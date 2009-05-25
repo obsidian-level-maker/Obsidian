@@ -51,19 +51,19 @@ ICDSE_THINGS =
   chainsaw_zombie = { id=3046, kind="monster", r=20,h=56 },
 
   -- weapons
+  pistol_pair = { id=2018, kind="pickup", r=20,h=16, pass=true },
+  uzi_pair    = { id=2022, kind="pickup", r=20,h=16, pass=true },
+  flak_shotty = { id=2006, kind="pickup", r=20,h=16, pass=true },
+  gren_launch = { id=  17, kind="pickup", r=20,h=16, pass=true },
+  satchel     = { id=2010, kind="pickup", r=20,h=16, pass=true },
+
+  minigun     = { id=2999, kind="pickup", r=20,h=16, pass=true },
   sawed_off   = { id=4444, kind="pickup", r=20,h=16, pass=true },
   beretta     = { id=4445, kind="pickup", r=20,h=16, pass=true },
   revolver    = { id=4446, kind="pickup", r=20,h=16, pass=true },
-  minigun     = { id=2999, kind="pickup", r=20,h=16, pass=true },
-
-  pistol_pair   = { id=2018, kind="pickup", r=20,h=16, pass=true },
-  uzi_pair      = { id=2022, kind="pickup", r=20,h=16, pass=true },
-  upgraded_shot = { id=2006, kind="pickup", r=20,h=16, pass=true },
-  gren_launch   = { id=  17, kind="pickup", r=20,h=16, pass=true },
-  satchel       = { id=2010, kind="pickup", r=20,h=16, pass=true },
 
   -- pickups
-  flak_shells   = { id=2024, kind="pickup", r=20,h=16, pass=true },
+  flak_shells = { id=2024, kind="pickup", r=20,h=16, pass=true },
 }
 
 
@@ -104,7 +104,73 @@ ICDSE_WEAPONS =
 {
   bfg = REMOVE_ME,   -- became: upgraded_shotgun
 
-  -- FIXME
+  fist =  -- knife
+  {
+  },
+
+  pistol =
+  {
+  },
+
+  pistol_pair =
+  {
+  },
+
+  shotty =
+  {
+  },
+
+  flak_shotty =
+  {
+  },
+
+  super =  -- double barrel
+  {
+  },
+
+  chain =  -- uzi
+  {
+  },
+
+  uzi_pair =
+  {
+  },
+
+  h_grenades =
+  {
+  },
+
+  gren_launch =
+  {
+  },
+
+  launch =  -- assault rifle
+  {
+  },
+
+  plasma =  -- SIG-COW
+  {
+  },
+
+  satchel =
+  {
+  },
+
+  minigun  =
+  {
+  },
+
+  sawed_off =
+  {
+  },
+
+  beretta =
+  {
+  },
+
+  revolver =
+  {
+  },
 }
 
 
@@ -149,12 +215,12 @@ OB_MODULES["icdse"] =
 
   tables =
   {
+    "player_model", ICDSE_PLAYER_MODEL,
+
     "things",   ICDSE_THINGS,
     "monsters", ICDSE_MONSTERS,
     "weapons",  ICDSE_WEAPONS,
     "pickups",  ICDSE_PICKUPS,
-
-    "player_model", ICDSE_PLAYER_MODEL,
   },
 }
 
