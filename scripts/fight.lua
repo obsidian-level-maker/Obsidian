@@ -24,9 +24,10 @@
 ===================
 
 Inputs:
-   monsters : list of monsters that the player must kill
-   weapons  : list of weapons that player can use
-   skill    : skill level
+   monsters   : list of monsters that the player must kill
+   weapons    : list of weapons that player can use
+   weap_prefs : weapon preference table (can be empty)
+   skill      : skill level
 
 Output:
    stats    : health that player needs to survive the battle
@@ -77,7 +78,7 @@ require 'defs'
 require 'util'
 
 
-function Fight_simulator(monsters, weapons, skill, stats)
+function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
 
   local active_mons = {}
 
@@ -93,35 +94,34 @@ function Fight_simulator(monsters, weapons, skill, stats)
   end
 
   local function select_weapon()
-
-    local first_mon = active_mons[1].info.name
+    local first_mon = active_mons[1].info
     assert(first_mon)
 
-    -- preferred weapon based on monster
-    local MW_prefs
--- FIXME   if GAME.mon_weap_prefs then MW_prefs = GAME.mon_weap_prefs[first_mon] end
-
+    -- determine probability for each weapon
     local probs = {}
 
     for idx,W in ipairs(weapons) do
       probs[idx] = assert(W.pref)
 
-      -- FIXME: other source of weapon preference [Theme??]
+      -- support a 'pref_equiv' name, useful for modules
+      for pass = 1,2 do
+        local name = sel(pass==1, W.name, W.pref_equiv)
+        if name then
+          probs[idx] = probs[idx] * (weap_prefs[name] or 1)
 
-      -- handle monster-based weapon preferences
-      if MW_prefs and MW_prefs[W.name] then
-        probs[idx] = probs[idx] * MW_prefs[W.name]
-      end
-
-    end
+          -- handle monster-based weapon preferences
+          if first_mon.weap_prefs then
+            probs[idx] = probs[idx] * (first_mon.weap_prefs[name] or 1)
+          end
+        end
+      end -- for pass
+    end -- for W
 
     assert(#probs == #weapons)
 
-    local wp_idx = rand_index_by_probs(probs)
-    local W = weapons[wp_idx]
-    assert(W)
+    local index = rand_index_by_probs(probs)
 
-    return W
+    return assert(weapons[index])
   end
 
 
