@@ -1407,6 +1407,8 @@ COMMON_THEMES_OLD =
 -- float  : true if monster floats (flys)
 -- invis  : true if invisible (or partially)
 --
+-- weap_prefs : weapon preferences table
+--
 -- NOTES:
 --
 -- Some monsters (e.g. IMP) have both a close-range melee
@@ -1452,12 +1454,14 @@ COMMON_MONSTERS =
     prob=20, trap_prob=11, cage_prob=11,
     health=100, damage=7, attack="melee",
     density=0.7, float=true,
+    weap_prefs={ launch=0.2 },
   },
 
   demon =
   {
     prob=35, guard_prob=31, trap_prob=31,
     health=150, damage=25, attack="melee",
+    weap_prefs={ launch=0.5 },
   },
 
   spectre =
@@ -1465,6 +1469,7 @@ COMMON_MONSTERS =
     replaces="demon", replace_prob=25, trap_prob=51, crazy_prob=21,
     health=150, damage=25, attack="melee",
     invis=true,
+    weap_prefs={ launch=0.2 },
   },
 
   caco =
@@ -1479,6 +1484,7 @@ COMMON_MONSTERS =
     prob=20, guard_prob=11, trap_prob=11, cage_prob=3,
     health=1000, damage=45, attack="missile",
     density=0.3,
+    weap_prefs={ bfg=3.0 },
   },
 
 
@@ -1489,6 +1495,7 @@ COMMON_MONSTERS =
     crazy_prob=12,
     health=4000, damage=150, attack="missile",
     density=0.1,
+    weap_prefs={ bfg=5.0 },
   },
 
   Mastermind =
@@ -1496,6 +1503,7 @@ COMMON_MONSTERS =
     crazy_prob=18,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
+    weap_prefs={ bfg=5.0 },
   },
 }
 
@@ -1549,6 +1557,7 @@ DOOM2_MONSTERS =
     prob=6, trap_prob=11, crazy_prob=15,
     health=700, damage=20, attack="missile",
     density=0.2,never_promote=true, float=true, 
+    weap_prefs={ launch=0.2 },
   },
 
   ss_dude =
@@ -1559,7 +1568,6 @@ DOOM2_MONSTERS =
     give={ {ammo="bullet",count=5} },
   },
 }
-
 
 
 -- Weapon list
@@ -1666,25 +1674,6 @@ DOOM2_WEAPONS =
     ammo="shell", per=2,
     give={ {ammo="shell",count=8} },
   },
-}
-
-
--- sometimes a certain weapon is preferred against a certain monster.
--- These values are multiplied with the weapon's "pref" field.
-
-COMMON_MONSTER_WEAPON_PREFS =
-{
-  zombie  = { shotty=6.0 },
-  shooter = { shotty=6.0 },
-  imp     = { shotty=6.0 },
-  demon   = { super=3.0, launch=0.3 },
-  spectre = { super=3.0, launch=0.3 },
-
-  pain    = { launch=0.1 },
-  skull   = { launch=0.1 },
-
-  Cyberdemon = { launch=3.0, bfg=6.0 },
-  Mastermind = { launch=3.0, bfg=9.0 },
 }
 
 

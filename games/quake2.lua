@@ -1634,11 +1634,13 @@ QUAKE2_MONSTERS =
     prob=90, guard_prob=11, trap_prob=11,
     health=50, damage=5, attack="missile",
     float=true,
+    weap_prefs={ grenade=0.2 },
   },
 
   shark =
   {
     health=50, damage=5, attack="melee",
+    weap_prefs={ grenade=0.2 },
   },
 
   parasite =
@@ -1658,6 +1660,7 @@ QUAKE2_MONSTERS =
     prob=50, guard_prob=11, trap_prob=11,
     health=200, damage=8, attack="missile",
     float=true,
+    weap_prefs={ grenade=0.2 },
   },
 
   beserker =
@@ -1671,6 +1674,7 @@ QUAKE2_MONSTERS =
     prob=70, guard_prob=11, trap_prob=21,
     health=240, damage=5, attack="missile",
     float=true,
+    weap_prefs={ grenade=0.2 },
   },
 
   medic =
@@ -1726,7 +1730,6 @@ QUAKE2_MONSTERS =
   Huge_flyer =
   {
     health=2000, damage=200,
-    -- FIXME: immune to laser (??)
   },
 
   Jorg =
@@ -1745,6 +1748,11 @@ QUAKE2_MONSTERS =
   -- be specified for each monster entity with the "item" keyword.
   -- This could be used for lots of cool stuff (e.g. kill a boss
   -- monster to get a needed key) -- another TODO feature.
+  --
+  -- Huge_flyer seems to be immune to the BFG spray, but not
+  -- to the actualy BFG missile.  Since the ball does much more
+  -- damage, we don't worry about the splash immunity.
+  --
 }
 
 

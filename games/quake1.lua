@@ -916,6 +916,7 @@ QUAKE1_MONSTERS =
   fish =
   {
     health=25, damage=3, attack="melee",
+    weap_prefs={ grenade=0.2 },
   },
 
   grunt =
@@ -942,6 +943,7 @@ QUAKE1_MONSTERS =
   {
     prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
     health=80, damage=18, attack="missile",
+    weap_prefs={ grenade=0.2 },
   },
 
   tarbaby =
@@ -949,6 +951,7 @@ QUAKE1_MONSTERS =
     prob=1,
     health=80, damage=10, attack="melee",
     density=0.3,
+    weap_prefs={ rocket=0.2, grenade=0.2 },
   },
 
   knight =
@@ -974,6 +977,7 @@ QUAKE1_MONSTERS =
   {
     prob=10, guard_prob=51, trap_prob=31,
     health=300, damage=20, attack="melee",
+    weap_prefs={ grenade=0.2 },
   },
 
   vore =
@@ -986,7 +990,8 @@ QUAKE1_MONSTERS =
   {
     prob=10, guard_prob=31, trap_prob=21, cage_prob=11,
     health=600, damage=30, attack="hitscan",
-    immunity={ rocket=0.5, grenade=0.5 },
+    immunity ={ rocket=0.5, grenade=0.5 },
+    weap_prefs={ rocket=0.2, grenade=0.2 },
   },
 }
 
@@ -1015,7 +1020,7 @@ QUAKE1_WEAPONS =
 
   grenade =
   {
-    pref=10, add_prob=15,
+    pref=12, add_prob=15,
     rate=1.5, damage= 5, attack="missile", splash={60,15,3},
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=5} },

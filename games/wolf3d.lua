@@ -982,9 +982,7 @@ end
 ----------------------------------------------------------------
 
 function Wolf3d_setup()
-
----???  GAME.door_probs = { combo_diff=90, normal=20, out_diff=1 }
----???  GAME.window_probs = { out_diff=0, combo_diff=0, normal=0 }
+  -- nothing needed
 end
 
 
