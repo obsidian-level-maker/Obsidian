@@ -247,12 +247,14 @@ end
 function get_sky()
   local mat = assert(GAME.materials["_SKY"])
 
+  local light = LEVEL.sky_light or LEVEL.ep_info.sky_light or 0.75
+
   return
   {
     kind = "sky",
     w_face = { texture=mat.t },
     t_face = { texture=mat.f or mat.t },
-    b_face = { texture=mat.f or mat.t, light=LEVEL.sky_light or 0.75 },
+    b_face = { texture=mat.f or mat.t, light=light },
   }
 end
 

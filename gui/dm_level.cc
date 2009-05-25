@@ -362,15 +362,14 @@ static void CreateOneSector(merge_region_c *R)
   sec->f_tex = B->t_face->tex;
   sec->c_tex = T->b_face->tex;
 
-  // FIXME: TEMP CRUD
   if (T->bkind == BKIND_Sky)
-    sec->light = 192;
+    sec->light = (int)(255 * T->b_face->light);
   else
   {
+    // FIXME: TEMP CRUD
     int min_light = (sec->c_h - sec->f_h < 150) ? 128 : 144;
 
     sec->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-
     sec->light = MIN(255, MAX(min_light, sec->light));
   }
 
