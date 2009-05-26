@@ -157,7 +157,7 @@ function Game_invoke_hook(name, rseed, ...)
     local func = mod[name]
     if func then
       if rseed then gui.rand_seed(rseed) end
-      func(...)
+      func(mod, ...)
     end
   end -- for mod
 end
