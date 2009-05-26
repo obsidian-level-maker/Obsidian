@@ -133,6 +133,15 @@ ZDOOM_MARINE_MONSTERS =
   },
 }
 
+function ZDoom_Marine_setup(self)
+  if self.options.use_melee.value == "no" then
+    GAME.things["marine_fist"] = nil
+    GAME.things["marine_berserk"] = nil
+    GAME.things["marine_saw"] = nil
+  end
+end
+
+
 -- Monster / Weapon prefs may go here eventually
 
 OB_MODULES["zdoom_marines"] =
@@ -143,10 +152,26 @@ OB_MODULES["zdoom_marines"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
+  setup_func = ZDoom_Marine_setup,
+
   tables =
   {
     "things",   ZDOOM_MARINE_THINGS,
     "monsters", ZDOOM_MARINE_MONSTERS,
+  },
+
+  options =
+  {
+    use_melee =
+    {
+      label = "Use Melee Marines",
+
+      choices =
+      {
+        { id="yes", label="Yes" },
+        { id="no",  label="No"  },
+      },
+    },
   },
 }
 
