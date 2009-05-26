@@ -135,9 +135,9 @@ ZDOOM_MARINE_MONSTERS =
 
 function ZDoom_Marine_setup(self)
   if self.options.use_melee.value == "no" then
-    GAME.things["marine_fist"] = nil
-    GAME.things["marine_berserk"] = nil
-    GAME.things["marine_saw"] = nil
+    GAME.monsters["marine_fist"] = nil
+    GAME.monsters["marine_berserk"] = nil
+    GAME.monsters["marine_saw"] = nil
   end
 end
 
