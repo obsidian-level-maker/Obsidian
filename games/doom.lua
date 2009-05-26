@@ -2084,6 +2084,7 @@ function Doom_make_cool_gfx()
   gui.wad_logo_gfx("WALL54_1", "p", "CARVE",  128,128, 4)
 
   -- flats
+  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
   gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
   gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
