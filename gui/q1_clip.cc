@@ -105,6 +105,35 @@ static void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
   *y = ny1 + along * (ny2 - ny1);
 }
 
+static double CalcIntersect_Y(double nx1, double ny1, double nx2, double ny2,
+                              double x)
+{
+    double a = nx1 - x;
+    double b = nx2 - x;
+
+    // BIG ASSUMPTION: lines are not parallel or colinear
+    SYS_ASSERT(fabs(a - b) > EPSILON);
+
+    // determine the intersection point
+    double along = a / (a - b);
+
+    return ny1 + along * (ny2 - ny1);
+}
+
+static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
+                              double y)
+{
+    double a = ny1 - y;
+    double b = ny2 - y;
+
+    // BIG ASSUMPTION: lines are not parallel or colinear
+    SYS_ASSERT(fabs(a - b) > EPSILON);
+
+    // determine the intersection point
+    double along = a / (a - b);
+
+    return nx1 + along * (nx2 - nx1);
+}
 
 static void FattenVertex(const csg_brush_c *P, unsigned int k,
                          csg_brush_c *P2, double pad_w)
@@ -182,6 +211,144 @@ static void FattenVertex(const csg_brush_c *P, unsigned int k,
   P2->verts.push_back(new area_vert_c(P2, nx, ny));
 }
 
+static void FattenVertex2(const csg_brush_c *P, unsigned int k,
+                          csg_brush_c *P2, double pad_w)
+{
+  unsigned int total = P->verts.size();
+
+  area_vert_c *kv = P->verts[k];
+
+  area_vert_c *pv = P->verts[(k + total - 1) % total];
+  area_vert_c *nv = P->verts[(k + 1        ) % total];
+
+///fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
+///k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
+
+  // determine internal angle
+  double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
+  double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
+
+  double diff = p_angle - n_angle;
+
+  if (diff < 0)    diff += 360.0;
+  if (diff >= 360) diff -= 360.0;
+
+///fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
+
+  if (diff > 180.1)
+    Main_FatalError("Area poly not convex!\n");
+
+  // NOTE: these normals face OUTWARDS (anti-normals?)
+  double p_nx, p_ny;
+  double n_nx, n_ny;
+
+  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
+  CalcNormal(kv->x, kv->y, nv->x, nv->y, &n_nx, &n_ny);
+
+  // for angles close to 180 degrees (i.e. co-linear), merely
+  // replacing the old vertex is sufficient.
+  if (diff > 179.0)
+  {
+    double sx = p_nx + n_nx;
+    double sy = p_ny + n_ny;
+    double s_len = sqrt(sx*sx + sy*sy);
+
+    double x = kv->x + pad_w * sx / s_len;
+    double y = kv->y + pad_w * sy / s_len;
+
+    P2->verts.push_back(new area_vert_c(P2, x, y));
+///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
+    return;
+  }
+
+  if (diff > 89.0)
+  {
+    double ix, iy;
+
+    CalcIntersection(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
+                     kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
+                     nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                     kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                     &ix, &iy);
+
+    P2->verts.push_back(new area_vert_c(P2, ix, iy));
+    return;
+  }
+
+  bool x_same = (p_nx >= 0 && n_nx >= 0) || (p_nx <= 0 && n_nx <= 0);
+  bool y_same = (p_ny >= 0 && n_ny >= 0) || (p_ny <= 0 && n_ny <= 0);
+
+  if (x_same && y_same)
+    Main_FatalError("INTERNAL ERROR: FattenVertex2 miscalculation!\n");
+
+  if (x_same)
+  {
+    // clip fattened vertex to a vertical line
+
+    double ix = kv->x + ((p_nx < 0) ? -pad_w : pad_w);
+
+    double py = CalcIntersect_Y(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
+                                kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
+                                ix);
+    
+    double ny = CalcIntersect_Y(nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                                kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                                ix);
+
+    P2->verts.push_back(new area_vert_c(P2, ix, py));
+    P2->verts.push_back(new area_vert_c(P2, ix, ny));
+  }
+  else if (y_same)
+  {
+    // clip fattened vertex to a horizontal line
+
+    double iy = kv->y + ((p_ny < 0) ? -pad_w : pad_w);
+
+    double px = CalcIntersect_X(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
+                                kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
+                                iy);
+    
+    double nx = CalcIntersect_X(nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                                kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                                iy);
+
+    P2->verts.push_back(new area_vert_c(P2, px, iy));
+    P2->verts.push_back(new area_vert_c(P2, nx, iy));
+  }
+  else
+  {
+    // clip fattened vertex to both axes
+
+    double dx = pad_w;
+    double dy = pad_w;
+
+    if (p_ny >= 0 && n_ny <= 0) dx = -dx;
+    if (p_nx <= 0 && n_nx >= 0) dy = -dy;
+
+    double kx = kv->x;
+    double ky = kv->y;
+
+    bool a_same = (p_nx >= 0 && n_ny >= 0) || (p_nx <= 0 && n_ny <= 0);
+    bool b_same = (p_ny >= 0 && n_nx >= 0) || (p_ny <= 0 && n_nx <= 0);
+
+    if (a_same != b_same)
+      Main_FatalError("INTERNAL ERROR: FattenVertex2 miscombobulation!\n");
+  
+    if (a_same)
+    {
+      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky));
+      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky+dy));
+      P2->verts.push_back(new area_vert_c(P2, kx,    ky+dy));
+    }
+    else
+    {
+      P2->verts.push_back(new area_vert_c(P2, kx,    ky+dy));
+      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky+dy));
+      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky));
+    }
+  }
+}
+
 static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 {
   for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
@@ -206,7 +373,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {
-      FattenVertex(P, k, P2, pad_w);
+      FattenVertex2(P, k, P2, pad_w);
     }
 
     P2->ComputeBBox();
