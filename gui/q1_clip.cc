@@ -267,7 +267,7 @@ static void FattenVertex2(const csg_brush_c *P, unsigned int k,
 
     CalcIntersection(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
                      kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
-                     nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+                     nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
                      kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
                      &ix, &iy);
 
@@ -291,7 +291,7 @@ static void FattenVertex2(const csg_brush_c *P, unsigned int k,
                                 kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
                                 ix);
     
-    double ny = CalcIntersect_Y(nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+    double ny = CalcIntersect_Y(nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
                                 kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
                                 ix);
 
@@ -308,7 +308,7 @@ static void FattenVertex2(const csg_brush_c *P, unsigned int k,
                                 kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
                                 iy);
     
-    double nx = CalcIntersect_X(nv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
+    double nx = CalcIntersect_X(nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
                                 kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
                                 iy);
 
