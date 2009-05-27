@@ -49,7 +49,6 @@
 ICDSE_THINGS =
 {
   -- players
-  -- (replaces COOP_HELPER_SPAWNER with SPACE_MARINE_PRIVATE)
   player4 = { id=3000, kind="player", r=20,h=56 },
 
   -- monsters
@@ -76,35 +75,77 @@ ICDSE_THINGS =
 }
 
 
+ICDSE_HELPER_TYPES =
+{
+  none =
+  {
+    player2 = { id=2015, kind="pickup", r=20,h=16, pass=true },
+    player3 = { id=2015, kind="pickup", r=20,h=16, pass=true },
+    player4 = { id=2015, kind="pickup", r=20,h=16, pass=true },
+  },
+
+  rifle =
+  {
+    player2 = { id=   2, kind="player", r=20,h=16, pass=true },
+    player3 = { id=   2, kind="player", r=20,h=16, pass=true },
+    player4 = { id=   2, kind="player", r=20,h=16, pass=true },
+  },
+
+  m16 =
+  {
+    player2 = { id=   3, kind="player", r=20,h=16, pass=true },
+    player3 = { id=   3, kind="player", r=20,h=16, pass=true },
+    player4 = { id=   3, kind="player", r=20,h=16, pass=true },
+  },
+
+  ssg =
+  {
+    player2 = { id=3000, kind="player", r=20,h=16, pass=true },
+    player3 = { id=3000, kind="player", r=20,h=16, pass=true },
+    player4 = { id=3000, kind="player", r=20,h=16, pass=true },
+  },
+
+  random =
+  {
+    player2 = { id=   4, kind="player", r=20,h=16, pass=true },
+    player3 = { id=   4, kind="player", r=20,h=16, pass=true },
+    player4 = { id=   4, kind="player", r=20,h=16, pass=true },
+  },
+
+  -- the "mixed" choice does not change anything
+  -- (hence no need to have an entry for it).
+}
+
+
 ICDSE_MONSTERS =
 {
   uzi_trooper =
   {
-    prob=20, guard_prob=21, trap_prob=11,
     health=40, damage=30, attack="hitscan",
     give={ {weapon="launch"}, {ammo="bullet",count=20} },
+    immoral_conduct=true,
   },
 
   super_shooter =
   {
-    prob=20, guard_prob=21, trap_prob=11,
     health=50, damage=70, attack="hitscan",
     give={ {weapon="super"}, {ammo="shell",count=4} },
     density=0.5,
+    immoral_conduct=true,
   },
 
   m16_zombie =
   {
-    prob=20, guard_prob=21, trap_prob=11,
     health=100, damage=40, attack="hitscan",
     give={ {weapon="launch"}, {ammo="rocket",count=2} },
+    immoral_conduct=true,
   },
 
   chainsaw_zombie =
   {
-    prob=20, guard_prob=11, trap_prob=31,
     health=100, damage=40, attack="melee",
     give={ {weapon="saw"} },
+    immoral_conduct=true,
   },
 }
 
@@ -120,7 +161,7 @@ ICDSE_WEAPONS =
 
   saw =
   {
-    pref=3, add_prob=2, start_prob=1,
+    pref=3, add_prob=4, start_prob=2,
     rate=6, damage=15, attack="melee",
   },
 
@@ -133,7 +174,7 @@ ICDSE_WEAPONS =
 
   pistol_pair =
   {
-    pref=15, add_prob=10, start_prob=20,
+    pref=15, add_prob=20, start_prob=40,
     rate=3.0, damage=30, attack="hitscan",
     ammo="bullet", per=2,
     give={ {ammo="bullet",count=12} },
@@ -141,7 +182,7 @@ ICDSE_WEAPONS =
 
   shotty =
   {
-    pref=50, add_prob=20, start_prob=60,
+    pref=50, add_prob=40, start_prob=120,
     rate=1.0, damage=80, attack="hitscan", splash={ 0,10 },
     ammo="shell", per=1,
     give={ {ammo="shell",count=8} },
@@ -157,7 +198,7 @@ ICDSE_WEAPONS =
 
   super =  -- double barrel
   {
-    pref=12, add_prob=10, start_prob=10,
+    pref=12, add_prob=20, start_prob=20,
     rate=0.53, damage=60, attack="hitscan", splash={ 0,20 },
     ammo="shell", per=2,
     give={ {ammo="shell",count=2} },
@@ -165,7 +206,7 @@ ICDSE_WEAPONS =
 
   chain =  -- uzi
   {
-    pref=25, add_prob=10, start_prob=10,
+    pref=25, add_prob=20, start_prob=20,
     rate=7.0, damage=10, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=30} },
@@ -173,7 +214,7 @@ ICDSE_WEAPONS =
 
   uzi_pair =
   {
-    pref=30, add_prob=10, start_prob=20,
+    pref=30, add_prob=20, start_prob=50,
     rate=5.6, damage=20, attack="hitscan",
     ammo="bullet", per=2,
     give={ {ammo="bullet",count=60} },
@@ -181,7 +222,7 @@ ICDSE_WEAPONS =
 
   h_grenades =
   {
-    pref=8, add_prob=2, start_prob=2,
+    pref=8, add_prob=4, start_prob=4,
     rate=0.7, damage=1, attack="missile", splash={ 60,30,10 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=5} },
@@ -189,7 +230,7 @@ ICDSE_WEAPONS =
 
   gren_launch =
   {
-    pref=15, add_prob=10, start_prob=20,
+    pref=15, add_prob=20, start_prob=50,
     rate=1.4, damage=20, attack="missile", splash={ 55,40,25,10 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=5} },
@@ -197,7 +238,7 @@ ICDSE_WEAPONS =
 
   satchel =
   {
-    pref=5, add_prob=5, start_prob=5,
+    pref=5, add_prob=12, start_prob=10,
     rate=1.4, damage=1, attack="missile", splash={ 0,15,5 },
     ammo="charge", per=1,
     give={ {ammo="charge",count=1} },
@@ -205,7 +246,7 @@ ICDSE_WEAPONS =
 
   launch =  -- assault rifle
   {
-    pref=50, add_prob=30, start_prob=30,
+    pref=50, add_prob=60, start_prob=60,
     rate=2.3, damage=54, attack="hitscan",
     ammo="cell", per=3,
     give={ {ammo="cell",count=45} },
@@ -213,7 +254,7 @@ ICDSE_WEAPONS =
 
   plasma =  -- SIG-COW
   {
-    pref=40, add_prob=20, start_prob=20,
+    pref=40, add_prob=40, start_prob=40,
     rate=2.6, damage=26, attack="hitscan",
     ammo="cell", per=1,
     give={ {ammo="cell",count=30} },
@@ -221,7 +262,7 @@ ICDSE_WEAPONS =
 
   minigun  =
   {
-    pref=50, add_prob=15, start_prob=30,
+    pref=50, add_prob=30, start_prob=60,
     rate=8.0, damage=17, attack="hitscan",
     ammo="cell", per=1,
     give={ {ammo="cell",count=100} },
@@ -229,7 +270,7 @@ ICDSE_WEAPONS =
 
   sawed_off =
   {
-    pref=20, add_prob=25, start_prob=30,
+    pref=20, add_prob=30, start_prob=40,
     rate=0.9, damage=80, attack="hitscan",
     ammo="shell", per=1,
     give={ {ammo="shell",count=6} },
@@ -237,7 +278,7 @@ ICDSE_WEAPONS =
 
   beretta =
   {
-    pref=10, add_prob=15, start_prob=10,
+    pref=10, add_prob=30, start_prob=20,
     rate=2.9, damage=12, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=30} },
@@ -245,7 +286,7 @@ ICDSE_WEAPONS =
 
   revolver =
   {
-    pref=10, add_prob=25, start_prob=20,
+    pref=10, add_prob=50, start_prob=40,
     rate=1.4, damage=32, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=12} },
@@ -299,6 +340,46 @@ ICDSE_PLAYER_MODEL =
   }
 }
 
+----------------------------------------------------------------
+
+function ImmConduct_setup(self)
+  local new_mons = self.options.new_mons.value
+
+  local NEW_MON_PROBS =
+  {
+    scarce=4, plenty=18, hordes=70,
+  }
+  local new_prob = NEW_MON_PROBS[new_mons]
+
+  if new_prob then
+    for _,M in pairs(GAME.monsters) do
+      if M.immoral_conduct then
+        M.prob       = new_prob
+        M.guard_prob = new_prob * rand_range(0.5, 1.5)
+        M.trap_prob  = new_prob * rand_range(0.2, 0.8)
+      end
+    end
+  end
+
+  local helper = self.options.helper.value
+
+  if ICDSE_HELPER_TYPES[helper] then
+    Game_merge_tab("things", ICDSE_HELPER_TYPES[helper])
+  end
+end
+
+
+function ImmConduct_begin_level(self)
+  if not LEVEL.styles then
+    LEVEL.styles = {}
+  end
+
+  -- the helpers tend to fall into liquid pools, so here we
+  -- make levels with lots of liquids less likely lol.
+  LEVEL.styles.liquids = { few=90, some=10, heaps=10 }
+end
+
+
 
 OB_MODULES["imm_conduct"] =
 {
@@ -308,6 +389,9 @@ OB_MODULES["imm_conduct"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { edge=1 },
 
+  setup_func = ImmConduct_setup,
+  begin_level_func = ImmConduct_begin_level,
+
   tables =
   {
     "player_model", ICDSE_PLAYER_MODEL,
@@ -316,6 +400,38 @@ OB_MODULES["imm_conduct"] =
     "monsters", ICDSE_MONSTERS,
     "weapons",  ICDSE_WEAPONS,
     "pickups",  ICDSE_PICKUPS,
+  },
+
+  options =
+  {
+    new_mons =
+    {
+      label = "New Monsters",
+
+      choices =
+      {
+        "none",   "NONE",
+        "scarce", "Scarce",
+        "plenty", "Plenty",
+        "hordes", "Hordes",
+      }
+    },
+
+    helper =
+    {
+      label = "Helper Type",
+      priority = 25,
+
+      choices =
+      {
+        "mixed",  "One of each",
+        "rifle",  "Rifle Corporal",
+        "ssg",    "SSG Private",
+        "m16",    "M16 Sergeant",
+        "random", "Random",
+        "none",   "NONE",
+      }
+    },
   },
 }
 
