@@ -2,10 +2,12 @@
 TODO
 ====
 
-
 -  rework Build_small_exit to only use a single transform,
 
 -  implement Chris's & JR's boss maps
+
++  BUG: items occasionally appear on skyfences
+   - finding small spots ignores sideway extents (thick[])
 
 ?  use 'xxx_t' instead of 'xxx_w' in skin tables
 
@@ -89,19 +91,27 @@ CHANGES (since 3.39)
 
 + better name generator (courtesy JohnnyRancid)
 - new just-for-kicks theme 'Psychedelic'
-+ new choice for Monsters: 'Crazy' 
+- new choice for Monsters: 'Crazy' 
 - support for huge monsters in maps
 
 + new Material system
-- reorganised DOOM code : doom_a and doom_b 
+- reorganised DOOM code : doom.lua & dm_tex.lua
 - added 'density' field to MONSTER tables
 - cleaner brush/entity transformations
 
 + new boss arena for E2M8 (thanks Mr. Chris)
 - more color schemes for skies (JohnnyRancid)
 - beginnings of support for DOOM I
-- new module "Skulltag Monsters" (thanks Chris)
 
 + new program for extracting Quake textures
 - worked on the module system
+- a bit of progress with Tiled games (Wolf3d)
+- added 'replaces' field for monsters
+- support monster/weapon preferences again
+
++ various new modules:
+  - Immoral Conduct - Special Edition
+  - Skulltag Monsters (by Mr. Chris)
+  - ZDoom Marines (thanks Enhas)
+  - Stealth Monsters (by Enhas)
 
