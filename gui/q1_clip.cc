@@ -34,7 +34,7 @@
 #include "q1_structs.h"
 
 
-// extern void CSG2_Doom_TestBrushes(void);
+extern void CSG2_Doom_TestBrushes(void);
 extern void CSG2_Doom_TestClip(void);
 
 
@@ -135,220 +135,6 @@ static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
     return nx1 + along * (nx2 - nx1);
 }
 
-static void FattenVertex(const csg_brush_c *P, unsigned int k,
-                         csg_brush_c *P2, double pad_w)
-{
-  unsigned int total = P->verts.size();
-
-  area_vert_c *kv = P->verts[k];
-
-  area_vert_c *nv = P->verts[(k + 1        ) % total];
-  area_vert_c *pv = P->verts[(k + total - 1) % total];
-
-///fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
-///k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
-
-  // determine internal angle
-  double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
-  double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
-
-  double diff = p_angle - n_angle;
-
-  if (diff < 0)    diff += 360.0;
-  if (diff >= 360) diff -= 360.0;
-
-///fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
-
-  if (diff > 180.1)
-    Main_FatalError("Area poly not convex!\n");
-
-  // NOTE: these normals face OUTWARDS (anti-normals?)
-  double p_nx, p_ny;
-  double n_nx, n_ny;
-
-  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
-  CalcNormal(kv->x, kv->y, nv->x, nv->y, &n_nx, &n_ny);
-
-  // for angles close to 180 degrees (i.e. co-linear), merely
-  // replacing the old vertex is sufficient.
-  if (diff > 175.0)
-  {
-    double x = kv->x + pad_w * (p_nx + n_nx) / 2.0;
-    double y = kv->y + pad_w * (p_ny + n_ny) / 2.0;
-
-    P2->verts.push_back(new area_vert_c(P2, x, y));
-///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
-
-    return;
-  }
-
-  // for lower angles, the ideal would be a curve (an arc of
-  // the circle of radius 'pad_w').  We emulate that ideal using
-  // between 1 to 3 new vertices.
-
-  double px = kv->x + pad_w * p_nx;
-  double py = kv->y + pad_w * p_ny;
-
-  P2->verts.push_back(new area_vert_c(P2, px, py));
-
-  if (diff < 88.0)
-  {
-    double b_nx = p_nx + n_nx;
-    double b_ny = p_ny + n_ny;
-
-    double b_len = ComputeDist(0, 0, b_nx, b_ny);
-    SYS_ASSERT(b_len > 0.01);
-
-    double bx = kv->x + pad_w * b_nx / b_len;
-    double by = kv->y + pad_w * b_ny / b_len;
-
-    P2->verts.push_back(new area_vert_c(P2, bx, by));
-  }
-
-  double nx = kv->x + pad_w * n_nx;
-  double ny = kv->y + pad_w * n_ny;
-
-  P2->verts.push_back(new area_vert_c(P2, nx, ny));
-}
-
-static void FattenVertex2(const csg_brush_c *P, unsigned int k,
-                          csg_brush_c *P2, double pad_w)
-{
-  unsigned int total = P->verts.size();
-
-  area_vert_c *kv = P->verts[k];
-
-  area_vert_c *pv = P->verts[(k + total - 1) % total];
-  area_vert_c *nv = P->verts[(k + 1        ) % total];
-
-///fprintf(stderr, "ORIGINAL VERT[%d] @ (%1.0f %1.0f)  < (%1.0f %1.0f) > (%1.0f %1.0f)\n",
-///k, kv->x, kv->y, pv->x, pv->y, nv->x, nv->y);
-
-  // determine internal angle
-  double p_angle = CalcAngle(kv->x, kv->y, pv->x, pv->y);
-  double n_angle = CalcAngle(kv->x, kv->y, nv->x, nv->y);
-
-  double diff = p_angle - n_angle;
-
-  if (diff < 0)    diff += 360.0;
-  if (diff >= 360) diff -= 360.0;
-
-///fprintf(stderr, "FattenVertex: ANGLE = %1.4f\n", diff);
-
-  if (diff > 180.1)
-    Main_FatalError("Area poly not convex!\n");
-
-  // NOTE: these normals face OUTWARDS (anti-normals?)
-  double p_nx, p_ny;
-  double n_nx, n_ny;
-
-  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
-  CalcNormal(kv->x, kv->y, nv->x, nv->y, &n_nx, &n_ny);
-
-  // for angles close to 180 degrees (i.e. co-linear), merely
-  // replacing the old vertex is sufficient.
-  if (diff > 179.0)
-  {
-    double sx = p_nx + n_nx;
-    double sy = p_ny + n_ny;
-    double s_len = sqrt(sx*sx + sy*sy);
-
-    double x = kv->x + pad_w * sx / s_len;
-    double y = kv->y + pad_w * sy / s_len;
-
-    P2->verts.push_back(new area_vert_c(P2, x, y));
-///fprintf(stderr, "... HIG VERT --> (%1.4f %1.4f)\n", x, y);
-    return;
-  }
-
-  if (diff > 89.0)
-  {
-    double ix, iy;
-
-    CalcIntersection(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
-                     kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
-                     nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
-                     kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
-                     &ix, &iy);
-
-    P2->verts.push_back(new area_vert_c(P2, ix, iy));
-    return;
-  }
-
-  bool x_same = (p_nx >= 0 && n_nx >= 0) || (p_nx <= 0 && n_nx <= 0);
-  bool y_same = (p_ny >= 0 && n_ny >= 0) || (p_ny <= 0 && n_ny <= 0);
-
-  if (x_same && y_same)
-    Main_FatalError("INTERNAL ERROR: FattenVertex2 miscalculation!\n");
-
-  if (x_same)
-  {
-    // clip fattened vertex to a vertical line
-
-    double ix = kv->x + ((p_nx < 0) ? -pad_w : pad_w);
-
-    double py = CalcIntersect_Y(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
-                                kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
-                                ix);
-    
-    double ny = CalcIntersect_Y(nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
-                                kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
-                                ix);
-
-    P2->verts.push_back(new area_vert_c(P2, ix, py));
-    P2->verts.push_back(new area_vert_c(P2, ix, ny));
-  }
-  else if (y_same)
-  {
-    // clip fattened vertex to a horizontal line
-
-    double iy = kv->y + ((p_ny < 0) ? -pad_w : pad_w);
-
-    double px = CalcIntersect_X(pv->x + pad_w*p_nx, pv->y + pad_w*p_ny,
-                                kv->x + pad_w*p_nx, kv->y + pad_w*p_ny,
-                                iy);
-    
-    double nx = CalcIntersect_X(nv->x + pad_w*n_nx, nv->y + pad_w*n_ny,
-                                kv->x + pad_w*n_nx, kv->y + pad_w*n_ny,
-                                iy);
-
-    P2->verts.push_back(new area_vert_c(P2, px, iy));
-    P2->verts.push_back(new area_vert_c(P2, nx, iy));
-  }
-  else
-  {
-    // clip fattened vertex to both axes
-
-    double dx = pad_w;
-    double dy = pad_w;
-
-    if (p_ny >= 0 && n_ny <= 0) dx = -dx;
-    if (p_nx <= 0 && n_nx >= 0) dy = -dy;
-
-    double kx = kv->x;
-    double ky = kv->y;
-
-    bool a_same = (p_nx >= 0 && n_ny >= 0) || (p_nx <= 0 && n_ny <= 0);
-    bool b_same = (p_ny >= 0 && n_nx >= 0) || (p_ny <= 0 && n_nx <= 0);
-
-    if (a_same != b_same)
-      Main_FatalError("INTERNAL ERROR: FattenVertex2 miscombobulation!\n");
-  
-    if (a_same)
-    {
-      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky));
-      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky+dy));
-      P2->verts.push_back(new area_vert_c(P2, kx,    ky+dy));
-    }
-    else
-    {
-      P2->verts.push_back(new area_vert_c(P2, kx,    ky+dy));
-      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky+dy));
-      P2->verts.push_back(new area_vert_c(P2, kx+dx, ky));
-    }
-  }
-}
-
 static void FattenVertex3(const csg_brush_c *P, unsigned int k,
                           csg_brush_c *P2, double pad)
 {
@@ -382,11 +168,21 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
     if (pv->x < kv->x) px_side = -1;
     if (pv->x > kv->x) px_side = +1;
   }
+  if (fabs(pdy) * factor > fabs(pdx))
+  {
+    if (pv->y < kv->y) py_side = -1;
+    if (pv->y > kv->y) py_side = +1;
+  }
 
   if (fabs(ndx) * factor > fabs(ndy))
   {
     if (nv->x < kv->x) nx_side = -1;
     if (nv->x > kv->x) nx_side = +1;
+  }
+  if (fabs(ndy) * factor > fabs(ndx))
+  {
+    if (nv->y < kv->y) ny_side = -1;
+    if (nv->y > kv->y) ny_side = +1;
   }
 
 
@@ -414,7 +210,7 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
     // which form a small box.  Only interesting part is
     // what order to add them.
     
-    if (x_side * y_side > 0)
+    if (x_side == y_side)
     {
       P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
       P2->verts.push_back(new area_vert_c(P2, ix,    iy));
@@ -426,10 +222,8 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
       P2->verts.push_back(new area_vert_c(P2, ix,    iy));
       P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
     }
-    return;
   }
-
-  if (x_side)
+  else if (x_side)
   {
     // Lines form a < or > shape, and we need to clip the
     // fattened vertex along a vertical line.
@@ -459,18 +253,19 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
     P2->verts.push_back(new area_vert_c(P2, px, iy));
     P2->verts.push_back(new area_vert_c(P2, nx, iy));
   }
-  
-  // Lines must go between diagonally opposite quadrants
-  // or one or both of them are purely horizontal or
-  // vertical.  A simple intersection is all we need.
-  CalcIntersection(pv->x + pad * p_nx, pv->y + pad * p_ny,
-                   kv->x + pad * p_nx, kv->y + pad * p_ny,
-                   nv->x + pad * n_nx, nv->y + pad * n_ny,
-                   kv->x + pad * n_nx, kv->y + pad * n_ny,
-                   &ix, &iy);
+  else
+  {
+    // Lines must go between diagonally opposite quadrants
+    // or one or both of them are purely horizontal or
+    // vertical.  A simple intersection is all we need.
+    CalcIntersection(pv->x + pad * p_nx, pv->y + pad * p_ny,
+                     kv->x + pad * p_nx, kv->y + pad * p_ny,
+                     nv->x + pad * n_nx, nv->y + pad * n_ny,
+                     kv->x + pad * n_nx, kv->y + pad * n_ny,
+                     &ix, &iy);
 
-  P2->verts.push_back(new area_vert_c(P2, ix, iy));
-  return;
+    P2->verts.push_back(new area_vert_c(P2, ix, iy));
+  }
 }
 
 
@@ -1235,8 +1030,8 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   CSG2_MergeAreas();
 
-  if (which == 0)
-    CSG2_Doom_TestClip();
+//  if (which == 0)
+//    CSG2_Doom_TestClip();
 
   cpSideList_c C_LEAF;
 
