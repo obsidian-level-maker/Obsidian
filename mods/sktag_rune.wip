@@ -1,0 +1,164 @@
+----------------------------------------------------------------
+--  MODULE: Skulltag Runes and Spheres
+----------------------------------------------------------------
+--
+--  Copyright (C) 2009 Enhas
+--
+--  This program is free software; you can redistribute it and/or
+--  modify it under the terms of the GNU General Public License
+--  as published by the Free Software Foundation; either version 2
+--  of the License, or (at your option) any later version.
+--
+--  This program is distributed in the hope that it will be useful,
+--  but WITHOUT ANY WARRANTY; without even the implied warranty of
+--  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+--  GNU General Public License for more details.
+--
+----------------------------------------------------------------
+
+SKULLTAG_RUNE_THINGS =
+{
+  turbo_sphere  = { id=5030, kind="pickup", r=20,h=45, pass=true },
+  time_sphere   = { id=5032, kind="pickup", r=20,h=45, pass=true },
+  invis_sphere  = { id=5035, kind="pickup", r=20,h=45, pass=true },
+  doom_sphere   = { id=5036, kind="pickup", r=20,h=45, pass=true },
+  guard_sphere  = { id=5037, kind="pickup", r=20,h=30, pass=true },
+  random_sphere = { id=5039, kind="pickup", r=20,h=45, pass=true },
+
+  rune_strength = { id=5100, kind="pickup", r=20,h=45, pass=true },
+  rune_rage     = { id=5101, kind="pickup", r=20,h=45, pass=true },
+  rune_drain    = { id=5102, kind="pickup", r=20,h=45, pass=true },
+  rune_spread   = { id=5103, kind="pickup", r=20,h=45, pass=true },
+  rune_resist   = { id=5104, kind="pickup", r=20,h=45, pass=true },
+  rune_regen    = { id=5105, kind="pickup", r=20,h=45, pass=true },
+  rune_prosper  = { id=5106, kind="pickup", r=20,h=45, pass=true },
+  rune_reflect  = { id=5107, kind="pickup", r=20,h=45, pass=true },
+  rune_hi_jump  = { id=5108, kind="pickup", r=20,h=45, pass=true },
+  rune_haste    = { id=5109, kind="pickup", r=20,h=45, pass=true },
+}
+
+SKULLTAG_RUNE_PICKUPS =
+{
+  -- This is temporary until powerups are enabled in a future version
+  -- of OBLIGE, and will be updated accordingly then.
+
+  -- The Invisibility Sphere is *not* the same as Partial Invisibility.
+
+  -- Runes are artifacts that give you a special power, until you die
+  -- or pick up another rune (you can only have one at a time), hence
+  -- their rarity.
+
+  -- The give field does nothing, but has to be there to prevent OBLIGE
+  -- from dying when generating a level with any of these powerups.
+
+  turbo_sphere =
+  {
+    prob=3, big_item=true,
+    give={ {health=0} },
+  },
+
+  time_sphere =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  invis_sphere =
+  {
+    prob=3, big_item=true,
+    give={ {health=0} },
+  },
+
+  doom_sphere =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  guard_sphere =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+  
+  random_sphere =
+  {
+    prob=0.1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_strength =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_rage =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_drain =
+  {
+    prob=0.1, big_item=true,
+    give={ {health=0} },
+  },
+  
+  rune_spread =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_resist =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_regen =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_prosper =
+  {
+    prob=0.2, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_reflect =
+  {
+    prob=0.5, big_item=true,
+    give={ {health=0} },
+  },
+
+  rune_hi_jump =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+ 
+  rune_haste =
+  {
+    prob=1, big_item=true,
+    give={ {health=0} },
+  },
+}
+
+OB_MODULES["sktag_rune"] =
+{
+  label = "Skulltag Runes and Spheres",
+
+  for_games   = { doom1=1, doom2=1, freedoom=1 },
+  for_modes   = { sp=1, coop=1 },
+  for_engines = { skulltag=1 },
+
+  tables =
+  {
+    "things",   SKULLTAG_RUNE_THINGS,
+    "pickups",  SKULLTAG_RUNE_PICKUPS,
+  },
+}
