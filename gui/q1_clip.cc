@@ -349,6 +349,131 @@ static void FattenVertex2(const csg_brush_c *P, unsigned int k,
   }
 }
 
+static void FattenVertex3(const csg_brush_c *P, unsigned int k,
+                          csg_brush_c *P2, double pad)
+{
+  unsigned int total = P->verts.size();
+
+  area_vert_c *kv = P->verts[k];
+
+  area_vert_c *pv = P->verts[(k + total - 1) % total];
+  area_vert_c *nv = P->verts[(k + 1        ) % total];
+
+  // if the two lines are co-linear (or near enough), then we
+  // can skip this vertex altogether.
+
+  if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) < 4.0*EPSILON)
+    return;
+
+  double pdx = kv->x - pv->x;
+  double pdy = kv->y - pv->y;
+
+  double ndx = kv->x - nv->x;
+  double ndy = kv->y - nv->y;
+
+  double factor = 1000.0;
+
+  // determine what side of axis the other vertices are on
+  int px_side = 0, py_side = 0;
+  int nx_side = 0, ny_side = 0;
+
+  if (fabs(pdx) * factor > fabs(pdy))
+  {
+    if (pv->x < kv->x) px_side = -1;
+    if (pv->x > kv->x) px_side = +1;
+  }
+
+  if (fabs(ndx) * factor > fabs(ndy))
+  {
+    if (nv->x < kv->x) nx_side = -1;
+    if (nv->x > kv->x) nx_side = +1;
+  }
+
+
+  // NOTE: these normals face OUTWARDS (anti-normals?)
+  double p_nx, p_ny;
+  double n_nx, n_ny;
+
+  CalcNormal(pv->x, pv->y, kv->x, kv->y, &p_nx, &p_ny);
+  CalcNormal(kv->x, kv->y, nv->x, nv->y, &n_nx, &n_ny);
+
+
+  // see whether BOTH vertices are on the same side
+  int x_side = (px_side == nx_side) ? px_side : 0;
+  int y_side = (py_side == ny_side) ? py_side : 0;
+
+  double ix, iy;
+
+  if (x_side) ix = kv->x - x_side * pad;
+  if (y_side) iy = kv->y - y_side * pad;
+
+  if (x_side && y_side)
+  {
+    // When both vertices are in the same quadrant,
+    // then it's pretty easy: we get three new vertices
+    // which form a small box.  Only interesting part is
+    // what order to add them.
+    
+    if (x_side * y_side > 0)
+    {
+      P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
+      P2->verts.push_back(new area_vert_c(P2, ix,    iy));
+      P2->verts.push_back(new area_vert_c(P2, kv->x, iy));
+    }
+    else
+    {
+      P2->verts.push_back(new area_vert_c(P2, kv->x, iy));
+      P2->verts.push_back(new area_vert_c(P2, ix,    iy));
+      P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
+    }
+    return;
+  }
+
+  if (x_side)
+  {
+    // Lines form a < or > shape, and we need to clip the
+    // fattened vertex along a vertical line.
+    double py = CalcIntersect_Y(pv->x + pad * p_nx, pv->y + pad * p_ny,
+                                kv->x + pad * p_nx, kv->y + pad * p_ny,
+                                ix);
+    
+    double ny = CalcIntersect_Y(nv->x + pad * n_nx, nv->y + pad * n_ny,
+                                kv->x + pad * n_nx, kv->y + pad * n_ny,
+                                ix);
+
+    P2->verts.push_back(new area_vert_c(P2, ix, py));
+    P2->verts.push_back(new area_vert_c(P2, ix, ny));
+  }
+  else if (y_side)
+  {
+    // Lines form an ^ or v shape, and we need to clip the
+    // fattened vertex along a horizontal line.
+    double px = CalcIntersect_X(pv->x + pad * p_nx, pv->y + pad * p_ny,
+                                kv->x + pad * p_nx, kv->y + pad * p_ny,
+                                iy);
+    
+    double nx = CalcIntersect_X(nv->x + pad * n_nx, nv->y + pad * n_ny,
+                                kv->x + pad * n_nx, kv->y + pad * n_ny,
+                                iy);
+
+    P2->verts.push_back(new area_vert_c(P2, px, iy));
+    P2->verts.push_back(new area_vert_c(P2, nx, iy));
+  }
+  
+  // Lines must go between diagonally opposite quadrants
+  // or one or both of them are purely horizontal or
+  // vertical.  A simple intersection is all we need.
+  CalcIntersection(pv->x + pad * p_nx, pv->y + pad * p_ny,
+                   kv->x + pad * p_nx, kv->y + pad * p_ny,
+                   nv->x + pad * n_nx, nv->y + pad * n_ny,
+                   kv->x + pad * n_nx, kv->y + pad * n_ny,
+                   &ix, &iy);
+
+  P2->verts.push_back(new area_vert_c(P2, ix, iy));
+  return;
+}
+
+
 static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 {
   for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
@@ -373,7 +498,7 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {
-      FattenVertex2(P, k, P2, pad_w);
+      FattenVertex3(P, k, P2, pad_w);
     }
 
     P2->ComputeBBox();
