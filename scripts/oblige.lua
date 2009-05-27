@@ -397,7 +397,7 @@ function ob_init()
 
   local function button_sorter(A, B)
     if A.priority or B.priority then
-      return (A.priority or 0) > (B.priority or 0)
+      return (A.priority or 50) > (B.priority or 50)
     end
 
     return A.label < B.label
@@ -447,13 +447,16 @@ function ob_init()
           gui.add_mod_option(mod.name, opt.name, opt.label)
 
           -- default value is always the first choice
-          opt.value = opt.choices[1].id
+          opt.value = opt.choices[1]
 
           opt.avail_choices = {}
 
-          for _,C in ipairs(opt.choices) do
-            gui.add_mod_option(mod.name, opt.name, C.id, C.label)
-            opt.avail_choices[C.id] = 1
+          for i = 1,#opt.choices,2 do
+            local id    = opt.choices[i]
+            local label = opt.choices[i+1]
+
+            gui.add_mod_option(mod.name, opt.name, id, label)
+            opt.avail_choices[id] = 1
           end
         end -- for opt
       end

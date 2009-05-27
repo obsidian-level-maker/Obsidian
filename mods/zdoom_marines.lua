@@ -168,8 +168,8 @@ OB_MODULES["zdoom_marines"] =
 
       choices =
       {
-        { id="yes", label="Yes" },
-        { id="no",  label="No"  },
+        "yes", "Yes",
+        "no",  "No",
       },
     },
   },
