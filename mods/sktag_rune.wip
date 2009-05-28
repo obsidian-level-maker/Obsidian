@@ -125,7 +125,7 @@ SKULLTAG_RUNE_PICKUPS =
 
   rune_prosper =
   {
-    prob=0.2, big_item=true,
+    prob=0.1, big_item=true,
     give={ {health=0} },
   },
 
