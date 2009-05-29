@@ -9,6 +9,9 @@ TODO
 +  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
 
++  BUG: outdoor bars can sometimes be jumped over.
+   --> make them higher _or_ another switch to lower them.
+
 ?  use 'xxx_t' instead of 'xxx_w' in skin tables
 
 
