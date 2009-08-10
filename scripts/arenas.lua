@@ -429,8 +429,8 @@ end
 
 
 function Arena_Doom_E1M8()
-  -- this arena was designed by Chris Pisarcyk
 
+  -- this arena was designed by Chris Pisarcyk
 
   local DIRT_TEXS =
   {
@@ -467,6 +467,7 @@ function Arena_Doom_E1M8()
   local ceil_i  = get_mat("CEIL3_5")
 
   local sky_i = get_sky()
+  local met_i = get_mat("METAL")
 
   local FACE_TEXS =
   {
@@ -649,7 +650,7 @@ function Arena_Doom_E1M8()
     local inner_i = get_mat(rand_element(INNER_TEXS))
     add_pegging(inner_i)
     inner_i.sec_tag = 666
-    inner_i.delta_z = 8
+    inner_i.delta_z = 64
 
     Trans_strip(inner_i,
     {
@@ -662,7 +663,7 @@ function Arena_Doom_E1M8()
       { -376, 1640, -408, 1640 },
       {  -64, 1424,  -96, 1400 },
     },
-    -EXTREME_H, 312)
+    -EXTREME_H, 320-64)
 
     local coords =
     {
@@ -712,7 +713,7 @@ function Arena_Doom_E1M8()
 
   local function make_hall()
     Trans_quad(floor_i, -64, 616, 64, 1344, -EXTREME_H, 0)
-    Trans_quad(ceil_i,  -64, 616, 64, 1344, 128, EXTREME_H)
+    Trans_quad(ceil_i,  -64, 616, 64, 1336, 128, EXTREME_H)
 
     Trans_quad(ceil_i,  -64, 1344, 64, 1424, 256, EXTREME_H)
 
@@ -721,6 +722,7 @@ function Arena_Doom_E1M8()
     Trans_quad(red_i, -64, 1408,  64, 1424, -EXTREME_H, 128)
     Trans_quad(red_i, -80, 1344, -64, 1408, -EXTREME_H, EXTREME_H)
     Trans_quad(red_i,  64, 1344,  80, 1408, -EXTREME_H, EXTREME_H)
+    Trans_quad(red_i, -80, 1336,  80, 1344, 128, EXTREME_H)
 
     local lift_i = add_pegging(get_mat("PLAT1", "FLAT3"))
     lift_i.sec_tag = 1
@@ -737,9 +739,55 @@ function Arena_Doom_E1M8()
     },
     -EXTREME_H, 124)
 
-    -- FIXME !!!! TEMP
-    Trans_quad(build_i, -128, 632, -64, 800, -EXTREME_H, EXTREME_H)
-    Trans_quad(build_i,   64, 632, 128, 800, -EXTREME_H, EXTREME_H)
+    local lite3 = get_mat("LITE3")
+
+    for i = 1,2 do
+      TRANSFORM.mirror_x = sel(i==1, 0, nil)
+
+      Trans_brush(build_i,
+      {
+          { x=-64, y=1424 },
+          { x=-96, y=1400 },
+          { x=-96, y=1384 },
+          { x=-64, y=1408 },
+      },
+      -EXTREME_H, EXTREME_H)
+
+      Trans_quad(met_i, -96,  800, -64,  848, -EXTREME_H, EXTREME_H)
+      Trans_quad(lite3, -96,  848, -64,  880, -EXTREME_H, EXTREME_H)
+      Trans_quad(lite3, -96, 1008, -64, 1040, -EXTREME_H, EXTREME_H)
+
+      Trans_quad(met_i,  -96,  848, -64, 1008, -EXTREME_H, 16)
+      Trans_quad(ceil_i, -296, 848, -64, 1008,  128, EXTREME_H)
+
+      -- logo
+      local face_i = add_pegging(get_mat(FACE_TEXS[1]), 0)
+
+      Trans_quad(build_i, -96, 1040, -64, 1120, -EXTREME_H, EXTREME_H)
+      Trans_quad(build_i, -96, 1248, -64, 1336, -EXTREME_H, EXTREME_H)
+      Trans_quad(face_i,  -96, 1040, -80, 1248, -EXTREME_H, EXTREME_H)
+
+      Trans_quad(floor_i, -96, 1120, -64, 1248, -EXTREME_H, 0)
+      Trans_quad(ceil_i,  -96, 1120, -64, 1248, 128, EXTREME_H)
+    end
+
+    Trans_quad(red_i, -128, 632, -64, 800, -EXTREME_H, EXTREME_H)
+    Trans_quad(red_i,   64, 632, 128, 800, -EXTREME_H, EXTREME_H)
+
+    -- door --
+
+    local door_i = add_pegging(get_mat("BIGDOOR4"))
+    door_i.delta_z = -8
+
+    Trans_brush(door_i,
+    {
+      { x=-64, y=632, line_kind=1 },
+      { x= 64, y=632, line_kind=1 },
+      { x= 64, y=648, line_kind=1 },
+      { x=-64, y=648, line_kind=1 },
+    },
+    0+8, EXTREME_H)
+
   end
 
   local function add_players()
@@ -771,6 +819,7 @@ end
 
 
 function Arena_Doom_E2M8()
+
   -- this arena was designed by Chris Pisarcyk
 
   local total_w = 3088
