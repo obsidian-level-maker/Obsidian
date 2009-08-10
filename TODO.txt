@@ -2,14 +2,14 @@
 TODO
 ====
 
+-  implement more of Chris's and Johnny's boss maps
+
 -  rework Build_small_exit to only use a single transform,
 
--  implement Chris's & JR's boss maps
-
-+  BUG: items occasionally appear on skyfences
+-  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
 
-+  BUG: outdoor bars can sometimes be jumped over.
+-  BUG: outdoor bars can sometimes be jumped over.
    --> make them higher _or_ another switch to lower them.
 
 ?  use 'xxx_t' instead of 'xxx_w' in skin tables
@@ -88,11 +88,11 @@ q1_nodes:
 CHANGES (since 3.39)
 ====================
 
-+ fixed fight sim (too much chaingun/plasma ammo)
++ fixed too much chaingun/plasma ammo (fight sim bug)
 - fixed non-working lifts and pedestals
 - fixed bug: levels reduced to 2 rooms
 
-+ better name generator (courtesy JohnnyRancid)
++ better name generator (thanks to JohnnyRancid)
 - new just-for-kicks theme 'Psychedelic'
 - new choice for Monsters: 'Crazy' 
 - support for huge monsters in maps
@@ -102,12 +102,12 @@ CHANGES (since 3.39)
 - added 'density' field to MONSTER tables
 - cleaner brush/entity transformations
 
-+ new boss arena for E2M8 (thanks Mr. Chris)
++ boss arenas for E1M8 and E2M8 (thanks Mr. Chris)
 - more color schemes for skies (JohnnyRancid)
-- beginnings of support for DOOM I
+- improved support for DOOM I
 
-+ new program for extracting Quake textures
 - worked on the module system
+- new program for extracting Quake textures
 - a bit of progress with Tiled games (Wolf3d)
 - added 'replaces' field for monsters
 - support monster/weapon preferences again
