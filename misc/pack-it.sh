@@ -22,3 +22,57 @@ fi
 
 echo "Creating a $mode package for Oblige..."
 
+cd ../..
+
+src=Oblige
+dest=PACK-RAT
+
+mkdir $dest
+
+#
+#  Copy Lua scripts
+#
+mkdir $dest/scripts
+cp -av $src/scripts/*.* $dest/scripts
+
+mkdir $dest/games
+cp -av $src/games/*.* $dest/scripts
+
+mkdir $dest/engines
+cp -av $src/engines/*.* $dest/engines
+
+mkdir $dest/mods
+cp -av $src/mods/*.* $dest/mods
+
+#
+#  Copy executables
+#
+mkdir $dest/data
+
+if [ $mode == "linux" ]
+then
+cp -av $src/Oblige $dest
+cp -av $src/qsavetex/qsavetex $dest/data
+else
+cp -av $src/Oblige.exe $dest
+cp -av $src/qsavetex/qsavetex.exe $dest/data
+fi
+
+#
+#  Copy documentation
+#
+cp -av $src/GPL.txt $dest
+cp -av $src/TODO.txt $dest
+cp -av $src/WISHLIST.txt $dest
+cp -av $src/CHANGES.txt $dest
+
+### cp -a $src/README.htm $dest
+
+
+#
+# all done
+#
+echo "Success!"
+
+cd $src/misc
+
