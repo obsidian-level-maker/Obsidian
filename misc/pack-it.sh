@@ -66,13 +66,12 @@ cp -av $src/TODO.txt $dest
 cp -av $src/WISHLIST.txt $dest
 cp -av $src/CHANGES.txt $dest
 
-### cp -a $src/README.htm $dest
-
+cat $src/web/main.css $src/web/index.html > $dest/README.htm
 
 #
 # all done
 #
-echo "Success!"
-
-cd $src/misc
+echo "--------------------------"
+echo "Remember to fix README.htm"
+echo "--------------------------"
 
