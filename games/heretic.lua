@@ -2015,7 +2015,7 @@ OB_THEMES["hc_garish"] =
 }
 
 
-OB_GAMES["heretic"] =
+UNFINISHED["heretic"] =
 {
   label = "Heretic",
 

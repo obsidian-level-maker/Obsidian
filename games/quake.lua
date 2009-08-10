@@ -1266,7 +1266,7 @@ OB_THEMES["q1_base"] =
 }
 
 
-OB_GAMES["quake"] =
+UNFINISHED["quake"] =
 {
   label = "Quake",
 
