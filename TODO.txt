@@ -2,6 +2,15 @@
 TODO
 ====
 
++  get more games working (Heretic, Hexen etc)
+
++  more themes for DOOM (Urban, Hell)
+
++  support for Traps, Cages, Secrets, Powerups
+
++  add in more scenery: lamps, computers etc
+
+
 -  implement more of Chris's and Johnny's boss maps
 
 -  rework Build_small_exit to only use a single transform,
@@ -13,37 +22,6 @@ TODO
    --> make them higher _or_ another switch to lower them.
 
 ?  use 'xxx_t' instead of 'xxx_w' in skin tables
-
-
-SKIN TABLE FIELDS
-
-1) use a plain word for the main part of something.
-
-   Examples: 'wall', 'floor', 'side', 'switch',
-             'beam', 'trim',  'base', 'door'.
-
-2) the '_f' suffix on the main word can be used to provide
-   a different floor or ceiling material (when the main word
-   refers to the side texture).
-
-3) the '_t' suffix can provide a different side texture
-   when the main word refers to a floor or ceiling.
-
-4) the '_c' suffix should NOT be used for normal DOOM,
-   it is reserved for setting the ceiling material for
-   rare cases when it could be different from the floor
-   material -- e.g. in a QUAKE prefab.
-
-5) the '_ox' '_oy' '_peg' suffixes provide x_offset,
-   y_offset and pegging values.  When pegging is true,
-   an absent y_offset value will be set to 0.
-
-6) the '_w' '_h' '_d' suffixes are reserved for setting
-   width / height (vertical) / depth values.
-
-
-General
-+  get traps (closets / depots) working again.
 
 
 CSG CODE:
@@ -84,37 +62,30 @@ q1_nodes:
   ?? move floor/ceiling faces into leaf.faces (instead of leaf.floor)
 
 
+SKIN TABLE FIELDS
 
-CHANGES (since 3.39)
-====================
+1) use a plain word for the main part of something.
 
-+ fixed too much chaingun/plasma ammo (fight sim bug)
-- fixed non-working lifts and pedestals
-- fixed bug: levels reduced to 2 rooms
+   Examples: 'wall', 'floor', 'side', 'switch',
+             'beam', 'trim',  'base', 'door'.
 
-+ better name generator (thanks to JohnnyRancid)
-- new just-for-kicks theme 'Psychedelic'
-- new choice for Monsters: 'Crazy' 
-- support for huge monsters in maps
+2) the '_f' suffix on the main word can be used to provide
+   a different floor or ceiling material (when the main word
+   refers to the side texture).
 
-+ new Material system
-- reorganised DOOM code : doom.lua & dm_tex.lua
-- added 'density' field to MONSTER tables
-- cleaner brush/entity transformations
+3) the '_t' suffix can provide a different side texture
+   when the main word refers to a floor or ceiling.
 
-+ boss arenas for E1M8 and E2M8 (thanks Mr. Chris)
-- more color schemes for skies (JohnnyRancid)
-- improved support for DOOM I
+4) the '_c' suffix should NOT be used for normal DOOM,
+   it is reserved for setting the ceiling material for
+   rare cases when it could be different from the floor
+   material -- e.g. in a QUAKE prefab.
 
-- worked on the module system
-- new program for extracting Quake textures
-- a bit of progress with Tiled games (Wolf3d)
-- added 'replaces' field for monsters
-- support monster/weapon preferences again
+5) the '_ox' '_oy' '_peg' suffixes provide x_offset,
+   y_offset and pegging values.  When pegging is true,
+   an absent y_offset value will be set to 0.
 
-+ various new modules:
-  - Immoral Conduct - Special Edition
-  - Skulltag Monsters (by Mr. Chris)
-  - ZDoom Marines (thanks Enhas)
-  - Stealth Monsters (by Enhas)
+6) the '_w' '_h' '_d' suffixes are reserved for setting
+   width / height (vertical) / depth values.
+
 
