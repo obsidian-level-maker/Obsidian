@@ -36,7 +36,7 @@ mkdir $dest/scripts
 cp -av $src/scripts/*.* $dest/scripts
 
 mkdir $dest/games
-cp -av $src/games/*.* $dest/scripts
+cp -av $src/games/*.* $dest/games
 
 mkdir $dest/engines
 cp -av $src/engines/*.* $dest/engines
@@ -71,7 +71,9 @@ cat $src/web/main.css $src/web/index.html > $dest/README.htm
 #
 # all done
 #
-echo "--------------------------"
-echo "Remember to fix README.htm"
-echo "--------------------------"
+echo "------------------------------------"
+echo "Remember to fix README.htm:"
+echo "  1. move the CSS"
+echo "  2. remove SCREENSHOT section"
+echo "  3. remove DOWNLOAD section"
 
