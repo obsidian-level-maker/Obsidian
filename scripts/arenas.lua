@@ -467,7 +467,6 @@ function Arena_Doom_E1M8()
   local ceil_i  = get_mat("CEIL3_5")
 
   local sky_i = get_sky()
-  local met_i = get_mat("METAL")
 
   local FACE_TEXS =
   {
@@ -739,7 +738,7 @@ function Arena_Doom_E1M8()
     },
     -EXTREME_H, 124)
 
-    local lite3 = get_mat("LITE3")
+    local lite3 = add_pegging(get_mat("LITE3"))
 
     for i = 1,2 do
       TRANSFORM.mirror_x = sel(i==1, 0, nil)
@@ -753,26 +752,33 @@ function Arena_Doom_E1M8()
       },
       -EXTREME_H, EXTREME_H)
 
-      Trans_quad(met_i, -96,  800, -64,  848, -EXTREME_H, EXTREME_H)
+      local ceil_lit = get_mat("CEIL3_5")
+      ceil_lit.b_face.light = 0.8
+      ceil_lit.sec_kind = 8
+
       Trans_quad(lite3, -96,  848, -64,  880, -EXTREME_H, EXTREME_H)
       Trans_quad(lite3, -96, 1008, -64, 1040, -EXTREME_H, EXTREME_H)
 
-      Trans_quad(met_i,  -96,  848, -64, 1008, -EXTREME_H, 16)
-      Trans_quad(ceil_i, -296, 848, -64, 1008,  128, EXTREME_H)
+      Trans_quad(floor_i,  -96, 848, -64, 1008, -EXTREME_H, -16)
+      Trans_quad(ceil_lit, -96, 848, -64, 1008,  128, EXTREME_H)
+
+      ceil_lit.b_face.light = 0.6
+      Trans_quad(ceil_lit, -296, 848, -96, 1008, 128, EXTREME_H)
+
+      local track_i = add_pegging(get_mat("DOORTRAK"))
+      Trans_quad(track_i, -128, 632, -64, 648, -EXTREME_H, EXTREME_H);
+      Trans_quad(build_i, -128, 648, -64, 848, -EXTREME_H, EXTREME_H);
 
       -- logo
-      local face_i = add_pegging(get_mat(FACE_TEXS[1]), 0)
+      local face_i = add_pegging(get_mat(FACE_TEXS[1]))
 
       Trans_quad(build_i, -96, 1040, -64, 1120, -EXTREME_H, EXTREME_H)
-      Trans_quad(build_i, -96, 1248, -64, 1336, -EXTREME_H, EXTREME_H)
-      Trans_quad(face_i,  -96, 1040, -80, 1248, -EXTREME_H, EXTREME_H)
+      Trans_quad(build_i, -96, 1248, -64, 1344, -EXTREME_H, EXTREME_H)
+      Trans_quad(face_i,  -96, 1120, -80, 1248, -EXTREME_H, EXTREME_H)
 
       Trans_quad(floor_i, -96, 1120, -64, 1248, -EXTREME_H, 0)
       Trans_quad(ceil_i,  -96, 1120, -64, 1248, 128, EXTREME_H)
     end
-
-    Trans_quad(red_i, -128, 632, -64, 800, -EXTREME_H, EXTREME_H)
-    Trans_quad(red_i,   64, 632, 128, 800, -EXTREME_H, EXTREME_H)
 
     -- door --
 
@@ -788,6 +794,16 @@ function Arena_Doom_E1M8()
     },
     0+8, EXTREME_H)
 
+    -- goodies
+    Trans_entity("shotty",    -176, 944, 0)
+    Trans_entity("shell_box", -256, 944, 0)
+    Trans_entity("shell_box", -256, 976, 0)
+    Trans_entity("shell_box", -256, 912, 0)
+
+    Trans_entity("chain",      176, 944, 0)
+    Trans_entity("bullet_box", 256, 944, 0)
+    Trans_entity("bullet_box", 256, 976, 0)
+    Trans_entity("bullet_box", 256, 912, 0)
   end
 
   local function add_players()
