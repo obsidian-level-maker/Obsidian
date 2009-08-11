@@ -410,10 +410,10 @@ OB_MODULES["imm_conduct"] =
 
       choices =
       {
-        "none",   "NONE",
         "scarce", "Scarce",
         "plenty", "Plenty",
         "hordes", "Hordes",
+        "none",   "NONE",
       }
     },
 
