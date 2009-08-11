@@ -97,7 +97,7 @@ clean:
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
-bin: all
+stripped: all
 	strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean bin
