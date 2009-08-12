@@ -805,9 +805,9 @@ DOOM2_MATERIALS =
   -- flats with closest texture
 
   BLOOD1   = { t="BFALL1",   f="BLOOD1" },
-  CONS1_1  = { t="COMPUTE1", f="CONS1_1" },
-  CONS1_5  = { t="COMPUTE1", f="CONS1_5" },
-  CONS1_7  = { t="COMPUTE1", f="CONS1_7" },
+  CONS1_1  = { t="GRAY5",    f="CONS1_1" },
+  CONS1_5  = { t="GRAY5",    f="CONS1_5" },
+  CONS1_7  = { t="GRAY5",    f="CONS1_7" },
 
   FLAT1_1  = { t="BSTONE2",  f="FLAT1_1" },
   FLAT1_2  = { t="BSTONE2",  f="FLAT1_2" },
