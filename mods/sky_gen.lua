@@ -205,7 +205,12 @@ function Doom_generate_skies()
                 GREEN_CLOUDS, YELLOW_CLOUDS,
                 HELLISH_CLOUDS, BLACK_N_WHITE,
               }
-    fore_gs = back_gs
+    fore_gs = { "none", "none", "none",
+                PURPLE_CLOUDS, RAINBOW_CLOUDS,
+                GREEN_CLOUDS, ORANGE_CLOUDS,
+                HELLISH_CLOUDS, YELLOW_CLOUDS,
+                BLUE_CLOUDS, BLUE_CLOUDS
+              }
   end
 
 
