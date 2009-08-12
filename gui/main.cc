@@ -310,6 +310,13 @@ int main(int argc, char **argv)
   }
 
   if (1)
+  {
+    Fl::background(236, 232, 228);
+    Fl::background2(255, 255, 255);
+    Fl::foreground(0, 0, 0);
+  }
+
+  if (1)
     Fl::scheme("plastic");
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
