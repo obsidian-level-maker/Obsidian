@@ -1,17 +1,24 @@
 
-h1 { color: #dd8; font-size: xx-large;
- }
 body { background-color: black; color: white; padding: 4px;
  }
 
-.rest { background-color: white; color: black; padding:1em;
-        padding-top: 0.5em; padding-bottom: 0.5em;
+.rest { background-color: white; color: black; padding: 0.5em;
+        padding-left: 1em;
  }
+
+.rest a:link { color:#00a }
+.rest a:visited { color:#00a }
+.rest a:hover { color:#04f }
 
 .legal { font-family:mono; font-size: smaller; 
          background-color: #ccc; color: black;
          border:1px solid black; padding: 1em;
  }
+
+h1 { color: #dd8; font-size: xx-large;
+ }
+
+h3 { color: #a63; }
 
 .menu { background-color: #765; color: white; line-height: 1.8em; 
         font-size: large;
