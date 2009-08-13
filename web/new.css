@@ -3,7 +3,7 @@ body { background-color: black; color: white; padding: 4px;
  }
 
 .rest { background-color: white; color: black; padding: 0.5em;
-        padding-left: 1em;
+        padding-left: 1em; padding-top: 1px;
  }
 
 .rest a:link { color:#00a }
@@ -18,7 +18,7 @@ body { background-color: black; color: white; padding: 4px;
 h1 { color: #dd8; font-size: xx-large;
  }
 
-h3 { color: #c63; }
+h3 { color: #c44; padding-top: 1em; }
 
 .menu { background-color: #765; color: white; line-height: 1.8em; 
         font-size: large;
