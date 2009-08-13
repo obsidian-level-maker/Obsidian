@@ -1361,7 +1361,9 @@ function Layout_hallway(R)
 
     LEVEL.hall_trim   = rand_odds(50)
     LEVEL.hall_lights = rand_odds(50)
+    if LEVEL.theme.ceil_lights then
     LEVEL.hall_lite_ftex = rand_key_by_probs(LEVEL.theme.ceil_lights)
+    end
   end
 
 

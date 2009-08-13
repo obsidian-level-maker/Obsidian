@@ -544,6 +544,8 @@ function Rooms_reckon_doors()
 
   ---| Rooms_reckon_doors |---
 
+  if not GAME.door_fabs then return end
+
   for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
       local S = sel(who == 1, C.src_S, C.dest_S)
@@ -1514,6 +1516,7 @@ function Room_make_ceiling(R)
     local skin
     
     if mode == "light" then
+      if not R.arena.ceil_light then return end
       skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim="METAL" }
     end
 
@@ -1644,7 +1647,7 @@ function Room_make_ceiling(R)
     end
 
 
-    if not R.arena.ceil_light then
+    if not R.arena.ceil_light and LEVEL.theme.ceil_light then
       R.arena.ceil_light = rand_key_by_probs(LEVEL.theme.ceil_lights)
     end
 
@@ -1691,7 +1694,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     if nice ~= 2 then return end
 
-      local ceil_info  = get_mat(R.combo.ceil)
+      local ceil_info  = get_mat(R.combo.ceil or R.combo.wall)
       local sky_info   = get_sky()
       local brown_info = get_mat("CEIL3_3")
 

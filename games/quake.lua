@@ -888,11 +888,17 @@ QUAKE1_THEMES =
     hallway =
     {
       -- FIXME
+      walls = { FLOOR5_2=10 },
+      floors = { FLOOR5_1=10 },
+      ceils = { FLOOR5_3=10 },
     },
 
     exit =
     {
       -- FIXME
+      walls = { FLOOR5_2=10 },
+      floors = { FLOOR5_1=10 },
+      ceils = { FLOOR5_3=10 },
     },
 
     scenery =
@@ -1266,7 +1272,7 @@ OB_THEMES["q1_base"] =
 }
 
 
-UNFINISHED["quake"] =
+OB_GAMES["quake"] =
 {
   label = "Quake",
 
