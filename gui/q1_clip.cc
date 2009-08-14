@@ -380,21 +380,20 @@ public:
 public:
   // LEAF
   cpNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
-               front_n(NULL), back_n(NULL), index(-1)
+               front(NULL), back(NULL), index(-1)
   { }
 
-  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL)
+  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL),
                           z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
-                          front_n(NULL), back_n(NULL),
-                          front_l(0),    back_l(0),  
+                          front(NULL), back(NULL),
                           index(-1)
   { }
 
   ~cpNode_c()
   {
-    if (front_n) delete front_n;
-    if (back_n)  delete back_n;
+///???    if (front) delete front;
+///???    if (back)  delete back;
   }
 
   inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
@@ -410,9 +409,7 @@ public:
   {
     SYS_ASSERT(! z_splitter);
 
-    cpNode_c *tmp_n = front_n; front_n = back_n; back_n = tmp_n;
-
-    int tmp_l = front_l; front_l = back_l; back_l = tmp_l;
+    cpNode_c *tmp = front; front = back; back = tmp;
 
     dx = -dx;
     dy = -dy;
@@ -421,9 +418,6 @@ public:
   void CheckValid() const
   {
     SYS_ASSERT(index >= 0);
-
-    SYS_ASSERT(front_n || front_l < 0);
-    SYS_ASSERT( back_n ||  back_l < 0);
   }
 };
 
@@ -469,109 +463,147 @@ public:
 ///---  }
 ///---}
 
-static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
+///---static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
+///---{
+///---  cpNode_c * result = NULL;
+///---
+///---  while (! LEAF.empty())
+///---  {
+///---    cpSide_c *S = LEAF.front();
+///---    LEAF.pop_front();
+///---
+///---    if (S->on_node)
+///---      continue;
+///---
+///---    MarkColinearSides(LEAF, S->x1, S->y1, S->x2, S->y2);
+///---
+///---    cpNode_c *node = new cpNode_c(false /* z_splitter */);
+///---
+///---    node->x = S->x1;
+///---    node->y = S->y1;
+///---
+///---    node->dx = S->x2 - S->x1;
+///---    node->dy = S->y2 - S->y1;
+///---
+///---    node->back_l = CONTENTS_SOLID;
+///---
+///---    if (result)
+///---      node->front_n = result;
+///---    else
+///---      node->front_l = CONTENTS_EMPTY;
+///---
+///---    result = node;
+///---  }
+///---
+///---  if (result)
+///---    return result;
+///---
+///---  {
+///---    // make dummy node (FIXME HOW CAN THIS HAPPEN ???? )
+///---
+///---    cpNode_c *node = new cpNode_c(false /* z_splitter */);
+///---
+///---    node->x  = node->y = node->dx = 0;
+///---    node->dy = 1;
+///---
+///---    node->front_l = CONTENTS_EMPTY;
+///---    node->back_l  = CONTENTS_EMPTY;
+///---
+///---    fprintf(stderr, "INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
+///---
+///---    return node;
+///---  }
+///---}
+
+
+// area number is:
+//    0 for below the lowest floor,
+//    1 for the first gap
+//    2 for above the first gap
+//    3 for the second gap
+//    etc etc...
+
+static cpNode_c * DoPartitionZ(merge_region_c *R,
+                              int min_area, int max_area)
 {
-  cpNode_c * result = NULL;
+  SYS_ASSERT(min_area <= max_area);
 
-  while (! LEAF.empty())
+  if (min_area < max_area)
   {
-    cpSide_c *S = LEAF.front();
-    LEAF.pop_front();
+    cpNode_c *node = new cpNode_c(true /* z_splitter */);
 
-    if (S->on_node)
-      continue;
+    // FIXME: binary subdivision !!!
+    int a1 = min_area;
+    int a2 = a1 + 1;
 
-    MarkColinearSides(LEAF, S->x1, S->y1, S->x2, S->y2);
+    int g = a1 / 2;
+    SYS_ASSERT(g < (int)R->gaps.size());
 
-    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-    node->x = S->x1;
-    node->y = S->y1;
-
-    node->dx = S->x2 - S->x1;
-    node->dy = S->y2 - S->y1;
-
-    node->back_l = CONTENTS_SOLID;
-
-    if (result)
-      node->front_n = result;
+    if ((a1 & 1) == 0)
+      node->z = R->gaps[g]->GetZ1();
     else
-      node->front_l = CONTENTS_EMPTY;
+      node->z = R->gaps[g]->GetZ1();
 
-    result = node;
-  }
-
-  if (result)
-    return result;
-
-  {
-    // make dummy node (FIXME HOW CAN THIS HAPPEN ???? )
-
-    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-    node->x  = node->y = node->dx = 0;
-    node->dy = 1;
-
-    node->front_l = CONTENTS_EMPTY;
-    node->back_l  = CONTENTS_EMPTY;
-
-    fprintf(stderr, "INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
+    node->back  = DoPartitionZ(R, min_area, a1);
+    node->front = DoPartitionZ(R, a2, max_area);
 
     return node;
   }
+
+  // reached a leaf (a solid or empty area)
+
+  cpNode_c *leaf = new cpNode_c();
+
+  if ((min_area & 1) == 0)
+    leaf->lf_contents = CONTENTS_SOLID;
+  else
+    leaf->lf_contents = CONTENTS_EMPTY;
+
+  return leaf;
+
+
+///---  int g = min_plane/2;
+///---
+///---  if ((min_plane & 1) == 0)
+///---  {
+///---      // floor plane
+///---      node->z = R->gaps[g]->GetZ2();
+///---
+///---      node->front = new cpNode_c();
+///---      node->front->lf_contents = CONTENTS_EMPTY;
+///---
+///---      node->back = new cpNode_c();
+///---      node->back->lf_contents = CONTENTS_SOLID;
+///---
+///---    }
+///---    else
+///---    {
+///---      node->z = R->gaps[p2/2]->GetZ1();
+///---
+///---      node->front_n = n2;
+///---      node->back_l  = CONTENTS_SOLID;
+///---    }
+///---
+///---    return node;
+///---  }
+///---
+///---  int p2 = (min_plane + max_plane + 1) / 2;
+///---
+///---
+///---  node->z = (p2 & 1) ? R->gaps[p2/2]->GetZ2() : R->gaps[p2/2]->GetZ1();
+///---
+///---  node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
+///---  node->back_n  = Partition_Z(LEAF, R, min_plane, p2-1);
+///---
+///---  return node;
 }
 
 
-static cpNode_c * Partition_Z(cpSideList_c& LEAF, merge_region_c *R,
-                              int min_plane, int max_plane)
+static cpNode_c * Partition_Z(merge_region_c *R)
 {
-  SYS_ASSERT(min_plane <= max_plane);
+  SYS_ASSERT(R->gaps.size() > 0);
 
-  if (max_plane - min_plane < 2)
-  {
-    int p2 = max_plane;
-
-    cpNode_c *node = new cpNode_c(true /* z_splitter */);
-    cpNode_c *n2;
-
-    if (p2 != min_plane)
-    {
-      n2 = Partition_Z(LEAF, R, min_plane, min_plane);
-    }
-    else
-    {
-      n2 = Partition_Gap(LEAF, R, p2/2);
-    }
-
-    if (p2 & 1)
-    {
-      node->z = R->gaps[p2/2]->GetZ2();
-
-      node->front_l = CONTENTS_SOLID;
-      node->back_n  = n2;
-    }
-    else
-    {
-      node->z = R->gaps[p2/2]->GetZ1();
-
-      node->front_n = n2;
-      node->back_l  = CONTENTS_SOLID;
-    }
-
-    return node;
-  }
-
-
-  int p2 = (min_plane + max_plane + 1) / 2;
-
-  cpNode_c *node = new cpNode_c(true /* z_splitter */);
-
-  node->z = (p2 & 1) ? R->gaps[p2/2]->GetZ2() : R->gaps[p2/2]->GetZ1();
-
-  node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
-  node->back_n  = Partition_Z(LEAF, R, min_plane, p2-1);
-
-  return node;
+  return DoPartitionZ(R, 0, (int)R->gaps.size() * 2);
 }
 
 
