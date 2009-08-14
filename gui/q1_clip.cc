@@ -422,6 +422,16 @@ public:
 };
 
 
+static cpNode_c * MakeLeaf(int contents)
+{
+  cpNode_c *leaf = new cpNode_c();
+
+  leaf->lf_contents = contents;
+
+  return leaf;
+}
+
+
 ///---static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
 ///---{
 ///---  // NOTE: assumes a convex leaf (in XY) !!
@@ -528,7 +538,15 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
 {
   SYS_ASSERT(min_area <= max_area);
 
-  if (min_area < max_area)
+  if (min_area == max_area)
+  {
+    if ((min_area & 1) == 0)
+      return MakeLeaf(CONTENTS_SOLID);
+    else
+      return MakeLeaf(CONTENTS_EMPTY);
+  }
+
+
   {
     cpNode_c *node = new cpNode_c(true /* z_splitter */);
 
@@ -542,24 +560,13 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
     if ((a1 & 1) == 0)
       node->z = R->gaps[g]->GetZ1();
     else
-      node->z = R->gaps[g]->GetZ1();
+      node->z = R->gaps[g]->GetZ2();
 
     node->back  = DoPartitionZ(R, min_area, a1);
     node->front = DoPartitionZ(R, a2, max_area);
 
     return node;
   }
-
-  // reached a leaf (a solid or empty area)
-
-  cpNode_c *leaf = new cpNode_c();
-
-  if ((min_area & 1) == 0)
-    leaf->lf_contents = CONTENTS_SOLID;
-  else
-    leaf->lf_contents = CONTENTS_EMPTY;
-
-  return leaf;
 
 
 ///---  int g = min_plane/2;
@@ -789,8 +796,11 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
 
 static cpSide_c * FindPartition(cpNode_c * LEAF)
 {
-  if (LEAF->sides.size() == 1)
+  if (LEAF->sides.size() == 0)
     return NULL;
+
+  if (LEAF->sides.size() == 1)
+    return LEAF->sides[0];
 
 // FIXME: choose two-sided segs over one-sided (always ??)
 
@@ -820,85 +830,97 @@ fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
 }
 
 
-static cpNode_c * Partition_XY(cpNode_c * LEAF)
+static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 {
-  SYS_ASSERT(LEAF->sides.size() > 0);
-
-  if (LEAF->sides.size() > 1)
+  if (side == 0)
   {
-    cpSide_c *best_p = FindPartition(LEAF);
-    SYS_ASSERT(best_p);
-
-    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-    node->x = best_p->x1;
-    node->y = best_p->y1;
-
-    node->dx = best_p->x2 - node->x;
-    node->dy = best_p->y2 - node->y;
-
-fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
-                 node->x, node->y,
-                 node->x + node->dx, node->y + node->dy);
-
-    cpNode_c * BACK = new cpNode_c();
-
-    Split_XY(node, LEAF, BACK);
-
-    node->front = Partition_XY(LEAF);
-    node->back  = Partition_XY(BACK);
-
-    return node;
+    if (SEG->front && SEG->front->gaps.size() > 0)
+      return Partition_Z(SEG->front);
+    else
+      return MakeLeaf(CONTENTS_SOLID);
   }
+  else
+  {
+    if (SEG->back && SEG->back->gaps.size() > 0)
+      return Partition_Z(SEG->back);
+    else
+      return MakeLeaf(CONTENTS_SOLID);
+  }
+}
 
-
-  merge_segment_c * SEG = LEAF->sides[0]->seg;
-
-  SYS_ASSERT(SEG->front || SEG->back);
-
-  // convert leaf to a node
-  LEAF->lf_contents = CONTENT__NODE;
-  LEAF->z_splitter  = false;
+static cpNode_c * XY_Leaf(merge_segment_c *SEG)
+{
+  cpNode_c *LEAF = new cpNode_c(false);
 
   LEAF->x  = SEG->start->x;
   LEAF->y  = SEG->start->y;
   LEAF->dx = SEG->end->x - LEAF->x;
   LEAF->dy = SEG->end->y - LEAF->y;
 
-  if (SEG->front)
-  {
-    LEAF->front = Partition_Z(SEG->front);
-  }
-  else
-  {
-    LEAF->front = new cpNode_c();
-    LEAF->front->lf_contents = CONTENTS_SOLID;
-  }
-
-  if (SEG->back)
-  {
-    LEAF->back = Partition_Z(SEG->back);
-  }
-  else
-  {
-    LEAF->back = new cpNode_c();
-    LEAF->back->lf_contents = CONTENTS_SOLID;
-  }
+  LEAF->front = XY_SegSide(SEG, 0);
+  LEAF->back  = XY_SegSide(SEG, 1);
 
   return LEAF;
 }
 
 
+static cpNode_c * Partition_XY(cpNode_c * LEAF)
+{
+//  if (LEAF->sides.size() == 1)
+//  {
+//    return XY_Leaf(LEAF->sides[0]->seg);
+//  }
+
+
+  {
+    cpSide_c *part = FindPartition(LEAF);
+    SYS_ASSERT(part);
+
+    cpNode_c *node = new cpNode_c(false /* z_splitter */);
+
+    node->x = part->x1;
+    node->y = part->y1;
+
+    node->dx = part->x2 - node->x;
+    node->dy = part->y2 - node->y;
+
+fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
+                 node->x, node->y, node->x + node->dx, node->y + node->dy);
+
+    cpNode_c * BACK = new cpNode_c();
+
+    Split_XY(node, LEAF, BACK);
+
+    if (LEAF->sides.size() == 0)
+      node->front = XY_SegSide(part->seg, 0);
+    else
+      node->front = Partition_XY(LEAF);
+
+    if (BACK->sides.size() == 0)
+      node->back = XY_SegSide(part->seg, 1);
+    else
+      node->back = Partition_XY(BACK);
+
+    return node;
+  }
+}
+
+
 static bool SameGaps(merge_segment_c *S)
 {
-  if (! S->front && ! S->back)
+  bool no_front = (! S->front || S->front->gaps.size() == 0);
+  bool no_back  = (! S->back  || S->back ->gaps.size() == 0);
+
+  if (no_front && no_back)
     return true;
 
-  if (! S->front || ! S->back)
+  if (no_front || no_back)
     return false;
 
   if (S->front->gaps.size() != S->back->gaps.size())
     return false;
+
+  // FIXME: check if any gaps actually touch
 
   for (unsigned k = 0; k < S->front->gaps.size(); k++)
   {
