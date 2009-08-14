@@ -313,38 +313,17 @@ class cpSide_c
 public:
   merge_segment_c *seg;
 
-  int side;  // 0 is front, 1 is back
-
   double x1, y1;
   double x2, y2;
 
-  bool on_node;  // true if has been on a partition line
-
 public:
-  cpSide_c(merge_segment_c * _seg, int _side) :
-      seg(_seg), side(_side), on_node(false)
+  cpSide_c(merge_segment_c * _seg) : seg(_seg)
   {
-    if (side == 0)
-    {
-      x1 = seg->start->x;  x2 = seg->end->x;
-      y1 = seg->start->y;  y2 = seg->end->y;
-    }
-    else  // back
-    {
-      x1 = seg->end->x;  x2 = seg->start->x;
-      y1 = seg->end->y;  y2 = seg->start->y;
-    }
+    x1 = seg->start->x;  x2 = seg->end->x;
+    y1 = seg->start->y;  y2 = seg->end->y;
   }
 
   ~cpSide_c()
-  { }
-
-private:
-  // copy constructor, used when splitting
-  cpSide_c(const cpSide_c *other, double new_x, double new_y) :
-           seg(other->seg), side(other->side),
-           x1(new_x), y1(new_y), x2(other->x2), y2(other->y2),
-           on_node(other->on_node)
   { }
 
 public:
@@ -353,31 +332,35 @@ public:
     return ComputeDist(x1,y1, x2,y2);
   }
 
-  merge_region_c *GetRegion() const
-  {
-    SYS_ASSERT(seg);
-    return (side == 0) ? seg->front : seg->back;
-  }
-
   cpSide_c *SplitAt(double new_x, double new_y)
   {
-    cpSide_c *T = new cpSide_c(this, new_x, new_y);
+    cpSide_c *T = new cpSide_c(seg);
+    
+    T->x1 = new_x;
+    T->y1 = new_y;
 
     x2 = new_x;
     y2 = new_y;
 
     return T;
   }
-
 };
 
 
-typedef std::list<cpSide_c *> cpSideList_c;
+#define CONTENT__NODE  12345
 
 
 class cpNode_c
 {
 public:
+  // LEAF STUFF
+  int lf_contents;
+
+  std::vector<cpSide_c *> sides;
+
+  merge_region_c *region;
+
+
   // true if this node splits the tree by Z
   // (with a horizontal upward-facing plane, i.e. dz = 1).
   bool z_splitter;
@@ -389,16 +372,19 @@ public:
   double x,  y;
   double dx, dy;
 
-  cpNode_c *front_n;  // front space, NULL for leaf
-  cpNode_c *back_n;   // back space,  NULL for leaf 
-
-  int front_l;  // contents of leaf
-  int back_l;   //
+  cpNode_c *front;  // front space
+  cpNode_c *back;   // back space
 
   int index;
 
 public:
-  cpNode_c(bool _Zsplit) : z_splitter(_Zsplit), z(0),
+  // LEAF
+  cpNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
+               front_n(NULL), back_n(NULL), index(-1)
+  { }
+
+  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL)
+                          z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
                           front_n(NULL), back_n(NULL),
                           front_l(0),    back_l(0),  
@@ -409,6 +395,15 @@ public:
   {
     if (front_n) delete front_n;
     if (back_n)  delete back_n;
+  }
+
+  inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
+  inline bool IsLeaf()  const { return lf_contents != CONTENT__NODE; }
+  inline bool IsSolid() const { return lf_contents == CONTENTS_SOLID; }
+
+  void AddSide(cpSide_c *S)
+  {
+    sides.push_back(S);
   }
 
   void Flip()
@@ -433,273 +428,46 @@ public:
 };
 
 
-static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
-{
-  // NOTE: assumes a convex leaf (in XY) !!
-  cpSideList_c::iterator SI;
-
-  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
-  {
-    cpSide_c *S = *SI;
-
-    if (S->seg)
-      return S->GetRegion();
-  }
-
-  Main_FatalError("INTERNAL ERROR: Clip Leaf has no solid side!");
-  return NULL; /* NOT REACHED */
-}
-
-
-static void MarkColinearSides(cpSideList_c& LEAF,
-                              double px1, double py1, double px2, double py2)
-{
-  // find _ALL_ sides that lie on the partition
-  cpSideList_c::iterator TI;
-
-  for (TI = LEAF.begin(); TI != LEAF.end(); TI++)
-  {
-    cpSide_c *T = *TI;
-
-    if (T->on_node)
-      continue;
-
-    double a = PerpDist(T->x1, T->y1,  px1, py1, px2, py2);
-    double b = PerpDist(T->x2, T->y2,  px1, py1, px2, py2);
-
-    if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
-      continue;
-
-    T->on_node = true;
-  }
-}
-
-//------------------------------------------------------------------------
-
-static double EvaluatePartition(cpSideList_c& LEAF,
-                                double px1, double py1, double px2, double py2)
-{
-  double pdx = px2 - px1;
-  double pdy = py2 - py1;
-
-  int back   = 0;
-  int front  = 0;
-  int splits = 0;
-
-  cpSideList_c::iterator SI;
-
-  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
-  {
-    cpSide_c *S = *SI;
-
-    // get state of lines' relation to each other
-    double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
-    double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
-
-    double fa = fabs(a);
-    double fb = fabs(b);
-
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
-    {
-      // lines are colinear
-
-      double sdx = S->x2 - S->x1;
-      double sdy = S->y2 - S->y1;
-
-      if (pdx * sdx + pdy * sdy < 0.0)
-        back++;
-      else
-        front++;
-
-      continue;
-    }
-
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        front++;
-      else
-        back++;
-
-      continue;
-    }
-
-    if (a > 0 && b > 0)
-    {
-      front++;
-      continue;
-    }
-
-    if (a < 0 && b < 0)
-    {
-      back++;
-      continue;
-    }
-
-    // the partition line will split it
-
-    splits++;
-
-    back++;
-    front++;
-  }
-
-///fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
-///        px1, py1, px2, py2, back, front, splits);
-
-
-  if (front == 0 || back == 0)
-    return -1;
-
-  // calculate heuristic
-  int diff = ABS(front - back);
-
-  double cost = (splits * (splits+1) * 365.0 + diff * 100.0) /
-                (double)(front + back);
-
-  // preference for axis-aligned planes
-  if (! (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON))
-    cost += 4.2;
-
-  return cost;
-}
-
-
-static cpSide_c * FindPartition(cpSideList_c& LEAF)
-{
-  cpSideList_c::iterator SI;
-
-  double    best_c = 9e30;
-  cpSide_c *best_p = NULL;
-
-  int count = 0;
-
-  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
-  {
-    cpSide_c *part = *SI;
-
-    count++;
-
-    // TODO: Optimise for two-sided segments by skipping the back one
-
-    // TODO: skip sides that lie on the same vertical plane
-
-    double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
-
-///fprintf(stderr, "--> COST:%1.2f for %p\n", cost, part);
-
-    if (cost < 0)  // not a potential candidate
-      continue;
-
-    if (! best_p || cost < best_c)
-    {
-      best_c = cost;
-      best_p = part;
-    }
-  }
-fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
-        best_p ? best_c : -9999, best_p);
-
-  return best_p;
-}
-
-
-static void Split_XY(cpNode_c *part, cpSideList_c& front_l, cpSideList_c& back_l)
-{
-  cpSideList_c all_sides;
-
-  all_sides.swap(front_l);
-
-
-  while (! all_sides.empty())
-  {
-    cpSide_c *S = all_sides.front();
-
-    all_sides.pop_front();
-
-    double sdx = S->x2 - S->x1;
-    double sdy = S->y2 - S->y1;
-
-    // get state of lines' relation to each other
-    double a = PerpDist(S->x1, S->y1,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
-
-    double b = PerpDist(S->x2, S->y2,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
-
-    double fa = fabs(a);
-    double fb = fabs(b);
-
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
-    {
-      // lines are colinear
-
-      if (part->dx * sdx + part->dy * sdy < 0.0)
-      {
-        back_l.push_back(S);
-      }
-      else
-      {
-        front_l.push_back(S);
-      }
-
-      S->on_node = true;
-      continue;
-    }
-
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        front_l.push_back(S);
-      else
-        back_l.push_back(S);
-
-      continue;
-    }
-
-    if (a > 0 && b > 0)
-    {
-      front_l.push_back(S);
-      continue;
-    }
-
-    if (a < 0 && b < 0)
-    {
-      back_l.push_back(S);
-      continue;
-    }
-
-    /* need to split it */
-
-    // determine the intersection point
-    double along = a / (a - b);
-
-    double ix = S->x1 + along * sdx;
-    double iy = S->y1 + along * sdy;
-
-    cpSide_c *T = S->SplitAt(ix, iy);
-
-    if (a < 0)
-    {
-       back_l.push_back(S);
-      front_l.push_back(T);
-    }
-    else
-    {
-      SYS_ASSERT(b < 0);
-
-      front_l.push_back(S);
-       back_l.push_back(T);
-    }
-  }
-}
-
+///---static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
+///---{
+///---  // NOTE: assumes a convex leaf (in XY) !!
+///---  cpSideList_c::iterator SI;
+///---
+///---  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
+///---  {
+///---    cpSide_c *S = *SI;
+///---
+///---    if (S->seg)
+///---      return S->GetRegion();
+///---  }
+///---
+///---  Main_FatalError("INTERNAL ERROR: Clip Leaf has no solid side!");
+///---  return NULL; /* NOT REACHED */
+///---}
+///---
+///---
+///---static void MarkColinearSides(cpSideList_c& LEAF,
+///---                              double px1, double py1, double px2, double py2)
+///---{
+///---  // find _ALL_ sides that lie on the partition
+///---  cpSideList_c::iterator TI;
+///---
+///---  for (TI = LEAF.begin(); TI != LEAF.end(); TI++)
+///---  {
+///---    cpSide_c *T = *TI;
+///---
+///---    if (T->on_node)
+///---      continue;
+///---
+///---    double a = PerpDist(T->x1, T->y1,  px1, py1, px2, py2);
+///---    double b = PerpDist(T->x2, T->y2,  px1, py1, px2, py2);
+///---
+///---    if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
+///---      continue;
+///---
+///---    T->on_node = true;
+///---  }
+///---}
 
 static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
 {
@@ -807,47 +575,285 @@ static cpNode_c * Partition_Z(cpSideList_c& LEAF, merge_region_c *R,
 }
 
 
-static cpNode_c * Partition_XY(cpSideList_c& LEAF)
+//------------------------------------------------------------------------
+
+static double EvaluatePartition(cpNode_c * LEAF,
+                                double px1, double py1, double px2, double py2)
 {
-  cpSide_c *best_p = FindPartition(LEAF);
+  double pdx = px2 - px1;
+  double pdy = py2 - py1;
 
-  if (! best_p)
+  int back   = 0;
+  int front  = 0;
+  int splits = 0;
+
+  std::vector<cpSide_c *>::iterator SI;
+
+  for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
   {
-    merge_region_c *R = GetLeafRegion(LEAF);
+    cpSide_c *S = *SI;
 
-    SYS_ASSERT(! R->gaps.empty());
+    // get state of lines' relation to each other
+    double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
+    double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
 
-    return Partition_Z(LEAF, R, 0, (int)R->gaps.size()*2 - 1);
+    double fa = fabs(a);
+    double fb = fabs(b);
+
+    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    {
+      // lines are colinear
+
+      double sdx = S->x2 - S->x1;
+      double sdy = S->y2 - S->y1;
+
+      if (pdx * sdx + pdy * sdy < 0.0)
+        back++;
+      else
+        front++;
+
+      continue;
+    }
+
+    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
+    {
+      // partition passes through one vertex
+
+      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
+        front++;
+      else
+        back++;
+
+      continue;
+    }
+
+    if (a > 0 && b > 0)
+    {
+      front++;
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      back++;
+      continue;
+    }
+
+    // the partition line will split it
+
+    splits++;
+
+    back++;
+    front++;
   }
 
-
-// fprintf(stderr, "CLIP LEAF HAS SPLITTER %p \n", best_p);
-  cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-  node->x = best_p->x1;
-  node->y = best_p->y1;
-
-  node->dx = best_p->x2 - node->x;
-  node->dy = best_p->y2 - node->y;
+///fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
+///        px1, py1, px2, py2, back, front, splits);
 
 
-fprintf(stderr, "Using clip partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
+  if (front == 0 || back == 0)
+    return 9e9;
+
+  // calculate heuristic
+  int diff = ABS(front - back);
+
+  double cost = (splits * (splits+1) * 365.0 + diff * 100.0) /
+                (double)(front + back);
+
+  // preference for axis-aligned planes
+  if (! (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON))
+    cost += 40;
+
+  return cost;
+}
+
+
+static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
+{
+  std::vector<cpSide_c *> all_sides;
+
+  all_sides.swap(FRONT->sides);
+
+  FRONT->region = NULL;
+
+
+  for (int k = 0; k < (int)all_sides.size(); k++)
+  {
+    cpSide_c *S = all_sides[k];
+
+    double sdx = S->x2 - S->x1;
+    double sdy = S->y2 - S->y1;
+
+    // get state of lines' relation to each other
+    double a = PerpDist(S->x1, S->y1,
+                        part->x, part->y,
+                        part->x + part->dx, part->y + part->dy);
+
+    double b = PerpDist(S->x2, S->y2,
+                        part->x, part->y,
+                        part->x + part->dx, part->y + part->dy);
+
+    double fa = fabs(a);
+    double fb = fabs(b);
+
+    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    {
+      // side sits on the partition : DROP IT
+
+///??? delete S;
+
+      continue;
+    }
+
+    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
+    {
+      // partition passes through one vertex
+
+      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
+        FRONT->AddSide(S);
+      else
+        BACK->AddSide(S);
+
+      continue;
+    }
+
+    if (a > 0 && b > 0)
+    {
+      FRONT->AddSide(S);
+      continue;
+    }
+
+    if (a < 0 && b < 0)
+    {
+      BACK->AddSide(S);
+      continue;
+    }
+
+    /* need to split it */
+
+    // determine the intersection point
+    double along = a / (a - b);
+
+    double ix = S->x1 + along * sdx;
+    double iy = S->y1 + along * sdy;
+
+    cpSide_c *T = S->SplitAt(ix, iy);
+
+    if (a < 0)
+    {
+       BACK->AddSide(S);
+      FRONT->AddSide(T);
+    }
+    else
+    {
+      SYS_ASSERT(b < 0);
+
+      FRONT->AddSide(S);
+       BACK->AddSide(T);
+    }
+  }
+}
+
+
+static cpSide_c * FindPartition(cpNode_c * LEAF)
+{
+  if (LEAF->sides.size() == 1)
+    return NULL;
+
+// FIXME: choose two-sided segs over one-sided (always ??)
+
+  double    best_c = 9e30;
+  cpSide_c *best_p = NULL;
+
+  std::vector<cpSide_c *>::iterator SI;
+
+  for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
+  {
+    cpSide_c *part = *SI;
+
+    // TODO: skip sides that lie on the same vertical plane
+
+    double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
+
+    if (! best_p || cost < best_c)
+    {
+      best_c = cost;
+      best_p = part;
+    }
+  }
+fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
+        best_p ? best_c : -9999, best_p);
+
+  return best_p;
+}
+
+
+static cpNode_c * Partition_XY(cpNode_c * LEAF)
+{
+  SYS_ASSERT(LEAF->sides.size() > 0);
+
+  if (LEAF->sides.size() > 1)
+  {
+    cpSide_c *best_p = FindPartition(LEAF);
+    SYS_ASSERT(best_p);
+
+    cpNode_c *node = new cpNode_c(false /* z_splitter */);
+
+    node->x = best_p->x1;
+    node->y = best_p->y1;
+
+    node->dx = best_p->x2 - node->x;
+    node->dy = best_p->y2 - node->y;
+
+fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
                  node->x, node->y,
                  node->x + node->dx, node->y + node->dy);
 
-  
-  cpSideList_c BACK;
+    cpNode_c * BACK = new cpNode_c();
 
-  Split_XY(node, LEAF, BACK);
+    Split_XY(node, LEAF, BACK);
+
+    node->front = Partition_XY(LEAF);
+    node->back  = Partition_XY(BACK);
+
+    return node;
+  }
 
 
-  node->front_n = Partition_XY(LEAF);
-  node->back_n  = Partition_XY(BACK);
+  merge_segment_c * SEG = LEAF->sides[0]->seg;
 
+  SYS_ASSERT(SEG->front || SEG->back);
 
-  // free stuff in BACK ???
+  // convert leaf to a node
+  LEAF->lf_contents = CONTENT__NODE;
+  LEAF->z_splitter  = false;
 
-  return node;
+  LEAF->x  = SEG->start->x;
+  LEAF->y  = SEG->start->y;
+  LEAF->dx = SEG->end->x - LEAF->x;
+  LEAF->dy = SEG->end->y - LEAF->y;
+
+  if (SEG->front)
+  {
+    LEAF->front = Partition_Z(SEG->front);
+  }
+  else
+  {
+    LEAF->front = new cpNode_c();
+    LEAF->front->lf_contents = CONTENTS_SOLID;
+  }
+
+  if (SEG->back)
+  {
+    LEAF->back = Partition_Z(SEG->back);
+  }
+  else
+  {
+    LEAF->back = new cpNode_c();
+    LEAF->back->lf_contents = CONTENTS_SOLID;
+  }
+
+  return LEAF;
 }
 
 
@@ -881,14 +887,6 @@ static bool SameGaps(merge_segment_c *S)
 }
 
 
-static void MakeClipSide(cpSideList_c& LEAF, merge_segment_c *seg, int side)
-{
-  cpSide_c *S = new cpSide_c(seg, side); 
-
-  LEAF.push_back(S);
-}
-
-
 //------------------------------------------------------------------------
 
 static void AssignIndexes(cpNode_c *node, int *idx_var)
@@ -897,11 +895,11 @@ static void AssignIndexes(cpNode_c *node, int *idx_var)
 
   (*idx_var) += 1;
 
-  if (node->front_n)
-    AssignIndexes(node->front_n, idx_var);
+  if (node->front->IsNode())
+    AssignIndexes(node->front, idx_var);
 
-  if (node->back_n)
-    AssignIndexes(node->back_n, idx_var);
+  if (node->back->IsNode())
+    AssignIndexes(node->back, idx_var);
 }
 
 
@@ -920,15 +918,15 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 
   node->CheckValid();
 
-  if (node->front_n)
-    clip.children[0] = (u16_t) node->front_n->index;
+  if (node->front->IsNode())
+    clip.children[0] = (u16_t) node->front->index;
   else
-    clip.children[0] = (u16_t) node->front_l;
+    clip.children[0] = (u16_t) node->front->lf_contents;
 
-  if (node->back_n)
-    clip.children[1] = (u16_t) node->back_n->index;
+  if (node->back->IsNode())
+    clip.children[1] = (u16_t) node->back->index;
   else
-    clip.children[1] = (u16_t) node->back_l;
+    clip.children[1] = (u16_t) node->back->lf_contents;
 
   if (flipped)
   {
@@ -945,11 +943,11 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 
   // recurse now, AFTER adding the current node
 
-  if (node->front_n)
-    WriteClipNodes(L, node->front_n);
+  if (node->front->IsNode())
+    WriteClipNodes(L, node->front);
 
-  if (node->back_n)
-    WriteClipNodes(L, node->back_n);
+  if (node->back->IsNode())
+    WriteClipNodes(L, node->back);
 }
 
 
@@ -1032,31 +1030,25 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   CSG2_MergeAreas();
 
-//  if (which == 0)
-//    CSG2_Doom_TestClip();
+  if (which == 0)
+    CSG2_Doom_TestClip();
 
-  cpSideList_c C_LEAF;
+  cpNode_c *C_LEAF = new cpNode_c();
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
     merge_segment_c *S = mug_segments[i];
 
-    if (SameGaps(S))
-      continue;
-
-    if (S->front && S->front->HasGap())
-      MakeClipSide(C_LEAF, S, 0);
-
-    if (S->back && S->back->HasGap())
-      MakeClipSide(C_LEAF, S, 1);
+    if (! SameGaps(S))
+    {
+      C_LEAF->AddSide(new cpSide_c(S)); 
+    }
   }
-
-  SYS_ASSERT(C_LEAF.size() > 0);
 
 
   cpNode_c *C_ROOT = Partition_XY(C_LEAF);
 
-  SYS_ASSERT(C_LEAF.size() == 0);
+  SYS_ASSERT(C_ROOT->IsNode());
 
 
   int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
