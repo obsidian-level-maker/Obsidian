@@ -31,6 +31,8 @@
 #include "q_bsp.h"
 
 
+#define NORMAL_EPSILON  0.0001
+
 
 qLump_c::qLump_c() : buffer(), crlf(false)
 { }
@@ -417,8 +419,6 @@ static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
 
 #define PLANE_NOT_FOUND  0xFFFF
 
-#define NORMAL_EPSILON  0.01
-
 
 static void BSP_ClearPlanes()
 {
@@ -527,10 +527,10 @@ u16_t BSP_AddPlane(double x, double y, double z,
     dplane_t *test_p = &bsp_planes[index];
 
     // Note: we ignore the redundant 'type' field
-    if (fabs(test_p->dist - dist)  <= Q_EPSILON &&
-        fabs(test_p->normal[0] - nx) <= NORMAL_EPSILON &&
-        fabs(test_p->normal[1] - ny) <= NORMAL_EPSILON &&
-        fabs(test_p->normal[2] - nz) <= NORMAL_EPSILON)
+    if (fabs(test_p->dist - dist)    < 0.001 &&
+        fabs(test_p->normal[0] - nx) < NORMAL_EPSILON &&
+        fabs(test_p->normal[1] - ny) < NORMAL_EPSILON &&
+        fabs(test_p->normal[2] - nz) < NORMAL_EPSILON)
     {
       plane_idx = index; // found it
       break;
