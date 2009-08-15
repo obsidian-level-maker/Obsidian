@@ -790,7 +790,7 @@ static void MergeIntersections(std::vector<intersection_c *>& cut_list)
 static void CreatePortals(std::vector<intersection_c *>& cut_list, 
                           qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 {
-  for (unsigned int i = 0; i < cut_list.size()-1; i++)
+  for (unsigned int i = 0; i+1 < cut_list.size(); i++)
   {
     intersection_c *K1 = cut_list[i];
     intersection_c *K2 = cut_list[i+1];
