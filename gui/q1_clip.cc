@@ -693,8 +693,8 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
       best_p = part;
     }
   }
-fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
-        best_p ? best_c : -9999, best_p);
+// fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
+//         best_p ? best_c : -9999, best_p);
 
   return best_p;
 }
@@ -754,8 +754,8 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
     node->dx = part->x2 - node->x;
     node->dy = part->y2 - node->y;
 
-fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
-                 node->x, node->y, node->x + node->dx, node->y + node->dy);
+// fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
+//                  node->x, node->y, node->x + node->dx, node->y + node->dy);
 
     cpNode_c * BACK = new cpNode_c();
 
@@ -926,8 +926,8 @@ static void MapModel_Clip(qLump_c *L, s32_t base,
 
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
-fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
-                  "-----------------------\n\n", which);
+// fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
+//                  "-----------------------\n\n", which);
 
   SYS_ASSERT(1 <= which && which <= 3);
 
@@ -953,8 +953,8 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   CSG2_MergeAreas();
 
-  if (which == 0)
-    CSG2_Doom_TestClip();
+//  if (which == 0)
+//    CSG2_Doom_TestClip();
 
   cpNode_c *C_LEAF = new cpNode_c();
 
