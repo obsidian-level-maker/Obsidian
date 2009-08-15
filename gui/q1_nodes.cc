@@ -632,8 +632,8 @@ static qSide_c * FindPartition(qLeaf_c *leaf)
       best_p = part;
     }
   }
-fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n",
-        best_p ? best_c : -9999, best_p);
+// fprintf(stderr, "ALL DONE : best_c=%1.0f best_p=%p\n",
+//         best_p ? best_c : -9999, best_p);
 
   return best_p;
 }
@@ -656,7 +656,7 @@ static void SplitDiagonalSides(qLeaf_c *L)
 
     if (S->Length() > FACE_MAX_SIZE)
     {
-fprintf(stderr, "Splitting DIAGONAL side %p length:%1.0f\n", S, S->Length());
+// fprintf(stderr, "Splitting DIAGONAL side %p length:%1.0f\n", S, S->Length());
 
       double ix = (S->x1 + S->x2) / 2.0;
       double iy = (S->y1 + S->y2) / 2.0;
@@ -800,7 +800,7 @@ static void CreatePortals(std::vector<intersection_c *>& cut_list,
 
     if (k1_open != k2_open) // sanity check
     {
-      fprintf(stderr, "WARNING: portal mismatch from (%1.1f %1.1f) to (%1.1f %1.1f)\n",
+      DebugPrintf("WARNING: portal mismatch from (%1.1f %1.1f) to (%1.1f %1.1f)\n",
               K1->x, K1->y, K2->x, K2->y);
       continue;
     }
@@ -1203,9 +1203,9 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
   }
 
 
-fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
-                 node->x, node->y,
-                 node->x + node->dx, node->y + node->dy);
+// fprintf(stderr, "Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
+//                  node->x, node->y,
+//                  node->x + node->dx, node->y + node->dy);
 
   qLeaf_c *front_l = leaf;
   qLeaf_c *back_l  = new qLeaf_c;
@@ -1339,7 +1339,8 @@ void Q1_BuildBSP( void )
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-fprintf(stderr, "Quake1_BuildBSP BEGUN\n");
+  LogPrintf("\nQuake1_BuildBSP BEGUN\n");
+
   Partition_XY(begin, &Q_ROOT, NULL);
 }
 

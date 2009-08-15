@@ -926,14 +926,13 @@ static void MapModel_Clip(qLump_c *L, s32_t base,
 
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
-// fprintf(stderr, "\nQuake1_CreateClipHull %d\n"
-//                  "-----------------------\n\n", which);
-
   SYS_ASSERT(1 <= which && which <= 3);
 
   // 3rd hull is not used in Quake 1
   if (which == 3)
     return 0;
+
+  LogPrintf("\nQuake1_CreateClipHull %d\n", which);
 
   which--;
 

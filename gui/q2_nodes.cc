@@ -1938,7 +1938,8 @@ static void Q2_BuildBSP(void)
   //            convex space (no partitions are needed) so in that
   //            case we use an arbitrary splitter plane.
 
-fprintf(stderr, "Q2_BuildBSP BEGUN\n");
+  LogPrintf("\nQ2_BuildBSP BEGUN\n");
+
   Partition_XY(begin, &Q_ROOT, NULL);
 }
 
