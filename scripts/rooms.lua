@@ -348,7 +348,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0 and
-       not PARAM.tiled
+       LEVEL.theme.stairwell
     then
       local hall_nb = hallway_neighbors(R) 
 

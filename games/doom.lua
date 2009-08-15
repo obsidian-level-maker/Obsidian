@@ -1273,6 +1273,19 @@ COMMON_THEMES =
       },
     },
 
+    stairwell =
+    {
+      walls =
+      {
+        BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
+      },
+
+      floors =
+      {
+        FLAT1=50, FLOOR7_1=50,
+      },
+    },
+
     exit =
     {
       walls =

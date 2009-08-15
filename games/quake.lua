@@ -888,9 +888,9 @@ QUAKE1_THEMES =
     hallway =
     {
       -- FIXME
-      walls = { FLOOR5_2=10 },
-      floors = { FLOOR5_1=10 },
-      ceils = { FLOOR5_3=10 },
+      walls = { TECH02_1=10 },
+      floors = { AFLOOR1_4=10 },
+      ceils = { AFLOOR1_4=10 },
     },
 
     exit =

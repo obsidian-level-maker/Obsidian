@@ -1150,16 +1150,13 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
   end
 
   local function do_try_divide()
+
+    if LEVEL.plain_rooms then return false end
+
     if R.children then return false end
 
     assert(R.kind ~= "hallway")
     assert(R.kind ~= "stairwell")
-
-    --[[ some chance of not dividing at all
-    local skip_prob = 50 - (area.tw + area.th) * 4
-    if skip_prob > 0 and rand_odds(skip_prob) then
-      return false
-    end --]]
 
     local sol_mul = 1.0
     if STYLE.junk == "heaps" then sol_mul = 3.0 end
@@ -2286,12 +2283,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "stairwell" then
     stairwell_height_diff(focus_C)
 
-    local WELL_TEX = { "BROWN1", "GRAY1", "STARGR1", "METAL4" }
     if not LEVEL.well_tex then
-      LEVEL.well_tex = rand_element(WELL_TEX)
+      LEVEL.well_tex   = rand_key_by_probs(LEVEL.theme.stairwell.walls)
+      LEVEL.well_floor = rand_key_by_probs(LEVEL.theme.stairwell.floors)
     end
 
-    local skin = { wall=LEVEL.well_tex, floor="FLAT1", ceil="FLOOR7_1" }
+    local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
 
     Build_stairwell(R, skin)
     return
