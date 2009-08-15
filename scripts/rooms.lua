@@ -1515,8 +1515,9 @@ function Room_make_ceiling(R)
   local function add_cross_beam(dir, x1,y1, x2,y2, mode)
     local skin
     
+    if not R.arena.ceil_light then return end
+
     if mode == "light" then
-      if not R.arena.ceil_light then return end
       skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim="METAL" }
     end
 
@@ -2189,7 +2190,7 @@ gui.printf("do_teleport\n")
           end
         end
 
-        if x_num == 1 and y_num == 1 then
+        if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
           Build_ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim="METAL" })
         end
       end
