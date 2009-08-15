@@ -432,100 +432,6 @@ static cpNode_c * MakeLeaf(int contents)
 }
 
 
-///---static merge_region_c * GetLeafRegion(cpSideList_c& LEAF)
-///---{
-///---  // NOTE: assumes a convex leaf (in XY) !!
-///---  cpSideList_c::iterator SI;
-///---
-///---  for (SI = LEAF.begin(); SI != LEAF.end(); SI++)
-///---  {
-///---    cpSide_c *S = *SI;
-///---
-///---    if (S->seg)
-///---      return S->GetRegion();
-///---  }
-///---
-///---  Main_FatalError("INTERNAL ERROR: Clip Leaf has no solid side!");
-///---  return NULL; /* NOT REACHED */
-///---}
-///---
-///---
-///---static void MarkColinearSides(cpSideList_c& LEAF,
-///---                              double px1, double py1, double px2, double py2)
-///---{
-///---  // find _ALL_ sides that lie on the partition
-///---  cpSideList_c::iterator TI;
-///---
-///---  for (TI = LEAF.begin(); TI != LEAF.end(); TI++)
-///---  {
-///---    cpSide_c *T = *TI;
-///---
-///---    if (T->on_node)
-///---      continue;
-///---
-///---    double a = PerpDist(T->x1, T->y1,  px1, py1, px2, py2);
-///---    double b = PerpDist(T->x2, T->y2,  px1, py1, px2, py2);
-///---
-///---    if (! (fabs(a) <= Q_EPSILON && fabs(b) <= Q_EPSILON))
-///---      continue;
-///---
-///---    T->on_node = true;
-///---  }
-///---}
-
-///---static cpNode_c * Partition_Gap(cpSideList_c& LEAF, merge_region_c *R, int gap)
-///---{
-///---  cpNode_c * result = NULL;
-///---
-///---  while (! LEAF.empty())
-///---  {
-///---    cpSide_c *S = LEAF.front();
-///---    LEAF.pop_front();
-///---
-///---    if (S->on_node)
-///---      continue;
-///---
-///---    MarkColinearSides(LEAF, S->x1, S->y1, S->x2, S->y2);
-///---
-///---    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-///---
-///---    node->x = S->x1;
-///---    node->y = S->y1;
-///---
-///---    node->dx = S->x2 - S->x1;
-///---    node->dy = S->y2 - S->y1;
-///---
-///---    node->back_l = CONTENTS_SOLID;
-///---
-///---    if (result)
-///---      node->front_n = result;
-///---    else
-///---      node->front_l = CONTENTS_EMPTY;
-///---
-///---    result = node;
-///---  }
-///---
-///---  if (result)
-///---    return result;
-///---
-///---  {
-///---    // make dummy node (FIXME HOW CAN THIS HAPPEN ???? )
-///---
-///---    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-///---
-///---    node->x  = node->y = node->dx = 0;
-///---    node->dy = 1;
-///---
-///---    node->front_l = CONTENTS_EMPTY;
-///---    node->back_l  = CONTENTS_EMPTY;
-///---
-///---    fprintf(stderr, "INTERNAL ERROR: Partition_Gap: no usable sides!!\n");
-///---
-///---    return node;
-///---  }
-///---}
-
-
 // area number is:
 //    0 for below the lowest floor,
 //    1 for the first gap
@@ -567,42 +473,6 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
 
     return node;
   }
-
-
-///---  int g = min_plane/2;
-///---
-///---  if ((min_plane & 1) == 0)
-///---  {
-///---      // floor plane
-///---      node->z = R->gaps[g]->GetZ2();
-///---
-///---      node->front = new cpNode_c();
-///---      node->front->lf_contents = CONTENTS_EMPTY;
-///---
-///---      node->back = new cpNode_c();
-///---      node->back->lf_contents = CONTENTS_SOLID;
-///---
-///---    }
-///---    else
-///---    {
-///---      node->z = R->gaps[p2/2]->GetZ1();
-///---
-///---      node->front_n = n2;
-///---      node->back_l  = CONTENTS_SOLID;
-///---    }
-///---
-///---    return node;
-///---  }
-///---
-///---  int p2 = (min_plane + max_plane + 1) / 2;
-///---
-///---
-///---  node->z = (p2 & 1) ? R->gaps[p2/2]->GetZ2() : R->gaps[p2/2]->GetZ1();
-///---
-///---  node->front_n = Partition_Z(LEAF, R, p2+1, max_plane);
-///---  node->back_n  = Partition_Z(LEAF, R, min_plane, p2-1);
-///---
-///---  return node;
 }
 
 
@@ -968,7 +838,6 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   else
     clip.planenum = BSP_AddPlane(node->x, node->y, 0,
                                  node->dy, -node->dx, 0, &flipped);
-
 
   node->CheckValid();
 
