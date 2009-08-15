@@ -1919,8 +1919,8 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
   // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
   //       very first one.  The following is a hack to achieve that.
-  //       (Hopefully no other assumptions about node ordering exist
-  //       in the Quake1 code!).
+  //       Hopefully no other assumptions about node ordering exist
+  //       in the Quake1 code!
 
   if (! parent) // is_root
   {
@@ -2138,6 +2138,8 @@ void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 
     dmodel_t smod;
 
+    memset(&smod, 0, sizeof(smod));
+
     smod.mins[0] = model->x1;  smod.maxs[0] = model->x2;
     smod.mins[1] = model->y1;  smod.maxs[1] = model->y2;
     smod.mins[2] = model->z1;  smod.maxs[2] = model->z2;
@@ -2171,13 +2173,12 @@ void Q1_CreateModel(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
 
-///  dmodel_t model;
-
-  model.visleafs  = 0;
-  model.firstface = 0;
-  model.numfaces  = 0;
+  memset(&model, 0, sizeof(model));
 
   total_nodes = 1;  // root node is always first
+
+  total_mark_surfs = 0;
+  total_surf_edges = 0;
 
   q_nodes = BSP_NewLump(LUMP_NODES);
   q_leafs = BSP_NewLump(LUMP_LEAFS);

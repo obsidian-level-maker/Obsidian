@@ -1958,6 +1958,7 @@ void Q2_CreateModel(void)
 
   total_leaf_faces = 0;
   total_leaf_brushes = 0;
+  total_surf_edges = 0;
 
   q_nodes = BSP_NewLump(LUMP_NODES);
   q_leafs = BSP_NewLump(LUMP_LEAFS);

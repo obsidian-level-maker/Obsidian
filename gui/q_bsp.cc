@@ -808,18 +808,12 @@ static int bsp_max_lightmap;
 static qLump_c *bsp_lightmap;
 
 
-void BSP_ClearLightmap()
-{
-  delete bsp_lightmap;
-  bsp_lightmap = NULL;
-}
-
 void BSP_PrepareLightmap(int lump, int max_lightmap)
 {
+fprintf(stderr, "BSP_PrepareLightmap: bsp_lightmap = %p\n", bsp_lightmap);
+
   bsp_light_lump = lump;
   bsp_max_lightmap = max_lightmap;
-
-  BSP_ClearLightmap();
 
   bsp_lightmap = BSP_NewLump(bsp_light_lump);
 
