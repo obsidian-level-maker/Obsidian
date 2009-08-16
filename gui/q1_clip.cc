@@ -595,22 +595,24 @@ static double EvaluatePartition(cpNode_c * LEAF,
     front++;
   }
 
-///fprintf(stderr, "CLIP PARTITION CANDIDATE (%1.0f %1.0f)..(%1.0f %1.0f) : %d|%d splits:%d\n",
-///        px1, py1, px2, py2, back, front, splits);
 
+  // always prefer axis-aligned planes
+  // (this helps prevent the "sticky doorways" bug)
+  bool aligned = (fabs(pdx) < 0.0001 || fabs(pdy) < 0.0001);
 
-  if (front == 0 || back == 0)
-    return 9e9;
+  if (front == 0 && back == 0)
+    return aligned ? 1e24 : 1e26;
 
-  // calculate heuristic
-  int diff = ABS(front - back);
+  if (splits > 1000)
+    splits = 1000;
 
-  double cost = (splits * (splits+1) * 365.0 + diff * 100.0) /
-                (double)(front + back);
+  double cost = splits * (splits+1) * 3.65;
 
-  // preference for axis-aligned planes
-  if (! (fabs(pdx) < EPSILON || fabs(pdy) < EPSILON))
-    cost += 40;
+  cost += ABS(front - back);
+  cost /=    (front + back);
+
+  if (! aligned)
+    cost += 1e12;
 
   return cost;
 }
@@ -726,9 +728,7 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
     }
   }
 
-// FIXME: choose two-sided segs over one-sided (always ??)
-
-  double    best_c = 9e30;
+  double    best_c = 1e30;
   cpSide_c *best_p = NULL;
 
   std::vector<cpSide_c *>::iterator SI;
