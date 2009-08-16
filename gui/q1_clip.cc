@@ -323,18 +323,10 @@ public:
   double x2, y2;
 
 public:
-  cpSide_c() : seg(NULL)
+  cpSide_c(merge_segment_c * _seg = NULL) : seg(_seg)
   { }
-  cpSide_c(merge_segment_c * _seg) : seg(_seg)
-  {
-  }
 
   ~cpSide_c()
-  { }
-
-private:
-  cpSide_c(double _x1, double _y1, double _x2, double _y2) :
-      seg(NULL), x1(_x1), y1(_y1), x2(_x2), y2(_y2)
   { }
 
 public:
