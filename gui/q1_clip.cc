@@ -330,6 +330,11 @@ public:
   ~cpSide_c()
   { }
 
+private:
+  cpSide_c(double _x1, double _y1, double _x2, double _y2) :
+      seg(NULL), x1(_x1), y1(_y1), x2(_x2), y2(_y2)
+  { }
+
 public:
   double Length() const
   {
@@ -347,6 +352,11 @@ public:
     y2 = new_y;
 
     return T;
+  }
+
+  static cpSide_c *FakePartition(double x, double y, double dx, double dy)
+  {
+    return new cpSide_c(x, y, x+dx, y+dy);
   }
 };
 
@@ -422,6 +432,32 @@ public:
   void CheckValid() const
   {
     SYS_ASSERT(index >= 0);
+  }
+
+  void CalcBounds(double *lx, double *ly, double *w, double *h) const
+  {
+    SYS_ASSERT(lf_contents != CONTENT__NODE);
+
+    double hx = -99999; *lx = +99999;
+    double hy = -99999; *ly = +99999;
+
+    for (unsigned int i = 0; i < sides.size(); i++)
+    {
+      cpSide_c *S = sides[i];
+
+      double x1 = MIN(S->x1, S->x2);
+      double y1 = MIN(S->y1, S->y2);
+      double x2 = MAX(S->x1, S->x2);
+      double y2 = MAX(S->y1, S->y2);
+
+      if (x1 < *lx) *lx = x1;
+      if (y1 < *ly) *ly = y1;
+      if (x2 >  hx)  hx = x2;
+      if (y2 >  hy)  hy = y2;
+    }
+
+    *w = (*lx > hx) ? 0 : (hx - *lx);
+    *h = (*ly > hy) ? 0 : (hy - *ly);
   }
 };
 
@@ -675,6 +711,21 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
   if (LEAF->sides.size() == 1)
     return LEAF->sides[0];
 
+  // speed up large maps
+  if (LEAF->sides.size() > 8)
+  {
+    double lx, ly, w, h;
+    LEAF->CalcBounds(&lx, &ly, &w, &h);
+
+    if (MAX(w, h) > 400)
+    {
+			if (w >= h)
+        return cpSide_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
+      else
+        return cpSide_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
+    }
+  }
+
 // FIXME: choose two-sided segs over one-sided (always ??)
 
   double    best_c = 9e30;
@@ -685,8 +736,6 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
   for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
   {
     cpSide_c *part = *SI;
-
-    // TODO: skip sides that lie on the same vertical plane
 
     double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
 
@@ -705,6 +754,8 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
 
 static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 {
+  SYS_ASSERT(SEG);
+
   if (side == 0)
   {
     if (SEG->front && SEG->front->gaps.size() > 0)
@@ -862,7 +913,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   if (which == 3)
     return 0;
 
-  LogPrintf("\nQuake1_CreateClipHull %d\n", which);
+  fprintf(stderr, "\nQuake1_CreateClipHull %d\n", which);
 
   which--;
 
