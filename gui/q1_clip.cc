@@ -450,16 +450,6 @@ public:
     sides.push_back(S);
   }
 
-  void Flip()
-  {
-    SYS_ASSERT(! z_splitter);
-
-    cpNode_c *tmp = front; front = back; back = tmp;
-
-    dx = -dx;
-    dy = -dy;
-  }
-
   void CheckValid() const
   {
     SYS_ASSERT(index >= 0);
