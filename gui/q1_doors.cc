@@ -36,6 +36,14 @@
 #include "q1_structs.h"
 
 
+extern qLump_c *q1_nodes;
+extern qLump_c *q1_leafs;
+extern qLump_c *q1_faces;
+
+extern int q1_total_nodes;
+extern int q1_total_mark_surfs;
+extern int q1_total_surf_edges;
+
 extern void Q1_AddEdge(double x1, double y1, double z1,
                        double x2, double y2, double z2,
                        dface_t *face, dleaf_t *raw_lf = NULL);
@@ -75,9 +83,7 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     texture = model->z_face->tex.c_str();
   }
 
-  int flags = CalcTextureFlag(texture);
-
-  raw_fc.texinfo = Q1_AddTexInfo(texture, flags, s, t);
+  raw_fc.texinfo = Q1_AddTexInfo(texture, 0, s, t);
 
   raw_fc.styles[0] = 0xFF;  // no lightmap
   raw_fc.styles[1] = 0xFF;
@@ -88,7 +94,7 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 
   // add the edges
 
-  raw_fc.firstedge = total_surf_edges;
+  raw_fc.firstedge = q1_total_surf_edges;
   raw_fc.numedges  = 0;
 
   if (face < 2)  // PLANE_X
@@ -126,19 +132,20 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     Q1_AddEdge(x2, model->y1, z, x1, model->y1, z, &raw_fc);
   }
 
-  if (! (flags & TEX_SPECIAL))
+  // lighting
+  if (true)
   {
     static int foo = 0; foo++;
     raw_fc.styles[0] = (foo & 3);
     raw_fc.lightofs  = 100;  //!!! flat lighting index
   }
 
-  q_faces->Append(&raw_fc, sizeof(raw_fc));
+  q1_faces->Append(&raw_fc, sizeof(raw_fc));
 }
 
 static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 {
-  model->nodes[0] = total_nodes;
+  model->nodes[0] = q1_total_nodes;
 
   int mins[3], maxs[3];
 
@@ -200,7 +207,7 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
     raw_lf.contents = CONTENTS_EMPTY;
     raw_lf.visofs = -1;
 
-    raw_lf.first_marksurf = total_mark_surfs;
+    raw_lf.first_marksurf = q1_total_mark_surfs;
     raw_lf.num_marksurf   = 0;
 
     memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
@@ -211,8 +218,8 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 
     // TODO: fix endianness
 
-    q_nodes->Append(&raw_nd, sizeof(raw_nd));
-    q_leafs->Append(&raw_lf, sizeof(raw_lf));
+    q1_nodes->Append(&raw_nd, sizeof(raw_nd));
+    q1_leafs->Append(&raw_lf, sizeof(raw_lf));
   }
 }
 
@@ -241,9 +248,10 @@ void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 
     MapModel_Nodes(model, first_face, first_leaf);
 
-    first_face  += 6;
-    first_leaf  += 6;
-    total_nodes += 6;
+    first_face += 6;
+    first_leaf += 6;
+
+    q1_total_nodes += 6;
 
     for (int h = 0; h < 4; h++)
     {
@@ -252,6 +260,56 @@ void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 
     // TODO: fix endianness in model
     L->Append(&smod, sizeof(smod));
+  }
+}
+
+
+void Q1_MapModel_Clip(qLump_c *L, s32_t base,
+                      q1MapModel_c *model, int which,
+                      double pad_w, double pad_t, double pad_b)
+{
+  model->nodes[which] = base;
+
+  for (int face = 0; face < 6; face++)
+  {
+    dclipnode_t clip;
+
+    double v;
+    double dir;
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
+      dir = (face==0) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
+      dir = (face==2) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
+      dir = (face==5) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    clip.children[0] = (u16_t) CONTENTS_EMPTY;
+    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
+
+    if (flipped)
+    {
+      u16_t tmp = clip.children[0];
+      clip.children[0] = clip.children[1];
+      clip.children[1] = tmp;
+    }
+
+    // TODO: fix endianness in 'clip'
+
+    L->Append(&clip, sizeof(clip));
   }
 }
 

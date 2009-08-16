@@ -810,8 +810,6 @@ static qLump_c *bsp_lightmap;
 
 void BSP_PrepareLightmap(int lump, int max_lightmap)
 {
-fprintf(stderr, "BSP_PrepareLightmap: bsp_lightmap = %p\n", bsp_lightmap);
-
   bsp_light_lump = lump;
   bsp_max_lightmap = max_lightmap;
 

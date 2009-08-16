@@ -36,6 +36,10 @@
 #include "q1_structs.h"
 
 
+extern void  Q1_MapModel_Clip(qLump_c *L, s32_t base,
+                      q1MapModel_c *model, int which,
+                      double pad_w, double pad_t, double pad_b);
+
 extern void CSG2_Doom_TestBrushes(void);
 extern void CSG2_Doom_TestClip(void);
 
@@ -717,61 +721,38 @@ static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
   }
 }
 
-static cpNode_c * XY_Leaf(merge_segment_c *SEG)
-{
-  cpNode_c *LEAF = new cpNode_c(false);
-
-  LEAF->x  = SEG->start->x;
-  LEAF->y  = SEG->start->y;
-  LEAF->dx = SEG->end->x - LEAF->x;
-  LEAF->dy = SEG->end->y - LEAF->y;
-
-  LEAF->front = XY_SegSide(SEG, 0);
-  LEAF->back  = XY_SegSide(SEG, 1);
-
-  return LEAF;
-}
-
 
 static cpNode_c * Partition_XY(cpNode_c * LEAF)
 {
-//  if (LEAF->sides.size() == 1)
-//  {
-//    return XY_Leaf(LEAF->sides[0]->seg);
-//  }
+  cpSide_c *part = FindPartition(LEAF);
+  SYS_ASSERT(part);
 
+  cpNode_c *node = new cpNode_c(false /* z_splitter */);
 
-  {
-    cpSide_c *part = FindPartition(LEAF);
-    SYS_ASSERT(part);
+  node->x = part->x1;
+  node->y = part->y1;
 
-    cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-    node->x = part->x1;
-    node->y = part->y1;
-
-    node->dx = part->x2 - node->x;
-    node->dy = part->y2 - node->y;
+  node->dx = part->x2 - node->x;
+  node->dy = part->y2 - node->y;
 
 // fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 //                  node->x, node->y, node->x + node->dx, node->y + node->dy);
 
-    cpNode_c * BACK = new cpNode_c();
+  cpNode_c * BACK = new cpNode_c();
 
-    Split_XY(node, LEAF, BACK);
+  Split_XY(node, LEAF, BACK);
 
-    if (LEAF->sides.size() == 0)
-      node->front = XY_SegSide(part->seg, 0);
-    else
-      node->front = Partition_XY(LEAF);
+  if (LEAF->sides.size() == 0)
+    node->front = XY_SegSide(part->seg, 0);
+  else
+    node->front = Partition_XY(LEAF);
 
-    if (BACK->sides.size() == 0)
-      node->back = XY_SegSide(part->seg, 1);
-    else
-      node->back = Partition_XY(BACK);
+  if (BACK->sides.size() == 0)
+    node->back = XY_SegSide(part->seg, 1);
+  else
+    node->back = Partition_XY(BACK);
 
-    return node;
-  }
+  return node;
 }
 
 
@@ -873,56 +854,6 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 }
 
 
-static void MapModel_Clip(qLump_c *L, s32_t base,
-                          q1MapModel_c *model, int which,
-                          double pad_w, double pad_t, double pad_b)
-{
-  model->nodes[which] = base;
-
-  for (int face = 0; face < 6; face++)
-  {
-    dclipnode_t clip;
-
-    double v;
-    double dir;
-    bool flipped;
-
-    if (face < 2)  // PLANE_X
-    {
-      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
-      dir = (face==0) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
-    }
-    else if (face < 4)  // PLANE_Y
-    {
-      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
-      dir = (face==2) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
-    }
-    else  // PLANE_Z
-    {
-      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
-      dir = (face==5) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
-    }
-
-    clip.children[0] = (u16_t) CONTENTS_EMPTY;
-    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
-
-    if (flipped)
-    {
-      u16_t tmp = clip.children[0];
-      clip.children[0] = clip.children[1];
-      clip.children[1] = tmp;
-    }
-
-    // TODO: fix endianness in 'clip'
-
-    L->Append(&clip, sizeof(clip));
-  }
-}
-
-
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
@@ -986,9 +917,9 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   // write clip nodes for each MapModel
   for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
   {
-    MapModel_Clip(q1_clip, cur_index,
-                  q1_all_mapmodels[mm], which+1,
-                  pads[which][0], pads[which][1], pads[which][2]);
+    Q1_MapModel_Clip(q1_clip, cur_index,
+                     q1_all_mapmodels[mm], which+1,
+                     pads[which][0], pads[which][1], pads[which][2]);
 
     cur_index += 6;
   }

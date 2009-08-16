@@ -41,6 +41,8 @@
 
 extern bool CSG2_PointInSolid(double x, double y);
 
+extern void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf);
+
 
 class qSide_c;
 class qLeaf_c;
@@ -1349,21 +1351,22 @@ void Q1_BuildBSP( void )
 
 static dmodel_t model;
 
-static qLump_c *q_nodes;
-static qLump_c *q_leafs;
-static qLump_c *q_faces;
+qLump_c *q1_nodes;
+qLump_c *q1_leafs;
+qLump_c *q1_faces;
+
 static qLump_c *q_mark_surfs;
 static qLump_c *q_surf_edges;
 static qLump_c *q_clip_nodes;
 
-static int total_nodes;
-static int total_mark_surfs;
-static int total_surf_edges;
+int q1_total_nodes;
+int q1_total_mark_surfs;
+int q1_total_surf_edges;
 
 
-static void DoAddEdge(double x1, double y1, double z1,
-                      double x2, double y2, double z2,
-                      dface_t *face, dleaf_t *raw_lf = NULL)
+void Q1_AddEdge(double x1, double y1, double z1,
+                double x2, double y2, double z2,
+                dface_t *face, dleaf_t *raw_lf = NULL)
 {
   u16_t v1 = BSP_AddVertex(x1, y1, z1);
   u16_t v2 = BSP_AddVertex(x2, y2, z2);
@@ -1381,7 +1384,7 @@ static void DoAddEdge(double x1, double y1, double z1,
 
   q_surf_edges->Append(&edge_idx, 4);
 
-  total_surf_edges += 1;
+  q1_total_surf_edges += 1;
 
   face->numedges += 1;
 
@@ -1407,13 +1410,13 @@ static void DoAddEdge(double x1, double y1, double z1,
 }
 
 
-static void DoAddSurf(u16_t index, dleaf_t *raw_lf )
+void Q1_AddSurf(u16_t index, dleaf_t *raw_lf )
 {
   index = LE_U16(index);
 
   q_mark_surfs->Append(&index, 2);
 
-  total_mark_surfs += 1;
+  q1_total_mark_surfs += 1;
 
   raw_lf->num_marksurf += 1;
 }
@@ -1625,15 +1628,15 @@ static void MakeFloorFace(qFace_c *F, dface_t *face)
 
   // add the edges
 
-  face->firstedge = total_surf_edges;
+  face->firstedge = q1_total_surf_edges;
   face->numedges  = 0;
 
   for (int pos = 0; pos < v_num; pos++)
   {
     int p2 = (pos + 1) % v_num;
 
-    DoAddEdge(vert_x[pos], vert_y[pos], z,
-              vert_x[p2 ], vert_y[p2 ], z, face);
+    Q1_AddEdge(vert_x[pos], vert_y[pos], z,
+               vert_x[p2 ], vert_y[p2 ], z, face);
 
     min_x = MIN(min_x, vert_x[pos]);
     min_y = MIN(min_y, vert_y[pos]);
@@ -1712,13 +1715,13 @@ static void MakeWallFace(qFace_c *F, dface_t *face)
 
   // add the edges
 
-  face->firstedge = total_surf_edges;
+  face->firstedge = q1_total_surf_edges;
   face->numedges  = 0;
 
-  DoAddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
-  DoAddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
-  DoAddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
-  DoAddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
+  Q1_AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
+  Q1_AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
+  Q1_AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
+  Q1_AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
 
   if (! (flags & TEX_SPECIAL))
   {
@@ -1775,7 +1778,7 @@ static void MakeFace(qFace_c *F, qNode_c *N)
 
   F->index = (int)index;
 
-  q_faces->Append(&face, sizeof(face));
+  q1_faces->Append(&face, sizeof(face));
 }
 
 
@@ -1802,7 +1805,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
   memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
 
-  raw_lf.first_marksurf = total_mark_surfs;
+  raw_lf.first_marksurf = q1_total_mark_surfs;
   raw_lf.num_marksurf   = 0;
 
 
@@ -1814,15 +1817,15 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     // should have been in a node already
     SYS_ASSERT(F->index >= 0);
 
-    DoAddSurf(F->index, &raw_lf);
+    Q1_AddSurf(F->index, &raw_lf);
   }
 
   // ???  probably should just put into leaf->faces array 
   SYS_ASSERT(leaf->floor->index >= 0);
   SYS_ASSERT(leaf-> ceil->index >= 0);
 
-  DoAddSurf(leaf->floor->index, &raw_lf);
-  DoAddSurf(leaf-> ceil->index, &raw_lf);
+  Q1_AddSurf(leaf->floor->index, &raw_lf);
+  Q1_AddSurf(leaf-> ceil->index, &raw_lf);
 
 
   for (b = 0; b < 3; b++)
@@ -1840,7 +1843,7 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
     Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
                     MAX_MAP_LEAFS);
 
-  q_leafs->Append(&raw_lf, sizeof(raw_lf));
+  q1_leafs->Append(&raw_lf, sizeof(raw_lf));
 
   return -(index+2);  // index+2 because the first leaf is SOLID
 }
@@ -1924,12 +1927,12 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
   if (! parent) // is_root
   {
-    q_nodes->Prepend(&raw_nd, sizeof(raw_nd));
+    q1_nodes->Prepend(&raw_nd, sizeof(raw_nd));
 
     return 0;
   }
 
-  s32_t index = total_nodes++;
+  s32_t index = q1_total_nodes++;
 
   if (index >= MAX_MAP_NODES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
@@ -1937,7 +1940,7 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
 
   // FIXME: fix endianness in raw_nd
 
-  q_nodes->Append(&raw_nd, sizeof(raw_nd));
+  q1_nodes->Append(&raw_nd, sizeof(raw_nd));
 
   return index;
 }
@@ -1952,220 +1955,7 @@ static void CreateSolidLeaf(void)
   raw_lf.contents = CONTENTS_SOLID;
   raw_lf.visofs   = -1;  // no visibility info
 
-  q_leafs->Append(&raw_lf, sizeof(raw_lf));
-}
-
-
-static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipped)
-{
-  dface_t raw_fc;
-
-  raw_fc.planenum = plane;
-  raw_fc.side = flipped ? 1 : 0;
- 
-
-  const char *texture = "error";
-
-  double s[4] = { 0.0, 0.0, 0.0, 0.0 };
-  double t[4] = { 0.0, 0.0, 0.0, 0.0 };
-
-  if (face < 2)  // PLANE_X
-  {
-    s[1] = 1.0; t[2] = 1.0;
-
-    texture = model->x_face->tex.c_str();
-  }
-  else if (face < 4)  // PLANE_Y
-  {
-    s[0] = 1.0; t[2] = 1.0;
-
-    texture = model->y_face->tex.c_str();
-  }
-  else // PLANE_Z
-  {
-    s[0] = 1.0; t[1] = 1.0;
-
-    texture = model->z_face->tex.c_str();
-  }
-
-  int flags = CalcTextureFlag(texture);
-
-  raw_fc.texinfo = Q1_AddTexInfo(texture, flags, s, t);
-
-  raw_fc.styles[0] = 0xFF;  // no lightmap
-  raw_fc.styles[1] = 0xFF;
-  raw_fc.styles[2] = 0xFF;
-  raw_fc.styles[3] = 0xFF;
-
-  raw_fc.lightofs = -1;  // no lightmap
-
-  // add the edges
-
-  raw_fc.firstedge = total_surf_edges;
-  raw_fc.numedges  = 0;
-
-  if (face < 2)  // PLANE_X
-  {
-    double x = (face==0) ? model->x1 : model->x2;
-    double y1 = flipped  ? model->y2 : model->y1;
-    double y2 = flipped  ? model->y1 : model->y2;
-
-    // Note: this assumes the plane is positive
-    DoAddEdge(x, y1, model->z1, x, y1, model->z2, &raw_fc);
-    DoAddEdge(x, y1, model->z2, x, y2, model->z2, &raw_fc);
-    DoAddEdge(x, y2, model->z2, x, y2, model->z1, &raw_fc);
-    DoAddEdge(x, y2, model->z1, x, y1, model->z1, &raw_fc);
-  }
-  else if (face < 4)  // PLANE_Y
-  {
-    double y = (face==2) ? model->y1 : model->y2;
-    double x1 = flipped  ? model->x1 : model->x2;
-    double x2 = flipped  ? model->x2 : model->x1;
-
-    DoAddEdge(x1, y, model->z1, x1, y, model->z2, &raw_fc);
-    DoAddEdge(x1, y, model->z2, x2, y, model->z2, &raw_fc);
-    DoAddEdge(x2, y, model->z2, x2, y, model->z1, &raw_fc);
-    DoAddEdge(x2, y, model->z1, x1, y, model->z1, &raw_fc);
-  }
-  else // PLANE_Z
-  {
-    double z = (face==5) ? model->z1 : model->z2;
-    double x1 = flipped  ? model->x2 : model->x1;
-    double x2 = flipped  ? model->x1 : model->x2;
-
-    DoAddEdge(x1, model->y1, z, x1, model->y2, z, &raw_fc);
-    DoAddEdge(x1, model->y2, z, x2, model->y2, z, &raw_fc);
-    DoAddEdge(x2, model->y2, z, x2, model->y1, z, &raw_fc);
-    DoAddEdge(x2, model->y1, z, x1, model->y1, z, &raw_fc);
-  }
-
-  if (! (flags & TEX_SPECIAL))
-  {
-    static int foo = 0; foo++;
-    raw_fc.styles[0] = (foo & 3);
-    raw_fc.lightofs  = 100;  //!!! flat lighting index
-  }
-
-  q_faces->Append(&raw_fc, sizeof(raw_fc));
-}
-
-static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
-{
-  model->nodes[0] = total_nodes;
-
-  int mins[3], maxs[3];
-
-  mins[0] = I_ROUND(model->x1)-32;
-  mins[1] = I_ROUND(model->y1)-32;
-  mins[2] = I_ROUND(model->z1)-64;
-
-  maxs[0] = I_ROUND(model->x2)+32;
-  maxs[1] = I_ROUND(model->y2)+32;
-  maxs[2] = I_ROUND(model->z2)+64;
-
-  for (int face = 0; face < 6; face++)
-  {
-    dnode_t raw_nd;
-    dleaf_t raw_lf;
-
-    double v;
-    double dir;
-    bool flipped;
-
-    if (face < 2)  // PLANE_X
-    {
-      v = (face==0) ? model->x1 : model->x2;
-      dir = (face==0) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
-    }
-    else if (face < 4)  // PLANE_Y
-    {
-      v = (face==2) ? model->y1 : model->y2;
-      dir = (face==2) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
-    }
-    else  // PLANE_Z
-    {
-      v = (face==5) ? model->z1 : model->z2;
-      dir = (face==5) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
-    }
-
-    raw_nd.children[0] = -(leaf_base + face + 2);
-    raw_nd.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
-
-    if (flipped)
-    {
-      u16_t tmp = raw_nd.children[0];
-      raw_nd.children[0] = raw_nd.children[1];
-      raw_nd.children[1] = tmp;
-    }
-
-    raw_nd.firstface = face_base + face;
-    raw_nd.numfaces  = 1;
-
-    for (int i = 0; i < 3; i++)
-    {
-      raw_lf.mins[i] = raw_nd.mins[i] = mins[i];
-      raw_lf.maxs[i] = raw_nd.maxs[i] = maxs[i];
-    }
-
-    raw_lf.contents = CONTENTS_EMPTY;
-    raw_lf.visofs = -1;
-
-    raw_lf.first_marksurf = total_mark_surfs;
-    raw_lf.num_marksurf   = 0;
-
-    memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
-
-    MapModel_Face(model, face, raw_nd.planenum, flipped);
-
-    DoAddSurf(raw_lf.first_marksurf, &raw_lf);
-
-    // TODO: fix endianness
-
-    q_nodes->Append(&raw_nd, sizeof(raw_nd));
-    q_leafs->Append(&raw_lf, sizeof(raw_lf));
-  }
-}
-
-
-void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
-{
-  for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
-  {
-    q1MapModel_c *model = q1_all_mapmodels[mm];
-
-    dmodel_t smod;
-
-    memset(&smod, 0, sizeof(smod));
-
-    smod.mins[0] = model->x1;  smod.maxs[0] = model->x2;
-    smod.mins[1] = model->y1;  smod.maxs[1] = model->y2;
-    smod.mins[2] = model->z1;  smod.maxs[2] = model->z2;
-
-    smod.origin[0] = 0;
-    smod.origin[1] = 0;
-    smod.origin[2] = 0;
-
-    smod.visleafs  = 6;
-    smod.firstface = first_face;
-    smod.numfaces  = 6;
-
-    MapModel_Nodes(model, first_face, first_leaf);
-
-    first_face  += 6;
-    first_leaf  += 6;
-    total_nodes += 6;
-
-    for (int h = 0; h < 4; h++)
-    {
-      smod.headnode[h] = model->nodes[h];
-    }
-
-    // TODO: fix endianness in model
-    L->Append(&smod, sizeof(smod));
-  }
+  q1_leafs->Append(&raw_lf, sizeof(raw_lf));
 }
 
 
@@ -2175,14 +1965,14 @@ void Q1_CreateModel(void)
 
   memset(&model, 0, sizeof(model));
 
-  total_nodes = 1;  // root node is always first
+  q1_total_nodes = 1;  // root node is always first
 
-  total_mark_surfs = 0;
-  total_surf_edges = 0;
+  q1_total_mark_surfs = 0;
+  q1_total_surf_edges = 0;
 
-  q_nodes = BSP_NewLump(LUMP_NODES);
-  q_leafs = BSP_NewLump(LUMP_LEAFS);
-  q_faces = BSP_NewLump(LUMP_FACES);
+  q1_nodes = BSP_NewLump(LUMP_NODES);
+  q1_leafs = BSP_NewLump(LUMP_LEAFS);
+  q1_faces = BSP_NewLump(LUMP_FACES);
 
   q_mark_surfs = BSP_NewLump(LUMP_MARKSURFACES);
   q_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
