@@ -44,14 +44,13 @@ extern bool CSG2_PointInSolid(double x, double y);
 extern void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf);
 
 
-class qSide_c;
-class qLeaf_c;
-class qNode_c;
+class rSide_c;
+class rNode_c;
 
 
-static qNode_c *Q_ROOT;
+static rNode_c *R_ROOT;
 
-static qLeaf_c *SOLID_LEAF;
+static rNode_c *SOLID_LEAF;
 
 
 void DoAssignFaces(qNode_c *N, qSide_c *S);
@@ -1129,8 +1128,9 @@ public:
   }
 };
 
-static std::list<rSide_c> rSideFactory_c::all_sides;
-static std::list<rFace_c> rFaceFactory_c::all_faces;
+
+std::list<rSide_c> rSideFactory_c::all_sides;
+std::list<rFace_c> rFaceFactory_c::all_faces;
 
 
 #define CONTENT__NODE  12345
@@ -1186,8 +1186,8 @@ public:
 
   ~cpNode_c()
   {
-    if (front) delete front;
-    if (back)  delete back;
+    if (front && front != SOLID_LEAF) delete front;
+    if (back  && back  != SOLID_LEAF) delete back;
   }
 
   inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
@@ -1199,15 +1199,15 @@ public:
     sides.push_back(S);
   }
 
-  void Flip()
-  {
-    SYS_ASSERT(! z_splitter);
-
-    rNode_c *tmp = front; front = back; back = tmp;
-
-    dx = -dx;
-    dy = -dy;
-  }
+//--  void Flip()
+//--  {
+//--    SYS_ASSERT(! z_splitter);
+//--
+//--    rNode_c *tmp = front; front = back; back = tmp;
+//--
+//--    dx = -dx;
+//--    dy = -dy;
+//--  }
 
   void CheckValid() const
   {
@@ -1242,6 +1242,9 @@ public:
 };
 
 
+static rNode_c *SOLID_LEAF;
+
+
 static void DoAddFace(rSide_c *S, int gap, double z1, double z2,
                       area_vert_c *av)
 {
@@ -1270,7 +1273,7 @@ static void DoAddFace(rSide_c *S, int gap, double z1, double z2,
   }
 }
 
-static void MakeSide(rNode_c *LEAF, merge_segment_c *seg, int side)
+static void CreateSide(rNode_c *LEAF, merge_segment_c *seg, int side)
 {
   rSide_c *S = rSideFactory_c::NewSide(seg, side);
 
@@ -1337,9 +1340,9 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
   if (min_area == max_area)
   {
     if ((min_area & 1) == 0)
-      return MakeLeaf(CONTENTS_SOLID);
+      return SOLID_LEAF;
     else
-      return MakeLeaf(CONTENTS_EMPTY);
+      return NewLeaf(CONTENTS_EMPTY);
   }
 
 
@@ -1631,14 +1634,14 @@ static rNode_c * XY_SegSide(merge_segment_c *SEG, int side)
     if (SEG->front && SEG->front->gaps.size() > 0)
       return Partition_Z(SEG->front);
     else
-      return MakeLeaf(CONTENTS_SOLID);
+      return SOLID_LEAF;
   }
   else
   {
     if (SEG->back && SEG->back->gaps.size() > 0)
       return Partition_Z(SEG->back);
     else
-      return MakeLeaf(CONTENTS_SOLID);
+      return SOLID_LEAF;
   }
 }
 
@@ -1674,59 +1677,6 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
     node->back = Partition_XY(BACK);
 
   return node;
-}
-
-
-void Q1_BuildBSP( void )
-{
-  // INPUTS:
-  //   all the stuff created by CSG_MergeAreas
-  //
-  // OUTPUTS:
-  //   a BSP tree consisting of nodes, leaves and faces
-
-  // ALGORITHM:
-  //   1. create a qSide list from every segment
-  //   2. while list is not yet convex:
-  //      (a) find a splitter side --> create qNode
-  //      (b) split list into front and back
-  //      (c) recursively handle front/back lists
-  //   3. perform Z splitting (the gaps)
-  //   4. perform solid splitting
-
-  LogPrintf("\nQuake1_BuildBSP BEGUN\n");
-
-  SOLID_LEAF = new qNode_c();
-  SOLID_LEAF->lf_contents = CONTENTS_SOLID;
-
-  qNode_c *R_LEAF = new qNode_c();
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    rSide_c *F = NULL;
-    rSide_c *B = NULL;
-
-    if (S->front && S->front->gaps.size() > 0)
-      F = MakeSide(R_LEAF, S, 0);
-
-    if (S->back && S->back->gaps.size() > 0)
-      B = MakeSide(R_LEAF, S, 1);
-
-    if (F && B)
-    {
-      F->partner = B;
-      B->partner = F;
-    }
-  }
-
-
-  rNode_c *R_ROOT = Partition_XY(C_LEAF);
-
-  SYS_ASSERT(R_ROOT->IsNode());
-
-  Partition_XY(begin, &Q_ROOT, NULL);
 }
 
 
@@ -1885,44 +1835,6 @@ static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bo
   }
 
   return v_num;
-}
-
-
-static csg_brush_c * PolyForSideTexture(merge_region_c *R, double z1, double z2)
-{
-  // find the brush which we will use for the side texture
-  // FIXME: duplicate code in dm_level : make one good function
-
-  csg_brush_c *MID = NULL;
-  double best_h = 0;
-
-  for (unsigned int j = 0; j < R->brushes.size(); j++)
-  {
-    csg_brush_c *A = R->brushes[j];
-
-    if (A->z2 < z1 + EPSILON)
-      continue;
-
-    if (A->z1 > z2 - EPSILON)
-      continue;
-
-    {
-      double h = A->z2 - A->z1;
-
-      // TODO: priorities
-
-//      if (MID && fabs(h - best_h) < EPSILON)
-//      { /* same height, prioritise */ }
-
-      if (h > best_h)
-      {
-        best_h = h;
-        MID = A;
-      }
-    }
-  }
-
-  return MID;
 }
 
 
@@ -2165,7 +2077,7 @@ static void MakeFace(qFace_c *F, qNode_c *N)
 }
 
 
-static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
+static s16_t WriteLeaf(rNode_c *LEAF, dnode_t *parent)
 {
   if (leaf == SOLID_LEAF)
     return -1;
@@ -2193,9 +2105,9 @@ static s16_t MakeLeaf(qLeaf_c *leaf, dnode_t *parent)
 
 
   // make faces
-  for (unsigned int n = 0; n < leaf->faces.size(); n++)
+  for (unsigned int n = 0; n < LEAF->faces.size(); n++)
   {
-    qFace_c *F = leaf->faces[n];
+    rFace_c *F = leaf->faces[n];
 
     // should have been in a node already
     SYS_ASSERT(F->index >= 0);
@@ -2303,29 +2215,70 @@ static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
   }
 
 
-  // -AJA- NOTE WELL: the Quake1 code assumes the root node is the
-  //       very first one.  The following is a hack to achieve that.
-  //       Hopefully no other assumptions about node ordering exist
-  //       in the Quake1 code!
-
-  if (! parent) // is_root
-  {
-    q1_nodes->Prepend(&raw_nd, sizeof(raw_nd));
-
-    return 0;
-  }
-
   s32_t index = q1_total_nodes++;
-
-  if (index >= MAX_MAP_NODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
-                    MAX_MAP_NODES);
 
   // FIXME: fix endianness in raw_nd
 
   q1_nodes->Append(&raw_nd, sizeof(raw_nd));
 
   return index;
+}
+
+
+static void AssignIndexes(rNode_c *node, int *idx_var)
+{
+  node->index = *idx_var;
+
+  (*idx_var) += 1;
+
+  if (node->front->IsNode())
+    AssignIndexes(node->front, idx_var);
+
+  if (node->back->IsNode())
+    AssignIndexes(node->back, idx_var);
+
+  // FIXME node bounding box
+
+}
+
+
+static void WriteClipNodes(qLump_c *L, rNode_c *node)
+{
+  dnode_t raw_nd;
+
+  bool flipped;
+
+  if (node->z_splitter)
+    clip.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+  else
+    clip.planenum = BSP_AddPlane(node->x, node->y, 0,
+                                 node->dy, -node->dx, 0, &flipped);
+
+  node->CheckValid();
+
+  raw_nd.children[0] = (u16_t) node->front->index;
+  raw_nd.children[1] = (u16_t) node->back ->index;
+
+  if (flipped)
+  {
+    u16_t tmp = raw_nd.children[0];
+    raw_nd.children[0] = raw_nd.children[1];
+    raw_nd.children[1] = tmp;
+  }
+
+
+  // TODO: fix endianness in 'raw_nd'
+
+  L->Append(&raw_nd, sizeof(raw_nd));
+
+
+  // recurse now, AFTER adding the current node
+
+  if (node->front->IsNode())
+    WriteClipNodes(L, node->front);
+
+  if (node->back->IsNode())
+    WriteClipNodes(L, node->back);
 }
 
 
@@ -2342,14 +2295,52 @@ static void CreateSolidLeaf(void)
 }
 
 
+void Q1_BuildBSP( void )
+{
+  LogPrintf("\nQuake1_BuildBSP BEGUN\n");
+
+  SOLID_LEAF = new rNode_c();
+  SOLID_LEAF->lf_contents = CONTENTS_SOLID;
+  SOLID_LEAF->index = -1;
+
+  rNode_c *R_LEAF = new rNode_c();
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    rSide_c *F = NULL;
+    rSide_c *B = NULL;
+
+    if (S->front && S->front->gaps.size() > 0)
+      F = CreateSide(R_LEAF, S, 0);
+
+    if (S->back && S->back->gaps.size() > 0)
+      B = CreateSide(R_LEAF, S, 1);
+
+    if (F && B)
+    {
+      F->partner = B;
+      B->partner = F;
+    }
+  }
+
+
+  R_ROOT = Partition_XY(C_LEAF);
+
+  SYS_ASSERT(R_ROOT->IsNode());
+}
+
+
 void Q1_CreateModel(void)
 {
+  Q1_BuildBSP();
+
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
 
   memset(&model, 0, sizeof(model));
 
-  q1_total_nodes = 1;  // root node is always first
-
+  q1_total_nodes = 0;
   q1_total_mark_surfs = 0;
   q1_total_surf_edges = 0;
 
@@ -2362,7 +2353,15 @@ void Q1_CreateModel(void)
 
   CreateSolidLeaf();
 
-  RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
+///---  RecursiveMakeNodes(Q_ROOT, NULL /* parent */);
+
+  AssignIndexes(R_ROOT, &q1_total_nodes);
+
+  if (q1_total_nodes >= MAX_MAP_NODES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
+                    MAX_MAP_NODES);
+
+  WriteClipNodes(q1_nodes, R_ROOT);
 
 
   // set model bounding box

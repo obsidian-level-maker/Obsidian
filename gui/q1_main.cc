@@ -641,8 +641,6 @@ BSP_AddLightBlock(16, 32, solid_light);
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  Q1_BuildBSP();
-
   Q1_CreateModel();
   Q1_CreateMipTex();
   Q1_CreateTexInfo();
