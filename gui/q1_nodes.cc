@@ -1171,6 +1171,9 @@ public:
 
   int index;
 
+  double mins[3];
+  double maxs[3];
+
 public:
   // LEAF
   rNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
@@ -1184,7 +1187,7 @@ public:
                           index(-1)
   { }
 
-  ~cpNode_c()
+  ~rNode_c()
   {
     if (front && front != SOLID_LEAF) delete front;
     if (back  && back  != SOLID_LEAF) delete back;
@@ -1194,20 +1197,10 @@ public:
   inline bool IsLeaf()  const { return lf_contents != CONTENT__NODE; }
   inline bool IsSolid() const { return lf_contents == CONTENTS_SOLID; }
 
-  void AddSide(cpSide_c *S)
+  void AddSide(rSide_c *S)
   {
     sides.push_back(S);
   }
-
-//--  void Flip()
-//--  {
-//--    SYS_ASSERT(! z_splitter);
-//--
-//--    rNode_c *tmp = front; front = back; back = tmp;
-//--
-//--    dx = -dx;
-//--    dy = -dy;
-//--  }
 
   void CheckValid() const
   {
@@ -1223,7 +1216,7 @@ public:
 
     for (unsigned int i = 0; i < sides.size(); i++)
     {
-      cpSide_c *S = sides[i];
+      rSide_c *S = sides[i];
 
       double x1 = MIN(S->x1, S->x2);
       double y1 = MIN(S->y1, S->y2);
@@ -1332,7 +1325,7 @@ static rNode_c * NewLeaf(int contents)
 //    3 for the second gap
 //    etc etc...
 
-static cpNode_c * DoPartitionZ(merge_region_c *R,
+static rNode_c * DoPartitionZ(merge_region_c *R,
                               int min_area, int max_area)
 {
   SYS_ASSERT(min_area <= max_area);
@@ -1347,7 +1340,7 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
 
 
   {
-    rNode_c *node = new cpNode_c(true /* z_splitter */);
+    rNode_c *node = new rNode_c(true /* z_splitter */);
 
     int a1 = (min_area + max_area) / 2;
     int a2 = a1 + 1;
@@ -1368,7 +1361,7 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
 }
 
 
-static cpNode_c * Partition_Z(merge_region_c *R)
+static rNode_c * Partition_Z(merge_region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
@@ -1646,12 +1639,12 @@ static rNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 }
 
 
-static cpNode_c * Partition_XY(cpNode_c * LEAF)
+static rNode_c * Partition_XY(rNode_c * LEAF)
 {
   cpSide_c *part = FindPartition(LEAF);
   SYS_ASSERT(part);
 
-  cpNode_c *node = new cpNode_c(false /* z_splitter */);
+  rNode_c *node = new rNode_c(false /* z_splitter */);
 
   node->x = part->x1;
   node->y = part->y1;
@@ -1681,6 +1674,8 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
 
 
 //------------------------------------------------------------------------
+//  LUMP WRITING CODE
+//------------------------------------------------------------------------
 
 static dmodel_t model;
 
@@ -1700,7 +1695,7 @@ int q1_total_surf_edges;
 
 void Q1_AddEdge(double x1, double y1, double z1,
                 double x2, double y2, double z2,
-                dface_t *face, dleaf_t *raw_lf = NULL)
+                dface_t *raw_face, dleaf_t *raw_lf = NULL)
 {
   u16_t v1 = BSP_AddVertex(x1, y1, z1);
   u16_t v2 = BSP_AddVertex(x2, y2, z2);
@@ -1720,7 +1715,7 @@ void Q1_AddEdge(double x1, double y1, double z1,
 
   q1_total_surf_edges += 1;
 
-  face->numedges += 1;
+  raw_face->numedges += 1;
 
 
   // update bounding boxes
@@ -1892,9 +1887,9 @@ static void BuildFloorFace(dface_t& raw_face, qFace_c *F)
   bool flipped;
 
   raw_face.planenum = BSP_AddPlane(0, 0, z,
-                                0, 0, is_ceil ? -1 : +1, &flipped);
-
+                                   0, 0, is_ceil ? -1 : +1, &flipped);
   raw_face.side = flipped ? 1 : 0;
+
 
   const char *texture = is_ceil ? gap->CeilTex() : gap->FloorTex();
 
@@ -1925,15 +1920,12 @@ static void BuildFloorFace(dface_t& raw_face, qFace_c *F)
 
   // add the edges
 
-  raw_face.firstedge = q1_total_surf_edges;
-  raw_face.numedges  = 0;
-
   for (int pos = 0; pos < v_num; pos++)
   {
     int p2 = (pos + 1) % v_num;
 
     Q1_AddEdge(vert_x[pos], vert_y[pos], z,
-               vert_x[p2 ], vert_y[p2 ], z, face);
+               vert_x[p2 ], vert_y[p2 ], z, &raw_face);
 
     min_x = MIN(min_x, vert_x[pos]);
     min_y = MIN(min_y, vert_y[pos]);
@@ -1954,6 +1946,7 @@ static void BuildFloorFace(dface_t& raw_face, qFace_c *F)
     raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
 }
+
 
 static void BuildWallFace(dface_t& raw_face, qFace_c *F)
 {
@@ -2012,13 +2005,10 @@ static void BuildWallFace(dface_t& raw_face, qFace_c *F)
 
   // add the edges
 
-  raw_face.firstedge = q1_total_surf_edges;
-  raw_face.numedges  = 0;
-
-  Q1_AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2,  face);
-  Q1_AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2,  face);
-  Q1_AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1,  face);
-  Q1_AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1,  face);
+  Q1_AddEdge(S->x1, S->y1, z1,  S->x1, S->y1, z2, &raw_face);
+  Q1_AddEdge(S->x1, S->y1, z2,  S->x2, S->y2, z2, &raw_face);
+  Q1_AddEdge(S->x2, S->y2, z2,  S->x2, S->y2, z1, &raw_face);
+  Q1_AddEdge(S->x2, S->y2, z1,  S->x1, S->y1, z1, &raw_face);
 
   if (! (flags & TEX_SPECIAL))
   {
@@ -2053,112 +2043,6 @@ static void BuildWallFace(dface_t& raw_face, qFace_c *F)
 }
 
 
-static void WriteFace(qFace_c *F)
-{
-  SYS_ASSERT(F->index < 0);
-
-
-  dface_t raw_face;
-
-  if (F->kind == qFace_c::WALL)
-    BuildWallFace(raw_face, F);
-  else
-    BuildFloorFace(raw_face, F);
-
-
-  F->index = (int)model.numfaces;
-  model.numfaces += 1;
-
-  if (F->index >= MAX_MAP_FACES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
-
-  // TODO: fix endianness in face
-  q1_faces->Append(&raw_face, sizeof(raw_face));
-}
-
-
-static s32_t RecursiveMakeNodes(qNode_c *node, dnode_t *parent)
-{
-  dnode_t raw_nd;
-
-  int b;
-  bool flipped;
-
-  if (node->z_splitter)
-    raw_nd.planenum = BSP_AddPlane(0, 0, node->z,
-                                   0, 0, (node->z_splitter==2) ? -1 : +1, &flipped);
-  else
-    raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
-                                   node->dy, -node->dx, 0, &flipped);
-  if (flipped)
-    node->Flip();
-
-
-  raw_nd.firstface = 0;
-  raw_nd.numfaces  = 0;
-
-  raw_nd.mins[0] = I_ROUND(node->min_x)-32;
-  raw_nd.mins[1] = I_ROUND(node->min_y)-32;
-  raw_nd.mins[2] = -2000;  //!!!!
-
-  raw_nd.maxs[0] = I_ROUND(node->max_x)+32;
-  raw_nd.maxs[1] = I_ROUND(node->max_y)+32;
-  raw_nd.maxs[2] = 2000;  //!!!!
-
-
-  // make faces [NOTE: must be done before recursing down]
-  for (unsigned int j = 0; j < node->faces.size(); j++)
-  {
-    qFace_c *F = node->faces[j];
-
-///fprintf(stderr, "node face: %p kind:%d (node %1.4f,%1.4f += %1.4f,%1.4f)\n",
-///        F, F->kind, node->x, node->y, node->dx, node->dy);
-
-    SYS_ASSERT(F->index < 0);
-
-    MakeFace(F, node);
-
-    SYS_ASSERT(F->index >= 0);
-
-    if (j == 0)
-      raw_nd.firstface = F->index;
-    
-    raw_nd.numfaces++;
-  }
-
-
-  if (node->front_n)
-    raw_nd.children[0] = RecursiveMakeNodes(node->front_n, &raw_nd);
-  else
-    raw_nd.children[0] = MakeLeaf(node->front_l, &raw_nd);
-
-  if (node->back_n)
-    raw_nd.children[1] = RecursiveMakeNodes(node->back_n, &raw_nd);
-  else
-    raw_nd.children[1] = MakeLeaf(node->back_l, &raw_nd);
-
-
-  if (parent)
-  {
-    for (b = 0; b < 3; b++)
-    {
-      parent->mins[b] = MIN(parent->mins[b], raw_nd.mins[b]);
-      parent->maxs[b] = MAX(parent->maxs[b], raw_nd.maxs[b]);
-    }
-  }
-
-
-  s32_t index = q1_total_nodes++;
-
-  // FIXME: fix endianness in raw_nd
-
-  q1_nodes->Append(&raw_nd, sizeof(raw_nd));
-
-  return index;
-}
-
-
 static void AssignLeafIndex(rNode_c *leaf)
 {
   // must add 2 (instead of 1) because leaf #0 is the SOLID_LEAF
@@ -2185,7 +2069,39 @@ static void AssignIndexes(rNode_c *node)
   else
     AssignLeafIndex(node->back);
 
-  // FIXME node bounding box
+  // determine node's bounding box
+  for (int b = 0; b < 3; b++)
+  {
+    // FIXME
+  }
+}
+
+
+static void WriteFace(rFace_c *F)
+{
+  SYS_ASSERT(F->index < 0);
+
+  dface_t raw_face;
+
+  memset(&raw_face, 0, sizeof(raw_face));
+
+  raw_face.firstedge = q1_total_surf_edges;
+  raw_face.numedges  = 0;
+
+  if (F->kind == rFace_c::WALL)
+    BuildWallFace(raw_face, F);
+  else
+    BuildFloorFace(raw_face, F);
+
+  F->index = (int)model.numfaces;
+  model.numfaces += 1;
+
+  if (F->index >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  // TODO: fix endianness in face
+  q1_faces->Append(&raw_face, sizeof(raw_face));
 }
 
 
@@ -2212,26 +2128,23 @@ static void WriteLeaf(rNode_c *leaf)
 
   dleaf_t raw_lf;
 
+  memset(&raw_lf, 0, sizeof(raw_lf));
+
   raw_lf.contents = leaf->contents;
   raw_lf.visofs   = -1;  // no visibility info
 
-  int b;
+  for (int b = 0; b < 3; b++)
+  {
+    raw_lf.mins[b] = I_ROUND(leaf->mins[b]) - 4;
+    raw_lf.maxs[b] = I_ROUND(leaf->maxs[b]) + 4;
+  }
 
-  raw_lf.mins[0] = I_ROUND(leaf->min_x)-16;
-  raw_lf.mins[1] = I_ROUND(leaf->min_y)-16;
-  raw_lf.mins[2] = I_ROUND(leaf->min_z)-128;
-
-  raw_lf.maxs[0] = I_ROUND(leaf->max_x)+16;
-  raw_lf.maxs[1] = I_ROUND(leaf->max_y)+16;
-  raw_lf.maxs[2] = I_ROUND(leaf->max_z)+128;
-
-  memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
 
   raw_lf.first_marksurf = q1_total_mark_surfs;
   raw_lf.num_marksurf   = 0;
 
 
-  // make faces
+  // create the 'mark surfs'
   for (unsigned int i = 0; n < leaf->faces.size(); i++)
   {
     rFace_c *F = leaf->faces[i];
@@ -2242,15 +2155,6 @@ static void WriteLeaf(rNode_c *leaf)
     Q1_AddSurf(F->index, &raw_lf);
   }
 
-
-  for (b = 0; b < 3; b++)
-  {
-    parent->mins[b] = MIN(parent->mins[b], raw_lf.mins[b]);
-    parent->maxs[b] = MAX(parent->maxs[b], raw_lf.maxs[b]);
-  }
-
-
-
   // TODO: fix endianness in raw_lf
   q1_leafs->Append(&raw_lf, sizeof(raw_lf));
 }
@@ -2260,15 +2164,17 @@ static void WriteNodes(rNode_c *node)
 {
   node->CheckValid();
 
+  dnode_t raw_nd;
+
+  memset(&raw_nd, 0, sizeof(raw_nd));
+
   bool flipped;
 
   if (node->z_splitter)
-    clip.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+    raw_nd.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
   else
-    clip.planenum = BSP_AddPlane(node->x, node->y, 0,
-                                 node->dy, -node->dx, 0, &flipped);
-
-  dnode_t raw_nd;
+    raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
+                                   node->dy, -node->dx, 0, &flipped);
 
   raw_nd.children[0] = (u16_t) node->front->index;
   raw_nd.children[1] = (u16_t) node->back ->index;
@@ -2280,13 +2186,25 @@ static void WriteNodes(rNode_c *node)
     raw_nd.children[1] = tmp;
   }
 
+  for (int b = 0; b < 3; b++)
+  {
+    raw_nd.mins[b] = I_ROUND(node->mins[b]) - 32;
+    raw_nd.maxs[b] = I_ROUND(node->maxs[b]) + 32;
+  }
+
+
+  if (node->faces.size() > 0)
+  {
+    raw_nd.firstface = model.numfaces;
+    raw_nd.numfaces  = node->faces.size();
+
+    for (unsigned int k = 0; k < node->faces.size(); k++)
+      WriteFace(node->faces[k]);
+  }
+
 
   // TODO: fix endianness in 'raw_nd'
   q1_nodes->Append(&raw_nd, sizeof(raw_nd));
-
-
-  for (unsigned int k = 0; k < node->faces.size(); k++)
-    WriteFace(node->faces[k]);
 
 
   // recurse now, AFTER adding the current node
@@ -2374,6 +2292,7 @@ void Q1_CreateModel(void)
                     MAX_MAP_LEAFS);
 
   WriteSolidLeaf();
+
   WriteNodes(R_ROOT);
 
 
@@ -2407,6 +2326,10 @@ void Q1_CreateModel(void)
   lump->Append(&model, sizeof(model));
 
   Q1_CreateSubModels(lump, model.numfaces, model.visleafs);
+
+
+  // there is no need to delete the lumps from BSP_NewLump(),
+  // that is handled by the q_bsp.c code.
 }
 
 //--- editor settings ---
