@@ -456,8 +456,7 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
   {
     cpNode_c *node = new cpNode_c(true /* z_splitter */);
 
-    // FIXME: binary subdivision !!!
-    int a1 = min_area;
+    int a1 = (min_area + max_area) / 2;
     int a2 = a1 + 1;
 
     int g = a1 / 2;
@@ -942,14 +941,13 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
     { 32, 24, 64 },
   };
 
-CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
-
   SaveBrushes();
   FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
 
 //  if (which == 0)
 //   CSG2_Doom_TestBrushes();
 
+  CSG2_FreeMerges();
   CSG2_MergeAreas();
 
 //  if (which == 0)
@@ -982,10 +980,9 @@ CSG2_FreeMerges(); //!!!!! NO BELONG HERE, MOVE UP (CreateModel?)
 
   delete C_ROOT;
 
-  CSG2_FreeMerges();
   RestoreBrushes();
 
-  
+
   // write clip nodes for each MapModel
   for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
   {

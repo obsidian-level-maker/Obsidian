@@ -902,6 +902,7 @@ void CSG2_FreeAll(void)
 
 void CSG2_BeginLevel(void)
 {
+  CSG2_FreeAll();
 }
 
 void CSG2_EndLevel(void)
