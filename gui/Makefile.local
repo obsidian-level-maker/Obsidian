@@ -63,6 +63,7 @@ OBJS=	main.o      \
 	dm_level.o  \
 	dm_wad.o    \
 	q1_clip.o   \
+	q1_doors.o  \
 	q1_main.o   \
 	q1_nodes.o  \
 	q2_main.o   \
