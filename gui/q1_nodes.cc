@@ -974,81 +974,6 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 }
 
 
-static void DoAddFace(qSide_c *S, int gap, double z1, double z2)
-{
-  SYS_ASSERT(z2 > z1);
-
-  // make sure face height does not exceed the limit
-  if (z2 - z1 > FACE_MAX_SIZE)
-  {
-    int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
-
-///fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
-
-    SYS_ASSERT(num >= 2);
-
-    for (int i = 0; i < num; i++)
-    {
-      double nz1 = z1 + (z2 - z1) *  i    / (double)num;
-      double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
-
-      DoAddFace(S, gap, nz1, nz2);
-    }
-
-    return;
-  }
-
-  qFace_c *F = new qFace_c(qFace_c::WALL, gap, z1, z2);
-
-  S->AddFace(F);
-}
-
-static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
-{
-  qSide_c *S = leaf->AddSide(seg, side);
-
-  // create the faces
-  merge_region_c *R  = (side == 0) ? seg->front : seg->back;
-  merge_region_c *RX = (side == 0) ? seg->back  : seg->front;
-
-  for (unsigned int k = 0; k < R->gaps.size(); k++)
-  {
-    merge_gap_c *G = R->gaps[k];
-
-    double gz1 = G->GetZ1();
-    double gz2 = G->GetZ2();
-
-    // simple case: other side is completely solid
-    if (RX == NULL || RX->gaps.size() == 0)
-    {
-      DoAddFace(S, k, gz1, gz2);
-
-///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u on one-sided line (%1.0f,%1.0f) - (%1.0f,%1.0f)\n",
-///        gz1, gz2, k, S->x1, S->y1, S->x2, S->y2);
-      continue;
-    }
-
-    // complex case: compare with solids on other side
-
-    for (unsigned m = 0; m <= RX->gaps.size(); m++)
-    {
-      double sz1 = (m == 0) ? -9e6 : RX->gaps[m-1]->GetZ2();
-      double sz2 = (m == RX->gaps.size()) ? +9e6 : RX->gaps[m]->GetZ1();
-
-      if (sz1 < gz1) sz1 = gz1;
-      if (sz2 > gz2) sz2 = gz2;
-
-      if (sz2 > sz1 + 0.99)  // don't create tiny faces
-      {
-        DoAddFace(S, k, sz1, sz2);
-
-///fprintf(stderr, "Making face %1.0f..%1.0f gap:%u neighbour:%u (%1.0f,%1.0f) - (%1.0f,%1.0f) side:%d\n",
-///        sz1, sz2, k, m, S->x1, S->y1, S->x2, S->y2, side);
-      }
-    }
-  }
-}
-
 
 //------------------------------------------------------------------------
 
@@ -1066,6 +991,7 @@ public:
   };
 
   int kind;
+  int gap;
 
   double z1, z2;
 
@@ -1094,17 +1020,17 @@ public:
     return F;
   }
 
-  static rSide_c *SplitAt(rSide_c *S, double new_x, double new_y)
+  static rFace_c *NewFace(int kind, int gap, double z1, double z2,
+                          area_vert_c *av)
   {
-    rSide_c *T = NewSide(S->seg);
-    
-    S->x2 = new_x;
-    S->y2 = new_y;
+    rFace_c *F = NewFace(kind);
 
-    T->x1 = new_x;
-    T->y1 = new_y;
+    F->gap = gap;
+    F->z1  = z1;
+    F->z2  = z2;
+    F->area_v = av;
 
-    return T;
+    return F;
   }
 
   static void FreeAll()
@@ -1144,6 +1070,13 @@ public:
   {
     return ComputeDist(x1,y1, x2,y2);
   }
+
+  void AddFace(int kind, int gap, double z1, double z2, area_vert_c *av)
+  {
+    rFace_c *F = rFaceFactory_c::NewFace(kind, gap, z1, z2, av);
+
+    faces.push_back(F);
+  }
 };
 
 
@@ -1152,9 +1085,9 @@ class rSideFactory_c
   static std::list<rSide_c> all_sides;
 
 public:
-  static rSide_c *NewSide(merge_segment_c *seg)
+  static rSide_c *NewSide(merge_segment_c *seg, int side)
   {
-    all_sides.push_back(rSide_c(seg));
+    all_sides.push_back(rSide_c(seg, side));
 
     rSide_c *S = &all_sides.back();
 
@@ -1166,7 +1099,7 @@ public:
 
   static rSide_c *SplitAt(rSide_c *S, double new_x, double new_y)
   {
-    rSide_c *T = NewSide(S->seg);
+    rSide_c *T = NewSide(S->seg, int S->side);
     
     S->x2 = new_x;
     S->y2 = new_y;
@@ -1309,6 +1242,76 @@ public:
 };
 
 
+static void DoAddFace(rSide_c *S, int gap, double z1, double z2,
+                      area_vert_c *av)
+{
+  SYS_ASSERT(z2 > z1);
+
+  // make sure face height does not exceed the limit
+  if (z2 - z1 > FACE_MAX_SIZE)
+  {
+    int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
+
+///fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
+
+    SYS_ASSERT(num >= 2);
+
+    for (int i = 0; i < num; i++)
+    {
+      double nz1 = z1 + (z2 - z1) *  i    / (double)num;
+      double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
+
+      S->AddFace(rFace_c::WALL, gap, nz1, nz2, av);
+    }
+  }
+  else
+  {
+    S->AddFace(rFace_c::WALL, gap, z1, z2, av);
+  }
+}
+
+static void MakeSide(rNode_c *LEAF, merge_segment_c *seg, int side)
+{
+  rSide_c *S = rSideFactory_c::NewSide(seg, side);
+
+  LEAF->AddSide(S);
+
+  // create the faces
+  merge_region_c *R  = (side == 0) ? seg->front : seg->back;
+  merge_region_c *RX = (side == 0) ? seg->back  : seg->front;
+
+  for (unsigned int k = 0; k < R->gaps.size(); k++)
+  {
+    merge_gap_c *G = R->gaps[k];
+
+    double z1 = G->GetZ1();
+    double z2 = G->GetZ2();
+
+    // emergency fallback
+    if (RX == NULL)
+    {
+      DoAddFace(S, k, z1, z2, CSG2_FindSideVertex(seg, (z1+z2)/2.0, (side==0)));
+      continue;
+    }
+
+    // complex case: compare with solids on other side
+
+    for (int m = 0; m <= (int)RX->gaps.size(); m++)
+    {
+      double sz1 = (m == 0) ? -9e6 : RX->gaps[m-1]->GetZ2();
+      double sz2 = (m == RX->gaps.size()) ? +9e6 : RX->gaps[m]->GetZ1();
+
+      if (sz1 < z1) sz1 = z1;
+      if (sz2 > z2) sz2 = z2;
+
+      if (sz2 < sz1 + 0.99)  // don't create tiny faces
+        continue;
+
+      DoAddFace(S, k, sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, (side==0)));
+    }
+  }
+}
+
 static rNode_c * NewLeaf(int contents)
 {
   rNode_c *leaf = new rNode_c();
@@ -1370,12 +1373,23 @@ static cpNode_c * Partition_Z(merge_region_c *R)
 }
 
 
-static void CreateFaces(rNode_c *part, rSide_c *S, rNode_c *FRONT, rNode_c *BACK)
+static void GrabFaces(rNode_c *part, rSide_c *S, rNode_c *FRONT, rNode_c *BACK)
 {
   double a = (S->x2 - S->x1) * part->dx + (S->y2 - S->y1) * part->dy;
 
   int p_side = (a >= 0) ? 0 : 1;
 
+  for (unsigned int i = 0; i < S->faces.size(); i++)
+  {
+    rFace_c *F = S->faces[i];
+
+    part->faces.push_back(F);
+
+    if (p_side == S->side)
+      FRONT->faces.push_back(F);
+    else
+      BACK->faces.push_back(F);
+  }
 
 }
 
@@ -1506,7 +1520,7 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
       // side sits on the partition : DROP IT
       
       if (S->seg)
-        CreateFaces(part, S, FRONT, BACK);
+        GrabFaces(part, S, FRONT, BACK);
 
       continue;
     }
