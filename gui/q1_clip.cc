@@ -314,6 +314,8 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
 class cpSide_c
 {
+friend class cpSideFactory_c;
+
 public:
   merge_segment_c *seg;
 
@@ -321,10 +323,10 @@ public:
   double x2, y2;
 
 public:
+  cpSide_c() : seg(NULL)
+  { }
   cpSide_c(merge_segment_c * _seg) : seg(_seg)
   {
-    x1 = seg->start->x;  x2 = seg->end->x;
-    y1 = seg->start->y;  y2 = seg->end->y;
   }
 
   ~cpSide_c()
@@ -340,25 +342,59 @@ public:
   {
     return ComputeDist(x1,y1, x2,y2);
   }
+};
 
-  cpSide_c *SplitAt(double new_x, double new_y)
+
+class cpSideFactory_c
+{
+  static std::list<cpSide_c> all_sides;
+
+public:
+  static cpSide_c *NewSide(merge_segment_c *seg)
   {
-    cpSide_c *T = new cpSide_c(seg);
+    all_sides.push_back(cpSide_c(seg));
+
+    cpSide_c *S = &all_sides.back();
+
+    S->x1 = seg->start->x;  S->x2 = seg->end->x;
+    S->y1 = seg->start->y;  S->y2 = seg->end->y;
+
+    return S;
+  }
+
+  static cpSide_c *SplitAt(cpSide_c *S, double new_x, double new_y)
+  {
+    cpSide_c *T = NewSide(S->seg);
     
+    S->x2 = new_x;
+    S->y2 = new_y;
+
     T->x1 = new_x;
     T->y1 = new_y;
-
-    x2 = new_x;
-    y2 = new_y;
 
     return T;
   }
 
   static cpSide_c *FakePartition(double x, double y, double dx, double dy)
   {
-    return new cpSide_c(x, y, x+dx, y+dy);
+    cpSide_c * S = NewSide(NULL);
+
+    S->x1 = x;
+    S->y1 = y;
+
+    S->x2 = x+dx;
+    S->y2 = y+dy;
+
+    return S;
+  }
+
+  static void FreeAll()
+  {
+    all_sides.clear();
   }
 };
+
+std::list<cpSide_c> cpSideFactory_c::all_sides;
 
 
 #define CONTENT__NODE  12345
@@ -367,13 +403,16 @@ public:
 class cpNode_c
 {
 public:
-  // LEAF STUFF
+  /* LEAF STUFF */
+
   int lf_contents;
 
   std::vector<cpSide_c *> sides;
 
   merge_region_c *region;
 
+
+  /* NODE STUFF */
 
   // true if this node splits the tree by Z
   // (with a horizontal upward-facing plane, i.e. dz = 1).
@@ -406,8 +445,8 @@ public:
 
   ~cpNode_c()
   {
-///???    if (front) delete front;
-///???    if (back)  delete back;
+    if (front) delete front;
+    if (back)  delete back;
   }
 
   inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
@@ -649,9 +688,6 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
     if (fa <= Q_EPSILON && fb <= Q_EPSILON)
     {
       // side sits on the partition : DROP IT
-
-///??? delete S;
-
       continue;
     }
 
@@ -687,7 +723,7 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
     double ix = S->x1 + along * sdx;
     double iy = S->y1 + along * sdy;
 
-    cpSide_c *T = S->SplitAt(ix, iy);
+    cpSide_c *T = cpSideFactory_c::SplitAt(S, ix, iy);
 
     if (a < 0)
     {
@@ -722,9 +758,9 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
     if (MAX(w, h) > 400)
     {
 			if (w >= h)
-        return cpSide_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
+        return cpSideFactory_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
       else
-        return cpSide_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
+        return cpSideFactory_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
     }
   }
 
@@ -915,6 +951,8 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
   fprintf(stderr, "\nQuake1_CreateClipHull %d\n", which);
 
+  cpSideFactory_c::FreeAll();
+
   which--;
 
   static double pads[2][3] =
@@ -943,7 +981,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
     if (! SameGaps(S))
     {
-      C_LEAF->AddSide(new cpSide_c(S)); 
+      C_LEAF->AddSide(cpSideFactory_c::NewSide(S)); 
     }
   }
 
@@ -960,6 +998,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
   WriteClipNodes(q1_clip, C_ROOT);
 
+  // this deletes the entire BSP tree (nodes and leafs)
   delete C_ROOT;
 
   RestoreBrushes();
