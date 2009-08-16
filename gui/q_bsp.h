@@ -84,6 +84,43 @@ void BSP_WriteVertices(void);
 void BSP_WriteEdges(void);
 
 
+/* ----- Intersection Lists ------------------------- */
+
+class merge_vertex_c;
+
+// an "intersection" remembers the vertex that touches a BSP divider
+// line (especially a new vertex that is created at a seg split).
+
+// Note: two points can exist in the intersection list with
+//       the same along value but different dirs.
+typedef struct
+{
+  merge_vertex_c *v;
+
+  // how far along the partition line the vertex is.
+  // bigger value are further along the partition line.
+  // Only used for sorting the list.
+  int along;
+
+  // direction that miniseg will touch, +1 for further along
+  // the partition, and -1 for backwards on the partition.
+  // The values +2 and -2 indicate REMOVED points.
+  int dir;
+
+  // this is only set after ProcessIntersections().
+  merge_vertex_c *next_v;
+}
+intersect_t;
+
+void BSP_AddIntersection(std::vector<intersect_t> & cut_list,
+                         merge_vertex_c *v, float along, int dir);
+
+void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list);
+
+// utility function
+int BSP_NiceMidwayPoint(float low, float extent);
+
+
 /* ----- BSP lump directory ------------------------- */
 
 #define Q1_HEADER_LUMPS  15

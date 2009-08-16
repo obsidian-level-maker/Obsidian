@@ -856,5 +856,103 @@ s32_t BSP_AddLightBlock(int w, int h, u8_t *levels)
 }
 
 
+//------------------------------------------------------------------------
+
+struct Compare_Intersect_pred
+{
+  inline bool operator() (const intersect_t& A, const intersect_t& B) const
+  {
+    if (A.along != B.along)
+      return A.along < B.along;
+
+    return A.dir < B.dir;
+  }
+};
+
+
+int BSP_NiceMidwayPoint(float low, float extent)
+{
+  int pow2 = 1;
+
+  while (pow2 < extent/5)
+  {
+    pow2 = pow2 << 1;
+  }
+
+  int mid = I_ROUND((low + extent/2.0f) / pow2) * pow2;
+
+  return mid;
+}
+
+
+void BSP_AddIntersection(std::vector<intersect_t> & cut_list,
+                         merge_vertex_c *v, float along, int dir)
+{
+  intersect_t new_cut;
+
+  new_cut.v = v;
+  new_cut.along = I_ROUND(along * 21.6f);
+  new_cut.dir = dir;
+  new_cut.next_v = NULL;
+
+  cut_list.push_back(new_cut);
+}
+
+
+void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list)
+{
+  if (cut_list.empty())
+    return;
+
+  // move input vector contents into a temporary vector, which we
+  // sort and iterate over.  Valid intersections then get pushed
+  // back into the input vector.
+
+  std::vector<intersect_t> temp_list;
+
+  temp_list.swap(cut_list);
+
+  std::sort(temp_list.begin(), temp_list.end(),
+            Compare_Intersect_pred());
+
+  std::vector<intersect_t>::iterator A, B;
+
+  A = temp_list.begin();
+
+  while (A != temp_list.end())
+  {
+    if (A->dir != +1)
+    {
+      A++; continue;
+    }
+
+    B = A; B++;
+
+    if (B == cut_list.end())
+      break;
+
+    // this handles multiple +1 entries and also ensures
+    // that the +2 "remove" entry kills a +1 entry.
+    if (A->along == B->along)
+    {
+      A++; continue;
+    }
+
+    if (B->dir != -1)
+    {
+      DebugPrintf("WARNING: bad pair in intersection list\n");
+
+      A = B; continue;
+    }
+
+    // found a viable intersection!
+    A->next_v = B->v;
+
+    cut_list.push_back(*A);
+
+    B++; A = B; continue;
+  }
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
