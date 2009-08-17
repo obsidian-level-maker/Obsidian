@@ -23,47 +23,32 @@ MON_CONTROL_CHOICES =
   "less",   "Less",
   "more",   "More",
   "heaps",  "Heaps",
-  "swarms", "Swarms",
-  "toomany", "TOO MANY",
+  "insane", "INSANE",
 }
 
 MON_CONTROL_AMOUNTS =
 {
-  scarce = 0.02,
-  less   = 0.3,
-  normal = 1,
-  more   = 3,
-  heaps  = 15,
-  swarms = 60,
-  toomany = 600,
+  scarce = 1,
+  less   = 15,
+  normal = 50,
+  more   = 120,
+  heaps  = 300,
+  insane = 2000,
 }
 
 
 function MonControl_setup(self)
-
-  local function adjust(M, factor, what)
-    if M[what] then
-      M[what] = M[what] * factor
-    end
-  end
 
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
     local factor = MON_CONTROL_AMOUNTS[opt.value]
 
     if M and factor then
-      if not M.prob then M.prob = 4 end
+      M.prob = factor
+      M.crazy_prob = factor
 
-      adjust(M, factor, "prob")
-      adjust(M, factor, "cage_prob")
-      adjust(M, factor, "trap_prob")
-      adjust(M, factor, "guard_prob")
-      adjust(M, factor, "crazy_prob")
-
-      if factor > 5 then
-        M.density = 1.0
-        M.always_use = true
-      end
+      if factor >  80 then M.density = 1.0 end
+      if factor > 180 then M.always_use = true end
     end
   end -- for opt
 
