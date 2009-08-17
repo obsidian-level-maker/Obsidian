@@ -52,6 +52,20 @@ static rNode_c *R_ROOT;
 
 static rNode_c *SOLID_LEAF;
 
+static dmodel_t model;
+
+qLump_c *q1_nodes;
+qLump_c *q1_leafs;
+qLump_c *q1_faces;
+
+static qLump_c *q_mark_surfs;
+static qLump_c *q_surf_edges;
+static qLump_c *q_clip_nodes;
+
+int q1_total_nodes;
+int q1_total_leafs;
+int q1_total_mark_surfs;
+int q1_total_surf_edges;
 
 
 #if 0
@@ -431,80 +445,6 @@ rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
   }
 
   return T;
-}
-
-
-static void DoAddFace(rSide_c *S, int gap, double z1, double z2,
-                      area_vert_c *av)
-{
-// FIXME
-#if 0
-  SYS_ASSERT(z2 > z1);
-
-  // make sure face height does not exceed the limit
-  if (z2 - z1 > FACE_MAX_SIZE)
-  {
-    int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
-
-///fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
-
-    SYS_ASSERT(num >= 2);
-
-    for (int i = 0; i < num; i++)
-    {
-      double nz1 = z1 + (z2 - z1) *  i    / (double)num;
-      double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
-
-      S->AddFace(rFace_c::WALL, gap, nz1, nz2, av);
-    }
-  }
-  else
-  {
-    S->AddFace(rFace_c::WALL, gap, z1, z2, av);
-  }
-#endif
-}
-
-
-static void Side_BuildFaces(rSide_c *S)
-{
-  merge_segment_c * seg = S->seg;
-  SYS_ASSERT(seg);
-
-  // create the faces
-  merge_region_c *R  = (S->side == 0) ? seg->front : seg->back;
-  merge_region_c *RX = (S->side == 0) ? seg->back  : seg->front;
-
-  for (unsigned int k = 0; k < R->gaps.size(); k++)
-  {
-    merge_gap_c *G = R->gaps[k];
-
-    double z1 = G->GetZ1();
-    double z2 = G->GetZ2();
-
-    // emergency fallback
-    if (RX == NULL)
-    {
-      DoAddFace(S, k, z1, z2, CSG2_FindSideVertex(seg, (z1+z2)/2.0, (side==0)));
-      continue;
-    }
-
-    // complex case: compare with solids on other side
-
-    for (int m = 0; m <= (int)RX->gaps.size(); m++)
-    {
-      double sz1 = (m == 0) ? -9e6 : RX->gaps[m-1]->GetZ2();
-      double sz2 = (m == (int)RX->gaps.size()) ? +9e6 : RX->gaps[m]->GetZ1();
-
-      if (sz1 < z1) sz1 = z1;
-      if (sz2 > z2) sz2 = z2;
-
-      if (sz2 < sz1 + 0.99)  // don't create tiny faces
-        continue;
-
-      DoAddFace(S, k, sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, (side==0)));
-    }
-  }
 }
 
 
@@ -931,25 +871,47 @@ static rNode_c * Partition_XY(rNode_c * LEAF)
   return node;
 }
 
+void Q1_BuildBSP( void )
+{
+  LogPrintf("\nQuake1_BuildBSP BEGUN\n");
+
+  SOLID_LEAF = new rNode_c();
+  SOLID_LEAF->lf_contents = CONTENTS_SOLID;
+  SOLID_LEAF->index = -1;
+
+  rNode_c *R_LEAF = new rNode_c();
+
+  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  {
+    merge_segment_c *S = mug_segments[i];
+
+    rSide_c *F = NULL;
+    rSide_c *B = NULL;
+
+    if (S->front && S->front->gaps.size() > 0)
+      F = CreateSide(R_LEAF, S, 0);
+
+    if (S->back && S->back->gaps.size() > 0)
+      B = CreateSide(R_LEAF, S, 1);
+
+    if (F && B)
+    {
+      F->partner = B;
+      B->partner = F;
+    }
+  }
+
+
+  R_ROOT = Partition_XY(R_LEAF);
+
+  SYS_ASSERT(R_ROOT->IsNode());
+}
+
+
 
 //------------------------------------------------------------------------
-//  LUMP WRITING CODE
+//  FACE STUFF
 //------------------------------------------------------------------------
-
-static dmodel_t model;
-
-qLump_c *q1_nodes;
-qLump_c *q1_leafs;
-qLump_c *q1_faces;
-
-static qLump_c *q_mark_surfs;
-static qLump_c *q_surf_edges;
-static qLump_c *q_clip_nodes;
-
-int q1_total_nodes;
-int q1_total_leafs;
-int q1_total_mark_surfs;
-int q1_total_surf_edges;
 
 
 void Q1_AddEdge(double x1, double y1, double z1,
@@ -1302,6 +1264,90 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F)
 }
 
 
+static void DoAddFace(rSide_c *S, int gap, double z1, double z2,
+                      area_vert_c *av)
+{
+// FIXME
+#if 0
+  SYS_ASSERT(z2 > z1);
+
+  // make sure face height does not exceed the limit
+  if (z2 - z1 > FACE_MAX_SIZE)
+  {
+    int num = 1 + (int)floor((z2 - z1) / (double)FACE_MAX_SIZE);
+
+///fprintf(stderr, "Splitting tall face (%1.0f .. %1.0f) into %d pieces\n", z1, z2, num);
+
+    SYS_ASSERT(num >= 2);
+
+    for (int i = 0; i < num; i++)
+    {
+      double nz1 = z1 + (z2 - z1) *  i    / (double)num;
+      double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
+
+      S->AddFace(rFace_c::WALL, gap, nz1, nz2, av);
+    }
+  }
+  else
+  {
+    S->AddFace(rFace_c::WALL, gap, z1, z2, av);
+  }
+#endif
+}
+
+
+static void Side_BuildFaces(rSide_c *S)
+{
+  merge_segment_c * seg = S->seg;
+  SYS_ASSERT(seg);
+
+  // create the faces
+  merge_region_c *R  = (S->side == 0) ? seg->front : seg->back;
+  merge_region_c *RX = (S->side == 0) ? seg->back  : seg->front;
+
+  for (unsigned int k = 0; k < R->gaps.size(); k++)
+  {
+    merge_gap_c *G = R->gaps[k];
+
+    double z1 = G->GetZ1();
+    double z2 = G->GetZ2();
+
+    // emergency fallback
+    if (RX == NULL)
+    {
+      DoAddFace(S, k, z1, z2, CSG2_FindSideVertex(seg, (z1+z2)/2.0, (S->side==0)));
+      continue;
+    }
+
+    // complex case: compare with solids on other side
+
+    for (int m = 0; m <= (int)RX->gaps.size(); m++)
+    {
+      double sz1 = (m == 0) ? -9e6 : RX->gaps[m-1]->GetZ2();
+      double sz2 = (m == (int)RX->gaps.size()) ? +9e6 : RX->gaps[m]->GetZ1();
+
+      if (sz1 < z1) sz1 = z1;
+      if (sz2 > z2) sz2 = z2;
+
+      if (sz2 < sz1 + 0.99)  // don't create tiny faces
+        continue;
+
+      DoAddFace(S, k, sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, (S->side==0)));
+    }
+  }
+}
+
+
+static void BuildFaces(rNode_c *node)
+{
+}
+
+
+//------------------------------------------------------------------------
+//  LUMP WRITING CODE
+//------------------------------------------------------------------------
+
+
 static void AssignLeafIndex(rNode_c *leaf)
 {
   // must add 2 (instead of 1) because leaf #0 is the SOLID_LEAF
@@ -1477,43 +1523,6 @@ static void WriteNodes(rNode_c *node)
     WriteNodes(node->back);
   else
     WriteLeaf(node->back);
-}
-
-
-void Q1_BuildBSP( void )
-{
-  LogPrintf("\nQuake1_BuildBSP BEGUN\n");
-
-  SOLID_LEAF = new rNode_c();
-  SOLID_LEAF->lf_contents = CONTENTS_SOLID;
-  SOLID_LEAF->index = -1;
-
-  rNode_c *R_LEAF = new rNode_c();
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    rSide_c *F = NULL;
-    rSide_c *B = NULL;
-
-    if (S->front && S->front->gaps.size() > 0)
-      F = CreateSide(R_LEAF, S, 0);
-
-    if (S->back && S->back->gaps.size() > 0)
-      B = CreateSide(R_LEAF, S, 1);
-
-    if (F && B)
-    {
-      F->partner = B;
-      B->partner = F;
-    }
-  }
-
-
-  R_ROOT = Partition_XY(R_LEAF);
-
-  SYS_ASSERT(R_ROOT->IsNode());
 }
 
 
