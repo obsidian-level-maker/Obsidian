@@ -862,8 +862,8 @@ struct Compare_Intersect_pred
 {
   inline bool operator() (const intersect_t& A, const intersect_t& B) const
   {
-    if (A.along != B.along)
-      return A.along < B.along;
+    if (A.q_dist != B.q_dist)
+      return A.q_dist < B.q_dist;
 
     return A.dir < B.dir;
   }
@@ -886,20 +886,20 @@ int BSP_NiceMidwayPoint(float low, float extent)
 
 
 void BSP_AddIntersection(std::vector<intersect_t> & cut_list,
-                         merge_vertex_c *v, float along, int dir)
+                         double along, int dir)
 {
   intersect_t new_cut;
 
-  new_cut.v = v;
-  new_cut.along = I_ROUND(along * 21.6f);
+  new_cut.along = along;
+  new_cut.q_dist = I_ROUND(along * 21.6f);
   new_cut.dir = dir;
-  new_cut.next_v = NULL;
+  new_cut.next_along = -1e30;
 
   cut_list.push_back(new_cut);
 }
 
 
-void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list)
+void BSP_MergeIntersections(std::vector<intersect_t> & cut_list)
 {
   if (cut_list.empty())
     return;
@@ -933,7 +933,7 @@ void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list)
 
     // this handles multiple +1 entries and also ensures
     // that the +2 "remove" entry kills a +1 entry.
-    if (A->along == B->along)
+    if (A->q_dist == B->q_dist)
     {
       A++; continue;
     }
@@ -946,7 +946,7 @@ void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list)
     }
 
     // found a viable intersection!
-    A->next_v = B->v;
+    A->next_along = B->along;
 
     cut_list.push_back(*A);
 

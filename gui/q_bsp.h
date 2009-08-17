@@ -95,27 +95,27 @@ class merge_vertex_c;
 //       the same along value but different dirs.
 typedef struct
 {
-  merge_vertex_c *v;
-
   // how far along the partition line the vertex is.
   // bigger value are further along the partition line.
-  // Only used for sorting the list.
-  int along;
+  double along;
+
+  // quantized along value
+  int q_dist;
 
   // direction that miniseg will touch, +1 for further along
   // the partition, and -1 for backwards on the partition.
   // The values +2 and -2 indicate REMOVED points.
   int dir;
 
-  // this is only set after ProcessIntersections().
-  merge_vertex_c *next_v;
+  // this is only set after MergeIntersections().
+  double next_along;
 }
 intersect_t;
 
 void BSP_AddIntersection(std::vector<intersect_t> & cut_list,
-                         merge_vertex_c *v, float along, int dir);
+                         double along, int dir);
 
-void BSP_ProcessIntersections(std::vector<intersect_t> & cut_list);
+void BSP_MergeIntersections(std::vector<intersect_t> & cut_list);
 
 // utility function
 int BSP_NiceMidwayPoint(float low, float extent);
