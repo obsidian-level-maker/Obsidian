@@ -53,8 +53,6 @@ static rNode_c *R_ROOT;
 static rNode_c *SOLID_LEAF;
 
 
-void DoAssignFaces(qNode_c *N, qSide_c *S);
-
 
 class qFace_c
 {
@@ -977,6 +975,9 @@ static void Partition_XY(qLeaf_c *leaf, qNode_c **out_n, qLeaf_c **out_l)
 //------------------------------------------------------------------------
 
 
+// for WALL faces, the x and y coordinates are not stored in the
+// face itself, but come from the rSide_c which contains the face.
+
 class rFace_c
 {
 friend class rFaceFactory_c;
@@ -1032,6 +1033,18 @@ public:
     return F;
   }
 
+  static rFace_c *CopyFace(const rFace_c *other)
+  {
+    rFace_c *F = NewFace(other->kind);
+
+    F->gap = other->gap;
+    F->z1  = other->z1;
+    F->z2  = other->z2;
+    F->area_v = other->area_v;
+
+    return F;
+  }
+
   static void FreeAll()
   {
     all_faces.clear();
@@ -1044,21 +1057,24 @@ class rSide_c
 friend class rSideFactory_c;
 
 public:
+  merge_segment_c *seg;
+
   int side;  // 0 = front/right, 1 = back/left
 
   rSide_c *partner;
-
-  merge_segment_c *seg;
+  rNode_c *node;
 
   double x1, y1;
   double x2, y2;
+
+  rNode_c *on_partition;
 
   std::vector<rFace_c *> faces;
 
 public:
   rSide_c(merge_segment_c * _seg = NULL, int _side = 0) :
-      side(_side), seg(_seg), partner(NULL)
-      f_faces(), b_faces()
+      seg(_seg), side(_side), partner(NULL), node(NULL),
+      on_partition(NULL), faces()
   { }
 
   ~rSide_c()
@@ -1106,6 +1122,10 @@ public:
     T->x1 = new_x;
     T->y1 = new_y;
 
+    // copy faces
+    for (unsigned int i = 0; i < S->faces.size(); i++)
+      T->AddFace(rFaceFactory::CopyFace(S->faces[i]));
+
     return T;
   }
 
@@ -1144,6 +1164,10 @@ public:
   int lf_contents;
 
   std::vector<rSide_c *> sides;
+
+  // for the convex leaf (before Z splitting) this contains the set
+  // of sides which bound the convex shape.
+  std::vector<rSide_c *> shape;
 
   merge_region_c *region;
 
@@ -1371,7 +1395,6 @@ static rNode_c * Partition_Z(merge_region_c *R)
 
 static void GrabFaces(rNode_c *part, rSide_c *S, rNode_c *FRONT, rNode_c *BACK)
 {
-  double a = (S->x2 - S->x1) * part->dx + (S->y2 - S->y1) * part->dy;
 
   int p_side = (a >= 0) ? 0 : 1;
 
@@ -1483,6 +1506,103 @@ static double EvaluatePartition(rNode_c * LEAF,
 }
 
 
+static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
+                          std::vector<intersect_t> & cut_list)
+{
+  double sdx = S->x2 - S->x1;
+  double sdy = S->y2 - S->y1;
+
+  // get state of lines' relation to each other
+  double a = PerpDist(S->x1, S->y1,
+                      part->x, part->y,
+                      part->x + part->dx, part->y + part->dy);
+
+  double b = PerpDist(S->x2, S->y2,
+                      part->x, part->y,
+                      part->x + part->dx, part->y + part->dy);
+
+  int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
+  int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
+
+  double fa = fabs(a);
+  double fb = fabs(b);
+
+  if (a_side == 0 && b_side == 0)
+  {
+    // side sits on the partition, it will go either left or right
+    S->on_partition = part;
+
+    double a = (S->x2 - S->x1) * part->dx + (S->y2 - S->y1) * part->dy;
+
+    if (a >= 0)
+    {
+      FRONT->AddSide(S);
+
+      // +2 and -2 mean "remove"
+      BSP_AddIntersection(cut_list, party, cur->v1, +2);
+      BSP_AddIntersection(cut_list, party, cur->v2, -2);
+    }
+    else
+    {
+      BACK->AddSide(S);
+
+      BSP_AddIntersection(cut_list, party, cur->v1, -2);
+      BSP_AddIntersection(cut_list, party, cur->v2, +2);
+    }
+
+    return;
+  }
+
+  /* check for right side */
+  if (a_side >= 0 && b_side >= 0)
+  {
+    if (a_side == 0)
+      BSP_AddIntersection(cut_list, party, cur->v1, -1);
+    else if (b_side == 0)
+      BSP_AddIntersection(cut_list, party, cur->v2, +1);
+
+    FRONT->AddSide(S);
+    return;
+  }
+
+  /* check for left side */
+  if (a_side <= 0 && b_side <= 0)
+  {
+    if (a_side == 0)
+      BSP_AddIntersection(cut_list, party, cur->v1, +1);
+    else if (b_side == 0)
+      BSP_AddIntersection(cut_list, party, cur->v2, -1);
+
+    BACK->AddSide(S);
+    return;
+  }
+
+  /* need to split it */
+
+  // determine the intersection point
+  double along = a / (a - b);
+
+  double ix = S->x1 + along * sdx;
+  double iy = S->y1 + along * sdy;
+
+  rSide_c *T = rSideFactory_c::SplitAt(S, ix, iy);
+
+  if (a < 0)
+  {
+     BACK->AddSide(S);
+    FRONT->AddSide(T);
+  }
+  else
+  {
+    SYS_ASSERT(b < 0);
+
+    FRONT->AddSide(S);
+     BACK->AddSide(T);
+  }
+
+  BSP_AddIntersection(cut_list, party, new_seg->v1, a_side);
+}
+
 static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 {
   std::vector<rSide_c *> all_sides;
@@ -1491,83 +1611,16 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 
   FRONT->region = NULL;
 
+  std::vector<intersection_c> cut_list;
 
   for (int k = 0; k < (int)all_sides.size(); k++)
   {
-    rSide_c *S = all_sides[k];
-
-    double sdx = S->x2 - S->x1;
-    double sdy = S->y2 - S->y1;
-
-    // get state of lines' relation to each other
-    double a = PerpDist(S->x1, S->y1,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
-
-    double b = PerpDist(S->x2, S->y2,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
-
-    double fa = fabs(a);
-    double fb = fabs(b);
-
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
-    {
-      // side sits on the partition : DROP IT
-      
-      if (S->seg)
-        GrabFaces(part, S, FRONT, BACK);
-
-      continue;
-    }
-
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        FRONT->AddSide(S);
-      else
-        BACK->AddSide(S);
-
-      continue;
-    }
-
-    if (a > 0 && b > 0)
-    {
-      FRONT->AddSide(S);
-      continue;
-    }
-
-    if (a < 0 && b < 0)
-    {
-      BACK->AddSide(S);
-      continue;
-    }
-
-    /* need to split it */
-
-    // determine the intersection point
-    double along = a / (a - b);
-
-    double ix = S->x1 + along * sdx;
-    double iy = S->y1 + along * sdy;
-
-    rSide_c *T = rSideFactory_c::SplitAt(S, ix, iy);
-
-    if (a < 0)
-    {
-       BACK->AddSide(S);
-      FRONT->AddSide(T);
-    }
-    else
-    {
-      SYS_ASSERT(b < 0);
-
-      FRONT->AddSide(S);
-       BACK->AddSide(T);
-    }
+    DivideOneSide(all_sides[k], part, FRONT, BACK, cut_list);
   }
+
+  BSP_ProcessIntersections(cut_list);
+
+  // FIXME: create mini sides
 }
 
 
@@ -2328,8 +2381,8 @@ void Q1_CreateModel(void)
   Q1_CreateSubModels(lump, model.numfaces, model.visleafs);
 
 
-  // there is no need to delete the lumps from BSP_NewLump(),
-  // that is handled by the q_bsp.c code.
+  // there is no need to delete the lumps from BSP_NewLump()
+  // since is handled by the q_bsp.c code.
 }
 
 //--- editor settings ---
