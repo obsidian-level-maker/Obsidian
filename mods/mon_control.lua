@@ -81,26 +81,26 @@ OB_MODULES["mon_control"] =
 
   options =
   {
-    zombie   = { label="Zombiemen",   priority=45, choices=MON_CONTROL_CHOICES },
-    shooter  = { label="Shotgun Guy", priority=44, choices=MON_CONTROL_CHOICES },
-    gunner   = { label="Chaingunner", priority=43, choices=MON_CONTROL_CHOICES },
-    ss_dude  = { label="SS Nazi",     priority=42, choices=MON_CONTROL_CHOICES },
-    imp      = { label="Imp",         priority=41, choices=MON_CONTROL_CHOICES },
+    zombie   = { label="Zombieman",      choices=MON_CONTROL_CHOICES },
+    shooter  = { label="Shotgun Guy",    choices=MON_CONTROL_CHOICES },
+    gunner   = { label="Chaingunner",    choices=MON_CONTROL_CHOICES },
+    ss_dude  = { label="SS Nazi",        choices=MON_CONTROL_CHOICES },
+    imp      = { label="Imp",            choices=MON_CONTROL_CHOICES },
 
-    skull    = { label="Lost Soul",   priority=35, choices=MON_CONTROL_CHOICES },
-    demon    = { label="Demon / Spectre", priority=34, choices=MON_CONTROL_CHOICES },
-    pain     = { label="Pain Elemental",  priority=33, choices=MON_CONTROL_CHOICES },
-    caco     = { label="Cacodemon",   priority=32, choices=MON_CONTROL_CHOICES },
-    knight   = { label="Hell Knight", priority=31, choices=MON_CONTROL_CHOICES },
+    skull    = { label="Lost Soul",      choices=MON_CONTROL_CHOICES },
+    demon    = { label="Demon / Spectre", choices=MON_CONTROL_CHOICES },
+    pain     = { label="Pain Elemental", choices=MON_CONTROL_CHOICES },
+    caco     = { label="Cacodemon",      choices=MON_CONTROL_CHOICES },
+    knight   = { label="Hell Knight",    choices=MON_CONTROL_CHOICES },
 
-    revenant = { label="Revenant",    priority=25, choices=MON_CONTROL_CHOICES },
-    mancubus = { label="Mancubus",    priority=24, choices=MON_CONTROL_CHOICES },
-    arach    = { label="Arachnotron", priority=23, choices=MON_CONTROL_CHOICES },
-    vile     = { label="Archvile",    priority=22, choices=MON_CONTROL_CHOICES },
-    baron    = { label="Baron of Hell", priority=21, choices=MON_CONTROL_CHOICES },
+    revenant = { label="Revenant",       choices=MON_CONTROL_CHOICES },
+    mancubus = { label="Mancubus",       choices=MON_CONTROL_CHOICES },
+    arach    = { label="Arachnotron",    choices=MON_CONTROL_CHOICES },
+    vile     = { label="Archvile",       choices=MON_CONTROL_CHOICES },
+    baron    = { label="Baron of Hell",  choices=MON_CONTROL_CHOICES },
 
-    Cyberdemon = { label="Cyberdemon", priority=12, choices=MON_CONTROL_CHOICES },
-    Mastermind = { label="Mastermind", priority=11, choices=MON_CONTROL_CHOICES },
+    Cyberdemon = { label="Cyberdemon",   choices=MON_CONTROL_CHOICES },
+    Mastermind = { label="Mastermind",   choices=MON_CONTROL_CHOICES },
   },
 }
 
