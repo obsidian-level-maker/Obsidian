@@ -750,20 +750,12 @@ static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 {
   SYS_ASSERT(SEG);
 
-  if (side == 0)
-  {
-    if (SEG->front && SEG->front->gaps.size() > 0)
-      return Partition_Z(SEG->front);
-    else
-      return MakeLeaf(CONTENTS_SOLID);
-  }
-  else
-  {
-    if (SEG->back && SEG->back->gaps.size() > 0)
-      return Partition_Z(SEG->back);
-    else
-      return MakeLeaf(CONTENTS_SOLID);
-  }
+  merge_region_c *region = (side == 0) ? SEG->front : SEG->back;
+
+  if (!region || region->gaps.size() == 0)
+    return MakeLeaf(CONTENTS_SOLID);
+
+  return Partition_Z(region);
 }
 
 
