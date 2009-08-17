@@ -225,6 +225,11 @@ double ComputeDist(double sx, double sy, double sz,
   return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy) + (ez-sz)*(ez-sz));
 }
 
+bool VectorSameDir(double x1, double y1, double x2, double y2)
+{
+  return (x1 * x2 + y1 * y2) > 0;
+}
+
 
 //------------------------------------------------------------------------
 

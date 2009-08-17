@@ -322,7 +322,7 @@ void WAD_FinishLump(void)
   int len = (int)ftell(wad_W_fp) - (int)wad_W_lump.start;
 
   // pad lumps to a multiple of four bytes
-  int padding = AlignLen(len) - len;
+  int padding = ALIGN_LEN(len) - len;
 
   if (padding > 0)
   {
