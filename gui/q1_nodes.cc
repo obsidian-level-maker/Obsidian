@@ -312,10 +312,6 @@ public:
 
   std::vector<rSide_c *> sides;
 
-  // for the convex leaf (before Z splitting) this contains the set
-  // of sides which bound the convex shape.
-  std::vector<rSide_c *> shape;
-
   merge_region_c *region;
 
 
@@ -375,9 +371,34 @@ public:
     sides.push_back(S);
   }
 
+  int ValidSides() const
+  {
+    int count = 0;
+
+    for (unsigned int i = 0; i < sides.size(); i++)
+    {
+      rSide_c *S = sides[i];
+
+      if (S->seg && ! S->on_partition)
+        count++;
+    }
+
+    return count;
+  }
+
   void CheckValid() const
   {
     SYS_ASSERT(index >= 0);
+  }
+
+  void BecomeNode(double x1, double y1, double x2, double y2)
+  {
+    lf_contents = CONTENT__NODE;
+
+    z_splitter = false;
+
+    x = x1; dx = x2 - x1;
+    y = y1; dy = y2 - y1;
   }
 
   void CalcBounds(double *lx, double *ly, double *w, double *h) const
@@ -749,27 +770,6 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
 }
 
 
-static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
-{
-  std::vector<rSide_c *> all_sides;
-
-  all_sides.swap(FRONT->sides);
-
-  FRONT->region = NULL;
-
-  std::vector<intersect_t> cut_list;
-
-  for (int k = 0; k < (int)all_sides.size(); k++)
-  {
-    DivideOneSide(all_sides[k], part, FRONT, BACK, cut_list);
-  }
-
-  BSP_MergeIntersections(cut_list);
-
-  CreatePortals(part, FRONT, BACK, cut_list);
-}
-
-
 static rSide_c * FindPartition(rNode_c * LEAF)
 {
   if (LEAF->sides.size() == 0)
@@ -817,61 +817,71 @@ static rSide_c * FindPartition(rNode_c * LEAF)
 }
 
 
+static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
+{
+  std::vector<rSide_c *> all_sides;
+
+  all_sides.swap(part->sides);
+
+//???  FRONT->region = NULL;
+
+  std::vector<intersect_t> cut_list;
+
+  for (unsigned int k = 0; k < all_sides.size(); k++)
+  {
+    DivideOneSide(all_sides[k], part, FRONT, BACK, cut_list);
+  }
+
+  BSP_MergeIntersections(cut_list);
+
+  CreatePortals(part, FRONT, BACK, cut_list);
+}
+
+
 static rNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 {
   SYS_ASSERT(SEG);
 
-  if (side == 0)
-  {
-    if (SEG->front && SEG->front->gaps.size() > 0)
-      return Partition_Z(SEG->front);
-    else
-      return SOLID_LEAF;
-  }
-  else
-  {
-    if (SEG->back && SEG->back->gaps.size() > 0)
-      return Partition_Z(SEG->back);
-    else
-      return SOLID_LEAF;
-  }
+  merge_region_c *region = (side == 0) ? SEG->front : SEG->back;
+
+  if (! reg || reg->gaps.size() == 0)
+    return SOLID_LEAF;
+
+  return Partition_Z(reg);
 }
 
 
-static rNode_c * Partition_XY(rNode_c * LEAF)
+static rNode_c * Partition_XY(rNode_c * LN)
 {
   rSide_c *part = FindPartition(LEAF);
   SYS_ASSERT(part);
 
-  rNode_c *node = new rNode_c(false /* z_splitter */);
+// fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) to (%1.2f,%1.2f)\n",
+//                  part->x, part->y, part->x + part->dx, part->y + part->dy);
 
-  node->x = part->x1;
-  node->y = part->y1;
+  // create a node from the pseudo leaf
+  LN->BecomeNode(part->x1, part->y1, part->x2, part->y2);
 
-  node->dx = part->x2 - node->x;
-  node->dy = part->y2 - node->y;
+  rNode_c * FRONT = new rNode_c();
+  rNode_c * BACK  = new rNode_c();
 
-// fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
-//                  node->x, node->y, node->x + node->dx, node->y + node->dy);
+  Split_XY(LN, FRONT, BACK);
 
-  rNode_c * BACK = new rNode_c();
-
-  Split_XY(node, LEAF, BACK);
-
-  if (LEAF->sides.size() == 0)
-    node->front = XY_SegSide(part->seg, 0);
+  if (FRONT->ValidSides() > 0)
+    LN->front = Partition_XY(FRONT);
   else
-    node->front = Partition_XY(LEAF);
+    LN->front = XY_SegSide(FRONT, part->seg, 0);
 
-  if (BACK->sides.size() == 0)
-    node->back = XY_SegSide(part->seg, 1);
+  if (BACK->ValidSides() > 0)
+    LN->back = Partition_XY(BACK);
   else
-    node->back = Partition_XY(BACK);
+    LN->back = XY_SegSide(BACK, part->seg, 1);
 
-  return node;
+  return LN;
 }
 
-void Q1_BuildBSP( void )
+
+void Q1_BuildBSP()
 {
   LogPrintf("\nQuake1_BuildBSP BEGUN\n");
 
