@@ -600,7 +600,8 @@ fprintf(stderr, "LEAF %p\n{\n", L);
 fprintf(stderr, "}\n");
 }
 
-static void Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
+
+static void OLD_Split_XY(qNode_c *part, qLeaf_c *front_l, qLeaf_c *back_l)
 {
   std::list<qSide_c *> all_sides;
 
@@ -1433,29 +1434,14 @@ static double EvaluatePartition(rNode_c * LEAF,
     double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
     double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
 
-    double fa = fabs(a);
-    double fb = fabs(b);
+    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
+    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    if (a_side == 0 && b_side == 0)
     {
       // lines are colinear
 
-      double sdx = S->x2 - S->x1;
-      double sdy = S->y2 - S->y1;
-
-      if (pdx * sdx + pdy * sdy < 0.0)
-        back++;
-      else
-        front++;
-
-      continue;
-    }
-
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
+      if (VectorSameDir(pdx, pdy, S->x2 - S->x1, S->y2 - S->y1))
         front++;
       else
         back++;
@@ -1463,13 +1449,13 @@ static double EvaluatePartition(rNode_c * LEAF,
       continue;
     }
 
-    if (a > 0 && b > 0)
+    if (a_side >= 0 && b_side >= 0)
     {
       front++;
       continue;
     }
 
-    if (a < 0 && b < 0)
+    if (a_side <= 0 && b_side <= 0)
     {
       back++;
       continue;
@@ -1485,7 +1471,7 @@ static double EvaluatePartition(rNode_c * LEAF,
 
 
   // always prefer axis-aligned planes
-  // (this helps prevent the "sticky doorways" bug)
+  // (this helps prevent the "sticky doorways" problem)
   bool aligned = (fabs(pdx) < 0.0001 || fabs(pdy) < 0.0001);
 
   if (front == 0 && back == 0)
@@ -1524,17 +1510,12 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
   int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
   int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
-  double fa = fabs(a);
-  double fb = fabs(b);
-
   if (a_side == 0 && b_side == 0)
   {
     // side sits on the partition, it will go either left or right
     S->on_partition = part;
 
-    double a = (S->x2 - S->x1) * part->dx + (S->y2 - S->y1) * part->dy;
-
-    if (a >= 0)
+    if (VectorSameDir(part->dx, part->dy, sdx, sdy))
     {
       FRONT->AddSide(S);
 
@@ -1618,7 +1599,7 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
     DivideOneSide(all_sides[k], part, FRONT, BACK, cut_list);
   }
 
-  BSP_ProcessIntersections(cut_list);
+  BSP_MergeIntersections(cut_list);
 
   // FIXME: create mini sides
 }
