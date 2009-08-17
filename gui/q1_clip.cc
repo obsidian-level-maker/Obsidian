@@ -566,10 +566,10 @@ static double EvaluatePartition(cpNode_c * LEAF,
     double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
     double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
 
-    double fa = fabs(a);
-    double fb = fabs(b);
+    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
+    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    if (a_side == 0 && b_side == 0)
     {
       // lines are colinear
 
@@ -584,25 +584,13 @@ static double EvaluatePartition(cpNode_c * LEAF,
       continue;
     }
 
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        front++;
-      else
-        back++;
-
-      continue;
-    }
-
-    if (a > 0 && b > 0)
+    if (a_side >= 0 && b_side >= 0)
     {
       front++;
       continue;
     }
 
-    if (a < 0 && b < 0)
+    if (a_side <= 0 && b_side <= 0)
     {
       back++;
       continue;
@@ -664,34 +652,22 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
                         part->x, part->y,
                         part->x + part->dx, part->y + part->dy);
 
-    double fa = fabs(a);
-    double fb = fabs(b);
+    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
+    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
-    if (fa <= Q_EPSILON && fb <= Q_EPSILON)
+    if (a_side == 0 && b_side == 0)
     {
       // side sits on the partition : DROP IT
       continue;
     }
 
-    if (fa <= Q_EPSILON || fb <= Q_EPSILON)
-    {
-      // partition passes through one vertex
-
-      if ( ((fa <= Q_EPSILON) ? b : a) >= 0 )
-        FRONT->AddSide(S);
-      else
-        BACK->AddSide(S);
-
-      continue;
-    }
-
-    if (a > 0 && b > 0)
+    if (a_side >= 0 && b_side >= 0)
     {
       FRONT->AddSide(S);
       continue;
     }
 
-    if (a < 0 && b < 0)
+    if (a_side <= 0 && b_side <= 0)
     {
       BACK->AddSide(S);
       continue;
