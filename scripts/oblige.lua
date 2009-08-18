@@ -187,7 +187,7 @@ function ob_update_modules()
       local shown = ob_match_conf(def)
 
       if shown ~= def.shown then
-        changes = true
+        changed = true
       end
 
       def.shown = shown
