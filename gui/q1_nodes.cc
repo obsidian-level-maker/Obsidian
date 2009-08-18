@@ -495,7 +495,7 @@ static rNode_c * NewLeaf(int contents)
 //    3 for the second gap
 //    etc etc...
 
-static rNode_c * DoPartitionZ(merge_region_c *R,
+static rNode_c * Partition_Z(rNode_c *LN, merge_region_c *R,
                               int min_area, int max_area)
 {
   SYS_ASSERT(min_area <= max_area);
@@ -503,9 +503,11 @@ static rNode_c * DoPartitionZ(merge_region_c *R,
   if (min_area == max_area)
   {
     if ((min_area & 1) == 0)
-      return SOLID_LEAF;
-    else
-      return NewLeaf(CONTENTS_EMPTY);
+    {
+      delete LN; return SOLID_LEAF;
+    }
+
+    return LN;
   }
 
 
@@ -523,19 +525,11 @@ static rNode_c * DoPartitionZ(merge_region_c *R,
     else
       node->z = R->gaps[g]->GetZ2();
 
-    node->back  = DoPartitionZ(R, min_area, a1);
-    node->front = DoPartitionZ(R, a2, max_area);
+    node->back  = Partition_Z(LN, R, min_area, a1);
+    node->front = Partition_Z(LN, R, a2, max_area);
 
     return node;
   }
-}
-
-
-static rNode_c * Partition_Z(merge_region_c *R)
-{
-  SYS_ASSERT(R->gaps.size() > 0);
-
-  return DoPartitionZ(R, 0, (int)R->gaps.size() * 2);
 }
 
 
@@ -838,28 +832,30 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 }
 
 
-static rNode_c * XY_SegSide(merge_segment_c *SEG, int side)
+static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, int side = 0)
 {
-  SYS_ASSERT(SEG);
+  if (LN->ValidSides() == 0)
+  {
+    SYS_ASSERT(prev_part);
 
-  merge_region_c *region = (side == 0) ? SEG->front : SEG->back;
+    merge_region_c *R = (side == 0) ? prev_part->front : prev_part->back;
 
-  if (! reg || reg->gaps.size() == 0)
-    return SOLID_LEAF;
+    if (! R || R->gaps.size() == 0)
+    {
+      delete LN; return SOLID_LEAF;
+    }
 
-  return Partition_Z(reg);
-}
+    return Partition_Z(LN, R, 0, (int)R->gaps.size() * 2);
+  }
 
 
-static rNode_c * Partition_XY(rNode_c * LN)
-{
   rSide_c *part = FindPartition(LEAF);
   SYS_ASSERT(part);
 
-// fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) to (%1.2f,%1.2f)\n",
-//                  part->x, part->y, part->x + part->dx, part->y + part->dy);
+// fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
+//                  part->x1, part->y1, part->x2, part->y2);
 
-  // create a node from the pseudo leaf
+  // turn the pseudo leaf into a real node
   LN->BecomeNode(part->x1, part->y1, part->x2, part->y2);
 
   rNode_c * FRONT = new rNode_c();
@@ -867,15 +863,8 @@ static rNode_c * Partition_XY(rNode_c * LN)
 
   Split_XY(LN, FRONT, BACK);
 
-  if (FRONT->ValidSides() > 0)
-    LN->front = Partition_XY(FRONT);
-  else
-    LN->front = XY_SegSide(FRONT, part->seg, 0);
-
-  if (BACK->ValidSides() > 0)
-    LN->back = Partition_XY(BACK);
-  else
-    LN->back = XY_SegSide(BACK, part->seg, 1);
+  LN->front = Partition_XY(FRONT, part->seg, 0);
+  LN->back  = Partition_XY(BACK,  part->seg, 1);
 
   return LN;
 }
