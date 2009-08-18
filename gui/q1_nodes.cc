@@ -220,7 +220,7 @@ friend class rSideFactory_c;
 public:
   merge_segment_c *seg;
 
-  int side;  // 0 = front/right, 1 = back/left
+  int side;  // side on the seg: 0 = front/right, 1 = back/left
 
   rSide_c *partner;
   rNode_c *node;
@@ -252,6 +252,18 @@ public:
     return ComputeDist(x1,y1, x2,y2);
   }
 
+  merge_region_c *FrontRegion() const
+  {
+    if (! seg) return NULL;
+    return side ? seg->back : seg->front;
+  }
+
+  merge_region_c *BackRegion() const
+  {
+    if (! seg) return NULL;
+    return side ? seg->front : seg->back;
+  }
+
   void AddFace(int kind, int gap, double z1, double z2, area_vert_c *av)
   {
 ///    rFace_c *F = rFaceFactory_c::NewFace(kind, gap, z1, z2, av);
@@ -276,8 +288,16 @@ public:
   {
     rSide_c *S = RawNew(seg, side);
 
-    S->x1 = seg->start->x;  S->x2 = seg->end->x;
-    S->y1 = seg->start->y;  S->y2 = seg->end->y;
+    if (side == 0)
+    {
+      S->x1 = seg->start->x;  S->x2 = seg->end->x;
+      S->y1 = seg->start->y;  S->y2 = seg->end->y;
+    }
+    else
+    {
+      S->x1 = seg->end->x;  S->x2 = seg->start->x;
+      S->y1 = seg->end->y;  S->y2 = seg->start->y;
+    }
 
     return S;
   }
@@ -483,6 +503,7 @@ rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
     rSide_c *TP = RawNew(SP->seg, SP->side);
 
     SYS_ASSERT(SP->node);
+    SYS_ASSERT(SP->side != S->side);
 
     TP->x1 = SP->x1; TP->y1 = SP->y1;
     TP->x2 = new_x;  TP->y2 = new_y;
@@ -826,23 +847,26 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 }
 
 
-static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, int side = 0)
+static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
 {
   if (LN->UsableSides() == 0)
   {
-    SYS_ASSERT(prev_part);
+fprintf(stderr, "Partition_XY: found pseudo-leaf %p, sides:%u\n",
+LN, LN->sides.size());
 
-    merge_region_c *R = (side == 0) ? prev_part->front : prev_part->back;
+    merge_region_c *R = part_reg;
 
-    if (! R || R->gaps.size() == 0)
+    if (! part_reg || part_reg->gaps.size() == 0)
     {
+fprintf(stderr, "  SOLID\n");
       delete LN; return SOLID_LEAF;
     }
 
     all_windings.push_back(LN);
 
     // Z partitioning occurs later (the second pass)
-    LN->region = R;
+fprintf(stderr, "  Region %p\n", part_reg);
+    LN->region = part_reg;
 
     return LN;
   }
@@ -851,8 +875,8 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, i
   rSide_c *part = FindPartition(LN);
   SYS_ASSERT(part);
 
-  // fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
-  //                 part->x1, part->y1, part->x2, part->y2);
+fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
+                part->x1, part->y1, part->x2, part->y2);
 
   // turn the pseudo leaf into a real node
   LN->BecomeNode(part->x1, part->y1, part->x2, part->y2);
@@ -860,17 +884,17 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, i
   rNode_c * FRONT = new rNode_c();
   rNode_c * BACK  = new rNode_c();
 
-/// int count = LN->UsableSides();
+/// int count = (int)LN->sides.size(); // LN->UsableSides();
 
   Split_XY(LN, FRONT, BACK);
 
-/// int c_front = FRONT->UsableSides();
-/// int c_back  =  BACK->UsableSides();
+/// int c_front = (int)FRONT->sides.size(); //  FRONT->UsableSides();
+/// int c_back  = (int) BACK->sides.size(); //  BACK->UsableSides();
 
 /// fprintf(stderr, "  SplitXY DONE: %d --> %d / %d\n", count, c_front, c_back);
 
-  LN->front = Partition_XY(FRONT, part->seg, 0);
-  LN->back  = Partition_XY(BACK,  part->seg, 1);
+  LN->front = Partition_XY(FRONT, part->FrontRegion());
+  LN->back  = Partition_XY(BACK,  part->BackRegion());
 
   return LN;
 }
@@ -1329,6 +1353,8 @@ static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
 
       rFace_c * F = NewFace(rFace_c::WALL, nz1, nz2, av);
 
+fprintf(stderr, "Created face %p : %1.0f..%1.0f\n", F, nz1, nz2);
+
       LEAF->AddFace(F);
       S->on_partition->AddFace(F);
     }
@@ -1352,8 +1378,7 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G   )
   SYS_ASSERT(seg);
 
   // create the faces
-  merge_region_c *R  = (S->side == 0) ? seg->front : seg->back;
-  merge_region_c *RX = (S->side == 0) ? seg->back  : seg->front;
+  merge_region_c *RX = S->BackRegion();
 
   double z1 = G->GetZ1();
   double z2 = G->GetZ2();
@@ -1395,6 +1420,7 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
   
   merge_gap_c *G = R->gaps[gap];
 
+fprintf(stderr, "Z_Leaf: winding %p has %u sides\n", winding, winding->sides.size());
   for (unsigned int i = 0; i < winding->sides.size(); i++)
   {
     Side_BuildFaces(LEAF, winding->sides[i], G);
