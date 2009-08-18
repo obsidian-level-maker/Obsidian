@@ -64,6 +64,8 @@ static qLump_c *q_clip_nodes;
 
 int q1_total_nodes;
 int q1_total_leafs;
+int q1_total_faces;
+
 int q1_total_mark_surfs;
 int q1_total_surf_edges;
 
@@ -71,6 +73,16 @@ int q1_total_surf_edges;
 static std::vector<rNode_c *> all_windings;
 
 static std::vector<rNode_c *> z_leafs;
+
+
+class rWindingVerts_c
+{
+public:
+  int count;
+
+  float x[256];
+  float y[256];
+};
 
 
 #if 0
@@ -130,10 +142,26 @@ public:
 
   int index;
 
+  area_face_c *w_face;
+
+  /* WALL STUFF */
+
+  rSide_c *side;
+  double z1, z2;
+
+  area_vert_c *area_v;  // ???? needed
+
+  /* FLOOR n CEIL STUFF */
+
+  double z;
+
+  rWindingVerts_c *UU;
+
 public:
   rFace_c() : index(-1)
   { }
 };
+
 #if 0
 
 // for WALL faces, the x and y coordinates are not stored in the
@@ -382,6 +410,8 @@ public:
   rNode_c *front;  // front space
   rNode_c *back;   // back space
 
+  rWindingVerts_c *wi_verts;
+
 
   /* COMMON STUFF */
 
@@ -396,15 +426,16 @@ public:
   // LEAF
   rNode_c() : lf_contents(CONTENTS_EMPTY), sides(),
               winding(NULL), region(NULL),
-              front(NULL), back(NULL), faces(), index(-1)
+              front(NULL), back(NULL), wi_verts(NULL),
+              faces(), index(-1)
   { }
 
   rNode_c(bool  _Zsplit) : lf_contents(CONTENT__NODE), sides(),
                           winding(NULL), region(NULL),
                           z_splitter(_Zsplit), z(0), dz(_Zsplit ? 1 : 0),
                           x(0), y(0), dx(0), dy(0),
-                          front(NULL), back(NULL), faces(),
-                          index(-1)
+                          front(NULL), back(NULL), wi_verts(NULL),
+                          faces(), index(-1)
   { }
 
   ~rNode_c()
@@ -856,8 +887,6 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
 fprintf(stderr, "Partition_XY: found pseudo-leaf %p, sides:%u\n",
 LN, LN->sides.size());
 
-    merge_region_c *R = part_reg;
-
     if (! part_reg || part_reg->gaps.size() == 0)
     {
 fprintf(stderr, "  SOLID\n");
@@ -1017,8 +1046,10 @@ struct Compare_FloorAngle_pred
 };
 
 
-static int CollectClockwiseVerts(rNode_c *winding, float *vert_x, float *vert_y, bool anticlock)
+static rWindingVerts_c * CollectClockwiseVerts(rNode_c *winding)
 {
+  rWindingVerts_c * UU = new rWindingVerts_c;
+
   int v_num = 0;
 
   std::vector<rSide_c *>::iterator SI;
@@ -1031,12 +1062,16 @@ static int CollectClockwiseVerts(rNode_c *winding, float *vert_x, float *vert_y,
   {
     rSide_c *S = *SI;
 
-    vert_x[v_num] = S->x1;
-    vert_y[v_num] = S->y1;
+    UU->x[v_num] = S->x1;
+    UU->y[v_num] = S->y1;
 
-    mid_x += vert_x[v_num];
-    mid_y += vert_y[v_num];
+    mid_x += UU->x[v_num];
+    mid_y += UU->y[v_num];
   }
+
+  SYS_ASSERT(v_num > 0);
+
+  UU->count = v_num;
 
   mid_x /= v_num;
   mid_y /= v_num;
@@ -1050,11 +1085,7 @@ static int CollectClockwiseVerts(rNode_c *winding, float *vert_x, float *vert_y,
 
   for (int a = 0; a < v_num; a++)
   {
-    angles[a] = CalcAngle(mid_x, mid_y, vert_x[a], vert_y[a]);
-
-    if (! anticlock)
-      angles[a] *= -1.0;
-
+    angles[a]  = 0 - CalcAngle(mid_x, mid_y, UU->x[a], UU->y[a]);
     mapping[a] = a;
   }
 
@@ -1069,20 +1100,20 @@ static int CollectClockwiseVerts(rNode_c *winding, float *vert_x, float *vert_y,
 
   for (int k = 0; k < v_num; k++)
   {
-    old_x[k] = vert_x[k];
-    old_y[k] = vert_y[k];
+    old_x[k] = UU->x[k];
+    old_y[k] = UU->y[k];
   }
 
 ///fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
   for (int m = 0; m < v_num; m++)
   {
-    vert_x[m] = old_x[mapping[m]];
-    vert_y[m] = old_y[mapping[m]];
+    UU->x[m] = old_x[mapping[m]];
+    UU->y[m] = old_y[mapping[m]];
 
 ///fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
   }
 
-  return v_num;
+  return UU;
 }
 
 
@@ -1118,7 +1149,7 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
 }
 
 
-static void BuildFloorFace(dface_t& raw_face, rFace_c *F)
+static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 {
 // FIXME BuildFloorFace
 #if 0
@@ -1203,14 +1234,9 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F)
 }
 
 
-static void BuildWallFace(dface_t& raw_face, rFace_c *F)
+static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 {
-// FIXME BuildWallFace
-#if 0
-  qSide_c *S = F->side;
-
-  merge_region_c *R = S->GetRegion();
-  SYS_ASSERT(R);
+  rSide_c *S = F->side;
 
 ///  merge_gap_c *gap = R->gaps.at(F->gap);
 
@@ -1221,21 +1247,12 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F)
   bool flipped;
 
   raw_face.planenum = BSP_AddPlane(S->x1, S->y1, 0,
-                                (S->y2 - S->y1), (S->x1 - S->x2), 0,
-                                &flipped);
+                                   (S->y2 - S->y1), (S->x1 - S->x2), 0,
+                                   &flipped);
 
   raw_face.side = flipped ? 1 : 0;
-  
-  const char *texture = "error";
 
-  merge_region_c *BACK = (S->side == 0) ? S->seg->back : S->seg->front;
-///fprintf(stderr, "BACK = %p\n", BACK);
-  if (BACK)
-  {
-    csg_brush_c *MID = PolyForSideTexture(BACK, z1, z2);
-    if (MID)
-      texture = MID->w_face->tex.c_str();
-  }
+  const char *texture = F->w_face->tex.c_str();
 
   int flags = CalcTextureFlag(texture);
 
@@ -1297,38 +1314,48 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F)
 
     raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
   }
-#endif
 }
 
 
-///---static void Flat_BuildFaces(rNode_c *LN)
-///---{
-///---  if (LN == SOLID_LEAF)
-///---    return;
-///---
-///---  if (! LN->IsNode())
-///---    return;
-///---
-///---  // recurse down
-///---  Flat_BuildFaces(LN->front);
-///---  Flat_BuildFaces(LN->back);
-///---
-///---  if (! LN->winding())
-///---    return;
-///---
-///---  SYS_ASSERT(LN->z_splitter);
-///---
-///---  rFace_c * F = new rFace_c;
-///---
-///---  LN->faces.insert(F);
-///---
-///---  // FIXME
-///---}
-
-
-static rFace_c * NewFace(...)
+static rFace_c * NewFace(rSide_c *S, double z1, double z2,
+                         area_vert_c *av)
 {
   rFace_c * F = new rFace_c;
+
+  F->kind = rFace_c::WALL;
+  F->index = -1;
+
+  F->side = S;
+
+  F->z1 = z1;
+  F->z2 = z2;
+
+  F->area_v = av;
+  F->w_face = av->w_face;
+
+  if (! F->w_face)
+    F->w_face = av->parent->w_face;
+
+  SYS_ASSERT(F->w_face);
+
+  return F;
+}
+
+
+static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
+                         area_face_c *w_face)
+{
+  rFace_c * F = new rFace_c;
+
+  F->kind = kind;
+  F->index = -1;
+
+  F->w_face = w_face;
+
+  F->z = z;
+  F->UU = UU;
+
+//!!!!!!  SYS_ASSERT(F->w_face);
 
   return F;
 }
@@ -1337,6 +1364,7 @@ static rFace_c * NewFace(...)
 static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
                       area_vert_c *av)
 {
+  SYS_ASSERT(av);
   SYS_ASSERT(z2 > z1);
 
   // make sure face height does not exceed the limit
@@ -1353,7 +1381,7 @@ static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
       double nz1 = z1 + (z2 - z1) *  i    / (double)num;
       double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
 
-      rFace_c * F = NewFace(rFace_c::WALL, nz1, nz2, av);
+      rFace_c * F = NewFace(S, nz1, nz2, av);
 
 fprintf(stderr, "Created face %p : %1.0f..%1.0f\n", F, nz1, nz2);
 fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, S->on_partition);
@@ -1380,16 +1408,24 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G   )
   merge_segment_c * seg = S->seg;
   SYS_ASSERT(seg);
 
+fprintf(stderr, "SIDE (%1.0f %1.0f) --> (%1.0f %1.0f)\n", S->x1,S->y1, S->x2,S->y2);
+fprintf(stderr, "SEG  (%1.0f %1.0f) --> (%1.0f %1.0f)\n", seg->start->x,seg->start->y, seg->end->x,seg->end->y);
+fprintf(stderr, "SIDE %p  SEG %p  S->side:%d  f_sides:%u b:%u\n",
+S, seg, S->side, seg->f_sides.size(), seg->b_sides.size());
+
   // create the faces
   merge_region_c *RX = S->BackRegion();
 
   double z1 = G->GetZ1();
   double z2 = G->GetZ2();
 
+  // FIXME: this is totally wrong, need to fix CSG2_FindSideVertex et al
+  bool on_front = (S->side == 1);
+
   // emergency fallback
   if (RX == NULL)
   {
-    DoAddFace(LEAF, S, z1, z2, CSG2_FindSideVertex(seg, (z1+z2)/2.0, (S->side==0)));
+    DoAddFace(LEAF, S, z1, z2, CSG2_FindSideVertex(seg, (z1+z2)/2.0, on_front));
     return;
   }
 
@@ -1408,7 +1444,7 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G   )
     if (sz2 < sz1 + 0.99)  // don't create tiny faces
       continue;
 
-    DoAddFace(LEAF, S,  sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, (S->side==0)));
+    DoAddFace(LEAF, S,  sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, on_front));
   }
 }
 
@@ -1439,15 +1475,17 @@ fprintf(stderr, "Z_Leaf: winding %p has %u sides\n", winding, winding->sides.siz
 
 static void AddFlatFace(rNode_c * N, int gap, int kind)
 {
+  rWindingVerts_c * UU = NULL; //!!!!! FIXME
+
+  area_face_c *w_face = NULL;  //!!!!! FIXME
+
   for (unsigned int k = 0; k < z_leafs.size(); k++)
   {
     rNode_c * LEAF = z_leafs[k];
 
     if (LEAF->gap == gap)
     {
-      rFace_c *F = NewFace();
-
-      F->kind = kind;
+      rFace_c *F = NewFace(kind, N->z, UU, w_face);
 
 fprintf(stderr, "Created flat face z=%1.0f\n", N->z);
 fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, N);
@@ -1583,9 +1621,13 @@ static void AssignIndexes(rNode_c *node)
 }
 
 
-static void WriteFace(rFace_c *F)
+static void WriteFace(rFace_c *F, rNode_c *N)
 {
   SYS_ASSERT(F->index < 0);
+
+  F->index = q1_total_faces;
+  q1_total_faces++;
+
 
   dface_t raw_face;
 
@@ -1594,17 +1636,10 @@ static void WriteFace(rFace_c *F)
   raw_face.firstedge = q1_total_surf_edges;
   raw_face.numedges  = 0;
 
-  if (true) //!!!!!!  rFace_c::WALL)
-    BuildWallFace(raw_face, F);
+  if (F->kind == rFace_c::WALL)
+    BuildWallFace(raw_face, F, N);
   else
-    BuildFloorFace(raw_face, F);
-
-  F->index = (int)model.numfaces;
-  model.numfaces += 1;
-
-  if (F->index >= MAX_MAP_FACES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
+    BuildFloorFace(raw_face, F, N);
 
   // TODO: fix endianness in face
   q1_faces->Append(&raw_face, sizeof(raw_face));
@@ -1704,11 +1739,11 @@ static void WriteNodes(rNode_c *node)
 fprintf(stderr, "Write node %p : faces=%u\n", node, node->faces.size());
   if (node->faces.size() > 0)
   {
-    raw_nd.firstface = model.numfaces;
+    raw_nd.firstface = q1_total_faces;
     raw_nd.numfaces  = node->faces.size();
 
     for (unsigned int k = 0; k < node->faces.size(); k++)
-      WriteFace(node->faces[k]);
+      WriteFace(node->faces[k], node);
   }
 
 
@@ -1769,6 +1804,13 @@ void Q1_CreateModel(void)
   WriteSolidLeaf();
 
   WriteNodes(R_ROOT);
+
+
+  if (q1_total_faces >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  model.numfaces = q1_total_faces;
 
 
   // set model bounding box
