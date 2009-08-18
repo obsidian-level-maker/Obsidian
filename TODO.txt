@@ -2,6 +2,21 @@
 TODO
 ====
 
+-  more ammo in starting room  (biggest pack for starting weapon or bullets)
+
+-  if monster uses replaces, but what it replaces does not exist, then never add that monster
+
+-  more robust handling of no usable monsters / weapons
+
+>> Compilation notes !!
+
+>> QSAVETEX: delete output wad on error
+
+-  Progressive bug:
+    "Oblige seems to make the largest level the first level of the next
+    "episode" in Doom 2 (IE MAP12 being massive instead of very small)
+
+
 +  get more games working (Heretic, Hexen etc)
 
 +  more themes for DOOM (Urban, Hell)

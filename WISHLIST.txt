@@ -2,6 +2,10 @@
 WISH-LIST
 =========
 
+-  more choices for Outdoor setting
+
+-  module explanations (appear above the options)
+
 MAP32: find and kill all the Keens to open the door to the exit.
        perhaps use Psychedelic theme and a lower qty Crazy mode.
 
@@ -63,8 +67,6 @@ Ceilings:
 Pickups:
   -  add some powerups
 
-
-Fight Sim: reimplement monster-weapon preferences
 
 Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
   
@@ -522,6 +524,12 @@ PIPE DREAMS
 -  have a table listing a quantized HSV for each texture/flat
    and make aesthetic decisions using it.
 
+-  CTF maps (boomctf) :
+       5130 = "Blue flag";
+       5131 = "Red flag";
+       5080 = "Blue Start"      
+       5081 = "Red Start"
+
 -  Batch mode:
    .  -b(atch) builds then quits
    .  -o(utput) for output filename
@@ -529,14 +537,6 @@ PIPE DREAMS
    .  option to read a different config file: -c(onfig)
    .  never writes the config file
    ?? what to do on error ??
-
--  CTF maps (boomctf) :
-
-      5130 = "Blue flag";
-      5131 = "Red flag";
-
-      5080 = "Blue Start"      
-      5081 = "Red Start"
 
 
  ____________________
