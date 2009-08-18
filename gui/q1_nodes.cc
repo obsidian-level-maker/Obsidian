@@ -68,7 +68,9 @@ int q1_total_mark_surfs;
 int q1_total_surf_edges;
 
 
-static std::list<rNode_c *> all_windings;
+static std::vector<rNode_c *> all_windings;
+
+static std::vector<rNode_c *> z_leafs;
 
 
 #if 0
@@ -362,6 +364,8 @@ public:
 
   merge_region_c *region;
 
+  int gap;
+
 
   /* NODE STUFF */
 
@@ -377,8 +381,6 @@ public:
 
   rNode_c *front;  // front space
   rNode_c *back;   // back space
-
-  int area;
 
 
   /* COMMON STUFF */
@@ -1354,6 +1356,7 @@ static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
       rFace_c * F = NewFace(rFace_c::WALL, nz1, nz2, av);
 
 fprintf(stderr, "Created face %p : %1.0f..%1.0f\n", F, nz1, nz2);
+fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, S->on_partition);
 
       LEAF->AddFace(F);
       S->on_partition->AddFace(F);
@@ -1415,6 +1418,10 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
 {
   rNode_c *LEAF = NewLeaf(CONTENTS_EMPTY);
 
+  LEAF->gap = gap;
+
+  z_leafs.push_back(LEAF);
+
   SYS_ASSERT(R);
   SYS_ASSERT(0 <= gap && gap < (int)R->gaps.size());
   
@@ -1427,6 +1434,32 @@ fprintf(stderr, "Z_Leaf: winding %p has %u sides\n", winding, winding->sides.siz
   }
 
   return LEAF;
+}
+
+
+static void AddFlatFace(rNode_c * N, int gap, int kind)
+{
+  for (unsigned int k = 0; k < z_leafs.size(); k++)
+  {
+    rNode_c * LEAF = z_leafs[k];
+
+    if (LEAF->gap == gap)
+    {
+      rFace_c *F = NewFace();
+
+      F->kind = kind;
+
+fprintf(stderr, "Created flat face z=%1.0f\n", N->z);
+fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, N);
+
+      LEAF->AddFace(F);
+      N->AddFace(F);
+
+      return;
+    }
+  }
+
+  LogPrintf("WARNING: missing leaf for flat surface\n");
 }
 
 
@@ -1473,6 +1506,8 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
     node->back  = Partition_Z(winding, R, min_area, a1);
     node->front = Partition_Z(winding, R, a2, max_area);
 
+    AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR);
+
     return node;
   }
 }
@@ -1498,6 +1533,8 @@ static rNode_c * SecondPass(rNode_c *LN)
 
   SYS_ASSERT(LN->region);
   SYS_ASSERT(LN->region->gaps.size() > 0);
+
+  z_leafs.clear();
 
   return Partition_Z(LN, LN->region, 0, (int)LN->region->gaps.size() * 2);
 }
@@ -1614,14 +1651,16 @@ static void WriteLeaf(rNode_c *leaf)
 
 
   // create the 'mark surfs'
+fprintf(stderr, "Write leaf %p : faces=%u\n", leaf, leaf->faces.size());
   for (unsigned int i = 0; i < leaf->faces.size(); i++)
   {
     rFace_c *F = leaf->faces[i];
 
     // should have been in a node already
-    SYS_ASSERT(F->index >= 0);
-
-    Q1_AddSurf(F->index, &raw_lf);
+    if (F->index < 0)
+      LogPrintf("WARNING: face found in leaf but not in node\n");
+    else
+      Q1_AddSurf(F->index, &raw_lf);
   }
 
   // TODO: fix endianness in raw_lf
@@ -1662,6 +1701,7 @@ static void WriteNodes(rNode_c *node)
   }
 
 
+fprintf(stderr, "Write node %p : faces=%u\n", node, node->faces.size());
   if (node->faces.size() > 0)
   {
     raw_nd.firstface = model.numfaces;
