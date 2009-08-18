@@ -227,6 +227,11 @@ public:
   { }
 
 public:
+  bool Usable() const
+  {
+    return (seg && ! on_partition);
+  }
+
   double Length() const
   {
     return ComputeDist(x1,y1, x2,y2);
@@ -245,12 +250,16 @@ class rSideFactory_c
 {
   static std::list<rSide_c> all_sides;
 
+  static rSide_c *RawNew(merge_segment_c *seg, int side)
+  {
+    all_sides.push_back(rSide_c(seg, side));
+    return &all_sides.back();
+  }
+
 public:
   static rSide_c *NewSide(merge_segment_c *seg, int side)
   {
-    all_sides.push_back(rSide_c(seg, side));
-
-    rSide_c *S = &all_sides.back();
+    rSide_c *S = RawNew(seg, side);
 
     S->x1 = seg->start->x;  S->x2 = seg->end->x;
     S->y1 = seg->start->y;  S->y2 = seg->end->y;
@@ -261,7 +270,7 @@ public:
   static rSide_c *NewPortal(double px, double py, double pdx, double pdy,
                             double start, double end)
   {
-    rSide_c *P = NewSide(NULL, 0);
+    rSide_c *P = RawNew(NULL, 0);
 
     double p_len = ComputeDist(0, 0, pdx, pdy);
 
@@ -278,7 +287,7 @@ public:
 
   static rSide_c *FakePartition(double x, double y, double dx, double dy)
   {
-    rSide_c * S = NewSide(NULL, 0);
+    rSide_c * S = RawNew(NULL, 0);
 
     S->x1 = x;
     S->y1 = y;
@@ -312,6 +321,10 @@ public:
 
   std::vector<rSide_c *> sides;
 
+  // this node just contains a list of sides which will be used
+  // to construct the floor and ceiling faces.
+  rNode_c * winding;
+
   merge_region_c *region;
 
 
@@ -343,11 +356,13 @@ public:
 
 public:
   // LEAF
-  rNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
+  rNode_c() : lf_contents(CONTENTS_EMPTY), sides(),
+              winding(NULL), region(NULL),
               front(NULL), back(NULL), faces(), index(-1)
   { }
 
-  rNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL),
+  rNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(),
+                          winding(NULL), region(NULL),
                           z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
                           front(NULL), back(NULL), faces(),
@@ -371,17 +386,13 @@ public:
     sides.push_back(S);
   }
 
-  int ValidSides() const
+  int UsableSides() const
   {
     int count = 0;
 
     for (unsigned int i = 0; i < sides.size(); i++)
-    {
-      rSide_c *S = sides[i];
-
-      if (S->seg && ! S->on_partition)
+      if (sides[i]->Usable())
         count++;
-    }
 
     return count;
   }
@@ -431,13 +442,14 @@ public:
 
 rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
 {
-  rSide_c *T = NewSide(S->seg, S->side);
-  
+  rSide_c *T = RawNew(S->seg, S->side);
+
+  T->x2 = S->x2; T->y2 = S->y2;
+  T->x1 = new_x; T->y1 = new_y;
+  S->x2 = new_x; S->y2 = new_y;
+
   T->node = S->node;
   T->on_partition = S->on_partition;
-
-  S->x2 = new_x; S->y2 = new_y;
-  T->x1 = new_x; T->y1 = new_y;
 
 ///---    // copy faces
 ///---    for (unsigned int i = 0; i < S->faces.size(); i++)
@@ -447,15 +459,16 @@ rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
   if (S->partner)
   {
     rSide_c *SP = S->partner;
-    rSide_c *TP = NewSide(SP->seg, SP->side);
+    rSide_c *TP = RawNew(SP->seg, SP->side);
 
     SYS_ASSERT(SP->node);
 
+    TP->x1 = SP->x1; TP->y1 = SP->y1;
+    TP->x2 = new_x;  TP->y2 = new_y;
+    SP->x1 = new_x;  SP->y1 = new_y;
+
     TP->node = SP->node;
     TP->on_partition = SP->on_partition;
-
-    SP->x1 = new_x; SP->y1 = new_y;
-    TP->x2 = new_x; TP->y2 = new_y;
 
     // establish partner relationship (S <-> SP remains OK)
      T->partner = TP;
@@ -495,7 +508,7 @@ static rNode_c * NewLeaf(int contents)
 //    3 for the second gap
 //    etc etc...
 
-static rNode_c * Partition_Z(rNode_c *LN, merge_region_c *R,
+static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
                               int min_area, int max_area)
 {
   SYS_ASSERT(min_area <= max_area);
@@ -504,10 +517,13 @@ static rNode_c * Partition_Z(rNode_c *LN, merge_region_c *R,
   {
     if ((min_area & 1) == 0)
     {
-      delete LN; return SOLID_LEAF;
+      return SOLID_LEAF;
     }
 
-    return LN;
+    rNode_c *LEAF = new rNode_c();
+    LEAF->lf_contents = CONTENTS_EMPTY;
+
+    return LEAF;
   }
 
 
@@ -525,8 +541,8 @@ static rNode_c * Partition_Z(rNode_c *LN, merge_region_c *R,
     else
       node->z = R->gaps[g]->GetZ2();
 
-    node->back  = Partition_Z(LN, R, min_area, a1);
-    node->front = Partition_Z(LN, R, a2, max_area);
+    node->back  = Partition_Z(winding, R, min_area, a1);
+    node->front = Partition_Z(winding, R, a2, max_area);
 
     return node;
   }
@@ -689,6 +705,11 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
   int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
   int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
+// fprintf(stderr, "dividing side %p valid:%d (%1.1f,%1.1f -> %1.1f,%1.1f)\n",
+//         S, (S->seg && ! S->on_partition) ? 1 : 0,
+//         S->x1, S->y1, S->x2, S->y2);
+// fprintf(stderr, "  a=%d b=%d\n", a_side, b_side);
+
   if (a_side == 0 && b_side == 0)
   {
     // side sits on the partition, it will go either left or right
@@ -766,12 +787,6 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
 
 static rSide_c * FindPartition(rNode_c * LEAF)
 {
-  if (LEAF->sides.size() == 0)
-    return NULL;
-
-  if (LEAF->sides.size() == 1)
-    return LEAF->sides[0];
-
   // speed up large maps
   if (LEAF->sides.size() > 8)
   {
@@ -796,6 +811,9 @@ static rSide_c * FindPartition(rNode_c * LEAF)
   {
     rSide_c *part = *SI;
 
+    if (! part->Usable())
+      continue;
+
     double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
 
     if (! best_p || cost < best_c)
@@ -806,6 +824,8 @@ static rSide_c * FindPartition(rNode_c * LEAF)
   }
 // fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
 //         best_p ? best_c : -9999, best_p);
+
+  SYS_ASSERT(best_p);
 
   return best_p;
 }
@@ -834,7 +854,7 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 
 static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, int side = 0)
 {
-  if (LN->ValidSides() == 0)
+  if (LN->UsableSides() == 0)
   {
     SYS_ASSERT(prev_part);
 
@@ -849,11 +869,11 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, i
   }
 
 
-  rSide_c *part = FindPartition(LEAF);
+  rSide_c *part = FindPartition(LN);
   SYS_ASSERT(part);
 
-// fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
-//                  part->x1, part->y1, part->x2, part->y2);
+  // fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
+  //                 part->x1, part->y1, part->x2, part->y2);
 
   // turn the pseudo leaf into a real node
   LN->BecomeNode(part->x1, part->y1, part->x2, part->y2);
@@ -861,7 +881,14 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_segment_c *prev_part = NULL, i
   rNode_c * FRONT = new rNode_c();
   rNode_c * BACK  = new rNode_c();
 
+/// int count = LN->UsableSides();
+
   Split_XY(LN, FRONT, BACK);
+
+/// int c_front = FRONT->UsableSides();
+/// int c_back  =  BACK->UsableSides();
+
+/// fprintf(stderr, "  SplitXY DONE: %d --> %d / %d\n", count, c_front, c_back);
 
   LN->front = Partition_XY(FRONT, part->seg, 0);
   LN->back  = Partition_XY(BACK,  part->seg, 1);
@@ -985,19 +1012,19 @@ struct Compare_FloorAngle_pred
 };
 
 
-static int CollectClockwiseVerts(float *vert_x, float *vert_y, qLeaf_c *leaf, bool anticlock)
+static int CollectClockwiseVerts(rNode_c *winding, float *vert_x, float *vert_y, bool anticlock)
 {
   int v_num = 0;
 
-  std::list<qSide_c *>::iterator SI;
+  std::vector<rSide_c *>::iterator SI;
 
   double mid_x = 0;
   double mid_y = 0;
   
 
-  for (SI = leaf->sides.begin(); SI != leaf->sides.end(); SI++, v_num++)
+  for (SI = winding->sides.begin(); SI != winding->sides.end(); SI++, v_num++)
   {
-    qSide_c *S = *SI;
+    rSide_c *S = *SI;
 
     vert_x[v_num] = S->x1;
     vert_y[v_num] = S->y1;
@@ -1088,6 +1115,8 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
 
 static void BuildFloorFace(dface_t& raw_face, rFace_c *F)
 {
+// FIXME BuildFloorFace
+#if 0
   qLeaf_c *leaf = F->floor_leaf;
   SYS_ASSERT(leaf);
 
@@ -1165,11 +1194,14 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F)
 
     raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
+#endif
 }
 
 
 static void BuildWallFace(dface_t& raw_face, rFace_c *F)
 {
+// FIXME BuildWallFace
+#if 0
   qSide_c *S = F->side;
 
   merge_region_c *R = S->GetRegion();
@@ -1260,6 +1292,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F)
 
     raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
   }
+#endif
 }
 
 
