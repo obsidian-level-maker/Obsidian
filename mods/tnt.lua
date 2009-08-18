@@ -277,6 +277,6 @@ OB_THEMES["tnt_egypt"] =
 {
   ref = "EGYPT",
   label = "Egypt",
-  for_module = "tnt",
+  for_modules = { tnt=1 },
 }
 
