@@ -1382,6 +1382,9 @@ static void BuildFaces(rNode_c *node)
 
 static void AssignLeafIndex(rNode_c *leaf)
 {
+  if (leaf == SOLID_LEAF)
+    return;
+
   // must add 2 (instead of 1) because leaf #0 is the SOLID_LEAF
   leaf->index = -(q1_total_leafs+2);
 
