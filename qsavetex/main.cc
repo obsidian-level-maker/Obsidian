@@ -84,11 +84,16 @@ void FatalError(const char *message, ...)
     va_start(argptr, message);
     vfprintf(log_file, message, argptr);
     va_end(argptr);
+
+    fprintf(log_file, "\n\n");
   }
+
+  // delete output file (need to close it first)
+  WAD2_CloseWrite();
 
   if (FileDelete(output_name))
   {
-    LogPrintf("\n\n(deleted incomplete output file)\n");
+    LogPrintf("\n(deleted incomplete output file)\n");
   }
 
   LogClose();

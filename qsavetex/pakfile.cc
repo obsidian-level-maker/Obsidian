@@ -270,6 +270,9 @@ bool PAK_OpenWrite(const char *filename)
 
 void PAK_CloseWrite(void)
 {
+  if (! w_pak_fp)
+    return;
+
   fflush(w_pak_fp);
 
   // write the directory
@@ -600,6 +603,9 @@ bool WAD2_OpenWrite(const char *filename)
 
 void WAD2_CloseWrite(void)
 {
+  if (! wad_W_fp)
+    return;
+
   fflush(wad_W_fp);
 
   // write the directory
