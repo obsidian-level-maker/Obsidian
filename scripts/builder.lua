@@ -2763,122 +2763,22 @@ end
 ---==========================================================---
 
 
-function Builder_quake2_test()
+function Builder_quake_test()
 
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/floor3_3" },
-    b_face = { texture="e1u1/floor3_3" },
-    w_face = { texture="e1u1/floor3_3" },
-  },
-  {
-    { x=256, y=128 },
-    { x=256, y=384 },
-    { x=0, y=384 },
-    { x=0, y=128 },
-  },
-  -24, 0)
-
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/grnx2_3" },
-    b_face = { texture="e1u1/grnx2_3" },
-    w_face = { texture="e1u1/grnx2_3" },
-  },
-  {
-    { x=256, y=128 },
-    { x=256, y=384 },
-    { x=0, y=384 },
-    { x=0, y=128 },
-  },
-  192, 208)
+  Trans_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
+  Trans_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
 
   if false then
-    gui.add_brush(
-    {
-      t_face = { texture="e1u1/grnx2_5" },
-      b_face = { texture="e1u1/grnx2_5" },
-      w_face = { texture="e1u1/grnx2_5" },
-    },
-    {
-      { x=136, y=160 },
-      { x=136, y=200 },
-      { x=120, y=200 },
-      { x=120, y=160 },
-    },
-    -EXTREME_H, EXTREME_H)
-
-    gui.add_brush(
-    {
-      t_face = { texture="e1u1/grnx2_3" },
-      b_face = { texture="e1u1/grnx2_3" },
-      w_face = { texture="e1u1/grnx2_3" },
-    },
-    {
-      { x=136, y=128 },
-      { x=136, y=160 },
-      { x=120, y=160 },
-      { x=120, y=128 },
-    },
-    -EXTREME_H, EXTREME_H)
+    Trans_quad(get_mat("METAL2_4"), 192, 192, 512, 512, -40, 440)
   end
 
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/wslt1_1" },
-    b_face = { texture="e1u1/wslt1_1" },
-    w_face = { texture="e1u1/wslt1_1" },
-  },
-  {
-    { x=32, y=128 },
-    { x=32, y=384 },
-    { x=0, y=384 },
-    { x=0, y=128 },
-  },
-  0, 192)
+  local wall_i = get_mat("COMP1_1")
 
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/wslt1_2" },
-    b_face = { texture="e1u1/wslt1_2" },
-    w_face = { texture="e1u1/wslt1_2" },
-  },
-  {
-    { x=256, y=128 },
-    { x=256, y=384 },
-    { x=224, y=384 },
-    { x=224, y=128 },
-  },
-  0, 192)
+  Trans_quad(wall_i, 0,   128,  32, 384,  0, 192)
+  Trans_quad(wall_i, 224, 128, 256, 384,  0, 192)
+  Trans_quad(wall_i, 0,   128, 256, 144,  0, 192)
+  Trans_quad(wall_i, 0,   370, 256, 384,  0, 192)
 
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/wslt1_3" },
-    b_face = { texture="e1u1/wslt1_3" },
-    w_face = { texture="e1u1/wslt1_3" },
-  },
-  {
-    { x=256, y=128 },
-    { x=256, y=144 },
-    { x=0,   y=144 },
-    { x=0,   y=128 },
-  },
-  0, 192)
-
-  gui.add_brush(
-  {
-    t_face = { texture="e1u1/wslt1_4" },
-    b_face = { texture="e1u1/wslt1_4" },
-    w_face = { texture="e1u1/wslt1_4" },
-  },
-  {
-    { x=256, y=370 },
-    { x=256, y=384 },
-    { x=0,   y=384 },
-    { x=0,   y=370 },
-  },
-  0, 192)
-
-  gui.add_entity("info_player_start", 64, 256, 64)
+  Trans_entity("player1", 64, 256, 64)
 end
 
