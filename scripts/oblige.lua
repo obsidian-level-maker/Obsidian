@@ -112,11 +112,13 @@ function ob_match_conf(T)
     return false
   end
 
-  if T.for_module then
-    local def = OB_MODULES[T.for_module]
-    if not (def and def.shown and def.enabled) then
-      return false
-    end
+  if T.for_modules then
+    for name,_ in pairs(T.for_modules) do
+        local def = OB_MODULES[name]
+        if not (def and def.shown and def.enabled) then
+          return false
+        end
+    end -- for name
   end
 
   return true --OK--
@@ -180,7 +182,7 @@ function ob_update_modules()
   -- to repeat this multiple times until all the dependencies
   -- have flowed through.
   
-  for loop = 1,10 do
+  for loop = 1,100 do
     local changed = false
 
     for name,def in pairs(OB_MODULES) do
@@ -448,8 +450,7 @@ function ob_init()
 
           gui.add_mod_option(mod.name, opt.name, opt.label)
 
-          -- default value is always the first choice
-          opt.value = opt.choices[1]
+          opt.value = opt.default or opt.choices[1]
 
           opt.avail_choices = {}
 
@@ -459,6 +460,13 @@ function ob_init()
 
             gui.add_mod_option(mod.name, opt.name, id, label)
             opt.avail_choices[id] = 1
+          end
+
+          -- FIXME FIXME REMOVE THIS TEST FOR RELEASE !!!!!!! 
+          if gui.change_mod_option then
+             gui.change_mod_option(mod.name, opt.name, opt.value)
+          else
+            opt.value = opt.choices[1]
           end
         end -- for opt
       end
