@@ -35,7 +35,7 @@ WEAP_CONTROL_AMOUNTS =
   normal = 50,
   more   = 120,
   heaps  = 300,
-  loveit = 2000,
+  loveit = 1000,
 }
 
 
@@ -48,6 +48,11 @@ function WeapControl_setup(self)
     if W and factor then
       W.start_prob = factor
       W.add_prob   = factor
+
+      -- adjust usage preference as well
+      if W.pref and factor > 0 then
+        W.pref = W.pref * ((factor / 50) ^ 0.6)
+      end
     end
   end -- for opt
 
