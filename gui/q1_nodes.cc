@@ -1151,32 +1151,17 @@ static void GetExtents(double min_s, double min_t, double max_s, double max_t,
 
 static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 {
-// FIXME BuildFloorFace
-#if 0
-  qLeaf_c *leaf = F->floor_leaf;
-  SYS_ASSERT(leaf);
-
-  merge_region_c *R = leaf->GetRegion();
-  SYS_ASSERT(R);
-
-  merge_gap_c *gap = R->gaps.at(F->gap);
-
-  double z1 = gap->GetZ1();
-  double z2 = gap->GetZ2();
-
-  double z = (F->kind == qFace_c::CEIL) ? z2 : z1;
-///fprintf(stderr, "BuildFloorFace: F=%p kind:%d @ z:%1.0f\n", F, F->kind, z);
-
-
-  bool is_ceil = (F->kind == qFace_c::CEIL) ? true : false;
+  bool is_ceil = (F->kind == rFace_c::CEIL) ? true : false;
   bool flipped;
+
+  double z = F->z;
 
   raw_face.planenum = BSP_AddPlane(0, 0, z,
                                    0, 0, is_ceil ? -1 : +1, &flipped);
   raw_face.side = flipped ? 1 : 0;
 
 
-  const char *texture = is_ceil ? gap->CeilTex() : gap->FloorTex();
+  const char *texture = F->w_face->tex.c_str();
 
   int flags = CalcTextureFlag(texture);
 
@@ -1192,30 +1177,34 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 
   raw_face.lightofs = -1;  // no lightmap
 
-  // collect the vertices and sort in clockwise order
+  
+  rWindingVerts_c *UU = F->UU;
 
-  float vert_x[256];
-  float vert_y[256];
-
-  int v_num = CollectClockwiseVerts(vert_x, vert_y, leaf, flipped);
+  // FIXME: need at least 3 verts
+  int v_num = UU->count;
 
   double min_x = +9e9; double max_x = -9e9;
   double min_y = +9e9; double max_y = -9e9;
 
 
-  // add the edges
+  // add the edges [anti-clockwise if flipped]
 
   for (int pos = 0; pos < v_num; pos++)
   {
-    int p2 = (pos + 1) % v_num;
+    int p2;
 
-    Q1_AddEdge(vert_x[pos], vert_y[pos], z,
-               vert_x[p2 ], vert_y[p2 ], z, &raw_face);
+    if (flipped)
+      p2 = (pos + v_num - 1) % v_num;
+    else
+      p2 = (pos + 1) % v_num;
 
-    min_x = MIN(min_x, vert_x[pos]);
-    min_y = MIN(min_y, vert_y[pos]);
-    max_x = MAX(max_x, vert_x[pos]);
-    max_y = MAX(max_y, vert_y[pos]);
+    Q1_AddEdge(UU->x[pos], UU->y[pos], z,
+               UU->x[p2 ], UU->y[p2 ], z, &raw_face);
+
+    min_x = MIN(min_x, UU->x[pos]);
+    min_y = MIN(min_y, UU->y[pos]);
+    max_x = MAX(max_x, UU->x[pos]);
+    max_y = MAX(max_y, UU->y[pos]);
   }
 
 
@@ -1230,7 +1219,6 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 
     raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
   }
-#endif
 }
 
 
@@ -1355,7 +1343,7 @@ static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
   F->z = z;
   F->UU = UU;
 
-//!!!!!!  SYS_ASSERT(F->w_face);
+  SYS_ASSERT(F->w_face);
 
   return F;
 }
@@ -1473,12 +1461,9 @@ fprintf(stderr, "Z_Leaf: winding %p has %u sides\n", winding, winding->sides.siz
 }
 
 
-static void AddFlatFace(rNode_c * N, int gap, int kind)
+static void AddFlatFace(rNode_c * N, int gap, int kind, area_face_c *w_face,
+                        rWindingVerts_c *UU)
 {
-  rWindingVerts_c * UU = NULL; //!!!!! FIXME
-
-  area_face_c *w_face = NULL;  //!!!!! FIXME
-
   for (unsigned int k = 0; k < z_leafs.size(); k++)
   {
     rNode_c * LEAF = z_leafs[k];
@@ -1536,15 +1521,22 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
     int g = a1 / 2;
     SYS_ASSERT(g < (int)R->gaps.size());
 
+    merge_gap_c *G = R->gaps[g];
+
     if (a1 & 1)
-      node->z = R->gaps[g]->GetZ2();
+      node->z = G->GetZ2();
     else
-      node->z = R->gaps[g]->GetZ1();
+      node->z = G->GetZ1();
 
     node->back  = Partition_Z(winding, R, min_area, a1);
     node->front = Partition_Z(winding, R, a2, max_area);
 
-    AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR);
+    if (! winding->wi_verts)
+      winding->wi_verts = CollectClockwiseVerts(winding);
+
+    AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR,
+                (a1 & 1) ? G->t_brush->b_face : G->b_brush->t_face,
+                winding->wi_verts);
 
     return node;
   }
