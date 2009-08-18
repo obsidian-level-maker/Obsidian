@@ -341,12 +341,16 @@ class cpSideFactory_c
 {
   static std::list<cpSide_c> all_sides;
 
+  static cpSide_c *RawNew(merge_segment_c *seg)
+  {
+    all_sides.push_back(cpSide_c(seg));
+    return &all_sides.back();
+  }
+
 public:
   static cpSide_c *NewSide(merge_segment_c *seg)
   {
-    all_sides.push_back(cpSide_c(seg));
-
-    cpSide_c *S = &all_sides.back();
+    cpSide_c *S = RawNew(seg);
 
     S->x1 = seg->start->x;  S->x2 = seg->end->x;
     S->y1 = seg->start->y;  S->y2 = seg->end->y;
@@ -356,26 +360,22 @@ public:
 
   static cpSide_c *SplitAt(cpSide_c *S, double new_x, double new_y)
   {
-    cpSide_c *T = NewSide(S->seg);
-    
-    S->x2 = new_x;
-    S->y2 = new_y;
+    cpSide_c *T = RawNew(S->seg);
 
-    T->x1 = new_x;
-    T->y1 = new_y;
+    T->x1 = new_x; T->y1 = new_y;
+    T->x2 = S->x2; T->y2 = S->y2;
+
+    S->x2 = new_x; S->y2 = new_y;
 
     return T;
   }
 
   static cpSide_c *FakePartition(double x, double y, double dx, double dy)
   {
-    cpSide_c * S = NewSide(NULL);
+    cpSide_c * S = RawNew(NULL);
 
-    S->x1 = x;
-    S->y1 = y;
-
-    S->x2 = x+dx;
-    S->y2 = y+dy;
+    S->x1 = x;  S->x2 = x+dx;
+    S->y1 = y;  S->y2 = y+dy;
 
     return S;
   }
