@@ -245,6 +245,7 @@ int gui_show_button(lua_State *L)
   return 0;
 }
 
+
 // LUA: change_button(what, id [, bool])
 //
 int gui_change_button(lua_State *L)
@@ -272,6 +273,23 @@ int gui_change_button(lua_State *L)
 
   else
     Main_FatalError("change_button: unknown what value '%s'\n", what);
+
+  return 0;
+}
+
+// LUA: change_mod_option(module, option, value)
+//
+int gui_change_mod_option(lua_State *L)
+{
+  const char *module = luaL_checkstring(L,1);
+  const char *option = luaL_checkstring(L,2);
+  const char *value  = luaL_checkstring(L,3);
+
+  SYS_ASSERT(module && option && value);
+
+   DebugPrintf("change_mod_option: %s.%s --> %s\n", module, option, value);
+
+  main_win->mod_box->ParseOptValue(module, option, value);
 
   return 0;
 }
@@ -442,6 +460,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "add_mod_option", gui_add_mod_option },
   { "show_button",    gui_show_button },
   { "change_button",  gui_change_button },
+  { "change_mod_option", gui_change_mod_option },
 
   { "at_level",    gui_at_level },
   { "progress",    gui_progress },
