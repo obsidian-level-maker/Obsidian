@@ -70,7 +70,6 @@ OB_MODULES["weap_control"] =
 
   options =
   {
-    fist     = { label="Fist",             choices=WEAP_CONTROL_CHOICES },
     berserk  = { label="Berserk",          choices=WEAP_CONTROL_CHOICES },
     saw      = { label="Saw",              choices=WEAP_CONTROL_CHOICES },
     shotty   = { label="Shotgun",          choices=WEAP_CONTROL_CHOICES },
