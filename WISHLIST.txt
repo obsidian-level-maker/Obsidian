@@ -10,6 +10,17 @@ MAP32: find and kill all the Keens to open the door to the exit.
        perhaps use Psychedelic theme and a lower qty Crazy mode.
 
 
+Other Games:
+
+-  Heretic II (uses same format as Quake II ?)
+-  Soldier of Fortune
+-  Serious Sam
+
+?  Strife
+?  Marathon
+?  Dark Forces
+
+
 CSG IDEA: clipping rectangles (typically a room)
 
 Monsters:
