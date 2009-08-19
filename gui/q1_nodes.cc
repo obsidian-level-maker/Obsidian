@@ -1191,15 +1191,22 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 
   for (int pos = 0; pos < v_num; pos++)
   {
+    int p1;
     int p2;
 
     if (flipped)
-      p2 = (pos + v_num - 1) % v_num;
+    {
+      p1 = (v_num*2 - pos)     % v_num;
+      p2 = (v_num*2 - pos - 1) % v_num;
+    }
     else
+    {
+      p1 = pos;
       p2 = (pos + 1) % v_num;
+    }
 
-    Q1_AddEdge(UU->x[pos], UU->y[pos], z,
-               UU->x[p2 ], UU->y[p2 ], z, &raw_face);
+    Q1_AddEdge(UU->x[p1], UU->y[p1], z,
+               UU->x[p2], UU->y[p2], z, &raw_face);
 
     min_x = MIN(min_x, UU->x[pos]);
     min_y = MIN(min_y, UU->y[pos]);
@@ -1508,8 +1515,6 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
 
 
   {
-///---    int dz = (a1 & 1) ? -1 : +1;
-
     rNode_c *node = new rNode_c(true /* z_splitter */);
 
     node->dz = 1;
