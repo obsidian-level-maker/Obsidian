@@ -123,9 +123,7 @@ static void OLD_SplitDiagonalSides(qLeaf_c *L)
     new_bits.pop_back();
   }
 }
-
 #endif
-
 
 
 class rFace_c
@@ -162,39 +160,8 @@ public:
   { }
 };
 
+
 #if 0
-
-// for WALL faces, the x and y coordinates are not stored in the
-// face itself, but come from the rSide_c which contains the face.
-
-class rFace_c
-{
-friend class rFaceFactory_c;
-
-public:
-  enum
-  {
-    WALL  = 0,
-    FLOOR = 1,
-    CEIL  = 2
-  };
-
-  int kind;
-  int gap;
-
-  double z1, z2;
-
-  area_vert_c *area_v;  // for texture (etc)
-
-public:
-  rFace_c(int _kind = WALL) : kind(_kind), area_v(NULL)
-  { }
-
-  ~rFace_c()
-  { }
-};
-
-
 class rFaceFactory_c
 {
   static std::list<rFace_c> all_faces;
@@ -576,26 +543,6 @@ static rNode_c * NewLeaf(int contents)
 }
 
 
-
-///---static void GrabFaces(rNode_c *part, rSide_c *S, rNode_c *FRONT, rNode_c *BACK)
-///---{
-///---
-///---  int p_side = (a >= 0) ? 0 : 1;
-///---
-///---  for (unsigned int i = 0; i < S->faces.size(); i++)
-///---  {
-///---    rFace_c *F = S->faces[i];
-///---
-///---    part->faces.push_back(F);
-///---
-///---    if (p_side == S->side)
-///---      FRONT->faces.push_back(F);
-///---    else
-///---      BACK->faces.push_back(F);
-///---  }
-///---}
-
-
 static void CreatePortals(rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
                           std::vector<intersect_t> & cut_list)
 {
@@ -603,15 +550,6 @@ static void CreatePortals(rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
   {
     double along1 = cut_list[i].along;
     double along2 = cut_list[i].next_along;
-
-#if 0
-    // check if portal crosses solid space
-    // (NOTE: this is hackish!)
-    double mx = (K1->x + K2->x) / 2.0;
-    double my = (K1->y + K2->y) / 2.0;
-
-    assert (! CSG2_PointInSolid(mx, my));
-#endif
 
     rSide_c *F = rSideFactory_c::NewPortal(part->x, part->y, part->dx, part->dy, along1, along2);
     rSide_c *B = rSideFactory_c::NewPortal(part->x, part->y, part->dx, part->dy, along2, along1);
