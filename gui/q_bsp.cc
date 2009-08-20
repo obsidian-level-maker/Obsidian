@@ -928,7 +928,7 @@ void BSP_MergeIntersections(std::vector<intersect_t> & cut_list)
 
     B = A; B++;
 
-    if (B == cut_list.end())
+    if (B == temp_list.end())
       break;
 
     // this handles multiple +1 entries and also ensures
