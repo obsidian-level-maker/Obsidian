@@ -2233,7 +2233,7 @@ end
         w_tex = R.corner_tex
       end
 
-      Trans_quad(get_mat(w_tex), x1,y1, x2,y2, EXTREME_H, EXTREME_H);
+      Trans_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.combo.wall, floor=S.f_tex or S.room.combo.floor }
