@@ -109,7 +109,7 @@ static bool Cookie_ParseLine(char *buf)
 
   const char *name = buf;
 
-  for (buf++; isalpha(*buf) || *buf == '_' || *buf == '.'; buf++)
+  for (buf++; isalnum(*buf) || *buf == '_' || *buf == '.'; buf++)
   { /* nothing here */ }
 
   while (isspace(*buf))
