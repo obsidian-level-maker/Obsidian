@@ -1769,6 +1769,7 @@ fprintf(stderr, "BSP_NewLump...\n");
 
   q1_total_nodes = 0;
   q1_total_leafs = 0;  // ignoring the solid leaf
+  q1_total_faces = 0;
 
   q1_total_mark_surfs = 0;
   q1_total_surf_edges = 0;
