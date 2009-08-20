@@ -874,7 +874,7 @@ int BSP_NiceMidwayPoint(float low, float extent)
 {
   int pow2 = 1;
 
-  while (pow2 < extent/5)
+  while (pow2 < extent/7)
   {
     pow2 = pow2 << 1;
   }
