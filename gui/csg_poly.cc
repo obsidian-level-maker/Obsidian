@@ -1364,7 +1364,8 @@ static merge_segment_c *ClosestSegmentToPoint(double x, double y, bool *hit_vert
   return closest_up ? closest_up : closest_down;
 }
 
-static merge_region_c *FindRegionForPoint(double x, double y)
+
+merge_region_c *CSG2_FindRegionForPoint(double x, double y)
 {
   // it is possible that we hit vertices both up and down, so
   // for that case we need to try a slightly moved point.
@@ -1409,13 +1410,6 @@ static merge_region_c *FindRegionForPoint(double x, double y)
   return NULL;
 }
 
-bool CSG2_PointInSolid(double x, double y)
-{
-  merge_region_c *R = FindRegionForPoint(x, y);
-
-  return ! (R && R->gaps.size() > 0);
-}
-
 
 static merge_gap_c *FindGapForPoint(merge_region_c *R, double x, double y, double z)
 {
@@ -1444,7 +1438,7 @@ static void Mug_PlaceEntities(void)
   {
     entity_info_c *E = all_entities[i];
 
-    merge_region_c *R = FindRegionForPoint(E->x, E->y);
+    merge_region_c *R = CSG2_FindRegionForPoint(E->x, E->y);
 
     if (! R || R->gaps.size() == 0)
     {

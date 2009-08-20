@@ -427,6 +427,8 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
 area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
                                 area_vert_c *V = NULL);
 
+merge_region_c *CSG2_FindRegionForPoint(double x, double y);
+
 void CSG2_MakeMiniMap(void);
 
 void CSG2_FreeMerges(void);

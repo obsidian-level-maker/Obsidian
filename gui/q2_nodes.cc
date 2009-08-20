@@ -42,7 +42,13 @@
 #define FACE_MAX_SIZE  240
 
 
-extern bool CSG2_PointInSolid(double x, double y);
+static bool CRUD_PointInSolid(double x, double y)
+{
+  merge_region_c *R = CSG2_FindRegionForPoint(x, y);
+
+  return ! (R && R->gaps.size() > 0);
+}
+
 
 
 class qSide_c;
@@ -799,7 +805,7 @@ static void CreatePortals(std::vector<intersection_c *>& cut_list,
     double mx = (K1->x + K2->x) / 2.0;
     double my = (K1->y + K2->y) / 2.0;
 
-    if (CSG2_PointInSolid(mx, my))
+    if (CRUD_PointInSolid(mx, my))
       continue;
 
     qSide_c *front_pt = qSide_c::NewPortal(K1->x,K1->y, K2->x,K2->y, 0);
