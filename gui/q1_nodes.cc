@@ -66,6 +66,7 @@ int q1_total_faces;
 
 int q1_total_mark_surfs;
 int q1_total_surf_edges;
+int q1_total_clusters;
 
 
 static std::vector<rNode_c *> all_windings;
@@ -301,7 +302,6 @@ public:
     rSide_c *P = RawNew(NULL, 0);
 
     double p_len = ComputeDist(0, 0, pdx, pdy);
-fprintf(stderr, "    new_portal: p_len:%1.5f  range:%1.5f .. %1.5f\n", p_len, start, end);
     P->x1 = px + pdx * start / p_len;
     P->y1 = py + pdy * start / p_len;
 
@@ -357,6 +357,8 @@ public:
 
   int gap;
 
+  int cluster;
+
 
   /* NODE STUFF */
 
@@ -382,24 +384,32 @@ public:
 
   int index;
 
+  bool bbox_valid;
+
   double mins[3];
   double maxs[3];
 
 public:
   // LEAF
   rNode_c() : lf_contents(CONTENTS_EMPTY), sides(),
-              winding(NULL), region(NULL),
+              winding(NULL), region(NULL), cluster(-1),
               front(NULL), back(NULL), wi_verts(NULL),
-              faces(), index(-1)
-  { }
+              faces(), index(-1),
+              bbox_valid(false)
+  {
+    EmptyBBox();
+  }
 
-  rNode_c(bool  _Zsplit) : lf_contents(CONTENT__NODE), sides(),
-                          winding(NULL), region(NULL),
+  rNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(),
+                          winding(NULL), region(NULL), cluster(-1),
                           z_splitter(_Zsplit), z(0), dz(_Zsplit ? 1 : 0),
                           x(0), y(0), dx(0), dy(0),
                           front(NULL), back(NULL), wi_verts(NULL),
-                          faces(), index(-1)
-  { }
+                          faces(), index(-1),
+                          bbox_valid(false)
+  {
+    EmptyBBox();
+  }
 
   ~rNode_c()
   {
@@ -416,6 +426,14 @@ public:
     S->node = this;
 
     sides.push_back(S);
+
+    if (! bbox_valid)
+      ComputeBBox();
+    else
+    {
+      AddToBBox(S->x1, S->y1);
+      AddToBBox(S->x2, S->y2);
+    }
   }
 
   void AddFace(rFace_c *F)
@@ -449,53 +467,65 @@ public:
     y = y1; dy = y2 - y1;
   }
 
-  void CalcBounds(double *lx, double *ly, double *w, double *h) const
+  void EmptyBBox()
+  {
+    for (int b = 0; b < 3; b++)
+      mins[b] = maxs[b] = 0;
+  }
+
+  void AddToBBox(double x, double y)
+  {
+    if (x < mins[0]) mins[0] = x;
+    if (y < mins[1]) mins[1] = y;
+
+    if (x > maxs[0]) maxs[0] = x;
+    if (y > maxs[1]) maxs[1] = y;
+  }
+
+  void ComputeBBox()
   {
     SYS_ASSERT(lf_contents != CONTENT__NODE);
 
-    double hx = -99999; *lx = +99999;
-    double hy = -99999; *ly = +99999;
+    mins[0] = -99999; maxs[0] = +99999;
+    mins[1] = -99999; maxs[1] = +99999;
+    mins[2] = -2000;  maxs[2] = +4000;
 
     for (unsigned int i = 0; i < sides.size(); i++)
     {
       rSide_c *S = sides[i];
 
-      double x1 = MIN(S->x1, S->x2);
-      double y1 = MIN(S->y1, S->y2);
-      double x2 = MAX(S->x1, S->x2);
-      double y2 = MAX(S->y1, S->y2);
-
-      if (x1 < *lx) *lx = x1;
-      if (y1 < *ly) *ly = y1;
-      if (x2 >  hx)  hx = x2;
-      if (y2 >  hy)  hy = y2;
+      AddToBBox(S->x1, S->y1);
+      AddToBBox(S->x2, S->y2);
     }
 
-    *w = (*lx > hx) ? 0 : (hx - *lx);
-    *h = (*ly > hy) ? 0 : (hy - *ly);
+    bbox_valid = true;
   }
+
+  double BBoxSizeX() const { return bbox_valid ? 0 : maxs[0] - mins[0]; }
+  double BBoxSizeY() const { return bbox_valid ? 0 : maxs[1] - mins[1]; }
+  double BBoxSizeZ() const { return bbox_valid ? 0 : maxs[2] - mins[2]; }
+
+  double BBoxMidX() const { return (mins[0] + maxs[0]) * 0.5; }
+  double BBoxMidY() const { return (mins[1] + maxs[1]) * 0.5; }
+  double BBoxMidZ() const { return (mins[2] + maxs[2]) * 0.5; }
 };
 
 
 rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
 {
-fprintf(stderr, "____ RawNew\n");
   rSide_c *T = RawNew(S->seg, S->side);
 
   T->x2 = S->x2; T->y2 = S->y2;
   T->x1 = new_x; T->y1 = new_y;
   S->x2 = new_x; S->y2 = new_y;
 
-fprintf(stderr, "____ foo\n");
   T->node = S->node;
   T->on_partition = S->on_partition;
-fprintf(stderr, "____ partners\n");
 
-  // howdy partners!
+  // howdy partners!  handle them
   if (S->partner)
   {
     rSide_c *SP = S->partner;
-fprintf(stderr, "____ RawNew\n");
     rSide_c *TP = RawNew(SP->seg, SP->side);
 
     if (S->seg)
@@ -506,7 +536,6 @@ fprintf(stderr, "____ RawNew\n");
     TP->x1 = SP->x1; TP->y1 = SP->y1;
     TP->x2 = new_x;  TP->y2 = new_y;
     SP->x1 = new_x;  SP->y1 = new_y;
-fprintf(stderr, "____ bar\n");
 
     TP->node = SP->node;
     TP->on_partition = SP->on_partition;
@@ -515,14 +544,10 @@ fprintf(stderr, "____ bar\n");
      T->partner = TP;
     TP->partner = T;
 
-fprintf(stderr, "____ S.node:%p SP.node:%p T.node:%p TP.node:%p\n",
-        S->node, SP->node, T->node, TP->node);
-
     // insert new partner into its containing node
     SYS_ASSERT(TP->node);
 
     TP->node->AddSide(TP);
-fprintf(stderr, "____ added\n");
   }
 
   return T;
@@ -535,8 +560,8 @@ static rSide_c * CreateSide(rNode_c *LEAF, merge_segment_c *seg, int side)
 
   LEAF->AddSide(S);
 
-fprintf(stderr, "Create side: seg:%p  (%1.0f %1.0f) -> (%1.0f %1.0f)\n",
-S->seg, S->x1, S->y1, S->x2, S->y2);
+// fprintf(stderr, "Create side: seg:%p  (%1.0f %1.0f) -> (%1.0f %1.0f)\n",
+// S->seg, S->x1, S->y1, S->x2, S->y2);
 
   return S;
 }
@@ -556,7 +581,6 @@ static void CreatePortals(rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
 {
   for (unsigned int i = 0; i < cut_list.size(); i++)
   {
-fprintf(stderr, "  portal %u / %u\n", i, cut_list.size());
     double along1 = cut_list[i].along;
     double along2 = cut_list[i].next_along;
 
@@ -568,7 +592,6 @@ fprintf(stderr, "  portal %u / %u\n", i, cut_list.size());
     F->partner = B;
     B->partner = F;
 
-fprintf(stderr, "    F=%p  B=%p\n", F, B);
     FRONT->AddSide(F);
      BACK->AddSide(B);
   }
@@ -685,10 +708,9 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
   int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
   int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
- fprintf(stderr, "dividing side %p valid:%d (%1.1f,%1.1f -> %1.1f,%1.1f)\n",
-         S, (S->seg && ! S->on_partition) ? 1 : 0,
-         S->x1, S->y1, S->x2, S->y2);
- fprintf(stderr, "  a=%d b=%d\n", a_side, b_side);
+/// fprintf(stderr, "dividing side %p valid:%d (%1.1f,%1.1f -> %1.1f,%1.1f)\n",
+///         S, (S->seg && ! S->on_partition) ? 1 : 0,
+///         S->x1, S->y1, S->x2, S->y2);
 
   if (a_side == 0 && b_side == 0)
   {
@@ -697,7 +719,7 @@ static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BA
 
     if (VectorSameDir(part->dx, part->dy, sdx, sdy))
     {
-fprintf(stderr, "  --> front\n");
+// fprintf(stderr, "  --> front\n");
       FRONT->AddSide(S);
 
       // +2 and -2 mean "remove"
@@ -706,7 +728,7 @@ fprintf(stderr, "  --> front\n");
     }
     else
     {
-fprintf(stderr, "  --> back\n");
+// fprintf(stderr, "  --> back\n");
       BACK->AddSide(S);
 
       BSP_AddIntersection(cut_list, P_Along(part, S, 0), -2);
@@ -724,7 +746,7 @@ fprintf(stderr, "  --> back\n");
     else if (b_side == 0)
       BSP_AddIntersection(cut_list, P_Along(part, S, 1), +1);
 
-fprintf(stderr, "  --> front\n");
+// fprintf(stderr, "  --> front\n");
     FRONT->AddSide(S);
     return;
   }
@@ -737,7 +759,7 @@ fprintf(stderr, "  --> front\n");
     else if (b_side == 0)
       BSP_AddIntersection(cut_list, P_Along(part, S, 1), -1);
 
-fprintf(stderr, "  --> back\n");
+// fprintf(stderr, "  --> back\n");
     BACK->AddSide(S);
     return;
   }
@@ -745,16 +767,14 @@ fprintf(stderr, "  --> back\n");
   /* need to split it */
 
   // determine the intersection point
-fprintf(stderr, "  MUST SPLIT: a=%1.5f b=%1.5f\n", a, b);
   double along = a / (a - b);
 
   double ix = S->x1 + along * sdx;
   double iy = S->y1 + along * sdy;
 
-fprintf(stderr, "split at (%1.5f %1.5f)\n", ix, iy);
+// fprintf(stderr, "split at (%1.5f %1.5f)\n", ix, iy);
   rSide_c *T = rSideFactory_c::SplitAt(S, ix, iy);
 
-fprintf(stderr, "adding sides...\n");
   if (a < 0)
   {
      BACK->AddSide(S);
@@ -768,23 +788,25 @@ fprintf(stderr, "adding sides...\n");
      BACK->AddSide(T);
   }
 
-fprintf(stderr, "adding intersection...\n");
   BSP_AddIntersection(cut_list, P_Along(part, T, 0), a_side);
 }
 
 
 static rSide_c * FindPartition(rNode_c * LEAF)
 {
-  double lx, ly, w, h;
-  LEAF->CalcBounds(&lx, &ly, &w, &h);
+  double w = LEAF->BBoxSizeX();
+  double h = LEAF->BBoxSizeY();
 
   // speed up large maps
-  if (MAX(w, h) > 240)
+  if (MAX(w, h) > FACE_MAX_SIZE)
   {
-			if (w >= h)
-        return rSideFactory_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
-      else
-        return rSideFactory_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
+    double lx = LEAF->mins[0];
+    double ly = LEAF->mins[1];
+
+    if (w >= h)
+      return rSideFactory_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
+    else
+      return rSideFactory_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
   }
 
   double   best_c = 1e30;
@@ -833,17 +855,12 @@ static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 
     for (unsigned int k = 0; k < all_sides.size(); k++)
     {
-  fprintf(stderr, "k = %u / %u\n", k, all_sides.size());
       DivideOneSide(all_sides[k], part, FRONT, BACK, cut_list);
     }
-
-    fprintf(stderr,  "GYPSY SIDES : %u\n", part->sides.size());
   }
 
-fprintf(stderr, "  merging...\n");
   BSP_MergeIntersections(cut_list);
 
-fprintf(stderr, "  CreatePortals...\n");
   CreatePortals(part, FRONT, BACK, cut_list);
 }
 
@@ -852,22 +869,17 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
 {
   if (LN->UsableSides() == 0)
   {
-fprintf(stderr, "Partition_XY: found pseudo-leaf %p, sides:%u\n",
-LN, LN->sides.size());
-
     // workaround for areas that become completely surrounded by portals
     if (! part_reg && LN->sides.size() > 1)
     {
-      // FIXME FIXME: maintain node / leaf bounding boxes !
-      double lx, ly, w, h;
-      LN->CalcBounds(&lx, &ly, &w, &h);
+      double mx = LN->BBoxMidX();
+      double my = LN->BBoxMidY();
 
-      part_reg = CSG2_FindRegionForPoint(lx+w/2.0, ly+h/2.0);
+      part_reg = CSG2_FindRegionForPoint(mx, my);
     }
 
     if (! part_reg || part_reg->gaps.size() == 0)
     {
-fprintf(stderr, "  SOLID\n");
       if (LN->sides.size() > 0)
         LogPrintf("WARNING: Lost %u sides behind solid wall\n", LN->sides.size());
 
@@ -879,7 +891,6 @@ fprintf(stderr, "  SOLID\n");
     all_windings.push_back(LN);
 
     // Z partitioning occurs later (the second pass)
-fprintf(stderr, "  Region %p\n", part_reg);
     LN->region = part_reg;
 
     return LN;
@@ -889,8 +900,8 @@ fprintf(stderr, "  Region %p\n", part_reg);
   rSide_c *part = FindPartition(LN);
   SYS_ASSERT(part);
 
-fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
-                part->x1, part->y1, part->x2, part->y2);
+// fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
+//                part->x1, part->y1, part->x2, part->y2);
 
   // turn the pseudo leaf into a real node
   LN->BecomeNode(part->x1, part->y1, part->x2, part->y2);
@@ -898,16 +909,14 @@ fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
   rNode_c * FRONT = new rNode_c();
   rNode_c * BACK  = new rNode_c();
 
- int count = (int)LN->sides.size(); // LN->UsableSides();
+/// int count = (int)LN->sides.size(); // LN->UsableSides();
 
-fprintf(stderr, "  Split_XY begin\n");
   Split_XY(LN, FRONT, BACK);
-fprintf(stderr, "  Split_XY done\n");
 
- int c_front = (int)FRONT->sides.size(); //  FRONT->UsableSides();
- int c_back  = (int) BACK->sides.size(); //  BACK->UsableSides();
+/// int c_front = (int)FRONT->sides.size(); //  FRONT->UsableSides();
+/// int c_back  = (int) BACK->sides.size(); //  BACK->UsableSides();
 
- fprintf(stderr, "  SplitXY DONE: %d --> %d / %d\n", count, c_front, c_back);
+///  fprintf(stderr, "  SplitXY DONE: %d --> %d / %d\n", count, c_front, c_back);
 
   LN->front = Partition_XY(FRONT, part->FrontRegion());
   LN->back  = Partition_XY(BACK,  part->BackRegion());
@@ -1369,9 +1378,6 @@ static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
 
       rFace_c * F = NewFace(S, nz1, nz2, av);
 
-fprintf(stderr, "Created face %p : %1.0f..%1.0f\n", F, nz1, nz2);
-fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, S->on_partition);
-
       LEAF->AddFace(F);
       S->on_partition->AddFace(F);
     }
@@ -1393,10 +1399,10 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G)
   merge_segment_c * seg = S->seg;
   SYS_ASSERT(seg);
 
-fprintf(stderr, "SIDE (%1.0f %1.0f) --> (%1.0f %1.0f)\n", S->x1,S->y1, S->x2,S->y2);
-fprintf(stderr, "SEG  (%1.0f %1.0f) --> (%1.0f %1.0f)\n", seg->start->x,seg->start->y, seg->end->x,seg->end->y);
-fprintf(stderr, "SIDE %p  SEG %p  S->side:%d  f_sides:%u b:%u\n",
-S, seg, S->side, seg->f_sides.size(), seg->b_sides.size());
+// fprintf(stderr, "SIDE (%1.0f %1.0f) --> (%1.0f %1.0f)\n", S->x1,S->y1, S->x2,S->y2);
+// fprintf(stderr, "SEG  (%1.0f %1.0f) --> (%1.0f %1.0f)\n", seg->start->x,seg->start->y, seg->end->x,seg->end->y);
+// fprintf(stderr, "SIDE %p  SEG %p  S->side:%d  f_sides:%u b:%u\n",
+// S, seg, S->side, seg->f_sides.size(), seg->b_sides.size());
 
   // create the faces
   merge_region_c *RX = S->BackRegion();
@@ -1448,7 +1454,6 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
   
   merge_gap_c *G = R->gaps[gap];
 
-fprintf(stderr, "Z_Leaf: winding %p has %u sides\n", winding, winding->sides.size());
   for (unsigned int i = 0; i < winding->sides.size(); i++)
   {
     Side_BuildFaces(LEAF, winding->sides[i], G);
@@ -1470,9 +1475,6 @@ if (UU->count < 3) return; //!!!!!!!!!!
     if (LEAF->gap == gap)
     {
       rFace_c *F = NewFace(kind, N->z, UU, w_face);
-
-fprintf(stderr, "Created flat face z=%1.0f\n", N->z);
-fprintf(stderr, "  added to leaf %p and node %p\n", LEAF, N);
 
       LEAF->AddFace(F);
       N->AddFace(F);
@@ -1605,8 +1607,53 @@ static void AssignIndexes(rNode_c *node)
   // determine node's bounding box
   for (int b = 0; b < 3; b++)
   {
-    // FIXME
+    if (node->front == SOLID_LEAF)
+    {
+      node->mins[b] = node->back->mins[b];
+      node->maxs[b] = node->back->maxs[b];
+    }
+    else if (node->back == SOLID_LEAF)
+    {
+      node->mins[b] = node->front->mins[b];
+      node->maxs[b] = node->front->maxs[b];
+    }
+    else
+    {
+      node->mins[b] = MIN(node->front->mins[b], node->back->mins[b]);
+      node->maxs[b] = MAX(node->front->maxs[b], node->back->maxs[b]);
+    }
   }
+}
+
+
+static void AssignClusterID(rNode_c *node, int cluster)
+{
+  if (node == SOLID_LEAF)
+    return;
+
+  node->cluster = cluster;
+
+  if (node->IsNode())
+  {
+    AssignClusterID(node->front, cluster);
+    AssignClusterID(node->back,  cluster);
+  }
+}
+
+static void AssignClusters(rNode_c *node)
+{
+  if (node == SOLID_LEAF)
+    return;
+
+  if (node->IsLeaf() || MAX(node->BBoxSizeX(), node->BBoxSizeY()) <= FACE_MAX_SIZE)
+  {
+    AssignClusterID(node, q1_total_clusters);
+    q1_total_clusters += 1;
+    return;
+  }
+
+  AssignClusters(node->front);
+  AssignClusters(node->back);
 }
 
 
@@ -1675,7 +1722,6 @@ static void WriteLeaf(rNode_c *leaf)
 
 
   // create the 'mark surfs'
-fprintf(stderr, "Write leaf %p : faces=%u\n", leaf, leaf->faces.size());
   for (unsigned int i = 0; i < leaf->faces.size(); i++)
   {
     rFace_c *F = leaf->faces[i];
@@ -1725,7 +1771,6 @@ static void WriteNodes(rNode_c *node)
   }
 
 
-fprintf(stderr, "Write node %p : faces=%u\n", node, node->faces.size());
   if (node->faces.size() > 0)
   {
     raw_nd.firstface = q1_total_faces;
@@ -1762,17 +1807,17 @@ void Q1_CreateModel(void)
 fprintf(stderr, "Q1_BuildBSP...\n");
   Q1_BuildBSP();
 
-fprintf(stderr, "BSP_NewLump...\n");
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
 
   memset(&model, 0, sizeof(model));
 
   q1_total_nodes = 0;
-  q1_total_leafs = 0;  // ignoring the solid leaf
+  q1_total_leafs = 0;  // does not include the solid leaf
   q1_total_faces = 0;
 
   q1_total_mark_surfs = 0;
   q1_total_surf_edges = 0;
+  q1_total_clusters   = 0;
 
   q1_nodes = BSP_NewLump(LUMP_NODES);
   q1_leafs = BSP_NewLump(LUMP_LEAFS);
