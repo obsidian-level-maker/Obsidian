@@ -394,8 +394,7 @@ public:
   rNode_c() : lf_contents(CONTENTS_EMPTY), sides(),
               winding(NULL), region(NULL), cluster(-1),
               front(NULL), back(NULL), wi_verts(NULL),
-              faces(), index(-1),
-              bbox_valid(false)
+              faces(), index(-1)
   {
     EmptyBBox();
   }
@@ -405,8 +404,7 @@ public:
                           z_splitter(_Zsplit), z(0), dz(_Zsplit ? 1 : 0),
                           x(0), y(0), dx(0), dy(0),
                           front(NULL), back(NULL), wi_verts(NULL),
-                          faces(), index(-1),
-                          bbox_valid(false)
+                          faces(), index(-1)
   {
     EmptyBBox();
   }
@@ -428,7 +426,7 @@ public:
     sides.push_back(S);
 
     if (! bbox_valid)
-      ComputeBBox();
+      ComputeLeafBBox();
     else
     {
       AddToBBox(S->x1, S->y1);
@@ -471,6 +469,8 @@ public:
   {
     for (int b = 0; b < 3; b++)
       mins[b] = maxs[b] = 0;
+
+    bbox_valid = false;
   }
 
   void AddToBBox(double x, double y)
@@ -482,12 +482,12 @@ public:
     if (y > maxs[1]) maxs[1] = y;
   }
 
-  void ComputeBBox()
+  void ComputeLeafBBox()
   {
     SYS_ASSERT(lf_contents != CONTENT__NODE);
 
-    mins[0] = -99999; maxs[0] = +99999;
-    mins[1] = -99999; maxs[1] = +99999;
+    mins[0] = +99999; maxs[0] = -99999;
+    mins[1] = +99999; maxs[1] = -99999;
     mins[2] = -2000;  maxs[2] = +4000;
 
     for (unsigned int i = 0; i < sides.size(); i++)
@@ -501,9 +501,53 @@ public:
     bbox_valid = true;
   }
 
-  double BBoxSizeX() const { return bbox_valid ? 0 : maxs[0] - mins[0]; }
-  double BBoxSizeY() const { return bbox_valid ? 0 : maxs[1] - mins[1]; }
-  double BBoxSizeZ() const { return bbox_valid ? 0 : maxs[2] - mins[2]; }
+  void ComputeNodeBBox()
+  {
+    bool front_ok = (front != SOLID_LEAF && front->bbox_valid);
+    bool  back_ok = ( back != SOLID_LEAF &&  back->bbox_valid);
+
+    if (! front_ok && ! back_ok)
+    {
+      EmptyBBox();
+      return;
+    }
+
+    for (int b = 0; b < 3; b++)
+    {
+      if (! front_ok)
+      {
+        mins[b] = back->mins[b];
+        maxs[b] = back->maxs[b];
+      }
+      else if (! back_ok)
+      {
+        mins[b] = front->mins[b];
+        maxs[b] = front->maxs[b];
+      }
+      else
+      {
+        mins[b] = MIN(front->mins[b], back->mins[b]);
+        maxs[b] = MAX(front->maxs[b], back->maxs[b]);
+      }
+    }
+
+    bbox_valid = true;
+  }
+
+  void CopyBBox(const rNode_c *src)
+  {
+    for (int b = 0; b < 3; b++)
+    {
+      mins[b] = src->mins[b];
+      maxs[b] = src->maxs[b];
+    }
+
+    bbox_valid = src->bbox_valid;
+  }
+
+  double BBoxSizeX() const { return maxs[0] - mins[0]; }
+  double BBoxSizeY() const { return maxs[1] - mins[1]; }
+  double BBoxSizeZ() const { return maxs[2] - mins[2]; }
 
   double BBoxMidX() const { return (mins[0] + maxs[0]) * 0.5; }
   double BBoxMidY() const { return (mins[1] + maxs[1]) * 0.5; }
@@ -1446,6 +1490,7 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
   rNode_c *LEAF = NewLeaf(CONTENTS_EMPTY);
 
   LEAF->gap = gap;
+  LEAF->CopyBBox(winding);
 
   z_leafs.push_back(LEAF);
 
@@ -1605,24 +1650,10 @@ static void AssignIndexes(rNode_c *node)
     AssignLeafIndex(node->back);
 
   // determine node's bounding box
-  for (int b = 0; b < 3; b++)
-  {
-    if (node->front == SOLID_LEAF)
-    {
-      node->mins[b] = node->back->mins[b];
-      node->maxs[b] = node->back->maxs[b];
-    }
-    else if (node->back == SOLID_LEAF)
-    {
-      node->mins[b] = node->front->mins[b];
-      node->maxs[b] = node->front->maxs[b];
-    }
-    else
-    {
-      node->mins[b] = MIN(node->front->mins[b], node->back->mins[b]);
-      node->maxs[b] = MAX(node->front->maxs[b], node->back->maxs[b]);
-    }
-  }
+  node->ComputeNodeBBox();
+
+//fprintf(stderr, "node %p  bbox side (%1.1f %1.1f %1.1f)\n",
+//        node, node->BBoxSizeX(), node->BBoxSizeY(), node->BBoxSizeZ());
 }
 
 
@@ -1830,6 +1861,10 @@ fprintf(stderr, "Second Pass...\n");
   SecondPass(R_ROOT);
 
   AssignIndexes(R_ROOT);
+  AssignClusters(R_ROOT);  // needs bboxes from AssignIndexes
+
+  LogPrintf(stderr, "render hull: %d nodes, %d leafs, %d clusters\n",
+          q1_total_nodes, q1_total_leafs, q1_total_clusters);
 
   if (q1_total_nodes >= MAX_MAP_NODES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
