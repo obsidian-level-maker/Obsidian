@@ -20,7 +20,8 @@ h1 { color: #dd8; font-size: xx-large;
 
 h3 { color: #c44; padding-top: 1em; }
 
-.menu { background-color: #765; color: white; line-height: 1.8em; 
+.menu { background-color: #765; color: white; line-height: 24px;
+        height: 24px;
         font-size: large;
  }
 .menu a { padding-left: 1em; padding-right: 1em;
@@ -29,9 +30,10 @@ h3 { color: #c44; padding-top: 1em; }
 .menu a:visited { text-decoration: none; color: #ddd }
 .menu a:hover   { text-decoration: none; color: #fff }
 
-.submenu { background-color: #dcb; color: white; line-height: 1.8em;
+.submenu { background-color: #dcb; color: white; line-height: 24px;
+           height: 24px;
             font-size: small;
-            padding-left: 2em;
+            /* padding-left: 2em; */
  }
 .submenu a { padding-left: 1em; padding-right: 1em; }
 
@@ -39,3 +41,9 @@ h3 { color: #c44; padding-top: 1em; }
 .submenu a:visited { text-decoration: none; color: #008 }
 .submenu a:hover   { text-decoration: none; color: #04e }
 
+.bottomcurve { background-color: white; height: 24px;
+            font-size: small;
+ }
+
+.floatL { float: left  !important; }
+.floatR { float: right !important; }
