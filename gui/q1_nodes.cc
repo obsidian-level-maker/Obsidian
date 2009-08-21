@@ -1863,7 +1863,7 @@ fprintf(stderr, "Second Pass...\n");
   AssignIndexes(R_ROOT);
   AssignClusters(R_ROOT);  // needs bboxes from AssignIndexes
 
-  LogPrintf(stderr, "render hull: %d nodes, %d leafs, %d clusters\n",
+  LogPrintf("render hull: %d nodes, %d leafs, %d clusters\n",
           q1_total_nodes, q1_total_leafs, q1_total_clusters);
 
   if (q1_total_nodes >= MAX_MAP_NODES)
