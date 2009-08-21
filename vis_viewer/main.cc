@@ -16,7 +16,6 @@
 //
 //------------------------------------------------------------------------
 
-
 /*
  *  Standard C headers
  */
@@ -30,12 +29,10 @@
 #include <errno.h>
 #include <math.h>
 
-
 /*
  *  Standard C++ headers
  */
 #include <vector>
-
 
 /*
  *  Fast Light Tool Kit
@@ -57,7 +54,6 @@
 #include <FL/fl_ask.H>
 #include <FL/fl_draw.H>
 
-
 /*
  *  Local Stuff
  */
@@ -69,22 +65,21 @@ void FatalError(const char *msg, ...);
 #include "vis_buf.cc"
 
 
+class UI_Window;
+
+UI_Window *main_win;
+
+
+#define MAX_SQUARES  32
+
+#define SQUARE_SIZE  12
+
+
 class UI_Canvas : public Fl_Widget
 {
 private:
-	Editor_State_c *e;
-
-	bool render3d;
-
-	Objid highlight;
-
-	bool selbox_active;
-	int  selbox_x1, selbox_y1;  // map coords
-	int  selbox_x2, selbox_y2;
-
-	// drawing state only
-	int map_lx, map_ly;
-	int map_hx, map_hy;
+	// the current square to view, -1 when out of range
+	int loc_x, loc_y;
 
 public:
 	UI_Canvas(int X, int Y, int W, int H, const char *label = NULL);
@@ -97,59 +92,12 @@ public:
 	// FLTK virtual method for resizing.
 	void resize(int X, int Y, int W, int H);
 
-	void set_edit_info(Editor_State_c *new_e) { e = new_e; redraw(); }
-
 	void DrawEverything();
-
-	void DrawMap();
-
-	void DrawMapPoint (int mapx, int mapy);
-	void DrawMapLine (int mapx1, int mapy1, int mapx2, int mapy2);
-	void DrawMapVector (int mapx1, int mapy1, int mapx2, int mapy2);
-	void DrawMapArrow (int mapx1, int mapy1, unsigned angle);
-
-	void HighlightSet(Objid& obj);
-	void HighlightForget();
-
-	void HighlightObject(int objtype, int objnum, Fl_Color colour);
-
-	void HighlightSelection(selection_c *list);
-
-	void SelboxBegin(int mapx, int mapy);
-	void SelboxDrag(int mapx, int mapy);
-	void SelboxFinish(int *x1, int *y1, int *x2, int *y2);
 
 private:
 	// FLTK virtual method for drawing.
 	void draw();
 
-	void DrawGrid();
-	void DrawVertices();
-	void DrawLinedefs();
-	void DrawThings();
-	void DrawRTS();
-	void DrawObjNum(int x, int y, int obj_no, Fl_Color c);
-
-	void SelboxDraw();
-
-	// convert screen coordinates to map coordinates
-	inline int MAPX(int sx) const { return (grid.orig_x + I_ROUND((sx - w()/2 - x()) / grid.Scale)); }
-	inline int MAPY(int sy) const { return (grid.orig_y + I_ROUND((h()/2 - sy + y()) / grid.Scale)); }
-
-	// convert map coordinates to screen coordinates
-	inline int SCREENX(int mx) const { return (x() + w()/2 + I_ROUND((mx - grid.orig_x) * grid.Scale)); }
-	inline int SCREENY(int my) const { return (y() + h()/2 + I_ROUND((grid.orig_y - my) * grid.Scale)); }
-
-	inline bool Vis(int x, int y, int r) const
-	{
-		return (x+r >= map_lx) && (x-r <= map_hx) &&
-		       (y+r >= map_ly) && (y-r <= map_hy);
-	}
-	inline bool Vis(int x1, int y1, int x2, int y2) const
-	{
-		return (x2 >= map_lx) && (x1 <= map_hx) &&
-		       (y2 >= map_ly) && (y1 <= map_hy);
-	}
 };
 
 
@@ -288,9 +236,6 @@ int UI_Canvas::handle(int event)
 
 	return 0;  // unused
 }
-
-
-//------------------------------------------------------------------------
 
 
 void UI_Canvas::DrawEverything()
@@ -461,343 +406,123 @@ void UI_Canvas::DrawGrid()
 //--------------------------------------------------------------------
 
 
-UI_MainWin *main_win;
-
-#define MAIN_WINDOW_W  (800-32+KF*60)
-#define MAIN_WINDOW_H  (600-98+KF*40)
-
-#define MAX_WINDOW_W  MAIN_WINDOW_W
-#define MAX_WINDOW_H  MAIN_WINDOW_H
+#define MAIN_WINDOW_W  (MAX_SQUARES * SQUARE_SIZE)
+#define MAIN_WINDOW_H  (MAX_SQUARES * SQUARE_SIZE)
 
 
-class UI_MainWin : public Fl_Double_Window
+class UI_Window : public Fl_Double_Window
 {
 public:
-  // main child widgets
+	bool want_quit;
 
-#ifdef MACOSX
-	Fl_Sys_Menu_Bar *menu_bar;
-#else
-	Fl_Menu_Bar *menu_bar;
-#endif
+	// main child widgets
 
 	UI_Canvas *canvas;
 
-	UI_FlatTexList *tex_list;
-
-	UI_InfoBar *info_bar;
-
-	UI_ThingBox  *thing_box;
-	UI_LineBox   *line_box;
-	UI_SectorBox *sec_box;
-	UI_VertexBox *vert_box;
-	UI_RadiusBox *rad_box;
-
-	enum  // actions
-	{
-		NONE = 0,
-		BUILD,
-		ABORT,
-		QUIT
-	};
-	
-	int action;
-
 private:
-	Fl_Cursor cursor_shape;
 
 public:
-	UI_MainWin(const char *title);
-	virtual ~UI_MainWin();
+	UI_Window(const char *title);
+	virtual ~UI_Window();
 
 public:
-	// mode can be 't', 'l', 's', 'v' or 'r'.   FIXME: ENUMERATE
-	void SetMode(char mode);
-
-	// this is a wrapper around the FLTK cursor() method which
-	// prevents the possibly expensive call when the shape hasn't
-	// changed.
-	void SetCursor(Fl_Cursor shape);
 };
 
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
 	if (main_win)
-		main_win->action = UI_MainWin::QUIT;
+		main_win->want_quit = true;
 }
 
 
-//
-// MainWin Constructor
-//
-UI_MainWin::UI_MainWin(const char *title) :
+UI_Window::UI_Window(const char *title) :
     Fl_Double_Window(MAIN_WINDOW_W, MAIN_WINDOW_H, title),
-    action(UI_MainWin::NONE),
-    cursor_shape(FL_CURSOR_DEFAULT)
+	want_quit(false), canvas(NULL)
 {
 	end(); // cancel begin() in Fl_Group constructor
 
-	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H);
+	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H, MAIN_WINDOW_W, MAIN_WINDOW_H);
 
 	callback((Fl_Callback *) main_win_close_CB);
 
-	color(WINDOW_BG, WINDOW_BG);
 
-	int cy = 0;
-	int ey = h();
-
-	int panel_W   = 260 + KF * 32;
-	int flattex_W = 180 + KF * 20;
-
-	/* ---- Menu bar ---- */
-	{
-		menu_bar = Menu_Create(0, 0, w() - panel_W, 28+KF*3);
-		add(menu_bar);
-
-#ifndef MACOSX
-		cy += menu_bar->h();
-#endif
-	}
-
-
-	info_bar = new UI_InfoBar(0, ey - (28+KF*3), w(), 28+KF*3);
-	add(info_bar);
-
-	ey = ey - info_bar->h();
-
-
-
-	tex_list = new UI_FlatTexList(w() - panel_W - flattex_W, cy, flattex_W, ey - cy);
-	add(tex_list);
-
-
-	canvas = new UI_Canvas(0, cy, w() - flattex_W - panel_W, ey - cy);
+	canvas = new UI_Canvas(0, 0, MAIN_WINDOW_W, MAIN_WINDOW_H);
 	add(canvas);
-
-	resizable(canvas);
-
-
-	int BY = 0;     // cy+2
-	int BH = ey-2;  // ey-BY-2
-
-	thing_box = new UI_ThingBox(w() - panel_W, BY, panel_W, BH);
-	add(thing_box);
-
-	line_box = new UI_LineBox(w() - panel_W, BY, panel_W, BH);
-	line_box->hide();
-	add(line_box);
-
-	sec_box = new UI_SectorBox(w() - panel_W, BY, panel_W, BH);
-	sec_box->hide();
-	add(sec_box);
-
-	vert_box = new UI_VertexBox(w() - panel_W, BY, panel_W, BH);
-	vert_box->hide();
-	add(vert_box);
-
-	rad_box = new UI_RadiusBox(w() - panel_W, BY, panel_W, BH);
-	rad_box->hide();
-	add(rad_box);
-
 }
 
-//
-// MainWin Destructor
-//
-UI_MainWin::~UI_MainWin()
+
+UI_Window::~UI_Window()
 { }
-
-
-void UI_MainWin::SetMode(char mode)
-{
-	// TODO: if mode == cur_mode then return end
-
-	thing_box->hide();
-	line_box->hide();
-	sec_box->hide();
-	vert_box->hide();
-	rad_box->hide();
-
-	switch (mode)
-	{
-		case 't': thing_box->show(); break;
-		case 'l':  line_box->show(); break;
-		case 's':   sec_box->show(); break;
-		case 'v':  vert_box->show(); break;
-		case 'r':   rad_box->show(); break;
-
-		default: break;
-	}
-
-	info_bar->SetMode(mode);
-
-	redraw();
-}
-
-
-void UI_MainWin::SetCursor(Fl_Cursor shape)
-{
-	if (shape == cursor_shape)
-		return;
-
-	cursor_shape = shape;
-
-	cursor(shape);
-}
 
 
 //--------------------------------------------------------------------
 
 
+#define MSG_BUF_LEN  2000
+
 void FatalError(const char *msg, ...)
 {
-  static char buffer[MSG_BUF_LEN];
+	static char buffer[MSG_BUF_LEN];
 
-  va_list arg_pt;
+	va_list arg_pt;
 
-  va_start(arg_pt, msg);
-  vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
-  va_end(arg_pt);
+	va_start(arg_pt, msg);
+	vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
+	va_end(arg_pt);
 
-  buffer[MSG_BUF_LEN-2] = 0;
+	buffer[MSG_BUF_LEN-2] = 0;
 
-  DLG_ShowError("%s", buffer);
+	fl_alert("%s", buffer);
 
-  Main_Shutdown(true);
+	if (main_win)
+		delete main_win;
 
-  exit(9);
+	exit(9);
 }
+
 
 int main(int argc, char **argv)
 {
-  // initialise argument parser (skipping program name)
-  ArgvInit(argc-1, (const char **)(argv+1));
+	if (1)
+		Fl::scheme("plastic");
 
-  if (ArgvFind('?', NULL) >= 0 || ArgvFind('h', "help") >= 0)
-  {
-    ShowInfo();
-    exit(1);
-  }
+	fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
-  if (1)
-  {
-    Fl::background(236, 232, 228);
-    Fl::background2(255, 255, 255);
-    Fl::foreground(0, 0, 0);
-  }
-
-  if (1)
-    Fl::scheme("plastic");
-
-  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
-
-  Determine_WorkingPath(argv[0]);
-  Determine_InstallPath(argv[0]);
-
-  FileChangeDir(working_path);
-
-  LogInit(LOG_FILENAME);
-
-  if (ArgvFind('d', "debug") >= 0)
-    LogEnableDebug();
-
-  if (ArgvFind('t', "terminal") >= 0)
-    LogEnableTerminal();
-
-  LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2009 Andrew Apted\n\n");
-
-  LogPrintf("working_path: [%s]\n",   working_path);
-  LogPrintf("install_path: [%s]\n\n", install_path);
-
-  // create directory for temporary files
-  FileMakeDir("temp");
-
-  // load icons for file chooser
+	// load icons for file chooser
 #ifndef WIN32
-  Fl_File_Icon::load_system_icons();
+	Fl_File_Icon::load_system_icons();
 #endif
 
-  Script_Init();
+	try
+	{
+		//// FIXME FIXME  LoadVisMap()
 
-  Default_Location();
+		main_win = new UI_Window("Vis Viewer");
 
-  main_win = new UI_MainWin(OBLIGE_TITLE);
+		// show window (pass some dummy arguments)
+		{
+			int argc = 1;
+			char *argv[] = { "VisViewer.exe", NULL };
 
-  // show window (pass some dummy arguments)
-  {
-    int argc = 1;
-    char *argv[] = { "Oblige.exe", NULL };
+			main_win->show(argc, argv);
+		}
 
-    main_win->show(argc, argv);
-  }
+		// run the GUI until the user quits
+		while (! main_win->want_quit)
+		{
+			Fl::wait(0.2f);
+		}
+	}
+	catch (...)
+	{
+		FatalError("An unknown error occurred (exception was thrown)");
+	}
 
-  // kill the stupid bright background of the "plastic" scheme
-  delete Fl::scheme_bg_;
-  Fl::scheme_bg_ = NULL;
+	if (main_win)
+		delete main_win;
 
-  main_win->image(NULL);
-
-  Fl::add_handler(escape_key_handler);
-
-  // draw an empty map (must be done after main window is
-  // shown() because that is when FLTK finalises the colors).
-  main_win->build_box->mini_map->EmptyMap();
-
-  Script_Load();
-
-  main_win->game_box ->Defaults();
-  main_win->level_box->Defaults();
-  main_win->play_box ->Defaults();
-
-  // load config after creating window (will set widget values)
-  Cookie_Load(CONFIG_FILENAME);
-
-  // handle -seed option
-  {
-    int num_par = 0;
-    int index = ArgvFind('s', "seed", &num_par);
-
-    if (index >= 0 && num_par > 0)
-    {
-      main_win->game_box->SetSeed(atoi(arg_list[index+1]));
-    }
-  }
- 
-
-  try
-  {
-    // run the GUI until the user quits
-    for (;;)
-    {
-      Fl::wait(0.2f);
-
-      if (main_win->action == UI_MainWin::QUIT)
-        break;
-
-      if (main_win->action == UI_MainWin::BUILD)
-      {
-        main_win->action = UI_MainWin::NONE;
-
-        // save config in case everything blows up
-        Cookie_Save(CONFIG_FILENAME);
-
-        Build_Cool_Shit();
-      }
-    }
-  }
-  catch (assert_fail_c err)
-  {
-    Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
-  }
-  catch (...)
-  {
-    Main_FatalError("An unknown problem occurred (UI code)");
-  }
-
-  Main_Shutdown(false);
-
-  return 0;
+	return 0;
 }
 
 
