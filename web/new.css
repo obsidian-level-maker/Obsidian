@@ -1,28 +1,33 @@
 
-body { background-color: black; color: white; padding: 4px;
+body {
+    background-color: black;
+    color: white;
+    padding: 4px;
  }
 
-.rest { background-color: white; color: black; padding: 0.5em;
-        padding-left: 1em; padding-top: 1px;
+.rest {
+    background-color: white;
+    color: black;
+    padding: 0.5em;
+    padding-left: 1em;
+    padding-top: 1px;
  }
 
 .rest a:link { color:#00a }
 .rest a:visited { color:#00a }
 .rest a:hover { color:#04f }
 
-.legal { font-family:mono; font-size: smaller; 
-         background-color: #ccc; color: black;
-         border:1px solid black; padding: 1em;
- }
-
-h1 { color: #dd8; font-size: xx-large;
- }
+h1 { color: #dd8; font-size: xx-large; text-align: center; }
 
 h3 { color: #c44; padding-top: 1em; }
 
-.menu { background-color: #765; color: white; line-height: 24px;
-        height: 24px;
-        font-size: large;
+.menu {
+    background-color: #776655;
+    color: white;
+    height: 40px;
+    line-height: 40px;
+    /* vertical-align: bottom; */
+    font-size: large;
  }
 .menu a { padding-left: 1em; padding-right: 1em;
  }
@@ -30,20 +35,34 @@ h3 { color: #c44; padding-top: 1em; }
 .menu a:visited { text-decoration: none; color: #ddd }
 .menu a:hover   { text-decoration: none; color: #fff }
 
-.submenu { background-color: #dcb; color: white; line-height: 24px;
-           height: 24px;
-            font-size: small;
-            /* padding-left: 2em; */
+.submenu {
+    background-color: #ddccbb;
+    color: white;
+    /* height: 32px; */
+    line-height: 1.8em;
+    font-size: small;
  }
 .submenu a { padding-left: 1em; padding-right: 1em; }
 
-.submenu a:link    { text-decoration: none; color: #008 }
-.submenu a:visited { text-decoration: none; color: #008 }
-.submenu a:hover   { text-decoration: none; color: #04e }
+.submenu a:link    { text-decoration: none; color: #006 }
+.submenu a:visited { text-decoration: none; color: #006 }
+.submenu a:hover   { text-decoration: none; color: #06f }
 
-.bottomcurve { background-color: white; height: 24px;
-            font-size: small;
+.bottomcurve {
+    background-color: white;
+    height: 24px;
+    font-size: small;
  }
 
 .floatL { float: left  !important; }
 .floatR { float: right !important; }
+
+.legal {
+    background-color: #ccc;
+    color: black;
+    font-family:mono;
+    font-size: smaller; 
+    border:1px solid black;
+    padding: 1em;
+ }
+
