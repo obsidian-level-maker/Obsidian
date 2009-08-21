@@ -1020,7 +1020,7 @@ QUAKE1_WEAPONS =
 
   ssg =
   {
-    pref=50, add_prob=40,
+    pref=50, add_prob=40, start_prob=50,
     rate=1.4, damage=45, attack="hitscan", splash={0,3},
     ammo="shell", per=2,
     give={ {ammo="shell",count=5} },
@@ -1028,7 +1028,7 @@ QUAKE1_WEAPONS =
 
   grenade =
   {
-    pref=12, add_prob=15,
+    pref=12, add_prob=15, start_prob=15,
     rate=1.5, damage= 5, attack="missile", splash={60,15,3},
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=5} },
@@ -1036,7 +1036,7 @@ QUAKE1_WEAPONS =
 
   rocket =
   {
-    pref=30, add_prob=10,
+    pref=30, add_prob=10, start_prob=10,
     rate=1.2, damage=80, attack="missile", splash={0,20,6,2},
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=5} },
@@ -1044,7 +1044,7 @@ QUAKE1_WEAPONS =
 
   nailgun =
   {
-    pref=50, add_prob=30,
+    pref=50, add_prob=30, start_prob=50,
     rate=5.0, damage=8, attack="missile",
     ammo="nail", per=1,
     give={ {ammo="nail",count=30} },
@@ -1052,7 +1052,7 @@ QUAKE1_WEAPONS =
 
   nailgun2 =
   {
-    pref=80, add_prob=10,
+    pref=80, add_prob=10, start_prob=15,
     rate=5.0, damage=18, attack="missile",
     ammo="nail", per=2,
     give={ {ammo="nail",count=30} },
@@ -1060,7 +1060,7 @@ QUAKE1_WEAPONS =
 
   zapper =
   {
-    pref=30, add_prob=2,
+    pref=30, add_prob=2, start_prob=5,
     rate=10, damage=30, attack="hitscan", splash={0,4},
     ammo="cell", per=1,
     give={ {ammo="cell",count=15} },
@@ -1247,6 +1247,8 @@ function Quake1_get_levels()
   --      switch_list = { "foo" },
     --    bar_list = { "foo" },
       }
+
+---   LEV.build_func = Builder_quake_test
 
       table.insert(GAME.all_levels, LEV)
     end -- for map
