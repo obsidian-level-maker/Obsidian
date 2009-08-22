@@ -95,6 +95,7 @@ SKULLTAG_MONSTERS =
   },
 }
 
+
 SKULLTAG_WEAPONS =
 {
   minigun =
@@ -152,10 +153,48 @@ SKULLTAG_PICKUPS =
   },
 }
 
+
+SKULLTAG_CHOICES =
+{
+  "some",   "Some",
+  "few",    "Few",
+  "heaps",  "Heaps",
+}
+
+SKULLTAG_FACTORS =
+{
+  few   = 0.2,
+  some  = 1.0,
+  heaps = 5.0,
+}
+
+
 function Skulltag_Setup(self)
   if OB_CONFIG.game == "doom1" then
     GAME.monsters["superguy"] = nil
     GAME.monsters["hectebus"] = nil
+  end
+
+  -- apply the 'Default Monsters' choice
+  local factor = ZDOOM_MARINE_FACTORS[self.options.def_mon.value]
+
+  for name,_ in pairs(SKULLTAG_MONSTERS) do
+    local M = GAME.monsters[name]
+    if M and factor then
+      M.prob = M.prob * factor
+      M.crazy_prob = (M.crazy_prob or M.prob) * factor
+    end
+  end
+
+  -- apply the 'Default Weapons' choice
+  factor = ZDOOM_MARINE_FACTORS[self.options.def_weap.value]
+
+  for name,_ in pairs(SKULLTAG_WEAPONS) do
+    local W = GAME.weapons[name]
+    if W and factor then
+      W.add_prob   = math.max(4, W.add_prob)   * factor
+      W.start_prob = math.max(4, W.start_prob) * factor
+    end
   end
 end
 
@@ -176,5 +215,18 @@ OB_MODULES["sktag_mons"] =
     "monsters", SKULLTAG_MONSTERS,
     "weapons",  SKULLTAG_WEAPONS,
     "pickups",  SKULLTAG_PICKUPS,
+  },
+
+  options =
+  {
+    def_mon =
+    {
+      label = "Default Monsters", choices = SKULLTAG_CHOICES,
+    },
+
+    def_weap =
+    {
+      label = "Default Weapons", choices = SKULLTAG_CHOICES,
+    },
   },
 }
