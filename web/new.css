@@ -68,6 +68,8 @@ h3 { color: #c44; padding-top: 1em; }
 .floatL { float: left  !important; }
 .floatR { float: right !important; }
 
+dd { margin-bottom: 1em; }
+
 .legal {
     background-color: #ccc;
     color: black;

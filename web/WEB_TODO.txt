@@ -1,0 +1,59 @@
+
+WEB PAGE REORGANISATION
+-----------------------
+
+MAIN SECTION
+
+- main page:
+  - short introduction
+  - news / changes
+
+- about page
+  OBLIGE is FREE SOFTWARE released under the GNU GPL with NO WARRANTY
+  - FEATURE list
+  - current status
+    (KNOWN PROBLEMS)
+  - future development
+  - license / copyright
+  - author(s)
+
+- screenshots
+
+- downloads
+
+
+DOCUMENTATION SECTION
+
+- user guide
+
+- modding guide 
+
+- full history
+
+
+VERSION 2 PAGE
+
+- V2 stuff
+
+
+USER-GUIDE:
+but stupid windows blocks EXE files unless you go to control
+panel/internet options/security/(change to default level before you
+unzip)
+
+Size setting is the overall size of the map.
+
+Most importantly it supports custom mods: plop the lua file in the
+'mods' folder and Oblige will load it and you can enable/disable it in
+the GUI.
+
+
+MODDING GUIDE
+The core of OBLIGE is written in the LUA scripting language, and those
+files are located in the "obl_data" folder with names like
+"planner.lua" and "th_doom1.lua". Because they are simply text files,
+you can edit them with a text editor (Notepad) and, assuming nothing
+got borked up, the changes will be used the next time you run OBLIGE --
+no need to compile anything.
+
+
