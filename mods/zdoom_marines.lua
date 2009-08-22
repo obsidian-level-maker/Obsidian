@@ -33,8 +33,6 @@ ZDOOM_MARINE_THINGS =
 
 ZDOOM_MARINE_MONSTERS =
 {
-  -- Doom II is required, because SSG Marine needs SSG sounds.
-
   -- None of these drop anything.
 
   -- The damage values below are not accurate,
@@ -46,7 +44,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_fist =
   {
-    prob=0.5,
+    prob=1,
     health=100, damage=4, attack="melee",
     never_promote=true,
     density=0.2,
@@ -54,7 +52,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_berserk =
   {
-    prob=3, trap_prob=3,
+    prob=6, trap_prob=3,
     health=100, damage=40, attack="melee",
     never_promote=true,
     density=0.2,
@@ -62,7 +60,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_saw =
   {
-    prob=2, trap_prob=2,
+    prob=4, trap_prob=2,
     health=100, damage=15, attack="melee",
     never_promote=true,
     density=0.2,
@@ -70,7 +68,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_pistol =
   {
-    prob=6, guard_prob=2, trap_prob=2, cage_prob=2,
+    prob=12, guard_prob=2, trap_prob=2, cage_prob=2,
     health=100, damage=8, attack="hitscan",
     never_promote=true,
     density=0.5,
@@ -86,7 +84,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_ssg =
   {
-    prob=3, guard_prob=2, trap_prob=2, cage_prob=1,
+    prob=6, guard_prob=2, trap_prob=2, cage_prob=1,
     health=100, damage=65, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -94,7 +92,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_chain =
   {
-    prob=3, guard_prob=3, trap_prob=3, cage_prob=2,
+    prob=6, guard_prob=3, trap_prob=3, cage_prob=2,
     health=100, damage=50, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -102,7 +100,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rocket =
   {
-    prob=2, guard_prob=2, trap_prob=1, cage_prob=2, crazy_prob=10,
+    prob=4, guard_prob=2, trap_prob=1, cage_prob=2, crazy_prob=10,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.2,
@@ -110,7 +108,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_plasma =
   {
-    prob=2, guard_prob=1, trap_prob=1, cage_prob=2, crazy_prob=6,
+    prob=4, guard_prob=1, trap_prob=1, cage_prob=2, crazy_prob=6,
     health=100, damage=70, attack="missile",
     never_promote=true,
     density=0.2,
@@ -118,7 +116,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rail =
   {
-    prob=1, guard_prob=1, trap_prob=1, cage_prob=1,
+    prob=2, guard_prob=1, trap_prob=1, cage_prob=1,
     health=100, damage=100, attack="hitscan",
     never_promote=true,
     density=0.1,
@@ -126,18 +124,42 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_bfg =
   {
-    prob=1, guard_prob=1, trap_prob=1, cage_prob=1,
+    prob=2, guard_prob=1, trap_prob=1, cage_prob=1,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.1,
   },
 }
 
-function ZDoom_Marine_setup(self)
-  if self.options.use_melee.value == "no" then
-    GAME.monsters["marine_fist"] = nil
-    GAME.monsters["marine_berserk"] = nil
-    GAME.monsters["marine_saw"] = nil
+
+ZDOOM_MARINE_CHOICES =
+{
+  "scarce",  "Scarce",
+  "plenty",  "Plenty",
+  "heaps",   "Heaps",
+}
+
+ZDOOM_MARINE_FACTORS =
+{
+  scarce = 0.4,
+  plenty = 1.0,
+  heaps  = 5.0,
+}
+
+
+function ZDoom_Marine_Setup(self)
+  if OB_CONFIG.game == "doom1" then
+    GAME.monsters["marine_ssg"] = nil
+  end
+
+  local factor = ZDOOM_MARINE_FACTORS[self.options.qty.value]
+
+  for name,_ in pairs(ZDOOM_MARINE_MONSTERS) do
+    local M = GAME.monsters[name]
+    if M and factor then
+      M.prob = M.prob * factor
+      M.crazy_prob = (M.crazy_prob or M.prob) * factor
+    end
   end
 end
 
@@ -148,11 +170,11 @@ OB_MODULES["zdoom_marines"] =
 {
   label = "ZDoom Marines",
 
-  for_games   = { doom2=1, freedoom=1 },
+  for_games   = { doom1=1, doom2=1, freedoom=1 },
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = ZDoom_Marine_setup,
+  setup_func = ZDoom_Marine_Setup,
 
   tables =
   {
@@ -162,16 +184,79 @@ OB_MODULES["zdoom_marines"] =
 
   options =
   {
-    use_melee =
+    qty =
     {
-      label = "Use Melee Marines",
-
-      choices =
-      {
-        "yes", "Yes",
-        "no",  "No",
-      },
+      label = "Default Quantity", choices = ZDOOM_MARINE_CHOICES,
     },
   },
+}
+
+
+----------------------------------------------------------------
+
+
+MARINE_CONTROL_CHOICES =
+{
+  "default", "DEFAULT",
+  "none",    "None at all",
+  "scarce",  "Scarce",
+  "less",    "Less",
+  "plenty",  "Plenty",
+  "more",    "More",
+  "heaps",   "Heaps",
+  "insane",  "INSANE",
+}
+
+MARINE_CONTROL_PROBS =
+{
+  none   = 0,
+  scarce = 1,
+  less   = 4,
+  plenty = 20,
+  more   = 70,
+  heaps  = 200,
+  insane = 1000,
+}
+
+
+function Marine_Control_Setup(self)
+  for name,opt in pairs(self.options) do
+    local M = GAME.monsters[name]
+
+    if M and opt.value ~= "default" then
+      local prob = MON_CONTROL_PROBS[opt.value]
+
+      M.prob = prob
+      M.crazy_prob = prob
+
+      if prob >  80 then M.density = 0.5 end
+      if prob > 180 then M.skip_prob = 0 end
+    end
+  end -- for opt
+end
+
+
+OB_MODULES["zdoom_marine_control"] =
+{
+  label = "ZDoom Marines : Fine Control",
+
+  for_modules = { zdoom_marines=1 },
+
+  setup_func = Marine_Control_Setup,
+
+  options =
+  {
+    marine_fist      = { label="Marine (Fist)",           choices=MARINE_CONTROL_CHOICES },
+    marine_berserk   = { label="Marine (Berserk)",        choices=MARINE_CONTROL_CHOICES },
+    marine_saw       = { label="Marine (Chainsaw)",       choices=MARINE_CONTROL_CHOICES },
+    marine_pistol    = { label="Marine (Pistol)",         choices=MARINE_CONTROL_CHOICES },
+    marine_shotty    = { label="Marine (Shotgun)",        choices=MARINE_CONTROL_CHOICES },
+    marine_ssg       = { label="Marine (Super Shotgun)",  choices=MARINE_CONTROL_CHOICES },
+    marine_chain     = { label="Marine (Chaingun)",       choices=MARINE_CONTROL_CHOICES },
+    marine_rocket    = { label="Marine (Rocket Launcher)",choices=MARINE_CONTROL_CHOICES },
+    marine_plasma    = { label="Marine (Plasma Rifle)",   choices=MARINE_CONTROL_CHOICES },
+    marine_rail      = { label="Marine (Railgun)",        choices=MARINE_CONTROL_CHOICES },
+    marine_bfg       = { label="Marine (BFG 9000)",       choices=MARINE_CONTROL_CHOICES },
+  }
 }
 
