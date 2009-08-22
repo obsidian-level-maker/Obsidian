@@ -18,40 +18,42 @@
 
 MON_CONTROL_CHOICES =
 {
-  "normal", "Normal",
-  "scarce", "Scarce",
-  "less",   "Less",
-  "more",   "More",
-  "heaps",  "Heaps",
-  "insane", "INSANE",
+  "default", "DEFAULT",
+  "none",    "None at all",
+  "scarce",  "Scarce",
+  "less",    "Less",
+  "plenty",  "Plenty",
+  "more",    "More",
+  "heaps",   "Heaps",
+  "insane",  "INSANE",
 }
 
-MON_CONTROL_AMOUNTS =
+MON_CONTROL_PROBS =
 {
-  scarce = 1,
+  none   = 0,
+  scarce = 2,
   less   = 15,
-  normal = 50,
+  plenty = 50,
   more   = 120,
   heaps  = 300,
   insane = 2000,
 }
 
 
-function MonControl_setup(self)
-
+function Mon_Control_Setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
-    local factor = MON_CONTROL_AMOUNTS[opt.value]
 
-    if M and factor then
-      M.prob = factor
-      M.crazy_prob = factor
+    if M and opt.value ~= "default" then
+      local prob = MON_CONTROL_PROBS[opt.value]
 
-      if factor >  80 then M.density = 1.0 end
-      if factor > 180 then M.always_use = true end
+      M.prob = prob
+      M.crazy_prob = prob
+
+      if prob >  80 then M.density = 1.0 end
+      if prob > 180 then M.skip_prob = 0 end
     end
   end -- for opt
-
 end
 
 
@@ -59,10 +61,10 @@ OB_MODULES["mon_control"] =
 {
   label = "Monster Control (DOOM)",
 
-  for_games = { doom1=1, doom2=1 },
+  for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = MonControl_setup,
+  setup_func = Mon_Control_Setup,
 
   options =
   {
