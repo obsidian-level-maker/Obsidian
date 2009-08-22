@@ -234,7 +234,7 @@ function Stealth_Mon_Control_Setup(self)
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = MON_CONTROL_PROBS[opt.value]
+      local prob = STEALTH_CONTROL_PROBS[opt.value]
 
       M.replaces = nil
       M.prob = prob

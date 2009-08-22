@@ -224,7 +224,7 @@ function Marine_Control_Setup(self)
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = MON_CONTROL_PROBS[opt.value]
+      local prob = MARINE_CONTROL_PROBS[opt.value]
 
       M.prob = prob
       M.crazy_prob = prob
