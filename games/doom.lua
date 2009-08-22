@@ -899,12 +899,13 @@ COMMON_SANITY_MAP =
 {
   -- liquids kill the player, so keep them recognisable
   LAVA1   = "FWATER1",
-  FWATER1 = "NUKAGE1",
+  FWATER1 = "BLOOD1",
+  BLOOD1  = "NUKAGE1",
   NUKAGE1 = "LAVA1",
-  SFALL1  = "BFALL1",
-  BFALL1  = "SFALL1",
-  WFALL1  = "LFALL1",
   LFALL1  = "WFALL1",
+  WFALL1  = "BFALL1",
+  BFALL1  = "SFALL1",
+  SFALL1  = "LFALL1",
   SLIME01 = "SLIME09",
   SLIME05 = "SLIME09",
   SLIME09 = "SLIME01",
