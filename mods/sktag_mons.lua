@@ -201,7 +201,7 @@ end
 
 OB_MODULES["sktag_mons"] =
 {
-  label = "Skulltag Monsters and Items",
+  label = "Skulltag : Monsters and Items",
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
@@ -230,3 +230,85 @@ OB_MODULES["sktag_mons"] =
     },
   },
 }
+
+
+----------------------------------------------------------------
+
+
+SKULLTAG_CONTROL_CHOICES =
+{
+  "default", "DEFAULT",
+  "none",    "None at all",
+  "scarce",  "Scarce",
+  "less",    "Less",
+  "plenty",  "Plenty",
+  "more",    "More",
+  "heaps",   "Heaps",
+  "insane",  "INSANE",
+}
+
+SKULLTAG_CONTROL_PROBS =
+{
+  none   = 0,
+  scarce = 1,
+  less   = 4,
+  plenty = 20,
+  more   = 70,
+  heaps  = 200,
+  insane = 1000,
+}
+
+
+function Sktag_Mon_Control_Setup(self)
+  -- TODO
+end
+
+
+OB_MODULES["sktag_mon_control"] =
+{
+  label = "Skulltag Monsters : Fine Control",
+
+  for_modules = { sktag_mons=1 },
+
+  setup_func = Sktag_Mon_Control_setup,
+
+  options =
+  {
+    darkimp   = { label="Dark Imp",          choices=SKULLTAG_CONTROL_CHOICES },
+    bldemon   = { label="Blood Demon",       choices=SKULLTAG_CONTROL_CHOICES },
+    cacolant  = { label="Cacolantern",       choices=SKULLTAG_CONTROL_CHOICES },
+    hectebus  = { label="Hectebus",          choices=SKULLTAG_CONTROL_CHOICES },
+    abaddon   = { label="Abaddon",           choices=SKULLTAG_CONTROL_CHOICES },
+
+    superguy  = { label="Super Shotgun Guy", choices=SKULLTAG_CONTROL_CHOICES },
+    belphegor = { label="Belphegor",         choices=SKULLTAG_CONTROL_CHOICES },
+  },
+
+}
+
+
+----------------------------------------------------------------
+
+
+function Sktag_Weap_Control_Setup(self)
+  -- TODO
+end
+
+
+OB_MODULES["sktag_weap_control"] =
+{
+  label = "Skulltag Weapons : Fine Control",
+
+  for_modules = { sktag_mons=1 },
+
+  setup_func = Sktag_WeapControl_setup,
+
+  options =
+  {
+    minigun  = { label="Minigun",          choices=SKULLTAG_CONTROL_CHOICES },
+    glaunch  = { label="Grenade Launcher", choices=SKULLTAG_CONTROL_CHOICES },
+    railgun  = { label="Railgun",          choices=SKULLTAG_CONTROL_CHOICES },
+    bfgtenk  = { label="BFG10K",           choices=SKULLTAG_CONTROL_CHOICES },
+  },
+}
+
