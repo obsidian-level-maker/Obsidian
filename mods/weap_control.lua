@@ -18,44 +18,44 @@
 
 WEAP_CONTROL_CHOICES =
 {
---  "none",   "NONE",
-  "normal", "Normal",
-  "scarce", "Scarce",
-  "less",   "Less",
-  "more",   "More",
-  "heaps",  "Heaps",
-  "loveit", "I LOVE IT",
+  "default", "DEFAULT",
+  "none",    "None at all",
+  "scarce",  "Scarce",
+  "less",    "Less",
+  "plenty",  "Plenty",
+  "more",    "More",
+  "heaps",   "Heaps",
+  "loveit",  "I LOVE IT",
 }
 
-WEAP_CONTROL_AMOUNTS =
+WEAP_CONTROL_PROBS =
 {
---  none =   0,
-  scarce = 1,
+  none   = 0,
+  scarce = 2,
   less   = 15,
-  normal = 50,
+  plenty = 50,
   more   = 120,
   heaps  = 300,
   loveit = 1000,
 }
 
 
-function WeapControl_setup(self)
-
+function Weap_Control_Setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
-    local factor = WEAP_CONTROL_AMOUNTS[opt.value]
 
-    if W and factor then
-      W.start_prob = factor
-      W.add_prob   = factor
+    if W and opt.value ~= "default" then
+      local prob = WEAP_CONTROL_PROBS[opt.value]
+
+      W.start_prob = prob
+      W.add_prob   = prob
 
       -- adjust usage preference as well
-      if W.pref and factor > 0 then
-        W.pref = W.pref * ((factor / 50) ^ 0.6)
+      if W.pref and prob > 0 then
+        W.pref = W.pref * ((prob / 50) ^ 0.6)
       end
     end
   end -- for opt
-
 end
 
 
@@ -66,7 +66,7 @@ OB_MODULES["weap_control"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = WeapControl_setup,
+  setup_func = Weap_Control_Setup,
 
   options =
   {
