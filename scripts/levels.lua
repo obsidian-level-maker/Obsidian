@@ -136,7 +136,7 @@ function Game_sort_modules()
 
   local function module_sorter(A, B)
     if A.priority or B.priority then
-      return (A.priority or 0) < (B.priority or 0)
+      return (A.priority or 50) < (B.priority or 50)
     end
 
     return A.label < B.label
