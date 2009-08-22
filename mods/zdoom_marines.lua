@@ -134,8 +134,8 @@ ZDOOM_MARINE_MONSTERS =
 
 ZDOOM_MARINE_CHOICES =
 {
-  "scarce",  "Scarce",
   "plenty",  "Plenty",
+  "scarce",  "Scarce",
   "heaps",   "Heaps",
 }
 
