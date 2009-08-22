@@ -17,8 +17,6 @@
 --
 ----------------------------------------------------------------
 
--- NOTE: Only Doom II supported for now.
-
 STEALTH_THINGS_EDGE =
 {
   stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
@@ -147,33 +145,100 @@ STEALTH_MONSTERS =
 }
 
 
-OB_MODULES["edge_stealth"] =
-{
-  label = "EDGE Stealth Monsters",
+function StealthMons_Setup(self)
+  if OB_CONFIG.engine == "edge" then
+    Game_merge_tab("things", STEALTH_THINGS_EDGE)
+  else
+    Game_merge_tab("things", STEALTH_THINGS_ZDOOM)
+  end
+end
 
-  for_games   = { doom2=1, freedoom=1 },
+
+OB_MODULES["stealth_mons"] =
+{
+  label = "Stealth Monsters",
+
+  for_games   = { doom1=1, doom2=1, freedoom=1 },
   for_modes   = { sp=1, coop=1 },
-  for_engines = { edge=1 },
+  for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 },
+
+  setup_func = StealthMons_Setup,
 
   tables =
   {
-    "things",   STEALTH_THINGS_EDGE,
     "monsters", STEALTH_MONSTERS,
   },
 }
 
-OB_MODULES["zdoom_stealth"] =
+
+----------------------------------------------------------------
+
+
+STEALTH_CONTROL_CHOICES =
 {
-  label = "ZDoom Stealth Monsters",
+  "default", "DEFAULT",
+  "none",    "None",
+  "scarce",  "Scarce",
+  "less",    "Less",
+  "quite",   "Quite a few",
+  "more",    "More",
+  "heaps",   "Heaps",
+  "insane",  "INSANE",
+}
 
-  for_games   = { doom2=1, freedoom=1 },
-  for_modes   = { sp=1, coop=1 },
-  for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
+STEALTH_CONTROL_PROBS =
+{
+  none   = 0,
+  scarce = 2,
+  less   = 15,
+  quite  = 50,
+  more   = 120,
+  heaps  = 300,
+  insane = 2000,
+}
 
-  tables =
+
+function StealthMonControl_Setup(self)
+  for name,opt in pairs(self.options) do
+    local M = GAME.monsters[name]
+
+    if M and opt.value ~= "default" then
+      local prob = MON_CONTROL_PROBS[opt.value]
+
+      M.replaces = nil
+      M.prob = prob
+      M.crazy_prob = prob
+
+      if prob >  80 then M.density = 1.0 end
+      if prob > 180 then M.skip_prob = 0 end
+    end
+  end -- for opt
+end
+
+
+OB_MODULES["stealth_mon_control"] =
+{
+  label = "Stealth Monsters : Fine Control",
+
+  for_modules = { stealth_mons=1 },
+
+  setup_func = StealthMonControl_Setup,
+
+  options =
   {
-    "things",   STEALTH_THINGS_ZDOOM,
-    "monsters", STEALTH_MONSTERS,
-  },
+    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH_CONTROL_CHOICES },
+    stealth_shooter  = { label="Stealth Shotgun Guy",   choices=STEALTH_CONTROL_CHOICES },
+    stealth_imp      = { label="Stealth Imp",           choices=STEALTH_CONTROL_CHOICES },
+    stealth_demon    = { label="Stealth Demon",         choices=STEALTH_CONTROL_CHOICES },
+    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH_CONTROL_CHOICES },
+    stealth_baron    = { label="Stealth Baron of Hell", choices=STEALTH_CONTROL_CHOICES },
+
+    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH_CONTROL_CHOICES },
+    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH_CONTROL_CHOICES },
+    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH_CONTROL_CHOICES },
+    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH_CONTROL_CHOICES },
+    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH_CONTROL_CHOICES },
+    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH_CONTROL_CHOICES },
+  }
 }
 
