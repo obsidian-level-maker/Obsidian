@@ -250,17 +250,29 @@ SKULLTAG_CONTROL_CHOICES =
 SKULLTAG_CONTROL_PROBS =
 {
   none   = 0,
-  scarce = 1,
-  less   = 4,
-  plenty = 20,
-  more   = 70,
-  heaps  = 200,
-  insane = 1000,
+  scarce = 2,
+  less   = 15,
+  plenty = 50,
+  more   = 120,
+  heaps  = 300,
+  insane = 1200,
 }
 
 
 function Sktag_Mon_Control_Setup(self)
-  -- TODO
+  for name,opt in pairs(self.options) do
+    local M = GAME.monsters[name]
+
+    if M and opt.value ~= "default" then
+      local prob = SKULLTAG_CONTROL_PROBS[opt.value]
+
+      M.prob = prob
+      M.crazy_prob = prob
+
+      if prob >  80 then M.density = 1.0 end
+      if prob > 180 then M.skip_prob = 0 end
+    end
+  end -- for opt
 end
 
 
@@ -291,7 +303,21 @@ OB_MODULES["sktag_mon_control"] =
 
 
 function Sktag_Weap_Control_Setup(self)
-  -- TODO
+  for name,opt in pairs(self.options) do
+    local W = GAME.weapons[name]
+
+    if W and opt.value ~= "default" then
+      local prob = SKULLTAG_CONTROL_PROBS[opt.value]
+
+      W.start_prob = prob
+      W.add_prob   = prob
+
+      -- adjust usage preference as well
+      if W.pref and prob > 0 then
+        W.pref = W.pref * ((prob / 50) ^ 0.6)
+      end
+    end
+  end -- for opt
 end
 
 
@@ -308,7 +334,7 @@ OB_MODULES["sktag_weap_control"] =
     minigun  = { label="Minigun",          choices=SKULLTAG_CONTROL_CHOICES },
     glaunch  = { label="Grenade Launcher", choices=SKULLTAG_CONTROL_CHOICES },
     railgun  = { label="Railgun",          choices=SKULLTAG_CONTROL_CHOICES },
-    bfgtenk  = { label="BFG10K",           choices=SKULLTAG_CONTROL_CHOICES },
+    bfg10k   = { label="BFG10K",           choices=SKULLTAG_CONTROL_CHOICES },
   },
 }
 
