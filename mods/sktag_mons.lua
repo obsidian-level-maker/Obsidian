@@ -44,10 +44,6 @@ SKULLTAG_THINGS =
 
 SKULLTAG_MONSTERS =
 {
-  -- NOTE: Super shotgun guy requires DOOM II (there is no super
-  --       shotgun in DOOM 1).  Hectebus too, it needs mancubus
-  --       sounds.
-
   darkimp =
   {
     prob=55, guard_prob=11, trap_prob=11, cage_prob=40,
@@ -156,26 +152,23 @@ SKULLTAG_PICKUPS =
   },
 }
 
-
--- TODO MONSTER/WEAPON PREFS
---  hectebus = { super=2.0, launch=2.0, railgun=1.5 },
---  belphegor = { launch=1.5, plasma=1.5, bfg=1.0, railgun=1.5 },
---  darkimp   = { chain=2.0, shotty=6.0, minigun=1.0 },
---  cacolant  = { super=2.0, launch=0.7, railgun=1.0, minigun=0.4 },
---  abaddon   = { super=2.0, launch=1.33, railgun=1.5 },
---  bldemon   = { super=3.0, launch=0.4 },
---  superguy  = { shotty=4.0, super=4.0, chain=3.0, railgun=0.3 }
-
-
+function Skulltag_Setup(self)
+  if OB_CONFIG.game == "doom1" then
+    GAME.monsters["superguy"] = nil
+    GAME.monsters["hectebus"] = nil
+  end
+end
 
 
 OB_MODULES["sktag_mons"] =
 {
   label = "Skulltag Monsters and Items",
 
-  for_games = { doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
+
+  setup_func = Skulltag_Setup,
 
   tables =
   {
@@ -185,4 +178,3 @@ OB_MODULES["sktag_mons"] =
     "pickups",  SKULLTAG_PICKUPS,
   },
 }
-
