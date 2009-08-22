@@ -145,11 +145,34 @@ STEALTH_MONSTERS =
 }
 
 
+STEALTH_CHOICES =
+{
+  "normal", "Normal",
+  "less",   "Less",
+  "more",   "More",
+}
+
+
 function Stealth_Mons_Setup(self)
   if OB_CONFIG.engine == "edge" then
     Game_merge_tab("things", STEALTH_THINGS_EDGE)
   else
     Game_merge_tab("things", STEALTH_THINGS_ZDOOM)
+  end
+
+  -- apply the Quantity choice
+  local qty = self.options.qty.value
+
+  for name,_ in pairs(STEALTH_MONSTERS) do
+    local M = GAME.monsters[name]
+    if M and qty == "less" then
+      M.replace_prob = M.replace_prob / 2
+      M.crazy_prob = M.crazy_prob / 3
+    end
+    if M and qty == "more" then
+      M.replace_prob = math.max(80, M.replace_prob * 2)
+      M.crazy_prob = M.crazy_prob * 3
+    end
   end
 end
 
@@ -168,6 +191,14 @@ OB_MODULES["stealth_mons"] =
   {
     "monsters", STEALTH_MONSTERS,
   },
+
+  options =
+  {
+    qty =
+    {
+      label = "Default Quantity", choices = STEALTH_CHOICES,
+    },
+  },
 }
 
 
@@ -177,10 +208,10 @@ OB_MODULES["stealth_mons"] =
 STEALTH_CONTROL_CHOICES =
 {
   "default", "DEFAULT",
-  "none",    "None",
+  "none",    "None at all",
   "scarce",  "Scarce",
   "less",    "Less",
-  "quite",   "Quite a few",
+  "plenty",  "Plenty",
   "more",    "More",
   "heaps",   "Heaps",
   "insane",  "INSANE",
@@ -191,7 +222,7 @@ STEALTH_CONTROL_PROBS =
   none   = 0,
   scarce = 2,
   less   = 15,
-  quite  = 50,
+  plenty = 50,
   more   = 120,
   heaps  = 300,
   insane = 2000,
