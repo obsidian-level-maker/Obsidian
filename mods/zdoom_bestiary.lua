@@ -27,7 +27,7 @@ BESTIARY_THINGS =
   zombie2    = { id=3201, kind="monster", r=20,h=56 },
   zombie3    = { id=3200, kind="monster", r=20,h=56 },
   zsec       = { id=6699, kind="monster", r=20,h=56 },
-  chainsawer = { id=3204, kind="monster", r=20,h=56 },
+  chainsawguy ={ id=3204, kind="monster", r=20,h=56 },
   plasmaguy  = { id=3205, kind="monster", r=20,h=56 },
   rocketguy  = { id=3202, kind="monster", r=20,h=56 },
 
@@ -40,39 +40,163 @@ BESTIARY_THINGS =
   gunner2    = { id=30124, kind="monster", r=20,h=56 },
   inferno    = { id=30105, kind="monster", r=31,h=56 },
   nailborg   = { id=27800, kind="monster", r=20,h=56 },
-  suicider   = { id=22099, kind="monster", r=20,h=56 },
+  suicideguy = { id=22099, kind="monster", r=20,h=56 },
   tornado    = { id=32725, kind="monster", r=20,h=56 },
   stonedemon = { id=31999, kind="monster", r=30,h=56 },
 }
 
+
 BESTIARY_MONSTERS =
 {
-  -- FIXME !!!!  grab proper stats
-
-  afrit      = { health=100, damage=50, attack="hitscan" },
-  defiler    = { health=100, damage=50, attack="hitscan" },
-  satyr      = { health=100, damage=50, attack="hitscan" },
-  stoneimp   = { health=100, damage=50, attack="hitscan" },
-  tortsoul   = { health=100, damage=50, attack="hitscan" },
-  zombie2    = { health=100, damage=50, attack="hitscan" },
-  zombie3    = { health=100, damage=50, attack="hitscan" },
-  zsec       = { health=100, damage=50, attack="hitscan" },
-  chainsawer = { health=100, damage=50, attack="hitscan" },
-  plasmaguy  = { health=100, damage=50, attack="hitscan" },
-  rocketguy  = { health=100, damage=50, attack="hitscan" },
-
-  archon     = { health=100, damage=50, attack="hitscan" },
-  chainarach = { health=100, damage=50, attack="hitscan" },
-  cybaron    = { health=100, damage=50, attack="hitscan" },
-  cybruiser  = { health=100, damage=50, attack="hitscan" },
+  -- FIXME: grab proper stats
   diabloist  = { health=100, damage=50, attack="hitscan" },
-  fusion     = { health=100, damage=50, attack="hitscan" },
-  gunner2    = { health=100, damage=50, attack="hitscan" },
-  inferno    = { health=100, damage=50, attack="hitscan" },
-  nailborg   = { health=100, damage=50, attack="hitscan" },
-  suicider   = { health=100, damage=50, attack="hitscan" },
   tornado    = { health=100, damage=50, attack="hitscan" },
-  stonedemon = { health=100, damage=50, attack="hitscan" },
+
+  zombie2 =
+  {
+    health=30, damage=10, attack="hitscan",
+    give={ {ammo="bullet",count=5} },
+  },
+
+  zombie3 =
+  {
+    health=50, damage=20, attack="hitscan",
+    give={ {ammo="bullet",count=10} },
+  },
+
+  zsec =
+  {
+    health=100, damage=35, attack="hitscan",
+    give={ {ammo="bullet",count=5} },
+  },
+
+  stoneimp =
+  {
+    health=150, damage=40, attack="melee",
+  },
+
+  stonedemon =
+  {
+    health=400, damage=40, attack="missile",
+  },
+
+  suicideguy =
+  {
+    health=50, damage=75, attack="melee",
+  },
+
+  chainsawguy =
+  {
+    health=50, damage=35, attack="melee",
+  },
+
+  rocketguy =
+  {
+    health=40, damage=100, attack="missile",
+    give={ {weapon="launch"}, {ammo="rocket",count=1} },
+  },
+
+  plasmaguy =
+  {
+    health=40, damage=60, attack="missile",
+    give={ {weapon="plasma"}, {ammo="cell",count=20} },
+  },
+
+  cybaron =
+  {
+    health=1200, damage=85, attack="missile",
+    weap_prefs={ bfg=1.2, bfg10k=1.2 },
+    density=0.35,
+  },
+
+  nailborg =
+  {
+    health=180, damage=45, attack="missile", density=0.6,
+  },
+
+  satyr =
+  {
+    health=400, damage=65, attack="melee",
+  },
+
+  afrit =
+  {
+    health=800, damage=50, attack="missile", float=true, density=0.5
+  },
+
+  archon =
+  {
+    health=1500, damage=120, attack="missile",
+    weap_prefs={ bfg=3.0, bfg10k=2.0 },
+    density=0.2, never_promote=true,
+  },
+
+-- FIXME
+--  watcher =
+--  {
+--    health=100, damage=20, attack="missile",
+--    float=true,
+--  },
+
+-- FIXME
+--  gunner3 =
+--  {
+--    health=90, damage=50, attack="hitscan",
+--    give={ {weapon="chain"}, {ammo="bullet",count=10} },
+--  },
+
+  ----------------------------------------
+
+  gunner2 =
+  {
+    health=100, damage=70, attack="hitscan",
+    give={ {weapon="chain"}, {ammo="bullet",count=10} },
+    density=0.6,
+  },
+
+  inferno =
+  {
+    health=400, damage=50, attack="missile",
+    float=true, never_promote=true,
+    density=0.4,
+  },
+
+  tortsoul =
+  {
+    health=700, damage=50, attack="missile",
+    float=true, never_promote=true,
+    density=0.3,
+  },
+
+  defiler =
+  {
+    health=1000, damage=60, attack="missile",
+    float=true, never_promote=true,
+    density=0.1,
+  },
+
+  fusion =
+  {
+    health=500, damage=70, attack="missile",
+  },
+
+  chainarach =
+  {
+    health=500, damage=40, attack="hitscan",
+  },
+
+  cybruiser =
+  {
+    health=1500, damage=70, attack="missile",
+    weap_prefs={ bfg=1.2, bfg10k=1.2 },
+    density=0.4,
+  },
+
+-- FIXME
+--  squire =
+--  {
+--    health=250, damage=30, attack="missile",
+--  },
 }
 
 
@@ -132,30 +256,30 @@ OB_MODULES["zdoom_bestiary"] =
   {
     -- FIXME !!!  grab their full names
 
-    afrit      = { label="afrit",      choices=BESTIARY_CHOICES },
-    defiler    = { label="defiler",    choices=BESTIARY_CHOICES },
-    satyr      = { label="satyr",      choices=BESTIARY_CHOICES },
-    stoneimp   = { label="stoneimp",   choices=BESTIARY_CHOICES },
-    tortsoul   = { label="tortsoul",   choices=BESTIARY_CHOICES },
-    zombie2    = { label="zombie2",    choices=BESTIARY_CHOICES },
-    zombie3    = { label="zombie3",    choices=BESTIARY_CHOICES },
-    zsec       = { label="zsec",       choices=BESTIARY_CHOICES },
-    chainsawer = { label="chainsawer", choices=BESTIARY_CHOICES },
-    plasmaguy  = { label="plasmaguy",  choices=BESTIARY_CHOICES },
-    rocketguy  = { label="rocketguy",  choices=BESTIARY_CHOICES },
-                                
-    archon     = { label="archon",     choices=BESTIARY_CHOICES },
-    chainarach = { label="chainarach", choices=BESTIARY_CHOICES },
-    cybaron    = { label="cybaron",    choices=BESTIARY_CHOICES },
-    cybruiser  = { label="cybruiser",  choices=BESTIARY_CHOICES },
-    diabloist  = { label="diabloist",  choices=BESTIARY_CHOICES },
-    fusion     = { label="fusion",     choices=BESTIARY_CHOICES },
-    gunner2    = { label="gunner2",    choices=BESTIARY_CHOICES },
-    inferno    = { label="inferno",    choices=BESTIARY_CHOICES },
-    nailborg   = { label="nailborg",   choices=BESTIARY_CHOICES },
-    suicider   = { label="suicider",   choices=BESTIARY_CHOICES },
-    tornado    = { label="tornado",    choices=BESTIARY_CHOICES },
-    stonedemon = { label="stonedemon", choices=BESTIARY_CHOICES },
+    afrit      = { label="Afrit",            choices=BESTIARY_CHOICES },
+    defiler    = { label="Defiler",          choices=BESTIARY_CHOICES },
+    satyr      = { label="Satyr",            choices=BESTIARY_CHOICES },
+    stoneimp   = { label="Stoneimp",         choices=BESTIARY_CHOICES },
+    tortsoul   = { label="Tortsoul",         choices=BESTIARY_CHOICES },
+    zombie2    = { label="Zombie2",          choices=BESTIARY_CHOICES },
+    zombie3    = { label="Zombie3",          choices=BESTIARY_CHOICES },
+    zsec       = { label="Zsec",             choices=BESTIARY_CHOICES },
+    chainsawguy ={ label="Chainsaw guy",     choices=BESTIARY_CHOICES },
+    plasmaguy  = { label="Plasma guy",       choices=BESTIARY_CHOICES },
+    rocketguy  = { label="Rocket guy",       choices=BESTIARY_CHOICES },
+
+    archon     = { label="Archon",           choices=BESTIARY_CHOICES },
+    chainarach = { label="Chainarach",       choices=BESTIARY_CHOICES },
+    cybaron    = { label="Cybaron",          choices=BESTIARY_CHOICES },
+    cybruiser  = { label="Cybruiser",        choices=BESTIARY_CHOICES },
+    diabloist  = { label="Diabloist",        choices=BESTIARY_CHOICES },
+    fusion     = { label="Fusion",           choices=BESTIARY_CHOICES },
+    gunner2    = { label="Gunner2",          choices=BESTIARY_CHOICES },
+    inferno    = { label="Inferno",          choices=BESTIARY_CHOICES },
+    nailborg   = { label="Nailborg",         choices=BESTIARY_CHOICES },
+    suicideguy = { label="Suicider",         choices=BESTIARY_CHOICES },
+    tornado    = { label="Tornado",          choices=BESTIARY_CHOICES },
+    stonedemon = { label="Stonedemon",       choices=BESTIARY_CHOICES },
   },
 }
 
