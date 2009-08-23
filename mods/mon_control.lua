@@ -47,6 +47,9 @@ function Mon_Control_Setup(self)
     if M and opt.value ~= "default" then
       local prob = MON_CONTROL_PROBS[opt.value]
 
+      -- allow Spectres to be controlled individually
+      M.replaces = nil
+
       M.prob = prob
       M.crazy_prob = prob
 
@@ -75,7 +78,8 @@ OB_MODULES["mon_control"] =
     imp      = { label="Imp",            choices=MON_CONTROL_CHOICES },
 
     skull    = { label="Lost Soul",      choices=MON_CONTROL_CHOICES },
-    demon    = { label="Demon / Spectre", choices=MON_CONTROL_CHOICES },
+    demon    = { label="Demon",          choices=MON_CONTROL_CHOICES },
+    spectre  = { label="Spectre",        choices=MON_CONTROL_CHOICES },
     pain     = { label="Pain Elemental", choices=MON_CONTROL_CHOICES },
     caco     = { label="Cacodemon",      choices=MON_CONTROL_CHOICES },
     knight   = { label="Hell Knight",    choices=MON_CONTROL_CHOICES },
