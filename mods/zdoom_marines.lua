@@ -207,6 +207,9 @@ MARINE_CONTROL_CHOICES =
   "insane",  "INSANE",
 }
 
+-- these probabilities are lower than in the Monster Control module
+-- because these dudes really pack a punch.
+
 MARINE_CONTROL_PROBS =
 {
   none   = 0,
