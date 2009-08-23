@@ -206,10 +206,13 @@ function Monsters_global_palette()
 
   local list = {}
   for name,info in pairs(GAME.monsters) do
-    if info.prob then
+    if info.prob and info.prob > 0 then
       table.insert(list, name)
     end
   end
+
+  -- is there enough monsters to actually bother?
+  if #list <= 2 then return end
 
   rand_shuffle(list)
 
@@ -224,7 +227,7 @@ function Monsters_global_palette()
     end
   end
 
-  if PARAM.skip_monsters and #list > 2 then
+  if PARAM.skip_monsters then
     local perc  = rand_range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
     local count = int(#list * perc / 100 + gui.random())
 
@@ -756,7 +759,6 @@ function Monsters_in_room(R)
 
 
   local function prob_for_mon(info, fp, toughness)
-
     local name = info.name
     local prob = info.prob
 
@@ -796,8 +798,8 @@ function Monsters_in_room(R)
       prob = prob * (damage / PARAM.mon_damage_low)
     end
 
-    if info.invis and R.outdoor then
-      prob = prob * 3
+    if R.outdoor then
+      prob = prob * (info.outdoor_factor or 1)
     end
 
     return prob
@@ -828,27 +830,27 @@ function Monsters_in_room(R)
     local list = {}
 
     for name,info in pairs(GAME.monsters) do
-      local prob = info.crazy_prob or info.prob
+      local prob = info.crazy_prob or info.prob or 0
 
-      if prob and LEVEL.monster_prefs then
+      if prob > 0 and LEVEL.monster_prefs then
         prob = prob * (LEVEL.monster_prefs[name] or 1)
         if info.replaces then
           prob = prob * (LEVEL.monster_prefs[info.replaces] or 1)
         end
       end
 
-      if prob and prob > 0 then
+      if prob > 0 then
         list[name] = prob
       end
     end
 
-    assert(not table_empty(list))
-
     local palette = {}
 
-    gui.debugf("Monster palette: (%d kinds)\n", num_kinds)
+    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table_size(list))
 
     for i = 1,num_kinds do
+      if table_empty(list) then break; end
+
       local mon = rand_key_by_probs(list)
       palette[mon] = list[mon]
 
@@ -856,7 +858,6 @@ function Monsters_in_room(R)
       LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
 
       list[mon] = nil
-      if table_empty(list) then break; end
     end
 
     return palette
@@ -875,16 +876,8 @@ function Monsters_in_room(R)
     local list = {}
     gui.debugf("Monster list:\n")
 
-    local fallback
-
     for name,info in pairs(GAME.monsters) do
       if info.prob then
-
-        -- just in case we end up with no monsters
-        if not fallback or info.prob < fallback.prob then
-          fallback = info
-        end
-
         local prob = prob_for_mon(info, fp, toughness)
 
         if prob > 0 then
@@ -894,21 +887,15 @@ function Monsters_in_room(R)
       end
     end
 
-    assert(fallback)
-
-    if table_empty(list) then
-      gui.printf("Empty monster palette @ %s : using %s\n",
-                 R:tostr(), fallback.name)
-      list[fallback.name] = 50
-    end
-
     local num_kinds = number_of_kinds(fp)
 
     local palette = {}
 
-    gui.debugf("Monster palette: (%d kinds)\n", num_kinds)
+    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table_size(list))
 
     for i = 1,num_kinds do
+      if table_empty(list) then break; end
+
       local mon  = rand_key_by_probs(list)
       local prob = list[mon]
       list[mon] = nil
@@ -922,8 +909,6 @@ function Monsters_in_room(R)
 
       gui.debugf("  #%d %s\n", i, mon)
       LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
-
-      if table_empty(list) then break; end
     end
 
     return palette
@@ -1277,8 +1262,6 @@ function Monsters_in_room(R)
 
     local palette = select_monsters(toughness)
 
-    create_monster_map(palette)
-
     local barrel_chance = sel(R.outdoor, 2, 20)
     if R.kind == "hallway" then barrel_chance = 5 end
     if STYLE.barrels == "heaps" or rand_odds(10) then barrel_chance = barrel_chance * 3 + 10 end
@@ -1289,7 +1272,12 @@ function Monsters_in_room(R)
       R.no_replacement = true
     end
 
-    fill_monster_map(qty, barrel_chance)
+    -- FIXME: add barrels even when no monsters in room
+
+    if not table_empty(palette) then
+      create_monster_map(palette)
+      fill_monster_map(qty, barrel_chance)
+    end
   end
 
 
