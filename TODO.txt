@@ -2,15 +2,23 @@
 TODO
 ====
 
+>>>>  if monster uses replaces, but what it replaces does not exist, then never add that monster
+
+>>>>  more robust handling of no usable monsters / weapons
+
+-  GUI adaption to higher res : make choices wider/taller
+
+-  Strength button:
+      Medium  (as now)
+      Low     
+      High
+      Crazy
+
+-  levels are a bit too big.
+
 -  more ammo in starting room  (biggest pack for starting weapon or bullets)
 
--  if monster uses replaces, but what it replaces does not exist, then never add that monster
-
--  more robust handling of no usable monsters / weapons
-
 >> Compilation notes !!
-
->> QSAVETEX: delete output wad on error
 
 -  Progressive bug:
     "Oblige seems to make the largest level the first level of the next
