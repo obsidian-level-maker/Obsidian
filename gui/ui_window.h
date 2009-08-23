@@ -22,6 +22,9 @@
 #define __UI_WINDOW_H__
 
 
+#define MIN_WINDOW_W  740
+#define MIN_WINDOW_H  500
+
 #define WINDOW_BG  fl_gray_ramp(3)
 
 #define BUILD_BG   fl_gray_ramp(4)
@@ -50,13 +53,15 @@ public:
   int action;
 
 public:
-  UI_MainWin(const char *title);
+  UI_MainWin(int W, int H, const char *title);
   virtual ~UI_MainWin();
 
   void Locked(bool value);
 };
 
 extern UI_MainWin * main_win;
+
+extern KF;  // Kromulent Factor
 
 
 #endif /* __UI_WINDOW_H__ */

@@ -35,14 +35,6 @@
 
 UI_MainWin *main_win;
 
-#define MIN_WINDOW_W  (640-12)
-#define MIN_WINDOW_H  (480-56)
-
-// not resizable!
-#define MAX_WINDOW_W  MIN_WINDOW_W
-#define MAX_WINDOW_H  MIN_WINDOW_H
-
-
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
   if (main_win)
@@ -53,43 +45,39 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 //
 // MainWin Constructor
 //
-UI_MainWin::UI_MainWin(const char *title) :
-    Fl_Double_Window(MIN_WINDOW_W, MIN_WINDOW_H, title),
+UI_MainWin::UI_MainWin(int W, int H, const char *title) :
+    Fl_Double_Window(W, H, title),
     action(UI_MainWin::NONE)
 {
   end(); // cancel begin() in Fl_Group constructor
 
-  size_range(MIN_WINDOW_W, MIN_WINDOW_H, MAX_WINDOW_W, MAX_WINDOW_H);
+  // not resizable!
+  size_range(W, H, W, H);
 
   callback((Fl_Callback *) main_win_close_CB);
 
   color(WINDOW_BG, WINDOW_BG);
 
+  int TOP_H  = 224 + (H - MIN_WINDOW_H) / 2;
+  int BOT_H  = H - TOP_H - 4;
 
-  int GAME_W = 212;
-  int LEV_W  = 204;
-  int PLAY_W = 204;
-  
-  int BUILD_W = 256;
-  int MOD_W   = w() - BUILD_W - 4;
+  int PANEL_W = 212 + (W - MIN_WINDOW_W) * 2 / 7;
+  int MOD_W   = W - PANEL_W*2 - 8;
 
-  int TOP_H = 214;
-  int BOT_H = h() - TOP_H - 4;
-
-  game_box = new UI_Game(0, 0, GAME_W, TOP_H);
+  game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
   add(game_box);
 
-  level_box = new UI_Level(GAME_W+4, 0, LEV_W, TOP_H);
+  level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H);
   add(level_box);
 
-  play_box = new UI_Play(w() - PLAY_W, 0, PLAY_W, TOP_H);
+  build_box = new UI_Build(0, H - BOT_H, PANEL_W, BOT_H);
+  add(build_box);
+
+  play_box = new UI_Play(PANEL_W+4, H - BOT_H, PANEL_W, BOT_H);
   add(play_box);
 
 
-  build_box = new UI_Build(0, h() - BOT_H, BUILD_W, BOT_H);
-  add(build_box);
-
-  mod_box = new UI_CustomMods(w() - MOD_W, h() - BOT_H, MOD_W, BOT_H);
+  mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
   add(mod_box);
 
   resizable(mod_box);

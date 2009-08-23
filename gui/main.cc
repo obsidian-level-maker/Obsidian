@@ -309,6 +309,8 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  Fl::visual(FL_RGB);
+
   if (1)
   {
     Fl::background(236, 232, 228);
@@ -318,6 +320,30 @@ int main(int argc, char **argv)
 
   if (1)
     Fl::scheme("plastic");
+
+  int screen_w = Fl::w();
+  int screen_h = Fl::h();
+
+  int main_w = MIN_WINDOW_W;
+  int main_h = MIN_WINDOW_H;
+
+  if (1)
+  {
+    if (screen_w > 1100 && screen_h > 800)
+    {
+      main_w += 160;
+      main_h += 64;
+
+      FL_NORMAL_SIZE = 18;
+    }
+    else if (screen_w > 950 && screen_h > 700)
+    {
+      main_w += 64;
+      main_h += 32;
+
+      FL_NORMAL_SIZE = 16;
+    }
+  }
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
@@ -351,7 +377,7 @@ int main(int argc, char **argv)
 
   Default_Location();
 
-  main_win = new UI_MainWin(OBLIGE_TITLE);
+  main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE);
 
   // show window (pass some dummy arguments)
   {
