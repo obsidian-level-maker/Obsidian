@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  MODULE: ZDoom Bestiary Monsters
+--  MODULE: ZDoom Beastiary Monsters (Realm667)
 ----------------------------------------------------------------
 --
 --  Copyright (C) 2009 Chris Pisarczyk
@@ -17,7 +17,7 @@
 --
 ----------------------------------------------------------------
 
-BESTIARY_THINGS =
+BEASTIARY_THINGS =
 {
   afrit      = { id=3120, kind="monster", r=24,h=64 },
   defiler    = { id=9654, kind="monster", r=31,h=56 },
@@ -30,6 +30,8 @@ BESTIARY_THINGS =
   chainsawguy ={ id=3204, kind="monster", r=20,h=56 },
   plasmaguy  = { id=3205, kind="monster", r=20,h=56 },
   rocketguy  = { id=3202, kind="monster", r=20,h=56 },
+  gunner3    = { id=3311, kind="monster", r=20,h=56 },
+  squire     = { id=9403, kind="monster", r=20,h=56 },
 
   archon     = { id=30104, kind="monster", r=24,h=64 },
   chainarach = { id=12456, kind="monster", r=66,h=64 },
@@ -43,10 +45,11 @@ BESTIARY_THINGS =
   suicideguy = { id=22099, kind="monster", r=20,h=56 },
   tornado    = { id=32725, kind="monster", r=20,h=56 },
   stonedemon = { id=31999, kind="monster", r=30,h=56 },
+  watcher    = { id=30126, kind="monster", r=24,h=40 },
 }
 
 
-BESTIARY_MONSTERS =
+BEASTIARY_MONSTERS =
 {
   -- FIXME: grab proper stats
   diabloist  = { health=100, damage=50, attack="hitscan" },
@@ -131,19 +134,17 @@ BESTIARY_MONSTERS =
     density=0.2, never_promote=true,
   },
 
--- FIXME
---  watcher =
---  {
---    health=100, damage=20, attack="missile",
---    float=true,
---  },
+  watcher =
+  {
+    health=100, damage=20, attack="missile",
+    float=true,
+  },
 
--- FIXME
---  gunner3 =
---  {
---    health=90, damage=50, attack="hitscan",
---    give={ {weapon="chain"}, {ammo="bullet",count=10} },
---  },
+  gunner3 =
+  {
+    health=90, damage=50, attack="hitscan",
+    give={ {weapon="chain"}, {ammo="bullet",count=10} },
+  },
 
   ----------------------------------------
 
@@ -192,15 +193,14 @@ BESTIARY_MONSTERS =
     density=0.4,
   },
 
--- FIXME
---  squire =
---  {
---    health=250, damage=30, attack="missile",
---  },
+  squire =
+  {
+    health=250, damage=30, attack="missile",
+  },
 }
 
 
-BESTIARY_CHOICES =
+BEASTIARY_CHOICES =
 {
   "none",    "NONE",
   "scarce",  "Scarce",
@@ -208,10 +208,10 @@ BESTIARY_CHOICES =
   "plenty",  "Plenty",
   "more",    "More",
   "heaps",   "Heaps",
-  "insane",  "OH LORD!",
+  "insane",  "OVERFLOW",
 }
 
-BESTIARY_PROBS =
+BEASTIARY_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -223,10 +223,10 @@ BESTIARY_PROBS =
 }
 
 
-function Bestiary_Setup(self)
+function Beastiary_Setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
-    local prob = MON_CONTROL_PROBS[opt.value]
+    local prob = BEASTIARY_PROBS[opt.value]
 
     if M and prob then
       M.prob = prob
@@ -236,50 +236,53 @@ function Bestiary_Setup(self)
 end
 
 
-OB_MODULES["zdoom_bestiary"] =
+OB_MODULES["zdoom_beastiary"] =
 {
-  label = "ZDoom Bestiary Monsters",
+  label = "ZDoom Beastiary Monsters",
 
   for_games   = { doom1=1, doom2=1, freedoom=1 },
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = Bestiary_Setup,
+  setup_func = Beastiary_Setup,
 
   tables =
   {
-    "things",    BESTIARY_THINGS,
-    "monsters",  BESTIARY_MONSTERS,
+    "things",    BEASTIARY_THINGS,
+    "monsters",  BEASTIARY_MONSTERS,
   },
 
   options =
   {
     -- FIXME !!!  grab their full names
 
-    afrit      = { label="Afrit",            choices=BESTIARY_CHOICES },
-    defiler    = { label="Defiler",          choices=BESTIARY_CHOICES },
-    satyr      = { label="Satyr",            choices=BESTIARY_CHOICES },
-    stoneimp   = { label="Stoneimp",         choices=BESTIARY_CHOICES },
-    tortsoul   = { label="Tortsoul",         choices=BESTIARY_CHOICES },
-    zombie2    = { label="Zombie2",          choices=BESTIARY_CHOICES },
-    zombie3    = { label="Zombie3",          choices=BESTIARY_CHOICES },
-    zsec       = { label="Zsec",             choices=BESTIARY_CHOICES },
-    chainsawguy ={ label="Chainsaw guy",     choices=BESTIARY_CHOICES },
-    plasmaguy  = { label="Plasma guy",       choices=BESTIARY_CHOICES },
-    rocketguy  = { label="Rocket guy",       choices=BESTIARY_CHOICES },
+    afrit      = { label="Afrit",            choices=BEASTIARY_CHOICES },
+    defiler    = { label="Defiler",          choices=BEASTIARY_CHOICES },
+    satyr      = { label="Satyr",            choices=BEASTIARY_CHOICES },
+    stoneimp   = { label="Stoneimp",         choices=BEASTIARY_CHOICES },
+    tortsoul   = { label="Tortsoul",         choices=BEASTIARY_CHOICES },
+    zombie2    = { label="Zombie2",          choices=BEASTIARY_CHOICES },
+    zombie3    = { label="Zombie3",          choices=BEASTIARY_CHOICES },
+    zsec       = { label="Zsec",             choices=BEASTIARY_CHOICES },
+    chainsawguy ={ label="Chainsaw guy",     choices=BEASTIARY_CHOICES },
+    plasmaguy  = { label="Plasma guy",       choices=BEASTIARY_CHOICES },
+    rocketguy  = { label="Rocket guy",       choices=BEASTIARY_CHOICES },
+    gunner3    = { label="Gunner3",          choices=BEASTIARY_CHOICES },
+    squire     = { label="Squire",           choices=BEASTIARY_CHOICES },
 
-    archon     = { label="Archon",           choices=BESTIARY_CHOICES },
-    chainarach = { label="Chainarach",       choices=BESTIARY_CHOICES },
-    cybaron    = { label="Cybaron",          choices=BESTIARY_CHOICES },
-    cybruiser  = { label="Cybruiser",        choices=BESTIARY_CHOICES },
-    diabloist  = { label="Diabloist",        choices=BESTIARY_CHOICES },
-    fusion     = { label="Fusion",           choices=BESTIARY_CHOICES },
-    gunner2    = { label="Gunner2",          choices=BESTIARY_CHOICES },
-    inferno    = { label="Inferno",          choices=BESTIARY_CHOICES },
-    nailborg   = { label="Nailborg",         choices=BESTIARY_CHOICES },
-    suicideguy = { label="Suicider",         choices=BESTIARY_CHOICES },
-    tornado    = { label="Tornado",          choices=BESTIARY_CHOICES },
-    stonedemon = { label="Stonedemon",       choices=BESTIARY_CHOICES },
+    archon     = { label="Archon",           choices=BEASTIARY_CHOICES },
+    chainarach = { label="Chainarach",       choices=BEASTIARY_CHOICES },
+    cybaron    = { label="Cybaron",          choices=BEASTIARY_CHOICES },
+    cybruiser  = { label="Cybruiser",        choices=BEASTIARY_CHOICES },
+    diabloist  = { label="Diabloist",        choices=BEASTIARY_CHOICES },
+    fusion     = { label="Fusion",           choices=BEASTIARY_CHOICES },
+    gunner2    = { label="Gunner2",          choices=BEASTIARY_CHOICES },
+    inferno    = { label="Inferno",          choices=BEASTIARY_CHOICES },
+    nailborg   = { label="Nailborg",         choices=BEASTIARY_CHOICES },
+    suicideguy = { label="Suicider",         choices=BEASTIARY_CHOICES },
+    tornado    = { label="Tornado",          choices=BEASTIARY_CHOICES },
+    stonedemon = { label="Stonedemon",       choices=BEASTIARY_CHOICES },
+    watcher    = { label="Watcher",          choices=BEASTIARY_CHOICES },
   },
 }
 
