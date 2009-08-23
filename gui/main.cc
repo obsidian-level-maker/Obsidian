@@ -334,6 +334,7 @@ int main(int argc, char **argv)
       main_w += 160;
       main_h += 64;
 
+      KF = 2;
       FL_NORMAL_SIZE = 18;
     }
     else if (screen_w > 950 && screen_h > 700)
@@ -341,6 +342,7 @@ int main(int argc, char **argv)
       main_w += 64;
       main_h += 32;
 
+      KF = 1;
       FL_NORMAL_SIZE = 16;
     }
   }

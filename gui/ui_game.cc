@@ -40,19 +40,23 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   color(BUILD_BG, BUILD_BG);
 
-  int cy = y + 6;
+  int y_step = 6 + KF * 2;
+
+  int cx = x + 66 + KF * 14;
+  int cy = y + y_step;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Game Settings");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 4);
 
   add(heading);
 
-  cy += heading->h() + 6;
+  cy += heading->h() + y_step;
 
 
-  seed = new Fl_Int_Input(x+66, cy, 60, 24, "Seed: ");
+  seed = new Fl_Int_Input(cx, cy, 60, 24, "Seed: ");
   seed->align(FL_ALIGN_LEFT);
   seed->selection_color(FL_BLUE);
   seed->maximum_size(5);
@@ -61,39 +65,39 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   add(seed);
 
-  bump = new Fl_Button(x+136, cy, 66, 24, "Bump");
+  bump = new Fl_Button(x + w - 80, cy, 66, 24, "Bump");
   bump->callback(callback_Bump, this);
 
   add(bump);
 
-  cy += seed->h() + 6;
+  cy += seed->h() + y_step;
 
-  cy += 10;
+  cy += y_step + y_step/2;
 
 
-  game = new UI_RChoice(x+66, cy, 130, 24, "Game: ");
+  game = new UI_RChoice(cx, cy, 130, 24, "Game: ");
   game->align(FL_ALIGN_LEFT);
   game->selection_color(FL_BLUE);
   game->callback(callback_Game, this);
 
   add(game);
   
-  cy += game->h() + 6;
+  cy += game->h() + y_step;
 
 
-  engine = new UI_RChoice(x+66, cy, 130, 24, "Engine: ");
+  engine = new UI_RChoice(cx, cy, 130, 24, "Engine: ");
   engine->align(FL_ALIGN_LEFT);
   engine->selection_color(FL_BLUE);
   engine->callback(callback_Engine, this);
 
   add(engine);
 
-  cy += engine->h() + 6;
+  cy += engine->h() + y_step;
 
-  cy += 10;
+  cy += y_step + y_step/2;
 
 
-  mode = new UI_RChoice(x+66, cy, 130, 24, "Mode: ");
+  mode = new UI_RChoice(cx, cy, 130, 24, "Mode: ");
   mode->align(FL_ALIGN_LEFT);
   mode->selection_color(FL_BLUE);
 ///---  mode->add("Single Player|Co-op|Deathmatch");
@@ -104,10 +108,10 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   add(mode);
 
-  cy += mode->h() + 6;
+  cy += mode->h() + y_step;
 
 
-  length = new UI_RChoice(x +66, cy, 130, 24, "Length: ");
+  length = new UI_RChoice(cx, cy, 130, 24, "Length: ");
   length->align(FL_ALIGN_LEFT);
   length->selection_color(FL_BLUE);
   length->callback(callback_Length, this);
@@ -116,7 +120,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   add(length);
 
-  cy += length->h() + 6;
+  cy += length->h() + y_step;
 
 
   DebugPrintf("UI_Game: final h = %d\n", cy - y);

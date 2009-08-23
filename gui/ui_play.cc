@@ -44,19 +44,23 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 6;
+  int y_step = 6 + KF * 2;
+
+  int cx = x + 80 + KF * 14;
+  int cy = y + y_step;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Playing Style");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 4);
 
   add(heading);
 
-  cy += heading->h() + 6;
+  cy += heading->h() + y_step;
 
 
-  mons = new UI_RChoice(x+ 82, cy, 110, 24, "Monsters: ");
+  mons = new UI_RChoice(cx, cy, 110, 24, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->selection_color(MY_RED);
   mons->callback(callback_Monsters, this);
@@ -65,12 +69,25 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(mons);
 
-  cy += mons->h() + 6;
-
-  cy += 10;
+  cy += mons->h() + y_step;
 
 
-  traps = new UI_RChoice(x+ 82, cy, 110, 24, "Traps: ");
+  UI_RChoice *tough;
+  tough = new UI_RChoice(cx, cy, 110, 24, "Toughness: ");
+  tough->align(FL_ALIGN_LEFT);
+  tough->selection_color(MY_RED);
+  tough->callback(callback_Monsters, this);
+
+//  setup_Toughness();
+
+  add(tough);
+
+  cy += tough->h() + y_step;
+
+  cy += y_step + y_step/2;
+
+
+  traps = new UI_RChoice(cx, cy, 110, 24, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(MY_RED);
   traps->callback(callback_Traps, this);
@@ -79,10 +96,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(traps);
 
-  cy += traps->h() + 6;
+  cy += traps->h() + y_step;
 
 
-  powers = new UI_RChoice(x+ 82, cy, 110, 24, "Powerups: ");
+  powers = new UI_RChoice(cx, cy, 110, 24, "Powerups: ");
   powers->align(FL_ALIGN_LEFT);
   powers->selection_color(MY_RED);
   powers->callback(callback_Powers, this);
@@ -91,13 +108,12 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(powers);
 
-  cy += powers->h() + 6;
+  cy += powers->h() + y_step;
+
+  cy += y_step + y_step/2;
 
 
-  cy += 10;
-
-
-  health = new UI_RChoice(x+82, cy, 110, 24, "Health: ");
+  health = new UI_RChoice(cx, cy, 110, 24, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->selection_color(MY_RED);
   health->callback(callback_Health, this);
@@ -106,10 +122,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(health);
 
-  cy += health->h() + 6;
+  cy += health->h() + y_step;
 
 
-  ammo = new UI_RChoice(x+82, cy, 110, 24, "Ammo: ");
+  ammo = new UI_RChoice(cx, cy, 110, 24, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->selection_color(MY_RED);
   ammo->callback(callback_Ammo, this);
@@ -118,7 +134,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   add(ammo);
   
-  cy += ammo->h() + 6;
+  cy += ammo->h() + y_step;
 
 
   DebugPrintf("UI_Play: final h = %d\n", cy - y);

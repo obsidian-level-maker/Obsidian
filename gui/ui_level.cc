@@ -43,19 +43,23 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 6;
+  int y_step = 6 + KF * 2;
+
+  int cx = x + 80 + KF * 14;
+  int cy = y + y_step;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Level Architecture");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 4);
 
   add(heading);
 
-  cy += heading->h() + 6;
+  cy += heading->h() + y_step;
 
 
-  size = new UI_RChoice(x+ 78, cy, 114, 24, "Size: ");
+  size = new UI_RChoice(cx, cy, 114, 24, "Size: ");
   size->align(FL_ALIGN_LEFT);
   size->selection_color(MY_GREEN);
   size->callback(callback_Size, this);
@@ -64,22 +68,22 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   add(size);
 
-  cy += size->h() + 6;
+  cy += size->h() + y_step;
 
-  cy += 10;
+  cy += y_step + y_step/2;
 
 
-  theme = new UI_RChoice(x+ 78, cy, 114, 24, "Theme: ");
+  theme = new UI_RChoice(cx, cy, 114, 24, "Theme: ");
   theme->align(FL_ALIGN_LEFT);
   theme->selection_color(MY_GREEN);
   theme->callback(callback_Theme, this);
 
   add(theme);
 
-  cy += theme->h() + 6;
+  cy += theme->h() + y_step;
 
 
-  outdoors = new UI_RChoice(x+ 78, cy, 114, 24, "Outdoors: ");
+  outdoors = new UI_RChoice(cx, cy, 114, 24, "Outdoors: ");
   outdoors->align(FL_ALIGN_LEFT);
   outdoors->selection_color(MY_GREEN);
   outdoors->callback(callback_Outdoors, this);
@@ -88,12 +92,12 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   add(outdoors);
 
-  cy += outdoors->h() + 6;
+  cy += outdoors->h() + y_step;
 
-  cy += 10;
+  cy += y_step + y_step/2;
 
 
-  light = new UI_RChoice(x+ 78, cy, 114, 24, "Lighting: ");
+  light = new UI_RChoice(cx, cy, 114, 24, "Lighting: ");
   light->align(FL_ALIGN_LEFT);
   light->selection_color(MY_GREEN);
   light->callback(callback_Light, this);
@@ -102,10 +106,10 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   add(light);
 
-  cy += light->h() + 6;
+  cy += light->h() + y_step;
 
 
-  detail = new UI_RChoice(x+ 78, cy, 114, 24, "Detail: ");
+  detail = new UI_RChoice(cx, cy, 114, 24, "Detail: ");
   detail->align(FL_ALIGN_LEFT);
   detail->selection_color(MY_GREEN);
   detail->callback(callback_Detail, this);
@@ -114,7 +118,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
 
   add(detail);
 
-  cy += detail->h() + 6;
+  cy += detail->h() + y_step;
 
 
   DebugPrintf("UI_Level: final h = %d\n", cy - y);

@@ -35,6 +35,9 @@
 
 UI_MainWin *main_win;
 
+int KF = 0;
+
+
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
   if (main_win)

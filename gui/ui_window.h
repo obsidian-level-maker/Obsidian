@@ -61,7 +61,7 @@ public:
 
 extern UI_MainWin * main_win;
 
-extern KF;  // Kromulent Factor
+extern int KF;  // Kromulent Factor
 
 
 #endif /* __UI_WINDOW_H__ */
