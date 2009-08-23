@@ -208,7 +208,7 @@ BEASTIARY_CHOICES =
   "plenty",  "Plenty",
   "more",    "More",
   "heaps",   "Heaps",
-  "insane",  "OVERFLOW",
+  "insane",  "INSANE",
 }
 
 BEASTIARY_PROBS =
