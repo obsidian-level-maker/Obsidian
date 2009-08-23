@@ -61,7 +61,7 @@ UI_Module::UI_Module(int x, int y, int w, int h,
   box(FL_THIN_UP_BOX);
   color(BUILD_BG, BUILD_BG);
 
-  mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24, label);
+  mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24+KF*2, label);
 
   add(mod_button);
  
@@ -84,10 +84,10 @@ opt_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label)
 {
-  int nw = 126;
-  int nh = 28;
+  int nw = 116 + KF * 16;
+  int nh = 28 + KF * 2;
 
-  int nx = x() + 192;
+  int nx = x() + w() - nw - 10;
   int ny = y() + children() * nh;
 
   // make label with ': ' suffixed
@@ -96,7 +96,7 @@ void UI_Module::AddOption(const char *opt, const char *label)
   strcpy(new_label, label);
   strcat(new_label, ": ");
 
-  UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24, new_label);
+  UI_RChoice *rch = new UI_RChoice(nx, ny, nw, 24+KF*2, new_label);
   rch->align(FL_ALIGN_LEFT);
   rch->selection_color(MY_PURPLE);
 
@@ -118,10 +118,10 @@ void UI_Module::AddOption(const char *opt, const char *label)
 
 int UI_Module::CalcHeight() const
 {
-  int h = 4 + 24 + 6;  // check button
+  int h = 4 + 24 + KF*2 + 6;  // check button
 
   if (mod_button->value() && children() > 1)
-    h += (children() - 1) * 28 + 4;
+    h += (children() - 1) * (28 + KF*2) + 4;
 
   return h;
 }

@@ -41,47 +41,55 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 13;
+  int cy = y + 16;
 
-  mini_map = new UI_MiniMap(x+20, cy + 6, 124, 104);
+  int mini_w = 124 + KF * 12;
+  int mini_h =  96 + KF *  4;
+
+  mini_map = new UI_MiniMap(x+(w-mini_w)/2, cy, mini_w, mini_h);
 
   add(mini_map);
 
+  cy += mini_h + 12;
 
-  build = new Fl_Button(x+w - 88, cy, 74, 30, "Build...");
+
+  int button_w = 74 + KF * 16;
+  int button_h = 30 + KF * 4;
+
+  Fl_Button *options;
+  options = new Fl_Button(x + 16, cy, button_w, button_h, "Options");
+//  options->callback(options_callback, this);
+
+  add(options);
+
+  build = new Fl_Button(x+w-12-button_w, cy, button_w, button_h, "Build");
   build->labelfont(FL_HELVETICA_BOLD);
   build->callback(build_callback, this);
 
   add(build);
 
-  cy += 42;
+  cy += build->h() + 6 + KF;
 
-  about = new Fl_Button(x+w - 88, cy, 74, 30, "About");
+
+  about = new Fl_Button(x + 16, cy, button_w, button_h, "About");
   about->callback(about_callback, this);
 
   add(about);
 
-  cy += 42;
-
-  quit = new Fl_Button(x+w - 88, cy, 74, 32, "Quit");
+  quit = new Fl_Button(x+w-12-button_w, cy, button_w, button_h, "Quit");
   quit->callback(quit_callback, this);
 
   add(quit);
 
-  cy += 42;
+  cy += build->h();
+
+  cy += 10 + KF;
   
 
-  DebugPrintf("UI_Build: button h2 = %d\n", cy - y);
-
-
-  cy = y + h - 72;
-
-  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, 136, 24, "Ready to go!");
+  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-20, 24+KF*2, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
-  if (1) // plastic
-    status->color(FL_DARK2, FL_DARK2);
-  else
-    status->color(BUILD_BG, BUILD_BG);
+  status->color(FL_DARK2, FL_DARK2);
+
   add(status);
 
   cy += status->h() + 12;
@@ -95,24 +103,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(progress);
 
-///  progress->hide();
 
-  cy += progress->h() + 12;
-
-
-  DebugPrintf("UI_Build: status h2 = %d\n", cy - y);
-
-
-#if 0
-  Fl_Box *sizer = new Fl_Box(FL_NO_BOX, x+1, cy-4, w-2, 2, NULL);
-  sizer->color(FL_RED, FL_RED);
-
-  add(sizer);
-
-  resizable(sizer);
-#else
   resizable(NULL);
-#endif
 }
 
 

@@ -72,17 +72,17 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += mons->h() + y_step;
 
 
-  UI_RChoice *tough;
-  tough = new UI_RChoice(cx, cy, 110, 24, "Toughness: ");
-  tough->align(FL_ALIGN_LEFT);
-  tough->selection_color(MY_RED);
-  tough->callback(callback_Monsters, this);
+  UI_RChoice *strength;
+  strength = new UI_RChoice(cx, cy, 110, 24, "Strength: ");
+  strength->align(FL_ALIGN_LEFT);
+  strength->selection_color(MY_RED);
+  strength->callback(callback_Monsters, this);
 
-//  setup_Toughness();
+//  setup_Strength();
 
-  add(tough);
+  add(strength);
 
-  cy += tough->h() + y_step;
+  cy += strength->h() + y_step;
 
   cy += y_step + y_step/2;
 
