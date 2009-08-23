@@ -176,7 +176,7 @@ function Skulltag_Setup(self)
   end
 
   -- apply the 'Default Monsters' choice
-  local factor = ZDOOM_MARINE_FACTORS[self.options.def_mon.value]
+  local factor = SKULLTAG_FACTORS[self.options.def_mon.value]
 
   for name,_ in pairs(SKULLTAG_MONSTERS) do
     local M = GAME.monsters[name]
@@ -187,7 +187,7 @@ function Skulltag_Setup(self)
   end
 
   -- apply the 'Default Weapons' choice
-  factor = ZDOOM_MARINE_FACTORS[self.options.def_weap.value]
+  factor = SKULLTAG_FACTORS[self.options.def_weap.value]
 
   for name,_ in pairs(SKULLTAG_WEAPONS) do
     local W = GAME.weapons[name]
