@@ -801,7 +801,7 @@ function Quest_add_weapons()
     local name_tab = {}
 
     for name,info in pairs(GAME.weapons) do
-      if info.start_prob then
+      if info.start_prob and info.start_prob > 0 then
         name_tab[name] = info.start_prob
 
         if OB_CONFIG.mons == "crazy" then
@@ -834,7 +834,9 @@ function Quest_add_weapons()
     local name_tab = {}
 
     for name,info in pairs(GAME.weapons) do
-      if info.add_prob and not LEVEL.added_weapons[name] then
+      if not LEVEL.added_weapons[name] and
+         info.add_prob and info.add_prob > 0
+      then
         name_tab[name] = info.add_prob
       end
     end
