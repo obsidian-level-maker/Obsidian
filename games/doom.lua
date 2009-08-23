@@ -818,6 +818,7 @@ DOOM2_MATERIALS =
   FLAT5_7  = { t="ASHWALL2", f="FLAT5_7" },
   FLAT5_8  = { t="ASHWALL2", f="FLAT5_8" },
   FLOOR6_2 = { t="ASHWALL2", f="FLOOR6_2" },
+  GRASS1   = { t="ZIMMER2",  f="GRASS1"   },
   GRASS2   = { t="ZIMMER2",  f="GRASS2"   },
   GRNROCK  = { t="ROCK2",    f="GRNROCK" },
   GRNLITE1 = { t="TEKGREN2", f="GRNLITE1" },
