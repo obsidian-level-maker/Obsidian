@@ -54,6 +54,9 @@ function Weap_Control_Setup(self)
       if W.pref and prob > 0 then
         W.pref = W.pref * ((prob / 50) ^ 0.6)
       end
+
+      -- allow it to appear as often as the user wants
+      W.rarity = nil
     end
   end -- for opt
 end
