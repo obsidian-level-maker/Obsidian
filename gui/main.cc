@@ -381,7 +381,7 @@ int main(int argc, char **argv)
 
   Default_Location();
 
-  main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE);
+  main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
   // show window (pass some dummy arguments)
   {
