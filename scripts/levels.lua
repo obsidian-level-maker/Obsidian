@@ -222,6 +222,53 @@ function Level_styles()
 end
 
 
+function Level_rarify(seed_idx, tab)
+  gui.rand_seed(OB_CONFIG.seed * 200 + seed_idx)
+
+  local function Rarify(name, rarity)
+    for group = 1, #GAME.all_levels, rarity do
+      
+      -- this level in the group will allow the item, every other
+      -- level will forbid it (by setting the allowance to 0).
+      local which = rand_irange(0, rarity-1)
+
+      for offset = 0, rarity-1 do
+        local L = GAME.all_levels[group + offset]
+        if not L then break; end
+
+        L.allowances[name] = sel(offset == which, 1, 0)
+
+        -- spice it up a bit more
+        if rand_odds(10) then
+          L.allowances[name] = 1 - L.allowances[name]
+        end
+      end -- for offset
+    end -- for group
+  end
+
+  -- Level_rarify --
+
+  for _,L in ipairs(GAME.all_levels) do
+    if not L.allowances then
+      L.allowances = {}
+    end
+  end
+
+  for name,info in pairs(tab) do
+    if info.rarity and info.rarity > 1 then
+      Rarify(name, int(info.rarity))
+    end
+  end
+
+  for _,L in ipairs(GAME.all_levels) do
+    if not table_empty(L.allowances) then
+      gui.debugf("Allowances in level %s =\n", L.name)
+      gui.debugf("%s\n", table_to_str(L.allowances, 1))
+    end
+  end
+end
+
+
 function Level_build_it()
   gui.rand_seed(LEVEL.seed)
 
@@ -331,6 +378,10 @@ function Game_make_all()
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
   end
+
+  Level_rarify(1, GAME.weapons)
+--Level_rarify(2, GAME.monsters)
+--Level_rarify(3, GAME.powerups)
 
   for index,L in ipairs(GAME.all_levels) do
     if Level_make(L, index, #GAME.all_levels) == "abort" then
