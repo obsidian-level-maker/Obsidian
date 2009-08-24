@@ -1971,7 +1971,7 @@ function Doom2_get_levels()
     local ep_along
 
     if map >= 31 then
-      episode = 2 ; ep_along = 0.5
+      episode = 2 ; ep_along = 0.35
     elseif map >= 21 then
       episode = 3 ; ep_along = (map - 20) / 10
     elseif map >= 12 then
