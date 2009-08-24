@@ -282,7 +282,7 @@ OB_MODULES["sktag_mon_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_Mon_Control_setup,
+  setup_func = Sktag_Mon_Control_Setup,
 
   options =
   {
@@ -327,7 +327,7 @@ OB_MODULES["sktag_weap_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_WeapControl_setup,
+  setup_func = Sktag_Weap_Control_Setup,
 
   options =
   {
