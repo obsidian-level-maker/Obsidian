@@ -736,7 +736,7 @@ WOLF_WEAPONS =
 
   gatling_gun =
   {
-    pref=30, add_prob=60, rarity=3,
+    pref=30, add_prob=50, rarity=4,
     rate=16,  damage=17, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",give=6} },
@@ -867,23 +867,12 @@ function wolfy_decide_quests(level_list, is_spear)
     return Quest
   end
 
-  local gatling_maps =
-  {
-    [rand_irange(2,3)] = true,
-    [rand_irange(4,6)] = true,
-    [rand_irange(7,9)] = true,
-  }
-
   for zzz,Level in ipairs(level_list) do
 
     -- weapons and keys
 
     if rand_odds(90 - 40 * ((Level.ep_along-1) % 3)) then
       add_quest(Level, "weapon", "machine_gun", 35)
-    end
-
-    if gatling_maps[Level.ep_along] then
-      add_quest(Level, "weapon", "gatling_gun", 50)
     end
 
     local keys = rand_index_by_probs(WOLF_KEY_NUM_PROBS[SETTINGS.size]) - 1

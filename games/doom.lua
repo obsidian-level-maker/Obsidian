@@ -1937,10 +1937,6 @@ function Doom1_get_levels()
         style = {},
       }
 
-      if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then
-        LEV.allow_bfg = true
-      end
-
       if LEV.name == "E1M8" then
         LEV.build_func = Arena_Doom_E1M8
       elseif LEV.name == "E2M8" or LEV.name == "E4M6" then
@@ -2017,14 +2013,9 @@ function Doom2_get_levels()
       style = {},
     }
 
-    if LEV.ep_along > 0.44 and rand_odds(sel(MAP_NUM > 7, 50, 90)) then
-      LEV.allow_bfg = true
-    end
-
     -- secret levels
     if map == 31 or map == 32 then
       LEV.theme_ref = "WOLF"
-      LEV.allow_bfg = true
     end
 
     if map == 23 then
