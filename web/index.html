@@ -77,7 +77,11 @@ Another blog about current developments:
 <hr>
 <div class="newsdate">30-May-2008:</div>
 <blockquote class="news">
-Released Oblige 0.97 which is a small update to 0.94.
+Released Oblige 0.97.
+This is a small update to version 0.94 which fixes the error
+about stair placement that occured sometimes
+(aborting the whole build).
+It also includes Sam Trenholme's expanded set of Heretic themes.
 </blockquote>
 
 
@@ -92,14 +96,42 @@ Added a summary of recent development:
 <hr>
 <div class="newsdate">05-Jul-2007:</div>
 <blockquote class="news">
-Oblige 0.94 was released ....
+Oblige 0.94 is released!
+
+<p>
+Major changes in version 0.94 include a new prefab system,
+new theming system, different sized rooms,
+greatly improved Hexen support,
+secret areas and levels, and
+experimental support for Wolfenstein 3D.
+
+<p>
+During development I came to the conclusion that the current algorithms
+are the wrong way to do things, and that a big rewrite of OBLIGE's
+level-building code is urgently needed. So I'm releasing this version
+as-is, even though some things are broken (notably the monster closet
+traps).
+
+<p>
+This version will occasionally abort the map-building process with an
+error message, for example saying it cannot place a stair in a room.
+This is symptom of the messed up level-building code and another reason
+why the rewrite is necessary. The only workaround is to try a different
+SEED value.
+
 </blockquote>
 
 
 <hr>
 <div class="newsdate">19-Feb-2007:</div>
 <blockquote class="news">
-Oblige 0.85 was released ....
+Oblige 0.85 has been released.
+This includes many major improvements:
+support for hallways, crates, and new exit rooms,
+better selection of floor and ceiling heights,
+user adjustments for health, ammo, monsters and traps,
+and support for TNT Evilution and Plutonia.
+User settings are also remembered when you quit.
 </blockquote>
 
 <p>
