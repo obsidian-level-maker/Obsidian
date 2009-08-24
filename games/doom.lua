@@ -1485,7 +1485,7 @@ COMMON_MONSTERS =
   {
     replaces="demon", replace_prob=25, trap_prob=51, crazy_prob=21,
     health=150, damage=25, attack="melee",
-    invis=true,
+    invis=true, outdoor_factor=3.0;
     weap_prefs={ launch=0.2 },
   },
 
