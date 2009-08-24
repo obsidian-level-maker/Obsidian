@@ -25,8 +25,8 @@ h1 {
 }
 
 h2 {
-    color: #bb7;
-    font-size: small;
+    color: #cb7;
+    font-size: medium;
     text-align: center; margin-top: 0px;
     padding-bottom: 12px;
 }
@@ -35,25 +35,29 @@ h3 { color: #c44; padding-top: 1em; }
 
 .menu {
     background-color: #776655;
-    color: white;
+    color: #ddd;
     min-height: 24px;
     line-height: 1.8em;
     font-size: large;
 }
-.menu a { padding-left: 1em; padding-right: 1em;
-}
+
+.menu span { padding-left: 1em; padding-right: 1em; }
+.menu a    { padding-left: 1em; padding-right: 1em; }
+
 .menu a:link    { text-decoration: none; color: #ddd }
 .menu a:visited { text-decoration: none; color: #ddd }
-.menu a:hover   { text-decoration: none; color: #fff }
+.menu a:hover   { text-decoration: none; color: white }
 
 .submenu {
     background-color: #ddccbb;
-    color: white;
+    color: #006;
     /* height: 32px; */
     line-height: 1.8em;
     font-size: small;
 }
-.submenu a { padding-left: 1em; padding-right: 1em; }
+
+.submenu span { padding-left: 1em; padding-right: 1em; }
+.submenu a    { padding-left: 1em; padding-right: 1em; }
 
 .submenu a:link    { text-decoration: none; color: #006 }
 .submenu a:visited { text-decoration: none; color: #006 }
@@ -69,6 +73,9 @@ h3 { color: #c44; padding-top: 1em; }
 .floatR { float: right !important; }
 
 dd { margin-bottom: 1em; }
+
+.newsdate { font-weight: bold; }
+.news { margin-bottom: 2em; }
 
 .legal {
     background-color: #ccc;
