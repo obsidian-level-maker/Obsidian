@@ -1609,13 +1609,13 @@ QUAKE2_MONSTERS =
 {
   guard =
   {
-    prob=20, guard_prob=3, trap_prob=3, cage_prob=3,
+    prob=20,
     health=20, damage=4, attack="missile",
   },
 
   guard_sg =
   {
-    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=70,
     health=30, damage=10, attack="hitscan",
   },
 
@@ -1627,13 +1627,13 @@ QUAKE2_MONSTERS =
 
   enforcer =
   {
-    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=50,
     health=100, damage=10, attack="hitscan",
   },
 
   flyer =
   {
-    prob=90, guard_prob=11, trap_prob=11,
+    prob=90,
     health=50, damage=5, attack="missile",
     float=true,
     weap_prefs={ grenade=0.2 },
@@ -1641,25 +1641,26 @@ QUAKE2_MONSTERS =
 
   shark =
   {
+    -- only appears in water
     health=50, damage=5, attack="melee",
     weap_prefs={ grenade=0.2 },
   },
 
   parasite =
   {
-    prob=10, guard_prob=11, trap_prob=21,
+    prob=10,
     health=175, damage=10, attack="missile",
   },
 
   maiden =
   {
-    prob=50, guard_prob=21, trap_prob=21, cage_prob=11,
+    prob=50,
     health=175, damage=30, attack="missile",
   },
 
   technician =
   {
-    prob=50, guard_prob=11, trap_prob=11,
+    prob=50,
     health=200, damage=8, attack="missile",
     float=true,
     weap_prefs={ grenade=0.2 },
@@ -1667,13 +1668,13 @@ QUAKE2_MONSTERS =
 
   beserker =
   {
-    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=50,
     health=240, damage=18, attack="melee",
   },
 
   icarus =
   {
-    prob=70, guard_prob=11, trap_prob=21,
+    prob=70,
     health=240, damage=5, attack="missile",
     float=true,
     weap_prefs={ grenade=0.2 },
@@ -1681,31 +1682,31 @@ QUAKE2_MONSTERS =
 
   medic =
   {
-    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=30,
     health=300, damage=21, attack="missile",
   },
 
   mutant =
   {
-    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=30,
     health=300, damage=24, attack="melee",
   },
 
   brain =
   {
-    prob=20, guard_prob=11, trap_prob=31,
+    prob=20,
     health=300, damage=17, attack="melee",
   },
 
   grenader =
   {
-    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=10,
     health=400, damage=30, attack="missile",
   },
 
   gladiator =
   {
-    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=10,
     health=400, damage=40, attack="missile",
   },
 

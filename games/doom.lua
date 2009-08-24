@@ -1412,10 +1412,8 @@ COMMON_THEMES_OLD =
 -- Monster list
 -- ============
 --
--- prob       : free-range probability
--- guard_prob : probability when guarding an item
--- cage_prob  : cage probability [absent = never]
--- trap_prob  : trap/surprise probability
+-- prob       : general probability
+-- crazy_prob : probability for "Crazy" strength setting
 --
 -- health : hit points of monster
 -- damage : damage can inflict per second (rough approx)
@@ -1448,27 +1446,27 @@ COMMON_MONSTERS =
 {
   zombie =
   {
-    prob=40, cage_prob=11,
+    prob=40,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
 
   shooter =
   {
-    prob=50, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=50,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
 
   imp =
   {
-    prob=60, guard_prob=11, trap_prob=20, cage_prob=50,
+    prob=60,
     health=60, damage=20, attack="missile",
   },
 
   skull =
   {
-    prob=20, trap_prob=11, cage_prob=11,
+    prob=20,
     health=100, damage=7, attack="melee",
     density=0.7, float=true,
     weap_prefs={ launch=0.2 },
@@ -1476,14 +1474,14 @@ COMMON_MONSTERS =
 
   demon =
   {
-    prob=35, guard_prob=31, trap_prob=31,
+    prob=35,
     health=150, damage=25, attack="melee",
     weap_prefs={ launch=0.5 },
   },
 
   spectre =
   {
-    replaces="demon", replace_prob=25, trap_prob=51, crazy_prob=21,
+    replaces="demon", replace_prob=25, crazy_prob=21,
     health=150, damage=25, attack="melee",
     invis=true, outdoor_factor=3.0;
     weap_prefs={ launch=0.2 },
@@ -1491,14 +1489,14 @@ COMMON_MONSTERS =
 
   caco =
   {
-    prob=40, guard_prob=61, trap_prob=21, cage_prob=21,
+    prob=40,
     health=400, damage=35, attack="missile",
     density=0.6, float=true,
   },
 
   baron =
   {
-    prob=20, guard_prob=11, trap_prob=11, cage_prob=3,
+    prob=20,
     health=1000, damage=45, attack="missile",
     density=0.3,
     weap_prefs={ bfg=3.0 },
@@ -1509,6 +1507,7 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
+    -- not generated in normal levels
     crazy_prob=12,
     health=4000, damage=150, attack="missile",
     density=0.1,
@@ -1529,49 +1528,49 @@ DOOM2_MONSTERS =
 {
   gunner =
   {
-    prob=18, guard_prob=21, trap_prob=41, cage_prob=71,
+    prob=18,
     health=70, damage=50, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
 
   revenant =
   {
-    prob=44, guard_prob=41, trap_prob=41, cage_prob=51,
+    prob=44,
     health=300, damage=70, attack="missile",
     density=0.6,
   },
 
   knight =
   {
-    prob=60, guard_prob=41, trap_prob=41, cage_prob=11, crazy_prob=40,
+    prob=60, crazy_prob=40,
     health=500, damage=45, attack="missile",
     density=0.4,
   },
 
   mancubus =
   {
-    prob=33, guard_prob=41, trap_prob=41, cage_prob=11,
+    prob=33,
     health=600, damage=70, attack="missile",
     density=0.4,
   },
 
   arach =
   {
-    prob=25, guard_prob=21, trap_prob=21, cage_prob=11,
+    prob=25,
     health=500, damage=70, attack="missile",
     density=0.5,
   },
 
   vile =
   {
-    prob=12, guard_prob=11, trap_prob=31, cage_prob=21,
+    prob=12,
     health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    prob=6, trap_prob=11, crazy_prob=15,
+    prob=6, crazy_prob=15,
     health=700, damage=20, attack="missile",
     density=0.2,never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },

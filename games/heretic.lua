@@ -1556,28 +1556,28 @@ HERETIC_MONSTERS =
 {
   gargoyle =
   {
-    prob=30, guard_prob=1, trap_prob=1,
+    prob=30,
     health=20, damage=5, attack="melee",
     float=true,
   },
 
   fire_garg =
   {
-    prob=10, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=10,
     health=80, damage=8, attack="missile",
     float=true,
   },
 
   mummy =
   {
-    prob=60, guard_prob=11, trap_prob=11,
+    prob=60,
     health=80, damage=8, attack="melee",
     give={ {ammo="crystal",count=1} },
   },
 
   mummy_inv =
   {
-    replaces="mummy", replace_prob=15, trap_prob=30,
+    replaces="mummy", replace_prob=15,
     health=80, damage=8, attack="melee",
     give={ {ammo="crystal",count=1} },
     invis=true,
@@ -1585,21 +1585,21 @@ HERETIC_MONSTERS =
 
   sabreclaw =  -- MT_CLINK
   {
-    prob=25, guard_prob=11, trap_prob=11,
+    prob=25,
     health=150, damage=12, attack="melee",
     give={ {ammo="rune",count=6} },
   },
 
   knight =
   {
-    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=70,
     health=200, damage=12, attack="missile",
     give={ {ammo="arrow",count=1.6} },
   },
 
   knight_inv =
   {
-    replaces="knight", replace_prob=15, trap_prob=30,
+    replaces="knight", replace_prob=15,
     health=200, damage=14, attack="missile",
     give={ {ammo="arrow",count=1.6} },
     invis=true,
@@ -1607,14 +1607,14 @@ HERETIC_MONSTERS =
 
   leader =
   {
-    prob=70, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=70, guard_prob=11, trap_prob=11,
     health=100, damage=16, attack="missile",
     give={ {ammo="crystal",count=1} },
   },
 
   leader_inv =
   {
-    replaces="leader", replace_prob=15, trap_prob=20,
+    replaces="leader", replace_prob=15,
     health=100, damage=16, attack="missile",
     give={ {ammo="crystal",count=1} },
     invis=true,
@@ -1622,7 +1622,7 @@ HERETIC_MONSTERS =
 
   disciple =  -- MT_WIZARD
   {
-    prob=25, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=25,
     health=180, damage=20, attack="missile",
     give={ {ammo="claw_orb",count=3} },
     float=true,
@@ -1630,14 +1630,14 @@ HERETIC_MONSTERS =
 
   weredragon =  -- MT_BEAST
   {
-    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=30,
     health=220, damage=25, attack="missile",
     give={ {ammo="arrow",count=3} },
   },
 
   ophidian =  -- MT_SNAKE
   {
-    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=30,
     health=280, damage=25, attack="missile",
     give={ {ammo="flame_orb",count=1.6} },
   },

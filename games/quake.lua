@@ -917,39 +917,40 @@ QUAKE1_MONSTERS =
   {
     -- we use 'replaces' here to simulate the way dogs
     -- usually appear with grunts.
-    replaces="grunt", replace_prob=30, trap_prob=30,
+    replaces="grunt", replace_prob=30, crazy_prob=20,
     health=25, damage=5, attack="melee",
   },
 
   fish =
   {
+    -- only appears in water
     health=25, damage=3, attack="melee",
     weap_prefs={ grenade=0.2 },
   },
 
   grunt =
   {
-    prob=80, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=80,
     health=30, damage=14, attack="hitscan",
     give={ {ammo="shell",count=5} },
   },
 
   enforcer =
   {
-    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=40,
     health=80, damage=18, attack="missile",
     give={ {ammo="cell",count=5} },
   },
 
   zombie =
   {
-    prob=10, guard_prob=1, cage_prob=11,
+    prob=10,
     health=60, damage=8,  attack="melee",
   },
 
   scrag =
   {
-    prob=60, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=60,
     health=80, damage=18, attack="missile",
     weap_prefs={ grenade=0.2 },
   },
@@ -964,39 +965,39 @@ QUAKE1_MONSTERS =
 
   knight =
   {
-    prob=60, guard_prob=1, trap_prob=11, cage_prob=11,
+    prob=60,
     health=75, damage=9,  attack="melee",
   },
 
   hell_knt =
   {
-    prob=30, guard_prob=31, trap_prob=21, cage_prob=11,
+    prob=30,
     health=250, damage=30, attack="missile",
   },
 
   ogre =
   {
-    prob=40, guard_prob=21, trap_prob=31, cage_prob=11,
+    prob=40,
     health=200, damage=15, attack="missile",
     give={ {ammo="rocket",count=2} },
   },
 
   fiend =
   {
-    prob=10, guard_prob=51, trap_prob=31,
+    prob=10,
     health=300, damage=20, attack="melee",
     weap_prefs={ grenade=0.2 },
   },
 
   vore =
   {
-    prob=10, guard_prob=31, trap_prob=31, cage_prob=11,
+    prob=10,
     health=400, damage=25, attack="missile",
   },
 
   shambler =
   {
-    prob=10, guard_prob=31, trap_prob=21, cage_prob=11,
+    prob=10,
     health=600, damage=30, attack="hitscan",
     immunity ={ rocket=0.5, grenade=0.5 },
     weap_prefs={ rocket=0.2, grenade=0.2 },

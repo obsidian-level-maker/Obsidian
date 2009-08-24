@@ -46,14 +46,14 @@ SKULLTAG_MONSTERS =
 {
   darkimp =
   {
-    prob=55, guard_prob=11, trap_prob=11, cage_prob=40,
+    prob=55,
     health=120, damage=30, attack="missile",
     density=0.6,
   },
 
   superguy =
   {
-    prob=33, guard_prob=21, trap_prob=11, cage_prob=30,
+    prob=33,
     health=120, damage=65, attack="hitscan",
     give={ {weapon="super"}, {ammo="shell",count=4} },
     density=0.5,
@@ -61,35 +61,35 @@ SKULLTAG_MONSTERS =
 
   bldemon =
   {
-    prob=20, guard_prob=11, trap_prob=31,
+    prob=20,
     health=300, damage=25, attack="melee",
     density=0.5,
   },
 
   cacolant =
   {
-    prob=25, guard_prob=21, trap_prob=11, cage_prob=11, crazy_prob=10,
+    prob=25, crazy_prob=10,
     health=800, damage=55, attack="missile",
     density=0.4, float=true,
   },
 
   hectebus =
   {
-    prob=35, guard_prob=21, trap_prob=21, cage_prob=88,
+    prob=35,
     health=1200, damage=120, attack="missile",
     density=0.2,
   },
 
   abaddon =
   {
-    prob=15, guard_prob=21, trap_prob=11, cage_prob=5, crazy_prob=25,
+    prob=15, crazy_prob=25,
     health=1200, damage=65, attack="missile",
     density=0.2, float=true,
   },
 
   belphegor =
   {
-    prob=15, guard_prob=21, trap_prob=21, cage_prob=5, crazy_prob=25,
+    prob=15, crazy_prob=25,
     health=1500, damage=80, attack="missile",
     density=0.2,
   },

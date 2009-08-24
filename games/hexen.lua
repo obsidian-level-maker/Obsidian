@@ -1792,27 +1792,27 @@ HEXEN_MONSTERS =
 {
   ettin =
   {
-    prob=60, guard_prob=11, trap_prob=11,
+    prob=60,
     health=170, damage= 6, attack="melee",
   },
 
   afrit =
   {
-    prob=40, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=40,
     health=80,  damage=20, attack="missile",
     float=true,
   },
 
   centaur1 =
   {
-    prob=40, guard_prob=11, trap_prob=11,
+    prob=40,
     health=200, damage=12, attack="melee",
   },
 
   centaur2 =
   {
     -- not using 'replaces' here, centaur2 is much tougher
-    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=20,
     health=250, damage=20, attack="missile"
   },
 
@@ -1829,13 +1829,13 @@ HEXEN_MONSTERS =
 
   iceguy =
   {
-    prob=3, guard_prob=11, trap_prob=11,
+    prob=3,
     health=120, damage=16, attack="missile",
   },
 
   demon1 =
   {
-    prob=30, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=30,
     health=250, damage=35, attack="missile",
   },
 
@@ -1847,14 +1847,14 @@ HEXEN_MONSTERS =
 
   bishop =
   {
-    prob=20, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=20,
     health=130, damage=24, attack="missile",
     float=true,
   },
 
   reiver =
   {
-    prob=5, guard_prob=11, trap_prob=11, cage_prob=11,
+    prob=5,
     health=150, damage=50, attack="missile",
     float=true,
   },

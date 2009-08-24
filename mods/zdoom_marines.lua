@@ -52,7 +52,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_berserk =
   {
-    prob=6, trap_prob=3,
+    prob=6,
     health=100, damage=40, attack="melee",
     never_promote=true,
     density=0.2,
@@ -60,7 +60,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_saw =
   {
-    prob=4, trap_prob=2,
+    prob=4,
     health=100, damage=15, attack="melee",
     never_promote=true,
     density=0.2,
@@ -68,7 +68,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_pistol =
   {
-    prob=12, guard_prob=2, trap_prob=2, cage_prob=2,
+    prob=12,
     health=100, damage=8, attack="hitscan",
     never_promote=true,
     density=0.5,
@@ -76,7 +76,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_shotty =
   {
-    prob=4, guard_prob=3, trap_prob=3, cage_prob=2,
+    prob=4,
     health=100, damage=10, attack="hitscan",
     never_promote=true,
     density=0.4,
@@ -84,7 +84,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_ssg =
   {
-    prob=6, guard_prob=2, trap_prob=2, cage_prob=1,
+    prob=6,
     health=100, damage=65, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -92,7 +92,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_chain =
   {
-    prob=6, guard_prob=3, trap_prob=3, cage_prob=2,
+    prob=6,
     health=100, damage=50, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -100,7 +100,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rocket =
   {
-    prob=4, guard_prob=2, trap_prob=1, cage_prob=2, crazy_prob=10,
+    prob=4, crazy_prob=10,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.2,
@@ -108,7 +108,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_plasma =
   {
-    prob=4, guard_prob=1, trap_prob=1, cage_prob=2, crazy_prob=6,
+    prob=4, crazy_prob=6,
     health=100, damage=70, attack="missile",
     never_promote=true,
     density=0.2,
@@ -116,7 +116,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rail =
   {
-    prob=2, guard_prob=1, trap_prob=1, cage_prob=1,
+    prob=2,
     health=100, damage=100, attack="hitscan",
     never_promote=true,
     density=0.1,
@@ -124,7 +124,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_bfg =
   {
-    prob=2, guard_prob=1, trap_prob=1, cage_prob=1,
+    prob=2,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.1,

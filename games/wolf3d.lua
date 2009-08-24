@@ -625,34 +625,34 @@ WOLF_MONSTERS =
 {
   dog =
   {
-    prob=20, guard_prob=5, trap_prob=1,
+    prob=20,
     health=1, damage=5, attack="melee",
   },
 
   guard =
   {
-    prob=60, guard_prob=20, trap_prob=3,
+    prob=60,
     health=25, damage=10, attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   officer =
   {
-    prob=30, guard_prob=50, trap_prob=10,
+    prob=30,
     health=50,  damage=20, attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   mutant =
   {
-    prob=20, guard_prob=20, trap_prob=20,
+    prob=20,
     health=55,  damage=35, attack="hitscan",
     give={ {ammo="bullet",count=4} },
   },
 
   ss_dude =
   {
-    prob=5, guard_prob=60, trap_prob=20,
+    prob=5,
     health=100, damage=30, attack="hitscan",
     give={ {weapon="machine_gun"}, {ammo="bullet",count=4} },
   },
