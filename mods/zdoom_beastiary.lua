@@ -43,9 +43,19 @@ BEASTIARY_THINGS =
   inferno    = { id=30105, kind="monster", r=31,h=56 },
   nailborg   = { id=27800, kind="monster", r=20,h=56 },
   suicideguy = { id=22099, kind="monster", r=20,h=56 },
+
   tornado    = { id=32725, kind="monster", r=20,h=56 },
   stonedemon = { id=31999, kind="monster", r=30,h=56 },
   watcher    = { id=30126, kind="monster", r=24,h=40 },
+  sambomber  = { id=10300, kind="monster", r=16,h=56 },
+  sniper     = { id=30896, kind="monster", r=20,h=56 },
+  fireimp    = { id=14564, kind="monster", r=20,h=56 },
+  wicked     = { id=30133, kind="monster", r=25,h=88 },
+
+  -- Bosses
+  moloch     = { id=6666,  kind="monster", r=50, h=120 },
+  overlord   = { id=30134, kind="monster", r=43, h=90 },
+  superdemon = { id=31269, kind="monster", r=40, h=110 },
 }
 
 
@@ -197,6 +207,51 @@ BEASTIARY_MONSTERS =
   {
     health=250, damage=30, attack="missile",
   },
+
+  sniper =
+  {
+    health=30, damage=80, attack="missile",
+    density=0.5,
+  },
+
+  sambomber =
+  {
+    health=20, damage=75, attack="melee",
+  },
+
+  fireimp =
+  {
+    health=150, damage=25, attack="missile",
+  },
+
+  wicked =
+  {
+    health=275, damage=35, attack="missile",
+    density=0.66, float=true,
+  },
+
+  -- CUSTOM BOSSES --
+
+  superdemon =
+  {
+    health=3500, damage=120, attack="missile",
+    density=0.1,
+    weap_prefs={ bfg=5.0, bfg10k=5.0 },
+  },
+
+  moloch =
+  {
+    health=4000, damage=200, attack="missile",
+    density=0.1,
+    weap_prefs={ bfg=8.0, bfg10k=8.0 },
+  },
+
+  overlord =
+  {
+    health=4000, damage=200, attack="missile",
+    density=0.1,
+    weap_prefs={ bfg=8.0, bfg10k=8.0 },
+  },
 }
 
 
@@ -283,6 +338,16 @@ OB_MODULES["zdoom_beastiary"] =
     tornado    = { label="Tornado",          choices=BEASTIARY_CHOICES },
     stonedemon = { label="Stonedemon",       choices=BEASTIARY_CHOICES },
     watcher    = { label="Watcher",          choices=BEASTIARY_CHOICES },
+
+    sambomber  = { label="Sambomber",        choices=BEASTIARY_CHOICES },
+    sniper     = { label="Sniper",           choices=BEASTIARY_CHOICES },
+    fireimp    = { label="Fire Imp",         choices=BEASTIARY_CHOICES },
+    wicked     = { label="Wicked",           choices=BEASTIARY_CHOICES },
+
+    -- Bosses
+    moloch     = { label="Moloch (BOSS)",    choices=BEASTIARY_CHOICES },
+    overlord   = { label="Overlord (BOSS)",  choices=BEASTIARY_CHOICES },
+    superdemon = { label="Superdemon (BOSS)", choices=BEASTIARY_CHOICES },
   },
 }
 
