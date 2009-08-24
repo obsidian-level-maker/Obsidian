@@ -309,17 +309,19 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  bool custom_colors = true;
+  bool hires_adapt = true;
+
   Fl::visual(FL_RGB);
 
-  if (1)
+  if (custom_colors)
   {
     Fl::background(236, 232, 228);
     Fl::background2(255, 255, 255);
     Fl::foreground(0, 0, 0);
   }
 
-  if (1)
-    Fl::scheme("plastic");
+  Fl::scheme("plastic");
 
   int screen_w = Fl::w();
   int screen_h = Fl::h();
@@ -327,17 +329,17 @@ int main(int argc, char **argv)
   int main_w = MIN_WINDOW_W;
   int main_h = MIN_WINDOW_H;
 
-  if (1)
+  if (hires_adapt)
   {
-    if (screen_w > 1100 && screen_h > 800)
+    if (screen_w > 1100 && screen_h > 720)
     {
-      main_w += 160;
+      main_w += 176;
       main_h += 64;
 
       KF = 2;
       FL_NORMAL_SIZE = 18;
     }
-    else if (screen_w > 950 && screen_h > 700)
+    else if (screen_w > 950 && screen_h > 660)
     {
       main_w += 64;
       main_h += 32;
