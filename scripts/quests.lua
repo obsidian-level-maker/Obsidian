@@ -797,24 +797,32 @@ function Quest_add_weapons()
  
   LEVEL.added_weapons = {}
 
+  local function do_mark_weapon(name)
+    LEVEL.added_weapons[name] = true
+
+    if LEVEL.allowances[name] == 0 then
+       LEVEL.allowances[name] = 1
+    end
+  end
+
   local function do_start_weapon(arena)
     local name_tab = {}
 
     for name,info in pairs(GAME.weapons) do
-      if info.start_prob and info.start_prob > 0 then
-        name_tab[name] = info.start_prob
+      local prob = info.start_prob
 
-        if OB_CONFIG.mons == "crazy" then
-          if info.attack == "melee" then
-            name_tab[name] = nil
-          else
-            name_tab[name] = 50
-          end
-        end
+      if OB_CONFIG.strength == "crazy" then
+        prob = info.add_prob
       end
-    end
 
-    if not LEVEL.allow_bfg then name_tab["bfg"] = nil end
+      if LEVEL.allowances[name] == 1 then
+        prob = 0
+      end
+
+      if prob and prob > 0 then
+        name_tab[name] = info.add_prob
+      end
+    end -- for weapons
 
     if table_empty(name_tab) then
       gui.debugf("Start weapon: NONE!!\n")
@@ -824,24 +832,28 @@ function Quest_add_weapons()
     local weapon = rand_key_by_probs(name_tab)
     gui.debugf("Start weapon: %s\n", weapon)
 
-    LEVEL.added_weapons[weapon] = true
-
     arena.weapon = weapon
     arena.start.weapon = weapon
+
+    do_mark_weapon(weapon)
   end
 
   local function do_new_weapon(arena)
     local name_tab = {}
 
     for name,info in pairs(GAME.weapons) do
-      if not LEVEL.added_weapons[name] and
-         info.add_prob and info.add_prob > 0
+      local prob = info.add_prob
+
+      if LEVEL.added_weapons[name] or
+         LEVEL.allowances[name] == 1
       then
+        prob = 0
+      end
+
+      if prob and prob > 0 then
         name_tab[name] = info.add_prob
       end
     end
-
-    if not LEVEL.allow_bfg then name_tab["bfg"] = nil end
 
     if table_empty(name_tab) then
       gui.debugf("No weapon @ ARENA_%d\n", arena.id)
@@ -850,9 +862,9 @@ function Quest_add_weapons()
 
     local weapon = rand_key_by_probs(name_tab)
 
-    LEVEL.added_weapons[weapon] = true
-
     arena.weapon = weapon
+
+    do_mark_weapon(weapon)
 
     -- Select a room to put the weapon in.
     -- This is very simplistic, either the start room of the
