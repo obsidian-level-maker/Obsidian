@@ -116,7 +116,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   cy += box->h() + 10;
   
   // the very informative text
-  box = new Fl_Box(10, cy, W-20, 192, Text);
+  box = new Fl_Box(10, cy, W-20, H-172, Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
@@ -143,8 +143,10 @@ UI_About::UI_About(int W, int H, const char *label) :
   add(darkish);
 
   // finally add an "OK" button
-  Fl_Button *button = new Fl_Button(W-10-60, H-10-30, 
-      60, 30, "OK");
+  int bw = 60 + KF * 10;
+  int bh = 30 + KF * 3;
+
+  Fl_Button *button = new Fl_Button(W-10-bw, H-10-bh, bw, bh, "OK");
   button->callback(quit_callback, this);
   darkish->add(button);
 }
@@ -152,7 +154,10 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 void DLG_AboutText(void)
 {
-  UI_About *about = new UI_About(340, 364, "About Oblige");
+  int about_w = 340 + KF * 30;
+  int about_h = 370 + KF * 40;
+
+  UI_About *about = new UI_About(about_w, about_h, "About Oblige");
 
   about->show();
 

@@ -57,7 +57,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   int button_h = 30 + KF * 4;
 
   options = new Fl_Button(x + 16, cy, button_w, button_h, "Options");
-  options->labelsize(FL_NORMAL_SIZE + 2);
+  options->labelsize(FL_NORMAL_SIZE + 0);
 //  options->callback(options_callback, this);
 
   add(options);
@@ -73,13 +73,13 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
 
   about = new Fl_Button(x + 16, cy, button_w, button_h, "About");
-  about->labelsize(FL_NORMAL_SIZE + 2);
+  about->labelsize(FL_NORMAL_SIZE + 0);
   about->callback(about_callback, this);
 
   add(about);
 
   quit = new Fl_Button(x+w-12-button_w, cy, button_w, button_h, "Quit");
-  quit->labelsize(FL_NORMAL_SIZE + 2);
+  quit->labelsize(FL_NORMAL_SIZE + 0);
   quit->callback(quit_callback, this);
 
   add(quit);
