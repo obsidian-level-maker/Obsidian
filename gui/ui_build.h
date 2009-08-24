@@ -36,6 +36,7 @@ private:
 
   Fl_Button *build;
   Fl_Button *about;
+  Fl_Button *options;
   Fl_Button *quit;
 
 public:

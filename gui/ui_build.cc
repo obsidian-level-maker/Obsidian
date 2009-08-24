@@ -56,7 +56,6 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   int button_w = 74 + KF * 16;
   int button_h = 30 + KF * 4;
 
-  Fl_Button *options;
   options = new Fl_Button(x + 16, cy, button_w, button_h, "Options");
 //  options->callback(options_callback, this);
 
@@ -100,6 +99,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   progress->box(FL_FLAT_BOX);
   progress->color(INACTIVE_BG, FL_BLACK);
   progress->value(0.0);
+  progress->labelsize(16);
 
   add(progress);
 
@@ -118,11 +118,13 @@ void UI_Build::Locked(bool value)
   {
     build->deactivate();
     about->deactivate();
+    options->deactivate();
   }
   else
   {
     build->activate();
     about->activate();
+    options->activate();
   }
 }
 

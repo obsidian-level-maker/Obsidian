@@ -26,6 +26,8 @@ class UI_Play : public Fl_Group
 public: // private:
 
   UI_RChoice *mons;
+  UI_RChoice *strength;
+
   UI_RChoice *powers;
   UI_RChoice *traps;
 
@@ -55,8 +57,6 @@ private:
   void setup_Traps   ();
   void setup_Health  ();
   void setup_Ammo    ();
-
-///---  void UpdateLabels(const char *game, const char *mode);
 
   static void notify_Mode(const char *name, void *priv_dat);
 

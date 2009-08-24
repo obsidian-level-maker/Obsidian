@@ -44,9 +44,9 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int y_step = 6 + KF * 2;
+  int y_step = 6 + KF;
 
-  int cx = x + 80 + KF * 14;
+  int cx = x + 84 + KF * 11;
   int cy = y + y_step;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Playing Style");
@@ -60,7 +60,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += heading->h() + y_step;
 
 
-  mons = new UI_RChoice(cx, cy, 110, 24, "Monsters: ");
+  int cw = 114 + KF * 16;
+  int ch = 24 + KF * 2;
+
+  mons = new UI_RChoice(cx, cy, cw, ch, "Monsters: ");
   mons->align(FL_ALIGN_LEFT);
   mons->selection_color(MY_RED);
   mons->callback(callback_Monsters, this);
@@ -72,8 +75,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += mons->h() + y_step;
 
 
-  UI_RChoice *strength;
-  strength = new UI_RChoice(cx, cy, 110, 24, "Strength: ");
+  strength = new UI_RChoice(cx, cy, cw, ch, "Strength: ");
   strength->align(FL_ALIGN_LEFT);
   strength->selection_color(MY_RED);
   strength->callback(callback_Monsters, this);
@@ -87,7 +89,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  traps = new UI_RChoice(cx, cy, 110, 24, "Traps: ");
+  traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
   traps->align(FL_ALIGN_LEFT);
   traps->selection_color(MY_RED);
   traps->callback(callback_Traps, this);
@@ -99,7 +101,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += traps->h() + y_step;
 
 
-  powers = new UI_RChoice(cx, cy, 110, 24, "Powerups: ");
+  powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
   powers->align(FL_ALIGN_LEFT);
   powers->selection_color(MY_RED);
   powers->callback(callback_Powers, this);
@@ -113,7 +115,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  health = new UI_RChoice(cx, cy, 110, 24, "Health: ");
+  health = new UI_RChoice(cx, cy, cw, ch, "Health: ");
   health->align(FL_ALIGN_LEFT);
   health->selection_color(MY_RED);
   health->callback(callback_Health, this);
@@ -125,7 +127,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += health->h() + y_step;
 
 
-  ammo = new UI_RChoice(cx, cy, 110, 24, "Ammo: ");
+  ammo = new UI_RChoice(cx, cy, cw, ch, "Ammo: ");
   ammo->align(FL_ALIGN_LEFT);
   ammo->selection_color(MY_RED);
   ammo->callback(callback_Ammo, this);
@@ -157,6 +159,7 @@ void UI_Play::Locked(bool value)
   if (value)
   {
     mons  ->deactivate();
+    strength->deactivate();
     powers->deactivate();
     traps ->deactivate();
     health->deactivate();
@@ -165,6 +168,7 @@ void UI_Play::Locked(bool value)
   else
   {
     mons  ->activate();
+    strength->activate();
     powers->activate();
     traps ->activate();
     health->activate();

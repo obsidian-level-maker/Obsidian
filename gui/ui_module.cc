@@ -235,7 +235,7 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
 
   mod_pack->align(FL_ALIGN_INSIDE);
   mod_pack->labeltype(FL_NORMAL_LABEL);
-  mod_pack->labelsize(FL_NORMAL_SIZE+8);
+  mod_pack->labelsize(FL_NORMAL_SIZE+6);
 
   mod_pack->box(FL_FLAT_BOX);
   mod_pack->color(WINDOW_BG);  
