@@ -1815,7 +1815,7 @@ QUAKE2_WEAPONS =
 
   rail =
   {
-    pref=50, add_prob=10,
+    pref=50, add_prob=25, rarity=3,
     rate=0.6, damage=140, attack="hitscan",
     ammo="slug", per=1, splash={0,25,5},
     give={ {ammo="slug",count=10} },
@@ -1823,7 +1823,7 @@ QUAKE2_WEAPONS =
 
   hyper =
   {
-    pref=60, add_prob=20,
+    pref=60, add_prob=30, rarity=2,
     rate=5.0, damage=20, attack="missile",
     ammo="cell", per=1,
     give={ {ammo="cell",count=50} },
@@ -1831,7 +1831,7 @@ QUAKE2_WEAPONS =
 
   bfg =
   {
-    pref=20, add_prob=15,
+    pref=20, add_prob=25, rarity=4,
     rate=0.3, damage=200, attack="missile", splash={0,50,40,30,20,10,10},
     ammo="cell", per=50,
     give={ {ammo="cell",count=50} },

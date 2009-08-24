@@ -736,7 +736,7 @@ WOLF_WEAPONS =
 
   gatling_gun =
   {
-    pref=30, add_prob=90,
+    pref=30, add_prob=90, rarity=3,
     rate=16,  damage=17, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",give=6} },

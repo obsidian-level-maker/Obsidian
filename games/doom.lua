@@ -1675,7 +1675,7 @@ COMMON_WEAPONS =
 
   bfg =
   {
-    pref=30, add_prob=25, start_prob=0.1,
+    pref=30, add_prob=25, start_prob=0.1, rarity=3,
     rate=0.8, damage=300, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=40,
     give={ {ammo="cell",count=40} },

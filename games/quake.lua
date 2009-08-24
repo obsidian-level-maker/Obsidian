@@ -1060,7 +1060,7 @@ QUAKE1_WEAPONS =
 
   zapper =
   {
-    pref=30, add_prob=2, start_prob=5,
+    pref=30, add_prob=5, start_prob=5, rarity=3,
     rate=10, damage=30, attack="hitscan", splash={0,4},
     ammo="cell", per=1,
     give={ {ammo="cell",count=15} },
