@@ -1607,7 +1607,7 @@ HERETIC_MONSTERS =
 
   leader =
   {
-    prob=70, guard_prob=11, trap_prob=11,
+    prob=70,
     health=100, damage=16, attack="missile",
     give={ {ammo="crystal",count=1} },
   },

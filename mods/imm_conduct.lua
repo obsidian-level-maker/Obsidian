@@ -354,9 +354,7 @@ function ImmConduct_setup(self)
   if new_prob then
     for _,M in pairs(GAME.monsters) do
       if M.immoral_conduct then
-        M.prob       = new_prob
-        M.guard_prob = new_prob * rand_range(0.5, 1.5)
-        M.trap_prob  = new_prob * rand_range(0.2, 0.8)
+        M.prob = new_prob
       end
     end
   end

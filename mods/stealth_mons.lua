@@ -52,8 +52,8 @@ STEALTH_THINGS_ZDOOM =
 
 STEALTH_MONSTERS =
 {
-  -- These are basically the same as the ones in doom.lua,
-  -- but with some different trap_prob or crazy_prob values.
+  -- These are mostly the same as the ones in doom.lua,
+  -- but with some different crazy_prob values.
 
   stealth_zombie =
   {
@@ -73,14 +73,14 @@ STEALTH_MONSTERS =
 
   stealth_imp =
   {
-    replaces="imp", replace_prob=40, trap_prob=20, crazy_prob=25,
+    replaces="imp", replace_prob=40, crazy_prob=25,
     health=60, damage=20, attack="missile",
     invis=true,
   },
 
   stealth_demon =
   {
-    replaces="demon", replace_prob=40, trap_prob=61, crazy_prob=30,
+    replaces="demon", replace_prob=40, crazy_prob=30,
     health=150, damage=25, attack="melee",
     invis=true,
   },
@@ -123,7 +123,7 @@ STEALTH_MONSTERS =
 
   stealth_mancubus =
   {
-    replaces="mancubus", replace_prob=25, trap_prob=30, crazy_prob=31,
+    replaces="mancubus", replace_prob=25, crazy_prob=31,
     health=600, damage=70, attack="missile",
     invis=true, density=0.4,
   },
@@ -137,7 +137,7 @@ STEALTH_MONSTERS =
 
   stealth_vile =
   {
-    replaces="vile", replace_prob=10, trap_prob=30, crazy_prob=5,
+    replaces="vile", replace_prob=10, crazy_prob=5,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
     invis=true,
