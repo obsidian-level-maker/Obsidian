@@ -4,9 +4,10 @@ TODO
 
 >>>>  if monster uses replaces, but what it replaces does not exist, then never add that monster
 
->>>>  more robust handling of no usable monsters / weapons
-
--  GUI adaption to higher res : make choices wider/taller
+-  weapons: 'rarity' field : 
+      1 = max one per level
+      2 = one for every two levels
+      4 = one for every four levels
 
 -  Strength button:
       Medium  (as now)
@@ -19,10 +20,6 @@ TODO
 -  more ammo in starting room  (biggest pack for starting weapon or bullets)
 
 >> Compilation notes !!
-
--  Progressive bug:
-    "Oblige seems to make the largest level the first level of the next
-    "episode" in Doom 2 (IE MAP12 being massive instead of very small)
 
 
 +  get more games working (Heretic, Hexen etc)

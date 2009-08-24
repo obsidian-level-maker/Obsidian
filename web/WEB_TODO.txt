@@ -5,8 +5,8 @@ WEB PAGE REORGANISATION
 MAIN SECTION
 
 - main page:
-  - short introduction
-  - news / changes
+  - short introduction (DONE)
+  - news / changes     (DONE)
 
 - about page
   OBLIGE is FREE SOFTWARE released under the GNU GPL with NO WARRANTY
@@ -19,7 +19,7 @@ MAIN SECTION
 
 - screenshots
 
-- downloads
+- downloads (DONE)
 
 
 DOCUMENTATION SECTION
@@ -42,6 +42,8 @@ panel/internet options/security/(change to default level before you
 unzip)
 
 Size setting is the overall size of the map.
+
+Mix It Up means pick a random setting for each level.
 
 Most importantly it supports custom mods: plop the lua file in the
 'mods' folder and Oblige will load it and you can enable/disable it in

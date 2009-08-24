@@ -96,7 +96,7 @@ private:
 	{
 		fl_push_clip(x(), y(), w(), h());
 
-		fl_color(FL_BLACK);
+		fl_color(FL_LIGHT2);
 		fl_rectf(x(), y(), w(), h());
 
 		// ....

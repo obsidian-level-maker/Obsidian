@@ -2,5 +2,6 @@
 CHANGES (since v3.43)
 =====================
 
--  reworked GUI layout, more readable in higher resolutions
+-  GUI: new layout, more room for modules
+-  GUI: larger fonts in higher resolutions
 
