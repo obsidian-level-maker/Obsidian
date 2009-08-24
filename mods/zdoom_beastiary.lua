@@ -53,9 +53,9 @@ BEASTIARY_THINGS =
   wicked     = { id=30133, kind="monster", r=25,h=88 },
 
   -- Bosses
-  moloch     = { id=6666,  kind="monster", r=50, h=120 },
-  overlord   = { id=30134, kind="monster", r=43, h=90 },
-  superdemon = { id=31269, kind="monster", r=40, h=110 },
+  Moloch     = { id=6666,  kind="monster", r=50, h=120 },
+  Overlord   = { id=30134, kind="monster", r=43, h=90 },
+  Superdemon = { id=31269, kind="monster", r=40, h=110 },
 }
 
 
@@ -232,26 +232,27 @@ BEASTIARY_MONSTERS =
 
   -- CUSTOM BOSSES --
 
-  superdemon =
+  Moloch =
+  {
+    health=4000, damage=200, attack="missile",
+    density=0.1,
+    weap_prefs={ bfg=8.0, bfg10k=8.0 },
+  },
+
+  Overlord =
+  {
+    health=4000, damage=200, attack="missile",
+    density=0.1,
+    weap_prefs={ bfg=8.0, bfg10k=8.0 },
+  },
+
+  Superdemon =
   {
     health=3500, damage=120, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0, bfg10k=5.0 },
   },
 
-  moloch =
-  {
-    health=4000, damage=200, attack="missile",
-    density=0.1,
-    weap_prefs={ bfg=8.0, bfg10k=8.0 },
-  },
-
-  overlord =
-  {
-    health=4000, damage=200, attack="missile",
-    density=0.1,
-    weap_prefs={ bfg=8.0, bfg10k=8.0 },
-  },
 }
 
 
@@ -345,9 +346,9 @@ OB_MODULES["zdoom_beastiary"] =
     wicked     = { label="Wicked",           choices=BEASTIARY_CHOICES },
 
     -- Bosses
-    moloch     = { label="Moloch (BOSS)",    choices=BEASTIARY_CHOICES },
-    overlord   = { label="Overlord (BOSS)",  choices=BEASTIARY_CHOICES },
-    superdemon = { label="Superdemon (BOSS)", choices=BEASTIARY_CHOICES },
+    Moloch     = { label="Moloch (BOSS)",    choices=BEASTIARY_CHOICES },
+    Overlord   = { label="Overlord (BOSS)",  choices=BEASTIARY_CHOICES },
+    Superdemon = { label="Superdemon (BOSS)", choices=BEASTIARY_CHOICES },
   },
 }
 
