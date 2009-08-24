@@ -78,9 +78,9 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   strength = new UI_RChoice(cx, cy, cw, ch, "Strength: ");
   strength->align(FL_ALIGN_LEFT);
   strength->selection_color(MY_RED);
-  strength->callback(callback_Monsters, this);
+  strength->callback(callback_Strength, this);
 
-//  setup_Strength();
+  setup_Strength();
 
   add(strength);
 
@@ -211,6 +211,13 @@ void UI_Play::callback_Monsters(Fl_Widget *w, void *data)
   ob_set_config("mons", that->mons->GetID());
 }
 
+void UI_Play::callback_Strength(Fl_Widget *w, void *data)
+{
+  UI_Play *that = (UI_Play *) data;
+
+  ob_set_config("strength", that->strength->GetID());
+}
+
 void UI_Play::callback_Powers(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
@@ -242,6 +249,7 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 void UI_Play::Defaults()
 {
   ParseValue("mons",    "normal");
+  ParseValue("strength","normal");
   ParseValue("powers",  "normal");
   ParseValue("traps",   "mixed");
   ParseValue("health",  "normal");
@@ -254,6 +262,13 @@ bool UI_Play::ParseValue(const char *key, const char *value)
   {
     mons->SetID(value);
     callback_Monsters(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "strength") == 0)
+  {
+    strength->SetID(value);
+    callback_Strength(NULL, this);
     return true;
   }
 
@@ -301,9 +316,18 @@ const char * UI_Play::monster_syms[] =
   "normal", "Normal",
   "more",   "More",
   "heaps",  "Hordes",
-  "crazy",  "Crazy",
 
   "mixed",  "Mix It Up",
+
+  NULL, NULL
+};
+
+const char * UI_Play::strength_syms[] =
+{
+  "weak",   "Weak",
+  "normal", "Medium",
+  "tough",  "Tough",
+  "crazy",  "Crazy",
 
   NULL, NULL
 };
@@ -342,6 +366,15 @@ void UI_Play::setup_Monsters()
   {
     mons->AddPair(monster_syms[i], monster_syms[i+1]);
     mons->ShowOrHide(monster_syms[i], 1);
+  }
+}
+
+void UI_Play::setup_Strength()
+{
+  for (int i = 0; strength_syms[i]; i += 2)
+  {
+    strength->AddPair(strength_syms[i], strength_syms[i+1]);
+    strength->ShowOrHide(strength_syms[i], 1);
   }
 }
 

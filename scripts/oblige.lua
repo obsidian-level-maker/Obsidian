@@ -359,6 +359,7 @@ function ob_read_all_config(all_opts)
 
   do_line("-- Playing Style --");
   do_line("mons = %s",    OB_CONFIG.mons or unknown)
+  do_line("strength = %s",OB_CONFIG.strength or unknown)
   do_line("traps = %s",   OB_CONFIG.traps or unknown)
   do_line("powers = %s",  OB_CONFIG.powers or unknown)
   do_line("health = %s",  OB_CONFIG.health or unknown)

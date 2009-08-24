@@ -53,6 +53,7 @@ public:
 private:
 
   void setup_Monsters();
+  void setup_Strength();
   void setup_Powers  ();
   void setup_Traps   ();
   void setup_Health  ();
@@ -61,12 +62,14 @@ private:
   static void notify_Mode(const char *name, void *priv_dat);
 
   static void callback_Monsters(Fl_Widget *, void*);
+  static void callback_Strength(Fl_Widget *, void*);
   static void callback_Powers  (Fl_Widget *, void*);
   static void callback_Traps   (Fl_Widget *, void*);
   static void callback_Health  (Fl_Widget *, void*);
   static void callback_Ammo    (Fl_Widget *, void*);
 
   static const char * monster_syms[];
+  static const char * strength_syms[];
   static const char * power_syms[];
   static const char * trap_syms[];
   static const char * health_syms[];
