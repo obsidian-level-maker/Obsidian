@@ -279,7 +279,7 @@ BEASTIARY_PROBS =
 }
 
 
-function Beastiary_Setup(self)
+function ZDoom_Beastiary_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
     local prob = BEASTIARY_PROBS[opt.value]
@@ -300,7 +300,7 @@ OB_MODULES["zdoom_beastiary"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = Beastiary_Setup,
+  setup_func = ZDoom_Beastiary_setup,
 
   tables =
   {

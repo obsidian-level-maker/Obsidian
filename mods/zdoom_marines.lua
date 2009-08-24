@@ -147,7 +147,7 @@ ZDOOM_MARINE_FACTORS =
 }
 
 
-function ZDoom_Marine_Setup(self)
+function ZDoom_Marine_setup(self)
   if OB_CONFIG.game == "doom1" then
     GAME.monsters["marine_ssg"] = nil
   end
@@ -174,7 +174,7 @@ OB_MODULES["zdoom_marines"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = ZDoom_Marine_Setup,
+  setup_func = ZDoom_Marine_setup,
 
   tables =
   {
@@ -222,7 +222,7 @@ MARINE_CONTROL_PROBS =
 }
 
 
-function Marine_Control_Setup(self)
+function Marine_Control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -245,7 +245,7 @@ OB_MODULES["zdoom_marine_control"] =
 
   for_modules = { zdoom_marines=1 },
 
-  setup_func = Marine_Control_Setup,
+  setup_func = Marine_Control_setup,
 
   options =
   {

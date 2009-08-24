@@ -40,7 +40,7 @@ WEAP_CONTROL_PROBS =
 }
 
 
-function Weap_Control_Setup(self)
+function Weap_Control_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -69,7 +69,7 @@ OB_MODULES["weap_control"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = Weap_Control_Setup,
+  setup_func = Weap_Control_setup,
 
   options =
   {

@@ -40,7 +40,7 @@ MON_CONTROL_PROBS =
 }
 
 
-function Mon_Control_Setup(self)
+function Mon_Control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -67,7 +67,7 @@ OB_MODULES["mon_control"] =
   for_games = { doom1=1, doom2=1, freedoom=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = Mon_Control_Setup,
+  setup_func = Mon_Control_setup,
 
   options =
   {

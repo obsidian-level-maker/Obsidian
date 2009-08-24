@@ -169,7 +169,7 @@ SKULLTAG_FACTORS =
 }
 
 
-function Skulltag_Setup(self)
+function Skulltag_setup(self)
   if OB_CONFIG.game == "doom1" then
     GAME.monsters["superguy"] = nil
     GAME.monsters["hectebus"] = nil
@@ -207,7 +207,7 @@ OB_MODULES["sktag_mons"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 
-  setup_func = Skulltag_Setup,
+  setup_func = Skulltag_setup,
 
   tables =
   {
@@ -259,7 +259,7 @@ SKULLTAG_CONTROL_PROBS =
 }
 
 
-function Sktag_Mon_Control_Setup(self)
+function Sktag_MonControl_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -282,7 +282,7 @@ OB_MODULES["sktag_mon_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_Mon_Control_Setup,
+  setup_func = Sktag_MonControl_setup,
 
   options =
   {
@@ -302,7 +302,7 @@ OB_MODULES["sktag_mon_control"] =
 ----------------------------------------------------------------
 
 
-function Sktag_Weap_Control_Setup(self)
+function Sktag_WeapControl_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -327,7 +327,7 @@ OB_MODULES["sktag_weap_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_Weap_Control_Setup,
+  setup_func = Sktag_WeapControl_setup,
 
   options =
   {
