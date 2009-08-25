@@ -1,0 +1,21 @@
+
+CHANGES IN 0.94 (since 0.85)
+============================
+
++  new prefab system, lots of cool prefabs.
++  new theme system for more consistent levels.
++  different sized rooms.
++  greatly improved Hexen support.
+
+!  monster closet traps no longer work
+
+-  new adjustments for level size and puzzles.
+-  adjustments for deathmatch games.
+-  secret areas and levels.
+-  balconies.
+
+-  experimental Wolfenstein-3D support.
+-  later levels get progressively harder.
+-  slightly better Heretic maps.
+-  more DOOM themes.
+

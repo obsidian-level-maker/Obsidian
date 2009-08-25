@@ -1,6 +1,6 @@
 
-CHANGES (since v3.39)
-=====================
+CHANGES IN 3.43 (since v3.39)
+=============================
 
 + fixed too much chaingun/plasma ammo (fight sim bug)
 - fixed non-working lifts and pedestals
