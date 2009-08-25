@@ -183,17 +183,32 @@ function Monsters_init()
 
   LEVEL.mon_replacement = {}
 
+  local dead_ones = {}
+
   for name,info in pairs(GAME.monsters) do
-    if info.replaces then
-      local other = info.replaces
+    local orig = info.replaces
+    if orig then
       assert(info.replace_prob)
-      if not LEVEL.mon_replacement[other] then
-        LEVEL.mon_replacement[other] = { [other]=90 }
+      if not GAME.monsters[orig] then
+        dead_ones[name] = true
+      else
+        if not LEVEL.mon_replacement[orig] then
+          -- the basic replacement table allows the monster to
+          -- pick itself at the time of replacement.
+          LEVEL.mon_replacement[orig] = { [orig]=70 }
+        end
+        LEVEL.mon_replacement[orig][name] = info.replace_prob
       end
-      LEVEL.mon_replacement[other][name] = info.replace_prob
     end
   end
+
+  -- remove a replacement monster if the monster it replaces
+  -- does not exist (e.g. stealth_gunner in DOOM 1 mode).
+  for name,_ in pairs(dead_ones) do
+    GAME.monsters[name] = nil
+  end
 end
+
 
 function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
@@ -744,9 +759,6 @@ function Monsters_in_room(R)
     if LEVEL.quantity then
       qty = LEVEL.quantity
 
-    elseif OB_CONFIG.mons == "crazy" then
-      qty = rand_irange(30,80)
-
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
             LEVEL.mixed_mons_qty  -- the "mixed" setting
@@ -864,7 +876,7 @@ function Monsters_in_room(R)
   end
 
   local function select_monsters(toughness)
-    if OB_CONFIG.mons == "crazy" then
+    if OB_CONFIG.strength == "crazy" then
       return crazy_monster_palette()
     end
 
@@ -1268,7 +1280,7 @@ function Monsters_in_room(R)
     if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
 
     -- sometimes prevent monster replacements
-    if rand_odds(40) or OB_CONFIG.mons == "crazy" then
+    if rand_odds(40) or OB_CONFIG.strength == "crazy" then
       R.no_replacement = true
     end
 
