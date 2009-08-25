@@ -2,13 +2,6 @@
 TODO
 ====
 
->>>>  if monster uses replaces, but what it replaces does not exist, then never add that monster
-
--  weapons: 'rarity' field : 
-      1 = max one per level
-      2 = one for every two levels
-      4 = one for every four levels
-
 -  Strength button:
       Medium  (as now)
       Low     

@@ -2,6 +2,18 @@
 CHANGES (since v3.43)
 =====================
 
--  GUI: new layout, more room for modules
--  GUI: larger fonts in higher resolutions
+-  new GUI layout, more room for modules
+-  use larger fonts in higher resolutions
+-  new 'Strength' button (for monsters)
+
+-  further work on Quake (better BSP algorithms etc)
+
+-  new modules:
+   - Monster Control for DOOM
+   - Weapon Control for DOOM
+   - Stealth Monsters : Fine Control (thanks Enhas)
+   - ZDoom Marines : Fine Control (Enhas)
+   - Skulltag : Fine Control (Enhas)
+   - Level Control (Enhas)
+   - ZDoom Bestiary (Mr Chris)
 
