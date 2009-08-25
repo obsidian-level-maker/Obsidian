@@ -84,7 +84,7 @@ opt_callback_data_t;
 
 void UI_Module::AddOption(const char *opt, const char *label)
 {
-  int nw = 116 + KF * 16;
+  int nw = 112 + KF * 16;
   int nh = 28 + KF * 2;
 
   int nx = x() + w() - nw - 10;
