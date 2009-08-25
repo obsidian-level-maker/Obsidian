@@ -258,11 +258,11 @@ OB_MODULES["stealth_mon_control"] =
   options =
   {
     stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH_CONTROL_CHOICES },
-    stealth_shooter  = { label="Stealth Shotgun Guy",   choices=STEALTH_CONTROL_CHOICES },
+    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH_CONTROL_CHOICES },
     stealth_imp      = { label="Stealth Imp",           choices=STEALTH_CONTROL_CHOICES },
     stealth_demon    = { label="Stealth Demon",         choices=STEALTH_CONTROL_CHOICES },
     stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH_CONTROL_CHOICES },
-    stealth_baron    = { label="Stealth Baron of Hell", choices=STEALTH_CONTROL_CHOICES },
+    stealth_baron    = { label="Stealth Baron",         choices=STEALTH_CONTROL_CHOICES },
 
     stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH_CONTROL_CHOICES },
     stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH_CONTROL_CHOICES },

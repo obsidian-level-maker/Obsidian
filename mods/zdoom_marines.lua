@@ -249,17 +249,17 @@ OB_MODULES["zdoom_marine_control"] =
 
   options =
   {
-    marine_fist      = { label="Marine (Fist)",           choices=MARINE_CONTROL_CHOICES },
-    marine_berserk   = { label="Marine (Berserk)",        choices=MARINE_CONTROL_CHOICES },
-    marine_saw       = { label="Marine (Chainsaw)",       choices=MARINE_CONTROL_CHOICES },
-    marine_pistol    = { label="Marine (Pistol)",         choices=MARINE_CONTROL_CHOICES },
-    marine_shotty    = { label="Marine (Shotgun)",        choices=MARINE_CONTROL_CHOICES },
-    marine_ssg       = { label="Marine (Super Shotgun)",  choices=MARINE_CONTROL_CHOICES },
-    marine_chain     = { label="Marine (Chaingun)",       choices=MARINE_CONTROL_CHOICES },
-    marine_rocket    = { label="Marine (Rocket Launcher)",choices=MARINE_CONTROL_CHOICES },
-    marine_plasma    = { label="Marine (Plasma Rifle)",   choices=MARINE_CONTROL_CHOICES },
-    marine_rail      = { label="Marine (Railgun)",        choices=MARINE_CONTROL_CHOICES },
-    marine_bfg       = { label="Marine (BFG 9000)",       choices=MARINE_CONTROL_CHOICES },
+    marine_fist      = { label="Fist Marine",        choices=MARINE_CONTROL_CHOICES },
+    marine_berserk   = { label="Berserk Marine",     choices=MARINE_CONTROL_CHOICES },
+    marine_saw       = { label="Chainsaw Marine",    choices=MARINE_CONTROL_CHOICES },
+    marine_pistol    = { label="Pistol Marine",      choices=MARINE_CONTROL_CHOICES },
+    marine_shotty    = { label="Shotgun Marine",     choices=MARINE_CONTROL_CHOICES },
+    marine_ssg       = { label="Super Shotgunner",   choices=MARINE_CONTROL_CHOICES },
+    marine_chain     = { label="Chaingun Marine",    choices=MARINE_CONTROL_CHOICES },
+    marine_rocket    = { label="Rocket Marine",      choices=MARINE_CONTROL_CHOICES },
+    marine_plasma    = { label="Plasma Marine",      choices=MARINE_CONTROL_CHOICES },
+    marine_rail      = { label="Railgun Marine",     choices=MARINE_CONTROL_CHOICES },
+    marine_bfg       = { label="BFG 9000 Marine",    choices=MARINE_CONTROL_CHOICES },
   }
 }
 
