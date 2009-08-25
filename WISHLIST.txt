@@ -12,13 +12,14 @@ MAP32: find and kill all the Keens to open the door to the exit.
 
 Other Games:
 
--  Heretic II (uses same format as Quake II ?)
+-  Strife
+-  Heretic II (uses same format as Quake II ??)
 -  Soldier of Fortune
--  Serious Sam
 
-?  Strife
-?  Marathon
+?  Marathon 2/Inf
 ?  Dark Forces
+?  Duke Nukem 3D
+?  HacX
 
 
 CSG IDEA: clipping rectangles (typically a room)
