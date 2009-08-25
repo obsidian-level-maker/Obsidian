@@ -2,13 +2,9 @@
 WISH-LIST
 =========
 
--  more choices for Outdoor setting
-
--  module explanations (appear above the options)
-
-MAP32: find and kill all the Keens to open the door to the exit.
-       perhaps use Psychedelic theme and a lower qty Crazy mode.
-
+----------------------------------------------------------------
+  GENERAL
+----------------------------------------------------------------
 
 Other Games:
 
@@ -23,75 +19,17 @@ Other Games:
 ?  HacX
 
 
-CSG IDEA: clipping rectangles (typically a room)
-
-Monsters:
-  +  add guard monsters first, seeds around the purpose
-     (or the weapon).
-
-  +  "monster map" :
-     (1) select 1-4 types of monster to use in room (palette)
-         (and a pref for each one)
-
-         (a) palette might not include guard monster
-             (bump chance way down)
-
-         (b) from player's current weapons determine a 'firepower'
-             value (average of classes in Hexen).
-             This is roughly how much damage can be done per sec.
-
-             Hence we know how long each kind of monster would
-             take to kill.  TOO LONG = skip monster,
-             TOO SHORT = skip or bump chance way down.
-
-  +  once we have the monster map, all we need then is some
-     idea of QUANTITIES.
-
-     +  the skill level controls how many monsters to add.
-        Each monster is always present in "hard" and may be
-        omitted for lower skills.  Maybe: medium keep 66%,
-        easy keep 33%.  (always keep at least one).
-
-     +  the GUI 'Monsters' setting not only controls how many
-        monsters, but also affects difficulty, though quantity
-        is more significant than the difficulty adjustment.
-
-  #  decide level-wide monster palette (no monsters are used
-     which are not in this palette).  Could save big monsters
-     (arach, mancubus) for later levels and omit small ones
-     (esp. pistol zombie).  Perhaps have a palette for each
-     usage kind (free-range, guard, trap, cage) ??
-
-  #  add some monsters
-  -  cages & ledges
-  -  monster closets
-  -  pop-ups 
-  -  teleport-in
-  -  facing entry door [blaze D1]
-
-
 Ceilings:
   - put several small light fittings/sky holes with
     simple patterns (e.g. inner 2x2 seeds, or outer corners)
-
-  - don't always trim the sky hole
 
 
 Pickups:
   -  add some powerups
 
 
-Fight Sim: handle weapon immunity [e.g. Shambler] --> abuse weap prefs
-  
-
-Misc:
-
+Planner:
 -  review / improve 'emergency' connections
-
--  small arena-ish boss levels to break up megawads,
-   e.g. DOOM 2 at MAP16 and MAP24  (JR)
-
--  "Progressive" mode for monsters  (Enhas)
 
 
 Windows:
@@ -118,8 +56,23 @@ Pictures:
     ceiling (above doors and low periphs).
 
 
-POLISH:
+Nicety:
   - mark end of big tables with a comment (like D1_WALL_PREFABS)
+
+
+
+----------------------------------------------------------------
+  IDEAS
+----------------------------------------------------------------
+
+-  module help / explanations ?? (appear above the options)
+
+-  CSG: clipping rectangles (typically a room)
+
+-  small arena-ish boss levels to break up megawads,
+   e.g. DOOM 2 at MAP16 and MAP24  (JR)
+
+
 
 
 >>>  a segment with same front and back ????
@@ -288,22 +241,6 @@ LEGACY: gui.property("solid_exfloor", 281)
         gui.property("liquid_exfloor", 280)  -- 301
 
 
-QUAKE:
-
-+ fix bounding boxes for everything (especially Leafs)
-
-+ create faces from stacked brushes behind a gap (cf. oa_dm7)
-
-++ perform lighting
-
-++ perform visibility
-
-- clipping hulls
-
-- gui.quake_add_wad("data/quake_tex.wad")
-
-- create "oblige" logo miptex [.wal for QuakeII]
-
 
 DOOM ENTITY PROPS:
   angle
@@ -329,7 +266,9 @@ General:
 -  put important constants/tables into defs.lua
 
 
-GUI / C++:
+----------------------------------------------------------------
+  GUI and C++ CODE
+----------------------------------------------------------------
 
 -  ui_chooser: support last_file in WIN32
       maybe this: lpstrFile contains _base_ of file (FOO.EXT)
@@ -342,11 +281,11 @@ GUI / C++:
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
--  ideas for remaining button (YYY) :
-   -  Secrets   (would be useless for DM)
+-  ideas for new buttons
+   -  Secrets
    -  Powerups
-   +  Outdoor-iness
-   -  Lighting adjustment
+   -  Outdoor-iness  [THERE]
+   -  Lighting adjustment  [THERE]
    -  Big monster adjustment
    -  Linearity
 
@@ -365,13 +304,20 @@ SKY GENERATOR:
    BUILDINGS params: min_h, max_h, gap_size, colors, light_cols
 
 
-DOOM
+----------------------------------------------------------------
+  DOOM and DOOM II
+----------------------------------------------------------------
+
+-  MAP32: find and kill all the Keens to open the door to the exit.
+          perhaps use Psychedelic theme and a lower qty Crazy mode.
 
 -  make light level of windows (esp. outdoor -> outdoor)
    slightly lower than surrounds.
 
 
-HERETIC:
+----------------------------------------------------------------
+  HERETIC:
+----------------------------------------------------------------
 
 -  don't build Blaze doors into maps.
 
@@ -380,7 +326,9 @@ HERETIC:
 -  weapons: firemace no good for SP/COOP ??
 
 
-HEXEN:
+----------------------------------------------------------------
+  HEXEN:
+----------------------------------------------------------------
 
 +  need exit teleporter in final Hub.
 
@@ -393,27 +341,48 @@ HEXEN:
 +  fix key usage (REQUIRE both to get to boss level).
 
 
-WOLF3d:
+----------------------------------------------------------------
+  WOLF 3D
+----------------------------------------------------------------
 
-   + push-walls for secret quests!
-   + secret elevators
-   + bosses!
++ push-walls for secret quests!
++ secret elevators
++ bosses!
 
-   - decide_monster : skills are "tiered"
-   - health/ammo : no skills! -- use medium one
-   - place_items : never where monsters are!
-   - create rooms with 'endgame' object.
+- decide_monster : skills are "tiered"
+- health/ammo : no skills! -- use medium one
+- place_items : never where monsters are!
+- create rooms with 'endgame' object.
 
-   + ensure limits are enforced:
-     - MAXACTORS = 150  (remove actors at random)
-     - MAXSTATS  = 400  (remove statics at random)
-     - MAXDOORS  = 64   (remove unneeded doors at random)
++ ensure limits are enforced:
+ - MAXACTORS = 150  (remove actors at random)
+ - MAXSTATS  = 400  (remove statics at random)
+ - MAXDOORS  = 64   (remove unneeded doors at random)
 
-   - patrolling monsters (need to create path with arrows).
-   - secret levels (full of treasure)
-   - something interesting in middle of big rooms.
-   - elevator "entry" in first room.
+- patrolling monsters (need to create path with arrows).
+- secret levels (full of treasure)
+- something interesting in middle of big rooms.
+- elevator "entry" in first room.
 
+
+----------------------------------------------------------------
+  QUAKE:
+----------------------------------------------------------------
+
++ create faces from stacked brushes behind a gap (cf. oa_dm7)
+
+++ perform lighting
+
+++ perform visibility
+
+- gui.quake_add_wad("data/quake_tex.wad")
+
+- create "oblige" logo miptex [.wal for QuakeII]
+
+
+----------------------------------------------------------------
+  MISCELLANEOUS
+----------------------------------------------------------------
 
 Docs:
 
@@ -445,6 +414,48 @@ Theme system:
 
 
 Monsters:
+  +  add guard monsters first, seeds around the purpose
+     (or the weapon).
+
+  +  "monster map" :
+     (1) select 1-4 types of monster to use in room (palette)
+         (and a pref for each one)
+
+         (a) palette might not include guard monster
+             (bump chance way down)
+
+         (b) from player's current weapons determine a 'firepower'
+             value (average of classes in Hexen).
+             This is roughly how much damage can be done per sec.
+
+             Hence we know how long each kind of monster would
+             take to kill.  TOO LONG = skip monster,
+             TOO SHORT = skip or bump chance way down.
+
+  +  once we have the monster map, all we need then is some
+     idea of QUANTITIES.
+
+     +  the skill level controls how many monsters to add.
+        Each monster is always present in "hard" and may be
+        omitted for lower skills.  Maybe: medium keep 66%,
+        easy keep 33%.  (always keep at least one).
+
+     +  the GUI 'Monsters' setting not only controls how many
+        monsters, but also affects difficulty, though quantity
+        is more significant than the difficulty adjustment.
+
+  #  decide level-wide monster palette (no monsters are used
+     which are not in this palette).  Could save big monsters
+     (arach, mancubus) for later levels and omit small ones
+     (esp. pistol zombie).  Perhaps have a palette for each
+     usage kind (free-range, guard, trap, cage) ??
+
+  #  add some monsters
+  -  cages & ledges
+  -  monster closets
+  -  pop-ups 
+  -  teleport-in
+  -  facing entry door [blaze D1]
 
 ++  put in some Cyberdemons or Spider Masterminds
 
@@ -458,7 +469,6 @@ Monsters:
          paths) as a SINGLE BATTLE ARENA.
 
 -  cage monsters: don't put hitscan snipers up really high.
-
 
 
 ----------------------------------------------------------------

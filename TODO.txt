@@ -2,6 +2,10 @@
 TODO
 ====
 
+-  more choices for Outdoor setting
+
+>>>  "Progressive" mode for monsters  (Enhas)
+
 -  Strength button:
       Medium  (as now)
       Low     
