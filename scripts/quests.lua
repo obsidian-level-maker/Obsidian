@@ -600,7 +600,9 @@ function Quest_add_keys()
     if arena.lock.kind == "EXIT" then
       assert(LEVEL.exit_room == R)
 
-      if R.kind == "building" and not R:has_any_lock() and R.svolume < 25 then
+      if R.kind == "building" and not R:has_any_lock() and
+         R.svolume < 25 and LEVEL.theme.exit
+      then
         make_small_exit(R)
       end
 

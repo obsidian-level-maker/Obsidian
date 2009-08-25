@@ -122,7 +122,11 @@ function Player_calc_firepower()
     local divisor   = 0
 
     for weapon,_ in pairs(hmodel.weapons) do
-      local info = assert(GAME.weapons[weapon])
+      local info = GAME.weapons[weapon]
+
+      if not info then
+        error("Missing weapon info for: " .. weapon)
+      end
 
       local dm = info.damage * info.rate
       if info.splash then dm = dm + info.splash[1] end

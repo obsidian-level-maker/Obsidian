@@ -319,6 +319,11 @@ function Rooms_decide_hallways_II()
 
   ---| Room_decide_hallways |---
 
+  if not LEVEL.theme.hallway then
+    gui.printf("Hallways disabled (no theme info)\n")
+    return
+  end
+
   for _,R in ipairs(LEVEL.all_rooms) do
     if eval_hallway(R) then
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
