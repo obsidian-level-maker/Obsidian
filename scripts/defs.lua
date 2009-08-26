@@ -89,7 +89,7 @@ BIG_ROOM_TABLE =
 
 MONSTER_QUANTITIES =
 {
-  scarce=10, less=18, normal=27, more=40, heaps=60
+  scarce=9, less=18, normal=27, more=40, heaps=60
 }
 
 MONSTER_TOUGHNESS =

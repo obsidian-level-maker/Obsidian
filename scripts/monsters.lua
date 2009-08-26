@@ -180,8 +180,13 @@ function Monsters_init()
 
   LEVEL.mon_stats = {}
 
-  LEVEL.mixed_mons_qty   = 24 + rand_skew() * 10
+  local low  = (MONSTER_QUANTITIES.scarce + MONSTER_QUANTITIES.less) / 2
+  local high =  MONSTER_QUANTITIES.more
+
+  LEVEL.mixed_mons_qty   = rand_range(low, high)
   LEVEL.mixed_mons_tough = rand_range(0.9, 1.1)
+
+  LEVEL.prog_mons_qty = low + LEVEL.ep_along * (high - low)
 
   -- build replacement table --
 
@@ -763,11 +768,17 @@ function Monsters_in_room(R)
     if LEVEL.quantity then
       qty = LEVEL.quantity
 
+    elseif OB_CONFIG.mons == "mixed" then
+      qty = LEVEL.mixed_mons_qty
+
+    elseif OB_CONFIG.mons == "prog" then
+      qty = LEVEL.prog_mons_qty
+
     else
-      qty = MONSTER_QUANTITIES[OB_CONFIG.mons] or
-            LEVEL.mixed_mons_qty  -- the "mixed" setting
+      qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
     end
 
+    assert(qty);
     gui.debugf("Quantity = %1.0f\n", qty)
 
     return qty
