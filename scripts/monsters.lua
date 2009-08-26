@@ -752,7 +752,7 @@ function Monsters_in_room(R)
     -- higher values (upto ~ 4.0) produces tougher monsters.
 
     -- each level gets progressively tougher
-    local toughness = 1.0 + LEVEL.ep_along * 3.0
+    local toughness = 0.5 + LEVEL.ep_along * 3.0
 
     if LEVEL.toughness then toughness = LEVEL.toughness end
 
@@ -763,6 +763,9 @@ function Monsters_in_room(R)
     elseif R.arena.id >= (#LEVEL.all_arenas - 1) then
       toughness = toughness * 1.2
     end
+
+    -- factor in the user Strength setting
+    toughness = toughness + (MONSTER_TOUGHNESS[OB_CONFIG.strength] or 0)
 
     if R.kind == "hallway" then
       toughness = toughness / 2
@@ -1273,6 +1276,7 @@ function Monsters_in_room(R)
       props.skill_medium = sel(skill <= 2, 1, 0)
       props.skill_easy   = sel(skill <= 1, 1, 0)
     end
+-- if (props.skill_medium ~= 1) then return end --!!!!!!!!!
 
     Trans_entity(mon, spot.x, spot.y, spot.S.floor_h, props)
 
