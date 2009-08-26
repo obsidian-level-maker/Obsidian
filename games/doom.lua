@@ -1431,14 +1431,14 @@ COMMON_MONSTERS =
   {
     prob=40,
     health=400, damage=35, attack="missile",
-    density=0.6, float=true,
+    density=0.7, float=true,
   },
 
   baron =
   {
     prob=20,
     health=1000, damage=45, attack="missile",
-    density=0.3,
+    density=0.5,
     weap_prefs={ bfg=3.0 },
   },
 
@@ -1447,7 +1447,7 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
-    prob=1, crazy_prob=12, skip_prob=200,
+    prob=10, crazy_prob=12, skip_prob=200,
     health=4000, damage=150, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0 },
@@ -1455,7 +1455,7 @@ COMMON_MONSTERS =
 
   Mastermind =
   {
-    prob=1, crazy_prob=18, skip_prob=400,
+    prob=5, crazy_prob=18, skip_prob=400,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
     weap_prefs={ bfg=5.0 },
@@ -1483,21 +1483,21 @@ DOOM2_MONSTERS =
   {
     prob=60, crazy_prob=40,
     health=500, damage=45, attack="missile",
-    density=0.4,
+    density=0.7,
   },
 
   mancubus =
   {
     prob=33,
     health=600, damage=70, attack="missile",
-    density=0.4,
+    density=0.6,
   },
 
   arach =
   {
     prob=25,
     health=500, damage=70, attack="missile",
-    density=0.5,
+    density=0.8,
   },
 
   vile =
@@ -1511,7 +1511,7 @@ DOOM2_MONSTERS =
   {
     prob=6, crazy_prob=15, skip_prob=150,
     health=700, damage=20, attack="missile",
-    density=0.2,never_promote=true, float=true, 
+    density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
   },
 
