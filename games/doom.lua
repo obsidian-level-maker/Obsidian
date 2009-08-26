@@ -2141,12 +2141,8 @@ OB_GAMES["doom1"] =
 
     skip_monsters = { 26,40 },
 
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
+    time_factor   = 1.0,
+    damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
   },

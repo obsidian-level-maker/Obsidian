@@ -183,10 +183,8 @@ function Monsters_init()
   local low  = (MONSTER_QUANTITIES.scarce + MONSTER_QUANTITIES.less) / 2
   local high =  MONSTER_QUANTITIES.more
 
+  LEVEL.prog_mons_qty    = low + LEVEL.ep_along * (high - low)
   LEVEL.mixed_mons_qty   = rand_range(low, high)
-  LEVEL.mixed_mons_tough = rand_range(0.9, 1.1)
-
-  LEVEL.prog_mons_qty = low + LEVEL.ep_along * (high - low)
 
   -- build replacement table --
 
@@ -753,27 +751,25 @@ function Monsters_in_room(R)
     -- determine a "toughness" value, where 1.0 is normal and
     -- higher values (upto ~ 4.0) produces tougher monsters.
 
-    local toughness = MONSTER_TOUGHNESS[OB_CONFIG.mons] or
-                      LEVEL.mixed_mons_tough  -- "mixed" setting
-
     -- each level gets progressively tougher
-    if LEVEL.toughness then
-      toughness = toughness * LEVEL.toughness
-    else
-      toughness = toughness * (1 + LEVEL.ep_along * 2.4)
-    end
+    local toughness = 1.0 + LEVEL.ep_along * 3.0
+
+    if LEVEL.toughness then toughness = LEVEL.toughness end
 
     -- less emphasis within a level, since each arena naturally
     -- get tougher as the player picks up new weapons.
     if R.arena.id == 1 then
       toughness = toughness * 0.8
     elseif R.arena.id >= (#LEVEL.all_arenas - 1) then
-      toughness = toughness * 1.4
+      toughness = toughness * 1.2
     end
 
     if R.kind == "hallway" then
-      toughness = toughness * 0.5
+      toughness = toughness / 2
     end
+
+    -- spice it up
+    toughness = toughness + rand_range(0, 0.4)
 
     gui.debugf("Toughness = %1.3f\n", toughness)
 
@@ -827,20 +823,37 @@ function Monsters_in_room(R)
 
     gui.debugf("  %s --> damage:%1.1f (%1.1f)  time:%1.2f\n", name, damage, damage/toughness, time)
 
-    if time >= PARAM.mon_time_max then return 0 end
+    -- would the monster take too long to kill?
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 16
 
-    -- adjust damage by toughness factor
-    damage = damage / toughness
-
-    if damage >= PARAM.mon_damage_max then return 0 end
-
-    if damage > PARAM.mon_damage_high then
-      local diff =   PARAM.mon_damage_max - PARAM.mon_damage_high
-      prob = prob * (PARAM.mon_damage_max - damage) / diff
+    if toughness > 1 then
+      max_time = max_time / math.sqrt(toughness)
     end
 
-    if damage < PARAM.mon_damage_low then
-      prob = prob * (damage / PARAM.mon_damage_low)
+    if PARAM.time_factor then
+      max_time = max_time * PARAM.time_factor
+    end
+
+    if time >= max_time then return 0 end
+
+    -- would the monster inflict too much damage on the player?
+    local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
+    local low_damage = MONSTER_LOW_DAMAGE[OB_CONFIG.strength] or 1
+
+    damage = damage / toughness
+
+    if PARAM.damage_factor then
+      damage = damage * PARAM.damage_factor
+    end
+
+    if damage >= max_damage then return 0 end
+
+    if damage > max_damage/2 then
+      prob = prob * (max_damage - damage) / (max_damage/2)
+    end
+
+    if damage < low_damage then
+      prob = prob * (damage / low_damage) ^ 1.2
     end
 
     if R.outdoor then
