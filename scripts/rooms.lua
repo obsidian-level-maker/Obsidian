@@ -93,15 +93,12 @@ function Rooms_decide_outdoors()
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand_odds(5) end
 
---[[ DISABLED -- KEYS/SWITCHES NOT DECIDED YET
-    -- preference for KEY locked doors to have at least one
-    -- indoor room on one side.  50% on each side --> 75% that
-    -- one of the sides will be indoor.
-    if R:has_lock_kind("KEY") and rand_odds(50) then
-      return false
-    end
---]]
+    if STYLE.skies == "none"   then return false end
+    if STYLE.skies == "always" then return true end
 
+    -- we would prefer KEY locked doors to touch at least one
+    -- indoor room.  However keys/switches are not decided yet,
+    -- so the following is a compromise solution.
     if R:has_any_lock() and rand_odds(20) then return false end
 
     if R.children then

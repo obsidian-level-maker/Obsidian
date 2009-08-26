@@ -259,9 +259,11 @@ const char * UI_Level::size_syms[] =
 
 const char * UI_Level::outdoor_syms[] =
 {
+  "none",   "NONE",
   "few",    "Rare",
   "some",   "Normal",
-  "heaps",  "Abundant",
+  "heaps",  "Lots",
+  "always", "Always",
 
   "mixed",  "Mix It Up",
 
