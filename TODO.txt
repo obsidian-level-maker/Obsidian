@@ -2,9 +2,11 @@
 TODO
 ====
 
--  more choices for Outdoor setting
++  Quests : add locks (new arenas) if when have no keys
 
->>>  "Progressive" mode for monsters  (Enhas)
+DONE:  more choices for Outdoor setting
+
+DONE:  "Progressive" mode for monsters  (Enhas)
 
 -  Strength button:
       Medium  (as now)

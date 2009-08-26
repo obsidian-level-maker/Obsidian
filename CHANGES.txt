@@ -3,9 +3,10 @@ CHANGES (since v3.43)
 =====================
 
 -  new GUI layout, more room for modules
--  use larger fonts in higher resolutions
+-  GUI uses larger fonts in higher resolutions
 -  new 'Strength' button (for monsters)
 -  new 'Progressive' choice for monster numbers
+-  more choices for the 'Outdoors' button
 
 -  further work on Quake (better BSP algorithms etc)
 
