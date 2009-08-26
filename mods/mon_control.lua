@@ -53,7 +53,7 @@ function Mon_Control_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 1.0 end
+      if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
       if prob > 180 then M.skip_prob = 0 end
     end
   end -- for opt

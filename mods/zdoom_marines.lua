@@ -44,7 +44,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_fist =
   {
-    prob=1,
+    prob=1, skip_prob=200,
     health=100, damage=4, attack="melee",
     never_promote=true,
     density=0.2,
@@ -52,7 +52,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_berserk =
   {
-    prob=6,
+    prob=6, skip_prob=100,
     health=100, damage=40, attack="melee",
     never_promote=true,
     density=0.2,
@@ -60,7 +60,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_saw =
   {
-    prob=4,
+    prob=4, skip_prob=100,
     health=100, damage=15, attack="melee",
     never_promote=true,
     density=0.2,
@@ -68,7 +68,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_pistol =
   {
-    prob=12,
+    prob=12, skip_prob=100,
     health=100, damage=8, attack="hitscan",
     never_promote=true,
     density=0.5,
@@ -76,7 +76,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_shotty =
   {
-    prob=4,
+    prob=4, skip_prob=100,
     health=100, damage=10, attack="hitscan",
     never_promote=true,
     density=0.4,
@@ -84,7 +84,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_ssg =
   {
-    prob=6,
+    prob=6, skip_prob=100,
     health=100, damage=65, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -92,7 +92,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_chain =
   {
-    prob=6,
+    prob=6, skip_prob=100,
     health=100, damage=50, attack="hitscan",
     never_promote=true,
     density=0.3,
@@ -100,7 +100,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rocket =
   {
-    prob=4, crazy_prob=10,
+    prob=4, crazy_prob=10, skip_prob=100,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.2,
@@ -108,7 +108,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_plasma =
   {
-    prob=4, crazy_prob=6,
+    prob=4, crazy_prob=6, skip_prob=100,
     health=100, damage=70, attack="missile",
     never_promote=true,
     density=0.2,
@@ -116,7 +116,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_rail =
   {
-    prob=2,
+    prob=2, skip_prob=200,
     health=100, damage=100, attack="hitscan",
     never_promote=true,
     density=0.1,
@@ -124,7 +124,7 @@ ZDOOM_MARINE_MONSTERS =
 
   marine_bfg =
   {
-    prob=2,
+    prob=2, skip_prob=250,
     health=100, damage=100, attack="missile",
     never_promote=true,
     density=0.1,
@@ -232,7 +232,7 @@ function Marine_Control_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 0.5 end
+      if prob >  80 then M.density = 0.5 ; M.skip_prob = 30 end
       if prob > 180 then M.skip_prob = 0 end
     end
   end -- for opt

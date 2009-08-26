@@ -243,23 +243,41 @@ function Monsters_global_palette()
   -- sometimes promote a particular monster
   if rand_odds(30) then
     local promote = list[#list]
-    local info = GAME.monsters[promote]
-    if not info.never_promote then
+    local M = GAME.monsters[promote]
+    if not M.never_promote then
       gui.debugf("Promoting monster: %s\n", promote)
-      LEVEL.monster_prefs[promote] = 3.3
+      LEVEL.monster_prefs[promote] = 3.5
       table.remove(list, #list)
     end
   end
 
   if PARAM.skip_monsters then
+    local skip_list = {}
+    local skip_total = 0
+
+    for _,name in ipairs(list) do
+      local M = GAME.monsters[name]
+      local prob = M.skip_prob or 50
+      if prob > 0 then
+        skip_list[name] = prob
+gui.debugf("skip_list %s = %1.0f\n", name, prob)
+        skip_total = skip_total + 1
+      end
+    end
+
     local perc  = rand_range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
     local count = int(#list * perc / 100 + gui.random())
 
-    if count >= #list then count = #list - 1 end
+    if count >= skip_total then count = skip_total - 1 end
 
     for i = 1,count do
-      LEVEL.monster_prefs[list[i]] = 0
+      if table_empty(skip_list) then break; end
+
+      local name = rand_key_by_probs(skip_list)
+      skip_list[name] = nil
+
       gui.debugf("Skipping monster: %s\n", list[i])
+      LEVEL.monster_prefs[name] = 0
     end
   end
 end
@@ -894,8 +912,6 @@ function Monsters_in_room(R)
     if OB_CONFIG.strength == "crazy" then
       return crazy_monster_palette()
     end
-
-    -- FIXME: guard monsters !!!
 
     local fp = Player_calc_firepower()
     gui.debugf("Firepower = %1.3f\n", fp)

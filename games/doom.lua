@@ -1447,8 +1447,7 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
-    -- not generated in normal levels
-    crazy_prob=12,
+    prob=1, crazy_prob=12, skip_prob=200,
     health=4000, damage=150, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0 },
@@ -1456,7 +1455,7 @@ COMMON_MONSTERS =
 
   Mastermind =
   {
-    crazy_prob=18,
+    prob=1, crazy_prob=18, skip_prob=400,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
     weap_prefs={ bfg=5.0 },
@@ -1503,14 +1502,14 @@ DOOM2_MONSTERS =
 
   vile =
   {
-    prob=12,
+    prob=12, skip_prob=100,
     health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    prob=6, crazy_prob=15,
+    prob=6, crazy_prob=15, skip_prob=150,
     health=700, damage=20, attack="missile",
     density=0.2,never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
@@ -1519,7 +1518,7 @@ DOOM2_MONSTERS =
   ss_dude =
   {
     -- not generated in normal levels
-    crazy_prob=7,
+    crazy_prob=7, skip_prob=100,
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
   },
