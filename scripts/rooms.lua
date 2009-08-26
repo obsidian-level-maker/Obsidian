@@ -549,8 +549,6 @@ function Rooms_reckon_doors()
 
   ---| Rooms_reckon_doors |---
 
-  if not GAME.door_fabs then return end
-
   for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
       local S = sel(who == 1, C.src_S, C.dest_S)
@@ -558,8 +556,10 @@ function Rooms_reckon_doors()
       assert(S)
 
       if S.conn_dir then
+        assert(N.conn_dir == 10-S.conn_dir)
+
         local B  = S.border[S.conn_dir]
-        local B2 = N.border[10 - S.conn_dir]
+        local B2 = N.border[N.conn_dir]
 
         -- ensure when going from outside to inside that the arch/door
         -- is made using the building combo (NOT the outdoor combo)
@@ -571,7 +571,7 @@ function Rooms_reckon_doors()
           S, N = N, S
 
           S.border[S.conn_dir] = B
-          N.border[10 - S.conn_dir] = B2
+          N.border[N.conn_dir] = B2
         end
 
         if B.kind == "arch" and not B.tried_door then
@@ -579,7 +579,7 @@ function Rooms_reckon_doors()
 
           local prob = door_chance(C.src, C.dest)
 
-          if S.conn.lock then
+          if S.conn.lock and GAME.door_fabs then
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
@@ -588,9 +588,9 @@ function Rooms_reckon_doors()
               B.kind = "bars"
             end
 
-          elseif rand_odds(prob) then
+          elseif rand_odds(prob) and GAME.door_fabs then
             B.kind = "door"
-          
+
           elseif (STYLE.fences == "none" or STYLE.fences == "few") and
                  C.src.outdoor and C.dest.outdoor then
             B.kind = "nothing"
