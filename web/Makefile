@@ -5,7 +5,7 @@
 all:
 	mkdir -p out
 	cp *.css out/
-	cp *.png out/
+	cp pics/*.* out/
 	htp -quiet index.htp out/index.html
 
 clean:
