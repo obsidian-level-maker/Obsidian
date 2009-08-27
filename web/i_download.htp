@@ -46,7 +46,8 @@ Browse Files</a>
 
 The SVN repository is the place where the most up-to-date code
 is stored.  SVN is an abbreviation of Subversion, which
-is the software used to manage a collection of source code files.
+is the software used to manage a collection of source code files
+over the internet.
 <p>
 
 The following link lets you browse the source code:
@@ -58,15 +59,10 @@ Click here for
 <a href="http://sourceforge.net/scm/?type=svn&group_id=176314"> More Information </a> (goes to SourceForge).
 
 
-<h3>SYSTEM REQUIREMENTS</h3>
-
-Blah blah blah
-
-
 <h3>COPYRIGHT / LICENSE</h3>
 
 <div class="legal">
-Oblige Level Maker
+OBLIGE Level Maker
 
 <p>
 Copyright (C) 2006-2009 Andrew Apted

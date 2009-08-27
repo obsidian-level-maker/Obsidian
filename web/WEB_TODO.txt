@@ -19,20 +19,23 @@ MAIN
 
 DOCS
 
+- usage
+
 - about page
   OBLIGE is FREE SOFTWARE released under the GNU GPL with NO WARRANTY
   - FEATURE list
-  - current status
-    (KNOWN PROBLEMS)
-  - future development
+  - system requirments
+  - status
+    - current status
+    - known problems
+    - future development
 
 - credits
   - author(s)
   - license / copyright
+  - acknowledgements
 
 - history
-
-- usage
 
 - games
 

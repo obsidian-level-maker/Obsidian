@@ -49,6 +49,21 @@ from existing programs (like the famous
 </ul>
 
 
+<h3>FEATURES</h3>
+
+FIXME Blah blah blah
+
+
+<h3>SYSTEM REQUIREMENTS</h3>
+
+FIXME Blah blah blah
+
+
+<h3>FUTURE DEVELOPMENT</h3>
+
+blah blah blah...
+
+
 <h3>CURRENT STATUS</h3>
 
 <PRE>
@@ -77,13 +92,30 @@ The ugly:
 -  common glitches on outside borders
 -  occasional wrong textures or misalignments
 -  lousy crates all over the place
+</PRE>
 
 
-<h3>FUTURE DEVELOPMENT</h3>
+<h3>COPYRIGHT / LICENSE</h3>
 
-blah blah blah...
+<div class="legal">
+OBLIGE Level Maker
 
+<p>
+Copyright (C) 2006-2009 Andrew Apted
 
+<p>
+OBLIGE is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 2
+of the License, or (at your option) any later version.
+
+<p>
+OBLIGE is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
+
+</div>
 <h3>ACKNOWLEDGEMENTS</h3>
 
 Thanks to Sam Trenholme for much expanded Heretic themes
