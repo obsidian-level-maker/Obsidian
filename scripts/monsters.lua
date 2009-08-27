@@ -257,6 +257,14 @@ function Monsters_global_palette()
       local M = GAME.monsters[name]
       local prob = M.skip_prob or 50
       if prob > 0 then
+        -- adjust skip probability based on Strength setting
+        local factor = math.min(M.health / 100, 9) ^ 0.5
+        if OB_CONFIG.strength == "weak" then
+          prob = prob * factor
+        elseif OB_CONFIG.strength == "tough" then
+          prob = prob / factor
+        end
+
         skip_list[name] = prob
 gui.debugf("skip_list %s = %1.0f\n", name, prob)
         skip_total = skip_total + 1
