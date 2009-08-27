@@ -9,6 +9,8 @@ CHANGES (since v3.43)
 -  more choices for the 'Outdoors' button
 
 -  further work on Quake (better BSP algorithms etc)
+-  very preliminary work on Strife
+-  preliminary work on Chex Quest (courtesy Enhas)
 
 -  new modules:
    - Monster Control for DOOM

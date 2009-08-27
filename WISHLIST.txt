@@ -314,7 +314,7 @@ SKY GENERATOR:
 -  make light level of windows (esp. outdoor -> outdoor)
    slightly lower than surrounds.
 
--  E1M8 boss map : less trees or lamps.
+-  E2M8 boss map : less trees or lamps.
 
 
 ----------------------------------------------------------------

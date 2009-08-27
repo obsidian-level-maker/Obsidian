@@ -2,19 +2,20 @@
 TODO
 ====
 
-+  Quests : add locks (new arenas) if when have no keys
++  levels are a bit too big.
+
++  Quests : add locks (new arenas) even when have no keys
+
+-  mon_control + weap_control --> doom_control
+
+-  rarity for bfg10k and railgun for Skulltag
+
+DONE: global palette should reflect Strength setting
+    (e.g. skip 'zombie' rarely for 'Weak' but often for 'Tough')
 
 DONE:  more choices for Outdoor setting
-
 DONE:  "Progressive" mode for monsters  (Enhas)
-
--  Strength button:
-      Medium  (as now)
-      Low     
-      High
-      Crazy
-
--  levels are a bit too big.
+DONE:  Strength button
 
 -  more ammo in starting room  (biggest pack for starting weapon or bullets)
 
