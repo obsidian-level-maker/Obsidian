@@ -2,11 +2,22 @@
 WEB PAGE REORGANISATION
 -----------------------
 
-MAIN SECTION
+>>>  switch to HTP (a HTML preprocessor)
+
+MAIN
 
 - main page:
   - short introduction (DONE)
   - news / changes     (DONE)
+
+- screenshots
+
+- downloads (DONE)
+
+- V2 page
+
+
+DOCS
 
 - about page
   OBLIGE is FREE SOFTWARE released under the GNU GPL with NO WARRANTY
@@ -14,26 +25,26 @@ MAIN SECTION
   - current status
     (KNOWN PROBLEMS)
   - future development
-  - license / copyright
+
+- credits
   - author(s)
+  - license / copyright
 
-- screenshots
+- history
 
-- downloads (DONE)
+- usage
 
+- games
 
-DOCUMENTATION SECTION
-
-- user guide
-
-- modding guide 
-
-- full history
+- modules
 
 
-VERSION 2 PAGE
+MODDING
 
-- V2 stuff
+- basics
+   - Lua
+   - OB_CONFIG, OB_GAMES, OB_MODULES
+ 
 
 
 USER-GUIDE:
@@ -48,6 +59,10 @@ Mix It Up means pick a random setting for each level.
 Most importantly it supports custom mods: plop the lua file in the
 'mods' folder and Oblige will load it and you can enable/disable it in
 the GUI.
+
+note that you need full version of XXX to play the games
+(shareware won't work).
+
 
 
 MODDING GUIDE
