@@ -66,6 +66,7 @@ the GUI.
 note that you need full version of XXX to play the games
 (shareware won't work).
 
+built-in DOOM node builder (glBSP).
 
 
 MODDING GUIDE

@@ -34,6 +34,8 @@ Check out <a href="http://oblige.sourceforge.net/index_v2.html">Oblige II</a>
 if you are interested in a Heretic or Hexen map generator,
 or if you just want to see what the previous version was like.
 
+<h3>FEATURES</h3>
+
 <p>
 OBLIGE will have the following features which set it apart
 from existing programs (like the famous
@@ -49,19 +51,9 @@ from existing programs (like the famous
 </ul>
 
 
-<h3>FEATURES</h3>
-
-FIXME Blah blah blah
-
-
 <h3>SYSTEM REQUIREMENTS</h3>
 
 FIXME Blah blah blah
-
-
-<h3>FUTURE DEVELOPMENT</h3>
-
-blah blah blah...
 
 
 <h3>CURRENT STATUS</h3>
@@ -95,65 +87,10 @@ The ugly:
 </PRE>
 
 
-<h3>COPYRIGHT / LICENSE</h3>
+<h3>FUTURE DEVELOPMENT</h3>
 
-<div class="legal">
-OBLIGE Level Maker
+blah blah blah...
 
-<p>
-Copyright (C) 2006-2009 Andrew Apted
-
-<p>
-OBLIGE is free software; you can redistribute it and/or
-modify it under the terms of the GNU General Public License
-as published by the Free Software Foundation; either version 2
-of the License, or (at your option) any later version.
-
-<p>
-OBLIGE is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-See the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> for more details.
-
-</div>
-<h3>ACKNOWLEDGEMENTS</h3>
-
-Thanks to Sam Trenholme for much expanded Heretic themes
-and various fixes, and for beta-testing Oblige III.
-Check out his "ObHack" modification for even more
-interesting stuff.
-
-<p>
-Thanks to JohnnyRancid for beta-testing Oblige III,
-for big help with the level-name generator,
-and creating heaps of DOOM prefabs.
-
-<p>
-Thanks to Chris Pisarczyk and Esselfortium for very
-detailed feedback and bug reports on OBLIGE.  These guys
-have even made their own Oblige mods -- they must be
-nutters like me :-D
-
-<p>
-I appreciate the feedback received from the other "OB3"
-beta-testers: gggmork and Csonicgo.
-
-<p>
-Big thanks to Derek "Dittohead" Braun for making a whole swag of
-Prefab structures, which kicked off some big improvements to the
-way OBLIGE builds stuff.
-
-<p>
-Thanks to Enhas and DoomJedi for their help.
-
-<p>
-Finally I'm grateful to everyone who provided positive
-feedback, bug reports and ideas for improvements, both in
-email and on the various forums. Cheers guys!
-
-<p>
-OBLIGE uses the cool FLTK widget library
-(<a href="http://www.fltk.org">http://www.fltk.org</a>).
 
 
 </div class="rest">
