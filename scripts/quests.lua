@@ -802,8 +802,9 @@ function Quest_add_weapons()
   local function do_mark_weapon(name)
     LEVEL.added_weapons[name] = true
 
-    if LEVEL.allowances[name] == 0 then
-       LEVEL.allowances[name] = 1
+    local allow = LEVEL.allowances[name]
+    if allow then
+      LEVEL.allowances[name] = sel(allow > 1, allow-1, 0)
     end
   end
 
@@ -817,7 +818,7 @@ function Quest_add_weapons()
         prob = info.add_prob
       end
 
-      if LEVEL.allowances[name] == 1 then
+      if LEVEL.allowances[name] == 0 then
         prob = 0
       end
 
@@ -846,9 +847,7 @@ function Quest_add_weapons()
     for name,info in pairs(GAME.weapons) do
       local prob = info.add_prob
 
-      if LEVEL.added_weapons[name] or
-         LEVEL.allowances[name] == 1
-      then
+      if LEVEL.added_weapons[name] or LEVEL.allowances[name] == 0 then
         prob = 0
       end
 
