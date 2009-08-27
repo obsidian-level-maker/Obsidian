@@ -6,7 +6,14 @@ all:
 	mkdir -p out
 	cp *.css out/
 	cp pics/*.* out/
-	htp -quiet index.htp out/index.html
+	htp -quiet index.htp         out/index.html
+	htp -quiet i_download.htp    out/i_download.html
+	htp -quiet i_screens.htp     out/i_screens.html
+	htp -quiet doc_about.htp     out/doc_about.html
+	htp -quiet doc_history.htp   out/doc_history.html
+	htp -quiet doc_usage.htp     out/doc_usage.html
+	htp -quiet blog_mar2008.htp  out/blog_mar2008.html
+	htp -quiet blog_nov2008.htp  out/blog_nov2008.html
 
 clean:
 	rm -f out/*.html
