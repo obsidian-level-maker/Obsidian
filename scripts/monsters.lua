@@ -274,7 +274,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
       local name = rand_key_by_probs(skip_list)
       skip_list[name] = nil
 
-      gui.debugf("Skipping monster: %s\n", list[i])
+      gui.debugf("Skipping monster: %s\n", name)
       LEVEL.monster_prefs[name] = 0
     end
   end
@@ -884,7 +884,7 @@ function Monsters_in_room(R)
     return num
   end
 
-  local function crazy_monster_palette()
+  local function crazy_palette()
     local size = (R.tw or R.sw) + (R.th or R.sh)
     local num_kinds = int(size / 2)
 
@@ -926,7 +926,7 @@ function Monsters_in_room(R)
 
   local function select_monsters(toughness)
     if OB_CONFIG.strength == "crazy" then
-      return crazy_monster_palette()
+      return crazy_palette()
     end
 
     local fp = Player_calc_firepower()
