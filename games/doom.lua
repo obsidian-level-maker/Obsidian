@@ -1431,7 +1431,7 @@ COMMON_MONSTERS =
   {
     prob=40,
     health=400, damage=35, attack="missile",
-    density=0.7, float=true,
+    density=0.6, float=true,
   },
 
   baron =
@@ -2058,6 +2058,13 @@ end
 function Doom_begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
+    -- FIXME hack here
+    if OB_CONFIG.theme == "psycho" then
+      LEVEL.name_theme = "PSYCHO"
+      if rand_odds(50) then
+        LEVEL.name_theme = rand_element{ "TECH", "URBAN", "GOTHIC" }
+      end
+    end
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 end

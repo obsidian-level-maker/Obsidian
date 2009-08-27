@@ -6,6 +6,7 @@
 --
 --  Copyright (C) 2008-2009 Andrew Apted
 --  Copyright (C) 2008-2009 JohnnyRancid
+--  Copyright (C)      2009 Enhas
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -21,6 +22,8 @@
 --
 --  Thanks to "JohnnyRancid" who contributed many of the
 --  complete level names and a lot of cool words.
+--
+--  Thanks to "Enhas" for the PSYCHO names.
 --
 ----------------------------------------------------------------
 
@@ -1038,6 +1041,72 @@ NAMING_THEMES =
       s = 300,
     },
   },  -- BOSS
+
+
+  ----------------------------------------
+
+  PSYCHO =
+  {
+    patterns =
+    {
+      ["%s"] = 10,
+    },
+
+    lexicon =
+    {
+      s =
+      {
+        -- soap operas, lol
+
+        ["Another World"]=10,
+        ["Days of our Lives"]=10,
+        ["Guiding Light"]=10,
+        ["One Life to Live"]=10,
+        ["Passions"]=10,
+
+        -- foods
+   
+        ["Alphabet Soup"]=10,
+        ["Banana Split"]=10,
+        ["Broccoli!"]=10,
+        ["Chow Mein"]=10,
+        ["Fried Chicken"]=10,
+        ["Liver and Onions"]=10,
+        ["Moldy Bread"]=10,
+        ["Raspberry Cheesecake"]=10,
+        ["Seedless Watermelon"]=10,
+        ["Swedish Meatballs"]=10,
+
+        -- others
+
+        ["99 Cents"]=10,
+        ["Axis of Evil"]=10,
+        ["Bait the Hook"]=10,
+        ["Catapult!"]=10,
+        ["Cyberdemon's Clubhouse"]=10,
+        ["Disco Inferno"]=10,
+        ["Don't Feed the Demons"]=10,
+        ["E for Effort"]=10,
+        ["ERROR: No Level Name."]=10,
+        ["Magnitude 10"]=10,
+        ["Moonwalk"]=10,
+        ["No Clue"]=10,
+        ["Omega-Kappa-Beta Outpost"]=10,
+        ["Over the Rainbow"]=10,
+        ["Paper Cut"]=10,
+        ["Press Alt + F4 for God Mode!"]=10,
+        ["This is Not a Hangar Remake"]=10,
+        ["You Will Oblige"]=10,
+        ["You'll Shoot Your Eye Out"]=10,
+        ["Zone of a Thousand Deaths"]=10,
+      },
+    },
+
+    divisors =
+    {
+      s = 300,
+    },
+  },  -- PSYCHO
 }
 
 
