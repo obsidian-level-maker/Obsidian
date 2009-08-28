@@ -40,7 +40,7 @@ OBLIGE 3.43 is the current version.
 <div class="newsdate">11-Aug-2009:</div>
 <blockquote class="news">
 OBLIGE 3.43 is released.
-Note a huge amount has changed, it is mostly code improvments
+Not a huge amount has changed, it is mostly code improvments
 under the hood.
 One nasty bug, the too-much-ammo problem, has been fixed.
 
@@ -73,7 +73,7 @@ and some diagonal walls here and there.
 
 <p>
 The bad stuff includes: only supports DOOM II,
-with only one texture theme: TECH,
+with only one theme: TECH.
 There are no traps or cages, nor any secrets or powerups,
 and the scenery is very limited (lousy crates).
 Fences in outdoor areas also suffer common glitches.
