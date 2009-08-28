@@ -1111,8 +1111,8 @@ function Build_niche_stair(S, skin, skin2)
 
 
   if S.stair_z1 > S.stair_z2 then
-    local f_tex = S.f_tex or S.room.combo.floor
-    local w_tex = S.w_tex or S.room.combo.wall
+    local f_tex = S.f_tex or S.room.main_tex
+    local w_tex = S.w_tex or S.room.main_tex
 
     local S2 = S:neighbor(S.stair_dir)
     if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
@@ -1195,7 +1195,7 @@ function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
     dy2 = -dy2 ; dy3 = -dy3
   end
 
-  local w_tex = S.w_tex or S.room.combo.wall
+  local w_tex = S.w_tex or S.room.main_tex
 
   local info = get_mat(w_tex)
 
@@ -1464,8 +1464,8 @@ function Build_lift(S, skin, tag)
   end
 
 
-  local f_tex = S.f_tex or S.room.combo.floor
-  local w_tex = S.w_tex or S.room.combo.wall
+  local f_tex = S.f_tex or S.room.main_tex
+  local w_tex = S.w_tex or S.room.main_tex
 
   local S2 = S:neighbor(10-side)
   if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then

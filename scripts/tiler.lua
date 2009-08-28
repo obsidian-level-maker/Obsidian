@@ -102,10 +102,10 @@ end
 
 
 function Tiler_layout_room(R)
-  local mat = GAME.materials[R.combo.wall]
+  local mat = GAME.materials[R.main_tex]
 
   if not mat then
-    gui.printf("LACKING MATERIAL : %s\n", tostring(R.combo.wall))
+    gui.printf("LACKING MATERIAL : %s\n", tostring(R.main_tex))
     mat = assert(GAME.materials["_ERROR"])
   end
 

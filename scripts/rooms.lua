@@ -135,34 +135,34 @@ end
 
 function Room_setup_theme(R)
  
-  if not LEVEL.outdoor_combos then
-    LEVEL.outdoor_combos = {}
+  if not LEVEL.outdoor_floors then
+    LEVEL.outdoor_floors = {}
 
     for num = 1,2 do
-      local name = rand_key_by_probs(LEVEL.theme.ground)
-      LEVEL.outdoor_combos[num] = assert(GAME.combos[name]) 
+      local name = rand_key_by_probs(LEVEL.theme.ground.floors)
+      LEVEL.outdoor_floors[num] = name
     end
   end
 
-  if not LEVEL.indoor_combos then
-    LEVEL.indoor_combos = {}
+  if not LEVEL.building_walls then
+    LEVEL.building_walls = {}
 
     for num = 1,3 do
-      local name = rand_key_by_probs(LEVEL.theme.building)
-      LEVEL.indoor_combos[num] = assert(GAME.combos[name]) 
+      local name = rand_key_by_probs(LEVEL.theme.building.walls)
+      LEVEL.building_walls[num] = name
     end
   end
 
 
   if not R.outdoor then
-    R.combo = rand_element(LEVEL.indoor_combos)
+    R.main_tex = rand_element(LEVEL.building_walls)
     return
   end
 
-  if not R.arena.outdoor_combo then
-    R.arena.outdoor_combo = rand_element(LEVEL.outdoor_combos)
+  if not R.arena.outdoor_floor then
+    R.arena.outdoor_floor = rand_element(LEVEL.outdoor_floors)
   end
-  R.combo = R.arena.outdoor_combo
+  R.main_tex = R.arena.outdoor_floor
 end
 
 function Room_setup_theme_Scenic(R)
@@ -205,9 +205,9 @@ function Room_setup_theme_Scenic(R)
 
   -- fallback
   if R.outdoor then
-    R.combo = rand_element(LEVEL.outdoor_combos)
+    R.main_tex = rand_element(LEVEL.outdoor_floors)
   else
-    R.combo = rand_element(LEVEL.indoor_combos)
+    R.main_tex = rand_element(LEVEL.building_walls)
   end
 end
 
@@ -535,7 +535,7 @@ function Rooms_reckon_doors()
     elseif R1.kind == "hallway" or R2.kind == "hallway" then
       return door_probs.hall_diff or 60
 
-    elseif R1.combo ~= R2.combo then
+    elseif R1.main_tex ~= R2.main_tex then
       return door_probs.combo_diff or 40
 
     else
@@ -1533,7 +1533,7 @@ function Room_make_ceiling(R)
             Build_ceil_light(S, ceil_h, skin)
           end
         else
-          Build_cross_beam(S, dir, 64, ceil_h - 16, R.combo.beam_mat or "METAL")
+          Build_cross_beam(S, dir, 64, ceil_h - 16, R.beam_mat or "METAL")
         end
       end
     end end -- for x, y
@@ -1697,7 +1697,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     if nice ~= 2 then return end
 
-      local ceil_info  = get_mat(R.combo.ceil or R.combo.wall)
+      local ceil_info  = get_mat(R.main_tex)
       local sky_info   = get_sky()
       local brown_info = get_mat("CEIL3_3")
 
@@ -1769,7 +1769,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
-    R.ceil_tex = rand_key_by_probs(LEVEL.theme.ceilings)
+    R.ceil_tex = rand_key_by_probs(LEVEL.theme.building.ceilings)
 
 -- [[
     decide_periphs()
@@ -1984,8 +1984,8 @@ gui.printf("do_teleport\n")
     assert(z1 and z2)
 
 
-    local w_tex = S.w_tex or R.combo.wall
-    local f_tex = S.f_tex or R.combo.floor
+    local w_tex = S.w_tex or R.main_tex
+    local f_tex = S.f_tex or R.main_tex
     local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
 
     if R.kind == "hallway" then
@@ -2004,7 +2004,7 @@ gui.printf("do_teleport\n")
       elseif N.room.kind == "stairwell" then
         o_tex = LEVEL.well_tex
       elseif not N.room.outdoor and N.room ~= R.parent then
-        o_tex = N.w_tex or N.room.combo.wall
+        o_tex = N.w_tex or N.room.main_tex
       end
     end
 
@@ -2238,7 +2238,7 @@ end
       Trans_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
-      local skin2 = { wall=S.room.combo.wall, floor=S.f_tex or S.room.combo.floor }
+      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
 
       Build_niche_stair(S, LEVEL.step_skin, skin2)
 

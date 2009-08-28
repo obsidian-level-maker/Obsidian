@@ -574,7 +574,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
   local function setup_floor(S, h, f_tex)
     S.floor_h = h
 
-    S.f_tex = sel(R.outdoor, R.combo.floor, f_tex)
+    S.f_tex = sel(R.outdoor, R.main_tex, f_tex)
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
@@ -1650,7 +1650,7 @@ function Layout_one(R)
 
         local skin =
         {
-          f_tex = S.f_tex or R.combo.floor,
+          f_tex = S.f_tex or R.main_tex,
           switch_w = "SW1COMP",
         }
 
@@ -1850,12 +1850,10 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
 
     for i = 1,4 do
-      if R.combo.floors then
-        table.insert(f_texs, rand_key_by_probs(R.combo.floors))
-      elseif LEVEL.theme.floors then
-        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.floors))
+      if LEVEL.theme.building.floors then
+        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.building.floors))
       else
-        table.insert(f_texs, f_texs[1] or R.combo.floor)
+        table.insert(f_texs, f_texs[1] or R.main_tex)
       end
     end
 
@@ -2303,8 +2301,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.kind == "smallexit" then
     local C = R.conns[1]
     local T = C:seed(C:neighbor(R))
-    local out_combo = T.room.combo
-    if T.room.outdoor then out_combo = R.combo end
+    local out_combo = T.room.main_tex
+    if T.room.outdoor then out_combo = R.main_tex end
 
     local skin =  -- FIXME: game specific
     {
@@ -2319,9 +2317,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     }
     local skin2 =
     {
-      wall = out_combo.wall,
+      wall = out_combo,
       floor = T.f_tex or C.conn_ftex,
-      ceil = out_combo.ceil,
+      ceil = out_combo,
     }
     --!!!! FIXME game/theme specific
     skin.switch = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",

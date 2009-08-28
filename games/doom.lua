@@ -1121,80 +1121,39 @@ COMMON_THEMES =
   {
     building =
     {
-      TECH_BASE=25,
-      TECH_GREEN=20,
-      TECH_BROWN=18,
-      TECH_SLAD=18,
+      walls =
+      {
+        STARTAN3=25, STARG2=20, STARTAN2=18, SLADWALL=18,
+        METAL2=13, STARGR2=10, GRAY7=10, BROWN1=5, STARBR2=5,
+        BROWNGRN=10, BROWN96=8, METAL1=1,
+      },
 
-      TECH_METAL=13,
-      TECH_SILVER=10,
-      TECH_GRAY=10,
-      TECH_LITEBROWN=5,
-      TECH_BROWNER=5,
+      floors =
+      {
+        FLOOR0_1=50, FLOOR0_3=50, FLOOR0_7=50, FLOOR3_3=50,
+        FLOOR4_5=50, FLOOR4_6=50, FLOOR4_8=50, FLOOR5_2=50,
+        CEIL3_2=50, FLAT9=50, FLAT14=50,
+      },
 
-      TECH_DARKGREEN=10,
-      TECH_DARKBROWN=8,
-      TECH_METAL1=1,
-    },
+      ceilings =
+      {
+        CEIL5_1=50, CEIL5_2=50, CEIL3_3=50, CEIL3_5=50,
+        FLAT1=50, FLAT4=50, FLAT18=50,
+        FLOOR0_2=50, FLOOR4_1=50, FLOOR5_1=50,
+        GRNLITE1=1, TLITE6_5=1,
+      },
 
-    floors =
-    {
-      FLOOR0_1=50,
-      FLOOR0_3=50,
-      FLOOR0_7=50,
-      FLOOR3_3=50,
-      
-      FLOOR4_5=50,
-      FLOOR4_6=50,
-      FLOOR4_8=50,
-      FLOOR5_2=50,
-      
-      CEIL3_2=50,
-      FLAT9=50,
-      FLAT14=50,
-    },
-
-    ceilings =
-    {
-      CEIL5_1=50,
-      CEIL5_2=50,
-      CEIL3_3=50,
-      CEIL3_5=50,
-      
-      FLAT1=50,
-      FLAT4=50,
-      FLAT18=50,
-      FLOOR0_2=50,
-      FLOOR4_1=50,
-      FLOOR5_1=50,
-      
-      GRNLITE1=1,
-      TLITE6_5=1,
-    },
-
-    corners =
-    {
-      TEKWALL6=60, STARGR1=40,
-      METAL7=40,   METAL1=20,
-      TEKWALL4=5,  COMPTALL=2,
-      TEKBRON1=2,  COMPBLUE=1,
+      corners =
+      {
+        TEKWALL6=60, STARGR1=40, METAL7=40,   METAL1=20,
+        TEKWALL4=5,  COMPTALL=2, TEKBRON1=2,  COMPBLUE=1,
+      },
     },
 
     ceil_lights =
     {
-      TLITE6_5=50, TLITE6_6=30,
-      TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,
-      FLAT22=10,   GRNLITE1=10,
-    },
-
-    ground =
-    {
-      TECH_GROUND=30,
-      URBAN_STONE=20,
-      URBAN_BROWN=20,
-
-      CAVE_ASH=5,
+      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
     },
 
     hallway =
@@ -1249,6 +1208,15 @@ COMMON_THEMES =
       },
     },
 
+    ground =
+    {
+      floors =
+      {
+        BROWN144=30, BROWN1=20, STONE=20,
+        ASHWALL=5,
+      },
+    },
+
     room_types =
     {
       -- FIXME  COMPUTER  WAREHOUSE  PUMP
@@ -1261,7 +1229,7 @@ COMMON_THEMES =
 
     monster_prefs =
     {
---!!!!      zombie=2.0, shooter=3.0, arach=2.0,
+      -- zombie=2.0, shooter=2.0, arach=2.0,
     },
   }, -- TECH
 
@@ -1299,27 +1267,31 @@ COMMON_THEMES =
   },
 }
 
+
 DOOM2_THEMES =
 {
   TECH =
   {
     building =
     {
-      TECH_TEKGREN=10,
+      walls =
+      {
+        TEKGREN2=10,
+      },
+
+      floors =
+      {
+        SLIME15=50, SLIME16=50,
+      },
     },
 
     ground =
     {
-      NAT_TANROCK5=10,
-      NAT_MUDDY=5,
-      NAT_SWAMP=5,
-      URBAN_GREENBRK=5,
-    },
-
-    floors =
-    {
-      SLIME15=50,
-      SLIME16=50,
+      floors =
+      {
+        TANROCK5=10, FLAT10=5, GRASS2=5,
+        RROCK14=5, BRICK10=5,
+      },
     },
   },
 }
@@ -2169,10 +2141,6 @@ OB_GAMES["doom1"] =
     "rails",      COMMON_RAILS,
     "sanity_map", COMMON_SANITY_MAP,
 
-    "combos", COMMON_COMBOS,
-    "exits", COMMON_EXITS,
-    "hallways",  COMMON_HALLWAYS,
-
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
     "crates", COMMON_CRATES,
@@ -2206,9 +2174,6 @@ OB_GAMES["doom1"] =
 
     "materials", DOOM1_MATERIALS,
     "rails",     DOOM1_RAILS,
-    "combos",    DOOM1_COMBOS,
-    "exits",     DOOM1_EXITS,
-    "hallways",  DOOM1_HALLWAYS,
     "crates",    DOOM1_CRATES,
     "wall_fabs", DOOM1_WALL_PREFABS,
   },
@@ -2276,10 +2241,6 @@ OB_GAMES["doom2"] =
     "rails",      COMMON_RAILS,
     "sanity_map", COMMON_SANITY_MAP,
 
-    "combos", COMMON_COMBOS,
-    "exits", COMMON_EXITS,
-    "hallways",  COMMON_HALLWAYS,
-
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
     "crates", COMMON_CRATES,
@@ -2319,12 +2280,9 @@ OB_GAMES["doom2"] =
 
     "materials",DOOM2_MATERIALS,
     "rails",    DOOM2_RAILS,
-    "combos",   DOOM2_COMBOS,
-    "hallways", DOOM2_HALLWAYS,
-    "exits",    DOOM2_EXITS,
-
     "hangs",    DOOM2_OVERHANGS,
     "crates",   DOOM2_CRATES,
+
     "doors",    DOOM2_DOORS,
     "lights",   DOOM2_LIGHTS,
     "liquids",  DOOM2_LIQUIDS,
