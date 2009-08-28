@@ -171,7 +171,6 @@ SKULLTAG_FACTORS =
 
 function Skulltag_setup(self)
   if OB_CONFIG.game == "doom1" then
-    GAME.monsters["superguy"] = nil
     GAME.monsters["hectebus"] = nil
   end
 
