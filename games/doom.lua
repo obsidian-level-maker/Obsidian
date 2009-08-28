@@ -1123,9 +1123,11 @@ COMMON_THEMES =
     {
       walls =
       {
-        STARTAN3=25, STARG2=20, STARTAN2=18, SLADWALL=18,
-        METAL2=13, STARGR2=10, GRAY7=10, BROWN1=5, STARBR2=5,
+        STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=8,
+        STARBR2=5, STARGR2=10,
+        METAL2=13, SLADWALL=18, GRAY7=10, BROWN1=5,
         BROWNGRN=10, BROWN96=8, METAL1=1,
+        BRONZE3=10,
       },
 
       floors =
@@ -1213,7 +1215,7 @@ COMMON_THEMES =
       floors =
       {
         BROWN144=30, BROWN1=20, STONE=20,
-        ASHWALL=5,
+        ASHWALL=5, FLAT10=5,
       },
     },
 
@@ -1289,8 +1291,10 @@ DOOM2_THEMES =
     {
       floors =
       {
-        TANROCK5=10, FLAT10=5, GRASS2=5,
+        TANROCK5=10, GRASS2=5,
         RROCK14=5, BRICK10=5,
+        RROCK20=5, STONE4=5, STONE6=5,
+        ZIMMER5=3, ZIMMER8=1,
       },
     },
   },
