@@ -159,9 +159,7 @@ STRIFE_PLAYER_MODEL =
 
 
 function Strife_setup()
-
---  GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
---  GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
+  -- nothing needed
 end
 
 
@@ -200,7 +198,7 @@ end
 ------------------------------------------------------------
 
 
-OB_GAMES["strife"] =
+UNFINISHED["strife"] =
 {
   label = "Strife",
 
