@@ -89,14 +89,14 @@ STEALTH_MONSTERS =
   {
     replaces="caco", replace_prob=25, crazy_prob=41,
     health=400, damage=35, attack="missile",
-    invis=true, float=true, density=0.6,
+    invis=true, float=true, density=0.7,
   },
 
   stealth_baron =
   {
     replaces="baron", replace_prob=20, crazy_prob=10,
     health=1000, damage=45, attack="missile",
-    invis=true, density=0.3,
+    invis=true, density=0.5,
   },
   
   stealth_gunner =
@@ -118,26 +118,26 @@ STEALTH_MONSTERS =
   {
     replaces="knight", replace_prob=25, crazy_prob=11,
     health=500, damage=45, attack="missile",
-    invis=true, density=0.4,
+    invis=true, density=0.7,
   },
 
   stealth_mancubus =
   {
     replaces="mancubus", replace_prob=25, crazy_prob=31,
     health=600, damage=70, attack="missile",
-    invis=true, density=0.4,
+    invis=true, density=0.6,
   },
 
   stealth_arach =
   {
     replaces="arach", replace_prob=25, crazy_prob=11,
     health=500, damage=70, attack="missile",
-    invis=true, density=0.5,
+    invis=true, density=0.8,
   },
 
   stealth_vile =
   {
-    replaces="vile", replace_prob=10, crazy_prob=5,
+    replaces="vile", replace_prob=10, crazy_prob=5, skip_prob=100,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
     invis=true,
@@ -240,7 +240,7 @@ function Stealth_MonControl_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 1.0 end
+      if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
       if prob > 180 then M.skip_prob = 0 end
     end
   end -- for opt

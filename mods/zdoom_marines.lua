@@ -232,8 +232,8 @@ function Marine_Control_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 0.5 ; M.skip_prob = 30 end
-      if prob > 180 then M.skip_prob = 0 end
+      if prob >  50 then M.density = 0.5 ; M.skip_prob = 30 end
+      if prob > 150 then M.skip_prob = 0 end
     end
   end -- for opt
 end

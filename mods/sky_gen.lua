@@ -209,7 +209,7 @@ function Doom_generate_skies()
                 PURPLE_CLOUDS, RAINBOW_CLOUDS,
                 GREEN_CLOUDS, ORANGE_CLOUDS,
                 HELLISH_CLOUDS, YELLOW_CLOUDS,
-                BLUE_CLOUDS, BLUE_CLOUDS
+                BLUE_CLOUDS, BLUE_CLOUDS,
               }
   end
 
