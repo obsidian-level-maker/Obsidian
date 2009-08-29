@@ -199,26 +199,41 @@ function Game_setup()
 end
 
 
-function Level_styles()
-  gui.rand_seed(LEVEL.seed)
+function Level_themes(seed_idx)
+  gui.rand_seed(OB_CONFIG.seed * 200)
 
-  for name,prob_tab in pairs(STYLE_LIST) do
-    STYLE[name] = rand_key_by_probs(prob_tab)
-  end
+  -- choose a theme for each episode (max 9)
+  local episode_list = {}
 
-  -- GUI overrides...
-  if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
-    STYLE.skies = OB_CONFIG.outdoors
-  end
-
-  -- per level overrides...
-  if LEVEL.style then
-    for name,value in pairs(LEVEL.style) do
-      STYLE[name] = value
+  local prob_tab = {}
+  for name,info in pairs(OB_THEMES) do
+    if info.use_prob and
+       info.for_games and info.for_games[OB_CONFIG.game]
+    then
+      prob_tab[name] = info.use_prob
     end
   end
-  
-  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
+
+  assert(not table_empty(prob_tab))
+
+  -- work on a copy of the probability table
+  local use_tab = shallow_copy(prob_tab)
+
+  while #episode_list < 9 do
+    local name = rand_index_by_probs(use_tab)
+    table.insert(episode_list, name)
+
+    gui.printf("Theme for episode %d = %s\n", #episode_list, name)
+
+    -- prevent the same theme being used again, at least until all
+    -- the themse have been used -- in that case we start again.
+    use_tab[name] = nil
+    if table_empty(use_tab) then
+      use_tab = prob_tab
+    end
+  end
+
+  -- FIXME
 end
 
 
@@ -266,6 +281,29 @@ function Level_rarify(seed_idx, tab)
       gui.debugf("%s\n", table_to_str(L.allowances, 1))
     end
   end
+end
+
+
+function Level_styles()
+  gui.rand_seed(LEVEL.seed)
+
+  for name,prob_tab in pairs(STYLE_LIST) do
+    STYLE[name] = rand_key_by_probs(prob_tab)
+  end
+
+  -- GUI overrides...
+  if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
+    STYLE.skies = OB_CONFIG.outdoors
+  end
+
+  -- per level overrides...
+  if LEVEL.style then
+    for name,value in pairs(LEVEL.style) do
+      STYLE[name] = value
+    end
+  end
+  
+  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 end
 
 
@@ -378,6 +416,8 @@ function Game_make_all()
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
   end
+
+  Level_themes()
 
   Level_rarify(1, GAME.weapons)
 --Level_rarify(2, GAME.monsters)
