@@ -223,12 +223,50 @@ function Level_themes(seed_idx)
     end
 
     local which = rand_key_by_probs(sub_tab)
+    L.theme = assert(GAME.themes[which])
 
-    L.theme = GAME.themes[which]
     gui.printf("Theme for level %s = %s\n", L.name, which)
+
+    if not L.name_theme then
+      L.name_theme = info.name_theme
+    end
   end
 
   --| Level_themes |--
+
+  if OB_CONFIG.theme == "psycho" then
+    local psycho_themes = {}
+    for name,_ in pairs(GAME.themes) do
+      table.insert(psycho_themes, name)
+    end
+    assert(not table_empty(psycho_themes))
+
+    for _,L in ipairs(GAME.all_levels) do
+      if not L.theme then
+        local which = rand_element(psycho_themes)
+        L.theme = assert(GAME.themes[which])
+
+        gui.printf("Theme for level %s = %s\n", L.name, which)
+
+        if not L.name_theme then
+          L.name_theme = "PSYCHO"
+          if rand_odds(50) then
+            L.name_theme = rand_element{ "TECH", "URBAN", "GOTHIC" }
+          end
+        end
+      end
+    end
+
+    return;
+  end
+
+  if OB_CONFIG.theme ~= "mixed" then
+    for _,L in ipairs(GAME.all_levels) do
+      set_sub_theme(L, OB_CONFIG.theme)
+    end
+
+    return;
+  end
 
   -- choose a theme for each episode
   local episode_list = {}
@@ -404,8 +442,6 @@ function Level_make(L, index, NUM)
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
   gui.at_level(LEVEL.name, index, NUM)
-
-  LEVEL.theme = GAME.themes["TECH"] -- FIXME
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 

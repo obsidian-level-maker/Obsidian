@@ -1851,9 +1851,6 @@ function Doom1_get_levels()
         ep_along = ep_along,
         ep_info  = ep_info,
 
-        theme_ref = "TECH",
-        name_theme = "TECH",
-
         key_list = { "kc_red", "kc_blue", "kc_yellow" },
         switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
         bar_list = { "bar_wood", "bar_silver", "bar_metal" },
@@ -1929,9 +1926,6 @@ function Doom2_get_levels()
       ep_along = ep_along,
       ep_info  = ep_info,
 
-      theme_ref = "TECH",
-      name_theme = "TECH",
-
       key_list = { "kc_red", "kc_blue", "kc_yellow" },
       switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
       bar_list = { "bar_wood", "bar_silver", "bar_metal" },
@@ -1941,7 +1935,8 @@ function Doom2_get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme_ref = "WOLF"
+      LEV.theme = GAME.themes["WOLF"]
+      LEV.name_theme = "URBAN"
     end
 
     if map == 23 then
@@ -2044,15 +2039,8 @@ function Doom_make_level_gfx()
 end
 
 function Doom_begin_level()
-  -- set the description here
+  -- set the description
   if not LEVEL.description and LEVEL.name_theme then
-    -- FIXME hack here
-    if OB_CONFIG.theme == "psycho" then
-      LEVEL.name_theme = "PSYCHO"
-      if rand_odds(50) then
-        LEVEL.name_theme = rand_element{ "TECH", "URBAN", "GOTHIC" }
-      end
-    end
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 end
@@ -2083,7 +2071,7 @@ OB_THEMES["doom_tech"] =
   use_prob = 50,
 }
 
-UNFINISHED["doom_hell"] =
+OB_THEMES["doom_hell"] =
 {
   label = "Hell",
   for_games = { doom1=1, doom2=1, freedoom=1 },
@@ -2093,7 +2081,7 @@ UNFINISHED["doom_hell"] =
   use_prob = 50,
 }
 
-UNFINISHED["doom_urban"] =
+OB_THEMES["doom_urban"] =
 {
   label = "Urban",
   for_games = { doom2=1, freedoom=1 },
@@ -2103,7 +2091,7 @@ UNFINISHED["doom_urban"] =
   use_prob = 50,
 }
 
-UNFINISHED["doom2_wolf"] =
+OB_THEMES["doom2_wolf"] =
 {
   label = "Wolfenstein",
   for_games = { doom2=1, freedoom=1 },
