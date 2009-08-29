@@ -1131,14 +1131,12 @@ COMMON_THEMES =
         BROWNGRN=10, BROWN96=8, METAL1=1,
         BRONZE3=10,
       },
-
       floors =
       {
         FLOOR0_1=50, FLOOR0_3=50, FLOOR0_7=50, FLOOR3_3=50,
         FLOOR4_5=50, FLOOR4_6=50, FLOOR4_8=50, FLOOR5_2=50,
         CEIL3_2=50, FLAT9=50, FLAT14=50,
       },
-
       ceilings =
       {
         CEIL5_1=50, CEIL5_2=50, CEIL3_3=50, CEIL3_5=50,
@@ -1146,7 +1144,6 @@ COMMON_THEMES =
         FLOOR0_2=50, FLOOR4_1=50, FLOOR5_1=50,
         GRNLITE1=1, TLITE6_5=1,
       },
-
       corners =
       {
         TEKWALL6=60, STARGR1=40, METAL7=40,   METAL1=20,
@@ -1166,12 +1163,10 @@ COMMON_THEMES =
       {
         BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
       },
-
       floors =
       {
         FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
       },
-
       ceils =
       {
         FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
@@ -1199,12 +1194,10 @@ COMMON_THEMES =
         TEKWALL4=50, PIPEWAL2=50,
         TEKGREN1=50, SPACEW2=50,  STARBR2=50
       },
-
       floors =
       {
         FLOOR0_3=50, FLOOR5_2=50
       },
-
       ceils =
       {
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
@@ -1240,9 +1233,71 @@ COMMON_THEMES =
 
   HELL1 =
   {
-    prob = 50,
+    prob = 60,
 
-    -- TODO: HELL THEME
+    building =
+    {
+      walls =
+      {
+        MARBLE2=50, GSTVINE1=20,
+      },
+      floors =
+      {
+        DEM1_6=20, FLAT5_7=10,
+      },
+      ceilings =
+      {
+        FLAT1=10, FLAT10=10,
+      },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        FLAT5_6=10, ASHWALL=5, FLAT10=5,
+      },
+    },
+
+    room_types =
+    {
+      -- FIXME  TORTURE  PRISON
+    },
+
+    monster_prefs =
+    {
+      zombie=0.1, shooter=0.3, arach=0.5,
+      skull=3.0,  vile=2.0, mancubus=2.0,
+    },
+  },
+
+  HELL2 =
+  {
+    prob = 20,
+
+    building =
+    {
+      walls =
+      {
+        SP_HOT1=20,
+      },
+      floors =
+      {
+        FLAT5_7=10,
+      },
+      ceilings =
+      {
+        FLAT1=10, FLOOR6_1=10, FLAT10=10,
+      },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        FLAT5_6=10, ASHWALL=5, FLAT10=5,
+      },
+    },
 
     room_types =
     {
@@ -1273,8 +1328,6 @@ COMMON_THEMES =
       caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
     },
   },
-
-
 }
 
 
