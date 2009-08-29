@@ -1117,8 +1117,10 @@ COMMON_THEMES =
    (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
 --]]
 
-  TECH =
+  TECH1 =
   {
+    prob=50,
+
     building =
     {
       walls =
@@ -1236,8 +1238,10 @@ COMMON_THEMES =
   }, -- TECH
 
 
-  HELL =
+  HELL1 =
   {
+    prob = 50,
+
     -- TODO: HELL THEME
 
     room_types =
@@ -1253,8 +1257,10 @@ COMMON_THEMES =
   },
 
 
-  URBAN =
+  URBAN1 =
   {
+    prob = 50,
+
     -- TODO: URBAN THEME
 
     room_types =
@@ -1270,9 +1276,15 @@ COMMON_THEMES =
 }
 
 
+DOOM1_THEMES =
+{
+  -- none yet
+}
+
+
 DOOM2_THEMES =
 {
-  TECH =
+  TECH1 =  -- extends the entry in COMMON_THEMES
   {
     building =
     {
@@ -1742,8 +1754,6 @@ COMMON_PLAYER_MODEL =
 }
 
 
-------------------------------------------------------------
-
 DOOM1_EPISODES =
 {
   episode1 =
@@ -1797,6 +1807,8 @@ DOOM2_EPISODES =
   },
 }
 
+
+------------------------------------------------------------
 
 function Doom1_setup()
   -- tweak monster probabilities
@@ -2061,32 +2073,45 @@ end
 
 ------------------------------------------------------------
 
-OB_THEMES["dm_tech"] =
+OB_THEMES["doom_tech"] =
 {
-  ref = "TECH",
   label = "Tech",
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  prefix = "TECH",
+  name_theme = "TECH",
+  use_prob = 50,
 }
 
-UNFINISHED["dm_hell"] =
+UNFINISHED["doom_hell"] =
 {
-  ref = "HELL",
   label = "Hell",
   for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  prefix = "HELL",
+  name_theme = "GOTHIC",
+  use_prob = 50,
 }
 
-UNFINISHED["d2_urban"] =
+UNFINISHED["doom_urban"] =
 {
-  ref = "URBAN",
-  label = "City",
+  label = "Urban",
   for_games = { doom2=1, freedoom=1 },
+
+  prefix = "URBAN",
+  name_theme = "URBAN",
+  use_prob = 50,
 }
 
-UNFINISHED["d2_wolf"] =
+UNFINISHED["doom2_wolf"] =
 {
-  ref = "WOLF",
   label = "Wolfenstein",
   for_games = { doom2=1, freedoom=1 },
+
+  prefix = "WOLF",
+  name_theme = "URBAN",
+
+  -- this theme is special, hence no use_prob
 }
 
 
@@ -2173,8 +2198,9 @@ OB_GAMES["doom1"] =
 
     ---- DOOM I stuff ----
 
-    "episodes",  DOOM1_EPISODES,
+    "themes",    DOOM1_THEMES,
     "rooms",     DOOM1_ROOMS,
+    "episodes",  DOOM1_EPISODES,
 
     "materials", DOOM1_MATERIALS,
     "rails",     DOOM1_RAILS,
@@ -2182,6 +2208,7 @@ OB_GAMES["doom1"] =
     "wall_fabs", DOOM1_WALL_PREFABS,
   },
 }
+
 
 ------------------------------------------------------------
 
