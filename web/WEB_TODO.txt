@@ -49,6 +49,11 @@ MODDING
    - OB_CONFIG, OB_GAMES, OB_MODULES
  
 
+LINKS??
+-  HacX : http://www.sonic.net/~nostromo/hacx/Hacx.html
+-  HexenII textures: http://www.raven-games.com/essentials
+(glbsp, FLTK, lua, yawn)
+
 
 USER-GUIDE:
 but stupid windows blocks EXE files unless you go to control
@@ -59,6 +64,10 @@ Size setting is the overall size of the map.
 
 Mix It Up means pick a random setting for each level.
 
+Monster strength is always progressive (except for Crazy mode).
+Medium gives you a good mix (like in the IWADs).  Weak gives less big
+monsters, and Tough gives less small monsters.
+
 Most importantly it supports custom mods: plop the lua file in the
 'mods' folder and Oblige will load it and you can enable/disable it in
 the GUI.
@@ -67,6 +76,14 @@ note that you need full version of XXX to play the games
 (shareware won't work).
 
 built-in DOOM node builder (glBSP).
+
+
+COMPILATION DEPENDENCIES
+
+-  glBSP 2.24  (this needs ZLib)
+-  Lua 5.1.x
+-  FLTK 1.1.9
+-  GNU C++ compiler (nothing else has been tested)
 
 
 MODDING GUIDE
