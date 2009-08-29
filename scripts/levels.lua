@@ -202,6 +202,28 @@ end
 function Level_themes(seed_idx)
   gui.rand_seed(OB_CONFIG.seed * 200)
 
+  local function get_sub_theme(name)
+    local info = assert(OB_THEMES[name])
+    assert(info.prefix)
+
+    local sub_tab = {}
+    local sub_pattern = "^" .. info.prefix
+
+    for which,theme in pairs(GAME.themes) do
+      if string.find(which, sub_pattern) then
+        sub_tab[which] = assert(theme.prob)
+      end
+    end
+
+    if table_empty(sub_tab) then
+      error("No sub-themes for " .. name)
+    end
+
+    return rand_key_by_probs(sub_tab)
+  end
+
+  --| Level_themes |--
+
   -- choose a theme for each episode (max 9)
   local episode_list = {}
 
@@ -220,7 +242,7 @@ function Level_themes(seed_idx)
   local use_tab = shallow_copy(prob_tab)
 
   while #episode_list < 9 do
-    local name = rand_index_by_probs(use_tab)
+    local name = rand_key_by_probs(use_tab)
     table.insert(episode_list, name)
 
     gui.printf("Theme for episode %d = %s\n", #episode_list, name)
@@ -229,11 +251,25 @@ function Level_themes(seed_idx)
     -- the themse have been used -- in that case we start again.
     use_tab[name] = nil
     if table_empty(use_tab) then
-      use_tab = prob_tab
+      break; --?? use_tab = shallow_copy(prob_tab)
     end
   end
 
-  -- FIXME
+
+  -- simple handling for a few maps : just one theme
+  if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+    for _,L in ipairs(GAME.all_levels) do
+      if not L.theme then
+        local which = get_sub_theme(episode_list[1])
+        L.theme = GAME.themes[which]
+        gui.printf("Theme for level %s = %s\n", L.name, which)
+      end
+    end
+
+    return;
+  end
+
+  error("NYI")
 end
 
 
@@ -261,7 +297,7 @@ function Level_rarify(seed_idx, tab)
     end -- for group
   end
 
-  -- Level_rarify --
+  --| Level_rarify |--
 
   for _,L in ipairs(GAME.all_levels) do
     if not L.allowances then
