@@ -260,6 +260,7 @@ function Level_themes(seed_idx)
     return;
   end
 
+  -- the user can specify the main theme
   if OB_CONFIG.theme ~= "mixed" then
     for _,L in ipairs(GAME.all_levels) do
       set_sub_theme(L, OB_CONFIG.theme)

@@ -1273,6 +1273,8 @@ COMMON_THEMES =
       caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
     },
   },
+
+
 }
 
 
@@ -1308,6 +1310,37 @@ DOOM2_THEMES =
         RROCK20=5, STONE4=5, STONE6=5,
         ZIMMER5=3, ZIMMER8=1,
       },
+    },
+  },
+
+  -- this theme is not normally used (only for secret levels)
+  WOLF1 =
+  {
+    prob = 10,
+
+    building =
+    {
+      walls =
+      {
+        ZZWOLF1=50, ZZWOLF11=40, ZZWOLF9=40, ZZWOLF12=15,
+      },
+
+      floors =
+      {
+        FLAT5_1=50, FLAT1=50, FLAT3=50, FLAT18=30,
+        FLAT1_2=15,
+      },
+
+      ceilings =
+      {
+        CEIL5_1=30, CEIL5_2=30, CEIL3_5=30,
+        FLAT5_3=10, FLAT5_5=20,
+      },
+    },
+
+    ground =
+    {
+      floors = { GRASS1=20, MFLR8_1=20, },
     },
   },
 }
