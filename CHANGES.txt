@@ -11,6 +11,7 @@ CHANGES (since v3.43)
 -  further work on Quake (better BSP algorithms etc)
 -  very preliminary work on Strife
 -  preliminary work on Chex Quest (courtesy Enhas)
+-  worked on a new theme system
 
 -  new modules:
    - Monster Control for DOOM
@@ -19,5 +20,5 @@ CHANGES (since v3.43)
    - ZDoom Marines : Fine Control (Enhas)
    - Skulltag : Fine Control (Enhas)
    - Level Control (Enhas)
-   - ZDoom Bestiary (Mr Chris)
+   - ZDoom Beastiary (Mr Chris)
 
