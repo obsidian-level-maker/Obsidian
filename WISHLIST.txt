@@ -9,14 +9,15 @@ WISH-LIST
 Other Games:
 
 -  Strife
+-  HacX
+
+-  Hexen II
 -  Heretic II (uses same format as Quake II ??)
--  Soldier of Fortune
 
 ?  Marathon 2/Inf
 ?  Dark Forces
-?  Hexen II
+?  Soldier of Fortune
 ?  Duke Nukem 3D
-?  HacX
 
 
 Ceilings:
