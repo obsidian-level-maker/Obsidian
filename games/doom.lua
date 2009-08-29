@@ -1312,22 +1312,6 @@ COMMON_THEMES =
   },
 
 
-  URBAN1 =
-  {
-    prob = 50,
-
-    -- TODO: URBAN THEME
-
-    room_types =
-    {
-      -- FIXME  PRISON  WAREHOUSE
-    },
-
-    monster_prefs =
-    {
-      caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
-    },
-  },
 }
 
 
@@ -1363,6 +1347,64 @@ DOOM2_THEMES =
         RROCK20=5, STONE4=5, STONE6=5,
         ZIMMER5=3, ZIMMER8=1,
       },
+    },
+  },
+
+  HELL1 =  -- extends the entry in COMMON_THEMES
+  {
+    prob = 60,
+
+    building =
+    {
+      walls =
+      {
+        MARBGRAY=50,
+      },
+    },
+  },
+
+  URBAN1 =
+  {
+    prob = 50,
+
+    building =
+    {
+      walls =
+      {
+        PANEL7=50, BRICK7=50, BIGBRIK1=20, BIGBRIK2=10,
+        STUCCO3=20,
+        BLAKWAL1=5, BRICK11=3, BRICK12=5, BRWINDOW=10,
+        STONE3=10,
+      },
+      floors =
+      {
+        FLAT1=10, FLAT1_1=10, FLOOR4_6=5, FLOOR5_4=10,
+        FLOOR7_1=5, 
+      },
+      ceilings =
+      {
+        CEIL1_1=20, FLAT1=10, FLOOR7_1=5, RROCK14=10,
+        FLAT5_1=5,
+      },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        STONE=50, BROWN1=20, ASHWALL=5, ASHWALL4=5,
+        RROCK19=10, ROCK2=15,
+      },
+    },
+
+    room_types =
+    {
+      -- FIXME  PRISON  WAREHOUSE
+    },
+
+    monster_prefs =
+    {
+      caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
     },
   },
 
