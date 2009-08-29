@@ -1774,7 +1774,7 @@ function Build_small_exit(R, xt_info, skin, skin2)
 
   local w_tex = rand_key_by_probs(xt_info.walls)
   local f_tex = rand_key_by_probs(xt_info.floors)
-  local c_tex = rand_key_by_probs(xt_info.ceils)
+  local c_tex = rand_key_by_probs(xt_info.ceilings)
 
   local inner_info = get_mat(w_tex, f_tex, c_tex)
 

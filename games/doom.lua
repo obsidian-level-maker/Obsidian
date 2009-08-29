@@ -1167,7 +1167,7 @@ COMMON_THEMES =
       {
         FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
       },
-      ceils =
+      ceilings =
       {
         FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
       },
@@ -1198,7 +1198,7 @@ COMMON_THEMES =
       {
         FLOOR0_3=50, FLOOR5_2=50
       },
-      ceils =
+      ceilings =
       {
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
         FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50

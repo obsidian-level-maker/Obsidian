@@ -1354,7 +1354,7 @@ function Layout_hallway(R)
 
     LEVEL.hall_tex   = rand_key_by_probs(info.walls)
     LEVEL.hall_floor = rand_key_by_probs(info.floors)
-    LEVEL.hall_ceil  = rand_key_by_probs(info.ceils)
+    LEVEL.hall_ceil  = rand_key_by_probs(info.ceilings)
 
     LEVEL.hall_trim   = rand_odds(50)
     LEVEL.hall_lights = rand_odds(50)
