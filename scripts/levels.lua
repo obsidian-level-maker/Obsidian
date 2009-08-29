@@ -202,16 +202,19 @@ end
 function Level_themes(seed_idx)
   gui.rand_seed(OB_CONFIG.seed * 200)
 
-  local function get_sub_theme(name)
+  local function set_sub_theme(L, name)
     local info = assert(OB_THEMES[name])
     assert(info.prefix)
+
+    -- don't overwrite theme of special levels
+    if L.theme then return end
 
     local sub_tab = {}
     local sub_pattern = "^" .. info.prefix
 
     for which,theme in pairs(GAME.themes) do
-      if string.find(which, sub_pattern) then
-        sub_tab[which] = assert(theme.prob)
+      if theme.prob > 0 and string.find(which, sub_pattern) then
+        sub_tab[which] = theme.prob
       end
     end
 
@@ -219,12 +222,15 @@ function Level_themes(seed_idx)
       error("No sub-themes for " .. name)
     end
 
-    return rand_key_by_probs(sub_tab)
+    local which = rand_key_by_probs(sub_tab)
+
+    L.theme = GAME.themes[which]
+    gui.printf("Theme for level %s = %s\n", L.name, which)
   end
 
   --| Level_themes |--
 
-  -- choose a theme for each episode (max 9)
+  -- choose a theme for each episode
   local episode_list = {}
 
   local prob_tab = {}
@@ -236,40 +242,45 @@ function Level_themes(seed_idx)
     end
   end
 
-  assert(not table_empty(prob_tab))
+  while not table_empty(prob_tab) do
+    local name = rand_key_by_probs(prob_tab)
+    prob_tab[name] = nil
 
-  -- work on a copy of the probability table
-  local use_tab = shallow_copy(prob_tab)
-
-  while #episode_list < 9 do
-    local name = rand_key_by_probs(use_tab)
     table.insert(episode_list, name)
-
     gui.printf("Theme for episode %d = %s\n", #episode_list, name)
+  end
 
-    -- prevent the same theme being used again, at least until all
-    -- the themse have been used -- in that case we start again.
-    use_tab[name] = nil
-    if table_empty(use_tab) then
-      break; --?? use_tab = shallow_copy(prob_tab)
-    end
+  local total = #episode_list
+  assert(total > 0)
+
+  -- flesh it out
+  while #episode_list < 40 do
+    local idx = #episode_list % total
+    table.insert(episode_list, episode_list[1 + idx])
   end
 
 
-  -- simple handling for a few maps : just one theme
-  if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+  -- special handling for a single episode
+  if OB_CONFIG.length == "episode" then
+    local pos = 1
+    local count = 0
+
     for _,L in ipairs(GAME.all_levels) do
-      if not L.theme then
-        local which = get_sub_theme(episode_list[1])
-        L.theme = GAME.themes[which]
-        gui.printf("Theme for level %s = %s\n", L.name, which)
+      if count >= 2 and (rand_odds(50) or count >= 5) then
+        pos = pos + 1
+        count = 0
       end
+
+      set_sub_theme(L, episode_list[pos])
+      count = count + 1
     end
 
     return;
   end
 
-  error("NYI")
+  for _,L in ipairs(GAME.all_levels) do
+    set_sub_theme(L, episode_list[L.episode])
+  end
 end
 
 
