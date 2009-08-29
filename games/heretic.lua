@@ -1317,71 +1317,40 @@ HERETIC_THEMES =
   {
     building =
     {
-      GOLD=50,
-      WOOD=50,
-      MOSSY=50,
-      BLOCK=50,
-      CAVE1=20,
-      CAVE2=20,
-      HUT=20,
-      DISCO2=20,
-      PHAROAH=20,
+      walls =
+      {
+        GOLD=50,
+        WOOD=50,
+        MOSSY=50,
+        BLOCK=50,
+        CAVE1=20,
+        CAVE2=20,
+        HUT=20,
+        DISCO2=20,
+        PHAROAH=20,
+      },
+      floors =
+      {
+        FLOOR00=50, FLOOR01=50, FLOOR02=50,
+        FLOOR03=50, FLOOR04=50, FLOOR05=50,
+      },
+      ceilings =
+      {
+        FLOOR16=50, FLOOR17=50, FLOOR18=50, FLOOR19=50,
+      },
     },
 
-    floors =
-    {
-      FLOOR00=50,
-      FLOOR01=50,
-      FLOOR02=50,
-      FLOOR03=50,
-      FLOOR04=50,
-      FLOOR05=50,
-    },
-
-    ceilings =
-    {
-      FLOOR16=50,
-      FLOOR17=50,
-      FLOOR18=50,
-      FLOOR19=50,
-    },
-
-    corners =
-    {
-      METL1=10,
-    },
-
-    ceil_lights =
-    {
-      FLOOR11=50,
-    },
-
-    ground =
-    {
-      CAVEO1=20,
-      CAVEO2=20,
-      CAVEMUD=20,
-      ODISCO1=20,
-      ODISCO2=20,
-      SANDY=20,
-      SANDZ=20,
-      MUDDY=20,
-      STONY=20,
-    },
-
-    hallway =
+    xx_hallway =
     {
       walls =
       {
         BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
       },
-
       floors =
       {
         FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
       },
-
-      ceils =
+      ceilings =
       {
         FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
       },
@@ -1395,17 +1364,28 @@ HERETIC_THEMES =
         TEKWALL4=50, PIPEWAL2=50,
         TEKGREN1=50, SPACEW2=50,  STARBR2=50
       },
-
       floors =
       {
         FLOOR0_3=50, FLOOR5_2=50
       },
-
-      ceils =
+      ceilings =
       {
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
         FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
       },
+    },
+
+    ground =
+    {
+      CAVEO1=20,
+      CAVEO2=20,
+      CAVEMUD=20,
+      ODISCO1=20,
+      ODISCO2=20,
+      SANDY=20,
+      SANDZ=20,
+      MUDDY=20,
+      STONY=20,
     },
 
     room_types =
@@ -1475,19 +1455,6 @@ HERETIC_THEMES =
   },
 
 --]]
-}
-
-HERETIC_QUEST_LEN_PROBS =
-{
-  ----------  2   3   4   5   6   7   8  9  10  -------
-
-  key    = {  0, 25, 50, 90, 65, 30, 10, 2 },
-  exit   = {  0, 25, 50, 90, 65, 30, 10, 2 },
-
-  switch = {  0, 50, 90, 50, 25, 5, 1 },
-
-  weapon = { 25, 90, 50, 10, 2 },
-  item   = { 15, 70, 70, 15, 2 },
 }
 
 
