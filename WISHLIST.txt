@@ -8,15 +8,16 @@ WISH-LIST
 
 Other Games:
 
--  Strife
--  HacX
+>>  Strife
+>>  HacX
 
 -  Hexen II
 -  Heretic II (uses same format as Quake II ??)
+-  Soldier of Fortune (extended Q2 format)
 
-?  Marathon 2/Inf
 ?  Dark Forces
-?  Soldier of Fortune
+?  Half-Life
+?  Marathon 2/Inf (prolly not, AlephOne too limited)
 ?  Duke Nukem 3D
 
 
