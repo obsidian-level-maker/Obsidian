@@ -1322,73 +1322,25 @@ HERETIC_THEMES =
     {
       walls =
       {
-        GOLD=50,
-        WOOD=50,
-        MOSSY=50,
-        BLOCK=50,
-        CAVE1=20,
-        CAVE2=20,
-        HUT=20,
-        DISCO2=20,
-        PHAROAH=20,
+        SANDSQ2=50, GRSTNPB=50, WOODWL=10,
+        CTYSTUC4=80, CTYSTCI2=80, TRISTON2=20,
       },
       floors =
       {
-        FLOOR00=50, FLOOR01=50, FLOOR02=50,
-        FLOOR03=50, FLOOR04=50, FLOOR05=50,
+        FLOOR06=50, FLOOR03=50, FLOOR00=50, FLOOR10=50,
       },
       ceilings =
       {
-        FLOOR16=50, FLOOR17=50, FLOOR18=50, FLOOR19=50,
-      },
-    },
-
-    xx_hallway =
-    {
-      walls =
-      {
-        BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
-      },
-      floors =
-      {
-        FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
-      },
-      ceilings =
-      {
-        FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
-      },
-    },
-
-    exit =
-    {
-      walls =
-      {
-        METAL2=50,   STARTAN2=50, STARG1=50,
-        TEKWALL4=50, PIPEWAL2=50,
-        TEKGREN1=50, SPACEW2=50,  STARBR2=50
-      },
-      floors =
-      {
-        FLOOR0_3=50, FLOOR5_2=50
-      },
-      ceilings =
-      {
-        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
+        FLOOR11=50, FLOOR03=30, FLOOR04=30, FLOOR12=50,
       },
     },
 
     ground =
     {
-      CAVEO1=20,
-      CAVEO2=20,
-      CAVEMUD=20,
-      ODISCO1=20,
-      ODISCO2=20,
-      SANDY=20,
-      SANDZ=20,
-      MUDDY=20,
-      STONY=20,
+      floors =
+      {
+        FLOOR00=20, FLOOR17=50, FLOOR27=30, FLOOR18=50,
+      },
     },
 
     room_types =
@@ -1410,6 +1362,35 @@ HERETIC_THEMES =
   GOTHIC1 =
   {
     prob=50,
+
+    building =
+    {
+      walls =
+      {
+        CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
+        SQPEB1=20, TRISTON1=20,
+      },
+      floors =
+      {
+        FLAT503=20, FLAT507=10, FLAT520=10, FLAT521=10,
+        FLOOR00=10, FLOOR03=20, FLOOR07=10,
+        FLAT523=20,
+      },
+      ceilings =
+      {
+        FLAT520=20, FLAT521=10, FLAT508=15,
+        FLOOR20=25, FLOOR29=10,
+      },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        FLAT509=20, FLAT510=20, FLAT513=20,
+        FLAT516=20, FLAT522=20,
+      },
+    },
 
   }, -- GOTHIC1
 
@@ -1942,7 +1923,7 @@ OB_THEMES["heretic_gothic"] =  -- castles
   label = "Gothic",
   for_games = { heretic=1 },
 
-  prefix = "CASTLE",
+  prefix = "GOTHIC",
   name_theme = "GOTHIC",
   use_prob = 50,
 }
