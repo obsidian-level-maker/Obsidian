@@ -197,7 +197,7 @@ HERETIC_MATERIALS =
   GRSTNPBV = { t="GRSTNPBV", f="FLAT520" },
   GRSTNPBW = { t="GRSTNPBW", f="FLAT520" },
   HORSES1  = { t="HORSES1",  f="FLAT520" },
-  LAVA1    = { t="LAVA1",    f="FLTLAVA1" },
+  LAVA1    = { t="LAVA1",    f="FLAT506" },
   LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" },
   LOOSERCK = { t="LOOSERCK", f="FLOOR04" },  -- poor match
   METL1    = { t="METL1",    f="FLOOR29" },
@@ -1311,10 +1311,13 @@ HERETIC_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
+
 HERETIC_THEMES =
 {
-  TECH =
+  URBAN1 =
   {
+    prob=50,
+
     building =
     {
       walls =
@@ -1401,8 +1404,45 @@ HERETIC_THEMES =
     monster_prefs =
     {
     },
-  }, -- TECH
+  }, -- URBAN1
 
+
+  GOTHIC1 =
+  {
+    prob=50,
+
+  }, -- GOTHIC1
+
+
+  CAVE1 =
+  {
+    prob=50,
+
+    building =  -- FIXME: cave =
+    {
+      walls = 
+      {
+        LOOSERCK=20, LAVA1=20, BRWNRCKS=20,
+      },
+      floors =
+      {
+        FLOOR01=20, FLAT516=20, FLAT516=20,
+      },
+      ceilings =
+      {
+        FLOOR01=20, FLAT516=20, FLAT506=20,
+      },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        LOOSERCK=50, RCKSNMUD=50, LAVA1=50,
+        FLAT516=50, FLAT510=50, FLAT516=50,
+      },
+    }, 
+  }, -- CAVE1
 
 
 --[[ FIXME: good old stuff
@@ -1887,43 +1927,38 @@ end
 
 ------------------------------------------------------------
 
-OB_THEMES["hc_city"] =
+OB_THEMES["heretic_urban"] =
 {
-  ref = "CITY",
-  label = "City",
+  label = "Urban",
   for_games = { heretic=1 },
+
+  prefix = "URBAN",
+  name_theme = "URBAN",
+  use_prob = 50,
 }
 
-OB_THEMES["hc_cave"] =
+OB_THEMES["heretic_gothic"] =  -- castles
 {
-  ref = "CAVE",
+  label = "Gothic",
+  for_games = { heretic=1 },
+
+  prefix = "CASTLE",
+  name_theme = "GOTHIC",
+  use_prob = 50,
+}
+
+OB_THEMES["heretic_cave"] =
+{
   label = "Cave",
   for_games = { heretic=1 },
-}
 
-OB_THEMES["hc_dome"] =
-{
-  ref = "DOME",
-  label = "Dome",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_egypt"] =
-{
-  ref = "EGYPT",
-  label = "Egypt",
-  for_games = { heretic=1 },
-}
-
-OB_THEMES["hc_garish"] =
-{
-  ref = "GARISH",
-  label = "Garish",
-  for_games = { heretic=1 },
+  prefix = "CAVE",
+  name_theme = "URBAN",
+  use_prob = 30,
 }
 
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
@@ -1953,12 +1988,8 @@ UNFINISHED["heretic"] =
 
     skip_monsters = { 20,30 },
 
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
+    time_factor   = 1.0,
+    damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
   },
@@ -1967,17 +1998,13 @@ UNFINISHED["heretic"] =
   {
     "player_model", HERETIC_PLAYER_MODEL,
     
-    "things", HERETIC_THINGS,
+    "things",   HERETIC_THINGS,
     "monsters", HERETIC_MONSTERS,
     "weapons",  HERETIC_WEAPONS,
     "pickups",  HERETIC_PICKUPS,
 
     "materials", HERETIC_MATERIALS,
-    "rails", HERETIC_RAILS,
-
-    "combos", HERETIC_COMBOS,
-    "exits", HERETIC_EXITS,
-    "hallways", HERETIC_HALLWAYS,
+    "rails",     HERETIC_RAILS,
 
     "episodes", HERETIC_EPISODES,
     "themes",   HERETIC_THEMES,
