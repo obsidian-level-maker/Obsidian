@@ -30,15 +30,31 @@ HACX_THINGS =
   teleport_spot = { id=14, kind="other", r=16,h=56 },
 
   --- monsters ---
-  acolyte = { id=1234, kind="monster", r=16,h=56 },
+  thug        = { id=3004, kind="monster", r=21,h=72 },
+  android     = { id=   9, kind="monster", r=21,h=70 },
+  i_c_e       = { id=3001, kind="monster", r=32,h=56 },
+  buzzer      = { id=3002, kind="monster", r=25,h=68 },
+  terminatrix = { id=3003, kind="monster", r=32,h=80 },
+  d_man       = { id=3006, kind="monster", r=48,h=78 },
 
-  -- bosses
+  stealth     = { id=58,  kind="monster", r=32,h=68 },
+  monstruct   = { id=65,  kind="monster", r=35,h=88 },
+  phage       = { id=67,  kind="monster", r=25,h=96 },
+  thorn       = { id=68,  kind="monster", r=66,h=96 },
+  mecha       = { id=69,  kind="monster", r=24,h=96 },
+  majong7     = { id=71,  kind="monster", r=31,h=56 },
+  roam_mine   = { id=84,  kind="monster", r=5, h=32 },
 
   --- pickups ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true },
+  k_password = { id=5,  kind="pickup", r=20,h=16, pass=true },
+  k_ckey     = { id=6,  kind="pickup", r=20,h=16, pass=true },
+
+  kz_red     = { id=38, kind="pickup", r=20,h=16, pass=true },
+  kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true },
+  kz_blue    = { id=40, kind="pickup", r=20,h=16, pass=true },
 
   --- scenery ---
-  wall_torch  = { id=50, kind="scenery", r=10,h=64, light=255 },
+  chair      = { id=35,   kind="scenery", r=24,h=40 },
 
 }
 
@@ -123,17 +139,87 @@ HACX_THEMES =
 HACX_MONSTERS =
 {
   -- FIXME : HACX_MONSTERS
+  thug =
+  {
+    health=60,
+  },
+
+  android =
+  {
+    health=75,
+  },
+
+  stealth =
+  {
+    health=30,
+  },
+
+  roam_mine =
+  {
+    health=50,
+  },
+
+  phage =
+  {
+    health=150,
+  },
+
+  buzzer =
+  {
+    health=175,
+  },
+
+  i_c_e =
+  {
+    health=225,
+  },
+
+  d_man =
+  {
+    health=250,
+  },
+
+  monstruct =
+  {
+    health=400,
+  },
+
+  majong7 =
+  {
+    health=400,
+  },
+
+  terminatrix =
+  {
+    health=450,
+  },
+
+  thorn =
+  {
+    health=600,
+  },
+
+  mecha =
+  {
+    health=800,
+  },
+
 }
 
 
 HACX_WEAPONS =
 {
-  dagger =
+  -- FIXME : HACX_WEAPONS
+  boot =
   {
     rate=1.5, damage=10, attack="melee",
   },
 
-  -- FIXME : HACX_WEAPONS
+  pistol =
+  {
+    rate=1.5, damage=10, attack="hitscan",
+  },
+
 }
 
 
@@ -147,10 +233,9 @@ HACX_PLAYER_MODEL =
 {
   danny =
   {
-    stats = { health=0, bolt=0, bullet=0, missile=0,
-              grenade=0, cell=0 },
+    stats = { health=0, bolt=0, bullet=0, missile=0, grenade=0, cell=0 },
 
-    weapons = { dagger=1 },
+    weapons = { pistol=1, boot=1 },
   }
 }
 
