@@ -426,7 +426,7 @@ COMMON_MATERIALS =
   FLAT5_3  = { t="REDWALL",  f="FLAT5_3" },
   FLAT5_4  = { t="STONE",    f="FLAT5_4" },
   FLAT5_5  = { t="BROWN1",   f="FLAT5_5" },
-  FLAT5_6  = { t="SP_FACE1", f="FLAT5_6" },  -- better in DOOM1
+  FLAT5_6  = { t="CRACKLE4", f="FLAT5_6" },
   FLAT8    = { t="STARBR2",  f="FLAT8" },
   FLAT9    = { t="GRAY4",    f="FLAT9" },
   FLAT10   = { t="BROWNHUG", f="FLAT10" },  -- better in DOOM2
@@ -1255,7 +1255,7 @@ COMMON_THEMES =
     {
       floors =
       {
-        FLAT5_6=10, ASHWALL=5, FLAT10=5,
+        FLAT5_6=10, ASHWALL=10, FLAT10=10,
       },
     },
 
