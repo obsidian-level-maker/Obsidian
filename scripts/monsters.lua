@@ -693,6 +693,10 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
+    if table_empty(GAME.pickups) then
+      return
+    end
+
     local item_list = {}
 
     local stats = R.fight_stats[SK][CL]
