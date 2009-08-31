@@ -7,12 +7,12 @@ WEB PAGE REORGANISATION
 MAIN
 
 - main page:
-  - short introduction (DONE)
-  - news / changes     (DONE)
+  - short introduction [DONE]
+  - news / changes     [DONE]
 
 - screenshots
 
-- downloads (DONE)
+- downloads [DONE]
 
 - V2 page
 
@@ -35,7 +35,7 @@ DOCS
   - license / copyright
   - acknowledgements
 
-- history
+- history  [DONE]
 
 - games
 
@@ -46,7 +46,9 @@ MODDING
 
 - basics
    - Lua
-   - OB_CONFIG, OB_GAMES, OB_MODULES
+   - OB_CONFIG, OB_GAMES, OB_MODULES, OB_THEMES
+   - things, monsters, weapons, pickups
+   - materials, themes
  
 
 LINKS??
