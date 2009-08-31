@@ -22,15 +22,54 @@
 
 <h3> AUTHOR </h3>
 
-me me me me me!
+OBLIGE was created by <b>Andrew Apted</b> (me), and I am
+continuing to develop it.
+Some other projects I have worked on include:
+<a href="http://glbsp.sourceforge.net/">glBSP</a>,
+a node builder for classic DOOM, and also:
+<a href="http://edge.sourceforge.net/">EDGE</a>,
+a DOOM source port with many enhanced features.
+
+<p>
+OBLIGE was written from scratch.  It does not contain any
+code from SLIGE (by David Chess) or from any other random
+map generator.
 
 
 <h3> CONTRIBUTORS </h3>
 
-you you you you you!
+These people actually contributed code and/or prefabs
+(and usually a lot of useful feedback as well), and
+I am extremely grateful to them:
+
+<p>
+<b>Sam Trenholme</b> did good stuff
+
+<p>
+<b>Enhas</b> did good stuff
+
+<p>
+<b>Mr Chris (Chris Pisarczyk)</b>
+did good stuff
+
+<p>
+<b>JohnnyRancid</b>
+did good stuff
+
+<p>
+<b>Dittohead (Derek Braun)</b>
+did good stuff
+
+<p>
+<b>Esselfortium (Michael Mancuso)</b>
+did good stuff
+
+<p>
+<b>DoomJedi</b> did good stuff
 
 
 <h3> THANKS TO ... </h3>
+
 
 Sam Trenholme for much expanded Heretic themes
 and various fixes, and for beta-testing Oblige III.
