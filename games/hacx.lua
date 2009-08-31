@@ -61,6 +61,24 @@ HACX_THINGS =
   reznator = { id=2005, kind="pickup", r=20,h=16, pass=true },
   nuker    = { id=2006, kind="pickup", r=20,h=16, pass=true },
 
+  dampener   = { id=2014, kind="pickup", r=20,h=16, pass=true },
+  microkit   = { id=2011, kind="pickup", r=20,h=16, pass=true },
+  hypo       = { id=2012, kind="pickup", r=20,h=16, pass=true },
+  smart_drug = { id=2013, kind="pickup", r=20,h=16, pass=true },
+
+  inhaler      = { id=2015, kind="pickup", r=20,h=16, pass=true },
+  kevlar_armor = { id=2018, kind="pickup", r=20,h=16, pass=true },
+  super_armor  = { id=2019, kind="pickup", r=20,h=16, pass=true },
+
+  bullets     = { id=2007, kind="pickup", r=20,h=16, pass=true },
+  bullet_box  = { id=2048, kind="pickup", r=20,h=16, pass=true },
+  shells      = { id=2008, kind="pickup", r=20,h=16, pass=true },
+  shell_box   = { id=2049, kind="pickup", r=20,h=16, pass=true },
+  torpedos    = { id=2010, kind="pickup", r=20,h=16, pass=true },
+  torpedo_box = { id=2046, kind="pickup", r=20,h=16, pass=true },
+  molecules   = { id=2047, kind="pickup", r=20,h=16, pass=true },
+  mol_tank    = { id=  17, kind="pickup", r=20,h=16, pass=true },
+
   --- scenery ---
   chair      = { id=35,   kind="scenery", r=24,h=40 },
 
@@ -144,9 +162,9 @@ HACX_MONSTERS =
 
   stealth =
   {
-    prob=8,
+    prob=7,
     health=30, damage=25, attack="melee",
-    float=true,
+    float=true, invis=true,
   },
 
   -- this thing just blows up on contact
@@ -268,7 +286,7 @@ HACX_WEAPONS =
   {
     pref=20, add_prob=25, start_prob=10,
     rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
-    ammo="torpedo",
+    ammo="torpedo", per=1,
     give={ {ammo="torpedo",count=2} },
   },
 
@@ -292,7 +310,102 @@ HACX_WEAPONS =
 
 HACX_PICKUPS =
 {
-  -- FIXME : HACX_PICKUPS
+  -- HEALTH --
+
+  dampener =
+  {
+    prob=20, cluster={ 4,7 },
+    give={ {health=1} },
+  },
+
+  microkit =
+  {
+    prob=60, cluster={ 2,5 },
+    give={ {health=10} },
+  },
+
+  hypo =
+  {
+    prob=100, cluster={ 1,3 },
+    give={ {health=25} },
+  },
+
+  smart_drug =
+  {
+    prob=3, big_item=true,
+    give={ {health=150} },
+  },
+
+  -- ARMOR --
+
+  inhaler =
+  {
+    prob=10, armor=true, cluster={ 4,7 },
+    give={ {health=1} },
+  },
+
+  kevlar_armor =
+  {
+    prob=5, armor=true, big_item=true,
+    give={ {health=30} },
+  },
+
+  super_armor =
+  {
+    prob=2, armor=true, big_item=true,
+    give={ {health=90} },
+  },
+
+  -- AMMO --
+
+  bullets =
+  {
+    prob=10, cluster={ 2,5 },
+    give={ {ammo="bullet",count=10} },
+  },
+
+  bullet_box =
+  {
+    prob=40, cluster={ 1,3 },
+    give={ {ammo="bullet", count=50} },
+  },
+
+  shells =
+  {
+    prob=20, cluster={ 2,5 },
+    give={ {ammo="shell",count=4} },
+  },
+
+  shell_box =
+  {
+    prob=40, cluster={ 1,3 },
+    give={ {ammo="shell",count=20} },
+  },
+
+  torpedos =
+  {
+    prob=10, cluster={ 4,7 },
+    give={ {ammo="torpedo",count=1} },
+  },
+
+  torpedo_box =
+  {
+    prob=40, cluster={ 1,3 },
+    give={ {ammo="torpedo",count=5} },
+  },
+
+  molecules =
+  {
+    prob=20, cluster={ 2,5 },
+    give={ {ammo="molecule",count=20} },
+  },
+
+  mol_tank =
+  {
+    prob=40, cluster={ 1,2 },
+    give={ {ammo="molecule",count=100} },
+  },
+
 }
 
 
