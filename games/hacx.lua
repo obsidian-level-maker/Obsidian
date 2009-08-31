@@ -53,6 +53,14 @@ HACX_THINGS =
   kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true },
   kz_blue    = { id=40, kind="pickup", r=20,h=16, pass=true },
 
+  tazer    = { id=2001, kind="pickup", r=20,h=16, pass=true },
+  cyrogun  = { id=  82, kind="pickup", r=20,h=16, pass=true },
+  fu2      = { id=2002, kind="pickup", r=20,h=16, pass=true },
+  zooka    = { id=2003, kind="pickup", r=20,h=16, pass=true },
+  antigun  = { id=2004, kind="pickup", r=20,h=16, pass=true },
+  reznator = { id=2005, kind="pickup", r=20,h=16, pass=true },
+  nuker    = { id=2006, kind="pickup", r=20,h=16, pass=true },
+
   --- scenery ---
   chair      = { id=35,   kind="scenery", r=24,h=40 },
 
@@ -122,30 +130,31 @@ HACX_THEMES =
 
 HACX_MONSTERS =
 {
-  -- FIXME : HACX_MONSTERS
   thug =
   {
-    prob=40,
+    prob=60,
     health=60, damage=5, attack="hitscan",
   },
 
   android =
   {
-    prob=40,
+    prob=50,
     health=75, damage=10, attack="hitscan",
   },
 
   stealth =
   {
-    prob=10,
+    prob=8,
     health=30, damage=25, attack="melee",
+    float=true,
   },
 
   -- this thing just blows up on contact
   roam_mine =
   {
-    prob=5,
+    prob=15,
     health=50, damage=5, attack="hitscan",
+    float=true,
   },
 
   phage =
@@ -158,29 +167,31 @@ HACX_MONSTERS =
   {
     prob=40,
     health=175, damage=25, attack="melee",
+    float=true,
   },
 
   i_c_e =
   {
-    prob=40,
-    health=225, damage=7, attack="melee", --????
+    prob=10,
+    health=225, damage=7, attack="melee",
   },
 
   d_man =
   {
-    prob=40,
-    health=250, damage=7, attack="melee", --????
+    prob=10,
+    health=250, damage=7, attack="melee",
+    float=true,
   },
 
   monstruct =
   {
-    prob=30,
+    prob=50,
     health=400, damage=80, attack="missile",
   },
 
   majong7 =
   {
-    prob=20,
+    prob=10,
     health=400, damage=20, attack="missile",
     density=0.5,
     weap_prefs={ launch=0.2 },
@@ -188,14 +199,14 @@ HACX_MONSTERS =
 
   terminatrix =
   {
-    prob=20,
+    prob=25,
     health=450, damage=40, attack="hitscan",
-    density=0.5,
+    density=0.8,
   },
 
   thorn =
   {
-    prob=20,
+    prob=25,
     health=600, damage=70, attack="missile",
   },
 
@@ -211,19 +222,71 @@ HACX_MONSTERS =
 
 HACX_WEAPONS =
 {
-  -- FIXME : HACX_WEAPONS
   boot =
   {
-    rate=1.5, damage=10, attack="melee",
+    rate=2.5, damage=5, attack="melee",
   },
 
   pistol =
   {
     pref=5,
-    rate=1.5, damage=10, attack="hitscan",
+    rate=2.0, damage=20, attack="hitscan",
     ammo="bullet", per=1,
   },
 
+  reznator =
+  {
+    pref=2, add_prob=2, start_prob=2,
+    rate=8.6, damage=10, attack="melee",
+  },
+
+  tazer =
+  {
+    pref=20, add_prob=10, start_prob=60,
+    rate=1.2, damage=70, attack="hitscan",
+    ammo="shell", per=1,
+    give={ {ammo="shell",count=8} },
+  },
+
+  cyrogun =
+  {
+    pref=40, add_prob=20, start_prob=10,
+    rate=0.9, damage=170, attack="hitscan", splash={ 0,30 },
+    ammo="shell", per=2, 
+    give={ {ammo="shell",count=8} },
+  },
+
+  fu2 =
+  {
+    pref=40, add_prob=35, start_prob=40,
+    rate=8.6, damage=10, attack="hitscan",
+    ammo="bullet", per=1,
+    give={ {ammo="bullet",count=20} },
+  },
+
+  zooka =
+  {
+    pref=20, add_prob=25, start_prob=10,
+    rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
+    ammo="torpedo",
+    give={ {ammo="torpedo",count=2} },
+  },
+
+  antigun =
+  {
+    pref=50, add_prob=13, start_prob=5,
+    rate=16, damage=20, attack="missile",
+    ammo="molecule", per=1,
+    give={ {ammo="molecule",count=40} },
+  },
+
+  nuker =
+  {
+    pref=20, add_prob=30, start_prob=0.2, rarity=3,
+    rate=1.4, damage=300, attack="missile", splash={60,45,30,30,20,10},
+    ammo="molecule", per=40,
+    give={ {ammo="molecule",count=40} },
+  },
 }
 
 
@@ -237,7 +300,7 @@ HACX_PLAYER_MODEL =
 {
   danny =
   {
-    stats = { health=0, bullet=0, missile=0, grenade=0, cell=0 },
+    stats = { health=0, bullet=0, shell=0, torpedo=0, molecule=0 },
 
     weapons = { pistol=1, boot=1 },
   }
