@@ -213,8 +213,9 @@ function Level_themes(seed_idx)
     local sub_pattern = "^" .. info.prefix
 
     for which,theme in pairs(GAME.themes) do
-      if theme.prob > 0 and string.find(which, sub_pattern) then
-        sub_tab[which] = theme.prob
+      local prob = theme.prob or 50
+      if prob > 0 and string.find(which, sub_pattern) then
+        sub_tab[which] = prob
       end
     end
 
