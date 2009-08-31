@@ -22,27 +22,31 @@
 <h3>HISTORY OF OBLIGE</h3>
 
 <b>Oblige V1</b> was the initial prototype,
-begun around MAY 2005.
+begun around May 2005.
 It was written in pure C++ and had a very limited architecture
 (everything was just 64x64 blocks).
 No monsters or items were added.
 A notable feature was a GUI window which
 showed you the shape of each generated area.
-Rumour has it the code still lurks somewhere in the
-deep recesses of the SVN repository.
+The V1 codebase was never released, but rumour has it
+the code lurks somewhere deep in the SVN repository.
 
 <p>
-<b>Oblige V2</b> started development in JUNE 2006, using Lua scripts
+<b>Oblige V2</b> started development in June 2006, using Lua scripts
 for the level creation logic and C++ for the GUI front-end
 and WAD output code.  This evolved with many features and
-support for several games to become the first public release of
-OBLIGE (version 0.81).
+support for several games to become the first public release:
+OBLIGE 0.81 (January 2007).
+The last release of the V2 codebase was version 0.97 (May 2008).
 
 <p>
 <b>Oblige V3</b> is the current incarnation.
 Severe limitations in the previous code prompted a huge rewrite,
-a process which is still on-going.
-The first public release @@@@@
+a process which is on-going as many earlier features
+have not been re-implemented yet.
+The first public release of the V3 codebase
+occurred in April 2009 (at version 3.39)
+and it is planned to release future versions as often as possible.
 
 
 <h3>RELEASE DATES</h3>
@@ -94,7 +98,7 @@ version 0.81  :  2007-01-21  (first public release)
 <h3 id="changes339">CHANGES IN 3.39</h3>
 
 <PRE>
-Version 3.39 was the huge re-write, with over 1500 SVN commits
+Version 3.39 was the huge rewrite, with over 1500 SVN commits
 since the 0.97 release.  The most significant changes were:
 
 * The map representation changed to a completely different system.
@@ -102,7 +106,7 @@ since the 0.97 release.  The most significant changes were:
   16x16 "fragments"), with very limited support for angled walls.
   The new method uses "brushes" like in Quake mapping, which are
   solid regions of space, and can support arbitrary shapes on the
-  2D map (and will allow more freedom in the third dimension).
+  2D map (and will allow more freedom in the Z dimension).
 
 * Nearly all of the level building logic (Lua code) was rewritten
   from scratch.  A key concept in the rewrite is "seeds", which
@@ -114,12 +118,12 @@ since the 0.97 release.  The most significant changes were:
   each Lua file in that folder is loaded when OBLIGE starts up,
   hence new games defs can simply be dropped in without having
   to change anything.  The same system is used for engine defs
-  and module defs.
+  and module defs too.
 
 + The new planning code supports really big rooms, and also
   "parent" rooms which can contain other rooms.  Often the parent
-  rooms are outdoor and the child rooms are buildings, which can
-  create maps similar to DOOM II's MAP13.
+  rooms are outdoor and the child rooms are buildings, leading to
+  areas similar to DOOM II's MAP13.
 
 + The room layout code supports symmetrical rooms, and uses a
   "room fab" system which selects a usable shape for the room
@@ -131,8 +135,10 @@ since the 0.97 release.  The most significant changes were:
   Game Settings, Level Architecture and Playing Style, and a
   scrollable area for custom modules.
 
++ Preliminary support for Quake and Quake II.
+
 With all this work going on, a lot of features which were
-present in earlier versions have not been re-implemented yet:
+available before have not been re-implemented yet:
 
 -  only supports DOOM 1 and DOOM 2
 -  only one available theme: TECH
