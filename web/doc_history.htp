@@ -93,7 +93,53 @@ version 0.81  :  2007-01-21  (first public release)
 
 <h3 id="changes339">CHANGES IN 3.39</h3>
 
-@@@@@@@
+<PRE>
+Version 3.39 was the huge re-write, with over 1500 SVN commits
+since the 0.97 release.  The most significant changes were:
+
+* The map representation changed to a completely different system.
+  The old method had 64x64 squares (which could be sub-divided into
+  16x16 "fragments"), with very limited support for angled walls.
+  The new method uses "brushes" like in Quake mapping, which are
+  solid regions of space, and can support arbitrary shapes on the
+  2D map (and will allow more freedom in the third dimension).
+
+* Nearly all of the level building logic (Lua code) was rewritten
+  from scratch.  A key concept in the rewrite is "seeds", which
+  are a grid of 256x256 blocks on the 2D map, and each seed is
+  responsible for building itself (floor, ceiling, any walls,
+  and anything special in it like a staircase or pillar).
+
+* All the game definitions were moved to a 'games' folder, and
+  each Lua file in that folder is loaded when OBLIGE starts up,
+  hence new games defs can simply be dropped in without having
+  to change anything.  The same system is used for engine defs
+  and module defs.
+
++ The new planning code supports really big rooms, and also
+  "parent" rooms which can contain other rooms.  Often the parent
+  rooms are outdoor and the child rooms are buildings, which can
+  create maps similar to DOOM II's MAP13.
+
++ The room layout code supports symmetrical rooms, and uses a
+  "room fab" system which selects a usable shape for the room
+  (which major elements like stairs, different height areas,
+  solid and diagonal blocks).  These room fabs can also be used
+  recursively, which can lead to some very interesting rooms.
+
++ The user interface was improved, with distinct panels for
+  Game Settings, Level Architecture and Playing Style, and a
+  scrollable area for custom modules.
+
+With all this work going on, a lot of features which were
+present in earlier versions have not been re-implemented yet:
+
+-  only supports DOOM 1 and DOOM 2
+-  only one available theme: TECH
+-  no traps, no cages
+-  no secrets, no powerups
+-  very limited scenery
+</PRE>
 
 <p> &nbsp;
 
