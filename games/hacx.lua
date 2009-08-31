@@ -125,67 +125,85 @@ HACX_MONSTERS =
   -- FIXME : HACX_MONSTERS
   thug =
   {
-    health=60,
+    prob=40,
+    health=60, damage=5, attack="hitscan",
   },
 
   android =
   {
-    health=75,
+    prob=40,
+    health=75, damage=10, attack="hitscan",
   },
 
   stealth =
   {
-    health=30,
+    prob=10,
+    health=30, damage=25, attack="melee",
   },
 
+  -- this thing just blows up on contact
   roam_mine =
   {
-    health=50,
+    prob=5,
+    health=50, damage=5, attack="hitscan",
   },
 
   phage =
   {
-    health=150,
+    prob=40,
+    health=150, damage=70, attack="missile",
   },
 
   buzzer =
   {
-    health=175,
+    prob=40,
+    health=175, damage=25, attack="melee",
   },
 
   i_c_e =
   {
-    health=225,
+    prob=40,
+    health=225, damage=7, attack="melee", --????
   },
 
   d_man =
   {
-    health=250,
+    prob=40,
+    health=250, damage=7, attack="melee", --????
   },
 
   monstruct =
   {
-    health=400,
+    prob=30,
+    health=400, damage=80, attack="missile",
   },
 
   majong7 =
   {
-    health=400,
+    prob=20,
+    health=400, damage=20, attack="missile",
+    density=0.5,
+    weap_prefs={ launch=0.2 },
   },
 
   terminatrix =
   {
-    health=450,
+    prob=20,
+    health=450, damage=40, attack="hitscan",
+    density=0.5,
   },
 
   thorn =
   {
-    health=600,
+    prob=20,
+    health=600, damage=70, attack="missile",
   },
 
   mecha =
   {
-    health=800,
+    prob=10,
+    health=800, damage=150, attack="missile",
+    density=0.2,
   },
 
 }
@@ -201,7 +219,9 @@ HACX_WEAPONS =
 
   pistol =
   {
+    pref=5,
     rate=1.5, damage=10, attack="hitscan",
+    ammo="bullet", per=1,
   },
 
 }
@@ -301,7 +321,7 @@ OB_GAMES["hacx"] =
 
     max_name_length = 28,
 
-    skip_monsters = { 20,30 },
+    skip_monsters = { 10,30 },
 
     time_factor   = 1.0,
     damage_factor = 1.0,
