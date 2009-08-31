@@ -64,19 +64,17 @@ HACX_THINGS =
 HACX_MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="BIGSTN02", f="P_SPLATR" },
-  _SKY   = { t="BIGSTN01", f="F_SKY001"  },
+  _ERROR = { t="HW171", f="DEM1_2" },
+  _SKY   = { t="HW171", f="F_SKY1" },
 
   -- textures --
 
-  BRKGRY01 = { t="BRKGRY01", f="F_BRKTOP" },
-  BRKGRY17 = { t="BRKGRY17", f="F_BRKTOP" },
-  WALCAV01 = { t="WALCAV01", f="F_CAVE01" },
+  BRICK1  = { t="MODWALL3", f="CEIL3_3" },
 
   -- flats --
 
-  F_BRKTOP = { t="BRKGRY01", f="F_BRKTOP" },
-  F_CAVE01 = { t="WALCAV01", f="F_CAVE01" },
+  GRASS1 = { t="MARBGRAY", f="TLITE6_1" },
+  GRASS2 = { t="MARBGRAY",  f="CONS1_7" },
 
 }
 
@@ -89,46 +87,32 @@ HACX_SANITY_MAP =
 
 ----------------------------------------------------------------
 
-HACX_COMBOS =
-{
-  BRICK1 =
-  {
-    wall = "BRKGRY01"
-  },
-
-  CAVE1 =
-  {
-    outdoor = true,
-
-    wall  = "WALCAV01",
-    floor = "WALCAV01",
-    ceil  = "WALCAV01",
-  }
-}
-
-
 HACX_THEMES =
 {
-  TECH =
+  TECH1 =
   {
     building =
     {
-      BRICK1=50,
-    },
-
-    floors =
-    {
-      F_BRKTOP=50,
-    },
-
-    ceilings =
-    {
-      F_BRKTOP=50,
+      walls =
+      {
+        BRICK1=50,
+      },
+      floors =
+      {
+        BRICK1=50,
+      },
+      ceilings =
+      {
+        BRICK1=50,
+      },
     },
 
     ground =
     {
-      CAVE1=20,
+      floors =
+      {
+        GRASS1=20,
+      },
     },
   }, -- TECH
 }
@@ -233,7 +217,7 @@ HACX_PLAYER_MODEL =
 {
   danny =
   {
-    stats = { health=0, bolt=0, bullet=0, missile=0, grenade=0, cell=0 },
+    stats = { health=0, bullet=0, missile=0, grenade=0, cell=0 },
 
     weapons = { pistol=1, boot=1 },
   }
@@ -283,6 +267,16 @@ end
 
 ------------------------------------------------------------
 
+OB_THEMES["hacx_tech"] =
+{
+  label = "Tech",
+  for_games = { hacx=1 },
+
+  prefix = "TECH",
+  name_theme = "TECH",
+  use_prob = 50,
+}
+
 
 OB_GAMES["hacx"] =
 {
@@ -325,9 +319,7 @@ OB_GAMES["hacx"] =
     "pickups",  HACX_PICKUPS,
 
     "materials", HACX_MATERIALS,
-
-    "combos",   HACX_COMBOS,
-    "themes",   HACX_THEMES,
+    "themes",    HACX_THEMES,
   },
 }
 
