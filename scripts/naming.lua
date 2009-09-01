@@ -277,6 +277,7 @@ NAMING_THEMES =
         ["Waste Management"]=10,
         ["Wires and Bloodcells"]=10,
 
+        ["Atomic Fortress"]=10,
         ["Artificial Apathy"]=10,
         ["Blast Radius"]=10,
         ["Celestial Crimes"]=10,
@@ -860,10 +861,12 @@ NAMING_THEMES =
         ["Graveyard Shift"]=10,
         ["Hidden Screams"]=10,
         ["Hiding the Secrets"]=10,
+        ["House of a Thousand Deaths"]=10,
         ["Jailbird"]=10,
         ["Kitchen Ace"]=10,
         ["Left for Dead"]=10,
         ["Left in the Cold"]=10,
+        ["Library of the Lost"]=10,
         ["Lights Out!"]=10,
         ["Lucid Illusion"]=10,
         ["Lunatic Fringe"]=10,
@@ -895,6 +898,7 @@ NAMING_THEMES =
         ["Suspense"]=10,
         ["Terminal Fear"]=10,
         ["Ten Degrees of Fate"]=10,
+        ["Terrorville"]=10,
         ["The Healer Stalks"]=10,
         ["The Hook"]=10,
         ["The Silenced Lamasery"]=10,
@@ -1057,7 +1061,6 @@ NAMING_THEMES =
       s =
       {
         -- soap operas, lol
-
         ["Another World"]=10,
         ["Days of our Lives"]=10,
         ["Guiding Light"]=10,
@@ -1065,7 +1068,6 @@ NAMING_THEMES =
         ["Passions"]=10,
 
         -- foods
-   
         ["Alphabet Soup"]=10,
         ["Banana Split"]=10,
         ["Broccoli!"]=10,
@@ -1078,16 +1080,19 @@ NAMING_THEMES =
         ["Swedish Meatballs"]=10,
 
         -- others
-
         ["99 Cents"]=10,
         ["Axis of Evil"]=10,
         ["Bait the Hook"]=10,
+        ["Beginning of the Line"]=10,
+        ["Code Pink"]=10,
+        ["Dat"]=10,
         ["Catapult!"]=10,
         ["Cyberdemon's Clubhouse"]=10,
         ["Disco Inferno"]=10,
         ["Don't Feed the Demons"]=10,
         ["E for Effort"]=10,
         ["ERROR: No Level Name."]=10,
+        ["Guts"]=10,
         ["Magnitude 10"]=10,
         ["Moonwalk"]=10,
         ["No Clue"]=10,
@@ -1095,10 +1100,11 @@ NAMING_THEMES =
         ["Over the Rainbow"]=10,
         ["Paper Cut"]=10,
         ["Press Alt + F4 for God Mode!"]=10,
+        ["Safety Zone"]=10,
         ["This is Not a Hangar Remake"]=10,
         ["You Will Oblige"]=10,
         ["You'll Shoot Your Eye Out"]=10,
-        ["Zone of a Thousand Deaths"]=10,
+        ["Zone of a Billion Deaths"]=10,
       },
     },
 
