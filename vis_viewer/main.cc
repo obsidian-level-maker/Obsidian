@@ -69,6 +69,8 @@ class UI_Window;
 
 UI_Window *main_win;
 
+const char *input_file = "DATA1";
+
 
 #define MAX_SQUARES  24
 
@@ -96,7 +98,7 @@ public:
 public:
 	void ReadMap()
 	{
-		vbuf.ReadMap("VIS_DATA");
+		vbuf.ReadMap(input_file);
 	}
 
 	void DrawSolidWall(int sx, int sy, int side)
@@ -336,15 +338,15 @@ void FatalError(const char *msg, ...)
 
 int main(int argc, char **argv)
 {
-	if (1)
-		Fl::scheme("plastic");
+	if (argc >= 2)
+		input_file = argv[1];
+
+	Fl::scheme("plastic");
 
 	fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
 	try
 	{
-		//// FIXME FIXME  LoadVisMap()
-
 		main_win = new UI_Window("Vis Viewer");
 
 		main_win->canvas->ReadMap();
