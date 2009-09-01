@@ -1967,11 +1967,37 @@ gui.printf("do_teleport\n")
   end
 
 
+  local function vis_dump_wall(S, side)
+    gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
+  end
+
+  local function vis_seed(S)
+    if S.kind == "void" then
+      vis_dump_wall(S, 2) ; vis_dump_wall(S, 8)
+      vis_dump_wall(S, 4) ; vis_dump_wall(S, 6)
+      return;
+    end
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      local B_kind = S.border[side].kind
+
+      if B_kind == "wall" or B_kind == "picture" or
+         B_kind == "sky_fence"
+      then
+        vis_dump_wall(S, side)
+      end
+    end
+  end
+
+
   local function build_seed(S)
 
     if S.already_built then
       return
     end
+
+    vis_seed(S)
 
     local x1 = S.x1
     local y1 = S.y1
