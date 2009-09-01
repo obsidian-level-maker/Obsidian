@@ -94,10 +94,34 @@ public:
 	{ }
 
 public:
+	void ReadMap()
+	{
+		vbuf.ReadMap("VIS_DATA");
+	}
+
+	void DrawSolidWall(int sx, int sy, int side)
+	{
+		int x1 = x() + sx * SQUARE_SIZE;
+		int y1 = y() + (MAX_SQUARES-1-sy) * SQUARE_SIZE;
+
+		int x2 = x1 + SQUARE_SIZE - 1;
+		int y2 = y1 + SQUARE_SIZE - 1;
+
+		switch (side)
+		{
+			case 2: fl_rectf(x1, y2, SQUARE_SIZE, 1); break;
+			case 8: fl_rectf(x1, y1, SQUARE_SIZE, 1); break;
+			case 4: fl_rectf(x1, y1, 1, SQUARE_SIZE); break;
+			case 6: fl_rectf(x2, y1, 1, SQUARE_SIZE); break;
+
+			default: break;
+		}
+	}
+
 	void DrawSquare(int sx, int sy)
 	{
 		int x1 = x() + sx * SQUARE_SIZE;
-		int y1 = y() + sy * SQUARE_SIZE;
+		int y1 = y() + (MAX_SQUARES-1-sy) * SQUARE_SIZE;
 
 		int x2 = x1 + SQUARE_SIZE - 1;
 		int y2 = y1 + SQUARE_SIZE - 1;
@@ -107,16 +131,26 @@ public:
 		fl_rectf(x1, y1, SQUARE_SIZE, 1);
 		fl_rectf(x1, y1, 1, SQUARE_SIZE);
 
-		// borders
-
-		if (loc_x < 0 || loc_y < 0)
-			return;
-
 		if (sx == loc_x && sy == loc_y)
 		{
 			fl_color(FL_YELLOW);
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
+
+		// draw solid borders
+		fl_color(FL_RED);
+
+		for (int side = 2; side <= 8; side += 2)
+		{
+			if (vbuf.TestWall(sx, sy, side))
+			{
+				DrawSolidWall(sx, sy, side);
+			}
+		}
+
+		if (loc_x < 0 || loc_y < 0)
+			return;
+
 	}
 
 	void DrawEverything()
@@ -147,6 +181,9 @@ public:
 	{
 		int new_loc_x = (mx - x()) / SQUARE_SIZE;
 		int new_loc_y = (my - y()) / SQUARE_SIZE;
+
+		// bottom-up ordering on Y coords
+		new_loc_y = MAX_SQUARES-1 - new_loc_y;
 
 		if (new_loc_x < 0 || new_loc_x >= MAX_SQUARES)
 			new_loc_x = -1;
@@ -309,6 +346,8 @@ int main(int argc, char **argv)
 		//// FIXME FIXME  LoadVisMap()
 
 		main_win = new UI_Window("Vis Viewer");
+
+		main_win->canvas->ReadMap();
 
 		// show window (pass some dummy arguments)
 		{
