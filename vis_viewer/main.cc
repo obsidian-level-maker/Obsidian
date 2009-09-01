@@ -70,9 +70,9 @@ class UI_Window;
 UI_Window *main_win;
 
 
-#define MAX_SQUARES  32
+#define MAX_SQUARES  24
 
-#define SQUARE_SIZE  12
+#define SQUARE_SIZE  16
 
 
 class UI_Canvas : public Fl_Widget
@@ -90,6 +90,66 @@ public:
 	virtual ~UI_Canvas()
 	{ }
 
+public:
+	void DrawSquare(int sx, int sy)
+	{
+		int x1 = x() + sx * SQUARE_SIZE;
+		int y1 = y() + sy * SQUARE_SIZE;
+
+		int x2 = x1 + SQUARE_SIZE - 1;
+		int y2 = y1 + SQUARE_SIZE - 1;
+
+		// borders
+
+		if (loc_x < 0 || loc_y < 0)
+			return;
+
+		if (sx == loc_x && sy == loc_y)
+		{
+			fl_color(FL_YELLOW);
+			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
+		}
+	}
+
+	void DrawEverything()
+	{
+		for (int sx = 0; sx < MAX_SQUARES; sx++)
+		for (int sy = 0; sy < MAX_SQUARES; sy++)
+		{
+			DrawSquare(sx, sy);
+		}
+	}
+
+	void ChangeLocation(int nx, int ny)
+	{
+		fprintf(stderr, "New loc: %d %d\n", nx, ny);
+
+		loc_x = nx;
+		loc_y = ny;
+
+		// VIS_Clear();
+
+		// if (loc_x >= 0 && loc_y >= 0)
+		//     VIS_Recompute(loc_x, loc_y);
+
+		redraw();
+	}
+
+	void MouseMotion(int mx, int my)
+	{
+		int new_loc_x = (mx - x()) / SQUARE_SIZE;
+		int new_loc_y = (my - y()) / SQUARE_SIZE;
+
+		if (new_loc_x < 0 || new_loc_x >= MAX_SQUARES)
+			new_loc_x = -1;
+
+		if (new_loc_y < 0 || new_loc_y >= MAX_SQUARES)
+			new_loc_y = -1;
+
+		if (loc_x != new_loc_x || loc_y != new_loc_y)
+			ChangeLocation(new_loc_x, new_loc_y);
+	}
+
 private:
 	// FLTK virtual method for drawing.
 	void draw()
@@ -99,12 +159,10 @@ private:
 		fl_color(FL_LIGHT2);
 		fl_rectf(x(), y(), w(), h());
 
-		// ....
+		DrawEverything();
 
 		fl_pop_clip();
 	}
-
-	void DrawEverything();
 
 public:
 	// FLTK virtual method for resizing.
@@ -141,9 +199,7 @@ public:
 
 			case FL_MOVE:
 			case FL_DRAG:
-				// FIXME : change current square
-				// EditorMouseMotion(Fl::event_x(), Fl::event_y(),
-				//		MAPX(Fl::event_x()), MAPY(Fl::event_y()), event == FL_DRAG);
+				MouseMotion(Fl::event_x(), Fl::event_y());
 				return 1;
 
 			case FL_PUSH:
@@ -171,11 +227,7 @@ class UI_Window : public Fl_Double_Window
 public:
 	bool want_quit;
 
-	// main child widgets
-
 	UI_Canvas *canvas;
-
-private:
 
 public:
 	UI_Window(const char *title);
@@ -201,7 +253,6 @@ UI_Window::UI_Window(const char *title) :
 	size_range(MAIN_WINDOW_W, MAIN_WINDOW_H, MAIN_WINDOW_W, MAIN_WINDOW_H);
 
 	callback((Fl_Callback *) main_win_close_CB);
-
 
 	canvas = new UI_Canvas(0, 0, MAIN_WINDOW_W, MAIN_WINDOW_H);
 	add(canvas);
