@@ -18,7 +18,7 @@
 
 
 #define V_BOTTOM  0x0001
-#define V_RIGHT   0x0002 
+#define V_LEFT    0x0002 
 
 
 class Vis_Buffer
@@ -50,7 +50,7 @@ public:
 
 	inline short& at(int x, int y)
 	{
-		return data[y*W + x];
+		return data[y * W + x];
 	}
 
 	void Clear()
@@ -60,9 +60,9 @@ public:
 
 	void AddWall(int x, int y, int side)
 	{
-		if (side == 4)
+		if (side == 6)
 		{
-			x++; side = 6;
+			x++; side = 4;
 		}
 
 		if (side == 8)
@@ -76,14 +76,14 @@ public:
 		if (side == 2)
 			at(x, y) |= V_BOTTOM;
 		else
-			at(x, y) |= V_RIGHT;
+			at(x, y) |= V_LEFT;
 	}
 
 	bool TestWall(int x, int y, int side)
 	{
-		if (side == 4)
+		if (side == 6)
 		{
-			x++; side = 6;
+			x++; side = 4;
 		}
 
 		if (side == 8)
@@ -97,7 +97,7 @@ public:
 		if (side == 2)
 			return (at(x, y) & V_BOTTOM) ? true : false;
 		else
-			return (at(x, y) & V_RIGHT)  ? true : false;
+			return (at(x, y) & V_LEFT) ? true : false;
 	}
 
 	void ReadMap(const char *filename)
