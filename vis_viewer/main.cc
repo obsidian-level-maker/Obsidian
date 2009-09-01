@@ -133,9 +133,16 @@ public:
 		fl_rectf(x1, y1, SQUARE_SIZE, 1);
 		fl_rectf(x1, y1, 1, SQUARE_SIZE);
 
+		int vis = vbuf.GetVis(sx, sy);
+
 		if (sx == loc_x && sy == loc_y)
 		{
 			fl_color(FL_YELLOW);
+			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
+		}
+		else if (vis == 1)
+		{
+			fl_color(FL_BLUE);
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
 
@@ -166,15 +173,15 @@ public:
 
 	void ChangeLocation(int nx, int ny)
 	{
-		fprintf(stderr, "New loc: %d %d\n", nx, ny);
+		// fprintf(stderr, "New loc: %d %d\n", nx, ny);
 
 		loc_x = nx;
 		loc_y = ny;
 
-		// VIS_Clear();
+		vbuf.ClearVis();
 
-		// if (loc_x >= 0 && loc_y >= 0)
-		//     VIS_Recompute(loc_x, loc_y);
+		if (loc_x >= 0 && loc_y >= 0)
+		    vbuf.ProcessVis(loc_x, loc_y);
 
 		redraw();
 	}
@@ -195,6 +202,17 @@ public:
 
 		if (loc_x != new_loc_x || loc_y != new_loc_y)
 			ChangeLocation(new_loc_x, new_loc_y);
+	}
+
+	void HandleKey(int key)
+	{
+		if (key == ' ' || key == FL_BackSpace || key == FL_Delete)
+		{
+			loc_x = loc_y = -1;
+			vbuf.ClearVis();
+			redraw();
+			return;
+		}
 	}
 
 private:
@@ -240,8 +258,8 @@ public:
 
 			case FL_KEYDOWN:
 			case FL_SHORTCUT:
-				// FIXME
 				key = Fl::event_key();
+				HandleKey(key);
 				return (32 <= key && key <= 126) ? 1 : 0;
 
 			case FL_MOVE:

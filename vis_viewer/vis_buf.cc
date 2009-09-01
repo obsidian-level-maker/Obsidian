@@ -17,8 +17,16 @@
 //------------------------------------------------------------------------
 
 
+// map data
 #define V_BOTTOM  0x0001
 #define V_LEFT    0x0002 
+
+
+// vis results
+#define V_BASIC   0x0010   // ultra basic
+#define V_LSHAPE  0x0020   // L shape testing
+#define V_SPAN    0x0040   // long spans
+#define V_WONKA   0x0080   // Wonka's (et al) method
 
 
 class Vis_Buffer
@@ -114,6 +122,58 @@ public:
 		}
 
 		fclose(fp);
+	}
+
+private:
+	void DoBasic(int x, int y, int dx, int dy, int side)
+	{
+		for (;;)
+		{
+			if (! isValid(x, y))
+				return;
+
+			if (TestWall(x, y, side))
+				break;
+
+			x += dx; y += dy;
+		}
+
+		for (;;)
+		{
+			x += dx; y += dy;
+
+			if (! isValid(x, y))
+				return;
+
+			at(x, y) |= V_BASIC;
+		}
+	}
+
+public:
+	void ClearVis()
+	{
+		int len = W * H;
+
+		for (int i = 0; i < len; i++)
+			data[i] &= 7;
+	}
+
+	void ProcessVis(int x, int y)
+	{
+		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
+		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
+	}
+
+	int GetVis(int x, int y)
+	{
+		short d = at(x, y);
+
+		if (d & V_BASIC)  return 1;
+		if (d & V_LSHAPE) return 2;
+		if (d & V_SPAN)   return 3;
+		if (d & V_WONKA)  return 4;
+
+		return 0;
 	}
 };
 
