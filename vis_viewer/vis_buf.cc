@@ -17,6 +17,10 @@
 //------------------------------------------------------------------------
 
 
+#define V_BOTTOM  0x0001
+#define V_RIGHT   0x0002 
+
+
 class Vis_Buffer
 {
 private:
@@ -30,7 +34,7 @@ public:
 	{
 		data = new short[W * H];
 
-		memset(data, 0, sizeof(short) * W * H);
+		Clear();
 	}
 
 	~Vis_Buffer()
@@ -39,7 +43,78 @@ public:
 	}
 
 public:
-	
+	inline bool isValid(int x, int y)
+	{
+		return (0 <= x && x < W) && (0 <= y && y < H);
+	}
+
+	inline short& at(int x, int y)
+	{
+		return data[y*W + x];
+	}
+
+	void Clear()
+	{
+		memset(data, 0, sizeof(short) * W * H);
+	}
+
+	void AddWall(int x, int y, int side)
+	{
+		if (side == 4)
+		{
+			x++; side = 6;
+		}
+
+		if (side == 8)
+		{
+			y++; side = 2;
+		}
+
+		if (! isValid(x, y))
+			return;
+
+		if (side == 2)
+			at(x, y) |= V_BOTTOM;
+		else
+			at(x, y) |= V_RIGHT;
+	}
+
+	bool TestWall(int x, int y, int side)
+	{
+		if (side == 4)
+		{
+			x++; side = 6;
+		}
+
+		if (side == 8)
+		{
+			y++; side = 2;
+		}
+
+		if (! isValid(x, y))
+			return true;
+
+		if (side == 2)
+			return (at(x, y) & V_BOTTOM) ? true : false;
+		else
+			return (at(x, y) & V_RIGHT)  ? true : false;
+	}
+
+	void ReadMap(const char *filename)
+	{
+		FILE *fp = fopen(filename, "r");
+		if (! fp)
+			FatalError("No such file: %s\n", filename);
+
+		int x, y, side;
+
+		while (fscanf(fp, " %d %d %d ", &x, &y, &side) == 3)
+		{
+			AddWall(x, y, side);
+		}
+
+		fclose(fp);
+	}
 };
 
 
