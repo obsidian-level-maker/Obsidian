@@ -116,6 +116,8 @@ public:
 	// FLTK virtual method for handling input events.
 	int handle(int event)
 	{
+		int key;
+
 		switch (event)
 		{
 			case FL_FOCUS:
@@ -134,8 +136,8 @@ public:
 			case FL_KEYDOWN:
 			case FL_SHORTCUT:
 				// FIXME
-				// HandleKey(Fl::event_key());
-				return 1;
+				key = Fl::event_key();
+				return (32 <= key && key <= 126) ? 1 : 0;
 
 			case FL_MOVE:
 			case FL_DRAG:
