@@ -17,3 +17,31 @@
 //------------------------------------------------------------------------
 
 
+class Vis_Buffer
+{
+private:
+	int W, H;  // size
+
+	short * data;
+
+public:
+	Vis_Buffer(int width, int height) :
+    	W(width), H(height)
+	{
+		data = new short[W * H];
+
+		memset(data, 0, sizeof(short) * W * H);
+	}
+
+	~Vis_Buffer()
+	{
+		delete[] data;
+	}
+
+public:
+	
+};
+
+
+//--- editor settings ---
+// vi:ts=4:sw=4:noexpandtab

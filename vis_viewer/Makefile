@@ -4,7 +4,7 @@
 # GNU Makefile for Unix/Linux
 #----------------------------------------------------------------
 
-PROGRAM=../VisViewer
+PROGRAM=VisViewer
 
 CXX=g++
 

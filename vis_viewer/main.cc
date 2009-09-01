@@ -81,10 +81,13 @@ private:
 	// the current square to view, -1 when out of range
 	int loc_x, loc_y;
 
+	Vis_Buffer vbuf;
+
 public:
 	UI_Canvas(int X, int Y, int W, int H, const char *label = NULL) :
 		Fl_Widget(X, Y, W, H, label),
-		loc_x(-1), loc_y(-1)
+		loc_x(-1), loc_y(-1),
+		vbuf(MAX_SQUARES, MAX_SQUARES)
 	{ }
 
 	virtual ~UI_Canvas()
@@ -98,6 +101,11 @@ public:
 
 		int x2 = x1 + SQUARE_SIZE - 1;
 		int y2 = y1 + SQUARE_SIZE - 1;
+
+		fl_color(fl_rgb_color(192, 192, 192));
+
+		fl_rectf(x1, y1, SQUARE_SIZE, 1);
+		fl_rectf(x1, y1, 1, SQUARE_SIZE);
 
 		// borders
 
