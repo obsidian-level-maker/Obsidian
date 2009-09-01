@@ -272,6 +272,8 @@ General:
   GUI and C++ CODE
 ----------------------------------------------------------------
 
+-  support for the DECORATE lump
+
 -  ui_chooser: support last_file in WIN32
       maybe this: lpstrFile contains _base_ of file (FOO.EXT)
               and lpstrInitialDir contains _path_ of last file.
