@@ -39,6 +39,30 @@ SKULLTAG_THINGS =
   max_potion = { id=5090, kind="pickup", r=20,h=16, pass=true },
   max_helmet = { id=5091, kind="pickup", r=20,h=16, pass=true },
   red_armor  = { id=5040, kind="pickup", r=20,h=16, pass=true },
+
+  -- powerups
+  turbo_sphere   = { id=5030, kind="pickup", r=20,h=45, pass=true },
+  time_sphere    = { id=5032, kind="pickup", r=20,h=45, pass=true },
+  invis_sphere   = { id=5035, kind="pickup", r=20,h=45, pass=true },
+  doom_sphere    = { id=5036, kind="pickup", r=20,h=45, pass=true },
+  guard_sphere   = { id=5037, kind="pickup", r=20,h=30, pass=true },
+  random_sphere  = { id=5039, kind="pickup", r=20,h=45, pass=true },
+ 
+  -- special powerups (multiplayer only)
+  hellstone  = { id=6000, kind="pickup", r=20,h=45, pass=true },
+  terminator = { id=6001, kind="pickup", r=20,h=45, pass=true },
+
+  -- runes
+  rune_strength = { id=5100, kind="pickup", r=20,h=45, pass=true },
+  rune_rage     = { id=5101, kind="pickup", r=20,h=45, pass=true },
+  rune_drain    = { id=5102, kind="pickup", r=20,h=45, pass=true },
+  rune_spread   = { id=5103, kind="pickup", r=20,h=45, pass=true },
+  rune_resist   = { id=5104, kind="pickup", r=20,h=45, pass=true },
+  rune_regen    = { id=5105, kind="pickup", r=20,h=45, pass=true },
+  rune_prosper  = { id=5106, kind="pickup", r=20,h=45, pass=true },
+  rune_reflect  = { id=5107, kind="pickup", r=20,h=45, pass=true },
+  rune_hi_jump  = { id=5108, kind="pickup", r=20,h=45, pass=true },
+  rune_haste    = { id=5109, kind="pickup", r=20,h=45, pass=true },
 }
 
 
@@ -48,7 +72,7 @@ SKULLTAG_MONSTERS =
   {
     prob=55,
     health=120, damage=30, attack="missile",
-    density=0.6,
+    density=0.7,
   },
 
   superguy =
@@ -70,14 +94,14 @@ SKULLTAG_MONSTERS =
   {
     prob=25, crazy_prob=10,
     health=800, damage=55, attack="missile",
-    density=0.4, float=true,
+    density=0.5, float=true,
   },
 
   hectebus =
   {
-    prob=35,
+    prob=10, skip_prob=100,
     health=1200, damage=120, attack="missile",
-    density=0.2,
+    density=0.2, never_promote=true,
   },
 
   abaddon =
@@ -109,23 +133,23 @@ SKULLTAG_WEAPONS =
   glaunch =
   {
     pref=50, add_prob=40,  start_prob=20,
-    rate=1.7, damage=90, attack="missile", --FIXME splash damage
+    rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=2} },
   },
 
   railgun =
   {
-    pref=20, add_prob=20, start_prob=7,
-    rate=3, damage=200, attack="hitscan",
+    pref=20, add_prob=20, start_prob=7, rarity=3,
+    rate=3.0, damage=200, attack="hitscan",
     ammo="cell", per=10,
     give={ {ammo="cell",count=40} },
   },
 
   bfg10k =
   {
-    pref=15, add_prob=2, start_prob=0.1,
-    rate=1.2, damage=300, attack="missile", --FIXME splash damage
+    pref=15, add_prob=2, start_prob=0.1, rarity=4,
+    rate=6.0, damage=160, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=5,
     give={ {ammo="cell",count=40} },
   },
@@ -172,6 +196,7 @@ SKULLTAG_FACTORS =
 function Skulltag_setup(self)
   if OB_CONFIG.game == "doom1" then
     GAME.monsters["hectebus"] = nil
+    GAME.monsters["superguy"].give = nil
   end
 
   -- apply the 'Default Monsters' choice
@@ -268,7 +293,7 @@ function Sktag_MonControl_setup(self)
       M.prob = prob
       M.crazy_prob = prob
 
-      if prob >  80 then M.density = 1.0 end
+      if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
       if prob > 180 then M.skip_prob = 0 end
     end
   end -- for opt
@@ -315,6 +340,9 @@ function Sktag_WeapControl_setup(self)
       if W.pref and prob > 0 then
         W.pref = W.pref * ((prob / 50) ^ 0.6)
       end
+      
+      -- allow it to appear as often as the user wants
+      W.rarity = nil
     end
   end -- for opt
 end
