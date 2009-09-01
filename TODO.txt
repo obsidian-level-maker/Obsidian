@@ -28,6 +28,8 @@ TODO
 
 -  rework Build_small_exit to only use a single transform,
 
+-  BUG: lowering item pedestals can go into ceiling
+
 -  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
 
