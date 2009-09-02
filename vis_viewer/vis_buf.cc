@@ -47,9 +47,12 @@ private:
 	// square we are processing
 	int loc_x, loc_y;
 
+	// current transform
+	int flip_x, flip_y;
+
 public:
 	Vis_Buffer(int width, int height) :
-    	W(width), H(height)
+    	W(width), H(height), flip_x(0), flip_y(0)
 	{
 		data = new short[W * H];
 
@@ -62,13 +65,39 @@ public:
 	}
 
 public:
+	inline int Trans_X(int x)
+	{
+		return flip_x ? (loc_x * 2 - x) : x;
+	}
+
+	inline int Trans_Y(int y)
+	{
+		return flip_y ? (loc_y * 2 - y) : y;
+	}
+
+	inline int Trans_Side(int side)
+	{
+		if ( (flip_x && (side == 4 || side == 6)) ||
+		     (flip_y && (side == 2 || side == 8)) )
+		{
+			return 10 - side;
+		}
+		return side;
+	}
+
 	inline bool isValid(int x, int y)
 	{
+		x = Trans_X(x);
+		y = Trans_Y(y);
+
 		return (0 <= x && x < W) && (0 <= y && y < H);
 	}
 
 	inline short& at(int x, int y)
 	{
+		x = Trans_X(x);
+		y = Trans_Y(y);
+
 		return data[y * W + x];
 	}
 
@@ -100,14 +129,18 @@ public:
 
 	bool TestWall(int x, int y, int side)
 	{
+		side = Trans_Side(side);
+
 		if (side == 6)
 		{
-			x++; side = 4;
+			if (flip_x) x--; else x++;
+			side = 4;
 		}
 
 		if (side == 8)
 		{
-			y++; side = 2;
+			if (flip_y) y--; else y++;
+			side = 2;
 		}
 
 		if (! isValid(x, y))
@@ -221,9 +254,14 @@ private:
 
 		if (bx == 0 && ly > loc_y) return;
 
-		for (int nx = loc_x; nx < W; nx++)
-		for (int ny = loc_y; ny < H; ny++)
+		for (int ny = loc_y; ny < loc_y+H; ny++)
+		for (int nx = loc_x; nx < loc_x+W; nx++)
 		{
+			if (! isValid(loc_x, ny))
+				return;
+			if (! isValid(nx, ny))
+				break;
+
 			if (nx >= lx+ww || ny >= ly+hh)
 			{
 				bool tl = true;
@@ -262,7 +300,7 @@ private:
 			if (side == 2)
 			{
 				sx++;
-				if (sx >= W) break;
+				if (! isValid(sx, sy)) break;
 
 				bool go_right = TestWall(sx, sy, 2);
 				bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
@@ -293,7 +331,7 @@ private:
 			{
 				assert(side == 4);
 
-				if (sy == loc_y) break;
+				if (sy <= loc_y) break;
 
 				bool go_right = TestWall(sx, sy, 2);
 				bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
@@ -327,15 +365,21 @@ private:
 		MarkSteps(steps);
 	}
 
-	void DoSteps()
+	void DoSteps(int quadrant)
 	{
-		for (int dy = 0; dy < H-loc_y; dy++)
-		for (int dx = 0; dx < W-loc_x; dx++)
+		flip_x = (quadrant & 1);
+		flip_y = (quadrant & 2);
+
+		for (int dy = 0; dy < H; dy++)
+		for (int dx = 0; dx < W; dx++)
 		{
 			int sx = loc_x + dx;
 			int sy = loc_y + dy;
 
-			assert(isValid(sx, sy));
+			if (! isValid(loc_x, sy))
+				return;
+			if (! isValid(sx, sy))
+				break;
 
 			if (  (dy > 0 && TestWall(sx, sy, 2)) &&
 			    ! (dx > 0 && TestWall(sx-1, sy, 2)) &&
@@ -347,7 +391,7 @@ private:
 
 			if (  (dx > 0 && TestWall(sx, sy, 4)) &&
 			    ! (          TestWall(sx-1, sy, 8)) &&
-				! (sy+1 < H && TestWall(sx, sy+1, 4)) )
+				! (isValid(sx, sy+1) && TestWall(sx, sy+1, 4)) )
 			{
 				Stair_Steps base;
 				FollowStair(base, sx, sy, 4);
@@ -370,10 +414,15 @@ public:
 		loc_x = x;
 		loc_y = y;
 
-		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
-		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
+//		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
+//		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
 
-		DoSteps();
+		DoSteps(0);
+		DoSteps(1);
+		DoSteps(2);
+		DoSteps(3);
+
+		flip_x = flip_y = 0;
 	}
 
 	int GetVis(int x, int y)
