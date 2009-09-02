@@ -327,9 +327,9 @@ if (sp_x <= x) return;  // FIXME
 		if (lx > x && lx == hx && ly > y && ly == hy)
 			return;
 
-		// fill in the "gaps" inside the bbox (behind the stair step)
+		// fill in the "gaps" inside the bbox (behind the stair-step)
 		int hx2 = hx;
-		if (steps[steps.size()-1].side == 4)
+		if (steps.back().side == 4)
 			hx2--;
 
 		for (unsigned int i = 0; i < steps.size(); i++)
@@ -337,6 +337,19 @@ if (sp_x <= x) return;  // FIXME
 			if (steps[i].side == 4)
 				for (int sx = steps[i].x; sx <= hx2; sx++)
 					at(sx, steps[i].y) |= V_BASIC;
+		}
+
+		// handle stair-steps which cover the whole quadrant
+		if (steps.front().x == x && steps.back().y == y)
+		{
+			for (int nx = x; nx < W; nx++)
+			for (int ny = y; ny < H; ny++)
+			{
+				if (nx >= hx || ny >= hy)
+					at(nx, ny) |= V_SPAN;
+			}
+
+			return;
 		}
 
 		return;
