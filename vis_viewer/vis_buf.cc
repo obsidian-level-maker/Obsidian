@@ -26,7 +26,7 @@
 #define V_BASIC   0x0010   // ultra basic
 #define V_SPAN    0x0020   // long spans
 #define V_LSHAPE  0x0040   // L shape testing
-#define V_WONKA   0x0080   // Wonka's (et al) method
+#define V_FILL    0x0080
 
 
 struct Stair_Pos
@@ -174,6 +174,8 @@ private:
 		int x = loc_x;
 		int y = loc_y;
 
+		int L = 0, R = 0;
+
 		for (;;)
 		{
 			if (! isValid(x, y))
@@ -187,12 +189,21 @@ private:
 
 		for (;;)
 		{
+			while (isValid( x+dy*(L+1), y+dx*(L+1)) &&
+			       TestWall(x+dy*(L+1), y+dx*(L+1), side))
+				L++;
+
+			while (isValid( x-dy*(R+1), y-dx*(R+1)) &&
+			       TestWall(x-dy*(R+1), y-dx*(R+1), side))
+				R++;
+
 			x += dx; y += dy;
 
 			if (! isValid(x, y))
 				return;
 
-			at(x, y) |= V_BASIC;
+			for (int j = -R; j <= L; j++)
+				at(x+dy*j, y+dx*j) |= V_BASIC;
 		}
 	}
 
@@ -414,10 +425,10 @@ public:
 		loc_x = x;
 		loc_y = y;
 
-//		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
-//		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
+  		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
+  		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
 
-		DoSteps(0);
+ 		DoSteps(0);
 		DoSteps(1);
 		DoSteps(2);
 		DoSteps(3);
@@ -429,10 +440,10 @@ public:
 	{
 		short d = at(x, y);
 
-  		if (d & V_BASIC)  return 1;
 		if (d & V_LSHAPE) return 3;
 		if (d & V_SPAN)   return 2;
-		if (d & V_WONKA)  return 4;
+  		if (d & V_BASIC)  return 1;
+		if (d & V_FILL)   return 4;
 
 		return 0;
 	}
