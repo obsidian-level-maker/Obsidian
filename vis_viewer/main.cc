@@ -72,7 +72,7 @@ UI_Window *main_win;
 const char *input_file = "DATA1";
 
 
-#define MAX_SQUARES  24
+#define MAX_SQUARES  28
 
 #define SQUARE_SIZE  16
 
