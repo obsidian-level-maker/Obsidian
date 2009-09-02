@@ -44,6 +44,9 @@ private:
 
 	short * data;
 
+	// square we are processing
+	int loc_x, loc_y;
+
 public:
 	Vis_Buffer(int width, int height) :
     	W(width), H(height)
@@ -133,8 +136,11 @@ public:
 	}
 
 private:
-	void DoBasic(int x, int y, int dx, int dy, int side)
+	void DoBasic(int dx, int dy, int side)
 	{
+		int x = loc_x;
+		int y = loc_y;
+
 		for (;;)
 		{
 			if (! isValid(x, y))
@@ -174,7 +180,7 @@ private:
 			dest.push_back(src[i]);
 	}
 
-	void MarkSteps(const Stair_Steps& steps, int x, int y)
+	void MarkSteps(const Stair_Steps& steps)
 	{
 		if (steps.size() < 2)
 			return;
@@ -193,7 +199,7 @@ private:
 			hh++;
 
 		// skip if too small
-		if (lx > x && ww <= 1 && ly > y && hh <= 1)
+		if (lx > loc_x && ww <= 1 && ly > loc_y && hh <= 1)
 			return;
 
 		// fill in the "gaps" inside the bbox (behind the stair-step)
@@ -207,35 +213,35 @@ private:
 		// normal case : mark all squares in the quadrant which lie
 		// in the shadow area cast by the stair-step's bounding box.
 
-		double tx = lx - x;
-		double ty = ly - y + hh - 1;
+		double tx = lx - loc_x;
+		double ty = ly - loc_y + hh - 1;
 
-		double bx = lx - x + ww - 1;
-		double by = ly - y;
+		double bx = lx - loc_x + ww - 1;
+		double by = ly - loc_y;
 
-		if (bx == 0 && ly > y) return;
+		if (bx == 0 && ly > loc_y) return;
 
-		for (int nx = x; nx < W; nx++)
-		for (int ny = y; ny < H; ny++)
+		for (int nx = loc_x; nx < W; nx++)
+		for (int ny = loc_y; ny < H; ny++)
 		{
 			if (nx >= lx+ww || ny >= ly+hh)
 			{
 				bool tl = true;
 				bool br = true;
   
-				if (lx > x)
+				if (lx > loc_x)
 				{
 					assert(tx > 0);
-					double z = y + 1 + (nx - x) * ty / tx;
+					double z = loc_y + 1 + (nx - loc_x) * ty / tx;
 
 					if (ny+1 > z)
 						tl = false;
 				}
 
-  				if (ly > y)
+  				if (ly > loc_y)
 				{
 					assert(bx > 0);
-					double z = y + (nx - x) * by / bx;
+					double z = loc_y + (nx - loc_x) * by / bx;
 
 					if (ny < z)
 						br = false;
@@ -247,7 +253,7 @@ private:
 		}
 	}
 
-	void FollowStair(Stair_Steps& steps, int x, int y, int sx, int sy, int side)
+	void FollowStair(Stair_Steps& steps, int sx, int sy, int side)
 	{
 		AddStep(steps, sx, sy, side);
 
@@ -259,7 +265,7 @@ private:
 				if (sx >= W) break;
 
 				bool go_right = TestWall(sx, sy, 2);
-				bool go_down  = (sy-1 >= y) && TestWall(sx, sy-1, 4);
+				bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
 
 				// handle branches with recursion
 				if (go_right && go_down)
@@ -267,7 +273,7 @@ private:
 					Stair_Steps other;
 					CopySteps(other, steps);
 
-					FollowStair(other, x, y, sx, sy, 2);
+					FollowStair(other, sx, sy, 2);
 					go_right = false;
 				}
 
@@ -287,10 +293,10 @@ private:
 			{
 				assert(side == 4);
 
-				if (sy == y) break;
+				if (sy == loc_y) break;
 
 				bool go_right = TestWall(sx, sy, 2);
-				bool go_down  = (sy-1 >= y) && TestWall(sx, sy-1, 4);
+				bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
 
 				// handle branches with recursion
 				if (go_right && go_down)
@@ -299,7 +305,7 @@ private:
 					Stair_Steps other;
 					CopySteps(other, steps);
 
-					FollowStair(other, x, y, sx, sy, 2);
+					FollowStair(other, sx, sy, 2);
 					go_right = false;
 				}
 
@@ -318,16 +324,16 @@ private:
 			AddStep(steps, sx, sy, side);
 		}
 
-		MarkSteps(steps, x, y);
+		MarkSteps(steps);
 	}
 
-	void DoSteps(int x, int y)
+	void DoSteps()
 	{
-		for (int dy = 0; dy < H-y; dy++)
-		for (int dx = 0; dx < W-x; dx++)
+		for (int dy = 0; dy < H-loc_y; dy++)
+		for (int dx = 0; dx < W-loc_x; dx++)
 		{
-			int sx = x + dx;
-			int sy = y + dy;
+			int sx = loc_x + dx;
+			int sy = loc_y + dy;
 
 			assert(isValid(sx, sy));
 
@@ -336,7 +342,7 @@ private:
 				! (dx > 0 && TestWall(sx, sy, 4)) )
 			{
 				Stair_Steps base;
-				FollowStair(base, x, y, sx, sy, 2);
+				FollowStair(base, sx, sy, 2);
 			}
 
 			if (  (dx > 0 && TestWall(sx, sy, 4)) &&
@@ -344,7 +350,7 @@ private:
 				! (sy+1 < H && TestWall(sx, sy+1, 4)) )
 			{
 				Stair_Steps base;
-				FollowStair(base, x, y, sx, sy, 4);
+				FollowStair(base, sx, sy, 4);
 			}
 
 		}
@@ -361,10 +367,13 @@ public:
 
 	void ProcessVis(int x, int y)
 	{
-		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
-		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
+		loc_x = x;
+		loc_y = y;
 
-		DoSteps(x, y);
+		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
+		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
+
+		DoSteps();
 	}
 
 	int GetVis(int x, int y)
