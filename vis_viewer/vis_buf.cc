@@ -281,9 +281,55 @@ if (sp_x <= x) return;  // FIXME
 		}
 	}
 
+	void FollowStair(int x, int y, int sx, int sy, int side)
+	{
+		at(sx, sy) |= V_SPAN;
+
+		for (;;)
+		{
+			if (side == 2)
+			{
+				sx++;
+				if (sx >= W) return;
+
+				if (TestWall(sx, sy, 2))
+				{
+					// OK
+				}
+				else if (sy-1 >= y && TestWall(sx, sy-1, 4))
+				{
+					sy--;  // OK
+					side = 4;
+				}
+				else
+					return;
+			}
+			else
+			{
+				assert(side == 4);
+
+				if (sy == y) return;
+
+				if (sy-1 >= y && TestWall(sx, sy-1, 4))
+				{
+					sy--;  // OK
+				}
+				else if (TestWall(sx, sy, 2))
+				{
+					// OK
+					side = 2;
+				}
+				else
+					return;
+			}
+
+			at(sx, sy) |= V_BASIC;
+		}
+	}
+
 	void DoSteps(int x, int y)
 	{
-		for (int dy = 1; dy < H-y; dy++)
+		for (int dy = 0; dy < H-y; dy++)
 		for (int dx = 0; dx < W-x; dx++)
 		{
 			int sx = x + dx;
@@ -291,16 +337,19 @@ if (sp_x <= x) return;  // FIXME
 
 			assert(isValid(sx, sy));
 
-			if (! TestWall(sx, sy, 2))
-				continue;
+			if (  (dy > 0 && TestWall(sx, sy, 2)) &&
+			    ! (dx > 0 && TestWall(sx-1, sy, 2)) &&
+				! (dx > 0 && TestWall(sx, sy, 4)) )
+			{
+				FollowStair(x, y, sx, sy, 2);
+			}
 
-			if (dx > 0 && TestWall(sx-1, sy, 2))
-				continue;
-
-			if (dx > 0 && TestWall(sx, sy, 4))
-				continue;
-
-			at(sx, sy) |= V_SPAN;
+			if (  (dx > 0 && TestWall(sx, sy, 4)) &&
+			    ! (          TestWall(sx-1, sy, 8)) &&
+				! (sy+1 < H && TestWall(sx, sy+1, 4)) )
+			{
+				FollowStair(x, y, sx, sy, 4);
+			}
 		}
 	}
 
@@ -315,8 +364,8 @@ public:
 
 	void ProcessVis(int x, int y)
 	{
-		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
-		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
+//		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
+//		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
 
 		// HorizSpans(x, y); VertSpans(x, y);
 
@@ -327,8 +376,8 @@ public:
 	{
 		short d = at(x, y);
 
-//		if (d & V_BASIC)  return 1;
 		if (d & V_SPAN)   return 2;
+  		if (d & V_BASIC)  return 1;
 		if (d & V_LSHAPE) return 3;
 		if (d & V_WONKA)  return 4;
 
