@@ -44,7 +44,7 @@ OBJS=main.o
 
 #--- Targets and Rules ------------------------------------------
 
-all: $(PROGRAM)
+all: clean $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) *.o core core.* ERRS
