@@ -30,6 +30,11 @@
 #include <math.h>
 #include <assert.h>
 
+#if 1
+#include <sys/time.h>
+#include <time.h>
+#endif
+
 /*
  *  Standard C++ headers
  */
@@ -72,10 +77,12 @@ UI_Window *main_win;
 
 const char *input_file = "DATA1";
 
+bool time_it = false;
 
-#define MAX_SQUARES  28
 
-#define SQUARE_SIZE  16
+#define MAX_SQUARES  34
+
+#define SQUARE_SIZE  12
 
 
 class UI_Canvas : public Fl_Widget
@@ -84,6 +91,7 @@ private:
 	// the current square to view, -1 when out of range
 	int loc_x, loc_y;
 
+public:
 	Vis_Buffer vbuf;
 
 public:
@@ -362,10 +370,49 @@ void FatalError(const char *msg, ...)
 }
 
 
+void TimeTest()
+{
+#if 1
+	fprintf(stderr, "BEGUN... %dx%d\n", MAX_SQUARES, MAX_SQUARES);
+
+	struct timeval tv1;
+	struct timeval tv2;
+
+	gettimeofday(&tv1, NULL);
+
+	for (int x = 0; x < MAX_SQUARES; x++)
+	for (int y = 0; y < MAX_SQUARES; y++)
+	{
+		main_win->canvas->vbuf.ClearVis();
+		main_win->canvas->vbuf.ProcessVis(x, y);
+	}
+
+	gettimeofday(&tv2, NULL);
+
+	int sec  = tv2.tv_sec  - tv1.tv_sec;
+	int usec = tv2.tv_usec - tv1.tv_usec;
+
+	double total = sec + usec / 1e6;
+
+	fprintf(stderr, "FINISHED... %1.4f sec\n", total);
+
+	exit(1);
+#endif
+}
+
+
 int main(int argc, char **argv)
 {
-	if (argc >= 2)
-		input_file = argv[1];
+	argv++, argc--;
+
+	if (argc >= 1 && strcmp(*argv, "-t") == 0)
+	{
+		time_it = true;
+		argv++, argc--;
+	}
+
+	if (argc >= 1)
+		input_file = *argv++;
 
 	Fl::scheme("plastic");
 
@@ -376,6 +423,9 @@ int main(int argc, char **argv)
 		main_win = new UI_Window("Vis Viewer");
 
 		main_win->canvas->ReadMap();
+
+		if (time_it)
+			TimeTest();
 
 		// show window (pass some dummy arguments)
 		{
