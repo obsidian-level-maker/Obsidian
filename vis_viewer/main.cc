@@ -141,19 +141,16 @@ public:
 			fl_color(FL_YELLOW);
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
-		else if (vis == 1)
+		else if (vis != 0)
 		{
-			fl_color(FL_BLUE);
-			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
-		}
-		else if (vis == 2)
-		{
-			fl_color(fl_rgb_color(255,176,32));
-			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
-		}
-		else if (vis == 3)
-		{
-			fl_color(fl_rgb_color(0,160,0));
+			switch (vis)
+			{
+				case 1:  fl_color(FL_BLUE); break;
+				case 2:  fl_color(fl_rgb_color(255,176,32)); break;
+				case 3:  fl_color(fl_rgb_color(0,160,0)); break;
+				default: fl_color(FL_MAGENTA); break;
+			}
+
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
 

@@ -28,6 +28,8 @@
 #define V_LSHAPE  0x0040   // L shape testing
 #define V_FILL    0x0080
 
+#define V_ANY     0xFFF0
+
 
 struct Stair_Pos
 {
@@ -204,6 +206,32 @@ private:
 
 			for (int j = -R; j <= L; j++)
 				at(x+dy*j, y+dx*j) |= V_BASIC;
+		}
+	}
+
+	void DoFill()
+	{
+		for (int dy = 0; dy < H; dy++)
+		for (int dx = 0; dx < W; dx++)
+		{
+			if (dx == 0 && dy == 0)
+				continue;
+
+			int sx = loc_x + dx;
+			int sy = loc_y + dy;
+
+			if (! isValid(loc_x, sy+1))
+				return;
+			if (! isValid(sx+1, loc_y))
+				break;
+
+			if (! (at(sx+1, sy+1) & V_ANY) &&
+			     ((at(sx+1, sy)   & V_ANY) || TestWall(sx+1, sy, 8)) &&
+			     ((at(sx,   sy+1) & V_ANY) || TestWall(sx, sy+1, 6))
+			   )
+			{
+				at(sx+1, sy+1) |= V_FILL;
+			}
 		}
 	}
 
@@ -407,7 +435,6 @@ private:
 				Stair_Steps base;
 				FollowStair(base, sx, sy, 4);
 			}
-
 		}
 	}
 
@@ -428,10 +455,10 @@ public:
   		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
   		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
 
- 		DoSteps(0);
-		DoSteps(1);
-		DoSteps(2);
-		DoSteps(3);
+ 		DoSteps(0); DoFill();
+		DoSteps(1); DoFill();
+		DoSteps(2); DoFill();
+		DoSteps(3); DoFill();
 
 		flip_x = flip_y = 0;
 	}
