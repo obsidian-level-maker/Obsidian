@@ -81,9 +81,9 @@ bool quick_mode = false;
 bool time_it = false;
 
 
-#define MAX_SQUARES  34
+#define MAX_SQUARES  32
 
-#define SQUARE_SIZE  12
+#define SQUARE_SIZE  16
 
 
 class UI_Canvas : public Fl_Widget
@@ -135,8 +135,8 @@ public:
 		int x1 = x() + sx * SQUARE_SIZE;
 		int y1 = y() + (MAX_SQUARES-1-sy) * SQUARE_SIZE;
 
-		int x2 = x1 + SQUARE_SIZE - 1;
-		int y2 = y1 + SQUARE_SIZE - 1;
+		// int x2 = x1 + SQUARE_SIZE - 1;
+		// int y2 = y1 + SQUARE_SIZE - 1;
 
 		fl_color(fl_rgb_color(192, 192, 192));
 

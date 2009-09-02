@@ -14,7 +14,7 @@ FLTK_DIR=$(LIB_LOC)/fltk-1.1.9
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
 
-OPTIMISE=-O -g3
+OPTIMISE=-O1 -g
 
 # operating system choices: UNIX WIN32
 OS=UNIX
@@ -35,7 +35,7 @@ GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
-LDFLAGS=-L/usr/X11R6/lib 
+LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 
 

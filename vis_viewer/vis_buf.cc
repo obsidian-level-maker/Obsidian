@@ -315,14 +315,14 @@ private:
 
 		if (bx == 0 && ly > loc_y)
 			return;
-//
+
 		for (int nx = loc_x; nx < loc_x+W; nx++)
 		{
 			if (! isValid(nx, loc_y))
 				return;
 		
 			int y1 = loc_y;
-			int y2 = loc_y+H; ///
+			int y2 = loc_y+H;
 
 			if (lx > loc_x)
 			{
@@ -342,42 +342,6 @@ private:
 			for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++)
 			{
 				at(nx, ny) |= V_SPAN;
-			}
-		}
-return; //
-		for (int ny = loc_y; ny < loc_y+H; ny++)
-		for (int nx = loc_x; nx < loc_x+W; nx++)
-		{
-			if (! isValid(loc_x, ny))
-				return;
-			if (! isValid(nx, ny))
-				break;
-
-			if (nx >= lx+ww || ny >= ly+hh)
-			{
-				bool tl = true;
-				bool br = true;
-  
-				if (lx > loc_x)
-				{
-					// assert(tx > 0);
-					double z = loc_y + 1 + (nx - loc_x) * ty / tx;
-
-					if (ny+1 > z)
-						tl = false;
-				}
-
-  				if (ly > loc_y)
-				{
-					// assert(bx > 0);
-					double z = loc_y + (nx - loc_x) * by / bx;
-
-					if (ny < z)
-						br = false;
-				}
-
-				if (tl && br)
-					at(nx, ny) |= V_SPAN;
 			}
 		}
 	}
