@@ -77,6 +77,7 @@ UI_Window *main_win;
 
 const char *input_file = "DATA1";
 
+bool quick_mode = false;
 bool time_it = false;
 
 
@@ -405,6 +406,12 @@ int main(int argc, char **argv)
 {
 	argv++, argc--;
 
+	if (argc >= 1 && strcmp(*argv, "-q") == 0)
+	{
+		quick_mode = true;
+		argv++, argc--;
+	}
+
 	if (argc >= 1 && strcmp(*argv, "-t") == 0)
 	{
 		time_it = true;
@@ -423,6 +430,8 @@ int main(int argc, char **argv)
 		main_win = new UI_Window("Vis Viewer");
 
 		main_win->canvas->ReadMap();
+
+		main_win->canvas->vbuf.SetQuickMode(quick_mode);
 
 		if (time_it)
 			TimeTest();

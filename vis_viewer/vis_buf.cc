@@ -46,15 +46,21 @@ private:
 
 	short * data;
 
+	bool quick_mode;
+
 	// square we are processing
 	int loc_x, loc_y;
 
 	// current transform
 	int flip_x, flip_y;
 
+	// current limits for DoSteps()
+	int limit_x, limit_y;
+
 public:
 	Vis_Buffer(int width, int height) :
-    	W(width), H(height), flip_x(0), flip_y(0)
+    	W(width), H(height), quick_mode(false),
+		flip_x(0), flip_y(0)
 	{
 		data = new short[W * H];
 
@@ -67,6 +73,11 @@ public:
 	}
 
 public:
+	void SetQuickMode(bool enable)
+	{
+		quick_mode = enable;
+	}
+
 	inline int Trans_X(int x)
 	{
 		return flip_x ? (loc_x * 2 - x) : x;
@@ -214,8 +225,8 @@ private:
 		for (int dy = 0; dy < H; dy++)
 		for (int dx = 0; dx < W; dx++)
 		{
-			if (dx == 0 && dy == 0)
-				continue;
+			// if (dx == 0 && dy == 0)
+			//	  continue;
 
 			int sx = loc_x + dx;
 			int sy = loc_y + dy;
@@ -282,6 +293,17 @@ private:
 					at(sx, steps[i].y) |= V_LSHAPE;
 		}
 
+		// if stair-step covers whole quadrant, then we don't need
+		// to look for other stair-steps behind the current one.
+		if (lx == loc_x && ly == loc_y)
+		{
+			limit_x = lx + ww;
+			limit_y = ly + hh;
+		}
+
+		if (quick_mode)
+			return;
+
 		// normal case : mark all squares in the quadrant which lie
 		// in the shadow area cast by the stair-step's bounding box.
 
@@ -291,8 +313,16 @@ private:
 		double bx = lx - loc_x + ww - 1;
 		double by = ly - loc_y;
 
-		if (bx == 0 && ly > loc_y) return;
+		if (bx == 0 && ly > loc_y)
+			return;
 
+/*		for (int nx = loc_x; nx < loc_x+W; nx++)
+		{
+			if (! isValid(nx, loc_y))
+				return;
+		
+		}
+*/
 		for (int ny = loc_y; ny < loc_y+H; ny++)
 		for (int nx = loc_x; nx < loc_x+W; nx++)
 		{
@@ -308,7 +338,7 @@ private:
   
 				if (lx > loc_x)
 				{
-					assert(tx > 0);
+					// assert(tx > 0);
 					double z = loc_y + 1 + (nx - loc_x) * ty / tx;
 
 					if (ny+1 > z)
@@ -317,7 +347,7 @@ private:
 
   				if (ly > loc_y)
 				{
-					assert(bx > 0);
+					// assert(bx > 0);
 					double z = loc_y + (nx - loc_x) * by / bx;
 
 					if (ny < z)
@@ -409,8 +439,11 @@ private:
 		flip_x = (quadrant & 1);
 		flip_y = (quadrant & 2);
 
-		for (int dy = 0; dy < H; dy++)
-		for (int dx = 0; dx < W; dx++)
+		limit_x = W;
+		limit_y = H;
+
+		for (int dy = 0; dy < limit_y; dy++)
+		for (int dx = 0; dx < limit_x; dx++)
 		{
 			int sx = loc_x + dx;
 			int sy = loc_y + dy;
@@ -467,10 +500,10 @@ public:
 	{
 		short d = at(x, y);
 
-		if (d & V_LSHAPE) return 3;
-		if (d & V_SPAN)   return 2;
-  		if (d & V_BASIC)  return 1;
 		if (d & V_FILL)   return 4;
+		if (d & V_LSHAPE) return 3;
+  		if (d & V_BASIC)  return 1;
+		if (d & V_SPAN)   return 2;
 
 		return 0;
 	}
