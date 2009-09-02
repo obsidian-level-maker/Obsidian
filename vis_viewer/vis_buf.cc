@@ -308,6 +308,39 @@ if (sp_x <= x) return;  // FIXME
 
 	void MarkSteps(const Stair_Steps& steps, int x, int y)
 	{
+		if (steps.size() < 2)
+			return;
+
+		// determine bounding box
+		int lx = 9999; int hx = 0;
+		int ly = 9999; int hy = 0;
+
+		for (unsigned int i = 0; i < steps.size(); i++)
+		{
+			lx = MIN(lx, steps[i].x);
+			ly = MIN(ly, steps[i].y);
+			hx = MAX(hx, steps[i].x);
+			hy = MAX(hy, steps[i].y);
+		}
+
+		// skip if too small
+		if (lx > x && lx == hx && ly > y && ly == hy)
+			return;
+
+		// fill in the "gaps" inside the bbox (behind the stair step)
+		int hx2 = hx;
+		if (steps[steps.size()-1].side == 4)
+			hx2--;
+
+		for (unsigned int i = 0; i < steps.size(); i++)
+		{
+			if (steps[i].side == 4)
+				for (int sx = steps[i].x; sx <= hx2; sx++)
+					at(sx, steps[i].y) |= V_BASIC;
+		}
+
+		return;
+
 		for (unsigned int i = 0; i < steps.size(); i++)
 		{
 			if (i == 0)
@@ -408,7 +441,7 @@ if (sp_x <= x) return;  // FIXME
 				Stair_Steps base;
 				FollowStair(base, x, y, sx, sy, 2);
 			}
-/*
+
 			if (  (dx > 0 && TestWall(sx, sy, 4)) &&
 			    ! (          TestWall(sx-1, sy, 8)) &&
 				! (sy+1 < H && TestWall(sx, sy+1, 4)) )
@@ -416,7 +449,7 @@ if (sp_x <= x) return;  // FIXME
 				Stair_Steps base;
 				FollowStair(base, x, y, sx, sy, 4);
 			}
-*/
+
 		}
 	}
 
