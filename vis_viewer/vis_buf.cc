@@ -315,14 +315,36 @@ private:
 
 		if (bx == 0 && ly > loc_y)
 			return;
-
-/*		for (int nx = loc_x; nx < loc_x+W; nx++)
+//
+		for (int nx = loc_x; nx < loc_x+W; nx++)
 		{
 			if (! isValid(nx, loc_y))
 				return;
 		
+			int y1 = loc_y;
+			int y2 = loc_y+H; ///
+
+			if (lx > loc_x)
+			{
+				double z = loc_y + 1 + (nx - loc_x) * ty / tx;
+				y2 = (int)floor(z) - 1;
+			}
+
+			if (ly > loc_y)
+			{
+				double z = loc_y + (nx - loc_x) * by / bx;
+				y1 = (int)ceil(z);
+			}
+
+			if (nx < lx + ww)
+				y1 = MAX(y1, ly + hh);
+
+			for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++)
+			{
+				at(nx, ny) |= V_SPAN;
+			}
 		}
-*/
+return; //
 		for (int ny = loc_y; ny < loc_y+H; ny++)
 		for (int nx = loc_x; nx < loc_x+W; nx++)
 		{
@@ -488,7 +510,7 @@ public:
   		DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
   		DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
 
- 		DoSteps(0); DoFill();
+		DoSteps(0); DoFill();
 		DoSteps(1); DoFill();
 		DoSteps(2); DoFill();
 		DoSteps(3); DoFill();
