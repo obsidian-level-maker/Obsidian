@@ -151,6 +151,11 @@ public:
 			fl_color(fl_rgb_color(255,176,32));
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
+		else if (vis == 3)
+		{
+			fl_color(fl_rgb_color(0,160,0));
+			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
+		}
 
 		// draw solid borders
 		fl_color(FL_RED);

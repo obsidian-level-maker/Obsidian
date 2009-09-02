@@ -312,54 +312,70 @@ if (sp_x <= x) return;  // FIXME
 			return;
 
 		// determine bounding box
-		int lx = 9999; int hx = 0;
-		int ly = 9999; int hy = 0;
+		int lx = steps.front().x;
+		int ly = steps.back().y;
 
-		for (unsigned int i = 0; i < steps.size(); i++)
-		{
-			lx = MIN(lx, steps[i].x);
-			ly = MIN(ly, steps[i].y);
-			hx = MAX(hx, steps[i].x);
-			hy = MAX(hy, steps[i].y);
-		}
+		int ww = steps.back().x  - lx;
+		int hh = steps.front().y - ly;
+
+		if (steps.back().side == 2)
+			ww++;
+
+		if (steps.front().side == 4)
+			hh++;
 
 		// skip if too small
-		if (lx > x && lx == hx && ly > y && ly == hy)
+		if (lx > x && ww <= 1 && ly > y && hh <= 1)
 			return;
 
 		// fill in the "gaps" inside the bbox (behind the stair-step)
-		int hx2 = hx;
-		if (steps.back().side == 4)
-			hx2--;
-
 		for (unsigned int i = 0; i < steps.size(); i++)
 		{
 			if (steps[i].side == 4)
-				for (int sx = steps[i].x; sx <= hx2; sx++)
-					at(sx, steps[i].y) |= V_BASIC;
+				for (int sx = steps[i].x; sx < lx+ww; sx++)
+					at(sx, steps[i].y) |= V_LSHAPE;
 		}
 
-		// handle stair-steps which cover the whole quadrant
-		if (steps.front().x == x && steps.back().y == y)
+		// normal case : mark all squares in the quadrant which lie
+		// in the shadow area cast by the stair-step's bounding box.
+
+		double tx = lx - x;
+		double ty = ly - y + hh - 1;
+
+		double bx = lx - x + ww - 1;
+		double by = ly - y;
+
+		if (bx == 0 && ly > y) return;
+
+		for (int nx = x; nx < W; nx++)
+		for (int ny = y; ny < H; ny++)
 		{
-			for (int nx = x; nx < W; nx++)
-			for (int ny = y; ny < H; ny++)
+			if (nx >= lx+ww || ny >= ly+hh)
 			{
-				if (nx >= hx || ny >= hy)
+				bool tl = true;
+				bool br = true;
+  
+				if (lx > x)
+				{
+					assert(tx > 0);
+					double z = y + 1 + (nx - x) * ty / tx;
+
+					if (ny+1 > z)
+						tl = false;
+				}
+
+  				if (ly > y)
+				{
+					assert(bx > 0);
+					double z = y + (nx - x) * by / bx;
+
+					if (ny < z)
+						br = false;
+				}
+
+				if (tl && br)
 					at(nx, ny) |= V_SPAN;
 			}
-
-			return;
-		}
-
-		return;
-
-		for (unsigned int i = 0; i < steps.size(); i++)
-		{
-			if (i == 0)
-				at(steps[i].x, steps[i].y) |= V_SPAN;
-			else
-				at(steps[i].x, steps[i].y) |= V_BASIC;
 		}
 	}
 
@@ -477,10 +493,8 @@ public:
 
 	void ProcessVis(int x, int y)
 	{
-//		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
-//		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
-
-		// HorizSpans(x, y); VertSpans(x, y);
+		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
+		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
 
 		DoSteps(x, y);
 	}
@@ -489,9 +503,9 @@ public:
 	{
 		short d = at(x, y);
 
-		if (d & V_SPAN)   return 2;
   		if (d & V_BASIC)  return 1;
 		if (d & V_LSHAPE) return 3;
+		if (d & V_SPAN)   return 2;
 		if (d & V_WONKA)  return 4;
 
 		return 0;
