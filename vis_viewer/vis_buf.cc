@@ -281,6 +281,29 @@ if (sp_x <= x) return;  // FIXME
 		}
 	}
 
+	void DoSteps(int x, int y)
+	{
+		for (int dy = 1; dy < H-y; dy++)
+		for (int dx = 0; dx < W-x; dx++)
+		{
+			int sx = x + dx;
+			int sy = y + dy;
+
+			assert(isValid(sx, sy));
+
+			if (! TestWall(sx, sy, 2))
+				continue;
+
+			if (dx > 0 && TestWall(sx-1, sy, 2))
+				continue;
+
+			if (dx > 0 && TestWall(sx, sy, 4))
+				continue;
+
+			at(sx, sy) |= V_SPAN;
+		}
+	}
+
 public:
 	void ClearVis()
 	{
@@ -295,14 +318,16 @@ public:
 		DoBasic(x, y, -1, 0, 4); DoBasic(x, y, 0, -1, 2);
 		DoBasic(x, y, +1, 0, 6); DoBasic(x, y, 0, +1, 8);
 
-		HorizSpans(x, y); VertSpans(x, y);
+		// HorizSpans(x, y); VertSpans(x, y);
+
+		DoSteps(x, y);
 	}
 
 	int GetVis(int x, int y)
 	{
 		short d = at(x, y);
 
-		if (d & V_BASIC)  return 1;
+//		if (d & V_BASIC)  return 1;
 		if (d & V_SPAN)   return 2;
 		if (d & V_LSHAPE) return 3;
 		if (d & V_WONKA)  return 4;

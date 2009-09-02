@@ -28,6 +28,7 @@
 #include <limits.h>
 #include <errno.h>
 #include <math.h>
+#include <assert.h>
 
 /*
  *  Standard C++ headers
