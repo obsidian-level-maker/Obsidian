@@ -1967,14 +1967,13 @@ gui.printf("do_teleport\n")
   end
 
 
-  local function vis_dump_wall(S, side)
+  local function vis_mark_wall(S, side)
     gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
 
   local function vis_seed(S)
     if S.kind == "void" then
-      vis_dump_wall(S, 2) ; vis_dump_wall(S, 8)
-      vis_dump_wall(S, 4) ; vis_dump_wall(S, 6)
+      -- vis_mark_solid(S)
       return;
     end
 
@@ -1982,10 +1981,11 @@ gui.printf("do_teleport\n")
       local N = S:neighbor(side)
       local B_kind = S.border[side].kind
 
-      if B_kind == "wall" or B_kind == "picture" or
+      if not N or N.kind == "void" or
+         B_kind == "wall" or B_kind == "picture" or
          B_kind == "sky_fence"
       then
-        vis_dump_wall(S, side)
+        vis_mark_wall(S, side)
       end
     end
   end
