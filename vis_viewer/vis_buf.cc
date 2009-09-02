@@ -29,6 +29,14 @@
 #define V_WONKA   0x0080   // Wonka's (et al) method
 
 
+struct Stair_Pos
+{
+	short x, y, side;
+};
+
+typedef std::vector<Stair_Pos> Stair_Steps;
+
+
 class Vis_Buffer
 {
 private:
@@ -281,50 +289,106 @@ if (sp_x <= x) return;  // FIXME
 		}
 	}
 
-	void FollowStair(int x, int y, int sx, int sy, int side)
+	void AddStep(Stair_Steps& dest, int x, int y, int side)
 	{
-		at(sx, sy) |= V_SPAN;
+		Stair_Pos pos;
+
+		pos.x = x;
+		pos.y = y;
+		pos.side = side;
+
+		dest.push_back(pos);
+	}
+
+	void CopySteps(Stair_Steps& dest, const Stair_Steps& src)
+	{
+		for (unsigned int i = 0; i < src.size(); i++)
+			dest.push_back(src[i]);
+	}
+
+	void MarkSteps(const Stair_Steps& steps, int x, int y)
+	{
+		for (unsigned int i = 0; i < steps.size(); i++)
+		{
+			if (i == 0)
+				at(steps[i].x, steps[i].y) |= V_SPAN;
+			else
+				at(steps[i].x, steps[i].y) |= V_BASIC;
+		}
+	}
+
+	void FollowStair(Stair_Steps& steps, int x, int y, int sx, int sy, int side)
+	{
+		AddStep(steps, sx, sy, side);
 
 		for (;;)
 		{
 			if (side == 2)
 			{
 				sx++;
-				if (sx >= W) return;
+				if (sx >= W) break;
 
-				if (TestWall(sx, sy, 2))
+				bool go_right = TestWall(sx, sy, 2);
+				bool go_down  = (sy-1 >= y) && TestWall(sx, sy-1, 4);
+
+				// handle branches with recursion
+				if (go_right && go_down)
+				{
+					Stair_Steps other;
+					CopySteps(other, steps);
+
+					FollowStair(other, x, y, sx, sy, 2);
+					go_right = false;
+				}
+
+				if (go_right)
 				{
 					// OK
 				}
-				else if (sy-1 >= y && TestWall(sx, sy-1, 4))
+				else if (go_down)
 				{
 					sy--;  // OK
 					side = 4;
 				}
 				else
-					return;
+					break;
 			}
 			else
 			{
 				assert(side == 4);
 
-				if (sy == y) return;
+				if (sy == y) break;
 
-				if (sy-1 >= y && TestWall(sx, sy-1, 4))
+				bool go_right = TestWall(sx, sy, 2);
+				bool go_down  = (sy-1 >= y) && TestWall(sx, sy-1, 4);
+
+				// handle branches with recursion
+				if (go_right && go_down)
+				{
+					// recursive bit
+					Stair_Steps other;
+					CopySteps(other, steps);
+
+					FollowStair(other, x, y, sx, sy, 2);
+					go_right = false;
+				}
+
+				if (go_right)
+				{
+					side = 2;
+				}
+				else if (go_down)
 				{
 					sy--;  // OK
 				}
-				else if (TestWall(sx, sy, 2))
-				{
-					// OK
-					side = 2;
-				}
 				else
-					return;
+					break;
 			}
 
-			at(sx, sy) |= V_BASIC;
+			AddStep(steps, sx, sy, side);
 		}
+
+		MarkSteps(steps, x, y);
 	}
 
 	void DoSteps(int x, int y)
@@ -341,15 +405,18 @@ if (sp_x <= x) return;  // FIXME
 			    ! (dx > 0 && TestWall(sx-1, sy, 2)) &&
 				! (dx > 0 && TestWall(sx, sy, 4)) )
 			{
-				FollowStair(x, y, sx, sy, 2);
+				Stair_Steps base;
+				FollowStair(base, x, y, sx, sy, 2);
 			}
-
+/*
 			if (  (dx > 0 && TestWall(sx, sy, 4)) &&
 			    ! (          TestWall(sx-1, sy, 8)) &&
 				! (sy+1 < H && TestWall(sx, sy+1, 4)) )
 			{
-				FollowStair(x, y, sx, sy, 4);
+				Stair_Steps base;
+				FollowStair(base, x, y, sx, sy, 4);
 			}
+*/
 		}
 	}
 
