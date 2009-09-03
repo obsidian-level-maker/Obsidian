@@ -844,7 +844,8 @@ QUAKE1_MONSTERS =
 
   zombie =
   {
-    prob=10,
+    -- Note: currently disabled (can only be killed with rockets)
+    -- prob=10,
     health=60, damage=8,  attack="melee",
   },
 
