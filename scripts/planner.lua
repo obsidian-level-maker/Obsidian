@@ -831,7 +831,7 @@ function Plan_determine_size()
 
   ---| Plan_determine_size |---
 
-  local W, H
+  local W, H  -- number of rooms
 
   local ob_size = OB_CONFIG.size
 
@@ -842,46 +842,37 @@ function Plan_determine_size()
   end
 
   if ob_size == "mixed" then
-    W = 3 + rand_index_by_probs { 2,4,6,6,4,3,2,1 }
-    H = 2 + rand_index_by_probs { 2,4,6,6,4,3,2 }
+    W = 2 + rand_index_by_probs { 1,4,7,4,2,1 }
+    H = 2 + rand_index_by_probs { 4,7,4,2,1 }
 
     if W < H then W, H = H, W end
+
+  elseif ob_size == "prog" then
+    local n = 1 + LEVEL.ep_along * 8.9
+    if OB_CONFIG.length == "few" then n = n * 2 - 1 end
+
+    n = int(n)
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    local WIDTHS  = { 3,4,4, 5,5,6, 6,7,7 }
+    local HEIGHTS = { 3,3,4, 4,5,5, 6,6,7 }
+
+    W = WIDTHS[n]
+    H = HEIGHTS[n]
+
   else
-    if ob_size == "prog" then
-      local n = 1 + LEVEL.ep_along * 8.9
-      if OB_CONFIG.length == "few" then n = n * 2 - 1 end
+    local WIDTHS  = { small=4, normal=6, large=7 }
+    local HEIGHTS = { small=3, normal=4, large=7 }
 
-      n = int(n)
-      if n < 1 then n = 1 end
-      if n > 9 then n = 9 end
+    W = WIDTHS[ob_size]
+    H = HEIGHTS[ob_size]
 
-      local WIDTHS  = { 5,5,5, 5,6,7, 7,8,9 }
-      local HEIGHTS = { 3,3,4, 4,5,5, 6,7,7 }
-
-      W = WIDTHS[n]
-      H = HEIGHTS[n]
-    else
-      local SIZES = { small=5, normal=7, large=9 }
-
-      W = SIZES[ob_size]
-
-      if not W then
-        error("Unknown size keyword: " .. tostring(ob_size))
-      end
-
-      H = W-1
-
-      if rand_odds(30) then W = W - 1 end
-      if rand_odds(70) then H = H - 1 end
-
-      if W >= 6 and rand_odds(50) then H = H - 1 end
+    if not W then
+      error("Unknown size keyword: " .. tostring(ob_size))
     end
-  end
 
-  -- adjustment for Wolf3d
-  if PARAM.tiled then
-    W = W - int(W / 4) ; if W > 8 then W = 8 end
-    H = H - int(H / 4) ; if H > 8 then H = 8 end
+    if rand_odds(30) then W = W - 1 end
   end
 
   LEVEL.W = W
@@ -900,7 +891,7 @@ end
   local cols = {}
   local rows = {}
 
-  local limit = PARAM.seed_limit or 38
+  local limit = PARAM.seed_limit or 36
 
   cols = get_column_sizes(W, limit)
   rows = get_column_sizes(W, limit)
