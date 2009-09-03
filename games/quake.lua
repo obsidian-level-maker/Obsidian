@@ -664,25 +664,6 @@ QUAKE1_MATERIALS =
 
 ----------------------------------------------------------------
 
-QUAKE1_COMBOS =
-{
-  TECH_BASE1 = { wall = "TECH06_1" },
-  TECH_BASE2 = { wall = "TECH08_2" },
-  TECH_BASE3 = { wall = "TECH09_3" },
-  TECH_BASE4 = { wall = "TECH13_2" },
-  TECH_BASE5 = { wall = "TECH14_1" },
-  TECH_BASE6 = { wall = "TWALL1_4" },
-  TECH_BASE7 = { wall = "TWALL2_3" },
-
-  TECH_GROUND =
-  {
-    outdoor = true,
-
-    wall  = "GROUND1_6",
-    floor = "GROUND1_6",
-    ceil  = "GROUND1_6",
-  }
-}
 
 QUAKE1_EXITS =
 {
@@ -782,56 +763,42 @@ QUAKE1_ROOMS =
 
 QUAKE1_THEMES =
 {
-  TECH =
+  BASE =
   {
     building =
     {
-      TECH_BASE1=50,
-      TECH_BASE2=50,
-      TECH_BASE3=50,
-      TECH_BASE4=50,
-      TECH_BASE5=50,
-      TECH_BASE6=50,
-      TECH_BASE7=50,
+      walls =
+      {
+        TECH06_1=50, TECH08_2=50, TECH09_3=50,
+        TECH13_2=50, TECH14_1=50, TWALL1_4=50,
+        TWALL2_3=50,
+      },
+      floors =
+      {
+        FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
+        SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
+      },
+      ceilings =
+      {
+        FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
+        SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
+      },
     },
 
-    ground =
-    {
-      TECH_GROUND=50,
-    },
-
-    floors =
-    {
-      FLOOR01_5=50,
-      METAL2_4=50,
-      METFLOR2_1=50,
-      MMETAL1_1=50,
-
-      SFLOOR4_1=50,
-      SFLOOR4_5=50,
-      SFLOOR4_6=50,
-      SFLOOR4_7=50,
-    },
-
-    ceilings =
-    {
-      FLOOR01_5=50,
-      METAL2_4=50,
-      METFLOR2_1=50,
-      MMETAL1_1=50,
-
-      SFLOOR4_1=50,
-      SFLOOR4_5=50,
-      SFLOOR4_6=50,
-      SFLOOR4_7=50,
-    },
-
-    hallway =
+    xx_hallway =
     {
       -- FIXME
       walls = { TECH02_1=10 },
       floors = { AFLOOR1_4=10 },
       ceilings = { AFLOOR1_4=10 },
+    },
+
+    ground =
+    {
+      floors =
+      {
+        GROUND1_6=50, GROUND1_2=50, GROUND1_8=30,
+      },
     },
 
     scenery =
@@ -1198,13 +1165,16 @@ function Quake1_begin_level()
 end
 
 
+----------------------------------------------------------------
 
-OB_THEMES["q1_base"] =
+OB_THEMES["quake_base"] =
 {
-  ref = "TECH",
   label = "Base",
-
   for_games = { quake=1 },
+
+  prefix = "BASE",
+  name_theme = "TECH",
+  use_prob = 50,
 }
 
 
@@ -1222,7 +1192,7 @@ OB_GAMES["quake"] =
 
     -- TODO
 
-    -- need to put center of map around (0,0) since the quake
+    -- need to put center of map near (0,0) since the quake
     -- engine needs all coords to lie between -4000 and +4000.
     center_map = true,
 
@@ -1258,7 +1228,6 @@ OB_GAMES["quake"] =
     "pickups",  QUAKE1_PICKUPS,
 
     "materials", QUAKE1_MATERIALS,
-    "combos", QUAKE1_COMBOS,
     "exits",  QUAKE1_EXITS,
 
     "episodes", QUAKE1_EPISODES,
