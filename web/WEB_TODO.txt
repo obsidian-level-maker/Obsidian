@@ -4,6 +4,8 @@ WEB PAGE REORGANISATION
 
 >>>  switch to HTP (a HTML preprocessor)
 
+>>>  link to Forum somewhere
+
 MAIN
 
 - main page:
@@ -31,9 +33,9 @@ DOCS
     - future development
 
 - credits
-  - author(s)
-  - license / copyright
+  - author(s)  [DONE]
   - acknowledgements
+  - license / copyright  [DONE]
 
 - history  [DONE]
 
