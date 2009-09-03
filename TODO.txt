@@ -2,11 +2,10 @@
 TODO
 ====
 
+-  Medium strength: if get rocket/bfg -> monsters too tough
+
 -  review monster_prefs in themes (actually used yet?)
-
 -  use LEVEL.skip_monsters rather than monster_prefs
-
-+  levels are a bit too big.
 
 +  Quests : add locks (new arenas) even when have no keys
 

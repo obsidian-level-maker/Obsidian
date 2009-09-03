@@ -8,8 +8,9 @@ WISH-LIST
 
 Other Games:
 
->>  Strife
->>  HacX
++  Strife
++  HacX
++  Chex Quest 1, 2
 
 -  Hexen II
 -  Heretic II (uses same format as Quake II ??)

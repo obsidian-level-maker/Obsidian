@@ -7,11 +7,13 @@ CHANGES (since v3.43)
 -  new 'Strength' button (for monsters)
 -  new 'Progressive' choice for monster numbers
 -  more choices for the 'Outdoors' button
+-  levels are somewhat smaller
 
 -  further work on Quake (better BSP algorithms etc)
 -  very preliminary work on Strife
 -  preliminary work on Chex Quest (courtesy Enhas)
 -  worked on a new theme system
+-  beginnings of support for HacX
 
 -  new modules:
    - Monster Control for DOOM
