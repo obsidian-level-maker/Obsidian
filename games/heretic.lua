@@ -1314,7 +1314,7 @@ HERETIC_ROOMS =
 
 HERETIC_THEMES =
 {
-  URBAN1 =
+  CITY1 =
   {
     prob=50,
 
@@ -1356,7 +1356,7 @@ HERETIC_THEMES =
     monster_prefs =
     {
     },
-  }, -- URBAN1
+  }, -- CITY1
 
 
   GOTHIC1 =
@@ -1913,7 +1913,7 @@ OB_THEMES["heretic_urban"] =
   label = "Urban",
   for_games = { heretic=1 },
 
-  prefix = "URBAN",
+  prefix = "CITY",
   name_theme = "URBAN",
   use_prob = 50,
 }

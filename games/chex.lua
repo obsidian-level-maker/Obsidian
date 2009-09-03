@@ -238,13 +238,13 @@ CHEX_MONSTERS =
   commonus =
   {
     prob=60,
-    health=20, damage=4, attack="hitscan",
+    health=20, damage=4, attack="melee",
   },
 
   bipedicus =
   {
     prob=45,
-    health=30, damage=10, attack="hitscan",
+    health=30, damage=10, attack="melee",
   },
 
   armored_biped =
