@@ -249,7 +249,7 @@ void UI_Play::callback_Ammo(Fl_Widget *w, void *data)
 void UI_Play::Defaults()
 {
   ParseValue("mons",    "normal");
-  ParseValue("strength","normal");
+  ParseValue("strength","medium");
   ParseValue("powers",  "normal");
   ParseValue("traps",   "mixed");
   ParseValue("health",  "normal");
