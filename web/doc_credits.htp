@@ -44,29 +44,32 @@ I am extremely grateful to them:
 
 <p>
 <b>Sam Trenholme</b>
-+  greatly improved Heretic themes (Sam Trenholme)
-+  fixed the stair-building error (Sam)
--  Obhack
+provided greatly improved Heretic themes for Oblige V2,
+and a good workaround for the stair-building error
+(which became the 0.97 release).  Plus some other fixes.
+He also maintained his own fork of Oblige V2, called
+<i>Obhack</i>, which had some completely new features
+such as an ability to make CTF multiplayer maps.
 
 
 <p>
 <b>Enhas</b>
-- various tweaks to Oblige V2 (armor helmets in maps etc)
-ZDoom Marines module,
-Stealth Monsters module
-Level Control module
-improvements to the Skulltag module,
-a bunch of level names for the Psychedelic theme
-currently working on support for Chex Quest.
+started off with helpful feedback and
+various tweaks to Oblige V2 (armor helmets in maps etc).
+He improved the Skulltag Monsters module, and created a
+cartload of new modules: ZDoom Marines,
+Stealth Monsters, and Level Control.
+He also wrote a bunch of funny Psychedelic level names,
+and is currently working on support for Chex Quest 3.
 
 
 <p>
 <b>Mr Chris (Chris Pisarczyk)</b>
-made a WAD with some prefabs (which haven't been used yet)
-made the monster definitions for Skulltag and
-  for the ZDoom Beastiary modules
-help with DOOM themes
-boss arenas for E1M8, E2M8, E3M8 and MAP07.
+made some DOOM prefabs (though they haven't been used yet).
+He wrote the monster definitions which later became the
+Skulltag Monsters module and the ZDoom Beastiary module.
+He has helped with DOOM themes, and created a bunch of
+boss areas maps (E1M8, E2M8, E3M8 and MAP07).
 
 
 <p>
@@ -79,12 +82,13 @@ He also created a very nice little Cyberdemon arena map.
 <p>
 <b>Dittohead (Derek Braun)</b>
 sent me a whole swag of great looking Prefab structures,
-which kicked off some big improvements to the Oblige V2 code.
+which kicked off some big improvements to the Oblige V2 code
+(a new prefab system with lots of different prefabs).
 
 
 <p>
 <b>Esselfortium (Michael Mancuso)</b>
-modded Oblige V2 with his own very nice &amp; consistent Tech
+modded Oblige V2 with his own very nice and consistent Tech
 theme -- proving that decent theming was possible.
 He also gave very detailed and encouraging feedback
 during Oblige V3 development.
