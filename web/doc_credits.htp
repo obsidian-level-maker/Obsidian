@@ -39,65 +39,72 @@ map generator.
 <h3> CONTRIBUTORS </h3>
 
 These people actually contributed code and/or prefabs
-(and usually a lot of useful feedback as well), and
+(and usually a lot of feedback as well), and
 I am extremely grateful to them:
 
 <p>
-<b>Sam Trenholme</b> did good stuff
+<b>Sam Trenholme</b>
++  greatly improved Heretic themes (Sam Trenholme)
++  fixed the stair-building error (Sam)
+-  Obhack
+
 
 <p>
-<b>Enhas</b> did good stuff
+<b>Enhas</b>
+- various tweaks to Oblige V2 (armor helmets in maps etc)
+ZDoom Marines module,
+Stealth Monsters module
+Level Control module
+improvements to the Skulltag module,
+a bunch of level names for the Psychedelic theme
+currently working on support for Chex Quest.
+
 
 <p>
 <b>Mr Chris (Chris Pisarczyk)</b>
-did good stuff
+made a WAD with some prefabs (which haven't been used yet)
+made the monster definitions for Skulltag and
+  for the ZDoom Beastiary modules
+help with DOOM themes
+boss arenas for E1M8, E2M8, E3M8 and MAP07.
+
 
 <p>
-<b>JohnnyRancid</b>
-did good stuff
+<b>JohnnyRancid</b> a.k.a. <b>40oz</b>
+also made some prefabs for Oblige.
+He also did heaps of work on the level name generator,
+and added more color themes for the sky generator.
+He also created a very nice little Cyberdemon arena map.
 
 <p>
 <b>Dittohead (Derek Braun)</b>
-did good stuff
+sent me a whole swag of great looking Prefab structures,
+which kicked off some big improvements to the Oblige V2 code.
+
 
 <p>
 <b>Esselfortium (Michael Mancuso)</b>
-did good stuff
+modded Oblige V2 with his own very nice &amp; consistent Tech
+theme -- proving that decent theming was possible.
+He also gave very detailed and encouraging feedback
+during Oblige V3 development.
+
 
 <p>
-<b>DoomJedi</b> did good stuff
+<b>DoomJedi</b>
+tested some pretty bad Wolf3D maps pooped out of Oblige,
+and made some Oblige logo graphics for Wolf3D maps
+(which unfortunately never got used).
+Plus he created a detailed list of Wolf3D mods and TCs
+that might get supported one day.
 
 
 <h3> THANKS TO ... </h3>
 
-
-Sam Trenholme for much expanded Heretic themes
-and various fixes, and for beta-testing Oblige III.
-Check out his "ObHack" modification for even more
-interesting stuff.
+<b>gggmork</b> for beta testing and detailed feedback.
 
 <p>
-Thanks to JohnnyRancid for beta-testing Oblige III,
-for big help with the level-name generator,
-and creating heaps of DOOM prefabs.
-
-<p>
-Thanks to Chris Pisarczyk and Esselfortium for very
-detailed feedback and bug reports on OBLIGE.  These guys
-have even made their own Oblige mods -- they must be
-nutters like me :-D
-
-<p>
-I appreciate the feedback received from the other "OB3"
-beta-testers: gggmork and Csonicgo.
-
-<p>
-Big thanks to Derek "Dittohead" Braun for making a whole swag of
-Prefab structures, which kicked off some big improvements to the
-way OBLIGE builds stuff.
-
-<p>
-Thanks to Enhas and DoomJedi for their help.
+<b>Csonicgo</b> for beta testing.
 
 <p>
 Finally I'm grateful to everyone who provided positive
