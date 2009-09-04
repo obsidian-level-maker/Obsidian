@@ -56,7 +56,7 @@ such as an ability to make CTF multiplayer maps.
 <b>Enhas</b>
 started off with helpful feedback and
 various tweaks to Oblige V2 (armor helmets in maps etc).
-He improved the Skulltag Monsters module, and created a
+Later he improved the Skulltag Monsters module, and created a
 cartload of new modules: ZDoom Marines,
 Stealth Monsters, and Level Control.
 He also wrote a bunch of funny Psychedelic level names,
@@ -77,13 +77,13 @@ boss areas maps (E1M8, E2M8, E3M8 and MAP07).
 also made some prefabs for Oblige.
 He also did heaps of work on the level name generator,
 and added more color themes for the sky generator.
-He also created a very nice little Cyberdemon arena map.
+He also created a sweet little Cyberdemon arena map.
 
 <p>
 <b>Dittohead (Derek Braun)</b>
 sent me a whole swag of great looking Prefab structures,
 which kicked off some big improvements to the Oblige V2 code
-(a new prefab system with lots of different prefabs).
+(a new prefab system and lots of different prefabs).
 
 
 <p>
