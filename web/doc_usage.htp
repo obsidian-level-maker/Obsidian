@@ -44,20 +44,39 @@ each one as it goes, and if everything goes smoothly the output
 file (e.g. "TEST.WAD") will be created at the end.
 Then you can play it using the normal method for playing
 mods with that game (e.g. for DOOM source ports:
-dragging-n-dropping the WAD file onto the source port's EXE
+dragging -n- dropping the WAD file onto the source port's EXE
 is usually enough).
 
 <p>
 <i>(Some games, especially Quake, may need to be setup before
-running Oblige.  See the information on each game for details)</i>
+running Oblige.  See the information on each game for details)
+</i>
 
 
-<h3>WINDOW OVERVIEW</h3>
+<h3>WINDOW LAYOUT</h3>
 
+The following diagram shows the GUI for OBLIGE.
+You can see that the window is sub-divided into five
+distinct panels.
+The panels are discussed in separate sections below.
+
+Also notice there is no menu bar.  To exit you can either
+click the window's standard close button, or
+click the "Quit" button in the Build Panel,
+or just press the ESCAPE key.
+
+<div class="guioverview">
 <img src="gui_overview.png" width="600" height="265" border="0" alt="PICTURE">
+</div>
+
+<p>
+</i>Note: some buttons, like 'Options' in the Build panel,
+currently do nothing at all.  These are features that are
+still in development.
+</i>
 
 
-<h3>SETTINGS PANEL</h3>
+<h3>GAME SETTINGS</h3>
 
 
 <p>
@@ -117,6 +136,27 @@ You should use a Source Port to play the levels, because the
 original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
 architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
+
+
+<h3>LEVEL ARCHITECTURE</h3>
+
+blah
+
+
+<h3>PLAYING STYLE</h3>
+
+blah
+
+
+<h3>MODULES PANEL</h3>
+
+blah
+
+
+<h3>BUILD PANEL</h3>
+
+blah
+
 
 
 </div class="rest">
