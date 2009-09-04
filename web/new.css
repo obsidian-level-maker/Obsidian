@@ -33,6 +33,8 @@ h2 {
 
 h3 { color: #c44; padding-top: 1em; }
 
+B { color: #853; }
+
 .menu {
     background-color: #776655;
     color: #ddd;
@@ -74,7 +76,7 @@ h3 { color: #c44; padding-top: 1em; }
 
 dd { margin-bottom: 1em; }
 
-.newsdate { font-weight: bold; }
+.newsdate { font-weight: bold; color: #853; }
 .news { margin-bottom: 2em; }
 
 .legal {

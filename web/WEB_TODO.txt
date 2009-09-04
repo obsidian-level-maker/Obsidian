@@ -81,6 +81,10 @@ note that you need full version of XXX to play the games
 
 built-in DOOM node builder (glBSP).
 
+note that Oblige does not merge any third party mods into the
+final WAD file, you need to run e.g. DOOM with both the mod _and_
+the Oblige output together.
+
 
 COMPILATION DEPENDENCIES
 

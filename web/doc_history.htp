@@ -50,15 +50,15 @@ and it is planned to release future versions as often as possible.
 
 
 <h3>RELEASE DATES</h3>
-<PRE>
-version 3.43  :  2009-08-11
-version 3.39  :  2009-04-12  (first release of V3)
 
-version 0.97  :  2008-05-30
-version 0.94  :  2007-07-05
-version 0.85  :  2007-02-19
-version 0.81  :  2007-01-21  (first public release)
-</PRE>
+<b>Version 3.43</b> : 2009-08-11<br>
+<b>Version 3.39</b> : 2009-04-12  (first release of V3)<br>
+
+<p>
+<b>Version 0.97</b> : 2008-05-30<br>
+<b>Version 0.94</b> : 2007-07-05<br>
+<b>Version 0.85</b> : 2007-02-19<br>
+<b>Version 0.81</b> : 2007-01-21  (first public release)<br>
 
 
 <h3 id="changes343">CHANGES IN 3.43</h3>
