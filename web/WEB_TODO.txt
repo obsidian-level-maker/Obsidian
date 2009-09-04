@@ -34,7 +34,7 @@ DOCS
 
 - credits
   - author(s)  [DONE]
-  - acknowledgements
+  - acknowledgements  [DONE]
   - license / copyright  [DONE]
 
 - history  [DONE]

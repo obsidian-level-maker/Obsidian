@@ -116,14 +116,6 @@ should be. Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
 
 <p>
-In Wolfenstein-3D mode, the "Build..." button does not bring up
-a dialog box.
-OBLIGE simply creates the output files in the same folder where
-it is installed. These files are called <b>GAMEMAPS.WL6</b> and
-<b>MAPHEAD.WL6</b> and you need to copy them into your
-Wolf3d folder (be sure to make a backup first!).
-
-<p>
 To exit, press the "Quit" button in the bottom left panel.
 
 <p>
@@ -131,21 +123,20 @@ The levels created by OBLIGE are ready to play.  There is no
 need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
 
-<p>
-You should use a Source Port to play the levels, because the
-original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
-architecture which OBLIGE creates.  For example, you might
-get the "Visplane Overflow" error which quits the game.
 
+<h3>LEVEL ARCHITECTURE / PLAYING STYLE</h3>
 
-<h3>LEVEL ARCHITECTURE</h3>
+The Level Architecture panel lets you control general features
+of the maps, like how big they are and what theme to use.
 
 blah
 
 
 <h3>PLAYING STYLE</h3>
 
-blah
+The Playing Style panel is all about the gameplay baby.
+Here you can control the quantity and strength of the
+monsters, how much health and ammo should be added, etc.
 
 
 <h3>MODULES PANEL</h3>
@@ -156,6 +147,22 @@ blah
 <h3>BUILD PANEL</h3>
 
 blah
+
+
+<h3>MISC</h3>
+
+In Wolfenstein-3D mode, the "Build..." button does not bring up
+a dialog box.
+OBLIGE simply creates the output files in the same folder where
+it is installed. These files are called <b>GAMEMAPS.WL6</b> and
+<b>MAPHEAD.WL6</b> and you need to copy them into your
+Wolf3d folder (be sure to make a backup first!).
+
+<p>
+You should use a Source Port to play the levels, because the
+original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
+architecture which OBLIGE creates.  For example, you might
+get the "Visplane Overflow" error which quits the game.
 
 
 
