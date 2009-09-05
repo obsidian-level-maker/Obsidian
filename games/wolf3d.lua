@@ -490,7 +490,7 @@ WOLF_ROOMS =
   },
 }
 
-WOLF_THEMES =
+WOLF_SUB_THEMES =
 {
   -- Main Themes:
   --
@@ -1024,10 +1024,7 @@ UNFINISHED["wolf3d"] =
     "pickups", WOLF_PICKUPS,
 
     "materials", WOLF_MATERIALS,
-    "combos", WOLF_COMBOS,
-    "exits",  WOLF_EXITS,
-
-    "themes", WOLF_THEMES,
+    "themes", WOLF_SUB_THEMES,
     "rooms",  WOLF_ROOMS,
 
     "key_doors", WOLF_KEY_DOORS,

@@ -1915,7 +1915,7 @@ OB_THEMES["heretic_urban"] =
 
   prefix = "CITY",
   name_theme = "URBAN",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 OB_THEMES["heretic_gothic"] =  -- castles
@@ -1925,7 +1925,7 @@ OB_THEMES["heretic_gothic"] =  -- castles
 
   prefix = "GOTHIC",
   name_theme = "GOTHIC",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 OB_THEMES["heretic_cave"] =
@@ -1935,7 +1935,7 @@ OB_THEMES["heretic_cave"] =
 
   prefix = "CAVE",
   name_theme = "URBAN",
-  use_prob = 30,
+  mixed_prob = 30,
 }
 
 

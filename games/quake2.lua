@@ -1512,7 +1512,7 @@ QUAKE2_ROOMS =
   },
 }
 
-QUAKE2_THEMES =
+QUAKE2_SUB_THEMES =
 {
   TECH =
   {
@@ -2053,7 +2053,7 @@ UNFINISHED["quake2"] =
     "exits",  QUAKE2_EXITS,
 
     "episodes", QUAKE2_EPISODES,
-    "themes", QUAKE2_THEMES,
+    "themes", QUAKE2_SUB_THEMES,
     "rooms",  QUAKE2_ROOMS,
 
     "key_doors", QUAKE2_KEY_DOORS,

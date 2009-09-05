@@ -113,7 +113,7 @@ HACX_SANITY_MAP =
 
 ----------------------------------------------------------------
 
-HACX_THEMES =
+HACX_SUB_THEMES =
 {
   TECH1 =
   {
@@ -470,7 +470,7 @@ OB_THEMES["hacx_tech"] =
 
   prefix = "TECH",
   name_theme = "TECH",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 
@@ -515,7 +515,7 @@ OB_GAMES["hacx"] =
     "pickups",  HACX_PICKUPS,
 
     "materials", HACX_MATERIALS,
-    "themes",    HACX_THEMES,
+    "themes",    HACX_SUB_THEMES,
   },
 }
 

@@ -1466,7 +1466,7 @@ HEXEN_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-HEXEN_THEMES =
+HEXEN_SUB_THEMES =
 {
   CAVE =
   {
@@ -2466,7 +2466,7 @@ UNFINISHED["hexen"] =
     "hallways",   HEXEN_HALLWAYS,
 
     "episodes",   HEXEN_EPISODES,
-    "themes",     HEXEN_THEMES,
+    "themes",     HEXEN_SUB_THEMES,
     "rooms",      HEXEN_ROOMS,
 
     "hangs",      HEXEN_OVERHANGS,

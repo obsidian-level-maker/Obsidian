@@ -1175,7 +1175,7 @@ OB_THEMES["quake_base"] =
 
   prefix = "BASE",
   name_theme = "TECH",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 

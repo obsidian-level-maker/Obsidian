@@ -197,7 +197,7 @@ CHEX_ROOMS =
 {
 }
 
-CHEX_THEMES =
+CHEX_SUB_THEMES =
 -- TECH, ARBORETUM and CAVE?
 {
   TECH =
@@ -571,7 +571,7 @@ OB_GAMES["chex"] =
     "liquids",      CHEX_LIQUIDS,
     "combos",       CHEX_COMBOS,
     "rooms",        CHEX_ROOMS,
-    "themes",       CHEX_THEMES,
+    "themes",       CHEX_SUB_THEMES,
     "monsters",     CHEX_MONSTERS,
     "weapons",      CHEX_WEAPONS,
     "pickups",      CHEX_PICKUPS,

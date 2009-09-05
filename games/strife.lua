@@ -91,7 +91,7 @@ STRIFE_COMBOS =
 }
 
 
-STRIFE_THEMES =
+STRIFE_SUB_THEMES =
 {
   TECH =
   {
@@ -243,9 +243,7 @@ UNFINISHED["strife"] =
     "pickups",  STRIFE_PICKUPS,
 
     "materials", STRIFE_MATERIALS,
-
-    "combos",   STRIFE_COMBOS,
-    "themes",   STRIFE_THEMES,
+    "themes",    STRIFE_SUB_THEMES,
   },
 }
 
