@@ -13,9 +13,8 @@
 <div class="submenu">
 <use SubSpacer>
 <use SubWhere where="NEWS">
-  <a href="i_about.html">About</a>
-  <a href="i_screens.html">Screenshots</a>
-  <a href="i_download.html">Download</a>
+<use IndexScreens>
+<use IndexDownload>
 </div>
 
 <div class="rest">
@@ -28,7 +27,7 @@ The goal is to produce
 high quality levels which are fun to play.
 
 <p>
-<i>(see the <a href="i_about.html">About</a> page for more information)</i>
+<i>(see the <a href="doc_about.html">About</a> page for more information)</i>
 
 <h3>CURRENT VERSION</h3>
 

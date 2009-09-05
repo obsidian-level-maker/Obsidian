@@ -13,6 +13,8 @@
 <div class="submenu">
 <use SubSpacer>
 <use SubWhere where="USAGE">
+<use DocAbout>
+<use DocCredits>
 <use DocHistory>
 </div>
 
@@ -150,7 +152,7 @@ blah
 blah
 
 
-<h3>MISC</h3>
+<h3>MISC NOTES</h3>
 
 <ul class="usagemisc">
 <li>
@@ -159,7 +161,7 @@ It will <i>not</i> work properly with shareware or demo
 versions, and never will (so don't ask).
 @@@ FreeDOOM
 
-<p>
+<li>
 In Wolfenstein-3D mode, the "Build..." button does not bring up
 a dialog box.
 OBLIGE simply creates the output files in the same folder where
@@ -167,12 +169,13 @@ it is installed. These files are called <b>GAMEMAPS.WL6</b> and
 <b>MAPHEAD.WL6</b> and you need to copy them into your
 Wolf3d folder (be sure to make a backup first!).
 
-<p>
+<li>
 You should use a Source Port to play the levels, because the
 original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
 architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
 
+</ul>
 
 
 </div class="rest">

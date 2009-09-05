@@ -4,9 +4,9 @@
 <file include="x_header.inc">
 
 <div class="menu">
-  <img src="top_L.png" class="floatL" alt="" width="24" height="24">
-  <img src="top_R.png" class="floatR" alt="" width="24" height="24">
-  <a href="http://oblige.sourceforge.net/">Home</a>
+<use TopCorners>
+<use MenuHome>
+<use MenuWhere where="BLOGS">
 </div>
 
 <div class="rest">

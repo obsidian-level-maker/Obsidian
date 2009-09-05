@@ -13,6 +13,8 @@
 <div class="submenu">
 <use SubSpacer>
 <use DocUsage>
+<use DocAbout>
+<use DocCredits>
 <use SubWhere where="HISTORY">
 </div>
 

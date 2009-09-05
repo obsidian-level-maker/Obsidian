@@ -4,19 +4,17 @@
 <file include="x_header.inc">
 
 <div class="menu">
-  <img src="top_L.png" class="floatL" alt="" width="24" height="24">
-  <img src="top_R.png" class="floatR" alt="" width="24" height="24">
-  <a href="http://oblige.sourceforge.net/">HOME</a>
+<use TopCorners>
+<use MenuWhere where="HOME">
   <a href="doc_user.html">Documentation</a>
   <a href="old_ver2.html">Older Version</a>
 </div>
 
 <div class="submenu">
-  &nbsp; &nbsp; &nbsp;
-  <a href="index.html">News</a>
-  <a href="i_about.html">About</a>
-  <a href="i_screens.html">Screenshots</a>
-  <a href="i_download.html">DOWNLOAD</a>
+<use SubSpacer>
+<use IndexNews>
+<use IndexScreens>
+<use SubWhere where="DOWNLOAD">
 </div>
 
 <div class="rest">
@@ -40,7 +38,7 @@
 
 All previous releases are available from SourceForge:
 <a href="http://sourceforge.net/project/showfiles.php?group_id=176314">
-Browse Files</a>
+Show Files</a>
 
 
 <h3>SVN REPOSITORY</h3>
