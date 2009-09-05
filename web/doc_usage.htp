@@ -4,18 +4,16 @@
 <file include="x_header.inc">
 
 <div class="menu">
-  <img src="top_L.png" class="floatL" alt="" width="24" height="24">
-  <img src="top_R.png" class="floatR" alt="" width="24" height="24">
-  <a href="http://oblige.sourceforge.net/">Home</a>
-  <a href="doc_user.html">DOCUMENTATION</a>
-  <a href="old_ver2.html">Older Version</a>
+<use TopCorners>
+<use MenuHome>
+<use MenuWhere where="DOCUMENTATION">
+<a href="old_ver2.html">Older Version</a>
 </div>
 
 <div class="submenu">
-  &nbsp; &nbsp; &nbsp;
-  <a href="doc_user.html">USER GUIDE</a>
-  <a href="doc_modding.html">Modding Guide</a>
-  <a href="doc_history.html">History</a>
+<use SubSpacer>
+<use SubWhere where="USAGE">
+<use DocHistory>
 </div>
 
 <div class="rest">
@@ -125,7 +123,7 @@ need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
 
 
-<h3>LEVEL ARCHITECTURE / PLAYING STYLE</h3>
+<h3>LEVEL ARCHITECTURE</h3>
 
 The Level Architecture panel lets you control general features
 of the maps, like how big they are and what theme to use.
@@ -135,12 +133,14 @@ blah
 
 <h3>PLAYING STYLE</h3>
 
-The Playing Style panel is all about the gameplay baby.
+Thispanel is all about the gameplay, baby!
 Here you can control the quantity and strength of the
 monsters, how much health and ammo should be added, etc.
 
 
 <h3>MODULES PANEL</h3>
+
+Modules are a great new feature in Oblige V3.
 
 blah
 
