@@ -5,16 +5,16 @@
 </block>
 
 
+<block MenuWhere>
+  <span> <use where> </span>
+</block>
+
 <block MenuHome>
   <a href="http://oblige.sourceforge.net/">Home</a>
 </block>
 
 <block MenuDocs>
   <a href="doc_usage.html">Documentation</a>
-</block>
-
-<block MenuWhere>
-  <span> <use where> </span>
 </block>
 
 
@@ -26,6 +26,15 @@
   <span> &gt;<use where>&lt; </span>
 </block>
 
+
+<block IndexMENU>
+  <div class="menu">
+  <use TopCorners>
+  <use MenuWhere where="HOME">
+  <use MenuDocs>
+  <a href="old_ver2.html">Older Version</a>
+  </div>
+</block>
 
 <block IndexNews>
   <a href="index.html">News</a>
@@ -39,6 +48,19 @@
   <a href="i_download.html">Download</a>
 </block>
 
+<block IndexForums>
+  <a href="http://sourceforge.net/apps/phpbb/oblige/">Forums*</a>
+</block>
+
+
+<block DocMENU>
+  <div class="menu">
+  <use TopCorners>
+  <use MenuHome>
+  <use MenuWhere where="DOCUMENTATION">
+    <a href="old_ver2.html">Older Version</a>
+  </div>
+</block>
 
 <block DocUsage>
   <a href="doc_usage.html">Usage</a>
@@ -54,5 +76,22 @@
 
 <block DocHistory>
   <a href="doc_history.html">History</a>
+</block>
+
+
+<block BlogMENU>
+  <div class="menu">
+  <use TopCorners>
+  <use MenuHome>
+  <use MenuWhere where="BLOGS">
+  </div>
+</block>
+
+<block BlogMar2008>
+  <a href="blog_mar2008.html">Mar-2008</a>
+</block>
+
+<block BlogNov2008>
+  <a href="blog_nov2008.html">Nov-2008</a>
 </block>
 

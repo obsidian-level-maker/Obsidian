@@ -3,10 +3,12 @@
 <file include="x_common.inc">
 <file include="x_header.inc">
 
-<div class="menu">
-<use TopCorners>
-<use MenuHome>
-<use MenuWhere where="BLOGS">
+<use BlogMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use BlogMar2008>
+<use SubWhere where="NOV-2008">
 </div>
 
 <div class="rest">

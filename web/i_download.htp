@@ -3,18 +3,14 @@
 <file include="x_common.inc">
 <file include="x_header.inc">
 
-<div class="menu">
-<use TopCorners>
-<use MenuWhere where="HOME">
-  <a href="doc_user.html">Documentation</a>
-  <a href="old_ver2.html">Older Version</a>
-</div>
+<use IndexMENU>
 
 <div class="submenu">
 <use SubSpacer>
 <use IndexNews>
 <use IndexScreens>
 <use SubWhere where="DOWNLOAD">
+<use IndexForums>
 </div>
 
 <div class="rest">

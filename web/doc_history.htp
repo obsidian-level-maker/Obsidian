@@ -3,12 +3,7 @@
 <file include="x_common.inc">
 <file include="x_header.inc">
 
-<div class="menu">
-<use TopCorners>
-<use MenuHome>
-<use MenuWhere where="DOCUMENTATION">
-<a href="old_ver2.html">Older Version</a>
-</div>
+<use DocMENU>
 
 <div class="submenu">
 <use SubSpacer>
