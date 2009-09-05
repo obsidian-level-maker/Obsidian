@@ -849,7 +849,6 @@ function Plan_determine_size()
 
   elseif ob_size == "prog" then
     local n = 1 + LEVEL.ep_along * 8.9
-    if OB_CONFIG.length == "few" then n = n * 2 - 1 end
 
     n = int(n)
     if n < 1 then n = 1 end
