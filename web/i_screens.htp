@@ -1,5 +1,6 @@
 <set O_WHERE="Screenshots">
 
+<file include="x_common.inc">
 <file include="x_header.inc">
 
 <div class="menu">

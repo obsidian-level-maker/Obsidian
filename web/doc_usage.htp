@@ -1,5 +1,6 @@
 <set O_WHERE="Usage">
 
+<file include="x_common.inc">
 <file include="x_header.inc">
 
 <div class="menu">
@@ -151,6 +152,14 @@ blah
 
 <h3>MISC</h3>
 
+<ul class="usagemisc">
+<li>
+OBLIGE requires the full version of each game it supports.
+It will <i>not</i> work properly with shareware or demo
+versions, and never will (so don't ask).
+@@@ FreeDOOM
+
+<p>
 In Wolfenstein-3D mode, the "Build..." button does not bring up
 a dialog box.
 OBLIGE simply creates the output files in the same folder where
