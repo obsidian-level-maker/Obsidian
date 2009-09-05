@@ -248,50 +248,48 @@ function Level_themes(seed_idx)
 
   --| Level_themes |--
 
-  if OB_CONFIG.theme == "psycho" then
-    local psycho_themes = {}
-    for name,_ in pairs(GAME.themes) do
-      table.insert(psycho_themes, name)
-    end
-    assert(not table_empty(psycho_themes))
-
+  -- the user can specify the main theme
+  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "psycho" then
     for _,L in ipairs(GAME.all_levels) do
+      set_sub_theme(L, OB_CONFIG.theme)
+    end
+
+    return;
+
+  elseif OB_CONFIG.theme == "psycho" then
+
+    local prob_tab = {}
+    for name,info in pairs(OB_THEMES) do
+      local prob = info.psycho_prob or info.mixed_prob or 0
+      if info.shown and prob then
+        prob_tab[name] = prob
+      end
+    end
+
+    assert(not table_empty(prob_tab))
+
+    for idx,L in ipairs(GAME.all_levels) do
       if not L.theme then
-        local which = rand_element(psycho_themes)
-        L.theme = assert(GAME.themes[which])
+        local name = rand_key_by_probs(prob_tab)
 
-        gui.printf("Theme for level %s = %s\n", L.name, which)
-
-        if not L.name_theme then
+        if not L.name_theme and ((idx % 2) == 1) then
           L.name_theme = "PSYCHO"
-          if rand_odds(50) then
-            L.name_theme = rand_element{ "TECH", "URBAN", "GOTHIC" }
-          end
         end
+
+        set_sub_theme(L, name)
       end
     end
 
     return;
   end
 
-  -- the user can specify the main theme
-  if OB_CONFIG.theme ~= "mixed" then
-    for _,L in ipairs(GAME.all_levels) do
-      set_sub_theme(L, OB_CONFIG.theme)
-    end
-
-    return;
-  end
-
-  -- choose a theme for each episode
+  -- Mix It Up : choose a theme for each episode
   local episode_list = {}
 
   local prob_tab = {}
   for name,info in pairs(OB_THEMES) do
-    if info.use_prob and
-       info.for_games and info.for_games[OB_CONFIG.game]
-    then
-      prob_tab[name] = info.use_prob
+    if info.shown and info.mixed_prob then
+      prob_tab[name] = info.mixed_prob
     end
   end
 
@@ -313,7 +311,7 @@ function Level_themes(seed_idx)
   end
 
 
-  -- special handling for a single episode
+  -- single episode is different: have a few small batches
   if OB_CONFIG.length == "episode" then
     local pos = 1
     local count = 0

@@ -2196,7 +2196,7 @@ OB_THEMES["doom_tech"] =
 
   prefix = "TECH",
   name_theme = "TECH",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 OB_THEMES["doom_hell"] =
@@ -2206,7 +2206,7 @@ OB_THEMES["doom_hell"] =
 
   prefix = "HELL",
   name_theme = "GOTHIC",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
 OB_THEMES["doom_urban"] =
@@ -2216,10 +2216,10 @@ OB_THEMES["doom_urban"] =
 
   prefix = "URBAN",
   name_theme = "URBAN",
-  use_prob = 50,
+  mixed_prob = 50,
 }
 
-OB_THEMES["doom2_wolf"] =
+OB_THEMES["doom_wolf"] =
 {
   label = "Wolfenstein",
   for_games = { doom2=1, freedoom=1 },
@@ -2227,7 +2227,8 @@ OB_THEMES["doom2_wolf"] =
   prefix = "WOLF",
   name_theme = "URBAN",
 
-  -- this theme is special, hence no use_prob
+  -- this theme is special, hence no mixed_prob
+  psycho_prob = 5,
 }
 
 
