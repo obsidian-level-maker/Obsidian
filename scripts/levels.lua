@@ -110,6 +110,16 @@ function Game_merge_tab(name, tab)
 end
 
 
+function Game_merge_table_list(tab_list)
+  for i = 1,#tab_list,2 do
+    local name = tab_list[i]
+    local tab  = tab_list[i+1]
+
+    Game_merge_tab(name, tab)
+  end
+end
+
+
 function Game_sort_modules()
   GAME.all_modules = {}
 
@@ -176,14 +186,17 @@ function Game_setup()
     end
 
     if mod.tables then
-      for i = 1,#mod.tables,2 do
-        local name = mod.tables[i]
-        local tab  = mod.tables[i+1]
-
-        Game_merge_tab(name, tab)
-      end
+      Game_merge_table_list(mod.tables)
     end
   end -- for mod
+
+  -- allow themes to supply sub-themes (etc)
+  for name,theme in pairs(OB_THEMES) do
+    if theme.shown and theme.tables then
+      Game_merge_table_list(theme.tables)
+    end
+  end
+
 
   Game_invoke_hook("setup_func",  OB_CONFIG.seed)
   Game_invoke_hook("setup2_func", OB_CONFIG.seed)

@@ -155,7 +155,8 @@ function ob_update_themes()
       new_label = def.label
     end
 
-    gui.show_button("theme", name, shown)
+    def.shown = shown
+    gui.show_button("theme", name, def.shown)
   end
 
   -- try to keep the same GUI label
