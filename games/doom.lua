@@ -1103,7 +1103,7 @@ DOOM2_ROOMS =
 }
 
 
-COMMON_THEMES =
+COMMON_SUB_THEMES =
 {
 --[[  
    (a) nature  (outdoor, grassy/rocky/muddy, water)
@@ -1315,15 +1315,15 @@ COMMON_THEMES =
 }
 
 
-DOOM1_THEMES =
+DOOM1_SUB_THEMES =
 {
   -- none yet
 }
 
 
-DOOM2_THEMES =
+DOOM2_SUB_THEMES =
 {
-  TECH1 =  -- extends the entry in COMMON_THEMES
+  TECH1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     building =
     {
@@ -1350,7 +1350,7 @@ DOOM2_THEMES =
     },
   },
 
-  HELL1 =  -- extends the entry in COMMON_THEMES
+  HELL1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     prob = 60,
 
@@ -2301,7 +2301,7 @@ OB_GAMES["doom1"] =
     "images", COMMON_IMAGES,
     "lights", COMMON_LIGHTS,
     "rooms",  COMMON_ROOMS,
-    "themes", COMMON_THEMES,
+    "themes", COMMON_SUB_THEMES,
 
     "sc_fabs",   COMMON_SCENERY_PREFABS,
     "feat_fabs", COMMON_FEATURE_PREFABS,
@@ -2314,7 +2314,7 @@ OB_GAMES["doom1"] =
 
     ---- DOOM I stuff ----
 
-    "themes",    DOOM1_THEMES,
+    "themes",    DOOM1_SUB_THEMES,
     "rooms",     DOOM1_ROOMS,
     "episodes",  DOOM1_EPISODES,
 
@@ -2403,7 +2403,7 @@ OB_GAMES["doom2"] =
     "images", COMMON_IMAGES,
     "lights", COMMON_LIGHTS,
     "rooms",  COMMON_ROOMS,
-    "themes", COMMON_THEMES,
+    "themes", COMMON_SUB_THEMES,
 
     "sc_fabs",   COMMON_SCENERY_PREFABS,
     "feat_fabs", COMMON_FEATURE_PREFABS,
@@ -2422,7 +2422,7 @@ OB_GAMES["doom2"] =
     "weapons",  DOOM2_WEAPONS,
     "pickups",  DOOM2_PICKUPS,
 
-    "themes",   DOOM2_THEMES,
+    "themes",   DOOM2_SUB_THEMES,
     "rooms",    DOOM2_ROOMS,
 
     "materials",DOOM2_MATERIALS,

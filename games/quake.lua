@@ -761,7 +761,7 @@ QUAKE1_ROOMS =
   },
 }
 
-QUAKE1_THEMES =
+QUAKE1_SUB_THEMES =
 {
   BASE =
   {
@@ -1232,7 +1232,7 @@ OB_GAMES["quake"] =
     "exits",  QUAKE1_EXITS,
 
     "episodes", QUAKE1_EPISODES,
-    "themes",   QUAKE1_THEMES,
+    "themes",   QUAKE1_SUB_THEMES,
     "rooms",    QUAKE1_ROOMS,
 
     "key_doors", QUAKE1_KEY_DOORS,

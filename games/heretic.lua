@@ -1312,7 +1312,7 @@ HERETIC_ROOMS =
 }
 
 
-HERETIC_THEMES =
+HERETIC_SUB_THEMES =
 {
   CITY1 =
   {
@@ -1988,7 +1988,7 @@ OB_GAMES["heretic"] =
     "rails",     HERETIC_RAILS,
 
     "episodes", HERETIC_EPISODES,
-    "themes",   HERETIC_THEMES,
+    "themes",   HERETIC_SUB_THEMES,
     "rooms",    HERETIC_ROOMS,
 
     "hangs", HERETIC_OVERHANGS,
