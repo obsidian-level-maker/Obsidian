@@ -72,6 +72,8 @@ h3 { color: #c44; padding-top: 1em; }
 .floatL { float: left  !important; }
 .floatR { float: right !important; }
 
+.moneyshot { float: right !important; margin-right: 20px; }
+
 dd { margin-bottom: 1em; }
 
 B { color: #742; }
