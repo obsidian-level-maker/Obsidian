@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
---  Engine: ZDoom
+--  Engine: Skulltag
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2009 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,23 +18,11 @@
 --
 ----------------------------------------------------------------
 
-OB_ENGINES["zdoom"] =
+
+OB_ENGINES["skulltag"] =
 {
-  label = "ZDoom 2.31",
-
-  for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
-
-  param =
-  {
-    -- TODO
-  },
-}
-
-
-OB_ENGINES["gzdoom"] =
-{
-  label = "GZDoom 1.2",
-  priority = -1,  -- keep at bottom with ZDoom
+  label = "Skulltag 97D3",
+--  priority = -2,  -- keep at bottom with ZDoom
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
