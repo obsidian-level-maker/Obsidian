@@ -1,50 +1,32 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-  <meta name="robots" content="all">
+<set O_WHERE="Older">
 
-  <title> Oblige V2 </title>
+<file include="x_common.inc">
+<file include="x_header.inc">
 
-  <script type="text/javascript"></script>
-
-  <style type="text/css" title="currentStyle">
-    @import "new.css";
-  </style>
-</head>
-
-<body>
-
-<h1> Oblige Level Maker </h1>
-
-<div class="menu">
-  <a href="http://oblige.sourceforge.net/">Home</a>
-  <a href="doc_user.html">Documentation</a>
-  <a href="old_ver2.html">OLDER VERSION</a>
-</div>
+<use IndexMENU>
 
 <div class="submenu">
-  <a href="old_ver2.html">Oblige V2</a>
+<use SubSpacer>
+<use IndexNews>
+<use IndexScreens>
+<use IndexDownload>
+<use SubWhere where="OLDVER">
+<use IndexForums>
 </div>
 
 <div class="rest">
 
+<h3>OLDER VERSION</h3>
 
-<h3>INTRODUCTION</h3>
+Earlier releases of Oblige with version numbers beginning
+with zero (like 0.85) may still be of interest, since they
+support games and features which have not been re-implemented
+in the current versions yet.
 
+<p>
 
 
 </div class="rest">
 
-<div align="right" class="logo">
-      <a HREF="http://sourceforge.net/projects/oblige">
-        <img src="http://sourceforge.net/sflogo.php?group_id=176314&amp;type=3" 
-         width="125" height="37" alt="SourceForge.net" 
-         align="MIDDLE" border="0" hspace="1">
-      </a>
-</div>
+<file include="x_footer.inc">
 
-<span style="font-size: smaller"> &copy; 2009  Andrew Apted </span>
-
-</body>
-</html>
