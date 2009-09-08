@@ -18,18 +18,25 @@
 
 <h3>ABOUT OBLIGE</h3>
 
-OBLIGE III is a random level maker for various games,
-only DOOM 2 currently.
-Version 3 was a big rewrite of the code, and not
-everything that used to be supported (like all the
-other games) has been added back yet.
+OBLIGE is a random level maker for numerous classic FPS
+games.
+
 
 <p>
 Check out <a href="http://oblige.sourceforge.net/index_v2.html">Oblige II</a>
 if you are interested in a Heretic or Hexen map generator,
 or if you just want to see what the previous version was like.
 
-<h3>FEATURES</h3>
+
+<p>
+Note: because OBLIGE is a <b>Free Software</b>
+(under the GNU GPL license)
+it comes with absolutely NO WARRANTY of any kind.
+Please read the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
+for all the details.
+
+
+<h3>FEATURES / GOALS</h3>
 
 <p>
 OBLIGE will have the following features which set it apart
@@ -82,10 +89,14 @@ The ugly:
 </PRE>
 
 
-<h3>FUTURE DEVELOPMENT</h3>
+<h3>KNOWN PROBLEMS</h3>
 
 blah blah blah...
 
+
+<h3>FUTURE DEVELOPMENT</h3>
+
+blah blah blah...
 
 
 </div class="rest">
