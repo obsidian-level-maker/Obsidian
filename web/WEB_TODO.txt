@@ -2,21 +2,17 @@
 WEB PAGE REORGANISATION
 -----------------------
 
->>>  switch to HTP (a HTML preprocessor)
-
->>>  link to Forum somewhere
-
 MAIN
 
 - main page:
   - short introduction [DONE]
   - news / changes     [DONE]
 
-- screenshots
+- screenshots  (LATER,,,,)
 
 - downloads [DONE]
 
-- V2 page
+- V2 page  [DONE]
 
 
 DOCS
@@ -31,6 +27,7 @@ DOCS
     - current status
     - known problems
     - future development
+  - contact:  sourceforge devel page
 
 - credits
   - author(s)  [DONE]
@@ -39,12 +36,12 @@ DOCS
 
 - history  [DONE]
 
-- games
+- games  (LATER....)
 
-- modules
+- modules  (LATER....)
 
 
-MODDING
+MODDING  (LATER....)
 
 - basics
    - Lua
@@ -54,6 +51,7 @@ MODDING
  
 
 LINKS??
+
 -  HacX : http://www.sonic.net/~nostromo/hacx/Hacx.html
 -  HexenII textures: http://www.raven-games.com/essentials
 (glbsp, FLTK, lua, yawn)

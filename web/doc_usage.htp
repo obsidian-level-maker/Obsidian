@@ -52,8 +52,7 @@ running Oblige.  See the information on each game for details)
 <h3>WINDOW LAYOUT</h3>
 
 The following diagram shows the GUI for OBLIGE.
-You can see that the window is sub-divided into five
-distinct panels.
+You can see that the window is divided into five distinct panels.
 The panels are discussed in separate sections below.
 
 Also notice there is no menu bar.  To exit you can either
@@ -64,12 +63,6 @@ or just press the ESCAPE key.
 <div class="guioverview">
 <img src="gui_overview.png" width="600" height="265" border="0" alt="PICTURE">
 </div>
-
-<p>
-</i>Note: some buttons, like 'Options' in the Build panel,
-currently do nothing at all.  These are features that are
-still in development.
-</i>
 
 
 <h3>GAME SETTINGS</h3>
@@ -146,17 +139,21 @@ blah
 
 blah
 
+<p>
+<i>Note: currently the 'Options' button does nothing at all.
+It will be used for setting options which don't really fit
+anywhere else.
+</i>
+
 
 <h3>MISC NOTES</h3>
 
-<ul class="usagemisc">
-<li>
 OBLIGE requires the full version of each game it supports.
 It will <i>not</i> work properly with shareware or demo
 versions, and never will (so don't ask).
 @@@ FreeDOOM
 
-<li>
+<p>
 In Wolfenstein-3D mode, the "Build..." button does not bring up
 a dialog box.
 OBLIGE simply creates the output files in the same folder where
@@ -164,13 +161,11 @@ it is installed. These files are called <b>GAMEMAPS.WL6</b> and
 <b>MAPHEAD.WL6</b> and you need to copy them into your
 Wolf3d folder (be sure to make a backup first!).
 
-<li>
+<p>
 You should use a Source Port to play the levels, because the
 original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
 architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
-
-</ul>
 
 
 </div class="rest">
