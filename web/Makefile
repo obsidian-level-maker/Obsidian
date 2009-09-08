@@ -8,6 +8,7 @@ all:
 	cp pics/*.* out/
 	htp -quiet index.htp         out/index.html
 	htp -quiet i_download.htp    out/i_download.html
+	htp -quiet i_oldie.htp       out/i_oldie.html
 	htp -quiet i_screens.htp     out/i_screens.html
 	htp -quiet doc_about.htp     out/doc_about.html
 	htp -quiet doc_credits.htp   out/doc_credits.html

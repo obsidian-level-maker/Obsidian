@@ -10,6 +10,7 @@
 <use IndexNews>
 <use SubWhere where="SCREENSHOTS">
 <use IndexDownload>
+<use IndexOldie>
 <use IndexForums>
 </div>
 

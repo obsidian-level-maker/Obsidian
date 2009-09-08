@@ -32,7 +32,6 @@
   <use TopCorners>
   <use MenuWhere where="HOME">
   <use MenuDocs>
-  <a href="old_ver2.html">Older Version</a>
   </div>
 </block>
 
@@ -41,11 +40,15 @@
 </block>
 
 <block IndexScreens>
-  <a href="i_screens.html">Screenshots</a>
+  <!--- a href="i_screens.html"] Screenshots [/a --->
 </block>
 
 <block IndexDownload>
   <a href="i_download.html">Download</a>
+</block>
+
+<block IndexOldie>
+  <a href="i_oldie.html">OldVer</a>
 </block>
 
 <block IndexForums>
@@ -58,7 +61,6 @@
   <use TopCorners>
   <use MenuHome>
   <use MenuWhere where="DOCUMENTATION">
-    <a href="old_ver2.html">Older Version</a>
   </div>
 </block>
 
