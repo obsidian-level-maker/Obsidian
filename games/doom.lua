@@ -2063,7 +2063,7 @@ function Doom2_get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.theme = GAME.themes["WOLF"]
+      LEV.theme = GAME.themes["WOLF1"]
       LEV.name_theme = "URBAN"
     end
 
