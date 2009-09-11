@@ -18,16 +18,16 @@
 
 <h3>ABOUT OBLIGE</h3>
 
-OBLIGE is a random level maker for numerous classic FPS
-games.
-
+OBLIGE is a random level maker for a bunch of classic FPS games.
+Just press a few buttons and <i>kazam!</i> out pops some fun maps
+to play.
+Well that's out goal anyway, it may take a while to fully achieve it.
 
 <p>
-Note: because OBLIGE is a <b>Free Software</b>
-(under the GNU GPL license)
-it comes with absolutely NO WARRANTY of any kind.
-Please read the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
-for all the details.
+OBLIGE is <b>Free Software</b>, released under the GNU GPL license.
+Please note that it comes with absolutely NO WARRANTY of any kind.
+You can read the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a>
+for all the legal stuff.
 
 
 <h3>FEATURES / GOALS</h3>
@@ -46,7 +46,7 @@ by David Chess)
 </ul>
 
 <p>
-OBLIGE aims to support the following games:
+OBLIGE plans to support the following games:
 
 <ul class="gamelist">
   <li>DOOM and DOOM II
@@ -57,7 +57,7 @@ OBLIGE aims to support the following games:
 </ul>
 
 Other games, such as Wolfenstein 3D and Strife,
-may get some support in the future, but for now the
+might get supported in the future, but for now the
 focus is mainly on the games listed above.
 
 <p>
@@ -119,7 +119,7 @@ The ugly:
 
 The best way of getting in contact, especially when reporting bugs,
 is to visit the
-<a href="http://sourceforge.net/apps/phpbb/oblige/">Oblige Forums*</a>.
+<a href="http://sourceforge.net/apps/phpbb/oblige/">Oblige Forums</a>.
 You will need an account on SourceForge before you can post.
 
 <p>
@@ -128,7 +128,7 @@ Alternatively you can email me:
 &lt;ajapted@users.sf.net&gt;</a>
 
 <p>
-Finally, you will reach the SourceForge
+Finally, you can visit the SourceForge
 <a href="http://sourceforge.net/projects/oblige">project page</a>
 for OBLIGE by clicking the SourceForge logo at the very bottom
 of these pages.
