@@ -20,14 +20,13 @@ DOCS
 - usage
 
 - about page
-  OBLIGE is FREE SOFTWARE released under the GNU GPL with NO WARRANTY
-  - FEATURE list
-  - system requirments
-  - status
-    - current status
-    - known problems
-    - future development
-  - contact:  sourceforge devel page
+  - OBLIGE is FREE SOFTWARE with NO WARRANTY  [DONE]
+  - FEATURE list  [DONE]
+  - system requirments  [DONE]
+  - current status
+  - known problems
+  - future development  (LATER...)
+  - contact:  sourceforge devel page  [DONE]
 
 - credits
   - author(s)  [DONE]
