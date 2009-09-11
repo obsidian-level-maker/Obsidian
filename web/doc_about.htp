@@ -75,45 +75,62 @@ for even more stuff we'd like to add)
 </ul>
 
 
-<h3>CURRENT STATUS</h3>
+<h3>GENERAL STATUS</h3>
 
-<PRE>
-The good:
+<ul class="status">
 
-+  nicer GUI interface
-+  name generator
-+  sky generator
+<li>only DOOM and DOOM II are supported just now
+<li>there is only a single theme: TECH
+<li>no traps, no cages
+<li>no secrets, no powerups
+<li>very limited scenery
+<li>common glitches in outdoor areas
 
-+  big rooms!
-+  symmetrical rooms
-+  room-in-a-room
-+  diagonal walls
+</ul>
 
-The bad:
 
--  only supports DOOM 1 and DOOM 2
--  only one available theme: TECH
--  no traps, no cages
--  no secrets, no powerups
--  very limited scenery
+<h3>STATUS OF GAMES</h3>
 
-The ugly:
+<b>DOOM and DOOM II:</b><br>
+Very playable (despite the limitations listed above).
 
--  the MAP07 and MAP30 arenas
--  common glitches on outside borders
--  occasional wrong textures or misalignments
--  lousy crates all over the place
-</PRE>
+<p>
+<b>Heretic:</b><br>
+Close to being playable, needs more work on proper themes
+(such as the Heretic style of locked doors with the statue
+out front), etc...
+
+<p>
+<b>Hexen:</b><br>
+Not playable just now, the map/wad construction code cannot
+create the Hexen-specific formats yet.
+
+<p>
+<b>Quake:</b><br>
+Close to being playable, but still lacking many things: lighting,
+visibility, doors, a working exit, sloped floors or ceilings,
+liquid areas, proper themes, etc... etc...
+
+<p>
+<b>Quake II:</b><br>
+Quite far from being playable, working levels cannot be built yet,
+and lacks all the stuff missing from Quake (as listed in the previous
+entry).
+
+<p>
+<b>Wolf3D:</b><br>
+A long way from being playable.  There is a separate piece of code
+for dealing with "Tiled" maps, but all it can do right now is make a
+bunch of connected empty rooms.
 
 
 <h3>KNOWN PROBLEMS</h3>
 
-<ul class="problems">
-<li>foo
-</ul>
+<i>(this section is under construction)</i>
 
 
 <!--- FUTURE DEVELOPMENT --->
+
 
 <h3>GETTING IN CONTACT</h3>
 
