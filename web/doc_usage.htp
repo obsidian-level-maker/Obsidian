@@ -86,26 +86,48 @@ Other settings include:
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
+<h3>LEVEL ARCHITECTURE</h3>
+
+The Level Architecture panel lets you control general features
+of the maps, like how big they are and what theme to use.
+
 In the <b>Level Architecture</b> panel you can control the
 size of the created levels, select a theme, as well as how
 much outdoors the levels will have.  [Note that the 'Lighting'
 and 'Detail' buttons don't do anything yet]
 
-<p>
+blah
+
+
+<h3>PLAYING STYLE</h3>
+
+This panel is all about the gameplay, baby!
+Here you can control the quantity and strength of the
+monsters, how much health and ammo should be added, etc.
+
 The <b>Playing Style</b> panel lets you control the
 how many monsters and traps are added. as well as
 how much health and ammunition.
-OBLIGE also implements the different skill levels
-for each map (e.g. Hurt-me-Plenty vs Ultra-Violence).
+
+blah
+
+
+<h3>MODULES PANEL</h3>
+
+<!--- Modules are a great new feature in Oblige V3.
+  --->
 
 <p>
-After you've chosen the desired settings, press the "Build..." button,
-which will open a Save-File dialog asking you what the output file
-should be. Enter something appropriate, e.g. TEST, and after that
+<i>(this section is under construction)</i>
+
+
+<h3>BUILD PANEL</h3>
+
+Once you've chosen the desired settings, press the "Build" button.
+This will open a Save-File dialog asking you what the output file
+should be.
+Enter something appropriate, e.g. TEST, and after that
 OBLIGE will starting building the levels.
-
-<p>
-To exit, press the "Quit" button in the bottom left panel.
 
 <p>
 The levels created by OBLIGE are ready to play.  There is no
@@ -113,36 +135,10 @@ need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
 
 
-<h3>LEVEL ARCHITECTURE</h3>
-
-The Level Architecture panel lets you control general features
-of the maps, like how big they are and what theme to use.
-
-blah
-
-
-<h3>PLAYING STYLE</h3>
-
-Thispanel is all about the gameplay, baby!
-Here you can control the quantity and strength of the
-monsters, how much health and ammo should be added, etc.
-
-
-<h3>MODULES PANEL</h3>
-
-Modules are a great new feature in Oblige V3.
-
-blah
-
-
-<h3>BUILD PANEL</h3>
-
-blah
-
 <p>
 <i>Note: currently the 'Options' button does nothing at all.
-It will be used for setting options which don't really fit
-anywhere else.
+In the future it will let you set various
+options which don't really fit anywhere else.
 </i>
 
 
@@ -154,12 +150,20 @@ versions, and never will (so don't ask).
 @@@ FreeDOOM
 
 <p>
-In Wolfenstein-3D mode, the "Build..." button does not bring up
+Most games let you play at different skill levels
+(e.g. Hurt-Me-Plenty vs Ultra-Violence),
+and OBLIGE takes them into account.  Easier skill levels
+will have less monsters and more health/ammo than the harder
+levels.
+
+<p>
+In Wolfenstein-3D mode, the "Build" button does not bring up
 a dialog box.
 OBLIGE simply creates the output files in the same folder where
-it is installed. These files are called <b>GAMEMAPS.WL6</b> and
-<b>MAPHEAD.WL6</b> and you need to copy them into your
-Wolf3d folder (be sure to make a backup first!).
+it is installed.
+These files are called <b>GAMEMAPS.WL6</b> and <b>MAPHEAD.WL6</b>
+and you need to copy them into your
+Wolf3d folder (please make a backup first!).
 
 <p>
 You should use a Source Port to play the levels, because the
