@@ -38,11 +38,12 @@ The last release of the V2 codebase was version 0.97 (May 2008).
 <p>
 <b>Oblige V3</b> is the current incarnation.
 Severe limitations in the previous code prompted a huge rewrite,
-a process which is on-going as many earlier features
+a process which is still on-going as many earlier features
 have not been re-implemented yet.
 The first public release of the V3 codebase
 occurred in April 2009 (at version 3.39)
-and it is planned to release future versions as often as possible.
+and it is planned to release future versions
+as often as possible.
 
 
 <h3>RELEASE DATES</h3>

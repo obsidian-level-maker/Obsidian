@@ -23,7 +23,7 @@ DOCS
   - OBLIGE is FREE SOFTWARE with NO WARRANTY  [DONE]
   - FEATURE list  [DONE]
   - system requirments  [DONE]
-  - current status
+  - current status [DONE]
   - known problems
   - future development  (LATER...)
   - contact:  sourceforge devel page  [DONE]

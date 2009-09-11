@@ -21,7 +21,7 @@
 OBLIGE is a random level maker for a bunch of classic FPS games.
 Just press a few buttons and <i>kazam!</i> out pops some fun maps
 to play.
-Well that's out goal anyway, it may take a while to fully achieve it.
+Well that's our goal anyway, it may take a while to fully achieve it.
 
 <p>
 OBLIGE is <b>Free Software</b>, released under the GNU GPL license.
@@ -46,7 +46,7 @@ by David Chess)
 </ul>
 
 <p>
-OBLIGE plans to support the following games:
+We plan to fully support the following games:
 
 <ul class="gamelist">
   <li>DOOM and DOOM II
@@ -114,7 +114,7 @@ liquid areas, proper themes, etc... etc...
 <p>
 <b>Quake II:</b><br>
 Quite far from being playable, working levels cannot be built yet,
-and lacks all the stuff missing from Quake (as listed in the previous
+and lacks all the same stuff missing from Quake (listed in the previous
 entry).
 
 <p>
@@ -147,7 +147,7 @@ Alternatively you can email me:
 <p>
 Finally, you can visit the SourceForge
 <a href="http://sourceforge.net/projects/oblige">project page</a>
-for OBLIGE by clicking the SourceForge logo at the very bottom
+for Oblige by clicking the SourceForge logo at the very bottom
 of these pages.
 
 
