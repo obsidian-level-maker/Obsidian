@@ -65,211 +65,6 @@ Nicety:
 
 
 ----------------------------------------------------------------
-  IDEAS
-----------------------------------------------------------------
-
--  module help / explanations ?? (appear above the options)
-
--  CSG: clipping rectangles (typically a room)
-
--  small arena-ish boss levels to break up megawads,
-   e.g. DOOM 2 at MAP16 and MAP24  (JR)
-
-
-
-
->>>  a segment with same front and back ????
-
->>>  AssignBrushes: double checking using f/b_sides
-
-
-NAME GENERATOR
-
--  GUI SIDE:
-   -  BOOM: DEHACKED lump   -- comments use '#'
-            [STRINGS] section
-            
-            gui.property("bex_string", "HUSTR_%d = %s")
-
-            (also: HUSTR_ExMy, PHUSTR_%d, THUSTR_%d)
-
-   -  EDGE: DDFLANG lump    -- comments use '//'
-            [ENGLISH] section
-
-            gui.property("ddf_string", "Map01Desc=\"%s\";")
-
-            (also: ExMyDesc="%s")
-
-   -  Doomsday:  DD_DEFNS lump  -- comments use '#'
-              
-              Map Info
-              {
-                ID = "MAP01";
-                Name = "Blah Blah";
-              }
-
-   -  Eternity:  EMAPINFO lump  -- comments use '#'
-
-              [MAP01]
-              levelname = Blah Blah
-              music = xxxx
-              creator = Oblige 3.xx
-              skyname = SKY3
-
-   -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
-
-             gui.mapinfo_map(lump, description)
-             gui.mapinfo_property("cluster", "1")
-
-             LIMIT = 31 letters
-
-   -  QUAKE 1/2: stored in 'worldspawn' entity
-
-             gui.property("level_desc", "%s") --> 'message' field
-
-             LIMIT = 39 letters
-
--  WILVxx and CWILVxx creation: need an API!
-
-
-MUSIC RE-ORDERING
-
-   *  Doom 1: shuffle each episode
-
-   *  Doom 2: if one episode (or less), pick random tracks and
-              ensure that no two tracks have the same three-letter
-              prefix.
-
-   *  Doom 2, full game: shuffle tracks, loop a few times looking
-                         for repeats (same three-letter prefix in a
-                         row) and move one to random spot.
-
-   -  BOOM, Eternity: [MUSIC] section in BEX
-
-          [MUSIC]
-          ROMERO = RUNNIN
-          RUNNIN = STALKS
-          STALKS = ROMERO
-
-   -  Eternity native: 'music' setting in EMAPINFO
-
-   -  EDGE native:  DDFPLAY lump:
-   
-          <PLAYLISTS>
-          [01]
-          MUSICINFO=MUS:LUMP:"D_RUNNIN";
-
-   -  ZDoom : via MAPINFO: music D_RUNNING
-
-
-THEME SELECTION
-
-(a) Each level has a THEME, e.g. "Tech"
-
-(b) User can select what theme to use ---> case closed
-
-(c) For "mixed" select a random theme, bearing in mind:
-    (i) secret levels can choose something whacky
-    (ii) One-Episode: use 'epi_prob', group same themes together
-    (iii) Full-Game: prefer episodes to have whole theme
-                     and prefer theme to match sky
-
-
-EXTRA GRAPHICS
-
-   { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
-   { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
-   { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
-
-   static const char *ext_patches[] =
-   {
-     "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
-     "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
-     "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
-     "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
-
-     NULL // end marker
-   }
-
-
-
-Room Fitting Out
-----------------
-
--  can_fab_list: do preliminary size check (e.g. min/max)
-
--  Junk sides
-   (f) sometimes allow one gap for a connection
-   (g) ensure floor_fill works OK
-   (h) use in rooms with children (no touching them)
-
--  IDEA: junk a side with a connection, and the little "bridge"
-         seed can become a stairway.
-
--  BUG: lowering bars can bypass-able
-
--  ability to use patterns with heights both HIGHER and LOWER
-   than the '.' entry connection.  (maybe: height=-1 in subs)
-
-- ceilings:
-  - big room with no sky neighbours: have a huge sky hole
-
-
-
-Stairwells: more steps to ensure wall lengths <= 128 units
-            --> SEED_SIZE * max(sx_span, sy_span) / 128
-
-Quests
-  - sometimes lock another connection (ESP: symmetry)
-    with the same lock as one we just added
-    [ESP: when new lock goes to leaf or semi-leaf]
-
-CONNECT:  for TC (etc) patterns, make the ones that branch at
-          room corners less likely (i.e. prefer 1 or 2 seeds
-          away from corner, though it depends on room size).
-
-HEIGHTS: prevent any room from having more than 4 heights
-         [tiny rooms: no more than 2]
-
-
-HEXEN lua: gui.property("hexen_format", "true")
-
-SPEAR lua: gui.property("file_ext", "SOD")
-
-EDGE: gui.property("solid_exfloor", 400)
-      gui.property("liquid_exfloor", 406)
-      gui.property("thing_exfloor_flags", "true")
-
-LEGACY: gui.property("solid_exfloor", 281)
-        gui.property("liquid_exfloor", 280)  -- 301
-
-
-
-DOOM ENTITY PROPS:
-  angle
-  options
-  tid
-  special
-  args
-
-
-QUAKE1 ENTITY PROPS:
-  light
-  spawnflags
-  target
-  targetname
-  speed
-  next stop
-
-
-General:
-
->>>  create special BOSS levels (e.g. E1M8, MAP30)
-
--  put important constants/tables into defs.lua
-
-
-----------------------------------------------------------------
   GUI and C++ CODE
 ----------------------------------------------------------------
 
@@ -286,7 +81,7 @@ General:
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
--  ideas for new buttons
+-  ideas for buttons
    -  Secrets
    -  Powerups
    -  Outdoor-iness  [THERE]
@@ -567,6 +362,238 @@ PIPE DREAMS
    .  option to read a different config file: -c(onfig)
    .  never writes the config file
    ?? what to do on error ??
+
+
+----------------------------------------------------------------
+  IDEAS AND BRAINSTORMS
+----------------------------------------------------------------
+
+-  module help / explanations ?? (appear above the options)
+
+-  CSG: clipping rectangles (typically a room)
+
+-  small arena-ish boss levels to break up megawads,
+   e.g. DOOM 2 at MAP16 and MAP24  (JR)
+
+
+
+>>>  a segment with same front and back ????
+
+>>>  AssignBrushes: double checking using f/b_sides
+
+
+SKIN TABLE FIELDS
+
+1) use a plain word for the main part of something.
+
+   Examples: 'wall', 'floor', 'side', 'switch',
+             'beam', 'trim',  'base', 'door'.
+
+2) the '_f' suffix on the main word can be used to provide
+   a different floor or ceiling material (when the main word
+   refers to the side texture).
+
+3) the '_t' suffix can provide a different side texture
+   when the main word refers to a floor or ceiling.
+
+4) the '_c' suffix should NOT be used for normal DOOM,
+   it is reserved for setting the ceiling material for
+   rare cases when it could be different from the floor
+   material -- e.g. in a QUAKE prefab.
+
+5) the '_ox' '_oy' '_peg' suffixes provide x_offset,
+   y_offset and pegging values.  When pegging is true,
+   an absent y_offset value will be set to 0.
+
+6) the '_w' '_h' '_d' suffixes are reserved for setting
+   width / height (vertical) / depth values.
+
+
+NAME GENERATOR
+
+-  GUI SIDE:
+   -  BOOM: DEHACKED lump   -- comments use '#'
+            [STRINGS] section
+            
+            gui.property("bex_string", "HUSTR_%d = %s")
+
+            (also: HUSTR_ExMy, PHUSTR_%d, THUSTR_%d)
+
+   -  EDGE: DDFLANG lump    -- comments use '//'
+            [ENGLISH] section
+
+            gui.property("ddf_string", "Map01Desc=\"%s\";")
+
+            (also: ExMyDesc="%s")
+
+   -  Doomsday:  DD_DEFNS lump  -- comments use '#'
+              
+              Map Info
+              {
+                ID = "MAP01";
+                Name = "Blah Blah";
+              }
+
+   -  Eternity:  EMAPINFO lump  -- comments use '#'
+
+              [MAP01]
+              levelname = Blah Blah
+              music = xxxx
+              creator = Oblige 3.xx
+              skyname = SKY3
+
+   -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
+
+             gui.mapinfo_map(lump, description)
+             gui.mapinfo_property("cluster", "1")
+
+             LIMIT = 31 letters
+
+   -  QUAKE 1/2: stored in 'worldspawn' entity
+
+             gui.property("level_desc", "%s") --> 'message' field
+
+             LIMIT = 39 letters
+
+-  WILVxx and CWILVxx creation: need an API!
+
+
+MUSIC RE-ORDERING
+
+   *  Doom 1: shuffle each episode
+
+   *  Doom 2: if one episode (or less), pick random tracks and
+              ensure that no two tracks have the same three-letter
+              prefix.
+
+   *  Doom 2, full game: shuffle tracks, loop a few times looking
+                         for repeats (same three-letter prefix in a
+                         row) and move one to random spot.
+
+   -  BOOM, Eternity: [MUSIC] section in BEX
+
+          [MUSIC]
+          ROMERO = RUNNIN
+          RUNNIN = STALKS
+          STALKS = ROMERO
+
+   -  Eternity native: 'music' setting in EMAPINFO
+
+   -  EDGE native:  DDFPLAY lump:
+   
+          <PLAYLISTS>
+          [01]
+          MUSICINFO=MUS:LUMP:"D_RUNNIN";
+
+   -  ZDoom : via MAPINFO: music D_RUNNING
+
+
+THEME SELECTION
+
+(a) Each level has a THEME, e.g. "Tech"
+
+(b) User can select what theme to use ---> case closed
+
+(c) For "mixed" select a random theme, bearing in mind:
+    (i) secret levels can choose something whacky
+    (ii) One-Episode: use 'epi_prob', group same themes together
+    (iii) Full-Game: prefer episodes to have whole theme
+                     and prefer theme to match sky
+
+
+EXTRA GRAPHICS
+
+   { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
+   { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
+   { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
+
+   static const char *ext_patches[] =
+   {
+     "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
+     "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
+     "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
+     "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
+
+     NULL // end marker
+   }
+
+
+
+Room Fitting Out
+----------------
+
+-  can_fab_list: do preliminary size check (e.g. min/max)
+
+-  Junk sides
+   (f) sometimes allow one gap for a connection
+   (g) ensure floor_fill works OK
+   (h) use in rooms with children (no touching them)
+
+-  IDEA: junk a side with a connection, and the little "bridge"
+         seed can become a stairway.
+
+-  BUG: lowering bars can bypass-able
+
+-  ability to use patterns with heights both HIGHER and LOWER
+   than the '.' entry connection.  (maybe: height=-1 in subs)
+
+- ceilings:
+  - big room with no sky neighbours: have a huge sky hole
+
+
+
+Stairwells: more steps to ensure wall lengths <= 128 units
+            --> SEED_SIZE * max(sx_span, sy_span) / 128
+
+Quests
+  - sometimes lock another connection (ESP: symmetry)
+    with the same lock as one we just added
+    [ESP: when new lock goes to leaf or semi-leaf]
+
+CONNECT:  for TC (etc) patterns, make the ones that branch at
+          room corners less likely (i.e. prefer 1 or 2 seeds
+          away from corner, though it depends on room size).
+
+HEIGHTS: prevent any room from having more than 4 heights
+         [tiny rooms: no more than 2]
+
+
+HEXEN lua: gui.property("hexen_format", "true")
+
+SPEAR lua: gui.property("file_ext", "SOD")
+
+EDGE: gui.property("solid_exfloor", 400)
+      gui.property("liquid_exfloor", 406)
+      gui.property("thing_exfloor_flags", "true")
+
+LEGACY: gui.property("solid_exfloor", 281)
+        gui.property("liquid_exfloor", 280)  -- 301
+
+
+
+DOOM ENTITY PROPS:
+  angle
+  options
+  tid
+  special
+  args
+
+
+QUAKE1 ENTITY PROPS:
+  light
+  spawnflags
+  target
+  targetname
+  speed
+  next stop
+
+
+General:
+
+>>>  create special BOSS levels (e.g. E1M8, MAP30)
+
+-  put important constants/tables into defs.lua
+
 
 
  ____________________
