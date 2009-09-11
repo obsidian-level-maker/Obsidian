@@ -23,12 +23,6 @@ games.
 
 
 <p>
-Check out <a href="http://oblige.sourceforge.net/index_v2.html">Oblige II</a>
-if you are interested in a Heretic or Hexen map generator,
-or if you just want to see what the previous version was like.
-
-
-<p>
 Note: because OBLIGE is a <b>Free Software</b>
 (under the GNU GPL license)
 it comes with absolutely NO WARRANTY of any kind.
@@ -39,23 +33,46 @@ for all the details.
 <h3>FEATURES / GOALS</h3>
 
 <p>
-OBLIGE will have the following features which set it apart
-from existing programs (like the famous
-<a href="http://www.doomworld.com/slige/">SLIGE</a> by David Chess)
-:-
+OBLIGE will have the following general features which set it apart
+from existing programs (like the famous <b>SLIGE</b>
+by David Chess)
 
-<ul>
+<ul class="features">
   <li>higher quality levels, e.g. outdoor areas!
   <li>easy to use GUI interface (no messing with command lines)
-  <li>built-in node builder, so the created levels are ready to play
+  <li>built-in node builder, the created levels are ready to play
   <li>uses the LUA scripting language for easy customisation
-  <li>more games, like Heretic, Hexen and Quake!
+  <li>can make multiplayer maps for Deathmatch and CTF
 </ul>
+
+<p>
+OBLIGE aims to support the following games:
+
+<ul class="gamelist">
+  <li>DOOM and DOOM II
+  <li>Heretic
+  <li>Hexen
+  <li>Quake
+  <li>Quake II
+</ul>
+
+Other games, such as Wolfenstein 3D and Strife,
+may get some support in the future, but for now the
+focus is mainly on the games listed above.
+
+<p>
+<i>(See the <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/WISHLIST.txt">WISHLIST</a>
+for even more stuff we'd like to add)
+</i>
 
 
 <h3>SYSTEM REQUIREMENTS</h3>
 
-FIXME Blah blah blah
+<ul class="sysreq">
+<li>Pentium 500 Mhz CPU or higher.
+<li>128 MB of RAM or higher.
+<li>Windows 2000, XP, Vista or later.  (Linux is supported too)
+</ul>
 
 
 <h3>CURRENT STATUS</h3>
@@ -91,12 +108,30 @@ The ugly:
 
 <h3>KNOWN PROBLEMS</h3>
 
-blah blah blah...
+<ul class="problems">
+<li>foo
+</ul>
 
 
-<h3>FUTURE DEVELOPMENT</h3>
+<!--- FUTURE DEVELOPMENT --->
 
-blah blah blah...
+<h3>GETTING IN CONTACT</h3>
+
+The best way of getting in contact, especially when reporting bugs,
+is to visit the
+<a href="http://sourceforge.net/apps/phpbb/oblige/">Oblige Forums*</a>.
+You will need an account on SourceForge before you can post.
+
+<p>
+Alternatively you can email me:
+<a href="mailto:ajapted@users.sf.net">
+&lt;ajapted@users.sf.net&gt;</a>
+
+<p>
+Finally, you will reach the SourceForge
+<a href="http://sourceforge.net/projects/oblige">project page</a>
+for OBLIGE by clicking the SourceForge logo at the very bottom
+of these pages.
 
 
 </div class="rest">
