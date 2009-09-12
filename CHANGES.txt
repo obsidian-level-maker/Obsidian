@@ -7,7 +7,9 @@ CHANGES (since v3.43)
 -  new 'Strength' button (for monsters)
 -  new 'Progressive' choice for monster numbers
 -  more choices for the 'Outdoors' button
+
 -  levels are somewhat smaller
+-  fixed some texture glitches / sky gaps
 
 -  further work on Quake (better BSP algorithms etc)
 -  very preliminary work on Strife

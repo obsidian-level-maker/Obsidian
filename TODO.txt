@@ -13,12 +13,12 @@ TODO
 
 -  more ammo in starting room  (biggest pack for starting weapon or bullets)
 
->> Compilation notes !!
+-  Compilation notes!  (INSTALL.txt)
 
+
+>>>  more themes for DOOM (Urban, Hell)
 
 +  get more games working (Heretic, Hexen etc)
-
-+  more themes for DOOM (Urban, Hell)
 
 +  support for Traps, Cages, Secrets, Powerups
 
@@ -36,8 +36,6 @@ TODO
 
 -  BUG: outdoor bars can sometimes be jumped over.
    --> make them higher _or_ another switch to lower them.
-
-?  use 'xxx_t' instead of 'xxx_w' in skin tables
 
 
 CSG CODE:
