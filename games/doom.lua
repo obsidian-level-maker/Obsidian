@@ -1051,6 +1051,20 @@ COMMON_PILLARS =
 }
 
 
+COMMON_CRATES =  -- temporary (until good prefab system)
+{
+  crate1 = { side_w="CRATE1", top_f="CRATOP2" },
+  crate2 = { side_w="CRATE2", top_f="CRATOP1" },
+  
+  space = { side_w="SPACEW3",  top_f="CEIL5_1" },
+  comp  = { side_w="COMPWERD", top_f="CEIL5_1" },
+  mod   = { side_w="MODWALL3", top_f="FLAT19" },
+
+  wood = { side_w="WOOD3",    top_f="CEIL1_1" },
+  ick  = { side_w="ICKWALL4", top_f="FLAT19" },
+}
+
+
 COMMON_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
@@ -1292,6 +1306,11 @@ COMMON_THEME_DEFAULTS =
   logos = { carve=50, pill=50 },
 
   liquid_pics = { pois1=70, pois2=30 },
+
+  crates = { crate1=50, crate2=50, space=90, comp=70, mod=10 },
+
+  -- FIXME: should not be separated, have 'environment' fields
+  out_crates = { wood=50, ick=50 },
 }
 
 
@@ -2530,10 +2549,10 @@ OB_GAMES["doom1"] =
     "lifts",      COMMON_LIFTS,
     "pictures",   COMMON_PICTURES,
     "pillars",    COMMON_PILLARS,
+    "crates",     COMMON_CRATES,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
-    "crates", COMMON_CRATES,
 
     "liquids", COMMON_LIQUIDS,
     "doors", COMMON_DOORS,
@@ -2565,7 +2584,6 @@ OB_GAMES["doom1"] =
 
     "materials", DOOM1_MATERIALS,
     "rails",     DOOM1_RAILS,
-    "crates",    DOOM1_CRATES,
     "wall_fabs", DOOM1_WALL_PREFABS,
   },
 }
@@ -2636,10 +2654,10 @@ OB_GAMES["doom2"] =
     "lifts",      COMMON_LIFTS,
     "pictures",   COMMON_PICTURES,
     "pillars",    COMMON_PILLARS,
+    "crates",     COMMON_CRATES,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
-    "crates", COMMON_CRATES,
 
     "liquids", COMMON_LIQUIDS,
     "doors", COMMON_DOORS,
@@ -2679,7 +2697,6 @@ OB_GAMES["doom2"] =
     "themes",   DOOM2_SUB_THEMES,
 
     "hangs",    DOOM2_OVERHANGS,
-    "crates",   DOOM2_CRATES,
 
     "doors",    DOOM2_DOORS,
     "lights",   DOOM2_LIGHTS,

@@ -1765,19 +1765,6 @@ function Room_add_crates(R)
   -- NOTE: temporary crap!
   -- (might be slightly useful for finding big spots for masterminds)
 
-local CRATE_SKINS =
-{
-  { side_w="CRATE1", top_f="CRATOP2" },
-  { side_w="CRATE2", top_f="CRATOP1" },
-  
-  { side_w="SPACEW3",  top_f="CEIL5_1" },
-  { side_w="COMPWERD", top_f="CEIL5_1" },
-  { side_w="MODWALL3", top_f="FLAT19" },
-
-  { side_w="WOOD3",    top_f="CEIL1_1" },
-  { side_w="ICKWALL4", top_f="FLAT19" },
-}
-
   local function test_spot(S, x, y)
     for dx = 0,1 do for dy = 0,1 do
       local N = SEEDS[x+dx][y+dy][1]
@@ -1816,11 +1803,17 @@ local CRATE_SKINS =
   end
 
   local skin
+  local skin_names
+
   if R.outdoor then
-    skin = CRATE_SKINS[rand_irange(6,7)]
+    -- FIXME: don't separate them
+    skin_names = LEVEL.theme.out_crates or GAME.defaults.out_crates
   else
-    skin = CRATE_SKINS[rand_index_by_probs { 5,5, 9,7,1 }]
+    skin_names = LEVEL.theme.crates or GAME.defaults.crates
   end
+
+  if not skin_names then return end
+  skin = assert(GAME.crates[rand_key_by_probs(skin_names)])
 
   local chance
 
