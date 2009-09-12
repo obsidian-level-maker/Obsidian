@@ -898,7 +898,148 @@ OLD_LIFT_JUNK =
 }
 
 
----- ARCH STUFF ------------
+COMMON_PICTURES =
+{
+  compsta1 =
+  {
+    pic_w="COMPSTA1", width=128, height=52,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  compsta2 =
+  {
+    pic_w="COMPSTA2", width=128, height=52,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  compsta1_blink =
+  {
+    pic_w="COMPSTA1", width=128, height=52,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
+
+  compsta2_blink =
+  {
+    pic_w="COMPSTA2", width=128, height=52,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
+
+  lite5 =
+  {
+    count=3, gap=32,
+    pic_w="LITE5", width=16, height=64,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    light=0.9, sec_kind=8,  -- oscillate
+  },
+
+  liteblu4 =
+  {
+    count=3, gap=32,
+    pic_w="LITEBLU4", width=16, height=64,
+    x_offset=0, y_offset=0,
+    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    light=0.9, sec_kind=8,
+  },
+
+  redwall =
+  {
+    count=2, gap=48,
+    pic_w="REDWALL", width=16, height=128, raise=20,
+    x_offset=0, y_offset=0,
+    side_t="REDWALL", floor="FLAT5_3", depth=8, 
+    light=0.99, sec_kind=8,
+  },
+
+  silver3 =
+  {
+    count=1, gap=32,
+    pic_w="SILVER3", width=64, height=96,
+    x_offset=0, y_offset=16,
+    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    light=0.8,
+  },
+
+  shawn1 =
+  {
+    count=1,
+    pic_w="SHAWN1", width=128, height=72,
+    x_offset=-4, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+  },
+
+  pill =
+  {
+    count=1,
+    pic_w="O_PILL", width=128, height=32, raise=16,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
+  },
+
+  carve =
+  {
+    count=1,
+    pic_w="O_CARVE", width=64, height=64,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
+  },
+
+  tekwall1 =
+  {
+    count=1,
+    pic_w="TEKWALL1", width=160, height=80,
+    x_offset=0, y_offset=24,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    line_kind=48, -- scroll
+    light=0.7,
+  },
+
+  tekwall4 =
+  {
+    count=1,
+    pic_w="TEKWALL4", width=128, height=80,
+    x_offset=0, y_offset=24,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    line_kind=48, -- scroll
+    light=0.7,
+  },
+
+  pois1 =
+  {
+    count=2, gap=32,
+    pic_w="BRNPOIS", width=64, height=56,
+    x_offset=0, y_offset=48,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+  },
+
+  pois2 =
+  {
+    count=1, gap=32,
+    pic_w="GRAYPOIS", width=64, height=64,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2",
+    depth=8, 
+  },
+
+  eagle1 =
+  {
+    count=1,
+    pic_w="ZZWOLF6", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="WOODVERT", floor="FLAT5_2", depth=8, 
+  },
+}
+
 
 COMMON_LIQUIDS =
 {
@@ -1126,6 +1267,20 @@ DOOM2_ROOMS =
 }
 
 
+COMMON_THEME_DEFAULTS =
+{
+  steps = { step1=50 },
+
+  lifts = { shiny=50 },
+
+  pictures = { shawn1=10 },
+
+  logos = { carve=50, pill=50 },
+
+  liquid_pics = { pois1=70, pois2=30 },
+}
+
+
 COMMON_SUB_THEMES =
 {
 --[[  
@@ -1242,7 +1397,14 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
-    lifts = { shiny=50 },
+    pictures =
+    {
+      shawn1=10, tekwall1=4, tekwall4=2,
+      lite5=30, liteblu4=30,
+      compsta1=40, compsta1_blink=3,
+      compsta2=40, compsta2_blink=3,
+      silver3=20, redwall=5,
+    },
 
     room_types =
     {
@@ -1294,8 +1456,6 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
-    lifts = { shiny=50 },
-
     room_types =
     {
       -- FIXME  TORTURE  PRISON
@@ -1340,8 +1500,6 @@ COMMON_SUB_THEMES =
     {
       step1=50, step3=50, step4=50,
     },
-
-    lifts = { shiny=50 },
 
     room_types =
     {
@@ -1451,7 +1609,10 @@ DOOM2_SUB_THEMES =
       step6=50,
     },
 
-    lifts = { shiny=50 },
+    pictures =
+    {
+      eagle1=50,
+    },
 
     room_types =
     {
@@ -1498,8 +1659,6 @@ DOOM2_SUB_THEMES =
     {
       step1=50,
     },
-
-    lifts = { shiny=50 },
   },
 }
 
@@ -2351,6 +2510,7 @@ OB_GAMES["doom1"] =
     "rails",      COMMON_RAILS,
     "steps",      COMMON_STEPS,
     "lifts",      COMMON_LIFTS,
+    "pictures",   COMMON_PICTURES,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2366,6 +2526,7 @@ OB_GAMES["doom1"] =
     "images", COMMON_IMAGES,
     "lights", COMMON_LIGHTS,
     "rooms",  COMMON_ROOMS,
+    "defaults", COMMON_THEME_DEFAULTS,
     "themes", COMMON_SUB_THEMES,
 
     "sc_fabs",   COMMON_SCENERY_PREFABS,
@@ -2454,6 +2615,7 @@ OB_GAMES["doom2"] =
     "rails",      COMMON_RAILS,
     "steps",      COMMON_STEPS,
     "lifts",      COMMON_LIFTS,
+    "pictures",   COMMON_PICTURES,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2469,6 +2631,7 @@ OB_GAMES["doom2"] =
     "images", COMMON_IMAGES,
     "lights", COMMON_LIGHTS,
     "rooms",  COMMON_ROOMS,
+    "defaults", COMMON_THEME_DEFAULTS,
     "themes", COMMON_SUB_THEMES,
 
     "sc_fabs",   COMMON_SCENERY_PREFABS,

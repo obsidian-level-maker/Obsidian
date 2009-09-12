@@ -900,144 +900,50 @@ function Rooms_border_up()
 
 
   local function select_picture(R, v_space, index)
-
-    -- FIXME: move into GAME !!!
-    local compsta1 =
-    {
-      pic_w="COMPSTA1", width=128, height=52,
-      x_offset=0, y_offset=0,
-      side_t="DOORSTOP", depth=8, 
-      floor="SHAWN2", light=0.8,
-    }
-    local compsta2 =
-    {
-      pic_w="COMPSTA2", width=128, height=52,
-      x_offset=0, y_offset=0,
-      side_t="DOORSTOP", depth=8, 
-      floor="SHAWN2", light=0.8,
-    }
-    local lite5 =
-    {
-      count=3, gap=32,
-      pic_w="LITE5", width=16, height=64,
-      x_offset=0, y_offset=0,
-      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
-      sec_kind=8, light=0.9,  -- oscillate
-    }
-    local liteblu4 =
-    {
-      count=3, gap=32,
-      pic_w="LITEBLU4", width=16, height=64,
-      x_offset=0, y_offset=0,
-      side_t="LITEBLU4", floor="FLAT14", depth=8, 
-      sec_kind=8, light=0.9,
-    }
-    local redwall =
-    {
-      count=2, gap=48,
-      pic_w="REDWALL", width=16, height=128, raise=20,
-      x_offset=0, y_offset=0,
-      side_t="REDWALL", floor="FLAT5_3", depth=8, 
-      sec_kind=8, light=0.99,
-    }
-    local silver3 =
-    {
-      count=1, gap=32,
-      pic_w="SILVER3", width=64, height=96,
-      x_offset=0, y_offset=16,
-      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
-      light=0.8,
-    }
-    local shawn1 =
-    {
-      count=1,
-      pic_w="SHAWN1", width=128, height=72,
-      x_offset=-4, y_offset=0,
-      side_t="DOORSTOP", floor="SHAWN2", depth=8, 
-    }
-    local pill =
-    {
-      count=1,
-      pic_w="O_PILL", width=128, height=32, raise=16,
-      x_offset=0, y_offset=0,
-      side_t="METAL", floor="CEIL5_2", depth=8, 
-      light=0.7,
-    }
-    local carve =
-    {
-      count=1,
-      pic_w="O_CARVE", width=64, height=64,
-      x_offset=0, y_offset=0,
-      side_t="METAL", floor="CEIL5_2", depth=8, 
-      light=0.7,
-    }
-    local tekwall1 =
-    {
-      count=1,
-      pic_w="TEKWALL1", width=160, height=80,
-      x_offset=0, y_offset=24,
-      side_t="METAL", floor="CEIL5_2", depth=8, 
-      line_kind=48, -- scroll
-      light=0.7,
-    }
-    local tekwall4 =
-    {
-      count=1,
-      pic_w="TEKWALL4", width=128, height=80,
-      x_offset=0, y_offset=24,
-      side_t="METAL", floor="CEIL5_2", depth=8, 
-      line_kind=48, -- scroll
-      light=0.7,
-    }
-    local pois1 =
-    {
-      count=2, gap=32,
-      pic_w="BRNPOIS", width=64, height=56,
-      x_offset=0, y_offset=48,
-      side_t="METAL", floor="CEIL5_2", depth=8, 
-    }
-    local pois2 =
-    {
-      count=1, gap=32,
-      pic_w="GRAYPOIS", width=64, height=64,
-      x_offset=0, y_offset=0,
-      side_t="DOORSTOP", floor="SHAWN2",
-      depth=8, 
-    }
-
-    --------------------
+    v_space = v_space - 16
+    -- FIXME: needs more v_space checking
 
     if rand_odds(sel(LEVEL.has_logo,7,40)) then
+      local logos = LEVEL.theme.logos or GAME.defaults.logos
+      if not logos then
+        error("Game is missing logo skins")
+      end
+
       LEVEL.has_logo = true
-      return rand_sel(50, carve, pill)
+      return rand_key_by_probs(logos)
     end
 
     if R.has_liquid and index == 1 and rand_odds(75) then
-      return rand_sel(70, pois1, pois2)
-    end
-
-    if v_space >= 160 and rand_odds(30) then
-      return rand_sel(80, silver3, redwall)
-    end
-
-    if rand_odds(10) then
-      return shawn1
-    elseif rand_odds(4) then
-      return rand_sel(60, tekwall1, tekwall4)
-    end
-
-    if rand_odds(64) then
-      if rand_odds(5) then
-        compsta1.sec_kind = 1
-        compsta2.sec_kind = 1
+      local liquid_pics = LEVEL.theme.liquid_pics or GAME.defaults.liquid_pics
+      if liquid_pics then
+        return rand_key_by_probs(liquid_pics)
       end
-      return rand_sel(50, compsta1, compsta2)
-    else
-      return rand_sel(50, lite5, liteblu4)
     end
+
+    local pic_tab = {}
+
+    local pictures = LEVEL.theme.pictures or GAME.defaults.pictures
+
+    if pictures then
+      for name,prob in pairs(pictures) do
+        local info = GAME.pictures[name]
+        if info and info.height <= v_space then
+          pic_tab[name] = prob
+        end
+      end
+    end
+
+    if not table_empty(pic_tab) then
+      return rand_key_by_probs(pic_tab)
+    end
+
+    -- fallback
+    return rand_key_by_probs(LEVEL.theme.logos or GAME.defaults.logos)
   end
 
-  local function install_pic(R, bd, skin)
+  local function install_pic(R, bd, pic_name)
+    skin = assert(GAME.pictures[pic_name])
+
     -- handles symmetry
 
     for dx = 1,sel(R.mirror_x, 2, 1) do
@@ -1126,7 +1032,7 @@ function Rooms_border_up()
       end
     end
 
-    gui.debugf("Selected pics: %s %s\n", pics[1].pic_w, pics[2].pic_w)
+    gui.debugf("Selected pics: %s %s\n", pics[1], pics[2])
 
 
     for loop = 1,count do
@@ -2263,19 +2169,21 @@ gui.printf("do_teleport\n")
 
     -- FIXME: decide this somewhere else
     if not LEVEL.step_skin then
-      if LEVEL.theme.steps then
-        local name = rand_key_by_probs(LEVEL.theme.steps)
-        LEVEL.step_skin = assert(GAME.steps[name])
-      else
-        LEVEL.step_skin = {}
+      local step_tab = LEVEL.theme.steps or GAME.defaults.steps
+      if not step_tab then
+        error("Game is missing step skins.") 
       end
 
-      if LEVEL.theme.lifts then
-        local name = rand_key_by_probs(LEVEL.theme.lifts)
-        LEVEL.lift_skin = assert(GAME.lifts[name])
-      else
-        LEVEL.lift_skin = {}
+      local name = rand_key_by_probs(LEVEL.theme.steps)
+      LEVEL.step_skin = GAME.steps[name] or {}
+
+      local lift_tab = LEVEL.theme.lifts or GAME.defaults.lifts
+      if not lift_tab then
+        error("Game is missing lift skins.") 
       end
+
+      local name = rand_key_by_probs(lift_tab)
+      LEVEL.lift_skin = GAME.lifts[name] or {}
     end
 
 
