@@ -793,6 +793,39 @@ DOOM2_MATERIALS =
 }
 
 
+COMMON_SANITY_MAP =
+{
+  -- liquids kill the player, so keep them recognisable
+  LAVA1   = "FWATER1",
+  FWATER1 = "BLOOD1",
+  BLOOD1  = "NUKAGE1",
+  NUKAGE1 = "LAVA1",
+  LFALL1  = "WFALL1",
+  WFALL1  = "BFALL1",
+  BFALL1  = "SFALL1",
+  SFALL1  = "LFALL1",
+  SLIME01 = "SLIME09",
+  SLIME05 = "SLIME09",
+  SLIME09 = "SLIME01",
+
+  -- keep keyed doors recognisable
+  DOORBLU  = "DOORBLU2",
+  DOORBLU2 = "DOORBLU",
+  DOORRED  = "DOORRED2",
+  DOORRED2 = "DOORRED",
+  DOORYEL  = "DOORYEL2",
+  DOORYEL2 = "DOORYEL",
+  EXITSIGN = "EXITSIGN",
+
+  -- these textures may not tile well vertically
+  STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
+  STEP4 = "STEP3", STEP5 = "STEP2", STEP6 = "STEP1",
+
+  STEPLAD1 = "STEPLAD1",
+  STEPTOP  = "STEPTOP",
+}
+
+
 COMMON_RAILS =
 {
 --BRNSMAL1
@@ -836,44 +869,34 @@ DOOM2_RAILS =
 --]]
 
 
-COMMON_SANITY_MAP =
+COMMON_STEPS =
 {
-  -- liquids kill the player, so keep them recognisable
-  LAVA1   = "FWATER1",
-  FWATER1 = "BLOOD1",
-  BLOOD1  = "NUKAGE1",
-  NUKAGE1 = "LAVA1",
-  LFALL1  = "WFALL1",
-  WFALL1  = "BFALL1",
-  BFALL1  = "SFALL1",
-  SFALL1  = "LFALL1",
-  SLIME01 = "SLIME09",
-  SLIME05 = "SLIME09",
-  SLIME09 = "SLIME01",
+  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
+  step3 = { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
+  step4 = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
+}
 
-  -- keep keyed doors recognisable
-  DOORBLU  = "DOORBLU2",
-  DOORBLU2 = "DOORBLU",
-  DOORRED  = "DOORRED2",
-  DOORRED2 = "DOORRED",
-  DOORYEL  = "DOORYEL2",
-  DOORYEL2 = "DOORYEL",
-  EXITSIGN = "EXITSIGN",
-
-  -- these textures may not tile well vertically
-  STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
-  STEP4 = "STEP3", STEP5 = "STEP2", STEP6 = "STEP1",
-
-  STEPLAD1 = "STEPLAD1",
-  STEPTOP  = "STEPTOP",
+DOOM2_STEPS =
+{
+  step6 = { step_w="STEP6", side_w="STUCCO", top_f="FLAT5" },
 }
 
 
 COMMON_LIFTS =
 {
+  shiny = 
+  {
+    side_w="SUPPORT2", top_f="FLAT20",
+    walk_kind=88, switch_kind=62,
+  },
+}
+
+OLD_LIFT_JUNK =
+{
   slow = { kind=62,  walk=88  },
   fast = { kind=123, walk=120 },
 }
+
 
 ---- ARCH STUFF ------------
 
@@ -1214,6 +1237,13 @@ COMMON_SUB_THEMES =
       },
     },
 
+    steps =
+    {
+      step1=50, step3=50, step4=50,
+    },
+
+    lifts = { shiny=50 },
+
     room_types =
     {
       -- FIXME  COMPUTER  WAREHOUSE  PUMP
@@ -1259,6 +1289,13 @@ COMMON_SUB_THEMES =
       },
     },
 
+    steps =
+    {
+      step1=50, step3=50, step4=50,
+    },
+
+    lifts = { shiny=50 },
+
     room_types =
     {
       -- FIXME  TORTURE  PRISON
@@ -1298,6 +1335,13 @@ COMMON_SUB_THEMES =
         FLAT5_6=10, ASHWALL=5, FLAT10=5,
       },
     },
+
+    steps =
+    {
+      step1=50, step3=50, step4=50,
+    },
+
+    lifts = { shiny=50 },
 
     room_types =
     {
@@ -1348,6 +1392,11 @@ DOOM2_SUB_THEMES =
         ZIMMER5=3, ZIMMER8=1,
       },
     },
+
+    steps =
+    {
+      step6=50,
+    },
   },
 
   HELL1 =  -- extends the entry in COMMON_SUB_THEMES
@@ -1397,6 +1446,13 @@ DOOM2_SUB_THEMES =
       },
     },
 
+    steps =
+    {
+      step6=50,
+    },
+
+    lifts = { shiny=50 },
+
     room_types =
     {
       -- FIXME  PRISON  WAREHOUSE
@@ -1437,6 +1493,13 @@ DOOM2_SUB_THEMES =
     {
       floors = { GRASS1=20, MFLR8_1=20, },
     },
+
+    steps =
+    {
+      step1=50,
+    },
+
+    lifts = { shiny=50 },
   },
 }
 
@@ -2284,8 +2347,10 @@ OB_GAMES["doom1"] =
     "pickups",  COMMON_PICKUPS,
 
     "materials",  COMMON_MATERIALS,
-    "rails",      COMMON_RAILS,
     "sanity_map", COMMON_SANITY_MAP,
+    "rails",      COMMON_RAILS,
+    "steps",      COMMON_STEPS,
+    "lifts",      COMMON_LIFTS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2293,7 +2358,6 @@ OB_GAMES["doom1"] =
 
     "liquids", COMMON_LIQUIDS,
     "doors", COMMON_DOORS,
-    "lifts", COMMON_LIFTS,
 
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
@@ -2386,8 +2450,10 @@ OB_GAMES["doom2"] =
     "pickups",  COMMON_PICKUPS,
 
     "materials",  COMMON_MATERIALS,
-    "rails",      COMMON_RAILS,
     "sanity_map", COMMON_SANITY_MAP,
+    "rails",      COMMON_RAILS,
+    "steps",      COMMON_STEPS,
+    "lifts",      COMMON_LIFTS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2395,7 +2461,6 @@ OB_GAMES["doom2"] =
 
     "liquids", COMMON_LIQUIDS,
     "doors", COMMON_DOORS,
-    "lifts", COMMON_LIFTS,
 
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
@@ -2423,11 +2488,13 @@ OB_GAMES["doom2"] =
     "weapons",  DOOM2_WEAPONS,
     "pickups",  DOOM2_PICKUPS,
 
-    "themes",   DOOM2_SUB_THEMES,
     "rooms",    DOOM2_ROOMS,
 
     "materials",DOOM2_MATERIALS,
     "rails",    DOOM2_RAILS,
+    "steps",    DOOM2_STEPS,
+    "themes",   DOOM2_SUB_THEMES,
+
     "hangs",    DOOM2_OVERHANGS,
     "crates",   DOOM2_CRATES,
 

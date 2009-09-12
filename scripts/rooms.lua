@@ -2225,29 +2225,22 @@ gui.printf("do_teleport\n")
     end
 
 
-local STEP_SKINS =
-{
-  { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
-  { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
-  { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
-}
-if OB_CONFIG.game == "doom2" then  -- FIXME !!!
-table.insert(STEP_SKINS,
-  { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" } )
-end
+    -- FIXME: decide this somewhere else
+    if not LEVEL.step_skin then
+      if LEVEL.theme.steps then
+        local name = rand_key_by_probs(LEVEL.theme.steps)
+        LEVEL.step_skin = assert(GAME.steps[name])
+      else
+        LEVEL.step_skin = {}
+      end
 
-local LIFT_SKINS =
-{
-  shiny = 
-  {
-    side_w="SUPPORT2", top_f="FLAT20",
-    walk_kind=88, switch_kind=62,
-  },
-}
-if not LEVEL.step_skin then
-  LEVEL.step_skin = rand_element(STEP_SKINS)
-  LEVEL.lift_skin = LIFT_SKINS.shiny
-end
+      if LEVEL.theme.lifts then
+        local name = rand_key_by_probs(LEVEL.theme.lifts)
+        LEVEL.lift_skin = assert(GAME.lifts[name])
+      else
+        LEVEL.lift_skin = {}
+      end
+    end
 
 
     -- FLOOR
