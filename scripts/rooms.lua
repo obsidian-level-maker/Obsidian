@@ -2038,6 +2038,33 @@ gui.printf("do_teleport\n")
     local sec_kind
 
 
+    -- coords for solid block floor and ceiling
+    local fx1, fy1 = x1, y1
+    local fx2, fy2 = x2, y2
+
+    local cx1, cy1 = x1, y1
+    local cx2, cy2 = x2, y2
+
+    local function shrink_floor(side, len)
+      if side == 2 then fy1 = fy1 + len end
+      if side == 8 then fy2 = fy2 - len end
+      if side == 4 then fx1 = fx1 + len end
+      if side == 6 then fx2 = fx2 - len end
+    end
+
+    local function shrink_ceiling(side, len)
+      if side == 2 then cy1 = cy1 + len end
+      if side == 8 then cy2 = cy2 - len end
+      if side == 4 then cx1 = cx1 + len end
+      if side == 6 then cx2 = cx2 - len end
+    end
+
+    local function shrink_both(side, len)
+      shrink_floor(side, len)
+      shrink_ceiling(side, len)
+    end
+
+
     -- SIDES
 
     for side = 2,8,2 do
@@ -2062,6 +2089,7 @@ gui.printf("do_teleport\n")
 
       if B_kind == "wall" and R.kind ~= "scenic" then
         Build_wall(S, side, w_tex)
+        shrink_both(side, 4)
       end
 
       if B_kind == "window" then
@@ -2071,6 +2099,7 @@ gui.printf("do_teleport\n")
 
         Build_window(S, side, B.win_width, B.win_mid_w,
                      B.win_z1, B.win_z2, skin)
+        shrink_both(side, 4)
       end
 
       if B_kind == "picture" then
@@ -2078,11 +2107,13 @@ gui.printf("do_teleport\n")
         B.pic_skin.wall = w_tex
 
         Build_picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        shrink_both(side, 4)
       end
 
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
         Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
+        shrink_floor(side, 4)
       end
 
       if B_kind == "sky_fence" then
@@ -2091,6 +2122,7 @@ gui.printf("do_teleport\n")
         local skin = { fence_w="BROWN144" }
 
         Build_sky_fence(S, side, z_top, z_low, skin)
+        shrink_floor(side, 4)
       end
 
       if B_kind == "arch" then
@@ -2098,6 +2130,7 @@ gui.printf("do_teleport\n")
         local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t="DOORTRAK" }
 
         Build_archway(S, side, z, z+112, skin)
+        shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2108,6 +2141,7 @@ gui.printf("do_teleport\n")
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build_archway(S, side, z1, z_top, skin)
+        shrink_ceiling(side, 4)
       end
 
       if B_kind == "door" then
@@ -2123,6 +2157,7 @@ gui.printf("do_teleport\n")
         assert(skin.step_w)
 
         Build_door(S, side, z, skin, skin2, 0)
+        shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2146,6 +2181,7 @@ gui.printf("do_teleport\n")
         local skin2 = { inner=w_tex, outer=o_tex }
 
         Build_door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag)
+        shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2200,7 +2236,7 @@ gui.printf("do_teleport\n")
       local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
       info.b_face.light = S.c_light
 
-      Trans_quad(info, x1,y1, x2,y2, z2, EXTREME_H)
+      Trans_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
 
 
       -- FIXME: this does not belong here
@@ -2244,7 +2280,6 @@ gui.printf("do_teleport\n")
 
 
     -- FLOOR
-
     if S.kind == "void" then
 
       if S.solid_feature and LEVEL.theme.corners then
@@ -2285,14 +2320,14 @@ gui.printf("do_teleport\n")
       lava.sec_kind = 16
 
       Trans_quad(sel(STYLE.dm_liquid == "nukage", nukage, lava),
-        x1,y1, x2,y2, -EXTREME_H, z1)
+        fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
     elseif not S.no_floor then
 
       local info = get_mat(S.l_tex or w_tex, f_tex)
       info.sec_kind = sec_kind
 
-      Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, z1)
+      Trans_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
     end
 
 

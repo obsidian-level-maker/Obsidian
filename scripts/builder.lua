@@ -1475,7 +1475,7 @@ function Build_lift(S, skin, tag)
 
   local sw_info = add_pegging(get_mat(skin.side_w))
 
-  local coords = get_wall_coords(S, side, 128)
+  local coords = get_wall_coords(S, side, 128, 16)
 
   -- FIXME: there must be a better way....
   coords[1].line_kind = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
