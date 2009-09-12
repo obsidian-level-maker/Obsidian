@@ -224,7 +224,7 @@ function safe_get_mat(name)
 end
 
 function get_mat(wall, floor, ceil)
-  assert(wall)
+  if not wall then wall = "_ERROR" end
 
   local w_mat = safe_get_mat(wall)
 

@@ -2194,7 +2194,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
       if is_digit(ch) then
         S.content = "pillar"
-        S.pillar_tex = sel(ch == '1', "TEKLITE", "SILVER2")
+        S.pillar_skin = assert(GAME.pillars[R.pillar_what])
       end
     end end -- for x, y
   end
@@ -2202,8 +2202,16 @@ gui.debugf("BOTH SAME HEIGHT\n")
   local function add_pillars()
     if R.parent then return end
 
+    if not GAME.pillars or not (LEVEL.theme.pillars or GAME.defaults.pillars) then
+      return
+    end
+
     -- FIXME this is too crude!
     if STYLE.pillars == "few" then return end
+
+    local skin_names = LEVEL.theme.pillars or GAME.defaults.pillars
+    if not skin_names then return end
+    R.pillar_what = rand_key_by_probs(skin_names)
 
     local SIDES = { 2, 4 }
     rand_shuffle(SIDES)

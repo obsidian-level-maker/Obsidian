@@ -1041,6 +1041,16 @@ COMMON_PICTURES =
 }
 
 
+COMMON_PILLARS =
+{
+  teklite = { pillar="TEKLITE", trim1="GRAY7", trim2="METAL" },
+  silver  = { pillar="SILVER2", trim1="GRAY7", trim2="METAL" },
+
+  big_red  = { pillar="REDWALL",  trim1="GRAY7", trim2="METAL" },
+  big_blue = { pillar="LITEBLU4", trim1="GRAY7", trim2="METAL" },
+}
+
+
 COMMON_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
@@ -1405,6 +1415,10 @@ COMMON_SUB_THEMES =
       compsta2=40, compsta2_blink=3,
       silver3=20, redwall=5,
     },
+
+    pillars = { teklite=50, silver=10 },
+
+    big_pillars = { big_red=50, big_blue=50 },
 
     room_types =
     {
@@ -2511,6 +2525,7 @@ OB_GAMES["doom1"] =
     "steps",      COMMON_STEPS,
     "lifts",      COMMON_LIFTS,
     "pictures",   COMMON_PICTURES,
+    "pillars",    COMMON_PILLARS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2616,6 +2631,7 @@ OB_GAMES["doom2"] =
     "steps",      COMMON_STEPS,
     "lifts",      COMMON_LIFTS,
     "pictures",   COMMON_PICTURES,
+    "pillars",    COMMON_PILLARS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,

@@ -1378,7 +1378,14 @@ function Room_make_ceiling(R)
 
     -- OK !!
     S.content = "pillar"
-    S.pillar_tex = rand_sel(20, "LITEBLU4", "REDWALL")
+
+    local skin_names = LEVEL.theme.big_pillars or GAME.defaults.big_pillars or
+                       LEVEL.theme.pillars or GAME.defaults.pillars
+    if pillar_skins then
+      S.pillar_skin = assert(GAME.pillars[rand_key_by_probs(skin_names)])
+    else
+      S.pillar_skin = {}
+    end
 
     R.has_central_pillar = true
   end
@@ -2242,8 +2249,7 @@ gui.printf("do_teleport\n")
     -- PREFABS
 
     if S.content == "pillar" then
-      local skin = { pillar=S.pillar_tex, trim1="METAL", trim2="GRAY7" }
-      Build_pillar(S, z1, z2, skin)
+      Build_pillar(S, z1, z2, assert(S.pillar_skin))
     end
 
 
