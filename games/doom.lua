@@ -1283,6 +1283,10 @@ COMMON_THEME_DEFAULTS =
 
   lifts = { shiny=50 },
 
+  outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
+                   BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
+                 },
+
   pictures = { shawn1=10 },
 
   logos = { carve=50, pill=50 },

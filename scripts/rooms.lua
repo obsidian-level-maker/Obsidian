@@ -1948,6 +1948,15 @@ gui.printf("do_teleport\n")
     end
 
 
+    -- FIXME: put this elsewhere
+    if not LEVEL.outer_fence_tex then
+      local outer_fences = LEVEL.theme.outer_fences or GAME.defaults.outer_fences
+      if outer_fences then
+        LEVEL.outer_fence_tex = rand_key_by_probs(outer_fences)
+      end
+    end
+
+
     local sec_kind
 
 
@@ -2032,7 +2041,7 @@ gui.printf("do_teleport\n")
       if B_kind == "sky_fence" then
         local z_top = math.max(LEVEL.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
         local z_low = LEVEL.skyfence_h - 64
-        local skin = { fence_w="BROWN144" }  -- FIXME
+        local skin = { fence_w=LEVEL.outer_fence_tex }
 
         Build_sky_fence(S, side, z_top, z_low, skin)
         shrink_floor(side, 4)
