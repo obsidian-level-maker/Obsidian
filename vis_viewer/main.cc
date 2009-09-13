@@ -68,7 +68,8 @@
 
 void FatalError(const char *msg, ...);
 
-#include "vis_buf.cc"
+#include "../gui/vis_buffer.h"
+#include "../gui/vis_buffer.cc"
 
 
 class UI_Window;
