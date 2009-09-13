@@ -2220,8 +2220,10 @@ gui.printf("do_teleport\n")
       Build_tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "lift" then
+      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
       local tag = alloc_tag()
-      Build_lift(S, LEVEL.lift_skin, tag)
+
+      Build_lift(S, LEVEL.lift_skin, skin2, tag)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!

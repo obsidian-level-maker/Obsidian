@@ -1447,7 +1447,7 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
 end
 
 
-function Build_lift(S, skin, tag)
+function Build_lift(S, skin, skin2, tag)
   assert(skin.walk_kind)
   assert(skin.switch_kind)
 
@@ -1478,8 +1478,8 @@ function Build_lift(S, skin, tag)
   end
 
 
-  local f_tex = S.f_tex or S.room.main_tex
-  local w_tex = S.w_tex or S.room.main_tex
+  local f_tex = skin2.floor
+  local w_tex = skin2.wall
 
   local S2 = S:neighbor(10-side)
   if S2 and S2.room == S.room and S2.kind == "walk" and S2.f_tex then
@@ -1489,7 +1489,7 @@ function Build_lift(S, skin, tag)
 
   local sw_info = add_pegging(get_mat(skin.side_w))
 
-  local coords = get_wall_coords(S, side, 128, 16)
+  local coords = get_wall_coords(S, side, 128)
 
   -- FIXME: there must be a better way....
   coords[1].line_kind = sel(switch_dirs[6], skin.switch_kind, skin.walk_kind)
@@ -1513,9 +1513,9 @@ function Build_lift(S, skin, tag)
 
 
   local front_coords = get_wall_coords(S, 10-side, 128)
+  local front_info   = get_mat(w_tex, f_tex)
 
-  Trans_brush(get_mat(w_tex, f_tex),
-    front_coords, -EXTREME_H, low_z);
+  Trans_brush(front_info, front_coords, -EXTREME_H, low_z);
 end
 
 
