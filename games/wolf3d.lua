@@ -535,9 +535,6 @@ WOLF_SUB_THEMES =
       -- FIXME
     },
 
-    monster_prefs =
-    {
-    },
   }, -- TECH
 
   --[[  FIXME FIXME
@@ -595,7 +592,7 @@ WOLF_SUB_THEMES =
 
     monster_prefs =
     {
-      mutant=6.0, officer=2.0,
+      mutant=4.0,
     },
   },
   --]]

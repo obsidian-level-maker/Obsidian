@@ -221,10 +221,11 @@ function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
-  -- if already have level prefs, don't overwrite
-  if LEVEL.monster_prefs then return end
+  if not LEVEL.monster_prefs then
+    LEVEL.monster_prefs = {}
+  end
 
-  LEVEL.monster_prefs = {}
+  LEVEL.global_skip = {}
 
   local list = {}
   for name,info in pairs(GAME.monsters) do
@@ -265,6 +266,14 @@ function Monsters_global_palette()
           prob = prob / factor
         end
 
+        -- adjust skip chance based on monster_prefs
+        if LEVEL.monster_prefs then
+          prob = prob / (LEVEL.monster_prefs[name] or 1)
+        end
+        if THEME.monster_prefs then
+          prob = prob / (THEME.monster_prefs[name] or 1)
+        end
+
         skip_list[name] = prob
 gui.debugf("skip_list %s = %1.0f\n", name, prob)
         skip_total = skip_total + 1
@@ -283,7 +292,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
       skip_list[name] = nil
 
       gui.debugf("Skipping monster: %s\n", name)
-      LEVEL.monster_prefs[name] = 0
+      LEVEL.global_skip[name] = 1
     end
   end
 end
@@ -818,12 +827,16 @@ function Monsters_in_room(R)
     local name = info.name
     local prob = info.prob
 
+    if LEVEL.global_skip[name] then
+      return 0
+    end
+
+    -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
     if LEVEL.monster_prefs then
       prob = prob * (LEVEL.monster_prefs[name] or 1)
     end
-
-    if LEVEL.theme.monster_prefs then
-      prob = prob * (LEVEL.theme.monster_prefs[name] or 1)
+    if THEME.monster_prefs then
+      prob = prob * (THEME.monster_prefs[name] or 1)
     end
 
     if R.room_type and R.room_type.monster_prefs then
@@ -904,6 +917,10 @@ function Monsters_in_room(R)
 
     for name,info in pairs(GAME.monsters) do
       local prob = info.crazy_prob or info.prob or 0
+
+      if LEVEL.global_skip[name] then
+        prob = 0
+      end
 
       if prob > 0 and LEVEL.monster_prefs then
         prob = prob * (LEVEL.monster_prefs[name] or 1)

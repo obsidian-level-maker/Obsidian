@@ -1455,7 +1455,7 @@ COMMON_SUB_THEMES =
 
     monster_prefs =
     {
-      -- zombie=2.0, shooter=2.0, arach=2.0,
+      arach=2.0,
     },
   }, -- TECH
 
@@ -1500,8 +1500,7 @@ COMMON_SUB_THEMES =
 
     monster_prefs =
     {
-      zombie=0.1, shooter=0.3, arach=0.5,
-      skull=3.0,  vile=2.0, mancubus=2.0,
+      zombie=0.2, shooter=0.5, skull=2.0, vile=2.0,
     },
   },
 
@@ -1545,11 +1544,9 @@ COMMON_SUB_THEMES =
 
     monster_prefs =
     {
-      zombie=0.1, shooter=0.3, arach=0.5,
-      skull=3.0,  vile=2.0, mancubus=2.0,
+      zombie=0.2, shooter=0.5, skull=2.0, vile=2.0,
     },
   },
-
 
 }
 
@@ -1658,7 +1655,7 @@ DOOM2_SUB_THEMES =
 
     monster_prefs =
     {
-      caco=2.0, revenant=1.5, baron=3.0, knight=2.0,
+      caco=2.0, revenant=1.5, knight=1.5,
     },
   },
 
