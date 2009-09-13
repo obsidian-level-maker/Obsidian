@@ -22,6 +22,8 @@ GAME   = {}
 PARAM  = {}
 STYLE  = {}
 LEVEL  = {}
+THEME  = {}
+
 SEEDS  = {}
 
 SKILLS = { "easy", "medium", "hard" }

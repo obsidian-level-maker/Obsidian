@@ -458,6 +458,8 @@ function Level_make(L, index, NUM)
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 
+  THEME = assert(LEVEL.theme)
+
 
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
