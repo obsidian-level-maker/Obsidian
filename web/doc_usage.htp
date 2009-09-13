@@ -69,14 +69,13 @@ or just press the ESCAPE key.
 
 
 <p>
-The top left corner is the <b>Settings</b> panel,
-which contains the most important settings.
+The top left corner panel contains the most important settings.
 
 <p>
 The first control is the "SEED" number.
 Each SEED number produces a unique, distinctive level. 
 Using the same SEED number always produces the exact same level
-(as long as the other settings are the same).
+(as long as every other setting is the same).
 
 <p>
 Other settings include:
@@ -89,27 +88,44 @@ Other settings include:
 <h3>LEVEL ARCHITECTURE</h3>
 
 The Level Architecture panel lets you control general features
-of the maps, like how big they are and what theme to use.
+of the maps, like what size they should be, what theme to use,
+how much outdoor areas to make, and so forth.
 
-In the <b>Level Architecture</b> panel you can control the
-size of the created levels, select a theme, as well as how
-much outdoors the levels will have.  [Note that the 'Lighting'
-and 'Detail' buttons don't do anything yet]
+<p>
+The special "Mix It Up" setting means that each level will get
+a random value.  For example it can make the size vary wildly
+between small and large.  However when using it for the Theme and
+making a full game, each episode will use a single theme.
 
-blah
+<p>
+<i>(Note that the 'Lighting' and 'Detail' buttons don't do
+anything yet)</I>
 
 
 <h3>PLAYING STYLE</h3>
 
 This panel is all about the gameplay, baby!
 Here you can control the quantity and strength of the
-monsters, how much health and ammo should be added, etc.
+monsters, how much health and ammunition should be added, etc...
 
-The <b>Playing Style</b> panel lets you control the
-how many monsters and traps are added. as well as
-how much health and ammunition.
+<p>
+The 'Strength' button determines the overall toughness of
+the monsters.  The "Medium" setting is designed to give a mix
+of monsters similar to the levels in the original game.
+Compared to that, the "Weak" and "Tough" settings produce
+weaker or tougher monsters respectively.
 
-blah
+<p>
+The "Crazy" setting works a bit differently.
+It completely forgets about trying to make battles
+which are fair (or somewhat fair), and throws any of the
+monsters at you, including bosses!
+Playing maps using this setting can actually
+make you insane -- you have been warned!
+
+<p>
+<i>(Note that the 'Traps' and 'Powerups' buttons don't do
+anything yet)</I>
 
 
 <h3>MODULES PANEL</h3>
@@ -145,16 +161,23 @@ options which don't really fit anywhere else.
 <h3>MISC NOTES</h3>
 
 OBLIGE requires the full version of each game it supports.
-It will <i>not</i> work properly with shareware or demo
+It will NOT work properly with shareware or demo
 versions, and never will (so don't ask).
-@@@ FreeDOOM
 
 <p>
 Most games let you play at different skill levels
 (e.g. Hurt-Me-Plenty vs Ultra-Violence),
 and OBLIGE takes them into account.  Easier skill levels
-will have less monsters and more health/ammo than the harder
-levels.
+will have less monsters and are more generous with health/ammo
+than the harder levels.
+
+<p>
+You should use a Source Port to play the levels, because the
+original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
+architecture which OBLIGE creates.  For example, you might
+get the "Visplane Overflow" error which quits the game.
+DOOM.EXE also crashes when saving a game if the level
+has too many things in it.
 
 <p>
 In Wolfenstein-3D mode, the "Build" button does not bring up
@@ -164,12 +187,6 @@ it is installed.
 These files are called <b>GAMEMAPS.WL6</b> and <b>MAPHEAD.WL6</b>
 and you need to copy them into your
 Wolf3d folder (please make a backup first!).
-
-<p>
-You should use a Source Port to play the levels, because the
-original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
-architecture which OBLIGE creates.  For example, you might
-get the "Visplane Overflow" error which quits the game.
 
 
 </div class="rest">
