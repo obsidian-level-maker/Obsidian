@@ -131,9 +131,12 @@ function Player_calc_firepower()
       local dm = info.damage * info.rate
       if info.splash then dm = dm + info.splash[1] end
 
-      -- melee attacks are hard to use
+      -- melee attacks are hard to use, and
+      -- projectiles miss more often than hitscan
       if info.attack == "melee" then
         dm = dm / 3.0
+      elseif info.attack == "missile" then
+        dm = dm / 1.3
       end
 
       local pref = info.pref or 1
@@ -773,9 +776,8 @@ function Monsters_in_room(R)
     -- higher values (upto ~ 4.0) produces tougher monsters.
 
     -- each level gets progressively tougher
-    local toughness = 0.5 + LEVEL.ep_along * 3.0
-
-    if LEVEL.toughness then toughness = LEVEL.toughness end
+    local toughness = LEVEL.toughness or 
+                      (0.5 + LEVEL.ep_along * 3.0)
 
     -- less emphasis within a level, since each arena naturally
     -- get tougher as the player picks up new weapons.
@@ -852,7 +854,7 @@ function Monsters_in_room(R)
     gui.debugf("  %s --> damage:%1.1f (%1.1f)  time:%1.2f\n", name, damage, damage/toughness, time)
 
     -- would the monster take too long to kill?
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 16
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 14
 
     if toughness > 1 then
       max_time = max_time / math.sqrt(toughness)
@@ -863,6 +865,10 @@ function Monsters_in_room(R)
     end
 
     if time >= max_time then return 0 end
+
+    if time > max_time/2 then
+      prob = prob * (max_time - time) / (max_time/2)
+    end
 
     -- would the monster inflict too much damage on the player?
     local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
