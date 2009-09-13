@@ -118,9 +118,9 @@ weaker or tougher monsters respectively.
 <p>
 The "Crazy" setting works a bit differently.
 It completely forgets about trying to make battles
-which are fair (or somewhat fair), and throws any of the
-monsters at you, including bosses!
-Playing maps using this setting can actually
+which are fair (or somewhat fair), and throws any or all
+of the monsters at you, including bosses!
+Playing maps using this setting may actually
 make you insane -- you have been warned!
 
 <p>
@@ -161,8 +161,8 @@ options which don't really fit anywhere else.
 <h3>MISC NOTES</h3>
 
 OBLIGE requires the full version of each game it supports.
-It will NOT work properly with shareware or demo
-versions, and never will (so don't ask).
+It will NOT work properly with shareware or demo versions,
+and never will.
 
 <p>
 Most games let you play at different skill levels
@@ -176,8 +176,8 @@ You should use a Source Port to play the levels, because the
 original DOOM.EXE, DOOM2.EXE (etc..) may not cope with the
 architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
-DOOM.EXE also crashes when saving a game if the level
-has too many things in it.
+DOOM.EXE also crashes when saving a level which has
+too many things in it.
 
 <p>
 In Wolfenstein-3D mode, the "Build" button does not bring up
