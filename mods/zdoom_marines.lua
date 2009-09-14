@@ -159,6 +159,12 @@ function ZDoom_Marine_setup(self)
     if M and factor then
       M.prob = M.prob * factor
       M.crazy_prob = (M.crazy_prob or M.prob) * factor
+
+      if OB_CONFIG.strength == "weak" then
+        M.skip_prob = M.skip_prob * 2
+      elseif OB_CONFIG.strength == "tough" then
+        M.skip_prob = M.skip_prob * 0.75
+      end
     end
   end
 end
