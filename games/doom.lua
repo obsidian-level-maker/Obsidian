@@ -1761,6 +1761,7 @@ COMMON_MONSTERS =
     prob=40,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
+    density=1.5,
   },
 
   shooter =
@@ -1803,7 +1804,7 @@ COMMON_MONSTERS =
   {
     prob=40,
     health=400, damage=35, attack="missile",
-    density=0.6, float=true,
+    density=0.5, float=true,
   },
 
   baron =
