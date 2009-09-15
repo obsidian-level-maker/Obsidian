@@ -120,6 +120,15 @@ ROOM_CLASS =
 
     return lx,ly, hx,hy
   end,
+
+  is_near_exit = function(self)
+    if self.purpose == "EXIT" then return true end
+    for _,D in ipairs(self.conns) do
+      local N = D:neighbor(self)
+      if N.purpose == "EXIT" then return true end
+    end
+    return false
+  end,
 }
 
 
