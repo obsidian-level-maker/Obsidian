@@ -2,10 +2,12 @@
 TODO
 ====
 
--  Medium strength: if get rocket/bfg -> monsters too tough
+DONE:  test Medium, Weak and Tough settings over a few megawads.
 
--  review monster_prefs in themes (actually used yet?)
--  use LEVEL.skip_monsters rather than monster_prefs
++  introduce randomness into skill bits:
+     UV:   1.0 1.0  /  1.0 1.0  /  1.0 1.0
+     HMP:  1.0 0.4  /  1.0 0.4  /  1.0 0.4
+     HNTR: 0.4 0.4  /  0.4 0.4  /  0.4 0.4
 
 +  Quests : add locks (new arenas) even when have no keys
 
