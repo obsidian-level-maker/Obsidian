@@ -1500,7 +1500,7 @@ COMMON_SUB_THEMES =
 
     monster_prefs =
     {
-      zombie=0.2, shooter=0.5, skull=2.0, vile=2.0,
+      zombie=0.3, shooter=0.6, skull=2.0, vile=2.0,
     },
   },
 
@@ -1544,7 +1544,7 @@ COMMON_SUB_THEMES =
 
     monster_prefs =
     {
-      zombie=0.2, shooter=0.5, skull=2.0, vile=2.0,
+      zombie=0.3, shooter=0.6, skull=2.0, vile=2.0,
     },
   },
 
@@ -1840,7 +1840,7 @@ DOOM2_MONSTERS =
 {
   gunner =
   {
-    prob=18,
+    prob=20,
     health=70, damage=50, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
@@ -1875,14 +1875,14 @@ DOOM2_MONSTERS =
 
   vile =
   {
-    prob=12, skip_prob=100,
+    prob=16, skip_prob=100,
     health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    prob=6, crazy_prob=15, skip_prob=150,
+    prob=7, crazy_prob=15, skip_prob=150,
     health=700, damage=20, attack="missile",
     density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },

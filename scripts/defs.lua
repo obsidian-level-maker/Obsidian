@@ -94,10 +94,9 @@ MONSTER_QUANTITIES =
   scarce=9, less=18, normal=27, more=40, heaps=60
 }
 
-MONSTER_TOUGHNESS  = { weak=0.1, medium=0.5, tough=1.2 }
-MONSTER_MAX_TIME   = { weak=12,  medium=16,  tough=24 }
-MONSTER_MAX_DAMAGE = { weak=100, medium=200, tough=300, }
-MONSTER_LOW_DAMAGE = { weak=0.1, medium=0.4, tough=3, }
+MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
+MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360, }
+MONSTER_LOW_DAMAGE = { weak=0.1, medium=1.0, tough=4, }
 
 MON_VARIATION_LOW  = 0.5
 MON_VARIATION_HIGH = 1.5

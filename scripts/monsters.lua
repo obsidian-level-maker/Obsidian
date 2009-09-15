@@ -230,6 +230,12 @@ function Monsters_global_palette()
 
   LEVEL.global_skip = {}
 
+do --!!!!!!!
+LEVEL.monster_prefs = {}
+THEME.monster_prefs = {}
+return
+end
+
   local list = {}
   for name,info in pairs(GAME.monsters) do
     if info.prob and info.prob > 0 then
@@ -772,30 +778,26 @@ function Monsters_in_room(R)
   end
 
   local function calc_toughness()
-    -- determine a "toughness" value, where 1.0 is normal and
-    -- higher values (upto ~ 4.0) produces tougher monsters.
+    -- determine a "toughness" value, where 1.0 is easy and
+    -- higher values produces tougher monsters.
 
     -- each level gets progressively tougher
-    local toughness = LEVEL.toughness or 
-                      (0.5 + LEVEL.ep_along * 3.0)
-
-    -- less emphasis within a level, since each arena naturally
-    -- get tougher as the player picks up new weapons.
-    if R.arena.id == 1 then
-      toughness = toughness * 0.8
-    elseif R.arena.id >= (#LEVEL.all_arenas - 1) then
-      toughness = toughness * 1.2
-    end
-
-    -- factor in the user Strength setting
-    toughness = toughness + (MONSTER_TOUGHNESS[OB_CONFIG.strength] or 0)
-
-    if R.kind == "hallway" then
-      toughness = toughness / 2
-    end
+    local toughness = LEVEL.episode + LEVEL.ep_along * 4
 
     -- spice it up
-    toughness = toughness + rand_range(0, 0.4)
+    local spice = gui.random()
+    toughness = toughness + spice * spice
+
+    if R.arena.id == 1 and #LEVEL.all_arenas > 1 then
+      -- be kinder around the starting area
+      toughness = toughness * 0.7
+    elseif R:is_near_exit() then
+      -- give the player greater resistance near the exit
+      toughness = toughness + 3
+    elseif R.kind == "hallway" then
+      -- don't fill hallways with big beasts
+      toughness = rand_range(1.0, 2.0)
+    end
 
     gui.debugf("Toughness = %1.3f\n", toughness)
 
@@ -851,43 +853,53 @@ function Monsters_in_room(R)
     local time   = info.health / fp
     local damage = info.damage * time
 
-    gui.debugf("  %s --> damage:%1.1f (%1.1f)  time:%1.2f\n", name, damage, damage/toughness, time)
+    if info.attack == "melee" then
+      damage = damage / 4.0
+    elseif info.attack == "missile" then
+      damage = damage / 1.5
+    end
+
+    if toughness > 1 then
+      time = time / math.sqrt(toughness)
+    end
+
+    damage = damage / toughness
+
+    if PARAM.time_factor then
+      time = time * PARAM.time_factor
+    end
+    if PARAM.damage_factor then
+      damage = damage * PARAM.damage_factor
+    end
+
+    gui.debugf("  %s --> damage:%1.1f   time:%1.2f\n", name, damage, time)
+
 
     -- would the monster take too long to kill?
     local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 14
 
-    if toughness > 1 then
-      max_time = max_time / math.sqrt(toughness)
-    end
-
-    if PARAM.time_factor then
-      max_time = max_time * PARAM.time_factor
-    end
-
     if time >= max_time then return 0 end
 
     if time > max_time/2 then
-      prob = prob * (max_time - time) / (max_time/2)
+      local factor = (max_time - time) / (max_time/2)
+      prob = prob * factor
     end
+
 
     -- would the monster inflict too much damage on the player?
     local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
     local low_damage = MONSTER_LOW_DAMAGE[OB_CONFIG.strength] or 1
 
-    damage = damage / toughness
-
-    if PARAM.damage_factor then
-      damage = damage * PARAM.damage_factor
-    end
-
     if damage >= max_damage then return 0 end
 
     if damage > max_damage/2 then
-      prob = prob * (max_damage - damage) / (max_damage/2)
+      local factor = (max_damage - damage) / (max_damage/2)
+      prob = prob * factor
     end
 
     if damage < low_damage then
-      prob = prob * (damage / low_damage) ^ 1.2
+      local factor = damage / low_damage
+      prob = prob * factor
     end
 
     if R.outdoor then
