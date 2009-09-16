@@ -57,10 +57,10 @@ STEALTH_MONSTERS =
 
   stealth_zombie =
   {
-    replaces="zombie", replace_prob=30, crazy_prob=0.5,
+    replaces="zombie", replace_prob=30, crazy_prob=5,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
-    invis=true,
+    invis=true, density=1.5,
   },
 
   stealth_shooter =
@@ -89,7 +89,7 @@ STEALTH_MONSTERS =
   {
     replaces="caco", replace_prob=25, crazy_prob=41,
     health=400, damage=35, attack="missile",
-    invis=true, float=true, density=0.7,
+    invis=true, float=true, density=0.5,
   },
 
   stealth_baron =

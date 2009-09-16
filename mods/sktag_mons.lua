@@ -94,7 +94,7 @@ SKULLTAG_MONSTERS =
   {
     prob=25, crazy_prob=10,
     health=800, damage=55, attack="missile",
-    density=0.5, float=true,
+    density=0.4, float=true,
   },
 
   hectebus =
