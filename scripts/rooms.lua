@@ -2183,7 +2183,7 @@ gui.printf("do_teleport\n")
         error("Game is missing step skins.") 
       end
 
-      local name = rand_key_by_probs(LEVEL.theme.steps)
+      local name = rand_key_by_probs(step_tab)
       LEVEL.step_skin = GAME.steps[name] or {}
 
       local lift_tab = LEVEL.theme.lifts or GAME.defaults.lifts
