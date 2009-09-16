@@ -542,7 +542,7 @@ function Build_door(S, side, z1, skin, skin2, tag)
 
   local step_info = get_mat(skin.step_w)
 
-  local key_info = add_pegging(get_mat(skin.key_w))
+  local key_info = add_pegging(get_mat(skin.key_w or skin2.inner), skin.key_ox, skin.key_oy)
 
 
   TRANSFORM = T

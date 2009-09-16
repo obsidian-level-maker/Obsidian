@@ -1065,6 +1065,34 @@ COMMON_CRATES =  -- temporary (until good prefab system)
 }
 
 
+COMMON_DOORS =
+{
+  silver_lit =
+  {
+    w=128, h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR1", door_c="FLAT1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18",
+    track="DOORTRAK",
+    door_h=72,
+    line_kind=1, tag=0,
+  },
+
+  big_wooden =
+  {
+    w=128, h=112,
+    door_w="BIGDOOR6", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    door_h=112,
+    line_kind=1, tag=0,
+  },
+}
+
+
 COMMON_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
@@ -1293,6 +1321,8 @@ DOOM2_ROOMS =
 
 COMMON_THEME_DEFAULTS =
 {
+  doors = { big_wooden=50 },
+
   steps = { step1=50 },
 
   lifts = { shiny=50 },
@@ -1423,6 +1453,11 @@ COMMON_SUB_THEMES =
         BROWN144=30, BROWN1=20, STONE=20,
         ASHWALL=5, FLAT10=5,
       },
+    },
+
+    doors =
+    {
+      silver_lit=50,
     },
 
     steps =
@@ -2548,12 +2583,12 @@ OB_GAMES["doom1"] =
     "pictures",   COMMON_PICTURES,
     "pillars",    COMMON_PILLARS,
     "crates",     COMMON_CRATES,
+    "doors",      COMMON_DOORS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
 
     "liquids", COMMON_LIQUIDS,
-    "doors", COMMON_DOORS,
 
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
@@ -2653,12 +2688,12 @@ OB_GAMES["doom2"] =
     "pictures",   COMMON_PICTURES,
     "pillars",    COMMON_PILLARS,
     "crates",     COMMON_CRATES,
+    "doors",      COMMON_DOORS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
 
     "liquids", COMMON_LIQUIDS,
-    "doors", COMMON_DOORS,
 
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
@@ -2695,8 +2730,6 @@ OB_GAMES["doom2"] =
     "themes",   DOOM2_SUB_THEMES,
 
     "hangs",    DOOM2_OVERHANGS,
-
-    "doors",    DOOM2_DOORS,
     "lights",   DOOM2_LIGHTS,
     "liquids",  DOOM2_LIQUIDS,
 

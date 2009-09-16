@@ -2061,14 +2061,19 @@ gui.printf("do_teleport\n")
 
       if B_kind == "door" then
         local z = assert(S.conn and S.conn.conn_h)
-        local INFO = assert(GAME.door_fabs["silver_lit"]) -- FIXME
 
-        local skin  = INFO.skin
+        -- FIXME: better logic for selecting doors
+        local doors = LEVEL.theme.doors or GAME.defaults.doors
+        if not doors then
+          error("Game is missing doors table")
+        end
+
+        local door_name = rand_key_by_probs(doors)
+        local skin = assert(GAME.doors[door_name])
+
         local skin2 = { inner=w_tex, outer=o_tex }
 
-        skin.frame_c = "FLAT18"
         assert(skin.track)
-        assert(skin.key_w)
         assert(skin.step_w)
 
         Build_door(S, side, z, skin, skin2, 0)
