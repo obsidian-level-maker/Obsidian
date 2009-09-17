@@ -904,25 +904,23 @@ function Rooms_border_up()
     -- FIXME: needs more v_space checking
 
     if rand_odds(sel(LEVEL.has_logo,7,40)) then
-      local logos = LEVEL.theme.logos or GAME.defaults.logos
-      if not logos then
+      if not THEME.logos then
         error("Game is missing logo skins")
       end
 
       LEVEL.has_logo = true
-      return rand_key_by_probs(logos)
+      return rand_key_by_probs(THEME.logos)
     end
 
     if R.has_liquid and index == 1 and rand_odds(75) then
-      local liquid_pics = LEVEL.theme.liquid_pics or GAME.defaults.liquid_pics
-      if liquid_pics then
-        return rand_key_by_probs(liquid_pics)
+      if THEME.liquid_pics then
+        return rand_key_by_probs(THEME.liquid_pics)
       end
     end
 
     local pic_tab = {}
 
-    local pictures = LEVEL.theme.pictures or GAME.defaults.pictures
+    local pictures = THEME.pictures
 
     if pictures then
       for name,prob in pairs(pictures) do
@@ -938,7 +936,7 @@ function Rooms_border_up()
     end
 
     -- fallback
-    return rand_key_by_probs(LEVEL.theme.logos or GAME.defaults.logos)
+    return rand_key_by_probs(THEME.logos)
   end
 
   local function install_pic(R, bd, pic_name)
@@ -1379,9 +1377,8 @@ function Room_make_ceiling(R)
     -- OK !!
     S.content = "pillar"
 
-    local skin_names = LEVEL.theme.big_pillars or GAME.defaults.big_pillars or
-                       LEVEL.theme.pillars or GAME.defaults.pillars
-    if pillar_skins then
+    local skin_names = THEME.big_pillars or THEME.pillars
+    if skin_names then
       S.pillar_skin = assert(GAME.pillars[rand_key_by_probs(skin_names)])
     else
       S.pillar_skin = {}
@@ -1807,9 +1804,9 @@ function Room_add_crates(R)
 
   if R.outdoor then
     -- FIXME: don't separate them
-    skin_names = LEVEL.theme.out_crates or GAME.defaults.out_crates
+    skin_names = THEME.out_crates
   else
-    skin_names = LEVEL.theme.crates or GAME.defaults.crates
+    skin_names = THENE.crates
   end
 
   if not skin_names then return end
@@ -1943,9 +1940,8 @@ gui.printf("do_teleport\n")
 
     -- FIXME: put this elsewhere
     if not LEVEL.outer_fence_tex then
-      local outer_fences = LEVEL.theme.outer_fences or GAME.defaults.outer_fences
-      if outer_fences then
-        LEVEL.outer_fence_tex = rand_key_by_probs(outer_fences)
+      if THEME.outer_fences then
+        LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
       end
     end
 
@@ -2063,7 +2059,7 @@ gui.printf("do_teleport\n")
         local z = assert(S.conn and S.conn.conn_h)
 
         -- FIXME: better logic for selecting doors
-        local doors = LEVEL.theme.doors or GAME.defaults.doors
+        local doors = THEME.doors
         if not doors then
           error("Game is missing doors table")
         end
@@ -2183,21 +2179,19 @@ gui.printf("do_teleport\n")
 
     -- FIXME: decide this somewhere else
     if not LEVEL.step_skin then
-      local step_tab = LEVEL.theme.steps or GAME.defaults.steps
-      if not step_tab then
+      if not THEME.steps then
         error("Game is missing step skins.") 
+      else
+        local name = rand_key_by_probs(THEME.steps)
+        LEVEL.step_skin = GAME.steps[name] or {}
       end
 
-      local name = rand_key_by_probs(step_tab)
-      LEVEL.step_skin = GAME.steps[name] or {}
-
-      local lift_tab = LEVEL.theme.lifts or GAME.defaults.lifts
-      if not lift_tab then
+      if not THEME.lifts then
         error("Game is missing lift skins.") 
+      else
+        local name = rand_key_by_probs(THEME.lifts)
+        LEVEL.lift_skin = GAME.lifts[name] or {}
       end
-
-      local name = rand_key_by_probs(lift_tab)
-      LEVEL.lift_skin = GAME.lifts[name] or {}
     end
 
 
