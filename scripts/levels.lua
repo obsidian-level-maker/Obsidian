@@ -385,7 +385,23 @@ end
 function Level_styles()
   gui.rand_seed(LEVEL.seed)
 
-  for name,prob_tab in pairs(STYLE_LIST) do
+  local style_tab = shallow_copy(STYLE_LIST)
+
+  -- per game, per level and per theme style_lists
+  if GAME.style_list then
+    shallow_merge(style_tab, GAME.style_list)
+  end
+  if LEVEL.style_list then
+    shallow_merge(style_tab, LEVEL.style_list)
+  end
+  if THEME.style_list then
+    shallow_merge(style_tab, THEME.style_list)
+  end
+
+  -- decide the values
+  STYLE = {}
+
+  for name,prob_tab in pairs(style_tab) do
     STYLE[name] = rand_key_by_probs(prob_tab)
   end
 
@@ -394,13 +410,6 @@ function Level_styles()
     STYLE.skies = OB_CONFIG.outdoors
   end
 
-  -- per level overrides...
-  if LEVEL.style then
-    for name,value in pairs(LEVEL.style) do
-      STYLE[name] = value
-    end
-  end
-  
   gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 end
 
