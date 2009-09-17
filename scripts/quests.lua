@@ -863,10 +863,6 @@ function Quest_add_weapons()
 
     local weapon = rand_key_by_probs(name_tab)
 
-    arena.weapon = weapon
-
-    do_mark_weapon(weapon)
-
     -- Select a room to put the weapon in.
     -- This is very simplistic, either the start room of the
     -- arena or a neighboring room.
@@ -884,7 +880,15 @@ function Quest_add_weapons()
       R = rand_element(neighbors)
     end
 
+    -- putting weapons in the exit room is a tad silly
+    if R.purpose == "EXIT" then
+      return
+    end
+
     R.weapon = weapon
+    arena.weapon = weapon
+
+    do_mark_weapon(weapon)
 
     gui.debugf("New weapon: %s @ %s ARENA_%d\n", weapon, R:tostr(), arena.id)
   end
