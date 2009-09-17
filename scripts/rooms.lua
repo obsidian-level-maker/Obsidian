@@ -1806,7 +1806,7 @@ function Room_add_crates(R)
     -- FIXME: don't separate them
     skin_names = THEME.out_crates
   else
-    skin_names = THENE.crates
+    skin_names = THEME.crates
   end
 
   if not skin_names then return end

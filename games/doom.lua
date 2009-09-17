@@ -1093,6 +1093,41 @@ COMMON_DOORS =
 }
 
 
+COMMON_EXITS =
+{
+  skull_pillar =
+  {
+    h=128,
+    switch_w="SW1SKULL",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+
+  skin_pillar =
+  {
+    h=128,
+    switch_w="SW1SKIN",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+
+  tech_outdoor =
+  {
+    podium="CEIL5_1", base="SHAWN2",
+    switch_w="SW1COMM", exit_w="EXITSIGN",
+  },
+
+  tech_small =
+  {
+    door = "EXITDOOR", track = "DOORTRAK",
+    exit = "EXITSIGN", exitside = "SHAWN2",
+    frame_c = "FLAT1", key_w = "LITE5",
+    break_w = "DOORSTOP",
+    items = { "medikit" },
+  },
+}
+
+
 COMMON_LIQUIDS =
 {
   water = { floor="FWATER1", wall="FIREMAG1" },
@@ -1341,6 +1376,11 @@ COMMON_THEME_DEFAULTS =
 
   -- FIXME: should not be separated, have 'environment' fields
   out_crates = { wood=50, ick=50 },
+
+  -- FIXME: next three should not be separated
+  exits = { skull_pillar=50 },
+  small_exits = { tech_small=50 },
+  out_exits = { tech_outdoor=50 },
 }
 
 
@@ -1392,10 +1432,13 @@ COMMON_SUB_THEMES =
       },
     },
 
-    ceil_lights =
+    ground =
     {
-      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
+      floors =
+      {
+        BROWN144=30, BROWN1=20, STONE=20,
+        ASHWALL=5, FLAT10=5,
+      },
     },
 
     hallway =
@@ -1444,14 +1487,11 @@ COMMON_SUB_THEMES =
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
         FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
       },
-    },
-
-    ground =
-    {
-      floors =
+      switches =
       {
-        BROWN144=30, BROWN1=20, STONE=20,
-        ASHWALL=5, FLAT10=5,
+        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
+        SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
+        SW1TEK=50,   SW1STON1=50
       },
     },
 
@@ -1472,6 +1512,12 @@ COMMON_SUB_THEMES =
       compsta1=40, compsta1_blink=3,
       compsta2=40, compsta2_blink=3,
       silver3=20, redwall=5,
+    },
+
+    ceil_lights =
+    {
+      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
     },
 
     pillars = { teklite=50, silver=10 },
@@ -1682,6 +1728,8 @@ DOOM2_SUB_THEMES =
     {
       eagle1=50,
     },
+
+    exits = { skin_pillar=50 },
 
     room_types =
     {
@@ -2584,6 +2632,7 @@ OB_GAMES["doom1"] =
     "pillars",    COMMON_PILLARS,
     "crates",     COMMON_CRATES,
     "doors",      COMMON_DOORS,
+    "exits",      COMMON_EXITS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,
@@ -2689,6 +2738,7 @@ OB_GAMES["doom2"] =
     "pillars",    COMMON_PILLARS,
     "crates",     COMMON_CRATES,
     "doors",      COMMON_DOORS,
+    "exits",      COMMON_EXITS,
 
     "hangs", COMMON_OVERHANGS,
     "pedestals", COMMON_PEDESTALS,

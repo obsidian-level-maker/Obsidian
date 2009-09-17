@@ -1685,16 +1685,19 @@ function Layout_one(R)
       local CS = R.conns[1]:seed(R)
       local dir = dir_for_wotsit(S)
 
-      if R.outdoor then
-        local skin = { podium="CEIL5_1", base="SHAWN2",
-                       switch_w="SW1COMM", exit_w="EXITSIGN" }
-
+      if R.outdoor and THEME.out_exits then
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand_key_by_probs(THEME.out_exits)
+        local skin = assert(GAME.exits[skin_name])
         Build_outdoor_exit_switch(S, dir, z1, skin)
-      else
-        local skin = { h=128, switch_w="SW1SKULL",
-                       exit_w="EXITSIGN", exit_h=16,
-                       exitside="COMPSPAN" }
 
+      else
+        if not THEME.exits then
+          error("Theme is missing exits table")
+        end
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand_key_by_probs(THEME.exits)
+        local skin = assert(GAME.exits[skin_name])
         Build_exit_pillar(S, z1, skin)
       end
 
@@ -2202,14 +2205,14 @@ gui.debugf("BOTH SAME HEIGHT\n")
   local function add_pillars()
     if R.parent then return end
 
-    if not GAME.pillars or not (LEVEL.theme.pillars or GAME.defaults.pillars) then
+    if not THEME.pillars then
       return
     end
 
     -- FIXME this is too crude!
     if STYLE.pillars == "few" then return end
 
-    local skin_names = LEVEL.theme.pillars or GAME.defaults.pillars
+    local skin_names = THEME.pillars
     if not skin_names then return end
     R.pillar_what = rand_key_by_probs(skin_names)
 
@@ -2312,29 +2315,25 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     local out_combo = T.room.main_tex
     if T.room.outdoor then out_combo = R.main_tex end
 
-    local skin =  -- FIXME: game specific
-    {
-      door = "EXITDOOR",
-      exit = "EXITSIGN",
-      exitside = "SHAWN2",
-      frame_c = "FLAT1",
-      key_w = "LITE5",
-      track = "DOORTRAK",
-      break_w = "DOORSTOP",
-      items = { "medikit" },
-    }
+    -- FIXME: use single one over a whole episode
+    if not THEME.small_exits then
+      error("Theme is missing small_exits table")
+    end
+    local skin_name = rand_key_by_probs(THEME.small_exits)
+    local skin = assert(GAME.exits[skin_name])
+
     local skin2 =
     {
       wall = out_combo,
       floor = T.f_tex or C.conn_ftex,
       ceil = out_combo,
     }
-    --!!!! FIXME game/theme specific
-    skin.switch = rand_element { "SW1METAL", "SW1LION", "SW1BRN2", "SW1BRNGN",
-                                "SW1GRAY",  "SW1MOD1", "SW1SLAD", "SW1STRTN",
-                                "SW1TEK",   "SW1STON1" }
 
-    Build_small_exit(R, LEVEL.theme.exit, skin, skin2)
+    assert(THEME.exit.switches)
+    -- FIXME: hacky
+    skin.switch = rand_key_by_probs(THEME.exit.switches)
+
+    Build_small_exit(R, THEME.exit, skin, skin2)
     return
   end
 
