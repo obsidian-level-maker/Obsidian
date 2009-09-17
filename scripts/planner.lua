@@ -902,7 +902,7 @@ end
   local limit = PARAM.seed_limit or 36
 
   cols = get_column_sizes(W, limit)
-  rows = get_column_sizes(W, limit)
+  rows = get_column_sizes(H, limit)
   
   LEVEL.col_W = cols
   LEVEL.row_H = rows
