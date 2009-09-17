@@ -264,12 +264,6 @@ function Monsters_global_palette()
         -- NOTE: we _could_ adjust probability based on Strength setting.
         -- _BUT_ it is probably better not to, otherwise we would just be
         -- skipping monsters which would not have been added anyway.
----##   local factor = math.min(M.health / 100, 9) ^ 0.5
----##   if OB_CONFIG.strength == "weak" then
----##     prob = prob * factor
----##   elseif OB_CONFIG.strength == "tough" then
----##     prob = prob / factor
----##   end
 
         -- adjust skip chance based on monster_prefs
         if LEVEL.monster_prefs then

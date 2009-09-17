@@ -1913,7 +1913,7 @@ COMMON_MONSTERS =
 
   Cyberdemon =
   {
-    prob=10, crazy_prob=12, skip_prob=200,
+    prob=10, crazy_prob=12, skip_prob=150,
     health=4000, damage=150, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0 },
@@ -1921,7 +1921,7 @@ COMMON_MONSTERS =
 
   Mastermind =
   {
-    prob=5, crazy_prob=18, skip_prob=400,
+    prob=5, crazy_prob=18, skip_prob=150,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
     weap_prefs={ bfg=5.0 },
@@ -1940,14 +1940,14 @@ DOOM2_MONSTERS =
 
   revenant =
   {
-    prob=44,
+    prob=44, skip_prob=90,
     health=300, damage=70, attack="missile",
     density=0.6,
   },
 
   knight =
   {
-    prob=60, crazy_prob=40,
+    prob=60, skip_prob=75, crazy_prob=40,
     health=500, damage=45, attack="missile",
     density=0.7,
   },
