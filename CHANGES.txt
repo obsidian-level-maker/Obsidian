@@ -9,11 +9,11 @@ CHANGES (since v3.43)
 -  more choices for the 'Outdoors' button
 
 -  levels are somewhat smaller
--  fixed some texture glitches / sky gaps
+-  fixed some texture glitches and sky gaps
 
 -  further work on Quake (better BSP algorithms etc)
 -  very preliminary work on Strife
--  preliminary work on Chex Quest (courtesy Enhas)
+-  preliminary work on Chex Quest 3 (courtesy Enhas)
 -  worked on a new theme system
 -  beginnings of support for HacX
 
