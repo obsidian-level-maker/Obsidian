@@ -382,7 +382,7 @@ function Cave_gen(W, H, conn_areas)
   end end -- for x, y
 
   -- clear areas to maintain connections to other rooms
-  for A in ipairs(conn_areas) do
+  for _,A in ipairs(conn_areas) do
     for x = A.x1, A.x2 do for y = A.y1, A.y2 do
       map[x][y] = 0
     end end
@@ -428,24 +428,92 @@ function Cave_gen(W, H, conn_areas)
     map, work = work, map
   end
 
-  -- debugging
-  -- [[
+  return map
+end
+
+
+function Cave_dump(map)
   gui.debugf("Cave_gen:\n")
-  for y = H,1,-1 do
+  for y = map.h,1,-1 do
     local line = "    ";
-    for x = 1,W do
-      line = line .. sel(map[x][y] == 1, "#", ".")
+    for x = 1,map.w do
+      line = line .. sel(map[x][y] > 0, "#", ".")
     end
     gui.debugf(line)
   end
+end
 
-  return map
+
+function Cave_validate(map)
+  local W = map.w
+  local H = map.h
+
+  local id = 1
+  local min_x, min_y =  999,  999
+  local max_x, max_y = -999, -999
+
+  local work = array_2D(map.w, map.h)
+
+  for x = 1,W do for y = 1,H do
+    if map[x][y] > 0 then
+      work[x][y] = 0
+    else
+      work[x][y] = id ; id = id + 1
+
+      min_x = math.min(min_x, x) ; min_y = math.min(min_y, y)
+      max_x = math.max(max_x, x) ; max_y = math.max(max_y, y)
+    end
+  end end
+
+  -- preliminary size check
+  local size_x = max_x - min_x + 1
+  local size_y = max_y - min_y + 1
+
+  if (size_x*1.6 < W and size_y*1.6 < H) or
+     (size_x*3.2 < W or  size_y*3.2 < H) then
+    return false
+  end 
+
+  -- perform flood-fill on empty areas
+  local function flood_point(x, y)
+    local changed = false
+    for side = 2,8,2 do
+      local nx, ny = nudge_coord(x, y, side)
+      if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
+        local W1 = work[x][y]
+        local W2 = work[nx][ny]
+
+        if W2 > 0 and W2 < W1 then
+          work[x][y] = W2
+          changed = true
+        end
+      end
+    end
+
+    return changed
+  end
+
+  repeat
+    local changed = false
+    for x = 1,W do for y = 1,H do
+      if work[x][y] > 0 then
+        if flood_point(x, y) then changed = true end
+      end
+    end end
+  until not changed
+
+  -- after flood fill, all areas should have id == 1
+  for x = 1,W do for y = 1,H do
+    if work[x][y] >= 2 then return false end
+  end end
+
+  return true
 end
 
 
 function Layout_natural_room(R, heights)
 
-  local f_tex = "RROCK11"
+  local f_tex = rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
 
   local function setup_floor(S, h)
     S.floor_h = h
@@ -460,14 +528,47 @@ function Layout_natural_room(R, heights)
     end
   end
 
-  Cave_gen(R.sw * 4, R.sh * 4, {})
+  local conn_areas = {}
 
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
-      if S.room == R and not S.floor_h then
-        setup_floor(S, heights[1])
-      end
-    end end -- for x, y
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+    local dir = S.conn_dir
+    local dx, dy = dir_to_delta(dir)
+
+    local x1 = (S.sx - R.sx1) * 4 + 2 + dx
+    local y1 = (S.sy - R.sy1) * 4 + 2 + dy
+
+    table.insert(conn_areas, { x1=x1, y1=y1, x2=x1+1, y2=y1+1 })
+  end
+
+  local w_tex  = rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
+  local w_info = get_mat(w_tex)
+
+  local map
+  
+  repeat
+    map = Cave_gen(R.sw * 4, R.sh * 4, conn_areas)
+  until Cave_validate(map)
+
+  Cave_dump(map)
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R and not S.floor_h then
+      setup_floor(S, heights[1])
+
+      local nx1 = (S.sx - R.sx1) * 4 + 1
+      local ny1 = (S.sy - R.sy1) * 4 + 1
+
+      for dx = 0,3 do for dy = 0,3 do
+        if map[nx1+dx][ny1+dy] == 1 then
+          Trans_quad(w_info, S.x1 + dx*64, S.y1 + dy*64,
+                             S.x1 + (dx+1)*64, S.y1 + (dy+1)*64,
+                             -EXTREME_H, EXTREME_H)
+        end
+      end end
+    end
+  end end -- for x, y
 end
 
 

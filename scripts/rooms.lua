@@ -1798,6 +1798,8 @@ function Room_add_crates(R)
     return
   end
 
+  if GAME.nature_test then return end
+
   local skin
   local skin_names
 
