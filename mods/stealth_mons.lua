@@ -109,14 +109,14 @@ STEALTH_MONSTERS =
 
   stealth_revenant =
   {
-    replaces="revenant", replace_prob=30, crazy_prob=40,
+    replaces="revenant", replace_prob=30, crazy_prob=40, skip_prob=90,
     health=300, damage=70, attack="missile",
     invis=true, density=0.6,
   },
 
   stealth_knight =
   {
-    replaces="knight", replace_prob=25, crazy_prob=11,
+    replaces="knight", replace_prob=25, crazy_prob=11, skip_prob=75,
     health=500, damage=45, attack="missile",
     invis=true, density=0.7,
   },
