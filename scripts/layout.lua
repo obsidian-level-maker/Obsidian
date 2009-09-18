@@ -444,6 +444,21 @@ function Cave_dump(map)
 end
 
 
+function Cave_remove_children(R, map)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room ~= R then
+      local nx1 = (S.sx - R.sx1) * 4 + 1
+      local ny1 = (S.sy - R.sy1) * 4 + 1
+
+      for dx = 0,3 do for dy = 0,3 do
+        map[nx1+dx][ny1+dy] = 1
+      end end -- for dx, dy
+    end
+  end end -- for x, y
+end
+
+
 function Cave_validate(map)
   local W = map.w
   local H = map.h
@@ -548,6 +563,10 @@ function Layout_natural_room(R, heights)
   
   repeat
     map = Cave_gen(R.sw * 4, R.sh * 4, conn_areas)
+    if R.children then
+      -- make sure the cave area outside the children is fully traversible
+      Cave_remove_children(R, map)
+    end
   until Cave_validate(map)
 
   Cave_dump(map)
@@ -1406,7 +1425,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 
   ---==| Layout_try_pattern |==---
  
-  if GAME.nature_test and is_top and not R.parent then
+  if GAME.nature_test and is_top then
     Layout_natural_room(R, heights)
     return
   end
