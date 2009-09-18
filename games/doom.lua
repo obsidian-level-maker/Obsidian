@@ -1940,7 +1940,7 @@ DOOM2_MONSTERS =
 
   revenant =
   {
-    prob=44, skip_prob=90,
+    prob=40, skip_prob=90,
     health=300, damage=70, attack="missile",
     density=0.6,
   },
@@ -1987,6 +1987,7 @@ DOOM2_MONSTERS =
     crazy_prob=7, skip_prob=100,
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
+    density=2.0,
   },
 }
 
