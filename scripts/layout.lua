@@ -363,7 +363,7 @@ function Layout_spot_for_wotsit(R, kind)
 end
 
 
-function Cave_gen(W, H, conn_areas)
+function Cave_gen(W, H, clear_areas)
   -- this method described by Jim Babcock in his article
   -- "Cellular Automata Method for Generating Random Cave-Like Levels"
 
@@ -377,21 +377,25 @@ function Cave_gen(W, H, conn_areas)
 --    elseif x <= 2 or x >= W-1 or y <= 2 or y >= H-1 then
 --      map[x][y] = rand_sel(26, 1, 0)
     else
-      map[x][y] = rand_sel(40, 1, 0)
+      map[x][y] = rand_sel(36, 1, 0)
     end
   end end -- for x, y
 
   -- clear areas to maintain connections to other rooms
-  for _,A in ipairs(conn_areas) do
-    for x = A.x1, A.x2 do for y = A.y1, A.y2 do
-      map[x][y] = 0
+  for _,A in ipairs(clear_areas) do
+    for x = A.x-1, A.x+1 do for y = A.y-1, A.y+1 do
+      if x >= 1 and x <= W and y >= 1 and y <= H then
+        map[x][y] = 0
+      end
     end end
+    map[A.x][A.y] = -2
   end
 
   local function calc_new(x, y, loop)
     if x == 1 or x == W or y == 1 or y == H then
       return map[x][y]
     end
+    if map[x][y] < 0 then return map[x][y] end
 
     local neighbors = 0
     for nx = x-1,x+1 do for ny = y-1,y+1 do
@@ -451,7 +455,7 @@ function Cave_remove_children(R, map)
       local nx1 = (S.sx - R.sx1) * 4 + 1
       local ny1 = (S.sy - R.sy1) * 4 + 1
 
-      for dx = 0,3 do for dy = 0,3 do
+      for dx = 0,4 do for dy = 0,4 do
         map[nx1+dx][ny1+dy] = 1
       end end -- for dx, dy
     end
@@ -528,7 +532,7 @@ end
 
 function Layout_natural_room(R, heights)
 
-  local f_tex = rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
+  local f_tex = "RROCK03" --- rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
 
   local function setup_floor(S, h)
     S.floor_h = h
@@ -543,26 +547,26 @@ function Layout_natural_room(R, heights)
     end
   end
 
-  local conn_areas = {}
+  local clear_areas = {}
 
   for _,C in ipairs(R.conns) do
     local S = C:seed(R)
     local dir = S.conn_dir
     local dx, dy = dir_to_delta(dir)
 
-    local x1 = (S.sx - R.sx1) * 4 + 2 + dx
-    local y1 = (S.sy - R.sy1) * 4 + 2 + dy
+    local x = (S.sx - R.sx1) * 4 + 3 + dx
+    local y = (S.sy - R.sy1) * 4 + 3 + dy
 
-    table.insert(conn_areas, { x1=x1, y1=y1, x2=x1+1, y2=y1+1 })
+    table.insert(clear_areas, { x=x, y=y }) -- { x1=x1, y1=y1, x2=x1+2, y2=y1+2 })
   end
 
   local w_tex  = rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
   local w_info = get_mat(w_tex)
 
   local map
-  
+
   repeat
-    map = Cave_gen(R.sw * 4, R.sh * 4, conn_areas)
+    map = Cave_gen(R.sw * 4 + 1, R.sh * 4 + 1, clear_areas)
     if R.children then
       -- make sure the cave area outside the children is fully traversible
       Cave_remove_children(R, map)
@@ -579,10 +583,10 @@ function Layout_natural_room(R, heights)
       local nx1 = (S.sx - R.sx1) * 4 + 1
       local ny1 = (S.sy - R.sy1) * 4 + 1
 
-      for dx = 0,3 do for dy = 0,3 do
-        if map[nx1+dx][ny1+dy] == 1 then
-          Trans_quad(w_info, S.x1 + dx*64, S.y1 + dy*64,
-                             S.x1 + (dx+1)*64, S.y1 + (dy+1)*64,
+      for dx = 0,4 do for dy = 0,4 do
+        if map[nx1+dx][ny1+dy] > 0 then
+          Trans_quad(w_info, S.x1 - 32 + dx*64,     S.y1 - 32 + dy*64,
+                             S.x1 - 32 + (dx+1)*64, S.y1 - 32 + (dy+1)*64,
                              -EXTREME_H, EXTREME_H)
         end
       end end
