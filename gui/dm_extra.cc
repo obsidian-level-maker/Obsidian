@@ -144,6 +144,20 @@ qLump_c * DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H)
 {
   qLump_c *lump = new qLump_c();
  
+  // create a skewed but working flat when original is 128x32
+  if (W != new_W && W == new_W*2 && H*2 == new_H)
+  {
+    for (int y = 0; y < new_H; y++)
+    for (int x = 0; x < new_W; x++)
+    {
+      int oy = (y + x / 2) % new_H;
+      int ox = x + ((oy >= H) ? W/2 : 0);
+
+      lump->Append(& pixels[(oy%H) * W + (ox%W)], 1);
+    }
+    return lump;
+  }
+
   for (int y = 0; y < new_H; y++)
   for (int x = 0; x < new_W; x += W)
   {
@@ -151,7 +165,7 @@ qLump_c * DM_CreateFlat(int new_W, int new_H, const byte *pixels, int W, int H)
 
     SYS_ASSERT(span > 0);
 
-    lump->Append(& pixels[y*W + x], span);
+    lump->Append(& pixels[(y%H) * W + (x%W)], span);
   }
 
   return lump;
