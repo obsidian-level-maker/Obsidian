@@ -603,6 +603,7 @@ end
 function Rooms_border_up()
 
   local function make_map_edge(R, S, side)
+
     if R.outdoor then
       S.border[side].kind = "sky_fence"
       S.thick[side] = 48
@@ -710,10 +711,6 @@ function Rooms_border_up()
 
     return list
   end
-
----## local function can_make_window(S, side)
----##    return true
----##  end
 
   local function score_window_side(R, side, border_list)
     local min_c1, max_f1 = 999, -999
@@ -1048,6 +1045,8 @@ function Rooms_border_up()
 
   ---| Rooms_border_up |---
   
+if GAME.nature_test then return end
+
   for _,R in ipairs(LEVEL.all_rooms) do
     border_up(R)
   end

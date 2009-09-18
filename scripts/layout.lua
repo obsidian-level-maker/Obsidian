@@ -363,6 +363,114 @@ function Layout_spot_for_wotsit(R, kind)
 end
 
 
+function Cave_gen(W, H, conn_areas)
+  -- this method described by Jim Babcock in his article
+  -- "Cellular Automata Method for Generating Random Cave-Like Levels"
+
+  local map  = array_2D(W, H)
+  local work = array_2D(W, H)
+
+  -- populate initial map
+  for x = 1,W do for y = 1,H do
+    if x == 1 or x == W or y == 1 or y == H then
+      map[x][y] = 1
+--    elseif x <= 2 or x >= W-1 or y <= 2 or y >= H-1 then
+--      map[x][y] = rand_sel(26, 1, 0)
+    else
+      map[x][y] = rand_sel(40, 1, 0)
+    end
+  end end -- for x, y
+
+  -- clear areas to maintain connections to other rooms
+  for A in ipairs(conn_areas) do
+    for x = A.x1, A.x2 do for y = A.y1, A.y2 do
+      map[x][y] = 0
+    end end
+  end
+
+  local function calc_new(x, y, loop)
+    if x == 1 or x == W or y == 1 or y == H then
+      return map[x][y]
+    end
+
+    local neighbors = 0
+    for nx = x-1,x+1 do for ny = y-1,y+1 do
+      neighbors = neighbors + map[nx][ny]
+    end end
+
+    if neighbors >= 5 then return 1 end
+
+    if loop >= 5 then return 0 end
+
+    if x <= 2 or x >= W-1 or y <= 2 or y >= H-1 then return 0 end
+
+    -- check larger area
+    local neighbors = 0
+    for nx = x-2,x+2 do for ny = y-2,y+2 do
+      if math.abs(x-nx) == 2 and math.abs(y-ny) == 2 then
+        -- skip the corners of the 5x5 block
+      else
+        neighbors = neighbors + map[nx][ny]
+      end
+    end end
+
+    if neighbors <= 2 then return 1 end
+
+    return 0
+  end
+
+  -- perform the cellular automation steps
+  for loop = 1,7 do
+    for x = 1,W do for y = 1,H do
+      work[x][y] = calc_new(x, y, loop)
+    end end
+
+    map, work = work, map
+  end
+
+  -- debugging
+  -- [[
+  gui.debugf("Cave_gen:\n")
+  for y = H,1,-1 do
+    local line = "    ";
+    for x = 1,W do
+      line = line .. sel(map[x][y] == 1, "#", ".")
+    end
+    gui.debugf(line)
+  end
+
+  return map
+end
+
+
+function Layout_natural_room(R, heights)
+
+  local f_tex = "RROCK11"
+
+  local function setup_floor(S, h)
+    S.floor_h = h
+    S.f_tex   = f_tex
+
+    if S.conn or S.pseudo_conn then
+      local C = S.conn or S.pseudo_conn
+      if C.conn_h then assert(C.conn_h == S.floor_h) end
+
+      C.conn_h = S.floor_h
+      C.conn_ftex = f_tex
+    end
+  end
+
+  Cave_gen(R.sw * 4, R.sh * 4, {})
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R and not S.floor_h then
+        setup_floor(S, heights[1])
+      end
+    end end -- for x, y
+end
+
+
 function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
@@ -1197,6 +1305,11 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 
   ---==| Layout_try_pattern |==---
  
+  if GAME.nature_test and is_top and not R.parent then
+    Layout_natural_room(R, heights)
+    return
+  end
+
   if do_try_divide() then
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
@@ -2344,7 +2457,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "building" and not R.children then
+  if R.kind == "building" and not R.children and not GAME.nature_test then
     junk_sides()
   end
 
