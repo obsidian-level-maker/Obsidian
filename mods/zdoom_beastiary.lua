@@ -61,10 +61,6 @@ BEASTIARY_THINGS =
 
 BEASTIARY_MONSTERS =
 {
-  -- FIXME: grab proper stats
-  diabloist  = { health=100, damage=50, attack="hitscan" },
-  tornado    = { health=100, damage=50, attack="hitscan" },
-
   zombie2 =
   {
     health=30, damage=10, attack="hitscan",
@@ -117,6 +113,7 @@ BEASTIARY_MONSTERS =
 
   cybaron =
   {
+    skip_prob=100,
     health=1200, damage=85, attack="missile",
     weap_prefs={ bfg=1.2, bfg10k=1.2 },
     density=0.35,
@@ -139,6 +136,7 @@ BEASTIARY_MONSTERS =
 
   archon =
   {
+    skip_prob=100,
     health=1500, damage=120, attack="missile",
     weap_prefs={ bfg=3.0, bfg10k=2.0 },
     density=0.2, never_promote=true,
@@ -181,6 +179,7 @@ BEASTIARY_MONSTERS =
 
   defiler =
   {
+    skip_prob=100,
     health=1000, damage=60, attack="missile",
     float=true, never_promote=true,
     density=0.1,
@@ -198,6 +197,7 @@ BEASTIARY_MONSTERS =
 
   cybruiser =
   {
+    skip_prob=100,
     health=1500, damage=70, attack="missile",
     weap_prefs={ bfg=1.2, bfg10k=1.2 },
     density=0.4,
@@ -210,8 +210,9 @@ BEASTIARY_MONSTERS =
 
   sniper =
   {
-    health=30, damage=80, attack="missile",
-    density=0.5,
+    skip_prob=150,
+    health=30, damage=150, attack="missile",
+    density=0.3,
   },
 
   sambomber =
@@ -234,6 +235,7 @@ BEASTIARY_MONSTERS =
 
   Moloch =
   {
+    skip_prob=200,
     health=4000, damage=200, attack="missile",
     density=0.1,
     weap_prefs={ bfg=8.0, bfg10k=8.0 },
@@ -241,6 +243,7 @@ BEASTIARY_MONSTERS =
 
   Overlord =
   {
+    skip_prob=250,
     health=4000, damage=200, attack="missile",
     density=0.1,
     weap_prefs={ bfg=8.0, bfg10k=8.0 },
@@ -248,6 +251,7 @@ BEASTIARY_MONSTERS =
 
   Superdemon =
   {
+    skip_prob=150,
     health=3500, damage=120, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0, bfg10k=5.0 },
@@ -287,6 +291,8 @@ function ZDoom_Beastiary_setup(self)
     if M and prob then
       M.prob = prob
       M.crazy_prob = prob
+
+      if prob > 80 then M.skip_prob = 2000 / prob end
     end
   end -- for opt
 end
@@ -330,13 +336,11 @@ OB_MODULES["zdoom_beastiary"] =
     chainarach = { label="Chainarach",       choices=BEASTIARY_CHOICES },
     cybaron    = { label="Cybaron",          choices=BEASTIARY_CHOICES },
     cybruiser  = { label="Cybruiser",        choices=BEASTIARY_CHOICES },
-    diabloist  = { label="Diabloist",        choices=BEASTIARY_CHOICES },
     fusion     = { label="Fusion",           choices=BEASTIARY_CHOICES },
     gunner2    = { label="Gunner2",          choices=BEASTIARY_CHOICES },
     inferno    = { label="Inferno",          choices=BEASTIARY_CHOICES },
     nailborg   = { label="Nailborg",         choices=BEASTIARY_CHOICES },
     suicideguy = { label="Suicider",         choices=BEASTIARY_CHOICES },
-    tornado    = { label="Tornado",          choices=BEASTIARY_CHOICES },
     stonedemon = { label="Stonedemon",       choices=BEASTIARY_CHOICES },
     watcher    = { label="Watcher",          choices=BEASTIARY_CHOICES },
 
