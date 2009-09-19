@@ -1372,7 +1372,7 @@ COMMON_THEME_DEFAULTS =
 
   liquid_pics = { pois1=70, pois2=30 },
 
-  crates = { crate1=50, crate2=50, space=90, comp=70, mod=10 },
+  crates = { crate1=50, crate2=50, mod=10 },
 
   -- FIXME: should not be separated, have 'environment' fields
   out_crates = { wood=50, ick=50 },
@@ -1523,6 +1523,8 @@ COMMON_SUB_THEMES =
     pillars = { teklite=50, silver=10 },
 
     big_pillars = { big_red=50, big_blue=50 },
+
+    crates = { crate1=50, crate2=50, space=90, comp=70, mod=15 },
 
     room_types =
     {
