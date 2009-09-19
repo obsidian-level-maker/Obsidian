@@ -18,6 +18,7 @@
 --
 ----------------------------------------------------------------
 
+-- important global tables
 GAME   = {}
 PARAM  = {}
 STYLE  = {}
@@ -40,8 +41,7 @@ MODES =
 UNFINISHED = {}
 
 
--- tables which interface with GUI code --
-
+-- tables which interface with GUI code
 OB_CONFIG = {}
 
 OB_GAMES   = {}
@@ -50,7 +50,7 @@ OB_ENGINES = {}
 OB_MODULES = {}
 
 
--- the catch-all engine
+-- various special settings
 OB_ENGINES["nolimit"] =
 {
   label = "Limit Removing",
@@ -70,8 +70,7 @@ OB_THEMES["psycho"] =
 }
 
 
-
--- Room layout stuff
+-- room layout stuff
 SKY_H = 512
 
 EXTREME_H = 4000
@@ -87,12 +86,13 @@ BIG_ROOM_TABLE =
 }
 
 
--- Monster stuff
-
+-- monster amounts and toughness
 MONSTER_QUANTITIES =
 {
   scarce=9, less=18, normal=27, more=40, heaps=60
 }
+
+COOP_MON_FACTOR = 1.5
 
 MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
 MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360, }
@@ -103,11 +103,13 @@ MON_VARIATION_HIGH = 1.5
 
 
 -- Fight Simulator constants and tables
-
 HEALTH_AMMO_ADJUSTS =
 {
   none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
 }
+
+COOP_HEALTH_FACTOR = 1.3
+COOP_AMMO_FACTOR   = 1.6
 
 PLAYER_ACCURACIES = { easy=0.65, medium=0.75, hard=0.85 }
 

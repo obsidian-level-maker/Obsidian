@@ -811,8 +811,12 @@ function Monsters_in_room(R)
     end
 
     assert(qty);
-    gui.debugf("Quantity = %1.0f\n", qty)
 
+    if OB_CONFIG.mode == "coop" then
+      qty = qty * COOP_MON_FACTOR
+    end
+
+    gui.debugf("Quantity = %1.0f\n", qty)
     return qty
   end
 
@@ -1424,6 +1428,11 @@ function Monsters_in_room(R)
 
     heal_mul = heal_mul * (PARAM.health_factor or 1)
     ammo_mul = ammo_mul * (PARAM.ammo_factor or 1)
+
+    if OB_CONFIG.mode == "coop" then
+      heal_mul = heal_mul * COOP_HEALTH_FACTOR
+      ammo_mul = ammo_mul * COOP_AMMO_FACTOR
+    end
 
     for name,qty in pairs(stats) do
       stats[name] = qty * sel(name == "health", heal_mul, ammo_mul)
