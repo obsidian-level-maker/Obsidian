@@ -66,7 +66,7 @@ cp -av $src/TODO.txt $dest
 cp -av $src/WISHLIST.txt $dest
 cp -av $src/CHANGES.txt $dest
 
-cat $src/web/main.css $src/web/index.html > $dest/README.htm
+### cat $src/web/main.css $src/web/index.html > $dest/README.htm
 
 #
 # all done
