@@ -585,9 +585,12 @@ function Layout_natural_room(R, heights)
 
       for dx = 0,4 do for dy = 0,4 do
         if map[nx1+dx][ny1+dy] > 0 then
-          Trans_quad(w_info, S.x1 - 32 + dx*64,     S.y1 - 32 + dy*64,
-                             S.x1 - 32 + (dx+1)*64, S.y1 - 32 + (dy+1)*64,
-                             -EXTREME_H, EXTREME_H)
+          local x1 = math.max(S.x1, S.x1 - 32 + dx * 64)
+          local y1 = math.max(S.y1, S.y1 - 32 + dy * 64)
+          local x2 = math.min(S.x2, S.x1 - 32 + (dx+1) * 64)
+          local y2 = math.min(S.y2, S.y1 - 32 + (dy+1) * 64)
+
+          Trans_quad(w_info, x1, y1, x2, y2, -EXTREME_H, EXTREME_H)
         end
       end end
     end
