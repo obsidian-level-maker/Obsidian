@@ -1608,15 +1608,13 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     add_central_pillar()
 
-    if nice ~= 2 then return end
+    if nice ~= 2 or not THEME.big_lights then return end
 
       local ceil_info  = get_mat(R.main_tex)
       local sky_info   = get_sky()
       local brown_info = get_mat("CEIL3_3")
 
-      local lights = { "TLITE6_5", "TLITE6_6", "GRNLITE1", "FLAT17", "CEIL3_4" }
-
-      local light_name = rand_element(lights)
+      local light_name = rand_key_by_probs(THEME.big_lights)
       local light_info = get_mat(light_name)
       light_info.b_face.light = 0.85
 

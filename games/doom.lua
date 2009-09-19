@@ -1668,6 +1668,8 @@ COMMON_SUB_THEMES =
       FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
     },
 
+    big_lights = { TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30 },
+
     pillars = { teklite=50, silver=10 },
 
     big_pillars = { big_red=50, big_blue=50 },
@@ -1725,6 +1727,8 @@ COMMON_SUB_THEMES =
 
     pictures = { marbface=10, skinface=10, firewall=20, gstfont=5,
                },
+
+    ceil_lights = { LAVA=10 },
 
     steps =
     {
@@ -1784,6 +1788,8 @@ COMMON_SUB_THEMES =
     pictures = { marbfac2=10, marbfac3=10,
                  spface1=2, firewall=20, gstfont=5,
                },
+
+    ceil_lights = { LAVA=10 },
 
     steps =
     {
