@@ -8,6 +8,7 @@ CHANGES (since v3.43)
 -  new 'Progressive' choice for monster numbers
 -  more choices for the 'Outdoors' button
 -  levels are somewhat smaller
+-  reinstated Co-op mode
 
 -  worked on a new theme system
 -  new URBAN and HELL themes for DOOM games
