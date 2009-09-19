@@ -7,17 +7,16 @@ CHANGES (since v3.43)
 -  new 'Strength' button (for monsters)
 -  new 'Progressive' choice for monster numbers
 -  more choices for the 'Outdoors' button
-
 -  levels are somewhat smaller
--  fixed some texture glitches and sky gaps
 
--  further work on Quake (better BSP algorithms etc)
--  preliminary work on Strife and HacX
--  preliminary work on Chex Quest 3 (courtesy Enhas)
 -  worked on a new theme system
 -  new URBAN and HELL themes for DOOM games
+-  preliminary work on Strife and HacX
+-  preliminary work on Chex Quest 3 (courtesy Enhas)
+-  further work on Quake (better BSP algorithms etc)
+-  fixed some texture glitches and sky gaps
 
--  new modules:
++  new modules:
    - Monster Control for DOOM
    - Weapon Control for DOOM
    - Stealth Monsters : Fine Control (thanks Enhas)
