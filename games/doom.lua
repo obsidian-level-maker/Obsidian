@@ -1136,6 +1136,7 @@ COMMON_CRATES =  -- temporary (until good prefab system)
   space = { side_w="SPACEW3",  top_f="CEIL5_1" },
   comp  = { side_w="COMPWERD", top_f="CEIL5_1" },
   mod   = { side_w="MODWALL3", top_f="FLAT19" },
+  lite5 = { side_w="LITE5",    top_f="FLAT19" },
 
   wood = { side_w="WOOD3",    top_f="CEIL1_1" },
   ick  = { side_w="ICKWALL4", top_f="FLAT19" },
@@ -1674,7 +1675,7 @@ COMMON_SUB_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 },
 
-    crates = { crate1=50, crate2=50, space=90, comp=70, mod=15 },
+    crates = { crate1=50, crate2=50, space=90, comp=70, mod=15, lite5=20 },
 
     room_types =
     {
@@ -1695,7 +1696,7 @@ COMMON_SUB_THEMES =
 
   HELL1 =
   {
-    prob = 50,
+    prob = 40,
 
     building =
     {
@@ -1859,13 +1860,24 @@ DOOM2_SUB_THEMES =
 
   HELL1 =  -- extends the entry in COMMON_SUB_THEMES
   {
-    prob = 60,
+    prob = 50,
 
     building =
     {
       walls =
       {
         MARBGRAY=50,
+      },
+    },
+  },
+
+  HELL2 =  -- extends the entry in COMMON_SUB_THEMES
+  {
+    ground =
+    {
+      floors =
+      {
+        CRACKLE2=20,
       },
     },
   },
