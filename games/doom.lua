@@ -1728,7 +1728,7 @@ COMMON_SUB_THEMES =
     pictures = { marbface=10, skinface=10, firewall=20, gstfont=5,
                },
 
-    ceil_lights = { LAVA=10 },
+    --- ceil_lights = { LAVA=10 },
 
     steps =
     {
@@ -1789,7 +1789,7 @@ COMMON_SUB_THEMES =
                  spface1=2, firewall=20, gstfont=5,
                },
 
-    ceil_lights = { LAVA=10 },
+    --- ceil_lights = { LAVA=10 },
 
     steps =
     {
