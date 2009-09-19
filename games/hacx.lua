@@ -474,7 +474,7 @@ OB_THEMES["hacx_tech"] =
 }
 
 
-OB_GAMES["hacx"] =
+UNFINISHED["hacx"] =
 {
   label = "HacX 1.1",
 

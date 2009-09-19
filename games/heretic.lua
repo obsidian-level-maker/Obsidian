@@ -1939,7 +1939,7 @@ OB_THEMES["heretic_cave"] =
 }
 
 
-OB_GAMES["heretic"] =
+UNFINISHED["heretic"] =
 {
   label = "Heretic",
 

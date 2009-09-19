@@ -527,7 +527,7 @@ UNFINISHED["chex_cave"] =
 
 ------------------------------------------------------------
 
-OB_GAMES["chex"] =
+UNFINISHED["chex"] =
 {
   label = "Chex Quest",
 
