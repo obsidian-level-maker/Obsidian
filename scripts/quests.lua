@@ -747,9 +747,9 @@ function Quest_choose_keys()
 
   table.sort(LEVEL.all_locks, function(A,B) return A.kscore > B.kscore end)
 
-  local use_keys     = shallow_copy(LEVEL.key_list or GAME.key_list) 
-  local use_switches = shallow_copy(LEVEL.switch_list or GAME.switch_list)
-  local use_bars     = shallow_copy(LEVEL.bar_list or GAME.bar_list)
+  local use_keys     = shallow_copy(THEME.key_list or GAME.key_list) 
+  local use_switches = shallow_copy(THEME.switch_list or GAME.switch_list)
+  local use_bars     = shallow_copy(THEME.bar_list or GAME.bar_list)
 
   rand_shuffle(use_keys)
   rand_shuffle(use_switches)

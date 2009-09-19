@@ -1381,6 +1381,10 @@ COMMON_THEME_DEFAULTS =
   exits = { skull_pillar=50 },
   small_exits = { tech_small=50 },
   out_exits = { tech_outdoor=50 },
+
+  key_list = { "kc_red", "kc_blue", "kc_yellow" },
+  switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
+  bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 }
 
 
@@ -2332,10 +2336,6 @@ function Doom1_get_levels()
         ep_along = ep_along,
         ep_info  = ep_info,
 
-        key_list = { "kc_red", "kc_blue", "kc_yellow" },
-        switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
-        bar_list = { "bar_wood", "bar_silver", "bar_metal" },
-
         secret_kind = (map == 9) and "plain",
 
         style = {},
@@ -2406,10 +2406,6 @@ function Doom2_get_levels()
       episode  = episode,
       ep_along = ep_along,
       ep_info  = ep_info,
-
-      key_list = { "kc_red", "kc_blue", "kc_yellow" },
-      switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
-      bar_list = { "bar_wood", "bar_silver", "bar_metal" },
 
       style = {},
     }
