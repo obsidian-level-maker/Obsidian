@@ -936,7 +936,7 @@ function Rooms_border_up()
     return rand_key_by_probs(THEME.logos)
   end
 
-  local function install_pic(R, bd, pic_name)
+  local function install_pic(R, bd, pic_name, v_space)
     skin = assert(GAME.pictures[pic_name])
 
     -- handles symmetry
@@ -961,9 +961,13 @@ function Rooms_border_up()
         local B = S.border[side]
 
         if B.kind == "wall" and S.floor_h then
+          local raise = skin.raise or 32
+          if raise + skin.height > v_space-4 then
+            raise = int((v_space - skin.height) / 2)
+          end
           B.kind = "picture"
           B.pic_skin = skin
-          B.pic_z1 = S.floor_h + (skin.raise or 32)
+          B.pic_z1 = S.floor_h + raise
         end
 
       end -- for dy
@@ -1038,7 +1042,7 @@ function Rooms_border_up()
 
       local bd = table.remove(new_list, b_index)
       
-      install_pic(R, bd, pics[1 + (loop-1) % 2])
+      install_pic(R, bd, pics[1 + (loop-1) % 2], v_space)
     end -- for loop
   end
 
