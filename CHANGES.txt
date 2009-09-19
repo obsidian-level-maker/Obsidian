@@ -12,10 +12,10 @@ CHANGES (since v3.43)
 -  fixed some texture glitches and sky gaps
 
 -  further work on Quake (better BSP algorithms etc)
--  very preliminary work on Strife
+-  preliminary work on Strife and HacX
 -  preliminary work on Chex Quest 3 (courtesy Enhas)
 -  worked on a new theme system
--  beginnings of support for HacX
+-  new URBAN and HELL themes for DOOM games
 
 -  new modules:
    - Monster Control for DOOM
