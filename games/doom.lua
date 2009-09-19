@@ -1038,6 +1038,82 @@ COMMON_PICTURES =
     x_offset=0, y_offset=0,
     side_t="WOODVERT", floor="FLAT5_2", depth=8, 
   },
+
+  hitler1 =
+  {
+    count=1,
+    pic_w="ZZWOLF7", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="WOODVERT", floor="FLAT5_2", depth=8, 
+  },
+
+  marbface =
+  {
+    count=1,
+    pic_w="MARBFACE", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, 
+  },
+
+  marbfac2 =
+  {
+    count=1,
+    pic_w="MARBFAC2", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, 
+  },
+
+  marbfac3 =
+  {
+    count=1,
+    pic_w="MARBFAC3", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, 
+  },
+
+  skinface =
+  {
+    count=1,
+    pic_w="SKINFACE", width=160, height=80,
+    x_offset=0, y_offset=24,
+    -- side_t="METAL", floor="CEIL5_2",
+    depth=8, 
+    line_kind=48, -- scroll
+    light=0.7,
+  },
+
+  spface1 =
+  {
+    count=1,
+    pic_w="SP_FACE1", width=160, height=96,
+    x_offset=0, y_offset=0,
+    -- side_t="METAL", floor="CEIL5_2",
+    depth=8, 
+    line_kind=48, -- scroll
+    light=0.7,
+  },
+
+  firewall =
+  {
+    count=1,
+    pic_w="FIREWALL", width=128, height=112,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.9,
+  },
+
+  gstfont =
+  {
+    count=2, gap=32,
+    pic_w="GSTFONT1", width=64, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8,
+  },
+
 }
 
 
@@ -1433,7 +1509,7 @@ COMMON_THEME_DEFAULTS =
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
                  },
 
-  pictures = { shawn1=10 },
+  pictures = { tekwall4=10 },
 
   logos = { carve=50, pill=50 },
 
@@ -1646,6 +1722,9 @@ COMMON_SUB_THEMES =
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
+    pictures = { marbface=10, skinface=10, firewall=20, gstfont=5,
+               },
+
     steps =
     {
       step1=50, step3=50, step4=50,
@@ -1700,6 +1779,10 @@ COMMON_SUB_THEMES =
     },
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
+
+    pictures = { marbfac2=10, marbfac3=10,
+                 spface1=2, firewall=20, gstfont=5,
+               },
 
     steps =
     {
@@ -1821,7 +1904,7 @@ DOOM2_SUB_THEMES =
 
     pictures =
     {
-      eagle1=50,
+      eagle1=50, hitler1=10,
     },
 
     exits = { skin_pillar=50 },
