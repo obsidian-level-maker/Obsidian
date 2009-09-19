@@ -211,7 +211,7 @@ function Plan_CreateRooms()
     -- prefer to put big rooms away from the edge
     if (bx == 1 or bx+big_w-1 == LEVEL.W or
         by == 1 or by+big_h-1 == LEVEL.H)
-        and rand_odds(70)
+        and rand_odds(50)
     then
       big_w, big_h = 1, 1
     end
