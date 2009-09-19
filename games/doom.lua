@@ -212,6 +212,7 @@ COMMON_MATERIALS =
   BROVINE2 = { t="BROVINE2", f="FLAT1" },  -- poor match
   BRNPOIS  = { t="BRNPOIS",  f="FLAT1" },  -- poor match
 
+  CEMENT9  = { t="CEMENT9",  f="FLAT1" },  -- poor match
   COMPBLUE = { t="COMPBLUE", f="FLAT14" },
   COMPSPAN = { t="COMPSPAN", f="CEIL5_1" },
   COMPSTA1 = { t="COMPSTA1", f="FLAT23" },
@@ -1871,9 +1872,9 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        PANEL7=50, BRICK7=50, BIGBRIK1=20, BIGBRIK2=10,
-        STUCCO3=20,
-        BLAKWAL1=5, BRICK11=3, BRICK12=5, BRWINDOW=10,
+        PANEL7=35, BRICK7=35, BIGBRIK1=20, BIGBRIK2=10,
+        STUCCO3=15,
+        BLAKWAL1=5, BRICK11=5, BRICK12=8, BRWINDOW=10,
         STONE3=10,
       },
       floors =
@@ -1893,9 +1894,11 @@ DOOM2_SUB_THEMES =
       floors =
       {
         STONE=50, BROWN1=20, ASHWALL=5, ASHWALL4=5,
-        RROCK19=10, ROCK2=15,
+        RROCK19=10, ROCK2=15, STONE7=8,
       },
     },
+
+    outer_fences = { STONE2=20, CEMENT9=30, WOOD9=30 },
 
     steps =
     {
