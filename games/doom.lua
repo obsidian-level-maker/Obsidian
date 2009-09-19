@@ -1616,21 +1616,22 @@ COMMON_SUB_THEMES =
 
   HELL1 =
   {
-    prob = 60,
+    prob = 50,
 
     building =
     {
       walls =
       {
-        MARBLE2=50, GSTVINE1=20,
+        MARBLE2=50, GSTVINE1=20, SKINMET2=10, SLADSKUL=5,
       },
       floors =
       {
-        DEM1_6=20, FLAT5_7=10,
+        DEM1_6=20, FLAT5_7=10, FLAT10=10,
+        FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
       },
       ceilings =
       {
-        FLAT1=10, FLAT10=10,
+        FLAT1=10, FLAT10=10, FLAT5_5=10,
       },
     },
 
@@ -1639,8 +1640,11 @@ COMMON_SUB_THEMES =
       floors =
       {
         FLAT5_6=10, ASHWALL=10, FLAT10=10,
+        SFLR6_1=10, MFLR8_2=10,
       },
     },
+
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
     steps =
     {
@@ -1673,15 +1677,16 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        SP_HOT1=20,
+        SP_HOT1=25, SKINMET1=5, STONE=10,
       },
       floors =
       {
-        FLAT5_7=10,
+        FLAT5_7=10, FLAT10=10, FLAT5_3=10,
+        FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
       },
       ceilings =
       {
-        FLAT1=10, FLOOR6_1=10, FLAT10=10,
+        FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10,
       },
     },
 
@@ -1690,8 +1695,11 @@ COMMON_SUB_THEMES =
       floors =
       {
         FLAT5_6=10, ASHWALL=5, FLAT10=5,
+        SFLR6_4=10, MFLR8_2=10,
       },
     },
+
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
     steps =
     {
