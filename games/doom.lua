@@ -2776,6 +2776,7 @@ OB_GAMES["doom1"] =
     liquids = true,
     teleporters = true,
     infighting = true,
+    raising_start = true,
 
     pack_sidedefs = true,
     custom_flats = true,
@@ -2875,6 +2876,7 @@ OB_GAMES["doom2"] =
     liquids = true,
     teleporters = true,
     infighting = true,
+    raising_start = true,
 
     pack_sidedefs = true,
     custom_flats = true,

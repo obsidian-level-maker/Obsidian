@@ -651,6 +651,9 @@ UNFINISHED["chex3"] =
     switches = true,
     liquids = true,
     teleporters = true,
+    raising_start = true,
+
+    -- NOTE: no infighting at all
 
     pack_sidedefs = true,
     custom_flats = true,
