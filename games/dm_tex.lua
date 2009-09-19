@@ -1741,7 +1741,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="COMPBLUE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="COMPBLUE",  track_w="DOORTRAK",
+        step_w="COMPBLUE",  track="DOORTRAK",
         step_f="FLAT14", frame_c="FLAT14",
         door_h=112,
         line_kind=0,
@@ -1756,7 +1756,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="REDWALL",
         door_w="BIGDOOR2", door_c="FLAT1",
-        step_w="REDWALL",  track_w="DOORTRAK",
+        step_w="REDWALL",  track="DOORTRAK",
         step_f="FLAT5_3", frame_c="FLAT5_3",
         door_h=112,
         line_kind=0,
@@ -1772,7 +1772,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="SKINFACE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
+        step_w="STEP1",  track="DOORTRAK",
         step_f="FLAT1", frame_c="FLAT1",
         door_h=112,
         line_kind=0,
@@ -1787,7 +1787,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="GRAYVINE",
         door_w="BIGDOOR3", door_c="FLOOR7_2",
-        step_w="STEP1",  track_w="DOORTRAK",
+        step_w="STEP1",  track="DOORTRAK",
         step_f="FLAT1", frame_c="FLAT1",
         door_h=112,
         line_kind=0,
@@ -1802,7 +1802,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="WOOD1",
         door_w="BIGDOOR7", door_c="CEIL5_2",
-        step_w="WOOD12",  track_w="DOORTRAK",
+        step_w="WOOD12",  track="DOORTRAK",
         step_f="FLAT5_2", frame_c="FLAT5_2",
         door_h=112,
         line_kind=0,
@@ -1817,7 +1817,7 @@ COMMON_SWITCH_DOORS =
       {
         key_w="GSTONE1",
         door_w="BIGDOOR2", door_c="FLAT1",
-        step_w="GSTONE1",  track_w="DOORTRAK",
+        step_w="GSTONE1",  track="DOORTRAK",
         step_f="FLOOR7_2", frame_c="FLOOR7_2",
         door_h=112,
         line_kind=0,
@@ -1885,56 +1885,6 @@ COMMON_SWITCH_DOORS =
 
 COMMON_KEY_DOORS =
 {
-  kc_blue =
-  {
-    w=128, h=112,
-
-    prefab = "DOOR_LIT_LOCKED",
-    
-    skin =
-    {
-      key_w="DOORBLU",
-      door_w="BIGDOOR3", door_c="FLOOR7_2",
-      step_w="STEP4",  track_w="DOORTRAK",
-      step_f="FLAT18", frame_c="FLAT18",
-      door_h=112,
-      line_kind=32, tag=0,  -- kind_mult=26
-    }
-  },
-
-  kc_yellow =
-  {
-    w=128, h=112,
-
-    prefab = "DOOR_LIT_LOCKED",
-
-    skin =
-    {
-      key_w="DOORYEL",
-      door_w="BIGDOOR4", door_c="FLOOR3_3",
-      step_w="STEP4",  track_w="DOORTRAK",
-      step_f="FLAT18", frame_c="FLAT4",
-      door_h=112,
-      line_kind=34, tag=0, -- kind_mult=27
-    }
-  },
-
-  kc_red =
-  {
-    w=128, h=112,
-
-    prefab = "DOOR_LIT_LOCKED",
-
-    skin =
-    {
-      key_w="DOORRED",
-      door_w="BIGDOOR2", door_c="FLAT1",
-      step_w="STEP4",  track_w="DOORTRAK",
-      step_f="FLAT18", frame_c="FLAT18",
-      door_h=112,
-      line_kind=33, tag=0, -- kind_mult=28
-    }
-  },
 
   -- TODO: ks_*
 }

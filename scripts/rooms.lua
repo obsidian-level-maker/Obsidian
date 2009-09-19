@@ -2084,16 +2084,18 @@ gui.printf("do_teleport\n")
         local z = assert(S.conn and S.conn.conn_h)
 
         local LOCK = assert(S.border[side].lock)
-        local INFO
+        local skin
+
         if LOCK.kind == "KEY" then
-          INFO = assert(GAME.key_doors[LOCK.item])
+          skin = assert(GAME.doors[LOCK.item])
         else
           assert(LOCK.kind == "SWITCH")
-          INFO = assert(GAME.switch_doors[LOCK.item])
+          local INFO = assert(GAME.switch_doors[LOCK.item])
+          skin = INFO.skin  -- FIXME
         end
 
-        local skin = INFO.skin
-        skin.track = "DOORTRAK"
+--if not skin.track then gui.printf("%s", table_to_str(skin,1)); end
+        assert(skin.track)
 
         local skin2 = { inner=w_tex, outer=o_tex }
 

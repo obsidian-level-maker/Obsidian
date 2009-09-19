@@ -1090,6 +1090,73 @@ COMMON_DOORS =
     door_h=112,
     line_kind=1, tag=0,
   },
+
+  kc_blue =
+  {
+    w=128, h=112,
+    key_w="DOORBLU",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT18",
+    door_h=112,
+    line_kind=32, tag=0,  -- kind_mult=26
+  },
+
+  kc_yellow =
+  {
+    w=128, h=112,
+    key_w="DOORYEL",
+    door_w="BIGDOOR4", door_c="FLOOR3_3",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT4",
+    door_h=112,
+    line_kind=34, tag=0, -- kind_mult=27
+  },
+
+  kc_red =
+  {
+    w=128, h=112,
+
+    key_w="DOORRED",
+    door_w="BIGDOOR2", door_c="FLAT1",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT18",
+    door_h=112,
+    line_kind=33, tag=0, -- kind_mult=28
+  },
+
+  ks_blue =
+  {
+    w=128, h=112,
+    key_w="DOORBLU2", key_ox=4, key_oy=-10,
+    door_w="BIGDOOR7", door_c="FLOOR7_2",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT18",
+    door_h=112,
+    line_kind=32, tag=0,  -- kind_mult=26
+  },
+
+  ks_yellow =
+  {
+    w=128, h=112,
+    key_w="DOORYEL2", key_ox=4, key_oy=-10,
+    door_w="BIGDOOR7", door_c="FLOOR3_3",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT4",
+    door_h=112,
+    line_kind=34, tag=0, -- kind_mult=27
+  },
+
+  ks_red =
+  {
+    w=128, h=112,
+    key_w="DOORRED2", key_ox=4, key_oy=-10,
+    door_w="BIGDOOR7", door_c="FLAT1",
+    step_w="STEP4",  track="DOORTRAK",
+    step_f="FLAT18", frame_c="FLAT18",
+    door_h=112,
+    line_kind=33, tag=0, -- kind_mult=28
+  },
 }
 
 
@@ -1580,6 +1647,8 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
+    key_list = { "ks_red", "ks_blue", "ks_yellow" },
+
     room_types =
     {
       -- FIXME  TORTURE  PRISON
@@ -1628,6 +1697,8 @@ COMMON_SUB_THEMES =
     {
       step1=50, step3=50, step4=50,
     },
+
+    key_list = { "ks_red", "ks_blue", "ks_yellow" },
 
     room_types =
     {
