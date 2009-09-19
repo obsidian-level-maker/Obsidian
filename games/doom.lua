@@ -1694,6 +1694,7 @@ COMMON_SUB_THEMES =
   }, -- TECH
 
 
+  -- this is the greeny/browny/marbley Hell
   HELL1 =
   {
     prob = 40,
@@ -1754,6 +1755,7 @@ COMMON_SUB_THEMES =
     },
   },
 
+  -- this is the reddy/skinny/firey Hell
   HELL2 =
   {
     prob = 20,
