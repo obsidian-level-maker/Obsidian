@@ -139,7 +139,7 @@ function Room_setup_theme(R)
     LEVEL.outdoor_floors = {}
 
     for num = 1,2 do
-      local name = rand_key_by_probs(LEVEL.theme.ground.floors)
+      local name = rand_key_by_probs(THEME.ground.floors)
       LEVEL.outdoor_floors[num] = name
     end
   end
@@ -148,7 +148,7 @@ function Room_setup_theme(R)
     LEVEL.building_walls = {}
 
     for num = 1,3 do
-      local name = rand_key_by_probs(LEVEL.theme.building.walls)
+      local name = rand_key_by_probs(THEME.building.walls)
       LEVEL.building_walls[num] = name
     end
   end
@@ -316,7 +316,7 @@ function Rooms_decide_hallways_II()
 
   ---| Room_decide_hallways |---
 
-  if not LEVEL.theme.hallway then
+  if not THEME.hallway then
     gui.printf("Hallways disabled (no theme info)\n")
     return
   end
@@ -350,7 +350,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0 and
-       LEVEL.theme.stairwell
+       THEME.stairwell
     then
       local hall_nb = hallway_neighbors(R) 
 
@@ -516,7 +516,7 @@ function Rooms_reckon_doors()
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
-    local door_probs = LEVEL.theme.door_probs or
+    local door_probs = THEME.door_probs or
                        GAME.door_probs or
                        DEFAULT_PROBS
 
@@ -1430,9 +1430,8 @@ function Room_make_ceiling(R)
   local function add_cross_beam(dir, x1,y1, x2,y2, mode)
     local skin
     
-    if not R.arena.ceil_light then return end
-
     if mode == "light" then
+      if not R.arena.ceil_light then return end
       skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim="METAL" }
     end
 
@@ -1563,8 +1562,8 @@ function Room_make_ceiling(R)
     end
 
 
-    if not R.arena.ceil_light and LEVEL.theme.ceil_light then
-      R.arena.ceil_light = rand_key_by_probs(LEVEL.theme.ceil_lights)
+    if not R.arena.ceil_light and THEME.ceil_lights then
+      R.arena.ceil_light = rand_key_by_probs(THEME.ceil_lights)
     end
 
     local beam_chance = 25
@@ -1680,7 +1679,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
-    R.ceil_tex = rand_key_by_probs(LEVEL.theme.building.ceilings)
+    R.ceil_tex = rand_key_by_probs(THEME.building.ceilings)
 
 -- [[
     decide_periphs()
@@ -2203,9 +2202,9 @@ gui.printf("do_teleport\n")
     -- FLOOR
     if S.kind == "void" then
 
-      if S.solid_feature and LEVEL.theme.corners then
+      if S.solid_feature and THEME.corners then
         if not R.corner_tex then
-          R.corner_tex = rand_key_by_probs(LEVEL.theme.corners)
+          R.corner_tex = rand_key_by_probs(THEME.corners)
         end
         w_tex = R.corner_tex
       end
