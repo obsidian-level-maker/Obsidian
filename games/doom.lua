@@ -1169,6 +1169,42 @@ COMMON_DOORS =
     line_kind=1, tag=0,
   },
 
+  tech_bigdoor2 =
+  {
+    w=128, h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR2", door_c="FLAT23",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18",
+    track="DOORTRAK",
+    door_h=112,
+    line_kind=115, tag=0,
+  },
+
+  tech_bigdoor3 =
+  {
+    w=128, h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18",
+    track="DOORTRAK",
+    door_h=112,
+    line_kind=115, tag=0,
+  },
+
+  tech_bigdoor4 =
+  {
+    w=128, h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR4", door_c="FLOOR7_1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18",
+    track="DOORTRAK",
+    door_h=112,
+    line_kind=115, tag=0,
+  },
+
   kc_blue =
   {
     w=128, h=112,
@@ -1509,6 +1545,7 @@ COMMON_THEME_DEFAULTS =
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
+                   GRAY1=10,
                  },
 
   pictures = { tekwall4=10 },
@@ -1559,7 +1596,6 @@ COMMON_SUB_THEMES =
         STARBR2=5, STARGR2=10,
         METAL2=13, SLADWALL=18, GRAY7=10, BROWN1=5,
         BROWNGRN=10, BROWN96=8, METAL1=1,
-        BRONZE3=10,
       },
       floors =
       {
@@ -1647,6 +1683,7 @@ COMMON_SUB_THEMES =
     doors =
     {
       silver_lit=50,
+      tech_bigdoor2=10, tech_bigdoor3=10, tech_bigdoor4=10,
     },
 
     steps =
@@ -1703,16 +1740,17 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        MARBLE2=50, GSTVINE1=20, SKINMET2=10, SLADSKUL=5,
+        MARBLE1=25, MARBLE2=10, MARBLE3=20,
+        GSTVINE2=20, SLADWALL=10, SKINMET1=3,
       },
       floors =
       {
-        DEM1_6=20, FLAT5_7=10, FLAT10=10,
+        DEM1_5=15, DEM1_6=15, FLAT5_7=10, FLAT10=10,
         FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
       },
       ceilings =
       {
-        FLAT1=10, FLAT10=10, FLAT5_5=10,
+        FLAT1=10, FLAT10=10, FLAT5_5=10, FLOOR7_2=10,
       },
     },
 
@@ -1720,8 +1758,9 @@ COMMON_SUB_THEMES =
     {
       floors =
       {
-        FLAT5_6=10, ASHWALL=10, FLAT10=10,
-        SFLR6_1=10, MFLR8_2=10,
+        ASHWALL=20,
+        FLAT5_6=10, FLAT10=20,
+        SFLR6_1=20, MFLR8_2=20,
       },
     },
 
@@ -1758,13 +1797,13 @@ COMMON_SUB_THEMES =
   -- this is the reddy/skinny/firey Hell
   HELL2 =
   {
-    prob = 20,
+    prob = 25,
 
     building =
     {
       walls =
       {
-        SP_HOT1=25, SKINMET1=5, STONE=10,
+        SP_HOT1=25, GSTVINE1=20, STONE=10, SKINMET2=5, BROWN1=2,
       },
       floors =
       {
@@ -1834,12 +1873,12 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        TEKGREN2=10,
+        BRONZE3=10, TEKGREN2=10,
       },
 
       floors =
       {
-        SLIME15=50, SLIME16=50,
+        SLIME14=25, SLIME15=30, SLIME16=50,
       },
     },
 
@@ -1868,7 +1907,7 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        MARBGRAY=50,
+        MARBGRAY=35,
       },
     },
   },
@@ -1892,15 +1931,17 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        PANEL7=35, BRICK7=35, BIGBRIK1=20, BIGBRIK2=10,
-        STUCCO3=15,
-        BLAKWAL1=5, BRICK11=5, BRICK12=8, BRWINDOW=10,
-        STONE3=10,
+        BIGBRIK1=20, BIGBRIK2=10,
+        BLAKWAL1=5, BRWINDOW=10,
+        BRICK5=10, BRICK7=35, BRICK8=5,
+        BRICK10=3, BRICK11=5, BRICK12=8,
+        PANEL7=35, STUCCO3=15,
+        STONE3=10, STONE2=3,
       },
       floors =
       {
-        FLAT1=10, FLAT1_1=10, FLOOR4_6=5, FLOOR5_4=10,
-        FLOOR7_1=5, 
+        FLAT1=20, FLAT1_1=20, FLOOR4_6=10, FLOOR5_4=20,
+        FLOOR7_1=10, FLOOR0_2=15,
       },
       ceilings =
       {
@@ -1913,8 +1954,10 @@ DOOM2_SUB_THEMES =
     {
       floors =
       {
-        STONE=50, BROWN1=20, ASHWALL=5, ASHWALL4=5,
+        STONE=50, BROWN1=20,
         RROCK19=10, ROCK2=15, STONE7=8,
+        ASHWALL=5, ASHWALL4=5, ASHWALL7=5,
+        BSTONE1=5, BSTONE2=5,
       },
     },
 
