@@ -1243,7 +1243,7 @@ COMMON_DOORS =
   bigdoor4 =
   {
     w=128, h=112, door_h=112,
-    key_w="LITE3",
+    key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
     step_w="STEP4", step_f="FLAT18",
     frame_c="FLAT18", track="DOORTRAK",
@@ -1253,7 +1253,7 @@ COMMON_DOORS =
   bigdoor4_fast =
   {
     w=128, h=112, door_h=112,
-    key_w="LITE3",
+    key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
     step_w="STEP4", step_f="FLAT18",
     frame_c="FLAT18", track="DOORTRAK",
@@ -1263,7 +1263,7 @@ COMMON_DOORS =
   bigdoor4_once =
   {
     w=128, h=112, door_h=112,
-    key_w="LITE3",
+    key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
     step_w="STEP4", step_f="FLAT18",
     frame_c="FLAT18", track="DOORTRAK",
