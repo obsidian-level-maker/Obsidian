@@ -63,6 +63,7 @@ fi
 #
 cp -av $src/GPL.txt $dest
 cp -av $src/TODO.txt $dest
+cp -av $src/README.txt $dest
 cp -av $src/WISHLIST.txt $dest
 cp -av $src/CHANGES.txt $dest
 
@@ -72,8 +73,7 @@ cp -av $src/CHANGES.txt $dest
 # all done
 #
 echo "------------------------------------"
-echo "Remember to fix README.htm:"
-echo "  1. move the CSS"
-echo "  2. remove SCREENSHOT section"
-echo "  3. remove DOWNLOAD section"
+echo "mv PACK-RAT Oblige-X.XX"
+echo "zip -l -r Oblige-X.XX.zip Oblige-X.XX"
+echo ""
 
