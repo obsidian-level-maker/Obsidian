@@ -1145,85 +1145,160 @@ COMMON_CRATES =  -- temporary (until good prefab system)
 
 COMMON_DOORS =
 {
-  silver_lit =
+  --- NORMAL DOORS ---
+
+  silver =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=72,
     key_w="LITE3",
     door_w="BIGDOOR1", door_c="FLAT1",
     step_w="STEP4", step_f="FLAT18",
-    frame_c="FLAT18",
-    track="DOORTRAK",
-    door_h=72,
+    frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
 
-  big_wooden =
+  silver_fast =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=72,
+    key_w="LITE3",
+    door_w="BIGDOOR1", door_c="FLAT1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=117, tag=0,
+  },
+
+  silver_once =
+  {
+    w=128, h=112, door_h=72,
+    key_w="LITE3",
+    door_w="BIGDOOR1", door_c="FLAT1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=31, tag=0,
+  },
+
+  wooden =
+  {
+    w=128, h=112, door_h=112,
     door_w="BIGDOOR6", door_c="FLAT5_2",
     lite_w="LITE5", step_w="STEP1",
     frame_f="FLAT1", frame_c="FLAT1",
     track="DOORTRAK",
     key_w="BRICKLIT", key_ox=20, key_oy=-16,
-    door_h=112,
     line_kind=1, tag=0,
   },
 
-  tech_bigdoor2 =
+  wooden_fast =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
+    door_w="BIGDOOR6", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=117, tag=0,
+  },
+
+  wooden_once =
+  {
+    w=128, h=112, door_h=112,
+    door_w="BIGDOOR6", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=31, tag=0,
+  },
+
+  bigdoor2 =
+  {
+    w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR2", door_c="FLAT23",
     step_w="STEP4", step_f="FLAT18",
-    frame_c="FLAT18",
-    track="DOORTRAK",
-    door_h=112,
-    line_kind=115, tag=0,
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=1, tag=0,
   },
 
-  tech_bigdoor3 =
+  bigdoor2_fast =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="LITE3",
-    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    door_w="BIGDOOR2", door_c="FLAT23",
     step_w="STEP4", step_f="FLAT18",
-    frame_c="FLAT18",
-    track="DOORTRAK",
-    door_h=112,
-    line_kind=115, tag=0,
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=117, tag=0,
   },
 
-  tech_bigdoor4 =
+  bigdoor2_once =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR2", door_c="FLAT23",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=31, tag=0,
+  },
+
+  bigdoor4 =
+  {
+    w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR4", door_c="FLOOR7_1",
     step_w="STEP4", step_f="FLAT18",
-    frame_c="FLAT18",
-    track="DOORTRAK",
-    door_h=112,
-    line_kind=115, tag=0,
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=1, tag=0,
   },
+
+  bigdoor4_fast =
+  {
+    w=128, h=112, door_h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR4", door_c="FLOOR7_1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=117, tag=0,
+  },
+
+  bigdoor4_once =
+  {
+    w=128, h=112, door_h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR4", door_c="FLOOR7_1",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=31, tag=0,
+  },
+
+  bigdoor3 =
+  {
+    w=128, h=112, door_h=112,
+    key_w="LITE3",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=1, tag=0,
+  },
+
+  --- LOCKED DOORS ---
 
   kc_blue =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="DOORBLU",
     door_w="BIGDOOR3", door_c="FLOOR7_2",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT18",
-    door_h=112,
     line_kind=32, tag=0,  -- kind_mult=26
   },
 
   kc_yellow =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="DOORYEL",
     door_w="BIGDOOR4", door_c="FLOOR3_3",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT4",
-    door_h=112,
     line_kind=34, tag=0, -- kind_mult=27
   },
 
@@ -1231,44 +1306,40 @@ COMMON_DOORS =
   {
     w=128, h=112,
 
-    key_w="DOORRED",
+    key_w="DOORRED", door_h=112,
     door_w="BIGDOOR2", door_c="FLAT1",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT18",
-    door_h=112,
     line_kind=33, tag=0, -- kind_mult=28
   },
 
   ks_blue =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="DOORBLU2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLOOR7_2",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT18",
-    door_h=112,
     line_kind=32, tag=0,  -- kind_mult=26
   },
 
   ks_yellow =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="DOORYEL2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLOOR3_3",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT4",
-    door_h=112,
     line_kind=34, tag=0, -- kind_mult=27
   },
 
   ks_red =
   {
-    w=128, h=112,
+    w=128, h=112, door_h=112,
     key_w="DOORRED2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLAT1",
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT18",
-    door_h=112,
     line_kind=33, tag=0, -- kind_mult=28
   },
 }
@@ -1537,7 +1608,7 @@ DOOM2_ROOMS =
 
 COMMON_THEME_DEFAULTS =
 {
-  doors = { big_wooden=50 },
+  doors = { wooden=30, wooden_fast=20 },
 
   steps = { step1=50 },
 
@@ -1682,8 +1753,10 @@ COMMON_SUB_THEMES =
 
     doors =
     {
-      silver_lit=50,
-      tech_bigdoor2=10, tech_bigdoor3=10, tech_bigdoor4=10,
+      silver=20, silver_fast=33, silver_once=2,
+      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
+      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
+      bigdoor3=5,
     },
 
     steps =
