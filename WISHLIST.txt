@@ -35,6 +35,10 @@ Planner:
 -  review / improve 'emergency' connections
 
 
+Buldings:
+  - can have separate textures for 'interior' and 'exterior' walls.
+
+
 Windows:
   - better patterns:
     (1) flank door mode
