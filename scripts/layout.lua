@@ -383,12 +383,9 @@ function Cave_gen(W, H, clear_areas)
 
   -- clear areas to maintain connections to other rooms
   for _,A in ipairs(clear_areas) do
-    for x = A.x-1, A.x+1 do for y = A.y-1, A.y+1 do
-      if x >= 1 and x <= W and y >= 1 and y <= H then
-        map[x][y] = 0
-      end
+    for x = A.x1,A.x2 do for y = A.y1,A.y2 do
+      map[x][y] = -2
     end end
-    map[A.x][A.y] = -2
   end
 
   local function calc_new(x, y, loop)
@@ -445,21 +442,6 @@ function Cave_dump(map)
     end
     gui.debugf(line)
   end
-end
-
-
-function Cave_remove_children(R, map)
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room ~= R then
-      local nx1 = (S.sx - R.sx1) * 4 + 1
-      local ny1 = (S.sy - R.sy1) * 4 + 1
-
-      for dx = 0,4 do for dy = 0,4 do
-        map[nx1+dx][ny1+dy] = 1
-      end end -- for dx, dy
-    end
-  end end -- for x, y
 end
 
 
@@ -530,9 +512,24 @@ function Cave_validate(map)
 end
 
 
+function Cave_remove_children(R, map)
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room ~= R then
+      local nx1 = (S.sx - R.sx1) * 5 + 1
+      local ny1 = (S.sy - R.sy1) * 5 + 1
+
+      for dx = 0,4 do for dy = 0,4 do
+        map[nx1+dx][ny1+dy] = 1
+      end end -- for dx, dy
+    end
+  end end -- for x, y
+end
+
+
 function Layout_natural_room(R, heights)
 
-  local f_tex = "RROCK03" --- rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
+  local f_tex = "RROCK04"
 
   local function setup_floor(S, h)
     S.floor_h = h
@@ -554,19 +551,19 @@ function Layout_natural_room(R, heights)
     local dir = S.conn_dir
     local dx, dy = dir_to_delta(dir)
 
-    local x = (S.sx - R.sx1) * 4 + 3 + dx
-    local y = (S.sy - R.sy1) * 4 + 3 + dy
+    local x = (S.sx - R.sx1) * 5 + 2 + dx
+    local y = (S.sy - R.sy1) * 5 + 2 + dy
 
-    table.insert(clear_areas, { x=x, y=y }) -- { x1=x1, y1=y1, x2=x1+2, y2=y1+2 })
+    table.insert(clear_areas, { x1=x, y1=y, x2=x+2, y2=y+2 })
   end
 
-  local w_tex  = rand_element { "ASHWALL", "ASHWALL4", "RROCK11", "GRASS2" }
+  local w_tex  = sel(R.outdoor, "RROCK11", "ASHWALL")
   local w_info = get_mat(w_tex)
 
   local map
 
   repeat
-    map = Cave_gen(R.sw * 4 + 1, R.sh * 4 + 1, clear_areas)
+    map = Cave_gen(R.sw * 5, R.sh * 5, clear_areas)
     if R.children then
       -- make sure the cave area outside the children is fully traversible
       Cave_remove_children(R, map)
@@ -575,20 +572,24 @@ function Layout_natural_room(R, heights)
 
   Cave_dump(map)
 
+  local ssz = PARAM.seed_size
+  assert(ssz >= 224)
+  local deltas = { 0, 48, 96, ssz-96, ssz-48, ssz }
+
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R and not S.floor_h then
       setup_floor(S, heights[1])
 
-      local nx1 = (S.sx - R.sx1) * 4 + 1
-      local ny1 = (S.sy - R.sy1) * 4 + 1
+      local nx1 = (S.sx - R.sx1) * 5 + 1
+      local ny1 = (S.sy - R.sy1) * 5 + 1
 
       for dx = 0,4 do for dy = 0,4 do
         if map[nx1+dx][ny1+dy] > 0 then
-          local x1 = math.max(S.x1, S.x1 - 32 + dx * 64)
-          local y1 = math.max(S.y1, S.y1 - 32 + dy * 64)
-          local x2 = math.min(S.x2, S.x1 - 32 + (dx+1) * 64)
-          local y2 = math.min(S.y2, S.y1 - 32 + (dy+1) * 64)
+          local x1 = S.x1 + deltas[1+dx]
+          local y1 = S.y1 + deltas[1+dy]
+          local x2 = S.x1 + deltas[2+dx]
+          local y2 = S.y1 + deltas[2+dy]
 
           Trans_quad(w_info, x1, y1, x2, y2, -EXTREME_H, EXTREME_H)
         end
