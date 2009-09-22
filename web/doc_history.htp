@@ -48,6 +48,7 @@ as often as possible.
 
 <h3>RELEASE DATES</h3>
 
+<b>Version 3.47</b> : 2009-09-22<br>
 <b>Version 3.43</b> : 2009-08-11<br>
 <b>Version 3.39</b> : 2009-04-12  (first release of V3)<br>
 
@@ -56,6 +57,34 @@ as often as possible.
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
 <b>Version 0.81</b> : 2007-01-21  (first public release)<br>
+
+
+<h3 id="changes347">CHANGES IN 3.47</h3>
+<PRE>
+-  new GUI layout, more room for modules
+-  GUI uses larger fonts in higher resolutions
+-  new 'Strength' button (for monsters)
+-  new 'Progressive' choice for monster numbers
+-  more choices for the 'Outdoors' button
+-  levels are somewhat smaller
+-  reinstated Co-op mode
+
+-  worked on a new theme system
+-  new URBAN and HELL themes for DOOM games
+-  preliminary work on Strife and HacX
+-  preliminary work on Chex Quest 3 (courtesy Enhas)
+-  further work on Quake (better BSP algorithms etc)
+-  fixed some texture glitches and sky gaps
+
++  new modules:
+   - Monster Control for DOOM
+   - Weapon Control for DOOM
+   - Stealth Monsters : Fine Control (thanks Enhas)
+   - ZDoom Marines : Fine Control (Enhas)
+   - Skulltag : Fine Control (Enhas)
+   - Level Control (Enhas)
+   - ZDoom Beastiary (Mr Chris)
+</PRE>
 
 
 <h3 id="changes343">CHANGES IN 3.43</h3>
