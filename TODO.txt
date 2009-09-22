@@ -9,6 +9,8 @@ TODO
 +  add in more scenery: lamps, computers etc
 
 
+-  stairs: messed up in some themes??
+
 +  review monster quantities, need some increase over the course
    of a level (like 50% more monsters at end compared to start)
    and maybe better pacing (e.g. nothing in a room occasionally).
