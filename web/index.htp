@@ -31,11 +31,27 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 3.43 is the current version.
+OBLIGE 3.47 is the current version.
 
 
 <h3>NEWS</h3>
 
+<div class="newsdate">22-Sep-2009:</div>
+<blockquote class="news">
+I'm happy to announce OBLIGE 3.47 has been released.
+This version has a larger, more readable GUI window,
+separate buttons to control monster quantity and toughness,
+more DOOM themes (Urban and Hell), and a bunch of new
+modules, plus many tweaks and fixes.
+
+<p>
+Big thanks goes to Enhas and Chris who have contributed a lot
+to this release, including new code, theme stuff
+and heaps of testing.
+</blockquote>
+
+
+<hr style="clear: right;">
 <div class="newsdate">13-Sep-2009:</div>
 <blockquote class="news">
 The web-site has gotten a large overhaul, with a brand new
