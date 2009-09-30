@@ -120,6 +120,9 @@ SKY GENERATOR:
 
 -  E2M8 boss map : less trees or lamps.
 
+-  a module to force themes (and maybe monster quantities) to
+   follow the original IWADs as much as possible.
+
 
 ----------------------------------------------------------------
   HERETIC:
