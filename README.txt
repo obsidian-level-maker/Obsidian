@@ -18,7 +18,7 @@ INTRODUCTION
     * built-in node builder, so the levels are ready to play
     * uses the LUA scripting language for easy customisation
     * can create Deathmatch levels
-    * Heretic and Hexen support!
+    * Heretic, Hexen and Quake support!
 
   For complete information (much more than in this README)
   please visit the web site: http://oblige.sourceforge.net/
