@@ -529,7 +529,7 @@ end
 
 function Layout_natural_room(R, heights)
 
-  local f_tex = "RROCK04"
+  local f_tex = "LAVA1"
 
   local function setup_floor(S, h)
     S.floor_h = h
@@ -539,7 +539,7 @@ function Layout_natural_room(R, heights)
       local C = S.conn or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == S.floor_h) end
 
-      C.conn_h = S.floor_h
+      C.conn_h = h
       C.conn_ftex = f_tex
     end
   end
@@ -557,8 +557,11 @@ function Layout_natural_room(R, heights)
     table.insert(clear_areas, { x1=x, y1=y, x2=x+2, y2=y+2 })
   end
 
-  local w_tex  = sel(R.outdoor, "RROCK11", "ASHWALL")
+  local w_tex  = sel(R.outdoor, "GRASS2", "ASHWALL4")
   local w_info = get_mat(w_tex)
+
+  local trim_i = get_mat("RROCK16")
+  local trim_2 = get_mat("RROCK04")
 
   local map
 
@@ -573,8 +576,61 @@ function Layout_natural_room(R, heights)
   Cave_dump(map)
 
   local ssz = PARAM.seed_size
-  assert(ssz >= 224)
+  assert(ssz >= 240)
   local deltas = { 0, 48, 96, ssz-96, ssz-48, ssz }
+
+  local function process_span(S, nx1, ny1, dx1, dx2, dy)
+    local tl, tr = deltas[1+dx1], deltas[2+dx2]
+    local bl, br = deltas[1+dx1], deltas[2+dx2]
+
+    local no_L = (dx1 > 0) or (nx1+dx1-1 > 0      and map[nx1+dx1-1][ny1+dy] <= 0)
+    local no_R = (dx2 < 4) or (nx1+dx2+1 <= map.w and map[nx1+dx2+1][ny1+dy] <= 0)
+
+    local no_B1 = (ny1+dy-1 > 0) and (map[nx1+dx1][ny1+dy-1] <= 0)
+    local no_B2 = (ny1+dy-1 > 0) and (map[nx1+dx2][ny1+dy-1] <= 0)
+
+    local no_T1 = (ny1+dy+1 <= map.h) and (map[nx1+dx1][ny1+dy+1] <= 0)
+    local no_T2 = (ny1+dy+1 <= map.h) and (map[nx1+dx2][ny1+dy+1] <= 0)
+
+    if no_L and no_B1 then bl = bl + 32 end
+    if no_L and no_T1 then tl = tl + 32 end
+
+    if no_R and no_B2 then br = br - 32 end
+    if no_R and no_T2 then tr = tr - 32 end
+
+    if br-bl < 6 then local mx = (bl+br)/2; bl=mx-12; br=mx+12; end
+    if tr-tl < 6 then local mx = (tl+tr)/2; tl=mx-12; tr=mx+12; end
+
+    local y1 = S.y1 + deltas[dy+1]
+    local y2 = S.y1 + deltas[dy+2]
+
+    Trans_brush(w_info,
+    {
+      { x=S.x1 + bl, y=y1 },
+      { x=S.x1 + br, y=y1 },
+      { x=S.x1 + tr, y=y2 },
+      { x=S.x1 + tl, y=y2 },
+    },
+    -EXTREME_H, S.floor_h + 72)
+
+    Trans_brush(trim_i,
+    {
+      { x=S.x1 + bl - 32, y=y1-32 },
+      { x=S.x1 + br + 32, y=y1-32 },
+      { x=S.x1 + tr + 32, y=y2+32 },
+      { x=S.x1 + tl - 32, y=y2+32 },
+    },
+    -EXTREME_H, S.floor_h + 16)
+
+    Trans_brush(trim_2,
+    {
+      { x=S.x1 + bl - 72, y=y1-72 },
+      { x=S.x1 + br + 72, y=y1-72 },
+      { x=S.x1 + tr + 72, y=y2+72 },
+      { x=S.x1 + tl - 72, y=y2+72 },
+    },
+    -EXTREME_H, S.floor_h + 8)
+  end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
@@ -585,13 +641,15 @@ function Layout_natural_room(R, heights)
       local ny1 = (S.sy - R.sy1) * 5 + 1
 
       for dx = 0,4 do for dy = 0,4 do
-        if map[nx1+dx][ny1+dy] > 0 then
-          local x1 = S.x1 + deltas[1+dx]
-          local y1 = S.y1 + deltas[1+dy]
-          local x2 = S.x1 + deltas[2+dx]
-          local y2 = S.y1 + deltas[2+dy]
+        if map[nx1+dx][ny1+dy] > 0 and 
+           (dx == 0 or map[nx1+dx-1][ny1+dy] <= 0)
+        then
+          local dx2 = dx
+          while (dx2+1) < 5 and map[nx1+dx2+1][ny1+dy] > 0 do
+            dx2 = dx2 + 1
+          end
 
-          Trans_quad(w_info, x1, y1, x2, y2, -EXTREME_H, EXTREME_H)
+          process_span(S, nx1,ny1, dx,dx2, dy)
         end
       end end
     end
