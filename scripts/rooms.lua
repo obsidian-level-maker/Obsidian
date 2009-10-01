@@ -900,11 +900,11 @@ function Rooms_border_up()
     v_space = v_space - 16
     -- FIXME: needs more v_space checking
 
-    if rand_odds(sel(LEVEL.has_logo,7,40)) then
-      if not THEME.logos then
-        error("Game is missing logo skins")
-      end
+    if not THEME.logos then
+      error("Game is missing logo skins")
+    end
 
+    if rand_odds(sel(LEVEL.has_logo,7,40)) then
       LEVEL.has_logo = true
       return rand_key_by_probs(THEME.logos)
     end
@@ -1681,7 +1681,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     R.ceil_tex = rand_key_by_probs(THEME.building.ceilings)
 
--- [[
+--[[
     decide_periphs()
     install_periphs()
 
@@ -2191,7 +2191,7 @@ gui.printf("do_teleport\n")
       end
 
       if not THEME.lifts then
-        error("Game is missing lift skins.") 
+        -- OK
       else
         local name = rand_key_by_probs(THEME.lifts)
         LEVEL.lift_skin = GAME.lifts[name] or {}
