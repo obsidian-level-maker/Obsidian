@@ -65,11 +65,7 @@
  */
 #include "../gui/sys_type.h"
 #include "../gui/sys_macro.h"
-
-void FatalError(const char *msg, ...);
-
 #include "../gui/vis_buffer.h"
-#include "../gui/vis_buffer.cc"
 
 
 class UI_Window;
@@ -351,7 +347,7 @@ UI_Window::~UI_Window()
 
 #define MSG_BUF_LEN  2000
 
-void FatalError(const char *msg, ...)
+void Main_FatalError(const char *msg, ...)
 {
 	static char buffer[MSG_BUF_LEN];
 
@@ -453,7 +449,7 @@ int main(int argc, char **argv)
 	}
 	catch (...)
 	{
-		FatalError("An unknown error occurred (exception was thrown)");
+		Main_FatalError("An unknown error occurred (exception was thrown)");
 	}
 
 	if (main_win)

@@ -39,12 +39,12 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 
 
-OBJS=main.o
+OBJS=main.o ../gui/vis_buffer.o
 
 
 #--- Targets and Rules ------------------------------------------
 
-all: clean $(PROGRAM)
+all: $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) *.o core core.* ERRS
