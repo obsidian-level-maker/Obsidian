@@ -2,6 +2,7 @@
 TODO
 ====
 
+
 +  get more games working (Heretic, Hexen etc)
 
 +  support for Traps, Cages, Secrets, Powerups
@@ -30,8 +31,6 @@ TODO
 -  rarity for bfg10k and railgun for Skulltag
 
 -  more ammo in starting room  (biggest pack for starting weapon or bullets)
-
--  Compilation notes!  (INSTALL.txt)
 
 
 -  implement more of Chris's and Johnny's boss maps

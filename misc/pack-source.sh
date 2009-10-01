@@ -38,6 +38,11 @@ mkdir $dest/qsavetex
 cp -av $src/qsavetex/*.[ch]* $dest/qsavetex
 cp -av $src/qsavetex/Makefile* $dest/qsavetex
 
+mkdir $dest/vis_viewer
+cp -av $src/vis_viewer/*.[ch]* $dest/vis_viewer
+cp -av $src/vis_viewer/Makefile* $dest/vis_viewer
+cp -av $src/vis_viewer/DATA* $dest/vis_viewer
+
 mkdir $dest/misc
 cp -av $src/misc/pack*.sh $dest/misc
 
