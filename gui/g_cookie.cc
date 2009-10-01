@@ -38,10 +38,6 @@ static void Cookie_SetValue(const char *name, const char *value)
 {
   DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
-  // ignore the seed value
-  if (StringCaseCmp(name, "seed") == 0)
-    return;
-
   // -- Game Settings --
   if (main_win->game_box->ParseValue(name, value))
     return;

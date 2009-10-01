@@ -155,20 +155,30 @@ void UI_Game::SetSeed(u32_t new_val)
 
 void UI_Game::FreshSeed()
 {
-  u32_t val = (u32_t)time(NULL);
+  u32_t val   = (u32_t)time(NULL);
+  u32_t usage = IntHash(val) % 100;
 
-  // fresh seeds are always even
-  SetSeed((val/86400)*1000 + ((val/11)%500)*2);
+  SetSeed((val/43200) * 100 + usage);
+}
+
+void UI_Game::StaleSeed(u32_t old_val)
+{
+  u32_t val   = (u32_t)time(NULL);
+  u32_t usage = IntHash(val) % 100;
+
+  // when the day is the same, simply Bump the old value
+  if ((val/43200) % 1000 == (old_val/100) % 1000)
+    usage = (old_val+1) % 100;
+
+  SetSeed((val/43200) * 100 + usage);
 }
 
 void UI_Game::BumpSeed()
 {
-  u32_t val = atoi(seed->value());
+  u32_t val   = atoi(seed->value());
+  u32_t usage = (val+1) % 100;
 
-  val += 7 + (IntHash(TimeGetMillies()) % 25);
-
-  // bumped seeds are always odd
-  SetSeed(val | 1);
+  SetSeed((val / 100) * 100 + usage);
 }
 
 void UI_Game::callback_Seed(Fl_Widget *w, void *data)
@@ -258,6 +268,12 @@ bool UI_Game::ParseValue(const char *key, const char *value)
 {
   // Note: game, engine are handled by LUA code
  
+  if (StringCaseCmp(key, "seed") == 0)
+  {
+    StaleSeed(atoi(value));
+    return true;
+  }
+
   if (StringCaseCmp(key, "mode") == 0)
   {
     mode->SetID(value);

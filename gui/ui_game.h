@@ -43,6 +43,7 @@ public:
   void SetSeed(u32_t new_val);
 
   void FreshSeed();
+  void StaleSeed(u32_t old_val);
   void BumpSeed();
 
   void Locked(bool value);
