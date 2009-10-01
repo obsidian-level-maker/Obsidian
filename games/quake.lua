@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Quake I
+-- GAME DEF : Quake
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -667,10 +667,31 @@ QUAKE1_MATERIALS =
 
 QUAKE1_EXITS =
 {
-  ELEVATOR =  -- FIXME: not needed, remove
+  exit_teleporter =
   {
-    mat_pri = 0,
-    wall = 21, void = 21, floor=0, ceil=0,
+    h=128,
+    switch_w="SW1SKULL",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+}
+
+
+QUAKE1_STEPS =
+{
+  step1 = { step_w="DUNG01_1" },
+}
+
+
+QUAKE1_PICTURES =
+{
+  carve =
+  {
+    count=1,
+    pic_w="O_CARVE", width=64, height=64,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
   },
 }
 
@@ -763,7 +784,7 @@ QUAKE1_ROOMS =
 
 QUAKE1_SUB_THEMES =
 {
-  BASE =
+  BASE1 =
   {
     building =
     {
@@ -800,6 +821,12 @@ QUAKE1_SUB_THEMES =
         GROUND1_6=50, GROUND1_2=50, GROUND1_8=30,
       },
     },
+
+    logos = { carve=50 },
+
+    steps = { step1=50 },
+
+    exits = { exit_teleporter=50 },
 
     scenery =
     {
@@ -1179,7 +1206,7 @@ OB_THEMES["quake_base"] =
 }
 
 
-UNFINISHED["quake"] =
+OB_GAMES["quake"] =
 {
   label = "Quake",
 
@@ -1210,11 +1237,8 @@ UNFINISHED["quake"] =
 
     skip_monsters = { 20,30 },
 
-    mon_time_max = 12,
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
+    time_factor   = 1.0,
+    damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
   },
@@ -1223,16 +1247,18 @@ UNFINISHED["quake"] =
   {
     "player_model", QUAKE1_PLAYER_MODEL,
 
-    "things", QUAKE1_THINGS,
+    "things",   QUAKE1_THINGS,
     "monsters", QUAKE1_MONSTERS,
     "weapons",  QUAKE1_WEAPONS,
     "pickups",  QUAKE1_PICKUPS,
 
     "materials", QUAKE1_MATERIALS,
-    "exits",  QUAKE1_EXITS,
+    "themes",    QUAKE1_SUB_THEMES,
+    "pictures",  QUAKE1_PICTURES,
+    "steps",     QUAKE1_STEPS,
+    "exits",     QUAKE1_EXITS,
 
     "episodes", QUAKE1_EPISODES,
-    "themes",   QUAKE1_SUB_THEMES,
     "rooms",    QUAKE1_ROOMS,
 
     "key_doors", QUAKE1_KEY_DOORS,
