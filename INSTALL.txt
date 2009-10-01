@@ -2,7 +2,9 @@
 COMPILING NOTES
 ===============
 
-Oblige uses makefiles for building:
+The gui/ directory contains the C++ code.
+
+OBLIGE uses makefiles for building:
 
 -  Makefile.local for the Linux binary
 -  Makefile.xming for the Win32 EXE
@@ -43,7 +45,11 @@ BUILDING HINTS
 ==============
 
 Lua-5.1.2:
-  (1) edit src/Makefile to use 'g++' instead of 'gcc'.
+  (1) Lua must be compiled using C++.  A system-wide C-compiled
+      version will not work.
+
+      edit src/Makefile to use 'g++' instead of 'gcc'.
+
       For Win32 cross-compile, prefix g++, ar and ranlib
       with 'i586-mingw32msvc-'.
 
