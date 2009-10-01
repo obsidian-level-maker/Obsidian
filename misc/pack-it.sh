@@ -74,6 +74,6 @@ cp -av $src/CHANGES.txt $dest
 #
 echo "------------------------------------"
 echo "mv PACK-RAT Oblige-X.XX"
-echo "zip -l -r Oblige-X.XX.zip Oblige-X.XX"
+echo "zip -l -r oblige-XXX-win.zip Oblige-X.XX"
 echo ""
 

@@ -53,12 +53,9 @@ cp -av $src/data/*.lmp $dest/data
 mkdir $dest/doc
 cp -av $src/doc/*.* $dest/doc
 
-mkdir $dest/web
-cp -av $src/web/index.html $dest/web
-cp -av $src/web/main.css   $dest/web
-
 cp -av $src/GPL.txt $dest
 cp -av $src/TODO.txt $dest
+cp -av $src/README.txt $dest
 cp -av $src/WISHLIST.txt $dest
 cp -av $src/CHANGES.txt $dest
 
