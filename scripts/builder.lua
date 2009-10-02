@@ -2009,7 +2009,9 @@ function Build_picture(S, side, z1, z2, skin)
   local gap = skin.gap or WD
 
   local total_w = count * WD + (count - 1) * gap
-  assert(total_w < PARAM.seed_size-28)
+  if total_w > PARAM.seed_size-16 then
+    error("Picture is too wide: " .. tostring(skin.pic_w))
+  end
 
   local mx = int(long/2)
   local my = deep - HT
