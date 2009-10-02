@@ -26,7 +26,7 @@
 
 #define LOG_FILE  "qsavetex_log.txt"
 
-#define QUAKE1_OUTPUT  "quake_tex.wad";
+#define QUAKE1_OUTPUT  "quake_tex.wd2";
 
 
 static const char * output_name = QUAKE1_OUTPUT;

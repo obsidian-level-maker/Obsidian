@@ -237,10 +237,11 @@ static void Q1_CreateMipTex(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
 
-  if (! WAD2_OpenRead("data/quake_tex.wad"))
+  if (! WAD2_OpenRead("data/quake_tex.wd2"))
   {
-    // this shouldn't happen, existence is checked earlier
-    Main_FatalError("No such file: data/quake_tex.wad");
+    // FIXME: specified by a Lua function
+    //        (do a check there, point user to website if not present)
+    Main_FatalError("No such file: data/quake_tex.wd2");
     return; /* NOT REACHED */
   }
 
