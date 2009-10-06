@@ -2,6 +2,10 @@
 TODO
 ====
 
+++  need to explain (Usage Guide, README) that some modules must
+    be run with additional wads or packages, in particular the
+    ZDoom Beastiary module.
+
 
 +  get more games working (Heretic, Hexen etc)
 
@@ -26,11 +30,13 @@ TODO
      HMP:  1.0 0.4  /  1.0 0.4  /  1.0 0.4
      HNTR: 0.4 0.4  /  0.4 0.4  /  0.4 0.4
 
++  more supplies in start room (ammo for weapon, armor vest)
+
 +  Quests : add locks (new arenas) even when have no keys
 
 -  rarity for bfg10k and railgun for Skulltag
 
--  more ammo in starting room  (biggest pack for starting weapon or bullets)
+-  allow export to .map files
 
 
 -  implement more of Chris's and Johnny's boss maps
