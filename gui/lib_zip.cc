@@ -15,6 +15,11 @@
 #include <sys/stat.h>
 
 
+static int cur_errcode = 0;
+
+static ZipFile * cur_zf;
+
+
 int readZipDirent(ZipFile * zf, ZipDirent * zde)
 {
   if (zf->zdp == NULL)
@@ -72,7 +77,7 @@ char * zip_errstr1(int errcode /*, char ** syserrp */)
 
 char * zip_errstr(ZipFile * zf /*, char ** syserrp */)
 {
-  return zip_errstr1(zf->errcode /*, syserrp */);
+  return zip_errstr1(cur_errcode /*, syserrp */);
 }
 
 
@@ -109,7 +114,7 @@ static ZipFp * zip_open_errcode(ZipFile * zf, ZipFp * zfp, zrerror_t e)
   if (zfp)
     delete_zipfp(zfp);
   
-  zf->errcode = e;
+  cur_errcode = e;
   return NULL;
 }
 
@@ -237,7 +242,7 @@ ZipFp * zip_open(ZipFile * zf, char * name, int flags)
       zfi = (struct zipfileinfo *)((char *)zfi + zfi->next);
     }
 
-  zf->errcode = ZRE_ENOENT;
+  cur_errcode = ZRE_ENOENT;
   return NULL;
 }
 
@@ -307,7 +312,7 @@ int zip_read(ZipFp * zfp, char * buf, int len)
     if (zfp_saveoffset(zf->currentfp) < 0 ||
 	lseek(zf->fd, zfp->offset, SEEK_SET) < 0)
     {
-      zf->errcode = ZRE_ZF_SEEK;
+      cur_errcode = ZRE_ZF_SEEK;
       return -1;
     }
     zf->currentfp = zfp;
@@ -331,7 +336,7 @@ int zip_read(ZipFp * zfp, char * buf, int len)
 	int i = read(zf->fd, zfp->buf32k, cl);
 	if (i <= 0)
 	{
-	  zf->errcode = ZRE_ZF_READ; /* 0 == ZRE_ZF_READ_EOF ? */
+	  cur_errcode = ZRE_ZF_READ; /* 0 == ZRE_ZF_READ_EOF ? */
 	  return -1;
 	}
 	zfp->crestlen -= i;
@@ -346,7 +351,7 @@ int zip_read(ZipFp * zfp, char * buf, int len)
 	zfp->restlen = 0;
       else if (err != Z_OK)
       {
-	zf->errcode = inflate_errmapper(NULL, err);
+	cur_errcode = inflate_errmapper(NULL, err);
 	return -1;
       }
       else
@@ -362,7 +367,7 @@ int zip_read(ZipFp * zfp, char * buf, int len)
     if (rv > 0)
       zfp->restlen-= rv;
     else if (rv < 0)
-      zf->errcode = ZRE_ZF_READ;
+      cur_errcode = ZRE_ZF_READ;
     return rv;
   }
 }  
@@ -397,7 +402,7 @@ int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
 
 	if (zfi->next == 0)
 	{
-	  zf->errcode = ZRE_ENOENT;
+	  cur_errcode = ZRE_ENOENT;
 	  return -1;
 	}
 
@@ -760,13 +765,46 @@ void scan_zipfile(ZipFile * zf)
 #endif  
 
 
-int zipfile_errcode(ZipFile * zf) { return zf->errcode; }
 
-int zipfile_fd(ZipFile * zf) { return zf->fd; }
+//----------------------------------------------------------------
 
-void zipfile_seterrcode(ZipFile * zf, int errcode) { zf->errcode = errcode; }
+bool ZARC_OpenRead(const char *filename)
+{
+  cur_errcode = 0;
+}
 
-ZipFile * zipfp2zipfile(ZipFp * zfp) { return zfp->zf; }
+void ZARC_CloseRead(void)
+{
+}
+
+int ZARC_NumEntries(void)
+{
+  return 0; // FIXME
+}
+
+int ZARC_FindEntry(const char *name)
+{
+  return -1; // not found
+}
+
+int ZARC_EntryLen(int entry)
+{
+  return 0;  // FIXME
+}
+
+const char * ZARC_EntryName(int entry)
+{
+  return "";  // FIXME
+}
+
+bool ZARC_ReadData(int entry, int offset, int length, void *buffer)
+{
+  return false;
+}
+
+void ZARC_ListEntries(void)
+{
+}
 
 
 #if 1  // TESTING CODE
@@ -775,26 +813,60 @@ ZipFile * zipfp2zipfile(ZipFp * zfp) { return zfp->zf; }
 
 int TEST_Zip(int argc, char ** argv)
 {
-  ZipFile * zf;
   char * name = "test.zip";
   zrerror_t rv;
   int i;
   
-  if (argv[1] != NULL)
+  if (argc > 1)
   {
     name = argv[1];
     argv++; argc--;
   }
 
-  printf("Opening zip file `%s'... ", name);
-  if ((zf = openZip(name, &rv)) == NULL)
+  printf("Opening zip file '%s'... ", name);
+
+  if (! ZARC_OpenRead(name))
   {
-    printf("error %d.\n", rv);
+    printf("Failed (error: Unknown)\n");  // FIXME error code,
     return 0;
   }
   printf("OK.\n");
-  
 
+
+  if (argc <= 1)
+  {
+    ZARC_ListEntries();
+  }
+  else
+  {
+    ZipFp * zfp;
+    char buf[17];
+    const char * name = argv[1];
+
+    printf("Opening file `%s' in zip archive... ", name);    
+    zfp = zip_open(zf, (char *)name, ZOF_CASEINSENSITIVE);
+
+    if (zfp == NULL)
+    {
+      printf("error WTF\n"); /// zipfile_errcode(zf));
+      ZARC_CloseRead();
+      return 0;
+    }
+    printf("OK.\n");
+    printf("Contents of the file:\n");
+
+    while ((i = zip_read(zfp, buf, 16)) > 0)
+    {
+      buf[i] = '\0';
+      /*printf("\n*** read %d ***\n", i); fflush(stdout); */
+      printf("%s", buf);
+      /*write(1, buf, i);*/ /* Windows does not have write !!! */
+    }
+    if (i < 0)
+      printf("error BBQ\n");  /// , zipfile_errcode(zf));
+  }
+
+#if 0
   for (i = 0; i < 1; i++)
   {
     ZipDirent zde;
@@ -809,37 +881,9 @@ int TEST_Zip(int argc, char ** argv)
     }
     resetZipDir(zf);
   }
+#endif
 
-  printf("\n");
-  
-  {
-    ZipFp * zfp;
-    char buf[17];
-    const char * name = argv[1]? argv[1]: "readme";
-
-
-    printf("Opening file `%s' in zip archive... ", name);    
-    zfp = zip_open(zf, (char *)name, ZOF_CASEINSENSITIVE);
-
-    if (zfp == NULL)
-    {
-      printf("error %d\n", zipfile_errcode(zf));
-      return 0;
-    }
-    printf("OK.\n");
-    printf("Contents of the file:\n");
-
-    while ((i = zip_read(zfp, buf, 16)) > 0)
-    {
-      buf[i] = '\0';
-      /*printf("\n*** read %d ***\n", i); fflush(stdout); */
-      printf("%s", buf);
-      /*write(1, buf, i);*/ /* Windows does not have write !!! */
-    }
-    if (i < 0)
-      printf("error %d\n", zipfile_errcode(zf));
-  }  
-    
+  ZARC_CloseRead();
   return 0;
 } 
 

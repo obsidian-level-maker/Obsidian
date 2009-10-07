@@ -75,14 +75,6 @@ char * zip_errstr(ZipFile * zf); /* error in other functions */
 
 
 /*
- * Functions to grab information from ZipFile structure (if ever needed)
- */
-int zipfile_errcode(ZipFile * zf);
-void zipfile_seterrcode(ZipFile * zf, int errcode);
-int zipfile_fd(ZipFile * zf);
-
-
-/*
  * Scanning files in zip archive (zip08dir.c)
  */
 int	readZipDirent(ZipFile * zf, ZipDirent * zde);
@@ -177,6 +169,19 @@ struct ZipFp_s
   z_stream d_stream;
 };
 #undef ZipFile
+
+
+bool ZARC_OpenRead(const char *filename);
+void ZARC_CloseRead(void);
+
+int  ZARC_NumEntries(void);
+int  ZARC_FindEntry(const char *name);
+int  ZARC_EntryLen(int entry);
+const char * ZARC_EntryName(int entry);
+
+bool ZARC_ReadData(int entry, int offset, int length, void *buffer);
+
+void ZARC_ListEntries(void);
 
 
 #endif /* __OBLIGE_LIB_ZIP_H__ */
