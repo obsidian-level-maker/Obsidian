@@ -15,6 +15,8 @@
 #include <sys/stat.h>
 
 
+static FILE *zarc_R_fp;
+
 static int cur_errcode = 0;
 
 static ZipFile * cur_zf;
@@ -118,6 +120,25 @@ static ZipFp * zip_open_errcode(ZipFile * zf, ZipFp * zfp, zrerror_t e)
   return NULL;
 }
 
+/*
+ * Make this better.
+ */
+static int inflate_errmapper(ZipFp * zfp, int zerr)
+{
+  if (zfp)
+    delete_zipfp(zfp);
+  
+  return 130 - zerr; /* zerr values 2, 1, 0, -1, -2, ... */
+#if 0  
+  switch (zerr)
+  {
+  case Z_X_Y: rc = 1; break;
+  }
+  return rv;
+#endif  
+}
+
+
 
 static int zfp_saveoffset(ZipFp * zfp)
 {
@@ -134,7 +155,27 @@ static int zfp_saveoffset(ZipFp * zfp)
 }
 
 
-static int zipread_init(ZipFp *, struct zipfileinfo *);
+static int zipread_init(ZipFp * zfp, struct zipfileinfo * zfi)
+{
+  zfp->method = zfi->compr;
+  zfp->restlen = zfi->usize;
+    
+  if (zfp->method)
+  {
+    int err;
+
+  /* memset(&zfp->d_stream, 0, sizeof zfp->d_stream); no need, done earlier */
+  
+    err = inflateInit2(&zfp->d_stream, -MAX_WBITS);
+    
+    if (err != Z_OK)
+      return inflate_errmapper(zfp, err);
+
+    zfp->crestlen = zfi->csize;
+  }
+  return 0;
+}
+
 
 ZipFp * zip_open(ZipFile * zf, char * name, int flags)
 {
@@ -244,45 +285,6 @@ ZipFp * zip_open(ZipFile * zf, char * name, int flags)
 
   cur_errcode = ZRE_ENOENT;
   return NULL;
-}
-
-/*
- * Make this better.
- */
-static int inflate_errmapper(ZipFp * zfp, int zerr)
-{
-  if (zfp)
-    delete_zipfp(zfp);
-  
-  return 130 - zerr; /* zerr values 2, 1, 0, -1, -2, ... */
-#if 0  
-  switch (zerr)
-  {
-  case Z_X_Y: rc = 1; break;
-  }
-  return rv;
-#endif  
-}
-
-static int zipread_init(ZipFp * zfp, struct zipfileinfo * zfi)
-{
-  zfp->method = zfi->compr;
-  zfp->restlen = zfi->usize;
-    
-  if (zfp->method)
-  {
-    int err;
-
-  /* memset(&zfp->d_stream, 0, sizeof zfp->d_stream); no need, done earlier */
-  
-    err = inflateInit2(&zfp->d_stream, -MAX_WBITS);
-    
-    if (err != Z_OK)
-      return inflate_errmapper(zfp, err);
-
-    zfp->crestlen = zfi->csize;
-  }
-  return 0;
 }
 
 
@@ -472,79 +474,6 @@ struct carrydata
   long size;
   long offset;
 };
-
-static int find_eod(int fd, int filesize, struct carrydata * cd);
-static int parse_zdir(int fd, struct carrydata * cd);
-
-static void delete_zipfile(ZipFile * zf)
-{
-  if (zf->zfp)		free(zf->zfp);
-  if (zf->fd >= 0)	close(zf->fd);
-  if (zf->buf32k)	free(zf->buf32k);
-  if (zf->zfi)		free(zf->zfi);
-  free(zf);
-}
-
-static ZipFile * seterr(zrerror_t * errcode_p, ZipFile * zf, int code)
-{
-  if (zf)
-    delete_zipfile(zf);
-
-  if (errcode_p)
-    *errcode_p = (zrerror_t)code;
-
-  return NULL;
-}
-
-int expungeZip(ZipFile * zf)
-{
-  if (zf->refcount)
-    return zf->refcount;
-
-  delete_zipfile(zf);
-  return 0;
-}
-
-ZipFile * openZip(char * filename, zrerror_t * errcode_p)
-{
-  long filesize;
-  struct carrydata cdi = { 0 };
-  int rv;
-  ZipFile * zf;
-
-  if ((zf = (ZipFile *)calloc(1, sizeof *zf)) == NULL)
-    return seterr(errcode_p, NULL, ZRE_OUTOFMEM);
-
-  zf->fd = -1;
-  
-  if ((zf->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
-    return seterr(errcode_p, zf, ZRE_OUTOFMEM);    
-
-  cdi.buf32k = zf->buf32k;
-  
-  if ((zf->fd = open(filename, O_RDONLY|O_BINARY)) < 0)
-    return seterr(errcode_p, zf, ZRE_ZF_OPEN);
-
-  if ((filesize = ffilelen(zf->fd)) < 0)
-    return seterr(errcode_p, zf, ZRE_ZF_STAT);
-
-  if ((rv = find_eod(zf->fd, filesize, &cdi)) != 0)
-    return seterr(errcode_p, zf, rv);
-
-#if 0
-  printf("num_directory_entries: %d\n",	  cdi.entries);
-  printf("size_directory: %ld\n",	  cdi.size);
-  printf("offset_directory_start: %ld \n", cdi.offset);
-#endif
-
-  if ((rv = parse_zdir(zf->fd, &cdi)) != 0)
-    return seterr(errcode_p, zf, rv);
-
-  zf->zfi = cdi.zfi;
-  zf->zdp = cdi.zfi;
-  
-  return zf;
-}
 
 
 #define ECDREADSIZE 1024
@@ -736,35 +665,78 @@ static int parse_zdir(int fd, struct carrydata * cd)
     
   return 0;
 }
-  
-#if 0
-void scan_zipfile(ZipFile * zf)
+
+static void delete_zipfile(ZipFile * zf)
 {
-  struct zipfileinfo * zfi = zf->zfi;
-
-  if (zf->zfi == NULL) return;
-    
-  while (1)
-  {
-    printf("\ncompression method: %d", zfi->compr);
-    if (zfi->compr == 0) printf(" (stored)");
-    else if (zfi->compr == 8) printf(" (deflated)");
-    else printf(" (unknown)");
-    printf("\ncrc32: %x\n", zfi->crc32);
-    printf("compressed size: %d\n", zfi->csize);
-    printf("uncompressed size: %d\n", zfi->usize);
-    printf("offset of file in archive: %d\n", zfi->offset);
-    printf("filename: %s\n\n", zfi->fname);
-
-    if (zfi->next == 0)
-      return;
-    (char *)zfi += zfi->next;
-    sleep(1);
- }
+  if (zf->zfp)		free(zf->zfp);
+  if (zf->fd >= 0)	close(zf->fd);
+  if (zf->buf32k)	free(zf->buf32k);
+  if (zf->zfi)		free(zf->zfi);
+  free(zf);
 }
-#endif  
 
+static ZipFile * seterr(zrerror_t * errcode_p, ZipFile * zf, int code)
+{
+  if (zf)
+    delete_zipfile(zf);
 
+  if (errcode_p)
+    *errcode_p = (zrerror_t)code;
+
+  return NULL;
+}
+
+int expungeZip(ZipFile * zf)
+{
+  if (zf->refcount)
+    return zf->refcount;
+
+  delete_zipfile(zf);
+  return 0;
+}
+
+ZipFile * openZip(char * filename, zrerror_t * errcode_p)
+{
+  long filesize;
+  struct carrydata cdi = { 0 };
+  int rv;
+  ZipFile * zf;
+
+  if ((zf = (ZipFile *)calloc(1, sizeof *zf)) == NULL)
+    return seterr(errcode_p, NULL, ZRE_OUTOFMEM);
+
+  zf->fd = -1;
+  
+  if ((zf->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
+    return seterr(errcode_p, zf, ZRE_OUTOFMEM);    
+
+  cdi.buf32k = zf->buf32k;
+  
+  if ((zf->fd = open(filename, O_RDONLY|O_BINARY)) < 0)
+    return seterr(errcode_p, zf, ZRE_ZF_OPEN);
+
+  if ((filesize = ffilelen(zf->fd)) < 0)
+    return seterr(errcode_p, zf, ZRE_ZF_STAT);
+
+  if ((rv = find_eod(zf->fd, filesize, &cdi)) != 0)
+    return seterr(errcode_p, zf, rv);
+
+#if 0
+  printf("num_directory_entries: %d\n",	  cdi.entries);
+  printf("size_directory: %ld\n",	  cdi.size);
+  printf("offset_directory_start: %ld \n", cdi.offset);
+#endif
+
+  if ((rv = parse_zdir(zf->fd, &cdi)) != 0)
+    return seterr(errcode_p, zf, rv);
+
+  zf->zfi = cdi.zfi;
+  zf->zdp = cdi.zfi;
+  
+  return zf;
+}
+
+  
 
 //----------------------------------------------------------------
 
