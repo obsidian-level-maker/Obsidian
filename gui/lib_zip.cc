@@ -768,3 +768,82 @@ void zipfile_seterrcode(ZipFile * zf, int errcode) { zf->errcode = errcode; }
 
 ZipFile * zipfp2zipfile(ZipFp * zfp) { return zfp->zf; }
 
+
+#if 1  // TESTING CODE
+
+#include <stdio.h>
+
+int TEST_Zip(int argc, char ** argv)
+{
+  ZipFile * zf;
+  char * name = "test.zip";
+  zrerror_t rv;
+  int i;
+  
+  if (argv[1] != NULL)
+  {
+    name = argv[1];
+    argv++; argc--;
+  }
+
+  printf("Opening zip file `%s'... ", name);
+  if ((zf = openZip(name, &rv)) == NULL)
+  {
+    printf("error %d.\n", rv);
+    return 0;
+  }
+  printf("OK.\n");
+  
+
+  for (i = 0; i < 1; i++)
+  {
+    ZipDirent zde;
+    
+    printf("\n");
+    printf("DIRECTORY:\n");
+    printf("----------\n");
+
+    while(!readZipDirent(zf, &zde))
+    {
+      printf("name %s, compr %d, size %d\n", zde.name, zde.compr, zde.size);
+    }
+    resetZipDir(zf);
+  }
+
+  printf("\n");
+  
+  {
+    ZipFp * zfp;
+    char buf[17];
+    const char * name = argv[1]? argv[1]: "readme";
+
+
+    printf("Opening file `%s' in zip archive... ", name);    
+    zfp = zip_open(zf, (char *)name, ZOF_CASEINSENSITIVE);
+
+    if (zfp == NULL)
+    {
+      printf("error %d\n", zipfile_errcode(zf));
+      return 0;
+    }
+    printf("OK.\n");
+    printf("Contents of the file:\n");
+
+    while ((i = zip_read(zfp, buf, 16)) > 0)
+    {
+      buf[i] = '\0';
+      /*printf("\n*** read %d ***\n", i); fflush(stdout); */
+      printf("%s", buf);
+      /*write(1, buf, i);*/ /* Windows does not have write !!! */
+    }
+    if (i < 0)
+      printf("error %d\n", zipfile_errcode(zf));
+  }  
+    
+  return 0;
+} 
+
+#endif
+
+//--- editor settings ---
+// vi:ts=2:sw=2:expandtab
