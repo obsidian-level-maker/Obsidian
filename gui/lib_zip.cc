@@ -22,7 +22,38 @@ static int cur_errcode = 0;
 static ZipFile * cur_zf;
 
 
-int readZipDirent(ZipFile * zf, ZipDirent * zde)
+/*
+ * Opening/closing zipfile for use. (zip08x.c)
+ */
+static ZipFile *  openZip(char * filename, zrerror_t * errcode_p);
+static int	expungeZip(ZipFile * zf);
+/*
+ * Getting error strings (zip08errs.c)
+ */
+static char * zip_errstr1(int errcode); /* error in openZip() */
+static char * zip_errstr(ZipFile * zf); /* error in other functions */
+/*
+ * Scanning files in zip archive (zip08dir.c)
+ */
+static int readZipDirent(ZipFile * zf, ZipDirent * zde);
+static void	resetZipDir(ZipFile * zf);
+/*
+ * 'opening', 'closing' and reading invidual files in zip archive. (zip08file.c
+ */
+static ZipFp * zip_open(ZipFile * zf, char * name, int flags);
+static void	zip_close(ZipFp * zfp);
+static int	zip_read(ZipFp * zfp, char * buf, int len);
+/*
+ * Functions to grab information from ZipFP structure (if ever needed)
+ */
+static ZipFile * zipfp_zipfile(ZipFp * zfp);
+/*
+ * reading info of a single file (zip08stat.c)
+ */
+static int	zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags);
+
+
+static int readZipDirent(ZipFile * zf, ZipDirent * zde)
 {
   if (zf->zdp == NULL)
     return -1;
@@ -39,7 +70,7 @@ int readZipDirent(ZipFile * zf, ZipDirent * zde)
   return 0;
 }
 
-void resetZipDir(ZipFile * zf)
+static void resetZipDir(ZipFile * zf)
 {
   if (zf->zfi)
     zf->zdp = zf->zfi;
@@ -69,7 +100,7 @@ static char * zip08errlist[] =
 
 static const int errlistsiz = sizeof zip08errlist / sizeof zip08errlist[0] - 1;
 
-char * zip_errstr1(int errcode /*, char ** syserrp */)
+static char * zip_errstr1(int errcode /*, char ** syserrp */)
 {
   if ((unsigned)errcode > (unsigned)errlistsiz)
     errcode = errlistsiz;
@@ -77,7 +108,7 @@ char * zip_errstr1(int errcode /*, char ** syserrp */)
   return zip08errlist[errcode];
 }
 
-char * zip_errstr(ZipFile * zf /*, char ** syserrp */)
+static char * zip_errstr(ZipFile * zf /*, char ** syserrp */)
 {
   return zip_errstr1(cur_errcode /*, syserrp */);
 }
@@ -103,8 +134,8 @@ static void delete_zipfp(ZipFp * zfp)
   
   zf->refcount--;
 
-  memset(zfp, 0, sizeof *zfp); /* ease to notice possible
-				  dangling reference errors */
+  memset(zfp, 0, sizeof *zfp); /* ease to notice possible dangling reference errors */
+
   if (zf->zfp == NULL)
     zf->zfp = zfp;
   else
@@ -177,118 +208,118 @@ static int zipread_init(ZipFp * zfp, struct zipfileinfo * zfi)
 }
 
 
-ZipFp * zip_open(ZipFile * zf, char * name, int flags)
+static ZipFp * zip_open(ZipFile * zf, char * name, int flags)
 {
   ZipFp * zfp;
   struct zipfileinfo * zfi = zf->zfi;
   int (*comprfunc)(const char *, const char *);
-  
+
   comprfunc = (flags & ZOF_CASEINSENSITIVE)? strcasecmp: strcmp;
 
 
   if (zfi != NULL)
-    while (1)
-    {
-      char * zn;
+  {
+    cur_errcode = ZRE_ENOENT;
+    return NULL;
+  }
 
-      if ((flags & ZOF_IGNOREPATH) &&
-          (zn = strrchr(zfi->fname, '/')) != NULL)
-        zn+= 1;
-      else
-        zn = zfi->fname;
+  while (1)
+  {
+    char * zn;
+
+    if ((flags & ZOF_IGNOREPATH) &&
+        (zn = strrchr(zfi->fname, '/')) != NULL)
+      zn+= 1;
+    else
+      zn = zfi->fname;
 
 #if 0      
-      printf("name %s, zn %s, compr %d, size %d\n",
-          zfi->fname, zn, zfi->compr, zfi->usize);
+    printf("name %s, zn %s, compr %d, size %d\n",
+        zfi->fname, zn, zfi->compr, zfi->usize);
 #endif
-      if (comprfunc(zn, name) == 0)
+    if (comprfunc(zn, name) == 0)
+    {
+      int i;
+
+      if (zfi->compr != 0 && zfi->compr != 8)
       {
-        int i;
+        return zip_open_errcode(zf, NULL, ZRE_UNSUPP_COMPR);
+      }
 
-        switch (zfi->compr)
-        {
-          case 0:
-          case 8:
-            break;
-          default:
-            return zip_open_errcode(zf, NULL, ZRE_UNSUPP_COMPR);
-        }
+      if (zf->zfp) /* use cached copy if available */
+      {
+        zfp = zf->zfp;
+        zf->zfp = NULL;
+        /* memset(zfp, 0, sizeof *zfp); cleared in delete_zipfp() */
+      }
+      else
+        if ((zfp = (ZipFp *)calloc(1, sizeof *zfp)) == NULL)
+          return zip_open_errcode(zf, NULL, ZRE_OUTOFMEM);
 
-        if (zf->zfp) /* use cached copy if available */
-        {
-          zfp = zf->zfp;
-          zf->zfp = NULL;
-          /* memset(zfp, 0, sizeof *zfp); cleared in delete_zipfp() */
-        }
-        else
-          if ((zfp = (ZipFp *)calloc(1, sizeof *zfp)) == NULL)
-            return zip_open_errcode(zf, NULL, ZRE_OUTOFMEM);
+      zfp->zf = zf;
+      zf->refcount++;
 
-        zfp->zf = zf;
-        zf->refcount++;
+      if (zf->buf32k) /* use cached copy if available */
+      {
+        zfp->buf32k = zf->buf32k;
+        zf->buf32k = NULL;
+      }
+      else if ((zfp->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
+          return zip_open_errcode(zf, zfp, ZRE_OUTOFMEM);
 
-        if (zf->buf32k) /* use cached copy if available */
-        {
-          zfp->buf32k = zf->buf32k;
-          zf->buf32k = NULL;
-        }
-        else
-          if ((zfp->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
-            return zip_open_errcode(zf, zfp, ZRE_OUTOFMEM);
+      /*
+       * In order to support simultaneous open files in one zip archive
+       * we'll fix the fd offset when opening new file/changing which
+       * file to read...
+       */ 
 
-        /*
-         * In order to support simultaneous open files in one zip archive
-         * we'll fix the fd offset when opening new file/changing which
-         * file to read...
-         */ 
+      if (zfp_saveoffset(zf->currentfp) < 0)
+        return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
 
-        if (zfp_saveoffset(zf->currentfp) < 0)
-          return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
+      zfp->offset = zfi->offset;
+      zf->currentfp = zfp;
 
-        zfp->offset = zfi->offset;
-        zf->currentfp = zfp;
+      if (lseek(zf->fd, zfi->offset, SEEK_SET) < 0)
+        return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
 
-        if (lseek(zf->fd, zfi->offset, SEEK_SET) < 0)
-          return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
+      { /* skip local header */
+        /* should test tons of other info, but trust that those are correct*/
+        int moff;
+        char * p = zfp->buf32k;
 
-        { /* skip local header */
-          /* should test tons of other info, but trust that those are correct*/
-          int moff;
-          char * p = zfp->buf32k;
+        if (read(zf->fd, p, 30) < 30)
+          return zip_open_errcode(zf, zfp, ZRE_ZF_READ);
 
-          if (read(zf->fd, p, 30) < 30)
-            return zip_open_errcode(zf, zfp, ZRE_ZF_READ);
-
-          if (p[0] != 'P' || p[1] != 'K' || p[2] != '\003' || p[3] != '\004')
-            return zip_open_errcode(zf, zfp, ZRE_CORRUPTED);
+        if (p[0] != 'P' || p[1] != 'K' || p[2] != '\003' || p[3] != '\004')
+          return zip_open_errcode(zf, zfp, ZRE_CORRUPTED);
 
 #define LEN_FILENAME 26
 #define LEN_EXTRA_FIELD 28
 
-          moff = makeword((unsigned char *)&p[LEN_FILENAME]) +
-            makeword((unsigned char *)&p[LEN_EXTRA_FIELD]);
+        moff = makeword((unsigned char *)&p[LEN_FILENAME]) +
+          makeword((unsigned char *)&p[LEN_EXTRA_FIELD]);
 
-          if (lseek(zf->fd, moff, SEEK_CUR) < 0)
-            return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
-        }
-
-        if ((i = zipread_init(zfp, zfi)) != 0)
-          return zip_open_errcode(zf, zfp, (zrerror_t)i);
-
-        return zfp;
+        if (lseek(zf->fd, moff, SEEK_CUR) < 0)
+          return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
       }
-      /* else */
-      if (zfi->next == 0)
-        break;
-      zfi = (struct zipfileinfo *)((char *)zfi + zfi->next);
+
+      if ((i = zipread_init(zfp, zfi)) != 0)
+        return zip_open_errcode(zf, zfp, (zrerror_t)i);
+
+      return zfp;
     }
+    /* else */
+    if (zfi->next == 0)
+      break;
+    zfi = (struct zipfileinfo *)((char *)zfi + zfi->next);
+  }
 
   cur_errcode = ZRE_ENOENT;
   return NULL;
 }
 
 
-void zip_close(ZipFp * zfp)
+static void zip_close(ZipFp * zfp)
 {
   delete_zipfp(zfp);
 }
@@ -296,7 +327,7 @@ void zip_close(ZipFp * zfp)
 /*
  * This routine needs most polishing, but should already work quite well.
  */
-int zip_read(ZipFp * zfp, char * buf, int len)
+static int zip_read(ZipFp * zfp, char * buf, int len)
 {
   ZipFile * zf = zfp->zf;
   int l = zfp->restlen > len? len: zfp->restlen;
@@ -312,58 +343,16 @@ int zip_read(ZipFp * zfp, char * buf, int len)
   if (zf->currentfp != zfp)
   {
     if (zfp_saveoffset(zf->currentfp) < 0 ||
-	lseek(zf->fd, zfp->offset, SEEK_SET) < 0)
+        lseek(zf->fd, zfp->offset, SEEK_SET) < 0)
     {
       cur_errcode = ZRE_ZF_SEEK;
       return -1;
     }
     zf->currentfp = zfp;
   }
-  
+
   /* if more methods is to be supported, change this to `switch ()' */
-  if (zfp->method) /* method != 0   == 8, inflate */
-  {
-    zfp->d_stream.avail_out = l;
-    zfp->d_stream.next_out = (unsigned char *)buf;
-
-    do {
-      int err;
-      int startlen;
-
-      if (zfp->crestlen > 0 && zfp->d_stream.avail_in == 0)
-      {
-	int cl = zfp->crestlen > BUF32KSIZE? BUF32KSIZE: zfp->crestlen;
-/*	int cl = zfp->crestlen > 128? 128: zfp->crestlen; */
-
-	int i = read(zf->fd, zfp->buf32k, cl);
-	if (i <= 0)
-	{
-	  cur_errcode = ZRE_ZF_READ; /* 0 == ZRE_ZF_READ_EOF ? */
-	  return -1;
-	}
-	zfp->crestlen -= i;
-	zfp->d_stream.avail_in = i;
-	zfp->d_stream.next_in = (unsigned char *)zfp->buf32k;
-      }
-
-      startlen = zfp->d_stream.total_out;
-      err = inflate(&zfp->d_stream, Z_NO_FLUSH);
-
-      if (err == Z_STREAM_END)
-	zfp->restlen = 0;
-      else if (err != Z_OK)
-      {
-	cur_errcode = inflate_errmapper(NULL, err);
-	return -1;
-      }
-      else
-	zfp->restlen -= (zfp->d_stream.total_out - startlen);
-
-    } while (zfp->restlen && zfp->d_stream.avail_out);
-
-    return l - zfp->d_stream.avail_out;
-  }
-  else /* method == 0 -- unstore */
+  if (zfp->method == 0)  /* 0 = store */
   {
     rv = read(zf->fd, buf, l);
     if (rv > 0)
@@ -372,6 +361,48 @@ int zip_read(ZipFp * zfp, char * buf, int len)
       cur_errcode = ZRE_ZF_READ;
     return rv;
   }
+
+  /* method == 8 -- inflate */
+
+  zfp->d_stream.avail_out = l;
+  zfp->d_stream.next_out = (unsigned char *)buf;
+
+  do {
+    int err;
+    int startlen;
+
+    if (zfp->crestlen > 0 && zfp->d_stream.avail_in == 0)
+    {
+      int cl = zfp->crestlen > BUF32KSIZE? BUF32KSIZE: zfp->crestlen;
+      /*	int cl = zfp->crestlen > 128? 128: zfp->crestlen; */
+
+      int i = read(zf->fd, zfp->buf32k, cl);
+      if (i <= 0)
+      {
+        cur_errcode = ZRE_ZF_READ; /* 0 == ZRE_ZF_READ_EOF ? */
+        return -1;
+      }
+      zfp->crestlen -= i;
+      zfp->d_stream.avail_in = i;
+      zfp->d_stream.next_in = (unsigned char *)zfp->buf32k;
+    }
+
+    startlen = zfp->d_stream.total_out;
+    err = inflate(&zfp->d_stream, Z_NO_FLUSH);
+
+    if (err == Z_STREAM_END)
+      zfp->restlen = 0;
+    else if (err != Z_OK)
+    {
+      cur_errcode = inflate_errmapper(NULL, err);
+      return -1;
+    }
+    else
+      zfp->restlen -= (zfp->d_stream.total_out - startlen);
+
+  } while (zfp->restlen && zfp->d_stream.avail_out);
+
+  return l - zfp->d_stream.avail_out;
 }  
 
 
@@ -382,7 +413,7 @@ int zip_read(ZipFp * zfp, char * buf, int len)
  * (or then not, but macros/inline functions rule to keep code consistent)
  */
 
-int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
+static int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
 {
   struct zipfileinfo * zfi = zf->zfi;
   int (*comprfunc)(const char *, const char *);
@@ -396,26 +427,26 @@ int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
       name = n + 1;
   }
 
-    if (zfi != NULL)
-      while (1)
+  if (zfi != NULL)
+    while (1)
+    {
+      if (comprfunc(zfi->fname, name) == 0)
+        break;
+
+      if (zfi->next == 0)
       {
-	if (comprfunc(zfi->fname, name) == 0)
-	  break;
-
-	if (zfi->next == 0)
-	{
-	  cur_errcode = ZRE_ENOENT;
-	  return -1;
-	}
-
-	zfi = (struct zipfileinfo *)((char *)zfi + zfi->next);
+        cur_errcode = ZRE_ENOENT;
+        return -1;
       }
 
-    zs->compr = zfi->compr;
-    zs->size  = zfi->usize;
-    zs->name  = zfi->fname;
+      zfi = (struct zipfileinfo *)((char *)zfi + zfi->next);
+    }
 
-    return 0;
+  zs->compr = zfi->compr;
+  zs->size  = zfi->usize;
+  zs->name  = zfi->fname;
+
+  return 0;
 }
 
 
@@ -487,7 +518,7 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
   int offoff;
   int firstoff = TRUE;
   int tmp;
-  
+
   if (filesize < 22)
     return ZRE_ZF_TOO_SHORT;
 
@@ -495,7 +526,7 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
   {
     int scanoff;
     char * buf;
-    
+
     offoff = filesize < ECDREADSIZE? filesize: ECDREADSIZE;
 
     offset -= offoff;
@@ -504,7 +535,7 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
 #if 0    
     printf("%d %d %d\n", offoff, filesize, offset);
 #endif    
-    
+
     if (bufptr < 0)
       break;
 
@@ -512,7 +543,7 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
       return ZRE_ZF_SEEK;
 
     buf = cd->buf32k + bufptr;
-    
+
     if ((tmp = read(fd, buf, offoff)) < offoff)
       return ZRE_ZF_READ;
 
@@ -525,18 +556,20 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
     }
 
     for (scanoff = offoff - 1; scanoff >= 0; scanoff--)
+    {
       if (buf[scanoff] == 'P' && buf[scanoff + 1] == 'K' && 
-	  buf[scanoff + 2] == '\005' &&
-	  buf[scanoff + 3] == '\006')
+          buf[scanoff + 2] == '\005' &&
+          buf[scanoff + 3] == '\006')
       {
-	buf += scanoff;
+        buf += scanoff;
 
-	cd->entries = makeword((unsigned char *)&buf[NUM_DIRECTORY_ENTRIES]);
-	cd->size = makelong((unsigned char *)&buf[SIZE_DIRECTORY]);
-	cd->offset = makelong((unsigned char *)&buf[OFFSET_DIRECTORY_START]);
-	
-	return 0;
+        cd->entries = makeword((unsigned char *)&buf[NUM_DIRECTORY_ENTRIES]);
+        cd->size = makelong((unsigned char *)&buf[SIZE_DIRECTORY]);
+        cd->offset = makelong((unsigned char *)&buf[OFFSET_DIRECTORY_START]);
+
+        return 0;
       }
+    }
   }
   return ZRE_EDH_MISSING;
 }
@@ -672,6 +705,7 @@ static void delete_zipfile(ZipFile * zf)
   if (zf->fd >= 0)	close(zf->fd);
   if (zf->buf32k)	free(zf->buf32k);
   if (zf->zfi)		free(zf->zfi);
+
   free(zf);
 }
 
@@ -686,7 +720,7 @@ static ZipFile * seterr(zrerror_t * errcode_p, ZipFile * zf, int code)
   return NULL;
 }
 
-int expungeZip(ZipFile * zf)
+static int expungeZip(ZipFile * zf)
 {
   if (zf->refcount)
     return zf->refcount;
@@ -695,7 +729,7 @@ int expungeZip(ZipFile * zf)
   return 0;
 }
 
-ZipFile * openZip(char * filename, zrerror_t * errcode_p)
+static ZipFile * openZip(char * filename, zrerror_t * errcode_p)
 {
   long filesize;
   struct carrydata cdi = { 0 };

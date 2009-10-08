@@ -61,45 +61,7 @@ ZipDirent;
 
 typedef struct ZipDirent_s ZipStat;
 
-/*
- * Opening/closing zipfile for use. (zip08x.c)
- */
-ZipFile *  openZip(char * filename, zrerror_t * errcode_p);
-int	expungeZip(ZipFile * zf);
 
-/*
- * Getting error strings (zip08errs.c)
- */
-char * zip_errstr1(int errcode); /* error in openZip() */
-char * zip_errstr(ZipFile * zf); /* error in other functions */
-
-
-/*
- * Scanning files in zip archive (zip08dir.c)
- */
-int	readZipDirent(ZipFile * zf, ZipDirent * zde);
-void	resetZipDir(ZipFile * zf);
-
-/*
- * 'opening', 'closing' and reading invidual files in zip archive. (zip08file.c
- */
-
-ZipFp * zip_open(ZipFile * zf, char * name, int flags);
-void	zip_close(ZipFp * zfp);
-int	zip_read(ZipFp * zfp, char * buf, int len);
-
-
-/*
- * Functions to grab information from ZipFP structure (if ever needed)
- */
-ZipFile * zipfp_zipfile(ZipFp * zfp);
-
-
-/*
- * reading info of a single file (zip08stat.c)
- */
-
-int	zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags);
 
 
 //----------------------------------------------------------------
