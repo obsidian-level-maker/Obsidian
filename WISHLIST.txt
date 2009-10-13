@@ -14,12 +14,11 @@ Other Games:
 
 -  Hexen II
 -  Heretic II (uses same format as Quake II ??)
--  Soldier of Fortune (extended Q2 format)
+-  Duke Nukem 3D
 
+?  Soldier of Fortune (extended Q2 format)
 ?  Dark Forces
 ?  Half-Life
-?  Marathon 2/Inf (prolly not, AlephOne too limited)
-?  Duke Nukem 3D
 
 
 Ceilings:

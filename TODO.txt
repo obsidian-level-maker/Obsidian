@@ -14,6 +14,9 @@ TODO
 +  add in more scenery: lamps, computers etc
 
 
++  BUG: arena E4M6 is not completeable (tag 666 does not work).
+
+
 -  stairs: messed up in some themes??
 
 +  review monster quantities, need some increase over the course
