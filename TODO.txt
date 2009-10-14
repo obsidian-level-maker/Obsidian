@@ -14,7 +14,7 @@ TODO
 +  add in more scenery: lamps, computers etc
 
 
-+  BUG: arena E4M6 is not completeable (tag 666 does not work).
++  BUG: arena E4M6 is not completeable (needs a tag 666 door).
 
 
 -  stairs: messed up in some themes??
