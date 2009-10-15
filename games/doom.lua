@@ -536,7 +536,7 @@ DOOM1_MATERIALS =
   NUKESLAD = { t="NUKESLAD", f="FLAT4" },  -- poor match
   PLANET1  = { t="PLANET1",  f="FLAT23" },
   REDWALL1 = { t="REDWALL1", f="FLOOR1_6" },
-  ROCKRED1 = { t="ROCKRED1", f="RROCK01" },
+  ROCKRED1 = { t="ROCKRED1", f="FLOOR6_1" },
   SKINBORD = { t="SKINBORD", f="FLAT5_5" },
   SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" },  -- poor match
   SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" },  -- poor match
