@@ -15,6 +15,123 @@
 #include <sys/stat.h>
 
 
+typedef enum {
+/*  0 */ ZRE_NO_ERROR,	/* no error, may be used if user sets it. */
+/*  1 */ ZRE_OUTOFMEM,	/* out of memory */
+/*  2 */ ZRE_ZF_OPEN,	/* failed to open zipfile, see errno for details */
+/*  3 */ ZRE_ZF_STAT,   /* failed to fstat zipfile, see errno for details */
+/*  4 */ ZRE_ZF_SEEK,   /* failed to lseek zipfile, see errno for details */
+/*  5 */ ZRE_ZF_READ,   /* failed to read zipfile, see errno for details */
+/*  6 */ ZRE_ZF_TOO_SHORT,
+/*  7 */ ZRE_EDH_MISSING,
+/*  8 */ ZRE_DIRSIZE,
+/*  9 */ ZRE_ENOENT,
+/* 10 */ ZRE_UNSUPP_COMPR,
+/* 11 */ ZRE_INFLATE,
+/* 12 */ ZRE_CORRUPTED,
+/* 13 */ ZRE_UNDEF
+}
+zrerror_t;
+
+/*
+ * zip_open flags.
+ */
+#define ZOF_CASEINSENSITIVE	0x01
+#define ZOF_IGNOREPATH		0x02
+
+
+// FIXME FIXME
+typedef char gint8;
+typedef unsigned char guint8;
+
+typedef short gint16;
+typedef unsigned short guint16;
+
+typedef int gint32;
+typedef unsigned int guint32;
+
+/* gint is a variable type that has the same size as pointer variable */
+typedef int gint;
+typedef unsigned int guint;
+
+#define GINT_TO_POINTER(i) ((void *)(i))
+#define GPOINTER_TO_INT(p) ((gint)(p))
+
+
+struct zipfileinfo;
+
+
+
+typedef struct ZipFile_s ZipFile;
+typedef struct ZipFp_s ZipFp;
+
+typedef struct ZipDirent_s
+{
+  int  compr; /* compression method (for user's information)*/
+  int  size; /* file size */
+  char * name;  /* file name */
+}
+ZipDirent;
+
+typedef struct ZipDirent_s ZipStat;
+
+
+
+
+#define TRUE   1
+#define FALSE  0
+
+struct ZipFp_s;
+
+#define ZipFp struct ZipFp_s
+struct ZipFile_s
+{
+  int fd;
+  int refcount;
+  ZipFp * zfp;   /* --- reduce a lot of allocations/deallocations by */
+  char * buf32k; /* --- caching one entry of these data structures */
+  struct zipfileinfo * zfi;
+  struct zipfileinfo * zdp; /* zip directpry pointer, for dirent stuff */
+  ZipFp * currentfp; /* last zfp used... */
+  int /* zrerror_t */ errcode;
+}; 
+#undef ZipFp
+
+#define BUF32KSIZE 32768
+
+guint32 __zip08x_internal_makelong(unsigned char * s);
+guint16 __zip08x_internal_makeword(unsigned char * s);
+
+#define makelong(x) __zip08x_internal_makelong(x)
+#define makeword(x) __zip08x_internal_makeword(x)
+
+
+/*
+ * ZipFp structure... currently no need to unionize, since structure needed
+ * for inflate is superset of structure needed for unstore.
+ *
+ * Don't make this public. Instead, create methods for needed operations.
+ */
+
+struct ZipFile_s;
+
+#define ZipFile struct ZipFile_s
+struct ZipFp_s
+{
+  ZipFile * zf;
+  int method;
+  int restlen;
+  int crestlen;
+  char * buf32k;
+  off_t offset; /* offset from the start of zipfile... */
+  z_stream d_stream;
+};
+#undef ZipFile
+
+
+//------------------------------------------------------------------------
+
+
 static FILE *zarc_R_fp;
 
 static int cur_errcode = 0;
@@ -772,11 +889,15 @@ static ZipFile * openZip(char * filename, zrerror_t * errcode_p)
 
   
 
-//----------------------------------------------------------------
+//------------------------------------------------------------------------
 
 bool ZARC_OpenRead(const char *filename)
 {
   cur_errcode = 0;
+
+  // FIXME
+
+  return false;
 }
 
 void ZARC_CloseRead(void)
@@ -850,7 +971,7 @@ int TEST_Zip(int argc, char ** argv)
     const char * name = argv[1];
 
     printf("Opening file `%s' in zip archive... ", name);    
-    zfp = zip_open(zf, (char *)name, ZOF_CASEINSENSITIVE);
+    zfp = zip_open(cur_zf, (char *)name, ZOF_CASEINSENSITIVE);
 
     if (zfp == NULL)
     {
