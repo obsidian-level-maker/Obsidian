@@ -15,6 +15,21 @@
 #include <sys/stat.h>
 
 
+/*
+ * this structure cannot be wildly enlarged...
+ */
+struct zipfileinfo
+{
+  u32_t usize;
+  u32_t csize;
+  u32_t crc32;
+  u32_t offset; /* offset of file in zipfile */
+  u16_t next; /* next zipfileinfo structure (in linked list)*/
+  byte  compr;
+  char  fname[1];
+};
+
+
 typedef enum {
 /*  0 */ ZRE_NO_ERROR,	/* no error, may be used if user sets it. */
 /*  1 */ ZRE_OUTOFMEM,	/* out of memory */
@@ -32,6 +47,26 @@ typedef enum {
 /* 13 */ ZRE_UNDEF
 }
 zrerror_t;
+
+/* FINE TUNE XXX */
+static char * zip08errlist[] =
+{
+  /*  0  */ "No error",
+  /*  1  */ "Out Of memory",
+  /*  2  */ "Failed to open %s",
+  /*  3  */ "Failed to fstat %s",
+  /*  4  */ "Failed to lseek %s",
+  /*  5  */ "Failed to read %s",
+  /*  6  */ "Zipfile %s too short",
+  /*  7  */ "End of directory header missing",
+  /*  8  */ "Directory size too big...",
+  /*  9  */ "No such file or directory",
+  /* 10  */ "Unsupported compression format"
+  /* 11  */ "Inflate error",	    /* add better inflate error handling */
+  /* 12  */ "Zipfile corrupted", 
+  /* 13  */ "Undefined errstr"
+};
+
 
 /*
  * zip_open flags.
@@ -185,25 +220,6 @@ static void resetZipDir(ZipFile * zf)
 }
 
 
-/* FINE TUNE XXX */
-static char * zip08errlist[] =
-{
-  /*  0  */ "No error",
-  /*  1  */ "Out Of memory",
-  /*  2  */ "Failed to open %s",
-  /*  3  */ "Failed to fstat %s",
-  /*  4  */ "Failed to lseek %s",
-  /*  5  */ "Failed to read %s",
-  /*  6  */ "Zipfile %s too short",
-  /*  7  */ "End of directory header missing",
-  /*  8  */ "Directory size too big...",
-  /*  9  */ "No such file or directory",
-  /* 10  */ "Unsupported compression format"
-  /* 11  */ "Inflate error",	    /* add better inflate error handling */
-  /* 12  */ "Zipfile corrupted", 
-  /* 13  */ "Undefined errstr"
-};
-
 static const int errlistsiz = sizeof zip08errlist / sizeof zip08errlist[0] - 1;
 
 static char * zip_errstr1(int errcode /*, char ** syserrp */)
@@ -274,7 +290,6 @@ static int inflate_errmapper(ZipFp * zfp, int zerr)
   return rv;
 #endif  
 }
-
 
 
 static int zfp_saveoffset(ZipFp * zfp)
@@ -359,8 +374,11 @@ static ZipFp * zip_open(ZipFile * zf, char * name, int flags)
         /* memset(zfp, 0, sizeof *zfp); cleared in delete_zipfp() */
       }
       else
-        if ((zfp = (ZipFp *)calloc(1, sizeof *zfp)) == NULL)
+      {
+        zfp = (ZipFp *)calloc(1, sizeof *zfp);
+        if (zfp == NULL)
           return zip_open_errcode(zf, NULL, ZRE_OUTOFMEM);
+      }
 
       zfp->zf = zf;
       zf->refcount++;
@@ -370,8 +388,12 @@ static ZipFp * zip_open(ZipFile * zf, char * name, int flags)
         zfp->buf32k = zf->buf32k;
         zf->buf32k = NULL;
       }
-      else if ((zfp->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
+      else
+      {
+        zfp->buf32k = (char *)malloc(BUF32KSIZE);
+        if (zfp->buf32k == NULL)
           return zip_open_errcode(zf, zfp, ZRE_OUTOFMEM);
+      }
 
       /*
        * In order to support simultaneous open files in one zip archive
@@ -409,7 +431,8 @@ static ZipFp * zip_open(ZipFile * zf, char * name, int flags)
           return zip_open_errcode(zf, zfp, ZRE_ZF_SEEK);
       }
 
-      if ((i = zipread_init(zfp, zfi)) != 0)
+      i = zipread_init(zfp, zfi);
+      if (i != 0)
         return zip_open_errcode(zf, zfp, (zrerror_t)i);
 
       return zfp;
@@ -620,27 +643,24 @@ struct carrydata
 
 static int find_eod(int fd, int filesize, struct carrydata * cd)
 {
-  long offset;
   long bufptr = BUF32KSIZE;
-  int offoff;
   int firstoff = TRUE;
-  int tmp;
 
   if (filesize < 22)
-    return ZRE_ZF_TOO_SHORT;
-
-  for (offset = filesize; filesize; filesize = offset)
   {
-    int scanoff;
-    char * buf;
+    LogPrintf("ZARC_OpenRead: not a zip file (too small)\n");
+    return -1;
+  }
 
-    offoff = filesize < ECDREADSIZE? filesize: ECDREADSIZE;
+  for (int offset = filesize; filesize; filesize = offset)
+  {
+    int readsize = MIN(filesize, ECDREADSIZE);
 
-    offset -= offoff;
-    bufptr -= offoff;
+    offset -= readsize;
+    bufptr -= readsize;
 
 #if 0    
-    printf("%d %d %d\n", offoff, filesize, offset);
+    printf("%d %d %d\n", readsize, filesize, offset);
 #endif    
 
     if (bufptr < 0)
@@ -649,20 +669,21 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
     if (lseek(fd, offset, SEEK_SET) < 0)
       return ZRE_ZF_SEEK;
 
-    buf = cd->buf32k + bufptr;
+    char * buf = cd->buf32k + bufptr;
 
-    if ((tmp = read(fd, buf, offoff)) < offoff)
+    int tmp = read(fd, buf, readsize);
+    if (tmp < readsize)
       return ZRE_ZF_READ;
 
-    /* ecd header is at least 22 bytes back from end of file...
-       making sure buf[scanoff + x] does not scan over allocated memory */
+    // ecd header is at least 22 bytes back from end of file...
+    // making sure buf[scanoff + x] does not scan over allocated memory
     if (firstoff)
     {
-      offoff -= 20;
+      readsize -= 20;
       firstoff = FALSE;
     }
 
-    for (scanoff = offoff - 1; scanoff >= 0; scanoff--)
+    for (int scanoff = readsize - 1; scanoff >= 0; scanoff--)
     {
       if (buf[scanoff] == 'P' && buf[scanoff + 1] == 'K' && 
           buf[scanoff + 2] == '\005' &&
@@ -678,7 +699,9 @@ static int find_eod(int fd, int filesize, struct carrydata * cd)
       }
     }
   }
-  return ZRE_EDH_MISSING;
+
+  LogPrintf("ZARC_OpenRead: not a zip file (cannot find EOD signature).\n");
+  return -1;
 }
 
 /*
@@ -973,8 +996,10 @@ int TEST_Zip(int argc, char ** argv)
     printf("OK.\n");
     printf("Contents of the file:\n");
 
-    while ((i = zip_read(zfp, buf, 16)) > 0)
+    for (;;)
     {
+      i = zip_read(zfp, buf, 16);
+      if (i <= 0) break;
       buf[i] = '\0';
       /*printf("\n*** read %d ***\n", i); fflush(stdout); */
       printf("%s", buf);
@@ -983,23 +1008,6 @@ int TEST_Zip(int argc, char ** argv)
     if (i < 0)
       printf("error BBQ\n");  /// , zipfile_errcode(zf));
   }
-
-#if 0
-  for (i = 0; i < 1; i++)
-  {
-    ZipDirent zde;
-    
-    printf("\n");
-    printf("DIRECTORY:\n");
-    printf("----------\n");
-
-    while(!readZipDirent(zf, &zde))
-    {
-      printf("name %s, compr %d, size %d\n", zde.name, zde.compr, zde.size);
-    }
-    resetZipDir(zf);
-  }
-#endif
 
   ZARC_CloseRead();
   return 0;
