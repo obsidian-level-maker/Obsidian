@@ -40,19 +40,8 @@ zrerror_t;
 #define ZOF_IGNOREPATH		0x02
 
 
-// FIXME FIXME
-typedef char gint8;
-typedef unsigned char guint8;
-
-typedef short gint16;
-typedef unsigned short guint16;
-
-typedef int gint32;
-typedef unsigned int guint32;
-
 /* gint is a variable type that has the same size as pointer variable */
 typedef int gint;
-typedef unsigned int guint;
 
 #define GINT_TO_POINTER(i) ((void *)(i))
 #define GPOINTER_TO_INT(p) ((gint)(p))
@@ -99,8 +88,8 @@ struct ZipFile_s
 
 #define BUF32KSIZE 32768
 
-guint32 __zip08x_internal_makelong(unsigned char * s);
-guint16 __zip08x_internal_makeword(unsigned char * s);
+u32_t __zip08x_internal_makelong(unsigned char * s);
+u16_t __zip08x_internal_makeword(unsigned char * s);
 
 #define makelong(x) __zip08x_internal_makelong(x)
 #define makeword(x) __zip08x_internal_makeword(x)
@@ -540,7 +529,8 @@ static int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
 
   if (flags & ZOF_IGNOREPATH)
   {
-    if ((n = strrchr(name, '/')) != NULL)
+    n = strrchr(name, '/');
+    if (n)
       name = n + 1;
   }
 
@@ -573,16 +563,16 @@ static int zip_stat(ZipFile * zf, char * name, ZipStat * zs, int flags)
  */
 
 /* defined to makelong() in zipx_priv.h for internal usage */
-guint32 __zip08x_internal_makelong(unsigned char * s)
+u32_t __zip08x_internal_makelong(unsigned char * s)
 {
-  return ((guint32)s[3] << 24) | ((guint32)s[2] << 16)
-    |    ((guint32)s[1] << 8)  |  (guint32)s[0];
+  return ((u32_t)s[3] << 24) | ((u32_t)s[2] << 16)
+    |    ((u32_t)s[1] << 8)  |  (u32_t)s[0];
 }
 
 /* defined to makeword() in zipx_priv.h for internal usage */
-guint16 __zip08x_internal_makeword(unsigned char * s)
+u16_t __zip08x_internal_makeword(unsigned char * s)
 {
-    return ((guint16)s[1] << 8) | (guint16)s[0];
+    return ((u16_t)s[1] << 8) | (u16_t)s[0];
 }
 
 #	define NUM_DIRECTORY_ENTRIES	8
@@ -717,7 +707,7 @@ static int advance_pointer_keep_struct_aligned(void ** p, int i)
 static int parse_zdir(int fd, struct carrydata * cd)
 {
   struct zipfileinfo * zfi, * firstzfi;
-  guint16 * lastnextp = NULL;
+  u16_t * lastnextp = NULL;
   short entries/*, realentries = 0*/;
   long offset;
   char * buf32k = cd->buf32k;
@@ -732,19 +722,20 @@ static int parse_zdir(int fd, struct carrydata * cd)
     return ZRE_ZF_READ;
 
 
-  advance_pointer_keep_struct_aligned(
-    (zfi = (struct zipfileinfo *)buf32k, (void**)&zfi), 0);
-  
+  zfi = (struct zipfileinfo *)buf32k;
+
+  advance_pointer_keep_struct_aligned((void**)&zfi, 0);
+
   firstzfi = zfi;
   
   for (entries=cd->entries, offset = 0; entries > 0; entries--)
   {
     char * buf = buf32k + offset;
 
-    guint16 efsize = makeword((unsigned char *)&buf[LENGTH_EXTRA_FIELD]);
-    guint16 fcsize = makeword((unsigned char *)&buf[LENGTH_FILE_COMMENT]);
-    guint16 fnsize = makeword((unsigned char *)&buf[LENGTH_FILENAME]);
-    guint16  compr = makeword((unsigned char *)&buf[METHOD_COMPRESSION]);
+    u16_t efsize = makeword((unsigned char *)&buf[LENGTH_EXTRA_FIELD]);
+    u16_t fcsize = makeword((unsigned char *)&buf[LENGTH_FILE_COMMENT]);
+    u16_t fnsize = makeword((unsigned char *)&buf[LENGTH_FILENAME]);
+    u16_t  compr = makeword((unsigned char *)&buf[METHOD_COMPRESSION]);
 
     if (compr > 255)
       compr = 255;
@@ -853,32 +844,39 @@ static ZipFile * openZip(char * filename, zrerror_t * errcode_p)
   int rv;
   ZipFile * zf;
 
-  if ((zf = (ZipFile *)calloc(1, sizeof *zf)) == NULL)
+  zf = (ZipFile *)calloc(1, sizeof *zf);
+  if (zf == NULL)
     return seterr(errcode_p, NULL, ZRE_OUTOFMEM);
 
   zf->fd = -1;
-  
-  if ((zf->buf32k = (char *)malloc(BUF32KSIZE)) == NULL)
+
+  zf->buf32k = (char *)malloc(BUF32KSIZE);
+
+  if (zf->buf32k == NULL)
     return seterr(errcode_p, zf, ZRE_OUTOFMEM);    
 
   cdi.buf32k = zf->buf32k;
   
-  if ((zf->fd = open(filename, O_RDONLY|O_BINARY)) < 0)
+  zf->fd = open(filename, O_RDONLY|O_BINARY);
+  if (zf->fd < 0)
     return seterr(errcode_p, zf, ZRE_ZF_OPEN);
 
-  if ((filesize = ffilelen(zf->fd)) < 0)
+  filesize = ffilelen(zf->fd);
+  if (filesize < 0)
     return seterr(errcode_p, zf, ZRE_ZF_STAT);
 
-  if ((rv = find_eod(zf->fd, filesize, &cdi)) != 0)
+  rv = find_eod(zf->fd, filesize, &cdi);
+  if (rv != 0)
     return seterr(errcode_p, zf, rv);
 
-#if 0
+#if 1
   printf("num_directory_entries: %d\n",	  cdi.entries);
   printf("size_directory: %ld\n",	  cdi.size);
   printf("offset_directory_start: %ld \n", cdi.offset);
 #endif
 
-  if ((rv = parse_zdir(zf->fd, &cdi)) != 0)
+  rv = parse_zdir(zf->fd, &cdi);
+  if (rv != 0)
     return seterr(errcode_p, zf, rv);
 
   zf->zfi = cdi.zfi;
@@ -887,7 +885,6 @@ static ZipFile * openZip(char * filename, zrerror_t * errcode_p)
   return zf;
 }
 
-  
 
 //------------------------------------------------------------------------
 
