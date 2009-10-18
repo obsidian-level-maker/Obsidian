@@ -839,50 +839,6 @@ static int expungeZip(ZipFile * zf)
 
 static ZipFile * openZip(char * filename, zrerror_t * errcode_p)
 {
-  long filesize;
-  struct carrydata cdi = { 0 };
-  int rv;
-  ZipFile * zf;
-
-  zf = (ZipFile *)calloc(1, sizeof *zf);
-  if (zf == NULL)
-    return seterr(errcode_p, NULL, ZRE_OUTOFMEM);
-
-  zf->fd = -1;
-
-  zf->buf32k = (char *)malloc(BUF32KSIZE);
-
-  if (zf->buf32k == NULL)
-    return seterr(errcode_p, zf, ZRE_OUTOFMEM);    
-
-  cdi.buf32k = zf->buf32k;
-  
-  zf->fd = open(filename, O_RDONLY|O_BINARY);
-  if (zf->fd < 0)
-    return seterr(errcode_p, zf, ZRE_ZF_OPEN);
-
-  filesize = ffilelen(zf->fd);
-  if (filesize < 0)
-    return seterr(errcode_p, zf, ZRE_ZF_STAT);
-
-  rv = find_eod(zf->fd, filesize, &cdi);
-  if (rv != 0)
-    return seterr(errcode_p, zf, rv);
-
-#if 1
-  printf("num_directory_entries: %d\n",	  cdi.entries);
-  printf("size_directory: %ld\n",	  cdi.size);
-  printf("offset_directory_start: %ld \n", cdi.offset);
-#endif
-
-  rv = parse_zdir(zf->fd, &cdi);
-  if (rv != 0)
-    return seterr(errcode_p, zf, rv);
-
-  zf->zfi = cdi.zfi;
-  zf->zdp = cdi.zfi;
-  
-  return zf;
 }
 
 
@@ -892,9 +848,47 @@ bool ZARC_OpenRead(const char *filename)
 {
   cur_errcode = 0;
 
-  // FIXME
+  long filesize;
+  struct carrydata cdi = { 0 };
+  int rv;
+  ZipFile * zf;
 
-  return false;
+  cur_zf = (ZipFile *)calloc(1, sizeof *zf);
+  SYS_ASSERT(cur_zf);
+
+  zf->fd = -1;
+  zf->buf32k = (char *)malloc(BUF32KSIZE);
+
+  SYS_ASSERT(zf->buf32k);
+
+  cdi.buf32k = zf->buf32k;
+  
+  zf->fd = open(filename, O_RDONLY|O_BINARY);
+  if (zf->fd < 0)
+    return false;  // seterr(errcode_p, zf, ZRE_ZF_OPEN);
+
+  filesize = ffilelen(zf->fd);
+  if (filesize < 0)
+    return false; // seterr(errcode_p, zf, ZRE_ZF_STAT);
+
+  rv = find_eod(zf->fd, filesize, &cdi);
+  if (rv != 0)
+    return false; // seterr(errcode_p, zf, rv);
+
+#if 1
+  printf("num_directory_entries: %d\n",	  cdi.entries);
+  printf("size_directory: %ld\n",	  cdi.size);
+  printf("offset_directory_start: %ld \n", cdi.offset);
+#endif
+
+  rv = parse_zdir(zf->fd, &cdi);
+  if (rv != 0)
+    return false; // seterr(errcode_p, zf, rv);
+
+  zf->zfi = cdi.zfi;
+  zf->zdp = cdi.zfi;
+  
+  return true;
 }
 
 void ZARC_CloseRead(void)
