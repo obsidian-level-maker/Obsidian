@@ -6,6 +6,8 @@
 
   <title> OBLIGE <use O_WHERE> </title>
 
+  <link rel="shortcut icon" href="http://oblige.sourceforge.net/favicon.ico" type="image/vnd.microsoft.icon">
+
   <script type="text/javascript"></script>
 
   <style type="text/css" title="currentStyle">

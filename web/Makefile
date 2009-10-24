@@ -6,6 +6,7 @@ all:
 	mkdir -p out
 	cp *.css out/
 	cp pics/*.* out/
+	cp favicon3.ico out/favicon.ico
 	htp -quiet index.htp         out/index.html
 	htp -quiet i_download.htp    out/i_download.html
 	htp -quiet i_oldie.htp       out/i_oldie.html
@@ -18,9 +19,7 @@ all:
 	htp -quiet blog_nov2008.htp  out/blog_nov2008.html
 
 clean:
-	rm -f out/*.html
-	rm -f out/*.css
-	rm -f out/*.png
+	rm -f out/*.*
 
 .PHONY: all clean
 
