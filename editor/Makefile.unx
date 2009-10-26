@@ -6,7 +6,7 @@
 
 PROGRAM=Tailor
 
-FLTK_DIR=../lib/fltk-1.1.9
+FLTK_DIR=../linux_lib/fltk-1.1.9
 
 FLTK_FLAGS=-I$(FLTK_DIR)
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
