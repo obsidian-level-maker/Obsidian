@@ -119,15 +119,17 @@ function voronoi_tesselate(bbox, points)
 
     -- find the existing arc which is split by the new one
     local split
+    local best
     local best_dist = 9e9
 
     for idx,A in ipairs(beach) do  -- TODO: skip points already seen
       if A.p.y < P.y + 0.01 then
-        -- skip points on same line as new point
+        error("voronoi: two points with same Y")
       else
         local dist = parabola_dist_from_line(A.p, P.x, P.y)
         if dist < best_dist then
           split = idx
+          best  = A
           best_dist = dist
         end
       end
@@ -137,6 +139,15 @@ function voronoi_tesselate(bbox, points)
 
     table.insert(beach, split, arc)
     table.insert(beach, split, beach[split+1])
+
+    -- remember the start point of a new edge
+    local hx = P.x
+    local hy = P.y + best_dist
+
+    local edge = { hx=P.x, hy=P.y + best_dist, p1=best.p, p2=P }
+
+    table.insert(edge.p1.edges, edge)
+    table.insert(edge.p2.edges, edge)
   end
 
   function new_vertex(C)
