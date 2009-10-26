@@ -48,10 +48,10 @@ function voronoi_tesselate(bbox, points)
   local events
   local beach
 
-  local function dist_squared(x1, y1, x2, y2)
+  local function get_dist(x1, y1, x2, y2)
     x2 = x2 - x1
     y2 = y2 - y1
-    return x2 * x2 + y2 * y2
+    return math.sqrt(x2 * x2 + y2 * y2)
   end
 
   local function parabola_dist_from_line(p, qx, line_y)
@@ -71,7 +71,7 @@ function voronoi_tesselate(bbox, points)
     local best_dist = 9e9
 
     for _,P in ipairs(points) do
-      local dist = dist_squared(x, y, P.x, P.y)
+      local dist = get_dist(x, y, P.x, P.y)
       if dist < best_dist then
         best = P
         best_dist = dist
@@ -95,7 +95,7 @@ function voronoi_tesselate(bbox, points)
 
     for i = #events,1,-1 do  -- must traverse backwards
       local E = events[i]
-      if E.circle and dist_squared(E.x, E.y, P.x, P.y) + 0.01 < (E.r * E.r) then
+      if E.circle and get_dist(E.x, E.y, P.x, P.y) + 0.01 < E.r then
         table.remove(events, i)
       end
     end
@@ -105,7 +105,7 @@ function voronoi_tesselate(bbox, points)
     -- TODO
   end
 
-  function new_arc(P)
+  function site_event(P)
     local arc = { p=P }
 
     local N = #beach
@@ -150,13 +150,16 @@ function voronoi_tesselate(bbox, points)
     table.insert(edge.p2.edges, edge)
   end
 
-  function new_vertex(C)
+  function circle_event(C)
     local visited = {}
     for _,arc in ipairs(beach) do
       if not visited[arc.p] then
-        local v = { x=C.x, y=C.y }
-        table.insert(arc.p.verts, v)
         visited[arc.p] = true
+        local dist = get_dist(arc.p.x, arc.p.y, C.x, C.y)
+        if math.abs(dist - C.r) < 0.02 then
+          local v = { x=C.x, y=C.y }
+          table.insert(arc.p.verts, v)
+        end
       end
     end
   end
@@ -189,9 +192,9 @@ function voronoi_tesselate(bbox, points)
     local E = table.remove(events, 1)
 
     if E.circle then
-      new_vertex(E)
+      circle_event(E)
     else
-      new_arc(E)
+      site_event(E)
       invalidate_circles(E)
     end
   end
