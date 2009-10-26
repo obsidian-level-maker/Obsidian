@@ -24,7 +24,8 @@
 --============
 -- 
 -- This is Fortune's Algorithm for constructing the Voronoi
--- diagram from a set of points.
+-- diagram from a set of points.  This version sweeps downwards
+-- (instead of left to right).
 --
 -- One difference is that I construct polygons by storing the
 -- generated vertices with each site.  Infinite half-edges are
@@ -38,21 +39,27 @@
 --   vert  = { x, y }
 --   edge  = { p1, p2, v1, v2 }   -- p2 is nil for edges on bbox
 --
---   arc    = { p, x1, x2 }
---   circle = { x, y, r }
+--   arc    = { p }
+--   circle = { x, y, r, circle=true }
 
 
 function voronoi_tesselate(bbox, points)
+
+  local events
+  local beach
+
+  local function dist_squared(x1, y1, x2, y2)
+    x2 = x2 - x1
+    y2 = y2 - y1
+    return x2 * x2 + y2 * y2
+  end
 
   local function find_closest_point(x, y)
     local best
     local best_dist = 9e9
 
     for _,P in ipairs(points) do
-      local dx = P.x - x
-      local dy = P.y - y
-      local dist = dx * dx + dy * dy
-
+      local dist = dist_squared(x, y, P.x, P.y)
       if dist < best_dist then
         best = P
         best_dist = dist
@@ -68,6 +75,35 @@ function voronoi_tesselate(bbox, points)
     local v = { x=x, y=y, corner=true }
 
     table.insert(p.verts, v)
+  end
+
+  function invalidate_circles(P)
+    -- circles must be empty (contain no points).
+    -- This checks to see if the new point is inside a circle
+
+    for i = #events,1,-1 do  -- must traverse backwards
+      local E = events[i]
+      if E.circle and dist_squared(E.x, E.y, P.x, P.y) + 0.01 < (E.r * E.r) then
+        table.remove(events, i)
+      end
+    end
+  end
+
+  function check_for_new_circles()
+    -- TODO
+  end
+
+  function new_arc(P)
+    if #beach == 0 then
+      table.insert(beach, { p=P })
+      return
+    end
+
+    -- TODO
+  end
+
+  function new_vertex(C)
+    -- TODO
   end
 
 
@@ -87,6 +123,22 @@ function voronoi_tesselate(bbox, points)
   add_corner_point(bbox.x1, bbox.y2)
   add_corner_point(bbox.x2, bbox.y2)
 
-  -- ....
+  -- create event list and beach line
+  events = shallow_copy(points)
+  beach  = { }
+
+  table.sort(events, function (A,B) return A.y > B.y end)
+
+  -- LOOP
+  while events[1] do
+    local E = table.remove(events, 1)
+
+    if E.circle then
+      new_vertex(E)
+    else
+      new_arc(E)
+      invalidate_circles(E)
+    end
+  end
 end
 
