@@ -54,6 +54,18 @@ function voronoi_tesselate(bbox, points)
     return x2 * x2 + y2 * y2
   end
 
+  local function parabola_dist_from_line(p, qx, line_y)
+    local px = p.x - qx
+    local py = p.y - line_y
+    assert(py > 0)
+
+    -- parabola invariant: dist(p->q) = dist(q->line)
+    -- Hence (px-qx)^2 + (py-qy)^2 = qy^2
+    -- Therefore qy = ((px-qx)^2 + py^2) / 2py
+
+    return math.sqrt(px * px + py * py) / (2 * py)
+  end
+
   local function find_closest_point(x, y)
     local best
     local best_dist = 9e9
@@ -94,16 +106,48 @@ function voronoi_tesselate(bbox, points)
   end
 
   function new_arc(P)
-    if #beach == 0 then
-      table.insert(beach, { p=P })
+    local arc = { p=P }
+
+    local N = #beach
+
+    if N == 0 then
+      table.insert(beach, arc)
       return
     end
 
-    -- TODO
+    -- FIXME: this cannot handle two points at same Y
+
+    -- find the existing arc which is split by the new one
+    local split
+    local best_dist = 9e9
+
+    for idx,A in ipairs(beach) do  -- TODO: skip points already seen
+      if A.p.y < P.y + 0.01 then
+        -- skip points on same line as new point
+      else
+        local dist = parabola_dist_from_line(A.p, P.x, P.y)
+        if dist < best_dist then
+          split = idx
+          best_dist = dist
+        end
+      end
+    end
+
+    assert(split)
+
+    table.insert(beach, split, arc)
+    table.insert(beach, split, beach[split+1])
   end
 
   function new_vertex(C)
-    -- TODO
+    local visited = {}
+    for _,arc in ipairs(beach) do
+      if not visited[arc.p] then
+        local v = { x=C.x, y=C.y }
+        table.insert(arc.p.verts, v)
+        visited[arc.p] = true
+      end
+    end
   end
 
 
