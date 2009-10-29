@@ -17,6 +17,8 @@ TODO
 +  BUG: arena E4M6 is not completeable (needs a tag 666 door).
 
 
++  support MAPINFO lumps (especially for ZDoom ports).
+
 -  stairs: messed up in some themes??
 
 +  review monster quantities, need some increase over the course
