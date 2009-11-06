@@ -254,7 +254,7 @@ void SKY_AddBuilding(int seed, byte *pixels, int W, int H,
       {
         byte fg = colors[1];
 
-        if (bu_twist.Rand() & 0xFFFF > win_prob)
+        if ((bu_twist.Rand() & 0xFFFF) > win_prob)
           fg = (numcol >= 3) ? colors[2] : bg;
 
         for (int dx = 0; dx < win_w; dx++)

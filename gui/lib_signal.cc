@@ -20,6 +20,8 @@
 
 #include "headers.h"
 
+#include <algorithm>
+
 #include "lib_signal.h"
 #include "lib_util.h"
 

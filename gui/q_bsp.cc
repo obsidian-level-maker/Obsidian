@@ -19,6 +19,9 @@
 //------------------------------------------------------------------------
 
 #include "headers.h"
+
+#include <algorithm>
+
 #include "hdr_lua.h"
 
 #include "lib_file.h"

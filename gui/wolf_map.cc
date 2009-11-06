@@ -259,7 +259,7 @@ int WF_wolf_block(lua_State *L)
 
 static void WF_DumpMap(void)
 {
-  static char *turning_points = ">/^\\</v\\";
+  static const char *turning_points = ">/^\\</v\\";
 //static char *player_angles  = "^>v<";
 
   bool show_floors = false;
