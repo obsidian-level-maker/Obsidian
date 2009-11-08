@@ -18,12 +18,23 @@
 
 
 function Doom_generate_skies()
-  local sky_list =  -- FIXME !!!! game specific
+
+  local sky_list =
   {
     { patch="RSKY1" },
     { patch="RSKY2" },
     { patch="RSKY3" },
   }
+
+  if OB_CONFIG.game == "doom1" then
+    sky_list =
+    {
+      { patch="SKY1" },
+      { patch="SKY2" },
+      { patch="SKY3" },
+      { patch="SKY4" },
+    }
+  end
 
   -- star colors --
 
@@ -245,7 +256,7 @@ OB_MODULES["sky_gen_doom"] =
 {
   label = "Sky Generator (DOOM)",
 
-  for_games = { doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1, freedoom=1 },
 
   levels_start_func = Doom_generate_skies,
 }
