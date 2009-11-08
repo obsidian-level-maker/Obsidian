@@ -4,3 +4,5 @@ CHANGES (since v3.47)
 
 -  SEED value works differently, less prone to duplicates
 
+-  fixed ROCKRED1 material (DOOM 1).
+
