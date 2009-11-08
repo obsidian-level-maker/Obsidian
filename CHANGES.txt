@@ -6,3 +6,5 @@ CHANGES (since v3.47)
 
 -  fixed ROCKRED1 material (DOOM 1).
 
+-  sky generator supports DOOM 1 (courtesy Enhas)
+
