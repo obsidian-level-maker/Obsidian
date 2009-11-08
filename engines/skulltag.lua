@@ -21,8 +21,7 @@
 
 OB_ENGINES["skulltag"] =
 {
-  label = "Skulltag 97D3",
---  priority = -2,  -- keep at bottom with ZDoom
+  label = "Skulltag 98A",
 
   for_games = { doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1 },
 
