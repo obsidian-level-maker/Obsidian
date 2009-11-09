@@ -267,13 +267,15 @@ int DM_wad_logo_gfx(lua_State *L)
   {
     qLump_c *lump = DM_CreateFlat(new_W, new_H,
                        pixels, logo->width, logo->height);
-    DM_AddFlat(patch, lump);
+
+    DM_AddSectionLump('F', patch, lump);
   }
   else
   {
     qLump_c *lump = DM_CreatePatch(new_W, new_H, 0, 0,
                        pixels, logo->width, logo->height);
-    DM_AddPatch(patch, lump);
+
+    DM_AddSectionLump('P', patch, lump);
   }
 
   delete[] pixels;
@@ -327,7 +329,7 @@ int DM_fsky_write(lua_State *L)
   qLump_c *lump = DM_CreatePatch(sky_final_W, sky_H, 0, 0,
                                  sky_pixels, sky_W, sky_H);
 
-  DM_AddPatch(patch, lump);
+  DM_AddSectionLump('P', patch, lump);
 
   return 0;
 }
@@ -771,6 +773,33 @@ static void TransferWADtoWAD(int src_entry, const char *dest_lump)
   WAD_FinishLump();
 }
 
+static qLump_c * DoLoadLump(int src_entry)
+{
+  qLump_c *lump = new qLump_c();
+
+  int length = WAD_EntryLen(src_entry);
+
+  int buf_size = 4096;
+  char *buffer = new char[buf_size];
+
+  for (int pos = 0; pos < length; )
+  {
+    int want_len = MIN(buf_size, length - pos);
+
+    // FIXME: handle error better
+    if (! WAD_ReadData(src_entry, pos, want_len, buffer))
+      break;
+
+    lump->Append(buffer, want_len);
+
+    pos += want_len;
+  }
+
+  delete[] buffer;
+
+  return lump;
+}
+
 
 #define NUM_LEVEL_LUMPS  12
 
@@ -880,6 +909,77 @@ int DM_wad_transfer_map(lua_State *L)
     entry++;
   }
  
+  WAD_CloseRead();
+
+  return 0;
+}
+
+
+static void DoMergeSection(char ch, const char *start1, const char *start2,
+                           const char *end1, const char *end2)
+{
+  int start = WAD_FindEntry(start1);
+  if (start < 0 && start2)
+  {
+    start1 = start2;
+    start = WAD_FindEntry(start2);
+  }
+
+  if (start < 0)
+    return;
+
+  int end = WAD_FindEntry(end1);
+  if (end < 0 && end2)
+  {
+    end1 = end2;
+    end = WAD_FindEntry(end2);
+  }
+
+  if (end < 9)
+  {
+    LogPrintf("WARNING: %s found but %s is missing.\n", start1, end1);
+    return;
+  }
+  else if (end < start)
+  {
+    LogPrintf("WARNING: %s marker found before %s!\n", end1, start1);
+    return;
+  }
+
+  for (int i = start+1; i < end; i++)
+  {
+    // skip other markers (e.g. F1_START)
+    if (WAD_EntryLen(i) == 0)
+      continue;
+
+    DM_AddSectionLump(ch, WAD_EntryName(i), DoLoadLump(i));
+  }
+}
+
+int DM_wad_merge_sections(lua_State *L)
+{
+  // LUA: wad_merge_sections(file_name)
+  //
+  // Open an existing wad file and merge the patches, sprites, flats
+  // and other stuff (which occur in between P_START/P_END and similar
+  // marker lumps).
+
+  const char *pkg_name = luaL_checkstring(L, 1);
+
+  LogPrintf("Merging WAD sections from: %s\n", pkg_name);
+
+  if (! CheckExtension(pkg_name, "wad"))
+    return luaL_error(L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
+
+  if (! WAD_OpenRead(pkg_name))
+    return luaL_error(L, "wad_merge_sections: bad or missing WAD file: %s", pkg_name);
+  
+  DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");
+  DoMergeSection('S', "S_START", "SS_START", "S_END", "SS_END");
+  DoMergeSection('F', "F_START", "FF_START", "F_END", "FF_END");
+  DoMergeSection('C', "C_START",  NULL,      "C_END",  NULL);
+  DoMergeSection('T', "TX_START", NULL,      "TX_END", NULL);
+
   WAD_CloseRead();
 
   return 0;

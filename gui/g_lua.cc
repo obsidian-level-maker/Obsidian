@@ -440,6 +440,7 @@ extern int DM_wad_add_text_lump(lua_State *L);
 extern int DM_wad_insert_file(lua_State *L);
 extern int DM_wad_transfer_lump(lua_State *L);
 extern int DM_wad_transfer_map(lua_State *L);
+extern int DM_wad_merge_sections(lua_State *L);
 
 extern int DM_fsky_create(lua_State *L);
 extern int DM_fsky_write(lua_State *L);
@@ -495,6 +496,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "wad_insert_file",   DM_wad_insert_file },
   { "wad_transfer_lump", DM_wad_transfer_lump },
   { "wad_transfer_map",  DM_wad_transfer_map },
+  { "wad_merge_sections",DM_wad_merge_sections },
 
   { "fsky_create",      DM_fsky_create },
   { "fsky_write",       DM_fsky_write },
