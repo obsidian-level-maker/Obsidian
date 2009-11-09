@@ -20,7 +20,7 @@
 
 function Edge_remap_music()
   
-  -- FIXME: game specific!!!
+  -- FIXME: DOOM2 specific!!!
   local mus_list =
   {
     "RUNNIN", "STALKS", "COUNTD", "BETWEE", "DOOM",
@@ -50,15 +50,37 @@ function Edge_remap_music()
 end
 
 
+function Edge_create_language()
+  
+  local data =
+  {
+    "//\n",
+    "// Language.ldf created by OBLIGE\n",
+    "//\n\n",
+    "<LANGUAGES>\n\n",
+    "[ENGLISH]\n"
+  }
+
+  for _,L in ipairs(GAME.all_levels) do
+    if L.description then
+      local id = string.format("%sDesc", L.name)
+      local text = L.name .. ": " .. L.description;
+
+      table.insert(data, string.format("%s = \"%s\";\n", id, text))
+    end
+  end
+
+  -- TODO: use TNTLANG and PLUTLANG when necessary
+  gui.wad_add_text_lump("DDFLANG", data);
+end
+
+
 ----------------------------------------------------------------
 
-function Edge_end_level()
-  if LEVEL.description then
-    local id = string.format("%sDesc", LEVEL.name)
-    local text = LEVEL.name .. ": " .. LEVEL.description;
+function Edge_all_done()
+  Edge_create_language();
 
-    gui.ddf_add_string(id, text)
-  end
+  -- Edge_remap_music()
 end
 
 
@@ -69,7 +91,7 @@ OB_ENGINES["edge"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
-  end_level_func = Edge_end_level,
+  all_done_func = Edge_all_done,
 
   param =
   {
