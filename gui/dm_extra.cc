@@ -722,5 +722,82 @@ int DM_wad_add_text_lump(lua_State *L)
 }
 
 
+static void TransferWADtoWAD(int src_entry, const char *dest_lump)
+{
+  int length = WAD_EntryLen(src_entry);
+  int buf_size = 4096;
+
+  WAD_NewLump(dest_lump);
+
+  char *buffer = new char[buf_size];
+
+  for (int pos = 0; pos < length; )
+  {
+    int want_len = MIN(buf_size, length - pos);
+
+    // FIXME: handle error better
+    if (! WAD_ReadData(src_entry, pos, want_len, buffer))
+      break;
+
+    WAD_AppendData(buffer, want_len);
+
+    pos += want_len;
+  }
+
+  delete[] buffer;
+
+  WAD_FinishLump();
+}
+
+int DM_wad_transfer_lump(lua_State *L)
+{
+  // LUA: wad_transfer_lump(wad_file, src_lump, dest_lump)
+  //
+  // Open an existing wad file and copy the lump into our wad.
+
+  // TODO: support PK3 too
+
+  const char *pkg_name  = luaL_checkstring(L, 1);
+  const char *src_lump  = luaL_checkstring(L, 2);
+  const char *dest_lump = luaL_checkstring(L, 3);
+
+  if (! WAD_OpenRead(pkg_name))
+    return luaL_error(L, "wad_transfer_lump: bad or missing WAD file: %s", pkg_name);
+  
+  int entry = WAD_FindEntry(src_lump);
+  if (entry < 0)
+    return luaL_error(L, "wad_transfer_lump: lump '%s' not found", src_lump);
+
+  TransferWADtoWAD(entry, dest_lump);
+
+  WAD_CloseRead();
+
+  return 0;
+}
+
+int DM_wad_transfer_map(lua_State *L)
+{
+  // LUA: wad_transfer_map(wad_file, src_map, dest_map)
+  //
+  // Open an existing wad file and copy the map into our wad.
+
+  const char *pkg_name = luaL_checkstring(L, 1);
+  const char *src_map  = luaL_checkstring(L, 2);
+  const char *dest_map = luaL_checkstring(L, 3);
+
+  if (! WAD_OpenRead(pkg_name))
+    return luaL_error(L, "wad_transfer_map: bad or missing WAD file: %s", pkg_name);
+  
+  int entry = WAD_FindEntry(src_map);
+  if (entry < 0)
+    return luaL_error(L, "wad_transfer_map: map '%s' not found", src_map);
+
+  // FIXME
+ 
+  WAD_CloseRead();
+
+  return 0;
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
