@@ -248,7 +248,6 @@ bool DM_StartWAD(const char *filename)
   CreateInfoLump();
 
   BEX_Start();
-  DDF_Start();
   DED_Start();
 
   return true; //OK
@@ -261,7 +260,6 @@ bool DM_EndWAD(void)
   WritePatches();
 
   BEX_Finish();
-  DDF_Finish();
   DED_Finish();
 
   // FIXME: errors????

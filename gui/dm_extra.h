@@ -24,9 +24,6 @@
 void BEX_Start();
 void BEX_Finish();
 
-void DDF_Start();
-void DDF_Finish();
-
 void DED_Start();
 void DED_Finish();
 
