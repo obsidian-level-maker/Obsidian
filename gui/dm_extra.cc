@@ -674,6 +674,53 @@ int DM_wad_name_gfx(lua_State *L)
   return 0;
 }
 
+int DM_wad_add_text_lump(lua_State *L)
+{
+  // LUA: wad_name_gfx(lump, strings)
+  //
+  // The 'strings' parameter is a table.
+
+  const char *name = luaL_checkstring(L, 1);
+
+  if (lua_type(L, 2) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 2, "expected a table: strings");
+  }
+ 
+  qLump_c *lump = new qLump_c();
+
+  // grab all the strings from the table
+  for (int i = 0; true; i++)
+  {
+    lua_pushinteger(L, 1+i);
+    lua_gettable(L, 2);
+
+    if (lua_isnil(L, -1))
+    {
+      lua_pop(L, 1);
+      break;
+    }
+
+    if (lua_type(L, -1) != LUA_TSTRING)
+      return luaL_error(L, "wad_add_text_lump: item #%d is not a string", 1+i);
+
+    // use this method since it allows embedded zeros in the string
+    // (just in case some crazy person wants to write a binary lump).
+    size_t len;
+    const char *str = lua_tolstring(L, -1, &len);
+
+    lump->Append(str, (int)len);
+
+    lua_pop(L, 1);
+  }
+
+  DM_WriteLump(name, lump);
+
+  delete lump;
+
+  return 0;
+}
+
 
 //------------------------------------------------------------------------
 

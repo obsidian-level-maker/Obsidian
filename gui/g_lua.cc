@@ -435,6 +435,7 @@ extern int WF_wolf_block(lua_State *L);
 
 extern int DM_wad_name_gfx(lua_State *L);
 extern int DM_wad_logo_gfx(lua_State *L);
+extern int DM_wad_add_text_lump(lua_State *L);
 
 extern int DM_fsky_create(lua_State *L);
 extern int DM_fsky_write(lua_State *L);
@@ -491,6 +492,7 @@ static const luaL_Reg gui_script_funcs[] =
   // Doom/Heretic/Hexen functions
   { "wad_name_gfx",   DM_wad_name_gfx  },
   { "wad_logo_gfx",   DM_wad_logo_gfx  },
+  { "wad_add_text_lump", DM_wad_add_text_lump },
 
   { "fsky_create",      DM_fsky_create },
   { "fsky_write",       DM_fsky_write },
@@ -499,6 +501,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "fsky_add_clouds",  DM_fsky_add_clouds },
   { "fsky_add_hills",   DM_fsky_add_hills },
 
+  // FIXME: remove these four
   { "bex_add_string",  DM_bex_add_string },
   { "bex_add_music",   DM_bex_add_music  },
   { "ddf_add_string",  DM_ddf_add_string },
