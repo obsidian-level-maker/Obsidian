@@ -40,9 +40,6 @@
 
 bool wad_hexen;  // FIXME: not global
 
-static std::vector<qLump_c *> patch_lumps;
-static std::vector<qLump_c *> flat_lumps;
-
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
 static qLump_c *sector_lump;
@@ -51,6 +48,33 @@ static qLump_c *linedef_lump;
 
 static int write_errors_seen; // FIXME: no longer used!
 static int seek_errors_seen;
+
+typedef std::vector<qLump_c *> lump_bag_t;
+
+typedef enum
+{
+  SECTION_Patches = 0,
+  SECTION_Sprites,
+  SECTION_Colormaps,
+  SECTION_ZDoomTex,
+  SECTION_Flats,
+
+  NUM_SECTIONS
+}
+wad_section_e;
+
+static lump_bag_t * sections[NUM_SECTIONS];
+
+static const char * section_markers[NUM_SECTIONS * 2] =
+{
+  "PP_START", "PP_END",
+  "SS_START", "SS_END",
+  "C_START",  "C_END",
+  "TX_START", "TX_END",
+
+  // flats must end with F_END (a single 'F') to be vanilla compatible
+  "FF_START", "F_END"
+};
 
 
 //------------------------------------------------------------------------
@@ -91,110 +115,63 @@ static void DM_WriteBehavior()
 }
 
 
-static void ClearPatches()
+static void ClearSections()
 {
-  for (unsigned int i = 0; i < patch_lumps.size(); i++)
+  for (int k = 0; k < NUM_SECTIONS; k++)
   {
-    delete patch_lumps[i];
-    patch_lumps[i] = NULL;
-  }
+    if (! sections[k])
+      sections[k] = new lump_bag_t;
 
-  patch_lumps.clear();
+    for (unsigned int i = 0; i < sections[k]->size(); i++)
+    {
+      delete sections[k]->at(i);
+      sections[k]->at(i) = NULL;
+    }
+
+    sections[k]->clear();
+  }
 }
 
-void DM_AddPatch(const char *name, qLump_c *lump)
+void DM_AddSectionLump(char ch, const char *name, qLump_c *lump)
 {
+  int k;
+  switch (ch)
+  {
+    case 'P': k = SECTION_Patches;   break;
+    case 'S': k = SECTION_Sprites;   break;
+    case 'C': k = SECTION_Colormaps; break;
+    case 'T': k = SECTION_ZDoomTex;  break;
+    case 'F': k = SECTION_Flats;     break;
+
+    default: 
+      Main_FatalError("DM_AddSectionLump: bad section '%c'\n", ch);
+      return; /* NOT REACHED */
+  }
+
   lump->SetName(name);
 
-  patch_lumps.push_back(lump);
+  sections[k]->push_back(lump);
 }
 
-static void WritePatches()
+static void WriteSections()
 {
-  if (patch_lumps.size() == 0)
-    return;
-
-  DM_WriteLump("PP_START", NULL, 0);
-
-  for (unsigned int i = 0; i < patch_lumps.size(); i++)
+  for (int k = 0; k < NUM_SECTIONS; k++)
   {
-    qLump_c *lump = patch_lumps[i];
+    if (sections[k]->size() == 0)
+      continue;
 
-    DM_WriteLump(lump->GetName(), lump);
+    DM_WriteLump(section_markers[k*2], NULL, 0);
+
+    for (unsigned int i = 0; i < sections[k]->size(); i++)
+    {
+      qLump_c *lump = sections[k]->at(i);
+
+      DM_WriteLump(lump->GetName(), lump);
+    }
+
+    DM_WriteLump(section_markers[k*2+1], NULL, 0);
   }
-
-  DM_WriteLump("PP_END", NULL, 0);
-
-  ClearPatches();
 }
-
-#if 0
-static void DM_OldWritePatches()
-{
-  // !!! TODO !!!
-  // ============
-  //
-  // Open a wad in the data/ folder containing some patches
-  // (and plain lumps), and add these into the current wad.
-  //
-  // Let Lua code specify name of data/ wad and lump/patch
-  // names to merge.  Have this code in dm_extra.cc
-
-  const char *filename = StringPrintf("%s/data/%s.lmp", install_path, ext_patches[i]);
-
-  int length;
-
-  u8_t *data = FileLoad(filename, &length);
-
-  if (! data)
-    Main_FatalError("Missing data file: %s.lmp", ext_patches[i]);
-
-  DM_WriteLump(ext_patches[i], data, length);
-
-  FileFree(data);
-}
-#endif
-
-
-static void ClearFlats()
-{
-  for (unsigned int i = 0; i < flat_lumps.size(); i++)
-  {
-    delete flat_lumps[i];
-    flat_lumps[i] = NULL;
-  }
-
-  flat_lumps.clear();
-}
-
-void DM_AddFlat(const char *name, qLump_c *lump)
-{
-  lump->SetName(name);
-
-  flat_lumps.push_back(lump);
-}
-
-static void WriteFlats()
-{
-  if (flat_lumps.size() == 0)
-    return;
-
-  DM_WriteLump("FF_START", NULL, 0);
-
-  for (unsigned int i = 0; i < flat_lumps.size(); i++)
-  {
-    qLump_c *lump = flat_lumps[i];
-
-    DM_WriteLump(lump->GetName(), lump);
-  }
-
-  // must end with F_END (a single 'F') to be compatible
-  // with vanilla doom.
-  DM_WriteLump("F_END", NULL, 0);
-
-  ClearFlats();
-}
-
 
 
 static void CreateInfoLump()
@@ -242,8 +219,7 @@ bool DM_StartWAD(const char *filename)
 
   wad_hexen = false;
 
-  ClearPatches();
-  ClearFlats();
+  ClearSections();
 
   CreateInfoLump();
 
@@ -253,8 +229,8 @@ bool DM_StartWAD(const char *filename)
 
 bool DM_EndWAD(void)
 {
-  WriteFlats();
-  WritePatches();
+  WriteSections();
+  ClearSections();
 
   // FIXME: errors????
   WAD_CloseWrite();

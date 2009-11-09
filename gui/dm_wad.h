@@ -31,8 +31,12 @@ void DM_BeginLevel(void);
 void DM_EndLevel(const char *level_name);
 
 void DM_WriteLump(const char *name, qLump_c *lump);
-void DM_AddPatch (const char *name, qLump_c *lump);
-void DM_AddFlat  (const char *name, qLump_c *lump);
+
+// the section parameter can be:
+//   'P' : patches   //   'F' : flats
+//   'S' : sprites   //   'C' : colormaps (Boom)
+//   'T' : textures (Zdoom)
+void DM_AddSectionLump(char section, const char *name, qLump_c *lump);
 
 
 void DM_AddVertex(int x, int y);
