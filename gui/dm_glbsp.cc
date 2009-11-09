@@ -187,8 +187,9 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
   nb_info.input_file  = GlbspStrDup(filename);
   nb_info.output_file = GlbspStrDup(out_name);
 
-  nb_info.quiet = true;
+  nb_info.quiet = TRUE;
   nb_info.pack_sides = pack_sidedefs;
+  nb_info.force_normal = TRUE;
 
   glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
 

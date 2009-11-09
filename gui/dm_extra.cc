@@ -749,6 +749,29 @@ static void TransferWADtoWAD(int src_entry, const char *dest_lump)
   WAD_FinishLump();
 }
 
+
+#define NUM_LEVEL_LUMPS  12
+
+static const char *level_lumps[NUM_LEVEL_LUMPS]=
+{
+  "THINGS", "LINEDEFS", "SIDEDEFS", "VERTEXES", "SEGS", 
+  "SSECTORS", "NODES", "SECTORS", "REJECT", "BLOCKMAP",
+  "BEHAVIOR",  // <-- hexen support
+  "SCRIPTS"  // -JL- Lump with script sources
+};
+
+static bool IsLevelLump(const char *name)
+{
+  for (int i=0; i < NUM_LEVEL_LUMPS; i++)
+  {
+    if (strcmp(name, level_lumps[i]) == 0)
+      return true;
+  }
+ 
+  return false;
+}
+
+
 int DM_wad_transfer_lump(lua_State *L)
 {
   // LUA: wad_transfer_lump(wad_file, src_lump, dest_lump)
@@ -781,6 +804,8 @@ int DM_wad_transfer_map(lua_State *L)
   //
   // Open an existing wad file and copy the map into our wad.
 
+  // TODO: error if PK3 is used
+
   const char *pkg_name = luaL_checkstring(L, 1);
   const char *src_map  = luaL_checkstring(L, 2);
   const char *dest_map = luaL_checkstring(L, 3);
@@ -792,7 +817,23 @@ int DM_wad_transfer_map(lua_State *L)
   if (entry < 0)
     return luaL_error(L, "wad_transfer_map: map '%s' not found", src_map);
 
-  // FIXME
+  // step 1: copy the map marker
+  TransferWADtoWAD(entry, dest_map);
+  entry++;
+
+  // step 2: copy all the lumps belonging to the map.
+  for (int loop = 0; loop < 15; loop++)
+  {
+    if (entry >= WAD_NumEntries())
+      break;
+
+    const char *src_lump = WAD_EntryName(entry);
+    if (! IsLevelLump(src_lump))
+      break;
+
+    TransferWADtoWAD(entry, src_lump);
+    entry++;
+  }
  
   WAD_CloseRead();
 
