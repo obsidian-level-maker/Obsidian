@@ -31,12 +31,22 @@ function Edge_remap_music()
 
   rand_shuffle(mus_list)
 
-  for i = 1,10 do
-    local track = string.format("%02d", i)
+  local data =
+  {
+    "//\n",
+    "// Playlist.ddf created by OBLIGE\n",
+    "//\n\n",
+    "<PLAYLISTS>\n\n"
+  }
 
-    gui.ddf_add_music(track, "MUS:LUMP:D_" .. mus_list[i])
---  gui.bex_add_music(old_list[i], mus_list[i])
+  for i = 1,10 do
+    local track = string.format(
+      "[%2d] MUSICINFO = MUS:LUMP:D_%s;\n", i, mus_list[i])
+ 
+    table.insert(data, track)
   end
+
+  gui.wad_add_text_lump("DDFPLAY", data);
 end
 
 
