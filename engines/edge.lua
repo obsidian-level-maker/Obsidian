@@ -86,7 +86,7 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = "EDGE 1.31",
+  label = "EDGE 1.34",
   priority = 90,
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
