@@ -24,9 +24,6 @@
 void BEX_Start();
 void BEX_Finish();
 
-void DED_Start();
-void DED_Finish();
-
 #endif /* __OBLIGE_DM_EXTRA_H__ */
 
 //--- editor settings ---

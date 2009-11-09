@@ -803,28 +803,5 @@ int DM_bex_add_music(lua_State *L)
 }
 
 
-//------------------------------------------------------------------------
-
-static qLump_c *dd_defns;
-
-void DED_Start()
-{
-  if (dd_defns)
-    delete dd_defns;
-
-  dd_defns = new qLump_c();
-}
-
-void DED_Finish()
-{
-  if (dd_defns->GetSize() > 0)
-  {
-    DM_WriteLump("DD_DEFNS", dd_defns);
-  }
-
-  delete dd_defns; dd_defns = NULL;
-}
-
-
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
