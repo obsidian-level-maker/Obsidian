@@ -722,13 +722,35 @@ int DM_wad_add_text_lump(lua_State *L)
 }
 
 
+static void TransferFILEtoWAD(FILE *fp, const char *dest_lump)
+{
+  WAD_NewLump(dest_lump);
+
+  int buf_size = 4096;
+  char *buffer = new char[buf_size];
+
+  for (;;)
+  {
+    int got_len = fread(buffer, 1, buf_size, fp);
+
+    if (got_len <= 0)
+      break;
+
+    WAD_AppendData(buffer, got_len);
+  }
+
+  delete[] buffer;
+
+  WAD_FinishLump();
+}
+
 static void TransferWADtoWAD(int src_entry, const char *dest_lump)
 {
   int length = WAD_EntryLen(src_entry);
-  int buf_size = 4096;
 
   WAD_NewLump(dest_lump);
 
+  int buf_size = 4096;
   char *buffer = new char[buf_size];
 
   for (int pos = 0; pos < length; )
@@ -772,17 +794,39 @@ static bool IsLevelLump(const char *name)
 }
 
 
+int DM_wad_insert_file(lua_State *L)
+{
+  // LUA: wad_insert_file(filename, lumpname)
+
+  const char *file_name = luaL_checkstring(L, 1);
+  const char *dest_lump = luaL_checkstring(L, 2);
+
+  FILE *fp = fopen(file_name, "rb");
+
+  if (! fp)
+    return luaL_error(L, "wad_insert_file: cannot open file: %s", file_name);
+
+  TransferFILEtoWAD(fp, dest_lump);
+
+  fclose(fp);
+
+  return 0;
+}
+
 int DM_wad_transfer_lump(lua_State *L)
 {
   // LUA: wad_transfer_lump(wad_file, src_lump, dest_lump)
   //
   // Open an existing wad file and copy the lump into our wad.
 
-  // TODO: support PK3 too
-
   const char *pkg_name  = luaL_checkstring(L, 1);
   const char *src_lump  = luaL_checkstring(L, 2);
   const char *dest_lump = luaL_checkstring(L, 3);
+
+  // TODO: support PK3
+
+  if (! CheckExtension(pkg_name, "wad"))
+    return luaL_error(L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
 
   if (! WAD_OpenRead(pkg_name))
     return luaL_error(L, "wad_transfer_lump: bad or missing WAD file: %s", pkg_name);
@@ -804,11 +848,12 @@ int DM_wad_transfer_map(lua_State *L)
   //
   // Open an existing wad file and copy the map into our wad.
 
-  // TODO: error if PK3 is used
-
   const char *pkg_name = luaL_checkstring(L, 1);
   const char *src_map  = luaL_checkstring(L, 2);
   const char *dest_map = luaL_checkstring(L, 3);
+
+  if (! CheckExtension(pkg_name, "wad"))
+    return luaL_error(L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
 
   if (! WAD_OpenRead(pkg_name))
     return luaL_error(L, "wad_transfer_map: bad or missing WAD file: %s", pkg_name);
