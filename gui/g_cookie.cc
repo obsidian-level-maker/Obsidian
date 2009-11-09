@@ -38,6 +38,13 @@ static void Cookie_SetValue(const char *name, const char *value)
 {
   DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
+  // -- Miscellaneous --
+  if (StringCaseCmp(name, "last_file") == 0)
+  {
+    UI_SetLastFile(value);
+    return;
+  }
+
   // -- Game Settings --
   if (main_win->game_box->ParseValue(name, value))
     return;
@@ -60,13 +67,6 @@ static void Cookie_SetValue(const char *name, const char *value)
     main_win->mod_box->ParseOptValue(module, dot+1 /* option */, value);
 
     StringFree(module);
-    return;
-  }
-
-  // -- Miscellaneous --
-  if (StringCaseCmp(name, "last_file") == 0)
-  {
-    UI_SetLastFile(value);
     return;
   }
 
@@ -188,8 +188,12 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2009 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-  std::vector<std::string> lines;
+  fprintf(cookie_fp, "-- Miscellaneous --\n");
+  fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
+  fprintf(cookie_fp, "\n");
 
+
+  std::vector<std::string> lines;
 
   ob_read_all_config(&lines, true /* all_opts */);
 
@@ -197,10 +201,6 @@ bool Cookie_Save(const char *filename)
   {
     fprintf(cookie_fp, "%s\n", lines[i].c_str());
   }
-
-  fprintf(cookie_fp, "-- Miscellaneous --\n");
-  fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
-  fprintf(cookie_fp, "\n");
 
   LogPrintf("DONE.\n\n");
 
