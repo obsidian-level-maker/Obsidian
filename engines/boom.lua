@@ -18,33 +18,61 @@
 --
 ----------------------------------------------------------------
 
-function Boom_end_level()
-  if LEVEL.description then
-    local id
+function Boom_create_dehacked()
 
-    if string.sub(LEVEL.name, 1, 1) == 'E' then
+  local data =
+  {
+    "#\n",
+    "# BEX LUMP created by OBLIGE\n",
+    "#\n\n",
+  }
 
-      -- Doom I : HUSTR_ExMy
-      id = "HUSTR_" .. LEVEL.name
+  -- Level names...
+  local strings_marker = false;
 
-    else
-      local pos = 4
-      if string.sub(LEVEL.name, pos, pos) == '0' then
-        pos = pos + 1
+  for _,L in ipairs(GAME.all_levels) do
+    if L.description then
+      local id
+
+      if string.sub(L.name, 1, 1) == 'E' then
+        -- Doom I : HUSTR_ExMy
+        id = "HUSTR_" .. L.name
+
+      else
+        local pos = 4
+        if string.sub(L.name, pos, pos) == '0' then
+          pos = pos + 1
+        end
+
+        -- Doom II : HUSTR_%d
+        id = "HUSTR_" .. string.sub(L.name, pos)
       end
 
-      -- Doom II : HUSTR_%d
-      id = "HUSTR_" .. string.sub(LEVEL.name, pos)
+      local text = L.name .. ": " .. L.description;
+
+      if not strings_marker then
+        table.insert(data, "[STRINGS]\n")
+        strings_marker = true
+      end
+
+      table.insert(data, string.format("%s = %s\n", id, text))
     end
+  end -- for L
 
-    local text = LEVEL.name .. ": " .. LEVEL.description;
+  -- TODO: music replacement
 
-    gui.bex_add_string(id, text)
-  end
+  table.insert(data, "\n");
+
+  gui.wad_add_text_lump("DEHACKED", data);
 end
 
 
 ----------------------------------------------------------------
+
+function Boom_all_done()
+  Boom_create_dehacked();
+end
+
 
 OB_ENGINES["boom"] =
 {
@@ -53,7 +81,7 @@ OB_ENGINES["boom"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
-  end_level_func = Boom_end_level,
+  all_done_func = Boom_all_done,
 
   param =
   {

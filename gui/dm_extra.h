@@ -21,8 +21,6 @@
 #ifndef __OBLIGE_DM_EXTRA_H__
 #define __OBLIGE_DM_EXTRA_H__
 
-void BEX_Start();
-void BEX_Finish();
 
 #endif /* __OBLIGE_DM_EXTRA_H__ */
 

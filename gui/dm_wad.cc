@@ -247,8 +247,6 @@ bool DM_StartWAD(const char *filename)
 
   CreateInfoLump();
 
-  BEX_Start();
-
   return true; //OK
 }
 
@@ -257,8 +255,6 @@ bool DM_EndWAD(void)
 {
   WriteFlats();
   WritePatches();
-
-  BEX_Finish();
 
   // FIXME: errors????
   WAD_CloseWrite();
