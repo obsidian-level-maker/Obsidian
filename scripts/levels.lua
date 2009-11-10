@@ -417,7 +417,7 @@ end
 function Level_build_it()
   gui.rand_seed(LEVEL.seed)
 
-  -- does the level have a custom build function (e.g. Arenas) ?
+  -- does the level have a custom build function?
   if LEVEL.build_func then
     LEVEL.build_func()
     if gui.abort() then return "abort" end
@@ -455,6 +455,16 @@ function Level_build_it()
 end
 
 
+function Level_handle_prebuilt()
+  -- FIXME: support other games (Wolf3d, Quake, etc)
+  assert(LEVEL.prebuilt_wad)
+
+  gui.wad_transfer_map(LEVEL.prebuilt_wad, LEVEL.prebuilt_map, LEVEL.name)
+
+  return "ok"
+end
+
+
 function Level_make(L, index, NUM)
   LEVEL = L
 
@@ -470,6 +480,24 @@ function Level_make(L, index, NUM)
   THEME = assert(LEVEL.theme)
   if GAME.defaults then
     merge_missing(THEME, GAME.defaults)
+  end
+
+
+  -- use a pre-built level ?
+
+  if LEVEL.prebuilt_map then
+    Game_invoke_hook("begin_level_func",  LEVEL.seed)
+    Game_invoke_hook("begin_level2_func", LEVEL.seed)
+
+    local res = Level_handle_prebuilt()
+    if res == "abort" then
+      return res
+    end
+
+    Game_invoke_hook("end_level_func",  LEVEL.seed)
+    Game_invoke_hook("end_level2_func", LEVEL.seed)
+
+    return "ok"
   end
 
 

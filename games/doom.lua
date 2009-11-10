@@ -2724,7 +2724,8 @@ function Doom2_get_levels()
     if map == 7 then
       LEV.build_func = Arena_Doom_MAP07
     elseif map == 17 then  -- 16..18
-      -- FIXME
+      LEV.prebuilt_wad = "data/gotcha_maps.wad"
+      LEV.prebuilt_map = "MAP01"
     elseif map == 24 then  -- or 25
       -- FIXME
     elseif map == 30 then
@@ -2824,7 +2825,7 @@ function Doom_begin_level()
 end
 
 function Doom_end_level()
-gui.printf("Doom_end_level: desc=%s patch=%s\n",
+gui.printf("Doom_end_level: desc='%s' patch='%s'\n",
            tostring(LEVEL.description),
            tostring(LEVEL.patch))
   if LEVEL.description and LEVEL.patch then
