@@ -16,6 +16,8 @@ TODO
 
 +  BUG: arena E4M6 is not completeable (needs a tag 666 door).
 
+?  option to not create backup files
+
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
@@ -30,7 +32,7 @@ TODO
 
 -  review big room logic
 
-+  introduce randomness into skill bits:
+?? introduce randomness into skill bits:
      UV:   1.0 1.0  /  1.0 1.0  /  1.0 1.0
      HMP:  1.0 0.4  /  1.0 0.4  /  1.0 0.4
      HNTR: 0.4 0.4  /  0.4 0.4  /  0.4 0.4

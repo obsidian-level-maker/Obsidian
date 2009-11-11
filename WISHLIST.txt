@@ -153,6 +153,8 @@ SKY GENERATOR:
   WOLF 3D
 ----------------------------------------------------------------
 
+- get it working (tiler.lua)
+
 + push-walls for secret quests!
 + secret elevators
 + bosses!
