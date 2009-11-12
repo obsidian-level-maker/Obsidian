@@ -22,8 +22,8 @@
 #define __UI_WINDOW_H__
 
 
-#define MIN_WINDOW_W  740
-#define MIN_WINDOW_H  500
+#define MIN_WINDOW_W  428 // 740
+#define MIN_WINDOW_H  432 // 500
 
 #define WINDOW_BG  fl_gray_ramp(3)
 

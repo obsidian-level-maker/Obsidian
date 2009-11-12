@@ -21,7 +21,7 @@
 #ifndef __OBLIGE_MAIN_H__
 #define __OBLIGE_MAIN_H__
 
-#define OBLIGE_TITLE  "Oblige Level Maker"
+#define OBLIGE_TITLE  "OBLIGE Level Maker"
 
 #define OBLIGE_VERSION  "3.48"
 #define OBLIGE_HEX_VER  0x348

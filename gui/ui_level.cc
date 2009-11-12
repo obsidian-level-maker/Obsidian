@@ -100,7 +100,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  light = new UI_RChoice(cx, cy, cw, ch, "Lighting: ");
+  light = new UI_RChoice(cx, cy, cw, ch, "Secrets: ");
   light->align(FL_ALIGN_LEFT);
   light->selection_color(MY_GREEN);
   light->callback(callback_Light, this);
@@ -112,7 +112,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += light->h() + y_step;
 
 
-  detail = new UI_RChoice(cx, cy, cw, ch, "Detail: ");
+  detail = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
   detail->align(FL_ALIGN_LEFT);
   detail->selection_color(MY_GREEN);
   detail->callback(callback_Detail, this);

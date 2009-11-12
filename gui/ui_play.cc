@@ -96,9 +96,10 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   setup_Traps();
 
+traps->hide();
   add(traps);
 
-  cy += traps->h() + y_step;
+//  cy += traps->h() + y_step;
 
 
   powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");

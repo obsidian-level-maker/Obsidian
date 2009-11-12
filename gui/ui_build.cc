@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  Build screen
+//  Build panel
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -43,50 +43,55 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 16;
 
-  int mini_w = 124 + KF * 12;
-  int mini_h =  96 + KF *  4;
+  int mini_w = 100 + KF * 12;
+  int mini_h = 76 + KF *  6;
 
-  mini_map = new UI_MiniMap(x+(w-mini_w)/2, cy, mini_w, mini_h);
+  mini_map = new UI_MiniMap(x+10+0*(w-mini_w)/2, cy, mini_w, mini_h);
 
   add(mini_map);
 
-  cy += mini_h + 12;
+//  cy += 10;
 
 
   int button_w = 74 + KF * 16;
   int button_h = 30 + KF * 4;
+  int button_x = x + w-10 - button_w;
 
-  options = new Fl_Button(x + 16, cy, button_w, button_h, "Options");
-  options->labelsize(FL_NORMAL_SIZE + 0);
-//  options->callback(options_callback, this);
+  about = new Fl_Button(button_x, cy, button_w, button_h, "About");
+  about->labelsize(FL_NORMAL_SIZE + 0);
+  about->callback(about_callback, this);
 
-  add(options);
+  add(about);
 
-  build = new Fl_Button(x+w-12-button_w, cy, button_w, button_h, "Build");
+  cy += about->h() + 14 + KF;
+
+  build = new Fl_Button(button_x, cy, button_w, button_h, "Build");
   build->labelfont(FL_HELVETICA_BOLD);
   build->labelsize(FL_NORMAL_SIZE + 2);
   build->callback(build_callback, this);
 
   add(build);
 
-  cy += build->h() + 6 + KF;
+  cy += build->h() + 14 + KF;
 
 
-  about = new Fl_Button(x + 16, cy, button_w, button_h, "About");
-  about->labelsize(FL_NORMAL_SIZE + 0);
-  about->callback(about_callback, this);
+  options = new Fl_Button(x+20, cy, button_w, button_h, "Options");
+  options->labelsize(FL_NORMAL_SIZE + 0);
+//  options->callback(options_callback, this);
 
-  add(about);
+  add(options);
 
-  quit = new Fl_Button(x+w-12-button_w, cy, button_w, button_h, "Quit");
+// cy += options->h() + 6;
+
+  quit = new Fl_Button(button_x, cy, button_w, button_h, "Quit");
   quit->labelsize(FL_NORMAL_SIZE + 0);
   quit->callback(quit_callback, this);
 
   add(quit);
 
-  cy += build->h();
+  cy += quit->h();
 
-  cy += 10 + KF;
+  cy += 6 + KF;
   
 
   status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-20, 24+KF*2, "Ready to go!");
@@ -106,6 +111,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   progress->labelsize(16);
 
   add(progress);
+
+  cy += progress->h() + 12;
 
 
   resizable(NULL);

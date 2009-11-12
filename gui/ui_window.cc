@@ -61,7 +61,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   color(WINDOW_BG, WINDOW_BG);
 
-  int TOP_H  = 224 + (H - MIN_WINDOW_H) / 2;
+  int TOP_H  = 214 + (H - MIN_WINDOW_H) / 2;
   int BOT_H  = H - TOP_H - 4;
 
   int PANEL_W = 212 + (W - MIN_WINDOW_W) * 2 / 7;
@@ -81,9 +81,12 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 
   mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
+
+  mod_box->hide();
+
   add(mod_box);
 
-  resizable(mod_box);
+///  resizable(mod_box);
 }
 
 //
