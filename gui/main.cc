@@ -389,6 +389,15 @@ int main(int argc, char **argv)
 
   main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
+  Script_Load();
+
+  main_win->game_box ->Defaults();
+  main_win->level_box->Defaults();
+  main_win->play_box ->Defaults();
+
+  // load config after creating window (will set widget values)
+  Cookie_Load(CONFIG_FILENAME);
+
   // show window (pass some dummy arguments)
   {
     int argc = 1;
@@ -411,15 +420,6 @@ int main(int argc, char **argv)
   // draw an empty map (must be done after main window is
   // shown() because that is when FLTK finalises the colors).
   main_win->build_box->mini_map->EmptyMap();
-
-  Script_Load();
-
-  main_win->game_box ->Defaults();
-  main_win->level_box->Defaults();
-  main_win->play_box ->Defaults();
-
-  // load config after creating window (will set widget values)
-  Cookie_Load(CONFIG_FILENAME);
 
   // handle -seed option
   {
