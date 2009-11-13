@@ -46,7 +46,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   int mini_w = 100 + KF * 12;
   int mini_h = 76 + KF *  6;
 
-  mini_map = new UI_MiniMap(x+10+0*(w-mini_w)/2, cy, mini_w, mini_h);
+  mini_map = new UI_MiniMap(x+14+KF*2, cy, mini_w, mini_h);
 
   add(mini_map);
 
@@ -55,7 +55,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int button_w = 74 + KF * 16;
   int button_h = 30 + KF * 4;
-  int button_x = x + w-10 - button_w;
+  int button_x = x + w-14-KF*2 - button_w;
 
   about = new Fl_Button(button_x, cy, button_w, button_h, "About");
   about->labelsize(FL_NORMAL_SIZE + 0);

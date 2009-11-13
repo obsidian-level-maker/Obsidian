@@ -61,10 +61,10 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   color(WINDOW_BG, WINDOW_BG);
 
-  int TOP_H  = 214 + KF*12; ///--- (H - MIN_WINDOW_H) / 2;
+  int TOP_H  = 214 + KF*16; ///--- (H - MIN_WINDOW_H) / 2;
   int BOT_H  = H - TOP_H - 4;
 
-  int PANEL_W = 212 + KF*64;  ///--- (W - MIN_WINDOW_W) * 2 / 7;
+  int PANEL_W = 212 + KF*32;  ///--- (W - MIN_WINDOW_W) * 2 / 7;
   int MOD_W   = W - PANEL_W*2 - 8;
 
   game_box = new UI_Game(0, 0, PANEL_W, TOP_H);

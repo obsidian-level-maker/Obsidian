@@ -86,7 +86,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   cy += strength->h() + y_step;
 
-  cy += y_step + y_step/2;
+  cy += y_step + y_step/2 - 1;
 
 
   powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
@@ -100,7 +100,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
 
   cy += powers->h() + y_step;
 
-  cy += y_step + y_step/2;
+  cy += y_step + y_step/2 - 1;
 
 
   health = new UI_RChoice(cx, cy, cw, ch, "Health: ");
