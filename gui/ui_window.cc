@@ -61,10 +61,10 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   color(WINDOW_BG, WINDOW_BG);
 
-  int TOP_H  = 214 + (H - MIN_WINDOW_H) / 2;
+  int TOP_H  = 214 + KF*12; ///--- (H - MIN_WINDOW_H) / 2;
   int BOT_H  = H - TOP_H - 4;
 
-  int PANEL_W = 212 + (W - MIN_WINDOW_W) * 2 / 7;
+  int PANEL_W = 212 + KF*64;  ///--- (W - MIN_WINDOW_W) * 2 / 7;
   int MOD_W   = W - PANEL_W*2 - 8;
 
   game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
@@ -81,9 +81,6 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
 
   mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
-
-  mod_box->hide();
-
   add(mod_box);
 
 ///  resizable(mod_box);
@@ -96,6 +93,17 @@ UI_MainWin::~UI_MainWin()
 { }
 
 
+
+void UI_MainWin::CalcWindowSize(bool hide_modules, int *W, int *H)
+{
+  *H = MIN_WINDOW_H + KF * 32;
+  *W = MIN_WINDOW_W + KF * 64;
+  
+  if (! hide_modules)
+    *W += 304 + KF * 32;
+}
+
+
 void UI_MainWin::Locked(bool value)
 {
   game_box ->Locked(value);
@@ -103,6 +111,30 @@ void UI_MainWin::Locked(bool value)
   level_box->Locked(value);
   play_box ->Locked(value);
   mod_box  ->Locked(value);
+}
+
+
+void UI_MainWin::HideModules(bool hide)
+{
+  int new_w, new_h;
+  CalcWindowSize(hide, &new_w, &new_h);
+
+  if (hide)
+  {
+    mod_box->hide();
+    mod_box->position(0, 0);
+
+    resize(0, 0, new_w, new_h);
+  }
+  else
+  {
+    resize(0, 0, new_w, new_h);
+
+    mod_box->position(w() - mod_box->w(), 0);
+    mod_box->show();
+  }
+
+  redraw();
 }
 
 //--- editor settings ---

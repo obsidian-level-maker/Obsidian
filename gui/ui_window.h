@@ -56,12 +56,16 @@ public:
   UI_MainWin(int W, int H, const char *title);
   virtual ~UI_MainWin();
 
+  static void CalcWindowSize(bool hide_modules, int *W, int *H);
+
   void Locked(bool value);
+
+  void HideModules(bool hide);
 };
 
-extern UI_MainWin * main_win;
-
 extern int KF;  // Kromulent Factor
+
+extern UI_MainWin * main_win;
 
 
 #endif /* __UI_WINDOW_H__ */

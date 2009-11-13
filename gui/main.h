@@ -28,6 +28,9 @@
 
 extern const char *install_path;
 
+extern bool hide_module_panel;
+
+
 void Main_FatalError(const char *msg, ...);
 
 void Main_Ticker();

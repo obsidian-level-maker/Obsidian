@@ -50,6 +50,11 @@
 const char *working_path = NULL;
 const char *install_path = NULL;
 
+int screen_w;
+int screen_h;
+
+bool hide_module_panel = false;
+
 
 game_interface_c * game_object = NULL;
 
@@ -329,31 +334,22 @@ int main(int argc, char **argv)
 
   Fl::scheme("plastic");
 
-  int screen_w = Fl::w();
-  int screen_h = Fl::h();
+  screen_w = Fl::w();
+  screen_h = Fl::h();
 
-  int main_w = MIN_WINDOW_W;
-  int main_h = MIN_WINDOW_H;
+  // determine the Kromulent factor
+  KF = 0;
 
   if (hires_adapt)
   {
     if (screen_w > 1100 && screen_h > 720)
-    {
-      main_w += 176;
-      main_h += 64;
-
       KF = 2;
-      FL_NORMAL_SIZE = 18;
-    }
     else if (screen_w > 950 && screen_h > 660)
-    {
-      main_w += 64;
-      main_h += 32;
-
       KF = 1;
-      FL_NORMAL_SIZE = 16;
-    }
   }
+
+  // default font size for widgets
+  FL_NORMAL_SIZE = 14 + KF * 2;
 
   fl_message_font(FL_HELVETICA /* _BOLD */, 18);
 
@@ -387,6 +383,9 @@ int main(int argc, char **argv)
 
   Default_Location();
 
+  int main_w, main_h;
+  UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
+
   main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
   Script_Load();
@@ -397,6 +396,9 @@ int main(int argc, char **argv)
 
   // load config after creating window (will set widget values)
   Cookie_Load(CONFIG_FILENAME);
+
+  if (hide_module_panel)
+    main_win->HideModules(true);
 
   // show window (pass some dummy arguments)
   {
