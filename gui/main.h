@@ -29,6 +29,7 @@
 extern const char *install_path;
 
 extern bool hide_module_panel;
+extern bool create_backups;
 
 
 void Main_FatalError(const char *msg, ...);

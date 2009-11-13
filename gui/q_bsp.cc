@@ -359,7 +359,7 @@ qLump_c *BSP_NewLump(int entry)
 
 void BSP_BackupPAK(const char *filename)
 {
-  if (FileExists(filename))
+  if (create_backups && FileExists(filename))
   {
     char *backup_name = ReplaceExtension(filename, "old");
 

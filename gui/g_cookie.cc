@@ -39,12 +39,17 @@ static void Cookie_SetValue(const char *name, const char *value)
   DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
   // -- Miscellaneous --
+  if (StringCaseCmp(name, "create_backups") == 0)
+  {
+    create_backups = atoi(value) ? true : false;
+    return;
+  }
   if (StringCaseCmp(name, "hide_modules") == 0)
   {
     hide_module_panel = atoi(value) ? true : false;
     return;
   }
-  else if (StringCaseCmp(name, "last_file") == 0)
+  if (StringCaseCmp(name, "last_file") == 0)
   {
     UI_SetLastFile(value);
     return;
@@ -194,6 +199,7 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
+  fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
   fprintf(cookie_fp, "hide_modules = %d\n", hide_module_panel ? 1 : 0);
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
   fprintf(cookie_fp, "\n");

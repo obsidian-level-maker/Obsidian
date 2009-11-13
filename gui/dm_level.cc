@@ -1116,7 +1116,7 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
 
   // backup any existing wad
 
-  if (FileExists(target_file))
+  if (create_backups && FileExists(target_file))
   {
     char *backup_name = ReplaceExtension(target_file, "bak");
 

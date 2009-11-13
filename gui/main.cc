@@ -54,6 +54,7 @@ int screen_w;
 int screen_h;
 
 bool hide_module_panel = false;
+bool create_backups = true;
 
 
 game_interface_c * game_object = NULL;
