@@ -197,17 +197,7 @@ public:
 
 public:
   // FLTK virtual method for handling input events.
-  int handle(int event)
-  {
-    if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
-        Fl::event_key() == FL_Escape)
-    {
-      want_quit = true;
-      return 1;
-    }
-
-    return Fl_Window::handle(event);
-  }
+  int handle(int event);
 
 private:
   static void quit_callback(Fl_Widget *w, void *data)
@@ -216,6 +206,19 @@ private:
 
     that->want_quit = true;
   }
+
+  static void backup_callback(Fl_Widget *w, void *data)
+  {
+  }
+
+  static void module_callback(Fl_Widget *w, void *data)
+  {
+    UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+    hide_module_panel = that->opt_modules->value() ? true : false;
+    main_win->HideModules(hide_module_panel);
+  }
+
 };
 
 
@@ -265,6 +268,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F1 key)");
   opt_modules->align(FL_ALIGN_RIGHT);
   opt_modules->value(hide_module_panel ? 1 : 0);
+  opt_modules->callback(module_callback, this);
 
   add(opt_modules);
 
@@ -296,6 +300,27 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   Fl_Button *button = new Fl_Button(W-10-bw, H-10-bh, bw, bh, "OK");
   button->callback(quit_callback, this);
   darkish->add(button);
+}
+
+
+int UI_OptionsWin::handle(int event)
+{
+  if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
+      Fl::event_key() == FL_Escape)
+  {
+    want_quit = true;
+    return 1;
+  }
+
+  if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
+      Fl::event_key() == TOGGLE_MODULES_KEY)
+  {
+    opt_modules->value(opt_modules->value() ? 0 : 1);    
+    module_callback(opt_modules, this);
+    return 1;
+  }
+
+  return Fl_Window::handle(event);
 }
 
 

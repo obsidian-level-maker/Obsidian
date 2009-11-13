@@ -236,7 +236,7 @@ static int module_key_handler(int event)
   if (event != FL_SHORTCUT)
     return 0;
 
-  if (Fl::event_key() == FL_F+1)
+  if (Fl::event_key() == TOGGLE_MODULES_KEY)
   {
     hide_module_panel = ! hide_module_panel;
     main_win->HideModules(hide_module_panel);
