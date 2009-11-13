@@ -170,13 +170,17 @@ void DLG_AboutText(void)
 }
 
 
-//------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////////////////
 
 
 class UI_OptionsWin : public Fl_Window
 {
 private:
   bool want_quit;
+
+  Fl_Check_Button *opt_modules;
+  Fl_Check_Button *opt_backups;
+  Fl_Check_Button *opt_debug;
 
 public:
   UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -235,7 +239,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
   int y_step = 6 + KF;
 
-  int cx = x() + 66 + KF * 11;
+  int cx = x() + 24 + KF*3;
   int cy = y() + y_step;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Miscellaneous Options");
@@ -247,6 +251,33 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   add(heading);
 
   cy += heading->h() + y_step;
+
+  
+  opt_backups = new Fl_Check_Button(cx, cy, 24, 24, "Create Backups");
+  opt_backups->align(FL_ALIGN_RIGHT);
+  opt_backups->value(true ? 1 : 0);
+
+  add(opt_backups);
+
+  cy += opt_backups->h() + y_step;
+
+
+  opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F1 key)");
+  opt_modules->align(FL_ALIGN_RIGHT);
+  opt_modules->value(hide_module_panel ? 1 : 0);
+
+  add(opt_modules);
+
+  cy += opt_modules->h() + y_step;
+
+
+  opt_debug = new Fl_Check_Button(cx, cy, 24, 24, "Debugging Messages (in LOGS.txt)");
+  opt_debug->align(FL_ALIGN_RIGHT);
+  opt_debug->value(false ? 1 : 0);
+
+  add(opt_debug);
+
+  cy += opt_debug->h() + y_step;
 
 
   int dh = 50 + KF * 4;
