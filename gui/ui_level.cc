@@ -100,28 +100,28 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  light = new UI_RChoice(cx, cy, cw, ch, "Secrets: ");
-  light->align(FL_ALIGN_LEFT);
-  light->selection_color(MY_GREEN);
-  light->callback(callback_Light, this);
+  secrets = new UI_RChoice(cx, cy, cw, ch, "Secrets: ");
+  secrets->align(FL_ALIGN_LEFT);
+  secrets->selection_color(MY_GREEN);
+  secrets->callback(callback_Secrets, this);
 
-  setup_Light();
+  setup_Secrets();
 
-  add(light);
+  add(secrets);
 
-  cy += light->h() + y_step;
+  cy += secrets->h() + y_step;
 
 
-  detail = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
-  detail->align(FL_ALIGN_LEFT);
-  detail->selection_color(MY_GREEN);
-  detail->callback(callback_Detail, this);
+  traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
+  traps->align(FL_ALIGN_LEFT);
+  traps->selection_color(MY_GREEN);
+  traps->callback(callback_Traps, this);
 
-  setup_Detail();
+  setup_Traps();
 
-  add(detail);
+  add(traps);
 
-  cy += detail->h() + y_step;
+  cy += traps->h() + y_step;
 
 
   DebugPrintf("UI_Level: final h = %d\n", cy - y);
@@ -141,19 +141,21 @@ void UI_Level::Locked(bool value)
 {
   if (value)
   {
-    theme  ->deactivate();
-    size   ->deactivate();
+    theme->deactivate();
+    size ->deactivate();
+
     outdoors->deactivate();
-    detail ->deactivate();
-    light  ->deactivate();
+    secrets ->deactivate();
+    traps   ->deactivate();
   }
   else
   {
-    theme  ->activate();
-    size   ->activate();
+    theme->activate();
+    size ->activate();
+
     outdoors->activate();
-    detail ->activate();
-    light  ->activate();
+    secrets ->activate();
+    traps   ->activate();
   }
 }
 
@@ -174,11 +176,11 @@ void UI_Level::callback_Size(Fl_Widget *w, void *data)
   ob_set_config("size", that->size->GetID());
 }
  
-void UI_Level::callback_Detail(Fl_Widget *w, void *data)
+void UI_Level::callback_Traps(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("detail", that->detail->GetID());
+  ob_set_config("traps", that->traps->GetID());
 }
  
 void UI_Level::callback_Outdoors(Fl_Widget *w, void *data)
@@ -188,11 +190,11 @@ void UI_Level::callback_Outdoors(Fl_Widget *w, void *data)
   ob_set_config("outdoors", that->outdoors->GetID());
 }
  
-void UI_Level::callback_Light(Fl_Widget *w, void *data)
+void UI_Level::callback_Secrets(Fl_Widget *w, void *data)
 {
   UI_Level *that = (UI_Level *) data;
 
-  ob_set_config("light", that->light->GetID());
+  ob_set_config("secrets", that->secrets->GetID());
 }
 
 void UI_Level::Defaults()
@@ -201,8 +203,8 @@ void UI_Level::Defaults()
 
   ParseValue("size",     "prog");
   ParseValue("outdoors", "mixed");
-  ParseValue("light",    "mixed");
-  ParseValue("detail",   "normal");
+  ParseValue("secrets",  "mixed");
+  ParseValue("traps",    "mixed");
 }
  
 bool UI_Level::ParseValue(const char *key, const char *value)
@@ -216,13 +218,6 @@ bool UI_Level::ParseValue(const char *key, const char *value)
     return true;
   }
 
-  if (StringCaseCmp(key, "detail") == 0)
-  {
-    detail->SetID(value);
-    callback_Detail(NULL, this);
-    return true;
-  }
-
   if (StringCaseCmp(key, "outdoors") == 0)
   {
     outdoors->SetID(value);
@@ -230,10 +225,17 @@ bool UI_Level::ParseValue(const char *key, const char *value)
     return true;
   }
 
-  if (StringCaseCmp(key, "light") == 0)
+  if (StringCaseCmp(key, "secrets") == 0)
   {
-    light->SetID(value);
-    callback_Light(NULL, this);
+    secrets->SetID(value);
+    callback_Secrets(NULL, this);
+    return true;
+  }
+
+  if (StringCaseCmp(key, "traps") == 0)
+  {
+    traps->SetID(value);
+    callback_Traps(NULL, this);
     return true;
   }
 
@@ -248,8 +250,6 @@ const char * UI_Level::size_syms[] =
   "small",  "Small",
   "normal", "Regular",
   "large",  "Large",
-
-/// "xlarge", "X-Large",
 
   "prog",   "Progressive",
   "mixed",  "Mix It Up",
@@ -270,16 +270,21 @@ const char * UI_Level::outdoor_syms[] =
   NULL, NULL
 };
 
-const char * UI_Level::detail_syms[] =
+const char * UI_Level::trap_syms[] =
 {
-  "none",   "NONE",
-  "low",    "Low",
-  "normal", "Medium",
-  "high",   "High",
+  // also used for: Secrets
+
+  "none",   "NONE",  
+  "few",    "Rare",
+  "some",   "Medium",
+  "heaps",  "Heaps",
+
+  "mixed",  "Mix It Up",
 
   NULL, NULL
 };
 
+#if 0
 const char * UI_Level::light_syms[] =
 {
   "none",   "NONE",
@@ -291,6 +296,7 @@ const char * UI_Level::light_syms[] =
 
   NULL, NULL
 };
+#endif
 
 void UI_Level::setup_Size()
 {
@@ -298,15 +304,6 @@ void UI_Level::setup_Size()
   {
     size->AddPair(size_syms[i], size_syms[i+1]);
     size->ShowOrHide(size_syms[i], 1);
-  }
-}
-
-void UI_Level::setup_Detail()
-{
-  for (int i = 0; detail_syms[i]; i += 2)
-  {
-    detail->AddPair(detail_syms[i], detail_syms[i+1]);
-    detail->ShowOrHide(detail_syms[i], 1);
   }
 }
 
@@ -319,13 +316,23 @@ void UI_Level::setup_Outdoors()
   }
 }
 
-void UI_Level::setup_Light()
+void UI_Level::setup_Secrets()
 {
-  for (int i = 0; light_syms[i]; i += 2)
+  for (int i = 0; trap_syms[i]; i += 2)
   {
-    light->AddPair(light_syms[i], light_syms[i+1]);
-    light->ShowOrHide(light_syms[i], 1);
+    secrets->AddPair(trap_syms[i], trap_syms[i+1]);
+    secrets->ShowOrHide(trap_syms[i], 1);
   }
+}
+
+void UI_Level::setup_Traps()
+{
+  for (int i = 0; trap_syms[i]; i += 2)
+  {
+    traps->AddPair(trap_syms[i], trap_syms[i+1]);
+    traps->ShowOrHide(trap_syms[i], 1);
+  }
+
 }
 
 

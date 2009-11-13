@@ -30,8 +30,8 @@ public: /// private:
   UI_RChoice *size;
   UI_RChoice *outdoors;
 
-  UI_RChoice *detail;
-  UI_RChoice *light;
+  UI_RChoice *secrets;
+  UI_RChoice *traps;
 
 
 public:
@@ -53,19 +53,18 @@ private:
 
   void setup_Size();
   void setup_Outdoors();
-  void setup_Detail();
-  void setup_Light();
+  void setup_Secrets();
+  void setup_Traps();
 
-  static void callback_Size   (Fl_Widget *, void*);
-  static void callback_Theme  (Fl_Widget *, void*);
+  static void callback_Size    (Fl_Widget *, void*);
+  static void callback_Theme   (Fl_Widget *, void*);
   static void callback_Outdoors(Fl_Widget *, void*);
-  static void callback_Detail (Fl_Widget *, void*);
-  static void callback_Light  (Fl_Widget *, void*);
+  static void callback_Secrets (Fl_Widget *, void*);
+  static void callback_Traps   (Fl_Widget *, void*);
 
   static const char * size_syms[];
   static const char * outdoor_syms[];
-  static const char * detail_syms[];
-  static const char * light_syms[];
+  static const char * trap_syms[];
 };
 
 #endif /* __UI_LEVEL_H__ */
