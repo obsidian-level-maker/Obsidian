@@ -2,6 +2,13 @@
 TODO
 ====
 
+>>>  Hide Modules option
+
+>>>  Create Backups option
+
+>>>  Debugging Messages option
+
+
 ++  need to explain (Usage Guide, README) that some modules must
     be run with additional wads or packages, in particular the
     ZDoom Beastiary module.
