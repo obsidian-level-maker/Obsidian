@@ -392,7 +392,10 @@ int main(int argc, char **argv)
   // show window (pass some dummy arguments)
   {
     int argc = 1;
-    char *argv[] = { "Oblige.exe", NULL };
+
+    char *argv[2];
+    argv[0] = strdup("Oblige.exe");
+    argv[1] = NULL;
 
     main_win->show(argc, argv);
   }
