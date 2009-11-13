@@ -157,7 +157,7 @@ void DLG_AboutText(void)
   int about_w = 340 + KF * 30;
   int about_h = 370 + KF * 40;
 
-  UI_About *about = new UI_About(about_w, about_h, "About OBLIGE");
+  UI_About *about = new UI_About(about_w, about_h, "About Oblige");
 
   about->show();
 
@@ -225,12 +225,46 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   // cancel Fl_Group's automatic add crap
   end();
 
-
   // non-resizable
   size_range(W, H, W, H);
   callback(quit_callback, this);
 
-  int cy = 0;
+  box(FL_THIN_UP_BOX);
+  color(BUILD_BG, BUILD_BG);
+
+
+  int y_step = 6 + KF;
+
+  int cx = x() + 66 + KF * 11;
+  int cy = y() + y_step;
+
+  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Miscellaneous Options");
+  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  heading->labeltype(FL_NORMAL_LABEL);
+  heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 2);
+
+  add(heading);
+
+  cy += heading->h() + y_step;
+
+
+  int dh = 50 + KF * 4;
+
+  Fl_Group *darkish = new Fl_Group(0, H-dh, W, dh);
+  darkish->end();
+  darkish->box(FL_FLAT_BOX);
+  darkish->color(BUILD_BG, BUILD_BG);
+  add(darkish);
+
+
+  // finally add an "OK" button
+  int bw = 60 + KF * 10;
+  int bh = 30 + KF * 3;
+
+  Fl_Button *button = new Fl_Button(W-10-bw, H-10-bh, bw, bh, "OK");
+  button->callback(quit_callback, this);
+  darkish->add(button);
 }
 
 
@@ -239,7 +273,7 @@ void DLG_OptionsEditor(void)
   int opt_w = 340 + KF * 30;
   int opt_h = 370 + KF * 40;
 
-  UI_OptionsWin *win = new UI_OptionsWin(opt_w, opt_h, "Options Editor");
+  UI_OptionsWin *win = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");
 
   win->show();
 
