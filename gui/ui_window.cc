@@ -124,11 +124,11 @@ void UI_MainWin::HideModules(bool hide)
     mod_box->hide();
     mod_box->position(0, 0);
 
-    resize(0, 0, new_w, new_h);
+    size(new_w, new_h);
   }
   else
   {
-    resize(0, 0, new_w, new_h);
+    size(new_w, new_h);
 
     mod_box->position(w() - mod_box->w(), 0);
     mod_box->show();

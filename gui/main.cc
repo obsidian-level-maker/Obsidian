@@ -231,6 +231,22 @@ static int escape_key_handler(int event)
 }
 
 
+static int module_key_handler(int event)
+{
+  if (event != FL_SHORTCUT)
+    return 0;
+
+  if (Fl::event_key() == FL_F+1)
+  {
+    hide_module_panel = ! hide_module_panel;
+    main_win->HideModules(hide_module_panel);
+    return 1;
+  }
+
+  return 0;
+}
+
+
 //------------------------------------------------------------------------
 
 void Build_Cool_Shit()
@@ -417,6 +433,7 @@ int main(int argc, char **argv)
 
   main_win->image(NULL);
 
+  Fl::add_handler(module_key_handler);
   Fl::add_handler(escape_key_handler);
 
   // draw an empty map (must be done after main window is
