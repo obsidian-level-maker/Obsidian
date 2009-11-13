@@ -59,6 +59,7 @@ public:
 private:
   static void build_callback(Fl_Widget *, void*);
   static void about_callback(Fl_Widget *, void*);
+  static void options_callback(Fl_Widget *, void*);
   static void stop_callback(Fl_Widget *, void*);
   static void quit_callback(Fl_Widget *, void*);
 };

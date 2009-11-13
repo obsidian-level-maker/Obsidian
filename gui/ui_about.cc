@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  About Window
+//  About and Options Windows
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -157,7 +157,7 @@ void DLG_AboutText(void)
   int about_w = 340 + KF * 30;
   int about_h = 370 + KF * 40;
 
-  UI_About *about = new UI_About(about_w, about_h, "About Oblige");
+  UI_About *about = new UI_About(about_w, about_h, "About OBLIGE");
 
   about->show();
 
@@ -169,6 +169,87 @@ void DLG_AboutText(void)
   delete about;
 }
 
+
+//------------------------------------------------------------------------
+
+
+class UI_OptionsWin : public Fl_Window
+{
+private:
+  bool want_quit;
+
+public:
+  UI_OptionsWin(int W, int H, const char *label = NULL);
+
+  virtual ~UI_OptionsWin()
+  {
+    // nothing needed
+  }
+
+  bool WantQuit() const
+  {
+    return want_quit;
+  }
+
+public:
+  // FLTK virtual method for handling input events.
+  int handle(int event)
+  {
+    if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
+        Fl::event_key() == FL_Escape)
+    {
+      want_quit = true;
+      return 1;
+    }
+
+    return Fl_Window::handle(event);
+  }
+
+private:
+  static void quit_callback(Fl_Widget *w, void *data)
+  {
+    UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+    that->want_quit = true;
+  }
+};
+
+
+//
+// Constructor
+//
+UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
+    Fl_Window(W, H, label),
+    want_quit(false)
+{
+  // cancel Fl_Group's automatic add crap
+  end();
+
+
+  // non-resizable
+  size_range(W, H, W, H);
+  callback(quit_callback, this);
+
+  int cy = 0;
+}
+
+
+void DLG_OptionsEditor(void)
+{
+  int opt_w = 340 + KF * 30;
+  int opt_h = 370 + KF * 40;
+
+  UI_OptionsWin *win = new UI_OptionsWin(opt_w, opt_h, "Options Editor");
+
+  win->show();
+
+  // run the GUI until the user closes
+  while (! win->WantQuit())
+    Fl::wait();
+
+  // this deletes all the child widgets too...
+  delete win;
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

@@ -77,7 +77,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   options = new Fl_Button(x+20, cy, button_w, button_h, "Options");
   options->labelsize(FL_NORMAL_SIZE + 0);
-//  options->callback(options_callback, this);
+  options->callback(options_callback, this);
 
   add(options);
 
@@ -232,6 +232,11 @@ void UI_Build::build_callback(Fl_Widget *w, void *data)
 void UI_Build::about_callback(Fl_Widget *w, void *data)
 {
   DLG_AboutText();
+}
+
+void UI_Build::options_callback(Fl_Widget *w, void *data)
+{
+  DLG_OptionsEditor();
 }
 
 void UI_Build::stop_callback(Fl_Widget *w, void *data)

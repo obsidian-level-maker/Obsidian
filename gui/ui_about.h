@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  About Window
+//  About and Options Windows
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -22,6 +22,8 @@
 #define __UI_ABOUT_H__
 
 void DLG_AboutText(void);
+
+void DLG_OptionsEditor(void);
 
 #endif /* __UI_ABOUT_H__ */
 
