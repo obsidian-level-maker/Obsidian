@@ -89,19 +89,6 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += y_step + y_step/2;
 
 
-  traps = new UI_RChoice(cx, cy, cw, ch, "Traps: ");
-  traps->align(FL_ALIGN_LEFT);
-  traps->selection_color(MY_RED);
-  traps->callback(callback_Traps, this);
-
-  setup_Traps();
-
-traps->hide();
-  add(traps);
-
-//  cy += traps->h() + y_step;
-
-
   powers = new UI_RChoice(cx, cy, cw, ch, "Powerups: ");
   powers->align(FL_ALIGN_LEFT);
   powers->selection_color(MY_RED);
@@ -162,7 +149,6 @@ void UI_Play::Locked(bool value)
     mons  ->deactivate();
     strength->deactivate();
     powers->deactivate();
-    traps ->deactivate();
     health->deactivate();
     ammo  ->deactivate();
   }
@@ -171,7 +157,6 @@ void UI_Play::Locked(bool value)
     mons  ->activate();
     strength->activate();
     powers->activate();
-    traps ->activate();
     health->activate();
     ammo  ->activate();
   }
@@ -191,12 +176,12 @@ void UI_Play::notify_Mode(const char *name, void *priv_dat)
   if (strcmp(mode, "dm") == 0)
   {
     play->mons->label ("Players: ");
-    play->traps->label("Weapons: ");
+    play->powers->label("Weapons: ");
   }
   else
   {
     play->mons->label ("Monsters: ");
-    play->traps->label("Traps: ");
+    play->powers->label("Powerups: ");
   }
 
   play->redraw();
@@ -226,13 +211,6 @@ void UI_Play::callback_Powers(Fl_Widget *w, void *data)
   ob_set_config("powers", that->powers->GetID());
 }
 
-void UI_Play::callback_Traps(Fl_Widget *w, void *data)
-{
-  UI_Play *that = (UI_Play *) data;
-
-  ob_set_config("traps", that->traps->GetID());
-}
-
 void UI_Play::callback_Health(Fl_Widget *w, void *data)
 {
   UI_Play *that = (UI_Play *) data;
@@ -252,7 +230,6 @@ void UI_Play::Defaults()
   ParseValue("mons",    "normal");
   ParseValue("strength","medium");
   ParseValue("powers",  "normal");
-  ParseValue("traps",   "mixed");
   ParseValue("health",  "normal");
   ParseValue("ammo",    "normal");
 }
@@ -277,13 +254,6 @@ bool UI_Play::ParseValue(const char *key, const char *value)
   {
     powers->SetID(value);
     callback_Powers(NULL, this);
-    return true;
-  }
-
-  if (StringCaseCmp(key, "traps") == 0)
-  {
-    traps->SetID(value);
-    callback_Traps(NULL, this);
     return true;
   }
 
@@ -334,9 +304,9 @@ const char * UI_Play::strength_syms[] =
   NULL, NULL
 };
 
-const char * UI_Play::trap_syms[] =
+const char * UI_Play::power_syms[] =
 {
-  // also used for: Powers, Weapons (DM)
+  // also used for: Weapons (DM)
 
   "none",   "NONE",  
   "less",   "Less",  
@@ -382,21 +352,11 @@ void UI_Play::setup_Strength()
 
 void UI_Play::setup_Powers()
 {
-  for (int i = 0; trap_syms[i]; i += 2)
+  for (int i = 0; power_syms[i]; i += 2)
   {
-    powers->AddPair(trap_syms[i], trap_syms[i+1]);
-    powers->ShowOrHide(trap_syms[i], 1);
+    powers->AddPair(power_syms[i], power_syms[i+1]);
+    powers->ShowOrHide(power_syms[i], 1);
   }
-}
-
-void UI_Play::setup_Traps()
-{
-  for (int i = 0; trap_syms[i]; i += 2)
-  {
-    traps->AddPair(trap_syms[i], trap_syms[i+1]);
-    traps->ShowOrHide(trap_syms[i], 1);
-  }
-
 }
 
 void UI_Play::setup_Health()

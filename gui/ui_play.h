@@ -55,7 +55,6 @@ private:
   void setup_Monsters();
   void setup_Strength();
   void setup_Powers  ();
-  void setup_Traps   ();
   void setup_Health  ();
   void setup_Ammo    ();
 
@@ -64,7 +63,6 @@ private:
   static void callback_Monsters(Fl_Widget *, void*);
   static void callback_Strength(Fl_Widget *, void*);
   static void callback_Powers  (Fl_Widget *, void*);
-  static void callback_Traps   (Fl_Widget *, void*);
   static void callback_Health  (Fl_Widget *, void*);
   static void callback_Ammo    (Fl_Widget *, void*);
 
