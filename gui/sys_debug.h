@@ -24,8 +24,8 @@
 void LogInit(const char *filename);  // NULL for none
 void LogClose(void);
 
-void LogEnableDebug(void);
-void LogEnableTerminal(void);
+void LogEnableDebug(bool enable);
+void LogEnableTerminal(bool enable);
 
 void LogPrintf(const char *str, ...);
 

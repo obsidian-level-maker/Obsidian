@@ -53,8 +53,9 @@ const char *install_path = NULL;
 int screen_w;
 int screen_h;
 
-bool hide_module_panel = false;
 bool create_backups = true;
+bool hide_module_panel = false;
+bool debug_messages = false;
 
 
 game_interface_c * game_object = NULL;
@@ -154,6 +155,47 @@ install_path, filename)
 }
 
 
+void Setup_FLTK()
+{
+  bool custom_colors = true;
+  bool hires_adapt = true;
+
+  Fl::visual(FL_RGB);
+
+  if (custom_colors)
+  {
+    Fl::background(236, 232, 228);
+    Fl::background2(255, 255, 255);
+    Fl::foreground(0, 0, 0);
+  }
+
+  Fl::scheme("plastic");
+
+  screen_w = Fl::w();
+  screen_h = Fl::h();
+
+#if 0  // debug
+  fprintf(stderr, "Screen dimensions = %dx%d\n", screen_w, screen_h);
+#endif
+
+  // determine the Kromulent factor
+  KF = 0;
+
+  if (hires_adapt)
+  {
+    if (screen_w > 1100 && screen_h > 720)
+      KF = 2;
+    else if (screen_w > 950 && screen_h > 660)
+      KF = 1;
+  }
+
+  // default font size for widgets
+  FL_NORMAL_SIZE = 14 + KF * 2;
+
+  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+}
+
+
 void Main_Ticker()
 {
   // This function is called very frequently.
@@ -171,6 +213,7 @@ void Main_Ticker()
     last_millis = cur_millis;
   }
 }
+
 
 void Main_Shutdown(bool error)
 {
@@ -337,56 +380,31 @@ int main(int argc, char **argv)
     exit(1);
   }
 
-  bool custom_colors = true;
-  bool hires_adapt = true;
-
-  Fl::visual(FL_RGB);
-
-  if (custom_colors)
-  {
-    Fl::background(236, 232, 228);
-    Fl::background2(255, 255, 255);
-    Fl::foreground(0, 0, 0);
-  }
-
-  Fl::scheme("plastic");
-
-  screen_w = Fl::w();
-  screen_h = Fl::h();
-
-  // determine the Kromulent factor
-  KF = 0;
-
-  if (hires_adapt)
-  {
-    if (screen_w > 1100 && screen_h > 720)
-      KF = 2;
-    else if (screen_w > 950 && screen_h > 660)
-      KF = 1;
-  }
-
-  // default font size for widgets
-  FL_NORMAL_SIZE = 14 + KF * 2;
-
-  fl_message_font(FL_HELVETICA /* _BOLD */, 18);
+  Setup_FLTK();
 
   Determine_WorkingPath(argv[0]);
   Determine_InstallPath(argv[0]);
 
   FileChangeDir(working_path);
 
+
   LogInit(LOG_FILENAME);
 
-  if (ArgvFind('d', "debug") >= 0)
-    LogEnableDebug();
-
   if (ArgvFind('t', "terminal") >= 0)
-    LogEnableTerminal();
+    LogEnableTerminal(true);
 
   LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2009 Andrew Apted\n\n");
 
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
+
+  // this is checked again here, in order to catch early debug messages
+  if (ArgvFind('d', "debug") >= 0)
+    debug_messages = true;
+
+  Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
+
+  LogEnableDebug(debug_messages);
 
   // create directory for temporary files
   FileMakeDir("temp");
@@ -395,6 +413,7 @@ int main(int argc, char **argv)
 #ifndef WIN32
   Fl_File_Icon::load_system_icons();
 #endif
+
 
   Script_Init();
 
@@ -417,15 +436,14 @@ int main(int argc, char **argv)
   if (hide_module_panel)
     main_win->HideModules(true);
 
+
   // show window (pass some dummy arguments)
   {
-    int argc = 1;
-
     char *argv[2];
     argv[0] = strdup("Oblige.exe");
     argv[1] = NULL;
 
-    main_win->show(argc, argv);
+    main_win->show(1 /* argc */, argv);
   }
 
   // kill the stupid bright background of the "plastic" scheme

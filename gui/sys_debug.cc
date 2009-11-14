@@ -39,16 +39,22 @@ void LogInit(const char *filename)
 }
 
 
-void LogEnableDebug(void)
+void LogEnableDebug(bool enable)
 {
-  debugging = true;
+  if (debugging == enable)
+    return;
 
-  LogPrintf("DEBUGGING ENABLED.\n\n");
+  debugging = enable;
+
+  if (debugging)
+    LogPrintf("DEBUGGING ENABLED.\n\n");
+  else
+    LogPrintf("DEBUGGING DISABLED.\n\n");
 }
 
-void LogEnableTerminal(void)
+void LogEnableTerminal(bool enable)
 {
-  terminal = true;
+  terminal = enable;
 }
 
 

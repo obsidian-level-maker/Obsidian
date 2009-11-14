@@ -49,14 +49,14 @@ static void Cookie_SetValue(const char *name, const char *value)
       create_backups = atoi(value) ? true : false;
       return;
     }
-    if (StringCaseCmp(name, "hide_modules") == 0)
-    {
-      hide_module_panel = atoi(value) ? true : false;
-      return;
-    }
     if (StringCaseCmp(name, "debug_messages") == 0)
     {
       debug_messages = atoi(value) ? true : false;
+      return;
+    }
+    if (StringCaseCmp(name, "hide_modules") == 0)
+    {
+      hide_module_panel = atoi(value) ? true : false;
       return;
     }
 
@@ -226,6 +226,7 @@ bool Cookie_Save(const char *filename)
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
   fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
+  fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
   fprintf(cookie_fp, "hide_modules = %d\n", hide_module_panel ? 1 : 0);
   fprintf(cookie_fp, "last_file = %s\n", UI_GetLastFile());
   fprintf(cookie_fp, "\n");

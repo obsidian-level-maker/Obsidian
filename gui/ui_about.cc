@@ -224,7 +224,10 @@ private:
 
   static void callback_Debug(Fl_Widget *w, void *data)
   {
-    // TODO
+    UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+    debug_messages = that->opt_debug->value() ? true : false;
+    LogEnableDebug(debug_messages);
   }
 
 };
@@ -286,7 +289,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
   opt_debug = new Fl_Check_Button(cx, cy, 24, 24, "Debugging Messages (in LOGS.txt)");
   opt_debug->align(FL_ALIGN_RIGHT);
-  opt_debug->value(false ? 1 : 0);
+  opt_debug->value(debug_messages ? 1 : 0);
   opt_debug->callback(callback_Debug, this);
 
   add(opt_debug);
