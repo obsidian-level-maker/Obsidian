@@ -398,11 +398,10 @@ int main(int argc, char **argv)
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
 
-  // this is checked again here, in order to catch early debug messages
+  Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
+
   if (ArgvFind('d', "debug") >= 0)
     debug_messages = true;
-
-  Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
 
   LogEnableDebug(debug_messages);
 

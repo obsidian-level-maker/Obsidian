@@ -47,9 +47,9 @@ void LogEnableDebug(bool enable)
   debugging = enable;
 
   if (debugging)
-    LogPrintf("DEBUGGING ENABLED.\n\n");
+    LogPrintf("===  DEBUGGING ENABLED  ===\n\n");
   else
-    LogPrintf("DEBUGGING DISABLED.\n\n");
+    LogPrintf("===  DEBUGGING DISABLED  ===\n\n");
 }
 
 void LogEnableTerminal(bool enable)

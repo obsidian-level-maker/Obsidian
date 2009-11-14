@@ -182,7 +182,7 @@ bool Cookie_Load(const char *filename, bool pre_load)
     return false;
   }
 
-  LogPrintf("Loading Config%s...\n", pre_load ? " (PRELOAD)" : "");
+  LogPrintf("Loading Config (%s)...\n", pre_load ? "PRELOAD" : "FULL");
 
   // simple line-by-line parser
   char buffer[MSG_BUF_LEN];
