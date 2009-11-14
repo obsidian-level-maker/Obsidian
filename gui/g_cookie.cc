@@ -33,27 +33,43 @@
 
 static FILE *cookie_fp;
 
+static bool doing_pre_load;
+
 
 static void Cookie_SetValue(const char *name, const char *value)
 {
-  DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
+  if (! doing_pre_load)
+    DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
   // -- Miscellaneous --
-  if (StringCaseCmp(name, "create_backups") == 0)
+  if (doing_pre_load)
   {
-    create_backups = atoi(value) ? true : false;
+    if (StringCaseCmp(name, "create_backups") == 0)
+    {
+      create_backups = atoi(value) ? true : false;
+      return;
+    }
+    if (StringCaseCmp(name, "hide_modules") == 0)
+    {
+      hide_module_panel = atoi(value) ? true : false;
+      return;
+    }
+    if (StringCaseCmp(name, "debug_messages") == 0)
+    {
+      debug_messages = atoi(value) ? true : false;
+      return;
+    }
+
+    // skip everything else during PRELOAD
     return;
   }
-  if (StringCaseCmp(name, "hide_modules") == 0)
-  {
-    hide_module_panel = atoi(value) ? true : false;
-    return;
-  }
+
   if (StringCaseCmp(name, "last_file") == 0)
   {
     UI_SetLastFile(value);
     return;
   }
+
 
   // -- Game Settings --
   if (main_win->game_box->ParseValue(name, value))
@@ -105,7 +121,9 @@ static bool Cookie_ParseLine(char *buf)
 
   if (! isalpha(*buf))
   {
-    LogPrintf("Weird config line: [%s]\n", buf);
+    if (! doing_pre_load)
+      LogPrintf("Weird config line: [%s]\n", buf);
+
     return false;
   }
 
@@ -123,7 +141,9 @@ static bool Cookie_ParseLine(char *buf)
   
   if (*buf != '=')
   {
-    LogPrintf("Config line missing '=': [%s]\n", buf);
+    if (! doing_pre_load)
+      LogPrintf("Config line missing '=': [%s]\n", buf);
+
     return false;
   }
 
@@ -134,7 +154,9 @@ static bool Cookie_ParseLine(char *buf)
 
   if (*buf == 0)
   {
-    LogPrintf("Config line missing value!\n");
+    if (! doing_pre_load)
+      LogPrintf("Config line missing value!\n");
+
     return false;
   }
 
@@ -146,17 +168,21 @@ static bool Cookie_ParseLine(char *buf)
 //------------------------------------------------------------------------
 
 
-bool Cookie_Load(const char *filename)
+bool Cookie_Load(const char *filename, bool pre_load)
 {
+  doing_pre_load = pre_load;
+
   cookie_fp = fopen(filename, "r");
 
   if (! cookie_fp)
   {
-    LogPrintf("Missing Config file -- using defaults.\n\n");
+    if (! doing_pre_load)
+      LogPrintf("Missing Config file -- using defaults.\n\n");
+
     return false;
   }
 
-  LogPrintf("Loading Config...\n");
+  LogPrintf("Loading Config%s...\n", pre_load ? " (PRELOAD)" : "");
 
   // simple line-by-line parser
   char buffer[MSG_BUF_LEN];
@@ -169,7 +195,7 @@ bool Cookie_Load(const char *filename)
       error_count += 1;
   }
 
-  if (error_count > 0)
+  if (error_count > 0 && ! pre_load)
     LogPrintf("DONE (found %d parse errors)\n\n", error_count);
   else
     LogPrintf("DONE.\n\n");
