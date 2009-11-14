@@ -195,7 +195,7 @@ COMMON_MATERIALS =
   -- textures with best-matching flat
 
   BIGDOOR1 = { t="BIGDOOR1", f="FLAT23" },
-  BIGDOOR2 = { t="BIGDOOR2", f="FLAT1" },
+  BIGDOOR2 = { t="BIGDOOR2", f="CEIL5_1" },
   BIGDOOR3 = { t="BIGDOOR3", f="FLOOR7_2" },
   BIGDOOR4 = { t="BIGDOOR4", f="FLOOR3_3" },
   BIGDOOR5 = { t="BIGDOOR5", f="FLAT5_2" },
@@ -208,11 +208,10 @@ COMMON_MATERIALS =
   BROWN96  = { t="BROWN96",  f="FLOOR7_1" },
   BROWNHUG = { t="BROWNHUG", f="FLOOR7_1" },
   BROWNPIP = { t="BROWNPIP", f="FLOOR0_1" },
-  BROWNGRN = { t="BROWNGRN", f="FLAT1" },  -- poor match
-  BROVINE2 = { t="BROVINE2", f="FLAT1" },  -- poor match
-  BRNPOIS  = { t="BRNPOIS",  f="FLAT1" },  -- poor match
+  BROWNGRN = { t="BROWNGRN", f="FLOOR7_1" },  -- poor match
+  BROVINE2 = { t="BROVINE2", f="FLOOR7_1" },  -- poor match
+  BRNPOIS  = { t="BRNPOIS",  f="FLOOR7_1" },  -- poor match
 
-  CEMENT9  = { t="CEMENT9",  f="FLAT1" },  -- poor match
   COMPBLUE = { t="COMPBLUE", f="FLAT14" },
   COMPSPAN = { t="COMPSPAN", f="CEIL5_1" },
   COMPSTA1 = { t="COMPSTA1", f="FLAT23" },
@@ -244,20 +243,20 @@ COMMON_MATERIALS =
   GRAY2    = { t="GRAY2",    f="FLAT18" },
   GRAY4    = { t="GRAY4",    f="FLAT18" },
   GRAY5    = { t="GRAY5",    f="FLAT18" },
-  GRAY7    = { t="GRAY7",    f="FLAT18"   },  
+  GRAY7    = { t="GRAY7",    f="FLAT18" },  
   GRAYBIG  = { t="GRAYBIG",  f="FLAT18" },
   GRAYPOIS = { t="GRAYPOIS", f="FLAT18" },
   GRAYTALL = { t="GRAYTALL", f="FLAT18" },
   GRAYVINE = { t="GRAYVINE", f="FLAT18" },
 
-  GSTFONT1 = { t="GSTFONT1", f="DEM1_5" },
-  GSTGARG  = { t="GSTGARG",  f="DEM1_5" },
-  GSTLION  = { t="GSTLION",  f="DEM1_5" },
-  GSTONE1  = { t="GSTONE1",  f="DEM1_5" },
-  GSTONE2  = { t="GSTONE2",  f="DEM1_5" },
-  GSTSATYR = { t="GSTSATYR", f="DEM1_5" },
-  GSTVINE1 = { t="GSTVINE1", f="DEM1_5" },
-  GSTVINE2 = { t="GSTVINE2", f="DEM1_5" },
+  GSTFONT1 = { t="GSTFONT1", f="FLOOR7_2" },
+  GSTGARG  = { t="GSTGARG",  f="FLOOR7_2" },
+  GSTLION  = { t="GSTLION",  f="FLOOR7_2" },
+  GSTONE1  = { t="GSTONE1",  f="FLOOR7_2" },
+  GSTONE2  = { t="GSTONE2",  f="FLOOR7_2" },
+  GSTSATYR = { t="GSTSATYR", f="FLOOR7_2" },
+  GSTVINE1 = { t="GSTVINE1", f="FLOOR7_2" },
+  GSTVINE2 = { t="GSTVINE2", f="FLOOR7_2" },
 
   ICKWALL1 = { t="ICKWALL1", f="FLAT19" },
   ICKWALL2 = { t="ICKWALL2", f="FLAT19" },
@@ -289,7 +288,7 @@ COMMON_MATERIALS =
   PIPE4    = { t="PIPE4",    f="FLOOR4_5" },
   PIPE6    = { t="PIPE6",    f="FLOOR4_5" },
   PLAT1    = { t="PLAT1",    f="FLAT4" },
-  ROCKRED1 = { t="ROCKRED1", f="FLOOR6_1" },  -- better in DOOM2
+  ROCKRED1 = { t="ROCKRED1", f="FLOOR6_1" },
   REDWALL  = { t="REDWALL",  f="FLAT5_3" },
 
   SHAWN1   = { t="SHAWN1",   f="FLAT23" },
@@ -308,9 +307,9 @@ COMMON_MATERIALS =
   SKSNAKE2 = { t="SKSNAKE2", f="SFLR6_4" },
   SKSPINE1 = { t="SKSPINE1", f="FLAT5_6" },
   SKSPINE2 = { t="SKSPINE2", f="FLAT5_6" },
-  SLADPOIS = { t="SLADPOIS", f="FLAT4" },  -- poor match
-  SLADSKUL = { t="SLADSKUL", f="FLAT4" },  -- poor match
-  SLADWALL = { t="SLADWALL", f="FLAT4" },  -- poor match
+  SLADPOIS = { t="SLADPOIS", f="FLOOR7_1" },  -- poor match
+  SLADSKUL = { t="SLADSKUL", f="FLOOR7_1" },  -- poor match
+  SLADWALL = { t="SLADWALL", f="FLOOR7_1" },  -- poor match
   SP_DUDE1 = { t="SP_DUDE1", f="DEM1_5" },
   SP_DUDE2 = { t="SP_DUDE2", f="DEM1_5" },
   SP_DUDE4 = { t="SP_DUDE4", f="DEM1_5" },
@@ -319,9 +318,9 @@ COMMON_MATERIALS =
   SP_HOT1  = { t="SP_HOT1",  f="FLAT5_3" },
   SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
 
-  STARG1   = { t="STARG1",   f="FLAT1" },  -- poor match
-  STARG2   = { t="STARG2",   f="FLAT1" },  -- poor match
-  STARG3   = { t="STARG3",   f="FLAT1" },  -- poor match
+  STARG1   = { t="STARG1",   f="FLAT23" },  -- poor match
+  STARG2   = { t="STARG2",   f="FLAT23" },  -- poor match
+  STARG3   = { t="STARG3",   f="FLAT23" },  -- poor match
   STARGR1  = { t="STARGR1",  f="FLAT3" },
   STARGR2  = { t="STARGR2",  f="FLAT3" },
   STARBR2  = { t="STARBR2",  f="FLOOR0_2" },
@@ -337,7 +336,7 @@ COMMON_MATERIALS =
   STEPLAD1 = { t="STEPLAD1", f="FLOOR7_1" },
   STEPTOP  = { t="STEPTOP",  f="FLOOR7_1" },
 
-  STONE    = { t="STONE",    f="FLAT1" },
+  STONE    = { t="STONE",    f="FLAT5_4" },
   STONE2   = { t="STONE2",   f="MFLR8_1" },
   STONE3   = { t="STONE3",   f="MFLR8_1" },
   SUPPORT2 = { t="SUPPORT2", f="FLAT23" },
@@ -354,7 +353,7 @@ COMMON_MATERIALS =
   SW1BLUE  = { t="SW1BLUE",  f="FLAT14" },
   SW1BRCOM = { t="SW1BRCOM", f="FLOOR7_1" },
   SW1BRN2  = { t="SW1BRN2",  f="FLOOR0_1" },
-  SW1BRNGN = { t="SW1BRNGN", f="FLOOR3_3" }, -- poor match
+  SW1BRNGN = { t="SW1BRNGN", f="FLOOR7_1" }, -- poor match
   SW1BROWN = { t="SW1BROWN", f="FLOOR7_1" },
   SW1COMM  = { t="SW1COMM",  f="FLAT23" },
   SW1COMP  = { t="SW1COMP",  f="CEIL5_1" },
@@ -371,7 +370,7 @@ COMMON_MATERIALS =
   SW1PIPE  = { t="SW1PIPE",  f="FLOOR4_5" },
   SW1SATYR = { t="SW1SATYR", f="CEIL5_2" },
   SW1SKIN  = { t="SW1SKIN",  f="CRATOP2" },
-  SW1SLAD  = { t="SW1SLAD",  f="FLAT4" },  -- poor match
+  SW1SLAD  = { t="SW1SLAD",  f="FLOOR7_1" },  -- poor match
   SW1STON1 = { t="SW1STON1", f="MFLR8_1" },
   SW1STRTN = { t="SW1STRTN", f="FLOOR4_1" },
   SW1VINE  = { t="SW1VINE",  f="FLAT1" },
@@ -475,8 +474,8 @@ COMMON_MATERIALS =
   SFLR6_4  = { t="SKSNAKE2", f="SFLR6_4" },
   SFLR7_1  = { t="SKSNAKE1", f="SFLR7_1" },
   SFLR7_4  = { t="SKSNAKE1", f="SFLR7_4" },
-  STEP_I   = { t="SHAWN2",   f="STEP1" },
-  STEP_H   = { t="SHAWN2",   f="STEP2" },
+  STEP_F1  = { t="SHAWN2",   f="STEP1" },
+  STEP_F2  = { t="SHAWN2",   f="STEP2" },
   TLITE6_1 = { t="METAL",    f="TLITE6_1" },
   TLITE6_4 = { t="METAL",    f="TLITE6_4" },
   TLITE6_5 = { t="METAL",    f="TLITE6_5" },
@@ -493,12 +492,13 @@ COMMON_MATERIALS =
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos
   --   SKY1/2/3 : not very useful
-  --   ZZZFACE# : not generally useful (OK to hard-code)
+  --   ZZZFACE# : not generally useful
   --
   -- Mid-masked (railing) textures are in separate tables.
   --
   -- Note too that STEP1/2 are ambiguous, the flats are quite
-  -- different to the textures, hence renamed flats: STEP_I/H.
+  -- different to the textures, hence renamed the flats as
+  -- STEP_F1 and STEP_F2.
 }
 
 
@@ -533,16 +533,15 @@ DOOM1_MATERIALS =
   LITERED  = { t="LITERED",  f="FLOOR1_6" },
   LITESTON = { t="LITESTON", f="MFLR8_1" },
 
-  NUKESLAD = { t="NUKESLAD", f="FLAT4" },  -- poor match
+  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" },  -- poor match
   PLANET1  = { t="PLANET1",  f="FLAT23" },
   REDWALL1 = { t="REDWALL1", f="FLOOR1_6" },
-  ROCKRED1 = { t="ROCKRED1", f="FLOOR6_1" },
   SKINBORD = { t="SKINBORD", f="FLAT5_5" },
   SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" },  -- poor match
   SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" },  -- poor match
   SKULWAL3 = { t="SKULWAL3", f="FLAT5_6" },
   SKULWALL = { t="SKULWALL", f="FLAT5_6" },
-  SLADRIP1 = { t="SLADRIP1", f="FLAT4" },  -- poor match
+  SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" },  -- poor match
   SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" },
   SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" },
   SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
@@ -554,6 +553,10 @@ DOOM1_MATERIALS =
   TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" },  -- poor match
   WOODSKUL = { t="WOODSKUL", f="FLAT5_2" },
 
+  SW1BRN1  = { t="SW1BRN1",  f="FLOOR0_1" },
+  SW1STARG = { t="SW1STARG", f="FLAT23" },
+  SW1STONE = { t="SW1STONE", f="FLAT1" },
+  SW1STON2 = { t="SW1STON2", f="MFLR8_1" },
 
   -- flats with closest texture
 
@@ -593,7 +596,7 @@ DOOM2_MATERIALS =
   BRICK9   = { t="BRICK9",   f="FLOOR5_4" },
   BRICK10  = { t="BRICK10",  f="SLIME13" },
   BRICK11  = { t="BRICK11",  f="FLAT5_3" },
-  BRICK12  = { t="BRICK12",  f="FLAT5_5" },  -- poor match
+  BRICK12  = { t="BRICK12",  f="FLOOR0_1" },  -- poor match
   BRONZE1  = { t="BRONZE1",  f="FLOOR7_1" },
   BRONZE2  = { t="BRONZE2",  f="FLOOR7_1" },
   BRONZE3  = { t="BRONZE3",  f="FLOOR7_1" },
@@ -604,6 +607,7 @@ DOOM2_MATERIALS =
   BSTONE2  = { t="BSTONE2",  f="RROCK12" },
   BSTONE3  = { t="BSTONE3",  f="RROCK12" },
 
+  CEMENT9  = { t="CEMENT9",  f="FLAT19" },  -- poor match
   CRACKLE2 = { t="CRACKLE2", f="RROCK01" },
   CRACKLE4 = { t="CRACKLE4", f="RROCK02" },
   CRATE3   = { t="CRATE3",   f="CRATOP1" },
@@ -645,8 +649,8 @@ DOOM2_MATERIALS =
   ROCK1    = { t="ROCK1",    f="RROCK13" },
   ROCK2    = { t="ROCK2",    f="GRNROCK" },
   ROCK3    = { t="ROCK3",    f="RROCK13" },
-  ROCK4    = { t="ROCK4",    f="RROCK11" },
-  ROCK5    = { t="ROCK5",    f="RROCK11" },
+  ROCK4    = { t="ROCK4",    f="FLOOR0_2" }, -- poor match
+  ROCK5    = { t="ROCK5",    f="RROCK09" },
 
   SFALL1   = { t="SFALL1",   f="NUKAGE1" },
   SILVER1  = { t="SILVER1",  f="FLAT23" },
@@ -872,7 +876,8 @@ DOOM2_RAILS =
 
 COMMON_STEPS =
 {
-  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="RROCK10" },
+  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
+  step2 = { step_w="STEP2", side_w="BROWN1",   top_f="FLAT5" },
   step3 = { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
   step4 = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
 }
