@@ -961,6 +961,24 @@ COMMON_PICTURES =
     light=0.9, sec_kind=8,  -- oscillate
   },
 
+  lite5_05blink =
+  {
+    count=3, gap=32,
+    pic_w="LITE5", width=16, height=64,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    light=0.9, sec_kind=12,  -- 0.5 second sync
+  },
+
+  lite5_10blink =
+  {
+    count=4, gap=24,
+    pic_w="LITE5", width=16, height=48,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    light=0.9, sec_kind=13,  -- 1.0 second sync
+  },
+
   liteblu4 =
   {
     count=3, gap=32,
@@ -968,6 +986,24 @@ COMMON_PICTURES =
     x_offset=0, y_offset=0,
     side_t="LITEBLU4", floor="FLAT14", depth=8, 
     light=0.9, sec_kind=8,
+  },
+
+  liteblu4_05sync =
+  {
+    count=3, gap=32,
+    pic_w="LITEBLU4", width=16, height=64,
+    x_offset=0, y_offset=0,
+    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    light=0.9, sec_kind=12,
+  },
+
+  liteblu4_10sync =
+  {
+    count=4, gap=32,
+    pic_w="LITEBLU4", width=16, height=48,
+    x_offset=0, y_offset=0,
+    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    light=0.9, sec_kind=13,
   },
 
   redwall =
@@ -1012,6 +1048,15 @@ COMMON_PICTURES =
     x_offset=0, y_offset=0,
     side_t="METAL", floor="CEIL5_2", depth=8, 
     light=0.7,
+  },
+
+  neon =
+  {
+    count=1,
+    pic_w="O_NEON", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.99, sec_kind=8,
   },
 
   tekwall1 =
@@ -1125,13 +1170,78 @@ COMMON_PICTURES =
     depth=8, light=0.9,
   },
 
-  gstfont =
+  planet1 =
   {
-    count=2, gap=32,
-    pic_w="GSTFONT1", width=64, height=128,
+    pic_w="PLANET1", width=192, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  planet1_blink =
+  {
+    pic_w="PLANET1", width=192, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
+
+  compute1 =
+  {
+    pic_w="COMPUTE1", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  compute1_blink =
+  {
+    pic_w="COMPUTE1", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
+
+  compute2 =
+  {
+    pic_w="COMPUTE2", width=192, height=56,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  compute2_blink =
+  {
+    pic_w="COMPUTE2", width=192, height=56,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
+
+  skulls1 =
+  {
+    count=1,
+    pic_w="SKULWALL", width=128, height=128,
     x_offset=0, y_offset=0,
     -- side_t="WOODVERT", floor="FLAT5_2",
-    depth=8,
+    depth=8, light=0.67,
+  },
+
+  skulls2 =
+  {
+    count=1,
+    pic_w="SKULWAL3", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spacewall =
+  {
+    pic_w="SPACEW3", width=64, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
   },
 
 }
@@ -1140,10 +1250,20 @@ COMMON_PICTURES =
 COMMON_PILLARS =
 {
   teklite = { pillar="TEKLITE", trim1="GRAY7", trim2="METAL" },
-  silver  = { pillar="SILVER2", trim1="GRAY7", trim2="METAL" },
+  silver2 = { pillar="SILVER2", trim1="GRAY7", trim2="METAL" },
+  shawn2  = { pillar="SHAWN2",  trim1="STARGR1", trim2="TEKWALL1" },
 
   big_red  = { pillar="REDWALL",  trim1="GRAY7", trim2="METAL" },
   big_blue = { pillar="LITEBLU4", trim1="GRAY7", trim2="METAL" },
+
+  tekwall4 = { pillar="TEKWALL4", trim1="GRAY7", trim2="METAL1" },
+  metal1   = { pillar="METAL1",   trim1="GRAY7", trim2="METAL" },
+  blue1    = { pillar="COMPBLUE", trim1="SHAWN2", trim2="TEKWALL1" },
+
+  marble1 = { pillar="MARBLE1",  trim1="GSTONE1", trim2="MARBLE2" },
+  redwall = { pillar="REDWALL",  trim1="SP_HOT1", trim2="SP_HOT1" },
+  sloppy  = { pillar="SLOPPY1",  trim1="MARBLE1", trim2="METAL" },
+  sloppy2 = { pillar="SP_FACE2", trim1="MARBLE1", trim2="METAL" },
 }
 
 
@@ -1207,6 +1327,17 @@ COMMON_DOORS =
     line_kind=1, tag=0,
   },
 
+  wooden2 =
+  {
+    w=128, h=112, door_h=112,
+    door_w="BIGDOOR5", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=1, tag=0,
+  },
+
   wooden_fast =
   {
     w=128, h=112, door_h=112,
@@ -1218,10 +1349,32 @@ COMMON_DOORS =
     line_kind=117, tag=0,
   },
 
+  wooden2_fast =
+  {
+    w=128, h=112, door_h=112,
+    door_w="BIGDOOR5", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=117, tag=0,
+  },
+
   wooden_once =
   {
     w=128, h=112, door_h=112,
     door_w="BIGDOOR6", door_c="FLAT5_2",
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=31, tag=0,
+  },
+
+  wooden2_once =
+  {
+    w=128, h=112, door_h=112,
+    door_w="BIGDOOR5", door_c="FLAT5_2",
     lite_w="LITE5", step_w="STEP1",
     frame_f="FLAT1", frame_c="FLAT1",
     track="DOORTRAK",
@@ -1374,6 +1527,22 @@ COMMON_EXITS =
     exitside="COMPSPAN",
   },
 
+  demon_pillar2 =
+  {
+    h=128,
+    switch_w="SW1SATYR",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+
+  demon_pillar3 =
+  {
+    h=128,
+    switch_w="SW1LION",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+
   skin_pillar =
   {
     h=128,
@@ -1382,10 +1551,24 @@ COMMON_EXITS =
     exitside="COMPSPAN",
   },
 
+  stone_pillar =
+  {
+    h=128,
+    switch_w="SW1STON1",
+    exit_w="EXITSIGN", exit_h=16,
+    exitside="COMPSPAN",
+  },
+
   tech_outdoor =
   {
     podium="CEIL5_1", base="SHAWN2",
     switch_w="SW1COMM", exit_w="EXITSIGN",
+  },
+
+  tech_outdoor2 =
+  {
+    podium="STARTAN2", base="SHAWN2",
+    switch_w="SW2COMM", exit_w="EXITSIGN",
   },
 
   tech_small =
@@ -1627,7 +1810,8 @@ DOOM2_ROOMS =
 
 COMMON_THEME_DEFAULTS =
 {
-  doors = { wooden=30, wooden_fast=20 },
+  doors = { wooden=30, wooden_fast=20,
+            wooden2=20, wooden2_fast=10 },
 
   steps = { step1=50 },
 
@@ -1640,7 +1824,7 @@ COMMON_THEME_DEFAULTS =
 
   pictures = { tekwall4=10 },
 
-  logos = { carve=50, pill=50 },
+  logos = { carve=50, pill=50, neon=50 },
 
   liquid_pics = { pois1=70, pois2=30 },
 
@@ -1783,12 +1967,15 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
+    logos = { carve=5, pill=50, neon=50 },
+
     pictures =
     {
       shawn1=10, tekwall1=4, tekwall4=2,
-      lite5=30, liteblu4=30,
-      compsta1=40, compsta1_blink=3,
-      compsta2=40, compsta2_blink=3,
+      lite5=30, lite5_05blink=10, lite5_10blink=10,
+      liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
+      compsta1=40, compsta1_blink=4,
+      compsta2=40, compsta2_blink=4,
       silver3=20, redwall=5,
     },
 
@@ -1858,7 +2045,9 @@ COMMON_SUB_THEMES =
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
-    pictures = { marbface=10, skinface=10, firewall=20, gstfont=5,
+    logos = { carve=90, pill=50, neon=5 },
+
+    pictures = { marbface=10, skinface=10, firewall=20,
                },
 
     --- ceil_lights = { LAVA=10 },
@@ -1885,6 +2074,7 @@ COMMON_SUB_THEMES =
       dm_liquid = { lava=70, nukage=10 },
     },
   },
+
 
   -- this is the reddy/skinny/firey Hell
   HELL2 =
@@ -1919,8 +2109,10 @@ COMMON_SUB_THEMES =
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
+    logos = { carve=90, pill=50, neon=5 },
+
     pictures = { marbfac2=10, marbfac3=10,
-                 spface1=2, firewall=20, gstfont=5,
+                 spface1=2, firewall=20,
                },
 
     --- ceil_lights = { LAVA=10 },
@@ -1953,7 +2145,70 @@ COMMON_SUB_THEMES =
 
 DOOM1_SUB_THEMES =
 {
-  -- none yet
+  TECH1 =  -- extends the entry in COMMON_SUB_THEMES
+  {
+    building =
+    {
+      walls =
+      {
+        COMPOHSO=10, STARTAN1=5, COMPTILE=5,
+      },
+    },
+
+    pictures = { planet1=20, planet1_blink=8, compute1=20, compute1_blink=5, compute2=15, compute2_blink=5, },
+
+    exits = { stone_pillar=50 },
+
+    corners =
+    {
+      COMPTILE=10,
+    },
+
+  },
+
+
+  HELL1 =  -- extends the entry in COMMON_SUB_THEMES
+  {
+    building =
+    {
+      walls =
+      {
+        SKINTEK1=15, SKINTEK2=15,
+      },
+    },
+
+    pictures = { skulls1=10, skulls2=10, },
+
+    exits = { skin_pillar=50, skull_pillar=5,
+              demon_pillar2=5, demon_pillar3=5 },
+
+    corners =
+    {
+      SKULWALL=8, SKULWAL3=7,
+    },
+  },
+
+
+  HELL2 =  -- extends the entry in COMMON_SUB_THEMES
+  {
+    building =
+    {
+      walls =
+      {
+        SKINTEK1=10, SKINTEK2=10,
+      },
+    },
+
+    pictures = { skulls1=20, skulls2=20, },
+
+    exits = { skin_pillar=50, skull_pillar=5,
+              demon_pillar2=5, demon_pillar3=5 },
+
+    corners =
+    {
+      SKULWALL=10, SKULWAL3=10, REDWALL1=15,
+    },
+  },
 }
 
 
@@ -1989,7 +2244,19 @@ DOOM2_SUB_THEMES =
     {
       step6=50,
     },
+
+    big_lights = { GRNLITE1=30 },
+
+    exits = { skull_pillar=50, stone_pillar=5 },
+
+    pillars = { teklite=50, silver2=10, shawn2=10, metal1=15 },
+
+    pictures = { silver3=20, spacewall=20 },
+
+    crates = { space=90, mod=15 },
+
   },
+
 
   HELL1 =  -- extends the entry in COMMON_SUB_THEMES
   {
@@ -2004,6 +2271,7 @@ DOOM2_SUB_THEMES =
     },
   },
 
+
   HELL2 =  -- extends the entry in COMMON_SUB_THEMES
   {
     ground =
@@ -2013,7 +2281,14 @@ DOOM2_SUB_THEMES =
         CRACKLE2=20,
       },
     },
+
+    exits = { skin_pillar=50, skull_pillar=5,
+             demon_pillar2=10, demon_pillar3=10 },
+
+    big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
+
   },
+
 
   URBAN1 =
   {
@@ -2060,6 +2335,8 @@ DOOM2_SUB_THEMES =
       step6=50,
     },
 
+    logos = { carve=40, pill=25, neon=50 },
+
     pictures =
     {
       eagle1=50, hitler1=10,
@@ -2077,6 +2354,7 @@ DOOM2_SUB_THEMES =
       caco=2.0, revenant=1.5, knight=1.5,
     },
   },
+
 
   -- this theme is not normally used (only for secret levels)
   WOLF1 =
