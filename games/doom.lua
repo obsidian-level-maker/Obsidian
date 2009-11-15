@@ -195,7 +195,7 @@ COMMON_MATERIALS =
   -- textures with best-matching flat
 
   BIGDOOR1 = { t="BIGDOOR1", f="FLAT23" },
-  BIGDOOR2 = { t="BIGDOOR2", f="CEIL5_1" },
+  BIGDOOR2 = { t="BIGDOOR2", f="FLAT1" },
   BIGDOOR3 = { t="BIGDOOR3", f="FLOOR7_2" },
   BIGDOOR4 = { t="BIGDOOR4", f="FLOOR3_3" },
   BIGDOOR5 = { t="BIGDOOR5", f="FLAT5_2" },
@@ -2840,6 +2840,12 @@ end
 
 function Doom_all_done()
   Doom_make_cool_gfx()
+
+  gui.wad_merge_sections("data/doom_falls.wad");
+
+  if OB_CONFIG.length == "full" then
+    gui.wad_merge_sections("data/freedoom_face.wad");
+  end
 end
 
 
