@@ -202,7 +202,6 @@ COMMON_MATERIALS =
   BIGDOOR6 = { t="BIGDOOR6", f="CEIL5_2" },
   BIGDOOR7 = { t="BIGDOOR7", f="CEIL5_2" },
 
-  BLODRIP1 = { t="BLODRIP1", f="FLOOR0_1" },
   BROWN1   = { t="BROWN1",   f="FLOOR0_1" },
   BROWN144 = { t="BROWN144", f="FLOOR7_1" },
   BROWN96  = { t="BROWN96",  f="FLOOR7_1" },
@@ -796,8 +795,6 @@ DOOM2_MATERIALS =
   RROCK19  = { t="ZIMMER2",  f="RROCK19" },
   RROCK20  = { t="ZIMMER7",  f="RROCK20" },
 
-  SLIME01  = { t="ZIMMER3",  f="SLIME01" },  -- poor match
-  SLIME05  = { t="ZIMMER3",  f="SLIME05" },  -- poor match
   SLIME09  = { t="ROCKRED1", f="SLIME09" },  -- poor match
   SLIME13  = { t="BRICK10",  f="SLIME13" },
   SLIME14  = { t="METAL2",   f="SLIME14" },  -- poor match
@@ -811,6 +808,11 @@ DOOM2_MATERIALS =
 
   SFALL1   = { t="SFALL1",  f="NUKAGE1" },
   NUKAGE1  = { t="SFALL1",  f="NUKAGE1" },
+
+  KFALL1   = { t="BLODRIP1", f="SLIME01" },  -- new patches
+  KFALL5   = { t="BLODRIP1", f="SLIME05" },
+  SLIME01  = { t="BLODRIP1", f="SLIME01" },
+  SLIME05  = { t="BLODRIP1", f="SLIME05" },
 }
 
 
