@@ -212,6 +212,15 @@ function safe_get_mat(name)
 
   local mat = GAME.materials[name]
 
+  -- special handling for DOOM switches
+  if not mat and string.sub(name,1,3) == "SW2" then
+    mat = GAME.materials["SW1" .. string.sub(name,4)]
+    if mat then
+      mat = { t=name, f=mat.f }  -- create new SW2XXX material
+      GAME.materials[name] = mat
+    end
+  end
+
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
     mat = assert(GAME.materials["_ERROR"])
