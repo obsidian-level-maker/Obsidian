@@ -237,6 +237,8 @@ COMMON_MATERIALS =
   EXITSIGN = { t="EXITSIGN", f="CEIL5_1" },
   EXITSTON = { t="EXITSTON", f="MFLR8_1" },
 
+  FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" }, -- poor match
+  FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" }, -- poor match
   FIREWALL = { t="FIREWALL", f="FLAT5_3" },
   GRAY1    = { t="GRAY1",    f="FLAT18" },
   GRAY2    = { t="GRAY2",    f="FLAT18" },
@@ -375,12 +377,6 @@ COMMON_MATERIALS =
   SW1VINE  = { t="SW1VINE",  f="FLAT1" },
   SW1WOOD  = { t="SW1WOOD",  f="FLAT5_2" },
   
-
----??? possible special use (e.g. WATER/NUKAGE/LAVA falls)
---FIREBLU1
---FIRELAVA
---FIREMAG1
-
 
   -- flats with closest texture
 
