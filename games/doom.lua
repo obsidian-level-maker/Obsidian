@@ -238,7 +238,7 @@ COMMON_MATERIALS =
   EXITSIGN = { t="EXITSIGN", f="CEIL5_1" },
   EXITSTON = { t="EXITSTON", f="MFLR8_1" },
 
-  FIREWALL = { t="FIREWALL", f="LAVA1" },
+  FIREWALL = { t="FIREWALL", f="FLAT5_3" },
   GRAY1    = { t="GRAY1",    f="FLAT18" },
   GRAY2    = { t="GRAY2",    f="FLAT18" },
   GRAY4    = { t="GRAY4",    f="FLAT18" },
@@ -385,8 +385,6 @@ COMMON_MATERIALS =
 
   -- flats with closest texture
 
-  BLOOD1   = { t="ROCKRED1", f="BLOOD1" },  -- better in DOOM2
-
   CEIL1_1  = { t="WOOD1",    f="CEIL1_1" },
   CEIL1_3  = { t="WOOD1",    f="CEIL1_3" },
   CEIL1_2  = { t="METAL",    f="CEIL1_2" },
@@ -459,17 +457,14 @@ COMMON_MATERIALS =
   FLOOR6_1 = { t="REDWALL",  f="FLOOR6_1" },  -- poor match
   FLOOR7_1 = { t="BROWNHUG", f="FLOOR7_1" },
   FLOOR7_2 = { t="MARBLE1",  f="FLOOR7_2" },
-  FWATER1  = { t="COMPBLUE", f="FWATER1" },
 
   GATE1    = { t="METAL",    f="GATE1" },
   GATE2    = { t="METAL",    f="GATE2" },
   GATE3    = { t="METAL",    f="GATE3" },
   GATE4    = { t="METAL",    f="GATE4" },
-  LAVA1    = { t="ROCKRED1", f="LAVA1" },
   MFLR8_1  = { t="STONE2",   f="MFLR8_1" },
   MFLR8_2  = { t="BROWNHUG", f="MFLR8_2" },
   MFLR8_3  = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
-  NUKAGE1  = { t="GSTVINE2", f="NUKAGE1" },  -- better in DOOM2
   SFLR6_1  = { t="SKSNAKE1", f="SFLR6_1" },
   SFLR6_4  = { t="SKSNAKE2", f="SFLR6_4" },
   SFLR7_1  = { t="SKSNAKE1", f="SFLR7_1" },
@@ -482,11 +477,20 @@ COMMON_MATERIALS =
   TLITE6_6 = { t="METAL",    f="TLITE6_6" },
 
 
+  -- liquid stuff (using new patches)
+  WFALL1   = { t="GSTFONT1", f="FWATER1" },
+  FWATER1  = { t="GSTFONT1", f="FWATER1" },
+
+  LFALL1   = { t="FIREMAG1", f="LAVA1" },
+  LAVA1    = { t="FIREMAG1", f="LAVA1" },
+
+
   -- Oblige stuff
   O_PILL   = { t="CEMENT1",  f="O_PILL" },
   O_BOLT   = { t="CEMENT2",  f="O_BOLT" },
   O_RELIEF = { t="CEMENT3",  f="O_RELIEF" },
   O_CARVE  = { t="CEMENT4",  f="O_CARVE" },
+  O_NEON   = { t="CEMENT6",  f="CEIL5_1" },
 
 
   -- Missing stuff:
@@ -508,7 +512,6 @@ DOOM1_MATERIALS =
   -- textures with best-matching flat
 
   ASHWALL  = { t="ASHWALL",  f="FLOOR6_2" },
-  BLODGR1  = { t="BLODGR1",  f="FLOOR0_1" },
   BROVINE  = { t="BROVINE",  f="FLOOR0_1" },
   BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1" },
   BROWNWEL = { t="BROWNWEL", f="FLOOR7_1" },
@@ -565,6 +568,15 @@ DOOM1_MATERIALS =
   FLAT5_8  = { t="ASHWALL",  f="FLAT5_8" },
   FLOOR6_2 = { t="ASHWALL",  f="FLOOR6_2" },
   MFLR8_4  = { t="ASHWALL",  f="MFLR8_4" },
+
+
+  -- liquid stuff (using new patches)
+  BFALL1   = { t="BLODGR1",  f="BLOOD1" },
+  BLOOD1   = { t="BLODGR1",  f="BLOOD1" },
+
+  SFALL1   = { t="SLADRIP1", f="NUKAGE1" },
+  NUKAGE1  = { t="SLADRIP1", f="NUKAGE1" },
+
 }
 
 
@@ -578,7 +590,6 @@ DOOM2_MATERIALS =
   ASHWALL4 = { t="ASHWALL4", f="FLAT10" },
   ASHWALL6 = { t="ASHWALL6", f="RROCK20" },
   ASHWALL7 = { t="ASHWALL7", f="RROCK18" },
-  BFALL1   = { t="BFALL1",   f="BLOOD1" },
   BIGBRIK1 = { t="BIGBRIK1", f="RROCK14" },
   BIGBRIK3 = { t="BIGBRIK3", f="RROCK14" },
   BIGBRIK2 = { t="BIGBRIK2", f="MFLR8_1" },
@@ -652,7 +663,6 @@ DOOM2_MATERIALS =
   ROCK4    = { t="ROCK4",    f="FLOOR0_2" }, -- poor match
   ROCK5    = { t="ROCK5",    f="RROCK09" },
 
-  SFALL1   = { t="SFALL1",   f="NUKAGE1" },
   SILVER1  = { t="SILVER1",  f="FLAT23" },
   SILVER2  = { t="SILVER2",  f="FLAT22" },
   SILVER3  = { t="SILVER3",  f="FLAT23" },
@@ -749,7 +759,6 @@ DOOM2_MATERIALS =
 
   -- flats with closest texture
 
-  BLOOD1   = { t="BFALL1",   f="BLOOD1" },
   CONS1_1  = { t="GRAY5",    f="CONS1_1" },
   CONS1_5  = { t="GRAY5",    f="CONS1_5" },
   CONS1_7  = { t="GRAY5",    f="CONS1_7" },
@@ -768,7 +777,6 @@ DOOM2_MATERIALS =
   GRNROCK  = { t="ROCK2",    f="GRNROCK" },
   GRNLITE1 = { t="TEKGREN2", f="GRNLITE1" },
   MFLR8_4  = { t="ASHWALL2", f="MFLR8_4" },
-  NUKAGE1  = { t="SFALL1",   f="NUKAGE1" },
 
   RROCK01  = { t="CRACKLE2", f="RROCK01" },
   RROCK02  = { t="CRACKLE4", f="RROCK02" },
@@ -795,6 +803,14 @@ DOOM2_MATERIALS =
   SLIME14  = { t="METAL2",   f="SLIME14" },  -- poor match
   SLIME15  = { t="COMPSPAN", f="SLIME15" },  -- poor match
   SLIME16  = { t="SPACEW4",  f="SLIME16" },
+
+
+  -- liquid stuff
+  BFALL1   = { t="BFALL1",  f="BLOOD1" },
+  BLOOD1   = { t="BFALL1",  f="BLOOD1" },
+
+  SFALL1   = { t="SFALL1",  f="NUKAGE1" },
+  NUKAGE1  = { t="SFALL1",  f="NUKAGE1" },
 }
 
 
