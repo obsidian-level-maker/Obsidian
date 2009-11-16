@@ -32,10 +32,7 @@ TODO
 
 -  review big room logic
 
-?? introduce randomness into skill bits:
-     UV:   1.0 1.0  /  1.0 1.0  /  1.0 1.0
-     HMP:  1.0 0.4  /  1.0 0.4  /  1.0 0.4
-     HNTR: 0.4 0.4  /  0.4 0.4  /  0.4 0.4
+DONE: introduce randomness into skill bits:
 
 +  more supplies in start room (ammo for weapon, armor vest)
 

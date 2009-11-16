@@ -8,5 +8,10 @@ CHANGES (since v3.47)
 
 -  sky generator supports DOOM 1 (courtesy Enhas)
 
--  new Options window, can toggle the Modules Panel on/off
+-  new Options window
+
+-  can toggle the Modules Panel on/off
+
+-  new (more random) way of setting monster skill bits
+
 
