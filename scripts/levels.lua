@@ -219,6 +219,12 @@ function Level_themes(seed_idx)
     local info = assert(OB_THEMES[name])
     assert(info.prefix)
 
+    L.super_theme = info
+
+    if not L.name_theme then
+      L.name_theme = info.name_theme
+    end
+
     -- don't overwrite theme of special levels
     if L.theme then return end
 
@@ -240,10 +246,6 @@ function Level_themes(seed_idx)
     L.theme = assert(GAME.themes[which])
 
     gui.printf("Theme for level %s = %s\n", L.name, which)
-
-    if not L.name_theme then
-      L.name_theme = info.name_theme
-    end
   end
 
   --| Level_themes |--
@@ -456,9 +458,10 @@ end
 
 
 function Level_handle_prebuilt()
-  -- FIXME: support other games (Wolf3d, Quake, etc)
   assert(LEVEL.prebuilt_wad)
+  assert(LEVEL.prebuilt_map)
 
+  -- FIXME: support other games (Wolf3d, Quake, etc)
   gui.wad_transfer_map(LEVEL.prebuilt_wad, LEVEL.prebuilt_map, LEVEL.name)
 
   return "ok"
@@ -485,7 +488,7 @@ function Level_make(L, index, NUM)
 
   -- use a pre-built level ?
 
-  if LEVEL.prebuilt_map then
+  if LEVEL.prebuilt then
     Game_invoke_hook("begin_level_func",  LEVEL.seed)
     Game_invoke_hook("begin_level2_func", LEVEL.seed)
 

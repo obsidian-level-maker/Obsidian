@@ -2439,6 +2439,7 @@ COMMON_PREBUILT_LEVELS =
   gotcha =
   {
     file = "data/gotcha_maps.wad",
+    maps = { MAP01=50, MAP02=50, MAP03=50 },
     theme_maps = { TECH="MAP01", URBAN="MAP02", HELL="MAP03" },
   },
 
@@ -2998,14 +2999,18 @@ function Doom1_get_levels()
       }
 
       if LEV.name == "E1M8" then
-        LEV.build_func = Arena_Doom_E1M8
-      elseif LEV.name == "E2M8" or LEV.name == "E4M6" then
-        LEV.build_func = Arena_Doom_E2M8
-      elseif LEV.name == "E3M8" or LEV.name == "E4M8" then
-        -- FIXME
+        LEV.prebuilt = GAME.prebuilt_levels.phobos_anomaly
+      elseif LEV.name == "E2M8" then
+        LEV.prebuilt = GAME.prebuilt_levels.tower_of_babel
+      elseif LEV.name == "E3M8" then
+        LEV.prebuilt = GAME.prebuilt_levels.dis
+      elseif LEV.name == "E4M6" then
+        LEV.prebuilt = GAME.prebuilt_levels.against_thee
+      elseif LEV.name == "E4M8" then
+        LEV.prebuilt = GAME.prebuilt_levels.unto_the_cruel
       end
 
-      if LEV.build_func then
+      if LEV.prebuilt then
         LEV.name_theme = "BOSS"
       end
 
@@ -3077,17 +3082,16 @@ function Doom2_get_levels()
     end
 
     if map == 7 then
-      LEV.build_func = Arena_Doom_MAP07
-    elseif map == 17 then  -- 16..18
-      LEV.prebuilt_wad = "data/gotcha_maps.wad"
-      LEV.prebuilt_map = "MAP01"
-    elseif map == 24 then  -- or 25
-      -- FIXME
+      LEV.prebuilt = GAME.prebuilt_levels.dead_simple
+    elseif map == 18 then
+      LEV.prebuilt = GAME.prebuilt_levels.gotcha
+    elseif map == 24 then
+      LEV.prebuilt = GAME.prebuilt_levels.gallow_arena
     elseif map == 30 then
-      LEV.build_func = Arena_Doom_MAP30
+      LEV.prebuilt = GAME.prebuilt_levels.icon_of_sin
     end
 
-    if LEV.build_func then
+    if LEV.prebuilt then
       LEV.name_theme = "BOSS"
     end
 
@@ -3176,6 +3180,28 @@ function Doom_begin_level()
   -- set the description
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+
+  -- determine stuff for prebuilt levels
+  -- (done here because themes are not yet known in xxx_get_levels)
+
+  if LEVEL.prebuilt then
+    local info = LEVEL.prebuilt
+    LEVEL.prebuilt_wad = info.file
+
+    -- try to match themes
+    if LEVEL.super_theme and info.theme_maps then
+      for sub, map in pairs(info.theme_maps) do
+        if sub == LEVEL.super_theme.prefix then -- if string.find(LEVEL.theme_name, "^" .. sub) then
+          LEVEL.prebuilt_map = map
+          break;  -- OK!
+        end
+      end
+    end
+
+    if not LEVEL.prebuilt_map then
+      LEVEL.prebuilt_map = rand_key_by_probs(info.maps)
+    end
   end
 end
 
@@ -3331,7 +3357,7 @@ OB_GAMES["doom1"] =
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
 
-    "prebuild_levels", COMMON_PREBUILT_LEVELS,
+    "prebuilt_levels", COMMON_PREBUILT_LEVELS,
 
     ---- DOOM I stuff ----
 
@@ -3440,7 +3466,7 @@ OB_GAMES["doom2"] =
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
 
-    "prebuild_levels", COMMON_PREBUILT_LEVELS,
+    "prebuilt_levels", COMMON_PREBUILT_LEVELS,
 
     ---- DOOM II stuff ----
 
