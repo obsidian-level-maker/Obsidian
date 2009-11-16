@@ -2416,6 +2416,64 @@ COMMON_THEMES_OLD =
 }
 
 
+COMMON_PREBUILT_LEVELS =
+{
+  dead_simple =
+  {
+    file = "data/dead_simples.wad",
+    maps = { MAP01=30, MAP02=50, MAP03=70 },
+  },
+
+  icon_of_sin =
+  {
+    file = "data/icon_maps.wad",
+    maps = { MAP01=30, MAP02=50 },
+  },
+
+  gallow_arena =
+  {
+    file = "data/gallow_arenas.wad",
+    maps = { MAP01=50, MAP02=25 },
+  },
+
+  gotcha =
+  {
+    file = "data/gotcha_maps.wad",
+    theme_maps = { TECH="MAP01", URBAN="MAP02", HELL="MAP03" },
+  },
+
+  phobos_anomaly =
+  {
+    file = "data/anomaly_towers.wad",
+    maps = { E1M1=50 },
+  },
+
+  tower_of_babel =
+  {
+    file = "data/anomaly_towers.wad",
+    maps = { E2M1=50 },
+  },
+
+  dis =
+  {
+    file = "data/anomaly_towers.wad",
+    maps = { E3M1=50 },
+  },
+
+  against_thee =
+  {
+    file = "data/anomaly_towers.wad",
+    maps = { E2M1=50 },
+  },
+
+  unto_the_cruel =
+  {
+    file = "data/anomaly_towers.wad",
+    maps = { E3M1=50 },
+  },
+}
+
+
 ------------------------------------------------------------
 
 -- Monster list
@@ -3273,6 +3331,8 @@ OB_GAMES["doom1"] =
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
 
+    "prebuild_levels", COMMON_PREBUILT_LEVELS,
+
     ---- DOOM I stuff ----
 
     "themes",    DOOM1_SUB_THEMES,
@@ -3379,6 +3439,8 @@ OB_GAMES["doom2"] =
     "arch_fabs", COMMON_ARCH_PREFABS,
     "win_fabs",  COMMON_WINDOW_PREFABS,
     "misc_fabs", COMMON_MISC_PREFABS,
+
+    "prebuild_levels", COMMON_PREBUILT_LEVELS,
 
     ---- DOOM II stuff ----
 
