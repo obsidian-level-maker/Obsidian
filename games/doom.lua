@@ -1987,7 +1987,7 @@ COMMON_SUB_THEMES =
 
     big_lights = { TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30 },
 
-    pillars = { teklite=50, silver=10 },
+    pillars = { teklite=50, silver2=10 },
 
     big_pillars = { big_red=50, big_blue=50 },
 
