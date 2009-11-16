@@ -54,6 +54,14 @@ require 'defs'
 require 'util'
 
 
+-- Quake flags
+SPAWNFLAG_AMBUSH     = 1
+SPAWNFLAG_NOT_EASY   = 256
+SPAWNFLAG_NOT_MEDIUM = 512
+SPAWNFLAG_NOT_HARD   = 1024
+SPAWNFLAG_NOT_DM     = 2048
+
+
 function Player_init()
   LEVEL.hmodels = {}
 
@@ -614,11 +622,11 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
       props = {}
 
       if SK == "easy" then
-        props.spawnflags = 512+1024
+        props.spawnflags = SPAWNFLAG_NOT_MEDIUM + SPAWNFLAG_NOT_HARD
       elseif SK == "medium" then
-        props.spawnflags = 256+1024
+        props.spawnflags = SPAWNFLAG_NOT_EASY + SPAWNFLAG_NOT_HARD
       elseif SK == "hard" then
-        props.spawnflags = 256+512
+        props.spawnflags = SPAWNFLAG_NOT_EASY + SPAWNFLAG_NOT_MEDIUM
       end
     else
       props =
@@ -1275,7 +1283,28 @@ function Monsters_in_room(R)
     table.insert(R.monster_list[SK], info)
   end
 
-  local function place_monster(spot, index)
+  local function calc_min_skill()
+    if not LEVEL.mon_dither then
+      LEVEL.mon_dither = 0
+    end
+
+    -- bump the dither, but have some randomness here too
+    if rand_odds(80) then
+      LEVEL.mon_dither = LEVEL.mon_dither + 1
+    end
+
+    -- skill 3 (hard) is always added
+    -- skill 2 (medium) alternates between 100% and 50% chance
+    -- skill 1 (easy) is always 50% chance of adding
+
+    if (LEVEL.mon_dither % 2) == 0 then
+      return rand_sel(50, 1, 2)
+    else
+      return rand_sel(50, 1, 3)
+    end
+  end
+
+  local function place_monster(spot)
     local angle  = monster_angle(spot.S)
     local ambush = rand_sel(92, 1, 0)
 
@@ -1289,35 +1318,30 @@ function Monsters_in_room(R)
     end
 
     -- minimum skill needed for the monster to appear
-    local skill
+    local skill = calc_min_skill()
 
-    if true then
-      skill = 3 ; add_to_list(SKILLS[skill], info)
-    end
-    if (index % 3) >= 1 then
-      skill = 2 ; add_to_list(SKILLS[skill], info)
-    end
-    if (index % 3) == 1 then
-      skill = 1 ; add_to_list(SKILLS[skill], info)
-    end
+    if skill <= 3 then add_to_list(SKILLS[3], info) end
+    if skill <= 2 then add_to_list(SKILLS[2], info) end
+    if skill <= 1 then add_to_list(SKILLS[1], info) end
 
     local props = { angle = spot.angle or angle }
 
     if PARAM.format == "quake" then
       props.spawnflags = 0
 
-      if props.ambush then props.spawnflags = props.spawnflags + 1 end
+      if spot.ambush or ambush then
+        props.spawnflags = props.spawnflags + SPAWNFLAG_AMBUSH
+      end
 
-      if (skill > 1) then props.spawnflags = props.spawnflags + 256 end
-      if (skill > 2) then props.spawnflags = props.spawnflags + 512 end
+      if (skill > 1) then props.spawnflags = props.spawnflags + SPAWNFLAG_NOT_EASY end
+      if (skill > 2) then props.spawnflags = props.spawnflags + SPAWNFLAG_NOT_MEDIUM end
     else
       props.ambush = spot.ambush or ambush
 
-      props.skill_hard   = 1
+      props.skill_hard   = sel(skill <= 3, 1, 0)
       props.skill_medium = sel(skill <= 2, 1, 0)
       props.skill_easy   = sel(skill <= 1, 1, 0)
     end
--- if (props.skill_medium ~= 1) then return end --!!!!!!!!!
 
     Trans_entity(mon, spot.x, spot.y, spot.S.floor_h, props)
 
@@ -1348,7 +1372,7 @@ function Monsters_in_room(R)
 
     for index,spot in ipairs(R.monster_spots) do
       if (actuals[spot.monster] or 0) >= 1 then
-        place_monster(spot, actuals[spot.monster])
+        place_monster(spot)
         actuals[spot.monster] = actuals[spot.monster] - 1
       elseif rand_odds(barrel_chance) then
         place_barrel(spot)
