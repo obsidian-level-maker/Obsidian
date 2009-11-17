@@ -32,8 +32,6 @@
 #include "glbsp.h"
 
 
-bool pack_sidedefs = false;
-
 static nodebuildinfo_t nb_info;
 static volatile nodebuildcomms_t nb_comms;
 
@@ -188,7 +186,7 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
   nb_info.output_file = GlbspStrDup(out_name);
 
   nb_info.quiet = TRUE;
-  nb_info.pack_sides = pack_sidedefs;
+  nb_info.pack_sides = FALSE;
   nb_info.force_normal = TRUE;
 
   glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);

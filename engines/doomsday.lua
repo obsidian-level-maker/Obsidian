@@ -26,7 +26,7 @@ OB_ENGINES["doomsday"] =
 
   param =
   {
-    pack_sidedefs = false,
+    -- TODO
   },
 }
 

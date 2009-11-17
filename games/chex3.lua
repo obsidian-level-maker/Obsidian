@@ -655,7 +655,6 @@ UNFINISHED["chex3"] =
 
     -- NOTE: no infighting at all
 
-    pack_sidedefs = true,
     custom_flats = true,
 
     no_keys = true, -- FIXME

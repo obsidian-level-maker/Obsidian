@@ -48,7 +48,6 @@ static int solid_exfloor;    // disabled if <= 0
 static int liquid_exfloor;
 
 extern bool wad_hexen;  // FIXME
-extern bool pack_sidedefs;
 
 
 #define VOID_INDEX  -2
@@ -1171,13 +1170,6 @@ void doom_game_interface_c::Property(const char *key, const char *value)
       wad_hexen = false;
     else
       wad_hexen = true;
-  }
-  else if (StringCaseCmp(key, "pack_sidedefs") == 0)
-  {
-    if (value[0] == '0' || tolower(value[0]) == 'f')
-      pack_sidedefs = false;
-    else
-      pack_sidedefs = true;
   }
   else if (StringCaseCmp(key, "error_tex") == 0)
   {

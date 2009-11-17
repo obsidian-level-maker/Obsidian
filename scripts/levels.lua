@@ -202,11 +202,6 @@ function Game_setup()
   Game_invoke_hook("setup2_func", OB_CONFIG.seed)
 
 
-  -- miscellanous stuff
-  if PARAM.pack_sidedefs then
-    gui.property("pack_sidedefs", "1")
-  end
-
   name_it_up(ROOM_PATTERNS)
   expand_copies(ROOM_PATTERNS)
 end

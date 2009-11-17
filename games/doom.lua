@@ -3296,7 +3296,6 @@ OB_GAMES["doom1"] =
     infighting = true,
     raising_start = true,
 
-    pack_sidedefs = true,
     custom_flats = true,
 
     seed_size = 256,
@@ -3398,7 +3397,6 @@ OB_GAMES["doom2"] =
     infighting = true,
     raising_start = true,
 
-    pack_sidedefs = true,
     custom_flats = true,
 
     seed_size = 256,

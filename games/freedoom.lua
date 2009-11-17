@@ -125,7 +125,6 @@ UNFINISHED["freedoom"] =
     teleporters = true,
     infighting = true,
 
-    pack_sidedefs = true,
     custom_flats = true,
 
     seed_size = 256,
