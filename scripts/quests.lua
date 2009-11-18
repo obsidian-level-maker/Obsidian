@@ -747,48 +747,40 @@ function Quest_choose_keys()
 
   table.sort(LEVEL.all_locks, function(A,B) return A.kscore > B.kscore end)
 
-  local use_keys     = shallow_copy(THEME.key_list or GAME.key_list) 
-  local use_switches = shallow_copy(THEME.switch_list or GAME.switch_list)
-  local use_bars     = shallow_copy(THEME.bar_list or GAME.bar_list)
-
-  rand_shuffle(use_keys)
-  rand_shuffle(use_switches)
+  local use_keys     = shallow_copy(THEME.keys or GAME.keys) 
+  local use_switches = shallow_copy(THEME.switches or GAME.switches)
+  local use_bars     = shallow_copy(THEME.bars or GAME.bars)
 
   -- use less keys when number of locked doors is small
-  local want_keys = #use_keys
+  local want_keys = table_size(use_keys)
   while want_keys > 1 and (#LEVEL.all_locks-1 < want_keys * 2) and rand_odds(80) do
     want_keys = want_keys - 1
   end
 
   -- assign keys first (to locks with biggest distance from key to door)
-  local cur_k = 1
-
   for _,LOCK in ipairs(LEVEL.all_locks) do
-    if cur_k > want_keys then
+    if table_empty(use_keys) then
       break;
     end
 
     if not LOCK.item then
       LOCK.kind = "KEY"
-      LOCK.item = use_keys[cur_k]
-      cur_k = cur_k + 1
+      LOCK.item = rand_key_by_probs(use_keys)
+      use_keys[LOCK.item] = nil
     end
   end
 
   -- assign switches second (random spread)
-  rand_shuffle(LEVEL.all_locks)
-
-  local cur_sw = 0
-
   for _,LOCK in ipairs(LEVEL.all_locks) do
     if not LOCK.item then
       LOCK.kind = "SWITCH"
 
-      if LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-        LOCK.item = rand_element(use_bars)
+      if not table_empty(use_bars) and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+        LOCK.item = rand_key_by_probs(use_bars)
+        use_bars[LOCK.item] = use_bars[LOCK.item] / 10
       else
-        LOCK.item = use_switches[1 + cur_sw % #use_switches]
-        cur_sw = cur_sw + 1
+        LOCK.item = rand_key_by_probs(use_switches)
+        use_switches[LOCK.item] = use_switches[LOCK.item] / 10
       end
     end
   end

@@ -586,9 +586,9 @@ function CHEX3_get_levels()
         ep_along = ep_along,
         ep_info  = ep_info,
 
-        key_list = { },
-        switch_list = { },
-        bar_list = { },
+        keys = { },
+        switches = { },
+        bars = { },
 
         style = {},
       }

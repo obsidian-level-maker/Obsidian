@@ -448,9 +448,9 @@ function HacX_get_levels()
         ep_along = map / MAP_NUM,
         ep_info  = { },
 
-        key_list = { "foo" },
-        switch_list = { "foo" },
-        bar_list = { "foo" },
+        keys = { foo=50 },
+        switches = { foo=50 },
+        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)

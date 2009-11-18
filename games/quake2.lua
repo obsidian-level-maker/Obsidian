@@ -1981,9 +1981,9 @@ function Quake2_get_levels()
 
         theme_ref = "BASE",
 
-        key_list = { "foo" },
-        switch_list = { "foo" },
-        bar_list = { "foo" },
+        keys = { foo=50 },
+        switches = { foo=50 },
+        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)

@@ -1952,9 +1952,9 @@ COMMON_THEME_DEFAULTS =
   small_exits = { tech_small=50 },
   out_exits = { tech_outdoor=50 },
 
-  key_list = { "kc_red", "kc_blue", "kc_yellow" },
-  switch_list = { "sw_blue", "sw_hot", "sw_marble", "sw_wood" },
-  bar_list = { "bar_wood", "bar_silver", "bar_metal" },
+  keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
+  switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
+  bars = { bar_wood=50, bar_silver=50, bar_metal=50 },
 }
 
 
@@ -2181,7 +2181,7 @@ COMMON_SUB_THEMES =
 
     lifts = { platform=10, rusty=50, spine=30 },
 
-    key_list = { "ks_red", "ks_blue", "ks_yellow" },
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     room_types =
     {
@@ -2252,7 +2252,7 @@ COMMON_SUB_THEMES =
 
     lifts = { platform=10, rusty=50, spine=30 },
 
-    key_list = { "ks_red", "ks_blue", "ks_yellow" },
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     room_types =
     {
