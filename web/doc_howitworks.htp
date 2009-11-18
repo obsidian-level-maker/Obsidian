@@ -1,0 +1,124 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
+  <meta name="robots" content="all">
+
+  <title> OBLIGE : How It Works </title>
+
+  <script type="text/javascript"></script>
+
+  <style type="text/css" title="currentStyle">
+    @import "new.css";
+  </style>
+</head>
+
+<body>
+
+<h1> OBLIGE Level Maker </h1>
+<h2>Advanced random map generator for classic FPS games</h2>
+
+<div class="menu">
+  <img src="top_L.png" class="floatL" alt="" width="24" height="24">
+  <img src="top_R.png" class="floatR" alt="" width="24" height="24">
+  <a href="http://oblige.sourceforge.net/">Home</a>
+  <a href="doc_user.html">DOCUMENTATION</a>
+  <a href="old_ver2.html">Older Version</a>
+</div>
+
+<div class="submenu">
+  &nbsp; &nbsp; &nbsp;
+  <a href="doc_user.html">User Guide</a>
+  <a href="doc_modding.html">MODDING GUIDE</a>
+  <a href="doc_history.html">History</a>
+</div>
+
+<div class="rest">
+
+
+<h3>HOW IT WORKS</h3>
+
+Oblige consists of three pieces: (1) the code which plans the levels,
+deciding where to put everything such as walls and monsters,
+and (2) the code which draws the user interface
+
+<p>
+The programming language Lua is used for all the level building
+logic.  Since Lua is a scripting language, you can edit the ".lua"
+files directly, and those changes will work (hopefully) the next
+time Oblige is started.  This is very convenient.
+
+<p>
+The GUI code is written in the C++ programming language.
+Any changes here means the program must be re-compiled,
+and setting everything up for compilation is far from easy.
+Certain things are done in C++ because it is much faster than Lua,
+such as the CSG processing.
+The C++ / GUI code is beyond the scope of this document.
+
+
+FOLDERS
+
+gui/  has the C++ code for the EXE that you run
+
+scripts/  has the Lua code for level building
+
+games/  has Lua code describing each game (DOOM, Heretic etc)
+
+engines/  has Lua code for each engine (Boom, EDGE, ZDoom etc)
+
+mods/  contains the Lua code for modules
+
+data/  various data files (e.g. wads for prebuilt levels)
+
+
+
+LOADING PROCESS
+
+
+
+FILES IN scripts/
+
+oblige.lua
+quests.lua
+planner.lua
+connect.lua
+
+layout.lua
+rooms.lua
+monsters.lua
+builder.lua
+
+fight.lua
+naming.lua
+ht_fabs.lua
+tiler.lua
+
+defs.lua
+seeds.lua
+util.lua
+a_star.lua
+
+
+
+</div class="rest">
+
+<div class="bottomcurve">
+<img src="bottom_L.png" class="floatL" alt="" width="24" height="24">
+<img src="bottom_R.png" class="floatR" alt="" width="24" height="24">
+</div>
+
+<br>
+
+<div class="floatR">
+      <a HREF="http://sourceforge.net/projects/oblige">
+        <img src="http://sourceforge.net/sflogo.php?group_id=176314&amp;type=3" 
+         width="125" height="37" alt="SourceForge.net" 
+         align="MIDDLE" border="0" hspace="1">
+      </a>
+</div>
+
+<span style="font-size: smaller"> &copy; 2009  Andrew Apted </span>
+
+</body>
+</html>
