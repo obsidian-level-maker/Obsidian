@@ -909,6 +909,24 @@ COMMON_LIFTS =
     side_w="SUPPORT2", top_f="FLAT20",
     walk_kind=88, switch_kind=62,
   },
+
+  rusty = 
+  {
+    side_w="SUPPORT3", top_f="CEIL5_2",
+    walk_kind=88, switch_kind=62,
+  },
+
+  platform = 
+  {
+    side_w="PLAT1", top_f="FLAT23",
+    walk_kind=88, switch_kind=62,
+  },
+
+  spine = 
+  {
+    side_w="SKSPINE1", -- top_f="FLAT23",
+    walk_kind=88, switch_kind=62,
+  },
 }
 
 OLD_LIFT_JUNK =
@@ -920,6 +938,10 @@ OLD_LIFT_JUNK =
 
 COMMON_PICTURES =
 {
+  -- Note: this includes pictures that only work on DOOM1 or DOOM2.
+  -- It is not a problem, because the game-specific sub-themes will
+  -- only reference the appropriate entries.
+
   compsta1 =
   {
     pic_w="COMPSTA1", width=128, height=52,
@@ -1006,6 +1028,15 @@ COMMON_PICTURES =
     light=0.9, sec_kind=13,
   },
 
+  litered =
+  {
+    count=3, gap=32,
+    pic_w="LITERED", width=16, height=64,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", floor="SHAWN2", depth=16, 
+    light=0.9, sec_kind=8,  -- oscillate
+  },
+
   redwall =
   {
     count=2, gap=48,
@@ -1055,7 +1086,7 @@ COMMON_PICTURES =
     count=1,
     pic_w="O_NEON", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side_t="METAL", floor="CEIL5_2", depth=16, 
     light=0.99, sec_kind=8,
   },
 
@@ -1065,7 +1096,7 @@ COMMON_PICTURES =
     pic_w="TEKWALL1", width=160, height=80,
     x_offset=0, y_offset=24,
     side_t="METAL", floor="CEIL5_2", depth=8, 
-    line_kind=48, -- scroll
+    line_kind=48, -- scroll left
     light=0.7,
   },
 
@@ -1075,7 +1106,7 @@ COMMON_PICTURES =
     pic_w="TEKWALL4", width=128, height=80,
     x_offset=0, y_offset=24,
     side_t="METAL", floor="CEIL5_2", depth=8, 
-    line_kind=48, -- scroll
+    line_kind=48, -- scroll left
     light=0.7,
   },
 
@@ -1146,7 +1177,7 @@ COMMON_PICTURES =
     x_offset=0, y_offset=24,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
-    line_kind=48, -- scroll
+    line_kind=48, -- scroll left
     light=0.7,
   },
 
@@ -1157,7 +1188,7 @@ COMMON_PICTURES =
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
-    line_kind=48, -- scroll
+    line_kind=48, -- scroll left
     light=0.7,
   },
 
@@ -1242,6 +1273,89 @@ COMMON_PICTURES =
     x_offset=0, y_offset=0,
     side_t="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
+  },
+
+  spdude1 =
+  {
+    count=1,
+    pic_w="SP_DUDE1", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude2 =
+  {
+    count=1,
+    pic_w="SP_DUDE2", width=128, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude3 =
+  {
+    count=1,
+    pic_w="SP_DUDE3", width=64, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude4 =
+  {
+    count=1,
+    pic_w="SP_DUDE4", width=64, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude5 =
+  {
+    count=1,
+    pic_w="SP_DUDE5", width=64, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude6 =
+  {
+    count=1,
+    pic_w="SP_DUDE6", width=64, height=128,
+    x_offset=0, y_offset=0,
+    -- side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.67,
+  },
+
+  spdude7 =
+  {
+    count=1,
+    pic_w="SP_DUDE7", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="RROCK03",
+    depth=8, light=0.67,
+  },
+
+  spdude8 =
+  {
+    count=1,
+    pic_w="SP_DUDE8", width=128, height=128,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="RROCK03",
+    depth=8, light=0.67,
+  },
+
+  spine =
+  {
+    count=1,
+    pic_w="SKSPINE2", width=160, height=70,
+    x_offset=0, y_offset=24,
+    -- side_t="METAL", floor="CEIL5_2",
+    depth=8, 
+    line_kind=48, -- scroll left
+    light=0.7,
   },
 
 }
@@ -1815,7 +1929,7 @@ COMMON_THEME_DEFAULTS =
 
   steps = { step1=50 },
 
-  lifts = { shiny=50 },
+  lifts = { shiny=50, platform=5, rusty=20 },
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
@@ -1860,7 +1974,7 @@ COMMON_SUB_THEMES =
 
   TECH1 =
   {
-    prob=50,
+    prob=60,
 
     building =
     {
@@ -1969,6 +2083,8 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
+    lifts = { shiny=50, platform=30, rusty=10 },
+
     logos = { carve=5, pill=50, neon=50 },
 
     pictures =
@@ -2022,7 +2138,8 @@ COMMON_SUB_THEMES =
       walls =
       {
         MARBLE1=25, MARBLE2=10, MARBLE3=20,
-        GSTVINE2=20, SLADWALL=10, SKINMET1=3,
+        GSTVINE2=20, SLADWALL=10,
+        SKINMET1=3, SKINMET2=3, SKINCUT=2,
       },
       floors =
       {
@@ -2049,8 +2166,11 @@ COMMON_SUB_THEMES =
 
     logos = { carve=90, pill=50, neon=5 },
 
-    pictures = { marbface=10, skinface=10, firewall=20,
-               },
+    pictures =
+    {
+      marbface=10, skinface=10, firewall=20,
+      spdude1=4, spdude2=4, spdude5=3, spine=2,
+    },
 
     --- ceil_lights = { LAVA=10 },
 
@@ -2058,6 +2178,8 @@ COMMON_SUB_THEMES =
     {
       step1=50, step3=50, step4=50,
     },
+
+    lifts = { platform=10, rusty=50, spine=30 },
 
     key_list = { "ks_red", "ks_blue", "ks_yellow" },
 
@@ -2113,9 +2235,12 @@ COMMON_SUB_THEMES =
 
     logos = { carve=90, pill=50, neon=5 },
 
-    pictures = { marbfac2=10, marbfac3=10,
-                 spface1=2, firewall=20,
-               },
+    pictures =
+    {
+      marbfac2=10, marbfac3=10,
+      spface1=2, firewall=20,
+      spdude7=5, spine=5,
+    },
 
     --- ceil_lights = { LAVA=10 },
 
@@ -2123,6 +2248,8 @@ COMMON_SUB_THEMES =
     {
       step1=50, step3=50, step4=50,
     },
+
+    lifts = { platform=10, rusty=50, spine=30 },
 
     key_list = { "ks_red", "ks_blue", "ks_yellow" },
 
@@ -2157,7 +2284,13 @@ DOOM1_SUB_THEMES =
       },
     },
 
-    pictures = { planet1=20, planet1_blink=8, compute1=20, compute1_blink=5, compute2=15, compute2_blink=5, },
+    pictures =
+    {
+      planet1=20,  planet1_blink=8,
+      compute1=20, compute1_blink=3,
+      compute2=15, compute2_blink=2,
+      litered=10,
+    },
 
     exits = { stone_pillar=50 },
 
@@ -2179,7 +2312,7 @@ DOOM1_SUB_THEMES =
       },
     },
 
-    pictures = { skulls1=10, skulls2=10, },
+    pictures = { skulls1=10, skulls2=10, spdude3=3, spdude6=3, },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
@@ -2356,6 +2489,7 @@ DOOM2_SUB_THEMES =
         ASHWALL=5, ASHWALL4=5, ASHWALL7=5,
         BSTONE1=5, BSTONE2=5,
         ROCK3=10, ROCK5=10,
+        GRASS1=15, GRASS2=10,
       },
     },
 
@@ -2364,11 +2498,7 @@ DOOM2_SUB_THEMES =
       STONE2=20, CEMENT9=30, WOOD9=30,
       STONE3=30, WOOD8=20, GRAY1=20, ICKWALL3=10,
       STONE4=30, STONE6=30, STUCCO=10,
-    },
-
-    steps =
-    {
-      step6=50,
+      WOODMET1=10,
     },
 
     logos = { carve=40, pill=25, neon=50 },
@@ -2380,6 +2510,10 @@ DOOM2_SUB_THEMES =
     },
 
     exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30, },
+
+    steps = { step6=50, },
+
+    lifts = { shiny=20, platform=20, rusty=50 },
 
     room_types =
     {
