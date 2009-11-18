@@ -2139,7 +2139,7 @@ COMMON_SUB_THEMES =
       {
         MARBLE1=25, MARBLE2=10, MARBLE3=20,
         GSTVINE2=20, SLADWALL=10,
-        SKINMET1=3, SKINMET2=3, SKINCUT=2,
+        SKINMET1=3, SKINMET2=3,
       },
       floors =
       {
@@ -2209,7 +2209,8 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        SP_HOT1=25, GSTVINE1=20, STONE=10, SKINMET2=5, BROWN1=2,
+        SP_HOT1=25, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
+        SKINCUT=2,
       },
       floors =
       {
