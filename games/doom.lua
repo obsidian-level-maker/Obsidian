@@ -1819,7 +1819,7 @@ COMMON_THEME_DEFAULTS =
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
-                   GRAY1=10,
+                   GRAY1=10, STONE=20,
                  },
 
   pictures = { tekwall4=10 },
@@ -1828,13 +1828,13 @@ COMMON_THEME_DEFAULTS =
 
   liquid_pics = { pois1=70, pois2=30 },
 
-  crates = { crate1=50, crate2=50, mod=10 },
+  crates = { crate1=50, crate2=50, },
 
   -- FIXME: should not be separated, have 'environment' fields
   out_crates = { wood=50, ick=50 },
 
   -- FIXME: next three should not be separated
-  exits = { skull_pillar=50 },
+  exits = { demon_pillar2=50 },
   small_exits = { tech_small=50 },
   out_exits = { tech_outdoor=50 },
 
@@ -1866,28 +1866,30 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=8,
-        STARBR2=5, STARGR2=10,
-        METAL2=13, SLADWALL=18, GRAY7=10, BROWN1=5,
-        BROWNGRN=10, BROWN96=8, METAL1=1,
+        STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=11,
+        STARBR2=5, STARGR2=10, STARG1=5, STARG2=5,
+        SLADWALL=18, GRAY7=10, BROWN1=5,
+        BROWNGRN=10, BROWN96=8, METAL1=1, GRAY5=3,
       },
       floors =
       {
-        FLOOR0_1=50, FLOOR0_3=50, FLOOR0_7=50, FLOOR3_3=50,
+        FLOOR0_1=50, FLOOR0_2=20, FLOOR0_3=50,
+        FLOOR0_7=50, FLOOR3_3=50, FLOOR7_1=10,
         FLOOR4_5=50, FLOOR4_6=50, FLOOR4_8=50, FLOOR5_2=50,
-        CEIL3_2=50, FLAT9=50, FLAT14=50,
+        FLAT1=20, FLAT5=20, FLAT9=50, FLAT14=50,
+        CEIL3_2=50,
       },
       ceilings =
       {
         CEIL5_1=50, CEIL5_2=50, CEIL3_3=50, CEIL3_5=50,
         FLAT1=50, FLAT4=50, FLAT18=50,
-        FLOOR0_2=50, FLOOR4_1=50, FLOOR5_1=50,
-        GRNLITE1=1, TLITE6_5=1,
+        FLOOR0_2=50, FLOOR4_1=50, FLOOR5_1=50, FLOOR5_4=20,
+        TLITE6_5=2, TLITE6_6=2, CEIL1_2=2,
       },
       corners =
       {
-        TEKWALL6=60, STARGR1=40, METAL7=40,   METAL1=20,
-        TEKWALL4=5,  COMPTALL=2, TEKBRON1=2,  COMPBLUE=1,
+        TEKWALL6=60, STARGR1=40, METAL1=20, ICKWALL3=6,
+        TEKWALL4=6,  COMPTALL=3, TEKBRON1=3, COMPBLUE=3,
       },
     },
 
@@ -2179,8 +2181,8 @@ DOOM1_SUB_THEMES =
 
     pictures = { skulls1=10, skulls2=10, },
 
-    exits = { skin_pillar=50, skull_pillar=5,
-              demon_pillar2=5, demon_pillar3=5 },
+    exits = { skin_pillar=40,
+              demon_pillar2=10, demon_pillar3=10 },
 
     corners =
     {
@@ -2201,8 +2203,8 @@ DOOM1_SUB_THEMES =
 
     pictures = { skulls1=20, skulls2=20, },
 
-    exits = { skin_pillar=50, skull_pillar=5,
-              demon_pillar2=5, demon_pillar3=5 },
+    exits = { skin_pillar=40,
+              demon_pillar2=10, demon_pillar3=10 },
 
     corners =
     {
@@ -2220,40 +2222,63 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        BRONZE3=10, TEKGREN2=10,
+        BRONZE1=5, BRONZE3=10, TEKGREN2=10,
+        METAL2=15,
       },
 
       floors =
       {
         SLIME14=25, SLIME15=30, SLIME16=50,
+
       },
+
+      ceilings =
+      {
+        GRNLITE1=2,
+      },
+    },
+
+    corners =
+    {
+      METAL7=40, METAL2=10, METAL4=10,
+      TEKWALL6=10, TEKBRON1=3,
     },
 
     ground =
     {
       floors =
       {
-        TANROCK5=10, GRASS2=5,
-        RROCK14=5, BRICK10=5,
-        RROCK20=5, STONE4=5, STONE6=5,
+        TANROCK5=10, GRASS2=5, GRASS1=3,
+        BRICK10=5,
+        RROCK14=5, RROCK19=5, RROCK20=5,
+        STONE4=5, STONE6=5,
         ZIMMER5=3, ZIMMER8=1,
       },
     },
 
-    steps =
+    exit =
     {
-      step6=50,
+      walls =
+      {
+        METAL2=50, PIPEWAL2=50, TEKGREN1=50, SPACEW2=50,
+      },
+      ceilings =
+      {
+        GRNLITE1=20,
+      },
     },
 
-    big_lights = { GRNLITE1=30 },
+    steps = { step6=50, },
 
-    exits = { skull_pillar=50, stone_pillar=5 },
+    big_lights = { GRNLITE1=20 },
 
     pillars = { teklite=50, silver2=10, shawn2=10, metal1=15 },
 
     pictures = { silver3=20, spacewall=20 },
 
     crates = { space=90, mod=15 },
+
+    exits = { skull_pillar=50, stone_pillar=5 },
 
   },
 
@@ -2269,6 +2294,11 @@ DOOM2_SUB_THEMES =
         MARBGRAY=35,
       },
     },
+
+    exits = { skin_pillar=40, skull_pillar=20,
+             demon_pillar2=10, demon_pillar3=10 },
+
+    big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
   },
 
 
@@ -2278,11 +2308,11 @@ DOOM2_SUB_THEMES =
     {
       floors =
       {
-        CRACKLE2=20,
+        CRACKLE2=15, CRACKLE4=20,
       },
     },
 
-    exits = { skin_pillar=50, skull_pillar=5,
+    exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
@@ -2299,11 +2329,11 @@ DOOM2_SUB_THEMES =
       walls =
       {
         BIGBRIK1=20, BIGBRIK2=10,
-        BLAKWAL1=5, BRWINDOW=10,
+        BLAKWAL1=5, BRWINDOW=5,
         BRICK5=10, BRICK7=35, BRICK8=5,
-        BRICK10=3, BRICK11=5, BRICK12=8,
-        PANEL7=35, STUCCO3=15,
-        STONE3=10, STONE2=3,
+        BRICK10=3, BRICK11=8, BRICK12=8,
+        PANEL7=15, PANCASE2=25, STUCCO3=15,
+        STONE3=10, STONE2=6,
       },
       floors =
       {
@@ -2321,14 +2351,20 @@ DOOM2_SUB_THEMES =
     {
       floors =
       {
-        STONE=50, BROWN1=20,
+        STONE=40, BROWN1=20, ASHWALL6=5,
         RROCK19=10, ROCK2=15, STONE7=8,
         ASHWALL=5, ASHWALL4=5, ASHWALL7=5,
         BSTONE1=5, BSTONE2=5,
+        ROCK3=10, ROCK5=10,
       },
     },
 
-    outer_fences = { STONE2=20, CEMENT9=30, WOOD9=30 },
+    outer_fences =
+    {
+      STONE2=20, CEMENT9=30, WOOD9=30,
+      STONE3=30, WOOD8=20, GRAY1=20, ICKWALL3=10,
+      STONE4=30, STONE6=30, STUCCO=10,
+    },
 
     steps =
     {
@@ -2339,10 +2375,11 @@ DOOM2_SUB_THEMES =
 
     pictures =
     {
-      eagle1=50, hitler1=10,
+      eagle1=40, hitler1=10,
+      marbfac2=3, marbfac3=3,
     },
 
-    exits = { skin_pillar=50 },
+    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30, },
 
     room_types =
     {
@@ -2351,7 +2388,7 @@ DOOM2_SUB_THEMES =
 
     monster_prefs =
     {
-      caco=2.0, revenant=1.5, knight=1.5,
+      caco=2.0, revenant=1.5, knight=1.5, demon=1.2,
     },
   },
 
@@ -2390,6 +2427,8 @@ DOOM2_SUB_THEMES =
     {
       step1=50,
     },
+
+    exits = { skull_pillar=50, stone_pillar=8 },
   },
 }
 
