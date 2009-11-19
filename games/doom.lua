@@ -1929,7 +1929,7 @@ COMMON_THEME_DEFAULTS =
 
   steps = { step1=50 },
 
-  lifts = { shiny=50, platform=5, rusty=20 },
+  lifts = { shiny=20, platform=10, rusty=30 },
 
   outer_fences = { BROWN144=50, STONE2=30, BROWNHUG=10,
                    BROVINE2=10, GRAYVINE=10, ICKWALL3=2,
@@ -2083,7 +2083,7 @@ COMMON_SUB_THEMES =
       step1=50, step3=50, step4=50,
     },
 
-    lifts = { shiny=50, platform=30, rusty=10 },
+    lifts = { shiny=20, platform=40, rusty=10 },
 
     logos = { carve=5, pill=50, neon=50 },
 
