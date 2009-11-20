@@ -3202,7 +3202,8 @@ function Doom2_get_levels()
   if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
   if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
---!!   assert(GAME.sky_info)
+  gotcha_map = rand_element{17,18,19}
+  gallow_map = rand_element{24,25,26}
 
   for map = 1,MAP_NUM do
     -- determine episode from map number
@@ -3257,9 +3258,9 @@ function Doom2_get_levels()
 
     if map == 7 then
       LEV.prebuilt = GAME.prebuilt_levels.dead_simple
-    elseif map == 18 then
+    elseif map == gotcha_map then
       LEV.prebuilt = GAME.prebuilt_levels.gotcha
-    elseif map == 24 then
+    elseif map == gallow_map then
       LEV.prebuilt = GAME.prebuilt_levels.gallow_arena
     elseif map == 30 then
       LEV.prebuilt = GAME.prebuilt_levels.icon_of_sin
