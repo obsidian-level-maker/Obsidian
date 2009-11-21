@@ -66,6 +66,10 @@ Nicety:
   - mark end of big tables with a comment (like D1_WALL_PREFABS)
 
 
+Miscellaneous:
+  - Can disable the custom levels
+  - More than one theme per episode.
+
 
 ----------------------------------------------------------------
   GUI and C++ CODE
