@@ -1681,7 +1681,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     R.ceil_tex = rand_key_by_probs(THEME.building.ceilings)
 
---[[
+-- [[
     decide_periphs()
     install_periphs()
 
