@@ -27,9 +27,8 @@ Oblige-3.xx/    <<< working & install directory (chdir to it)
   mods/
 
   data/
-    w74a_1.raw
-    w74a_2.raw
-    w74b_2.raw
+    doom_falls.wad
+    quake_tex.wd2
     ...etc...
  
 
@@ -43,29 +42,31 @@ $PREFIX/bin/Oblige
 
 $PREFIX/share/oblige-3.xx/   <<< install directory
 
-   scripts/
-     oblige.lua
-     planner.lua
-     ...
+  scripts/
+    oblige.lua
+    planner.lua
+    ...
    
-   games/
-   engines/
-   mods/
+  games/
+  engines/
+  mods/
 
-   data/
-     w74a_1.raw
-     w74a_2.raw
-     ...
+  data/
+    doom_falls.wad
+    quake_tex.wd2
+    ...etc...
 
-   README.txt
-   GPL.txt
+  README.txt
+  GPL.txt
 
 $HOME/.oblige/      <<< working directory (chdir to it)
-   CONFIG.cfg
-   LOGS.txt
+  CONFIG.cfg
+  LOGS.txt
 
-   TEMP.wad
-   MAPHEAD.tmp
+  temp/
+    TEMP.wad
+    MAPHEAD.tmp
+
 
 
 Paths in the Code:
@@ -75,7 +76,8 @@ Paths in the Code:
    Open CONFIG.cfg, LOGS.txt and temp/XXX using relative paths.
 
 2. Install directory.
-   Open scripts/XXX and data/XXX using absolute paths.
+   Open scripts/XXX and data/XXX using absolute paths
+   (But files in the working directory can override them).
 
 3. Default Save directory:
    working directory on Win32,
