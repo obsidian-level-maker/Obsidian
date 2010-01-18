@@ -8,16 +8,14 @@ WISH-LIST
 
 Other Games:
 
-+  Strife
-+  HacX
-+  Chex Quest 1, 2, 3
++  Duke Nukem 3D
 
+-  HacX
 -  Hexen II
--  Heretic II (uses same format as Quake II ??)
--  Duke Nukem 3D
+-  Chex Quest 1, 2, 3
 
-?  Soldier of Fortune (extended Q2 format)
 ?  Dark Forces
+?  Strife
 ?  Half-Life
 
 
