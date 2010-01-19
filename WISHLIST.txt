@@ -80,9 +80,6 @@ Miscellaneous:
               and lpstrInitialDir contains _path_ of last file.
       probably only set it once (first call).
 
-+  get the 'Unixy' type of installation working, and
-   write a INSTALL.txt with some useful information.
-
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
