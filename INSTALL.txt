@@ -6,10 +6,11 @@ The gui/ directory contains the C++ code.
 
 OBLIGE uses makefiles for building:
 
--  Makefile.local for the Linux binary
+-  Makefile.local for the Linux binary (local files)
 -  Makefile.xming for the Win32 EXE
+-  Makefile.unixy for a system-wide Linux install
 
-These makefiles require GNU make.
+These makefiles require GNU Make.
 
 I personally compile the Win32 binaries on Linux using what's
 called a "Cross Compiler".  The Ubuntu package is "mingw32".
