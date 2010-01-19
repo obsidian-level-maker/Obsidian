@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -540,7 +540,10 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetLoadPath(lua_State *L)
 {
-  script_path = StringPrintf("%s/scripts/?.lua", install_path);
+  if (StringCaseCmp(install_path, working_path) == 0)
+    script_path = StringPrintf("%s/scripts/?.lua", install_path);
+  else
+    script_path = StringPrintf("./scripts/?.lua;%s/scripts/?.lua", install_path);
 
   LogPrintf("script_path: [%s]\n\n", script_path);
 
@@ -639,12 +642,10 @@ struct Compare_ScriptFilename_pred
   }
 };
 
-void Script_LoadFromDir(const char *subdir)
+static void Script_LoadAllFromDir(const char *path)
 {
   // load all scripts (files which match "*.lua") from a
   // sub-directory.
-
-  const char *path = StringPrintf("%s/%s", install_path, subdir);
 
   LogPrintf("Loading scripts from: [%s]\n", path);
 
@@ -686,9 +687,36 @@ void Script_LoadFromDir(const char *subdir)
     file_list[i] = NULL;
   }
  
-  StringFree(path);
-
   LogPrintf("\n");
+}
+
+static void Script_LoadSubDir(const char *subdir)
+{
+  // TODO: prevent loading a script from install directory if the same one
+  //       (e.g. games/doom.lua) exists in the working directory.  Right now
+  //       we end up loading both, which is OK but inefficient.
+
+  //  first pass = install directory
+  // second pass = working directory
+
+  int num_pass = 2;
+
+  if (StringCaseCmp(install_path, working_path) == 0)
+    num_pass = 1;
+
+  for (int pass = 0; pass < num_pass; pass++)
+  {
+    const char *path;
+
+    if (pass == 0)
+      path = StringPrintf("%s/%s", install_path, subdir);
+    else
+      path = StringPrintf("./%s", subdir);
+
+    Script_LoadAllFromDir(path);
+
+    StringFree(path);
+  }
 }
 
 
@@ -706,9 +734,9 @@ void Script_Load(void)
     Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
   }
 
-  Script_LoadFromDir("games");
-  Script_LoadFromDir("engines");
-  Script_LoadFromDir("mods");
+  Script_LoadSubDir("games");
+  Script_LoadSubDir("engines");
+  Script_LoadSubDir("mods");
 
   has_loaded = true;
  

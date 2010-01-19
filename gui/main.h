@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -27,6 +27,7 @@
 #define OBLIGE_HEX_VER  0x350
 
 extern const char *install_path;
+extern const char *working_path;
 
 extern bool create_backups;
 extern bool hide_module_panel;
