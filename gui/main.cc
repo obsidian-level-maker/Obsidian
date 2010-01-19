@@ -100,9 +100,12 @@ void Determine_WorkingPath(const char *argv0)
   working_path = GetExecutablePath(argv0);
 
 #else
-  working_path = StringNew(FL_PATH_MAX + 4);
+  char *path = StringNew(FL_PATH_MAX + 4);
 
-  fl_filename_expand(working_path, "$HOME/.oblige");
+  if (fl_filename_expand(path, "$HOME/.oblige") == 0)
+    Main_FatalError("Unable to find $HOME directory!\n");
+
+  working_path = path;
 
   // try to create it (doesn't matter if it already exists)
   FileMakeDir(working_path);
@@ -130,20 +133,25 @@ void Determine_InstallPath(const char *argv0)
 
   for (int i = 0; prefixes[i]; i++)
   {
-    install_path = StringPrintf("%s/share/oblige-%s",
-        prefixes[i], OBLIGE_VERSION);
+#if 0  // Version specific dir
+    install_path = StringPrintf("%s/share/oblige-%s", prefixes[i], OBLIGE_VERSION);
+#else
+    install_path = StringPrintf("%s/share/oblige", prefixes[i]);
+#endif
 
     const char *filename = StringPrintf("%s/scripts/oblige.lua", install_path);
 
-fprintf(stderr, "Trying install path: [%s]\n  with file: [%s]\n\n",
-install_path, filename)
+#if 0  // DEBUG
+    fprintf(stderr, "Trying install path: [%s]\n", install_path);
+    fprintf(stderr, "  using file: [%s]\n\n", filename);
+#endif
 
     bool exists = FileExists(filename);
 
     StringFree(filename);
 
     if (exists)
-      break;
+      return;
 
     StringFree(install_path);
     install_path = NULL;
@@ -151,7 +159,7 @@ install_path, filename)
 #endif
 
   if (! install_path)
-    Main_FatalError("Unable to find LUA script folder!\n");
+    Main_FatalError("Unable to find Oblige's install directory!\n");
 }
 
 
