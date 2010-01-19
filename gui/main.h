@@ -28,6 +28,7 @@
 
 extern const char *install_path;
 extern const char *working_path;
+extern const char *data_path;
 
 extern bool create_backups;
 extern bool hide_module_panel;

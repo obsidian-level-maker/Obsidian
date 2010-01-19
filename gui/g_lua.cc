@@ -39,6 +39,8 @@ static lua_State *LUA_ST;
 
 static const char *script_path;
 
+const char *data_path;
+
 static bool has_loaded = false;
 static bool has_added_buttons = false;
 
@@ -538,14 +540,14 @@ static int p_init_lua(lua_State *L)
   return 0;
 }
 
-static void Script_SetLoadPath(lua_State *L)
+static void Script_SetScriptPath(lua_State *L)
 {
   if (StringCaseCmp(install_path, working_path) == 0)
     script_path = StringPrintf("%s/scripts/?.lua", install_path);
   else
     script_path = StringPrintf("./scripts/?.lua;%s/scripts/?.lua", install_path);
 
-  LogPrintf("script_path: [%s]\n\n", script_path);
+  LogPrintf("script_path: [%s]\n", script_path);
 
   lua_getglobal(L, "package");
 
@@ -559,6 +561,18 @@ static void Script_SetLoadPath(lua_State *L)
   lua_pop(L, 1);
 }
 
+static void Script_SetDataPath(void)
+{
+  data_path = "./mods/data;./data";
+
+  if (StringCaseCmp(install_path, working_path) != 0)
+  {
+    data_path = StringPrintf("%s;%s/mods/data;%s/data", data_path, install_path, install_path);
+  }
+
+  LogPrintf("data_path:   [%s]\n\n", data_path);
+}
+
 void Script_Init(void)
 {
   LUA_ST = lua_open();
@@ -569,7 +583,8 @@ void Script_Init(void)
   if (status != 0)
     Main_FatalError("LUA Init failed: cannot load standard libs (%d)", status);
 
-  Script_SetLoadPath(LUA_ST);
+  Script_SetScriptPath(LUA_ST);
+  Script_SetDataPath();
 }
 
 void Script_Close(void)
