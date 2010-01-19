@@ -2594,56 +2594,56 @@ COMMON_PREBUILT_LEVELS =
 {
   dead_simple =
   {
-    file = "data/dead_simples.wad",
+    file = "dead_simples.wad",
     maps = { MAP01=30, MAP02=50, MAP03=70 },
   },
 
   icon_of_sin =
   {
-    file = "data/icon_maps.wad",
+    file = "icon_maps.wad",
     maps = { MAP01=30, MAP02=50 },
   },
 
   gallow_arena =
   {
-    file = "data/gallow_arenas.wad",
+    file = "gallow_arenas.wad",
     maps = { MAP01=50, MAP02=25 },
   },
 
   gotcha =
   {
-    file = "data/gotcha_maps.wad",
+    file = "gotcha_maps.wad",
     maps = { MAP01=50, MAP02=50, MAP03=50 },
     theme_maps = { TECH="MAP01", URBAN="MAP02", HELL="MAP03" },
   },
 
   phobos_anomaly =
   {
-    file = "data/anomaly_towers.wad",
+    file = "anomaly_towers.wad",
     maps = { E1M1=50 },
   },
 
   tower_of_babel =
   {
-    file = "data/anomaly_towers.wad",
+    file = "anomaly_towers.wad",
     maps = { E2M1=50 },
   },
 
   dis =
   {
-    file = "data/anomaly_towers.wad",
+    file = "anomaly_towers.wad",
     maps = { E3M1=50 },
   },
 
   against_thee =
   {
-    file = "data/anomaly_towers.wad",
+    file = "anomaly_towers.wad",
     maps = { E2M1=50 },
   },
 
   unto_the_cruel =
   {
-    file = "data/anomaly_towers.wad",
+    file = "anomaly_towers.wad",
     maps = { E3M1=50 },
   },
 }
@@ -3392,10 +3392,10 @@ end
 function Doom_all_done()
   Doom_make_cool_gfx()
 
-  gui.wad_merge_sections("data/doom_falls.wad");
+  gui.wad_merge_sections("doom_falls.wad");
 
   if OB_CONFIG.length == "full" then
-    gui.wad_merge_sections("data/freedoom_face.wad");
+    gui.wad_merge_sections("freedoom_face.wad");
   end
 end
 
