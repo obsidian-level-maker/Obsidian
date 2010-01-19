@@ -116,7 +116,11 @@ install: stripped
 	install -o root -m 755 ../engines/*.lua $(SCRIPT_DIR)/engines
 	install -o root -m 755 ../mods/*.lua    $(SCRIPT_DIR)/mods
 
-.PHONY: all clean stripped install
+uninstall:
+	rm -v $(INSTALL_PREFIX)/bin/$(PROGRAM)
+	rm -Rv $(SCRIPT_DIR) 
+
+.PHONY: all clean stripped install uninstall
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
