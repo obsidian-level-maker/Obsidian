@@ -642,7 +642,7 @@ struct Compare_ScriptFilename_pred
   }
 };
 
-static void Script_LoadAllFromDir(const char *path)
+static bool Script_LoadAllFromDir(const char *path)
 {
   // load all scripts (files which match "*.lua") from a
   // sub-directory.
@@ -654,7 +654,10 @@ static void Script_LoadAllFromDir(const char *path)
   int count = ScanDirectory(path, add_extra_script, &file_list);
 
   if (count < 0)
-    Main_FatalError("Unable to find extra scripts! (%d)\n", count);
+  {
+    LogPrintf("  --> No such directory.\n\n");
+    return false;
+  }
 
   DebugPrintf("Scanned %d entries in sub-directory.\n", count);
 
@@ -688,6 +691,7 @@ static void Script_LoadAllFromDir(const char *path)
   }
  
   LogPrintf("\n");
+  return true;  // OK
 }
 
 static void Script_LoadSubDir(const char *subdir)
