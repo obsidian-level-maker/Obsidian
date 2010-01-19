@@ -14,6 +14,8 @@ CHANGES (since v3.47)
 
 -  new (more random) way of setting monster skill bits
 
--  system for adding "prebuilt" levels
+-  new system for adding "prebuilt" levels
 -  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
+
+-  'Unixy' type of system-wide installation (via Makefile.unixy)
 
