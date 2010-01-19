@@ -5,17 +5,19 @@
 # GNU Makefile for Unix/Linux with system-wide install
 #
 
-PROGRAM=../Oblige
+PROGRAM=Oblige
+
+INSTALL_PREFIX=/usr/local
+SCRIPT_DIR=$(INSTALL_PREFIX)/share/oblige
 
 CXX=g++
 
 LIB_LOC=../linux_lib
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
 
-OPTIMISE=-O0 -g3
+OPTIMISE=-O2
 
 # operating system choices: UNIX WIN32
 OS=UNIX
@@ -23,10 +25,9 @@ OS=UNIX
 
 #--- Internal stuff from here -----------------------------------
 
-FLTK_FLAGS=-I$(FLTK_DIR)
-FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
-          $(FLTK_DIR)/lib/libfltk.a \
-          -lX11 -lXext -lpng -ljpeg
+# assumes system-wide FLTK installation
+FLTK_FLAGS=
+FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
 
 LUA_FLAGS=-I$(LUA_DIR)/src
 LUA_LIBS=$(LUA_DIR)/src/liblua.a
@@ -99,10 +100,23 @@ clean:
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
-stripped: all
+stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
-.PHONY: all clean bin
+install: stripped
+	install -o root -m 755 $(PROGRAM) $(INSTALL_PREFIX)/bin/
+	install -d $(SCRIPT_DIR)/scripts
+	install -d $(SCRIPT_DIR)/data
+	install -d $(SCRIPT_DIR)/games
+	install -d $(SCRIPT_DIR)/engines
+	install -d $(SCRIPT_DIR)/mods
+	install -o root -m 755 ../scripts/*.lua $(SCRIPT_DIR)/scripts
+	install -o root -m 755 ../data/*.*      $(SCRIPT_DIR)/data
+	install -o root -m 755 ../games/*.lua   $(SCRIPT_DIR)/games
+	install -o root -m 755 ../engines/*.lua $(SCRIPT_DIR)/engines
+	install -o root -m 755 ../mods/*.lua    $(SCRIPT_DIR)/mods
+
+.PHONY: all clean stripped install
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
