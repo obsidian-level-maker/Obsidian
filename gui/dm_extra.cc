@@ -827,17 +827,23 @@ int DM_wad_insert_file(lua_State *L)
 {
   // LUA: wad_insert_file(filename, lumpname)
 
-  const char *file_name = luaL_checkstring(L, 1);
+  const char *base_name = luaL_checkstring(L, 1);
   const char *dest_lump = luaL_checkstring(L, 2);
 
-  FILE *fp = fopen(file_name, "rb");
+  const char *full_name = Script_FindDataFile(base_name);
+  if (! full_name)
+    return luaL_error(L, "wad_insert_file: missing data file: %s", base_name);
 
-  if (! fp)
-    return luaL_error(L, "wad_insert_file: cannot open file: %s", file_name);
+  FILE *fp = fopen(full_name, "rb");
+
+  if (! fp) // this is unlikely (we know it exists)
+    return luaL_error(L, "wad_insert_file: cannot open file: %s", full_name);
 
   TransferFILEtoWAD(fp, dest_lump);
 
   fclose(fp);
+
+  StringFree(full_name);
 
   return 0;
 }
@@ -857,16 +863,25 @@ int DM_wad_transfer_lump(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
 
-  if (! WAD_OpenRead(pkg_name))
-    return luaL_error(L, "wad_transfer_lump: bad or missing WAD file: %s", pkg_name);
+  const char *full_name = Script_FindDataFile(pkg_name);
+  if (! full_name)
+    return luaL_error(L, "wad_transfer_lump: missing WAD file: %s", pkg_name);
+
+  if (! WAD_OpenRead(full_name))
+    return luaL_error(L, "wad_transfer_lump: bad WAD file: %s", full_name);
   
   int entry = WAD_FindEntry(src_lump);
   if (entry < 0)
+  {
+    WAD_CloseRead();
     return luaL_error(L, "wad_transfer_lump: lump '%s' not found", src_lump);
+  }
 
   TransferWADtoWAD(entry, dest_lump);
 
   WAD_CloseRead();
+
+  StringFree(full_name);
 
   return 0;
 }
@@ -884,12 +899,19 @@ int DM_wad_transfer_map(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
 
-  if (! WAD_OpenRead(pkg_name))
-    return luaL_error(L, "wad_transfer_map: bad or missing WAD file: %s", pkg_name);
+  const char *full_name = Script_FindDataFile(pkg_name);
+  if (! full_name)
+    return luaL_error(L, "wad_transfer_map: missing WAD file: %s", pkg_name);
+
+  if (! WAD_OpenRead(full_name))
+    return luaL_error(L, "wad_transfer_map: bad WAD file: %s", full_name);
   
   int entry = WAD_FindEntry(src_map);
   if (entry < 0)
+  {
+    WAD_CloseRead();
     return luaL_error(L, "wad_transfer_map: map '%s' not found", src_map);
+  }
 
   // step 1: copy the map marker
   TransferWADtoWAD(entry, dest_map);
@@ -910,6 +932,8 @@ int DM_wad_transfer_map(lua_State *L)
   }
  
   WAD_CloseRead();
+
+  StringFree(full_name);
 
   return 0;
 }
@@ -971,9 +995,13 @@ int DM_wad_merge_sections(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
 
-  if (! WAD_OpenRead(pkg_name))
-    return luaL_error(L, "wad_merge_sections: bad or missing WAD file: %s", pkg_name);
-  
+  const char *full_name = Script_FindDataFile(pkg_name);
+  if (! full_name)
+    return luaL_error(L, "wad_merge_sections: missing WAD file: %s\n", pkg_name);
+
+  if (! WAD_OpenRead(full_name))
+    return luaL_error(L, "wad_merge_sections: bad WAD file: %s", full_name);
+
   DoMergeSection('P', "P_START", "PP_START", "P_END", "PP_END");
   DoMergeSection('S', "S_START", "SS_START", "S_END", "SS_END");
   DoMergeSection('F', "F_START", "FF_START", "F_END", "FF_END");
@@ -981,6 +1009,8 @@ int DM_wad_merge_sections(lua_State *L)
   DoMergeSection('T', "TX_START", NULL,      "TX_END", NULL);
 
   WAD_CloseRead();
+
+  StringFree(full_name);
 
   return 0;
 }
