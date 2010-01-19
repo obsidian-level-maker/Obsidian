@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -78,7 +78,7 @@ const char *UI_About::Text =
   "OBLIGE is a random level generator for\n"
   "DOOM I and II (more planned)\n"
   "\n"
-  "Copyright (C) 2006-2009 Andrew Apted\n"
+  "Copyright (C) 2006-2010 Andrew Apted\n"
   "\n"
   "This program is free software, and may be\n"
   "distributed and modified under the terms of\n"

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -221,7 +221,7 @@ bool Cookie_Save(const char *filename)
 
   // header...
   fprintf(cookie_fp, "-- CONFIG FILE : OBLIGE %s\n", OBLIGE_VERSION); 
-  fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2009 Andrew Apted\n");
+  fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2010 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
   fprintf(cookie_fp, "-- Miscellaneous --\n");
