@@ -766,36 +766,6 @@ void Script_Load(void)
 }
 
 
-const char * Script_FindDataFile(const char *base_name)
-{
-  // search through the 'data_path' directories to find the given file.
-  // If found, the complete filename is returned (which must be freed
-  // using StringFree).  If not found, NULL is returned.
-
-  const char *p = data_path;
-
-  for (;;)
-  {
-    const char *sep = strchr(p, ';');
-    int len = sep ? (sep - p) : strlen(p);
-
-    const char *filename = StringPrintf("%.*s/%s", len, p, base_name);
-
-//  fprintf(stderr, "Trying data file: [%s]\n", filename);
-
-    if (FileExists(filename))
-      return filename;
-
-    StringFree(filename);
-
-    if (! sep)
-      return NULL;  // not found
-
-    p = sep + 1;
-  }
-}
-
-
 //------------------------------------------------------------------------
 // WRAPPERS TO LUA FUNCTIONS
 //------------------------------------------------------------------------

@@ -830,7 +830,7 @@ int DM_wad_insert_file(lua_State *L)
   const char *base_name = luaL_checkstring(L, 1);
   const char *dest_lump = luaL_checkstring(L, 2);
 
-  const char *full_name = Script_FindDataFile(base_name);
+  const char *full_name = FileFindInPath(data_path, base_name);
   if (! full_name)
     return luaL_error(L, "wad_insert_file: missing data file: %s", base_name);
 
@@ -863,7 +863,7 @@ int DM_wad_transfer_lump(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_lump: file extension is not WAD: %s\n", pkg_name);
 
-  const char *full_name = Script_FindDataFile(pkg_name);
+  const char *full_name = FileFindInPath(data_path, pkg_name);
   if (! full_name)
     return luaL_error(L, "wad_transfer_lump: missing WAD file: %s", pkg_name);
 
@@ -899,7 +899,7 @@ int DM_wad_transfer_map(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_transfer_map: file extension is not WAD: %s\n", pkg_name);
 
-  const char *full_name = Script_FindDataFile(pkg_name);
+  const char *full_name = FileFindInPath(data_path, pkg_name);
   if (! full_name)
     return luaL_error(L, "wad_transfer_map: missing WAD file: %s", pkg_name);
 
@@ -995,7 +995,7 @@ int DM_wad_merge_sections(lua_State *L)
   if (! CheckExtension(pkg_name, "wad"))
     return luaL_error(L, "wad_merge_sections: file extension is not WAD: %s\n", pkg_name);
 
-  const char *full_name = Script_FindDataFile(pkg_name);
+  const char *full_name = FileFindInPath(data_path, pkg_name);
   if (! full_name)
     return luaL_error(L, "wad_merge_sections: missing WAD file: %s\n", pkg_name);
 

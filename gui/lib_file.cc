@@ -360,6 +360,36 @@ bool PathIsDirectory(const char *path)
 }
 
 
+const char * FileFindInPath(const char *paths, const char *base_name)
+{
+  // search through the path list (separated by ';') to find the file.
+  // If found, the complete filename is returned (which must be freed
+  // using StringFree).  If not found, NULL is returned.
+
+  for (;;)
+  {
+    const char *sep = strchr(paths, ';');
+    int len = sep ? (sep - paths) : strlen(paths);
+
+    SYS_ASSERT(len > 0);
+
+    const char *filename = StringPrintf("%.*s/%s", len, paths, base_name);
+
+//  fprintf(stderr, "Trying data file: [%s]\n", filename);
+
+    if (FileExists(filename))
+      return filename;
+
+    StringFree(filename);
+
+    if (! sep)
+      return NULL;  // not found
+
+    paths = sep + 1;
+  }
+}
+
+
 //------------------------------------------------------------------------
 
 int ScanDirectory(const char *path, directory_iter_f func, void *priv_dat)

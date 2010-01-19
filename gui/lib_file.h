@@ -46,6 +46,8 @@ bool FileMakeDir(const char *dir_name);
 u8_t *FileLoad(const char *filename, int *length);
 void FileFree(u8_t *mem);
 
+const char * FileFindInPath(const char *paths, const char *base_name);
+
 // miscellanous
 const char *GetExecutablePath(const char *argv0);
 
