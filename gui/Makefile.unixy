@@ -2,7 +2,7 @@
 # OBLIGE
 #----------------------------------------------------------------
 #
-# GNU Makefile for Unix/Linux version (local files)
+# GNU Makefile for Unix/Linux with system-wide install
 #
 
 PROGRAM=../Oblige
