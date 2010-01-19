@@ -71,8 +71,6 @@ OBJS=	main.o      \
 	q1_doors.o  \
 	q1_main.o   \
 	q1_nodes.o  \
-	q2_main.o   \
-	q2_nodes.o  \
 	q_bsp.o     \
 	vis_buffer.o \
 	wolf_map.o  \

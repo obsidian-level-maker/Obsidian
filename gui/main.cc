@@ -38,7 +38,6 @@
 #include "wolf_map.h"
 #include "dm_level.h"
 #include "q1_main.h"
-#include "q2_main.h"
 
 
 #define TICKER_TIME  40 /* ms */
@@ -322,8 +321,8 @@ void Build_Cool_Shit()
     else if (StringCaseCmp(format, "quake") == 0)
       game_object = Quake1_GameObject();
 
-    else if (StringCaseCmp(format, "quake2") == 0)
-      game_object = Quake2_GameObject();
+///    else if (StringCaseCmp(format, "quake2") == 0)
+///      game_object = Quake2_GameObject();
 
     else
       Main_FatalError("ERROR: unknown format: '%s'\n", format);
