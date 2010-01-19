@@ -5,7 +5,7 @@
 # GNU Makefile for Unix/Linux with system-wide install
 #
 
-PROGRAM=Oblige
+PROGRAM=oblige
 
 INSTALL_PREFIX=/usr/local
 SCRIPT_DIR=$(INSTALL_PREFIX)/share/oblige
@@ -35,7 +35,7 @@ LUA_LIBS=$(LUA_DIR)/src/liblua.a
 GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
+CXXFLAGS=$(OPTIMISE) -Wall -DFHS_INSTALL -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
 LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
