@@ -769,8 +769,6 @@ void Script_Load(void)
 const char * Script_FindDataFile(const char *base_name)
 {
   // search through the 'data_path' directories to find the given file.
-  // The base_name should not contain path separators.
-  //
   // If found, the complete filename is returned (which must be freed
   // using StringFree).  If not found, NULL is returned.
 
