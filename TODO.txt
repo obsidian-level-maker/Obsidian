@@ -2,9 +2,16 @@
 TODO
 ====
 
-++  need to explain (Usage Guide, README) that some modules must
-    be run with additional wads or packages, in particular the
-    ZDoom Beastiary module.
+>>>  don't use tech_outdoor exit in HELL themes
+
+>>>  rework liquids
+
+++  BUG: sky height out-of-sync, causing bars to become one-sided
+    (cf MAP04 of chris's map).
+
+?  need to explain (Usage Guide, README) that some modules must
+   be run with additional wads or packages, in particular the
+   ZDoom Beastiary module.
 
 
 +  get more games working (Heretic, Hexen etc)
@@ -14,9 +21,9 @@ TODO
 +  add in more scenery: lamps, computers etc
 
 
-+  BUG: arena E4M6 is not completeable (needs a tag 666 door).
+FIXED:  BUG: arena E4M6 is not completeable (needs a tag 666 door).
 
-?  option to not create backup files
+DONE:  option to not create backup files
 
 
 +  support MAPINFO lumps (especially for ZDoom ports).
@@ -73,21 +80,8 @@ CSG CODE:
 +   DOOM: merge linedefs where possible
 
 
-Quake II:
--  need to store wall brushes into a big list (qLeaf_c)
-   and "split" them with Split_XY (if purely on one side,
-   move to that side, otherwise keep in both sides).
-
-   when get to solid wall leaf, keep the ones that match
-   that wall (i.e. not completely in front of wall).
-
-?  use cluster=-1 for SOLID leafs
-
-
 Quakey:
 +  merge Q#_CreateEntities into a common function
-
--  dface_t == dface2_t, move into common ??
 
 q1_nodes:
   -  floor_leaf --> leaf

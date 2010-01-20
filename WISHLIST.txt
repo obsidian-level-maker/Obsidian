@@ -9,6 +9,7 @@ WISH-LIST
 Other Games:
 
 +  Duke Nukem 3D
++  Quake II
 
 -  HacX
 -  Hexen II
@@ -184,9 +185,25 @@ SKY GENERATOR:
 
 ++ perform visibility
 
-- gui.quake_add_wad("data/quake_tex.wad")
+- gui.quake_add_textures("data/quake_tex.wad")
 
 - create "oblige" logo miptex [.wal for QuakeII]
+
+
+----------------------------------------------------------------
+  QUAKE II:
+----------------------------------------------------------------
+
+-  need to store wall brushes into a big list (qLeaf_c)
+   and "split" them with Split_XY (if purely on one side,
+   move to that side, otherwise keep in both sides).
+
+   when get to solid wall leaf, keep the ones that match
+   that wall (i.e. not completely in front of wall).
+
+?  use cluster=-1 for SOLID leafs
+
+-  dface2_t == dface_t, move into common ??
 
 
 ----------------------------------------------------------------
