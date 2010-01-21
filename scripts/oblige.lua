@@ -30,8 +30,9 @@ function ob_traceback(msg)
   if not gui or not gui.printf then
     return msg
   end
- 
-  gui.printf("\nStack Trace:\n")
+
+  gui.printf("\n\n****** ERROR OCCURRED ******\n\n");
+  gui.printf("Stack Trace:\n")
 
   local stack_limit = 40
 

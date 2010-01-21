@@ -128,7 +128,7 @@ void DLG_ShowError(const char *msg, ...)
 
   buffer[MSG_BUF_LEN-2] = 0;
 
-  LogPrintf("\n%s\n", buffer);
+  LogPrintf("\n%s\n\n", buffer);
 
   if (! batch_mode)
     DialogShowAndRun(buffer, "Oblige - Error Message");
