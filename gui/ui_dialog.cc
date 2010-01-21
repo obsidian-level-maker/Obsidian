@@ -21,6 +21,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#include "main.h"
 
 static int dialog_result;
 
@@ -129,7 +130,10 @@ void DLG_ShowError(const char *msg, ...)
 
   LogPrintf("\n%s\n", buffer);
 
-  DialogShowAndRun(buffer, "Oblige - Error Message");
+  if (batch_mode)
+    fprintf(stderr, "\n%s\n", buffer);
+  else
+    DialogShowAndRun(buffer, "Oblige - Error Message");
 }
 
 

@@ -38,6 +38,8 @@ static bool doing_pre_load;
 
 static void Cookie_SetValue(const char *name, const char *value)
 {
+  SYS_ASSERT(main_win);
+
   if (! doing_pre_load)
     DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 

@@ -156,6 +156,9 @@ int gui_add_button(lua_State *L)
 
   SYS_ASSERT(what && id && label);
 
+  if (! main_win)
+    return 0;
+
   // only allowed during startup
   if (has_added_buttons)
     Main_FatalError("LUA script problem: gui.add_button called late.\n");
@@ -206,6 +209,9 @@ int gui_add_mod_option(lua_State *L)
 
   SYS_ASSERT(module && option);
 
+  if (! main_win)
+    return 0;
+
   // only allowed during startup
   if (has_added_buttons)
     Main_FatalError("LUA script problem: gui.add_mod_option called late.\n");
@@ -229,6 +235,9 @@ int gui_show_button(lua_State *L)
   int shown = lua_toboolean(L,3) ? 1 : 0;
 
   SYS_ASSERT(what && id);
+
+  if (! main_win)
+    return 0;
 
   // DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
@@ -262,6 +271,9 @@ int gui_change_button(lua_State *L)
 
   SYS_ASSERT(what && id);
 
+  if (! main_win)
+    return 0;
+
   // DebugPrintf("change_button: %s --> %s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
@@ -292,7 +304,10 @@ int gui_change_mod_option(lua_State *L)
 
   SYS_ASSERT(module && option && value);
 
-   DebugPrintf("change_mod_option: %s.%s --> %s\n", module, option, value);
+  if (! main_win)
+    return 0;
+
+  DebugPrintf("change_mod_option: %s.%s --> %s\n", module, option, value);
 
   main_win->mod_box->ParseOptValue(module, option, value);
 
@@ -313,7 +328,10 @@ int gui_at_level(lua_State *L)
 
   sprintf(buffer, "Making %s", name);
 
-  main_win->build_box->ProgStatus(buffer);
+  if (main_win)
+    main_win->build_box->ProgStatus(buffer);
+  else
+    printf("%s\n", buffer);
 
   return 0;
 }
@@ -328,7 +346,8 @@ int gui_progress(lua_State *L)
 
   perc = ((level_IDX-1) * 100 + perc) / level_TOTAL;
 
-  main_win->build_box->ProgUpdate(perc);
+  if (main_win)
+    main_win->build_box->ProgUpdate(perc);
 
   return 0;
 }
@@ -349,7 +368,7 @@ int gui_abort(lua_State *L)
 {
   int value = 0;
 
-  if (main_win->action >= UI_MainWin::ABORT)
+  if (main_win && main_win->action >= UI_MainWin::ABORT)
     value = 1;
 
   lua_pushboolean(L, value);

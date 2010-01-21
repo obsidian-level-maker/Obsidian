@@ -1102,8 +1102,11 @@ bool doom_game_interface_c::Start()
   if (! DM_StartWAD(TEMP_FILENAME))
     return false;
 
-  main_win->build_box->ProgInit(2);
-  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  if (main_win)
+  {
+    main_win->build_box->ProgInit(2);
+    main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  }
 
   return true;
 }

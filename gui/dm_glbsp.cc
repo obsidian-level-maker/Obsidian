@@ -106,7 +106,7 @@ void GB_Ticker(void)
 {
   Main_Ticker();
 
-  if (main_win->action >= UI_MainWin::ABORT)
+  if (main_win && main_win->action >= UI_MainWin::ABORT)
   {
     nb_comms.cancelled = TRUE;
   }
@@ -138,7 +138,7 @@ void GB_DisplaySetBarText(int barnum, const char *str)
 
 void GB_DisplaySetBarLimit(int barnum, int limit)
 {
-  if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
+  if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
   {
     main_win->build_box->ProgBegin(2, limit, GLBSP_PROGRESS_FG);
     main_win->build_box->ProgStatus("Building nodes");
@@ -147,7 +147,7 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
 
 void GB_DisplaySetBar(int barnum, int count)
 {
-  if (display_mode == DIS_BUILDPROGRESS && barnum == 2)
+  if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
   {
     main_win->build_box->ProgUpdate(count);
   }

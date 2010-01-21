@@ -99,6 +99,11 @@ const char *UI_GetLastFile(void)
 
 char *Select_Output_File(const char *ext)
 {
+  if (batch_mode)
+  {
+    return StringDup(batch_output_file);
+  }
+
   SYS_ASSERT(last_file);
 
 #ifdef WIN32

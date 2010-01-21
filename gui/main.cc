@@ -52,9 +52,12 @@ const char *install_path = NULL;
 int screen_w;
 int screen_h;
 
+bool batch_mode = false;
 bool create_backups = true;
 bool hide_module_panel = false;
 bool debug_messages = false;
+
+const char *batch_output_file = NULL;
 
 
 game_interface_c * game_object = NULL;
@@ -74,9 +77,10 @@ static void ShowInfo(void)
     "Usage: Oblige [options...]\n"
     "\n"
     "Available options:\n"
-    "  -d  -debug        Enable debugging\n"
-    "  -t  -terminal     Print log messages to stdout\n"
-    "  -h  -help         Show this help message\n"
+    "  -b --batch  <file>   Batch mode (no GUI)\n"
+    "  -d --debug           Enable debugging\n"
+    "  -t --terminal        Print log messages to stdout\n"
+    "  -h --help            Show this help message\n"
     "\n"
   );
 
@@ -303,7 +307,8 @@ static int module_key_handler(int event)
 void Build_Cool_Shit()
 {
   // clear the map
-  main_win->build_box->mini_map->EmptyMap();
+  if (main_win)
+    main_win->build_box->mini_map->EmptyMap();
 
   const char *format = ob_game_format();
 
@@ -329,12 +334,13 @@ void Build_Cool_Shit()
   }
 
 
-  UI_Build *bb_area = main_win->build_box;
-
   // lock most widgets of user interface
-  main_win->Locked(true);
-  bb_area->ProgSetButton(true);
-  bb_area->ProgStatus("Preparing...");
+  if (main_win)
+  {
+    main_win->Locked(true);
+    main_win->build_box->ProgSetButton(true);
+    main_win->build_box->ProgStatus("Preparing...");
+  }
 
   bool was_ok = game_object->Start();
 
@@ -347,20 +353,23 @@ void Build_Cool_Shit()
       was_ok = false;
   }
 
-  if (was_ok)
-    bb_area->ProgStatus("Success");
-  else if (main_win->action >= UI_MainWin::ABORT)
-    bb_area->ProgStatus("Cancelled");
-  else
-    bb_area->ProgStatus("Error");  // !!! FIXME: more info
+  if (main_win)
+  {
+    if (was_ok)
+      main_win->build_box->ProgStatus("Success");
+    else if (main_win->action >= UI_MainWin::ABORT)
+      main_win->build_box->ProgStatus("Cancelled");
+    else
+      main_win->build_box->ProgStatus("Error");  // !!! FIXME: more info
 
-  bb_area->ProgFinish();
-  bb_area->ProgSetButton(false);
+    main_win->build_box->ProgFinish();
+    main_win->build_box->ProgSetButton(false);
 
-  main_win->Locked(false);
+    main_win->Locked(false);
 
-  if (main_win->action == UI_MainWin::ABORT)
-    main_win->action = UI_MainWin::NONE;
+    if (main_win->action == UI_MainWin::ABORT)
+      main_win->action = UI_MainWin::NONE;
+  }
 
   // don't need game object anymore
   delete game_object;
@@ -405,7 +414,8 @@ int main(int argc, char **argv)
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
 
-  Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
+  if (! batch_mode)
+    Cookie_Load(CONFIG_FILENAME, true /* PRELOAD */);
 
   if (ArgvFind('d', "debug") >= 0)
     debug_messages = true;
@@ -417,94 +427,102 @@ int main(int argc, char **argv)
 
   // load icons for file chooser
 #ifndef WIN32
-  Fl_File_Icon::load_system_icons();
+  if (! batch_mode)
+    Fl_File_Icon::load_system_icons();
 #endif
 
 
   Script_Init();
 
-  Default_Location();
-
-  int main_w, main_h;
-  UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
-
-  main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
-
-  Script_Load();
-
-  main_win->game_box ->Defaults();
-  main_win->level_box->Defaults();
-  main_win->play_box ->Defaults();
-
-  // load config after creating window (will set widget values)
-  Cookie_Load(CONFIG_FILENAME);
-
-  if (hide_module_panel)
-    main_win->HideModules(true);
-
-
-  // show window (pass some dummy arguments)
+  if (batch_mode)
   {
-    char *argv[2];
-    argv[0] = strdup("Oblige.exe");
-    argv[1] = NULL;
-
-    main_win->show(1 /* argc */, argv);
+    Script_Load();
   }
-
-  // kill the stupid bright background of the "plastic" scheme
-  delete Fl::scheme_bg_;
-  Fl::scheme_bg_ = NULL;
-
-  main_win->image(NULL);
-
-  Fl::add_handler(module_key_handler);
-  Fl::add_handler(escape_key_handler);
-
-  // draw an empty map (must be done after main window is
-  // shown() because that is when FLTK finalises the colors).
-  main_win->build_box->mini_map->EmptyMap();
-
-  // handle -seed option
+  else
   {
-    int num_par = 0;
-    int index = ArgvFind('s', "seed", &num_par);
+    Default_Location();
 
-    if (index >= 0 && num_par > 0)
+    int main_w, main_h;
+    UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
+
+    main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
+
+    Script_Load();
+
+    main_win->game_box ->Defaults();
+    main_win->level_box->Defaults();
+    main_win->play_box ->Defaults();
+
+    // load config after creating window (will set widget values)
+    Cookie_Load(CONFIG_FILENAME);
+
+    if (hide_module_panel)
+      main_win->HideModules(true);
+
+
+    // show window (pass some dummy arguments)
     {
-      main_win->game_box->SetSeed(atoi(arg_list[index+1]));
+      char *argv[2];
+      argv[0] = strdup("Oblige.exe");
+      argv[1] = NULL;
+
+      main_win->show(1 /* argc */, argv);
     }
-  }
- 
 
-  try
-  {
-    // run the GUI until the user quits
-    for (;;)
+    // kill the stupid bright background of the "plastic" scheme
+    delete Fl::scheme_bg_;
+    Fl::scheme_bg_ = NULL;
+
+    main_win->image(NULL);
+
+    Fl::add_handler(module_key_handler);
+    Fl::add_handler(escape_key_handler);
+
+    // draw an empty map (must be done after main window is
+    // shown() because that is when FLTK finalises the colors).
+    main_win->build_box->mini_map->EmptyMap();
+
+    // handle -seed option
     {
-      Fl::wait(0.2f);
+      int num_par = 0;
+      int index = ArgvFind('s', "seed", &num_par);
 
-      if (main_win->action == UI_MainWin::QUIT)
-        break;
-
-      if (main_win->action == UI_MainWin::BUILD)
+      if (index >= 0 && num_par > 0)
       {
-        main_win->action = UI_MainWin::NONE;
-
-        // save config in case everything blows up
-        Cookie_Save(CONFIG_FILENAME);
-
-        Build_Cool_Shit();
+        main_win->game_box->SetSeed(atoi(arg_list[index+1]));
       }
     }
-  }
-  catch (assert_fail_c err)
-  {
-    Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
-  }
-  catch (...)
-  {
-    Main_FatalError("An unknown problem occurred (UI code)");
+ 
+
+    try
+    {
+      // run the GUI until the user quits
+      for (;;)
+      {
+        Fl::wait(0.2f);
+
+        if (main_win->action == UI_MainWin::QUIT)
+          break;
+
+        if (main_win->action == UI_MainWin::BUILD)
+        {
+          main_win->action = UI_MainWin::NONE;
+
+          // save config in case everything blows up
+          Cookie_Save(CONFIG_FILENAME);
+
+          Build_Cool_Shit();
+        }
+      }
+    }
+    catch (assert_fail_c err)
+    {
+      Main_FatalError("Sorry, an internal error occurred:\n%s", err.GetMessage());
+    }
+    catch (...)
+    {
+      Main_FatalError("An unknown problem occurred (UI code)");
+    }
   }
 
   Main_Shutdown(false);
