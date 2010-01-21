@@ -87,7 +87,7 @@ static void ShowInfo(void)
   printf(
     "This program is free software, under the terms of the GNU General\n"
     "Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
-    "documentation for more details, or visit this web page:\n"
+    "documentation for more details, or visit the following web page:\n"
     "http://www.gnu.org/licenses/gpl.html\n"
     "\n"
   );
@@ -302,6 +302,36 @@ static int module_key_handler(int event)
 }
 
 
+static void Batch_Defaults(void)
+{
+  // inform Lua code about batch mode
+  ob_set_config("batch", "YES");
+
+  int seed = time(NULL) & 0x7FFFF;
+
+  char seed_buffer[20];
+  sprintf(seed_buffer, "%d", seed);
+
+  // Game Settings
+  ob_set_config("seed",   seed_buffer);
+  ob_set_config("mode",   "sp");
+  ob_set_config("length", "few");
+
+  // Level Architecture
+  ob_set_config("size",     "prog");
+  ob_set_config("outdoors", "mixed");
+  ob_set_config("secrets",  "mixed");
+  ob_set_config("traps",    "mixed");
+
+  // Playing Style
+  ob_set_config("mons",    "normal");
+  ob_set_config("strength","medium");
+  ob_set_config("powers",  "normal");
+  ob_set_config("health",  "normal");
+  ob_set_config("ammo",    "normal");
+}
+
+
 //------------------------------------------------------------------------
 
 void Build_Cool_Shit()
@@ -411,7 +441,8 @@ int main(int argc, char **argv)
   }
 
 
-  Setup_FLTK();
+  if (! batch_mode)
+    Setup_FLTK();
 
   Determine_WorkingPath(argv[0]);
   Determine_InstallPath(argv[0]);
@@ -452,6 +483,11 @@ int main(int argc, char **argv)
   if (batch_mode)
   {
     Script_Load();
+
+    Batch_Defaults();
+    Cookie_ParseArguments();
+
+    Build_Cool_Shit();
   }
   else
   {
@@ -470,6 +506,8 @@ int main(int argc, char **argv)
 
     // load config after creating window (will set widget values)
     Cookie_Load(CONFIG_FILENAME);
+
+    Cookie_ParseArguments();
 
     if (hide_module_panel)
       main_win->HideModules(true);
@@ -497,17 +535,6 @@ int main(int argc, char **argv)
     // shown() because that is when FLTK finalises the colors).
     main_win->build_box->mini_map->EmptyMap();
 
-    // handle -seed option
-    {
-      int num_par = 0;
-      int index = ArgvFind('s', "seed", &num_par);
-
-      if (index >= 0 && num_par > 0)
-      {
-        main_win->game_box->SetSeed(atoi(arg_list[index+1]));
-      }
-    }
- 
 
     try
     {

@@ -23,6 +23,7 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "lib_argv.h"
 #include "lib_util.h"
 #include "main.h"
 
@@ -250,6 +251,50 @@ bool Cookie_Save(const char *filename)
   return true;
 }
 
+
+void Cookie_ParseArguments(void)
+{
+  doing_pre_load = false;
+
+  for (int i = 0; i < arg_count; i++)
+  {
+    const char *arg = arg_list[i];
+
+    if (arg[0] == '-')
+      continue;
+
+    const char *eq_pos = strchr(arg, '=');
+    if (! eq_pos)
+      continue;
+
+    // split argument into name/value pair
+    int eq_offset = (eq_pos - arg);
+
+    char *name = StringDup(arg);
+    char *value = name + eq_offset + 1;
+
+    name[eq_offset] = 0;
+
+    if (name[0] == 0 || value[0] == 0)
+      Main_FatalError("Bad setting on command line: '%s'\n", arg);
+
+    if (batch_mode)
+    {
+      DebugPrintf("ARGUMENT: Name: [%s] Value: [%s]\n", name, value);
+      ob_set_config(name, value);
+    }
+    else
+    {
+      // need special handling for the 'seed' value
+      if (StringCaseCmp(name, "seed") == 0)
+        main_win->game_box->SetSeed(atoi(value));
+      else
+        Cookie_SetValue(name, value);
+    }
+
+    StringFree(name);
+  }
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
