@@ -304,8 +304,8 @@ static int module_key_handler(int event)
 
 static void Batch_Defaults(void)
 {
-  // inform Lua code about batch mode
-  ob_set_config("batch", "YES");
+  // inform Lua code about batch mode (the value doesn't matter)
+  ob_set_config("batch", "yes");
 
   int seed = time(NULL) & 0x7FFFF;
 
@@ -455,7 +455,7 @@ int main(int argc, char **argv)
   if (batch_mode || ArgvFind('t', "terminal") >= 0)
     LogEnableTerminal(true);
 
-  LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted\n\n");
+  LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n\n");
 
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
