@@ -379,14 +379,6 @@ PIPE DREAMS
        5080 = "Blue Start"      
        5081 = "Red Start"
 
--  Batch mode:
-   .  -b(atch) builds then quits
-   .  -o(utput) for output filename
-   .  set parameters via command-line : xxx=aaa yyy=bbb (non-options)
-   .  option to read a different config file: -c(onfig)
-   .  never writes the config file
-   ?? what to do on error ??
-
 
 ----------------------------------------------------------------
   IDEAS AND BRAINSTORMS
