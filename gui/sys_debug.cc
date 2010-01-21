@@ -90,7 +90,7 @@ void LogPrintf(const char *str, ...)
     va_list args;
 
     va_start(args, str);
-    vfprintf(stderr, str, args);
+    vfprintf(stdout, str, args);
     va_end(args);
   }
 }
@@ -98,7 +98,7 @@ void LogPrintf(const char *str, ...)
 
 void DebugPrintf(const char *str, ...)
 {
-  if (log_file && debugging)
+  if (debugging)
   {
     static char buffer[MSG_BUF_LEN];
 
