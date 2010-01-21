@@ -396,6 +396,21 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+
+  int batch_arg = ArgvFind('b', "batch");
+  if (batch_arg >= 0)
+  {
+    if (batch_arg+1 >= arg_count || arg_list[batch_arg+1][0] == '-')
+    {
+      fprintf(stderr, "OBLIGE ERROR: missing filename for --batch\n");
+      exit(9);
+    }
+
+    batch_mode = true;
+    batch_output_file = arg_list[batch_arg+1];
+  }
+
+
   Setup_FLTK();
 
   Determine_WorkingPath(argv[0]);
@@ -404,9 +419,9 @@ int main(int argc, char **argv)
   FileChangeDir(working_path);
 
 
-  LogInit(LOG_FILENAME);
+  LogInit(batch_mode ? NULL : LOG_FILENAME);
 
-  if (ArgvFind('t', "terminal") >= 0)
+  if (batch_mode || ArgvFind('t', "terminal") >= 0)
     LogEnableTerminal(true);
 
   LogPrintf(OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted\n\n");
