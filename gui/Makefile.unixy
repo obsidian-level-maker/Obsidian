@@ -4,16 +4,26 @@
 #
 # GNU Makefile for Unix/Linux with system-wide install
 #
+# Using this makefile (make, make install) will place the
+# executable, script and data files in standard Unixy places.
+# The script and data files can be overridden by files in the
+# $HOME/.oblige directory.
+#
+# NOTE: the Lua library must be compiled as C++
+#
+# NOTE 2: a system-wide FLTK library is assumed
+#
 
 PROGRAM=oblige
 
+# prefix choices: /usr  /usr/local  /opt
 INSTALL_PREFIX=/usr/local
+
 SCRIPT_DIR=$(INSTALL_PREFIX)/share/oblige
 
 CXX=g++
 
 LIB_LOC=../linux_lib
-
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
 

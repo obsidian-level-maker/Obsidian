@@ -16,6 +16,6 @@ CHANGES (since v3.47)
 -  new system for adding pre-built levels
 -  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
 
--  Unixy type of system-wide installation (via Makefile.unixy)
+-  Unixy type of system-wide installation (use Makefile.unixy)
 -  Batch mode : run Oblige without the GUI
 
