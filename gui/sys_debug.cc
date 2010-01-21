@@ -35,7 +35,7 @@ void LogInit(const char *filename)
     log_file = fopen(filename, "w");
   }
 
-  LogPrintf("========= START OF OBLIGE LOGS =========\n\n");
+  LogPrintf("========= START OF OBLIGE LOGS =========\n");
 }
 
 

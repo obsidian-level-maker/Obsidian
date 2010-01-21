@@ -455,7 +455,11 @@ int main(int argc, char **argv)
   if (batch_mode || ArgvFind('t', "terminal") >= 0)
     LogEnableTerminal(true);
 
-  LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n\n");
+  LogPrintf("\n");
+  LogPrintf("********************************************************\n");
+  LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n");
+  LogPrintf("********************************************************\n");
+  LogPrintf("\n");
 
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
