@@ -38,8 +38,6 @@ static bool doing_pre_load;
 
 static void Cookie_SetValue(const char *name, const char *value)
 {
-  SYS_ASSERT(main_win);
-
   if (! doing_pre_load)
     DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
@@ -65,6 +63,8 @@ static void Cookie_SetValue(const char *name, const char *value)
     // skip everything else during PRELOAD
     return;
   }
+
+  SYS_ASSERT(main_win);
 
   if (StringCaseCmp(name, "last_file") == 0)
   {
