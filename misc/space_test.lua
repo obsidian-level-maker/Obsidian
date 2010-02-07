@@ -25,6 +25,15 @@ DIVIDE_ODDS = { 0,  5, 10, 20, 40, 60, 70, 80, 90, 95, 98, 99, 100 }
 ROOM = 1
 
 
+function fill_area(x, y, w, h, R)
+  for sy = y, y+h-1 do
+    for sx = x, x+w-1 do
+      SEEDS[sx][sy] = R
+    end
+  end
+end
+
+
 function divide_horiz(x, y, w, h)
   if (w >= 3) and rand_odds(math.min(50, (w-1)*10)) then
     local w2 = int(w / 3)
@@ -77,12 +86,41 @@ function divide_vert(x, y, w, h)
 end
 
 
+function L_shape(x, y, w, h)
+  local w2 = 1
+  if w > 2 and rand_odds(math.min(80, w*10)) then w2 = w2 + 1 end
+  if w > 4 and rand_odds(25) then w2 = w2 + 1 end
+
+  local h2 = 1
+  if h > 2 and rand_odds(math.min(80, h*10)) then h2 = h2 + 1 end
+  if h > 4 and rand_odds(25) then h2 = h2 + 1 end
+
+  local corner = rand_element { 1, 3, 7, 9 }
+
+  fill_area(x, y, w, h, ROOM)
+  ROOM = ROOM + 1
+
+  w = w - w2
+  h = h - h2
+
+  if corner > 5 then y = y + h2 end
+  if corner == 3 or corner == 9 then x = x + w2 end
+
+  recursive_fill(x, y, w, h)
+end
+
+
 function recursive_fill(x, y, w, h)
   local d
 
 -- print(x, y, w, h)
 
   if math.min(w, h) >= 2 then
+
+    if true then
+      L_shape(x, y, w, h)
+      return;
+    end
 
     if (w > h) or (w == h and rand_odds(50)) then
       d = math.min(w, #DIVIDE_ODDS)
@@ -101,11 +139,8 @@ function recursive_fill(x, y, w, h)
   end  -- min(w, h) >= 2
 
   -- no subdivision, just fill the space
-  for sy = y, y+h-1 do
-    for sx = x, x+w-1 do
-      SEEDS[sx][sy] = ROOM
-    end
-  end
+
+  fill_area(x, y, w, h, ROOM)
 
   ROOM = ROOM + 1
 end
