@@ -137,13 +137,13 @@ public:
 			fl_color(FL_YELLOW);
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
-		else if (vis != 0)
+		else if ((vis % 5) != 0)
 		{
-			switch (vis)
+			switch (vis % 5)
 			{
 				case 1:  fl_color(FL_BLUE); break;
 				case 2:  fl_color(fl_rgb_color(255,176,32)); break;
-				case 3:  fl_color(fl_rgb_color(0,160,0)); break;
+				case 3:  fl_color(fl_rgb_color(0,192,0)); break;
 				default: fl_color(FL_MAGENTA); break;
 			}
 
@@ -330,21 +330,6 @@ UI_Window::~UI_Window()
 //--------------------------------------------------------------------
 
 
-void Generate(void)
-{
-	int x, y;
-
-	for (x = 0; x < MAX_SQUARES; x++)
-	for (y = 0; y < MAX_SQUARES; y++)
-	{
-		main_win->canvas->buffer[x][y] = rand() & 3;
-	}
-}
-
-
-//--------------------------------------------------------------------
-
-
 #define MSG_BUF_LEN  2000
 
 void Main_FatalError(const char *msg, ...)
@@ -365,6 +350,23 @@ void Main_FatalError(const char *msg, ...)
 		delete main_win;
 
 	exit(9);
+}
+
+
+void ReadMap(void)
+{
+	int x, y;
+
+	for (y = 0; y < MAX_SQUARES; y++)
+	for (x = 0; x < MAX_SQUARES; x++)
+	{
+		int val;
+
+		if (fscanf(stdin, " %i ", &val) != 1)
+			Main_FatalError("Error reading map data from stdin!\n");
+
+		main_win->canvas->buffer[x][y] = val;
+	}
 }
 
 
@@ -391,12 +393,15 @@ int main(int argc, char **argv)
 	{
 		main_win = new UI_Window("Space Test");
 
-		Generate();
+		ReadMap();
 
 		// show window (pass some dummy arguments)
 		{
 			int argc = 1;
-			char *argv[] = { "SpaceTest.exe", NULL };
+			char *argv[2];
+			
+			argv[0] = strdup("SpaceTest.exe");
+			argv[1] = NULL;
 
 			main_win->show(argc, argv);
 		}
