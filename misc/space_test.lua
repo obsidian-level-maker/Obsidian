@@ -110,6 +110,39 @@ function L_shape(x, y, w, h)
 end
 
 
+function U_shape(x, y, w, h, side)
+  local ww = w
+  local hh = h
+
+  if is_vert(side) then ww = int(w/2) else hh = int(h/2) end
+
+  local w2 = 1
+  if ww > 2 and rand_odds(math.min(80, ww*10)) then w2 = w2 + 1 end
+  if ww > 4 and rand_odds(25) then w2 = w2 + 1 end
+
+  local h2 = 1
+  if hh > 2 and rand_odds(math.min(80, hh*10)) then h2 = h2 + 1 end
+  if hh > 4 and rand_odds(25) then h2 = h2 + 1 end
+
+  fill_area(x, y, w, h, ROOM)
+  ROOM = ROOM + 1
+
+  if is_vert(side) then
+    w = w - w2 * 2
+    h = h - h2
+    x = x + w2
+    if side == 8 then y = y + h2 end
+  else
+    w = w - w2
+    h = h - h2 * 2
+    y = y + h2
+    if side == 6 then x = x + w2 end
+  end
+
+  recursive_fill(x, y, w, h)
+end
+
+
 function recursive_fill(x, y, w, h)
   local d
 
@@ -117,7 +150,14 @@ function recursive_fill(x, y, w, h)
 
   if math.min(w, h) >= 2 then
 
-    if true then
+    if math.min(w, h) >= 3 then
+      local side = sel(w >= h, rand_sel(50, 2, 8), rand_sel(50, 4, 6))
+
+      U_shape(x, y, w, h, side)
+      return;
+    end
+
+    if false then
       L_shape(x, y, w, h)
       return;
     end
