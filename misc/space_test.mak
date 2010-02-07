@@ -1,10 +1,10 @@
 #----------------------------------------------------------------
-# Space Test
+# Space Viewer
 #
 # GNU Makefile for Unix/Linux
 #----------------------------------------------------------------
 
-PROGRAM=space_test
+PROGRAM=space_viewer
 
 CXX=g++
 
@@ -30,7 +30,7 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS)
 
 
-OBJS=space_test.o
+OBJS=space_viewer.o
 
 
 #--- Targets and Rules ------------------------------------------
