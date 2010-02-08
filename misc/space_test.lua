@@ -21,11 +21,13 @@ SEED_H = 32
 SEEDS = array_2D(SEED_W, SEED_H)
 
 
+ROOM = 1
+
 DIVIDE_ODDS = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
 DIVIDE_ODDS = { 0,  5, 10, 20, 40, 60, 70, 80, 90, 95, 98, 99, 100 }
 -- DIVIDE_ODDS = { 0, 60, 60, 60, 60, 60, 60, 60, 60, 60, 100 }
 
-ROOM = 1
+SHAPE_PROBS = { N=150, t=70, s=70, l=30, u=30, h=15, o=15 }
 
 
 function fill_area(x, y, w, h, R)
@@ -271,39 +273,37 @@ end
 
 
 
-
-
 function recursive_fill(x, y, w, h)
 --print("recursive_fill", x, y, w, h)
   assert(w >= 1)
   assert(h >= 1)
 
-  local d
+  local shape = rand_key_by_probs(SHAPE_PROBS)
+
+  local side = rand_irange(1,4) * 2
+
 
   if math.min(w, h) >= 2 then
 
     if math.min(w, h) >= 3 then
-      local side = sel(w >= h, rand_sel(50, 2, 8), rand_sel(50, 4, 6))
-
-      side = rand_irange(1,4) * 2
-
-      S_shape(x, y, w, h, side)
-      return;
+      
+      if shape == "s" then S_shape(x, y, w, h, side) ; return end
+      if shape == "t" then T_shape(x, y, w, h, side) ; return end
+      if shape == "h" then H_shape(x, y, w, h, side) ; return end
+      if shape == "u" then U_shape(x, y, w, h, side) ; return end
+      if shape == "o" then O_shape(x, y, w, h, side) ; return end
     end
 
-    if false then
-      L_shape(x, y, w, h)
-      return;
-    end
+    if shape == "l" then L_shape(x, y, w, h) ; return end
 
     if (w > h) or (w == h and rand_odds(50)) then
-      d = math.min(w, #DIVIDE_ODDS)
+      local d = math.min(w, #DIVIDE_ODDS)
 
       if rand_odds(DIVIDE_ODDS[d]) then
         return divide_horiz(x, y, w, h)
       end
     else
-      d = math.min(h, #DIVIDE_ODDS)
+      local d = math.min(h, #DIVIDE_ODDS)
 
       if rand_odds(DIVIDE_ODDS[d]) then
         return divide_vert(x, y, w, h)
