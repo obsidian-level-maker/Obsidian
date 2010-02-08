@@ -3,8 +3,6 @@
 -------------------------------------------
 
 
--- TODO >>   S_shape()  X_shape()
-
 -- TODO >>   mirroring
 
 
@@ -236,6 +234,44 @@ function H_shape(x, y, w, h, side)
 end
 
 
+function S_shape(x, y, w, h, side)
+  local ww = w
+  local hh = h
+
+  ww = int((w-1)/2)
+  hh = int((h-1)/2)
+
+  local w2 = 1
+  if ww > 2 and rand_odds(math.min(80, ww*10)) then w2 = w2 + 1 end
+  if ww > 4 and rand_odds(25) then w2 = w2 + 1 end
+
+  local h2 = 1
+  if hh > 2 and rand_odds(math.min(80, hh*10)) then h2 = h2 + 1 end
+  if hh > 4 and rand_odds(25) then h2 = h2 + 1 end
+
+  fill_area(x, y, w, h, ROOM)
+  ROOM = ROOM + 1
+
+--print("S_shape", x, y, w, h, side)
+--print("\t", ww, hh, w2, h2)
+  if side == 2 then
+    recursive_fill(x, y,          ww, h-h2)
+    recursive_fill(x+w-ww, y+h2,  ww, h-h2)
+  elseif side == 8 then
+    recursive_fill(x, y+h2,    ww, h-h2)
+    recursive_fill(x+w-ww, y,  ww, h-h2)
+  elseif side == 4 then
+    recursive_fill(x, y,          w-w2, hh)
+    recursive_fill(x+w2, y+h-hh,  w-w2, hh)
+  else
+    recursive_fill(x, y+h-hh,  w-w2, hh)
+    recursive_fill(x+w2, y,    w-w2, hh)
+  end
+end
+
+
+
+
 
 function recursive_fill(x, y, w, h)
 --print("recursive_fill", x, y, w, h)
@@ -251,7 +287,7 @@ function recursive_fill(x, y, w, h)
 
       side = rand_irange(1,4) * 2
 
-      H_shape(x, y, w, h, side)
+      S_shape(x, y, w, h, side)
       return;
     end
 
