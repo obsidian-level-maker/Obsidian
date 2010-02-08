@@ -285,7 +285,7 @@ function recursive_fill(x, y, w, h)
 
   if math.min(w, h) >= 2 then
 
-    if math.min(w, h) >= 3 then
+    if math.min(w, h) >= 3 and math.max(w, h) <= 9 then
       
       if shape == "s" then S_shape(x, y, w, h, side) ; return end
       if shape == "t" then T_shape(x, y, w, h, side) ; return end
