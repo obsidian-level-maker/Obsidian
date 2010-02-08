@@ -137,9 +137,9 @@ public:
 			fl_color(FL_YELLOW);
 			fl_rectf(x1, y1, SQUARE_SIZE, SQUARE_SIZE);
 		}
-		else if ((vis % 5) != 0)
+		else if (vis != 0)
 		{
-			switch (vis % 5)
+			switch (vis % 4)
 			{
 				case 1:  fl_color(FL_BLUE); break;
 				case 2:  fl_color(fl_rgb_color(255,176,32)); break;

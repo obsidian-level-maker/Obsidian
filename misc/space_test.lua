@@ -30,6 +30,15 @@ DIVIDE_ODDS = { 0,  5, 10, 20, 40, 60, 70, 80, 90, 95, 98, 99, 100 }
 SHAPE_PROBS = { N=150, t=70, s=70, l=30, u=30, h=15, o=15 }
 
 
+function generate_noise()
+  for y = 1,SEED_H do
+    for x = 1,SEED_W do
+      SEEDS[x][y] = rand_index_by_probs({ 80, 40, 20, 10, 5 }) - 1
+    end
+  end
+end
+
+
 function fill_area(x, y, w, h, R)
   for sy = y, y+h-1 do
     for sx = x, x+w-1 do
@@ -377,12 +386,99 @@ function merge_areas(count)
 end
 
 
-function generate_noise()
-  for y = 1,SEED_H do
-    for x = 1,SEED_W do
-      SEEDS[x][y] = rand_index_by_probs({ 80, 40, 20, 10, 5 }) - 1
+function area_used(x1, y1, x2, y2)
+  if x1 < 1 or x2 > SEED_W or y1 < 1 or y2 > SEED_H then
+    return true
+  end
+
+  for x = x1, x2 do for y = y1, y2 do
+    if SEEDS[x][y] then
+      return true
+    end
+  end end
+
+  return false
+end
+
+
+function try_build_room(x, y, dir, loop)
+  local deep = rand_irange(1,4) * 2 + 1
+  local long = rand_irange(1,4)
+
+--print("deep", deep)
+--print("long", long)
+  local dx, dy = dir_to_delta(dir)
+  local ax, ay = dir_to_delta(rotate_ccw90(dir))
+
+  local x1, y1, x2, y2
+
+  if is_vert(dir) then
+    x1 = x - long
+    x2 = x + long
+    y1 = y
+    y2 = y + (deep-1) * dy
+    if y1 > y2 then y1, y2 = y2, y1 end
+  else
+    y1 = y - long
+    y2 = y + long
+    x1 = x
+    x2 = x + (deep-1) * dx
+    if x1 > x2 then x1, x2 = x2, x1 end
+  end
+
+  if area_used(x1, y1, x2, y2) then
+    return false
+  end
+
+  fill_area(x1, y1, x2-x1+1, y2-y1+1, ROOM)
+  if rand_odds(70) then
+    ROOM = ROOM + 1
+  end
+
+  local half = int(deep/2)
+
+  spots = {}
+
+  table.insert({},
+  {
+    x = x + deep * dx,
+    y = y + deep * dy,
+    dir = dir,
+  })
+
+  table.insert(spots,
+  {
+    x = x + half * dx + (long+1) * ax,
+    y = y + half * dy + (long+1) * ay,
+    dir = rotate_ccw90(dir),
+  })
+
+  table.insert(spots,
+  {
+    x = x + half * dx - (long+1) * ax,
+    y = y + half * dy - (long+1) * ay,
+    dir = rotate_cw90(dir),
+  })
+
+  rand_shuffle(spots)
+
+  for _,P in ipairs(spots) do
+    build_rooms(P.x, P.y, P.dir)
+  end
+
+  return true
+end
+
+
+function build_rooms(x, y, dir)
+--print("build_rooms...")
+  for loop = 1,20 do
+    if try_build_room(x, y, dir, loop) then
+      return true
     end
   end
+
+  return false
 end
 
 
@@ -397,8 +493,9 @@ end
 
 math.randomseed(0 + 1 * os.time())
 
-recursive_fill(1,1, SEED_W,SEED_H)
+--recursive_fill(1,1, SEED_W,SEED_H)
+--merge_areas(SEED_W * 3)
 
-merge_areas(SEED_W * 3)
+build_rooms(rand_irange(8,24), rand_irange(4,12), 8)
 
 write_seeds()
