@@ -21,13 +21,20 @@ SEED_H = 32
 SEEDS = array_2D(SEED_W, SEED_H)
 
 
-ROOM = 1
+HALL = 1
+ROOM = 2
 
 DIVIDE_ODDS = { 0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 }
 DIVIDE_ODDS = { 0,  5, 10, 20, 40, 60, 70, 80, 90, 95, 98, 99, 100 }
 -- DIVIDE_ODDS = { 0, 60, 60, 60, 60, 60, 60, 60, 60, 60, 100 }
 
 SHAPE_PROBS = { N=150, t=70, s=70, l=30, u=30, h=15, o=15 }
+
+
+function valid(x, y)
+  return x >= 1 and x <= SEED_W and 
+         y >= 1 and y <= SEED_H
+end
 
 
 function generate_noise()
@@ -357,7 +364,7 @@ end
 
 function merge_at_point(x, y, side)
   local nx, ny = nudge_coord(x, y, side)
-  if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+  if not valid(nx, ny) then
     return false
   end
 
@@ -402,27 +409,36 @@ end
 
 
 function try_build_room(x, y, dir, loop)
+  if not valid(x, y) or SEEDS[x][y] then
+    return false
+  end
+
   local deep = rand_irange(1,4) * 2 + 1
   local long = rand_irange(1,4)
+
+  local hall_len = rand_sel(90, 1, 0)
 
 --print("deep", deep)
 --print("long", long)
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_delta(rotate_ccw90(dir))
 
+  local rx = x + hall_len * dx
+  local ry = y + hall_len * dy
+
   local x1, y1, x2, y2
 
   if is_vert(dir) then
-    x1 = x - long
-    x2 = x + long
-    y1 = y
-    y2 = y + (deep-1) * dy
+    x1 = rx - long
+    x2 = rx + long
+    y1 = ry
+    y2 = ry + (deep-1) * dy
     if y1 > y2 then y1, y2 = y2, y1 end
   else
-    y1 = y - long
-    y2 = y + long
-    x1 = x
-    x2 = x + (deep-1) * dx
+    y1 = ry - long
+    y2 = ry + long
+    x1 = rx
+    x2 = rx + (deep-1) * dx
     if x1 > x2 then x1, x2 = x2, x1 end
   end
 
@@ -430,8 +446,13 @@ function try_build_room(x, y, dir, loop)
     return false
   end
 
+
+  if hall_len > 0 then
+    SEEDS[x][y] = HALL
+  end
+
   fill_area(x1, y1, x2-x1+1, y2-y1+1, ROOM)
-  if rand_odds(70) then
+  if rand_odds(30) or hall_len > 0 then
     ROOM = ROOM + 1
   end
 
@@ -441,22 +462,22 @@ function try_build_room(x, y, dir, loop)
 
   table.insert({},
   {
-    x = x + deep * dx,
-    y = y + deep * dy,
+    x = rx + deep * dx,
+    y = ry + deep * dy,
     dir = dir,
   })
 
   table.insert(spots,
   {
-    x = x + half * dx + (long+1) * ax,
-    y = y + half * dy + (long+1) * ay,
+    x = rx + half * dx + (long+1) * ax,
+    y = ry + half * dy + (long+1) * ay,
     dir = rotate_ccw90(dir),
   })
 
   table.insert(spots,
   {
-    x = x + half * dx - (long+1) * ax,
-    y = y + half * dy - (long+1) * ay,
+    x = rx + half * dx - (long+1) * ax,
+    y = ry + half * dy - (long+1) * ay,
     dir = rotate_cw90(dir),
   })
 
