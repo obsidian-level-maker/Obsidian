@@ -3,7 +3,7 @@
 -------------------------------------------
 
 
--- TODO >>   S_shape()  H_shape()  X_shape()
+-- TODO >>   S_shape()  X_shape()
 
 -- TODO >>   mirroring
 
@@ -67,7 +67,7 @@ end
 
 function divide_vert(x, y, w, h)
   if (h >= 3) and rand_odds(math.min(50, (h-1)*10)) then
-    local h2 = int(w / 3)
+    local h2 = int(h / 3)
 
     recursive_fill(x, y, w, h2)
     recursive_fill(x, y+h-h2, w, h2)
@@ -206,17 +206,52 @@ function T_shape(x, y, w, h, side)
 end
 
 
-function recursive_fill(x, y, w, h)
-  local d
+function H_shape(x, y, w, h, side)
+  local ww = w
+  local hh = h
 
--- print(x, y, w, h)
+  ww = int((w-1)/2)
+  hh = int((h-1)/2)
+
+  local w2 = 1
+  if ww > 2 and rand_odds(math.min(80, ww*10)) then w2 = w2 + 1 end
+  if ww > 4 and rand_odds(25) then w2 = w2 + 1 end
+
+  local h2 = 1
+  if hh > 2 and rand_odds(math.min(80, hh*10)) then h2 = h2 + 1 end
+  if hh > 4 and rand_odds(25) then h2 = h2 + 1 end
+
+  fill_area(x, y, w, h, ROOM)
+  ROOM = ROOM + 1
+
+--print("H_shape", x, y, w, h, side)
+--print("\t", ww, hh, w2, h2)
+  if is_vert(side) then
+    recursive_fill(x+w2, y,       w-w2-w2, hh)
+    recursive_fill(x+w2, y+h-hh,  w-w2-w2, hh)
+  else
+    recursive_fill(x,      y+h2,  ww, h-h2-h2)
+    recursive_fill(x+w-ww, y+h2,  ww, h-h2-h2)
+  end
+end
+
+
+
+function recursive_fill(x, y, w, h)
+--print("recursive_fill", x, y, w, h)
+  assert(w >= 1)
+  assert(h >= 1)
+
+  local d
 
   if math.min(w, h) >= 2 then
 
     if math.min(w, h) >= 3 then
       local side = sel(w >= h, rand_sel(50, 2, 8), rand_sel(50, 4, 6))
 
-      T_shape(x, y, w, h, side)
+      side = rand_irange(1,4) * 2
+
+      H_shape(x, y, w, h, side)
       return;
     end
 
