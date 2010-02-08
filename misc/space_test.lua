@@ -416,12 +416,19 @@ function try_build_room(x, y, dir, loop)
   local deep = rand_irange(1,4) * 2 + 1
   local long = rand_irange(1,4)
 
-  local hall_len = rand_sel(90, 1, 0)
+  local hall_len = rand_sel(70, 1, 0)
 
 --print("deep", deep)
 --print("long", long)
   local dx, dy = dir_to_delta(dir)
   local ax, ay = dir_to_delta(rotate_ccw90(dir))
+
+  if hall_len == 1 and valid(x+dx, y+dy) and not SEEDS[x+dx][y+dy] and rand_odds(25) then
+    hall_len = 2
+  end
+
+  -- no hallway when no other room
+  if ROOM == 2 then hall_len = 0 end
 
   local rx = x + hall_len * dx
   local ry = y + hall_len * dy
@@ -448,11 +455,13 @@ function try_build_room(x, y, dir, loop)
 
 
   if hall_len > 0 then
-    SEEDS[x][y] = HALL
+    for i = 1, hall_len do
+      SEEDS[x+(i-1)*dx][y+(i-1)*dy] = HALL
+    end
   end
 
   fill_area(x1, y1, x2-x1+1, y2-y1+1, ROOM)
-  if rand_odds(30) or hall_len > 0 then
+  if rand_odds(99) or hall_len > 0 then
     ROOM = ROOM + 1
   end
 
@@ -460,26 +469,32 @@ function try_build_room(x, y, dir, loop)
 
   spots = {}
 
-  table.insert({},
-  {
-    x = rx + deep * dx,
-    y = ry + deep * dy,
-    dir = dir,
-  })
+  if rand_odds(80) then
+    table.insert(spots,
+    {
+      x = rx + half * dx + (long+1) * ax,
+      y = ry + half * dy + (long+1) * ay,
+      dir = rotate_ccw90(dir),
+    })
+  end
 
-  table.insert(spots,
-  {
-    x = rx + half * dx + (long+1) * ax,
-    y = ry + half * dy + (long+1) * ay,
-    dir = rotate_ccw90(dir),
-  })
+  if rand_odds(80) then
+    table.insert(spots,
+    {
+      x = rx + half * dx - (long+1) * ax,
+      y = ry + half * dy - (long+1) * ay,
+      dir = rotate_cw90(dir),
+    })
+  end
 
-  table.insert(spots,
-  {
-    x = rx + half * dx - (long+1) * ax,
-    y = ry + half * dy - (long+1) * ay,
-    dir = rotate_cw90(dir),
-  })
+  if rand_odds(40) or #spots == 0 then
+    table.insert(spots,
+    {
+      x = rx + deep * dx,
+      y = ry + deep * dy,
+      dir = dir,
+    })
+  end
 
   rand_shuffle(spots)
 
