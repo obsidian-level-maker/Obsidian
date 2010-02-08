@@ -320,6 +320,63 @@ function recursive_fill(x, y, w, h)
 end
 
 
+function merge_two_rooms(R1, R2)
+  local new_size = 0
+
+  for y = 1,SEED_H do
+    for x = 1,SEED_W do
+      if SEEDS[x][y] == R1 or SEEDS[x][y] == R2 then
+        new_size = new_size + 1
+      end
+    end
+  end
+
+  -- don't let new room become too big
+  if new_size > (SEED_W * SEED_H / 8) then
+    return false
+  end
+
+  for y = 1,SEED_H do
+    for x = 1,SEED_W do
+      if SEEDS[x][y] == R2 then
+        SEEDS[x][y] = R1
+      end
+    end
+  end
+end
+
+
+function merge_at_point(x, y, side)
+  local nx, ny = nudge_coord(x, y, side)
+  if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+    return false
+  end
+
+  if SEEDS[nx][ny] == SEEDS[x][y] then
+    return false
+  end
+
+  merge_two_rooms(SEEDS[x][y], SEEDS[nx][ny])
+
+  return true
+end
+
+
+function merge_areas(count)
+  for i = 1, count do
+    local x = rand_irange(1, SEED_W)
+    local y = rand_irange(1, SEED_H)
+
+    local SIDES = {2,4,6,8}
+    rand_shuffle(SIDES)
+
+    for _,side in ipairs(SIDES) do
+      if merge_at_point(x, y, side) then break; end
+    end
+  end
+end
+
+
 function generate_noise()
   for y = 1,SEED_H do
     for x = 1,SEED_W do
@@ -341,5 +398,7 @@ end
 math.randomseed(0 + 1 * os.time())
 
 recursive_fill(1,1, SEED_W,SEED_H)
+
+merge_areas(SEED_W * 3)
 
 write_seeds()
