@@ -175,7 +175,7 @@ void Setup_FLTK()
 
   if (custom_colors)
   {
-    Fl::background(236-12, 232-12, 228-12);  ///!!!! FIXME
+    Fl::background(236, 232, 228);
     Fl::background2(255, 255, 255);
     Fl::foreground(0, 0, 0);
   }
