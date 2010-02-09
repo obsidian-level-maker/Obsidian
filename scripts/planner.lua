@@ -147,7 +147,8 @@ function Plan_CreateRooms()
   local function dump_rooms()
     local function room_char(R)
       if not R then return '.' end
-      if R.is_scenic then return '/' end
+      if R.is_scenic then return '=' end
+      if R.kind == "nature" then return '/' end
       local n = 1 + (R.id % 26)
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
     end
@@ -244,6 +245,64 @@ function Plan_CreateRooms()
   end
 
 
+  local function replace_room(R, N)
+    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+      if room_map[x][y] == R then
+         room_map[x][y] = N
+      end
+    end end -- for x, y
+  end
+
+  local function plonk_new_natural(last_x, last_y)
+    if last_x then
+      local LAST = room_map[last_x][last_y]
+      local SIDES = { 2,4,6,8 }
+      rand_shuffle(SIDES)
+      for _,side in ipairs(SIDES) do
+        local nx, ny = nudge_coord(last_x, last_y, side)
+        if valid_R(nx, ny) then
+          local R = room_map[nx][ny]
+          if R and R.kind == "building" then
+            R.kind = "nature"  ---  replace_room(R, LAST)
+            return nx, ny
+          end
+        end
+      end -- for side
+    end
+
+    -- no previous room, search randomly
+    -- (doesn't matter if we don't find any room to convert)
+
+    for loop = 1, 2*(LEVEL.W + LEVEL.H) do
+      local x = rand_irange(1, LEVEL.W)
+      local y = rand_irange(1, LEVEL.H)
+      local R = room_map[x][y]
+
+      if R and R.kind == "building" then
+        R.kind = "nature"
+        return x, y
+      end
+    end
+  end
+
+  local function make_naturals(room_num)
+    if room_num <= 4 then return end
+
+    local count = int(room_num / 3)
+    local last_x, last_y
+
+    for i = 1,count do
+      local x, y = plonk_new_natural(last_x, last_y)
+
+      if rand_odds(80) then
+        last_x, last_y = x, y
+      else
+        last_x, last_y = nil, nil
+      end
+    end
+  end
+
+
   ---| Plan_CreateRooms |---
 
   room_map = array_2D(LEVEL.W, LEVEL.H)
@@ -299,6 +358,8 @@ function Plan_CreateRooms()
 
   LEVEL.last_id = id
 
+  make_naturals(id)
+
   dump_rooms()
 
 
@@ -324,6 +385,8 @@ function Plan_CreateRooms()
     end end -- for side / if ~= 5
   end end -- for x, y
 end
+
+
 
 
 ------------------------------------------------------------------------
