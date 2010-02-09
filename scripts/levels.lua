@@ -43,7 +43,6 @@ require 'builder'
 require 'arenas'
 require 'layout'
 require 'rooms'
-require 'tiler'
 require 'fight'
 require 'monsters'
 
@@ -439,10 +438,8 @@ function Level_build_it()
     if gui.abort() then return "abort" end
     gui.progress(70)
 
-  if PARAM.tiled then
-    Tiler_layout_all()
-    return "ok" --!!!! FIXME
-  end
+  -- here is where the tiler.lua layout code used to kick in
+  assert(not PARAM.tiled)
 
   Monsters_make_battles()
     if gui.abort() then return "abort" end
