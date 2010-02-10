@@ -490,7 +490,9 @@ function OLD_Layout_natural_room(R, heights)
       end end
     end
   end end -- for x, y
-end
+
+end -- OLD_Layout_natural_room
+
 
 
 function Layout_natural_room(R, heights)
@@ -511,41 +513,86 @@ function Layout_natural_room(R, heights)
     end
   end
 
-  local function clear_conns()
+  local function set_side(S, side, value)
+    local mx = (S.sx - R.sx1) * 3 + 1
+    local my = (S.sy - R.sy1) * 3 + 1
+
+    assert(1 <= mx and mx+2 <= map.w)
+    assert(1 <= my and my+2 <= map.h)
+
+    local x1, y1, x2, y2 = side_coords(side, mx,my, mx+2,my+2)
+
+    for x = x1,x2 do for y = y1,y2 do
+      if (map[x][y] or 0) < 0 then
+        -- do not overwrite any cleared areas
+      else
+        map[x][y] = value
+      end
+    end end
   end
 
+  local function handle_wall(S, side)
+    local N = S:neighbor(side)
 
-  local clear_areas = {}
+    if not N or not N.room then
+      return set_side(S, side, 1)
+    end
 
-  for _,C in ipairs(R.conns) do
+    if N.room == S.room then return end
+
+    if N.room.kind == "nature" then
+      return set_side(S, side, 1)
+    end
+
+    set_side(S, side, -1)
+  end
+
+  local function clear_conn(C)
     local S = C:seed(R)
     local dir = S.conn_dir
-    local dx, dy = dir_to_delta(dir)
 
-    local x = (S.sx - R.sx1) * 5 + 2 + dx
-    local y = (S.sy - R.sy1) * 5 + 2 + dy
-
-    table.insert(clear_areas, { x1=x, y1=y, x2=x+2, y2=y+2 })
+    set_side(S, S.conn_dir, -1)
   end
+
+
+  --| Layout_natural_room |--
 
   map = array_2D(R.sw * 3, R.sh * 3)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
+      local mx = (S.sx - R.sx1) * 3 + 1
+      local my = (S.sy - R.sy1) * 3 + 1
+
       if not S.floor_h then
         setup_floor(S, heights[1])
       end
 
-      map BLAH
+      for dx = 0,2 do for dy = 0,2 do
+        map[x+dx][y+dy] = 0
+      end end
+
+      for side = 2,8,2 do
+        handle_wall(S, side)
+      end
     end
   end end -- for x, y
+
+  for _,C in ipairs(R.conns) do
+    clear_conn(C)
+  end
+
+  Cave_dump(map)
 
   local cave
 
   repeat
     cave = Cave_gen(map)
   until true --!!!!!! FIXME: Cave_validate(cave)
+
+  Cave_dump(cave)
+
 
   local w_tex  = "ASHWALL4" --- sel(R.outdoor, "GRASS2", "ASHWALL4")
   local w_info = get_mat(w_tex)
@@ -554,7 +601,7 @@ function Layout_natural_room(R, heights)
   local trim_2 = get_mat("RROCK04")
 
   for x = 1,map.w do for y = 1,map.h do
-    if map[x][y] > 0 then
+    if cave[x][y] > 0 then
       local bx = SEEDS[R.sx1][R.sy1][1].x1
       local by = SEEDS[R.sx1][R.sy1][1].y1
 
