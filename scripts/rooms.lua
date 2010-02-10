@@ -843,6 +843,10 @@ function Rooms_border_up()
       info.width = rand_sel(20, 128, 192)
     end
 
+    if info.width > PARAM.seed_size-32 then
+       info.width = PARAM.seed_size-32
+    end
+
     return info
   end
 

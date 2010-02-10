@@ -1210,7 +1210,7 @@ gui.debugf("Failed\n")
     R.c_group = c_group
   end
 
-  sprinkle_scenics()
+--!!!!!!  sprinkle_scenics()
 
   branch_big_rooms()
   branch_the_rest()
