@@ -26,7 +26,8 @@ function Cave_gen(map)
 --**  "Cellular Automata Method for Generating Random Cave-Like Levels"
 --**
 
-  -- The 'map' parameter is created with array_2D().
+  -- The 'map' parameter must be created with array_2D().
+  -- The result is a totally new array.
   --
   -- Elements of the array can start with these values:
   --    nil : never touched
@@ -34,7 +35,7 @@ function Cave_gen(map)
   --      0 : computed normally
   --     +1 : forced on
   --
-  -- After generation, the values can be nil, -1 or +1.
+  -- Result elements can be: nil, -1 or +1.
   --
 
   local W = map.w
@@ -46,7 +47,7 @@ function Cave_gen(map)
   -- populate initial map
   for x = 1,W do for y = 1,H do
     if map[x][y] == 0 then
-      work[x][y] = rand_sel(36, 1, -1)
+      work[x][y] = rand_sel(36, 1, 0)
     elseif map[x][y] > 0 then
       work[x][y] = 1
     else -- nil or negative
@@ -98,11 +99,16 @@ function Cave_gen(map)
     work, other = other, work
   end
 
+  -- convert values for the result
   for x = 1,W do for y = 1,H do
     if map[x][y] == 0 then
-      map[x][y] = sel(work[x][y] > 0, 1, -1)
+      work[x][y] = sel(work[x][y] > 0, 1, -1)
+    else
+      work[x][y] = map[x][y]
     end
   end end
+
+  return work
 end
 
 
