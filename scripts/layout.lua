@@ -513,17 +513,30 @@ function Layout_natural_room(R, heights)
     end
   end
 
-  local function set_side(S, side, value)
+  local function set_whole(S, value)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
 
     assert(1 <= mx and mx+2 <= map.w)
     assert(1 <= my and my+2 <= map.h)
 
-    local x1, y1, x2, y2 = side_coords(10-side, mx,my, mx+2,my+2)
+    for x = mx,mx+2 do for y = my,my+2 do
+      if (map[x][y] or 0) < 0 then
+        -- do not overwrite any cleared areas
+      else
+        map[x][y] = value
+      end
+    end end
+  end
+
+  local function set_side(S, side, value)
+    local mx = (S.sx - R.sx1) * 3 + 1
+    local my = (S.sy - R.sy1) * 3 + 1
+
+    local x1, y1, x2, y2 = side_coords(side, mx,my, mx+2,my+2)
 
     for x = mx,mx+2 do for y = my,my+2 do
-      if not box_contains_point(x1,y1,x2,y2, x,y) then
+      if box_contains_point(x1,y1,x2,y2, x,y) then
         if (map[x][y] or 0) < 0 then
           -- do not overwrite any cleared areas
         else
@@ -553,7 +566,7 @@ function Layout_natural_room(R, heights)
     local S = C:seed(R)
     local dir = S.conn_dir
 
-    set_side(S, S.conn_dir, -1)
+    set_whole(S, -1)
   end
 
 

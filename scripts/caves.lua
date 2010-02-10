@@ -48,17 +48,17 @@ function Cave_gen(map)
   for x = 1,W do for y = 1,H do
     if not map[x][y] or map[x][y] < 0 then
       work[x][y] = 0
-    elseif map[x][y] == 0 then
-      work[x][y] = rand_sel(36, 1, 0)
-    else
+    elseif map[x][y] > 0 then
       work[x][y] = 1
+    else
+      work[x][y] = rand_sel(40, 1, 0)
     end
   end end
 
   local function calc_new(x, y, loop)
-    if not map[x][y] then return 0.5 end
-    if map[x][y] > 0 then return 0 end
-    if map[x][y] < 0 then return 1 end
+    if not map[x][y] then return 0 end
+    if map[x][y] > 0 then return 1 end
+    if map[x][y] < 0 then return 0 end
 
     if x == 1 or x == W or y == 1 or y == H then
       return work[x][y]
@@ -116,7 +116,7 @@ function Cave_dump(map)
   gui.debugf("Cave_Map:\n")
 
   for y = map.h,1,-1 do
-    local line = "    ";
+    local line = ">> ";
     for x = 1,map.w do
       local ch = " "
       if map[x][y] == 0       then ch = "?" end
