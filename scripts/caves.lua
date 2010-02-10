@@ -41,28 +41,28 @@ function Cave_gen(map)
   local W = map.w
   local H = map.h
 
-  local work  = array_2D(W, H)
-  local other = array_2D(W, H)
+  local work = array_2D(W, H)
+  local temp = array_2D(W, H)
 
   -- populate initial map
   for x = 1,W do for y = 1,H do
-    if map[x][y] == 0 then
-      work[x][y] = rand_sel(36, 1, 0)
-    elseif map[x][y] > 0 then
-      work[x][y] = 1
-    else -- nil or negative
+    if not map[x][y] or map[x][y] < 0 then
       work[x][y] = 0
+    elseif map[x][y] == 0 then
+      work[x][y] = rand_sel(36, 1, 0)
+    else
+      work[x][y] = 1
     end
   end end
 
   local function calc_new(x, y, loop)
-    if map[x][y] ~= 0 then return end
+    if not map[x][y] then return 0.5 end
+    if map[x][y] > 0 then return 0 end
+    if map[x][y] < 0 then return 1 end
 
     if x == 1 or x == W or y == 1 or y == H then
       return work[x][y]
     end
-
-    if work[x][y] < 0 then return work[x][y] end
 
     local neighbors = 0
     for nx = x-1,x+1 do for ny = y-1,y+1 do
@@ -93,10 +93,10 @@ function Cave_gen(map)
   -- perform the cellular automation steps
   for loop = 1,7 do
     for x = 1,W do for y = 1,H do
-      other[x][y] = calc_new(x, y, loop)
+      temp[x][y] = calc_new(x, y, loop)
     end end
 
-    work, other = other, work
+    work, temp = temp, work
   end
 
   -- convert values for the result
@@ -119,6 +119,7 @@ function Cave_dump(map)
     local line = "    ";
     for x = 1,map.w do
       local ch = " "
+      if map[x][y] == 0       then ch = "?" end
       if (map[x][y] or 0) > 0 then ch = "#" end
       if (map[x][y] or 0) < 0 then ch = "." end
       line = line .. ch

@@ -520,13 +520,15 @@ function Layout_natural_room(R, heights)
     assert(1 <= mx and mx+2 <= map.w)
     assert(1 <= my and my+2 <= map.h)
 
-    local x1, y1, x2, y2 = side_coords(side, mx,my, mx+2,my+2)
+    local x1, y1, x2, y2 = side_coords(10-side, mx,my, mx+2,my+2)
 
-    for x = x1,x2 do for y = y1,y2 do
-      if (map[x][y] or 0) < 0 then
-        -- do not overwrite any cleared areas
-      else
-        map[x][y] = value
+    for x = mx,mx+2 do for y = my,my+2 do
+      if not box_contains_point(x1,y1,x2,y2, x,y) then
+        if (map[x][y] or 0) < 0 then
+          -- do not overwrite any cleared areas
+        else
+          map[x][y] = value
+        end
       end
     end end
   end
@@ -570,7 +572,7 @@ function Layout_natural_room(R, heights)
       end
 
       for dx = 0,2 do for dy = 0,2 do
-        map[x+dx][y+dy] = 0
+        map[mx+dx][my+dy] = 0
       end end
 
       for side = 2,8,2 do
@@ -601,7 +603,7 @@ function Layout_natural_room(R, heights)
   local trim_2 = get_mat("RROCK04")
 
   for x = 1,map.w do for y = 1,map.h do
-    if cave[x][y] > 0 then
+    if (cave[x][y] or 0) > 0 then
       local bx = SEEDS[R.sx1][R.sy1][1].x1
       local by = SEEDS[R.sx1][R.sy1][1].y1
 
