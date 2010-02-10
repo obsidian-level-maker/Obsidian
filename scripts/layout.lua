@@ -363,7 +363,7 @@ function Layout_spot_for_wotsit(R, kind)
 end
 
 
-function Layout_natural_room(R, heights)
+function OLD_Layout_natural_room(R, heights)
 
   local f_tex = "LAVA1"
 
@@ -488,6 +488,87 @@ function Layout_natural_room(R, heights)
           process_span(S, nx1,ny1, dx,dx2, dy)
         end
       end end
+    end
+  end end -- for x, y
+end
+
+
+function Layout_natural_room(R, heights)
+
+  local map
+  local f_tex = "LAVA1"
+
+  local function setup_floor(S, h)
+    S.floor_h = h
+    S.f_tex   = f_tex
+
+    if S.conn or S.pseudo_conn then
+      local C = S.conn or S.pseudo_conn
+      if C.conn_h then assert(C.conn_h == S.floor_h) end
+
+      C.conn_h = h
+      C.conn_ftex = f_tex
+    end
+  end
+
+  local function clear_conns()
+  end
+
+
+  local clear_areas = {}
+
+  for _,C in ipairs(R.conns) do
+    local S = C:seed(R)
+    local dir = S.conn_dir
+    local dx, dy = dir_to_delta(dir)
+
+    local x = (S.sx - R.sx1) * 5 + 2 + dx
+    local y = (S.sy - R.sy1) * 5 + 2 + dy
+
+    table.insert(clear_areas, { x1=x, y1=y, x2=x+2, y2=y+2 })
+  end
+
+  map = array_2D(R.sw * 3, R.sh * 3)
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      if not S.floor_h then
+        setup_floor(S, heights[1])
+      end
+
+      map BLAH
+    end
+  end end -- for x, y
+
+  local cave
+
+  repeat
+    cave = Cave_gen(map)
+  until true --!!!!!! FIXME: Cave_validate(cave)
+
+  local w_tex  = "ASHWALL4" --- sel(R.outdoor, "GRASS2", "ASHWALL4")
+  local w_info = get_mat(w_tex)
+
+  local trim_i = get_mat("RROCK16")
+  local trim_2 = get_mat("RROCK04")
+
+  for x = 1,map.w do for y = 1,map.h do
+    if map[x][y] > 0 then
+      local bx = SEEDS[R.sx1][R.sy1][1].x1
+      local by = SEEDS[R.sx1][R.sy1][1].y1
+
+      bx = bx + (x - 1) * 64
+      by = by + (y - 1) * 64
+
+      Trans_brush(w_info,
+      {
+        { x=bx+64, y=by },
+        { x=bx+64, y=by+64 },
+        { x=bx,    y=by+64 },
+        { x=bx,    y=by },
+      },
+      -EXTREME_H, EXTREME_H)
     end
   end end -- for x, y
 end
@@ -1329,7 +1410,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 
   ---==| Layout_try_pattern |==---
  
-  if GAME.nature_test and is_top then
+  if R.kind == "nature" then
     Layout_natural_room(R, heights)
     return
   end
