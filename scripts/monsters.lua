@@ -1353,7 +1353,7 @@ function Monsters_in_room(R)
       return
     end
 
-    Trans_entity("barrel", spot.x, spot.y, spot.S.floor_h)
+--!!!!!!    Trans_entity("barrel", spot.x, spot.y, spot.S.floor_h)
 
     spot.S.content = "monster"  -- allow items to exist here
   end

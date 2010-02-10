@@ -1338,7 +1338,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
-    if R.kind == "nature" then f_texs[1] = "GRASS2" end  --!!!!!!
+    if R.kind == "nature" then f_texs[1] = "GATE3" end  --!!!!!!
 
     install_flat_floor(heights[1], f_texs[1])
   end

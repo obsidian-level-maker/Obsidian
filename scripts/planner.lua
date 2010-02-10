@@ -264,6 +264,7 @@ function Plan_CreateRooms()
           local R = room_map[nx][ny]
           if R and R.kind == "building" then
             R.kind = "nature"  ---  replace_room(R, LAST)
+            R.nature_parent = LAST
             return nx, ny
           end
         end
@@ -294,7 +295,7 @@ function Plan_CreateRooms()
     for i = 1,count do
       local x, y = plonk_new_natural(last_x, last_y)
 
-      if rand_odds(80) then
+      if rand_odds(90) then
         last_x, last_y = x, y
       else
         last_x, last_y = nil, nil
@@ -386,6 +387,45 @@ function Plan_CreateRooms()
   end end -- for x, y
 end
 
+
+
+function Plan_MergeNatural()
+ 
+  local function merge_one_nature(src, dest)
+    dest.sx1 = math.min(src.sx1, dest.sx1)
+    dest.sy1 = math.min(src.sy1, dest.sy1)
+
+    dest.sx2 = math.max(src.sx2, dest.sx2)
+    dest.sy2 = math.max(src.sy2, dest.sy2)
+
+    dest.sw = dest.sx2 - dest.sx1 + 1
+    dest.sh = dest.sy2 - dest.sy1 + 1
+    dest.svolume = dest.sw * dest.sh  -- not accurate
+
+    -- NB: connections are not established yet
+
+    for x = src.sx1,src.sx2 do for y = src.sy1,src.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == src then
+         S.room = dest
+      end
+    end end -- for x, y
+  end
+
+  ---| Plan_MergeNatural |---
+
+  local all_rooms = LEVEL.all_rooms
+  LEVEL.all_rooms = {}
+
+  for _,R in ipairs(all_rooms) do
+    if R.natural_parent then
+      -- this room is NOT added back into all_rooms list
+      merge_one_nature(R, R.natural_parent)
+    else
+      table.insert(LEVEL.all_rooms, R)
+    end
+  end
+end
 
 
 
@@ -621,8 +661,9 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
   nudge_big_rooms()
   nudge_the_rest()
-
 end
+
+
 
 
 function Plan_SubRooms()
@@ -766,7 +807,7 @@ function Plan_SubRooms()
   local chance_tab = sel(STYLE.subrooms == "some", SUB_CHANCES, SUB_HEAPS)
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not R.parent then
+    if not R.parent and not (R.kind == "nature") then
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
 
@@ -991,11 +1032,13 @@ function Plan_rooms_sp()
   LEVEL.free_mark = 1
 
   Plan_determine_size()
+
   Plan_CreateRooms()
   Plan_Nudge()
 
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
+  Plan_MergeNatural()
 
   Plan_SubRooms()
 

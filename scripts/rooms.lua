@@ -24,6 +24,7 @@ class ROOM
 {
   kind : keyword  -- "building", "hallway", "stairwell",
                   -- "smallexit", "ground", "scenic"
+                  -- "nature"
 
   outdoor : bool  -- true for outdoor rooms
 
