@@ -19,43 +19,53 @@
 ----------------------------------------------------------------
 
 
-function Cave_gen(W, H, clear_areas)
+function Cave_gen(map)
 
---  NOTE:
---
---  The method used here was described by Jim Babcock in his article
---  "Cellular Automata Method for Generating Random Cave-Like Levels"
+--**
+--**  This algorithm was described by Jim Babcock in his article
+--**  "Cellular Automata Method for Generating Random Cave-Like Levels"
+--**
 
-  local map  = array_2D(W, H)
-  local work = array_2D(W, H)
+  -- The 'map' parameter is created with array_2D().
+  --
+  -- Elements of the array can start with these values:
+  --    nil : never touched
+  --     -1 : forced off
+  --      0 : computed normally
+  --     +1 : forced on
+  --
+  -- After generation, the values can be nil, -1 or +1.
+  --
+
+  local W = map.w
+  local H = map.h
+
+  local work  = array_2D(W, H)
+  local other = array_2D(W, H)
 
   -- populate initial map
   for x = 1,W do for y = 1,H do
-    if x == 1 or x == W or y == 1 or y == H then
-      map[x][y] = 1
---    elseif x <= 2 or x >= W-1 or y <= 2 or y >= H-1 then
---      map[x][y] = rand_sel(26, 1, 0)
-    else
-      map[x][y] = rand_sel(36, 1, 0)
+    if map[x][y] == 0 then
+      work[x][y] = rand_sel(36, 1, -1)
+    elseif map[x][y] > 0 then
+      work[x][y] = 1
+    else -- nil or negative
+      work[x][y] = 0
     end
-  end end -- for x, y
-
-  -- clear areas to maintain connections to other rooms
-  for _,A in ipairs(clear_areas) do
-    for x = A.x1,A.x2 do for y = A.y1,A.y2 do
-      map[x][y] = -2
-    end end
-  end
+  end end
 
   local function calc_new(x, y, loop)
+    if map[x][y] ~= 0 then return end
+
     if x == 1 or x == W or y == 1 or y == H then
-      return map[x][y]
+      return work[x][y]
     end
-    if map[x][y] < 0 then return map[x][y] end
+
+    if work[x][y] < 0 then return work[x][y] end
 
     local neighbors = 0
     for nx = x-1,x+1 do for ny = y-1,y+1 do
-      neighbors = neighbors + map[nx][ny]
+      neighbors = neighbors + work[nx][ny]
     end end
 
     if neighbors >= 5 then return 1 end
@@ -70,7 +80,7 @@ function Cave_gen(W, H, clear_areas)
       if math.abs(x-nx) == 2 and math.abs(y-ny) == 2 then
         -- skip the corners of the 5x5 block
       else
-        neighbors = neighbors + map[nx][ny]
+        neighbors = neighbors + work[nx][ny]
       end
     end end
 
@@ -82,22 +92,30 @@ function Cave_gen(W, H, clear_areas)
   -- perform the cellular automation steps
   for loop = 1,7 do
     for x = 1,W do for y = 1,H do
-      work[x][y] = calc_new(x, y, loop)
+      other[x][y] = calc_new(x, y, loop)
     end end
 
-    map, work = work, map
+    work, other = other, work
   end
 
-  return map
+  for x = 1,W do for y = 1,H do
+    if map[x][y] == 0 then
+      map[x][y] = sel(work[x][y] > 0, 1, -1)
+    end
+  end end
 end
 
 
 function Cave_dump(map)
-  gui.debugf("Cave_gen:\n")
+  gui.debugf("Cave_Map:\n")
+
   for y = map.h,1,-1 do
     local line = "    ";
     for x = 1,map.w do
-      line = line .. sel(map[x][y] > 0, "#", ".")
+      local ch = " "
+      if (map[x][y] or 0) > 0 then ch = "#" end
+      if (map[x][y] or 0) < 0 then ch = "." end
+      line = line .. ch
     end
     gui.debugf(line)
   end
@@ -184,5 +202,4 @@ function Cave_remove_children(R, map)
     end
   end end -- for x, y
 end
-
 
