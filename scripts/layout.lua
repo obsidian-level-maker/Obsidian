@@ -1987,7 +1987,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   local function select_floor_texs(focus_C)
     local f_texs  = {}
 
-    if focus_C.conn_ftex and (focus_C.src.outdoor == focus_C.dest.outdoor) then
+    if focus_C.conn_ftex and (focus_C.src.outdoor == focus_C.dest.outdoor) and
+       (focus_C.src.kind == focus_C.dest.kind) then
       table.insert(f_texs, focus_C.conn_ftex)
     end
 

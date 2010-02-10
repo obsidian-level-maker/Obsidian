@@ -263,8 +263,8 @@ function Plan_CreateRooms()
         if valid_R(nx, ny) then
           local R = room_map[nx][ny]
           if R and R.kind == "building" then
-            R.kind = "nature"  ---  replace_room(R, LAST)
-            R.nature_parent = LAST
+            R.kind = "nature"
+            R.nature_parent = LAST.nature_parent or LAST
             return nx, ny
           end
         end
@@ -295,7 +295,7 @@ function Plan_CreateRooms()
     for i = 1,count do
       local x, y = plonk_new_natural(last_x, last_y)
 
-      if rand_odds(90) then
+      if rand_odds(85) then
         last_x, last_y = x, y
       else
         last_x, last_y = nil, nil
@@ -391,7 +391,9 @@ end
 
 function Plan_MergeNatural()
  
-  local function merge_one_nature(src, dest)
+  local function merge_one_natural(src, dest)
+    gui.printf("Merging Natural: %s --> %s\n", src:tostr(), dest:tostr())
+
     dest.sx1 = math.min(src.sx1, dest.sx1)
     dest.sy1 = math.min(src.sy1, dest.sy1)
 
@@ -414,13 +416,13 @@ function Plan_MergeNatural()
 
   ---| Plan_MergeNatural |---
 
-  local all_rooms = LEVEL.all_rooms
+  local room_list = LEVEL.all_rooms
   LEVEL.all_rooms = {}
 
-  for _,R in ipairs(all_rooms) do
-    if R.natural_parent then
+  for _,R in ipairs(room_list) do
+    if R.nature_parent then
       -- this room is NOT added back into all_rooms list
-      merge_one_nature(R, R.natural_parent)
+      merge_one_natural(R, R.nature_parent)
     else
       table.insert(LEVEL.all_rooms, R)
     end
