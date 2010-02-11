@@ -129,7 +129,61 @@ function Cave_dump(map)
 end
 
 
-function Cave_validate(map)
+function Cave_flood_fill(cave)
+  -- returns a new array where each contiguous region has a unique id.
+  -- Empty areas use negative values, Solid areas use positive values.
+  -- Zero is invalid.  Nil cells remain nil.
+
+  local W = cave.w
+  local H = cave.h
+
+  local flood = array_2D(W, H)
+  local empty_id = -1
+  local solid_id =  1
+
+  for x = 1,W do for y = 1,H do
+    if cave[x][y] < 0 then
+      flood[x][y] = empty_id ; empty_id = empty_id - 1
+    elseif cave[x][y] > 0 then
+      flood[x][y] = solid_id ; solid_id = solid_id + 1
+    end
+  end end
+
+  local function flood_point(x, y)
+    local changed = false
+    for side = 2,8,2 do
+      local nx, ny = nudge_coord(x, y, side)
+      if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
+        local A = flood[x][y]
+        local B = flood[nx][ny]
+
+        if A and B and ((B > 0 and B < A) or (B < 0 and B > A)) then
+          flood[x][y] = B
+          changed = true
+        end
+      end
+    end
+
+    return changed
+  end
+
+  -- perform flood-fill until all nothing changes
+  repeat
+    local changed = false
+    for x = 1,W do for y = 1,H do
+      if flood[x][y] then
+        if flood_point(x, y) then changed = true end
+      end
+    end end
+  until not changed
+
+end
+
+
+function Cave_validate(cave, conns)
+
+  -- this function makes sure that all the connections are
+
   local W = map.w
   local H = map.h
 
@@ -159,33 +213,6 @@ function Cave_validate(map)
     return false
   end 
 
-  -- perform flood-fill on empty areas
-  local function flood_point(x, y)
-    local changed = false
-    for side = 2,8,2 do
-      local nx, ny = nudge_coord(x, y, side)
-      if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
-        local W1 = work[x][y]
-        local W2 = work[nx][ny]
-
-        if W2 > 0 and W2 < W1 then
-          work[x][y] = W2
-          changed = true
-        end
-      end
-    end
-
-    return changed
-  end
-
-  repeat
-    local changed = false
-    for x = 1,W do for y = 1,H do
-      if work[x][y] > 0 then
-        if flood_point(x, y) then changed = true end
-      end
-    end end
-  until not changed
 
   -- after flood fill, all areas should have id == 1
   for x = 1,W do for y = 1,H do
