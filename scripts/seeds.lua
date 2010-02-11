@@ -120,7 +120,7 @@ function Seed_init(W, H, D)
         S.x1 = S.x1 - int(SEED_W / 2) * SIZE
         S.y1 = S.y1 - int(SEED_H / 2) * SIZE
 
-      else
+      elseif PARAM.seed_size == 256 then
         -- offset by 32 units so that DOOM flats align with a
         -- 64x64 pedestal (etc) at the center of the seed.
         S.x1 = S.x1 + 32
