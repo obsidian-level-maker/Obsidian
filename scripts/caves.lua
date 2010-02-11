@@ -167,7 +167,40 @@ function Cave_flood_fill(cave)
     return changed
   end
 
-  -- perform flood-fill until all nothing changes
+  local function update_info(x, y)
+    local f = flood[x][y]
+    if not f then return end
+
+    if f < 0 then
+      flood.empty_cells = flood.empty_cells + 1
+    else
+      flood.solid_cells = flood.solid_cells + 1
+    end
+
+    local reg = flood.regions[f]
+
+    if not reg then
+      reg =
+      {
+        x1 = x, y1 = y,
+        x2 = x, y2 = y,
+      }
+      flood.regions[f] = reg
+
+      if f < 0 then
+        flood.empty_regions = flood.empty_regions + 1
+      else
+        flood.solid_regions = flood.solid_regions + 1
+      end
+    end
+
+    if x < reg.x1 then reg.x1 = x end
+    if y < reg.y1 then reg.y1 = y end
+    if x > reg.x2 then reg.x2 = x end
+    if y > reg.y2 then reg.y2 = y end
+  end
+
+  -- perform the flood-fill
   repeat
     local changed = false
     for x = 1,W do for y = 1,H do
@@ -177,6 +210,19 @@ function Cave_flood_fill(cave)
     end end
   until not changed
 
+  -- create information for each region
+  flood.regions = {}
+
+  flood.empty_cells = 0
+  flood.solid_cells = 0
+  flood.empty_regions = 0
+  flood.solid_regions = 0
+
+  for x = 1,W do for y = 1,H do
+    update_info(x, y)
+  end end
+
+  return flood
 end
 
 
