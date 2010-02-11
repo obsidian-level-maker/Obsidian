@@ -184,6 +184,7 @@ function Cave_flood_fill(cave)
     if not reg then
       reg =
       {
+        id = f,
         x1 = x, y1 = y,
         x2 = x, y2 = y,
         cells = 0,
@@ -262,28 +263,5 @@ function Cave_main_empty_region(flood)
   end 
 
   return empty_reg, size_ok
-end
-
-
-function Cave_validate(flood, conns)
-
-  -- this function checks that there is one main empty area which
-  -- covers a reasonable amount of the total space, and that it
-  -- touches all the connections
-end
-
-
-function Cave_remove_children(R, map)
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
-    if S.room ~= R then
-      local nx1 = (S.sx - R.sx1) * 5 + 1
-      local ny1 = (S.sy - R.sy1) * 5 + 1
-
-      for dx = 0,4 do for dy = 0,4 do
-        map[nx1+dx][ny1+dy] = 1
-      end end -- for dx, dy
-    end
-  end end -- for x, y
 end
 
