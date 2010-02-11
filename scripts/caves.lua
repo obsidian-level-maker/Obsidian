@@ -232,46 +232,44 @@ function Cave_flood_fill(cave)
 end
 
 
-function Cave_validate(cave, conns)
+function Cave_main_empty_region(flood)
 
-  -- this function makes sure that all the connections are
+  -- find the largest empty region
 
-  local W = map.w
-  local H = map.h
+  local empty_reg
 
-  local id = 1
-  local min_x, min_y =  999,  999
-  local max_x, max_y = -999, -999
-
-  local work = array_2D(map.w, map.h)
-
-  for x = 1,W do for y = 1,H do
-    if map[x][y] > 0 then
-      work[x][y] = 0
-    else
-      work[x][y] = id ; id = id + 1
-
-      min_x = math.min(min_x, x) ; min_y = math.min(min_y, y)
-      max_x = math.max(max_x, x) ; max_y = math.max(max_y, y)
+  for what,reg in pairs(flood.regions) do
+    if what < 0 then
+      if not empty_reg or reg.cells > empty_reg.cells then
+        empty_reg = reg
+      end
     end
-  end end
+  end
 
-  -- preliminary size check
-  local size_x = max_x - min_x + 1
-  local size_y = max_y - min_y + 1
+  if not empty_reg then
+    return
+  end
+
+  -- size check
+  local size_ok = true
+
+  local size_x = empty_reg.x2 - empty_reg.x1 + 1
+  local size_y = empty_reg.y2 - empty_reg.y1 + 1
 
   if (size_x*1.6 < W and size_y*1.6 < H) or
      (size_x*3.2 < W or  size_y*3.2 < H) then
-    return false
+    size_ok = false
   end 
 
+  return empty_reg, size_ok
+end
 
-  -- after flood fill, all areas should have id == 1
-  for x = 1,W do for y = 1,H do
-    if work[x][y] >= 2 then return false end
-  end end
 
-  return true
+function Cave_validate(flood, conns)
+
+  -- this function checks that there is one main empty area which
+  -- covers a reasonable amount of the total space, and that it
+  -- touches all the connections
 end
 
 
