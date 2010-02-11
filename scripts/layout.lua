@@ -594,11 +594,38 @@ function Layout_natural_room(R, heights)
     set_corner(S, side, -1)
   end
 
-  local function clear_conn(C)
-    local S = C:seed(R)
-    local dir = S.conn_dir
+  local function clear_conns()
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+      local dir = S.conn_dir
 
-    set_whole(S, -1)
+      set_whole(S, -1)
+    end
+  end
+
+  local function cave_is_good(flood)
+    local reg, size_ok = Cave_main_empty_region(flood)
+
+    if not reg or not size_ok then
+      gui.debugf("cave failed size check\n")
+      return false
+    end
+
+    -- check connections
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)
+      local dir = S.conn_dir
+
+      local mx = (S.sx - R.sx1) * 3 + 2
+      local my = (S.sy - R.sy1) * 3 + 2
+
+      if flood[mx][my] ~= reg.id then
+        gui.debugf("cave failed connection check\n")
+        return false
+      end
+    end
+
+    return true
   end
 
 
@@ -630,20 +657,34 @@ function Layout_natural_room(R, heights)
     end
   end end -- for x, y
 
-  for _,C in ipairs(R.conns) do
-    clear_conn(C)
-  end
+  clear_conns()
 
   Cave_dump(map)
 
   local cave
   local flood
 
-  repeat
+  for loop = 1,20 do
+    if loop >= 20 then
+      gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
+
+      -- emergency fallback
+      cave = Cave_fallback(map)
+      flood = Cave_flood_fill(cave)
+      break;
+    end
+
+    gui.debugf("Trying to make a cave: loop %d\n", loop)
+
     cave  = Cave_gen(map)
     flood = Cave_flood_fill(cave)
 
-  until true --!!!!!! FIXME: Cave_validate(cave)
+    if cave_is_good(flood) then
+      break;
+    end
+
+    --- Cave_dump(cave)
+  end
 
   Cave_dump(cave)
 

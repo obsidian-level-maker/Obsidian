@@ -112,6 +112,26 @@ function Cave_gen(map)
 end
 
 
+function Cave_fallback(map)
+  local W = map.w
+  local H = map.h
+
+  local work = array_2D(W, H)
+
+  for x = 1,W do for y = 1,H do
+    if not map[x][y] then
+      -- skip it
+    elseif map[x][y] > 0 then
+      work[x][y] = 1
+    else
+      work[x][y] = -1
+    end
+  end end
+
+  return work
+end
+
+
 function Cave_dump(map)
   gui.debugf("Cave_Map:\n")
 
@@ -252,6 +272,9 @@ function Cave_main_empty_region(flood)
   end
 
   -- size check
+  local W = flood.w
+  local H = flood.h
+
   local size_ok = true
 
   local size_x = empty_reg.x2 - empty_reg.x1 + 1
