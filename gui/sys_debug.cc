@@ -35,7 +35,7 @@ void LogInit(const char *filename)
     log_file = fopen(filename, "w");
   }
 
-  LogPrintf("========= START OF OBLIGE LOGS =========\n");
+  LogPrintf("====== START OF OBLIGE LOGS ======\n");
 }
 
 
@@ -60,7 +60,7 @@ void LogEnableTerminal(bool enable)
 
 void LogClose(void)
 {
-  LogPrintf("\n========= END OF OBLIGE LOGS =========\n");
+  LogPrintf("\n====== END OF OBLIGE LOGS ======\n");
 
   if (log_file)
   {
