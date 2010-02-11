@@ -513,6 +513,13 @@ function Layout_natural_room(R, heights)
     end
   end
 
+  local function set_cell(mx, my, value)
+    -- do not overwrite any cleared areas
+    if not map[mx][my] or map[mx][my] >= 0 then
+      map[mx][my] = value
+    end
+  end
+
   local function set_whole(S, value)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
@@ -521,11 +528,7 @@ function Layout_natural_room(R, heights)
     assert(1 <= my and my+2 <= map.h)
 
     for x = mx,mx+2 do for y = my,my+2 do
-      if (map[x][y] or 0) < 0 then
-        -- do not overwrite any cleared areas
-      else
-        map[x][y] = value
-      end
+      set_cell(x, y, value)
     end end
   end
 
@@ -537,13 +540,21 @@ function Layout_natural_room(R, heights)
 
     for x = mx,mx+2 do for y = my,my+2 do
       if box_contains_point(x1,y1,x2,y2, x,y) then
-        if (map[x][y] or 0) < 0 then
-          -- do not overwrite any cleared areas
-        else
-          map[x][y] = value
-        end
+        set_cell(x, y, value)
       end
     end end
+  end
+
+  local function set_corner(S, side, value)
+    local mx = (S.sx - R.sx1) * 3 + 1
+    local my = (S.sy - R.sy1) * 3 + 1
+
+    local dx, dy = dir_to_delta(side)
+
+    mx = mx + 1 + dx
+    my = my + 1 + dy
+
+    set_cell(mx, my, value)
   end
 
   local function handle_wall(S, side)
@@ -560,6 +571,27 @@ function Layout_natural_room(R, heights)
     end
 
     set_side(S, side, -1)
+  end
+
+  local function handle_corner(S, side)
+    local N = S:neighbor(side)
+
+    local A = S:neighbor(rotate_ccw45(side))
+    local B = S:neighbor(rotate_cw45(side))
+
+    if not (A and A.room == R) or not (B and B.room == R) then
+      return
+    end
+
+    if not N or not N.room then
+      return -- set_corner(S, side, 1)
+    end
+
+    if N.room == S.room then return end
+
+    if N.room.kind == "nature" then return end
+
+    set_corner(S, side, -1)
   end
 
   local function clear_conn(C)
@@ -591,6 +623,10 @@ function Layout_natural_room(R, heights)
       for side = 2,8,2 do
         handle_wall(S, side)
       end
+
+      for side = 1,9,2 do if side ~= 5 then
+        handle_corner(S, side)
+      end end
     end
   end end -- for x, y
 
