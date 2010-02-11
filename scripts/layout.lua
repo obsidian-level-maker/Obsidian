@@ -637,12 +637,18 @@ function Layout_natural_room(R, heights)
   Cave_dump(map)
 
   local cave
+  local flood
 
   repeat
-    cave = Cave_gen(map)
+    cave  = Cave_gen(map)
+    flood = Cave_flood_fill(cave)
+
   until true --!!!!!! FIXME: Cave_validate(cave)
 
   Cave_dump(cave)
+
+--- gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
+--- gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 
 
   local w_tex  = "ASHWALL4" --- sel(R.outdoor, "GRASS2", "ASHWALL4")

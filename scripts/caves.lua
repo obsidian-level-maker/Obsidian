@@ -142,9 +142,11 @@ function Cave_flood_fill(cave)
   local solid_id =  1
 
   for x = 1,W do for y = 1,H do
-    if cave[x][y] < 0 then
+    if not cave[x][y] then
+      -- ignore it
+    elseif cave[x][y] < 0 then
       flood[x][y] = empty_id ; empty_id = empty_id - 1
-    elseif cave[x][y] > 0 then
+    else
       flood[x][y] = solid_id ; solid_id = solid_id + 1
     end
   end end
@@ -184,7 +186,9 @@ function Cave_flood_fill(cave)
       {
         x1 = x, y1 = y,
         x2 = x, y2 = y,
+        cells = 0,
       }
+
       flood.regions[f] = reg
 
       if f < 0 then
@@ -198,6 +202,8 @@ function Cave_flood_fill(cave)
     if y < reg.y1 then reg.y1 = y end
     if x > reg.x2 then reg.x2 = x end
     if y > reg.y2 then reg.y2 = y end
+
+    reg.cells = reg.cells + 1
   end
 
   -- perform the flood-fill
