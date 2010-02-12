@@ -1201,21 +1201,21 @@ COMMON_PICTURES =
     depth=8, light=0.9,
   },
 
-  planet1 =
-  {
-    pic_w="PLANET1", width=192, height=128,
-    x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
-    floor="SHAWN2", light=0.8,
-  },
-
-  planet1_blink =
-  {
-    pic_w="PLANET1", width=192, height=128,
-    x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
-    floor="SHAWN2", light=0.8, sec_kind=1,
-  },
+--!!!!  planet1 =
+--!!!!  {
+--!!!!    pic_w="PLANET1", width=192, height=128,
+--!!!!    x_offset=0, y_offset=0,
+--!!!!    side_t="DOORSTOP", depth=8, 
+--!!!!    floor="SHAWN2", light=0.8,
+--!!!!  },
+--!!!!
+--!!!!  planet1_blink =
+--!!!!  {
+--!!!!    pic_w="PLANET1", width=192, height=128,
+--!!!!    x_offset=0, y_offset=0,
+--!!!!    side_t="DOORSTOP", depth=8, 
+--!!!!    floor="SHAWN2", light=0.8, sec_kind=1,
+--!!!!  },
 
   compute1 =
   {
@@ -1233,21 +1233,21 @@ COMMON_PICTURES =
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
-  compute2 =
-  {
-    pic_w="COMPUTE2", width=192, height=56,
-    x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
-    floor="SHAWN2", light=0.8,
-  },
-
-  compute2_blink =
-  {
-    pic_w="COMPUTE2", width=192, height=56,
-    x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
-    floor="SHAWN2", light=0.8, sec_kind=1,
-  },
+--!!!!  compute2 =
+--!!!!  {
+--!!!!    pic_w="COMPUTE2", width=192, height=56,
+--!!!!    x_offset=0, y_offset=0,
+--!!!!    side_t="DOORSTOP", depth=8, 
+--!!!!    floor="SHAWN2", light=0.8,
+--!!!!  },
+--!!!!
+--!!!!  compute2_blink =
+--!!!!  {
+--!!!!    pic_w="COMPUTE2", width=192, height=56,
+--!!!!    x_offset=0, y_offset=0,
+--!!!!    side_t="DOORSTOP", depth=8, 
+--!!!!    floor="SHAWN2", light=0.8, sec_kind=1,
+--!!!!  },
 
   skulls1 =
   {
@@ -3473,7 +3473,7 @@ OB_GAMES["doom1"] =
 
     custom_flats = true,
 
-    seed_size = 256,
+    seed_size = 192,
 
     max_name_length = 28,
 
@@ -3574,7 +3574,7 @@ OB_GAMES["doom2"] =
 
     custom_flats = true,
 
-    seed_size = 256,
+    seed_size = 192,
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does
