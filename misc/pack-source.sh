@@ -5,7 +5,7 @@ echo "Creating the source package for Oblige..."
 
 cd ../..
 
-src=Oblige
+src=oblige
 dest=PACK-SRC
 
 mkdir $dest

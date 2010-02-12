@@ -24,7 +24,7 @@ echo "Creating a $mode package for Oblige..."
 
 cd ../..
 
-src=Oblige
+src=oblige
 dest=PACK-RAT
 
 mkdir $dest
