@@ -45,9 +45,17 @@ mkdir $dest/mods
 cp -av $src/mods/*.* $dest/mods
 
 #
-#  Copy executables
+#  Copy data files
 #
 mkdir $dest/data
+
+cp -av $src/data/*.lmp $dest/data
+cp -av $src/data/*.wad $dest/data
+cp -av $src/data/*.pak $dest/data
+
+#
+#  Copy executables
+#
 
 if [ $mode == "linux" ]
 then
