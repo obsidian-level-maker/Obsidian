@@ -19,7 +19,7 @@
 ----------------------------------------------------------------
 
 
-function Cave_gen(map)
+function Cave_gen(map, solid_prob)
 
 --**
 --**  This algorithm was described by Jim Babcock in his article
@@ -38,6 +38,8 @@ function Cave_gen(map)
   -- Result elements can be: nil, -1 or +1.
   --
 
+  solid_prob = solid_prob or 40
+
   local W = map.w
   local H = map.h
 
@@ -51,7 +53,7 @@ function Cave_gen(map)
     elseif map[x][y] > 0 then
       work[x][y] = 1
     else
-      work[x][y] = rand_sel(40, 1, 0)
+      work[x][y] = rand_sel(solid_prob, 1, 0)
     end
   end end
 

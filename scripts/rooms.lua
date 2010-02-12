@@ -97,6 +97,8 @@ function Rooms_decide_outdoors()
     if STYLE.skies == "none"   then return false end
     if STYLE.skies == "always" then return true end
 
+    if R.kind == "nature" then return true end
+
     -- we would prefer KEY locked doors to touch at least one
     -- indoor room.  However keys/switches are not decided yet,
     -- so the following is a compromise solution.
