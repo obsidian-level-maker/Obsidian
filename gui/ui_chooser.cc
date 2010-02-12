@@ -31,6 +31,7 @@
 #endif
 
 static char *last_file;
+static bool last_file_from_config;
 
 void Default_Location(void)
 {
@@ -56,6 +57,8 @@ void Default_Location(void)
   strcat(last_file, "TEST");
 
   DebugPrintf("Default_Location: [%s]\n", last_file);
+
+  last_file_from_config = false;
 }
 
 bool UI_SetLastFile(const char *filename)
@@ -83,6 +86,8 @@ bool UI_SetLastFile(const char *filename)
 
   DebugPrintf("Parsed last_file as: [%s]\n", last_file);
  
+  last_file_from_config = true;
+
   return true;
 }
 
@@ -141,8 +146,34 @@ char *Select_Output_File(const char *ext)
               OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT |
               OFN_NONETWORKBUTTON;
   ofn.lpstrTitle = "Select output file"; 
+
+  char *last_dir = NULL;
+
+  if (last_file_from_config)
+  {
+    // only do this once, assuming Windows will remember it
+    last_file_from_config = false;
+
+    if (strlen(last_file) > 0)
+    {
+      const char *base = FindBaseName(last_file);
+
+      DebugPrintf("LAST FILE: lpstrFile = [%s]\n", base);
+////!!!!!!      strcpy(ofn.lpstrFile, base);
+
+      // extract just the path from the last filename
+      last_dir = StringDup(last_file);
+      last_dir[base - last_file] = 0;
+
+      DebugPrintf("LAST FILE: lpstrInitialDir = [%s]\n", last_dir);
+      ofn.lpstrInitialDir = last_dir;
+    }
+  }
  
   BOOL result = ::GetSaveFileName(&ofn);
+
+  if (last_dir)
+    StringFree(last_dir);
 
   if (result == 0)
   {
