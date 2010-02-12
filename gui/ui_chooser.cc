@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -127,11 +127,14 @@ char *Select_Output_File(const char *ext)
   pattern_buf[0] = toupper(ext[0]);
   sprintf(pattern_buf+1, "%s Files%c*.%s%c%c", ext+1, 0, ext, 0, 0);
 
-  // --- call the bitch ---
-
   char *name = StringNew(FL_PATH_MAX);
   name[0] = 0;
-  // THIS FUCKS UP: strcpy(name, last_file);
+
+#if 1
+  char *base_without_ext = ReplaceExtension(FindBaseName(last_file), NULL);
+  strcpy(name, base_without_ext);
+  StringFree(base_without_ext);
+#endif
 
   OPENFILENAME ofn;
   memset(&ofn, 0, sizeof(ofn));
@@ -158,18 +161,17 @@ char *Select_Output_File(const char *ext)
     {
       const char *base = FindBaseName(last_file);
 
-      DebugPrintf("LAST FILE: lpstrFile = [%s]\n", base);
-////!!!!!!      strcpy(ofn.lpstrFile, base);
-
       // extract just the path from the last filename
       last_dir = StringDup(last_file);
       last_dir[base - last_file] = 0;
 
       DebugPrintf("LAST FILE: lpstrInitialDir = [%s]\n", last_dir);
-      ofn.lpstrInitialDir = last_dir;
+      ofn.lpstrInitialDir = (LPSTR)last_dir;
     }
   }
  
+  // --- call the bitch ---
+
   BOOL result = ::GetSaveFileName(&ofn);
 
   if (last_dir)
