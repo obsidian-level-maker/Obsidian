@@ -353,10 +353,9 @@ class wolf_game_interface_c : public game_interface_c
 {
 private:
   std::string file_ext;
-  std::string error_msg;
 
 public:
-  wolf_game_interface_c() : file_ext("WL6"), error_msg("OK")
+  wolf_game_interface_c() : file_ext("WL6")
   { }
 
   ~wolf_game_interface_c()
@@ -364,8 +363,6 @@ public:
 
   bool Start();
   bool Finish(bool build_ok);
-
-  const char *GetError();
 
   void BeginLevel();
   void EndLevel();
@@ -383,7 +380,9 @@ bool wolf_game_interface_c::Start()
 
   if (! map_fp)
   {
-    DLG_ShowError("Unable to create %s:\n%s", TEMP_GAMEFILE, strerror(errno));
+    LogPrintf("Unable to create %s:\n%s", TEMP_GAMEFILE, strerror(errno));
+
+    Main_ProgStatus("Error (create file)");
     return false;
   }
 
@@ -391,7 +390,11 @@ bool wolf_game_interface_c::Start()
 
   if (! head_fp)
   {
-    DLG_ShowError("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
+    fclose(map_fp);
+
+    LogPrintf("Unable to create %s:\n%s", TEMP_HEADFILE, strerror(errno));
+
+    Main_ProgStatus("Error (create file)");
     return false;
   }
 
@@ -431,25 +434,20 @@ bool wolf_game_interface_c::Finish(bool build_ok)
   delete thing_plane;  thing_plane = NULL;
 
 
-  if (! build_ok || write_errors_seen > 0)
+  if (! build_ok)
   {
     Tidy();
     return false;
   }
 
-  if (! Rename())
+  if (write_errors_seen > 0 || ! Rename())
   {
+    Main_ProgStatus("Error (write file)");
     Tidy();
     return false;
   }
 
   return true; // OK!
-}
-
-
-const char * wolf_game_interface_c::GetError()
-{
-  return error_msg.c_str();
 }
 
 

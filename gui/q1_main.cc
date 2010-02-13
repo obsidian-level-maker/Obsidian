@@ -539,10 +539,8 @@ class quake1_game_interface_c : public game_interface_c
 private:
   const char *filename;
 
-  std::string error_msg;
-
 public:
-  quake1_game_interface_c() : filename(NULL), error_msg("OK")
+  quake1_game_interface_c() : filename(NULL)
   { }
 
   ~quake1_game_interface_c()
@@ -550,8 +548,6 @@ public:
 
   bool Start();
   bool Finish(bool build_ok);
-
-  const char *GetError();
 
   void BeginLevel();
   void EndLevel();
@@ -563,13 +559,19 @@ bool quake1_game_interface_c::Start()
 {
   filename = Select_Output_File("pak");
 
-  if (! filename)  // cancelled
+  if (! filename)
+  {
+    Main_ProgStatus("Cancelled");
     return false;
+  }
 
   BSP_BackupPAK(filename);
 
   if (! PAK_OpenWrite(filename))
+  {
+    Main_ProgStatus("Error (create file)");
     return false;
+  }
 
   BSP_CreateInfoFile();
 
@@ -591,12 +593,6 @@ bool quake1_game_interface_c::Finish(bool build_ok)
 /////  FileDelete(TEMP_FILENAME);
 
   return build_ok;
-}
-
-
-const char * quake1_game_interface_c::GetError()
-{
-  return error_msg.c_str();
 }
 
 

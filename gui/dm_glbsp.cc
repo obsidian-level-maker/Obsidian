@@ -4,7 +4,7 @@
 // 
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 // 
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -197,6 +197,7 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
     GB_PrintMsg("Param Check FAILED: %s\n", GetErrorString(ret));
     GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
+    Main_ProgStatus("glBSP Error");
     return false;
   }
 
@@ -205,14 +206,17 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
   if (ret == GLBSP_E_Cancelled)
   {
     GB_PrintMsg("Building CANCELLED.\n\n");
+    Main_ProgStatus("Cancelled");
     return false;
   }
-  else if (ret != GLBSP_E_OK)
+
+  if (ret != GLBSP_E_OK)
   {
     // build nodes failed
     GB_PrintMsg("Building FAILED: %s\n", GetErrorString(ret));
     GB_PrintMsg("Reason: %s\n\n", nb_comms.message);
 
+    Main_ProgStatus("glBSP Error");
     return false;
   }
 

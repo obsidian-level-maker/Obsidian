@@ -265,6 +265,25 @@ void Main_FatalError(const char *msg, ...)
 }
 
 
+void Main_ProgStatus(const char *msg, ...)
+{
+  static char buffer[MSG_BUF_LEN];
+
+  if (main_win)
+  {
+    va_list arg_pt;
+
+    va_start(arg_pt, msg);
+    vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
+    va_end(arg_pt);
+
+    buffer[MSG_BUF_LEN-2] = 0;
+
+    main_win->build_box->ProgStatus(msg);
+  }
+}
+
+
 static int escape_key_handler(int event)
 {
   if (event != FL_SHORTCUT)
@@ -383,13 +402,11 @@ void Build_Cool_Shit()
       was_ok = false;
   }
 
+  if (was_ok)
+    Main_ProgStatus("Success");
+
   if (main_win)
   {
-    if (was_ok)
-      main_win->build_box->ProgStatus("Success");
-    else
-      main_win->build_box->ProgStatus(game_object->GetError());
-
     main_win->build_box->ProgFinish();
     main_win->build_box->ProgSetButton(false);
 

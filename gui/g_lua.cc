@@ -878,7 +878,10 @@ const char * ob_game_format(void)
 bool ob_build_cool_shit(void)
 {
   if (! Script_DoRun("ob_build_cool_shit", 1))
+  {
+    Main_ProgStatus("Script Error");
     return false;
+  }
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
 
@@ -888,6 +891,7 @@ bool ob_build_cool_shit(void)
   if (res && strcmp(res, "ok") == 0)
     return true;
 
+  Main_ProgStatus("Cancelled");
   return false;
 }
 
