@@ -1806,7 +1806,7 @@ function Room_add_crates(R)
     return
   end
 
-  if GAME.nature_test then return end
+  if R.kind == "nature" then return end
 
   local skin
   local skin_names
