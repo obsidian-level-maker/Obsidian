@@ -80,7 +80,7 @@ Using the same SEED number always produces the exact same level
 <p>
 Other settings include:
 <ul>
-  <li>the "Game" type (DOOM, WOLF3D, HERETIC or HEXEN), 
+  <li>the "Game" type (DOOM, HERETIC or HEXEN), 
   <li>the "Mode" of the game (SINGLE-PLAYER, CO-OP, or DEATHMATCH)
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
