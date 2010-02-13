@@ -155,6 +155,9 @@ function Cave_flood_fill(cave)
   -- returns a new array where each contiguous region has a unique id.
   -- Empty areas use negative values, Solid areas use positive values.
   -- Zero is invalid.  Nil cells remain nil.
+  --
+  -- This also creates a table of regions, and various other statistics
+  -- (as named fields of the result).
 
   local W = cave.w
   local H = cave.h
@@ -251,6 +254,19 @@ function Cave_flood_fill(cave)
     update_info(x, y)
   end end
 
+  -- find largest regions
+  for what,reg in pairs(flood.regions) do
+    if what < 0 then
+      if not flood.largest_empty or reg.cells > flood.largest_empty.cells then
+        flood.largest_empty = reg
+      end
+    else
+      if not flood.largest_solid or reg.cells > flood.largest_solid.cells then
+        flood.largest_solid = reg
+      end
+    end
+  end
+
   return flood
 end
 
@@ -259,15 +275,7 @@ function Cave_main_empty_region(flood)
 
   -- find the largest empty region
 
-  local empty_reg
-
-  for what,reg in pairs(flood.regions) do
-    if what < 0 then
-      if not empty_reg or reg.cells > empty_reg.cells then
-        empty_reg = reg
-      end
-    end
-  end
+  local empty_reg = flood.largest_empty
 
   if not empty_reg then
     return
