@@ -387,10 +387,8 @@ void Build_Cool_Shit()
   {
     if (was_ok)
       main_win->build_box->ProgStatus("Success");
-    else if (main_win->action >= UI_MainWin::ABORT)
-      main_win->build_box->ProgStatus("Cancelled");
     else
-      main_win->build_box->ProgStatus("Error");  // !!! FIXME: more info
+      main_win->build_box->ProgStatus(game_object->GetError());
 
     main_win->build_box->ProgFinish();
     main_win->build_box->ProgSetButton(false);

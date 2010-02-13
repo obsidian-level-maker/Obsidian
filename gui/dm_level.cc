@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -1071,8 +1071,10 @@ class doom_game_interface_c : public game_interface_c
 private:
   const char *filename;
 
+  std::string error_msg;
+
 public:
-  doom_game_interface_c() : filename(NULL)
+  doom_game_interface_c() : filename(NULL), error_msg("OK")
   { }
 
   ~doom_game_interface_c()
@@ -1082,6 +1084,8 @@ public:
 
   bool Start();
   bool Finish(bool build_ok);
+
+  const char *GetError();
 
   void BeginLevel();
   void EndLevel();
@@ -1147,6 +1151,12 @@ bool doom_game_interface_c::Finish(bool build_ok)
   FileDelete(TEMP_FILENAME);
 
   return build_ok;
+}
+
+
+const char * doom_game_interface_c::GetError()
+{
+  return error_msg.c_str();
 }
 
 

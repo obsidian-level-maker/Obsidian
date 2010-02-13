@@ -72,6 +72,11 @@ public:
   // Returns false on error.  Note that Finish() is never
   // called if Start() fails.
 
+  virtual const char *GetError() = 0;
+  // get the error message if the Start() or Finish() method failed.
+  // The message will be as short as possible, so it can fit within
+  // the build panel.  Never returns a NULL pointer.
+
   /*** CSG2 ***/
 
   virtual void BeginLevel() = 0;

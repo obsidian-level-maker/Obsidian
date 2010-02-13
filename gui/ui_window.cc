@@ -83,7 +83,8 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
   mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H);
   add(mod_box);
 
-///  resizable(mod_box);
+
+  resizable(NULL);
 }
 
 //

@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -353,9 +353,10 @@ class wolf_game_interface_c : public game_interface_c
 {
 private:
   std::string file_ext;
+  std::string error_msg;
 
 public:
-  wolf_game_interface_c() : file_ext("WL6")
+  wolf_game_interface_c() : file_ext("WL6"), error_msg("OK")
   { }
 
   ~wolf_game_interface_c()
@@ -363,6 +364,8 @@ public:
 
   bool Start();
   bool Finish(bool build_ok);
+
+  const char *GetError();
 
   void BeginLevel();
   void EndLevel();
@@ -441,6 +444,12 @@ bool wolf_game_interface_c::Finish(bool build_ok)
   }
 
   return true; // OK!
+}
+
+
+const char * wolf_game_interface_c::GetError()
+{
+  return error_msg.c_str();
 }
 
 
