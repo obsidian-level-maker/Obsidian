@@ -2,6 +2,28 @@
 TODO
 ====
 
+
+Natural areas:
+
+  -  CAVE: more cave wall @ building borders
+
+  -  place purpose (key / switch) in open spot
+  -  place monsters in walkable spots
+  -  place items in walkable spots
+
+  -  height changes 
+  -  create jaggy edges
+  -  trimming
+
+  -  better border at edge of map / nil seed
+  -  better bordering with other natural areas
+
+  -  choose CAVE / LANDSCAPE / LAKE mode  -- use styles
+
+  -  proper theming (c.f. THEME.building)
+
+
+
 >>>  don't use tech_outdoor exit in HELL themes
 
 >>>  rework liquids

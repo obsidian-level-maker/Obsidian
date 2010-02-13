@@ -1936,10 +1936,11 @@ COMMON_THEME_DEFAULTS =
                    GRAY1=10, STONE=20,
                  },
 
-  pictures = { tekwall4=10 },
-
   logos = { carve=50, pill=50, neon=50 },
 
+  pictures = { tekwall4=10 },
+
+  -- FIXME: should not be separated (environment = "liquid" ??)
   liquid_pics = { pois1=70, pois2=30 },
 
   crates = { crate1=50, crate2=50, },

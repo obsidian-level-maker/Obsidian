@@ -498,6 +498,8 @@ end -- OLD_Layout_natural_room
 function Layout_natural_room(R, heights)
 
   local map
+
+  local is_lake = false
   local f_tex = "FLAT10"
 
   local function setup_floor(S, h)
@@ -561,13 +563,13 @@ function Layout_natural_room(R, heights)
     local N = S:neighbor(side)
 
     if not N or not N.room then
-      return set_side(S, side, -1) --!!!!!  +1
+      return set_side(S, side, sel(is_lake,-1,1))
     end
 
     if N.room == S.room then return end
 
     if N.room.kind == "nature" then
-      return set_side(S, side, -1) --!!!!!  +1
+      return set_side(S, side, sel(is_lake,-1,1))
     end
 
     set_side(S, side, -1)
@@ -584,7 +586,8 @@ function Layout_natural_room(R, heights)
     end
 
     if not N or not N.room then
-      return set_corner(S, side, -1)  --!!!!
+      if is_lake then set_corner(S, side, -1) end
+      return
     end
 
     if N.room == S.room then return end
@@ -676,14 +679,14 @@ function Layout_natural_room(R, heights)
 
     gui.debugf("Trying to make a cave: loop %d\n", loop)
 
-    cave  = Cave_gen(map, 60)
+    cave  = Cave_gen(map, sel(is_lake,62,38))
     flood = Cave_flood_fill(cave)
 
     if cave_is_good(flood) then
       break;
     end
 
-    --- Cave_dump(cave)
+        Cave_dump(cave)
   end
 
   Cave_dump(cave)
@@ -692,13 +695,15 @@ function Layout_natural_room(R, heights)
 --- gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 
 
-  local w_tex  = "FWATER1" --- sel(R.outdoor, "GRASS2", "ASHWALL4")
+  local w_tex  = sel(is_lake, "FWATER1", sel(R.outdoor, "GRASS2", "ASHWALL"))
   local w_info = get_mat(w_tex)
 
-  w_info.delta_z = -42;
+  if is_lake then w_info.delta_z = -42 end
 
   local trim_i = get_mat("RROCK16")
   local trim_2 = get_mat("RROCK04")
+
+  local high_z = sel(is_lake, heights[1]+2, EXTREME_H)
 
   for x = 1,map.w do for y = 1,map.h do
     if (cave[x][y] or 0) > 0 then
@@ -715,7 +720,7 @@ function Layout_natural_room(R, heights)
         { x=bx,    y=by+64 },
         { x=bx,    y=by },
       },
-      -EXTREME_H, heights[1]+2)
+      -EXTREME_H, high_z)
     end
   end end -- for x, y
 end
@@ -2712,7 +2717,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "building" and not R.children and not GAME.nature_test then
+  if R.kind == "building" and not R.children then
     junk_sides()
   end
 
