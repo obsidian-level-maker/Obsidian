@@ -364,6 +364,84 @@ end
 
 
 
+function Layout_cave_brush(cave, x, y, bx, by, w_info, high_z)
+  bx = bx + (x - 1) * 64
+  by = by + (y - 1) * 64
+
+--[[ most basic method
+  Trans_brush(w_info,
+  {
+    { x=bx+64, y=by },
+    { x=bx+64, y=by+64 },
+    { x=bx,    y=by+64 },
+    { x=bx,    y=by },
+  },
+  -EXTREME_H, high_z)
+
+  do return end
+--]]
+
+
+  -- points around the outside of the cell:
+  --
+  --    g   f   e
+  --     +--+--+
+  --     |     |
+  --   h +     + d
+  --     |     |
+  --     +--+--+
+  --    a   b   c
+
+  local a = { x=0, y=0 }
+  local b = { x=0, y=0 }
+  local c = { x=0, y=0 }
+  local d = { x=0, y=0 }
+  local e = { x=0, y=0 }
+  local f = { x=0, y=0 }
+  local g = { x=0, y=0 }
+  local h = { x=0, y=0 }
+
+  local function handle_side(p, side)
+    local dx, dy = dir_to_delta(side)
+    -- ....
+  end
+
+  local function handle_corner(p, corner)
+    local dx, dy = dir_to_delta(corner)
+    -- ....
+  end
+
+
+  handle_corner(a, 1) ; handle_side(b, 2)
+  handle_corner(c, 3) ; handle_side(d, 6)
+  handle_corner(e, 9) ; handle_side(f, 8)
+  handle_corner(g, 7) ; handle_side(h, 4)
+
+
+  -- use coordinate system where (0,0) = bottom left of cave cell
+  local T =
+  {
+    add_x = bx,
+    add_y = by,
+  }
+
+  Trans_set(T)
+
+  -- FIXME: optimise this
+
+  Trans_brush(w_info, { { x=32, y=32 }, { x=   a.x, y=   a.y }, { x=32+b.x, y=   b.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=32+b.x, y=   b.y }, { x=64-c.x, y=   c.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=64-c.x, y=   c.y }, { x=64-d.x, y=32+d.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=64-d.x, y=32+d.y }, { x=64-e.x, y=64-e.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=64-e.x, y=64-e.y }, { x=32+f.x, y=64-f.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=32+f.x, y=64-f.y }, { x=   g.x, y=64-g.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=   g.x, y=64-g.y }, { x=   h.x, y=32+h.y }}, -EXTREME_H, high_z)
+  Trans_brush(w_info, { { x=32, y=32 }, { x=   h.x, y=32+h.y }, { x=   a.x, y=   a.y }}, -EXTREME_H, high_z)
+
+  Trans_clear()
+end
+
+
 function Layout_natural_room(R, heights)
 
   local map
@@ -555,7 +633,7 @@ function Layout_natural_room(R, heights)
       break;
     end
 
-        Cave_dump(cave)
+    --- Cave_dump(cave)
   end
 
   Cave_dump(cave)
@@ -574,22 +652,12 @@ function Layout_natural_room(R, heights)
 
   local high_z = sel(is_lake, heights[1]+2, EXTREME_H)
 
+  local base_x = SEEDS[R.sx1][R.sy1][1].x1
+  local base_y = SEEDS[R.sx1][R.sy1][1].y1
+
   for x = 1,map.w do for y = 1,map.h do
     if (cave[x][y] or 0) > 0 then
-      local bx = SEEDS[R.sx1][R.sy1][1].x1
-      local by = SEEDS[R.sx1][R.sy1][1].y1
-
-      bx = bx + (x - 1) * 64
-      by = by + (y - 1) * 64
-
-      Trans_brush(w_info,
-      {
-        { x=bx+64, y=by },
-        { x=bx+64, y=by+64 },
-        { x=bx,    y=by+64 },
-        { x=bx,    y=by },
-      },
-      -EXTREME_H, high_z)
+      Layout_cave_brush(cave, x, y, base_x, base_y, w_info, high_z)
     end
   end end -- for x, y
 end
