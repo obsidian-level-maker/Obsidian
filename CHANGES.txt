@@ -12,12 +12,13 @@ CHANGES (since v3.47)
 -  can disable making backups
 
 -  new (more random) way of setting monster skill bits
-
 -  new system for adding pre-built levels
 -  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
 
 -  fixed Save dialog (MS Windows) to go back to last place
+-  output directory is checked to be valid
+-  the status bar is more accurate about errors
 
--  Unixy type of system-wide installation (use Makefile.unixy)
--  Batch mode : run Oblige without the GUI
+-  Unixy type of system-wide installation (Makefile.unixy)
+-  Batch mode : run Oblige without any GUI at all
 
