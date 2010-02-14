@@ -364,7 +364,55 @@ end
 
 
 
-function Layout_cave_brush(cave, x, y, bx, by, w_info, high_z)
+function Layout_cave_corner(cave, corner_map, x, y, side)
+  local W = cave.w
+  local H = cave.h
+
+  local dx, dy = dir_to_delta(side)
+
+  local cx = x + sel(dx < 0, 0, 1)
+  local cy = y + sel(dy < 0, 0, 1)
+
+  if corner_map[cx][cy] then return end  -- already decided
+
+  local function test_nb(dx, dy)
+    local nx = x + dx
+    local ny = y + dy
+
+    if nx < 1 or nx > W or ny < 1 or ny > H then return true end
+
+    return not cave[nx][ny] or (cave[nx][ny] >= 0)
+  end
+
+  local A = test_nb(0, dy)
+  local B = test_nb(dx, 0)
+  local C = test_nb(dx, dy)
+
+  if C then return end
+
+  if not A and not B then
+    corner_map[cx][cy] = rand_element { "x", "y", "xy", "split" }
+    return
+  end
+
+  if A and not B then
+    if rand_odds(30) then corner_map[cx][cy] = "x" end
+    return
+  end
+
+  if B and not A then
+    if rand_odds(30) then corner_map[cx][cy] = "y" end
+    return
+  end
+
+  -- assert(A and B and not C)
+
+  if rand_odds(50) then corner_map[cx][cy] = "split" end
+  return
+end
+
+
+function Layout_cave_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
   bx = bx + (x - 1) * 64
   by = by + (y - 1) * 64
 
@@ -382,63 +430,37 @@ function Layout_cave_brush(cave, x, y, bx, by, w_info, high_z)
 --]]
 
 
-  -- points around the outside of the cell:
-  --
-  --    g   f   e
-  --     +--+--+
-  --     |     |
-  --   h +     + d
-  --     |     |
-  --     +--+--+
-  --    a   b   c
+  local W = cave.w
+  local H = cave.h
 
-  local a = { x=0, y=0 }
-  local b = { x=0, y=0 }
-  local c = { x=0, y=0 }
-  local d = { x=0, y=0 }
-  local e = { x=0, y=0 }
-  local f = { x=0, y=0 }
-  local g = { x=0, y=0 }
-  local h = { x=0, y=0 }
+  local coords = { }
 
-  local function handle_side(p, side)
+  for side = 1,9 do if side ~= 5 then
     local dx, dy = dir_to_delta(side)
-    -- ....
-  end
 
-  local function handle_corner(p, corner)
-    local dx, dy = dir_to_delta(corner)
-    -- ....
-  end
+    local cx = x + sel(dx < 0, 0, 1)
+    local cy = y + sel(dy < 0, 0, 1)
 
+    local fx = bx + sel(dx < 0, 0, 64)
+    local fy = by + sel(dy < 0, 0, 64)
 
-  handle_corner(a, 1) ; handle_side(b, 2)
-  handle_corner(c, 3) ; handle_side(d, 6)
-  handle_corner(e, 9) ; handle_side(f, 8)
-  handle_corner(g, 7) ; handle_side(h, 4)
+    local what = corner_map[cx][cy]
 
+    if what == "split" then
+      if side == 1 or side == 9 then
+        table.insert(coords, { x=fx, y=fy-dy*24 })
+        table.insert(coords, { x=fx-dx*24, y=fy })
+      else
+        table.insert(coords, { x=fx-dx*24, y=fy })
+        table.insert(coords, { x=fx, y=fy-dy*24 })
+      end
+    else
+      if what == "x" or what == "xy" then x = x - dx*24 end
+      if what == "y" or what == "xy" then y = y - dy*24 end
 
-  -- use coordinate system where (0,0) = bottom left of cave cell
-  local T =
-  {
-    add_x = bx,
-    add_y = by,
-  }
-
-  Trans_set(T)
-
-  -- FIXME: optimise this
-
-  Trans_brush(w_info, { { x=32, y=32 }, { x=   a.x, y=   a.y }, { x=32+b.x, y=   b.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=32+b.x, y=   b.y }, { x=64-c.x, y=   c.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=64-c.x, y=   c.y }, { x=64-d.x, y=32+d.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=64-d.x, y=32+d.y }, { x=64-e.x, y=64-e.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=64-e.x, y=64-e.y }, { x=32+f.x, y=64-f.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=32+f.x, y=64-f.y }, { x=   g.x, y=64-g.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=   g.x, y=64-g.y }, { x=   h.x, y=32+h.y }}, -EXTREME_H, high_z)
-  Trans_brush(w_info, { { x=32, y=32 }, { x=   h.x, y=32+h.y }, { x=   a.x, y=   a.y }}, -EXTREME_H, high_z)
-
-  Trans_clear()
+      table.insert(coords, { x=fx, y=fy })
+    end
+  end end
 end
 
 
@@ -655,11 +677,21 @@ function Layout_natural_room(R, heights)
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
-  for x = 1,map.w do for y = 1,map.h do
+  local corner_map = array_2D(cave.w + 1, cave.h + 1)
+
+  for x = 1,cave.w do for y = 1,cave.h do
     if (cave[x][y] or 0) > 0 then
-      Layout_cave_brush(cave, x, y, base_x, base_y, w_info, high_z)
+      for side = 1,9 do if side ~= 5 then
+        Layout_cave_corner(cave, corner_map, x, y, side)
+      end end
     end
   end end -- for x, y
+
+  for x = 1,cave.w do for y = 1,cave.h do
+    if (cave[x][y] or 0) > 0 then
+      Layout_cave_brush(cave, corner_map, x, y, base_x, base_y, w_info, high_z)
+    end
+  end end
 end
 
 
