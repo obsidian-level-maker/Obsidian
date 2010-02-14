@@ -391,23 +391,29 @@ function Layout_cave_corner(cave, corner_map, x, y, side)
   if C then return end
 
   if not A and not B then
+
+    if test_nb(-dx, 0) and test_nb(0, -dy) and rand_odds(90) then
+      corner_map[cx][cy] = "drop"
+      return
+    end
+
     corner_map[cx][cy] = rand_element { "x", "y", "xy", "split" }
     return
   end
 
   if A and not B then
-    if rand_odds(30) then corner_map[cx][cy] = "x" end
+    if rand_odds(40) then corner_map[cx][cy] = "x" end
     return
   end
 
   if B and not A then
-    if rand_odds(30) then corner_map[cx][cy] = "y" end
+    if rand_odds(40) then corner_map[cx][cy] = "y" end
     return
   end
 
   -- assert(A and B and not C)
 
-  if rand_odds(50) then corner_map[cx][cy] = "split" end
+  if rand_odds(1) then corner_map[cx][cy] = "split" end
   return
 end
 
@@ -434,8 +440,9 @@ function Layout_cave_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
   local H = cave.h
 
   local coords = { }
+  local SIDES  = { 1,3,9,7 }
 
-  for side = 1,9 do if side ~= 5 then
+  for _,side in ipairs(SIDES) do
     local dx, dy = dir_to_delta(side)
 
     local cx = x + sel(dx < 0, 0, 1)
@@ -446,7 +453,10 @@ function Layout_cave_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
 
     local what = corner_map[cx][cy]
 
-    if what == "split" then
+    if what == "drop" then
+      -- ignore it
+
+    elseif what == "split" then
       if side == 1 or side == 9 then
         table.insert(coords, { x=fx, y=fy-dy*24 })
         table.insert(coords, { x=fx-dx*24, y=fy })
@@ -454,13 +464,23 @@ function Layout_cave_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
         table.insert(coords, { x=fx-dx*24, y=fy })
         table.insert(coords, { x=fx, y=fy-dy*24 })
       end
+
     else
-      if what == "x" or what == "xy" then x = x - dx*24 end
-      if what == "y" or what == "xy" then y = y - dy*24 end
+      if what == "x" then fx = fx - dx*24 end
+      if what == "y" then fy = fy - dy*24 end
+
+      if what == "xy" then
+        fx = fx - dx*16
+        fy = fy - dy*16
+      end
 
       table.insert(coords, { x=fx, y=fy })
     end
-  end end
+  end
+
+--- gui.debugf("CAVE BRUSH:\n%s\n\n", table_to_str(coords,2))
+
+  Trans_brush(w_info, coords, -EXTREME_H, high_z)
 end
 
 
@@ -681,7 +701,7 @@ function Layout_natural_room(R, heights)
 
   for x = 1,cave.w do for y = 1,cave.h do
     if (cave[x][y] or 0) > 0 then
-      for side = 1,9 do if side ~= 5 then
+      for side = 1,9,2 do if side ~= 5 then
         Layout_cave_corner(cave, corner_map, x, y, side)
       end end
     end
