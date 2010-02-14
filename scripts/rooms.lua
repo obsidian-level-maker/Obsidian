@@ -239,7 +239,7 @@ function Rooms_decide_hallways_II()
 
   local function eval_hallway(R)
 
-    if R.outdoor or R.kind == "scenic" or R.children then
+    if R.outdoor or R.kind ~= "building" or R.children then
       return false
     end
 
