@@ -76,11 +76,6 @@ Miscellaneous:
 
 -  support for the DECORATE lump
 
--  ui_chooser: support last_file in WIN32
-      maybe this: lpstrFile contains _base_ of file (FOO.EXT)
-              and lpstrInitialDir contains _path_ of last file.
-      probably only set it once (first call).
-
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 

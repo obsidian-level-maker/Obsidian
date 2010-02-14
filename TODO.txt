@@ -22,6 +22,9 @@ Natural areas:
 
   -  proper theming (c.f. THEME.building)
 
+  -  single (or two?) border seeds around map
+     (plus space for monster depots)
+
 
 
 >>>  don't use tech_outdoor exit in HELL themes
@@ -43,10 +46,6 @@ Natural areas:
 +  add in more scenery: lamps, computers etc
 
 
-FIXED:  BUG: arena E4M6 is not completeable (needs a tag 666 door).
-
-DONE:  option to not create backup files
-
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
@@ -61,7 +60,6 @@ DONE:  option to not create backup files
 
 -  review big room logic
 
-DONE: introduce randomness into skill bits:
 
 +  more supplies in start room (ammo for weapon, armor vest)
 
@@ -83,6 +81,7 @@ DONE: introduce randomness into skill bits:
 
 -  BUG: outdoor bars can sometimes be jumped over.
    --> make them higher _or_ another switch to lower them.
+
 
 
 CSG CODE:
