@@ -441,7 +441,7 @@ function Layout_natural_room(R, heights)
       return set_side(S, side, sel(is_lake,-1,1))
     end
 
-    set_side(S, side, -1)
+    set_side(S, side, sel(is_lake,-1,1))
   end
 
   local function handle_corner(S, side)
