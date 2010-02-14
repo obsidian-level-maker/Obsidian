@@ -106,6 +106,8 @@ DialogShowAndRun(const char *message, const char *title)
   dialog->set_modal();
   dialog->show();
 
+  fl_beep();
+
   // run the GUI and let user make their choice
   while (dialog_result == 0)
   {
