@@ -87,47 +87,6 @@ public:
 };
 
 
-#if 0
-
-static void OLD_SplitDiagonalSides(qLeaf_c *L)
-{
-  // leafs are already split to be small than 240 units in width
-  // and height.  If diagonal sides (the faces on them) are texture
-  // mapped by an axis aligned plane, then we don't need to split
-  // them.  Otherwise it is possible that the side is too long and
-  // must be split.
-
-  std::list<qSide_c *> new_bits;
-
-  std::list<qSide_c *>::iterator SI;
-
-  for (SI = L->sides.begin(); SI != L->sides.end(); SI++)
-  {
-    qSide_c *S = *SI;
-
-    if (S->Length() > FACE_MAX_SIZE)
-    {
-// fprintf(stderr, "Splitting DIAGONAL side %p length:%1.0f\n", S, S->Length());
-
-      double ix = (S->x1 + S->x2) / 2.0;
-      double iy = (S->y1 + S->y2) / 2.0;
-
-      qSide_c *T = S->SplitAt(ix, iy);
-
-      new_bits.push_back(T);
-    }
-  }
-
-  while (! new_bits.empty())
-  {
-    L->sides.push_back(new_bits.back());
-
-    new_bits.pop_back();
-  }
-}
-#endif
-
-
 class rFace_c
 {
 public:
