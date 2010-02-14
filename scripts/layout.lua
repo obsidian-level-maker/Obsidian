@@ -392,7 +392,7 @@ function Layout_cave_corner(cave, corner_map, x, y, side)
 
   if not A and not B then
 
-    if test_nb(-dx, 0) and test_nb(0, -dy) and rand_odds(90) then
+    if test_nb(-dx, 0) and test_nb(0, -dy) and rand_odds(70) then
       corner_map[cx][cy] = "drop"
       return
     end
