@@ -1089,17 +1089,51 @@ public:
 
 private:
   bool BuildNodes(const char *target_file);
+
+  bool CheckDirectory(const char *filename);
 };
+
+
+bool doom_game_interface_c::CheckDirectory(const char *filename)
+{
+  char *dir_name = StringDup(filename);
+
+  // remove the base filename to get the plain directory
+  const char *base = FindBaseName(filename);
+
+  dir_name[base - filename] = 0;
+
+  if (strlen(dir_name) == 0)
+    return true;
+
+  // this badly-named function checks the directory exists
+  bool result = fl_filename_isdir(dir_name);
+
+  if (! result)
+    DLG_ShowError("The specified folder does not exist:\n\n  %s", dir_name);
+
+  StringFree(dir_name);
+
+  return result;
+}
 
 
 bool doom_game_interface_c::Start()
 {
-  filename = Select_Output_File("wad");
-
-  if (! filename)
+  for (;;)
   {
-    Main_ProgStatus("Cancelled");
-    return false;
+    filename = Select_Output_File("wad");
+
+    if (! filename)
+    {
+      Main_ProgStatus("Cancelled");
+      return false;
+    }
+
+    if (CheckDirectory(filename))
+      break;
+
+    // keep trying until filename is valid
   }
 
   if (! DM_StartWAD(TEMP_FILENAME))
