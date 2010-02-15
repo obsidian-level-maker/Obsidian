@@ -1186,20 +1186,67 @@ function Monsters_in_room(R)
   end
 
 
-  local function can_accommodate_big(S, sx, sy)
+  local function add_small_mon_spot(S, h_diff)
+    -- FIXME: take walls (etc) into consideration
+
+    local mx, my = S:mid_point()
+
+    table.insert(R.monster_spots,
+    {
+      S=S, score=gui.random(),  -- FIXME score
+      x1=mx-32, y1=my-32, z1=(S.floor_h or 0),
+      x2=mx+32, y2=my+32, z2=(S.floor_h or 0) + h_diff,
+    })
+  end
+
+  local function add_large_mon_spot(S, h_diff)
+    -- FIXME: take walls (etc) into consideration
+
+    local mx, my = S.x2, S.y2,
+
+    table.insert(R.monster_spots,
+    {
+      S=S, score=gui.random(),  -- FIXME score
+      x1=mx-72, y1=my-72, z1=(S.floor_h or 0),
+      x2=mx+72, y2=my+72, z2=(S.floor_h or 0) + h_diff,
+    })
+  end
+
+  local function can_accommodate_small(S)
+    if S.content or S.no_monster or not S.floor_h then
+      return false
+    end
+
+    -- keep entryway clear
+    if R.entry_conn and S.conn == R.entry_conn then
+      return false
+    end
+
+    -- check seed kind
+    if S.kind ~= "walk" then
+      return false
+    end
+
+    local h_diff = (S.ceil_h or R.ceil_h or SKY_H) - (S.floor_h or 0)
+
+    return true, h_diff
+  end
+
+  local function can_accommodate_large(S, sx, sy)
     if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
       return false
     end
 
     local low_ceil = S.ceil_h or R.ceil_h or SKY_H
+    local hi_floor = S.floor_h or 0
 
     for dx = 0,1 do for dy = 0,1 do
       if dx > 0 or dy > 0 then
         local S2 = SEEDS[sx+dx][sy+dy][1]
 
-        if S2.room ~= S.room then
-          return false
-        end
+        if S2.room ~= S.room then return false end
+
+        if not can_accommodate_small(S2) then return false end
 
         if S2.ceil_h then
           low_ceil = math.min(low_ceil, S.ceil_h)
@@ -1213,12 +1260,12 @@ function Monsters_in_room(R)
     end end -- for dx, dy
 
     -- NOTE: arachnotrons can fit in lower rooms, but we have to allow for
-    --       the tallest of the big monsters (Hexen bosses).
-    if low_ceil < 128 then
-      return false
-    end
+    --       the tallest of the large monsters (Hexen bosses).
+    local h_diff = (low_ceil - hi_floor)
 
-    return true
+---???   if h_diff < 128 then return false end
+
+    return true, h_diff
   end
 
   local function find_monster_spots()
@@ -1226,9 +1273,19 @@ function Monsters_in_room(R)
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
+      
+      if S.room == R then
+        local small_ok, small_diff = can_accommodate_small(S)
 
-      if S.room == R and S.floor_h and not S.no_monster then
+        if small_ok then
+          local large_ok, large_diff = can_accommodate_large(S, x, y)
 
+          if large_ok then
+            add_large_mon_spot(S, large_diff)
+          else
+            add_small_mon_spot(S, small_diff)
+          end
+        end
       end
     end end
   end
