@@ -505,6 +505,8 @@ function Layout_cave_pickup_spots(R)
   R.small_spots = {}
   R.big_spots = {}
 
+  -- FIXME FIXME: this is terrible (only checks centre of seed)
+
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
@@ -515,6 +517,83 @@ function Layout_cave_pickup_spots(R)
         add_big_spot(R, S, gui.random())
         add_small_spot(R, S, gui.random())
       end
+    end
+  end end
+end
+
+
+function Layout_cave_monster_spots(R)
+  local flood = R.flood
+  assert(flood.largest_empty)
+
+  local W = flood.w
+  local H = flood.h
+
+  local used = array_2D(W, H)
+
+  local function check_range(x1,y1, x2,y2)
+    if x2 > W or y2 > H then return false end
+
+    for x = x1,x2 do for y = y1,y2 do
+      if flood[x][y] ~= flood.largest_empty.id then
+        return false
+      end
+      if used[x][y] then return false end
+    end end
+
+    -- FIXME: check seeds too !!!  (purpose etc)
+
+    return true
+  end
+
+  local function mark_range(x1,y1, x2,y2)
+    for x = x1,x2 do for y = y1,y2 do
+      used[x][y] = true
+    end end
+  end
+
+
+  --| Layout_cave_monster_spots |--
+
+  R.monster_spots = {}
+
+  local base_x = SEEDS[R.sx1][R.sy1][1].x1
+  local base_y = SEEDS[R.sx1][R.sy1][1].y1
+
+  for x = 1,W do for y = 1,H do
+    if flood[x][y] == flood.largest_empty.id and not used[x][y] then
+
+      local sx = R.sx1 + int((x-1) / 3)
+      local sy = R.sy1 + int((y-1) / 3)
+
+      local S = SEEDS[sx][sy][1]
+
+      assert(S.room == R)
+
+      -- TODO: non-square rectangles, e.g. 4x2
+
+      local size = 1
+      
+      repeat
+        if not check_range(x,y, x+size,y+size) then
+          break;
+        end
+
+        size = size + 1
+      until size >= 4
+
+      mark_range(x,y, x+size-1, y+size-1)
+
+      table.insert(R.monster_spots,
+      {
+        S=S, score=gui.random(),  -- FIXME: score
+        x1=base_x + (x-1) * 64,
+        y1=base_y + (y-1) * 64,
+        x2=base_x + (x-1+size) * 64,
+        y2=base_y + (y-1+size) * 64,
+        z1=(S.floor_h or 0),
+        z2=(S.floor_h or 0) + 128,  -- FIXME !!!!
+      })
     end
   end end
 end
@@ -2779,6 +2858,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.kind == "nature" then
     Layout_cave_pickup_spots(R)
+    Layout_cave_monster_spots(R)
   end
 
   if R.kind == "building" then

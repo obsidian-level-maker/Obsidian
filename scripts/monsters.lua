@@ -496,7 +496,7 @@ function Monsters_do_pickups()
 
     gui.debugf("find_pickup_spots @ %s\n", R:tostr())
 
-    -- already there?
+    -- already there?? (caves)
     if R.small_spots then
       if #R.small_spots == 0 or #R.big_spots == 0 then
         return false
@@ -1289,6 +1289,11 @@ function Monsters_in_room(R)
   end
 
   local function find_monster_spots()
+    -- already there?? (caves)
+    if R.monster_spots then
+      return
+    end
+
     R.monster_spots = {}
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
