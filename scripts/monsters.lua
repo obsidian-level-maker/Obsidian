@@ -496,6 +496,15 @@ function Monsters_do_pickups()
 
     gui.debugf("find_pickup_spots @ %s\n", R:tostr())
 
+    -- already there?
+    if R.small_spots then
+      if #R.small_spots == 0 or #R.big_spots == 0 then
+        return false
+      end
+
+      return true
+    end
+
     R.big_spots = {}
     R.small_spots = {}
 
@@ -531,7 +540,7 @@ function Monsters_do_pickups()
 
     if #R.big_spots == 0 then
       gui.debugf("No big spots found : using emergency\n")
-      add_big_spot(R, emerg_big)
+      add_big_spot(R, emerg_big, 0)
     end
 
     if #R.small_spots == 0 then
@@ -645,8 +654,8 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
 
     -- assume big spots will sometimes run out (and be reused),
     -- so don't put multiple items at exactly the same place.
-    x = x + rand_irange(-32, 32)
-    y = y + rand_irange(-32, 32)
+    x = x + rand_irange(-16, 16)
+    y = y + rand_irange(-16, 16)
 
     place_item(spot.S, item, x, y, SK)
   end

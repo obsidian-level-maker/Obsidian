@@ -484,6 +484,42 @@ function Layout_cave_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
 end
 
 
+function Layout_cave_pickup_spots(R)
+  local flood = R.flood
+  assert(flood.largest_empty)
+
+  local function add_big_spot(R, S, score)
+    local mx, my = S:mid_point()
+    table.insert(R.big_spots, { S=S, x=mx, y=my, score=score })
+  end
+
+  local function add_small_spot(R, S, score)
+    local mx, my = S:mid_point()
+    local dir = rand_sel(50, 2, 4)
+    table.insert(R.small_spots, { S=S, x=mx, y=my, dir=dir, score=score })
+  end
+
+
+  --| Layout_cave_pickup_spots |--
+
+  R.small_spots = {}
+  R.big_spots = {}
+
+  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+    local S = SEEDS[x][y][1]
+    if S.room == R then
+      local mx = (S.sx - R.sx1) * 3 + 2
+      local my = (S.sy - R.sy1) * 3 + 2
+
+      if flood[mx][my] == flood.largest_empty.id then
+        add_big_spot(R, S, gui.random())
+        add_small_spot(R, S, gui.random())
+      end
+    end
+  end end
+end
+
+
 function Layout_natural_room(R, heights)
 
   local map
@@ -621,6 +657,7 @@ function Layout_natural_room(R, heights)
   end
 
 
+
   --| Layout_natural_room |--
 
   map = array_2D(R.sw * 3, R.sh * 3)
@@ -678,13 +715,16 @@ function Layout_natural_room(R, heights)
     --- Cave_dump(cave)
   end
 
+  R.cave  = cave
+  R.flood = flood
+
   Cave_dump(cave)
 
 --- gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
 --- gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 
 
-  local w_tex  = sel(is_lake, "FWATER1", sel(R.outdoor, "GRASS2", "ASHWALL"))
+  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL"))
   local w_info = get_mat(w_tex)
 
   if is_lake then w_info.delta_z = -42 end
@@ -2736,6 +2776,10 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   if R.purpose then add_purpose() end
   if R.weapon  then add_weapon(R.weapon)  end
+
+  if R.kind == "nature" then
+    Layout_cave_pickup_spots(R)
+  end
 
   if R.kind == "building" then
     add_pillars()
