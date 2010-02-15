@@ -29,7 +29,7 @@ Main usages:
 (b) guarding something [keys]
 (c) cages
 (d) traps (triggered closets, teleport in)
-(e) surprises (behind entry door, closests on back path)
+(e) surprises (behind entry door, closets on back path)
 
 
 IDEAS:
@@ -777,11 +777,11 @@ end
 function Monsters_in_room(R)
 
   local function is_big(mon)
-    return GAME.things[mon].r > 34
+    return GAME.things[mon].r > 30
   end
 
   local function is_huge(mon)
-    return GAME.things[mon].r > 66
+    return GAME.things[mon].r > 60
   end
 
   local function calc_toughness()
@@ -1128,6 +1128,22 @@ function Monsters_in_room(R)
     return true
   end
 
+  local function try_occupy_spot(spot, mon, totals)
+    local info  = GAME.monsters[mon]
+    local thing = GAME.things[mon]
+
+    if thing.r * 2 > (spot.x2 - spot.x1 - 4) then return false end
+    if thing.r * 2 > (spot.y2 - spot.y1 - 4) then return false end
+
+    if thing.h > (spot.z2 - spot.z1 - 2) then return false end
+
+    spot.monster = mon
+    spot.info    = info
+
+    totals[mon] = totals[mon] + 1
+    return true
+  end
+
   local function steal_a_seed(mon, totals)
     if is_huge(mon) then
       -- monster requires 2x2 seeds, but we cannot steal that
@@ -1194,21 +1210,21 @@ function Monsters_in_room(R)
     table.insert(R.monster_spots,
     {
       S=S, score=gui.random(),  -- FIXME score
-      x1=mx-32, y1=my-32, z1=(S.floor_h or 0),
-      x2=mx+32, y2=my+32, z2=(S.floor_h or 0) + h_diff,
+      x1=mx-64, y1=my-64, z1=(S.floor_h or 0),
+      x2=mx+64, y2=my+64, z2=(S.floor_h or 0) + h_diff,
     })
   end
 
   local function add_large_mon_spot(S, h_diff)
     -- FIXME: take walls (etc) into consideration
 
-    local mx, my = S.x2, S.y2,
+    local mx, my = S.x2, S.y2
 
     table.insert(R.monster_spots,
     {
       S=S, score=gui.random(),  -- FIXME score
-      x1=mx-72, y1=my-72, z1=(S.floor_h or 0),
-      x2=mx+72, y2=my+72, z2=(S.floor_h or 0) + h_diff,
+      x1=mx-128, y1=my-128, z1=(S.floor_h or 0),
+      x2=mx+128, y2=my+128, z2=(S.floor_h or 0) + h_diff,
     })
   end
 
@@ -1237,6 +1253,8 @@ function Monsters_in_room(R)
       return false
     end
 
+    if S.solid_corner then return false end
+
     local low_ceil = S.ceil_h or R.ceil_h or SKY_H
     local hi_floor = S.floor_h or 0
 
@@ -1248,8 +1266,10 @@ function Monsters_in_room(R)
 
         if not can_accommodate_small(S2) then return false end
 
+        if S2.solid_corner then return false end
+
         if S2.ceil_h then
-          low_ceil = math.min(low_ceil, S.ceil_h)
+          low_ceil = math.min(low_ceil, S2.ceil_h)
         end
 
         -- ensure no floor difference for huge monsters
@@ -1308,12 +1328,12 @@ function Monsters_in_room(R)
       end
     end
 
-    -- TODO: sometimes maintain symmetry
+    rand_shuffle(R.monster_spots)
+    
+    for _,spot in ipairs(R.monster_spots) do
 
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+        assert(not spot.monster)
 
-      if S.room == R and S.floor_h and not S.no_monster then
         local try_pal = shallow_copy(pal_2)
 
         -- try other monsters if the first doesn't fit
@@ -1321,21 +1341,20 @@ function Monsters_in_room(R)
           local mon = rand_key_by_probs(try_pal)
           try_pal[mon] = nil
 
-          if try_occupy_seed(S, x, y, mon, totals) then
+          if try_occupy_spot(spot, mon, totals) then
             break;
           end
         end
-      end
-    end end -- for x, y
+    end
 
-    rand_shuffle(R.monster_spots)
-    
     -- make sure each monster has at least one seed
+--[[ !!!!
     for mon,_ in pairs(palette) do
       if totals[mon] == 0 then
         steal_a_seed(mon, totals)
       end
     end
+--]]
 
     gui.debugf("Monster map totals:\n")
     for mon,count in pairs(totals) do
@@ -1456,7 +1475,10 @@ function Monsters_in_room(R)
       props.skill_easy   = sel(skill <= 1, 1, 0)
     end
 
-    Trans_entity(mon, spot.x, spot.y, spot.S.floor_h, props)
+    local mx = (spot.x1 + spot.x2) / 2
+    local my = (spot.y1 + spot.y2) / 2
+
+    Trans_entity(mon, mx, my, spot.z1, props)
 
     spot.S.content = "monster"
   end
@@ -1466,7 +1488,10 @@ function Monsters_in_room(R)
       return
     end
 
---!!!!!!    Trans_entity("barrel", spot.x, spot.y, spot.S.floor_h)
+    local mx = (spot.x1 + spot.x2) / 2
+    local my = (spot.y1 + spot.y2) / 2
+
+--!!!!!!    Trans_entity("barrel", mx, my, spot.z1)
 
     spot.S.content = "monster"  -- allow items to exist here
   end
@@ -1476,7 +1501,9 @@ function Monsters_in_room(R)
     local actuals = {}
 
     for _,spot in ipairs(R.monster_spots) do
-      totals[spot.monster] = (totals[spot.monster] or 0) + 1
+      if spot.monster then
+        totals[spot.monster] = (totals[spot.monster] or 0) + 1
+      end
     end
 
     for mon,count in pairs(totals) do
@@ -1484,11 +1511,13 @@ function Monsters_in_room(R)
     end
 
     for index,spot in ipairs(R.monster_spots) do
-      if (actuals[spot.monster] or 0) >= 1 then
-        place_monster(spot)
-        actuals[spot.monster] = actuals[spot.monster] - 1
-      elseif rand_odds(barrel_chance) then
-        place_barrel(spot)
+      if spot.monster then
+        if (actuals[spot.monster] or 0) >= 1 then
+          place_monster(spot)
+          actuals[spot.monster] = actuals[spot.monster] - 1
+        elseif rand_odds(barrel_chance) then
+          place_barrel(spot)
+        end
       end
     end
   end
