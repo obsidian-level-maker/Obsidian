@@ -1185,8 +1185,55 @@ function Monsters_in_room(R)
     rand_shuffle(R.monster_spots)
   end
 
-  local function create_monster_map(palette)
+
+  local function can_accommodate_big(S, sx, sy)
+    if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
+      return false
+    end
+
+    local low_ceil = S.ceil_h or R.ceil_h or SKY_H
+
+    for dx = 0,1 do for dy = 0,1 do
+      if dx > 0 or dy > 0 then
+        local S2 = SEEDS[sx+dx][sy+dy][1]
+
+        if S2.room ~= S.room then
+          return false
+        end
+
+        if S2.ceil_h then
+          low_ceil = math.min(low_ceil, S.ceil_h)
+        end
+
+        -- ensure no floor difference for huge monsters
+        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
+
+        if diff > 1 then return false end
+      end
+    end end -- for dx, dy
+
+    -- NOTE: arachnotrons can fit in lower rooms, but we have to allow for
+    --       the tallest of the big monsters (Hexen bosses).
+    if low_ceil < 128 then
+      return false
+    end
+
+    return true
+  end
+
+  local function find_monster_spots()
     R.monster_spots = {}
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+
+      if S.room == R and S.floor_h and not S.no_monster then
+
+      end
+    end end
+  end
+
+  local function create_monster_map(palette)
 
     -- adjust probs in palette to account for monster size,
     -- i.e. we can fit 4 imps in a seed but only one mancubus,
@@ -1506,6 +1553,8 @@ function Monsters_in_room(R)
 
   assert(R.kind ~= "scenic")
 
+
+  find_monster_spots()
 
   add_monsters()
 
