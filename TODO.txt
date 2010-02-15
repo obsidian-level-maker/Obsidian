@@ -5,20 +5,22 @@ TODO
 
 Natural areas:
 
-  -  CAVE: more cave wall @ building borders
+  DONE:  CAVE: more cave wall @ building borders
+
+  PRELIM  place monsters in walkable spots
+  PRELIM  place items in walkable spots
 
   -  place purpose (key / switch) in open spot
-  -  place monsters in walkable spots
-  -  place items in walkable spots
 
   -  height changes 
-  -  create jaggy edges
   -  trimming
+
+  DONE:  create jaggy edges
 
   -  better border at edge of map / nil seed
   -  better bordering with other natural areas
 
-  -  choose CAVE / LANDSCAPE / LAKE mode  -- use styles
+  -  choose between CAVE / LANDSCAPE / LAKE mode  -- via STYLES[]
 
   -  proper theming (c.f. THEME.building)
 
