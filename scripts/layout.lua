@@ -318,6 +318,23 @@ end
 function Layout_spot_for_wotsit(R, kind)
   local spots = {}
 
+  local function cave_spot_OK(x, y)
+    -- FIXME: this only tests the middle 64x64 square
+
+    if not R.cave then return true end
+
+    local flood = R.flood
+
+    local mx = (x - R.sx1) * 3 + 2
+    local my = (y - R.sy1) * 3 + 2
+
+    if flood[mx][my] == flood.largest_empty.id then
+      return true
+    end
+
+    return false
+  end
+
   -- for symmetrical rooms, prefer a centred item
   local bonus_x, bonus_y
 
@@ -327,7 +344,7 @@ function Layout_spot_for_wotsit(R, kind)
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
 
-    if S.room == R and S.kind == "walk" and not S.content then
+    if S.room == R and S.kind == "walk" and not S.content and cave_spot_OK(x, y) then
       local P = { x=x, y=y, S=S }
 
       P.score = gui.random() + (S.div_lev or 0) * 20
@@ -509,7 +526,7 @@ function Layout_cave_pickup_spots(R)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
-    if S.room == R then
+    if S.room == R and not S.content then
       local mx = (S.sx - R.sx1) * 3 + 2
       local my = (S.sy - R.sy1) * 3 + 2
 
@@ -541,7 +558,16 @@ function Layout_cave_monster_spots(R)
       if used[x][y] then return false end
     end end
 
-    -- FIXME: check seeds too !!!  (purpose etc)
+    -- check seeds too
+    local sx1 = R.sx1 + int((x1-1) / 3)
+    local sy1 = R.sy1 + int((y1-1) / 3)
+    local sx2 = R.sx1 + int((x2-1) / 3)
+    local sy2 = R.sy1 + int((y2-1) / 3)
+
+    for x = sx1,sx2 do for y = sy1,sy2 do
+      local S = SEEDS[x][y][1]
+      if S.content then return false end
+    end end
 
     return true
   end
@@ -803,7 +829,7 @@ function Layout_natural_room(R, heights)
 --- gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 
 
-  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL"))
+  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
   local w_info = get_mat(w_tex)
 
   if is_lake then w_info.delta_z = -42 end
