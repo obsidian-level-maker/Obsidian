@@ -9,8 +9,7 @@ Natural areas:
 
   PRELIM  place monsters in walkable spots
   PRELIM  place items in walkable spots
-
-  -  place purpose (key / switch) in open spot
+  PRELIM  place purpose (key / switch) in open spot
 
   -  height changes 
   -  trimming
