@@ -3412,16 +3412,8 @@ OB_THEMES["doom_tech"] =
 
   prefix = "TECH",
   name_theme = "TECH",
-  mixed_prob = 50,
-}
+  usual_episode = 1,
 
-OB_THEMES["doom_hell"] =
-{
-  label = "Hell",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
-
-  prefix = "HELL",
-  name_theme = "GOTHIC",
   mixed_prob = 50,
 }
 
@@ -3432,6 +3424,20 @@ OB_THEMES["doom_urban"] =
 
   prefix = "URBAN",
   name_theme = "URBAN",
+  usual_episode = 2,
+
+  mixed_prob = 50,
+}
+
+OB_THEMES["doom_hell"] =
+{
+  label = "Hell",
+  for_games = { doom1=1, doom2=1, freedoom=1 },
+
+  prefix = "HELL",
+  name_theme = "GOTHIC",
+  usual_episode = 3,
+
   mixed_prob = 50,
 }
 

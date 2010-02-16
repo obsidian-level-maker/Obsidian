@@ -207,7 +207,7 @@ function Game_setup()
 end
 
 
-function Level_themes(seed_idx)
+function Level_themes()
   gui.rand_seed(OB_CONFIG.seed * 200)
 
   local function set_sub_theme(L, name)
@@ -290,21 +290,50 @@ function Level_themes(seed_idx)
     end
   end
 
+  local prob_rest = shallow_copy(prob_tab)
+
+  -- first pass : assign to usual episodes (most of the time)
   while not table_empty(prob_tab) do
     local name = rand_key_by_probs(prob_tab)
     prob_tab[name] = nil
 
-    table.insert(episode_list, name)
-    gui.printf("Theme for episode %d = %s\n", #episode_list, name)
+    local info = OB_THEMES[name]
+    if info.usual_episode and not episode_list[info.usual_episode] and
+       rand_odds(60)
+    then
+      episode_list[info.usual_episode] = name
+      prob_rest[name] = nil
+    end
   end
+
+  -- second pass : assign the rest
+  while not table_empty(prob_rest) do
+    local name = rand_key_by_probs(prob_rest)
+    prob_rest[name] = nil
+
+    -- place it in first unused slot
+    for idx = 1,40 do
+      if not episode_list[idx] then
+        episode_list[idx] = name
+        break;
+      end
+    end
+  end
+
+  gui.printf("Theme for episodes =\n%s\n", table_to_str(episode_list))
 
   local total = #episode_list
   assert(total > 0)
 
   -- flesh it out
+  if total == 2 then
+    local dist = rand_sel(66, 0, 1)
+    table.insert(episode_list, episode_list[1 + dist])
+    table.insert(episode_list, episode_list[2 - dist])
+  end
+
   while #episode_list < 40 do
-    local idx = #episode_list % total
-    table.insert(episode_list, episode_list[1 + idx])
+    table.insert(episode_list, episode_list[rand_irange(1, total)])
   end
 
 
