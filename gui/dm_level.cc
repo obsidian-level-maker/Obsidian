@@ -140,11 +140,91 @@ public:
 };
 
 
+class vertex_info_c 
+{
+public:
+  raw_vertex_t raw;
+
+  int index;
+ 
+public:
+  vertex_info_c() : index(-1)
+  { }
+
+  ~vertex_info_c()
+  { }
+};
+
+
+class sidedef_info_c 
+{
+public:
+  raw_sidedef_t raw;
+
+  sector_info_c *sector;
+
+  int index;
+ 
+public:
+  sidedef_info_c() : sector(NULL), index(-1)
+  { }
+
+  ~sidedef_info_c()
+  { }
+};
+
+
+class linedef_info_c 
+{
+public:
+  vertex_info_c *start;
+  vertex_info_c *end;
+
+  sidedef_info_c *front;
+  sidedef_info_c *back;
+
+  int flags;
+  int type;   // 'special' in Hexen format
+  int tag;
+
+  u8_t args[5];
+
+public:
+  linedef_info_c() : start(NULL), end(NULL), front(NULL), back(NULL),
+                     flags(0), type(0), tag(0)
+                     // raw, args: not initialised
+  { }
+
+  ~linedef_info_c()
+  { }
+};
+
+
+
+static std::vector<vertex_info_c>   dm_vertices;
+static std::vector<linedef_info_c>  dm_linedefs;
+static std::vector<sidedef_info_c>  dm_sidedefs;
+
 static std::vector<sector_info_c *> dm_sectors;
 static std::vector<extrafloor_c *>  dm_exfloors;
 
 int bounds_x1, bounds_y1;
 int bounds_x2, bounds_y2;
+
+
+static void FreeLevelStuff(void)
+{
+  int i;
+
+  for (i = 0; i < (int)dm_sectors.size();  i++) delete dm_sectors[i];
+  for (i = 0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
+
+  dm_vertices.clear();
+  dm_linedefs.clear();
+  dm_sidedefs.clear();
+  dm_sectors.clear();
+  dm_exfloors.clear();
+}
 
 
 bool extrafloor_c::Match(const extrafloor_c *other) const
@@ -267,7 +347,7 @@ void DM_TestRegions(void)
 
 //------------------------------------------------------------------------
 
-void DetermineMapBounds(void)
+static void DetermineMapBounds(void)
 {
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
@@ -1192,7 +1272,7 @@ bool doom_game_interface_c::Finish(bool build_ok)
 
 void doom_game_interface_c::BeginLevel()
 {
-  // nothing needed
+  FreeLevelStuff();
 }
 
 
