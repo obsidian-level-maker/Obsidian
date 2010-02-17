@@ -137,47 +137,101 @@ public:
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
            SameExtraFloors(other);
   }
+
+  int Write()
+  {
+    if (index < 0)
+    {
+      for (unsigned int k = 0; k < exfloors.size(); k++)
+      {
+//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
+      }
+
+      index = DM_NumSectors();
+
+      DM_AddSector(f_h, f_tex.c_str(),
+                   c_h, c_tex.c_str(),
+                   light, special, tag);
+    }
+
+    return index;
+  }
 };
 
 
 class vertex_info_c 
 {
 public:
-  raw_vertex_t raw;
+  int x, y;
 
   int index;
  
 public:
-  vertex_info_c() : index(-1)
+  vertex_info_c() : x(0), y(0), index(-1)
   { }
 
   ~vertex_info_c()
   { }
+
+  int Write()
+  {
+    if (index < 0)
+    {
+      index = DM_NumVertexes();
+
+      DM_AddVertex(x, y);
+    }
+
+    return index;
+  }
 };
 
 
 class sidedef_info_c 
 {
 public:
-  raw_sidedef_t raw;
+  std::string lower;
+  std::string mid;
+  std::string upper;
+
+  int x_offset;
+  int y_offset;
 
   sector_info_c *sector;
 
   int index;
  
 public:
-  sidedef_info_c() : sector(NULL), index(-1)
+  sidedef_info_c() : lower(), mid(), upper(), x_offset(0), y_offset(0),
+                     sector(NULL), index(-1)
   { }
 
   ~sidedef_info_c()
   { }
+
+  int Write()
+  {
+    if (index < 0)
+    {
+      SYS_ASSERT(sector);
+
+      int sec_num = sector->Write();
+
+      index = DM_NumSidedefs();
+
+      DM_AddSidedef(sec_num, lower.c_str(), mid.c_str(),
+                    upper.c_str(), x_offset, y_offset);
+    }
+
+    return index;
+  }
 };
 
 
 class linedef_info_c 
 {
 public:
-  vertex_info_c *start;
+  vertex_info_c *start;  // NULL means "unused linedef"
   vertex_info_c *end;
 
   sidedef_info_c *front;
@@ -191,12 +245,26 @@ public:
 
 public:
   linedef_info_c() : start(NULL), end(NULL), front(NULL), back(NULL),
-                     flags(0), type(0), tag(0)
-                     // raw, args: not initialised
-  { }
+                     flags(1), type(0), tag(0)
+  {
+    args[0] = args[1] = args[2] = args[3] = args[4] = 0;
+  }
 
   ~linedef_info_c()
   { }
+
+  void Write()
+  {
+    SYS_ASSERT(start && end);
+
+    int v1 = start->Write();
+    int v2 =   end->Write();
+
+    int f = front ? front->Write() : -1;
+    int b =  back ?  back->Write() : -1;
+
+    DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
+  }
 };
 
 
@@ -737,24 +805,8 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 }
 
 
-static int WriteSector(sector_info_c *S)
-{
-  if (S->index < 0)
-  {
-    for (unsigned int k = 0; k < S->exfloors.size(); k++)
-    {
-      WriteExtraFloor(S, S->exfloors[k]);
-    }
 
-    S->index = DM_NumSectors();
 
-    DM_AddSector(S->f_h, S->f_tex.c_str(),
-                 S->c_h, S->c_tex.c_str(),
-                 S->light, S->special, S->tag);
-  }
-
-  return S->index;
-}
 
 
 static int NaturalXOffset(merge_segment_c *G, int side)
@@ -785,7 +837,7 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
 }
 
 
-static int WriteSidedef(merge_segment_c *G, int side,
+static int MakeSidedef(merge_segment_c *G, int side,
                         merge_region_c *F, merge_region_c *B,
                         area_vert_c *spec,
                         bool *l_peg, bool *u_peg)
@@ -795,7 +847,7 @@ static int WriteSidedef(merge_segment_c *G, int side,
 
   sector_info_c *S = dm_sectors[F->index];
 
-  int sec_num = WriteSector(S);
+  int sec_num = S->Write();
 
   const char *lower = "-";
   const char *upper = "-";
@@ -948,7 +1000,7 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
 }
 
 
-static void WriteLinedefs(void)
+static void MakeLinedefs(void)
 {
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
@@ -997,8 +1049,8 @@ static void WriteLinedefs(void)
     bool l_peg = false;
     bool u_peg = false;
 
-    int s1 = WriteSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
-    int s2 = WriteSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
+    int s1 = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
+    int s2 = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
 
     if (flipped)
     {
@@ -1030,6 +1082,21 @@ static void WriteLinedefs(void)
   }
 
   SYS_ASSERT(DM_NumVertexes() > 0);
+}
+
+
+static void WriteLinedefs(void)
+{
+  // this triggers everything else (Sidedefs, Sectors, Vertices) to be
+  // written as well.
+
+  for (int i = 0; i < (int)dm_linedefs.size(); i++)
+  {
+    linedef_info_c *L = &dm_linedefs[i];
+
+    if (L->start)
+      L->Write();
+  }
 }
 
 
@@ -1134,6 +1201,8 @@ void DM_WriteDoom(void)
   CreateSectors();
 
 ///  WriteDummies();
+
+  MakeLinedefs();
 
   WriteLinedefs();
 
