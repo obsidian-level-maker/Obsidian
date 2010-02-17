@@ -515,9 +515,13 @@ static void CreateOneSector(merge_region_c *R)
   csg_brush_c *B = R->gaps.front()->b_brush;
   csg_brush_c *T = R->gaps.back() ->t_brush;
 
+
+  R->index = (int)dm_sectors.size();
+
   dm_sectors.push_back(sector_info_c());
 
   sector_info_c *sec = &dm_sectors.back();
+
 
   sec->f_h = I_ROUND(B->z2 + B->delta_z);
   sec->c_h = I_ROUND(T->z1 + T->delta_z);
@@ -555,13 +559,6 @@ static void CreateOneSector(merge_region_c *R)
     sec->tag = T->sec_tag;
   else
     sec->tag = 0;
-
-
-  R->index = (int)dm_sectors.size();
-
-  dm_sectors.push_back(sector_info_c());
-
-  sec = &dm_sectors[R->index];
 
 
   // find brushes floating in-between --> make extrafloors
@@ -1080,13 +1077,13 @@ static void MakeLinedefs(void)
     L->dm_front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
     L->dm_back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
 
-    SYS_ASSERT(L->dm_front >= 0);
-
     L->dm_start = MakeVertex(G->start);
     L->dm_end   = MakeVertex(G->end);
 
     if (flipped)
       L->Flip();
+
+    SYS_ASSERT(L->dm_front >= 0);
 
     if (L->dm_back < 0)
       L->flags |= MLF_BlockAll;
