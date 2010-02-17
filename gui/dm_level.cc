@@ -216,7 +216,8 @@ public:
   int index;
  
 public:
-  sidedef_info_c() : lower(), mid(), upper(), x_offset(0), y_offset(0),
+  sidedef_info_c() : lower("-"), mid("-"), upper("-"),
+                     x_offset(0), y_offset(0),
                      sector(NULL), index(-1)
   { }
 
@@ -259,7 +260,7 @@ public:
 
 public:
   linedef_info_c() : start(NULL), end(NULL), front(NULL), back(NULL),
-                     flags(1), type(0), tag(0)
+                     flags(0), type(0), tag(0)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
@@ -719,16 +720,22 @@ static void CreateSectors(void)
 
 //------------------------------------------------------------------------
 
-static int WriteVertex(merge_vertex_c *V)
+static vertex_info_c * MakeVertex(merge_vertex_c *MV)
 {
-  if (V->index < 0)
-  {
-    V->index = DM_NumVertexes();
+  if (MV->index >= 0)
+    return &dm_vertices[MV->index];
 
-    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
-  }
+  // create new one
+  MV->index = (int)dm_vertices.size();
 
-  return V->index;
+  dm_vertices.push_back(vertex_info_c());
+
+  vertex_info_c * V = &dm_vertices.back();
+
+  V->x = I_ROUND(MV->x); 
+  V->y = I_ROUND(MV->y);
+
+  return V;
 }
 
 
@@ -839,25 +846,23 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
 }
 
 
-static int MakeSidedef(merge_segment_c *G, int side,
-                        merge_region_c *F, merge_region_c *B,
-                        area_vert_c *spec,
-                        bool *l_peg, bool *u_peg)
+static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
+                          merge_region_c *F, merge_region_c *B,
+                          area_vert_c *spec,
+                          bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
-    return -1;
+    return NULL;
+
+  dm_sidedefs.push_back(sidedef_info_c());
+
+  sidedef_info_c *SD = &dm_sidedefs.back();
 
   sector_info_c *S = &dm_sectors[F->index];
 
-  int sec_num = S->Write();
-
-  const char *lower = "-";
-  const char *upper = "-";
-  const char *mid   = "-";
-
   // the 'natural' X/Y offsets
-  int x_offset = NaturalXOffset(G, side);
-  int y_offset = - S->c_h;
+  SD->x_offset = NaturalXOffset(G, side);
+  SD->y_offset = - S->c_h;
 
   if (B && B->index > 0)
   {
@@ -877,29 +882,29 @@ static int MakeSidedef(merge_segment_c *G, int side,
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
 
-    lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : "-";
-    upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : "-";
+    SD->lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : "-";
+    SD->upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : "-";
 
     if (rail_W)
     {
-      mid = rail_W->tex.c_str();
+      SD->mid = rail_W->tex.c_str();
 
       *l_peg = false;
     }
 
     if (rail_W && rail_W->x_offset != FVAL_NONE)
-      x_offset = CalcXOffset(G, side, spec, rail_W->x_offset);
+      SD->x_offset = CalcXOffset(G, side, spec, rail_W->x_offset);
     else if (lower_W && lower_W->x_offset != FVAL_NONE)
-      x_offset = CalcXOffset(G, side, l_vert, lower_W->x_offset);
+      SD->x_offset = CalcXOffset(G, side, l_vert, lower_W->x_offset);
     else if (upper_W && upper_W->x_offset != FVAL_NONE)
-      x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
+      SD->x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
 
     if (rail_W && rail_W->y_offset != FVAL_NONE)
-      y_offset = (int)rail_W->y_offset;
+      SD->y_offset = (int)rail_W->y_offset;
     else if (lower_W && lower_W->y_offset != FVAL_NONE)
-      y_offset = (int)lower_W->y_offset;
+      SD->y_offset = (int)lower_W->y_offset;
     else if (upper_W && upper_W->y_offset != FVAL_NONE)
-      y_offset = (int)upper_W->y_offset;
+      SD->y_offset = (int)upper_W->y_offset;
   }
   else  // one-sided line
   {
@@ -911,23 +916,19 @@ static int MakeSidedef(merge_segment_c *G, int side,
     if (mid_W && mid_W->peg)
       *l_peg = true;
 
-    mid = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
+    SD->mid = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
 
     if (mid_W && mid_W->x_offset != FVAL_NONE)
-      x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);
+      SD->x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);
 
     if (mid_W && mid_W->y_offset != FVAL_NONE)
-      y_offset = (int)mid_W->y_offset;
+      SD->y_offset = (int)mid_W->y_offset;
   }
 
-  x_offset &= 1023;
-  y_offset &= 1023;
+  SD->x_offset &= 1023;
+  SD->y_offset &= 1023;
 
-  int side_ref = DM_NumSidedefs();
-
-  DM_AddSidedef(sec_num, lower, mid, upper, x_offset, y_offset);
-
-  return side_ref;
+  return SD;
 }
 
 
@@ -1048,42 +1049,44 @@ static void MakeLinedefs(void)
     }
 
 
+    dm_linedefs.push_back(linedef_info_c());
+
+    linedef_info_c *L = &dm_linedefs.back();
+
+
     bool l_peg = false;
     bool u_peg = false;
 
-    int s1 = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
-    int s2 = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
+    L->front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
+    L->back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
 
     if (flipped)
     {
-      int TMP = s1; s1 = s2; s2 = TMP;
+      sidedef_info_c * TMP = L->front; L->front = L->back; L->back = TMP;
     }
 
-    SYS_ASSERT(s1 >= 0);
+    SYS_ASSERT(L->front);
 
+    L->start = MakeVertex(flipped ? G->end : G->start);
+    L->end   = MakeVertex(flipped ? G->start : G->end);
 
-    int v1 = WriteVertex(flipped ? G->end : G->start);
-    int v2 = WriteVertex(flipped ? G->start : G->end);
-
-    int flags = 0;
-
-    if (s2 < 0)
-      flags |= MLF_BlockAll;
+    if (! L->back)
+      L->flags |= MLF_BlockAll;
     else
-      flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
+      L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
 
-    if (l_peg) flags ^= MLF_LowerUnpeg;
-    if (u_peg) flags ^= MLF_UpperUnpeg;
+    if (l_peg) L->flags ^= MLF_LowerUnpeg;
+    if (u_peg) L->flags ^= MLF_UpperUnpeg;
 
     if (spec)
-      DM_AddLinedef(v1, v2, s1, s2,
-                    spec->line_kind, spec->line_flags | flags,
-                    spec->line_tag,  spec->line_args);
-    else
-      DM_AddLinedef(v1, v2, s1, s2, 0, flags, 0, NULL);
-  }
+    {
+      L->flags |= spec->line_flags;
+      L->type   = spec->line_kind;
+      L->tag    = spec->line_tag;
 
-  SYS_ASSERT(DM_NumVertexes() > 0);
+      // FIXME !!!!  spec->line_args
+    }
+  }
 }
 
 
@@ -1093,12 +1096,8 @@ static void WriteLinedefs(void)
   // written as well.
 
   for (int i = 0; i < (int)dm_linedefs.size(); i++)
-  {
-    linedef_info_c *L = &dm_linedefs[i];
-
-    if (L->start)
-      L->Write();
-  }
+    if (dm_linedefs[i].start)
+      dm_linedefs[i].Write();
 }
 
 
