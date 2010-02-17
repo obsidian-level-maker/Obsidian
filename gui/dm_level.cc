@@ -64,15 +64,18 @@ class extrafloor_c
 {
 public:
   // dummy sector
-  sector_info_c * sec;
+  sector_info_c * dummy_sec;
 
   std::string w_tex;
 
   std::vector<sector_info_c *> users;
 
 public:
-   extrafloor_c() : sec(NULL), w_tex(), users() { }
-  ~extrafloor_c() { } 
+  extrafloor_c() : dummy_sec(NULL), w_tex(), users()
+  { }
+
+  ~extrafloor_c()
+  { } 
 
   bool Match(const extrafloor_c *other) const;
 };
@@ -157,6 +160,17 @@ public:
     return index;
   }
 };
+
+
+bool extrafloor_c::Match(const extrafloor_c *other) const
+{
+  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
+    return false;
+
+  SYS_ASSERT(dummy_sec && other->dummy_sec);
+
+  return dummy_sec->Match(other->dummy_sec);
+}
 
 
 class vertex_info_c 
@@ -269,12 +283,12 @@ public:
 
 
 
-static std::vector<vertex_info_c>   dm_vertices;
-static std::vector<linedef_info_c>  dm_linedefs;
-static std::vector<sidedef_info_c>  dm_sidedefs;
+static std::vector<vertex_info_c>  dm_vertices;
+static std::vector<linedef_info_c> dm_linedefs;
+static std::vector<sidedef_info_c> dm_sidedefs;
 
-static std::vector<sector_info_c *> dm_sectors;
-static std::vector<extrafloor_c *>  dm_exfloors;
+static std::vector<sector_info_c>  dm_sectors;
+static std::vector<extrafloor_c>   dm_exfloors;
 
 int bounds_x1, bounds_y1;
 int bounds_x2, bounds_y2;
@@ -282,27 +296,11 @@ int bounds_x2, bounds_y2;
 
 static void FreeLevelStuff(void)
 {
-  int i;
-
-  for (i = 0; i < (int)dm_sectors.size();  i++) delete dm_sectors[i];
-  for (i = 0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
-
   dm_vertices.clear();
   dm_linedefs.clear();
   dm_sidedefs.clear();
   dm_sectors.clear();
   dm_exfloors.clear();
-}
-
-
-bool extrafloor_c::Match(const extrafloor_c *other) const
-{
-  SYS_ASSERT(sec && other->sec);
-
-  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
-    return false;
-
-  return sec->Match(other->sec);
 }
 
 
@@ -464,27 +462,27 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   SYS_ASSERT(MID);
 
 
-  extrafloor_c *EF = new extrafloor_c();
+  dm_exfloors.push_back(extrafloor_c());
+
+  extrafloor_c *EF = &dm_exfloors.back();
 
   EF->w_tex = MID->w_face->tex;
 
   EF->users.push_back(sec);
 
 
-  EF->sec = new sector_info_c();
+  EF->dummy_sec = new sector_info_c();
 
-  EF->sec->f_h = I_ROUND(B->t_brush->z1);
-  EF->sec->c_h = I_ROUND(T->b_brush->z2);
+  EF->dummy_sec->f_h = I_ROUND(B->t_brush->z1);
+  EF->dummy_sec->c_h = I_ROUND(T->b_brush->z2);
 
-  EF->sec->f_tex = B->t_brush->b_face->tex.c_str();
-  EF->sec->c_tex = T->b_brush->t_face->tex.c_str();
+  EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
+  EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
 
   // FIXME !!!! light, special
 
 
   sec->exfloors.push_back(EF);
-
-  dm_exfloors.push_back(EF);
 }
 
 
@@ -500,7 +498,9 @@ static void CreateOneSector(merge_region_c *R)
   csg_brush_c *B = R->gaps[0]->b_brush;
   csg_brush_c *T = R->gaps[R->gaps.size()-1]->t_brush;
 
-  sector_info_c *sec = new sector_info_c;
+  dm_sectors.push_back(sector_info_c());
+
+  sector_info_c *sec = &dm_sectors.back();
 
   sec->f_h = I_ROUND(B->z2 + B->delta_z);
   sec->c_h = I_ROUND(T->z1 + T->delta_z);
@@ -542,7 +542,9 @@ static void CreateOneSector(merge_region_c *R)
 
   R->index = (int)dm_sectors.size();
 
-  dm_sectors.push_back(sec);
+  dm_sectors.push_back(sector_info_c());
+
+  sec = &dm_sectors[R->index];
 
 
   // find brushes floating in-between --> make extrafloors
@@ -590,8 +592,8 @@ static void CoalesceSectors(void)
       if (S->front->index == S->back->index)
         continue;
 
-      sector_info_c *F = dm_sectors[S->front->index];
-      sector_info_c *B = dm_sectors[S->back ->index];
+      sector_info_c *F = &dm_sectors[S->front->index];
+      sector_info_c *B = &dm_sectors[S->back ->index];
 
       if (F->Match(B))
       {
@@ -625,8 +627,8 @@ static void CoalesceExtraFloors(void)
       if (S->front->index <= 0 || S->back->index <= 0)
         continue;
 
-      sector_info_c *F = dm_sectors[S->front->index];
-      sector_info_c *B = dm_sectors[S->back ->index];
+      sector_info_c *F = &dm_sectors[S->front->index];
+      sector_info_c *B = &dm_sectors[S->back ->index];
       
       for (unsigned int j = 0; j < F->exfloors.size(); j++)
       for (unsigned int k = 0; k < B->exfloors.size(); k++)
@@ -684,7 +686,7 @@ static void AssignExtraFloorTags(void)
     if (R->index <= 0)
       continue;
 
-    sector_info_c *S = dm_sectors[R->index];
+    sector_info_c *S = &dm_sectors[R->index];
 
     if (S->exfloors.size() > 0 && S->tag <= 0)
     {
@@ -697,8 +699,8 @@ static void CreateSectors(void)
 {
   dm_sectors.clear();
 
-  // #0 represents VOID (removed later)
-  dm_sectors.push_back(new sector_info_c);
+  // #0 represents VOID (never written to map lump)
+  dm_sectors.push_back(sector_info_c());
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
@@ -732,6 +734,8 @@ static int WriteVertex(merge_vertex_c *V)
 
 static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 {
+#if 0  ///  FIXME  FIXME
+
   if (EF->sec->index >= 0)
     return;
 
@@ -802,10 +806,8 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
                   type, 1 /* impassible */,
                   tag, NULL /* args */);
   }
+#endif
 }
-
-
-
 
 
 
@@ -845,7 +847,7 @@ static int MakeSidedef(merge_segment_c *G, int side,
   if (! (F && F->index > 0))
     return -1;
 
-  sector_info_c *S = dm_sectors[F->index];
+  sector_info_c *S = &dm_sectors[F->index];
 
   int sec_num = S->Write();
 
@@ -859,7 +861,7 @@ static int MakeSidedef(merge_segment_c *G, int side,
 
   if (B && B->index > 0)
   {
-    sector_info_c *BS = dm_sectors[B->index];
+    sector_info_c *BS = &dm_sectors[B->index];
 
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
@@ -935,10 +937,10 @@ static area_vert_c *FindSpecialVert(merge_segment_c *G)
   sector_info_c *BS = NULL;
 
   if (G->front && G->front->index > 0)
-    FS = dm_sectors[G->front->index];
+    FS = &dm_sectors[G->front->index];
 
   if (G->back && G->back->index > 0)
-    BS = dm_sectors[G-> back->index];
+    BS = &dm_sectors[G->back->index];
 
   if (!BS && !FS)
     return NULL;
@@ -1021,8 +1023,8 @@ static void MakeLinedefs(void)
     }
     else if (G->back && G->back->index > 0)
     {
-      sector_info_c *FS = dm_sectors[G->front->index];
-      sector_info_c *BS = dm_sectors[G-> back->index];
+      sector_info_c *FS = &dm_sectors[G->front->index];
+      sector_info_c *BS = &dm_sectors[G-> back->index];
 
       if (FS->f_h != BS->f_h)
       {
@@ -1183,7 +1185,7 @@ void DM_WriteDoom(void)
   //
   // Algorithm:
   //
-  // 1) reserve sector #0 to represent VOID space (removed later)
+  // 1) reserve first sector to represent VOID space (never written)
   // 2) create a sector for each region
   // 3) coalesce neighbouring sectors with same properties
   //    - mark border segments as unused
