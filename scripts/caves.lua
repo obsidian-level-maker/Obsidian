@@ -345,3 +345,142 @@ function Cave_grow(cave)
   return Cave_do_shrink_grow(cave, 1)
 end
 
+
+function Cave_render(cave, w_info, base_x, base_y, low_z, high_z)
+  local W = cave.w
+  local H = cave.h
+
+  local corner_map = array_2D(W + 1, H + 1)
+
+
+  local function analyse_corner(cave, corner_map, x, y, side)
+
+    local dx, dy = dir_to_delta(side)
+
+    local cx = x + sel(dx < 0, 0, 1)
+    local cy = y + sel(dy < 0, 0, 1)
+
+    if corner_map[cx][cy] then return end  -- already decided
+
+    local function test_nb(dx, dy)
+      local nx = x + dx
+      local ny = y + dy
+
+      if nx < 1 or nx > W or ny < 1 or ny > H then return true end
+
+      return not cave[nx][ny] or (cave[nx][ny] >= 0)
+    end
+
+    local A = test_nb(0, dy)
+    local B = test_nb(dx, 0)
+    local C = test_nb(dx, dy)
+
+    if C then return end
+
+    if not A and not B then
+
+      if test_nb(-dx, 0) and test_nb(0, -dy) and rand_odds(70) then
+        corner_map[cx][cy] = "drop"
+        return
+      end
+
+      corner_map[cx][cy] = rand_element { "x", "y", "xy", "split" }
+      return
+    end
+
+    if A and not B then
+      if rand_odds(40) then corner_map[cx][cy] = "x" end
+      return
+    end
+
+    if B and not A then
+      if rand_odds(40) then corner_map[cx][cy] = "y" end
+      return
+    end
+
+    -- assert(A and B and not C)
+
+    if rand_odds(1) then corner_map[cx][cy] = "split" end
+    return
+  end
+
+
+  local function add_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
+    bx = bx + (x - 1) * 64
+    by = by + (y - 1) * 64
+
+  --[[ most basic method
+    Trans_brush(w_info,
+    {
+      { x=bx+64, y=by },
+      { x=bx+64, y=by+64 },
+      { x=bx,    y=by+64 },
+      { x=bx,    y=by },
+    },
+    -EXTREME_H, high_z)
+
+    do return end
+  --]]
+
+    local coords = { }
+    local SIDES  = { 1,3,9,7 }
+
+    for _,side in ipairs(SIDES) do
+      local dx, dy = dir_to_delta(side)
+
+      local cx = x + sel(dx < 0, 0, 1)
+      local cy = y + sel(dy < 0, 0, 1)
+
+      local fx = bx + sel(dx < 0, 0, 64)
+      local fy = by + sel(dy < 0, 0, 64)
+
+      local what = corner_map[cx][cy]
+
+      if what == "drop" then
+        -- ignore it
+
+      elseif what == "split" then
+        if side == 1 or side == 9 then
+          table.insert(coords, { x=fx, y=fy-dy*24 })
+          table.insert(coords, { x=fx-dx*24, y=fy })
+        else
+          table.insert(coords, { x=fx-dx*24, y=fy })
+          table.insert(coords, { x=fx, y=fy-dy*24 })
+        end
+
+      else
+        if what == "x" then fx = fx - dx*24 end
+        if what == "y" then fy = fy - dy*24 end
+
+        if what == "xy" then
+          fx = fx - dx*16
+          fy = fy - dy*16
+        end
+
+        table.insert(coords, { x=fx, y=fy })
+      end
+    end
+
+  --- gui.debugf("CAVE BRUSH:\n%s\n\n", table_to_str(coords,2))
+
+    Trans_brush(w_info, coords, -EXTREME_H, high_z)
+  end
+
+
+  ---| Cave_render |---
+
+  for x = 1,W do for y = 1,H do
+    if (cave[x][y] or 0) > 0 then
+      for side = 1,9,2 do if side ~= 5 then
+        analyse_corner(cave, corner_map, x, y, side)
+      end end
+    end
+  end end -- for x, y
+
+  for x = 1,W do for y = 1,H do
+    if (cave[x][y] or 0) > 0 then
+      add_brush(cave, corner_map, x, y, base_x, base_y, w_info, high_z)
+    end
+  end end
+end
+
