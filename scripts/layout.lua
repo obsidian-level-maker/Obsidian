@@ -643,7 +643,7 @@ function Layout_natural_room(R, heights)
 
 
 
-  --| Layout_natural_room |--
+  ---| Layout_natural_room |---
 
   map = array_2D(R.sw * 3, R.sh * 3)
 
@@ -722,7 +722,11 @@ function Layout_natural_room(R, heights)
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
-  Cave_render(cave, w_info, base_x, base_y, -EXTREME_H, high_z)
+  for id,_ in pairs(flood.regions) do
+    if id > 0 then
+      Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
+    end
+  end
 end
 
 

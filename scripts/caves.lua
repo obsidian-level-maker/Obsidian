@@ -271,6 +271,34 @@ function Cave_flood_fill(cave)
 end
 
 
+function Cave_region_is_island(flood, reg)
+
+  -- returns true if the region is an "island", i.e. touches neither the
+  -- edge of the 2D matrix or a NIL cell.  In other words, it will be
+  -- completely surrounded by its opposite (solid or empty).
+
+  local W = flood.w
+  local H = flood.h
+
+  if reg.x1 <= 1 or reg.x2 >= W or reg.y1 <= 1 or reg.y2 >= H then
+    return false
+  end
+
+  for x = reg.x1,reg.x2 do for y = reg.y1,reg.y2 do
+    if flood[x][y] == reg.id then
+      for side = 2,8,2 do
+        local nx, ny = nudge_coord(x, y, side)
+        if not flood[x][y] then
+          return false
+        end
+      end
+    end
+  end end
+
+  return true
+end
+
+
 function Cave_main_empty_region(flood)
 
   -- find the largest empty region
@@ -346,7 +374,10 @@ function Cave_grow(cave)
 end
 
 
-function Cave_render(cave, w_info, base_x, base_y, low_z, high_z)
+function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
+  -- only solid regions are handled
+  assert(reg_id > 0)
+
   local W = cave.w
   local H = cave.h
 
@@ -368,7 +399,7 @@ function Cave_render(cave, w_info, base_x, base_y, low_z, high_z)
 
       if nx < 1 or nx > W or ny < 1 or ny > H then return true end
 
-      return not cave[nx][ny] or (cave[nx][ny] >= 0)
+      return not cave[nx][ny] or (cave[nx][ny] > 0)
     end
 
     local A = test_nb(0, dy)
@@ -470,7 +501,7 @@ function Cave_render(cave, w_info, base_x, base_y, low_z, high_z)
   ---| Cave_render |---
 
   for x = 1,W do for y = 1,H do
-    if (cave[x][y] or 0) > 0 then
+    if cave[x][y] == reg_id then
       for side = 1,9,2 do if side ~= 5 then
         analyse_corner(cave, corner_map, x, y, side)
       end end
@@ -478,7 +509,7 @@ function Cave_render(cave, w_info, base_x, base_y, low_z, high_z)
   end end -- for x, y
 
   for x = 1,W do for y = 1,H do
-    if (cave[x][y] or 0) > 0 then
+    if cave[x][y] == reg_id then
       add_brush(cave, corner_map, x, y, base_x, base_y, w_info, high_z)
     end
   end end
