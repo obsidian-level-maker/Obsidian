@@ -626,7 +626,13 @@ function Rooms_border_up()
     end
 
 
-    if R1.outdoor then
+    if R1.outdoor and R2.kind == "nature" then
+      S.border[side].kind = "fence"
+
+    elseif R1.kind == "nature" and R2.outdoor then
+      S.border[side].kind = "nothing"
+
+    elseif R1.outdoor then
       if R2.outdoor then
         S.border[side].kind = "fence"
       else
@@ -1056,8 +1062,6 @@ function Rooms_border_up()
 
   ---| Rooms_border_up |---
   
-if GAME.nature_test then return end
-
   for _,R in ipairs(LEVEL.all_rooms) do
     border_up(R)
   end
