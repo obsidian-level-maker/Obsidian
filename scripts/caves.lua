@@ -384,8 +384,21 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
   local corner_map = array_2D(W + 1, H + 1)
 
 
-  local function analyse_corner(cave, corner_map, x, y, side)
+  local function is_land_locked(x, y)
+    if x <= 1 or x >= W or y <= 1 or y >= H then
+      return false
+    end
 
+    for dx = -1,1 do for dy = -1,1 do
+      if cave[x+dx][y+dy] ~= reg_id then
+        return false
+      end
+    end end
+
+    return true
+  end
+
+  local function analyse_corner(corner_map, x, y, side)
     local dx, dy = dir_to_delta(side)
 
     local cx = x + sel(dx < 0, 0, 1)
@@ -436,7 +449,11 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
   end
 
 
-  local function add_brush(cave, corner_map, x, y, bx, by, w_info, high_z)
+  local function add_brush(corner_map, x, y, bx, by, w_info, high_z)
+    if is_land_locked(x, y) then
+      return
+    end
+
     bx = bx + (x - 1) * 64
     by = by + (y - 1) * 64
 
@@ -503,14 +520,14 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
   for x = 1,W do for y = 1,H do
     if cave[x][y] == reg_id then
       for side = 1,9,2 do if side ~= 5 then
-        analyse_corner(cave, corner_map, x, y, side)
+        analyse_corner(corner_map, x, y, side)
       end end
     end
   end end -- for x, y
 
   for x = 1,W do for y = 1,H do
     if cave[x][y] == reg_id then
-      add_brush(cave, corner_map, x, y, base_x, base_y, w_info, high_z)
+      add_brush(corner_map, x, y, base_x, base_y, w_info, high_z)
     end
   end end
 end
