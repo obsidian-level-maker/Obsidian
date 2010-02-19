@@ -3,6 +3,11 @@ TODO
 ====
 
 
+dm_level.cc  >>>  fix up extrafloor stuff
+
+Cave_remove_dots()  :  good place for a scenery item ?
+
+
 Natural areas:
 
   DONE:  CAVE: more cave wall @ building borders
@@ -23,9 +28,14 @@ Natural areas:
 
   -  proper theming (c.f. THEME.building)
 
-  -  single (or two?) border seeds around map
-     (plus space for monster depots)
+  -  "layering" : perform multiple 'grow + render' passes
 
+  -  decide #ROOMS based on theme (e.g. less in TECH)
+
+
+-  single (or two?) border seeds around map
+   (plus space for monster depots)
+   
 
 
 >>>  don't use tech_outdoor exit in HELL themes
