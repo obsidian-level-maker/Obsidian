@@ -2268,15 +2268,11 @@ gui.printf("do_teleport\n")
       Build_popup_trap(S, z1, skin, "revenant")
 
     elseif S.kind == "liquid" then
-      -- FIXME: game specific
-      local nukage = get_mat("NUKAGE1")
-      nukage.sec_kind = 16
+      assert(LEVEL.liquid)
+      local info = get_mat(LEVEL.liquid.mat)
+      info.sec_kind = LEVEL.liquid.sec_kind
 
-      local lava = get_mat("LAVA1")
-      lava.sec_kind = 16
-
-      Trans_quad(sel(STYLE.dm_liquid == "nukage", nukage, lava),
-        fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      Trans_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
     elseif not S.no_floor then
 

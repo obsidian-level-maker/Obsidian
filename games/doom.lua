@@ -1698,13 +1698,13 @@ COMMON_EXITS =
 
 COMMON_LIQUIDS =
 {
-  water  = { mat="FWATER1", sec_kind=5 },
-  blood  = { mat="BLOOD1",  sec_kind=7 }, --  5% damage
-  nukage = { mat="NUKAGE1", sec_kind=5 }, -- 10% damage
+  water  = { mat="FWATER1", sec_kind=16 },
+  blood  = { mat="BLOOD1",  sec_kind=16 }, --  5% damage
+  nukage = { mat="NUKAGE1", sec_kind=16 }, -- 10% damage
   lava   = { mat="LAVA1",   sec_kind=16, add_light=64 }, -- 20% damage
 
   -- this one is Doom II only
-  slime = { mat="SLIME01", sec_kind=7 },
+  slime = { mat="SLIME01", sec_kind=16 },
 }
 
 

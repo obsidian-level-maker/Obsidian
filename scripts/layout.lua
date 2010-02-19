@@ -1531,6 +1531,8 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     if STYLE.liquids == "few"   then liq_mul = 0.2 end
     if STYLE.liquids == "heaps" then liq_mul = 9.0 end
 
+    if not LEVEL.liquid then liq_mul = 0 end
+
     local f_probs = {}
     local f_infos = {}
 
