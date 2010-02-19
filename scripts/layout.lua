@@ -2020,7 +2020,9 @@ function Layout_one(R)
       local angle = player_angle(S)
       local dist = 56
 
-      if PARAM.raising_start and R.svolume >= 20 and rand_odds(30) then
+      if PARAM.raising_start and R.svolume >= 20 and R.kind ~= "nature"
+         and rand_odds(30)
+      then
         gui.debugf("Raising Start made\n")
 
         local skin =
