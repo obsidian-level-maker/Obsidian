@@ -1698,10 +1698,13 @@ COMMON_EXITS =
 
 COMMON_LIQUIDS =
 {
-  water = { floor="FWATER1", wall="FIREMAG1" },
-  blood = { floor="BLOOD1",  wall="BFALL1",   sec_kind=7 }, --  5% damage
-  nukage= { floor="NUKAGE1", wall="SFALL1",   sec_kind=5 }, -- 10% damage
-  lava  = { floor="LAVA1",   wall="ROCKRED1", sec_kind=16, add_light=64 }, -- 20% damage
+  water  = { mat="FWATER1", sec_kind=5 },
+  blood  = { mat="BLOOD1",  sec_kind=7 }, --  5% damage
+  nukage = { mat="NUKAGE1", sec_kind=5 }, -- 10% damage
+  lava   = { mat="LAVA1",   sec_kind=16, add_light=64 }, -- 20% damage
+
+  -- this one is Doom II only
+  slime = { mat="SLIME01", sec_kind=7 },
 }
 
 
@@ -1977,6 +1980,8 @@ COMMON_SUB_THEMES =
   {
     prob=60,
 
+    liquids = { nukage=90, water=15, lava=10 },
+
     building =
     {
       walls =
@@ -2134,6 +2139,8 @@ COMMON_SUB_THEMES =
   {
     prob = 40,
 
+    liquids = { lava=30, blood=90, nukage=5 },
+
     building =
     {
       walls =
@@ -2205,6 +2212,8 @@ COMMON_SUB_THEMES =
   HELL2 =
   {
     prob = 25,
+
+    liquids = { lava=90, blood=40 },
 
     building =
     {
@@ -2458,6 +2467,8 @@ DOOM2_SUB_THEMES =
   URBAN1 =
   {
     prob = 50,
+
+    liquids = { water=90, slime=40, nukage=20, blood=10, lava=5 },
 
     building =
     {
@@ -3667,7 +3678,7 @@ OB_GAMES["doom2"] =
 
     "hangs",    DOOM2_OVERHANGS,
     "lights",   DOOM2_LIGHTS,
-    "liquids",  DOOM2_LIQUIDS,
+---### "liquids",  DOOM2_LIQUIDS,
 
     "sc_fabs",   DOOM2_SCENERY_PREFABS,
     "feat_fabs", DOOM2_FEATURE_PREFABS,
