@@ -1224,8 +1224,8 @@ UNFINISHED["quake"] =
     -- engine needs all coords to lie between -4000 and +4000.
     center_map = true,
 
-    seed_size  = 240,
-    seed_limit = 30,
+    seed_size  = 192,
+    seed_limit = 40,
 
     no_keys = true,  --!!!! FIXME
 

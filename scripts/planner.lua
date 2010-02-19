@@ -1005,7 +1005,7 @@ end
   local cols = {}
   local rows = {}
 
-  local limit = PARAM.seed_limit or 36
+  local limit = PARAM.seed_limit or 48
 
   cols = get_column_sizes(W, limit)
   rows = get_column_sizes(H, limit)
