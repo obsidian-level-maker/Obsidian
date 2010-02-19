@@ -1848,15 +1848,15 @@ end
 function Room_build_cave(R)
   local flood = R.flood
 
-  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
+  local w_tex  = R.cave_tex  --- sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
   local w_info = get_mat(w_tex)
 
-  if is_lake then w_info.delta_z = -42 end
+  if R.is_lake then w_info.delta_z = -42 end
 
   local trim_i = get_mat("RROCK16")
   local trim_2 = get_mat("RROCK04")
 
-  local high_z = sel(is_lake, R.cave_floor_h+2, EXTREME_H)
+  local high_z = sel(R.is_lake, R.cave_floor_h+2, EXTREME_H)
 
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
@@ -1932,7 +1932,6 @@ gui.printf("do_teleport\n")
 
 
   local function build_seed(S)
-
     if S.already_built then
       return
     end

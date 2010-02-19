@@ -524,7 +524,7 @@ function Layout_natural_room(R, heights)
   local map
 
   local is_lake = false
-  local f_tex = "FLAT10"
+  local f_tex = "ASHWALL"
 
   local function setup_floor(S, h)
     S.floor_h = h
@@ -717,6 +717,7 @@ function Layout_natural_room(R, heights)
   R.cave  = cave
   R.flood = flood
 
+  R.cave_tex = "ASHWALL"
   R.cave_floor_h = heights[1]
 
   Cave_dump(cave)
