@@ -319,8 +319,6 @@ function Layout_spot_for_wotsit(R, kind)
   local spots = {}
 
   local function cave_spot_OK(x, y)
-    -- FIXME: this only tests the middle 64x64 square
-
     if not R.cave then return true end
 
     local flood = R.flood
@@ -330,6 +328,14 @@ function Layout_spot_for_wotsit(R, kind)
 
     if flood[mx][my] == flood.largest_empty.id then
       return true
+    end
+
+    for side = 2,8,2 do
+      local nx, ny = nudge_coord(mx, my, side)
+
+      if flood[nx][ny] == flood.largest_empty.id then
+        return true
+      end
     end
 
     return false
@@ -375,6 +381,14 @@ function Layout_spot_for_wotsit(R, kind)
   end
 
   P.S.content = "wotsit"
+
+  if R.cave then
+    -- clear the middle cell
+    local mx = (P.x - R.sx1) * 3 + 2
+    local my = (P.y - R.sy1) * 3 + 2
+
+    R.flood[mx][my] = R.flood.largest_empty.id
+  end
 
   return P.x, P.y, P.S
 end
@@ -703,30 +717,12 @@ function Layout_natural_room(R, heights)
   R.cave  = cave
   R.flood = flood
 
+  R.cave_floor_h = heights[1]
+
   Cave_dump(cave)
 
---- gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
---- gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
-
-
-  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
-  local w_info = get_mat(w_tex)
-
-  if is_lake then w_info.delta_z = -42 end
-
-  local trim_i = get_mat("RROCK16")
-  local trim_2 = get_mat("RROCK04")
-
-  local high_z = sel(is_lake, heights[1]+2, EXTREME_H)
-
-  local base_x = SEEDS[R.sx1][R.sy1][1].x1
-  local base_y = SEEDS[R.sx1][R.sy1][1].y1
-
-  for id,_ in pairs(flood.regions) do
-    if id > 0 then
-      Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
-    end
-  end
+  gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
+  gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 end
 
 

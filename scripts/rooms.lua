@@ -1845,6 +1845,30 @@ function Room_add_crates(R)
 end
 
 
+function Room_build_cave(R)
+  local flood = R.flood
+
+  local w_tex  = sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
+  local w_info = get_mat(w_tex)
+
+  if is_lake then w_info.delta_z = -42 end
+
+  local trim_i = get_mat("RROCK16")
+  local trim_2 = get_mat("RROCK04")
+
+  local high_z = sel(is_lake, R.cave_floor_h+2, EXTREME_H)
+
+  local base_x = SEEDS[R.sx1][R.sy1][1].x1
+  local base_y = SEEDS[R.sx1][R.sy1][1].y1
+
+  for id,_ in pairs(flood.regions) do
+    if id > 0 then
+      Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
+    end
+  end
+end
+
+
 function Room_build_seeds(R)
 
   local function do_teleporter(S)
@@ -2280,6 +2304,10 @@ gui.printf("do_teleport\n")
 
 
   ---==| Room_build_seeds |==---
+
+  if R.cave then
+    Room_build_cave(R)
+  end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
