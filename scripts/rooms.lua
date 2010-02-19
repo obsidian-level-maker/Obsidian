@@ -1851,12 +1851,12 @@ function Room_build_cave(R)
   local w_tex  = R.cave_tex  --- sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
   local w_info = get_mat(w_tex)
 
-  if R.is_lake then w_info.delta_z = -42 end
+  if R.is_lake then w_info.delta_z = -48 end
 
   local trim_i = get_mat("RROCK16")
   local trim_2 = get_mat("RROCK04")
 
-  local high_z = sel(R.is_lake, R.cave_floor_h+2, EXTREME_H)
+  local high_z = sel(R.is_lake, R.cave_floor_h+8, EXTREME_H)
 
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
@@ -1869,6 +1869,8 @@ function Room_build_cave(R)
 
   local walkway = Cave_negate(R.flood)
 
+  -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
+
   for i = 1,2 do
     walkway = Cave_shrink(walkway)
 
@@ -1877,10 +1879,21 @@ function Room_build_cave(R)
     end
 
     local trim = get_mat(sel(i == 1, "RROCK16", "RROCK04"))
-    trim.delta_z = -(i * 10)
+
+    if i==2 and rand_odds(50) then  -- TODO: theme specific prob
+      trim = get_mat(LEVEL.liquid.mat)
+      trim.sec_kind = LEVEL.liquid.sec_kind
+      if rand_odds(50) then  -- TODO: level style
+        trim.delta_z = -(i * 10 + 40)
+      end
+    end
+
+    if not trim.delta_z then
+      trim.delta_z = -(i * 10)
+    end
 
     Cave_render(walkway, - flood.largest_empty.id, trim,
-                base_x, base_y, -EXTREME_H, R.cave_floor_h + i*4)
+                base_x, base_y, -EXTREME_H, R.cave_floor_h + i)
   end
 end
 
