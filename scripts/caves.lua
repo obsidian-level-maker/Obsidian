@@ -299,6 +299,24 @@ function Cave_region_is_island(flood, reg)
 end
 
 
+function Cave_negate(cave)
+  -- returns a new cave, converting empty regions to solid and vice versa.
+
+  local W = cave.w
+  local H = cave.h
+
+  local work = array_2D(W, H)
+
+  for x = 1,W do for y = 1,H do
+    if cave[x][y] then
+      work[x][y] = - cave[x][y]
+    end
+  end end
+
+  return work
+end
+
+
 function Cave_main_empty_region(flood)
 
   -- find the largest empty region
@@ -450,9 +468,9 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
 
 
   local function add_brush(corner_map, x, y, bx, by, w_info, high_z)
-    if is_land_locked(x, y) then
-      return
-    end
+---###    if is_land_locked(x, y) then
+---###      return
+---###    end
 
     bx = bx + (x - 1) * 64
     by = by + (y - 1) * 64

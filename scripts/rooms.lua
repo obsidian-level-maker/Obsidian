@@ -1866,6 +1866,22 @@ function Room_build_cave(R)
       Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
     end
   end
+
+  local walkway = Cave_negate(R.flood)
+
+  for i = 1,2 do
+    walkway = Cave_shrink(walkway)
+
+    if rand_odds(sel(i==1, 20, 50)) then
+      walkway = Cave_shrink(walkway)
+    end
+
+    local trim = get_mat(sel(i == 1, "RROCK16", "RROCK04"))
+    trim.delta_z = -(i * 10)
+
+    Cave_render(walkway, - flood.largest_empty.id, trim,
+                base_x, base_y, -EXTREME_H, R.cave_floor_h + i*4)
+  end
 end
 
 
