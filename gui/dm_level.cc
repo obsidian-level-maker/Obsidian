@@ -211,14 +211,14 @@ public:
   int x_offset;
   int y_offset;
 
-  int dm_sec;
+  sector_info_c * sector;
 
   int index;
  
 public:
   sidedef_info_c() : lower("-"), mid("-"), upper("-"),
                      x_offset(0), y_offset(0),
-                     dm_sec(-1), index(-1)
+                     sector(NULL), index(-1)
   { }
 
   ~sidedef_info_c()
@@ -231,11 +231,11 @@ public:
 class linedef_info_c 
 {
 public:
-  int dm_start;  // -1 means "unused linedef"
-  int dm_end;
+  vertex_info_c *start;  // NULL means "unused linedef"
+  vertex_info_c *end;
 
-  int dm_front;
-  int dm_back;
+  sidedef_info_c *front;
+  sidedef_info_c *back;
 
   int flags;
   int type;   // 'special' in Hexen format
@@ -244,8 +244,8 @@ public:
   u8_t args[5];
 
 public:
-  linedef_info_c() : dm_start(-1), dm_end(-1),
-                     dm_front(-1), dm_back(-1),
+  linedef_info_c() : start(NULL), end(NULL),
+                     front(NULL), back(NULL),
                      flags(0), type(0), tag(0)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
@@ -254,12 +254,15 @@ public:
   ~linedef_info_c()
   { }
 
+  inline bool Valid() const
+  {
+    return (start != NULL);
+  }
+
   void Flip()
   {
-    int tmp;
-
-    tmp = dm_start; dm_start = dm_end;  dm_end = tmp;
-    tmp = dm_front; dm_front = dm_back; dm_back = tmp;
+    std::swap(start, end);
+    std::swap(front, back);
   }
 
   void Write();
@@ -267,12 +270,12 @@ public:
 
 
 
-static std::vector<vertex_info_c>  dm_vertices;
-static std::vector<linedef_info_c> dm_linedefs;
-static std::vector<sidedef_info_c> dm_sidedefs;
+static std::vector<vertex_info_c *>  dm_vertices;
+static std::vector<linedef_info_c *> dm_linedefs;
+static std::vector<sidedef_info_c *> dm_sidedefs;
 
-static std::vector<sector_info_c>  dm_sectors;
-static std::vector<extrafloor_c>   dm_exfloors;
+static std::vector<sector_info_c *>  dm_sectors;
+static std::vector<extrafloor_c *>   dm_exfloors;
 
 int bounds_x1, bounds_y1;
 int bounds_x2, bounds_y2;
@@ -280,6 +283,14 @@ int bounds_x2, bounds_y2;
 
 static void FreeLevelStuff(void)
 {
+  int i;
+
+  for (i=0; i < (int)dm_vertices.size(); i++) delete dm_vertices[i];
+  for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
+  for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
+  for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
+  for (i=0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
+
   dm_vertices.clear();
   dm_linedefs.clear();
   dm_sidedefs.clear();
@@ -292,10 +303,9 @@ int sidedef_info_c::Write()
 {
   if (index < 0)
   {
-    SYS_ASSERT(dm_sec >= 0);
-    SYS_ASSERT(dm_sec < (int)dm_sectors.size());
+    SYS_ASSERT(sector);
 
-    int sec_index = dm_sectors[dm_sec].Write();
+    int sec_index = sector->Write();
 
     index = DM_NumSidedefs();
 
@@ -309,13 +319,13 @@ int sidedef_info_c::Write()
 
 void linedef_info_c::Write()
 {
-  SYS_ASSERT(dm_start >= 0 && dm_end >= 0);
+  SYS_ASSERT(start && end);
 
-  int v1 = dm_vertices[dm_start].Write();
-  int v2 = dm_vertices[dm_end]  .Write();
+  int v1 = start->Write();
+  int v2 = end  ->Write();
 
-  int f = (dm_front >= 0) ? dm_sidedefs[dm_front].Write() : -1;
-  int b = (dm_back  >= 0) ? dm_sidedefs[dm_back] .Write() : -1;
+  int f = front ? front->Write() : -1;
+  int b = back  ? back ->Write() : -1;
 
   DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
 }
@@ -479,16 +489,16 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   SYS_ASSERT(MID);
 
 
-  dm_exfloors.push_back(extrafloor_c());
+  extrafloor_c *EF = new extrafloor_c;
 
-  extrafloor_c *EF = &dm_exfloors.back();
+  dm_exfloors.push_back(EF);
 
   EF->w_tex = MID->w_face->tex;
 
   EF->users.push_back(sec);
 
 
-  EF->dummy_sec = new sector_info_c();
+  EF->dummy_sec = new sector_info_c;
 
   EF->dummy_sec->f_h = I_ROUND(B->t_brush->z1);
   EF->dummy_sec->c_h = I_ROUND(T->b_brush->z2);
@@ -518,47 +528,47 @@ static void CreateOneSector(merge_region_c *R)
 
   R->index = (int)dm_sectors.size();
 
-  dm_sectors.push_back(sector_info_c());
+  sector_info_c *S = new sector_info_c;
 
-  sector_info_c *sec = &dm_sectors.back();
+  dm_sectors.push_back(S);
 
 
-  sec->f_h = I_ROUND(B->z2 + B->delta_z);
-  sec->c_h = I_ROUND(T->z1 + T->delta_z);
+  S->f_h = I_ROUND(B->z2 + B->delta_z);
+  S->c_h = I_ROUND(T->z1 + T->delta_z);
 
-  if (sec->c_h < sec->f_h)
-      sec->c_h = sec->f_h;
+  if (S->c_h < S->f_h)
+      S->c_h = S->f_h;
 
-  sec->f_tex = B->t_face->tex;
-  sec->c_tex = T->b_face->tex;
+  S->f_tex = B->t_face->tex;
+  S->c_tex = T->b_face->tex;
 
   if (T->bkind == BKIND_Sky)
-    sec->light = (int)(255 * T->b_face->light);
+    S->light = (int)(255 * T->b_face->light);
   else
   {
     // FIXME: TEMP CRUD
-    int min_light = (sec->c_h - sec->f_h < 150) ? 128 : 144;
+    int min_light = (S->c_h - S->f_h < 150) ? 128 : 144;
 
-    sec->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-    sec->light = MIN(255, MAX(min_light, sec->light));
+    S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
+    S->light = MIN(255, MAX(min_light, S->light));
   }
 
-  sec->mark = MAX(B->mark, T->mark);
+  S->mark = MAX(B->mark, T->mark);
 
   // floors have priority over ceilings
   if (B->sec_kind > 0)
-    sec->special = B->sec_kind;
+    S->special = B->sec_kind;
   else if (T->sec_kind > 0)
-    sec->special = T->sec_kind;
+    S->special = T->sec_kind;
   else
-    sec->special = 0;
+    S->special = 0;
 
   if (B->sec_tag > 0)
-    sec->tag = B->sec_tag;
+    S->tag = B->sec_tag;
   else if (T->sec_tag > 0)
-    sec->tag = T->sec_tag;
+    S->tag = T->sec_tag;
   else
-    sec->tag = 0;
+    S->tag = 0;
 
 
   // find brushes floating in-between --> make extrafloors
@@ -575,7 +585,7 @@ static void CreateOneSector(merge_region_c *R)
 
     if (solid_exfloor > 0)
     {
-      MakeExtraFloor(R, sec, T, B);
+      MakeExtraFloor(R, S, T, B);
     }
     else
     {
@@ -606,8 +616,8 @@ static void CoalesceSectors(void)
       if (S->front->index == S->back->index)
         continue;
 
-      sector_info_c *F = &dm_sectors[S->front->index];
-      sector_info_c *B = &dm_sectors[S->back ->index];
+      sector_info_c *F = dm_sectors[S->front->index];
+      sector_info_c *B = dm_sectors[S->back ->index];
 
       if (F->Match(B))
       {
@@ -641,8 +651,8 @@ static void CoalesceExtraFloors(void)
       if (S->front->index <= 0 || S->back->index <= 0)
         continue;
 
-      sector_info_c *F = &dm_sectors[S->front->index];
-      sector_info_c *B = &dm_sectors[S->back ->index];
+      sector_info_c *F = dm_sectors[S->front->index];
+      sector_info_c *B = dm_sectors[S->back ->index];
       
       for (unsigned int j = 0; j < F->exfloors.size(); j++)
       for (unsigned int k = 0; k < B->exfloors.size(); k++)
@@ -700,7 +710,7 @@ static void AssignExtraFloorTags(void)
     if (R->index <= 0)
       continue;
 
-    sector_info_c *S = &dm_sectors[R->index];
+    sector_info_c *S = dm_sectors[R->index];
 
     if (S->exfloors.size() > 0 && S->tag <= 0)
     {
@@ -714,7 +724,7 @@ static void CreateSectors(void)
   dm_sectors.clear();
 
   // #0 represents VOID (never written to map lump)
-  dm_sectors.push_back(sector_info_c());
+  dm_sectors.push_back(new sector_info_c);
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
@@ -733,22 +743,22 @@ static void CreateSectors(void)
 
 //------------------------------------------------------------------------
 
-static int MakeVertex(merge_vertex_c *MV)
+static vertex_info_c * MakeVertex(merge_vertex_c *MV)
 {
   if (MV->index >= 0)
-    return MV->index;
+    return dm_vertices[MV->index];
 
   // create new one
+  vertex_info_c * V = new vertex_info_c;
+
   MV->index = (int)dm_vertices.size();
 
-  dm_vertices.push_back(vertex_info_c());
-
-  vertex_info_c * V = &dm_vertices.back();
+  dm_vertices.push_back(V);
 
   V->x = I_ROUND(MV->x); 
   V->y = I_ROUND(MV->y);
 
-  return MV->index;
+  return V;
 }
 
 
@@ -859,23 +869,23 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
 }
 
 
-static int MakeSidedef(merge_segment_c *G, int side,
+static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
                        merge_region_c *F, merge_region_c *B,
                        area_vert_c *spec,
                        bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
-    return -1;
+    return NULL;
 
-  int index = (int)dm_sidedefs.size();
+///  int index = (int)dm_sidedefs.size();
 
-  dm_sidedefs.push_back(sidedef_info_c());
+  sidedef_info_c *SD = new sidedef_info_c;
 
-  sidedef_info_c *SD = &dm_sidedefs.back();
+  dm_sidedefs.push_back(SD);
 
-  sector_info_c *S = &dm_sectors[F->index];
+  sector_info_c *S = dm_sectors[F->index];
 
-  SD->dm_sec = F->index;
+  SD->sector = S;
 
   // the 'natural' X/Y offsets
   SD->x_offset = NaturalXOffset(G, side);
@@ -883,7 +893,7 @@ static int MakeSidedef(merge_segment_c *G, int side,
 
   if (B && B->index > 0)
   {
-    sector_info_c *BS = &dm_sectors[B->index];
+    sector_info_c *BS = dm_sectors[B->index];
 
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
@@ -945,7 +955,7 @@ static int MakeSidedef(merge_segment_c *G, int side,
   SD->x_offset &= 1023;
   SD->y_offset &= 1023;
 
-  return index;
+  return SD;
 }
 
 
@@ -955,10 +965,10 @@ static area_vert_c *FindSpecialVert(merge_segment_c *G)
   sector_info_c *BS = NULL;
 
   if (G->front && G->front->index > 0)
-    FS = &dm_sectors[G->front->index];
+    FS = dm_sectors[G->front->index];
 
   if (G->back && G->back->index > 0)
-    BS = &dm_sectors[G->back->index];
+    BS = dm_sectors[G->back->index];
 
   if (!BS && !FS)
     return NULL;
@@ -1041,8 +1051,8 @@ static void MakeLinedefs(void)
     }
     else if (G->back && G->back->index > 0)
     {
-      sector_info_c *FS = &dm_sectors[G->front->index];
-      sector_info_c *BS = &dm_sectors[G-> back->index];
+      sector_info_c *FS = dm_sectors[G->front->index];
+      sector_info_c *BS = dm_sectors[G-> back->index];
 
       if (FS->f_h != BS->f_h)
       {
@@ -1066,26 +1076,26 @@ static void MakeLinedefs(void)
     }
 
 
-    dm_linedefs.push_back(linedef_info_c());
+    linedef_info_c *L = new linedef_info_c;
 
-    linedef_info_c *L = &dm_linedefs.back();
+    dm_linedefs.push_back(L);
 
+
+    L->start = MakeVertex(G->start);
+    L->end   = MakeVertex(G->end);
 
     bool l_peg = false;
     bool u_peg = false;
 
-    L->dm_front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
-    L->dm_back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
-
-    L->dm_start = MakeVertex(G->start);
-    L->dm_end   = MakeVertex(G->end);
+    L->front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
+    L->back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
 
     if (flipped)
       L->Flip();
 
-    SYS_ASSERT(L->dm_front >= 0);
+    SYS_ASSERT(L->front);
 
-    if (L->dm_back < 0)
+    if (! L->back)
       L->flags |= MLF_BlockAll;
     else
       L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
@@ -1111,8 +1121,8 @@ static void WriteLinedefs(void)
   // written as well.
 
   for (int i = 0; i < (int)dm_linedefs.size(); i++)
-    if (dm_linedefs[i].dm_start >= 0)
-      dm_linedefs[i].Write();
+    if (dm_linedefs[i]->Valid())
+      dm_linedefs[i]->Write();
 }
 
 
