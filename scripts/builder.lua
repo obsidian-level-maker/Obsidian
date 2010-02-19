@@ -1553,6 +1553,7 @@ function Build_pillar(S, z1, z2, skin)
   -EXTREME_H, EXTREME_H)
 
   for pass = 1,2 do
+--[[
     Trans_brush(get_mat(skin.trim2),
     {
       { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
@@ -1561,7 +1562,7 @@ function Build_pillar(S, z1, z2, skin)
     sel(pass == 1, -EXTREME_H, z2-32),
     sel(pass == 2,  EXTREME_H, z1+32)
     )
-
+--]]
     Trans_brush(get_mat(skin.trim1),
     {
       { x=mx-40, y=my-56 },
@@ -1693,16 +1694,18 @@ function Build_exit_pillar(S, z1, skin)
  
   Trans_set(DT)
 
+  local pos = long/2 - 68
+
   for pass=1,4 do
     TRANSFORM.mirror_x = sel((pass % 2)==1, nil, long/2)
     TRANSFORM.mirror_y = sel(pass >= 3,     nil, long/2)
 
     Trans_brush(info,
     {
-      { x=60+8,  y=60+24 },
-      { x=60+0,  y=60+16, w_face = exit_info.w_face },
-      { x=60+28, y=60+0  },
-      { x=60+36, y=60+8  },
+      { x=pos+8,  y=pos+24 },
+      { x=pos+0,  y=pos+16, w_face = exit_info.w_face },
+      { x=pos+28, y=pos+0  },
+      { x=pos+36, y=pos+8  },
     },
     -EXTREME_H, z1 + skin.exit_h)
   end
