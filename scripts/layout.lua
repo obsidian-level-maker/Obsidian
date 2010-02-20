@@ -417,6 +417,7 @@ function Layout_cave_pickup_spots(R)
   R.big_spots = {}
 
   -- FIXME FIXME: this is terrible (only checks centre of seed)
+  -- (probably scrap this function, re-use the monster spots)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
@@ -461,6 +462,7 @@ function Layout_cave_monster_spots(R)
     for x = sx1,sx2 do for y = sy1,sy2 do
       local S = SEEDS[x][y][1]
       if S.content then return false end
+      if S.conn_dir then return false end
     end end
 
     return true
@@ -481,8 +483,7 @@ function Layout_cave_monster_spots(R)
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
   for x = 1,W do for y = 1,H do
-    if flood[x][y] == flood.largest_empty.id and not used[x][y] then
-
+    if check_range(x,y, x,y) then
       local sx = R.sx1 + int((x-1) / 3)
       local sy = R.sy1 + int((y-1) / 3)
 
