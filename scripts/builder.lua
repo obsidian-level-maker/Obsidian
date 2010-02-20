@@ -269,6 +269,17 @@ function get_sky()
   }
 end
 
+function get_liquid()
+  assert(THEME.liquid)
+
+  local mat = get_mat(THEME.liquid.mat)
+
+  mat.sec_kind = THEME.liquid.sec_kind
+
+  return mat
+end
+
+
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
   info.w_face.y_offset = y_offset or 0
