@@ -1960,64 +1960,6 @@ COMMON_THEME_DEFAULTS =
   switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
   bars = { bar_wood=50, bar_silver=50, bar_metal=50 },
 
-
-  -- FIXME FIXME  TEMPORARY
-
-  cave =
-  {
-   walls =
-   {
-    SP_ROCK1=50,
-    ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-    ROCK5=50, RROCK03=50,
-    BSTONE1=50,
-
-    GRAYVINE=50, MODWALL1=50,
-    STONE4=50, STONE7=60,
-    TANROCK2=50, TANROCK3=50, TANROCK4=50,
-    TANROCK5=50, TANROCK7=50, TANROCK8=50,
-
-    ZIMMER2=50, ZIMMER3=50,
-    ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
-
-    ROCKRED1=50,
-    CRACKLE2=50, CRACKLE4=50,
-    SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
-    SLOPPY1=50, SP_FACE2=50,
-    FIREBLU1=50, FIRELAV2=50, 
-
-    TEKWALL1=50, TEKWALL4=50,
-    WOOD1=50, WOOD9=50,
-   },
-  },
-
-  landscape =
-  {
-   ground =
-   {
-    SP_ROCK1=50,
-    ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-    ROCK5=50, RROCK03=50,
-    BSTONE1=50,
-
-    GRAYVINE=50, MODWALL1=50,
-    STONE4=50, STONE7=60,
-    TANROCK2=50, TANROCK3=50, TANROCK4=50,
-    TANROCK5=50, TANROCK7=50, TANROCK8=50,
-
-    ZIMMER2=50, ZIMMER3=50,
-    ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
-
-    ROCKRED1=50,
-    CRACKLE2=50, CRACKLE4=50,
-    SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
-    SLOPPY1=50, SP_FACE2=50,
-    FIREBLU1=50, FIRELAV2=50, 
-
-    TEKWALL1=50, TEKWALL4=50,
-    WOOD1=50, WOOD9=50,
-   },
-  },
 }
 
 
@@ -2079,6 +2021,44 @@ COMMON_SUB_THEMES =
         BROWN144=30, BROWN1=20, STONE=20,
         ASHWALL=5, FLAT10=5,
       },
+    },
+
+    cave = 
+    {
+      walls =
+      {
+        ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+        ROCK5=50, RROCK03=50,
+        BSTONE1=50, SP_ROCK1=50,
+
+        GRAYVINE=50, MODWALL1=50,
+        STONE4=50, STONE7=60,
+        TANROCK4=50, TANROCK5=50,
+        TANROCK7=50, TANROCK8=50,
+
+        ZIMMER2=50, ZIMMER3=50,
+        ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+
+        TEKWALL4=5,
+      },
+    },
+
+    landscape =
+    {
+      walls =
+      {
+       ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+       BSTONE1=50, SP_ROCK1=50,
+       ROCK5=50,
+
+       GRAYVINE=50, MODWALL1=50,
+       STONE4=50, STONE7=60,
+       TANROCK4=50, TANROCK5=50,
+       TANROCK7=50, TANROCK8=50,
+
+       ZIMMER2=50, ZIMMER3=50,
+       ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+     },
     },
 
     hallway =
@@ -2229,6 +2209,28 @@ COMMON_SUB_THEMES =
       },
     },
 
+    cave =
+    {
+      walls =
+      {
+        ROCKRED1=50,
+        CRACKLE2=50, CRACKLE4=50,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
+        SLOPPY1=50, SP_FACE2=50,
+        FIREBLU1=50, FIRELAVA=50, 
+      },
+    },
+
+    landscape =
+    {
+      walls =
+      {
+        ASHWALL=50, GRAYVINE=50,
+        SP_ROCK1=50, ROCKRED1=50,
+        SKSNAKE1=10, SKSNAKE2=10,
+      },
+    },
+
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
     logos = { carve=90, pill=50, neon=5 },
@@ -2298,6 +2300,28 @@ COMMON_SUB_THEMES =
       {
         FLAT5_6=10, ASHWALL=5, FLAT10=5,
         SFLR6_4=10, MFLR8_2=10,
+      },
+    },
+
+    cave =
+    {
+      walls =
+      {
+        ROCKRED1=50,
+        CRACKLE2=50, CRACKLE4=50,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
+        SLOPPY1=50, SP_FACE2=50,
+        FIREBLU1=50, FIRELAVA=50, 
+      },
+    },
+
+    landscape =
+    {
+      walls =
+      {
+        ASHWALL=50, GRAYVINE=50,
+        SP_ROCK1=50, ROCKRED1=50,
+        SKSNAKE1=10, SKSNAKE2=10,
       },
     },
 
@@ -2563,6 +2587,42 @@ DOOM2_SUB_THEMES =
         ROCK3=10, ROCK5=10,
         GRASS1=15, GRASS2=10,
       },
+    },
+
+    cave = 
+    {
+      walls =
+      {
+        ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+        ROCK5=50, RROCK03=50,
+        BSTONE1=50, SP_ROCK1=50,
+
+        GRAYVINE=50, MODWALL1=50,
+        STONE4=50, STONE7=60,
+        TANROCK4=50, TANROCK5=50,
+        TANROCK7=50, TANROCK8=50,
+
+        ZIMMER2=50, ZIMMER3=50,
+        ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+      },
+    },
+
+    landscape =
+    {
+      walls =
+      {
+       ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+       BSTONE1=50, SP_ROCK1=50,
+       ROCK5=50,
+
+       GRAYVINE=50, MODWALL1=50,
+       STONE4=50, STONE7=60,
+       TANROCK4=50, TANROCK5=50,
+       TANROCK7=50, TANROCK8=50,
+
+       ZIMMER2=50, ZIMMER3=50,
+       ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+     },
     },
 
     outer_fences =
