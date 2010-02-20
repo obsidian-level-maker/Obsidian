@@ -1853,13 +1853,17 @@ function Room_build_cave(R)
 
   local w_tex  = R.cave_tex
   local w_info = get_mat(w_tex)
+  local high_z = EXTREME_H
 
   if R.is_lake then
     w_info = get_liquid()
-    w_info.delta_z = rand_odds(70, -48, -80)
+    w_info.delta_z = rand_sel(70, -48, -80)
+    high_z = R.cave_floor_h + 8
   end
 
-  local high_z = sel(R.is_lake, R.cave_floor_h+8, EXTREME_H)
+  if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand_odds(88) then
+    high_z = R.cave_floor_h + rand_sel(65, 80, 144)
+  end
 
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
@@ -1870,15 +1874,16 @@ function Room_build_cave(R)
     end
   end
 
+  if R.is_lake then return end
+
+
   local walkway = Cave_negate(R.flood)
 
   local ceil_h = R.cave_floor_h + R.cave_h
 
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
-  for i = 1,2 do
-    if R.is_lake then break; end
-
+  for i = 1,rand_index_by_probs({ 10,10,70 })-1 do
     walkway = Cave_shrink(walkway, false)
 
     if rand_odds(sel(i==1, 20, 50)) then
