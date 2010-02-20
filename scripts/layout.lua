@@ -529,6 +529,7 @@ function Layout_natural_room(R, heights)
   local function setup_floor(S, h)
     S.floor_h = h
     S.f_tex   = f_tex
+    S.w_tex   = f_tex
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn

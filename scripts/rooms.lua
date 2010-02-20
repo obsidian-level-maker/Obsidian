@@ -1878,6 +1878,8 @@ function Room_build_cave(R)
       walkway = Cave_shrink(walkway)
     end
 
+    Cave_remove_dots(walkway)
+
     local trim = get_mat(sel(i == 1, "RROCK16", "RROCK04"))
 
     if i==2 and rand_odds(50) then  -- TODO: theme specific prob

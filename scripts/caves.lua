@@ -392,6 +392,42 @@ function Cave_grow(cave)
 end
 
 
+function Cave_remove_dots(cave, keep_edges, callback)
+  -- modifies the given cave, removing isolated solid cells.
+  -- diagonal cells are NOT checked.
+
+  local W = cave.w
+  local H = cave.h
+
+  local function is_isolated(x, y)
+    local count = 0
+
+    for side = 2,8,2 do
+      local nx, ny = nudge_coord(x, y, side)
+
+      if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
+        if keep_edges then return false end
+      elseif cave[nx][ny] > 0 then
+        count = count + 1
+      end
+    end
+
+    return (count == 0)
+  end
+
+
+  for x = 1,W do for y = 1,H do
+    if is_isolated(x, y) then
+      local dx = sel(x > W/2, -1, 1)
+      cave[x][y] = cave[x+dx][y]
+      if callback then
+        callback(cave, x, y)
+      end
+    end
+  end end
+end
+
+
 function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
   -- only solid regions are handled
   assert(reg_id > 0)
