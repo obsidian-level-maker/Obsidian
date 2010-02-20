@@ -530,7 +530,7 @@ function Layout_natural_room(R, heights)
   if R.outdoor and THEME.landscape then
     R.cave_tex = rand_key_by_probs(THEME.landscape.walls)
 
-    if R.svolume >= 49 and rand_odds(55) then  -- FIXME: odds
+    if R.svolume >= 49 and rand_odds(35) then
       R.is_lake = true
     end
   else
@@ -1590,8 +1590,6 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 gui.debugf("Success @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
   else
 gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
-    if R.kind == "nature" then f_texs[1] = "GATE3" end  --!!!!!!
-
     install_flat_floor(heights[1], f_texs[1])
   end
 end

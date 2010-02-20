@@ -1859,6 +1859,11 @@ function Room_build_cave(R)
   local w_info = get_mat(w_tex)
   local high_z = EXTREME_H
 
+  local base_x = SEEDS[R.sx1][R.sy1][1].x1
+  local base_y = SEEDS[R.sx1][R.sy1][1].y1
+
+  -- DO WALLS --
+
   if R.is_lake then
     w_info = get_liquid()
     w_info.delta_z = rand_sel(70, -48, -80)
@@ -1869,12 +1874,20 @@ function Room_build_cave(R)
     high_z = R.cave_floor_h + rand_sel(65, 80, 144)
   end
 
-  local base_x = SEEDS[R.sx1][R.sy1][1].x1
-  local base_y = SEEDS[R.sx1][R.sy1][1].y1
-
-  for id,_ in pairs(flood.regions) do
+  for id,reg in pairs(flood.regions) do
     if id > 0 then
-      Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
+      if not R.is_lake and reg.cells > 4 and rand_odds(50) and
+         Cave_region_is_island(flood, reg)
+      then
+        -- create a lava/nukage pit
+        local pit = get_liquid()
+        pit.delta_z = rand_sel(70, -40, -64)
+
+        Cave_render(flood, id, pit, base_x, base_y, -EXTREME_H, R.cave_floor_h+8)
+      else
+        -- make walls normally
+        Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
+      end
     end
   end
 
