@@ -97,7 +97,10 @@ function Rooms_decide_outdoors()
     if STYLE.skies == "none"   then return false end
     if STYLE.skies == "always" then return true end
 
-    if R.kind == "nature" then return false end  --- FIXME !!!!
+    if R.kind == "nature" then
+      if STYLE.skies == "heaps" then return rand_odds(75) end
+      return rand_odds(25)
+    end
 
     -- we would prefer KEY locked doors to touch at least one
     -- indoor room.  However keys/switches are not decided yet,
@@ -1848,13 +1851,13 @@ end
 function Room_build_cave(R)
   local flood = R.flood
 
-  local w_tex  = R.cave_tex  --- sel(is_lake, "LAVA1", sel(R.outdoor, "GRASS2", "ASHWALL4"))
+  local w_tex  = R.cave_tex
   local w_info = get_mat(w_tex)
 
-  if R.is_lake then w_info.delta_z = -48 end
-
-  local trim_i = get_mat("RROCK16")
-  local trim_2 = get_mat("RROCK04")
+  if R.is_lake then
+    w_info = get_liquid()
+    w_info.delta_z = rand_odds(70, -48, -80)
+  end
 
   local high_z = sel(R.is_lake, R.cave_floor_h+8, EXTREME_H)
 
@@ -1869,9 +1872,13 @@ function Room_build_cave(R)
 
   local walkway = Cave_negate(R.flood)
 
+  local ceil_h = R.cave_floor_h + R.cave_h
+
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
   for i = 1,2 do
+    if R.is_lake then break; end
+
     walkway = Cave_shrink(walkway, false)
 
     if rand_odds(sel(i==1, 20, 50)) then
@@ -1882,11 +1889,16 @@ function Room_build_cave(R)
 
     -- DO FLOOR --
 
-    local trim = get_mat(sel(i == 1, "RROCK16", "RROCK04"))
+    local trim
+
+    if R.outdoor then
+      trim = get_mat(rand_key_by_probs(THEME.landscape.trims or THEME.landscape.ground))
+    else
+      trim = get_mat(rand_key_by_probs(THEME.cave.trims or THEME.cave.walls))
+    end
 
     if i==2 and rand_odds(50) then  -- TODO: theme specific prob
-      trim = get_mat(LEVEL.liquid.mat)
-      trim.sec_kind = LEVEL.liquid.sec_kind
+      trim = get_liquid()
 
       -- FIXME: this bugs up monster/pickup/key spots
       if rand_odds(0) then
@@ -1901,15 +1913,18 @@ function Room_build_cave(R)
     Cave_render(walkway, - flood.largest_empty.id, trim,
                 base_x, base_y, -EXTREME_H, R.cave_floor_h + i)
 
+
     -- DO CEILING --
 
-    if i==2 and rand_odds(50) then
-      w_info = get_sky()
-    end
-    w_info.delta_z = 64 + (i-1)*32
+    if not R.outdoor then
+      if i==2 and rand_odds(40) then
+        w_info = get_sky()
+      end
+      w_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
 
-    Cave_render(walkway, - flood.largest_empty.id, w_info,
-                base_x, base_y, R.cave_floor_h + 128 - i, EXTREME_H)
+      Cave_render(walkway, - flood.largest_empty.id, w_info,
+                  base_x, base_y, ceil_h - i, EXTREME_H)
+    end
   end
 end
 
@@ -2314,8 +2329,7 @@ gui.printf("do_teleport\n")
 
     elseif S.kind == "liquid" then
       assert(LEVEL.liquid)
-      local info = get_mat(LEVEL.liquid.mat)
-      info.sec_kind = LEVEL.liquid.sec_kind
+      local info = get_liquid()
 
       Trans_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 

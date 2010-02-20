@@ -524,23 +524,37 @@ function Layout_natural_room(R, heights)
 
   local map
 
-  local is_lake = false
-  local f_tex = "ASHWALL"
+  R.cave_floor_h = heights[1]
+  R.cave_h = rand_element { 128, 128, 192, 256 }
+
+  if R.outdoor and THEME.landscape then
+    R.cave_tex = rand_key_by_probs(THEME.landscape.ground)
+
+    if R.svolume >= 49 and rand_odds(55) then  -- FIXME: odds
+      R.is_lake = true
+    end
+  else
+    R.cave_tex = rand_key_by_probs(THEME.cave.walls)
+  end
+
 
   local function setup_floor(S, h)
     S.floor_h = h
-    S.ceil_h  = h + 128
 
-    S.f_tex = f_tex
-    S.w_tex = f_tex
-    S.c_tex = f_tex
+    S.f_tex = R.cave_tex
+    S.w_tex = R.cave_tex
+
+    if not R.outdoor then
+      S.ceil_h  = h + R.cave_h
+      S.c_tex = R.cave_tex
+    end
 
     if S.conn or S.pseudo_conn then
       local C = S.conn or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == S.floor_h) end
 
       C.conn_h = h
-      C.conn_ftex = f_tex
+      C.conn_ftex = R.cave_tex  -- needed ???
     end
   end
 
@@ -592,16 +606,16 @@ function Layout_natural_room(R, heights)
     local N = S:neighbor(side)
 
     if not N or not N.room then
-      return set_side(S, side, sel(is_lake,-1,1))
+      return set_side(S, side, sel(R.is_lake,-1,1))
     end
 
     if N.room == S.room then return end
 
     if N.room.kind == "nature" then
-      return set_side(S, side, sel(is_lake,-1,1))
+      return set_side(S, side, sel(R.is_lake,-1,1))
     end
 
-    set_side(S, side, sel(is_lake,-1,1))
+    set_side(S, side, sel(R.is_lake,-1,1))
   end
 
   local function handle_corner(S, side)
@@ -615,7 +629,7 @@ function Layout_natural_room(R, heights)
     end
 
     if not N or not N.room then
-      if is_lake then set_corner(S, side, -1) end
+      if R.is_lake then set_corner(S, side, -1) end
       return
     end
 
@@ -673,7 +687,7 @@ function Layout_natural_room(R, heights)
       local my = (S.sy - R.sy1) * 3 + 1
 
       if not S.floor_h then
-        setup_floor(S, heights[1])
+        setup_floor(S, R.cave_floor_h)
       end
 
       for dx = 0,2 do for dy = 0,2 do
@@ -709,7 +723,7 @@ function Layout_natural_room(R, heights)
 
     gui.debugf("Trying to make a cave: loop %d\n", loop)
 
-    cave  = Cave_gen(map, sel(is_lake,62,38))
+    cave  = Cave_gen(map, sel(R.is_lake,58,38))
     flood = Cave_flood_fill(cave)
 
     if cave_is_good(flood) then
@@ -721,9 +735,6 @@ function Layout_natural_room(R, heights)
 
   R.cave  = cave
   R.flood = flood
-
-  R.cave_tex = "ASHWALL"
-  R.cave_floor_h = heights[1]
 
   Cave_dump(cave)
 

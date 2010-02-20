@@ -289,6 +289,8 @@ function Plan_CreateRooms()
   local function make_naturals(room_num)
     if room_num <= 4 then return end
 
+    if not (THEME.cave and THEME.landscape) then return end
+
     local count = int(room_num / 2)
     local last_x, last_y
 
