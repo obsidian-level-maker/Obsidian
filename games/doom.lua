@@ -3586,7 +3586,7 @@ OB_THEMES["doom_wolf"] =
 
 ------------------------------------------------------------
 
-OB_GAMES["doom1"] =
+UNFINISHED["doom1"] =
 {
   label = "Doom 1",
 
