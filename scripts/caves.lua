@@ -345,7 +345,10 @@ function Cave_main_empty_region(flood)
 end
 
 
-function Cave_do_shrink_grow(cave, mul)
+function Cave_grow(cave)
+  -- returns the new cave (more solids, less empties)
+  -- nil cells are not touched.
+
   local W = cave.w
   local H = cave.h
 
@@ -358,7 +361,7 @@ function Cave_do_shrink_grow(cave, mul)
       return
     end
 
-    if (cave[nx][ny] or 0) * mul < 0 then
+    if (cave[nx][ny] or 0) < 0 then
       work[nx][ny] = cave[x][y]
     end
   end
@@ -368,7 +371,7 @@ function Cave_do_shrink_grow(cave, mul)
   end end
 
   for x = 1,W do for y = 1,H do
-    if (cave[x][y] or 0) * mul > 0 then
+    if (cave[x][y] or 0) > 0 then
       for side = 2,8,2 do
         handle_neighbor(x, y, side)
       end
@@ -379,16 +382,49 @@ function Cave_do_shrink_grow(cave, mul)
 end
 
 
-function Cave_shrink(cave)
+function Cave_shrink(cave, keep_edges)
   -- returns the new cave (more empties, less solids).
   -- nil cells are not touched.
-  return Cave_do_shrink_grow(cave, -1)
-end
+  -- when 'keep_edges' is true, cells at edges are not touched.
 
-function Cave_grow(cave)
-  -- returns the new cave (more solids, less empties)
-  -- nil cells are not touched.
-  return Cave_do_shrink_grow(cave, 1)
+  local W = cave.w
+  local H = cave.h
+
+  local work = array_2D(W, H)
+
+  local SIDES = { 2,4,6,8 }
+
+  local function value_for_spot(x, y)
+    rand_shuffle(SIDES)
+
+    local hit_edge = false
+
+    for _,side in ipairs(SIDES) do
+      local nx, ny = nudge_coord(x, y, side)
+    
+      if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
+        hit_edge = true
+      elseif cave[nx][ny] < 0 then
+        return cave[nx][ny]
+      end
+    end
+
+    if hit_edge and not keep_sides then
+      return nil
+    end
+
+    return cave[x][y]
+  end
+
+  for x = 1,W do for y = 1,H do
+    if (cave[x][y] or 0) > 0 then
+      work[x][y] = value_for_spot(x, y)
+    else
+      work[x][y] = cave[x][y]
+    end
+  end end
+
+  return work
 end
 
 

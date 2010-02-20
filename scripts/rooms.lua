@@ -1872,10 +1872,10 @@ function Room_build_cave(R)
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
   for i = 1,2 do
-    walkway = Cave_shrink(walkway)
+    walkway = Cave_shrink(walkway, false)
 
     if rand_odds(sel(i==1, 20, 50)) then
-      walkway = Cave_shrink(walkway)
+      walkway = Cave_shrink(walkway, false)
     end
 
     Cave_remove_dots(walkway)
