@@ -270,11 +270,10 @@ function get_sky()
 end
 
 function get_liquid()
-  assert(THEME.liquid)
+  assert(LEVEL.liquid)
+  local mat = get_mat(LEVEL.liquid.mat)
 
-  local mat = get_mat(THEME.liquid.mat)
-
-  mat.sec_kind = THEME.liquid.sec_kind
+  mat.sec_kind = LEVEL.liquid.sec_kind
 
   return mat
 end
