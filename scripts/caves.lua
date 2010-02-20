@@ -539,7 +539,7 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
   end
 
 
-  local function add_brush(corner_map, x, y, bx, by, w_info, high_z)
+  local function add_brush(corner_map, x, y, bx, by)
 ---###    if is_land_locked(x, y) then
 ---###      return
 ---###    end
@@ -601,7 +601,7 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
 
   --- gui.debugf("CAVE BRUSH:\n%s\n\n", table_to_str(coords,2))
 
-    Trans_brush(w_info, coords, -EXTREME_H, high_z)
+    Trans_brush(w_info, coords, low_z, high_z)
   end
 
 
@@ -617,7 +617,7 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
 
   for x = 1,W do for y = 1,H do
     if cave[x][y] == reg_id then
-      add_brush(corner_map, x, y, base_x, base_y, w_info, high_z)
+      add_brush(corner_map, x, y, base_x, base_y)
     end
   end end
 end
