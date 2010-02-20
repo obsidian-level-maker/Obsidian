@@ -148,6 +148,21 @@ void merge_segment_c::MergeSides(merge_segment_c *other)
   }
 }
 
+area_vert_c *merge_segment_c::FindSide(csg_brush_c *brush)
+{
+  unsigned int k;
+
+  for (k = 0; k < f_sides.size(); k++)
+    if (f_sides[k]->parent == brush)
+      return f_sides[k];
+
+  for (k = 0; k < b_sides.size(); k++)
+    if (b_sides[k]->parent == brush)
+      return b_sides[k];
+
+  return NULL;  // not found
+}
+
 
 double merge_region_c::MinGapZ() const
 {

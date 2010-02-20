@@ -513,7 +513,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 }
 
 
-static void CreateOneSector(merge_region_c *R)
+static void MakeSector(merge_region_c *R)
 {
   // completely solid (no gaps) ?
   if (R->gaps.size() == 0)
@@ -730,7 +730,7 @@ static void CreateSectors(void)
   {
     merge_region_c *R = mug_regions[i];
 
-    CreateOneSector(R);
+    MakeSector(R);
   }
 
   CoalesceSectors();
@@ -893,6 +893,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
   if (B && B->index > 0)
   {
+#if 0  // OLD WAY
     sector_info_c *BS = dm_sectors[B->index];
 
     double fz = (S->f_h + BS->f_h) / 2.0;
@@ -903,6 +904,20 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
     area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1, l_vert);
     area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1, u_vert);
+#else
+    csg_brush_c *l_brush = B->gaps.front()->b_brush;
+    csg_brush_c *u_brush = B->gaps.back() ->t_brush;
+
+    SYS_ASSERT(l_brush && u_brush);
+
+    area_vert_c *l_vert = G->FindSide(l_brush);
+    area_vert_c *u_vert = G->FindSide(u_brush);
+
+    area_face_c *lower_W = (l_vert && l_vert->w_face) ? l_vert->w_face : l_brush->w_face;
+    area_face_c *upper_W = (u_vert && u_vert->w_face) ? u_vert->w_face : u_brush->w_face;
+
+    SYS_ASSERT(lower_W && upper_W);
+#endif
 
     area_face_c *rail_W = spec ? spec->rail : NULL;
 

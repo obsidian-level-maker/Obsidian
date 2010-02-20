@@ -302,6 +302,8 @@ public:
   void Flip();
 
   bool HasGap() const;
+
+  area_vert_c *FindSide(csg_brush_c *brush);
 };
 
 
