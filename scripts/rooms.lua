@@ -1880,12 +1880,16 @@ function Room_build_cave(R)
 
     Cave_remove_dots(walkway)
 
+    -- DO FLOOR --
+
     local trim = get_mat(sel(i == 1, "RROCK16", "RROCK04"))
 
     if i==2 and rand_odds(50) then  -- TODO: theme specific prob
       trim = get_mat(LEVEL.liquid.mat)
       trim.sec_kind = LEVEL.liquid.sec_kind
-      if rand_odds(50) then  -- TODO: level style
+
+      -- FIXME: this bugs up monster/pickup/key spots
+      if rand_odds(0) then
         trim.delta_z = -(i * 10 + 40)
       end
     end
@@ -1896,6 +1900,16 @@ function Room_build_cave(R)
 
     Cave_render(walkway, - flood.largest_empty.id, trim,
                 base_x, base_y, -EXTREME_H, R.cave_floor_h + i)
+
+    -- DO CEILING --
+
+    if i==2 and rand_odds(50) then
+      w_info = get_sky()
+    end
+    w_info.delta_z = 64 + (i-1)*32
+
+    Cave_render(walkway, - flood.largest_empty.id, w_info,
+                base_x, base_y, R.cave_floor_h + 128 - i, EXTREME_H)
   end
 end
 
