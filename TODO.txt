@@ -2,10 +2,7 @@
 TODO
 ====
 
-
-dm_level.cc  >>>  fix up extrafloor stuff
-
-Cave_remove_dots()  :  good place for a scenery item ?
+>>>  small chance an island region becomes a lava pit
 
 
 Natural areas:
@@ -17,25 +14,33 @@ Natural areas:
   PRELIM  place purpose (key / switch) in open spot
 
   -  height changes 
-  -  trimming
 
   DONE:  create jaggy edges
 
-  -  better border at edge of map / nil seed
-  -  better bordering with other natural areas
-
   -  choose between CAVE / LANDSCAPE / LAKE mode  -- via STYLES[]
 
-  -  proper theming (c.f. THEME.building)
-
-  -  "layering" : perform multiple 'grow + render' passes
-
   -  decide #ROOMS based on theme (e.g. less in TECH)
+
+  PRELIM  proper theming (c.f. THEME.building)
+
+  PRELIM  "layering" : perform multiple 'grow + render' passes
+
+  -  layering: if last is "deep liquid", it bugs mon/pickup spots
+     (find the spots later ??)
+
+  -  better bordering with other natural areas
+
+  -  windows facing landscapes : can it be done??
+
+  -  create two or so "combos" for caves on each map (sim. landscapes)
 
 
 -  single (or two?) border seeds around map
    (plus space for monster depots)
    
+
+dm_level.cc  >>>  fix up extrafloor stuff
+
 
 
 >>>  don't use tech_outdoor exit in HELL themes
