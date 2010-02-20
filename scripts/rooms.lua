@@ -782,6 +782,10 @@ function Rooms_border_up()
 
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
+
+        if N.room.kind == "nature" then
+          max_f2 = math.max(max_f2, N.room.cave_floor_h + 128)
+        end
       end 
     end  -- for bd
 
@@ -1897,7 +1901,7 @@ function Room_build_cave(R)
     local trim
 
     if R.outdoor then
-      trim = get_mat(rand_key_by_probs(THEME.landscape.trims or THEME.landscape.ground))
+      trim = get_mat(rand_key_by_probs(THEME.landscape.trims or THEME.landscape.walls))
     else
       trim = get_mat(rand_key_by_probs(THEME.cave.trims or THEME.cave.walls))
     end

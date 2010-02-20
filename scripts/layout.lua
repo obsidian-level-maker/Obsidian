@@ -528,7 +528,7 @@ function Layout_natural_room(R, heights)
   R.cave_h = rand_element { 128, 128, 192, 256 }
 
   if R.outdoor and THEME.landscape then
-    R.cave_tex = rand_key_by_probs(THEME.landscape.ground)
+    R.cave_tex = rand_key_by_probs(THEME.landscape.walls)
 
     if R.svolume >= 49 and rand_odds(55) then  -- FIXME: odds
       R.is_lake = true
