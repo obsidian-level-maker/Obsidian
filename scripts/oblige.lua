@@ -517,7 +517,7 @@ function ob_build_cool_shit()
 
   Game_setup()
 
-  local abort = Game_make_all()
+  local aborted = Game_make_all()
 
   Game_clean_up()
 
