@@ -517,11 +517,11 @@ function ob_build_cool_shit()
 
   Game_setup()
 
-  local aborted = Game_make_all()
+  local status = Game_make_all()
 
   Game_clean_up()
 
-  if aborted then
+  if status == "abort" then
     gui.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")
     return "abort"
   end
