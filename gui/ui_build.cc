@@ -41,7 +41,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   color(BUILD_BG, BUILD_BG);
 
 
-  int cy = y + 16;
+  int cy = y + 18 + KF * 4;
 
   int mini_w = 100 + KF * 12;
   int mini_h = 76 + KF *  6;
