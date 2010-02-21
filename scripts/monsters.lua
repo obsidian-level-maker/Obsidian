@@ -1285,6 +1285,9 @@ function Monsters_in_room(R)
 
 ---???   if h_diff < 128 then return false end
 
+    -- FIXME: ugh -- hack to allow more monsters in the room
+    if rand_odds(50) then return false end
+
     return true, h_diff
   end
 
