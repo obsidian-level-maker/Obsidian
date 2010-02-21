@@ -248,7 +248,7 @@ COMMON_MATERIALS =
   GRAYBIG  = { t="GRAYBIG",  f="FLAT18" },
   GRAYPOIS = { t="GRAYPOIS", f="FLAT18" },
   GRAYTALL = { t="GRAYTALL", f="FLAT18" },
-  GRAYVINE = { t="GRAYVINE", f="FLAT18" },
+  GRAYVINE = { t="GRAYVINE", f="FLAT1"  },
 
   GSTFONT1 = { t="GSTFONT1", f="FLOOR7_2" },
   GSTGARG  = { t="GSTGARG",  f="FLOOR7_2" },
@@ -2213,11 +2213,11 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ROCKRED1=50,
-        CRACKLE2=50, CRACKLE4=50,
-        SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
-        SLOPPY1=50, SP_FACE2=50,
+        ROCKRED1=90, RROCK03=70,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
         FIREBLU1=50, FIRELAVA=50, 
+        SLOPPY1=20, SP_FACE2=20,
+        CRACKLE2=15, CRACKLE4=15,
       },
     },
 
@@ -2225,8 +2225,8 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, GRAYVINE=50,
-        SP_ROCK1=50, ROCKRED1=50,
+        ASHWALL=50, GRAYVINE=50, RROCK03=70,
+        SP_ROCK1=50, ROCKRED1=90,
         SKSNAKE1=10, SKSNAKE2=10,
       },
     },
@@ -2307,11 +2307,11 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ROCKRED1=50,
-        CRACKLE2=50, CRACKLE4=50,
-        SKIN2=50, SKINFACE=50, SKSNAKE1=50, SKSNAKE2=50,
-        SLOPPY1=50, SP_FACE2=50,
+        ROCKRED1=90, RROCK03=70,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
         FIREBLU1=50, FIRELAVA=50, 
+        SLOPPY1=20, SP_FACE2=20,
+        CRACKLE2=15, CRACKLE4=15,
       },
     },
 
@@ -2319,8 +2319,8 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, GRAYVINE=50,
-        SP_ROCK1=50, ROCKRED1=50,
+        ASHWALL=50, GRAYVINE=50, RROCK03=70,
+        SP_ROCK1=50, ROCKRED1=90,
         SKSNAKE1=10, SKSNAKE2=10,
       },
     },
