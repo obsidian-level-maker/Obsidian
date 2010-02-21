@@ -3,25 +3,20 @@ CHANGES (since v3.47)
 =====================
 
 +  new code for building Caves and Landscapes
-
 +  SEED value works differently, less prone to duplicates
-
++  Unixy type of system-wide installation (Makefile.unixy)
++  Batch mode : run Oblige without any GUI at all
 +  new Options window
 +  new system for adding pre-built levels
 
-+  Unixy type of system-wide installation (Makefile.unixy)
-+  Batch mode : run Oblige without any GUI at all
-
 -  fixed ROCKRED1 material (DOOM 1)
 -  sky generator supports DOOM 1 (courtesy Enhas)
-
 -  can toggle the Modules Panel on/off
 -  can disable making backups
-
 -  new (more random) way of setting monster skill bits
+
 -  fixed E2M8 / E3M8 maps to work on E4M6 / E4M8
 -  episode themes in Full Game usually match the IWAD
-
 -  fixed Save dialog (MS Windows) to go back to last place
 -  output directory is checked to be valid
 -  the status bar has more accurate messages

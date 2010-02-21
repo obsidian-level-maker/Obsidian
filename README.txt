@@ -1,8 +1,8 @@
 
-OBLIGE 3.47 Read-Me
+OBLIGE 3.51 Read-Me
 ===================
 
-by Andrew Apted.   September 2009
+by Andrew Apted.   February 2010
 
 
 INTRODUCTION
@@ -54,7 +54,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2009 Andrew Apted
+  Copyright (C) 2006-2010 Andrew Apted
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
