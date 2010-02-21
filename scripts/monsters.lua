@@ -1499,7 +1499,7 @@ function Monsters_in_room(R)
     local mx = (spot.x1 + spot.x2) / 2
     local my = (spot.y1 + spot.y2) / 2
 
---!!!!!!    Trans_entity("barrel", mx, my, spot.z1)
+    Trans_entity("barrel", mx, my, spot.z1)
 
     spot.S.content = "monster"  -- allow items to exist here
   end
@@ -1537,9 +1537,10 @@ function Monsters_in_room(R)
 
     local palette = select_monsters(toughness)
 
-    local barrel_chance = sel(R.outdoor, 2, 20)
+    local barrel_chance = sel(R.outdoor, 2, 15)
+    if R.kind == "nature"  then barrel_chance = 3 end
     if R.kind == "hallway" then barrel_chance = 5 end
-    if STYLE.barrels == "heaps" or rand_odds(10) then barrel_chance = barrel_chance * 3 + 10 end
+    if STYLE.barrels == "heaps" or rand_odds( 7) then barrel_chance = barrel_chance * 3 + 10 end
     if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
 
     -- sometimes prevent monster replacements
