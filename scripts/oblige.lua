@@ -464,12 +464,7 @@ function ob_init()
             opt.avail_choices[id] = 1
           end
 
-          -- FIXME FIXME REMOVE THIS TEST FOR RELEASE !!!!!!! 
-          if gui.change_mod_option then
-             gui.change_mod_option(mod.name, opt.name, opt.value)
-          else
-            opt.value = opt.choices[1]
-          end
+          gui.change_mod_option(mod.name, opt.name, opt.value)
         end -- for opt
       end
     end -- for mod
