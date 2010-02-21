@@ -61,7 +61,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   color(WINDOW_BG, WINDOW_BG);
 
-  int TOP_H  = 214 + KF*16; ///--- (H - MIN_WINDOW_H) / 2;
+  int TOP_H  = 214 + KF*22; ///--- (H - MIN_WINDOW_H) / 2;
   int BOT_H  = H - TOP_H - 4;
 
   int PANEL_W = 212 + KF*32;  ///--- (W - MIN_WINDOW_W) * 2 / 7;
@@ -97,8 +97,8 @@ UI_MainWin::~UI_MainWin()
 
 void UI_MainWin::CalcWindowSize(bool hide_modules, int *W, int *H)
 {
-  *H = MIN_WINDOW_H + KF * 32;
   *W = MIN_WINDOW_W + KF * 64;
+  *H = MIN_WINDOW_H + KF * 44;
   
   if (! hide_modules)
     *W += 304 + KF * 32;

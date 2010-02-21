@@ -115,8 +115,10 @@ UI_About::UI_About(int W, int H, const char *label) :
 
   cy += box->h() + 10;
   
+  int pad = 12 + KF * 6;
+
   // the very informative text
-  box = new Fl_Box(10, cy, W-20, H-172, Text);
+  box = new Fl_Box(pad, cy, W-pad-pad, H-172, Text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->box(FL_UP_BOX);
   box->color(INFO_COLOR);
@@ -154,7 +156,7 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 void DLG_AboutText(void)
 {
-  int about_w = 340 + KF * 30;
+  int about_w = 350 + KF * 30;
   int about_h = 370 + KF * 40;
 
   UI_About *about = new UI_About(about_w, about_h, "About Oblige");

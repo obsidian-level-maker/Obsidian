@@ -47,7 +47,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   int y_step = 6 + KF;
 
   int cx = x + 84 + KF * 11;
-  int cy = y + y_step;
+  int cy = y + y_step + KF * 3;
 
   Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Playing Style");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
