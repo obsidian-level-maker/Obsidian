@@ -21,6 +21,11 @@ always seems to be a major pain in the arse.
 Sorry, but if you want to compile the Win32 binary under
 Windows then you are on your own.
 
+For a system-wide installation (with Makefile.unixy) you need
+to run "make install" as the superuser after building.  Users
+can override script and data files by placing the same named
+file (e.g. "game/doom.lua") in their $HOME/.oblige directory.
+
 
 REQUIRED LIBRARIES
 ==================

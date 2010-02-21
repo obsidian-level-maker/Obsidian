@@ -1,6 +1,6 @@
 
-CHANGES (since v3.47)
-=====================
+CHANGES IN 3.51 (since v3.47)
+=============================
 
 +  new code for building Caves and Landscapes
 +  SEED value works differently, less prone to duplicates
