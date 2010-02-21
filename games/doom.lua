@@ -1981,7 +1981,7 @@ COMMON_SUB_THEMES =
   {
     prob=60,
 
-    liquids = { nukage=90, water=15, lava=10 },
+    liquids = { nukage=90, water=15, lava=10, slime=5 },
 
     building =
     {
@@ -2036,8 +2036,7 @@ COMMON_SUB_THEMES =
         TANROCK4=50, TANROCK5=50,
         TANROCK7=50, TANROCK8=50,
 
-        ZIMMER2=50, ZIMMER3=50,
-        ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+        ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
 
         TEKWALL4=5,
       },
@@ -2057,7 +2056,7 @@ COMMON_SUB_THEMES =
        TANROCK7=50, TANROCK8=50,
 
        ZIMMER2=50, ZIMMER3=50,
-       ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+       ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
      },
     },
 
@@ -2178,7 +2177,7 @@ COMMON_SUB_THEMES =
   {
     prob = 40,
 
-    liquids = { lava=30, blood=90, nukage=5 },
+    liquids = { lava=30, blood=90, slime=5, nukage=5 },
 
     building =
     {
@@ -2274,7 +2273,7 @@ COMMON_SUB_THEMES =
   {
     prob = 25,
 
-    liquids = { lava=90, blood=40 },
+    liquids = { lava=90, blood=40, slime=10 },
 
     building =
     {
@@ -2551,7 +2550,7 @@ DOOM2_SUB_THEMES =
   {
     prob = 50,
 
-    liquids = { water=90, slime=40, nukage=20, blood=10, lava=5 },
+    liquids = { water=90, slime=40, lava=20, blood=7, nukage=2 },
 
     building =
     {
@@ -2602,8 +2601,7 @@ DOOM2_SUB_THEMES =
         TANROCK4=50, TANROCK5=50,
         TANROCK7=50, TANROCK8=50,
 
-        ZIMMER2=50, ZIMMER3=50,
-        ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+        ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
       },
     },
 
@@ -2621,7 +2619,7 @@ DOOM2_SUB_THEMES =
        TANROCK7=50, TANROCK8=50,
 
        ZIMMER2=50, ZIMMER3=50,
-       ZIMMER5=50, ZIMMER7=50, ZIMMER8=50,
+       ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
      },
     },
 
