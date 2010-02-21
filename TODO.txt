@@ -2,7 +2,11 @@
 TODO
 ====
 
->>>  small chance an island region becomes a lava pit
+*  get more games working (Heretic, Hexen etc)
+
+*  support for Traps, Cages, Secrets, Powerups
+
+*  add in more scenery: lamps, computers etc
 
 
 Natural areas:
@@ -17,27 +21,31 @@ Natural areas:
 
   DONE:  create jaggy edges
 
+  DONE:  small chance an island region becomes a lava pit
+
   -  choose between CAVE / LANDSCAPE / LAKE mode  -- via STYLES[]
 
   -  decide #ROOMS based on theme (e.g. less in TECH)
 
   PRELIM  proper theming (c.f. THEME.building)
 
-  PRELIM  "layering" : perform multiple 'grow + render' passes
+  DONE:  "layering" : perform multiple 'grow + render' passes
+
+  -  create two "combos" for caves on each map (sim. landscapes)
+
+  -  trimming: try to avoid same material as previous one
+  
+  -  better bordering with outdoor areas
 
   -  layering: if last is "deep liquid", it bugs mon/pickup spots
      (find the spots later ??)
 
-  -  better bordering with other natural areas
-
   -  windows facing landscapes : can it be done??
-
-  -  create two or so "combos" for caves on each map (sim. landscapes)
 
 
 -  single (or two?) border seeds around map
    (plus space for monster depots)
-   
+ 
 
 dm_level.cc  >>>  fix up extrafloor stuff
 
@@ -53,14 +61,6 @@ dm_level.cc  >>>  fix up extrafloor stuff
 ?  need to explain (Usage Guide, README) that some modules must
    be run with additional wads or packages, in particular the
    ZDoom Beastiary module.
-
-
-+  get more games working (Heretic, Hexen etc)
-
-+  support for Traps, Cages, Secrets, Powerups
-
-+  add in more scenery: lamps, computers etc
-
 
 
 +  support MAPINFO lumps (especially for ZDoom ports).
