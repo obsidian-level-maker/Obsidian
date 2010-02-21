@@ -2027,18 +2027,10 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-        ROCK5=50, RROCK03=50,
-        BSTONE1=50, SP_ROCK1=50,
-
-        GRAYVINE=50, MODWALL1=50,
-        STONE4=50, STONE7=60,
-        TANROCK4=50, TANROCK5=50,
-        TANROCK7=50, TANROCK8=50,
-
-        ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
-
-        TEKWALL4=5,
+        ASHWALL=50,
+        SP_ROCK1=50,
+        GRAYVINE=50,
+        TEKWALL4=3,
       },
     },
 
@@ -2046,17 +2038,10 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-       ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-       BSTONE1=50, SP_ROCK1=50,
-       ROCK5=50,
-
-       GRAYVINE=50, MODWALL1=50,
-       STONE4=50, STONE7=60,
-       TANROCK4=50, TANROCK5=50,
-       TANROCK7=50, TANROCK8=50,
-
-       ZIMMER2=50, ZIMMER3=50,
-       ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
+        ASHWALL=50,
+        SP_ROCK1=50,
+        GRAYVINE=50,
+        STONE=50,
      },
     },
 
@@ -2212,11 +2197,9 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ROCKRED1=90, RROCK03=70,
+        ROCKRED1=90,
         SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
         FIREBLU1=50, FIRELAVA=50, 
-        SLOPPY1=20, SP_FACE2=20,
-        CRACKLE2=15, CRACKLE4=15,
       },
     },
 
@@ -2224,7 +2207,7 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, GRAYVINE=50, RROCK03=70,
+        ASHWALL=50, GRAYVINE=50,
         SP_ROCK1=50, ROCKRED1=90,
         SKSNAKE1=10, SKSNAKE2=10,
       },
@@ -2306,11 +2289,9 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ROCKRED1=90, RROCK03=70,
+        ROCKRED1=90,
         SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
         FIREBLU1=50, FIRELAVA=50, 
-        SLOPPY1=20, SP_FACE2=20,
-        CRACKLE2=15, CRACKLE4=15,
       },
     },
 
@@ -2318,7 +2299,7 @@ COMMON_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, GRAYVINE=50, RROCK03=70,
+        ASHWALL=50, GRAYVINE=50,
         SP_ROCK1=50, ROCKRED1=90,
         SKSNAKE1=10, SKSNAKE2=10,
       },
@@ -2482,6 +2463,38 @@ DOOM2_SUB_THEMES =
       },
     },
 
+    cave =
+    {
+      walls =
+      {
+        ASHWALL4=50, ASHWALL7=50,
+        BSTONE1=50, MODWALL1=50,
+        ROCK5=50, RROCK03=50,
+        STONE4=50, STONE7=60,
+
+        TANROCK4=50, TANROCK5=50,
+        TANROCK7=50, TANROCK8=50,
+        ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
+      },
+    },
+
+    landscape =
+    {
+      walls =
+      {
+        ASHWALL4=50, ASHWALL7=50,
+        BSTONE1=50, ROCK5=50,
+        MODWALL1=50, STONE4=50, STONE7=60,
+
+        TANROCK4=50, TANROCK5=50,
+        TANROCK7=50, TANROCK8=50,
+
+        ZIMMER2=50, ZIMMER3=50,
+        ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
+      },
+    },
+
+
 ---!!!!    exit =
 ---!!!!    {
 ---!!!!      walls =
@@ -2521,6 +2534,17 @@ DOOM2_SUB_THEMES =
       },
     },
 
+    cave =
+    {
+      RROCK04=70,
+      CRACKLE2=7, CRACKLE4=7,
+    },
+
+    landscape =
+    {
+      RROCK04=70,
+    },
+
     exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
 
@@ -2536,6 +2560,17 @@ DOOM2_SUB_THEMES =
       {
         CRACKLE2=15, CRACKLE4=20,
       },
+    },
+
+    cave =
+    {
+      RROCK04=70,
+      CRACKLE2=7, CRACKLE4=7,
+    },
+
+    landscape =
+    {
+      RROCK04=70,
     },
 
     exits = { skin_pillar=40, skull_pillar=20,
@@ -2592,7 +2627,8 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-        ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+        ASHWALL=50,
+        ASHWALL4=50, ASHWALL7=50,
         ROCK5=50, RROCK03=50,
         BSTONE1=50, SP_ROCK1=50,
 
@@ -2609,18 +2645,19 @@ DOOM2_SUB_THEMES =
     {
       walls =
       {
-       ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-       BSTONE1=50, SP_ROCK1=50,
-       ROCK5=50,
+        ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
+        BSTONE1=50, ROCK5=50,
 
-       GRAYVINE=50, MODWALL1=50,
-       STONE4=50, STONE7=60,
-       TANROCK4=50, TANROCK5=50,
-       TANROCK7=50, TANROCK8=50,
+        GRAYVINE=50, MODWALL1=50,
+        STONE4=50, STONE7=60,
+        TANROCK4=50, TANROCK5=50,
+        TANROCK7=50, TANROCK8=50,
 
-       ZIMMER2=50, ZIMMER3=50,
-       ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
-     },
+        ZIMMER2=50, ZIMMER3=50,
+        ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
+
+        WOOD9=90,
+      },
     },
 
     outer_fences =
@@ -3262,6 +3299,7 @@ function Doom1_setup()
 
   GAME.monsters["Cyberdemon"].crazy_prob = 8
   GAME.monsters["Mastermind"].crazy_prob = 12
+
 end
 
 
@@ -3584,7 +3622,7 @@ OB_THEMES["doom_wolf"] =
 
 ------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
   label = "Doom 1",
 
