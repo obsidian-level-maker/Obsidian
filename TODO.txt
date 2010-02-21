@@ -49,13 +49,15 @@ Natural areas:
    (plus space for monster depots)
  
 
-dm_level.cc  >>>  fix up extrafloor stuff
 
+>>> dm_level.cc : fix up extrafloor stuff
 
+>>> themes : move 'corners' into 'building' table
 
 >>>  don't use tech_outdoor exit in HELL themes
 
->>>  rework liquids
+
+DONE: rework liquids
 
 ++  BUG: sky height out-of-sync, causing bars to become one-sided
     (cf MAP04 of chris's map).
