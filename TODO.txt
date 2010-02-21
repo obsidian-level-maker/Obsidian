@@ -8,6 +8,8 @@ TODO
 
 *  add in more scenery: lamps, computers etc
 
+*  improve monster selection (and placement)
+
 
 Natural areas:
 
@@ -65,8 +67,6 @@ dm_level.cc  >>>  fix up extrafloor stuff
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
--  stairs: messed up in some themes??
-
 +  review monster quantities, need some increase over the course
    of a level (like 50% more monsters at end compared to start)
    and maybe better pacing (e.g. nothing in a room occasionally).
@@ -74,12 +74,10 @@ dm_level.cc  >>>  fix up extrafloor stuff
    Also may need to create smaller room palettes for small
    quantities (i.e. Less or Scarce settings).
 
--  review big room logic
-
 
 +  more supplies in start room (ammo for weapon, armor vest)
 
-+  Quests : add locks (new arenas) even when have no keys
+-  Quests : add locks (new arenas) even when have no keys
 
 -  rarity for bfg10k and railgun for Skulltag
 
@@ -102,7 +100,7 @@ dm_level.cc  >>>  fix up extrafloor stuff
 
 CSG CODE:
 
-!!!! DOOM: build sidedefs/linedefs in memory !!!!
+DONE:  DOOM: build sidedefs/linedefs in memory
 
 !!  proper quantization, remove degenerate segments / brushes 
 

@@ -48,6 +48,7 @@ cp -av $src/mods/*.* $dest/mods
 #  Copy data files
 #
 mkdir $dest/data
+mkdir $dest/mods/data
 
 cp -av $src/data/*.lmp $dest/data
 cp -av $src/data/*.wad $dest/data
