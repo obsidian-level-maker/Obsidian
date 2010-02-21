@@ -312,8 +312,6 @@ static void WF_DumpMap(void)
 
 static void WF_MakeMiniMap(void)
 {
-  int scale = 96;
-
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
 
@@ -323,7 +321,7 @@ static void WF_MakeMiniMap(void)
   for (int x = 0; x < 64; x++)
   {
     int tile = solid_plane[PL_START+y*64+x];
-    int obj  = thing_plane[PL_START+y*64+x];
+/// int obj  = thing_plane[PL_START+y*64+x];
 
     byte r, g, b;
 
