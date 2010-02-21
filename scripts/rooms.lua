@@ -1866,7 +1866,7 @@ function Room_build_cave(R)
 
   if R.is_lake then
     w_info = get_liquid()
-    w_info.delta_z = rand_sel(70, -48, -80)
+    w_info.delta_z = rand_sel(70, -48, -72)
     high_z = R.cave_floor_h + 8
   end
 
@@ -1881,7 +1881,7 @@ function Room_build_cave(R)
       then
         -- create a lava/nukage pit
         local pit = get_liquid()
-        pit.delta_z = rand_sel(70, -40, -64)
+        pit.delta_z = rand_sel(70, -52, -76)
 
         Cave_render(flood, id, pit, base_x, base_y, -EXTREME_H, R.cave_floor_h+8)
       else
