@@ -1521,7 +1521,7 @@ QUAKE2_SUB_THEMES =
       TECH_BASE=50,
     },
 
-    ground =
+    courtyard =
     {
       TECH_GROUND=50,
     },

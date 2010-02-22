@@ -512,7 +512,7 @@ WOLF_SUB_THEMES =
 
     ceilings = { },
 
-    ground =
+    courtyard =
     {
       TMP_WOOD=30,
     },

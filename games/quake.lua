@@ -814,7 +814,7 @@ QUAKE1_SUB_THEMES =
       ceilings = { AFLOOR1_4=10 },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {

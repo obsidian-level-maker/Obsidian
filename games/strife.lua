@@ -110,7 +110,7 @@ STRIFE_SUB_THEMES =
       F_BRKTOP=50,
     },
 
-    ground =
+    courtyard =
     {
       CAVE1=20,
     },

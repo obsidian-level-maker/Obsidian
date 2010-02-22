@@ -2014,7 +2014,7 @@ COMMON_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -2183,13 +2183,13 @@ COMMON_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
         ASHWALL=20,
         FLAT5_6=10, FLAT10=20,
-        SFLR6_1=20, MFLR8_2=20,
+        SFLR6_1=10, MFLR8_2=20,
       },
     },
 
@@ -2276,7 +2276,7 @@ COMMON_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -2356,6 +2356,10 @@ DOOM1_SUB_THEMES =
       {
         COMPOHSO=10, STARTAN1=5, COMPTILE=5,
       },
+      corners =
+      {
+        COMPTILE=10,
+      },
     },
 
     pictures =
@@ -2368,11 +2372,6 @@ DOOM1_SUB_THEMES =
 
     exits = { stone_pillar=50 },
 
-    corners =
-    {
-      COMPTILE=10,
-    },
-
   },
 
 
@@ -2384,17 +2383,16 @@ DOOM1_SUB_THEMES =
       {
         SKINTEK1=15, SKINTEK2=15,
       },
+      corners =
+      {
+        SKULWALL=8, SKULWAL3=7,
+      },
     },
 
     pictures = { skulls1=10, skulls2=10, spdude3=3, spdude6=3, },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
-
-    corners =
-    {
-      SKULWALL=8, SKULWAL3=7,
-    },
   },
 
 
@@ -2406,17 +2404,16 @@ DOOM1_SUB_THEMES =
       {
         SKINTEK1=10, SKINTEK2=10,
       },
+      corners =
+      {
+        SKULWALL=10, SKULWAL3=10, REDWALL1=15,
+      },
     },
 
     pictures = { skulls1=20, skulls2=20, },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
-
-    corners =
-    {
-      SKULWALL=10, SKULWAL3=10, REDWALL1=15,
-    },
   },
 }
 
@@ -2432,26 +2429,22 @@ DOOM2_SUB_THEMES =
         BRONZE1=5, BRONZE3=10, TEKGREN2=10,
         METAL2=15,
       },
-
       floors =
       {
         SLIME14=25, SLIME15=30, SLIME16=50,
-
       },
-
       ceilings =
       {
         GRNLITE1=2,
       },
+      corners =
+      {
+        METAL7=40, METAL2=10, METAL4=10,
+        TEKWALL6=10, TEKBRON1=3,
+      },
     },
 
-    corners =
-    {
-      METAL7=40, METAL2=10, METAL4=10,
-      TEKWALL6=10, TEKBRON1=3,
-    },
-
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -2554,7 +2547,7 @@ DOOM2_SUB_THEMES =
 
   HELL2 =  -- extends the entry in COMMON_SUB_THEMES
   {
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -2610,7 +2603,7 @@ DOOM2_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -2721,7 +2714,7 @@ DOOM2_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors = { GRASS1=20, MFLR8_1=20, },
     },

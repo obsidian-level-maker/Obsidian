@@ -1335,7 +1335,7 @@ HERETIC_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -1383,7 +1383,7 @@ HERETIC_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
@@ -1415,7 +1415,7 @@ HERETIC_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {

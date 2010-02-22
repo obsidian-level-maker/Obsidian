@@ -22,11 +22,14 @@
 
 class ROOM
 {
-  kind : keyword  -- "building", "hallway", "stairwell",
-                  -- "smallexit", "ground", "scenic"
-                  -- "nature"
+  kind : keyword  -- "building", "courtyard",
+                  -- "cave", "landscape", "scenic",
+                  -- "hallway", "stairwell",
+                  -- "smallexit",
 
   outdoor : bool  -- true for outdoor rooms
+
+  natural : bool  -- true for cave/landscape areas
 
   conns : array(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
@@ -133,7 +136,7 @@ function Rooms_decide_outdoors()
       R.outdoor = choose(R)
     end
     if R.outdoor and R.kind == "building" then
-      R.kind = "ground"
+      R.kind = "courtyard"
     end
   end
 end
@@ -145,7 +148,7 @@ function Room_setup_theme(R)
     LEVEL.outdoor_floors = {}
 
     for num = 1,2 do
-      local name = rand_key_by_probs(THEME.ground.floors)
+      local name = rand_key_by_probs(THEME.courtyard.floors)
       LEVEL.outdoor_floors[num] = name
     end
   end
@@ -1765,7 +1768,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
   ---| Room_make_ceiling |---
 
-  if R.kind == "ground" then
+  if R.kind == "courtyard" then
     outdoor_ceiling()
   
   elseif R.kind == "building" then
@@ -2317,9 +2320,9 @@ gui.printf("do_teleport\n")
     -- FLOOR
     if S.kind == "void" then
 
-      if S.solid_feature and THEME.corners then
+      if S.solid_feature and THEME.building.corners then
         if not R.corner_tex then
-          R.corner_tex = rand_key_by_probs(THEME.corners)
+          R.corner_tex = rand_key_by_probs(THEME.building.corners)
         end
         w_tex = R.corner_tex
       end

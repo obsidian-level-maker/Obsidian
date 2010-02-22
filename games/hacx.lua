@@ -133,7 +133,7 @@ HACX_SUB_THEMES =
       },
     },
 
-    ground =
+    courtyard =
     {
       floors =
       {
