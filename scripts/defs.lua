@@ -57,16 +57,22 @@ OB_ENGINES["nolimit"] =
   priority = 95,  -- top most
 }
 
+OB_THEMES["usual"] =
+{
+  label = "As Usual",
+  priority = -97,
+}
+
 OB_THEMES["mixed"] =
 {
   label = "Mix It Up",
-  priority = -99,  -- bottom most
+  priority = -98,
 }
 
 OB_THEMES["psycho"] =
 {
   label = "Psychedelic",
-  priority = -98,
+  priority = -99,  -- bottom most
 }
 
 

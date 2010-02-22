@@ -241,18 +241,21 @@ function Level_themes()
     gui.printf("Theme for level %s = %s\n", L.name, which)
   end
 
-  --| Level_themes |--
+
+  ---| Level_themes |---
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "psycho" then
+  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "usual" and
+     OB_CONFIG.theme ~= "psycho"
+  then
     for _,L in ipairs(GAME.all_levels) do
       set_sub_theme(L, OB_CONFIG.theme)
     end
 
     return;
+  end
 
-  elseif OB_CONFIG.theme == "psycho" then
-
+  if OB_CONFIG.theme == "psycho" then
     local prob_tab = {}
     for name,info in pairs(OB_THEMES) do
       local prob = info.psycho_prob or info.mixed_prob or 0
@@ -280,48 +283,36 @@ function Level_themes()
 
   -- Mix It Up : choose a theme for each episode
   local episode_list = {}
+  local total = 0
 
   local prob_tab = {}
   for name,info in pairs(OB_THEMES) do
     if info.shown and info.mixed_prob then
       prob_tab[name] = info.mixed_prob
+      total = total + 1
     end
   end
 
-  local prob_rest = shallow_copy(prob_tab)
+  assert(total > 0)
 
-  -- first pass : assign to usual episodes (most of the time)
   while not table_empty(prob_tab) do
     local name = rand_key_by_probs(prob_tab)
     prob_tab[name] = nil
 
     local info = OB_THEMES[name]
-    if info.usual_episode and not episode_list[info.usual_episode] and
-       rand_odds(60)
-    then
+
+    if OB_CONFIG.theme == "usual" and info.usual_episode and not episode_list[info.usual_episode] then
       episode_list[info.usual_episode] = name
-      prob_rest[name] = nil
-    end
-  end
-
-  -- second pass : assign the rest
-  while not table_empty(prob_rest) do
-    local name = rand_key_by_probs(prob_rest)
-    prob_rest[name] = nil
-
-    -- place it in first unused slot
-    for idx = 1,40 do
-      if not episode_list[idx] then
-        episode_list[idx] = name
-        break;
+    else
+      local pos = rand_irange(1, total)
+      if episode_list[pos] then
+        pos = table_find_unused(episode_list)
       end
+      episode_list[pos] = name 
     end
   end
 
   gui.printf("Theme for episodes =\n%s\n", table_to_str(episode_list))
-
-  local total = #episode_list
-  assert(total > 0)
 
   -- flesh it out
   if total == 2 then
