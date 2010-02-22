@@ -1181,6 +1181,7 @@ area.x1, area.y1, area.x2, area.y2)
 
         elseif ch == '~' then
           -- NOTE: floor_h for liquids is determined later
+          assert(LEVEL.liquid)
           S.kind = "liquid"
           R.has_liquid = true
 
@@ -1633,7 +1634,7 @@ function Layout_scenic(R)
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
-      S.kind = "liquid"
+      S.kind = sel(LEVEL.liquid, "void", "liquid")
       for side = 2,8,2 do
         local N = S:neighbor(side)
         if N and N.room and N.floor_h then

@@ -849,6 +849,7 @@ function Plan_MakeSeeds()
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
         local S = SEEDS[sx][sy][1]
         if not S.room then -- overlap is OK for scenics
+          assert(LEVEL.liquid)
           S.room = R
           S.kind = "liquid"
           S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
