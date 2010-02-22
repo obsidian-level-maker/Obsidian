@@ -57,9 +57,9 @@ OB_ENGINES["nolimit"] =
   priority = 95,  -- top most
 }
 
-OB_THEMES["usual"] =
+OB_THEMES["original"] =
 {
-  label = "As Usual",
+  label = "As Original",
   priority = -97,
 }
 

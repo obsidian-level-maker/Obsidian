@@ -245,7 +245,7 @@ function Level_themes()
   ---| Level_themes |---
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "usual" and
+  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "original" and
      OB_CONFIG.theme ~= "psycho"
   then
     for _,L in ipairs(GAME.all_levels) do
@@ -301,7 +301,7 @@ function Level_themes()
 
     local info = OB_THEMES[name]
 
-    if OB_CONFIG.theme == "usual" and info.usual_episode and not episode_list[info.usual_episode] then
+    if OB_CONFIG.theme == "original" and info.usual_episode and not episode_list[info.usual_episode] then
       episode_list[info.usual_episode] = name
     else
       local pos = rand_irange(1, total)

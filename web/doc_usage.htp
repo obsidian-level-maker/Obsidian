@@ -99,7 +99,7 @@ However when using it for the Theme and
 making a full game, each episode will stick to a single theme.
 
 <p>
-The "As Usual" theme setting causes the themes in each episode
+The "As Original" theme setting causes the themes in each episode
 to try and match the original game.  However, if there are custom
 themes (from a module) then the same ordering is not guaranteed
 since a custom theme could replace one of them.
