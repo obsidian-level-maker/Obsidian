@@ -94,7 +94,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   cy += 6 + KF;
   
 
-  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-20, 24+KF*2, "Ready to go!");
+  status = new Fl_Box(FL_FLAT_BOX, x+12, cy, w-22, 24+KF*2, "Ready to go!");
   status->align(FL_ALIGN_INSIDE | FL_ALIGN_BOTTOM_LEFT);
   status->color(FL_DARK2, FL_DARK2);
 
@@ -103,7 +103,7 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   cy += status->h() + 12;
   
 
-  progress = new Fl_Progress(x+12, cy, w-24, 20);
+  progress = new Fl_Progress(x+14+KF*2, cy, w-28-KF*4, 20);
   progress->align(FL_ALIGN_INSIDE);
   progress->box(FL_FLAT_BOX);
   progress->color(INACTIVE_BG, FL_BLACK);
