@@ -2782,7 +2782,7 @@ COMMON_PREBUILT_LEVELS =
   {
     file = "gotcha_maps.wad",
     maps = { MAP01=50, MAP02=50, MAP03=50 },
-    theme_maps = { TECH="MAP01", URBAN="MAP02", HELL="MAP03" },
+--  theme_maps = { TECH="MAP01", URBAN="MAP02", HELL="MAP03" },
   },
 
   phobos_anomaly =
