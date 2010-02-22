@@ -86,6 +86,16 @@ function table_contains(t, v)
   return false
 end
 
+function table_find_unused(t, start)
+  if not start then start = 1 end
+
+  while t[start] do
+    start = start + 1
+  end
+
+  return start
+end
+
 function table_reverse(t)
   if not t then return nil end
 
@@ -435,6 +445,8 @@ function rand_key_by_probs(tab)
   return key_list[idx]
 end
 
+
+----====| GEOMETRY |====----
 
 function dir_to_delta(dir)
   if dir == 1 then return -1, -1 end
