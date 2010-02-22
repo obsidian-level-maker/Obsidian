@@ -50,9 +50,9 @@ cp -av $src/misc/pack*.sh $dest/misc
 #  Data files
 #
 mkdir $dest/data
-cp -av $src/data/*.lmp $dest/data
-cp -av $src/data/*.wad $dest/data
-cp -av $src/data/*.pak $dest/data
+cp -av $src/data/*.lmp $dest/data || true
+cp -av $src/data/*.wad $dest/data || true
+cp -av $src/data/*.pak $dest/data || true
 
 #
 #  Copy documentation

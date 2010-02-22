@@ -50,21 +50,23 @@ cp -av $src/mods/*.* $dest/mods
 mkdir $dest/data
 mkdir $dest/mods/data
 
-cp -av $src/data/*.lmp $dest/data
-cp -av $src/data/*.wad $dest/data
-cp -av $src/data/*.pak $dest/data
+cp -av $src/data/*.lmp $dest/data || true
+cp -av $src/data/*.wad $dest/data || true
+cp -av $src/data/*.pak $dest/data || true
 
 #
 #  Copy executables
 #
 
+mkdir $dest/tools
+
 if [ $mode == "linux" ]
 then
 cp -av $src/Oblige $dest
-cp -av $src/qsavetex/qsavetex $dest/data
+cp -av $src/qsavetex/qsavetex $dest/tools
 else
 cp -av $src/Oblige.exe $dest
-cp -av $src/qsavetex/qsavetex.exe $dest/data
+cp -av $src/qsavetex/qsavetex.exe $dest/tools
 fi
 
 #
