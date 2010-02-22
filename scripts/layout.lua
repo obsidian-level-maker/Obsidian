@@ -1482,6 +1482,10 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     end
 
 
+    if info.kind == "liquid" and not LEVEL.liquid then
+      return false -- no liquids available
+    end
+
     if (info.environment == "indoor"  and R.outdoor) or
        (info.environment == "outdoor" and not R.outdoor)
     then
@@ -1547,8 +1551,6 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     local liq_mul = 1.0
     if STYLE.liquids == "few"   then liq_mul = 0.2 end
     if STYLE.liquids == "heaps" then liq_mul = 9.0 end
-
-    if not LEVEL.liquid then liq_mul = 0 end
 
     local f_probs = {}
     local f_infos = {}
@@ -1634,7 +1636,7 @@ function Layout_scenic(R)
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
     if S.room == R then
-      S.kind = sel(LEVEL.liquid, "void", "liquid")
+      S.kind = sel(LEVEL.liquid, "liquid", "void")
       for side = 2,8,2 do
         local N = S:neighbor(side)
         if N and N.room and N.floor_h then
