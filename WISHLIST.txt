@@ -601,8 +601,6 @@ QUAKE1 ENTITY PROPS:
 
 General:
 
->>>  create special BOSS levels (e.g. E1M8, MAP30)
-
 -  put important constants/tables into defs.lua
 
 

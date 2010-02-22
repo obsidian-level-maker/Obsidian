@@ -52,9 +52,7 @@ Natural areas:
 
 >>> dm_level.cc : fix up extrafloor stuff
 
->>> themes : move 'corners' into 'building' table
-
->>>  don't use tech_outdoor exit in HELL themes
+>>> make a theme-appropriate version of tech_outdoor exit
 
 
 DONE: rework liquids
