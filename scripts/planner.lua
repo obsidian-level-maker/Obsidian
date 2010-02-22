@@ -852,7 +852,7 @@ function Plan_MakeSeeds()
           assert(LEVEL.liquid)
           S.room = R
           S.kind = "liquid"
-          S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
+---###    S.f_tex = "LAVA1"  -- TEMP CRUD !!!!
         end
       end end -- for sx,sy
     end -- for R

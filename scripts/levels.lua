@@ -74,8 +74,6 @@ STYLE_LIST =
   lt_swapped = { none=90, heaps=20 },
 
   favor_shape = { none=80, L=5, T=5, O=5, S=5, X=5 },
-
-  dm_liquid = { nukage=50, lava=10 },  -- FIXME: game specific
 }
 
 

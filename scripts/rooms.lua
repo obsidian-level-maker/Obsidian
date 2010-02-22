@@ -648,14 +648,13 @@ function Rooms_border_up()
 
       if N.kind == "liquid" and
         (S.kind == "liquid" or R1.arena == R2.arena)
-        and (STYLE.dm_liquid == "nukage")
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
 
       if STYLE.fences == "none" and R1.arena == R2.arena and
-         (S.kind ~= "liquid" or STYLE.dm_liquid == "nukage" or
+         (S.kind ~= "liquid" or
           S.floor_h == N.floor_h)
       then
         S.border[side].kind = "nothing"
@@ -673,7 +672,7 @@ function Rooms_border_up()
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
-         (STYLE.dm_liquid == "nukage" or (S.floor_h == N.floor_h))
+         (S.floor_h == N.floor_h) and rand_odds(50)
       then
         S.border[side].kind = "liquid_arch"
         return

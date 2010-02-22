@@ -52,13 +52,6 @@ LEVEL_CONTROL_CHOICES_F =
   "X",      "X",
 }
 
-LEVEL_CONTROL_CHOICES_G =
-{
-  "mixed",   "Mix It Up",
-  "nukage",  "Nukage",
-  "lava",    "Lava",
-}
-
 
 function Level_Control_begin_level(self)
   for name,opt in pairs(self.options) do
@@ -96,7 +89,6 @@ OB_MODULES["level_control"] =
     crates     = { label="Crates",   priority =  7, choices=LEVEL_CONTROL_CHOICES_B },
 
     favor_shape = { label ="Favor Shape", priority = 3, choices=LEVEL_CONTROL_CHOICES_F },
-    dm_liquid   = { label ="Liquid Type", priority = 2, choices=LEVEL_CONTROL_CHOICES_G },
   }, 
 }
 
