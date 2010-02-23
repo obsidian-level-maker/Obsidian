@@ -669,7 +669,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
       return
     end
 
-    local away = sel(count == 2, 20, 56)
+    local away = sel(count == 2, 20, 40)
     local dir  = spot.dir
 
     if is_vert(dir) then
