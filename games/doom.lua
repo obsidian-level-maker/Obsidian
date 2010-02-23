@@ -3239,28 +3239,28 @@ DOOM1_EPISODES =
 {
   episode1 =
   {
-    theme = "TECH",
+    orig_theme = "doom_tech",
     sky_light = 0.85,
     secret_exits = { "E1M3" },
   },
 
   episode2 =
   {
-    theme = "TECH",
+    orig_theme = "doom_tech",
     sky_light = 0.65,
     secret_exits = { "E2M5" },
   },
 
   episode3 =
   {
-    theme = "HELL",
+    orig_theme = "doom_hell",
     sky_light = 0.75,
     secret_exits = { "E3M6" },
   },
 
   episode4 =
   {
-    theme = "HELL",
+    orig_theme = "doom_hell",
     sky_light = 0.75,
     secret_exits = { "E4M2" },
   },
@@ -3270,20 +3270,20 @@ DOOM2_EPISODES =
 {
   episode1 =
   {
-    theme = "TECH",
+    orig_theme = "doom_tech",
     sky_light = 0.75,
   },
 
   episode2 =
   {
-    theme = "URBAN",
+    orig_theme = "doom_urban",
     sky_light = 0.50,
     secret_exits = { "MAP16", "MAP31" },
   },
 
   episode3 =
   {
-    theme = "HELL",
+    orig_theme = "doom_hell",
     sky_light = 0.75,
   },
 }
@@ -3311,9 +3311,13 @@ function Doom1_get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
+  GAME.original_themes = {}
+
   for episode = 1,EP_NUM do
     local ep_info = DOOM1_EPISODES["episode" .. episode]
     assert(ep_info)
+
+    GAME.original_themes[episode] = ep_info.orig_theme
 
     for map = 1,MAP_NUM do
       local ep_along = map / MAP_NUM
@@ -3371,6 +3375,8 @@ function Doom2_get_levels()
   gotcha_map = rand_element{17,18,19}
   gallow_map = rand_element{24,25,26}
 
+  GAME.original_themes = {}
+
   for map = 1,MAP_NUM do
     -- determine episode from map number
     local episode
@@ -3399,6 +3405,10 @@ function Doom2_get_levels()
     local ep_info = DOOM2_EPISODES["episode" .. episode]
     assert(ep_info)
     assert(ep_along <= 1)
+
+    if not GAME.original_themes[episode] then
+      GAME.original_themes[episode] = ep_info.orig_theme
+    end
 
     local LEV =
     {

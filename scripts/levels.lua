@@ -244,6 +244,8 @@ function Level_themes()
 
   ---| Level_themes |---
 
+  gui.printf("\n")
+
   -- the user can specify the main theme
   if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "original" and
      OB_CONFIG.theme ~= "psycho"
@@ -295,28 +297,53 @@ function Level_themes()
 
   assert(total > 0)
 
+  if OB_CONFIG.theme == "original" and GAME.original_themes then
+    total = math.max(total, # GAME.original_themes)
+  end
+
   while not table_empty(prob_tab) do
     local name = rand_key_by_probs(prob_tab)
     prob_tab[name] = nil
 
     local info = OB_THEMES[name]
+    local pos = rand_irange(1, total)
 
-    if OB_CONFIG.theme == "original" and info.usual_episode and not episode_list[info.usual_episode] then
-      episode_list[info.usual_episode] = name
-    else
-      local pos = rand_irange(1, total)
-      if episode_list[pos] then
-        pos = table_find_unused(episode_list)
+    if OB_CONFIG.theme == "original" and GAME.original_themes then
+      for i,orig_theme in ipairs(GAME.original_themes) do
+        if name == orig_theme and not episode_list[i] then
+          -- this can leave gaps, but they are filled later
+          pos = i ; break
+        end
       end
-      episode_list[pos] = name 
     end
+
+    if episode_list[pos] then
+      pos = table_find_unused(episode_list)
+    end
+
+    episode_list[pos] = name 
+  end
+
+  gui.debugf("Initial theme list = \n%s\n", table_to_str(episode_list))
+
+  -- fill any gaps when in "As Original" mode
+  if OB_CONFIG.theme == "original" and GAME.original_themes then
+    gui.printf("original_themes =\n%s\n", table_to_str(GAME.original_themes))
+
+    for i,orig_theme in ipairs(GAME.original_themes) do
+      if not episode_list[i] then
+        episode_list[i] = orig_theme
+      end
+    end
+
+    assert(# episode_list == total)
   end
 
   gui.printf("Theme for episodes =\n%s\n", table_to_str(episode_list))
 
   -- flesh it out
   if total == 2 then
-    local dist = rand_sel(66, 0, 1)
+    local dist = rand_sel(70, 0, 1)
     table.insert(episode_list, episode_list[1 + dist])
     table.insert(episode_list, episode_list[2 - dist])
   end
