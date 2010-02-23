@@ -2009,8 +2009,8 @@ COMMON_SUB_THEMES =
       },
       corners =
       {
-        TEKWALL6=60, STARGR1=40, METAL1=20, ICKWALL3=6,
-        TEKWALL4=6,  COMPTALL=3, TEKBRON1=3, COMPBLUE=3,
+        STARGR1=40, METAL1=20, ICKWALL3=6,
+        TEKWALL4=6, COMPTALL=3, COMPBLUE=3,
       },
     },
 
@@ -2123,7 +2123,7 @@ COMMON_SUB_THEMES =
       liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
       compsta1=40, compsta1_blink=4,
       compsta2=40, compsta2_blink=4,
-      silver3=20, redwall=5,
+      redwall=5,
     },
 
     ceil_lights =
@@ -2134,7 +2134,7 @@ COMMON_SUB_THEMES =
 
     big_lights = { TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30 },
 
-    pillars = { teklite=50, silver2=10 },
+    pillars = { metal1=70, tekwall4=20 },
 
     big_pillars = { big_red=50, big_blue=50 },
 
@@ -2410,7 +2410,7 @@ DOOM1_SUB_THEMES =
       },
     },
 
-    pictures = { skulls1=20, skulls2=20, spdude7=5 },
+    pictures = { skulls1=20, skulls2=20 },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
@@ -2574,7 +2574,8 @@ DOOM2_SUB_THEMES =
              demon_pillar2=10, demon_pillar3=10 },
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
-
+    
+    pictures = { spdude7=7 },
   },
 
 
