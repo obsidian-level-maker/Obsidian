@@ -328,7 +328,7 @@ function Level_themes()
 
   -- fill any gaps when in "As Original" mode
   if OB_CONFIG.theme == "original" and GAME.original_themes then
-    gui.printf("original_themes =\n%s\n", table_to_str(GAME.original_themes))
+    gui.debugf("original_themes =\n%s\n", table_to_str(GAME.original_themes))
 
     for i,orig_theme in ipairs(GAME.original_themes) do
       if not episode_list[i] then
