@@ -1981,7 +1981,7 @@ COMMON_SUB_THEMES =
   {
     prob=60,
 
-    liquids = { nukage=90, water=15, lava=10, slime=5 },
+    liquids = { nukage=90, water=15, lava=10 },
 
     building =
     {
@@ -2138,7 +2138,7 @@ COMMON_SUB_THEMES =
 
     big_pillars = { big_red=50, big_blue=50 },
 
-    crates = { crate1=50, crate2=50, space=90, comp=70, mod=15, lite5=20 },
+    crates = { crate1=50, crate2=50, comp=70, lite5=20 },
 
     room_types =
     {
@@ -2162,7 +2162,7 @@ COMMON_SUB_THEMES =
   {
     prob = 40,
 
-    liquids = { lava=30, blood=90, slime=5, nukage=5 },
+    liquids = { lava=30, blood=90, nukage=5 },
 
     building =
     {
@@ -2256,7 +2256,7 @@ COMMON_SUB_THEMES =
   {
     prob = 25,
 
-    liquids = { lava=90, blood=40, slime=10 },
+    liquids = { lava=90, blood=40 },
 
     building =
     {
@@ -2313,7 +2313,7 @@ COMMON_SUB_THEMES =
     {
       marbfac2=10, marbfac3=10,
       spface1=2, firewall=20,
-      spdude7=5, spine=5,
+      spine=5,
     },
 
     --- ceil_lights = { LAVA=10 },
@@ -2410,7 +2410,7 @@ DOOM1_SUB_THEMES =
       },
     },
 
-    pictures = { skulls1=20, skulls2=20, },
+    pictures = { skulls1=20, skulls2=20, spdude7=5 },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
@@ -2422,6 +2422,8 @@ DOOM2_SUB_THEMES =
 {
   TECH1 =  -- extends the entry in COMMON_SUB_THEMES
   {
+    liquids = { nukage=90, water=15, lava=10, slime=5 },
+
     building =
     {
       walls =
@@ -2547,6 +2549,8 @@ DOOM2_SUB_THEMES =
 
   HELL2 =  -- extends the entry in COMMON_SUB_THEMES
   {
+    liquids = { lava=90, blood=40, slime=10 },
+
     courtyard =
     {
       floors =
