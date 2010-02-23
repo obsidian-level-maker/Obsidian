@@ -256,30 +256,27 @@ ExtractDialog_ShowAndRun(const char *message, const char *title, bool detected)
 }
 
 
-#if 0
-static const char * extract_Text =
-  Oblige needs to extract $(DATATYPE) from the game's
-  data files in order to make $(GAME) levels.
-
-  The game data is usually stored in a file called
-  $(FILE)
-  "pak0.pak" in a folder called "id1"
-  where $(GAME) is installed.
-
-  Oblige has detected an existing $(GAME) installation
-  on your computer in the following location:
-  [C:\QUAKE\ID1\PAK0.PAK]
-
-  Do you want to use this location?
-OR
-  Oblige has looked for an existing $(GAME) installation
-  but did not find it.  Please find it yourself by clicking
-  on the Find Manually button.
-
-  
-  (ABORT)  (USE DETECTED)  (FIND MANUALLY)
-;
-#endif
+// static const char * extract_Text =
+//   Oblige needs to extract $(DATATYPE) from the game's
+//   data files in order to make $(GAME) levels.
+// 
+//   The game data is usually stored in a file called
+//   $(FILE)
+//   "pak0.pak" in a folder called "id1"
+//   where $(GAME) is installed.
+// 
+//   Oblige has detected an existing $(GAME) installation
+//   on your computer in the following location:
+//   [C:\QUAKE\ID1\PAK0.PAK]
+// 
+//   Do you want to use this location?
+// OR
+//   Oblige has looked for an existing $(GAME) installation
+//   but did not find it.  Please find it yourself by clicking
+//   on the Find Manually button.
+// 
+//   
+//   (ABORT)  (USE DETECTED)  (FIND MANUALLY)
 
 
 int DLG_ExtractStuff(extract_info_t *info)
