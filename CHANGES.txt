@@ -10,7 +10,7 @@ CHANGES IN 3.51 (since v3.47)
 +  new system for adding pre-built levels
 
 !  monster and item placement has several problems
-!  small exits don't work (due to smaller seed size)
+!  no small exit buildings (due to smaller seed size)
 
 -  fixed ROCKRED1 material (DOOM 1)
 -  sky generator supports DOOM 1 (courtesy Enhas)
