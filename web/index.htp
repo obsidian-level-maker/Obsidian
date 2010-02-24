@@ -31,10 +31,30 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 3.47 is the current version.
+OBLIGE 3.51 is the current version.
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">24-Feb-2010:</div>
+<blockquote class="news">
+Another version of OBLIGE, namely 3.51, has just been released.
+The most exciting new feature is the support for natural areas:
+twisty caves and outdoor landscapes.  Other changes include an
+Options window, a system for adding pre-built maps, and better
+support under Linux and similar OSes.
+
+<p>
+However some things are not working as well as before, since the
+fundamental grid size which Oblige uses was reduced from 256 to
+192.  For example, the small exit rooms are disabled (they didn't
+fit), and you'll often see things like fences stuck in doors.
+Monster and item placement is out of whack too.
+
+<p>
+Thanks once again to Chris and Enhas for their contributions and
+testing.
+
 
 <div class="newsdate">22-Sep-2009:</div>
 <blockquote class="news">

@@ -211,15 +211,15 @@ get the "Visplane Overflow" error which quits the game.
 DOOM.EXE also crashes when saving a level which has
 too many things in it.
 
-<p>
+<!---
 In Wolfenstein-3D mode, the "Build" button does not bring up
 a dialog box.
 OBLIGE simply creates the output files in the same folder where
 it is installed.
-These files are called <b>GAMEMAPS.WL6</b> and <b>MAPHEAD.WL6</b>
+These files are called [b]GAMEMAPS.WL6[/b] and [b]MAPHEAD.WL6[/b]
 and you need to copy them into your
 Wolf3d folder (please make a backup first!).
-
+--->
 
 </div class="rest">
 

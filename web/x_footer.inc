@@ -13,7 +13,7 @@
       </a>
 </div>
 
-<span style="font-size: smaller"> &copy; 2009  Andrew Apted </span>
+<span style="font-size: smaller"> &copy; 2010  Andrew Apted </span>
 
 </body>
 </html>
