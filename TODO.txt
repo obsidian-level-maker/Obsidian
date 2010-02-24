@@ -60,10 +60,6 @@ DONE: rework liquids
 ++  BUG: sky height out-of-sync, causing bars to become one-sided
     (cf MAP04 of chris's map).
 
-?  need to explain (Usage Guide, README) that some modules must
-   be run with additional wads or packages, in particular the
-   ZDoom Beastiary module.
-
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
