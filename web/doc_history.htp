@@ -48,7 +48,7 @@ as often as possible.
 
 <h3>RELEASE DATES</h3>
 
-<b>Version 3.51</b> : 2010-02-24br>
+<b>Version 3.51</b> : 2010-02-24<br>
 <b>Version 3.47</b> : 2009-09-22<br>
 <b>Version 3.43</b> : 2009-08-11<br>
 <b>Version 3.39</b> : 2009-04-12  (first release of V3)<br>
@@ -66,7 +66,6 @@ as often as possible.
 +  SEED value works differently, less prone to duplicates
 +  Unixy type of system-wide installation (Makefile.unixy)
 +  batch mode : run Oblige without any GUI at all
-+  new Options window
 +  new system for adding pre-built levels
 
 !  monster and item placement has several problems
@@ -75,6 +74,7 @@ as often as possible.
 -  new "As Original" choice for Theme button
 -  fixed ROCKRED1 material (DOOM 1)
 -  sky generator supports DOOM 1 (courtesy Enhas)
+-  new Options window
 -  can toggle the Modules Panel on/off
 -  can disable making backups
 

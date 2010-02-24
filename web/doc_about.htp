@@ -79,11 +79,9 @@ for even more stuff we'd like to add)
 <ul class="status">
 
 <li>only DOOM and DOOM II are supported just now
-<li>there is only a single theme: TECH
 <li>no traps, no cages
 <li>no secrets, no powerups
 <li>very limited scenery
-<li>common glitches in outdoor areas
 
 </ul>
 
@@ -116,11 +114,13 @@ Quite far from being playable, working levels cannot be built yet,
 and lacks all the same stuff missing from Quake (listed in the previous
 entry).
 
-<p>
-<b>Wolf3D:</b><br>
+<!---
+[p]
+[b]Wolf3D:[/b][br]
 A long way from being playable.  There is a separate piece of code
 for dealing with "Tiled" maps, but all it can do right now is make a
 bunch of connected empty rooms.
+--->
 
 
 <h3>KNOWN PROBLEMS</h3>

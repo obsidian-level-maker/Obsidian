@@ -105,7 +105,7 @@ themes (from a module) then the same ordering is not guaranteed
 since a custom theme could replace one of them.
 
 <p>
-<i>(Note that the 'Lighting' and 'Detail' buttons don't do
+<i>(Note that the 'Secrets' and 'Traps' buttons don't do
 anything yet)</I>
 
 
@@ -133,7 +133,7 @@ Be warned though, playing maps on this setting can actually
 drive you insane (hence the name).
 
 <p>
-<i>(Note that the 'Traps' and 'Powerups' buttons don't do
+<i>(Note that the 'Powerups' button doesn't do
 anything yet)</I>
 
 

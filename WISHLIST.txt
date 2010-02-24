@@ -205,12 +205,6 @@ SKY GENERATOR:
   MISCELLANEOUS
 ----------------------------------------------------------------
 
-Docs:
-
--  note that you need full version of XXX to play the games
-   (shareware won't work).
-
-
 Secrets:
 
 -  fix battle simulator to ignore stuff got in secrets
