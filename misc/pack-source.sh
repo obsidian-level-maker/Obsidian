@@ -31,8 +31,7 @@ cp -av $src/mods/*.* $dest/mods
 mkdir $dest/gui
 cp -av $src/gui/*.[chr]* $dest/gui
 cp -av $src/gui/*.ico $dest/gui
-cp -av $src/gui/Makefile.local $dest/gui
-cp -av $src/gui/Makefile.xming $dest/gui
+cp -av $src/gui/Makefile.* $dest/gui
 
 mkdir $dest/qsavetex
 cp -av $src/qsavetex/*.[ch]* $dest/qsavetex
