@@ -1747,14 +1747,14 @@ function Build_outdoor_exit_switch(S, dir, f_h, skin)
 
   Trans_brush(info,
   {
-    { x=mx-40, y=my-40 },
-    { x=mx+40, y=my-40 },
-    { x=mx+56, y=my-24 },
-    { x=mx+56, y=my+24 },
-    { x=mx+40, y=my+40 },
-    { x=mx-40, y=my+40 },
-    { x=mx-56, y=my+24 },
-    { x=mx-56, y=my-24 },
+    { x=mx-36, y=my-24 },
+    { x=mx+36, y=my-24 },
+    { x=mx+44, y=my-16 },
+    { x=mx+44, y=my+16 },
+    { x=mx+36, y=my+24 },
+    { x=mx-36, y=my+24 },
+    { x=mx-44, y=my+16 },
+    { x=mx-44, y=my-16 },
   },
   -EXTREME_H, f_h+16)
 
@@ -1781,10 +1781,10 @@ function Build_outdoor_exit_switch(S, dir, f_h, skin)
 
     Trans_brush(info,
     {
-      { x=48+8,  y=48+24 },
-      { x=48+0,  y=48+16, w_face = exit_info.w_face },
-      { x=48+28, y=48+0  },
-      { x=48+36, y=48+8  },
+      { x=48+8,  y=40+24 },
+      { x=48+0,  y=40+16, w_face = exit_info.w_face },
+      { x=48+28, y=40+0  },
+      { x=48+36, y=40+8  },
     },
     -EXTREME_H, f_h+12+16)
   end
