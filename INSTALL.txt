@@ -30,14 +30,14 @@ same name (e.g. "games/doom.lua") in their $HOME/.oblige/ dir.
 REQUIRED LIBRARIES
 ==================
 
-Lua : v5.1.2 (or a later 5.1.x)
+Lua : v5.1.4
   http://www.lua.org/
 
-FLTK (Fast Light Tool Kit) : v1.1.9 (or a later 1.1.x)
+FLTK (Fast Light Tool Kit) : v1.1.10
   http://www.fltk.org/
 
-glBSP : v2.24
-  http://glbsp.sourceforge.net/
+glBSP : v2.27
+  http://sourceforge.net/projects/glbsp/files
 
 glBSP requires: zlib (v1.2.3 or later)
   http://www.gzip.org/zlib
@@ -50,9 +50,9 @@ FLTK may require: libpng, jpeglib, zlib
 BUILDING HINTS
 ==============
 
-Lua-5.1.2:
+Lua:
   (1) Lua must be compiled using C++.  A system-wide C-compiled
-      version will not work.
+      version will NOT work!
 
       edit src/Makefile to use 'g++' instead of 'gcc'.
 
@@ -63,7 +63,7 @@ Lua-5.1.2:
       use 'make generic' for Win32 cross-compile.
 
 
-FLTK-1.1.9:
+FLTK:
   (1) Linux: /configure --quiet --disable-shared --disable-gl \
              --disable-localjpeg --disable-localzlib --disable-localpng
 
