@@ -188,6 +188,7 @@ bool DM_BuildNodes(const char *filename, const char *out_name)
   nb_info.quiet = TRUE;
   nb_info.pack_sides = FALSE;
   nb_info.force_normal = TRUE;
+  nb_info.fast = TRUE;
 
   glbsp_ret_e ret = GlbspCheckInfo(&nb_info, &nb_comms);
 

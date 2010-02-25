@@ -22,7 +22,7 @@ LIB_LOC=../linux_lib
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 LUA_DIR=$(LIB_LOC)/lua-5.1.2
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
+GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O0 -g3
 
