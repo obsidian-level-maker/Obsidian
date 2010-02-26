@@ -550,28 +550,8 @@ struct Compare_RegionMinX_pred
 };
 
 
-static void Mug_OverlapPass(void)
+static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B)
 {
-  // TODO: consider using quadtrees so that vertical separation
-  //       can be used to reduce the number of segment/segment
-  //       tests even further.
-
-  /* sort segments in order of minimum X coordinate */
-  std::sort(mug_segments.begin(), mug_segments.end(),
-            Compare_SegmentMinX_pred());
-
-  for (int i=0; i < (int)mug_segments.size(); i++)
-  {
-    merge_segment_c *A = mug_segments[i];
-
-    for (int k=i+1; k < (int)mug_segments.size(); k++)
-    {
-      merge_segment_c *B = mug_segments[k];
-
-      // skip deleted segments
-      if (! A->start) break;
-      if (! B->start) continue;
-
       double ax1 = A->start->x;
       double ay1 = A->start->y;
       double ax2 = A->end->x;
@@ -582,18 +562,18 @@ static void Mug_OverlapPass(void)
       double bx2 = B->end->x;
       double by2 = B->end->y;
 
-#if 1 // normal code
+#if 0 // normal code
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
         break;
 #else // non-sorted method (TESTING only)
       if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2 ||
           MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON/2)
-        continue;
+        return;
 #endif
 
       if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON/2 ||
           MIN(ay1, ay2) > MAX(by1, by2)+EPSILON/2)
-        continue;
+        return;
 
       /* to get here, the bounding boxes must touch or overlap.
        * now we perform the line-line intersection test.
@@ -619,7 +599,7 @@ static void Mug_OverlapPass(void)
           B->Kill();
 
           mug_changes++;
-          continue;
+          return;
         }
 #endif
 
@@ -639,49 +619,49 @@ static void Mug_OverlapPass(void)
 
         // doesn't touch, or merely connects?
 ///??    if (b_max < a1_along + 2*EPSILON)
-///??      continue;
+///??      return;
 ///??
 ///??    if (b_min > a2_along - 2*EPSILON)
-///??      continue;
+///??      return;
 
         if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
           if (Mug_SplitSegment(A, B->start))
-            continue;
+            return;
 
         if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
           if (Mug_SplitSegment(A, B->end))
-            continue;
+            return;
 
         if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
           if (Mug_SplitSegment(B, A->start))
-            continue;
+            return;
 
         if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
           if (Mug_SplitSegment(B, A->end))
-            continue;
+            return;
 
         // Note: it's possible one of the new (split) segments is
         //       directly overlapping another segment.  This will
         //       be caught and handled in the next pass.
-        continue;
+        return;
       }
 
 
       // check for sharing a single vertex
       if (A->start == B->start || A->start == B->end ||
           A->end   == B->start || A->end   == B->end)
-        continue;
+        return;
 
 
       // does A cross B-extended-to-infinity?
       if ((ap1 >  EPSILON/2 && ap2 >  EPSILON/2) ||
           (ap1 < -EPSILON/2 && ap2 < -EPSILON/2))
-        continue;
+        return;
 
       // does B cross A-extended-to-infinity?
       if ((bp1 >  EPSILON/2 && bp2 >  EPSILON/2) ||
           (bp1 < -EPSILON/2 && bp2 < -EPSILON/2))
-        continue;
+        return;
 
 
       // compute intersection point
@@ -725,38 +705,56 @@ DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
       {
         Mug_SplitSegment(B, NV);
       }
+}
 
-///---      if (fabs(bp1) <= EPSILON 
-///---      {
-///---        Mug_SplitSegment(A, NV);
-///---        continue;
-///---      }
-///---      else if (fabs(bp2) <= EPSILON)
-///---      {
-///---        Mug_SplitSegment(A, NV);
-///---        continue;
-///---      }
-///---      else if (fabs(ap1) <= EPSILON)
-///---      {
-///---        Mug_SplitSegment(B, NV);
-///---        continue;
-///---      }
-///---      else if (fabs(ap2) <= EPSILON)
-///---      {
-///---        Mug_SplitSegment(B, NV);
-///---        continue;
-///---      }
+static void Mug_OverlapPass(quadtree_node_c *root)
+{
+  // TODO: consider using quadtrees so that vertical separation
+  //       can be used to reduce the number of segment/segment
+  //       tests even further.
 
-///---      // in very rare circumstances, the new vertex NV will be
-///---      // the same as one of the crossing lines (due to EPSILON
-///---      // matching).  Hence the extra checks...
+  /* sort segments in order of minimum X coordinate */
+  std::sort(mug_segments.begin(), mug_segments.end(),
+            Compare_SegmentMinX_pred());
 
+  for (int i=0; i < (int)mug_segments.size(); i++)
+  {
+    merge_segment_c *A = mug_segments[i];
+
+    for (int k=i+1; k < (int)mug_segments.size(); k++)
+    {
+      merge_segment_c *B = mug_segments[k];
+
+      // skip deleted segments
+      if (! A->start) break;
+      if (! B->start) continue;
+
+      TestOverlap(A, B);
     }
   }
 }
 
+static void Mug_TransferQuadTree(void)
+{
+  // FIXME !!!!!
+}
+
 static void Mug_FindOverlaps(void)
 {
+  // TODO: determine bounds earlier on (as we create segments)
+  double min_x, min_y, min_z;
+  double max_x, max_y, max_z;
+
+  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
+
+
+  quadtree_node_c * root = quadtree_node_c::CreateTree(
+    (int)min_x, (int)min_y, (int)max_x, (int)max_y);
+
+  for (int i = 0; i < (int)mug_segments.size(); i++)
+    root->AddSeg(mug_segments[i]);
+
+
   int loops = 0;
 
   do
@@ -765,14 +763,20 @@ static void Mug_FindOverlaps(void)
 
     mug_changes = 0;
 
-    Mug_OverlapPass();
-    Mug_AdjustList();
+    Mug_OverlapPass(root);
+
+///    Mug_AdjustList(root);
 
     loops++;
 
 printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
   } while (mug_changes > 0);
+
+
+  Mug_TransferQuadTree();
+
+  delete root;  // TODO: consider using quad-tree in other functions
 }
 
 
