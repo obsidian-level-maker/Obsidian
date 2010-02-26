@@ -224,14 +224,18 @@ public:
 
   inline bool Match(double _xx, double _yy) const
   {
-    return (fabs(_xx - x) <= EPSILON) &&
-           (fabs(_yy - y) <= EPSILON);
+    return (I_ROUND(_xx / EPSILON) == I_ROUND(x / EPSILON)) &&
+           (I_ROUND(_yy / EPSILON) == I_ROUND(y / EPSILON));
+///---    return (fabs(_xx - x) <= EPSILON) &&
+///---           (fabs(_yy - y) <= EPSILON);
   }
 
   inline bool Match(const merge_vertex_c *other) const
   {
-    return (fabs(other->x - x) <= EPSILON) &&
-           (fabs(other->y - y) <= EPSILON);
+    return (I_ROUND(other->x / EPSILON) == I_ROUND(x / EPSILON)) &&
+           (I_ROUND(other->y / EPSILON) == I_ROUND(y / EPSILON));
+///---    return (fabs(other->x - x) <= EPSILON) &&
+///---           (fabs(other->y - y) <= EPSILON);
   }
     
   void AddSeg(merge_segment_c *seg);
