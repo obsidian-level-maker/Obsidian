@@ -98,11 +98,11 @@ public:
 
   void AddSeg(merge_segment_c *S)
   {
-    int min_x = (int)floor(MIN(S->start->x, S->end->x));
-    int min_y = (int)floor(MIN(S->start->y, S->end->y));
+    int min_x = (int)floor(MIN(S->start->x, S->end->x)) - 1;
+    int min_y = (int)floor(MIN(S->start->y, S->end->y)) - 1;
 
-    int max_x = (int)ceil(MAX(S->start->x, S->end->x));
-    int max_y = (int)ceil(MAX(S->start->y, S->end->y));
+    int max_x = (int)ceil(MAX(S->start->x, S->end->x)) + 1;
+    int max_y = (int)ceil(MAX(S->start->y, S->end->y)) + 1;
 
     int node_mx = (x1 + x2) / 2;
     int node_my = (y1 + y2) / 2;
@@ -743,11 +743,11 @@ DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 static void TestOverlap_recursive(merge_segment_c *A, int i,
                                   quadtree_node_c *AN, quadtree_node_c *BN)
 {
-  int min_x = (int)floor(MIN(A->start->x, A->end->x));
-  int min_y = (int)floor(MIN(A->start->y, A->end->y));
+  int min_x = (int)floor(MIN(A->start->x, A->end->x)) - 1;
+  int min_y = (int)floor(MIN(A->start->y, A->end->y)) - 1;
 
-  int max_x = (int)ceil(MAX(A->start->x, A->end->x));
-  int max_y = (int)ceil(MAX(A->start->y, A->end->y));
+  int max_x = (int)ceil(MAX(A->start->x, A->end->x)) + 1;
+  int max_y = (int)ceil(MAX(A->start->y, A->end->y)) + 1;
 
   for (int k=(int)BN->segs.size()-1; k >= 0; k--)
   {
