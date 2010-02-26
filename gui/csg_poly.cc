@@ -552,138 +552,138 @@ struct Compare_RegionMinX_pred
 
 static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B)
 {
-      double ax1 = A->start->x;
-      double ay1 = A->start->y;
-      double ax2 = A->end->x;
-      double ay2 = A->end->y;
+  double ax1 = A->start->x;
+  double ay1 = A->start->y;
+  double ax2 = A->end->x;
+  double ay2 = A->end->y;
 
-      double bx1 = B->start->x;
-      double by1 = B->start->y;
-      double bx2 = B->end->x;
-      double by2 = B->end->y;
+  double bx1 = B->start->x;
+  double by1 = B->start->y;
+  double bx2 = B->end->x;
+  double by2 = B->end->y;
 
 #if 0 // normal code
-      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
-        break;
+  if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
+    break;
 #else // non-sorted method (TESTING only)
-      if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2 ||
-          MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON/2)
-        return;
+  if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2 ||
+      MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON/2)
+    return;
 #endif
 
-      if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON/2 ||
-          MIN(ay1, ay2) > MAX(by1, by2)+EPSILON/2)
-        return;
+  if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON/2 ||
+      MIN(ay1, ay2) > MAX(by1, by2)+EPSILON/2)
+    return;
 
-      /* to get here, the bounding boxes must touch or overlap.
-       * now we perform the line-line intersection test.
-       */
+  /* to get here, the bounding boxes must touch or overlap.
+   * now we perform the line-line intersection test.
+   */
 
 /// DebugPrintf("\nA = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", ax1,ay1, ax2,ay2);
 /// DebugPrintf(  "B = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", bx1,by1, bx2,by2);
 
-      double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
-      double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
+  double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
+  double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
 
-      double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
-      double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
+  double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
+  double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
 
 #if 1
-        // total overlap (same start + end points) ?
-        if (A->Match(B))
-        {
+    // total overlap (same start + end points) ?
+    if (A->Match(B))
+    {
 // DebugPrintf("mug_change: killed segment %p (%1.6f %1.6f) -> (%1.6f %1.6f)\n", B,
 // B->start->x, B->start->y, B->end->x, B->end->y);
 
-          A->MergeSides(B);
-          B->Kill();
+      A->MergeSides(B);
+      B->Kill();
 
-          mug_changes++;
-          return;
-        }
+      mug_changes++;
+      return;
+    }
 #endif
 
-      // check if on the same line
-      if (fabs(bp1) <= FINE_EPSILON && fabs(bp2) <= FINE_EPSILON)
-      {
-        // find vertices that split a segment
-        double a1_along = 0.0;
-        double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
-        double b1_along = AlongDist(bx1,by1, ax1,ay1, ax2,ay2);
-        double b2_along = AlongDist(bx2,by2, ax1,ay1, ax2,ay2);
+  // check if on the same line
+  if (fabs(bp1) <= FINE_EPSILON && fabs(bp2) <= FINE_EPSILON)
+  {
+    // find vertices that split a segment
+    double a1_along = 0.0;
+    double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
+    double b1_along = AlongDist(bx1,by1, ax1,ay1, ax2,ay2);
+    double b2_along = AlongDist(bx2,by2, ax1,ay1, ax2,ay2);
 
-        SYS_ASSERT(a2_along > a1_along);
+    SYS_ASSERT(a2_along > a1_along);
 
-        double b_min = MIN(b1_along, b2_along);
-        double b_max = MAX(b1_along, b2_along);
+    double b_min = MIN(b1_along, b2_along);
+    double b_max = MAX(b1_along, b2_along);
 
-        // doesn't touch, or merely connects?
+    // doesn't touch, or merely connects?
 ///??    if (b_max < a1_along + 2*EPSILON)
 ///??      return;
 ///??
 ///??    if (b_min > a2_along - 2*EPSILON)
 ///??      return;
 
-        if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
-          if (Mug_SplitSegment(A, B->start))
-            return;
-
-        if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
-          if (Mug_SplitSegment(A, B->end))
-            return;
-
-        if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
-          if (Mug_SplitSegment(B, A->start))
-            return;
-
-        if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
-          if (Mug_SplitSegment(B, A->end))
-            return;
-
-        // Note: it's possible one of the new (split) segments is
-        //       directly overlapping another segment.  This will
-        //       be caught and handled in the next pass.
-        return;
-      }
-
-
-      // check for sharing a single vertex
-      if (A->start == B->start || A->start == B->end ||
-          A->end   == B->start || A->end   == B->end)
+    if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
+      if (Mug_SplitSegment(A, B->start))
         return;
 
-
-      // does A cross B-extended-to-infinity?
-      if ((ap1 >  EPSILON/2 && ap2 >  EPSILON/2) ||
-          (ap1 < -EPSILON/2 && ap2 < -EPSILON/2))
+    if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
+      if (Mug_SplitSegment(A, B->end))
         return;
 
-      // does B cross A-extended-to-infinity?
-      if ((bp1 >  EPSILON/2 && bp2 >  EPSILON/2) ||
-          (bp1 < -EPSILON/2 && bp2 < -EPSILON/2))
+    if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
+      if (Mug_SplitSegment(B, A->start))
         return;
 
+    if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
+      if (Mug_SplitSegment(B, A->end))
+        return;
 
-      // compute intersection point
-      double ix, iy, along;
+    // Note: it's possible one of the new (split) segments is
+    //       directly overlapping another segment.  This will
+    //       be caught and handled in the next pass.
+    return;
+  }
 
-      if (fabs(ap1 - ap2) > fabs(bp1 - bp2))
-      {
-        along = ap1 / (ap1 - ap2);
 
-        ix = ax1 + along * (ax2 - ax1);
-        iy = ay1 + along * (ay2 - ay1);
-      }
-      else
-      {
-        along = bp1 / (bp1 - bp2);
+  // check for sharing a single vertex
+  if (A->start == B->start || A->start == B->end ||
+      A->end   == B->start || A->end   == B->end)
+    return;
 
-        ix = bx1 + along * (bx2 - bx1);
-        iy = by1 + along * (by2 - by1);
-      }
-      
-      // add a new vertex at the intersection point
-      merge_vertex_c * NV = Mug_AddVertex(ix, iy);
+
+  // does A cross B-extended-to-infinity?
+  if ((ap1 >  EPSILON/2 && ap2 >  EPSILON/2) ||
+      (ap1 < -EPSILON/2 && ap2 < -EPSILON/2))
+    return;
+
+  // does B cross A-extended-to-infinity?
+  if ((bp1 >  EPSILON/2 && bp2 >  EPSILON/2) ||
+      (bp1 < -EPSILON/2 && bp2 < -EPSILON/2))
+    return;
+
+
+  // compute intersection point
+  double ix, iy, along;
+
+  if (fabs(ap1 - ap2) > fabs(bp1 - bp2))
+  {
+    along = ap1 / (ap1 - ap2);
+
+    ix = ax1 + along * (ax2 - ax1);
+    iy = ay1 + along * (ay2 - ay1);
+  }
+  else
+  {
+    along = bp1 / (bp1 - bp2);
+
+    ix = bx1 + along * (bx2 - bx1);
+    iy = by1 + along * (by2 - by1);
+  }
+  
+  // add a new vertex at the intersection point
+  merge_vertex_c * NV = Mug_AddVertex(ix, iy);
 
 #if 0
 DebugPrintf("cross-over at (%1.6f %1.6f)\n", ix, iy);
@@ -694,17 +694,17 @@ DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
 DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
-      if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
-          (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
-      {
-        Mug_SplitSegment(A, NV);
-      }
+  if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
+      (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
+  {
+    Mug_SplitSegment(A, NV);
+  }
 
-      if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
-          (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
-      {
-        Mug_SplitSegment(B, NV);
-      }
+  if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
+      (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
+  {
+    Mug_SplitSegment(B, NV);
+  }
 }
 
 static void Mug_OverlapPass(quadtree_node_c *root)
