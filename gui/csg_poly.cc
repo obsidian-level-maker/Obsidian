@@ -125,6 +125,18 @@ public:
     segs.push_back(S);
   }
 
+  void Transfer()
+  {
+    for (int i = 0; i < (int)segs.size(); i++)
+      if (segs[i]->start)
+        mug_segments.push_back(segs[i]);
+
+    // recurse down
+    if (children[0])
+      for (int c = 0; c < 4; c++)
+        children[c]->Transfer();
+  }
+
 private:
   static quadtree_node_c * CreateSubTree(int lx, int ly, int hx, int hy, int depth)
   {
@@ -228,10 +240,8 @@ void merge_segment_c::Kill()
 
 void merge_segment_c::Flip()
 {
-  merge_vertex_c *tmp_V = start; start = end; end = tmp_V;
-
-  merge_region_c *tmp_R = front; front = back; back = tmp_R;
-
+  std::swap(start, end);
+  std::swap(front, back);
   std::swap(f_sides, b_sides);
 }
 
@@ -447,7 +457,8 @@ static void Mug_MakeSegments(csg_brush_c *P)
   }
 }
 
-static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
+static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
+                             quadtree_node_c *nd)
 {
   if (V == S->start || V == S->end)
     return false;
@@ -457,7 +468,12 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V)
 
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
-  mug_new_segs.push_back(NS);
+  // Note: after splitting the seg, one of the pieces is often small enough
+  //       to move into a child node of the quadtree.  However we currently
+  //       don't do that (they stay in same node), and moving it probably
+  //       won't give any benefit.
+
+  nd->segs.push_back(NS);
 
   // replace end vertex
   S->end->ReplaceSeg(S, NS);
@@ -550,7 +566,8 @@ struct Compare_RegionMinX_pred
 };
 
 
-static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B)
+static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B,
+                               quadtree_node_c *AN, quadtree_node_c *BN)
 {
   double ax1 = A->start->x;
   double ay1 = A->start->y;
@@ -625,19 +642,19 @@ static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B)
 ///??      return;
 
     if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
-      if (Mug_SplitSegment(A, B->start))
+      if (Mug_SplitSegment(A, B->start, AN))
         return;
 
     if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
-      if (Mug_SplitSegment(A, B->end))
+      if (Mug_SplitSegment(A, B->end, AN))
         return;
 
     if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
-      if (Mug_SplitSegment(B, A->start))
+      if (Mug_SplitSegment(B, A->start, BN))
         return;
 
     if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
-      if (Mug_SplitSegment(B, A->end))
+      if (Mug_SplitSegment(B, A->end, BN))
         return;
 
     // Note: it's possible one of the new (split) segments is
@@ -697,14 +714,47 @@ DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
   if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
       (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
   {
-    Mug_SplitSegment(A, NV);
+    Mug_SplitSegment(A, NV, AN);
   }
 
   if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
       (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
   {
-    Mug_SplitSegment(B, NV);
+    Mug_SplitSegment(B, NV, BN);
   }
+}
+
+static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NULL)
+{
+  if (! BN)
+    BN = AN;
+
+  for (int i=(int)AN->segs.size()-1; i >= 0; i--)
+  {
+    merge_segment_c *A = AN->segs[i];
+
+    for (int k=(int)BN->segs.size()-1; k >= 0; k--)
+    {
+      if (AN == BN && k <= i)
+        break;
+
+      merge_segment_c *B = BN->segs[k];
+      
+      // skip deleted segments
+      if (! A->start) break;
+      if (! B->start) continue;
+      
+      TestOverlap(A, B, AN, BN);
+    }
+
+    if (BN->children[0])
+      for (int c = 0; c < 4; c++)
+        OverlapPass_recursive(AN, BN->children[c]);
+  }
+
+  if (AN == BN && AN->children[0])
+    for (int c = 0; c < 4; c++)
+      OverlapPass_recursive(AN->children[c]);
 }
 
 static void Mug_OverlapPass(quadtree_node_c *root)
@@ -729,14 +779,25 @@ static void Mug_OverlapPass(quadtree_node_c *root)
       if (! A->start) break;
       if (! B->start) continue;
 
-      TestOverlap(A, B);
+///      TestOverlap(A, B);
     }
   }
 }
 
-static void Mug_TransferQuadTree(void)
+static void Mug_TransferQuadTree(quadtree_node_c *root)
 {
-  // FIXME !!!!!
+  std::vector<merge_segment_c *> old_segments;
+
+  std::swap(mug_segments, old_segments);
+
+  root->Transfer();
+
+  // FIXME ????
+#if 0
+  for (int i = 0; i < (int)old_segments.size(); i++)
+    if (! old_segments[i]->start)
+      delete old_segments[i];
+#endif
 }
 
 static void Mug_FindOverlaps(void)
@@ -763,7 +824,7 @@ static void Mug_FindOverlaps(void)
 
     mug_changes = 0;
 
-    Mug_OverlapPass(root);
+    OverlapPass_recursive(root);
 
 ///    Mug_AdjustList(root);
 
@@ -774,7 +835,7 @@ printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
   } while (mug_changes > 0);
 
 
-  Mug_TransferQuadTree();
+  Mug_TransferQuadTree(root);
 
   delete root;  // TODO: consider using quad-tree in other functions
 }
