@@ -473,7 +473,7 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
   //       don't do that (they stay in same node), and moving it probably
   //       won't give any benefit.
 
-  nd->segs.push_back(NS);
+  nd->AddSeg(NS);
 
   // replace end vertex
   S->end->ReplaceSeg(S, NS);
