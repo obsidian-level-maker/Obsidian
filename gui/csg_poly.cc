@@ -532,6 +532,22 @@ fprintf(stderr, ".. %d new segments, %d dead ones\n",
   }
 }
 
+static void Mug_TransferQuadTree(quadtree_node_c *root)
+{
+  std::vector<merge_segment_c *> old_segments;
+
+  std::swap(mug_segments, old_segments);
+
+  root->Transfer();
+
+  // FIXME ????
+#if 0
+  for (int i = 0; i < (int)old_segments.size(); i++)
+    if (! old_segments[i]->start)
+      delete old_segments[i];
+#endif
+}
+
 
 struct Compare_SegmentMinX_pred
 {
@@ -807,22 +823,6 @@ static void Mug_OverlapPass(quadtree_node_c *root)
 ///      TestOverlap(A, B);
     }
   }
-}
-
-static void Mug_TransferQuadTree(quadtree_node_c *root)
-{
-  std::vector<merge_segment_c *> old_segments;
-
-  std::swap(mug_segments, old_segments);
-
-  root->Transfer();
-
-  // FIXME ????
-#if 0
-  for (int i = 0; i < (int)old_segments.size(); i++)
-    if (! old_segments[i]->start)
-      delete old_segments[i];
-#endif
 }
 
 static void Mug_FindOverlaps(void)
