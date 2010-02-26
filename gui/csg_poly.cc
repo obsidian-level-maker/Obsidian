@@ -724,6 +724,44 @@ DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
   }
 }
 
+static void TestOverlap_recursive(merge_segment_c *A, int i,
+                                  quadtree_node_c *AN, quadtree_node_c *BN)
+{
+  int min_x = (int)floor(MIN(A->start->x, A->end->x));
+  int min_y = (int)floor(MIN(A->start->y, A->end->y));
+
+  int max_x = (int)ceil(MAX(A->start->x, A->end->x));
+  int max_y = (int)ceil(MAX(A->start->y, A->end->y));
+
+  for (int k=(int)BN->segs.size()-1; k >= 0; k--)
+  {
+    if (AN == BN && k <= i)
+      break;
+
+    merge_segment_c *B = BN->segs[k];
+
+    // skip deleted segments
+    if (! A->start) return;
+    if (! B->start) continue;
+    
+    TestOverlap(A, B, AN, BN);
+  }
+
+  if (! BN->children[0])
+    return;
+
+  for (int c = 0; c < 4; c++)
+  {
+    quadtree_node_c *CN = BN->children[c];
+
+    if (max_x < CN->x1 || min_x > CN->x2 ||
+        max_y < CN->y1 || min_y > CN->y2)
+      continue;
+
+    TestOverlap_recursive(A, i, AN, CN);
+  }
+}
+
 static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NULL)
 {
   if (! BN)
@@ -733,23 +771,10 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
   {
     merge_segment_c *A = AN->segs[i];
 
-    for (int k=(int)BN->segs.size()-1; k >= 0; k--)
-    {
-      if (AN == BN && k <= i)
-        break;
+    if (! A->start)
+      continue;
 
-      merge_segment_c *B = BN->segs[k];
-      
-      // skip deleted segments
-      if (! A->start) break;
-      if (! B->start) continue;
-      
-      TestOverlap(A, B, AN, BN);
-    }
-
-    if (BN->children[0])
-      for (int c = 0; c < 4; c++)
-        OverlapPass_recursive(AN, BN->children[c]);
+    TestOverlap_recursive(A, i, AN, BN);
   }
 
   if (AN == BN && AN->children[0])
