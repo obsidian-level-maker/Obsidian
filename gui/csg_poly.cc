@@ -37,6 +37,117 @@ static int mug_changes = 0;
 #define FINE_EPSILON  0.0002
 
 
+#define QUADTREE_LEAF_SIZE  128
+
+class quadtree_node_c
+{
+public:
+  // area covered by this node
+  short x1, y1, x2, y2;
+
+  // sub trees:
+  //    0 | 1
+  //    --+--
+  //    2 | 3
+  quadtree_node_c * children[4];
+
+  std::vector<merge_segment_c *> segs;
+ 
+public:
+  quadtree_node_c(int lx, int ly, int hx, int hy) :
+      x1(lx), y1(ly), x2(hx), y2(hy), segs()
+  {
+    children[0] = children[1] = children[2] = children[3] = NULL;
+  }
+
+  ~quadtree_node_c()
+  {
+    for (int i = 0; i < 4; i++)
+      if (children[i])
+        delete children[i];
+  }
+
+  static quadtree_node_c * CreateTree(int lx, int ly, int hx, int hy)
+  {
+    int mx = (hx + lx) / 2;
+    int my = (hy + ly) / 2;
+
+    // adjust centre so that zero axes touch a leaf boundary
+    mx = (mx / QUADTREE_LEAF_SIZE) * QUADTREE_LEAF_SIZE;
+    my = (my / QUADTREE_LEAF_SIZE) * QUADTREE_LEAF_SIZE;
+
+    // determine total size of quadtree (N = number of leaves)
+    int N = 1;
+    int depth = 0;
+
+    while (lx < (mx - (N-1)*QUADTREE_LEAF_SIZE) || hx > (mx + N * QUADTREE_LEAF_SIZE) ||
+           ly < (my - (N-1)*QUADTREE_LEAF_SIZE) || hy > (my + N * QUADTREE_LEAF_SIZE))
+    {
+      N *= 2;
+      depth += 1;
+    }
+
+    lx = mx - (N-1) * QUADTREE_LEAF_SIZE;
+    ly = my - (N-1) * QUADTREE_LEAF_SIZE;
+
+    hx = mx + N * QUADTREE_LEAF_SIZE;
+    hy = my + N * QUADTREE_LEAF_SIZE;
+
+    return CreateSubTree(lx, ly, hx, hy, depth);
+  }
+
+  void AddSeg(merge_segment_c *S)
+  {
+    int min_x = (int)floor(MIN(S->start->x, S->end->x));
+    int min_y = (int)floor(MIN(S->start->y, S->end->y));
+
+    int max_x = (int)ceil(MAX(S->start->x, S->end->x));
+    int max_y = (int)ceil(MAX(S->start->y, S->end->y));
+
+    int node_mx = (x1 + x2) / 2;
+    int node_my = (y1 + y2) / 2;
+
+    if (children[0])
+    {
+      int where = 0;
+
+      if (max_x <= node_mx) where |= 1;
+      if (min_x >= node_mx) where |= 2;
+      if (max_y <= node_my) where |= 4;
+      if (min_y >= node_my) where |= 8;
+
+      if (where ==  5) { children[0]->AddSeg(S); return; }
+      if (where ==  6) { children[1]->AddSeg(S); return; }
+      if (where ==  9) { children[2]->AddSeg(S); return; }
+      if (where == 10) { children[3]->AddSeg(S); return; }
+    }
+
+    segs.push_back(S);
+  }
+
+private:
+  static quadtree_node_c * CreateSubTree(int lx, int ly, int hx, int hy, int depth)
+  {
+    quadtree_node_c *nd = new quadtree_node_c(lx, ly, hx, hy);
+
+    if (depth > 0)
+    {
+      depth--;
+
+      int mx = (lx + hx) / 2;
+      int my = (ly + hy) / 2;
+
+      nd->children[0] = CreateSubTree(lx, ly, mx, my, depth);
+      nd->children[1] = CreateSubTree(mx, ly, hx, my, depth);
+      nd->children[2] = CreateSubTree(lx, my, mx, hy, depth);
+      nd->children[3] = CreateSubTree(mx, my, hx, hy, depth);
+    }
+
+    return nd;
+  }
+};
+
+
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
   for (unsigned int j=0; j < segs.size(); j++)
@@ -659,7 +770,7 @@ static void Mug_FindOverlaps(void)
 
     loops++;
 
-DebugPrintf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
+printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
   } while (mug_changes > 0);
 }
