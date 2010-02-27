@@ -2,6 +2,10 @@
 TODO
 ====
 
+
+>>>  CSG: determine bounds properly
+
+
 *  get more games working (Heretic, Hexen etc)
 
 *  support for Traps, Cages, Secrets, Powerups
@@ -96,10 +100,6 @@ DONE: rework liquids
 
 CSG CODE:
 
-DONE:  DOOM: build sidedefs/linedefs in memory
-
-!!  proper quantization, remove degenerate segments / brushes 
-
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush
     and area_vert references.
@@ -110,9 +110,6 @@ DONE:  DOOM: build sidedefs/linedefs in memory
 
 +   DOOM: merge linedefs where possible
 
-
-Quakey:
-+  merge Q#_CreateEntities into a common function
 
 q1_nodes:
   -  floor_leaf --> leaf

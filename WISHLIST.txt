@@ -198,6 +198,8 @@ SKY GENERATOR:
 
 ?  use cluster=-1 for SOLID leafs
 
++  merge Q#_CreateEntities into a common function
+
 -  dface2_t == dface_t, move into common ??
 
 
