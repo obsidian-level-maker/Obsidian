@@ -601,7 +601,7 @@ struct Compare_RegionMinX_pred
 };
 
 
-static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
+static inline void TestOverlap(merge_segment_c *A, merge_segment_c *B,
                                quadtree_node_c *AN, quadtree_node_c *BN)
 {
   double ax1 = A->start->x;
@@ -616,11 +616,11 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
   if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
       MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
-    return false;
+    return;
 
   if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON ||
       MIN(ay1, ay2) > MAX(by1, by2)+EPSILON)
-    return false;
+    return;
 
   /* to get here, the bounding boxes must touch or overlap.
    * now we perform the line-line intersection test.
@@ -629,21 +629,20 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 /// DebugPrintf("\nA = %p (%1.5f %1.5f) .. (%1.5f %1.5f)\n", A, ax1,ay1, ax2,ay2);
 /// DebugPrintf(  "B = %p (%1.5f %1.5f) .. (%1.5f %1.5f)\n", B, bx1,by1, bx2,by2);
 
-#if 1
-    // total overlap (same start + end points) ?
-    if (A->Match(B))
-    {
-///   DebugPrintf("Killed %p (merged with %p)\n", B, A);
 
-      A->MergeSides(B);
-      B->Kill();
+  // total overlap (same start + end points) ?
+  if (A->Match(B))
+  {
+/// DebugPrintf("Killed %p (merged with %p)\n", B, A);
 
-      MarkHot(A);
-      mug_changes++;
+    A->MergeSides(B);
+    B->Kill();
 
-      return true;
-    }
-#endif
+    MarkHot(A);
+
+    mug_changes++;
+    return;
+  }
 
 
   double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
@@ -656,7 +655,7 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
   // is A completely on one side of B?
   if (a1_side == a2_side && a1_side != 0)
-    return false;
+    return;
 
   double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
   double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
@@ -668,14 +667,12 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
   // is B completely on one side of A?
   if (b1_side == b2_side && b1_side != 0)
-    return false;
+    return;
 
 
   // check if on the same line
   if ((a1_side == 0 && a2_side == 0) || (b1_side == 0 && b2_side == 0))
   {
-    // HMMM: perhaps test longest line against shortest
-
     // find vertices that split a segment
     double a1_along = 0.0;
     double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
@@ -689,10 +686,10 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
     // doesn't touch, or merely connects?
     if (b_max < a1_along + EPSILON)
-      return false;
+      return;
 
     if (b_min > a2_along - EPSILON)
-      return false;
+      return;
 
 
     // Note: it's possible one of the new (split off) segments
@@ -701,21 +698,21 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
     if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
       if (Mug_SplitSegment(A, B->start, AN))
-        return true;
+        return;
 
     if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
       if (Mug_SplitSegment(A, B->end, AN))
-        return true;
+        return;
 
     if (a1_along > b_min+EPSILON && a1_along < b_max-EPSILON)
       if (Mug_SplitSegment(B, A->start, BN))
-        return true;
+        return;
 
     if (a2_along > b_min+EPSILON && a2_along < b_max-EPSILON)
       if (Mug_SplitSegment(B, A->end, BN))
-        return true;
+        return;
 
-    return false;
+    return;
   }
 
 
@@ -726,7 +723,7 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
     return false;
 #else
   if ((a1_side == 0 || a2_side == 0) && (b1_side == 0 || b2_side == 0))
-    return false;
+    return;
 #endif
 
 
@@ -761,54 +758,45 @@ DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
 DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
-  bool changed = false;
-
   if (a1_side * a2_side < 0)
   {
-    changed |= Mug_SplitSegment(A, NV, AN);
+    Mug_SplitSegment(A, NV, AN);
   }
 
   if (b1_side * b2_side < 0)
   {
-    changed |= Mug_SplitSegment(B, NV, BN);
+    Mug_SplitSegment(B, NV, BN);
   }
-
-  return changed;
 }
 
-static bool TestOverlap_recursive(merge_segment_c *A, int i,
+static void TestOverlap_recursive(merge_segment_c *A, int i,
                                   quadtree_node_c *AN, quadtree_node_c *BN)
 {
-  bool changed = false;
-
   int min_x = (int)floor(MIN(A->start->x, A->end->x)) - 1;
   int min_y = (int)floor(MIN(A->start->y, A->end->y)) - 1;
 
   int max_x = (int)ceil(MAX(A->start->x, A->end->x)) + 1;
   int max_y = (int)ceil(MAX(A->start->y, A->end->y)) + 1;
 
-  // NOTE: the check against segs.size() allows newly added segs (from splits)
-  //       to be processed as well.
+  // NOTE: the check against segs.size() here allows newly added segs
+  //       (from splits) to be processed as well.
 
   for (int k=(AN==BN) ? i+1 : 0; k < (int)BN->segs.size(); k++)
   {
-///    if (AN == BN && k <= i)
-///      break;
-
     merge_segment_c *B = BN->segs[k];
 
     // skip deleted segments
-    if (! A->start) return changed;
+    if (! A->start) return;
     if (! B->start) continue;
 
     if (IsCold(A) && IsCold(B))
       continue;
 
-    changed |= TestOverlap(A, B, AN, BN);
+    TestOverlap(A, B, AN, BN);
   }
 
   if (! BN->children[0])
-    return changed;
+    return;
 
   for (int c = 0; c < 4; c++)
   {
@@ -818,10 +806,8 @@ static bool TestOverlap_recursive(merge_segment_c *A, int i,
         max_y < CN->y1 || min_y > CN->y2)
       continue;
 
-    changed |= TestOverlap_recursive(A, i, AN, CN);
+    TestOverlap_recursive(A, i, AN, CN);
   }
-
-  return changed;
 }
 
 static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NULL)
@@ -829,8 +815,8 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
   if (! BN)
     BN = AN;
 
-  // NOTE: the check against segs.size() allows newly added segs (from splits)
-  //       to be processed as well.
+  // NOTE: the check against segs.size() here allows newly added segs
+  //       (from splits) to be processed as well.
 
   for (int i=0; i < (int)AN->segs.size(); i++)
   {
@@ -839,12 +825,7 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
     if (! A->start)
       continue;
 
-    int loops = 0;
-
-    if (TestOverlap_recursive(A, i, AN, BN))  ///!!!!!
-    {
-      loops++; SYS_ASSERT(loops < 100);
-    }
+    TestOverlap_recursive(A, i, AN, BN);
   }
 
   if (AN == BN && AN->children[0])
@@ -852,10 +833,9 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
       OverlapPass_recursive(AN->children[c]);
 }
 
-
 static void Mug_FindOverlaps(void)
 {
-  // TODO: determine bounds earlier on (as we create segments)
+  // FIXME: determine bounds earlier on (as we create segments)
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
 
@@ -871,31 +851,26 @@ static void Mug_FindOverlaps(void)
     quad_root->AddSeg(mug_segments[i]);
 
 
-  // only one pass over the quadtree is necessary, since newly added segs
-  // (from splits) are always fully processed as we gp/
-
   int loops = 0;
 
   do
   {
-    SYS_ASSERT(loops < 100);
-
-    mug_changes = 0;
+    loops++ ; SYS_ASSERT(loops < 100);
 
     hot_index--;
 
+    mug_changes = 0;
+
     OverlapPass_recursive(quad_root);
 
-    loops++;
-
-printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
+    LogPrintf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
   } while (mug_changes > 0);
 
 
   Mug_TransferQuadTree(quad_root);
 
-  delete quad_root;  // TODO: consider using quad-tree in other functions
+  delete quad_root;  // TODO: consider using quadtree in other functions
 }
 
 
