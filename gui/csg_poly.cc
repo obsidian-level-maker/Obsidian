@@ -471,19 +471,14 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
 
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
-  // Note: after splitting the seg, one of the pieces is often small enough
-  //       to move into a child node of the quadtree.  However we currently
-  //       don't do that (they stay in same node), and moving it probably
-  //       won't give any benefit.
-
   nd->AddSeg(NS);
 
   // replace end vertex
   S->end->ReplaceSeg(S, NS);
   S->end = V;
 
-SYS_ASSERT(! V->HasSeg(S));
-SYS_ASSERT(! V->HasSeg(NS));
+  // SYS_ASSERT(! V->HasSeg(S));
+  // SYS_ASSERT(! V->HasSeg(NS));
 
   V->AddSeg(S);
   V->AddSeg(NS);
@@ -610,8 +605,8 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
    * now we perform the line-line intersection test.
    */
 
-/// DebugPrintf("\nA = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", ax1,ay1, ax2,ay2);
-/// DebugPrintf(  "B = (%1.5f %1.5f) .. (%1.5f %1.5f)\n", bx1,by1, bx2,by2);
+/// DebugPrintf("\nA = %p (%1.5f %1.5f) .. (%1.5f %1.5f)\n", A, ax1,ay1, ax2,ay2);
+/// DebugPrintf(  "B = %p (%1.5f %1.5f) .. (%1.5f %1.5f)\n", B, bx1,by1, bx2,by2);
 
 #if 1
     // total overlap (same start + end points) ?
@@ -628,11 +623,16 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
     }
 #endif
 
+
   double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
   double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
 
   int a1_side = (ap1 < -EPSILON) ? -1 : (ap1 > EPSILON) ? +1 : 0;
   int a2_side = (ap2 < -EPSILON) ? -1 : (ap2 > EPSILON) ? +1 : 0;
+
+  // is A completely on one side of B?
+  if (a1_side == a2_side && a1_side != 0)
+    return false;
 
   double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
   double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
@@ -640,9 +640,16 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   int b1_side = (bp1 < -EPSILON) ? -1 : (bp1 > EPSILON) ? +1 : 0;
   int b2_side = (bp2 < -EPSILON) ? -1 : (bp2 > EPSILON) ? +1 : 0;
 
+  // is B completely on one side of A?
+  if (b1_side == b2_side && b1_side != 0)
+    return false;
+
+
   // check if on the same line
-  if (b1_side == 0 && b2_side == 0)
+  if ((a1_side == 0 && a2_side == 0) || (b1_side == 0 && b2_side == 0))
   {
+    // HMMM: perhaps test longest line against shortest
+
     // find vertices that split a segment
     double a1_along = 0.0;
     double a2_along = AlongDist(ax2,ay2, ax1,ay1, ax2,ay2);
@@ -655,11 +662,16 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
     double b_max = MAX(b1_along, b2_along);
 
     // doesn't touch, or merely connects?
-///??    if (b_max < a1_along + 2*EPSILON)
-///??      return;
-///??
-///??    if (b_min > a2_along - 2*EPSILON)
-///??      return;
+    if (b_max < a1_along + EPSILON)
+      return false;
+
+    if (b_min > a2_along - EPSILON)
+      return false;
+
+
+    // Note: it's possible one of the new (split off) segments
+    //       is directly overlapping another segment.  This will
+    //       be detected and handled in the next pass.
 
     if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
       if (Mug_SplitSegment(A, B->start, AN))
@@ -677,26 +689,19 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
       if (Mug_SplitSegment(B, A->end, BN))
         return true;
 
-    // Note: it's possible one of the new (split) segments is
-    //       directly overlapping another segment.  This will
-    //       be caught and handled in the next pass.
     return false;
   }
 
 
-  // does A cross B-extended-to-infinity?
-  if (a1_side == a2_side && a1_side != 0)
-    return false;
-
-  // does B cross A-extended-to-infinity?
-  if (b1_side == b2_side && b1_side != 0)
-    return false;
-
   // check for sharing a single vertex
+#if 0
   if (A->start == B->start || A->start == B->end ||
       A->end   == B->start || A->end   == B->end)
     return false;
-
+#else
+  if ((a1_side == 0 || a2_side == 0) && (b1_side == 0 || b2_side == 0))
+    return false;
+#endif
 
 
   // compute intersection point
@@ -718,6 +723,7 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   }
   
   // add a new vertex at the intersection point
+  // (this alone does not count as a change)
   merge_vertex_c * NV = Mug_AddVertex(ix, iy);
 
 #if 0
@@ -729,17 +735,19 @@ DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
 DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
+  bool changed = false;
+
   if (a1_side * a2_side < 0)
   {
-    Mug_SplitSegment(A, NV, AN);
+    changed |= Mug_SplitSegment(A, NV, AN);
   }
 
   if (b1_side * b2_side < 0)
   {
-    Mug_SplitSegment(B, NV, BN);
+    changed |= Mug_SplitSegment(B, NV, BN);
   }
 
-  return true;
+  return changed;
 }
 
 static bool TestOverlap_recursive(merge_segment_c *A, int i,
@@ -906,10 +914,10 @@ static void TraceNext(void)
     SYS_ASSERT(angle < 360.0 + ANGLE_EPSILON);
 
 #if 0
-LogPrintf("T: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
+LogPrintf("T: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", T,
   T->start->x, T->start->y, T->end->x, T->end->y);
 if (best_seg)
-LogPrintf("best_seg: (%1.4f %1.4f) --> (%1.4f %1.4f)\n",
+LogPrintf("best_seg: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", best_seg,
   best_seg->start->x, best_seg->start->y,
   best_seg->end->x, best_seg->end->y);
 LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
