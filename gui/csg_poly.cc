@@ -143,8 +143,12 @@ public:
   void Transfer()
   {
     for (int i = 0; i < (int)segs.size(); i++)
+    {
       if (segs[i]->start)
         mug_segments.push_back(segs[i]);
+      else
+        delete segs[i];
+    }
 
     // recurse down
     if (children[0])
@@ -518,53 +522,25 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
   return true;
 }
 
-struct SegDead_pred
-{
-  inline bool operator() (const merge_segment_c *S) const
-  {
-    return ! S->start;
-  }
-};
-
-static void Mug_AdjustList(void)
-{
-  /* Removes dead segs and Appends new segs */
-
-  std::vector<merge_segment_c *>::iterator ENDP;
-
-  ENDP = std::remove_if(mug_segments.begin(), mug_segments.end(), SegDead_pred());
-
-#if 0
-fprintf(stderr, ".. %d new segments, %d dead ones\n",
-       (int)mug_new_segs.size(), (int)(mug_segments.end() - ENDP));
-#endif
-
-  mug_segments.erase(ENDP, mug_segments.end());
-
-
-  while (mug_new_segs.size() > 0)
-  {
-    merge_segment_c *S = mug_new_segs.back();
-
-    mug_new_segs.pop_back();
-    mug_segments.push_back(S);
-  }
-}
 
 static void Mug_TransferQuadTree(quadtree_node_c *root)
 {
+#if 0
   std::vector<merge_segment_c *> old_segments;
 
   std::swap(mug_segments, old_segments);
 
-  root->Transfer();
-
-  // FIXME ????
-#if 0
   for (int i = 0; i < (int)old_segments.size(); i++)
     if (! old_segments[i]->start)
       delete old_segments[i];
+#else
+
+  // every segment (including ones marked as deleted) is still in the
+  // quadtree, hence this should not leak any memory.
+  mug_segments.clear();
 #endif
+
+  root->Transfer();
 }
 
 
