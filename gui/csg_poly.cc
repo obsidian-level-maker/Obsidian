@@ -873,7 +873,7 @@ static merge_vertex_c  *trace_vert;
 static int    trace_side;
 static double trace_angles;
 
-static void TraceNext(void)
+static bool TraceNext(void)
 {
   merge_vertex_c *next_v = trace_seg->Other(trace_vert);
 
@@ -905,7 +905,11 @@ static void TraceNext(void)
     }
 
     // should never have two segments with same angle (pt 1)
-    SYS_ASSERT(fabs(angle) > ANGLE_EPSILON);
+    if (fabs(angle) < ANGLE_EPSILON)
+    {
+      LogPrintf("WARNING: TraceNext failure near (%1.4f,%1.4f)\n", next_v->x, next_v->y);
+      return false;
+    }
 
     if (angle < 0)
       angle += 360.0;
@@ -923,7 +927,11 @@ LogPrintf("best_seg: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", best_seg,
 LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
 #endif
     // should never have two segments with same angle (pt 2)
-    SYS_ASSERT(fabs(best_angle - angle) > ANGLE_EPSILON);
+    if (fabs(best_angle - angle) < ANGLE_EPSILON)
+    {
+      LogPrintf("WARNING: TraceNext failure near (%1.4f,%1.4f)\n", next_v->x, next_v->y);
+      return false;
+    }
 
     if (angle < best_angle)
     {
@@ -938,6 +946,8 @@ LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
   trace_vert = next_v;
 
   trace_angles += best_angle;
+
+  return true;
 }
 
 static void TraceSegment(merge_segment_c *S, int side)
@@ -959,7 +969,7 @@ S, S->start->x, S->start->y, S->end->x, S->end->y, side);
 
   do
   {
-    TraceNext();
+    if (! TraceNext()) return;
 
 #if 0
 DebugPrintf("  CUR SEG %p (%1.1f,%1.1f) .. (%1.1f,%1.1f)\n",
