@@ -34,7 +34,7 @@
 
 static int mug_changes = 0;
 
-#define FINE_EPSILON  0.0002
+///--- #define FINE_EPSILON  0.0002
 
 
 #define QUADTREE_LEAF_SIZE  128
@@ -380,11 +380,11 @@ static void ClearVertexHash()
 static merge_vertex_c *Mug_AddVertex(double x, double y)
 {
   // quantize position
-  int qx = I_ROUND(x / EPSILON);
-  int qy = I_ROUND(y / EPSILON);
+  int qx = I_ROUND(x / QUANTIZE_GRID);
+  int qy = I_ROUND(y / QUANTIZE_GRID);
 
-  x = qx * EPSILON;
-  y = qy * EPSILON;
+  x = qx * QUANTIZE_GRID;
+  y = qy * QUANTIZE_GRID;
 
   // check if already present.
   // for speed we use a hash-table
@@ -598,17 +598,12 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   double bx2 = B->end->x;
   double by2 = B->end->y;
 
-#if 0 // normal code
-  if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2)
-    break;
-#else // non-sorted method (TESTING only)
-  if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON/2 ||
-      MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON/2)
+  if (MIN(bx1, bx2) > MAX(ax1, ax2)+EPSILON ||
+      MIN(ax1, ax2) > MAX(bx1, bx2)+EPSILON)
     return false;
-#endif
 
-  if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON/2 ||
-      MIN(ay1, ay2) > MAX(by1, by2)+EPSILON/2)
+  if (MIN(by1, by2) > MAX(ay1, ay2)+EPSILON ||
+      MIN(ay1, ay2) > MAX(by1, by2)+EPSILON)
     return false;
 
   /* to get here, the bounding boxes must touch or overlap.
@@ -636,11 +631,17 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   double ap1 = PerpDist(ax1,ay1, bx1,by1, bx2,by2);
   double ap2 = PerpDist(ax2,ay2, bx1,by1, bx2,by2);
 
+  int a1_side = (ap1 < -EPSILON) ? -1 : (ap1 > EPSILON) ? +1 : 0;
+  int a2_side = (ap2 < -EPSILON) ? -1 : (ap2 > EPSILON) ? +1 : 0;
+
   double bp1 = PerpDist(bx1,by1, ax1,ay1, ax2,ay2);
   double bp2 = PerpDist(bx2,by2, ax1,ay1, ax2,ay2);
 
+  int b1_side = (bp1 < -EPSILON) ? -1 : (bp1 > EPSILON) ? +1 : 0;
+  int b2_side = (bp2 < -EPSILON) ? -1 : (bp2 > EPSILON) ? +1 : 0;
+
   // check if on the same line
-  if (fabs(bp1) <= FINE_EPSILON && fabs(bp2) <= FINE_EPSILON)
+  if (b1_side == 0 && b2_side == 0)
   {
     // find vertices that split a segment
     double a1_along = 0.0;
@@ -660,19 +661,19 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 ///??    if (b_min > a2_along - 2*EPSILON)
 ///??      return;
 
-    if (b1_along > a1_along+0.5*EPSILON && b1_along < a2_along-0.5*EPSILON)
+    if (b1_along > a1_along+EPSILON && b1_along < a2_along-EPSILON)
       if (Mug_SplitSegment(A, B->start, AN))
         return true;
 
-    if (b2_along > a1_along+0.5*EPSILON && b2_along < a2_along-0.5*EPSILON)
+    if (b2_along > a1_along+EPSILON && b2_along < a2_along-EPSILON)
       if (Mug_SplitSegment(A, B->end, AN))
         return true;
 
-    if (a1_along > b_min+0.5*EPSILON && a1_along < b_max-0.5*EPSILON)
+    if (a1_along > b_min+EPSILON && a1_along < b_max-EPSILON)
       if (Mug_SplitSegment(B, A->start, BN))
         return true;
 
-    if (a2_along > b_min+0.5*EPSILON && a2_along < b_max-0.5*EPSILON)
+    if (a2_along > b_min+EPSILON && a2_along < b_max-EPSILON)
       if (Mug_SplitSegment(B, A->end, BN))
         return true;
 
@@ -683,21 +684,19 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   }
 
 
+  // does A cross B-extended-to-infinity?
+  if (a1_side == a2_side && a1_side != 0)
+    return false;
+
+  // does B cross A-extended-to-infinity?
+  if (b1_side == b2_side && b1_side != 0)
+    return false;
+
   // check for sharing a single vertex
   if (A->start == B->start || A->start == B->end ||
       A->end   == B->start || A->end   == B->end)
     return false;
 
-
-  // does A cross B-extended-to-infinity?
-  if ((ap1 >  EPSILON/2 && ap2 >  EPSILON/2) ||
-      (ap1 < -EPSILON/2 && ap2 < -EPSILON/2))
-    return false;
-
-  // does B cross A-extended-to-infinity?
-  if ((bp1 >  EPSILON/2 && bp2 >  EPSILON/2) ||
-      (bp1 < -EPSILON/2 && bp2 < -EPSILON/2))
-    return false;
 
 
   // compute intersection point
@@ -730,14 +729,12 @@ DebugPrintf("   BP = %1.7f / %1.7f\n", bp1, bp2);
 DebugPrintf("   NV at (%1.6f %1.6f)\n", NV->x, NV->y);
 #endif
 
-  if ((ap1 < -EPSILON/2 && ap2 > EPSILON/2) ||
-      (ap2 < -EPSILON/2 && ap1 > EPSILON/2))
+  if (a1_side * a2_side < 0)
   {
     Mug_SplitSegment(A, NV, AN);
   }
 
-  if ((bp1 < -EPSILON/2 && bp2 > EPSILON/2) ||
-      (bp2 < -EPSILON/2 && bp1 > EPSILON/2))
+  if (b1_side * b2_side < 0)
   {
     Mug_SplitSegment(B, NV, BN);
   }
@@ -1287,10 +1284,10 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
   // fast test for rectangular brushes
   if (B->bflags & BRU_IF_Quad)
   {
-    return (R->min_x >= B->min_x - EPSILON) &&
-           (R->min_y >= B->min_y - EPSILON) &&
-           (R->max_x <= B->max_x + EPSILON) &&
-           (R->max_y <= B->max_y + EPSILON);
+    return (R->min_x >= B->min_x - QUANTIZE_GRID) &&
+           (R->min_y >= B->min_y - QUANTIZE_GRID) &&
+           (R->max_x <= B->max_x + QUANTIZE_GRID) &&
+           (R->max_y <= B->max_y + QUANTIZE_GRID);
   }
 
   // check each vertex of region against each half-plane of brush
@@ -1311,10 +1308,10 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
     {
       merge_segment_c *S = R->segs[j];
 
-      if (PerpDist(S->start->x, S->start->y, m1->x, m1->y, m2->x, m2->y) > 2*EPSILON)
+      if (PerpDist(S->start->x, S->start->y, m1->x, m1->y, m2->x, m2->y) > QUANTIZE_GRID)
         return false;
 
-      if (PerpDist(S->end->x, S->end->y, m1->x, m1->y, m2->x, m2->y) > 2*EPSILON)
+      if (PerpDist(S->end->x, S->end->y, m1->x, m1->y, m2->x, m2->y) > QUANTIZE_GRID)
         return false;
     }
   }

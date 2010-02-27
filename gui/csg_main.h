@@ -22,7 +22,12 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 
-#define EPSILON  0.05
+// grid spacing for quantizing vertices  
+#define QUANTIZE_GRID  0.1
+
+// distance between two points to consider them equal.
+// the 1.98 provides a small overlap between two quantized vertices.
+#define EPSILON  (QUANTIZE_GRID / 1.98)
 
 #define ANGLE_EPSILON  0.0003
 
@@ -224,18 +229,14 @@ public:
 
   inline bool Match(double _xx, double _yy) const
   {
-    return (I_ROUND(_xx / EPSILON) == I_ROUND(x / EPSILON)) &&
-           (I_ROUND(_yy / EPSILON) == I_ROUND(y / EPSILON));
-///---    return (fabs(_xx - x) <= EPSILON) &&
-///---           (fabs(_yy - y) <= EPSILON);
+    return (I_ROUND(_xx / QUANTIZE_GRID) == I_ROUND(x / QUANTIZE_GRID)) &&
+           (I_ROUND(_yy / QUANTIZE_GRID) == I_ROUND(y / QUANTIZE_GRID));
   }
 
   inline bool Match(const merge_vertex_c *other) const
   {
-    return (I_ROUND(other->x / EPSILON) == I_ROUND(x / EPSILON)) &&
-           (I_ROUND(other->y / EPSILON) == I_ROUND(y / EPSILON));
-///---    return (fabs(other->x - x) <= EPSILON) &&
-///---           (fabs(other->y - y) <= EPSILON);
+    return (I_ROUND(other->x / QUANTIZE_GRID) == I_ROUND(x / QUANTIZE_GRID)) &&
+           (I_ROUND(other->y / QUANTIZE_GRID) == I_ROUND(y / QUANTIZE_GRID));
   }
     
   void AddSeg(merge_segment_c *seg);
