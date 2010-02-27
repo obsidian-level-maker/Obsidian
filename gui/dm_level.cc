@@ -1058,6 +1058,11 @@ static void MakeLinedefs(void)
         ! (G->back  && G-> back->index > 0))
       continue;
 
+    // skip segments which would become zero length linedefs
+    if (I_ROUND(G->start->x) == I_ROUND(G->end->x) &&
+        I_ROUND(G->start->y) == I_ROUND(G->end->y))
+      continue;
+
     bool flipped = false;
 
     if (! (G->front && G->front->index > 0))
