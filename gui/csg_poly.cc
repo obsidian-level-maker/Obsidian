@@ -160,6 +160,9 @@ private:
 };
 
 
+static quadtree_node_c *quad_root;
+
+
 void merge_vertex_c::AddSeg(merge_segment_c *seg)
 {
   for (unsigned int j=0; j < segs.size(); j++)
@@ -753,6 +756,9 @@ static bool TestOverlap_recursive(merge_segment_c *A, int i,
   int max_x = (int)ceil(MAX(A->start->x, A->end->x)) + 1;
   int max_y = (int)ceil(MAX(A->start->y, A->end->y)) + 1;
 
+  // NOTE: the check against segs.size() allows newly added segs (from splits)
+  //       to be processed as well.
+
   for (int k=(AN==BN) ? i+1 : 0; k < (int)BN->segs.size(); k++)
   {
 ///    if (AN == BN && k <= i)
@@ -789,6 +795,9 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
   if (! BN)
     BN = AN;
 
+  // NOTE: the check against segs.size() allows newly added segs (from splits)
+  //       to be processed as well.
+
   for (int i=0; i < (int)AN->segs.size(); i++)
   {
     merge_segment_c *A = AN->segs[i];
@@ -796,7 +805,12 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
     if (! A->start)
       continue;
 
-    while (TestOverlap_recursive(A, i, AN, BN)) { }
+    int loops = 0;
+
+    while (TestOverlap_recursive(A, i, AN, BN))
+    {
+      loops++; SYS_ASSERT(loops < 100);
+    }
   }
 
   if (AN == BN && AN->children[0])
@@ -804,32 +818,6 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
       OverlapPass_recursive(AN->children[c]);
 }
 
-static void Mug_OverlapPass(quadtree_node_c *root)
-{
-  // TODO: consider using quadtrees so that vertical separation
-  //       can be used to reduce the number of segment/segment
-  //       tests even further.
-
-  /* sort segments in order of minimum X coordinate */
-  std::sort(mug_segments.begin(), mug_segments.end(),
-            Compare_SegmentMinX_pred());
-
-  for (int i=0; i < (int)mug_segments.size(); i++)
-  {
-    merge_segment_c *A = mug_segments[i];
-
-    for (int k=i+1; k < (int)mug_segments.size(); k++)
-    {
-      merge_segment_c *B = mug_segments[k];
-
-      // skip deleted segments
-      if (! A->start) break;
-      if (! B->start) continue;
-
-///      TestOverlap(A, B);
-    }
-  }
-}
 
 static void Mug_FindOverlaps(void)
 {
@@ -840,35 +828,35 @@ static void Mug_FindOverlaps(void)
   CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
 
 
-  quadtree_node_c * root = quadtree_node_c::CreateTree(
+  quad_root = quadtree_node_c::CreateTree(
     (int)min_x, (int)min_y, (int)max_x, (int)max_y);
 
   for (int i = 0; i < (int)mug_segments.size(); i++)
-    root->AddSeg(mug_segments[i]);
+    quad_root->AddSeg(mug_segments[i]);
 
+
+  // only one pass over the quadtree is necessary, since newly added segs
+  // (from splits) are always fully processed as we gp/
 
   int loops = 0;
 
-  do
   {
     SYS_ASSERT(loops < 100);
 
     mug_changes = 0;
 
-    OverlapPass_recursive(root);
-
-///    Mug_AdjustList(root);
+    OverlapPass_recursive(quad_root);
 
     loops++;
 
 printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
-  } while (mug_changes > 0);
+  } ///--- while (mug_changes > 0);
 
 
-  Mug_TransferQuadTree(root);
+  Mug_TransferQuadTree(quad_root);
 
-  delete root;  // TODO: consider using quad-tree in other functions
+  delete quad_root;  // TODO: consider using quad-tree in other functions
 }
 
 
