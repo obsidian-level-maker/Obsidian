@@ -34,6 +34,8 @@
 
 static int mug_changes = 0;
 
+static int hot_index;
+
 ///--- #define FINE_EPSILON  0.0002
 
 
@@ -121,7 +123,7 @@ public:
       if (where ==  9) { children[2]->AddSeg(S); return; }
       if (where == 10) { children[3]->AddSeg(S); return; }
     }
-
+S->index = hot_index;
     segs.push_back(S);
   }
 
@@ -464,11 +466,16 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
                              quadtree_node_c *nd)
 {
   if (V == S->start || V == S->end)
+  {
+/// DebugPrintf("Mug_SplitSegment %p (%1.6f %1.6f) --> (%1.6f %1.6f) : V IS START/END\n",
+/// S, S->start->x, S->start->y, S->end->x, S->end->y);
     return false;
+  }
 
-// DebugPrintf("mug_change: split segment %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
-// S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
+/// DebugPrintf("Mug_SplitSegment: %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
+/// S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
 
+S->index = hot_index;
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   nd->AddSeg(NS);
@@ -612,12 +619,11 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
     // total overlap (same start + end points) ?
     if (A->Match(B))
     {
-// DebugPrintf("mug_change: killed segment %p (%1.6f %1.6f) -> (%1.6f %1.6f)\n", B,
-// B->start->x, B->start->y, B->end->x, B->end->y);
+///   DebugPrintf("Killed %p (merged with %p)\n", B, A);
 
       A->MergeSides(B);
       B->Kill();
-
+A->index = hot_index;
       mug_changes++;
       return true;
     }
@@ -630,6 +636,8 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
   int a1_side = (ap1 < -EPSILON) ? -1 : (ap1 > EPSILON) ? +1 : 0;
   int a2_side = (ap2 < -EPSILON) ? -1 : (ap2 > EPSILON) ? +1 : 0;
 
+/// DebugPrintf("A SIDES: %d %d\n", a1_side, a2_side);
+
   // is A completely on one side of B?
   if (a1_side == a2_side && a1_side != 0)
     return false;
@@ -639,6 +647,8 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
   int b1_side = (bp1 < -EPSILON) ? -1 : (bp1 > EPSILON) ? +1 : 0;
   int b2_side = (bp2 < -EPSILON) ? -1 : (bp2 > EPSILON) ? +1 : 0;
+
+/// DebugPrintf("B SIDES: %d %d\n", a1_side, a2_side);
 
   // is B completely on one side of A?
   if (b1_side == b2_side && b1_side != 0)
@@ -775,6 +785,9 @@ static bool TestOverlap_recursive(merge_segment_c *A, int i,
     if (! A->start) return changed;
     if (! B->start) continue;
     
+    if (A->index > hot_index+1 && B->index > hot_index+1)
+      continue;
+
     changed |= TestOverlap(A, B, AN, BN);
   }
 
@@ -812,7 +825,7 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
 
     int loops = 0;
 
-    while (TestOverlap_recursive(A, i, AN, BN))
+    if (TestOverlap_recursive(A, i, AN, BN))  ///!!!!!
     {
       loops++; SYS_ASSERT(loops < 100);
     }
@@ -833,6 +846,8 @@ static void Mug_FindOverlaps(void)
   CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
 
 
+  hot_index = -1;
+
   quad_root = quadtree_node_c::CreateTree(
     (int)min_x, (int)min_y, (int)max_x, (int)max_y);
 
@@ -845,10 +860,13 @@ static void Mug_FindOverlaps(void)
 
   int loops = 0;
 
+  do
   {
     SYS_ASSERT(loops < 100);
 
     mug_changes = 0;
+
+    hot_index--;
 
     OverlapPass_recursive(quad_root);
 
@@ -856,7 +874,7 @@ static void Mug_FindOverlaps(void)
 
 printf("Mug_FindOverlaps: loop=%d changes=%d\n", loops, mug_changes);
 
-  } ///--- while (mug_changes > 0);
+  } while (mug_changes > 0);
 
 
   Mug_TransferQuadTree(quad_root);
@@ -918,13 +936,13 @@ static bool TraceNext(void)
     SYS_ASSERT(angle < 360.0 + ANGLE_EPSILON);
 
 #if 0
-LogPrintf("T: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", T,
+DebugPrintf("T: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", T,
   T->start->x, T->start->y, T->end->x, T->end->y);
 if (best_seg)
-LogPrintf("best_seg: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", best_seg,
+DebugPrintf("best_seg: %p (%1.6f %1.6f) --> (%1.6f %1.6f)\n", best_seg,
   best_seg->start->x, best_seg->start->y,
   best_seg->end->x, best_seg->end->y);
-LogPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
+DebugPrintf("best_angle: %1.8f  angle: %1.8f\n", best_angle, angle);
 #endif
     // should never have two segments with same angle (pt 2)
     if (fabs(best_angle - angle) < ANGLE_EPSILON)
