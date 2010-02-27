@@ -39,6 +39,17 @@ static int hot_index;
 ///--- #define FINE_EPSILON  0.0002
 
 
+static inline bool IsCold(const merge_segment_c *S)
+{
+  return (S->index > hot_index+1);
+}
+
+static inline void MarkHot(merge_segment_c *S)
+{
+  S->index = hot_index;
+}
+
+
 #define QUADTREE_LEAF_SIZE  128
 
 class quadtree_node_c
@@ -123,7 +134,9 @@ public:
       if (where ==  9) { children[2]->AddSeg(S); return; }
       if (where == 10) { children[3]->AddSeg(S); return; }
     }
-S->index = hot_index;
+
+    MarkHot(S);
+
     segs.push_back(S);
   }
 
@@ -475,7 +488,8 @@ static bool Mug_SplitSegment(merge_segment_c *S, merge_vertex_c *V,
 /// DebugPrintf("Mug_SplitSegment: %p (%1.6f %1.6f) --> (%1.6f %1.6f) at (%1.6f %1.6f)\n", S,
 /// S->start->x, S->start->y, S->end->x, S->end->y, V->x, V->y);
 
-S->index = hot_index;
+  MarkHot(S);
+
   merge_segment_c *NS = new merge_segment_c(V, S->end);
 
   nd->AddSeg(NS);
@@ -623,8 +637,10 @@ static inline bool TestOverlap(merge_segment_c *A, merge_segment_c *B,
 
       A->MergeSides(B);
       B->Kill();
-A->index = hot_index;
+
+      MarkHot(A);
       mug_changes++;
+
       return true;
     }
 #endif
@@ -784,8 +800,8 @@ static bool TestOverlap_recursive(merge_segment_c *A, int i,
     // skip deleted segments
     if (! A->start) return changed;
     if (! B->start) continue;
-    
-    if (A->index > hot_index+1 && B->index > hot_index+1)
+
+    if (IsCold(A) && IsCold(B))
       continue;
 
     changed |= TestOverlap(A, B, AN, BN);
