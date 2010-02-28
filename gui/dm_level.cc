@@ -277,9 +277,6 @@ static std::vector<sidedef_info_c *> dm_sidedefs;
 static std::vector<sector_info_c *>  dm_sectors;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
-int bounds_x1, bounds_y1;
-int bounds_x2, bounds_y2;
-
 
 static void FreeLevelStuff(void)
 {
@@ -439,21 +436,6 @@ void DM_TestRegions(void)
 
 
 //------------------------------------------------------------------------
-
-static void DetermineMapBounds(void)
-{
-  double min_x, min_y, min_z;
-  double max_x, max_y, max_z;
-
-  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
-
-  // rounding is OK since the bounds have been padded
-  bounds_x1 = I_ROUND(min_x);
-  bounds_y1 = I_ROUND(min_y);
-
-  bounds_x2 = I_ROUND(max_x);
-  bounds_y2 = I_ROUND(max_y);
-}
 
 
 static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
@@ -1241,8 +1223,6 @@ void DM_WriteDoom(void)
  
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;
-
-  DetermineMapBounds();
 
   CreateSectors();
 

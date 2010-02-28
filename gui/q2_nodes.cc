@@ -1985,14 +1985,9 @@ void Q2_CreateModel(void)
 
 
   // set model bounding box
-  double min_x, min_y, min_z;
-  double max_x, max_y, max_z;
-
-  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
-
-  model.mins[0] = min_x;  model.maxs[0] = max_x;
-  model.mins[1] = min_y;  model.maxs[1] = max_y;
-  model.mins[2] = min_z;  model.maxs[2] = max_z;
+  model.mins[0] = bounds_x1;  model.maxs[0] = bounds_x2;
+  model.mins[1] = bounds_y1;  model.maxs[1] = bounds_y2;
+  model.mins[2] = bounds_z1;  model.maxs[2] = bounds_z2;
 
   model.origin[0] = 0;
   model.origin[1] = 0;

@@ -1850,16 +1850,13 @@ fprintf(stderr, "Write Nodes...\n");
 
 
   // set model bounding box
-  double mins[3], maxs[3];
+  model.mins[0] = bounds_x1;  model.maxs[0] = bounds_x2;
+  model.mins[1] = bounds_y1;  model.maxs[1] = bounds_y2;
+  model.mins[2] = bounds_z1;  model.maxs[2] = bounds_z2;
 
-  CSG2_GetBounds(mins[0], mins[1], mins[2],  maxs[0], maxs[1], maxs[2]);
-
-  for (int b = 0; b < 3; b++)
-  {
-    model.mins[b]   = mins[b];
-    model.maxs[b]   = maxs[b];
-    model.origin[b] = 0;
-  }
+  model.origin[0] = 0;
+  model.origin[1] = 0;
+  model.origin[2] = 0;
 
 
   // clipping hulls
