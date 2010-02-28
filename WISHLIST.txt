@@ -70,6 +70,13 @@ Miscellaneous:
   - More than one theme per episode.
 
 
+Possible Options:
+-  glBSP section:
+   -  more accurate nodes (slower)
+   -  verbose log messages
+   -  pack sidedefs
+
+
 ----------------------------------------------------------------
   GUI and C++ CODE
 ----------------------------------------------------------------
