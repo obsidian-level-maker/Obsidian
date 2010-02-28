@@ -43,6 +43,9 @@ std::vector<merge_vertex_c *>  mug_vertices;
 std::vector<merge_segment_c *> mug_segments;
 std::vector<merge_region_c *>  mug_regions;
 
+int bounds_x1, bounds_y1, bounds_z1;
+int bounds_x2, bounds_y2, bounds_z2;
+
 
 static void CSG2_BeginLevel(void);
 static void CSG2_EndLevel(void);
@@ -204,18 +207,26 @@ entity_info_c::~entity_info_c()
 
 //------------------------------------------------------------------------
 
-void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
-                    double& max_x, double& max_y, double& max_z)
+void CSG2_UpdateBounds(bool three_d)
 {
+  double min_x, min_y, min_z;
+  double max_x, max_y, max_z;
+
   min_x = min_y = min_z = +9e9;
   max_x = max_y = max_z = -9e9;
+
+  if (three_d)
+  {
+    min_z = -4000.0;
+    max_z = +4000.0;
+  }
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
     merge_segment_c *S = mug_segments[i];
 
     // ignore lines "in the solid"
-    if (! S->HasGap())
+    if (three_d && ! S->HasGap())
       continue;
 
     double x1 = MIN(S->start->x, S->end->x);
@@ -230,25 +241,30 @@ void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
     max_x = MAX(max_x, x2);
     max_y = MAX(max_y, y2);
 
-    if (S->front && S->front->HasGap())
+    if (three_d && S->front && S->front->HasGap())
     {
       min_z = MIN(min_z, S->front->MinGapZ());
       max_z = MAX(max_z, S->front->MaxGapZ());
     }
 
-    if (S->back && S->back->HasGap())
+    if (three_d && S->back && S->back->HasGap())
     {
       min_z = MIN(min_z, S->back->MinGapZ());
       max_z = MAX(max_z, S->back->MaxGapZ());
     }
   }
 
-  if (min_x > max_x)
-    Main_FatalError("CSG2_GetBounds: map is completely solid!\n");
+//??  if (min_x > max_x)
+//??    Main_FatalError("CSG2_GetBounds: map is completely solid!\n");
 
   // add some leeyway
-  min_x -= 32; min_y -= 32; min_z -= 64;
-  max_x += 32; max_y += 32; max_z += 64;
+  bounds_x1 = (int)floor(min_x) - 32;
+  bounds_y1 = (int)floor(min_y) - 32;
+  bounds_z1 = (int)floor(min_z) - 64;
+
+  bounds_x2 = (int)ceil(max_x) + 32;
+  bounds_y2 = (int)ceil(max_y) + 32;
+  bounds_z2 = (int)ceil(max_z) + 64;
 }
 
 
@@ -259,13 +275,8 @@ void CSG2_MakeMiniMap(void)
 
   int scale = 64;
 
-  double min_x, min_y, min_z;
-  double max_x, max_y, max_z;
-
-  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
-
-  double cent_x = (min_x + max_x) / 2.0;
-  double cent_y = (min_y + max_y) / 2.0;
+  double cent_x = (bounds_x1 + bounds_x2) / 2.0;
+  double cent_y = (bounds_y1 + bounds_y2) / 2.0;
 
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
@@ -279,11 +290,11 @@ void CSG2_MakeMiniMap(void)
     if (! S->HasGap())
       continue;
 
-    int x1 = (int)ceil(S->start->x - cent_x) / scale + map_W/2;
-    int y1 = (int)ceil(S->start->y - cent_y) / scale + map_H/2;
+    int x1 = I_ROUND(S->start->x - cent_x) / scale + map_W/2;
+    int y1 = I_ROUND(S->start->y - cent_y) / scale + map_H/2;
 
-    int x2 = (int)ceil(S->end  ->x - cent_x) / scale + map_W/2;
-    int y2 = (int)ceil(S->end  ->y - cent_y) / scale + map_H/2;
+    int x2 = I_ROUND(S->end->x   - cent_x) / scale + map_W/2;
+    int y2 = I_ROUND(S->end->y   - cent_y) / scale + map_H/2;
 
     bool two_sided = (S->front && S->front->gaps.size() > 0) &&
                      (S->back  && S->back ->gaps.size() > 0);

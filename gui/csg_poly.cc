@@ -441,11 +441,7 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
     return S;
   }
 
-   SYS_ASSERT(! end->FindSeg(start));
-
-///--- for (int i=0; i < (int)mug_segments.size(); i++)
-///--- if (mug_segments[i]->Match(start, end))
-///--- Main_FatalError("OUCH!!!!\n");
+  SYS_ASSERT(! end->FindSeg(start));
 
   S = new merge_segment_c(start, end);
 
@@ -809,17 +805,10 @@ static void OverlapPass_recursive(quadtree_node_c *AN, quadtree_node_c *BN = NUL
 
 static void Mug_FindOverlaps(void)
 {
-  // FIXME: determine bounds earlier on (as we create segments)
-  double min_x, min_y, min_z;
-  double max_x, max_y, max_z;
-
-  CSG2_GetBounds(min_x, min_y, min_z,  max_x, max_y, max_z);
-
-
   hot_index = -1;
 
   quad_root = quadtree_node_c::CreateTree(
-    (int)min_x, (int)min_y, (int)max_x, (int)max_y);
+    (int)bounds_x1, (int)bounds_y1, (int)bounds_x2, (int)bounds_y2);
 
   for (int i = 0; i < (int)mug_segments.size(); i++)
     quad_root->AddSeg(mug_segments[i]);
@@ -1777,6 +1766,8 @@ void CSG2_MergeAreas(void)
     Mug_MakeSegments(P);
   }
 
+  CSG2_UpdateBounds(false /* three_d */);
+
   Mug_FindOverlaps();
   Mug_TraceSegLoops();
   Mug_RemoveIslands();
@@ -1788,6 +1779,8 @@ void CSG2_MergeAreas(void)
 
   Mug_PlaceEntities();
   Mug_FillUnusedGaps();
+
+  CSG2_UpdateBounds(true /* three_d */);
 }
 
 

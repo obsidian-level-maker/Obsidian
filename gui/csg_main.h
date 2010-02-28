@@ -419,13 +419,13 @@ extern std::vector<merge_segment_c *> mug_segments;
 extern std::vector<merge_region_c *>  mug_regions;
 extern std::vector<merge_gap_c *>     mug_gaps;
 
+extern int bounds_x1, bounds_y1, bounds_z1;
+extern int bounds_x2, bounds_y2, bounds_z2;
+
 
 /* ----- FUNCTIONS ----- */
 
 void CSG2_MergeAreas(void);
-
-void CSG2_GetBounds(double& min_x, double& min_y, double& min_z,
-                    double& max_x, double& max_y, double& max_z);
 
 area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
@@ -437,6 +437,8 @@ area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
 merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 
 void CSG2_MakeMiniMap(void);
+
+void CSG2_UpdateBounds(bool three_d);
 
 void CSG2_FreeMerges(void);
 
