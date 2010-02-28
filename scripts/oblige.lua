@@ -334,10 +334,14 @@ function ob_set_config(name, value)
 end
 
 
-function ob_read_all_config(all_opts)
+function ob_read_all_config(all_opts, print_to_log)
 
   local function do_line(fmt, ...)
-    gui.config_line(string.format(fmt, ...))
+    if print_to_log then
+      gui.printf(fmt .. "\n", ...)
+    else
+      gui.config_line(string.format(fmt, ...))
+    end
   end
 
   local unknown = "XXX"
@@ -506,7 +510,7 @@ function ob_build_cool_shit()
 
   gui.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  gui.printf("Settings =\n%s\n", table_to_str(OB_CONFIG))
+  ob_read_all_config(false, true)
 
   gui.ticker()
 
