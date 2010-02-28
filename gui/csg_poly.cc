@@ -381,8 +381,6 @@ void merge_region_c::ComputeBBox()
 }
 
 
-static std::vector<merge_segment_c *> mug_new_segs;
-
 #define VERTEX_HASH  512
 static std::vector<merge_vertex_c *> * hashed_verts[VERTEX_HASH];
 
@@ -1768,8 +1766,6 @@ void CSG2_MergeAreas(void)
   //   (5) find the gaps and their neighbours
   //   (6) place every entity into a gap
   //   (7) remove gaps which no entity can reach
-
-  mug_new_segs.clear(); // should be empty, but just in case
 
   ClearVertexHash();
 
