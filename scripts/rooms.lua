@@ -138,6 +138,9 @@ function Rooms_decide_outdoors()
     if R.outdoor and R.kind == "building" then
       R.kind = "courtyard"
     end
+    if R.outdoor then
+      R.sky_h = SKY_H
+    end
   end
 end
 
@@ -606,6 +609,33 @@ function Rooms_reckon_doors()
       end
     end -- for who
   end -- for C
+end
+
+
+function Rooms_synchronise_skies()
+  -- make sure that any two outdoor rooms which touch have the same sky_h
+
+  for loop = 1,10 do
+    local changes = false
+
+    for x = 1,SEED_W do for y = 1,SEED_H do
+      local S = SEEDS[x][y][1]
+      if S and S.room and S.room.sky_h then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room and N.room ~= S.room and N.room.sky_h and
+             S.room.sky_h ~= N.room.sky_h
+          then
+            S.room.sky_h = math.max(S.room.sky_h, N.room.sky_h)
+            N.room.sky_h = S.room.sky_h
+            changes = true
+          end
+        end -- for side
+      end
+    end end -- for x, y
+
+    if not changes then break; end
+  end -- for loop
 end
 
 
@@ -1088,9 +1118,8 @@ end
 function Room_make_ceiling(R)
 
   local function outdoor_ceiling()
-    assert(R.floor_max_h)
-    if R.floor_max_h > SKY_H - 128 then
-      R.ceil_h = R.floor_max_h + 128
+    if R.floor_max_h then
+      R.sky_h = math.max(R.sky or SKY_H, R.floor_max_h + 128)
     end
   end
 
@@ -1768,7 +1797,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
   ---| Room_make_ceiling |---
 
-  if R.kind == "courtyard" then
+  if R.outdoor then
     outdoor_ceiling()
   
   elseif R.kind == "building" then
@@ -2028,7 +2057,7 @@ gui.printf("do_teleport\n")
     local y2 = S.y2
 
     local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
-    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+    local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
 
     assert(z1 and z2)
 
@@ -2430,6 +2459,8 @@ function Rooms_build_all()
     Layout_scenic(R)
     Room_make_ceiling(R)
   end
+
+  Rooms_synchronise_skies()
 
   Rooms_border_up()
 
