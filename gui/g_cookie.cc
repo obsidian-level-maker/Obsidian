@@ -37,33 +37,44 @@ static FILE *cookie_fp;
 static bool doing_pre_load;
 
 
+static bool ParseMiscOption(const char *name, const char *value)
+{
+  if (StringCaseCmp(name, "create_backups") == 0)
+  {
+    if (doing_pre_load)
+      create_backups = atoi(value) ? true : false;
+  }
+  else if (StringCaseCmp(name, "debug_messages") == 0)
+  {
+    if (doing_pre_load)
+      debug_messages = atoi(value) ? true : false;
+  }
+  else if (StringCaseCmp(name, "hide_modules") == 0)
+  {
+    if (doing_pre_load)
+      hide_module_panel = atoi(value) ? true : false;
+  }
+  else
+  {
+    return false;  // not a misc option
+  }
+
+  return true;
+}
+
+
 static void Cookie_SetValue(const char *name, const char *value)
 {
   if (! doing_pre_load)
     DebugPrintf("CONFIG: Name: [%s] Value: [%s]\n", name, value);
 
-  // -- Miscellaneous --
-  if (doing_pre_load)
-  {
-    if (StringCaseCmp(name, "create_backups") == 0)
-    {
-      create_backups = atoi(value) ? true : false;
-      return;
-    }
-    if (StringCaseCmp(name, "debug_messages") == 0)
-    {
-      debug_messages = atoi(value) ? true : false;
-      return;
-    }
-    if (StringCaseCmp(name, "hide_modules") == 0)
-    {
-      hide_module_panel = atoi(value) ? true : false;
-      return;
-    }
-
-    // skip everything else during PRELOAD
+  // -- Misc Options --
+  if (ParseMiscOption(name, value))
     return;
-  }
+
+  // skip everything else during PRELOAD
+  if (doing_pre_load)
+    return;
 
   SYS_ASSERT(main_win);
 
@@ -227,7 +238,7 @@ bool Cookie_Save(const char *filename)
   fprintf(cookie_fp, "-- " OBLIGE_TITLE " (C) 2006-2010 Andrew Apted\n");
   fprintf(cookie_fp, "-- http://oblige.sourceforge.net/\n\n");
 
-  fprintf(cookie_fp, "-- Miscellaneous --\n");
+  fprintf(cookie_fp, "-- Misc Options --\n");
   fprintf(cookie_fp, "create_backups = %d\n", create_backups ? 1 : 0);
   fprintf(cookie_fp, "debug_messages = %d\n", debug_messages ? 1 : 0);
   fprintf(cookie_fp, "hide_modules = %d\n", hide_module_panel ? 1 : 0);
