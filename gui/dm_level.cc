@@ -203,16 +203,28 @@ public:
       }
   }
 
+  void ReplaceLine(linedef_info_c *old_L, linedef_info_c *new_L)
+  {
+    for (int i=0; i < 3; i++)
+      if (lines[i] == old_L)
+      {
+        lines[i] = new_L;
+        return;
+      }
+  }
+
   linedef_info_c *SecondLine(const linedef_info_c *L) const
   {
-    if (lines[2] || ! lines[1])
+    if (lines[2])  // three or more lines?
+      return NULL;
+
+    if (! lines[1])  // only one line?
       return NULL;
 
     if (lines[0] == L)
       return lines[1];
 
     SYS_ASSERT(lines[1] == L);
-
     return lines[0];
   }
 
@@ -283,6 +295,15 @@ public:
   ~linedef_info_c()
   { }
 
+  inline vertex_info_c *OtherVertex(const vertex_info_c *V) const
+  {
+    if (start == V)
+      return end;
+
+    SYS_ASSERT(end == V);
+    return start;
+  }
+
   inline bool Valid() const
   {
     return (start != NULL);
@@ -319,6 +340,9 @@ public:
       bdx = -bdx;  bdy = -bdy;
     }
 
+    if (adx * bdy != bdx * ady)
+      return false;
+
     // FIXME
 
     return true;
@@ -327,9 +351,16 @@ public:
   void Merge(linedef_info_c *B, vertex_info_c *V)
   {
     if (V == start)
-      end = (V == B->start) ? B->end : B->start;
+      start = B->OtherVertex(V);
     else
-      start = (V == B->start) ? B->end : B->start;
+      end = B->OtherVertex(V);
+
+    if (V == B->start)
+      B->end->ReplaceLine(B, this);
+    else
+      B->start->ReplaceLine(B, this);
+
+    // no need to update V (it is no longer used)
 
     B->Kill();
   }
@@ -1282,6 +1313,8 @@ static void TryMergeLine(linedef_info_c *A, int v_num)
 
   if (! B)
     return;
+
+  SYS_ASSERT(B->Valid());
 
   if (A->CouldMerge(B, V))
     A->Merge(B, V);
