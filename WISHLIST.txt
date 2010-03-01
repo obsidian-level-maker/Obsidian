@@ -184,6 +184,7 @@ SKY GENERATOR:
 + create faces from stacked brushes behind a gap (cf. oa_dm7)
 
 ++ perform lighting
+   (sky vector = '1 2 4')
 
 ++ perform visibility
 

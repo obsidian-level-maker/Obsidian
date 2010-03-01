@@ -3,9 +3,7 @@ TODO
 ====
 
 
->>>  CSG: determine bounds properly
-
-BUG: can create outdoor rooms with low ceiling (e.g. E3M7)
+FIXED: can create outdoor rooms with low ceiling (e.g. E3M7)
 
 BUG: can assign a seed as "walk" without floor_h ??
 

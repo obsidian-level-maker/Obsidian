@@ -5,8 +5,11 @@ CHANGES (since v3.51)
 - faster node building (especially on large maps)
 - faster / more robust CSG code
 
-- write all user settings into the LOGS.txt file
+- more optimised maps (less vertices and linedefs)
+>>>  better texture alignment 
 
-- fixed a bug where outdoor area was too low to fit in
+- write all relevant settings in the LOGS.txt file
+
+- fixed a bug where an outdoor area was too low to fit in
 - fixed ugliness when outdoor rooms had differing sky heights
 
