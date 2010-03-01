@@ -294,10 +294,15 @@ public:
 
   double length;
 
+  // similar linedef touching our start vertex (NULL if none).
+  // used for texture aligning.
+  linedef_info_c *sim_prev;
+
 public:
   linedef_info_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
-                     flags(0), type(0), tag(0), length(0)
+                     flags(0), type(0), tag(0),
+                     length(0), sim_prev(NULL)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
@@ -413,12 +418,35 @@ public:
     B->end->ReplaceLine(B, this);
 
     // fix X offset on back sidedef
-    if (back)
+    if (back && back->x_offset != IVAL_NONE)
       back->x_offset += I_ROUND(B->length);
 
     B->Kill();
 
     CalcLength();
+  }
+
+  bool isFrontSimilar(const linedef_info_c *P) const
+  {
+    if (! back && ! P->back)
+      return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
+
+    if (back && P->back)
+      return front->SameTex(P->front);
+
+    const linedef_info_c *L = this;
+
+    if (back)
+      std::swap(L, P);
+
+    // now L is single sided and P is double sided.
+
+///---  if (P->mid[0] != '-')
+///---    return false;
+
+    // allow either upper or lower to match
+    return (strcmp(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
+           (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
   }
 };
 
@@ -977,7 +1005,7 @@ static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
 
 
 
-static int NaturalXOffset(merge_segment_c *G, int side)
+static int NaturalXOffset(linedef_info_c *G, int side)
 {
   double along;
   
@@ -1370,30 +1398,48 @@ static void MergeColinearLines(void)
 }
 
 
-static linedef_info_c * FindPreviousSimilarLine(linedef_info_c *L)
+static void FindPreviousSimilarLine(linedef_info_c *L)
 {
-  linedef_info_c *first_L = L;
+  if (L->front->x_offset != IVAL_NONE)
+    return;
 
-  for (;;)
+  // FIXME: handle 3 and 4 way junctions !!!!
+
+  linedef_info_c *P = L->start->SecondLine(L);
+
+  if (P)
   {
-    // FIXME: handle 3 and 4 way junctions !!!!
-    //        (prefer same front sector)
-
-    linedef_info_c *P = L->start->SecondLine(L);
-    if (! P)
-      break;
-
-    if (P == first_L)
-      break;
-
-//    if (! L->MatchTextures(P))
-//    break;
-
-// FUCK IT -- no good
-
+    if (L->isFrontSimilar(P))
+    {
+      L->sim_prev = P;
+      return;
+    }
   }
 
-  return NULL;  // not found
+  L->front->x_offset = NaturalXOffset(L, 0);
+}
+
+
+static void RecursiveXOffsetFromPrevious(linedef_info_c *L, int depth = 0)
+{
+  if (! L->sim_prev || depth > 200)
+  {
+    L->front->x_offset = NaturalXOffset(L, 0);
+    return;
+  }
+
+  // set a temporary value, which handles line loops nicely
+  // (prevents going round and round and round)
+  L->front->x_offset = 0;
+
+  if (L->sim_prev->front->x_offset == IVAL_NONE)
+  {
+    RecursiveXOffsetFromPrevious(L->sim_prev, depth+1);
+  }
+
+  int prev = L->sim_prev->front->x_offset;
+
+  L->front->x_offset = prev + I_ROUND(L->sim_prev->length);
 }
 
 
@@ -1410,7 +1456,23 @@ static void AlignTextures(void)
   //
   // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
 
+  int i;
 
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+    if (dm_linedefs[i]->Valid())
+      FindPreviousSimilarLine(dm_linedefs[i]);
+
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+    if (dm_linedefs[i]->Valid())
+    {
+      linedef_info_c *L = dm_linedefs[i];
+
+      if (L->front->x_offset == IVAL_NONE)
+        RecursiveXOffsetFromPrevious(L);
+
+      if (L->back && L->back->x_offset == IVAL_NONE)
+        L->back->x_offset = NaturalXOffset(L, 0);
+    }
 }
 
 
