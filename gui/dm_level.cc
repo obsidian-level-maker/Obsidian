@@ -183,12 +183,13 @@ public:
 
   // keep track of a few (but not all) linedefs touching this vertex.
   // this is used to detect colinear lines which can be merged.
-  linedef_info_c *lines[3];
+  // (later it may be used for horizontal texture alignment)
+  linedef_info_c *lines[4];
  
 public:
   vertex_info_c() : x(0), y(0), index(-1)
   {
-    lines[0] = lines[1] = lines[2] = NULL;
+    lines[0] = lines[1] = lines[2] = lines[3] = NULL;
   }
 
   ~vertex_info_c()
@@ -196,7 +197,7 @@ public:
 
   void AddLine(linedef_info_c *L)
   {
-    for (int i=0; i < 3; i++)
+    for (int i=0; i < 4; i++)
       if (! lines[i])
       {
         lines[i] = L; return;
@@ -205,7 +206,7 @@ public:
 
   void ReplaceLine(linedef_info_c *old_L, linedef_info_c *new_L)
   {
-    for (int i=0; i < 3; i++)
+    for (int i=0; i < 4; i++)
       if (lines[i] == old_L)
       {
         lines[i] = new_L;
@@ -361,10 +362,12 @@ public:
     if (A->sector != B->sector)
       return false;
 
-    if (A->y_offset != B->y_offset)
-      return false;
+    // X offsets not done here
 
-    // FIXME: x_offsets (hard)
+    if (A->y_offset != B->y_offset &&
+        A->y_offset != IVAL_NONE   &&
+        B->y_offset != IVAL_NONE)
+      return false;
 
     return A->SameTex(B);
   }
@@ -387,8 +390,18 @@ public:
 ///---  if ((V == end) == (V == B->end))
 ///---    std::swap(B_front, B_back);
 
-    return CanMergeSides(back,  B_back) &&
-           CanMergeSides(front, B_front);
+    if (! CanMergeSides(back,  B_back) ||
+        ! CanMergeSides(front, B_front))
+      return false;
+
+    if (  front->x_offset == IVAL_NONE ||
+        B_front->x_offset == IVAL_NONE)
+      return true;
+
+    int diff = B_front->x_offset - (front->x_offset + I_ROUND(length));
+
+    // the < 4 accounts for precision loss with multiple merges
+    return abs(diff) < 4; 
   }
 
   void Merge(linedef_info_c *B)
@@ -432,7 +445,7 @@ static void FreeLevelStuff(void)
   dm_vertices.clear();
   dm_linedefs.clear();
   dm_sidedefs.clear();
-  dm_sectors.clear();
+  dm_sectors. clear();
   dm_exfloors.clear();
 }
 
@@ -448,7 +461,7 @@ int sidedef_info_c::Write()
     index = DM_NumSidedefs();
 
     DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
-                  upper.c_str(), x_offset, y_offset);
+                  upper.c_str(), x_offset & 1023, y_offset & 1023);
   }
 
   return index;
@@ -1011,7 +1024,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
   SD->sector = S;
 
   // the 'natural' X/Y offsets
-  SD->x_offset = NaturalXOffset(G, side);
+  SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
   SD->y_offset = - S->c_h;
 
   if (B && B->index > 0)
@@ -1089,9 +1102,6 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     if (mid_W && mid_W->y_offset != FVAL_NONE)
       SD->y_offset = (int)mid_W->y_offset;
   }
-
-  SD->x_offset &= 1023;
-  SD->y_offset &= 1023;
 
   return SD;
 }
@@ -1360,6 +1370,50 @@ static void MergeColinearLines(void)
 }
 
 
+static linedef_info_c * FindPreviousSimilarLine(linedef_info_c *L)
+{
+  linedef_info_c *first_L = L;
+
+  for (;;)
+  {
+    // FIXME: handle 3 and 4 way junctions !!!!
+    //        (prefer same front sector)
+
+    linedef_info_c *P = L->start->SecondLine(L);
+    if (! P)
+      break;
+
+    if (P == first_L)
+      break;
+
+//    if (! L->MatchTextures(P))
+//    break;
+
+// FUCK IT -- no good
+
+  }
+
+  return NULL;  // not found
+}
+
+
+static void AlignTextures(void)
+{
+  // FIXME !!!!
+
+  // Algorithm:
+  //
+  // 1) assign every linedef a "prev_matcher" field (forms a chain)
+  //    [POSSIBILITY: similar field for back sidedefs]
+  //
+  // 2) give every linedef with no prev_matcher the NATURAL X offset
+  //
+  // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
+
+
+}
+
+
 void DM_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
@@ -1384,6 +1438,7 @@ void DM_WriteDoom(void)
 
   MakeLinedefs();
   MergeColinearLines();
+  AlignTextures();
 
 ///  CreateeDummies();
 
