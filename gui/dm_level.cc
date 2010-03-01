@@ -266,6 +266,13 @@ public:
   { }
 
   int Write();
+
+  inline bool SameTex(const sidedef_info_c *T) const
+  {
+    return (strcmp(mid  .c_str(), T->mid  .c_str()) == 0) &&
+           (strcmp(lower.c_str(), T->lower.c_str()) == 0) &&
+           (strcmp(upper.c_str(), T->upper.c_str()) == 0);
+  }
 };
 
 
@@ -322,7 +329,23 @@ public:
 
   void Write();
 
-  bool CouldMerge(const linedef_info_c *B, const vertex_info_c *V) const
+  inline bool CanMergeSides(const sidedef_info_c *A, const sidedef_info_c *B) const
+  {
+    if (! A || ! B)
+      return (!A && !B);
+
+    if (A->sector != B->sector)
+      return false;
+
+    if (A->y_offset != B->y_offset)
+      return false;
+
+    // FIXME: x_offsets (hard)
+
+    return A->SameTex(B);
+  }
+
+  bool CanMerge(const linedef_info_c *B, const vertex_info_c *V) const
   {
     int adx = end->x - start->x;
     int ady = end->y - start->y;
@@ -343,9 +366,15 @@ public:
     if (adx * bdy != bdx * ady)
       return false;
 
-    // FIXME
+    // test sidedefs
+    sidedef_info_c *B_front = B->front;
+    sidedef_info_c *B_back  = B->back;
 
-    return true;
+    if ((V == end) == (V == B->end))
+      std::swap(B_front, B_back);
+
+    return CanMergeSides(back,  B_back) &&
+           CanMergeSides(front, B_front);
   }
 
   void Merge(linedef_info_c *B, vertex_info_c *V)
@@ -359,6 +388,8 @@ public:
       B->end->ReplaceLine(B, this);
     else
       B->start->ReplaceLine(B, this);
+
+    // FIXME: sidedef X offsets
 
     // no need to update V (it is no longer used)
 
@@ -1316,7 +1347,7 @@ static void TryMergeLine(linedef_info_c *A, int v_num)
 
   SYS_ASSERT(B->Valid());
 
-  if (A->CouldMerge(B, V))
+  if (A->CanMerge(B, V))
     A->Merge(B, V);
 }
 
