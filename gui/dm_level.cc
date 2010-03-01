@@ -327,6 +327,23 @@ public:
     std::swap(front, back);
   }
 
+  inline bool ShouldFlip() const
+  {
+    if (! front)
+      return true;
+
+    if (! back)
+      return false;
+
+    sector_info_c *F = front->sector;
+    sector_info_c *B = back->sector;
+
+    if (F->f_h != B->f_h) return (F->f_h > B->f_h);
+    if (F->c_h != B->c_h) return (F->c_h < B->c_h);
+
+    return false;
+  }
+
   void Write();
 
   inline bool CanMergeSides(const sidedef_info_c *A, const sidedef_info_c *B) const
@@ -1174,29 +1191,6 @@ static void MakeLinedefs(void)
         I_ROUND(G->start->y) == I_ROUND(G->end->y))
       continue;
 
-    bool flipped = false;
-
-    if (! (G->front && G->front->index > 0))
-    {
-      flipped = true;
-    }
-    else if (G->back && G->back->index > 0)
-    {
-      sector_info_c *FS = dm_sectors[G->front->index];
-      sector_info_c *BS = dm_sectors[G-> back->index];
-
-      if (FS->f_h != BS->f_h)
-      {
-        if (BS->f_h < FS->f_h)
-          flipped = true;
-      }
-      else if (FS->c_h != BS->c_h)
-      {
-        if (BS->c_h > FS->c_h)
-          flipped = true;
-      }
-    }
-
     area_vert_c *spec = FindSpecialVert(G);
 
     // if same sector on both sides, skip the line, unless
@@ -1211,7 +1205,6 @@ static void MakeLinedefs(void)
 
     dm_linedefs.push_back(L);
 
-
     L->start = MakeVertex(G->start);
     L->end   = MakeVertex(G->end);
 
@@ -1224,10 +1217,12 @@ static void MakeLinedefs(void)
     L->front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
     L->back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
 
-    if (flipped)
+    SYS_ASSERT(L->front || L->back);
+
+    // TODO: a way to ensure a certain orientation (two-sided lines only)
+    if (L->ShouldFlip())
       L->Flip();
 
-    SYS_ASSERT(L->front);
 
     if (! L->back)
       L->flags |= MLF_BlockAll;
