@@ -291,16 +291,23 @@ public:
 
   u8_t args[5];
 
+  double length;
+
 public:
   linedef_info_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
-                     flags(0), type(0), tag(0)
+                     flags(0), type(0), tag(0), length(0)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
 
   ~linedef_info_c()
   { }
+
+  void CalcLength()
+  {
+    length = ComputeDist(start->x, start->y, end->x, end->y);
+  }
 
   inline vertex_info_c *OtherVertex(const vertex_info_c *V) const
   {
@@ -362,23 +369,13 @@ public:
     return A->SameTex(B);
   }
 
-  bool CanMerge(const linedef_info_c *B, const vertex_info_c *V) const
+  bool CanMerge(const linedef_info_c *B) const
   {
     int adx = end->x - start->x;
     int ady = end->y - start->y;
 
     int bdx = B->end->x - B->start->x;
     int bdy = B->end->y - B->start->y;
-
-    if (V == end)
-    {
-      adx = -adx;  ady = -ady;
-    }
-
-    if (V == B->end)
-    {
-      bdx = -bdx;  bdy = -bdy;
-    }
 
     if (adx * bdy != bdx * ady)
       return false;
@@ -387,30 +384,28 @@ public:
     sidedef_info_c *B_front = B->front;
     sidedef_info_c *B_back  = B->back;
 
-    if ((V == end) == (V == B->end))
-      std::swap(B_front, B_back);
+///---  if ((V == end) == (V == B->end))
+///---    std::swap(B_front, B_back);
 
     return CanMergeSides(back,  B_back) &&
            CanMergeSides(front, B_front);
   }
 
-  void Merge(linedef_info_c *B, vertex_info_c *V)
+  void Merge(linedef_info_c *B)
   {
-    if (V == start)
-      start = B->OtherVertex(V);
-    else
-      end = B->OtherVertex(V);
+    SYS_ASSERT(B->start == end);
 
-    if (V == B->start)
-      B->end->ReplaceLine(B, this);
-    else
-      B->start->ReplaceLine(B, this);
+    end = B->end;
 
-    // FIXME: sidedef X offsets
+    B->end->ReplaceLine(B, this);
 
-    // no need to update V (it is no longer used)
+    // fix X offset on back sidedef
+    if (back)
+      back->x_offset += I_ROUND(B->length);
 
     B->Kill();
+
+    CalcLength();
   }
 };
 
@@ -1211,6 +1206,9 @@ static void MakeLinedefs(void)
     L->start->AddLine(L);
     L->end  ->AddLine(L);
 
+    L->CalcLength();
+
+
     bool l_peg = false;
     bool u_peg = false;
 
@@ -1331,19 +1329,25 @@ static void WriteThings(void)
 }
 
 
-static void TryMergeLine(linedef_info_c *A, int v_num)
+static void TryMergeLine(linedef_info_c *A)
 {
-  vertex_info_c *V = v_num ? A->end : A->start;
+  vertex_info_c *V = A->end;
 
   linedef_info_c *B = V->SecondLine(A);
 
   if (! B)
     return;
 
+  // we only handle the case where B's start == A's end
+  // (which is still the vast majority of mergeable cases)
+
+  if (V != B->start)
+    return;
+
   SYS_ASSERT(B->Valid());
 
-  if (A->CanMerge(B, V))
-    A->Merge(B, V);
+  if (A->CanMerge(B))
+    A->Merge(B);
 }
 
 
@@ -1352,8 +1356,7 @@ static void MergeColinearLines(void)
   for (int pass = 0; pass < 4; pass++)
     for (int i = 0; i < (int)dm_linedefs.size(); i++)
       if (dm_linedefs[i]->Valid())
-        for (int v = 0; v < 2; v++)
-          TryMergeLine(dm_linedefs[i], v);
+        TryMergeLine(dm_linedefs[i]);
 }
 
 
