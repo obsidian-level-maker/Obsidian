@@ -58,6 +58,7 @@ static int extrafloor_slot;
 
 
 class sector_info_c;
+class linedef_info_c;
 
 
 class extrafloor_c
@@ -179,13 +180,41 @@ public:
   int x, y;
 
   int index;
+
+  // keep track of a few (but not all) linedefs touching this vertex.
+  // this is used to detect colinear lines which can be merged.
+  linedef_info_c *lines[3];
  
 public:
   vertex_info_c() : x(0), y(0), index(-1)
-  { }
+  {
+    lines[0] = lines[1] = lines[2] = NULL;
+  }
 
   ~vertex_info_c()
   { }
+
+  void AddLine(linedef_info_c *L)
+  {
+    for (int i=0; i < 3; i++)
+      if (! lines[i])
+      {
+        lines[i] = L; return;
+      }
+  }
+
+  linedef_info_c *SecondLine(const linedef_info_c *L) const
+  {
+    if (lines[2] || ! lines[1])
+      return NULL;
+
+    if (lines[0] == L)
+      return lines[1];
+
+    SYS_ASSERT(lines[1] == L);
+
+    return lines[0];
+  }
 
   int Write()
   {
@@ -259,6 +288,11 @@ public:
     return (start != NULL);
   }
 
+  void Kill()
+  {
+    start = end = NULL;
+  }
+
   void Flip()
   {
     std::swap(start, end);
@@ -266,6 +300,39 @@ public:
   }
 
   void Write();
+
+  bool CouldMerge(const linedef_info_c *B, const vertex_info_c *V) const
+  {
+    int adx = end->x - start->x;
+    int ady = end->y - start->y;
+
+    int bdx = B->end->x - B->start->x;
+    int bdy = B->end->y - B->start->y;
+
+    if (V == end)
+    {
+      adx = -adx;  ady = -ady;
+    }
+
+    if (V == B->end)
+    {
+      bdx = -bdx;  bdy = -bdy;
+    }
+
+    // FIXME
+
+    return true;
+  }
+
+  void Merge(linedef_info_c *B, vertex_info_c *V)
+  {
+    if (V == start)
+      end = (V == B->start) ? B->end : B->start;
+    else
+      start = (V == B->start) ? B->end : B->start;
+
+    B->Kill();
+  }
 };
 
 
@@ -1086,6 +1153,9 @@ static void MakeLinedefs(void)
     L->start = MakeVertex(G->start);
     L->end   = MakeVertex(G->end);
 
+    L->start->AddLine(L);
+    L->end  ->AddLine(L);
+
     bool l_peg = false;
     bool u_peg = false;
 
@@ -1204,6 +1274,30 @@ static void WriteThings(void)
 }
 
 
+static void TryMergeLine(linedef_info_c *A, int v_num)
+{
+  vertex_info_c *V = v_num ? A->end : A->start;
+
+  linedef_info_c *B = V->SecondLine(A);
+
+  if (! B)
+    return;
+
+  if (A->CouldMerge(B, V))
+    A->Merge(B, V);
+}
+
+
+static void MergeColinearLines(void)
+{
+  for (int pass = 0; pass < 4; pass++)
+    for (int i = 0; i < (int)dm_linedefs.size(); i++)
+      if (dm_linedefs[i]->Valid())
+        for (int v = 0; v < 2; v++)
+          TryMergeLine(dm_linedefs[i], v);
+}
+
+
 void DM_WriteDoom(void)
 {
   // converts the Merged list into the sectors, linedefs (etc)
@@ -1226,12 +1320,12 @@ void DM_WriteDoom(void)
 
   CreateSectors();
 
-///  WriteDummies();
-
   MakeLinedefs();
+  MergeColinearLines();
+
+///  CreateeDummies();
 
   WriteLinedefs();
-
   WriteThings();
 
   // FIXME: Free everything
