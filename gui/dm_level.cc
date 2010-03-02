@@ -1438,49 +1438,6 @@ static linedef_info_c * FindSimilarLine(linedef_info_c *L, vertex_info_c *V)
   return best;
 }
 
-static void FindPreviousSimilarLine(linedef_info_c *L)
-{
-  if (L->front->x_offset != IVAL_NONE)
-    return;
-
-  // FIXME: handle 3 and 4 way junctions !!!!
-
-  linedef_info_c *P = L->start->SecondLine(L);
-
-  if (P)
-  {
-    if (L->isFrontSimilar(P))
-    {
-      L->sim_prev = P;
-      return;
-    }
-  }
-
-}
-
-
-static void RecursiveXOffsetFromPrevious(linedef_info_c *L, int depth = 0)
-{
-  if (! L->sim_prev || depth > 200)
-  {
-    L->front->x_offset = NaturalXOffset(L, 0);
-    return;
-  }
-
-  // set a temporary value, which handles line loops nicely
-  // (prevents going round and round and round)
-  L->front->x_offset = 0;
-
-  if (L->sim_prev->front->x_offset == IVAL_NONE)
-  {
-    RecursiveXOffsetFromPrevious(L->sim_prev, depth+1);
-  }
-
-  int prev = L->sim_prev->front->x_offset;
-
-  L->front->x_offset = prev + I_ROUND(L->sim_prev->length);
-}
-
 
 static void AlignTextures(void)
 {
@@ -1511,12 +1468,12 @@ static void AlignTextures(void)
       L->back->x_offset = NaturalXOffset(L, 1);
   }
 
-  int stragglers = 0;
-  int backers = 0;
-  int forwarders = 0;
-
-  for (int pass = 5; pass > 0; pass--)
+  for (int pass = 8; pass >= 0; pass--)
   {
+    int naturals = 0;
+    int prev_count = 0;
+    int next_count = 0;
+
     for (i = 0; i < (int)dm_linedefs.size(); i++)
     {
       linedef_info_c *L = dm_linedefs[i];
@@ -1525,29 +1482,36 @@ static void AlignTextures(void)
 
       if (L->front->x_offset == IVAL_NONE)
       {
-        if (pass == 1)
+        int mask = (1 << pass) - 1;
+
+        if ((i & mask) == 0)
         {
           L->front->x_offset = NaturalXOffset(L, 0);
-          stragglers ++;
+          naturals++;
         }
         continue;
       }
 
-      if (L->sim_prev && L->sim_prev->front->x_offset == IVAL_NONE)
+      linedef_info_c *P = L;
+      linedef_info_c *N = L;
+
+      while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE)
       {
-        L->sim_prev->front->x_offset = L->sim_prev->front->x_offset - I_ROUND(L->sim_prev->length);
-        backers++;
+        P->sim_prev->front->x_offset = P->front->x_offset - I_ROUND(P->sim_prev->length);
+        P = P->sim_prev;
+        prev_count++;
       }
 
-      if (L->sim_next && L->sim_next->front->x_offset == IVAL_NONE)
+      while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE)
       {
-        L->sim_next->front->x_offset = L->front->x_offset + I_ROUND(L->length);
-        forwarders++;
+        N->sim_next->front->x_offset = N->front->x_offset + I_ROUND(N->length);
+        N = N->sim_next;
+        next_count++;
       }
     }
 
-    LogPrintf("AlignTextures pass %d : stragglers:%d prevs:%d nexts:%d\n",
-              pass, stragglers, backers, forwarders);
+    DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
+                pass, naturals, prev_count, next_count);
   }
 }
 
