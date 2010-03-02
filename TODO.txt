@@ -5,6 +5,8 @@ TODO
 
 FIXED: can create outdoor rooms with low ceiling (e.g. E3M7)
 
+BUG: liquification of caves at a border can subvert quests
+
 BUG: can assign a seed as "walk" without floor_h ??
 
 
