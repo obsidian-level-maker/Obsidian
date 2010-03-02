@@ -6,7 +6,7 @@ CHANGES (since v3.51)
 - faster / more robust CSG code
 
 - more optimised maps (less vertices and linedefs)
->>>  better texture alignment 
+- better texture alignment (especially in caves)
 
 - write all relevant settings in the LOGS.txt file
 
