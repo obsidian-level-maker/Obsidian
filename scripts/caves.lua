@@ -166,6 +166,8 @@ function Cave_flood_fill(cave)
   local empty_id = -1
   local solid_id =  1
 
+  local points = {}
+
   for x = 1,W do for y = 1,H do
     if not cave[x][y] then
       -- ignore it
@@ -177,21 +179,18 @@ function Cave_flood_fill(cave)
   end end
 
   local function flood_point(x, y)
-    local changed = false
     for side = 2,8,2 do
       local nx, ny = nudge_coord(x, y, side)
       if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
         local A = flood[x][y]
         local B = flood[nx][ny]
 
-        if A and B and ((B > 0 and B < A) or (B < 0 and B > A)) then
-          flood[x][y] = B
-          changed = true
+        if A and B and ((A > 0 and A < B) or (A < 0 and A > B)) then
+          flood[nx][ny] = A
+          table.insert(points, {x=nx, y=ny})
         end
       end
     end
-
-    return changed
   end
 
   local function update_info(x, y)
@@ -233,14 +232,19 @@ function Cave_flood_fill(cave)
   end
 
   -- perform the flood-fill
-  repeat
-    local changed = false
-    for x = 1,W do for y = 1,H do
-      if flood[x][y] then
-        if flood_point(x, y) then changed = true end
-      end
-    end end
-  until not changed
+  for x = 1,W do for y = 1,H do
+    if flood[x][y] then
+      flood_point(x, y)
+    end
+  end end
+
+  while #points > 0 do
+    local p_list = points ; points = {}
+
+    for _,P in ipairs(p_list) do
+      flood_point(P.x, P.y)
+    end
+  end
 
   -- create information for each region
   flood.regions = {}
