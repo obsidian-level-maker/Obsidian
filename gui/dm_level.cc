@@ -294,15 +294,17 @@ public:
 
   double length;
 
-  // similar linedef touching our start vertex (NULL if none).
+  // similar linedef touching our start (end) vertex, or NULL if none.
+  // only takes front sidedefs into account.
   // used for texture aligning.
   linedef_info_c *sim_prev;
+  linedef_info_c *sim_next;
 
 public:
   linedef_info_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
-                     flags(0), type(0), tag(0),
-                     length(0), sim_prev(NULL)
+                     flags(0), type(0), tag(0), length(0),
+                     sim_prev(NULL), sim_next(NULL)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
@@ -377,7 +379,7 @@ public:
     return A->SameTex(B);
   }
 
-  bool CanMerge(const linedef_info_c *B) const
+  bool ColinearWith(const linedef_info_c *B) const
   {
     int adx = end->x - start->x;
     int ady = end->y - start->y;
@@ -385,7 +387,12 @@ public:
     int bdx = B->end->x - B->start->x;
     int bdy = B->end->y - B->start->y;
 
-    if (adx * bdy != bdx * ady)
+    return (adx * bdy == bdx * ady);
+  }
+
+  bool CanMerge(const linedef_info_c *B) const
+  {
+    if (! ColinearWith(B))
       return false;
 
     // test sidedefs
@@ -405,7 +412,7 @@ public:
 
     int diff = B_front->x_offset - (front->x_offset + I_ROUND(length));
 
-    // the < 4 accounts for precision loss with multiple merges
+    // the < 4 accounts for precision loss after multiple merges
     return abs(diff) < 4; 
   }
 
@@ -1398,6 +1405,39 @@ static void MergeColinearLines(void)
 }
 
 
+static linedef_info_c * FindSimilarLine(linedef_info_c *L, vertex_info_c *V)
+{
+  linedef_info_c *best = NULL;
+  int best_score = -1;
+
+  for (int i = 0; i < 4; i++)
+  {
+    linedef_info_c *M = V->lines[i];
+
+    if (! M) break;
+    if (M == L) continue;
+
+    if (! L->isFrontSimilar(M))
+      continue;
+
+    int score = 0;
+
+    if (! L->back && ! M->back)
+      score += 20;
+
+    if (L->ColinearWith(M))
+      score += 10;
+
+    if (score > best_score)
+    {
+      best = M;
+      best_score = score;
+    }
+  }
+
+  return best;
+}
+
 static void FindPreviousSimilarLine(linedef_info_c *L)
 {
   if (L->front->x_offset != IVAL_NONE)
@@ -1416,7 +1456,6 @@ static void FindPreviousSimilarLine(linedef_info_c *L)
     }
   }
 
-  L->front->x_offset = NaturalXOffset(L, 0);
 }
 
 
@@ -1445,9 +1484,7 @@ static void RecursiveXOffsetFromPrevious(linedef_info_c *L, int depth = 0)
 
 static void AlignTextures(void)
 {
-  // FIXME !!!!
-
-  // Algorithm:
+  // Algorithm:  FIXME out of date
   //
   // 1) assign every linedef a "prev_matcher" field (forms a chain)
   //    [POSSIBILITY: similar field for back sidedefs]
@@ -1459,20 +1496,59 @@ static void AlignTextures(void)
   int i;
 
   for (i = 0; i < (int)dm_linedefs.size(); i++)
-    if (dm_linedefs[i]->Valid())
-      FindPreviousSimilarLine(dm_linedefs[i]);
+  {
+    linedef_info_c *L = dm_linedefs[i];
+    if (! L->Valid())
+      continue;
 
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
-    if (dm_linedefs[i]->Valid())
+    L->sim_prev = FindSimilarLine(L, L->start);
+    L->sim_next = FindSimilarLine(L, L->end);
+
+    if (L->front->x_offset == IVAL_NONE && ! L->sim_prev && ! L->sim_next)
+      L->front->x_offset = NaturalXOffset(L, 0);
+    
+    if (L->back && L->back->x_offset == IVAL_NONE)
+      L->back->x_offset = NaturalXOffset(L, 1);
+  }
+
+  int stragglers = 0;
+  int backers = 0;
+  int forwarders = 0;
+
+  for (int pass = 5; pass > 0; pass--)
+  {
+    for (i = 0; i < (int)dm_linedefs.size(); i++)
     {
       linedef_info_c *L = dm_linedefs[i];
+      if (! L->Valid())
+        continue;
 
       if (L->front->x_offset == IVAL_NONE)
-        RecursiveXOffsetFromPrevious(L);
+      {
+        if (pass == 1)
+        {
+          L->front->x_offset = NaturalXOffset(L, 0);
+          stragglers ++;
+        }
+        continue;
+      }
 
-      if (L->back && L->back->x_offset == IVAL_NONE)
-        L->back->x_offset = NaturalXOffset(L, 0);
+      if (L->sim_prev && L->sim_prev->front->x_offset == IVAL_NONE)
+      {
+        L->sim_prev->front->x_offset = L->sim_prev->front->x_offset - I_ROUND(L->sim_prev->length);
+        backers++;
+      }
+
+      if (L->sim_next && L->sim_next->front->x_offset == IVAL_NONE)
+      {
+        L->sim_next->front->x_offset = L->front->x_offset + I_ROUND(L->length);
+        forwarders++;
+      }
     }
+
+    LogPrintf("AlignTextures pass %d : stragglers:%d prevs:%d nexts:%d\n",
+              pass, stragglers, backers, forwarders);
+  }
 }
 
 
