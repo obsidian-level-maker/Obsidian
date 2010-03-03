@@ -40,6 +40,7 @@
 #include "nk_structs.h"  // TEMPORARY !!
 #include "lib_wad.h"
 #include "q_bsp.h"
+class nk_wall_c;
 
 
 #define TEMP_FILENAME    "temp/out.wad"
@@ -305,14 +306,15 @@ public:
   linedef_info_c *sim_prev;
   linedef_info_c *sim_next;
 
-int nk_index; //FIXME TEMP CRUD
-int nk_side;
+nk_wall_c *nk_front;
+nk_wall_c *nk_back;
 
 public:
   linedef_info_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
                      flags(0), type(0), tag(0), length(0),
-                     sim_prev(NULL), sim_next(NULL)
+                     sim_prev(NULL), sim_next(NULL),
+                     nk_front(NULL), nk_back(NULL)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
@@ -1559,11 +1561,75 @@ void DM_WriteDoom(void)
 }
 
 
-static int NK_CollectWalls(sector_info_c *S, int wall_id, qLump_c *walls)
+class nk_wall_c
+{
+public:
+  linedef_info_c *line;
+
+  nk_wall_c *next;
+  nk_wall_c *back;
+
+  int side;
+
+  int index;
+
+public:
+   nk_wall_c() {}
+  ~nk_wall_c() {}
+
+  int GetX() const
+  {
+    return (side == 0) ? line->start->x : line->end->x;
+  }
+
+  int GetY() const
+  {
+    return (side == 0) ? line->start->y : line->end->y;
+  }
+
+  int SectorIndex() const
+  {
+    return (side == 0) ? line->front->sector->index : line->back->sector->index;
+  }
+
+  void Write(qLump_c *lump)
+  {
+    raw_nukem_wall_t raw;
+    memset(&raw, 0, sizeof(raw));
+
+    raw.x = LE_S32(GetX() * 256);
+    raw.y = LE_S32(GetY() * 256);
+
+    raw.right_wall = LE_U16(next->index);
+
+    if (back)
+    {
+      raw.back_wall = LE_U16(back->index);
+      raw.back_sec  = LE_U16(back->SectorIndex());
+    }
+    else
+    {
+      raw.back_wall = LE_U16(0xFFFF);
+      raw.back_sec  = LE_U16(0xFFFF);
+    }
+
+    raw.pic[0] = LE_U16(251);
+    raw.pic[1] = LE_U16(251);
+
+    raw.xscale = raw.yscale = 4;
+
+    raw.extra = -1;
+
+    lump->Append(&raw, sizeof(raw));
+  }
+};
+
+typedef std::vector<nk_wall_c *> nk_wall_list_c;
+
+
+static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c& circle)
 {
   int i;
-
-  std::vector<linedef_info_c *> circle;
 
   for (i = 0; i < (int)dm_linedefs.size(); i++)
   {
@@ -1578,47 +1644,20 @@ static int NK_CollectWalls(sector_info_c *S, int wall_id, qLump_c *walls)
     if (L->front->sector == S && L->back->sector == S)
       continue;
 
-    circle.push_back(L);
+    nk_wall_c *W = new nk_wall_c;
+
+    W->line = L;
+    W->side = (L->front->sector == S) ? 0 : 1;
+
+    W->index = *wall_id;  (*wall_id) += 1;
+
+    if (W->side == 0)
+      L->nk_front = W;
+    else
+      L->nk_back = W;
+
+    circle.push_back(W);
   }
-
-  // WRITE THE WALL LOOP
-
-  for (i = 0; i < (int)circle.size(); i++)
-  {
-    linedef_info_c *L = circle[i];
-
-    raw_nukem_wall_t raw;
-    memset(&raw, 0, sizeof(raw));
-
-    int side = 0;
-    if (L->back->sector == S)
-      side = 1;
-
-    int x = side ? L->end->x : L->start->x;
-    int y = side ? L->end->y : L->start->y;
-
-
-    raw.x = LE_S32(x * 256);
-    raw.y = LE_S32(y * 256);
-
-    // FUCK : FIXME
-
-    raw.right_wall = 9999;
-    raw.back_wall  = 7777;
-    raw.back_sec   = 3333;
-
-
-    raw.pic[0] = LE_U16(251);
-    raw.pic[1] = LE_U16(251);
-
-    raw.xscale = raw.yscale = 4;
-
-    raw.extra = -1;
-
-    walls->Append(&raw, sizeof(raw));
-  }
-
-  return (int)circle.size();
 }
 
 static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
@@ -1648,7 +1687,15 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     }
   }
 
-  // create the sectors
+
+  // find the walls of each sector
+
+  std::vector< nk_wall_list_c > sec_walls;
+
+  for (int k = 0; k < sec_id; k++)
+    sec_walls.push_back(nk_wall_list_c());
+
+
   int wall_id = 0;
 
   for (i = 0; i < (int)dm_sectors.size(); i++)
@@ -1657,12 +1704,38 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     if (S->index < 0)
       continue;
 
-    int count = NK_CollectWalls(S, wall_id, walls);
+    NK_CollectWalls(S, &wall_id, sec_walls[S->index]);
+  }
+
+
+  // CONNECT FRONT AND BACK
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  {
+    linedef_info_c *L = dm_linedefs[i];
+
+    if (L->nk_front && L->nk_back)
+    {
+      L->nk_front->back = L->nk_back;
+      L->nk_back ->back = L->nk_front;
+    }
+  }
+
+
+
+  // create the sectors
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+  {
+    sector_info_c *S = dm_sectors[i];
+    if (S->index < 0)
+      continue;
+
+    int first =      sec_walls[S->index][0]->index; 
+    int count = (int)sec_walls[S->index].size();
 
     raw_nukem_sector_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.wall_ptr = LE_U16(wall_id); 
+    raw.wall_ptr = LE_U16(first);
     raw.wall_num = LE_U16(count); 
 
     raw.floor_pic = LE_U16(310);
@@ -1675,7 +1748,14 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
 
     sectors->Append(&raw, sizeof(raw));
 
-    wall_id += count;
+    // WRITE THE WALL LOOP
+
+    for (int k = 0; k < count; k++)
+    {
+      sec_walls[S->index][k]->Write(walls);
+
+      delete sec_walls[S->index][k];
+    }
   }
 }
 
