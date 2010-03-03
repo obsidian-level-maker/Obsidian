@@ -1711,7 +1711,7 @@ fprintf(stderr, "\nWall list @ sec:%d\n", S->index);
     if (! L->Valid())
       continue;
 
-    if (L->front->sector != S && (! L->back || L->back->sector != S))
+    if (! (L->front->sector == S || (L->back && L->back->sector == S)))
       continue;
 
     // HMMM
@@ -1741,7 +1741,8 @@ fprintf(stderr, "\n");
 
   SYS_ASSERT(total >= 2);
 
-  for (i = 0; i < total; i++)
+  // for (i = 0; i < total; i++)
+  for (i = total-1; i >= 0; i--)
   {
     if (prelim[i])
       NK_Chain(i, prelim, circle, wall_id);
@@ -1753,10 +1754,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
   int i;
 
   // mark all visible sectors
-  int sec_id = 0;
-
   for (i = 0; i < (int)dm_sectors.size(); i++)
-    dm_sectors[i]->index = -3;
+    dm_sectors[i]->index = -1;
 
   for (i = 0; i < (int)dm_linedefs.size(); i++)
   {
@@ -1766,12 +1765,24 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
 
     if (L->front->sector->index < 0)
     {
-      L->front->sector->index = sec_id; sec_id++;
+      L->front->sector->index = -2;
     }
 
     if (L->back && L->back->sector->index < 0)
     {
-      L->back->sector->index = sec_id; sec_id++;
+      L->back->sector->index = -2;
+    }
+  }
+
+  int sec_id = 0;
+
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+  {
+    sector_info_c * S = dm_sectors[i];
+
+    if (S->index == -2)
+    {
+      S->index = sec_id;  sec_id += 1;
     }
   }
 
@@ -1800,6 +1811,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
   for (i = 0; i < (int)dm_linedefs.size(); i++)
   {
     linedef_info_c *L = dm_linedefs[i];
+    if (! L->Valid())
+      continue;
 
     if (L->nk_front && L->nk_back)
     {
@@ -1807,7 +1820,6 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
       L->nk_back ->back = L->nk_front;
     }
   }
-
 
 
   // create the sectors
