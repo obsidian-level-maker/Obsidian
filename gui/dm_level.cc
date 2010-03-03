@@ -220,6 +220,15 @@ public:
       }
   }
 
+  bool HasLine(const linedef_info_c *L) const
+  {
+    for (int i=0; i < 4; i++)
+      if (lines[i] == L)
+        return true;
+
+    return false;
+  }
+
   linedef_info_c *SecondLine(const linedef_info_c *L) const
   {
     if (lines[2])  // three or more lines?
@@ -1570,7 +1579,7 @@ class nk_wall_c
 public:
   linedef_info_c *line;
 
-  nk_wall_c *next;
+  nk_wall_c *right;
   nk_wall_c *back;
 
   int side;
@@ -1579,7 +1588,7 @@ public:
 
 public:
   nk_wall_c(linedef_info_c *_L, int _S) :
-      line(_L), next(NULL), back(NULL),
+      line(_L), right(NULL), back(NULL),
       side(_S), index(-1)
   { }
 
@@ -1605,10 +1614,10 @@ public:
     raw_nukem_wall_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(GetX() * NK_FACTOR);
-    raw.y = LE_S32(GetY() * NK_FACTOR);
+    raw.x = LE_S32(-GetX() * NK_FACTOR);
+    raw.y = LE_S32( GetY() * NK_FACTOR);
 
-    raw.right_wall = LE_U16(1 ? 12345 : next->index); //!!!!!!!
+    raw.right_wall = LE_U16(right->index);
 
     if (back)
     {
@@ -1622,7 +1631,7 @@ public:
     }
 
     raw.pic[0] = LE_U16(251);
-    raw.pic[1] = LE_U16(251);
+    raw.pic[1] = LE_U16(251*0);
 
     raw.xscale = raw.yscale = 4;
 
@@ -1664,9 +1673,44 @@ static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c *circ
     circle->push_back(W);
   }
 
-  // determine 'right' wall
+  // determine 'right' wall  (FIXME: insanely un-optimised)
 
-  // FIXME
+  SYS_ASSERT(circle->size() >= 2);
+
+  for (i = 0; i < (int)circle->size(); i++)
+  {
+    int best = i + 1;
+    if (best >= (int)circle->size()) best = 0;
+
+    nk_wall_c *W1 = circle->at(i);
+
+    for (int k = 0; k < (int)circle->size(); k++)
+    {
+      if (k == i)
+        continue;
+
+      nk_wall_c *W2 = circle->at(k);
+        
+      if (W1->side == 0)
+      {
+        if (W1->line->end->HasLine(W2->line))
+        {
+          W1->right = W2;
+          break;
+        }
+      }
+      else
+      {
+        if (W1->line->start->HasLine(W2->line))
+        {
+          W1->right = W2;
+          break;
+        }
+      }
+    } // for k
+
+    SYS_ASSERT(W1->right);
+  }
 }
 
 static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
@@ -1750,9 +1794,10 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.floor_pic = LE_U16(310);
     raw.ceil_pic  = LE_U16(181);
 
-    raw.floor_h = LE_S32(0 - S->f_h*NK_FACTOR);
-    raw.ceil_h  = LE_S32(0 - S->c_h*NK_FACTOR);
+    raw.floor_h = LE_S32( 16384); //!!! (0 - S->f_h*NK_FACTOR);
+    raw.ceil_h  = LE_S32(-16384); //!!! (0 - S->c_h*NK_FACTOR);
 
+    raw.visibility = 16;
     raw.extra = -1;
 
     sectors->Append(&raw, sizeof(raw));
@@ -1796,6 +1841,7 @@ static void NK_WriteSprites(qLump_c *sprites)
     if (type != 1)
       continue;
 
+    
 
     // parse entity properties
     int angle = 0;
@@ -1814,9 +1860,9 @@ static void NK_WriteSprites(qLump_c *sprites)
     raw_nukem_sprite_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(I_ROUND(E->x) * NK_FACTOR);
-    raw.y = LE_S32(I_ROUND(E->y) * NK_FACTOR);
-    raw.z = LE_S32(I_ROUND(E->z) * NK_FACTOR);
+    raw.x = LE_S32(-I_ROUND(E->x) * NK_FACTOR);
+    raw.y = LE_S32( I_ROUND(E->y) * NK_FACTOR);
+    raw.z = LE_S32( I_ROUND(E->z*0) * NK_FACTOR);  //!!!!
 
     raw.pic = LE_U16(1405);  // APLAYER
     raw.xscale = 40;
@@ -1825,6 +1871,19 @@ static void NK_WriteSprites(qLump_c *sprites)
 
     raw.extra = -1;
     raw.owner = -1;
+
+
+    merge_region_c *REG = CSG2_FindRegionForPoint(E->x, E->y);
+    if (REG && REG->index >= 0)
+    {
+      sector_info_c *S = dm_sectors[REG->index];
+      if (S->index >= 0)
+      {
+        raw.sector = LE_U16(S->index);
+fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
+      }
+    }
+
 
     sprites->Append(&raw, sizeof(raw));
   }
@@ -1840,11 +1899,11 @@ GRP_NewLump("E1L8.MAP");
 raw_nukem_map_t header;
 
 header.version = LE_U32(DUKE_MAP_VERSION);
-header.pos_x = 0;
-header.pos_y = 0;
-header.pos_z = 0;
+header.pos_x = LE_S32(-7680);
+header.pos_y = LE_S32(32256);
+header.pos_z = LE_S32(4096*0);
 header.angle = 0;
-header.sector = 0;
+header.sector = 19;
 
 GRP_AppendData(&header, (int)sizeof(header));
 
