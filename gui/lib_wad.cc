@@ -576,7 +576,7 @@ bool GRP_OpenWrite(const char *filename)
   {
     raw_grp_lump_t entry;
 
-    sprintf(entry.name, "_%03d.ZZZ", i);
+    sprintf(entry.name, "___%03d.ZZZ", i);
     entry.length = LE_U32(1);
 
     fwrite(&entry, sizeof(raw_grp_lump_t), 1, grp_W_fp);
@@ -606,7 +606,7 @@ void GRP_CloseWrite(void)
   for (unsigned int i = 0; i < sizeof(header.magic); i++)
     header.magic[i] = ~grp_magic_data[i];
 
-  header.num_lumps = LE_U32(grp_W_directory.size());
+  header.num_lumps = LE_U32(MAX_GRP_WRITE_ENTRIES); /// grp_W_directory.size());
 
   fwrite(&header, sizeof(header), 1, grp_W_fp);
   fflush(grp_W_fp);
