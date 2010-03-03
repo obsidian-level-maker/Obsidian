@@ -1636,8 +1636,8 @@ public:
       raw.back_sec  = LE_U16(0xFFFF);
     }
 
-    raw.pic[0] = LE_U16(251);
-    raw.pic[1] = LE_U16(251*0);
+    raw.pic[0] = LE_U16(back ? 723 : 783);
+    raw.pic[1] = LE_U16(0);
 
     raw.xscale = raw.yscale = 4;
 
@@ -1650,10 +1650,61 @@ public:
 typedef std::vector<nk_wall_c *> nk_wall_list_c;
 
 
+static void NK_Chain(int start, nk_wall_list_c& prelim, nk_wall_list_c *circle,
+                     int *wall_id)
+{
+fprintf(stderr, "starting at %d\n", start);
+
+  int last = start;
+
+  nk_wall_c *start_W = prelim[start];
+
+  for (;;)
+  {
+    nk_wall_c *cur = prelim[last];  SYS_ASSERT(cur);
+    prelim[last] = NULL;
+
+fprintf(stderr, "  adding %d @ wall_id:%d\n", last, *wall_id);
+
+    cur->index = *wall_id;  (*wall_id) += 1;
+    circle->push_back(cur);
+
+    last = -1;
+
+    for (int k = 0; k < (int)prelim.size(); k++)
+    {
+      nk_wall_c *W2 = prelim[k];
+      if (! W2)
+        continue;
+       
+      if ( (cur->side == 0 && cur->line->end  ->HasLine(W2->line)) ||
+           (cur->side == 1 && cur->line->start->HasLine(W2->line)) )
+      {
+        cur->right = W2;
+        last = k;
+        break;
+      }
+    }
+fprintf(stderr, "Found right %p (%d)\n", cur->right, last);
+
+    if (! cur->right)
+    {
+      SYS_ASSERT(start_W != cur);
+
+      cur->right = start_W;
+fprintf(stderr, "End of loop, using %p\n", cur->right);
+      return;
+    }
+  }
+}
+
 static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c *circle)
 {
   int i;
 
+  std::vector<nk_wall_c *> prelim;
+
+fprintf(stderr, "\nWall list @ sec:%d\n", S->index);
   for (i = 0; i < (int)dm_linedefs.size(); i++)
   {
     linedef_info_c *L = dm_linedefs[i];
@@ -1669,53 +1720,31 @@ static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c *circ
 
     nk_wall_c *W = new nk_wall_c(L, (L->front->sector == S) ? 0 : 1);
 
-    W->index = *wall_id;  (*wall_id) += 1;
-
     if (W->side == 0)
       L->nk_front = W;
     else
       L->nk_back = W;
 
-    circle->push_back(W);
+fprintf(stderr, "  %i=%p line:%p side:%d (%d %d) --> (%d %d)\n",
+(int)prelim.size(), W, W->line, W->side,
+W->line->start->x, W->line->start->y,
+W->line->end->x, W->line->end->y);
+
+    prelim.push_back(W);
   }
 
-  // determine 'right' wall  (FIXME: insanely un-optimised)
+fprintf(stderr, "\n");
 
-  SYS_ASSERT(circle->size() >= 2);
+  // group into wall loops
 
-  for (i = 0; i < (int)circle->size(); i++)
+  int total = (int)prelim.size();
+
+  SYS_ASSERT(total >= 2);
+
+  for (i = 0; i < total; i++)
   {
-    int best = i + 1;
-    if (best >= (int)circle->size()) best = 0;
-
-    nk_wall_c *W1 = circle->at(i);
-
-    for (int k = 0; k < (int)circle->size(); k++)
-    {
-      if (k == i)
-        continue;
-
-      nk_wall_c *W2 = circle->at(k);
-        
-      if (W1->side == 0)
-      {
-        if (W1->line->end->HasLine(W2->line))
-        {
-          W1->right = W2;
-          break;
-        }
-      }
-      else
-      {
-        if (W1->line->start->HasLine(W2->line))
-        {
-          W1->right = W2;
-          break;
-        }
-      }
-    } // for k
-
-    SYS_ASSERT(W1->right);
+    if (prelim[i])
+      NK_Chain(i, prelim, circle, wall_id);
   }
 }
 
@@ -1797,8 +1826,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.wall_ptr = LE_U16(first);
     raw.wall_num = LE_U16(count); 
 
-    raw.floor_pic = LE_U16(181);
-    raw.ceil_pic  = LE_U16(310);
+    raw.floor_pic = LE_U16(742);
+    raw.ceil_pic  = LE_U16(757);
 
     raw.floor_h = LE_S32(0 - (S->f_h)*NK_HT_FACTOR);
     raw.ceil_h  = LE_S32(0 - (S->c_h)*NK_HT_FACTOR);
