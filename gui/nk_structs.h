@@ -28,9 +28,9 @@ typedef struct
 {
   u32_t version;
 
-  u32_t pos_x;
-  u32_t pos_y;
-  u32_t pos_z;
+  s32_t pos_x;
+  s32_t pos_y;
+  s32_t pos_z;
 
   u16_t angle;
   u16_t sector;
