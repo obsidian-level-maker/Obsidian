@@ -182,6 +182,9 @@ bool WAD_ReadData(int entry, int offset, int length, void *buffer)
 
   raw_wad_lump_t *L = &wad_R_dir[entry];
 
+  if ((u32_t)offset + (u32_t)length > L->length)  // EOF
+    return false;
+
   if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
     return false;
 
@@ -497,6 +500,9 @@ bool GRP_ReadData(int entry, int offset, int length, void *buffer)
   SYS_ASSERT(length > 0);
 
   int L_start = grp_R_starts[entry];
+
+  if ((u32_t)offset + (u32_t)length > grp_R_dir[entry].length)  // EOF
+    return false;
 
   if (fseek(grp_R_fp, L_start + offset, SEEK_SET) != 0)
     return false;

@@ -210,6 +210,9 @@ bool PAK_ReadData(int entry, int offset, int length, void *buffer)
 
   raw_pak_entry_t *E = &r_directory[entry];
 
+  if ((u32_t)offset + (u32_t)length > E->length)  // EOF
+    return false;
+
   if (fseek(r_pak_fp, E->offset + offset, SEEK_SET) != 0)
     return false;
 
@@ -520,6 +523,9 @@ bool WAD2_ReadData(int entry, int offset, int length, void *buffer)
   SYS_ASSERT(length > 0);
 
   raw_wad2_lump_t *L = &wad_R_dir[entry];
+
+  if ((u32_t)offset + (u32_t)length > L->length)  // EOF
+    return false;
 
   if (fseek(wad_R_fp, L->start + offset, SEEK_SET) != 0)
     return false;
