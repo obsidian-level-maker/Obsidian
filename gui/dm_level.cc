@@ -1573,6 +1573,12 @@ void DM_WriteDoom(void)
 //----------------------------------------------------------------------
 
 #define NK_FACTOR  16
+#define NK_HT_FACTOR  256
+
+static int nk_pos_x;
+static int nk_pos_y;
+static int nk_pos_z;
+static int nk_sec;
 
 class nk_wall_c
 {
@@ -1791,11 +1797,11 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.wall_ptr = LE_U16(first);
     raw.wall_num = LE_U16(count); 
 
-    raw.floor_pic = LE_U16(310);
-    raw.ceil_pic  = LE_U16(181);
+    raw.floor_pic = LE_U16(181);
+    raw.ceil_pic  = LE_U16(310);
 
-    raw.floor_h = LE_S32( 16384); //!!! (0 - S->f_h*NK_FACTOR);
-    raw.ceil_h  = LE_S32(-16384); //!!! (0 - S->c_h*NK_FACTOR);
+    raw.floor_h = LE_S32(0 - (S->f_h)*NK_HT_FACTOR);
+    raw.ceil_h  = LE_S32(0 - (S->c_h)*NK_HT_FACTOR);
 
     raw.visibility = 16;
     raw.extra = -1;
@@ -1862,7 +1868,7 @@ static void NK_WriteSprites(qLump_c *sprites)
 
     raw.x = LE_S32(-I_ROUND(E->x) * NK_FACTOR);
     raw.y = LE_S32( I_ROUND(E->y) * NK_FACTOR);
-    raw.z = LE_S32( I_ROUND(E->z*0) * NK_FACTOR);  //!!!!
+    raw.z = LE_S32(-I_ROUND(E->z) * NK_HT_FACTOR);
 
     raw.pic = LE_U16(1405);  // APLAYER
     raw.xscale = 40;
@@ -1884,6 +1890,14 @@ fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
       }
     }
 
+    if (type == 1)
+    {
+      nk_pos_x = raw.x;
+      nk_pos_y = raw.y;
+      nk_pos_z = raw.z;
+      nk_sec   = raw.sector;
+    }
+
 
     sprites->Append(&raw, sizeof(raw));
   }
@@ -1895,17 +1909,6 @@ SYS_ASSERT(GRP_OpenWrite("test.grp"));
 
 GRP_NewLump("E1L8.MAP");
 
-// HEADER
-raw_nukem_map_t header;
-
-header.version = LE_U32(DUKE_MAP_VERSION);
-header.pos_x = LE_S32(-7680);
-header.pos_y = LE_S32(32256);
-header.pos_z = LE_S32(4096*0);
-header.angle = 0;
-header.sector = 19;
-
-GRP_AppendData(&header, (int)sizeof(header));
 
 qLump_c sectors;
 qLump_c walls;
@@ -1922,6 +1925,18 @@ num_sectors = LE_U16(num_sectors);
 num_walls   = LE_U16(num_walls);
 num_sprites = LE_U16(num_sprites);
 
+
+// HEADER
+raw_nukem_map_t header;
+
+header.version = LE_U32(DUKE_MAP_VERSION);
+header.pos_x = nk_pos_x;
+header.pos_y = nk_pos_y;
+header.pos_z = nk_pos_z;
+header.angle = 0;
+header.sector = nk_sec;
+
+GRP_AppendData(&header, (int)sizeof(header));
 GRP_AppendData(&num_sectors, 2);
 GRP_AppendData(sectors.GetBuffer(), sectors.GetSize());
 
