@@ -37,6 +37,11 @@
 #include "dm_wad.h"
 
 
+#include "nk_structs.h"  // TEMPORARY !!
+#include "lib_wad.h"
+#include "q_bsp.h"
+
+
 #define TEMP_FILENAME    "temp/out.wad"
 
 
@@ -1551,6 +1556,106 @@ void DM_WriteDoom(void)
 }
 
 
+
+static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
+{
+}
+
+static void NK_WriteSprites(qLump_c *sprites)
+{
+  for (unsigned int j = 0; j < all_entities.size(); j++)
+  {
+    entity_info_c *E = all_entities[j];
+
+    int type = atoi(E->name.c_str());
+
+    if (type < 1 || type > 4)
+      continue;
+
+
+    // parse entity properties
+    int angle = 0;
+
+    std::map<std::string, std::string>::iterator MI;
+    for (MI = E->props.begin(); MI != E->props.end(); MI++)
+    {
+      const char *name  = MI->first.c_str();
+      const char *value = MI->second.c_str();
+
+      if (StringCaseCmp(name, "angle") == 0)
+        angle = atoi(value);
+    }
+
+
+    raw_nukem_sprite_t raw;
+    memset(&raw, 0, sizeof(raw));
+
+    raw.x = LE_S32(I_ROUND(E->x) * 256);
+    raw.y = LE_S32(I_ROUND(E->y) * 256);
+    raw.z = LE_S32(I_ROUND(E->z) * 256);
+
+    raw.pic = LE_U16(1405);  // APLAYER
+    raw.xscale = 40;
+    raw.yscale = 40;
+    raw.clip_dist = 32;
+
+    raw.extra = -1;
+    raw.owner = -1;
+
+
+    sprites->Append(&raw, sizeof(raw));
+  }
+}
+
+static void WriteNukem(void)
+{
+SYS_ASSERT(GRP_OpenWrite("test.grp"));
+
+GRP_NewLump("E1L1.MAP");
+
+// HEADER
+raw_nukem_map_t header;
+
+header.version = LE_U32(DUKE_MAP_VERSION);
+header.pos_x = 0;
+header.pos_y = 0;
+header.pos_z = 0;
+header.angle = 0;
+header.sector = 0;
+
+GRP_AppendData(&header, (int)sizeof(header));
+
+qLump_c sectors;
+qLump_c walls;
+qLump_c sprites;
+
+NK_WriteWalls(&walls, &sectors);
+NK_WriteSprites(&sprites);
+
+u16_t num_sectors = sectors.GetSize() / (int)sizeof(raw_nukem_sector_t);
+u16_t num_walls   = walls.GetSize()   / (int)sizeof(raw_nukem_wall_t);
+u16_t num_sprites = sprites.GetSize() / (int)sizeof(raw_nukem_sprite_t);
+
+num_sectors = LE_U16(num_sectors);
+num_walls   = LE_U16(num_walls);
+num_sprites = LE_U16(num_sprites);
+
+GRP_AppendData(&num_sectors, 2);
+GRP_AppendData(sectors.GetBuffer(), sectors.GetSize());
+
+GRP_AppendData(&num_walls, 2);
+GRP_AppendData(walls.GetBuffer(), walls.GetSize());
+
+GRP_AppendData(&num_sprites, 2);
+GRP_AppendData(sprites.GetBuffer(), sprites.GetSize());
+
+GRP_FinishLump();
+
+GRP_CloseWrite();
+}
+
+
+
 //------------------------------------------------------------------------
 
 
@@ -1736,6 +1841,7 @@ void doom_game_interface_c::EndLevel()
   CSG2_MakeMiniMap();
 
   DM_WriteDoom();
+WriteNukem();
 
   DM_EndLevel(level_name);
 
