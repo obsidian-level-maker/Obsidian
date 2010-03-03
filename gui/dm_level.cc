@@ -1561,6 +1561,10 @@ void DM_WriteDoom(void)
 }
 
 
+//----------------------------------------------------------------------
+
+#define NK_FACTOR  16
+
 class nk_wall_c
 {
 public:
@@ -1574,7 +1578,11 @@ public:
   int index;
 
 public:
-   nk_wall_c() {}
+  nk_wall_c(linedef_info_c *_L, int _S) :
+      line(_L), next(NULL), back(NULL),
+      side(_S), index(-1)
+  { }
+
   ~nk_wall_c() {}
 
   int GetX() const
@@ -1597,10 +1605,10 @@ public:
     raw_nukem_wall_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(GetX() * 256);
-    raw.y = LE_S32(GetY() * 256);
+    raw.x = LE_S32(GetX() * NK_FACTOR);
+    raw.y = LE_S32(GetY() * NK_FACTOR);
 
-    raw.right_wall = LE_U16(next->index);
+    raw.right_wall = LE_U16(1 ? 12345 : next->index); //!!!!!!!
 
     if (back)
     {
@@ -1627,7 +1635,7 @@ public:
 typedef std::vector<nk_wall_c *> nk_wall_list_c;
 
 
-static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c& circle)
+static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c *circle)
 {
   int i;
 
@@ -1637,17 +1645,14 @@ static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c& circ
     if (! L->Valid())
       continue;
 
-    if (L->front->sector != S && L->back->sector != S)
+    if (L->front->sector != S && (! L->back || L->back->sector != S))
       continue;
 
     // HMMM
-    if (L->front->sector == S && L->back->sector == S)
+    if (L->front->sector == S && L->back && L->back->sector == S)
       continue;
 
-    nk_wall_c *W = new nk_wall_c;
-
-    W->line = L;
-    W->side = (L->front->sector == S) ? 0 : 1;
+    nk_wall_c *W = new nk_wall_c(L, (L->front->sector == S) ? 0 : 1);
 
     W->index = *wall_id;  (*wall_id) += 1;
 
@@ -1656,8 +1661,12 @@ static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c& circ
     else
       L->nk_back = W;
 
-    circle.push_back(W);
+    circle->push_back(W);
   }
+
+  // determine 'right' wall
+
+  // FIXME
 }
 
 static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
@@ -1690,10 +1699,10 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
 
   // find the walls of each sector
 
-  std::vector< nk_wall_list_c > sec_walls;
+  std::vector<nk_wall_list_c *> sec_walls;
 
   for (int k = 0; k < sec_id; k++)
-    sec_walls.push_back(nk_wall_list_c());
+    sec_walls.push_back(new nk_wall_list_c);
 
 
   int wall_id = 0;
@@ -1729,8 +1738,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     if (S->index < 0)
       continue;
 
-    int first =      sec_walls[S->index][0]->index; 
-    int count = (int)sec_walls[S->index].size();
+    int first =      sec_walls[S->index]->at(0)->index; 
+    int count = (int)sec_walls[S->index]->size();
 
     raw_nukem_sector_t raw;
     memset(&raw, 0, sizeof(raw));
@@ -1741,8 +1750,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.floor_pic = LE_U16(310);
     raw.ceil_pic  = LE_U16(181);
 
-    raw.floor_h = LE_S32(0 - S->f_h*256);
-    raw.ceil_h  = LE_S32(0 - S->c_h*256);
+    raw.floor_h = LE_S32(0 - S->f_h*NK_FACTOR);
+    raw.ceil_h  = LE_S32(0 - S->c_h*NK_FACTOR);
 
     raw.extra = -1;
 
@@ -1752,10 +1761,27 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
 
     for (int k = 0; k < count; k++)
     {
-      sec_walls[S->index][k]->Write(walls);
-
-      delete sec_walls[S->index][k];
+      sec_walls[S->index]->at(k)->Write(walls);
     }
+  }
+
+
+  // free stuff
+
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+  {
+    sector_info_c *S = dm_sectors[i];
+    if (S->index < 0)
+      continue;
+
+    int count = (int)sec_walls[S->index]->size();
+
+    for (int k = 0; k < count; k++)
+    {
+      delete sec_walls[S->index]->at(k);
+    }
+
+    delete sec_walls[S->index];
   }
 }
 
@@ -1788,9 +1814,9 @@ static void NK_WriteSprites(qLump_c *sprites)
     raw_nukem_sprite_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(I_ROUND(E->x) * 256);
-    raw.y = LE_S32(I_ROUND(E->y) * 256);
-    raw.z = LE_S32(I_ROUND(E->z) * 256);
+    raw.x = LE_S32(I_ROUND(E->x) * NK_FACTOR);
+    raw.y = LE_S32(I_ROUND(E->y) * NK_FACTOR);
+    raw.z = LE_S32(I_ROUND(E->z) * NK_FACTOR);
 
     raw.pic = LE_U16(1405);  // APLAYER
     raw.xscale = 40;
@@ -1800,7 +1826,6 @@ static void NK_WriteSprites(qLump_c *sprites)
     raw.extra = -1;
     raw.owner = -1;
 
-
     sprites->Append(&raw, sizeof(raw));
   }
 }
@@ -1809,7 +1834,7 @@ static void NK_WriteNukem(void)
 {
 SYS_ASSERT(GRP_OpenWrite("test.grp"));
 
-GRP_NewLump("E1L1.MAP");
+GRP_NewLump("E1L8.MAP");
 
 // HEADER
 raw_nukem_map_t header;
