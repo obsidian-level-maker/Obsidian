@@ -305,6 +305,9 @@ public:
   linedef_info_c *sim_prev;
   linedef_info_c *sim_next;
 
+int nk_index; //FIXME TEMP CRUD
+int nk_side;
+
 public:
   linedef_info_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
@@ -1556,9 +1559,124 @@ void DM_WriteDoom(void)
 }
 
 
+static int NK_CollectWalls(sector_info_c *S, int wall_id, qLump_c *walls)
+{
+  int i;
+
+  std::vector<linedef_info_c *> circle;
+
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  {
+    linedef_info_c *L = dm_linedefs[i];
+    if (! L->Valid())
+      continue;
+
+    if (L->front->sector != S && L->back->sector != S)
+      continue;
+
+    // HMMM
+    if (L->front->sector == S && L->back->sector == S)
+      continue;
+
+    circle.push_back(L);
+  }
+
+  // WRITE THE WALL LOOP
+
+  for (i = 0; i < (int)circle.size(); i++)
+  {
+    linedef_info_c *L = circle[i];
+
+    raw_nukem_wall_t raw;
+    memset(&raw, 0, sizeof(raw));
+
+    int side = 0;
+    if (L->back->sector == S)
+      side = 1;
+
+    int x = side ? L->end->x : L->start->x;
+    int y = side ? L->end->y : L->start->y;
+
+
+    raw.x = LE_S32(x * 256);
+    raw.y = LE_S32(y * 256);
+
+    // FUCK : FIXME
+
+    raw.right_wall = 9999;
+    raw.back_wall  = 7777;
+    raw.back_sec   = 3333;
+
+
+    raw.pic[0] = LE_U16(251);
+    raw.pic[1] = LE_U16(251);
+
+    raw.xscale = raw.yscale = 4;
+
+    raw.extra = -1;
+
+    walls->Append(&raw, sizeof(raw));
+  }
+
+  return (int)circle.size();
+}
 
 static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
 {
+  int i;
+
+  // mark all visible sectors
+  int sec_id = 0;
+
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+    dm_sectors[i]->index = -3;
+
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  {
+    linedef_info_c *L = dm_linedefs[i];
+    if (! L->Valid())
+      continue;
+
+    if (L->front->sector->index < 0)
+    {
+      L->front->sector->index = sec_id; sec_id++;
+    }
+
+    if (L->back && L->back->sector->index < 0)
+    {
+      L->back->sector->index = sec_id; sec_id++;
+    }
+  }
+
+  // create the sectors
+  int wall_id = 0;
+
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+  {
+    sector_info_c *S = dm_sectors[i];
+    if (S->index < 0)
+      continue;
+
+    int count = NK_CollectWalls(S, wall_id, walls);
+
+    raw_nukem_sector_t raw;
+    memset(&raw, 0, sizeof(raw));
+
+    raw.wall_ptr = LE_U16(wall_id); 
+    raw.wall_num = LE_U16(count); 
+
+    raw.floor_pic = LE_U16(310);
+    raw.ceil_pic  = LE_U16(181);
+
+    raw.floor_h = LE_S32(0 - S->f_h*256);
+    raw.ceil_h  = LE_S32(0 - S->c_h*256);
+
+    raw.extra = -1;
+
+    sectors->Append(&raw, sizeof(raw));
+
+    wall_id += count;
+  }
 }
 
 static void NK_WriteSprites(qLump_c *sprites)
@@ -1569,7 +1687,7 @@ static void NK_WriteSprites(qLump_c *sprites)
 
     int type = atoi(E->name.c_str());
 
-    if (type < 1 || type > 4)
+    if (type != 1)
       continue;
 
 
@@ -1607,7 +1725,7 @@ static void NK_WriteSprites(qLump_c *sprites)
   }
 }
 
-static void WriteNukem(void)
+static void NK_WriteNukem(void)
 {
 SYS_ASSERT(GRP_OpenWrite("test.grp"));
 
@@ -1841,7 +1959,8 @@ void doom_game_interface_c::EndLevel()
   CSG2_MakeMiniMap();
 
   DM_WriteDoom();
-WriteNukem();
+
+NK_WriteNukem();
 
   DM_EndLevel(level_name);
 
