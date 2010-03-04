@@ -38,29 +38,39 @@
 #include "q_bsp.h"
 
 
+extern void NK_WriteNukem(void);
+
 // Properties
 static char *level_name;
 static char *error_tex;
 
 
-void NK_StartGRP()
+bool NK_StartGRP(const char *filename)
 {
-  // FIXME
+  if (! GRP_OpenWrite(filename))
+    return false;
+
+  return true;
 }
 
-void NK_EndGRP()
+void NK_EndGRP(void)
 {
-  // FIXME
+  GRP_CloseWrite();
 }
 
-void NK_BeginLevel()
+void NK_BeginLevel(const char *level_name)
 {
-  // FIXME
+  char buffer[40];
+
+  sprintf(buffer, "%s.MAP", level_name);
+  StringUpper(buffer);
+
+  GRP_NewLump(buffer);
 }
 
-void NK_EndLevel()
+void NK_EndLevel(void)
 {
-  // FIXME
+  GRP_FinishLump();
 }
 
 
@@ -130,7 +140,7 @@ bool nukem_game_interface_c::Finish(bool build_ok)
 
 void nukem_game_interface_c::BeginLevel()
 {
-  FreeLevelStuff();
+//!!!!!!  FreeLevelStuff();
 }
 
 
@@ -165,7 +175,7 @@ void nukem_game_interface_c::EndLevel()
   if (! level_name)
     Main_FatalError("Script problem: did not set level name!\n");
 
-  NK_BeginLevel();
+  NK_BeginLevel(level_name);
 
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();

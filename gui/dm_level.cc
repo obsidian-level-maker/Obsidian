@@ -1847,6 +1847,12 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.visibility = 16;
     raw.extra = -1;
 
+    if (false)  // IS_SKY(S)
+    {
+      raw.ceil_pic = LE_U16(89);
+      raw.ceil_flags = LE_U16(SECTOR_F_PARALLAX);
+    }
+
     sectors->Append(&raw, sizeof(raw));
 
     // WRITE THE WALL LOOP
@@ -1944,12 +1950,8 @@ fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
   }
 }
 
-static void NK_WriteNukem(void)
+void NK_WriteNukem(void)
 {
-SYS_ASSERT(GRP_OpenWrite("test.grp"));
-
-GRP_NewLump("E1L8.MAP");
-
 
 qLump_c sectors;
 qLump_c walls;
@@ -1987,9 +1989,6 @@ GRP_AppendData(walls.GetBuffer(), walls.GetSize());
 GRP_AppendData(&num_sprites, 2);
 GRP_AppendData(sprites.GetBuffer(), sprites.GetSize());
 
-GRP_FinishLump();
-
-GRP_CloseWrite();
 }
 
 
@@ -2179,8 +2178,6 @@ void doom_game_interface_c::EndLevel()
   CSG2_MakeMiniMap();
 
   DM_WriteDoom();
-
-NK_WriteNukem();
 
   DM_EndLevel(level_name);
 
