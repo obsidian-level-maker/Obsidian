@@ -89,51 +89,19 @@ public:
   void Property(const char *key, const char *value);
 
 private:
-  bool CheckDirectory(const char *filename);
 };
 
 
-// FIXME: duplicated code (dm_level.cc)
-bool nukem_game_interface_c::CheckDirectory(const char *filename)
-{
-  char *dir_name = StringDup(filename);
-
-  // remove the base filename to get the plain directory
-  const char *base = FindBaseName(filename);
-
-  dir_name[base - filename] = 0;
-
-  if (strlen(dir_name) == 0)
-    return true;
-
-  // this badly-named function checks the directory exists
-  bool result = fl_filename_isdir(dir_name);
-
-  if (! result)
-    DLG_ShowError("The specified folder does not exist:\n\n  %s", dir_name);
-
-  StringFree(dir_name);
-
-  return result;
-}
 
 
 bool nukem_game_interface_c::Start()
 {
-  for (;;)
+  filename = Select_Output_File("grp");
+
+  if (! filename)
   {
-    filename = Select_Output_File("grp");
-
-    if (! filename)
-    {
-      Main_ProgStatus("Cancelled");
-      return false;
-    }
-
-    if (CheckDirectory(filename))
-      break;
-
-    // keep trying until filename is valid
+    Main_ProgStatus("Cancelled");
+    return false;
   }
 
   if (! NK_StartGRP(filename))
@@ -155,9 +123,6 @@ bool nukem_game_interface_c::Start()
 bool nukem_game_interface_c::Finish(bool build_ok)
 {
   NK_EndGRP();
-
-  // tidy up
-  FileDelete(TEMP_FILENAME);
 
   return build_ok;
 }
