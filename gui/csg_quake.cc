@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 BSP
+//  CSG 2.5D : QUAKE output
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License

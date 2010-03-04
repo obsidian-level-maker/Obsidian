@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  2.5D CSG : DOOM output
+//  CSG 2.5D : DOOM and NUKEM output
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -1617,8 +1617,8 @@ public:
     raw_nukem_wall_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(-GetX() * NK_FACTOR);
-    raw.y = LE_S32( GetY() * NK_FACTOR);
+    raw.x = LE_S32( GetX() * NK_FACTOR);
+    raw.y = LE_S32(-GetY() * NK_FACTOR);
 
     raw.right_wall = LE_U16(right->index);
 
@@ -1738,8 +1738,7 @@ fprintf(stderr, "\n");
 
   SYS_ASSERT(total >= 2);
 
-  // for (i = 0; i < total; i++)
-  for (i = total-1; i >= 0; i--)
+  for (i = 0; i < total; i++)
   {
     if (prelim[i])
       NK_Chain(i, prelim, circle, wall_id);
@@ -1910,8 +1909,8 @@ static void NK_WriteSprites(qLump_c *sprites)
     raw_nukem_sprite_t raw;
     memset(&raw, 0, sizeof(raw));
 
-    raw.x = LE_S32(-I_ROUND(E->x) * NK_FACTOR);
-    raw.y = LE_S32( I_ROUND(E->y) * NK_FACTOR);
+    raw.x = LE_S32( I_ROUND(E->x) * NK_FACTOR);
+    raw.y = LE_S32(-I_ROUND(E->y) * NK_FACTOR);
     raw.z = LE_S32(-I_ROUND(E->z) * NK_HT_FACTOR);
 
     raw.pic = LE_U16(1405);  // APLAYER
