@@ -29,16 +29,27 @@
 
 #include "main.h"
 #include "g_lua.h"
-
+#include "ui_chooser.h"
 #include "csg_main.h"
 
 #include "dm_extra.h"
+#include "dm_glbsp.h"
 #include "dm_level.h"
 #include "dm_wad.h"
 #include "q_bsp.h"  // qLump_c
 
 
-bool wad_hexen;  // FIXME: not global
+extern void DM_WriteDoom(void);
+extern void DM_FreeLevelStuff(void);
+
+#define TEMP_FILENAME    "temp/out.wad"
+
+static char *level_name;
+
+bool wad_hexen;  // FIXME: not global (next 3 too)
+extern char *dm_error_tex;
+extern int solid_exfloor;    // disabled if <= 0
+extern int liquid_exfloor;
 
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
@@ -430,6 +441,210 @@ int DM_NumSidedefs(void)
   return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
 }
 
+
+//------------------------------------------------------------------------
+
+
+class doom_game_interface_c : public game_interface_c
+{
+private:
+  const char *filename;
+
+public:
+  doom_game_interface_c() : filename(NULL)
+  { }
+
+  ~doom_game_interface_c()
+  {
+    StringFree(filename);
+  }
+
+  bool Start();
+  bool Finish(bool build_ok);
+
+  void BeginLevel();
+  void EndLevel();
+  void Property(const char *key, const char *value);
+
+private:
+  bool BuildNodes(const char *target_file);
+
+  bool CheckDirectory(const char *filename);
+};
+
+
+bool doom_game_interface_c::CheckDirectory(const char *filename)
+{
+  char *dir_name = StringDup(filename);
+
+  // remove the base filename to get the plain directory
+  const char *base = FindBaseName(filename);
+
+  dir_name[base - filename] = 0;
+
+  if (strlen(dir_name) == 0)
+    return true;
+
+  // this badly-named function checks the directory exists
+  bool result = fl_filename_isdir(dir_name);
+
+  if (! result)
+    DLG_ShowError("The specified folder does not exist:\n\n  %s", dir_name);
+
+  StringFree(dir_name);
+
+  return result;
+}
+
+
+bool doom_game_interface_c::Start()
+{
+  for (;;)
+  {
+    filename = Select_Output_File("wad");
+
+    if (! filename)
+    {
+      Main_ProgStatus("Cancelled");
+      return false;
+    }
+
+    if (CheckDirectory(filename))
+      break;
+
+    // keep trying until filename is valid
+  }
+
+  if (! DM_StartWAD(TEMP_FILENAME))
+  {
+    Main_ProgStatus("Error (create file)");
+    return false;
+  }
+
+  if (main_win)
+  {
+    main_win->build_box->ProgInit(2);
+    main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  }
+
+  return true;
+}
+
+
+bool doom_game_interface_c::BuildNodes(const char *target_file)
+{
+  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
+
+  // backup any existing wad
+
+  if (create_backups && FileExists(target_file))
+  {
+    char *backup_name = ReplaceExtension(target_file, "bak");
+
+    LogPrintf("Backing up existing file to %s\n", backup_name);
+
+    if (! FileCopy(target_file, backup_name))
+      LogPrintf("WARNING: unable to create backup!\n");
+
+    StringFree(backup_name);
+  }
+
+  return DM_BuildNodes(TEMP_FILENAME, target_file);
+}
+
+
+bool doom_game_interface_c::Finish(bool build_ok)
+{
+  DM_EndWAD(); // FIXME:check return??
+
+  if (build_ok)
+  {
+    build_ok = BuildNodes(filename);
+  }
+
+  // tidy up
+  FileDelete(TEMP_FILENAME);
+
+  return build_ok;
+}
+
+
+void doom_game_interface_c::BeginLevel()
+{
+  DM_FreeLevelStuff();
+}
+
+
+void doom_game_interface_c::Property(const char *key, const char *value)
+{
+  if (StringCaseCmp(key, "level_name") == 0)
+  {
+    level_name = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "description") == 0)
+  {
+    // ignored (for now)
+    // [another mechanism sets the description via BEX/DDF]
+  }
+  else if (StringCaseCmp(key, "hexen_format") == 0)
+  {
+    if (value[0] == '0' || tolower(value[0]) == 'f')
+      wad_hexen = false;
+    else
+      wad_hexen = true;
+  }
+  else if (StringCaseCmp(key, "error_tex") == 0)
+  {
+    dm_error_tex = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "error_flat") == 0)
+  {
+    // silently accepted, but not used
+  }
+  else if (StringCaseCmp(key, "solid_exfloor") == 0)
+  {
+    solid_exfloor = atoi(value);
+  }
+  else if (StringCaseCmp(key, "liquid_exfloor") == 0)
+  {
+    liquid_exfloor = atoi(value);
+  }
+  else
+  {
+    LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
+  }
+}
+
+
+void doom_game_interface_c::EndLevel()
+{
+  if (! level_name)
+    Main_FatalError("Script problem: did not set level name!\n");
+
+  DM_BeginLevel();
+
+  CSG2_MergeAreas();
+  CSG2_MakeMiniMap();
+
+  DM_WriteDoom();
+
+  DM_EndLevel(level_name);
+
+  StringFree(level_name);
+  level_name = NULL;
+
+  if (dm_error_tex)
+  {
+    StringFree(dm_error_tex);
+    dm_error_tex = NULL;
+  }
+}
+
+
+game_interface_c * Doom_GameObject()
+{
+  return new doom_game_interface_c();
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

@@ -43,15 +43,12 @@
 class nk_wall_c;
 
 
-#define TEMP_FILENAME    "temp/out.wad"
-
 
 // Properties
-static char *level_name;
-static char *error_tex;
+char *dm_error_tex;
 
-static int solid_exfloor;    // disabled if <= 0
-static int liquid_exfloor;
+int solid_exfloor;    // disabled if <= 0
+int liquid_exfloor;
 
 extern bool wad_hexen;  // FIXME
 
@@ -486,7 +483,7 @@ static std::vector<sector_info_c *>  dm_sectors;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
 
-static void FreeLevelStuff(void)
+void DM_FreeLevelStuff(void)
 {
   int i;
 
@@ -1114,8 +1111,8 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
 
-    SD->lower = lower_W ? lower_W->tex.c_str() : error_tex ? error_tex : "-";
-    SD->upper = upper_W ? upper_W->tex.c_str() : error_tex ? error_tex : "-";
+    SD->lower = lower_W ? lower_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
+    SD->upper = upper_W ? upper_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
 
     if (rail_W)
     {
@@ -1148,7 +1145,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     if (mid_W && mid_W->peg)
       *l_peg = true;
 
-    SD->mid = mid_W ? mid_W->tex.c_str() : error_tex ? error_tex : "-";
+    SD->mid = mid_W ? mid_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
 
     if (mid_W && mid_W->x_offset != FVAL_NONE)
       SD->x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);
@@ -1991,211 +1988,6 @@ GRP_AppendData(sprites.GetBuffer(), sprites.GetSize());
 
 }
 
-
-
-//------------------------------------------------------------------------
-
-
-class doom_game_interface_c : public game_interface_c
-{
-private:
-  const char *filename;
-
-public:
-  doom_game_interface_c() : filename(NULL)
-  { }
-
-  ~doom_game_interface_c()
-  {
-    StringFree(filename);
-  }
-
-  bool Start();
-  bool Finish(bool build_ok);
-
-  void BeginLevel();
-  void EndLevel();
-  void Property(const char *key, const char *value);
-
-private:
-  bool BuildNodes(const char *target_file);
-
-  bool CheckDirectory(const char *filename);
-};
-
-
-bool doom_game_interface_c::CheckDirectory(const char *filename)
-{
-  char *dir_name = StringDup(filename);
-
-  // remove the base filename to get the plain directory
-  const char *base = FindBaseName(filename);
-
-  dir_name[base - filename] = 0;
-
-  if (strlen(dir_name) == 0)
-    return true;
-
-  // this badly-named function checks the directory exists
-  bool result = fl_filename_isdir(dir_name);
-
-  if (! result)
-    DLG_ShowError("The specified folder does not exist:\n\n  %s", dir_name);
-
-  StringFree(dir_name);
-
-  return result;
-}
-
-
-bool doom_game_interface_c::Start()
-{
-  for (;;)
-  {
-    filename = Select_Output_File("wad");
-
-    if (! filename)
-    {
-      Main_ProgStatus("Cancelled");
-      return false;
-    }
-
-    if (CheckDirectory(filename))
-      break;
-
-    // keep trying until filename is valid
-  }
-
-  if (! DM_StartWAD(TEMP_FILENAME))
-  {
-    Main_ProgStatus("Error (create file)");
-    return false;
-  }
-
-  if (main_win)
-  {
-    main_win->build_box->ProgInit(2);
-    main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  }
-
-  return true;
-}
-
-
-bool doom_game_interface_c::BuildNodes(const char *target_file)
-{
-  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
-
-  // backup any existing wad
-
-  if (create_backups && FileExists(target_file))
-  {
-    char *backup_name = ReplaceExtension(target_file, "bak");
-
-    LogPrintf("Backing up existing file to %s\n", backup_name);
-
-    if (! FileCopy(target_file, backup_name))
-      LogPrintf("WARNING: unable to create backup!\n");
-
-    StringFree(backup_name);
-  }
-
-  return DM_BuildNodes(TEMP_FILENAME, target_file);
-}
-
-
-bool doom_game_interface_c::Finish(bool build_ok)
-{
-  DM_EndWAD(); // FIXME:check return??
-
-  if (build_ok)
-  {
-    build_ok = BuildNodes(filename);
-  }
-
-  // tidy up
-  FileDelete(TEMP_FILENAME);
-
-  return build_ok;
-}
-
-
-void doom_game_interface_c::BeginLevel()
-{
-  FreeLevelStuff();
-}
-
-
-void doom_game_interface_c::Property(const char *key, const char *value)
-{
-  if (StringCaseCmp(key, "level_name") == 0)
-  {
-    level_name = StringDup(value);
-  }
-  else if (StringCaseCmp(key, "description") == 0)
-  {
-    // ignored (for now)
-    // [another mechanism sets the description via BEX/DDF]
-  }
-  else if (StringCaseCmp(key, "hexen_format") == 0)
-  {
-    if (value[0] == '0' || tolower(value[0]) == 'f')
-      wad_hexen = false;
-    else
-      wad_hexen = true;
-  }
-  else if (StringCaseCmp(key, "error_tex") == 0)
-  {
-    error_tex = StringDup(value);
-  }
-  else if (StringCaseCmp(key, "error_flat") == 0)
-  {
-    // silently accepted, but not used
-  }
-  else if (StringCaseCmp(key, "solid_exfloor") == 0)
-  {
-    solid_exfloor = atoi(value);
-  }
-  else if (StringCaseCmp(key, "liquid_exfloor") == 0)
-  {
-    liquid_exfloor = atoi(value);
-  }
-  else
-  {
-    LogPrintf("WARNING: unknown DOOM property: %s=%s\n", key, value);
-  }
-}
-
-
-void doom_game_interface_c::EndLevel()
-{
-  if (! level_name)
-    Main_FatalError("Script problem: did not set level name!\n");
-
-  DM_BeginLevel();
-
-  CSG2_MergeAreas();
-  CSG2_MakeMiniMap();
-
-  DM_WriteDoom();
-
-  DM_EndLevel(level_name);
-
-  StringFree(level_name);
-  level_name = NULL;
-
-  if (error_tex)
-  {
-    StringFree(error_tex);
-    error_tex = NULL;
-  }
-}
-
-
-game_interface_c * Doom_GameObject()
-{
-  return new doom_game_interface_c();
-}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
