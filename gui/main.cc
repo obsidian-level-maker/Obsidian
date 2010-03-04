@@ -35,9 +35,10 @@
 #include "g_cookie.h"
 #include "g_lua.h"
 
-#include "wolf_map.h"
 #include "dm_level.h"
+#include "nk_level.h"
 #include "q1_main.h"
+#include "wolf_map.h"
 
 
 #define TICKER_TIME  40 /* ms */
@@ -368,6 +369,9 @@ void Build_Cool_Shit()
   {
     if (StringCaseCmp(format, "doom") == 0)
       game_object = Doom_GameObject();
+
+    else if (StringCaseCmp(format, "nukem") == 0)
+      game_object = Nukem_GameObject();
 
     else if (StringCaseCmp(format, "wolf3d") == 0)
       game_object = Wolf_GameObject();
