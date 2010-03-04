@@ -135,6 +135,16 @@ SKY GENERATOR:
 
 -  weapons: firemace no good for SP/COOP ??
 
+Sam's suggestions:
+  for Heretic caves should be rare in E1, common in E2, and somewhat common
+  in E3. I would, if going along with the “Egypt Sand” theme I made for
+  ObHack’s E4 in Heretic, make caverns about as common as they are in E3.
+
+  I would give E2 caverns pretty much the same theme as they have in ObHack;
+  E3 should be pretty much like E1, but I would make the occasional cavern in
+  E3 be very watery (water flowing down walls and the floor being full of
+  pools), or be like some areas in the original E3M7.
+
 
 ----------------------------------------------------------------
   HEXEN:
@@ -387,8 +397,7 @@ PIPE DREAMS
 
 -  CSG: clipping rectangles (typically a room)
 
--  small arena-ish boss levels to break up megawads,
-   e.g. DOOM 2 at MAP16 and MAP24  (JR)
+-  friendly monsters
 
 
 
