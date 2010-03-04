@@ -65,14 +65,14 @@ OBJS=	main.o      \
 	img_relief.o \
 	img_font1.o  \
 	\
+	csg_doom.o  \
+	csg_quake.o \
 	dm_extra.o  \
 	dm_glbsp.o  \
-	dm_level.o  \
 	dm_wad.o    \
 	q1_clip.o   \
 	q1_doors.o  \
 	q1_main.o   \
-	q1_nodes.o  \
 	q_bsp.o     \
 	vis_buffer.o \
 	wolf_map.o  \
