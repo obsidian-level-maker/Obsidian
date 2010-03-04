@@ -575,11 +575,13 @@ bool GRP_OpenWrite(const char *filename)
   for (int i = 0; i < MAX_GRP_WRITE_ENTRIES; i++)
   {
     raw_grp_lump_t entry;
+    memset(&entry, 0, sizeof(entry));
 
     sprintf(entry.name, "__%03d.ZZZ", i);
+
     entry.length = LE_U32(1);
 
-    fwrite(&entry, sizeof(raw_grp_lump_t), 1, grp_W_fp);
+    fwrite(&entry, sizeof(entry), 1, grp_W_fp);
   }
   fflush(grp_W_fp);
 
