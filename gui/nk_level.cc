@@ -45,6 +45,11 @@ static char *level_name;
 static char *error_tex;
 
 
+static qLump_c *nk_sectors;
+static qLump_c *nk_walls;
+static qLump_c *nk_sprites;
+
+
 bool NK_StartGRP(const char *filename)
 {
   if (! GRP_OpenWrite(filename))
@@ -72,6 +77,80 @@ void NK_EndLevel(void)
 {
   GRP_FinishLump();
 }
+
+
+void NK_AddSector(int first_wall, int num_wall, int f_h, int c_h, ...)
+{
+  raw_nukem_sector_t raw;
+
+  memset(&raw, 0, sizeof(raw));
+
+  raw.wall_ptr = LE_U16(first_wall);
+  raw.wall_num = LE_U16(num_wall); 
+
+  raw.floor_pic = LE_U16(742);
+  raw.ceil_pic  = LE_U16(757);
+
+  raw.floor_h = LE_S32(f_h);
+  raw.ceil_h  = LE_S32(c_h);
+
+  raw.visibility = 16;
+  raw.extra = -1;
+
+  nk_sectors->Append(&raw, sizeof(raw));
+}
+
+void NK_AddWall(int x, int y, int right, int back, int back_sec, ... )
+{
+  raw_nukem_wall_t raw;
+
+  memset(&raw, 0, sizeof(raw));
+
+  raw.x = LE_S32(x);
+  raw.y = LE_S32(y);
+
+  raw.right_wall = LE_U16(right);
+
+  raw.back_wall = LE_U16(back);
+  raw.back_sec  = LE_U16(back_sec);
+
+  raw.pic[0] = LE_U16(723);
+  raw.pic[1] = LE_U16(0);
+
+  raw.xscale = raw.yscale = 4;
+
+  raw.extra = -1;
+
+  nk_walls->Append(&raw, sizeof(raw));
+}
+
+void NK_AddSprite( ... )
+{
+  raw_nukem_sprite_t raw;
+
+  memset(&raw, 0, sizeof(raw));
+
+  // FIXME
+
+  nk_sprites->Append(&raw, sizeof(raw));
+}
+
+
+int NK_NumSectors(void)
+{
+  return nk_sectors->GetSize() / sizeof(raw_nukem_sector_t);
+}
+
+int NK_NumWalls(void)
+{
+  return nk_walls->GetSize() / sizeof(raw_nukem_wall_t);
+}
+
+int NK_NumSprites(void)
+{
+  return nk_sprites->GetSize() / sizeof(raw_nukem_sprite_t);
+}
+
 
 
 //------------------------------------------------------------------------

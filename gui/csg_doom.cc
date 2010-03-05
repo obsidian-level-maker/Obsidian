@@ -908,6 +908,9 @@ static void AssignExtraFloorTags(void)
 
 static void CreateSectors(void)
 {
+  extrafloor_tag  = 9000;
+  extrafloor_slot = 0;
+
   dm_sectors.clear();
 
   // #0 represents VOID (never written to map lump)
@@ -1549,9 +1552,6 @@ void DM_WriteDoom(void)
 //CSG2_Doom_TestRegions();
 //return;
  
-  extrafloor_tag  = 9000;
-  extrafloor_slot = 0;
-
   CreateSectors();
 
   MakeLinedefs();
@@ -1614,6 +1614,10 @@ public:
 
   void Write(qLump_c *lump)
   {
+    // NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
+    //            back ? back->index : -1, back ? back->SectorIndex() : -1,
+    //            ... )
+
     raw_nukem_wall_t raw;
     memset(&raw, 0, sizeof(raw));
 
@@ -1828,6 +1832,10 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     int first =      sec_walls[S->index]->at(0)->index; 
     int count = (int)sec_walls[S->index]->size();
 
+    // NK_AddSector(first, count,
+    //              - S->f_h * -NK_HT_FACTOR,
+    //              - S->c_h * -NK_HT_FACTOR, ...)
+
     raw_nukem_sector_t raw;
     memset(&raw, 0, sizeof(raw));
 
@@ -1906,6 +1914,10 @@ static void NK_WriteSprites(qLump_c *sprites)
     }
 
 
+    // NK_AddSprite(I_ROUND( E->x * NK_FACTOR),
+    //              I_ROUND(-E->y * NK_FACTOR),
+    //              I_ROUND(-E->z * NK_HT_FACTOR), ... )
+
     raw_nukem_sprite_t raw;
     memset(&raw, 0, sizeof(raw));
 
@@ -1948,6 +1960,10 @@ fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
 
 void NK_WriteNukem(void)
 {
+  CreateSectors();
+
+  MakeLinedefs();
+  MergeColinearLines();
 
 qLump_c sectors;
 qLump_c walls;
