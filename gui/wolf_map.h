@@ -21,7 +21,6 @@
 #ifndef __OBLIGE_LWOLF_H__
 #define __OBLIGE_LWOLF_H__
 
-game_interface_c * Wolf_GameObject();
 
 #endif /* __OBLIGE_LWOLF_H__ */
 

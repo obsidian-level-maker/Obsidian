@@ -22,7 +22,6 @@
 #define __OBLIGE_QUAKE1_H__
 
 
-game_interface_c * Quake1_GameObject(void);
 
 
 //------------------------------------------------------------------------

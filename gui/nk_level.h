@@ -21,7 +21,6 @@
 #ifndef __OBLIGE_NUKEM_LEVEL_H__
 #define __OBLIGE_NUKEM_LEVEL_H__
 
-game_interface_c * Nukem_GameObject();
 
 #endif /* __OBLIGE_NUKEM_LEVEL_H__ */
 

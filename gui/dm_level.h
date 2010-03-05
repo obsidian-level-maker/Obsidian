@@ -21,7 +21,6 @@
 #ifndef __OBLIGE_DOOM_LEVEL_H__
 #define __OBLIGE_DOOM_LEVEL_H__
 
-game_interface_c * Doom_GameObject();
 
 #endif /* __OBLIGE_DOOM_LEVEL_H__ */
 
