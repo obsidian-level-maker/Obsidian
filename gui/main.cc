@@ -35,10 +35,8 @@
 #include "g_cookie.h"
 #include "g_lua.h"
 
-#include "dm_level.h"
 #include "nk_level.h"
 #include "q1_main.h"
-#include "wolf_map.h"
 
 
 #define TICKER_TIME  40 /* ms */

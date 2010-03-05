@@ -34,7 +34,6 @@
 
 #include "dm_extra.h"
 #include "dm_glbsp.h"
-#include "dm_level.h"
 #include "dm_wad.h"
 #include "q_bsp.h"  // qLump_c
 

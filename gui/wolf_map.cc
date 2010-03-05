@@ -29,7 +29,6 @@
 #include "main.h"
 
 #include "g_lua.h"
-#include "wolf_map.h"
 
 
 #define TEMP_GAMEFILE  "temp/gamemaps.tmp"
