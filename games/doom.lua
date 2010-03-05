@@ -3586,7 +3586,6 @@ OB_THEMES["doom_tech"] =
 
   prefix = "TECH",
   name_theme = "TECH",
-  usual_episode = 1,
 
   mixed_prob = 50,
 }
@@ -3598,7 +3597,6 @@ OB_THEMES["doom_urban"] =
 
   prefix = "URBAN",
   name_theme = "URBAN",
-  usual_episode = 2,
 
   mixed_prob = 50,
 }
@@ -3610,7 +3608,6 @@ OB_THEMES["doom_hell"] =
 
   prefix = "HELL",
   name_theme = "GOTHIC",
-  usual_episode = 3,
 
   mixed_prob = 50,
 }
