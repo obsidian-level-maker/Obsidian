@@ -18,10 +18,6 @@
 --
 ----------------------------------------------------------------
 
-function Eternity_end_level()
-  Boom_end_level()
-end
-
 
 OB_ENGINES["eternity"] =
 {
@@ -29,7 +25,7 @@ OB_ENGINES["eternity"] =
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 
-  end_level_func = Eternity_end_level,
+  all_done_func = Boom_all_done,
 
   param =
   {

@@ -18,10 +18,6 @@
 --
 ----------------------------------------------------------------
 
-function Legacy_end_level()
-  Boom_end_level()
-end
-
 
 OB_ENGINES["legacy"] =
 {
@@ -29,7 +25,7 @@ OB_ENGINES["legacy"] =
 
   for_games = { doom1=1, doom2=1, freedoom=1 },
 
-  end_level_func = Legacy_end_level,
+  all_done_func = Boom_all_done,
 
   param =
   {
