@@ -14,4 +14,5 @@ CHANGES (since v3.51)
 - fixed a bug where an outdoor area was too low to fit in
 - fixed ugliness when outdoor rooms had differing sky heights
 - fixed failure when engine was set to Legacy or Eternity
+- Mr. Chris fixed a Boom-only linetype in the E1M8 map
 
