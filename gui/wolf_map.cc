@@ -140,6 +140,7 @@ int rle_compress_plane(u16_t *plane, int src_len)
 
 
 //------------------------------------------------------------------------
+
 static void WF_WritePlane(u16_t *plane, int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
@@ -154,9 +155,6 @@ static void WF_WritePlane(u16_t *plane, int *offset, int *length)
       LogPrintf("Failure writing to map file! (%d bytes)\n", *length);
     }
   }
-
-// FIXME: validate length
-//  int wrote_length = (int)ftell(map_fp) - *offset;
 }
 
 static void WF_WriteBlankPlane(int *offset, int *length)

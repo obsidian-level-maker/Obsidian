@@ -57,8 +57,7 @@ static qLump_c *sector_lump;
 static qLump_c *sidedef_lump;
 static qLump_c *linedef_lump;
 
-static int write_errors_seen; // FIXME: no longer used!
-static int seek_errors_seen;
+static int errors_seen;
 
 typedef std::vector<qLump_c *> lump_bag_t;
 
@@ -100,8 +99,10 @@ void DM_WriteLump(const char *name, const void *data, u32_t len)
 
   if (len > 0)
   {
-    // FIXME: check error
-    WAD_AppendData(data, len);
+    if (! WAD_AppendData(data, len))
+    {
+      errors_seen++;
+    }
   }
 
   WAD_FinishLump();
@@ -225,8 +226,7 @@ bool DM_StartWAD(const char *filename)
     return false;
   }
 
-  write_errors_seen = 0;
-  seek_errors_seen  = 0;
+  errors_seen = 0;
 
   wad_hexen = false;
 
@@ -243,10 +243,9 @@ bool DM_EndWAD(void)
   WriteSections();
   ClearSections();
 
-  // FIXME: errors????
   WAD_CloseWrite();
 
-  return (write_errors_seen == 0) && (seek_errors_seen == 0);
+  return (errors_seen == 0);
 }
 
 
@@ -555,7 +554,10 @@ bool doom_game_interface_c::BuildNodes(const char *target_file)
 
 bool doom_game_interface_c::Finish(bool build_ok)
 {
-  DM_EndWAD(); // FIXME:check return??
+  if (! DM_EndWAD())
+  {
+    // FIXME: there were write errors -- do something
+  }
 
   if (build_ok)
   {
