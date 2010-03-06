@@ -21,12 +21,12 @@
 NUKEM_THINGS =
 {
   --- special stuff ---
-  other1 = { id=1405, kind="player", r=20,h=56 },
-  other2 = { id=1405, kind="player", r=20,h=56 },
-  other3 = { id=1405, kind="player", r=20,h=56 },
-  other4 = { id=1405, kind="player", r=20,h=56 },
+  player1 = { id=1405, kind="other", r=20,h=56 },
+  player2 = { id=1405, kind="other", r=20,h=56 },
+  player3 = { id=1405, kind="other", r=20,h=56 },
+  player4 = { id=1405, kind="other", r=20,h=56 },
 
-  dm_other = { id=1405, kind="player", r=20,h=56 },
+  dm_player = { id=1405, kind="other", r=20,h=56 },
 
   --- monsters ---
   pig_cop = { id=2000, kind="monster", r=16,h=56 },
@@ -69,9 +69,28 @@ NUKEM_SANITY_MAP =
 ----------------------------------------------------------------
 
 
+NUKEM_STEPS =
+{
+  step1 = { step_w="_ERROR", side_w="_ERROR", top_f="_ERROR" },
+}
+
+
+NUKEM_PICTURES =
+{
+  carve =
+  {
+    count=1,
+    pic_w="_ERROR", width=64, height=64,
+    x_offset=0, y_offset=0,
+    -- side_t="METAL", floor="CEIL5_2",
+    depth=8, 
+  },
+}
+
+
 NUKEM_SUB_THEMES =
 {
-  CITY =
+  CITY1 =
   {
     building =
     {
@@ -79,6 +98,10 @@ NUKEM_SUB_THEMES =
       floors = { F_BRKTOP=50 },
       ceilings = { F_BRKTOP=50 },
     },
+
+    logos = { carve=50 },
+
+    steps = { step1=50 },
 
   }, -- CITY
 }
@@ -222,6 +245,8 @@ OB_GAMES["nukem"] =
 
     "materials", NUKEM_MATERIALS,
     "themes",    NUKEM_SUB_THEMES,
+    "pictures",  NUKEM_PICTURES,
+    "steps",     NUKEM_STEPS,
   },
 }
 

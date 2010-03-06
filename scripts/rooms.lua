@@ -97,6 +97,9 @@ function Rooms_decide_outdoors()
     if R.parent and R.parent.outdoor then return false end
     if R.parent then return rand_odds(5) end
 
+    if R.kind == "building" and not THEME.courtyard then return false end
+    if R.kind == "nature"   and not THEME.landscape then return false end
+
     if STYLE.skies == "none"   then return false end
     if STYLE.skies == "always" then return true end
 
@@ -150,9 +153,13 @@ function Room_setup_theme(R)
   if not LEVEL.outdoor_floors then
     LEVEL.outdoor_floors = {}
 
-    for num = 1,2 do
-      local name = rand_key_by_probs(THEME.courtyard.floors)
-      LEVEL.outdoor_floors[num] = name
+    if not THEME.courtyard then
+      LEVEL.outdoor_floors[1] = rand_key_by_probs(THEME.building.floors)
+    else
+      for num = 1,2 do
+        local name = rand_key_by_probs(THEME.courtyard.floors)
+        LEVEL.outdoor_floors[num] = name
+      end
     end
   end
 
@@ -583,7 +590,7 @@ function Rooms_reckon_doors()
           N.border[N.conn_dir] = B2
         end
 
-        if B.kind == "arch" and not B.tried_door then
+        if B.kind == "arch" and GAME.doors and not B.tried_door then
           B.tried_door = true
 
           local prob = door_chance(C.src, C.dest)

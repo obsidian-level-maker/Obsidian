@@ -2085,10 +2085,7 @@ function Layout_one(R)
         local skin = assert(GAME.exits[skin_name])
         Build_outdoor_exit_switch(S, dir, z1, skin)
 
-      else
-        if not THEME.exits then
-          error("Theme is missing exits table")
-        end
+      elseif THEME.exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand_key_by_probs(THEME.exits)
         local skin = assert(GAME.exits[skin_name])
@@ -2704,16 +2701,13 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
-  if R.kind == "smallexit" then
+  if R.kind == "smallexit" and THEME.small_exits then
     local C = R.conns[1]
     local T = C:seed(C:neighbor(R))
     local out_combo = T.room.main_tex
     if T.room.outdoor then out_combo = R.main_tex end
 
     -- FIXME: use single one over a whole episode
-    if not THEME.small_exits then
-      error("Theme is missing small_exits table")
-    end
     local skin_name = rand_key_by_probs(THEME.small_exits)
     local skin = assert(GAME.exits[skin_name])
 
