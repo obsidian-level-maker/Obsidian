@@ -3,12 +3,17 @@ TODO
 ====
 
 
-FIXED: can create outdoor rooms with low ceiling (e.g. E3M7)
+>>>  CSG NUKEM: use the NK_AddWall() stuff,
+                move header writing to nk_level.cc
+
 
 BUG: liquification of caves at a border can subvert quests
 
 BUG: can assign a seed as "walk" without floor_h ??
 
+-  hallway detailing (etc?) : mark lines as impassible
+
+-  get small exits working again
 
 
 *  get more games working (Heretic, Hexen etc)
@@ -30,7 +35,7 @@ Natural areas:
 
   -  height changes 
 
-  DONE:  create jaggy edges
+  PARTIAL:  create jaggy edges
 
   DONE:  small chance an island region becomes a lava pit
 
@@ -59,15 +64,12 @@ Natural areas:
  
 
 
->>> dm_level.cc : fix up extrafloor stuff
+>>> csg_doom.cc : fix up extrafloor stuff
 
 >>> make a theme-appropriate version of tech_outdoor exit
 
 
 DONE: rework liquids
-
-++  BUG: sky height out-of-sync, causing bars to become one-sided
-    (cf MAP04 of chris's map).
 
 
 +  support MAPINFO lumps (especially for ZDoom ports).
@@ -85,8 +87,6 @@ DONE: rework liquids
 -  Quests : add locks (new arenas) even when have no keys
 
 -  rarity for bfg10k and railgun for Skulltag
-
--  allow export to .map files
 
 
 -  implement more of Chris's and Johnny's boss maps
@@ -113,7 +113,7 @@ CSG CODE:
 
 !!  DOOM: fix y_offset values
 
-+   DOOM: merge linedefs where possible
+DONE:  merge linedefs where possible
 
 
 q1_nodes:

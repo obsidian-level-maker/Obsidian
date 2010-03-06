@@ -162,6 +162,44 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
+  QUAKE:
+----------------------------------------------------------------
+
++  create faces from stacked brushes behind a gap (cf. oa_dm7)
+
+++ perform lighting
+   (sky vector = '1 2 4')
+
+++ perform visibility
+
+-  liquid areas
+
+-  gui.quake_add_textures("data/quake_tex.wad")
+
+-  create "oblige" logo miptex [.wal for QuakeII]
+
+-  allow export to .map files
+
+
+----------------------------------------------------------------
+  QUAKE II:
+----------------------------------------------------------------
+
+-  need to store wall brushes into a big list (qLeaf_c)
+   and "split" them with Split_XY (if purely on one side,
+   move to that side, otherwise keep in both sides).
+
+   when get to solid wall leaf, keep the ones that match
+   that wall (i.e. not completely in front of wall).
+
+?  use cluster=-1 for SOLID leafs
+
++  merge Q#_CreateEntities into a common function
+
+-  dface2_t == dface_t, move into common ??
+
+
+----------------------------------------------------------------
   WOLF 3D
 ----------------------------------------------------------------
 
@@ -185,40 +223,6 @@ Sam's suggestions:
 - secret levels (full of treasure)
 - something interesting in middle of big rooms.
 - elevator "entry" in first room.
-
-
-----------------------------------------------------------------
-  QUAKE:
-----------------------------------------------------------------
-
-+ create faces from stacked brushes behind a gap (cf. oa_dm7)
-
-++ perform lighting
-   (sky vector = '1 2 4')
-
-++ perform visibility
-
-- gui.quake_add_textures("data/quake_tex.wad")
-
-- create "oblige" logo miptex [.wal for QuakeII]
-
-
-----------------------------------------------------------------
-  QUAKE II:
-----------------------------------------------------------------
-
--  need to store wall brushes into a big list (qLeaf_c)
-   and "split" them with Split_XY (if purely on one side,
-   move to that side, otherwise keep in both sides).
-
-   when get to solid wall leaf, keep the ones that match
-   that wall (i.e. not completely in front of wall).
-
-?  use cluster=-1 for SOLID leafs
-
-+  merge Q#_CreateEntities into a common function
-
--  dface2_t == dface_t, move into common ??
 
 
 ----------------------------------------------------------------
