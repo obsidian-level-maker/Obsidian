@@ -1568,8 +1568,8 @@ void DM_WriteDoom(void)
 
 //----------------------------------------------------------------------
 
-#define NK_FACTOR  16
-#define NK_HT_FACTOR  256
+#define NK_FACTOR  10
+#define NK_HT_FACTOR  200
 
 static int nk_pos_x;
 static int nk_pos_y;
@@ -1894,10 +1894,6 @@ static void NK_WriteSprites(qLump_c *sprites)
 
     int type = atoi(E->name.c_str());
 
-    if (type != 1)
-      continue;
-
-    
 
     // parse entity properties
     int angle = 0;
@@ -1944,7 +1940,7 @@ fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
       }
     }
 
-    if (type == 1)
+    if (type == 1405)
     {
       nk_pos_x = raw.x;
       nk_pos_y = raw.y;
