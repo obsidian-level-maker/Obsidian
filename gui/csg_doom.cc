@@ -757,6 +757,10 @@ static void MakeSector(merge_region_c *R)
     S->tag = 0;
 
 
+if (T->bkind == BKIND_Sky)  // FIXME temp hack
+  S->special |= 0x10000;
+
+
   // find brushes floating in-between --> make extrafloors
 
   // Note: top-to-bottom is the most natural order, because when
@@ -1636,8 +1640,28 @@ public:
       raw.back_sec  = LE_U16(0xFFFF);
     }
 
-    raw.pic[0] = LE_U16(back ? 723 : 783);
-    raw.pic[1] = LE_U16(0);
+    int pic;
+    if (! back)
+      pic = atoi(line->front->mid.c_str());
+    else
+    {
+      int f1_h = line->front->sector->f_h;
+      int c1_h = line->front->sector->c_h;
+
+      int f2_h = line->back->sector->f_h;
+      int c2_h = line->back->sector->c_h;
+
+      int f_diff = f2_h - f1_h;
+      int c_diff = c1_h - c2_h;
+
+      bool use_upper = (side==0) ? (c_diff > f_diff) : (-c_diff > -f_diff);
+
+      const sidedef_info_c *SD = (side==0) ? line->front : line->back;
+
+      pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
+    }
+
+    raw.pic = LE_U16(pic);
 
     raw.xscale = raw.yscale = 4;
 
@@ -1841,8 +1865,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.wall_ptr = LE_U16(first);
     raw.wall_num = LE_U16(count); 
 
-    raw.floor_pic = LE_U16(742);
-    raw.ceil_pic  = LE_U16(757);
+    raw.floor_pic = LE_U16(atoi(S->f_tex.c_str()));
+    raw.ceil_pic  = LE_U16(atoi(S->c_tex.c_str()));
 
     raw.floor_h = LE_S32(0 - (S->f_h)*NK_HT_FACTOR);
     raw.ceil_h  = LE_S32(0 - (S->c_h)*NK_HT_FACTOR);
@@ -1850,9 +1874,8 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     raw.visibility = 16;
     raw.extra = -1;
 
-    if (false)  // IS_SKY(S)
+    if (S->special & 0x10000)
     {
-      raw.ceil_pic = LE_U16(89);
       raw.ceil_flags = LE_U16(SECTOR_F_PARALLAX);
     }
 

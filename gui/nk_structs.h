@@ -93,7 +93,8 @@ typedef struct
 
   u16_t flags;
 
-  u16_t pic[2];
+  u16_t pic;
+  u16_t mask_pic;
 
   s8_t shade;
   u8_t palette;

@@ -57,6 +57,7 @@ NUKEM_MATERIALS =
   -- flats --
 
   F_BRKTOP = { t=742 },
+  F_873    = { t=873 },
 }
 
 
@@ -96,7 +97,12 @@ NUKEM_SUB_THEMES =
     {
       walls = { BRICK1=50 },
       floors = { F_BRKTOP=50 },
-      ceilings = { F_BRKTOP=50 },
+      ceilings = { F_873=50 },
+    },
+
+    courtyard =
+    {
+      floors = { F_BRKTOP=50 },
     },
 
     logos = { carve=50 },
