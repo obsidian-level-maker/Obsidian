@@ -59,13 +59,15 @@ private:
 };
 
 
-void BSP_CreateInfoFile();
 void BSP_BackupPAK(const char *filename);
 
 bool BSP_OpenLevel(const char *entry_in_pak, int game /* 1 or 2 */);
 bool BSP_CloseLevel();
 
 qLump_c *BSP_NewLump(int entry);
+
+void BSP_AddInfoFile();
+qLump_c *BSP_CreateInfoLump();
 
 
 void BSP_PreparePlanes(int lump, int max_planes);

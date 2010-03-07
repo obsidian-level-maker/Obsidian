@@ -375,7 +375,7 @@ void BSP_BackupPAK(const char *filename)
 }
 
 
-void BSP_CreateInfoFile()
+qLump_c * BSP_CreateInfoLump()
 {
   qLump_c *L = new qLump_c();
 
@@ -401,11 +401,19 @@ void BSP_CreateInfoFile()
 
   L->Append(terminator, 2);
 
+  return L;
+}
+
+
+void BSP_AddInfoFile()
+{
+  qLump_c *info = BSP_CreateInfoLump();
+
   PAK_NewLump("oblige_dat.txt");
-  BSP_WriteLump(L);
+  BSP_WriteLump(info);
   PAK_FinishLump();
 
-  delete L;
+  delete info;
 }
 
 

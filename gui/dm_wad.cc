@@ -185,38 +185,6 @@ static void WriteSections()
 }
 
 
-static void CreateInfoLump()
-{
-  qLump_c *L = new qLump_c();
-
-  L->SetCRLF(true);
-
-  L->Printf("\n");
-  L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2010 Andrew Apted\n");
-  L->Printf("-- http://oblige.sourceforge.net/\n");
-  L->Printf("\n");
-
-  std::vector<std::string> lines;
-
-  ob_read_all_config(&lines, false /* all_opts */);
-
-  for (unsigned int i = 0; i < lines.size(); i++)
-    L->Printf("%s\n", lines[i].c_str());
- 
-  L->Printf("\n\n\n");
-
-  // terminate lump with ^Z and a NUL character
-  static const byte terminator[2] = { 26, 0 };
-
-  L->Append(terminator, 2);
-
-  DM_WriteLump("OBLIGDAT", L);
-
-  delete L;
-}
-
-
 bool DM_StartWAD(const char *filename)
 {
   if (! WAD_OpenWrite(filename))
@@ -231,7 +199,9 @@ bool DM_StartWAD(const char *filename)
 
   ClearSections();
 
-  CreateInfoLump();
+  qLump_c *info = BSP_CreateInfoLump();
+  DM_WriteLump("OBLIGDAT", info);
+  delete info;
 
   return true; //OK
 }

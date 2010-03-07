@@ -403,7 +403,7 @@ bool quake2_game_interface_c::Start()
     return false;
   }
 
-  BSP_CreateInfoFile();
+  BSP_AddInfoFile();
 
   if (main_win)
   {

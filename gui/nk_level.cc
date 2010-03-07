@@ -52,10 +52,34 @@ static qLump_c *nk_sprites;
 static raw_nukem_map_t nk_header;
 
 
+static void NK_WriteLump(const char *name, qLump_c *lump)
+{
+  SYS_ASSERT(strlen(name) <= 11);
+
+  GRP_NewLump(name);
+
+  int len = lump->GetSize();
+
+  if (len > 0)
+  {
+    if (! GRP_AppendData(lump->GetBuffer(), len))
+    {
+//    errors_seen++;
+    }
+  }
+
+  GRP_FinishLump();
+}
+
+
 bool NK_StartGRP(const char *filename)
 {
   if (! GRP_OpenWrite(filename))
     return false;
+
+  qLump_c *info = BSP_CreateInfoLump();
+  NK_WriteLump("OBLIGE.DAT", info);
+  delete info;
 
   return true;
 }
@@ -67,12 +91,12 @@ void NK_EndGRP(void)
 
 void NK_BeginLevel(const char *level_name)
 {
-  char buffer[40];
+  char lump_name[40];
 
-  sprintf(buffer, "%s.MAP", level_name);
-  StringUpper(buffer);
+  sprintf(lump_name, "%s.MAP", level_name);
+  StringUpper(lump_name);
 
-  GRP_NewLump(buffer);
+  GRP_NewLump(lump_name);
 
   // initialise the header
 
