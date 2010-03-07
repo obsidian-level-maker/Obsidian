@@ -1636,10 +1636,15 @@ public:
     if (back)
       flags |= WALL_F_PEGGED;
 
+    int xscale = 1 + (int)line->length / 16;
+    if (xscale > 255)
+      xscale = 255;
+
 
     NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
                back ? back->index : -1, back ? back->SectorIndex() : -1,
-               flags, pic, 0);
+               flags, pic, 0,
+               xscale, 8, 0, 0);
 
   }
 };

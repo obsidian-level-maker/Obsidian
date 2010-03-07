@@ -154,7 +154,8 @@ void NK_AddSector(int first_wall, int num_wall, int visibility,
 }
 
 void NK_AddWall(int x, int y, int right, int back, int back_sec, 
-                int flags, int pic, int mask_pic)
+                int flags, int pic, int mask_pic,
+                int xscale, int yscale, int xpan, int ypan)
 {
   raw_nukem_wall_t raw;
 
@@ -171,7 +172,8 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec,
   raw.pic      = LE_U16(pic);
   raw.mask_pic = LE_U16(mask_pic);
 
-  raw.xscale = raw.yscale = 4;
+  raw.xscale = xscale;  raw.xpan = xpan;
+  raw.yscale = yscale;  raw.ypan = ypan;
 
   raw.extra = -1;
 

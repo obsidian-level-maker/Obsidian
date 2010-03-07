@@ -26,7 +26,8 @@ void NK_AddSector(int first_wall, int num_wall, int visibility,
                   int c_h, int c_pic, int c_flags);
 
 void NK_AddWall(int x, int y, int right, int back, int back_sec, 
-                int flags, int pic, int mask_pic);
+                int flags, int pic, int mask_pic,
+                int xscale, int yscale, int xpan, int ypan);
 
 void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec);
 
