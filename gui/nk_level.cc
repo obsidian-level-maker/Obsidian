@@ -272,6 +272,10 @@ bool nukem_game_interface_c::Finish(bool build_ok)
 void nukem_game_interface_c::BeginLevel()
 {
 //!!!!!!  FreeLevelStuff();
+
+  nk_sectors = new qLump_c;
+  nk_walls   = new qLump_c;
+  nk_sprites = new qLump_c;
 }
 
 
@@ -323,6 +327,10 @@ void nukem_game_interface_c::EndLevel()
     StringFree(error_tex);
     error_tex = NULL;
   }
+
+  delete nk_sectors;  nk_sectors = NULL;
+  delete nk_walls;    nk_walls   = NULL;
+  delete nk_sprites;  nk_sprites = NULL;
 }
 
 
