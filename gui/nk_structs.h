@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -78,7 +78,10 @@ raw_nukem_sector_t;
 
 #define SECTOR_F_PARALLAX    (1 << 0)
 #define SECTOR_F_SLOPED      (1 << 1)
+#define SECTOR_F_RELATIVE    (1 << 6)
+
 #define SECTOR_F_SWAP_XY     (1 << 2)
+#define SECTOR_F_DOUBLED     (1 << 3)
 #define SECTOR_F_FLIP_X      (1 << 4)
 #define SECTOR_F_FLIP_Y      (1 << 5)
 
@@ -108,10 +111,13 @@ typedef struct
 raw_nukem_wall_t;
 
 #define WALL_F_BLOCKING    (1 << 0)
-#define WALL_F_GUN_BLOCK   (1 << 6)
-#define WALL_F_PEG_BOTTOM  (1 << 2)
-#define WALL_F_MASKED      (1 << 4)
 #define WALL_F_ONE_WAY     (1 << 5)
+#define WALL_F_GUN_BLOCK   (1 << 6)
+
+#define WALL_F_SWAP_LOWER  (1 << 1)
+#define WALL_F_PEGGED      (1 << 2)
+#define WALL_F_MASKED      (1 << 4)
+
 #define WALL_F_FLIP_X      (1 << 3)
 #define WALL_F_FLIP_Y      (1 << 8)
 
@@ -143,12 +149,17 @@ typedef struct
 raw_nukem_sprite_t;
 
 #define SPRITE_F_BLOCKING    (1 << 0)
+#define SPRITE_F_SUBMERGED   (1 << 7)
 #define SPRITE_F_GUN_BLOCK   (1 << 8)
+
+#define SPRITE_F_TRANSPARENT (1 << 1)
+#define SPRITE_F_ONE_SIDED   (1 << 6)
+#define SPRITE_F_INVISIBLE   (1 << 15)
+
 #define SPRITE_F_IS_WALL     (1 << 4)
 #define SPRITE_F_IS_FLOOR    (1 << 5)
 #define SPRITE_F_FLIP_X      (1 << 2)
 #define SPRITE_F_FLIP_Y      (1 << 3)
-#define SPRITE_F_INVISIBLE   (1 << 15)
 
 
 #endif /* __OBLIGE_DUKE3D_STRUCTS_H__ */
