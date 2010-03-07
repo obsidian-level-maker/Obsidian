@@ -34,13 +34,11 @@
 #include "dm_extra.h"
 #include "dm_glbsp.h"
 #include "dm_wad.h"
+#include "nk_level.h"
+#include "nk_structs.h"  // flags
 
 
-#include "nk_structs.h"  // TEMPORARY !!
-#include "lib_wad.h"
-#include "q_bsp.h"
 class nk_wall_c;
-
 
 
 // Properties
@@ -1573,12 +1571,7 @@ void DM_WriteDoom(void)
 //----------------------------------------------------------------------
 
 #define NK_FACTOR  10
-#define NK_HT_FACTOR  200
-
-static int nk_pos_x;
-static int nk_pos_y;
-static int nk_pos_z;
-static int nk_sec;
+#define NK_HT_FACTOR  -200
 
 class nk_wall_c
 {
@@ -1615,31 +1608,8 @@ public:
     return (side == 0) ? line->front->sector->index : line->back->sector->index;
   }
 
-  void Write(qLump_c *lump)
+  void Write()
   {
-    // NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
-    //            back ? back->index : -1, back ? back->SectorIndex() : -1,
-    //            ... )
-
-    raw_nukem_wall_t raw;
-    memset(&raw, 0, sizeof(raw));
-
-    raw.x = LE_S32( GetX() * NK_FACTOR);
-    raw.y = LE_S32(-GetY() * NK_FACTOR);
-
-    raw.right_wall = LE_U16(right->index);
-
-    if (back)
-    {
-      raw.back_wall = LE_U16(back->index);
-      raw.back_sec  = LE_U16(back->SectorIndex());
-    }
-    else
-    {
-      raw.back_wall = LE_U16(0xFFFF);
-      raw.back_sec  = LE_U16(0xFFFF);
-    }
-
     int pic;
     if (! back)
       pic = atoi(line->front->mid.c_str());
@@ -1661,13 +1631,16 @@ public:
       pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
     }
 
-    raw.pic = LE_U16(pic);
+    int flags = 0;
 
-    raw.xscale = raw.yscale = 4;
+    if (back)
+      flags |= WALL_F_PEGGED;
 
-    raw.extra = -1;
 
-    lump->Append(&raw, sizeof(raw));
+    NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
+               back ? back->index : -1, back ? back->SectorIndex() : -1,
+               flags, pic, 0);
+
   }
 };
 
@@ -1772,7 +1745,7 @@ fprintf(stderr, "\n");
   }
 }
 
-static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
+static void NK_WriteWalls(void)
 {
   int i;
 
@@ -1855,37 +1828,26 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
     int first =      sec_walls[S->index]->at(0)->index; 
     int count = (int)sec_walls[S->index]->size();
 
-    // NK_AddSector(first, count,
-    //              - S->f_h * -NK_HT_FACTOR,
-    //              - S->c_h * -NK_HT_FACTOR, ...)
-
-    raw_nukem_sector_t raw;
-    memset(&raw, 0, sizeof(raw));
-
-    raw.wall_ptr = LE_U16(first);
-    raw.wall_num = LE_U16(count); 
-
-    raw.floor_pic = LE_U16(atoi(S->f_tex.c_str()));
-    raw.ceil_pic  = LE_U16(atoi(S->c_tex.c_str()));
-
-    raw.floor_h = LE_S32(0 - (S->f_h)*NK_HT_FACTOR);
-    raw.ceil_h  = LE_S32(0 - (S->c_h)*NK_HT_FACTOR);
-
-    raw.visibility = 16;
-    raw.extra = -1;
+    int c_flags = 0;
+    int visibility = 1;
 
     if (S->special & 0x10000)
     {
-      raw.ceil_flags = LE_U16(SECTOR_F_PARALLAX);
+      c_flags |= SECTOR_F_PARALLAX;
     }
 
-    sectors->Append(&raw, sizeof(raw));
+
+    NK_AddSector(first, count, visibility,
+                 S->f_h * NK_HT_FACTOR, atoi(S->f_tex.c_str()),
+                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags
+                );
+
 
     // WRITE THE WALL LOOP
 
     for (int k = 0; k < count; k++)
     {
-      sec_walls[S->index]->at(k)->Write(walls);
+      sec_walls[S->index]->at(k)->Write();
     }
   }
 
@@ -1909,7 +1871,7 @@ static void NK_WriteWalls(qLump_c *walls, qLump_c *sectors)
   }
 }
 
-static void NK_WriteSprites(qLump_c *sprites)
+static void NK_WriteSprites(void)
 {
   for (unsigned int j = 0; j < all_entities.size(); j++)
   {
@@ -1931,26 +1893,10 @@ static void NK_WriteSprites(qLump_c *sprites)
         angle = atoi(value);
     }
 
+    // FIXME !!!  convert angle to 0-2048  (maybe account for Y flip)
 
-    // NK_AddSprite(I_ROUND( E->x * NK_FACTOR),
-    //              I_ROUND(-E->y * NK_FACTOR),
-    //              I_ROUND(-E->z * NK_HT_FACTOR), ... )
 
-    raw_nukem_sprite_t raw;
-    memset(&raw, 0, sizeof(raw));
-
-    raw.x = LE_S32( I_ROUND(E->x) * NK_FACTOR);
-    raw.y = LE_S32(-I_ROUND(E->y) * NK_FACTOR);
-    raw.z = LE_S32(-I_ROUND(E->z) * NK_HT_FACTOR);
-
-    raw.pic = LE_U16(1405);  // APLAYER
-    raw.xscale = 40;
-    raw.yscale = 40;
-    raw.clip_dist = 32;
-
-    raw.extra = -1;
-    raw.owner = -1;
-
+    int sec = 0;
 
     merge_region_c *REG = CSG2_FindRegionForPoint(E->x, E->y);
     if (REG && REG->index >= 0)
@@ -1958,23 +1904,21 @@ static void NK_WriteSprites(qLump_c *sprites)
       sector_info_c *S = dm_sectors[REG->index];
       if (S->index >= 0)
       {
-        raw.sector = LE_U16(S->index);
+        sec = S->index;
 fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
       }
     }
 
-    if (type == 1405)
-    {
-      nk_pos_x = raw.x;
-      nk_pos_y = raw.y;
-      nk_pos_z = raw.z;
-      nk_sec   = raw.sector;
-    }
 
+    NK_AddSprite(I_ROUND( E->x * NK_FACTOR),
+                 I_ROUND(-E->y * NK_FACTOR),
+                 I_ROUND( E->z * NK_HT_FACTOR),
+                 type, angle, sec
+                );
 
-    sprites->Append(&raw, sizeof(raw));
   }
 }
+
 
 void NK_WriteNukem(void)
 {
@@ -1983,42 +1927,8 @@ void NK_WriteNukem(void)
   MakeLinedefs();
   MergeColinearLines();
 
-qLump_c sectors;
-qLump_c walls;
-qLump_c sprites;
-
-NK_WriteWalls(&walls, &sectors);
-NK_WriteSprites(&sprites);
-
-u16_t num_sectors = sectors.GetSize() / (int)sizeof(raw_nukem_sector_t);
-u16_t num_walls   = walls.GetSize()   / (int)sizeof(raw_nukem_wall_t);
-u16_t num_sprites = sprites.GetSize() / (int)sizeof(raw_nukem_sprite_t);
-
-num_sectors = LE_U16(num_sectors);
-num_walls   = LE_U16(num_walls);
-num_sprites = LE_U16(num_sprites);
-
-
-// HEADER
-raw_nukem_map_t header;
-
-header.version = LE_U32(DUKE_MAP_VERSION);
-header.pos_x = nk_pos_x;
-header.pos_y = nk_pos_y;
-header.pos_z = nk_pos_z;
-header.angle = 0;
-header.sector = nk_sec;
-
-GRP_AppendData(&header, (int)sizeof(header));
-GRP_AppendData(&num_sectors, 2);
-GRP_AppendData(sectors.GetBuffer(), sectors.GetSize());
-
-GRP_AppendData(&num_walls, 2);
-GRP_AppendData(walls.GetBuffer(), walls.GetSize());
-
-GRP_AppendData(&num_sprites, 2);
-GRP_AppendData(sprites.GetBuffer(), sprites.GetSize());
-
+  NK_WriteWalls();
+  NK_WriteSprites();
 }
 
 

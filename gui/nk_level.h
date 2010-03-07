@@ -21,6 +21,18 @@
 #ifndef __OBLIGE_NUKEM_LEVEL_H__
 #define __OBLIGE_NUKEM_LEVEL_H__
 
+void NK_AddSector(int first_wall, int num_wall, int visibility,
+                  int f_h, int f_pic,
+                  int c_h, int c_pic, int c_flags);
+
+void NK_AddWall(int x, int y, int right, int back, int back_sec, 
+                int flags, int pic, int mask_pic);
+
+void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec);
+
+int NK_NumSectors(void);
+int NK_NumWalls(void);
+int NK_NumSprites(void);
 
 #endif /* __OBLIGE_NUKEM_LEVEL_H__ */
 
