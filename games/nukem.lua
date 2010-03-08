@@ -125,6 +125,15 @@ NUKEM_SANITY_MAP =
 }
 
 
+NUKEM_LIQUIDS =
+{
+  water = { mat="WATER", },
+  slime = { mat="SLIME",  },
+  lava  = { mat="LAVA", },
+}
+
+
+
 ----------------------------------------------------------------
 
 
@@ -151,6 +160,10 @@ NUKEM_SUB_THEMES =
 {
   CITY1 =
   {
+    prob=50,
+
+    liquids = { water=50, slime=20, lava=7 },
+
     building =
     {
       walls = { BRNBRICK=50, WINDOW1=30, WINDOW2=30,
@@ -317,6 +330,7 @@ OB_GAMES["nukem"] =
     "pickups",  NUKEM_PICKUPS,
 
     "materials", NUKEM_MATERIALS,
+    "liquids",   NUKEM_LIQUIDS,
     "themes",    NUKEM_SUB_THEMES,
     "pictures",  NUKEM_PICTURES,
     "steps",     NUKEM_STEPS,
