@@ -1684,7 +1684,7 @@ typedef std::vector<nk_wall_c *> nk_wall_list_c;
 static void NK_Chain(int start, nk_wall_list_c& prelim, nk_wall_list_c *circle,
                      int *wall_id)
 {
-fprintf(stderr, "starting at %d\n", start);
+// fprintf(stderr, "starting at %d\n", start);
 
   int last = start;
 
@@ -1695,7 +1695,7 @@ fprintf(stderr, "starting at %d\n", start);
     nk_wall_c *cur = prelim[last];  SYS_ASSERT(cur);
     prelim[last] = NULL;
 
-fprintf(stderr, "  adding %d @ wall_id:%d\n", last, *wall_id);
+// fprintf(stderr, "  adding %d @ wall_id:%d\n", last, *wall_id);
 
     cur->index = *wall_id;  (*wall_id) += 1;
     circle->push_back(cur);
@@ -1716,14 +1716,14 @@ fprintf(stderr, "  adding %d @ wall_id:%d\n", last, *wall_id);
         break;
       }
     }
-fprintf(stderr, "Found right %p (%d)\n", cur->right, last);
+// fprintf(stderr, "Found right %p (%d)\n", cur->right, last);
 
     if (! cur->right)
     {
       SYS_ASSERT(start_W != cur);
 
       cur->right = start_W;
-fprintf(stderr, "End of loop, using %p\n", cur->right);
+// fprintf(stderr, "End of loop, using %p\n", cur->right);
       return;
     }
   }
@@ -1735,7 +1735,7 @@ static void NK_CollectWalls(sector_info_c *S, int *wall_id, nk_wall_list_c *circ
 
   std::vector<nk_wall_c *> prelim;
 
-fprintf(stderr, "\nWall list @ sec:%d\n", S->index);
+// fprintf(stderr, "\nWall list @ sec:%d\n", S->index);
   for (i = 0; i < (int)dm_linedefs.size(); i++)
   {
     linedef_info_c *L = dm_linedefs[i];
@@ -1756,15 +1756,15 @@ fprintf(stderr, "\nWall list @ sec:%d\n", S->index);
     else
       L->nk_back = W;
 
-fprintf(stderr, "  %i=%p line:%p side:%d (%d %d) --> (%d %d)\n",
-(int)prelim.size(), W, W->line, W->side,
-W->line->start->x, W->line->start->y,
-W->line->end->x, W->line->end->y);
+//fprintf(stderr, "  %i=%p line:%p side:%d (%d %d) --> (%d %d)\n",
+//(int)prelim.size(), W, W->line, W->side,
+//W->line->start->x, W->line->start->y,
+//W->line->end->x, W->line->end->y);
 
     prelim.push_back(W);
   }
 
-fprintf(stderr, "\n");
+//fprintf(stderr, "\n");
 
   // group into wall loops
 
@@ -1945,7 +1945,6 @@ static void NK_WriteSprites(void)
       if (S->index >= 0)
       {
         sec = S->index;
-fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
       }
     }
 
