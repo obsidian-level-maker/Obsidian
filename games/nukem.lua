@@ -116,6 +116,15 @@ NUKEM_MATERIALS =
   IRON  = { t=757 },
 
 
+  SUPPORT2 = { t=739 },
+  SUPPORT3 = { t=349 },
+  METAL  = { t=437 },
+  METAL2 = { t=368 },
+
+
+  PICT1 = { t=265 },
+  PICT2 = { t=266 },
+  PICT3 = { t=267 },
 }
 
 
@@ -148,7 +157,16 @@ NUKEM_PICTURES =
   carve =
   {
     count=1,
-    pic_w="_ERROR", width=64, height=64,
+    pic_w="PICT1", width=120, height=82,
+    x_offset=0, y_offset=0,
+    -- side_t="METAL", floor="CEIL5_2",
+    depth=8, 
+  },
+
+  pill =
+  {
+    count=1,
+    pic_w="PICT2", width=120, height=82,
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
@@ -185,7 +203,7 @@ NUKEM_SUB_THEMES =
                  },
     },
 
-    logos = { carve=50 },
+    logos = { carve=50, pill=50 },
 
     steps = { step1=50 },
 
