@@ -172,6 +172,7 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec,
 
   raw.pic      = LE_U16(pic);
   raw.mask_pic = LE_U16(mask_pic);
+  raw.flags    = LE_U16(flags);
 
   raw.xscale = xscale;  raw.xpan = xpan;
   raw.yscale = yscale;  raw.ypan = ypan;

@@ -468,6 +468,23 @@ public:
     return (strcmp(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
            (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
   }
+
+  // here "greedy" means that from one side, both the upper and the lower
+  // will be visible at the same time.
+  inline bool isGreedy() const
+  {
+    if (! back)
+      return false;
+
+    int f1_h = front->sector->f_h;
+    int f2_h = back ->sector->f_h;
+
+    int c1_h = front->sector->c_h;
+    int c2_h = back ->sector->c_h;
+
+    return (f1_h < f2_h && c2_h < c1_h) ||
+           (f1_h > f2_h && c2_h > c1_h);
+  }
 };
 
 
@@ -1611,27 +1628,36 @@ public:
   void Write()
   {
     int pic;
+    int flags = 0;
+
     if (! back)
+    {
       pic = atoi(line->front->mid.c_str());
-    else
+    }
+    else if (line->isGreedy())
     {
       int f1_h = line->front->sector->f_h;
+      int f2_h = line->back ->sector->f_h;
+
+      bool use_upper = ((side==0) == (f1_h < f2_h));
+
+      const sidedef_info_c *SD = (f1_h < f2_h) ? line->front : line->back;
+
+      pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
+
+      flags |= WALL_F_SWAP_LOWER;
+    }
+    else
+    {
       int c1_h = line->front->sector->c_h;
+      int c2_h = line->back ->sector->c_h;
 
-      int f2_h = line->back->sector->f_h;
-      int c2_h = line->back->sector->c_h;
-
-      int f_diff = f2_h - f1_h;
-      int c_diff = c1_h - c2_h;
-
-      bool use_upper = (side==0) ? (c_diff > f_diff) : (-c_diff > -f_diff);
+      bool use_upper = (side==0) ? (c2_h < c1_h) : (c1_h < c2_h);
 
       const sidedef_info_c *SD = (side==0) ? line->front : line->back;
 
       pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
     }
-
-    int flags = 0;
 
     if (back)
       flags |= WALL_F_PEGGED;
