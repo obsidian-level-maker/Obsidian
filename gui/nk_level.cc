@@ -131,7 +131,8 @@ void NK_EndLevel(void)
 
 void NK_AddSector(int first_wall, int num_wall, int visibility,
                   int f_h, int f_pic,
-                  int c_h, int c_pic, int c_flags)
+                  int c_h, int c_pic, int c_flags,
+                  int lo_tag, int hi_tag)
 {
   raw_nukem_sector_t raw;
 
@@ -149,14 +150,18 @@ void NK_AddSector(int first_wall, int num_wall, int visibility,
   raw.ceil_flags = LE_U16(c_flags);
 
   raw.visibility = visibility;
-  raw.extra = -1;
+
+  raw.lo_tag = LE_U16(lo_tag);
+  raw.hi_tag = LE_U16(hi_tag);
+  raw.extra  = LE_U16(-1);
 
   nk_sectors->Append(&raw, sizeof(raw));
 }
 
 void NK_AddWall(int x, int y, int right, int back, int back_sec, 
                 int flags, int pic, int mask_pic,
-                int xscale, int yscale, int xpan, int ypan)
+                int xscale, int yscale, int xpan, int ypan,
+                int lo_tag, int hi_tag)
 {
   raw_nukem_wall_t raw;
 
@@ -177,12 +182,15 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec,
   raw.xscale = xscale;  raw.xpan = xpan;
   raw.yscale = yscale;  raw.ypan = ypan;
 
-  raw.extra = -1;
+  raw.lo_tag = LE_U16(lo_tag);
+  raw.hi_tag = LE_U16(hi_tag);
+  raw.extra  = LE_U16(-1);
 
   nk_walls->Append(&raw, sizeof(raw));
 }
 
-void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec)
+void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec,
+                  int lo_tag, int hi_tag)
 {
   raw_nukem_sprite_t raw;
 
@@ -200,7 +208,10 @@ void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec)
   raw.yscale = 40;
   raw.clip_dist = 32;
 
-  raw.extra = -1;
+  raw.lo_tag = LE_U16(lo_tag);
+  raw.hi_tag = LE_U16(hi_tag);
+  raw.extra  = LE_U16(-1);
+
   raw.owner = -1;
 
   if (NK_NumSprites() == 0 || pic == 1405 /* APLAYER */)

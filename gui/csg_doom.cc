@@ -1237,10 +1237,10 @@ DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
 DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
             BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
 */
-        if (V->line_kind > 0)
+        if (V->line_kind != 0)
           return V;
 
-        if (V->rail || V->line_flags || V->line_tag > 0)
+        if (V->rail || V->line_flags || V->line_tag != 0)
           minor = V;
       }
     }
@@ -1666,12 +1666,15 @@ public:
     if (xscale > 255)
       xscale = 255;
 
+    int lo_tag = (side==0) ? line->type : 0;
+    int hi_tag = (side==0) ? line->tag  : 0;
+
 
     NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
                back ? back->index : -1, back ? back->SectorIndex() : -1,
                flags, pic, 0,
-               xscale, 8, 0, 0);
-
+               xscale, 8, 0, 0,
+               lo_tag, hi_tag);
   }
 };
 
@@ -1870,8 +1873,8 @@ static void NK_WriteWalls(void)
 
     NK_AddSector(first, count, visibility,
                  S->f_h * NK_HT_FACTOR, atoi(S->f_tex.c_str()),
-                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags
-                );
+                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags,
+                 S->special, S->tag);
 
 
     // WRITE THE WALL LOOP
@@ -1910,9 +1913,10 @@ static void NK_WriteSprites(void)
 
     int type = atoi(E->name.c_str());
 
-
     // parse entity properties
     int angle = 0;
+    int lo_tag = 0;
+    int hi_tag = 0;
 
     std::map<std::string, std::string>::iterator MI;
     for (MI = E->props.begin(); MI != E->props.end(); MI++)
@@ -1922,6 +1926,10 @@ static void NK_WriteSprites(void)
 
       if (StringCaseCmp(name, "angle") == 0)
         angle = atoi(value);
+      else if (StringCaseCmp(name, "lo_tag") == 0)
+        lo_tag = atoi(value);
+      else if (StringCaseCmp(name, "hi_tag") == 0)
+        hi_tag = atoi(value);
     }
 
     // FIXME !!!  convert angle to 0-2048  (maybe account for Y flip)
@@ -1944,9 +1952,8 @@ fprintf(stderr, "PLAYER SECTOR = #%d\n", S->index);
     NK_AddSprite(I_ROUND( E->x * NK_FACTOR),
                  I_ROUND(-E->y * NK_FACTOR),
                  I_ROUND( E->z * NK_HT_FACTOR),
-                 type, angle, sec
-                );
-
+                 type, angle, sec,
+                 lo_tag, hi_tag);
   }
 }
 
