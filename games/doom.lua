@@ -666,7 +666,6 @@ DOOM2_MATERIALS =
   SLOPPY1  = { t="SLOPPY1",  f="FLAT5_6" },  -- poor match
   SLOPPY2  = { t="SLOPPY2",  f="FLAT5_6" },  -- poor match
   SP_DUDE7 = { t="SP_DUDE7", f="FLOOR5_4" },
-  SP_DUDE8 = { t="SP_DUDE8", f="FLOOR5_4" },
   SP_FACE2 = { t="SP_FACE2", f="FLAT5_6" },
 
   SPACEW2  = { t="SPACEW2",  f="CEIL3_3" },
@@ -871,6 +870,8 @@ DOOM2_RAILS =
 --MIDBARS3
 --MIDBRONZ
 --MIDSPACE
+
+--SP_DUDE8   -- scaled MIDVINE2 from FreeDoom
 }
 
 --[[ FIXME
@@ -1333,15 +1334,6 @@ COMMON_PICTURES =
   {
     count=1,
     pic_w="SP_DUDE7", width=128, height=128,
-    x_offset=0, y_offset=0,
-    side_t="METAL", floor="RROCK03",
-    depth=8, light=0.67,
-  },
-
-  spdude8 =
-  {
-    count=1,
-    pic_w="SP_DUDE8", width=128, height=128,
     x_offset=0, y_offset=0,
     side_t="METAL", floor="RROCK03",
     depth=8, light=0.67,
@@ -3569,6 +3561,7 @@ function Doom_all_done()
   Doom_make_cool_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
+  gui.wad_merge_sections("vine_dude.wad");
 
   if OB_CONFIG.length == "full" then
     gui.wad_merge_sections("freedoom_face.wad");
