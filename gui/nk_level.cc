@@ -39,6 +39,7 @@
 
 
 extern void NK_WriteNukem(void);
+extern void DM_FreeLevelStuff(void);
 
 // Properties
 static char *level_name;
@@ -297,7 +298,7 @@ bool nukem_game_interface_c::Finish(bool build_ok)
 
 void nukem_game_interface_c::BeginLevel()
 {
-//!!!!!!  FreeLevelStuff();
+  DM_FreeLevelStuff();
 
   nk_sectors = new qLump_c;
   nk_walls   = new qLump_c;
