@@ -1689,12 +1689,14 @@ function Build_exit_pillar(S, z1, skin)
 
   Trans_brush(add_pegging(get_mat(skin.switch_w)),
   {
-    { x=mx+32, y=my-32, line_kind=11 },
-    { x=mx+32, y=my+32, line_kind=11 },
-    { x=mx-32, y=my+32, line_kind=11 },
-    { x=mx-32, y=my-32, line_kind=11 },
+    { x=mx+32, y=my-32, line_kind=skin.line_kind or 11 },
+    { x=mx+32, y=my+32, line_kind=skin.line_kind or 11 },
+    { x=mx-32, y=my+32, line_kind=skin.line_kind or 11 },
+    { x=mx-32, y=my-32, line_kind=skin.line_kind or 11 },
   },
   -EXTREME_H, z1 + skin.h)
+
+--- NUKEM:  gui.add_entity("142", mx, my, z1+96, { lo_tag=-1 });
 
 
   local info = get_mat(skin.exitside)
