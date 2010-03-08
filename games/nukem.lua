@@ -176,7 +176,7 @@ NUKEM_SUB_THEMES =
 
     courtyard =
     {
-      floors = { MUD=50, GRASS=50, WATER=50, LAVA=50, SLIME=50,
+      floors = { MUD=50, GRASS=50,
                  CRETE1=20, CRETE2=20, CONC1=20, CONC2=20,
                  BLOCKS1=30, BLOCKS2=30, STONES=30, 
                  ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
