@@ -1932,7 +1932,8 @@ static void NK_WriteSprites(void)
         hi_tag = atoi(value);
     }
 
-    // FIXME !!!  convert angle to 0-2048  (maybe account for Y flip)
+    // convert angle to 0-2047 range
+    angle = ((405 - angle) * 256 / 45) & 2047;
 
 
     int sec = 0;
