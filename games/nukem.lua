@@ -49,15 +49,73 @@ NUKEM_MATERIALS =
   _ERROR = { t=1 },
   _SKY   = { t=89 },
 
-  -- textures --
 
-  BRICK1 = { t=723 },
-  CAVE1  = { t=783 },
+  WATER = { t=336 },
+  SLIME = { t=200 },
+  LAVA  = { t=1082 },
 
-  -- flats --
+  GLASS1 = { t=198 },
+  GLASS2 = { t=758 },
 
-  F_BRKTOP = { t=742 },
-  F_873    = { t=873 },
+  
+
+  BRNBRICK = { t=0 },
+
+
+  GRAYCIRCLE = { t=181 },
+  GRAYFLAT = { t=182 },
+  GRATE1 = { t=183 },
+
+  CRETE1 = { t=300 },
+  CRETE2 = { t=302 },
+  CONC1 = { t=740 },
+  CONC2 = { t=741 },
+
+  ROCK1 = { t=239 },
+  ROCK2 = { t=240 },
+  ROCK3 = { t=241 },
+
+  PIPES = { t=243 },
+  DOOR1 = { t=242 },
+
+  REDCARPET = { t=331 },
+  REDSLATS  = { t=332 },
+  ROOF1 = { t=342 },
+  ROOF2 = { t=343 },
+
+  WARNING = { t=355 },
+  BOULEVARD = { t=823 },
+
+  GRAYBRICK  = { t=461 },
+  BRICK2 = { t=750 },
+  CLANG1 = { t=755 },
+  GRNBRICK = { t=748 },
+
+  ROCK4 = { t=772 },
+  ROCK5 = { t=782 },
+  ROCK6 = { t=780 },
+  SMROCK1 = { t=771 },
+  SMROCK2 = { t=775 },
+  SMROCK3 = { t=773 },
+
+  ROCK7 = { t=801 },
+  ZROCK1 = { t=805 },
+  ZROCK2 = { t=796 },
+  TETROCK = { t=876 },
+
+  GRASS = { t=803 },
+  STONES = { t=819 },
+  MUD = { t=1218 },
+  BLOCKS1 = { t=1205 },
+  FLAT18 = { t=1204 },
+
+  CABLES = { t=243 },
+  BLOCKS2 = { t=1191 },
+  WINDOW1 = { t=763 },
+  WINDOW2 = { t=764 },
+  IRON  = { t=757 },
+
+
 }
 
 
@@ -95,14 +153,23 @@ NUKEM_SUB_THEMES =
   {
     building =
     {
-      walls = { BRICK1=50 },
-      floors = { F_BRKTOP=50 },
-      ceilings = { F_873=50 },
+      walls = { BRNBRICK=50, WINDOW1=30, WINDOW2=30,
+                BRICK2=50, GRNBRICK=30, GRAYBRICK=50,
+                REDSLATS=20, IRON=20,
+               },
+      floors = { GRAYCIRCLE=30, CLANG1=90, GRAYFLAT=10, REDCARPET=10 },
+      ceilings = { IRON=5, GRAYCIRCLE=50, ROOF1=20, ROOF2=20, },
     },
 
     courtyard =
     {
-      floors = { F_BRKTOP=50 },
+      floors = { MUD=50, GRASS=50, WATER=50, LAVA=50, SLIME=50,
+                 CRETE1=20, CRETE2=20, CONC1=20, CONC2=20,
+                 BLOCKS1=30, BLOCKS2=30, STONES=30, 
+                 ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
+                 ROCK5=15, ROCK6=15, ROCK7=15,
+                 SMROCK1=20, SMROCK2=20, SMROCK3=20,
+                 },
     },
 
     logos = { carve=50 },
