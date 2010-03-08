@@ -38,6 +38,16 @@ NUKEM_THINGS =
 
   --- scenery ---
 
+  --- buttons ---
+  nuke_button   = { id=142, kind="other", r=32,h=64, pass=true },
+  red_button    = { id=162, kind="other", r=32,h=64, pass=true },
+  square_button = { id=164, kind="other", r=32,h=64, pass=true },
+  access_panel  = { id=130, kind="other", r=32,h=64, pass=true },
+
+  turn_switch   = { id=136, kind="other", r=32,h=64, pass=true },
+  handle_switch = { id=140, kind="other", r=32,h=64, pass=true },
+  light_switch  = { id=712, kind="other", r=32,h=64, pass=true },
+  lever_switch  = { id=862, kind="other", r=32,h=64, pass=true },
 }
 
 
@@ -70,6 +80,7 @@ NUKEM_MATERIALS =
   CRETE2 = { t=302 },
   CONC1 = { t=740 },
   CONC2 = { t=741 },
+  CONC3 = { t=802 },
 
   ROCK1 = { t=239 },
   ROCK2 = { t=240 },
@@ -77,6 +88,7 @@ NUKEM_MATERIALS =
 
   PIPES = { t=243 },
   DOOR1 = { t=242 },
+  VAULTDOOR = { t=470 },
 
   REDCARPET = { t=331 },
   REDSLATS  = { t=332 },
@@ -125,6 +137,25 @@ NUKEM_MATERIALS =
   PICT1 = { t=265 },
   PICT2 = { t=266 },
   PICT3 = { t=267 },
+
+
+  BSTONES = { t=781 },
+  WOOD1 = { t=884 },
+  WOOD2 = { t=880 },
+  WOOD3 = { t=1188 },
+  WOOD4 = { t=1181 },
+
+  CANYON1 = { t=1169 },
+  CANYON2 = { t=1170 },
+  OCTAFLOOR = { t=417 },
+  BLOCKS4 = { t=827 },
+  RUST = { t=767 },
+  
+  COMPUTER1 = { t=875 },
+  COMPUTER2 = { t=294 },
+  COMPUTER3 = { t=297 },
+  COMPUTER4 = { t=298 },
+  COMPUTER5 = { t=299 },
 }
 
 
