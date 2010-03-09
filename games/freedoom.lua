@@ -49,12 +49,14 @@ FREEDOOM_MONSTER_LIST =
   spider = 0,
 }
 
-FREEDOOM_MISSING_SCENERY =
+FREEDOOM_SCENERY_LIST =
 {
-  hang_arm_pair = 1,
-  hang_leg_pair = 1,
-  hang_leg_gone = 1,
-  hang_leg      = 1,
+  ---| missing sprites |---
+
+  hang_arm_pair = 0,
+  hang_leg_pair = 0,
+  hang_leg_gone = 0,
+  hang_leg      = 0,
 }
 
 FREEDOOM_LIQUIDS =
@@ -86,17 +88,9 @@ function Freedoom_setup()
 
   -- FreeDOOM is lacking some scenery sprites
 
-  for name,_ in pairs(FREEDOOM_MISSING_SCENERY) do
-    for _,R in ipairs(GAME.rooms) do
-      if R.scenery then
-        R.scenery[name] = nil
-      end
-    end
-
-    for _,C in ipairs(GAME.combos) do
-      if C.scenery == name then
-        C.scenery = nil
-      end
+  for name,quality in pairs(FREEDOOM_SCENERY_LIST) do
+    if quality < 1 then
+      GAME.things[name] = nil
     end
   end
 end
