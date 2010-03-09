@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -3283,12 +3283,11 @@ DOOM2_EPISODES =
 
 ------------------------------------------------------------
 
+
 function Doom1_setup()
   -- tweak monster probabilities
-
   GAME.monsters["Cyberdemon"].crazy_prob = 8
   GAME.monsters["Mastermind"].crazy_prob = 12
-
 end
 
 
@@ -3298,7 +3297,8 @@ end
 
 
 function Doom1_get_levels()
-  local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
+  local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
+  local EP_NUM  = sel(OB_CONFIG.length == "full", EP_MAX, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
@@ -3715,6 +3715,27 @@ OB_GAMES["doom1"] =
     "rails",     DOOM1_RAILS,
     "wall_fabs", DOOM1_WALL_PREFABS,
   },
+}
+
+
+OB_GAMES["ultdoom"] =
+{
+  label = "Ultimate Doom",
+
+  extends = "doom1",
+
+  priority = 97, -- keep at third spot
+
+  setup_func        = Doom1_setup,
+  levels_start_func = Doom1_get_levels,
+
+  begin_level_func  = Doom_begin_level,
+  end_level_func    = Doom_end_level,
+  all_done_func     = Doom_all_done,
+
+  -- no additional parameters
+  
+  -- no additional tables
 }
 
 
