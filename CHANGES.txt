@@ -18,3 +18,6 @@ CHANGES (since v3.51)
 - fixed ugliness when outdoor rooms had differing sky heights
 - fixed failure when engine was set to Legacy or Eternity
 
+- separate 'Doom 1' and 'Ultimate Doom' game choices
+- preliminary support for Duke Nukem 3D 
+
