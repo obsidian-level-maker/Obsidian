@@ -103,8 +103,15 @@ function ob_match_conf(T)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
+  local game_def   = OB_GAMES  [OB_CONFIG.game]
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
   if T.for_games and not T.for_games[OB_CONFIG.game] then
-    return false
+    if game_def and game_def.extends and T.for_games[game_def.extends] then
+      -- OK --
+    else
+      return false
+    end
   end
 
   if T.for_modes and not T.for_modes[OB_CONFIG.mode] then
@@ -112,7 +119,11 @@ function ob_match_conf(T)
   end
 
   if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
-    return false
+    if engine_def and engine_def.extends and T.for_engines[engine_def.extends] then
+      -- OK --
+    else
+      return false
+    end
   end
 
   if T.for_modules then
@@ -498,6 +509,10 @@ function ob_game_format()
   assert(OB_CONFIG.game)
 
   local game = OB_GAMES[OB_CONFIG.game]
+
+  if game.extends then
+    game = OB_GAMES[game.extends]
+  end
 
   assert(game)
   assert(game.param)

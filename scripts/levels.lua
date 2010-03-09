@@ -131,6 +131,22 @@ function Game_sort_modules()
     error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
   end
 
+  -- validate reference for extended games / engines
+
+  if game.extends then
+    game.extend_other = OB_GAMES[game.extends]
+    if not game.extend_other then
+      error("UNKNOWN GAME TO EXTEND: " .. game.extends)
+    end
+  end
+
+  if engine.extends then
+    engine.extend_other = OB_GAMES[engine.extends]
+    if not engine.extend_other then
+      error("UNKNOWN ENGINE TO EXTEND: " .. engine.extends)
+    end
+  end
+
   -- find all the visible & enabled modules
 
   for _,mod in pairs(OB_MODULES) do
@@ -178,7 +194,9 @@ function Game_setup()
 
   Game_sort_modules()
 
-  for index,mod in ipairs(GAME.all_modules) do
+  -- merge parameters and tables from each module
+
+  local function merge_stuff(mod)
     if mod.param then
       shallow_merge(PARAM, mod.param)
     end
@@ -186,9 +204,19 @@ function Game_setup()
     if mod.tables then
       Game_merge_table_list(mod.tables)
     end
+  end
+
+  for index,mod in ipairs(GAME.all_modules) do
+    if mod.extend_other then
+      merge_stuff(mod.extend_other)
+    end
+
+    merge_stuff(mod)
   end -- for mod
 
+
   -- allow themes to supply sub-themes (etc)
+
   for name,theme in pairs(OB_THEMES) do
     if theme.shown and theme.tables then
       Game_merge_table_list(theme.tables)
