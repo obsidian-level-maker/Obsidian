@@ -179,7 +179,7 @@ NUKEM_LIQUIDS =
 
 NUKEM_STEPS =
 {
-  step1 = { step_w="_ERROR", side_w="_ERROR", top_f="_ERROR" },
+  step1 = { step_w="RUST", side_w="RUST", top_f="RUST" },
 }
 
 
@@ -226,8 +226,8 @@ NUKEM_SUB_THEMES =
     courtyard =
     {
       floors = { MUD=50, GRASS=50,
-                 CRETE1=20, CRETE2=20, CONC1=20, CONC2=20,
-                 BLOCKS1=30, BLOCKS2=30, STONES=30, 
+                 CRETE1=20, CONC1=20, CONC2=20,
+                 BLOCKS1=30, BLOCKS2=30,
                  ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
                  ROCK5=15, ROCK6=15, ROCK7=15,
                  SMROCK1=20, SMROCK2=20, SMROCK3=20,
@@ -237,6 +237,8 @@ NUKEM_SUB_THEMES =
     logos = { carve=50, pill=50 },
 
     steps = { step1=50 },
+
+    outer_fences = { STONES=50, BSTONES=50, WOOD3=50 },
 
   }, -- CITY
 }
