@@ -167,7 +167,7 @@ end
 
 UNFINISHED["plut"] =
 {
-  label = "Plutonia",
+  label = "Plutonia Experiment",
   priority = 92,
 
   for_games = { doom2=1 },
