@@ -1,8 +1,10 @@
 ----------------------------------------------------------------
---  MODULE : Plutonia Experiment (Final DOOM)
+--  GAME DEF : Plutonia Experiment (Final DOOM)
 ----------------------------------------------------------------
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Oblige Level Maker
+--
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -165,15 +167,11 @@ function plut_modifier(T)
 end
 
 
-UNFINISHED["plut"] =
+UNFINISHED["plutonia"] =
 {
-  label = "Plutonia Experiment",
-  priority = 92,
+  label = "Plutonia",
 
-  for_games = { doom2=1 },
+  extends = "doom2",
 
-  conflicts = { IWAD=1 },
-
-  mod_func = plut_modifier,
 }
 

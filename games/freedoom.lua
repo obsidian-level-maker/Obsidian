@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
--- GAME DEF : FreeDOOM 0.5
+--  GAME DEFINITION : FreeDOOM
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -74,6 +74,7 @@ FREEDOOM_SKY_INFO =
 
 ----------------------------------------------------------------
 
+
 function Freedoom_setup()
 
   GAME.sky_info = FREEDOOM_SKY_INFO
@@ -96,57 +97,22 @@ function Freedoom_setup()
 end
 
 
-function Freedoom_get_levels()
-  Doom2_get_levels()
-end
-
-
 UNFINISHED["freedoom"] =
 {
   label = "FreeDoom 0.6",
 
+  extends = "doom2",
+
   setup_func = Freedoom_setup,
 
-  levels_start_func = Freedoom_get_levels,
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting = true,
-
-    custom_flats = true,
-
-    seed_size = 256,
-
-    -- this is roughly how many characters can fit on the
-    -- intermission screens (the CWILVxx patches).  It does
-    -- not reflect any buffer limits in Doom ports.
-    max_name_length = 28,
-
-    skip_monsters = { 30,44 },
-
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
+  levels_start_func = Doom2_get_levels,
 
   tables =
   {
-    -- FIXME: common stuff
-
-    -- FIXME: doom 2 stuff
-    
     -- FIXME: doom 1 stuff
+
+    -- FreeDoom stuff --
+
   },
 }
 

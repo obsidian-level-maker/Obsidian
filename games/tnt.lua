@@ -1,8 +1,10 @@
 ----------------------------------------------------------------
---  MODULE : TNT Evilution (Final DOOM)
+--  GAME DEF : TNT Evilution (Final DOOM)
 ----------------------------------------------------------------
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Oblige Level Maker
+--
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -240,7 +242,16 @@ TN_SKY_INFO =
   { color="red",    light=192 },
 }
 
+
 ----------------------------------------------------------------
+
+
+OB_THEMES["tnt_egypt"] =
+{
+  ref = "EGYPT",
+  label = "Egypt",
+  for_modules = { tnt=1 },
+}
 
 function tnt_modifier(T)
 
@@ -263,20 +274,9 @@ end
 UNFINISHED["tnt"] =
 {
   label = "TNT Evilution",
-  priority = 94,
 
-  for_games = { doom2=1 },
+  extends = "doom2",
 
-  conflicts = { IWAD=1 },
-
-  mod_func = tnt_modifier,
 }
 
-
-OB_THEMES["tnt_egypt"] =
-{
-  ref = "EGYPT",
-  label = "Egypt",
-  for_modules = { tnt=1 },
-}
 
