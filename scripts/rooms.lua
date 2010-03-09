@@ -161,6 +161,8 @@ function Room_setup_theme(R)
         LEVEL.outdoor_floors[num] = name
       end
     end
+
+    gui.printf("outdoor_floors =\n%s\n\n", table_to_str(LEVEL.outdoor_floors))
   end
 
   if not LEVEL.building_walls then
@@ -170,6 +172,8 @@ function Room_setup_theme(R)
       local name = rand_key_by_probs(THEME.building.walls)
       LEVEL.building_walls[num] = name
     end
+
+    gui.printf("building_walls =\n%s\n\n", table_to_str(LEVEL.building_walls))
   end
 
 
