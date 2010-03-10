@@ -148,7 +148,7 @@ ZDOOM_MARINE_FACTORS =
 
 
 function ZDoom_Marine_setup(self)
-  if OB_CONFIG.game == "doom1" then
+  if not PARAM.doom2_weapons then
     GAME.monsters["marine_ssg"] = nil
   end
 

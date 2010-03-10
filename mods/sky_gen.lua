@@ -19,20 +19,21 @@
 
 function Doom_generate_skies()
 
+  -- FIXME: supply full information, e.g. via GAME.skies table
   local sky_list =
   {
-    { patch="RSKY1" },
-    { patch="RSKY2" },
-    { patch="RSKY3" },
+    { patch="SKY1" },
+    { patch="SKY2" },
+    { patch="SKY3" },
+    { patch="SKY4" },
   }
 
-  if OB_CONFIG.game == "doom1" then
+  if PARAM.doom2_skies then
     sky_list =
     {
-      { patch="SKY1" },
-      { patch="SKY2" },
-      { patch="SKY3" },
-      { patch="SKY4" },
+      { patch="RSKY1" },
+      { patch="RSKY2" },
+      { patch="RSKY3" },
     }
   end
 

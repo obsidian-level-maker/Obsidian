@@ -3990,6 +3990,10 @@ OB_GAMES["doom2"] =
   {
     format = "doom",
 
+    doom2_monsters = true,
+    doom2_weapons  = true,
+    doom2_skies    = true,  -- RSKY# patches
+
     rails = true,
     switches = true,
     liquids = true,
