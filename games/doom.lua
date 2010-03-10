@@ -894,12 +894,13 @@ COMMON_STEPS =
   step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
   step2 = { step_w="STEP2", side_w="BROWN1",   top_f="FLAT5" },
   step3 = { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
-  step4 = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
+  step4 = { step_w="STEP4", side_w="STONE",    top_f="FLAT5_4" },
 }
 
 DOOM2_STEPS =
 {
-  step6 = { step_w="STEP6", side_w="STUCCO", top_f="FLAT5" },
+  step4 = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
+  step6 = { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
 }
 
 
