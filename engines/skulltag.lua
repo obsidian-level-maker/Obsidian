@@ -25,7 +25,7 @@ OB_ENGINES["skulltag"] =
 
   for_games =
   {
-    chex3=1, doom1=1, doom2=1, freedoom=1, heretic=1, hexen=1
+    chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   },
 
   param =

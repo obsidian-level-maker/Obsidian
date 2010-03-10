@@ -74,7 +74,7 @@ OB_MODULES["sktag_theme"] =
 {
   label = "Skulltag : Flats and Textures",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
   for_engines = { skulltag=1 },
 
   setup_func = SkulltagTheme_setup,

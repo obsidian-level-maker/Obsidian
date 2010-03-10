@@ -227,7 +227,7 @@ OB_MODULES["sktag_mons"] =
 {
   label = "Skulltag : Monsters and Items",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 

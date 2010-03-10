@@ -79,7 +79,7 @@ OB_ENGINES["boom"] =
   label = "BOOM Compat",
   priority = 92,
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
 
   all_done_func = Boom_all_done,
 

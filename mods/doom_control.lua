@@ -64,7 +64,7 @@ OB_MODULES["mon_control"] =
 {
   label = "Monster Control (DOOM)",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
 
   setup_func = Mon_Control_setup,
@@ -149,7 +149,7 @@ OB_MODULES["weap_control"] =
 {
   label = "Weapon Control (DOOM)",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
 
   setup_func = Weap_Control_setup,

@@ -176,7 +176,7 @@ OB_MODULES["zdoom_marines"] =
 {
   label = "ZDoom Marines",
 
-  for_games   = { doom1=1, doom2=1, freedoom=1 },
+  for_games   = { doom1=1, doom2=1 },
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 

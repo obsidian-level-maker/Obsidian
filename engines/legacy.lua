@@ -23,7 +23,7 @@ OB_ENGINES["legacy"] =
 {
   label = "Legacy 1.42",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
 
   all_done_func = Boom_all_done,
 

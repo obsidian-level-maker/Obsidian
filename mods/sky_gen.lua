@@ -256,7 +256,7 @@ OB_MODULES["sky_gen_doom"] =
 {
   label = "Sky Generator (DOOM)",
 
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
 
   levels_start_func = Doom_generate_skies,
 }

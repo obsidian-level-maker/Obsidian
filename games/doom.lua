@@ -3826,7 +3826,7 @@ end
 OB_THEMES["doom_tech"] =
 {
   label = "Tech",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
 
   prefix = "TECH",
   name_theme = "TECH",
@@ -3837,7 +3837,7 @@ OB_THEMES["doom_tech"] =
 OB_THEMES["doom_urban"] =
 {
   label = "Urban",
-  for_games = { doom2=1, freedoom=1 },
+  for_games = { doom2=1 },
 
   prefix = "URBAN",
   name_theme = "URBAN",
@@ -3848,7 +3848,7 @@ OB_THEMES["doom_urban"] =
 OB_THEMES["doom_hell"] =
 {
   label = "Hell",
-  for_games = { doom1=1, doom2=1, freedoom=1 },
+  for_games = { doom1=1, doom2=1 },
 
   prefix = "HELL",
   name_theme = "GOTHIC",
@@ -3859,7 +3859,7 @@ OB_THEMES["doom_hell"] =
 OB_THEMES["doom_wolf"] =
 {
   label = "Wolfenstein",
-  for_games = { doom2=1, freedoom=1 },
+  for_games = { doom2=1 },
 
   prefix = "WOLF",
   name_theme = "URBAN",
