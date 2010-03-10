@@ -18,7 +18,7 @@
 --
 ----------------------------------------------------------------
 
-COMMON_THINGS =
+DOOM_THINGS =
 {
   --- PLAYERS ---
 
@@ -186,7 +186,7 @@ COMMON_THINGS =
 
 ----------------------------------------------------------------
 
-COMMON_MATERIALS =
+DOOM_COMMON_MATERIALS =
 {
   -- special materials --
   _ERROR = { t="METAL",   f="CEIL5_2" },
@@ -811,7 +811,7 @@ DOOM2_MATERIALS =
 }
 
 
-COMMON_SANITY_MAP =
+DOOM_SANITY_MAP =
 {
   -- liquids kill the player, so keep them recognisable
   LAVA1   = "FWATER1",
@@ -844,8 +844,10 @@ COMMON_SANITY_MAP =
 }
 
 
-COMMON_RAILS =
+DOOM_RAILS =
 {
+  -- common --
+
 --BRNSMAL1
 --BRNSMAL2
 --BRNSMALC
@@ -853,19 +855,17 @@ COMMON_RAILS =
 --BRNSMALR
 --MIDBRN1
 --MIDGRATE
-}
 
-DOOM1_RAILS =
-{
+  -- Doom I only --
+
 --BRNBIGC
 --BRNBIGL
 --BRNBIGR
 --MIDVINE1
 --MIDVINE2
-}
 
-DOOM2_RAILS =
-{
+  -- Doom II only --
+
 --MIDBARS1
 --MIDBARS3
 --MIDBRONZ
@@ -874,37 +874,21 @@ DOOM2_RAILS =
 --SP_DUDE8   -- scaled MIDVINE2 from FreeDoom
 }
 
---[[ FIXME
-DOOM1_RAILS =
-{
-  r_1 = { wall="BRNSMALC", w=128, h=64  },
-  r_2 = { wall="MIDGRATE", w=128, h=128 },
-}
 
-DOOM2_RAILS =
-{
-  r_1 = { wall="MIDBARS3", w=128, h=72  },
-  r_2 = { wall="MIDGRATE", w=128, h=128 },
-}
---]]
-
-
-COMMON_STEPS =
+DOOM_STEPS =
 {
   step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
   step2 = { step_w="STEP2", side_w="BROWN1",   top_f="FLAT5" },
   step3 = { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
   step4 = { step_w="STEP4", side_w="STONE",    top_f="FLAT5_4" },
+
+  -- Doom II only --
+  step4b = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
+  step6  = { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
 }
 
-DOOM2_STEPS =
-{
-  step4 = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
-  step6 = { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
-}
 
-
-COMMON_LIFTS =
+DOOM_LIFTS =
 {
   shiny = 
   {
@@ -938,7 +922,7 @@ OLD_LIFT_JUNK =
 }
 
 
-COMMON_PICTURES =
+DOOM_PICTURES =
 {
   -- Note: this includes pictures that only work on DOOM1 or DOOM2.
   -- It is not a problem, because the game-specific sub-themes will
@@ -1354,7 +1338,7 @@ COMMON_PICTURES =
 }
 
 
-COMMON_PILLARS =
+DOOM_PILLARS =
 {
   teklite = { pillar="TEKLITE", trim1="GRAY7", trim2="METAL" },
   silver2 = { pillar="SILVER2", trim1="GRAY7", trim2="METAL" },
@@ -1374,7 +1358,7 @@ COMMON_PILLARS =
 }
 
 
-COMMON_CRATES =  -- temporary (until good prefab system)
+DOOM_CRATES =  -- temporary (until good prefab system)
 {
   crate1 = { side_w="CRATE1", top_f="CRATOP2" },
   crate2 = { side_w="CRATE2", top_f="CRATOP1" },
@@ -1389,7 +1373,7 @@ COMMON_CRATES =  -- temporary (until good prefab system)
 }
 
 
-COMMON_DOORS =
+DOOM_DOORS =
 {
   --- NORMAL DOORS ---
 
@@ -1624,7 +1608,7 @@ COMMON_DOORS =
 }
 
 
-COMMON_EXITS =
+DOOM_EXITS =
 {
   skull_pillar =
   {
@@ -1689,19 +1673,19 @@ COMMON_EXITS =
 }
 
 
-COMMON_LIQUIDS =
+DOOM_LIQUIDS =
 {
   water  = { mat="FWATER1", sec_kind=16 },
   blood  = { mat="BLOOD1",  sec_kind=16 }, --  5% damage
   nukage = { mat="NUKAGE1", sec_kind=16 }, -- 10% damage
   lava   = { mat="LAVA1",   sec_kind=16, add_light=64 }, -- 20% damage
 
-  -- this one is Doom II only
+  -- Doom II only --
   slime = { mat="SLIME01", sec_kind=16 },
 }
 
 
-COMMON_ROOMS =
+DOOM_ROOMS =
 {
   PLAIN =
   {
@@ -1918,7 +1902,7 @@ DOOM2_ROOMS =
 }
 
 
-COMMON_THEME_DEFAULTS =
+DOOM_THEME_DEFAULTS =
 {
   doors = { wooden=30, wooden_fast=20,
             wooden2=20, wooden2_fast=10 },
@@ -1956,7 +1940,7 @@ COMMON_THEME_DEFAULTS =
 }
 
 
-COMMON_SUB_THEMES =
+DOOM_COMMON_SUB_THEMES =
 {
 --[[  
    (a) nature  (outdoor, grassy/rocky/muddy, water)
@@ -2102,7 +2086,7 @@ COMMON_SUB_THEMES =
 
     steps =
     {
-      step1=50, step3=50, step4=50,
+      step1=50, step3=50, step4b=50,
     },
 
     lifts = { shiny=20, platform=40, rusty=10 },
@@ -2749,7 +2733,7 @@ COMMON_THEMES_OLD =
 }
 
 
-COMMON_PREBUILT_LEVELS =
+DOOM_PREBUILT_LEVELS =
 {
   dead_simple =
   {
@@ -2842,7 +2826,7 @@ COMMON_PREBUILT_LEVELS =
 -- since it was creating way too much health in levels.
 --
 
-COMMON_MONSTERS =
+DOOM_MONSTERS =
 {
   zombie =
   {
@@ -3014,7 +2998,7 @@ DOOM2_MONSTERS =
 -- have that weapon.
 --
 
-COMMON_WEAPONS =
+DOOM_WEAPONS =
 {
   fist =
   {
@@ -3080,10 +3064,8 @@ COMMON_WEAPONS =
     ammo="cell", per=40,
     give={ {ammo="cell",count=40} },
   },
-}
 
-DOOM2_WEAPONS =
-{
+  -- this is Doom II only --
   super =
   {
     pref=70, add_prob=20, start_prob=10,
@@ -3097,7 +3079,7 @@ DOOM2_WEAPONS =
 -- Pickup List
 -- ===========
 
-COMMON_PICKUPS =
+DOOM_PICKUPS =
 {
   -- HEALTH --
 
@@ -3195,6 +3177,14 @@ COMMON_PICKUPS =
     give={ {ammo="cell",count=100} },
   },
 
+  -- Doom II only --
+
+  mega =
+  {
+    prob=1, big_item=true,
+    give={ {health=200} },
+  },
+
 
   -- NOTES:
   --
@@ -3208,17 +3198,8 @@ COMMON_PICKUPS =
   -- equivalent to 100 units of health.
 }
 
-DOOM2_PICKUPS =
-{
-  mega =
-  {
-    prob=1, big_item=true,
-    give={ {health=200} },
-  },
-}
 
-
-COMMON_PLAYER_MODEL =
+DOOM_PLAYER_MODEL =
 {
   doomguy =
   {
@@ -3286,6 +3267,10 @@ DOOM2_EPISODES =
 
 
 function Doom1_setup()
+  -- remove Doom II only stuff
+  GAME.weapons["super"] = nil
+  GAME.pickups["mega"]  = nil
+
   -- tweak monster probabilities
   GAME.monsters["Cyberdemon"].crazy_prob = 8
   GAME.monsters["Mastermind"].crazy_prob = 12
@@ -3444,7 +3429,7 @@ function Doom2_get_levels()
 end
 
 
-COMMON_LEVEL_GFX_COLORS =
+DOOM_LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
   silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
@@ -3476,9 +3461,9 @@ function Doom_make_cool_gfx()
   {
     BRONZE_2, GREEN, RED,
 
-    COMMON_LEVEL_GFX_COLORS.gold,
-    COMMON_LEVEL_GFX_COLORS.silver,
-    COMMON_LEVEL_GFX_COLORS.iron,
+    DOOM_LEVEL_GFX_COLORS.gold,
+    DOOM_LEVEL_GFX_COLORS.silver,
+    DOOM_LEVEL_GFX_COLORS.iron,
   }
 
   rand_shuffle(colmaps)
@@ -3486,7 +3471,7 @@ function Doom_make_cool_gfx()
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
-  gui.set_colormap(4, COMMON_LEVEL_GFX_COLORS.iron)
+  gui.set_colormap(4, DOOM_LEVEL_GFX_COLORS.iron)
 
   -- patches (CEMENT1 .. CEMENT4)
   gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
@@ -3512,7 +3497,7 @@ function Doom_make_level_gfx()
       gold=12, silver=3, bronze=8, iron=10
     })
 
-    GAME.level_gfx_colors = assert(COMMON_LEVEL_GFX_COLORS[kind])
+    GAME.level_gfx_colors = assert(DOOM_LEVEL_GFX_COLORS[kind])
   end
 
   gui.set_colormap(1, GAME.level_gfx_colors)
@@ -3662,59 +3647,43 @@ OB_GAMES["doom1"] =
   {
     ---- common stuff ----
 
-    "player_model", COMMON_PLAYER_MODEL,
+    "player_model", DOOM_PLAYER_MODEL,
 
-    "things",   COMMON_THINGS,
-    "monsters", COMMON_MONSTERS,
-    "weapons",  COMMON_WEAPONS,
-    "pickups",  COMMON_PICKUPS,
+    "things",   DOOM_THINGS,
+    "monsters", DOOM_MONSTERS,
+    "weapons",  DOOM_WEAPONS,
+    "pickups",  DOOM_PICKUPS,
 
-    "materials",  COMMON_MATERIALS,
-    "sanity_map", COMMON_SANITY_MAP,
-    "rails",      COMMON_RAILS,
-    "steps",      COMMON_STEPS,
-    "lifts",      COMMON_LIFTS,
-    "pictures",   COMMON_PICTURES,
-    "pillars",    COMMON_PILLARS,
-    "crates",     COMMON_CRATES,
-    "doors",      COMMON_DOORS,
-    "exits",      COMMON_EXITS,
+    "materials",  DOOM_COMMON_MATERIALS,
+    "sanity_map", DOOM_SANITY_MAP,
+    "rails",      DOOM_RAILS,
+    "liquids",    DOOM_LIQUIDS,
 
-    "hangs", COMMON_OVERHANGS,
-    "pedestals", COMMON_PEDESTALS,
+    "steps",      DOOM_STEPS,
+    "lifts",      DOOM_LIFTS,
+    "pictures",   DOOM_PICTURES,
+    "pillars",    DOOM_PILLARS,
+    "crates",     DOOM_CRATES,
+    "doors",      DOOM_DOORS,
+    "exits",      DOOM_EXITS,
 
-    "liquids", COMMON_LIQUIDS,
+    "rooms",  DOOM_ROOMS,
+    "defaults", DOOM_THEME_DEFAULTS,
+    "themes", DOOM_COMMON_SUB_THEMES,
 
+    -- FIXME
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
-    "key_doors", COMMON_KEY_DOORS,
-
-    "images", COMMON_IMAGES,
-    "lights", COMMON_LIGHTS,
-    "rooms",  COMMON_ROOMS,
-    "defaults", COMMON_THEME_DEFAULTS,
-    "themes", COMMON_SUB_THEMES,
-
-    "sc_fabs",   COMMON_SCENERY_PREFABS,
-    "feat_fabs", COMMON_FEATURE_PREFABS,
-    "wall_fabs", COMMON_WALL_PREFABS,
-
     "door_fabs", COMMON_DOOR_PREFABS,
-    "arch_fabs", COMMON_ARCH_PREFABS,
-    "win_fabs",  COMMON_WINDOW_PREFABS,
-    "misc_fabs", COMMON_MISC_PREFABS,
 
-    "prebuilt_levels", COMMON_PREBUILT_LEVELS,
+    "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 
     ---- DOOM I stuff ----
 
+    "materials", DOOM1_MATERIALS,
+
     "themes",    DOOM1_SUB_THEMES,
     "rooms",     DOOM1_ROOMS,
-    "episodes",  DOOM1_EPISODES,
-
-    "materials", DOOM1_MATERIALS,
-    "rails",     DOOM1_RAILS,
-    "wall_fabs", DOOM1_WALL_PREFABS,
   },
 }
 
@@ -3791,74 +3760,44 @@ OB_GAMES["doom2"] =
   {
     ---- common stuff ----
 
-    "player_model", COMMON_PLAYER_MODEL,
+    "player_model", DOOM_PLAYER_MODEL,
 
-    "things",   COMMON_THINGS,
-    "monsters", COMMON_MONSTERS,
-    "weapons",  COMMON_WEAPONS,
-    "pickups",  COMMON_PICKUPS,
+    "things",   DOOM_THINGS,
+    "monsters", DOOM_MONSTERS,
+    "weapons",  DOOM_WEAPONS,
+    "pickups",  DOOM_PICKUPS,
 
-    "materials",  COMMON_MATERIALS,
-    "sanity_map", COMMON_SANITY_MAP,
-    "rails",      COMMON_RAILS,
-    "steps",      COMMON_STEPS,
-    "lifts",      COMMON_LIFTS,
-    "pictures",   COMMON_PICTURES,
-    "pillars",    COMMON_PILLARS,
-    "crates",     COMMON_CRATES,
-    "doors",      COMMON_DOORS,
-    "exits",      COMMON_EXITS,
+    "materials",  DOOM_COMMON_MATERIALS,
+    "sanity_map", DOOM_SANITY_MAP,
+    "rails",      DOOM_RAILS,
+    "liquids",    DOOM_LIQUIDS,
 
-    "hangs", COMMON_OVERHANGS,
-    "pedestals", COMMON_PEDESTALS,
+    "steps",      DOOM_STEPS,
+    "lifts",      DOOM_LIFTS,
+    "pictures",   DOOM_PICTURES,
+    "pillars",    DOOM_PILLARS,
+    "crates",     DOOM_CRATES,
+    "doors",      DOOM_DOORS,
+    "exits",      DOOM_EXITS,
 
-    "liquids", COMMON_LIQUIDS,
+    "rooms",  DOOM_ROOMS,
+    "defaults", DOOM_THEME_DEFAULTS,
+    "themes", DOOM_COMMON_SUB_THEMES,
 
+    -- FIXME
     "switch_infos", COMMON_SWITCH_INFOS,
     "switch_doors", COMMON_SWITCH_DOORS,
-    "key_doors", COMMON_KEY_DOORS,
-
-    "images", COMMON_IMAGES,
-    "lights", COMMON_LIGHTS,
-    "rooms",  COMMON_ROOMS,
-    "defaults", COMMON_THEME_DEFAULTS,
-    "themes", COMMON_SUB_THEMES,
-
-    "sc_fabs",   COMMON_SCENERY_PREFABS,
-    "feat_fabs", COMMON_FEATURE_PREFABS,
-    "wall_fabs", COMMON_WALL_PREFABS,
-
     "door_fabs", COMMON_DOOR_PREFABS,
-    "arch_fabs", COMMON_ARCH_PREFABS,
-    "win_fabs",  COMMON_WINDOW_PREFABS,
-    "misc_fabs", COMMON_MISC_PREFABS,
 
-    "prebuilt_levels", COMMON_PREBUILT_LEVELS,
+    "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 
     ---- DOOM II stuff ----
 
-    "episodes", DOOM2_EPISODES,
-
-    "monsters", DOOM2_MONSTERS,
-    "weapons",  DOOM2_WEAPONS,
-    "pickups",  DOOM2_PICKUPS,
-
+    "materials",DOOM2_MATERIALS,
+    "themes",   DOOM2_SUB_THEMES,
     "rooms",    DOOM2_ROOMS,
 
-    "materials",DOOM2_MATERIALS,
-    "rails",    DOOM2_RAILS,
-    "steps",    DOOM2_STEPS,
-    "themes",   DOOM2_SUB_THEMES,
-
-    "hangs",    DOOM2_OVERHANGS,
-    "lights",   DOOM2_LIGHTS,
----### "liquids",  DOOM2_LIQUIDS,
-
-    "sc_fabs",   DOOM2_SCENERY_PREFABS,
-    "feat_fabs", DOOM2_FEATURE_PREFABS,
-    "wall_fabs", DOOM2_WALL_PREFABS,
-    "door_fabs", DOOM2_DOOR_PREFABS,
-    "misc_fabs", DOOM2_MISC_PREFABS,
+    "monsters", DOOM2_MONSTERS,
   },
 }
 
