@@ -2117,7 +2117,7 @@ function Layout_one(R)
     elseif R.purpose == "SWITCH" then
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       local LOCK = assert(R.lock_for_item)  -- eww
-      local INFO = assert(GAME.switch_infos[R.do_switch])
+      local INFO = assert(GAME.switches[R.do_switch])
       Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else

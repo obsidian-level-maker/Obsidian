@@ -181,10 +181,12 @@ DOOM_THINGS =
   brain_boss    = { id=88, kind="other", r=16, h=16 },
   brain_shooter = { id=89, kind="other", r=20, h=32 },
   brain_target  = { id=87, kind="other", r=20, h=32, pass=true },
-}
+
+} -- end of DOOM_THINGS
 
 
 ----------------------------------------------------------------
+
 
 DOOM_COMMON_MATERIALS =
 {
@@ -498,7 +500,8 @@ DOOM_COMMON_MATERIALS =
   -- Note too that STEP1/2 are ambiguous, the flats are quite
   -- different to the textures, hence renamed the flats as
   -- STEP_F1 and STEP_F2.
-}
+
+} -- end of DOOM_COMMON_MATERIALS
 
 
 
@@ -1776,7 +1779,164 @@ DOOM_EXITS =
     break_w = "DOORSTOP",
     items = { "medikit" },
   },
-}
+
+} -- end of DOOM_DOORS
+
+
+DOOM_SWITCHES =
+{
+  sw_blue =
+  {
+    prefab = "SWITCH_FLOOR",
+    skin =
+    {
+      switch_w="SW1BLUE", side_w="COMPBLUE",
+      switch_f="FLAT14", switch_h=64,
+
+      beam_w="WOOD1", beam_f="FLAT5_2",
+
+      x_offset=0, y_offset=56, line_kind=103,
+    }
+  },
+
+  sw_blue2 =
+  {
+    prefab = "SWITCH_FLOOR_BEAM",
+    skin =
+    {
+      switch_w="SW1BLUE", side_w="COMPBLUE",
+      switch_f="FLAT14", switch_h=64,
+
+      beam_w="WOOD1", beam_f="FLAT5_2",
+
+      x_offset=0, y_offset=56, line_kind=103,
+    }
+  },
+
+  sw_hot =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1HOT", side_w="SP_HOT1",
+      switch_f="FLAT5_3",
+      x_offset=0, y_offset=52,
+      line_kind=103,
+    }
+
+  },
+
+  sw_skin =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1SKIN", side_w="SKSNAKE2",
+      switch_f="SFLR6_4",
+      x_offset=0, y_offset=52,
+      line_kind=103,
+    }
+  },
+
+  sw_vine =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1VINE", side_w="GRAYVINE",
+      switch_f="FLAT1",
+      x_offset=0, y_offset=64,
+      line_kind=103,
+    }
+  },
+
+  sw_metl =
+  {
+    prefab = "SWITCH_CEILING",
+    environment = "indoor",
+    skin =
+    {
+      switch_w="SW1GARG", side_w="METAL",
+      switch_c="CEIL5_2", switch_h=56,
+
+      beam_w="SUPPORT3", beam_c="CEIL5_2",
+
+      x_offset=0, y_offset=64, line_kind=23,
+    }
+  },
+
+  sw_wood =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1WOOD", side_w="WOOD9",
+      switch_f="FLAT5_2",
+      x_offset=0, y_offset=56,
+      line_kind=103,
+    }
+  },
+
+  sw_marble =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1GSTON", side_w="GSTONE1",
+      switch_f="FLOOR7_2",
+      x_offset=0, y_offset=56,
+      line_kind=103,
+    }
+  },
+
+  bar_wood =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1WOOD", side_w="WOOD9",
+      switch_f="FLAT5_2",
+      x_offset=0, y_offset=56,
+      line_kind=23,
+    }
+  },
+
+  bar_silver =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1COMM", side_w="SHAWN2",
+      switch_f="FLAT23",
+      x_offset=0, y_offset=0,
+      line_kind=23,
+    }
+  },
+
+  bar_metal =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1MET2", side_w="METAL2",
+      switch_f="CEIL5_2",
+      x_offset=0, y_offset=0,
+      line_kind=23,
+    }
+  },
+
+  bar_gray =
+  {
+    prefab = "SWITCH_PILLAR",
+    skin =
+    {
+      switch_w="SW1GRAY1", side_w="GRAY1", line_kind=23,
+      switch_f="FLAT1",
+    }
+  },
+
+} -- end of DOOM_SWITCHES
+
 
 
 DOOM_LIQUIDS =
@@ -3771,6 +3931,7 @@ OB_GAMES["doom1"] =
     "pillars",    DOOM_PILLARS,
     "crates",     DOOM_CRATES,
     "doors",      DOOM_DOORS,
+    "switches",   DOOM_SWITCHES,
     "exits",      DOOM_EXITS,
 
     "rooms",  DOOM_ROOMS,
@@ -3778,7 +3939,6 @@ OB_GAMES["doom1"] =
     "themes", DOOM_COMMON_SUB_THEMES,
 
     -- FIXME
-    "switch_infos", COMMON_SWITCH_INFOS,
     "door_fabs", COMMON_DOOR_PREFABS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
@@ -3883,6 +4043,7 @@ OB_GAMES["doom2"] =
     "pillars",    DOOM_PILLARS,
     "crates",     DOOM_CRATES,
     "doors",      DOOM_DOORS,
+    "switches",   DOOM_SWITCHES,
     "exits",      DOOM_EXITS,
 
     "rooms",  DOOM_ROOMS,
@@ -3890,7 +4051,6 @@ OB_GAMES["doom2"] =
     "themes", DOOM_COMMON_SUB_THEMES,
 
     -- FIXME
-    "switch_infos", COMMON_SWITCH_INFOS,
     "door_fabs", COMMON_DOOR_PREFABS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,

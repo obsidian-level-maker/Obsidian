@@ -1036,6 +1036,8 @@ function Plan_rooms_sp()
   LEVEL.free_tag  = 1
   LEVEL.free_mark = 1
 
+  gui.random()
+
   if LEVEL.theme.liquids then
     local name = rand_key_by_probs(LEVEL.theme.liquids)
     gui.printf("Liquid = %s\n", name)
