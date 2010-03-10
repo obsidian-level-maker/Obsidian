@@ -2243,15 +2243,7 @@ gui.printf("do_teleport\n")
         local z = assert(S.conn and S.conn.conn_h)
 
         local LOCK = assert(S.border[side].lock)
-        local skin
-
-        if LOCK.kind == "KEY" then
-          skin = assert(GAME.doors[LOCK.item])
-        else
-          assert(LOCK.kind == "SWITCH")
-          local INFO = assert(GAME.switch_doors[LOCK.item])
-          skin = INFO.skin  -- FIXME
-        end
+        local skin = assert(GAME.doors[LOCK.item])
 
 --if not skin.track then gui.printf("%s", table_to_str(skin,1)); end
         assert(skin.track)
@@ -2267,9 +2259,9 @@ gui.printf("do_teleport\n")
 
       if B_kind == "bars" then
         local LOCK = assert(S.border[side].lock)
-        local INFO = assert(GAME.switch_doors[LOCK.item])
+        local skin = assert(GAME.doors[LOCK.item])
 
-        Build_lowering_bars(S, side, z1, INFO.skin, LOCK.tag)
+        Build_lowering_bars(S, side, z1, skin, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true

@@ -1543,6 +1543,7 @@ DOOM_DOORS =
     line_kind=1, tag=0,
   },
 
+
   --- LOCKED DOORS ---
 
   kc_blue =
@@ -1604,6 +1605,111 @@ DOOM_DOORS =
     step_w="STEP4",  track="DOORTRAK",
     step_f="FLAT18", frame_c="FLAT18",
     line_kind=33, tag=0, -- kind_mult=28
+  },
+
+
+  --- SWITCHED DOORS ---
+
+  sw_blue =
+  {
+    w=128, h=112,
+
+    key_w="COMPBLUE",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="COMPBLUE",  track="DOORTRAK",
+    step_f="FLAT14", frame_c="FLAT14",
+    door_h=112,
+    line_kind=0,
+  },
+
+  sw_hot =
+  {
+    w=128, h=112,
+
+    key_w="REDWALL",
+    door_w="BIGDOOR2", door_c="FLAT1",
+    step_w="REDWALL",  track="DOORTRAK",
+    step_f="FLAT5_3", frame_c="FLAT5_3",
+    door_h=112,
+    line_kind=0,
+  },
+
+  sw_skin =
+  {
+    w=128, h=112,
+
+    key_w="SKINFACE",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="STEP1",  track="DOORTRAK",
+    step_f="FLAT1", frame_c="FLAT1",
+    door_h=112,
+    line_kind=0,
+  },
+
+  sw_vine =
+  {
+    w=128, h=112,
+
+    key_w="GRAYVINE",
+    door_w="BIGDOOR3", door_c="FLOOR7_2",
+    step_w="STEP1",  track="DOORTRAK",
+    step_f="FLAT1", frame_c="FLAT1",
+    door_h=112,
+    line_kind=0,
+  },
+
+  sw_wood =
+  {
+    w=128, h=112,
+
+    key_w="WOOD1",
+    door_w="BIGDOOR7", door_c="CEIL5_2",
+    step_w="WOOD12",  track="DOORTRAK",
+    step_f="FLAT5_2", frame_c="FLAT5_2",
+    door_h=112,
+    line_kind=0,
+  },
+
+  sw_marble =
+  {
+    w=128, h=112,
+
+    key_w="GSTONE1",
+    door_w="BIGDOOR2", door_c="FLAT1",
+    step_w="GSTONE1",  track="DOORTRAK",
+    step_f="FLOOR7_2", frame_c="FLOOR7_2",
+    door_h=112,
+    line_kind=0,
+  },
+
+  bar_wood =
+  {
+    bar_w="WOOD9",
+    bar_f="FLAT5_2",
+    bar_h=64,
+    line_kind=0,
+  },
+
+  bar_silver =
+  {
+    bar_w="SUPPORT2",
+    bar_h=64,
+    line_kind=0,
+  },
+
+  bar_metal =
+  {
+    bar_w="SUPPORT3",
+    bar_h=64,
+    line_kind=0,
+  },
+
+  bar_gray =
+  {
+    w=128, h=128,
+
+    bar_w="GRAY7", bar_f="FLAT19",
+    line_kind=0
   },
 }
 
@@ -3673,7 +3779,6 @@ OB_GAMES["doom1"] =
 
     -- FIXME
     "switch_infos", COMMON_SWITCH_INFOS,
-    "switch_doors", COMMON_SWITCH_DOORS,
     "door_fabs", COMMON_DOOR_PREFABS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
@@ -3786,7 +3891,6 @@ OB_GAMES["doom2"] =
 
     -- FIXME
     "switch_infos", COMMON_SWITCH_INFOS,
-    "switch_doors", COMMON_SWITCH_DOORS,
     "door_fabs", COMMON_DOOR_PREFABS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
