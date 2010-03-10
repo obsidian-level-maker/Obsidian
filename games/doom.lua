@@ -2977,7 +2977,7 @@ DOOM2_SUB_THEMES =
 }
 
 
-COMMON_THEMES_OLD =
+OLD_COMMON_THEMES =
 {
   NATURE =
   {
@@ -3938,9 +3938,6 @@ OB_GAMES["doom1"] =
     "defaults", DOOM_THEME_DEFAULTS,
     "themes", DOOM_COMMON_SUB_THEMES,
 
-    -- FIXME
-    "door_fabs", COMMON_DOOR_PREFABS,
-
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 
     ---- DOOM I stuff ----
@@ -4049,9 +4046,6 @@ OB_GAMES["doom2"] =
     "rooms",  DOOM_ROOMS,
     "defaults", DOOM_THEME_DEFAULTS,
     "themes", DOOM_COMMON_SUB_THEMES,
-
-    -- FIXME
-    "door_fabs", COMMON_DOOR_PREFABS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 

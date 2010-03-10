@@ -599,7 +599,7 @@ function Rooms_reckon_doors()
 
           local prob = door_chance(C.src, C.dest)
 
-          if S.conn.lock and GAME.door_fabs then
+          if S.conn.lock then
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
@@ -608,7 +608,7 @@ function Rooms_reckon_doors()
               B.kind = "bars"
             end
 
-          elseif rand_odds(prob) and GAME.door_fabs then
+          elseif rand_odds(prob) then
             B.kind = "door"
 
           elseif (STYLE.fences == "none" or STYLE.fences == "few") and
