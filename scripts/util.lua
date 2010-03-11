@@ -63,6 +63,24 @@ function is_digit(lc)
          lc == '9'
 end
 
+function read_text_file(filename)
+  local file = io.open(filename, "r")
+
+  if not file then
+    return nil
+  end
+
+  local lines = {}
+
+  for L in file:lines() do
+    table.insert(lines, L .. "\n")
+  end
+
+  file:close()
+  
+  return lines
+end
+
 
 ----====| TABLE UTILITIES |====----
 
