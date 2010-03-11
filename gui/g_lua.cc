@@ -146,6 +146,25 @@ int gui_set_colormap(lua_State *L)
 }
 
 
+// LUA: locate_data(filename) --> string
+//
+int gui_locate_data(lua_State *L)
+{
+  const char *base_name = luaL_checkstring(L, 1);
+
+  const char *full_name = FileFindInPath(data_path, base_name);
+
+  if (! full_name)
+  {
+    lua_pushnil(L);
+    return 1;
+  }
+
+  lua_pushstring(L, full_name);
+  return 1;
+}
+
+
 // LUA: add_button (what, id, label)
 //
 int gui_add_button(lua_State *L)
@@ -362,7 +381,7 @@ int gui_ticker(lua_State *L)
   return 0;
 }
 
-// LUA: abort() -> boolean
+// LUA: abort() --> boolean
 //
 int gui_abort(lua_State *L)
 {
@@ -387,7 +406,7 @@ int gui_rand_seed(lua_State *L)
   return 0;
 }
 
-// LUA: random()
+// LUA: random() --> number
 //
 int gui_random(lua_State *L)
 {
@@ -398,7 +417,7 @@ int gui_random(lua_State *L)
 }
 
 
-// LUA: bit_and(A, B)
+// LUA: bit_and(A, B) --> number
 //
 int gui_bit_and(lua_State *L)
 {
@@ -409,7 +428,7 @@ int gui_bit_and(lua_State *L)
   return 1;
 }
 
-// LUA: bit_or(A, B)
+// LUA: bit_or(A, B) --> number
 //
 int gui_bit_or(lua_State *L)
 {
@@ -420,7 +439,7 @@ int gui_bit_or(lua_State *L)
   return 1;
 }
 
-// LUA: bit_xor(A, B)
+// LUA: bit_xor(A, B) --> number
 //
 int gui_bit_xor(lua_State *L)
 {
@@ -431,7 +450,7 @@ int gui_bit_xor(lua_State *L)
   return 1;
 }
 
-// LUA: bit_not(val)
+// LUA: bit_not(val) --> number
 //
 int gui_bit_not(lua_State *L)
 {
@@ -481,6 +500,7 @@ static const luaL_Reg gui_script_funcs[] =
 
   { "config_line",    gui_config_line },
   { "set_colormap",   gui_set_colormap },
+  { "locate_data",    gui_locate_data },
 
   { "add_button",     gui_add_button },
   { "add_mod_option", gui_add_mod_option },
