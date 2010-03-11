@@ -418,6 +418,20 @@ function ob_init()
   name_it_up(OB_MODULES)
 
 
+  local function preinit_all(DEFS)
+    for name,def in pairs(DEFS) do
+      if def.preinit_func then
+        def.preinit_func(def)
+      end
+    end
+  end
+
+  preinit_all(OB_GAMES)
+  preinit_all(OB_THEMES)
+  preinit_all(OB_ENGINES)
+  preinit_all(OB_MODULES)
+
+
   local function button_sorter(A, B)
     if A.priority or B.priority then
       return (A.priority or 50) > (B.priority or 50)
