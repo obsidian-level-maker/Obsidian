@@ -419,10 +419,18 @@ function ob_init()
 
 
   local function preinit_all(DEFS)
+    local removed = {}
+
     for name,def in pairs(DEFS) do
       if def.preinit_func then
-        def.preinit_func(def)
+        if def.preinit_func(def) == REMOVE_ME then
+          removed[name] = true
+        end
       end
+    end
+
+    for name,_ in pairs(removed) do
+      DEFS[name] = nil
     end
   end
 
