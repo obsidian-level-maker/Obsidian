@@ -1014,5 +1014,77 @@ int DM_wad_merge_sections(lua_State *L)
   return 0;
 }
 
+
+int DM_wad_read_text_lump(lua_State *L)
+{
+  // LUA: wad_read_text_lump(file_name, lump_name) --> table
+  //
+  // Open the wad file and find the given lump.  If it exists, it is assumed
+  // to be text, and a table is returned containing a string for each line.
+  // Certain characters (esp. zero bytes) will be silently removed.
+  //
+  // If the lump does not exist, nil is returned.
+  // If the _file_ does not exist, An error is raised.
+ 
+  const char *pkg_name = luaL_checkstring(L, 1);
+  const char *src_lump = luaL_checkstring(L, 2);
+ 
+  if (! CheckExtension(pkg_name, "wad"))
+    return luaL_error(L, "wad_read_text_lump: file extension is not WAD: %s\n", pkg_name);
+
+  const char *full_name = FileFindInPath(data_path, pkg_name);
+  if (! full_name)
+    return luaL_error(L, "wad_read_text_lump: missing WAD file: %s", pkg_name);
+
+  if (! WAD_OpenRead(full_name))
+    return luaL_error(L, "wad_read_text_lump: bad WAD file: %s", full_name);
+  
+  int entry = WAD_FindEntry(src_lump);
+  if (entry < 0)
+  {
+    WAD_CloseRead();
+
+    lua_pushnil(L);
+    return 1;
+  }
+
+  qLump_c *lump = DoLoadLump(entry);
+
+  WAD_CloseRead();
+
+  StringFree(full_name);
+
+  // create the table
+  lua_newtable(L);
+
+  const byte *buf = lump->GetBuffer();
+  const byte *b_end = buf + lump->GetSize();
+
+  int cur_pos = 1;
+
+  while (buf < b_end)
+  {
+    const byte *next = buf;
+    while (next < b_end && *next != '\n')
+      next++;
+
+    if (next < b_end)
+      next++;
+
+    size_t len = (next - buf);
+
+    // !!! FIXME: validate / clean up string
+
+    lua_pushinteger(L, cur_pos);
+    lua_pushlstring(L, (const char *)buf, len);
+
+    lua_rawset(L, -3);
+
+    buf = next; cur_pos++;
+  }
+
+  return 1;
+}
+
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
