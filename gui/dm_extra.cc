@@ -1015,6 +1015,44 @@ int DM_wad_merge_sections(lua_State *L)
 }
 
 
+#define DIRTY_CHAR(ch)  ((ch) == 0)
+
+void G_PushCleanString(lua_State *L, const char *buf, int len)
+{
+  bool dirty = false;
+
+  for (int i = 0; i < len; i++)
+    if (DIRTY_CHAR(buf[i]))
+    {
+      dirty = true; break;
+    }
+
+  if (! dirty)
+  {
+    lua_pushlstring(L, buf, len);
+    return;
+  }
+
+  // this is quite sub-optimal, since we assume dirty strings are rare
+  // (i.e. the usual case is plain text files).
+
+  const char *src = buf;
+  const char *s_end = src + len;
+
+  char *new_str = StringNew(len);
+  char *dest = new_str;
+
+  for (; src < s_end; src++)
+    if (! DIRTY_CHAR(*src))
+      *dest++ = *src;
+
+  *dest = 0;
+
+  lua_pushstring(L, new_str);
+
+  StringFree(new_str);
+}
+
 int DM_wad_read_text_lump(lua_State *L)
 {
   // LUA: wad_read_text_lump(file_name, lump_name) --> table
@@ -1073,10 +1111,8 @@ int DM_wad_read_text_lump(lua_State *L)
 
     size_t len = (next - buf);
 
-    // !!! FIXME: validate / clean up string
-
     lua_pushinteger(L, cur_pos);
-    lua_pushlstring(L, (const char *)buf, len);
+    G_PushCleanString(L, (const char *)buf, len);
 
     lua_rawset(L, -3);
 
