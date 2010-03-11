@@ -11,8 +11,9 @@ CHANGES (since v3.51)
 
 - write all relevant settings in the LOGS.txt file
 
-- Chris fixed a Boom-only linetype in his E1M8 map
 - Enhas improved his Gotcha-style arena maps
+- Chris fixed a Boom-only linetype in his E1M8 map
+- Chris contributed a brand new E1M8 boss map
 
 - fixed a bug where an outdoor area was too low to fit in
 - fixed ugliness when outdoor rooms had differing sky heights
