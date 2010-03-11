@@ -3028,7 +3028,7 @@ DOOM_PREBUILT_LEVELS =
   phobos_anomaly =
   {
     file = "anomaly_towers.wad",
-    maps = { E1M1=50 },
+    maps = { E1M1=40, E1M2=80 },
   },
 
   tower_of_babel =
