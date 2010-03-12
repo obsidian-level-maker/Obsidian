@@ -3,11 +3,24 @@ TODO
 ====
 
 
->>>  CSG NUKEM: 
-      DONE: support lower and upper on same wall
-      DONE: create OBLIGE.DAT as first entry
-      DONE: move header writing to nk_level.cc
-      DONE: use the NK_AddWall() stuff,
+++  'extends' field for SUB_THEME entries
+    (remove implicit extension and THEME_DEFAULTS)
+
++  'outer_walls' theme field.
+   the scope of application = contiguous outdoor areas.
+
++  get small exits working again
+
+
++  fix room kinds for natural rooms
+
+-  choose between CAVE / LANDSCAPE / LAKE mode  -- via STYLES[]
+
+-  decide natural #ROOMS based on theme (e.g. less in TECH)
+
+-  supply a brush-making callback to Cave_render
+
+-  improve the jaggy edge algorithm (support corner triangles)
 
 
 BUG: liquification of caves at a border can subvert quests
@@ -15,8 +28,6 @@ BUG: liquification of caves at a border can subvert quests
 BUG: can assign a seed as "walk" without floor_h ??
 
 -  hallway detailing (etc?) : mark lines as impassible
-
--  get small exits working again
 
 
 *  get more games working (Heretic, Hexen etc)
@@ -38,13 +49,7 @@ Natural areas:
 
   -  height changes 
 
-  PARTIAL:  create jaggy edges
-
   DONE:  small chance an island region becomes a lava pit
-
-  -  choose between CAVE / LANDSCAPE / LAKE mode  -- via STYLES[]
-
-  -  decide #ROOMS based on theme (e.g. less in TECH)
 
   PRELIM  proper theming (c.f. THEME.building)
 
