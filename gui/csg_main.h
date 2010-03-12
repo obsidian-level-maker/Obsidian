@@ -117,10 +117,8 @@ typedef enum
 
   BKIND_Sky,
   BKIND_Liquid,
-
   BKIND_Rail,     // supply a railing (DOOM/Nukem only)
-  BKIND_Light,    // supply extra lighting (DOOM/Nukem only)
-  BKIND_Bridge,   // fake 3D bridge (Nukem only)
+  BKIND_Light,    // supply extra lighting
 }
 brush_kind_e;
 

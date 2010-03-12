@@ -418,10 +418,8 @@ int Grab_BrushKind(lua_State *L, int stack_pos)
 
   if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
   if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
-
   if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
   if (StringCaseCmp(kind, "light")  == 0) return BKIND_Light;
-  if (StringCaseCmp(kind, "bridge") == 0) return BKIND_Bridge;
 
   return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }
