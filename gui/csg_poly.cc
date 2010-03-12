@@ -36,7 +36,8 @@ static int mug_changes = 0;
 
 static int hot_index;
 
-///--- #define FINE_EPSILON  0.0002
+static bool do_clip_brushes;
+
 
 
 static inline bool IsCold(const merge_segment_c *S)
@@ -455,6 +456,11 @@ static merge_segment_c *Mug_AddSegment(merge_vertex_c *start, merge_vertex_c *en
 
 static void Mug_MakeSegments(csg_brush_c *P)
 {
+  SYS_ASSERT(P);
+
+  if (! do_clip_brushes && P->bkind == BKIND_Clip)
+    return;
+
   for (int k=0; k < (int)P->verts.size(); k++)
   {
     area_vert_c *v1 = P->verts[k];
@@ -1340,6 +1346,9 @@ static void Mug_AssignBrushes(void)
   {
     csg_brush_c *B = all_brushes[j];
 
+    if (! do_clip_brushes && B->bkind == BKIND_Clip)
+      continue;
+
 // unsigned int orig_ff = first_reg;
 
     for (k=first_reg; k < mug_regions.size(); k++)
@@ -1405,6 +1414,19 @@ static void Mug_DiscoverGaps(void)
     {
       csg_brush_c *A = R->brushes[k];
 
+      // skip the "ephemeral" brushes
+      if (high->bkind == BKIND_Liquid || high->bkind == BKIND_Rail ||
+          high->bkind == BKIND_Light)
+      {
+        high = A;
+        continue;
+      }
+      else if (A->bkind == BKIND_Liquid || A->bkind == BKIND_Rail ||
+               A->bkind == BKIND_Light)
+      {
+        continue;
+      }
+
       if (A->z1 > high->z2 + EPSILON)
       {
         // found a gap
@@ -1431,15 +1453,15 @@ static void MarkNeighbouringGaps(merge_gap_c *B, merge_gap_c *F)
   // check if already marked
   std::vector<merge_gap_c *>::iterator GI;
 
-  for (GI = B->neighbours.begin(); GI != B->neighbours.end(); GI++)
+  for (GI = B->neighbors.begin(); GI != B->neighbors.end(); GI++)
     if (*GI == F)
       return;
 
-  B->neighbours.push_back(F);
-  F->neighbours.push_back(B);
+  B->neighbors.push_back(F);
+  F->neighbors.push_back(B);
 }
 
-static void Mug_GapNeighbours(void)
+static void Mug_GapNeighbors(void)
 {
   // TODO: optimise this by only checking each region-region pair once
 
@@ -1686,9 +1708,9 @@ static void Mug_FillUnusedGaps(void)
         if (! G->reachable)
           continue;
 
-        for (unsigned int n = 0; n < G->neighbours.size(); n++)
+        for (unsigned int n = 0; n < G->neighbors.size(); n++)
         {
-          merge_gap_c *H = G->neighbours[n];
+          merge_gap_c *H = G->neighbors[n];
 
           if (! H->reachable)
           {
@@ -1738,7 +1760,7 @@ static void Mug_FillUnusedGaps(void)
 }
 
 
-void CSG2_MergeAreas(void)
+void CSG2_MergeAreas(bool do_clips)
 {
   // this takes all the brushes, figures out what OVERLAPS
   // (on the 2D map), and performs the CSG operations to create
@@ -1752,18 +1774,17 @@ void CSG2_MergeAreas(void)
   //   (2) check seg against every other seg for overlap/T-junction
   //   (3) create regions from segs, remove islands
   //   (4) assign brushes to the regions
-  //   (5) find the gaps and their neighbours
+  //   (5) find the gaps and their neighbors
   //   (6) place every entity into a gap
   //   (7) remove gaps which no entity can reach
+
+  do_clip_brushes = do_clips;
 
   ClearVertexHash();
 
   for (unsigned int j=0; j < all_brushes.size(); j++)
   {
-    csg_brush_c *P = all_brushes[j];
-    SYS_ASSERT(P);
-
-    Mug_MakeSegments(P);
+    Mug_MakeSegments(all_brushes[j]);
   }
 
   CSG2_UpdateBounds(false /* three_d */);
@@ -1775,14 +1796,13 @@ void CSG2_MergeAreas(void)
   Mug_AssignBrushes();
 
   Mug_DiscoverGaps();
-  Mug_GapNeighbours();
+  Mug_GapNeighbors();
 
   Mug_PlaceEntities();
   Mug_FillUnusedGaps();
 
   CSG2_UpdateBounds(true /* three_d */);
 }
-
 
 
 //--- editor settings ---

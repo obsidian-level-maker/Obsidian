@@ -931,7 +931,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //   CSG2_Doom_TestBrushes();
 
   CSG2_FreeMerges();
-  CSG2_MergeAreas(true);
+  CSG2_MergeAreas(true /* do_clips */);
 
 //  if (which == 0)
 //    CSG2_Doom_TestClip();

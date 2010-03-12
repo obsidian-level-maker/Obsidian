@@ -321,7 +321,7 @@ public:
   csg_brush_c *b_brush;
   csg_brush_c *t_brush;
 
-  std::vector<merge_gap_c *> neighbours;
+  std::vector<merge_gap_c *> neighbors;
 
   std::vector<entity_info_c *> entities;
 
@@ -330,7 +330,7 @@ public:
 public:
   merge_gap_c(merge_region_c *R, csg_brush_c *B, csg_brush_c *T) :
       parent(R), b_brush(B), t_brush(T),
-      neighbours(), entities(), reachable(false)
+      neighbors(), entities(), reachable(false)
   { }
 
   ~merge_gap_c()
@@ -426,7 +426,7 @@ extern int bounds_x2, bounds_y2, bounds_z2;
 
 /* ----- FUNCTIONS ----- */
 
-void CSG2_MergeAreas(void);
+void CSG2_MergeAreas(bool do_clips = false);
 
 area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
