@@ -10,6 +10,7 @@ TODO
    the scope of application = contiguous outdoor areas.
 
 +  get small exits working again
+   -  rework Build_small_exit to only use a single transform
 
 
 +  fix room kinds for natural rooms
@@ -23,11 +24,24 @@ TODO
 -  improve the jaggy edge algorithm (support corner triangles)
 
 
++  CSG DOOM: support "rail" and "light" brushes
+
+-  CSG DOOM: fix up extrafloor creation
+
++  more supplies in start room (ammo for weapon, armor vest)
+
+-  hallway detailing (etc?) : mark lines as impassible
+
+
 BUG: liquification of caves at a border can subvert quests
 
 BUG: can assign a seed as "walk" without floor_h ??
 
--  hallway detailing (etc?) : mark lines as impassible
+BUG: lowering item pedestals can go into ceiling
+
+BUG: outdoor bars can sometimes be jumped over.
+   --> make them higher _or_ another switch to lower them.
+
 
 
 *  get more games working (Heretic, Hexen etc)
@@ -73,15 +87,6 @@ Natural areas:
    (plus space for monster depots)
  
 
-
->>> csg_doom.cc : fix up extrafloor stuff
-
->>> make a theme-appropriate version of tech_outdoor exit
-
-
-DONE: rework liquids
-
-
 +  support MAPINFO lumps (especially for ZDoom ports).
 
 +  review monster quantities, need some increase over the course
@@ -92,25 +97,12 @@ DONE: rework liquids
    quantities (i.e. Less or Scarce settings).
 
 
-+  more supplies in start room (ammo for weapon, armor vest)
-
 -  Quests : add locks (new arenas) even when have no keys
 
 -  rarity for bfg10k and railgun for Skulltag
 
-
--  implement more of Chris's and Johnny's boss maps
-
--  rework Build_small_exit to only use a single transform,
-
--  BUG: lowering item pedestals can go into ceiling
-
 -  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
-
--  BUG: outdoor bars can sometimes be jumped over.
-   --> make them higher _or_ another switch to lower them.
-
 
 
 CSG CODE:
