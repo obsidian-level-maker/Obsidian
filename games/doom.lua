@@ -191,8 +191,9 @@ DOOM_THINGS =
 DOOM_COMMON_MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="METAL",   f="CEIL5_2" },
-  _SKY   = { t="CEMENT3", f="F_SKY1" },
+  _ERROR = { t="METAL",    f="CEIL5_2" },
+  _SKY   = { t="CEMENT3",  f="F_SKY1" },
+  _LIGHT = { t="COMPBLUE", f="FLAT14" },
 
   -- textures with best-matching flat
 

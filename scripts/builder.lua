@@ -278,6 +278,18 @@ function get_liquid()
   return mat
 end
 
+function get_light(intensity)
+  local mat = assert(GAME.materials["_LIGHT"])
+
+  return
+  {
+    kind = "light",
+    w_face = { texture=mat.t },
+    t_face = { texture=mat.f or mat.t },
+    b_face = { texture=mat.f or mat.t, light=intensity },
+  }
+end
+
 
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
