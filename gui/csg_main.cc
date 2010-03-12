@@ -808,6 +808,9 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
   {
     area_vert_c *V = is_front ? G->f_sides[i]: G->b_sides[i];
 
+    if (V->parent->bkind == BKIND_Light || V->parent->bkind == BKIND_Rail)
+      continue;
+
     // ideal match
     if ((z > V->parent->z1 - EPSILON) && (z < V->parent->z2 + EPSILON))
       return V;
@@ -841,6 +844,9 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   for (unsigned int k = 0; k < R->brushes.size(); k++)
   {
     csg_brush_c *A = R->brushes[k];
+
+    if (A->bkind == BKIND_Light || A->bkind == BKIND_Rail)
+      continue;
 
     // ideal match
     if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
