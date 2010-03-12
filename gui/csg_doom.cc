@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  CSG 2.5D : DOOM and NUKEM output
+//  CSG 2.5D : DOOM and DUKE NUKEM output
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -748,10 +748,10 @@ static void MakeSector(merge_region_c *R)
   else
   {
     // FIXME: TEMP CRUD
-    int min_light = (S->c_h - S->f_h < 150) ? 128 : 144;
+    int min_light = 96; //!!!!!!  (S->c_h - S->f_h < 150) ? 128 : 144;
 
     S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-    S->light = MIN(255, MAX(min_light, S->light));
+    S->light = MAX(min_light, S->light);
   }
 
   S->mark = MAX(B->mark, T->mark);
@@ -772,8 +772,31 @@ static void MakeSector(merge_region_c *R)
     S->tag = 0;
 
 
-if (T->bkind == BKIND_Sky)  // FIXME temp hack
-  S->special |= 0x10000;
+  if (T->bkind == BKIND_Sky)  // FIXME temp hack
+    S->special |= 0x10000;
+
+
+  // handle Lighting brushes
+
+  for (unsigned int i = 0; i < R->brushes.size(); i++)
+  {
+    csg_brush_c *B = R->brushes[i];
+
+    if (B->bkind != BKIND_Light)
+      continue;
+
+    if (B->z2 < S->f_h+1 || B->z1 > S->c_h-1)
+      continue;
+
+      // TODO: perhaps have a single 'brush.light' field
+      int light = (int)(256 * MAX(B->b_face->light, B->t_face->light));
+
+      if (S->light < light)
+          S->light = light;
+  }
+
+  if (S->light > 255)
+      S->light = 255;
 
 
   // find brushes floating in-between --> make extrafloors
