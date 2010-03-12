@@ -199,29 +199,45 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
+  DUKE NUKEM 3D
+----------------------------------------------------------------
+
+!  exit buttons
+
++  monsters
++  weapons
++  health and ammo
+
++  working doors
++  keys and switches
+
+-  fake 3D bridges (created via sprites)
+
+
+----------------------------------------------------------------
   WOLF 3D
 ----------------------------------------------------------------
 
-- get it working (tiler.lua)
+-  get it working (tiler.lua)
 
-+ push-walls for secret quests!
-+ secret elevators
-+ bosses!
++  push-walls for secret quests!
++  secret elevators
++  bosses!
 
-- decide_monster : skills are "tiered"
-- health/ammo : no skills! -- use medium one
-- place_items : never where monsters are!
-- create rooms with 'endgame' object.
+-  decide_monster : skills are "tiered"
+-  health/ammo : no skills! -- use medium one
+-  place_items : never where monsters are!
+-  create rooms with 'endgame' object.
 
-+ ensure limits are enforced:
- - MAXACTORS = 150  (remove actors at random)
- - MAXSTATS  = 400  (remove statics at random)
- - MAXDOORS  = 64   (remove unneeded doors at random)
++  ensure limits are enforced:
+   - MAXACTORS = 150  (remove actors at random)
+   - MAXSTATS  = 400  (remove statics at random)
+   - MAXDOORS  = 64   (remove unneeded doors at random)
 
-- patrolling monsters (need to create path with arrows).
-- secret levels (full of treasure)
-- something interesting in middle of big rooms.
-- elevator "entry" in first room.
+-  patrolling monsters (need to create path with arrows).
+-  secret levels (full of treasure)
+-  something interesting in middle of big rooms.
+-  elevator "entry" in first room.
 
 
 ----------------------------------------------------------------
