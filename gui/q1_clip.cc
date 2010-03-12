@@ -157,6 +157,13 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
   if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) < 4.0*EPSILON)
     return;
 
+  // liquid brushes remain the same size
+  if (P->bkind == BKIND_Liquid)
+  {
+    P2->verts.push_back(new area_vert_c(P2, kv->x, kv->y));
+    return;
+  }
+
   double pdx = kv->x - pv->x;
   double pdy = kv->y - pv->y;
 
@@ -281,6 +288,9 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
   {
     csg_brush_c *P = saved_all_brushes[i];
 
+    if (P->bkind == BKIND_Detail || P->bkind == BKIND_Light)
+      continue;
+
     csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
 
     // !!!! FIXME: if floor is sloped, split this poly into two halves
@@ -294,8 +304,11 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
     SYS_ASSERT(! P2->b_slope);
 
-    P2->z2 += pad_t;
-    P2->z1 -= pad_b;
+    if (P->bkind != BKIND_Liquid)
+    {
+      P2->z2 += pad_t;
+      P2->z1 -= pad_b;
+    }
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {
@@ -895,7 +908,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
 
-  // 3rd hull is not used in Quake 1
+  // 3rd hull is not used in Quake
   if (which == 3)
     return 0;
 
@@ -918,7 +931,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //   CSG2_Doom_TestBrushes();
 
   CSG2_FreeMerges();
-  CSG2_MergeAreas();
+  CSG2_MergeAreas(true);
 
 //  if (which == 0)
 //    CSG2_Doom_TestClip();
