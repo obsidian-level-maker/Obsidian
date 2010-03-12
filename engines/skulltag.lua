@@ -21,7 +21,7 @@
 
 OB_ENGINES["skulltag"] =
 {
-  label = "Skulltag 98A",
+  label = "Skulltag 98b",
 
   for_games =
   {
