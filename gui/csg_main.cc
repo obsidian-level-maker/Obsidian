@@ -413,12 +413,15 @@ int Grab_BrushKind(lua_State *L, int stack_pos)
   const char *kind = lua_tostring(L, stack_pos);
 
   if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
-  if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
-  if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
-
-  if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
   if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
   if (StringCaseCmp(kind, "clip")   == 0) return BKIND_Clip;
+
+  if (StringCaseCmp(kind, "sky")    == 0) return BKIND_Sky;
+  if (StringCaseCmp(kind, "liquid") == 0) return BKIND_Liquid;
+
+  if (StringCaseCmp(kind, "rail")   == 0) return BKIND_Rail;
+  if (StringCaseCmp(kind, "light")  == 0) return BKIND_Light;
+  if (StringCaseCmp(kind, "bridge") == 0) return BKIND_Bridge;
 
   return luaL_error(L, "gui.add_brush: unknown kind '%s'", kind);
 }
@@ -498,11 +501,9 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 
   lua_pop(L, 4);
 
-  lua_getfield(L, stack_pos, "flag_noclip");
-
-  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
- 
-  lua_pop(L, 1);
+///  lua_getfield(L, stack_pos, "flag_noclip");
+///  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
+///  lua_pop(L, 1);
 
   return B;
 }

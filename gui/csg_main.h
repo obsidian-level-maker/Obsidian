@@ -112,18 +112,21 @@ public:
 typedef enum
 {
   BKIND_Solid = 0,
-  BKIND_Liquid,
-  BKIND_Sky,
+  BKIND_Detail,   // ignored for clipping (Quake 1/2 only)
+  BKIND_Clip,     // clipping only, no faces (Quake 1/2 only)
 
-  BKIND_Rail,
-  BKIND_Detail,
-  BKIND_Clip,
+  BKIND_Sky,
+  BKIND_Liquid,
+
+  BKIND_Rail,     // supply a railing (DOOM/Nukem only)
+  BKIND_Light,    // supply extra lighting (DOOM/Nukem only)
+  BKIND_Bridge,   // fake 3D bridge (Nukem only)
 }
 brush_kind_e;
 
 typedef enum
 {
-  BRU_F_NoClip   = (1 << 3),  // objects/shots can pass through
+///  BRU_F_XXX = (1 << 0),
 
   // internal flags
   BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
