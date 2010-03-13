@@ -1403,13 +1403,22 @@ static void MakeLinedefs(void)
     if (rail)
     {
       L->flags |= rail->line_flags;
+
+      if (rail->line_kind)
+      {
+        L->type = rail->line_kind;
+        L->tag  = rail->line_tag;
+
+        // FIXME: rail->line_args
+      }
     }
 
     if (spec)
     {
       L->flags |= spec->line_flags;
-      L->type   = spec->line_kind;
-      L->tag    = spec->line_tag;
+
+      L->type = spec->line_kind;
+      L->tag  = spec->line_tag;
 
       // FIXME !!!!  spec->line_args
     }
