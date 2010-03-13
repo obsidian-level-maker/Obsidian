@@ -1329,11 +1329,14 @@ static area_vert_c *FindRailVert(merge_segment_c *G)
       if (! V->w_face)
         continue;
 
-      if (V->parent->z1 < (double)max_c &&
-          V->parent->z2 > (double)min_f)
-      {
-        return V;
-      }
+      if (V->parent->z1 > max_c || V->parent->z1 < min_f)
+        continue;
+
+      if (V->w_face->tex[0] == '-' && !V->line_kind && !V->line_flags)
+        continue;
+
+      // found one
+      return V;
     }
   }
 
