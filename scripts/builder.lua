@@ -289,17 +289,19 @@ function get_light(intensity)
 end
 
 function get_rail(name)
-  assert(GAME.rails)
-
-  local rail = assert(GAME.rails[name])
-
   return
   {
     kind = "rail",
-    w_face = { texture=rail.t, line_flags=rail.line_flags },
+    w_face = { texture="-" },
     t_face = { texture="-" },
     b_face = { texture="-" },
   }
+end
+
+function rail_face(name)
+  local rail = assert(GAME.rails[name])
+
+  return { texture=rail.t, line_flags=rail.line_flags }
 end
 
 
