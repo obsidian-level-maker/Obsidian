@@ -526,7 +526,7 @@ int sidedef_info_c::Write()
     index = DM_NumSidedefs();
 
     DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
-                  upper.c_str(), x_offset & 1023, y_offset & 1023);
+                  upper.c_str(), x_offset & 1023, y_offset);
   }
 
   return index;
@@ -1099,6 +1099,13 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
   return (int)(along + x_offset);
 }
 
+static int CalcRailYOffset(area_vert_c *rail, int base_h)
+{
+  int y_offset = I_ROUND(rail->parent->z1) - base_h;
+
+  return y_offset;   ///--- MAX(0, y_offset);
+}
+
 
 static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
                        merge_region_c *F, merge_region_c *B,
@@ -1124,9 +1131,9 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
   if (B && B->index > 0)
   {
-#if 0  // OLD WAY
     sector_info_c *BS = dm_sectors[B->index];
 
+#if 0  // OLD WAY
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
 
@@ -1173,7 +1180,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
       SD->x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
 
     if (rail_W)
-      SD->y_offset = 0;  // FIXME WRONG
+      SD->y_offset = CalcRailYOffset(rail, MAX(S->f_h, BS->f_h));
     else if (lower_W && lower_W->y_offset != FVAL_NONE)
       SD->y_offset = (int)lower_W->y_offset;
     else if (upper_W && upper_W->y_offset != FVAL_NONE)
