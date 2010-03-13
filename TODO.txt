@@ -2,6 +2,16 @@
 TODO
 ====
 
+- CSG NUKEM: use 'pal 3' for skies
+
+DONE:  CSG DOOM: support "rail" and "light" brushes
+
+Rail brushes: support fake 3D bridges
+              (create dummy sector from brush's Z2)
+
+-  CSG DOOM: fix up extrafloor creation
+
+
 
 ++  'extends' field for SUB_THEME entries
     (remove implicit extension and THEME_DEFAULTS)
@@ -23,10 +33,6 @@ TODO
 
 -  improve the jaggy edge algorithm (support corner triangles)
 
-
-+  CSG DOOM: support "rail" and "light" brushes
-
--  CSG DOOM: fix up extrafloor creation
 
 +  more supplies in start room (ammo for weapon, armor vest)
 

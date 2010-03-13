@@ -100,8 +100,8 @@ making a full game, each episode will stick to a single theme.
 
 <p>
 The "As Original" theme setting causes the themes in each episode
-to try and match the original game.  However, if there are custom
-themes (from a module) then the same ordering is not guaranteed
+to try and match the original game.  Note that when there are custom
+themes (from a module) the same ordering is not guaranteed
 since a custom theme could replace one of them.
 
 <p>
@@ -181,13 +181,6 @@ OBLIGE will starting building the levels.
 The levels created by OBLIGE are ready to play.  There is no
 need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
-
-
-<p>
-<i>Note: currently the 'Options' button does nothing at all.
-In the future it will let you set various
-options which don't fit anywhere else.
-</i>
 
 
 <h3>MISC NOTES</h3>

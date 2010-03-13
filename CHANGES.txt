@@ -21,4 +21,5 @@ CHANGES (since v3.51)
 
 - separate 'Doom 1' and 'Ultimate Doom' game choices
 - preliminary support for Duke Nukem 3D 
+- the DOOM CSG code supports lighting and rail brushes
 

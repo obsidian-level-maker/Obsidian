@@ -204,6 +204,8 @@ Sam's suggestions:
 
 !  exit buttons
 
+!  Oblige logos: create TILES020.ART
+
 +  monsters
 +  weapons
 +  health and ammo
