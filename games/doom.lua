@@ -193,7 +193,6 @@ DOOM_COMMON_MATERIALS =
   -- special materials --
   _ERROR = { t="METAL",    f="CEIL5_2" },
   _SKY   = { t="CEMENT3",  f="F_SKY1" },
-  _LIGHT = { t="COMPBLUE", f="FLAT14" },
 
   -- textures with best-matching flat
 
@@ -3580,8 +3579,8 @@ function Doom1_get_levels()
 
         episode  = episode,
         ep_along = ep_along,
-        ep_info  = ep_info,
 
+        sky_light   = ep_info.sky_light,
         secret_kind = (map == 9) and "plain",
 
         style = {},
@@ -3662,7 +3661,8 @@ function Doom2_get_levels()
 
       episode  = episode,
       ep_along = ep_along,
-      ep_info  = ep_info,
+
+      sky_light = ep_info.sky_light,
 
       style = {},
     }

@@ -258,7 +258,7 @@ end
 function get_sky()
   local mat = assert(GAME.materials["_SKY"])
 
-  local light = LEVEL.sky_light or LEVEL.ep_info.sky_light or 0.75
+  local light = LEVEL.sky_light or 0.75
 
   return
   {
@@ -279,14 +279,26 @@ function get_liquid()
 end
 
 function get_light(intensity)
-  local mat = assert(GAME.materials["_LIGHT"])
-
   return
   {
     kind = "light",
-    w_face = { texture=mat.t },
-    t_face = { texture=mat.f or mat.t },
-    b_face = { texture=mat.f or mat.t, light=intensity },
+    w_face = { texture="-" },
+    t_face = { texture="-" },
+    b_face = { texture="-", light=intensity },
+  }
+end
+
+function get_rail(name)
+  assert(GAME.rails)
+
+  local rail = assert(GAME.rails[name])
+
+  return
+  {
+    kind = "rail",
+    w_face = { texture=rail.t, line_flags=rail.line_flags },
+    t_face = { texture="-" },
+    b_face = { texture="-" },
   }
 end
 
