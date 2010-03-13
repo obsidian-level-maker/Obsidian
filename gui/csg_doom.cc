@@ -1102,7 +1102,7 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
 
 static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
                        merge_region_c *F, merge_region_c *B,
-                       area_vert_c *spec,
+                       area_vert_c *rail,
                        bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
@@ -1150,7 +1150,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     SYS_ASSERT(lower_W && upper_W);
 #endif
 
-    area_face_c *rail_W = spec ? spec->rail : NULL;
+    area_face_c *rail_W = rail ? rail->w_face : NULL;
 
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
@@ -1166,14 +1166,14 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     }
 
     if (rail_W && rail_W->x_offset != FVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, spec, rail_W->x_offset);
+      SD->x_offset = CalcXOffset(G, side, rail, rail_W->x_offset);
     else if (lower_W && lower_W->x_offset != FVAL_NONE)
       SD->x_offset = CalcXOffset(G, side, l_vert, lower_W->x_offset);
     else if (upper_W && upper_W->x_offset != FVAL_NONE)
       SD->x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
 
-    if (rail_W && rail_W->y_offset != FVAL_NONE)
-      SD->y_offset = (int)rail_W->y_offset;
+    if (rail_W)
+      SD->y_offset = 0;  // FIXME WRONG
     else if (lower_W && lower_W->y_offset != FVAL_NONE)
       SD->y_offset = (int)lower_W->y_offset;
     else if (upper_W && upper_W->y_offset != FVAL_NONE)
@@ -1246,6 +1246,9 @@ static area_vert_c *FindSpecialVert(merge_segment_c *G)
     {
       area_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
 
+      if (V->parent->bkind == BKIND_Rail)
+        continue;
+
       if (V->parent->z1 < (double)max_c &&
           V->parent->z2 > (double)min_f)
       {
@@ -1263,7 +1266,7 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
         if (V->line_kind != 0)
           return V;
 
-        if (V->rail || V->line_flags || V->line_tag != 0)
+        if (V->line_flags || V->line_tag != 0)
           minor = V;
       }
     }
@@ -1271,6 +1274,66 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
 
   return minor;
 }
+
+static area_vert_c *FindRailVert(merge_segment_c *G)
+{
+  sector_info_c *FS = NULL;  // FIXME: duplicate code
+  sector_info_c *BS = NULL;
+
+  if (G->front && G->front->index > 0)
+    FS = dm_sectors[G->front->index];
+
+  if (G->back && G->back->index > 0)
+    BS = dm_sectors[G->back->index];
+
+  if (!BS && !FS)
+    return NULL;
+
+  int min_f = +9999;
+  int max_c = -9999;
+
+  if (FS)
+  {
+    min_f = MIN(min_f, FS->f_h);
+    max_c = MAX(max_c, FS->c_h);
+  }
+
+  if (BS)
+  {
+    min_f = MIN(min_f, BS->f_h);
+    max_c = MAX(max_c, BS->c_h);
+  }
+
+  min_f -= 2;
+  max_c += 2;
+
+
+  for (int side = 0; side < 2; side++)
+  {
+    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
+
+    for (unsigned int k=0; k < count; k++)
+    {
+      area_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
+
+      if (V->parent->bkind != BKIND_Rail)
+        continue;
+
+      if (! V->w_face)
+        continue;
+
+      if (V->parent->z1 < (double)max_c &&
+          V->parent->z2 > (double)min_f)
+      {
+        return V;
+      }
+    }
+  }
+
+  return NULL;
+}
+
+
 
 
 static void MakeLinedefs(void)
@@ -1293,9 +1356,11 @@ static void MakeLinedefs(void)
 
     area_vert_c *spec = FindSpecialVert(G);
 
+    area_vert_c *rail = FindRailVert(G);
+
     // if same sector on both sides, skip the line, unless
     // we have a rail texture or a special line.
-    if (! spec && G->front && G->back && G->front->index == G->back->index)
+    if (! rail && ! spec && G->front && G->back && G->front->index == G->back->index)
     {
       continue;
     }
@@ -1317,8 +1382,8 @@ static void MakeLinedefs(void)
     bool l_peg = false;
     bool u_peg = false;
 
-    L->front = MakeSidedef(G, 0, G->front, G->back, spec, &l_peg, &u_peg);
-    L->back  = MakeSidedef(G, 1, G->back, G->front, spec, &l_peg, &u_peg);
+    L->front = MakeSidedef(G, 0, G->front, G->back, rail, &l_peg, &u_peg);
+    L->back  = MakeSidedef(G, 1, G->back, G->front, rail, &l_peg, &u_peg);
 
     SYS_ASSERT(L->front || L->back);
 
@@ -1334,6 +1399,11 @@ static void MakeLinedefs(void)
 
     if (l_peg) L->flags ^= MLF_LowerUnpeg;
     if (u_peg) L->flags ^= MLF_UpperUnpeg;
+
+    if (rail)
+    {
+      L->flags |= rail->line_flags;
+    }
 
     if (spec)
     {
