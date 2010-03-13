@@ -851,30 +851,29 @@ DOOM_RAILS =
 {
   -- common --
 
---BRNSMAL1
---BRNSMAL2
---BRNSMALC
---BRNSMALL
---BRNSMALR
---MIDBRN1
---MIDGRATE
+  BRNSMAL1 = { t="BRNSMAL1", h=64,  line_flags=1 },
+  BRNSMAL2 = { t="BRNSMAL2", h=64,  line_flags=1 },
+  BRNSMALC = { t="BRNSMALC", h=64,  line_flags=1 },
+
+  MIDBRN1  = { t="MIDBRN1",  h=128, line_flags=1 },
+  MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 },
 
   -- Doom I only --
 
---BRNBIGC
---BRNBIGL
---BRNBIGR
---MIDVINE1
---MIDVINE2
+  BRNBIGC  = { t="BRNBIGC",  h=128, line_flags=1 },
+
+  MIDVINE1 = { t="MIDVINE1", h=128 },
+  MIDVINE2 = { t="MIDVINE2", h=128 },
 
   -- Doom II only --
 
---MIDBARS1
---MIDBARS3
---MIDBRONZ
---MIDSPACE
+  MIDBARS1 = { t="MIDBARS1", h=128, line_flags=1 },
+  MIDBARS3 = { t="MIDBARS3", h=72,  line_flags=1 },
+  MIDBRONZ = { t="MIDBRONZ", h=128, line_flags=1 },
+  MIDSPACE = { t="MIDSPACE", h=128, line_flags=1 },
 
---SP_DUDE8   -- scaled MIDVINE2 from FreeDoom
+  -- scaled MIDVINE2 from FreeDoom
+  FMIDVINE = { t="SP_DUDE8", h=128 },
 }
 
 
