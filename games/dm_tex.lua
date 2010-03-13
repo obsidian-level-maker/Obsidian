@@ -1005,13 +1005,6 @@ DOOM2_WALL_PREFABS =
     skin = { pic_w="SP_DUDE7", pic_h=128 },
   },
 
-  wall_pic_SPDUDE8 =
-  {
-    prefab = "WALL_PIC",
-    min_height = 160,
-    skin = { pic_w="SP_DUDE8", pic_h=128 },
-  },
-
   cage_niche_MIDGRATE =
   {
     prefab = "CAGE_NICHE",

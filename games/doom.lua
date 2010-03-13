@@ -2121,7 +2121,7 @@ DOOM2_ROOMS =
     {
       cage_niche_MIDGRATE = 50,
       wall_pic_SPDUDE1 = 20, wall_pic_SPDUDE2 = 20,
-      wall_pic_SPDUDE7 = 30, wall_pic_SPDUDE8 = 30,
+      wall_pic_SPDUDE7 = 30,
 
       other = 50
     },
