@@ -493,8 +493,10 @@ function Rooms_setup_symmetry()
           local LS = SEEDS[R.sx1 + dx][y][1]
           local RS = SEEDS[R.sx2 - dx][y][1]
 
-          LS.x_peer = RS
-          RS.x_peer = LS
+          if LS.room == R and RS.room == R then
+            LS.x_peer = RS
+            RS.x_peer = LS
+          end
         end
       end
     end
@@ -507,8 +509,10 @@ function Rooms_setup_symmetry()
           local BS = SEEDS[x][R.sy1 + dy][1]
           local TS = SEEDS[x][R.sy2 - dy][1]
 
-          BS.y_peer = TS
-          TS.y_peer = BS
+          if BS.room == R and TS.room == R then
+            BS.y_peer = TS
+            TS.y_peer = BS
+          end
         end
       end
     end
