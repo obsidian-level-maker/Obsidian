@@ -162,6 +162,25 @@ raw_nukem_sprite_t;
 #define SPRITE_F_FLIP_Y      (1 << 3)
 
 
+/* ----- ART structures ---------------------- */
+
+typedef struct
+{
+  u32_t version;
+
+  u32_t num_pics;
+  u32_t first_pic;
+  u32_t last_pic;
+
+  // s16_t width[NUM_PICS];
+  // s16_t height[NUM_PICS];
+  // s32_t anim[NUM_PICS];
+
+  // block_of_pixels_t pics[NUM_PICS];
+}
+raw_art_header_t;
+
+
 #endif /* __OBLIGE_DUKE3D_STRUCTS_H__ */
 
 //--- editor settings ---
