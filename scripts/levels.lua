@@ -40,7 +40,6 @@ require 'naming'
 require 'quests'
 require 'builder'
 
-require 'arenas'
 require 'caves'
 require 'layout'
 require 'rooms'
