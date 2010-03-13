@@ -288,7 +288,7 @@ function get_light(intensity)
   }
 end
 
-function get_rail(name)
+function get_rail()
   return
   {
     kind = "rail",
@@ -298,10 +298,15 @@ function get_rail(name)
   }
 end
 
-function rail_face(name)
-  local rail = assert(GAME.rails[name])
+function rail_coord(x, y, name)
+  local rail = GAME.rails[name]
 
-  return { texture=rail.t, line_flags=rail.line_flags }
+  if not rail then
+    gui.printf("LACKING RAIL %s\n", name)
+    return { x=x, y=y }
+  end
+
+  return { x=x, y=y, w_face={ texture=rail.t }, line_flags=rail.line_flags }
 end
 
 
