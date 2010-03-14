@@ -1640,8 +1640,7 @@ function Room_make_ceiling(R)
       R.arena.ceil_light = rand_key_by_probs(THEME.ceil_lights)
     end
 
-    local BEAM_PROBS = { few=5, some=25, heaps=75 }
-    local beam_chance = BEAM_PROBS[STYLE.beams] or 0
+    local beam_chance = style_sel("beams", 0, 5, 25, 75)
 
     if rand_odds(beam_chance) then
       if criss_cross_beams("beam") then return end
