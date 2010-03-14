@@ -74,6 +74,8 @@ OBJS=	main.o      \
 	dm_extra.o  \
 	dm_glbsp.o  \
 	dm_wad.o    \
+	nk_art.o    \
+	nk_level.o  \
 	q1_clip.o   \
 	q1_doors.o  \
 	q1_main.o   \
