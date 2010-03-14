@@ -149,6 +149,10 @@ void NK_AddSector(int first_wall, int num_wall, int visibility,
 
   raw.ceil_flags = LE_U16(c_flags);
 
+  // preven the space skies from killing the player
+  if (c_flags & SECTOR_F_PARALLAX)
+    raw.ceil_palette = 3;
+
   raw.visibility = visibility;
 
   raw.lo_tag = LE_U16(lo_tag);
