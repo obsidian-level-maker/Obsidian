@@ -60,7 +60,8 @@ OB_MODULES["level_control"] =
     hallways   = { label="Hallways", priority = 21, choices=LEVEL_CONTROL_CHOICES },
     liquids    = { label="Liquids",  priority = 20, choices=LEVEL_CONTROL_CHOICES },
     subrooms   = { label="Sub-Rooms",priority = 19, choices=LEVEL_CONTROL_CHOICES },
-    scenics    = { label="Scenics",  priority = 18, choices=LEVEL_CONTROL_CHOICES },
+    naturals   = { label="Natural Areas", priority = 17, choices=LEVEL_CONTROL_CHOICES },
+    lakes      = { label="Lakes",    priority = 16, choices=LEVEL_CONTROL_CHOICES },
 
     symmetry   = { label="Symmetry", priority = 15, choices=LEVEL_CONTROL_CHOICES },
     pillars    = { label="Pillars",  priority = 14, choices=LEVEL_CONTROL_CHOICES },
@@ -72,6 +73,7 @@ OB_MODULES["level_control"] =
     cages      = { label="Cages",    priority =  9, choices=LEVEL_CONTROL_CHOICES },
     fences     = { label="Fences",   priority =  8, choices=LEVEL_CONTROL_CHOICES },
     crates     = { label="Crates",   priority =  7, choices=LEVEL_CONTROL_CHOICES },
+    scenics    = { label="Scenics",  priority =  5, choices=LEVEL_CONTROL_CHOICES },
 
     favor_shape = { label ="Favor Shape", priority = 3, choices=LEVEL_CONTROL_SHAPES },
   }, 
