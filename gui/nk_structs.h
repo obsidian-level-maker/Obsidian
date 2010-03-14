@@ -121,8 +121,8 @@ raw_nukem_wall_t;
 #define WALL_F_FLIP_X      (1 << 3)
 #define WALL_F_FLIP_Y      (1 << 8)
 
-#define WALL_F_TRANS66     (1 << 7)
-#define WALL_F_TRANS33     (1 << 9)  // requires TRANS66 too
+#define WALL_F_TRANS33     (1 << 7)
+#define WALL_F_TRANS66     (1 << 9)  // requires TRANS33 too
 
 
 typedef struct
@@ -155,8 +155,8 @@ raw_nukem_sprite_t;
 #define SPRITE_F_SUBMERGED   (1 << 7)
 #define SPRITE_F_GUN_BLOCK   (1 << 8)
 
-#define SPRITE_F_TRANS66     (1 << 1)
-#define SPRITE_F_TRANS33     (1 << 9)  // requires TRANS66 too
+#define SPRITE_F_TRANS33     (1 << 1)
+#define SPRITE_F_TRANS66     (1 << 9)  // requires TRANS33 too
 #define SPRITE_F_ONE_SIDED   (1 << 6)
 #define SPRITE_F_INVISIBLE   (1 << 15)
 
