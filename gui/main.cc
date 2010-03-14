@@ -333,7 +333,7 @@ static void Batch_Defaults(void)
   // Game Settings
   ob_set_config("seed",   seed_buffer);
   ob_set_config("mode",   "sp");
-  ob_set_config("length", "few");
+  ob_set_config("length", "single");
 
   // Level Architecture
   ob_set_config("size",     "prog");
