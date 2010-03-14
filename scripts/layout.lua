@@ -1844,7 +1844,7 @@ function Layout_one(R)
 ---##         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
 ---##       end
 
-      if STYLE.junk == "few" and rand_odds(70) then
+      if STYLE.junk == "none" or (STYLE.junk == "few" and rand_odds(70)) then
         return false
       end
 
@@ -2602,7 +2602,9 @@ gui.debugf("BOTH SAME HEIGHT\n")
     end
 
     -- FIXME this is too crude!
-    if STYLE.pillars == "few" then return end
+    if STYLE.pillars == "none" or STYLE.pillars == "few" then
+      return
+    end
 
     local skin_names = THEME.pillars
     if not skin_names then return end

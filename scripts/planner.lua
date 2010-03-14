@@ -808,7 +808,7 @@ function Plan_SubRooms()
 
   if STYLE.subrooms == "none" then return end
 
-  local chance_tab = sel(STYLE.subrooms == "some", SUB_CHANCES, SUB_HEAPS)
+  local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
 
   for _,R in ipairs(LEVEL.all_rooms) do
     if not R.parent and not (R.kind == "nature") then

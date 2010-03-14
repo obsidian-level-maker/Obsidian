@@ -1145,7 +1145,8 @@ gui.debugf("Failed\n")
     local join_chance = 65
     if STYLE.scenics == "few"   then join_chance = 95 end
     if STYLE.scenics == "heaps" then join_chance = 40 end
-    if LEVEL.join_all then join_chance = 100 end
+
+    if STYLE.scenics == "none" or LEVEL.join_all then join_chance = 100 end
 
     gui.debugf("Join Chance: %d\n", join_chance)
 
@@ -1177,7 +1178,9 @@ gui.debugf("Failed\n")
     
   local function sprinkle_scenics()
     -- select some rooms as scenic rooms
-    if STYLE.scenics == "few" then return end
+    if STYLE.scenics == "none" or STYLE.scenics == "few" then
+      return
+    end
 
     local side_prob = sel(STYLE.scenics == "heaps", 60, 10)
     local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)

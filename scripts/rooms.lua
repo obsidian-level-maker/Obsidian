@@ -344,6 +344,10 @@ function Rooms_decide_hallways_II()
     return
   end
 
+  if STYLE.hallways == "none" then
+    return
+  end
+
   for _,R in ipairs(LEVEL.all_rooms) do
     if eval_hallway(R) then
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
@@ -460,6 +464,8 @@ function Rooms_setup_symmetry()
       R.symmetry = nil
     end
 
+    if STYLE.symmetry == "none" then return end
+
     local SYM_LIST = { "x", "y", "xy" }
 
     local syms  = { "none" }
@@ -481,9 +487,6 @@ function Rooms_setup_symmetry()
     local index = rand_index_by_probs(probs)
 
     R.symmetry = sel(index > 1, syms[index], nil)
-
-    gui.debugf("Final symmetry @ %s : %s --> %s\n", R:tostr(),
-               tostring(R.conn_symmetry), tostring(R.symmetry))
   end
 
   local function mirror_horizontally(R)
@@ -523,6 +526,9 @@ function Rooms_setup_symmetry()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     decide_layout_symmetry(R)
+
+    gui.debugf("Final symmetry @ %s : %s --> %s\n", R:tostr(),
+               tostring(R.conn_symmetry), tostring(R.symmetry))
 
     if R.symmetry == "x" or R.symmetry == "xy" then
       R.mirror_x = true
@@ -941,6 +947,7 @@ function Rooms_border_up()
   local function decide_windows(R, border_list)
     if R.kind ~= "building" then return end
     if R.semi_outdoor then return end
+    if STYLE.windows == "none" then return end
 
     local poss = {}
 
@@ -1076,6 +1083,9 @@ function Rooms_border_up()
 
     if STYLE.pictures == "heaps" then perc = 50 end
     if STYLE.pictures == "few"   then perc = 10 end
+
+    -- FIXME: support "none" but also force logos to appear
+    if STYLE.pictures == "none"  then perc =  7 end
 
     local count = int(#border_list * perc / 100)
 
@@ -1630,9 +1640,8 @@ function Room_make_ceiling(R)
       R.arena.ceil_light = rand_key_by_probs(THEME.ceil_lights)
     end
 
-    local beam_chance = 25
-    if STYLE.beams == "few"   then beam_chance =  5 end
-    if STYLE.beams == "heaps" then beam_chance = 75 end
+    local BEAM_PROBS = { few=5, some=25, heaps=75 }
+    local beam_chance = BEAM_PROBS[STYLE.beams] or 0
 
     if rand_odds(beam_chance) then
       if criss_cross_beams("beam") then return end

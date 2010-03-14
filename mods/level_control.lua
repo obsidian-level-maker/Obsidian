@@ -17,31 +17,16 @@
 --
 ----------------------------------------------------------------
 
-LEVEL_CONTROL_CHOICES_A =
-{
-  "mixed",  "Mix It Up",
-  "few",    "Few",
-  "some",   "Some",
-  "heaps",  "Heaps",
-}
-
-LEVEL_CONTROL_CHOICES_B =
-{
-  "mixed",  "Mix It Up",
-  "none",   "NONE",
-  "some",   "Some",
-  "heaps",  "Heaps",
-}
-
-LEVEL_CONTROL_CHOICES_D =
+LEVEL_CONTROL_CHOICES =
 {
   "mixed",  "Mix It Up",
   "none",   "NONE",
   "few",    "Few",
   "some",   "Some",
+  "heaps",  "Heaps",
 }
 
-LEVEL_CONTROL_CHOICES_F =
+LEVEL_CONTROL_SHAPES =
 {
   "mixed",  "Mix It Up",
   "none",   "NONE",
@@ -72,23 +57,23 @@ OB_MODULES["level_control"] =
 
   options =
   {
-    hallways   = { label="Hallways", priority = 21, choices=LEVEL_CONTROL_CHOICES_A },
-    liquids    = { label="Liquids",  priority = 20, choices=LEVEL_CONTROL_CHOICES_A },
-    subrooms   = { label="Sub-Rooms",priority = 19, choices=LEVEL_CONTROL_CHOICES_B },
-    scenics    = { label="Scenics",  priority = 18, choices=LEVEL_CONTROL_CHOICES_A },
+    hallways   = { label="Hallways", priority = 21, choices=LEVEL_CONTROL_CHOICES },
+    liquids    = { label="Liquids",  priority = 20, choices=LEVEL_CONTROL_CHOICES },
+    subrooms   = { label="Sub-Rooms",priority = 19, choices=LEVEL_CONTROL_CHOICES },
+    scenics    = { label="Scenics",  priority = 18, choices=LEVEL_CONTROL_CHOICES },
 
-    symmetry   = { label="Symmetry", priority = 15, choices=LEVEL_CONTROL_CHOICES_A },
-    pillars    = { label="Pillars",  priority = 14, choices=LEVEL_CONTROL_CHOICES_A },
-    beams      = { label="Beams",    priority = 13, choices=LEVEL_CONTROL_CHOICES_A },
-    barrels    = { label="Barrels",  priority = 12, choices=LEVEL_CONTROL_CHOICES_A },
+    symmetry   = { label="Symmetry", priority = 15, choices=LEVEL_CONTROL_CHOICES },
+    pillars    = { label="Pillars",  priority = 14, choices=LEVEL_CONTROL_CHOICES },
+    beams      = { label="Beams",    priority = 13, choices=LEVEL_CONTROL_CHOICES },
+    barrels    = { label="Barrels",  priority = 12, choices=LEVEL_CONTROL_CHOICES },
 
-    windows    = { label="Windows",  priority = 11, choices=LEVEL_CONTROL_CHOICES_A },
-    pictures   = { label="Pictures", priority = 10, choices=LEVEL_CONTROL_CHOICES_A },
-    cages      = { label="Cages",    priority =  9, choices=LEVEL_CONTROL_CHOICES_B },
-    fences     = { label="Fences",   priority =  8, choices=LEVEL_CONTROL_CHOICES_D },
-    crates     = { label="Crates",   priority =  7, choices=LEVEL_CONTROL_CHOICES_B },
+    windows    = { label="Windows",  priority = 11, choices=LEVEL_CONTROL_CHOICES },
+    pictures   = { label="Pictures", priority = 10, choices=LEVEL_CONTROL_CHOICES },
+    cages      = { label="Cages",    priority =  9, choices=LEVEL_CONTROL_CHOICES },
+    fences     = { label="Fences",   priority =  8, choices=LEVEL_CONTROL_CHOICES },
+    crates     = { label="Crates",   priority =  7, choices=LEVEL_CONTROL_CHOICES },
 
-    favor_shape = { label ="Favor Shape", priority = 3, choices=LEVEL_CONTROL_CHOICES_F },
+    favor_shape = { label ="Favor Shape", priority = 3, choices=LEVEL_CONTROL_SHAPES },
   }, 
 }
 

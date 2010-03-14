@@ -56,6 +56,7 @@ STYLE_LIST =
   subrooms   = { none=40, some=80, heaps=5 },
   islands    = { few=60, heaps=40 },
 
+  lakes      = { few=60, heaps=10 },
   junk       = { few=10, some=60, heaps=20 },
   symmetry   = { few=20, some=60, heaps=20 },
   pillars    = { few=30, some=60, heaps=20 },
