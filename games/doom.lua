@@ -3581,8 +3581,6 @@ function Doom1_get_levels()
 
         sky_light   = ep_info.sky_light,
         secret_kind = (map == 9) and "plain",
-
-        style = {},
       }
 
       if LEV.name == "E1M8" then
@@ -3662,8 +3660,6 @@ function Doom2_get_levels()
       ep_along = ep_along,
 
       sky_light = ep_info.sky_light,
-
-      style = {},
     }
 
     -- secret levels
@@ -3673,7 +3669,7 @@ function Doom2_get_levels()
     end
 
     if map == 23 then
-      LEV.style.barrels = "heaps"
+      LEV.style_list = { barrels = { heaps=100 } }
     end
 
     if map == 7 then

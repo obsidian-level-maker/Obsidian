@@ -53,10 +53,11 @@ STYLE_LIST =
   hallways   = { few=10, some=90, heaps=30 },
   liquids    = { few=30, some=50, heaps=20 },
   scenics    = { few=30, some=50, heaps=10 },
+  naturals   = { few=30, some=50, heaps=10 },
+  lakes      = { few=60, heaps=10 },
   subrooms   = { none=40, some=80, heaps=5 },
   islands    = { few=60, heaps=40 },
 
-  lakes      = { few=60, heaps=10 },
   junk       = { few=10, some=60, heaps=20 },
   symmetry   = { few=20, some=60, heaps=20 },
   pillars    = { few=30, some=60, heaps=20 },
@@ -479,8 +480,6 @@ function Level_styles()
   if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
     STYLE.skies = OB_CONFIG.outdoors
   end
-
-  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 end
 
 
@@ -573,8 +572,12 @@ function Level_make(L, index, NUM)
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
+  Level_styles()
+
   Game_invoke_hook("begin_level_func",  LEVEL.seed)
   Game_invoke_hook("begin_level2_func", LEVEL.seed)
+
+  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 
 
   local error_mat = assert(GAME.materials["_ERROR"])
@@ -586,8 +589,6 @@ function Level_make(L, index, NUM)
     gui.property("description", LEVEL.description)
   end
 
-
-  Level_styles()
 
   local res = Level_build_it()
   if res == "abort" then

@@ -43,7 +43,7 @@ function Level_Control_begin_level(self)
     local factor = self.options[name].value
 
     if factor ~= "mixed" then
-      LEVEL.style[name] = factor
+      STYLE[name] = factor
     end
   end
 end

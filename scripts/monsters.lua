@@ -1541,8 +1541,8 @@ function Monsters_in_room(R)
     if R.kind == "nature"  then barrel_chance = 3 end
     if R.kind == "hallway" then barrel_chance = 5 end
 
-    if STYLE.barrels == "heaps" or rand_odds( 7) then barrel_chance = barrel_chance * 3 + 10 end
-    if STYLE.barrels == "few"   or rand_odds(30) then barrel_chance = barrel_chance / 4 end
+    if STYLE.barrels == "heaps" or rand_odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
+    if STYLE.barrels == "few"   or rand_odds(25) then barrel_chance = barrel_chance / 4 end
 
     if STYLE.barrels == "none" then barrel_chance = 0 end
 

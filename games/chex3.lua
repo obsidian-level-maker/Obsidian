@@ -589,8 +589,6 @@ function CHEX3_get_levels()
         keys = { },
         switches = { },
         bars = { },
-
-        style = {},
       }
 
       table.insert(GAME.all_levels, LEV)
