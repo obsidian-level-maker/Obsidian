@@ -2096,17 +2096,17 @@ function Layout_one(R)
     elseif R.purpose == "KEY" then
       local lp_skin = -- FIXME!!!!  game specific skin
       {
-        wall="WOOD4", floor="CEIL1_3",
+        wall="WOOD2", floor="CEIL1_3",
         x_offset=0, y_offset=0, peg=true,
         line_kind=23,
       }
 
-      local z = math.max(z1+80, R.floor_max_h+40)
+      local z = math.max(z1+96, R.floor_max_h+64)
       if z > z2-32 then z = z2-32 end
 
       if rand_odds(2) then
         -- nothing
-      elseif rand_odds(10) then
+      elseif rand_odds(15) and z+20 < (S.ceil_h or R.ceil_h or SKY_H) then
         Build_lowering_pedestal(S, z, lp_skin)
       else
         local skin = { floor="CEIL1_2" }
@@ -2149,7 +2149,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     if R.kind == "hallway" or R == LEVEL.start_room then
       -- nothing!
-    elseif rand_odds(40) then
+    elseif rand_odds(40) and z+20 < (S.ceil_h or R.ceil_h or SKY_H) then
       Build_lowering_pedestal(S, z, lp_skin)
     else
       local skin = { floor="CEIL1_2" }
