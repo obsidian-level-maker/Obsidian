@@ -757,6 +757,8 @@ function Quest_choose_keys()
     want_keys = want_keys - 1
   end
 
+  gui.debugf("all_locks:%d want_keys:%d use_switches:%d\n", #LEVEL.all_locks, want_keys, table_size(use_switches))
+
   -- assign keys first (to locks with biggest distance from key to door)
   for _,LOCK in ipairs(LEVEL.all_locks) do
     if table_empty(use_keys) then
@@ -767,6 +769,9 @@ function Quest_choose_keys()
       LOCK.kind = "KEY"
       LOCK.item = rand_key_by_probs(use_keys)
       use_keys[LOCK.item] = nil
+
+      want_keys = want_keys - 1
+      if want_keys <= 0 then break; end
     end
   end
 
@@ -784,6 +789,8 @@ function Quest_choose_keys()
       end
     end
   end
+
+  gui.debugf("LEVEL.all_locks =\n%s\n\n", table_to_str(LEVEL.all_locks,2))
 end
 
 
