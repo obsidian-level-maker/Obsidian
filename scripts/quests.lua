@@ -926,7 +926,9 @@ function Quest_assign()
   gui.printf("\n--==| Quest_assign |==--\n\n")
 
   -- need at least a START room and an EXIT room
-  assert(#LEVEL.all_rooms >= 2)
+  if #LEVEL.all_rooms < 2 then
+    error("Level only has one room! (2 or more are needed)")
+  end
 
   -- count branches in each room
   for _,R in ipairs(LEVEL.all_rooms) do
