@@ -260,6 +260,9 @@ void Main_FatalError(const char *msg, ...)
 
   Main_Shutdown(true);
 
+  if (batch_mode)
+    fprintf(stderr, "ERROR!\n");
+
   exit(9);
 }
 

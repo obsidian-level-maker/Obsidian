@@ -539,9 +539,9 @@ function Level_make(L, index, NUM)
   assert(LEVEL)
   assert(LEVEL.name)
 
-  gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
-
   gui.at_level(LEVEL.name, index, NUM)
+
+  gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 

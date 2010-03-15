@@ -60,7 +60,7 @@ void LogEnableTerminal(bool enable)
 
 void LogClose(void)
 {
-  LogPrintf("\n====== END OF OBLIGE LOGS ======\n");
+  LogPrintf("\n====== END OF OBLIGE LOGS ======\n\n");
 
   if (log_file)
   {
