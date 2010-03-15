@@ -133,6 +133,9 @@ void GB_DisplaySetBarText(int barnum, const char *str)
   if (display_mode == DIS_BUILDPROGRESS && barnum == 1)
   {
     /* IDEA: extract map name from 'str' */
+
+    if (batch_mode)
+      fprintf(stderr, "%s\n", str);
   }
 }
 

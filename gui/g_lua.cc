@@ -343,14 +343,7 @@ int gui_at_level(lua_State *L)
   level_IDX   = luaL_checkint(L, 2);
   level_TOTAL = luaL_checkint(L, 3);
 
-  char buffer[200];
-
-  sprintf(buffer, "Making %s", name);
-
-  if (main_win)
-    main_win->build_box->ProgStatus(buffer);
-  else
-    printf("%s\n", buffer);
+  Main_ProgStatus("Making %s", name);
 
   return 0;
 }

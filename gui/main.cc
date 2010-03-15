@@ -268,17 +268,21 @@ void Main_ProgStatus(const char *msg, ...)
 {
   static char buffer[MSG_BUF_LEN];
 
+  va_list arg_pt;
+
+  va_start(arg_pt, msg);
+  vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
+  va_end(arg_pt);
+
+  buffer[MSG_BUF_LEN-2] = 0;
+
   if (main_win)
   {
-    va_list arg_pt;
-
-    va_start(arg_pt, msg);
-    vsnprintf(buffer, MSG_BUF_LEN-1, msg, arg_pt);
-    va_end(arg_pt);
-
-    buffer[MSG_BUF_LEN-2] = 0;
-
     main_win->build_box->ProgStatus(msg);
+  }
+  else if (batch_mode)
+  {
+    fprintf(stderr, "%s\n", buffer);
   }
 }
 
@@ -352,7 +356,7 @@ static void Batch_Defaults(void)
 
 //------------------------------------------------------------------------
 
-void Build_Cool_Shit()
+bool Build_Cool_Shit()
 {
   // clear the map
   if (main_win)
@@ -421,6 +425,8 @@ void Build_Cool_Shit()
   // don't need game object anymore
   delete game_object;
   game_object = NULL;
+
+  return was_ok;
 }
 
 
@@ -508,7 +514,13 @@ int main(int argc, char **argv)
     Batch_Defaults();
     Cookie_ParseArguments();
 
-    Build_Cool_Shit();
+    if (! Build_Cool_Shit())
+    {
+      fprintf(stderr, "FAILED!\n");
+
+      Main_Shutdown(false);
+      return 3;
+    }
   }
   else
   {
