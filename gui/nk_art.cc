@@ -39,8 +39,9 @@
 
 
 #define LOGO_ART_FILE  "TILES020.ART"
+#define LOGO_START  6600
 
-#define MAX_LOGOS  16
+#define MAX_LOGOS  8
 
 
 class nukem_picture_c
@@ -72,10 +73,26 @@ public:
   {
     memset(pixels, 0, width * height);
   }
+
+  void Write()
+  {
+    GRP_AppendData(pixels, width * height);
+  }
 };
 
 
-static nukem_picture_c *nk_pictures[MAX_LOGOS];
+static nukem_picture_c *nk_logos[MAX_LOGOS];
+
+
+void NK_InitArt()
+{
+  for (int i = 0; i < MAX_LOGOS; i++)
+    if (nk_logos[i])
+    {
+      delete nk_logos[i];
+      nk_logos[i] = NULL;
+    }
+}
 
 
 int NK_grp_logo_gfx(lua_State *L)
@@ -125,10 +142,10 @@ int NK_grp_logo_gfx(lua_State *L)
 
   nukem_picture_c *pic = new nukem_picture_c(new_W, new_H);
 
-  if (nk_pictures[index])
-    delete nk_pictures[index];
+  if (nk_logos[index])
+    delete nk_logos[index];
 
-  nk_pictures[index] = pic;
+  nk_logos[index] = pic;
 
 
   byte *pixels = pic->pixels;
@@ -142,7 +159,6 @@ int NK_grp_logo_gfx(lua_State *L)
 
     *dest = map->colors[idx];
   }
-  
 
   return 0;
 }
@@ -152,26 +168,52 @@ void NK_WriteLogos()
 {
   GRP_NewLump(LOGO_ART_FILE);
 
-  int count = 0;
   int i;
 
   for (i = 0; i < MAX_LOGOS; i++)
-    if (nk_pictures[i])
-      count++;
-
-  if (count == 0)
   {
-    nk_pictures[0] = new nukem_picture_c(16, 16);
-    nk_pictures[0]->Clear();
+    if (! nk_logos[i])
+    {
+      nk_logos[0] = new nukem_picture_c(8, 8);
+      nk_logos[0]->Clear();
+    }
+  }
+
+  raw_art_header_t header;
+
+  header.version = LE_U32(1);
+
+  header.num_pics  = LE_U32(8);
+  header.first_pic = LE_U32(LOGO_START);
+  header.last_pic  = LE_U32(LOGO_START+MAX_LOGOS-1);
+
+  GRP_AppendData(&header, sizeof(header));
+
+  for (i = 0; i < MAX_LOGOS; i++)
+  {
+    u16_t width = LE_U16(nk_logos[i]->width);
+    GRP_AppendData(&width, sizeof(width));
   }
 
   for (i = 0; i < MAX_LOGOS; i++)
   {
-    nukem_picture_c *pic = nk_pictures[i];
-    // FIXME
+    u16_t height = LE_U16(nk_logos[i]->height);
+    GRP_AppendData(&height, sizeof(height));
   }
 
+  for (i = 0; i < MAX_LOGOS; i++)
+  {
+    u32_t anim = LE_U32(nk_logos[i]->anim);
+    GRP_AppendData(&anim, sizeof(anim));
+  }
+
+  for (i = 0; i < MAX_LOGOS; i++)
+    nk_logos[i]->Write();
+
   GRP_FinishLump();
+
+  // free them now
+  NK_InitArt();
 }
 
 
