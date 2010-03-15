@@ -1038,6 +1038,22 @@ gui.debugf("Failed\n")
     return true
   end
 
+  local function score_emerg_branch(R, S, n_side)
+    local score = 200 + gui.random()
+
+    -- prefer it away from other connections
+    for dist = 1,3 do
+      for side = 2,8,2 do if side ~= n_side then
+        local N = S:neighbor(side, dist)
+        if N and N.conn_dir then
+          score = score - 40 / (dist ^ 2)
+        end
+      end end -- for side
+    end -- for dist
+
+    return score
+  end
+
   local function force_room_branch(R)
     gui.debugf("Emergency connection in %s\n", R:tostr())
 
@@ -1049,7 +1065,7 @@ gui.debugf("Failed\n")
         for side = 2,8,2 do
           local N = S:neighbor(side)
           if N and N.room and N.room ~= R then
-            local score = gui.random() -- FIXME
+            local score = score_emerg_branch(R, S, side)
             table.insert(try_list, { x=x, y=y, dir=side, score=score })
           end
         end -- for side
