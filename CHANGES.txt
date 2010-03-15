@@ -19,8 +19,10 @@ CHANGES (since v3.51)
 - fixed ugliness when outdoor rooms had differing sky heights
 - fixed failure when engine was set to Legacy or Eternity
 - fixed a rare assertion failure in the layout code
+- fixed the Level Control module
 
 - separate 'Doom 1' and 'Ultimate Doom' game choices
-- preliminary support for Duke Nukem 3D 
-- the DOOM CSG code supports lighting and rail brushes
+- preliminary code to create Duke Nukem 3D maps
+- the DOOM CSG code supports rail and lighting brushes
+- quantity of natural/cavey areas is now varied
 

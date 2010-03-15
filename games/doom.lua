@@ -2396,6 +2396,11 @@ DOOM_COMMON_SUB_THEMES =
     {
       arach=2.0,
     },
+
+    style_list =
+    {
+      naturals = { none=30, few=70, some=30, heaps=2 },
+    },
   }, -- TECH
 
 

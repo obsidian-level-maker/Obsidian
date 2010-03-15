@@ -289,9 +289,15 @@ function Plan_CreateRooms()
   local function make_naturals(room_num)
     if not THEME.cave then return end
 
-    if room_num <= 4 then return end
+    if room_num <= 3 then return end
 
-    local count = int(room_num / 2)
+    local perc = style_sel("naturals", 0, 18, 46, 92)
+
+    local count = int(room_num * perc / 100)
+    if count > room_num-2 then
+       count = room_num-2
+    end
+
     local last_x, last_y
 
     for i = 1,count do
