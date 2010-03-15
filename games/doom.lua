@@ -568,6 +568,10 @@ DOOM1_MATERIALS =
   MFLR8_4  = { t="ASHWALL",  f="MFLR8_4" },
 
 
+  -- FIXME: HACK HACK HACK
+  BRICKLIT = { t="LITEMET", f="CEIL5_1" },
+
+
   -- liquid stuff (using new patches)
   BFALL1   = { t="BLODGR1",  f="BLOOD1" },
   BLOOD1   = { t="BLODGR1",  f="BLOOD1" },
@@ -1666,7 +1670,7 @@ DOOM_DOORS =
 
     key_w="WOOD1",
     door_w="BIGDOOR7", door_c="CEIL5_2",
-    step_w="WOOD12",  track="DOORTRAK",
+    step_w="WOOD1",  track="DOORTRAK",
     step_f="FLAT5_2", frame_c="FLAT5_2",
     door_h=112,
     line_kind=0,
@@ -1869,7 +1873,7 @@ DOOM_SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1WOOD", side_w="WOOD9",
+      switch_w="SW1WOOD", side_w="WOOD1",
       switch_f="FLAT5_2",
       x_offset=0, y_offset=56,
       line_kind=103,
@@ -2200,7 +2204,7 @@ DOOM_THEME_DEFAULTS =
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
   switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
-  bars = { bar_wood=50, bar_silver=50, bar_metal=50 },
+  bars = { bar_silver=50 },
 
 }
 
@@ -2666,7 +2670,7 @@ DOOM2_SUB_THEMES =
       walls =
       {
         BRONZE1=5, BRONZE3=10, TEKGREN2=10,
-        METAL2=15,
+        METAL2=20,
       },
       floors =
       {
@@ -2751,6 +2755,7 @@ DOOM2_SUB_THEMES =
 
     exits = { skull_pillar=50, stone_pillar=5 },
 
+    bars = { bar_wood=50, bar_metal=50 },
   },
 
 
@@ -2781,6 +2786,8 @@ DOOM2_SUB_THEMES =
              demon_pillar2=10, demon_pillar3=10 },
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
+
+    bars = { bar_wood=50, bar_metal=50 },
   },
 
 
@@ -2813,6 +2820,8 @@ DOOM2_SUB_THEMES =
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
     
     pictures = { spdude7=7 },
+
+    bars = { bar_wood=50, bar_metal=50 },
   },
 
 
@@ -2916,6 +2925,8 @@ DOOM2_SUB_THEMES =
     steps = { step6=50, },
 
     lifts = { shiny=20, platform=20, rusty=50 },
+
+    bars = { bar_wood=50, bar_metal=50 },
 
     room_types =
     {

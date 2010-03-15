@@ -2094,9 +2094,9 @@ function Layout_one(R)
       end
 
     elseif R.purpose == "KEY" then
-      local lp_skin =
+      local lp_skin = -- FIXME!!!!  game specific skin
       {
-        wall="WOOD9", floor="CEIL1_3",
+        wall="WOOD4", floor="CEIL1_3",
         x_offset=0, y_offset=0, peg=true,
         line_kind=23,
       }
@@ -2137,7 +2137,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     local mx, my = S:mid_point()
 
-    local lp_skin =
+    local lp_skin = -- FIXME!!!!  game specific skin
     {
       wall="PIPEWAL1", floor="CEIL1_2",
       x_offset=0, y_offset=0, peg=true,
