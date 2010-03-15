@@ -1043,25 +1043,20 @@ gui.debugf("Failed\n")
 
     local try_list = {}
 
-    for x = R.sx1,R.sx2 do
-      if SEEDS[x][R.sy1][1].room == R then
-        table.insert(try_list, { x=x, y=R.sy1, dir=2 })
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      if S.room == R then
+        for side = 2,8,2 do
+          local N = S:neighbor(side)
+          if N and N.room and N.room ~= R then
+            local score = gui.random() -- FIXME
+            table.insert(try_list, { x=x, y=y, dir=side, score=score })
+          end
+        end -- for side
       end
-      if SEEDS[x][R.sy2][1].room == R then
-        table.insert(try_list, { x=x, y=R.sy2, dir=8 })
-      end
-    end
-    for y = R.sy1,R.sy2 do
-      if SEEDS[R.sx1][y][1].room == R then
-        table.insert(try_list, { x=R.sx1, y=y, dir=4 })
-      end
-      if SEEDS[R.sx2][y][1].room == R then
-        table.insert(try_list, { x=R.sx2, y=y, dir=6 })
-      end
-    end
+    end end -- for x, y
 
-    -- FIXME: find all possible, use best one
-    rand_shuffle(try_list)
+    table.sort(try_list, function(A, B) return A.score > B.score end)
 
     for _,L in ipairs(try_list) do
       if try_emergency_connect(R, L.x, L.y, L.dir) then
