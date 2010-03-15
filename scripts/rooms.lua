@@ -1428,11 +1428,14 @@ function Room_make_ceiling(R)
 
   local function add_central_pillar()
     -- big rooms only
-    if R.tw < 5 or R.th < 5 then return end
+    if R.cw < 3 or R.ch < 3 then return end
 
     -- centred only
-    if R.cw < 3 or R.ch < 3 then return end
     if (R.cw % 2) == 0 or (R.ch % 2) == 0 then return end
+
+    local skin_names = THEME.big_pillars or THEME.pillars
+    if not skin_names then return end
+
 
     local mx = R.cx1 + int(R.cw / 2)
     local my = R.cy1 + int(R.ch / 2)
@@ -1452,16 +1455,14 @@ function Room_make_ceiling(R)
     end
 
     -- OK !!
-    S.content = "pillar"
+    local which = rand_key_by_probs(skin_names)
 
-    local skin_names = THEME.big_pillars or THEME.pillars
-    if skin_names then
-      S.pillar_skin = assert(GAME.pillars[rand_key_by_probs(skin_names)])
-    else
-      S.pillar_skin = {}
-    end
+    S.content = "pillar"
+    S.pillar_skin = assert(GAME.pillars[which])
 
     R.has_central_pillar = true
+
+    gui.debugf("Central pillar @ (%d,%d) skin:%s\n", S.sx, S.sy, which)
   end
 
   local function central_niceness()
