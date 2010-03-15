@@ -2490,11 +2490,6 @@ DOOM_COMMON_SUB_THEMES =
     {
       zombie=0.3, shooter=0.6, skull=2.0, vile=2.0,
     },
-
-    style_list =
-    {
-      dm_liquid = { lava=70, nukage=10 },
-    },
   },
 
 
@@ -2582,11 +2577,6 @@ DOOM_COMMON_SUB_THEMES =
     monster_prefs =
     {
       zombie=0.3, shooter=0.6, skull=2.0, vile=2.0,
-    },
-
-    style_list =
-    {
-      dm_liquid = { lava=70, nukage=10 },
     },
   },
 
