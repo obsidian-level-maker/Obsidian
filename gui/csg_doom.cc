@@ -748,7 +748,7 @@ static void MakeSector(merge_region_c *R)
   else
   {
     // FIXME: TEMP CRUD
-    int min_light = 96; //!!!!!!  (S->c_h - S->f_h < 150) ? 128 : 144;
+    int min_light = (S->c_h - S->f_h < 150) ? 128 : 144;
 
     S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
     S->light = MAX(min_light, S->light);
