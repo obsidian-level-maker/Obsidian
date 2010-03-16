@@ -2089,7 +2089,7 @@ gui.printf("do_teleport\n")
     local f_tex = S.f_tex or R.main_tex
     local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
 
-    if R.hallway then
+    if R.kind == "hallway" then
       w_tex = assert(LEVEL.hall_tex)
     elseif R.kind == "stairwell" then
       w_tex = assert(LEVEL.well_tex)

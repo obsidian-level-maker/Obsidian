@@ -115,8 +115,10 @@ HACX_SANITY_MAP =
 
 HACX_SUB_THEMES =
 {
-  TECH1 =
+  hacx_tech1 =
   {
+    prob = 50,
+
     building =
     {
       walls =
@@ -468,7 +470,6 @@ OB_THEMES["hacx_tech"] =
   label = "Tech",
   for_games = { hacx=1 },
 
-  prefix = "TECH",
   name_theme = "TECH",
   mixed_prob = 50,
 }

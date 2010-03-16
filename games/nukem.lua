@@ -207,7 +207,7 @@ NUKEM_PICTURES =
 
 NUKEM_SUB_THEMES =
 {
-  CITY1 =
+  nukem_city1 =
   {
     prob=50,
 
@@ -329,7 +329,6 @@ OB_THEMES["nukem_city"] =
   label = "City",
   for_games = { nukem=1 },
 
-  prefix = "CITY",
   name_theme = "URBAN",
 
   mixed_prob = 50,

@@ -2223,7 +2223,7 @@ DOOM_COMMON_SUB_THEMES =
    (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
 --]]
 
-  TECH1 =
+  doom_tech1 =
   {
     prob=60,
 
@@ -2409,7 +2409,7 @@ DOOM_COMMON_SUB_THEMES =
 
 
   -- this is the greeny/browny/marbley Hell
-  HELL1 =
+  doom_hell1 =
   {
     prob = 40,
 
@@ -2498,7 +2498,7 @@ DOOM_COMMON_SUB_THEMES =
 
 
   -- this is the reddy/skinny/firey Hell
-  HELL2 =
+  doom_hell2 =
   {
     prob = 25,
 
@@ -2589,7 +2589,7 @@ DOOM_COMMON_SUB_THEMES =
 
 DOOM1_SUB_THEMES =
 {
-  TECH1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_tech1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     building =
     {
@@ -2616,7 +2616,7 @@ DOOM1_SUB_THEMES =
   },
 
 
-  HELL1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     building =
     {
@@ -2637,7 +2637,7 @@ DOOM1_SUB_THEMES =
   },
 
 
-  HELL2 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell2 =  -- extends the entry in COMMON_SUB_THEMES
   {
     building =
     {
@@ -2661,7 +2661,7 @@ DOOM1_SUB_THEMES =
 
 DOOM2_SUB_THEMES =
 {
-  TECH1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_tech1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     liquids = { nukage=90, water=15, lava=10, slime=5 },
 
@@ -2759,7 +2759,7 @@ DOOM2_SUB_THEMES =
   },
 
 
-  HELL1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell1 =  -- extends the entry in COMMON_SUB_THEMES
   {
     prob = 50,
 
@@ -2791,7 +2791,7 @@ DOOM2_SUB_THEMES =
   },
 
 
-  HELL2 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell2 =  -- extends the entry in COMMON_SUB_THEMES
   {
     liquids = { lava=90, blood=40, slime=10 },
 
@@ -2825,7 +2825,7 @@ DOOM2_SUB_THEMES =
   },
 
 
-  URBAN1 =
+  doom2_urban1 =
   {
     prob = 50,
 
@@ -2943,7 +2943,7 @@ DOOM2_SUB_THEMES =
 
 
   -- this theme is not normally used (only for secret levels)
-  WOLF1 =
+  doom2_wolf1 =
   {
     prob = 10,
 
@@ -3780,25 +3780,11 @@ function Doom_begin_level()
   end
 
   -- determine stuff for prebuilt levels
-  -- (done here because themes are not yet known in xxx_get_levels)
-
   if LEVEL.prebuilt then
     local info = LEVEL.prebuilt
+
     LEVEL.prebuilt_wad = info.file
-
-    -- try to match themes
-    if LEVEL.super_theme and info.theme_maps then
-      for sub, map in pairs(info.theme_maps) do
-        if sub == LEVEL.super_theme.prefix then -- if string.find(LEVEL.theme_name, "^" .. sub) then
-          LEVEL.prebuilt_map = map
-          break;  -- OK!
-        end
-      end
-    end
-
-    if not LEVEL.prebuilt_map then
-      LEVEL.prebuilt_map = rand_key_by_probs(info.maps)
-    end
+    LEVEL.prebuilt_map = rand_key_by_probs(info.maps)
   end
 end
 
@@ -3828,22 +3814,20 @@ end
 OB_THEMES["doom_tech"] =
 {
   label = "Tech",
+
   for_games = { doom1=1, doom2=1 },
 
-  prefix = "TECH",
   name_theme = "TECH",
-
   mixed_prob = 50,
 }
 
-OB_THEMES["doom_urban"] =
+OB_THEMES["doom2_urban"] =
 {
   label = "Urban",
+
   for_games = { doom2=1 },
 
-  prefix = "URBAN",
   name_theme = "URBAN",
-
   mixed_prob = 50,
 }
 
@@ -3852,18 +3836,15 @@ OB_THEMES["doom_hell"] =
   label = "Hell",
   for_games = { doom1=1, doom2=1 },
 
-  prefix = "HELL",
   name_theme = "GOTHIC",
-
   mixed_prob = 50,
 }
 
-OB_THEMES["doom_wolf"] =
+OB_THEMES["doom2_wolf"] =
 {
   label = "Wolfenstein",
   for_games = { doom2=1 },
 
-  prefix = "WOLF",
   name_theme = "URBAN",
 
   -- this theme is special, hence no mixed_prob

@@ -1512,10 +1512,13 @@ QUAKE2_ROOMS =
   },
 }
 
+
 QUAKE2_SUB_THEMES =
 {
-  TECH =
+  quake2_base1 =
   {
+    prob = 50,
+
     building =
     {
       TECH_BASE=50,
@@ -1946,10 +1949,13 @@ QUAKE2_EPISODES =
 
 ------------------------------------------------------------
 
-OB_THEMES["q2_base"] =
+OB_THEMES["quake2_base"] =
 {
   label = "Base",
   for_games = { quake2=1 },
+
+  name_theme = "TECH",
+  mixed_prob = 50,
 }
 
 

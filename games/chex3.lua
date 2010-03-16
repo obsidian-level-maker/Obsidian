@@ -220,7 +220,7 @@ CHEX3_ROOMS =
 
 CHEX3_SUB_THEMES =
 {
-  TECH1 =
+  chex3_tech1 =
   {
     prob=50,
 
@@ -613,7 +613,6 @@ OB_THEMES["chex3_tech"] =
   label = "Tech",
   for_games = { chex3=1 },
 
-  prefix = "TECH",
   name_theme = "TECH",
   mixed_prob = 50,
 }
@@ -626,7 +625,6 @@ UNFINISHED["chex3_city"] =
   label = "City",
   for_games = { chex3=1 },
 
-  prefix = "CITY",
   name_theme = "URBAN",
   mixed_prob = 50,
 }

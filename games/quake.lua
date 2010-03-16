@@ -784,8 +784,10 @@ QUAKE1_ROOMS =
 
 QUAKE1_SUB_THEMES =
 {
-  BASE1 =
+  quake_base1 =
   {
+    prob=50,
+
     building =
     {
       walls =
@@ -1200,7 +1202,6 @@ OB_THEMES["quake_base"] =
   label = "Base",
   for_games = { quake=1 },
 
-  prefix = "BASE",
   name_theme = "TECH",
   mixed_prob = 50,
 }

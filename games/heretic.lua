@@ -1314,7 +1314,7 @@ HERETIC_ROOMS =
 
 HERETIC_SUB_THEMES =
 {
-  CITY1 =
+  heretic_urban1 =
   {
     prob=50,
 
@@ -1359,7 +1359,7 @@ HERETIC_SUB_THEMES =
   }, -- CITY1
 
 
-  GOTHIC1 =
+  heretic_gothic1 =
   {
     prob=50,
 
@@ -1395,7 +1395,7 @@ HERETIC_SUB_THEMES =
   }, -- GOTHIC1
 
 
-  CAVE1 =
+  heretic_cave1 =
   {
     prob=50,
 
@@ -1913,7 +1913,6 @@ OB_THEMES["heretic_urban"] =
   label = "Urban",
   for_games = { heretic=1 },
 
-  prefix = "CITY",
   name_theme = "URBAN",
   mixed_prob = 50,
 }
@@ -1923,7 +1922,6 @@ OB_THEMES["heretic_gothic"] =  -- castles
   label = "Gothic",
   for_games = { heretic=1 },
 
-  prefix = "GOTHIC",
   name_theme = "GOTHIC",
   mixed_prob = 50,
 }
@@ -1933,7 +1931,6 @@ OB_THEMES["heretic_cave"] =
   label = "Cave",
   for_games = { heretic=1 },
 
-  prefix = "CAVE",
   name_theme = "URBAN",
   mixed_prob = 30,
 }

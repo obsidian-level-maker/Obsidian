@@ -239,7 +239,6 @@ function Level_themes()
 
   local function set_sub_theme(L, name)
     local info = assert(OB_THEMES[name])
-    assert(info.prefix)
 
     L.super_theme = info
 
@@ -251,7 +250,7 @@ function Level_themes()
     if L.theme then return end
 
     local sub_tab = {}
-    local sub_pattern = "^" .. info.prefix
+    local sub_pattern = "^" .. name
 
     for which,theme in pairs(GAME.themes) do
       local prob = theme.prob or 50
