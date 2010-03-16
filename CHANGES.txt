@@ -19,7 +19,10 @@ CHANGES (since v3.51)
 - fixed ugliness when outdoor rooms had differing sky heights
 - fixed failure when engine was set to Legacy or Eternity
 - fixed a rare assertion failure in the layout code
+
 - fixed never using switched doors in small levels
+- fixed rare bug of lowering pedestals stuck in ceiling
+- fixed lowering bars, prevent running over them
 - fixed the Level Control module
 
 - separate 'Doom 1' and 'Ultimate Doom' game choices

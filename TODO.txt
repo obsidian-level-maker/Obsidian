@@ -6,19 +6,18 @@ DONE: Room kinds:
    (1) remove current kind values (implied by outdoor and natural)
    (2) have "normal" as well as "scenic" and "hallway" etc...
 
-
 FIXED:  batch mode: if error occurs, RETURN CODE FROM MAIN
 
 FIXED: lowering item pedestals can go into ceiling
 
-TEST: outdoor bars can sometimes be jumped over.
+FIXED: outdoor bars can sometimes be jumped over.
    --> make them higher _or_ another switch to lower them.
 
 
-++  'extends' field for SUB_THEME entries
-    (remove implicit extension and THEME_DEFAULTS)
+DONE ??   theming system rework
 
-+  support outer walls: building.facades in a theme def.
+
++  support outer walls: building_facades in a theme def.
 
 +  get small exits working again
    -  rework Build_small_exit to only use a single transform
