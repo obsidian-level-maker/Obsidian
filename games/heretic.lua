@@ -1318,30 +1318,26 @@ HERETIC_SUB_THEMES =
   {
     prob=50,
 
-    building =
-    {
-      walls =
+    building_walls =
       {
         SANDSQ2=50, GRSTNPB=50, WOODWL=10,
         CTYSTUC4=80, CTYSTCI2=80, TRISTON2=20,
       },
-      floors =
+
+    building_floors =
       {
         FLOOR06=50, FLOOR03=50, FLOOR00=50, FLOOR10=50,
       },
-      ceilings =
+
+    building_ceilings =
       {
         FLOOR11=50, FLOOR03=30, FLOOR04=30, FLOOR12=50,
       },
-    },
 
-    courtyard =
-    {
-      floors =
+    courtyard_floors =
       {
         FLOOR00=20, FLOOR17=50, FLOOR27=30, FLOOR18=50,
       },
-    },
 
     room_types =
     {
@@ -1363,66 +1359,59 @@ HERETIC_SUB_THEMES =
   {
     prob=50,
 
-    building =
-    {
-      walls =
+    building_walls =
       {
         CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
         SQPEB1=20, TRISTON1=20,
       },
-      floors =
+
+    building_floors =
       {
         FLAT503=20, FLAT507=10, FLAT520=10, FLAT521=10,
         FLOOR00=10, FLOOR03=20, FLOOR07=10,
         FLAT523=20,
       },
-      ceilings =
+
+    building_ceilings =
       {
         FLAT520=20, FLAT521=10, FLAT508=15,
         FLOOR20=25, FLOOR29=10,
       },
-    },
 
-    courtyard =
-    {
-      floors =
+    courtyard_floors =
       {
         FLAT509=20, FLAT510=20, FLAT513=20,
         FLAT516=20, FLAT522=20,
       },
-    },
 
   }, -- GOTHIC1
 
 
-  heretic_cave1 =
+  heretic_cave1 =  -- Keep this ???
   {
     prob=50,
 
-    building =  -- FIXME: cave =
-    {
-      walls = 
+    building_walls = 
       {
         LOOSERCK=20, LAVA1=20, BRWNRCKS=20,
       },
-      floors =
+
+    building_floors =
       {
         FLOOR01=20, FLAT516=20, FLAT516=20,
       },
-      ceilings =
+
+    building_ceilings =
       {
         FLOOR01=20, FLAT516=20, FLAT506=20,
       },
-    },
 
-    courtyard =
-    {
-      floors =
+    courtyard_floors =
       {
         LOOSERCK=50, RCKSNMUD=50, LAVA1=50,
         FLAT516=50, FLAT510=50, FLAT516=50,
       },
-    }, 
+
   }, -- CAVE1
 
 
@@ -1985,7 +1974,7 @@ UNFINISHED["heretic"] =
     "rails",     HERETIC_RAILS,
 
     "episodes", HERETIC_EPISODES,
-    "themes",   HERETIC_SUB_THEMES,
+    "sub_themes", HERETIC_SUB_THEMES,
     "rooms",    HERETIC_ROOMS,
 
     "hangs", HERETIC_OVERHANGS,

@@ -95,22 +95,22 @@ STRIFE_SUB_THEMES =
 {
   TECH =
   {
-    building =
+    building_walls =
     {
       BRICK1=50,
     },
 
-    floors =
+    building_floors =
     {
       F_BRKTOP=50,
     },
 
-    ceilings =
+    building_ceilings =
     {
       F_BRKTOP=50,
     },
 
-    courtyard =
+    courtyard_floors =
     {
       CAVE1=20,
     },
@@ -243,7 +243,7 @@ UNFINISHED["strife"] =
     "pickups",  STRIFE_PICKUPS,
 
     "materials", STRIFE_MATERIALS,
-    "themes",    STRIFE_SUB_THEMES,
+    "sub_themes",  STRIFE_SUB_THEMES,
   },
 }
 

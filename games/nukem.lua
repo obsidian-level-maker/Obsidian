@@ -213,25 +213,23 @@ NUKEM_SUB_THEMES =
 
     liquids = { water=50, slime=20, lava=7 },
 
-    building =
-    {
-      walls = { BRNBRICK=50, WINDOW1=30, WINDOW2=30,
+    building_walls = { BRNBRICK=50, WINDOW1=30, WINDOW2=30,
                 BRICK2=50, GRNBRICK=30, GRAYBRICK=50,
                 REDSLATS=20, IRON=20,
                },
-      floors = { GRAYCIRCLE=30, CLANG1=90, GRAYFLAT=10, REDCARPET=10 },
-      ceilings = { IRON=5, GRAYCIRCLE=50, ROOF1=20, ROOF2=20, },
-    },
 
-    courtyard =
+    building_floors = { GRAYCIRCLE=30, CLANG1=90, GRAYFLAT=10, REDCARPET=10 },
+
+    building_ceilings = { IRON=5, GRAYCIRCLE=50, ROOF1=20, ROOF2=20, },
+
+    courtyard_floors =
     {
-      floors = { MUD=50, GRASS=50,
-                 CRETE1=20, CONC1=20, CONC2=20,
-                 BLOCKS1=30, BLOCKS2=30,
-                 ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
-                 ROCK5=15, ROCK6=15, ROCK7=15,
-                 SMROCK1=20, SMROCK2=20, SMROCK3=20,
-                 },
+      MUD=50, GRASS=50,
+      CRETE1=20, CONC1=20, CONC2=20,
+      BLOCKS1=30, BLOCKS2=30,
+      ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
+      ROCK5=15, ROCK6=15, ROCK7=15,
+      SMROCK1=20, SMROCK2=20, SMROCK3=20,
     },
 
     logos = { carve=50, pill=50 },
@@ -381,7 +379,7 @@ OB_GAMES["nukem"] =
 
     "materials", NUKEM_MATERIALS,
     "liquids",   NUKEM_LIQUIDS,
-    "themes",    NUKEM_SUB_THEMES,
+    "sub_themes", NUKEM_SUB_THEMES,
     "pictures",  NUKEM_PICTURES,
     "steps",     NUKEM_STEPS,
   },

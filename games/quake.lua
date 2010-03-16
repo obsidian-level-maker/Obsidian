@@ -788,25 +788,24 @@ QUAKE1_SUB_THEMES =
   {
     prob=50,
 
-    building =
-    {
-      walls =
+    building_walls =
       {
         TECH06_1=50, TECH08_2=50, TECH09_3=50,
         TECH13_2=50, TECH14_1=50, TWALL1_4=50,
         TWALL2_3=50,
       },
-      floors =
+
+    building_floors =
       {
         FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
         SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
       },
-      ceilings =
+
+    building_ceilings =
       {
         FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
         SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
       },
-    },
 
     xx_hallway =
     {
@@ -1254,7 +1253,7 @@ UNFINISHED["quake"] =
     "pickups",  QUAKE1_PICKUPS,
 
     "materials", QUAKE1_MATERIALS,
-    "themes",    QUAKE1_SUB_THEMES,
+    "sub_themes",    QUAKE1_SUB_THEMES,
     "pictures",  QUAKE1_PICTURES,
     "steps",     QUAKE1_STEPS,
     "exits",     QUAKE1_EXITS,
