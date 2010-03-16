@@ -23,13 +23,15 @@
 class ROOM
 {
   kind : keyword  -- "building", "courtyard",
-                  -- "cave", "landscape", "scenic",
-                  -- "hallway", "stairwell",
-                  -- "smallexit",
+                  -- "cave", "landscape"
 
   outdoor : bool  -- true for outdoor rooms
-
   natural : bool  -- true for cave/landscape areas
+  scenic  : bool  -- true for scenic (unvisitable) areas
+
+  small_exit : bool
+  hallway    : bool
+  stairwell  : bool
 
   conns : array(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
@@ -98,12 +100,12 @@ function Rooms_decide_outdoors()
     if R.parent then return rand_odds(5) end
 
     if R.kind == "building" and not THEME.courtyard then return false end
-    if R.kind == "nature"   and not THEME.landscape then return false end
+    if R.kind == "cave"     and not THEME.landscape then return false end
 
     if STYLE.skies == "none"   then return false end
     if STYLE.skies == "always" then return true end
 
-    if R.kind == "nature" then
+    if R.natural then
       if STYLE.skies == "heaps" then return rand_odds(75) end
       return rand_odds(25)
     end
@@ -138,10 +140,9 @@ function Rooms_decide_outdoors()
     if R.outdoor == nil then
       R.outdoor = choose(R)
     end
-    if R.outdoor and R.kind == "building" then
-      R.kind = "courtyard"
-    end
     if R.outdoor then
+      if R.kind == "building" then R.kind = "courtyard" end
+      if R.kind == "cave"     then R.kind = "landscape" end
       R.sky_h = SKY_H
     end
   end
@@ -189,8 +190,7 @@ function Room_setup_theme(R)
 end
 
 function Room_setup_theme_Scenic(R)
-  R.outdoor = true
----###  R.kind = "scenic"
+  R.outdoor = true  -- ???
 
   --[[
 
@@ -201,7 +201,7 @@ function Room_setup_theme_Scenic(R)
   for dist = -SEED_W,SEED_W do
     if Seed_valid(mx + dist, my, 1) then
       local S = SEEDS[mx + dist][my][1]
-      if S.room and S.room.kind ~= "scenic" and
+      if S.room and not S.room.scenic and
          S.room.combo
 ---      and (not S.room.outdoor) == (not R.outdoor)
       then
@@ -213,7 +213,7 @@ function Room_setup_theme_Scenic(R)
 
     if Seed_valid(mx, my + dist, 1) then
       local S = SEEDS[mx][my + dist][1]
-      if S.room and S.room.kind ~= "scenic" and
+      if S.room and not S.room.scenic and
          S.room.combo
 ---      and (not S.room.outdoor) == (not R.outdoor)
       then
@@ -258,12 +258,9 @@ function Rooms_decide_hallways_II()
   local REVERT_PROBS    = {  0,  0, 25, 75, 90, 98 }
 
   local function eval_hallway(R)
-
-    if R.outdoor or R.kind ~= "building" or R.children then
+    if R.outdoor or R.natural or R.children or R.purpose then
       return false
     end
-
-    if R.purpose then return false end
 
     if #R.teleports > 0 then return false end
     if R.num_branch < 2 then return false end
@@ -306,7 +303,7 @@ function Rooms_decide_hallways_II()
     local hall_nb = 0
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.kind == "hallway" then hall_nb = hall_nb + 1 end
+      if N.hallway then hall_nb = hall_nb + 1 end
     end
 
     return hall_nb
@@ -321,7 +318,7 @@ function Rooms_decide_hallways_II()
     local swell_nb = 0
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.kind == "stairwell" then swell_nb = swell_nb + 1 end
+      if N.stairwell then swell_nb = swell_nb + 1 end
     end
 
     return swell_nb
@@ -351,7 +348,7 @@ function Rooms_decide_hallways_II()
   for _,R in ipairs(LEVEL.all_rooms) do
     if eval_hallway(R) then
 gui.debugf("  Made Hallway @ %s\n", R:tostr())
-      R.kind = "hallway"
+      R.hallway = true
       R.outdoor = nil
     end
   end
@@ -359,7 +356,7 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
   -- large rooms which are surrounded by hallways are wasted,
   -- hence look for them and revert them back to normal.
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind == "hallway" and surrounded_by_halls(R) then
+    if R.hallway and surrounded_by_halls(R) then
       local min_d = math.min(R.sw, R.sh)
 
       assert(min_d <= 6)
@@ -373,7 +370,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 
   -- decide stairwells
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind == "hallway" and R.num_branch == 2 and
+    if R.hallway and R.num_branch == 2 and
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0 and
@@ -386,14 +383,14 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       if hall_nb == 1 then prob = 40 end
 
       if rand_odds(prob) then
-        R.kind = "stairwell"
+        R.stairwell = true
       end
     end
   end -- for R
 
   -- we don't need archways where two hallways connect
   for _,C in ipairs(LEVEL.all_conns) do
-    if not C.lock and C.src.kind == "hallway" and C.dest.kind == "hallway" then
+    if not C.lock and C.src.hallway and C.dest.hallway then
       local S = C.src_S
       local T = C.dest_S
       local dir = S.conn_dir
@@ -559,13 +556,13 @@ function Rooms_reckon_doors()
     elseif R1.outdoor or R2.outdoor then
       return door_probs.out_diff or 80
 
-    elseif R1.kind == "stairwell" or R2.kind == "stairwell" then
+    elseif R1.stairwell or R2.stairwell then
       return door_probs.stairwell or 1
 
-    elseif R1.kind == "hallway" and R2.kind == "hallway" then
+    elseif R1.hallway and R2.hallway then
       return door_probs.hall_both or 2
 
-    elseif R1.kind == "hallway" or R2.kind == "hallway" then
+    elseif R1.hallway or R2.hallway then
       return door_probs.hall_diff or 60
 
     elseif R1.main_tex ~= R2.main_tex then
@@ -683,10 +680,10 @@ function Rooms_border_up()
     end
 
 
-    if R1.outdoor and R2.kind == "nature" then
+    if R1.outdoor and R2.natural then
       S.border[side].kind = "fence"
 
-    elseif R1.kind == "nature" and R2.outdoor then
+    elseif R1.natural and R2.outdoor then
       S.border[side].kind = "nothing"
 
     elseif R1.outdoor then
@@ -696,13 +693,13 @@ function Rooms_border_up()
         S.border[side].kind = "nothing"
       end
 
-      if N.kind == "smallexit" then
+      if N.small_exit then
         S.border[side].kind = "nothing"
       end
 
       if N.kind == "liquid" and
         (S.kind == "liquid" or R1.arena == R2.arena)
-        --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
+        --!!! or (N.room.scenic and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
@@ -822,7 +819,7 @@ function Rooms_border_up()
       then
         table.insert(info.seeds, S)
 
-        if N.kind == "scenic" then
+        if N.scenic then
           scenics = scenics + 1
         end
 
@@ -836,7 +833,7 @@ function Rooms_border_up()
         max_f1 = math.max(max_f1, S.floor_h)
         max_f2 = math.max(max_f2, N.floor_h)
 
-        if N.room.kind == "nature" then
+        if N.room.natural then
           max_f2 = math.max(max_f2, N.room.cave_floor_h + 128)
         end
       end 
@@ -945,7 +942,7 @@ function Rooms_border_up()
   end
 
   local function decide_windows(R, border_list)
-    if R.kind ~= "building" then return end
+    if R.outdoor or R.natural or R.hallway or R.stairwell or R.small_exit then return false end
     if R.semi_outdoor then return end
     if STYLE.windows == "none" then return end
 
@@ -1049,7 +1046,7 @@ function Rooms_border_up()
   end
 
   local function decide_pictures(R, border_list)
-    if R.kind ~= "building" then return end
+    if R.outdoor or R.natural or R.hallway or R.stairwell or R.small_exit then return false end
     if R.semi_outdoor then return end
 
     -- filter border list to remove symmetrical peers, seeds
@@ -1732,6 +1729,10 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
   local function indoor_ceiling()
+    if R.natural or R.hallway or R.stairwell or R.small_exit then
+      return
+    end
+
     assert(R.floor_max_h)
 
     local avg_h = int((R.floor_min_h + R.floor_max_h) / 2)
@@ -1823,8 +1824,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
   if R.outdoor then
     outdoor_ceiling()
-  
-  elseif R.kind == "building" then
+  else
     indoor_ceiling()
   end
 end
@@ -1868,11 +1868,11 @@ function Room_add_crates(R)
 
   if STYLE.crates == "none" then return end
 
-  if R.kind == "stairwell" or R.kind == "smallexit" then
+  if R.stairwell or R.small_exit then
     return
   end
 
-  if R.kind == "nature" then return end
+  if R.natural then return end
 
   local skin
   local skin_names
@@ -2090,9 +2090,9 @@ gui.printf("do_teleport\n")
     local f_tex = S.f_tex or R.main_tex
     local c_tex = S.c_tex or sel(R.outdoor, "_SKY", R.ceil_tex)
 
-    if R.kind == "hallway" then
+    if R.hallway then
       w_tex = assert(LEVEL.hall_tex)
-    elseif R.kind == "stairwell" then
+    elseif R.stairwell then
       w_tex = assert(LEVEL.well_tex)
     end
 
@@ -2101,9 +2101,9 @@ gui.printf("do_teleport\n")
     if S.conn_dir then
       local N = S:neighbor(S.conn_dir)
 
-      if N.room.kind == "hallway" then
+      if N.room.hallway then
         o_tex = LEVEL.hall_tex
-      elseif N.room.kind == "stairwell" then
+      elseif N.room.stairwell then
         o_tex = LEVEL.well_tex
       elseif not N.room.outdoor and N.room ~= R.parent then
         o_tex = N.w_tex or N.room.main_tex
@@ -2157,7 +2157,7 @@ gui.printf("do_teleport\n")
       local B_kind = S.border[side].kind
 
       -- hallway hack
-      if R.kind == "hallway" and not (S.kind == "void") and
+      if R.hallway and not (S.kind == "void") and
          ( (B_kind == "wall")
           or
            (S:neighbor(side) and S:neighbor(side).room == R and
@@ -2171,7 +2171,7 @@ gui.printf("do_teleport\n")
         B_kind = nil
       end
 
-      if B_kind == "wall" and R.kind ~= "scenic" then
+      if B_kind == "wall" and not R.scenic then
         Build_wall(S, side, w_tex)
         shrink_both(side, 4)
       end
@@ -2323,7 +2323,7 @@ gui.printf("do_teleport\n")
 
 
       -- FIXME: this does not belong here
-      if R.kind == "hallway" and LEVEL.hall_lights then
+      if R.hallway and LEVEL.hall_lights then
         local x_num, y_num = 0,0
 
         for side = 2,8,2 do

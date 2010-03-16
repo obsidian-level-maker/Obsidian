@@ -835,7 +835,7 @@ function Build_detailed_hall(S, side, z1, z2, skin)
 
     if N.room == S.room then return true end
 
-    if N.room.kind == "hallway" then return true end
+    if N.room.hallway then return true end
 
     return false
   end

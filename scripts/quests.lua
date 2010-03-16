@@ -124,7 +124,7 @@ function Quest_decide_start_room(arena)
   end
 
   local function natural_flow(R, visited)
-    assert(R.kind ~= "scenic")
+    assert(not R.scenic)
 
     visited[R] = true
 
@@ -579,7 +579,7 @@ end
 function Quest_add_keys()
 
   local function make_small_exit(R)
-    R.kind = "smallexit"
+    R.small_exit = true
 
     local C = assert(R.conns[1])
 
@@ -917,7 +917,7 @@ function Quest_find_storage_rooms()
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind ~= "scenic" and #R.conns == 1 and
+    if not R.scenic and #R.conns == 1 and
        not R.purpose and not R.weapon
     then
       R.is_storage = true
@@ -941,7 +941,7 @@ function Quest_assign()
   for _,R in ipairs(LEVEL.all_rooms) do
     R.teleports = {} --!!!!
 
-    if R.kind ~= "scenic" then
+    if not R.scenic then
       R.num_branch = #R.conns + #R.teleports
       if R.num_branch == 0 then
         error("Room exists with no connections!")
@@ -964,7 +964,7 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   }
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind ~= "scenic" then
+    if not R.scenic then
       table.insert(ARENA.rooms, R)
     end
   end

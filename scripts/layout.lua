@@ -612,7 +612,7 @@ function Layout_natural_room(R, heights)
 
     if N.room == S.room then return end
 
-    if N.room.kind == "nature" then
+    if N.room.natural then
       return set_side(S, side, sel(R.is_lake,-1,1))
     end
 
@@ -636,7 +636,7 @@ function Layout_natural_room(R, heights)
 
     if N.room == S.room then return end
 
-    if N.room.kind == "nature" then return end
+    if N.room.nature then return end
 
     set_corner(S, side, -1)
   end
@@ -1540,11 +1540,10 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     if LEVEL.plain_rooms then return false end
 
     if R.children then return false end
+    if R.natural  then return false end
 
-    if R.kind == "nature" then return false end
-
-    assert(R.kind ~= "hallway")
-    assert(R.kind ~= "stairwell")
+    assert(not R.hallway)
+    assert(not R.stairwell)
 
     local sol_mul = 1.0
     if STYLE.junk == "heaps" then sol_mul = 3.0 end
@@ -1585,7 +1584,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
 
   ---==| Layout_try_pattern |==---
  
-  if R.kind == "nature" then
+  if R.natural then
     Layout_natural_room(R, heights)
     return
   end
@@ -2038,7 +2037,7 @@ function Layout_one(R)
       local angle = player_angle(S)
       local dist = 56
 
-      if PARAM.raising_start and R.svolume >= 20 and R.kind ~= "nature"
+      if PARAM.raising_start and R.svolume >= 20 and not R.natural
          and rand_odds(30)
       then
         gui.debugf("Raising Start made\n")
@@ -2096,7 +2095,7 @@ function Layout_one(R)
     elseif R.purpose == "KEY" then
       local lp_skin = -- FIXME!!!!  game specific skin
       {
-        wall="WOOD2", floor="CEIL1_3",
+        wall="WOOD3", floor="CEIL1_3",
         x_offset=0, y_offset=0, peg=true,
         line_kind=23,
       }
@@ -2147,7 +2146,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     local z = math.max(z1+80, R.floor_max_h+40)
     if z > z2-32 then z = z2-32 end
 
-    if R.kind == "hallway" or R == LEVEL.start_room then
+    if R.hallway or R == LEVEL.start_room then
       -- nothing!
     elseif rand_odds(40) and z+20 < (S.ceil_h or R.ceil_h or SKY_H) then
       Build_lowering_pedestal(S, z, lp_skin)
@@ -2684,7 +2683,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.floor_h = focus_C.conn_h  -- ??? BLEH
 
   -- special stuff
-  if R.kind == "stairwell" then
+  if R.stairwell then
     stairwell_height_diff(focus_C)
 
     if not LEVEL.well_tex then
@@ -2698,13 +2697,13 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
-  if R.kind == "hallway" then
+  if R.hallway then
     Layout_hallway(R, focus_C.conn_h)
     if R.weapon then add_weapon(R.weapon) end
     return
   end
 
-  if R.kind == "smallexit" and THEME.small_exits then
+  if R.small_exit and THEME.small_exits then
     local C = R.conns[1]
     local T = C:seed(C:neighbor(R))
     local out_combo = T.room.main_tex
@@ -2767,7 +2766,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.purpose then add_purpose() end
   if R.weapon  then add_weapon(R.weapon)  end
 
-  if R.kind == "nature" then
+  if R.natural then
     Layout_cave_pickup_spots(R)
     Layout_cave_monster_spots(R)
   end

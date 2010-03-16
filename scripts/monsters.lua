@@ -761,13 +761,13 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not (R.kind == "stairwell" or R.kind == "smallexit") then
+    if not (R.stairwell or R.small_exit) then
       distribute_fight_stats(R)
     end
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not (R.kind == "stairwell" or R.kind == "smallexit") then
+    if not (R.stairwell or R.small_exit) then
       pickups_in_room(R)
     end
   end
@@ -801,7 +801,7 @@ function Monsters_in_room(R)
     elseif R:is_near_exit() then
       -- give the player greater resistance near the exit
       toughness = toughness + 3
-    elseif R.kind == "hallway" then
+    elseif R.hallway then
       -- don't fill hallways with big beasts
       toughness = rand_range(1.0, 2.0)
     end
@@ -1538,8 +1538,8 @@ function Monsters_in_room(R)
     local palette = select_monsters(toughness)
 
     local barrel_chance = sel(R.outdoor, 2, 15)
-    if R.kind == "nature"  then barrel_chance = 3 end
-    if R.kind == "hallway" then barrel_chance = 5 end
+    if R.natural then barrel_chance = 3 end
+    if R.hallway then barrel_chance = 5 end
 
     if STYLE.barrels == "heaps" or rand_odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
     if STYLE.barrels == "few"   or rand_odds(25) then barrel_chance = barrel_chance / 4 end
@@ -1645,11 +1645,11 @@ function Monsters_in_room(R)
     return
   end
 
-  if R.kind == "stairwell" or R.kind == "smallexit" then
+  if R.stairwell or R.small_exit then
     return
   end
 
-  assert(R.kind ~= "scenic")
+  assert(not R.scenic)
 
 
   find_monster_spots()

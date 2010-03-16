@@ -148,7 +148,7 @@ function Plan_CreateRooms()
     local function room_char(R)
       if not R then return '.' end
       if R.is_scenic then return '=' end
-      if R.kind == "nature" then return '/' end
+      if R.natural then return '/' end
       local n = 1 + (R.id % 26)
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
     end
@@ -263,7 +263,8 @@ function Plan_CreateRooms()
         if valid_R(nx, ny) then
           local R = room_map[nx][ny]
           if R and R.kind == "building" then
-            R.kind = "nature"
+            R.kind = "cave"
+            R.natural = true
             R.nature_parent = LAST.nature_parent or LAST
             return nx, ny
           end
@@ -280,7 +281,8 @@ function Plan_CreateRooms()
       local R = room_map[x][y]
 
       if R and R.kind == "building" then
-        R.kind = "nature"
+        R.kind = "cave"
+        R.natural = true
         return x, y
       end
     end
@@ -817,7 +819,7 @@ function Plan_SubRooms()
   local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not R.parent and not (R.kind == "nature") then
+    if not R.parent and not R.natural then
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
 
