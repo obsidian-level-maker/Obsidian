@@ -761,13 +761,13 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not (R.stairwell or R.small_exit) then
+    if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
       distribute_fight_stats(R)
     end
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if not (R.stairwell or R.small_exit) then
+    if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
       pickups_in_room(R)
     end
   end
@@ -1641,15 +1641,14 @@ function Monsters_in_room(R)
     return
   end
 
+  if R.kind == "stairwell" then return end
+  if R.kind == "smallexit" then return end
+
+  assert(R.kind ~= "scenic")
+
   if R.purpose == "START" and not R.has_raising_start then
     return
   end
-
-  if R.stairwell or R.small_exit then
-    return
-  end
-
-  assert(not R.scenic)
 
 
   find_monster_spots()

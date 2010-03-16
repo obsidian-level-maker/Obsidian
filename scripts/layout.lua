@@ -1536,14 +1536,13 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
   end
 
   local function do_try_divide()
-
     if LEVEL.plain_rooms then return false end
 
     if R.children then return false end
     if R.natural  then return false end
 
-    assert(not R.hallway)
-    assert(not R.stairwell)
+    assert(R.kind ~= "hallway")
+    assert(R.kind ~= "stairwell")
 
     local sol_mul = 1.0
     if STYLE.junk == "heaps" then sol_mul = 3.0 end
@@ -2690,7 +2689,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.floor_h = focus_C.conn_h  -- ??? BLEH
 
   -- special stuff
-  if R.stairwell then
+  if R.kind == "stairwell" then
     stairwell_height_diff(focus_C)
 
     if not LEVEL.well_tex then
@@ -2710,7 +2709,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
-  if R.small_exit and THEME.small_exits then
+  if R.kind == "small_exit" and THEME.small_exits then
     local C = R.conns[1]
     local T = C:seed(C:neighbor(R))
     local out_combo = T.room.main_tex
@@ -2742,7 +2741,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "building" and not R.children then
+  if R.kind == "normal" and not R.children then
     junk_sides()
   end
 
@@ -2778,7 +2777,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     Layout_cave_monster_spots(R)
   end
 
-  if R.kind == "building" then
+  if R.kind == "normal" and not (R.outdoor or R.natural) then
     add_pillars()
   end
 end

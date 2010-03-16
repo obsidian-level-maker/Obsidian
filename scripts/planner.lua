@@ -147,7 +147,7 @@ function Plan_CreateRooms()
   local function dump_rooms()
     local function room_char(R)
       if not R then return '.' end
-      if R.is_scenic then return '=' end
+      if R.kind == "scenic" then return '=' end
       if R.natural then return '/' end
       local n = 1 + (R.id % 26)
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
@@ -262,8 +262,7 @@ function Plan_CreateRooms()
         local nx, ny = nudge_coord(last_x, last_y, side)
         if valid_R(nx, ny) then
           local R = room_map[nx][ny]
-          if R and R.kind == "building" then
-            R.kind = "cave"
+          if R and not R.natural then
             R.natural = true
             R.nature_parent = LAST.nature_parent or LAST
             return nx, ny
@@ -280,8 +279,7 @@ function Plan_CreateRooms()
       local y = rand_irange(1, LEVEL.H)
       local R = room_map[x][y]
 
-      if R and R.kind == "building" then
-        R.kind = "cave"
+      if R and not R.natural then
         R.natural = true
         return x, y
       end
@@ -339,7 +337,7 @@ function Plan_CreateRooms()
     local bx, by = vis.x, vis.y
     
     if not room_map[bx][by] then
-      local ROOM = { id=id, kind="building", conns={}, }
+      local ROOM = { id=id, kind="normal", conns={}, }
       id = id + 1
 
       set_class(ROOM, ROOM_CLASS)
@@ -771,7 +769,7 @@ function Plan_SubRooms()
     -- actually add it !
     local ROOM =
     {
-      id=id, kind="building", conns={},
+      id=id, kind="normal", conns={},
       big_w=1, big_h=1,
     }
 

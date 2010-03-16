@@ -2,7 +2,7 @@
 TODO
 ====
 
-!! Room kinds:
+DONE: Room kinds:
    (1) remove current kind values (implied by outdoor and natural)
    (2) have "normal" as well as "scenic" and "hallway" etc...
 
@@ -11,8 +11,8 @@ FIXED:  batch mode: if error occurs, RETURN CODE FROM MAIN
 
 FIXED: lowering item pedestals can go into ceiling
 
--  CSG DOOM: fix up extrafloor creation
-
+TEST: outdoor bars can sometimes be jumped over.
+   --> make them higher _or_ another switch to lower them.
 
 
 ++  'extends' field for SUB_THEME entries
@@ -34,9 +34,6 @@ FIXED: lowering item pedestals can go into ceiling
 
 
 BUG: liquification of caves at a border can subvert quests
-
-BUG: outdoor bars can sometimes be jumped over.
-   --> make them higher _or_ another switch to lower them.
 
 
 
@@ -110,6 +107,8 @@ CSG CODE:
     Hence remove the CSG2_FindXXX rubbish.
 
 !!  DOOM: fix y_offset values
+
++  CSG DOOM: fix up extrafloor creation
 
 DONE:  merge linedefs where possible
 

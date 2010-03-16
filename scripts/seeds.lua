@@ -209,7 +209,7 @@ function Seed_dump_rooms()
     if not S then return "!" end
     if not S.room then return "." end
 
-    if S.room.is_scenic then return "/" end
+    if S.room.kind == "scenic" then return "=" end
     if S.room.dump_char then return S.room.dump_char end
 
     if S.room.parent then
@@ -237,9 +237,8 @@ function Seed_dump_fabs()
 
     if not S or not S.kind then return " " end
 
-    if S.kind == "ground" then return "." end
-    if S.kind == "building" then return "#" end
-    if S.kind == "hallway" then return "+" end
+    if S.kind == "walk" then return "." end
+    if S.kind == "void" then return "#" end
     if S.kind == "liquid" then return "~" end
 
     return "?"

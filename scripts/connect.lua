@@ -669,8 +669,8 @@ function Connect_rooms()
   end
 
   local function connect_seeds(S, T, dir)
-    assert(S.room and not S.room.scenic)
-    assert(T.room and not T.room.scenic)
+    assert(S.room and S.room.kind ~= "scenic")
+    assert(T.room and T.room.kind ~= "scenic")
 
     S.border[dir].kind    = "arch"
     T.border[10-dir].kind = "straddle"
@@ -826,7 +826,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
       else
         if not N.room or
            not N.room.c_group or
-           N.room.scenic or
+           N.room.kind == "scenic" or
            N.room.branch_kind or
            groups_seen[N.room.c_group] or
            N.conn -- only one connection per seed!
@@ -912,7 +912,7 @@ gui.debugf("Failed\n")
     local rooms = {}
 
     for _,R in ipairs(LEVEL.all_rooms) do
-      if R.svolume >= 1 and (R.kind == "building") and not R.parent then
+      if R.svolume >= 1 and (R.kind == "normal") and not R.parent then
         R.k_score = sel((R.sw%2)==1 and (R.sh%2)==1, 5, 0) + R.svolume + gui.random()
         table.insert(rooms, R)
       end
@@ -951,10 +951,9 @@ gui.debugf("Failed\n")
     -- Note: connections must be handled elsewhere
 
     gui.debugf("Making %s SCENIC\n", R:tostr())
-    assert(not R.scenic)
+    assert(R.kind ~= "scenic")
 
-    R.scenic = true
-    R.scenic_kind = R.kind
+    R.kind = "scenic"
 
     -- move the room to the scenic list
 
@@ -1017,7 +1016,7 @@ gui.debugf("Failed\n")
 
     if not N.room or
        not N.room.c_group or
-       N.room.scenic or
+       N.room.kind == "scenic" or
        N.room.c_group == R.c_group
     then
       return false
@@ -1165,7 +1164,7 @@ gui.debugf("Failed\n")
       local changed = false
 
       for _,R in ipairs(list) do
-        if R.c_group ~= min_g and not R.scenic then
+        if R.c_group ~= min_g and R.kind ~= "scenic" then
           if #R.conns == 0 then
             handle_isolate(R, join_chance)
           else
@@ -1182,7 +1181,7 @@ gui.debugf("Failed\n")
 
   local function has_scenic_neigbour(R)
     for _,N in ipairs(R.neighbors) do
-      if N.scenic then return true end
+      if N.kind == "scenic" then return true end
     end
     return false
   end
