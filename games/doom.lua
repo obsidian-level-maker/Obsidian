@@ -3058,54 +3058,63 @@ DOOM_PREBUILT_LEVELS =
   {
     file = "dead_simples.wad",
     maps = { MAP01=30, MAP02=50, MAP03=70 },
+    name_theme = "BOSS",
   },
 
   icon_of_sin =
   {
     file = "icon_maps.wad",
     maps = { MAP01=30, MAP02=50 },
+    name_theme = "BOSS",
   },
 
   gallow_arena =
   {
     file = "gallow_arenas.wad",
     maps = { MAP01=50, MAP02=25 },
+    name_theme = "BOSS",
   },
 
   gotcha =
   {
     file = "gotcha_maps.wad",
     maps = { MAP01=50, MAP02=50, MAP03=40, MAP04=10 },
+    name_theme = "BOSS",
   },
 
   phobos_anomaly =
   {
     file = "anomaly_towers.wad",
     maps = { E1M1=40, E1M2=80 },
+    name_theme = "BOSS",
   },
 
   tower_of_babel =
   {
     file = "anomaly_towers.wad",
     maps = { E2M1=50 },
+    name_theme = "BOSS",
   },
 
   dis =
   {
     file = "anomaly_towers.wad",
     maps = { E3M1=50 },
+    name_theme = "BOSS",
   },
 
   against_thee =
   {
     file = "anomaly_towers.wad",
     maps = { E2M1=50 },
+    name_theme = "BOSS",
   },
 
   unto_the_cruel =
   {
     file = "anomaly_towers.wad",
     maps = { E3M1=50 },
+    name_theme = "BOSS",
   },
 }
 
@@ -3650,7 +3659,7 @@ function Doom1_get_levels()
       end
 
       if LEV.prebuilt then
-        LEV.name_theme = "BOSS"
+        LEV.name_theme = LEV.prebuilt.name_theme
       end
 
       table.insert(GAME.all_levels, LEV)
@@ -3737,7 +3746,7 @@ function Doom2_get_levels()
     end
 
     if LEV.prebuilt then
-      LEV.name_theme = "BOSS"
+      LEV.name_theme = LEV.prebuilt.name_theme
     end
 
     table.insert(GAME.all_levels, LEV)
