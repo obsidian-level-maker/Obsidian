@@ -527,15 +527,15 @@ function Layout_natural_room(R, heights)
   R.cave_floor_h = heights[1]
   R.cave_h = rand_element { 128, 128, 192, 256 }
 
-  if R.outdoor and THEME.landscape then
-    R.cave_tex = rand_key_by_probs(THEME.landscape.walls)
+  if R.outdoor and THEME.landscape_walls then
+    R.cave_tex = rand_key_by_probs(THEME.landscape_walls)
 
     if R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
        rand_odds(style_sel("lakes", 0, 10, 30, 90)) then
       R.is_lake = true
     end
   else
-    R.cave_tex = rand_key_by_probs(THEME.cave.walls)
+    R.cave_tex = rand_key_by_probs(THEME.cave_walls)
   end
 
 
@@ -2251,8 +2251,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
 
     for i = 1,4 do
-      if LEVEL.theme.building.floors then
-        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.building.floors))
+      if LEVEL.theme.building_floors then
+        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.building_floors))
       else
         table.insert(f_texs, f_texs[1] or R.main_tex)
       end

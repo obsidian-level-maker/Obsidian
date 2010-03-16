@@ -97,14 +97,26 @@ function Game_merge_tab(name, tab)
     error("No such table: " .. tostring(name))
   end
 
-  local DEEP_TABLES = { themes=true, rooms=true }
-
   if not GAME[name] then
     GAME[name] = deep_copy(tab)
-  elseif DEEP_TABLES[name] then
-    deep_merge(GAME[name], tab)
-  else
+    return
+  end
+
+  if name ~= "sub_themes" then
     deepish_merge(GAME[name], tab)
+    return
+  end
+
+  -- special handling for sub_themes
+
+  for k,info in pairs(tab) do
+    if tab == REMOVE_ME then
+      GAME.sub_themes[k] = nil
+    elseif not GAME.sub_themes[k] then
+      GAME.sub_themes[k] = deep_copy(info)
+    else
+      deepish_merge(GAME.sub_themes[k], info)
+    end
   end
 end
 
@@ -252,7 +264,7 @@ function Level_themes()
     local sub_tab = {}
     local sub_pattern = "^" .. name
 
-    for which,theme in pairs(GAME.themes) do
+    for which,theme in pairs(GAME.sub_themes) do
       local prob = theme.prob or 50
       if prob > 0 and string.find(which, sub_pattern) then
         sub_tab[which] = prob
@@ -264,7 +276,7 @@ function Level_themes()
     end
 
     local which = rand_key_by_probs(sub_tab)
-    L.theme = assert(GAME.themes[which])
+    L.theme = assert(GAME.sub_themes[which])
 
     gui.printf("Theme for level %s = %s\n", L.name, which)
   end
@@ -545,8 +557,9 @@ function Level_make(L, index, NUM)
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 
   THEME = assert(LEVEL.theme)
-  if GAME.defaults then
-    merge_missing(THEME, GAME.defaults)
+
+  if GAME.sub_defaults then
+    merge_missing(THEME, GAME.sub_defaults)
   end
 
 

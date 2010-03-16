@@ -99,9 +99,9 @@ function Rooms_decide_outdoors()
     if R.parent then return rand_odds(5) end
 
     if R.natural then
-      if not THEME.landscape then return false end
+      if not THEME.landscape_walls then return false end
     else
-      if not THEME.courtyard then return false end
+      if not THEME.courtyard_floors then return false end
     end
 
     if STYLE.skies == "none"   then return false end
@@ -154,11 +154,11 @@ function Room_setup_theme(R)
   if not LEVEL.outdoor_floors then
     LEVEL.outdoor_floors = {}
 
-    if not THEME.courtyard then
-      LEVEL.outdoor_floors[1] = rand_key_by_probs(THEME.building.floors)
+    if not THEME.courtyard_floors then
+      LEVEL.outdoor_floors[1] = rand_key_by_probs(THEME.building_floors)
     else
       for num = 1,2 do
-        local name = rand_key_by_probs(THEME.courtyard.floors)
+        local name = rand_key_by_probs(THEME.courtyard_floors)
         LEVEL.outdoor_floors[num] = name
       end
     end
@@ -170,7 +170,7 @@ function Room_setup_theme(R)
     LEVEL.building_walls = {}
 
     for num = 1,3 do
-      local name = rand_key_by_probs(THEME.building.walls)
+      local name = rand_key_by_probs(THEME.building_walls)
       LEVEL.building_walls[num] = name
     end
 
@@ -1755,7 +1755,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
-    R.ceil_tex = rand_key_by_probs(THEME.building.ceilings)
+    R.ceil_tex = rand_key_by_probs(THEME.building_ceilings)
 
 -- [[
     decide_periphs()
@@ -1968,9 +1968,9 @@ function Room_build_cave(R)
     local trim
 
     if R.outdoor then
-      trim = get_mat(rand_key_by_probs(THEME.landscape.trims or THEME.landscape.walls))
+      trim = get_mat(rand_key_by_probs(THEME.landscape_trims or THEME.landscape_walls))
     else
-      trim = get_mat(rand_key_by_probs(THEME.cave.trims or THEME.cave.walls))
+      trim = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
     end
 
     if i==2 and rand_odds(50) then  -- TODO: theme specific prob
@@ -2371,9 +2371,9 @@ gui.printf("do_teleport\n")
     -- FLOOR
     if S.kind == "void" then
 
-      if S.solid_feature and THEME.building.corners then
+      if S.solid_feature and THEME.building_corners then
         if not R.corner_tex then
-          R.corner_tex = rand_key_by_probs(THEME.building.corners)
+          R.corner_tex = rand_key_by_probs(THEME.building_corners)
         end
         w_tex = R.corner_tex
       end

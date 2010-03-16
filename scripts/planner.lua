@@ -287,7 +287,7 @@ function Plan_CreateRooms()
   end
 
   local function make_naturals(room_num)
-    if not THEME.cave then return end
+    if not THEME.cave_walls then return end
 
     if room_num <= 3 then return end
 

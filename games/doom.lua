@@ -2171,7 +2171,7 @@ DOOM2_ROOMS =
 }
 
 
-DOOM_THEME_DEFAULTS =
+DOOM_SUB_THEME_DEFAULTS =
 {
   doors = { wooden=30, wooden_fast=20,
             wooden2=20, wooden2_fast=10 },
@@ -2589,7 +2589,7 @@ DOOM_COMMON_SUB_THEMES =
 
 DOOM1_SUB_THEMES =
 {
-  doom_tech1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_tech1 =
   {
     building =
     {
@@ -2616,7 +2616,7 @@ DOOM1_SUB_THEMES =
   },
 
 
-  doom_hell1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell1 =
   {
     building =
     {
@@ -2637,7 +2637,7 @@ DOOM1_SUB_THEMES =
   },
 
 
-  doom_hell2 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell2 =
   {
     building =
     {
@@ -2661,7 +2661,7 @@ DOOM1_SUB_THEMES =
 
 DOOM2_SUB_THEMES =
 {
-  doom_tech1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_tech1 =
   {
     liquids = { nukage=90, water=15, lava=10, slime=5 },
 
@@ -2791,7 +2791,7 @@ DOOM2_SUB_THEMES =
   },
 
 
-  doom_hell2 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell2 =
   {
     liquids = { lava=90, blood=40, slime=10 },
 
@@ -3918,17 +3918,16 @@ OB_GAMES["doom1"] =
     "exits",      DOOM_EXITS,
 
     "rooms",  DOOM_ROOMS,
-    "defaults", DOOM_THEME_DEFAULTS,
-    "themes", DOOM_COMMON_SUB_THEMES,
+
+    "sub_defaults",    DOOM_SUB_THEME_DEFAULTS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 
     ---- DOOM I stuff ----
 
-    "materials", DOOM1_MATERIALS,
-
-    "themes",    DOOM1_SUB_THEMES,
-    "rooms",     DOOM1_ROOMS,
+    "materials",  DOOM1_MATERIALS,
+    "sub_themes", DOOM1_SUB_THEMES,
+    "rooms",      DOOM1_ROOMS,
   },
 }
 
@@ -4031,16 +4030,16 @@ OB_GAMES["doom2"] =
     "exits",      DOOM_EXITS,
 
     "rooms",  DOOM_ROOMS,
-    "defaults", DOOM_THEME_DEFAULTS,
-    "themes", DOOM_COMMON_SUB_THEMES,
+
+    "sub_defaults",    DOOM_SUB_THEME_DEFAULTS,
 
     "prebuilt_levels", DOOM_PREBUILT_LEVELS,
 
     ---- DOOM II stuff ----
 
-    "materials",DOOM2_MATERIALS,
-    "themes",   DOOM2_SUB_THEMES,
-    "rooms",    DOOM2_ROOMS,
+    "materials",  DOOM2_MATERIALS,
+    "sub_themes", DOOM2_SUB_THEMES,
+    "rooms",      DOOM2_ROOMS,
 
     "monsters", DOOM2_MONSTERS,
   },
