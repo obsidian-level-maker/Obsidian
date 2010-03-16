@@ -2100,19 +2100,22 @@ function Layout_one(R)
         line_kind=23,
       }
 
-      local z = math.max(z1+96, R.floor_max_h+64)
-      if z > z2-32 then z = z2-32 end
+      if rand_odds(15) then
+        local z_top = math.max(z1+128, R.floor_max_h+64)
+        if z_top > z2-32 then
+           z_top = z2-32
+        end
 
-      if rand_odds(2) then
-        -- nothing
-      elseif rand_odds(15) and z+20 < (S.ceil_h or R.ceil_h or SKY_H) then
-        Build_lowering_pedestal(S, z, lp_skin)
+        Build_lowering_pedestal(S, z_top, lp_skin)
+
+        Trans_entity(R.key_item, mx, my, z_top)
       else
-        local skin = { floor="CEIL1_2" }
-        Build_pedestal(S, z1, skin)
+        if rand_odds(98) then
+          local skin = { floor="CEIL1_2" }
+          Build_pedestal(S, z1, skin)
+        end
+        Trans_entity(R.key_item, mx, my, z1)
       end
-
-      Trans_entity(R.key_item, mx, my, z)
 
     elseif R.purpose == "SWITCH" then
 gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
@@ -2143,21 +2146,25 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       line_kind=23,
     }
 
-    local z = math.max(z1+80, R.floor_max_h+40)
-    if z > z2-32 then z = z2-32 end
-
     if R.hallway or R == LEVEL.start_room then
-      -- nothing!
-    elseif rand_odds(40) and z+20 < (S.ceil_h or R.ceil_h or SKY_H) then
-      Build_lowering_pedestal(S, z, lp_skin)
+      Trans_entity(weapon, mx, my, z1)
+
+    elseif rand_odds(40) then
+      local z_top = math.max(z1+80, R.floor_max_h+40)
+      if z_top > z2-32 then
+         z_top = z2-32
+      end
+
+      Build_lowering_pedestal(S, z_top, lp_skin)
+
+      Trans_entity(weapon, mx, my, z_top)
     else
       local skin = { floor="CEIL1_2" }
       Build_pedestal(S, z1, skin)
+      Trans_entity(weapon, mx, my, z1)
     end
 
-    Trans_entity(weapon, mx, my, z)
-
-    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z)
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
   end
 
   local function stairwell_height_diff(focus_C)

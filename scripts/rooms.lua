@@ -2274,7 +2274,14 @@ gui.printf("do_teleport\n")
         local LOCK = assert(S.border[side].lock)
         local skin = assert(GAME.doors[LOCK.item])
 
-        Build_lowering_bars(S, side, z1, skin, LOCK.tag)
+        local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
+        local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
+
+        if z_top > ceil_min-32 then
+           z_top = ceil_min-32
+        end
+
+        Build_lowering_bars(S, side, z_top, skin, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true

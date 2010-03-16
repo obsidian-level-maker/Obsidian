@@ -682,7 +682,7 @@ function Build_quake_door(S, side)
 end
 
 
-function Build_lowering_bars(S, side, z1, skin, tag)
+function Build_lowering_bars(S, side, z_top, skin, tag)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -702,11 +702,6 @@ function Build_lowering_bars(S, side, z1, skin, tag)
 
   local mx1 = 8 + side_gap + bar_w/2
   local mx2 = long - 8 - side_gap - bar_w/2
-
-  local z_top = z1 + skin.bar_h
-  if S.room.fence_h then
-    z_top = math.max(z_top, S.room.fence_h + 16)
-  end
 
   Trans_set(T)
 
