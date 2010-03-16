@@ -1672,7 +1672,7 @@ function Monsters_in_room(R)
           gui.debugf("  %s\n", info.name)
         end
 
-        local weap_prefs = LEVEL.weap_prefs or LEVEL.theme.weap_prefs or {}
+        local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
 
         Fight_simulator(mon_list, weap_list, weap_prefs, SK, stats)
         gui.debugf("raw result = \n%s\n", table_to_str(stats,1))

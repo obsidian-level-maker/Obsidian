@@ -336,7 +336,7 @@ function Rooms_decide_hallways_II()
 
   ---| Room_decide_hallways |---
 
-  if not THEME.hallway then
+  if not THEME.hallway_walls then
     gui.printf("Hallways disabled (no theme info)\n")
     return
   end

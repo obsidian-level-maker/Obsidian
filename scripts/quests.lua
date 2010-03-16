@@ -602,7 +602,7 @@ function Quest_add_keys()
 
       if not (R.outdoor or R.natural) and
          not R:has_any_lock() and
-         R.svolume < 25 and LEVEL.theme.exit
+         R.svolume < 25 and THEME.exit
       then
         make_small_exit(R)
       end

@@ -1741,16 +1741,17 @@ function Layout_hallway(R)
   R.tw,  R.th  = R.sw,  R.sh
 
   if not LEVEL.hall_tex then
-    local info = assert(LEVEL.theme.hallway)
+    assert(THEME.hallway_walls)
 
-    LEVEL.hall_tex   = rand_key_by_probs(info.walls)
-    LEVEL.hall_floor = rand_key_by_probs(info.floors)
-    LEVEL.hall_ceil  = rand_key_by_probs(info.ceilings)
+    LEVEL.hall_tex   = rand_key_by_probs(THEME.hallway_walls)
+    LEVEL.hall_floor = rand_key_by_probs(THEME.hallway_floors)
+    LEVEL.hall_ceil  = rand_key_by_probs(THEME.hallway_ceilings)
 
     LEVEL.hall_trim   = rand_odds(50)
     LEVEL.hall_lights = rand_odds(50)
-    if LEVEL.theme.ceil_lights then
-    LEVEL.hall_lite_ftex = rand_key_by_probs(LEVEL.theme.ceil_lights)
+
+    if THEME.ceil_lights then
+      LEVEL.hall_lite_ftex = rand_key_by_probs(THEME.ceil_lights)
     end
   end
 
@@ -2251,8 +2252,8 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
     end
 
     for i = 1,4 do
-      if LEVEL.theme.building_floors then
-        table.insert(f_texs, rand_key_by_probs(LEVEL.theme.building_floors))
+      if THEME.building_floors then
+        table.insert(f_texs, rand_key_by_probs(THEME.building_floors))
       else
         table.insert(f_texs, f_texs[1] or R.main_tex)
       end
@@ -2693,8 +2694,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     stairwell_height_diff(focus_C)
 
     if not LEVEL.well_tex then
-      LEVEL.well_tex   = rand_key_by_probs(LEVEL.theme.stairwell.walls)
-      LEVEL.well_floor = rand_key_by_probs(LEVEL.theme.stairwell.floors)
+      LEVEL.well_tex   = rand_key_by_probs(THEME.stairwell_walls)
+      LEVEL.well_floor = rand_key_by_probs(THEME.stairwell_floors)
     end
 
     local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }

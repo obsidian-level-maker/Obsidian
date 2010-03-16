@@ -1047,8 +1047,8 @@ function Plan_rooms_sp()
 
   gui.random()
 
-  if LEVEL.theme.liquids then
-    local name = rand_key_by_probs(LEVEL.theme.liquids)
+  if THEME.liquids then
+    local name = rand_key_by_probs(THEME.liquids)
     gui.printf("Liquid = %s\n", name)
     LEVEL.liquid = assert(GAME.liquids[name])
   end
