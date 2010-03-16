@@ -2224,85 +2224,6 @@ DOOM_SUB_THEME_DEFAULTS =
 --]]
 
 
-OLD_COMMON_SUBS =
-{
-
-  doom_hell2 =
-  {
-    building =
-    {
-      walls =
-      {
-        SP_HOT1=25, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
-        SKINCUT=2,
-      },
-      floors =
-      {
-        FLAT5_7=10, FLAT10=10, FLAT5_3=10,
-        FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
-      },
-      ceilings =
-      {
-        FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10,
-      },
-    },
-
-    courtyard_floors =
-      {
-        FLAT5_6=10, ASHWALL=5, FLAT10=5,
-        SFLR6_4=10, MFLR8_2=10,
-      },
-
-    cave_walls =
-      {
-        ROCKRED1=90,
-        SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
-        FIREBLU1=50, FIRELAVA=50, 
-      },
-
-    landscape_walls =
-      {
-        ASHWALL=50, GRAYVINE=50,
-        SP_ROCK1=50, ROCKRED1=90,
-        SKSNAKE1=10, SKSNAKE2=10,
-      },
-
-    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
-
-    logos = { carve=90, pill=50, neon=5 },
-
-    pictures =
-    {
-      marbfac2=10, marbfac3=10,
-      spface1=2, firewall=20,
-      spine=5,
-    },
-
-    --- ceil_lights = { LAVA=10 },
-
-    steps =
-    {
-      step1=50, step3=50, step4=50,
-    },
-
-    lifts = { platform=10, rusty=50, spine=30 },
-
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
-
-    room_types =
-    {
-      -- FIXME  TORTURE  PRISON
-    },
-
-    monster_prefs =
-    {
-      zombie=0.3, shooter=0.6, skull=2.0, vile=2.0,
-    },
-  },
-
-}
-
-
 DOOM1_SUB_THEMES =
 {
   doom_tech1 =
@@ -2550,7 +2471,7 @@ DOOM1_SUB_THEMES =
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
-    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 },
+    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 },
   },
 
 
@@ -2566,6 +2487,23 @@ DOOM1_SUB_THEMES =
     {
       walls =
       {
+        SP_HOT1=25, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
+        SKINCUT=2,
+      },
+      floors =
+      {
+        FLAT5_7=10, FLAT10=10, FLAT5_3=10,
+        FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
+      },
+      ceilings =
+      {
+        FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10,
+      },
+    },
+    building =
+    {
+      walls =
+      {
         SKINTEK1=10, SKINTEK2=10,
       },
       corners =
@@ -2573,11 +2511,45 @@ DOOM1_SUB_THEMES =
         SKULWALL=10, SKULWAL3=10, REDWALL1=15,
       },
     },
+    courtyard_floors =
+      {
+        FLAT5_6=10, ASHWALL=5, FLAT10=5,
+        SFLR6_4=10, MFLR8_2=10,
+      },
+    cave_walls =
+      {
+        ROCKRED1=90,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
+        FIREBLU1=50, FIRELAVA=50, 
+      },
+    landscape_walls =
+      {
+        ASHWALL=50, GRAYVINE=50,
+        SP_ROCK1=50, ROCKRED1=90,
+        SKSNAKE1=10, SKSNAKE2=10,
+      },
 
+    logos = { carve=90, pill=50, neon=5 },
+
+    pictures =
+    {
+      marbfac2=10, marbfac3=10,
+      spface1=2, firewall=20,
+      spine=5,
+    },
     pictures = { skulls1=20, skulls2=20 },
+
+    steps = { step1=50, step3=50, step4=50 },
+    lifts = { platform=10, rusty=50, spine=30 },
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
+
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
+
+    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 },
   },
 }
 
@@ -2892,6 +2864,28 @@ DOOM2_SUB_THEMES =
 
     liquids = { lava=90, blood=40, slime=10 },
 
+    building =
+    {
+      walls =
+      {
+        SP_HOT1=25, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
+        SKINCUT=2,
+      },
+      floors =
+      {
+        FLAT5_7=10, FLAT10=10, FLAT5_3=10,
+        FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
+      },
+      ceilings =
+      {
+        FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10,
+      },
+    },
+    courtyard_floors =
+      {
+        FLAT5_6=10, ASHWALL=5, FLAT10=5,
+        SFLR6_4=10, MFLR8_2=10,
+      },
     courtyard =
     {
       floors =
@@ -2900,12 +2894,24 @@ DOOM2_SUB_THEMES =
       },
     },
 
+    cave_walls =
+      {
+        ROCKRED1=90,
+        SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
+        FIREBLU1=50, FIRELAVA=50, 
+      },
     cave =
     {
       RROCK04=70,
       CRACKLE2=7, CRACKLE4=7,
     },
 
+    landscape_walls =
+      {
+        ASHWALL=50, GRAYVINE=50,
+        SP_ROCK1=50, ROCKRED1=90,
+        SKSNAKE1=10, SKSNAKE2=10,
+      },
     landscape =
     {
       RROCK04=70,
@@ -2916,9 +2922,26 @@ DOOM2_SUB_THEMES =
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
     
+    logos = { carve=90, pill=50, neon=5 },
+
+    pictures =
+    {
+      marbfac2=10, marbfac3=10,
+      spface1=2, firewall=20,
+      spine=5,
+    },
     pictures = { spdude7=7 },
 
+    steps = { step1=50, step3=50, step4=50 },
+    lifts = { platform=10, rusty=50, spine=30 },
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
+
     bars = { bar_wood=50, bar_metal=50 },
+
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
+
+    monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0, vile=2.0 },
   },
 
 
