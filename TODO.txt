@@ -2,24 +2,16 @@
 TODO
 ====
 
-!!!  96 lighting
+!! Room kinds:
+   (1) remove current kind values (implied by outdoor and natural)
+   (2) have "normal" as well as "scenic" and "hallway" etc...
 
-!!!  batch mode: if error occurs, RETURN CODE FROM MAIN
 
-FIXED: not using switches (always keys) in small levels ??
+FIXED:  batch mode: if error occurs, RETURN CODE FROM MAIN
 
-rename Zdoom beast: WIP ext
-
--  pillars (sloppy, sloppy2) becoming METAL
-
-+  fix room kinds for natural rooms
-
-DONE:  CSG DOOM: support "rail" and "light" brushes
+FIXED: lowering item pedestals can go into ceiling
 
 -  CSG DOOM: fix up extrafloor creation
-
-DONE:  decide natural #ROOMS based on theme (e.g. less in TECH)
-     via STYLE["naturals"]
 
 
 
@@ -31,21 +23,17 @@ DONE:  decide natural #ROOMS based on theme (e.g. less in TECH)
 +  get small exits working again
    -  rework Build_small_exit to only use a single transform
 
++  more supplies in start room (ammo for weapon, armor vest)
+
 
 -  supply a brush-making callback to Cave_render
 
 -  improve the jaggy edge algorithm (support corner triangles)
 
-+  more supplies in start room (ammo for weapon, armor vest)
-
 -  hallway detailing (etc?) : mark lines as impassible
 
 
 BUG: liquification of caves at a border can subvert quests
-
-FIXED: can assign a seed as "walk" without floor_h
-
-BUG: lowering item pedestals can go into ceiling
 
 BUG: outdoor bars can sometimes be jumped over.
    --> make them higher _or_ another switch to lower them.
