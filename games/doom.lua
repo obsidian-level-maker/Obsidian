@@ -1193,21 +1193,21 @@ DOOM_PICTURES =
     depth=8, light=0.9,
   },
 
---!!!!  planet1 =
---!!!!  {
---!!!!    pic_w="PLANET1", width=192, height=128,
---!!!!    x_offset=0, y_offset=0,
---!!!!    side_t="DOORSTOP", depth=8, 
---!!!!    floor="SHAWN2", light=0.8,
---!!!!  },
---!!!!
---!!!!  planet1_blink =
---!!!!  {
---!!!!    pic_w="PLANET1", width=192, height=128,
---!!!!    x_offset=0, y_offset=0,
---!!!!    side_t="DOORSTOP", depth=8, 
---!!!!    floor="SHAWN2", light=0.8, sec_kind=1,
---!!!!  },
+  planet1 =
+  {
+    pic_w="PLANET1", width=192, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  planet1_blink =
+  {
+    pic_w="PLANET1", width=192, height=128,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
 
   compute1 =
   {
@@ -1225,21 +1225,21 @@ DOOM_PICTURES =
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
---!!!!  compute2 =
---!!!!  {
---!!!!    pic_w="COMPUTE2", width=192, height=56,
---!!!!    x_offset=0, y_offset=0,
---!!!!    side_t="DOORSTOP", depth=8, 
---!!!!    floor="SHAWN2", light=0.8,
---!!!!  },
---!!!!
---!!!!  compute2_blink =
---!!!!  {
---!!!!    pic_w="COMPUTE2", width=192, height=56,
---!!!!    x_offset=0, y_offset=0,
---!!!!    side_t="DOORSTOP", depth=8, 
---!!!!    floor="SHAWN2", light=0.8, sec_kind=1,
---!!!!  },
+  compute2 =
+  {
+    pic_w="COMPUTE2", width=192, height=56,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8,
+  },
+
+  compute2_blink =
+  {
+    pic_w="COMPUTE2", width=192, height=56,
+    x_offset=0, y_offset=0,
+    side_t="DOORSTOP", depth=8, 
+    floor="SHAWN2", light=0.8, sec_kind=1,
+  },
 
   skulls1 =
   {
@@ -2320,30 +2320,30 @@ DOOM_COMMON_SUB_THEMES =
       },
     },
 
----!!!!    exit =
----!!!!    {
----!!!!      walls =
----!!!!      {
----!!!!        METAL2=50,   STARTAN2=50, STARG1=50,
----!!!!        TEKWALL4=50, PIPEWAL2=50,
----!!!!        TEKGREN1=50, SPACEW2=50,  STARBR2=50
----!!!!      },
----!!!!      floors =
----!!!!      {
----!!!!        FLOOR0_3=50, FLOOR5_2=50
----!!!!      },
----!!!!      ceilings =
----!!!!      {
----!!!!        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
----!!!!        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
----!!!!      },
----!!!!      switches =
----!!!!      {
----!!!!        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
----!!!!        SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
----!!!!        SW1TEK=50,   SW1STON1=50
----!!!!      },
----!!!!    },
+    __exit =  -- FIXME
+    {
+      walls =
+      {
+        METAL2=50,   STARTAN2=50, STARG1=50,
+        TEKWALL4=50, PIPEWAL2=50,
+        TEKGREN1=50, SPACEW2=50,  STARBR2=50
+      },
+      floors =
+      {
+        FLOOR0_3=50, FLOOR5_2=50
+      },
+      ceilings =
+      {
+        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
+        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
+      },
+      switches =
+      {
+        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
+        SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
+        SW1TEK=50,   SW1STON1=50
+      },
+    },
 
     doors =
     {
@@ -2605,9 +2605,9 @@ DOOM1_SUB_THEMES =
 
     pictures =
     {
-      planet1=20,  planet1_blink=8,
+---!!!   planet1=20,  planet1_blink=8,
       compute1=20, compute1_blink=3,
-      compute2=15, compute2_blink=2,
+---!!!   compute2=15, compute2_blink=2,
       litered=10,
     },
 
@@ -2731,17 +2731,17 @@ DOOM2_SUB_THEMES =
     },
 
 
----!!!!    exit =
----!!!!    {
----!!!!      walls =
----!!!!      {
----!!!!        METAL2=50, PIPEWAL2=50, TEKGREN1=50, SPACEW2=50,
----!!!!      },
----!!!!      ceilings =
----!!!!      {
----!!!!        GRNLITE1=20,
----!!!!      },
----!!!!    },
+    __exit = -- FIXME
+    {
+      walls =
+      {
+        METAL2=50, PIPEWAL2=50, TEKGREN1=50, SPACEW2=50,
+      },
+      ceilings =
+      {
+        GRNLITE1=20,
+      },
+    },
 
     steps = { step6=50, },
 
@@ -3219,7 +3219,7 @@ DOOM2_MONSTERS =
   vile =
   {
     prob=16, skip_prob=100,
-    health=700, damage=40, attack="hitscan",  ---??? no_dist=true,
+    health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
   },
 
