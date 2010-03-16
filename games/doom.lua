@@ -2738,7 +2738,7 @@ DOOM2_SUB_THEMES =
   },
 
 
-  doom_hell1 =  -- extends the entry in COMMON_SUB_THEMES
+  doom_hell1 =
   {
     prob = 50,
 
