@@ -1519,12 +1519,22 @@ QUAKE2_SUB_THEMES =
   {
     prob = 50,
 
-    building =
+    building_walls =
     {
       TECH_BASE=50,
     },
 
-    courtyard =
+    building_floors =
+    {
+      TECH_BASE=50,
+    },
+
+    building_ceilings =
+    {
+      TECH_BASE=50,
+    },
+
+    courtyard_floors =
     {
       TECH_GROUND=50,
     },
@@ -1534,7 +1544,7 @@ QUAKE2_SUB_THEMES =
       -- FIXME
     },
 
-    exit =
+    __exit =
     {
       -- FIXME
     },
@@ -2059,7 +2069,7 @@ UNFINISHED["quake2"] =
     "exits",  QUAKE2_EXITS,
 
     "episodes", QUAKE2_EPISODES,
-    "themes", QUAKE2_SUB_THEMES,
+    "sub_themes", QUAKE2_SUB_THEMES,
     "rooms",  QUAKE2_ROOMS,
 
     "key_doors", QUAKE2_KEY_DOORS,
