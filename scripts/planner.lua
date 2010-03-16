@@ -961,6 +961,9 @@ function Plan_determine_size()
 
   local ob_size = OB_CONFIG.size
 
+  -- FIXME: REMOVE !!!!!!
+  if ob_size == "normal" then ob_size = "regular" end
+
   -- there is no real "progression" when making a single level
   -- hence use mixed mode instead.
   if ob_size == "prog" and OB_CONFIG.length == "single" then
@@ -987,8 +990,8 @@ function Plan_determine_size()
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { small=4, normal=6, large=7 }
-    local HEIGHTS = { small=3, normal=4, large=7 }
+    local WIDTHS  = { small=4, regular=6, large=7 }
+    local HEIGHTS = { small=3, regular=4, large=7 }
 
     W = WIDTHS[ob_size]
     H = HEIGHTS[ob_size]

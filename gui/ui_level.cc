@@ -247,12 +247,12 @@ bool UI_Level::ParseValue(const char *key, const char *value)
 
 const char * UI_Level::size_syms[] =
 {
-  "small",  "Small",
-  "normal", "Regular",
-  "large",  "Large",
+  "small",   "Small",
+  "regular", "Regular",
+  "large",   "Large",
 
-  "prog",   "Progressive",
-  "mixed",  "Mix It Up",
+  "prog",    "Progressive",
+  "mixed",   "Mix It Up",
 
   NULL, NULL
 };
