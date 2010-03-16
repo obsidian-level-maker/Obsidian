@@ -247,7 +247,9 @@ function deep_merge(dest, src, _curdepth)
   end
 
   for k,v in pairs(src) do
-    if type(v) == "table" then
+    if v == REMOVE_ME then
+      dest[k] = nil
+    elseif type(v) == "table" then
       -- the type check handles non-existing fields too.
       -- the # checks mean we merely copy a list (NOT merge it).
       if type(dest[k]) == "table" and #v == 0 and #dest[k] == 0 then
@@ -255,8 +257,6 @@ function deep_merge(dest, src, _curdepth)
       else
         dest[k] = deep_merge({}, v, _curdepth+1)
       end
-    elseif v == REMOVE_ME then
-      dest[k] = nil
     else
       dest[k] = v
     end
@@ -315,7 +315,7 @@ function expand_copies(LIST)
     sub.copy = nil
   end
 
-  -- expand_copies --
+  --| expand_copies |--
 
   for name,sub in pairs(LIST) do
     expand_it(name, sub)
