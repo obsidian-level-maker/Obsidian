@@ -765,13 +765,14 @@ function Quest_choose_keys()
       break;
     end
 
+    if want_keys <= 0 then break; end
+
     if not LOCK.item then
       LOCK.kind = "KEY"
       LOCK.item = rand_key_by_probs(use_keys)
       use_keys[LOCK.item] = nil
 
       want_keys = want_keys - 1
-      if want_keys <= 0 then break; end
     end
   end
 
