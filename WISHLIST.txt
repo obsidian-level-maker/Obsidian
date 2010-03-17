@@ -69,12 +69,18 @@ Miscellaneous:
   - Can disable the custom levels
   - More than one theme per episode.
 
+  - rarity for bfg10k and railgun for Skulltag
+
 
 Possible Options:
 -  glBSP section:
    -  more accurate nodes (slower)
    -  verbose log messages
    -  pack sidedefs
+
+
+Quests : add locks (new arenas) even when have no keys
+
 
 
 ----------------------------------------------------------------
@@ -113,13 +119,13 @@ SKY GENERATOR:
   DOOM and DOOM II
 ----------------------------------------------------------------
 
++  support MAPINFO lumps (especially for ZDoom ports).
+
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
 -  make light level of windows (esp. outdoor -> outdoor)
    slightly lower than surrounds.
-
--  E2M8 boss map : less trees or lamps.
 
 -  generate episode names (M_EPI# etc).
 

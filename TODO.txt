@@ -25,11 +25,11 @@ DONE ??   theming system rework
 +  more supplies in start room (ammo for weapon, armor vest)
 
 
--  supply a brush-making callback to Cave_render
+DONE:  supply a brush-making callback to Cave_render
 
 -  improve the jaggy edge algorithm (support corner triangles)
 
--  hallway detailing (etc?) : mark lines as impassible
+DONE:  hallway detailing : mark lines as impassible
 
 
 BUG: liquification of caves at a border can subvert quests
@@ -79,8 +79,6 @@ Natural areas:
    (plus space for monster depots)
  
 
-+  support MAPINFO lumps (especially for ZDoom ports).
-
 +  review monster quantities, need some increase over the course
    of a level (like 50% more monsters at end compared to start)
    and maybe better pacing (e.g. nothing in a room occasionally).
@@ -88,10 +86,6 @@ Natural areas:
    Also may need to create smaller room palettes for small
    quantities (i.e. Less or Scarce settings).
 
-
--  Quests : add locks (new arenas) even when have no keys
-
--  rarity for bfg10k and railgun for Skulltag
 
 -  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
