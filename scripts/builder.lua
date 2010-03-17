@@ -563,14 +563,14 @@ function Build_archway(S, side, z1, z2, skin)
   local frame_coords =
   {
     { x=long, y=-N_deep },
-    { x=long, y=deep },
+    { x=long, y=deep, w_face = wall_info.w_face },
     { x=0,    y=deep },
-    { x=0,    y=-N_deep, w_face = other_info.w_face },
+    { x=0,    y=-N_deep },
   }
 
   Trans_set(T)
 
-  Trans_brush(wall_info, frame_coords, z2, EXTREME_H)
+  Trans_brush(other_info, frame_coords, z2, EXTREME_H)
 
 
   assert(deep > 17 or N_deep > 17)
@@ -624,9 +624,9 @@ function Build_door(S, side, z1, skin, skin2, tag)
   local out_info = get_mat(skin2.outer)
 
   local frame_info = get_mat(skin2.inner, skin.frame_c)
-  frame_info.b_face.light = 0.7
 
   local step_info = get_mat(skin.step_w)
+  step_info.t_face.light = 0.7
 
   local key_info = add_pegging(get_mat(skin.key_w or skin2.inner), skin.key_ox, skin.key_oy)
 
@@ -635,12 +635,12 @@ function Build_door(S, side, z1, skin, skin2, tag)
 
   Trans_quad(step_info, 0,my-DY, long,my+DY, -EXTREME_H, z1+8)
 
-  Trans_brush(frame_info,
+  Trans_brush(out_info,
   {
     { x=long, y=my-DY },
-    { x=long, y=my+DY },
+    { x=long, y=my+DY, w_face = frame_info.w_face },
     { x=0,    y=my+DY },
-    { x=0,    y=my-DY, w_face = out_info.w_face },
+    { x=0,    y=my-DY },
   },
   z1+8+door_h, EXTREME_H)
 
@@ -670,12 +670,12 @@ function Build_door(S, side, z1, skin, skin2, tag)
     },
     -EXTREME_H, EXTREME_H)
 
-    Trans_brush(frame_info,
+    Trans_brush(out_info,
     {
       { x=mx-64-18, y=my-DY },
-      { x=mx-64-18, y=my+DY },
+      { x=mx-64-18, y=my+DY, w_face = frame_info.w_face },
       { x=0,        y=my+DY },
-      { x=0,        y=my-DY, w_face = out_info.w_face },
+      { x=0,        y=my-DY },
     },
     -EXTREME_H, EXTREME_H)
   end
@@ -2018,7 +2018,9 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   local side_info = get_mat(skin.side_t)
 
   local facade_info = wall_info
-  if skin.facade then facade_info = get_mat(skin.facade) end
+  if skin.facade then
+    facade_info = get_mat(skin.facade)
+  end
 
 
   local T, long, deep = get_transform_for_seed_side(S, side)
@@ -2028,15 +2030,16 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   Trans_set(T)
 
   -- top and bottom
-  local coords = rect_coords(mx-width/2, 0, mx+width/2, deep)
+  local coords =
+  {
+    { x=mx-width/2, y=0, w_face=facade_info.w_face },
+    { x=mx+width/2, y=0 },
+    { x=mx+width/2, y=deep },
+    { x=mx-width/2, y=deep },
+  }
 
   Trans_brush(wall_info, coords, -EXTREME_H, z1)
   Trans_brush(wall_info, coords, z2,  EXTREME_H)
-
-  local coords = rect_coords(mx-width/2, -4, mx+width/2, 0)
-
-  Trans_brush(facade_info, coords, -EXTREME_H, z1)
-  Trans_brush(facade_info, coords, z2,  EXTREME_H)
 
 
   -- center piece
@@ -2044,9 +2047,9 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
     Trans_brush(wall_info,
     {
       { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
-      { x=mx+mid_w/2, y=deep, w_face = facade_info.w_face },
+      { x=mx+mid_w/2, y=deep },
       { x=mx-mid_w/2, y=deep, w_face = side_info.w_face },
-      { x=mx-mid_w/2, y=0 },
+      { x=mx-mid_w/2, y=0,    w_face = facade_info.w_face },
     },
     -EXTREME_H, EXTREME_H)
   end
@@ -2061,7 +2064,7 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
       { x=mx-width/2, y=0, w_face = side_info.w_face },
       { x=mx-width/2, y=deep },
       { x=0, y=deep },
-      { x=0, y=0 },
+      { x=0, y=0, w_face = facade_info.w_face },
     },
     -EXTREME_H, EXTREME_H)
   end

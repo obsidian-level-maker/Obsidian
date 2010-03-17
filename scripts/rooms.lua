@@ -742,15 +742,16 @@ function Rooms_border_up()
       S.border[side].kind = "nothing"
 
     elseif R1.outdoor then
-      if R2.outdoor then
+      if R2.outdoor or R2.natural then
         S.border[side].kind = "fence"
       else
-        S.border[side].kind = "nothing"
+        S.border[side].kind = "facade"
+        S.border[side].facade = R2.facade
       end
 
-      if N.kind == "small_exit" then
-        S.border[side].kind = "nothing"
-      end
+--###   if N.kind == "small_exit" then
+--###     S.border[side].kind = "nothing"
+--###   end
 
       if N.kind == "liquid" and
         (S.kind == "liquid" or R1.arena == R2.arena)
@@ -792,7 +793,7 @@ function Rooms_border_up()
       local S = SEEDS[x][y][1]
       if S.room == R then
         for side = 2,8,2 do
-          if not S.border[side].kind then
+          if not S.border[side].kind then  -- don't clobber connections
             local N = S:neighbor(side)
   
             if not (N and N.room) then
@@ -981,6 +982,11 @@ function Rooms_border_up()
       S.border[side].win_mid_w = info.mid_w
       S.border[side].win_z1    = info.z1
       S.border[side].win_z2    = info.z2
+
+      local N = S:neighbor(side)
+      assert(N and N.room)
+
+      N.border[10-side].kind = "nothing"
     end -- for S
   end
 
@@ -2178,6 +2184,8 @@ gui.printf("do_teleport\n")
         o_tex = LEVEL.well_tex
       elseif not N.room.outdoor and N.room ~= R.parent then
         o_tex = N.w_tex or N.room.main_tex
+      elseif N.room.outdoor and not R.outdoor then
+        o_tex = R.facade or w_tex
       end
     end
 
@@ -2243,8 +2251,12 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
-        Build_wall(S, side, w_tex, R.facade)
+        Build_wall(S, side, w_tex)
         shrink_both(side, 4)
+      end
+
+      if B_kind == "facade" then
+        Build_facade(S, side, S.border[side].facade)
       end
 
       if B_kind == "window" then
@@ -2311,7 +2323,7 @@ gui.printf("do_teleport\n")
         local door_name = rand_key_by_probs(doors)
         local skin = assert(GAME.doors[door_name])
 
-        local skin2 = { inner=w_tex, outer=R.facade or o_tex } --!!!!!
+        local skin2 = { inner=w_tex, outer=o_tex }
 
         assert(skin.track)
         assert(skin.step_w)
