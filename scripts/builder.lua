@@ -1976,10 +1976,20 @@ function Build_small_exit(R, xt_info, skin, skin2)
 end
 
 
-function Build_wall(S, side, mat)
+function Build_wall(S, side, mat, o_mat)
   Trans_brush(get_mat(mat),
       get_wall_coords(S, side),
       -EXTREME_H, EXTREME_H)
+
+  -- FIXME temp junk
+  if o_mat and o_mat ~= mat then
+    local N = S:neighbor(side)
+    if N then
+      Trans_brush(get_mat(o_mat),
+          get_wall_coords(N, 10-side, 4),
+          -EXTREME_H, EXTREME_H)
+    end
+  end
 end
 
 
@@ -1994,6 +2004,9 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
 
   local side_info = get_mat(skin.side_t)
 
+  local facade_info = wall_info
+  if skin.facade then facade_info = get_mat(skin.facade) end
+
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -2007,13 +2020,18 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   Trans_brush(wall_info, coords, -EXTREME_H, z1)
   Trans_brush(wall_info, coords, z2,  EXTREME_H)
 
+  local coords = rect_coords(mx-width/2, -4, mx+width/2, 0)
+
+  Trans_brush(facade_info, coords, -EXTREME_H, z1)
+  Trans_brush(facade_info, coords, z2,  EXTREME_H)
+
 
   -- center piece
   if mid_w then
     Trans_brush(wall_info,
     {
       { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
-      { x=mx+mid_w/2, y=deep },
+      { x=mx+mid_w/2, y=deep, w_face = facade_info.w_face },
       { x=mx-mid_w/2, y=deep, w_face = side_info.w_face },
       { x=mx-mid_w/2, y=0 },
     },

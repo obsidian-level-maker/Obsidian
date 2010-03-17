@@ -2541,6 +2541,12 @@ DOOM2_SUB_THEMES =
 
     liquids = { nukage=90, water=15, lava=10, slime=5 },
 
+--!!!! TESTING CRUD
+    building_facades =
+    {
+      LAVA1=50, FWATER1=50, NUKAGE1=50, BLOOD1=50
+    },
+
     building_walls =
       {
         STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=11,
@@ -2897,10 +2903,18 @@ DOOM2_SUB_THEMES =
 
     liquids = { water=90, slime=40, lava=20, blood=7, nukage=2 },
 
+    building_facades =
+    {
+      BIGBRIK1=20, BIGBRIK2=10,
+      BLAKWAL1=10, BRWINDOW=15,
+      BRICK5=10, BRICK7=35, BRICK8=5,
+      BRICK10=3, BRICK11=8, BRICK12=8,
+      STONE3=10, STONE2=6,
+    },
+
     building_walls =
       {
         BIGBRIK1=20, BIGBRIK2=10,
-        BLAKWAL1=5, BRWINDOW=5,
         BRICK5=10, BRICK7=35, BRICK8=5,
         BRICK10=3, BRICK11=8, BRICK12=8,
         PANEL7=15, PANCASE2=25, STUCCO3=15,

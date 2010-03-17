@@ -149,21 +149,15 @@ function Rooms_decide_outdoors()
 end
 
 
-function Room_setup_theme(R)
- 
-  if not LEVEL.outdoor_floors then
-    LEVEL.outdoor_floors = {}
+function Rooms_select_textures()
+  if not LEVEL.building_facades then
+    LEVEL.building_facades = {}
 
-    if not THEME.courtyard_floors then
-      LEVEL.outdoor_floors[1] = rand_key_by_probs(THEME.building_floors)
-    else
-      for num = 1,2 do
-        local name = rand_key_by_probs(THEME.courtyard_floors)
-        LEVEL.outdoor_floors[num] = name
-      end
+    for num = 1,2 do
+      local name = rand_key_by_probs(THEME.building_facades or THEME.building_walls)
+      LEVEL.building_facades[num] = name
     end
 
-    gui.printf("outdoor_floors =\n%s\n\n", table_to_str(LEVEL.outdoor_floors))
   end
 
   if not LEVEL.building_walls then
@@ -173,20 +167,42 @@ function Room_setup_theme(R)
       local name = rand_key_by_probs(THEME.building_walls)
       LEVEL.building_walls[num] = name
     end
-
-    gui.printf("building_walls =\n%s\n\n", table_to_str(LEVEL.building_walls))
   end
 
+  if not LEVEL.courtyard_floors then
+    LEVEL.courtyard_floors = {}
 
+    if not THEME.courtyard_floors then
+      LEVEL.courtyard_floors[1] = rand_key_by_probs(THEME.building_floors)
+    else
+      for num = 1,2 do
+        local name = rand_key_by_probs(THEME.courtyard_floors)
+        LEVEL.courtyard_floors[num] = name
+      end
+    end
+  end
+
+  -- TODO: caves and landscapes
+
+  gui.printf("Selected room textures:\n")
+
+  gui.printf("building_facades =\n%s\n\n", table_to_str(LEVEL.building_facades))
+  gui.printf("building_walls =\n%s\n\n",   table_to_str(LEVEL.building_walls))
+  gui.printf("courtyard_floors =\n%s\n\n", table_to_str(LEVEL.courtyard_floors))
+end
+
+
+function Room_setup_theme(R)
   if not R.outdoor then
     R.main_tex = rand_element(LEVEL.building_walls)
     return
   end
 
-  if not R.arena.outdoor_floor then
-    R.arena.outdoor_floor = rand_element(LEVEL.outdoor_floors)
+  if not R.arena.courtyard_floor then
+    R.arena.courtyard_floor = rand_element(LEVEL.courtyard_floors)
   end
-  R.main_tex = R.arena.outdoor_floor
+
+  R.main_tex = R.arena.courtyard_floor
 end
 
 function Room_setup_theme_Scenic(R)
@@ -228,9 +244,44 @@ function Room_setup_theme_Scenic(R)
 
   -- fallback
   if R.outdoor then
-    R.main_tex = rand_element(LEVEL.outdoor_floors)
+    R.main_tex = rand_element(LEVEL.courtyard_floors)
   else
     R.main_tex = rand_element(LEVEL.building_walls)
+  end
+end
+
+function Rooms_assign_facades()
+  for i = 1,#LEVEL.all_rooms,4 do
+    local R = LEVEL.all_rooms[i]
+    R.facade = rand_element(LEVEL.building_facades)
+  end
+
+  local visits = shallow_copy(LEVEL.all_rooms)
+
+  for loop = 1,10 do
+    local changes = false
+
+    rand_shuffle(visits);
+
+    for _,R in ipairs(visits) do
+      if R.facade then
+        for _,N in ipairs(R.neighbors) do
+          if not N.facade then 
+            N.facade = R.facade
+            changes = true
+          end
+        end -- for N
+      end
+    end -- for R
+
+    if not changes then break; end
+  end -- for loop
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if not R.facade then
+io.stderr:write("Emergency facade\n")
+      R.facade = "FIREBLU1" --!!!! rand_element(LEVEL.building_facades)
+    end
   end
 end
 
@@ -241,6 +292,8 @@ function Rooms_choose_themes()
   for _,R in ipairs(LEVEL.scenic_rooms) do
     Room_setup_theme_Scenic(R)
   end
+
+  Rooms_assign_facades()
 end
 
 
@@ -2190,13 +2243,13 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
-        Build_wall(S, side, w_tex)
+        Build_wall(S, side, w_tex, R.facade)
         shrink_both(side, 4)
       end
 
       if B_kind == "window" then
         local B = S.border[side]
-        local skin = { wall=w_tex, side_t="DOORSTOP" }
+        local skin = { wall=w_tex, side_t="DOORSTOP", facade=R.facade or w_tex }
         -- skin.floor = f_tex
 
         Build_window(S, side, B.win_width, B.win_mid_w,
@@ -2258,7 +2311,7 @@ gui.printf("do_teleport\n")
         local door_name = rand_key_by_probs(doors)
         local skin = assert(GAME.doors[door_name])
 
-        local skin2 = { inner=w_tex, outer=o_tex }
+        local skin2 = { inner=w_tex, outer=R.facade or o_tex } --!!!!!
 
         assert(skin.track)
         assert(skin.step_w)
@@ -2472,6 +2525,7 @@ function Rooms_build_all()
 
 ---  Test_room_fabs()
 
+  Rooms_select_textures()
   Rooms_decide_outdoors()
   Rooms_choose_themes()
 
