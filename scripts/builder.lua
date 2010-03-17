@@ -435,6 +435,40 @@ function get_wall_coords(S, side, thick, pad)
 end
 
 
+function Build_wall(S, side, mat)
+  local coords = get_wall_coords(S, side)
+
+  Trans_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+end
+
+
+function Build_facade(S, side, mat)
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  local coords
+
+  if side == 2 then
+    coords = { {x=x1,y=y1}, {x=x2,y=y1}, {x=x2-8,y=y1+8}, {x=x1+8,y=y1+8} }
+  elseif side == 8 then
+    coords = { {x=x2,y=y2}, {x=x1,y=y2}, {x=x1+8,y=y2-8}, {x=x2-8,y=y2-8} }
+  elseif side == 4 then
+    coords = { {x=x1,y=y2}, {x=x1,y=y1}, {x=x1+8,y=y1+8}, {x=x1+8,y=y2-8} }
+  else
+    coords = { {x=x2,y=y1}, {x=x2,y=y2}, {x=x2-8,y=y2-8}, {x=x2-8,y=y1+8} }
+  end
+
+  Trans_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+end
+
+
+function Build_fence(S, side, fence_h, skin)
+  local coords = get_wall_coords(S, side)
+
+  Trans_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
+end
+
+
 function Build_sky_fence(S, side, z_top, z_low, skin)
   local wall_info = get_mat(skin.fence_w, skin.fence_f)
 
@@ -507,6 +541,8 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     Trans_quad(wall_info, wx1, sy2,    sx2, sy2+16, -EXTREME_H, z_top)
   end
 end
+
+
 
 
 function Build_archway(S, side, z1, z2, skin)
@@ -1973,29 +2009,6 @@ function Build_small_exit(R, xt_info, skin, skin2)
   end
 
   Trans_clear()
-end
-
-
-function Build_wall(S, side, mat, o_mat)
-  Trans_brush(get_mat(mat),
-      get_wall_coords(S, side),
-      -EXTREME_H, EXTREME_H)
-
-  -- FIXME temp junk
-  if o_mat and o_mat ~= mat then
-    local N = S:neighbor(side)
-    if N then
-      Trans_brush(get_mat(o_mat),
-          get_wall_coords(N, 10-side, 4),
-          -EXTREME_H, EXTREME_H)
-    end
-  end
-end
-
-
-function Build_fence(S, side, fence_h, skin)
-  Trans_brush(get_mat(skin.wall, skin.floor),
-    get_wall_coords(S, side), -EXTREME_H, fence_h)
 end
 
 
