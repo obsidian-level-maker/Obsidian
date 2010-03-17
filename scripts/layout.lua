@@ -555,7 +555,6 @@ function Layout_natural_room(R, heights)
       if C.conn_h then assert(C.conn_h == S.floor_h) end
 
       C.conn_h = h
-      C.conn_ftex = R.cave_tex  -- needed ???
     end
   end
 
