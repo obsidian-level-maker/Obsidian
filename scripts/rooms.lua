@@ -1920,6 +1920,15 @@ function Room_build_cave(R)
     Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
   end
 
+  local function FC_brush(data, coords)
+    if data.f_info then
+      Trans_brush(data.f_info, coords, -EXTREME_H, data.f_z)
+    end
+    if data.c_info then
+      Trans_brush(data.c_info, coords, data.c_z, EXTREME_H)
+    end
+  end
+
   -- DO WALLS --
 
   if R.is_lake then
@@ -1969,44 +1978,48 @@ function Room_build_cave(R)
 
     Cave_remove_dots(walkway)
 
-    -- DO FLOOR --
+    -- DO FLOOR and CEILING --
 
-    local trim
+    local data = {}
 
     if R.outdoor then
-      trim = get_mat(rand_key_by_probs(THEME.landscape_trims or THEME.landscape_walls))
+      data.f_info = get_mat(rand_key_by_probs(THEME.landscape_trims or THEME.landscape_walls))
     else
-      trim = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
+      data.f_info = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
     end
 
     if i==2 and rand_odds(50) then  -- TODO: theme specific prob
-      trim = get_liquid()
+      data.f_info = get_liquid()
 
       -- FIXME: this bugs up monster/pickup/key spots
       if rand_odds(0) then
-        trim.delta_z = -(i * 10 + 40)
+        data.f_trim.delta_z = -(i * 10 + 40)
       end
     end
 
-    if not trim.delta_z then
-      trim.delta_z = -(i * 10)
+    if not data.f_info.delta_z then
+      data.f_info.delta_z = -(i * 10)
     end
 
-    Cave_render(walkway, - flood.largest_empty.id, base_x, base_y,
-                handle_brush, { info=trim, z2 = R.cave_floor_h + i})
+    data.f_z = R.cave_floor_h + i
 
-
-    -- DO CEILING --
+    data.c_info = nil
 
     if not R.outdoor then
-      if i==2 and rand_odds(40) then
-        w_info = get_sky()
-      end
-      w_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
+      data.c_info = w_info
 
-      Cave_render(walkway, - flood.largest_empty.id, base_x, base_y,
-                  handle_brush, { info=w_info, z1=ceil_h - i })
+      if i==2 and rand_odds(40) then
+        data.c_info = get_sky()
+      end
+
+      data.c_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
+
+      data.c_z = ceil_h - i
     end
+
+
+    Cave_render(walkway, - flood.largest_empty.id, base_x, base_y,
+                FC_brush, data)
   end
 end
 
