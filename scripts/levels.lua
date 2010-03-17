@@ -259,7 +259,7 @@ function Level_themes()
     end
 
     -- don't overwrite theme of special levels
-    if L.theme then return end
+    if L.sub_theme then return end
 
     local sub_tab = {}
     local sub_pattern = "^" .. name
@@ -276,7 +276,7 @@ function Level_themes()
     end
 
     local which = rand_key_by_probs(sub_tab)
-    L.theme = assert(GAME.sub_themes[which])
+    L.sub_theme = assert(GAME.sub_themes[which])
 
     gui.printf("Theme for level %s = %s\n", L.name, which)
   end
@@ -309,7 +309,7 @@ function Level_themes()
     assert(not table_empty(prob_tab))
 
     for idx,L in ipairs(GAME.all_levels) do
-      if not L.theme then
+      if not L.sub_theme then
         local name = rand_key_by_probs(prob_tab)
 
         if not L.name_theme and ((idx % 2) == 1) then
@@ -556,7 +556,7 @@ function Level_make(L, index, NUM)
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 
-  THEME = assert(LEVEL.theme)
+  THEME = assert(LEVEL.sub_theme)
 
   if GAME.sub_defaults then
     merge_missing(THEME, GAME.sub_defaults)
