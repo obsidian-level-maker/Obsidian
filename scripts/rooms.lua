@@ -157,7 +157,6 @@ function Rooms_select_textures()
       local name = rand_key_by_probs(THEME.building_facades or THEME.building_walls)
       LEVEL.building_facades[num] = name
     end
-
   end
 
   if not LEVEL.building_walls then
@@ -271,16 +270,19 @@ function Rooms_assign_facades()
             changes = true
           end
         end -- for N
+      elseif rand_odds(loop * loop) then
+        R.facade = rand_element(LEVEL.building_facades)
       end
     end -- for R
-
-    if not changes then break; end
   end -- for loop
 
   for _,R in ipairs(LEVEL.all_rooms) do
+    assert(R.facade)
+  end
+
+  for _,R in ipairs(LEVEL.scenic_rooms) do
     if not R.facade then
-io.stderr:write("Emergency facade\n")
-      R.facade = "FIREBLU1" --!!!! rand_element(LEVEL.building_facades)
+      R.facade = rand_element(LEVEL.building_facades)
     end
   end
 end
