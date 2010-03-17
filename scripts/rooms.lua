@@ -762,9 +762,8 @@ function Rooms_border_up()
         S.border[side].kind = "nothing"
       end
 
-      if STYLE.fences == "none" and R1.arena == R2.arena and
-         (S.kind ~= "liquid" or
-          S.floor_h == N.floor_h)
+      if STYLE.fences == "none" and R1.arena == R2.arena and R2.outdoor and
+         (S.kind ~= "liquid" or S.floor_h == N.floor_h)
       then
         S.border[side].kind = "nothing"
       end
@@ -2186,7 +2185,7 @@ gui.printf("do_teleport\n")
         o_tex = LEVEL.well_tex
       elseif not N.room.outdoor and N.room ~= R.parent then
         o_tex = N.w_tex or N.room.main_tex
-      elseif N.room.outdoor and not R.outdoor then
+      elseif N.room.outdoor and not (R.outdoor or R.natural) then
         o_tex = R.facade or w_tex
       end
     end

@@ -621,7 +621,7 @@ function Build_door(S, side, z1, skin, skin2, tag)
   door_info.sec_tag = tag
   door_info.delta_z = -8
 
-  local out_info = get_mat(skin2.outer)
+  local out_info = get_mat(skin2.outer, skin.frame_c)
 
   local frame_info = get_mat(skin2.inner, skin.frame_c)
 
