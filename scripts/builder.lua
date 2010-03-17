@@ -835,7 +835,7 @@ function Build_detailed_hall(S, side, z1, z2, skin)
     return false
   end
 
-  local function get_hall_coords(thickness, pad)
+  local function get_hall_coords(thickness, pad, impassible)
 
     ---### S.thick[side] = thickness
 
@@ -854,17 +854,21 @@ function Build_detailed_hall(S, side, z1, z2, skin)
     local res = get_wall_coords(S, side, thickness, pad)
 
     S.x1,S.y1, S.x2,S.y2 = ox1, oy1, ox2, oy2
-    
+
+    if impassible then
+      for _,c in ipairs(res) do c.line_flags = 1 end
+    end
+
     return res
   end
 
 
   if LEVEL.hall_trim then
     Trans_brush(get_mat(skin.trim2),
-        get_hall_coords(32, 8), -EXTREME_H, z1 + 32)
+        get_hall_coords(32, 8, true), -EXTREME_H, z1 + 32)
 
     Trans_brush(get_mat(skin.trim2),
-        get_hall_coords(32, 8), z2 - 32, EXTREME_H)
+        get_hall_coords(32, 8, true), z2 - 32, EXTREME_H)
   end
 
 
