@@ -468,7 +468,7 @@ function Cave_remove_dots(cave, keep_edges, callback)
 end
 
 
-function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
+function Cave_render(cave, reg_id, base_x, base_y, brush_func, data)
   -- only solid regions are handled
   assert(reg_id > 0)
 
@@ -544,22 +544,17 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
 
 
   local function add_brush(corner_map, x, y, bx, by)
----###    if is_land_locked(x, y) then
----###      return
----###    end
-
     bx = bx + (x - 1) * 64
     by = by + (y - 1) * 64
 
   --[[ most basic method
-    Trans_brush(w_info,
+    brush_func(data,
     {
       { x=bx+64, y=by },
       { x=bx+64, y=by+64 },
       { x=bx,    y=by+64 },
       { x=bx,    y=by },
-    },
-    -EXTREME_H, high_z)
+    })
 
     do return end
   --]]
@@ -605,7 +600,7 @@ function Cave_render(cave, reg_id, w_info, base_x, base_y, low_z, high_z)
 
   --- gui.debugf("CAVE BRUSH:\n%s\n\n", table_to_str(coords,2))
 
-    Trans_brush(w_info, coords, low_z, high_z)
+    brush_func(data, coords)
   end
 
 

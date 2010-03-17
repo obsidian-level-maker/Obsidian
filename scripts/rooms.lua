@@ -1916,6 +1916,10 @@ function Room_build_cave(R)
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
+  local function handle_brush(data, coords)
+    Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
+  end
+
   -- DO WALLS --
 
   if R.is_lake then
@@ -1937,10 +1941,12 @@ function Room_build_cave(R)
         local pit = get_liquid()
         pit.delta_z = rand_sel(70, -52, -76)
 
-        Cave_render(flood, id, pit, base_x, base_y, -EXTREME_H, R.cave_floor_h+8)
+        Cave_render(flood, id, base_x, base_y, handle_brush,
+                    { info=pit, z2=R.cave_floor_h+8 })
       else
         -- make walls normally
-        Cave_render(flood, id, w_info, base_x, base_y, -EXTREME_H, high_z)
+        Cave_render(flood, id, base_x, base_y, handle_brush,
+                    { info=w_info, z2=high_z })
       end
     end
   end
@@ -1986,8 +1992,8 @@ function Room_build_cave(R)
       trim.delta_z = -(i * 10)
     end
 
-    Cave_render(walkway, - flood.largest_empty.id, trim,
-                base_x, base_y, -EXTREME_H, R.cave_floor_h + i)
+    Cave_render(walkway, - flood.largest_empty.id, base_x, base_y,
+                handle_brush, { info=trim, z2 = R.cave_floor_h + i})
 
 
     -- DO CEILING --
@@ -1998,8 +2004,8 @@ function Room_build_cave(R)
       end
       w_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
 
-      Cave_render(walkway, - flood.largest_empty.id, w_info,
-                  base_x, base_y, ceil_h - i, EXTREME_H)
+      Cave_render(walkway, - flood.largest_empty.id, base_x, base_y,
+                  handle_brush, { info=w_info, z1=ceil_h - i })
     end
   end
 end
