@@ -1549,6 +1549,26 @@ DOOM_DOORS =
     line_kind=1, tag=0,
   },
 
+  wolf_door =
+  {
+    w=128, h=112, door_h=128,
+    key_w="DOORSTOP",
+    door_w="ZDOORB1", door_c="FLAT23",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=1, tag=0,
+  },
+
+  wolf_elev_door =
+  {
+    w=128, h=112, door_h=128,
+    key_w="DOORSTOP",
+    door_w="ZELDOOR", door_c="FLAT23",
+    step_w="STEP4", step_f="FLAT18",
+    frame_c="FLAT18", track="DOORTRAK",
+    line_kind=1, tag=0,
+  },
+
 
   --- LOCKED DOORS ---
 
@@ -3055,13 +3075,15 @@ DOOM2_SUB_THEMES =
 
     exits = { skull_pillar=50, stone_pillar=8 },
 
+    doors = { wolf_door=90, wolf_elev_door=5 },
+
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _else=0 },
 
 ---???  weap_prefs = { chain=3, shotty=3, super=3 },
 
     style_list =
     {
-      naturals = { none=50, few=50, some=10 },
+      naturals = { none=40, few=60, some=10 },
     },
   },
 }
