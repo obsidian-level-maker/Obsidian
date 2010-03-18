@@ -273,6 +273,9 @@ function get_liquid()
   assert(LEVEL.liquid)
   local mat = get_mat(LEVEL.liquid.mat)
 
+  mat.t_face.light = LEVEL.liquid.light
+  mat.b_face.light = LEVEL.liquid.light
+
   mat.sec_kind = LEVEL.liquid.sec_kind
 
   return mat
