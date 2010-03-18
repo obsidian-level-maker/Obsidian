@@ -524,7 +524,7 @@ function Layout_natural_room(R, heights)
 
   local map
 
-  R.cave_floor_h = heights[1]
+  R.cave_floor_h = assert(heights[1])
   R.cave_h = rand_element { 128, 128, 192, 256 }
 
   if R.outdoor and THEME.landscape_walls then
@@ -1660,6 +1660,10 @@ function Layout_scenic(R)
       S.floor_h = R.liquid_h
     end
   end end -- for x, y
+
+  if R.natural then
+    R.cave_floor_h = min_floor
+  end
 end
 
 
