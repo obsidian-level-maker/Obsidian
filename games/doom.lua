@@ -3044,6 +3044,8 @@ DOOM2_SUB_THEMES =
     steps = { step1=50 },
 
     exits = { skull_pillar=50, stone_pillar=8 },
+
+    force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _else=0 },
   },
 }
 

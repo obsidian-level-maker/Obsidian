@@ -842,9 +842,15 @@ function Monsters_in_room(R)
     local name = info.name
     local prob = info.prob
 
-    if LEVEL.global_skip[name] then
+    if THEME.force_mon_probs then
+      prob = THEME.force_mon_probs[name] or
+             THEME.force_mon_probs._else
+      if prob then return prob end
+    elseif LEVEL.global_skip[name] then
       return 0
     end
+
+    prob = prob or 0
 
     -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
     if LEVEL.monster_prefs then
@@ -947,7 +953,10 @@ function Monsters_in_room(R)
     for name,info in pairs(GAME.monsters) do
       local prob = info.crazy_prob or info.prob or 0
 
-      if LEVEL.global_skip[name] then
+      if THEME.force_mon_probs then
+        prob = THEME.force_mon_probs[name] or
+               THEME.force_mon_probs._else or prob  
+      elseif LEVEL.global_skip[name] then
         prob = 0
       end
 
@@ -994,13 +1003,11 @@ function Monsters_in_room(R)
     gui.debugf("Monster list:\n")
 
     for name,info in pairs(GAME.monsters) do
-      if info.prob then
-        local prob = prob_for_mon(info, fp, toughness)
+      local prob = prob_for_mon(info, fp, toughness)
 
-        if prob > 0 then
-          list[name] = prob
-          gui.debugf("  %s --> prob:%1.1f\n", name, prob)
-        end
+      if prob > 0 then
+        list[name] = prob
+        gui.debugf("  %s --> prob:%1.1f\n", name, prob)
       end
     end
 
