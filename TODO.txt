@@ -2,6 +2,27 @@
 TODO
 ====
 
+!!!! lowering pedestal in ceiling:
+     fucked up because ceiling heights determined AFTER pedestal
+     hence : make pedestal in Build_seed NOT layout.lua
+
+
+Idea: replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
+      (similarly for 'tag', 'args' etc...)
+
+
+Lighting: support entity.light
+
+-  light brushes: if value < 0, "shadow" brush
+
+
+>>  liquids are lit
+
+
+DONE: Wolf theme: ROCK4 caves (but squarey)
+DONE: Wolf SILVER DOOR
+
+
 DONE: Room kinds:
    (1) remove current kind values (implied by outdoor and natural)
    (2) have "normal" as well as "scenic" and "hallway" etc...
@@ -17,17 +38,20 @@ FIXED: outdoor bars can sometimes be jumped over.
 DONE ??   theming system rework
 
 
-+  support outer walls: building_facades in a theme def.
+
++  more supplies in start room (ammo for weapon, armor vest)
 
 +  get small exits working again
    -  rework Build_small_exit to only use a single transform
 
-+  more supplies in start room (ammo for weapon, armor vest)
+>>>  support outer walls: building_facades in a theme def.
+   - would be nice to "smooth" any odd-one-outs
+   - ability to ensure both inner/outer are the same
 
+
++  improve the jaggy edge algorithm (support corner triangles)
 
 DONE:  supply a brush-making callback to Cave_render
-
--  improve the jaggy edge algorithm (support corner triangles)
 
 DONE:  hallway detailing : mark lines as impassible
 
