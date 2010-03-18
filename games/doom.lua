@@ -1966,7 +1966,7 @@ DOOM_LIQUIDS =
 {
   water  = { mat="FWATER1", light=0.65, sec_kind=16 },
   blood  = { mat="BLOOD1",  light=0.65, sec_kind=16 }, --  5% damage
-  nukage = { mat="NUKAGE1", light=0.75, sec_kind=16 }, -- 10% damage
+  nukage = { mat="NUKAGE1", light=0.65, sec_kind=16 }, -- 10% damage
   lava   = { mat="LAVA1",   light=0.75, sec_kind=16 }, -- 20% damage
 
   -- Doom II only --
