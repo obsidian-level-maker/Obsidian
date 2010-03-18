@@ -2003,7 +2003,7 @@ function Room_build_cave(R)
 
   for id,reg in pairs(flood.regions) do
     if id > 0 then
-      if THEME.liquids and not R.is_lake and reg.cells > 4 and
+      if LEVEL.liquid and not R.is_lake and reg.cells > 4 and
          rand_odds(50) and Cave_region_is_island(flood, reg)
       then
         -- create a lava/nukage pit
@@ -2049,7 +2049,7 @@ function Room_build_cave(R)
       data.f_info = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
     end
 
-    if THEME.liquids and i==2 and rand_odds(50) then  -- TODO: theme specific prob
+    if LEVEL.liquid and i==2 and rand_odds(50) then  -- TODO: theme specific prob
       data.f_info = get_liquid()
 
       -- FIXME: this bugs up monster/pickup/key spots
