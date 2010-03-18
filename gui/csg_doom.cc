@@ -101,11 +101,13 @@ public:
   std::vector<extrafloor_c *> exfloors;
 
   int index;
+
+  merge_region_c *region;  // this is invalid after CoalesceSectors
   
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(96), special(0), tag(0), mark(0),
-                    exfloors(), index(-1)
+                    exfloors(), index(-1), region(NULL)
   { }
 
   ~sector_info_c()
@@ -736,6 +738,8 @@ static void MakeSector(merge_region_c *R)
   dm_sectors.push_back(S);
 
 
+  S->region = R;
+
   S->f_h = I_ROUND(B->z2 + B->delta_z);
   S->c_h = I_ROUND(T->z1 + T->delta_z);
 
@@ -842,10 +846,9 @@ fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
     {
       sector_info_c *S = active[i];
 
-      // FIXME : store segments in sector??
-      for (int k = 0; k < (int)mug_segments.size(); k++)
+      for (int k = 0; k < (int)S->region->segs.size(); k++)
       {
-        merge_segment_c *G = mug_segments[k];
+        merge_segment_c *G = S->region->segs[k];
 
         if (! G->front || ! G->back)
           continue;
