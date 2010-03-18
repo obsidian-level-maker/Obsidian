@@ -3039,10 +3039,7 @@ DOOM2_SUB_THEMES =
         FLAT5_3=10, FLAT5_5=20,
       },
 
-    courtyard =
-    {
-      floors = { GRASS1=20, MFLR8_1=20, },
-    },
+    courtyard_floors = { GRASS1=20, MFLR8_1=20, },
 
     steps = { step1=50 },
 
