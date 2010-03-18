@@ -56,7 +56,9 @@ static int extrafloor_tag;
 static int extrafloor_slot;
 
 
-#define SEC_PRIMARY_LIT  0x20000
+#define SEC_IS_SKY       (0x1 << 16)
+#define SEC_PRIMARY_LIT  (0x2 << 16)
+#define SEC_SHADOW       (0x4 << 16)
 
 
 class sector_info_c;
@@ -103,11 +105,14 @@ public:
   int index;
 
   merge_region_c *region;  // this is invalid after CoalesceSectors
-  
+
+  int misc_flags;
+
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(96), special(0), tag(0), mark(0),
-                    exfloors(), index(-1), region(NULL)
+                    exfloors(), index(-1),
+                    region(NULL), misc_flags(0)
   { }
 
   ~sector_info_c()
@@ -135,6 +140,8 @@ public:
 
   bool Match(const sector_info_c *other) const
   {
+    // deliberately absent: misc_flags
+
     return (f_h == other->f_h) &&
            (c_h == other->c_h) &&
            (light == other->light) &&
@@ -770,12 +777,12 @@ static void MakeSector(merge_region_c *R)
   if (T->b_face->light > 0 || B->t_face->light > 0)
   {
     S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-    S->special |= SEC_PRIMARY_LIT;
+    S->misc_flags |= SEC_PRIMARY_LIT;
 
   }
 
-  if (T->bkind == BKIND_Sky)  // FIXME temp hack
-    S->special |= 0x10000;
+  if (T->bkind == BKIND_Sky)
+    S->misc_flags |= SEC_IS_SKY;
 
 
   // handle Lighting brushes
@@ -790,13 +797,20 @@ static void MakeSector(merge_region_c *R)
     if (B->z2 < S->f_h+1 || B->z1 > S->c_h-1)
       continue;
 
+    if (B->b_face->light < 0 || B->t_face->light < 0)
+    {
+      if (S->f_h < S->c_h)
+        S->misc_flags |= SEC_SHADOW;
+      continue;
+    }
+
     // TODO: perhaps have a single 'brush.light' field
     int light = (int)(256 * MAX(B->b_face->light, B->t_face->light));
 
     if (light > S->light)
     {
       S->light = light;
-      S->special |= SEC_PRIMARY_LIT;
+      S->misc_flags |= SEC_PRIMARY_LIT;
     }
   }
 
@@ -833,13 +847,14 @@ static void LightingFloodFill(void)
 
   for (i = 1; i < (int)dm_sectors.size(); i++)
   {
-    if (dm_sectors[i]->special & SEC_PRIMARY_LIT)
+    if (dm_sectors[i]->misc_flags & SEC_PRIMARY_LIT)
       active.push_back(dm_sectors[i]);
   }
 
   while (! active.empty())
   {
-fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
+//fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
+
     std::vector<sector_info_c *> changed;
 
     for (i = 0; i < (int)active.size(); i++)
@@ -865,10 +880,14 @@ fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
         if (B == S)
           std::swap(F, B);
 
-        if (B->special & SEC_PRIMARY_LIT)
+        if (B->misc_flags & SEC_PRIMARY_LIT)
           continue;
 
         int light = MIN(F->light - 16, 176);
+
+        // less light through closed doors
+        if (F->f_h >= B->c_h || B->f_h >= F->c_h)
+          light -= 32;
 
         if (B->light > light)
           continue;
@@ -884,11 +903,14 @@ fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
     std::swap(active, changed);
   }
 
-fprintf(stderr, "LightingFloodFill EMPTY\n");
+//fprintf(stderr, "LightingFloodFill EMPTY\n");
 
   for (i = 0; i < (int)dm_sectors.size(); i++)
   {
     sector_info_c *S = dm_sectors[i];
+
+    if ((S->misc_flags & SEC_SHADOW))
+      S->light -= (S->light > 168) ? 48 : 32;
 
     S->light = CLAMP(96, S->light, 255);
   }
@@ -2049,7 +2071,7 @@ static void NK_WriteWalls(void)
     int c_flags = 0;
     int visibility = 1;
 
-    if (S->special & 0x10000)
+    if (S->misc_flags & SEC_IS_SKY)
     {
       c_flags |= SECTOR_F_PARALLAX;
     }
