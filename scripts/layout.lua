@@ -530,7 +530,8 @@ function Layout_natural_room(R, heights)
   if R.outdoor and THEME.landscape_walls then
     R.cave_tex = rand_key_by_probs(THEME.landscape_walls)
 
-    if R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
+    if THENE.liquids and
+       R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
        rand_odds(style_sel("lakes", 0, 10, 30, 90)) then
       R.is_lake = true
     end

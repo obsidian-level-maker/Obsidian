@@ -3022,9 +3022,17 @@ DOOM2_SUB_THEMES =
   {
     prob = 10,
 
+    square_caves = true,
+
+    building_facades =
+      {
+        ZZWOLF1=50, ZZWOLF11=40, ZZWOLF9=20,
+      },
+
     building_walls =
       {
-        ZZWOLF1=50, ZZWOLF11=40, ZZWOLF9=40, ZZWOLF12=15,
+        ZZWOLF1=40, ZZWOLF11=20, ZZWOLF9=40,
+        ZZWOLF5=30,
       },
 
     building_floors =
@@ -3039,13 +3047,22 @@ DOOM2_SUB_THEMES =
         FLAT5_3=10, FLAT5_5=20,
       },
 
-    courtyard_floors = { GRASS1=20, MFLR8_1=20, },
+    courtyard_floors = { MFLR8_1=20, FLAT1_1=10, RROCK04=20 },
+
+    cave_walls = { ROCK4=50, SP_ROCK1=10 },
 
     steps = { step1=50 },
 
     exits = { skull_pillar=50, stone_pillar=8 },
 
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _else=0 },
+
+---???  weap_prefs = { chain=3, shotty=3, super=3 },
+
+    style_list =
+    {
+      naturals = { none=50, few=50, some=10 },
+    },
   },
 }
 

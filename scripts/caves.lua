@@ -468,7 +468,8 @@ function Cave_remove_dots(cave, keep_edges, callback)
 end
 
 
-function Cave_render(cave, reg_id, base_x, base_y, brush_func, data)
+function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
+                     square_caves)
   -- only solid regions are handled
   assert(reg_id > 0)
 
@@ -547,17 +548,18 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data)
     bx = bx + (x - 1) * 64
     by = by + (y - 1) * 64
 
-  --[[ most basic method
-    brush_func(data,
-    {
-      { x=bx+64, y=by },
-      { x=bx+64, y=by+64 },
-      { x=bx,    y=by+64 },
-      { x=bx,    y=by },
-    })
+    -- most basic method (mostly for debugging)
+    if square_caves then
+      brush_func(data,
+      {
+        { x=bx+64, y=by },
+        { x=bx+64, y=by+64 },
+        { x=bx,    y=by+64 },
+        { x=bx,    y=by },
+      })
 
-    do return end
-  --]]
+      return
+    end
 
     local coords = { }
     local SIDES  = { 1,3,9,7 }
