@@ -56,6 +56,8 @@ static int extrafloor_tag;
 static int extrafloor_slot;
 
 
+#define SEC_PRIMARY_LIT  0x20000
+
 
 class sector_info_c;
 class linedef_info_c;
@@ -102,7 +104,7 @@ public:
   
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(255), special(0), tag(0), mark(0),
+                    light(96), special(0), tag(0), mark(0),
                     exfloors(), index(-1)
   { }
 
@@ -743,17 +745,6 @@ static void MakeSector(merge_region_c *R)
   S->f_tex = B->t_face->tex;
   S->c_tex = T->b_face->tex;
 
-  if (T->bkind == BKIND_Sky)
-    S->light = (int)(255 * T->b_face->light);
-  else
-  {
-    // FIXME: TEMP CRUD
-    int min_light = (S->c_h - S->f_h < 150) ? 128 : 144;
-
-    S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-    S->light = MAX(min_light, S->light);
-  }
-
   S->mark = MAX(B->mark, T->mark);
 
   // floors have priority over ceilings
@@ -772,6 +763,13 @@ static void MakeSector(merge_region_c *R)
     S->tag = 0;
 
 
+  if (T->b_face->light > 0 || B->t_face->light > 0)
+  {
+    S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
+    S->special |= SEC_PRIMARY_LIT;
+
+  }
+
   if (T->bkind == BKIND_Sky)  // FIXME temp hack
     S->special |= 0x10000;
 
@@ -788,15 +786,15 @@ static void MakeSector(merge_region_c *R)
     if (B->z2 < S->f_h+1 || B->z1 > S->c_h-1)
       continue;
 
-      // TODO: perhaps have a single 'brush.light' field
-      int light = (int)(256 * MAX(B->b_face->light, B->t_face->light));
+    // TODO: perhaps have a single 'brush.light' field
+    int light = (int)(256 * MAX(B->b_face->light, B->t_face->light));
 
-      if (S->light < light)
-          S->light = light;
+    if (light > S->light)
+    {
+      S->light = light;
+      S->special |= SEC_PRIMARY_LIT;
+    }
   }
-
-  if (S->light > 255)
-      S->light = 255;
 
 
   // find brushes floating in-between --> make extrafloors
@@ -821,6 +819,75 @@ static void MakeSector(merge_region_c *R)
                 T->b_brush->t_face->tex.c_str(),
                 T->b_brush->w_face->tex.c_str());
     }
+  }
+}
+
+static void LightingFloodFill(void)
+{
+  int i;
+  std::vector<sector_info_c *> active;
+
+  for (i = 1; i < (int)dm_sectors.size(); i++)
+  {
+    if (dm_sectors[i]->special & SEC_PRIMARY_LIT)
+      active.push_back(dm_sectors[i]);
+  }
+
+  while (! active.empty())
+  {
+fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
+    std::vector<sector_info_c *> changed;
+
+    for (i = 0; i < (int)active.size(); i++)
+    {
+      sector_info_c *S = active[i];
+
+      // FIXME : store segments in sector??
+      for (int k = 0; k < (int)mug_segments.size(); k++)
+      {
+        merge_segment_c *G = mug_segments[k];
+
+        if (! G->front || ! G->back)
+          continue;
+
+        if (G->front->index <= 0 || G->back->index <= 0)
+          continue;
+
+        sector_info_c *F = dm_sectors[G->front->index];
+        sector_info_c *B = dm_sectors[G->back ->index];
+
+        if (! (F==S || B==S))
+          continue;
+
+        if (B == S)
+          std::swap(F, B);
+
+        if (B->special & SEC_PRIMARY_LIT)
+          continue;
+
+        int light = MIN(F->light - 16, 176);
+
+        if (B->light > light)
+          continue;
+
+        // spread brighter light into back sector
+          
+        B->light = light;
+
+        changed.push_back(B);
+      }
+    }
+
+    std::swap(active, changed);
+  }
+
+fprintf(stderr, "LightingFloodFill EMPTY\n");
+
+  for (i = 0; i < (int)dm_sectors.size(); i++)
+  {
+    sector_info_c *S = dm_sectors[i];
+
+    S->light = CLAMP(96, S->light, 255);
   }
 }
 
@@ -963,6 +1030,8 @@ static void CreateSectors(void)
 
     MakeSector(R);
   }
+
+  LightingFloodFill();
 
   CoalesceSectors();
 
