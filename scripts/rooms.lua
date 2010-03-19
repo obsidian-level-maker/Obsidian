@@ -2125,6 +2125,202 @@ gui.printf("do_teleport\n")
   end
 
 
+  local function dir_for_wotsit(S)
+    local dirs  = {}
+    local missing_dir
+  
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      if N and N.room == R and N.kind == "walk" and
+         N.floor_h and math.abs(N.floor_h - S.floor_h) < 17
+      then
+        table.insert(dirs, dir)
+      else
+        missing_dir = dir
+      end
+    end
+
+    if #dirs == 1 then return dirs[1] end
+
+    if #dirs == 3 then return 10 - missing_dir end
+
+    if S.room.entry_conn then
+      local entry_S = S.room.entry_conn:seed(S.room)
+      local exit_dir = assert(entry_S.conn_dir)
+
+      if #dirs == 0 then return exit_dir end
+
+      for _,dir in ipairs(dirs) do
+        if dir == exit_dir then return exit_dir end
+      end
+    end
+
+    if #dirs > 0 then
+      return rand_element(dirs)
+    end
+
+    return rand_irange(1,4)*2
+  end
+
+  local function player_angle(S)
+    if R.sh > R.sw then
+      if S.sy > (R.sy1 + R.sy2) / 2 then 
+        return 270
+      else
+        return 90
+      end
+    else
+      if S.sx > (R.sx1 + R.sx2) / 2 then 
+        return 180
+      else
+        return 0
+      end
+    end
+  end
+
+  local function do_purpose(S)
+    local sx, sy = S.sx, S.sy
+
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    local mx, my = S:mid_point()
+
+    if R.purpose == "START" then
+      local angle = player_angle(S)
+      local dist = 56
+
+      if PARAM.raising_start and R.svolume >= 20 and not R.natural
+         and rand_odds(30)
+      then
+        gui.debugf("Raising Start made\n")
+
+        local skin =
+        {
+          f_tex = S.f_tex or R.main_tex,
+          switch_w = "SW1COMP",
+        }
+
+        Build_raising_start(S, 6, z1, skin)
+        angle = 0
+
+        S.no_floor = true
+        S.raising_start = true
+        R.has_raising_start = true
+      else
+        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=true }
+        Build_pedestal(S, z1, skin)
+      end
+
+      Trans_entity("player1", mx, my, z1, { angle=angle })
+
+      if GAME.things["player2"] then
+        Trans_entity("player2", mx - dist, my, z1, { angle=angle })
+        Trans_entity("player3", mx + dist, my, z1, { angle=angle })
+        Trans_entity("player4", mx, my - dist, z1, { angle=angle })
+      end
+
+      -- never put monsters next to the start spot
+      for dir = 2,8,2 do
+        local N = S:neighbor(dir)
+        if N and N.room == R then
+          N.no_monster = true
+        end
+      end
+
+    elseif R.purpose == "EXIT" then
+      local CS = R.conns[1]:seed(R)
+      local dir = dir_for_wotsit(S)
+
+      if R.outdoor and THEME.out_exits then
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand_key_by_probs(THEME.out_exits)
+        local skin = assert(GAME.exits[skin_name])
+        Build_outdoor_exit_switch(S, dir, z1, skin)
+
+      elseif THEME.exits then
+        -- FIXME: use single one for a whole episode
+        local skin_name = rand_key_by_probs(THEME.exits)
+        local skin = assert(GAME.exits[skin_name])
+        Build_exit_pillar(S, z1, skin)
+      end
+
+    elseif R.purpose == "KEY" then
+      local lp_skin = -- FIXME!!!!  game specific skin
+      {
+        wall="WOOD3", floor="CEIL1_3",
+        x_offset=0, y_offset=0, peg=true,
+        line_kind=23,
+      }
+
+      if rand_odds(15) then
+        local z_top = math.max(z1+128, R.floor_max_h+64)
+        if z_top > z2-32 then
+           z_top = z2-32
+        end
+
+        Build_lowering_pedestal(S, z_top, lp_skin)
+
+        Trans_entity(R.key_item, mx, my, z_top)
+      else
+        if rand_odds(98) then
+          local skin = { floor="CEIL1_2" }
+          Build_pedestal(S, z1, skin)
+        end
+        Trans_entity(R.key_item, mx, my, z1)
+      end
+
+    elseif R.purpose == "SWITCH" then
+gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
+      local LOCK = assert(R.lock_for_item)  -- eww
+      local INFO = assert(GAME.switches[R.do_switch])
+      Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+
+    else
+      error("Layout_one: unknown purpose! " .. tostring(R.purpose))
+    end
+  end
+
+
+  local function do_weapon(S)
+    local sx, sy = S.sx, S.sy
+
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    local mx, my = S:mid_point()
+
+    local weapon = assert(S.content_weapon)
+
+    local lp_skin = -- FIXME!!!!  game specific skin
+    {
+      wall="PIPEWAL1", floor="CEIL1_2",
+      x_offset=0, y_offset=0, peg=true,
+      line_kind=23,
+    }
+
+    if R.hallway or R == LEVEL.start_room then
+      Trans_entity(weapon, mx, my, z1)
+
+    elseif rand_odds(40) then
+      local z_top = math.max(z1+80, R.floor_max_h+40)
+      if z_top > z2-32 then
+         z_top = z2-32
+      end
+
+      Build_lowering_pedestal(S, z_top, lp_skin)
+
+      Trans_entity(weapon, mx, my, z_top)
+    else
+      local skin = { floor="CEIL1_2" }
+      Build_pedestal(S, z1, skin)
+      Trans_entity(weapon, mx, my, z1)
+    end
+
+    gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
+  end
+
+
   local function vis_mark_wall(S, side)
     gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
   end
@@ -2523,6 +2719,12 @@ gui.printf("do_teleport\n")
 
     if S.content == "pillar" then
       Build_pillar(S, z1, z2, assert(S.pillar_skin))
+    end
+
+    if S.content == "wotsit" and S.content_kind == "WEAPON" then
+      do_weapon(S)
+    elseif S.content == "wotsit" then
+      do_purpose(S)
     end
 
 
