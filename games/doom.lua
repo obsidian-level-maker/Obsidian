@@ -2321,7 +2321,7 @@ DOOM1_SUB_THEMES =
 
     stairwell_walls =
       {
-        BROWN1=50, GRAY1=50, STARGR1=50, METAL4=50
+        BROWN1=50, GRAY1=50, STARGR1=50, METAL1=20
       },
     stairwell_floors =
       {
