@@ -3697,6 +3697,7 @@ function Doom1_get_levels()
         name  = string.format("E%dM%d", episode, map),
         patch = string.format("WILV%d%d", episode-1, map-1),
 
+        map      = map,
         episode  = episode,
         ep_along = ep_along,
 
@@ -3781,6 +3782,7 @@ function Doom2_get_levels()
       name  = string.format("MAP%02d", map),
       patch = string.format("CWILV%02d", map-1),
 
+      map      = map,
       episode  = episode,
       ep_along = ep_along,
 
