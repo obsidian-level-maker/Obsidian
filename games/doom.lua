@@ -2351,9 +2351,8 @@ DOOM1_SUB_THEMES =
     {
       walls =
       {
-        METAL2=50,   STARTAN2=50, STARG1=50,
-        TEKWALL4=50, PIPEWAL2=50,
-        TEKGREN1=50, SPACEW2=50,  STARBR2=50
+        STARTAN2=50, STARG1=50,
+        TEKWALL4=50, STARBR2=50
       },
       floors =
       {
@@ -2362,13 +2361,13 @@ DOOM1_SUB_THEMES =
       ceilings =
       {
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50
+        FLOOR1_7=50, CEIL4_3=50
       },
       switches =
       {
         SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
-        SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
-        SW1TEK=50,   SW1STON1=50
+        SW1GRAY=50,  SW1SLAD=50, SW1STRTN=50,
+        SW1STON1=50
       },
     },
 
