@@ -1149,7 +1149,17 @@ QUAKE1_EPISODES =
 ----------------------------------------------------------------
 
 function Quake1_setup()
-  -- nothing to do
+  local tex_wad = "quake_tex.wd2"
+
+  local primary_tex_file = gui.locate_data(tex_wad)
+
+  if not primary_tex_file then
+    error("cannot find texture file: " .. tex_wad .. "\n\n" ..
+          "Please visit the OBLIGE website for full information on " ..
+          "how to setup Quake support.")
+  end
+
+  -- gui.quake_add_wad(primary_tex_file)
 end
 
 
