@@ -92,6 +92,8 @@ require 'defs'
 require 'util'
 
 
+ACCURATE_LIGHTING = true
+
 
 function Rooms_decide_outdoors()
   local function choose(R)
@@ -2146,6 +2148,20 @@ gui.printf("do_teleport\n")
     end
   end
 
+  local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
+    if ACCURATE_LIGHTING and (S.content ~= "wotsit") then
+      local mx = int((x1+x2) / 2)
+      local my = int((y1+y2) / 2)
+
+      Trans_quad(info, x1,y1, mx,my, z1,z2)
+      Trans_quad(info, mx,y1, x2,my, z1,z2)
+      Trans_quad(info, x1,my, mx,y2, z1,z2)
+      Trans_quad(info, mx,my, x2,y2, z1,z2)
+    else
+      Trans_quad(info, x1,y1, x2,y2, z1,z2)
+    end
+  end
+
 
   local function build_seed(S)
     if S.already_built then
@@ -2499,7 +2515,7 @@ gui.printf("do_teleport\n")
       local info = get_mat(S.l_tex or w_tex, f_tex)
       info.sec_kind = sec_kind
 
-      Trans_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
     end
 
 
