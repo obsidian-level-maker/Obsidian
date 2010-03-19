@@ -61,6 +61,12 @@ static int extrafloor_slot;
 #define SEC_SHADOW       (0x4 << 16)
 
 
+#define MIN_LIGHT  96
+#define LIGHT_DIST_FACTOR  1000.0
+
+bool quantize_lighting = true;
+
+
 class sector_info_c;
 class linedef_info_c;
 
@@ -107,12 +113,13 @@ public:
   merge_region_c *region;  // this is invalid after CoalesceSectors
 
   int misc_flags;
+  int valid_count;
 
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(96), special(0), tag(0), mark(0),
+                    light(MIN_LIGHT), special(0), tag(0), mark(0),
                     exfloors(), index(-1),
-                    region(NULL), misc_flags(0)
+                    region(NULL), misc_flags(0), valid_count(0)
   { }
 
   ~sector_info_c()
@@ -845,14 +852,23 @@ static void LightingFloodFill(void)
   int i;
   std::vector<sector_info_c *> active;
 
+  int valid_count = 1;
+
   for (i = 1; i < (int)dm_sectors.size(); i++)
   {
-    if (dm_sectors[i]->misc_flags & SEC_PRIMARY_LIT)
+    sector_info_c *S = dm_sectors[i];
+
+    if (S->misc_flags & SEC_PRIMARY_LIT)
+    {
       active.push_back(dm_sectors[i]);
+      S->valid_count = valid_count;
+    }
   }
 
   while (! active.empty())
   {
+    valid_count++;
+
 //fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
 
     std::vector<sector_info_c *> changed;
@@ -883,20 +899,38 @@ static void LightingFloodFill(void)
         if (B->misc_flags & SEC_PRIMARY_LIT)
           continue;
 
-        int light = MIN(F->light - 16, 176);
+        int light = MIN(F->light, 176);
+
+        SYS_ASSERT(B != F);
+
+        double x1 = (F->region->min_x + F->region->max_x) / 2.0;
+        double y1 = (F->region->min_y + F->region->max_y) / 2.0;
+        double x2 = (B->region->min_x + B->region->max_x) / 2.0;
+        double y2 = (B->region->min_y + B->region->max_y) / 2.0;
+
+        double dist = ComputeDist(x1,y1, x2,y2);
+
+        double A = log(light) / log(2);
+        double L2 = pow(2, A - dist / LIGHT_DIST_FACTOR);
+
+        light = (int)L2;
 
         // less light through closed doors
         if (F->f_h >= B->c_h || B->f_h >= F->c_h)
           light -= 32;
 
-        if (B->light > light)
+        if (B->light >= light)
           continue;
 
         // spread brighter light into back sector
           
         B->light = light;
 
-        changed.push_back(B);
+        if (B->valid_count != valid_count)
+        {
+          B->valid_count = valid_count;
+          changed.push_back(B);
+        }
       }
     }
 
@@ -909,10 +943,13 @@ static void LightingFloodFill(void)
   {
     sector_info_c *S = dm_sectors[i];
 
+    if (quantize_lighting)
+      S->light = ((S->light + 3) / 16) * 16;
+
     if ((S->misc_flags & SEC_SHADOW))
       S->light -= (S->light > 168) ? 48 : 32;
 
-    S->light = CLAMP(96, S->light, 255);
+    S->light = CLAMP(MIN_LIGHT, S->light, 255);
   }
 }
 
