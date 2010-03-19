@@ -129,6 +129,9 @@ SKY GENERATOR:
 
 -  generate episode names (M_EPI# etc).
 
+-  generate DEMO# lumps : use nomonster mode, guide the player
+   to get each key / switch / exit room.
+
 
 ----------------------------------------------------------------
   HERETIC:

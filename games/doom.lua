@@ -3720,6 +3720,10 @@ function Doom1_get_levels()
         LEV.name_theme = LEV.prebuilt.name_theme
       end
 
+      if MAP_NUM == 1 or map == 3 then
+        LEV.demo_lump = string.format("DEMO%d", episode)
+      end
+
       table.insert(GAME.all_levels, LEV)
     end -- for map
 
@@ -3805,6 +3809,10 @@ function Doom2_get_levels()
 
     if LEV.prebuilt then
       LEV.name_theme = LEV.prebuilt.name_theme
+    end
+
+    if MAP_NUM == 1 or (map % 10) == 3 then
+      LEV.demo_lump = string.format("DEMO%d", episode)
     end
 
     table.insert(GAME.all_levels, LEV)
