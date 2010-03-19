@@ -281,7 +281,7 @@ void Main_ProgStatus(const char *msg, ...)
 
   if (main_win)
   {
-    main_win->build_box->ProgStatus(msg);
+    main_win->build_box->ProgStatus(buffer);
   }
   else if (batch_mode)
   {
