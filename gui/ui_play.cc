@@ -127,8 +127,7 @@ UI_Play::UI_Play(int x, int y, int w, int h, const char *label) :
   cy += ammo->h() + y_step;
 
 
-  DebugPrintf("UI_Play: final h = %d\n", cy - y);
-
+//  DebugPrintf("UI_Play: final h = %d\n", cy - y);
 
   Signal_Watch("mode", notify_Mode, this);
 }

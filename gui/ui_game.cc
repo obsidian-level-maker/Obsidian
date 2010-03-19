@@ -126,7 +126,7 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   cy += length->h() + y_step;
 
 
-  DebugPrintf("UI_Game: final h = %d\n", cy - y);
+//  DebugPrintf("UI_Game: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 

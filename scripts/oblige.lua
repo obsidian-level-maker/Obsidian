@@ -412,6 +412,8 @@ function ob_init()
     if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
   end
 
+  gui.printf("~~ Oblige Lua initialization begun ~~\n")
+
   name_it_up(OB_GAMES)
   name_it_up(OB_THEMES)
   name_it_up(OB_ENGINES)
@@ -450,6 +452,7 @@ function ob_init()
 
   local function create_buttons(what, DEFS)
     assert(DEFS)
+    gui.debugf("creating buttons for %s\n", what)
   
     local list = {}
 
@@ -472,6 +475,8 @@ function ob_init()
   end
 
   local function create_mod_options()
+    gui.debugf("creating module options\n", what)
+
     for _,mod in pairs(OB_MODULES) do
       if not mod.options then
         mod.options = {}
@@ -523,6 +528,8 @@ function ob_init()
 
   gui.change_button("game",   OB_CONFIG.game)
   gui.change_button("engine", OB_CONFIG.engine)
+
+  gui.printf("\n~~ Completed Lua initialization ~~\n\n")
 end
 
 

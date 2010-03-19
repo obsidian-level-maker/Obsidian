@@ -124,7 +124,7 @@ UI_Level::UI_Level(int x, int y, int w, int h, const char *label) :
   cy += traps->h() + y_step;
 
 
-  DebugPrintf("UI_Level: final h = %d\n", cy - y);
+//  DebugPrintf("UI_Level: final h = %d\n", cy - y);
 
   resizable(0);  // don't resize our children
 }

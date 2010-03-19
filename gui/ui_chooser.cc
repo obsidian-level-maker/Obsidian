@@ -56,7 +56,7 @@ void Default_Location(void)
 
   strcat(last_file, "TEST");
 
-  DebugPrintf("Default_Location: [%s]\n", last_file);
+  LogPrintf("Default_Location: [%s]\n\n", last_file);
 
   last_file_from_config = false;
 }

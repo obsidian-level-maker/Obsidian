@@ -182,7 +182,7 @@ int gui_add_button(lua_State *L)
   if (has_added_buttons)
     Main_FatalError("LUA script problem: gui.add_button called late.\n");
 
-  // DebugPrintf("add_button: %s id:%s\n", what, id);
+// DebugPrintf("  add_button: %s id:%s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->AddPair(id, label);
@@ -258,7 +258,7 @@ int gui_show_button(lua_State *L)
   if (! main_win)
     return 0;
 
-  // DebugPrintf("show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
+// DebugPrintf("  show_button: %s id:%s %s\n", what, id, shown ? "show" : "HIDE");
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->ShowOrHide(id, shown);
@@ -293,7 +293,7 @@ int gui_change_button(lua_State *L)
   if (! main_win)
     return 0;
 
-  // DebugPrintf("change_button: %s --> %s\n", what, id);
+// DebugPrintf("  change_button: %s --> %s\n", what, id);
 
   if (StringCaseCmp(what, "game") == 0)
     main_win->game_box->game->SetID(id);
@@ -326,7 +326,7 @@ int gui_change_mod_option(lua_State *L)
   if (! main_win)
     return 0;
 
-  DebugPrintf("change_mod_option: %s.%s --> %s\n", module, option, value);
+// DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
 
   main_win->mod_box->ParseOptValue(module, option, value);
 
