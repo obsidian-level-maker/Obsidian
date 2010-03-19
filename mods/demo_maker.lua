@@ -20,7 +20,7 @@
 function Demo_make_for_doom()
   if not LEVEL.demo_lump then return end
 
-  io.stderr:write("Generating demo : " .. LEVEL.demo_lump .. "\n")
+  gui.printf("\nGenerating demo : %s\n\n", LEVEL.demo_lump)
 
   -- FIXME
 end
@@ -28,7 +28,7 @@ end
 
 OB_MODULES["demo_maker"] =
 {
-  label = "Demo Maker",
+  label = "Demo Maker (DOOM)",
 
   for_games = { doom1=1, doom2=1 },
 
