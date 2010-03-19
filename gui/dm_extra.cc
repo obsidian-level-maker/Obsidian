@@ -675,9 +675,10 @@ int DM_wad_name_gfx(lua_State *L)
   return 0;
 }
 
+
 int DM_wad_add_text_lump(lua_State *L)
 {
-  // LUA: wad_name_gfx(lump, strings)
+  // LUA: wad_add_text_lump(lump, strings)
   //
   // The 'strings' parameter is a table.
 
@@ -716,7 +717,72 @@ int DM_wad_add_text_lump(lua_State *L)
   }
 
   DM_WriteLump(name, lump);
+  delete lump;
 
+  return 0;
+}
+
+int DM_wad_add_binary_lump(lua_State *L)
+{
+  // LUA: wad_add_binary_lump(lump, bytes)
+  //
+  // The 'bytes' parameter is a table, which can contain numbers, strings,
+  // and booleans.  Each number ends up as a single byte.
+
+  const char *name = luaL_checkstring(L, 1);
+
+  if (lua_type(L, 2) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 2, "expected a table: bytes");
+  }
+ 
+  qLump_c *lump = new qLump_c();
+
+  // grab all the stuff from the table
+  for (int i = 0; true; i++)
+  {
+    lua_pushinteger(L, 1+i);
+    lua_gettable(L, 2);
+
+    if (lua_isnil(L, -1))
+    {
+      lua_pop(L, 1);
+      break;
+    }
+
+    int val_type = lua_type(L, -1);
+
+    byte value;
+
+    switch (val_type)
+    {
+      case LUA_TNUMBER:
+        value = lua_tointeger(L, -1) & 0xFF;
+        lump->Append(&value, 1);
+        break;
+
+      case LUA_TBOOLEAN:
+        value = lua_toboolean(L, -1);
+        lump->Append(&value, 1);
+        break;
+
+      case LUA_TSTRING:
+        {
+          size_t len;
+          const char *str = lua_tolstring(L, -1, &len);
+
+          lump->Append(str, (int)len);
+        }
+        break;
+
+      default:
+        return luaL_error(L, "wad_add_binary_lump: item #%d is illegal", 1+i);
+    }
+
+    lua_pop(L, 1);
+  }
+
+  DM_WriteLump(name, lump);
   delete lump;
 
   return 0;

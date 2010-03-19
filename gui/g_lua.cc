@@ -470,6 +470,7 @@ extern int DM_wad_name_gfx(lua_State *L);
 extern int DM_wad_logo_gfx(lua_State *L);
 
 extern int DM_wad_add_text_lump(lua_State *L);
+extern int DM_wad_add_binary_lump(lua_State *L);
 extern int DM_wad_insert_file(lua_State *L);
 extern int DM_wad_transfer_lump(lua_State *L);
 extern int DM_wad_transfer_map(lua_State *L);
@@ -527,7 +528,9 @@ static const luaL_Reg gui_script_funcs[] =
   // Doom/Heretic/Hexen functions
   { "wad_name_gfx",   DM_wad_name_gfx  },
   { "wad_logo_gfx",   DM_wad_logo_gfx  },
-  { "wad_add_text_lump", DM_wad_add_text_lump },
+  { "wad_add_text_lump",   DM_wad_add_text_lump },
+  { "wad_add_binary_lump", DM_wad_add_binary_lump },
+
   { "wad_insert_file",   DM_wad_insert_file },
   { "wad_transfer_lump", DM_wad_transfer_lump },
   { "wad_transfer_map",  DM_wad_transfer_map },
