@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -438,6 +438,45 @@ function get_wall_coords(S, side, thick, pad)
 end
 
 
+function Build_shadow(S, side, D)
+  if not PARAM.outdoor_shadows then return end
+
+  if not S then return end
+
+  if side < 0 then
+    S = S:neighbor(-side)
+    if not (S and S.room and S.room.outdoor) then return end
+    side = 10 + side
+  end
+
+  D = D or 100  -- TODO: base it on height (floor --> top)
+
+  local x1, y1 = S.x1, S.y1
+  local x2, y2 = S.x2, S.y2
+
+  if side == 8 then
+    Trans_brush(get_light(-1),
+    {
+      { x=x2, y=y2 },
+      { x=x1, y=y2 },
+      { x=x1+D, y=y2-D },
+      { x=x2+D, y=y2-D },
+    },
+    -EXTREME_H, EXTREME_H)
+
+  elseif side == 4 then
+    Trans_brush(get_light(-1),
+    {
+      { x=x1, y=y2 },
+      { x=x1, y=y1 },
+      { x=x1+D, y=y1-D },
+      { x=x1+D, y=y2-D },
+    },
+    -EXTREME_H, EXTREME_H)
+  end
+end
+
+
 function Build_wall(S, side, mat)
   local coords = get_wall_coords(S, side)
 
@@ -462,6 +501,8 @@ function Build_facade(S, side, mat)
   end
 
   Trans_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+
+  Build_shadow(S, side)
 end
 
 
@@ -469,6 +510,8 @@ function Build_fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
   Trans_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
+
+  Build_shadow(S, side, 40)
 end
 
 
@@ -543,6 +586,8 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     Trans_quad(wall_info, wx1, sy1-16, sx2, sy1,    -EXTREME_H, z_top)
     Trans_quad(wall_info, wx1, sy2,    sx2, sy2+16, -EXTREME_H, z_top)
   end
+
+  Build_shadow(S, side, 80)
 end
 
 
@@ -599,6 +644,8 @@ function Build_archway(S, side, z1, z2, skin)
   end
 
   Trans_clear()
+
+  Build_shadow(S, -side)
 end
 
 
@@ -684,6 +731,8 @@ function Build_door(S, side, z1, skin, skin2, tag)
   end
 
   Trans_clear()
+
+  Build_shadow(S, -side)
 end
 
 function Build_quake_door(S, side)
@@ -2073,6 +2122,8 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   end
 
   Trans_clear()
+
+  Build_shadow(S, -side)
 end
 
 
@@ -2159,6 +2210,8 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   Trans_brush(floor_info, coords, z2,  EXTREME_H)
 
   Trans_clear()
+
+  Build_shadow(S, -side)
 end
 
 
