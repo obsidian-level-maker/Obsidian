@@ -16,6 +16,8 @@
 --
 ----------------------------------------------------------------
 
+-- NOTE: this might be better done as an Option in the GUI
+
 
 function LightControl_setup()
   -- TODO

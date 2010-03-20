@@ -56,9 +56,9 @@ function Demo_make_for_doom()
 end
 
 
-OB_MODULES["demo_maker"] =
+OB_MODULES["demo_gen"] =
 {
-  label = "Demo Maker (DOOM)",
+  label = "Demo Generator (DOOM)",
 
   for_games = { doom1=1, doom2=1 },
 
