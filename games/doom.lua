@@ -569,7 +569,8 @@ DOOM1_MATERIALS =
 
 
   -- FIXME: HACK HACK HACK
-  BRICKLIT = { t="LITEMET", f="CEIL5_1" },
+  BRICKLIT = { t="LITEMET",  f="CEIL5_1" },
+  PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" },
 
 
   -- liquid stuff (using new patches)
@@ -2379,16 +2380,16 @@ DOOM1_SUB_THEMES =
       bigdoor3=5,
     },
 
-    steps = { step1=50, step3=50, step4b=50 },
+    steps = { step1=50, step3=50, step4=50 },
     lifts = { shiny=20, platform=40, rusty=10 },
 
     ceil_lights =
     {
       TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10,
     },
 
-    big_lights = { TLITE6_5=30, TLITE6_6=30, GRNLITE1=30, FLAT17=30, CEIL3_4=30 },
+    big_lights = { TLITE6_5=30, TLITE6_6=30, FLAT17=30, CEIL3_4=30 },
 
     pillars = { metal1=70, tekwall4=20 },
     big_pillars = { big_red=50, big_blue=50 },
@@ -2697,7 +2698,7 @@ DOOM2_SUB_THEMES =
       ceilings =
       {
         TLITE6_6=50, TLITE6_5=50, FLAT17=50,
-        FLOOR1_7=50, GRNLITE1=50, CEIL4_3=50,
+        FLOOR1_7=50, CEIL4_3=50,
 
         GRNLITE1=20,
       },
@@ -2725,7 +2726,9 @@ DOOM2_SUB_THEMES =
     ceil_lights =
     {
       TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10,   GRNLITE1=10,
+      FLAT2=20,    CEIL3_4=10,  FLAT22=10,
+      
+      GRNLITE1=10,
     },
 
     big_lights =
