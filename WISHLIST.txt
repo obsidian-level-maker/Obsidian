@@ -20,6 +20,16 @@ Other Games:
 ?  Half-Life
 
 
+Facades:
+  -  would be nice to "smooth" any odd-one-outs
+
+  -  ability to ensure both inner/outer are the same
+
+
+Lighting:
+  -  support w_face.light (maybe even have 'light' in MATERIALS ?)
+
+
 Ceilings:
   - put several small light fittings/sky holes with
     simple patterns (e.g. inner 2x2 seeds, or outer corners)
