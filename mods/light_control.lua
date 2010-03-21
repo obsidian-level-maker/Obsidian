@@ -19,8 +19,8 @@
 -- NOTE: this might be better done as an Option in the GUI
 
 
-function LightControl_setup()
-  -- TODO
+function LightControl_setup(self)
+  GAME.lighting_precision = self.options.precision.value
 end
 
 
@@ -39,7 +39,7 @@ OB_MODULES["lighting_control"] =
       {
         "low",  "Fastest",
         "medium", "Medium",
-        "high", "Highest",
+        "high", "High \\/ Slow",
       },
     },
   }

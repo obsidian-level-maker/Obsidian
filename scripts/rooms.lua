@@ -92,9 +92,6 @@ require 'defs'
 require 'util'
 
 
-ACCURATE_LIGHTING = true
-
-
 function Rooms_decide_outdoors()
   local function choose(R)
     if R.parent and R.parent.outdoor then return false end
@@ -2345,7 +2342,28 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   end
 
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
-    if ACCURATE_LIGHTING and (S.content ~= "wotsit") then
+    local prec = GAME.lighting_precision or "low"
+    if S.content == "wotsit" then prec = "low" end
+
+    if prec == "high" then
+      local ax = int((x1*2+x2) / 3)
+      local ay = int((y1*2+y2) / 3)
+      local bx = int((x1+x2*2) / 3)
+      local by = int((y1+y2*2) / 3)
+
+      Trans_quad(info, x1,y1, ax,ay, z1,z2)
+      Trans_quad(info, ax,y1, bx,ay, z1,z2)
+      Trans_quad(info, bx,y1, x2,ay, z1,z2)
+
+      Trans_quad(info, x1,ay, ax,by, z1,z2)
+      Trans_quad(info, ax,ay, bx,by, z1,z2)
+      Trans_quad(info, bx,ay, x2,by, z1,z2)
+
+      Trans_quad(info, x1,by, ax,y2, z1,z2)
+      Trans_quad(info, ax,by, bx,y2, z1,z2)
+      Trans_quad(info, bx,by, x2,y2, z1,z2)
+
+    elseif prec == "medium" then
       local mx = int((x1+x2) / 2)
       local my = int((y1+y2) / 2)
 
@@ -2353,6 +2371,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Trans_quad(info, mx,y1, x2,my, z1,z2)
       Trans_quad(info, x1,my, mx,y2, z1,z2)
       Trans_quad(info, mx,my, x2,y2, z1,z2)
+
     else
       Trans_quad(info, x1,y1, x2,y2, z1,z2)
     end
