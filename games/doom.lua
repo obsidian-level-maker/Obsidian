@@ -1108,7 +1108,8 @@ DOOM_PICTURES =
     count=2, gap=32,
     pic_w="BRNPOIS", width=64, height=56,
     x_offset=0, y_offset=48,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side_t="METAL", floor="CEIL5_2",
+    depth=8, light=0.5,
   },
 
   pois2 =
@@ -1117,7 +1118,7 @@ DOOM_PICTURES =
     pic_w="GRAYPOIS", width=64, height=64,
     x_offset=0, y_offset=0,
     side_t="DOORSTOP", floor="SHAWN2",
-    depth=8, 
+    depth=8, light=0.5,
   },
 
   eagle1 =
@@ -1125,7 +1126,8 @@ DOOM_PICTURES =
     count=1,
     pic_w="ZZWOLF6", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="WOODVERT", floor="FLAT5_2", depth=8, 
+    side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.57,
   },
 
   hitler1 =
@@ -1133,7 +1135,8 @@ DOOM_PICTURES =
     count=1,
     pic_w="ZZWOLF7", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="WOODVERT", floor="FLAT5_2", depth=8, 
+    side_t="WOODVERT", floor="FLAT5_2",
+    depth=8, light=0.57,
   },
 
   marbface =
@@ -1142,7 +1145,7 @@ DOOM_PICTURES =
     pic_w="MARBFACE", width=128, height=128,
     x_offset=0, y_offset=0,
     -- side_t="WOODVERT", floor="FLAT5_2",
-    depth=8, 
+    depth=8, light=0.57,
   },
 
   marbfac2 =
@@ -1151,7 +1154,7 @@ DOOM_PICTURES =
     pic_w="MARBFAC2", width=128, height=128,
     x_offset=0, y_offset=0,
     -- side_t="WOODVERT", floor="FLAT5_2",
-    depth=8, 
+    depth=8, light=0.57,
   },
 
   marbfac3 =
@@ -1160,7 +1163,7 @@ DOOM_PICTURES =
     pic_w="MARBFAC3", width=128, height=128,
     x_offset=0, y_offset=0,
     -- side_t="WOODVERT", floor="FLAT5_2",
-    depth=8, 
+    depth=8, light=0.57,
   },
 
   skinface =

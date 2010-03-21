@@ -1771,6 +1771,7 @@ function Build_small_switch(S, dir, f_h, skin, tag)
 
 
   local info = get_mat(skin.side_w)
+  info.t_face.light = 0.66
 
   local switch_info = get_mat(skin.switch_w)
   add_pegging(switch_info, skin.x_offset, skin.y_offset)
@@ -1828,6 +1829,8 @@ function Build_exit_pillar(S, z1, skin)
 
   local exit_info = get_mat(skin.exit_w)
   add_pegging(exit_info)
+
+  info.t_face.light = 0.82
  
   Trans_set(DT)
 
@@ -2227,6 +2230,7 @@ function Build_pedestal(S, z1, skin)
   local my = int((S.y1+S.y2) / 2)
 
   local info = get_mat(skin.wall or skin.floor, skin.floor)
+  info.t_face.light = 0.7
 
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
 
