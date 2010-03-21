@@ -333,7 +333,7 @@ OB_THEMES["nukem_city"] =
 }
 
 
-OB_GAMES["nukem"] =
+UNFINISHED["nukem"] =
 {
   label = "Duke Nukem",
 
