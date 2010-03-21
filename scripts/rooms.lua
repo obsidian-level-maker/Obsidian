@@ -2048,7 +2048,7 @@ function Room_build_cave(R)
       data.f_info = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
     end
 
-    if LEVEL.liquid and i==2 and rand_odds(50) then  -- TODO: theme specific prob
+    if LEVEL.liquid and i==2 and rand_odds(60) then  -- TODO: theme specific prob
       data.f_info = get_liquid()
 
       -- FIXME: this bugs up monster/pickup/key spots
@@ -2068,7 +2068,7 @@ function Room_build_cave(R)
     if not R.outdoor then
       data.c_info = w_info
 
-      if i==2 and rand_odds(40) then
+      if i==2 and rand_odds(60) then
         data.c_info = get_sky()
       end
 
