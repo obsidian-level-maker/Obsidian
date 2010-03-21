@@ -959,8 +959,7 @@ function Plan_determine_size()
 
   local ob_size = OB_CONFIG.size
 
-  -- FIXME: REMOVE !!!!!!
-  if ob_size == "normal" then ob_size = "regular" end
+---##  if ob_size == "normal" then ob_size = "regular" end
 
   -- there is no real "progression" when making a single level
   -- hence use mixed mode instead.
