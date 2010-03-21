@@ -455,21 +455,28 @@ function Build_shadow(S, side, D)
   local x2, y2 = S.x2, S.y2
 
   if side == 8 then
+    local N = S:neighbor(6)
+    local clip = not (N and N.room and N.room.outdoor)
+
     Trans_brush(get_light(-1),
     {
       { x=x2, y=y2 },
       { x=x1, y=y2 },
       { x=x1+D, y=y2-D },
-      { x=x2+D, y=y2-D },
+      { x=x2+sel(clip,0,D), y=y2-D },
     },
     -EXTREME_H, EXTREME_H)
+  end
 
-  elseif side == 4 then
+  if side == 4 then
+    local N = S:neighbor(2)
+    local clip = not (N and N.room and N.room.outdoor)
+
     Trans_brush(get_light(-1),
     {
       { x=x1, y=y2 },
       { x=x1, y=y1 },
-      { x=x1+D, y=y1-D },
+      { x=x1+D, y=y1-sel(clip,0,D) },
       { x=x1+D, y=y2-D },
     },
     -EXTREME_H, EXTREME_H)
