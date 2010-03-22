@@ -5,6 +5,8 @@ TODO
 
 BUG: switch in cave may end up inaccessible (clear the seed)
 
+BUG: place pickups more carefully in caves (otherwise can be unpickupable)
+
 BUG: liquification of caves at a border can subvert quests
 
 
@@ -21,6 +23,10 @@ BUG: liquification of caves at a border can subvert quests
    (plus space for monster depots)
 
 +  improve the jaggy edge algorithm (support corner triangles)
+
+-  Split_quad: only for _indoor_ rooms
+
+-  big caves should not be chosen as starting room
 
 
 
