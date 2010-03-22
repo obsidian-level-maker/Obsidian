@@ -754,7 +754,7 @@ function Rooms_border_up()
 --###     S.border[side].kind = "nothing"
 --###   end
 
-      if N.kind == "liquid" and
+      if N.kind == "liquid" and R2.outdoor and
         (S.kind == "liquid" or R1.arena == R2.arena)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
