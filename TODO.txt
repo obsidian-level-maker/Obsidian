@@ -10,6 +10,12 @@ BUG: place pickups more carefully in caves (otherwise can be unpickupable)
 BUG: liquification of caves at a border can subvert quests
 
 
++  use FLTK 1.1.10 for Win32, and LUA 5.1.4 for Linux/Win32
+
+-  Cave code: give each cave an 'info' field and make it a class
+              with various methods, in particular for mapping
+              between seed coords and cave cell coords.
+
 -  CSG DOOM: support entity.light
 
 -  some basic lighting objects (torches), esp. Urban/Hell
@@ -28,6 +34,8 @@ BUG: liquification of caves at a border can subvert quests
 
 -  big caves should not be chosen as starting room
 
+-  cave trimming: try to avoid same material as previous one
+  
 
 
 *  get more games working (Heretic, Hexen etc)
@@ -37,37 +45,6 @@ BUG: liquification of caves at a border can subvert quests
 *  add in more scenery: lamps, computers etc
 
 *  improve monster selection (and placement)
-
-
-Natural areas:
-
-  DONE:  CAVE: more cave wall @ building borders
-
-  PRELIM  place monsters in walkable spots
-  PRELIM  place items in walkable spots
-  PRELIM  place purpose (key / switch) in open spot
-
-  -  height changes 
-
-  DONE:  small chance an island region becomes a lava pit
-
-  PRELIM  proper theming (c.f. THEME.building)
-
-  DONE:  "layering" : perform multiple 'grow + render' passes
-
-  -  create two "combos" for caves on each map (sim. landscapes)
-
-  -  trimming: try to avoid same material as previous one
-  
-  -  better bordering with outdoor areas
-
-  -  layering: if last is "deep liquid", it bugs mon/pickup spots
-     (find the spots later ??)
-
-  -  windows facing landscapes : can it be done??
-
-  -  MIDVINE sometimes used at cave transitions
-     (probably need a new prefab for this)
 
 
 +  review monster quantities, need some increase over the course

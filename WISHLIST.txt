@@ -3,10 +3,8 @@ WISH-LIST
 =========
 
 ----------------------------------------------------------------
-  GENERAL
+  OTHER GAMES
 ----------------------------------------------------------------
-
-Other Games:
 
 +  Duke Nukem 3D
 +  Quake II
@@ -20,10 +18,29 @@ Other Games:
 ?  Half-Life
 
 
+----------------------------------------------------------------
+  LEVEL STUFF
+----------------------------------------------------------------
+
 Facades:
   -  would be nice to "smooth" any odd-one-outs
 
   -  ability to ensure both inner/outer are the same
+
+
+Natural areas:
+
+  -  height changes?
+
+  -  better bordering with outdoor areas, how??
+
+  -  support last layer being a deep liquid or even solid,
+     this requires monster/pickup spots to be done later
+
+  -  windows facing landscapes : clear the cave in front
+
+  -  MIDVINE sometimes used at cave transitions
+     (probably need a new prefab for this)
 
 
 Lighting:
@@ -87,6 +104,7 @@ Possible Options:
    -  more accurate nodes (slower)
    -  verbose log messages
    -  pack sidedefs
+   -  keep REJECT
 
 
 Quests : add locks (new arenas) even when have no keys
@@ -97,18 +115,8 @@ Quests : add locks (new arenas) even when have no keys
   GUI and C++ CODE
 ----------------------------------------------------------------
 
--  support for the DECORATE lump
-
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
-
--  ideas for buttons
-   -  Secrets
-   -  Powerups
-   -  Outdoor-iness  [THERE]
-   -  Lighting adjustment  [THERE]
-   -  Big monster adjustment
-   -  Linearity
 
 
 SKY GENERATOR:
@@ -130,6 +138,8 @@ SKY GENERATOR:
 ----------------------------------------------------------------
 
 +  support MAPINFO lumps (especially for ZDoom ports).
+
+-  support for the DECORATE lump
 
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
@@ -167,6 +177,8 @@ Sam's suggestions:
 ----------------------------------------------------------------
   HEXEN:
 ----------------------------------------------------------------
+
+-  get it working again (different WAD formats, args[], etc)
 
 +  need exit teleporter in final Hub.
 
@@ -223,7 +235,7 @@ Sam's suggestions:
 
 !  exit buttons
 
-!  Oblige logos: create TILES020.ART
+!  Oblige logos: create 'TILES020.ART' lump
 
 +  monsters
 +  weapons
@@ -406,22 +418,6 @@ PIPE DREAMS
       5-15 mancubi
       5-15 arachnatrons
 
-?? one-way routes ??
-   -  for example: at along:3 fall-off -> along:4
-      BUT... how to get back to along:3 ??
-      WITHOUT creating an alternative path?
-      ANSWER: use another one-way connection
-
-   - One way connections:
-     (a) fall-offs
-     (b) teleporters
-     (c) doors that only open from one side (esp. via a switch)
-     (d) lifts that go up (or down) into a hole
-         (activated by a switch only on one side).
-
--  have a table listing a quantized HSV for each texture/flat
-   and make aesthetic decisions using it.
-
 -  CTF maps (boomctf) :
        5130 = "Blue flag";
        5131 = "Red flag";
@@ -439,6 +435,21 @@ PIPE DREAMS
 
 -  friendly monsters
 
+?? one-way routes ??
+   -  for example: at along:3 fall-off -> along:4
+      BUT... how to get back to along:3 ??
+      WITHOUT creating an alternative path?
+      ANSWER: use another one-way connection
+
+   - One way connections:
+     (a) fall-offs
+     (b) teleporters
+     (c) doors that only open from one side (esp. via a switch)
+     (d) lifts that go up (or down) into a hole
+         (activated by a switch only on one side).
+
+-  have a table listing a quantized HSV for each texture/flat
+   and make aesthetic decisions using it.
 
 
 >>>  a segment with same front and back ????
