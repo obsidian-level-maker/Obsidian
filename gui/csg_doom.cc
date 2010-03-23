@@ -61,10 +61,9 @@ static int extrafloor_slot;
 #define SEC_SHADOW       (0x4 << 16)
 
 
-#define MIN_LIGHT  96
-#define LIGHT_DIST_FACTOR  1000.0
+double light_dist_factor = 800.0;
 
-bool quantize_lighting = true;
+bool smoother_lighting = false;
 
 
 class sector_info_c;
@@ -117,7 +116,7 @@ public:
 
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(MIN_LIGHT), special(0), tag(0), mark(0),
+                    light(80), special(0), tag(0), mark(0),
                     exfloors(), index(-1),
                     region(NULL), misc_flags(0), valid_count(0)
   { }
@@ -911,7 +910,7 @@ static void LightingFloodFill(void)
         double dist = ComputeDist(x1,y1, x2,y2);
 
         double A = log(light) / log(2);
-        double L2 = pow(2, A - dist / LIGHT_DIST_FACTOR);
+        double L2 = pow(2, A - dist / light_dist_factor);
 
         light = (int)L2;
 
@@ -943,13 +942,20 @@ static void LightingFloodFill(void)
   {
     sector_info_c *S = dm_sectors[i];
 
-    if (quantize_lighting)
+    if (smoother_lighting)
+      S->light = ((S->light + 1) / 8) * 8;
+    else
       S->light = ((S->light + 3) / 16) * 16;
 
     if ((S->misc_flags & SEC_SHADOW))
       S->light -= (S->light > 168) ? 48 : 32;
 
-    S->light = CLAMP(MIN_LIGHT, S->light, 255);
+    if (S->light <= 80)
+      S->light = 96;
+    else if (S->light < 112)
+      S->light = 112;
+    else if (S->light > 255)
+      S->light = 255;
   }
 }
 
