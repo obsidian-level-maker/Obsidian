@@ -1993,9 +1993,16 @@ function Room_build_cave(R)
     end
   end
 
+  local function choose_tex(last, tab)
+    local tex = rand_key_by_probs(tab)
+    if tex == last then tex = rand_key_by_probs(tab) end
+    if tex == last then tex = rand_key_by_probs(tab) end
+    return tex
+  end
+
   -- DO WALLS --
 
-  local data = { info=w_info }
+  local data = { info=w_info, ftex=w_tex, ctex=w_tex }
 
   if R.is_lake then
     data.info = get_liquid()
@@ -2052,11 +2059,14 @@ function Room_build_cave(R)
 
     data = {}
 
+
     if R.outdoor then
-      data.f_info = get_mat(rand_key_by_probs(THEME.landscape_trims or THEME.landscape_walls))
+      data.ftex = choose_tex(data.ftex, THEME.landscape_trims or THEME.landscape_walls)
     else
-      data.f_info = get_mat(rand_key_by_probs(THEME.cave_trims or THEME.cave_walls))
+      data.ftex = choose_tex(data.ftex, THEME.cave_trims or THEME.cave_walls)
     end
+
+    data.f_info = get_mat(data.ftex)
 
     if LEVEL.liquid and i==2 and rand_odds(60) then  -- TODO: theme specific prob
       data.f_info = get_liquid()
@@ -2080,6 +2090,11 @@ function Room_build_cave(R)
 
       if i==2 and rand_odds(60) then
         data.c_info = get_sky()
+      elseif rand_odds(50) then
+        data.c_info = get_mat(data.ftex)
+      elseif rand_odds(4.9*20) then
+        data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
+        data.c_info = get_mat(data.ctex)
       end
 
       data.c_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
