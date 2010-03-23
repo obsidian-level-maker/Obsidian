@@ -24,7 +24,7 @@ SCRIPT_DIR=$(INSTALL_PREFIX)/share/oblige
 CXX=g++
 
 LIB_LOC=../linux_lib
-LUA_DIR=$(LIB_LOC)/lua-5.1.2
+LUA_DIR=$(LIB_LOC)/lua-5.1.4
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O2
