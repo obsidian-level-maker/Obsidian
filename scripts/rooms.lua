@@ -2352,7 +2352,7 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
   end
 
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
-    local prec = GAME.lighting_precision or "low"
+    local prec = GAME.lighting_precision or "medium"
     if R.outdoor then prec = "low" end
     if S.content == "wotsit" then prec = "low" end
 
