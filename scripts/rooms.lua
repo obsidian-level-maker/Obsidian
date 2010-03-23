@@ -1975,8 +1975,15 @@ function Room_build_cave(R)
   local base_x = SEEDS[R.sx1][R.sy1][1].x1
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
-  local function handle_brush(data, coords)
+  local function WALL_brush(data, coords)
     Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
+
+    if data.shadows then
+      -- FIXME: this is not enough, need to produce new "shadowed" brush coords
+      Trans_set({ add_x=24, add_y=-24 })
+      Trans_brush(data.shadows, coords, -EXTREME_H, data.z2 - 4)
+      Trans_clear()
+    end
   end
 
   local function FC_brush(data, coords)
@@ -1996,8 +2003,14 @@ function Room_build_cave(R)
     high_z = R.cave_floor_h + 8
   end
 
+  local data = { info=w_info }
+
   if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand_odds(88) then
-    high_z = R.cave_floor_h + rand_sel(65, 80, 144)
+    data.z2 = R.cave_floor_h + rand_sel(65, 80, 144)
+  end
+
+  if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
+    data.shadows = get_light(-1)
   end
 
   for id,reg in pairs(flood.regions) do
@@ -2009,12 +2022,11 @@ function Room_build_cave(R)
         local pit = get_liquid()
         pit.delta_z = rand_sel(70, -52, -76)
 
-        Cave_render(flood, id, base_x, base_y, handle_brush,
+        Cave_render(flood, id, base_x, base_y, WALL_brush,
                     { info=pit, z2=R.cave_floor_h+8 })
       else
         -- make walls normally
-        Cave_render(flood, id, base_x, base_y, handle_brush,
-                    { info=w_info, z2=high_z }, THEME.square_caves)
+        Cave_render(flood, id, base_x, base_y, WALL_brush, data, THEME.square_caves)
       end
     end
   end
@@ -2040,7 +2052,7 @@ function Room_build_cave(R)
 
     -- DO FLOOR and CEILING --
 
-    local data = {}
+    data = {}
 
     if R.outdoor then
       data.f_info = get_mat(rand_key_by_probs(THEME.landscape_trims or THEME.landscape_walls))
