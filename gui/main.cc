@@ -402,6 +402,8 @@ bool Build_Cool_Shit()
     main_win->build_box->ProgStatus("Preparing...");
   }
 
+  u32_t start_time = TimeGetMillies();
+
   bool was_ok = game_object->Start();
 
   if (was_ok)
@@ -413,8 +415,16 @@ bool Build_Cool_Shit()
       was_ok = false;
   }
 
+  u32_t end_time = TimeGetMillies();
+
   if (was_ok)
+  {
     Main_ProgStatus("Success");
+
+    u32_t total_time = end_time - start_time;
+
+    LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
+  }
 
   if (main_win)
   {
