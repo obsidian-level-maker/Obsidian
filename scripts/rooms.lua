@@ -2198,7 +2198,7 @@ gui.printf("do_teleport\n")
       local dist = 56
 
       if PARAM.raising_start and R.svolume >= 20 and not R.natural
-         and rand_odds(30)
+         and not LEVEL.demo_lump and rand_odds(30)
       then
         gui.debugf("Raising Start made\n")
 
@@ -2226,6 +2226,12 @@ gui.printf("do_teleport\n")
         Trans_entity("player3", mx + dist, my, z1, { angle=angle })
         Trans_entity("player4", mx, my - dist, z1, { angle=angle })
       end
+
+      -- save position for the demo generator
+      LEVEL.player_pos =
+      {
+        S=S, R=R, x=mx, y=my, z=z1, angle=angle,
+      }
 
       -- never put monsters next to the start spot
       for dir = 2,8,2 do
