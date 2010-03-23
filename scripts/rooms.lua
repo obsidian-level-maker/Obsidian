@@ -1959,7 +1959,7 @@ function Room_add_crates(R)
     if rand_odds(chance) then
       spot.S.solid_corner = true
       local z_top = spot.S.floor_h + (skin.h or 64)
-      Build_crate(spot.S.x2, spot.S.y2, z_top, skin)
+      Build_crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
     end
   end
 end
