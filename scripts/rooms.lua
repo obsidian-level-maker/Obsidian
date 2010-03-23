@@ -1995,13 +1995,13 @@ function Room_build_cave(R)
 
   -- DO WALLS --
 
-  if R.is_lake then
-    w_info = get_liquid()
-    w_info.delta_z = rand_sel(70, -48, -72)
-    high_z = R.cave_floor_h + 8
-  end
-
   local data = { info=w_info }
+
+  if R.is_lake then
+    data.info = get_liquid()
+    data.info.delta_z = rand_sel(70, -48, -72)
+    data.z2 = R.cave_floor_h + 8
+  end
 
   if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand_odds(88) then
     data.z2 = R.cave_floor_h + rand_sel(65, 80, 144)
@@ -2475,6 +2475,12 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
+
+      if R.outdoor and N and N.room and not N.room.outdoor then
+        local dist = 24 + int((z2 - z1) / 4)
+        if dist > 160 then dist = 160 end
+        Build_shadow(S, side, dist)
+      end
 
       local B_kind = S.border[side].kind
 

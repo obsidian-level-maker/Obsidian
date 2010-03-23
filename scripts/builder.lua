@@ -506,7 +506,9 @@ function shadowify_brush(coords, dist)
 end
 
 
-function Build_shadow(S, side, D)
+function Build_shadow(S, side, dist, z2)
+  assert(dist)
+
   if not PARAM.outdoor_shadows then return end
 
   if not S then return end
@@ -516,8 +518,6 @@ function Build_shadow(S, side, D)
     if not (S and S.room and S.room.outdoor) then return end
     side = 10 + side
   end
-
-  D = D or 100  -- TODO: base it on height (floor --> top)
 
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
@@ -530,10 +530,10 @@ function Build_shadow(S, side, D)
     {
       { x=x2, y=y2 },
       { x=x1, y=y2 },
-      { x=x1+D, y=y2-D },
-      { x=x2+sel(clip,0,D), y=y2-D },
+      { x=x1+dist, y=y2-dist },
+      { x=x2+sel(clip,0,dist), y=y2-dist },
     },
-    -EXTREME_H, EXTREME_H)
+    -EXTREME_H, z2 or EXTREME_H)
   end
 
   if side == 4 then
@@ -544,10 +544,10 @@ function Build_shadow(S, side, D)
     {
       { x=x1, y=y2 },
       { x=x1, y=y1 },
-      { x=x1+D, y=y1-sel(clip,0,D) },
-      { x=x1+D, y=y2-D },
+      { x=x1+dist, y=y1-sel(clip,0,dist) },
+      { x=x1+dist, y=y2-dist },
     },
-    -EXTREME_H, EXTREME_H)
+    -EXTREME_H, z2 or EXTREME_H)
   end
 end
 
@@ -576,8 +576,6 @@ function Build_facade(S, side, mat)
   end
 
   Trans_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
-
-  Build_shadow(S, side)
 end
 
 
@@ -586,7 +584,8 @@ function Build_fence(S, side, fence_h, skin)
 
   Trans_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
 
-  Build_shadow(S, side, 40)
+  Build_shadow(S,  side, 40, fence_h-4)
+  Build_shadow(S, -side, 24, fence_h-4)
 end
 
 
@@ -662,7 +661,7 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     Trans_quad(wall_info, wx1, sy2,    sx2, sy2+16, -EXTREME_H, z_top)
   end
 
-  Build_shadow(S, side, 80)
+  Build_shadow(S, side, 80, z_top-4)
 end
 
 
@@ -719,8 +718,6 @@ function Build_archway(S, side, z1, z2, skin)
   end
 
   Trans_clear()
-
-  Build_shadow(S, -side)
 end
 
 
@@ -806,8 +803,6 @@ function Build_door(S, side, z1, skin, skin2, tag)
   end
 
   Trans_clear()
-
-  Build_shadow(S, -side)
 end
 
 function Build_quake_door(S, side)
@@ -2200,8 +2195,6 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   end
 
   Trans_clear()
-
-  Build_shadow(S, -side)
 end
 
 
@@ -2288,8 +2281,6 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   Trans_brush(floor_info, coords, z2,  EXTREME_H)
 
   Trans_clear()
-
-  Build_shadow(S, -side)
 end
 
 
