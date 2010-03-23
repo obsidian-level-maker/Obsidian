@@ -2353,9 +2353,20 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
 
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
     local prec = GAME.lighting_precision or "low"
+    if R.outdoor then prec = "low" end
     if S.content == "wotsit" then prec = "low" end
 
     if prec == "high" then
+      for i = 0,5 do for k = 0,5 do
+        local ax = int((x1*i+x2*(6-i)) / 6)
+        local ay = int((y1*k+y2*(6-k)) / 6)
+        local bx = int((x1*(i+1)+x2*(5-i)) / 6)
+        local by = int((y1*(k+1)+y2*(5-k)) / 6)
+        
+        Trans_quad(info, ax,ay, bx,by, z1,z2)
+      end end
+
+    elseif prec == "medium" then
       local ax = int((x1*2+x2) / 3)
       local ay = int((y1*2+y2) / 3)
       local bx = int((x1+x2*2) / 3)
@@ -2372,15 +2383,6 @@ gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
       Trans_quad(info, x1,by, ax,y2, z1,z2)
       Trans_quad(info, ax,by, bx,y2, z1,z2)
       Trans_quad(info, bx,by, x2,y2, z1,z2)
-
-    elseif prec == "medium" then
-      local mx = int((x1+x2) / 2)
-      local my = int((y1+y2) / 2)
-
-      Trans_quad(info, x1,y1, mx,my, z1,z2)
-      Trans_quad(info, mx,y1, x2,my, z1,z2)
-      Trans_quad(info, x1,my, mx,y2, z1,z2)
-      Trans_quad(info, mx,my, x2,y2, z1,z2)
 
     else
       Trans_quad(info, x1,y1, x2,y2, z1,z2)
