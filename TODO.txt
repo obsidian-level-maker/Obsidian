@@ -12,11 +12,11 @@ BUG: liquification of caves at a border can subvert quests
 
 +  use FLTK 1.1.10 for Win32, and LUA 5.1.4 for Linux/Win32
 
+DONE: support FreeDOOM again
+
 -  Cave code: give each cave an 'info' field and make it a class
               with various methods, in particular for mapping
               between seed coords and cave cell coords.
-
--  CSG DOOM: support entity.light
 
 -  some basic lighting objects (torches), esp. Urban/Hell
 
@@ -35,16 +35,9 @@ BUG: liquification of caves at a border can subvert quests
 -  big caves should not be chosen as starting room
 
 -  cave trimming: try to avoid same material as previous one
-  
 
+DONE: "mixed" theme on "a few" levels : more varied
 
-*  get more games working (Heretic, Hexen etc)
-
-*  support for Traps, Cages, Secrets, Powerups
-
-*  add in more scenery: lamps, computers etc
-
-*  improve monster selection (and placement)
 
 
 +  review monster quantities, need some increase over the course
@@ -72,10 +65,12 @@ CSG CODE:
 -  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
     (similarly for 'tag', 'args' etc...)
 
+-  CSG DOOM: support entity.light
+
 -  CSG DOOM: fix up extrafloor creation
 
-- Rail brushes: support fake 3D bridges
-                (create dummy sector from brush's Z2)
+-  Rail brushes: support fake 3D bridges
+                 (create dummy sector from brush's Z2)
 
 
 q1_nodes:

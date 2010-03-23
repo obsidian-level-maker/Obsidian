@@ -2,6 +2,15 @@
 WISH-LIST
 =========
 
+*  get more games working (Heretic, Hexen etc)
+
+*  support for Traps, Cages, Secrets, Powerups
+
+*  add in more scenery: lamps, computers etc
+
+*  improve monster selection (and placement)
+
+
 ----------------------------------------------------------------
   OTHER GAMES
 ----------------------------------------------------------------
@@ -104,7 +113,6 @@ Possible Options:
    -  more accurate nodes (slower)
    -  verbose log messages
    -  pack sidedefs
-   -  keep REJECT
 
 
 Quests : add locks (new arenas) even when have no keys
@@ -151,6 +159,8 @@ SKY GENERATOR:
 
 -  generate DEMO# lumps : use nomonster mode, guide the player
    to get each key / switch / exit room.
+
+-  build our own REJECT lump (use vis info like Quake)
 
 
 ----------------------------------------------------------------
