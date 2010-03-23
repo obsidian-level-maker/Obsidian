@@ -2570,7 +2570,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
   R.junk_thick = { [2]=0, [4]=0, [6]=0, [8]=0 }
 
-  if R.kind == "normal" and not R.children then
+  if R.kind == "normal" and not R.outdoor and not R.children then
     junk_sides()
   end
 
