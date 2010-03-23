@@ -106,13 +106,15 @@ require 'util'
 function Quest_decide_start_room(arena)
 
   local function eval_room(R)
-    local cost = 0
+    local cost = R.svolume
 
     -- preference for leaf rooms
-    cost = cost + 40 * ((#R.conns) ^ 0.6)
+    cost = cost + 20 * #R.conns
 
     -- large amount of randomness
-    cost = cost + 100 * (1 - gui.random() * gui.random())
+    cost = cost + 75 * (gui.random() ^ 0.5)
+
+--  gui.printf("Start cost @ %s (svol:%d rconns:%d) --> %1.3f\n", R.svolume, #R.conns, cost)
 
     return cost
   end
