@@ -3683,6 +3683,8 @@ function Doom1_get_levels()
 
   GAME.original_themes = {}
 
+  local few_episodes = { 1, 1, 2, 2 }
+
   for episode = 1,EP_NUM do
     local ep_info = DOOM1_EPISODES["episode" .. episode]
     assert(ep_info)
@@ -3710,6 +3712,10 @@ function Doom1_get_levels()
         sky_light   = ep_info.sky_light,
         secret_kind = (map == 9) and "plain",
       }
+
+      if OB_CONFIG.length == "few" then
+        LEV.episode = few_episodes[map]
+      end
 
       if LEV.name == "E1M8" then
         LEV.prebuilt = GAME.prebuilt_levels.phobos_anomaly
@@ -3749,6 +3755,8 @@ function Doom2_get_levels()
   gallow_map = rand_element{24,25,26}
 
   GAME.original_themes = {}
+
+  local few_episodes = { 1, rand_sel(75,1,2), rand_sel(65,2,3), 3 }
 
   for map = 1,MAP_NUM do
     -- determine episode from map number
@@ -3794,6 +3802,10 @@ function Doom2_get_levels()
 
       sky_light = ep_info.sky_light,
     }
+
+    if OB_CONFIG.length == "few" then
+      LEV.episode = few_episodes[map]
+    end
 
     -- secret levels
     if map == 31 or map == 32 then
