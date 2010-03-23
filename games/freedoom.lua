@@ -59,7 +59,7 @@ FREEDOOM_SCENERY_LIST =
   hang_leg      = 0,
 }
 
-FREEDOOM_LIQUIDS =
+FREEDOOM_LIQUIDS = --FIXME
 {
   water = { floor="FWATER1", wall="WFALL1" },
 }
@@ -97,7 +97,7 @@ function Freedoom_setup()
 end
 
 
-UNFINISHED["freedoom"] =
+OB_GAMES["freedoom"] =
 {
   label = "FreeDoom 0.6",
 
@@ -106,6 +106,9 @@ UNFINISHED["freedoom"] =
   setup_func = Freedoom_setup,
 
   levels_start_func = Doom2_get_levels,
+  begin_level_func  = Doom_begin_level,
+  end_level_func    = Doom_end_level,
+  all_done_func     = Doom_all_done,
 
   tables =
   {
