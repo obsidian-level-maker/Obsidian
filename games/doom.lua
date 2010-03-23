@@ -3756,7 +3756,7 @@ function Doom2_get_levels()
 
   GAME.original_themes = {}
 
-  local few_episodes = { 1, rand_sel(75,1,2), rand_sel(65,2,3), 3 }
+  local few_episodes = { 1, rand_sel(70,1,2), rand_sel(70,2,3), 3 }
 
   for map = 1,MAP_NUM do
     -- determine episode from map number
