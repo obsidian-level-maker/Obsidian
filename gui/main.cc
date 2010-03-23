@@ -23,6 +23,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
+#include "glbsp.h"
+
 #include "lib_argv.h"
 #include "lib_file.h"
 #include "lib_signal.h"
@@ -486,6 +488,10 @@ int main(int argc, char **argv)
   LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n");
   LogPrintf("********************************************************\n");
   LogPrintf("\n");
+
+  LogPrintf("Library versions: %s / FLTK %d.%d.%d / glBSP %s\n\n",
+            LUA_RELEASE, FL_MAJOR_VERSION, FL_MINOR_VERSION, FL_PATCH_VERSION,
+            GLBSP_VER);
 
   LogPrintf("working_path: [%s]\n",   working_path);
   LogPrintf("install_path: [%s]\n\n", install_path);
