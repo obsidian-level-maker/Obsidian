@@ -1979,10 +1979,8 @@ function Room_build_cave(R)
     Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
 
     if data.shadows then
-      -- FIXME: this is not enough, need to produce new "shadowed" brush coords
-      Trans_set({ add_x=24, add_y=-24 })
-      Trans_brush(data.shadows, coords, -EXTREME_H, data.z2 - 4)
-      Trans_clear()
+      local sh_coords = shadowify_brush(coords, 40)
+      Trans_brush(data.shadows, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
   end
 
