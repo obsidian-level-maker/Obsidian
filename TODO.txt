@@ -2,6 +2,7 @@
 TODO
 ====
 
+!!! BUG: disconnected caves
 
 BUG: switch in cave may end up inaccessible (clear the seed)
 
@@ -18,8 +19,6 @@ DONE: support FreeDOOM again
               with various methods, in particular for mapping
               between seed coords and cave cell coords.
 
--  some basic lighting objects (torches), esp. Urban/Hell
-
 +  more supplies in start room (ammo for weapon, armor vest)
 
 +  get small exits working again
@@ -30,11 +29,11 @@ DONE: support FreeDOOM again
 
 +  improve the jaggy edge algorithm (support corner triangles)
 
--  Split_quad: only for _indoor_ rooms
+DONE: cave trimming: try to avoid same material as previous one
 
--  big caves should not be chosen as starting room
+DONE: Split_quad: only for _indoor_ rooms
 
--  cave trimming: try to avoid same material as previous one
+DONE: big caves should not be chosen as starting room
 
 DONE: "mixed" theme on "a few" levels : more varied
 
@@ -46,6 +45,9 @@ DONE: "mixed" theme on "a few" levels : more varied
 
    Also may need to create smaller room palettes for small
    quantities (i.e. Less or Scarce settings).
+
+
+-  some basic lighting objects (torches), esp. Urban/Hell
 
 
 -  BUG: items occasionally appear on skyfences

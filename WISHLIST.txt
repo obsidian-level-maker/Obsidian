@@ -37,8 +37,12 @@ Facades:
   -  ability to ensure both inner/outer are the same
 
 
-Natural areas:
+Porches:
+  -  this is 3 or more seeds around a door from outside->inside
+     with a non-sky ceiling and some pillars and a raised floor.
 
+
+Natural areas:
   -  height changes?
 
   -  better bordering with outdoor areas, how??
