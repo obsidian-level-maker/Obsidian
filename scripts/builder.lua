@@ -120,25 +120,6 @@ function Trans_brush(info, coords, z1, z2)
   gui.add_brush(info, coords, z1, z2)
 end
 
-function Trans_quad(info, x1,y1, x2,y2, z1,z2)
-  Trans_brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
-end
-
-function Trans_strip(info, strip, z1, z2)
-  for i = 1, #strip - 1 do
-    local a = strip[i]
-    local b = strip[i+1]
-
-    Trans_brush(info,
-    {
-      { x = a[1], y = a[2] },
-      { x = a[3], y = a[4] },
-      { x = b[3], y = b[4] },
-      { x = b[1], y = b[2] },
-    },
-    z1, z2)
-  end
-end
 
 function Trans_entity(name, x, y, z, props)
   assert(name)
@@ -163,6 +144,63 @@ function Trans_entity(name, x, y, z, props)
   end
 
   gui.add_entity(tostring(info.id), x, y, z, props)
+end
+
+
+function tri_coords(x1,y1, x2,y2, x3,y3)
+  return
+  {
+    { x=x1, y=y1 },
+    { x=x2, y=y2 },
+    { x=x3, y=y3 },
+  }
+end
+
+function rect_coords(x1, y1, x2, y2)
+  return
+  {
+    { x=x2, y=y1 },
+    { x=x2, y=y2 },
+    { x=x1, y=y2 },
+    { x=x1, y=y1 },
+  }
+end
+
+function boxwh_coords(x, y, w, h)
+  return
+  {
+    { x=x+w, y=y },
+    { x=x+w, y=y+h },
+    { x=x,   y=y+h },
+    { x=x,   y=y },
+  }
+end
+
+
+function Trans_quad(info, x1,y1, x2,y2, z1,z2)
+  Trans_brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
+end
+
+
+function Trans_tri(info, x1,y1, x2,y2, x3,y3, z1,z2)
+  Trans_brush(info, tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
+end
+
+
+function Trans_strip(info, strip, z1, z2)
+  for i = 1, #strip - 1 do
+    local a = strip[i]
+    local b = strip[i+1]
+
+    Trans_brush(info,
+    {
+      { x = a[1], y = a[2] },
+      { x = a[3], y = a[4] },
+      { x = b[3], y = b[4] },
+      { x = b[1], y = b[2] },
+    },
+    z1, z2)
+  end
 end
 
 
@@ -352,26 +390,6 @@ function get_transform_for_seed_center(S)
   return T, long, deep
 end
 
-
-function rect_coords(x1, y1, x2, y2)
-  return
-  {
-    { x=x2, y=y1 },
-    { x=x2, y=y2 },
-    { x=x1, y=y2 },
-    { x=x1, y=y1 },
-  }
-end
-
-function boxwh_coords(x, y, w, h)
-  return
-  {
-    { x=x+w, y=y },
-    { x=x+w, y=y+h },
-    { x=x,   y=y+h },
-    { x=x,   y=y },
-  }
-end
 
 function diagonal_coords(side, x1,y1, x2,y2)
   if side == 9 then
