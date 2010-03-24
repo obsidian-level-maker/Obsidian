@@ -64,7 +64,7 @@ Lua:
 
 
 FLTK:
-  (1) Linux: /configure --quiet --disable-shared --disable-gl \
+  (1) Linux: ./configure --quiet --disable-shared --disable-gl \
              --disable-localjpeg --disable-localzlib --disable-localpng
 
   (2) Win32 cross-compile:
