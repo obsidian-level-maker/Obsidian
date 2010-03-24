@@ -354,7 +354,7 @@ function Quest_num_keys(num_rooms)
 end
 
 
-function Quest_lock_up_arena(arena)
+function Quest_decide_split(arena)  -- returns a LOCK
 
   local function eval_lock(C)
     --
@@ -413,6 +413,45 @@ function Quest_lock_up_arena(arena)
     end
   end
 
+
+  ---| Quest_decide_split |---
+
+  -- choose connection which will get locked
+  local poss_locks = {}
+
+  locks_for_room(arena.start, poss_locks)
+
+  for _,C in ipairs(arena.path) do
+    locks_for_room(C.dest, poss_locks)
+  end
+ 
+  -- should always have at least one possible lock, otherwise the
+  -- Quest_decide_split() function should never have been called.
+  assert(#poss_locks > 0)
+
+  dump_locks(poss_locks)
+
+  local LC = table_pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
+  assert(LC)
+
+  gui.debugf("Lock conn has COST:%1.2f on_path:%s\n",
+             LC.lock_cost, sel(LC.on_path, "YES", "NO"))
+
+  local LOCK =
+  {
+    -- kind and item set later!
+    kind = "UNSET",
+
+    conn = LC,
+    tag  = alloc_tag(),
+  }
+
+  return LOCK
+end
+
+
+function Quest_split_arena(arena, LOCK)
+
   local function dump_arena(A, name)
     gui.debugf("%s ARENA  %s  %d+%d\n", name, tostring(A), #A.rooms, #A.conns)
     gui.debugf("{\n")
@@ -434,46 +473,15 @@ function Quest_lock_up_arena(arena)
     gui.debugf("}\n")
   end
 
-
-  ---| Quest_lock_up_arena |---
+  ---| Quest_split_arena |---
 
   dump_arena(arena, "INPUT")
 
-  -- choose connection which will get locked
-  local poss_locks = {}
-
-  locks_for_room(arena.start, poss_locks)
-
-  for _,C in ipairs(arena.path) do
-    locks_for_room(C.dest, poss_locks)
-  end
- 
-  -- should always have at least one possible lock, otherwise the
-  -- Quest_lock_up_arena() function should never have been called.
-  assert(#poss_locks > 0)
-
-  dump_locks(poss_locks)
-
-  local LC = table_pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
-  assert(LC)
-
-  gui.debugf("Lock conn has COST:%1.2f on_path:%s\n",
-             LC.lock_cost, sel(LC.on_path, "YES", "NO"))
-
-
-  local LOCK =
-  {
-    -- kind and item set later!
-    kind = "UNSET",
-
-    conn = LC,
-    tag  = alloc_tag(),
-  }
+  local LC = LOCK.conn
 
   LC.lock = LOCK
 
   table.insert(LEVEL.all_locks, LOCK)
-
 
 
   --- perform split ---
@@ -513,13 +521,6 @@ function Quest_lock_up_arena(arena)
 
 
   if not LC.on_path then
-    Quest_rejig_path(front_A, LC)
-  end
-
-
-  Quest_initial_path(back_A)
-
-  if not LC.on_path then
     -- this is easy (front path stays the same)
     front_A.target = arena.target
     front_A.path   = arena.path
@@ -540,6 +541,8 @@ function Quest_lock_up_arena(arena)
 
     assert(hit_lock)
   end
+
+  Quest_initial_path(back_A)
 
 
   -- find oldie to replace with the newbies...
@@ -566,7 +569,7 @@ function Quest_lock_up_arena(arena)
 end
 
 
-function Quest_add_lock()
+function Quest_add_a_lock()
 
   local function conn_is_lockable(C)
     if C.lock then
@@ -627,7 +630,7 @@ function Quest_add_lock()
   end
 
 
-  --| Quest_add_lock |--
+  --| Quest_add_a_lock |--
 
   for _,C in ipairs(LEVEL.all_conns) do
     C.can_lock = conn_is_lockable(C)
@@ -638,6 +641,7 @@ function Quest_add_lock()
   end
 
   -- choose arena to add the locked door into
+
   for _,A in ipairs(LEVEL.all_arenas) do
     A.split_score = eval_arena(A)
 gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
@@ -652,7 +656,9 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 
   Quest_update_tvols(arena)
 
-  Quest_lock_up_arena(arena)
+  local LOCK = Quest_decide_split(arena)
+
+  Quest_split_arena(arena, LOCK)
 end
 
 
@@ -1063,7 +1069,7 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   Quest_initial_path(ARENA)
 
   for i = 1,LEVEL.max_keys do
-    Quest_add_lock()
+    Quest_add_a_lock()
   end
 
   gui.printf("Total arenas: %d\n", #LEVEL.all_arenas)
