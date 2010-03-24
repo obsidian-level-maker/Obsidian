@@ -45,7 +45,7 @@ is usually enough).
 
 <p>
 <i>(Some games, especially Quake, may need special setup before
-running Oblige.  See the information on each game for details)
+running Oblige.  See below for more information)
 </i>
 
 
@@ -181,6 +181,55 @@ OBLIGE will starting building the levels.
 The levels created by OBLIGE are ready to play.  There is no
 need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
+
+
+<h3>OPTIONS WINDOW</h3>
+
+@@
+
+
+<h3>SETTING UP FOR QUAKE</h3>
+
+Quake levels have the unusual feature of including a full copy
+of every texture which they use.
+But this is a problem for OBLIGE, as it needs to get
+these textures from somewhere.
+I am not allowed to put a copy of them on 
+SourceForge for you to download, because they are copyrighted
+material (belonging to Id Software).
+
+<p>
+The solution is to extract the textures using a program
+called <b>qsavetex</b>, which is included with OBLIGE
+in the 'tools' folder.  Here is what you need to do:
+
+<ol class="qsavetex">
+
+<li>copy the qsavetex program into the folder called <b>id1</b>
+    which exists in your copy of Quake.  You can be sure it is
+    the correct folder if it contains two files called
+    pak0.pak and pak1.pak
+
+<li>double click on qsavetex to run it
+
+<li>refresh the folder, a file called <b>qsavetex_log.txt</b>
+    should have appeared.  Open it (e.g. in NOTEPAD) to check
+    whether the textures were extracted successfully.
+    If something went wrong, this file should have an
+    error message in it
+
+<li>lastly, copy the <b>quake_tex.wd2</b> file into the 'data'
+    folder where OBLIGE is installed.
+
+</ol>
+
+You will know it has worked when OBLIGE can build some Quake
+maps without any error message about missing texture wads.
+
+<p>
+
+
+--]
 
 
 <h3>MISC NOTES</h3>
