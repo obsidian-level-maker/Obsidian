@@ -13,7 +13,7 @@ CXX=i586-mingw32msvc-g++
 
 LIB_LOC=../win32_lib
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.9
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 LUA_DIR=$(LIB_LOC)/lua-5.1.4
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
