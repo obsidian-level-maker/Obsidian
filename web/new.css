@@ -99,3 +99,11 @@ PRE { font-size: larger; }
 
 .screenshot { padding: 16px; }
 
+.qsavetex li {
+    color: #444;
+    font-size: smaller;
+    margin-left: 1.6em;
+    margin-right: 3em;
+    margin-bottom: 1em;
+}
+

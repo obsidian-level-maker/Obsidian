@@ -210,10 +210,10 @@ in the 'tools' folder.  Here is what you need to do:
     the correct folder if it contains two files called
     pak0.pak and pak1.pak
 
-<li>double click on qsavetex to run it
+<li>run qsavetex by double clicking on it
 
 <li>refresh the folder, a file called <b>qsavetex_log.txt</b>
-    should have appeared.  Open it (e.g. in NOTEPAD) to check
+    should have appeared.  Read it (e.g. with NOTEPAD) to check
     whether the textures were extracted successfully.
     If something went wrong, this file should have an
     error message in it
@@ -228,8 +228,8 @@ maps without any error message about missing texture wads.
 
 <p>
 
-
---]
+<i>(Note that Quake support is still under development and is
+not functional just yet)</i>
 
 
 <h3>MISC NOTES</h3>
