@@ -2946,6 +2946,7 @@ DOOM2_SUB_THEMES =
 
     building_walls =
       {
+        WOOD1=15,
         BIGBRIK1=20, BIGBRIK2=10,
         BRICK5=10, BRICK7=35, BRICK8=5,
         BRICK10=3, BRICK11=8, BRICK12=8,
