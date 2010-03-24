@@ -1011,7 +1011,7 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
   if (start < 0 && start2)
   {
     start1 = start2;
-    start = WAD_FindEntry(start2);
+    start = WAD_FindEntry(start1);
   }
 
   if (start < 0)
@@ -1021,10 +1021,10 @@ static void DoMergeSection(char ch, const char *start1, const char *start2,
   if (end < 0 && end2)
   {
     end1 = end2;
-    end = WAD_FindEntry(end2);
+    end = WAD_FindEntry(end1);
   }
 
-  if (end < 9)
+  if (end < 0)
   {
     LogPrintf("WARNING: %s found but %s is missing.\n", start1, end1);
     return;
