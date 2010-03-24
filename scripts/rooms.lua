@@ -2274,6 +2274,8 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "KEY" then
+      local LOCK = assert(R.lock)
+
       local lp_skin = -- FIXME!!!!  game specific skin
       {
         wall="WOOD3", floor="CEIL1_3",
@@ -2289,19 +2291,19 @@ gui.printf("do_teleport\n")
 
         Build_lowering_pedestal(S, z_top, lp_skin)
 
-        Trans_entity(R.key_item, mx, my, z_top)
+        Trans_entity(LOCK.item, mx, my, z_top)
       else
         if rand_odds(98) then
           local skin = { floor="CEIL1_2" }
           Build_pedestal(S, z1, skin)
         end
-        Trans_entity(R.key_item, mx, my, z1)
+        Trans_entity(LOCK.item, mx, my, z1)
       end
 
     elseif R.purpose == "SWITCH" then
-gui.debugf("SWITCH ITEM = %s\n", R.do_switch)
-      local LOCK = assert(R.lock_for_item)  -- eww
-      local INFO = assert(GAME.switches[R.do_switch])
+      local LOCK = assert(R.lock)
+gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
+      local INFO = assert(GAME.switches[LOCK.item])
       Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else

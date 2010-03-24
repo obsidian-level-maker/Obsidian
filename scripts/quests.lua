@@ -677,6 +677,10 @@ function Quest_add_keys()
     local R = arena.target
     assert(R)
 
+    assert(arena.lock.kind ~= "UNSET")
+
+    R.lock = arena.lock
+
     if arena.lock.kind == "EXIT" then
       assert(LEVEL.exit_room == R)
 
@@ -687,15 +691,8 @@ function Quest_add_keys()
         make_small_exit(R)
       end
 
-    elseif arena.lock.kind == "KEY" then
+    else
       R.purpose = arena.lock.kind
-      R.key_item = arena.lock.item  -- BLEH!
-      R.lock_for_item = arena.lock
-
-    elseif arena.lock.kind == "SWITCH" then
-      R.purpose = arena.lock.kind
-      R.do_switch = arena.lock.item  -- BLEH!
-      R.lock_for_item = arena.lock
     end
   end
 end
