@@ -18,9 +18,10 @@
 --
 ----------------------------------------------------------------
 
+
 --[[ *** CLASS INFORMATION ***
 
-class ARENA  (( QUEST ))
+class ARENA
 {
   -- an Arena is a group of rooms, generally with a locked door
   -- to a different arena (requiring the player to find the key
@@ -41,11 +42,25 @@ class ARENA  (( QUEST ))
                  -- Never nil.
 
   lock : LOCK    -- lock info, which defines what the 'target' room
-                 -- will hold (key, switch or an EXIT).
+                 -- will hold (key, switch or an EXIT).  Also defines
+                 -- connection to the next arena (the keyed door etc).
                  -- Never nil.
+                 --
+                 -- NOTE: the room on the front side of the connection
+                 -- is not necessarily in this arena.
 
   path : array(CONN)  -- full path of rooms from 'start' to 'target'
+                      -- (actually only the connections are stored).
+                      -- The list may be empty.
 
+  back_path : array(ROOM)
+                 -- path from 'target' room (not included) to the room
+                 -- with the connection to the next arena (included).
+                 -- It uses rooms since some connections are travelled
+                 -- backwards and some are travelled forward.
+                 -- Nil for EXIT locks.
+                 --
+                 -- NOTE: some rooms may be in other arenas.
 }
 
 
@@ -56,6 +71,7 @@ class LOCK
 
   conn : CONN     -- connection between two rooms (and two arenas)
                   -- which is locked (keyed door, lowering bars, etc)
+                  -- Nil for "EXIT" kind.
 
   distance : number  -- number of rooms between key and door
 
@@ -76,12 +92,20 @@ Hence we cannot add locked doors just anywhere into the level.
 This algorithm assumes that in each group of rooms (an ARENA)
 there is a path from the start to the target room (that's the
 room which holds either a key or is the EXIT room of the map).
-So a locked door can be added somewhere along that path.
+So a locked door can be added to a room somewhere along that
+path.
 
-It can either block the target room (an "ON" type) or branch
-"OFF" the path.  The room where it is added must be a "junction",
-i.e. must have a free branch where the player travels along to
-find the key to that locked door.
+There are two different ways to add a lock:
+   - the "ON" type simply blocks the original path.
+
+   - the "OFF" type does not block the path itself, instead it
+     locks one of the connections coming off the path.  This is
+     similar to choosing a new path in the arena and then
+     blocking it, except the way 'back_path' is handled.
+
+The room where the lock is added must be a "junction", i.e. it
+must have a free branch where the player can travel along to
+find the key to the locked door.
 
 The "ON" type creates more linear progression (see door A,
 find key A, see door B, find key B, etc...).  The "OFF" type
@@ -101,6 +125,26 @@ and path, and they might get split again in the future.
 
 require 'defs'
 require 'util'
+
+
+function arena_before_lock(LOCK)
+  assert(LOCK.conn)
+  return assert(LOCK.conn.src.arena)
+end
+
+function arena_after_lock(LOCK)
+  if LOCK.kind == "EXIT" then
+    return nil
+  end
+
+  assert(LOCK.conn)
+  return assert(LOCK.conn.dest.arena)
+end
+
+function arena_next_arena(A)
+  assert(A.lock)
+  return arena_after_lock(A.lock)
+end
 
 
 function Quest_decide_start_room(arena)
@@ -174,7 +218,7 @@ end
 
 function Quest_update_tvols(arena)
 
-  function travel_volume(R, seen_conns)
+  local function travel_volume(R, seen_conns)
     -- Determine total volume of rooms that are reachable from the
     -- given room R, including itself, but excluding connections
     -- that have been "locked" or already seen.
@@ -236,22 +280,52 @@ function Quest_initial_path(arena)
 
   arena.path = {}
 
-  local R = arena.start
+  local R = assert(arena.start)
 
   for loop = 1,999 do
     if loop == 999 then
       error("Quest_initial_path infinite loop!")
     end
 
-    if not R then break; end
-
     arena.target = R
+
     R = select_next_room(R, arena.path)
+
+    if not R then break; end
   end
 
   gui.debugf("Arena %s  start: S(%d,%d)  target: S(%d,%d)\n",
              tostring(arena), arena.start.sx1, arena.start.sy1,
              arena.target.sx1, arena.target.sy1)
+end
+
+
+function Quest_rejig_path(arena, new_conn)
+  -- adjust the arena so that its path branches through the given
+  -- connection (which must come off a room along the original path).
+
+  local old_start = arena.start
+  local old_path  = shallow_copy(arena.path)
+
+  arena.start = new_conn.src
+
+  Quest_initial_path(arena)
+
+  arena.start = old_start
+
+  local hit_it = false
+
+  for index,C in ipairs(old_path) do
+    local next_R = C.dest
+
+    if next_R == new_conn.src then
+      hit_it = true ; break
+    end
+
+    table.insert(arena.path, index, C)
+  end
+
+  assert(hit_it)
 end
 
 
@@ -283,7 +357,7 @@ end
 function Quest_lock_up_arena(arena)
 
   local function eval_lock(C)
-
+    --
     -- Factors to consider:
     --
     -- 1) primary factor is how well this connection breaks up the
@@ -297,8 +371,6 @@ function Quest_lock_up_arena(arena)
     --    cannot use keyed doors in DOOM without creating a tall
     --    (ugly) door frame.  Worse is when there is a big height
     --    difference.
-    --
-    -- 3) preference for "ON" locks (less back-tracking)
 
     assert(C.src_tvol and C.dest_tvol)
 
@@ -308,9 +380,10 @@ function Quest_lock_up_arena(arena)
       cost = cost + 40
     end
 
-    if not C.on_path then
-      cost = cost + 10
-    end
+--??  -- small preference for "ON" kind
+--??  if not C.on_path then
+--??    cost = cost + 10
+--??  end
 
     return cost + gui.random() * 5
   end
@@ -437,6 +510,11 @@ function Quest_lock_up_arena(arena)
 
   collect_arena(front_A, front_A.start)
   collect_arena(back_A,  back_A.start)
+
+
+  if not LC.on_path then
+    Quest_rejig_path(front_A, LC)
+  end
 
 
   Quest_initial_path(back_A)
