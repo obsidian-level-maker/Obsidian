@@ -19,7 +19,7 @@
 
 OB_MODULES["outdoor_shadows"] =
 {
-  label = "Shadows (EXPERIMENTAL)",
+  label = "Outdoor Shadows",
 
   -- should work on any "doomish" format
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1,
