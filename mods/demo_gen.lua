@@ -54,7 +54,7 @@ function Demo_make_for_doom()
 
   local function solve_room(t_kind, what)
     if t_kind == "purpose" then
-      gui.debugf("doing purpose %s/%s in %s\n",
+      gui.debugf("  doing purpose %s/%s in %s\n",
                  pos.R.arena.lock.kind or "-",
                  pos.R.arena.lock.item or "-", pos.R:tostr())
       -- FIXME
@@ -63,40 +63,43 @@ function Demo_make_for_doom()
     end
   end
 
-  local function next_room(C)
-    assert(C)
+  local function next_room(C, N)
+    if not C then
+      assert(N)
+      for _,C2 in ipairs(N.conns) do
+        if C2:neighbor(N) == pos.R then
+          C = C2 ; break
+        end
+      end
+      assert(C)
+    end
 
-    local N = C:neighbor(pos.R)
-    assert(N)
+    if not N then
+      local N = C:neighbor(pos.R)
+      assert(N)
+    end
 
-    gui.debugf("enter room %s via conn %s\n", N:tostr(), C:tostr())
+    gui.debugf("  enter room %s via conn %s\n", N:tostr(), C:tostr())
 
     -- FIXME
+
     pos.R = N
     pos.S = C:seed(N)
   end
 
-  local function follow_path(path, want_lock)
-    for _,C in ipairs(path) do
-      next_room(C)
-
-      if want_lock and pos.R:has_lock(want_lock) then
-        return true
-      end
-    end
+  local function follow_path(path)
   end
 
   local function solve_arenas()
-    local A = 1
-    local arena = LEVEL.all_arenas[A]
+    local arena = LEVEL.all_arenas[1]
 
     gui.debugf("start is %s\n", pos.R:tostr())
 
     while true do
       gui.debugf("solving arena %d\n", arena.id)
 
-      if arena.path then
-        follow_path(arena.path)
+      for _,C in ipairs(path) do
+        next_room(C)
       end
 
       solve_room("purpose")
@@ -106,24 +109,13 @@ function Demo_make_for_doom()
         return
       end
 
-      if arena.path then
-        local rev_path = shallow_copy(arena.path)
-        table_reverse(rev_path)
-
-        follow_path(rev_path, arena.lock)
+      for _,R in ipairs(arena.back_path) do
+        next_room(nil, R)
       end
 
-      local lock_conn = arena.lock.conn
+      next_room(arena.lock.conn)
 
-      A = A + 1
-      arena = LEVEL.all_arenas[A]
-      assert(arena)
-
----###      local nb_room = arena.lock.conn:neighbor(pos.R)
----###      assert(nb_room)
----###      arena = assert(nb_room.arena)
-
-      next_room(lock_conn)
+      arena = pos.R.arena
     end
   end
 
