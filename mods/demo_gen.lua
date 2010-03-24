@@ -75,7 +75,7 @@ function Demo_make_for_doom()
     end
 
     if not N then
-      local N = C:neighbor(pos.R)
+      N = C:neighbor(pos.R)
       assert(N)
     end
 
@@ -96,11 +96,13 @@ function Demo_make_for_doom()
     gui.debugf("start is %s\n", pos.R:tostr())
 
     while true do
-      gui.debugf("solving arena %d\n", arena.id)
+      gui.debugf("\nsolving arena %d\n", arena.id)
 
-      for _,C in ipairs(path) do
+      for _,C in ipairs(arena.path) do
         next_room(C)
       end
+
+      assert(pos.R == arena.target)
 
       solve_room("purpose")
 
@@ -109,8 +111,10 @@ function Demo_make_for_doom()
         return
       end
 
-      for _,R in ipairs(arena.back_path) do
-        next_room(nil, R)
+      assert(arena.back_path)
+
+      for _,C in ipairs(arena.back_path) do
+        next_room(C)
       end
 
       next_room(arena.lock.conn)

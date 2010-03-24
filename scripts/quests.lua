@@ -53,12 +53,11 @@ class ARENA
                       -- (actually only the connections are stored).
                       -- The list may be empty.
 
-  back_path : array(ROOM)
-                 -- path from 'target' room (not included) to the room
-                 -- with the connection to the next arena (included).
-                 -- It uses rooms since some connections are travelled
-                 -- backwards and some are travelled forward.
-                 -- Nil for EXIT locks.
+  back_path : array(CONN)
+                 -- path from 'target' room to the room with the
+                 -- connection to the next arena.  You need to follow
+                 -- the full path to know whether each connection goes
+                 -- forward or backwards.  Not used for EXIT.
                  --
                  -- NOTE: some rooms may be in other arenas.
 }
@@ -71,7 +70,7 @@ class LOCK
 
   conn : CONN     -- connection between two rooms (and two arenas)
                   -- which is locked (keyed door, lowering bars, etc)
-                  -- Nil for "EXIT" kind.
+                  -- Not used for EXITs.
 
   distance : number  -- number of rooms between key and door
 
@@ -99,9 +98,8 @@ There are two different ways to add a lock:
    - the "ON" type simply blocks the original path.
 
    - the "OFF" type does not block the path itself, instead it
-     locks one of the connections coming off the path.  This is
-     similar to choosing a new path in the arena and then
-     blocking it, except the way 'back_path' is handled.
+     locks one of the connections coming off the path.  This
+     causes the existing target to change to a new room.
 
 The room where the lock is added must be a "junction", i.e. it
 must have a free branch where the player can travel along to
@@ -354,6 +352,42 @@ function Quest_num_keys(num_rooms)
 end
 
 
+function Quest_find_path_to_room(src, dest)
+  local seen_rooms = {}
+
+  local function recurse(R)
+    if R == dest then
+      return {}
+    end
+
+    if seen_rooms[R] then
+      return nil
+    end
+
+    seen_rooms[R] = true
+
+    for _,C in ipairs(R.conns) do
+      local p = recurse(C:neighbor(R))
+      if p then
+        table.insert(p, 1, C)
+        return p
+      end
+    end
+
+    return nil -- no way
+  end
+
+  local path = recurse(src)
+
+  if not path then
+    gui.debugf("No path %s --> %s\n", src:tostr(), dest:tostr())
+    error("Failed to find path between two rooms!")
+  end
+
+  return path
+end
+
+
 function Quest_decide_split(arena)  -- returns a LOCK
 
   local function eval_lock(C)
@@ -415,6 +449,8 @@ function Quest_decide_split(arena)  -- returns a LOCK
 
 
   ---| Quest_decide_split |---
+
+  Quest_update_tvols(arena)
 
   -- choose connection which will get locked
   local poss_locks = {}
@@ -520,29 +556,66 @@ function Quest_split_arena(arena, LOCK)
   collect_arena(back_A,  back_A.start)
 
 
-  if not LC.on_path then
-    -- this is easy (front path stays the same)
-    front_A.target = arena.target
-    front_A.path   = arena.path
-  else
+  -- FRONT STUFF --
+
+  if LC.on_path then -- "ON" kind
+
     -- create second half of front path
     front_A.start = LOCK.conn.src
+    
     Quest_initial_path(front_A)
+
     front_A.start = arena.start
 
-    -- add first half of path (upto the locked connection)
+    -- create the back_path
+    front_A.back_path = shallow_copy(front_A.path)
+    table_reverse(front_A.back_path)
+
+    -- add first half of path
     local hit_lock = false
     for index,C in ipairs(arena.path) do
       if C == LOCK.conn then
-        hit_lock = true; break;
+        hit_lock = true ; break
       end
       table.insert(front_A.path, index, C)
     end
+    assert(hit_lock)
 
+  else  -- "OFF" kind
+
+    -- this is easy (front path stays the same)
+    front_A.target = arena.target
+    front_A.path   = arena.path
+
+    -- a bit harder : create the back_path
+    front_A.back_path = {}
+
+    local hit_lock = false
+    for idx = #front_A.path, 1, -1 do
+      local C = front_A.path[idx]
+      table.insert(front_A.back_path, C)
+      if C.src == LOCK.conn.src then
+        hit_lock = true ; break
+      end
+    end
     assert(hit_lock)
   end
 
+
+  -- BACK STUFF --
+
   Quest_initial_path(back_A)
+
+  if arena.back_path then
+    -- create back_path
+
+    if LC.on_path then -- "ON" kind
+      back_A.back_path = arena.back_path
+
+    else  -- "OFF" kind
+      back_A.back_path = "FIND"  -- find it later
+    end
+  end
 
 
   -- find oldie to replace with the newbies...
@@ -653,8 +726,6 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
     gui.debugf("No more locks could be made!\n")
     return
   end
-
-  Quest_update_tvols(arena)
 
   local LOCK = Quest_decide_split(arena)
 
@@ -1035,7 +1106,7 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
-  local EXIT_LOCK =
+  local LOCK_EXIT =
   {
     kind = "EXIT",
     item = "normal",
@@ -1043,20 +1114,14 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
 
   local ARENA =
   {
-    rooms = {},
+    rooms = shallow_copy(LEVEL.all_rooms),
     conns = shallow_copy(LEVEL.all_conns),
-    lock = EXIT_LOCK,
+    lock = LOCK_EXIT,
   }
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    assert(R.kind ~= "scenic")
-
-    table.insert(ARENA.rooms, R)
-  end
 
 
   LEVEL.all_arenas = { ARENA }
-  LEVEL.all_locks  = { EXIT_LOCK }
+  LEVEL.all_locks  = { LOCK_EXIT }
 
   Quest_decide_start_room(ARENA)
 
@@ -1072,13 +1137,17 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
     Quest_add_a_lock()
   end
 
-  gui.printf("Total arenas: %d\n", #LEVEL.all_arenas)
+  gui.printf("Arena count: %d\n", #LEVEL.all_arenas)
 
-  for id,A in ipairs(LEVEL.all_arenas) do
-    A.id = id
+  for index,A in ipairs(LEVEL.all_arenas) do
+    A.id = index
 
     for _,R in ipairs(A.rooms) do
       R.arena = A
+    end
+
+    if A.back_path == "FIND" then
+      A.back_path = Quest_find_path_to_room(A.target, A.lock.conn.src)
     end
   end
 
