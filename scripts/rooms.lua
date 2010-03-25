@@ -1978,9 +1978,9 @@ function Room_build_cave(R)
   local function WALL_brush(data, coords)
     Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
 
-    if data.shadows then
+    if data.shadow_info then
       local sh_coords = shadowify_brush(coords, 40)
-      Trans_brush(data.shadows, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
+      Trans_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
   end
 
@@ -2015,7 +2015,7 @@ function Room_build_cave(R)
   end
 
   if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
-    data.shadows = get_light(-1)
+    data.shadow_info = get_light(-1)
   end
 
   for id,reg in pairs(flood.regions) do
