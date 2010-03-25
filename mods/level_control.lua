@@ -57,25 +57,24 @@ OB_MODULES["level_control"] =
 
   options =
   {
-    hallways   = { label="Hallways", priority = 21, choices=LEVEL_CONTROL_CHOICES },
-    liquids    = { label="Liquids",  priority = 20, choices=LEVEL_CONTROL_CHOICES },
-    subrooms   = { label="Sub-Rooms",priority = 19, choices=LEVEL_CONTROL_CHOICES },
-    naturals   = { label="Natural Areas", priority = 17, choices=LEVEL_CONTROL_CHOICES },
-    lakes      = { label="Lakes",    priority = 16, choices=LEVEL_CONTROL_CHOICES },
+    barrels    = { label="Barrels",        choices=LEVEL_CONTROL_CHOICES },
+    beams      = { label="Beams",          choices=LEVEL_CONTROL_CHOICES },
+    cages      = { label="Cages",          choices=LEVEL_CONTROL_CHOICES },
+    crates     = { label="Crates",         choices=LEVEL_CONTROL_CHOICES },
+    fences     = { label="Fences",         choices=LEVEL_CONTROL_CHOICES },
+    hallways   = { label="Hallways",       choices=LEVEL_CONTROL_CHOICES },
+    lakes      = { label="Lakes",          choices=LEVEL_CONTROL_CHOICES },
+    liquids    = { label="Liquids",        choices=LEVEL_CONTROL_CHOICES },
+    naturals   = { label="Natural Areas",  choices=LEVEL_CONTROL_CHOICES },
+    pictures   = { label="Pictures",       choices=LEVEL_CONTROL_CHOICES },
+    pillars    = { label="Pillars",        choices=LEVEL_CONTROL_CHOICES },
+    scenics    = { label="Scenics",        choices=LEVEL_CONTROL_CHOICES },
+    subrooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL_CHOICES },
+    switches   = { label="Switches / Keys",choices=LEVEL_CONTROL_CHOICES },
+    symmetry   = { label="Symmetry",       choices=LEVEL_CONTROL_CHOICES },
+    windows    = { label="Windows",        choices=LEVEL_CONTROL_CHOICES },
 
-    symmetry   = { label="Symmetry", priority = 15, choices=LEVEL_CONTROL_CHOICES },
-    pillars    = { label="Pillars",  priority = 14, choices=LEVEL_CONTROL_CHOICES },
-    beams      = { label="Beams",    priority = 13, choices=LEVEL_CONTROL_CHOICES },
-    barrels    = { label="Barrels",  priority = 12, choices=LEVEL_CONTROL_CHOICES },
-
-    windows    = { label="Windows",  priority = 11, choices=LEVEL_CONTROL_CHOICES },
-    pictures   = { label="Pictures", priority = 10, choices=LEVEL_CONTROL_CHOICES },
-    cages      = { label="Cages",    priority =  9, choices=LEVEL_CONTROL_CHOICES },
-    fences     = { label="Fences",   priority =  8, choices=LEVEL_CONTROL_CHOICES },
-    crates     = { label="Crates",   priority =  7, choices=LEVEL_CONTROL_CHOICES },
-    scenics    = { label="Scenics",  priority =  5, choices=LEVEL_CONTROL_CHOICES },
-
-    favor_shape = { label ="Favor Shape", priority = 3, choices=LEVEL_CONTROL_SHAPES },
+    favor_shape = { label ="Favor Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES },
   }, 
 }
 
