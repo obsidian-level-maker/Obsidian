@@ -27,6 +27,9 @@ OB_ENGINES["zdoom"] =
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   },
 
+  -- FIXME: this is only for level names, use MAPINFO instead
+  all_done_func = Boom_all_done,
+
   param =
   {
     boom_lines = true,
@@ -46,6 +49,8 @@ OB_ENGINES["gzdoom"] =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   },
+
+  all_done_func = Boom_all_done,
 
   param =
   {
