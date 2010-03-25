@@ -39,7 +39,7 @@ function Demo_make_for_doom()
     1, 0, 0, 0  -- playersingame
   }
 
-  local function add_ticcmd(forward, side, turn, buttons)
+  local function ticcmd(forward, side, turn, buttons)
     table.insert(data, forward)
     table.insert(data, side)
     table.insert(data, turn)
@@ -48,7 +48,7 @@ function Demo_make_for_doom()
 
   local function wait(tics)
     for i = 1,tics do
-      add_ticcmd(0, 0, 0, 0)
+      ticcmd(0, 0, 0, 0)
     end
   end
 
@@ -57,13 +57,15 @@ function Demo_make_for_doom()
   end
 
   local function give_up()
+    gui.debugf("WTF?  I GIVE UP!\n")
+
     pos.given_up = true
 
     wait(35*2)
 
     -- shake his head
     for i = 4,35 do
-      add_ticcmd(0, 0, sel(gui.bit_and(i,8) == 0, 3, -3), 0)
+      ticcmd(0, 0, sel(gui.bit_and(i,8) == 0, 3, -3), 0)
     end
 
     wait(35*2)
@@ -77,6 +79,44 @@ function Demo_make_for_doom()
                pos.S:tostr(), pos.R.id or "??")
   end
 
+  local function quantize_angle(ang)
+    -- convert angle from 0-359 floating point --> 0-255 integer.
+    -- values are allowed to lie outside of this range (e.g. negative)
+    return int(pos.angle * 256 / 360 + 0.4)
+  end
+
+  local function angle_diff(A, B)  -- B minus A, result is -128..+128
+    local D = int(B - A)
+
+    while D >  128 do D = D - 256 end
+    while D < -128 do D = D + 256 end
+
+    return D
+  end
+
+  local function fast_turn(target_angle)
+    ticcmd(0, 0, angle_diff(pos.angle, target_angle), 0)
+
+    pos.angle = target_angle
+  end
+
+  local function slow_turn(target_angle, tics)
+    assert(tics >= 2)
+
+    local diff = angle_diff(pos.angle, target_angle)
+
+    -- exactly 180 degrees is ambiguous, choose randomly left or right
+    if math.abs(diff) == 128 and rand_odds(50) then
+      diff = -diff
+    end
+
+    for i = 1,tics do
+      fast_turn(int(pos.angle + diff * i / tics))
+    end
+
+    pos.angle = target_angle
+  end
+
   local function solve_room(t_kind, what)
     if pos.given_up then return end
 
@@ -84,7 +124,13 @@ function Demo_make_for_doom()
       gui.debugf("  doing purpose %s/%s in %s\n",
                  pos.R.arena.lock.kind or "-",
                  pos.R.arena.lock.item or "-", pos.R:tostr())
+
       -- FIXME
+
+      if pos.R.purpose == "EXIT" then
+        pos.finished = true
+      end
+
     else
       -- TODO
     end
@@ -115,6 +161,9 @@ function Demo_make_for_doom()
   end
 
   local function follow_path(path)
+    for _,C in ipairs(path) do
+      next_room(C)
+    end
   end
 
   local function solve_arenas()
@@ -127,24 +176,22 @@ function Demo_make_for_doom()
 
       dump_pos()
 
-      for _,C in ipairs(arena.path) do
-        next_room(C)
-      end
+      if pos.R ~= arena.start then give_up() ; return end
 
-      assert(pos.R == arena.target)
+      follow_path(arena.path)
+
+      if pos.R ~= arena.target then give_up() ; return end
 
       solve_room("purpose")
 
-      if arena.lock.kind == "EXIT" then
-        gui.debugf("EXIT")
+      if pos.finished then
+        gui.debugf("YEAH I MADE IT!\n")
         return
       end
 
-      assert(arena.back_path)
+      follow_path(assert(arena.back_path))
 
-      for _,C in ipairs(arena.back_path) do
-        next_room(C)
-      end
+      if pos.R ~= arena.lock.conn.src then give_up() ; return end
 
       next_room(arena.lock.conn)
 
@@ -153,7 +200,10 @@ function Demo_make_for_doom()
   end
 
 
-  -- BEGIN!
+  -- MAKE A COOL DEMO !! --
+
+  pos.angle = quantize_angle(pos.angle)
+
   wait(16)
 
   solve_arenas()
