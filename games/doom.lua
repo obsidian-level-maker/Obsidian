@@ -2815,6 +2815,7 @@ DOOM2_SUB_THEMES =
 
         RROCK04=70,
         CRACKLE2=7, CRACKLE4=7,
+        SP_FACE2=15, SLOPPY2=40,
       },
 
     landscape_walls =
@@ -2889,6 +2890,7 @@ DOOM2_SUB_THEMES =
 
         RROCK04=70,
         CRACKLE2=7, CRACKLE4=7,
+        SP_FACE2=15, SLOPPY2=40,
       },
 
     landscape_walls =
