@@ -95,26 +95,37 @@ function Demo_make_for_doom()
   end
 
   local function fast_turn(target_angle)
-    ticcmd(0, 0, angle_diff(pos.angle, target_angle), 0)
+    local diff = angle_diff(pos.angle, target_angle)
+
+    if diff == 0 then return end  -- very fast indeed :)
+
+    ticcmd(0, 0, diff, 0)
 
     pos.angle = target_angle
+
+    if math.abs(diff) < 128 then
+      pos.last_turn = diff
+    end
   end
 
   local function slow_turn(target_angle, tics)
-    assert(tics >= 2)
+    assert(tics >= 1)
 
     local diff = angle_diff(pos.angle, target_angle)
 
-    -- exactly 180 degrees is ambiguous, choose randomly left or right
-    if math.abs(diff) == 128 and rand_odds(50) then
-      diff = -diff
+    -- exactly 180 degrees is ambiguous: could go left or right.
+    -- we keep going in same direction as the last turn.
+    if math.abs(diff) == 128 then
+      diff = sel(pos.last_turn < 0, -1, 1) * 128
     end
+
+    local orig_angle = pos.angle
 
     for i = 1,tics do
-      fast_turn(int(pos.angle + diff * i / tics))
+      fast_turn(orig_angle + int(diff * i / tics))
     end
 
-    pos.angle = target_angle
+    fast_turn(target_angle)
   end
 
   local function solve_room(t_kind, what)
@@ -203,8 +214,14 @@ function Demo_make_for_doom()
   -- MAKE A COOL DEMO !! --
 
   pos.angle = quantize_angle(pos.angle)
+  pos.last_turn = 0
 
   wait(16)
+
+  slow_turn(64, 16) ; wait(16);
+  slow_turn(-64, 30) ; wait(16);
+  slow_turn(128, 16) ; wait(16);
+  slow_turn(0, 30) ; wait(16);
 
   solve_arenas()
 
