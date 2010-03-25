@@ -36,4 +36,5 @@ CHANGES (since v3.51)
 - buildings can have different outer and inner textures
 - improved DOOM's Wolf theme: SS Nazis, silver doors
 - more varied themes when making "a few" maps
+- variation in number of keys and switches per level
 
