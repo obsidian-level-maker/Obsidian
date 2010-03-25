@@ -52,7 +52,34 @@ function Demo_make_for_doom()
     end
   end
 
+  local function end_stream()
+    table.insert(data, 0x80)  -- DEMOMARKER
+  end
+
+  local function give_up()
+    pos.given_up = true
+
+    wait(35*2)
+
+    -- shake his head
+    for i = 4,35 do
+      add_ticcmd(0, 0, sel(gui.bit_and(i,8) == 0, 3, -3), 0)
+    end
+
+    wait(35*2)
+
+    end_stream()
+  end
+
+  local function dump_pos()
+    gui.debugf("Pos:(%1.1f %1.1f %1.1f) ang:%1.1f  @  %s in ROOM_%s\n",
+               pos.x, pos.y, pos.z, pos.angle,
+               pos.S:tostr(), pos.R.id or "??")
+  end
+
   local function solve_room(t_kind, what)
+    if pos.given_up then return end
+
     if t_kind == "purpose" then
       gui.debugf("  doing purpose %s/%s in %s\n",
                  pos.R.arena.lock.kind or "-",
@@ -95,8 +122,10 @@ function Demo_make_for_doom()
 
     gui.debugf("start is %s\n", pos.R:tostr())
 
-    while true do
+    while not pos.given_up do
       gui.debugf("\nsolving arena %d\n", arena.id)
+
+      dump_pos()
 
       for _,C in ipairs(arena.path) do
         next_room(C)
@@ -125,14 +154,13 @@ function Demo_make_for_doom()
 
 
   -- BEGIN!
-  wait(10)
+  wait(16)
 
   solve_arenas()
 
   wait(35*2)
 
-  -- mark the end
-  table.insert(data, 0x80)  -- DEMOMARKER
+  end_stream()
 
   gui.wad_add_binary_lump(LEVEL.demo_lump, data)
 end
