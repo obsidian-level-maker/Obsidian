@@ -327,26 +327,24 @@ function Quest_rejig_path(arena, new_conn)
 end
 
 
-function Quest_num_keys(num_rooms)
-  if PARAM.no_keys then return 0 end
+function Quest_num_locks(num_rooms)
+  local result
 
-  local PUZZLE_NUMS = { less=16, normal=10, more=5, mixed=10  }
-
----  if not PUZZLE_NUMS[OB_CONFIG.puzzles] then
----    gui.printf("Puzzles disabled\n")
----    return 0
----  end
-
-  local approx = num_rooms / 8 +  ---  PUZZLE_NUMS[OB_CONFIG.puzzles] +
-                 gui.random() * gui.random() * 4
-
-  local result = int(approx)
+  if PARAM.no_keys or STYLE.switches == "none" then
+    result = 0
+  elseif STYLE.switches == "heaps" then
+    result = num_rooms
+  elseif STYLE.switches == "few" then
+    result = int(num_rooms / 14 + gui.random())
+  else
+    result = int(num_rooms / 7 + (gui.random() ^ 2) * 4)
+  end
 
   if PARAM.one_lock_tex then -- FIXME !!!! TEMP CRUD
     result = math.min(2, result)
   end
 
-  gui.printf("Number of keys: %1.2f -> %d  rooms=%d\n", approx, result, num_rooms)
+  gui.printf("Number of locks: %d  (rooms:%d)\n", result, num_rooms)
 
   return result
 end
@@ -1128,12 +1126,12 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   LEVEL.start_room = LEVEL.all_arenas[1].start
   LEVEL.start_room.purpose = "START"
 
-  LEVEL.max_keys = Quest_num_keys(#ARENA.rooms)
+  local lock_num = Quest_num_locks(#ARENA.rooms)
 
 
   Quest_initial_path(ARENA)
 
-  for i = 1,LEVEL.max_keys do
+  for i = 1,lock_num do
     Quest_add_a_lock()
   end
 

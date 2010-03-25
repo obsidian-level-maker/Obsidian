@@ -69,6 +69,7 @@ STYLE_LIST =
   cages      = { none=50, some=50, heaps=6 },
   fences     = { none=30, few=30, some=10 },
   crates     = { none=20, some=40, heaps=10 },
+  switches   = { none=2, few=6, some=60, heaps=6 },
 
   lt_trim    = { none=40, some=20, heaps=10 },
   lt_spokes  = { none=90, some=20, heaps=5 },
