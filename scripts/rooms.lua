@@ -2573,6 +2573,11 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         Build_archway(S, side, z, z+112, skin)
         shrink_ceiling(side, 4)
 
+        if R.outdoor and N.room.outdoor then
+          Build_shadow(S,  side, 96)
+          Build_shadow(S, -side, 96)
+        end
+
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
       end
