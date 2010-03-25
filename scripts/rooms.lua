@@ -2828,8 +2828,6 @@ function Rooms_build_all()
   Rooms_setup_symmetry()
   Rooms_reckon_doors()
 
-  Seed_dump_fabs()
-
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
     -- (code in tiler.lua will now kick in).

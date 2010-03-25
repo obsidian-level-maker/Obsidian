@@ -247,9 +247,8 @@ function Seed_dump_fabs()
   gui.printf("Room Fabs:\n")
 
   for y = SEED_H,1,-1 do
-    
     for x = 1,SEED_W do
-      gui.printf("%s", char_for_seed(SEEDS[x][y][1].room))
+      gui.printf("%s", char_for_seed(SEEDS[x][y][1]))
     end
 
     gui.printf("\n")
