@@ -26,6 +26,8 @@ function Demo_make_for_doom()
   local STOPSPEED = 1/16
   local FRICTION = 1 - 3/32
 
+  local DIR_ANGLES = { [6]=0, [8]=64, [4]=128, [2]=192 }
+
   local player = shallow_copy(assert(LEVEL.player_pos))
 
   local data =
@@ -83,13 +85,14 @@ function Demo_make_for_doom()
   end
 
   local function ticcmd(forward, side, turn, buttons)
-gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
     table.insert(data, forward)
     table.insert(data, side)
     table.insert(data, turn)
     table.insert(data, buttons)
 
     -- move the player
+    player.angle = gui.bit_and(player.angle + turn, 255)
+
     p_thrust(player.angle,   forward / 32.0)
     p_thrust(player.angle - 64, side / 32.0)
 
@@ -155,6 +158,16 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
     return x*cos_R - y*sin_R, y*cos_R + x*sin_R
   end
 
+  local function angle_from_mom()
+    if math.abs(player.momx) < 0.01 and math.abs(player.momy) < 0.01 then
+      return nil
+    end
+
+    local raw = math.atan2(player.momy, player.momx)
+
+    return int(raw * 128 / math.pi)
+  end
+
   local function fast_turn(target_angle)
     local diff = angle_diff(player.angle, target_angle)
 
@@ -189,8 +202,31 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
     fast_turn(target_angle)
   end
 
-  local function move_player(target_x, target_y, tics)
-    local LIMIT = 32
+  local function turn_amount(target)
+    if not target then
+      -- we don't care
+      return 0
+    end
+
+    local diff = angle_diff(player.angle, target)
+
+    -- exactly 180 degrees is ambiguous: could go left or right.
+    -- we keep going in same direction as the last turn
+    if math.abs(diff) == 128 then
+      diff = sel(player.last_turn < 0, -1, 1) * 128
+    end
+
+    local LIMIT = 2
+
+    if math.abs(diff) > LIMIT then
+      diff = sel(diff < 0, -LIMIT, LIMIT)
+    end
+
+    return diff
+  end
+
+  local function move_player(target_x, target_y, target_angle, tics)
+    local LIMIT = 24
 
     for i = 1,tics do
       local predict_x = player.x + player.momx * 12
@@ -211,11 +247,30 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
       forward = quantize_move(forward)
       side    = quantize_move(side)
 
-      ticcmd(forward, -side, 0, 0)
+      local turn = turn_amount(angle_from_mom())
+
+      ticcmd(forward, -side, turn, 0)
     end
   end
 
-  local function solve_room(t_kind, what)
+  local function use_door()
+    if not player.S.conn_dir then
+      give_up()
+      return
+    end
+
+    fast_turn(DIR_ANGLES[player.S.conn_dir])
+
+    local D = player.S:neighbor(player.S.conn_dir)
+    assert(D and D.room)
+
+    move_player((D.x1 + D.x2)/2, (D.y1 + D.y2)/2, nil, 45)
+
+    player.S = D
+    player.R = D.room
+  end
+
+  local function solve_room(t_kind, S, C)
     if player.given_up then return end
 
     if t_kind == "purpose" then
@@ -226,9 +281,17 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
       -- FIXME
 
       if player.R.purpose == "EXIT" then
-        player.finished = true
+        player.exited = true
       end
 
+    elseif t_kind == "conn" then
+      local K = math.abs(S.sx - player.S.sx) + math.abs(S.sy - player.S.sy)
+
+      local t_ang = DIR_ANGLES[C.dir]
+
+      move_player((S.x1 + S.x2)/2, (S.y1+S.y2)/2, t_ang, 14*(K+2))
+
+      player.S = S
     else
       -- TODO
     end
@@ -252,7 +315,9 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
 
     gui.debugf("  enter room %s via conn %s\n", N:tostr(), C:tostr())
 
-    -- FIXME
+    solve_room("conn", C.src_S, C)
+
+    use_door()
 
     player.R = N
     player.S = C:seed(N)
@@ -282,7 +347,7 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
 
       solve_room("purpose")
 
-      if player.finished then
+      if player.exited then
         gui.debugf("YEAH I MADE IT!\n")
         return
       end
@@ -308,14 +373,9 @@ gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
   player.last_turn = 0
   player.on_ground = true
 
-  wait(16)
-  
---  slow_turn(64, 35);
-  move_player(player.x, player.y + 192, 105);
---  slow_turn(0, 35);
-  move_player(player.x, player.y - 192, 105);
+  wait(35)
 
---  solve_arenas()
+  solve_arenas()
 
   wait(35*2)
 
