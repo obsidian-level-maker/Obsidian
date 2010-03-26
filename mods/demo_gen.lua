@@ -26,6 +26,9 @@ function Demo_make_for_doom()
   local STOPSPEED = 1/16
   local FRICTION = 1 - 3/32
 
+  local BT_ATTACK = 1
+  local BT_USE = 2
+
   local DIR_ANGLES = { [6]=0, [8]=64, [4]=128, [2]=192 }
 
   local player = shallow_copy(assert(LEVEL.player_pos))
@@ -247,10 +250,20 @@ function Demo_make_for_doom()
       forward = quantize_move(forward)
       side    = quantize_move(side)
 
-      local turn = turn_amount(angle_from_mom())
+      local turn = turn_amount(target_angle or angle_from_mom())
 
       ticcmd(forward, -side, turn, 0)
     end
+  end
+
+  local function has_door(S, D, dir)
+    local B1 = S.border[dir]
+    local B2 = D.border[10-dir]
+
+    if (B1 and (B1.kind == "door" or B1.kind == "lock_door")) then return true end
+    if (B2 and (B2.kind == "door" or B2.kind == "lock_door")) then return true end
+
+    return false
   end
 
   local function use_door()
@@ -259,18 +272,34 @@ function Demo_make_for_doom()
       return
     end
 
-    fast_turn(DIR_ANGLES[player.S.conn_dir])
-
-    local D = player.S:neighbor(player.S.conn_dir)
+    local S = player.S
+    local D = S:neighbor(S.conn_dir)
     assert(D and D.room)
 
-    move_player((D.x1 + D.x2)/2, (D.y1 + D.y2)/2, nil, 45)
+    local angle = DIR_ANGLES[S.conn_dir]
+
+    -- open doors
+    if has_door(S, D, S.conn_dir) then
+
+      local dx, dy = dir_to_delta(S.conn_dir)
+
+      move_player((S.x1 + S.x2)/2 + dx*80,
+                  (S.y1 + S.y2)/2 + dy*80, angle, 25)
+
+      fast_turn(angle)
+
+      ticcmd(0, 0, 0, BT_USE + BT_ATTACK)
+
+      wait(45)
+    end
+
+    move_player((D.x1 + D.x2)/2, (D.y1 + D.y2)/2, angle, 45)
 
     player.S = D
     player.R = D.room
   end
 
-  local function solve_room(t_kind, S, C)
+  local function solve_room(t_kind, S)
     if player.given_up then return end
 
     if t_kind == "purpose" then
@@ -280,6 +309,11 @@ function Demo_make_for_doom()
 
       -- FIXME
 
+      local S = assert(player.R.guard_spot)
+
+      move_player((S.x1 + S.x2)/2, (S.y1+S.y2)/2, nil, 35*4)
+      player.S = S
+
       if player.R.purpose == "EXIT" then
         player.exited = true
       end
@@ -287,10 +321,9 @@ function Demo_make_for_doom()
     elseif t_kind == "conn" then
       local K = math.abs(S.sx - player.S.sx) + math.abs(S.sy - player.S.sy)
 
-      local t_ang = DIR_ANGLES[C.dir]
+      local t_ang = DIR_ANGLES[S.conn_dir]
 
-      move_player((S.x1 + S.x2)/2, (S.y1+S.y2)/2, t_ang, 14*(K+2))
-
+      move_player((S.x1 + S.x2)/2, (S.y1+S.y2)/2, nil, 14*(K+2))
       player.S = S
     else
       -- TODO
@@ -315,7 +348,7 @@ function Demo_make_for_doom()
 
     gui.debugf("  enter room %s via conn %s\n", N:tostr(), C:tostr())
 
-    solve_room("conn", C.src_S, C)
+    solve_room("conn", C:seed(player.R))
 
     use_door()
 
@@ -373,7 +406,7 @@ function Demo_make_for_doom()
   player.last_turn = 0
   player.on_ground = true
 
-  wait(35)
+  wait(10)
 
   solve_arenas()
 
