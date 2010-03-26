@@ -22,7 +22,7 @@ function Demo_make_for_doom()
 
   gui.printf("\nGenerating demo : %s\n\n", LEVEL.demo_lump)
 
-  local pos = shallow_copy(assert(LEVEL.player_pos))
+  local player = shallow_copy(assert(LEVEL.player_pos))
 
   local data =
   {
@@ -59,7 +59,7 @@ function Demo_make_for_doom()
   local function give_up()
     gui.debugf("WTF?  I GIVE UP!\n")
 
-    pos.given_up = true
+    player.given_up = true
 
     wait(35*2)
 
@@ -75,14 +75,14 @@ function Demo_make_for_doom()
 
   local function dump_pos()
     gui.debugf("Pos:(%1.1f %1.1f %1.1f) ang:%1.1f  @  %s in ROOM_%s\n",
-               pos.x, pos.y, pos.z, pos.angle,
-               pos.S:tostr(), pos.R.id or "??")
+               player.x, player.y, player.z, player.angle,
+               player.S:tostr(), player.R.id or "??")
   end
 
   local function quantize_angle(ang)
     -- convert angle from 0-359 floating point --> 0-255 integer.
     -- values are allowed to lie outside of this range (e.g. negative)
-    return int(pos.angle * 256 / 360 + 0.4)
+    return int(player.angle * 256 / 360 + 0.4)
   end
 
   local function angle_diff(A, B)  -- B minus A, result is -128..+128
@@ -95,31 +95,31 @@ function Demo_make_for_doom()
   end
 
   local function fast_turn(target_angle)
-    local diff = angle_diff(pos.angle, target_angle)
+    local diff = angle_diff(player.angle, target_angle)
 
     if diff == 0 then return end  -- very fast indeed :)
 
     ticcmd(0, 0, diff, 0)
 
-    pos.angle = target_angle
+    player.angle = target_angle
 
     if math.abs(diff) < 128 then
-      pos.last_turn = diff
+      player.last_turn = diff
     end
   end
 
   local function slow_turn(target_angle, tics)
     assert(tics >= 1)
 
-    local diff = angle_diff(pos.angle, target_angle)
+    local diff = angle_diff(player.angle, target_angle)
 
     -- exactly 180 degrees is ambiguous: could go left or right.
-    -- we keep going in same direction as the last turn.
+    -- we keep going in same direction as the last turn
     if math.abs(diff) == 128 then
-      diff = sel(pos.last_turn < 0, -1, 1) * 128
+      diff = sel(player.last_turn < 0, -1, 1) * 128
     end
 
-    local orig_angle = pos.angle
+    local orig_angle = player.angle
 
     for i = 1,tics do
       fast_turn(orig_angle + int(diff * i / tics))
@@ -129,17 +129,17 @@ function Demo_make_for_doom()
   end
 
   local function solve_room(t_kind, what)
-    if pos.given_up then return end
+    if player.given_up then return end
 
     if t_kind == "purpose" then
       gui.debugf("  doing purpose %s/%s in %s\n",
-                 pos.R.arena.lock.kind or "-",
-                 pos.R.arena.lock.item or "-", pos.R:tostr())
+                 player.R.arena.lock.kind or "-",
+                 player.R.arena.lock.item or "-", player.R:tostr())
 
       -- FIXME
 
-      if pos.R.purpose == "EXIT" then
-        pos.finished = true
+      if player.R.purpose == "EXIT" then
+        player.finished = true
       end
 
     else
@@ -151,7 +151,7 @@ function Demo_make_for_doom()
     if not C then
       assert(N)
       for _,C2 in ipairs(N.conns) do
-        if C2:neighbor(N) == pos.R then
+        if C2:neighbor(N) == player.R then
           C = C2 ; break
         end
       end
@@ -159,7 +159,7 @@ function Demo_make_for_doom()
     end
 
     if not N then
-      N = C:neighbor(pos.R)
+      N = C:neighbor(player.R)
       assert(N)
     end
 
@@ -167,8 +167,8 @@ function Demo_make_for_doom()
 
     -- FIXME
 
-    pos.R = N
-    pos.S = C:seed(N)
+    player.R = N
+    player.S = C:seed(N)
   end
 
   local function follow_path(path)
@@ -180,48 +180,45 @@ function Demo_make_for_doom()
   local function solve_arenas()
     local arena = LEVEL.all_arenas[1]
 
-    gui.debugf("start is %s\n", pos.R:tostr())
+    gui.debugf("start is %s\n", player.R:tostr())
 
-    while not pos.given_up do
+    while not player.given_up do
       gui.debugf("\nsolving arena %d\n", arena.id)
 
       dump_pos()
 
-      if pos.R ~= arena.start then give_up() ; return end
+      if player.R ~= arena.start then give_up() ; return end
 
       follow_path(arena.path)
 
-      if pos.R ~= arena.target then give_up() ; return end
+      if player.R ~= arena.target then give_up() ; return end
 
       solve_room("purpose")
 
-      if pos.finished then
+      if player.finished then
         gui.debugf("YEAH I MADE IT!\n")
         return
       end
 
       follow_path(assert(arena.back_path))
 
-      if pos.R ~= arena.lock.conn.src then give_up() ; return end
+      if player.R ~= arena.lock.conn.src then give_up() ; return end
 
       next_room(arena.lock.conn)
 
-      arena = pos.R.arena
+      arena = player.R.arena
     end
   end
 
 
   -- MAKE A COOL DEMO !! --
 
-  pos.angle = quantize_angle(pos.angle)
-  pos.last_turn = 0
+  player.momx = 0
+  player.momy = 0
+  player.angle = quantize_angle(player.angle)
+  player.last_turn = 0
 
   wait(16)
-
-  slow_turn(64, 16) ; wait(16);
-  slow_turn(-64, 30) ; wait(16);
-  slow_turn(128, 16) ; wait(16);
-  slow_turn(0, 30) ; wait(16);
 
   solve_arenas()
 
