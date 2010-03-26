@@ -43,6 +43,10 @@ function Demo_make_for_doom()
     1, 0, 0, 0  -- playersingame
   }
 
+  local function end_stream()
+    table.insert(data, DEMOMARKER)
+  end
+
   local function p_thrust(angle, move)
     if player.on_ground then
       player.momx = player.momx + move * math.cos(angle * math.pi / 128.0)
@@ -79,6 +83,7 @@ function Demo_make_for_doom()
   end
 
   local function ticcmd(forward, side, turn, buttons)
+gui.debugf("ticcmd: %d  %d  %d  %d\n", forward, side, turn, buttons)
     table.insert(data, forward)
     table.insert(data, side)
     table.insert(data, turn)
@@ -97,10 +102,6 @@ function Demo_make_for_doom()
     for i = 1,tics do
       ticcmd(0, 0, 0, 0)
     end
-  end
-
-  local function end_stream()
-    table.insert(data, DEMOMARKER)
   end
 
   local function give_up()
@@ -126,10 +127,16 @@ function Demo_make_for_doom()
                player.S:tostr(), player.R.id or "??")
   end
 
-  local function quantize_angle(ang)
+  local function quantize_angle(angle)
     -- convert angle from 0-359 floating point --> 0-255 integer.
     -- values are allowed to lie outside of this range (e.g. negative)
-    return int(player.angle * 256 / 360 + 0.4)
+    return int(angle * 256 / 360 + 0.4)
+  end
+
+  local function quantize_move(move)
+    local abs = int(math.abs(move) + 0.6)
+
+    return sel(move < 0, -abs, abs)
   end
 
   local function angle_diff(A, B)  -- B minus A, result is -128..+128
@@ -139,6 +146,13 @@ function Demo_make_for_doom()
     while D < -128 do D = D + 256 end
 
     return D
+  end
+
+  local function rotate_vector(x, y, angle)
+    local cos_R = math.cos(angle * math.pi / 128)
+    local sin_R = math.sin(angle * math.pi / 128)
+
+    return x*cos_R - y*sin_R, y*cos_R + x*sin_R
   end
 
   local function fast_turn(target_angle)
@@ -173,6 +187,32 @@ function Demo_make_for_doom()
     end
 
     fast_turn(target_angle)
+  end
+
+  local function move_player(target_x, target_y, tics)
+    local LIMIT = 32
+
+    for i = 1,tics do
+      local predict_x = player.x + player.momx * 12
+      local predict_y = player.y + player.momy * 12
+
+      local dx = target_x - predict_x
+      local dy = target_y - predict_y
+
+      local forward, side = rotate_vector(dx, dy, -player.angle)
+
+      local m = math.max(math.abs(forward), math.abs(side))
+
+      if m >= LIMIT then
+        forward = forward * LIMIT / m
+        side = side * LIMIT / m
+      end
+
+      forward = quantize_move(forward)
+      side    = quantize_move(side)
+
+      ticcmd(forward, -side, 0, 0)
+    end
   end
 
   local function solve_room(t_kind, what)
@@ -269,8 +309,13 @@ function Demo_make_for_doom()
   player.on_ground = true
 
   wait(16)
+  
+--  slow_turn(64, 35);
+  move_player(player.x, player.y + 192, 105);
+--  slow_turn(0, 35);
+  move_player(player.x, player.y - 192, 105);
 
-  solve_arenas()
+--  solve_arenas()
 
   wait(35*2)
 
