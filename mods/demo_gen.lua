@@ -20,7 +20,11 @@
 function Demo_make_for_doom()
   if not LEVEL.demo_lump then return end
 
-  gui.printf("\nGenerating demo : %s\n\n", LEVEL.demo_lump)
+  -- constants
+  local DEMOMARKER = 0x80
+  local MAXMOVE = 30
+  local STOPSPEED = 1/16
+  local FRICTION = 1 - 3/32
 
   local player = shallow_copy(assert(LEVEL.player_pos))
 
@@ -39,11 +43,54 @@ function Demo_make_for_doom()
     1, 0, 0, 0  -- playersingame
   }
 
+  local function p_thrust(angle, move)
+    if player.on_ground then
+      player.momx = player.momx + move * math.cos(angle * math.pi / 128.0)
+      player.momy = player.momy + move * math.sin(angle * math.pi / 128.0)
+    end
+  end
+
+  local function p_physics(impetus)
+    -- DOOM physics emulation
+    
+    if player.momx < -MAXMOVE then player.momx = -MAXMOVE end
+    if player.momy < -MAXMOVE then player.momy = -MAXMOVE end
+
+    if player.momx > MAXMOVE then player.momx = MAXMOVE end
+    if player.momy > MAXMOVE then player.momy = MAXMOVE end
+
+    player.x = player.x + player.momx
+    player.y = player.y + player.momy
+
+    if not player.on_ground then
+      return  --  no friction when airborne
+    end
+
+    if not impetus and
+       math.abs(player.momx) < STOPSPEED and
+       math.abs(player.momy) < STOPSPEED
+    then
+      player.momx = 0
+      player.momy = 0
+    else
+      player.momx = player.momx * FRICTION
+      player.momy = player.momy * FRICTION
+    end
+  end
+
   local function ticcmd(forward, side, turn, buttons)
     table.insert(data, forward)
     table.insert(data, side)
     table.insert(data, turn)
     table.insert(data, buttons)
+
+    -- move the player
+    p_thrust(player.angle,   forward / 32.0)
+    p_thrust(player.angle - 64, side / 32.0)
+
+    local impetus = (forward ~= 0) or (side ~= 0)
+
+    p_physics(impetus)
   end
 
   local function wait(tics)
@@ -53,7 +100,7 @@ function Demo_make_for_doom()
   end
 
   local function end_stream()
-    table.insert(data, 0x80)  -- DEMOMARKER
+    table.insert(data, DEMOMARKER)
   end
 
   local function give_up()
@@ -213,10 +260,13 @@ function Demo_make_for_doom()
 
   -- MAKE A COOL DEMO !! --
 
+  gui.printf("\nGenerating demo : %s\n\n", LEVEL.demo_lump)
+
   player.momx = 0
   player.momy = 0
   player.angle = quantize_angle(player.angle)
   player.last_turn = 0
+  player.on_ground = true
 
   wait(16)
 
