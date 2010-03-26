@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or
@@ -154,9 +154,9 @@ HERETIC_MATERIALS =
 {
   -- special materials --
   _ERROR = { t="WOODWL",  f="FLOOR10" },
-  _SKY   = { t="MOSAIC1", f="F_SKY1"  },
+  _SKY   = { t="CHAINSD", f="F_SKY1"  },
 
-  -- textures --
+  -- textures with best-matching flat
 
   BANNER1  = { t="BANNER1",  f="FLOOR03" },
   BANNER2  = { t="BANNER2",  f="FLOOR03" },
@@ -170,7 +170,6 @@ HERETIC_MATERIALS =
   BRWNRCKS = { t="BRWNRCKS", f="FLOOR17" },
   CELTIC   = { t="CELTIC",   f="FLOOR06" },
   CHAINMAN = { t="CHAINMAN", f="FLAT520" },
-  CHAINSD  = { t="CHAINSD",  f="FLAT520" },
   CSTLMOSS = { t="CSTLMOSS", f="FLOOR03" },
   CSTLRCK  = { t="CSTLRCK",  f="FLOOR03" },
   CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11" },
@@ -192,6 +191,7 @@ HERETIC_MATERIALS =
   GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19" },
   GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19" },
   GRSKULL1 = { t="GRSKULL1", f="FLAT521" },
+  GRSKULL2 = { t="GRSKULL2", f="FLAT521" },
   GRSKULL3 = { t="GRSKULL3", f="FLAT521" },
   GRSTNPB  = { t="GRSTNPB",  f="FLAT520" },
   GRSTNPBV = { t="GRSTNPBV", f="FLAT520" },
@@ -216,7 +216,6 @@ HERETIC_MATERIALS =
   SAINT1   = { t="SAINT1",   f="FLAT523" },
   SANDSQ2  = { t="SANDSQ2",  f="FLOOR06" },
   SKULLSB1 = { t="SKULLSB1", f="FLOOR30" },
-  SKULLSB2 = { t="SKULLSB2", f="FLOOR30" },
   SNDBLCKS = { t="SNDBLCKS", f="FLOOR06" },
   SNDCHNKS = { t="SNDCHNKS", f="FLAT522" },
   SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" },
@@ -236,10 +235,7 @@ HERETIC_MATERIALS =
   WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" },
   WOODWL   = { t="WOODWL",   f="FLOOR10" },
 
---- logos???
---GRSKULL2
-
-  -- flats --
+  -- flats with best-matching texture
 
   FLAT500  = { t="SQPEB1",   f="FLAT500"  },
   FLAT502  = { t="BLUEFRAG", f="FLAT502"  },
@@ -293,7 +289,14 @@ HERETIC_MATERIALS =
   FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" },  -- poor match
   FLTTELE1 = { t="CHAINSD",  f="FLTTELE1" },
   FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" },  -- poor match
+
+
+  -- Oblige stuff
+  O_PILL   = { t="SKULLSB2", f="O_PILL" },
+  O_BOLT   = { t="DOORWOOD", f="O_BOLT" },
+  O_CARVE  = { t="CHAINSD",  f="O_CARVE" },
 }
+
 
 HERETIC_RAILS =
 {
@@ -315,6 +318,39 @@ HERETIC_RAILS =
 HERETIC_SANITY_MAP =
 {
   -- FIXME
+}
+
+
+HERETIC_STEPS =
+{
+  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
+}
+
+
+HERETIC_PICTURES =
+{
+  -- Note: this includes pictures that only work on DOOM1 or DOOM2.
+  -- It is not a problem, because the game-specific sub-themes will
+  -- only reference the appropriate entries.
+
+  pill =
+  {
+    count=1,
+    pic_w="O_PILL", width=128, height=32, raise=16,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
+  },
+
+  carve =
+  {
+    count=1,
+    pic_w="O_CARVE", width=64, height=64,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
+  },
+
 }
 
 
@@ -1093,8 +1129,20 @@ HERETIC_SWITCHES =
   },
 }
 
+
 HERETIC_DOORS =
 {
+  door1 =
+  {
+    w=128, h=112, door_h=112,
+    door_w="DMNMSK", door_c="FLAT5_2",  -- FIXME!!!!
+    lite_w="LITE5", step_w="STEP1",
+    frame_f="FLAT1", frame_c="FLAT1",
+    track="DOORTRAK",
+    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    line_kind=1, tag=0,
+  },
+
   d_demon = { prefab="DOOR", w=128, h=128,
 
                skin =
@@ -1309,6 +1357,16 @@ HERETIC_ROOMS =
   },
 
   -- TODO: check in-game level names for ideas
+}
+
+
+HERETIC_SUB_THEME_DEFAULTS =
+{
+  steps = { step1=50 },
+
+  doors = { door1=50 },
+
+  logos = { carve=50, pill=50 },
 }
 
 
@@ -1851,7 +1909,6 @@ HERETIC_EPISODES =
 function Heretic_setup()
 
   -- FIXME: temp crap
-  GAME.door_fabs["silver_lit"] = GAME.door_fabs["d_wood"]
   GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
 end
 
@@ -1887,11 +1944,74 @@ function Heretic_get_levels()
 end
 
 
+function Heretic_make_cool_gfx()
+  local GREEN =
+  {
+    0, 209, 211, 213, 215, 217, 218
+  }
+
+  local BROWN =
+  {
+    0, 66, 68, 70, 73, 76, 79, 82, 86, 90
+  }
+
+  local RED =
+  {
+    0, 251, 253, 145, 147, 149, 151, 153, 155, 157
+  }
+
+  local WHITE =
+  {
+    0,2,4,6,8,10,12, 14,16,18,20,22,24
+  }
+
+  local BLUE =
+  {
+    0, 185, 187, 189, 191, 194, 197, 199, 202
+  }
+
+
+  local colmaps =
+  {
+    GREEN, BROWN, RED, BLUE
+  }
+
+  rand_shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, WHITE)
+
+  local carve = "RELIEF"
+  local c_map = 3
+
+  if rand_odds(33) then
+    carve = "CARVE"
+    c_map = 4
+  end
+
+  -- patches : SKULLSB2, CHAINSD
+  gui.wad_logo_gfx("WALL41", "p", "PILL",  128,128, 1)
+  gui.wad_logo_gfx("WALL42", "p", carve,    64,128, c_map)
+
+  -- flats
+  gui.wad_logo_gfx("O_BOLT",  "f", "BOLT",  64,64, 2)
+  gui.wad_logo_gfx("O_PILL",  "f", "PILL",  64,64, 1)
+  gui.wad_logo_gfx("O_CARVE", "f", carve,   64,64, c_map)
+end
+
+
 function Heretic_begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
+end
+
+
+function Heretic_all_done()
+  Heretic_make_cool_gfx()
 end
 
 
@@ -1925,13 +2045,14 @@ OB_THEMES["heretic_cave"] =
 }
 
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
   setup_func = Heretic_setup,
   levels_start_func = Heretic_get_levels,
   begin_level_func = Heretic_begin_level,
+  all_done_func = Heretic_all_done,
 
   param =
   {
@@ -1972,28 +2093,20 @@ UNFINISHED["heretic"] =
 
     "materials", HERETIC_MATERIALS,
     "rails",     HERETIC_RAILS,
+    "liquids",   HERETIC_LIQUIDS,
+    "steps",     HERETIC_STEPS,
+    "pictures",  HERETIC_PICTURES,
+    "doors",     HERETIC_DOORS,
 
-    "episodes", HERETIC_EPISODES,
     "sub_themes", HERETIC_SUB_THEMES,
+    "sub_defaults", HERETIC_SUB_THEME_DEFAULTS,
     "rooms",    HERETIC_ROOMS,
 
-    "hangs", HERETIC_OVERHANGS,
-    "pedestals", HERETIC_PEDESTALS,
-
-    "liquids", HERETIC_LIQUIDS,
     "switches", HERETIC_SWITCHES,
-    "doors", HERETIC_DOORS,
     "key_doors", HERETIC_KEY_DOORS,
     "lifts", HERETIC_LIFTS,
 
-    "pics", HERETIC_PICS,
-    "images", HERETIC_IMAGES,
-    "lights", HERETIC_LIGHTS,
-    "wall_lights", HERETIC_WALL_LIGHTS,
-
     "door_fabs", HERETIC_DOOR_PREFABS,
-    "wall_fabs", HERETIC_WALL_PREFABS,
-    "misc_fabs", HERETIC_MISC_PREFABS,
   },
 }
 
