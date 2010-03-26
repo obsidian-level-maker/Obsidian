@@ -2213,7 +2213,7 @@ gui.printf("do_teleport\n")
       local dist = 56
 
       if PARAM.raising_start and R.svolume >= 20 and not R.natural
-         and not LEVEL.demo_lump and rand_odds(30)
+         and rand_odds(25)
       then
         gui.debugf("Raising Start made\n")
 

@@ -1551,7 +1551,7 @@ function Monsters_in_room(R)
     if STYLE.barrels == "heaps" or rand_odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
     if STYLE.barrels == "few"   or rand_odds(25) then barrel_chance = barrel_chance / 4 end
 
-    if STYLE.barrels == "none"  or LEVEL.demo_lump then barrel_chance = 0 end
+    if STYLE.barrels == "none" then barrel_chance = 0 end
 
     -- sometimes prevent monster replacements
     if rand_odds(40) or OB_CONFIG.strength == "crazy" then

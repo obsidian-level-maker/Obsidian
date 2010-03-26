@@ -2438,8 +2438,6 @@ gui.debugf("BOTH SAME HEIGHT\n")
       return
     end
 
-    if LEVEL.demo_lump then return end
-
     local skin_names = THEME.pillars
     if not skin_names then return end
     R.pillar_what = rand_key_by_probs(skin_names)
