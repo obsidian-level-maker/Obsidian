@@ -2295,6 +2295,8 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
 
   local coords = rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
 
+  for _,c in ipairs(coords) do c.line_flags = 1 end
+
   Trans_brush(floor_info, coords, -EXTREME_H, z1)
   Trans_brush(floor_info, coords, z2,  EXTREME_H)
 
