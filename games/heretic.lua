@@ -1367,6 +1367,9 @@ HERETIC_SUB_THEME_DEFAULTS =
   doors = { door1=50 },
 
   logos = { carve=50, pill=50 },
+
+  periph_pillar_mat = "WOODWL",
+  beam_mat = "WOODWL",
 }
 
 

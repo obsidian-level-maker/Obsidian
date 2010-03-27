@@ -1064,7 +1064,7 @@ end
 
 
 -- NOT ACTUALLY USED:
-function Build_weird_hall(S, side, z1, z2)
+function Build_weird_hall(S, side, skin, z1, z2)
 
   local function get_hall_coords(thickness)
 
@@ -1101,7 +1101,7 @@ function Build_weird_hall(S, side, z1, z2)
   end
 
 
-  local info = get_mat("SHAWN2")
+  local info = get_mat(skin.wall)  -- e.g. SHAWN2
 
   Trans_brush(info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
 
@@ -1145,7 +1145,7 @@ function Build_diagonal(S, side, info, floor_h, ceil_h)
 end
 
 
-function Build_arrow(S, dir, f_h)
+function Build_debug_arrow(S, dir, f_h)
  
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1522,7 +1522,7 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
   end
 
 
-  local mat_info = get_mat("METAL")
+  local mat_info = get_mat(skin.support)
 
   local z3 = math.max(x_h, y_h)
 

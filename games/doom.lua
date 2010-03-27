@@ -2230,6 +2230,36 @@ DOOM_SUB_THEME_DEFAULTS =
   switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
   bars = { bar_silver=50 },
 
+  -- MISC STUFF : these don't quite fit in yet --
+
+  periph_pillar_mat = "SUPPORT3",
+  beam_mat = "METAL",
+  light_trim = "METAL",
+  corner_supports = { SUPPORT2=50, SUPPORT3=10 },
+  ceiling_trim = "METAL",
+  ceiling_spoke = "SHAWN2",
+  teleporter_mat = "GATE3",
+  raising_start_switch = "SW1COMP",
+  pedestal_mat = "CEIL1_2",
+  hall_trim1 = "GRAY7",
+  hall_trim2 = "METAL",
+  window_side_mat = "DOORSTOP",
+  track_mat = "DOORTRAK",
+
+  lowering_pedestal_skin =
+  {
+    wall="WOOD3", floor="CEIL1_3",
+    x_offset=0, y_offset=0, peg=true,
+    line_kind=23,
+  },
+
+  lowering_pedestal_skin2 =
+  {
+    wall="PIPEWAL1", floor="CEIL1_2",
+    x_offset=0, y_offset=0, peg=true,
+    line_kind=23,
+  },
+
 }
 
 

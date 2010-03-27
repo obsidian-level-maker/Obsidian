@@ -1246,14 +1246,18 @@ function Room_make_ceiling(R)
   end
 
   local function add_periph_pillars(side, offset)
+    if not THEME.periph_pillar_mat then
+      return
+    end
+
+    local info = add_pegging(get_mat(THEME.periph_pillar_mat))
+
     local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
     if is_vert(side) then x2 = x2-1 else y2 = y2-1 end
 
     local x_dir = sel(side == 6, -1, 1)
     local y_dir = sel(side == 8, -1, 1)
-
-    local metal = add_pegging(get_mat("SUPPORT3"))
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
@@ -1276,7 +1280,7 @@ function Room_make_ceiling(R)
         local px = sel(x_dir < 0, S.x1, S.x2)
         local py = sel(y_dir < 0, S.y1, S.y2)
 
-        Trans_quad(metal, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
+        Trans_quad(info, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
         
         R.has_periph_pillars = true
 
@@ -1565,7 +1569,7 @@ function Room_make_ceiling(R)
     
     if mode == "light" then
       if not R.arena.ceil_light then return end
-      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim="METAL" }
+      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim=THEME.light_trim }
     end
 
     for x = x1,x2 do for y = y1,y2 do
@@ -1578,7 +1582,7 @@ function Room_make_ceiling(R)
             Build_ceil_light(S, ceil_h, skin)
           end
         else
-          Build_cross_beam(S, dir, 64, ceil_h - 16, R.beam_mat or "METAL")
+          Build_cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
         end
       end
     end end -- for x, y
@@ -1592,6 +1596,8 @@ function Room_make_ceiling(R)
   end
 
   local function criss_cross_beams(mode)
+    if not THEME.beam_mat then return false end
+
     if R.children then return false end
 
     R.lite_w = 64
@@ -1645,6 +1651,12 @@ function Room_make_ceiling(R)
   end
 
   local function corner_supports()
+    if not THEME.corner_supports then
+      return false
+    end
+
+    local mat = rand_key_by_probs(THEME.corner_supports)
+
     local SIDES = { 1, 7, 3, 9 }
 
     -- first pass only checks if possible
@@ -1662,10 +1674,10 @@ function Room_make_ceiling(R)
           poss = poss + 1
 
           if loop == 2 then
-            local skin = { w=24, beam_w="SUPPORT2", x_offset=0 }
-            if R.has_lift or (R.id % 5) == 4 then
-              skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
-            end
+            local skin = { w=24, beam_w=mat, x_offset=0 }
+            ---## if R.has_lift or (R.id % 5) == 4 then
+            ---##   skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
+            ---## end
             Build_corner_beam(S, SIDES[where], skin)
           end
 
@@ -1742,7 +1754,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       local ceil_info  = get_mat(R.main_tex)
       local sky_info   = get_sky()
-      local brown_info = get_mat("CEIL3_3")
+      local brown_info = get_mat(rand_key_by_probs(THEME.building_ceilings))
 
       local light_name = rand_key_by_probs(THEME.big_lights)
       local light_info = get_mat(light_name)
@@ -1757,8 +1769,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         end
       end
 
-    local trim   = "METAL"
-    local spokes = "SHAWN2"
+    local trim   = THEME.ceiling_trim
+    local spokes = THEME.ceiling_spoke
 
     if STYLE.lt_swapped ~= "none" then
       trim, spokes = spokes, trim
@@ -2138,12 +2150,12 @@ if idx < 1 then return end
 
 
 gui.printf("do_teleport\n")
-    local gate_info = get_mat("GATE3")
+    local gate_info = get_mat(THEME.teleporter_mat)
     gate_info.sec_tag = tag
 
     Trans_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
 
-    gui.add_entity("14", (x1+x2)/2, (y1+y2)/2, z1 + 25)
+    Trans_entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
   end
 
 
@@ -2213,14 +2225,14 @@ gui.printf("do_teleport\n")
       local dist = 56
 
       if PARAM.raising_start and R.svolume >= 20 and not R.natural
-         and rand_odds(25)
+         and THEME.raising_start_switch and rand_odds(25)
       then
         gui.debugf("Raising Start made\n")
 
         local skin =
         {
           f_tex = S.f_tex or R.main_tex,
-          switch_w = "SW1COMP",
+          switch_w = THEME.raising_start_switch,
         }
 
         Build_raising_start(S, 6, z1, skin)
@@ -2276,25 +2288,18 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.lock)
 
-      local lp_skin = -- FIXME!!!!  game specific skin
-      {
-        wall="WOOD3", floor="CEIL1_3",
-        x_offset=0, y_offset=0, peg=true,
-        line_kind=23,
-      }
-
-      if rand_odds(15) then
+      if rand_odds(15) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
         end
 
-        Build_lowering_pedestal(S, z_top, lp_skin)
+        Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
 
         Trans_entity(LOCK.item, mx, my, z_top)
       else
         if rand_odds(98) then
-          local skin = { floor="CEIL1_2" }
+          local skin = { floor=THEME.pedestal_mat }
           Build_pedestal(S, z1, skin)
         end
         Trans_entity(LOCK.item, mx, my, z1)
@@ -2322,28 +2327,22 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
     local weapon = assert(S.content_weapon)
 
-    local lp_skin = -- FIXME!!!!  game specific skin
-    {
-      wall="PIPEWAL1", floor="CEIL1_2",
-      x_offset=0, y_offset=0, peg=true,
-      line_kind=23,
-    }
-
     if R.hallway or R == LEVEL.start_room then
       Trans_entity(weapon, mx, my, z1)
 
-    elseif rand_odds(40) then
+    elseif rand_odds(40) and THEME.lowering_pedestal_skin2 then
       local z_top = math.max(z1+80, R.floor_max_h+40)
       if z_top > z2-32 then
          z_top = z2-32
       end
 
-      Build_lowering_pedestal(S, z_top, lp_skin)
+      Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
 
       Trans_entity(weapon, mx, my, z_top)
     else
-      local skin = { floor="CEIL1_2" }
+      local skin = { floor=THEME.pedestal_mat }
       Build_pedestal(S, z1, skin)
+
       Trans_entity(weapon, mx, my, z1)
     end
 
@@ -2517,7 +2516,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
             S:neighbor(side).kind == "void")
          )
       then
-        local skin = { wall=LEVEL.hall_tex, trim1="GRAY7", trim2="METAL" }
+        local skin = { wall=LEVEL.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
         Build_detailed_hall(S, side, z1, z2, skin)
 
         S.border[side].kind = nil
@@ -2535,7 +2534,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "window" then
         local B = S.border[side]
-        local skin = { wall=w_tex, side_t="DOORSTOP", facade=R.facade or w_tex }
+        local skin = { wall=w_tex, side_t=THEME.window_side_mat or w_tex, facade=R.facade or w_tex }
         -- skin.floor = f_tex
 
         Build_window(S, side, B.win_width, B.win_mid_w,
@@ -2568,7 +2567,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
-        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t="DOORTRAK" }
+        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
 
         Build_archway(S, side, z, z+112, skin)
         shrink_ceiling(side, 4)
@@ -2583,7 +2582,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       end
 
       if B_kind == "liquid_arch" then
-        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t="DOORTRAK" }
+        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build_archway(S, side, z1, z_top, skin)
@@ -2707,7 +2706,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         end
 
         if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
-          Build_ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim="METAL" })
+          Build_ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
         end
       end
     end
