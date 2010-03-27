@@ -116,7 +116,7 @@ public:
 
 public:
   sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(80), special(0), tag(0), mark(0),
+                    light(64), special(0), tag(0), mark(0),
                     exfloors(), index(-1),
                     region(NULL), misc_flags(0), valid_count(0)
   { }
@@ -950,7 +950,7 @@ static void LightingFloodFill(void)
     if ((S->misc_flags & SEC_SHADOW))
       S->light -= (S->light > 168) ? 48 : 32;
 
-    if (S->light <= 80)
+    if (S->light <= 64)
       S->light = 96;
     else if (S->light < 112)
       S->light = 112;
