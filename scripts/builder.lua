@@ -859,11 +859,11 @@ end
 
 
 function Build_quake_exit_pad(S, z_top, skin, next_map)
-  local x1 = S.x1 + 32
-  local y1 = S.y1 + 32
+  local x1 = S.x1 + 64
+  local y1 = S.y1 + 64
 
-  local x2 = x1 + 128
-  local y2 = y1 + 128
+  local x2 = x1 + 64
+  local y2 = y1 + 64
 
   local m_ref = gui.q1_add_mapmodel(
   {

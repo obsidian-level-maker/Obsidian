@@ -2269,10 +2269,9 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
-      local next_map = string.format("e%dm%d", LEVEL.episode, LEVEL.map+1)
       local skin = { floor="SLIP2", wall="SLIPSIDE" }
 
-      Build_quake_exit_pad(S, z1 + 16, skin, next_map)
+      Build_quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
 
     elseif R.purpose == "EXIT" then
       local CS = R.conns[1]:seed(R)

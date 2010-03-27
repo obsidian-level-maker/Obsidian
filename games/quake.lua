@@ -1180,8 +1180,10 @@ function Quake1_get_levels()
         name = string.format("e%dm%d", episode, map),
 
         episode  = episode,
+        map      = map,
         ep_along = map / MAP_NUM,
-        ep_info  = ep_info,
+
+        next_map = string.format("e%dm%d", episode, map+1)
 
 --        key_list = { "foo" },
   --      switch_list = { "foo" },
@@ -1216,7 +1218,7 @@ OB_THEMES["quake_base"] =
 }
 
 
-UNFINISHED["quake"] =
+OB_GAMES["quake"] =
 {
   label = "Quake",
 
