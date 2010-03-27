@@ -858,6 +858,34 @@ function Build_quake_door(S, side)
 end
 
 
+function Build_quake_exit_pad(S, z_top, skin, next_map)
+  local x1 = S.x1 + 32
+  local y1 = S.y1 + 32
+
+  local x2 = x1 + 128
+  local y2 = y1 + 128
+
+  local m_ref = gui.q1_add_mapmodel(
+  {
+    y_face={ texture="trigger" },
+    x_face={ texture="trigger" },
+    z_face={ texture="trigger" },
+  },
+  x1,y1, z_top, x2,y2, z_top+256)
+
+  gui.add_entity("trigger_changelevel", 0, 0, 0,
+                 { map=next_map, model=assert(m_ref) })
+
+  -- the pad itself
+
+  local info = get_mat(skin.wall or skin.floor, skin.floor)
+  info.t_face.light = 0.8
+
+  Trans_quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
+end
+
+
+
 function Build_lowering_bars(S, side, z_top, skin, tag)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
