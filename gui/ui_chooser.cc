@@ -217,6 +217,13 @@ char *Select_Output_File(const char *ext)
 
 #else  // Linux and MacOSX
 
+  if (HasExtension(last_file) && ! CheckExtension(last_file, ext))
+  {
+    char *new_last = ReplaceExtension(last_file, NULL);
+    StringFree(last_file);
+    last_file = new_last;
+  }
+
   char pattern_buf[64];
   sprintf(pattern_buf, "*.%s", ext);
 
