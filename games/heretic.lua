@@ -338,7 +338,7 @@ HERETIC_PICTURES =
     count=1,
     pic_w="O_PILL", width=128, height=32, raise=16,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side_t="METL2", floor="FLOOR30", depth=8, 
     light=0.7,
   },
 
@@ -347,7 +347,7 @@ HERETIC_PICTURES =
     count=1,
     pic_w="O_CARVE", width=64, height=64,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side_t="METL2", floor="FLOOR30", depth=8, 
     light=0.7,
   },
 
@@ -1043,10 +1043,10 @@ HERETIC_OVERHANGS =
 
 HERETIC_LIQUIDS =
 {
-  water  = { floor="FLTFLWW1", wall="WATRWAL1" },
-  lava   = { floor="FLATHUH1", wall="LAVAFL1", sec_kind=16 },
-  magma  = { floor="FLTLAVA1", wall="LAVA1",   sec_kind=5 },
-  sludge = { floor="FLTSLUD1", wall="LAVA1",   sec_kind=7 },
+  water  = { mat="FLTFLWW1", light=0.65, sec_kind=16 },
+  lava   = { mat="FLATHUH1", light=0.75, sec_kind=16 },
+  magma  = { mat="FLTLAVA1", light=0.65, sec_kind=16 },
+  sludge = { mat="FLTSLUD1", light=0.65, sec_kind=16 },
 }
 
 HERETIC_SWITCHES =
@@ -1364,6 +1364,15 @@ HERETIC_SUB_THEME_DEFAULTS =
 
   keys = { k_yellow=50, k_green=50, k_blue=20 },
 
+--FIXME TEMP STUFF
+  cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
+                 RCKSNMUD=20, ROOTWALL=30,
+               },
+
+  landscape_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
+                      RCKSNMUD=20, ROOTWALL=10,
+                    },
+
   periph_pillar_mat = "WOODWL",
   beam_mat = "WOODWL",
   track_mat = "METL2",
@@ -1375,6 +1384,8 @@ HERETIC_SUB_THEMES =
   heretic_urban1 =
   {
     prob=50,
+
+    liquids = { water=50, sludge=15, lava=4 },
 
     building_walls =
       {
@@ -1417,6 +1428,8 @@ HERETIC_SUB_THEMES =
   {
     prob=50,
 
+    liquids = { lava=50, magma=20, sludge=3 },
+
     building_walls =
       {
         CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
@@ -1445,7 +1458,7 @@ HERETIC_SUB_THEMES =
   }, -- GOTHIC1
 
 
-  heretic_cave1 =  -- Keep this ???
+  heretic_cave1 =  -- Keep this ???  Nope !
   {
     prob=50,
 
@@ -2035,7 +2048,7 @@ OB_THEMES["heretic_gothic"] =  -- castles
   mixed_prob = 50,
 }
 
-OB_THEMES["heretic_cave"] =
+UNFINISHED["heretic_cave"] =
 {
   label = "Cave",
   for_games = { heretic=1 },

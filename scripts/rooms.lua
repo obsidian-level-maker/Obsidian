@@ -2050,6 +2050,7 @@ function Room_build_cave(R)
 
   if R.is_lake then return end
   if THEME.square_caves then return end
+  if PARAM.simple_caves then return end
 
 
   local walkway = Cave_negate(R.flood)
