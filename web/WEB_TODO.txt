@@ -25,7 +25,6 @@ DOCS
   - FEATURE list  [DONE]
   - system requirments  [DONE]
   - current status [DONE]
-  - known problems
   - future development  (LATER...)
   - contact:  sourceforge devel page  [DONE]
 
