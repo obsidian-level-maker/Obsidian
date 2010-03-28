@@ -2,30 +2,18 @@
 TODO
 ====
 
-!!! BUG: disconnected caves
+
+!!!! BUG: disconnected caves
 
 !! BUG: monsters ending up in the void (caves)
 
-BUG: switch in cave may end up inaccessible (clear the seed)
+!  when choosing filename but EXT is different, reset last_name
 
-BUG: place pickups more carefully in caves (otherwise can be unpickupable)
-
-BUG: liquification of caves at a border can subvert quests
-
-
--  Cave code: give each cave an 'info' field and make it a class
-              with various methods, in particular for mapping
-              between seed coords and cave cell coords.
 
 +  more supplies in start room (ammo for weapon, armor vest)
 
-+  get small exits working again
-   -  rework Build_small_exit to only use a single transform
-
 +  single (or two?) border seeds around map
    (plus space for monster depots)
-
-+  improve the jaggy edge algorithm (support corner triangles)
 
 
 DONE: style control over key/switch num
@@ -44,6 +32,24 @@ DONE: "mixed" theme on "a few" levels : more varied
 
 
 
+BUG: switch in cave may end up inaccessible (clear the seed)
+
+BUG: place pickups more carefully in caves (otherwise can be unpickupable)
+
+BUG: liquification of caves at a border can subvert quests
+
+
+-  Cave code: give each cave an 'info' field and make it a class
+              with various methods, in particular for mapping
+              between seed coords and cave cell coords.
+
++  get small exits working again
+   -  rework Build_small_exit to only use a single transform
+
++  improve the jaggy edge algorithm (support corner triangles)
+
+-  key distances : easy now with 'back_path'
+
 +  review monster quantities, need some increase over the course
    of a level (like 50% more monsters at end compared to start)
    and maybe better pacing (e.g. nothing in a room occasionally).
@@ -52,12 +58,13 @@ DONE: "mixed" theme on "a few" levels : more varied
    quantities (i.e. Less or Scarce settings).
 
 
--  some basic lighting objects (torches), esp. Urban/Hell
+-  prevent escapes over fences/windows near key pedestals (etc) by
+   raising the height of the fences/windows there.
 
+-  some basic lighting objects (torches), esp. Urban/Hell
 
 -  BUG: items occasionally appear on skyfences
    - finding small spots ignores sideway extents (thick[])
-
 
 -  have a 'functions' table for games, engines, mods 
    e.g. setup_func = XXX  -->  functions = { setup = XXX }

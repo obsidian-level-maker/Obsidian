@@ -122,6 +122,14 @@ Possible Options:
 Quests : add locks (new arenas) even when have no keys
 
 
+Hallway Theming:
+  Wood# (Namely Wood1, Wood3 and Wood5...Wood4 is the one with skulls on it
+  and might look silly), Woodmet1, Skin2, GSTONE1/SP_HOT1 and Skinmet#
+  textures would fit well in the HELL theme (Note Woodmet# textures are Doom2
+  only, everything else works in both games)
+
+  PANCASE2 would fit well for Doom2 Urban hallways.
+
 
 ----------------------------------------------------------------
   GUI and C++ CODE
@@ -209,20 +217,28 @@ Sam's suggestions:
   QUAKE:
 ----------------------------------------------------------------
 
-+  create faces from stacked brushes behind a gap (cf. oa_dm7)
+++ perform visibility
+
+++ create a usable exit
 
 ++ perform lighting
    (sky vector = '1 2 4')
 
-++ perform visibility
-
 -  liquid areas
-
--  gui.quake_add_textures("data/quake_tex.wad")
 
 -  create "oblige" logo miptex [.wal for QuakeII]
 
--  allow export to .map files
+-  create faces from stacked brushes behind a gap (cf. oa_dm7)
+
+-  gui.quake_add_textures("data/quake_tex.wad")
+
+-  Option to create _debugging_ MAP file
+
+-  Option for shrinking textures to 32x32 (scaled in-map)
+   which would only require 1/4 of the lightmap space
+   (and hence less likely to run out of it)
+
+-  verify the POP file
 
 
 ----------------------------------------------------------------
