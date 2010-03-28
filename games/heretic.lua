@@ -1376,6 +1376,7 @@ HERETIC_SUB_THEME_DEFAULTS =
   periph_pillar_mat = "WOODWL",
   beam_mat = "WOODWL",
   track_mat = "METL2",
+  pedestal_mat = "FLAT500",
 }
 
 
