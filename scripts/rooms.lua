@@ -662,7 +662,7 @@ function Rooms_reckon_doors()
 
           local prob = door_chance(C.src, C.dest)
 
-          if S.conn.lock then
+          if S.conn.lock and S.conn.lock.kind ~= "NULL" then
             B.kind = "lock_door"
             B.lock = S.conn.lock
 
@@ -2511,6 +2511,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         Build_shadow(S, side, dist)
       end
 
+      local border = S.border[side]
       local B_kind = S.border[side].kind
 
       -- hallway hack
@@ -2629,7 +2630,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         local skin2 = { inner=w_tex, outer=o_tex }
 
-        Build_door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag)
+        local reversed = (S == S.conn.dest_S)
+
+        Build_door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)

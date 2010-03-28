@@ -739,7 +739,7 @@ function Build_archway(S, side, z1, z2, skin)
 end
 
 
-function Build_door(S, side, z1, skin, skin2, tag)
+function Build_door(S, side, z1, skin, skin2, tag, reversed)
 
   tag2 = nil  -- FIXME !!!
 
@@ -796,6 +796,14 @@ function Build_door(S, side, z1, skin, skin2, tag)
   z1+16, EXTREME_H)
 
   local track_i = add_pegging(get_mat(skin.track))
+
+
+  -- Heretic statues
+  if skin.statue then
+    local ey = sel(reversed, -40, 40)
+    Trans_entity(skin.statue, 16,     ey, z1)
+    Trans_entity(skin.statue, long-16, ey, z1)
+  end
 
 
   for pass = 1,2 do

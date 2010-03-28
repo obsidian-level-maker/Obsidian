@@ -1145,11 +1145,12 @@ HERETIC_DOORS =
     door_w="DMNMSK", door_c="FLAT5_2",  -- FIXME!!!!
     lite_w="LITE5", step_w="STEP1",
     frame_f="FLAT1", frame_c="FLAT1",
-    track="DOORTRAK",
+    track="METL2",
     key_w="BRICKLIT", key_ox=20, key_oy=-16,
     line_kind=1, tag=0,
   },
 
+--[[
   d_demon = { prefab="DOOR", w=128, h=128,
 
                skin =
@@ -1166,64 +1167,48 @@ HERETIC_DOORS =
  d_wood   = { wall="DOORWOOD", w=64,  h=128, ceil="FLOOR10" },
   
 --  d_stone  = { wall="DOORSTON", w=64,  h=128 },
-}
+--]]
 
-HERETIC_KEY_DOORS =
-{
+
+  -- LOCKED DOORS --
+
   k_blue =
   {
-    w=128, h=128,
+    w=128, h=128, door_h=128, 
 
-    prefab = "DOOR", -- DOOR_LOCKED
+    door_w="DOORSTON", door_c="FLOOR28",
+    track="METL2",
+    frame_f="FLOOR04",
+    line_kind=32, tag=0,  -- kind_rep=26
 
-    skin =
-    {
-      door_w="DOORSTON", door_c="FLOOR28",
-      track_w="METL2",
-      frame_f="FLOOR04",
-      door_h=128, 
-      door_kind=32, tag=0,  -- kind_rep=26
-    },
-
-    thing = "blue_statue",
+    statue = "blue_statue",
   },
 
   k_green =
   {
-    w=128, h=128,
+    w=128, h=128, door_h=128,
 
-    prefab = "DOOR", -- DOOR_LOCKED
+    door_w="DOORSTON", door_c="FLOOR28",
+    track="METL2",
+    frame_f="FLOOR04",
+    line_kind=33, tag=0, -- kind_rep=28,
 
-    skin =
-    {
-      door_w="DOORSTON", door_c="FLOOR28",
-      track_w="METL2",
-      frame_f="FLOOR04",
-      door_h=128, 
-      door_kind=33, tag=0, -- kind_rep=28,
-    },
-
-    thing = "green_statue",
+    statue = "green_statue",
   },
 
   k_yellow =
   {
-    w=128, h=128,
+    w=128, h=128, door_h=128,
 
-    prefab = "DOOR", -- DOOR_LOCKED
+    door_w="DOORSTON", door_c="FLOOR28",
+    track="METL2",
+    frame_f="FLOOR04",
+    line_kind=34, tag=0, -- kind_rep=27,
 
-    skin =
-    {
-      door_w="DOORSTON", door_c="FLOOR28",
-      track_w="METL2",
-      frame_f="FLOOR04",
-      door_h=128, 
-      door_kind=34, tag=0, -- kind_rep=27,
-    },
-
-    thing = "yellow_statue",
+    statue = "yellow_statue",
   },
 }
+
 
 HERETIC_LIFTS =
 {
@@ -1377,8 +1362,11 @@ HERETIC_SUB_THEME_DEFAULTS =
 
   exits = { exit_pillar=50 },
 
+  keys = { k_yellow=50, k_green=50, k_blue=20 },
+
   periph_pillar_mat = "WOODWL",
   beam_mat = "WOODWL",
+  track_mat = "METL2",
 }
 
 
@@ -2078,8 +2066,6 @@ OB_GAMES["heretic"] =
     prefer_stairs = true,
     noblaze_door = true,
 
-    no_keys = true,  --!!!! FIXME
-
     custom_flats = true,
 
     seed_size = 192,
@@ -2117,7 +2103,6 @@ OB_GAMES["heretic"] =
     "rooms",    HERETIC_ROOMS,
 
     "switches", HERETIC_SWITCHES,
-    "key_doors", HERETIC_KEY_DOORS,
     "lifts", HERETIC_LIFTS,
 
     "door_fabs", HERETIC_DOOR_PREFABS,

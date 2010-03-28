@@ -65,7 +65,7 @@ class ARENA
 
 class LOCK
 {
-  kind : keyword  -- "KEY" or "SWITCH" or "EXIT"
+  kind : keyword  -- "NULL" or "KEY" or "SWITCH" or "EXIT"
   item : string   -- what kind of key or switch (game specific)
 
   conn : CONN     -- connection between two rooms (and two arenas)
