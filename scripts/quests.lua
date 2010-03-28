@@ -833,50 +833,15 @@ function Quest_key_distances()
   -- the biggest distances will use actual keys (which are limited)
   -- whereas everything else will use switched doors.
 
-  local function lock_in_path(A, lock)
-    if table_empty(A.path) then
-      if A.start:has_lock(lock) then return 1 end
-    else
-      for c_idx,C in ipairs(A.path) do
-        if C.src:has_lock(lock) then
-          return 1 + #A.path - c_idx
-        end
-      end
-    end
-
-    if A.target:has_lock(lock) then return 0 end
-
-    return nil -- not here
-  end
-
-  local function dist_to_lock(arena_idx, lock)
-    local dist = 0
-
-    while arena_idx >= 1 do
-      local d = lock_in_path(LEVEL.all_arenas[arena_idx], lock)
-      if d then
-        return dist + d  -- Yay!
-      end
-
-      -- try earlier arena
-      dist = dist + #LEVEL.all_arenas[arena_idx].path
-      arena_idx = arena_idx - 1
-    end
-
-    -- FIXME: this may be normal, verify!
-    gui.printf("WARNING: Quest_key_distances: cannot find locked door")
-    return 12
-  end
-
-  ---| Quest_key_distances |---
-
   gui.debugf("Key Distances:\n")
 
   for index,A in ipairs(LEVEL.all_arenas) do
     if A.lock.kind == "EXIT" then
       A.lock.distance = 0
+    elseif A.back_path then
+      A.lock.distance = 1 + #A.back_path 
     else
-      A.lock.distance = 2 + dist_to_lock(index, A.lock) 
+      A.lock.distance = rand_irange(1,12)
     end
     gui.debugf("  Arena #%d : lock_dist %1.1f\n", index, A.lock.distance)
   end
