@@ -1934,32 +1934,34 @@ function Build_exit_pillar(S, z1, skin)
 --- NUKEM:  gui.add_entity("142", mx, my, z1+96, { lo_tag=-1 });
 
 
-  local info = get_mat(skin.exitside)
+  if skin.exitside then
+    local info = get_mat(skin.exitside)
 
-  local exit_info = get_mat(skin.exit_w)
-  add_pegging(exit_info)
+    local exit_info = get_mat(skin.exit_w)
+    add_pegging(exit_info)
 
-  info.t_face.light = 0.82
- 
-  Trans_set(DT)
+    info.t_face.light = 0.82
+   
+    Trans_set(DT)
 
-  local pos = long/2 - 68
+    local pos = long/2 - 68
 
-  for pass=1,4 do
-    TRANSFORM.mirror_x = sel((pass % 2)==1, nil, long/2)
-    TRANSFORM.mirror_y = sel(pass >= 3,     nil, long/2)
+    for pass=1,4 do
+      TRANSFORM.mirror_x = sel((pass % 2)==1, nil, long/2)
+      TRANSFORM.mirror_y = sel(pass >= 3,     nil, long/2)
 
-    Trans_brush(info,
-    {
-      { x=pos+8,  y=pos+24 },
-      { x=pos+0,  y=pos+16, w_face = exit_info.w_face },
-      { x=pos+28, y=pos+0  },
-      { x=pos+36, y=pos+8  },
-    },
-    -EXTREME_H, z1 + skin.exit_h)
+      Trans_brush(info,
+      {
+        { x=pos+8,  y=pos+24 },
+        { x=pos+0,  y=pos+16, w_face = exit_info.w_face },
+        { x=pos+28, y=pos+0  },
+        { x=pos+36, y=pos+8  },
+      },
+      -EXTREME_H, z1 + skin.exit_h)
+    end
+
+    Trans_clear()
   end
-
-  Trans_clear()
 end
 
 

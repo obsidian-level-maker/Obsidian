@@ -856,6 +856,12 @@ HERETIC_COMBOS =
 
 HERETIC_EXITS =
 {
+  exit_pillar =
+  {
+    h=128, switch_w="SW2OFF",
+  },
+
+--[[
   METAL =
   {
     mat_pri = 9,
@@ -901,6 +907,7 @@ HERETIC_EXITS =
       }
     },
   },
+--]]
 }
 
 HERETIC_HALLWAYS =
@@ -1367,6 +1374,8 @@ HERETIC_SUB_THEME_DEFAULTS =
   doors = { door1=50 },
 
   logos = { carve=50, pill=50 },
+
+  exits = { exit_pillar=50 },
 
   periph_pillar_mat = "WOODWL",
   beam_mat = "WOODWL",
@@ -2073,7 +2082,7 @@ OB_GAMES["heretic"] =
 
     custom_flats = true,
 
-    seed_size = 256,
+    seed_size = 192,
 
     max_name_length = 28,
 
@@ -2097,9 +2106,11 @@ OB_GAMES["heretic"] =
     "materials", HERETIC_MATERIALS,
     "rails",     HERETIC_RAILS,
     "liquids",   HERETIC_LIQUIDS,
+
     "steps",     HERETIC_STEPS,
     "pictures",  HERETIC_PICTURES,
     "doors",     HERETIC_DOORS,
+    "exits",     HERETIC_EXITS,
 
     "sub_themes", HERETIC_SUB_THEMES,
     "sub_defaults", HERETIC_SUB_THEME_DEFAULTS,
