@@ -292,37 +292,48 @@ void Main_ProgStatus(const char *msg, ...)
 }
 
 
-static int escape_key_handler(int event)
+static int special_key_handler(int event)
 {
   if (event != FL_SHORTCUT)
     return 0;
 
-  if (Fl::event_key() != FL_Escape)
-    return 0;
-
-  // if building is in progress, cancel it, otherwise quit
-  if (game_object && ! Fl::modal())
+  switch (Fl::event_key())
   {
-    main_win->action = UI_MainWin::ABORT;
-    return 1;
-  }
+    case FL_Escape:
+      // if building is in progress, cancel it, otherwise quit
+      if (game_object && ! Fl::modal())
+      {
+        main_win->action = UI_MainWin::ABORT;
+        return 1;
+      }
+      else
+      {
+        // let FLTK's default code kick in
+        // [we cannot mimic it because we lack the 'window' ref]
+        return 0;
+      }
 
-  // let FLTK's default code kick in
-  // [we cannot mimic it because we lack the 'window' ref]
-  return 0;
-}
+    case FL_F+1:   // F1 = HELP
+      DLG_AboutText();
+      return 1;
 
+    case FL_F+2:   // F1 = BUILD
+      if (main_win->action == UI_MainWin::NONE)
+      {
+        main_win->action = UI_MainWin::BUILD;
+      }
+      return 1;
 
-static int module_key_handler(int event)
-{
-  if (event != FL_SHORTCUT)
-    return 0;
+    case FL_F+4:   // F4 = OPTIONS
+      DLG_OptionsEditor();
+      return 1;
 
-  if (Fl::event_key() == TOGGLE_MODULES_KEY)
-  {
-    hide_module_panel = ! hide_module_panel;
-    main_win->HideModules(hide_module_panel);
-    return 1;
+    case FL_F+5:   // F5 = TOGGLE MODULES
+      hide_module_panel = ! hide_module_panel;
+      main_win->HideModules(hide_module_panel);
+      return 1;
+
+    default: break;
   }
 
   return 0;
@@ -580,8 +591,7 @@ int main(int argc, char **argv)
 
     main_win->image(NULL);
 
-    Fl::add_handler(module_key_handler);
-    Fl::add_handler(escape_key_handler);
+    Fl::add_handler(special_key_handler);
 
     // draw an empty map (must be done after main window is
     // shown() because that is when FLTK finalises the colors).

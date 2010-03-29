@@ -52,11 +52,19 @@ public:
   // FLTK virtual method for handling input events.
   int handle(int event)
   {
-    if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
-        Fl::event_key() == FL_Escape)
+    if (event == FL_KEYDOWN || event == FL_SHORTCUT)
     {
-      want_quit = true;
-      return 1;
+      int key = Fl::event_key();
+
+      if (key == FL_Escape)
+      {
+        want_quit = true;
+        return 1;
+      }
+        
+      // eat all other function keys
+      if (FL_F+1 <= key && key <= FL_F+12)
+        return 1;
     }
 
     return Fl_Window::handle(event);
@@ -156,19 +164,26 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 void DLG_AboutText(void)
 {
+  static UI_About * about_window = NULL;
+
+  if (about_window)  // already up?
+    return;
+
   int about_w = 350 + KF * 30;
   int about_h = 370 + KF * 40;
 
-  UI_About *about = new UI_About(about_w, about_h, "About Oblige");
+  about_window = new UI_About(about_w, about_h, "About Oblige");
 
-  about->show();
+  about_window->show();
 
   // run the GUI until the user closes
-  while (! about->WantQuit())
+  while (! about_window->WantQuit())
     Fl::wait();
 
   // this deletes all the child widgets too...
-  delete about;
+  delete about_window;
+
+  about_window = NULL;
 }
 
 
@@ -279,7 +294,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   cy += opt_backups->h() + y_step;
 
 
-  opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F1 key)");
+  opt_modules = new Fl_Check_Button(cx, cy, 24, 24, "Hide Modules Panel (same as F5 key)");
   opt_modules->align(FL_ALIGN_RIGHT);
   opt_modules->value(hide_module_panel ? 1 : 0);
   opt_modules->callback(callback_Modules, this);
@@ -320,21 +335,28 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
 int UI_OptionsWin::handle(int event)
 {
-  if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
-      Fl::event_key() == FL_Escape)
+  if (event == FL_KEYDOWN || event == FL_SHORTCUT)
   {
-    want_quit = true;
-    return 1;
-  }
+    int key = Fl::event_key();
 
-  // intercept TOGGLE_MODULES_KEY key before it gets to the main
-  // window, and handle it ourselves (update checkbox).
-  if ((event == FL_KEYDOWN || event == FL_SHORTCUT) &&
-      Fl::event_key() == TOGGLE_MODULES_KEY)
-  {
-    opt_modules->value(opt_modules->value() ? 0 : 1);    
-    callback_Modules(opt_modules, this);
-    return 1;
+    switch (key)
+    {
+      case FL_Escape:
+        want_quit = true;
+        return 1;
+      
+      // intercept the F5 key and toggle the associated checkbox
+      case FL_F+5:
+        opt_modules->value(opt_modules->value() ? 0 : 1);    
+        callback_Modules(opt_modules, this);
+        return 1;
+    
+      default: break;
+    }
+
+    // eat all other function keys
+    if (FL_F+1 <= key && key <= FL_F+12)
+      return 1;
   }
 
   return Fl_Window::handle(event);
@@ -343,19 +365,26 @@ int UI_OptionsWin::handle(int event)
 
 void DLG_OptionsEditor(void)
 {
+  static UI_OptionsWin * option_window = NULL;
+
+  if (option_window)  // already in use?
+    return;
+
   int opt_w = 340 + KF * 30;
   int opt_h = 370 + KF * 40;
 
-  UI_OptionsWin *win = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");
+  option_window = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");
 
-  win->show();
+  option_window->show();
 
   // run the GUI until the user closes
-  while (! win->WantQuit())
+  while (! option_window->WantQuit())
     Fl::wait();
 
   // this deletes all the child widgets too...
-  delete win;
+  delete option_window;
+
+  option_window = NULL;
 }
 
 //--- editor settings ---

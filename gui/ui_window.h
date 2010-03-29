@@ -29,8 +29,6 @@
 
 #define BUILD_BG   fl_gray_ramp(4)
 
-#define TOGGLE_MODULES_KEY  (FL_F+1)
-
 
 class UI_MainWin : public Fl_Double_Window
 {
