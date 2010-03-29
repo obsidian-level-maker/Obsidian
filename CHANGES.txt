@@ -4,6 +4,9 @@ CHANGES (since v3.51)
 
 + new lighting system
 
++ Heretic and Quake support
++ FreeDOOM is supported again
+
 - faster node building (especially on large maps)
 - faster / more robust CSG code
 - faster cave generation logic
@@ -28,14 +31,16 @@ CHANGES (since v3.51)
 - fixed bug where caves could become disconnected
 - fixed the Level Control module
 
-- FreeDOOM is supported again
 - separate 'Doom 1' and 'Ultimate Doom' game choices
-- preliminary code to create Duke Nukem 3D maps
 - the DOOM CSG code supports rail and lighting brushes
+- amount of natural/cavey areas is now varied
+- preliminary code to create Duke Nukem 3D maps
 
-- quantity of natural/cavey areas is now varied
 - buildings can have different outer and inner textures
 - improved DOOM's Wolf theme: SS Nazis, silver doors
 - more varied themes when making "a few" maps
 - variation in number of keys and switches per level
+
+- changed shortcut key to toggle module panel --> F5
+- new shortcut keys: F1 = About, F2 = Build, F4 = Options
 
