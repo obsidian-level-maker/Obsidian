@@ -915,7 +915,11 @@ function Quest_choose_keys()
     end
   end
 
-  gui.debugf("LEVEL.all_locks =\n%s\n\n", table_to_str(LEVEL.all_locks,2))
+  gui.printf("all_locks =\n{\n")
+  for idx,LOCK in ipairs(LEVEL.all_locks) do
+    gui.printf("  %d = %s : %s\n", idx, LOCK.kind, LOCK.item or "NIL")
+  end
+  gui.printf("}\n")
 end
 
 
