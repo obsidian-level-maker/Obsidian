@@ -1392,7 +1392,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=72,
     key_w="LITE3",
     door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1402,7 +1402,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=72,
     key_w="LITE3",
     door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=117, tag=0,
   },
@@ -1412,7 +1412,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=72,
     key_w="LITE3",
     door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=31, tag=0,
   },
@@ -1488,7 +1488,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR2", door_c="FLAT23",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1498,7 +1498,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR2", door_c="FLAT23",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=117, tag=0,
   },
@@ -1508,7 +1508,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR2", door_c="FLAT23",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=31, tag=0,
   },
@@ -1518,7 +1518,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1528,7 +1528,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=117, tag=0,
   },
@@ -1538,7 +1538,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITEBLU1", key_oy=56,
     door_w="BIGDOOR4", door_c="FLOOR7_1",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=31, tag=0,
   },
@@ -1548,7 +1548,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=112,
     key_w="LITE3",
     door_w="BIGDOOR3", door_c="FLOOR7_2",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1558,7 +1558,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=128,
     key_w="DOORSTOP",
     door_w="ZDOORB1", door_c="FLAT23",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1568,7 +1568,7 @@ DOOM_DOORS =
     w=128, h=112, door_h=128,
     key_w="DOORSTOP",
     door_w="ZELDOOR", door_c="FLAT23",
-    step_w="STEP4", step_f="FLAT18",
+    step_w="STEP4",
     frame_c="FLAT18", track="DOORTRAK",
     line_kind=1, tag=0,
   },
@@ -1582,7 +1582,7 @@ DOOM_DOORS =
     key_w="DOORBLU",
     door_w="BIGDOOR3", door_c="FLOOR7_2",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT18",
+    frame_c="FLAT18",
     line_kind=32, tag=0,  -- kind_mult=26
   },
 
@@ -1592,7 +1592,7 @@ DOOM_DOORS =
     key_w="DOORYEL",
     door_w="BIGDOOR4", door_c="FLOOR3_3",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT4",
+    frame_c="FLAT4",
     line_kind=34, tag=0, -- kind_mult=27
   },
 
@@ -1603,7 +1603,7 @@ DOOM_DOORS =
     key_w="DOORRED", door_h=112,
     door_w="BIGDOOR2", door_c="FLAT1",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT18",
+    frame_c="FLAT18",
     line_kind=33, tag=0, -- kind_mult=28
   },
 
@@ -1613,7 +1613,7 @@ DOOM_DOORS =
     key_w="DOORBLU2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLOOR7_2",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT18",
+    frame_c="FLAT18",
     line_kind=32, tag=0,  -- kind_mult=26
   },
 
@@ -1623,7 +1623,7 @@ DOOM_DOORS =
     key_w="DOORYEL2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLOOR3_3",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT4",
+    frame_c="FLAT4",
     line_kind=34, tag=0, -- kind_mult=27
   },
 
@@ -1633,7 +1633,7 @@ DOOM_DOORS =
     key_w="DOORRED2", key_ox=4, key_oy=-10,
     door_w="BIGDOOR7", door_c="FLAT1",
     step_w="STEP4",  track="DOORTRAK",
-    step_f="FLAT18", frame_c="FLAT18",
+    frame_c="FLAT18",
     line_kind=33, tag=0, -- kind_mult=28
   },
 
@@ -1647,7 +1647,7 @@ DOOM_DOORS =
     key_w="COMPBLUE",
     door_w="BIGDOOR3", door_c="FLOOR7_2",
     step_w="COMPBLUE",  track="DOORTRAK",
-    step_f="FLAT14", frame_c="FLAT14",
+    frame_c="FLAT14",
     door_h=112,
     line_kind=0,
   },
@@ -1659,7 +1659,7 @@ DOOM_DOORS =
     key_w="REDWALL",
     door_w="BIGDOOR2", door_c="FLAT1",
     step_w="REDWALL",  track="DOORTRAK",
-    step_f="FLAT5_3", frame_c="FLAT5_3",
+    frame_c="FLAT5_3",
     door_h=112,
     line_kind=0,
   },
@@ -1669,9 +1669,9 @@ DOOM_DOORS =
     w=128, h=112,
 
     key_w="SKINFACE",
-    door_w="BIGDOOR3", door_c="FLOOR7_2",
-    step_w="STEP1",  track="DOORTRAK",
-    step_f="FLAT1", frame_c="FLAT1",
+    door_w="BIGDOOR4", door_c="FLOOR7_2",
+    step_w="SKINFACE", track="DOORTRAK",
+    frame_c="SKINFACE",
     door_h=112,
     line_kind=0,
   },
@@ -1681,9 +1681,9 @@ DOOM_DOORS =
     w=128, h=112,
 
     key_w="GRAYVINE",
-    door_w="BIGDOOR3", door_c="FLOOR7_2",
-    step_w="STEP1",  track="DOORTRAK",
-    step_f="FLAT1", frame_c="FLAT1",
+    door_w="BIGDOOR4", door_c="FLOOR7_2",
+    step_w="GRAYVINE", track="DOORTRAK",
+    frame_c="FLAT1",
     door_h=112,
     line_kind=0,
   },
@@ -1695,7 +1695,7 @@ DOOM_DOORS =
     key_w="WOOD1",
     door_w="BIGDOOR7", door_c="CEIL5_2",
     step_w="WOOD1",  track="DOORTRAK",
-    step_f="FLAT5_2", frame_c="FLAT5_2",
+    frame_c="FLAT5_2",
     door_h=112,
     line_kind=0,
   },
@@ -1707,7 +1707,7 @@ DOOM_DOORS =
     key_w="GSTONE1",
     door_w="BIGDOOR2", door_c="FLAT1",
     step_w="GSTONE1",  track="DOORTRAK",
-    step_f="FLOOR7_2", frame_c="FLOOR7_2",
+    frame_c="FLOOR7_2",
     door_h=112,
     line_kind=0,
   },
@@ -1736,9 +1736,8 @@ DOOM_DOORS =
 
   bar_gray =
   {
-    w=128, h=128,
-
     bar_w="GRAY7", bar_f="FLAT19",
+    bar_h=64,
     line_kind=0
   },
 }
@@ -1957,8 +1956,10 @@ DOOM_SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1GRAY1", side_w="GRAY1", line_kind=23,
+      switch_w="SW1GRAY1", side_w="GRAY1",
       switch_f="FLAT1",
+      x_offset=0, y_offset=64,
+      line_kind=23,
     }
   },
 
@@ -2381,6 +2382,10 @@ DOOM1_SUB_THEMES =
 
     exits = { stone_pillar=50 },
 
+    switches = { sw_blue=50, sw_hot=50 },
+
+    bars = { bar_silver=50, bar_gray=50 },
+
     __exit =  -- FIXME
     {
       walls =
@@ -2505,6 +2510,10 @@ DOOM1_SUB_THEMES =
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
 
+    switches = { sw_marble=50, sw_vine=50, sw_wood=50 },
+
+    bars = { bar_wood=50, bar_metal=50 },
+
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 },
@@ -2578,6 +2587,10 @@ DOOM1_SUB_THEMES =
 
     exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
+
+    switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
+
+    bars = { bar_wood=50, bar_metal=50 },
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
 
@@ -2795,7 +2808,9 @@ DOOM2_SUB_THEMES =
 
     exits = { skull_pillar=50, stone_pillar=5 },
 
-    bars = { bar_wood=50, bar_metal=50 },
+    switches = { sw_blue=50, sw_hot=50 },
+
+    bars = { bar_silver=50, bar_gray=50 },
 
     monster_prefs = { arach=2.0 },
 
@@ -2875,6 +2890,8 @@ DOOM2_SUB_THEMES =
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
 
+    switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
+
     bars = { bar_wood=50, bar_metal=50 },
 
     outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10 },
@@ -2952,6 +2969,8 @@ DOOM2_SUB_THEMES =
     lifts = { platform=10, rusty=50, spine=30 },
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
+
+    switches = { sw_skin=50, sw_marble=50, sw_vine=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -3059,6 +3078,8 @@ DOOM2_SUB_THEMES =
 
     lifts = { shiny=20, platform=20, rusty=50 },
 
+    switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
+
     bars = { bar_wood=50, bar_metal=50 },
 
     room_types =
@@ -3111,7 +3132,13 @@ DOOM2_SUB_THEMES =
 
     steps = { step1=50 },
 
+    pictures = { eagle1=50, hitler1=10 },
+
     exits = { skull_pillar=50, stone_pillar=8 },
+
+    switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
+
+    bars = { bar_wood=50, bar_gray=50, bar_silver=50 },
 
     doors = { wolf_door=90, wolf_elev_door=5 },
 
