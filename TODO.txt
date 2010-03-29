@@ -2,12 +2,25 @@
 TODO
 ====
 
+!!! Quests: broken if keys but no switches, hmmm.....
 
-!!!! BUG: disconnected caves
+  --> create a list of usable stuff (before split arenas)
+      e.g. { "key", "key", "switch", "key", "switch", "switch" }
 
-!! BUG: monsters ending up in the void (caves)
+      if have switches then
+        list = "switch" ** 20
+        for i = 1,num_keys do
+          pos = rand_index_by_probs { 40, 30, 20, 10, 6, 4, 3, 2, 1, 1, 1 }
+          list.insert @ i "key"
+        end
+      else
+        list = "key" ** num_keys
+      end
 
-!  when choosing filename but EXT is different, reset last_name
+
+FIXED: BUG: disconnected caves
+
+Fixed??  BUG: monsters ending up in the void (caves)
 
 
 +  more supplies in start room (ammo for weapon, armor vest)
@@ -15,6 +28,8 @@ TODO
 +  single (or two?) border seeds around map
    (plus space for monster depots)
 
+
+DONE: when choosing filename but EXT is different, remove old EXT
 
 DONE: style control over key/switch num
 
@@ -66,6 +81,8 @@ BUG: liquification of caves at a border can subvert quests
 
 -  have a 'functions' table for games, engines, mods 
    e.g. setup_func = XXX  -->  functions = { setup = XXX }
+
+-  cmdline option: -k (--keep-seed)
 
 
 CSG CODE:

@@ -119,9 +119,6 @@ Possible Options:
    -  pack sidedefs
 
 
-Quests : add locks (new arenas) even when have no keys
-
-
 Hallway Theming:
   Wood# (Namely Wood1, Wood3 and Wood5...Wood4 is the one with skulls on it
   and might look silly), Woodmet1, Skin2, GSTONE1/SP_HOT1 and Skinmet#
@@ -176,7 +173,20 @@ SKY GENERATOR:
 
 
 ----------------------------------------------------------------
-  HERETIC:
+  FINAL DOOM
+----------------------------------------------------------------
+
+-  TNT Evilution textures that have been changed:
+     BLODGR1..4  SLADRIP1..3  SW1GSTON    SW1SKULL
+
+-  Plutonia textures that have been changed:
+     DBRAIN1..4  FIREBLU1..2  SW1SKULL
+
+-  Plutonia has 'WFALL1..4' textures for water
+
+
+----------------------------------------------------------------
+  HERETIC
 ----------------------------------------------------------------
 
 -  don't build Blaze doors into maps.
@@ -197,7 +207,7 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  HEXEN:
+  HEXEN
 ----------------------------------------------------------------
 
 -  get it working again (different WAD formats, args[], etc)
@@ -214,7 +224,7 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  QUAKE:
+  QUAKE
 ----------------------------------------------------------------
 
 ++ perform visibility
@@ -242,7 +252,7 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  QUAKE II:
+  QUAKE II
 ----------------------------------------------------------------
 
 -  need to store wall brushes into a big list (qLeaf_c)
@@ -389,7 +399,7 @@ Monsters:
 
 
 ----------------------------------------------------------------
-PIPE DREAMS
+  PIPE DREAMS
 ----------------------------------------------------------------
 
 +  better global architecture
