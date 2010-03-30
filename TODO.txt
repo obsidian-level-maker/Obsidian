@@ -18,32 +18,20 @@ TODO
       end
 
 
+>>>  border seeds around map
+     -  buildings need to extend out further than courtyards
+        (half a seed is enough)
+     -  seed-size "fence" should not be see-over-able
+        => use floor_max_h or nearby room(s)
+     -  if making liquid surround, put railings on courtyards
+        and don't make liquid too low (or fence too high)
+
+
+DONE: more supplies in start room (ammo for weapon, armor vest)
+
 FIXED: BUG: disconnected caves
 
 Fixed??  BUG: monsters ending up in the void (caves)
-
-
-+  more supplies in start room (ammo for weapon, armor vest)
-
-+  single (or two?) border seeds around map
-   (plus space for monster depots)
-
-
-DONE: when choosing filename but EXT is different, remove old EXT
-
-DONE: style control over key/switch num
-
-DONE: use FLTK 1.1.10 for Win32, and LUA 5.1.4 for Linux/Win32
-
-DONE: support FreeDOOM again
-
-DONE: cave trimming: try to avoid same material as previous one
-
-DONE: Split_quad: only for _indoor_ rooms
-
-DONE: big caves should not be chosen as starting room
-
-DONE: "mixed" theme on "a few" levels : more varied
 
 
 

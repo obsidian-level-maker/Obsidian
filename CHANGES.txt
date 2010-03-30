@@ -43,4 +43,5 @@ CHANGES (since v3.51)
 
 - changed shortcut key to toggle module panel --> F5
 - new shortcut keys: F1 = About, F2 = Build, F4 = Options
+- more armor and ammo in the starting room
 
