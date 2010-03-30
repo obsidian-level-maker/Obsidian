@@ -2194,13 +2194,13 @@ end
 
 
 function Build_window(S, side, width, mid_w, z1, z2, skin)
-  local wall_info = get_mat(skin.wall, skin.floor)
+  local inner_info = get_mat(skin.wall, skin.floor)
 
   local side_info = get_mat(skin.side_t)
 
-  local facade_info = wall_info
+  local wall_info = inner_info
   if skin.facade then
-    facade_info = get_mat(skin.facade)
+    wall_info = get_mat(skin.facade)
   end
 
   local T, long, deep = get_transform_for_seed_side(S, side)
@@ -2212,9 +2212,9 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   -- top and bottom
   local coords =
   {
-    { x=mx-width/2, y=0, w_face=facade_info.w_face },
+    { x=mx-width/2, y=0 },
     { x=mx+width/2, y=0 },
-    { x=mx+width/2, y=deep },
+    { x=mx+width/2, y=deep, w_face=inner_info.w_face },
     { x=mx-width/2, y=deep },
   }
 
@@ -2227,9 +2227,9 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
     Trans_brush(wall_info,
     {
       { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
-      { x=mx+mid_w/2, y=deep },
+      { x=mx+mid_w/2, y=deep, w_face = inner_info.w_face },
       { x=mx-mid_w/2, y=deep, w_face = side_info.w_face },
-      { x=mx-mid_w/2, y=0,    w_face = facade_info.w_face },
+      { x=mx-mid_w/2, y=0 },
     },
     -EXTREME_H, EXTREME_H)
   end
@@ -2238,19 +2238,19 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
   -- sides pieces
   Trans_brush(wall_info,
   {
-    { x=mx-width/2, y=0, w_face = side_info.w_face },
-    { x=mx-width/2, y=deep },
+    { x=mx-width/2, y=0,    w_face = side_info.w_face },
+    { x=mx-width/2, y=deep, w_face = inner_info.w_face },
     { x=0, y=deep },
-    { x=0, y=0, w_face = facade_info.w_face },
+    { x=0, y=0 },
   },
   -EXTREME_H, EXTREME_H)
 
   Trans_brush(wall_info,
   {
     { x=long, y=0 },
-    { x=long, y=deep },
+    { x=long, y=deep, w_face = inner_info.w_face },
     { x=mx+width/2, y=deep, w_face = side_info.w_face },
-    { x=mx+width/2, y=0, w_face = facade_info.w_face },
+    { x=mx+width/2, y=0 },
   },
   -EXTREME_H, EXTREME_H)
 
