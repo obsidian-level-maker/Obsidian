@@ -1227,5 +1227,8 @@ gui.debugf("Failed\n")
 
   branch_big_rooms()
   branch_the_rest()
+
+  gui.printf("New Seed Map:\n")
+  Seed_dump_rooms()
 end
 

@@ -156,7 +156,7 @@ function Plan_CreateRooms()
     --- dump_rooms ---
 
     gui.printf("\n")
-    gui.printf("Room Map\n")
+    gui.printf("Room Map:\n")
 
     for y = LEVEL.H,1,-1 do
       local line = "  "
@@ -810,8 +810,6 @@ function Plan_SubRooms()
 
   ---| Plan_SubRooms |---
 
-  Seed_dump_rooms()
-
   if STYLE.subrooms == "none" then return end
 
   local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
@@ -833,8 +831,6 @@ function Plan_SubRooms()
   end
 
   LEVEL.last_id = id
-
-  Seed_dump_rooms()
 end
 
 
@@ -1067,6 +1063,9 @@ function Plan_rooms_sp()
   -- must create the seeds _AFTER_ nudging
   Plan_MakeSeeds()
   Plan_MergeNatural()
+
+  gui.printf("Seed Map:\n")
+  Seed_dump_rooms()
 
   Plan_SubRooms()
 

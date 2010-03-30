@@ -214,13 +214,11 @@ end
 
 
 function Seed_dump_rooms()
-  gui.printf("Seed Map:\n")
-
   local function seed_to_char(S)
     if not S then return "!" end
     if S.free then return "." end
     if S.edge_of_map then return "#" end
-    if not S.room then return " " end
+    if not S.room then return "?" end
 
     if S.room.kind == "scenic" then return "=" end
 
@@ -237,32 +235,6 @@ function Seed_dump_rooms()
     for x = 1,SEED_W do
       gui.printf("%s", seed_to_char(SEEDS[x][y][1]))
     end
-    gui.printf("\n")
-  end
-
-  gui.printf("\n")
-end
-
-
-function Seed_dump_fabs()
-  local function char_for_seed(S)
-
-    if not S or not S.kind then return " " end
-
-    if S.kind == "walk" then return "." end
-    if S.kind == "void" then return "#" end
-    if S.kind == "liquid" then return "~" end
-
-    return "?"
-  end
-
-  gui.printf("Room Fabs:\n")
-
-  for y = SEED_H,1,-1 do
-    for x = 1,SEED_W do
-      gui.printf("%s", char_for_seed(SEEDS[x][y][1]))
-    end
-
     gui.printf("\n")
   end
 
