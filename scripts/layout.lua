@@ -2614,9 +2614,34 @@ end
 
 function Layout_edge_of_map()
   
+  local function build_edge(S)
+    Trans_quad(get_liquid(), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, 0)
+
+    Trans_quad(get_sky(), S.x1,S.y1, S.x2,S.y2, SKY_H, EXTREME_H)
+
+    for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if not N or N.free then
+        local z_top = LEVEL.skyfence_h
+        local z_low = LEVEL.skyfence_h - 64
+        local skin = { fence_w=LEVEL.outer_fence_tex }
+
+        S.thick[side] = 48
+
+        Build_sky_fence(S, side, z_top, z_low, skin)
+      end
+    end
+  end
+
   ---| Layout_edge_of_map |---
   
   gui.debugf("Layout_edge_of_map\n")
 
+  for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEEDS[x][y][1]
+    if S.edge_of_map then
+      build_edge(S)
+    end
+  end end -- for x, y
 end
 
