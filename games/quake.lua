@@ -1237,7 +1237,7 @@ OB_GAMES["quake"] =
     center_map = true,
 
     seed_size  = 192,
-    seed_limit = 40,
+    seed_limit = 42,
 
     no_keys = true,  --!!!! FIXME
 

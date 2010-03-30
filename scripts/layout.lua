@@ -2611,3 +2611,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 end
 
+
+function Layout_edge_of_map()
+  
+  ---| Layout_edge_of_map |---
+  
+  gui.debugf("Layout_edge_of_map\n")
+
+end
+

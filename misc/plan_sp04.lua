@@ -186,7 +186,7 @@ function Landmap_DoLiquid(mirrored)
   {
     none = 200,
 
---!!!!!    river    = 50,
+--!!!!    river    = 50,
 --(disabled until teleporter logic is sorted out)
 
     pool     = 50,
@@ -226,7 +226,7 @@ function Landmap_DoGround()
       ground = 50, valley = 70, hill = 35,
     }
 
-    FILLERS.none = 60*5  -- variable?  --!!!!!!!!
+    FILLERS.none = 60*5  -- variable?  --!!!
 
     local near_lava = false
     for dx = -1,1 do for dy = -1,1 do

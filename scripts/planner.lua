@@ -318,8 +318,8 @@ function Plan_CreateRooms()
 
   local id = 1
 
-  local col_x = { 2 }  -- one border seed
-  local col_y = { 2 }
+  local col_x = { 3 }  -- two border seeds at [1] and [2]
+  local col_y = { 3 }  --
 
   for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
   for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
@@ -899,20 +899,24 @@ function Plan_MakeSeeds()
   local max_sy = 1
 
   for _,R in ipairs(LEVEL.all_rooms) do
+gui.debugf("seed range @ %s\n", R:tostr())
     max_sx = math.max(max_sx, R.sx2)
     max_sy = math.max(max_sy, R.sy2)
 
     R.svolume = R.sw * R.sh
   end
 
-  -- one border seed
-  max_sx = max_sx + 1
-  max_sy = max_sy + 1
+  -- two border seeds at top and right
+  -- (the left and bottom were handled in Plan_CreateRooms)
+  max_sx = max_sx + 2
+  max_sy = max_sy + 2
 
-  Seed_init(max_sx, max_sy, 1)
+  Seed_init(max_sx-1, max_sy-1, 1, 3, 3)
 
   plant_rooms()
   fill_holes()
+
+  Seed_flood_fill_edges()
 end
 
 
@@ -929,10 +933,10 @@ function Plan_determine_size()
   local function get_column_sizes(W, limit)
     local cols = {}
 
-    assert(2 + W*2 <= limit)
+    assert(4 + W*2 <= limit)
 
     for loop = 1,100 do
-      local total = 2  -- border seeds around level
+      local total = 4  -- border seeds around level
 
       for x = 1,W do
         cols[x] = rand_index_by_probs(ROOM_SIZE_TABLE)
@@ -1016,7 +1020,10 @@ end
   local cols = {}
   local rows = {}
 
-  local limit = PARAM.seed_limit or 48
+  local limit = (PARAM.seed_limit or 56)
+
+  -- take border seeds (2+2) and free space (3) into account
+  limit = limit - 7
 
   cols = get_column_sizes(W, limit)
   rows = get_column_sizes(H, limit)

@@ -88,7 +88,12 @@ SEED_CLASS =
 }
 
 
-function Seed_init(W, H, D)
+function Seed_init(map_W, map_H, map_D, free_W, free_H)
+  gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
+
+  local W = map_W + free_W
+  local H = map_H + free_H
+  local D = map_D
 
   -- setup globals 
   SEED_W = W
@@ -114,7 +119,7 @@ function Seed_init(W, H, D)
         border = {},
       }
 
-      if PARAM.center_map then
+      if true or PARAM.center_map then
         -- adjustment needed for Quake 1
         -- (this formula ensures that 'coord 0' is still a seed boundary)
         S.x1 = S.x1 - int(SEED_W / 2) * SIZE
@@ -135,6 +140,12 @@ function Seed_init(W, H, D)
       for side = 2,8,2 do
         S.border[side] = {}
         S.thick[side] = 16
+      end
+
+      if x > map_W or y > map_H then
+        S.free = true
+      elseif x == 1 or x == map_W or y == 1 or y == map_H then
+        S.edge_of_map = true
       end
 
       SEEDS[x][y][z] = S
@@ -207,10 +218,11 @@ function Seed_dump_rooms()
 
   local function seed_to_char(S)
     if not S then return "!" end
-    if not S.room then return "." end
+    if S.free then return "." end
+    if S.edge_of_map then return "#" end
+    if not S.room then return " " end
 
     if S.room.kind == "scenic" then return "=" end
-    if S.room.dump_char then return S.room.dump_char end
 
     if S.room.parent then
       local n = 1 + (S.room.id % 26)
@@ -255,5 +267,31 @@ function Seed_dump_fabs()
   end
 
   gui.printf("\n")
+end
+
+
+function Seed_flood_fill_edges()
+  local active = {}
+
+  for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEEDS[x][y][1]
+    if S.edge_of_map then
+      table.insert(active, S)
+    end
+  end end -- for x, y
+
+  while not table_empty(active) do
+    local new_active = {}
+
+    for _,S in ipairs(active) do for side = 2,8,2 do
+      local N = S:neighbor(side)
+      if N and not N.edge_of_map and not N.free and not N.room then
+        N.edge_of_map = true
+        table.insert(new_active, N)
+      end
+    end end -- for S, side
+
+    active = new_active
+  end
 end
 

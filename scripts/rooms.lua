@@ -2568,8 +2568,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local z_low = LEVEL.skyfence_h - 64
         local skin = { fence_w=LEVEL.outer_fence_tex }
 
-        Build_sky_fence(S, side, z_top, z_low, skin)
-        shrink_floor(side, 4)
+--!!!!!        Build_sky_fence(S, side, z_top, z_low, skin)
+--!!!!!        shrink_floor(side, 4)
       end
 
       if B_kind == "arch" then
@@ -2861,6 +2861,8 @@ function Rooms_build_all()
   Rooms_synchronise_skies()
 
   Rooms_border_up()
+
+  Layout_edge_of_map()
 
   for _,R in ipairs(LEVEL.scenic_rooms) do Room_build_seeds(R) end
   for _,R in ipairs(LEVEL.all_rooms)    do Room_build_seeds(R) end

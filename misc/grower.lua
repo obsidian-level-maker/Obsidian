@@ -442,8 +442,8 @@ function TODO_REAL_Seed_grow()
     -- actually linked?
     if not L then return end
 
---!!!!!    -- both are stationary : nothing to do
---!!!!!    if not (S.grow or N.grow or S.shrink or N.shrink) then return end
+--!!!    -- both are stationary : nothing to do
+--!!!    if not (S.grow or N.grow or S.shrink or N.shrink) then return end
 
     -- both are moving : nothing to do
     if S.grow and N.grow and S.shrink and N.shrink then return end
@@ -574,7 +574,7 @@ function TODO_REAL_Seed_grow()
 
   local function maintain_symmetry()
 
-    --!!!! FIXME maintain_symmetry
+    --!!! FIXME maintain_symmetry
 
     -- FIXME: support "symmetric" links (L.twin ??)
   end
@@ -634,7 +634,7 @@ function TODO_REAL_Seed_grow()
 ---#          if diff >= 2 then chance = 66 end
 ---#          if diff >= 4 then chance = 99 end
 ---#
----#          if true then --!!!!!! rand_odds(chance) then
+---#          if true then --!!! rand_odds(chance) then
 ---#            mark_grow(S)
 ---#          end
 ---#        end
@@ -720,10 +720,10 @@ function TODO_REAL_Seed_grow()
         assert(S.h >= S.min_H)
 
         local N = SEEDS[x+1] and SEEDS[x+1][y]
---!!!!!!        if N then assert(S.x2 < N.x1) end
+--!!!        if N then assert(S.x2 < N.x1) end
 
         N = SEEDS[x][y+1]
---!!!!!!        if N then assert(S.y2 < N.y1) end
+--!!!        if N then assert(S.y2 < N.y1) end
       end
 
     end end
