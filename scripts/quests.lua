@@ -961,10 +961,16 @@ function Quest_add_weapons()
     end
 
     local weapon = rand_key_by_probs(name_tab)
+    local info = GAME.weapons[weapon]
+
     gui.debugf("Start weapon: %s\n", weapon)
 
     arena.weapon = weapon
     arena.start.weapon = weapon
+
+    if info.ammo then
+      arena.start.weapon_ammo = info.ammo
+    end
 
     do_mark_weapon(weapon)
   end
@@ -990,6 +996,7 @@ function Quest_add_weapons()
     end
 
     local weapon = rand_key_by_probs(name_tab)
+    local info = GAME.weapons[weapon]
 
     -- Select a room to put the weapon in.
     -- This is very simplistic, either the start room of the
@@ -1015,6 +1022,10 @@ function Quest_add_weapons()
 
     R.weapon = weapon
     arena.weapon = weapon
+
+    if info.ammo then
+      arena.start.weapon_ammo = info.ammo
+    end
 
     do_mark_weapon(weapon)
 

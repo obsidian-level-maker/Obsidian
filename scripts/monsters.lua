@@ -556,7 +556,7 @@ function Monsters_do_pickups()
     table.sort(R.small_spots, function(A,B) return A.score > B.score end)
   end
 
-  local function decide_pickup(stat, qty)
+  local function decide_pickup(R, stat, qty)
     local item_tab = {}
 
     for name,info in pairs(GAME.pickups) do
@@ -565,6 +565,10 @@ function Monsters_do_pickups()
          (info.give[1].ammo == stat)
       then
         item_tab[name] = info.prob
+
+        if R.purpose == "START" and info.start_prob then
+          item_tab[name] = info.start_prob
+        end
 
 ---###    local each_qty = info.give[1].health or info.give[1].count
 ---###    local min_num  = (info.cluster and info.cluster[1]) or 1
@@ -599,14 +603,30 @@ function Monsters_do_pickups()
   end
 
   local function select_pickups(R, item_list, stat, qty, hmodel)
-gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
+gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
 
     -- subtract any previous gotten stuff
     qty = qty - hmodel.stats[stat]
     hmodel.stats[stat] = 0
 
+    -- more ammo in start room
+    local excess = 0
+
+    if stat == R.weapon_ammo then
+      if qty > 0 then
+        excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
+      end
+
+      if GAME.ammos then
+        excess = math.max(excess, GAME.ammos[stat].start_bonus)
+      end
+      gui.debugf("Bonus %s = %1.1f\n", stat, excess)
+    end
+
+    qty = qty + excess
+
     while qty > 0 do
-      local item, count = decide_pickup(stat, qty)
+      local item, count = decide_pickup(R, stat, qty)
       table.insert(item_list, { item=item, count=count, SK=hmodel.skill, rand=gui.random() })
       
       if stat == "health" then
@@ -617,10 +637,13 @@ gui.debugf("Initial = %s:%1.1f\n", stat, hmodel.stats[stat])
       end
     end
 
+    excess = excess + (-qty)
+
     -- accumulate any excess quantity into the hmodel
-    if qty < 0 then
-gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
-      hmodel.stats[stat] = assert(hmodel.stats[stat]) - qty
+
+    if excess > 0 then
+gui.debugf("Excess %s = %1.1f\n", stat, excess)
+      hmodel.stats[stat] = assert(hmodel.stats[stat]) + excess
     end
   end
 
@@ -748,6 +771,7 @@ gui.debugf("Excess = %s:%1.1f\n", stat, -qty)
   end
 
   local function pickups_in_room(R)
+gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
     if find_pickup_spots(R) then
       for _,SK in ipairs(SKILLS) do
         for CL,hmodel in pairs(LEVEL.hmodels[SK]) do

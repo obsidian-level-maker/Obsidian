@@ -3528,6 +3528,15 @@ DOOM_WEAPONS =
 }
 
 
+DOOM_AMMOS =
+{
+  bullet = { start_bonus = 60 },
+  shell  = { start_bonus = 12 },
+  rocket = { start_bonus = 4  },
+  cell   = { start_bonus = 40 },
+}
+
+
 -- Pickup List
 -- ===========
 
@@ -3555,7 +3564,7 @@ DOOM_PICKUPS =
 
   soul =
   {
-    prob=3, big_item=true,
+    prob=3, big_item=true, start_prob=5,
     give={ {health=150} },
   },
 
@@ -3569,13 +3578,13 @@ DOOM_PICKUPS =
 
   green_armor =
   {
-    prob=5, armor=true, big_item=true,
+    prob=5, armor=true, big_item=true, start_prob=80,
     give={ {health=30} },
   },
 
   blue_armor =
   {
-    prob=2, armor=true, big_item=true,
+    prob=2, armor=true, big_item=true, start_prob=30,
     give={ {health=90} },
   },
 
@@ -3633,7 +3642,7 @@ DOOM_PICKUPS =
 
   mega =
   {
-    prob=1, big_item=true,
+    prob=1, armor=true, big_item=true, start_prob=8,
     give={ {health=200} },
   },
 
@@ -4104,6 +4113,7 @@ OB_GAMES["doom1"] =
     "things",   DOOM_THINGS,
     "monsters", DOOM_MONSTERS,
     "weapons",  DOOM_WEAPONS,
+    "ammos",    DOOM_AMMOS,
     "pickups",  DOOM_PICKUPS,
 
     "materials",  DOOM_COMMON_MATERIALS,
@@ -4216,6 +4226,7 @@ OB_GAMES["doom2"] =
     "things",   DOOM_THINGS,
     "monsters", DOOM_MONSTERS,
     "weapons",  DOOM_WEAPONS,
+    "ammos",    DOOM_AMMOS,
     "pickups",  DOOM_PICKUPS,
 
     "materials",  DOOM_COMMON_MATERIALS,
