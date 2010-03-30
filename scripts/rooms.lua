@@ -180,6 +180,13 @@ function Rooms_select_textures()
     end
   end
 
+  if not LEVEL.outer_fence_tex then
+    if THEME.outer_fences then
+      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
+    end
+  end
+
+
   -- TODO: caves and landscapes
 
   gui.printf("Selected room textures:\n")
@@ -2459,14 +2466,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         o_tex = N.w_tex or N.room.main_tex
       elseif N.room.outdoor and not (R.outdoor or R.natural) then
         o_tex = R.facade or w_tex
-      end
-    end
-
-
-    -- FIXME: put this elsewhere
-    if not LEVEL.outer_fence_tex then
-      if THEME.outer_fences then
-        LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
       end
     end
 
