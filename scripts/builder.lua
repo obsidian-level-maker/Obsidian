@@ -2203,7 +2203,6 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
     facade_info = get_mat(skin.facade)
   end
 
-
   local T, long, deep = get_transform_for_seed_side(S, side)
 
   local mx = int(long/2)
@@ -2237,18 +2236,23 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
 
 
   -- sides pieces
-  for pass = 1,2 do
-    if pass == 2 then TRANSFORM.mirror_x = mx end
+  Trans_brush(wall_info,
+  {
+    { x=mx-width/2, y=0, w_face = side_info.w_face },
+    { x=mx-width/2, y=deep },
+    { x=0, y=deep },
+    { x=0, y=0, w_face = facade_info.w_face },
+  },
+  -EXTREME_H, EXTREME_H)
 
-    Trans_brush(wall_info,
-    {
-      { x=mx-width/2, y=0, w_face = side_info.w_face },
-      { x=mx-width/2, y=deep },
-      { x=0, y=deep },
-      { x=0, y=0, w_face = facade_info.w_face },
-    },
-    -EXTREME_H, EXTREME_H)
-  end
+  Trans_brush(wall_info,
+  {
+    { x=long, y=0 },
+    { x=long, y=deep },
+    { x=mx+width/2, y=deep, w_face = side_info.w_face },
+    { x=mx+width/2, y=0, w_face = facade_info.w_face },
+  },
+  -EXTREME_H, EXTREME_H)
 
   Trans_clear()
 end
@@ -2937,6 +2941,12 @@ function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
   local diag_w = int(mw / 4)
   local diag_h = int(mh / 4)
+
+  -- ensure ceiling brushes don't interfere with facades
+  if sx1 == SEEDS[sx1][sy1][1].room.sx1 then ox1 = ox1 + 4 end
+  if sy1 == SEEDS[sx1][sy1][1].room.sy1 then oy1 = oy1 + 4 end
+  if sx2 == SEEDS[sx2][sy2][1].room.sx2 then ox2 = ox2 - 4 end
+  if sy2 == SEEDS[sx2][sy2][1].room.sy2 then oy2 = oy2 - 4 end
 
 
   if inner_info then
