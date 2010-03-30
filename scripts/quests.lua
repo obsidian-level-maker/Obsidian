@@ -966,11 +966,9 @@ function Quest_add_weapons()
     gui.debugf("Start weapon: %s\n", weapon)
 
     arena.weapon = weapon
-    arena.start.weapon = weapon
 
-    if info.ammo then
-      arena.start.weapon_ammo = info.ammo
-    end
+    arena.start.weapon = weapon
+    arena.start.weapon_ammo = info.ammo
 
     do_mark_weapon(weapon)
   end
@@ -1020,12 +1018,10 @@ function Quest_add_weapons()
       return
     end
 
-    R.weapon = weapon
     arena.weapon = weapon
 
-    if info.ammo then
-      arena.start.weapon_ammo = info.ammo
-    end
+    R.weapon = weapon
+    R.weapon_ammo = info.ammo
 
     do_mark_weapon(weapon)
 
