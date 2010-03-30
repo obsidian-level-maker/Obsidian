@@ -557,7 +557,7 @@ function Level_make(L, index, NUM)
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 
-  THEME = assert(LEVEL.sub_theme)
+  THEME = shallow_copy(assert(LEVEL.sub_theme))
 
   if GAME.sub_defaults then
     merge_missing(THEME, GAME.sub_defaults)
