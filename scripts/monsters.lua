@@ -870,7 +870,9 @@ function Monsters_in_room(R)
       prob = THEME.force_mon_probs[name] or
              THEME.force_mon_probs._else
       if prob then return prob end
-    elseif LEVEL.global_skip[name] then
+    end
+
+    if LEVEL.global_skip[name] then
       return 0
     end
 
@@ -977,11 +979,13 @@ function Monsters_in_room(R)
     for name,info in pairs(GAME.monsters) do
       local prob = info.crazy_prob or info.prob or 0
 
+      if LEVEL.global_skip[name] then
+        prob = 0
+      end
+
       if THEME.force_mon_probs then
         prob = THEME.force_mon_probs[name] or
                THEME.force_mon_probs._else or prob  
-      elseif LEVEL.global_skip[name] then
-        prob = 0
       end
 
       if prob > 0 and LEVEL.monster_prefs then
