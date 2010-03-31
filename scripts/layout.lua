@@ -2653,7 +2653,7 @@ function Layout_edge_of_map()
             end
 
             if other_h then
-              S.walk_h = math.min(S.walk_h or 999, other_h)
+              S.walk_h = math.max(S.walk_h or 0, other_h)
             end
           end -- for side
         end
@@ -2676,27 +2676,32 @@ function Layout_edge_of_map()
       fence_h = math.min(S.walk_h + 64, SKY_H - 64)
     end
 
-    Trans_quad(get_mat(LEVEL.outer_fence_tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, fence_h)
+    local x1 = S.x1
+    local y1 = S.y1
+    local x2 = S.x2
+    local y2 = S.y2
 
-    Trans_quad(get_sky(), S.x1,S.y1, S.x2,S.y2, SKY_H, EXTREME_H)
+    local function shrink(side, len)
+      if side == 2 then y1 = y1 + len end
+      if side == 8 then y2 = y2 - len end
+      if side == 4 then x1 = x1 + len end
+      if side == 6 then x2 = x2 - len end
+    end
+
+    local skin = { fence_w=LEVEL.outer_fence_tex }
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
       if not N or N.free then
-        local z_top = LEVEL.skyfence_h
-        local z_low = LEVEL.skyfence_h - 64
-        local skin = { fence_w=LEVEL.outer_fence_tex }
+        S.thick[side] = 48 ; shrink(side, 48)
 
-        S.thick[side] = 48
-
-        Build_sky_fence(S, side, z_top, z_low, skin)
+        Build_sky_fence(S, side, fence_h, fence_h - 64, skin)
       end
-
---    if N and N.room and not (N.room.outdoor or N.room.natural) then
---      Build_facade(S, side, N.room.facade)
---      Trans_quad(get_mat(N.room.facade),  S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H)
---    end
     end
+
+    Trans_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, fence_h)
+
+    Trans_quad(get_sky(), x1,y1, x2,y2, SKY_H, EXTREME_H)
   end
 
   ---| Layout_edge_of_map |---
