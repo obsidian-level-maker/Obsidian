@@ -390,6 +390,8 @@ function Plan_CreateRooms()
         if N ~= R then
           add_neighbor(R, side, N)
         end
+      else
+        R.touches_edge = true
       end
     end end -- for side / if ~= 5
   end end -- for x, y

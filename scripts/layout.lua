@@ -2614,8 +2614,39 @@ end
 
 function Layout_edge_of_map()
   
+  local function stretch_buildings()
+    -- TODO: OPTIMISE
+    for loop = 1,3 do
+      for x = 1,SEED_W do for y = 1,SEED_H do
+        local S = SEEDS[x][y][1]
+        if (S.room and not S.room.outdoor) or (S.edge_of_map and S.building) then
+          if (S.move_loop or 0) < loop then
+            for side = 2,8,2 do
+              if not S.edge_of_map or S.building_side == side then
+                local N = S:neighbor(side)
+                if N and N.edge_of_map and not N.building then
+                  N.building = S.room or S.building
+                  N.building_side = side
+                  N.move_loop = loop
+                end
+              end
+            end -- for side
+          end
+        end
+      end end -- for x, y
+    end -- for loop
+  end
+
   local function build_edge(S)
-    Trans_quad(get_liquid(), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, 0)
+    if S.building then
+      local tex = S.building.cave_tex or S.building.facade or S.building.main_tex
+      assert(tex)
+
+      Trans_quad(get_mat(tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H)
+      return
+    end
+
+    Trans_quad(get_mat(LEVEL.outer_fence_tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, 0)
 
     Trans_quad(get_sky(), S.x1,S.y1, S.x2,S.y2, SKY_H, EXTREME_H)
 
@@ -2630,12 +2661,19 @@ function Layout_edge_of_map()
 
         Build_sky_fence(S, side, z_top, z_low, skin)
       end
+
+--    if N and N.room and not (N.room.outdoor or N.room.natural) then
+--      Build_facade(S, side, N.room.facade)
+--      Trans_quad(get_mat(N.room.facade),  S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H)
+--    end
     end
   end
 
   ---| Layout_edge_of_map |---
   
   gui.debugf("Layout_edge_of_map\n")
+
+  stretch_buildings()
 
   for x = 1,SEED_W do for y = 1,SEED_H do
     local S = SEEDS[x][y][1]

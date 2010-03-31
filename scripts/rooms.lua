@@ -128,7 +128,7 @@ function Rooms_decide_outdoors()
     if STYLE.skies == "few"   then return rand_odds(5) end
 
     -- room on edge of map?
-    if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
+    if R.touches_edge then
       return rand_odds(30)
     end
 
@@ -182,7 +182,7 @@ function Rooms_select_textures()
 
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then
-      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
+      LEVEL.outer_fence_tex = "COMPSPAN" --!!!!!! rand_key_by_probs(THEME.outer_fences)
     end
   end
 

@@ -1199,12 +1199,7 @@ gui.debugf("Failed\n")
     rand_shuffle(list)
 
     for _,R in ipairs(list) do
-      local is_side
-      if R.sx1 <= 2 or R.sy1 <= 2 or R.sx2 >= SEED_W-1 or R.sy2 >= SEED_H-1 then
-        is_side = true
-      end
-
-      if rand_odds(sel(is_side, side_prob, mid_prob)) and
+      if rand_odds(sel(R.touches_edge, side_prob, mid_prob)) and
          not has_scenic_neigbour(R)
       then
         make_scenic(R)
