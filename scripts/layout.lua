@@ -2637,6 +2637,30 @@ function Layout_edge_of_map()
     end -- for loop
   end
 
+  local function determine_walk_heights()
+    -- TODO: OPTIMISE
+    for loop = 1,5 do
+      for x = 1,SEED_W do for y = 1,SEED_H do
+        local S = SEEDS[x][y][1]
+        if S.edge_of_map and not S.building then
+          for side = 2,8,2 do
+            local N = S:neighbor(side)
+            local other_h
+            if N and N.edge_of_map and not N.building then
+              other_h = N.walk_h
+            elseif N and N.room and N.room.outdoor then
+              other_h = N.room.floor_max_h
+            end
+
+            if other_h then
+              S.walk_h = math.min(S.walk_h or 999, other_h)
+            end
+          end -- for side
+        end
+      end end -- for x, y
+    end -- for loop
+  end
+
   local function build_edge(S)
     if S.building then
       local tex = S.building.cave_tex or S.building.facade or S.building.main_tex
@@ -2646,7 +2670,13 @@ function Layout_edge_of_map()
       return
     end
 
-    Trans_quad(get_mat(LEVEL.outer_fence_tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, 0)
+    local fence_h = SKY_H - 128  -- fallback value
+
+    if S.walk_h then
+      fence_h = math.min(S.walk_h + 64, SKY_H - 64)
+    end
+
+    Trans_quad(get_mat(LEVEL.outer_fence_tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, fence_h)
 
     Trans_quad(get_sky(), S.x1,S.y1, S.x2,S.y2, SKY_H, EXTREME_H)
 
@@ -2674,6 +2704,8 @@ function Layout_edge_of_map()
   gui.debugf("Layout_edge_of_map\n")
 
   stretch_buildings()
+
+  determine_walk_heights()
 
   for x = 1,SEED_W do for y = 1,SEED_H do
     local S = SEEDS[x][y][1]
