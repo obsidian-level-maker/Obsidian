@@ -111,6 +111,8 @@ public:
 
   merge_region_c *region;  // this is invalid after CoalesceSectors
 
+  double mid_x, mid_y;  // invalid after CoalesceSectors
+
   int misc_flags;
   int valid_count;
 
@@ -157,6 +159,29 @@ public:
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
            SameExtraFloors(other);
+  }
+
+  void CalcMiddle()
+  {
+    mid_x = 0;
+    mid_y = 0;
+
+    int count = (int)region->segs.size();
+
+    for (int i = 0; i < count; i++)
+    {
+      merge_segment_c *G = region->segs[i];
+
+      // tally both start and end, as segs may face either way
+      mid_x = mid_x + G->start->x + G->end->x;
+      mid_y = mid_y + G->start->y + G->end->y;
+    }
+
+    if (count > 0)
+    {
+      mid_x /= (double)(count * 2);
+      mid_y /= (double)(count * 2);
+    }
   }
 
   int Write()
@@ -753,6 +778,8 @@ static void MakeSector(merge_region_c *R)
 
   S->region = R;
 
+  S->CalcMiddle();
+
   S->f_h = I_ROUND(B->z2 + B->delta_z);
   S->c_h = I_ROUND(T->z1 + T->delta_z);
 
@@ -902,12 +929,7 @@ static void LightingFloodFill(void)
 
         SYS_ASSERT(B != F);
 
-        double x1 = (F->region->min_x + F->region->max_x) / 2.0;
-        double y1 = (F->region->min_y + F->region->max_y) / 2.0;
-        double x2 = (B->region->min_x + B->region->max_x) / 2.0;
-        double y2 = (B->region->min_y + B->region->max_y) / 2.0;
-
-        double dist = ComputeDist(x1,y1, x2,y2);
+        double dist = ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
 
         double A = log(light) / log(2);
         double L2 = pow(2, A - dist / light_dist_factor);
