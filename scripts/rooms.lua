@@ -182,7 +182,7 @@ function Rooms_select_textures()
 
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then
-      LEVEL.outer_fence_tex = "COMPSPAN" --!!!!!! rand_key_by_probs(THEME.outer_fences)
+      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
     end
   end
 
