@@ -731,48 +731,6 @@ gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
 end
 
 
-function Quest_add_keys()
-
-  local function make_small_exit(R)
-    R.kind = "small_exit"
-
-    local C = assert(R.conns[1])
-
-    local S = C.src_S
-    local T = C.dest_S
-
-    local B1 = S.border[S.conn_dir]
-    local B2 = T.border[T.conn_dir]
-
-    B1.kind = "straddle"
-    B2.kind = "straddle"
-  end
-
-  for _,arena in ipairs(LEVEL.all_arenas) do
-    local R = arena.target
-    assert(R)
-
-    assert(arena.lock.kind ~= "UNSET")
-
-    R.lock = arena.lock
-
-    if arena.lock.kind == "EXIT" then
-      assert(LEVEL.exit_room == R)
-
-      if not (R.outdoor or R.natural) and
-         not R:has_any_lock() and
-         R.svolume < 25 and THEME.exit
-      then
-        make_small_exit(R)
-      end
-
-    elseif arena.lock.kind ~= "NULL" then
-      R.purpose = arena.lock.kind
-    end
-  end
-end
-
-
 function Quest_order_by_visit()
   -- put rooms in the 'all_rooms' list into the order which the
   -- player will most likely visit them.
@@ -920,6 +878,50 @@ function Quest_choose_keys()
     gui.printf("  %d = %s : %s\n", idx, LOCK.kind, LOCK.item or "NIL")
   end
   gui.printf("}\n")
+end
+
+
+function Quest_add_keys()
+
+  local function make_small_exit(R)
+    R.kind = "small_exit"
+
+    local C = assert(R.conns[1])
+
+    local S = C.src_S
+    local T = C.dest_S
+
+    local B1 = S.border[S.conn_dir]
+    local B2 = T.border[T.conn_dir]
+
+    B1.kind = "straddle"
+    B2.kind = "straddle"
+  end
+
+  --| Quest_add_keys |--
+
+  for _,arena in ipairs(LEVEL.all_arenas) do
+    local R = arena.target
+    assert(R)
+
+    assert(arena.lock.kind ~= "UNSET")
+
+    R.lock = arena.lock
+
+    if arena.lock.kind == "EXIT" then
+      assert(LEVEL.exit_room == R)
+
+      if not (R.outdoor or R.natural) and
+         not R:has_any_lock() and
+         R.svolume < 25 and THEME.exit
+      then
+        make_small_exit(R)
+      end
+
+    elseif arena.lock.kind ~= "NULL" then
+      R.purpose = arena.lock.kind
+    end
+  end
 end
 
 
