@@ -783,7 +783,7 @@ function Rooms_border_up()
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
-         (S.floor_h == N.floor_h) and rand_odds(50)
+         (S.floor_h == N.floor_h)  --- and rand_odds(50)
       then
         S.border[side].kind = "liquid_arch"
         N.border[10-side].kind = "straddle"
