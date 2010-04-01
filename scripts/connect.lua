@@ -1207,6 +1207,16 @@ gui.debugf("Failed\n")
     end -- for R
   end
 
+  local function count_branches()
+    for _,R in ipairs(LEVEL.all_rooms) do
+      R.num_branch = #R.conns + #R.teleports
+      if R.num_branch == 0 then
+        error("Room exists with no connections!")
+      end
+      gui.debugf("Branches in %s --> %d\n", R:tostr(), R.num_branch)
+    end
+  end
+
 
   --==| Connect_rooms |==--
 
@@ -1216,12 +1226,15 @@ gui.debugf("Failed\n")
 
   for c_group,R in ipairs(LEVEL.all_rooms) do
     R.c_group = c_group
+    R.teleports = {}
   end
 
---!!!!!!  sprinkle_scenics()
+--!!!  sprinkle_scenics()
 
   branch_big_rooms()
   branch_the_rest()
+
+  count_branches()
 
   gui.printf("New Seed Map:\n")
   Seed_dump_rooms()
