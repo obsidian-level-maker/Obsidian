@@ -2,23 +2,8 @@
 TODO
 ====
 
-BUG: liquid_arches one-sided
 
-
-!!! Quests: broken if keys but no switches, hmmm.....
-
-  --> create a list of usable stuff (before split arenas)
-      e.g. { "key", "key", "switch", "key", "switch", "switch" }
-
-      if have switches then
-        list = "switch" ** 20
-        for i = 1,num_keys do
-          pos = rand_index_by_probs { 40, 30, 20, 10, 6, 4, 3, 2, 1, 1, 1 }
-          list.insert @ i "key"
-        end
-      else
-        list = "key" ** num_keys
-      end
+DONE:  Quests broken if keys but no switches, hmmm.....
 
 
 BUG: switch in cave may end up inaccessible (clear the seed)
@@ -26,6 +11,11 @@ BUG: switch in cave may end up inaccessible (clear the seed)
 BUG: place pickups more carefully in caves (otherwise can be unpickupable)
 
 BUG: liquification of caves at a border can subvert quests
+
+BUG: items occasionally appear on high fences
+     - finding small spots ignores sideway extents (thick[])
+
+BUG: corner supports are sometimes off the wall
 
 
 -  Cave code: give each cave an 'info' field and make it a class
@@ -49,9 +39,6 @@ BUG: liquification of caves at a border can subvert quests
    raising the height of the fences/windows there.
 
 -  some basic lighting objects (torches), esp. Urban/Hell
-
--  BUG: items occasionally appear on skyfences
-   - finding small spots ignores sideway extents (thick[])
 
 -  have a 'functions' table for games, engines, mods 
    e.g. setup_func = XXX  -->  functions = { setup = XXX }

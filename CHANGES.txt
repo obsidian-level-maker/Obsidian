@@ -1,9 +1,8 @@
 
-CHANGES (since v3.51)
-=====================
+CHANGES IN 3.57 (since v3.51)
+=============================
 
 + new lighting system
-
 + Heretic and Quake support
 + FreeDOOM is supported again
 
@@ -20,6 +19,7 @@ CHANGES (since v3.51)
 - Chris fixed a Boom-only linetype in his E1M8 map
 - Chris contributed a brand new E1M8 boss map
 
+- fixed the Level Control module
 - fixed a bug where an outdoor area was too low to fit in
 - fixed ugliness when outdoor rooms had differing sky heights
 - fixed failure when engine was set to Legacy or Eternity
@@ -29,7 +29,7 @@ CHANGES (since v3.51)
 - fixed rare bug of lowering pedestals stuck in ceiling
 - fixed lowering bars, prevent running over them
 - fixed bug where caves could become disconnected
-- fixed the Level Control module
+- fixed weapon probabilities in the start room
 
 - separate 'Doom 1' and 'Ultimate Doom' game choices
 - the DOOM CSG code supports rail and lighting brushes
