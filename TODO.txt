@@ -2,6 +2,9 @@
 TODO
 ====
 
+BUG: liquid_arches one-sided
+
+
 !!! Quests: broken if keys but no switches, hmmm.....
 
   --> create a list of usable stuff (before split arenas)
@@ -16,23 +19,6 @@ TODO
       else
         list = "key" ** num_keys
       end
-
-
->>>  border seeds around map
-     -  buildings need to extend out further than courtyards
-        (half a seed is enough)
-     -  seed-size "fence" should not be see-over-able
-        => use floor_max_h or nearby room(s)
-     -  if making liquid surround, put railings on courtyards
-        and don't make liquid too low (or fence too high)
-
-
-DONE: more supplies in start room (ammo for weapon, armor vest)
-
-FIXED: BUG: disconnected caves
-
-Fixed??  BUG: monsters ending up in the void (caves)
-
 
 
 BUG: switch in cave may end up inaccessible (clear the seed)
@@ -81,7 +67,7 @@ CSG CODE:
 
     Hence remove the CSG2_FindXXX rubbish.
 
-!!  DOOM: fix y_offset values
+!!  DOOM: fix y_offset values (when brush side is truncated/extended)
 
 -  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
     (similarly for 'tag', 'args' etc...)

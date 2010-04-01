@@ -161,6 +161,8 @@ SKY GENERATOR:
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
+-  give sky_fence linedefs the 'never draw' flag
+
 -  make light level of windows (esp. outdoor -> outdoor)
    slightly lower than surrounds.
 
