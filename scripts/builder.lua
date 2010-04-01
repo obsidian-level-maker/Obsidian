@@ -657,6 +657,10 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     { x=sx1, y=sy2 }, { x=sx1, y=sy1 },
   }
 
+  -- give back part the "never draw" linedef flag
+  s_coords[sel(is_vert(side), 2,1)].line_flags = 128
+  s_coords[sel(is_vert(side), 4,3)].line_flags = 128
+
   Trans_brush(wall_info, w_coords, -EXTREME_H, z_top)
   Trans_brush(wall_info, s_coords, -EXTREME_H, z_low)
 
@@ -664,20 +668,6 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
 
   Trans_brush(sky_info, w_coords, SKY_H,   EXTREME_H)
   Trans_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
-
-  if side == 2 then
-    Trans_quad(wall_info, sx1-16, sy1, sx1,    wy2, -EXTREME_H, z_top)
-    Trans_quad(wall_info, sx2,    sy1, sx2+16, wy2, -EXTREME_H, z_top)
-  elseif side == 8 then
-    Trans_quad(wall_info, sx1-16, wy1, sx1,    sy2, -EXTREME_H, z_top)
-    Trans_quad(wall_info, sx2,    wy1, sx2+16, sy2, -EXTREME_H, z_top)
-  elseif side == 4 then
-    Trans_quad(wall_info, sx1, sy1-16, wx2, sy1,    -EXTREME_H, z_top)
-    Trans_quad(wall_info, sx1, sy2,    wx2, sy2+16, -EXTREME_H, z_top)
-  else
-    Trans_quad(wall_info, wx1, sy1-16, sx2, sy1,    -EXTREME_H, z_top)
-    Trans_quad(wall_info, wx1, sy2,    sx2, sy2+16, -EXTREME_H, z_top)
-  end
 end
 
 
