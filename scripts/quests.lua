@@ -344,10 +344,6 @@ function Quest_num_locks(num_rooms)
     result = int(num_rooms / 7 + (gui.random() ^ 2) * 4)
   end
 
-  if PARAM.one_lock_tex then -- FIXME !!!! TEMP CRUD
-    result = math.min(2, result)
-  end
-
   gui.printf("Number of locks: %d  (rooms:%d)\n", result, num_rooms)
 
   return result
@@ -1068,6 +1064,111 @@ function Quest_find_storage_rooms()
 end
 
 
+function Quest_select_textures()
+  if not LEVEL.building_facades then
+    LEVEL.building_facades = {}
+
+    for num = 1,2 do
+      local name = rand_key_by_probs(THEME.building_facades or THEME.building_walls)
+      LEVEL.building_facades[num] = name
+    end
+  end
+
+  if not LEVEL.building_walls then
+    LEVEL.building_walls = {}
+
+    for num = 1,3 do
+      local name = rand_key_by_probs(THEME.building_walls)
+      LEVEL.building_walls[num] = name
+    end
+  end
+
+  if not LEVEL.courtyard_floors then
+    LEVEL.courtyard_floors = {}
+
+    if not THEME.courtyard_floors then
+      LEVEL.courtyard_floors[1] = rand_key_by_probs(THEME.building_floors)
+    else
+      for num = 1,2 do
+        local name = rand_key_by_probs(THEME.courtyard_floors)
+        LEVEL.courtyard_floors[num] = name
+      end
+    end
+  end
+
+  if not LEVEL.outer_fence_tex then
+    if THEME.outer_fences then
+      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
+    end
+  end
+
+
+  -- TODO: caves and landscapes
+
+  gui.printf("Selected room textures:\n")
+
+  gui.printf("building_facades =\n%s\n\n", table_to_str(LEVEL.building_facades))
+  gui.printf("building_walls =\n%s\n\n",   table_to_str(LEVEL.building_walls))
+  gui.printf("courtyard_floors =\n%s\n\n", table_to_str(LEVEL.courtyard_floors))
+end
+
+
+function Quest_decide_outdoors()
+  local function choose(R)
+    if R.parent and R.parent.outdoor then return false end
+    if R.parent then return rand_odds(5) end
+
+    if R.natural then
+      if not THEME.landscape_walls then return false end
+    else
+      if not THEME.courtyard_floors then return false end
+    end
+
+    if STYLE.skies == "none"   then return false end
+    if STYLE.skies == "always" then return true end
+
+    if R.natural then
+      if STYLE.skies == "heaps" then return rand_odds(75) end
+      return rand_odds(25)
+    end
+
+    -- we would prefer KEY locked doors to touch at least one
+    -- indoor room.  However keys/switches are not decided yet,
+    -- so the following is a compromise solution.
+    if R:has_any_lock() and rand_odds(20) then return false end
+
+    if R.children then
+      if STYLE.skies == "few" then
+        return rand_odds(33)
+      else
+        return rand_odds(80)
+      end
+    end
+
+    if STYLE.skies == "heaps" then return rand_odds(50) end
+    if STYLE.skies == "few"   then return rand_odds(5) end
+
+    -- room on edge of map?
+    if R.touches_edge then
+      return rand_odds(30)
+    end
+
+    return rand_odds(10)
+  end
+
+  ---| Quest_decide_outdoors |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.outdoor == nil then
+      R.outdoor = choose(R)
+    end
+    if R.outdoor then
+      R.sky_h = SKY_H
+    end
+  end
+end
+
+
 function Quest_assign()
 
   gui.printf("\n--==| Quest_assign |==--\n\n")
@@ -1077,20 +1178,7 @@ function Quest_assign()
     error("Level only has one room! (2 or more are needed)")
   end
 
-  -- count branches in each room
-  for _,R in ipairs(LEVEL.all_rooms) do
-    R.teleports = {} --!!!!
-
-    if R.kind ~= "scenic" then
-      R.num_branch = #R.conns + #R.teleports
-      if R.num_branch == 0 then
-        error("Room exists with no connections!")
-      end
-gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
-    end
-  end
-
-  local LOCK_EXIT =
+  local LOCK =
   {
     kind = "EXIT",
     item = "normal",
@@ -1100,22 +1188,22 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
   {
     rooms = shallow_copy(LEVEL.all_rooms),
     conns = shallow_copy(LEVEL.all_conns),
-    lock = LOCK_EXIT,
+    lock = LOCK,
   }
 
 
   LEVEL.all_arenas = { ARENA }
-  LEVEL.all_locks  = { LOCK_EXIT }
+  LEVEL.all_locks  = { LOCK  }
 
   Quest_decide_start_room(ARENA)
 
-  LEVEL.start_room = LEVEL.all_arenas[1].start
+  LEVEL.start_room = ARENA.start
   LEVEL.start_room.purpose = "START"
-
-  local lock_num = Quest_num_locks(#ARENA.rooms)
 
 
   Quest_initial_path(ARENA)
+
+  local lock_num = Quest_num_locks(#ARENA.rooms)
 
   for i = 1,lock_num do
     Quest_add_a_lock()
@@ -1135,6 +1223,7 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
     end
   end
 
+
   LEVEL.exit_room = LEVEL.all_arenas[#LEVEL.all_arenas].target
   LEVEL.exit_room.purpose = "EXIT"
 
@@ -1146,5 +1235,11 @@ gui.debugf("%s branches:%d\n", R:tostr(), R.num_branch)
 
   Quest_add_weapons()
   Quest_find_storage_rooms()
+
+  Quest_select_textures()
+  Quest_decide_outdoors()
+
+  Quest_choose_keys()
+  Quest_add_keys()
 end
 

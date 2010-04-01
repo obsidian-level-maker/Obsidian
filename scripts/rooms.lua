@@ -92,111 +92,6 @@ require 'defs'
 require 'util'
 
 
-function Rooms_decide_outdoors()
-  local function choose(R)
-    if R.parent and R.parent.outdoor then return false end
-    if R.parent then return rand_odds(5) end
-
-    if R.natural then
-      if not THEME.landscape_walls then return false end
-    else
-      if not THEME.courtyard_floors then return false end
-    end
-
-    if STYLE.skies == "none"   then return false end
-    if STYLE.skies == "always" then return true end
-
-    if R.natural then
-      if STYLE.skies == "heaps" then return rand_odds(75) end
-      return rand_odds(25)
-    end
-
-    -- we would prefer KEY locked doors to touch at least one
-    -- indoor room.  However keys/switches are not decided yet,
-    -- so the following is a compromise solution.
-    if R:has_any_lock() and rand_odds(20) then return false end
-
-    if R.children then
-      if STYLE.skies == "few" then
-        return rand_odds(33)
-      else
-        return rand_odds(80)
-      end
-    end
-
-    if STYLE.skies == "heaps" then return rand_odds(50) end
-    if STYLE.skies == "few"   then return rand_odds(5) end
-
-    -- room on edge of map?
-    if R.touches_edge then
-      return rand_odds(30)
-    end
-
-    return rand_odds(10)
-  end
-
-  ---| Rooms_decide_outdoors |---
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    if R.outdoor == nil then
-      R.outdoor = choose(R)
-    end
-    if R.outdoor then
-      R.sky_h = SKY_H
-    end
-  end
-end
-
-
-function Rooms_select_textures()
-  if not LEVEL.building_facades then
-    LEVEL.building_facades = {}
-
-    for num = 1,2 do
-      local name = rand_key_by_probs(THEME.building_facades or THEME.building_walls)
-      LEVEL.building_facades[num] = name
-    end
-  end
-
-  if not LEVEL.building_walls then
-    LEVEL.building_walls = {}
-
-    for num = 1,3 do
-      local name = rand_key_by_probs(THEME.building_walls)
-      LEVEL.building_walls[num] = name
-    end
-  end
-
-  if not LEVEL.courtyard_floors then
-    LEVEL.courtyard_floors = {}
-
-    if not THEME.courtyard_floors then
-      LEVEL.courtyard_floors[1] = rand_key_by_probs(THEME.building_floors)
-    else
-      for num = 1,2 do
-        local name = rand_key_by_probs(THEME.courtyard_floors)
-        LEVEL.courtyard_floors[num] = name
-      end
-    end
-  end
-
-  if not LEVEL.outer_fence_tex then
-    if THEME.outer_fences then
-      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
-    end
-  end
-
-
-  -- TODO: caves and landscapes
-
-  gui.printf("Selected room textures:\n")
-
-  gui.printf("building_facades =\n%s\n\n", table_to_str(LEVEL.building_facades))
-  gui.printf("building_walls =\n%s\n\n",   table_to_str(LEVEL.building_walls))
-  gui.printf("courtyard_floors =\n%s\n\n", table_to_str(LEVEL.courtyard_floors))
-end
-
-
 function Room_setup_theme(R)
   if not R.outdoor then
     R.main_tex = rand_element(LEVEL.building_walls)
@@ -2820,16 +2715,9 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Rooms_build_all |==--\n\n")
 
----  Test_room_fabs()
-
-  Rooms_select_textures()
-  Rooms_decide_outdoors()
   Rooms_choose_themes()
-
-  Quest_choose_keys()
-  Quest_add_keys()
-
   Rooms_decide_hallways_II()
+
   Rooms_setup_symmetry()
   Rooms_reckon_doors()
 
