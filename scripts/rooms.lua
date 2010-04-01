@@ -2476,7 +2476,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       end
 
       if B_kind == "liquid_arch" then
-        local skin = { wall=w_tex, floor=f_tex, other=R.facade, break_t=THEME.track_mat }
+        local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
+        local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
         Build_archway(S, side, z1, z_top, skin)
