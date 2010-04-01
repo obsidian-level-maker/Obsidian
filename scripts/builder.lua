@@ -678,8 +678,6 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
     Trans_quad(wall_info, wx1, sy1-16, sx2, sy1,    -EXTREME_H, z_top)
     Trans_quad(wall_info, wx1, sy2,    sx2, sy2+16, -EXTREME_H, z_top)
   end
-
-  Build_shadow(S, side, 80, z_top-4)
 end
 
 

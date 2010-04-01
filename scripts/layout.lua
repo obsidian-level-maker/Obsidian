@@ -2670,10 +2670,10 @@ function Layout_edge_of_map()
       return
     end
 
-    local fence_h = SKY_H - 128  -- fallback value
+    S.fence_h = SKY_H - 128  -- fallback value
 
     if S.walk_h then
-      fence_h = math.min(S.walk_h + 64, SKY_H - 64)
+      S.fence_h = math.min(S.walk_h + 64, SKY_H - 64)
     end
 
     local x1 = S.x1
@@ -2695,11 +2695,17 @@ function Layout_edge_of_map()
       if not N or N.free then
         S.thick[side] = 48 ; shrink(side, 48)
 
-        Build_sky_fence(S, side, fence_h, fence_h - 64, skin)
+        Build_sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
+      end
+
+      if N and ((N.room and not N.room.outdoor) or
+                (N.edge_of_map and N.building))
+      then
+        Build_shadow(S, side, 64)
       end
     end
 
-    Trans_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, fence_h)
+    Trans_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, S.fence_h)
 
     Trans_quad(get_sky(), x1,y1, x2,y2, SKY_H, EXTREME_H)
   end

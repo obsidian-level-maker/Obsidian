@@ -723,10 +723,9 @@ end
 function Rooms_border_up()
 
   local function make_map_edge(R, S, side)
-
     if R.outdoor then
-      S.border[side].kind = "sky_fence"
-      S.thick[side] = 48
+      -- a fence will be created by Layout_edge_of_map()
+      S.border[side].kind = "nothing"
     else
       S.border[side].kind = "wall"
       S.border[side].can_fake_sky = true
@@ -735,13 +734,11 @@ function Rooms_border_up()
   end
 
   local function make_border(R1, S, R2, N, side)
-
     if R1 == R2 then
       -- same room : do nothing
       S.border[side].kind = "nothing"
       return
     end
-
 
     if R1.outdoor and R2.natural then
       S.border[side].kind = "fence"
@@ -2370,16 +2367,15 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
   local function vis_seed(S)
     if S.kind == "void" then
       -- vis_mark_solid(S)
-      return;
+      return
     end
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
       local B_kind = S.border[side].kind
 
-      if not N or N.kind == "void" or
-         B_kind == "wall" or B_kind == "picture" or
-         B_kind == "sky_fence"
+      if not N or N.free or N.kind == "void" or
+         B_kind == "wall" or B_kind == "picture"
       then
         vis_mark_wall(S, side)
       end
@@ -2505,10 +2501,15 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
-      if R.outdoor and N and N.room and not N.room.outdoor then
+      if R.outdoor and N and ((N.room and not N.room.outdoor) or
+                              (N.edge_of_map and N.building))
+      then
         local dist = 24 + int((z2 - z1) / 4)
         if dist > 160 then dist = 160 end
         Build_shadow(S, side, dist)
+
+      elseif R.outdoor and N and N.edge_of_map and N.fence_h then
+        Build_shadow(S, side, 20, N.fence_h - 4)
       end
 
       local border = S.border[side]
@@ -2560,15 +2561,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local skin = { h=30, wall=w_tex, floor=f_tex }
         Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
         shrink_floor(side, 4)
-      end
-
-      if B_kind == "sky_fence" then
-        local z_top = math.max(LEVEL.skyfence_h, (S.room.floor_max_h or S.room.floor_h or 400) + 48)
-        local z_low = LEVEL.skyfence_h - 64
-        local skin = { fence_w=LEVEL.outer_fence_tex }
-
---!!!!!        Build_sky_fence(S, side, z_top, z_low, skin)
---!!!!!        shrink_floor(side, 4)
       end
 
       if B_kind == "arch" then
