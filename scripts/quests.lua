@@ -36,6 +36,8 @@ class ARENA
   start : ROOM   -- room which player enters this arena
                  -- (map's start room for the very first arena)
                  -- Never nil.
+                 --
+                 -- start.entry_conn is the entry to this arena
 
   target : ROOM  -- room containing the key/switch to exit this
                  -- arena, _OR_ the level's exit room itself.
@@ -46,20 +48,22 @@ class ARENA
                  -- connection to the next arena (the keyed door etc).
                  -- Never nil.
                  --
+                 -- lock.conn is the connection leaving this arena.
+                 --
                  -- NOTE: the room on the front side of the connection
-                 -- is not necessarily in this arena.
+                 --       may belong to a different arena.
 
   path : array(CONN)  -- full path of rooms from 'start' to 'target'
                       -- (actually only the connections are stored).
                       -- The list may be empty.
 
   back_path : array(CONN)
-                 -- path from 'target' room to the room with the
-                 -- connection to the next arena.  You need to follow
-                 -- the full path to know whether each connection goes
-                 -- forward or backwards.  Not used for EXIT.
+                 -- path from 'target' to the room with the connection
+                 -- to the next arena.  You need to follow the full
+                 -- path to know whether each connection goes forward
+                 -- or backwards.  Not used for EXIT.
                  --
-                 -- NOTE: some rooms may be in other arenas.
+                 -- NOTE: some rooms may belong to other arenas.
 }
 
 
@@ -951,7 +955,7 @@ function Quest_add_weapons()
       end
 
       if prob and prob > 0 then
-        name_tab[name] = info.add_prob
+        name_tab[name] = prob
       end
     end -- for weapons
 
