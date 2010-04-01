@@ -69,7 +69,7 @@ class ARENA
 
 class LOCK
 {
-  kind : keyword  -- "NULL" or "KEY" or "SWITCH" or "EXIT"
+  kind : keyword  -- "UNSET" or "KEY" or "SWITCH" or "EXIT"
   item : string   -- what kind of key or switch (game specific)
 
   conn : CONN     -- connection between two rooms (and two arenas)
@@ -334,6 +334,9 @@ end
 function Quest_num_locks(num_rooms)
   local result
 
+  local num_keys     = table_size(THEME.keys or {})
+  local num_switches = table_size(THEME.switches or {})
+
   if STYLE.switches == "none" then
     result = 0
   elseif STYLE.switches == "heaps" then
@@ -342,6 +345,12 @@ function Quest_num_locks(num_rooms)
     result = int(num_rooms / 14 + gui.random())
   else
     result = int(num_rooms / 7 + (gui.random() ^ 2) * 4)
+  end
+
+  -- if we have no switches, then limit is number of keys
+  -- (since keys can only be used once per level)
+  if num_switches == 0 then
+    result = math.min(result, num_keys)
   end
 
   gui.printf("Number of locks: %d  (rooms:%d)\n", result, num_rooms)
@@ -474,7 +483,7 @@ function Quest_decide_split(arena)  -- returns a LOCK
   local LOCK =
   {
     -- kind and item set later!
-    kind = "NULL",
+    kind = "UNSET",
 
     conn = LC,
     tag  = alloc_tag(),
@@ -808,67 +817,78 @@ end
 
 function Quest_choose_keys()
   -- there is always at least one "lock" (for EXIT room)
-  if #LEVEL.all_locks <= 1 then return end
+  local locks_needed = #LEVEL.all_locks - 1
+  if locks_needed <= 0 then return end
 
-  local use_keys     = shallow_copy(THEME.keys     or {}) 
-  local use_switches = shallow_copy(THEME.switches or {})
-  local use_bars     = shallow_copy(THEME.bars     or {})
+  local key_tab    = shallow_copy(THEME.keys     or {}) 
+  local switch_tab = shallow_copy(THEME.switches or {})
+  local bar_tab    = shallow_copy(THEME.bars     or {})
+
+  local num_keys     = table_size(key_tab)
+  local num_switches = table_size(switch_tab)
+  local num_bars     = table_size(bar_tab)
 
   -- use less keys when number of locked doors is small
-  local want_keys = table_size(use_keys)
-  while want_keys > 1 and (#LEVEL.all_locks-1 < want_keys * 2) and
-        not (table_empty(use_switches) and table_empty(use_bars)) and
-        rand_odds(80)
-  do
-    want_keys = want_keys - 1
+  local want_keys = num_keys
+
+  if num_switches == 0 then
+    assert(locks_needed <= num_keys)
+  else
+    while want_keys > 1 and (want_keys*2 > locks_needed) and rand_odds(80) do
+      want_keys = want_keys - 1
+    end
   end
 
-  for _,LOCK in ipairs(LEVEL.all_locks) do
-    LOCK.kscore = LOCK.distance
+  gui.printf("locks_needed:%d  keys:%d (of %d)  switches:%d  bars:%d\n",
+              locks_needed, want_keys, num_keys, num_switches, num_bars);
 
-    -- prefer not to use KEY doors between two Outside rooms
+  --- STEP 1 : assign keys (distance based) ---
+
+  for _,LOCK in ipairs(LEVEL.all_locks) do
+    -- when the distance gets large, keys are better than switches
+    LOCK.key_score = LOCK.distance or 0
+
+    -- prefer not to use keyed doors between two outdoor rooms
     if LOCK.conn and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-      LOCK.kscore = 0
+      LOCK.key_score = 0
     end
 
-    LOCK.kscore = LOCK.kscore + gui.random() / 5.0
+    LOCK.key_score = LOCK.key_score + gui.random() / 5.0
   end
 
-  table.sort(LEVEL.all_locks, function(A,B) return A.kscore > B.kscore end)
+  local lock_list = shallow_copy(LEVEL.all_locks)
+  table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
 
-  gui.debugf("all_locks:%d want_keys:%d use_switches:%d\n", #LEVEL.all_locks, want_keys, table_size(use_switches))
-
-  -- assign keys first (to locks with biggest distance from key to door)
-  for _,LOCK in ipairs(LEVEL.all_locks) do
-    if table_empty(use_keys) then
+  for _,LOCK in ipairs(lock_list) do
+    if table_empty(key_tab) or want_keys <= 0 then
       break;
     end
 
-    if want_keys <= 0 then break; end
-
-    if not LOCK.item then
+    if LOCK.kind == "UNSET" then
       LOCK.kind = "KEY"
-      LOCK.item = rand_key_by_probs(use_keys)
-      use_keys[LOCK.item] = nil
+      LOCK.item = rand_key_by_probs(key_tab)
+
+      -- cannot use this key again
+      key_tab[LOCK.item] = nil
 
       want_keys = want_keys - 1
     end
   end
 
-  -- assign switches second (random spread)
-  for _,LOCK in ipairs(LEVEL.all_locks) do
-    if not LOCK.item then
-      if not table_empty(use_bars) and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-        LOCK.kind = "SWITCH"
-        LOCK.item = rand_key_by_probs(use_bars)
-        use_bars[LOCK.item] = use_bars[LOCK.item] / 10
-      elseif not table_empty(use_switches) then
-        LOCK.kind = "SWITCH"
-        LOCK.item = rand_key_by_probs(use_switches)
-        use_switches[LOCK.item] = use_switches[LOCK.item] / 10
+  --- STEP 2 : assign switches (random spread) ---
+
+  for _,LOCK in ipairs(lock_list) do
+    if LOCK.kind == "UNSET" then
+      assert(num_switches > 0)
+
+      LOCK.kind = "SWITCH"
+
+      if num_bars > 0 and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
+        LOCK.item = rand_key_by_probs(bar_tab)
+        bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
       else
-        LOCK.kind = "NULL"
-        LOCK.item = "null"
+        LOCK.item = rand_key_by_probs(switch_tab)
+        switch_tab[LOCK.item] = switch_tab[LOCK.item] / 8
       end
     end
   end
@@ -902,7 +922,6 @@ function Quest_add_keys()
 
   for _,arena in ipairs(LEVEL.all_arenas) do
     local R = arena.target
-    assert(R)
 
     assert(arena.lock.kind ~= "UNSET")
 
@@ -1205,9 +1224,9 @@ function Quest_assign()
 
   Quest_initial_path(ARENA)
 
-  local lock_num = Quest_num_locks(#ARENA.rooms)
+  local want_lock = Quest_num_locks(#ARENA.rooms)
 
-  for i = 1,lock_num do
+  for i = 1,want_lock do
     Quest_add_a_lock()
   end
 
