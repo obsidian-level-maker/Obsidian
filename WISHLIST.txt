@@ -231,14 +231,18 @@ Sam's suggestions:
 
 ++ perform visibility
 
-++ create a usable exit
-
 ++ perform lighting
    (sky vector = '1 2 4')
 
--  liquid areas
++  liquid areas
+
+-  better exits
 
 -  create "oblige" logo miptex [.wal for QuakeII]
+
+-  intermission cameras:
+     "classname" "info_intermission"
+     "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
 
 -  create faces from stacked brushes behind a gap (cf. oa_dm7)
 
@@ -250,7 +254,7 @@ Sam's suggestions:
    which would only require 1/4 of the lightmap space
    (and hence less likely to run out of it)
 
--  verify the POP file
+-  QSAVETEX: verify the POP file
 
 
 ----------------------------------------------------------------

@@ -2,8 +2,10 @@
 TODO
 ====
 
+QUAKE STUFF:
+  -  OBLIGE logos : gui.quake_make_logo()
 
-DONE:  Quests broken if keys but no switches, hmmm.....
+room : step decision --> quest_select_tex
 
 
 BUG: switch in cave may end up inaccessible (clear the seed)
@@ -48,6 +50,9 @@ BUG: corner supports are sometimes off the wall
 
 CSG CODE:
 
++  improve progress bar code to handle Lua part + CSG part
+   (especially for Quake)
+
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush
     and area_vert references.
@@ -65,7 +70,6 @@ CSG CODE:
 
 -  Rail brushes: support fake 3D bridges
                  (create dummy sector from brush's Z2)
-
 
 q1_nodes:
   -  floor_leaf --> leaf
