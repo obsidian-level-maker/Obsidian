@@ -912,7 +912,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   if (which == 3)
     return 0;
 
-  fprintf(stderr, "\nQuake1_CreateClipHull %d\n", which);
+  fprintf(stderr, "Quake1_CreateClipHull %d\n", which);
 
   cpSideFactory_c::FreeAll();
 

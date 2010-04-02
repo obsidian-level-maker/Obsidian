@@ -1797,7 +1797,7 @@ void Q1_CreateModel(void)
   rSideFactory_c::FreeAll();
   all_windings.clear();
 
-fprintf(stderr, "Q1_BuildBSP...\n");
+// fprintf(stderr, "Q1_BuildBSP...\n");
   Q1_BuildBSP();
 
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
@@ -1819,7 +1819,7 @@ fprintf(stderr, "Q1_BuildBSP...\n");
   q_mark_surfs = BSP_NewLump(LUMP_MARKSURFACES);
   q_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
 
-fprintf(stderr, "Second Pass...\n");
+// fprintf(stderr, "Second Pass...\n");
   SecondPass(R_ROOT);
 
   AssignIndexes(R_ROOT);
@@ -1838,9 +1838,8 @@ fprintf(stderr, "Second Pass...\n");
 
   WriteSolidLeaf();
 
-fprintf(stderr, "Write Nodes...\n");
+// fprintf(stderr, "Write Nodes...\n");
   WriteNodes(R_ROOT);
-
 
   if (q1_total_faces >= MAX_MAP_FACES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
@@ -1879,7 +1878,7 @@ fprintf(stderr, "Write Nodes...\n");
   delete R_ROOT;  R_ROOT = NULL;
   delete SOLID_LEAF;  SOLID_LEAF = NULL;
 
-fprintf(stderr, "DONE.\n");
+// fprintf(stderr, "DONE.\n");
 
   // there is no need to delete the lumps from BSP_NewLump()
   // since is handled by the q_bsp.c code.
