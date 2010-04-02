@@ -1123,6 +1123,24 @@ function Quest_select_textures()
     end
   end
 
+  if not LEVEL.step_skin then
+    if not THEME.steps then
+      error("Theme is missing step skins") 
+    else
+      local name = rand_key_by_probs(THEME.steps)
+      LEVEL.step_skin = assert(GAME.steps[name])
+    end
+  end
+
+  if not LEVEL.lift_skin then
+    if not THEME.lifts then
+      -- OK
+    else
+      local name = rand_key_by_probs(THEME.lifts)
+      LEVEL.lift_skin = assert(GAME.lifts[name])
+    end
+  end
+
 
   -- TODO: caves and landscapes
 

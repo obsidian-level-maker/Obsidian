@@ -2609,24 +2609,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     end
 
 
-    -- FIXME: decide this somewhere else
-    if not LEVEL.step_skin then
-      if not THEME.steps then
-        error("Game is missing step skins.") 
-      else
-        local name = rand_key_by_probs(THEME.steps)
-        LEVEL.step_skin = GAME.steps[name] or {}
-      end
-
-      if not THEME.lifts then
-        -- OK
-      else
-        local name = rand_key_by_probs(THEME.lifts)
-        LEVEL.lift_skin = GAME.lifts[name] or {}
-      end
-    end
-
-
     -- FLOOR
     if S.kind == "void" then
 
