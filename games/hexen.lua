@@ -1555,7 +1555,7 @@ HEXEN_LIFTS =
 }
 
 
-HEXEN_DOOR_PREFABS =
+HEXEN_DOOR_PREFABS =  -- NB: OBSOLETE
 {
   winnow =
   {
@@ -2483,11 +2483,6 @@ UNFINISHED["hexen"] =
     "images",     HEXEN_IMAGES,
     "lights",     HEXEN_LIGHTS,
     "wall_lights", HEXEN_WALL_LIGHTS,
-
-    "door_fabs",  HEXEN_DOOR_PREFABS,
-    "wall_fabs",  HEXEN_WALL_PREFABS,
-    "sc_fabs",    HEXEN_SCENERY_PREFABS,
-    "misc_fabs",  HEXEN_MISC_PREFABS,
   },
 }
 

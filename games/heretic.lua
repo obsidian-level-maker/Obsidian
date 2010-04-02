@@ -1223,7 +1223,7 @@ HERETIC_LIFTS =
   slow = { kind=62,  walk=88 },
 }
 
-HERETIC_DOOR_PREFABS =
+HERETIC_DOOR_PREFABS =  -- NB: OBSOLETE
 {
   d_wood =
   {
@@ -2126,8 +2126,6 @@ OB_GAMES["heretic"] =
 
     "switches", HERETIC_SWITCHES,
     "lifts", HERETIC_LIFTS,
-
-    "door_fabs", HERETIC_DOOR_PREFABS,
   },
 }
 
