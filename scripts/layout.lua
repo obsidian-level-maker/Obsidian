@@ -2530,7 +2530,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     return
   end
 
-  if R.hallway then
+  if R.kind == "hallway" then
     Layout_hallway(R, focus_C.conn_h)
     if R.weapon then add_weapon(R.weapon) end
     return

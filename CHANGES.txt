@@ -3,7 +3,7 @@ CHANGES IN 3.57 (since v3.51)
 =============================
 
 + new lighting system
-+ Heretic and Quake support
++ early Heretic and Quake support
 + FreeDOOM is supported again
 
 - faster node building (especially on large maps)

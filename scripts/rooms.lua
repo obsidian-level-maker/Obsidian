@@ -200,7 +200,7 @@ function Rooms_choose_themes()
 end
 
 
-function Rooms_decide_hallways_II()
+function Rooms_decide_hallways()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
   --   - prefer small rooms
@@ -2717,7 +2717,7 @@ function Rooms_build_all()
   gui.printf("\n--==| Rooms_build_all |==--\n\n")
 
   Rooms_choose_themes()
-  Rooms_decide_hallways_II()
+  Rooms_decide_hallways()
 
   Rooms_setup_symmetry()
   Rooms_reckon_doors()
