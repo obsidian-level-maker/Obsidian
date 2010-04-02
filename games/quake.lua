@@ -807,20 +807,17 @@ QUAKE1_SUB_THEMES =
         SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
       },
 
+    courtyard_floors =
+    {
+      GROUND1_6=50, GROUND1_2=50, GROUND1_8=30,
+    },
+
     xx_hallway =
     {
       -- FIXME
       walls = { TECH02_1=10 },
       floors = { AFLOOR1_4=10 },
       ceilings = { AFLOOR1_4=10 },
-    },
-
-    courtyard =
-    {
-      floors =
-      {
-        GROUND1_6=50, GROUND1_2=50, GROUND1_8=30,
-      },
     },
 
     logos = { carve=50 },
