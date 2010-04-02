@@ -24,7 +24,7 @@ FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 LUA_DIR=$(LIB_LOC)/lua-5.1.4
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
-OPTIMISE=-O0 -g3
+OPTIMISE=-O2 -g
 
 # operating system choices: UNIX WIN32
 OS=UNIX
