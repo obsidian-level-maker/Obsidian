@@ -1139,16 +1139,24 @@ HERETIC_SWITCHES =
 
 HERETIC_DOORS =
 {
-  door1 =
+  d_demon =
   {
-    w=128, h=112, door_h=112,
-    door_w="DMNMSK", door_c="FLAT5_2",  -- FIXME!!!!
-    lite_w="LITE5", step_w="STEP1",
-    frame_f="FLAT1", frame_c="FLAT1",
-    track="METL2",
-    key_w="BRICKLIT", key_ox=20, key_oy=-16,
+    w=128, h=128, door_h=128,
+    door_w="DMNMSK", door_c="FLOOR10",
+    step_w="METL2", track="METL2",
+    key_ox=20, key_oy=-16,
     line_kind=1, tag=0,
   },
+
+  d_wood =
+  {
+    w=128, h=128, door_h=128,
+    door_w="DOORWOOD", door_c="FLOOR01",
+    step_w="METL2", track="METL2",
+    key_ox=20, key_oy=-16,
+    line_kind=1, tag=0,
+  },
+
 
 --[[
   d_demon = { prefab="DOOR", w=128, h=128,
@@ -1356,7 +1364,7 @@ HERETIC_SUB_THEME_DEFAULTS =
 {
   steps = { step1=50 },
 
-  doors = { door1=50 },
+  doors = { d_wood=50, d_demon=15 },
 
   logos = { carve=50, pill=50 },
 
