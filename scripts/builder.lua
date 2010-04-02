@@ -1351,7 +1351,7 @@ end
 
 
 function Build_niche_stair(S, skin, skin2)
-  local step_info = get_mat(skin.side_w, skin.top_f)
+  local step_info = get_mat(skin.side_w or skin.step_w, skin.top_f)
 
   local front_info = add_pegging(get_mat(skin.step_w))
 
@@ -1406,9 +1406,9 @@ function Build_niche_stair(S, skin, skin2)
     Trans_brush(step_info,
     {
       { x=long-W, y=by },
-      { x=long-W, y=ty, w_face = front_info.wface },
+      { x=long-W, y=ty, w_face = front_info.w_face },
       { x=     W, y=ty },
-      { x=     W, y=by, w_face = front_info.wface },
+      { x=     W, y=by, w_face = front_info.w_face },
     },
     -EXTREME_H, int(z));
   end
