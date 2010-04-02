@@ -667,7 +667,7 @@ QUAKE1_MATERIALS =
 
 QUAKE1_EXITS =
 {
-  exit_teleporter =
+  exit_pad =
   {
     h=128,
     switch_w="SW1SKULL",
@@ -679,7 +679,8 @@ QUAKE1_EXITS =
 
 QUAKE1_STEPS =
 {
-  step1 = { step_w="DUNG01_1" },
+  step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" },
+  step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" },
 }
 
 
@@ -782,6 +783,7 @@ QUAKE1_ROOMS =
   },
 }
 
+
 QUAKE1_SUB_THEMES =
 {
   quake_base1 =
@@ -822,9 +824,9 @@ QUAKE1_SUB_THEMES =
 
     logos = { carve=50 },
 
-    steps = { step1=50 },
+    steps = { step1=50, step2=50 },
 
-    exits = { exit_teleporter=50 },
+    exits = { exit_pad=50 },
 
     scenery =
     {
