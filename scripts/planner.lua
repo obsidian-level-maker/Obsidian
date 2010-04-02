@@ -1051,7 +1051,7 @@ function Plan_rooms_sp()
 
   gui.random()
 
-  if THEME.liquids and not LEVEL.liquid then
+  if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
     local name = rand_key_by_probs(THEME.liquids)
     gui.printf("Liquid = %s\n", name)
     LEVEL.liquid = assert(GAME.liquids[name])
