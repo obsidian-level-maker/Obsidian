@@ -784,6 +784,16 @@ QUAKE1_ROOMS =
 }
 
 
+QUAKE1_SUB_THEME_DEFAULTS =
+{
+  teleporter_mat = "TELE_TOP",
+  tele_dest_mat = "COP3_4",
+  pedestal_mat = "LIGHT1_1",
+  periph_pillar_mat = "METAL2_6",
+  track_mat = "MET5_1",
+}
+
+
 QUAKE1_SUB_THEMES =
 {
   quake_base1 =
@@ -1202,6 +1212,9 @@ function Quake1_begin_level()
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
+
+  -- select the sky to use (FIXME: make it theme based)
+  GAME.materials["_SKY"].t = rand_element { "sky1", "sky4" }
 end
 
 
@@ -1264,7 +1277,6 @@ OB_GAMES["quake"] =
     "pickups",  QUAKE1_PICKUPS,
 
     "materials", QUAKE1_MATERIALS,
-    "sub_themes",    QUAKE1_SUB_THEMES,
     "pictures",  QUAKE1_PICTURES,
     "steps",     QUAKE1_STEPS,
     "exits",     QUAKE1_EXITS,
@@ -1274,6 +1286,9 @@ OB_GAMES["quake"] =
 
     "key_doors", QUAKE1_KEY_DOORS,
     "misc_fabs", QUAKE1_MISC_PREFABS,
+
+    "sub_defaults", QUAKE1_SUB_THEME_DEFAULTS,
+    "sub_themes",   QUAKE1_SUB_THEMES,
   },
 }
 
