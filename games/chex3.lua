@@ -653,8 +653,6 @@ UNFINISHED["chex3"] =
 
     custom_flats = true,
 
-    no_keys = true, -- FIXME
-
     seed_size = 256,
 
     max_name_length = 28,

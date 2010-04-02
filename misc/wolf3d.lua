@@ -1000,8 +1000,6 @@ UNFINISHED["wolf3d"] =
     seed_size = 192,  -- actually 3 blocks
     seed_limit = 21,  -- 64 / 3
 
-    no_keys = true, --!!!!
-
     mon_time_max = 12,
     mon_damage_max  = 200,
     mon_damage_high = 100,

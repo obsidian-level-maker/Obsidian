@@ -492,8 +492,6 @@ UNFINISHED["hacx"] =
     teleporters = true,
     noblaze_door = true,
 
-    no_keys = true,
-
     seed_size = 256,
 
     max_name_length = 28,

@@ -1251,8 +1251,6 @@ OB_GAMES["quake"] =
     seed_size  = 192,
     seed_limit = 42,
 
-    no_keys = true,  --!!!! FIXME
-
     entity_delta_z = 24,
 
     -- the name buffer in Quake can fit 39 characters, however

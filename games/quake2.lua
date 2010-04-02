@@ -2036,8 +2036,6 @@ UNFINISHED["quake2"] =
     seed_size = 240,
     seed_limit = 32,
 
-    no_keys = true,  --!!!! FIXME
-
     entity_delta_z = 24,
 
     -- the name buffer in Quake II is huge, but this value
