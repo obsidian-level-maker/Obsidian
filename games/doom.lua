@@ -3495,7 +3495,7 @@ DOOM_WEAPONS =
 
   launch =
   {
-    pref=50, add_prob=25, start_prob=10,
+    pref=50, add_prob=25, start_prob=15,
     rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=2} },
@@ -3503,7 +3503,7 @@ DOOM_WEAPONS =
 
   plasma =
   {
-    pref=90, add_prob=13, start_prob=5,
+    pref=90, add_prob=13, start_prob=7,
     rate=11, damage=20, attack="missile",
     ammo="cell", per=1,
     give={ {ammo="cell",count=40} },
@@ -3520,7 +3520,7 @@ DOOM_WEAPONS =
   -- this is Doom II only --
   super =
   {
-    pref=70, add_prob=20, start_prob=10,
+    pref=70, add_prob=20, start_prob=15,
     rate=0.6, damage=170, attack="hitscan", splash={ 0,30 },
     ammo="shell", per=2,
     give={ {ammo="shell",count=8} },
