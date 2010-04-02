@@ -664,10 +664,14 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
   Trans_brush(wall_info, w_coords, -EXTREME_H, z_top)
   Trans_brush(wall_info, s_coords, -EXTREME_H, z_low)
 
-  sky_back.delta_z = (z_low+4) - (SKY_H-2)
+  Trans_brush(sky_info, w_coords, SKY_H, EXTREME_H)
 
-  Trans_brush(sky_info, w_coords, SKY_H,   EXTREME_H)
-  Trans_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
+  if PARAM.format == "quake" then
+    Trans_brush(sky_back, s_coords, z_low+4, EXTREME_H)
+  else
+    sky_back.delta_z = (z_low+4) - (SKY_H-2)
+    Trans_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
+  end
 end
 
 
@@ -861,13 +865,14 @@ function Build_quake_exit_pad(S, z_top, skin, next_map)
   local x2 = x1 + 64
   local y2 = y1 + 64
 
+  -- trigger is a bit smaller than the pad
   local m_ref = gui.q1_add_mapmodel(
   {
     y_face={ texture="trigger" },
     x_face={ texture="trigger" },
     z_face={ texture="trigger" },
   },
-  x1,y1, z_top, x2,y2, z_top+256)
+  x1+12,y1+12, z_top, x2-12,y2-12, z_top+256)
 
   gui.add_entity("trigger_changelevel", 0, 0, 0,
                  { map=next_map, model=assert(m_ref) })
