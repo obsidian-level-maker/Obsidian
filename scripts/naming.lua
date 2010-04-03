@@ -53,7 +53,7 @@ NAMING_THEMES =
       a =
       {
         -- size
-        Universal=20, Collosal=20, Prodigious=3,
+        Universal=20, Colossal=20, Prodigious=3,
         Secluded=10, Confined=5, Restricted=3,
 
 
@@ -356,7 +356,7 @@ NAMING_THEMES =
       a =
       {
         -- size
-        Monumental=5, Collossal=10, Sprawling=5,
+        Monumental=5, Colossal=10, Sprawling=5,
         Small=3, Endless=10,
 
         -- location
