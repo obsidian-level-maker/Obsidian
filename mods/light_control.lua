@@ -28,6 +28,10 @@ OB_MODULES["lighting_control"] =
 {
   label = "Lighting Control",
 
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1,
+                strife=1,
+              },
+
   setup_func = LightControl_setup,
 
   options =
