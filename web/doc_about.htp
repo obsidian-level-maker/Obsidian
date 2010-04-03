@@ -74,15 +74,14 @@ for even more stuff we'd like to add)
 </ul>
 
 
-<h3>GENERAL STATUS</h3>
+<h3>KNOWN PROBLEMS</h3>
 
 <ul class="status">
-
-<!-- user interface is good and stable -->
 
 <li>no traps, no cages
 <li>no secrets, no powerups
 <li>very limited scenery
+<li>messed up monster quantities
 
 </ul>
 
@@ -115,7 +114,7 @@ create the Hexen-specific formats yet.
 <p>
 <b>Quake:</b><br>
 Close to being playable, but still lacking many things: lighting,
-visibility, doors, a working exit, sloped floors or ceilings,
+visibility, doors, sloped floors or ceilings,
 liquid areas, proper themes, etc... etc...
 
 <p>
