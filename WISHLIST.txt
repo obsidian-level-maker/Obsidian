@@ -8,7 +8,7 @@ WISH-LIST
 
 *  add in more scenery: lamps, computers etc
 
-*  improve monster selection (and placement)
+*  better monster selection
 
 
 ----------------------------------------------------------------
@@ -234,13 +234,21 @@ Sam's suggestions:
 ++ perform lighting
    (sky vector = '1 2 4')
 
++  only copy _used_ textures into the MipTex lump
+
 +  liquid areas
+
++  support the Boss maps (next map = "start")
+     E1M7 : get rune, electrocute Chthon
+     E2M6 : wood floor, funky bridge, kill vores to get rune
+     E3M6 : castley, lavay, teleport-in fiend
+     e4M7 : blue maze, spawn, kill vores to get rune
 
 -  better exits
 
 -  create "oblige" logo miptex [.wal for QuakeII]
 
--  intermission cameras:
+-  intermission camera (only need 1 -- user won't replay level)
      "classname" "info_intermission"
      "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
 

@@ -5,8 +5,8 @@ TODO
 QUAKE STUFF:
   -  OBLIGE logos : gui.quake_make_logo()
 
-room : step decision --> quest_select_tex
 
+BUG: some Quake maps have clipping issues (invisible barriers)
 
 BUG: switch in cave may end up inaccessible (clear the seed)
 
@@ -20,6 +20,14 @@ BUG: items occasionally appear on high fences
 BUG: corner supports are sometimes off the wall
 
 
++  fix monster quantities, which was messed up by cave code.
+
+   Also need some increase over the course of a level
+   (like 50% more monsters at end compared to start) and
+   vary the quantity (e.g. nothing in a room occasionally).
+
+   For Less or Scarce settings, create smaller room palettes
+
 -  Cave code: give each cave an 'info' field and make it a class
               with various methods, in particular for mapping
               between seed coords and cave cell coords.
@@ -28,13 +36,6 @@ BUG: corner supports are sometimes off the wall
    -  rework Build_small_exit to only use a single transform
 
 +  improve the jaggy edge algorithm (support corner triangles)
-
-+  review monster quantities, need some increase over the course
-   of a level (like 50% more monsters at end compared to start)
-   and maybe better pacing (e.g. nothing in a room occasionally).
-
-   Also may need to create smaller room palettes for small
-   quantities (i.e. Less or Scarce settings).
 
 
 -  prevent escapes over fences/windows near key pedestals (etc) by
@@ -52,6 +53,9 @@ CSG CODE:
 
 +  improve progress bar code to handle Lua part + CSG part
    (especially for Quake)
+
++  CSG DOOM: temporary file has ".TMP" extension, delete it on error
+             kill the temp/ folder  (NB: used by wolf too)
 
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush
