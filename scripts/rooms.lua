@@ -2280,6 +2280,8 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
     local prec = GAME.lighting_precision or "medium"
+
+    if OB_CONFIG.game == "quake" then prec = "low" end
     if R.outdoor then prec = "low" end
     if S.content == "wotsit" then prec = "low" end
 
