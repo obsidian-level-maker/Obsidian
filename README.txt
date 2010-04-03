@@ -2,7 +2,7 @@
 OBLIGE 3.57 Read-Me
 ===================
 
-by Andrew Apted.   February 2010
+by Andrew Apted.   April 2010
 
 
 INTRODUCTION
@@ -20,8 +20,10 @@ INTRODUCTION
     * can create Deathmatch levels
     * Heretic, Hexen and Quake support!
 
-  For complete information (much more than in this README)
-  please visit the web site: http://oblige.sourceforge.net/
+
+  Please visit the web site for complete information:
+
+    http://oblige.sourceforge.net/
 
 
 WHAT'S NEW?
