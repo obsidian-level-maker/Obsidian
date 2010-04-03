@@ -4,8 +4,10 @@
 
 all:
 	mkdir -p out
+	mkdir -p out/shots
 	cp *.css out/
 	cp pics/*.* out/
+	cp shots/*.* out/shots
 	cp favicon3.ico out/favicon.ico
 	htp -quiet index.htp         out/index.html
 	htp -quiet i_download.htp    out/i_download.html
