@@ -19,6 +19,7 @@ DOCS
 
 - usage
   - Batch mode section!
+  - Options window
 
 - about page
   - OBLIGE is FREE SOFTWARE with NO WARRANTY  [DONE]

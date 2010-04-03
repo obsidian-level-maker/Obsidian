@@ -31,10 +31,36 @@ high quality levels which are fun to play.
 
 <h3>CURRENT VERSION</h3>
 
-OBLIGE 3.51 is the current version.
+OBLIGE 3.57 is the current version.
 
 
 <h3>NEWS</h3>
+
+<div class="newsdate">????-Apr-2010:</div>
+<blockquote class="news">
+Version 3.57 of OBLIGE has been released.
+
+<p>
+Major changes include a new system of lighting the levels,
+which is rather simplistic and blocky
+but a big improvement over what was there before.
+Also this is the first version of V3 to include support for
+other games, namely: Heretic and Quake, although they are
+still in their early stages (especially Quake).
+
+<p>
+There is also lots of bug fixes and general improvements in this release,
+like Chris's new E1M8 boss map,
+faster CSG and node building code,
+support for FreeDOOM,
+and more restrained use of cavey areas
+(the TECH theme in particular).
+So what are you waiting for, go grab it!
+
+</blockquote>
+
+
+<hr style="clear: right;">
 
 <div class="newsdate">24-Feb-2010:</div>
 <blockquote class="news">

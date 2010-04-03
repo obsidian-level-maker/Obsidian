@@ -100,7 +100,7 @@ making a full game, each episode will stick to a single theme.
 
 <p>
 The "As Original" theme setting causes the themes in each episode
-to try and match the original game.  Note that when there are custom
+to try and match the original game.  Note: when there are custom
 themes (from a module) the same ordering is not guaranteed
 since a custom theme could replace one of them.
 
@@ -183,9 +183,11 @@ need to run the output WAD file through a node-builder program,
 since OBLIGE does this automatically.
 
 
+<!--- 
 <h3>OPTIONS WINDOW</h3>
 
-@@
+Blah blah blag
+--->
 
 
 <h3>SETTING UP FOR QUAKE</h3>
@@ -228,8 +230,10 @@ maps without any error message about missing texture wads.
 
 <p>
 
+<!---
 <i>(Note that Quake support is still under development and is
 not functional just yet)</i>
+--->
 
 
 <h3>MISC NOTES</h3>
