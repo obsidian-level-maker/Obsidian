@@ -37,6 +37,10 @@ BUG: corner supports are sometimes off the wall
 
 +  improve the jaggy edge algorithm (support corner triangles)
 
+-  missing stairwells:
+     The stairwell problem can be fixed by changing THEME.stairwell
+     in rooms.lua to 'THEME.stairwell_walls and THEME.stairwell_floors'.
+
 
 -  prevent escapes over fences/windows near key pedestals (etc) by
    raising the height of the fences/windows there.
@@ -57,16 +61,22 @@ CSG CODE:
 +  CSG DOOM: temporary file has ".TMP" extension, delete it on error
              kill the temp/ folder  (NB: used by wolf too)
 
+-  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
+   (similarly for 'tag', 'args' etc...).
+   Put delta_z in there too.
+
+-  make the [wbt]_face field of brushes be like entities and
+   store all the fields in a std::map.
+   Have a utility function to find / extract a field.
+
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush
     and area_vert references.
 
     Hence remove the CSG2_FindXXX rubbish.
 
-!!  DOOM: fix y_offset values (when brush side is truncated/extended)
-
--  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
-    (similarly for 'tag', 'args' etc...)
+!!  DOOM: fix y_offset values
+    (when have y_offset and brush side is truncated/extended)
 
 -  CSG DOOM: support entity.light
 
