@@ -2,9 +2,9 @@
 --  MODULE: Skulltag Monsters and Items
 ----------------------------------------------------------------
 --
---  Copyright (C) 2009 Andrew Apted
---  Copyright (C) 2009 Chris Pisarczyk
---  Copyright (C) 2009 Enhas
+--  Copyright (C)      2009 Andrew Apted
+--  Copyright (C)      2009 Chris Pisarczyk
+--  Copyright (C) 2009-2010 Enhas
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -106,14 +106,14 @@ SKULLTAG_MONSTERS =
 
   abaddon =
   {
-    prob=15, crazy_prob=25,
+    prob=15,
     health=1200, damage=65, attack="missile",
     density=0.2, float=true,
   },
 
   belphegor =
   {
-    prob=15, crazy_prob=25,
+    prob=10,
     health=1500, damage=80, attack="missile",
     density=0.2,
   },
@@ -124,7 +124,7 @@ SKULLTAG_WEAPONS =
 {
   minigun =
   {
-    pref=85, add_prob=40,  start_prob=20,
+    pref=85, add_prob=20, start_prob=10,
     rate=15, damage=10, attack="hitscan",
     ammo="bullet", per=1,
     give={ {ammo="bullet",count=20} },
@@ -132,7 +132,7 @@ SKULLTAG_WEAPONS =
 
   glaunch =
   {
-    pref=50, add_prob=40,  start_prob=20,
+    pref=50, add_prob=15, start_prob=8,
     rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
     ammo="rocket", per=1,
     give={ {ammo="rocket",count=2} },
@@ -140,7 +140,7 @@ SKULLTAG_WEAPONS =
 
   railgun =
   {
-    pref=20, add_prob=20, start_prob=7, rarity=3,
+    pref=20, add_prob=10, start_prob=5, rarity=3,
     rate=3.0, damage=200, attack="hitscan",
     ammo="cell", per=10,
     give={ {ammo="cell",count=40} },
@@ -148,7 +148,7 @@ SKULLTAG_WEAPONS =
 
   bfg10k =
   {
-    pref=15, add_prob=2, start_prob=0.1, rarity=4,
+    pref=15, add_prob=5, start_prob=1, rarity=4,
     rate=6.0, damage=160, attack="missile", splash={60,45,30,30,20,10},
     ammo="cell", per=5,
     give={ {ammo="cell",count=40} },
@@ -275,7 +275,7 @@ SKULLTAG_CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
-  less   = 15,
+  less   = 10,
   plenty = 50,
   more   = 120,
   heaps  = 300,
