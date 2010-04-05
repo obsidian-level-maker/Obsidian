@@ -1766,7 +1766,7 @@ function Build_lift(S, skin, skin2, tag)
   Trans_brush(lift_info, coords, -EXTREME_H, high_z - 8)
 
 
-  local front_coords = get_wall_coords(S, 10-side, 128)
+  local front_coords = get_wall_coords(S, 10-side, 64)
   local front_info   = get_mat(w_tex, f_tex)
 
   Trans_brush(front_info, front_coords, -EXTREME_H, low_z);
