@@ -31,13 +31,12 @@
 #include "csg_main.h"
 
 #include "ui_chooser.h"
+#include "img_all.h"
 
 #include "q_bsp.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
-
-std::vector<q1MapModel_c *> q1_all_mapmodels;
 
 q1MapModel_c::q1MapModel_c() :
     x1(0), y1(0), z1(0),
@@ -54,6 +53,8 @@ q1MapModel_c::~q1MapModel_c()
   delete y_face;
   delete z_face;
 }
+
+std::vector<q1MapModel_c *> q1_all_mapmodels;
 
 
 static char *level_name;
@@ -126,7 +127,7 @@ static void ClearMipTex(void)
   // built-in textures
   Q1_AddMipTex("error");   // #0
   Q1_AddMipTex("missing"); // #1
-  Q1_AddMipTex("oblige");  // #2
+  Q1_AddMipTex("o_carve"); // #2
 }
 
 s32_t Q1_AddMipTex(const char *name)
@@ -186,6 +187,55 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
   }
 }
 
+static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
+{
+  SYS_ASSERT(strlen(name) < 16);
+
+  miptex_t mm_tex;
+
+  strcpy(mm_tex.name, name);
+
+  int size = 64;
+
+  mm_tex.width  = LE_U32(size);
+  mm_tex.height = LE_U32(size);
+
+  int offset = sizeof(mm_tex);
+
+  for (int i = 0; i < MIP_LEVELS; i++)
+  {
+    mm_tex.offsets[i] = LE_U32(offset);
+
+    offset += (size * size);
+    size /= 2;
+  }
+
+  lump->Append(&mm_tex, sizeof(mm_tex));
+
+
+  size = 64;
+  int scale = 1;
+
+  static byte colormap[8] =
+  {
+    0, 16, 97, 101, 105, 109, 243, 243
+  };
+
+  for (int i = 0; i < MIP_LEVELS; i++)
+  {
+    for (int y = 0; y < size; y++)
+    for (int x = 0; x < size; x++)
+    {
+      byte pixel = colormap[data[(63-y*scale)*64 + x*scale] >> 5];
+
+      lump->Append(&pixel, 1);
+    }
+
+    size  /= 2;
+    scale *= 2;
+  }
+}
+
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
   if (strcmp(name, "error") == 0)
@@ -198,8 +248,11 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
     CreateDummyMip(lump, name, 4, 12);
     return;
   }
-
-  // TODO: "oblige"
+  if (strcmp(name, "o_carve") == 0)  // TEMP STUFF !!!!
+  {
+    CreateLogoMip(lump, name, logo_RELIEF.data);
+    return;
+  }
 
   int entry = WAD2_FindEntry(name);
 

@@ -596,6 +596,10 @@ QUAKE1_MATERIALS =
   WWOOD1_7   = { t="wwood1_7" },
   Z_EXIT     = { t="z_exit" },
 
+  -- Oblige special textures
+  O_CARVE    = { t="o_carve" },
+  O_BOLT     = { t="o_carve" },
+
 ---  +0basebtn
 ---  +0butn
 ---  +0butnn
@@ -689,7 +693,7 @@ QUAKE1_PICTURES =
   carve =
   {
     count=1,
-    pic_w="O_CARVE", width=64, height=64,
+    pic_w="O_CARVE", width=64, height=64, raise=64,
     x_offset=0, y_offset=0,
     side_t="METAL", floor="CEIL5_2", depth=8, 
     light=0.7,
