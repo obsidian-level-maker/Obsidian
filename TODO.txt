@@ -2,9 +2,6 @@
 TODO
 ====
 
-QUAKE STUFF:
-  -  OBLIGE logos : gui.quake_make_logo()
-
 
 BUG: some Quake maps have clipping issues (invisible barriers)
 

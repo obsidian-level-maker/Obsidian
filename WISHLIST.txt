@@ -229,12 +229,15 @@ Sam's suggestions:
   QUAKE
 ----------------------------------------------------------------
 
++  better miptex handling:
+   -  only copy _used_ textures into the MipTex lump
+   -  support multiple WD2 files : gui.quake_add_textures
+   -  create OBLIGE logos : gui.quake_make_logo()
+
 ++ perform visibility
 
 ++ perform lighting
    (sky vector = '1 2 4')
-
-+  only copy _used_ textures into the MipTex lump
 
 +  liquid areas
 
@@ -246,15 +249,13 @@ Sam's suggestions:
 
 -  better exits
 
--  create "oblige" logo miptex [.wal for QuakeII]
-
 -  intermission camera (only need 1 -- user won't replay level)
      "classname" "info_intermission"
      "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
 
--  create faces from stacked brushes behind a gap (cf. oa_dm7)
+-  nail shooters FTW
 
--  gui.quake_add_textures("data/quake_tex.wad")
+-  create faces from stacked brushes behind a gap (cf. oa_dm7)
 
 -  Option to create _debugging_ MAP file
 
@@ -268,6 +269,8 @@ Sam's suggestions:
 ----------------------------------------------------------------
   QUAKE II
 ----------------------------------------------------------------
+
+-  create oblige logos (.wal entries)
 
 -  need to store wall brushes into a big list (qLeaf_c)
    and "split" them with Split_XY (if purely on one side,
