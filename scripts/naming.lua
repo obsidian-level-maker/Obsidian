@@ -21,10 +21,10 @@
 --
 ----------------------------------------------------------------
 --
---  Thanks to "JohnnyRancid" who contributed many of the
+--  Thanks to JohnnyRancid who contributed many of the
 --  complete level names and a lot of cool words.
 --
---  Thanks to "Enhas" for the PSYCHO names.
+--  Thanks to Enhas and Chris for their additions.
 --
 ----------------------------------------------------------------
 
