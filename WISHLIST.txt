@@ -158,6 +158,8 @@ SKY GENERATOR:
 
 -  support for the DECORATE lump
 
+-  better starting scenarios (e.g. fix raising_starts)
+
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
@@ -167,9 +169,6 @@ SKY GENERATOR:
    slightly lower than surrounds.
 
 -  generate episode names (M_EPI# etc).
-
--  generate DEMO# lumps : use nomonster mode, guide the player
-   to get each key / switch / exit room.
 
 -  build our own REJECT lump (use vis info like Quake)
 
