@@ -97,7 +97,9 @@ PRE { font-size: larger; }
     padding-top: 30px;
 }
 
-.screenshot { padding: 16px; }
+.shot_area { text-align: center; }
+
+.screenshot { padding: 16px; margin: 0px; border: 0px solid black; }
 
 .qsavetex li {
     color: #444;

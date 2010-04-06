@@ -19,6 +19,7 @@
 
 <h3>DOOM SCREENSHOTS</h3>
 
+<div class="shot_area">
 <img class="screenshot" src="shots/doom_069.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/doom_017.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/doom_026.png" alt="SCREENSHOT" width="320" height="240">
@@ -33,20 +34,23 @@
 <img class="screenshot" src="shots/doom_112.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/doom_161.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/doom_014.png" alt="SCREENSHOT" width="320" height="240">
-
+</div>
 
 <h3>HERETIC SCREENSHOTS</h3>
 
+<div class="shot_area">
 <img class="screenshot" src="shots/heretic_08.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/heretic_13.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/heretic_37.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/heretic_56.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/heretic_69.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/heretic_70.png" alt="SCREENSHOT" width="320" height="240">
+</div>
 
 
 <h3>QUAKE SCREENSHOTS</h3>
 
+<div class="shot_area">
 <img class="screenshot" src="shots/quake_018.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/quake_035.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/quake_056.png" alt="SCREENSHOT" width="320" height="240">
@@ -59,6 +63,7 @@
 <img class="screenshot" src="shots/quake_193.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/quake_031.png" alt="SCREENSHOT" width="320" height="240">
 <img class="screenshot" src="shots/quake_217.png" alt="SCREENSHOT" width="320" height="240">
+</div>
 
 </div class="rest">
 
