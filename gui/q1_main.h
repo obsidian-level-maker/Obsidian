@@ -21,15 +21,11 @@
 #ifndef __OBLIGE_QUAKE1_H__
 #define __OBLIGE_QUAKE1_H__
 
-
-
-
-//------------------------------------------------------------------------
-// INTERNAL API
-//------------------------------------------------------------------------
-
 class qLump_c;
 class area_face_c;
+
+extern int q1_flat_lightmaps[256];
+
 
 class q1MapModel_c
 {
@@ -60,7 +56,6 @@ void Q1_CreateModel(void);
 // q1_clip.cc
 
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip);
-
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

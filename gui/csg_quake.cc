@@ -41,6 +41,9 @@
 
 #define FACE_MAX_SIZE  240
 
+#define LIGHT_INDOOR   64
+#define LIGHT_OUTDOOR  100
+
 
 extern void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf);
 
@@ -103,6 +106,8 @@ public:
 
   area_face_c *w_face;
 
+  int light;
+
   /* WALL STUFF */
 
   rSide_c *side;
@@ -115,7 +120,7 @@ public:
   rWindingVerts_c *UU;
 
 public:
-  rFace_c() : index(-1)
+  rFace_c() : index(-1), light(0)
   { }
 };
 
@@ -321,6 +326,8 @@ public:
 
   int cluster;
 
+  int light;
+
 
   /* NODE STUFF */
 
@@ -354,7 +361,7 @@ public:
 public:
   // LEAF
   rNode_c() : lf_contents(CONTENTS_EMPTY), sides(),
-              winding(NULL), region(NULL), cluster(-1),
+              winding(NULL), region(NULL), cluster(-1), light(LIGHT_INDOOR),
               front(NULL), back(NULL), wi_verts(NULL),
               faces(), index(-1)
   {
@@ -1228,7 +1235,7 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
     static int foo; foo++;
     raw_face.styles[0] = 0; // (foo & 3); //!!!!!
 
-    raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, rand()&0x7F);
+    raw_face.lightofs = q1_flat_lightmaps[F->light];
   }
 }
 
@@ -1312,7 +1319,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
     static int foo = 0; foo++;
     raw_face.styles[0] = 0; // (foo & 3); //!!!!!
 
-    raw_face.lightofs = 100; //!!!! Quake1_LightAddBlock(ext_W, ext_H, 0x80|(rand()&0x7F));
+    raw_face.lightofs = q1_flat_lightmaps[F->light];
   }
 }
 
@@ -1383,6 +1390,7 @@ static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
       double nz2 = z1 + (z2 - z1) * (i+1) / (double)num;
 
       rFace_c * F = NewFace(S, nz1, nz2, av);
+      F->light = LEAF->light;
 
       LEAF->AddFace(F);
       S->on_partition->AddFace(F);
@@ -1461,6 +1469,13 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
   
   merge_gap_c *G = R->gaps[gap];
 
+  if (gap == (int)R->gaps.size()-1 && G->t_brush->bkind == BKIND_Sky)
+    LEAF->light = LIGHT_OUTDOOR;
+  else if (G->GetZ2() > G->GetZ1()+150)
+    LEAF->light = LIGHT_INDOOR;
+  else
+    LEAF->light = LIGHT_INDOOR * 2 / 3;
+
   for (unsigned int i = 0; i < winding->sides.size(); i++)
   {
     Side_BuildFaces(LEAF, winding->sides[i], G);
@@ -1482,6 +1497,7 @@ if (UU->count < 3) return; //!!!!!!!!!!
     if (LEAF->gap == gap)
     {
       rFace_c *F = NewFace(kind, N->z, UU, w_face);
+      F->light = LEAF->light;
 
       LEAF->AddFace(F);
       N->AddFace(F);

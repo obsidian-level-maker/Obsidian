@@ -38,6 +38,9 @@
 #include "q1_structs.h"
 
 
+int q1_flat_lightmaps[256];
+
+
 q1MapModel_c::q1MapModel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),
@@ -218,7 +221,8 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
 
   static byte colormap[8] =
   {
-    0, 16, 97, 101, 105, 109, 243, 243
+    // 0, 16, 97, 101, 105, 109, 243, 243
+    16, 97, 103, 109, 243, 243, 243, 243
   };
 
   for (int i = 0; i < MIP_LEVELS; i++)
@@ -584,6 +588,21 @@ int Q1_add_mapmodel(lua_State *L)
   return 1;
 }
 
+static void Q1_MakeFlatLightmaps()
+{
+  byte data[17*17];
+
+  for (int level = 0; level < 256; level += 2)
+  {
+    for (int i = 0; i < 17*17; i++)
+      data[i] = level;
+
+    q1_flat_lightmaps[level] = BSP_AddLightBlock(17, 17, data);
+
+    q1_flat_lightmaps[level+1] = q1_flat_lightmaps[level];
+  }
+}
+
 
 //------------------------------------------------------------------------
 
@@ -695,11 +714,7 @@ void quake1_game_interface_c::EndLevel()
   BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
   BSP_PrepareLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 
-//!!!! TEMP CRUD
-byte solid_light[512];
-for (int L=0; L < 512; L++) solid_light[L] = 64;
-BSP_AddLightBlock(16, 32, solid_light);
-
+  Q1_MakeFlatLightmaps();
 
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
