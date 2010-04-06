@@ -190,7 +190,7 @@ Blah blah blag
 --->
 
 
-<h3>SETTING UP FOR QUAKE</h3>
+<h3>QUAKE SETUP</h3>
 
 Quake levels have the unusual feature of including a full copy
 of every texture which they use.
@@ -247,7 +247,7 @@ Most games let you play at different skill levels
 (e.g. Hurt-Me-Plenty vs Ultra-Violence),
 and OBLIGE takes them into account.  Easier skill levels
 will have less monsters than harder skill levels,
-and health/ammo are also affected.
+and health/ammo are also adjusted.
 
 <p>
 You should use a Source Port to play the levels, because the
@@ -256,6 +256,13 @@ architecture which OBLIGE creates.  For example, you might
 get the "Visplane Overflow" error which quits the game.
 DOOM.EXE also crashes when saving a level which has
 too many things in it.
+
+<p>
+For Quake, call the output file <b>PAK2.pak</b> and place it
+in the ID1 folder where Quake is installed.
+Then start a game normally.
+Delete the PAK2.pak file when you want to play the original
+Quake levels.
 
 <!---
 In Wolfenstein-3D mode, the "Build" button does not bring up
