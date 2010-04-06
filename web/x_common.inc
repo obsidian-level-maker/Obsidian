@@ -40,7 +40,7 @@
 </block>
 
 <block IndexScreens>
-  <!--- a href="i_screens.html"] Screenshots [/a --->
+  <a href="i_screens.html">Screenshots</a>
 </block>
 
 <block IndexDownload>

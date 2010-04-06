@@ -32,8 +32,8 @@ the code lurks somewhere deep in the SVN repository.
 for the level creation logic and C++ for the GUI front-end
 and WAD output code.  This evolved with many features and
 support for several games to become the first public release:
-OBLIGE 0.81 (January 2007).
-The last release of the V2 codebase was version 0.97 (May 2008).
+OBLIGE 0.81 in January 2007.
+The last release of the V2 codebase was version 0.97 in May 2008.
 
 <p>
 <b>Oblige V3</b> is the current incarnation.
