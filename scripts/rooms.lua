@@ -2127,7 +2127,8 @@ gui.printf("do_teleport\n")
       local angle = player_angle(S)
       local dist = 56
 
-      if PARAM.raising_start and R.svolume >= 20 and not R.natural
+      -- TODO: fix this
+      if false and PARAM.raising_start and R.svolume >= 20 and not R.natural
          and THEME.raising_start_switch and rand_odds(25)
       then
         gui.debugf("Raising Start made\n")
