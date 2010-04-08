@@ -23,8 +23,8 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "3.57"
-#define OBLIGE_HEX_VER  0x357
+#define OBLIGE_VERSION  "3.58"
+#define OBLIGE_HEX_VER  0x358
 
 extern const char *install_path;
 extern const char *working_path;
