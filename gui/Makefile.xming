@@ -85,6 +85,7 @@ OBJS=	main.o      \
 	ui_about.o  \
 	ui_build.o  \
 	ui_chooser.o \
+	ui_console.o \
 	ui_dialog.o \
 	ui_game.o   \
 	ui_level.o  \
