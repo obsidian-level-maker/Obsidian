@@ -49,71 +49,44 @@ class UI_ConLine : public Fl_Group
 friend class UI_Console;
 
 private:
-//  std::string line;
-
-public:
-  UI_ConLine(int x, int y, int w, int h, const char *line);
-  virtual ~UI_ConLine();
-
-public:
-  int CalcHeight() const;
+  std::string unparsed;
 
 private:
-//  static void callback_Foo(Fl_Widget *w, void *data);
+  void Parse()
+  {
+    // convert the text into one or more Fl_Boxs
+
+    Fl_Box *K = new Fl_Box(FL_NO_BOX, x(), y(), w(), h(), NULL);
+
+    K->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    K->labelcolor(FL_LIGHT1);
+    K->copy_label(unparsed.c_str());
+
+    add(K);
+  }
+
+public:
+  UI_ConLine(int x, int y, int w, int h, const char *line) :
+    Fl_Group(x, y, w, h), unparsed(line)
+  {
+    end(); // cancel begin() in Fl_Group constructor
+   
+    resizable(NULL);
+
+    Parse();
+  }
+
+  virtual ~UI_ConLine()
+  {
+    // TODO
+  }
+
+public:
+  int CalcHeight() const
+  {
+    return LINE_H;
+  }
 };
-
-
-UI_ConLine::UI_ConLine(int x, int y, int w, int h, const char *line) :
-    Fl_Group(x, y, w, h)
-{
-  end(); // cancel begin() in Fl_Group constructor
- 
-  resizable(NULL);
-
-//  box(FL_THIN_UP_BOX);
-//  color(BUILD_BG, BUILD_BG);
-
-///  mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24+KF*2, label);
-///  add(mod_button);
- 
-  ///  char *datum = StringPrintf("%s = %s", _key, _value);
-
-fprintf(stderr, "line = [%s]\n", line);
-  Fl_Box *KK = new Fl_Box(FL_NO_BOX, x, y, w, h, NULL);
-  KK->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  KK->labelcolor(FL_LIGHT1);
-  KK->copy_label(line);
-
-  add(KK);
-
-//  Fl_Box * VV = new Fl_Box(FL_NO_BOX, x+w/4, y, w-w/4, h, _value);
-//  VV->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-//  ColorFromType(VV, _type);
-//  add(VV);
-
-
-//  hide();
-}
-
-
-UI_ConLine::~UI_ConLine()
-{
-}
-
-
-int UI_ConLine::CalcHeight() const
-{
-  return LINE_H;
-
-/*
-  int h = 4 + 24 + KF*2 + 6;  // check button
-
-  if (mod_button->value() && children() > 1)
-    h += (children() - 1) * (28 + KF*2) + 4;
-
-  return h;
-*/
-}
 
 
 //----------------------------------------------------------------
@@ -135,7 +108,7 @@ public:
 class UI_Console : public Fl_Group
 {
 private:
-  Fl_Group *datum_pack;
+  Fl_Group *all_lines;
 
   Fl_Scrollbar *sbar;
 
@@ -148,83 +121,65 @@ private:
   // total height of all shown data
   int total_h;
 
-public:
-  UI_Console(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_Console();
-
-public:
-  void AddLine(const char *line);
-
 private:
   void PositionAll(UI_ConLine *focus = NULL);
+
+public:
+  UI_Console(int x, int y, int w, int h, const char *label = NULL) :
+    Fl_Group(x, y, w, h, label)
+  {
+    end(); // cancel begin() in Fl_Group constructor
+   
+    int cy = y;
+
+    // area for module list
+    mx = x+0;
+    my = cy;
+    mw = w-0 - Fl::scrollbar_size();
+    mh = y+h-cy;
+
+    offset_y = 0;
+    total_h  = 0;
+
+
+    sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
+    sbar->callback(callback_Scroll, this);
+
+    add(sbar);
+
+
+    all_lines = new My_ClipGroup(mx+4, my+4, mw-8, mh-8);
+    all_lines->end();
+
+    all_lines->box(FL_FLAT_BOX);
+    all_lines->color(CONSOLE_BG);
+    all_lines->resizable(NULL);
+
+    add(all_lines);
+  }
+
+  virtual ~UI_Console()
+  {
+    // TODO
+  }
+
+public:
+  void AddLine(const char *line)
+  {
+    UI_ConLine *M = new UI_ConLine(mx, my, mw-4, LINE_H, line);
+
+  ///  M->mod_button->callback(callback_ModEnable, M);
+
+    all_lines->add(M);
+
+    PositionAll();
+
+  ///???  M->redraw();
+  }
 
   static void callback_Scroll(Fl_Widget *w, void *data);
   static void callback_Bar(Fl_Widget *w, void *data);
 };
-
-
-UI_Console::UI_Console(int x, int y, int w, int h, const char *label) :
-    Fl_Group(x, y, w, h, label)
-{
-  end(); // cancel begin() in Fl_Group constructor
- 
-//  box(FL_FLAT_BOX);
-//  color(WINDOW_BG, WINDOW_BG);
-// color(BUILD_BG, BUILD_BG);
-
-
-  int cy = y;
-
-
-  // area for module list
-  mx = x+0;
-  my = cy;
-  mw = w-0 - Fl::scrollbar_size();
-  mh = y+h-cy;
-
-  offset_y = 0;
-  total_h  = 0;
-
-
-  sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
-  sbar->callback(callback_Scroll, this);
-
-  add(sbar);
-
-
-  datum_pack = new My_ClipGroup(mx+4, my+4, mw-8, mh-8);
-  datum_pack->end();
-
-///---  datum_pack->align(FL_ALIGN_INSIDE);
-///---  datum_pack->labeltype(FL_NORMAL_LABEL);
-///---  datum_pack->labelsize(FL_NORMAL_SIZE+6);
-
-  datum_pack->box(FL_FLAT_BOX);
-  datum_pack->color(CONSOLE_BG);
-  datum_pack->resizable(NULL);
-
-  add(datum_pack);
-}
-
-
-UI_Console::~UI_Console()
-{
-}
-
-
-void UI_Console::AddLine(const char *line)
-{
-  UI_ConLine *M = new UI_ConLine(mx, my, mw-4, LINE_H, line);
-
-///  M->mod_button->callback(callback_ModEnable, M);
-
-  datum_pack->add(M);
-
-
-  PositionAll();
-
-///???  M->redraw();
-}
 
 
 void UI_Console::PositionAll(UI_ConLine *focus)
@@ -234,9 +189,9 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   {
     int best_dist = 9999;
 
-    for (int j = 0; j < datum_pack->children(); j++)
+    for (int j = 0; j < all_lines->children(); j++)
     {
-      UI_ConLine *M = (UI_ConLine *) datum_pack->child(j);
+      UI_ConLine *M = (UI_ConLine *) all_lines->child(j);
       SYS_ASSERT(M);
 
       if (!M->visible() || M->y() < my || M->y() >= my+mh)
@@ -257,9 +212,9 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   int new_height = 0;
   int spacing = 0;
 
-  for (int k = 0; k < datum_pack->children(); k++)
+  for (int k = 0; k < all_lines->children(); k++)
   {
-    UI_ConLine *M = (UI_ConLine *) datum_pack->child(k);
+    UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
     SYS_ASSERT(M);
 
     if (M->visible())
@@ -277,9 +232,9 @@ void UI_Console::PositionAll(UI_ConLine *focus)
     int focus_oy = focus->y() - my;
 
     int above_h = 0;
-    for (int k = 0; k < datum_pack->children(); k++)
+    for (int k = 0; k < all_lines->children(); k++)
     {
-      UI_ConLine *M = (UI_ConLine *) datum_pack->child(k);
+      UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
       if (M->visible() && M->y() < focus->y())
       {
         above_h += M->CalcHeight() + spacing;
@@ -307,9 +262,9 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   // reposition all the modules
   int ny = my - offset_y;
 
-  for (int j = 0; j < datum_pack->children(); j++)
+  for (int j = 0; j < all_lines->children(); j++)
   {
-    UI_ConLine *M = (UI_ConLine *) datum_pack->child(j);
+    UI_ConLine *M = (UI_ConLine *) all_lines->child(j);
     SYS_ASSERT(M);
 
     int nh = M->visible() ? M->CalcHeight() : 1;
@@ -330,7 +285,7 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   // l = length, total number of lines
   sbar->value(offset_y, mh, 0, total_h);
 
-  datum_pack->redraw();
+  all_lines->redraw();
 }
 
 
@@ -346,15 +301,15 @@ void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
   int dy = that->offset_y - previous_y;
 
   // simply reposition all the UI_ConLine widgets
-  for (int j = 0; j < that->datum_pack->children(); j++)
+  for (int j = 0; j < that->all_lines->children(); j++)
   {
-    Fl_Widget *F = that->datum_pack->child(j);
+    Fl_Widget *F = that->all_lines->child(j);
     SYS_ASSERT(F);
 
     F->resize(F->x(), F->y() - dy, F->w(), F->h());
   }
 
-  that->datum_pack->redraw();
+  that->all_lines->redraw();
 }
 
 
