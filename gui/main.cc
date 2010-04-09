@@ -338,7 +338,7 @@ static int special_key_handler(int event)
       ConPrintf("GAME.foobie =\n");
       for (int kk = 0; kk < 17; kk++) {
       ConPrintf("@2{\n");
-      ConPrintf("  foo = @3123\n");
+      ConPrintf("  foo = @3123 (room @ 1,2) @5kitty @6foo\n");
       ConPrintf("  BAZZA = @1\"foobie bletch\"\n");
       ConPrintf("  __exit = @2{ .... } @4expand\n");
       ConPrintf("@2}\n");

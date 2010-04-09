@@ -30,10 +30,11 @@
 
 #define CONSOLE_BG  FL_BLACK
 
+#define CONSOLE_FONT  FL_COURIER
+#define CON_FONT_H    (14 + KF * 2)
+
 #define CON_LINES   512
 
-
-#define MY_PURPLE  fl_rgb_color(208,0,208)
 
 #define LINE_H  (22 + KF * 2)
 
@@ -44,6 +45,26 @@ static UI_Console       *console_body;
 static Fl_Double_Window *console_win;
 
 
+#define MY_FL_COLOR(R,G,B) \
+          (Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
+
+static Fl_Color digit_colors[10] =
+{
+  MY_FL_COLOR(96, 96, 96),   // 0 : dark grey
+  MY_FL_COLOR(255,112,112),  // 1 : red
+  MY_FL_COLOR(72,255,72),    // 2 : green
+  MY_FL_COLOR(255,255,128),  // 3 : yellow
+
+  MY_FL_COLOR(128,128,255),  // 4 : blue
+  MY_FL_COLOR(0,255,255),    // 5 : cyan
+  MY_FL_COLOR(224,0,224),    // 6 : purple
+  MY_FL_COLOR(208,208,208),  // 7 : white
+
+  MY_FL_COLOR(255,176,64),   // 8 : orange
+  MY_FL_COLOR(200,144,112),  // 9 : brown
+};
+
+
 class UI_ConLine : public Fl_Group
 {
 friend class UI_Console;
@@ -52,17 +73,72 @@ private:
   std::string unparsed;
 
 private:
+  void AddBox(int& px, const char *text, int col)
+  {
+    SYS_ASSERT(col >= 0 && col < 10);
+
+    Fl_Box *K = new Fl_Box(FL_NO_BOX, px, y(), w(), h(), NULL);
+
+    K->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+    K->labelcolor(digit_colors[col]);
+    K->labelfont(CONSOLE_FONT);
+    K->labelsize(CON_FONT_H);
+    K->copy_label(text);
+
+    add(K);
+
+    fl_font(K->labelfont(), K->labelsize());
+
+    int pw=0, ph=0;  fl_measure(text, pw, ph);
+
+    px += pw;
+  }
+
   void Parse()
   {
     // convert the text into one or more Fl_Boxs
 
-    Fl_Box *K = new Fl_Box(FL_NO_BOX, x(), y(), w(), h(), NULL);
+    int px = x();
+    int color = 7;
 
-    K->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-    K->labelcolor(FL_LIGHT1);
-    K->copy_label(unparsed.c_str());
+    char *text = StringDup(unparsed.c_str());
+    char *pos  = text;
+    char *next;
 
-    add(K);
+    while (pos && *pos)
+    {
+      next = strchr(pos, '@');
+
+      // the '@' is not special when followed by whitespace
+      if (next && isspace(next[1]))
+      {
+        next[1] = '@'; // escape it for FLTK
+        next = strchr(next+2, '@');
+      }
+
+      if (next) *next++ = 0;
+
+      AddBox(px, pos, color);
+
+      if (next)
+      {
+        if (isdigit(*next))
+        {
+          color = *next++;
+          color -= '0';
+        }
+        else if (isalpha(*next))
+        {
+          char special = *next++;
+
+          // TODO
+        }
+      }
+
+      pos = next;
+    }
+
+    StringFree(text);
   }
 
 public:
@@ -380,9 +456,6 @@ void ConPrintf(const char *str, ...)
     buffer[MSG_BUF_LEN-2] = 0;
 
     // prefix each debugging line with a special symbol
-
-//!!!! TEMP CRUD
-for (int i = 0; i < MSG_BUF_LEN; i++) if (buffer[i] == '@') buffer[i] = '#';
 
     char *pos = buffer;
     char *next;
