@@ -70,6 +70,11 @@ int gui_raw_log_print(lua_State *L)
     const char *res = luaL_checkstring(L,1);
     SYS_ASSERT(res);
 
+    ConPrintf("%s", res);
+
+    if (res[0] == '@' && isdigit(res[1]))
+      res += 2;
+
     LogPrintf("%s", res);
   }
 
@@ -86,6 +91,12 @@ int gui_raw_debug_print(lua_State *L)
   {
     const char *res = luaL_checkstring(L,1);
     SYS_ASSERT(res);
+
+    if (true)  // FIXME: debug_onto_console
+      ConPrintf("%s", res);
+
+    if (res[0] == '@' && isdigit(res[1]))
+      res += 2;
 
     DebugPrintf("%s", res);
   }

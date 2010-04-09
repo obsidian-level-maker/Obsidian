@@ -33,7 +33,8 @@ function ob_traceback(msg)
     return msg
   end
 
-  gui.printf("\n\n****** ERROR OCCURRED ******\n\n");
+  gui.printf("\n\n")
+  gui.printf("@1****** ERROR OCCURRED ******\n\n")
   gui.printf("Stack Trace:\n")
 
   local stack_limit = 40
@@ -554,7 +555,8 @@ function ob_build_cool_shit()
   assert(OB_CONFIG)
   assert(OB_CONFIG.game)
 
-  gui.printf("\n\n~~~~~~~ Making Levels ~~~~~~~\n\n")
+  gui.printf("\n\n")
+  gui.printf("@5~~~~~~~ Making Levels ~~~~~~~\n\n")
 
   ob_read_all_config(false, true)
 
@@ -579,12 +581,14 @@ function ob_build_cool_shit()
     outfile:close()
   end
 
+  gui.printf("\n")
+
   if status == "abort" then
-    gui.printf("\n~~~~~~~ Build Aborted! ~~~~~~~\n\n")
+    gui.printf("@1~~~~~~~ Build Aborted! ~~~~~~~\n\n")
     return "abort"
   end
 
-  gui.printf("\n~~~~~~ Finished Making Levels ~~~~~~\n\n")
+  gui.printf("@5~~~~~~ Finished Making Levels ~~~~~~\n\n")
 
   return "ok"
 end
