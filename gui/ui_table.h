@@ -27,13 +27,10 @@ class UI_TableDatum : public Fl_Group
 friend class UI_TableViewer;
 
 private:
-  std::string key;
-  std::string type;
-  std::string value;
+//  std::string line;
 
 public:
-  UI_TableDatum(int x, int y, int w, int h,
-                const char *_key, const char *_type, const char *_value);
+  UI_TableDatum(int x, int y, int w, int h, const char *line);
   virtual ~UI_TableDatum();
 
 public:
@@ -65,7 +62,7 @@ public:
   virtual ~UI_TableViewer();
 
 public:
-  void AddDatum(const char *_key, const char *_type, const char *_value);
+  void AddLine(const char *line);
 
 private:
   void PositionAll(UI_TableDatum *focus = NULL);
@@ -77,7 +74,9 @@ private:
 
 extern UI_TableViewer * table_view;  // FIXME: TEMP STUFF
 
-void UI_CreateTableViewer();
+void UI_CreateConsole();
+
+void ConPrintf(const char *str, ...);
 
 
 #endif /* __UI_DEBUG_H__ */

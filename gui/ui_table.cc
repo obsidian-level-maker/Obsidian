@@ -68,11 +68,8 @@ static void ColorFromType(Fl_Widget *w, const char *type)
 //-----------------------------------------------------------------
 
 
-UI_TableDatum::UI_TableDatum(int x, int y, int w, int h,
-                             const char *_key, const char *_type,
-                             const char *_value) :
-    Fl_Group(x, y, w, h),
-    key(_key), type(_type), value(_value)
+UI_TableDatum::UI_TableDatum(int x, int y, int w, int h, const char *line) :
+    Fl_Group(x, y, w, h)
 {
   end(); // cancel begin() in Fl_Group constructor
  
@@ -86,18 +83,18 @@ UI_TableDatum::UI_TableDatum(int x, int y, int w, int h,
  
   ///  char *datum = StringPrintf("%s = %s", _key, _value);
 
-  Fl_Box *KK = new Fl_Box(FL_NO_BOX, x, y, w/4, h, _key);
+fprintf(stderr, "line = [%s]\n", line);
+  Fl_Box *KK = new Fl_Box(FL_NO_BOX, x, y, w, h, NULL);
   KK->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-  KK->labelcolor(FL_BLUE);
+  KK->labelcolor(FL_LIGHT1);
+  KK->copy_label(line);
 
   add(KK);
 
-  Fl_Box * VV = new Fl_Box(FL_NO_BOX, x+w/4, y, w-w/4, h, _value);
-  VV->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
-
-  ColorFromType(VV, _type);
-
-  add(VV);
+//  Fl_Box * VV = new Fl_Box(FL_NO_BOX, x+w/4, y, w-w/4, h, _value);
+//  VV->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+//  ColorFromType(VV, _type);
+//  add(VV);
 
 
 //  hide();
@@ -176,9 +173,9 @@ UI_TableViewer::~UI_TableViewer()
 }
 
 
-void UI_TableViewer::AddDatum(const char *_key, const char *_type, const char *_value)
+void UI_TableViewer::AddLine(const char *line)
 {
-  UI_TableDatum *M = new UI_TableDatum(mx, my, mw-4, LINE_H, _key, _type, _value);
+  UI_TableDatum *M = new UI_TableDatum(mx, my, mw-4, LINE_H, line);
 
 ///  M->mod_button->callback(callback_ModEnable, M);
 
@@ -331,9 +328,9 @@ void UI_TableViewer::callback_Bar(Fl_Widget *w, void *data)
 UI_TableViewer *table_view;
 
 
-void UI_CreateTableViewer()
+void UI_CreateConsole()
 {
-  Fl_Double_Window *win = new Fl_Double_Window(0, 0, 500, 400, "Lua Table Viewer");
+  Fl_Double_Window *win = new Fl_Double_Window(0, 0, 600, 400, "OBLIGE CONSOLE");
   win->end();
 
   win->color(WINDOW_BG, WINDOW_BG);
@@ -345,6 +342,40 @@ void UI_CreateTableViewer()
 /// FIXME  win->resizable(table_view);
 
   win->show();
+}
+
+void ConPrintf(const char *str, ...)
+{
+  if (table_view)
+  {
+    static char buffer[MSG_BUF_LEN];
+
+    va_list args;
+
+    va_start(args, str);
+    vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+    va_end(args);
+
+    buffer[MSG_BUF_LEN-2] = 0;
+
+    // prefix each debugging line with a special symbol
+
+for (int i = 0; i < MSG_BUF_LEN; i++) if (buffer[i] == '@') buffer[i] = '#';
+
+    char *pos = buffer;
+    char *next;
+
+    while (pos && *pos)
+    {
+      next = strchr(pos, '\n');
+
+      if (next) *next++ = 0;
+
+      table_view->AddLine(pos);
+
+      pos = next;
+    }
+  }
 }
 
 
