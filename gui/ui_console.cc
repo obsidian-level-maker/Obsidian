@@ -28,47 +28,42 @@
 #include "g_lua.h"
 
 
+#define CONSOLE_BG  FL_BLACK
+
+#define CON_LINES   512
+
+
 #define MY_PURPLE  fl_rgb_color(208,0,208)
 
 #define LINE_H  (22 + KF * 2)
 
 
-class My_ClipGroup : public Fl_Group
-{
-public:
-  My_ClipGroup(int X, int Y, int W, int H, const char *L = NULL) :
-      Fl_Group(X, Y, W, H, L)
-  {
-    clip_children(1);
-  }
+class UI_Console;
 
-  virtual ~My_ClipGroup()
-  { }
+static UI_Console       *console_body;
+static Fl_Double_Window *console_win;
+
+
+class UI_ConLine : public Fl_Group
+{
+friend class UI_Console;
+
+private:
+//  std::string line;
+
+public:
+  UI_ConLine(int x, int y, int w, int h, const char *line);
+  virtual ~UI_ConLine();
+
+public:
+  int CalcHeight() const;
+
+private:
+//  static void callback_Foo(Fl_Widget *w, void *data);
 };
 
 
-static void ColorFromType(Fl_Widget *w, const char *type)
-{
-  if (strcmp(type, "table") == 0)
-  {
-    w->labelcolor(FL_GREEN);
-    return;
-  }
-
-  if (strcmp(type, "number") == 0)
-  {
-    w->labelcolor(FL_YELLOW);
-    return;
-  }
-
-  w->labelcolor(FL_RED);
-}
-
-
-//-----------------------------------------------------------------
-
-
-UI_TableDatum::UI_TableDatum(int x, int y, int w, int h, const char *line) :
+UI_ConLine::UI_ConLine(int x, int y, int w, int h, const char *line) :
     Fl_Group(x, y, w, h)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -101,12 +96,12 @@ fprintf(stderr, "line = [%s]\n", line);
 }
 
 
-UI_TableDatum::~UI_TableDatum()
+UI_ConLine::~UI_ConLine()
 {
 }
 
 
-int UI_TableDatum::CalcHeight() const
+int UI_ConLine::CalcHeight() const
 {
   return LINE_H;
 
@@ -123,8 +118,52 @@ int UI_TableDatum::CalcHeight() const
 
 //----------------------------------------------------------------
 
+class My_ClipGroup : public Fl_Group
+{
+public:
+  My_ClipGroup(int X, int Y, int W, int H, const char *L = NULL) :
+      Fl_Group(X, Y, W, H, L)
+  {
+    clip_children(1);
+  }
 
-UI_TableViewer::UI_TableViewer(int x, int y, int w, int h, const char *label) :
+  virtual ~My_ClipGroup()
+  { }
+};
+
+
+class UI_Console : public Fl_Group
+{
+private:
+  Fl_Group *datum_pack;
+
+  Fl_Scrollbar *sbar;
+
+  // area occupied by datum list
+  int mx, my, mw, mh;
+
+  // number of pixels "lost" above the top of the module area
+  int offset_y;
+
+  // total height of all shown data
+  int total_h;
+
+public:
+  UI_Console(int x, int y, int w, int h, const char *label = NULL);
+  virtual ~UI_Console();
+
+public:
+  void AddLine(const char *line);
+
+private:
+  void PositionAll(UI_ConLine *focus = NULL);
+
+  static void callback_Scroll(Fl_Widget *w, void *data);
+  static void callback_Bar(Fl_Widget *w, void *data);
+};
+
+
+UI_Console::UI_Console(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
 {
   end(); // cancel begin() in Fl_Group constructor
@@ -153,7 +192,7 @@ UI_TableViewer::UI_TableViewer(int x, int y, int w, int h, const char *label) :
   add(sbar);
 
 
-  datum_pack = new My_ClipGroup(mx, my, mw, mh);
+  datum_pack = new My_ClipGroup(mx+4, my+4, mw-8, mh-8);
   datum_pack->end();
 
 ///---  datum_pack->align(FL_ALIGN_INSIDE);
@@ -161,21 +200,21 @@ UI_TableViewer::UI_TableViewer(int x, int y, int w, int h, const char *label) :
 ///---  datum_pack->labelsize(FL_NORMAL_SIZE+6);
 
   datum_pack->box(FL_FLAT_BOX);
-  datum_pack->color(FL_BLACK);
+  datum_pack->color(CONSOLE_BG);
   datum_pack->resizable(NULL);
 
   add(datum_pack);
 }
 
 
-UI_TableViewer::~UI_TableViewer()
+UI_Console::~UI_Console()
 {
 }
 
 
-void UI_TableViewer::AddLine(const char *line)
+void UI_Console::AddLine(const char *line)
 {
-  UI_TableDatum *M = new UI_TableDatum(mx, my, mw-4, LINE_H, line);
+  UI_ConLine *M = new UI_ConLine(mx, my, mw-4, LINE_H, line);
 
 ///  M->mod_button->callback(callback_ModEnable, M);
 
@@ -188,7 +227,7 @@ void UI_TableViewer::AddLine(const char *line)
 }
 
 
-void UI_TableViewer::PositionAll(UI_TableDatum *focus)
+void UI_Console::PositionAll(UI_ConLine *focus)
 {
   // determine focus [closest to top without going past it]
   if (! focus)
@@ -197,7 +236,7 @@ void UI_TableViewer::PositionAll(UI_TableDatum *focus)
 
     for (int j = 0; j < datum_pack->children(); j++)
     {
-      UI_TableDatum *M = (UI_TableDatum *) datum_pack->child(j);
+      UI_ConLine *M = (UI_ConLine *) datum_pack->child(j);
       SYS_ASSERT(M);
 
       if (!M->visible() || M->y() < my || M->y() >= my+mh)
@@ -220,7 +259,7 @@ void UI_TableViewer::PositionAll(UI_TableDatum *focus)
 
   for (int k = 0; k < datum_pack->children(); k++)
   {
-    UI_TableDatum *M = (UI_TableDatum *) datum_pack->child(k);
+    UI_ConLine *M = (UI_ConLine *) datum_pack->child(k);
     SYS_ASSERT(M);
 
     if (M->visible())
@@ -240,7 +279,7 @@ void UI_TableViewer::PositionAll(UI_TableDatum *focus)
     int above_h = 0;
     for (int k = 0; k < datum_pack->children(); k++)
     {
-      UI_TableDatum *M = (UI_TableDatum *) datum_pack->child(k);
+      UI_ConLine *M = (UI_ConLine *) datum_pack->child(k);
       if (M->visible() && M->y() < focus->y())
       {
         above_h += M->CalcHeight() + spacing;
@@ -270,7 +309,7 @@ void UI_TableViewer::PositionAll(UI_TableDatum *focus)
 
   for (int j = 0; j < datum_pack->children(); j++)
   {
-    UI_TableDatum *M = (UI_TableDatum *) datum_pack->child(j);
+    UI_ConLine *M = (UI_ConLine *) datum_pack->child(j);
     SYS_ASSERT(M);
 
     int nh = M->visible() ? M->CalcHeight() : 1;
@@ -295,10 +334,10 @@ void UI_TableViewer::PositionAll(UI_TableDatum *focus)
 }
 
 
-void UI_TableViewer::callback_Scroll(Fl_Widget *w, void *data)
+void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
 {
   Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
-  UI_TableViewer *that = (UI_TableViewer *)data;
+  UI_Console *that = (UI_Console *)data;
 
   int previous_y = that->offset_y;
 
@@ -306,7 +345,7 @@ void UI_TableViewer::callback_Scroll(Fl_Widget *w, void *data)
 
   int dy = that->offset_y - previous_y;
 
-  // simply reposition all the UI_TableDatum widgets
+  // simply reposition all the UI_ConLine widgets
   for (int j = 0; j < that->datum_pack->children(); j++)
   {
     Fl_Widget *F = that->datum_pack->child(j);
@@ -319,34 +358,61 @@ void UI_TableViewer::callback_Scroll(Fl_Widget *w, void *data)
 }
 
 
-void UI_TableViewer::callback_Bar(Fl_Widget *w, void *data)
+void UI_Console::callback_Bar(Fl_Widget *w, void *data)
 {
-  UI_TableDatum *M = (UI_TableDatum *)data;
+  UI_ConLine *M = (UI_ConLine *)data;
 }
 
 
-UI_TableViewer *table_view;
+//----------------------------------------------------------------
 
-
-void UI_CreateConsole()
+void UI_OpenConsole()
 {
-  Fl_Double_Window *win = new Fl_Double_Window(0, 0, 600, 400, "OBLIGE CONSOLE");
-  win->end();
+  if (console_win)
+    return;
 
-  win->color(WINDOW_BG, WINDOW_BG);
+  console_win = new Fl_Double_Window(0, 0, 600, 400, "OBLIGE CONSOLE");
+  console_win->end();
 
-  table_view = new UI_TableViewer(0, 0, win->w(), win->h());
+  console_win->color(CONSOLE_BG, CONSOLE_BG);
 
-  win->add(table_view);
+  if (! console_body)
+  {
+    console_body = new UI_Console(0, 0, console_win->w(), console_win->h());
+  }
+  // else RESIZE body to WIN SIZE
 
-/// FIXME  win->resizable(table_view);
+  console_win->add(console_body);
 
-  win->show();
+/// FIXME  console_win->resizable(console_body);
+
+  console_win->show();
 }
+
+void UI_CloseConsole()
+{
+  if (console_win)
+  {
+    // we keep the body around
+    console_win->remove(console_body);
+
+    delete console_win;
+    console_win = NULL;
+  }
+}
+
+void UI_ToggleConsole()
+{
+  if (console_win)
+    UI_CloseConsole();
+  else
+    UI_OpenConsole();
+}
+
 
 void ConPrintf(const char *str, ...)
 {
-  if (table_view)
+  if (console_body)
   {
     static char buffer[MSG_BUF_LEN];
 
@@ -360,6 +426,7 @@ void ConPrintf(const char *str, ...)
 
     // prefix each debugging line with a special symbol
 
+//!!!! TEMP CRUD
 for (int i = 0; i < MSG_BUF_LEN; i++) if (buffer[i] == '@') buffer[i] = '#';
 
     char *pos = buffer;
@@ -371,13 +438,12 @@ for (int i = 0; i < MSG_BUF_LEN; i++) if (buffer[i] == '@') buffer[i] = '#';
 
       if (next) *next++ = 0;
 
-      table_view->AddLine(pos);
+      console_body->AddLine(pos);
 
       pos = next;
     }
   }
 }
-
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

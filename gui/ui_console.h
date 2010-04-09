@@ -21,63 +21,11 @@
 #ifndef __UI_DEBUG_H__
 #define __UI_DEBUG_H__
 
-
-class UI_TableDatum : public Fl_Group
-{
-friend class UI_TableViewer;
-
-private:
-//  std::string line;
-
-public:
-  UI_TableDatum(int x, int y, int w, int h, const char *line);
-  virtual ~UI_TableDatum();
-
-public:
-  int CalcHeight() const;
-
-private:
-//  static void callback_Foo(Fl_Widget *w, void *data);
-};
-
-
-class UI_TableViewer : public Fl_Group
-{
-private:
-  Fl_Group *datum_pack;
-
-  Fl_Scrollbar *sbar;
-
-  // area occupied by datum list
-  int mx, my, mw, mh;
-
-  // number of pixels "lost" above the top of the module area
-  int offset_y;
-
-  // total height of all shown data
-  int total_h;
-
-public:
-  UI_TableViewer(int x, int y, int w, int h, const char *label = NULL);
-  virtual ~UI_TableViewer();
-
-public:
-  void AddLine(const char *line);
-
-private:
-  void PositionAll(UI_TableDatum *focus = NULL);
-
-  static void callback_Scroll(Fl_Widget *w, void *data);
-  static void callback_Bar(Fl_Widget *w, void *data);
-};
-
-
-extern UI_TableViewer * table_view;  // FIXME: TEMP STUFF
-
-void UI_CreateConsole();
+void UI_OpenConsole();
+void UI_CloseConsole();
+void UI_ToggleConsole();
 
 void ConPrintf(const char *str, ...);
-
 
 #endif /* __UI_DEBUG_H__ */
 

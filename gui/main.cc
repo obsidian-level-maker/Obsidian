@@ -333,6 +333,18 @@ static int special_key_handler(int event)
       main_win->HideModules(hide_module_panel);
       return 1;
 
+    case FL_F+8:
+      UI_ToggleConsole();
+      ConPrintf("GAME.foobie =\n");
+      for (int kk = 0; kk < 17; kk++) {
+      ConPrintf("@2{\n");
+      ConPrintf("  foo = @3123\n");
+      ConPrintf("  BAZZA = @1\"foobie bletch\"\n");
+      ConPrintf("  __exit = @2{ .... } @4expand\n");
+      ConPrintf("@2}\n");
+}
+      return 1;
+
     default: break;
   }
 
