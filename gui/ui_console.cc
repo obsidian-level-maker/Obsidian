@@ -36,7 +36,7 @@
 #define CON_LINES   512
 
 
-#define LINE_H  (22 + KF * 2)
+#define LINE_H  (18 + KF * 2)
 
 
 class UI_Console;
@@ -50,17 +50,17 @@ static Fl_Double_Window *console_win;
 
 static Fl_Color digit_colors[10] =
 {
-  MY_FL_COLOR(96, 96, 96),   // 0 : dark grey
-  MY_FL_COLOR(255,112,112),  // 1 : red
-  MY_FL_COLOR(72,255,72),    // 2 : green
+  MY_FL_COLOR(96,  96, 96),  // 0 : dark grey
+  MY_FL_COLOR(255, 64, 64),  // 1 : red
+  MY_FL_COLOR(72, 255, 72),  // 2 : green
   MY_FL_COLOR(255,255,128),  // 3 : yellow
 
   MY_FL_COLOR(128,128,255),  // 4 : blue
-  MY_FL_COLOR(0,255,255),    // 5 : cyan
-  MY_FL_COLOR(224,0,224),    // 6 : purple
+  MY_FL_COLOR(0,  255,255),  // 5 : cyan
+  MY_FL_COLOR(224,  0,224),  // 6 : purple
   MY_FL_COLOR(208,208,208),  // 7 : white
 
-  MY_FL_COLOR(255,176,64),   // 8 : orange
+  MY_FL_COLOR(255,176, 64),  // 8 : orange
   MY_FL_COLOR(200,144,112),  // 9 : brown
 };
 
@@ -81,7 +81,7 @@ private:
 
     K->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     K->labelcolor(digit_colors[col]);
-    K->labelfont(CONSOLE_FONT);
+//!!    K->labelfont(CONSOLE_FONT);
     K->labelsize(CON_FONT_H);
     K->copy_label(text);
 
@@ -143,7 +143,7 @@ private:
 
 public:
   UI_ConLine(int x, int y, int w, int h, const char *line) :
-    Fl_Group(x, y, w, h), unparsed(line)
+      Fl_Group(x, y, w, h), unparsed(line)
   {
     end(); // cancel begin() in Fl_Group constructor
    
@@ -184,6 +184,8 @@ public:
 class UI_Console : public Fl_Group
 {
 private:
+  int count;
+
   Fl_Group *all_lines;
 
   Fl_Scrollbar *sbar;
@@ -202,7 +204,8 @@ private:
 
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
-    Fl_Group(x, y, w, h, label)
+      Fl_Group(x, y, w, h, label),
+      count(0), offset_y(0), total_h(0)
   {
     end(); // cancel begin() in Fl_Group constructor
    
@@ -213,9 +216,6 @@ public:
     my = cy;
     mw = w-0 - Fl::scrollbar_size();
     mh = y+h-cy;
-
-    offset_y = 0;
-    total_h  = 0;
 
 
     sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
@@ -242,11 +242,18 @@ public:
 public:
   void AddLine(const char *line)
   {
+    if (count >= CON_LINES)
+    {
+      all_lines->remove(all_lines->child(0));
+      count--;
+    }
+
     UI_ConLine *M = new UI_ConLine(mx, my, mw-4, LINE_H, line);
 
   ///  M->mod_button->callback(callback_ModEnable, M);
 
     all_lines->add(M);
+    count++;
 
     PositionAll();
 
