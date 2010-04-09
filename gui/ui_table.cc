@@ -30,7 +30,7 @@
 
 #define MY_PURPLE  fl_rgb_color(208,0,208)
 
-#define LINE_H  (20 + KF * 2)
+#define LINE_H  (22 + KF * 2)
 
 
 class My_ClipGroup : public Fl_Group
@@ -47,6 +47,24 @@ public:
 };
 
 
+static void ColorFromType(Fl_Widget *w, const char *type)
+{
+  if (strcmp(type, "table") == 0)
+  {
+    w->labelcolor(FL_GREEN);
+    return;
+  }
+
+  if (strcmp(type, "number") == 0)
+  {
+    w->labelcolor(FL_YELLOW);
+    return;
+  }
+
+  w->labelcolor(FL_RED);
+}
+
+
 //-----------------------------------------------------------------
 
 
@@ -60,18 +78,27 @@ UI_TableDatum::UI_TableDatum(int x, int y, int w, int h,
  
   resizable(NULL);
 
-  box(FL_THIN_UP_BOX);
-  color(BUILD_BG, BUILD_BG);
+//  box(FL_THIN_UP_BOX);
+//  color(BUILD_BG, BUILD_BG);
 
 ///  mod_button = new Fl_Check_Button(x+5, y+4, w-20, 24+KF*2, label);
 ///  add(mod_button);
  
-  char *datum = StringPrintf("%s = %s", _key, _value);
+  ///  char *datum = StringPrintf("%s = %s", _key, _value);
 
-  Fl_Box *B = new Fl_Box(FL_FLAT_BOX, x, y, w, h, datum);
-  B->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  Fl_Box *KK = new Fl_Box(FL_NO_BOX, x, y, w/4, h, _key);
+  KK->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  KK->labelcolor(FL_BLUE);
 
-  add(B);
+  add(KK);
+
+  Fl_Box * VV = new Fl_Box(FL_NO_BOX, x+w/4, y, w-w/4, h, _value);
+  VV->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+
+  ColorFromType(VV, _type);
+
+  add(VV);
+
 
 //  hide();
 }
@@ -105,8 +132,9 @@ UI_TableViewer::UI_TableViewer(int x, int y, int w, int h, const char *label) :
 {
   end(); // cancel begin() in Fl_Group constructor
  
-  box(FL_FLAT_BOX);
-  color(WINDOW_BG, WINDOW_BG);
+//  box(FL_FLAT_BOX);
+//  color(WINDOW_BG, WINDOW_BG);
+// color(BUILD_BG, BUILD_BG);
 
 
   int cy = y;
@@ -128,15 +156,15 @@ UI_TableViewer::UI_TableViewer(int x, int y, int w, int h, const char *label) :
   add(sbar);
 
 
-  datum_pack = new My_ClipGroup(mx, my, mw, mh, "\nData:");
+  datum_pack = new My_ClipGroup(mx, my, mw, mh);
   datum_pack->end();
 
-  datum_pack->align(FL_ALIGN_INSIDE);
-  datum_pack->labeltype(FL_NORMAL_LABEL);
-  datum_pack->labelsize(FL_NORMAL_SIZE+6);
+///---  datum_pack->align(FL_ALIGN_INSIDE);
+///---  datum_pack->labeltype(FL_NORMAL_LABEL);
+///---  datum_pack->labelsize(FL_NORMAL_SIZE+6);
 
   datum_pack->box(FL_FLAT_BOX);
-  datum_pack->color(WINDOW_BG);  
+  datum_pack->color(FL_BLACK);
   datum_pack->resizable(NULL);
 
   add(datum_pack);
@@ -305,15 +333,16 @@ UI_TableViewer *table_view;
 
 void UI_CreateTableViewer()
 {
-  Fl_Double_Window *win = new Fl_Double_Window(0, 0, 600, 400, "Lua Table Viewer");
+  Fl_Double_Window *win = new Fl_Double_Window(0, 0, 500, 400, "Lua Table Viewer");
   win->end();
 
-  win->color(BUILD_BG, BUILD_BG);
-
+  win->color(WINDOW_BG, WINDOW_BG);
 
   table_view = new UI_TableViewer(0, 0, win->w(), win->h());
 
   win->add(table_view);
+
+/// FIXME  win->resizable(table_view);
 
   win->show();
 }
