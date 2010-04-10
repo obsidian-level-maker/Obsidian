@@ -36,6 +36,8 @@
 
 #define CON_MAX_LINES   1024
 
+#define MIN_SLIDER_SIZE  0.08
+
 
 #define LINE_H  (18 + KF * 2)
 
@@ -280,6 +282,13 @@ private:
 private:
   void PositionAll(UI_ConLine *focus = NULL);
 
+  void Clear()
+  {
+    all_lines->clear();
+
+    AddLine("");
+  }
+
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
       Fl_Group(x, y, w, h, label),
@@ -299,6 +308,8 @@ public:
     sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
     sbar->callback(callback_Scroll, this);
 
+    sbar->color(FL_DARK3+1, FL_DARK3+1);
+
     add(sbar);
 
 
@@ -317,6 +328,9 @@ public:
     add(input);
 
     mh = mh - 48;
+
+    // ensure not empty
+    AddLine("");
   }
 
   virtual ~UI_Console()
@@ -452,6 +466,10 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   // t = top, number of first line
   // l = length, total number of lines
   sbar->value(offset_y, mh, 0, total_h);
+
+  // ensure knob never gets too small
+  if (sbar->slider_size() < MIN_SLIDER_SIZE)
+      sbar->slider_size(MIN_SLIDER_SIZE);
 
   all_lines->redraw();
 }

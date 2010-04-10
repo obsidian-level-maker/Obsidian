@@ -227,6 +227,8 @@ UI_CustomMods::UI_CustomMods(int x, int y, int w, int h, const char *label) :
   sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
   sbar->callback(callback_Scroll, this);
 
+  sbar->color(FL_DARK3+1, FL_DARK3+1);
+
   add(sbar);
 
 
