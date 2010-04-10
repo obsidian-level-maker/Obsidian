@@ -3,21 +3,27 @@ TODO
 ====
 
 Console:
-  !!  make console move to bottom on new lines (if already at bottom)
-
   +  make window resizable
 
+  -  fix the odd placement (-4) and mx/my/mh/mw
+
+  DONE: make console move to bottom on new lines (if already at bottom)
+  DONE: implement command history
   DONE: '?' command to display an expression or table
-
-  -  implement command history (CTRL-P ??)
-
-  -  'clear' command
-
-  -  @bfunc:label:data@b  : make a button, shown as label
-                          : func 'e' = table expander
+  DONE: 'clear' command
+  DONE: move con_dump --> oblige.lua as 'ob_console_dump'
 
   -  remember ConPrintf strings when console is not open
-     (don't re-use console_body widget)
+
+  -  don't keep console_body widget when delete console_win
+
+  -  @blabel:data@  : make a button, shown as label
+
+  -  have a "current table", gui.current_table, default to _G
+     when '?' used with no arguments, display it
+     the '= xxx' syntax sets it (xxx can be '.name')
+     the '? .name' syntax displays a field
+     the '.name = xxx' syntax set a field
 
 
 BUG: some Quake maps have clipping issues (invisible barriers)
