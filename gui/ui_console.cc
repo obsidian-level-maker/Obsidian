@@ -401,9 +401,6 @@ private:
 
   UI_ConInput *input;
 
-  // area occupied by datum list
-  int mx, my, mw, mh;
-
   // number of pixels "lost" above the top of the module area
   int offset_y;
 
@@ -420,24 +417,23 @@ public:
   {
     end(); // cancel begin() in Fl_Group constructor
    
-    int cy = y;
-
-    // area for module list
-    mx = x+0;
-    my = cy;
-    mw = w-0 - Fl::scrollbar_size();
-    mh = y+h-cy;
+    int sb_w = Fl::scrollbar_size();
+    int in_h = 28 + KF * 2;
 
 
-    sbar = new Fl_Scrollbar(mx+mw, my, Fl::scrollbar_size(), mh);
+    sbar = new Fl_Scrollbar(x + w - sb_w, y, sb_w, h);
     sbar->callback(callback_Scroll, this);
-
     sbar->color(FL_DARK3+1, FL_DARK3+1);
 
     add(sbar);
 
 
-    all_lines = new My_ClipGroup(mx+4, my+4, mw-8, mh-48);
+    input = new UI_ConInput(x+4, y+h-in_h, w-sb_w-8, in_h-4);
+
+    add(input);
+
+
+    all_lines = new My_ClipGroup(x+4, y+4, w-sb_w-8, h-in_h-4);
     all_lines->end();
 
     all_lines->box(FL_FLAT_BOX);
@@ -446,15 +442,8 @@ public:
 
     add(all_lines);
 
-
-    input = new UI_ConInput(mx+4, y+h-32, mw-8, 28);
-
-    add(input);
-
-    mh = mh - 48;
-
-
     resizable(all_lines);
+
 
     // ensure not empty
     AddLine("");
@@ -483,7 +472,11 @@ public:
       count--;
     }
 
-    UI_ConLine *M = new UI_ConLine(mx, my, mw-4, LINE_H, line);
+    int mx = all_lines->x();
+    int my = all_lines->y();
+    int mw = all_lines->w();
+
+    UI_ConLine *M = new UI_ConLine(mx, my, mw, LINE_H, line);
 
   ///  M->mod_button->callback(callback_ModEnable, M);
 
@@ -498,8 +491,10 @@ private:
   {
     int ah = all_lines->h();
 
-fprintf(stderr, "PageUp: offset_y=%d ah=%d\n", offset_y, ah);
-    int new_offset = MAX(0, offset_y - ah);
+    if (ah <= LINE_H)
+      return;
+
+    int new_offset = MAX(0, offset_y - (ah - LINE_H));
 
     sbar->value(new_offset, ah, 0, total_h);
     callback_Scroll(sbar, this);
@@ -509,7 +504,10 @@ fprintf(stderr, "PageUp: offset_y=%d ah=%d\n", offset_y, ah);
   {
     int ah = all_lines->h();
 
-    int new_offset = MIN(total_h - ah, offset_y + ah);
+    if (ah <= LINE_H)
+      return;
+
+    int new_offset = MIN(total_h - ah, offset_y + (ah - LINE_H));
 
     sbar->value(new_offset, ah, 0, total_h);
     callback_Scroll(sbar, this);
@@ -550,6 +548,9 @@ private:
 void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
 {
   // determine focus [closest to top without going past it]
+  int my = all_lines->y();
+  int mh = all_lines->h();
+
   if (! focus)
   {
     int best_dist = 9999;
