@@ -35,6 +35,7 @@
 #define CON_FONT_H    (14 + KF * 2)
 
 #define CON_MAX_LINES   1024
+#define CON_MAX_ARGS    32
 
 #define MIN_SLIDER_SIZE  0.08
 
@@ -48,6 +49,9 @@ static UI_Console       *console_body;
 static Fl_Double_Window *console_win;
 
 bool debug_onto_console;
+
+char *console_argv[CON_MAX_ARGS];
+int   console_argc;
 
 
 void ConExecute(const char *cmd);  // fwd decl
@@ -282,13 +286,6 @@ private:
 private:
   void PositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
 
-  void Clear()
-  {
-    all_lines->clear();
-
-    AddLine("");
-  }
-
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
       Fl_Group(x, y, w, h, label),
@@ -339,6 +336,13 @@ public:
   }
 
 public:
+  void Clear()
+  {
+    all_lines->clear();
+
+    AddLine("");
+  }
+
   void AddLine(const char *line)
   {
     bool at_bottom = (1 + sbar->value() > sbar->maximum());
@@ -637,6 +641,39 @@ void CMD_PrintExpr(const char *expr)
   StringFree(lua_code);
 }
 
+void CMD_Clear(void)
+{
+  console_body->Clear();
+}
+
+void CMD_Help(void)
+{
+  // FIXME: make this even more helpful
+  ConPrintf("We all need help, buddy.\n");
+}
+
+
+typedef struct
+{
+	const char *name;
+
+	void (* func)(void);
+}
+con_cmd_t;
+
+//
+// Current console commands
+//
+const con_cmd_t builtin_commands[] =
+{
+	{ "clear",          CMD_Clear },
+	{ "help",           CMD_Help },
+
+	// end of list
+	{ NULL, NULL }
+};
+
+
 void ConExecute(const char *cmd)
 {
   if (! console_win)
@@ -657,8 +694,27 @@ void ConExecute(const char *cmd)
   ConPrintf("@6> %s\n", display);
   StringFree(display);
 
-  // FIXME: new commands
+  // look for a built-in command
+  int bi = -1;
+	for (int i = 0; builtin_commands[i].name; i++)
+	{
+		if (strncmp(builtin_commands[i].name, cmd, strlen(builtin_commands[i].name) ) == 0)
+		{
+      bi = i; break;
+    }
+	}
 
+  if (bi >= 0)
+  {
+// FIXME    ParseArgs(cmd);  // [0] will be the command name
+
+		(* builtin_commands[bi].func)();
+
+// FIXME		KillArgs(argv, argc);
+		return;
+  }
+
+  // everything else goes to Lua
   Script_DoString(cmd);
 }
 
