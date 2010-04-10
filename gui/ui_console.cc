@@ -24,6 +24,7 @@
 #include "hdr_ui.h"
 
 #include "lib_util.h"
+#include "main.h"
 
 #include "g_lua.h"
 
@@ -563,11 +564,59 @@ void ConPrintf(const char *str, ...)
 }
 
 
+//----------------------------------------------------------------
+
+extern lua_State *LUA_ST;  // Fixme ?
+
+
+static bool Script_DoString(const char *str)
+{
+  lua_getglobal(LUA_ST, "ob_traceback");
+ 
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+
+  int status = luaL_loadstring(LUA_ST, str);
+
+  if (status != 0)
+  {
+    ConPrintf("@1ERROR : luaL_loadstring\n");
+    lua_remove(LUA_ST, -1);
+    return false;
+  }
+
+  status = lua_pcall(LUA_ST, 0, 0 /* !!! LUA_MULTRET */, -2);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    // this will appear in the log file too
+    ConPrintf("@1LUA script error:\n%s", msg);
+  }
+ 
+  // remove the traceback function
+  lua_remove(LUA_ST, -1);
+
+  return (status == 0) ? true : false;
+}
+
 void ConExecute(const char *cmd)
 {
-  ConPrintf("@6> %s\n", cmd);
+  if (! console_win)
+    return;
 
-  // FIXME: ConExecute
+  // display line, removing any @ symbols (TODO: escape them properly)
+  char *display = StringDup(cmd);
+  for (char *pos = display; *pos; pos++)
+    if (*pos == '@')
+      *pos = '*';
+
+  ConPrintf("@6> %s\n", display);
+  StringFree(display);
+
+  // FIXME: new commands
+
+  Script_DoString(cmd);
 }
 
 //--- editor settings ---
