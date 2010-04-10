@@ -88,9 +88,9 @@ char *StringNew(int length)
   return s;
 }
 
-char *StringDup(const char *orig)
+char *StringDup(const char *orig, int limit)
 {
-  char *s = strdup(orig);
+  char *s = (limit < 0) ? strdup(orig) : strndup(orig, limit);
 
   if (! s)
     AssertFail("Out of memory (copy string)\n");

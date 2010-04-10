@@ -29,7 +29,7 @@ void StringMaxCopy(char *dest, const char *src, int max);
 
 char *StringUpper(const char *name);
 char *StringNew(int length);
-char *StringDup(const char *orig);
+char *StringDup(const char *orig, int limit = -1);
 char *StringPrintf(const char *str, ...); // GCCATTR((format (printf, 1, 2)));
 void StringFree(const char *str);
 
