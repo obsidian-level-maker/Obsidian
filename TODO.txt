@@ -2,6 +2,23 @@
 TODO
 ====
 
+Console:
+  !!  make console move to bottom on new lines (if already at bottom)
+
+  +  make window resizable
+
+  DONE: '?' command to display an expression or table
+
+  -  implement command history (CTRL-P ??)
+
+  -  'clear' command
+
+  -  @bfunc:label:data@b  : make a button, shown as label
+                          : func 'e' = table expander
+
+  -  remember ConPrintf strings when console is not open
+     (don't re-use console_body widget)
+
 
 BUG: some Quake maps have clipping issues (invisible barriers)
 
