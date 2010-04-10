@@ -603,7 +603,7 @@ static bool Script_DoString(const char *str)
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
     Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
 
-  int status = luaL_loadstring(LUA_ST, str);
+  int status = luaL_loadbuffer(LUA_ST, str, strlen(str), "=CONSOLE");
 
   if (status != 0)
   {
@@ -617,8 +617,15 @@ static bool Script_DoString(const char *str)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    // this will appear in the log file too
-    ConPrintf("@1LUA script error:\n%s", msg);
+    // skip the filename
+    const char *err_msg = strstr(msg, ": ");
+    if (err_msg)
+      err_msg += 2;
+    else
+      err_msg = msg;
+
+    ConPrintf("\nERROR: @1%s", err_msg);
+    ConPrintf("\n");
   }
  
   // remove the traceback function
@@ -634,7 +641,7 @@ void CMD_PrintExpr(const char *expr)
 
   ConPrintf("%s = \n", expr);
 
-  char *lua_code = StringPrintf("gui.TEMP = %s ; con_dump(gui.TEMP)", expr);
+  char *lua_code = StringPrintf("con_dump(%s)", expr);
 
   Script_DoString(lua_code);
 
@@ -649,7 +656,7 @@ void CMD_Args(void)
   {
     const char *arg = console_argv[i];
 
-		ConPrintf(" %2d len:%d text:\"%s\"\n", i, (int)strlen(arg), arg);
+		ConPrintf("  %2d = \"%s\" (len %d)\n", i, arg, (int)strlen(arg));
   }
 }
 
