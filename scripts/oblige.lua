@@ -121,10 +121,10 @@ function ob_console_dump(...)
         if table_empty(v) then
           gui.conprintf("   %s = @2{ }\n", tostring(k))
         elseif #v > 0 then
-          gui.conprintf("   %s = @2[ %d ]\n", tostring(k), #v)
+          gui.conprintf("   %s = @blist[%d]:e:FOOBIE@\n", tostring(k), #v)
         else
           local first_k = next(v)
-          gui.conprintf("   %s = @2{ %s... }\n", tostring(k), tostring(first_k))
+          gui.conprintf("   %s = @btable:e:FOOBIE@\n", tostring(k)) -- , tostring(first_k))
         end
       elseif type(v) == "string" then
         gui.conprintf("   %s = @1\"%s\"\n", tostring(k), tostring(v))

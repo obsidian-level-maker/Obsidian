@@ -107,6 +107,55 @@ private:
     px += pw;
   }
 
+  void AddButton(int& px, const char *lab, const char *data)
+  {
+    int col = 7;  // FIXME: first digit of lab
+
+    // FIXME: measure properly
+    int bw = 14 + strlen(lab) * 6;
+
+    px += 4;
+
+    Fl_Button *B = new Fl_Button(px, y()+1, bw, h()-2);
+    B->align(FL_ALIGN_INSIDE);
+    B->color(FL_GREEN, FL_LIGHT1);
+    B->labelcolor(FL_BLACK);
+    B->copy_label(lab);
+
+///!!!!    B->callback(callback_Button, data);
+
+    add(B);
+
+    px += bw + 4;
+  }
+
+  char *ParseButton(int& px, char *pos)
+  {
+    char *lab = pos;
+
+    while (*pos && *pos != ':' && *pos != '\n')
+      pos++;
+
+    if (*pos != ':')
+      return lab;
+
+    *pos++ = 0;
+
+    char *data = pos;
+
+    while (*pos && *pos != '@' && *pos != '\n')
+      pos++;
+
+    if (*pos != '@')
+      return data;
+
+    *pos++ = 0;
+
+    AddButton(px, lab, data);
+
+    return pos;
+  }
+
   void Parse()
   {
     // convert the text into one or more Fl_Boxs
@@ -144,7 +193,14 @@ private:
         {
           char special = *next++;
 
+          if (special == 'b')
+          {
+            next = ParseButton(px, next);
+          }
+          else
+          {
           // TODO
+          }
         }
       }
 
