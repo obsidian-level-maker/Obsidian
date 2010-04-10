@@ -45,6 +45,9 @@ static UI_Console       *console_body;
 static Fl_Double_Window *console_win;
 
 
+void ConExecute(const char *cmd);  // fwd decl
+
+
 #define MY_FL_COLOR(R,G,B) \
           (Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
 
@@ -167,6 +170,76 @@ public:
 
 //----------------------------------------------------------------
 
+class UI_ConInput : public Fl_Group
+{
+friend class UI_Console;
+
+private:
+///  Fl_Box *box;
+
+  Fl_Input *input;
+
+private:
+  void Update()
+  {
+    char new_lab[256];
+
+//    sprintf(new_lab, "> %s_", buffer.c_str());
+
+//    box->copy_label(new_lab);
+  }
+
+public:
+  UI_ConInput(int x, int y, int w, int h) :
+      Fl_Group(x, y, w, h)
+  {
+    end(); // cancel begin() in Fl_Group constructor
+   
+    resizable(NULL);
+
+///---    box(FL_FLAT_BOX);
+///---    color(BUILD_BG, BUILD_BG);
+
+    int cx = x;
+/*
+    box = new Fl_Box(FL_NO_BOX, cx, y, 50, h, "DEBUG>");
+    box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+    box->labelcolor(digit_colors[6]);
+
+    add(box);
+
+    cx = cx + box->w();
+*/    
+    input = new Fl_Input(cx+4, y, w-cx-8, h); /// , "DEBUG>");
+
+///---    input->align(FL_ALIGN_LEFT);
+///---    input->labelcolor(digit_colors[6]);
+
+    input->when(FL_WHEN_ENTER_KEY_ALWAYS);
+    input->callback(callback_Enter, this);
+
+    add(input);
+  }
+
+  virtual ~UI_ConInput()
+  {
+    // TODO
+  }
+
+private:
+  static void callback_Enter(Fl_Widget *w, void *data)
+  {
+    UI_ConInput *that = (UI_ConInput *) data;
+
+    ConExecute(that->input->value());
+
+    that->input->value("");
+  }
+};
+
+
+//----------------------------------------------------------------
+
 class My_ClipGroup : public Fl_Group
 {
 public:
@@ -189,6 +262,8 @@ private:
   Fl_Group *all_lines;
 
   Fl_Scrollbar *sbar;
+
+  UI_ConInput *input;
 
   // area occupied by datum list
   int mx, my, mw, mh;
@@ -224,7 +299,7 @@ public:
     add(sbar);
 
 
-    all_lines = new My_ClipGroup(mx+4, my+4, mw-8, mh-8);
+    all_lines = new My_ClipGroup(mx+4, my+4, mw-8, mh-48);
     all_lines->end();
 
     all_lines->box(FL_FLAT_BOX);
@@ -232,6 +307,13 @@ public:
     all_lines->resizable(NULL);
 
     add(all_lines);
+
+
+    input = new UI_ConInput(mx+4, my+mh-36, mw-8, 28);
+
+    add(input);
+
+    mh = mh - 48;
   }
 
   virtual ~UI_Console()
@@ -478,6 +560,14 @@ void ConPrintf(const char *str, ...)
       pos = next;
     }
   }
+}
+
+
+void ConExecute(const char *cmd)
+{
+  ConPrintf("@6> %s\n", cmd);
+
+  // FIXME: ConExecute
 }
 
 //--- editor settings ---
