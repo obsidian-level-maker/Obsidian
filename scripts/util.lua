@@ -230,6 +230,24 @@ function con_dump_tab(t)
   gui.conprintf("@2}\n")
 end
 
+function con_dump(val)
+  local t = type(val)
+
+  if val == nil then
+    gui.conprintf("@1nil\n")
+  elseif t == "table" then
+    if table_empty(val) then
+      gui.conprintf("@2{ }\n")
+    else
+      con_dump_tab(val)
+    end
+  elseif t == "string" then
+    gui.conprintf("@1\"%s\"\n", tostring(val))
+  else
+    gui.conprintf("@3%s\n", tostring(val))
+  end
+end
+
 function table_pick_best(list, comp)
   assert(list)
 

@@ -602,10 +602,30 @@ static bool Script_DoString(const char *str)
   return (status == 0) ? true : false;
 }
 
+void CMD_PrintExpr(const char *expr)
+{
+  while (isspace(*expr))
+    expr++;
+
+  ConPrintf("%s = \n", expr);
+
+  char *lua_code = StringPrintf("gui.TEMP = %s ; con_dump(gui.TEMP)", expr);
+
+  Script_DoString(lua_code);
+
+  StringFree(lua_code);
+}
+
 void ConExecute(const char *cmd)
 {
   if (! console_win)
     return;
+
+  if (cmd[0] == '?')
+  {
+    CMD_PrintExpr(cmd+1);
+    return;
+  }
 
   // display line, removing any @ symbols (TODO: escape them properly)
   char *display = StringDup(cmd);
