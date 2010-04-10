@@ -404,7 +404,7 @@ end
 
 function ob_init()
 
-  -- the missing console functions
+  -- the missing print functions
   gui.printf = function (fmt, ...)
     if fmt then gui.raw_log_print(string.format(fmt, ...)) end
   end
@@ -412,6 +412,11 @@ function ob_init()
   gui.debugf = function (fmt, ...)
     if fmt then gui.raw_debug_print(string.format(fmt, ...)) end
   end
+
+  gui.conprintf = function (fmt, ...)
+    if fmt then gui.raw_console_print(string.format(fmt, ...)) end
+  end
+
 
   gui.printf("~~ Oblige Lua initialization begun ~~\n")
 

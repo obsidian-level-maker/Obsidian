@@ -35,7 +35,7 @@
 #include "twister.h"
 
 
-static lua_State *LUA_ST;
+lua_State *LUA_ST;
 
 static const char *script_path;
 
@@ -72,6 +72,7 @@ int gui_raw_log_print(lua_State *L)
 
     ConPrintf("%s", res);
 
+    // strip off colorizations
     if (res[0] == '@' && isdigit(res[1]))
       res += 2;
 
@@ -92,13 +93,27 @@ int gui_raw_debug_print(lua_State *L)
     const char *res = luaL_checkstring(L,1);
     SYS_ASSERT(res);
 
-    if (true)  // FIXME: debug_onto_console
+    if (debug_onto_console)
       ConPrintf("%s", res);
 
-    if (res[0] == '@' && isdigit(res[1]))
-      res += 2;
-
     DebugPrintf("%s", res);
+  }
+
+  return 0;
+}
+
+// LUA: raw_console_print(str)
+//
+int gui_raw_console_print(lua_State *L)
+{
+  int nargs = lua_gettop(L);
+
+  if (nargs >= 1)
+  {
+    const char *res = luaL_checkstring(L,1);
+    SYS_ASSERT(res);
+
+    ConPrintf("%s", res);
   }
 
   return 0;
@@ -117,6 +132,7 @@ int gui_config_line(lua_State *L)
 
   return 0;
 }
+
 
 // LUA: set_colormap(map, colors)
 //
@@ -500,8 +516,9 @@ extern int Q1_add_mapmodel(lua_State *L);
 
 static const luaL_Reg gui_script_funcs[] =
 {
-  { "raw_log_print",  gui_raw_log_print },
-  { "raw_debug_print",gui_raw_debug_print },
+  { "raw_log_print",     gui_raw_log_print },
+  { "raw_debug_print",   gui_raw_debug_print },
+  { "raw_console_print", gui_raw_console_print },
 
   { "config_line",    gui_config_line },
   { "set_colormap",   gui_set_colormap },

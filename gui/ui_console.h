@@ -21,6 +21,8 @@
 #ifndef __UI_DEBUG_H__
 #define __UI_DEBUG_H__
 
+extern bool debug_onto_console;
+
 void UI_OpenConsole();
 void UI_CloseConsole();
 void UI_ToggleConsole();

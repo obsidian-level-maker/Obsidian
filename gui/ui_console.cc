@@ -45,6 +45,8 @@ class UI_Console;
 static UI_Console       *console_body;
 static Fl_Double_Window *console_win;
 
+bool debug_onto_console;
+
 
 void ConExecute(const char *cmd);  // fwd decl
 
