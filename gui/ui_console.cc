@@ -34,7 +34,7 @@
 #define CONSOLE_FONT  FL_COURIER
 #define CON_FONT_H    (14 + KF * 2)
 
-#define CON_LINES   512
+#define CON_MAX_LINES   1024
 
 
 #define LINE_H  (18 + KF * 2)
@@ -325,7 +325,7 @@ public:
 public:
   void AddLine(const char *line)
   {
-    if (count >= CON_LINES)
+    if (count >= CON_MAX_LINES)
     {
       all_lines->remove(all_lines->child(0));
       count--;
