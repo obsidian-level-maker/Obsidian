@@ -232,7 +232,7 @@ function con_dump_tab(t)
   gui.conprintf("@2}\n")
 end
 
-function con_dump(val)
+function con_dump_one(val)
   local t = type(val)
 
   if val == nil then
@@ -247,6 +247,23 @@ function con_dump(val)
     gui.conprintf("@1\"%s\"\n", tostring(val))
   else
     gui.conprintf("@3%s\n", tostring(val))
+  end
+end
+
+function con_dump(...)
+  local list = { ... }
+
+  -- determine number of results (show at least one)
+  local highest = 1
+
+  for index = 2,8 do
+    if list[index] ~= nil then
+      highest = index
+    end
+  end
+
+  for index = 1,highest do
+    con_dump_one(list[index])
   end
 end
 
