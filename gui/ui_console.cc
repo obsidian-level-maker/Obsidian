@@ -641,6 +641,18 @@ void CMD_PrintExpr(const char *expr)
   StringFree(lua_code);
 }
 
+void CMD_Args(void)
+{
+  ConPrintf("Arguments:\n");
+
+	for (int i = 0; i < console_argc; i++)
+  {
+    const char *arg = console_argv[i];
+
+		ConPrintf(" %2d len:%d text:\"%s\"\n", i, (int)strlen(arg), arg);
+  }
+}
+
 void CMD_Clear(void)
 {
   console_body->Clear();
@@ -666,12 +678,77 @@ con_cmd_t;
 //
 const con_cmd_t builtin_commands[] =
 {
+	{ "args",           CMD_Args },
 	{ "clear",          CMD_Clear },
 	{ "help",           CMD_Help },
 
 	// end of list
 	{ NULL, NULL }
 };
+
+
+static int FindCommand(const char *line)
+{
+	for (int i = 0; builtin_commands[i].name; i++)
+	{
+    const char *name = builtin_commands[i].name;
+
+		if (StringCaseCmpPartial(line, name) == 0)
+      return i;
+	}
+
+  return -1;  // not found
+}
+
+static void ParseArgs(const char *line)
+{
+	console_argc = 0;
+
+	for (;;)
+	{
+		while (isspace(*line))
+			line++;
+
+		if (! *line)
+			break;
+
+		// silent truncation (bad?)
+		if (console_argc >= CON_MAX_ARGS)
+			break;
+
+		const char *start = line;
+
+		if (*line == '"')
+		{
+			start++; line++;
+
+			while (*line && *line != '"')
+				line++;
+		}
+		else
+		{
+			while (*line && !isspace(*line))
+				line++;
+		}
+
+		// ignore empty strings at beginning of the line
+		if (! (console_argc == 0 && start == line))
+		{
+			console_argv[console_argc++] = StringDup(start, line - start);
+		}
+
+		if (*line)
+			line++;
+	}
+}
+
+static void KillArgs()
+{
+	for (int i = 0; i < console_argc; i++)
+  {
+		StringFree(console_argv[i]);
+  }
+}
 
 
 void ConExecute(const char *cmd)
@@ -695,22 +772,14 @@ void ConExecute(const char *cmd)
   StringFree(display);
 
   // look for a built-in command
-  int bi = -1;
-	for (int i = 0; builtin_commands[i].name; i++)
-	{
-		if (strncmp(builtin_commands[i].name, cmd, strlen(builtin_commands[i].name) ) == 0)
-		{
-      bi = i; break;
-    }
-	}
-
+  int bi = FindCommand(cmd);
   if (bi >= 0)
   {
-// FIXME    ParseArgs(cmd);  // [0] will be the command name
+    ParseArgs(cmd);  // argv[0] will be the command itself
 
 		(* builtin_commands[bi].func)();
 
-// FIXME		KillArgs(argv, argc);
+		KillArgs();
 		return;
   }
 
