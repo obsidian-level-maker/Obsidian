@@ -34,8 +34,9 @@
 #define CONSOLE_FONT  FL_COURIER
 #define CON_FONT_H    (14 + KF * 2)
 
-#define CON_MAX_LINES   1024
-#define CON_MAX_ARGS    32
+#define CON_MAX_LINES    1024
+#define CON_MAX_ARGS     32
+#define CON_MAX_HISTORY  100
 
 #define MIN_SLIDER_SIZE  0.08
 
@@ -184,45 +185,33 @@ class UI_ConInput : public Fl_Group
 friend class UI_Console;
 
 private:
-///  Fl_Box *box;
-
   Fl_Input *input;
 
-private:
-  void Update()
-  {
-    char new_lab[256];
+  char *cmd_history[CON_MAX_HISTORY];
 
-//    sprintf(new_lab, "> %s_", buffer.c_str());
+  int hist_used;
 
-//    box->copy_label(new_lab);
-  }
+  // when browsing the history, this shows the current index.
+  // Usually it is -1.
+  int browse_pos;
+
+  std::string saved_input;
 
 public:
   UI_ConInput(int x, int y, int w, int h) :
-      Fl_Group(x, y, w, h)
+      Fl_Group(x, y, w, h),
+      hist_used(0), browse_pos(-1), saved_input()
   {
     end(); // cancel begin() in Fl_Group constructor
    
     resizable(NULL);
 
-///---    box(FL_FLAT_BOX);
-///---    color(BUILD_BG, BUILD_BG);
+    for (int i = 0; i < CON_MAX_HISTORY; i++)
+      cmd_history[i] = NULL;
 
     int cx = x;
-/*
-    box = new Fl_Box(FL_NO_BOX, cx, y, 50, h, "DEBUG>");
-    box->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
-    box->labelcolor(digit_colors[6]);
 
-    add(box);
-
-    cx = cx + box->w();
-*/    
-    input = new Fl_Input(cx+4, y, w-cx-8, h); /// , "DEBUG>");
-
-///---    input->align(FL_ALIGN_LEFT);
-///---    input->labelcolor(digit_colors[6]);
+    input = new Fl_Input(cx+4, y, w-cx-8, h);
 
     input->when(FL_WHEN_ENTER_KEY_ALWAYS);
     input->callback(callback_Enter, this);
@@ -232,13 +221,96 @@ public:
 
   virtual ~UI_ConInput()
   {
-    // TODO
+    for (int i = 0; i < hist_used; i++)
+      StringFree(cmd_history[i]);
+  }
+
+private:
+  void AddHistory(const char *s)
+  {
+    // ignore empty lines
+    const char *t = s;
+    while (isspace(*t)) t++;
+    if (*t == 0)
+      return;
+
+    // don't add if same as previous command
+    if (hist_used > 0)
+        if (strcmp(s, cmd_history[0]) == 0)
+            return;
+
+    // scroll everything up 
+    StringFree(cmd_history[CON_MAX_HISTORY-1]);
+
+    for (int i = CON_MAX_HISTORY-1; i > 0; i--)
+      cmd_history[i] = cmd_history[i-1];
+
+    cmd_history[0] = StringDup(s);
+
+    if (hist_used < CON_MAX_HISTORY)
+      hist_used++;
+  }
+
+  bool HasInput() const
+  {
+    return strlen(input->value()) > 0;
+  }
+
+  void HistoryUp()
+  {
+    if (browse_pos >= hist_used-1)
+      return;
+
+    if (browse_pos == -1)
+      saved_input = input->value();
+
+    browse_pos++;
+
+    input->value(cmd_history[browse_pos]);
+  }
+
+  void HistoryDown()
+  {
+    if (browse_pos <= -1)
+      return;
+
+    browse_pos--;
+
+    if (browse_pos >= 0)
+      input->value(cmd_history[browse_pos]);
+    else
+      input->value(saved_input.c_str());
+  }
+
+  // FLTK virtual method for handling input events.
+  int handle(int event)
+  {
+    if (event == FL_KEYDOWN || event == FL_SHORTCUT)
+    {
+      int key = Fl::event_key();
+
+      if (key == FL_Up)
+      {
+        HistoryUp();
+        return 1;
+      }
+
+      if (key == FL_Down)
+      {
+        HistoryDown();
+        return 1;
+      }
+    }
+
+    return Fl_Group::handle(event);
   }
 
 private:
   static void callback_Enter(Fl_Widget *w, void *data)
   {
     UI_ConInput *that = (UI_ConInput *) data;
+
+    that->AddHistory(that->input->value());
 
     ConExecute(that->input->value());
 
@@ -539,14 +611,14 @@ void UI_OpenConsole()
 
 void UI_CloseConsole()
 {
-  if (console_win)
-  {
-    // we keep the body around
-    console_win->remove(console_body);
+  if (! console_win)
+    return;
 
-    delete console_win;
-    console_win = NULL;
-  }
+  // we keep the body around (FIXME: don't)
+  console_win->remove(console_body);
+
+  delete console_win;
+  console_win = NULL;
 }
 
 void UI_ToggleConsole()
