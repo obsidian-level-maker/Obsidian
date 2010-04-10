@@ -607,12 +607,15 @@ static bool Script_DoString(const char *str)
 
   if (status != 0)
   {
-    ConPrintf("@1ERROR : luaL_loadstring\n");
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
+
     lua_remove(LUA_ST, -1);
     return false;
   }
 
-  status = lua_pcall(LUA_ST, 0, 0 /* !!! LUA_MULTRET */, -2);
+  status = lua_pcall(LUA_ST, 0, 0, -2);
   if (status != 0)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
@@ -624,7 +627,7 @@ static bool Script_DoString(const char *str)
     else
       err_msg = msg;
 
-    ConPrintf("\nERROR: @1%s", err_msg);
+    ConPrintf("\nError: @1%s", err_msg);
     ConPrintf("\n");
   }
  
@@ -641,7 +644,7 @@ void CMD_PrintExpr(const char *expr)
 
   ConPrintf("%s = \n", expr);
 
-  char *lua_code = StringPrintf("con_dump(%s)", expr);
+  char *lua_code = StringPrintf("ob_console_dump(%s)", expr);
 
   Script_DoString(lua_code);
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -33,7 +33,7 @@ function ob_traceback(msg)
     return msg
   end
 
-  gui.printf("\n\n")
+  gui.printf("\n")
   gui.printf("@1****** ERROR OCCURRED ******\n\n")
   gui.printf("Stack Trace:\n")
 
@@ -95,6 +95,81 @@ function ob_traceback(msg)
   end
 
   return msg
+end
+
+
+function ob_console_dump(...)
+
+  local function dump_tab(t)
+    assert(t)
+
+    local keys = {}
+    local longest_k = 1
+
+    for k,v in pairs(t) do
+      table.insert(keys, k)
+      longest_k = math.max(longest_k, string.len(tostring(k)))
+    end
+
+    gui.conprintf("@2{\n")
+
+    table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
+
+    for index,k in ipairs(keys) do
+      local v = t[k]
+      if type(v) == "table" then
+        if table_empty(v) then
+          gui.conprintf("   %s = @2{ }\n", tostring(k))
+        elseif #v > 0 then
+          gui.conprintf("   %s = @2[ %d ]\n", tostring(k), #v)
+        else
+          local first_k = next(v)
+          gui.conprintf("   %s = @2{ %s... }\n", tostring(k), tostring(first_k))
+        end
+      elseif type(v) == "string" then
+        gui.conprintf("   %s = @1\"%s\"\n", tostring(k), tostring(v))
+      elseif type(v) == "function" then
+        gui.conprintf("   @3%s()\n", tostring(k))
+      else
+        gui.conprintf("   %s = @3%s\n", tostring(k), tostring(v))
+      end
+    end
+
+    gui.conprintf("@2}\n")
+  end
+
+  function dump_value(val)
+    local t = type(val)
+
+    if val == nil then
+      gui.conprintf("@1nil\n")
+    elseif t == "table" then
+      if table_empty(val) then
+        gui.conprintf("@2{ }\n")
+      else
+        dump_tab(val)
+      end
+    elseif t == "string" then
+      gui.conprintf("@1\"%s\"\n", tostring(val))
+    else
+      gui.conprintf("@3%s\n", tostring(val))
+    end
+  end
+
+  -- grab results and count them (show at least one)
+  local list = { ... }
+
+  local highest = 1
+
+  for index = 2,8 do
+    if list[index] ~= nil then
+      highest = index
+    end
+  end
+
+  for index = 1,highest do
+    dump_value(list[index])
+  end
 end
 
 
