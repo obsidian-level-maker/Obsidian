@@ -260,19 +260,17 @@ public:
   {
     end(); // cancel begin() in Fl_Group constructor
    
-    resizable(NULL);
-
     for (int i = 0; i < CON_MAX_HISTORY; i++)
       cmd_history[i] = NULL;
 
-    int cx = x;
-
-    input = new Fl_Input(cx+4, y, w-cx-8, h);
+    input = new Fl_Input(x, y, w, h);
 
     input->when(FL_WHEN_ENTER_KEY_ALWAYS);
     input->callback(callback_Enter, this);
 
     add(input);
+
+    /// resizable(NULL);
   }
 
   virtual ~UI_ConInput()
@@ -345,16 +343,17 @@ private:
     {
       int key = Fl::event_key();
 
-      if (key == FL_Up)
+      switch (key)
       {
-        HistoryUp();
-        return 1;
-      }
+        case FL_Up:
+          HistoryUp();
+          return 1;
 
-      if (key == FL_Down)
-      {
-        HistoryDown();
-        return 1;
+        case FL_Down:
+          HistoryDown();
+          return 1;
+
+        default: break;
       }
     }
 
@@ -448,11 +447,14 @@ public:
     add(all_lines);
 
 
-    input = new UI_ConInput(mx+4, my+mh-36, mw-8, 28);
+    input = new UI_ConInput(mx+4, y+h-32, mw-8, 28);
 
     add(input);
 
     mh = mh - 48;
+
+
+    resizable(all_lines);
 
     // ensure not empty
     AddLine("");
@@ -491,6 +493,55 @@ public:
     PositionAll(at_bottom);
   }
 
+private:
+  void PageUp()
+  {
+    int ah = all_lines->h();
+
+fprintf(stderr, "PageUp: offset_y=%d ah=%d\n", offset_y, ah);
+    int new_offset = MAX(0, offset_y - ah);
+
+    sbar->value(new_offset, ah, 0, total_h);
+    callback_Scroll(sbar, this);
+  }
+
+  void PageDown()
+  {
+    int ah = all_lines->h();
+
+    int new_offset = MIN(total_h - ah, offset_y + ah);
+
+    sbar->value(new_offset, ah, 0, total_h);
+    callback_Scroll(sbar, this);
+  }
+
+  // FLTK virtual method for handling input events.
+  int handle(int event)
+  {
+    if (event == FL_KEYDOWN || event == FL_SHORTCUT)
+    {
+      int key = Fl::event_key();
+
+      switch (key)
+      {
+        // do our own PAGE-UP and PAGE-DOWN handling, since FLTK jumps
+        // too far after we sane-ified the slider_size.
+        case FL_Page_Up:
+          PageUp();
+          return 1;
+
+        case FL_Page_Down:
+          PageDown();
+          return 1;
+
+        default: break;
+      }
+    }
+
+    return Fl_Group::handle(event);
+  }
+
+private:
   static void callback_Scroll(Fl_Widget *w, void *data);
   static void callback_Bar(Fl_Widget *w, void *data);
 };
@@ -650,6 +701,7 @@ void UI_OpenConsole()
   console_win = new Fl_Double_Window(0, 0, 600, 400, "OBLIGE CONSOLE");
   console_win->end();
 
+  console_win->size_range(240, 160);
   console_win->color(CONSOLE_BG, CONSOLE_BG);
 
   if (! console_body)
@@ -659,8 +711,7 @@ void UI_OpenConsole()
   // else RESIZE body to WIN SIZE
 
   console_win->add(console_body);
-
-/// FIXME  console_win->resizable(console_body);
+  console_win->resizable(console_body);
 
   console_win->show();
 }
