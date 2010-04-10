@@ -214,6 +214,8 @@ function con_dump_tab(t)
     if type(v) == "table" then
       if table_empty(v) then
         gui.conprintf("   %s = @2{ }\n", tostring(k))
+      elseif #v > 0 then
+        gui.conprintf("   %s = @2[ %d ]\n", tostring(k), #v)
       else
         local first_k = next(v)
         gui.conprintf("   %s = @2{ %s... }\n", tostring(k), tostring(first_k))
