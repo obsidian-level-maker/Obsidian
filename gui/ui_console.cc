@@ -280,7 +280,7 @@ private:
   int total_h;
 
 private:
-  void PositionAll(UI_ConLine *focus = NULL);
+  void PositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
 
   void Clear()
   {
@@ -341,6 +341,8 @@ public:
 public:
   void AddLine(const char *line)
   {
+    bool at_bottom = (1 + sbar->value() > sbar->maximum());
+
     if (count >= CON_MAX_LINES)
     {
       all_lines->remove(all_lines->child(0));
@@ -354,9 +356,7 @@ public:
     all_lines->add(M);
     count++;
 
-    PositionAll();
-
-  ///???  M->redraw();
+    PositionAll(at_bottom);
   }
 
   static void callback_Scroll(Fl_Widget *w, void *data);
@@ -364,7 +364,7 @@ public:
 };
 
 
-void UI_Console::PositionAll(UI_ConLine *focus)
+void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
 {
   // determine focus [closest to top without going past it]
   if (! focus)
@@ -409,6 +409,10 @@ void UI_Console::PositionAll(UI_ConLine *focus)
   {
     offset_y = 0;
   }
+  else if (jump_bottom)
+  {
+    offset_y = new_height - mh;
+  }
   else if (focus)
   {
     int focus_oy = focus->y() - my;
@@ -439,7 +443,6 @@ void UI_Console::PositionAll(UI_ConLine *focus)
 
   SYS_ASSERT(offset_y >= 0);
   SYS_ASSERT(offset_y <= total_h);
-
 
   // reposition all the modules
   int ny = my - offset_y;
