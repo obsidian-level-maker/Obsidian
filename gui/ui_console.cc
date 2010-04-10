@@ -408,6 +408,24 @@ private:
   int total_h;
 
 private:
+  void Repos(int new_offset, bool call_cb = false)
+  {
+    // p = position, first line displayed
+    // w = window, number of lines displayed
+    // t = top, number of first line
+    // l = length, total number of lines
+    sbar->value(new_offset, all_lines->h(), 0, total_h);
+
+    // ensure knob never gets too small
+    if (sbar->slider_size() < MIN_SLIDER_SIZE)
+        sbar->slider_size(MIN_SLIDER_SIZE);
+
+    if (call_cb)
+      callback_Scroll(sbar, this);
+    else
+      all_lines->redraw();
+  }
+
   void PositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
 
 public:
@@ -489,28 +507,20 @@ public:
 private:
   void PageUp()
   {
-    int ah = all_lines->h();
+    int dy = MAX(LINE_H, all_lines->h() - LINE_H);
 
-    if (ah <= LINE_H)
-      return;
+    int new_offset = MAX(0, offset_y - dy);
 
-    int new_offset = MAX(0, offset_y - (ah - LINE_H));
-
-    sbar->value(new_offset, ah, 0, total_h);
-    callback_Scroll(sbar, this);
+    Repos(new_offset, true);
   }
 
   void PageDown()
   {
-    int ah = all_lines->h();
+    int dy = MAX(LINE_H, all_lines->h() - LINE_H);
 
-    if (ah <= LINE_H)
-      return;
+    int new_offset = MIN(total_h - all_lines->h(), offset_y + dy);
 
-    int new_offset = MIN(total_h - ah, offset_y + (ah - LINE_H));
-
-    sbar->value(new_offset, ah, 0, total_h);
-    callback_Scroll(sbar, this);
+    Repos(new_offset, true);
   }
 
   // FLTK virtual method for handling input events.
@@ -648,17 +658,7 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
   }
 
 
-  // p = position, first line displayed
-  // w = window, number of lines displayed
-  // t = top, number of first line
-  // l = length, total number of lines
-  sbar->value(offset_y, mh, 0, total_h);
-
-  // ensure knob never gets too small
-  if (sbar->slider_size() < MIN_SLIDER_SIZE)
-      sbar->slider_size(MIN_SLIDER_SIZE);
-
-  all_lines->redraw();
+  Repos(offset_y);
 }
 
 
