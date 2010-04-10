@@ -194,6 +194,42 @@ function table_to_str(t, depth, prefix)
   return result
 end
 
+function con_dump_tab(t)
+  assert(t)
+
+  local keys = {}
+  local longest_k = 1
+
+  for k,v in pairs(t) do
+    table.insert(keys, k)
+    longest_k = math.max(longest_k, string.len(tostring(k)))
+  end
+
+  gui.printf("| @2{\n")
+
+  table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
+
+  for index,k in ipairs(keys) do
+    local v = t[k]
+    if type(v) == "table" then
+      if table_empty(v) then
+        gui.printf("|    %s = @2{ }\n", tostring(k))
+      else
+        local first_k = next(v)
+        gui.printf("|    %s = @2{ %s... }\n", tostring(k), tostring(first_k))
+      end
+    elseif type(v) == "string" then
+      gui.printf("|    %s = @1\"%s\"\n", tostring(k), tostring(v))
+    elseif type(v) == "function" then
+      gui.printf("|    @3%s()\n", tostring(k))
+    else
+      gui.printf("|    %s = @3%s\n", tostring(k), tostring(v))
+    end
+  end
+
+  gui.printf("| @2}\n")
+end
+
 function table_pick_best(list, comp)
   assert(list)
 
