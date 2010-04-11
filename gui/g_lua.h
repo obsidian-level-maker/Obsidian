@@ -27,6 +27,9 @@ void Script_Init(void);
 void Script_Load(void);
 void Script_Close(void);
 
+bool Script_RunString(const char *str, ...);
+
+
 #define MAX_COLOR_MAPS  9  // 1 to 9 (from Lua)
 #define MAX_COLORS_PER_MAP  260
 

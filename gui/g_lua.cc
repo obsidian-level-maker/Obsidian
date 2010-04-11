@@ -35,7 +35,7 @@
 #include "twister.h"
 
 
-lua_State *LUA_ST;
+static lua_State *LUA_ST;
 
 static const char *script_path;
 
@@ -638,6 +638,7 @@ static void Script_SetDataPath(void)
   LogPrintf("data_path:   [%s]\n\n", data_path);
 }
 
+
 void Script_Init(void)
 {
   LUA_ST = lua_open();
@@ -661,8 +662,10 @@ void Script_Close(void)
 }
 
 
-static bool Script_DoRun(const char *func_name, int nresult = 0, const char **params = NULL)
+static bool Script_CallFunc(const char *func_name, int nresult = 0, const char **params = NULL)
 {
+  // Note: the results of the function will be on the Lua stack
+
   lua_getglobal(LUA_ST, "ob_traceback");
  
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
@@ -685,14 +688,78 @@ static bool Script_DoRun(const char *func_name, int nresult = 0, const char **pa
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
+    // skip the filename
+    const char *err_msg = strstr(msg, ": ");
+    if (err_msg)
+      err_msg += 2;
+    else
+      err_msg = msg;
+
     // this will appear in the log file too
-    DLG_ShowError("LUA script error:\n%s", msg);
+    DLG_ShowError("LUA script error:\n%s", err_msg);
+
+    lua_pop(LUA_ST, 2);  // ob_traceback, message
+    return false;
   }
  
   // remove the traceback function
   lua_remove(LUA_ST, -1-nresult);
 
-  return (status == 0) ? true : false;
+  return true;
+}
+
+
+bool Script_RunString(const char *str, ...)
+{
+  static char buffer[MSG_BUF_LEN];
+
+  va_list args;
+
+  va_start(args, str);
+  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+  va_end(args);
+
+  buffer[MSG_BUF_LEN-2] = 0;
+
+
+  lua_getglobal(LUA_ST, "ob_traceback");
+ 
+  if (lua_type(LUA_ST, -1) == LUA_TNIL)
+    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+
+  int status = luaL_loadbuffer(LUA_ST, buffer, strlen(buffer), "=CONSOLE");
+
+  if (status != 0)
+  {
+    // const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
+
+    lua_pop(LUA_ST, 2);  // ob_traceback, message
+    return false;
+  }
+
+  status = lua_pcall(LUA_ST, 0, 0, -2);
+  if (status != 0)
+  {
+    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+
+    // skip the filename
+    const char *err_msg = strstr(msg, ": ");
+    if (err_msg)
+      err_msg += 2;
+    else
+      err_msg = msg;
+
+    ConPrintf("\nError: @1%s", err_msg);
+    ConPrintf("\n");
+
+    lua_pop(LUA_ST, 2);  // ob_traceback, message
+    return false;
+  }
+ 
+  lua_pop(LUA_ST, 1);  // ob_traceback
+  return true;
 }
 
 
@@ -824,7 +891,7 @@ void Script_Load(void)
 
   has_loaded = true;
  
-  if (! Script_DoRun("ob_init"))
+  if (! Script_CallFunc("ob_init"))
     Main_FatalError("The ob_init script failed.\n");
 
   has_added_buttons = true;
@@ -857,7 +924,7 @@ bool ob_set_config(const char *key, const char *value)
   params[1] = value;
   params[2] = NULL; // end of list
 
-  return Script_DoRun("ob_set_config", 0, params);
+  return Script_CallFunc("ob_set_config", 0, params);
 }
 
 
@@ -877,7 +944,7 @@ bool ob_set_mod_option(const char *module, const char *option,
   params[2] = value;
   params[3] = NULL;
 
-  return Script_DoRun("ob_set_mod_option", 0, params);
+  return Script_CallFunc("ob_set_mod_option", 0, params);
 }
 
 
@@ -896,7 +963,7 @@ bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
 
   conf_line_buffer = lines;
  
-  bool result = Script_DoRun("ob_read_all_config", 0, params);
+  bool result = Script_CallFunc("ob_read_all_config", 0, params);
 
   conf_line_buffer = NULL;
 
@@ -906,7 +973,7 @@ bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
 
 const char * ob_game_format(void)
 {
-  if (! Script_DoRun("ob_game_format", 1))
+  if (! Script_CallFunc("ob_game_format", 1))
     return NULL;
 
   const char *res = lua_tolstring(LUA_ST, -1, NULL);
@@ -923,7 +990,7 @@ const char * ob_game_format(void)
 
 bool ob_build_cool_shit(void)
 {
-  if (! Script_DoRun("ob_build_cool_shit", 1))
+  if (! Script_CallFunc("ob_build_cool_shit", 1))
   {
     Main_ProgStatus("Script Error");
     return false;

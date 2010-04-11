@@ -64,8 +64,6 @@ static UI_ConLine *button_line;
 // forward decls
 void ConExecute(const char *cmd);
 
-static bool Script_DoString(const char *str);
-
 
 #define MY_FL_COLOR(R,G,B) \
           (Fl_Color) (((R) << 24) | ((G) << 16) | ((B) << 8))
@@ -281,9 +279,7 @@ private:
       while (isdigit(*datum)) datum++;
       if (*datum == ':') datum++;
 
-      char *lua_code = StringPrintf("ob_console_dump { tab_ref=%s, indent=%d }", datum, indent);
-      Script_DoString(lua_code);
-      StringFree(lua_code);
+      Script_RunString("ob_console_dump { tab_ref=%s, indent=%d }", datum, indent);
 
       button_line = false;
 
@@ -860,49 +856,6 @@ void ConPrintf(const char *str, ...)
 
 //----------------------------------------------------------------
 
-extern lua_State *LUA_ST;  // Fixme ?
-
-
-static bool Script_DoString(const char *str)  // FIXME VARARG-ify
-{
-  lua_getglobal(LUA_ST, "ob_traceback");
- 
-  if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
-
-  int status = luaL_loadbuffer(LUA_ST, str, strlen(str), "=CONSOLE");
-
-  if (status != 0)
-  {
-    // const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-    ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
-
-    lua_remove(LUA_ST, -1);
-    return false;
-  }
-
-  status = lua_pcall(LUA_ST, 0, 0, -2);
-  if (status != 0)
-  {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
-
-    // skip the filename
-    const char *err_msg = strstr(msg, ": ");
-    if (err_msg)
-      err_msg += 2;
-    else
-      err_msg = msg;
-
-    ConPrintf("\nError: @1%s", err_msg);
-    ConPrintf("\n");
-  }
- 
-  // remove the traceback function
-  lua_remove(LUA_ST, -1);
-
-  return (status == 0) ? true : false;
-}
 
 void CMD_PrintExpr(const char *expr)
 {
@@ -911,11 +864,7 @@ void CMD_PrintExpr(const char *expr)
 
   ConPrintf("%s = \n", expr);
 
-  char *lua_code = StringPrintf("ob_console_dump(nil, %s)", expr);
-
-  Script_DoString(lua_code);
-
-  StringFree(lua_code);
+  Script_RunString("ob_console_dump(nil, %s)", expr);
 }
 
 void CMD_Args(void)
@@ -934,7 +883,7 @@ void CMD_Clear(void)
 {
   console_body->Clear();
 
-  Script_DoString("ob_ref_table(\"clear\")");
+  Script_RunString("ob_ref_table(\"clear\")");
 }
 
 void CMD_Help(void)
@@ -1063,7 +1012,7 @@ void ConExecute(const char *cmd)
   }
 
   // everything else goes to Lua
-  Script_DoString(cmd);
+  Script_RunString(cmd);
 }
 
 //--- editor settings ---
