@@ -98,10 +98,38 @@ function ob_traceback(msg)
 end
 
 
-function ob_console_dump(...)
+function ob_ref_table(op, t)
+  if not gui.___REFS then
+    gui.___REFS = {}
+  end
 
-  local function dump_tab(t)
+  if op == "clear" then
+    gui.___REFS = {}
+    collectgarbage("collect")
+    return
+  end
+
+  if op == "store" then
+    if t == _G then return 0 end
+    local id = 1 + #gui.___REFS
+    gui.___REFS[id] = t    -- t == table
+    return id
+  end
+
+  if op == "lookup" then
+    if t == 0 then return _G end
+    return gui.___REFS[t]  -- t == id number
+  end
+
+  error("ob_ref_table: unknown op: " .. tostring(op))
+end
+
+function ob_console_dump(info, ...)
+
+  local function dump_tab(t, indent)
     assert(t)
+
+    indent = indent or 0
 
     local keys = {}
     local longest_k = 1
@@ -111,31 +139,45 @@ function ob_console_dump(...)
       longest_k = math.max(longest_k, string.len(tostring(k)))
     end
 
-    gui.conprintf("@2{\n")
+    gui.conprintf("@2%s{\n", string.rep("   ", indent))
 
     table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
 
+    local space = string.rep("   ", indent+1)
+
     for index,k in ipairs(keys) do
       local v = t[k]
-      if type(v) == "table" then
+
+      local k_type = type(k)
+      local v_type = type(v)
+
+      if not (k_type == "string" or k_type == "number") then
+        gui.conprintf("%s@1%s = %s\n", tostring(k), tostring(v))
+
+      elseif v_type == "table" then
         if table_empty(v) then
-          gui.conprintf("   %s = @2{ }\n", tostring(k))
-        elseif #v > 0 then
-          gui.conprintf("   %s = @b2list %d:e:3:_G.%s@\n", tostring(k), #v, tostring(k))
+          gui.conprintf("%s%s = @2{ }\n", space, k)
         else
-          local first_k = next(v)
-          gui.conprintf("   %s = @b2table:e:3:_G.%s@\n", tostring(k), tostring(k)) -- , tostring(first_k))
+          local label = "table"
+          if #v > 0 then label = string.format("list %d", #v) end
+
+          local ref_id = ob_ref_table("store", v)
+
+          gui.printf("%s%s = @b2%s:e:%d:%d@\n", space, k, label, indent+1, ref_id);
         end
+
       elseif type(v) == "string" then
-        gui.conprintf("   %s = @1\"%s\"\n", tostring(k), tostring(v))
+        gui.conprintf("%s%s = @5\"%s\"\n", space, k, tostring(v))
+
       elseif type(v) == "function" then
-        gui.conprintf("   @3%s()\n", tostring(k))
+        gui.conprintf("%s@3%s()\n", space, k)
+
       else
-        gui.conprintf("   %s = @3%s\n", tostring(k), tostring(v))
+        gui.conprintf("%s%s = @3%s\n", space, k, tostring(v))
       end
     end
 
-    gui.conprintf("@2}\n")
+    gui.conprintf("@2%s}\n", string.rep("   ",indent))
   end
 
   function dump_value(val)
@@ -150,10 +192,24 @@ function ob_console_dump(...)
         dump_tab(val)
       end
     elseif t == "string" then
-      gui.conprintf("@1\"%s\"\n", tostring(val))
+      gui.conprintf("@5\"%s\"\n", tostring(val))
     else
       gui.conprintf("@3%s\n", tostring(val))
     end
+  end
+
+  
+  --| ob_console_dump |--
+
+  if info and info.tab_ref then
+    local t = ob_ref_table("lookup", info.tab_ref)
+    if t then
+      dump_tab(t, info.indent)
+    else
+      gui.conprintf("@1BAD TABLE REF: %s\n", tostring(info.tab_ref))
+    end
+
+    return
   end
 
   -- grab results and count them (show at least one)

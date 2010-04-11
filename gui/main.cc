@@ -602,7 +602,7 @@ int main(int argc, char **argv)
     main_win->build_box->mini_map->EmptyMap();
 
 
-    ConPrintf("All Globals: @b2table:e:0:_G@\n\n");
+    ConPrintf("All Globals: @b2table:e:0:0@\n\n");
 
 
     try

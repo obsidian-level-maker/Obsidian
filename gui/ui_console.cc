@@ -59,7 +59,6 @@ static std::list<std::string> con_saved_lines;
 static int con_saved_count = 0;
 
 static UI_ConLine *button_line;
-static int button_indent;  // RENAME !!
 
 
 // forward decls
@@ -277,12 +276,12 @@ private:
     {
       datum += 2;
 
-      button_indent = atoi(datum);
+      int indent = atoi(datum);
 
       while (isdigit(*datum)) datum++;
       if (*datum == ':') datum++;
 
-      char *lua_code = StringPrintf("ob_console_dump(%s)\n", datum);
+      char *lua_code = StringPrintf("ob_console_dump { tab_ref=%s, indent=%d }", datum, indent);
       Script_DoString(lua_code);
       StringFree(lua_code);
 
@@ -556,7 +555,7 @@ public:
     int my = all_lines->y();
     int mw = all_lines->w();
 
-    UI_ConLine *M = new UI_ConLine(mx, my, mw, LINE_H, line, button_indent);
+    UI_ConLine *M = new UI_ConLine(mx, my, mw, LINE_H, line);
 
   ///  M->mod_button->callback(callback_ModEnable, M);
 
@@ -874,7 +873,7 @@ static bool Script_DoString(const char *str)  // FIXME VARARG-ify
 
   if (status != 0)
   {
-    const char *msg = lua_tolstring(LUA_ST, -1, NULL);
+    // const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
     ConPrintf("Error: @1Bad Syntax or Unknown Command\n");
 
@@ -911,7 +910,7 @@ void CMD_PrintExpr(const char *expr)
 
   ConPrintf("%s = \n", expr);
 
-  char *lua_code = StringPrintf("ob_console_dump(%s)", expr);
+  char *lua_code = StringPrintf("ob_console_dump(nil, %s)", expr);
 
   Script_DoString(lua_code);
 
