@@ -159,7 +159,7 @@ function Plan_CreateRooms()
     gui.printf("Room Map:\n")
 
     for y = LEVEL.H,1,-1 do
-      local line = "  "
+      local line = "@c  "
       for x = 1,LEVEL.W do
         line = line .. room_char(room_map[x][y])
       end

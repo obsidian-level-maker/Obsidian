@@ -138,7 +138,7 @@ function Cave_dump(map)
   gui.debugf("Cave_Map:\n")
 
   for y = map.h,1,-1 do
-    local line = "| ";
+    local line = "@c| ";
     for x = 1,map.w do
       local ch = " "
       if map[x][y] == 0       then ch = "?" end
@@ -146,7 +146,7 @@ function Cave_dump(map)
       if (map[x][y] or 0) < 0 then ch = "." end
       line = line .. ch
     end
-    gui.debugf(line)
+    gui.debugf("%s\n", line)
   end
 end
 

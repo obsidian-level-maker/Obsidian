@@ -232,10 +232,11 @@ function Seed_dump_rooms()
   end
 
   for y = SEED_H,1,-1 do
+    local line = "@c"
     for x = 1,SEED_W do
-      gui.printf("%s", seed_to_char(SEEDS[x][y][1]))
+      line = line .. seed_to_char(SEEDS[x][y][1])
     end
-    gui.printf("\n")
+    gui.printf("%s\n", line)
   end
 
   gui.printf("\n")
