@@ -151,8 +151,8 @@ function ob_console_dump(info, ...)
       local k_type = type(k)
       local v_type = type(v)
 
-      if not (k_type == "string" or k_type == "number") then
-        gui.conprintf("%s@1%s = %s\n", tostring(k), tostring(v))
+      if not (k_type == "string" or k_type == "number") or k == "___REFS" then
+        gui.conprintf("%s@1%s@7 = %s\n", space, tostring(k), tostring(v))
 
       elseif v_type == "table" then
         if table_empty(v) then
