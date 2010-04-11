@@ -112,7 +112,12 @@ private:
 
   void AddButton(int& px, const char *lab, const char *data)
   {
-    int col = 7;  // FIXME: first digit of lab
+    int col = 7;
+    if (isdigit(lab[0]))
+    {
+      col = CLAMP(0, lab[0] - '0', 9);
+      lab++;
+    }
 
     // FIXME: measure properly
     int bw = 14 + strlen(lab) * 6;
@@ -121,9 +126,14 @@ private:
 
     Fl_Button *B = new Fl_Button(px, y()+1, bw, h()-2);
     B->align(FL_ALIGN_INSIDE);
-    B->color(FL_GREEN, FL_LIGHT1);
+    B->color(col, FL_LIGHT1);
     B->labelcolor(FL_BLACK);
     B->copy_label(lab);
+
+    if (col != 7)
+      B->color(digit_colors[col], FL_LIGHT1);
+    else
+      B->color(FL_DARK3, FL_LIGHT3);
 
 ///!!!!    B->callback(callback_Button, data);
 
@@ -191,7 +201,7 @@ private:
         if (isdigit(*next))
         {
           color = *next++;
-          color -= '0';
+          color = CLAMP(0, color - '0', 9);
         }
         else if (isalpha(*next))
         {
