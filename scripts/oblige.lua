@@ -98,6 +98,22 @@ function ob_traceback(msg)
 end
 
 
+-- replace the standard 'print' function
+-- Note: it is impossible to emulate print(nil, nil)
+function print(...)
+  local args = { ... }
+  local line = ""
+
+  for i = 16,1,-1 do
+    if args[i] or #line > 0 or i == 1 then
+      line = tostring(args[i]) .. "\t" .. line
+    end
+  end
+
+  gui.printf("%s\n", line)
+end
+
+
 function ob_ref_table(op, t)
   if not gui.___REFS then
     gui.___REFS = {}
