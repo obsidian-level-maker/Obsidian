@@ -45,6 +45,7 @@
 
 
 class UI_Console;
+class UI_ConLine;
 
 static UI_Console       *console_body;
 static Fl_Double_Window *console_win;
@@ -57,8 +58,14 @@ int   console_argc;
 static std::list<std::string> con_saved_lines;
 static int con_saved_count = 0;
 
+static UI_ConLine *button_line;
+static int button_indent;  // RENAME !!
 
-void ConExecute(const char *cmd);  // fwd decl
+
+// forward decls
+void ConExecute(const char *cmd);
+
+static bool Script_DoString(const char *str);
 
 
 #define MY_FL_COLOR(R,G,B) \
@@ -87,6 +94,8 @@ friend class UI_Console;
 
 private:
   std::string unparsed;
+
+  std::string button_data;
 
 private:
   void AddBox(int& px, const char *text, int font, int col)
@@ -135,11 +144,13 @@ private:
     else
       B->color(FL_DARK3, FL_LIGHT3);
 
-///!!!!    B->callback(callback_Button, data);
+    B->callback(callback_Button, this);
 
     add(B);
 
     px += bw + 4;
+
+    button_data = data;
   }
 
   char *ParseButton(int& px, char *pos)
@@ -169,11 +180,10 @@ private:
     return pos;
   }
 
-  void Parse()
+  void Parse(int px)
   {
     // convert the text into one or more Fl_Boxs
 
-    int px = x();
     int color = 7;
     int font  = FL_HELVETICA;
 
@@ -233,14 +243,14 @@ private:
   }
 
 public:
-  UI_ConLine(int x, int y, int w, int h, const char *line) :
+  UI_ConLine(int x, int y, int w, int h, const char *line, int indent = 0) :
       Fl_Group(x, y, w, h), unparsed(line)
   {
     end(); // cancel begin() in Fl_Group constructor
    
     resizable(NULL);
 
-    Parse();
+    Parse(x + indent * 8);
   }
 
   virtual ~UI_ConLine()
@@ -252,6 +262,36 @@ public:
   int CalcHeight() const
   {
     return LINE_H;
+  }
+
+private:
+  static void callback_Button(Fl_Widget *w, void *data)
+  {
+    // TODO: support more than one button per line
+
+    button_line = (UI_ConLine *) data;
+
+    const char *datum = button_line->button_data.c_str();
+
+    if (datum[0] == 'e' && datum[1] == ':')
+    {
+      datum += 2;
+
+      button_indent = atoi(datum);
+
+      while (isdigit(*datum)) datum++;
+      if (*datum == ':') datum++;
+
+      char *lua_code = StringPrintf("ob_console_dump(%s)\n", datum);
+      Script_DoString(lua_code);
+      StringFree(lua_code);
+
+      button_line = false;
+
+      w->hide();
+    }
+    else
+      fl_beep();
   }
 };
 
@@ -516,11 +556,19 @@ public:
     int my = all_lines->y();
     int mw = all_lines->w();
 
-    UI_ConLine *M = new UI_ConLine(mx, my, mw, LINE_H, line);
+    UI_ConLine *M = new UI_ConLine(mx, my, mw, LINE_H, line, button_indent);
 
   ///  M->mod_button->callback(callback_ModEnable, M);
 
-    all_lines->add(M);
+    if (button_line)
+    {
+      all_lines->insert(*M, 1 + all_lines->find(button_line));
+      button_line = M;  // FIXME
+      at_bottom = false;
+    }
+    else
+      all_lines->add(M);
+
     count++;
 
     PositionAll(at_bottom);
@@ -573,7 +621,6 @@ private:
 
 private:
   static void callback_Scroll(Fl_Widget *w, void *data);
-  static void callback_Bar(Fl_Widget *w, void *data);
 };
 
 
@@ -708,12 +755,6 @@ void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
 }
 
 
-void UI_Console::callback_Bar(Fl_Widget *w, void *data)
-{
-  UI_ConLine *M = (UI_ConLine *)data;
-}
-
-
 //----------------------------------------------------------------
 
 void UI_OpenConsole()
@@ -822,7 +863,7 @@ void ConPrintf(const char *str, ...)
 extern lua_State *LUA_ST;  // Fixme ?
 
 
-static bool Script_DoString(const char *str)
+static bool Script_DoString(const char *str)  // FIXME VARARG-ify
 {
   lua_getglobal(LUA_ST, "ob_traceback");
  
