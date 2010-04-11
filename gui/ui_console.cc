@@ -54,6 +54,9 @@ bool debug_onto_console;
 char *console_argv[CON_MAX_ARGS];
 int   console_argc;
 
+static std::list<std::string> con_saved_lines;
+static int con_saved_count = 0;
+
 
 void ConExecute(const char *cmd);  // fwd decl
 
@@ -86,7 +89,7 @@ private:
   std::string unparsed;
 
 private:
-  void AddBox(int& px, const char *text, int col)
+  void AddBox(int& px, const char *text, int font, int col)
   {
     SYS_ASSERT(col >= 0 && col < 10);
 
@@ -94,7 +97,7 @@ private:
 
     K->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
     K->labelcolor(digit_colors[col]);
-//!!    K->labelfont(CONSOLE_FONT);
+    K->labelfont(font);
     K->labelsize(CON_FONT_H);
     K->copy_label(text);
 
@@ -162,6 +165,7 @@ private:
 
     int px = x();
     int color = 7;
+    int font  = FL_HELVETICA;
 
     char *text = StringDup(unparsed.c_str());
     char *pos  = text;
@@ -180,7 +184,7 @@ private:
 
       if (next) *next++ = 0;
 
-      AddBox(px, pos, color);
+      AddBox(px, pos, font, color);
 
       if (next)
       {
@@ -193,13 +197,21 @@ private:
         {
           char special = *next++;
 
-          if (special == 'b')
+          switch (special)
           {
-            next = ParseButton(px, next);
-          }
-          else
-          {
-          // TODO
+            case 'b':
+              next = ParseButton(px, next);
+              break;
+
+            case 'c':
+              font = FL_COURIER;
+              break;
+
+            case 'h':
+              font = FL_HELVETICA;
+              break;
+
+            default: break;
           }
         }
       }
@@ -715,6 +727,14 @@ void UI_OpenConsole()
   console_win->resizable(console_body);
 
   console_win->show();
+
+  // add the saved lines
+  while (! con_saved_lines.empty())
+  {
+    console_body->AddLine(con_saved_lines.front().c_str());
+
+    con_saved_lines.pop_front();
+  }
 }
 
 void UI_CloseConsole()
@@ -738,35 +758,51 @@ void UI_ToggleConsole()
 }
 
 
+static void DoAddLine(const char *line)
+{
+  if (console_win)
+  {
+    console_body->AddLine(line);
+    return;
+  }
+
+  // save the line
+
+  if (con_saved_count >= CON_MAX_LINES)
+  {
+    con_saved_lines.pop_front();
+    con_saved_count--;
+  }
+
+  con_saved_lines.push_back(line);
+  con_saved_count++;
+}
+
 void ConPrintf(const char *str, ...)
 {
-  if (console_body)
+  static char buffer[MSG_BUF_LEN];
+
+  va_list args;
+
+  va_start(args, str);
+  vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
+  va_end(args);
+
+  buffer[MSG_BUF_LEN-2] = 0;
+
+  // split into lines
+  char *pos = buffer;
+  char *next;
+
+  while (pos && *pos)
   {
-    static char buffer[MSG_BUF_LEN];
+    next = strchr(pos, '\n');
 
-    va_list args;
+    if (next) *next++ = 0;
 
-    va_start(args, str);
-    vsnprintf(buffer, MSG_BUF_LEN-1, str, args);
-    va_end(args);
+    DoAddLine(pos);
 
-    buffer[MSG_BUF_LEN-2] = 0;
-
-    // prefix each debugging line with a special symbol
-
-    char *pos = buffer;
-    char *next;
-
-    while (pos && *pos)
-    {
-      next = strchr(pos, '\n');
-
-      if (next) *next++ = 0;
-
-      console_body->AddLine(pos);
-
-      pos = next;
-    }
+    pos = next;
   }
 }
 
