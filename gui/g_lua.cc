@@ -207,7 +207,7 @@ int gui_add_button(lua_State *L)
 
   // only allowed during startup
   if (has_added_buttons)
-    Main_FatalError("LUA script problem: gui.add_button called late.\n");
+    Main_FatalError("Script problem: gui.add_button called late.\n");
 
 // DebugPrintf("  add_button: %s id:%s\n", what, id);
 
@@ -260,7 +260,7 @@ int gui_add_mod_option(lua_State *L)
 
   // only allowed during startup
   if (has_added_buttons)
-    Main_FatalError("LUA script problem: gui.add_mod_option called late.\n");
+    Main_FatalError("Script problem: gui.add_mod_option called late.\n");
 
   if (! id)
     main_win->mod_box->AddOption(module, option, label);
@@ -617,7 +617,7 @@ static void Script_SetScriptPath(lua_State *L)
   lua_getglobal(L, "package");
 
   if (lua_type(L, -1) == LUA_TNIL)
-    Main_FatalError("LUA SetPath failed: no 'package' module!");
+    Main_FatalError("Script problem: no 'package' module!");
 
   lua_pushstring(L, script_path);
 
@@ -669,12 +669,12 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
   lua_getglobal(LUA_ST, "ob_traceback");
  
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+    Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
 
   lua_getglobal(LUA_ST, func_name);
 
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", func_name);
+    Main_FatalError("Script problem: missing function '%s'", func_name);
 
   int nargs = 0;
   if (params)
@@ -696,7 +696,9 @@ static bool Script_CallFunc(const char *func_name, int nresult = 0, const char *
       err_msg = msg;
 
     // this will appear in the log file too
-    DLG_ShowError("LUA script error:\n%s", err_msg);
+
+    ConPrintf("\nScript Error: @1%s\n", err_msg);
+    DLG_ShowError("Script Error: %s", err_msg);
 
     lua_pop(LUA_ST, 2);  // ob_traceback, message
     return false;
@@ -725,7 +727,7 @@ bool Script_RunString(const char *str, ...)
   lua_getglobal(LUA_ST, "ob_traceback");
  
   if (lua_type(LUA_ST, -1) == LUA_TNIL)
-    Main_FatalError("LUA script problem: missing function '%s'", "ob_traceback");
+    Main_FatalError("Script problem: missing function '%s'", "ob_traceback");
 
   int status = luaL_loadbuffer(LUA_ST, buffer, strlen(buffer), "=CONSOLE");
 
@@ -751,8 +753,8 @@ bool Script_RunString(const char *str, ...)
     else
       err_msg = msg;
 
-    ConPrintf("\nError: @1%s", err_msg);
-    ConPrintf("\n");
+    ConPrintf("\nScript Error: @1%s\n", err_msg);
+    LogPrintf("\nScript Error: %s\n", err_msg);
 
     lua_pop(LUA_ST, 2);  // ob_traceback, message
     return false;
