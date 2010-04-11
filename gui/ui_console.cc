@@ -431,6 +431,7 @@ private:
     ConExecute(that->input->value());
 
     that->input->value("");
+    that->browse_pos = -1;
   }
 };
 
@@ -932,6 +933,8 @@ void CMD_Args(void)
 void CMD_Clear(void)
 {
   console_body->Clear();
+
+  Script_DoString("ob_ref_table(\"clear\")");
 }
 
 void CMD_Help(void)
