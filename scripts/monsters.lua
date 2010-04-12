@@ -55,11 +55,14 @@ require 'util'
 
 
 -- Quake flags
-SPAWNFLAG_AMBUSH     = 1
-SPAWNFLAG_NOT_EASY   = 256
-SPAWNFLAG_NOT_MEDIUM = 512
-SPAWNFLAG_NOT_HARD   = 1024
-SPAWNFLAG_NOT_DM     = 2048
+QUAKE_FLAGS =
+{
+  AMBUSH     = 1,
+  NOT_EASY   = 256,
+  NOT_MEDIUM = 512,
+  NOT_HARD   = 1024,
+  NOT_DM     = 2048,
+}
 
 
 function Player_init()
@@ -654,11 +657,11 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       props = {}
 
       if SK == "easy" then
-        props.spawnflags = SPAWNFLAG_NOT_MEDIUM + SPAWNFLAG_NOT_HARD
+        props.spawnflags = QUAKE_FLAGS.NOT_MEDIUM + QUAKE_FLAGS.NOT_HARD
       elseif SK == "medium" then
-        props.spawnflags = SPAWNFLAG_NOT_EASY + SPAWNFLAG_NOT_HARD
+        props.spawnflags = QUAKE_FLAGS.NOT_EASY + QUAKE_FLAGS.NOT_HARD
       elseif SK == "hard" then
-        props.spawnflags = SPAWNFLAG_NOT_EASY + SPAWNFLAG_NOT_MEDIUM
+        props.spawnflags = QUAKE_FLAGS.NOT_EASY + QUAKE_FLAGS.NOT_MEDIUM
       end
     else
       props =
@@ -1505,11 +1508,11 @@ function Monsters_in_room(R)
       props.spawnflags = 0
 
       if spot.ambush or ambush then
-        props.spawnflags = props.spawnflags + SPAWNFLAG_AMBUSH
+        props.spawnflags = props.spawnflags + QUAKE_FLAGS.AMBUSH
       end
 
-      if (skill > 1) then props.spawnflags = props.spawnflags + SPAWNFLAG_NOT_EASY end
-      if (skill > 2) then props.spawnflags = props.spawnflags + SPAWNFLAG_NOT_MEDIUM end
+      if (skill > 1) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_EASY end
+      if (skill > 2) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_MEDIUM end
     else
       props.ambush = spot.ambush or ambush
 
