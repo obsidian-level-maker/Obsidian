@@ -2071,10 +2071,13 @@ OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
-  setup_func = Heretic_setup,
-  levels_start_func = Heretic_get_levels,
-  begin_level_func = Heretic_begin_level,
-  all_done_func = Heretic_all_done,
+  hooks =
+  {
+    setup = Heretic_setup,
+    levels_start = Heretic_get_levels,
+    begin_level = Heretic_begin_level,
+    all_done = Heretic_all_done,
+  },
 
   param =
   {

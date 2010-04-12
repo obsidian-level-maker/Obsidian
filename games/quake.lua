@@ -1238,9 +1238,12 @@ OB_GAMES["quake"] =
 {
   label = "Quake",
 
-  setup_func = Quake1_setup,
-  levels_start_func = Quake1_get_levels,
-  begin_level_func = Quake1_begin_level,
+  hooks =
+  {
+    setup = Quake1_setup,
+    levels_start = Quake1_get_levels,
+    begin_level = Quake1_begin_level,
+  },
 
   param =
   {

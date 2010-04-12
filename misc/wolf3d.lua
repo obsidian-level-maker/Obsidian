@@ -979,8 +979,11 @@ UNFINISHED["wolf3d"] =
 
   priority = -1,  -- keep at bottom
 
-  setup_func = Wolf3d_setup,
-  levels_start_func = Wolf3d_get_levels,
+  hooks =
+  {
+    setup = Wolf3d_setup,
+    levels_start = Wolf3d_get_levels,
+  },
 
   param =
   {
@@ -1034,8 +1037,11 @@ UNFINISHED["spear"] =
 
   priority = -2,  -- keep at bottom (with Wolf3d)
 
-  setup_func = Spear_setup,
-  levels_start_func = Spear_get_levels,
+  hooks =
+  {
+    setup = Spear_setup,
+    levels_start = Spear_get_levels,
+  },
 
   param = UNFINISHED["wolf3d"].param,
 

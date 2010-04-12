@@ -193,13 +193,17 @@ end
 
 
 function Game_invoke_hook(name, rseed, ...)
-  for index,mod in ipairs(GAME.all_modules) do
-    local func = mod[name]
-    if func then
-      if rseed then gui.rand_seed(rseed) end
-      func(mod, ...)
+  for pass = 1,2 do
+    for index,mod in ipairs(GAME.all_modules) do
+      local func = mod.hooks and mod.hooks[name]
+      if func then
+        if rseed then gui.rand_seed(rseed) end
+        func(mod, ...)
+      end
     end
-  end -- for mod
+    -- second pass appends '2' to the name
+    name = name .. "2"
+  end
 end
 
 
@@ -238,9 +242,7 @@ function Game_setup()
   end
 
 
-  Game_invoke_hook("setup_func",  OB_CONFIG.seed)
-  Game_invoke_hook("setup2_func", OB_CONFIG.seed)
-
+  Game_invoke_hook("setup",  OB_CONFIG.seed)
 
   name_it_up(ROOM_PATTERNS)
   expand_copies(ROOM_PATTERNS)
@@ -567,17 +569,14 @@ function Level_make(L, index, NUM)
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    Game_invoke_hook("begin_level_func",  LEVEL.seed)
-    Game_invoke_hook("begin_level2_func", LEVEL.seed)
+    Game_invoke_hook("begin_level",  LEVEL.seed)
 
     local res = Level_handle_prebuilt()
     if res == "abort" then
       return res
     end
 
-    Game_invoke_hook("end_level_func",  LEVEL.seed)
-    Game_invoke_hook("end_level2_func", LEVEL.seed)
-
+    Game_invoke_hook("end_level",  LEVEL.seed)
     return "ok"
   end
 
@@ -587,8 +586,7 @@ function Level_make(L, index, NUM)
 
   Level_styles()
 
-  Game_invoke_hook("begin_level_func",  LEVEL.seed)
-  Game_invoke_hook("begin_level2_func", LEVEL.seed)
+  Game_invoke_hook("begin_level",  LEVEL.seed)
 
   gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
 
@@ -609,8 +607,7 @@ function Level_make(L, index, NUM)
   end
 
 
-  Game_invoke_hook("end_level_func",  LEVEL.seed)
-  Game_invoke_hook("end_level2_func", LEVEL.seed)
+  Game_invoke_hook("end_level",  LEVEL.seed)
 
   gui.end_level()
 
@@ -631,8 +628,7 @@ function Game_make_all()
 
   GAME.all_levels = {}
 
-  Game_invoke_hook("levels_start_func",  OB_CONFIG.seed)
-  Game_invoke_hook("levels_start2_func", OB_CONFIG.seed)
+  Game_invoke_hook("levels_start",  OB_CONFIG.seed)
 
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
@@ -650,12 +646,7 @@ function Game_make_all()
     end
   end
 
-  Game_invoke_hook("all_done_func",  OB_CONFIG.seed)
-  Game_invoke_hook("all_done2_func", OB_CONFIG.seed)
-
----!!!  if HOOKS.remap_music then
----!!!     HOOKS.remap_music()
----!!!  end
+  Game_invoke_hook("all_done",  OB_CONFIG.seed)
 
   return "ok"
 end

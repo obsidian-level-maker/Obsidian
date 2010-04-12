@@ -231,7 +231,10 @@ OB_MODULES["sktag_mons"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 
-  setup_func = Skulltag_setup,
+  hooks =
+  {
+    setup = Skulltag_setup,
+  },
 
   tables =
   {
@@ -306,7 +309,10 @@ OB_MODULES["sktag_mon_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_MonControl_setup,
+  hooks =
+  {
+    setup = Sktag_MonControl_setup,
+  },
 
   options =
   {
@@ -354,7 +360,10 @@ OB_MODULES["sktag_weap_control"] =
 
   for_modules = { sktag_mons=1 },
 
-  setup_func = Sktag_WeapControl_setup,
+  hooks =
+  {
+    setup = Sktag_WeapControl_setup,
+  },
 
   options =
   {

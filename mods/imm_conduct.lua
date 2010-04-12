@@ -387,8 +387,11 @@ OB_MODULES["imm_conduct"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { edge=1 },
 
-  setup_func = ImmConduct_setup,
-  begin_level_func = ImmConduct_begin_level,
+  hooks =
+  {
+    setup = ImmConduct_setup,
+    begin_level = ImmConduct_begin_level,
+  },
 
   tables =
   {

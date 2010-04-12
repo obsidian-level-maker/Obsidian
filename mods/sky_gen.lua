@@ -259,6 +259,9 @@ OB_MODULES["sky_gen_doom"] =
 
   for_games = { doom1=1, doom2=1 },
 
-  levels_start_func = Doom_generate_skies,
+  hooks =
+  {
+    levels_start = Doom_generate_skies,
+  },
 }
 

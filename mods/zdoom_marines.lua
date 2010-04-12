@@ -180,7 +180,10 @@ OB_MODULES["zdoom_marines"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = ZDoom_Marine_setup,
+  hooks =
+  {
+    setup = ZDoom_Marine_setup,
+  },
 
   tables =
   {
@@ -251,7 +254,10 @@ OB_MODULES["zdoom_marine_control"] =
 
   for_modules = { zdoom_marines=1 },
 
-  setup_func = Marine_Control_setup,
+  hooks =
+  {
+    setup = Marine_Control_setup,
+  },
 
   options =
   {

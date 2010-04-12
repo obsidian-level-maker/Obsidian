@@ -67,7 +67,10 @@ OB_MODULES["mon_control"] =
   for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = Mon_Control_setup,
+  hooks =
+  {
+    setup = Mon_Control_setup,
+  },
 
   options =
   {
@@ -152,7 +155,10 @@ OB_MODULES["weap_control"] =
   for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
 
-  setup_func = Weap_Control_setup,
+  hooks =
+  {
+    setup = Weap_Control_setup,
+  },
 
   options =
   {

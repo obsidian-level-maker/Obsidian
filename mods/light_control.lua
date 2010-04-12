@@ -32,7 +32,10 @@ OB_MODULES["lighting_control"] =
                 strife=1,
               },
 
-  setup_func = LightControl_setup,
+  hooks =
+  {
+    setup = LightControl_setup,
+  },
 
   options =
   {

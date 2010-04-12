@@ -202,8 +202,11 @@ UNFINISHED["strife"] =
 {
   label = "Strife",
 
-  setup_func = Strife_setup,
-  levels_start_func = Strife_get_levels,
+  hooks =
+  {
+    setup = Strife_setup,
+    levels_start = Strife_get_levels,
+  },
 
   param =
   {

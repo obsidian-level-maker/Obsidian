@@ -53,7 +53,10 @@ OB_MODULES["level_control"] =
 {
   label = "Level Control",
 
-  begin_level_func = Level_Control_begin_level,
+  hooks =
+  {
+    begin_level = Level_Control_begin_level,
+  },
 
   options =
   {

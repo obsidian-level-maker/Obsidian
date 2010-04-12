@@ -479,8 +479,11 @@ UNFINISHED["hacx"] =
 {
   label = "HacX 1.1",
 
-  setup_func = HacX_setup,
-  levels_start_func = HacX_get_levels,
+  hooks =
+  {
+    setup = HacX_setup,
+    levels_start = HacX_get_levels,
+  },
 
   param =
   {

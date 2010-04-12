@@ -2413,9 +2413,12 @@ UNFINISHED["hexen"] =
 {
   label = "Hexen",
 
-  setup_func = Hexen_setup,
-  levels_start_func = Hexen_get_levels,
-  begin_level_func = Hexen_begin_level,
+  hooks =
+  {
+    setup = Hexen_setup,
+    levels_start = Hexen_get_levels,
+    begin_level = Hexen_begin_level,
+  },
 
   param =
   {

@@ -2020,9 +2020,12 @@ UNFINISHED["quake2"] =
 {
   label = "Quake 2",
 
-  setup_func = Quake2_setup,
-  levels_start_func = Quake2_get_levels,
-  begin_level_func = Quake2_begin_level,
+  hooks =
+  {
+    setup = Quake2_setup,
+    levels_start = Quake2_get_levels,
+    begin_level = Quake2_begin_level,
+  },
 
   param =
   {

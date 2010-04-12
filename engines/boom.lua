@@ -81,7 +81,10 @@ OB_ENGINES["boom"] =
 
   for_games = { doom1=1, doom2=1 },
 
-  all_done_func = Boom_all_done,
+  hooks =
+  {
+    all_done = Boom_all_done,
+  },
 
   param =
   {

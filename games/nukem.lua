@@ -337,8 +337,11 @@ UNFINISHED["nukem"] =
 {
   label = "Duke Nukem",
 
-  setup_func = Nukem_setup,
-  levels_start_func = Nukem_get_levels,
+  hooks =
+  {
+    setup = Nukem_setup,
+    levels_start = Nukem_get_levels,
+  },
 
   param =
   {

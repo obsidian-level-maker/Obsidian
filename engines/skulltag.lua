@@ -29,7 +29,10 @@ OB_ENGINES["skulltag"] =
   },
 
   -- FIXME: this is only for level names, use MAPINFO instead
-  all_done_func = Boom_all_done,
+  hooks =
+  {
+    all_done = Boom_all_done,
+  },
 
   param =
   {

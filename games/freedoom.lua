@@ -103,12 +103,10 @@ OB_GAMES["freedoom"] =
 
   extends = "doom2",
 
-  setup_func = Freedoom_setup,
-
-  levels_start_func = Doom2_get_levels,
-  begin_level_func  = Doom_begin_level,
-  end_level_func    = Doom_end_level,
-  all_done_func     = Doom_all_done,
+  hooks =
+  {
+    setup = Freedoom_setup,
+  },
 
   tables =
   {

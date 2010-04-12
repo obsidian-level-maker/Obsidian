@@ -185,7 +185,10 @@ OB_MODULES["stealth_mons"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 },
 
-  setup_func = Stealth_Mons_setup,
+  hooks =
+  {
+    setup = Stealth_Mons_setup,
+  },
 
   tables =
   {
@@ -253,7 +256,10 @@ OB_MODULES["stealth_mon_control"] =
 
   for_modules = { stealth_mons=1 },
 
-  setup_func = Stealth_MonControl_setup,
+  hooks =
+  {
+    setup = Stealth_MonControl_setup,
+  },
 
   options =
   {

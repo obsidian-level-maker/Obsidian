@@ -4072,12 +4072,15 @@ OB_GAMES["doom1"] =
 
   priority = 98, -- keep at second spot
 
-  setup_func        = Doom1_setup,
-  levels_start_func = Doom1_get_levels,
+  hooks =
+  {
+    setup        = Doom1_setup,
+    levels_start = Doom1_get_levels,
 
-  begin_level_func  = Doom_begin_level,
-  end_level_func    = Doom_end_level,
-  all_done_func     = Doom_all_done,
+    begin_level  = Doom_begin_level,
+    end_level    = Doom_end_level,
+    all_done     = Doom_all_done,
+  },
 
   param =
   {
@@ -4153,12 +4156,7 @@ OB_GAMES["ultdoom"] =
 
   priority = 97, -- keep at third spot
 
-  setup_func        = Doom1_setup,
-  levels_start_func = Doom1_get_levels,
-
-  begin_level_func  = Doom_begin_level,
-  end_level_func    = Doom_end_level,
-  all_done_func     = Doom_all_done,
+  -- no additional hooks
 
   -- no additional parameters
   
@@ -4174,12 +4172,15 @@ OB_GAMES["doom2"] =
 
   priority = 99, -- keep at top
 
-  setup_func        = Doom2_setup,
-  levels_start_func = Doom2_get_levels,
+  hooks =
+  {
+    setup        = Doom2_setup,
+    levels_start = Doom2_get_levels,
 
-  begin_level_func  = Doom_begin_level,
-  end_level_func    = Doom_end_level,
-  all_done_func     = Doom_all_done,
+    begin_level  = Doom_begin_level,
+    end_level    = Doom_end_level,
+    all_done     = Doom_all_done,
+  },
 
   param =
   {

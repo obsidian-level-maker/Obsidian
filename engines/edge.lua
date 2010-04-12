@@ -91,7 +91,10 @@ OB_ENGINES["edge"] =
 
   for_games = { doom1=1, doom2=1 },
 
-  all_done_func = Edge_all_done,
+  hooks =
+  {
+    all_done = Edge_all_done,
+  },
 
   param =
   {
