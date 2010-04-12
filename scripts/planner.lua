@@ -340,7 +340,7 @@ function Plan_CreateRooms()
       local ROOM = { id=id, kind="normal", conns={}, }
       id = id + 1
 
-      set_class(ROOM, ROOM_CLASS)
+      table.set_class(ROOM, ROOM_CLASS)
 
       local big_w, big_h = choose_big_size(bx, by)
 
@@ -777,7 +777,7 @@ function Plan_SubRooms()
 
     id = id + 1
 
-    set_class(ROOM, ROOM_CLASS)
+    table.set_class(ROOM, ROOM_CLASS)
 
     ROOM.parent = parent
     ROOM.neighbors = { }  -- ???
@@ -863,7 +863,7 @@ function Plan_MakeSeeds()
   end
 
   local function fill_holes()
-    local sc_list = shallow_copy(LEVEL.scenic_rooms)
+    local sc_list = table.copy(LEVEL.scenic_rooms)
     rand_shuffle(sc_list)
 
     for _,R in ipairs(sc_list) do

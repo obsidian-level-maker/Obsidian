@@ -135,7 +135,7 @@ function Seed_init(map_W, map_H, map_D, free_W, free_H)
       S.x2 = S.x1 + SIZE
       S.y2 = S.y1 + SIZE
 
-      set_class(S, SEED_CLASS)
+      table.set_class(S, SEED_CLASS)
 
       for side = 2,8,2 do
         S.border[side] = {}

@@ -83,7 +83,7 @@ function Trans_brush(info, coords, z1, z2)
   if TRANSFORM.mirror_y then reverse_it = not reverse_it end
 
   -- apply transform
-  coords = deep_copy(coords)
+  coords = table.deep_copy(coords)
 
   for _,C in ipairs(coords) do
     C.x, C.y = Trans_coord(C.x, C.y)

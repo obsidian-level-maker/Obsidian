@@ -1331,7 +1331,7 @@ gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
   local function clip_heights(tab, where)
     assert(tab and #tab >= 1)
 
-    local new_tab = shallow_copy(tab)
+    local new_tab = table.copy(tab)
 
     for i = 1,where do
       table.remove(new_tab, 1)
@@ -1376,7 +1376,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
           T.score = eval_pattern(T)
 
           if T.score > 0 then
-            table.insert(possibles, shallow_copy(T))
+            table.insert(possibles, table.copy(T))
           end
         end end -- for xf_n, yf_n
       end 

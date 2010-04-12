@@ -307,7 +307,7 @@ function Quest_rejig_path(arena, new_conn)
   -- connection (which must come off a room along the original path).
 
   local old_start = arena.start
-  local old_path  = shallow_copy(arena.path)
+  local old_path  = table.copy(arena.path)
 
   arena.start = new_conn.src
 
@@ -575,7 +575,7 @@ function Quest_split_arena(arena, LOCK)
     front_A.start = arena.start
 
     -- create the back_path
-    front_A.back_path = shallow_copy(front_A.path)
+    front_A.back_path = table.copy(front_A.path)
     table_reverse(front_A.back_path)
 
     -- add first half of path
@@ -820,9 +820,9 @@ function Quest_choose_keys()
   local locks_needed = #LEVEL.all_locks - 1
   if locks_needed <= 0 then return end
 
-  local key_tab    = shallow_copy(THEME.keys     or {}) 
-  local switch_tab = shallow_copy(THEME.switches or {})
-  local bar_tab    = shallow_copy(THEME.bars     or {})
+  local key_tab    = table.copy(THEME.keys     or {}) 
+  local switch_tab = table.copy(THEME.switches or {})
+  local bar_tab    = table.copy(THEME.bars     or {})
 
   local num_keys     = table_size(key_tab)
   local num_switches = table_size(switch_tab)
@@ -856,7 +856,7 @@ function Quest_choose_keys()
     LOCK.key_score = LOCK.key_score + gui.random() / 5.0
   end
 
-  local lock_list = shallow_copy(LEVEL.all_locks)
+  local lock_list = table.copy(LEVEL.all_locks)
   table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
 
   for _,LOCK in ipairs(lock_list) do
@@ -1225,8 +1225,8 @@ function Quest_assign()
 
   local ARENA =
   {
-    rooms = shallow_copy(LEVEL.all_rooms),
-    conns = shallow_copy(LEVEL.all_conns),
+    rooms = table.copy(LEVEL.all_rooms),
+    conns = table.copy(LEVEL.all_conns),
     lock = LOCK,
   }
 

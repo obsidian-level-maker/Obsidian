@@ -216,7 +216,7 @@ function table_pick_best(list, comp)
   return list[cur], cur
 end
 
-function shallow_merge(dest, src)
+function table.merge(dest, src)  -- shallow
   for k,v in pairs(src) do
     if v == REMOVE_ME then
       dest[k] = nil
@@ -228,18 +228,18 @@ function shallow_merge(dest, src)
   return dest
 end
 
-function shallow_copy(t)
-  return t and shallow_merge({}, t)
+function table.copy(t)  -- shallow
+  return t and table.merge({}, t)
 end
 
-function merge_missing(dest, src)
+function table.merge_missing(dest, src)
   for k,v in pairs(src) do
     if not dest[k] then dest[k] = v end
   end
   return dest
 end
 
-function deep_merge(dest, src, _curdepth)
+function table.deep_merge(dest, src, _curdepth)
   _curdepth = _curdepth or 1
 
   if _curdepth > 10 then
@@ -253,9 +253,9 @@ function deep_merge(dest, src, _curdepth)
       -- the type check handles non-existing fields too.
       -- the # checks mean we merely copy a list (NOT merge it).
       if type(dest[k]) == "table" and #v == 0 and #dest[k] == 0 then
-        deep_merge(dest[k], v, _curdepth+1)
+        table.deep_merge(dest[k], v, _curdepth+1)
       else
-        dest[k] = deep_merge({}, v, _curdepth+1)
+        dest[k] = table.deep_merge({}, v, _curdepth+1)
       end
     else
       dest[k] = v
@@ -265,16 +265,16 @@ function deep_merge(dest, src, _curdepth)
   return dest
 end
 
-function deep_copy(t)
-  return t and deep_merge({}, t)
+function table.deep_copy(t)
+  return t and table.deep_merge({}, t)
 end
 
-function deepish_merge(dest, src)
+function table.deepish_merge(dest, src)
   for k,v in pairs(src) do
     if v == REMOVE_ME then
       dest[k] = nil
     elseif type(v) == "table" then
-      dest[k] = deep_copy(v)
+      dest[k] = table.deep_copy(v)
     else
       dest[k] = v
     end
@@ -309,7 +309,7 @@ function expand_copies(LIST)
     -- recursively expand the original
     expand_it(sub.copy, orig)
 
-    merge_missing(sub, orig)
+    table.merge_missing(sub, orig)
 
     sub._expanding = nil
     sub.copy = nil
@@ -330,30 +330,16 @@ function array_2D(w, h)
   return array
 end
 
-function iterate_2D(arr, func, sx, sy, ex, ey)
-  if not sx then
-    sx = 1; sy = 1; ex = arr.w; ey = arr.h
-  end
-  for x = sx,ex do
-    for y= sy,ey do
-      if arr[x][y] then
-        local res = func(arr, x, y)
-        if not res then return res end
-      end
-    end
-  end
-end
-
-INHERIT_META =
+table.INHERIT_META =
 {
   __index = function(t, k)
     if t.__parent then return t.__parent[k] end
   end
 }
 
-function set_class(child, parent)
+function table.set_class(child, parent)
   child.__parent = parent
-  setmetatable(child, INHERIT_META)
+  setmetatable(child, table.INHERIT_META)
 end
 
 

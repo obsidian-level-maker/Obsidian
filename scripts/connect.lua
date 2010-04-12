@@ -686,7 +686,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
     local CONN = { dir=dir, src=S.room, dest=T.room, src_S=S, dest_S=T }
 
-    set_class(CONN, CONN_CLASS)
+    table.set_class(CONN, CONN_CLASS)
 
     assert(not S.conn and not S.conn_dir)
     assert(not T.conn and not T.conn_dir)
@@ -1132,7 +1132,7 @@ gui.debugf("Failed\n")
     gui.debugf("Killing rebel group %d (%d rooms)\n", rebel_id, #rebels)
 
     -- use a copy since we modify the original list
-    local c_copy = shallow_copy(LEVEL.all_conns)
+    local c_copy = table.copy(LEVEL.all_conns)
 
     for _,C in ipairs(c_copy) do
       if C.src.c_group == rebel_id then
@@ -1150,7 +1150,7 @@ gui.debugf("Failed\n")
     local min_g = min_group_id()
 
     -- use a copy since LEVEL.all_rooms may be modified
-    local list = shallow_copy(LEVEL.all_rooms)
+    local list = table.copy(LEVEL.all_rooms)
 
     local join_chance = 65
     if STYLE.scenics == "few"   then join_chance = 95 end
@@ -1195,7 +1195,7 @@ gui.debugf("Failed\n")
     local side_prob = sel(STYLE.scenics == "heaps", 60, 10)
     local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)
 
-    local list = shallow_copy(LEVEL.all_rooms)
+    local list = table.copy(LEVEL.all_rooms)
     rand_shuffle(list)
 
     for _,R in ipairs(list) do

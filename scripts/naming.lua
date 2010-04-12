@@ -1272,6 +1272,7 @@ NAMING_THEMES =
         ["ERROR: No Level Name."]=10,
         ["Family Time"]=10,
         ["Fatal Error"]=10,
+        ["Heard of Cows?"]=10,
         ["I See Dead People"]=10,
         ["Idiots Preferred"]=10,
         ["Inflating Dwarfs"]=10,
@@ -1456,11 +1457,10 @@ end
 
 
 function Naming_gen_list(theme, count, max_len)
- 
-  local defs = deep_copy(NAMING_THEMES)
+  local defs = table.deep_copy(NAMING_THEMES)
 
   if GAME.naming_themes then
-    deep_merge(defs, GAME.naming_themes)
+    table.deep_merge(defs, GAME.naming_themes)
   end
  
   local DEF = defs[theme]

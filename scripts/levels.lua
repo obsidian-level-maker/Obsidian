@@ -99,24 +99,24 @@ function Game_merge_tab(name, tab)
   end
 
   if not GAME[name] then
-    GAME[name] = deep_copy(tab)
+    GAME[name] = table.deep_copy(tab)
     return
   end
 
   if name ~= "sub_themes" then
-    deepish_merge(GAME[name], tab)
+    table.deepish_merge(GAME[name], tab)
     return
   end
 
   -- special handling for sub_themes
 
-  for k,info in pairs(tab) do
-    if tab == REMOVE_ME then
+  for k,sub_t in pairs(tab) do
+    if sub_t == REMOVE_ME then
       GAME.sub_themes[k] = nil
     elseif not GAME.sub_themes[k] then
-      GAME.sub_themes[k] = deep_copy(info)
+      GAME.sub_themes[k] = table.deep_copy(sub_t)
     else
-      deepish_merge(GAME.sub_themes[k], info)
+      table.deepish_merge(GAME.sub_themes[k], sub_t)
     end
   end
 end
@@ -212,7 +212,7 @@ function Game_setup()
 
   local function merge_stuff(mod)
     if mod.param then
-      shallow_merge(PARAM, mod.param)
+      table.merge(PARAM, mod.param)
     end
 
     if mod.tables then
@@ -468,17 +468,17 @@ end
 function Level_styles()
   gui.rand_seed(LEVEL.seed)
 
-  local style_tab = shallow_copy(STYLE_LIST)
+  local style_tab = table.copy(STYLE_LIST)
 
   -- per game, per level and per theme style_lists
   if GAME.style_list then
-    shallow_merge(style_tab, GAME.style_list)
+    table.merge(style_tab, GAME.style_list)
   end
   if LEVEL.style_list then
-    shallow_merge(style_tab, LEVEL.style_list)
+    table.merge(style_tab, LEVEL.style_list)
   end
   if THEME.style_list then
-    shallow_merge(style_tab, THEME.style_list)
+    table.merge(style_tab, THEME.style_list)
   end
 
   -- decide the values
@@ -557,10 +557,10 @@ function Level_make(L, index, NUM)
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
 
-  THEME = shallow_copy(assert(LEVEL.sub_theme))
+  THEME = table.copy(assert(LEVEL.sub_theme))
 
   if GAME.sub_defaults then
-    merge_missing(THEME, GAME.sub_defaults)
+    table.merge_missing(THEME, GAME.sub_defaults)
   end
 
 

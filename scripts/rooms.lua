@@ -156,7 +156,7 @@ function Rooms_assign_facades()
     R.facade = rand_element(LEVEL.building_facades)
   end
 
-  local visits = shallow_copy(LEVEL.all_rooms)
+  local visits = table.copy(LEVEL.all_rooms)
 
   for loop = 1,10 do
     local changes = false

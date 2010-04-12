@@ -66,7 +66,7 @@ function Player_init()
   LEVEL.hmodels = {}
 
   for _,SK in ipairs(SKILLS) do
-    local hm_set = deep_copy(GAME.player_model)
+    local hm_set = table.deep_copy(GAME.player_model)
 
     for CL,hmodel in pairs(hm_set) do
       hmodel.skill = SK
@@ -1377,7 +1377,7 @@ function Monsters_in_room(R)
 
         assert(not spot.monster)
 
-        local try_pal = shallow_copy(pal_2)
+        local try_pal = table.copy(pal_2)
 
         -- try other monsters if the first doesn't fit
         while not table_empty(try_pal) do
