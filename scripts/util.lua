@@ -337,7 +337,7 @@ end
 
 ----====| RANDOM NUMBERS |====----
 
-rand = {}
+rand = { }
 
 function rand.range(L,H)
   return L + gui.random() * (H-L)
@@ -432,7 +432,24 @@ end
 
 ----====| GEOMETRY |====----
 
-geom = {}
+geom = { }
+
+-- rotate tables : Right = CLOCKWISE, Left = ANTI-CLOCKWISE
+
+geom.ROTATE =
+{
+  [0] = { 1,2,3, 4,5,6, 7,8,9 },
+  [1] = { 4,1,2, 7,5,3, 8,9,6 },
+  [2] = { 7,4,1, 8,5,2, 9,6,3 },
+  [3] = { 8,7,4, 9,5,1, 6,3,2 },
+  [4] = { 9,8,7, 6,5,4, 3,2,1 },
+  [5] = { 6,9,8, 3,5,7, 2,1,4 },
+  [6] = { 3,6,9, 2,5,8, 1,4,7 },
+  [7] = { 2,3,6, 1,5,9, 4,7,8 },
+}
+
+geom.RIGHT = geom.ROTATE[2]
+geom.LEFT  = geom.ROTATE[6]
 
 function geom.dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
@@ -453,27 +470,6 @@ function geom.delta(dir)
 
   error("geom.delta: bad dir: " .. tostring(dir))
 end
-
-function geom.right(dir)
-  if dir == 3 then return -1, -1 end
-  if dir == 6 then return  0, -1 end
-  if dir == 9 then return  1, -1 end
-
-  if dir == 2 then return -1, 0 end
-  if dir == 5 then return  0, 0 end
-  if dir == 8 then return  1, 0 end
-
-  if dir == 1 then return -1, 1 end
-  if dir == 4 then return  0, 1 end
-  if dir == 7 then return  1, 1 end
-
-  error("geom.right: bad dir: " .. tostring(dir))
-end
-
-function geom.left(dir)
-  return geom.right(10 - dir)
-end
-
 
 function geom.nudge(x, y, dir, dist)
   if not dist then dist = 1 end
@@ -497,49 +493,6 @@ function geom.is_perpendic(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
 end
 
-CW_45_ROTATES  = { 4, 1, 2,  7, 5, 3,  8, 9, 6 }
-CCW_45_ROTATES = { 2, 3, 6,  1, 5, 9,  4, 7, 8 }
-
-CW_90_ROTATES  = { 7, 4, 1,  8, 5, 2,  9, 6, 3 }
-CCW_90_ROTATES = { 3, 6, 9,  2, 5, 8,  1, 4, 7 }
-
-function rotate_cw45(dir)
-  return CW_45_ROTATES[dir]
-end
-
-function rotate_ccw45(dir)
-  return CCW_45_ROTATES[dir]
-end
-
-function rotate_cw90(dir)
-  return CW_90_ROTATES[dir]
-end
-
-function rotate_ccw90(dir)
-  return CCW_90_ROTATES[dir]
-end
-
-DIR_ROTATE_TAB =
-{
-  [1] = { 6,9,8, 3,5,7, 2,1,4 },
-  [2] = { 9,8,7, 6,5,4, 3,2,1 },
-  [3] = { 8,7,4, 9,5,1, 6,3,2 },
-  [4] = { 3,6,9, 2,5,8, 1,4,7 },
-
-  [6] = { 7,4,1, 8,5,2, 9,6,3 },
-  [7] = { 2,3,6, 1,5,9, 4,7,8 },
-  [8] = { 1,2,3, 4,5,6, 7,8,9 },
-  [9] = { 4,1,2, 7,5,3, 8,9,6 },
-}
-
-function rotate_dir(dir, up_dir)
-  -- when up_dir is 8, there is no change
-  -- when up_dir is 6 --> 90 degrees clockwise, etc..
-
-  assert(DIR_ROTATE_TAB[up_dir])
-
-  return assert(DIR_ROTATE_TAB[up_dir][dir])
-end
 
 DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
 

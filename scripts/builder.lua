@@ -1180,7 +1180,7 @@ function Build_debug_arrow(S, dir, f_h)
   local my = int((S.y1 + S.y2)/2)
 
   local dx, dy = geom.delta(dir)
-  local ax, ay = geom.right(dir)
+  local ax, ay = geom.delta(geom.RIGHT[dir])
 
   Trans_brush(get_mat("FWATER1"),
   {
@@ -2075,9 +2075,9 @@ function Build_small_exit(R, xt_info, skin, skin2)
 
   S.thick[side] = 80
 
-  Trans_brush(inner_info, get_wall_coords(S, rotate_cw90(side),  32, 8),
+  Trans_brush(inner_info, get_wall_coords(S, geom.RIGHT[side], 32, 8),
                     -EXTREME_H, EXTREME_H)
-  Trans_brush(inner_info, get_wall_coords(S, rotate_ccw90(side), 32, 8),
+  Trans_brush(inner_info, get_wall_coords(S, geom.LEFT[side], 32, 8),
                     -EXTREME_H, EXTREME_H)
 
 

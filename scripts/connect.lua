@@ -733,7 +733,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
     end
 
     if MORPH >= 4 then
-      dir = rotate_cw90(dir)
+      dir = geom.RIGHT[dir]
     end
 
     return dir

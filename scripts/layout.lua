@@ -623,8 +623,8 @@ function Layout_natural_room(R, heights)
   local function handle_corner(S, side)
     local N = S:neighbor(side)
 
-    local A = S:neighbor(rotate_ccw45(side))
-    local B = S:neighbor(rotate_cw45(side))
+    local A = S:neighbor(geom.ROTATE[1][side])
+    local B = S:neighbor(geom.ROTATE[7][side])
 
     if not (A and A.room == R) or not (B and B.room == R) then
       return
@@ -675,7 +675,6 @@ function Layout_natural_room(R, heights)
 
     return true
   end
-
 
 
   ---| Layout_natural_room |---
@@ -860,8 +859,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
       local SIDES =
       {
         10 - dir,  -- try back first
-        rotate_ccw90(dir),
-        rotate_cw90 (dir)
+        geom.LEFT[dir],
+        geom.RIGHT[dir],
       }
 
       for _,side in ipairs(SIDES) do

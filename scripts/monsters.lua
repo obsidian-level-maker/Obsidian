@@ -398,7 +398,7 @@ function Monsters_do_pickups()
       if side == 7 then mx, my = mx + i*dist, my - i*dist end
       if side == 9 then mx, my = mx - i*dist, my - i*dist end
 
-      local dir = rotate_cw90(side)
+      local dir = geom.RIGHT[side]
 
       table.insert(R.small_spots, { S=S, x=mx, y=my, dir=dir, score=score })
 
