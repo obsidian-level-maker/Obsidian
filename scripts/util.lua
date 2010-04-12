@@ -21,9 +21,6 @@
 
 ----====| GENERAL STUFF |====----
 
-function do_nothing()
-end
-
 function int(val)
   return math.floor(val)
 end
@@ -112,6 +109,12 @@ function table.contains(t, v)
     if v == value then return true end
   end
   return false
+end
+
+function table.numbers(count)
+  local t = {}
+  for i = 1,count do t[i] = i end
+  return t
 end
 
 function table.find_unused(t, start)
@@ -344,27 +347,29 @@ end
 
 ----====| RANDOM NUMBERS |====----
 
-function rand_range(L,H)
+rand = {}
+
+function rand.range(L,H)
   return L + gui.random() * (H-L)
 end
 
-function rand_irange(L,H)
+function rand.irange(L,H)
   return math.floor(L + gui.random() * (H-L+0.9999))
 end
 
-function rand_skew()
+function rand.skew()
   return gui.random() - gui.random()
 end
 
-function rand_dir()
-  return rand_irange(1,4) * 2
+function rand.dir()
+  return rand.irange(1, 4) * 2
 end
 
-function rand_odds(chance)
+function rand.odds(chance)
   return (gui.random() * 100) <= chance
 end
 
-function rand_sel(chance, yes_val, no_val)
+function rand.sel(chance, yes_val, no_val)
   if (gui.random() * 100) <= chance then
     return yes_val
   else
@@ -372,79 +377,55 @@ function rand_sel(chance, yes_val, no_val)
   end
 end
 
-function dual_odds(test,t_chance,f_chance)
-  if test then
-    return rand_odds(t_chance)
+function rand.pick(list)
+  if #list > 0 then
+    return list[rand.irange(1, #list)]
   else
-    return rand_odds(f_chance)
+    return nil
   end
 end
 
-function rand_element(list)
-  if #list == 0 then return nil end
-  return list[rand_irange(1,#list)]
-end
+function rand.shuffle(t)
+  -- implements Knuth's random shuffle algorithm.
 
-function rand_table_pair(tab)
-  local count = 0
-  for k,v in pairs(tab) do count = count+1 end
-
-  if count == 0 then return nil, nil end
-  local index = rand_irange(1,count)
-
-  for k,v in pairs(tab) do
-    if index==1 then return k,v end
-    index = index-1
+  if #t > 1 then
+    for i = 1,(#t-1) do
+      local k = rand.irange(i,#t)
+      -- swap the pair of values
+      t[i], t[k] = t[k], t[i]
+    end
   end
 
-  error("rand_table_kv: miscounted!")
+  return t
 end
 
--- implements Knuth's random shuffle algorithm.
--- returns first value after the shuffle.
--- the table can optionally be filled with integers.
-function rand_shuffle(t, fill_size)
-  if fill_size then
-    for i = 1,fill_size do t[i] = i end
-  end
-
-  if #t <= 1 then return end
-
-  for i = 1,(#t-1) do
-    local j = rand_irange(i,#t)
-
-    -- swap the pair of values
-    t[i], t[j] = t[j], t[i]
-  end
-
-  return t[1]
-end
-
--- each element in the table is a probability.
--- returns a random index based on the probabilities
--- (e.g. the highest value is returned more often).
-function rand_index_by_probs(p)
+function rand.index_by_probs(p)
+  -- each element in the table is a probability.
+  -- returns a random index based on the probabilities
+  -- (e.g. the highest value is returned more often).
   assert(#p > 0)
 
   local total = 0
-  for _,prob in ipairs(p) do total = total + prob end
-
-  if total == 0 then return nil end
-
-  local value = gui.random() * total
-
-  for idx, prob in ipairs(p) do
-    value = value - prob
-    if (value <= 0) then return idx end
+  for _,prob in ipairs(p) do
+    total = total + prob
   end
 
-  -- shouldn't get here, but if we do, return a valid index
+  if total > 0 then
+    local value = gui.random() * total
+
+    for idx, prob in ipairs(p) do
+      value = value - prob
+      if (value <= 0) then return idx end
+    end
+  end
+
+  -- should not get here, but if we do, return a valid index
   return 1
 end
 
--- each element in the table has the form: KEY = PROB.
--- This function returns one of the keys.
-function rand_key_by_probs(tab)
+function rand.key_by_probs(tab)
+  -- each element in the table has the form: KEY = PROB.
+  -- This function returns one of the keys.
   local key_list  = {}
   local prob_list = {}
 
@@ -453,7 +434,7 @@ function rand_key_by_probs(tab)
     table.insert(prob_list, prob)
   end
 
-  local idx = rand_index_by_probs(prob_list)
+  local idx = rand.index_by_probs(prob_list)
 
   return key_list[idx]
 end
