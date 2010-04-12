@@ -1400,7 +1400,7 @@ function Name_from_pattern(DEF)
   local name = ""
   local words = {}
 
-  local pattern = rand_key_by_probs(DEF.patterns)
+  local pattern = rand.key_by_probs(DEF.patterns)
   local pos = 1
 
   while pos <= #pattern do
@@ -1424,7 +1424,7 @@ function Name_from_pattern(DEF)
         error("Naming theme is missing letter: " .. c)
       end
 
-      local w = rand_key_by_probs(lex)
+      local w = rand.key_by_probs(lex)
       name = name .. w
 
       Naming_split_word(words, w)

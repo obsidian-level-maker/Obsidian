@@ -226,14 +226,14 @@ function Doom_generate_skies()
   end
 
 
-  rand_shuffle(back_gs)
-  rand_shuffle(fore_gs)
+  rand.shuffle(back_gs)
+  rand.shuffle(fore_gs)
 
 
   for num,sky in ipairs(sky_list) do
     gui.fsky_create(256, 128, 0)
 
-    local squish = rand_index_by_probs { 1, 4, 2 }
+    local squish = rand.index_by_probs { 1, 4, 2 }
 
     if back_gs[num] == "stars" then
       gui.set_colormap(1, STAR_COLS)

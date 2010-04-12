@@ -3764,7 +3764,7 @@ function Doom1_get_levels()
       local ep_along = map / MAP_NUM
 
       if MAP_NUM == 1 then
-        ep_along = rand_range(0.3, 0.7);
+        ep_along = rand.range(0.3, 0.7);
       elseif map == 9 then
         ep_along = 0.5
       end
@@ -3820,12 +3820,12 @@ function Doom2_get_levels()
   if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
   if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
-  gotcha_map = rand_element{17,18,19}
-  gallow_map = rand_element{24,25,26}
+  gotcha_map = rand.pick{17,18,19}
+  gallow_map = rand.pick{24,25,26}
 
   GAME.original_themes = {}
 
-  local few_episodes = { 1, rand_sel(70,1,2), rand_sel(70,2,3), 3 }
+  local few_episodes = { 1, rand.sel(70,1,2), rand.sel(70,2,3), 3 }
 
   for map = 1,MAP_NUM do
     -- determine episode from map number
@@ -3843,7 +3843,7 @@ function Doom2_get_levels()
     end
 
     if MAP_NUM == 1 then
-      ep_along = rand_range(0.3, 0.7)
+      ep_along = rand.range(0.3, 0.7)
     end
 
     if OB_CONFIG.length == "single" then
@@ -3946,7 +3946,7 @@ function Doom_make_cool_gfx()
     DOOM_LEVEL_GFX_COLORS.iron,
   }
 
-  rand_shuffle(colmaps)
+  rand.shuffle(colmaps)
 
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
@@ -3972,7 +3972,7 @@ function Doom_make_level_gfx()
 
   -- decide color set
   if not GAME.level_gfx_colors then
-    local kind = rand_key_by_probs(
+    local kind = rand.key_by_probs(
     {
       gold=12, silver=3, bronze=8, iron=10
     })
@@ -3996,7 +3996,7 @@ function Doom_begin_level()
     local info = LEVEL.prebuilt
 
     LEVEL.prebuilt_wad = info.file
-    LEVEL.prebuilt_map = rand_key_by_probs(info.maps)
+    LEVEL.prebuilt_map = rand.key_by_probs(info.maps)
   end
 end
 

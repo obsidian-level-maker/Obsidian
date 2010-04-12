@@ -808,7 +808,7 @@ function Quest_key_distances()
     elseif A.back_path then
       A.lock.distance = 1 + #A.back_path 
     else
-      A.lock.distance = rand_irange(1,12)
+      A.lock.distance = rand.irange(1,12)
     end
     gui.debugf("  Arena #%d : lock_dist %1.1f\n", index, A.lock.distance)
   end
@@ -834,7 +834,7 @@ function Quest_choose_keys()
   if num_switches == 0 then
     assert(locks_needed <= num_keys)
   else
-    while want_keys > 1 and (want_keys*2 > locks_needed) and rand_odds(80) do
+    while want_keys > 1 and (want_keys*2 > locks_needed) and rand.odds(80) do
       want_keys = want_keys - 1
     end
   end
@@ -866,7 +866,7 @@ function Quest_choose_keys()
 
     if LOCK.kind == "UNSET" then
       LOCK.kind = "KEY"
-      LOCK.item = rand_key_by_probs(key_tab)
+      LOCK.item = rand.key_by_probs(key_tab)
 
       -- cannot use this key again
       key_tab[LOCK.item] = nil
@@ -884,10 +884,10 @@ function Quest_choose_keys()
       LOCK.kind = "SWITCH"
 
       if num_bars > 0 and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-        LOCK.item = rand_key_by_probs(bar_tab)
+        LOCK.item = rand.key_by_probs(bar_tab)
         bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
       else
-        LOCK.item = rand_key_by_probs(switch_tab)
+        LOCK.item = rand.key_by_probs(switch_tab)
         switch_tab[LOCK.item] = switch_tab[LOCK.item] / 8
       end
     end
@@ -981,7 +981,7 @@ function Quest_add_weapons()
       return
     end
 
-    local weapon = rand_key_by_probs(name_tab)
+    local weapon = rand.key_by_probs(name_tab)
     local info = GAME.weapons[weapon]
 
     gui.debugf("Start weapon: %s\n", weapon)
@@ -1014,7 +1014,7 @@ function Quest_add_weapons()
       return
     end
 
-    local weapon = rand_key_by_probs(name_tab)
+    local weapon = rand.key_by_probs(name_tab)
     local info = GAME.weapons[weapon]
 
     -- Select a room to put the weapon in.
@@ -1030,8 +1030,8 @@ function Quest_add_weapons()
       end
     end
 
-    if #neighbors >= 1 and rand_odds(75) then
-      R = rand_element(neighbors)
+    if #neighbors >= 1 and rand.odds(75) then
+      R = rand.pick(neighbors)
     end
 
     -- putting weapons in the exit room is a tad silly
@@ -1055,7 +1055,7 @@ function Quest_add_weapons()
   for index,A in ipairs(LEVEL.all_arenas) do
     if index == 1  then
       do_start_weapon(A)
-    elseif (index == 2) or rand_odds(sel((index % 2) == 1, 80, 20)) then
+    elseif (index == 2) or rand.odds(sel((index % 2) == 1, 80, 20)) then
       do_new_weapon(A)
     end
   end
@@ -1090,7 +1090,7 @@ function Quest_select_textures()
     LEVEL.building_facades = {}
 
     for num = 1,2 do
-      local name = rand_key_by_probs(THEME.building_facades or THEME.building_walls)
+      local name = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
       LEVEL.building_facades[num] = name
     end
   end
@@ -1099,7 +1099,7 @@ function Quest_select_textures()
     LEVEL.building_walls = {}
 
     for num = 1,3 do
-      local name = rand_key_by_probs(THEME.building_walls)
+      local name = rand.key_by_probs(THEME.building_walls)
       LEVEL.building_walls[num] = name
     end
   end
@@ -1108,10 +1108,10 @@ function Quest_select_textures()
     LEVEL.courtyard_floors = {}
 
     if not THEME.courtyard_floors then
-      LEVEL.courtyard_floors[1] = rand_key_by_probs(THEME.building_floors)
+      LEVEL.courtyard_floors[1] = rand.key_by_probs(THEME.building_floors)
     else
       for num = 1,2 do
-        local name = rand_key_by_probs(THEME.courtyard_floors)
+        local name = rand.key_by_probs(THEME.courtyard_floors)
         LEVEL.courtyard_floors[num] = name
       end
     end
@@ -1119,7 +1119,7 @@ function Quest_select_textures()
 
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then
-      LEVEL.outer_fence_tex = rand_key_by_probs(THEME.outer_fences)
+      LEVEL.outer_fence_tex = rand.key_by_probs(THEME.outer_fences)
     end
   end
 
@@ -1127,7 +1127,7 @@ function Quest_select_textures()
     if not THEME.steps then
       error("Theme is missing step skins") 
     else
-      local name = rand_key_by_probs(THEME.steps)
+      local name = rand.key_by_probs(THEME.steps)
       LEVEL.step_skin = assert(GAME.steps[name])
     end
   end
@@ -1136,7 +1136,7 @@ function Quest_select_textures()
     if not THEME.lifts then
       -- OK
     else
-      local name = rand_key_by_probs(THEME.lifts)
+      local name = rand.key_by_probs(THEME.lifts)
       LEVEL.lift_skin = assert(GAME.lifts[name])
     end
   end
@@ -1155,7 +1155,7 @@ end
 function Quest_decide_outdoors()
   local function choose(R)
     if R.parent and R.parent.outdoor then return false end
-    if R.parent then return rand_odds(5) end
+    if R.parent then return rand.odds(5) end
 
     if R.natural then
       if not THEME.landscape_walls then return false end
@@ -1167,32 +1167,32 @@ function Quest_decide_outdoors()
     if STYLE.skies == "always" then return true end
 
     if R.natural then
-      if STYLE.skies == "heaps" then return rand_odds(75) end
-      return rand_odds(25)
+      if STYLE.skies == "heaps" then return rand.odds(75) end
+      return rand.odds(25)
     end
 
     -- we would prefer KEY locked doors to touch at least one
     -- indoor room.  However keys/switches are not decided yet,
     -- so the following is a compromise solution.
-    if R:has_any_lock() and rand_odds(20) then return false end
+    if R:has_any_lock() and rand.odds(20) then return false end
 
     if R.children then
       if STYLE.skies == "few" then
-        return rand_odds(33)
+        return rand.odds(33)
       else
-        return rand_odds(80)
+        return rand.odds(80)
       end
     end
 
-    if STYLE.skies == "heaps" then return rand_odds(50) end
-    if STYLE.skies == "few"   then return rand_odds(5) end
+    if STYLE.skies == "heaps" then return rand.odds(50) end
+    if STYLE.skies == "few"   then return rand.odds(5) end
 
     -- room on edge of map?
     if R.touches_edge then
-      return rand_odds(30)
+      return rand.odds(30)
     end
 
-    return rand_odds(10)
+    return rand.odds(10)
   end
 
   ---| Quest_decide_outdoors |---

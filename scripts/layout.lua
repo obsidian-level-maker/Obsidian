@@ -407,7 +407,7 @@ function Layout_cave_pickup_spots(R)
 
   local function add_small_spot(R, S, score)
     local mx, my = S:mid_point()
-    local dir = rand_sel(50, 2, 4)
+    local dir = rand.sel(50, 2, 4)
     table.insert(R.small_spots, { S=S, x=mx, y=my, dir=dir, score=score })
   end
 
@@ -526,18 +526,18 @@ function Layout_natural_room(R, heights)
   local map
 
   R.cave_floor_h = assert(heights[1])
-  R.cave_h = rand_element { 128, 128, 192, 256 }
+  R.cave_h = rand.pick { 128, 128, 192, 256 }
 
   if R.outdoor and THEME.landscape_walls then
-    R.cave_tex = rand_key_by_probs(THEME.landscape_walls)
+    R.cave_tex = rand.key_by_probs(THEME.landscape_walls)
 
     if LEVEL.liquid and
        R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
-       rand_odds(style_sel("lakes", 0, 10, 30, 90)) then
+       rand.odds(style_sel("lakes", 0, 10, 30, 90)) then
       R.is_lake = true
     end
   else
-    R.cave_tex = rand_key_by_probs(THEME.cave_walls)
+    R.cave_tex = rand.key_by_probs(THEME.cave_walls)
   end
 
 
@@ -1357,8 +1357,8 @@ gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
 
 gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
       if T.x_sizes and T.y_sizes then
-        local xs = rand_element(T.x_sizes)
-        local ys = rand_element(T.y_sizes)
+        local xs = rand.pick(T.x_sizes)
+        local ys = rand.pick(T.y_sizes)
 
         local xf_tot = 1
         local yf_tot = 1
@@ -1398,7 +1398,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
     local sym_fills = {}
 
     for s_idx,sub in ipairs(info.subs or {}) do
-      if sub.sym_fill and (req_sym or rand_odds(50)) then
+      if sub.sym_fill and (req_sym or rand.odds(50)) then
         sym_fills[s_idx] = true
       elseif sub.recurse or sub.sym_fill then
         -- recursive fill
@@ -1565,7 +1565,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
         break;
       end
 
-      local which = rand_key_by_probs(f_probs)
+      local which = rand.key_by_probs(f_probs)
       f_probs[which] = nil
 
       gui.debugf("Trying pattern %s in %s (loop %d)......\n",
@@ -1647,8 +1647,8 @@ function Layout_scenic(R)
   end end -- for x,y
 
   if min_floor < 999 then
-    local h1 = rand_irange(1,6)
-    local h2 = rand_irange(1,6)
+    local h1 = rand.irange(1,6)
+    local h2 = rand.irange(1,6)
 
     R.liquid_h = min_floor - (h1 + h2) * 16
   else
@@ -1696,7 +1696,7 @@ function Layout_hallway(R)
     local S1 = C1:seed(R)
     local S2 = C2:seed(R)
 
-    if rand_odds(50) then S1,S2 = S2,S1 end
+    if rand.odds(50) then S1,S2 = S2,S1 end
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
@@ -1748,15 +1748,15 @@ function Layout_hallway(R)
   if not LEVEL.hall_tex then
     assert(THEME.hallway_walls)
 
-    LEVEL.hall_tex   = rand_key_by_probs(THEME.hallway_walls)
-    LEVEL.hall_floor = rand_key_by_probs(THEME.hallway_floors)
-    LEVEL.hall_ceil  = rand_key_by_probs(THEME.hallway_ceilings)
+    LEVEL.hall_tex   = rand.key_by_probs(THEME.hallway_walls)
+    LEVEL.hall_floor = rand.key_by_probs(THEME.hallway_floors)
+    LEVEL.hall_ceil  = rand.key_by_probs(THEME.hallway_ceilings)
 
-    LEVEL.hall_trim   = rand_odds(50)
-    LEVEL.hall_lights = rand_odds(50)
+    LEVEL.hall_trim   = rand.odds(50)
+    LEVEL.hall_lights = rand.odds(50)
 
     if THEME.ceil_lights then
-      LEVEL.hall_lite_ftex = rand_key_by_probs(THEME.ceil_lights)
+      LEVEL.hall_lite_ftex = rand.key_by_probs(THEME.ceil_lights)
     end
   end
 
@@ -1771,7 +1771,7 @@ function Layout_hallway(R)
 
   gui.debugf("Hall conn area: (%d,%d) .. (%d,%d)\n", tx1,ty1, tx2,ty2)
 
-  if R.sw >= 3 and R.sh >= 3 and rand_odds(o_prob) then
+  if R.sw >= 3 and R.sh >= 3 and rand.odds(o_prob) then
     make_O()
 
   elseif tw == 1 or th == 1 then
@@ -1786,9 +1786,9 @@ function Layout_hallway(R)
 
 
   local height = 128
-  if rand_odds(20) then
+  if rand.odds(20) then
     height = 192
-  elseif rand_odds(10) then
+  elseif rand.odds(10) then
     height = 256
     R.hall_sky = true
   end
@@ -1849,7 +1849,7 @@ function Layout_one(R)
 ---##         if R.junk_thick[4] + R.junk_thick[6] >= x_max then return -1 end
 ---##       end
 
-      if STYLE.junk == "none" or (STYLE.junk == "few" and rand_odds(70)) then
+      if STYLE.junk == "none" or (STYLE.junk == "few" and rand.odds(70)) then
         return false
       end
 
@@ -1870,7 +1870,7 @@ function Layout_one(R)
       if STYLE.junk == "heaps" then prob = JUNK_HEAPS[long] end
 
       assert(prob)
-      if not rand_odds(prob) then return false end
+      if not rand.odds(prob) then return false end
 
 
       -- connection checking
@@ -1958,7 +1958,7 @@ function Layout_one(R)
     if not R.mirror_x then table.insert(SIDES,6) end
     if not R.mirror_y then table.insert(SIDES,8) end
 
-    rand_shuffle(SIDES)
+    rand.shuffle(SIDES)
 
     for _,side in ipairs(SIDES) do
       if eval_side(side) then
@@ -2002,7 +2002,7 @@ function Layout_one(R)
     other_C.conn_h = focus_C.conn_h
 
     if true then
-      local delta = rand_element { -2,-2,-1, 1,2,2 }
+      local delta = rand.pick { -2,-2,-1, 1,2,2 }
 
       other_C.conn_h = other_C.conn_h + delta * 64
 
@@ -2040,7 +2040,7 @@ function Layout_one(R)
 
       for _,S in ipairs(unset_list) do
         local did_fix = false
-        rand_shuffle(SIDES)
+        rand.shuffle(SIDES)
         for _,side in ipairs(SIDES) do
           local N = S:neighbor(side)
           if N and N.room and N.room == R and N.floor_h and
@@ -2078,7 +2078,7 @@ function Layout_one(R)
 
     for i = 1,4 do
       if THEME.building_floors then
-        table.insert(f_texs, rand_key_by_probs(THEME.building_floors))
+        table.insert(f_texs, rand.key_by_probs(THEME.building_floors))
       else
         table.insert(f_texs, f_texs[1] or R.main_tex)
       end
@@ -2098,7 +2098,7 @@ function Layout_one(R)
 
       for i = 1,num do
         table.insert(list, base_h)
-        local delta = rand_key_by_probs(delta_tab)
+        local delta = rand.key_by_probs(delta_tab)
         base_h = base_h + dir * delta
       end
 
@@ -2129,7 +2129,7 @@ function Layout_one(R)
     local groups = {}
 
     for i = 1,10 do
-      local dir = rand_sel(50, 1, -1)
+      local dir = rand.sel(50, 1, -1)
       local hts = gen_group(base_h, 4, dir)
 
       local cost = math.abs(base_h - hts[4])
@@ -2440,10 +2440,10 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
     local skin_names = THEME.pillars
     if not skin_names then return end
-    R.pillar_what = rand_key_by_probs(skin_names)
+    R.pillar_what = rand.key_by_probs(skin_names)
 
     local SIDES = { 2, 4 }
-    rand_shuffle(SIDES)
+    rand.shuffle(SIDES)
 
     for _,side in ipairs(SIDES) do for offset = 0,1 do
       local long, deep = R.tw, R.th
@@ -2471,8 +2471,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
           -- preference for same pattern
           for loop = 1,3 do
-            pat1 = rand_element(lists[1])
-            pat2 = rand_element(lists[2])
+            pat1 = rand.pick(lists[1])
+            pat2 = rand.pick(lists[2])
             if pat1 == pat2 then break; end
           end
 
@@ -2509,7 +2509,7 @@ gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
   if not focus_C.conn_h then
 gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
-    focus_C.conn_h = SKY_H - rand_irange(4,7) * 64
+    focus_C.conn_h = SKY_H - rand.irange(4,7) * 64
   end
 
   R.floor_h = focus_C.conn_h  -- ??? BLEH
@@ -2519,8 +2519,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     stairwell_height_diff(focus_C)
 
     if not LEVEL.well_tex then
-      LEVEL.well_tex   = rand_key_by_probs(THEME.stairwell_walls)
-      LEVEL.well_floor = rand_key_by_probs(THEME.stairwell_floors)
+      LEVEL.well_tex   = rand.key_by_probs(THEME.stairwell_walls)
+      LEVEL.well_floor = rand.key_by_probs(THEME.stairwell_floors)
     end
 
     -- FIXME !!! move this part (Build_stairwell) into rooms.lua
@@ -2545,7 +2545,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
     -- FIXME !!! move this part (Build_small_exit) into rooms.lua
 
     -- FIXME: use single one over a whole episode
-    local skin_name = rand_key_by_probs(THEME.small_exits)
+    local skin_name = rand.key_by_probs(THEME.small_exits)
     local skin = assert(GAME.exits[skin_name])
 
     local skin2 =
@@ -2557,7 +2557,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
     assert(THEME.exit.switches)
     -- FIXME: hacky
-    skin.switch = rand_key_by_probs(THEME.exit.switches)
+    skin.switch = rand.key_by_probs(THEME.exit.switches)
 
     Build_small_exit(R, THEME.exit, skin, skin2)
     return

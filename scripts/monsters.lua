@@ -195,7 +195,7 @@ function Monsters_init()
   local high =  MONSTER_QUANTITIES.more
 
   LEVEL.prog_mons_qty    = low + LEVEL.ep_along * (high - low)
-  LEVEL.mixed_mons_qty   = rand_range(low, high)
+  LEVEL.mixed_mons_qty   = rand.range(low, high)
 
   -- build replacement table --
 
@@ -248,10 +248,10 @@ function Monsters_global_palette()
   -- is there enough monsters to actually bother?
   if #list <= 2 then return end
 
-  rand_shuffle(list)
+  rand.shuffle(list)
 
   -- sometimes promote a particular monster
-  if rand_odds(30) then
+  if rand.odds(30) then
     local promote = list[#list]
     local M = GAME.monsters[promote]
     if not M.never_promote then
@@ -287,7 +287,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
       end
     end
 
-    local perc  = rand_range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
+    local perc  = rand.range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
     local count = int(#list * perc / 100 + gui.random())
 
     if count >= skip_total then count = skip_total - 1 end
@@ -295,7 +295,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
     for i = 1,count do
       if table.empty(skip_list) then break; end
 
-      local name = rand_key_by_probs(skip_list)
+      local name = rand.key_by_probs(skip_list)
       skip_list[name] = nil
 
       gui.debugf("Skipping monster: %s\n", name)
@@ -329,7 +329,7 @@ function Monsters_do_pickups()
     local ratios = {}
 
     for i = 1, #arena.storage_rooms do
-      ratios[i] = rand_irange(2,5)
+      ratios[i] = rand.irange(2,5)
     end
 
     return ratios, arena.storage_rooms
@@ -344,7 +344,7 @@ function Monsters_do_pickups()
     while PREV.entry_conn and #room_list < 4 do
       PREV = PREV.entry_conn:neighbor(PREV)
 
-      local qty = rand_irange(3,5) / (1 + #room_list)
+      local qty = rand.irange(3,5) / (1 + #room_list)
 
       table.insert(room_list, PREV)
       table.insert(ratios, qty)
@@ -462,7 +462,7 @@ function Monsters_do_pickups()
 
     else
       for loop = 1,100 do
-        local side = rand_irange(1,4) * 2
+        local side = rand.irange(1,4) * 2
         if walls[side] then
           add_small_spots(R, S, side, 4, score)
           break;
@@ -578,7 +578,7 @@ function Monsters_do_pickups()
     end
 
     assert(not table.empty(item_tab))
-    local name = rand_key_by_probs(item_tab)
+    local name = rand.key_by_probs(item_tab)
     local info = GAME.pickups[name]
 
     local count = 1
@@ -588,12 +588,12 @@ function Monsters_do_pickups()
       local min_num  = info.cluster[1]
       local max_num  = info.cluster[2]
 
-      --- count = rand_irange(min_num, max_num)
+      --- count = rand.irange(min_num, max_num)
 
       if min_num * each_qty >= qty then
         count = min_num
       elseif max_num * each_qty <= qty then
-        count = max_num - rand_sel(20,1,0)
+        count = max_num - rand.sel(20,1,0)
       else
         count = 1 + int(qty / each_qty)
       end
@@ -677,8 +677,8 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
     -- assume big spots will sometimes run out (and be reused),
     -- so don't put multiple items at exactly the same place.
-    x = x + rand_irange(-16, 16)
-    y = y + rand_irange(-16, 16)
+    x = x + rand.irange(-16, 16)
+    y = y + rand.irange(-16, 16)
 
     place_item(spot.S, item, x, y, SK)
   end
@@ -827,7 +827,7 @@ function Monsters_in_room(R)
       toughness = toughness + 3
     elseif R.hallway then
       -- don't fill hallways with big beasts
-      toughness = rand_range(1.0, 2.0)
+      toughness = rand.range(1.0, 2.0)
     end
 
     gui.debugf("Toughness = %1.3f\n", toughness)
@@ -963,7 +963,7 @@ function Monsters_in_room(R)
 
     local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 20
 
-    if rand_odds(bump_prob) then
+    if rand.odds(bump_prob) then
       num = num + 1
     end
 
@@ -1007,7 +1007,7 @@ function Monsters_in_room(R)
     for i = 1,num_kinds do
       if table.empty(list) then break; end
 
-      local mon = rand_key_by_probs(list)
+      local mon = rand.key_by_probs(list)
       palette[mon] = list[mon]
 
       gui.debugf("  #%d %s\n", i, mon)
@@ -1048,13 +1048,13 @@ function Monsters_in_room(R)
     for i = 1,num_kinds do
       if table.empty(list) then break; end
 
-      local mon  = rand_key_by_probs(list)
+      local mon  = rand.key_by_probs(list)
       local prob = list[mon]
       list[mon] = nil
 
       -- sometimes replace it completely (e.g. all demons become spectres)
-      if rand_odds(25) and LEVEL.mon_replacement[mon] then
-        mon = rand_key_by_probs(LEVEL.mon_replacement[mon])
+      if rand.odds(25) and LEVEL.mon_replacement[mon] then
+        mon = rand.key_by_probs(LEVEL.mon_replacement[mon])
       end
 
       palette[mon] = prob
@@ -1233,7 +1233,7 @@ function Monsters_in_room(R)
       if not victim_S then break; end
     end
 
-    rand_shuffle(R.monster_spots)
+    rand.shuffle(R.monster_spots)
   end
 
 
@@ -1321,7 +1321,7 @@ function Monsters_in_room(R)
 ---???   if h_diff < 128 then return false end
 
     -- FIXME: ugh -- hack to allow more monsters in the room
-    if rand_odds(50) then return false end
+    if rand.odds(50) then return false end
 
     return true, h_diff
   end
@@ -1371,7 +1371,7 @@ function Monsters_in_room(R)
       end
     end
 
-    rand_shuffle(R.monster_spots)
+    rand.shuffle(R.monster_spots)
     
     for _,spot in ipairs(R.monster_spots) do
 
@@ -1381,7 +1381,7 @@ function Monsters_in_room(R)
 
         -- try other monsters if the first doesn't fit
         while not table.empty(try_pal) do
-          local mon = rand_key_by_probs(try_pal)
+          local mon = rand.key_by_probs(try_pal)
           try_pal[mon] = nil
 
           if try_occupy_spot(spot, mon, totals) then
@@ -1418,7 +1418,7 @@ function Monsters_in_room(R)
     end
  
     -- some random variation
-    count = count * rand_range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
+    count = count * rand.range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
     count = count + gui.random() ^ 2
 
     return math.max(1, int(count))
@@ -1429,11 +1429,11 @@ function Monsters_in_room(R)
     --       the same direction, or look towards the entrance, or
     --       towards the guard_spot.
 
-    if rand_odds(20) then
-      return rand_irange(0,7) * 45
+    if rand.odds(20) then
+      return rand.irange(0,7) * 45
     end
 
-    local delta = rand_irange(-1,1) * 45
+    local delta = rand.irange(-1,1) * 45
 
     if R.sh > R.sw then
       if S.sy > (R.sy1 + R.sy2) / 2 then 
@@ -1464,7 +1464,7 @@ function Monsters_in_room(R)
     end
 
     -- bump the dither, but have some randomness here too
-    if rand_odds(80) then
+    if rand.odds(80) then
       LEVEL.mon_dither = LEVEL.mon_dither + 1
     end
 
@@ -1473,22 +1473,22 @@ function Monsters_in_room(R)
     -- skill 1 (easy) is always 50% chance of adding
 
     if (LEVEL.mon_dither % 2) == 0 then
-      return rand_sel(50, 1, 2)
+      return rand.sel(50, 1, 2)
     else
-      return rand_sel(50, 1, 3)
+      return rand.sel(50, 1, 3)
     end
   end
 
   local function place_monster(spot)
     local angle  = monster_angle(spot.S)
-    local ambush = rand_sel(92, 1, 0)
+    local ambush = rand.sel(92, 1, 0)
 
     local mon  = spot.monster
     local info = spot.info
 
     -- handle replacements
     if LEVEL.mon_replacement[mon] and not R.no_replacement then
-      mon  = rand_key_by_probs(LEVEL.mon_replacement[mon])
+      mon  = rand.key_by_probs(LEVEL.mon_replacement[mon])
       info = assert(GAME.monsters[mon])
     end
 
@@ -1558,7 +1558,7 @@ function Monsters_in_room(R)
         if (actuals[spot.monster] or 0) >= 1 then
           place_monster(spot)
           actuals[spot.monster] = actuals[spot.monster] - 1
-        elseif rand_odds(barrel_chance) then
+        elseif rand.odds(barrel_chance) then
           place_barrel(spot)
         end
       end
@@ -1576,13 +1576,13 @@ function Monsters_in_room(R)
     if R.natural then barrel_chance = 3 end
     if R.hallway then barrel_chance = 5 end
 
-    if STYLE.barrels == "heaps" or rand_odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
-    if STYLE.barrels == "few"   or rand_odds(25) then barrel_chance = barrel_chance / 4 end
+    if STYLE.barrels == "heaps" or rand.odds( 5) then barrel_chance = barrel_chance * 4 + 10 end
+    if STYLE.barrels == "few"   or rand.odds(25) then barrel_chance = barrel_chance / 4 end
 
     if STYLE.barrels == "none" then barrel_chance = 0 end
 
     -- sometimes prevent monster replacements
-    if rand_odds(40) or OB_CONFIG.strength == "crazy" then
+    if rand.odds(40) or OB_CONFIG.strength == "crazy" then
       R.no_replacement = true
     end
 

@@ -853,9 +853,9 @@ function wolfy_decide_quests(level_list, is_spear)
     {
       kind = kind,
       item = item,
-      want_len = 1 + rand_index_by_probs(len_probs),
+      want_len = 1 + rand.index_by_probs(len_probs),
     }
-    if item == "secret" or (secret_prob and rand_odds(secret_prob)) then
+    if item == "secret" or (secret_prob and rand.odds(secret_prob)) then
       Quest.is_secret = true
       -- need at least one room in-between (for push-wall)
       if Quest.want_len < 3 then Quest.want_len = 3 end
@@ -868,11 +868,11 @@ function wolfy_decide_quests(level_list, is_spear)
 
     -- weapons and keys
 
-    if rand_odds(90 - 40 * ((Level.ep_along-1) % 3)) then
+    if rand.odds(90 - 40 * ((Level.ep_along-1) % 3)) then
       add_quest(Level, "weapon", "machine_gun", 35)
     end
 
-    local keys = rand_index_by_probs(WOLF_KEY_NUM_PROBS[SETTINGS.size]) - 1
+    local keys = rand.index_by_probs(WOLF_KEY_NUM_PROBS[SETTINGS.size]) - 1
 
     if keys >= 1 then
       add_quest(Level, "key", "k_silver")
@@ -883,12 +883,12 @@ function wolfy_decide_quests(level_list, is_spear)
     local ITEM_PROBS = { small=33, regular=45, large=66 }
 
     for i = 1,sel(is_spear,4,6) do
-      if rand_odds(ITEM_PROBS[SETTINGS.size]) then
+      if rand.odds(ITEM_PROBS[SETTINGS.size]) then
         add_quest(Level, "item", "treasure", 50)
       end
     end
 
-    if is_spear and rand_odds(60) then
+    if is_spear and rand.odds(60) then
       add_quest(Level, "item", "clip_25", 50)
     end
 
@@ -923,7 +923,7 @@ function Wolf3d_get_levels()
 
     local boss_kind = WOLF_EPISODE_BOSSES[episode]
     if OB_CONFIG.length ~= "full" then
-      boss_kind = WOLF_EPISODE_BOSSES[rand_irange(1,6)]
+      boss_kind = WOLF_EPISODE_BOSSES[rand.irange(1,6)]
     end
 
     local secret_kind = "pacman"

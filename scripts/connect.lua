@@ -880,16 +880,16 @@ gui.debugf("hit_conns = %d\n", hit_conns)
     local rotates = { 0, 4 }
     local morphs  = { 0, 1, 2, 3 }
 
-    rand_shuffle(rotates)
+    rand.shuffle(rotates)
 
     for _,ROT in ipairs(rotates) do
       local long, deep = morph_size(ROT, R)
       local configs = info.func(long, deep)
 
       if configs then
-        rand_shuffle(configs)
+        rand.shuffle(configs)
         for _,CONF in ipairs(configs) do
-          rand_shuffle(morphs)
+          rand.shuffle(morphs)
 
           for _,SUB in ipairs(morphs) do
             local MORPH = ROT + SUB  -- the full morph
@@ -922,11 +922,11 @@ gui.debugf("Failed\n")
 
     table.sort(rooms, function(A, B) return A.k_score > B.k_score end)
 
-    local big_bra_chance = rand_key_by_probs { [99] = 80, [50]=12, [10]=3 }
+    local big_bra_chance = rand.key_by_probs { [99] = 80, [50]=12, [10]=3 }
     gui.printf("Big Branch Mode: %d%%\n", big_bra_chance)
 
     for _,R in ipairs(rooms) do
-      if (#R.conns <= 2) and rand_odds(big_bra_chance) then
+      if (#R.conns <= 2) and rand.odds(big_bra_chance) then
         gui.debugf("Branching BIG %s k_score: %1.3f\n", R:tostr(), R.k_score)
 
         local kinds = {}
@@ -935,7 +935,7 @@ gui.debugf("Failed\n")
         end
 
         while not table.empty(kinds) do
-          local K = assert(rand_key_by_probs(kinds))
+          local K = assert(rand.key_by_probs(kinds))
 
           kinds[K] = nil  -- don't try this branch kind again
 
@@ -1086,7 +1086,7 @@ gui.debugf("Failed\n")
   end
 
   local function handle_isolate(R, join_chance)
-    if rand_odds(join_chance) or R.parent or not LEVEL.branched_one then
+    if rand.odds(join_chance) or R.parent or not LEVEL.branched_one then
       if force_room_branch(R) then
         return -- OK
       end
@@ -1112,7 +1112,7 @@ gui.debugf("Failed\n")
     assert(#rebels > 0)
     gui.debugf("#rebels : %d\n", #rebels)
 
-    if rand_odds(join_chance) then
+    if rand.odds(join_chance) then
       -- try the least important rooms first
       for _,R in ipairs(rebels) do
         R.rebel_cost = sel(R.symmetry, 500, 0) + R.svolume + gui.random()
@@ -1196,10 +1196,10 @@ gui.debugf("Failed\n")
     local mid_prob  = sel(STYLE.scenics == "heaps", 20, 3)
 
     local list = table.copy(LEVEL.all_rooms)
-    rand_shuffle(list)
+    rand.shuffle(list)
 
     for _,R in ipairs(list) do
-      if rand_odds(sel(R.touches_edge, side_prob, mid_prob)) and
+      if rand.odds(sel(R.touches_edge, side_prob, mid_prob)) and
          not has_scenic_neigbour(R)
       then
         make_scenic(R)

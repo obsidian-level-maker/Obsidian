@@ -305,7 +305,7 @@ function Level_themes()
       error("No sub-themes for " .. name)
     end
 
-    local which = rand_key_by_probs(sub_tab)
+    local which = rand.key_by_probs(sub_tab)
     L.sub_theme = assert(GAME.sub_themes[which])
 
     gui.printf("Theme for level %s = %s\n", L.name, which)
@@ -340,7 +340,7 @@ function Level_themes()
 
     for idx,L in ipairs(GAME.all_levels) do
       if not L.sub_theme then
-        local name = rand_key_by_probs(prob_tab)
+        local name = rand.key_by_probs(prob_tab)
 
         if not L.name_theme and ((idx % 2) == 1) then
           L.name_theme = "PSYCHO"
@@ -372,11 +372,11 @@ function Level_themes()
   end
 
   while not table.empty(prob_tab) do
-    local name = rand_key_by_probs(prob_tab)
+    local name = rand.key_by_probs(prob_tab)
     prob_tab[name] = nil
 
     local info = OB_THEMES[name]
-    local pos = rand_irange(1, total)
+    local pos = rand.irange(1, total)
 
     if OB_CONFIG.theme == "original" and GAME.original_themes then
       for i,orig_theme in ipairs(GAME.original_themes) do
@@ -413,13 +413,13 @@ function Level_themes()
 
   -- flesh it out
   if total == 2 then
-    local dist = rand_sel(70, 0, 1)
+    local dist = rand.sel(70, 0, 1)
     table.insert(episode_list, episode_list[1 + dist])
     table.insert(episode_list, episode_list[2 - dist])
   end
 
   while #episode_list < 40 do
-    table.insert(episode_list, episode_list[rand_irange(1, total)])
+    table.insert(episode_list, episode_list[rand.irange(1, total)])
   end
 
 
@@ -429,7 +429,7 @@ function Level_themes()
     local count = 0
 
     for _,L in ipairs(GAME.all_levels) do
-      if count >= 2 and (rand_odds(50) or count >= 5) then
+      if count >= 2 and (rand.odds(50) or count >= 5) then
         pos = pos + 1
         count = 0
       end
@@ -455,7 +455,7 @@ function Level_rarify(seed_idx, tab)
       
       -- this level in the group will allow the item, every other
       -- level will forbid it (by setting the allowance to 0).
-      local which = rand_irange(0, rarity-1)
+      local which = rand.irange(0, rarity-1)
 
       for offset = 0, rarity-1 do
         local L = GAME.all_levels[group + offset]
@@ -464,7 +464,7 @@ function Level_rarify(seed_idx, tab)
         L.allowances[name] = sel(offset == which, 1, 0)
 
         -- spice it up a bit more
-        if rand_odds(10) then
+        if rand.odds(10) then
           L.allowances[name] = 1 - L.allowances[name]
         end
       end -- for offset
@@ -514,7 +514,7 @@ function Level_styles()
   STYLE = {}
 
   for name,prob_tab in pairs(style_tab) do
-    STYLE[name] = rand_key_by_probs(prob_tab)
+    STYLE[name] = rand.key_by_probs(prob_tab)
   end
 
   -- GUI overrides...

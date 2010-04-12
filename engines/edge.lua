@@ -29,7 +29,7 @@ function Edge_remap_music()
 
   local old_list = table.copy(mus_list)
 
-  rand_shuffle(mus_list)
+  rand.shuffle(mus_list)
 
   local data =
   {

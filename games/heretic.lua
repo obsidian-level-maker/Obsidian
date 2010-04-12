@@ -1998,7 +1998,7 @@ function Heretic_make_cool_gfx()
     GREEN, BROWN, RED, BLUE
   }
 
-  rand_shuffle(colmaps)
+  rand.shuffle(colmaps)
 
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
@@ -2008,7 +2008,7 @@ function Heretic_make_cool_gfx()
   local carve = "RELIEF"
   local c_map = 3
 
-  if rand_odds(33) then
+  if rand.odds(33) then
     carve = "CARVE"
     c_map = 4
   end

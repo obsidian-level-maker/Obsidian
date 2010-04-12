@@ -94,12 +94,12 @@ require 'util'
 
 function Room_setup_theme(R)
   if not R.outdoor then
-    R.main_tex = rand_element(LEVEL.building_walls)
+    R.main_tex = rand.pick(LEVEL.building_walls)
     return
   end
 
   if not R.arena.courtyard_floor then
-    R.arena.courtyard_floor = rand_element(LEVEL.courtyard_floors)
+    R.arena.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
   end
 
   R.main_tex = R.arena.courtyard_floor
@@ -144,16 +144,16 @@ function Room_setup_theme_Scenic(R)
 
   -- fallback
   if R.outdoor then
-    R.main_tex = rand_element(LEVEL.courtyard_floors)
+    R.main_tex = rand.pick(LEVEL.courtyard_floors)
   else
-    R.main_tex = rand_element(LEVEL.building_walls)
+    R.main_tex = rand.pick(LEVEL.building_walls)
   end
 end
 
 function Rooms_assign_facades()
   for i = 1,#LEVEL.all_rooms,4 do
     local R = LEVEL.all_rooms[i]
-    R.facade = rand_element(LEVEL.building_facades)
+    R.facade = rand.pick(LEVEL.building_facades)
   end
 
   local visits = table.copy(LEVEL.all_rooms)
@@ -161,7 +161,7 @@ function Rooms_assign_facades()
   for loop = 1,10 do
     local changes = false
 
-    rand_shuffle(visits);
+    rand.shuffle(visits);
 
     for _,R in ipairs(visits) do
       if R.facade then
@@ -171,8 +171,8 @@ function Rooms_assign_facades()
             changes = true
           end
         end -- for N
-      elseif rand_odds(loop * loop) then
-        R.facade = rand_element(LEVEL.building_facades)
+      elseif rand.odds(loop * loop) then
+        R.facade = rand.pick(LEVEL.building_facades)
       end
     end -- for R
   end -- for loop
@@ -183,7 +183,7 @@ function Rooms_assign_facades()
 
   for _,R in ipairs(LEVEL.scenic_rooms) do
     if not R.facade then
-      R.facade = rand_element(LEVEL.building_facades)
+      R.facade = rand.pick(LEVEL.building_facades)
     end
   end
 end
@@ -232,11 +232,11 @@ function Rooms_decide_hallways()
 
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.outdoor and not rand_odds(outdoor_chance) then
+      if N.outdoor and not rand.odds(outdoor_chance) then
         return false
       end
 
-      if C.dest == R and C.lock and not rand_odds(lock_chance) then
+      if C.dest == R and C.lock and not rand.odds(lock_chance) then
         return false
       end
     end
@@ -246,13 +246,13 @@ function Rooms_decide_hallways()
     if min_d > 6 then return false end
 
     if STYLE.hallways == "heaps" then
-      return rand_odds(HALL_SIZE_HEAPS[min_d])
+      return rand.odds(HALL_SIZE_HEAPS[min_d])
     end
 
-    if STYLE.hallways == "few" and rand_odds(66) then
+    if STYLE.hallways == "few" and rand.odds(66) then
       return false end
 
-    return rand_odds(HALL_SIZE_PROBS[min_d])
+    return rand.odds(HALL_SIZE_PROBS[min_d])
   end
 
   local function hallway_neighbors(R)
@@ -318,7 +318,7 @@ gui.debugf("  Made Hallway @ %s\n", R:tostr())
 
       assert(min_d <= 6)
 
-      if rand_odds(REVERT_PROBS[min_d]) then
+      if rand.odds(REVERT_PROBS[min_d]) then
         R.kind = "normal"
         R.hallway = nil
 gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
@@ -340,7 +340,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       if hall_nb >= 2 then prob = 2  end
       if hall_nb == 1 then prob = 40 end
 
-      if rand_odds(prob) then
+      if rand.odds(prob) then
         R.kind = "stairwell"
       end
     end
@@ -439,7 +439,7 @@ function Rooms_setup_symmetry()
       end
     end
 
-    local index = rand_index_by_probs(probs)
+    local index = rand.index_by_probs(probs)
 
     R.symmetry = sel(index > 1, syms[index], nil)
   end
@@ -573,7 +573,7 @@ function Rooms_reckon_doors()
               B.kind = "bars"
             end
 
-          elseif rand_odds(prob) then
+          elseif rand.odds(prob) then
             B.kind = "door"
 
           elseif (STYLE.fences == "none" or STYLE.fences == "few") and
@@ -678,7 +678,7 @@ function Rooms_border_up()
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
-         (S.floor_h == N.floor_h)  --- and rand_odds(50)
+         (S.floor_h == N.floor_h)  --- and rand.odds(50)
       then
         S.border[side].kind = "liquid_arch"
         N.border[10-side].kind = "straddle"
@@ -834,15 +834,15 @@ function Rooms_border_up()
 
 
     -- determine height of window
-    if (min_c - max_f) >= 192 and rand_odds(20) then
+    if (min_c - max_f) >= 192 and rand.odds(20) then
       info.z1 = max_f + 64
       info.z2 = min_c - 64
       info.is_tall = true
-    elseif (min_c - max_f) >= 160 and rand_odds(60) then
+    elseif (min_c - max_f) >= 160 and rand.odds(60) then
       info.z1 = max_f + 32
       info.z2 = min_c - 24
       info.is_tall = true
-    elseif (max_f1 < max_f2) and rand_odds(30) then
+    elseif (max_f1 < max_f2) and rand.odds(30) then
       info.z1 = min_c - 80
       info.z2 = min_c - 32
     else
@@ -854,15 +854,15 @@ function Rooms_border_up()
     local thin_chance = math.min(6, usable) * 20 - 40
     local dbl_chance  = 80 - math.min(3, usable) * 20
 
-    if usable >= 3 and rand_odds(thin_chance) then
+    if usable >= 3 and rand.odds(thin_chance) then
       info.width = 64
-    elseif usable <= 3 and rand_odds(dbl_chance) then
+    elseif usable <= 3 and rand.odds(dbl_chance) then
       info.width = 192
       info.mid_w = 64
     elseif info.is_tall then
-      info.width = rand_sel(80, 128, 192)
+      info.width = rand.sel(80, 128, 192)
     else
-      info.width = rand_sel(20, 128, 192)
+      info.width = rand.sel(20, 128, 192)
     end
 
     if info.width > PARAM.seed_size-32 then
@@ -936,14 +936,14 @@ function Rooms_border_up()
       error("Game is missing logo skins")
     end
 
-    if rand_odds(sel(LEVEL.has_logo,7,40)) then
+    if rand.odds(sel(LEVEL.has_logo,7,40)) then
       LEVEL.has_logo = true
-      return rand_key_by_probs(THEME.logos)
+      return rand.key_by_probs(THEME.logos)
     end
 
-    if R.has_liquid and index == 1 and rand_odds(75) then
+    if R.has_liquid and index == 1 and rand.odds(75) then
       if THEME.liquid_pics then
-        return rand_key_by_probs(THEME.liquid_pics)
+        return rand.key_by_probs(THEME.liquid_pics)
       end
     end
 
@@ -961,11 +961,11 @@ function Rooms_border_up()
     end
 
     if not table.empty(pic_tab) then
-      return rand_key_by_probs(pic_tab)
+      return rand.key_by_probs(pic_tab)
     end
 
     -- fallback
-    return rand_key_by_probs(THEME.logos)
+    return rand.key_by_probs(THEME.logos)
   end
 
   local function install_pic(R, bd, pic_name, v_space)
@@ -1037,7 +1037,7 @@ function Rooms_border_up()
 
 
     -- deice how many pictures we want
-    local perc = rand_element { 20,30,40 }
+    local perc = rand.pick { 20,30,40 }
 
     if STYLE.pictures == "heaps" then perc = 50 end
     if STYLE.pictures == "few"   then perc = 10 end
@@ -1073,7 +1073,7 @@ function Rooms_border_up()
       if #new_list == 0 then break; end
 
       -- FIXME !!!! SELECT GOOD SPOT
-      local b_index = rand_irange(1, #new_list)
+      local b_index = rand.irange(1, #new_list)
 
       local bd = table.remove(new_list, b_index)
       
@@ -1229,7 +1229,7 @@ function Room_make_ceiling(R)
 
     if not (P1 and P2) then return nil end
 
-    if P1.tight and rand_odds(90) then return nil end
+    if P1.tight and rand.odds(90) then return nil end
 
     return
     {
@@ -1256,24 +1256,24 @@ function Room_make_ceiling(R)
 
 
     local SIDES = { 2,4 }
-    if (R.th > R.tw) or (R.th == R.tw and rand_odds(50)) then
+    if (R.th > R.tw) or (R.th == R.tw and rand.odds(50)) then
       SIDES = { 4,2 }
     end
-    if rand_odds(10) then  -- swap 'em
+    if rand.odds(10) then  -- swap 'em
       SIDES[1], SIDES[2] = SIDES[2], SIDES[1]
     end
 
     for idx,side in ipairs(SIDES) do
       if (R.symmetry == "xy" or R.symmetry == sel(side==2, "y", "x")) or
          R.pillar_rows and is_parallel(R.pillar_rows[1].side, side) or
-         rand_odds(50)
+         rand.odds(50)
       then
         --- Symmetrical Mode ---
 
         local PER_0 = merge_periphs(side, 0)
         local PER_1 = merge_periphs(side, 1)
 
-        if PER_0 and PER_1 and rand_odds(sel(PER_1.pillars, 70, 10)) then
+        if PER_0 and PER_1 and rand.odds(sel(PER_1.pillars, 70, 10)) then
           PER_0 = nil
         end
 
@@ -1284,7 +1284,7 @@ function Room_make_ceiling(R)
         R.periphs[side][1] = PER_1 ; R.periphs[10-side][1] = PER_1
         R.periphs[side][2] = nil   ; R.periphs[10-side][2] = nil
 
-        if idx==1 and PER_0 and not R.pillar_rows and rand_odds(50) then
+        if idx==1 and PER_0 and not R.pillar_rows and rand.odds(50) then
           add_periph_pillars(side)
           add_periph_pillars(10-side)
         end
@@ -1292,14 +1292,14 @@ function Room_make_ceiling(R)
         --- Funky Mode ---
 
         -- pick one side to use   [FIXME]
-        local keep = rand_sel(50, side, 10-side)
+        local keep = rand.sel(50, side, 10-side)
 
         for n = 0,2 do R.periphs[10-keep][n] = nil end
 
         local PER_0 = R.periphs[keep][0]
         local PER_1 = R.periphs[keep][1]
 
-        if PER_0 and PER_1 and rand_odds(5) then
+        if PER_0 and PER_1 and rand.odds(5) then
           PER_0 = nil
         end
 
@@ -1308,10 +1308,10 @@ function Room_make_ceiling(R)
 
         R.periphs[keep][2] = nil
 
-        if idx==1 and PER_0 and not R.pillar_rows and rand_odds(75) then
+        if idx==1 and PER_0 and not R.pillar_rows and rand.odds(75) then
           add_periph_pillars(keep)
 
-        --??  if PER_1 and rand_odds(10) then
+        --??  if PER_1 and rand.odds(10) then
         --??    add_periph_pillars(keep, 1)
         --??  end
         end
@@ -1419,7 +1419,7 @@ function Room_make_ceiling(R)
     end
 
     -- OK !!
-    local which = rand_key_by_probs(skin_names)
+    local which = rand.key_by_probs(skin_names)
 
     S.content = "pillar"
     S.pillar_skin = assert(GAME.pillars[which])
@@ -1507,12 +1507,12 @@ function Room_make_ceiling(R)
 
     local poss = {}
 
-    if R.cw > R.ch or (R.cw == R.ch and rand_odds(50)) then
+    if R.cw > R.ch or (R.cw == R.ch and rand.odds(50)) then
       -- vertical beams
 
-      if rand_odds(20) then R.lite_h = 192 end
-      if rand_odds(10) then R.lite_h = 128 end
-      if rand_odds(30) then R.lite_h = R.lite_w end
+      if rand.odds(20) then R.lite_h = 192 end
+      if rand.odds(10) then R.lite_h = 128 end
+      if rand.odds(30) then R.lite_h = R.lite_w end
 
       for x = R.cx1, R.cx2 do
         poss[x - R.cx1 + 1] = test_cross_beam(8, x, R.ty1, x, R.ty2, mode)
@@ -1530,9 +1530,9 @@ function Room_make_ceiling(R)
 
     else -- horizontal beams
 
-      if rand_odds(20) then R.lite_w = 192 end
-      if rand_odds(10) then R.lite_w = 128 end
-      if rand_odds(30) then R.lite_w = R.lite_h end
+      if rand.odds(20) then R.lite_w = 192 end
+      if rand.odds(10) then R.lite_w = 128 end
+      if rand.odds(30) then R.lite_w = R.lite_h end
 
       for y = R.cy1, R.cy2 do
         poss[y - R.cy1 + 1] = test_cross_beam(6, R.tx1, y, R.tx2, y, mode)
@@ -1557,7 +1557,7 @@ function Room_make_ceiling(R)
       return false
     end
 
-    local mat = rand_key_by_probs(THEME.corner_supports)
+    local mat = rand.key_by_probs(THEME.corner_supports)
 
     local SIDES = { 1, 7, 3, 9 }
 
@@ -1597,29 +1597,29 @@ function Room_make_ceiling(R)
 
     local has_sky_nb = R:has_sky_neighbor()
 
-    if R.has_periph_pillars and not has_sky_nb and rand_odds(16) then
+    if R.has_periph_pillars and not has_sky_nb and rand.odds(16) then
       fill_xyz(R.ceil_h, true)
       R.semi_outdoor = true
       return
     end
 
 
-    if (R.tw * R.th) <= 18 and rand_odds(20) then
-      if corner_supports() and rand_odds(35) then return end
+    if (R.tw * R.th) <= 18 and rand.odds(20) then
+      if corner_supports() and rand.odds(35) then return end
     end
 
 
     if not R.arena.ceil_light and THEME.ceil_lights then
-      R.arena.ceil_light = rand_key_by_probs(THEME.ceil_lights)
+      R.arena.ceil_light = rand.key_by_probs(THEME.ceil_lights)
     end
 
     local beam_chance = style_sel("beams", 0, 5, 25, 75)
 
-    if rand_odds(beam_chance) then
+    if rand.odds(beam_chance) then
       if criss_cross_beams("beam") then return end
     end
 
-    if rand_odds(42) then
+    if rand.odds(42) then
       if criss_cross_beams("light") then return end
     end
 
@@ -1632,7 +1632,7 @@ gui.debugf("Original @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     while nice < 2 and (R.cw >= 3 or R.ch >= 3) do
       
-      if R.cw > R.ch or (R.cw == R.ch and rand_odds(50)) then
+      if R.cw > R.ch or (R.cw == R.ch and rand.odds(50)) then
         assert(R.cw >= 3)
         R.cx1 = R.cx1 + 1
         R.cx2 = R.cx2 - 1
@@ -1656,18 +1656,18 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
       local ceil_info  = get_mat(R.main_tex)
       local sky_info   = get_sky()
-      local brown_info = get_mat(rand_key_by_probs(THEME.building_ceilings))
+      local brown_info = get_mat(rand.key_by_probs(THEME.building_ceilings))
 
-      local light_name = rand_key_by_probs(THEME.big_lights)
+      local light_name = rand.key_by_probs(THEME.big_lights)
       local light_info = get_mat(light_name)
       light_info.b_face.light = 0.85
 
       -- lighting effects
       -- (They can break lifts, hence the check here)
       if not R.has_lift then
-            if rand_odds(10) then light_info.sec_kind = 8
-        elseif rand_odds(6)  then light_info.sec_kind = 3
-        elseif rand_odds(3)  then light_info.sec_kind = 2
+            if rand.odds(10) then light_info.sec_kind = 8
+        elseif rand.odds(6)  then light_info.sec_kind = 3
+        elseif rand.odds(3)  then light_info.sec_kind = 2
         end
       end
 
@@ -1678,10 +1678,10 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       trim, spokes = spokes, trim
     end
 
-    if STYLE.lt_trim == "none" or (STYLE.lt_trim == "some" and rand_odds(50)) then
+    if STYLE.lt_trim == "none" or (STYLE.lt_trim == "some" and rand.odds(50)) then
       trim = nil
     end
-    if STYLE.lt_spokes == "none" or (STYLE.lt_spokes == "some" and rand_odds(70)) then
+    if STYLE.lt_spokes == "none" or (STYLE.lt_spokes == "some" and rand.odds(70)) then
       spokes = nil
     end
 
@@ -1690,7 +1690,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       return
     end
 
-    local shape = rand_sel(30, "square", "round")
+    local shape = rand.sel(30, "square", "round")
 
     local w = 96 + 140 * (R.cw - 1)
     local h = 96 + 140 * (R.ch - 1)
@@ -1698,8 +1698,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     Build_sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
                    ceil_info, R.ceil_h,
-                   sel(not has_sky_nb and not R.parent and rand_odds(60), sky_info,
-                       rand_sel(75, light_info, brown_info)), R.ceil_h + z,
+                   sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
+                       rand.sel(75, light_info, brown_info)), R.ceil_h + z,
                    trim, spokes)
   end
 
@@ -1717,7 +1717,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     local th = R.th or R.sh
 
     local approx_size = (2 * math.min(tw, th) + math.max(tw, th)) / 3.0
-    local tallness = (approx_size + rand_range(-0.6,1.6)) * 64.0
+    local tallness = (approx_size + rand.range(-0.6,1.6)) * 64.0
 
     if tallness < 128 then tallness = 128 end
     if tallness > 448 then tallness = 448 end
@@ -1728,7 +1728,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
  
     R.ceil_h = math.max(min_h, avg_h + R.tallness)
 
-    R.ceil_tex = rand_key_by_probs(THEME.building_ceilings)
+    R.ceil_tex = rand.key_by_probs(THEME.building_ceilings)
 
 -- [[
     decide_periphs()
@@ -1857,20 +1857,20 @@ function Room_add_crates(R)
   end
 
   if not skin_names then return end
-  skin = assert(GAME.crates[rand_key_by_probs(skin_names)])
+  skin = assert(GAME.crates[rand.key_by_probs(skin_names)])
 
   local chance
 
   if STYLE.crates == "heaps" then
     chance = sel(R.outdoor, 25, 40)
-    if rand_odds(20) then chance = chance * 2 end
+    if rand.odds(20) then chance = chance * 2 end
   else
     chance = sel(R.outdoor, 15, 25)
-    if rand_odds(10) then chance = chance * 3 end
+    if rand.odds(10) then chance = chance * 3 end
   end
 
   for _,spot in ipairs(find_spots()) do
-    if rand_odds(chance) then
+    if rand.odds(chance) then
       spot.S.solid_corner = true
       local z_top = spot.S.floor_h + (skin.h or 64)
       Build_crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
@@ -1908,9 +1908,9 @@ function Room_build_cave(R)
   end
 
   local function choose_tex(last, tab)
-    local tex = rand_key_by_probs(tab)
-    if tex == last then tex = rand_key_by_probs(tab) end
-    if tex == last then tex = rand_key_by_probs(tab) end
+    local tex = rand.key_by_probs(tab)
+    if tex == last then tex = rand.key_by_probs(tab) end
+    if tex == last then tex = rand.key_by_probs(tab) end
     return tex
   end
 
@@ -1920,12 +1920,12 @@ function Room_build_cave(R)
 
   if R.is_lake then
     data.info = get_liquid()
-    data.info.delta_z = rand_sel(70, -48, -72)
+    data.info.delta_z = rand.sel(70, -48, -72)
     data.z2 = R.cave_floor_h + 8
   end
 
-  if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand_odds(88) then
-    data.z2 = R.cave_floor_h + rand_sel(65, 80, 144)
+  if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
+    data.z2 = R.cave_floor_h + rand.sel(65, 80, 144)
   end
 
   if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
@@ -1935,11 +1935,11 @@ function Room_build_cave(R)
   for id,reg in pairs(flood.regions) do
     if id > 0 then
       if LEVEL.liquid and not R.is_lake and reg.cells > 4 and
-         rand_odds(50) and Cave_region_is_island(flood, reg)
+         rand.odds(50) and Cave_region_is_island(flood, reg)
       then
         -- create a lava/nukage pit
         local pit = get_liquid()
-        pit.delta_z = rand_sel(70, -52, -76)
+        pit.delta_z = rand.sel(70, -52, -76)
 
         Cave_render(flood, id, base_x, base_y, WALL_brush,
                     { info=pit, z2=R.cave_floor_h+8 })
@@ -1961,10 +1961,10 @@ function Room_build_cave(R)
 
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
-  for i = 1,rand_index_by_probs({ 10,10,70 })-1 do
+  for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
     walkway = Cave_shrink(walkway, false)
 
-    if rand_odds(sel(i==1, 20, 50)) then
+    if rand.odds(sel(i==1, 20, 50)) then
       walkway = Cave_shrink(walkway, false)
     end
 
@@ -1983,11 +1983,11 @@ function Room_build_cave(R)
 
     data.f_info = get_mat(data.ftex)
 
-    if LEVEL.liquid and i==2 and rand_odds(60) then  -- TODO: theme specific prob
+    if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
       data.f_info = get_liquid()
 
       -- FIXME: this bugs up monster/pickup/key spots
-      if rand_odds(0) then
+      if rand.odds(0) then
         data.f_trim.delta_z = -(i * 10 + 40)
       end
     end
@@ -2003,11 +2003,11 @@ function Room_build_cave(R)
     if not R.outdoor then
       data.c_info = w_info
 
-      if i==2 and rand_odds(60) then
+      if i==2 and rand.odds(60) then
         data.c_info = get_sky()
-      elseif rand_odds(50) then
+      elseif rand.odds(50) then
         data.c_info = get_mat(data.ftex)
-      elseif rand_odds(4.9*20) then
+      elseif rand.odds(80) then
         data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
         data.c_info = get_mat(data.ctex)
       end
@@ -2093,10 +2093,10 @@ gui.printf("do_teleport\n")
     end
 
     if #dirs > 0 then
-      return rand_element(dirs)
+      return rand.pick(dirs)
     end
 
-    return rand_irange(1,4)*2
+    return rand.irange(1,4)*2
   end
 
   local function player_angle(S)
@@ -2129,7 +2129,7 @@ gui.printf("do_teleport\n")
 
       -- TODO: fix this
       if false and PARAM.raising_start and R.svolume >= 20 and not R.natural
-         and THEME.raising_start_switch and rand_odds(25)
+         and THEME.raising_start_switch and rand.odds(25)
       then
         gui.debugf("Raising Start made\n")
 
@@ -2183,13 +2183,13 @@ gui.printf("do_teleport\n")
 
       if R.outdoor and THEME.out_exits then
         -- FIXME: use single one for a whole episode
-        local skin_name = rand_key_by_probs(THEME.out_exits)
+        local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.exits[skin_name])
         Build_outdoor_exit_switch(S, dir, z1, skin)
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
-        local skin_name = rand_key_by_probs(THEME.exits)
+        local skin_name = rand.key_by_probs(THEME.exits)
         local skin = assert(GAME.exits[skin_name])
         Build_exit_pillar(S, z1, skin)
       end
@@ -2197,7 +2197,7 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.lock)
 
-      if rand_odds(15) and THEME.lowering_pedestal_skin then
+      if rand.odds(15) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
@@ -2207,7 +2207,7 @@ gui.printf("do_teleport\n")
 
         Trans_entity(LOCK.item, mx, my, z_top)
       else
-        if rand_odds(98) then
+        if rand.odds(98) then
           local skin = { floor=THEME.pedestal_mat }
           Build_pedestal(S, z1, skin)
         end
@@ -2239,7 +2239,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     if R.hallway or R == LEVEL.start_room then
       Trans_entity(weapon, mx, my, z1)
 
-    elseif rand_odds(40) and THEME.lowering_pedestal_skin2 then
+    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
       local z_top = math.max(z1+80, R.floor_max_h+40)
       if z_top > z2-32 then
          z_top = z2-32
@@ -2498,7 +2498,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
           error("Game is missing doors table")
         end
 
-        local door_name = rand_key_by_probs(doors)
+        local door_name = rand.key_by_probs(doors)
         local skin = assert(GAME.doors[door_name])
 
         local skin2 = { inner=w_tex, outer=o_tex }
@@ -2619,7 +2619,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if S.solid_feature and THEME.building_corners then
         if not R.corner_tex then
-          R.corner_tex = rand_key_by_probs(THEME.building_corners)
+          R.corner_tex = rand.key_by_probs(THEME.building_corners)
         end
         w_tex = R.corner_tex
       end

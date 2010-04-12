@@ -226,7 +226,7 @@ function psychedelic_mat(name)
       end
     end
 
-    rand_shuffle(m_after)
+    rand.shuffle(m_after)
 
     LEVEL.psycho_map = {}
 
@@ -2050,9 +2050,9 @@ function Build_small_exit(R, xt_info, skin, skin2)
   local f_h = C.conn_h or T.floor_h or T.room.floor_h or 0
   local c_h = f_h + 128
 
-  local w_tex = rand_key_by_probs(xt_info.walls)
-  local f_tex = rand_key_by_probs(xt_info.floors)
-  local c_tex = rand_key_by_probs(xt_info.ceilings)
+  local w_tex = rand.key_by_probs(xt_info.walls)
+  local f_tex = rand.key_by_probs(xt_info.floors)
+  local c_tex = rand.key_by_probs(xt_info.ceilings)
 
   local inner_info = get_mat(w_tex, f_tex, c_tex)
 
@@ -2179,7 +2179,7 @@ function Build_small_exit(R, xt_info, skin, skin2)
 
 
   if skin.items then
-    Trans_entity(rand_element(skin.items), mx, 96, f_h)
+    Trans_entity(rand.pick(skin.items), mx, 96, f_h)
   end
 
   Trans_clear()

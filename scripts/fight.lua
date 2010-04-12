@@ -121,7 +121,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
 
     assert(#probs == #weapons)
 
-    local index = rand_index_by_probs(probs)
+    local index = rand.index_by_probs(probs)
 
     return assert(weapons[index])
   end
@@ -278,7 +278,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
   while #active_mons > 0 do
     local W = select_weapon()
 
-    local shots = int(rand_range(2.0, 8.0) * W.rate + 0.5)
+    local shots = int(rand.range(2.0, 8.0) * W.rate + 0.5)
 
     if shots < 2  then shots = 2  end
     if shots > 30 then shots = 30 end

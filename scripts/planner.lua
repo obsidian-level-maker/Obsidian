@@ -194,12 +194,12 @@ function Plan_CreateRooms()
   end
 
   local function choose_big_size(bx, by)
-    local raw = rand_key_by_probs(BIG_ROOM_TABLE)
+    local raw = rand.key_by_probs(BIG_ROOM_TABLE)
 
     local big_w = int(raw / 10)
     local big_h =    (raw % 10)
 
-    if rand_odds(50) then
+    if rand.odds(50) then
       big_w, big_h = big_h, big_w
     end
 
@@ -212,7 +212,7 @@ function Plan_CreateRooms()
     -- prefer to put big rooms away from the edge
     if (bx == 1 or bx+big_w-1 == LEVEL.W or
         by == 1 or by+big_h-1 == LEVEL.H)
-        and rand_odds(50)
+        and rand.odds(50)
     then
       big_w, big_h = 1, 1
     end
@@ -257,7 +257,7 @@ function Plan_CreateRooms()
     if last_x then
       local LAST = room_map[last_x][last_y]
       local SIDES = { 2,4,6,8 }
-      rand_shuffle(SIDES)
+      rand.shuffle(SIDES)
       for _,side in ipairs(SIDES) do
         local nx, ny = nudge_coord(last_x, last_y, side)
         if valid_R(nx, ny) then
@@ -275,8 +275,8 @@ function Plan_CreateRooms()
     -- (doesn't matter if we don't find any room to convert)
 
     for loop = 1, 2*(LEVEL.W + LEVEL.H) do
-      local x = rand_irange(1, LEVEL.W)
-      local y = rand_irange(1, LEVEL.H)
+      local x = rand.irange(1, LEVEL.W)
+      local y = rand.irange(1, LEVEL.H)
       local R = room_map[x][y]
 
       if R and not R.natural then
@@ -303,7 +303,7 @@ function Plan_CreateRooms()
     for i = 1,count do
       local x, y = plonk_new_natural(last_x, last_y)
 
-      if rand_odds(85) then
+      if rand.odds(85) then
         last_x, last_y = x, y
       else
         last_x, last_y = nil, nil
@@ -331,7 +331,7 @@ function Plan_CreateRooms()
     table.insert(visits, { x=x, y=y })
   end end
 
-  rand_shuffle(visits)
+  rand.shuffle(visits)
 
   for _,vis in ipairs(visits) do
     local bx, by = vis.x, vis.y
@@ -535,7 +535,7 @@ function Plan_Nudge()
     -- Note: any shrinkage must pull neighbors too
 
     if not grow then
-      grow = rand_sel(75,1,-1)
+      grow = rand.sel(75,1,-1)
     end
 
 gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
@@ -613,11 +613,11 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local sides = { 2,4,6,8 }
 
     for _,R in ipairs(rooms) do
-      rand_shuffle(sides)
+      rand.shuffle(sides)
       for _,side in ipairs(sides) do
         local depth = sel(side==4 or side==6, R.sw, R.sh)
         if (depth % 2) == 0 then
-          if not (rand_odds(30) and try_nudge_room(R, side, 1)) then
+          if not (rand.odds(30) and try_nudge_room(R, side, 1)) then
             try_nudge_room(R, side, -1)
           end
         end
@@ -652,11 +652,11 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
     local sides = { 2,4,6,8 }
 
     for pass = 1,2 do
-      rand_shuffle(rooms)
+      rand.shuffle(rooms)
       for _,R in ipairs(rooms) do
-        rand_shuffle(sides)
+        rand.shuffle(sides)
         for _,side in ipairs(sides) do
-          if rand_odds(30) then
+          if rand.odds(30) then
             try_nudge_room(R, side)
           end
         end
@@ -750,12 +750,12 @@ function Plan_SubRooms()
           local INFO = { x=x, y=y, w=w, h=w, islandy=islandy }
 
           -- make rectangles sometimes
-          if INFO.w >= 3 and rand_odds(30) then
+          if INFO.w >= 3 and rand.odds(30) then
             INFO.w = INFO.w - 1
-            if rand_odds(50) then INFO.x = INFO.x + 1 end
-          elseif INFO.h >= 3 and rand_odds(30) then
+            if rand.odds(50) then INFO.x = INFO.x + 1 end
+          elseif INFO.h >= 3 and rand.odds(30) then
             INFO.h = INFO.h - 1
-            if rand_odds(50) then INFO.y = INFO.y + 1 end
+            if rand.odds(50) then INFO.y = INFO.y + 1 end
           end
 
           table.insert(infos, INFO)
@@ -766,7 +766,7 @@ function Plan_SubRooms()
 
     if #infos == 0 then return end
 
-    local info = infos[rand_index_by_probs(probs)]
+    local info = infos[rand.index_by_probs(probs)]
 
     -- actually add it !
     local ROOM =
@@ -821,13 +821,13 @@ function Plan_SubRooms()
       local min_d = math.max(R.sw, R.sh)
       if min_d > 8 then min_d = 8 end
 
-      if rand_odds(chance_tab[min_d]) then
+      if rand.odds(chance_tab[min_d]) then
         try_add_sub_room(R)
 
-        if min_d >= 5 and rand_odds(10) then try_add_sub_room(R) end
-        if min_d >= 6 and rand_odds(65) then try_add_sub_room(R) end
-        if min_d >= 7 and rand_odds(25) then try_add_sub_room(R) end
-        if min_d >= 8 and rand_odds(90) then try_add_sub_room(R) end
+        if min_d >= 5 and rand.odds(10) then try_add_sub_room(R) end
+        if min_d >= 6 and rand.odds(65) then try_add_sub_room(R) end
+        if min_d >= 7 and rand.odds(25) then try_add_sub_room(R) end
+        if min_d >= 8 and rand.odds(90) then try_add_sub_room(R) end
       end
     end
   end
@@ -864,7 +864,7 @@ function Plan_MakeSeeds()
 
   local function fill_holes()
     local sc_list = table.copy(LEVEL.scenic_rooms)
-    rand_shuffle(sc_list)
+    rand.shuffle(sc_list)
 
     for _,R in ipairs(sc_list) do
       local nx1,ny1 = R.sx1,R.sy1
@@ -937,7 +937,7 @@ function Plan_determine_size()
       local total = 4  -- border seeds around level
 
       for x = 1,W do
-        cols[x] = rand_index_by_probs(ROOM_SIZE_TABLE)
+        cols[x] = rand.index_by_probs(ROOM_SIZE_TABLE)
         total = total + cols[x]
       end
 
@@ -970,8 +970,8 @@ function Plan_determine_size()
   end
 
   if ob_size == "mixed" then
-    W = 2 + rand_index_by_probs { 1,4,7,4,2,1 }
-    H = 2 + rand_index_by_probs { 4,7,4,2,1 }
+    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
+    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
 
     if W < H then W, H = H, W end
 
@@ -999,7 +999,7 @@ function Plan_determine_size()
       error("Unknown size keyword: " .. tostring(ob_size))
     end
 
-    if rand_odds(30) then W = W - 1 end
+    if rand.odds(30) then W = W - 1 end
   end
 
   LEVEL.W = W
@@ -1052,7 +1052,7 @@ function Plan_rooms_sp()
   gui.random()
 
   if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
-    local name = rand_key_by_probs(THEME.liquids)
+    local name = rand.key_by_probs(THEME.liquids)
     gui.printf("Liquid = %s\n", name)
     LEVEL.liquid = assert(GAME.liquids[name])
   end
@@ -1076,7 +1076,7 @@ function Plan_rooms_sp()
   end
 
 
-  LEVEL.skyfence_h = rand_sel(50, 192, rand_sel(50, 64, 320))
+  LEVEL.skyfence_h = rand.sel(50, 192, rand.sel(50, 64, 320))
 
 end -- Plan_rooms_sp
 

@@ -53,7 +53,7 @@ function Cave_gen(map, solid_prob)
     elseif map[x][y] > 0 then
       work[x][y] = 1
     else
-      work[x][y] = rand_sel(solid_prob, 1, 0)
+      work[x][y] = rand.sel(solid_prob, 1, 0)
     end
   end end
 
@@ -399,7 +399,7 @@ function Cave_shrink(cave, keep_edges)
   local SIDES = { 2,4,6,8 }
 
   local function value_for_spot(x, y)
-    rand_shuffle(SIDES)
+    rand.shuffle(SIDES)
 
     local hit_edge = false
 
@@ -518,28 +518,28 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
 
     if not A and not B then
 
-      if test_nb(-dx, 0) and test_nb(0, -dy) and rand_odds(70) then
+      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(70) then
         corner_map[cx][cy] = "drop"
         return
       end
 
-      corner_map[cx][cy] = rand_element { "x", "y", "xy", "split" }
+      corner_map[cx][cy] = rand.pick { "x", "y", "xy", "split" }
       return
     end
 
     if A and not B then
-      if rand_odds(40) then corner_map[cx][cy] = "x" end
+      if rand.odds(40) then corner_map[cx][cy] = "x" end
       return
     end
 
     if B and not A then
-      if rand_odds(40) then corner_map[cx][cy] = "y" end
+      if rand.odds(40) then corner_map[cx][cy] = "y" end
       return
     end
 
     -- assert(A and B and not C)
 
-    if rand_odds(1) then corner_map[cx][cy] = "split" end
+    if rand.odds(1) then corner_map[cx][cy] = "split" end
     return
   end
 
