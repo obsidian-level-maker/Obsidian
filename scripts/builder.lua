@@ -61,10 +61,7 @@ function Trans_coord(x, y)
 
   -- handle rotation
   if TRANSFORM.rotate then
-    local cos_R = math.cos(TRANSFORM.rotate * math.pi / 180.0)
-    local sin_R = math.sin(TRANSFORM.rotate * math.pi / 180.0)
-
-    x, y = x * cos_R - y * sin_R, y * cos_R + x * sin_R
+    x, y = geom.rotate_vec(x, y, TRANSFORM.rotate)
   end
 
   -- handle translation last

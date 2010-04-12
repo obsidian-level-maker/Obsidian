@@ -451,6 +451,9 @@ geom.ROTATE =
 geom.RIGHT = geom.ROTATE[2]
 geom.LEFT  = geom.ROTATE[6]
 
+geom.ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
+
+
 function geom.dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 end
@@ -486,33 +489,63 @@ function geom.is_vert(dir)
 end
 
 function geom.is_parallel(dir1, dir2)
-  return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
+  return dir1 == dir2 or (dir1 + dir2) == 10
 end
 
 function geom.is_perpendic(dir1, dir2)
-  return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
+  return geom.RIGHT[dir1] == dir2 or geom.LEFT[dir1] == dir2
 end
 
 
-DIR_ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
+function geom.angle_diff(A, B)
+  -- A + result = B
+  -- result ranges from -180 to +180
 
-function dir_to_angle(dir)
-  assert(1 <= dir and dir <= 9)
-  return DIR_ANGLES[dir]
+  local D = (B - A)
+
+  while D >  180 do D = D - 360 end
+  while D < -180 do D = D + 360 end
+
+  return D
 end
 
-function delta_to_angle(dx,dy)
-  if math.abs(dy) < math.abs(dx)/2 then
-    return sel(dx < 0, 180, 0)
+function geom.rotate_vec(x, y, angle)
+  local cos_R = math.cos(angle * math.pi / 128)
+  local sin_R = math.sin(angle * math.pi / 128)
+
+  return x*cos_R - y*sin_R, y*cos_R + x*sin_R
+end
+
+function geom.calc_angle(dx, dy)
+  if math.abs(dx) < 0.001 and math.abs(dy) < 0.001 then
+    return nil
   end
-  if math.abs(dx) < math.abs(dy)/2 then
-    return sel(dy < 0, 270, 90)
+
+  local angle = math.atan2(dy, dx) * 180 / math.pi
+
+  if angle < 0 then angle = angle + 360 end
+
+  return angle
+end
+
+function geom.closest_dir(dx, dy)
+  if math.abs(dx) < 0.002 and math.abs(dy) < 0.002 then
+    return 5
   end
-  if dy > 0 then
-    return sel(dx < 0, 135, 45)
-  else
-    return sel(dx < 0, 225, 315)
-  end
+
+  local angle = geom.calc_angle(dx, dy)
+
+  if angle <  22 then return 6 end
+  if angle <  77 then return 9 end
+  if angle < 112 then return 8 end
+  if angle < 157 then return 7 end
+
+  if angle < 202 then return 4 end
+  if angle < 247 then return 1 end
+  if angle < 292 then return 2 end
+  if angle < 337 then return 3 end
+
+  return 6
 end
 
 function geom.rough_dir(dx, dy)
@@ -546,28 +579,6 @@ function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
   if y3 > y2 or y4 < y1 then return false end
 
   return true
-end
-
-function boxes_touch_sides(x1,y1,x2,y2,  x3,y3,x4,y4)
-
-  if x3 > x2+1 or x4 < x1-1 then return false end
-  if y3 > y2+1 or y4 < y1-1 then return false end
-
-  if not (x3 > x2+1 or x4 < x1-1) and not (y3 > y2 or y4 < y1)
-  then return true end
-
-  if not (y3 > y2+1 or y4 < y1-1) and not (x3 > x2 or x4 < x1)
-  then return true end
-
-  return false
-end
-
-function get_long_deep(dir, w, h)
-  if (dir == 2) or (dir == 8) then
-    return w, h
-  else
-    return h, w
-  end
 end
 
 function side_coords(side, x1,y1, x2,y2, ofs)
