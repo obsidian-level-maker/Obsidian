@@ -272,6 +272,8 @@ private:
 
     if (datum[0] == 'e' && datum[1] == ':')
     {
+      w->hide();
+
       datum += 2;
 
       int indent = atoi(datum);
@@ -281,12 +283,10 @@ private:
 
       Script_RunString("ob_console_dump { tab_ref=%s, indent=%d }", datum, indent);
 
-      button_line = false;
+      // NOTE: it's possible the widget (w) has been deleted by now
 
-      w->hide();
+      button_line = false;
     }
-    else
-      fl_beep();
   }
 };
 
