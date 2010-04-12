@@ -99,15 +99,12 @@ end
 
 
 -- replace the standard 'print' function
--- Note: it is impossible to emulate print(nil, nil)
-function print(...)
+function ob_print(...)
   local args = { ... }
   local line = ""
 
-  for i = 16,1,-1 do
-    if args[i] or #line > 0 or i == 1 then
-      line = tostring(args[i]) .. "\t" .. line
-    end
+  for i = 1,gui.va_count(...) do
+    line = line .. "\t" .. tostring(args[i])
   end
 
   gui.printf("%s\n", line)
@@ -228,19 +225,16 @@ function ob_console_dump(info, ...)
     return
   end
 
-  -- grab results and count them (show at least one)
-  local list = { ... }
+  -- grab results and show them
+  local args = { ... }
+  local count = gui.va_count(...)
 
-  local highest = 1
-
-  for index = 2,8 do
-    if list[index] ~= nil then
-      highest = index
+  if count == 0 then
+    gui.conprintf("no results\n")
+  else
+    for index = 1,count do
+      dump_value(args[index])
     end
-  end
-
-  for index = 1,highest do
-    dump_value(list[index])
   end
 end
 
@@ -563,6 +557,8 @@ function ob_init()
   gui.conprintf = function (fmt, ...)
     if fmt then gui.raw_console_print(string.format(fmt, ...)) end
   end
+
+  print = ob_print
 
 
   gui.printf("~~ Oblige Lua initialization begun ~~\n")
