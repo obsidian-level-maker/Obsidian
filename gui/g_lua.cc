@@ -458,6 +458,17 @@ int gui_bit_and(lua_State *L)
   return 1;
 }
 
+// LUA: bit_test(val) --> boolean
+//
+int gui_bit_test(lua_State *L)
+{
+  int A = luaL_checkint(L, 1);
+  int B = luaL_checkint(L, 2);
+
+  lua_pushboolean(L, (A & B) != 0);
+  return 1;
+}
+
 // LUA: bit_or(A, B) --> number
 //
 int gui_bit_or(lua_State *L)
@@ -549,11 +560,6 @@ static const luaL_Reg gui_script_funcs[] =
   { "rand_seed",   gui_rand_seed },
   { "random",      gui_random },
 
-  { "bit_and",     gui_bit_and },
-  { "bit_or",      gui_bit_or  },
-  { "bit_xor",     gui_bit_xor },
-  { "bit_not",     gui_bit_not },
-  
   // CSG functions
   { "begin_level", CSG2_begin_level },
   { "end_level",   CSG2_end_level   },
@@ -591,6 +597,19 @@ static const luaL_Reg gui_script_funcs[] =
 };
 
 
+// partial Lua 5.2.0 compability
+static const luaL_Reg bit_functions[] =
+{
+  { "band",    gui_bit_and },
+  { "btest",   gui_bit_test },
+  { "bor",     gui_bit_or  },
+  { "bxor",    gui_bit_xor },
+  { "bnot",    gui_bit_not },
+
+  { NULL, NULL } // the end
+};
+
+
 int Script_RegisterLib(const char *name, const luaL_Reg *reg)
 {
   SYS_NULL_CHECK(LUA_ST);
@@ -611,6 +630,7 @@ static int p_init_lua(lua_State *L)
     luaL_openlibs(L);  /* open libraries */
 
     Script_RegisterLib("gui", gui_script_funcs);
+    Script_RegisterLib("bit", bit_functions);
   }
   lua_gc(L, LUA_GCRESTART, 0);
 
