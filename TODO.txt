@@ -5,7 +5,7 @@ TODO
 Console:
   +  make window resizable
 
-  -  fix the odd placement (-4) and mx/my/mh/mw
+  +  handle lists better
 
   DONE: make console move to bottom on new lines (if already at bottom)
   DONE: implement command history
@@ -13,17 +13,19 @@ Console:
   DONE: 'clear' command
   DONE: move con_dump --> oblige.lua as 'ob_console_dump'
 
-  -  remember ConPrintf strings when console is not open
+  DONE: remember ConPrintf strings when console is not open
+  DONE: @blabel:data@  : make a button, shown as label
 
   -  don't keep console_body widget when delete console_win
 
-  -  @blabel:data@  : make a button, shown as label
-
-  -  have a "current table", gui.current_table, default to _G
+  -  have a "current table", gui.___CURRENT, default to _G
      when '?' used with no arguments, display it
-     the '= xxx' syntax sets it (xxx can be '.name')
+     the 'cd xxx' syntax sets it (xxx can be '.name')
      the '? .name' syntax displays a field
      the '.name = xxx' syntax set a field
+  
+
+DONE:  redefine standard 'print' function to use gui.printf
 
 
 BUG: some Quake maps have clipping issues (invisible barriers)
