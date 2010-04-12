@@ -557,21 +557,16 @@ function geom.rough_dir(dx, dy)
 end
 
 
-function box_size(x1, y1, x2, y2)
-  return (x2-x1+1), (y2-y1+1)
+function geom.group_size(x1,y1, x2,y2)
+  return x2 - x1 + 1, y2 - y1 + 1
 end
 
-function box_aspect(w, h)
-  assert(w > 0 and h > 0)
-  return math.max(w, h) / math.min(w, h)
+function geom.inside_box(x,y, bx1,by1, bx2,by2)
+  return (bx1 <= x) and (x <= bx2) and
+         (by1 <= y) and (y <= by2)
 end
 
-function box_contains_point(x1,y1,x2,y2, tx,ty)
-  return (x1 <= tx) and (tx <= x2) and
-         (y1 <= ty) and (ty <= y2)
-end
-
-function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
+function geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4)
   assert(x2 >= x1 and y2 >= y1)
   assert(x4 >= x3 and y4 >= y3)
 
@@ -581,7 +576,7 @@ function boxes_overlap(x1,y1,x2,y2,  x3,y3,x4,y4)
   return true
 end
 
-function side_coords(side, x1,y1, x2,y2, ofs)
+function geom.side_coords(side, x1,y1, x2,y2, ofs)
   if not ofs then ofs = 0 end
 
   if side == 2 then return x1,y1+ofs, x2,y1+ofs end
@@ -589,15 +584,15 @@ function side_coords(side, x1,y1, x2,y2, ofs)
   if side == 4 then return x1+ofs,y1, x1+ofs,y2 end
   if side == 6 then return x2-ofs,y1, x2-ofs,y2 end
 
-  error ("side_coords: bad side " .. side)
+  error("side_coords: bad side: " .. tostring(side))
 end
 
-function corner_coords(side, x1,y1, x2,y2)
+function geom.pick_corner(side, x1,y1, x2,y2)
   if side == 1 then return x1,y1 end
   if side == 3 then return x2,y1 end
   if side == 7 then return x1,y2 end
   if side == 9 then return x2,y2 end
 
-  error ("corner_coords: bad side " .. side)
+  error("pick_corner: bad side: " .. tostring(side))
 end
 

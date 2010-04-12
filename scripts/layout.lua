@@ -583,10 +583,10 @@ function Layout_natural_room(R, heights)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
 
-    local x1, y1, x2, y2 = side_coords(side, mx,my, mx+2,my+2)
+    local x1,y1, x2,y2 = geom.side_coords(side, mx,my, mx+2,my+2)
 
     for x = mx,mx+2 do for y = my,my+2 do
-      if box_contains_point(x1,y1,x2,y2, x,y) then
+      if geom.inside_box(x,y, x1,y1, x2,y2) then
         set_cell(x, y, value)
       end
     end end
@@ -751,7 +751,7 @@ function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- this function is responsible for setting floor_h in every
   -- seed in the given 'area'.
 
-  area.tw, area.th = box_size(area.x1, area.y1, area.x2, area.y2)
+  area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
 gui.debugf("Layout_try_pattern @ %s  div_lev:%d\n", R:tostr(), div_lev)
 gui.debugf("Area: (%d,%d)..(%d,%d) heights: %d %d %d\n",
@@ -1873,8 +1873,9 @@ function Layout_one(R)
 
 
       -- connection checking
-      local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+      local x1,y1, x2,y2 = geom.side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
       local dx, dy = geom.delta(side)
+
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
@@ -1906,8 +1907,9 @@ function Layout_one(R)
     local function apply_junk_side(side)
       local th = R.junk_thick[side]
 
-      local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
+      local x1,y1, x2,y2 = geom.side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
       local dx, dy = geom.delta(side)
+
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
@@ -1971,7 +1973,7 @@ function Layout_one(R)
     R.tx2 = R.sx2 - R.junk_thick[6]
     R.ty2 = R.sy2 - R.junk_thick[8]
 
-    R.tw, R.th = box_size(R.tx1, R.ty1, R.tx2, R.ty2)
+    R.tw, R.th = geom.group_size(R.tx1, R.ty1, R.tx2, R.ty2)
   end
 
 
@@ -2377,7 +2379,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
   }
 
   local function can_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
     local pos = 1
 
     x1,y1 = geom.nudge(x1, y1, 10-side, offset)
@@ -2406,7 +2408,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
   end
 
   local function make_pillar_pattern(side, offset, pat)
-    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
     local pos = 1
 
     x1,y1 = geom.nudge(x1, y1, 10-side, offset)

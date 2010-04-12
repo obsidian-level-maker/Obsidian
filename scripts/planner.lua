@@ -587,7 +587,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
       end
 
       -- fix up seed size
-      R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+      R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
 
       assert(not R.nudges[push.side])
       R.nudges[push.side] = true
@@ -788,7 +788,7 @@ function Plan_SubRooms()
     ROOM.sx2 = info.x + info.w - 1
     ROOM.sy2 = info.y + info.h - 1
 
-    ROOM.sw, ROOM.sh = box_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
+    ROOM.sw, ROOM.sh = geom.group_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
     ROOM.svolume = ROOM.sw * ROOM.sh
 
     ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
@@ -886,7 +886,7 @@ function Plan_MakeSeeds()
       R.sx1, R.sy1 = nx1, ny1
       R.sx2, R.sy2 = nx2, ny2
 
-      R.sw, R.sh = box_size(R.sx1, R.sy1, R.sx2, R.sy2)
+      R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
     end -- for R
   end
 

@@ -567,7 +567,7 @@ function Test_Branch_Gen(name)
     local P = table.array_2D(W+2, H+2)
 
     for y = 0,H+1 do for x = 0,W+1 do
-      P[x+1][y+1] = sel(box_contains_point(1,1,W,H, x,y), "#", " ")
+      P[x+1][y+1] = sel(geom.inside_box(x,y, 1,1, W,H), "#", " ")
     end end
 
     for idx = 1,#config,3 do
@@ -576,7 +576,7 @@ function Test_Branch_Gen(name)
       local dir = config[idx+2]
 
       assert(x, y, dir)
-      assert(box_contains_point(1,1,W,H, x,y))
+      assert(geom.inside_box(x,y, 1,1, W,H))
 
       local nx, ny = geom.nudge(x, y, dir)
       assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)

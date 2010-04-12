@@ -1115,7 +1115,7 @@ function Room_make_ceiling(R)
 
   local function get_max_drop(side, offset)
     local drop_z
-    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
@@ -1154,7 +1154,7 @@ function Room_make_ceiling(R)
 
     local info = add_pegging(get_mat(THEME.periph_pillar_mat))
 
-    local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
+    local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
     if geom.is_vert(side) then x2 = x2-1 else y2 = y2-1 end
 
@@ -1333,7 +1333,7 @@ function Room_make_ceiling(R)
       end
     end
 
-    R.cw, R.ch = box_size(R.cx1, R.cy1, R.cx2, R.cy2)
+    R.cw, R.ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
 
     assert(R.cw >= 1)
     assert(R.ch >= 1)
@@ -1642,7 +1642,7 @@ gui.debugf("Original @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         R.cy2 = R.cy2 - 1
       end
 
-      R.cw, R.ch = box_size(R.cx1, R.cy1, R.cx2, R.cy2)
+      R.cw, R.ch = geom.group_size(R.cx1, R.cy1, R.cx2, R.cy2)
 
       nice = central_niceness()
     end
