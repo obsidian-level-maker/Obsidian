@@ -97,24 +97,24 @@ end
 -- special value for deep_merge() and deep_copy()
 REMOVE_ME = "__REMOVE__"
 
-function table_size(t)
+function table.size(t)
   local count = 0;
   for k,v in pairs(t) do count = count+1 end
   return count
 end
 
-function table_empty(t)
+function table.empty(t)
   return not next(t)
 end
 
-function table_contains(t, v)
+function table.contains(t, v)
   for _,value in ipairs(t) do
     if v == value then return true end
   end
   return false
 end
 
-function table_find_unused(t, start)
+function table.find_unused(t, start)
   if not start then start = 1 end
 
   while t[start] do
@@ -124,7 +124,7 @@ function table_find_unused(t, start)
   return start
 end
 
-function table_reverse(t)
+function table.reverse(t)
   if not t then return nil end
 
   for x = 1, int(#t / 2) do
@@ -134,7 +134,7 @@ function table_reverse(t)
   end
 end
 
-function table_subset(t, predicate)
+function table.subset(t, predicate)
   local new_t = {}
 
   if t then
@@ -148,7 +148,7 @@ function table_subset(t, predicate)
   return new_t
 end
 
-function table_subset_w_field(t, field, value)
+function table.subset_w_field(t, field, value)
   local new_t = {}
 
   if t then
@@ -164,7 +164,7 @@ end
 
 function table_to_str(t, depth, prefix)
   if not t then return "NIL" end
-  if table_empty(t) then return "{}" end
+  if table.empty(t) then return "{}" end
 
   depth = depth or 1
   prefix = prefix or ""
@@ -194,7 +194,7 @@ function table_to_str(t, depth, prefix)
   return result
 end
 
-function table_pick_best(list, comp)
+function table.pick_best(list, comp)
   assert(list)
 
   if not comp then
@@ -283,46 +283,45 @@ function table.deepish_merge(dest, src)
   return dest
 end
 
-function name_it_up(LIST)
-  for name,info in pairs(LIST) do
+function table.name_up(t)
+  for name,info in pairs(t) do
     info.name = name
   end
 end
 
-function expand_copies(LIST)
+function table.expand_copies(t)
 
   local function expand_it(name, sub)
     if not sub.copy then return end
 
-    if sub._expanding then
-      error("Cyclic copy refs: " .. name)
+    if sub.__expanding then
+      error("Cyclic copy ref in: " .. name)
     end
 
-    sub._expanding = true
-
-    local orig = LIST[sub.copy]
-
+    local orig = t[sub.copy]
     if not orig then
-      error("Unknown copy ref: " .. name .. " -> " .. tostring(sub.copy))
+      error("Unknown copy ref: " .. tostring(sub.copy) .. " in: " .. name)
     end
+
+    sub.__expanding = true
 
     -- recursively expand the original
     expand_it(sub.copy, orig)
 
     table.merge_missing(sub, orig)
 
-    sub._expanding = nil
+    sub.__expanding = nil
     sub.copy = nil
   end
 
   --| expand_copies |--
 
-  for name,sub in pairs(LIST) do
+  for name,sub in pairs(t) do
     expand_it(name, sub)
   end
 end
 
-function array_2D(w, h)
+function table.array_2D(w, h)
   local array = { w=w, h=h }
   for x = 1,w do
     array[x] = {}

@@ -314,7 +314,7 @@ function Plan_CreateRooms()
 
   ---| Plan_CreateRooms |---
 
-  room_map = array_2D(LEVEL.W, LEVEL.H)
+  room_map = table.array_2D(LEVEL.W, LEVEL.H)
 
   local id = 1
 

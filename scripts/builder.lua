@@ -103,7 +103,7 @@ function Trans_brush(info, coords, z1, z2)
     coords[#coords].x = x1
     coords[#coords].y = y1
 
-    table_reverse(coords)
+    table.reverse(coords)
   end
   
 

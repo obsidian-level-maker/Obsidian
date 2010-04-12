@@ -181,9 +181,9 @@ end
 
 
 function Monsters_init()
-  name_it_up(GAME.monsters)
-  name_it_up(GAME.weapons)
-  name_it_up(GAME.pickups)
+  table.name_up(GAME.monsters)
+  table.name_up(GAME.weapons)
+  table.name_up(GAME.pickups)
 
   for name,info in pairs(GAME.monsters) do
     info.thing = assert(GAME.things[name])
@@ -293,7 +293,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
     if count >= skip_total then count = skip_total - 1 end
 
     for i = 1,count do
-      if table_empty(skip_list) then break; end
+      if table.empty(skip_list) then break; end
 
       local name = rand_key_by_probs(skip_list)
       skip_list[name] = nil
@@ -450,7 +450,7 @@ function Monsters_do_pickups()
       end
     end -- for side
 
-    if table_empty(walls) then return end
+    if table.empty(walls) then return end
 
     if walls[4] and walls[6] then
       add_small_spots(R, S, 4, 2, score)
@@ -577,7 +577,7 @@ function Monsters_do_pickups()
       end
     end
 
-    assert(not table_empty(item_tab))
+    assert(not table.empty(item_tab))
     local name = rand_key_by_probs(item_tab)
     local info = GAME.pickups[name]
 
@@ -741,7 +741,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
-    if table_empty(GAME.pickups) then
+    if table.empty(GAME.pickups) then
       return
     end
 
@@ -1002,10 +1002,10 @@ function Monsters_in_room(R)
 
     local palette = {}
 
-    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table_size(list))
+    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table.size(list))
 
     for i = 1,num_kinds do
-      if table_empty(list) then break; end
+      if table.empty(list) then break; end
 
       local mon = rand_key_by_probs(list)
       palette[mon] = list[mon]
@@ -1043,10 +1043,10 @@ function Monsters_in_room(R)
 
     local palette = {}
 
-    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table_size(list))
+    gui.debugf("Monster palette: (%d kinds, %d actual)\n", num_kinds, table.size(list))
 
     for i = 1,num_kinds do
-      if table_empty(list) then break; end
+      if table.empty(list) then break; end
 
       local mon  = rand_key_by_probs(list)
       local prob = list[mon]
@@ -1380,7 +1380,7 @@ function Monsters_in_room(R)
         local try_pal = table.copy(pal_2)
 
         -- try other monsters if the first doesn't fit
-        while not table_empty(try_pal) do
+        while not table.empty(try_pal) do
           local mon = rand_key_by_probs(try_pal)
           try_pal[mon] = nil
 
@@ -1588,7 +1588,7 @@ function Monsters_in_room(R)
 
     -- FIXME: add barrels even when no monsters in room
 
-    if not table_empty(palette) then
+    if not table.empty(palette) then
       create_monster_map(palette)
       fill_monster_map(qty, barrel_chance)
     end

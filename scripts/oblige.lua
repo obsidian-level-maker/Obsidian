@@ -168,7 +168,7 @@ function ob_console_dump(info, ...)
         gui.conprintf("%s@1%s@7 = %s\n", space, tostring(k), tostring(v))
 
       elseif v_type == "table" then
-        if table_empty(v) then
+        if table.empty(v) then
           gui.conprintf("%s%s = @2{ }\n", space, k)
         else
           local label = "table"
@@ -199,7 +199,7 @@ function ob_console_dump(info, ...)
     if val == nil then
       gui.conprintf("@1nil\n")
     elseif t == "table" then
-      if table_empty(val) then
+      if table.empty(val) then
         gui.conprintf("@2{ }\n")
       else
         dump_tab(val)
@@ -563,10 +563,10 @@ function ob_init()
 
   gui.printf("~~ Oblige Lua initialization begun ~~\n")
 
-  name_it_up(OB_GAMES)
-  name_it_up(OB_THEMES)
-  name_it_up(OB_ENGINES)
-  name_it_up(OB_MODULES)
+  table.name_up(OB_GAMES)
+  table.name_up(OB_THEMES)
+  table.name_up(OB_ENGINES)
+  table.name_up(OB_MODULES)
 
 
   local function preinit_all(DEFS)

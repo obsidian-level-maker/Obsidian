@@ -43,8 +43,8 @@ function Cave_gen(map, solid_prob)
   local W = map.w
   local H = map.h
 
-  local work = array_2D(W, H)
-  local temp = array_2D(W, H)
+  local work = table.array_2D(W, H)
+  local temp = table.array_2D(W, H)
 
   -- populate initial map
   for x = 1,W do for y = 1,H do
@@ -118,7 +118,7 @@ function Cave_fallback(map)
   local W = map.w
   local H = map.h
 
-  local work = array_2D(W, H)
+  local work = table.array_2D(W, H)
 
   for x = 1,W do for y = 1,H do
     if not map[x][y] then
@@ -162,7 +162,7 @@ function Cave_flood_fill(cave)
   local W = cave.w
   local H = cave.h
 
-  local flood = array_2D(W, H)
+  local flood = table.array_2D(W, H)
   local empty_id = -1
   local solid_id =  1
 
@@ -309,7 +309,7 @@ function Cave_negate(cave)
   local W = cave.w
   local H = cave.h
 
-  local work = array_2D(W, H)
+  local work = table.array_2D(W, H)
 
   for x = 1,W do for y = 1,H do
     if cave[x][y] then
@@ -356,7 +356,7 @@ function Cave_grow(cave)
   local W = cave.w
   local H = cave.h
 
-  local work = array_2D(W, H)
+  local work = table.array_2D(W, H)
 
   local function handle_neighbor(x, y, side)
     local nx, ny = nudge_coord(x, y, side)
@@ -394,7 +394,7 @@ function Cave_shrink(cave, keep_edges)
   local W = cave.w
   local H = cave.h
 
-  local work = array_2D(W, H)
+  local work = table.array_2D(W, H)
 
   local SIDES = { 2,4,6,8 }
 
@@ -476,7 +476,7 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
   local W = cave.w
   local H = cave.h
 
-  local corner_map = array_2D(W + 1, H + 1)
+  local corner_map = table.array_2D(W + 1, H + 1)
 
 
   local function is_land_locked(x, y)

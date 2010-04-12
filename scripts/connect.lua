@@ -564,7 +564,7 @@ function Test_Branch_Gen(name)
   local function dump_exits(config, W, H)
     local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
 
-    local P = array_2D(W+2, H+2)
+    local P = table.array_2D(W+2, H+2)
 
     for y = 0,H+1 do for x = 0,W+1 do
       P[x+1][y+1] = sel(box_contains_point(1,1,W,H, x,y), "#", " ")
@@ -934,7 +934,7 @@ gui.debugf("Failed\n")
           kinds[N] = assert(info.prob)
         end
 
-        while not table_empty(kinds) do
+        while not table.empty(kinds) do
           local K = assert(rand_key_by_probs(kinds))
 
           kinds[K] = nil  -- don't try this branch kind again
@@ -1108,7 +1108,7 @@ gui.debugf("Failed\n")
     local join_chance = 99
     if STYLE.scenics == "heaps" then join_chance = 66 end
 
-    local rebels = table_subset_w_field(list, "c_group", rebel_id)
+    local rebels = table.subset_w_field(list, "c_group", rebel_id)
     assert(#rebels > 0)
     gui.debugf("#rebels : %d\n", #rebels)
 

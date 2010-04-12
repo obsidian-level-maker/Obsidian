@@ -26,8 +26,8 @@
 --   f(cx,cy, nx,ny, dir) -> distance, negative for impossible
 --
 function astar_find_path(w, h, sx, sy, ex, ey, scorer)
-  local open   = array_2D(w, h)
-  local closed = array_2D(w, h)
+  local open   = table.array_2D(w, h)
+  local closed = table.array_2D(w, h)
   local cx, cy
 
   local function calc_H(x,y)

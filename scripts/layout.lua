@@ -373,7 +373,7 @@ function Layout_spot_for_wotsit(R, kind)
 
 
   -- FIXME: no need to store spots
-  local P = table_pick_best(spots,
+  local P = table.pick_best(spots,
         function(A,B) return A.score > B.score end)
 
   if not P then
@@ -442,7 +442,7 @@ function Layout_cave_monster_spots(R)
   local W = flood.w
   local H = flood.h
 
-  local used = array_2D(W, H)
+  local used = table.array_2D(W, H)
 
   local function check_range(x1,y1, x2,y2)
     if x2 > W or y2 > H then return false end
@@ -680,7 +680,7 @@ function Layout_natural_room(R, heights)
 
   ---| Layout_natural_room |---
 
-  map = array_2D(R.sw * 3, R.sh * 3)
+  map = table.array_2D(R.sw * 3, R.sh * 3)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
@@ -837,7 +837,7 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
   local function convert_structure(T, info, x_sizes, y_sizes)
 
-    T.structure = array_2D(area.tw, area.th)
+    T.structure = table.array_2D(area.tw, area.th)
 
     local stru_w = #x_sizes
     local stru_h = #y_sizes
@@ -1388,7 +1388,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
 
 gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
 
-    T = table_pick_best(possibles,
+    T = table.pick_best(possibles,
         function(A,B) return A.score > B.score end)
 
 gui.debugf("Chose pattern with score %1.4f\n", T.score)
@@ -1561,7 +1561,7 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     local try_count = 8 + area.tw + area.th
 
     for loop = 1,try_count do
-      if table_empty(f_probs) then
+      if table.empty(f_probs) then
         break;
       end
 
@@ -1722,7 +1722,7 @@ function Layout_hallway(R)
     end
 
     -- all connections are parallel => fail
-    if table_empty(used_x) or table_empty(used_y) then
+    if table.empty(used_x) or table.empty(used_y) then
       make_O()
       return
     end
@@ -2143,7 +2143,7 @@ function Layout_one(R)
       table.insert(groups, { hts=hts, dir=dir, cost=cost })
     end
 
-    local g_info = table_pick_best(groups,
+    local g_info = table.pick_best(groups,
                       function(A,B) return A.cost < B.cost end)
 
     return g_info.hts

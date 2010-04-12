@@ -205,7 +205,7 @@ function Quest_decide_start_room(arena)
     gui.debugf("%s : START COST : %1.4f\n", R:tostr(), R.start_cost)
   end
 
-  arena.start = table_pick_best(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
+  arena.start = table.pick_best(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
 
   assert(#arena.start.conns > 0)
 
@@ -334,8 +334,8 @@ end
 function Quest_num_locks(num_rooms)
   local result
 
-  local num_keys     = table_size(THEME.keys or {})
-  local num_switches = table_size(THEME.switches or {})
+  local num_keys     = table.size(THEME.keys or {})
+  local num_switches = table.size(THEME.switches or {})
 
   if STYLE.switches == "none" then
     result = 0
@@ -430,8 +430,8 @@ function Quest_decide_split(arena)  -- returns a LOCK
   end
 
   local function add_lock(list, C)
-    if not table_contains(list, C) then
-      C.on_path = table_contains(arena.path, C)
+    if not table.contains(list, C) then
+      C.on_path = table.contains(arena.path, C)
       C.lock_cost = eval_lock(C)
       table.insert(list, C)
     end
@@ -474,7 +474,7 @@ function Quest_decide_split(arena)  -- returns a LOCK
 
   dump_locks(poss_locks)
 
-  local LC = table_pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
+  local LC = table.pick_best(poss_locks, function(X,Y) return X.lock_cost < Y.lock_cost end)
   assert(LC)
 
   gui.debugf("Lock conn has COST:%1.2f on_path:%s\n",
@@ -576,7 +576,7 @@ function Quest_split_arena(arena, LOCK)
 
     -- create the back_path
     front_A.back_path = table.copy(front_A.path)
-    table_reverse(front_A.back_path)
+    table.reverse(front_A.back_path)
 
     -- add first half of path
     local hit_lock = false
@@ -727,7 +727,7 @@ function Quest_add_a_lock()
 gui.debugf("Arena %s  split_score:%1.4f\n", tostring(A), A.split_score)
   end
 
-  local arena = table_pick_best(LEVEL.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
+  local arena = table.pick_best(LEVEL.all_arenas, function(X,Y) return X.split_score > Y.split_score end)
 
   if arena.split_score < 0 then
     gui.debugf("No more locks could be made!\n")
@@ -824,9 +824,9 @@ function Quest_choose_keys()
   local switch_tab = table.copy(THEME.switches or {})
   local bar_tab    = table.copy(THEME.bars     or {})
 
-  local num_keys     = table_size(key_tab)
-  local num_switches = table_size(switch_tab)
-  local num_bars     = table_size(bar_tab)
+  local num_keys     = table.size(key_tab)
+  local num_switches = table.size(switch_tab)
+  local num_bars     = table.size(bar_tab)
 
   -- use less keys when number of locked doors is small
   local want_keys = num_keys
@@ -860,7 +860,7 @@ function Quest_choose_keys()
   table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
 
   for _,LOCK in ipairs(lock_list) do
-    if table_empty(key_tab) or want_keys <= 0 then
+    if table.empty(key_tab) or want_keys <= 0 then
       break;
     end
 
@@ -976,7 +976,7 @@ function Quest_add_weapons()
       end
     end -- for weapons
 
-    if table_empty(name_tab) then
+    if table.empty(name_tab) then
       gui.debugf("Start weapon: NONE!!\n")
       return
     end
@@ -1009,7 +1009,7 @@ function Quest_add_weapons()
       end
     end
 
-    if table_empty(name_tab) then
+    if table.empty(name_tab) then
       gui.debugf("No weapon @ ARENA_%d\n", arena.id)
       return
     end

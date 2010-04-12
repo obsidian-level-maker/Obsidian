@@ -271,8 +271,8 @@ function Game_setup()
 
   Game_invoke_hook("setup",  OB_CONFIG.seed)
 
-  name_it_up(ROOM_PATTERNS)
-  expand_copies(ROOM_PATTERNS)
+  table.name_up(ROOM_PATTERNS)
+  table.expand_copies(ROOM_PATTERNS)
 end
 
 
@@ -301,7 +301,7 @@ function Level_themes()
       end
     end
 
-    if table_empty(sub_tab) then
+    if table.empty(sub_tab) then
       error("No sub-themes for " .. name)
     end
 
@@ -336,7 +336,7 @@ function Level_themes()
       end
     end
 
-    assert(not table_empty(prob_tab))
+    assert(not table.empty(prob_tab))
 
     for idx,L in ipairs(GAME.all_levels) do
       if not L.sub_theme then
@@ -371,7 +371,7 @@ function Level_themes()
     total = math.max(total, # GAME.original_themes)
   end
 
-  while not table_empty(prob_tab) do
+  while not table.empty(prob_tab) do
     local name = rand_key_by_probs(prob_tab)
     prob_tab[name] = nil
 
@@ -388,7 +388,7 @@ function Level_themes()
     end
 
     if episode_list[pos] then
-      pos = table_find_unused(episode_list)
+      pos = table.find_unused(episode_list)
     end
 
     episode_list[pos] = name 
@@ -486,7 +486,7 @@ function Level_rarify(seed_idx, tab)
   end
 
   for _,L in ipairs(GAME.all_levels) do
-    if not table_empty(L.allowances) then
+    if not table.empty(L.allowances) then
       gui.debugf("Allowances in level %s =\n", L.name)
       gui.debugf("%s\n", table_to_str(L.allowances, 1))
     end

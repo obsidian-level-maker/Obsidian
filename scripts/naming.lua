@@ -1486,7 +1486,7 @@ function Naming_grab_one(theme)
     GAME.name_cache = {}
   end
 
-  if not GAME.name_cache[theme] or table_empty(GAME.name_cache[theme]) then
+  if not GAME.name_cache[theme] or table.empty(GAME.name_cache[theme]) then
     GAME.name_cache[theme] = Naming_gen_list(theme, 30, PARAM.max_name_length)
   end
 

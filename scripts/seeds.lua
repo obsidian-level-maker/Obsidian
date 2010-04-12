@@ -100,7 +100,7 @@ function Seed_init(map_W, map_H, map_D, free_W, free_H)
   SEED_H = H
   SEED_D = D
 
-  SEEDS = array_2D(W, H)
+  SEEDS = table.array_2D(W, H)
 
   local SIZE = assert(PARAM.seed_size)
 
@@ -253,7 +253,7 @@ function Seed_flood_fill_edges()
     end
   end end -- for x, y
 
-  while not table_empty(active) do
+  while not table.empty(active) do
     local new_active = {}
 
     for _,S in ipairs(active) do for side = 2,8,2 do

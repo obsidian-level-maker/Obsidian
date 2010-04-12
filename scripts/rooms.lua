@@ -960,7 +960,7 @@ function Rooms_border_up()
       end
     end
 
-    if not table_empty(pic_tab) then
+    if not table.empty(pic_tab) then
       return rand_key_by_probs(pic_tab)
     end
 
@@ -1491,7 +1491,7 @@ function Room_make_ceiling(R)
   end
 
   local function decide_beam_pattern(poss, total, mode)
-    if table_empty(poss) then return false end
+    if table.empty(poss) then return false end
 
     -- FIXME !!!
     return true
