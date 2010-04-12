@@ -1212,8 +1212,8 @@ gui.debugf("end install_fab\n")
     -- OT : other (source)
 
     if OT.kind == "walk" and not OT.floor_h then
-gui.debugf("S  =\n%s\n\n", table_to_str(S,  1))
-gui.debugf("OT =\n%s\n\n", table_to_str(OT, 1))
+gui.debugf("S  =\n%s\n\n", table.tostr(S,  1))
+gui.debugf("OT =\n%s\n\n", table.tostr(OT, 1))
       error("mirror_seed : peer not setup yet!")
     end
 
@@ -1386,7 +1386,7 @@ gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
       return false
     end
 
-gui.debugf("Possible patterns:\n%s\n", table_to_str(possibles, 2))
+gui.debugf("Possible patterns:\n%s\n", table.tostr(possibles, 2))
 
     T = table.pick_best(possibles,
         function(A,B) return A.score > B.score end)

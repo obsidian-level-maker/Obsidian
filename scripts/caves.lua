@@ -600,7 +600,7 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
       end
     end
 
-  --- gui.debugf("CAVE BRUSH:\n%s\n\n", table_to_str(coords,2))
+  --- gui.debugf("CAVE BRUSH:\n%s\n\n", table.tostr(coords,2))
 
     brush_func(data, coords)
   end

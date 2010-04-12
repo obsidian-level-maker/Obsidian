@@ -786,7 +786,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
     groups_seen[R.c_group] = true
 
--- gui.debugf("TRY configuration: %s\n", table_to_str(config))
+-- gui.debugf("TRY configuration: %s\n", table.tostr(config))
 
     -- see if the pattern can be used on this room
     -- (e.g. all exits go somewhere and are different groups)

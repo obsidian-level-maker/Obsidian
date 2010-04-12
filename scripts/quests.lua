@@ -1146,9 +1146,9 @@ function Quest_select_textures()
 
   gui.printf("Selected room textures:\n")
 
-  gui.printf("building_facades =\n%s\n\n", table_to_str(LEVEL.building_facades))
-  gui.printf("building_walls =\n%s\n\n",   table_to_str(LEVEL.building_walls))
-  gui.printf("courtyard_floors =\n%s\n\n", table_to_str(LEVEL.courtyard_floors))
+  gui.printf("building_facades =\n%s\n\n", table.tostr(LEVEL.building_facades))
+  gui.printf("building_walls =\n%s\n\n",   table.tostr(LEVEL.building_walls))
+  gui.printf("courtyard_floors =\n%s\n\n", table.tostr(LEVEL.courtyard_floors))
 end
 
 

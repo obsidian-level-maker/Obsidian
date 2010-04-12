@@ -394,11 +394,11 @@ function Level_themes()
     episode_list[pos] = name 
   end
 
-  gui.debugf("Initial theme list = \n%s\n", table_to_str(episode_list))
+  gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
 
   -- fill any gaps when in "As Original" mode
   if OB_CONFIG.theme == "original" and GAME.original_themes then
-    gui.debugf("original_themes =\n%s\n", table_to_str(GAME.original_themes))
+    gui.debugf("original_themes =\n%s\n", table.tostr(GAME.original_themes))
 
     for i,orig_theme in ipairs(GAME.original_themes) do
       if not episode_list[i] then
@@ -409,7 +409,7 @@ function Level_themes()
     assert(# episode_list == total)
   end
 
-  gui.printf("Theme for episodes =\n%s\n", table_to_str(episode_list))
+  gui.printf("Theme for episodes =\n%s\n", table.tostr(episode_list))
 
   -- flesh it out
   if total == 2 then
@@ -488,7 +488,7 @@ function Level_rarify(seed_idx, tab)
   for _,L in ipairs(GAME.all_levels) do
     if not table.empty(L.allowances) then
       gui.debugf("Allowances in level %s =\n", L.name)
-      gui.debugf("%s\n", table_to_str(L.allowances, 1))
+      gui.debugf("%s\n", table.tostr(L.allowances, 1))
     end
   end
 end
@@ -615,7 +615,7 @@ function Level_make(L, index, NUM)
 
   Game_invoke_hook("begin_level",  LEVEL.seed)
 
-  gui.printf("\nStyles = \n%s\n\n", table_to_str(STYLE, 1))
+  gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
 
   local error_mat = assert(GAME.materials["_ERROR"])

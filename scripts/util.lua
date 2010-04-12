@@ -162,7 +162,7 @@ function table.subset_w_field(t, field, value)
   return new_t
 end
 
-function table_to_str(t, depth, prefix)
+function table.tostr(t, depth, prefix)
   if not t then return "NIL" end
   if table.empty(t) then return "{}" end
 
@@ -182,7 +182,7 @@ function table_to_str(t, depth, prefix)
     local v = t[k]
     result = result .. prefix .. "  " .. tostring(k) .. " = "
     if type(v) == "table" and depth > 1 then
-      result = result .. table_to_str(v, depth-1, prefix .. "  ")
+      result = result .. table.tostr(v, depth-1, prefix .. "  ")
     else
       result = result .. tostring(v)
     end

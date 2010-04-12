@@ -2519,7 +2519,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local LOCK = assert(S.border[side].lock)
         local skin = assert(GAME.doors[LOCK.item])
 
---if not skin.track then gui.printf("%s", table_to_str(skin,1)); end
+--if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
         assert(skin.track)
 
         local skin2 = { inner=w_tex, outer=o_tex }

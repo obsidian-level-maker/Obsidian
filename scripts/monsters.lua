@@ -1710,16 +1710,16 @@ function Monsters_in_room(R)
         local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
 
         Fight_simulator(mon_list, weap_list, weap_prefs, SK, stats)
-        gui.debugf("raw result = \n%s\n", table_to_str(stats,1))
+        gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
         user_adjust_result(stats)
-        gui.debugf("adjusted result = \n%s\n", table_to_str(stats,1))
+        gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
         give_monster_drops(mon_list, hmodel)
 
         subtract_gotten_stuff(stats, hmodel)
 
-        gui.debugf("final result = \n%s\n", table_to_str(stats,1))
+        gui.debugf("final result = \n%s\n", table.tostr(stats,1))
       end -- for CL
 
     end
