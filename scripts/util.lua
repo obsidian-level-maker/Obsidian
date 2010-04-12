@@ -26,38 +26,28 @@ function int(val)
 end
 
 function sel(cond, yes_val, no_val)
-  if cond then return yes_val else return no_val end
+  -- a poor man's ?: operator
+  -- NOTE: both expressions are evaluated!
+  if cond then return yes_val end
+  return no_val
 end
 
-function dist(x1,y1, x2,y2)
-  return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+function math.low_high(a, b)
+  if b < a then return b, a end
+  return a, b
 end
 
-function bool_str(n)
+function string.bool(n)
   if n == nil   then return "nil"   end
   if n == false then return "false" end
   return "TRUE"
 end
 
-function low_high(a, b)
-  if b < a then return b, a end
-  return a, b
-end
-
-function eq_multi(val, a, b, c, d, guard)
-  if guard then
-    error("eq_multi only supports 4 test values.")
-  end
-  return (a and val == a) or (b and val == b) or
-         (c and val == c) or (d and val == d) or
-         false
-end
-
-function is_digit(lc)
-  return lc == '0' or lc == '1' or lc == '2' or
-         lc == '3' or lc == '4' or lc == '5' or
-         lc == '6' or lc == '7' or lc == '8' or
-         lc == '9'
+function string.is_digit(ch)
+  return ch == '0' or ch == '1' or ch == '2' or
+         ch == '3' or ch == '4' or ch == '5' or
+         ch == '6' or ch == '7' or ch == '8' or
+         ch == '9'
 end
 
 function read_text_file(filename)
@@ -442,7 +432,13 @@ end
 
 ----====| GEOMETRY |====----
 
-function dir_to_delta(dir)
+geom = {}
+
+function geom.dist(x1,y1, x2,y2)
+  return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
+end
+
+function geom.delta(dir)
   if dir == 1 then return -1, -1 end
   if dir == 2 then return  0, -1 end
   if dir == 3 then return  1, -1 end
@@ -455,45 +451,49 @@ function dir_to_delta(dir)
   if dir == 8 then return  0, 1 end
   if dir == 9 then return  1, 1 end
 
-  error ("dir_to_delta: bad dir " .. dir)
+  error("geom.delta: bad dir: " .. tostring(dir))
 end
 
-function delta_to_dir(dx, dy)
-  if math.abs(dx) > math.abs(dy) then
-    if dx > 0 then return 6 else return 4 end
-  else
-    if dy > 0 then return 8 else return 2 end
-  end
+function geom.right(dir)
+  if dir == 3 then return -1, -1 end
+  if dir == 6 then return  0, -1 end
+  if dir == 9 then return  1, -1 end
+
+  if dir == 2 then return -1, 0 end
+  if dir == 5 then return  0, 0 end
+  if dir == 8 then return  1, 0 end
+
+  if dir == 1 then return -1, 1 end
+  if dir == 4 then return  0, 1 end
+  if dir == 7 then return  1, 1 end
+
+  error("geom.right: bad dir: " .. tostring(dir))
 end
 
-function dir_to_across(dir)
-  if dir == 2 then return 1, 0 end
-  if dir == 4 then return 0, 1 end
-  if dir == 6 then return 0, 1 end
-  if dir == 8 then return 1, 0 end
-
-  error ("dir_to_across: bad dir " .. dir)
+function geom.left(dir)
+  return geom.right(10 - dir)
 end
 
-function nudge_coord(x, y, dir, dist)
+
+function geom.nudge(x, y, dir, dist)
   if not dist then dist = 1 end
-  local dx, dy = dir_to_delta(dir)
+  local dx, dy = geom.delta(dir)
   return x + dx * dist, y + dy * dist
 end
 
-function is_horiz(dir)
+function geom.is_horiz(dir)
   return (dir == 4) or (dir == 6)
 end
 
-function is_vert(dir)
+function geom.is_vert(dir)
   return (dir == 2) or (dir == 8)
 end
 
-function is_parallel(dir1, dir2)
+function geom.is_parallel(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 2 or dir2 == 8)
 end
 
-function is_perpendicular(dir1, dir2)
+function geom.is_perpendic(dir1, dir2)
   return (dir1 == 2 or dir1 == 8) == (dir2 == 4 or dir2 == 6)
 end
 
@@ -561,6 +561,15 @@ function delta_to_angle(dx,dy)
     return sel(dx < 0, 225, 315)
   end
 end
+
+function geom.rough_dir(dx, dy)
+  if math.abs(dx) > math.abs(dy) then
+    if dx > 0 then return 6 else return 4 end
+  else
+    if dy > 0 then return 8 else return 2 end
+  end
+end
+
 
 function box_size(x1, y1, x2, y2)
   return (x2-x1+1), (y2-y1+1)

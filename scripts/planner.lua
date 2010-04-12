@@ -259,7 +259,7 @@ function Plan_CreateRooms()
       local SIDES = { 2,4,6,8 }
       rand.shuffle(SIDES)
       for _,side in ipairs(SIDES) do
-        local nx, ny = nudge_coord(last_x, last_y, side)
+        local nx, ny = geom.nudge(last_x, last_y, side)
         if valid_R(nx, ny) then
           local R = room_map[nx][ny]
           if R and not R.natural then
@@ -384,7 +384,7 @@ function Plan_CreateRooms()
     end
 
     for side = 1,9 do if side ~= 5 then
-      local nx, ny = nudge_coord(x, y, side)
+      local nx, ny = geom.nudge(x, y, side)
       if valid_R(nx, ny) then
         local N = room_map[nx][ny]
         if N ~= R then

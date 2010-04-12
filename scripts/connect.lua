@@ -578,7 +578,7 @@ function Test_Branch_Gen(name)
       assert(x, y, dir)
       assert(box_contains_point(1,1,W,H, x,y))
 
-      local nx, ny = nudge_coord(x, y, dir)
+      local nx, ny = geom.nudge(x, y, dir)
       assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
 
       if P[nx+1][ny+1] ~= " " then
@@ -801,7 +801,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
       x, y = morph_coord(MORPH, R, x, y, long, deep)
       dir  = morph_dir(MORPH, dir)
 
-      local nx, ny = nudge_coord(x, y, dir)
+      local nx, ny = geom.nudge(x, y, dir)
 
       if not Seed_valid(nx, ny, 1) then return false end
 
@@ -1004,7 +1004,7 @@ gui.debugf("Failed\n")
   end
 
   local function try_emergency_connect(R, x, y, dir)
-    local nx, ny = nudge_coord(x, y, dir)
+    local nx, ny = geom.nudge(x, y, dir)
 
     if not Seed_valid(nx, ny, 1) then return false end
 

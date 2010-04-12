@@ -180,7 +180,7 @@ function Cave_flood_fill(cave)
 
   local function flood_point(x, y)
     for side = 2,8,2 do
-      local nx, ny = nudge_coord(x, y, side)
+      local nx, ny = geom.nudge(x, y, side)
       if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
         local A = flood[x][y]
         local B = flood[nx][ny]
@@ -291,7 +291,7 @@ function Cave_region_is_island(flood, reg)
   for x = reg.x1,reg.x2 do for y = reg.y1,reg.y2 do
     if flood[x][y] == reg.id then
       for side = 2,8,2 do
-        local nx, ny = nudge_coord(x, y, side)
+        local nx, ny = geom.nudge(x, y, side)
         if not flood[x][y] then
           return false
         end
@@ -359,7 +359,7 @@ function Cave_grow(cave)
   local work = table.array_2D(W, H)
 
   local function handle_neighbor(x, y, side)
-    local nx, ny = nudge_coord(x, y, side)
+    local nx, ny = geom.nudge(x, y, side)
     
     if nx < 1 or nx > W or ny < 1 or ny > H then
       return
@@ -404,7 +404,7 @@ function Cave_shrink(cave, keep_edges)
     local hit_edge = false
 
     for _,side in ipairs(SIDES) do
-      local nx, ny = nudge_coord(x, y, side)
+      local nx, ny = geom.nudge(x, y, side)
     
       if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
         hit_edge = true
@@ -443,7 +443,7 @@ function Cave_remove_dots(cave, keep_edges, callback)
     local count = 0
 
     for side = 2,8,2 do
-      local nx, ny = nudge_coord(x, y, side)
+      local nx, ny = geom.nudge(x, y, side)
 
       if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
         if keep_edges then return false end
@@ -494,7 +494,7 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
   end
 
   local function analyse_corner(corner_map, x, y, side)
-    local dx, dy = dir_to_delta(side)
+    local dx, dy = geom.delta(side)
 
     local cx = x + sel(dx < 0, 0, 1)
     local cy = y + sel(dy < 0, 0, 1)
@@ -565,7 +565,7 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
     local SIDES  = { 1,3,9,7 }
 
     for _,side in ipairs(SIDES) do
-      local dx, dy = dir_to_delta(side)
+      local dx, dy = geom.delta(side)
 
       local cx = x + sel(dx < 0, 0, 1)
       local cy = y + sel(dy < 0, 0, 1)

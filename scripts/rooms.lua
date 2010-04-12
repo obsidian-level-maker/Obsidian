@@ -981,13 +981,13 @@ function Rooms_border_up()
         if dx == 2 then
           S = S.x_peer
           if not S then break; end
-          if is_horiz(side) then side = 10-side end
+          if geom.is_horiz(side) then side = 10-side end
         end
 
         if S and dy == 2 then
           S = S.y_peer
           if not S then break; end
-          if is_vert(side) then side = 10-side end
+          if geom.is_vert(side) then side = 10-side end
         end
 
         local B = S.border[side]
@@ -1156,7 +1156,7 @@ function Room_make_ceiling(R)
 
     local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
-    if is_vert(side) then x2 = x2-1 else y2 = y2-1 end
+    if geom.is_vert(side) then x2 = x2-1 else y2 = y2-1 end
 
     local x_dir = sel(side == 6, -1, 1)
     local y_dir = sel(side == 8, -1, 1)
@@ -1198,7 +1198,7 @@ function Room_make_ceiling(R)
   end
 
   local function create_periph_info(side, offset)
-    local t_size = sel(is_horiz(side), R.tw, R.th)
+    local t_size = sel(geom.is_horiz(side), R.tw, R.th)
 
     if t_size < (3+offset*2) then return nil end
 
@@ -1265,7 +1265,7 @@ function Room_make_ceiling(R)
 
     for idx,side in ipairs(SIDES) do
       if (R.symmetry == "xy" or R.symmetry == sel(side==2, "y", "x")) or
-         R.pillar_rows and is_parallel(R.pillar_rows[1].side, side) or
+         R.pillar_rows and geom.is_parallel(R.pillar_rows[1].side, side) or
          rand.odds(50)
       then
         --- Symmetrical Mode ---

@@ -426,7 +426,7 @@ function Monsters_do_pickups()
 
     if R.entry_conn then
       local e_dist
-      if is_vert(R.entry_conn.dir) then
+      if geom.is_vert(R.entry_conn.dir) then
         e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)
       else
         e_dist = math.abs(R.entry_conn.dest_S.sx - S.sx)
@@ -695,9 +695,9 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     local away = sel(count == 2, 20, 40)
     local dir  = spot.dir
 
-    if is_vert(dir) then
+    if geom.is_vert(dir) then
       y1, y2 = y1-away, y2+away
-    elseif is_horiz(dir) then
+    elseif geom.is_horiz(dir) then
       x1, x2 = x1-away, x2+away
     elseif dir == 1 or dir == 9 then
       x1, y1 = x1-away, y1-away

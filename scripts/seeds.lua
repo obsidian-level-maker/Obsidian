@@ -75,7 +75,7 @@ SEED_CLASS =
   end,
 
   neighbor = function(self, dir, dist)
-    local nx, ny = nudge_coord(self.sx, self.sy, dir, dist)
+    local nx, ny = geom.nudge(self.sx, self.sy, dir, dist)
     if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
       return nil
     end

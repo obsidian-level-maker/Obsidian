@@ -658,8 +658,8 @@ function Build_sky_fence(S, side, z_top, z_low, skin)
   }
 
   -- give back part the "never draw" linedef flag
-  s_coords[sel(is_vert(side), 2,1)].line_flags = 128
-  s_coords[sel(is_vert(side), 4,3)].line_flags = 128
+  s_coords[sel(geom.is_vert(side), 2,1)].line_flags = 128
+  s_coords[sel(geom.is_vert(side), 4,3)].line_flags = 128
 
   Trans_brush(wall_info, w_coords, -EXTREME_H, z_top)
   Trans_brush(wall_info, s_coords, -EXTREME_H, z_low)
@@ -1179,8 +1179,8 @@ function Build_debug_arrow(S, dir, f_h)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  local dx, dy = dir_to_delta(dir)
-  local ax, ay = dir_to_delta(rotate_cw90(dir))
+  local dx, dy = geom.delta(dir)
+  local ax, ay = geom.right(dir)
 
   Trans_brush(get_mat("FWATER1"),
   {
@@ -1605,7 +1605,7 @@ gui.debugf("Build_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy,
   end
 
 
-  if is_horiz(conn_dir) then
+  if geom.is_horiz(conn_dir) then
     if iy2+64 < oy2 then
       Build_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
     end
@@ -1724,7 +1724,7 @@ function Build_lift(S, skin, skin2, tag)
     local N = S:neighbor(dir)
 
     if (dir == 10-side) or
-       (is_perpendicular(dir, side) and N and N.room == S.room
+       (geom.is_perpendic(dir, side) and N and N.room == S.room
         and N.floor_h and N.floor_h < high_z - 15)
     then
       switch_dirs[dir] = true
@@ -1852,16 +1852,16 @@ function Build_cross_beam(S, dir, w, beam_z, mat)
   local x2, y2 = S.x2, S.y2
 
   -- FIXME: at this stage the thick[] values are not decided yet
-  if S.sx == S.room.sx1 then x1 = x1 + 24 elseif is_horiz(dir) then x1 = x1 - 24 end
-  if S.sx == S.room.sx2 then x2 = x2 - 24 elseif is_horiz(dir) then x2 = x2 + 24 end
-  if S.sy == S.room.sy1 then y1 = y1 + 24 elseif is_vert(dir)  then y1 = y1 - 24 end
-  if S.sy == S.room.sy2 then y2 = y2 - 24 elseif is_vert(dir)  then y2 = y2 + 24 end
+  if S.sx == S.room.sx1 then x1 = x1 + 24 elseif geom.is_horiz(dir) then x1 = x1 - 24 end
+  if S.sx == S.room.sx2 then x2 = x2 - 24 elseif geom.is_horiz(dir) then x2 = x2 + 24 end
+  if S.sy == S.room.sy1 then y1 = y1 + 24 elseif geom.is_vert(dir)  then y1 = y1 - 24 end
+  if S.sy == S.room.sy2 then y2 = y2 - 24 elseif geom.is_vert(dir)  then y2 = y2 + 24 end
 
   local mx = int((x1 + x2) / 2)
   local my = int((y1 + y2) / 2)
 
   local coords
-  if is_vert(dir) then
+  if geom.is_vert(dir) then
     coords = rect_coords(mx-w/2, y1, mx+w/2, y2)
   else
     coords = rect_coords(x1, my-w/2, x2, my+w/2)
@@ -2884,7 +2884,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
   local BS = B:seed(R)
   assert(AS and BS)
 
-  if is_perpendicular(AS.conn_dir, BS.conn_dir) then
+  if geom.is_perpendic(AS.conn_dir, BS.conn_dir) then
     build_stairwell_90(R)
 
   elseif AS.conn_dir == BS.conn_dir then

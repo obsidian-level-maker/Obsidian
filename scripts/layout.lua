@@ -158,7 +158,7 @@ function Test_room_fabs()
       for x = 1,#line do
         local ch = string.sub(line, x, x)
         if ch == '0' then error("Invalid sub '0'") end
-        if is_digit(ch) then
+        if string.is_digit(ch) then
           local s_idx = 0 + ch  -- convert to number
           assert(s_idx >= 1 and s_idx <= 9)
           if not (info.subs and info.subs[s_idx]) then
@@ -208,7 +208,7 @@ function Test_room_fabs()
     end
 
     -- having different sub-areas is OK
-    if is_digit(LC) and is_digit(RC) then return true end
+    if string.is_digit(LC) and string.is_digit(RC) then return true end
 
     return (LC == RC)
   end
@@ -219,7 +219,7 @@ function Test_room_fabs()
     end
 
     -- having different sub-areas is OK
-    if is_digit(TC) and is_digit(BC) then return true end
+    if string.is_digit(TC) and string.is_digit(BC) then return true end
 
     return (TC == BC)
   end
@@ -331,7 +331,7 @@ function Layout_spot_for_wotsit(R, kind)
     end
 
     for side = 2,8,2 do
-      local nx, ny = nudge_coord(mx, my, side)
+      local nx, ny = geom.nudge(mx, my, side)
 
       if flood[nx][ny] == flood.largest_empty.id then
         return true
@@ -596,7 +596,7 @@ function Layout_natural_room(R, heights)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
 
-    local dx, dy = dir_to_delta(side)
+    local dx, dy = geom.delta(side)
 
     mx = mx + 1 + dx
     my = my + 1 + dy
@@ -811,8 +811,8 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
   end
 
   local function morph_dir(T, dir)
-    if T.x_flip and is_horiz(dir) then dir = 10-dir end
-    if T.y_flip and is_vert(dir)  then dir = 10-dir end
+    if T.x_flip and geom.is_horiz(dir) then dir = 10-dir end
+    if T.y_flip and geom.is_vert(dir)  then dir = 10-dir end
 
     if T.transpose then dir = TRANSPOSE_DIRS[dir] end
 
@@ -866,14 +866,14 @@ heights[1] or -1, heights[2] or -1, heights[3] or -1)
 
       for _,side in ipairs(SIDES) do
         local nch
-        local nx, ny = nudge_coord(i, j, side)
+        local nx, ny = geom.nudge(i, j, side)
 
         if (1 <= nx and nx <= stru_w) and (1 <= ny and ny <= stru_h) then
           local src = info.structure[stru_h+1 - ny]
           nch = string.sub(src, nx, nx)
         end
 
-        if nch and (nch == '.' or is_digit(nch)) then
+        if nch and (nch == '.' or string.is_digit(nch)) then
           E.stair_src = nch
           break;
         end
@@ -1083,12 +1083,12 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       local ch = assert(E.char)
 
       if (S.conn or S.pseudo_conn or S.must_walk) then
-        if not (ch == '.' or is_digit(ch)) then
+        if not (ch == '.' or string.is_digit(ch)) then
 gui.debugf("CONN needs PLAIN WALK\n")
           return -1
         end
 
-        if is_digit(ch) then
+        if string.is_digit(ch) then
           local s_idx = (0 + ch)
           matches[s_idx] = (matches[s_idx] or 0) + 1
 ---??     score = score + 20
@@ -1151,8 +1151,8 @@ area.x1, area.y1, area.x2, area.y2)
       S.div_lev = div_lev
 
       do
-        if ch == '.' or is_digit(ch) then
-          if is_digit(ch) then
+        if ch == '.' or string.is_digit(ch) then
+          if string.is_digit(ch) then
             local s_idx = 0 + ch
             if want_subs[s_idx] then
               local sub = assert(T.info.subs[s_idx])
@@ -1251,11 +1251,11 @@ gui.debugf("OT =\n%s\n\n", table.tostr(OT, 1))
       S.stair_dir = assert(OT.stair_dir)
       S.stair_z1  = assert(OT.stair_z1)
 
-      if sym == "x" and is_horiz(S.stair_dir) then
+      if sym == "x" and geom.is_horiz(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
       end
 
-      if sym == "y" and is_vert(S.stair_dir) then
+      if sym == "y" and geom.is_vert(S.stair_dir) then
         S.stair_dir = 10 - S.stair_dir
       end
     end
@@ -1275,7 +1275,7 @@ gui.debugf("OT =\n%s\n\n", table.tostr(OT, 1))
 
 gui.debugf("Fab.symmetry = %s\n", tostring(T.info.symmetry))
 gui.debugf("Room.symmetry = %s\n", tostring(R.symmetry))
-gui.debugf("Transposed : %s\n", bool_str(T.transpose))
+gui.debugf("Transposed : %s\n", string.bool(T.transpose))
 
     local do_x = (T.info.symmetry == "x")
     local do_y = (T.info.symmetry == "y")
@@ -1355,7 +1355,7 @@ gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
       T.x_sizes = matching_sizes(info.x_sizes, T.long)
       T.y_sizes = matching_sizes(info.y_sizes, T.deep)
 
-gui.debugf("  tr:%s  long:%d  deep:%d\n", bool_str(T.transpose), T.long, T.deep)
+gui.debugf("  tr:%s  long:%d  deep:%d\n", string.bool(T.transpose), T.long, T.deep)
       if T.x_sizes and T.y_sizes then
         local xs = rand.pick(T.x_sizes)
         local ys = rand.pick(T.y_sizes)
@@ -1714,7 +1714,7 @@ function Layout_hallway(R)
 
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
-      if is_vert(S.conn_dir) then
+      if geom.is_vert(S.conn_dir) then
         used_x[S.sx] = 1
       else
         used_y[S.sy] = 1
@@ -1860,7 +1860,7 @@ function Layout_one(R)
       if R.mirror_x then long = int((long+3) / 2) end
       if R.mirror_y then deep = int((deep+3) / 2) end
 
-      if is_vert(side) then long,deep = deep,long end
+      if geom.is_vert(side) then long,deep = deep,long end
 
       if long <= 2 then return false end
 
@@ -1875,7 +1875,7 @@ function Layout_one(R)
 
       -- connection checking
       local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
-      local dx, dy = dir_to_delta(side)
+      local dx, dy = geom.delta(side)
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
@@ -1908,7 +1908,7 @@ function Layout_one(R)
       local th = R.junk_thick[side]
 
       local x1,y1, x2,y2 = side_coords(side, R.sx1,R.sy1, R.sx2,R.sy2)
-      local dx, dy = dir_to_delta(side)
+      local dx, dy = geom.delta(side)
       x1, y1 = x1-dx*th, y1-dy*th
       x2, y2 = x2-dx*th, y2-dy*th
 
@@ -1940,8 +1940,8 @@ function Layout_one(R)
 
       gui.debugf("Junked side:%d @ %s\n", side, R:tostr())
 
-      if (is_horiz(side) and R.mirror_x) or
-         (is_vert(side) and R.mirror_y)
+      if (geom.is_horiz(side) and R.mirror_x) or
+         (geom.is_vert(side) and R.mirror_y)
       then
         side = 10 - side
 
@@ -2381,8 +2381,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
     local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
     local pos = 1
 
-    x1,y1 = nudge_coord(x1, y1, 10-side, offset)
-    x2,y2 = nudge_coord(x2, y2, 10-side, offset)
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
@@ -2394,7 +2394,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       if ch == '-' then
         if S.content == "pillar" then return false end
       else
-        assert(is_digit(ch))
+        assert(string.is_digit(ch))
         if S.kind ~= "walk" or S.room ~= R or S.content or
            S.conn or S.pseudo_conn or S.must_walk
         then
@@ -2410,8 +2410,8 @@ gui.debugf("BOTH SAME HEIGHT\n")
     local x1,y1, x2,y2 = side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2)
     local pos = 1
 
-    x1,y1 = nudge_coord(x1, y1, 10-side, offset)
-    x2,y2 = nudge_coord(x2, y2, 10-side, offset)
+    x1,y1 = geom.nudge(x1, y1, 10-side, offset)
+    x2,y2 = geom.nudge(x2, y2, 10-side, offset)
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]
@@ -2419,7 +2419,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       local ch = string.sub(pat, pos, pos)
       pos = pos + 1
 
-      if is_digit(ch) then
+      if string.is_digit(ch) then
         S.content = "pillar"
         S.pillar_skin = assert(GAME.pillars[R.pillar_what])
       end
@@ -2447,7 +2447,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
     for _,side in ipairs(SIDES) do for offset = 0,1 do
       local long, deep = R.tw, R.th
-      if is_horiz(side) then long,deep = deep,long end
+      if geom.is_horiz(side) then long,deep = deep,long end
 
       if deep >= 3+offset*2 and long >= 3 then
         local lists = { {}, {} }

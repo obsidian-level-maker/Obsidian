@@ -661,7 +661,7 @@ function Quest_add_a_lock()
       local old_dir = LEVEL.all_locks[1].conn.dir -- FIXME !!!
       assert(old_dir and C.dir)
 
-      if not is_perpendicular(old_dir, C.dir) then
+      if not geom.is_perpendic(old_dir, C.dir) then
         return false
       end
     end
