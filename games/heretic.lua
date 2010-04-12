@@ -24,7 +24,9 @@
 --
 ----------------------------------------------------------------
 
-HERETIC_THINGS =
+HERETIC = { }
+
+HERETIC.THINGS =
 {
   --- special stuff ---
   player1 = { id=1, kind="other", r=16,h=56 },
@@ -150,7 +152,7 @@ HERETIC_THINGS =
 
 ----------------------------------------------------------------
 
-HERETIC_MATERIALS =
+HERETIC.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="WOODWL",  f="FLOOR10" },
@@ -298,7 +300,7 @@ HERETIC_MATERIALS =
 }
 
 
-HERETIC_RAILS =
+HERETIC.RAILS =
 {
   wdgate = { wall="WDGAT64", w=64, h=64  },
 
@@ -315,19 +317,19 @@ HERETIC_RAILS =
 --WEB3_M
 }
 
-HERETIC_SANITY_MAP =
+HERETIC.SANITY_MAP =
 {
   -- FIXME
 }
 
 
-HERETIC_STEPS =
+HERETIC.STEPS =
 {
   step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
 }
 
 
-HERETIC_PICTURES =
+HERETIC.PICTURES =
 {
   -- Note: this includes pictures that only work on DOOM1 or DOOM2.
   -- It is not a problem, because the game-specific sub-themes will
@@ -356,7 +358,7 @@ HERETIC_PICTURES =
 
 ----------------------------------------------------------------
 
-HERETIC_COMBOS =
+HERETIC.COMBOS =
 {
   ---- INDOOR ------------
 
@@ -854,7 +856,7 @@ HERETIC_COMBOS =
 }
 
 
-HERETIC_EXITS =
+HERETIC.EXITS =
 {
   exit_pillar =
   {
@@ -910,7 +912,7 @@ HERETIC_EXITS =
 --]]
 }
 
-HERETIC_HALLWAYS =
+HERETIC.HALLWAYS =
 {
  
   -- Hall with set stone walls 
@@ -1003,7 +1005,7 @@ HERETIC_HALLWAYS =
 
 --- PEDESTALS --------------
 
-HERETIC_PEDESTALS =
+HERETIC.PEDESTALS =
 {
   PLAYER =
   {
@@ -1029,7 +1031,7 @@ HERETIC_PEDESTALS =
 
 ---- OVERHANGS ------------
 
-HERETIC_OVERHANGS =
+HERETIC.OVERHANGS =
 {
   WOOD =
   {
@@ -1041,7 +1043,7 @@ HERETIC_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-HERETIC_LIQUIDS =
+HERETIC.LIQUIDS =
 {
   water  = { mat="FLTFLWW1", light=0.65, sec_kind=16 },
   lava   = { mat="FLATHUH1", light=0.75, sec_kind=16 },
@@ -1049,7 +1051,7 @@ HERETIC_LIQUIDS =
   sludge = { mat="FLTSLUD1", light=0.65, sec_kind=16 },
 }
 
-HERETIC_SWITCHES =
+HERETIC.SWITCHES =
 {
   sw_demon =
   {
@@ -1137,7 +1139,7 @@ HERETIC_SWITCHES =
 }
 
 
-HERETIC_DOORS =
+HERETIC.DOORS =
 {
   d_demon =
   {
@@ -1218,12 +1220,12 @@ HERETIC_DOORS =
 }
 
 
-HERETIC_LIFTS =
+HERETIC.LIFTS =
 {
   slow = { kind=62,  walk=88 },
 }
 
-HERETIC_DOOR_PREFABS =  -- NB: OBSOLETE
+HERETIC.DOOR_PREFABS =  -- NB: OBSOLETE
 {
   d_wood =
   {
@@ -1242,7 +1244,7 @@ HERETIC_DOOR_PREFABS =  -- NB: OBSOLETE
   },
 }
 
-HERETIC_WALL_PREFABS =
+HERETIC.WALL_PREFABS =
 {
   wall_pic_GLASS1 =
   {
@@ -1259,7 +1261,7 @@ HERETIC_WALL_PREFABS =
   },
 }
 
-HERETIC_MISC_PREFABS =
+HERETIC.MISC_PREFABS =
 {
   pedestal_PLAYER =
   {
@@ -1313,23 +1315,23 @@ HERETIC_MISC_PREFABS =
 }
 
 
-HERETIC_IMAGES =
+HERETIC.IMAGES =
 {
   { wall = "GRSKULL2", w=128, h=128, glow=true },
   { wall = "GRSKULL1", w=64,  h=64,  floor="FLOOR27" }
 }
 
-HERETIC_LIGHTS =
+HERETIC.LIGHTS =
 {
   round = { floor="FLOOR26",  side="ORNGRAY" },
 }
 
-HERETIC_WALL_LIGHTS =
+HERETIC.WALL_LIGHTS =
 {
   redwall = { wall="REDWALL", w=32 },
 }
 
-HERETIC_PICS =
+HERETIC.PICS =
 {
   skull3 = { wall="GRSKULL3", w=128, h=128 },
   glass1 = { wall="STNGLS1",  w=128, h=128 },
@@ -1338,7 +1340,7 @@ HERETIC_PICS =
 ---- QUEST STUFF ----------------
 
 
-HERETIC_ROOMS =
+HERETIC.ROOMS =
 {
   PLAIN =
   {
@@ -1360,7 +1362,7 @@ HERETIC_ROOMS =
 }
 
 
-HERETIC_SUB_THEME_DEFAULTS =
+HERETIC.SUB_THEME_DEFAULTS =
 {
   steps = { step1=50 },
 
@@ -1388,7 +1390,7 @@ HERETIC_SUB_THEME_DEFAULTS =
 }
 
 
-HERETIC_SUB_THEMES =
+HERETIC.SUB_THEMES =
 {
   heretic_urban1 =
   {
@@ -1550,7 +1552,7 @@ HERETIC_SUB_THEMES =
 
 ------------------------------------------------------------
 
-HERETIC_MONSTERS =
+HERETIC.MONSTERS =
 {
   gargoyle =
   {
@@ -1641,7 +1643,7 @@ HERETIC_MONSTERS =
   },
 
 
-  ---| HERETIC_BOSSES |---
+  ---| HERETIC BOSSES |---
 
   -- FIXME: damage values are crap, need 'attack' type
 
@@ -1673,7 +1675,7 @@ HERETIC_MONSTERS =
 }
 
 
-HERETIC_WEAPONS =
+HERETIC.WEAPONS =
 {
   staff =
   {
@@ -1746,7 +1748,7 @@ HERETIC_WEAPONS =
 }
 
 
-HERETIC_PICKUPS =
+HERETIC.PICKUPS =
 {
   -- HEALTH --
 
@@ -1863,13 +1865,13 @@ HERETIC_PICKUPS =
 }
 
 
-HERETIC_ITEMS =
+HERETIC.ITEMS =
 {
   p1 = { pickup="torch", prob=2.0 },
 }
 
 
-HERETIC_PLAYER_MODEL =
+HERETIC.PLAYER_MODEL =
 {
   cleric =
   {
@@ -1882,7 +1884,7 @@ HERETIC_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-HERETIC_EPISODES =
+HERETIC.EPISODES =
 {
   episode1 =
   {
@@ -1942,7 +1944,7 @@ function Heretic_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-    local ep_info = HERETIC_EPISODES["episode" .. episode]
+    local ep_info = HERETIC.EPISODES["episode" .. episode]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -2107,28 +2109,28 @@ OB_GAMES["heretic"] =
 
   tables =
   {
-    "player_model", HERETIC_PLAYER_MODEL,
+    "player_model", HERETIC.PLAYER_MODEL,
     
-    "things",   HERETIC_THINGS,
-    "monsters", HERETIC_MONSTERS,
-    "weapons",  HERETIC_WEAPONS,
-    "pickups",  HERETIC_PICKUPS,
+    "things",   HERETIC.THINGS,
+    "monsters", HERETIC.MONSTERS,
+    "weapons",  HERETIC.WEAPONS,
+    "pickups",  HERETIC.PICKUPS,
 
-    "materials", HERETIC_MATERIALS,
-    "rails",     HERETIC_RAILS,
-    "liquids",   HERETIC_LIQUIDS,
+    "materials", HERETIC.MATERIALS,
+    "rails",     HERETIC.RAILS,
+    "liquids",   HERETIC.LIQUIDS,
 
-    "steps",     HERETIC_STEPS,
-    "pictures",  HERETIC_PICTURES,
-    "doors",     HERETIC_DOORS,
-    "exits",     HERETIC_EXITS,
+    "steps",     HERETIC.STEPS,
+    "pictures",  HERETIC.PICTURES,
+    "doors",     HERETIC.DOORS,
+    "exits",     HERETIC.EXITS,
 
-    "sub_themes", HERETIC_SUB_THEMES,
-    "sub_defaults", HERETIC_SUB_THEME_DEFAULTS,
-    "rooms",    HERETIC_ROOMS,
+    "sub_themes", HERETIC.SUB_THEMES,
+    "sub_defaults", HERETIC.SUB_THEME_DEFAULTS,
+    "rooms",    HERETIC.ROOMS,
 
-    "switches", HERETIC_SWITCHES,
-    "lifts", HERETIC_LIFTS,
+    "switches", HERETIC.SWITCHES,
+    "lifts",    HERETIC.LIFTS,
   },
 }
 

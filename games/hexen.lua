@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-HEXEN_THINGS =
+HEXEN = { }
+
+HEXEN.THINGS =
 {
   --- players
   player1 = { id=1, kind="other", r=16,h=64 },
@@ -234,7 +236,7 @@ HEXEN_THINGS =
 
 ----------------------------------------------------------------
 
-HEXEN_MATERIALS =
+HEXEN.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="WASTE01", f="F_033" },
@@ -588,7 +590,7 @@ HEXEN_MATERIALS =
   X_012 = { t="CASTLE01", f="X_012" },
 }
 
-HEXEN_RAILS =
+HEXEN.RAILS =
 {
 -- GATE01
 -- GATE02
@@ -633,7 +635,7 @@ HEXEN_RAILS =
 
 ----------------------------------------------------------------
 
-HEXEN_COMBOS =
+HEXEN.COMBOS =
 {
   ---- CAVE ------------
 
@@ -955,7 +957,7 @@ HEXEN_COMBOS =
   
 }
 
-HEXEN_EXITS =
+HEXEN.EXITS =
 {
   STEEL =
   {
@@ -974,7 +976,7 @@ HEXEN_EXITS =
 
 }
 
-HEXEN_HALLWAYS =
+HEXEN.HALLWAYS =
 {
   -- FIXME !!! hallway themes
 }
@@ -982,7 +984,7 @@ HEXEN_HALLWAYS =
 
 ---- PEDESTALS ------------
 
-HEXEN_PEDESTALS =
+HEXEN.PEDESTALS =
 {
   PLAYER =
   {
@@ -1009,7 +1011,7 @@ HEXEN_PEDESTALS =
 
 ---- OVERHANGS ------------
 
-HEXEN_OVERHANGS =
+HEXEN.OVERHANGS =
 {
   WOOD =
   {
@@ -1022,7 +1024,7 @@ HEXEN_OVERHANGS =
 
 ---- MISC STUFF ------------
 
-HEXEN_LIQUIDS =
+HEXEN.LIQUIDS =
 {
   water = { floor="X_005", wall="X_WATER1" },
   lava  = { floor="X_001", wall="X_FIRE01" },
@@ -1030,7 +1032,7 @@ HEXEN_LIQUIDS =
 --- slime = { floor="X_009", wall="X_SWMP1" },
 }
 
-HEXEN_SWITCHES =
+HEXEN.SWITCHES =
 {
   sw_cow =
   {
@@ -1219,7 +1221,7 @@ HEXEN_SWITCHES =
   },
 }
 
-HEXEN_DOORS =
+HEXEN.DOORS =
 {
   d_big2   = { prefab="DOOR", w=128, h=128,
 
@@ -1246,7 +1248,7 @@ HEXEN_DOORS =
   d_wood3  = { wall="D_WD10",   w=64,  h=128 },
 }
 
-HEXEN_KEY_DOORS =
+HEXEN.KEY_DOORS =
 {
   k_emerald =
   {
@@ -1413,25 +1415,25 @@ HEXEN_KEY_DOORS =
 
 }
 
-HEXEN_IMAGES =
+HEXEN.IMAGES =
 {
   { wall = "BRASS3", w=128, h=128, glow=true },
   { wall = "BRASS4", w=64,  h=64,  floor="F_016" }
 }
 
-HEXEN_LIGHTS =
+HEXEN.LIGHTS =
 {
   l1 = { floor="F_081", side="FIRE07" },
   l2 = { floor="F_084", side="FIRE07" },
   l3 = { floor="X_012", side="FIRE07" },
 }
 
-HEXEN_WALL_LIGHTS =
+HEXEN.WALL_LIGHTS =
 {
   fire = { wall="X_FIRE01", w=16 },
 }
 
-HEXEN_PICS =
+HEXEN.PICS =
 {
   cave12 = { wall = "CAVE12",   w=128, h=128 },
   forest = { wall = "FOREST03", w=128, h=128 },
@@ -1445,7 +1447,7 @@ HEXEN_PICS =
 }
 
 
-HEXEN_ROOMS =
+HEXEN.ROOMS =
 {
   PLAIN =
   {
@@ -1466,7 +1468,7 @@ HEXEN_ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
-HEXEN_SUB_THEMES =
+HEXEN.SUB_THEMES =
 {
   CAVE =
   {
@@ -1539,7 +1541,7 @@ HEXEN_SUB_THEMES =
 }
 
 
-HEXEN_LIFTS =
+HEXEN.LIFTS =
 {
   slow =
   {
@@ -1555,7 +1557,7 @@ HEXEN_LIFTS =
 }
 
 
-HEXEN_DOOR_PREFABS =  -- NB: OBSOLETE
+HEXEN.DOOR_PREFABS =  -- NB: OBSOLETE
 {
   winnow =
   {
@@ -1591,7 +1593,7 @@ HEXEN_DOOR_PREFABS =  -- NB: OBSOLETE
 }
 
 
-HEXEN_WALL_PREFABS =
+HEXEN.WALL_PREFABS =
 {
   solid_SEWER02 =
   {
@@ -1604,7 +1606,7 @@ HEXEN_WALL_PREFABS =
   },
 }
 
-HEXEN_MISC_PREFABS =
+HEXEN.MISC_PREFABS =
 {
   -- Note: pedestal_PLAYER intentionally omitted
 
@@ -1676,7 +1678,7 @@ HEXEN_MISC_PREFABS =
   },
 }
 
-HEXEN_SCENERY_PREFABS =
+HEXEN.SCENERY_PREFABS =
 {
   pillar_rnd_PILLAR01 =
   {
@@ -1707,7 +1709,7 @@ HEXEN_SCENERY_PREFABS =
 }
 
 
-HEXEN_PLAYER_MODEL =
+HEXEN.PLAYER_MODEL =
 {
   fighter =
   {
@@ -1729,7 +1731,7 @@ HEXEN_PLAYER_MODEL =
 }
 
 
-HEXEN_MONSTERS =
+HEXEN.MONSTERS =
 {
   ettin =
   {
@@ -1801,7 +1803,7 @@ HEXEN_MONSTERS =
   },
 
 
-  ---| HEXEN_BOSSES |---
+  ---| HEXEN BOSSES |---
 
   -- FIXME: proper damage and attack fields
 
@@ -1823,7 +1825,7 @@ HEXEN_MONSTERS =
 }
 
 
-HEXEN_WEAPONS =
+HEXEN.WEAPONS =
 {
   c_mace =
   {
@@ -1953,7 +1955,7 @@ HEXEN_WEAPONS =
 ---##   mage    = { "m_wand",  "m_cone",  "m_blitz",  "m_scourge" },
 ---## }
 
-HEXEN_WEAPON_PIECES =
+HEXEN.WEAPON_PIECES =
 {
   fighter = { "f1_hilt",  "f2_cross", "f3_blade" },
   cleric  = { "c1_shaft", "c2_cross", "c3_arc"   },
@@ -1961,7 +1963,7 @@ HEXEN_WEAPON_PIECES =
 }
 
 
-HEXEN_PICKUPS =
+HEXEN.PICKUPS =
 {
   -- HEALTH --
 
@@ -2042,7 +2044,7 @@ HEXEN_PICKUPS =
 }
 
 
-HEXEN_ITEMS =
+HEXEN.ITEMS =
 {
   p1 = { pickup="flechette", prob=9 },
   p2 = { pickup="bracer",    prob=5 },
@@ -2052,7 +2054,7 @@ HEXEN_ITEMS =
 
 ------------------------------------------------------------
 
-HEXEN_EPISODES =
+HEXEN.EPISODES =
 {
   episode1 =
   {
@@ -2091,12 +2093,12 @@ HEXEN_EPISODES =
   },
 }
 
-HEXEN_THEME_LIST =
+HEXEN.THEME_LIST =
 {
   "CAVE", "DUNGEON", "ICE", "SWAMP", "VILLAGE"
 }
 
-HEXEN_KEY_PAIRS =
+HEXEN.KEY_PAIRS =
 {
   { key_A="k_emerald", key_B="k_cave" },
   { key_A="k_silver",  key_B="k_swamp" },
@@ -2112,14 +2114,14 @@ function hexen_do_get_levels(episode)
 
   local level_list = {}
 
-  local source_levels = HEXEN_LEVELS[episode]
+  local source_levels = HEXEN.LEVELS[episode]
   assert(#source_levels == 6)
 
   local theme_mapping = { 1,2,3,4,5 }
   rand.shuffle(theme_mapping)
 
-  local key_A = HEXEN_KEY_PAIRS[episode].key_A
-  local key_B = HEXEN_KEY_PAIRS[episode].key_B
+  local key_A = HEXEN.KEY_PAIRS[episode].key_A
+  local key_B = HEXEN.KEY_PAIRS[episode].key_B
   assert(key_A and key_B)
 
   for map = 1,6 do
@@ -2144,7 +2146,7 @@ function hexen_do_get_levels(episode)
       -- secret level is a mixture
       Level.theme_probs = { ICE=3,SWAMP=4,DUNGEON=5,CAVE=6,VILLAGE=7 }
     else
-      local th_name = HEXEN_THEME_LIST[theme_mapping[sel(map==6, 5, map)]]
+      local th_name = HEXEN.THEME_LIST[theme_mapping[sel(map==6, 5, map)]]
       Level.theme_probs = { [th_name] = 5 }
     end
 
@@ -2167,7 +2169,7 @@ function hexen_do_get_levels(episode)
     for xxx,CL in ipairs(GAME.classes) do
       table.insert(quest.assumed_stuff,
       {
-        weapon = HEXEN_WEAPON_NAMES[CL][wp]
+        weapon = HEXEN.WEAPON_NAMES[CL][wp]
       })
     end
   end
@@ -2177,7 +2179,7 @@ function hexen_do_get_levels(episode)
 
     local L = level_list[map]
 
-    local len_probs = assert(HEXEN_QUEST_LEN_PROBS[kind])
+    local len_probs = assert(HEXEN.QUEST_LEN_PROBS[kind])
 
     local Quest =
     {
@@ -2266,7 +2268,7 @@ function hexen_do_get_levels(episode)
 
   for xxx,CL in ipairs(GAME.classes) do
     for piece = 1,3 do
-      local name = assert(HEXEN_WEAPON_PIECES[CL][piece])
+      local name = assert(HEXEN.WEAPON_PIECES[CL][piece])
       add_quest(4, "weapon", name, "sub")
     end
   end
@@ -2282,8 +2284,8 @@ function hexen_do_get_levels(episode)
   -- weapon quests
 
   for xxx,CL in ipairs(GAME.classes) do
-    local weap_2 = assert(HEXEN_WEAPON_NAMES[CL][2])
-    local weap_3 = assert(HEXEN_WEAPON_NAMES[CL][3])
+    local weap_2 = assert(HEXEN.WEAPON_NAMES[CL][2])
+    local weap_3 = assert(HEXEN.WEAPON_NAMES[CL][3])
 
     add_quest(rand.index_by_probs { 7, 1, 1 }, "weapon", weap_2, "sub")
     add_quest(rand.index_by_probs { 2, 7, 7 }, "weapon", weap_3, "sub")
@@ -2358,7 +2360,7 @@ function Hexen_setup()
 
   gui.property("hexen_format", "true")
 
-  rand.shuffle(HEXEN_KEY_PAIRS)
+  rand.shuffle(HEXEN.KEY_PAIRS)
 
 --  classes  = { "fighter", "cleric", "mage" },
 end
@@ -2456,36 +2458,36 @@ UNFINISHED["hexen"] =
 
   tables =
   {
-    "player_model", HEXEN_PLAYER_MODEL,
+    "player_model", HEXEN.PLAYER_MODEL,
 
-    "things",     HEXEN_THINGS,
-    "monsters",   HEXEN_MONSTERS,
-    "weapons",    HEXEN_WEAPONS,
-    "pickups",    HEXEN_PICKUPS,
+    "things",     HEXEN.THINGS,
+    "monsters",   HEXEN.MONSTERS,
+    "weapons",    HEXEN.WEAPONS,
+    "pickups",    HEXEN.PICKUPS,
 
-    "materials",  HEXEN_MATERIALS,
-    "combos",     HEXEN_COMBOS,
-    "exits",      HEXEN_EXITS,
-    "hallways",   HEXEN_HALLWAYS,
+    "materials",  HEXEN.MATERIALS,
+    "combos",     HEXEN.COMBOS,
+    "exits",      HEXEN.EXITS,
+    "hallways",   HEXEN.HALLWAYS,
 
-    "episodes",   HEXEN_EPISODES,
-    "themes",     HEXEN_SUB_THEMES,
-    "rooms",      HEXEN_ROOMS,
+    "episodes",   HEXEN.EPISODES,
+    "themes",     HEXEN.SUB_THEMES,
+    "rooms",      HEXEN.ROOMS,
 
-    "hangs",      HEXEN_OVERHANGS,
-    "pedestals",  HEXEN_PEDESTALS,
-    "rails",      HEXEN_RAILS,
+    "hangs",      HEXEN.OVERHANGS,
+    "pedestals",  HEXEN.PEDESTALS,
+    "rails",      HEXEN.RAILS,
 
-    "liquids",    HEXEN_LIQUIDS,
-    "switches",   HEXEN_SWITCHES,
-    "doors",      HEXEN_DOORS,
-    "key_doors",  HEXEN_KEY_DOORS,
-    "lifts",      HEXEN_LIFTS,
+    "liquids",    HEXEN.LIQUIDS,
+    "switches",   HEXEN.SWITCHES,
+    "doors",      HEXEN.DOORS,
+    "key_doors",  HEXEN.KEY_DOORS,
+    "lifts",      HEXEN.LIFTS,
 
-    "pics",       HEXEN_PICS,
-    "images",     HEXEN_IMAGES,
-    "lights",     HEXEN_LIGHTS,
-    "wall_lights", HEXEN_WALL_LIGHTS,
+    "pics",       HEXEN.PICS,
+    "images",     HEXEN.IMAGES,
+    "lights",     HEXEN.LIGHTS,
+    "wall_lights", HEXEN.WALL_LIGHTS,
   },
 }
 

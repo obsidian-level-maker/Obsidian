@@ -27,7 +27,7 @@ OB_ENGINES["eternity"] =
 
   hooks =
   {
-    all_done = Boom_all_done,
+    all_done = BOOM.all_done,
   },
 
   param =

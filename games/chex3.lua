@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-CHEX3_THINGS =
+CHEX3 = { }
+
+CHEX3.THINGS =
 {
   --- PLAYERS ---
 
@@ -168,7 +170,7 @@ CHEX3_THINGS =
 
 ----------------------------------------------------------------
 
-CHEX3_MATERIALS =
+CHEX3.MATERIALS =
 {
   -- FIXME this is all just temporary
 
@@ -190,14 +192,14 @@ CHEX3_MATERIALS =
   NUKAGE1 = { t="BROWNGRN", f="NUKAGE1" },
 }
 
-CHEX3_SANITY_MAP =
+CHEX3.SANITY_MAP =
 { 
   NUKAGE1  = "LAVA1",
   LAVA1    = "NUKAGE1",
   FIREMAG1 = "FIREMAG1",
 }
 
-CHEX3_LIFTS =
+CHEX3.LIFTS =
 {
   slow = { kind=62,  walk=88  },
   fast = { kind=123, walk=120 },
@@ -205,7 +207,7 @@ CHEX3_LIFTS =
 
 ----------------------------------------------------------------
 
-CHEX3_LIQUIDS =
+CHEX3.LIQUIDS =
 {
   -- "blood", "nukage" and "lava" all look similar (like green slime) but do different damage
   --water  = { floor="FWATER1", wall="GSTFONT1" },
@@ -214,11 +216,11 @@ CHEX3_LIQUIDS =
   lava   = { floor="LAVA1", wall="FIREMAG1", sec_kind=16, add_light=64 },
 }
 
-CHEX3_ROOMS =
+CHEX3.ROOMS =
 {
 }
 
-CHEX3_SUB_THEMES =
+CHEX3.SUB_THEMES =
 {
   chex3_tech1 =
   {
@@ -256,7 +258,7 @@ CHEX3_SUB_THEMES =
 -- Monster list
 -- ============
 
-CHEX3_MONSTERS =
+CHEX3.MONSTERS =
 {
   commonus =
   {
@@ -355,7 +357,7 @@ CHEX3_MONSTERS =
 -- Weapon list
 -- ===========
 
-CHEX3_WEAPONS =
+CHEX3.WEAPONS =
 {
   bootspoon =
   {
@@ -419,7 +421,7 @@ CHEX3_WEAPONS =
 -- Pickup List
 -- ===========
 
-CHEX3_PICKUPS =
+CHEX3.PICKUPS =
 {
   -- HEALTH --
 
@@ -518,7 +520,7 @@ CHEX3_PICKUPS =
   },
 }
 
-CHEX3_PLAYER_MODEL =
+CHEX3.PLAYER_MODEL =
 {
   chexguy =
   {
@@ -529,7 +531,7 @@ CHEX3_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-CHEX3_EPISODES =
+CHEX3.EPISODES =
 {
   episode1 =
   {
@@ -554,18 +556,18 @@ CHEX3_EPISODES =
   },
 }
 
-function CHEX3_setup()
+function CHEX3.setup()
  -- nothing needed
 end
 
-function CHEX3_get_levels()
+function CHEX3.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 3, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 5)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 2 end
 
   for episode = 1,EP_NUM do
-    local ep_info = CHEX3_EPISODES["episode" .. episode]
+    local ep_info = CHEX3.EPISODES["episode" .. episode]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -597,7 +599,7 @@ function CHEX3_get_levels()
   end -- for episode
 end
 
-function CHEX3_begin_level()
+function CHEX3.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -637,9 +639,9 @@ UNFINISHED["chex3"] =
 
   hooks =
   {
-    setup        = CHEX3_setup,
-    levels_start = CHEX3_get_levels,
-    begin_level  = CHEX3_begin_level,
+    setup        = CHEX3.setup,
+    levels_start = CHEX3.get_levels,
+    begin_level  = CHEX3.begin_level,
   },
 
   param =
@@ -670,17 +672,17 @@ UNFINISHED["chex3"] =
 
   tables =
   {
-    "things",       CHEX3_THINGS,
-    "materials",    CHEX3_MATERIALS,
-    "sanity_map",   CHEX3_SANITY_MAP,
-    "lifts",        CHEX3_LIFTS,
-    "liquids",      CHEX3_LIQUIDS,
-    "rooms",        CHEX3_ROOMS,
-    "themes",       CHEX3_SUB_THEMES,
-    "monsters",     CHEX3_MONSTERS,
-    "weapons",      CHEX3_WEAPONS,
-    "pickups",      CHEX3_PICKUPS,
-    "player_model", CHEX3_PLAYER_MODEL,
-    "episodes",     CHEX3_EPISODES,
+    "things",       CHEX3.THINGS,
+    "materials",    CHEX3.MATERIALS,
+    "sanity_map",   CHEX3.SANITY_MAP,
+    "lifts",        CHEX3.LIFTS,
+    "liquids",      CHEX3.LIQUIDS,
+    "rooms",        CHEX3.ROOMS,
+    "themes",       CHEX3.SUB_THEMES,
+    "monsters",     CHEX3.MONSTERS,
+    "weapons",      CHEX3.WEAPONS,
+    "pickups",      CHEX3.PICKUPS,
+    "player_model", CHEX3.PLAYER_MODEL,
+    "episodes",     CHEX3.EPISODES,
   },
 }

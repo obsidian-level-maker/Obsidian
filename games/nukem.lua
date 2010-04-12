@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-NUKEM_THINGS =
+NUKEM = { }
+
+NUKEM.THINGS =
 {
   --- special stuff ---
   player1 = { id=1405, kind="other", r=20,h=56 },
@@ -53,7 +55,7 @@ NUKEM_THINGS =
 
 ----------------------------------------------------------------
 
-NUKEM_MATERIALS =
+NUKEM.MATERIALS =
 {
   -- special materials --
   _ERROR = { t=1 },
@@ -159,13 +161,13 @@ NUKEM_MATERIALS =
 }
 
 
-NUKEM_SANITY_MAP =
+NUKEM.SANITY_MAP =
 {
   -- FIXME
 }
 
 
-NUKEM_LIQUIDS =
+NUKEM.LIQUIDS =
 {
   water = { mat="WATER", },
   slime = { mat="SLIME",  },
@@ -177,13 +179,13 @@ NUKEM_LIQUIDS =
 ----------------------------------------------------------------
 
 
-NUKEM_STEPS =
+NUKEM.STEPS =
 {
   step1 = { step_w="RUST", side_w="RUST", top_f="RUST" },
 }
 
 
-NUKEM_PICTURES =
+NUKEM.PICTURES =
 {
   carve =
   {
@@ -205,7 +207,7 @@ NUKEM_PICTURES =
 }
 
 
-NUKEM_SUB_THEMES =
+NUKEM.SUB_THEMES =
 {
   nukem_city1 =
   {
@@ -244,30 +246,30 @@ NUKEM_SUB_THEMES =
 
 ------------------------------------------------------------
 
-NUKEM_MONSTERS =
+NUKEM.MONSTERS =
 {
-  -- FIXME : NUKEM_MONSTERS
+  -- FIXME : NUKEM.MONSTERS
 }
 
 
-NUKEM_WEAPONS =
+NUKEM.WEAPONS =
 {
   foot =
   {
     rate=1.5, damage=10, attack="melee",
   },
 
-  -- FIXME : NUKEM_WEAPONS
+  -- FIXME : NUKEM.WEAPONS
 }
 
 
-NUKEM_PICKUPS =
+NUKEM.PICKUPS =
 {
-  -- FIXME : NUKEM_PICKUPS
+  -- FIXME : NUKEM.PICKUPS
 }
 
 
-NUKEM_PLAYER_MODEL =
+NUKEM.PLAYER_MODEL =
 {
   duke =
   {
@@ -371,18 +373,18 @@ UNFINISHED["nukem"] =
 
   tables =
   {
-    "player_model", NUKEM_PLAYER_MODEL,
+    "player_model", NUKEM.PLAYER_MODEL,
     
-    "things",   NUKEM_THINGS,
-    "monsters", NUKEM_MONSTERS,
-    "weapons",  NUKEM_WEAPONS,
-    "pickups",  NUKEM_PICKUPS,
+    "things",   NUKEM.THINGS,
+    "monsters", NUKEM.MONSTERS,
+    "weapons",  NUKEM.WEAPONS,
+    "pickups",  NUKEM.PICKUPS,
 
-    "materials", NUKEM_MATERIALS,
-    "liquids",   NUKEM_LIQUIDS,
-    "sub_themes", NUKEM_SUB_THEMES,
-    "pictures",  NUKEM_PICTURES,
-    "steps",     NUKEM_STEPS,
+    "materials", NUKEM.MATERIALS,
+    "liquids",   NUKEM.LIQUIDS,
+    "sub_themes", NUKEM.SUB_THEMES,
+    "pictures",  NUKEM.PICTURES,
+    "steps",     NUKEM.STEPS,
   },
 }
 

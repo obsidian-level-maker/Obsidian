@@ -18,6 +18,8 @@
 --
 ----------------------------------------------------------------
 
+ZDOOM = { }
+
 OB_ENGINES["zdoom"] =
 {
   label = "ZDoom 2.31",
@@ -30,7 +32,7 @@ OB_ENGINES["zdoom"] =
   -- FIXME: this is only for level names, use MAPINFO instead
   hooks =
   {
-    all_done = Boom_all_done,
+    all_done = BOOM.all_done,
   },
 
   param =
@@ -55,7 +57,7 @@ OB_ENGINES["gzdoom"] =
 
   hooks =
   {
-    all_done = Boom_all_done,
+    all_done = BOOM.all_done,
   },
 
   param =

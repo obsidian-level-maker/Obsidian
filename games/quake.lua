@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-QUAKE1_THINGS =
+QUAKE1 = { }
+
+QUAKE1.THINGS =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },
@@ -104,7 +106,7 @@ QUAKE1_THINGS =
 
 ----------------------------------------------------------------
 
-QUAKE1_MATERIALS =
+QUAKE1.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="METAL1_1" },
@@ -669,7 +671,7 @@ QUAKE1_MATERIALS =
 ----------------------------------------------------------------
 
 
-QUAKE1_EXITS =
+QUAKE1.EXITS =
 {
   exit_pad =
   {
@@ -681,14 +683,14 @@ QUAKE1_EXITS =
 }
 
 
-QUAKE1_STEPS =
+QUAKE1.STEPS =
 {
   step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" },
   step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" },
 }
 
 
-QUAKE1_PICTURES =
+QUAKE1.PICTURES =
 {
   carve =
   {
@@ -701,13 +703,13 @@ QUAKE1_PICTURES =
 }
 
 
-QUAKE1_KEY_DOORS =
+QUAKE1.KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-QUAKE1_MISC_PREFABS =
+QUAKE1.MISC_PREFABS =
 {
   elevator =
   {
@@ -720,7 +722,7 @@ QUAKE1_MISC_PREFABS =
 
 
 
-QUAKE1_ROOMS =
+QUAKE1.ROOMS =
 {
   PLAIN =
   {
@@ -788,7 +790,7 @@ QUAKE1_ROOMS =
 }
 
 
-QUAKE1_SUB_THEME_DEFAULTS =
+QUAKE1.SUB_THEME_DEFAULTS =
 {
   teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",
@@ -798,7 +800,7 @@ QUAKE1_SUB_THEME_DEFAULTS =
 }
 
 
-QUAKE1_SUB_THEMES =
+QUAKE1.SUB_THEMES =
 {
   quake_base1 =
   {
@@ -852,7 +854,7 @@ QUAKE1_SUB_THEMES =
 
 ----------------------------------------------------------------
 
-QUAKE1_MONSTERS =
+QUAKE1.MONSTERS =
 {
   dog =
   {
@@ -947,7 +949,7 @@ QUAKE1_MONSTERS =
 }
 
 
-QUAKE1_WEAPONS =
+QUAKE1.WEAPONS =
 {
   axe =
   {
@@ -1025,7 +1027,7 @@ QUAKE1_WEAPONS =
 }
 
 
-QUAKE1_PICKUPS =
+QUAKE1.PICKUPS =
 {
   -- HEALTH --
 
@@ -1119,7 +1121,7 @@ QUAKE1_PICKUPS =
 }
 
 
-QUAKE1_PLAYER_MODEL =
+QUAKE1.PLAYER_MODEL =
 {
   quakeguy =
   {
@@ -1131,7 +1133,7 @@ QUAKE1_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-QUAKE1_EPISODES =
+QUAKE1.EPISODES =
 {
   episode1 =
   {
@@ -1183,7 +1185,7 @@ function Quake1_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
   for episode = 1,EP_NUM do
-    local ep_info = QUAKE1_EPISODES["episode" .. episode]
+    local ep_info = QUAKE1.EPISODES["episode" .. episode]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -1274,26 +1276,26 @@ OB_GAMES["quake"] =
 
   tables =
   {
-    "player_model", QUAKE1_PLAYER_MODEL,
+    "player_model", QUAKE1.PLAYER_MODEL,
 
-    "things",   QUAKE1_THINGS,
-    "monsters", QUAKE1_MONSTERS,
-    "weapons",  QUAKE1_WEAPONS,
-    "pickups",  QUAKE1_PICKUPS,
+    "things",   QUAKE1.THINGS,
+    "monsters", QUAKE1.MONSTERS,
+    "weapons",  QUAKE1.WEAPONS,
+    "pickups",  QUAKE1.PICKUPS,
 
-    "materials", QUAKE1_MATERIALS,
-    "pictures",  QUAKE1_PICTURES,
-    "steps",     QUAKE1_STEPS,
-    "exits",     QUAKE1_EXITS,
+    "materials", QUAKE1.MATERIALS,
+    "pictures",  QUAKE1.PICTURES,
+    "steps",     QUAKE1.STEPS,
+    "exits",     QUAKE1.EXITS,
 
-    "episodes", QUAKE1_EPISODES,
-    "rooms",    QUAKE1_ROOMS,
+    "episodes", QUAKE1.EPISODES,
+    "rooms",    QUAKE1.ROOMS,
 
-    "key_doors", QUAKE1_KEY_DOORS,
-    "misc_fabs", QUAKE1_MISC_PREFABS,
+    "key_doors", QUAKE1.KEY_DOORS,
+    "misc_fabs", QUAKE1.MISC_PREFABS,
 
-    "sub_defaults", QUAKE1_SUB_THEME_DEFAULTS,
-    "sub_themes",   QUAKE1_SUB_THEMES,
+    "sub_defaults", QUAKE1.SUB_THEME_DEFAULTS,
+    "sub_themes",   QUAKE1.SUB_THEMES,
   },
 }
 

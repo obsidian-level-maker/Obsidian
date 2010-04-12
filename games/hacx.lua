@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-HACX_THINGS =
+HACX = { }
+
+HACX.THINGS =
 {
   --- special stuff ---
   player1 = { id=1, kind="other", r=16,h=56 },
@@ -87,7 +89,7 @@ HACX_THINGS =
 
 ----------------------------------------------------------------
 
-HACX_MATERIALS =
+HACX.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="HW171", f="DEM1_2" },
@@ -105,7 +107,7 @@ HACX_MATERIALS =
 }
 
 
-HACX_SANITY_MAP =
+HACX.SANITY_MAP =
 {
   -- FIXME
 }
@@ -113,7 +115,7 @@ HACX_SANITY_MAP =
 
 ----------------------------------------------------------------
 
-HACX_SUB_THEMES =
+HACX.SUB_THEMES =
 {
   hacx_tech1 =
   {
@@ -148,7 +150,7 @@ HACX_SUB_THEMES =
 
 ------------------------------------------------------------
 
-HACX_MONSTERS =
+HACX.MONSTERS =
 {
   thug =
   {
@@ -240,7 +242,7 @@ HACX_MONSTERS =
 }
 
 
-HACX_WEAPONS =
+HACX.WEAPONS =
 {
   boot =
   {
@@ -310,7 +312,7 @@ HACX_WEAPONS =
 }
 
 
-HACX_PICKUPS =
+HACX.PICKUPS =
 {
   -- HEALTH --
 
@@ -411,7 +413,7 @@ HACX_PICKUPS =
 }
 
 
-HACX_PLAYER_MODEL =
+HACX.PLAYER_MODEL =
 {
   danny =
   {
@@ -509,15 +511,15 @@ UNFINISHED["hacx"] =
 
   tables =
   {
-    "player_model", HACX_PLAYER_MODEL,
+    "player_model", HACX.PLAYER_MODEL,
     
-    "things",   HACX_THINGS,
-    "monsters", HACX_MONSTERS,
-    "weapons",  HACX_WEAPONS,
-    "pickups",  HACX_PICKUPS,
+    "things",   HACX.THINGS,
+    "monsters", HACX.MONSTERS,
+    "weapons",  HACX.WEAPONS,
+    "pickups",  HACX.PICKUPS,
 
-    "materials", HACX_MATERIALS,
-    "themes",    HACX_SUB_THEMES,
+    "materials", HACX.MATERIALS,
+    "themes",    HACX.SUB_THEMES,
   },
 }
 

@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-DOOM_THINGS =
+DOOM = { }
+
+DOOM.THINGS =
 {
   --- PLAYERS ---
 
@@ -182,13 +184,13 @@ DOOM_THINGS =
   brain_shooter = { id=89, kind="other", r=20, h=32 },
   brain_target  = { id=87, kind="other", r=20, h=32, pass=true },
 
-} -- end of DOOM_THINGS
+} -- end of DOOM.THINGS
 
 
 ----------------------------------------------------------------
 
 
-DOOM_COMMON_MATERIALS =
+DOOM.COMMON_MATERIALS =
 {
   -- special materials --
   _ERROR = { t="METAL",    f="CEIL5_2" },
@@ -501,11 +503,11 @@ DOOM_COMMON_MATERIALS =
   -- different to the textures, hence renamed the flats as
   -- STEP_F1 and STEP_F2.
 
-} -- end of DOOM_COMMON_MATERIALS
+} -- end of DOOM.COMMON_MATERIALS
 
 
 
-DOOM1_MATERIALS =
+DOOM.D1_MATERIALS =
 {
   -- textures with best-matching flat
 
@@ -584,7 +586,7 @@ DOOM1_MATERIALS =
 
 
 
-DOOM2_MATERIALS =
+DOOM.D2_MATERIALS =
 {
   -- textures with best-matching flat
 
@@ -819,7 +821,7 @@ DOOM2_MATERIALS =
 }
 
 
-DOOM_SANITY_MAP =
+DOOM.SANITY_MAP =
 {
   -- liquids kill the player, so keep them recognisable
   LAVA1   = "FWATER1",
@@ -852,7 +854,7 @@ DOOM_SANITY_MAP =
 }
 
 
-DOOM_RAILS =
+DOOM.RAILS =
 {
   -- common --
 
@@ -882,7 +884,7 @@ DOOM_RAILS =
 }
 
 
-DOOM_STEPS =
+DOOM.STEPS =
 {
   step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
   step2 = { step_w="STEP2", side_w="BROWN1",   top_f="FLAT5" },
@@ -895,7 +897,7 @@ DOOM_STEPS =
 }
 
 
-DOOM_LIFTS =
+DOOM.LIFTS =
 {
   shiny = 
   {
@@ -929,7 +931,7 @@ OLD_LIFT_JUNK =
 }
 
 
-DOOM_PICTURES =
+DOOM.PICTURES =
 {
   -- Note: this includes pictures that only work on DOOM1 or DOOM2.
   -- It is not a problem, because the game-specific sub-themes will
@@ -1348,7 +1350,7 @@ DOOM_PICTURES =
 }
 
 
-DOOM_PILLARS =
+DOOM.PILLARS =
 {
   teklite = { pillar="TEKLITE", trim1="GRAY7", trim2="METAL" },
   silver2 = { pillar="SILVER2", trim1="GRAY7", trim2="METAL" },
@@ -1368,7 +1370,7 @@ DOOM_PILLARS =
 }
 
 
-DOOM_CRATES =  -- temporary (until good prefab system)
+DOOM.CRATES =  -- temporary (until good prefab system)
 {
   crate1 = { side_w="CRATE1", top_f="CRATOP2" },
   crate2 = { side_w="CRATE2", top_f="CRATOP1" },
@@ -1383,7 +1385,7 @@ DOOM_CRATES =  -- temporary (until good prefab system)
 }
 
 
-DOOM_DOORS =
+DOOM.DOORS =
 {
   --- NORMAL DOORS ---
 
@@ -1743,7 +1745,7 @@ DOOM_DOORS =
 }
 
 
-DOOM_EXITS =
+DOOM.EXITS =
 {
   skull_pillar =
   {
@@ -1806,10 +1808,10 @@ DOOM_EXITS =
     items = { "medikit" },
   },
 
-} -- end of DOOM_DOORS
+} -- end of DOOM.DOORS
 
 
-DOOM_SWITCHES =
+DOOM.SWITCHES =
 {
   sw_blue =
   {
@@ -1963,11 +1965,11 @@ DOOM_SWITCHES =
     }
   },
 
-} -- end of DOOM_SWITCHES
+} -- end of DOOM.SWITCHES
 
 
 
-DOOM_LIQUIDS =
+DOOM.LIQUIDS =
 {
   water  = { mat="FWATER1", light=0.65, sec_kind=16 },
   blood  = { mat="BLOOD1",  light=0.65, sec_kind=16 }, --  5% damage
@@ -1979,7 +1981,7 @@ DOOM_LIQUIDS =
 }
 
 
-DOOM_ROOMS =
+DOOM.ROOMS =
 {
   PLAIN =
   {
@@ -2024,7 +2026,7 @@ DOOM_ROOMS =
   },
 }
 
-DOOM1_ROOMS =
+DOOM.D1_ROOMS =
 {
   PLANT =
   {
@@ -2079,7 +2081,7 @@ DOOM1_ROOMS =
   },
 }
 
-DOOM2_ROOMS =
+DOOM.D2_ROOMS =
 {
   PLANT =
   {
@@ -2196,7 +2198,7 @@ DOOM2_ROOMS =
 }
 
 
-DOOM_SUB_THEME_DEFAULTS =
+DOOM.SUB_THEME_DEFAULTS =
 {
   doors = { wooden=30, wooden_fast=20,
             wooden2=20, wooden2_fast=10 },
@@ -2279,7 +2281,7 @@ DOOM_SUB_THEME_DEFAULTS =
 --]]
 
 
-DOOM1_SUB_THEMES =
+DOOM.D1_SUB_THEMES =
 {
   doom_tech1 =
   {
@@ -2599,7 +2601,7 @@ DOOM1_SUB_THEMES =
 }
 
 
-DOOM2_SUB_THEMES =
+DOOM.D2_SUB_THEMES =
 {
   doom_tech1 =
   {
@@ -3176,7 +3178,7 @@ OLD_COMMON_THEMES =
 }
 
 
-DOOM_PREBUILT_LEVELS =
+DOOM.PREBUILT_LEVELS =
 {
   dead_simple =
   {
@@ -3278,7 +3280,7 @@ DOOM_PREBUILT_LEVELS =
 -- since it was creating way too much health in levels.
 --
 
-DOOM_MONSTERS =
+DOOM.MONSTERS =
 {
   zombie =
   {
@@ -3360,7 +3362,7 @@ DOOM_MONSTERS =
 }
 
 
-DOOM2_MONSTERS =
+DOOM.D2_MONSTERS =
 {
   gunner =
   {
@@ -3450,7 +3452,7 @@ DOOM2_MONSTERS =
 -- have that weapon.
 --
 
-DOOM_WEAPONS =
+DOOM.WEAPONS =
 {
   fist =
   {
@@ -3528,7 +3530,7 @@ DOOM_WEAPONS =
 }
 
 
-DOOM_AMMOS =
+DOOM.AMMOS =
 {
   bullet = { start_bonus = 60 },
   shell  = { start_bonus = 12 },
@@ -3540,7 +3542,7 @@ DOOM_AMMOS =
 -- Pickup List
 -- ===========
 
-DOOM_PICKUPS =
+DOOM.PICKUPS =
 {
   -- HEALTH --
 
@@ -3660,7 +3662,7 @@ DOOM_PICKUPS =
 }
 
 
-DOOM_PLAYER_MODEL =
+DOOM.PLAYER_MODEL =
 {
   doomguy =
   {
@@ -3670,7 +3672,7 @@ DOOM_PLAYER_MODEL =
 }
 
 
-DOOM1_EPISODES =
+DOOM.D1_EPISODES =
 {
   episode1 =
   {
@@ -3701,7 +3703,7 @@ DOOM1_EPISODES =
   },
 }
 
-DOOM2_EPISODES =
+DOOM.D2_EPISODES =
 {
   episode1 =
   {
@@ -3755,7 +3757,7 @@ function Doom1_get_levels()
   local few_episodes = { 1, 1, 2, 2 }
 
   for episode = 1,EP_NUM do
-    local ep_info = DOOM1_EPISODES["episode" .. episode]
+    local ep_info = DOOM.D1_EPISODES["episode" .. episode]
     assert(ep_info)
 
     GAME.original_themes[episode] = ep_info.orig_theme
@@ -3852,7 +3854,7 @@ function Doom2_get_levels()
       ep_along = map / MAP_NUM
     end
 
-    local ep_info = DOOM2_EPISODES["episode" .. episode]
+    local ep_info = DOOM.D2_EPISODES["episode" .. episode]
     assert(ep_info)
     assert(ep_along <= 1)
 
@@ -3909,7 +3911,7 @@ function Doom2_get_levels()
 end
 
 
-DOOM_LEVEL_GFX_COLORS =
+DOOM.LEVEL_GFX_COLORS =
 {
   gold   = { 0,47,44, 167,166,165,164,163,162,161,160, 225 },
   silver = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 },
@@ -3941,9 +3943,9 @@ function Doom_make_cool_gfx()
   {
     BRONZE_2, GREEN, RED,
 
-    DOOM_LEVEL_GFX_COLORS.gold,
-    DOOM_LEVEL_GFX_COLORS.silver,
-    DOOM_LEVEL_GFX_COLORS.iron,
+    DOOM.LEVEL_GFX_COLORS.gold,
+    DOOM.LEVEL_GFX_COLORS.silver,
+    DOOM.LEVEL_GFX_COLORS.iron,
   }
 
   rand.shuffle(colmaps)
@@ -3951,7 +3953,7 @@ function Doom_make_cool_gfx()
   gui.set_colormap(1, colmaps[1])
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
-  gui.set_colormap(4, DOOM_LEVEL_GFX_COLORS.iron)
+  gui.set_colormap(4, DOOM.LEVEL_GFX_COLORS.iron)
 
   -- patches (CEMENT1 .. CEMENT4)
   gui.wad_logo_gfx("WALL52_1", "p", "PILL",   128,128, 1)
@@ -3977,7 +3979,7 @@ function Doom_make_level_gfx()
       gold=12, silver=3, bronze=8, iron=10
     })
 
-    GAME.level_gfx_colors = assert(DOOM_LEVEL_GFX_COLORS[kind])
+    GAME.level_gfx_colors = assert(DOOM.LEVEL_GFX_COLORS[kind])
   end
 
   gui.set_colormap(1, GAME.level_gfx_colors)
@@ -4111,39 +4113,39 @@ OB_GAMES["doom1"] =
   {
     ---- common stuff ----
 
-    "player_model", DOOM_PLAYER_MODEL,
+    "player_model", DOOM.PLAYER_MODEL,
 
-    "things",   DOOM_THINGS,
-    "monsters", DOOM_MONSTERS,
-    "weapons",  DOOM_WEAPONS,
-    "ammos",    DOOM_AMMOS,
-    "pickups",  DOOM_PICKUPS,
+    "things",   DOOM.THINGS,
+    "monsters", DOOM.MONSTERS,
+    "weapons",  DOOM.WEAPONS,
+    "ammos",    DOOM.AMMOS,
+    "pickups",  DOOM.PICKUPS,
 
-    "materials",  DOOM_COMMON_MATERIALS,
-    "sanity_map", DOOM_SANITY_MAP,
-    "rails",      DOOM_RAILS,
-    "liquids",    DOOM_LIQUIDS,
+    "materials",  DOOM.COMMON_MATERIALS,
+    "sanity_map", DOOM.SANITY_MAP,
+    "rails",      DOOM.RAILS,
+    "liquids",    DOOM.LIQUIDS,
 
-    "steps",      DOOM_STEPS,
-    "lifts",      DOOM_LIFTS,
-    "pictures",   DOOM_PICTURES,
-    "pillars",    DOOM_PILLARS,
-    "crates",     DOOM_CRATES,
-    "doors",      DOOM_DOORS,
-    "switches",   DOOM_SWITCHES,
-    "exits",      DOOM_EXITS,
+    "steps",      DOOM.STEPS,
+    "lifts",      DOOM.LIFTS,
+    "pictures",   DOOM.PICTURES,
+    "pillars",    DOOM.PILLARS,
+    "crates",     DOOM.CRATES,
+    "doors",      DOOM.DOORS,
+    "switches",   DOOM.SWITCHES,
+    "exits",      DOOM.EXITS,
 
-    "rooms",  DOOM_ROOMS,
+    "rooms",  DOOM.ROOMS,
 
-    "sub_defaults",    DOOM_SUB_THEME_DEFAULTS,
+    "sub_defaults",    DOOM.SUB_THEME_DEFAULTS,
 
-    "prebuilt_levels", DOOM_PREBUILT_LEVELS,
+    "prebuilt_levels", DOOM.PREBUILT_LEVELS,
 
     ---- DOOM I stuff ----
 
-    "materials",  DOOM1_MATERIALS,
-    "sub_themes", DOOM1_SUB_THEMES,
-    "rooms",      DOOM1_ROOMS,
+    "materials",  DOOM.D1_MATERIALS,
+    "sub_themes", DOOM.D1_SUB_THEMES,
+    "rooms",      DOOM.D1_ROOMS,
   },
 }
 
@@ -4222,41 +4224,41 @@ OB_GAMES["doom2"] =
   {
     ---- common stuff ----
 
-    "player_model", DOOM_PLAYER_MODEL,
+    "player_model", DOOM.PLAYER_MODEL,
 
-    "things",   DOOM_THINGS,
-    "monsters", DOOM_MONSTERS,
-    "weapons",  DOOM_WEAPONS,
-    "ammos",    DOOM_AMMOS,
-    "pickups",  DOOM_PICKUPS,
+    "things",   DOOM.THINGS,
+    "monsters", DOOM.MONSTERS,
+    "weapons",  DOOM.WEAPONS,
+    "ammos",    DOOM.AMMOS,
+    "pickups",  DOOM.PICKUPS,
 
-    "materials",  DOOM_COMMON_MATERIALS,
-    "sanity_map", DOOM_SANITY_MAP,
-    "rails",      DOOM_RAILS,
-    "liquids",    DOOM_LIQUIDS,
+    "materials",  DOOM.COMMON_MATERIALS,
+    "sanity_map", DOOM.SANITY_MAP,
+    "rails",      DOOM.RAILS,
+    "liquids",    DOOM.LIQUIDS,
 
-    "steps",      DOOM_STEPS,
-    "lifts",      DOOM_LIFTS,
-    "pictures",   DOOM_PICTURES,
-    "pillars",    DOOM_PILLARS,
-    "crates",     DOOM_CRATES,
-    "doors",      DOOM_DOORS,
-    "switches",   DOOM_SWITCHES,
-    "exits",      DOOM_EXITS,
+    "steps",      DOOM.STEPS,
+    "lifts",      DOOM.LIFTS,
+    "pictures",   DOOM.PICTURES,
+    "pillars",    DOOM.PILLARS,
+    "crates",     DOOM.CRATES,
+    "doors",      DOOM.DOORS,
+    "switches",   DOOM.SWITCHES,
+    "exits",      DOOM.EXITS,
 
-    "rooms",  DOOM_ROOMS,
+    "rooms",  DOOM.ROOMS,
 
-    "sub_defaults",    DOOM_SUB_THEME_DEFAULTS,
+    "sub_defaults",    DOOM.SUB_THEME_DEFAULTS,
 
-    "prebuilt_levels", DOOM_PREBUILT_LEVELS,
+    "prebuilt_levels", DOOM.PREBUILT_LEVELS,
 
     ---- DOOM II stuff ----
 
-    "materials",  DOOM2_MATERIALS,
-    "sub_themes", DOOM2_SUB_THEMES,
-    "rooms",      DOOM2_ROOMS,
+    "materials",  DOOM.D2_MATERIALS,
+    "sub_themes", DOOM.D2_SUB_THEMES,
+    "rooms",      DOOM.D2_ROOMS,
 
-    "monsters", DOOM2_MONSTERS,
+    "monsters", DOOM.D2_MONSTERS,
   },
 }
 

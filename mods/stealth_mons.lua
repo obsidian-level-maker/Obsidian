@@ -17,7 +17,9 @@
 --
 ----------------------------------------------------------------
 
-STEALTH_THINGS_EDGE =
+STEALTH = { }
+
+STEALTH.THINGS_EDGE =
 {
   stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
   stealth_vile     = { id=4051, kind="monster", r=20,h=56 },
@@ -33,7 +35,7 @@ STEALTH_THINGS_EDGE =
   stealth_zombie   = { id=4061, kind="monster", r=20,h=56 },
 }
 
-STEALTH_THINGS_ZDOOM =
+STEALTH.THINGS_ZDOOM =
 {
   stealth_arach    = { id=9050, kind="monster", r=66,h=64 },
   stealth_vile     = { id=9051, kind="monster", r=20,h=56 },
@@ -50,7 +52,7 @@ STEALTH_THINGS_ZDOOM =
 }
 
 
-STEALTH_MONSTERS =
+STEALTH.MONSTERS =
 {
   -- These are mostly the same as the ones in doom.lua,
   -- but with some different crazy_prob values.
@@ -145,7 +147,7 @@ STEALTH_MONSTERS =
 }
 
 
-STEALTH_CHOICES =
+STEALTH.CHOICES =
 {
   "normal", "Normal",
   "less",   "Less",
@@ -155,15 +157,15 @@ STEALTH_CHOICES =
 
 function Stealth_Mons_setup(self)
   if OB_CONFIG.engine == "edge" then
-    Game_merge_tab("things", STEALTH_THINGS_EDGE)
+    Game_merge_tab("things", STEALTH.THINGS_EDGE)
   else
-    Game_merge_tab("things", STEALTH_THINGS_ZDOOM)
+    Game_merge_tab("things", STEALTH.THINGS_ZDOOM)
   end
 
   -- apply the Quantity choice
   local qty = self.options.qty.value
 
-  for name,_ in pairs(STEALTH_MONSTERS) do
+  for name,_ in pairs(STEALTH.MONSTERS) do
     local M = GAME.monsters[name]
     if M and qty == "less" then
       M.replace_prob = M.replace_prob / 2
@@ -192,14 +194,14 @@ OB_MODULES["stealth_mons"] =
 
   tables =
   {
-    "monsters", STEALTH_MONSTERS,
+    "monsters", STEALTH.MONSTERS,
   },
 
   options =
   {
     qty =
     {
-      label = "Default Quantity", choices = STEALTH_CHOICES,
+      label = "Default Quantity", choices = STEALTH.CHOICES,
     },
   },
 }
@@ -208,7 +210,7 @@ OB_MODULES["stealth_mons"] =
 ----------------------------------------------------------------
 
 
-STEALTH_CONTROL_CHOICES =
+STEALTH.CONTROL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -220,7 +222,7 @@ STEALTH_CONTROL_CHOICES =
   "insane",  "INSANE",
 }
 
-STEALTH_CONTROL_PROBS =
+STEALTH.CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -237,7 +239,7 @@ function Stealth_MonControl_setup(self)
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = STEALTH_CONTROL_PROBS[opt.value]
+      local prob = STEALTH.CONTROL_PROBS[opt.value]
 
       M.replaces = nil
       M.prob = prob
@@ -263,19 +265,19 @@ OB_MODULES["stealth_mon_control"] =
 
   options =
   {
-    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH_CONTROL_CHOICES },
-    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH_CONTROL_CHOICES },
-    stealth_imp      = { label="Stealth Imp",           choices=STEALTH_CONTROL_CHOICES },
-    stealth_demon    = { label="Stealth Demon",         choices=STEALTH_CONTROL_CHOICES },
-    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH_CONTROL_CHOICES },
-    stealth_baron    = { label="Stealth Baron",         choices=STEALTH_CONTROL_CHOICES },
+    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH.CONTROL_CHOICES },
+    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH.CONTROL_CHOICES },
+    stealth_imp      = { label="Stealth Imp",           choices=STEALTH.CONTROL_CHOICES },
+    stealth_demon    = { label="Stealth Demon",         choices=STEALTH.CONTROL_CHOICES },
+    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH.CONTROL_CHOICES },
+    stealth_baron    = { label="Stealth Baron",         choices=STEALTH.CONTROL_CHOICES },
 
-    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH_CONTROL_CHOICES },
-    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH_CONTROL_CHOICES },
-    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH_CONTROL_CHOICES },
-    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH_CONTROL_CHOICES },
-    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH_CONTROL_CHOICES },
-    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH_CONTROL_CHOICES },
+    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH.CONTROL_CHOICES },
+    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH.CONTROL_CHOICES },
+    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH.CONTROL_CHOICES },
+    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH.CONTROL_CHOICES },
+    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH.CONTROL_CHOICES },
+    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH.CONTROL_CHOICES },
   }
 }
 

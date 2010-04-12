@@ -16,7 +16,9 @@
 --
 ----------------------------------------------------------------
 
-ZDOOM_MARINE_THINGS =
+ZDOOM_MARINE = { }
+
+ZDOOM_MARINE.THINGS =
 {
   marine_fist    = { id=9101, kind="monster", r=16,h=56 },
   marine_berserk = { id=9102, kind="monster", r=16,h=56 },
@@ -31,7 +33,7 @@ ZDOOM_MARINE_THINGS =
   marine_bfg     = { id=9111, kind="monster", r=16,h=56 },
 }
 
-ZDOOM_MARINE_MONSTERS =
+ZDOOM_MARINE.MONSTERS =
 {
   -- None of these drop anything.
 
@@ -132,14 +134,14 @@ ZDOOM_MARINE_MONSTERS =
 }
 
 
-ZDOOM_MARINE_CHOICES =
+ZDOOM_MARINE.CHOICES =
 {
   "plenty",  "Plenty",
   "scarce",  "Scarce",
   "heaps",   "Heaps",
 }
 
-ZDOOM_MARINE_FACTORS =
+ZDOOM_MARINE.FACTORS =
 {
   scarce = 0.4,
   plenty = 1.0,
@@ -152,9 +154,9 @@ function ZDoom_Marine_setup(self)
     GAME.monsters["marine_ssg"] = nil
   end
 
-  local factor = ZDOOM_MARINE_FACTORS[self.options.qty.value]
+  local factor = ZDOOM_MARINE.FACTORS[self.options.qty.value]
 
-  for name,_ in pairs(ZDOOM_MARINE_MONSTERS) do
+  for name,_ in pairs(ZDOOM_MARINE.MONSTERS) do
     local M = GAME.monsters[name]
     if M and factor then
       M.prob = M.prob * factor
@@ -187,15 +189,15 @@ OB_MODULES["zdoom_marines"] =
 
   tables =
   {
-    "things",   ZDOOM_MARINE_THINGS,
-    "monsters", ZDOOM_MARINE_MONSTERS,
+    "things",   ZDOOM_MARINE.THINGS,
+    "monsters", ZDOOM_MARINE.MONSTERS,
   },
 
   options =
   {
     qty =
     {
-      label = "Default Quantity", choices = ZDOOM_MARINE_CHOICES,
+      label = "Default Quantity", choices = ZDOOM_MARINE.CHOICES,
     },
   },
 }
@@ -204,7 +206,7 @@ OB_MODULES["zdoom_marines"] =
 ----------------------------------------------------------------
 
 
-MARINE_CONTROL_CHOICES =
+ZDOOM_MARINE.CTL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -219,7 +221,7 @@ MARINE_CONTROL_CHOICES =
 -- these probabilities are lower than in the Monster Control module
 -- because these dudes really pack a punch.
 
-MARINE_CONTROL_PROBS =
+ZDOOM_MARINE.CTL_PROBS =
 {
   none   = 0,
   scarce = 1,
@@ -236,7 +238,7 @@ function Marine_Control_setup(self)
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = MARINE_CONTROL_PROBS[opt.value]
+      local prob = ZDOOM_MARINE.CTL_PROBS[opt.value]
 
       M.prob = prob
       M.crazy_prob = prob
@@ -261,17 +263,17 @@ OB_MODULES["zdoom_marine_control"] =
 
   options =
   {
-    marine_fist      = { label="Fist Marine",        choices=MARINE_CONTROL_CHOICES },
-    marine_berserk   = { label="Berserk Marine",     choices=MARINE_CONTROL_CHOICES },
-    marine_saw       = { label="Chainsaw Marine",    choices=MARINE_CONTROL_CHOICES },
-    marine_pistol    = { label="Pistol Marine",      choices=MARINE_CONTROL_CHOICES },
-    marine_shotty    = { label="Shotgun Marine",     choices=MARINE_CONTROL_CHOICES },
-    marine_ssg       = { label="Super Shotgunner",   choices=MARINE_CONTROL_CHOICES },
-    marine_chain     = { label="Chaingun Marine",    choices=MARINE_CONTROL_CHOICES },
-    marine_rocket    = { label="Rocket Marine",      choices=MARINE_CONTROL_CHOICES },
-    marine_plasma    = { label="Plasma Marine",      choices=MARINE_CONTROL_CHOICES },
-    marine_rail      = { label="Railgun Marine",     choices=MARINE_CONTROL_CHOICES },
-    marine_bfg       = { label="BFG 9000 Marine",    choices=MARINE_CONTROL_CHOICES },
+    marine_fist      = { label="Fist Marine",        choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_berserk   = { label="Berserk Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_saw       = { label="Chainsaw Marine",    choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_pistol    = { label="Pistol Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_shotty    = { label="Shotgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_ssg       = { label="Super Shotgunner",   choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_chain     = { label="Chaingun Marine",    choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_rocket    = { label="Rocket Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_plasma    = { label="Plasma Marine",      choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_rail      = { label="Railgun Marine",     choices=ZDOOM_MARINE.CTL_CHOICES },
+    marine_bfg       = { label="BFG 9000 Marine",    choices=ZDOOM_MARINE.CTL_CHOICES },
   }
 }
 

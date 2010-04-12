@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-SKULLTAG_THINGS =
+-- the SKULLTAG table already exists (engines/skulltag)
+
+SKULLTAG.THINGS =
 {
   -- monsters
   darkimp    = { id=5003, kind="monster", r=20,h=56 },
@@ -66,7 +68,7 @@ SKULLTAG_THINGS =
 }
 
 
-SKULLTAG_MONSTERS =
+SKULLTAG.MONSTERS =
 {
   darkimp =
   {
@@ -120,7 +122,7 @@ SKULLTAG_MONSTERS =
 }
 
 
-SKULLTAG_WEAPONS =
+SKULLTAG.WEAPONS =
 {
   minigun =
   {
@@ -156,7 +158,7 @@ SKULLTAG_WEAPONS =
 }
 
 
-SKULLTAG_PICKUPS =
+SKULLTAG.PICKUPS =
 {
   max_potion =
   {
@@ -178,14 +180,14 @@ SKULLTAG_PICKUPS =
 }
 
 
-SKULLTAG_CHOICES =
+SKULLTAG.CHOICES =
 {
   "some",   "Some",
   "few",    "Few",
   "heaps",  "Heaps",
 }
 
-SKULLTAG_FACTORS =
+SKULLTAG.FACTORS =
 {
   few   = 0.2,
   some  = 1.0,
@@ -200,9 +202,9 @@ function Skulltag_setup(self)
   end
 
   -- apply the 'Default Monsters' choice
-  local factor = SKULLTAG_FACTORS[self.options.def_mon.value]
+  local factor = SKULLTAG.FACTORS[self.options.def_mon.value]
 
-  for name,_ in pairs(SKULLTAG_MONSTERS) do
+  for name,_ in pairs(SKULLTAG.MONSTERS) do
     local M = GAME.monsters[name]
     if M and factor then
       M.prob = M.prob * factor
@@ -211,9 +213,9 @@ function Skulltag_setup(self)
   end
 
   -- apply the 'Default Weapons' choice
-  factor = SKULLTAG_FACTORS[self.options.def_weap.value]
+  factor = SKULLTAG.FACTORS[self.options.def_weap.value]
 
-  for name,_ in pairs(SKULLTAG_WEAPONS) do
+  for name,_ in pairs(SKULLTAG.WEAPONS) do
     local W = GAME.weapons[name]
     if W and factor then
       W.add_prob   = math.max(4, W.add_prob)   * factor
@@ -238,22 +240,22 @@ OB_MODULES["sktag_mons"] =
 
   tables =
   {
-    "things",   SKULLTAG_THINGS,
-    "monsters", SKULLTAG_MONSTERS,
-    "weapons",  SKULLTAG_WEAPONS,
-    "pickups",  SKULLTAG_PICKUPS,
+    "things",   SKULLTAG.THINGS,
+    "monsters", SKULLTAG.MONSTERS,
+    "weapons",  SKULLTAG.WEAPONS,
+    "pickups",  SKULLTAG.PICKUPS,
   },
 
   options =
   {
     def_mon =
     {
-      label = "Default Monsters", choices = SKULLTAG_CHOICES,
+      label = "Default Monsters", choices = SKULLTAG.CHOICES,
     },
 
     def_weap =
     {
-      label = "Default Weapons", choices = SKULLTAG_CHOICES,
+      label = "Default Weapons", choices = SKULLTAG.CHOICES,
     },
   },
 }
@@ -262,7 +264,7 @@ OB_MODULES["sktag_mons"] =
 ----------------------------------------------------------------
 
 
-SKULLTAG_CONTROL_CHOICES =
+SKULLTAG.CONTROL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -274,7 +276,7 @@ SKULLTAG_CONTROL_CHOICES =
   "insane",  "INSANE",
 }
 
-SKULLTAG_CONTROL_PROBS =
+SKULLTAG.CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -291,7 +293,7 @@ function Sktag_MonControl_setup(self)
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = SKULLTAG_CONTROL_PROBS[opt.value]
+      local prob = SKULLTAG.CONTROL_PROBS[opt.value]
 
       M.prob = prob
       M.crazy_prob = prob
@@ -316,14 +318,14 @@ OB_MODULES["sktag_mon_control"] =
 
   options =
   {
-    darkimp   = { label="Dark Imp",          choices=SKULLTAG_CONTROL_CHOICES },
-    bldemon   = { label="Blood Demon",       choices=SKULLTAG_CONTROL_CHOICES },
-    cacolant  = { label="Cacolantern",       choices=SKULLTAG_CONTROL_CHOICES },
-    hectebus  = { label="Hectebus",          choices=SKULLTAG_CONTROL_CHOICES },
-    abaddon   = { label="Abaddon",           choices=SKULLTAG_CONTROL_CHOICES },
+    darkimp   = { label="Dark Imp",          choices=SKULLTAG.CONTROL_CHOICES },
+    bldemon   = { label="Blood Demon",       choices=SKULLTAG.CONTROL_CHOICES },
+    cacolant  = { label="Cacolantern",       choices=SKULLTAG.CONTROL_CHOICES },
+    hectebus  = { label="Hectebus",          choices=SKULLTAG.CONTROL_CHOICES },
+    abaddon   = { label="Abaddon",           choices=SKULLTAG.CONTROL_CHOICES },
 
-    superguy  = { label="Super Shotgun Guy", choices=SKULLTAG_CONTROL_CHOICES },
-    belphegor = { label="Belphegor",         choices=SKULLTAG_CONTROL_CHOICES },
+    superguy  = { label="Super Shotgun Guy", choices=SKULLTAG.CONTROL_CHOICES },
+    belphegor = { label="Belphegor",         choices=SKULLTAG.CONTROL_CHOICES },
   },
 
 }
@@ -337,7 +339,7 @@ function Sktag_WeapControl_setup(self)
     local W = GAME.weapons[name]
 
     if W and opt.value ~= "default" then
-      local prob = SKULLTAG_CONTROL_PROBS[opt.value]
+      local prob = SKULLTAG.CONTROL_PROBS[opt.value]
 
       W.start_prob = prob
       W.add_prob   = prob
@@ -367,10 +369,10 @@ OB_MODULES["sktag_weap_control"] =
 
   options =
   {
-    minigun  = { label="Minigun",          choices=SKULLTAG_CONTROL_CHOICES },
-    glaunch  = { label="Grenade Launcher", choices=SKULLTAG_CONTROL_CHOICES },
-    railgun  = { label="Railgun",          choices=SKULLTAG_CONTROL_CHOICES },
-    bfg10k   = { label="BFG10K",           choices=SKULLTAG_CONTROL_CHOICES },
+    minigun  = { label="Minigun",          choices=SKULLTAG.CONTROL_CHOICES },
+    glaunch  = { label="Grenade Launcher", choices=SKULLTAG.CONTROL_CHOICES },
+    railgun  = { label="Railgun",          choices=SKULLTAG.CONTROL_CHOICES },
+    bfg10k   = { label="BFG10K",           choices=SKULLTAG.CONTROL_CHOICES },
   },
 }
 

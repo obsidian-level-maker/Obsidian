@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-QUAKE2_THINGS =
+QUAKE2 = { }
+
+QUAKE2.THINGS =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },
@@ -112,7 +114,7 @@ QUAKE2_THINGS =
 
 ----------------------------------------------------------------
 
-QUAKE2_MATERIALS =
+QUAKE2.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="e1u1/metal1_1" },
@@ -1402,14 +1404,14 @@ QUAKE2_MATERIALS =
 ---- e1u1/skip
 }
 
-QUAKE2_RAILS =
+QUAKE2.RAILS =
 {
 }
 
 
 ----------------------------------------------------------------
 
-QUAKE2_COMBOS =
+QUAKE2.COMBOS =
 {
   TECH_BASE =
   {
@@ -1428,24 +1430,24 @@ QUAKE2_COMBOS =
   },
 }
 
-QUAKE2_EXITS =
+QUAKE2.EXITS =
 {
 }
 
 
-QUAKE2_KEY_DOORS =
+QUAKE2.KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-QUAKE2_MISC_PREFABS =
+QUAKE2.MISC_PREFABS =
 {
 }
 
 
 
-QUAKE2_ROOMS =
+QUAKE2.ROOMS =
 {
   PLAIN =
   {
@@ -1513,7 +1515,7 @@ QUAKE2_ROOMS =
 }
 
 
-QUAKE2_SUB_THEMES =
+QUAKE2.SUB_THEMES =
 {
   quake2_base1 =
   {
@@ -1559,7 +1561,7 @@ QUAKE2_SUB_THEMES =
 
 ----------------------------------------------------------------
 
-QUAKE2_MONSTERS =
+QUAKE2.MONSTERS =
 {
   guard =
   {
@@ -1713,7 +1715,7 @@ QUAKE2_MONSTERS =
 }
 
 
-QUAKE2_WEAPONS =
+QUAKE2.WEAPONS =
 {
   blaster =
   {
@@ -1806,7 +1808,7 @@ QUAKE2_WEAPONS =
 }
 
 
-QUAKE2_PICKUPS =
+QUAKE2.PICKUPS =
 {
   -- HEALTH --
 
@@ -1911,7 +1913,7 @@ QUAKE2_PICKUPS =
 }
 
 
-QUAKE2_PLAYER_MODEL =
+QUAKE2.PLAYER_MODEL =
 {
   quakeguy =
   {
@@ -1923,7 +1925,7 @@ QUAKE2_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-QUAKE2_EPISODES =
+QUAKE2.EPISODES =
 {
   episode1 =
   {
@@ -1982,7 +1984,7 @@ function Quake2_get_levels()
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
   for episode = 1,EP_NUM do
-    local ep_info = QUAKE2_EPISODES["episode" .. episode]
+    local ep_info = QUAKE2.EPISODES["episode" .. episode]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -2058,23 +2060,23 @@ UNFINISHED["quake2"] =
 
   tables =
   {
-    "things", QUAKE2_THINGS,
-    "player_model", QUAKE2_PLAYER_MODEL,
+    "things", QUAKE2.THINGS,
+    "player_model", QUAKE2.PLAYER_MODEL,
 
-    "monsters", QUAKE2_MONSTERS,
-    "weapons",  QUAKE2_WEAPONS,
-    "pickups",  QUAKE2_PICKUPS,
+    "monsters", QUAKE2.MONSTERS,
+    "weapons",  QUAKE2.WEAPONS,
+    "pickups",  QUAKE2.PICKUPS,
 
-    "materials", QUAKE2_MATERIALS,
-    "combos", QUAKE2_COMBOS,
-    "exits",  QUAKE2_EXITS,
+    "materials", QUAKE2.MATERIALS,
+    "combos", QUAKE2.COMBOS,
+    "exits",  QUAKE2.EXITS,
 
-    "episodes", QUAKE2_EPISODES,
-    "sub_themes", QUAKE2_SUB_THEMES,
-    "rooms",  QUAKE2_ROOMS,
+    "episodes", QUAKE2.EPISODES,
+    "sub_themes", QUAKE2.SUB_THEMES,
+    "rooms",  QUAKE2.ROOMS,
 
-    "key_doors", QUAKE2_KEY_DOORS,
-    "misc_fabs", QUAKE2_MISC_PREFABS,
+    "key_doors", QUAKE2.KEY_DOORS,
+    "misc_fabs", QUAKE2.MISC_PREFABS,
   },
 }
 

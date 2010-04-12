@@ -46,7 +46,9 @@
 -- taking cover somewhere while the weapon reloads).
 --
 
-ICDSE_THINGS =
+ICDSE = { }
+
+ICDSE.THINGS =
 {
   -- players
   player4 = { id=3000, kind="player", r=20,h=56 },
@@ -75,7 +77,7 @@ ICDSE_THINGS =
 }
 
 
-ICDSE_HELPER_TYPES =
+ICDSE.HELPER_TYPES =
 {
   none =
   {
@@ -117,7 +119,7 @@ ICDSE_HELPER_TYPES =
 }
 
 
-ICDSE_MONSTERS =
+ICDSE.MONSTERS =
 {
   uzi_trooper =
   {
@@ -150,7 +152,7 @@ ICDSE_MONSTERS =
 }
 
 
-ICDSE_WEAPONS =
+ICDSE.WEAPONS =
 {
   bfg = REMOVE_ME,  -- became: flak_shotty
 
@@ -294,7 +296,7 @@ ICDSE_WEAPONS =
 }
 
 
-ICDSE_PICKUPS =
+ICDSE.PICKUPS =
 {
   green_armor = REMOVE_ME,  -- became: pistol_pair
   cell_box    = REMOVE_ME,  -- became: gren_launch
@@ -323,14 +325,14 @@ ICDSE_PICKUPS =
 }
 
 
-ICDSE_POWERUPS =
+ICDSE.POWERUPS =
 {
   invul = REMOVE_ME,  -- became: uzi_pair
   invis = REMOVE_ME,  -- became: flak_shells
 }
 
 
-ICDSE_PLAYER_MODEL =
+ICDSE.PLAYER_MODEL =
 {
   doomguy =
   {
@@ -361,8 +363,8 @@ function ImmConduct_setup(self)
 
   local helper = self.options.helper.value
 
-  if ICDSE_HELPER_TYPES[helper] then
-    Game_merge_tab("things", ICDSE_HELPER_TYPES[helper])
+  if ICDSE.HELPER_TYPES[helper] then
+    Game_merge_tab("things", ICDSE.HELPER_TYPES[helper])
   end
 end
 
@@ -395,12 +397,12 @@ OB_MODULES["imm_conduct"] =
 
   tables =
   {
-    "player_model", ICDSE_PLAYER_MODEL,
+    "player_model", ICDSE.PLAYER_MODEL,
 
-    "things",   ICDSE_THINGS,
-    "monsters", ICDSE_MONSTERS,
-    "weapons",  ICDSE_WEAPONS,
-    "pickups",  ICDSE_PICKUPS,
+    "things",   ICDSE.THINGS,
+    "monsters", ICDSE.MONSTERS,
+    "weapons",  ICDSE.WEAPONS,
+    "pickups",  ICDSE.PICKUPS,
   },
 
   options =

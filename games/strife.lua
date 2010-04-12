@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-STRIFE_THINGS =
+STRIFE = { }
+
+STRIFE.THINGS =
 {
   --- special stuff ---
   player1 = { id=1, kind="other", r=16,h=56 },
@@ -45,7 +47,7 @@ STRIFE_THINGS =
 
 ----------------------------------------------------------------
 
-STRIFE_MATERIALS =
+STRIFE.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="BIGSTN02", f="P_SPLATR" },
@@ -65,7 +67,7 @@ STRIFE_MATERIALS =
 }
 
 
-STRIFE_SANITY_MAP =
+STRIFE.SANITY_MAP =
 {
   -- FIXME
 }
@@ -73,7 +75,7 @@ STRIFE_SANITY_MAP =
 
 ----------------------------------------------------------------
 
-STRIFE_COMBOS =
+STRIFE.COMBOS =
 {
   BRICK1 =
   {
@@ -91,7 +93,7 @@ STRIFE_COMBOS =
 }
 
 
-STRIFE_SUB_THEMES =
+STRIFE.SUB_THEMES =
 {
   TECH =
   {
@@ -120,30 +122,30 @@ STRIFE_SUB_THEMES =
 
 ------------------------------------------------------------
 
-STRIFE_MONSTERS =
+STRIFE.MONSTERS =
 {
-  -- FIXME : STRIFE_MONSTERS
+  -- FIXME : STRIFE.MONSTERS
 }
 
 
-STRIFE_WEAPONS =
+STRIFE.WEAPONS =
 {
   dagger =
   {
     rate=1.5, damage=10, attack="melee",
   },
 
-  -- FIXME : STRIFE_WEAPONS
+  -- FIXME : STRIFE.WEAPONS
 }
 
 
-STRIFE_PICKUPS =
+STRIFE.PICKUPS =
 {
-  -- FIXME : STRIFE_PICKUPS
+  -- FIXME : STRIFE.PICKUPS
 }
 
 
-STRIFE_PLAYER_MODEL =
+STRIFE.PLAYER_MODEL =
 {
   strifeguy =
   {
@@ -236,15 +238,15 @@ UNFINISHED["strife"] =
 
   tables =
   {
-    "player_model", STRIFE_PLAYER_MODEL,
+    "player_model", STRIFE.PLAYER_MODEL,
     
-    "things",   STRIFE_THINGS,
-    "monsters", STRIFE_MONSTERS,
-    "weapons",  STRIFE_WEAPONS,
-    "pickups",  STRIFE_PICKUPS,
+    "things",   STRIFE.THINGS,
+    "monsters", STRIFE.MONSTERS,
+    "weapons",  STRIFE.WEAPONS,
+    "pickups",  STRIFE.PICKUPS,
 
-    "materials", STRIFE_MATERIALS,
-    "sub_themes",  STRIFE_SUB_THEMES,
+    "materials", STRIFE.MATERIALS,
+    "sub_themes",  STRIFE.SUB_THEMES,
   },
 }
 

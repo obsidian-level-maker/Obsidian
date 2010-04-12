@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-function Boom_create_dehacked()
+BOOM = { }
+
+function BOOM.create_dehacked()
 
   local data =
   {
@@ -69,8 +71,8 @@ end
 
 ----------------------------------------------------------------
 
-function Boom_all_done()
-  Boom_create_dehacked();
+function BOOM.all_done()
+  BOOM.create_dehacked();
 end
 
 
@@ -83,7 +85,7 @@ OB_ENGINES["boom"] =
 
   hooks =
   {
-    all_done = Boom_all_done,
+    all_done = BOOM.all_done,
   },
 
   param =

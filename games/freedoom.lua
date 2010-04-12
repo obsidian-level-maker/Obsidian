@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-FREEDOOM_MONSTER_LIST =
+FREEDOOM = { }
+
+FREEDOOM.MONSTER_LIST =
 {
   ---| fairly good |---
 
@@ -49,7 +51,7 @@ FREEDOOM_MONSTER_LIST =
   spider = 0,
 }
 
-FREEDOOM_SCENERY_LIST =
+FREEDOOM.SCENERY_LIST =
 {
   ---| missing sprites |---
 
@@ -59,12 +61,12 @@ FREEDOOM_SCENERY_LIST =
   hang_leg      = 0,
 }
 
-FREEDOOM_LIQUIDS = --FIXME
+FREEDOOM.LIQUIDS = --FIXME
 {
   water = { floor="FWATER1", wall="WFALL1" },
 }
 
-FREEDOOM_SKY_INFO =
+FREEDOOM.SKY_INFO =
 {
   { color="brown",  light=192 },
   { color="black",  light=160 },
@@ -77,11 +79,11 @@ FREEDOOM_SKY_INFO =
 
 function Freedoom_setup()
 
-  GAME.sky_info = FREEDOOM_SKY_INFO
+  GAME.sky_info = FREEDOOM.SKY_INFO
 
   -- FreeDOOM is lacking many monster sprites
 
-  for name,quality in pairs(FREEDOOM_MONSTER_LIST) do
+  for name,quality in pairs(FREEDOOM.MONSTER_LIST) do
     if quality < 1 then
       GAME.monsters[name] = nil
     end
@@ -89,7 +91,7 @@ function Freedoom_setup()
 
   -- FreeDOOM is lacking some scenery sprites
 
-  for name,quality in pairs(FREEDOOM_SCENERY_LIST) do
+  for name,quality in pairs(FREEDOOM.SCENERY_LIST) do
     if quality < 1 then
       GAME.things[name] = nil
     end

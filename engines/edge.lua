@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-function Edge_remap_music()
+EDGE = { }
+
+function EDGE.remap_music()
   
   -- FIXME: DOOM2 specific!!!
   local mus_list =
@@ -50,7 +52,7 @@ function Edge_remap_music()
 end
 
 
-function Edge_create_language()
+function EDGE.create_language()
   
   local data =
   {
@@ -77,8 +79,8 @@ end
 
 ----------------------------------------------------------------
 
-function Edge_all_done()
-  Edge_create_language();
+function EDGE.all_done()
+  EDGE.create_language();
 
   -- Edge_remap_music()
 end
@@ -93,7 +95,7 @@ OB_ENGINES["edge"] =
 
   hooks =
   {
-    all_done = Edge_all_done,
+    all_done = EDGE.all_done,
   },
 
   param =
