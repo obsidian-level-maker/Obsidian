@@ -132,34 +132,62 @@ function Game_merge_table_list(tab_list)
 end
 
 
-function Game_sort_modules()
-  GAME.all_modules = {}
-
+function Game_get_game_def()
   local game = OB_GAMES[OB_CONFIG.game]
+
   if not game then
     error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
   end
 
+  if game.extends then
+    local other = OB_GAMES[game.extends]
+    if not other then
+      error("UNKNOWN GAME TO EXTEND: " .. game.extends)
+    end
+
+    game.extend_other = other
+
+    if other.param then
+      game.param = table.merge_missing(game.param or {}, other.param)
+    end
+    if other.hooks then
+      game.hooks = table.merge_missing(game.hooks or {}, other.hooks)
+    end
+  end
+
+  return game
+end
+
+
+function Game_get_engine_def()
   local engine = OB_ENGINES[OB_CONFIG.engine]
+
   if not engine then
     error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
   end
 
-  -- validate reference for extended games / engines
-
-  if game.extends then
-    game.extend_other = OB_GAMES[game.extends]
-    if not game.extend_other then
-      error("UNKNOWN GAME TO EXTEND: " .. game.extends)
-    end
-  end
-
   if engine.extends then
-    engine.extend_other = OB_GAMES[engine.extends]
-    if not engine.extend_other then
+    local other = OB_GAMES[engine.extends]
+    if not other then
       error("UNKNOWN ENGINE TO EXTEND: " .. engine.extends)
     end
+
+    engine.extend_other = other
+
+    if other.param then
+      engine.param = table.merge_missing(engine.param or {}, other.param)
+    end
+    if other.hooks then
+      engine.hooks = table.merge_missing(engine.hooks or {}, other.hooks)
+    end
   end
+
+  return engine
+end
+
+
+function Game_sort_modules()
+  GAME.all_modules = {}
 
   -- find all the visible & enabled modules
 
@@ -187,12 +215,16 @@ function Game_sort_modules()
   -- first entry must be the game def, and second entry must be
   -- the engine def.  NOTE: neither of these are real modules.
 
+  local game   = Game_get_game_def()
+  local engine = Game_get_engine_def()
+
   table.insert(GAME.all_modules, 1, game)
   table.insert(GAME.all_modules, 2, engine)
 end
 
 
 function Game_invoke_hook(name, rseed, ...)
+  -- two passes, for example: setup and setup2
   for pass = 1,2 do
     for index,mod in ipairs(GAME.all_modules) do
       local func = mod.hooks and mod.hooks[name]
@@ -201,7 +233,6 @@ function Game_invoke_hook(name, rseed, ...)
         func(mod, ...)
       end
     end
-    -- second pass appends '2' to the name
     name = name .. "2"
   end
 end
@@ -214,26 +245,22 @@ function Game_setup()
 
   -- merge parameters and tables from each module
 
-  local function merge_stuff(mod)
+  for index,mod in ipairs(GAME.all_modules) do
     if mod.param then
       table.merge(PARAM, mod.param)
+    end
+
+    if mod.extend_other and mod.extend_other.tables then
+      Game_merge_table_list(mod.extend_other.tables)
     end
 
     if mod.tables then
       Game_merge_table_list(mod.tables)
     end
-  end
-
-  for index,mod in ipairs(GAME.all_modules) do
-    if mod.extend_other then
-      merge_stuff(mod.extend_other)
-    end
-
-    merge_stuff(mod)
   end -- for mod
 
 
-  -- allow themes to supply sub-themes (etc)
+  -- allow themes to supply sub-theme information
 
   for name,theme in pairs(OB_THEMES) do
     if theme.shown and theme.tables then
