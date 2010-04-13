@@ -544,7 +544,7 @@ function Levels.build_it()
 
   Levels.invoke_hook("connect_rooms",  LEVEL.seed)
 
-  Connect_rooms()
+  Connect.connect_rooms()
     if gui.abort() then return "abort" end
     gui.progress(30)
 

@@ -18,8 +18,9 @@
 --
 ----------------------------------------------------------------
 
+Cave = { }
 
-function Cave_gen(map, solid_prob)
+function Cave.generate(map, solid_prob)
 
 --**
 --**  This algorithm was described by Jim Babcock in his article
@@ -114,7 +115,7 @@ function Cave_gen(map, solid_prob)
 end
 
 
-function Cave_fallback(map)
+function Cave.fallback(map)
   local W = map.w
   local H = map.h
 
@@ -134,8 +135,8 @@ function Cave_fallback(map)
 end
 
 
-function Cave_dump(map)
-  gui.debugf("Cave_Map:\n")
+function Cave.dump(map)
+  gui.debugf("Cave Map:\n")
 
   for y = map.h,1,-1 do
     local line = "@c| ";
@@ -151,7 +152,7 @@ function Cave_dump(map)
 end
 
 
-function Cave_flood_fill(cave)
+function Cave.flood_fill(cave)
   -- returns a new array where each contiguous region has a unique id.
   -- Empty areas use negative values, Solid areas use positive values.
   -- Zero is invalid.  Nil cells remain nil.
@@ -275,7 +276,7 @@ function Cave_flood_fill(cave)
 end
 
 
-function Cave_region_is_island(flood, reg)
+function Cave.region_is_island(flood, reg)
 
   -- returns true if the region is an "island", i.e. touches neither the
   -- edge of the 2D matrix or a NIL cell.  In other words, it will be
@@ -303,7 +304,7 @@ function Cave_region_is_island(flood, reg)
 end
 
 
-function Cave_negate(cave)
+function Cave.negate(cave)
   -- returns a new cave, converting empty regions to solid and vice versa.
 
   local W = cave.w
@@ -321,7 +322,7 @@ function Cave_negate(cave)
 end
 
 
-function Cave_main_empty_region(flood)
+function Cave.main_empty_region(flood)
 
   -- find the largest empty region
 
@@ -349,7 +350,7 @@ function Cave_main_empty_region(flood)
 end
 
 
-function Cave_grow(cave)
+function Cave.grow(cave)
   -- returns the new cave (more solids, less empties)
   -- nil cells are not touched.
 
@@ -386,7 +387,7 @@ function Cave_grow(cave)
 end
 
 
-function Cave_shrink(cave, keep_edges)
+function Cave.shrink(cave, keep_edges)
   -- returns the new cave (more empties, less solids).
   -- nil cells are not touched.
   -- when 'keep_edges' is true, cells at edges are not touched.
@@ -432,7 +433,7 @@ function Cave_shrink(cave, keep_edges)
 end
 
 
-function Cave_remove_dots(cave, keep_edges, callback)
+function Cave.remove_dots(cave, keep_edges, callback)
   -- modifies the given cave, removing isolated solid cells.
   -- diagonal cells are NOT checked.
 
@@ -468,7 +469,7 @@ function Cave_remove_dots(cave, keep_edges, callback)
 end
 
 
-function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
+function Cave.render(cave, reg_id, base_x, base_y, brush_func, data,
                      square_caves)
   -- only solid regions are handled
   assert(reg_id > 0)
@@ -606,7 +607,7 @@ function Cave_render(cave, reg_id, base_x, base_y, brush_func, data,
   end
 
 
-  ---| Cave_render |---
+  ---| Cave.render |---
 
   for x = 1,W do for y = 1,H do
     if cave[x][y] == reg_id then
