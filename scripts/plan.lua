@@ -445,31 +445,7 @@ function Plan.merge_naturals()
 end
 
 
-
 ------------------------------------------------------------------------
-
-
-function Room_side_len(R, side)
-  if (side == 2 or side == 8) then
-    return R.sx2 + 1 - R.sx1
-  else
-    return R.sy2 + 1 - R.sy1
-  end
-end
-
-function Room_side_coord(R, side, i)
-  local x, y
-
-      if side == 2 then x, y = R.sx1 + (i-1), R.sy1
-  elseif side == 8 then x, y = R.sx1 + (i-1), R.sy2
-  elseif side == 4 then x, y = R.sx1, R.sy1 + (i-1)
-  elseif side == 6 then x, y = R.sx2, R.sy1 + (i-1)
-  else
-    error("Bad side for Room_side_coord!")
-  end
-
-  return x, y
-end
 
 
 function Plan.nudge_rooms()
