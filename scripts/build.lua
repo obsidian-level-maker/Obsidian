@@ -534,7 +534,7 @@ function shadowify_brush(coords, dist)
 end
 
 
-function Build_shadow(S, side, dist, z2)
+function Build.shadow(S, side, dist, z2)
   assert(dist)
 
   if not PARAM.outdoor_shadows then return end
@@ -580,14 +580,14 @@ function Build_shadow(S, side, dist, z2)
 end
 
 
-function Build_wall(S, side, mat)
+function Build.wall(S, side, mat)
   local coords = get_wall_coords(S, side)
 
   Trans.brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
 end
 
 
-function Build_facade(S, side, mat)
+function Build.facade(S, side, mat)
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
 
@@ -607,17 +607,17 @@ function Build_facade(S, side, mat)
 end
 
 
-function Build_fence(S, side, fence_h, skin)
+function Build.fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
   Trans.brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
 
-  Build_shadow(S,  side, 40, fence_h-4)
-  Build_shadow(S, -side, 24, fence_h-4)
+  Build.shadow(S,  side, 40, fence_h-4)
+  Build.shadow(S, -side, 24, fence_h-4)
 end
 
 
-function Build_sky_fence(S, side, z_top, z_low, skin)
+function Build.sky_fence(S, side, z_top, z_low, skin)
   local wall_info = get_mat(skin.fence_w, skin.fence_f)
 
   local sky_info = get_sky()
@@ -687,7 +687,7 @@ end
 
 
 
-function Build_archway(S, side, z1, z2, skin)
+function Build.archway(S, side, z1, z2, skin)
 
   local N = S:neighbor(side)
   assert(N)
@@ -741,7 +741,7 @@ function Build_archway(S, side, z1, z2, skin)
 end
 
 
-function Build_door(S, side, z1, skin, skin2, tag, reversed)
+function Build.door(S, side, z1, skin, skin2, tag, reversed)
 
   tag2 = nil  -- FIXME !!!
 
@@ -833,7 +833,7 @@ function Build_door(S, side, z1, skin, skin2, tag, reversed)
   Trans.clear()
 end
 
-function Build_quake_door(S, side)
+function Build.quake_door(S, side)
   
   -- FIXME : way incomplete
 
@@ -868,7 +868,7 @@ function Build_quake_door(S, side)
 end
 
 
-function Build_quake_exit_pad(S, z_top, skin, next_map)
+function Build.quake_exit_pad(S, z_top, skin, next_map)
   local x1 = S.x1 + 64
   local y1 = S.y1 + 64
 
@@ -897,7 +897,7 @@ end
 
 
 
-function Build_lowering_bars(S, side, z_top, skin, tag)
+function Build.lowering_bars(S, side, z_top, skin, tag)
 
   local T, long, deep = get_transform_for_seed_side(S, side)
 
@@ -932,7 +932,7 @@ function Build_lowering_bars(S, side, z_top, skin, tag)
 end
 
 
-function Build_ceil_light(S, z2, skin)
+function Build.ceil_light(S, z2, skin)
   assert(skin)
   
   local w = (skin.w or 64) / 2
@@ -1036,7 +1036,7 @@ function Build_ceil_light(S, z2, skin)
 end
 
 
-function Build_detailed_hall(S, side, z1, z2, skin)
+function Build.detailed_hall(S, side, z1, z2, skin)
 
   local function compat_neighbor(side)
     local N = S:neighbor(side)
@@ -1103,7 +1103,7 @@ end
 
 
 -- NOT ACTUALLY USED:
-function Build_weird_hall(S, side, skin, z1, z2)
+function Build.weird_hall(S, side, skin, z1, z2)
 
   local function get_hall_coords(thickness)
 
@@ -1156,7 +1156,7 @@ function Build_weird_hall(S, side, skin, z1, z2)
 end
 
 
-function Build_diagonal(S, side, info, floor_h, ceil_h)
+function Build.diagonal(S, side, info, floor_h, ceil_h)
 
   -- floor_h and ceil_h are usually absent, which makes a
   -- totally solid diagonal piece.  One of them can be given
@@ -1184,7 +1184,7 @@ function Build_diagonal(S, side, info, floor_h, ceil_h)
 end
 
 
-function Build_debug_arrow(S, dir, f_h)
+function Build.debug_arrow(S, dir, f_h)
  
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1202,7 +1202,7 @@ function Build_debug_arrow(S, dir, f_h)
 end
 
 
-function Build_curved_hall(steps, corn_x, corn_y,
+function Build.curved_hall(steps, corn_x, corn_y,
                            dx0, dx1, dx2, dx3,
                            dy0, dy1, dy2, dy3,
                            x_h, y_h, gap_h,
@@ -1262,7 +1262,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     end
   end
 
-  --| Build_curved_hall |--
+  --| Build.curved_hall |--
 
   assert(steps >= 2)
 
@@ -1284,7 +1284,7 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
 end
 
 
-function Build_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
+function Build.ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -1322,7 +1322,7 @@ function Build_ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
 end
 
 
-function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
+function Build.ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
   assert(az and bz)
 
   local steps = int(math.abs(az-bz) / 14 + 0.9)
@@ -1360,7 +1360,7 @@ function Build_ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
-function Build_niche_stair(S, skin, skin2)
+function Build.niche_stair(S, skin, skin2)
   local step_info = get_mat(skin.side_w or skin.step_w, skin.top_f)
 
   local front_info = add_pegging(get_mat(skin.step_w))
@@ -1427,7 +1427,7 @@ function Build_niche_stair(S, skin, skin2)
 end
 
 
-function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
+function Build.tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   assert(x_h and y_h)
 
   local step_info = get_mat(skin.step_w, skin.top_f)
@@ -1477,7 +1477,7 @@ function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
 
   local info = get_mat(w_tex)
 
-  Build_curved_hall(steps, corn_x, corn_y,
+  Build.curved_hall(steps, corn_x, corn_y,
                     dx0, dx1, dx2, dx3,
                     dy0, dy1, dy2, dy3,
                     y_h, x_h, 256,
@@ -1485,7 +1485,7 @@ function Build_tall_curved_stair(S, skin, x_side,y_side, x_h,y_h)
 end
 
 
-function Build_low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
+function Build.low_curved_stair(S, skin, x_side,y_side, x_h,y_h)
   local step_info = get_mat(skin.step_w, skin.top_f)
   add_pegging(step_info)
 
@@ -1575,7 +1575,7 @@ end
 
 
 -- NOT ACTUALLY USED:
-function Build_outdoor_ramp_down(ST, f_tex, w_tex)
+function Build.outdoor_ramp_down(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -1595,39 +1595,39 @@ function Build_outdoor_ramp_down(ST, f_tex, w_tex)
 
   local info = get_mat(w_tex, f_tex)
 
-gui.debugf("Build_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+gui.debugf("Build.outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
     ix1 = ix2-96
-    Build_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+    Build.ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
 
   elseif conn_dir == 4 then
     ix2 = ix1 + 96
-    Build_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+    Build.ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
 
   elseif conn_dir == 8 then
     iy1 = iy2-96
-    Build_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+    Build.ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
 
   elseif conn_dir == 2 then
     iy2 = iy1 + 96
-    Build_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+    Build.ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
   end
 
 
   if geom.is_horiz(conn_dir) then
     if iy2+64 < oy2 then
-      Build_ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
+      Build.ramp_y(info, ox1,iy2,oy2, ox2,iy2,oy2, ih, oh, "exact")
     end
     if iy1-64 > oy1 then
-      Build_ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
+      Build.ramp_y(info, ox1,oy1,iy1, ox2,oy1,iy1, oh, ih, "exact")
     end
   else -- is_vert
     if ix2+64 < ox2 then
-      Build_ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
+      Build.ramp_x(info, ix2,ox2,oy1, ix2,ox2,oy2, ih, oh, "exact")
     end
     if ix1-64 > ox1 then
-      Build_ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
+      Build.ramp_x(info, ox1,ix1,oy1, ox1,ix1,oy2, oh, ih, "exact")
     end
   end
 
@@ -1635,7 +1635,7 @@ gui.debugf("Build_outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy,
 end
 
 -- NOT ACTUALLY USED:
-function Build_outdoor_ramp_up(ST, f_tex, w_tex)
+function Build.outdoor_ramp_up(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -1655,7 +1655,7 @@ function Build_outdoor_ramp_up(ST, f_tex, w_tex)
 
   local info = get_mat(w_tex, f_tex)
 
-gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
+gui.debugf("Build.outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, conn_dir)
 
   if conn_dir == 6 then
     ix1 = ix2 - 64
@@ -1711,7 +1711,7 @@ gui.debugf("Build_outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
 end
 
 
-function Build_lift(S, skin, skin2, tag)
+function Build.lift(S, skin, skin2, tag)
   assert(skin.walk_kind)
   assert(skin.switch_kind)
 
@@ -1783,7 +1783,7 @@ function Build_lift(S, skin, skin2, tag)
 end
 
 
-function Build_pillar(S, z1, z2, skin)
+function Build.pillar(S, z1, z2, skin)
   
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
@@ -1825,7 +1825,7 @@ function Build_pillar(S, z1, z2, skin)
 end
 
 
-function Build_corner_beam(S, side, skin)
+function Build.corner_beam(S, side, skin)
   -- FIXME: at this stage the thick[] values are not decided yet
 
   local x1 = S.x1 + 24 -- S.thick[4]
@@ -1846,7 +1846,7 @@ function Build_corner_beam(S, side, skin)
 end
 
 
-function Build_cross_beam(S, dir, w, beam_z, mat)
+function Build.cross_beam(S, dir, w, beam_z, mat)
   local x1, y1 = S.x1, S.y1
   local x2, y2 = S.x2, S.y2
 
@@ -1870,7 +1870,7 @@ function Build_cross_beam(S, dir, w, beam_z, mat)
 end
 
 
-function Build_small_switch(S, dir, f_h, skin, tag)
+function Build.small_switch(S, dir, f_h, skin, tag)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
@@ -1916,7 +1916,7 @@ function Build_small_switch(S, dir, f_h, skin, tag)
 end
 
                                       
-function Build_exit_pillar(S, z1, skin)
+function Build.exit_pillar(S, z1, skin)
   local DT, long = get_transform_for_seed_side(S, 8)
 
   local mx = int((S.x1 + S.x2)/2)
@@ -1965,7 +1965,7 @@ function Build_exit_pillar(S, z1, skin)
 end
 
 
-function Build_outdoor_exit_switch(S, dir, f_h, skin)
+function Build.outdoor_exit_switch(S, dir, f_h, skin)
 
   local DT, long = get_transform_for_seed_side(S, 10-dir)
   local deep = long
@@ -2034,7 +2034,7 @@ function Build_outdoor_exit_switch(S, dir, f_h, skin)
 end
 
 
-function Build_small_exit(R, xt_info, skin, skin2)
+function Build.small_exit(R, xt_info, skin, skin2)
   assert(xt_info)
   assert(#R.conns == 1)
 
@@ -2183,7 +2183,7 @@ function Build_small_exit(R, xt_info, skin, skin2)
 end
 
 
-function Build_window(S, side, width, mid_w, z1, z2, skin)
+function Build.window(S, side, width, mid_w, z1, z2, skin)
   local inner_info = get_mat(skin.wall, skin.floor)
 
   local side_info = get_mat(skin.side_t)
@@ -2248,7 +2248,7 @@ function Build_window(S, side, width, mid_w, z1, z2, skin)
 end
 
 
-function Build_picture(S, side, z1, z2, skin)
+function Build.picture(S, side, z1, z2, skin)
 
   local count = skin.count or 1
 
@@ -2336,7 +2336,7 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
 end
 
 
-function Build_pedestal(S, z1, skin)
+function Build.pedestal(S, z1, skin)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
@@ -2348,7 +2348,7 @@ function Build_pedestal(S, z1, skin)
   Trans.quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
 end
 
-function Build_lowering_pedestal(S, z1, skin)
+function Build.lowering_pedestal(S, z1, skin)
   local mx = int((S.x1+S.x2) / 2)
   local my = int((S.y1+S.y2) / 2)
 
@@ -2370,7 +2370,7 @@ function Build_lowering_pedestal(S, z1, skin)
 end
 
 
-function Build_crate(x, y, z_top, skin, is_outdoor)
+function Build.crate(x, y, z_top, skin, is_outdoor)
   local info = add_pegging(get_mat(skin.side_w))
 
   local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
@@ -2383,7 +2383,7 @@ function Build_crate(x, y, z_top, skin, is_outdoor)
 end
 
 
-function Build_raising_start(S, face_dir, z1, skin)
+function Build.raising_start(S, face_dir, z1, skin)
   local info = get_mat(skin.f_tex)
 
   local sw_info = add_pegging(get_mat(skin.switch_w))
@@ -2429,7 +2429,7 @@ function Build_raising_start(S, face_dir, z1, skin)
 end
 
 
-function Build_popup_trap(S, z, skin, monster)
+function Build.popup_trap(S, z, skin, monster)
   local info = get_mat(skin.wall, skin.floor)
 
   for side = 2,8,2 do
@@ -2472,7 +2472,7 @@ function Build_popup_trap(S, z, skin, monster)
 end
 
 
-function Build_stairwell(R, skin)
+function Build.stairwell(R, skin)
   assert(skin.wall)
 
   local wall_info  = get_mat(skin.wall, skin.floor)
@@ -2561,7 +2561,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
     local steps = int(math.abs(x_h - y_h) / 16)
     if steps < 5 then steps = 5 end
 
-    Build_curved_hall(steps, ax, by,
+    Build.curved_hall(steps, ax, by,
                       dx0, dx1, dx2, dx3,
                       dy0, dy1, dy2, dy3,
                       x_h, y_h, 128,
@@ -2630,14 +2630,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- left side
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         -dx0, -dx1, -dx2, -dx3,
                         dy0, dy1, dy2, dy3,
                         h1, h2, 128,
                         wall_info, floor_info, ceil_info)
 
       -- right side
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         dx0, dx1, dx2, dx3,
                         dy0, dy1, dy2, dy3,
                         h3, h2, 128,
@@ -2661,14 +2661,14 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- bottom section
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         dx0, dx1, dx2, dx3,
                         -dy0, -dy1, -dy2, -dy3,
                         h2, h1, 128,
                         wall_info, floor_info, ceil_info)
 
       -- top section
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         dx0, dx1, dx2, dx3,
                         dy0, dy1, dy2, dy3,
                         h2, h3, 128,
@@ -2731,7 +2731,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- left side
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         -dx0, -dx1, -dx2, -dx3,
                         dy0, dy1, dy2, dy3,
                         h1, h2, 128,
@@ -2745,7 +2745,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dx1 = dx0 + 32
       local dx2 = dx3 - 32
 
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         dx0, dx1, dx2, dx3,
                         -dy0, -dy1, -dy2, -dy3,
                         h3, h2, 128,
@@ -2773,7 +2773,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       end
 
       -- bottom section
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         dx0, dx1, dx2, dx3,
                         -dy0, -dy1, -dy2, -dy3,
                         h2, h1, 128,
@@ -2787,7 +2787,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local dy1 = dy0 + 32
       local dy2 = dy3 - 32
 
-      Build_curved_hall(steps, corn_x, corn_y,
+      Build.curved_hall(steps, corn_x, corn_y,
                         -dx0, -dx1, -dx2, -dx3,
                         dy0, dy1, dy2, dy3,
                         h2, h3, 128,
@@ -2907,7 +2907,7 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
 end
 
 
-function Build_sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
+function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
                         outer_info, outer_z,
                         inner_info, inner_z,
                         trim, spokes)

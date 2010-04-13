@@ -1484,10 +1484,10 @@ function Rooms.make_ceiling(R)
       if ceil_h and S.kind ~= "void" then
         if mode == "light" then
           if S.content ~= "pillar" then
-            Build_ceil_light(S, ceil_h, skin)
+            Build.ceil_light(S, ceil_h, skin)
           end
         else
-          Build_cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
+          Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
         end
       end
     end end -- for x, y
@@ -1583,7 +1583,7 @@ function Rooms.make_ceiling(R)
             ---## if R.has_lift or (R.id % 5) == 4 then
             ---##   skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
             ---## end
-            Build_corner_beam(S, SIDES[where], skin)
+            Build.corner_beam(S, SIDES[where], skin)
           end
 
         end
@@ -1699,7 +1699,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     local h = 96 + 140 * (R.ch - 1)
     local z = (R.cw + R.ch) * 8
 
-    Build_sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
+    Build.sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
                    ceil_info, R.ceil_h,
                    sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
                        rand.sel(75, light_info, brown_info)), R.ceil_h + z,
@@ -1743,7 +1743,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 --[[
     if R.tx1 and R.tw >= 7 and R.th >= 7 then
 
-      Build_sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
+      Build.sky_hole(R.tx1,R.ty1, R.tx2,R.ty2,
                      "round", w, h,
                      outer_info, R.ceil_h,
                      nil, R.ceil_h , ---  + z,
@@ -1755,7 +1755,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       outer_info.b_face.texture = "F_SKY1"
       outer_info.b_face.light = 0.8
 
-      Build_sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
+      Build.sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
                      "round", w, h,
                      outer_info, R.ceil_h + 96,
                      inner_info, R.ceil_h + 104,
@@ -1773,7 +1773,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         local tx2 = R.tx1 + dx * 2 + 1
         local ty2 = R.ty1 + dy * 2 + 3
 
-        Build_sky_hole(tx1,ty1, tx2,ty2,
+        Build.sky_hole(tx1,ty1, tx2,ty2,
                        "square", w, h,
                        outer_info, R.ceil_h,
                        inner_info, R.ceil_h + 36,
@@ -1786,7 +1786,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
         for y = R.ty1+1, R.ty2-1, 2 do
           local S = SEEDS[x][y][1]
           if not (S.kind == "void" or S.kind == "diagonal") then
-            Build_sky_hole(x,y, x,y, "square", 160,160,
+            Build.sky_hole(x,y, x,y, "square", 160,160,
                            metal,      R.ceil_h+16,
                            inner_info, R.ceil_h+32,
                            nil, silver)
@@ -1876,7 +1876,7 @@ function Rooms.add_crates(R)
     if rand.odds(chance) then
       spot.S.solid_corner = true
       local z_top = spot.S.floor_h + (skin.h or 64)
-      Build_crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
+      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
     end
   end
 end
@@ -2050,7 +2050,7 @@ function Rooms.do_small_exit()
   -- FIXME: hacky
   skin.switch = rand.key_by_probs(THEME.exit.switches)
 
-  Build_small_exit(R, THEME.exit, skin, skin2)
+  Build.small_exit(R, THEME.exit, skin, skin2)
   return
 end
 
@@ -2062,7 +2062,7 @@ function Rooms.do_stairwell(R)
   end
 
   local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
-  Build_stairwell(R, skin)
+  Build.stairwell(R, skin)
 end
 
 
@@ -2181,7 +2181,7 @@ gui.printf("do_teleport\n")
           switch_w = THEME.raising_start_switch,
         }
 
-        Build_raising_start(S, 6, z1, skin)
+        Build.raising_start(S, 6, z1, skin)
         angle = 0
 
         S.no_floor = true
@@ -2189,7 +2189,7 @@ gui.printf("do_teleport\n")
         R.has_raising_start = true
       else
         local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=true }
-        Build_pedestal(S, z1, skin)
+        Build.pedestal(S, z1, skin)
       end
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
@@ -2217,7 +2217,7 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
       local skin = { floor="SLIP2", wall="SLIPSIDE" }
 
-      Build_quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
 
     elseif R.purpose == "EXIT" then
       local CS = R.conns[1]:seed(R)
@@ -2227,13 +2227,13 @@ gui.printf("do_teleport\n")
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.exits[skin_name])
-        Build_outdoor_exit_switch(S, dir, z1, skin)
+        Build.outdoor_exit_switch(S, dir, z1, skin)
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.exits)
         local skin = assert(GAME.exits[skin_name])
-        Build_exit_pillar(S, z1, skin)
+        Build.exit_pillar(S, z1, skin)
       end
 
     elseif R.purpose == "KEY" then
@@ -2245,13 +2245,13 @@ gui.printf("do_teleport\n")
            z_top = z2-32
         end
 
-        Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
+        Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
 
         Trans.entity(LOCK.item, mx, my, z_top)
       else
         if rand.odds(98) then
           local skin = { floor=THEME.pedestal_mat }
-          Build_pedestal(S, z1, skin)
+          Build.pedestal(S, z1, skin)
         end
         Trans.entity(LOCK.item, mx, my, z1)
       end
@@ -2260,7 +2260,7 @@ gui.printf("do_teleport\n")
       local LOCK = assert(R.lock)
 gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       local INFO = assert(GAME.switches[LOCK.item])
-      Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+      Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else
       error("unknown purpose: " .. tostring(R.purpose))
@@ -2287,12 +2287,12 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
          z_top = z2-32
       end
 
-      Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
+      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
 
       Trans.entity(weapon, mx, my, z_top)
     else
       local skin = { floor=THEME.pedestal_mat }
-      Build_pedestal(S, z1, skin)
+      Build.pedestal(S, z1, skin)
 
       Trans.entity(weapon, mx, my, z1)
     end
@@ -2449,10 +2449,10 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       then
         local dist = 24 + int((z2 - z1) / 4)
         if dist > 160 then dist = 160 end
-        Build_shadow(S, side, dist)
+        Build.shadow(S, side, dist)
 
       elseif R.outdoor and N and N.edge_of_map and N.fence_h then
-        Build_shadow(S, side, 20, N.fence_h - 4)
+        Build.shadow(S, side, 20, N.fence_h - 4)
       end
 
       local border = S.border[side]
@@ -2467,19 +2467,19 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
          )
       then
         local skin = { wall=LEVEL.hall_tex, trim1=THEME.hall_trim1, trim2=THEME.hall_trim2 }
-        Build_detailed_hall(S, side, z1, z2, skin)
+        Build.detailed_hall(S, side, z1, z2, skin)
 
         S.border[side].kind = nil
         B_kind = nil
       end
 
       if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
-        Build_wall(S, side, w_tex)
+        Build.wall(S, side, w_tex)
         shrink_both(side, 4)
       end
 
       if B_kind == "facade" then
-        Build_facade(S, side, S.border[side].facade)
+        Build.facade(S, side, S.border[side].facade)
       end
 
       if B_kind == "window" then
@@ -2487,7 +2487,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local skin = { wall=w_tex, side_t=THEME.window_side_mat or w_tex, facade=R.facade or w_tex }
         -- skin.floor = f_tex
 
-        Build_window(S, side, B.win_width, B.win_mid_w,
+        Build.window(S, side, B.win_width, B.win_mid_w,
                      B.win_z1, B.win_z2, skin)
         shrink_both(side, 4)
       end
@@ -2496,13 +2496,13 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local B = S.border[side]
         B.pic_skin.wall = w_tex
 
-        Build_picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
         shrink_both(side, 4)
       end
 
       if B_kind == "fence"  then
         local skin = { h=30, wall=w_tex, floor=f_tex }
-        Build_fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
+        Build.fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
         shrink_floor(side, 4)
       end
 
@@ -2510,12 +2510,12 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local z = assert(S.conn and S.conn.conn_h)
         local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
 
-        Build_archway(S, side, z, z+112, skin)
+        Build.archway(S, side, z, z+112, skin)
         shrink_ceiling(side, 4)
 
         if R.outdoor and N.room.outdoor then
-          Build_shadow(S,  side, 96)
-          Build_shadow(S, -side, 96)
+          Build.shadow(S,  side, 96)
+          Build.shadow(S, -side, 96)
         end
 
         assert(not S.conn.already_made_lock)
@@ -2527,7 +2527,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Build_archway(S, side, z1, z_top, skin)
+        Build.archway(S, side, z1, z_top, skin)
         shrink_ceiling(side, 4)
       end
 
@@ -2548,7 +2548,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         assert(skin.track)
         assert(skin.step_w)
 
-        Build_door(S, side, z, skin, skin2, 0)
+        Build.door(S, side, z, skin, skin2, 0)
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2568,7 +2568,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         local reversed = (S == S.conn.dest_S)
 
-        Build_door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
+        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
         shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2586,7 +2586,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
            z_top = ceil_min-32
         end
 
-        Build_lowering_bars(S, side, z_top, skin, LOCK.tag)
+        Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2603,7 +2603,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
 
-      Build_diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
+      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
       S.kind = assert(S.diag_new_kind)
 
@@ -2650,7 +2650,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         end
 
         if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
-          Build_ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
+          Build.ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
         end
       end
     end
@@ -2671,24 +2671,24 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
 
-      Build_niche_stair(S, LEVEL.step_skin, skin2)
+      Build.niche_stair(S, LEVEL.step_skin, skin2)
 
     elseif S.kind == "curve_stair" then
-      Build_low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+      Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "tall_stair" then
-      Build_tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+      Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "lift" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
       local tag = LEVEL:alloc_tag()
 
-      Build_lift(S, LEVEL.lift_skin, skin2, tag)
+      Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
       local skin = { wall=w_tex, floor=f_tex }
-      Build_popup_trap(S, z1, skin, "revenant")
+      Build.popup_trap(S, z1, skin, "revenant")
 
     elseif S.kind == "liquid" then
       assert(LEVEL.liquid)
@@ -2708,7 +2708,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     -- PREFABS
 
     if S.content == "pillar" then
-      Build_pillar(S, z1, z2, assert(S.pillar_skin))
+      Build.pillar(S, z1, z2, assert(S.pillar_skin))
     end
 
     if S.content == "wotsit" and S.content_kind == "WEAPON" then

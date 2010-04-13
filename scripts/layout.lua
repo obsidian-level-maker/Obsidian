@@ -2664,13 +2664,13 @@ function Layout.edge_of_map()
       if not N or N.free then
         S.thick[side] = 48 ; shrink(side, 48)
 
-        Build_sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
+        Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
       end
 
       if N and ((N.room and not N.room.outdoor) or
                 (N.edge_of_map and N.building))
       then
-        Build_shadow(S, side, 64)
+        Build.shadow(S, side, 64)
       end
     end
 
