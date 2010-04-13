@@ -674,7 +674,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       }
     end
 
-    Trans_entity(item_name, x, y, S.floor_h, props)
+    Trans.entity(item_name, x, y, S.floor_h, props)
   end
 
   local function place_big_item(spot, item, SK)
@@ -1526,7 +1526,7 @@ function Monsters.fill_room(R)
     local mx = (spot.x1 + spot.x2) / 2
     local my = (spot.y1 + spot.y2) / 2
 
-    Trans_entity(mon, mx, my, spot.z1, props)
+    Trans.entity(mon, mx, my, spot.z1, props)
 
     spot.S.content = "monster"
   end
@@ -1539,7 +1539,7 @@ function Monsters.fill_room(R)
     local mx = (spot.x1 + spot.x2) / 2
     local my = (spot.y1 + spot.y2) / 2
 
-    Trans_entity("barrel", mx, my, spot.z1)
+    Trans.entity("barrel", mx, my, spot.z1)
 
     spot.S.content = "monster"  -- allow items to exist here
   end

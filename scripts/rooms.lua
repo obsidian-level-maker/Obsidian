@@ -1184,7 +1184,7 @@ function Rooms.make_ceiling(R)
         local px = sel(x_dir < 0, S.x1, S.x2)
         local py = sel(y_dir < 0, S.y1, S.y2)
 
-        Trans_quad(info, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
+        Trans.quad(info, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
         
         R.has_periph_pillars = true
 
@@ -1892,20 +1892,20 @@ function Rooms.build_cave(R)
   local base_y = SEEDS[R.sx1][R.sy1][1].y1
 
   local function WALL_brush(data, coords)
-    Trans_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
+    Trans.brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
 
     if data.shadow_info then
       local sh_coords = shadowify_brush(coords, 40)
-      Trans_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
+      Trans.brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
   end
 
   local function FC_brush(data, coords)
     if data.f_info then
-      Trans_brush(data.f_info, coords, -EXTREME_H, data.f_z)
+      Trans.brush(data.f_info, coords, -EXTREME_H, data.f_z)
     end
     if data.c_info then
-      Trans_brush(data.c_info, coords, data.c_z, EXTREME_H)
+      Trans.brush(data.c_info, coords, data.c_z, EXTREME_H)
     end
   end
 
@@ -2060,9 +2060,9 @@ gui.printf("do_teleport\n")
     local gate_info = get_mat(THEME.teleporter_mat)
     gate_info.sec_tag = tag
 
-    Trans_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
+    Trans.quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
 
-    Trans_entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
+    Trans.entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
   end
 
 
@@ -2154,12 +2154,12 @@ gui.printf("do_teleport\n")
         Build_pedestal(S, z1, skin)
       end
 
-      Trans_entity("player1", mx, my, z1, { angle=angle })
+      Trans.entity("player1", mx, my, z1, { angle=angle })
 
       if GAME.things["player2"] then
-        Trans_entity("player2", mx - dist, my, z1, { angle=angle })
-        Trans_entity("player3", mx + dist, my, z1, { angle=angle })
-        Trans_entity("player4", mx, my - dist, z1, { angle=angle })
+        Trans.entity("player2", mx - dist, my, z1, { angle=angle })
+        Trans.entity("player3", mx + dist, my, z1, { angle=angle })
+        Trans.entity("player4", mx, my - dist, z1, { angle=angle })
       end
 
       -- save position for the demo generator
@@ -2209,13 +2209,13 @@ gui.printf("do_teleport\n")
 
         Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
 
-        Trans_entity(LOCK.item, mx, my, z_top)
+        Trans.entity(LOCK.item, mx, my, z_top)
       else
         if rand.odds(98) then
           local skin = { floor=THEME.pedestal_mat }
           Build_pedestal(S, z1, skin)
         end
-        Trans_entity(LOCK.item, mx, my, z1)
+        Trans.entity(LOCK.item, mx, my, z1)
       end
 
     elseif R.purpose == "SWITCH" then
@@ -2241,7 +2241,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     local weapon = assert(S.content_weapon)
 
     if R.hallway or R == LEVEL.start_room then
-      Trans_entity(weapon, mx, my, z1)
+      Trans.entity(weapon, mx, my, z1)
 
     elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
       local z_top = math.max(z1+80, R.floor_max_h+40)
@@ -2251,12 +2251,12 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       Build_lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
 
-      Trans_entity(weapon, mx, my, z_top)
+      Trans.entity(weapon, mx, my, z_top)
     else
       local skin = { floor=THEME.pedestal_mat }
       Build_pedestal(S, z1, skin)
 
-      Trans_entity(weapon, mx, my, z1)
+      Trans.entity(weapon, mx, my, z1)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
@@ -2299,7 +2299,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local bx = int((x1*(i+1)+x2*(5-i)) / 6)
         local by = int((y1*(k+1)+y2*(5-k)) / 6)
         
-        Trans_quad(info, ax,ay, bx,by, z1,z2)
+        Trans.quad(info, ax,ay, bx,by, z1,z2)
       end end
 
     elseif prec == "medium" then
@@ -2308,20 +2308,20 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       local bx = int((x1+x2*2) / 3)
       local by = int((y1+y2*2) / 3)
 
-      Trans_quad(info, x1,y1, ax,ay, z1,z2)
-      Trans_quad(info, ax,y1, bx,ay, z1,z2)
-      Trans_quad(info, bx,y1, x2,ay, z1,z2)
+      Trans.quad(info, x1,y1, ax,ay, z1,z2)
+      Trans.quad(info, ax,y1, bx,ay, z1,z2)
+      Trans.quad(info, bx,y1, x2,ay, z1,z2)
 
-      Trans_quad(info, x1,ay, ax,by, z1,z2)
-      Trans_quad(info, ax,ay, bx,by, z1,z2)
-      Trans_quad(info, bx,ay, x2,by, z1,z2)
+      Trans.quad(info, x1,ay, ax,by, z1,z2)
+      Trans.quad(info, ax,ay, bx,by, z1,z2)
+      Trans.quad(info, bx,ay, x2,by, z1,z2)
 
-      Trans_quad(info, x1,by, ax,y2, z1,z2)
-      Trans_quad(info, ax,by, bx,y2, z1,z2)
-      Trans_quad(info, bx,by, x2,y2, z1,z2)
+      Trans.quad(info, x1,by, ax,y2, z1,z2)
+      Trans.quad(info, ax,by, bx,y2, z1,z2)
+      Trans.quad(info, bx,by, x2,y2, z1,z2)
 
     else
-      Trans_quad(info, x1,y1, x2,y2, z1,z2)
+      Trans.quad(info, x1,y1, x2,y2, z1,z2)
     end
   end
 
@@ -2587,13 +2587,13 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
        (S.is_sky or c_tex == "_SKY")
     then
 
-      Trans_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
+      Trans.quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
 
     elseif S.kind ~= "void" and not S.no_ceil then
       local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
       info.b_face.light = S.c_light
 
-      Trans_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
+      Trans.quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
 
 
       -- FIXME: this does not belong here
@@ -2628,7 +2628,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         w_tex = R.corner_tex
       end
 
-      Trans_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
+      Trans.quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
@@ -2656,7 +2656,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       assert(LEVEL.liquid)
       local info = get_liquid()
 
-      Trans_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      Trans.quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
     elseif not S.no_floor then
 
