@@ -195,7 +195,7 @@ SKULLTAG.FACTORS =
 }
 
 
-function Skulltag_setup(self)
+function SKULLTAG.setup(self)
   if not PARAM.doom2_monsters then
     GAME.monsters["hectebus"] = nil
     GAME.monsters["superguy"].give = nil
@@ -235,7 +235,7 @@ OB_MODULES["sktag_mons"] =
 
   hooks =
   {
-    setup = Skulltag_setup,
+    setup = SKULLTAG.setup,
   },
 
   tables =
@@ -288,7 +288,7 @@ SKULLTAG.CONTROL_PROBS =
 }
 
 
-function Sktag_MonControl_setup(self)
+function SKULLTAG.MonControl_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -313,7 +313,7 @@ OB_MODULES["sktag_mon_control"] =
 
   hooks =
   {
-    setup = Sktag_MonControl_setup,
+    setup = SKULLTAG.MonControl_setup,
   },
 
   options =
@@ -334,7 +334,7 @@ OB_MODULES["sktag_mon_control"] =
 ----------------------------------------------------------------
 
 
-function Sktag_WeapControl_setup(self)
+function SKULLTAG.WeapControl_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -364,7 +364,7 @@ OB_MODULES["sktag_weap_control"] =
 
   hooks =
   {
-    setup = Sktag_WeapControl_setup,
+    setup = SKULLTAG.WeapControl_setup,
   },
 
   options =

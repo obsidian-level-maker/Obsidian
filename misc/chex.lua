@@ -18,7 +18,9 @@
 --
 ----------------------------------------------------------------
 
-CHEX_THINGS =
+CHEX = { }
+
+CHEX.THINGS =
 {
   --- PLAYERS ---
 
@@ -116,7 +118,7 @@ CHEX_THINGS =
 
 ----------------------------------------------------------------
 
-CHEX_MATERIALS =
+CHEX.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="SHAWN2", f="FLOOR0_5" },
@@ -137,7 +139,7 @@ CHEX_MATERIALS =
 
 }
 
-CHEX_SANITY_MAP =
+CHEX.SANITY_MAP =
 {
   --LAVA1    = "FWATER1",
   --FWATER1  = "BLOOD1",
@@ -160,7 +162,7 @@ CHEX_SANITY_MAP =
   FIREMAG1 = "FIREMAG1",
 }
 
-CHEX_LIFTS =
+CHEX.LIFTS =
 {
   slow = { kind=62,  walk=88  },
   fast = { kind=123, walk=120 },
@@ -168,7 +170,7 @@ CHEX_LIFTS =
 
 ----------------------------------------------------------------
 
-CHEX_LIQUIDS =
+CHEX.LIQUIDS =
 {
   -- "blood", "nukage" and "lava" all look similar (like green slime) but do different damage
   --water  = { floor="FWATER1", wall="GSTFONT1" },
@@ -177,7 +179,7 @@ CHEX_LIQUIDS =
   lava   = { floor="LAVA1", wall="FIREMAG1", sec_kind=16, add_light=64 },
 }
 
-CHEX_COMBOS =
+CHEX.COMBOS =
 {
   BROWN =
   {
@@ -193,11 +195,11 @@ CHEX_COMBOS =
   },
 }
 
-CHEX_ROOMS =
+CHEX.ROOMS =
 {
 }
 
-CHEX_SUB_THEMES =
+CHEX.SUB_THEMES =
 -- TECH, ARBORETUM and CAVE?
 {
   TECH =
@@ -233,7 +235,7 @@ CHEX_SUB_THEMES =
 -- nearly all the settings below for monsters, weapons and items
 -- are the same as doom.lua, except the probs for monsters
 
-CHEX_MONSTERS =
+CHEX.MONSTERS =
 {
   commonus =
   {
@@ -273,7 +275,7 @@ CHEX_MONSTERS =
 -- Weapon list
 -- ===========
 
-CHEX_WEAPONS =
+CHEX.WEAPONS =
 {
   bootspoon =
   {
@@ -338,7 +340,7 @@ CHEX_WEAPONS =
 -- Pickup List
 -- ===========
 
-CHEX_PICKUPS =
+CHEX.PICKUPS =
 {
   -- HEALTH --
 
@@ -438,7 +440,7 @@ CHEX_PICKUPS =
 }
 
 
-CHEX_PLAYER_MODEL =
+CHEX.PLAYER_MODEL =
 {
   chexguy =
   {
@@ -450,16 +452,16 @@ CHEX_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-CHEX_EPISODES =
+CHEX.EPISODES =
 -- Chex Quest only has one episode of five levels
 {
 }
 
-function Chex_setup()
+function CHEX.setup()
  -- TODO
 end
 
-function Chex_get_levels()
+function CHEX.get_levels()
   local EP_NUM  = 1
   local MAP_NUM = 1
 
@@ -493,7 +495,7 @@ function Chex_get_levels()
   end -- for episode
 end
 
-function Chex_begin_level()
+function CHEX.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -531,9 +533,9 @@ UNFINISHED["chex"] =
 {
   label = "Chex Quest",
 
-  setup_func        = Chex_setup,
-  levels_start_func = Chex_get_levels,
-  begin_level_func  = Chex_begin_level,
+  setup_func        = CHEX.setup,
+  levels_start_func = CHEX.get_levels,
+  begin_level_func  = CHEX.begin_level,
 
   param =
   {
@@ -561,18 +563,17 @@ UNFINISHED["chex"] =
 
   tables =
   {
-    "things",       CHEX_THINGS,
-    "materials",    CHEX_MATERIALS,
-    "sanity_map",   CHEX_SANITY_MAP,
-    "lifts",        CHEX_LIFTS,
-    "liquids",      CHEX_LIQUIDS,
-    "combos",       CHEX_COMBOS,
-    "rooms",        CHEX_ROOMS,
-    "themes",       CHEX_SUB_THEMES,
-    "monsters",     CHEX_MONSTERS,
-    "weapons",      CHEX_WEAPONS,
-    "pickups",      CHEX_PICKUPS,
-    "player_model", CHEX_PLAYER_MODEL,
-    "episodes",     CHEX_EPISODES,
+    "player_model", CHEX.PLAYER_MODEL,
+    "things",       CHEX.THINGS,
+    "materials",    CHEX.MATERIALS,
+    "sanity_map",   CHEX.SANITY_MAP,
+    "lifts",        CHEX.LIFTS,
+    "liquids",      CHEX.LIQUIDS,
+    "combos",       CHEX.COMBOS,
+    "rooms",        CHEX.ROOMS,
+    "themes",       CHEX.SUB_THEMES,
+    "monsters",     CHEX.MONSTERS,
+    "weapons",      CHEX.WEAPONS,
+    "pickups",      CHEX.PICKUPS,
   },
 }

@@ -344,7 +344,7 @@ ICDSE.PLAYER_MODEL =
 
 ----------------------------------------------------------------
 
-function ImmConduct_setup(self)
+function ICDSE.setup(self)
   local new_mons = self.options.new_mons.value
 
   local NEW_MON_PROBS =
@@ -369,7 +369,7 @@ function ImmConduct_setup(self)
 end
 
 
-function ImmConduct_begin_level(self)
+function ICDSE.begin_level(self)
   if not LEVEL.styles then
     LEVEL.styles = {}
   end
@@ -391,8 +391,8 @@ OB_MODULES["imm_conduct"] =
 
   hooks =
   {
-    setup = ImmConduct_setup,
-    begin_level = ImmConduct_begin_level,
+    setup = ICDSE.setup,
+    begin_level = ICDSE.begin_level,
   },
 
   tables =

@@ -23,7 +23,9 @@ WF_NO_TILE = 48
 WF_NO_OBJ  = 0
 
 
-WOLF_THINGS =
+WOLF = { }
+
+WOLF.THINGS =
 {
   -- players
   player1 = { kind="other", r=30, h=60,
@@ -174,7 +176,7 @@ WOLF_THINGS =
   marble_column = { kind="scenery", id=71, r=30, h=60, add_mode="island" },
 }
 
-WOLF_TILE_NUMS =
+WOLF.TILE_NUMS =
 {
   area_min = 108,
   area_max = 143,
@@ -193,7 +195,7 @@ WOLF_TILE_NUMS =
 
 ----------------------------------------------------------------
 
-WOLF_MATERIALS =
+WOLF.MATERIALS =
 {
   -- special materials --
 
@@ -297,7 +299,7 @@ SPEAR_MATERIALS =
 
 ----------------------------------------------------------------
 
-WOLF_COMBOS =
+WOLF.COMBOS =
 {
   TMP_WOOD   = { wall="WOOD1" },
   TMP_GSTONE = { wall="GSTONE1" },
@@ -394,7 +396,7 @@ WOLF_COMBOS =
   },
 }
 
-WOLF_EXITS =
+WOLF.EXITS =
 {
   ELEVATOR =  -- FIXME: not needed, remove
   {
@@ -404,13 +406,13 @@ WOLF_EXITS =
 }
 
 
-WOLF_KEY_DOORS =
+WOLF.KEY_DOORS =
 {
   k_silver = { door_kind="door_silver", door_side=14 },
   k_gold   = { door_kind="door_gold",   door_side=14 },
 }
 
-WOLF_MISC_PREFABS =
+WOLF.MISC_PREFABS =
 {
   elevator =
   {
@@ -423,7 +425,7 @@ WOLF_MISC_PREFABS =
 
 
 
-WOLF_ROOMS =
+WOLF.ROOMS =
 {
   PLAIN =
   {
@@ -490,7 +492,7 @@ WOLF_ROOMS =
   },
 }
 
-WOLF_SUB_THEMES =
+WOLF.SUB_THEMES =
 {
   -- Main Themes:
   --
@@ -618,7 +620,7 @@ WOLF_SUB_THEMES =
 
 ----------------------------------------------------------------
 
-WOLF_MONSTERS =
+WOLF.MONSTERS =
 {
   dog =
   {
@@ -659,7 +661,7 @@ WOLF_MONSTERS =
     health=350, damage=50, attack="missile",
   },
 
-  --| WOLF_BOSSES |--
+  --| WOLF BOSSES |--
 
   -- FIXME: hit-points are just averages of skill 2 and 3
  
@@ -708,7 +710,7 @@ WOLF_MONSTERS =
 }
 
 
-WOLF_WEAPONS =
+WOLF.WEAPONS =
 {
   knife =
   {
@@ -741,7 +743,7 @@ WOLF_WEAPONS =
 }
 
 
-WOLF_PICKUPS =
+WOLF.PICKUPS =
 {
   -- NOTE: no "gibs" here, they are fairly insignificant
 
@@ -771,7 +773,7 @@ WOLF_PICKUPS =
 }
 
 
-WOLF_PLAYER_MODEL =
+WOLF.PLAYER_MODEL =
 {
   bj =
   {
@@ -783,7 +785,7 @@ WOLF_PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-WOLF_EPISODES =
+WOLF.EPISODES =
 {
   episode1 =
   {
@@ -835,7 +837,7 @@ WOLF_EPISODES =
 }
 
 
-WOLF_KEY_NUM_PROBS =
+WOLF.KEY_NUM_PROBS =
 {
   small   = { 90, 50, 20 },
   regular = { 40, 90, 40 },
@@ -848,7 +850,7 @@ function wolfy_decide_quests(level_list, is_spear)
   local function add_quest(L, kind, item, secret_prob)
     secret_prob = 0 --FIXME !!!!
 
-    local len_probs = non_nil(WOLF_QUEST_LEN_PROBS[kind])
+    local len_probs = non_nil(WOLF.QUEST_LEN_PROBS[kind])
     local Quest =
     {
       kind = kind,
@@ -872,7 +874,7 @@ function wolfy_decide_quests(level_list, is_spear)
       add_quest(Level, "weapon", "machine_gun", 35)
     end
 
-    local keys = rand.index_by_probs(WOLF_KEY_NUM_PROBS[SETTINGS.size]) - 1
+    local keys = rand.index_by_probs(WOLF.KEY_NUM_PROBS[SETTINGS.size]) - 1
 
     if keys >= 1 then
       add_quest(Level, "key", "k_silver")
@@ -911,19 +913,19 @@ function wolfy_decide_quests(level_list, is_spear)
 end
 
 
-function Wolf3d_get_levels()
+function WOLF.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 6, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 10)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
   for episode = 1,EP_NUM do
-    local ep_info = WOLF_EPISODES["episode" .. episode]
+    local ep_info = WOLF.EPISODES["episode" .. episode]
     assert(ep_info)
 
-    local boss_kind = WOLF_EPISODE_BOSSES[episode]
+    local boss_kind = WOLF.EPISODE_BOSSES[episode]
     if OB_CONFIG.length ~= "full" then
-      boss_kind = WOLF_EPISODE_BOSSES[rand.irange(1,6)]
+      boss_kind = WOLF.EPISODE_BOSSES[rand.irange(1,6)]
     end
 
     local secret_kind = "pacman"
@@ -938,7 +940,7 @@ function Wolf3d_get_levels()
         styles = {},
       }
 
-      if WOLF_SECRET_EXITS[Level.name] then
+      if WOLF.SECRET_EXITS[Level.name] then
         Level.secret_exit = true
       end
 
@@ -963,12 +965,12 @@ end
 
 ----------------------------------------------------------------
 
-function Wolf3d_setup()
+function WOLF.setup()
   -- nothing needed
 end
 
 
-function Spear_setup()
+function WOLF.Spear_setup()
   -- nothing needed (yet)
 end
 
@@ -981,8 +983,8 @@ UNFINISHED["wolf3d"] =
 
   hooks =
   {
-    setup = Wolf3d_setup,
-    levels_start = Wolf3d_get_levels,
+    setup = WOLF.setup,
+    levels_start = WOLF.get_levels,
   },
 
   param =
@@ -1014,18 +1016,18 @@ UNFINISHED["wolf3d"] =
 
   tables =
   {
-    "things",   WOLF_THINGS,
-    "player_model", WOLF_PLAYER_MODEL,
+    "things",   WOLF.THINGS,
+    "player_model", WOLF.PLAYER_MODEL,
 
-    "monsters", WOLF_MONSTERS,
-    "weapons",  WOLF_WEAPONS,
-    "pickups", WOLF_PICKUPS,
+    "monsters", WOLF.MONSTERS,
+    "weapons",  WOLF.WEAPONS,
+    "pickups", WOLF.PICKUPS,
 
-    "materials", WOLF_MATERIALS,
-    "themes", WOLF_SUB_THEMES,
-    "rooms",  WOLF_ROOMS,
+    "materials", WOLF.MATERIALS,
+    "sub_themes", WOLF.SUB_THEMES,
+    "rooms",  WOLF.ROOMS,
 
-    "key_doors", WOLF_KEY_DOORS,
+    "key_doors", WOLF.KEY_DOORS,
   },
 }
 
@@ -1039,8 +1041,8 @@ UNFINISHED["spear"] =
 
   hooks =
   {
-    setup = Spear_setup,
-    levels_start = Spear_get_levels,
+    setup = WOLF.Spear_setup,
+    levels_start = WOLF.Spear_get_levels,
   },
 
   param = UNFINISHED["wolf3d"].param,

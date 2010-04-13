@@ -160,12 +160,12 @@ STRIFE.PLAYER_MODEL =
 ------------------------------------------------------------
 
 
-function Strife_setup()
+function STRIFE.setup()
   -- nothing needed
 end
 
 
-function Strife_get_levels()
+function STRIFE.get_levels()
   local EP_NUM  = 1
   local MAP_NUM = 1
 
@@ -206,8 +206,8 @@ UNFINISHED["strife"] =
 
   hooks =
   {
-    setup = Strife_setup,
-    levels_start = Strife_get_levels,
+    setup = STRIFE.setup,
+    levels_start = STRIFE.get_levels,
   },
 
   param =

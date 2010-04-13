@@ -427,12 +427,12 @@ HACX.PLAYER_MODEL =
 ------------------------------------------------------------
 
 
-function HacX_setup()
+function HACX.setup()
   -- nothing needed
 end
 
 
-function HacX_get_levels()
+function HACX.get_levels()
   local EP_NUM  = 1
   local MAP_NUM = 1
 
@@ -483,8 +483,8 @@ UNFINISHED["hacx"] =
 
   hooks =
   {
-    setup = HacX_setup,
-    levels_start = HacX_get_levels,
+    setup = HACX.setup,
+    levels_start = HACX.get_levels,
   },
 
   param =

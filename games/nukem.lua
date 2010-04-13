@@ -284,12 +284,12 @@ NUKEM.PLAYER_MODEL =
 ------------------------------------------------------------
 
 
-function Nukem_setup()
+function NUKEM.setup()
   -- nothing needed
 end
 
 
-function Nukem_get_levels()
+function NUKEM.get_levels()
   local EP_NUM  = 1
   local MAP_NUM = 1
 
@@ -341,8 +341,8 @@ UNFINISHED["nukem"] =
 
   hooks =
   {
-    setup = Nukem_setup,
-    levels_start = Nukem_get_levels,
+    setup = NUKEM.setup,
+    levels_start = NUKEM.get_levels,
   },
 
   param =

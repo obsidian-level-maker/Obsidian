@@ -1930,14 +1930,12 @@ HERETIC.EPISODES =
 
 ------------------------------------------------------------
 
-function Heretic_setup()
+function HERETIC.setup()
 
-  -- FIXME: temp crap
-  GAME.materials["NUKAGE1"] = GAME.materials["FLTSLUD1"]
 end
 
 
-function Heretic_get_levels()
+function HERETIC.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
 
@@ -1968,7 +1966,7 @@ function Heretic_get_levels()
 end
 
 
-function Heretic_make_cool_gfx()
+function HERETIC.make_cool_gfx()
   local GREEN =
   {
     0, 209, 211, 213, 215, 217, 218
@@ -2026,7 +2024,7 @@ function Heretic_make_cool_gfx()
 end
 
 
-function Heretic_begin_level()
+function HERETIC.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -2034,8 +2032,8 @@ function Heretic_begin_level()
 end
 
 
-function Heretic_all_done()
-  Heretic_make_cool_gfx()
+function HERETIC.all_done()
+  HERETIC.make_cool_gfx()
 end
 
 
@@ -2075,10 +2073,10 @@ OB_GAMES["heretic"] =
 
   hooks =
   {
-    setup = Heretic_setup,
-    levels_start = Heretic_get_levels,
-    begin_level = Heretic_begin_level,
-    all_done = Heretic_all_done,
+    setup = HERETIC.setup,
+    levels_start = HERETIC.get_levels,
+    begin_level = HERETIC.begin_level,
+    all_done = HERETIC.all_done,
   },
 
   param =

@@ -1973,11 +1973,11 @@ OB_THEMES["quake2_base"] =
 
 ----------------------------------------------------------------
 
-function Quake2_setup()
+function QUAKE2.setup()
   -- nothing needed
 end
 
-function Quake2_get_levels()
+function QUAKE2.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
@@ -2010,7 +2010,7 @@ function Quake2_get_levels()
   end -- for episode
 end
 
-function Quake2_begin_level()
+function QUAKE2.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -2024,9 +2024,9 @@ UNFINISHED["quake2"] =
 
   hooks =
   {
-    setup = Quake2_setup,
-    levels_start = Quake2_get_levels,
-    begin_level = Quake2_begin_level,
+    setup = QUAKE2.setup,
+    levels_start = QUAKE2.get_levels,
+    begin_level = QUAKE2.begin_level,
   },
 
   param =

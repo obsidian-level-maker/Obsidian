@@ -149,7 +149,7 @@ ZDOOM_MARINE.FACTORS =
 }
 
 
-function ZDoom_Marine_setup(self)
+function ZDOOM_MARINE.setup(self)
   if not PARAM.doom2_weapons then
     GAME.monsters["marine_ssg"] = nil
   end
@@ -184,7 +184,7 @@ OB_MODULES["zdoom_marines"] =
 
   hooks =
   {
-    setup = ZDoom_Marine_setup,
+    setup = ZDOOM_MARINE.setup,
   },
 
   tables =
@@ -233,7 +233,7 @@ ZDOOM_MARINE.CTL_PROBS =
 }
 
 
-function Marine_Control_setup(self)
+function ZDOOM_MARINE.CTL_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -258,7 +258,7 @@ OB_MODULES["zdoom_marine_control"] =
 
   hooks =
   {
-    setup = Marine_Control_setup,
+    setup = ZDOOM_MARINE.CTL_setup,
   },
 
   options =

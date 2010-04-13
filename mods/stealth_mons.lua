@@ -155,7 +155,7 @@ STEALTH.CHOICES =
 }
 
 
-function Stealth_Mons_setup(self)
+function STEALTH.setup(self)
   if OB_CONFIG.engine == "edge" then
     Game_merge_tab("things", STEALTH.THINGS_EDGE)
   else
@@ -189,7 +189,7 @@ OB_MODULES["stealth_mons"] =
 
   hooks =
   {
-    setup = Stealth_Mons_setup,
+    setup = STEALTH.setup,
   },
 
   tables =
@@ -234,7 +234,7 @@ STEALTH.CONTROL_PROBS =
 }
 
 
-function Stealth_MonControl_setup(self)
+function STEALTH.Control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -260,7 +260,7 @@ OB_MODULES["stealth_mon_control"] =
 
   hooks =
   {
-    setup = Stealth_MonControl_setup,
+    setup = STEALTH.Control_setup,
   },
 
   options =

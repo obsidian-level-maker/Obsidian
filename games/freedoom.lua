@@ -77,7 +77,7 @@ FREEDOOM.SKY_INFO =
 ----------------------------------------------------------------
 
 
-function Freedoom_setup()
+function FREEDOOM.setup()
 
   GAME.sky_info = FREEDOOM.SKY_INFO
 
@@ -107,7 +107,7 @@ OB_GAMES["freedoom"] =
 
   hooks =
   {
-    setup = Freedoom_setup,
+    setup = FREEDOOM.setup,
   },
 
   tables =

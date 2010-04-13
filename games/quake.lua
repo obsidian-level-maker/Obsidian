@@ -1163,7 +1163,7 @@ QUAKE1.EPISODES =
 
 ----------------------------------------------------------------
 
-function Quake1_setup()
+function QUAKE1.setup()
   local tex_wad = "quake_tex.wd2"
 
   local primary_tex_file = gui.locate_data(tex_wad)
@@ -1178,7 +1178,7 @@ function Quake1_setup()
 end
 
 
-function Quake1_get_levels()
+function QUAKE1.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
@@ -1213,7 +1213,7 @@ function Quake1_get_levels()
   end -- for episode
 end
 
-function Quake1_begin_level()
+function QUAKE1.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -1242,9 +1242,9 @@ OB_GAMES["quake"] =
 
   hooks =
   {
-    setup = Quake1_setup,
-    levels_start = Quake1_get_levels,
-    begin_level = Quake1_begin_level,
+    setup = QUAKE1.setup,
+    levels_start = QUAKE1.get_levels,
+    begin_level = QUAKE1.begin_level,
   },
 
   param =

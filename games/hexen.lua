@@ -2356,7 +2356,7 @@ function hexen_do_get_levels(episode)
 end
 
 
-function Hexen_setup()
+function HEXEN.setup()
 
   gui.property("hexen_format", "true")
 
@@ -2365,7 +2365,7 @@ function Hexen_setup()
 --  classes  = { "fighter", "cleric", "mage" },
 end
 
-function Hexen_begin_level()
+function HEXEN.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -2417,9 +2417,9 @@ UNFINISHED["hexen"] =
 
   hooks =
   {
-    setup = Hexen_setup,
-    levels_start = Hexen_get_levels,
-    begin_level = Hexen_begin_level,
+    setup = HEXEN.setup,
+    levels_start = HEXEN.get_levels,
+    begin_level = HEXEN.begin_level,
   },
 
   param =

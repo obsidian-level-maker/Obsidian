@@ -17,7 +17,7 @@
 ----------------------------------------------------------------
 
 
-function Doom_generate_skies()
+function Skygen_generate_doom()
 
   -- FIXME: supply full information, e.g. via GAME.skies table
   local sky_list =
@@ -261,7 +261,7 @@ OB_MODULES["sky_gen_doom"] =
 
   hooks =
   {
-    levels_start = Doom_generate_skies,
+    levels_start = Skygen_generate_doom,
   },
 }
 

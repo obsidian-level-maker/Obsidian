@@ -2,7 +2,7 @@
 --  MODULE: Doom Control
 ----------------------------------------------------------------
 --
---  Copyright (C) 2009 Andrew Apted
+--  Copyright (C) 2009-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -16,7 +16,7 @@
 --
 ----------------------------------------------------------------
 
-MON_CONTROL_CHOICES =
+DOOM.MON_CONTROL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -28,7 +28,7 @@ MON_CONTROL_CHOICES =
   "insane",  "INSANE",
 }
 
-MON_CONTROL_PROBS =
+DOOM.MON_CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -40,12 +40,12 @@ MON_CONTROL_PROBS =
 }
 
 
-function Mon_Control_setup(self)
+function DOOM.Mon_Control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = MON_CONTROL_PROBS[opt.value]
+      local prob = DOOM.MON_CONTROL_PROBS[opt.value]
 
       -- allow Spectres to be controlled individually
       M.replaces = nil
@@ -69,32 +69,32 @@ OB_MODULES["mon_control"] =
 
   hooks =
   {
-    setup = Mon_Control_setup,
+    setup = DOOM.Mon_Control_setup,
   },
 
   options =
   {
-    zombie   = { label="Zombieman",      choices=MON_CONTROL_CHOICES },
-    shooter  = { label="Shotgun Guy",    choices=MON_CONTROL_CHOICES },
-    gunner   = { label="Chaingunner",    choices=MON_CONTROL_CHOICES },
-    ss_dude  = { label="SS Nazi",        choices=MON_CONTROL_CHOICES },
-    imp      = { label="Imp",            choices=MON_CONTROL_CHOICES },
+    zombie   = { label="Zombieman",      choices=DOOM.MON_CONTROL_CHOICES },
+    shooter  = { label="Shotgun Guy",    choices=DOOM.MON_CONTROL_CHOICES },
+    gunner   = { label="Chaingunner",    choices=DOOM.MON_CONTROL_CHOICES },
+    ss_dude  = { label="SS Nazi",        choices=DOOM.MON_CONTROL_CHOICES },
+    imp      = { label="Imp",            choices=DOOM.MON_CONTROL_CHOICES },
 
-    skull    = { label="Lost Soul",      choices=MON_CONTROL_CHOICES },
-    demon    = { label="Demon",          choices=MON_CONTROL_CHOICES },
-    spectre  = { label="Spectre",        choices=MON_CONTROL_CHOICES },
-    pain     = { label="Pain Elemental", choices=MON_CONTROL_CHOICES },
-    caco     = { label="Cacodemon",      choices=MON_CONTROL_CHOICES },
-    knight   = { label="Hell Knight",    choices=MON_CONTROL_CHOICES },
+    skull    = { label="Lost Soul",      choices=DOOM.MON_CONTROL_CHOICES },
+    demon    = { label="Demon",          choices=DOOM.MON_CONTROL_CHOICES },
+    spectre  = { label="Spectre",        choices=DOOM.MON_CONTROL_CHOICES },
+    pain     = { label="Pain Elemental", choices=DOOM.MON_CONTROL_CHOICES },
+    caco     = { label="Cacodemon",      choices=DOOM.MON_CONTROL_CHOICES },
+    knight   = { label="Hell Knight",    choices=DOOM.MON_CONTROL_CHOICES },
 
-    revenant = { label="Revenant",       choices=MON_CONTROL_CHOICES },
-    mancubus = { label="Mancubus",       choices=MON_CONTROL_CHOICES },
-    arach    = { label="Arachnotron",    choices=MON_CONTROL_CHOICES },
-    vile     = { label="Archvile",       choices=MON_CONTROL_CHOICES },
-    baron    = { label="Baron of Hell",  choices=MON_CONTROL_CHOICES },
+    revenant = { label="Revenant",       choices=DOOM.MON_CONTROL_CHOICES },
+    mancubus = { label="Mancubus",       choices=DOOM.MON_CONTROL_CHOICES },
+    arach    = { label="Arachnotron",    choices=DOOM.MON_CONTROL_CHOICES },
+    vile     = { label="Archvile",       choices=DOOM.MON_CONTROL_CHOICES },
+    baron    = { label="Baron of Hell",  choices=DOOM.MON_CONTROL_CHOICES },
 
-    Cyberdemon = { label="Cyberdemon",   choices=MON_CONTROL_CHOICES },
-    Mastermind = { label="Mastermind",   choices=MON_CONTROL_CHOICES },
+    Cyberdemon = { label="Cyberdemon",   choices=DOOM.MON_CONTROL_CHOICES },
+    Mastermind = { label="Mastermind",   choices=DOOM.MON_CONTROL_CHOICES },
   },
 }
 
@@ -102,7 +102,7 @@ OB_MODULES["mon_control"] =
 ----------------------------------------------------------------
 
 
-WEAP_CONTROL_CHOICES =
+DOOM.WEAP_CONTROL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -114,7 +114,7 @@ WEAP_CONTROL_CHOICES =
   "loveit",  "I LOVE IT",
 }
 
-WEAP_CONTROL_PROBS =
+DOOM.WEAP_CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -126,7 +126,7 @@ WEAP_CONTROL_PROBS =
 }
 
 
-function Weap_Control_setup(self)
+function DOOM.Weap_Control_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -157,19 +157,19 @@ OB_MODULES["weap_control"] =
 
   hooks =
   {
-    setup = Weap_Control_setup,
+    setup = DOOM.Weap_Control_setup,
   },
 
   options =
   {
-    berserk  = { label="Berserk",          choices=WEAP_CONTROL_CHOICES },
-    saw      = { label="Saw",              choices=WEAP_CONTROL_CHOICES },
-    shotty   = { label="Shotgun",          choices=WEAP_CONTROL_CHOICES },
-    super    = { label="Super Shotty",     choices=WEAP_CONTROL_CHOICES },
-    chain    = { label="Chaingun",         choices=WEAP_CONTROL_CHOICES },
-    launch   = { label="Rocket Launcher",  choices=WEAP_CONTROL_CHOICES },
-    plasma   = { label="Plasma Rifle",     choices=WEAP_CONTROL_CHOICES },
-    bfg      = { label="B.F.G",            choices=WEAP_CONTROL_CHOICES },
+    berserk  = { label="Berserk",          choices=DOOM.WEAP_CONTROL_CHOICES },
+    saw      = { label="Saw",              choices=DOOM.WEAP_CONTROL_CHOICES },
+    shotty   = { label="Shotgun",          choices=DOOM.WEAP_CONTROL_CHOICES },
+    super    = { label="Super Shotty",     choices=DOOM.WEAP_CONTROL_CHOICES },
+    chain    = { label="Chaingun",         choices=DOOM.WEAP_CONTROL_CHOICES },
+    launch   = { label="Rocket Launcher",  choices=DOOM.WEAP_CONTROL_CHOICES },
+    plasma   = { label="Plasma Rifle",     choices=DOOM.WEAP_CONTROL_CHOICES },
+    bfg      = { label="B.F.G",            choices=DOOM.WEAP_CONTROL_CHOICES },
   },
 }
 

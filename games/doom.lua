@@ -3729,7 +3729,7 @@ DOOM.D2_EPISODES =
 ------------------------------------------------------------
 
 
-function Doom1_setup()
+function DOOM.D1_setup()
   -- remove Doom II only stuff
   GAME.weapons["super"] = nil
   GAME.pickups["mega"]  = nil
@@ -3740,12 +3740,12 @@ function Doom1_setup()
 end
 
 
-function Doom2_setup()
+function DOOM.D2_setup()
   -- nothing needed
 end
 
 
-function Doom1_get_levels()
+function DOOM.D1_get_levels()
   local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
   local EP_NUM  = sel(OB_CONFIG.length == "full", EP_MAX, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
@@ -3815,7 +3815,7 @@ function Doom1_get_levels()
 end
 
 
-function Doom2_get_levels()
+function DOOM.D2_get_levels()
   local MAP_NUM = 11
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
@@ -3919,7 +3919,7 @@ DOOM.LEVEL_GFX_COLORS =
   iron   = { 0,7,5, 111,109,107,104,101,98,94,90,86,81 },
 }
 
-function Doom_make_cool_gfx()
+function DOOM.make_cool_gfx()
   local GREEN =
   {
     0, 7, 127, 126, 125, 124, 123,
@@ -3968,7 +3968,7 @@ function Doom_make_cool_gfx()
   gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
 end
 
-function Doom_make_level_gfx()
+function DOOM.make_level_gfx()
   assert(LEVEL.description)
   assert(LEVEL.patch)
 
@@ -3987,7 +3987,7 @@ function Doom_make_level_gfx()
   gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
 end
 
-function Doom_begin_level()
+function DOOM.begin_level()
   -- set the description
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
@@ -4002,17 +4002,17 @@ function Doom_begin_level()
   end
 end
 
-function Doom_end_level()
-gui.printf("Doom_end_level: desc='%s' patch='%s'\n",
+function DOOM.end_level()
+gui.printf("DOOM.end_level: desc='%s' patch='%s'\n",
            tostring(LEVEL.description),
            tostring(LEVEL.patch))
   if LEVEL.description and LEVEL.patch then
-    Doom_make_level_gfx()
+    DOOM.make_level_gfx()
   end
 end
 
-function Doom_all_done()
-  Doom_make_cool_gfx()
+function DOOM.all_done()
+  DOOM.make_cool_gfx()
 
   gui.wad_merge_sections("doom_falls.wad");
   gui.wad_merge_sections("vine_dude.wad");
@@ -4076,12 +4076,12 @@ OB_GAMES["doom1"] =
 
   hooks =
   {
-    setup        = Doom1_setup,
-    levels_start = Doom1_get_levels,
+    setup        = DOOM.D1_setup,
+    levels_start = DOOM.D1_get_levels,
 
-    begin_level  = Doom_begin_level,
-    end_level    = Doom_end_level,
-    all_done     = Doom_all_done,
+    begin_level  = DOOM.begin_level,
+    end_level    = DOOM.end_level,
+    all_done     = DOOM.all_done,
   },
 
   param =
@@ -4176,12 +4176,12 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    setup        = Doom2_setup,
-    levels_start = Doom2_get_levels,
+    setup        = DOOM.D2_setup,
+    levels_start = DOOM.D2_get_levels,
 
-    begin_level  = Doom_begin_level,
-    end_level    = Doom_end_level,
-    all_done     = Doom_all_done,
+    begin_level  = DOOM.begin_level,
+    end_level    = DOOM.end_level,
+    all_done     = DOOM.all_done,
   },
 
   param =
