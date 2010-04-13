@@ -334,7 +334,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
        not R.purpose and not R.weapon and
        stairwell_neighbors(R) == 0 and
        locked_neighbors(R) == 0 and
-       THEME.stairwell
+       THEME.stairwell_walls
     then
       local hall_nb = hallway_neighbors(R) 
 
@@ -343,6 +343,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       if hall_nb == 1 then prob = 40 end
 
       if rand.odds(prob) then
+        gui.printf("  Made Stairwell @ %s\n", R:tostr())
         R.kind = "stairwell"
       end
     end
@@ -2028,10 +2029,47 @@ function Rooms.build_cave(R)
 end
 
 
+function Rooms.do_small_exit()
+  local C = R.conns[1]
+  local T = C:seed(C:neighbor(R))
+  local out_combo = T.room.main_tex
+  if T.room.outdoor then out_combo = R.main_tex end
+
+  -- FIXME: use single one over a whole episode
+  local skin_name = rand.key_by_probs(THEME.small_exits)
+  local skin = assert(GAME.exits[skin_name])
+
+  local skin2 =
+  {
+    wall = out_combo,
+    floor = T.f_tex or C.conn_ftex,
+    ceil = out_combo,
+  }
+
+  assert(THEME.exit.switches)
+  -- FIXME: hacky
+  skin.switch = rand.key_by_probs(THEME.exit.switches)
+
+  Build_small_exit(R, THEME.exit, skin, skin2)
+  return
+end
+
+
+function Rooms.do_stairwell(R)
+  if not LEVEL.well_tex then
+    LEVEL.well_tex   = rand.key_by_probs(THEME.stairwell_walls)
+    LEVEL.well_floor = rand.key_by_probs(THEME.stairwell_floors)
+  end
+
+  local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
+  Build_stairwell(R, skin)
+end
+
+
 function Rooms.build_seeds(R)
 
   local function do_teleporter(S)
-    -- TEMP HACK SHIT
+    -- TEMP HACK CRUD JUNK
 
     local idx = S.sx - S.room.sx1 + 1
 
@@ -2556,7 +2594,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     end -- for side
 
 
-    if S.sides_only then return end
+    if R.sides_only then return end
 
 
     -- DIAGONALS
@@ -2692,6 +2730,16 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
   if R.cave then
     Rooms.build_cave(R)
+  end
+
+  if R.kind == "smallexit" then
+    Rooms.do_small_exit(R)
+    return
+  end
+
+  if R.kind == "stairwell" then
+    Rooms.do_stairwell(R)
+    R.sides_only = true
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do

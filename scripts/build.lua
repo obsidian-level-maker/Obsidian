@@ -1783,17 +1783,6 @@ function Build_lift(S, skin, skin2, tag)
 end
 
 
-function mark_room_as_done(R)
-  for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-    local S = SEEDS[sx][sy][1]
-    
-    if S.room == R then
-      S.sides_only = true
-    end
-  end end
-end
-
-
 function Build_pillar(S, z1, z2, skin)
   
   local mx = int((S.x1 + S.x2)/2)
@@ -2184,8 +2173,6 @@ function Build_small_exit(R, xt_info, skin, skin2)
 
   assert(not C.already_made_lock)
   C.already_made_lock = true
-
-  mark_room_as_done(R)
 
 
   if skin.items then
@@ -2917,9 +2904,6 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       build_stairwell_0(R)
     end
   end
-
-
-  mark_room_as_done(R)
 end
 
 

@@ -2517,51 +2517,18 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   R.floor_h = focus_C.conn_h  -- ??? BLEH
 
   -- special stuff
+  if R.kind == "small_exit" then
+    return
+  end
+
   if R.kind == "stairwell" then
     stairwell_height_diff(focus_C)
-
-    if not LEVEL.well_tex then
-      LEVEL.well_tex   = rand.key_by_probs(THEME.stairwell_walls)
-      LEVEL.well_floor = rand.key_by_probs(THEME.stairwell_floors)
-    end
-
-    -- FIXME !!! move this part (Build_stairwell) into rooms.lua
-    local skin = { wall=LEVEL.well_tex, floor=LEVEL.wall_floor }
-
-    Build_stairwell(R, skin)
     return
   end
 
   if R.kind == "hallway" then
     Layout.do_hallway(R, focus_C.conn_h)
     if R.weapon then add_weapon(R.weapon) end
-    return
-  end
-
-  if R.kind == "small_exit" and THEME.small_exits then
-    local C = R.conns[1]
-    local T = C:seed(C:neighbor(R))
-    local out_combo = T.room.main_tex
-    if T.room.outdoor then out_combo = R.main_tex end
-
-    -- FIXME !!! move this part (Build_small_exit) into rooms.lua
-
-    -- FIXME: use single one over a whole episode
-    local skin_name = rand.key_by_probs(THEME.small_exits)
-    local skin = assert(GAME.exits[skin_name])
-
-    local skin2 =
-    {
-      wall = out_combo,
-      floor = T.f_tex or C.conn_ftex,
-      ceil = out_combo,
-    }
-
-    assert(THEME.exit.switches)
-    -- FIXME: hacky
-    skin.switch = rand.key_by_probs(THEME.exit.switches)
-
-    Build_small_exit(R, THEME.exit, skin, skin2)
     return
   end
 
