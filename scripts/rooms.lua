@@ -2639,7 +2639,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
     elseif S.kind == "lift" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
-      local tag = alloc_tag()
+      local tag = LEVEL:alloc_tag()
 
       Build_lift(S, LEVEL.lift_skin, skin2, tag)
 

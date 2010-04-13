@@ -486,7 +486,7 @@ function Quest_decide_split(arena)  -- returns a LOCK
     kind = "UNSET",
 
     conn = LC,
-    tag  = alloc_tag(),
+    tag  = LEVEL:alloc_tag(),
   }
 
   return LOCK

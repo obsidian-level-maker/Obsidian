@@ -34,17 +34,19 @@ require 'defs'
 require 'util'
 
 require 'seeds'
-require 'planner'
+require 'plan'
 require 'connect'
 require 'naming'
 require 'quests'
-require 'builder'
+require 'build'
 
 require 'caves'
 require 'layout'
 require 'rooms'
 require 'fight'
 require 'monsters'
+
+Game = { }
 
 
 STYLE_LIST =
@@ -536,7 +538,7 @@ function Level_build_it()
     return "ok"
   end
 
-  Plan_rooms_sp()
+  Plan.create_rooms()
     if gui.abort() then return "abort" end
     gui.progress(10)
 

@@ -41,18 +41,23 @@ class LEVEL
 require 'defs'
 require 'util'
 
+Plan = { }
 
-function alloc_tag()
-  local result = LEVEL.free_tag
-  LEVEL.free_tag = LEVEL.free_tag + 1
-  return result
-end
+
+LEVEL_CLASS =
+{
+  alloc_tag = function(self)
+    local result = self.free_tag
+    LEVEL.free_tag = self.free_tag + 1
+    return result
+  end,
   
-function alloc_mark()
-  local result = LEVEL.free_mark
-  LEVEL.free_mark = LEVEL.free_mark + 1
-  return result
-end
+  alloc_mark = function(self)
+    local result = self.free_mark
+    LEVEL.free_mark = self.free_mark + 1
+    return result
+  end,
+}
 
 
 ROOM_CLASS =
@@ -133,7 +138,7 @@ ROOM_CLASS =
 
 
 
-function Plan_CreateRooms()
+function Plan.initial_rooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
@@ -312,7 +317,7 @@ function Plan_CreateRooms()
   end
 
 
-  ---| Plan_CreateRooms |---
+  ---| Plan.initial_rooms |---
 
   room_map = table.array_2D(LEVEL.W, LEVEL.H)
 
@@ -399,7 +404,7 @@ end
 
 
 
-function Plan_MergeNatural()
+function Plan.merge_naturals()
  
   local function merge_one_natural(src, dest)
     gui.printf("Merging Natural: %s --> %s\n", src:tostr(), dest:tostr())
@@ -424,7 +429,7 @@ function Plan_MergeNatural()
     end end -- for x, y
   end
 
-  ---| Plan_MergeNatural |---
+  ---| Plan.merge_naturals |---
 
   local room_list = LEVEL.all_rooms
   LEVEL.all_rooms = {}
@@ -467,7 +472,7 @@ function Room_side_coord(R, side, i)
 end
 
 
-function Plan_Nudge()
+function Plan.nudge_rooms()
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
   -- in particular each room must remain a rectangle shape (so we
@@ -665,7 +670,7 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
   end
 
 
-  ---| Plan_Nudge |---
+  ---| Plan.nudge_rooms |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
     R.nudges = {}
@@ -678,7 +683,7 @@ end
 
 
 
-function Plan_SubRooms()
+function Plan.sub_rooms()
   local id = LEVEL.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
@@ -810,7 +815,7 @@ function Plan_SubRooms()
   end
 
 
-  ---| Plan_SubRooms |---
+  ---| Plan.sub_rooms |---
 
   if STYLE.subrooms == "none" then return end
 
@@ -836,7 +841,7 @@ function Plan_SubRooms()
 end
 
 
-function Plan_MakeSeeds()
+function Plan.make_seeds()
 
   local function plant_rooms()
     for _,R in ipairs(LEVEL.all_rooms) do
@@ -891,7 +896,7 @@ function Plan_MakeSeeds()
   end
 
 
-  ---| Plan_MakeSeeds |---
+  ---| Plan.make_seeds |---
 
   local max_sx = 1
   local max_sy = 1
@@ -905,7 +910,7 @@ gui.debugf("seed range @ %s\n", R:tostr())
   end
 
   -- two border seeds at top and right
-  -- (the left and bottom were handled in Plan_CreateRooms)
+  -- (the left and bottom were handled in Plan.initial_rooms)
   max_sx = max_sx + 2
   max_sy = max_sy + 2
 
@@ -918,7 +923,7 @@ gui.debugf("seed range @ %s\n", R:tostr())
 end
 
 
-function Plan_determine_size()
+function Plan.determine_size()
 
   local function show_sizes(name, t, N)
     name = name .. ": "
@@ -955,7 +960,7 @@ function Plan_determine_size()
   end
 
 
-  ---| Plan_determine_size |---
+  ---| Plan.determine_size |---
 
   local W, H  -- number of rooms
 
@@ -1034,11 +1039,13 @@ end
 end
 
 
-function Plan_rooms_sp()
+function Plan.create_rooms()
 
-  gui.printf("\n--==| Plan_rooms_sp |==--\n\n")
+  gui.printf("\n--==| Plan.create_rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
+
+  table.set_class(LEVEL, LEVEL_CLASS)
 
   LEVEL.all_rooms = {}
   LEVEL.all_conns = {}
@@ -1057,19 +1064,19 @@ function Plan_rooms_sp()
     LEVEL.liquid = assert(GAME.liquids[name])
   end
 
-  Plan_determine_size()
+  Plan.determine_size()
 
-  Plan_CreateRooms()
-  Plan_Nudge()
+  Plan.initial_rooms()
+  Plan.nudge_rooms()
 
   -- must create the seeds _AFTER_ nudging
-  Plan_MakeSeeds()
-  Plan_MergeNatural()
+  Plan.make_seeds()
+  Plan.merge_naturals()
 
   gui.printf("Seed Map:\n")
   Seed_dump_rooms()
 
-  Plan_SubRooms()
+  Plan.sub_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
@@ -1078,5 +1085,5 @@ function Plan_rooms_sp()
 
   LEVEL.skyfence_h = rand.sel(50, 192, rand.sel(50, 64, 320))
 
-end -- Plan_rooms_sp
+end -- Plan.create_rooms
 
