@@ -56,7 +56,6 @@ function Trans.modify(what, value)
 end
 
 
-
 function Trans.apply(x, y)
   local T = Trans.TRANSFORM
 
@@ -157,7 +156,7 @@ function Trans.entity(name, x, y, z, props)
 end
 
 
-function tri_coords(x1,y1, x2,y2, x3,y3)
+function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
   return
   {
     { x=x1, y=y1 },
@@ -166,7 +165,7 @@ function tri_coords(x1,y1, x2,y2, x3,y3)
   }
 end
 
-function rect_coords(x1, y1, x2, y2)
+function Trans.rect_coords(x1, y1, x2, y2)
   return
   {
     { x=x2, y=y1 },
@@ -176,7 +175,7 @@ function rect_coords(x1, y1, x2, y2)
   }
 end
 
-function boxwh_coords(x, y, w, h)
+function Trans.box_coords(x, y, w, h)
   return
   {
     { x=x+w, y=y },
@@ -188,14 +187,12 @@ end
 
 
 function Trans.quad(info, x1,y1, x2,y2, z1,z2)
-  Trans.brush(info, rect_coords(x1,y1, x2,y2), z1,z2)
+  Trans.brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
-
 
 function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
-  Trans.brush(info, tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
+  Trans.brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
 end
-
 
 function Trans.strip(info, strip, z1, z2)
   for i = 1, #strip - 1 do
@@ -212,6 +209,9 @@ function Trans.strip(info, strip, z1, z2)
     z1, z2)
   end
 end
+
+
+------------------------------------------------------------------------
 
 
 function psychedelic_mat(name)
@@ -462,7 +462,7 @@ function get_wall_coords(S, side, thick, pad)
     if pad then y2 = y2 - pad end
   end
 
-  return rect_coords(x1,y1, x2,y2)
+  return Trans.rect_coords(x1,y1, x2,y2)
 end
 
 
@@ -1872,9 +1872,9 @@ function Build_cross_beam(S, dir, w, beam_z, mat)
 
   local coords
   if geom.is_vert(dir) then
-    coords = rect_coords(mx-w/2, y1, mx+w/2, y2)
+    coords = Trans.rect_coords(mx-w/2, y1, mx+w/2, y2)
   else
-    coords = rect_coords(x1, my-w/2, x2, my+w/2)
+    coords = Trans.rect_coords(x1, my-w/2, x2, my+w/2)
   end
 
   Trans.brush(get_mat(mat), coords, beam_z, EXTREME_H)
@@ -2338,7 +2338,7 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   floor_info.b_face.light = skin.light
   floor_info.sec_kind = skin.sec_kind
 
-  local coords = rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
+  local coords = Trans.rect_coords(mx-total_w/2,my-4, mx+total_w/2,deep)
 
   for _,c in ipairs(coords) do c.line_flags = 1 end
 
@@ -2386,7 +2386,7 @@ end
 function Build_crate(x, y, z_top, skin, is_outdoor)
   local info = add_pegging(get_mat(skin.side_w))
 
-  local coords = rect_coords(x-32,y-32, x+32,y+32)
+  local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
 
   Trans.brush(info, coords, -EXTREME_H, z_top)
 
