@@ -99,7 +99,7 @@ end
 
 
 -- replace the standard 'print' function
-function ob_print(...)
+print = function(...)
   local args = { ... }
   local line = ""
 
@@ -557,8 +557,6 @@ function ob_init()
   gui.conprintf = function (fmt, ...)
     if fmt then gui.raw_console_print(string.format(fmt, ...)) end
   end
-
-  print = ob_print
 
 
   gui.printf("~~ Oblige Lua initialization begun ~~\n")
