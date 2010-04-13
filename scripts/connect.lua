@@ -803,7 +803,7 @@ T.sx,T.sy, T.room.id, T.room.c_group)
 
       local nx, ny = geom.nudge(x, y, dir)
 
-      if not Seed_valid(nx, ny, 1) then return false end
+      if not Seed.valid(nx, ny, 1) then return false end
 
       local S = SEEDS[ x][ y][1]
       local N = SEEDS[nx][ny][1]
@@ -1006,7 +1006,7 @@ gui.debugf("Failed\n")
   local function try_emergency_connect(R, x, y, dir)
     local nx, ny = geom.nudge(x, y, dir)
 
-    if not Seed_valid(nx, ny, 1) then return false end
+    if not Seed.valid(nx, ny, 1) then return false end
 
     local S = SEEDS[ x][ y][1]
     local N = SEEDS[nx][ny][1]
@@ -1237,6 +1237,6 @@ gui.debugf("Failed\n")
   count_branches()
 
   gui.printf("New Seed Map:\n")
-  Seed_dump_rooms()
+  Seed.dump_rooms()
 end
 

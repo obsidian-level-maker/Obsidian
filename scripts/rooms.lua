@@ -115,7 +115,7 @@ function Room_setup_theme_Scenic(R)
   local my = int((R.sy1 + R.sy2) / 2)
 
   for dist = -SEED_W,SEED_W do
-    if Seed_valid(mx + dist, my, 1) then
+    if Seed.valid(mx + dist, my, 1) then
       local S = SEEDS[mx + dist][my][1]
       if S.room and S.room.kind == "scenic" and
          S.room.combo
@@ -127,7 +127,7 @@ function Room_setup_theme_Scenic(R)
       end
     end
 
-    if Seed_valid(mx, my + dist, 1) then
+    if Seed.valid(mx, my + dist, 1) then
       local S = SEEDS[mx][my + dist][1]
       if S.room and S.room.kind == "scenic" and
          S.room.combo
@@ -1171,7 +1171,7 @@ function Room_make_ceiling(R)
         local nx = x + dx * x_dir
         local ny = y + dy * y_dir
 
-        if Seed_valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
+        if Seed.valid(nx, ny, 1) and SEEDS[nx][ny][1].room == R then
           count = count + 1
         end
       end end -- for dx,dy
