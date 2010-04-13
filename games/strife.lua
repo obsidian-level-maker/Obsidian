@@ -206,8 +206,8 @@ UNFINISHED["strife"] =
 
   hooks =
   {
-    setup = STRIFE.setup,
-    levels_start = STRIFE.get_levels,
+    setup      = STRIFE.setup,
+    get_levels = STRIFE.get_levels,
   },
 
   param =

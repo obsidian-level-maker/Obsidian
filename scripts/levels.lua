@@ -663,7 +663,7 @@ function Levels.make_all()
 
   GAME.all_levels = {}
 
-  Levels.invoke_hook("levels_start",  OB_CONFIG.seed)
+  Levels.invoke_hook("get_levels",  OB_CONFIG.seed)
 
   if #GAME.all_levels == 0 then
     error("Level list is empty!")

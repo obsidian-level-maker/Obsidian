@@ -4077,7 +4077,7 @@ OB_GAMES["doom1"] =
   hooks =
   {
     setup        = DOOM.D1_setup,
-    levels_start = DOOM.D1_get_levels,
+    get_levels   = DOOM.D1_get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,
@@ -4177,7 +4177,7 @@ OB_GAMES["doom2"] =
   hooks =
   {
     setup        = DOOM.D2_setup,
-    levels_start = DOOM.D2_get_levels,
+    get_levels   = DOOM.D2_get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,

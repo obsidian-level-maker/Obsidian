@@ -2024,9 +2024,9 @@ UNFINISHED["quake2"] =
 
   hooks =
   {
-    setup = QUAKE2.setup,
-    levels_start = QUAKE2.get_levels,
-    begin_level = QUAKE2.begin_level,
+    setup        = QUAKE2.setup,
+    get_levels   = QUAKE2.get_levels,
+    begin_level  = QUAKE2.begin_level,
   },
 
   param =

@@ -983,8 +983,8 @@ UNFINISHED["wolf3d"] =
 
   hooks =
   {
-    setup = WOLF.setup,
-    levels_start = WOLF.get_levels,
+    setup      = WOLF.setup,
+    get_levels = WOLF.get_levels,
   },
 
   param =
@@ -1041,8 +1041,8 @@ UNFINISHED["spear"] =
 
   hooks =
   {
-    setup = WOLF.Spear_setup,
-    levels_start = WOLF.Spear_get_levels,
+    setup      = WOLF.Spear_setup,
+    get_levels = WOLF.Spear_get_levels,
   },
 
   param = UNFINISHED["wolf3d"].param,

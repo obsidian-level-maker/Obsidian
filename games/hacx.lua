@@ -483,8 +483,8 @@ UNFINISHED["hacx"] =
 
   hooks =
   {
-    setup = HACX.setup,
-    levels_start = HACX.get_levels,
+    setup      = HACX.setup,
+    get_levels = HACX.get_levels,
   },
 
   param =

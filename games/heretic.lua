@@ -2073,10 +2073,10 @@ OB_GAMES["heretic"] =
 
   hooks =
   {
-    setup = HERETIC.setup,
-    levels_start = HERETIC.get_levels,
-    begin_level = HERETIC.begin_level,
-    all_done = HERETIC.all_done,
+    setup        = HERETIC.setup,
+    get_levels   = HERETIC.get_levels,
+    begin_level  = HERETIC.begin_level,
+    all_done     = HERETIC.all_done,
   },
 
   param =

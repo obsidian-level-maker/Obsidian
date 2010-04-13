@@ -640,7 +640,7 @@ UNFINISHED["chex3"] =
   hooks =
   {
     setup        = CHEX3.setup,
-    levels_start = CHEX3.get_levels,
+    get_levels   = CHEX3.get_levels,
     begin_level  = CHEX3.begin_level,
   },
 

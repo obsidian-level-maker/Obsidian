@@ -341,8 +341,8 @@ UNFINISHED["nukem"] =
 
   hooks =
   {
-    setup = NUKEM.setup,
-    levels_start = NUKEM.get_levels,
+    setup       = NUKEM.setup,
+    get_levels  = NUKEM.get_levels,
   },
 
   param =

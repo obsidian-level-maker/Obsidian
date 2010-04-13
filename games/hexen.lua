@@ -2417,9 +2417,9 @@ UNFINISHED["hexen"] =
 
   hooks =
   {
-    setup = HEXEN.setup,
-    levels_start = HEXEN.get_levels,
-    begin_level = HEXEN.begin_level,
+    setup        = HEXEN.setup,
+    get_levels   = HEXEN.get_levels,
+    begin_level  = HEXEN.begin_level,
   },
 
   param =

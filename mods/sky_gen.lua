@@ -261,7 +261,7 @@ OB_MODULES["sky_gen_doom"] =
 
   hooks =
   {
-    levels_start = Skygen_generate_doom,
+    get_levels = Skygen_generate_doom,
   },
 }
 

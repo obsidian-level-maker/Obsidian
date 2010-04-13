@@ -533,9 +533,12 @@ UNFINISHED["chex"] =
 {
   label = "Chex Quest",
 
-  setup_func        = CHEX.setup,
-  levels_start_func = CHEX.get_levels,
-  begin_level_func  = CHEX.begin_level,
+  hooks =
+  {
+    setup        = CHEX.setup,
+    get_levels   = CHEX.get_levels,
+    begin_level  = CHEX.begin_level,
+  },
 
   param =
   {
