@@ -103,7 +103,7 @@ print = function(...)
   local args = { ... }
   local line = ""
 
-  for i = 1,gui.va_count(...) do
+  for i = 1,select("#", ...) do
     line = line .. "\t" .. tostring(args[i])
   end
 
@@ -227,7 +227,7 @@ function ob_console_dump(info, ...)
 
   -- grab results and show them
   local args = { ... }
-  local count = gui.va_count(...)
+  local count = select("#", ...)
 
   if count == 0 then
     gui.conprintf("no results\n")

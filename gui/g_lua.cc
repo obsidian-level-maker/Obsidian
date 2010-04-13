@@ -415,16 +415,6 @@ int gui_abort(lua_State *L)
 }
 
 
-// LUA: va_count(...)
-//
-int gui_va_count(lua_State *L)
-{
-  int nargs = lua_gettop(L);
-
-  lua_pushinteger(L, nargs);
-  return 1;
-}
-
 // LUA: rand_seed(seed)
 //
 int gui_rand_seed(lua_State *L)
@@ -555,8 +545,6 @@ static const luaL_Reg gui_script_funcs[] =
   { "progress",    gui_progress },
   { "ticker",      gui_ticker },
   { "abort",       gui_abort },
-
-  { "va_count",    gui_va_count },
   { "rand_seed",   gui_rand_seed },
   { "random",      gui_random },
 
