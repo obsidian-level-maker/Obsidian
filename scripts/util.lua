@@ -510,8 +510,8 @@ function geom.angle_diff(A, B)
 end
 
 function geom.rotate_vec(x, y, angle)
-  local cos_R = math.cos(angle * math.pi / 128)
-  local sin_R = math.sin(angle * math.pi / 128)
+  local cos_R = math.cos(angle * math.pi / 180)
+  local sin_R = math.sin(angle * math.pi / 180)
 
   return x*cos_R - y*sin_R, y*cos_R + x*sin_R
 end
