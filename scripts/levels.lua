@@ -46,7 +46,7 @@ require 'rooms'
 require 'fight'
 require 'monsters'
 
-Game = { }
+Levels = { }
 
 
 STYLE_LIST =
@@ -81,7 +81,7 @@ STYLE_LIST =
 }
 
 
-function Game_clean_up()
+function Levels.clean_up()
   GAME   = {}
   PARAM  = {}
   STYLE  = {}
@@ -93,7 +93,7 @@ function Game_clean_up()
 end
 
 
-function Game_merge_tab(name, tab)
+function Levels.merge_tab(name, tab)
   assert(name)
 
   if not tab then
@@ -124,17 +124,17 @@ function Game_merge_tab(name, tab)
 end
 
 
-function Game_merge_table_list(tab_list)
+function Levels.merge_table_list(tab_list)
   for i = 1,#tab_list,2 do
     local name = tab_list[i]
     local tab  = tab_list[i+1]
 
-    Game_merge_tab(name, tab)
+    Levels.merge_tab(name, tab)
   end
 end
 
 
-function Game_get_game_def()
+function Levels.get_game_def()
   local game = OB_GAMES[OB_CONFIG.game]
 
   if not game then
@@ -161,7 +161,7 @@ function Game_get_game_def()
 end
 
 
-function Game_get_engine_def()
+function Levels.get_engine_def()
   local engine = OB_ENGINES[OB_CONFIG.engine]
 
   if not engine then
@@ -188,7 +188,7 @@ function Game_get_engine_def()
 end
 
 
-function Game_sort_modules()
+function Levels.sort_modules()
   GAME.all_modules = {}
 
   -- find all the visible & enabled modules
@@ -217,15 +217,15 @@ function Game_sort_modules()
   -- first entry must be the game def, and second entry must be
   -- the engine def.  NOTE: neither of these are real modules.
 
-  local game   = Game_get_game_def()
-  local engine = Game_get_engine_def()
+  local game   = Levels.get_game_def()
+  local engine = Levels.get_engine_def()
 
   table.insert(GAME.all_modules, 1, game)
   table.insert(GAME.all_modules, 2, engine)
 end
 
 
-function Game_invoke_hook(name, rseed, ...)
+function Levels.invoke_hook(name, rseed, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
     for index,mod in ipairs(GAME.all_modules) do
@@ -240,10 +240,10 @@ function Game_invoke_hook(name, rseed, ...)
 end
 
 
-function Game_setup()
-  Game_clean_up()
+function Levels.setup()
+  Levels.clean_up()
 
-  Game_sort_modules()
+  Levels.sort_modules()
 
   -- merge parameters and tables from each module
 
@@ -253,11 +253,11 @@ function Game_setup()
     end
 
     if mod.extend_other and mod.extend_other.tables then
-      Game_merge_table_list(mod.extend_other.tables)
+      Levels.merge_table_list(mod.extend_other.tables)
     end
 
     if mod.tables then
-      Game_merge_table_list(mod.tables)
+      Levels.merge_table_list(mod.tables)
     end
   end -- for mod
 
@@ -266,19 +266,19 @@ function Game_setup()
 
   for name,theme in pairs(OB_THEMES) do
     if theme.shown and theme.tables then
-      Game_merge_table_list(theme.tables)
+      Levels.merge_table_list(theme.tables)
     end
   end
 
 
-  Game_invoke_hook("setup",  OB_CONFIG.seed)
+  Levels.invoke_hook("setup",  OB_CONFIG.seed)
 
   table.name_up(ROOM_PATTERNS)
   table.expand_copies(ROOM_PATTERNS)
 end
 
 
-function Level_themes()
+function Levels.choose_themes()
   gui.rand_seed(OB_CONFIG.seed * 200)
 
   local function set_sub_theme(L, name)
@@ -314,7 +314,7 @@ function Level_themes()
   end
 
 
-  ---| Level_themes |---
+  ---| Levels.choose_themes |---
 
   gui.printf("\n")
 
@@ -449,7 +449,7 @@ function Level_themes()
 end
 
 
-function Level_rarify(seed_idx, tab)
+function Levels.rarify(seed_idx, tab)
   gui.rand_seed(OB_CONFIG.seed * 200 + seed_idx)
 
   local function Rarify(name, rarity)
@@ -473,7 +473,7 @@ function Level_rarify(seed_idx, tab)
     end -- for group
   end
 
-  --| Level_rarify |--
+  --| Levels.rarify |--
 
   for _,L in ipairs(GAME.all_levels) do
     if not L.allowances then
@@ -496,7 +496,7 @@ function Level_rarify(seed_idx, tab)
 end
 
 
-function Level_styles()
+function Levels.do_styles()
   gui.rand_seed(LEVEL.seed)
 
   local style_tab = table.copy(STYLE_LIST)
@@ -526,7 +526,7 @@ function Level_styles()
 end
 
 
-function Level_build_it()
+function Levels.build_it()
   gui.rand_seed(LEVEL.seed)
 
   -- does the level have a custom build function?
@@ -542,6 +542,8 @@ function Level_build_it()
     if gui.abort() then return "abort" end
     gui.progress(10)
 
+  Levels.invoke_hook("connect_rooms",  LEVEL.seed)
+
   Connect_rooms()
     if gui.abort() then return "abort" end
     gui.progress(30)
@@ -550,12 +552,16 @@ function Level_build_it()
     if gui.abort() then return "abort" end
     gui.progress(50)
 
+  Levels.invoke_hook("build_rooms",  LEVEL.seed)
+
   Rooms_build_all()
     if gui.abort() then return "abort" end
     gui.progress(70)
 
   -- here is where the tiler.lua layout code used to kick in
   assert(not PARAM.tiled)
+
+  Levels.invoke_hook("make_battles",  LEVEL.seed)
 
   Monsters_make_battles()
     if gui.abort() then return "abort" end
@@ -565,7 +571,7 @@ function Level_build_it()
 end
 
 
-function Level_handle_prebuilt()
+function Levels.handle_prebuilt()
   assert(LEVEL.prebuilt_wad)
   assert(LEVEL.prebuilt_map)
 
@@ -576,7 +582,7 @@ function Level_handle_prebuilt()
 end
 
 
-function Level_make(L, index, NUM)
+function Levels.make_level(L, index, NUM)
   LEVEL = L
 
   assert(LEVEL)
@@ -598,14 +604,14 @@ function Level_make(L, index, NUM)
   -- use a pre-built level ?
 
   if LEVEL.prebuilt then
-    Game_invoke_hook("begin_level",  LEVEL.seed)
+    Levels.invoke_hook("begin_level",  LEVEL.seed)
 
-    local res = Level_handle_prebuilt()
+    local res = Levels.handle_prebuilt()
     if res == "abort" then
       return res
     end
 
-    Game_invoke_hook("end_level",  LEVEL.seed)
+    Levels.invoke_hook("end_level",  LEVEL.seed)
     return "ok"
   end
 
@@ -613,9 +619,9 @@ function Level_make(L, index, NUM)
   gui.begin_level()
   gui.property("level_name", LEVEL.name);
 
-  Level_styles()
+  Levels.do_styles()
 
-  Game_invoke_hook("begin_level",  LEVEL.seed)
+  Levels.invoke_hook("begin_level",  LEVEL.seed)
 
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
@@ -630,13 +636,13 @@ function Level_make(L, index, NUM)
   end
 
 
-  local res = Level_build_it()
+  local res = Levels.build_it()
   if res == "abort" then
     return res
   end
 
 
-  Game_invoke_hook("end_level",  LEVEL.seed)
+  Levels.invoke_hook("end_level",  LEVEL.seed)
 
   gui.end_level()
 
@@ -653,29 +659,29 @@ function Level_make(L, index, NUM)
 end
 
 
-function Game_make_all()
+function Levels.make_all()
 
   GAME.all_levels = {}
 
-  Game_invoke_hook("levels_start",  OB_CONFIG.seed)
+  Levels.invoke_hook("levels_start",  OB_CONFIG.seed)
 
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
   end
 
-  Level_themes()
+  Levels.choose_themes()
 
-  Level_rarify(1, GAME.weapons)
---Level_rarify(2, GAME.monsters)
---Level_rarify(3, GAME.powerups)
+  Levels.rarify(1, GAME.weapons)
+--Levels.rarify(2, GAME.monsters)
+--Levels.rarify(3, GAME.powerups)
 
   for index,L in ipairs(GAME.all_levels) do
-    if Level_make(L, index, #GAME.all_levels) == "abort" then
+    if Levels.make_level(L, index, #GAME.all_levels) == "abort" then
       return "abort"
     end
   end
 
-  Game_invoke_hook("all_done",  OB_CONFIG.seed)
+  Levels.invoke_hook("all_done",  OB_CONFIG.seed)
 
   return "ok"
 end

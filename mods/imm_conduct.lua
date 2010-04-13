@@ -364,7 +364,7 @@ function ICDSE.setup(self)
   local helper = self.options.helper.value
 
   if ICDSE.HELPER_TYPES[helper] then
-    Game_merge_tab("things", ICDSE.HELPER_TYPES[helper])
+    Levels.merge_tab("things", ICDSE.HELPER_TYPES[helper])
   end
 end
 

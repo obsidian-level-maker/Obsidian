@@ -715,11 +715,11 @@ function ob_build_cool_shit()
     profiler:start()
   end
 
-  Game_setup()
+  Levels.setup()
 
-  local status = Game_make_all()
+  local status = Levels.make_all()
 
-  Game_clean_up()
+  Levels.clean_up()
 
   if _profiler then
     profiler:stop()

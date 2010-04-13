@@ -157,9 +157,9 @@ STEALTH.CHOICES =
 
 function STEALTH.setup(self)
   if OB_CONFIG.engine == "edge" then
-    Game_merge_tab("things", STEALTH.THINGS_EDGE)
+    Levels.merge_tab("things", STEALTH.THINGS_EDGE)
   else
-    Game_merge_tab("things", STEALTH.THINGS_ZDOOM)
+    Levels.merge_tab("things", STEALTH.THINGS_ZDOOM)
   end
 
   -- apply the Quantity choice
