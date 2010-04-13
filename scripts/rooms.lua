@@ -91,8 +91,10 @@ DIAGONALS:
 require 'defs'
 require 'util'
 
+Rooms = { }
 
-function Room_setup_theme(R)
+
+function Rooms.setup_theme(R)
   if not R.outdoor then
     R.main_tex = rand.pick(LEVEL.building_walls)
     return
@@ -105,7 +107,7 @@ function Room_setup_theme(R)
   R.main_tex = R.arena.courtyard_floor
 end
 
-function Room_setup_theme_Scenic(R)
+function Rooms.setup_theme_Scenic(R)
   R.outdoor = true  -- ???
 
   --[[
@@ -150,7 +152,7 @@ function Room_setup_theme_Scenic(R)
   end
 end
 
-function Rooms_assign_facades()
+function Rooms.assign_facades()
   for i = 1,#LEVEL.all_rooms,4 do
     local R = LEVEL.all_rooms[i]
     R.facade = rand.pick(LEVEL.building_facades)
@@ -188,19 +190,19 @@ function Rooms_assign_facades()
   end
 end
 
-function Rooms_choose_themes()
+function Rooms.choose_themes()
   for _,R in ipairs(LEVEL.all_rooms) do
-    Room_setup_theme(R)
+    Rooms.setup_theme(R)
   end
   for _,R in ipairs(LEVEL.scenic_rooms) do
-    Room_setup_theme_Scenic(R)
+    Rooms.setup_theme_Scenic(R)
   end
 
-  Rooms_assign_facades()
+  Rooms.assign_facades()
 end
 
 
-function Rooms_decide_hallways()
+function Rooms.decide_hallways()
   -- Marks certain rooms to be hallways, using the following criteria:
   --   - indoor non-leaf room
   --   - prefer small rooms
@@ -290,7 +292,7 @@ function Rooms_decide_hallways()
   end
 
 
-  ---| Room_decide_hallways |---
+  ---| Rooms.decide_hallways |---
 
   if not THEME.hallway_walls then
     gui.printf("Hallways disabled (no theme info)\n")
@@ -364,7 +366,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
 end
 
 
-function Rooms_setup_symmetry()
+function Rooms.setup_symmetry()
   -- The 'symmetry' field of each room already has a value
   -- (from the big-branch connection system).  Here we choose
   -- whether to keep that, expand it (rare) or discard it.
@@ -477,7 +479,7 @@ function Rooms_setup_symmetry()
   end
 
 
-  --| Rooms_setup_symmetry |--
+  --| Rooms.setup_symmetry |--
 
   for _,R in ipairs(LEVEL.all_rooms) do
     decide_layout_symmetry(R)
@@ -500,7 +502,7 @@ function Rooms_setup_symmetry()
 end
 
 
-function Rooms_reckon_doors()
+function Rooms.reckon_doors()
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
@@ -532,7 +534,7 @@ function Rooms_reckon_doors()
   end
 
 
-  ---| Rooms_reckon_doors |---
+  ---| Rooms.reckon_doors |---
 
   for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
@@ -588,7 +590,7 @@ function Rooms_reckon_doors()
 end
 
 
-function Rooms_synchronise_skies()
+function Rooms.synchronise_skies()
   -- make sure that any two outdoor rooms which touch have the same sky_h
 
   for loop = 1,10 do
@@ -615,7 +617,7 @@ function Rooms_synchronise_skies()
 end
 
 
-function Rooms_border_up()
+function Rooms.border_up()
 
   local function make_map_edge(R, S, side)
     if R.outdoor then
@@ -1082,7 +1084,7 @@ function Rooms_border_up()
   end
 
 
-  ---| Rooms_border_up |---
+  ---| Rooms.border_up |---
   
   for _,R in ipairs(LEVEL.all_rooms) do
     border_up(R)
@@ -1098,7 +1100,7 @@ function Rooms_border_up()
 end
 
 
-function Room_make_ceiling(R)
+function Rooms.make_ceiling(R)
 
   local function outdoor_ceiling()
     if R.floor_max_h then
@@ -1795,7 +1797,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
   end
 
 
-  ---| Room_make_ceiling |---
+  ---| Rooms.make_ceiling |---
 
   if R.outdoor then
     outdoor_ceiling()
@@ -1805,7 +1807,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 end
 
 
-function Room_add_crates(R)
+function Rooms.add_crates(R)
 
   -- NOTE: temporary crap!
   -- (might be slightly useful for finding big spots for masterminds)
@@ -1839,7 +1841,7 @@ function Room_add_crates(R)
   end
 
 
-  --| Room_add_crates |--
+  --| Rooms.add_crates |--
 
   if STYLE.crates == "none" then return end
 
@@ -1879,7 +1881,7 @@ function Room_add_crates(R)
 end
 
 
-function Room_build_cave(R)
+function Rooms.build_cave(R)
   local flood = R.flood
 
   local w_tex  = R.cave_tex
@@ -2024,7 +2026,7 @@ function Room_build_cave(R)
 end
 
 
-function Room_build_seeds(R)
+function Rooms.build_seeds(R)
 
   local function do_teleporter(S)
     -- TEMP HACK SHIT
@@ -2684,10 +2686,10 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
   end -- build_seed()
 
 
-  ---==| Room_build_seeds |==---
+  ---==| Rooms.build_seeds |==---
 
   if R.cave then
-    Room_build_cave(R)
+    Rooms.build_cave(R)
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
@@ -2699,15 +2701,15 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 end
 
 
-function Rooms_build_all()
+function Rooms.build_all()
 
-  gui.printf("\n--==| Rooms_build_all |==--\n\n")
+  gui.printf("\n--==| Build Rooms |==--\n\n")
 
-  Rooms_choose_themes()
-  Rooms_decide_hallways()
+  Rooms.choose_themes()
+  Rooms.decide_hallways()
 
-  Rooms_setup_symmetry()
-  Rooms_reckon_doors()
+  Rooms.setup_symmetry()
+  Rooms.reckon_doors()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
@@ -2717,22 +2719,22 @@ function Rooms_build_all()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_one(R)
-    Room_make_ceiling(R)
-    Room_add_crates(R)
+    Rooms.make_ceiling(R)
+    Rooms.add_crates(R)
   end
 
   for _,R in ipairs(LEVEL.scenic_rooms) do
     Layout_scenic(R)
-    Room_make_ceiling(R)
+    Rooms.make_ceiling(R)
   end
 
-  Rooms_synchronise_skies()
+  Rooms.synchronise_skies()
 
-  Rooms_border_up()
+  Rooms.border_up()
 
   Layout_edge_of_map()
 
-  for _,R in ipairs(LEVEL.scenic_rooms) do Room_build_seeds(R) end
-  for _,R in ipairs(LEVEL.all_rooms)    do Room_build_seeds(R) end
+  for _,R in ipairs(LEVEL.scenic_rooms) do Rooms.build_seeds(R) end
+  for _,R in ipairs(LEVEL.all_rooms)    do Rooms.build_seeds(R) end
 end
 
