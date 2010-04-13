@@ -30,8 +30,9 @@
 
 require 'util'
 
+Naming = { }
 
-NAMING_THEMES =
+Naming.THEMES =
 {
   TECH =
   {
@@ -1341,14 +1342,14 @@ NAMING_THEMES =
 }
 
 
-NAMING_IGNORE_WORDS =
+Naming.IGNORE_WORDS =
 {
   ["the"]=1, ["a"]=1,  ["an"]=1, ["of"]=1, ["s"]=1,
   ["for"]=1, ["in"]=1, ["on"]=1, ["to"]=1,
 }
 
 
-function Name_fixup(name)
+function Naming.fix_up(name)
   -- convert "_" to "-"
   name = string.gsub(name, "_ ", "-")
   name = string.gsub(name, "_",  "-")
@@ -1360,11 +1361,11 @@ function Name_fixup(name)
 end
 
 
-function Naming_split_word(tab, word)
+function Naming.split_word(tab, word)
   for w in string.gmatch(word, "%a+") do
     local low = string.lower(w)
 
-    if not NAMING_IGNORE_WORDS[low] then
+    if not Naming.IGNORE_WORDS[low] then
       -- truncate to 4 letters
       if #low > 4 then
         low = string.sub(low, 1, 4)
@@ -1376,7 +1377,7 @@ function Naming_split_word(tab, word)
 end
 
 
-function Naming_match_parts(word, parts)
+function Naming.match_parts(word, parts)
   for p,_ in pairs(parts) do
     for w in string.gmatch(word, "%a+") do
       local low = string.lower(w)
@@ -1396,7 +1397,7 @@ function Naming_match_parts(word, parts)
 end
 
 
-function Name_from_pattern(DEF)
+function Naming.one_from_pattern(DEF)
   local name = ""
   local words = {}
 
@@ -1427,7 +1428,7 @@ function Name_from_pattern(DEF)
       local w = rand.key_by_probs(lex)
       name = name .. w
 
-      Naming_split_word(words, w)
+      Naming.split_word(words, w)
     end
   end
 
@@ -1435,29 +1436,28 @@ function Name_from_pattern(DEF)
 end
 
 
-function Name_choose_one(DEF, seen_words, max_len)
-
+function Naming.choose_one(DEF, max_len)
   local name, parts
 
   repeat
-    name, parts = Name_from_pattern(DEF)
+    name, parts = Naming.one_from_pattern(DEF)
   until #name <= max_len
 
   -- adjust probabilities
   for c,divisor in pairs(DEF.divisors) do
     for w,prob in pairs(DEF.lexicon[c]) do
-      if Naming_match_parts(w, parts) then
+      if Naming.match_parts(w, parts) then
         DEF.lexicon[c][w] = prob / divisor
       end
     end
   end
 
-  return Name_fixup(name)
+  return Naming.fix_up(name)
 end
 
 
-function Naming_gen_list(theme, count, max_len)
-  local defs = table.deep_copy(NAMING_THEMES)
+function Naming.generate(theme, count, max_len)
+  local defs = table.deep_copy(Naming.THEMES)
 
   if GAME.naming_themes then
     table.deep_merge(defs, GAME.naming_themes)
@@ -1465,14 +1465,13 @@ function Naming_gen_list(theme, count, max_len)
  
   local DEF = defs[theme]
   if not DEF then
-    error("Naming_generate: unknown theme: " .. tostring(theme))
+    error("Naming.generate: unknown theme: " .. tostring(theme))
   end
 
   local list = {}
-  local seen_words = {}
 
   for i = 1, count do
-    local name = Name_choose_one(DEF, seen_words, max_len)
+    local name = Naming.choose_one(DEF, max_len)
 
     table.insert(list, name)
   end
@@ -1481,24 +1480,24 @@ function Naming_gen_list(theme, count, max_len)
 end
 
 
-function Naming_grab_one(theme)
+function Naming.grab_one(theme)
   if not GAME.name_cache then
     GAME.name_cache = {}
   end
 
   if not GAME.name_cache[theme] or table.empty(GAME.name_cache[theme]) then
-    GAME.name_cache[theme] = Naming_gen_list(theme, 30, PARAM.max_name_length)
+    GAME.name_cache[theme] = Naming.generate(theme, 30, PARAM.max_name_length)
   end
 
   return table.remove(GAME.name_cache[theme], 1)
 end
 
 
-function Naming_test()
+function Naming.test()
   local function test_theme(T)
     for set = 1,30 do
       gui.rand_seed(set)
-      local list = Naming_generate(T, 12, 28)
+      local list = Naming.generate(T, 12, 28)
 
       for i,name in ipairs(list) do
         gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
