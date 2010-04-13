@@ -214,35 +214,36 @@ end
 ------------------------------------------------------------------------
 
 
+function Build.prepare_trip()
+
+  -- build the psychedelic mapping
+  local m_before = {}
+  local m_after  = {}
+
+  for m,_ in pairs(GAME.materials) do
+    if not (GAME.sanity_map and GAME.sanity_map[m]) and
+       not (string.sub(m,1,1) == "_") and
+       not (string.sub(m,1,2) == "SW") and
+       not (string.sub(m,1,3) == "BUT")
+    then
+      table.insert(m_before, m)
+      table.insert(m_after,  m)
+    end
+  end
+
+  rand.shuffle(m_after)
+
+  LEVEL.psycho_map = {}
+
+  for i = 1,#m_before do
+    LEVEL.psycho_map[m_before[i]] = m_after[i]
+  end
+end
+
+
 function psychedelic_mat(name)
   if GAME.sanity_map and GAME.sanity_map[name] then
     return GAME.sanity_map[name]
-  end
-
-  if not LEVEL.psycho_map then
-    -- build the psychedelic mapping --
-
-    local m_before = {}
-    local m_after  = {}
-
-    for m,_ in pairs(GAME.materials) do
-      if not (GAME.sanity_map and GAME.sanity_map[m]) and
-         not (string.sub(m,1,1) == "_") and
-         not (string.sub(m,1,2) == "SW") and
-         not (string.sub(m,1,3) == "BUT")
-      then
-        table.insert(m_before, m)
-        table.insert(m_after,  m)
-      end
-    end
-
-    rand.shuffle(m_after)
-
-    LEVEL.psycho_map = {}
-
-    for i = 1,#m_before do
-      LEVEL.psycho_map[m_before[i]] = m_after[i]
-    end
   end
 
   if LEVEL.psycho_map[name] then

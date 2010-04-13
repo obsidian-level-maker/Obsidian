@@ -525,6 +525,10 @@ function Levels.do_styles()
   end
 
   SKY_H = rand.sel(5, 768, 512)
+
+  if OB_CONFIG.theme == "psycho" then
+    Build.prepare_trip()
+  end
 end
 
 
