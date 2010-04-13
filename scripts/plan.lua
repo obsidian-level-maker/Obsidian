@@ -1041,7 +1041,7 @@ end
 
 function Plan.create_rooms()
 
-  gui.printf("\n--==| Plan.create_rooms |==--\n\n")
+  gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
 

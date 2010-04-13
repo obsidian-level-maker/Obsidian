@@ -54,6 +54,8 @@ require 'defs'
 require 'util'
 
 
+Monsters = { }
+
 -- Quake flags
 QUAKE_FLAGS =
 {
@@ -65,7 +67,7 @@ QUAKE_FLAGS =
 }
 
 
-function Player_init()
+function Monsters.player_init()
   LEVEL.hmodels = {}
 
   for _,SK in ipairs(SKILLS) do
@@ -80,7 +82,7 @@ function Player_init()
   end -- for SK
 end
 
-function Player_give_weapon(weapon, to_CL)
+function Monsters.player_give_weapon(weapon, to_CL)
   gui.debugf("Giving weapon: %s\n", weapon)
 
   for _,SK in ipairs(SKILLS) do
@@ -92,7 +94,7 @@ function Player_give_weapon(weapon, to_CL)
   end -- for SK
 end
 
-function Player_give_stuff(hmodel, give_list)
+function Monsters.player_give_stuff(hmodel, give_list)
   for _,give in ipairs(give_list) do
     if give.health then
       gui.debugf("Giving [%s/%s] health: %d\n",
@@ -117,7 +119,7 @@ function Player_give_stuff(hmodel, give_list)
   end
 end
 
-function Player_calc_firepower()
+function Monsters.player_firepower()
   -- The 'firepower' is (roughly) how much damage per second
   -- the player would normally do using their current set of
   -- weapons.
@@ -159,13 +161,13 @@ function Player_calc_firepower()
     end
 
     if divisor == 0 then
-      error("Player_calc_firepower: no weapons???")
+      error("Monsters.player_firepower: no weapons???")
     end
 
     return firepower / divisor
   end
 
-  ---| Player_calc_firepower |---
+  ---| Monsters.player_firepower |---
 
   local fp_total  = 0
   local class_num = 0
@@ -183,7 +185,7 @@ function Player_calc_firepower()
 end
 
 
-function Monsters_init()
+function Monsters.init()
   table.name_up(GAME.monsters)
   table.name_up(GAME.weapons)
   table.name_up(GAME.pickups)
@@ -231,7 +233,7 @@ function Monsters_init()
 end
 
 
-function Monsters_global_palette()
+function Monsters.global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
@@ -308,7 +310,7 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
 end
 
 
-function Monsters_do_pickups()
+function Monsters.do_pickups()
 
   local function distribute(R, qty, D)  -- Dest
     for _,SK in ipairs(SKILLS) do
@@ -785,7 +787,7 @@ gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
   end
 
 
-  ---| Monsters_do_pickups |---
+  ---| Monsters.do_pickups |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
@@ -801,7 +803,7 @@ gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
 end
 
 
-function Monsters_in_room(R)
+function Monsters.fill_room(R)
 
   local function is_big(mon)
     return GAME.things[mon].r > 30
@@ -1027,7 +1029,7 @@ function Monsters_in_room(R)
       return crazy_palette()
     end
 
-    local fp = Player_calc_firepower()
+    local fp = Monsters.player_firepower()
     gui.debugf("Firepower = %1.3f\n", fp)
     
     local list = {}
@@ -1631,7 +1633,7 @@ function Monsters_in_room(R)
   local function give_monster_drops(mon_list, hmodel)
     for _,info in ipairs(mon_list) do
       if info.give then
-        Player_give_stuff(hmodel, info.give)
+        Monsters.player_give_stuff(hmodel, info.give)
       end
     end
   end
@@ -1668,9 +1670,9 @@ function Monsters_in_room(R)
   end
 
 
-  ---| Monsters_in_room |---
+  ---| Monsters.fill_room |---
 
-  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
+  gui.debugf("Monsters.fill_room @ %s\n", R:tostr())
 
   R.monster_list = {}
   R.fight_stats  = make_empty_stats()
@@ -1730,7 +1732,7 @@ function Monsters_in_room(R)
 end
 
 
-function Monsters_show_stats()
+function Monsters.show_stats()
   local total = 0
   for _,count in pairs(LEVEL.mon_stats) do
     total = total + count
@@ -1755,14 +1757,14 @@ function Monsters_show_stats()
 end
 
 
-function Monsters_make_battles()
+function Monsters.make_battles()
   
-  gui.printf("\n--==| Monsters_make_battles |==--\n\n")
+  gui.printf("\n--==| Make Battles |==--\n\n")
 
-  Player_init()
+  Monsters.player_init()
 
-  Monsters_init()
-  Monsters_global_palette()
+  Monsters.init()
+  Monsters.global_palette()
 
   local cur_arena = -1
 
@@ -1772,20 +1774,20 @@ function Monsters_make_battles()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     if R.arena.weapon and (R.arena.id > cur_arena) then
-      Player_give_weapon(R.arena.weapon)
+      Monsters.player_give_weapon(R.arena.weapon)
       cur_arena = R.arena.id
     end
 
-    Monsters_in_room(R)
+    Monsters.fill_room(R)
   end -- for R
 
-  Monsters_show_stats()
+  Monsters.show_stats()
 
   -- Once all monsters have been chosen and all battles
   -- (including cages and traps) have been simulated, then
   -- we can decide what pickups to add (the easy part) and
   -- _where_ to place them (the hard part).
 
-  Monsters_do_pickups()
+  Monsters.do_pickups()
 end
 

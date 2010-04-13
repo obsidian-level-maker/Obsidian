@@ -548,7 +548,7 @@ function Levels.build_it()
     if gui.abort() then return "abort" end
     gui.progress(30)
 
-  Quest_assign()
+  Quest.assign_quests()
     if gui.abort() then return "abort" end
     gui.progress(50)
 
@@ -563,7 +563,7 @@ function Levels.build_it()
 
   Levels.invoke_hook("make_battles",  LEVEL.seed)
 
-  Monsters_make_battles()
+  Monsters.make_battles()
     if gui.abort() then return "abort" end
     gui.progress(90)
 
