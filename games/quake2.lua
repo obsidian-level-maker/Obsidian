@@ -2035,11 +2035,7 @@ UNFINISHED["quake2"] =
 
     -- TODO
 
-    -- dunno if needed by Quake II, but it doesn't hurt
-    center_map = true,
-
-    seed_size = 240,
-    seed_limit = 32,
+    seed_limit = 42,
 
     entity_delta_z = 24,
 

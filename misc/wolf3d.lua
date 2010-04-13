@@ -1002,8 +1002,8 @@ UNFINISHED["wolf3d"] =
     four_dirs = true,
     sealed_start = true,
 
-    seed_size = 192,  -- actually 3 blocks
-    seed_limit = 21,  -- 64 / 3
+    -- assumes each seed is 3x3 blocks
+    seed_limit = 21,
 
     mon_time_max = 12,
     mon_damage_max  = 200,

@@ -1253,11 +1253,7 @@ OB_GAMES["quake"] =
 
     -- TODO
 
-    -- need to put center of map near (0,0) since the quake
-    -- engine needs all coords to lie between -4000 and +4000.
-    center_map = true,
-
-    seed_size  = 192,
+    -- Quake engine needs all coords to lie between -4000 and +4000.
     seed_limit = 42,
 
     entity_delta_z = 24,

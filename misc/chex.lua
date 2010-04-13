@@ -552,8 +552,6 @@ UNFINISHED["chex"] =
 
     custom_flats = true,
 
-    seed_size = 256,
-
     max_name_length = 28,
 
     skip_monsters = { 10,35 },

@@ -4097,8 +4097,6 @@ OB_GAMES["doom1"] =
 
     custom_flats = true,
 
-    seed_size = 192,
-
     max_name_length = 28,
 
     skip_monsters = { 26,40 },
@@ -4200,8 +4198,6 @@ OB_GAMES["doom2"] =
     raising_start = true,
 
     custom_flats = true,
-
-    seed_size = 192,
 
     -- this is roughly how many characters can fit on the
     -- intermission screens (the CWILVxx patches).  It does

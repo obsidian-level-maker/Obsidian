@@ -68,6 +68,8 @@ SEED_W = 0
 SEED_H = 0
 SEED_D = 0
 
+SEED_SIZE = 192
+
 
 SEED_CLASS =
 {
@@ -104,8 +106,6 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
 
   SEEDS = table.array_2D(W, H)
 
-  local SIZE = assert(PARAM.seed_size)
-
   for x = 1,W do for y = 1,H do
     SEEDS[x][y] = {}
 
@@ -114,28 +114,20 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
       {
         sx=x, sy=y, sz=z,
 
-        x1 = (x-1) * SIZE,
-        y1 = (y-1) * SIZE,
+        x1 = (x-1) * SEED_SIZE,
+        y1 = (y-1) * SEED_SIZE,
 
         thick  = {},
         border = {},
       }
 
-      if true or PARAM.center_map then
-        -- adjustment needed for Quake 1
-        -- (this formula ensures that 'coord 0' is still a seed boundary)
-        S.x1 = S.x1 - int(SEED_W / 2) * SIZE
-        S.y1 = S.y1 - int(SEED_H / 2) * SIZE
+      -- centre the map : needed for Quake, OK for other games
+      -- (this formula ensures that 'coord 0' is still a seed boundary)
+      S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
+      S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
 
-      elseif PARAM.seed_size == 256 then
-        -- offset by 32 units so that DOOM flats align with a
-        -- 64x64 pedestal (etc) at the center of the seed.
-        S.x1 = S.x1 + 32
-        S.y1 = S.y1 + 32
-      end
-
-      S.x2 = S.x1 + SIZE
-      S.y2 = S.y1 + SIZE
+      S.x2 = S.x1 + SEED_SIZE
+      S.y2 = S.y1 + SEED_SIZE
 
       table.set_class(S, SEED_CLASS)
 

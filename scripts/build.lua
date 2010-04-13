@@ -385,7 +385,7 @@ function get_transform_for_seed_side(S, side, thick)
   if side == 6 then T.add_x, T.add_y = S.x2, S.y1 end
   if side == 8 then T.add_x, T.add_y = S.x2, S.y2 end
 
-  return T, PARAM.seed_size, thick
+  return T, SEED_SIZE, thick
 end
 
 function get_transform_for_seed_center(S)
@@ -2272,7 +2272,7 @@ function Build.picture(S, side, z1, z2, skin)
   local gap = skin.gap or WD
 
   local total_w = count * WD + (count - 1) * gap
-  if total_w > PARAM.seed_size-16 then
+  if total_w > SEED_SIZE-16 then
     error("Picture is too wide: " .. tostring(skin.pic_w))
   end
 

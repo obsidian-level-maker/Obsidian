@@ -220,8 +220,6 @@ UNFINISHED["strife"] =
     teleporters = true,
     noblaze_door = true,
 
-    seed_size = 256,
-
     max_name_length = 28,
 
     skip_monsters = { 20,30 },
