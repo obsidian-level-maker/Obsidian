@@ -621,7 +621,7 @@ function Rooms.border_up()
 
   local function make_map_edge(R, S, side)
     if R.outdoor then
-      -- a fence will be created by Layout_edge_of_map()
+      -- a fence will be created by Layout.edge_of_map()
       S.border[side].kind = "nothing"
     else
       S.border[side].kind = "wall"
@@ -1911,8 +1911,10 @@ function Rooms.build_cave(R)
 
   local function choose_tex(last, tab)
     local tex = rand.key_by_probs(tab)
-    if tex == last then tex = rand.key_by_probs(tab) end
-    if tex == last then tex = rand.key_by_probs(tab) end
+    for loop = 1,4 do
+      if tex ~= last then break; end
+      tex = rand.key_by_probs(tab)
+    end
     return tex
   end
 
@@ -2223,7 +2225,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       Build_small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else
-      error("Layout_one: unknown purpose! " .. tostring(R.purpose))
+      error("unknown purpose: " .. tostring(R.purpose))
     end
   end
 
@@ -2718,13 +2720,13 @@ function Rooms.build_all()
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_one(R)
+    Layout.do_room(R)
     Rooms.make_ceiling(R)
     Rooms.add_crates(R)
   end
 
   for _,R in ipairs(LEVEL.scenic_rooms) do
-    Layout_scenic(R)
+    Layout.do_scenic(R)
     Rooms.make_ceiling(R)
   end
 
@@ -2732,7 +2734,7 @@ function Rooms.build_all()
 
   Rooms.border_up()
 
-  Layout_edge_of_map()
+  Layout.edge_of_map()
 
   for _,R in ipairs(LEVEL.scenic_rooms) do Rooms.build_seeds(R) end
   for _,R in ipairs(LEVEL.all_rooms)    do Rooms.build_seeds(R) end
