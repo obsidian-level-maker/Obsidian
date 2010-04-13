@@ -52,7 +52,7 @@ function Trans.set(T)
 end
 
 function Trans.modify(what, value)
-  Trans[what] = value
+  Trans.TRANSFORM[what] = value
 end
 
 
