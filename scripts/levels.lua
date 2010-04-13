@@ -523,6 +523,8 @@ function Levels.do_styles()
   if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
     STYLE.skies = OB_CONFIG.outdoors
   end
+
+  SKY_H = rand.sel(5, 768, 512)
 end
 
 
