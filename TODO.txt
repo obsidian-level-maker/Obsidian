@@ -2,6 +2,50 @@
 TODO
 ====
 
+>>  don't use mirroring to create doors (etc)
+
+>>  gui.add_brush([kind,] coords)
+
+>>  Mat.solid() etc???
+
+Example:
+    brushes =
+    {
+      {
+        "solid",
+        { x=0, y=50, face={ BLAH } },
+        { x=80, y=50, face={ BLAH } },
+        { x=40, y=90, face={ BLAH } },
+        { b=100, face={ BLAH } },               -- bottom, -EXTREME_H if absent
+        { t=160, slope={..}, face={ BLAH } },   -- top,    +EXTREME_H if absent
+      },
+
+      ...
+    }
+
+Fields of a face:
+    (nothing is compulsory)
+
+    tex
+    x_offset
+    y_offset
+    peg
+    mark
+
+    kind
+    tag
+    flags
+    args
+    light
+
+Slope fields:  x1, y1, x2, y2, dz
+
+Second and subsequent X/Y coords can omit the face, which then
+uses the one from the first face.
+
+
+
+
 Console:
   +  make window resizable
 
