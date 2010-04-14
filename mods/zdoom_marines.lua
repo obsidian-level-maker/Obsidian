@@ -233,7 +233,7 @@ ZDOOM_MARINE.CTL_PROBS =
 }
 
 
-function ZDOOM_MARINE.CTL_setup(self)
+function ZDOOM_MARINE.control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -258,7 +258,7 @@ OB_MODULES["zdoom_marine_control"] =
 
   hooks =
   {
-    setup = ZDOOM_MARINE.CTL_setup,
+    setup = ZDOOM_MARINE.control_setup,
   },
 
   options =

@@ -204,6 +204,11 @@ UNFINISHED["strife"] =
 {
   label = "Strife",
 
+  tables =
+  {
+    STRIFE
+  },
+
   hooks =
   {
     setup      = STRIFE.setup,
@@ -232,19 +237,6 @@ UNFINISHED["strife"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", STRIFE.PLAYER_MODEL,
-    
-    "things",   STRIFE.THINGS,
-    "monsters", STRIFE.MONSTERS,
-    "weapons",  STRIFE.WEAPONS,
-    "pickups",  STRIFE.PICKUPS,
-
-    "materials", STRIFE.MATERIALS,
-    "sub_themes",  STRIFE.SUB_THEMES,
   },
 }
 

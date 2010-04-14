@@ -637,6 +637,11 @@ UNFINISHED["chex3"] =
 {
   label = "Chex Quest 3",
 
+  tables =
+  {
+    CHEX3
+  },
+
   hooks =
   {
     setup        = CHEX3.setup,
@@ -666,21 +671,5 @@ UNFINISHED["chex3"] =
     damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "things",       CHEX3.THINGS,
-    "materials",    CHEX3.MATERIALS,
-    "sanity_map",   CHEX3.SANITY_MAP,
-    "lifts",        CHEX3.LIFTS,
-    "liquids",      CHEX3.LIQUIDS,
-    "rooms",        CHEX3.ROOMS,
-    "themes",       CHEX3.SUB_THEMES,
-    "monsters",     CHEX3.MONSTERS,
-    "weapons",      CHEX3.WEAPONS,
-    "pickups",      CHEX3.PICKUPS,
-    "player_model", CHEX3.PLAYER_MODEL,
-    "episodes",     CHEX3.EPISODES,
   },
 }

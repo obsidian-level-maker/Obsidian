@@ -981,6 +981,11 @@ UNFINISHED["wolf3d"] =
 
   priority = -1,  -- keep at bottom
 
+  tables =
+  {
+    WOLF
+  },
+
   hooks =
   {
     setup      = WOLF.setup,
@@ -1013,22 +1018,6 @@ UNFINISHED["wolf3d"] =
     ammo_factor   = 0.8,
     health_factor = 0.7,
   },
-
-  tables =
-  {
-    "things",   WOLF.THINGS,
-    "player_model", WOLF.PLAYER_MODEL,
-
-    "monsters", WOLF.MONSTERS,
-    "weapons",  WOLF.WEAPONS,
-    "pickups", WOLF.PICKUPS,
-
-    "materials", WOLF.MATERIALS,
-    "sub_themes", WOLF.SUB_THEMES,
-    "rooms",  WOLF.ROOMS,
-
-    "key_doors", WOLF.KEY_DOORS,
-  },
 }
 
 
@@ -1039,6 +1028,11 @@ UNFINISHED["spear"] =
 
   priority = -2,  -- keep at bottom (with Wolf3d)
 
+  tables =
+  {
+    WOLF
+  },
+
   hooks =
   {
     setup      = WOLF.Spear_setup,
@@ -1047,9 +1041,5 @@ UNFINISHED["spear"] =
 
   param = UNFINISHED["wolf3d"].param,
 
-  tables =
-  {
-    -- FIXME
-  },
 }
 

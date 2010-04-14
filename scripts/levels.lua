@@ -126,7 +126,9 @@ function Levels.merge_table_list(tab_list)
     for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy
       if string.match(name, "^[A-Z]") then
-        assert(type(tab) == "table")
+        if type(tab) ~= "table" then
+          error("Game field not a table: " .. tostring(name))
+        end
         Levels.merge_tab(name, tab)
       end
     end

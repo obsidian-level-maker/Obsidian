@@ -320,7 +320,6 @@ function NUKEM.get_levels()
 end
 
 
-
 ------------------------------------------------------------
 
 
@@ -338,6 +337,11 @@ OB_THEMES["nukem_city"] =
 UNFINISHED["nukem"] =
 {
   label = "Duke Nukem",
+
+  tables =
+  {
+    NUKEM
+  },
 
   hooks =
   {
@@ -367,22 +371,6 @@ UNFINISHED["nukem"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", NUKEM.PLAYER_MODEL,
-    
-    "things",   NUKEM.THINGS,
-    "monsters", NUKEM.MONSTERS,
-    "weapons",  NUKEM.WEAPONS,
-    "pickups",  NUKEM.PICKUPS,
-
-    "materials", NUKEM.MATERIALS,
-    "liquids",   NUKEM.LIQUIDS,
-    "sub_themes", NUKEM.SUB_THEMES,
-    "pictures",  NUKEM.PICTURES,
-    "steps",     NUKEM.STEPS,
   },
 }
 

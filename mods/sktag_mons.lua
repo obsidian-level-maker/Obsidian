@@ -288,7 +288,7 @@ SKULLTAG.CONTROL_PROBS =
 }
 
 
-function SKULLTAG.MonControl_setup(self)
+function SKULLTAG.mon_control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -313,7 +313,7 @@ OB_MODULES["sktag_mon_control"] =
 
   hooks =
   {
-    setup = SKULLTAG.MonControl_setup,
+    setup = SKULLTAG.mon_control_setup,
   },
 
   options =
@@ -334,7 +334,7 @@ OB_MODULES["sktag_mon_control"] =
 ----------------------------------------------------------------
 
 
-function SKULLTAG.WeapControl_setup(self)
+function SKULLTAG.weap_control_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -364,7 +364,7 @@ OB_MODULES["sktag_weap_control"] =
 
   hooks =
   {
-    setup = SKULLTAG.WeapControl_setup,
+    setup = SKULLTAG.weap_control_setup,
   },
 
   options =

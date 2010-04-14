@@ -1240,6 +1240,11 @@ OB_GAMES["quake"] =
 {
   label = "Quake",
 
+  tables =
+  {
+    QUAKE1
+  },
+
   hooks =
   {
     setup        = QUAKE1.setup,
@@ -1268,30 +1273,6 @@ OB_GAMES["quake"] =
     damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", QUAKE1.PLAYER_MODEL,
-
-    "things",   QUAKE1.THINGS,
-    "monsters", QUAKE1.MONSTERS,
-    "weapons",  QUAKE1.WEAPONS,
-    "pickups",  QUAKE1.PICKUPS,
-
-    "materials", QUAKE1.MATERIALS,
-    "pictures",  QUAKE1.PICTURES,
-    "steps",     QUAKE1.STEPS,
-    "exits",     QUAKE1.EXITS,
-
-    "episodes", QUAKE1.EPISODES,
-    "rooms",    QUAKE1.ROOMS,
-
-    "key_doors", QUAKE1.KEY_DOORS,
-    "misc_fabs", QUAKE1.MISC_PREFABS,
-
-    "sub_defaults", QUAKE1.SUB_THEME_DEFAULTS,
-    "sub_themes",   QUAKE1.SUB_THEMES,
   },
 }
 

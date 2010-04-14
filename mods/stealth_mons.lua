@@ -234,7 +234,7 @@ STEALTH.CONTROL_PROBS =
 }
 
 
-function STEALTH.Control_setup(self)
+function STEALTH.control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -260,7 +260,7 @@ OB_MODULES["stealth_mon_control"] =
 
   hooks =
   {
-    setup = STEALTH.Control_setup,
+    setup = STEALTH.control_setup,
   },
 
   options =

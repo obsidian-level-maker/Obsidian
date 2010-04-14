@@ -40,7 +40,7 @@ DOOM.MON_CONTROL_PROBS =
 }
 
 
-function DOOM.Mon_Control_setup(self)
+function DOOM.mon_control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
@@ -69,7 +69,7 @@ OB_MODULES["mon_control"] =
 
   hooks =
   {
-    setup = DOOM.Mon_Control_setup,
+    setup = DOOM.mon_control_setup,
   },
 
   options =
@@ -126,7 +126,7 @@ DOOM.WEAP_CONTROL_PROBS =
 }
 
 
-function DOOM.Weap_Control_setup(self)
+function DOOM.weap_control_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
@@ -150,14 +150,14 @@ end
 
 OB_MODULES["weap_control"] =
 {
-  label = "Weapon Control (DOOM)",
+  label = "weap_c Control (DOOM)",
 
   for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
 
   hooks =
   {
-    setup = DOOM.Weap_Control_setup,
+    setup = DOOM.weap_control_setup,
   },
 
   options =

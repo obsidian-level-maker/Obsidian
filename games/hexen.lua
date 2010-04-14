@@ -2415,6 +2415,11 @@ UNFINISHED["hexen"] =
 {
   label = "Hexen",
 
+  tables =
+  {
+    HEXEN
+  },
+
   hooks =
   {
     setup        = HEXEN.setup,
@@ -2452,40 +2457,6 @@ UNFINISHED["hexen"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", HEXEN.PLAYER_MODEL,
-
-    "things",     HEXEN.THINGS,
-    "monsters",   HEXEN.MONSTERS,
-    "weapons",    HEXEN.WEAPONS,
-    "pickups",    HEXEN.PICKUPS,
-
-    "materials",  HEXEN.MATERIALS,
-    "combos",     HEXEN.COMBOS,
-    "exits",      HEXEN.EXITS,
-    "hallways",   HEXEN.HALLWAYS,
-
-    "episodes",   HEXEN.EPISODES,
-    "themes",     HEXEN.SUB_THEMES,
-    "rooms",      HEXEN.ROOMS,
-
-    "hangs",      HEXEN.OVERHANGS,
-    "pedestals",  HEXEN.PEDESTALS,
-    "rails",      HEXEN.RAILS,
-
-    "liquids",    HEXEN.LIQUIDS,
-    "switches",   HEXEN.SWITCHES,
-    "doors",      HEXEN.DOORS,
-    "key_doors",  HEXEN.KEY_DOORS,
-    "lifts",      HEXEN.LIFTS,
-
-    "pics",       HEXEN.PICS,
-    "images",     HEXEN.IMAGES,
-    "lights",     HEXEN.LIGHTS,
-    "wall_lights", HEXEN.WALL_LIGHTS,
   },
 }
 

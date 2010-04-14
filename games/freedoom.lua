@@ -61,7 +61,7 @@ FREEDOOM.SCENERY_LIST =
   hang_leg      = 0,
 }
 
-FREEDOOM.LIQUIDS = --FIXME
+FREEDOOM.LIQUID_LIST = --FIXME
 {
   water = { floor="FWATER1", wall="WFALL1" },
 }
@@ -105,17 +105,16 @@ OB_GAMES["freedoom"] =
 
   extends = "doom2",
 
+  tables =
+  {
+    DOOM, DOOM1, DOOM2
+  },
+
   hooks =
   {
     setup = FREEDOOM.setup,
   },
 
-  tables =
-  {
-    -- FIXME: doom 1 stuff
-
-    -- FreeDoom stuff --
-
-  },
+  -- no additional parameters
 }
 

@@ -2022,6 +2022,11 @@ UNFINISHED["quake2"] =
 {
   label = "Quake 2",
 
+  tables =
+  {
+    QUAKE2
+  },
+
   hooks =
   {
     setup        = QUAKE2.setup,
@@ -2052,27 +2057,6 @@ UNFINISHED["quake2"] =
 
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "things", QUAKE2.THINGS,
-    "player_model", QUAKE2.PLAYER_MODEL,
-
-    "monsters", QUAKE2.MONSTERS,
-    "weapons",  QUAKE2.WEAPONS,
-    "pickups",  QUAKE2.PICKUPS,
-
-    "materials", QUAKE2.MATERIALS,
-    "combos", QUAKE2.COMBOS,
-    "exits",  QUAKE2.EXITS,
-
-    "episodes", QUAKE2.EPISODES,
-    "sub_themes", QUAKE2.SUB_THEMES,
-    "rooms",  QUAKE2.ROOMS,
-
-    "key_doors", QUAKE2.KEY_DOORS,
-    "misc_fabs", QUAKE2.MISC_PREFABS,
   },
 }
 
