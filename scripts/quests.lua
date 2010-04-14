@@ -928,7 +928,7 @@ function Quest.add_weapons()
   local function do_start_weapon(arena)
     local name_tab = {}
 
-    for name,info in pairs(GAME.weapons) do
+    for name,info in pairs(GAME.WEAPONS) do
       local prob = info.start_prob
 
       if OB_CONFIG.strength == "crazy" then
@@ -950,7 +950,7 @@ function Quest.add_weapons()
     end
 
     local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.weapons[weapon]
+    local info = GAME.WEAPONS[weapon]
 
     gui.debugf("Start weapon: %s\n", weapon)
 
@@ -965,7 +965,7 @@ function Quest.add_weapons()
   local function do_new_weapon(arena)
     local name_tab = {}
 
-    for name,info in pairs(GAME.weapons) do
+    for name,info in pairs(GAME.WEAPONS) do
       local prob = info.add_prob
 
       if LEVEL.added_weapons[name] or LEVEL.allowances[name] == 0 then
@@ -983,7 +983,7 @@ function Quest.add_weapons()
     end
 
     local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.weapons[weapon]
+    local info = GAME.WEAPONS[weapon]
 
     -- Select a room to put the weapon in.
     -- This is very simplistic, either the start room of the
@@ -1096,7 +1096,7 @@ function Quest.select_textures()
       error("Theme is missing step skins") 
     else
       local name = rand.key_by_probs(THEME.steps)
-      LEVEL.step_skin = assert(GAME.steps[name])
+      LEVEL.step_skin = assert(GAME.STEPS[name])
     end
   end
 
@@ -1105,7 +1105,7 @@ function Quest.select_textures()
       -- OK
     else
       local name = rand.key_by_probs(THEME.lifts)
-      LEVEL.lift_skin = assert(GAME.lifts[name])
+      LEVEL.lift_skin = assert(GAME.LIFTS[name])
     end
   end
 

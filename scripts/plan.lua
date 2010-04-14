@@ -1037,7 +1037,7 @@ function Plan.create_rooms()
   if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
     local name = rand.key_by_probs(THEME.liquids)
     gui.printf("Liquid = %s\n", name)
-    LEVEL.liquid = assert(GAME.liquids[name])
+    LEVEL.liquid = assert(GAME.LIQUIDS[name])
   end
 
   Plan.determine_size()

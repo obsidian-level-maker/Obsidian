@@ -1459,8 +1459,8 @@ end
 function Naming.generate(theme, count, max_len)
   local defs = table.deep_copy(Naming.THEMES)
 
-  if GAME.naming_themes then
-    table.deep_merge(defs, GAME.naming_themes)
+  if GAME.NAME_THEMES then
+    table.deep_merge(defs, GAME.NAME_THEMES)
   end
  
   local DEF = defs[theme]

@@ -2423,7 +2423,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
 
       if string.is_digit(ch) then
         S.content = "pillar"
-        S.pillar_skin = assert(GAME.pillars[R.pillar_what])
+        S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
       end
     end end -- for x, y
   end

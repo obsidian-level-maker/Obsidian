@@ -133,7 +133,7 @@ end
 function Trans.entity(name, x, y, z, props)
   assert(name)
 
-  local info = GAME.things[name]
+  local info = GAME.THINGS[name]
   if not info then
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
     return
@@ -220,8 +220,8 @@ function Build.prepare_trip()
   local m_before = {}
   local m_after  = {}
 
-  for m,_ in pairs(GAME.materials) do
-    if not (GAME.sanity_map and GAME.sanity_map[m]) and
+  for m,_ in pairs(GAME.MATERIALS) do
+    if not (GAME.SANITY_MAP and GAME.SANITY_MAP[m]) and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
        not (string.sub(m,1,3) == "BUT")
@@ -242,8 +242,8 @@ end
 
 
 function psychedelic_mat(name)
-  if GAME.sanity_map and GAME.sanity_map[name] then
-    return GAME.sanity_map[name]
+  if GAME.SANITY_MAP and GAME.SANITY_MAP[name] then
+    return GAME.SANITY_MAP[name]
   end
 
   if LEVEL.psycho_map[name] then
@@ -259,23 +259,23 @@ function safe_get_mat(name)
     name = psychedelic_mat(name)
   end
 
-  local mat = GAME.materials[name]
+  local mat = GAME.MATERIALS[name]
 
   -- special handling for DOOM switches
   if not mat and string.sub(name,1,3) == "SW2" then
-    mat = GAME.materials["SW1" .. string.sub(name,4)]
+    mat = GAME.MATERIALS["SW1" .. string.sub(name,4)]
     if mat then
       mat = { t=name, f=mat.f }  -- create new SW2XXX material
-      GAME.materials[name] = mat
+      GAME.MATERIALS[name] = mat
     end
   end
 
   if not mat then
     gui.printf("\nLACKING MATERIAL : %s\n\n", name)
-    mat = assert(GAME.materials["_ERROR"])
+    mat = assert(GAME.MATERIALS["_ERROR"])
 
     -- prevent further messages
-    GAME.materials[name] = mat
+    GAME.MATERIALS[name] = mat
   end
 
   return mat
@@ -305,7 +305,7 @@ function get_mat(wall, floor, ceil)
 end
 
 function get_sky()
-  local mat = assert(GAME.materials["_SKY"])
+  local mat = assert(GAME.MATERIALS["_SKY"])
 
   local light = LEVEL.sky_light or 0.75
 
@@ -351,7 +351,7 @@ function get_rail()
 end
 
 function rail_coord(x, y, name)
-  local rail = GAME.rails[name]
+  local rail = GAME.RAILS[name]
 
   if not rail then
     gui.printf("LACKING RAIL %s\n", name)

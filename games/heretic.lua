@@ -18,11 +18,6 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
---
---  Big thanks to Sam Trenholme who greatly improved the
---  Heretic theme (including lots of new COMBOs).
---
-----------------------------------------------------------------
 
 HERETIC = { }
 
@@ -2071,6 +2066,11 @@ OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
+  tables =
+  {
+    HERETIC
+  },
+
   hooks =
   {
     setup        = HERETIC.setup,
@@ -2101,32 +2101,6 @@ OB_GAMES["heretic"] =
     damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", HERETIC.PLAYER_MODEL,
-    
-    "things",   HERETIC.THINGS,
-    "monsters", HERETIC.MONSTERS,
-    "weapons",  HERETIC.WEAPONS,
-    "pickups",  HERETIC.PICKUPS,
-
-    "materials", HERETIC.MATERIALS,
-    "rails",     HERETIC.RAILS,
-    "liquids",   HERETIC.LIQUIDS,
-
-    "steps",     HERETIC.STEPS,
-    "pictures",  HERETIC.PICTURES,
-    "doors",     HERETIC.DOORS,
-    "exits",     HERETIC.EXITS,
-
-    "sub_themes", HERETIC.SUB_THEMES,
-    "sub_defaults", HERETIC.SUB_THEME_DEFAULTS,
-    "rooms",    HERETIC.ROOMS,
-
-    "switches", HERETIC.SWITCHES,
-    "lifts",    HERETIC.LIFTS,
   },
 }
 

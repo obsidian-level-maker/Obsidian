@@ -18,7 +18,11 @@
 --
 ----------------------------------------------------------------
 
-DOOM = { }
+DOOM  = { }  -- common stuff
+
+DOOM1 = { }  -- stuff specific to each game
+DOOM2 = { }  --
+
 
 DOOM.THINGS =
 {
@@ -190,7 +194,7 @@ DOOM.THINGS =
 ----------------------------------------------------------------
 
 
-DOOM.COMMON_MATERIALS =
+DOOM.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="METAL",    f="CEIL5_2" },
@@ -503,11 +507,11 @@ DOOM.COMMON_MATERIALS =
   -- different to the textures, hence renamed the flats as
   -- STEP_F1 and STEP_F2.
 
-} -- end of DOOM.COMMON_MATERIALS
+} -- end of DOOM.MATERIALS
 
 
 
-DOOM.D1_MATERIALS =
+DOOM1.MATERIALS =
 {
   -- textures with best-matching flat
 
@@ -586,7 +590,7 @@ DOOM.D1_MATERIALS =
 
 
 
-DOOM.D2_MATERIALS =
+DOOM2.MATERIALS =
 {
   -- textures with best-matching flat
 
@@ -2026,7 +2030,7 @@ DOOM.ROOMS =
   },
 }
 
-DOOM.D1_ROOMS =
+DOOM1.ROOMS =
 {
   PLANT =
   {
@@ -2081,7 +2085,7 @@ DOOM.D1_ROOMS =
   },
 }
 
-DOOM.D2_ROOMS =
+DOOM2.ROOMS =
 {
   PLANT =
   {
@@ -2233,7 +2237,7 @@ DOOM.SUB_THEME_DEFAULTS =
   switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
   bars = { bar_silver=50 },
 
-  -- MISC STUFF : these don't quite fit in yet --
+  -- MISC STUFF : these don't quite fit in yet --  (FIXME)
 
   periph_pillar_mat = "SUPPORT3",
   beam_mat = "METAL",
@@ -2281,7 +2285,7 @@ DOOM.SUB_THEME_DEFAULTS =
 --]]
 
 
-DOOM.D1_SUB_THEMES =
+DOOM1.SUB_THEMES =
 {
   doom_tech1 =
   {
@@ -2601,7 +2605,7 @@ DOOM.D1_SUB_THEMES =
 }
 
 
-DOOM.D2_SUB_THEMES =
+DOOM2.SUB_THEMES =
 {
   doom_tech1 =
   {
@@ -3362,7 +3366,7 @@ DOOM.MONSTERS =
 }
 
 
-DOOM.D2_MONSTERS =
+DOOM2.MONSTERS =
 {
   gunner =
   {
@@ -3672,7 +3676,7 @@ DOOM.PLAYER_MODEL =
 }
 
 
-DOOM.D1_EPISODES =
+DOOM1.EPISODES =
 {
   episode1 =
   {
@@ -3703,7 +3707,7 @@ DOOM.D1_EPISODES =
   },
 }
 
-DOOM.D2_EPISODES =
+DOOM2.EPISODES =
 {
   episode1 =
   {
@@ -3729,23 +3733,23 @@ DOOM.D2_EPISODES =
 ------------------------------------------------------------
 
 
-function DOOM.D1_setup()
+function DOOM.d1_setup()
   -- remove Doom II only stuff
-  GAME.weapons["super"] = nil
-  GAME.pickups["mega"]  = nil
+  GAME.WEAPONS["super"] = nil
+  GAME.PICKUPS["mega"]  = nil
 
   -- tweak monster probabilities
-  GAME.monsters["Cyberdemon"].crazy_prob = 8
-  GAME.monsters["Mastermind"].crazy_prob = 12
+  GAME.MONSTERS["Cyberdemon"].crazy_prob = 8
+  GAME.MONSTERS["Mastermind"].crazy_prob = 12
 end
 
 
-function DOOM.D2_setup()
+function DOOM.d2_setup()
   -- nothing needed
 end
 
 
-function DOOM.D1_get_levels()
+function DOOM.d1_get_levels()
   local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
   local EP_NUM  = sel(OB_CONFIG.length == "full", EP_MAX, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
@@ -3757,7 +3761,7 @@ function DOOM.D1_get_levels()
   local few_episodes = { 1, 1, 2, 2 }
 
   for episode = 1,EP_NUM do
-    local ep_info = DOOM.D1_EPISODES["episode" .. episode]
+    local ep_info = DOOM1.EPISODES["episode" .. episode]
     assert(ep_info)
 
     GAME.original_themes[episode] = ep_info.orig_theme
@@ -3789,15 +3793,15 @@ function DOOM.D1_get_levels()
       end
 
       if LEV.name == "E1M8" then
-        LEV.prebuilt = GAME.prebuilt_levels.phobos_anomaly
+        LEV.prebuilt = GAME.PREBUILT_LEVELS.phobos_anomaly
       elseif LEV.name == "E2M8" then
-        LEV.prebuilt = GAME.prebuilt_levels.tower_of_babel
+        LEV.prebuilt = GAME.PREBUILT_LEVELS.tower_of_babel
       elseif LEV.name == "E3M8" then
-        LEV.prebuilt = GAME.prebuilt_levels.dis
+        LEV.prebuilt = GAME.PREBUILT_LEVELS.dis
       elseif LEV.name == "E4M6" then
-        LEV.prebuilt = GAME.prebuilt_levels.against_thee
+        LEV.prebuilt = GAME.PREBUILT_LEVELS.against_thee
       elseif LEV.name == "E4M8" then
-        LEV.prebuilt = GAME.prebuilt_levels.unto_the_cruel
+        LEV.prebuilt = GAME.PREBUILT_LEVELS.unto_the_cruel
       end
 
       if LEV.prebuilt then
@@ -3815,7 +3819,7 @@ function DOOM.D1_get_levels()
 end
 
 
-function DOOM.D2_get_levels()
+function DOOM.d2_get_levels()
   local MAP_NUM = 11
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
@@ -3854,7 +3858,7 @@ function DOOM.D2_get_levels()
       ep_along = map / MAP_NUM
     end
 
-    local ep_info = DOOM.D2_EPISODES["episode" .. episode]
+    local ep_info = DOOM2.EPISODES["episode" .. episode]
     assert(ep_info)
     assert(ep_along <= 1)
 
@@ -3880,7 +3884,7 @@ function DOOM.D2_get_levels()
 
     -- secret levels
     if map == 31 or map == 32 then
-      LEV.sub_theme = GAME.sub_themes["doom_wolf1"]
+      LEV.sub_theme = GAME.SUB_THEMES["doom_wolf1"]
       LEV.name_theme = "URBAN"
     end
 
@@ -3889,13 +3893,13 @@ function DOOM.D2_get_levels()
     end
 
     if map == 7 then
-      LEV.prebuilt = GAME.prebuilt_levels.dead_simple
+      LEV.prebuilt = GAME.PREBUILT_LEVELS.dead_simple
     elseif map == gotcha_map then
-      LEV.prebuilt = GAME.prebuilt_levels.gotcha
+      LEV.prebuilt = GAME.PREBUILT_LEVELS.gotcha
     elseif map == gallow_map then
-      LEV.prebuilt = GAME.prebuilt_levels.gallow_arena
+      LEV.prebuilt = GAME.PREBUILT_LEVELS.gallow_arena
     elseif map == 30 then
-      LEV.prebuilt = GAME.prebuilt_levels.icon_of_sin
+      LEV.prebuilt = GAME.PREBUILT_LEVELS.icon_of_sin
     end
 
     if LEV.prebuilt then
@@ -4074,10 +4078,15 @@ OB_GAMES["doom1"] =
 
   priority = 98, -- keep at second spot
 
+  tables =
+  {
+    DOOM, DOOM1
+  },
+
   hooks =
   {
-    setup        = DOOM.D1_setup,
-    get_levels   = DOOM.D1_get_levels,
+    setup        = DOOM.d1_setup,
+    get_levels   = DOOM.d1_get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,
@@ -4106,45 +4115,6 @@ OB_GAMES["doom1"] =
     ammo_factor   = 0.8,
     health_factor = 0.7,
   },
-
-  tables =
-  {
-    ---- common stuff ----
-
-    "player_model", DOOM.PLAYER_MODEL,
-
-    "things",   DOOM.THINGS,
-    "monsters", DOOM.MONSTERS,
-    "weapons",  DOOM.WEAPONS,
-    "ammos",    DOOM.AMMOS,
-    "pickups",  DOOM.PICKUPS,
-
-    "materials",  DOOM.COMMON_MATERIALS,
-    "sanity_map", DOOM.SANITY_MAP,
-    "rails",      DOOM.RAILS,
-    "liquids",    DOOM.LIQUIDS,
-
-    "steps",      DOOM.STEPS,
-    "lifts",      DOOM.LIFTS,
-    "pictures",   DOOM.PICTURES,
-    "pillars",    DOOM.PILLARS,
-    "crates",     DOOM.CRATES,
-    "doors",      DOOM.DOORS,
-    "switches",   DOOM.SWITCHES,
-    "exits",      DOOM.EXITS,
-
-    "rooms",  DOOM.ROOMS,
-
-    "sub_defaults",    DOOM.SUB_THEME_DEFAULTS,
-
-    "prebuilt_levels", DOOM.PREBUILT_LEVELS,
-
-    ---- DOOM I stuff ----
-
-    "materials",  DOOM.D1_MATERIALS,
-    "sub_themes", DOOM.D1_SUB_THEMES,
-    "rooms",      DOOM.D1_ROOMS,
-  },
 }
 
 
@@ -4155,12 +4125,12 @@ OB_GAMES["ultdoom"] =
   extends = "doom1",
 
   priority = 97, -- keep at third spot
+  
+  -- no additional tables
 
   -- no additional hooks
 
   -- no additional parameters
-  
-  -- no additional tables
 }
 
 
@@ -4172,10 +4142,15 @@ OB_GAMES["doom2"] =
 
   priority = 99, -- keep at top
 
+  tables =
+  {
+    DOOM, DOOM2
+  },
+
   hooks =
   {
-    setup        = DOOM.D2_setup,
-    get_levels   = DOOM.D2_get_levels,
+    setup        = DOOM.d2_setup,
+    get_levels   = DOOM.d2_get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,
@@ -4216,45 +4191,5 @@ OB_GAMES["doom2"] =
     health_factor = 0.7,
   },
 
-  tables =
-  {
-    ---- common stuff ----
-
-    "player_model", DOOM.PLAYER_MODEL,
-
-    "things",   DOOM.THINGS,
-    "monsters", DOOM.MONSTERS,
-    "weapons",  DOOM.WEAPONS,
-    "ammos",    DOOM.AMMOS,
-    "pickups",  DOOM.PICKUPS,
-
-    "materials",  DOOM.COMMON_MATERIALS,
-    "sanity_map", DOOM.SANITY_MAP,
-    "rails",      DOOM.RAILS,
-    "liquids",    DOOM.LIQUIDS,
-
-    "steps",      DOOM.STEPS,
-    "lifts",      DOOM.LIFTS,
-    "pictures",   DOOM.PICTURES,
-    "pillars",    DOOM.PILLARS,
-    "crates",     DOOM.CRATES,
-    "doors",      DOOM.DOORS,
-    "switches",   DOOM.SWITCHES,
-    "exits",      DOOM.EXITS,
-
-    "rooms",  DOOM.ROOMS,
-
-    "sub_defaults",    DOOM.SUB_THEME_DEFAULTS,
-
-    "prebuilt_levels", DOOM.PREBUILT_LEVELS,
-
-    ---- DOOM II stuff ----
-
-    "materials",  DOOM.D2_MATERIALS,
-    "sub_themes", DOOM.D2_SUB_THEMES,
-    "rooms",      DOOM.D2_ROOMS,
-
-    "monsters", DOOM.D2_MONSTERS,
-  },
 }
 

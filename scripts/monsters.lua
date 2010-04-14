@@ -71,7 +71,7 @@ function Monsters.player_init()
   LEVEL.hmodels = {}
 
   for _,SK in ipairs(SKILLS) do
-    local hm_set = table.deep_copy(GAME.player_model)
+    local hm_set = table.deep_copy(GAME.PLAYER_MODEL)
 
     for CL,hmodel in pairs(hm_set) do
       hmodel.skill = SK
@@ -135,7 +135,7 @@ function Monsters.player_firepower()
     local divisor   = 0
 
     for weapon,_ in pairs(hmodel.weapons) do
-      local info = GAME.weapons[weapon]
+      local info = GAME.WEAPONS[weapon]
 
       if not info then
         error("Missing weapon info for: " .. weapon)
@@ -186,12 +186,12 @@ end
 
 
 function Monsters.init()
-  table.name_up(GAME.monsters)
-  table.name_up(GAME.weapons)
-  table.name_up(GAME.pickups)
+  table.name_up(GAME.MONSTERS)
+  table.name_up(GAME.WEAPONS)
+  table.name_up(GAME.PICKUPS)
 
-  for name,info in pairs(GAME.monsters) do
-    info.thing = assert(GAME.things[name])
+  for name,info in pairs(GAME.MONSTERS) do
+    info.thing = assert(GAME.THINGS[name])
   end
 
   LEVEL.mon_stats = {}
@@ -208,11 +208,11 @@ function Monsters.init()
 
   local dead_ones = {}
 
-  for name,info in pairs(GAME.monsters) do
+  for name,info in pairs(GAME.MONSTERS) do
     local orig = info.replaces
     if orig then
       assert(info.replace_prob)
-      if not GAME.monsters[orig] then
+      if not GAME.MONSTERS[orig] then
         dead_ones[name] = true
       else
         if not LEVEL.mon_replacement[orig] then
@@ -228,7 +228,7 @@ function Monsters.init()
   -- remove a replacement monster if the monster it replaces
   -- does not exist (e.g. stealth_gunner in DOOM 1 mode).
   for name,_ in pairs(dead_ones) do
-    GAME.monsters[name] = nil
+    GAME.MONSTERS[name] = nil
   end
 end
 
@@ -244,7 +244,7 @@ function Monsters.global_palette()
   LEVEL.global_skip = {}
 
   local list = {}
-  for name,info in pairs(GAME.monsters) do
+  for name,info in pairs(GAME.MONSTERS) do
     if info.prob and info.prob > 0 then
       table.insert(list, name)
     end
@@ -258,7 +258,7 @@ function Monsters.global_palette()
   -- sometimes promote a particular monster
   if rand.odds(30) then
     local promote = list[#list]
-    local M = GAME.monsters[promote]
+    local M = GAME.MONSTERS[promote]
     if not M.never_promote then
       gui.debugf("Promoting monster: %s\n", promote)
       LEVEL.monster_prefs[promote] = 3.5
@@ -271,7 +271,7 @@ function Monsters.global_palette()
     local skip_total = 0
 
     for _,name in ipairs(list) do
-      local M = GAME.monsters[name]
+      local M = GAME.MONSTERS[name]
       local prob = M.skip_prob or 50
       if prob > 0 then
         -- NOTE: we _could_ adjust probability based on Strength setting.
@@ -564,7 +564,7 @@ function Monsters.do_pickups()
   local function decide_pickup(R, stat, qty)
     local item_tab = {}
 
-    for name,info in pairs(GAME.pickups) do
+    for name,info in pairs(GAME.PICKUPS) do
       if info.prob and
          (stat == "health" and info.give[1].health) or
          (info.give[1].ammo == stat)
@@ -584,7 +584,7 @@ function Monsters.do_pickups()
 
     assert(not table.empty(item_tab))
     local name = rand.key_by_probs(item_tab)
-    local info = GAME.pickups[name]
+    local info = GAME.PICKUPS[name]
 
     local count = 1
     
@@ -604,7 +604,7 @@ function Monsters.do_pickups()
       end
     end
 
-    return GAME.pickups[name], count
+    return GAME.PICKUPS[name], count
   end
 
   local function select_pickups(R, item_list, stat, qty, hmodel)
@@ -622,8 +622,8 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
         excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
       end
 
-      if GAME.ammos then
-        excess = math.max(excess, GAME.ammos[stat].start_bonus)
+      if GAME.AMMOS then
+        excess = math.max(excess, GAME.AMMOS[stat].start_bonus)
       end
       gui.debugf("Bonus %s = %1.1f\n", stat, excess)
     end
@@ -746,7 +746,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
-    if table.empty(GAME.pickups) then
+    if table.empty(GAME.PICKUPS) then
       return
     end
 
@@ -806,11 +806,11 @@ end
 function Monsters.fill_room(R)
 
   local function is_big(mon)
-    return GAME.things[mon].r > 30
+    return GAME.THINGS[mon].r > 30
   end
 
   local function is_huge(mon)
-    return GAME.things[mon].r > 60
+    return GAME.THINGS[mon].r > 60
   end
 
   local function calc_toughness()
@@ -981,7 +981,7 @@ function Monsters.fill_room(R)
 
     local list = {}
 
-    for name,info in pairs(GAME.monsters) do
+    for name,info in pairs(GAME.MONSTERS) do
       local prob = info.crazy_prob or info.prob or 0
 
       if LEVEL.global_skip[name] then
@@ -1035,7 +1035,7 @@ function Monsters.fill_room(R)
     local list = {}
     gui.debugf("Monster list:\n")
 
-    for name,info in pairs(GAME.monsters) do
+    for name,info in pairs(GAME.MONSTERS) do
       local prob = prob_for_mon(info, fp, toughness)
 
       if prob > 0 then
@@ -1091,7 +1091,7 @@ function Monsters.fill_room(R)
 
     -- check if fits vertically
     local ceil_h = S.ceil_h or R.ceil_h or SKY_H
-    local thing  = assert(GAME.things[mon])
+    local thing  = assert(GAME.THINGS[mon])
 
     if thing.h >= (ceil_h - S.floor_h - 1) then
       return false
@@ -1135,8 +1135,8 @@ function Monsters.fill_room(R)
   end
 
   local function try_occupy_seed(S, x, y, mon, totals)
-    local info  = GAME.monsters[mon]
-    local thing = GAME.things[mon]
+    local info  = GAME.MONSTERS[mon]
+    local thing = GAME.THINGS[mon]
 
     local sx2, sy2 = x, y
     if is_huge(mon) then
@@ -1169,8 +1169,8 @@ function Monsters.fill_room(R)
   end
 
   local function try_occupy_spot(spot, mon, totals)
-    local info  = GAME.monsters[mon]
-    local thing = GAME.things[mon]
+    local info  = GAME.MONSTERS[mon]
+    local thing = GAME.THINGS[mon]
 
     if thing.r * 2 > (spot.x2 - spot.x1 - 4) then return false end
     if thing.r * 2 > (spot.y2 - spot.y1 - 4) then return false end
@@ -1205,7 +1205,7 @@ function Monsters.fill_room(R)
 
     gui.debugf("steal_a_seed(%s): stealing from %s\n", mon, victim)
 
-    local new_info = GAME.monsters[mon]
+    local new_info = GAME.MONSTERS[mon]
 
     local qty = 1
     if totals[victim] >= 10 then qty = 2 end
@@ -1411,7 +1411,7 @@ function Monsters.fill_room(R)
   end
 
   local function how_many_dudes(mon, count, qty)
-    local info = GAME.monsters[mon]
+    local info = GAME.MONSTERS[mon]
 
     if count <= 1 then return count end
 
@@ -1494,7 +1494,7 @@ function Monsters.fill_room(R)
     -- handle replacements
     if LEVEL.mon_replacement[mon] and not R.no_replacement then
       mon  = rand.key_by_probs(LEVEL.mon_replacement[mon])
-      info = assert(GAME.monsters[mon])
+      info = assert(GAME.MONSTERS[mon])
     end
 
     -- minimum skill needed for the monster to appear
@@ -1605,7 +1605,7 @@ function Monsters.fill_room(R)
 
     for _,SK in ipairs(SKILLS) do
       stats[SK] = {}
-      for CL,_ in pairs(GAME.player_model) do
+      for CL,_ in pairs(GAME.PLAYER_MODEL) do
         stats[SK][CL] = {}
       end
     end
@@ -1617,7 +1617,7 @@ function Monsters.fill_room(R)
     local list = {}
 
     for name,_ in pairs(hmodel.weapons) do
-      local info = assert(GAME.weapons[name])
+      local info = assert(GAME.WEAPONS[name])
       if info.pref then
         table.insert(list, info)
       end

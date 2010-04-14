@@ -94,18 +94,14 @@ end
 
 
 function Levels.merge_tab(name, tab)
-  assert(name)
-
-  if not tab then
-    error("No such table: " .. tostring(name))
-  end
+  assert(name and tab)
 
   if not GAME[name] then
     GAME[name] = table.deep_copy(tab)
     return
   end
 
-  if name ~= "sub_themes" then
+  if name ~= "SUB_THEMES" then
     table.deepish_merge(GAME[name], tab)
     return
   end
@@ -114,22 +110,26 @@ function Levels.merge_tab(name, tab)
 
   for k,sub_t in pairs(tab) do
     if sub_t == REMOVE_ME then
-      GAME.sub_themes[k] = nil
-    elseif not GAME.sub_themes[k] then
-      GAME.sub_themes[k] = table.deep_copy(sub_t)
+      GAME.SUB_THEMES[k] = nil
+    elseif not GAME.SUB_THEMES[k] then
+      GAME.SUB_THEMES[k] = table.deep_copy(sub_t)
     else
-      table.deepish_merge(GAME.sub_themes[k], sub_t)
+      table.deepish_merge(GAME.SUB_THEMES[k], sub_t)
     end
   end
 end
 
 
 function Levels.merge_table_list(tab_list)
-  for i = 1,#tab_list,2 do
-    local name = tab_list[i]
-    local tab  = tab_list[i+1]
-
-    Levels.merge_tab(name, tab)
+  for _,GT in ipairs(tab_list) do
+    assert(GT)
+    for name,tab in pairs(GT) do
+      -- upper-case names should always be tables to copy
+      if string.match(name, "^[A-Z]") then
+        assert(type(tab) == "table")
+        Levels.merge_tab(name, tab)
+      end
+    end
   end
 end
 
@@ -296,7 +296,7 @@ function Levels.choose_themes()
     local sub_tab = {}
     local sub_pattern = "^" .. name
 
-    for which,theme in pairs(GAME.sub_themes) do
+    for which,theme in pairs(GAME.SUB_THEMES) do
       local prob = theme.prob or 50
       if prob > 0 and string.find(which, sub_pattern) then
         sub_tab[which] = prob
@@ -308,7 +308,7 @@ function Levels.choose_themes()
     end
 
     local which = rand.key_by_probs(sub_tab)
-    L.sub_theme = assert(GAME.sub_themes[which])
+    L.sub_theme = assert(GAME.SUB_THEMES[which])
 
     gui.printf("Theme for level %s = %s\n", L.name, which)
   end
@@ -502,8 +502,8 @@ function Levels.do_styles()
   local style_tab = table.copy(STYLE_LIST)
 
   -- per game, per level and per theme style_lists
-  if GAME.style_list then
-    table.merge(style_tab, GAME.style_list)
+  if GAME.STYLES then
+    table.merge(style_tab, GAME.STYLES)
   end
   if LEVEL.style_list then
     table.merge(style_tab, LEVEL.style_list)
@@ -602,8 +602,8 @@ function Levels.make_level(L, index, NUM)
 
   THEME = table.copy(assert(LEVEL.sub_theme))
 
-  if GAME.sub_defaults then
-    table.merge_missing(THEME, GAME.sub_defaults)
+  if GAME.SUB_THEME_DEFAULTS then
+    table.merge_missing(THEME, GAME.SUB_THEME_DEFAULTS)
   end
 
 
@@ -632,7 +632,7 @@ function Levels.make_level(L, index, NUM)
   gui.printf("\nStyles = \n%s\n\n", table.tostr(STYLE, 1))
 
 
-  local error_mat = assert(GAME.materials["_ERROR"])
+  local error_mat = assert(GAME.MATERIALS["_ERROR"])
 
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
@@ -677,9 +677,9 @@ function Levels.make_all()
 
   Levels.choose_themes()
 
-  Levels.rarify(1, GAME.weapons)
---Levels.rarify(2, GAME.monsters)
---Levels.rarify(3, GAME.powerups)
+  Levels.rarify(1, GAME.WEAPONS)
+--Levels.rarify(2, GAME.MONSTERS)
+--Levels.rarify(3, GAME.POWERUPS)
 
   for index,L in ipairs(GAME.all_levels) do
     if Levels.make_level(L, index, #GAME.all_levels) == "abort" then

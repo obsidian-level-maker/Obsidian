@@ -562,7 +562,7 @@ function Rooms.reckon_doors()
           N.border[N.conn_dir] = B2
         end
 
-        if B.kind == "arch" and GAME.doors and not B.tried_door then
+        if B.kind == "arch" and GAME.DOORS and not B.tried_door then
           B.tried_door = true
 
           local prob = door_chance(C.src, C.dest)
@@ -956,7 +956,7 @@ function Rooms.border_up()
 
     if pictures then
       for name,prob in pairs(pictures) do
-        local info = GAME.pictures[name]
+        local info = GAME.PICTURES[name]
         if info and info.height <= v_space then
           pic_tab[name] = prob
         end
@@ -972,7 +972,7 @@ function Rooms.border_up()
   end
 
   local function install_pic(R, bd, pic_name, v_space)
-    skin = assert(GAME.pictures[pic_name])
+    skin = assert(GAME.PICTURES[pic_name])
 
     -- handles symmetry
 
@@ -1425,7 +1425,7 @@ function Rooms.make_ceiling(R)
     local which = rand.key_by_probs(skin_names)
 
     S.content = "pillar"
-    S.pillar_skin = assert(GAME.pillars[which])
+    S.pillar_skin = assert(GAME.PILLARS[which])
 
     R.has_central_pillar = true
 
@@ -1860,7 +1860,7 @@ function Rooms.add_crates(R)
   end
 
   if not skin_names then return end
-  skin = assert(GAME.crates[rand.key_by_probs(skin_names)])
+  skin = assert(GAME.CRATES[rand.key_by_probs(skin_names)])
 
   local chance
 
@@ -2037,7 +2037,7 @@ function Rooms.do_small_exit()
 
   -- FIXME: use single one over a whole episode
   local skin_name = rand.key_by_probs(THEME.small_exits)
-  local skin = assert(GAME.exits[skin_name])
+  local skin = assert(GAME.EXITS[skin_name])
 
   local skin2 =
   {
@@ -2194,7 +2194,7 @@ gui.printf("do_teleport\n")
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
 
-      if GAME.things["player2"] then
+      if GAME.THINGS["player2"] then
         Trans.entity("player2", mx - dist, my, z1, { angle=angle })
         Trans.entity("player3", mx + dist, my, z1, { angle=angle })
         Trans.entity("player4", mx, my - dist, z1, { angle=angle })
@@ -2226,13 +2226,13 @@ gui.printf("do_teleport\n")
       if R.outdoor and THEME.out_exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.out_exits)
-        local skin = assert(GAME.exits[skin_name])
+        local skin = assert(GAME.EXITS[skin_name])
         Build.outdoor_exit_switch(S, dir, z1, skin)
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.exits)
-        local skin = assert(GAME.exits[skin_name])
+        local skin = assert(GAME.EXITS[skin_name])
         Build.exit_pillar(S, z1, skin)
       end
 
@@ -2259,7 +2259,7 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "SWITCH" then
       local LOCK = assert(R.lock)
 gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
-      local INFO = assert(GAME.switches[LOCK.item])
+      local INFO = assert(GAME.SWITCHES[LOCK.item])
       Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
 
     else
@@ -2541,7 +2541,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         end
 
         local door_name = rand.key_by_probs(doors)
-        local skin = assert(GAME.doors[door_name])
+        local skin = assert(GAME.DOORS[door_name])
 
         local skin2 = { inner=w_tex, outer=o_tex }
 
@@ -2559,7 +2559,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local z = assert(S.conn and S.conn.conn_h)
 
         local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.doors[LOCK.item])
+        local skin = assert(GAME.DOORS[LOCK.item])
 
 --if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
         assert(skin.track)
@@ -2577,7 +2577,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "bars" then
         local LOCK = assert(S.border[side].lock)
-        local skin = assert(GAME.doors[LOCK.item])
+        local skin = assert(GAME.DOORS[LOCK.item])
 
         local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
         local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
