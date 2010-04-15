@@ -22,7 +22,16 @@ ZDOOM = { }
 
 ZDOOM.THINGS =
 {
+  -- players --
+
+  player5 = { id=4001, kind="other", r=16,h=56 },
+  player6 = { id=4002, kind="other", r=16,h=56 },
+  player7 = { id=4003, kind="other", r=16,h=56 },
+  player8 = { id=4004, kind="other", r=16,h=56 },
+
   -- monsters --
+
+  mbf_dog = { id=888, kind="monster", r=12,h=28 },
 
   stealth_arach    = { id=9050, kind="monster", r=66,h=64 },
   stealth_vile     = { id=9051, kind="monster", r=20,h=56 },
@@ -48,6 +57,16 @@ ZDOOM.THINGS =
   marine_plasma  = { id=9109, kind="monster", r=16,h=56 },
   marine_rail    = { id=9110, kind="monster", r=16,h=56 },
   marine_bfg     = { id=9111, kind="monster", r=16,h=56 },
+
+  -- scenery --
+
+  fountain_red    = { id=9027, kind="scenery", r=16,h=16, pass=true },
+  fountain_green  = { id=9028, kind="scenery", r=16,h=16, pass=true },
+  fountain_blue   = { id=9029, kind="scenery", r=16,h=16, pass=true },
+  fountain_yellow = { id=9030, kind="scenery", r=16,h=16, pass=true },
+  fountain_purple = { id=9031, kind="scenery", r=16,h=16, pass=true },
+  fountain_black  = { id=9032, kind="scenery", r=16,h=16, pass=true },
+  fountain_white  = { id=9033, kind="scenery", r=16,h=16, pass=true },
 }
 
 ZDOOM.PARAMETERS =

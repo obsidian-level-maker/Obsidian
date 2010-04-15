@@ -31,6 +31,8 @@ EDGE.THINGS =
 
   -- monsters --
 
+  mbf_dog = { id=888, kind="monster", r=12,h=28 },
+
   stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
   stealth_vile     = { id=4051, kind="monster", r=20,h=56 },
   stealth_baron    = { id=4052, kind="monster", r=24,h=64 },
