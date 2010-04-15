@@ -240,19 +240,35 @@ end
 
 
 function ob_match_conf(T)
-
   assert(OB_CONFIG.game)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
-  local game_def   = OB_GAMES  [OB_CONFIG.game]
-  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+  local game_def = OB_GAMES[OB_CONFIG.game]
 
   if T.for_games and not T.for_games[OB_CONFIG.game] then
-    if game_def and game_def.extends and T.for_games[game_def.extends] then
-      -- OK --
-    else
-      return false
+    while game_def do
+      if not game_def.extends then return false end
+
+      if T.for_games[game_def.extends] then
+        break; -- OK --
+      end
+
+      game_def = OB_GAMES[game_def.extends]
+    end
+  end
+
+  local engine_def = OB_ENGINES[OB_CONFIG.engine]
+
+  if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
+    while engine_def do
+      if not engine_def.extends then return false end
+
+      if T.for_engines[engine_def.extends] then
+        break; -- OK --
+      end
+
+      engine_def = OB_GAMES[engine_def.extends]
     end
   end
 
@@ -260,21 +276,13 @@ function ob_match_conf(T)
     return false
   end
 
-  if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
-    if engine_def and engine_def.extends and T.for_engines[engine_def.extends] then
-      -- OK --
-    else
-      return false
-    end
-  end
-
   if T.for_modules then
     for name,_ in pairs(T.for_modules) do
-        local def = OB_MODULES[name]
-        if not (def and def.shown and def.enabled) then
-          return false
-        end
-    end -- for name
+      local def = OB_MODULES[name]
+      if not (def and def.shown and def.enabled) then
+        return false
+      end
+    end
   end
 
   return true --OK--

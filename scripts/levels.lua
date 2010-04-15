@@ -136,53 +136,64 @@ function Levels.merge_table_list(tab_list)
 end
 
 
-function Levels.get_game_def()
-  local game = OB_GAMES[OB_CONFIG.game]
+function Levels.add_game()
+  local function recurse(name, child)
+    local def = OB_GAMES[name]
 
-  if not game then
-    error("UNKNOWN GAME: " .. tostring(OB_CONFIG.game))
-  end
-
-  if game.extends then
-    local other = OB_GAMES[game.extends]
-    if not other then
-      error("UNKNOWN GAME TO EXTEND: " .. game.extends)
+    if not def then
+      error("UNKNOWN GAME: " .. name)
     end
 
-    game.extend_other = other
+    -- here is the tricky bit : by recursing now, we can process all the
+    -- game definitions in the correct order (children after parents).
 
-    if other.hooks then
-      game.hooks = table.merge_missing(game.hooks or {}, other.hooks)
+    if def.extends then
+      recurse(def.extends, def)
     end
+
+    if def.tables then
+      Levels.merge_table_list(def.tables)
+    end
+
+    if child and def.hooks then
+      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
+    end
+
+    if def.format then
+      GAME.format = format
+    end
+
+    return def
   end
 
-  GAME.format = game.format
-
-  return game
+  table.insert(GAME.all_modules, 1, recurse(OB_CONFIG.game))
 end
 
 
-function Levels.get_engine_def()
-  local engine = OB_ENGINES[OB_CONFIG.engine]
+function Levels.add_engine()
+  local function recurse(name, child)
+    local def = OB_ENGINES[name]
 
-  if not engine then
-    error("UNKNOWN ENGINE: " .. tostring(OB_CONFIG.engine))
-  end
-
-  if engine.extends then
-    local other = OB_GAMES[engine.extends]
-    if not other then
-      error("UNKNOWN ENGINE TO EXTEND: " .. engine.extends)
+    if not def then
+      error("UNKNOWN ENGINE: " .. name)
     end
 
-    engine.extend_other = other
-
-    if other.hooks then
-      engine.hooks = table.merge_missing(engine.hooks or {}, other.hooks)
+    if def.extends then
+      recurse(def.extends, def)
     end
+
+    if def.tables then
+      Levels.merge_table_list(def.tables)
+    end
+
+    if child and def.hooks then
+      child.hooks = table.merge_missing(child.hooks or {}, def.hooks)
+    end
+
+    return def
   end
 
-  return engine
+  table.insert(GAME.all_modules, 2, recurse(OB_CONFIG.engine))
 end
 
 
@@ -211,15 +222,6 @@ function Levels.sort_modules()
   if #GAME.all_modules > 1 then
     table.sort(GAME.all_modules, module_sorter)
   end
- 
-  -- first entry must be the game def, and second entry must be
-  -- the engine def.  NOTE: neither of these are real modules.
-
-  local game   = Levels.get_game_def()
-  local engine = Levels.get_engine_def()
-
-  table.insert(GAME.all_modules, 1, game)
-  table.insert(GAME.all_modules, 2, engine)
 end
 
 
@@ -243,18 +245,18 @@ function Levels.setup()
 
   Levels.sort_modules()
 
+  -- first entry must be the game def, and second entry must be
+  -- the engine def.  NOTE: neither of these are real modules.
+  Levels.add_game()
+  Levels.add_engine()
+
   -- merge tables from each module
 
   for index,mod in ipairs(GAME.all_modules) do
-    if mod.extend_other and mod.extend_other.tables then
-      Levels.merge_table_list(mod.extend_other.tables)
-    end
-
     if mod.tables then
       Levels.merge_table_list(mod.tables)
     end
-  end -- for mod
-
+  end
 
   -- allow themes to supply sub-theme information
 
