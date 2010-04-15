@@ -80,16 +80,29 @@ NUKEM.MATERIALS =
   _SKY   = { t=89 },
 
 
-  WATER = { t=336 },
-  SLIME = { t=200 },
-  LAVA  = { t=1082 },
+  WATER  = { t=336 },
+  SLIME  = { t=200 },
+  PLASMA = { t=1082 },
+
+
+  BRN_BRICK = { t=0 },
+
+  SCREEN_BREAK1 = { t=263 },
+  SCREEN_BREAK2 = { t=264 },
+  SCREEN_BREAK3 = { t=265 },
+  SCREEN_BREAK4 = { t=266 },
+  SCREEN_BREAK5 = { t=267 },
+
+  SCREEN_BREAK13 = { t=275 },
+  SCREEN_BREAK15 = { t=4123 },
+  SCREEN_BREAK17 = { t=4128 },
+  SCREEN_BREAK18 = { t=4129 },
+  SCREEN_BREAK19 = { t=4125 },
+
 
   GLASS1 = { t=198 },
   GLASS2 = { t=758 },
 
-  
-
-  BRNBRICK = { t=0 },
 
 
   GRAYCIRCLE = { t=181 },
@@ -154,11 +167,6 @@ NUKEM.MATERIALS =
   METAL2 = { t=368 },
 
 
-  PICT1 = { t=265 },
-  PICT2 = { t=266 },
-  PICT3 = { t=267 },
-
-
   BSTONES = { t=781 },
   WOOD1 = { t=884 },
   WOOD2 = { t=880 },
@@ -187,15 +195,13 @@ NUKEM.SANITY_MAP =
 
 NUKEM.LIQUIDS =
 {
-  water = { mat="WATER", },
-  slime = { mat="SLIME",  },
-  lava  = { mat="LAVA", },
+  water  = { mat="WATER", },
+  slime  = { mat="SLIME",  },
+  plasma = { mat="PLASMA", },
 }
 
 
-
 ----------------------------------------------------------------
-
 
 NUKEM.STEPS =
 {
@@ -208,7 +214,7 @@ NUKEM.PICTURES =
   carve =
   {
     count=1,
-    pic_w="PICT1", width=120, height=82,
+    pic_w="SCREEN_BREAK3", width=120, height=82,
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
@@ -217,7 +223,7 @@ NUKEM.PICTURES =
   pill =
   {
     count=1,
-    pic_w="PICT2", width=120, height=82,
+    pic_w="SCREEN_BREAK4", width=120, height=82,
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
@@ -233,7 +239,7 @@ NUKEM.SUB_THEMES =
 
     liquids = { water=50, slime=20, lava=7 },
 
-    building_walls = { BRNBRICK=50, WINDOW1=30, WINDOW2=30,
+    building_walls = { BRN_BRICK=50, WINDOW1=30, WINDOW2=30,
                 BRICK2=50, GRNBRICK=30, GRAYBRICK=50,
                 REDSLATS=20, IRON=20,
                },
@@ -325,17 +331,14 @@ function NUKEM.get_levels()
         episode  = episode,
         ep_along = map / MAP_NUM,
         ep_info  = { },
-
-        keys = { foo=50 },
-        switches = { foo=50 },
-        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)
-    end -- for map
 
+    end -- for map
   end -- for episode
 end
+
 
 
 ------------------------------------------------------------
@@ -356,7 +359,6 @@ UNFINISHED["nukem"] =
     setup       = NUKEM.setup,
     get_levels  = NUKEM.get_levels,
   },
-
 }
 
 
