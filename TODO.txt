@@ -2,6 +2,10 @@
 TODO
 ====
 
+PARAMETRIZE PREFABS WITH FUNCTIONS !!!
+  e.g. { t=function(env) return env.z1 + 128 end, face={ ... }}
+
+
 >>  don't use mirroring to create doors (etc)
 
 >>  gui.add_brush([kind,] coords)
@@ -23,6 +27,9 @@ Example:
       ...
     }
 
+Second and subsequent X/Y coords can omit the face, which then
+uses the one from the first face.
+
 Fields of a face:
     (nothing is compulsory)
 
@@ -40,9 +47,11 @@ Fields of a face:
 
 Slope fields:  x1, y1, x2, y2, dz
 
-Second and subsequent X/Y coords can omit the face, which then
-uses the one from the first face.
+Slopes must be "shrinky" -- i.e. the b..t coordinate range is
+guaranteed to contain the sloped brush.
 
+???  Slope brushes must also follow this rule: there exists height mz
+???  such that all bottom coords <= mz <= all top coords.
 
 
 
