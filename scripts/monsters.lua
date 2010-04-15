@@ -632,7 +632,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
 
     while qty > 0 do
       local item, count = decide_pickup(R, stat, qty)
-      table.insert(item_list, { item=item, count=count, SK=hmodel.skill, rand=gui.random() })
+      table.insert(item_list, { item=item, count=count, SK=hmodel.skill, random=gui.random() })
       
       if stat == "health" then
         qty = qty - item.give[1].health * count
@@ -770,7 +770,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     sort_spots(R)
 
     -- place large clusters before small ones
-    table.sort(item_list, function(A,B) return (A.count + A.rand) > (B.count + B.rand) end)
+    table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
 
     place_item_list(R, item_list, SK, CL)
   end
