@@ -26,9 +26,9 @@ OB_MODULES["outdoor_shadows"] =
                 strife=1,
               },
 
-  param =
+  hooks =
   {
-    outdoor_shadows = true
+    setup = function() PARAM.outdoor_shadows = true end
   },
 }
 

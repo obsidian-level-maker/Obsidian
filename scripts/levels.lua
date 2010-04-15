@@ -151,13 +151,12 @@ function Levels.get_game_def()
 
     game.extend_other = other
 
-    if other.param then
-      game.param = table.merge_missing(game.param or {}, other.param)
-    end
     if other.hooks then
       game.hooks = table.merge_missing(game.hooks or {}, other.hooks)
     end
   end
+
+  GAME.format = game.format
 
   return game
 end
@@ -178,9 +177,6 @@ function Levels.get_engine_def()
 
     engine.extend_other = other
 
-    if other.param then
-      engine.param = table.merge_missing(engine.param or {}, other.param)
-    end
     if other.hooks then
       engine.hooks = table.merge_missing(engine.hooks or {}, other.hooks)
     end
@@ -247,13 +243,9 @@ function Levels.setup()
 
   Levels.sort_modules()
 
-  -- merge parameters and tables from each module
+  -- merge tables from each module
 
   for index,mod in ipairs(GAME.all_modules) do
-    if mod.param then
-      table.merge(PARAM, mod.param)
-    end
-
     if mod.extend_other and mod.extend_other.tables then
       Levels.merge_table_list(mod.extend_other.tables)
     end
@@ -272,6 +264,8 @@ function Levels.setup()
     end
   end
 
+
+  PARAM = assert(GAME.PARAMETERS)
 
   Levels.invoke_hook("setup",  OB_CONFIG.seed)
 

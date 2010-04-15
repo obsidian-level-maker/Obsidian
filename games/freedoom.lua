@@ -107,7 +107,7 @@ OB_GAMES["freedoom"] =
 
   tables =
   {
-    DOOM, DOOM1, DOOM2
+    -- TODO
   },
 
   hooks =

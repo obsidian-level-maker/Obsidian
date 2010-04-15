@@ -686,14 +686,13 @@ function ob_game_format()
 
   local game = OB_GAMES[OB_CONFIG.game]
 
+  assert(game)
+
   if game.extends then
-    game = OB_GAMES[game.extends]
+    game = assert(OB_GAMES[game.extends])
   end
 
-  assert(game)
-  assert(game.param)
-
-  return assert(game.param.format)
+  return assert(game.format)
 end
 
 

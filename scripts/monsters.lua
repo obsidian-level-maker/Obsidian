@@ -655,7 +655,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   local function place_item(S, item_name, x, y, SK)
     local props
 
-    if PARAM.format == "quake" then
+    if GAME.format == "quake" then
       props = {}
 
       if SK == "easy" then
@@ -1506,7 +1506,7 @@ function Monsters.fill_room(R)
 
     local props = { angle = spot.angle or angle }
 
-    if PARAM.format == "quake" then
+    if GAME.format == "quake" then
       props.spawnflags = 0
 
       if spot.ambush or ambush then

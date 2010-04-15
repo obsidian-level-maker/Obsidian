@@ -191,6 +191,40 @@ DOOM.THINGS =
 } -- end of DOOM.THINGS
 
 
+DOOM.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+  infighting = true,
+  raising_start = true,
+
+  custom_flats = true,
+
+  -- this is roughly how many characters can fit on the
+  -- intermission screens (the CWILVxx patches).  It does
+  -- not reflect any buffer limits in Doom ports.
+  max_name_length = 28,
+
+  skip_monsters = { 26,40 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
+}
+
+DOOM2.PARAMETERS =
+{
+  doom2_monsters = true,
+  doom2_weapons  = true,
+  doom2_skies    = true,  -- RSKY# patches
+
+  skip_monsters = { 30,44 },
+}
+
+
 ----------------------------------------------------------------
 
 
@@ -3730,6 +3764,7 @@ DOOM2.EPISODES =
 }
 
 
+
 ------------------------------------------------------------
 
 
@@ -4078,6 +4113,8 @@ OB_GAMES["doom1"] =
 
   priority = 98, -- keep at second spot
 
+  format = "doom",
+
   tables =
   {
     DOOM, DOOM1
@@ -4091,29 +4128,6 @@ OB_GAMES["doom1"] =
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,
     all_done     = DOOM.all_done,
-  },
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting = true,
-    raising_start = true,
-
-    custom_flats = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 26,40 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
   },
 }
 
@@ -4134,13 +4148,13 @@ OB_GAMES["ultdoom"] =
 }
 
 
-------------------------------------------------------------
-
 OB_GAMES["doom2"] =
 {
   label = "Doom 2",
 
   priority = 99, -- keep at top
+
+  format = "doom",
 
   tables =
   {
@@ -4156,40 +4170,5 @@ OB_GAMES["doom2"] =
     end_level    = DOOM.end_level,
     all_done     = DOOM.all_done,
   },
-
-  param =
-  {
-    format = "doom",
-
-    doom2_monsters = true,
-    doom2_weapons  = true,
-    doom2_skies    = true,  -- RSKY# patches
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting = true,
-    raising_start = true,
-
-    custom_flats = true,
-
-    -- this is roughly how many characters can fit on the
-    -- intermission screens (the CWILVxx patches).  It does
-    -- not reflect any buffer limits in Doom ports.
-    max_name_length = 28,
-
-    skip_monsters = { 30,44 },
-
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
-
 }
 

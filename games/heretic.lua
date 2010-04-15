@@ -145,6 +145,29 @@ HERETIC.THINGS =
 }
 
 
+HERETIC.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+  infighting  =  true,
+  prefer_stairs = true,
+  noblaze_door = true,
+
+  custom_flats = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 20,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
+}
+
+
 ----------------------------------------------------------------
 
 HERETIC.MATERIALS =
@@ -2066,6 +2089,8 @@ OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
+  format = "doom",
+
   tables =
   {
     HERETIC
@@ -2077,30 +2102,6 @@ OB_GAMES["heretic"] =
     get_levels   = HERETIC.get_levels,
     begin_level  = HERETIC.begin_level,
     all_done     = HERETIC.all_done,
-  },
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting  =  true,
-    prefer_stairs = true,
-    noblaze_door = true,
-
-    custom_flats = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 20,30 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
   },
 }
 

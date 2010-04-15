@@ -677,7 +677,7 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
 
   Trans.brush(sky_info, w_coords, SKY_H, EXTREME_H)
 
-  if PARAM.format == "quake" then
+  if GAME.format == "quake" then
     Trans.brush(sky_back, s_coords, z_low+4, EXTREME_H)
   else
     sky_back.delta_z = (z_low+4) - (SKY_H-2)
