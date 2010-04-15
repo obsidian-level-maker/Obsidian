@@ -611,10 +611,6 @@ function CHEX3.get_levels()
         episode  = episode,
         ep_along = ep_along,
         ep_info  = ep_info,
-
-        keys = { },
-        switches = { },
-        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)

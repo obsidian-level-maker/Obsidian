@@ -201,10 +201,6 @@ function STRIFE.get_levels()
         episode  = episode,
         ep_along = map / MAP_NUM,
         ep_info  = { },
-
-        keys = { foo=50 },
-        switches = { foo=50 },
-        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)

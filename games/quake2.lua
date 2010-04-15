@@ -2007,10 +2007,6 @@ function QUAKE2.get_levels()
         ep_info  = ep_info,
 
         theme_ref = "BASE",
-
-        keys = { foo=50 },
-        switches = { foo=50 },
-        bars = { },
       }
 
       table.insert(GAME.all_levels, LEV)
