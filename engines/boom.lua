@@ -20,6 +20,12 @@
 
 BOOM = { }
 
+BOOM.THINGS =
+{
+  point_push = { id=5001, kind="scenery", r=16,h=16, pass=true },
+  point_pull = { id=5002, kind="scenery", r=16,h=16, pass=true },
+}
+
 BOOM.PARAMETERS =
 {
   boom_lines = true,
