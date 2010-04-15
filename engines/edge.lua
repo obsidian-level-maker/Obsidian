@@ -22,6 +22,13 @@ EDGE = { }
 
 EDGE.THINGS =
 {
+  -- players --
+
+  player5 = { id=4001, kind="other", r=16,h=56 },
+  player6 = { id=4002, kind="other", r=16,h=56 },
+  player7 = { id=4003, kind="other", r=16,h=56 },
+  player8 = { id=4004, kind="other", r=16,h=56 },
+
   -- monsters --
 
   stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
@@ -36,6 +43,26 @@ EDGE.THINGS =
   stealth_revenant = { id=4059, kind="monster", r=20,h=64 },
   stealth_shooter  = { id=4060, kind="monster", r=20,h=56 },
   stealth_zombie   = { id=4061, kind="monster", r=20,h=56 },
+
+  -- pickups --
+
+  kc_green = { id=7015, kind="pickup", r=16,h=16, pass=true },
+  ks_green = { id=7017, kind="pickup", r=16,h=16, pass=true },
+
+  night_vision = { id=7000, kind="pickup", r=16,h=16, pass=true },
+  jetpack      = { id=7020, kind="pickup", r=16,h=16, pass=true },
+
+  purple_armor = { id=7031, kind="pickup", r=16,h=16, pass=true },
+  yellow_armor = { id=7032, kind="pickup", r=16,h=16, pass=true },
+  red_armor    = { id=7033, kind="pickup", r=16,h=16, pass=true },
+
+  -- scenery --
+
+  burnt_spike_stub = { id=7010, kind="scenery", r=16,h=46 },
+
+  nukage_glow = { id=7041, kind="scenery", r=16,h=16, pass=true },
+  lava_glow   = { id=7042, kind="scenery", r=16,h=16, pass=true },
+  water_glow  = { id=7043, kind="scenery", r=16,h=16, pass=true },
 }
 
 EDGE.PARAMETERS =
