@@ -16,27 +16,6 @@
 --
 ----------------------------------------------------------------
 
-SKULLTAG_RUNE_THINGS =
-{
-  turbo_sphere  = { id=5030, kind="pickup", r=20,h=45, pass=true },
-  time_sphere   = { id=5032, kind="pickup", r=20,h=45, pass=true },
-  invis_sphere  = { id=5035, kind="pickup", r=20,h=45, pass=true },
-  doom_sphere   = { id=5036, kind="pickup", r=20,h=45, pass=true },
-  guard_sphere  = { id=5037, kind="pickup", r=20,h=30, pass=true },
-  random_sphere = { id=5039, kind="pickup", r=20,h=45, pass=true },
-
-  rune_strength = { id=5100, kind="pickup", r=20,h=45, pass=true },
-  rune_rage     = { id=5101, kind="pickup", r=20,h=45, pass=true },
-  rune_drain    = { id=5102, kind="pickup", r=20,h=45, pass=true },
-  rune_spread   = { id=5103, kind="pickup", r=20,h=45, pass=true },
-  rune_resist   = { id=5104, kind="pickup", r=20,h=45, pass=true },
-  rune_regen    = { id=5105, kind="pickup", r=20,h=45, pass=true },
-  rune_prosper  = { id=5106, kind="pickup", r=20,h=45, pass=true },
-  rune_reflect  = { id=5107, kind="pickup", r=20,h=45, pass=true },
-  rune_hi_jump  = { id=5108, kind="pickup", r=20,h=45, pass=true },
-  rune_haste    = { id=5109, kind="pickup", r=20,h=45, pass=true },
-}
-
 SKULLTAG_RUNE_PICKUPS =
 {
   -- This is temporary until powerups are enabled in a future version
@@ -148,7 +127,7 @@ SKULLTAG_RUNE_PICKUPS =
   },
 }
 
-OB_MODULES["sktag_rune"] =
+UNFINSHED["sktag_rune"] =
 {
   label = "Skulltag Runes and Spheres",
 
@@ -158,7 +137,6 @@ OB_MODULES["sktag_rune"] =
 
   tables =
   {
-    "things",   SKULLTAG_RUNE_THINGS,
     "pickups",  SKULLTAG_RUNE_PICKUPS,
   },
 }

@@ -17,26 +17,6 @@
 --
 ----------------------------------------------------------------
 
-SKULLTAG_MATERIALS =
-{
-  -- textures
-
-  N_SUBV01 = { t="N_SUBV01", f="FLOOR0_2" },
-  N_SUBV02 = { t="N_SUBV02", f="FLOOR0_2" },
-  N_SUBV03 = { t="N_SUBV03", f="FLAT1" },
-  N_SUBV04 = { t="N_SUBV04", f="FLAT1" },
-  N_SUBV05 = { t="N_SUBV05", f="FLAT3" },
-  N_SUBV06 = { t="N_SUBV06", f="FLAT3" },
-  N_SUBV07 = { t="N_SUBV07", f="FLOOR4_1" },
-  N_SUBV08 = { t="N_SUBV08", f="FLOOR4_1" },
-
-  -- flats
-
-  FAN1     = { t="METAL",   f="FAN1" },
-  NFMTSQ03 = { t="BROWN96", f="NFMTSQ03" },
-  TLITE6_7 = { t="METAL",   f="TLITE6_7" },
-}
-
 
 SKULLTAG_THEMES = 
 {

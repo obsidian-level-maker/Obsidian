@@ -19,39 +19,6 @@
 
 STEALTH = { }
 
-STEALTH.THINGS_EDGE =
-{
-  stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
-  stealth_vile     = { id=4051, kind="monster", r=20,h=56 },
-  stealth_baron    = { id=4052, kind="monster", r=24,h=64 },
-  stealth_caco     = { id=4053, kind="monster", r=31,h=56 },
-  stealth_gunner   = { id=4054, kind="monster", r=20,h=56 },
-  stealth_demon    = { id=4055, kind="monster", r=30,h=56 },
-  stealth_knight   = { id=4056, kind="monster", r=24,h=64 },
-  stealth_imp      = { id=4057, kind="monster", r=20,h=56 },
-  stealth_mancubus = { id=4058, kind="monster", r=48,h=64 },
-  stealth_revenant = { id=4059, kind="monster", r=20,h=64 },
-  stealth_shooter  = { id=4060, kind="monster", r=20,h=56 },
-  stealth_zombie   = { id=4061, kind="monster", r=20,h=56 },
-}
-
-STEALTH.THINGS_ZDOOM =
-{
-  stealth_arach    = { id=9050, kind="monster", r=66,h=64 },
-  stealth_vile     = { id=9051, kind="monster", r=20,h=56 },
-  stealth_baron    = { id=9052, kind="monster", r=24,h=64 },
-  stealth_caco     = { id=9053, kind="monster", r=31,h=56 },
-  stealth_gunner   = { id=9054, kind="monster", r=20,h=56 },
-  stealth_demon    = { id=9055, kind="monster", r=30,h=56 },
-  stealth_knight   = { id=9056, kind="monster", r=24,h=64 },
-  stealth_imp      = { id=9057, kind="monster", r=20,h=56 },
-  stealth_mancubus = { id=9058, kind="monster", r=48,h=64 },
-  stealth_revenant = { id=9059, kind="monster", r=20,h=64 },
-  stealth_shooter  = { id=9060, kind="monster", r=20,h=56 },
-  stealth_zombie   = { id=9061, kind="monster", r=20,h=56 },
-}
-
-
 STEALTH.MONSTERS =
 {
   -- These are mostly the same as the ones in doom.lua,
@@ -156,12 +123,6 @@ STEALTH.CHOICES =
 
 
 function STEALTH.setup(self)
-  if OB_CONFIG.engine == "edge" then
-    Levels.merge_tab("things", STEALTH.THINGS_EDGE)
-  else
-    Levels.merge_tab("things", STEALTH.THINGS_ZDOOM)
-  end
-
   -- apply the Quantity choice
   local qty = self.options.qty.value
 

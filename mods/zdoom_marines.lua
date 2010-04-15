@@ -18,21 +18,6 @@
 
 ZDOOM_MARINE = { }
 
-ZDOOM_MARINE.THINGS =
-{
-  marine_fist    = { id=9101, kind="monster", r=16,h=56 },
-  marine_berserk = { id=9102, kind="monster", r=16,h=56 },
-  marine_saw     = { id=9103, kind="monster", r=16,h=56 },
-  marine_pistol  = { id=9104, kind="monster", r=16,h=56 },
-  marine_shotty  = { id=9105, kind="monster", r=16,h=56 },
-  marine_ssg     = { id=9106, kind="monster", r=16,h=56 },
-  marine_chain   = { id=9107, kind="monster", r=16,h=56 },
-  marine_rocket  = { id=9108, kind="monster", r=16,h=56 },
-  marine_plasma  = { id=9109, kind="monster", r=16,h=56 },
-  marine_rail    = { id=9110, kind="monster", r=16,h=56 },
-  marine_bfg     = { id=9111, kind="monster", r=16,h=56 },
-}
-
 ZDOOM_MARINE.MONSTERS =
 {
   -- None of these drop anything.

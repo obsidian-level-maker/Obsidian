@@ -20,6 +20,24 @@
 
 EDGE = { }
 
+EDGE.THINGS =
+{
+  -- monsters --
+
+  stealth_arach    = { id=4050, kind="monster", r=66,h=64 },
+  stealth_vile     = { id=4051, kind="monster", r=20,h=56 },
+  stealth_baron    = { id=4052, kind="monster", r=24,h=64 },
+  stealth_caco     = { id=4053, kind="monster", r=31,h=56 },
+  stealth_gunner   = { id=4054, kind="monster", r=20,h=56 },
+  stealth_demon    = { id=4055, kind="monster", r=30,h=56 },
+  stealth_knight   = { id=4056, kind="monster", r=24,h=64 },
+  stealth_imp      = { id=4057, kind="monster", r=20,h=56 },
+  stealth_mancubus = { id=4058, kind="monster", r=48,h=64 },
+  stealth_revenant = { id=4059, kind="monster", r=20,h=64 },
+  stealth_shooter  = { id=4060, kind="monster", r=20,h=56 },
+  stealth_zombie   = { id=4061, kind="monster", r=20,h=56 },
+}
+
 EDGE.PARAMETERS =
 {
   extra_floors = true,

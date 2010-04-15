@@ -18,57 +18,9 @@
 --
 ----------------------------------------------------------------
 
--- the SKULLTAG table already exists (engines/skulltag)
+SKTAG_MONS = { }
 
-SKULLTAG.THINGS =
-{
-  -- monsters
-  darkimp    = { id=5003, kind="monster", r=20,h=56 },
-  bldemon    = { id=5004, kind="monster", r=30,h=56 },
-  superguy   = { id=5005, kind="monster", r=20,h=56 },
-  cacolant   = { id=5006, kind="monster", r=31,h=56 },
-  hectebus   = { id=5007, kind="monster", r=48,h=64 },
-  belphegor  = { id=5008, kind="monster", r=24,h=64 },
-  abaddon    = { id=5015, kind="monster", r=31,h=56 },
-
-  -- weapons
-  glaunch = { id=5011, kind="pickup", r=20,h=16, pass=true },
-  railgun = { id=5012, kind="pickup", r=20,h=16, pass=true },
-  bfg10k  = { id=5013, kind="pickup", r=20,h=16, pass=true },
-  minigun = { id=5014, kind="pickup", r=20,h=16, pass=true },
-
-  -- pickups
-  max_potion = { id=5090, kind="pickup", r=20,h=16, pass=true },
-  max_helmet = { id=5091, kind="pickup", r=20,h=16, pass=true },
-  red_armor  = { id=5040, kind="pickup", r=20,h=16, pass=true },
-
-  -- powerups
-  turbo_sphere   = { id=5030, kind="pickup", r=20,h=45, pass=true },
-  time_sphere    = { id=5032, kind="pickup", r=20,h=45, pass=true },
-  invis_sphere   = { id=5035, kind="pickup", r=20,h=45, pass=true },
-  doom_sphere    = { id=5036, kind="pickup", r=20,h=45, pass=true },
-  guard_sphere   = { id=5037, kind="pickup", r=20,h=30, pass=true },
-  random_sphere  = { id=5039, kind="pickup", r=20,h=45, pass=true },
- 
-  -- special powerups (multiplayer only)
-  hellstone  = { id=6000, kind="pickup", r=20,h=45, pass=true },
-  terminator = { id=6001, kind="pickup", r=20,h=45, pass=true },
-
-  -- runes
-  rune_strength = { id=5100, kind="pickup", r=20,h=45, pass=true },
-  rune_rage     = { id=5101, kind="pickup", r=20,h=45, pass=true },
-  rune_drain    = { id=5102, kind="pickup", r=20,h=45, pass=true },
-  rune_spread   = { id=5103, kind="pickup", r=20,h=45, pass=true },
-  rune_resist   = { id=5104, kind="pickup", r=20,h=45, pass=true },
-  rune_regen    = { id=5105, kind="pickup", r=20,h=45, pass=true },
-  rune_prosper  = { id=5106, kind="pickup", r=20,h=45, pass=true },
-  rune_reflect  = { id=5107, kind="pickup", r=20,h=45, pass=true },
-  rune_hi_jump  = { id=5108, kind="pickup", r=20,h=45, pass=true },
-  rune_haste    = { id=5109, kind="pickup", r=20,h=45, pass=true },
-}
-
-
-SKULLTAG.MONSTERS =
+SKTAG_MONS.MONSTERS =
 {
   darkimp =
   {
@@ -122,7 +74,7 @@ SKULLTAG.MONSTERS =
 }
 
 
-SKULLTAG.WEAPONS =
+SKTAG_MONS.WEAPONS =
 {
   minigun =
   {
@@ -158,7 +110,7 @@ SKULLTAG.WEAPONS =
 }
 
 
-SKULLTAG.PICKUPS =
+SKTAG_MONS.PICKUPS =
 {
   max_potion =
   {
@@ -180,14 +132,14 @@ SKULLTAG.PICKUPS =
 }
 
 
-SKULLTAG.CHOICES =
+SKTAG_MONS.CHOICES =
 {
   "some",   "Some",
   "few",    "Few",
   "heaps",  "Heaps",
 }
 
-SKULLTAG.FACTORS =
+SKTAG_MONS.FACTORS =
 {
   few   = 0.2,
   some  = 1.0,
@@ -195,16 +147,16 @@ SKULLTAG.FACTORS =
 }
 
 
-function SKULLTAG.setup(self)
+function SKTAG_MONS.setup(self)
   if not PARAM.doom2_monsters then
     GAME.monsters["hectebus"] = nil
     GAME.monsters["superguy"].give = nil
   end
 
   -- apply the 'Default Monsters' choice
-  local factor = SKULLTAG.FACTORS[self.options.def_mon.value]
+  local factor = SKTAG_MONS.FACTORS[self.options.def_mon.value]
 
-  for name,_ in pairs(SKULLTAG.MONSTERS) do
+  for name,_ in pairs(SKTAG_MONS.MONSTERS) do
     local M = GAME.monsters[name]
     if M and factor then
       M.prob = M.prob * factor
@@ -213,9 +165,9 @@ function SKULLTAG.setup(self)
   end
 
   -- apply the 'Default Weapons' choice
-  factor = SKULLTAG.FACTORS[self.options.def_weap.value]
+  factor = SKTAG_MONS.FACTORS[self.options.def_weap.value]
 
-  for name,_ in pairs(SKULLTAG.WEAPONS) do
+  for name,_ in pairs(SKTAG_MONS.WEAPONS) do
     local W = GAME.weapons[name]
     if W and factor then
       W.add_prob   = math.max(4, W.add_prob)   * factor
@@ -240,19 +192,19 @@ OB_MODULES["sktag_mons"] =
 
   hooks =
   {
-    setup = SKULLTAG.setup,
+    setup = SKTAG_MONS.setup,
   },
 
   options =
   {
     def_mon =
     {
-      label = "Default Monsters", choices = SKULLTAG.CHOICES,
+      label = "Default Monsters", choices = SKTAG_MONS.CHOICES,
     },
 
     def_weap =
     {
-      label = "Default Weapons", choices = SKULLTAG.CHOICES,
+      label = "Default Weapons", choices = SKTAG_MONS.CHOICES,
     },
   },
 }
@@ -261,7 +213,7 @@ OB_MODULES["sktag_mons"] =
 ----------------------------------------------------------------
 
 
-SKULLTAG.CONTROL_CHOICES =
+SKTAG_MONS.CONTROL_CHOICES =
 {
   "default", "DEFAULT",
   "none",    "None at all",
@@ -273,7 +225,7 @@ SKULLTAG.CONTROL_CHOICES =
   "insane",  "INSANE",
 }
 
-SKULLTAG.CONTROL_PROBS =
+SKTAG_MONS.CONTROL_PROBS =
 {
   none   = 0,
   scarce = 2,
@@ -285,12 +237,12 @@ SKULLTAG.CONTROL_PROBS =
 }
 
 
-function SKULLTAG.mon_control_setup(self)
+function SKTAG_MONS.mon_control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.monsters[name]
 
     if M and opt.value ~= "default" then
-      local prob = SKULLTAG.CONTROL_PROBS[opt.value]
+      local prob = SKTAG_MONS.CONTROL_PROBS[opt.value]
 
       M.prob = prob
       M.crazy_prob = prob
@@ -310,19 +262,19 @@ OB_MODULES["sktag_mon_control"] =
 
   hooks =
   {
-    setup = SKULLTAG.mon_control_setup,
+    setup = SKTAG_MONS.mon_control_setup,
   },
 
   options =
   {
-    darkimp   = { label="Dark Imp",          choices=SKULLTAG.CONTROL_CHOICES },
-    bldemon   = { label="Blood Demon",       choices=SKULLTAG.CONTROL_CHOICES },
-    cacolant  = { label="Cacolantern",       choices=SKULLTAG.CONTROL_CHOICES },
-    hectebus  = { label="Hectebus",          choices=SKULLTAG.CONTROL_CHOICES },
-    abaddon   = { label="Abaddon",           choices=SKULLTAG.CONTROL_CHOICES },
+    darkimp   = { label="Dark Imp",          choices=SKTAG_MONS.CONTROL_CHOICES },
+    bldemon   = { label="Blood Demon",       choices=SKTAG_MONS.CONTROL_CHOICES },
+    cacolant  = { label="Cacolantern",       choices=SKTAG_MONS.CONTROL_CHOICES },
+    hectebus  = { label="Hectebus",          choices=SKTAG_MONS.CONTROL_CHOICES },
+    abaddon   = { label="Abaddon",           choices=SKTAG_MONS.CONTROL_CHOICES },
 
-    superguy  = { label="Super Shotgun Guy", choices=SKULLTAG.CONTROL_CHOICES },
-    belphegor = { label="Belphegor",         choices=SKULLTAG.CONTROL_CHOICES },
+    superguy  = { label="Super Shotgun Guy", choices=SKTAG_MONS.CONTROL_CHOICES },
+    belphegor = { label="Belphegor",         choices=SKTAG_MONS.CONTROL_CHOICES },
   },
 
 }
@@ -331,12 +283,12 @@ OB_MODULES["sktag_mon_control"] =
 ----------------------------------------------------------------
 
 
-function SKULLTAG.weap_control_setup(self)
+function SKTAG_MONS.weap_control_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.weapons[name]
 
     if W and opt.value ~= "default" then
-      local prob = SKULLTAG.CONTROL_PROBS[opt.value]
+      local prob = SKTAG_MONS.CONTROL_PROBS[opt.value]
 
       W.start_prob = prob
       W.add_prob   = prob
@@ -361,15 +313,15 @@ OB_MODULES["sktag_weap_control"] =
 
   hooks =
   {
-    setup = SKULLTAG.weap_control_setup,
+    setup = SKTAG_MONS.weap_control_setup,
   },
 
   options =
   {
-    minigun  = { label="Minigun",          choices=SKULLTAG.CONTROL_CHOICES },
-    glaunch  = { label="Grenade Launcher", choices=SKULLTAG.CONTROL_CHOICES },
-    railgun  = { label="Railgun",          choices=SKULLTAG.CONTROL_CHOICES },
-    bfg10k   = { label="BFG10K",           choices=SKULLTAG.CONTROL_CHOICES },
+    minigun  = { label="Minigun",          choices=SKTAG_MONS.CONTROL_CHOICES },
+    glaunch  = { label="Grenade Launcher", choices=SKTAG_MONS.CONTROL_CHOICES },
+    railgun  = { label="Railgun",          choices=SKTAG_MONS.CONTROL_CHOICES },
+    bfg10k   = { label="BFG10K",           choices=SKTAG_MONS.CONTROL_CHOICES },
   },
 }
 
