@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,17 +18,21 @@
 --
 ----------------------------------------------------------------
 
+FITZ = { }
+
+FITZ.PARAMETERS =
+{
+  colored_lighting = true,
+  global_fog = true,
+  sky_box = true,
+}
+
 OB_ENGINES["fitz"] =
 {
   label = "FitzQuake",
 
   for_games = { quake=1 },
 
-  param =
-  {
-    colored_lighting = true,
-    global_fog = true,
-    sky_box = true,
-  },
+  tables = { FITZ },
 }
 

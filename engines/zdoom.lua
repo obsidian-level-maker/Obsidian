@@ -20,52 +20,42 @@
 
 ZDOOM = { }
 
+ZDOOM.PARAMETERS =
+{
+  -- TODO
+}
+
 OB_ENGINES["zdoom"] =
 {
   label = "ZDoom 2.31",
+
+  extends = "boom",
 
   for_games =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   },
 
-  -- FIXME: this is only for level names, use MAPINFO instead
-  hooks =
-  {
-    all_done = BOOM.all_done,
-  },
-
-  param =
-  {
-    boom_lines = true,
-    boom_sectors = true,
-
-    -- FIXME: more stuff
-  },
+  tables = { ZDOOM },
 }
 
+
+----------------------------------------------------------------
+
+GZDOOM = { }
 
 OB_ENGINES["gzdoom"] =
 {
   label = "GZDoom 1.2",
   priority = -1,  -- keep at bottom with ZDoom
 
+  extends = "zdoom",
+
   for_games =
   {
     chex3=1, doom1=1, doom2=1, heretic=1, hexen=1
   },
 
-  hooks =
-  {
-    all_done = BOOM.all_done,
-  },
-
-  param =
-  {
-    boom_lines = true,
-    boom_sectors = true,
-
-    -- FIXME: more stuff
-  },
+  tables = { GZDOOM },
 }
 

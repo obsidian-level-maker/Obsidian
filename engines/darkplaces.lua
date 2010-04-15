@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,17 +18,12 @@
 --
 ----------------------------------------------------------------
 
-OB_ENGINES["darky"] =
+OB_ENGINES["darkplaces"] =
 {
   label = "DarkPlaces",
 
   for_games = { quake=1 },
 
-  param =
-  {
-    dirty_yucky_blood_everywhere = true,
-
-    -- TODO
-  },
+  -- TODO
 }
 

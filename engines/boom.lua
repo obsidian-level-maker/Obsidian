@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,6 +19,12 @@
 ----------------------------------------------------------------
 
 BOOM = { }
+
+BOOM.PARAMETERS =
+{
+  boom_lines = true,
+  boom_sectors = true,
+}
 
 function BOOM.create_dehacked()
 
@@ -83,15 +89,11 @@ OB_ENGINES["boom"] =
 
   for_games = { doom1=1, doom2=1 },
 
+  tables = { BOOM },
+
   hooks =
   {
     all_done = BOOM.all_done,
-  },
-
-  param =
-  {
-    boom_lines = true,
-    boom_sectors = true,
   },
 }
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,6 +19,18 @@
 ----------------------------------------------------------------
 
 EDGE = { }
+
+EDGE.PARAMETERS =
+{
+  extra_floors = true,
+  liquid_floors = true,
+  thing_exfloor_flags = true,
+
+  mirrors = true,
+}
+
+
+----------------------------------------------------------------
 
 function EDGE.remap_music()
   
@@ -77,8 +89,6 @@ function EDGE.create_language()
 end
 
 
-----------------------------------------------------------------
-
 function EDGE.all_done()
   EDGE.create_language();
 
@@ -91,23 +101,15 @@ OB_ENGINES["edge"] =
   label = "EDGE 1.34",
   priority = 90,
 
+  extends = "boom",
+
   for_games = { doom1=1, doom2=1 },
+
+  tables = { EDGE },
 
   hooks =
   {
     all_done = EDGE.all_done,
-  },
-
-  param =
-  {
-    boom_lines = true,
-    boom_sectors = true,
-
-    extra_floors = true,
-    liquid_floors = true,
-    thing_exfloor_flags = true,
-
-    mirrors = true,
   },
 }
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008 Andrew Apted
+--  Copyright (C) 2008,2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -18,21 +18,16 @@
 --
 ----------------------------------------------------------------
 
+ETERNITY = { }
 
 OB_ENGINES["eternity"] =
 {
   label = "Eternity 3.33",
 
+  extends = "boom",
+
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
 
-  hooks =
-  {
-    all_done = BOOM.all_done,
-  },
-
-  param =
-  {
-    -- TODO
-  },
+  tables = { ETERNITY },
 }
 
