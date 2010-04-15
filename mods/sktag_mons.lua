@@ -233,17 +233,14 @@ OB_MODULES["sktag_mons"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { skulltag=1 },
 
+  tables =
+  {
+    SKULLTAG
+  },
+
   hooks =
   {
     setup = SKULLTAG.setup,
-  },
-
-  tables =
-  {
-    "things",   SKULLTAG.THINGS,
-    "monsters", SKULLTAG.MONSTERS,
-    "weapons",  SKULLTAG.WEAPONS,
-    "pickups",  SKULLTAG.PICKUPS,
   },
 
   options =

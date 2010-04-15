@@ -182,15 +182,14 @@ OB_MODULES["zdoom_marines"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { zdoom=1, gzdoom=1, skulltag=1 },
 
+  tables =
+  {
+    ZDOOM_MARINE
+  },
+
   hooks =
   {
     setup = ZDOOM_MARINE.setup,
-  },
-
-  tables =
-  {
-    "things",   ZDOOM_MARINE.THINGS,
-    "monsters", ZDOOM_MARINE.MONSTERS,
   },
 
   options =

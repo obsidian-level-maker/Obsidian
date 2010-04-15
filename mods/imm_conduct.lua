@@ -46,9 +46,9 @@
 -- taking cover somewhere while the weapon reloads).
 --
 
-ICDSE = { }
+IMMORAL_CONDUCT = { }
 
-ICDSE.THINGS =
+IMMORAL_CONDUCT.THINGS =
 {
   -- players
   player4 = { id=3000, kind="player", r=20,h=56 },
@@ -77,7 +77,7 @@ ICDSE.THINGS =
 }
 
 
-ICDSE.HELPER_TYPES =
+IMMORAL_CONDUCT.HELPER_TYPES =
 {
   none =
   {
@@ -119,7 +119,7 @@ ICDSE.HELPER_TYPES =
 }
 
 
-ICDSE.MONSTERS =
+IMMORAL_CONDUCT.MONSTERS =
 {
   uzi_trooper =
   {
@@ -152,7 +152,7 @@ ICDSE.MONSTERS =
 }
 
 
-ICDSE.WEAPONS =
+IMMORAL_CONDUCT.WEAPONS =
 {
   bfg = REMOVE_ME,  -- became: flak_shotty
 
@@ -296,7 +296,7 @@ ICDSE.WEAPONS =
 }
 
 
-ICDSE.PICKUPS =
+IMMORAL_CONDUCT.PICKUPS =
 {
   green_armor = REMOVE_ME,  -- became: pistol_pair
   cell_box    = REMOVE_ME,  -- became: gren_launch
@@ -325,14 +325,14 @@ ICDSE.PICKUPS =
 }
 
 
-ICDSE.POWERUPS =
+IMMORAL_CONDUCT.POWERUPS =
 {
   invul = REMOVE_ME,  -- became: uzi_pair
   invis = REMOVE_ME,  -- became: flak_shells
 }
 
 
-ICDSE.PLAYER_MODEL =
+IMMORAL_CONDUCT.PLAYER_MODEL =
 {
   doomguy =
   {
@@ -344,7 +344,7 @@ ICDSE.PLAYER_MODEL =
 
 ----------------------------------------------------------------
 
-function ICDSE.setup(self)
+function IMMORAL_CONDUCT.setup(self)
   local new_mons = self.options.new_mons.value
 
   local NEW_MON_PROBS =
@@ -363,13 +363,13 @@ function ICDSE.setup(self)
 
   local helper = self.options.helper.value
 
-  if ICDSE.HELPER_TYPES[helper] then
-    Levels.merge_tab("things", ICDSE.HELPER_TYPES[helper])
+  if IMMORAL_CONDUCT.HELPER_TYPES[helper] then
+    Levels.merge_tab("things", IMMORAL_CONDUCT.HELPER_TYPES[helper])
   end
 end
 
 
-function ICDSE.begin_level(self)
+function IMMORAL_CONDUCT.begin_level(self)
   if not LEVEL.styles then
     LEVEL.styles = {}
   end
@@ -389,20 +389,15 @@ OB_MODULES["imm_conduct"] =
   for_modes = { sp=1, coop=1 },
   for_engines = { edge=1 },
 
-  hooks =
-  {
-    setup = ICDSE.setup,
-    begin_level = ICDSE.begin_level,
-  },
-
   tables =
   {
-    "player_model", ICDSE.PLAYER_MODEL,
+    IMMORAL_CONDUCT
+  },
 
-    "things",   ICDSE.THINGS,
-    "monsters", ICDSE.MONSTERS,
-    "weapons",  ICDSE.WEAPONS,
-    "pickups",  ICDSE.PICKUPS,
+  hooks =
+  {
+    setup = IMMORAL_CONDUCT.setup,
+    begin_level = IMMORAL_CONDUCT.begin_level,
   },
 
   options =

@@ -481,6 +481,11 @@ UNFINISHED["hacx"] =
 {
   label = "HacX 1.1",
 
+  tables =
+  {
+    HACX
+  },
+
   hooks =
   {
     setup      = HACX.setup,
@@ -505,19 +510,6 @@ UNFINISHED["hacx"] =
     damage_factor = 1.0,
     ammo_factor   = 0.8,
     health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", HACX.PLAYER_MODEL,
-    
-    "things",   HACX.THINGS,
-    "monsters", HACX.MONSTERS,
-    "weapons",  HACX.WEAPONS,
-    "pickups",  HACX.PICKUPS,
-
-    "materials", HACX.MATERIALS,
-    "themes",    HACX.SUB_THEMES,
   },
 }
 

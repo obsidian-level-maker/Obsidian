@@ -187,14 +187,14 @@ OB_MODULES["stealth_mons"] =
   for_modes   = { sp=1, coop=1 },
   for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 },
 
+  tables =
+  {
+    STEALTH
+  },
+
   hooks =
   {
     setup = STEALTH.setup,
-  },
-
-  tables =
-  {
-    "monsters", STEALTH.MONSTERS,
   },
 
   options =
