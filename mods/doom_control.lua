@@ -60,9 +60,9 @@ function DOOM.mon_control_setup(self)
 end
 
 
-OB_MODULES["mon_control"] =
+OB_MODULES["doom_mon_control"] =
 {
-  label = "Monster Control (DOOM)",
+  label = "Doom Monster Control",
 
   for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
@@ -148,9 +148,9 @@ function DOOM.weap_control_setup(self)
 end
 
 
-OB_MODULES["weap_control"] =
+OB_MODULES["doom_weap_control"] =
 {
-  label = "weap_c Control (DOOM)",
+  label = "Doom Weapon Control",
 
   for_games = { doom1=1, doom2=1 },
   for_modes = { sp=1, coop=1 },
