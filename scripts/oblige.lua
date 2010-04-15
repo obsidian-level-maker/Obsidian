@@ -244,9 +244,8 @@ function ob_match_conf(T)
   assert(OB_CONFIG.mode)
   assert(OB_CONFIG.engine)
 
-  local game_def = OB_GAMES[OB_CONFIG.game]
-
   if T.for_games and not T.for_games[OB_CONFIG.game] then
+    local game_def = OB_GAMES[OB_CONFIG.game]
     while game_def do
       if not game_def.extends then return false end
 
@@ -258,9 +257,8 @@ function ob_match_conf(T)
     end
   end
 
-  local engine_def = OB_ENGINES[OB_CONFIG.engine]
-
   if T.for_engines and not T.for_engines[OB_CONFIG.engine] then
+    local engine_def = OB_ENGINES[OB_CONFIG.engine]
     while engine_def do
       if not engine_def.extends then return false end
 
@@ -268,7 +266,7 @@ function ob_match_conf(T)
         break; -- OK --
       end
 
-      engine_def = OB_GAMES[engine_def.extends]
+      engine_def = OB_ENGINES[engine_def.extends]
     end
   end
 

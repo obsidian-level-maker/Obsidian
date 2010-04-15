@@ -145,7 +145,7 @@ function Levels.add_game()
     end
 
     -- here is the tricky bit : by recursing now, we can process all the
-    -- game definitions in the correct order (children after parents).
+    -- definitions in the correct order (children after parents).
 
     if def.extends then
       recurse(def.extends, def)
