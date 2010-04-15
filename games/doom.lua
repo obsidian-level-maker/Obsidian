@@ -4062,48 +4062,6 @@ function DOOM.all_done()
 end
 
 
-------------------------------------------------------------
-
-OB_THEMES["doom_tech"] =
-{
-  label = "Tech",
-
-  for_games = { doom1=1, doom2=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
-OB_THEMES["doom_urban"] =
-{
-  label = "Urban",
-
-  for_games = { doom2=1 },
-
-  name_theme = "URBAN",
-  mixed_prob = 50,
-}
-
-OB_THEMES["doom_hell"] =
-{
-  label = "Hell",
-  for_games = { doom1=1, doom2=1 },
-
-  name_theme = "GOTHIC",
-  mixed_prob = 50,
-}
-
-OB_THEMES["doom_wolf"] =
-{
-  label = "Wolfenstein",
-  for_games = { doom2=1 },
-
-  name_theme = "URBAN",
-
-  -- this theme is special, hence no mixed_prob
-  psycho_prob = 5,
-}
-
 
 ------------------------------------------------------------
 
@@ -4170,5 +4128,48 @@ OB_GAMES["doom2"] =
     end_level    = DOOM.end_level,
     all_done     = DOOM.all_done,
   },
+}
+
+
+------------------------------------------------------------
+
+OB_THEMES["doom_tech"] =
+{
+  label = "Tech",
+
+  for_games = { doom1=1, doom2=1 },
+
+  name_theme = "TECH",
+  mixed_prob = 50,
+}
+
+OB_THEMES["doom_urban"] =
+{
+  label = "Urban",
+
+  for_games = { doom2=1 },
+
+  name_theme = "URBAN",
+  mixed_prob = 50,
+}
+
+OB_THEMES["doom_hell"] =
+{
+  label = "Hell",
+  for_games = { doom1=1, doom2=1 },
+
+  name_theme = "GOTHIC",
+  mixed_prob = 50,
+}
+
+OB_THEMES["doom_wolf"] =
+{
+  label = "Wolfenstein",
+  for_games = { doom2=1 },
+
+  name_theme = "URBAN",
+
+  -- this theme is special, hence no mixed_prob
+  psycho_prob = 5,
 }
 

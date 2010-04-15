@@ -168,6 +168,30 @@ CHEX3.THINGS =
 
 }
 
+
+CHEX3.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+  raising_start = true,
+
+  -- NOTE: no infighting at all
+
+  custom_flats = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 26,40 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
+}
+
+
 ----------------------------------------------------------------
 
 CHEX3.MATERIALS =
@@ -606,36 +630,15 @@ function CHEX3.begin_level()
   end
 end
 
-------------------------------------------------------------
 
--- sub-themes (TECH2 etc...): caves, spaceship (use flemkeys here)
-
-OB_THEMES["chex3_tech"] =
-{
-  label = "Tech",
-  for_games = { chex3=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
--- sub-themes (CITY2 etc...): sewers, lodge {lots of trees 
--- and grassy / rocky terrain outdoors, wooden buildings)
-
-UNFINISHED["chex3_city"] =
-{
-  label = "City",
-  for_games = { chex3=1 },
-
-  name_theme = "URBAN",
-  mixed_prob = 50,
-}
 
 ------------------------------------------------------------
 
 UNFINISHED["chex3"] =
 {
   label = "Chex Quest 3",
+
+  format = "doom",
 
   tables =
   {
@@ -648,28 +651,28 @@ UNFINISHED["chex3"] =
     get_levels   = CHEX3.get_levels,
     begin_level  = CHEX3.begin_level,
   },
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    raising_start = true,
-
-    -- NOTE: no infighting at all
-
-    custom_flats = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 26,40 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
 }
+
+-- themes (TECH2 etc...): caves, spaceship (use flemkeys here)
+
+OB_THEMES["chex3_tech"] =
+{
+  label = "Tech",
+  for_games = { chex3=1 },
+
+  name_theme = "TECH",
+  mixed_prob = 50,
+}
+
+-- themes (CITY2 etc...): sewers, lodge {lots of trees 
+-- and grassy / rocky terrain outdoors, wooden buildings)
+
+UNFINISHED["chex3_city"] =
+{
+  label = "City",
+  for_games = { chex3=1 },
+
+  name_theme = "URBAN",
+  mixed_prob = 50,
+}
+

@@ -53,6 +53,24 @@ NUKEM.THINGS =
 }
 
 
+NUKEM.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 20,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
+}
+
+
 ----------------------------------------------------------------
 
 NUKEM.MATERIALS =
@@ -322,21 +340,11 @@ end
 
 ------------------------------------------------------------
 
-
-OB_THEMES["nukem_city"] =
-{
-  label = "City",
-  for_games = { nukem=1 },
-
-  name_theme = "URBAN",
-
-  mixed_prob = 50,
-}
-
-
 UNFINISHED["nukem"] =
 {
   label = "Duke Nukem",
+
+  format = "nukem",
 
   tables =
   {
@@ -349,28 +357,16 @@ UNFINISHED["nukem"] =
     get_levels  = NUKEM.get_levels,
   },
 
-  param =
-  {
-    format = "nukem",
+}
 
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    noblaze_door = true,
 
-    max_name_length = 28,
+OB_THEMES["nukem_city"] =
+{
+  label = "City",
+  for_games = { nukem=1 },
 
-    skip_monsters = { 20,30 },
+  name_theme = "URBAN",
 
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
+  mixed_prob = 50,
 }
 

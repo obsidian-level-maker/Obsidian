@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009 Andrew Apted
+--  Copyright (C) 2009-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -42,6 +42,24 @@ STRIFE.THINGS =
   --- scenery ---
   wall_torch  = { id=50, kind="scenery", r=10,h=64, light=255 },
 
+}
+
+
+STRIFE.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 20,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -199,10 +217,11 @@ end
 
 ------------------------------------------------------------
 
-
 UNFINISHED["strife"] =
 {
   label = "Strife",
+
+  format = "doom",
 
   tables =
   {
@@ -214,29 +233,8 @@ UNFINISHED["strife"] =
     setup      = STRIFE.setup,
     get_levels = STRIFE.get_levels,
   },
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    noblaze_door = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 20,30 },
-
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
 }
+
+
+-- TODO:  OB_THEMES["strife_xxx"] = ...
 

@@ -248,13 +248,6 @@ TN_SKY_INFO =
 ----------------------------------------------------------------
 
 
-OB_THEMES["tnt_egypt"] =
-{
-  ref = "EGYPT",
-  label = "Egypt",
-  for_modules = { tnt=1 },
-}
-
 function tnt_modifier(T)
 
   T.rails = copy_and_merge(T.rails,  TN_RAILS)
@@ -273,11 +266,21 @@ function tnt_modifier(T)
 end
 
 
+
+----------------------------------------------------------------
+
 UNFINISHED["tnt"] =
 {
   label = "TNT Evilution",
 
   extends = "doom2",
 
+}
+
+OB_THEMES["tnt_egypt"] =
+{
+  ref = "EGYPT",
+  label = "Egypt",
+  for_modules = { tnt=1 },
 }
 

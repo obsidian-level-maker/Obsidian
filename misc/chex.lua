@@ -116,6 +116,27 @@ CHEX.THINGS =
 }
 
 
+CHEX.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+  infighting = true,
+
+  custom_flats = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 10,35 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
+}
+
+
 ----------------------------------------------------------------
 
 CHEX.MATERIALS =
@@ -503,7 +524,27 @@ function CHEX.begin_level()
 end
 
 
+
 ------------------------------------------------------------
+
+UNFINISHED["chex"] =
+{
+  label = "Chex Quest",
+
+  format = "doom",
+
+  tables =
+  {
+    CHEX
+  },
+
+  hooks =
+  {
+    setup        = CHEX.setup,
+    get_levels   = CHEX.get_levels,
+    begin_level  = CHEX.begin_level,
+  },
+}
 
 OB_THEMES["chex_tech"] =
 {
@@ -526,55 +567,3 @@ UNFINISHED["chex_cave"] =
   for_games = { chex=1 },
 }
 
-
-------------------------------------------------------------
-
-UNFINISHED["chex"] =
-{
-  label = "Chex Quest",
-
-  hooks =
-  {
-    setup        = CHEX.setup,
-    get_levels   = CHEX.get_levels,
-    begin_level  = CHEX.begin_level,
-  },
-
-  param =
-  {
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting = true,
-
-    custom_flats = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 10,35 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
-
-  tables =
-  {
-    "player_model", CHEX.PLAYER_MODEL,
-    "things",       CHEX.THINGS,
-    "materials",    CHEX.MATERIALS,
-    "sanity_map",   CHEX.SANITY_MAP,
-    "lifts",        CHEX.LIFTS,
-    "liquids",      CHEX.LIQUIDS,
-    "combos",       CHEX.COMBOS,
-    "rooms",        CHEX.ROOMS,
-    "themes",       CHEX.SUB_THEMES,
-    "monsters",     CHEX.MONSTERS,
-    "weapons",      CHEX.WEAPONS,
-    "pickups",      CHEX.PICKUPS,
-  },
-}

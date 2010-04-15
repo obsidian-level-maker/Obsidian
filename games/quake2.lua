@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -109,6 +109,27 @@ QUAKE2.THINGS =
   -- special
 
   -- TODO
+}
+
+
+QUAKE2.PARAMETERS =
+{
+  -- TODO
+
+  seed_limit = 42,
+
+  entity_delta_z = 24,
+
+  -- the name buffer in Quake II is huge, but this value
+  -- reflects the on-screen space (in the computer panel)
+  max_name_length = 24,
+
+  skip_monsters = { 30,50 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -1959,18 +1980,6 @@ QUAKE2.EPISODES =
 }
 
 
-------------------------------------------------------------
-
-OB_THEMES["quake2_base"] =
-{
-  label = "Base",
-  for_games = { quake2=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
-
 ----------------------------------------------------------------
 
 function QUAKE2.setup()
@@ -2018,9 +2027,14 @@ function QUAKE2.begin_level()
 end
 
 
+
+----------------------------------------------------------------
+
 UNFINISHED["quake2"] =
 {
   label = "Quake 2",
+
+  format = "quake2",
 
   tables =
   {
@@ -2033,30 +2047,15 @@ UNFINISHED["quake2"] =
     get_levels   = QUAKE2.get_levels,
     begin_level  = QUAKE2.begin_level,
   },
+}
 
-  param =
-  {
-    format = "quake2",
 
-    -- TODO
+OB_THEMES["quake2_base"] =
+{
+  label = "Base",
+  for_games = { quake2=1 },
 
-    seed_limit = 42,
-
-    entity_delta_z = 24,
-
-    -- the name buffer in Quake II is huge, but this value
-    -- reflects the on-screen space (in the computer panel)
-    max_name_length = 24,
-
-    skip_monsters = { 30,50 },
-
-    mon_time_max = 12,
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
+  name_theme = "TECH",
+  mixed_prob = 50,
 }
 

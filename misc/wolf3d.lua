@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -190,6 +190,30 @@ WOLF.TILE_NUMS =
   door_silver = { 94, 95 },
 
   door_elevator = { 100, 101 },
+}
+
+
+WOLF.PARAMETERS =
+{
+  tiled  = true,
+
+  no_height = true,
+  no_sky = true,
+  one_lock_tex = true,
+  elevator_exit = true,
+  blocky_items = true,
+  blocky_doors = true,
+  tiered_skills = true,
+  four_dirs = true,
+  sealed_start = true,
+
+  -- assumes each seed is 3x3 blocks
+  seed_limit = 21,
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -981,6 +1005,8 @@ UNFINISHED["wolf3d"] =
 
   priority = -1,  -- keep at bottom
 
+  format = "wolf3d",
+
   tables =
   {
     WOLF
@@ -991,46 +1017,20 @@ UNFINISHED["wolf3d"] =
     setup      = WOLF.setup,
     get_levels = WOLF.get_levels,
   },
-
-  param =
-  {
-    format = "wolf3d",
-    tiled  = true,
-
-    no_height = true,
-    no_sky = true,
-    one_lock_tex = true,
-    elevator_exit = true,
-    blocky_items = true,
-    blocky_doors = true,
-    tiered_skills = true,
-    four_dirs = true,
-    sealed_start = true,
-
-    -- assumes each seed is 3x3 blocks
-    seed_limit = 21,
-
-    mon_time_max = 12,
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
 }
 
 
 UNFINISHED["spear"] =
 {
   label = "Spear of Destiny",
-  format = "wolf3d",
 
   priority = -2,  -- keep at bottom (with Wolf3d)
 
+  format = "wolf3d",
+
   tables =
   {
-    WOLF
+    WOLF  -- SPEAR
   },
 
   hooks =
@@ -1038,8 +1038,8 @@ UNFINISHED["spear"] =
     setup      = WOLF.Spear_setup,
     get_levels = WOLF.Spear_get_levels,
   },
-
-  param = UNFINISHED["wolf3d"].param,
-
 }
+
+
+--  TODO: OB_THEMES["wolf_xxx"] = ...
 

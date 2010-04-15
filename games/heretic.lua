@@ -153,7 +153,6 @@ HERETIC.PARAMETERS =
   teleporters = true,
   infighting  =  true,
   prefer_stairs = true,
-  noblaze_door = true,
 
   custom_flats = true,
 
@@ -2055,35 +2054,8 @@ function HERETIC.all_done()
 end
 
 
+
 ------------------------------------------------------------
-
-OB_THEMES["heretic_urban"] =
-{
-  label = "Urban",
-  for_games = { heretic=1 },
-
-  name_theme = "URBAN",
-  mixed_prob = 50,
-}
-
-OB_THEMES["heretic_gothic"] =  -- castles
-{
-  label = "Gothic",
-  for_games = { heretic=1 },
-
-  name_theme = "GOTHIC",
-  mixed_prob = 50,
-}
-
-UNFINISHED["heretic_cave"] =
-{
-  label = "Cave",
-  for_games = { heretic=1 },
-
-  name_theme = "URBAN",
-  mixed_prob = 30,
-}
-
 
 OB_GAMES["heretic"] =
 {
@@ -2103,5 +2075,23 @@ OB_GAMES["heretic"] =
     begin_level  = HERETIC.begin_level,
     all_done     = HERETIC.all_done,
   },
+}
+
+OB_THEMES["heretic_urban"] =
+{
+  label = "Urban",
+  for_games = { heretic=1 },
+
+  name_theme = "URBAN",
+  mixed_prob = 50,
+}
+
+OB_THEMES["heretic_gothic"] =  -- castles
+{
+  label = "Gothic",
+  for_games = { heretic=1 },
+
+  name_theme = "GOTHIC",
+  mixed_prob = 50,
 }
 

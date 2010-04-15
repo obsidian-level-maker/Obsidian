@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -231,6 +231,31 @@ HEXEN.THINGS =
   snd_ice    = { id=1407, kind="other", r=16,h=16, pass=true },
   snd_earth  = { id=1408, kind="other", r=16,h=16, pass=true },
   snd_metal2 = { id=1409, kind="other", r=16,h=16, pass=true },
+}
+
+
+HEXEN.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+  infighting  =  true,
+  prefer_stairs = true,
+   
+  hubs = true,
+  polyobjs = true,
+  three_part_weapons = true,
+  ACS_script = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 20,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -2375,6 +2400,28 @@ end
 
 ------------------------------------------------------------
 
+UNFINISHED["hexen"] =
+{
+  label = "Hexen",
+
+  -- hexen format is a minor variation on the Doom format 
+  -- which is enabled by the setup function.
+  format = "doom",
+
+  tables =
+  {
+    HEXEN
+  },
+
+  hooks =
+  {
+    setup        = HEXEN.setup,
+    get_levels   = HEXEN.get_levels,
+    begin_level  = HEXEN.begin_level,
+  },
+}
+
+
 OB_THEMES["xn_cave"] =
 {
   ref = "CAVE",
@@ -2408,55 +2455,5 @@ OB_THEMES["xn_village"] =
   ref = "VILLAGE",
   label = "Village",
   for_games = { hexen=1 },
-}
-
-
-UNFINISHED["hexen"] =
-{
-  label = "Hexen",
-
-  tables =
-  {
-    HEXEN
-  },
-
-  hooks =
-  {
-    setup        = HEXEN.setup,
-    get_levels   = HEXEN.get_levels,
-    begin_level  = HEXEN.begin_level,
-  },
-
-  param =
-  {
-    -- hexen format is a variation on the Doom format,
-    -- and is enabled by the setup function.
-    format = "doom",
-
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    infighting  =  true,
-    prefer_stairs = true,
-     
-    hubs = true,
-    polyobjs = true,
-    three_part_weapons = true,
-    ACS_script = true,
-
-    max_name_length = 28,
-
-    skip_monsters = { 20,30 },
-
-    mon_time_max = 12,
-
-    mon_damage_max  = 200,
-    mon_damage_high = 100,
-    mon_damage_low  =   1,
-
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
 }
 

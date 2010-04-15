@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009 Andrew Apted
+--  Copyright (C) 2009-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -84,6 +84,24 @@ HACX.THINGS =
   --- scenery ---
   chair      = { id=35,   kind="scenery", r=24,h=40 },
 
+}
+
+
+HACX.PARAMETERS =
+{
+  rails = true,
+  switches = true,
+  liquids = true,
+  teleporters = true,
+
+  max_name_length = 28,
+
+  skip_monsters = { 10,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -426,7 +444,6 @@ HACX.PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-
 function HACX.setup()
   -- nothing needed
 end
@@ -467,19 +484,11 @@ end
 
 ------------------------------------------------------------
 
-OB_THEMES["hacx_tech"] =
-{
-  label = "Tech",
-  for_games = { hacx=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
-
 UNFINISHED["hacx"] =
 {
   label = "HacX 1.1",
+
+  format = "doom",
 
   tables =
   {
@@ -491,25 +500,15 @@ UNFINISHED["hacx"] =
     setup      = HACX.setup,
     get_levels = HACX.get_levels,
   },
+}
 
-  param =
-  {
-    format = "doom",
 
-    rails = true,
-    switches = true,
-    liquids = true,
-    teleporters = true,
-    noblaze_door = true,
+OB_THEMES["hacx_tech"] =
+{
+  label = "Tech",
+  for_games = { hacx=1 },
 
-    max_name_length = 28,
-
-    skip_monsters = { 10,30 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
+  name_theme = "TECH",
+  mixed_prob = 50,
 }
 

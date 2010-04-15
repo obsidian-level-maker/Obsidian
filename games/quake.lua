@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -101,6 +101,28 @@ QUAKE1.THINGS =
 
   -- special
 
+}
+
+
+QUAKE1.PARAMETERS =
+{
+  -- TODO
+
+  -- Quake engine needs all coords to lie between -4000 and +4000.
+  seed_limit = 42,
+
+  entity_delta_z = 24,
+
+  -- the name buffer in Quake can fit 39 characters, however
+  -- the on-screen space for the name is much less.
+  max_name_length = 20,
+
+  skip_monsters = { 20,30 },
+
+  time_factor   = 1.0,
+  damage_factor = 1.0,
+  ammo_factor   = 0.8,
+  health_factor = 0.7,
 }
 
 
@@ -1226,19 +1248,11 @@ end
 
 ----------------------------------------------------------------
 
-OB_THEMES["quake_base"] =
-{
-  label = "Base",
-  for_games = { quake=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
-
 OB_GAMES["quake"] =
 {
   label = "Quake",
+
+  format = "quake",
 
   tables =
   {
@@ -1251,28 +1265,15 @@ OB_GAMES["quake"] =
     get_levels   = QUAKE1.get_levels,
     begin_level  = QUAKE1.begin_level,
   },
+}
 
-  param =
-  {
-    format = "quake",
 
-    -- TODO
+OB_THEMES["quake_base"] =
+{
+  label = "Base",
+  for_games = { quake=1 },
 
-    -- Quake engine needs all coords to lie between -4000 and +4000.
-    seed_limit = 42,
-
-    entity_delta_z = 24,
-
-    -- the name buffer in Quake can fit 39 characters, however
-    -- the on-screen space for the name is much less.
-    max_name_length = 20,
-
-    skip_monsters = { 20,30 },
-
-    time_factor   = 1.0,
-    damage_factor = 1.0,
-    ammo_factor   = 0.8,
-    health_factor = 0.7,
-  },
+  name_theme = "TECH",
+  mixed_prob = 50,
 }
 
