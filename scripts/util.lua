@@ -81,7 +81,7 @@ end
 
 ----====| TABLE UTILITIES |====----
 
--- special value for deep_merge() and deep_copy()
+-- special value for merging
 REMOVE_ME = "__REMOVE__"
 
 function table.size(t)
@@ -222,7 +222,11 @@ function table.merge(dest, src)  -- shallow
 end
 
 function table.copy(t)  -- shallow
-  return t and table.merge({}, t)
+  if type(t) == "table" then
+    return table.merge({}, t)
+  else
+    return t
+  end
 end
 
 function table.merge_missing(dest, src)
@@ -259,15 +263,19 @@ function table.deep_merge(dest, src, _curdepth)
 end
 
 function table.deep_copy(t)
-  return t and table.deep_merge({}, t)
+  if type(t) == "table" then
+    return table.deep_merge({}, t)
+  else
+    return t
+  end
 end
 
-function table.deepish_merge(dest, src)
+function table.merge_w_copy(dest, src)
   for k,v in pairs(src) do
     if v == REMOVE_ME then
       dest[k] = nil
     elseif type(v) == "table" then
-      dest[k] = table.deep_copy(v)
+      dest[k] = table.deep_merge({}, v)
     else
       dest[k] = v
     end
