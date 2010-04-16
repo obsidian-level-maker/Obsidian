@@ -429,6 +429,9 @@ extern int bounds_x2, bounds_y2, bounds_z2;
 
 /* ----- FUNCTIONS ----- */
 
+const char * CSG2_Lookup(std::map<std::string, std::string> & props,
+                         const char *field, const char *nil_result = NULL);
+
 void CSG2_MergeAreas(bool do_clips = false);
 
 area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,

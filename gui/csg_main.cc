@@ -370,6 +370,9 @@ void CSG2_MakeMiniMap(void)
 static int Grab_Properties(lua_State *L, int stack_pos,
                             std::map<std::string, std::string> & props)
 {
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
+
   if (lua_type(L, stack_pos) != LUA_TTABLE)
     return luaL_argerror(L, stack_pos, "bad property table");
 
@@ -453,10 +456,15 @@ int Grab_BrushKind(lua_State *L, int stack_pos)
 }
 
 
-//----area_face_c * Grab_Face(lua_State *L, int stack_pos)
+csg_face_c * Grab_Face(lua_State *L, int stack_pos)
+{
+  csg_face_c *F = new csg_face_c();
+
+  Grab_Properties(L, stack_pos, F->props);
+
+  return F;
+}
 //----{
-//----  if (stack_pos < 0)
-//----    stack_pos += lua_gettop(L) + 1;
 //----
 //----  if (lua_type(L, stack_pos) != LUA_TTABLE)
 //----  {
@@ -576,10 +584,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   lua_getfield(L, stack_pos, "face");
 
   if (! lua_isnil(L, -1))
-  {
-    face = new csg_face_c();
-    Grab_Properties(L, -1, face->props);
-  }
+    face = Grab_Face(L, -1);
 
   lua_pop(L, 1);
 
@@ -852,6 +857,18 @@ int CSG2_add_entity(lua_State *L)
 
 //------------------------------------------------------------------------
 
+const char * CSG2_Lookup(std::map<std::string, std::string> & props,
+                         const char *field, const char *nil_result)
+{
+  std::map<std::string, std::string>::iterator PI =
+       props.find(field);
+
+  if (PI == props.end())
+    return nil_result;
+
+  return PI->second.c_str();
+}
+
 
 area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact)
@@ -987,7 +1004,6 @@ void CSG2_EndLevel(void)
 {
   CSG2_FreeAll();
 }
-
 
 
 //--- editor settings ---
