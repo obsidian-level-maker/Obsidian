@@ -44,6 +44,8 @@ extern int q1_total_nodes;
 extern int q1_total_mark_surfs;
 extern int q1_total_surf_edges;
 
+extern csg_face_c * Grab_Face(lua_State *L, int stack_pos);
+
 extern void Q1_AddEdge(double x1, double y1, double z1,
                        double x2, double y2, double z2,
                        dface_t *face, dleaf_t *raw_lf = NULL);
@@ -68,19 +70,19 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   {
     s[1] = 1.0; t[2] = 1.0;
 
-    texture = model->x_face->tex.c_str();
+    texture = CSG2_Lookup(model->x_face->props, "tex", "error");
   }
   else if (face < 4)  // PLANE_Y
   {
     s[0] = 1.0; t[2] = 1.0;
 
-    texture = model->y_face->tex.c_str();
+    texture = CSG2_Lookup(model->y_face->props, "tex", "error");
   }
   else // PLANE_Z
   {
     s[0] = 1.0; t[1] = 1.0;
 
-    texture = model->z_face->tex.c_str();
+    texture = CSG2_Lookup(model->z_face->props, "tex", "error");
   }
 
   raw_fc.texinfo = Q1_AddTexInfo(texture, 0, s, t);
@@ -313,6 +315,52 @@ void Q1_MapModel_Clip(qLump_c *L, s32_t base,
   }
 }
 
+
+//------------------------------------------------------------------------
+
+int Q1_add_mapmodel(lua_State *L)
+{
+  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
+  //
+  // info is a table containing:
+  //   x_face  : face table for X sides
+  //   y_face  : face table for Y sides
+  //   z_face  : face table for top and bottom
+
+  q1MapModel_c *model = new q1MapModel_c();
+
+  model->x1 = luaL_checknumber(L, 2);
+  model->y1 = luaL_checknumber(L, 3);
+  model->z1 = luaL_checknumber(L, 4);
+
+  model->x2 = luaL_checknumber(L, 5);
+  model->y2 = luaL_checknumber(L, 6);
+  model->z2 = luaL_checknumber(L, 7);
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 1, "missing table: mapmodel info");
+  }
+
+  lua_getfield(L, 1, "x_face");
+  lua_getfield(L, 1, "y_face");
+  lua_getfield(L, 1, "z_face");
+
+  model->x_face = Grab_Face(L, -3);
+  model->y_face = Grab_Face(L, -2);
+  model->z_face = Grab_Face(L, -1);
+
+  lua_pop(L, 3);
+
+  q1_all_mapmodels.push_back(model);
+
+  // create model reference (for entity)
+  char ref_name[32];
+  sprintf(ref_name, "*%u", q1_all_mapmodels.size());
+
+  lua_pushstring(L, ref_name);
+  return 1;
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

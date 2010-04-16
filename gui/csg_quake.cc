@@ -1172,7 +1172,7 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 
 
   const char *texture = "missing";
-  if (F->w_face) texture = F->w_face->tex.c_str();
+  if (F->w_face) texture = CSG2_Lookup(F->w_face->props, "tex", "missing");
 
   int flags = CalcTextureFlag(texture);
 
@@ -1259,7 +1259,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
   raw_face.side = flipped ? 1 : 0;
 
   const char *texture = "missing";
-  if (F->w_face) texture = F->w_face->tex.c_str();
+  if (F->w_face) texture = CSG2_Lookup(F->w_face->props, "tex", "missing");
 
   int flags = CalcTextureFlag(texture);
 
@@ -1341,10 +1341,10 @@ static rFace_c * NewFace(rSide_c *S, double z1, double z2,
   
   if (av)
   {
-  F->w_face =av->w_face;
+  F->w_face =av->face;
 
   if (! F->w_face)
-    F->w_face = av->parent->w_face;
+    F->w_face = av->parent->verts[0]->face;
   }
 
   return F;

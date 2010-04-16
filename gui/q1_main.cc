@@ -40,6 +40,8 @@
 
 int q1_flat_lightmaps[256];
 
+extern csg_face_c * Grab_Face(lua_State *L, int stack_pos);
+
 
 q1MapModel_c::q1MapModel_c() :
     x1(0), y1(0), z1(0),
@@ -539,54 +541,6 @@ static void DummyTexInfo(void)
 }
 #endif
 
-
-//------------------------------------------------------------------------
-
-extern area_face_c * Grab_Face(lua_State *L, int stack_pos);
-
-int Q1_add_mapmodel(lua_State *L)
-{
-  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
-  //
-  // info is a table containing:
-  //   x_face  : face table for X sides
-  //   y_face  : face table for Y sides
-  //   z_face  : face table for top and bottom
-
-  q1MapModel_c *model = new q1MapModel_c();
-
-  model->x1 = luaL_checknumber(L, 2);
-  model->y1 = luaL_checknumber(L, 3);
-  model->z1 = luaL_checknumber(L, 4);
-
-  model->x2 = luaL_checknumber(L, 5);
-  model->y2 = luaL_checknumber(L, 6);
-  model->z2 = luaL_checknumber(L, 7);
-
-  if (lua_type(L, 1) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, 1, "missing table: mapmodel info");
-  }
-
-  lua_getfield(L, 1, "x_face");
-  lua_getfield(L, 1, "y_face");
-  lua_getfield(L, 1, "z_face");
-
-  model->x_face = Grab_Face(L, -3);
-  model->y_face = Grab_Face(L, -2);
-  model->z_face = Grab_Face(L, -1);
-
-  lua_pop(L, 3);
-
-  q1_all_mapmodels.push_back(model);
-
-  // create model reference (for entity)
-  char ref_name[32];
-  sprintf(ref_name, "*%u", q1_all_mapmodels.size());
-
-  lua_pushstring(L, ref_name);
-  return 1;
-}
 
 static void Q1_MakeFlatLightmaps()
 {

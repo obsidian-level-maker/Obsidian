@@ -62,10 +62,10 @@ static void RestoreBrushes(void)
   {
     csg_brush_c *P2 = all_brushes[i];
 
-    // FIXME DIRTY HACK (copy constructor does not duplicate these)
-    P2->t_face = NULL;
-    P2->b_face = NULL;
-    P2->w_face = NULL;
+///---    // FIXME DIRTY HACK (copy constructor does not duplicate these)
+///---    P2->t_face = NULL;
+///---    P2->b_face = NULL;
+///---    P2->w_face = NULL;
 
     delete P2;
   }
