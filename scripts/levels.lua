@@ -102,7 +102,7 @@ function Levels.merge_tab(name, tab)
   end
 
   if name ~= "SUB_THEMES" then
-    table.deepish_merge(GAME[name], tab)
+    table.merge_w_copy(GAME[name], tab)
     return
   end
 
@@ -114,7 +114,7 @@ function Levels.merge_tab(name, tab)
     elseif not GAME.SUB_THEMES[k] then
       GAME.SUB_THEMES[k] = table.deep_copy(sub_t)
     else
-      table.deepish_merge(GAME.SUB_THEMES[k], sub_t)
+      table.merge_w_copy(GAME.SUB_THEMES[k], sub_t)
     end
   end
 end
