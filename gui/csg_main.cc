@@ -671,42 +671,41 @@ int CSG2_property(lua_State *L)
 }
 
 
-// LUA: add_brush(info, loop, z1, z2)
+// LUA: add_brush([kind,] coords)
 //
-// info is a table:
-//    kind           : brush kind, default to "solid"
-//                     can also be "liquid", "sky", "rail", etc
+// kind  :  brush kind, default to "solid"
+//          can also be "liquid", "sky", "detail", "clip", etc
 //
-//    t_face, b_face : top and bottom faces
-//    w_face         : default side face
+// coords is a list of coordinates of the form:
+//   { x=123, y=456, face={ ... } }           -- side of brush
+//   { b=200, slope={ ... }, face={ ... } }   -- top of brush
+//   { t=240, slope={ ... }, face={ ... } }   -- bottom of brush
 //
-//    flag_xxx       : various CSG flags (e.g. Liquid)
+// tops and bottoms are optional, when absent then it means the
+// brush extends to infinity in that direction.
 //
-//    delta_z        : a post-CSG height adjustment
-//    mark           : separating number
+// slope specifications are optional.  When used, the slope must be
+// "shrinky", i.e. the z1..z2 range needs to cover the sloped brush.
+// They contain these fields: { x1, y1, x2, y2, dz }
 //
-//    sec_kind       : DOOM sector type
-//    sec_tag        : DOOM sector tag
+// faces are NOT optional -- if absent or has no texture field then
+// a dummy face using the error texture is used.
 //
-// ?? liquid         : usually nil, otherwise name (e.g. "lava")
-// ?? special        : usually nil, otherwise name (e.g. "damage20")
+// face tables may contain:
 //
-// z1 & z2 are either a height (number) or a slope table:
-//    sx, sy, sz     : start point on slope
-//    ex, ey, ez     : end point on slope
+//    tex    : texture name
+//    
+//    x_offset  BLAH  FIXME
+//    y_offset
+//    peg
 //
-// loop is an array of Vertices:
-//    x, y
-//    w_face (can be nil)
+//    delta_z        : a post-CSG height adjustment (top & bottom only)
+//    mark           : separating number (top & bottom only)
 //
-//    line_kind,  line_tag
-//    line_flags, line_args
-//    rail (= face table)
-//
-// face is a table:
-//    texture
-//    x_offset, y_offset
-//    peg (DOOM only)
+//    kind   : DOOM sector or linedef type
+//    flags  : DOOM linedef flags
+//    tag    : DOOM sector or linedef tag
+//    args   : DOOM sector or linedef args (a table)
 //
 int CSG2_add_brush(lua_State *L)
 {
@@ -732,7 +731,8 @@ int CSG2_add_brush(lua_State *L)
 
 // LUA: add_entity(name, x, y, z, [props])
 //
-// props is a table:
+// props is a table which may contain:
+//
 //   angle
 //   ambush
 //
