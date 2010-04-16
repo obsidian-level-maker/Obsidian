@@ -364,6 +364,34 @@ void CSG2_MakeMiniMap(void)
 
 //------------------------------------------------------------------------
 
+static int Grab_Properties(lua_State *L, int stack_pos,
+                            std::map<std::string, std::string> & props)
+{
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+    return luaL_argerror(L, stack_pos, "bad property table");
+
+  for (lua_pushnil(L) ; lua_next(L, stack_pos) != 0 ; lua_pop(L,1))
+  {
+    // skip keys which are not strings
+    if (lua_type(L, -2) != LUA_TSTRING)
+      continue;
+
+    // validate the value
+    if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
+      return luaL_error(L, "bad property: value is not a string or number");
+
+    const char *p_key   = lua_tostring(L, -2);
+    const char *p_value = lua_tostring(L, -1);
+
+    SYS_ASSERT(p_value);
+
+    props[p_key] = std::string(p_value);
+  }
+
+  return 0;
+}
+
+
 static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
@@ -507,13 +535,12 @@ static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
 }
 
 
-static void Grab_HexenArgs(lua_State *L, byte *args)
+static int Grab_HexenArgs(lua_State *L, byte *args)
 {
   // NOTE: we assume table is on top of stack
   if (lua_type(L, -1) != LUA_TTABLE)
   {
-    luaL_error(L, "gui.add_brush: missing line_args table");
-    return; /* NOT REACHED */
+    return luaL_error(L, "gui.add_brush: missing line_args table");
   }
  
   for (int i = 0; i < 5; i++)
@@ -528,6 +555,8 @@ static void Grab_HexenArgs(lua_State *L, byte *args)
 
     lua_pop(L, 1);
   }
+
+  return 0;
 }
 
 
@@ -759,31 +788,9 @@ int CSG2_add_entity(lua_State *L)
 
   entity_info_c *E = new entity_info_c(name, x, y, z);
 
-
-  // grab properties
-
   if (nargs >= 5 && lua_type(L, 5) != LUA_TNIL)
   {
-    if (lua_type(L, 5) != LUA_TTABLE)
-      return luaL_argerror(L, 5, "bad property table");
-
-    for (lua_pushnil(L) ; lua_next(L, 5) != 0 ; lua_pop(L,1))
-    {
-      // skip keys which are not strings
-      if (lua_type(L, -2) != LUA_TSTRING)
-        continue;
-
-      // validate the value
-      if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
-        luaL_error(L, "gui.add_entity: property is not a string or number");
-
-      const char *p_key   = lua_tostring(L, -2);
-      const char *p_value = lua_tostring(L, -1);
-
-      SYS_ASSERT(p_value);
-
-      E->props[p_key] = std::string(p_value);
-    }
+    Grab_Properties(L, 5, E->props);
   }
 
   all_entities.push_back(E);
