@@ -53,8 +53,7 @@ static void CSG2_EndLevel(void);
 
 
 slope_plane_c::slope_plane_c() :
-      sx(-1),sy(-1),sz(-1),
-      ex(-1),ey(-1),ez(-1)
+      sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
 
 slope_plane_c::~slope_plane_c()
@@ -64,7 +63,17 @@ double slope_plane_c::GetAngle() const
 {
   double xy_dist = ComputeDist(sx, sy, ex, ey);
 
-  return CalcAngle(0, sz, xy_dist, ez);
+  return CalcAngle(0, 0, xy_dist, dz);
+}
+
+double slope_plane_c::CalcZ(double base_z, double x, double y) const
+{
+  double dx = (ex - sx);
+  double dy = (ey - sy);
+
+  double along = (x - sx) * dx + (y - dy) * dy;
+
+  return base_z + dz * along / (dx*dx + dy*dy);
 }
 
 
@@ -368,32 +377,23 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
 
   slope_plane_c *P = new slope_plane_c();
 
-  lua_getfield(L, stack_pos, "sx");
-  lua_getfield(L, stack_pos, "sy");
-  lua_getfield(L, stack_pos, "sz");
+  lua_getfield(L, stack_pos, "x1");
+  lua_getfield(L, stack_pos, "y1");
 
-  P->sx = luaL_checknumber(L, -3);
-  P->sy = luaL_checknumber(L, -2);
-  P->sz = luaL_checknumber(L, -1);
+  P->sx = luaL_checknumber(L, -2);
+  P->sy = luaL_checknumber(L, -1);
 
-  lua_pop(L, 3);
+  lua_pop(L, 2);
 
-  lua_getfield(L, stack_pos, "ex");
-  lua_getfield(L, stack_pos, "ey");
-  lua_getfield(L, stack_pos, "ez");
+  lua_getfield(L, stack_pos, "x2");
+  lua_getfield(L, stack_pos, "y2");
+  lua_getfield(L, stack_pos, "dz");
 
-  P->sx = luaL_checknumber(L, -3);
-  P->sy = luaL_checknumber(L, -2);
-  P->sz = luaL_checknumber(L, -1);
+  P->ex = luaL_checknumber(L, -3);
+  P->ey = luaL_checknumber(L, -2);
+  P->dz = luaL_checknumber(L, -1);
 
   lua_pop(L, 3);
-
-#if 0
-  if (A->z2 <= A->z1 + EPSILON)
-  {
-    return luaL_error(L, "add_brush: bad z1..z2 range given (%1.2f .. %1.2f)", A->z1, A->z2);
-  }
-#endif
 
   return P;
 }

@@ -49,19 +49,24 @@ class csg_brush_c;
 class slope_plane_c
 {
   // defines the planes used for sloped floors or ceiling.
-  // Gives two points in 3D space, from low to high (sz < ez).
-  // The plane is not tilted along that line, i.e. the vector
-  // at right-angles has constant Z.
+  // gives two points on the 2D map, and change in Z between them.
+  //
+  // the absolute Z coords are not here, this is implicitly relative
+  // to an external height (such as the top of the brush).
 
 public:
-  double sx, sy, sz;
-  double ex, ey, ez;
+  double sx, sy;
+  double ex, ey;
+
+  double dz;
 
 public:
    slope_plane_c();
   ~slope_plane_c();
 
   double GetAngle() const;
+
+  double CalcZ(double base_z, double x, double y) const;
 };
 
 
@@ -113,19 +118,17 @@ typedef enum
 {
   BKIND_Solid = 0,
   BKIND_Detail,   // ignored for clipping (Quake 1/2 only)
-  BKIND_Clip,     // clipping only, no faces (Quake 1/2 only)
+  BKIND_Clip,     // clipping only, no visible faces (Quake 1/2 only)
 
   BKIND_Sky,
   BKIND_Liquid,
   BKIND_Rail,     // supply a railing (DOOM/Nukem only)
-  BKIND_Light,    // supply extra lighting
+  BKIND_Light,    // supply extra lighting or shadow
 }
 brush_kind_e;
 
 typedef enum
 {
-///  BRU_F_XXX = (1 << 0),
-
   // internal flags
   BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
 }
