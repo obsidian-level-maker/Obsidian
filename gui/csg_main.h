@@ -70,24 +70,25 @@ public:
 };
 
 
-class area_face_c
+class csg_face_c
 {
 public:
-  std::string tex;
+  std::map<std::string, std::string> props;
 
-  double light;
+  void * parsed;
 
-  double x_offset;
-  double y_offset;
-
-  // this causes the Upper or Lower on a two-sided linedef to
-  // be PEGGED, which is useful for doors and steps.
-  bool peg;
+///---  // this causes the Upper or Lower on a two-sided linedef to
+///---  // be PEGGED, which is useful for doors and steps.
+///---  bool peg;
 
 public:
-   area_face_c();
-  ~area_face_c();
+   csg_face_c();
+  ~csg_face_c();
 };
+
+
+// FIXME !!!!!!
+#define area_face_c  csg_face_c
 
 
 class area_vert_c
@@ -97,14 +98,13 @@ public:
 
   double x, y;
 
-  area_face_c *w_face; // optional
-  area_face_c *rail;   //
+  area_face_c *face;
 
-  int line_kind;
-  int line_tag;
-  int line_flags;
-
-  byte line_args[5];
+//----  int line_kind;
+//----  int line_tag;
+//----  int line_flags;
+//----
+//----  byte line_args[5];
 
   merge_vertex_c *partner;
 
@@ -143,20 +143,12 @@ class csg_brush_c
   // are allowed.
 
 public:
-  std::vector<area_vert_c *> verts;
-
-  double min_x, min_y;
-  double max_x, max_y;
-
-  // AREA INFO
   int bkind;
   int bflags;
 
-  area_face_c *b_face;
-  area_face_c *t_face;
-  area_face_c *w_face;  // default side face
+  std::vector<area_vert_c *> verts;
 
-  // without slopes, z1 and z2 are just the heights of the bottom
+  // without slopes, these are just the heights of the bottom
   // and top faces.  When slopes are present, they represent the
   // bounding heights of the brush.
   double z1, z2;
@@ -165,6 +157,13 @@ public:
   slope_plane_c *b_slope;
   slope_plane_c *t_slope;
 
+  area_face_c *b_face;
+  area_face_c *t_face;
+
+  double min_x, min_y;
+  double max_x, max_y;
+
+/*
   // this moves the whole brush up or down _after_ all the CSG
   // construction has been done.  It's purpose is to ease the
   // creation of features inset into the floor or ceiling.
@@ -173,6 +172,7 @@ public:
 
   int mark;
   int sec_kind, sec_tag;
+*/
 
 public:
    csg_brush_c();
@@ -349,15 +349,15 @@ public:
     return t_brush->z1;
   }
 
-  inline const char *FloorTex() const
-  {
-    return b_brush->t_face->tex.c_str();
-  }
-
-  inline const char *CeilTex() const
-  {
-    return t_brush->b_face->tex.c_str();
-  }
+//---  inline const char *FloorTex() const
+//---  {
+//---    return b_brush->t_face->tex.c_str();
+//---  }
+//---
+//---  inline const char *CeilTex() const
+//---  {
+//---    return t_brush->b_face->tex.c_str();
+//---  }
 };
 
 
