@@ -22,7 +22,8 @@
 #define __OBLIGE_QUAKE1_H__
 
 class qLump_c;
-class area_face_c;
+
+class csg_face_c;
 
 extern int q1_flat_lightmaps[256];
 

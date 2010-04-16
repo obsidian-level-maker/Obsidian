@@ -46,7 +46,7 @@ class merge_region_c;
 class csg_brush_c;
 
 
-class slope_plane_c
+class slope_info_c
 {
   // defines the planes used for sloped floors or ceiling.
   // gives two points on the 2D map, and change in Z between them.
@@ -61,8 +61,8 @@ public:
   double dz;
 
 public:
-   slope_plane_c();
-  ~slope_plane_c();
+   slope_info_c();
+  ~slope_info_c();
 
   double GetAngle() const;
 
@@ -87,18 +87,14 @@ public:
 };
 
 
-// FIXME !!!!!!
-#define area_face_c  csg_face_c
-
-
-class area_vert_c
+class brush_vert_c
 {
 public:
   csg_brush_c *parent;
 
   double x, y;
 
-  area_face_c *face;
+  csg_face_c *face;
 
 //----  int line_kind;
 //----  int line_tag;
@@ -109,8 +105,36 @@ public:
   merge_vertex_c *partner;
 
 public:
-   area_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
-  ~area_vert_c();
+   brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
+  ~brush_vert_c();
+};
+
+
+// FIXME !!!!!!
+#define slope_plane_c  slope_info_c
+#define area_face_c    csg_face_c
+#define area_vert_c    brush_vert_c
+
+
+class brush_plane_c
+{
+public:
+  // without slope, this is just the height of the top or bottom
+  // of the brush.  When sloped, it still represents a bounding
+  // height of the brush.
+  double z;
+
+  slope_info_c *slope;
+
+  csg_face_c *face;
+
+public:
+  brush_plane_c() : z(0), slope(NULL), face(NULL)
+  { }
+
+  brush_plane_c(const brush_plane_c& other);
+
+  ~brush_plane_c();
 };
 
 
@@ -146,33 +170,34 @@ public:
   int bkind;
   int bflags;
 
-  std::vector<area_vert_c *> verts;
+  std::vector<brush_vert_c *> verts;
 
-  // without slopes, these are just the heights of the bottom
-  // and top faces.  When slopes are present, they represent the
-  // bounding heights of the brush.
-  double z1, z2;
+  brush_plane_c b;  // bottom
+  brush_plane_c t;  // top
 
-  // these are NULL when not sloped
-  slope_plane_c *b_slope;
-  slope_plane_c *t_slope;
-
-  area_face_c *b_face;
-  area_face_c *t_face;
+//----  // without slopes, these are just the heights of the bottom
+//----  // and top faces.  When slopes are present, they represent the
+//----  // bounding heights of the brush.
+//----  double z1, z2;
+//----
+//----  // these are NULL when not sloped
+//----  slope_plane_c *b_slope;
+//----  slope_plane_c *t_slope;
+//----
+//----  area_face_c *b_face;
+//----  area_face_c *t_face;
 
   double min_x, min_y;
   double max_x, max_y;
 
-/*
-  // this moves the whole brush up or down _after_ all the CSG
-  // construction has been done.  It's purpose is to ease the
-  // creation of features inset into the floor or ceiling.
-  // Yes it's a hack, but a very useful one!
-  double delta_z;
-
-  int mark;
-  int sec_kind, sec_tag;
-*/
+//----  // this moves the whole brush up or down _after_ all the CSG
+//----  // construction has been done.  It's purpose is to ease the
+//----  // creation of features inset into the floor or ceiling.
+//----  // Yes it's a hack, but a very useful one!
+//----  double delta_z;
+//----
+//----  int mark;
+//----  int sec_kind, sec_tag;
 
 public:
    csg_brush_c();
@@ -341,12 +366,12 @@ public:
 
   inline double GetZ1() const
   {
-    return b_brush->z2;
+    return b_brush->t.z;
   }
 
   inline double GetZ2() const
   {
-    return t_brush->z1;
+    return t_brush->b.z;
   }
 
 //---  inline const char *FloorTex() const
@@ -438,7 +463,7 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
 csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact = false);
-area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
                                 area_vert_c *V = NULL);
 
 merge_region_c *CSG2_FindRegionForPoint(double x, double y);

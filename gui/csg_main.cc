@@ -33,7 +33,7 @@
 #include "ui_dialog.h"
 
 
-// FIXME std::vector<area_face_c *> all_faces;
+// FIXME std::vector<csg_face_c *> all_faces;
 
 std::vector<csg_brush_c *> all_brushes;
 
@@ -77,12 +77,12 @@ double slope_plane_c::CalcZ(double base_z, double x, double y) const
 }
 
 
-area_face_c::area_face_c() : props()  /*
+csg_face_c::csg_face_c() : props()  /*
       tex(), light(0),
       x_offset(FVAL_NONE), y_offset(FVAL_NONE), peg(false)  */
 { }
 
-area_face_c::~area_face_c()
+csg_face_c::~csg_face_c()
 { }
 
 
@@ -99,12 +99,21 @@ area_vert_c::~area_vert_c()
 { }
 
 
+brush_plane_c::brush_plane_c(const brush_plane_c& other) :
+    z(other.z), slope(NULL), face(NULL)  // FIXME ?!?!?
+{ }
+    
+brush_plane_c::~brush_plane_c()
+{
+  // free slope ??   (or keep all slopes in big list)
+
+  // free face ??  (or keep all faces in big list)
+}
+
+
 csg_brush_c::csg_brush_c() :
      bkind(BKIND_Solid), bflags(0),
-     verts(),
-     z1(-1), z2(-1),
-     b_slope(NULL), t_slope(NULL),
-     b_face(NULL), t_face(NULL)
+     verts(), b(), t()
      /* ,
      delta_z(0), mark(0),
      sec_kind(0), sec_tag(0) */
@@ -114,10 +123,11 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       bkind(other->bkind),
       bflags(other->bflags),
       verts(),
+      b(other->b), t(other->t)
+/* ,
       z1(other->z1), z2(other->z2),
       b_slope(NULL), t_slope(NULL),
       b_face(other->b_face), t_face(other->t_face)
-      /* ,
       delta_z(other->delta_z), mark(other->mark),
       sec_kind(other->sec_kind), sec_tag(other->sec_tag) */
 {
@@ -597,15 +607,15 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   {
     if (lua_isnil(L, -3))  // top
     {
-      B->z2 = luaL_checknumber(L, -2);
-      B->t_face = face;
-      B->t_slope = Grab_Slope(L, -1);
+      B->t.z = luaL_checknumber(L, -2);
+      B->t.slope = Grab_Slope(L, -1);
+      B->t.face = face;
     }
     else  // bottom
     {
-      B->z1 = luaL_checknumber(L, -3);
-      B->b_face = face;
-      B->b_slope = Grab_Slope(L, -1);
+      B->b.z = luaL_checknumber(L, -3);
+      B->b.slope = Grab_Slope(L, -1);
+      B->b.face = face;
     }
   }
   else  // side info
@@ -887,13 +897,13 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
       continue;
 
     // ideal match
-    if ((z > V->parent->z1 - EPSILON) && (z < V->parent->z2 + EPSILON))
+    if ((z > V->parent->b.z - EPSILON) && (z < V->parent->t.z + EPSILON))
       return V;
 
-    if (z < V->parent->z1)
-      dist = V->parent->z1 - z;
+    if (z < V->parent->b.z)
+      dist = V->parent->b.z - z;
     else
-      dist = z - V->parent->z2;
+      dist = z - V->parent->t.z;
 
     if (dist < best_dist)
     {
@@ -924,10 +934,10 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
       continue;
 
     // ideal match
-    if ((z > A->z1 - EPSILON) && (z < A->z2 + EPSILON))
+    if ((z > A->b.z - EPSILON) && (z < A->t.z + EPSILON))
       return A;
 
-    double dist = (z < A->z1) ? (A->z1 - z) : (z - A->z2);
+    double dist = (z < A->b.z) ? (A->b.z - z) : (z - A->t.z);
 
     if (dist < best_dist)
     {
@@ -939,7 +949,7 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   return exact ? NULL : best;
 }
 
-area_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
                                 area_vert_c *V)
 {
   if (! V)
