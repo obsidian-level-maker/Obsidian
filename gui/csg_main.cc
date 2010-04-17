@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -45,6 +45,9 @@ std::vector<merge_region_c *>  mug_regions;
 
 int bounds_x1, bounds_y1, bounds_z1;
 int bounds_x2, bounds_y2, bounds_z2;
+
+csg_face_c *dummy_side_face;
+csg_face_c *dummy_plane_face;
 
 
 static void CSG2_BeginLevel(void);
@@ -740,7 +743,22 @@ int CSG2_property(lua_State *L)
   const char *key   = luaL_checkstring(L,1);
   const char *value = luaL_checkstring(L,2);
 
-  // TODO: eat propertities intended for CSG2
+  // eat propertities intended for CSG2
+
+  if (strcmp(key, "error_tex") == 0)
+  {
+    SYS_ASSERT(dummy_side_face);
+
+    dummy_side_face->props[key] = std::string(value);
+    return 0;
+  }
+  else if (strcmp(key, "error_flat") == 0)
+  {
+    SYS_ASSERT(dummy_plane_face);
+
+    dummy_plane_face->props[key] = std::string(value);
+    return 0;
+  }
 
   SYS_ASSERT(game_object);
 
@@ -803,21 +821,37 @@ int CSG2_add_brush(lua_State *L)
 
   Grab_CoordList(L, coord_arg, B);
 
-/* OLD
-  csg_brush_c *B = Grab_AreaInfo(L, 1);
+//----  csg_brush_c *B = Grab_AreaInfo(L, 1);
+//----
+//----  Grab_LineLoop(L, 2, B);
+//----
+//----  if (lua_isnumber(L, 3))
+//----    B->z1 = lua_tonumber(L, 3);
+//----  else
+//----    B->b_slope = Grab_Slope(L, 3);
+//----
+//----  if (lua_isnumber(L, 4))
+//----    B->z2 = lua_tonumber(L, 4);
+//----  else
+//----    B->t_slope = Grab_Slope(L, 4);
 
-  Grab_LineLoop(L, 2, B);
+  // make sure that certain brush kinds have valid faces
+  if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail ||
+      B->bkind == BKIND_Sky)
+  {
+    SYS_ASSERT(dummy_plane_face);
 
-  if (lua_isnumber(L, 3))
-    B->z1 = lua_tonumber(L, 3);
-  else
-    B->b_slope = Grab_Slope(L, 3);
+    if (! B->b.face) B->b.face = B->t.face ? B->t.face : dummy_plane_face;
+    if (! B->t.face) B->t.face = B->b.face;
 
-  if (lua_isnumber(L, 4))
-    B->z2 = lua_tonumber(L, 4);
-  else
-    B->t_slope = Grab_Slope(L, 4);
-*/
+    for (unsigned int k = 0; k < B->verts.size(); k++)
+    {
+      brush_vert_c *V = B->verts[k];
+
+      if (! V->face)
+        V->face = (k == 0) ? dummy_side_face : B->verts[0]->face;
+    }
+  } 
 
   all_brushes.push_back(B);
 
@@ -1003,15 +1037,21 @@ void CSG2_FreeAll(void)
 
   all_brushes.clear();
   all_entities.clear();
+
+  delete dummy_side_face;  dummy_side_face  = NULL;
+  delete dummy_plane_face; dummy_plane_face = NULL;
 }
 
 
-void CSG2_BeginLevel(void)
+static void CSG2_BeginLevel(void)
 {
   CSG2_FreeAll();
+
+  dummy_side_face  = new csg_face_c();
+  dummy_plane_face = new csg_face_c();
 }
 
-void CSG2_EndLevel(void)
+static void CSG2_EndLevel(void)
 {
   CSG2_FreeAll();
 }

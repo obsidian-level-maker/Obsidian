@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -447,6 +447,9 @@ extern std::vector<merge_gap_c *>     mug_gaps;
 
 extern int bounds_x1, bounds_y1, bounds_z1;
 extern int bounds_x2, bounds_y2, bounds_z2;
+
+extern csg_face_c *dummy_side_face;
+extern csg_face_c *dummy_plane_face;
 
 
 /* ----- FUNCTIONS ----- */
