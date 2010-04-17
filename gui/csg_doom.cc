@@ -42,8 +42,6 @@ class nk_wall_c;
 
 
 // Properties
-char *dm_error_tex;
-
 int solid_exfloor;    // disabled if <= 0
 int liquid_exfloor;
 
@@ -1321,8 +1319,8 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
 
-    SD->lower = lower_W ? lower_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
-    SD->upper = upper_W ? upper_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
+    SD->lower = lower_W ? lower_W->tex.c_str() : "-";
+    SD->upper = upper_W ? upper_W->tex.c_str() : "-";
 
     if (rail_W)
     {
@@ -1355,7 +1353,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     if (mid_W && mid_W->peg)
       *l_peg = true;
 
-    SD->mid = mid_W ? mid_W->tex.c_str() : dm_error_tex ? dm_error_tex : "-";
+    SD->mid = mid_W ? mid_W->tex.c_str() : "-";
 
     if (mid_W && mid_W->x_offset != FVAL_NONE)
       SD->x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);

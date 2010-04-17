@@ -43,7 +43,6 @@ extern void DM_FreeLevelStuff(void);
 
 // Properties
 static char *level_name;
-static char *error_tex;
 
 
 static qLump_c *nk_sectors;
@@ -333,14 +332,6 @@ void nukem_game_interface_c::Property(const char *key, const char *value)
     // ignored (for now)
     // [another mechanism sets the description via BEX/DDF]
   }
-  else if (StringCaseCmp(key, "error_tex") == 0)
-  {
-    error_tex = StringDup(value);
-  }
-  else if (StringCaseCmp(key, "error_flat") == 0)
-  {
-    // silently accepted, but not used
-  }
   else
   {
     LogPrintf("WARNING: unknown NUKEM property: %s=%s\n", key, value);
@@ -364,12 +355,6 @@ void nukem_game_interface_c::EndLevel()
 
   StringFree(level_name);
   level_name = NULL;
-
-  if (error_tex)
-  {
-    StringFree(error_tex);
-    error_tex = NULL;
-  }
 
   delete nk_sectors;  nk_sectors = NULL;
   delete nk_walls;    nk_walls   = NULL;

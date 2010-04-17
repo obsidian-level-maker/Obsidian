@@ -46,7 +46,7 @@ extern void DM_FreeLevelStuff(void);
 static char *level_name;
 
 bool wad_hexen;  // FIXME: not global (next 3 too)
-extern char *dm_error_tex;
+
 extern int solid_exfloor;    // disabled if <= 0
 extern int liquid_exfloor;
 
@@ -564,14 +564,6 @@ void doom_game_interface_c::Property(const char *key, const char *value)
     else
       wad_hexen = true;
   }
-  else if (StringCaseCmp(key, "error_tex") == 0)
-  {
-    dm_error_tex = StringDup(value);
-  }
-  else if (StringCaseCmp(key, "error_flat") == 0)
-  {
-    // silently accepted, but not used
-  }
   else if (StringCaseCmp(key, "solid_exfloor") == 0)
   {
     solid_exfloor = atoi(value);
@@ -603,12 +595,6 @@ void doom_game_interface_c::EndLevel()
 
   StringFree(level_name);
   level_name = NULL;
-
-  if (dm_error_tex)
-  {
-    StringFree(dm_error_tex);
-    dm_error_tex = NULL;
-  }
 }
 
 
