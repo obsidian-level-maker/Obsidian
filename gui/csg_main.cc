@@ -112,11 +112,13 @@ brush_plane_c::~brush_plane_c()
 
 
 csg_brush_c::csg_brush_c() :
-     bkind(BKIND_Solid), bflags(0),
-     verts(), b(), t()
-     /* ,
-     delta_z(0), mark(0),
-     sec_kind(0), sec_tag(0) */
+     bkind(BKIND_Solid),
+     bflags(0),
+     verts(),
+     b(-EXTREME_H),
+     t( EXTREME_H)
+///---     delta_z(0), mark(0),
+///---     sec_kind(0), sec_tag(0)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
@@ -124,12 +126,11 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       bflags(other->bflags),
       verts(),
       b(other->b), t(other->t)
-/* ,
-      z1(other->z1), z2(other->z2),
-      b_slope(NULL), t_slope(NULL),
-      b_face(other->b_face), t_face(other->t_face)
-      delta_z(other->delta_z), mark(other->mark),
-      sec_kind(other->sec_kind), sec_tag(other->sec_tag) */
+///---      z1(other->z1), z2(other->z2),
+///---      b_slope(NULL), t_slope(NULL),
+///---      b_face(other->b_face), t_face(other->t_face)
+///---      delta_z(other->delta_z), mark(other->mark),
+///---      sec_kind(other->sec_kind), sec_tag(other->sec_tag)
 {
   // FIXME: do_verts
 
@@ -237,10 +238,10 @@ void CSG2_UpdateBounds(bool three_d)
   min_x = min_y = min_z = +9e9;
   max_x = max_y = max_z = -9e9;
 
-  if (three_d)
+  if (! three_d)
   {
-    min_z = -4000.0;
-    max_z = +4000.0;
+    min_z = -EXTREME_H;
+    max_z =  EXTREME_H;
   }
 
   for (unsigned int i = 0; i < mug_segments.size(); i++)

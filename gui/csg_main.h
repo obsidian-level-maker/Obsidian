@@ -31,6 +31,9 @@
 
 #define ANGLE_EPSILON  0.0003
 
+// very high (low) value for uncapped brushes
+#define EXTREME_H  4000
+
 
 // unset values (handy sometimes)
 #define IVAL_NONE  -27777
@@ -123,7 +126,7 @@ public:
   csg_face_c *face;
 
 public:
-  brush_plane_c() : z(0), slope(NULL), face(NULL)
+  brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(NULL)
   { }
 
   brush_plane_c(const brush_plane_c& other);
