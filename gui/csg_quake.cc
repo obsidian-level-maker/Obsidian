@@ -1557,7 +1557,7 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
       winding->wi_verts = CollectClockwiseVerts(winding);
 
     AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR,
-                (a1 & 1) ? G->t_brush->b_face : G->b_brush->t_face,
+                (a1 & 1) ? G->t_brush->b.face : G->b_brush->t.face,
                 winding->wi_verts);
 
     return node;

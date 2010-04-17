@@ -606,8 +606,8 @@ void CSG2_Doom_TestBrushes(void)
     
     int sec_idx = DM_NumSectors();
 
-    DM_AddSector(I_ROUND(P->z1), P->b_face->tex.c_str(),
-                 I_ROUND(P->z2), P->t_face->tex.c_str(),
+    DM_AddSector(I_ROUND(P->b.z), P->b.face->tex.c_str(),  // FIXME face can be NULL
+                 I_ROUND(P->t.z), P->t.face->tex.c_str(),
                  192, 0, 0);
 
     int side_idx = DM_NumSidedefs();
@@ -711,10 +711,10 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   {
     csg_brush_c *A = R->brushes[j];
 
-    if (A->z1 > B->t_brush->z1 - EPSILON &&
-        A->z2 < T->b_brush->z2 + EPSILON)
+    if (A->b.z > B->t_brush->b.z - EPSILON &&
+        A->t.z < T->b_brush->t.z + EPSILON)
     {
-      double h = A->z2 - A->z1;
+      double h = A->t.z - A->b.z;
 
       // TODO: priorities
 
@@ -743,8 +743,8 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   EF->dummy_sec = new sector_info_c;
 
-  EF->dummy_sec->f_h = I_ROUND(B->t_brush->z1);
-  EF->dummy_sec->c_h = I_ROUND(T->b_brush->z2);
+  EF->dummy_sec->f_h = I_ROUND(B->t_brush->b.z);
+  EF->dummy_sec->c_h = I_ROUND(T->b_brush->t.z);
 
   EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
   EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
@@ -780,8 +780,8 @@ static void MakeSector(merge_region_c *R)
 
   S->CalcMiddle();
 
-  S->f_h = I_ROUND(B->z2 + B->delta_z);
-  S->c_h = I_ROUND(T->z1 + T->delta_z);
+  S->f_h = I_ROUND(B->t.z + B->delta_z);
+  S->c_h = I_ROUND(T->b.z + T->delta_z);
 
   if (S->c_h < S->f_h)
       S->c_h = S->f_h;
@@ -827,7 +827,7 @@ static void MakeSector(merge_region_c *R)
     if (B->bkind != BKIND_Light)
       continue;
 
-    if (B->z2 < S->f_h+1 || B->z1 > S->c_h-1)
+    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
       continue;
 
     if (B->b_face->light < 0 || B->t_face->light < 0)
@@ -1260,7 +1260,7 @@ static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_o
 
 static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 {
-  int y_offset = I_ROUND(rail->parent->z1) - base_h;
+  int y_offset = I_ROUND(rail->parent->b.z) - base_h;
 
   return y_offset;   ///--- MAX(0, y_offset);
 }
@@ -1310,13 +1310,13 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     brush_vert_c *l_vert = G->FindSide(l_brush);
     brush_vert_c *u_vert = G->FindSide(u_brush);
 
-    csg_face_c *lower_W = (l_vert && l_vert->w_face) ? l_vert->w_face : l_brush->w_face;
-    csg_face_c *upper_W = (u_vert && u_vert->w_face) ? u_vert->w_face : u_brush->w_face;
+    csg_face_c *lower_W = (l_vert && l_vert->face) ? l_vert->face : l_brush->w_face;
+    csg_face_c *upper_W = (u_vert && u_vert->face) ? u_vert->face : u_brush->w_face;
 
     SYS_ASSERT(lower_W && upper_W);
 #endif
 
-    csg_face_c *rail_W = rail ? rail->w_face : NULL;
+    csg_face_c *rail_W = rail ? rail->face : NULL;
 
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
@@ -1415,15 +1415,15 @@ static brush_vert_c *FindSpecialVert(merge_segment_c *G)
       if (V->parent->bkind == BKIND_Rail)
         continue;
 
-      if (V->parent->z1 < (double)max_c &&
-          V->parent->z2 > (double)min_f)
+      if (V->parent->b.z < (double)max_c &&
+          V->parent->t.z > (double)min_f)
       {
 /*
 DebugPrintf("SEGMENT (%1.0f,%1.0f) --> (%1.0f,%1.0f) SIDE:%d LINE_KIND:%d\n",
             G->start->x, G->start->y, G->end  ->x, G->end  ->y,
             side, V->line_kind);
 DebugPrintf("   BRUSH RANGE: %1.0f --> %1.0f  tex:%s\n",
-            V->parent->z1, V->parent->z2, V->parent->w_face->tex.c_str());
+            V->parent->b.z, V->parent->t.z, V->parent->w_face->tex.c_str());
 DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
             FS, FS ? FS->f_h : -1, FS ? FS->c_h : -1, FS ? FS->f_tex.c_str() : "");
 DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
@@ -1485,13 +1485,15 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
       if (V->parent->bkind != BKIND_Rail)
         continue;
 
-      if (! V->w_face)
+      if (! V->face)
         continue;
 
-      if (V->parent->z1 > max_c || V->parent->z1 < min_f)
+      if (V->parent->b.z > max_c || V->parent->b.z < min_f)
         continue;
 
-      if (V->w_face->tex[0] == '-' && !V->line_kind && !V->line_flags)
+      const char *tex = CSG2_Lookup(V->face->props, "tex", "-");
+
+      if (tex[0] == '-' && !V->line_kind && !V->line_flags)
         continue;
 
       // found one

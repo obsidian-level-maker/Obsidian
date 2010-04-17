@@ -296,18 +296,18 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
     // !!!! FIXME: if floor is sloped, split this poly into two halves
     //             at the point where the (slope + fh) exceeds (z2 + fh)
 
-    SYS_ASSERT(! P2->t_slope);
+    SYS_ASSERT(! P2->t.slope);
 
     // TODO: if ceiling is sloped, adjust slope to keep it in new bbox
     //       (this is a kludge.  Floors are a lot more important to get
     //        right because players and monsters walk on them).
 
-    SYS_ASSERT(! P2->b_slope);
+    SYS_ASSERT(! P2->b.slope);
 
     if (P->bkind != BKIND_Liquid)
     {
-      P2->z2 += pad_t;
-      P2->z1 -= pad_b;
+      P2->b.z -= pad_b;
+      P2->t.z += pad_t;
     }
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
