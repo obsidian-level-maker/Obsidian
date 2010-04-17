@@ -620,8 +620,8 @@ void CSG2_Doom_TestBrushes(void)
     {
       int j2 = (j1 + 1) % (int)P->verts.size();
 
-      area_vert_c *v1 = P->verts[j1];
-   // area_vert_c *v2 = P->verts[j2];
+      brush_vert_c *v1 = P->verts[j1];
+   // brush_vert_c *v2 = P->verts[j2];
 
       DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
@@ -1243,7 +1243,7 @@ static int NaturalXOffset(linedef_info_c *G, int side)
   return I_ROUND(- along);
 }
 
-static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_offset) 
+static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_offset) 
 {
   double along = 0;
   
@@ -1258,7 +1258,7 @@ static int CalcXOffset(merge_segment_c *G, int side, area_vert_c *V, double x_of
   return (int)(along + x_offset);
 }
 
-static int CalcRailYOffset(area_vert_c *rail, int base_h)
+static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 {
   int y_offset = I_ROUND(rail->parent->z1) - base_h;
 
@@ -1268,7 +1268,7 @@ static int CalcRailYOffset(area_vert_c *rail, int base_h)
 
 static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
                        merge_region_c *F, merge_region_c *B,
-                       area_vert_c *rail,
+                       brush_vert_c *rail,
                        bool *l_peg, bool *u_peg)
 {
   if (! (F && F->index > 0))
@@ -1296,27 +1296,27 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     double fz = (S->f_h + BS->f_h) / 2.0;
     double cz = (S->c_h + BS->c_h) / 2.0;
 
-    area_vert_c *l_vert = CSG2_FindSideVertex(G, fz, side == 1, true);
-    area_vert_c *u_vert = CSG2_FindSideVertex(G, cz, side == 1, true);
+    brush_vert_c *l_vert = CSG2_FindSideVertex(G, fz, side == 1, true);
+    brush_vert_c *u_vert = CSG2_FindSideVertex(G, cz, side == 1, true);
 
-    area_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1, l_vert);
-    area_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1, u_vert);
+    csg_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1, l_vert);
+    csg_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1, u_vert);
 #else
     csg_brush_c *l_brush = B->gaps.front()->b_brush;
     csg_brush_c *u_brush = B->gaps.back() ->t_brush;
 
     SYS_ASSERT(l_brush && u_brush);
 
-    area_vert_c *l_vert = G->FindSide(l_brush);
-    area_vert_c *u_vert = G->FindSide(u_brush);
+    brush_vert_c *l_vert = G->FindSide(l_brush);
+    brush_vert_c *u_vert = G->FindSide(u_brush);
 
-    area_face_c *lower_W = (l_vert && l_vert->w_face) ? l_vert->w_face : l_brush->w_face;
-    area_face_c *upper_W = (u_vert && u_vert->w_face) ? u_vert->w_face : u_brush->w_face;
+    csg_face_c *lower_W = (l_vert && l_vert->w_face) ? l_vert->w_face : l_brush->w_face;
+    csg_face_c *upper_W = (u_vert && u_vert->w_face) ? u_vert->w_face : u_brush->w_face;
 
     SYS_ASSERT(lower_W && upper_W);
 #endif
 
-    area_face_c *rail_W = rail ? rail->w_face : NULL;
+    csg_face_c *rail_W = rail ? rail->w_face : NULL;
 
     if (lower_W && lower_W->peg) *l_peg = true;
     if (upper_W && upper_W->peg) *u_peg = true;
@@ -1349,8 +1349,8 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
   {
     double mz = (S->f_h + S->c_h) / 2.0;
 
-    area_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
-    area_face_c *mid_W  = CSG2_FindSideFace(  G, mz, side == 1, m_vert);
+    brush_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
+    csg_face_c *mid_W  = CSG2_FindSideFace(  G, mz, side == 1, m_vert);
 
     if (mid_W && mid_W->peg)
       *l_peg = true;
@@ -1368,7 +1368,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 }
 
 
-static area_vert_c *FindSpecialVert(merge_segment_c *G)
+static brush_vert_c *FindSpecialVert(merge_segment_c *G)
 {
   sector_info_c *FS = NULL;
   sector_info_c *BS = NULL;
@@ -1401,7 +1401,7 @@ static area_vert_c *FindSpecialVert(merge_segment_c *G)
   max_c += 2;
 
 
-  area_vert_c *minor = NULL;
+  brush_vert_c *minor = NULL;
 
 
   for (int side = 0; side < 2; side++)
@@ -1410,7 +1410,7 @@ static area_vert_c *FindSpecialVert(merge_segment_c *G)
 
     for (unsigned int k=0; k < count; k++)
     {
-      area_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
+      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
 
       if (V->parent->bkind == BKIND_Rail)
         continue;
@@ -1441,7 +1441,7 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
   return minor;
 }
 
-static area_vert_c *FindRailVert(merge_segment_c *G)
+static brush_vert_c *FindRailVert(merge_segment_c *G)
 {
   sector_info_c *FS = NULL;  // FIXME: duplicate code
   sector_info_c *BS = NULL;
@@ -1480,7 +1480,7 @@ static area_vert_c *FindRailVert(merge_segment_c *G)
 
     for (unsigned int k=0; k < count; k++)
     {
-      area_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
+      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
 
       if (V->parent->bkind != BKIND_Rail)
         continue;
@@ -1523,9 +1523,9 @@ static void MakeLinedefs(void)
         I_ROUND(G->start->y) == I_ROUND(G->end->y))
       continue;
 
-    area_vert_c *spec = FindSpecialVert(G);
+    brush_vert_c *spec = FindSpecialVert(G);
 
-    area_vert_c *rail = FindRailVert(G);
+    brush_vert_c *rail = FindRailVert(G);
 
     // if same sector on both sides, skip the line, unless
     // we have a rail texture or a special line.

@@ -84,7 +84,7 @@ public:
   int index;  // final index into Faces lump
 
   csg_brush_c *brush;
-  area_face_c *info;
+  csg_face_c *info;
 
 public:
    qFace_c(int _kind = WALL) :
@@ -1224,7 +1224,7 @@ DebugPrintf("Using partition (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
 }
 
 
-static void DoAddFace(qSide_c *S, csg_brush_c *B, area_face_c *AF,
+static void DoAddFace(qSide_c *S, csg_brush_c *B, csg_face_c *AF,
                       int gap, double z1, double z2)
 {
   SYS_ASSERT(z2 > z1);
@@ -1289,7 +1289,7 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
     if (RX == NULL || RX->gaps.size() == 0)
     {
       csg_brush_c *B  = CSG2_FindSideBrush(seg, (gz1+gz2)/2.0, side==1);
-      area_face_c *AF = CSG2_FindSideFace( seg, (gz1+gz2)/2.0, side==1);
+      csg_face_c *AF = CSG2_FindSideFace( seg, (gz1+gz2)/2.0, side==1);
 
       DoAddFace(S, B, AF, k, gz1, gz2);
 
@@ -1309,7 +1309,7 @@ static void MakeSide(qLeaf_c *leaf, merge_segment_c *seg, int side)
       if (sz2 > gz2) sz2 = gz2;
 
       csg_brush_c *B  = CSG2_FindSideBrush(seg, (sz1+sz2)/2.0, side==1);
-      area_face_c *AF = CSG2_FindSideFace( seg, (sz1+sz2)/2.0, side==1);
+      csg_face_c *AF = CSG2_FindSideFace( seg, (sz1+sz2)/2.0, side==1);
 
       if (sz2 > sz1 + 0.99)  // don't create tiny faces
       {

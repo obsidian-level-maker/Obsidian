@@ -146,10 +146,10 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
 {
   unsigned int total = P->verts.size();
 
-  area_vert_c *kv = P->verts[k];
+  brush_vert_c *kv = P->verts[k];
 
-  area_vert_c *pv = P->verts[(k + total - 1) % total];
-  area_vert_c *nv = P->verts[(k + 1        ) % total];
+  brush_vert_c *pv = P->verts[(k + total - 1) % total];
+  brush_vert_c *nv = P->verts[(k + 1        ) % total];
 
   // if the two lines are co-linear (or near enough), then we
   // can skip this vertex altogether.
@@ -160,7 +160,7 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
   // liquid brushes remain the same size
   if (P->bkind == BKIND_Liquid)
   {
-    P2->verts.push_back(new area_vert_c(P2, kv->x, kv->y));
+    P2->verts.push_back(new brush_vert_c(P2, kv->x, kv->y));
     return;
   }
 
@@ -225,15 +225,15 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
     
     if (x_side == y_side)
     {
-      P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
-      P2->verts.push_back(new area_vert_c(P2, ix,    iy));
-      P2->verts.push_back(new area_vert_c(P2, kv->x, iy));
+      P2->verts.push_back(new brush_vert_c(P2, ix,    kv->y));
+      P2->verts.push_back(new brush_vert_c(P2, ix,    iy));
+      P2->verts.push_back(new brush_vert_c(P2, kv->x, iy));
     }
     else
     {
-      P2->verts.push_back(new area_vert_c(P2, kv->x, iy));
-      P2->verts.push_back(new area_vert_c(P2, ix,    iy));
-      P2->verts.push_back(new area_vert_c(P2, ix,    kv->y));
+      P2->verts.push_back(new brush_vert_c(P2, kv->x, iy));
+      P2->verts.push_back(new brush_vert_c(P2, ix,    iy));
+      P2->verts.push_back(new brush_vert_c(P2, ix,    kv->y));
     }
   }
   else if (x_side)
@@ -248,8 +248,8 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
                                 kv->x + pad * n_nx, kv->y + pad * n_ny,
                                 ix);
 
-    P2->verts.push_back(new area_vert_c(P2, ix, py));
-    P2->verts.push_back(new area_vert_c(P2, ix, ny));
+    P2->verts.push_back(new brush_vert_c(P2, ix, py));
+    P2->verts.push_back(new brush_vert_c(P2, ix, ny));
   }
   else if (y_side)
   {
@@ -263,8 +263,8 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
                                 kv->x + pad * n_nx, kv->y + pad * n_ny,
                                 iy);
 
-    P2->verts.push_back(new area_vert_c(P2, px, iy));
-    P2->verts.push_back(new area_vert_c(P2, nx, iy));
+    P2->verts.push_back(new brush_vert_c(P2, px, iy));
+    P2->verts.push_back(new brush_vert_c(P2, nx, iy));
   }
   else
   {
@@ -277,7 +277,7 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
                      kv->x + pad * n_nx, kv->y + pad * n_ny,
                      &ix, &iy);
 
-    P2->verts.push_back(new area_vert_c(P2, ix, iy));
+    P2->verts.push_back(new brush_vert_c(P2, ix, iy));
   }
 }
 

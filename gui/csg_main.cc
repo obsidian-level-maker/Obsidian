@@ -52,21 +52,21 @@ static void CSG2_EndLevel(void);
 
 
 
-slope_plane_c::slope_plane_c() :
+slope_info_c::slope_info_c() :
       sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
 
-slope_plane_c::~slope_plane_c()
+slope_info_c::~slope_info_c()
 { }
 
-double slope_plane_c::GetAngle() const
+double slope_info_c::GetAngle() const
 {
   double xy_dist = ComputeDist(sx, sy, ex, ey);
 
   return CalcAngle(0, 0, xy_dist, dz);
 }
 
-double slope_plane_c::CalcZ(double base_z, double x, double y) const
+double slope_info_c::CalcZ(double base_z, double x, double y) const
 {
   double dx = (ex - sx);
   double dy = (ey - sy);
@@ -86,7 +86,7 @@ csg_face_c::~csg_face_c()
 { }
 
 
-area_vert_c::area_vert_c(csg_brush_c *_parent, double _x, double _y) :
+brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
       parent(_parent), x(_x), y(_y),
       face(NULL),
 ///---    line_kind(0), line_tag(0), line_flags(0), */
@@ -95,7 +95,7 @@ area_vert_c::area_vert_c(csg_brush_c *_parent, double _x, double _y) :
 ///---  memset(line_args, 0, sizeof(line_args));
 }
 
-area_vert_c::~area_vert_c()
+brush_vert_c::~brush_vert_c()
 { }
 
 
@@ -160,9 +160,9 @@ const char * csg_brush_c::Validate()
 
   for (unsigned int k = 0; k < verts.size(); k++)
   {
-    area_vert_c *v1 = verts[k];
-    area_vert_c *v2 = verts[(k+1) % (int)verts.size()];
-    area_vert_c *v3 = verts[(k+2) % (int)verts.size()];
+    brush_vert_c *v1 = verts[k];
+    brush_vert_c *v2 = verts[(k+1) % (int)verts.size()];
+    brush_vert_c *v3 = verts[(k+2) % (int)verts.size()];
 
     if (fabs(v2->x - v1->x) < EPSILON && fabs(v2->y - v1->y) < EPSILON)
       return "Line loop contains a zero length line!";
@@ -206,7 +206,7 @@ void csg_brush_c::ComputeBBox()
 
   for (unsigned int i = 0; i < verts.size(); i++)
   {
-    area_vert_c *V = verts[i];
+    brush_vert_c *V = verts[i];
 
     if (V->x < min_x) min_x = V->x;
     if (V->y < min_y) min_y = V->y;
@@ -408,7 +408,7 @@ static int Grab_Properties(lua_State *L, int stack_pos,
 }
 
 
-static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
+static slope_info_c * Grab_Slope(lua_State *L, int stack_pos)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -422,7 +422,7 @@ static slope_plane_c * Grab_Slope(lua_State *L, int stack_pos)
     return NULL; /* NOT REACHED */
   }
 
-  slope_plane_c *P = new slope_plane_c();
+  slope_info_c *P = new slope_info_c();
 
   lua_getfield(L, stack_pos, "x1");
   lua_getfield(L, stack_pos, "y1");
@@ -482,7 +482,7 @@ csg_face_c * Grab_Face(lua_State *L, int stack_pos)
 //----    return NULL; /* NOT REACHED */
 //----  }
 //----
-//----  area_face_c *F = new area_face_c();
+//----  csg_face_c *F = new csg_face_c();
 //----
 //----  lua_getfield(L, stack_pos, "texture");
 //----  lua_getfield(L, stack_pos, "light");
@@ -620,7 +620,7 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   }
   else  // side info
   {
-    area_vert_c *V = new area_vert_c(B);
+    brush_vert_c *V = new brush_vert_c(B);
 
     lua_getfield(L, stack_pos, "x");
     lua_getfield(L, stack_pos, "y");
@@ -880,10 +880,10 @@ const char * CSG2_Lookup(std::map<std::string, std::string> & props,
 }
 
 
-area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact)
 {
-  area_vert_c *best = NULL;
+  brush_vert_c *best = NULL;
   double best_dist = 1e9;
   double dist;
 
@@ -891,7 +891,7 @@ area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
 
   for (unsigned i = 0; i < count; i++)
   {
-    area_vert_c *V = is_front ? G->f_sides[i]: G->b_sides[i];
+    brush_vert_c *V = is_front ? G->f_sides[i]: G->b_sides[i];
 
     if (V->parent->bkind == BKIND_Light || V->parent->bkind == BKIND_Rail)
       continue;
@@ -950,7 +950,7 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
 }
 
 csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
-                                area_vert_c *V)
+                               brush_vert_c *V)
 {
   if (! V)
     V = CSG2_FindSideVertex(G, z, is_front, true);

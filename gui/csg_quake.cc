@@ -104,7 +104,7 @@ public:
 
   int index;
 
-  area_face_c *w_face;
+  csg_face_c *w_face;
 
   int light;
 
@@ -141,7 +141,7 @@ public:
   }
 
   static rFace_c *NewFace(int kind, int gap, double z1, double z2,
-                          area_vert_c *av)
+                          brush_vert_c *av)
   {
     rFace_c *F = NewFace(kind);
 
@@ -225,7 +225,7 @@ public:
     return side ? seg->front : seg->back;
   }
 
-  void AddFace(int kind, int gap, double z1, double z2, area_vert_c *av)
+  void AddFace(int kind, int gap, double z1, double z2, brush_vert_c *av)
   {
 ///    rFace_c *F = rFaceFactory_c::NewFace(kind, gap, z1, z2, av);
 ///
@@ -1325,7 +1325,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 
 
 static rFace_c * NewFace(rSide_c *S, double z1, double z2,
-                         area_vert_c *av)
+                         brush_vert_c *av)
 {
   rFace_c * F = new rFace_c;
 
@@ -1352,7 +1352,7 @@ static rFace_c * NewFace(rSide_c *S, double z1, double z2,
 
 
 static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
-                         area_face_c *w_face)
+                         csg_face_c *w_face)
 {
   rFace_c * F = new rFace_c;
 
@@ -1371,7 +1371,7 @@ static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
 
 
 static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
-                      area_vert_c *av)
+                      brush_vert_c *av)
 {
   SYS_ASSERT(z2 > z1);
 
@@ -1485,7 +1485,7 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
 }
 
 
-static void AddFlatFace(rNode_c * N, int gap, int kind, area_face_c *w_face,
+static void AddFlatFace(rNode_c * N, int gap, int kind, csg_face_c *w_face,
                         rWindingVerts_c *UU)
 {
 if (UU->count < 3) return; //!!!!!!!!!!

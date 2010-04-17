@@ -292,7 +292,7 @@ void merge_segment_c::MergeSides(merge_segment_c *other)
   }
 }
 
-area_vert_c *merge_segment_c::FindSide(csg_brush_c *brush)
+brush_vert_c *merge_segment_c::FindSide(csg_brush_c *brush)
 {
   unsigned int k;
 
@@ -463,8 +463,8 @@ static void Mug_MakeSegments(csg_brush_c *P)
 
   for (int k=0; k < (int)P->verts.size(); k++)
   {
-    area_vert_c *v1 = P->verts[k];
-    area_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
+    brush_vert_c *v1 = P->verts[k];
+    brush_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
 
     v1->partner = Mug_AddVertex(v1->x, v1->y);
     v2->partner = Mug_AddVertex(v2->x, v2->y);
@@ -1292,8 +1292,8 @@ static bool BrushContainsRegion(csg_brush_c *B, merge_region_c *R)
 
   for (unsigned int k=0; k < B->verts.size(); k++)
   {
-    area_vert_c *v1 = B->verts[k];
-    area_vert_c *v2 = B->verts[(k+1) % B->verts.size()];
+    brush_vert_c *v1 = B->verts[k];
+    brush_vert_c *v2 = B->verts[(k+1) % B->verts.size()];
 
     merge_vertex_c *m1 = v1->partner;
     merge_vertex_c *m2 = v2->partner;

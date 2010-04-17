@@ -110,12 +110,6 @@ public:
 };
 
 
-// FIXME !!!!!!
-#define slope_plane_c  slope_info_c
-#define area_face_c    csg_face_c
-#define area_vert_c    brush_vert_c
-
-
 class brush_plane_c
 {
 public:
@@ -181,11 +175,11 @@ public:
 //----  double z1, z2;
 //----
 //----  // these are NULL when not sloped
-//----  slope_plane_c *b_slope;
-//----  slope_plane_c *t_slope;
+//----  slope_info_c *b_slope;
+//----  slope_info_c *t_slope;
 //----
-//----  area_face_c *b_face;
-//----  area_face_c *t_face;
+//----  csg_face_c *b_face;
+//----  csg_face_c *t_face;
 
   double min_x, min_y;
   double max_x, max_y;
@@ -290,8 +284,8 @@ public:
   merge_region_c *back;
 
   // line-loop parts which lie along this segment
-  std::vector<area_vert_c *> f_sides;
-  std::vector<area_vert_c *> b_sides;
+  std::vector<brush_vert_c *> f_sides;
+  std::vector<brush_vert_c *> b_sides;
 
   // this index is not used by the polygoniser code (csg_poly.cc),
   // only by the Doom conversion code.  -1 means "unused".
@@ -337,7 +331,7 @@ public:
 
   bool HasGap() const;
 
-  area_vert_c *FindSide(csg_brush_c *brush);
+  brush_vert_c *FindSide(csg_brush_c *brush);
 };
 
 
@@ -459,12 +453,12 @@ const char * CSG2_Lookup(std::map<std::string, std::string> & props,
 
 void CSG2_MergeAreas(bool do_clips = false);
 
-area_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
 csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact = false);
 csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
-                                area_vert_c *V = NULL);
+                               brush_vert_c *V = NULL);
 
 merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 
