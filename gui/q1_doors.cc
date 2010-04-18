@@ -70,19 +70,19 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   {
     s[1] = 1.0; t[2] = 1.0;
 
-    texture = CSG2_Lookup(model->x_face->props, "tex", "error");
+    texture = model->x_face->getStr("tex", "missing");
   }
   else if (face < 4)  // PLANE_Y
   {
     s[0] = 1.0; t[2] = 1.0;
 
-    texture = CSG2_Lookup(model->y_face->props, "tex", "error");
+    texture = model->y_face->getStr("tex", "missing");
   }
   else // PLANE_Z
   {
     s[0] = 1.0; t[1] = 1.0;
 
-    texture = CSG2_Lookup(model->z_face->props, "tex", "error");
+    texture = model->z_face->getStr("tex", "missing");
   }
 
   raw_fc.texinfo = Q1_AddTexInfo(texture, 0, s, t);

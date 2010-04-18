@@ -23,7 +23,6 @@
 
 class qLump_c;
 
-class csg_face_c;
 
 extern int q1_flat_lightmaps[256];
 

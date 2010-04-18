@@ -96,10 +96,10 @@ void Q1_CreateEntities(void)
     lump->Printf("{\n");
 
     // write entity properties
-    std::map<std::string, std::string>::iterator MI;
-    for (MI = E->props.begin(); MI != E->props.end(); MI++)
+    csg_property_set_c::iterator PI;
+    for (PI = E->props.begin(); PI != E->props.end(); PI++)
     {
-      lump->KeyPair(MI->first.c_str(), "%s", MI->second.c_str());
+      lump->KeyPair(PI->first.c_str(), "%s", PI->second.c_str());
     }
 
     if ((I_ROUND(E->x) | I_ROUND(E->y) | I_ROUND(E->z)) != 0)

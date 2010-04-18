@@ -157,13 +157,6 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
   if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) < 4.0*EPSILON)
     return;
 
-  // liquid brushes remain the same size
-  if (P->bkind == BKIND_Liquid)
-  {
-    P2->verts.push_back(new brush_vert_c(P2, kv->x, kv->y));
-    return;
-  }
-
   double pdx = kv->x - pv->x;
   double pdy = kv->y - pv->y;
 
@@ -288,7 +281,8 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
   {
     csg_brush_c *P = saved_all_brushes[i];
 
-    if (P->bkind == BKIND_Detail || P->bkind == BKIND_Light)
+    if (! (P->bkind == BKIND_Solid || P->bkind == BKIND_Clip ||
+           P->bkind == BKIND_Sky))
       continue;
 
     csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
@@ -304,11 +298,8 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
     SYS_ASSERT(! P2->b.slope);
 
-    if (P->bkind != BKIND_Liquid)
-    {
-      P2->b.z -= pad_b;
-      P2->t.z += pad_t;
-    }
+    P2->b.z -= pad_b;
+    P2->t.z += pad_t;
 
     for (unsigned int k = 0; k < P->verts.size(); k++)
     {

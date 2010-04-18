@@ -80,13 +80,53 @@ double slope_info_c::CalcZ(double base_z, double x, double y) const
 }
 
 
-csg_face_c::csg_face_c() : props()  /*
-      tex(), light(0),
-      x_offset(FVAL_NONE), y_offset(FVAL_NONE), peg(false)  */
-{ }
 
-csg_face_c::~csg_face_c()
-{ }
+void csg_property_set_c::Add(const char *key, const char *value)
+{
+  dict[key] = std::string(value);
+}
+
+const char * csg_property_set_c::getStr(const char *key, const char *def_val)
+{
+  std::map<std::string, std::string>::iterator PI = dict.find(key);
+
+  if (PI == dict.end())
+    return def_val;
+
+  return PI->second.c_str();
+}
+
+double csg_property_set_c::getDouble(const char *key, double def_val)
+{
+  const char *str = getStr(key);
+
+  return str ? atof(str) : def_val;
+}
+
+int csg_property_set_c::getInt(const char *key, int def_val)
+{
+  const char *str = getStr(key);
+
+  return str ? I_ROUND(atof(str)) : def_val;
+}
+
+void csg_property_set_c::getHexenArgs(const char *key, u8_t *args)
+{
+  const char *str = getStr(key);
+
+  if (str)
+  {
+    int a1=0, a2=0, a3=0, a4=0, a5=0;
+
+    sscanf(str, " %d %d %d %d %d ", &a1, &a2, &a3, &a4, &a5);
+
+    args[0] = (u8_t)a1;
+    args[1] = (u8_t)a2;
+    args[2] = (u8_t)a3;
+    args[3] = (u8_t)a4;
+    args[4] = (u8_t)a5;
+  }
+}
 
 
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
@@ -382,7 +422,7 @@ void CSG2_MakeMiniMap(void)
 //------------------------------------------------------------------------
 
 static int Grab_Properties(lua_State *L, int stack_pos,
-                            std::map<std::string, std::string> & props)
+                           csg_property_set_c *props)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -400,12 +440,10 @@ static int Grab_Properties(lua_State *L, int stack_pos,
     if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
       return luaL_error(L, "bad property: value is not a string or number");
 
-    const char *p_key   = lua_tostring(L, -2);
-    const char *p_value = lua_tostring(L, -1);
+    const char *key   = lua_tostring(L, -2);
+    const char *value = lua_tostring(L, -1);
 
-    SYS_ASSERT(p_value);
-
-    props[p_key] = std::string(p_value);
+    props->Add(key, value);
   }
 
   return 0;
@@ -474,7 +512,7 @@ csg_face_c * Grab_Face(lua_State *L, int stack_pos)
 {
   csg_face_c *F = new csg_face_c();
 
-  Grab_Properties(L, stack_pos, F->props);
+  Grab_Properties(L, stack_pos, F);
 
   return F;
 }
@@ -598,7 +636,9 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
   lua_getfield(L, stack_pos, "face");
 
   if (! lua_isnil(L, -1))
+  {
     face = Grab_Face(L, -1);
+  }
 
   lua_pop(L, 1);
 
@@ -749,14 +789,14 @@ int CSG2_property(lua_State *L)
   {
     SYS_ASSERT(dummy_side_face);
 
-    dummy_side_face->props[key] = std::string(value);
+    dummy_side_face->Add(key, value);
     return 0;
   }
   else if (strcmp(key, "error_flat") == 0)
   {
     SYS_ASSERT(dummy_plane_face);
 
-    dummy_plane_face->props[key] = std::string(value);
+    dummy_plane_face->Add(key, value);
     return 0;
   }
 
@@ -768,9 +808,9 @@ int CSG2_property(lua_State *L)
 }
 
 
-// LUA: add_brush([kind,] coords)
+// LUA: add_brush(kind, coords)
 //
-// kind  :  brush kind, default to "solid"
+// kind  :  brush kind, usually "solid"
 //          can also be "liquid", "sky", "detail", "clip", etc
 //
 // coords is a list of coordinates of the form:
@@ -790,7 +830,7 @@ int CSG2_property(lua_State *L)
 //
 // face tables may contain:
 //
-//    tex    : texture name
+//    tex  :  texture name
 //    
 //    x_offset  BLAH  FIXME
 //    y_offset
@@ -808,18 +848,11 @@ int CSG2_add_brush(lua_State *L)
 {
   int nargs = lua_gettop(L);
 
-  int coord_arg = 1;
-
   csg_brush_c *B = new csg_brush_c();
 
-  if (nargs >= 2)
-  {
-    B->bkind = Grab_BrushKind(L, -1);
+  B->bkind = Grab_BrushKind(L, 1);
 
-    coord_arg++;
-  }
-
-  Grab_CoordList(L, coord_arg, B);
+  Grab_CoordList(L, 2, B);
 
 //----  csg_brush_c *B = Grab_AreaInfo(L, 1);
 //----
@@ -891,7 +924,7 @@ int CSG2_add_entity(lua_State *L)
 
   if (nargs >= 5 && lua_type(L, 5) != LUA_TNIL)
   {
-    Grab_Properties(L, 5, E->props);
+    Grab_Properties(L, 5, &E->props);
   }
 
   all_entities.push_back(E);
@@ -901,19 +934,6 @@ int CSG2_add_entity(lua_State *L)
 
 
 //------------------------------------------------------------------------
-
-const char * CSG2_Lookup(std::map<std::string, std::string> & props,
-                         const char *field, const char *nil_result)
-{
-  std::map<std::string, std::string>::iterator PI =
-       props.find(field);
-
-  if (PI == props.end())
-    return nil_result;
-
-  return PI->second.c_str();
-}
-
 
 brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact)

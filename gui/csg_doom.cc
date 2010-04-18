@@ -604,14 +604,15 @@ void CSG2_Doom_TestBrushes(void)
     
     int sec_idx = DM_NumSectors();
 
-    DM_AddSector(I_ROUND(P->b.z), P->b.face->tex.c_str(),  // FIXME face can be NULL
-                 I_ROUND(P->t.z), P->t.face->tex.c_str(),
-                 192, 0, 0);
+    const char *b_tex = "LAVA1";
+    const char *t_tex = "LAVA1";
 
-    int side_idx = DM_NumSidedefs();
+    if (P->b.face) b_tex = P->b.face->getStr("tex", b_tex);
+    if (P->t.face) t_tex = P->t.face->getStr("tex", t_tex);
 
-    DM_AddSidedef(sec_idx, "-", P->w_face->tex.c_str(), "-", 0, 0);
+    DM_AddSector(I_ROUND(P->b.z), b_tex, I_ROUND(P->t.z), t_tex, 192, 0, 0);
 
+    int side_base = DM_NumSidedefs();
     int vert_base = DM_NumVertexes();
 
     for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
@@ -619,11 +620,15 @@ void CSG2_Doom_TestBrushes(void)
       int j2 = (j1 + 1) % (int)P->verts.size();
 
       brush_vert_c *v1 = P->verts[j1];
-   // brush_vert_c *v2 = P->verts[j2];
+
+      const char *w_tex = "CRACKLE4";
+      if (v1->face) w_tex = v1->face->getStr("tex", w_tex);
 
       DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
-      DM_AddLinedef(vert_base+j2, vert_base+j1, side_idx, -1,
+      DM_AddSidedef(sec_idx, "-", w_tex, "-", 0, 0);
+
+      DM_AddLinedef(vert_base+j2, vert_base+j1, side_base+j1, -1,
                     0, 1 /*impassible*/, 0, NULL /* args */);
     }
   }
@@ -734,7 +739,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 
   dm_exfloors.push_back(EF);
 
-  EF->w_tex = MID->w_face->tex;
+//FIXME !!!!  EF->w_tex = MID->w_face->tex;
 
   EF->users.push_back(sec);
 
@@ -744,8 +749,9 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   EF->dummy_sec->f_h = I_ROUND(B->t_brush->b.z);
   EF->dummy_sec->c_h = I_ROUND(T->b_brush->t.z);
 
-  EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
-  EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
+//FIXME !!!!  EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
+//FIXME !!!!  EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
+
 
   // FIXME !!!! light, special
 
@@ -778,38 +784,57 @@ static void MakeSector(merge_region_c *R)
 
   S->CalcMiddle();
 
-  S->f_h = I_ROUND(B->t.z + B->delta_z);
-  S->c_h = I_ROUND(T->b.z + T->delta_z);
+  csg_face_c *f_face = B->t.face ? B->t.face : dummy_plane_face;
+  csg_face_c *c_face = T->b.face ? T->b.face : dummy_plane_face;
+
+  SYS_ASSERT(f_face && c_face);
+
+  // determine floor and ceiling heights
+  double f_delta = f_face->getDouble("delta_z");
+  double c_delta = c_face->getDouble("delta_z");
+
+  S->f_h = I_ROUND(B->t.z + f_delta);
+  S->c_h = I_ROUND(T->b.z + c_delta);
 
   if (S->c_h < S->f_h)
       S->c_h = S->f_h;
 
-  S->f_tex = B->t_face->tex;
-  S->c_tex = T->b_face->tex;
 
-  S->mark = MAX(B->mark, T->mark);
+  S->f_tex = f_face->getStr("tex", "-");
+  S->c_tex = c_face->getStr("tex", "-");
+
+  int f_mark = f_face->getInt("mark");
+  int c_mark = c_face->getInt("mark");
+
+  S->mark = f_mark ? f_mark : c_mark;
+
 
   // floors have priority over ceilings
-  if (B->sec_kind > 0)
-    S->special = B->sec_kind;
-  else if (T->sec_kind > 0)
-    S->special = T->sec_kind;
-  else
-    S->special = 0;
+  int f_kind = f_face->getInt("kind");
+  int c_kind = c_face->getInt("kind");
 
-  if (B->sec_tag > 0)
-    S->tag = B->sec_tag;
-  else if (T->sec_tag > 0)
-    S->tag = T->sec_tag;
-  else
-    S->tag = 0;
+  int f_tag = f_face->getInt("tag");
+  int c_tag = c_face->getInt("tag");
 
-
-  if (T->b_face->light > 0 || B->t_face->light > 0)
+  if (f_kind || ! c_kind)
   {
-    S->light = (int)(256 * MAX(T->b_face->light, B->t_face->light));
-    S->misc_flags |= SEC_PRIMARY_LIT;
+    S->special = f_kind;
+    S->tag = (f_tag > 0) ? f_tag : c_tag;
+  }
+  else
+  {
+    S->special = c_kind;
+    S->tag = (c_tag > 0) ? c_tag : f_tag;
+  }
 
+
+  int f_light = f_face->getInt("light");
+  int c_light = c_face->getInt("light");
+
+  if (f_light > 0 || c_light > 0)
+  {
+    S->light = (int)(256 * MAX(f_light, c_light));
+    S->misc_flags |= SEC_PRIMARY_LIT;
   }
 
   if (T->bkind == BKIND_Sky)
@@ -828,15 +853,19 @@ static void MakeSector(merge_region_c *R)
     if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
       continue;
 
-    if (B->b_face->light < 0 || B->t_face->light < 0)
+    csg_face_c *f_face = B->t.face ? B->t.face : dummy_plane_face;
+    csg_face_c *c_face = B->b.face ? B->b.face : dummy_plane_face;
+
+    double raw = c_face->getInt("light", f_face->getInt("light"));
+    int light = I_ROUND(raw * 256);
+
+    if (light < 0)
     {
+      // don't put shadow in closed doors
       if (S->f_h < S->c_h)
         S->misc_flags |= SEC_SHADOW;
       continue;
     }
-
-    // TODO: perhaps have a single 'brush.light' field
-    int light = (int)(256 * MAX(B->b_face->light, B->t_face->light));
 
     if (light > S->light)
     {
@@ -864,9 +893,8 @@ static void MakeSector(merge_region_c *R)
     }
     else
     {
-      LogPrintf("WARNING: discarding extrafloor brush (top:%s side:%s)\n",
-                T->b_brush->t_face->tex.c_str(),
-                T->b_brush->w_face->tex.c_str());
+      LogPrintf("WARNING: discarding extrafloor @ (%1.0f, %1.0f, %1.0f..%1.0f\n",
+                S->mid_x, S->mid_y, B->GetZ2(), T->GetZ1());
     }
   }
 }
@@ -1290,16 +1318,6 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
   {
     sector_info_c *BS = dm_sectors[B->index];
 
-#if 0  // OLD WAY
-    double fz = (S->f_h + BS->f_h) / 2.0;
-    double cz = (S->c_h + BS->c_h) / 2.0;
-
-    brush_vert_c *l_vert = CSG2_FindSideVertex(G, fz, side == 1, true);
-    brush_vert_c *u_vert = CSG2_FindSideVertex(G, cz, side == 1, true);
-
-    csg_face_c *lower_W = CSG2_FindSideFace(G, fz, side == 1, l_vert);
-    csg_face_c *upper_W = CSG2_FindSideFace(G, cz, side == 1, u_vert);
-#else
     csg_brush_c *l_brush = B->gaps.front()->b_brush;
     csg_brush_c *u_brush = B->gaps.back() ->t_brush;
 
@@ -1308,58 +1326,73 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     brush_vert_c *l_vert = G->FindSide(l_brush);
     brush_vert_c *u_vert = G->FindSide(u_brush);
 
-    csg_face_c *lower_W = (l_vert && l_vert->face) ? l_vert->face : l_brush->w_face;
-    csg_face_c *upper_W = (u_vert && u_vert->face) ? u_vert->face : u_brush->w_face;
+    csg_face_c *lower_W = (l_vert && l_vert->face) ? l_vert->face : l_brush->verts[0]->face;
+    csg_face_c *upper_W = (u_vert && u_vert->face) ? u_vert->face : u_brush->verts[0]->face;
+
+    if (! lower_W) lower_W = dummy_side_face;
+    if (! upper_W) upper_W = dummy_side_face;
 
     SYS_ASSERT(lower_W && upper_W);
-#endif
+
+    SD->lower = lower_W->getStr("tex", "-");
+    SD->upper = upper_W->getStr("tex", "-");
+
+    if (lower_W->getInt("peg")) *l_peg = true;
+    if (upper_W->getInt("peg")) *u_peg = true;
 
     csg_face_c *rail_W = rail ? rail->face : NULL;
 
-    if (lower_W && lower_W->peg) *l_peg = true;
-    if (upper_W && upper_W->peg) *u_peg = true;
-
-    SD->lower = lower_W ? lower_W->tex.c_str() : "-";
-    SD->upper = upper_W ? upper_W->tex.c_str() : "-";
-
     if (rail_W)
     {
-      SD->mid = rail_W->tex.c_str();
+      SD->mid = rail_W->getStr("tex", "-");
 
       *l_peg = false;
     }
 
-    if (rail_W && rail_W->x_offset != FVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, rail, rail_W->x_offset);
-    else if (lower_W && lower_W->x_offset != FVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, l_vert, lower_W->x_offset);
-    else if (upper_W && upper_W->x_offset != FVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, u_vert, upper_W->x_offset);
+    int r_ox = IVAL_NONE;
+    if (rail_W) r_ox = rail_W->getInt("x_offset", r_ox);
+
+    int l_ox = lower_W->getInt("x_offset", IVAL_NONE);
+    int l_oy = lower_W->getInt("y_offset", IVAL_NONE);
+
+    int u_ox = upper_W->getInt("x_offset", IVAL_NONE);
+    int u_oy = upper_W->getInt("y_offset", IVAL_NONE);
+
+    if (r_ox != IVAL_NONE)
+      SD->x_offset = CalcXOffset(G, side, rail, r_ox);
+    else if (l_ox != IVAL_NONE)
+      SD->x_offset = CalcXOffset(G, side, l_vert, l_ox);
+    else if (u_ox != IVAL_NONE)
+      SD->x_offset = CalcXOffset(G, side, u_vert, u_ox);
 
     if (rail_W)
       SD->y_offset = CalcRailYOffset(rail, MAX(S->f_h, BS->f_h));
-    else if (lower_W && lower_W->y_offset != FVAL_NONE)
-      SD->y_offset = (int)lower_W->y_offset;
-    else if (upper_W && upper_W->y_offset != FVAL_NONE)
-      SD->y_offset = (int)upper_W->y_offset;
+    else if (l_oy != IVAL_NONE)
+      SD->y_offset = l_oy;
+    else if (u_oy != IVAL_NONE)
+      SD->y_offset = u_oy;
   }
   else  // one-sided line
   {
     double mz = (S->f_h + S->c_h) / 2.0;
 
     brush_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
-    csg_face_c *mid_W  = CSG2_FindSideFace(  G, mz, side == 1, m_vert);
 
-    if (mid_W && mid_W->peg)
-      *l_peg = true;
+    csg_face_c *mid_W = CSG2_FindSideFace(G, mz, side == 1, m_vert);
+    if (! mid_W) mid_W = dummy_side_face;
 
-    SD->mid = mid_W ? mid_W->tex.c_str() : "-";
+    SD->mid = mid_W->getStr("tex", "-");
 
-    if (mid_W && mid_W->x_offset != FVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, m_vert, mid_W->x_offset);
+    if (mid_W->getInt("peg")) *l_peg = true;
 
-    if (mid_W && mid_W->y_offset != FVAL_NONE)
-      SD->y_offset = (int)mid_W->y_offset;
+    int ox = mid_W->getInt("x_offset", IVAL_NONE);
+    int oy = mid_W->getInt("y_offset", IVAL_NONE);
+
+    if (ox != IVAL_NONE)
+      SD->x_offset = CalcXOffset(G, side, m_vert, ox);
+
+    if (oy != IVAL_NONE)
+      SD->y_offset = oy;
   }
 
   return SD;
@@ -1410,6 +1443,9 @@ static brush_vert_c *FindSpecialVert(merge_segment_c *G)
     {
       brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
 
+      if (! V->face)
+        continue;
+
       if (V->parent->bkind == BKIND_Rail)
         continue;
 
@@ -1427,10 +1463,10 @@ DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
 DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
             BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
 */
-        if (V->line_kind != 0)
+        if (V->face->line_kind != 0)
           return V;
 
-        if (V->line_flags || V->line_tag != 0)
+        if (V->face->line_flags || V->face->line_tag != 0)
           minor = V;
       }
     }
@@ -1489,9 +1525,9 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
       if (V->parent->b.z > max_c || V->parent->b.z < min_f)
         continue;
 
-      const char *tex = CSG2_Lookup(V->face->props, "tex", "-");
+      const char *tex = V->face->getStr("tex", "-");
 
-      if (tex[0] == '-' && !V->line_kind && !V->line_flags)
+      if (tex[0] == '-' && !V->face->line_kind && !V->face->line_flags)
         continue;
 
       // found one
@@ -1501,8 +1537,6 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
 
   return NULL;
 }
-
-
 
 
 static void MakeLinedefs(void)
@@ -1569,25 +1603,25 @@ static void MakeLinedefs(void)
     if (l_peg) L->flags ^= MLF_LowerUnpeg;
     if (u_peg) L->flags ^= MLF_UpperUnpeg;
 
-    if (rail)
+    if (rail && rail->face)
     {
-      L->flags |= rail->line_flags;
+      L->flags |= rail->face->line_flags;
 
-      if (rail->line_kind)
+      if (rail->face->line_kind)
       {
-        L->type = rail->line_kind;
-        L->tag  = rail->line_tag;
+        L->type = rail->face->line_kind;
+        L->tag  = rail->face->line_tag;
 
         // FIXME: rail->line_args
       }
     }
 
-    if (spec)
+    if (spec && spec->face)
     {
-      L->flags |= spec->line_flags;
+      L->flags |= spec->face->line_flags;
 
-      L->type = spec->line_kind;
-      L->tag  = spec->line_tag;
+      L->type = spec->face->line_kind;
+      L->tag  = spec->face->line_tag;
 
       // FIXME !!!!  spec->line_args
     }

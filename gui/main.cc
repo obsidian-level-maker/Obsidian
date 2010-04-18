@@ -37,6 +37,7 @@
 #include "g_cookie.h"
 #include "g_lua.h"
 
+#include "csg_main.h"
 #include "nk_level.h"
 #include "q1_main.h"
 

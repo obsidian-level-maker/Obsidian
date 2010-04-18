@@ -73,21 +73,41 @@ public:
 };
 
 
-class csg_face_c
+class csg_property_set_c
 {
-public:
-  std::map<std::string, std::string> props;
+/* !!!!!!!! FIXME FIXME */ public:
+int line_kind; int line_flags; int line_tag;
 
-  void * parsed;
-
-///---  // this causes the Upper or Lower on a two-sided linedef to
-///---  // be PEGGED, which is useful for doors and steps.
-///---  bool peg;
+private:
+  std::map<std::string, std::string> dict;
 
 public:
-   csg_face_c();
-  ~csg_face_c();
+  csg_property_set_c() : dict()
+  {
+line_flags = line_kind = line_tag = 0;
+  }
+
+  ~csg_property_set_c()
+  { }
+
+  void Add(const char *key, const char *value);
+
+  const char * getStr(const char *key, const char *def_val = NULL);
+
+  double getDouble(const char *key, double def_val = 0);
+  int    getInt   (const char *key, int def_val = 0);
+
+  void getHexenArgs(const char *key, u8_t *args);
+
+public:
+  typedef std::map<std::string, std::string>::iterator iterator;
+
+  iterator begin() { return dict.begin(); }
+  iterator   end() { return dict.  end(); }
 };
+
+
+typedef csg_property_set_c  csg_face_c;
 
 
 class brush_vert_c
@@ -219,7 +239,7 @@ public:
 
   double x, y, z;
 
-  std::map<std::string, std::string> props;
+  csg_property_set_c props;
 
 public:
    entity_info_c(const char *_name, double xpos, double ypos, double zpos,
@@ -453,9 +473,6 @@ extern csg_face_c *dummy_plane_face;
 
 
 /* ----- FUNCTIONS ----- */
-
-const char * CSG2_Lookup(std::map<std::string, std::string> & props,
-                         const char *field, const char *nil_result = NULL);
 
 void CSG2_MergeAreas(bool do_clips = false);
 
