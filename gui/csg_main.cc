@@ -131,12 +131,8 @@ void csg_property_set_c::getHexenArgs(const char *key, u8_t *args)
 
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
       parent(_parent), x(_x), y(_y),
-      face(NULL),
-///---    line_kind(0), line_tag(0), line_flags(0), */
-      partner(NULL)
-{
-///---  memset(line_args, 0, sizeof(line_args));
-}
+      face(NULL), partner(NULL)
+{ }
 
 brush_vert_c::~brush_vert_c()
 { }
@@ -160,20 +156,14 @@ csg_brush_c::csg_brush_c() :
      verts(),
      b(-EXTREME_H),
      t( EXTREME_H)
-///---     delta_z(0), mark(0),
-///---     sec_kind(0), sec_tag(0)
 { }
 
 csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       bkind(other->bkind),
       bflags(other->bflags),
       verts(),
-      b(other->b), t(other->t)
-///---      z1(other->z1), z2(other->z2),
-///---      b_slope(NULL), t_slope(NULL),
-///---      b_face(other->b_face), t_face(other->t_face)
-///---      delta_z(other->delta_z), mark(other->mark),
-///---      sec_kind(other->sec_kind), sec_tag(other->sec_tag)
+      b(other->b),
+      t(other->t)
 {
   // FIXME: do_verts
 
@@ -516,108 +506,6 @@ csg_face_c * Grab_Face(lua_State *L, int stack_pos)
 
   return F;
 }
-//----{
-//----
-//----  if (lua_type(L, stack_pos) != LUA_TTABLE)
-//----  {
-//----    luaL_error(L, "gui.add_brush: missing face info");
-//----    return NULL; /* NOT REACHED */
-//----  }
-//----
-//----  csg_face_c *F = new csg_face_c();
-//----
-//----  lua_getfield(L, stack_pos, "texture");
-//----  lua_getfield(L, stack_pos, "light");
-//----  lua_getfield(L, stack_pos, "x_offset");
-//----  lua_getfield(L, stack_pos, "y_offset");
-//----  lua_getfield(L, stack_pos, "peg");
-//----
-//----  F->tex = std::string(luaL_checkstring(L, -5));
-//----
-//----  if (! lua_isnil(L, -4)) F->light    = luaL_checknumber(L, -4);
-//----  if (! lua_isnil(L, -3)) F->x_offset = luaL_checknumber(L, -3);
-//----  if (! lua_isnil(L, -2)) F->y_offset = luaL_checknumber(L, -2);
-//----
-//----  if (lua_toboolean(L, -1)) F->peg = true;
-//----
-//----  lua_pop(L, 5);
-//----
-//----  // FIXME: store every face in the 'all_faces' list
-//----
-//----  return F;
-//----}
-
-
-//----static csg_brush_c * Grab_AreaInfo(lua_State *L, int stack_pos)
-//----{
-//----  if (stack_pos < 0)
-//----    stack_pos += lua_gettop(L) + 1;
-//----
-//----  if (lua_type(L, stack_pos) != LUA_TTABLE)
-//----  {
-//----    luaL_argerror(L, stack_pos, "missing table: area info");
-//----    return NULL; /* NOT REACHED */
-//----  }
-//----
-//----  csg_brush_c *B = new csg_brush_c();
-//----
-//----  lua_getfield(L, stack_pos, "kind");
-//----
-//----  B->bkind = Grab_BrushKind(L, -1);
-//----
-//----  lua_getfield(L, stack_pos, "t_face");
-//----  lua_getfield(L, stack_pos, "b_face");
-//----  lua_getfield(L, stack_pos, "w_face");
-//----
-//----  B->t_face = Grab_Face(L, -3);
-//----  B->b_face = Grab_Face(L, -2);
-//----  B->w_face = Grab_Face(L, -1);
-//----
-//----  lua_pop(L, 3);
-//----
-//----  lua_getfield(L, stack_pos, "delta_z");
-//----  lua_getfield(L, stack_pos, "mark");
-//----  lua_getfield(L, stack_pos, "sec_kind");
-//----  lua_getfield(L, stack_pos, "sec_tag");
-//----
-//----  if (lua_isnumber(L, -4)) B->delta_z  = lua_tonumber (L, -4);
-//----  if (lua_isnumber(L, -3)) B->mark     = lua_tointeger(L, -3);
-//----  if (lua_isnumber(L, -2)) B->sec_kind = lua_tointeger(L, -2);
-//----  if (lua_isnumber(L, -1)) B->sec_tag  = lua_tointeger(L, -1);
-//----
-//----  lua_pop(L, 4);
-//----
-//----///  lua_getfield(L, stack_pos, "flag_noclip");
-//----///  if (lua_toboolean(L, -1)) B->bflags |= BRU_F_NoClip;
-//----///  lua_pop(L, 1);
-//----
-//----  return B;
-//----}
-
-
-//--- static int Grab_HexenArgs(lua_State *L, byte *args)
-//--- {
-//---   // NOTE: we assume table is on top of stack
-//---   if (lua_type(L, -1) != LUA_TTABLE)
-//---   {
-//---     return luaL_error(L, "gui.add_brush: missing line_args table");
-//---   }
-//---  
-//---   for (int i = 0; i < 5; i++)
-//---   {
-//---     lua_pushinteger(L, i+1);
-//---     lua_gettable(L, -2);
-//--- 
-//---     if (lua_isnumber(L, -1))
-//---     {
-//---       args[i] = lua_tointeger(L, -1);
-//---     }
-//--- 
-//---     lua_pop(L, 1);
-//---   }
-//--- 
-//---   return 0;
-//--- }
 
 
 static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
@@ -675,23 +563,6 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     V->face = face;
 
     lua_pop(L, 2);
-
-
-//---   lua_getfield(L, stack_pos, "line_kind");
-//---   lua_getfield(L, stack_pos, "line_tag");
-//---   lua_getfield(L, stack_pos, "line_flags");
-//---   lua_getfield(L, stack_pos, "line_args");
-//--- 
-//---   if (lua_isnumber(L, -4)) V->line_kind  = lua_tointeger(L, -4);
-//---   if (lua_isnumber(L, -3)) V->line_tag   = lua_tointeger(L, -3);
-//---   if (lua_isnumber(L, -2)) V->line_flags = lua_tointeger(L, -2);
-//--- 
-//---   if (! lua_isnil(L, -1))
-//---   {
-//---     Grab_HexenArgs(L, V->line_args);
-//---   }
-//--- 
-//---   lua_pop(L, 4);
 
     B->verts.push_back(V);
   }
@@ -853,20 +724,6 @@ int CSG2_add_brush(lua_State *L)
   B->bkind = Grab_BrushKind(L, 1);
 
   Grab_CoordList(L, 2, B);
-
-//----  csg_brush_c *B = Grab_AreaInfo(L, 1);
-//----
-//----  Grab_LineLoop(L, 2, B);
-//----
-//----  if (lua_isnumber(L, 3))
-//----    B->z1 = lua_tonumber(L, 3);
-//----  else
-//----    B->b_slope = Grab_Slope(L, 3);
-//----
-//----  if (lua_isnumber(L, 4))
-//----    B->z2 = lua_tonumber(L, 4);
-//----  else
-//----    B->t_slope = Grab_Slope(L, 4);
 
   // make sure that certain brush kinds have valid faces
   if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail ||

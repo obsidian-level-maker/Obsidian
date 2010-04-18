@@ -114,12 +114,6 @@ public:
 
   csg_face_c *face;
 
-//----  int line_kind;
-//----  int line_tag;
-//----  int line_flags;
-//----
-//----  byte line_args[5];
-
   merge_vertex_c *partner;
 
 public:
@@ -136,7 +130,7 @@ public:
   // height of the brush.
   double z;
 
-  slope_info_c *slope;
+  slope_info_c *slope;  // NULL if not sloped
 
   csg_face_c *face;
 
@@ -187,29 +181,8 @@ public:
   brush_plane_c b;  // bottom
   brush_plane_c t;  // top
 
-//----  // without slopes, these are just the heights of the bottom
-//----  // and top faces.  When slopes are present, they represent the
-//----  // bounding heights of the brush.
-//----  double z1, z2;
-//----
-//----  // these are NULL when not sloped
-//----  slope_info_c *b_slope;
-//----  slope_info_c *t_slope;
-//----
-//----  csg_face_c *b_face;
-//----  csg_face_c *t_face;
-
   double min_x, min_y;
   double max_x, max_y;
-
-//----  // this moves the whole brush up or down _after_ all the CSG
-//----  // construction has been done.  It's purpose is to ease the
-//----  // creation of features inset into the floor or ceiling.
-//----  // Yes it's a hack, but a very useful one!
-//----  double delta_z;
-//----
-//----  int mark;
-//----  int sec_kind, sec_tag;
 
 public:
    csg_brush_c();
@@ -385,16 +358,6 @@ public:
   {
     return t_brush->b.z;
   }
-
-//---  inline const char *FloorTex() const
-//---  {
-//---    return b_brush->t_face->tex.c_str();
-//---  }
-//---
-//---  inline const char *CeilTex() const
-//---  {
-//---    return t_brush->b_face->tex.c_str();
-//---  }
 };
 
 
