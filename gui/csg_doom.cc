@@ -1463,10 +1463,10 @@ DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
 DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
             BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
 */
-        if (V->face->line_kind != 0)
+        if (V->face->getStr("kind"))
           return V;
 
-        if (V->face->line_flags || V->face->line_tag != 0)
+        if (V->face->getStr("tag") || V->face->getStr("flags"))
           minor = V;
       }
     }
@@ -1527,7 +1527,7 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
 
       const char *tex = V->face->getStr("tex", "-");
 
-      if (tex[0] == '-' && !V->face->line_kind && !V->face->line_flags)
+      if (tex[0] == '-' && !V->face->getStr("kind") && !V->face->getStr("flags"))
         continue;
 
       // found one
@@ -1558,7 +1558,6 @@ static void MakeLinedefs(void)
       continue;
 
     brush_vert_c *spec = FindSpecialVert(G);
-
     brush_vert_c *rail = FindRailVert(G);
 
     // if same sector on both sides, skip the line, unless
@@ -1603,27 +1602,23 @@ static void MakeLinedefs(void)
     if (l_peg) L->flags ^= MLF_LowerUnpeg;
     if (u_peg) L->flags ^= MLF_UpperUnpeg;
 
-    if (rail && rail->face)
+
+    if (rail)
     {
-      L->flags |= rail->face->line_flags;
+      L->flags |= rail->face->getInt("flags");
 
-      if (rail->face->line_kind)
-      {
-        L->type = rail->face->line_kind;
-        L->tag  = rail->face->line_tag;
-
-        // FIXME: rail->line_args
-      }
+      if (! spec && rail->face->getStr("kind"))
+        spec = rail;
     }
 
-    if (spec && spec->face)
+    if (spec)
     {
-      L->flags |= spec->face->line_flags;
+      L->flags |= spec->face->getInt("flags");
 
-      L->type = spec->face->line_kind;
-      L->tag  = spec->face->line_tag;
+      L->type = spec->face->getInt("kind");
+      L->tag  = spec->face->getInt("tag");
 
-      // FIXME !!!!  spec->line_args
+      spec->face->getHexenArgs("args", L->args);
     }
   }
 }

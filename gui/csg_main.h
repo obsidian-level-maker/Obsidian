@@ -75,17 +75,12 @@ public:
 
 class csg_property_set_c
 {
-/* !!!!!!!! FIXME FIXME */ public:
-int line_kind; int line_flags; int line_tag;
-
 private:
   std::map<std::string, std::string> dict;
 
 public:
   csg_property_set_c() : dict()
-  {
-line_flags = line_kind = line_tag = 0;
-  }
+  { }
 
   ~csg_property_set_c()
   { }
