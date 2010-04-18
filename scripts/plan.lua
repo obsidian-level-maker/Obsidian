@@ -1032,7 +1032,7 @@ function Plan.create_rooms()
   LEVEL.free_tag  = 1
   LEVEL.free_mark = 1
 
-  gui.random()
+  gui.random() ; gui.random()
 
   if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
     local name = rand.key_by_probs(THEME.liquids)

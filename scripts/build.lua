@@ -83,7 +83,56 @@ function Trans.apply(x, y)
 end
 
 
-function Trans.brush(info, coords, z1, z2)
+function Trans.apply_z(z, slope)
+  local T = Trans.TRANSFORM
+
+  if slope then
+    slope = table.copy(slope)
+
+    slope.x1, slope.y1 = Trans.apply(slope.x1, slope.y1)
+    slope.x2, slope.y2 = Trans.apply(slope.x2, slope.y2)
+
+    if T.mirror_z then slope.dz = - slope.dz end
+  end
+
+  -- apply mirroring first
+  if T.mirror_z then z = T.mirror_z * 2 - z end
+
+  -- apply scaling
+  z = z * (T.scale_z or 1)
+
+  -- apply translation last
+  z = z + (T.add_z or 0)
+
+  return z, slope
+end
+
+
+function Trans.brush(kind, coords)
+  if not coords then
+    kind, coords = "solid", kind
+  end
+
+  -- FIXME: mirroring
+
+  -- apply transform
+  coords = table.copy(coords)
+
+  for _,C in ipairs(coords) do
+    if C.x then
+      C.x, C.y = Trans.apply(C.x, C.y)
+    elseif C.b then
+      C.b, C.slope = Trans.apply_z(C.b, C.slope)
+    else assert(C.t)
+      C.t, C.slope = Trans.apply_z(C.t, C.slope)
+    end
+  end
+
+  gui.add_brush(kind, coords)
+end
+
+
+function Trans.old_brush(info, coords, z1, z2)
 ---???  if type(info) ~= "table" then
 ---???    info = get_mat(info)
 ---???  end
@@ -167,6 +216,27 @@ function Trans.entity(name, x, y, z, props)
 end
 
 
+function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
+  if not w_face then
+    -- convenient form: only a material name was given
+    kind, w_face, p_face = Mat_normal(kind)
+  end
+
+  local coords =
+  {
+    { x=x1, y=y1, face=w_face },
+    { x=x2, y=y1, face=w_face },
+    { x=x2, y=y2, face=w_face },
+    { x=x1, y=y2, face=w_face },
+  }
+
+  if z1 then table.insert(coords, { b=z1, face=p_face }) end
+  if z2 then table.insert(coords, { t=z2, face=p_face }) end
+
+  Trans.brush(kind, coords)
+end
+
+
 function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
   return
   {
@@ -197,12 +267,12 @@ function Trans.box_coords(x, y, w, h)
 end
 
 
-function Trans.quad(info, x1,y1, x2,y2, z1,z2)
-  Trans.brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
+function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
+  Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
 function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
-  Trans.brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
+  Trans.old_brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
 end
 
 function Trans.strip(info, strip, z1, z2)
@@ -210,7 +280,7 @@ function Trans.strip(info, strip, z1, z2)
     local a = strip[i]
     local b = strip[i+1]
 
-    Trans.brush(info,
+    Trans.old_brush(info,
     {
       { x = a[1], y = a[2] },
       { x = a[3], y = a[4] },
@@ -313,6 +383,19 @@ function get_mat(wall, floor, ceil)
     t_face = { tex=f_mat.f or f_mat.t },
     b_face = { tex=c_mat.f or c_mat.t },
   }
+end
+
+function Mat_normal(wall, floor)
+  if not wall then wall = "_ERROR" end
+
+  local w_mat = safe_get_mat(wall)
+
+  local f_mat = w_mat
+  if floor then
+    f_mat = safe_get_mat(floor)
+  end
+
+  return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
 end
 
 function get_sky()
@@ -566,7 +649,7 @@ function Build.shadow(S, side, dist, z2)
     local N = S:neighbor(6)
     local clip = not (N and N.room and N.room.outdoor)
 
-    Trans.brush(get_light(-1),
+    Trans.old_brush(get_light(-1),
     {
       { x=x2, y=y2 },
       { x=x1, y=y2 },
@@ -580,7 +663,7 @@ function Build.shadow(S, side, dist, z2)
     local N = S:neighbor(2)
     local clip = not (N and N.room and N.room.outdoor)
 
-    Trans.brush(get_light(-1),
+    Trans.old_brush(get_light(-1),
     {
       { x=x1, y=y2 },
       { x=x1, y=y1 },
@@ -595,7 +678,7 @@ end
 function Build.wall(S, side, mat)
   local coords = get_wall_coords(S, side)
 
-  Trans.brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
 end
 
 
@@ -615,14 +698,14 @@ function Build.facade(S, side, mat)
     coords = { {x=x2,y=y1}, {x=x2,y=y2}, {x=x2-8,y=y2-8}, {x=x2-8,y=y1+8} }
   end
 
-  Trans.brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
+  Trans.old_brush(get_mat(mat), coords, -EXTREME_H, EXTREME_H)
 end
 
 
 function Build.fence(S, side, fence_h, skin)
   local coords = get_wall_coords(S, side)
 
-  Trans.brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
+  Trans.old_brush(get_mat(skin.wall, skin.floor), coords, -EXTREME_H, fence_h)
 
   Build.shadow(S,  side, 40, fence_h-4)
   Build.shadow(S, -side, 24, fence_h-4)
@@ -683,16 +766,16 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
   s_coords[sel(geom.is_vert(side), 2,1)].line_flags = 128
   s_coords[sel(geom.is_vert(side), 4,3)].line_flags = 128
 
-  Trans.brush(wall_info, w_coords, -EXTREME_H, z_top)
-  Trans.brush(wall_info, s_coords, -EXTREME_H, z_low)
+  Trans.old_brush(wall_info, w_coords, -EXTREME_H, z_top)
+  Trans.old_brush(wall_info, s_coords, -EXTREME_H, z_low)
 
-  Trans.brush(sky_info, w_coords, SKY_H, EXTREME_H)
+  Trans.old_brush(sky_info, w_coords, SKY_H, EXTREME_H)
 
   if GAME.format == "quake" then
-    Trans.brush(sky_back, s_coords, z_low+4, EXTREME_H)
+    Trans.old_brush(sky_back, s_coords, z_low+4, EXTREME_H)
   else
     sky_back.delta_z = (z_low+4) - (SKY_H-2)
-    Trans.brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
+    Trans.old_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
   end
 end
 
@@ -724,7 +807,7 @@ function Build.archway(S, side, z1, z2, skin)
 
   Trans.set(T)
 
-  Trans.brush(other_info, frame_coords, z2, EXTREME_H)
+  Trans.old_brush(other_info, frame_coords, z2, EXTREME_H)
 
 
   assert(deep > 17 or N_deep > 17)
@@ -737,7 +820,7 @@ function Build.archway(S, side, z1, z2, skin)
   for pass = 1,2 do
     if pass == 2 then Trans.modify("mirror_x", mx) end
 
-    Trans.brush(wall_info,
+    Trans.old_brush(wall_info,
     {
       { x=0,     y=-N_deep,    w_face = other_info.w_face },
       { x=24+16, y=-N_deep,    w_face = other_info.w_face },
@@ -787,9 +870,9 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
 
   Trans.set(T)
 
-  Trans.quad(step_info, 0,my-DY, long,my+DY, -EXTREME_H, z1+8)
+  Trans.old_quad(step_info, 0,my-DY, long,my+DY, -EXTREME_H, z1+8)
 
-  Trans.brush(out_info,
+  Trans.old_brush(out_info,
   {
     { x=long, y=my-DY },
     { x=long, y=my+DY, w_face = frame_info.w_face },
@@ -800,7 +883,7 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
 
   local KIND = assert(skin.line_kind)
 
-  Trans.brush(door_info,
+  Trans.old_brush(door_info,
   {
     { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
     { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
@@ -823,7 +906,7 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
   for pass = 1,2 do
     if pass == 2 then Trans.modify("mirror_x", mx) end
 
-    Trans.brush(key_info,
+    Trans.old_brush(key_info,
     {
       { x=mx-64,    y=my-8, w_face = track_i.w_face },
       { x=mx-64,    y=my+8  },
@@ -832,7 +915,7 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
     },
     -EXTREME_H, EXTREME_H)
 
-    Trans.brush(out_info,
+    Trans.old_brush(out_info,
     {
       { x=mx-64-18, y=my-DY },
       { x=mx-64-18, y=my+DY, w_face = frame_info.w_face },
@@ -904,7 +987,7 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
   local info = get_mat(skin.wall or skin.floor, skin.floor)
   info.t_face.light = 0.8
 
-  Trans.quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
+  Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
 end
 
 
@@ -936,7 +1019,7 @@ function Build.lowering_bars(S, side, z_top, skin, tag)
     local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
     local my = 0
 
-    Trans.quad(bar_info, mx-bar_w/2, my-bar_w/2, mx+bar_w/2, my+bar_w/2,
+    Trans.old_quad(bar_info, mx-bar_w/2, my-bar_w/2, mx+bar_w/2, my+bar_w/2,
         -EXTREME_H, z_top)
   end
 
@@ -956,7 +1039,7 @@ function Build.ceil_light(S, z2, skin)
   local light_info = get_mat(skin.lite_f)
   light_info.b_face.light = 0.90
 
-  Trans.brush(light_info,
+  Trans.old_brush(light_info,
   {
     { x = mx+w, y = my-h },
     { x = mx+w, y = my+h },
@@ -969,7 +1052,7 @@ function Build.ceil_light(S, z2, skin)
   local trim_info = get_mat(skin.trim)
   trim_info.b_face.light = 0.72
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx-w,     y = my-(h+8) },
     { x = mx-w,     y = my+(h+8) },
@@ -978,7 +1061,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx+(w+8), y = my-(h+8) },
     { x = mx+(w+8), y = my+(h+8) },
@@ -987,7 +1070,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx+(w+8), y = my-(h+8) },
     { x = mx+(w+8), y = my-h },
@@ -996,7 +1079,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-16, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx+(w+8), y = my+h },
     { x = mx+(w+8), y = my+(h+8) },
@@ -1008,7 +1091,7 @@ function Build.ceil_light(S, z2, skin)
 
 --[[ connecting spokes....
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx+4, y = my+40 },
     { x = mx+4, y = S.y2  },
@@ -1017,7 +1100,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx+4, y = S.y1  },
     { x = mx+4, y = my-40 },
@@ -1026,7 +1109,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = mx-40, y = my-4, },
     { x = mx-40, y = my+4, },
@@ -1035,7 +1118,7 @@ function Build.ceil_light(S, z2, skin)
   },
   z2-10, EXTREME_H)
 
-  Trans.brush(trim_info,
+  Trans.old_brush(trim_info,
   {
     { x = S.x2 , y = my-4, },
     { x = S.x2 , y = my+4, },
@@ -1091,22 +1174,22 @@ function Build.detailed_hall(S, side, z1, z2, skin)
 
 
   if LEVEL.hall_trim then
-    Trans.brush(get_mat(skin.trim2),
+    Trans.old_brush(get_mat(skin.trim2),
         get_hall_coords(32, 8, true), -EXTREME_H, z1 + 32)
 
-    Trans.brush(get_mat(skin.trim2),
+    Trans.old_brush(get_mat(skin.trim2),
         get_hall_coords(32, 8, true), z2 - 32, EXTREME_H)
   end
 
 
-  Trans.brush(get_mat(skin.trim1),
+  Trans.old_brush(get_mat(skin.trim1),
       get_hall_coords(64, 8), -EXTREME_H, z1 + 6)
 
-  Trans.brush(get_mat(skin.trim1),
+  Trans.old_brush(get_mat(skin.trim1),
       get_hall_coords(64, 8), z2 - 6, EXTREME_H)
 
 
-  Trans.brush(get_mat(skin.wall),
+  Trans.old_brush(get_mat(skin.wall),
       get_hall_coords(24, 0), -EXTREME_H, EXTREME_H)
 
 
@@ -1154,16 +1237,16 @@ function Build.weird_hall(S, side, skin, z1, z2)
 
   local info = get_mat(skin.wall)  -- e.g. SHAWN2
 
-  Trans.brush(info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
+  Trans.old_brush(info, get_hall_coords(24), -EXTREME_H, EXTREME_H)
 
-  Trans.brush(info, get_hall_coords(32), -EXTREME_H, z1 + 32)
-  Trans.brush(info, get_hall_coords(32), z2 - 32, EXTREME_H)
+  Trans.old_brush(info, get_hall_coords(32), -EXTREME_H, z1 + 32)
+  Trans.old_brush(info, get_hall_coords(32), z2 - 32, EXTREME_H)
 
-  Trans.brush(info, get_hall_coords(48), -EXTREME_H, z1 + 18)
-  Trans.brush(info, get_hall_coords(48), z2 - 18, EXTREME_H)
+  Trans.old_brush(info, get_hall_coords(48), -EXTREME_H, z1 + 18)
+  Trans.old_brush(info, get_hall_coords(48), z2 - 18, EXTREME_H)
 
-  Trans.brush(info, get_hall_coords(64), -EXTREME_H, z1 + 6)
-  Trans.brush(info, get_hall_coords(64), z2 - 6, EXTREME_H)
+  Trans.old_brush(info, get_hall_coords(64), -EXTREME_H, z1 + 6)
+  Trans.old_brush(info, get_hall_coords(64), z2 - 6, EXTREME_H)
 
 end
 
@@ -1190,7 +1273,7 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
   local y2 = S.y2 - get_thick(8)
 
 
-  Trans.brush(info,
+  Trans.old_brush(info,
       diagonal_coords(side,x1,y1,x2,y2),
       ceil_h or -EXTREME_H, floor_h or EXTREME_H)
 end
@@ -1204,7 +1287,7 @@ function Build.debug_arrow(S, dir, f_h)
   local dx, dy = geom.delta(dir)
   local ax, ay = geom.delta(geom.RIGHT[dir])
 
-  Trans.brush(get_mat("FWATER1"),
+  Trans.old_brush(get_mat("FWATER1"),
   {
     { x = mx - ax*20,  y = my - ay * 20  },
     { x = mx + ax*20,  y = my + ay * 20  },
@@ -1285,13 +1368,13 @@ gui.printf("corner (%d,%d)  DX %d,%d,%d,%d  DY %d,%d,%d,%d\n",
     local f_h = x_h + (y_h - x_h) * (i-1) / (steps-1)
     local c_h = f_h + gap_h
 
-    Trans.brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -EXTREME_H,EXTREME_H)
-    Trans.brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -EXTREME_H,EXTREME_H)
+    Trans.old_brush(wall_info, arc_coords(p0,p1, dx0,dx1, dy0,dy1), -EXTREME_H,EXTREME_H)
+    Trans.old_brush(wall_info, arc_coords(p0,p1, dx2,dx3, dy2,dy3), -EXTREME_H,EXTREME_H)
 
     local coords = arc_coords(p0,p1, dx1,dx2, dy1,dy2)
 
-    Trans.brush(floor_info, coords, -EXTREME_H, f_h)
-    Trans.brush(ceil_info,  coords, c_h, EXTREME_H)
+    Trans.old_brush(floor_info, coords, -EXTREME_H, f_h)
+    Trans.old_brush(ceil_info,  coords, c_h, EXTREME_H)
   end
 end
 
@@ -1322,7 +1405,7 @@ function Build.ramp_x(skin, bx1,bx2,y1, tx1,tx2,y2, az,bz, exact)
     bx3 = int(bx3) ; tx3 = int(tx3)
     bx4 = int(bx4) ; tx4 = int(tx4)
 
-    Trans.brush(skin,
+    Trans.old_brush(skin,
     {
       { x=bx4, y=y1 },
       { x=tx4, y=y2 },
@@ -1360,7 +1443,7 @@ function Build.ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
     ly3 = int(ly3) ; ry3 = int(ry3)
     ly4 = int(ly4) ; ry4 = int(ry4)
 
-    Trans.brush(skin,
+    Trans.old_brush(skin,
     {
       { x=x2, y=ry3 },
       { x=x2, y=ry4 },
@@ -1395,9 +1478,9 @@ function Build.niche_stair(S, skin, skin2)
 
   Trans.set(T)
 
-  Trans.quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
-  Trans.quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
-  Trans.quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
+  Trans.old_quad(niche_info, 0,0, W,deep, -EXTREME_H, z2)
+  Trans.old_quad(niche_info, long-W,0, long,deep, -EXTREME_H, z2)
+  Trans.old_quad(niche_info, W,deep-HB, long-W,deep, -EXTREME_H, z2)
 
 
   if S.stair_z1 > S.stair_z2 then
@@ -1409,7 +1492,7 @@ function Build.niche_stair(S, skin, skin2)
       f_tex = S2.f_tex
     end
 
-    Trans.quad(get_mat(w_tex, f_tex), W,0, long-W,HF, -EXTREME_H, z1)
+    Trans.old_quad(get_mat(w_tex, f_tex), W,0, long-W,HF, -EXTREME_H, z1)
   else
     HF = 0
   end
@@ -1425,7 +1508,7 @@ function Build.niche_stair(S, skin, skin2)
     local by = int(HF + (deep-HF-HB) * (i)   / steps)
     local ty = int(HF + (deep-HF-HB) * (i+1) / steps)
 
-    Trans.brush(step_info,
+    Trans.old_brush(step_info,
     {
       { x=long-W, y=by },
       { x=long-W, y=ty, w_face = front_info.w_face },
@@ -1562,7 +1645,7 @@ gui.debugf("DEL (%1.3f %1.3f)  (%1.3f %1.3f)\n", dx1, dy1, dx2,dy2)
 
 gui.debugf("(%d,%d) .. (%d,%d) .. (%d,%d) .. (%d,%d)\n",
 cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
-    Trans.brush(step_info,
+    Trans.old_brush(step_info,
     {
       { x=fx1, y=fy1 },
       { x=fx2, y=fy2 },
@@ -1577,10 +1660,10 @@ cx1,cy1, cx2,cy2, fx2,fy2, fx1,fy1)
 
   local z3 = math.max(x_h, y_h)
 
-  Trans.quad(mat_info, 0,0, 32,32, -EXTREME_H, z3)
+  Trans.old_quad(mat_info, 0,0, 32,32, -EXTREME_H, z3)
 
-  Trans.quad(mat_info, 0,deep-bord_W, long,deep, -EXTREME_H, z3)
-  Trans.quad(mat_info, long-bord_W,0, long,deep, -EXTREME_H, z3)
+  Trans.old_quad(mat_info, 0,deep-bord_W, long,deep, -EXTREME_H, z3)
+  Trans.old_quad(mat_info, long-bord_W,0, long,deep, -EXTREME_H, z3)
 
   Trans.clear()
 end
@@ -1709,7 +1792,7 @@ gui.debugf("Build.outdoor_ramp_up: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy, c
     nx2 = int(nx2) ; ny2 = int(ny2)
     z   = int(z)
 
-    Trans.brush(info,
+    Trans.old_brush(info,
     {
       { x=nx2, y=ny1 },
       { x=nx2, y=ny2 },
@@ -1785,13 +1868,13 @@ function Build.lift(S, skin, skin2, tag)
 
   lift_info.sec_tag = tag
 
-  Trans.brush(lift_info, coords, -EXTREME_H, high_z - 8)
+  Trans.old_brush(lift_info, coords, -EXTREME_H, high_z - 8)
 
 
   local front_coords = get_wall_coords(S, 10-side, 64)
   local front_info   = get_mat(w_tex, f_tex)
 
-  Trans.brush(front_info, front_coords, -EXTREME_H, low_z);
+  Trans.old_brush(front_info, front_coords, -EXTREME_H, low_z);
 end
 
 
@@ -1801,7 +1884,7 @@ function Build.pillar(S, z1, z2, skin)
   local my = int((S.y1 + S.y2)/2)
   local mz = int((z1 + z2)/2)
 
-  Trans.brush(add_pegging(get_mat(skin.pillar)),
+  Trans.old_brush(add_pegging(get_mat(skin.pillar)),
   {
     { x=mx+32, y=my-32 }, { x=mx+32, y=my+32 },
     { x=mx-32, y=my+32 }, { x=mx-32, y=my-32 },
@@ -1810,7 +1893,7 @@ function Build.pillar(S, z1, z2, skin)
 
   for pass = 1,2 do
 --[[
-    Trans.brush(get_mat(skin.trim2),
+    Trans.old_brush(get_mat(skin.trim2),
     {
       { x=mx+40, y=my-40 }, { x=mx+40, y=my+40 },
       { x=mx-40, y=my+40 }, { x=mx-40, y=my-40 },
@@ -1819,7 +1902,7 @@ function Build.pillar(S, z1, z2, skin)
     sel(pass == 2,  EXTREME_H, z1+32)
     )
 --]]
-    Trans.brush(get_mat(skin.trim1),
+    Trans.old_brush(get_mat(skin.trim1),
     {
       { x=mx-40, y=my-56 },
       { x=mx+40, y=my-56 },
@@ -1854,7 +1937,7 @@ function Build.corner_beam(S, side, skin)
 
   add_pegging(info, skin.x_offset, skin.y_offset, 0)
 
-  Trans.quad(info, x1,y1, x2,y2, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, EXTREME_H)
 end
 
 
@@ -1878,7 +1961,7 @@ function Build.cross_beam(S, dir, w, beam_z, mat)
     coords = Trans.rect_coords(x1, my-w/2, x2, my+w/2)
   end
 
-  Trans.brush(get_mat(mat), coords, beam_z, EXTREME_H)
+  Trans.old_brush(get_mat(mat), coords, beam_z, EXTREME_H)
 end
 
 
@@ -1902,7 +1985,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
 
   Trans.set(DT)
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=mx-40, y=my-40 },
     { x=mx+40, y=my-40 },
@@ -1915,7 +1998,7 @@ function Build.small_switch(S, dir, f_h, skin, tag)
   },
   -EXTREME_H, f_h+base_h)
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=mx+32, y=my-8 },
     { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=assert(skin.line_kind), line_tag=tag },
@@ -1934,7 +2017,7 @@ function Build.exit_pillar(S, z1, skin)
   local mx = int((S.x1 + S.x2)/2)
   local my = int((S.y1 + S.y2)/2)
 
-  Trans.brush(add_pegging(get_mat(skin.switch_w)),
+  Trans.old_brush(add_pegging(get_mat(skin.switch_w)),
   {
     { x=mx+32, y=my-32, line_kind=skin.line_kind or 11 },
     { x=mx+32, y=my+32, line_kind=skin.line_kind or 11 },
@@ -1962,7 +2045,7 @@ function Build.exit_pillar(S, z1, skin)
       Trans.modify("mirror_x", sel((pass % 2)==1, nil, long/2))
       Trans.modify("mirror_y", sel(pass >= 3,     nil, long/2))
 
-      Trans.brush(info,
+      Trans.old_brush(info,
       {
         { x=pos+8,  y=pos+24 },
         { x=pos+0,  y=pos+16, w_face = exit_info.w_face },
@@ -1989,7 +2072,7 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
   Trans.set(DT)
 
 
-  Trans.quad(get_mat(skin.podium), 32,32, long-32,deep-32,
+  Trans.old_quad(get_mat(skin.podium), 32,32, long-32,deep-32,
       -EXTREME_H, f_h+12)
 
 
@@ -1998,7 +2081,7 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
   local switch_info = get_mat(skin.switch_w)
   add_pegging(switch_info, skin.x_offset, skin.y_offset)
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=mx-36, y=my-24 },
     { x=mx+36, y=my-24 },
@@ -2011,7 +2094,7 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
   },
   -EXTREME_H, f_h+16)
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=mx+32, y=my-8 },
     { x=mx+32, y=my+8, w_face = switch_info.w_face, line_kind=11 },
@@ -2032,7 +2115,7 @@ function Build.outdoor_exit_switch(S, dir, f_h, skin)
     Trans.modify("mirror_x", sel((pass % 2)==1, nil, long/2))
     Trans.modify("mirror_y", sel(pass >= 3,     nil, deep/2))
 
-    Trans.brush(info,
+    Trans.old_brush(info,
     {
       { x=48+8,  y=40+24 },
       { x=48+0,  y=40+16, w_face = exit_info.w_face },
@@ -2075,20 +2158,20 @@ function Build.small_exit(R, xt_info, skin, skin2)
 
   Trans.set(DT)
 
-  Trans.quad(out_info, 8,0,   long-8,48, -EXTREME_H, f_h)
-  Trans.quad(out_info, 8,-24, long-8,48, c_h, EXTREME_H)
+  Trans.old_quad(out_info, 8,0,   long-8,48, -EXTREME_H, f_h)
+  Trans.old_quad(out_info, 8,-24, long-8,48, c_h, EXTREME_H)
 
-  Trans.quad(inner_info, 8,48, long-8,long-8, -EXTREME_H, f_h)
-  Trans.quad(inner_info, 8,48, long-8,long-8, c_h, EXTREME_H)
+  Trans.old_quad(inner_info, 8,48, long-8,long-8, -EXTREME_H, f_h)
+  Trans.old_quad(inner_info, 8,48, long-8,long-8, c_h, EXTREME_H)
 
   Trans.clear()
 
 
   S.thick[side] = 80
 
-  Trans.brush(inner_info, get_wall_coords(S, geom.RIGHT[side], 32, 8),
+  Trans.old_brush(inner_info, get_wall_coords(S, geom.RIGHT[side], 32, 8),
                     -EXTREME_H, EXTREME_H)
-  Trans.brush(inner_info, get_wall_coords(S, geom.LEFT[side], 32, 8),
+  Trans.old_brush(inner_info, get_wall_coords(S, geom.LEFT[side], 32, 8),
                     -EXTREME_H, EXTREME_H)
 
 
@@ -2099,7 +2182,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
 
   Trans.set(DT)
 
-  Trans.brush(door_info,
+  Trans.old_brush(door_info,
   {
     { x=mx+32, y=48, line_kind=1 },
     { x=mx+32, y=64, line_kind=1 },
@@ -2111,7 +2194,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
   local frame_i = get_mat(skin.frame_c)
   inner_info.b_face = frame_i.b_face
 
-  Trans.brush(inner_info,
+  Trans.old_brush(inner_info,
   {
     { x=mx+32, y=32 },
     { x=mx+32, y=80 },
@@ -2131,7 +2214,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
   for pass = 1,2 do
     if pass == 2 then Trans.modify("mirror_x", mx) end
 
-    Trans.brush(out_info,
+    Trans.old_brush(out_info,
     {
       { x=0,     y=80  },
       { x=0,     y=-24 },
@@ -2143,7 +2226,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
     },
     -EXTREME_H, EXTREME_H)
 
-    Trans.brush(exit_side,
+    Trans.old_brush(exit_side,
     {
       { x=mx-68, y= -8 },
       { x=mx-60, y=-16, w_face = exit_info.w_face },
@@ -2169,7 +2252,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
 
   Trans.set(WT)
 
-  Trans.brush(inner_info,
+  Trans.old_brush(inner_info,
   {
     { x=long-8, y=8 },
     { x=long-8, y=32 },
@@ -2220,13 +2303,13 @@ function Build.window(S, side, width, mid_w, z1, z2, skin)
     { x=mx-width/2, y=deep },
   }
 
-  Trans.brush(wall_info, coords, -EXTREME_H, z1)
-  Trans.brush(wall_info, coords, z2,  EXTREME_H)
+  Trans.old_brush(wall_info, coords, -EXTREME_H, z1)
+  Trans.old_brush(wall_info, coords, z2,  EXTREME_H)
 
 
   -- center piece
   if mid_w then
-    Trans.brush(wall_info,
+    Trans.old_brush(wall_info,
     {
       { x=mx+mid_w/2, y=0,    w_face = side_info.w_face },
       { x=mx+mid_w/2, y=deep, w_face = inner_info.w_face },
@@ -2238,7 +2321,7 @@ function Build.window(S, side, width, mid_w, z1, z2, skin)
 
 
   -- sides pieces
-  Trans.brush(wall_info,
+  Trans.old_brush(wall_info,
   {
     { x=mx-width/2, y=0,    w_face = side_info.w_face },
     { x=mx-width/2, y=deep, w_face = inner_info.w_face },
@@ -2247,7 +2330,7 @@ function Build.window(S, side, width, mid_w, z1, z2, skin)
   },
   -EXTREME_H, EXTREME_H)
 
-  Trans.brush(wall_info,
+  Trans.old_brush(wall_info,
   {
     { x=long, y=0 },
     { x=long, y=deep, w_face = inner_info.w_face },
@@ -2295,9 +2378,9 @@ function Build.picture(S, side, z1, z2, skin)
   Trans.set(T)
 
   -- wall around picture
-  Trans.quad(wall_info, 0,0, long,my-4, -EXTREME_H, EXTREME_H)
-  Trans.quad(wall_info, 0,my-4, 8,deep, -EXTREME_H, EXTREME_H)
-  Trans.quad(wall_info, long-8,my-4, long,deep, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(wall_info, 0,0, long,my-4, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(wall_info, 0,my-4, 8,deep, -EXTREME_H, EXTREME_H)
+  Trans.old_quad(wall_info, long-8,my-4, long,deep, -EXTREME_H, EXTREME_H)
 
 
   for n = 0,count do
@@ -2305,7 +2388,7 @@ function Build.picture(S, side, z1, z2, skin)
 
     -- picture itself
     if n < count then
-      Trans.brush(pic_info,
+      Trans.old_brush(pic_info,
       {
         { x=x+WD, y=my-4, line_kind=skin.line_kind },
         { x=x+WD, y=my,   line_kind=skin.line_kind },
@@ -2320,7 +2403,7 @@ function Build.picture(S, side, z1, z2, skin)
     local x2 = sel(n == count, long-8, x)
 
 gui.debugf("x1..x2 : %d,%d\n", x1,x2)
-    Trans.brush(wall_info,
+    Trans.old_brush(wall_info,
     {
       { x=x2, y=my-4, w_face = side_info.w_face },
       { x=x2, y=deep },
@@ -2341,8 +2424,8 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
 
   for _,c in ipairs(coords) do c.line_flags = 1 end
 
-  Trans.brush(floor_info, coords, -EXTREME_H, z1)
-  Trans.brush(floor_info, coords, z2,  EXTREME_H)
+  Trans.old_brush(floor_info, coords, -EXTREME_H, z1)
+  Trans.old_brush(floor_info, coords, z2,  EXTREME_H)
 
   Trans.clear()
 end
@@ -2357,7 +2440,7 @@ function Build.pedestal(S, z1, skin)
 
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
 
-  Trans.quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
+  Trans.old_quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
 end
 
 function Build.lowering_pedestal(S, z1, skin)
@@ -2371,7 +2454,7 @@ function Build.lowering_pedestal(S, z1, skin)
   add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
   info.sec_tag = tag
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
     { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
@@ -2387,10 +2470,10 @@ function Build.crate(x, y, z_top, skin, is_outdoor)
 
   local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
 
-  Trans.brush(info, coords, -EXTREME_H, z_top)
+  Trans.old_brush(info, coords, -EXTREME_H, z_top)
 
   if PARAM.outdoor_shadows and is_outdoor then
-    Trans.brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
+    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
   end
 end
 
@@ -2410,7 +2493,7 @@ function Build.raising_start(S, face_dir, z1, skin)
     Trans.set(T)
 
     if side == face_dir then
-      Trans.brush(info,
+      Trans.old_brush(info,
       {
         { x=long,  y=0 },
         { x=long,  y=deep },
@@ -2422,7 +2505,7 @@ function Build.raising_start(S, face_dir, z1, skin)
       -EXTREME_H, z1)
     
     else
-      Trans.quad(info, 0,0, long,deep, -EXTREME_H, z1)
+      Trans.old_quad(info, 0,0, long,deep, -EXTREME_H, z1)
     end
 
     Trans.clear()
@@ -2435,7 +2518,7 @@ function Build.raising_start(S, face_dir, z1, skin)
 
   Trans.set(T)
 
-  Trans.quad(info, 0,0, long,deep, -EXTREME_H, z1 - 128)
+  Trans.old_quad(info, 0,0, long,deep, -EXTREME_H, z1 - 128)
 
   Trans.clear()
 end
@@ -2451,7 +2534,7 @@ function Build.popup_trap(S, z, skin, monster)
 
     Trans.set(T)
 
-    Trans.brush(info,
+    Trans.old_brush(info,
     {
       { x=long, y=0 },
       { x=long, y=deep, w_face={ tex="-" } },
@@ -2469,7 +2552,7 @@ function Build.popup_trap(S, z, skin, monster)
 
   Trans.set(T)
 
-  Trans.brush(info,
+  Trans.old_brush(info,
   {
     { x=long, y=0,    line_kind=19, line_tag=info.sec_tag },
     { x=long, y=deep, line_kind=19, line_tag=info.sec_tag },
@@ -2870,13 +2953,13 @@ gui.printf("DX %d,%d  DY %d,%d\n", dx1,dx2, dy1,dy2)
       local f_h = h1 + (h2 - h1) * (i-1) / (steps-1)
       local c_h = f_h + gap_h
 
-      Trans.brush(wall_info, step_coords(p0,p1, 0/6, 1/6), -EXTREME_H,EXTREME_H)
-      Trans.brush(wall_info, step_coords(p0,p1, 5/6, 6/6), -EXTREME_H,EXTREME_H)
+      Trans.old_brush(wall_info, step_coords(p0,p1, 0/6, 1/6), -EXTREME_H,EXTREME_H)
+      Trans.old_brush(wall_info, step_coords(p0,p1, 5/6, 6/6), -EXTREME_H,EXTREME_H)
 
       local coords = step_coords(p0,p1, 1/6, 5/6)
 
-      Trans.brush(floor_info, coords, -EXTREME_H,f_h)
-      Trans.brush(ceil_info,  coords,  c_h,EXTREME_H)
+      Trans.old_brush(floor_info, coords, -EXTREME_H,f_h)
+      Trans.old_brush(ceil_info,  coords,  c_h,EXTREME_H)
     end
   end
 
@@ -2949,29 +3032,29 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
 
 
   if inner_info then
-    Trans.quad(inner_info, x1,y1,x2,y2, inner_z, EXTREME_H)
+    Trans.old_quad(inner_info, x1,y1,x2,y2, inner_z, EXTREME_H)
   end
 
 
-  Trans.quad(outer_info, ox1,oy1,  x1,oy2, outer_z, EXTREME_H)
-  Trans.quad(outer_info,  x2,oy1, ox2,oy2, outer_z, EXTREME_H)
-  Trans.quad(outer_info,  x1,oy1,  x2, y1, outer_z, EXTREME_H)
-  Trans.quad(outer_info,  x1, y2,  x2,oy2, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info, ox1,oy1,  x1,oy2, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x2,oy1, ox2,oy2, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x1,oy1,  x2, y1, outer_z, EXTREME_H)
+  Trans.old_quad(outer_info,  x1, y2,  x2,oy2, outer_z, EXTREME_H)
 
   if kind == "round" then
-    Trans.brush(outer_info,
+    Trans.old_brush(outer_info,
                       diagonal_coords(1, x1, y1, x1+diag_w, y1+diag_h),
                       outer_z, EXTREME_H)
 
-    Trans.brush(outer_info,
+    Trans.old_brush(outer_info,
                       diagonal_coords(3, x2-diag_w, y1, x2, y1+diag_h),
                       outer_z, EXTREME_H)
 
-    Trans.brush(outer_info,
+    Trans.old_brush(outer_info,
                       diagonal_coords(7, x1, y2-diag_h, x1+diag_w, y2),
                       outer_z, EXTREME_H)
 
-    Trans.brush(outer_info,
+    Trans.old_brush(outer_info,
                       diagonal_coords(9, x2-diag_w, y2-diag_h, x2, y2),
                       outer_z, EXTREME_H)
   end
@@ -2986,21 +3069,21 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
   local trim_h = 4 * int(1 + math.min(mw,mh) / 120)
 
   if trim and kind == "square" then
-    Trans.quad(trim, x1-w,y1-w, x1+4,y2+w, outer_z-trim_h, EXTREME_H)
-    Trans.quad(trim, x2-4,y1-w, x2+w,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1-w,y1-w, x1+4,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x2-4,y1-w, x2+w,y2+w, outer_z-trim_h, EXTREME_H)
 
-    Trans.quad(trim, x1+4,y1-w, x2-4,y1+4, outer_z-trim_h, EXTREME_H)
-    Trans.quad(trim, x1+4,y2-4, x2-4,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+4,y1-w, x2-4,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+4,y2-4, x2-4,y2+w, outer_z-trim_h, EXTREME_H)
   end
 
   if trim and kind == "round" then
-    Trans.quad(trim, x1-w,y1+diag_h, x1+4,y2-diag_h, outer_z-trim_h, EXTREME_H)
-    Trans.quad(trim, x2-4,y1+diag_h, x2+w,y2-diag_h, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1-w,y1+diag_h, x1+4,y2-diag_h, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x2-4,y1+diag_h, x2+w,y2-diag_h, outer_z-trim_h, EXTREME_H)
 
-    Trans.quad(trim, x1+diag_w,y1-w, x2-diag_w,y1+4, outer_z-trim_h, EXTREME_H)
-    Trans.quad(trim, x1+diag_w,y2-4, x2-diag_w,y2+w, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+diag_w,y1-w, x2-diag_w,y1+4, outer_z-trim_h, EXTREME_H)
+    Trans.old_quad(trim, x1+diag_w,y2-4, x2-diag_w,y2+w, outer_z-trim_h, EXTREME_H)
 
-    Trans.brush(trim,  -- top left
+    Trans.old_brush(trim,  -- top left
     {
       { x=x1-w, y=y2-diag_h },
       { x=x1+4, y=y2-diag_h },
@@ -3009,7 +3092,7 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    Trans.brush(trim,  -- top right
+    Trans.old_brush(trim,  -- top right
     {
       { x=x2-diag_w, y=y2+w },
       { x=x2-diag_w, y=y2-4 },
@@ -3018,7 +3101,7 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    Trans.brush(trim,  -- bottom left
+    Trans.old_brush(trim,  -- bottom left
     {
       { x=x1+4, y=y1+diag_h },
       { x=x1-w, y=y1+diag_h },
@@ -3027,7 +3110,7 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     },
     outer_z-trim_h, EXTREME_H)
 
-    Trans.brush(trim,  -- bottom right
+    Trans.old_brush(trim,  -- bottom right
     {
       { x=x2-diag_w, y=y1+4 },
       { x=x2-diag_w, y=y1-w },
@@ -3048,11 +3131,11 @@ function Build.sky_hole(sx1,sy1, sx2,sy2, kind, mw, mh,
     local pw = w * 2
     local K = 16
 
-    Trans.quad(spokes, ox1+K,my-w, x1+pw,my+w, outer_z-trim_h*1.5, EXTREME_H)
-    Trans.quad(spokes, x2-pw,my-w, ox2-K,my+w, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, ox1+K,my-w, x1+pw,my+w, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, x2-pw,my-w, ox2-K,my+w, outer_z-trim_h*1.5, EXTREME_H)
 
-    Trans.quad(spokes, mx-w,oy1+K, mx+w,y1+pw, outer_z-trim_h*1.5, EXTREME_H)
-    Trans.quad(spokes, mx-w,y2-pw, mx+w,oy2-K, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, mx-w,oy1+K, mx+w,y1+pw, outer_z-trim_h*1.5, EXTREME_H)
+    Trans.old_quad(spokes, mx-w,y2-pw, mx+w,oy2-K, outer_z-trim_h*1.5, EXTREME_H)
   end
 
 
@@ -3068,19 +3151,19 @@ end
 
 function Builder_quake_test()
 
-  Trans.quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
-  Trans.quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
+  Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
+  Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
 
   if true then
-    Trans.quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
+    Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
   end
 
   local wall_i = get_mat("COMP1_1")
 
-  Trans.quad(wall_i, 0,   128,  32, 384,  0, 192)
-  Trans.quad(wall_i, 224, 128, 256, 384,  0, 192)
-  Trans.quad(wall_i, 0,   128, 256, 144,  0, 192)
-  Trans.quad(wall_i, 0,   370, 256, 384,  0, 192)
+  Trans.old_quad(wall_i, 0,   128,  32, 384,  0, 192)
+  Trans.old_quad(wall_i, 224, 128, 256, 384,  0, 192)
+  Trans.old_quad(wall_i, 0,   128, 256, 144,  0, 192)
+  Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
 
   Trans.entity("player1", 64, 256, 64)
 end

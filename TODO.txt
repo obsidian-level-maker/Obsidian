@@ -2,15 +2,31 @@
 TODO
 ====
 
+>>>>  new brush system (gui)
+
+   (b) line_kind, line_tag (etc)
+   (c) sec_kind, se_tag (etc)
+   (a) delta_z
+
+DONE:  class csg_prop_set_c, typedef csg_prop_set_c csg_face_c;
+DONE:  renaming (brush_vert_c, csg_face_c, etc)
+DONE:  create two DUMMY FACES for brush_vert_c and brush_plane_c
+DONE:  remove game-specific "error_tex" handling
+
+
++  make linedef merging more relaxed (cf. DAVID.wad)
+
+
 PARAMETRIZE PREFABS WITH FUNCTIONS !!!
   e.g. { t=function(env) return env.z1 + 128 end, face={ ... }}
-
 
 >>  don't use mirroring to create doors (etc)
 
 >>  gui.add_brush([kind,] coords)
 
 >>  Mat.solid() etc???
+
+!!  support TRANSFORM.add_z, scale_z, mirror_z
 
 Example:
     brushes =
@@ -71,12 +87,6 @@ Console:
 
   -  don't keep console_body widget when delete console_win
 
-  -  have a "current table", gui.___CURRENT, default to _G
-     when '?' used with no arguments, display it
-     the 'cd xxx' syntax sets it (xxx can be '.name')
-     the '? .name' syntax displays a field
-     the '.name = xxx' syntax set a field
-  
 
 DONE:  redefine standard 'print' function to use gui.printf
 
