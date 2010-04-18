@@ -1752,7 +1752,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
       w = 96 + 110 * (R.tx2 - R.tx1 - 4)
       h = 96 + 110 * (R.ty2 - R.ty1 - 4)
 
-      outer_info.b_face.texture = "F_SKY1"
+      outer_info.b_face.tex = "F_SKY1"
       outer_info.b_face.light = 0.8
 
       Build.sky_hole(R.tx1+2,R.ty1+2, R.tx2-2,R.ty2-2,
@@ -2188,7 +2188,7 @@ gui.printf("do_teleport\n")
         S.raising_start = true
         R.has_raising_start = true
       else
-        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=true }
+        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
         Build.pedestal(S, z1, skin)
       end
 

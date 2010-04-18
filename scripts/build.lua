@@ -31,15 +31,18 @@ Trans.TRANSFORM =
 {
   -- mirror_x  : flip horizontally (about given X)
   -- mirror_y  : flip vertically (about given Y)
+  -- mirror_z
 
   -- scale_x   : scaling factor
   -- scale_y
+  -- scale_z
 
   -- rotate    : angle in degrees, counter-clockwise,
   --             rotates about the origin
 
   -- add_x     : translation, i.e. new origin coords
   -- add_y
+  -- add_z
 }
 
 
@@ -96,6 +99,12 @@ function Trans.brush(info, coords, z1, z2)
 
   for _,C in ipairs(coords) do
     C.x, C.y = Trans.apply(C.x, C.y)
+
+    if C.w_face then
+      C.face = C.w_face ; C.w_face = nil
+    else
+      C.face = info.w_face
+    end
   end
 
   if reverse_it then
@@ -114,19 +123,21 @@ function Trans.brush(info, coords, z1, z2)
 
     table.reverse(coords)
   end
-  
 
---[[
-  gui.debugf("{\n")
-  for _,C in ipairs(coords) do
-    gui.debugf("  (%1.3f %1.3f)\n", C.x, C.y)
+  if z1 > -EXTREME_H + 1 then
+    table.insert(coords, { b=z1, face=info.b_face })
   end
-  gui.debugf("}\n")
---]]
+
+  if z2 < EXTREME_H - 1 then
+    table.insert(coords, { t=z2, face=info.t_face })
+  end
+
 
   -- TODO !!!  transform slope coords (z1 or z2 == table)
 
-  gui.add_brush(info, coords, z1, z2)
+-- gui.printf("coords=\n%s\n", table.tostr(coords,4))
+
+  gui.add_brush(info.kind or "solid", coords)
 end
 
 
@@ -298,9 +309,9 @@ function get_mat(wall, floor, ceil)
 
   return
   {
-    w_face = { texture=w_mat.t },
-    t_face = { texture=f_mat.f or f_mat.t },
-    b_face = { texture=c_mat.f or c_mat.t },
+    w_face = { tex=w_mat.t },
+    t_face = { tex=f_mat.f or f_mat.t },
+    b_face = { tex=c_mat.f or c_mat.t },
   }
 end
 
@@ -312,9 +323,9 @@ function get_sky()
   return
   {
     kind = "sky",
-    w_face = { texture=mat.t },
-    t_face = { texture=mat.f or mat.t },
-    b_face = { texture=mat.f or mat.t, light=light },
+    w_face = { tex=mat.t },
+    t_face = { tex=mat.f or mat.t },
+    b_face = { tex=mat.f or mat.t, light=light },
   }
 end
 
@@ -334,9 +345,9 @@ function get_light(intensity)
   return
   {
     kind = "light",
-    w_face = { texture="-" },
-    t_face = { texture="-" },
-    b_face = { texture="-", light=intensity },
+    w_face = { tex="-" },
+    t_face = { tex="-" },
+    b_face = { tex="-", light=intensity },
   }
 end
 
@@ -344,9 +355,9 @@ function get_rail()
   return
   {
     kind = "rail",
-    w_face = { texture="-" },
-    t_face = { texture="-" },
-    b_face = { texture="-" },
+    w_face = { tex="-" },
+    t_face = { tex="-" },
+    b_face = { tex="-" },
   }
 end
 
@@ -358,14 +369,14 @@ function rail_coord(x, y, name)
     return { x=x, y=y }
   end
 
-  return { x=x, y=y, w_face={ texture=rail.t }, line_flags=rail.line_flags }
+  return { x=x, y=y, w_face={ tex=rail.t }, line_flags=rail.line_flags }
 end
 
 
 function add_pegging(info, x_offset, y_offset, peg)
   info.w_face.x_offset = x_offset or 0
   info.w_face.y_offset = y_offset or 0
-  info.w_face.peg = sel(peg == nil, true, peg)
+  info.w_face.peg = sel(peg == nil, 1, peg)
 
   return info
 end
@@ -840,9 +851,9 @@ function Build.quake_door(S, side)
 
   local m_ref = gui.q1_add_mapmodel(
   {
-    y_face={ texture="edoor01_1" },
-    x_face={ texture="met5_1" },
-    z_face={ texture="met5_1" },
+    y_face={ tex="edoor01_1" },
+    x_face={ tex="met5_1" },
+    z_face={ tex="met5_1" },
   },
   -1664+64,  -328-12, 0,
   -1664+128, -328+12, 128)
@@ -855,9 +866,9 @@ function Build.quake_door(S, side)
 
   m_ref = gui.q1_add_mapmodel(
   {
-    y_face={ texture="edoor01_1" },
-    x_face={ texture="met5_1" },
-    z_face={ texture="met5_1" },
+    y_face={ tex="edoor01_1" },
+    x_face={ tex="met5_1" },
+    z_face={ tex="met5_1" },
   },
   -1664+128, -328-12, 0,
   -1664+192, -328+12, 128)
@@ -879,9 +890,9 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
   -- trigger is a bit smaller than the pad
   local m_ref = gui.q1_add_mapmodel(
   {
-    y_face={ texture="trigger" },
-    x_face={ texture="trigger" },
-    z_face={ texture="trigger" },
+    y_face={ tex="trigger" },
+    x_face={ tex="trigger" },
+    z_face={ tex="trigger" },
   },
   x1+12,y1+12, z_top, x2-12,y2-12, z_top+256)
 
@@ -1841,7 +1852,7 @@ function Build.corner_beam(S, side, skin)
   
   local info = get_mat(skin.beam_w, skin.beam_f)
 
-  add_pegging(info, skin.x_offset, skin.y_offset, false)
+  add_pegging(info, skin.x_offset, skin.y_offset, 0)
 
   Trans.quad(info, x1,y1, x2,y2, -EXTREME_H, EXTREME_H)
 end
@@ -2153,7 +2164,7 @@ function Build.small_exit(R, xt_info, skin, skin2)
   mx = int(long / 2)
   local swit_W = 64
 
-  local switch_i = add_pegging(get_mat(skin.switch), 0, 0, false)
+  local switch_i = add_pegging(get_mat(skin.switch), 0, 0, 0)
   local break_i  = add_pegging(get_mat(skin.break_w))
 
   Trans.set(WT)
@@ -2261,7 +2272,7 @@ function Build.picture(S, side, z1, z2, skin)
   if skin.side_t then side_info = get_mat(skin.side_t) end
 
   local pic_info = get_mat(skin.pic_w)
-  add_pegging(pic_info, skin.x_offset, skin.y_offset, skin.peg or false)
+  add_pegging(pic_info, skin.x_offset, skin.y_offset, skin.peg or 0)
 
 
   if not z2 then
@@ -2443,7 +2454,7 @@ function Build.popup_trap(S, z, skin, monster)
     Trans.brush(info,
     {
       { x=long, y=0 },
-      { x=long, y=deep, w_face={ texture="-" } },
+      { x=long, y=deep, w_face={ tex="-" } },
       { x=0,    y=deep },
       { x=0,    y=0 },
     },
