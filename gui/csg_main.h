@@ -102,9 +102,6 @@ public:
 };
 
 
-typedef csg_property_set_c  csg_face_c;
-
-
 class brush_vert_c
 {
 public:
@@ -112,7 +109,7 @@ public:
 
   double x, y;
 
-  csg_face_c *face;
+  csg_property_set_c face;
 
   merge_vertex_c *partner;
 
@@ -132,10 +129,10 @@ public:
 
   slope_info_c *slope;  // NULL if not sloped
 
-  csg_face_c *face;
+  csg_property_set_c face;
 
 public:
-  brush_plane_c(double _z = 0) : z(_z), slope(NULL), face(NULL)
+  brush_plane_c(double _z = 0) : z(_z), slope(NULL), face()
   { }
 
   brush_plane_c(const brush_plane_c& other);
@@ -426,8 +423,8 @@ extern std::vector<merge_gap_c *>     mug_gaps;
 extern int bounds_x1, bounds_y1, bounds_z1;
 extern int bounds_x2, bounds_y2, bounds_z2;
 
-extern csg_face_c *dummy_side_face;
-extern csg_face_c *dummy_plane_face;
+extern std::string dummy_wall_tex;
+extern std::string dummy_plane_tex;
 
 
 /* ----- FUNCTIONS ----- */
@@ -438,8 +435,8 @@ brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
 csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact = false);
-csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
-                               brush_vert_c *V = NULL);
+brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+                                 brush_vert_c *V = NULL);
 
 merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 

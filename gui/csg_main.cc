@@ -33,8 +33,6 @@
 #include "ui_dialog.h"
 
 
-// FIXME std::vector<csg_face_c *> all_faces;
-
 std::vector<csg_brush_c *> all_brushes;
 
 std::vector<entity_info_c *> all_entities;
@@ -46,8 +44,8 @@ std::vector<merge_region_c *>  mug_regions;
 int bounds_x1, bounds_y1, bounds_z1;
 int bounds_x2, bounds_y2, bounds_z2;
 
-csg_face_c *dummy_side_face;
-csg_face_c *dummy_plane_face;
+std::string dummy_wall_tex;
+std::string dummy_plane_tex;
 
 
 static void CSG2_BeginLevel(void);
@@ -131,7 +129,7 @@ void csg_property_set_c::getHexenArgs(const char *key, u8_t *args)
 
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
       parent(_parent), x(_x), y(_y),
-      face(NULL), partner(NULL)
+      face(), partner(NULL)
 { }
 
 brush_vert_c::~brush_vert_c()
@@ -139,7 +137,7 @@ brush_vert_c::~brush_vert_c()
 
 
 brush_plane_c::brush_plane_c(const brush_plane_c& other) :
-    z(other.z), slope(NULL), face(NULL)  // FIXME ?!?!?
+    z(other.z), slope(NULL), face()  // FIXME ?!?!?
 { }
     
 brush_plane_c::~brush_plane_c()
@@ -411,11 +409,14 @@ void CSG2_MakeMiniMap(void)
 
 //------------------------------------------------------------------------
 
-static int Grab_Properties(lua_State *L, int stack_pos,
-                           csg_property_set_c *props)
+int Grab_Properties(lua_State *L, int stack_pos,
+                    csg_property_set_c *props, bool skip_xybt = false)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
+
+  if (lua_isnil(L, stack_pos))
+    return 0;
 
   if (lua_type(L, stack_pos) != LUA_TTABLE)
     return luaL_argerror(L, stack_pos, "bad property table");
@@ -432,6 +433,10 @@ static int Grab_Properties(lua_State *L, int stack_pos,
 
     const char *key   = lua_tostring(L, -2);
     const char *value = lua_tostring(L, -1);
+
+    // for faces, skip single letter keys ('x', 'y', 'b', 't', 's') 
+    if (skip_xybt && strlen(key) == 1)
+      continue;
 
     props->Add(key, value);
   }
@@ -498,16 +503,6 @@ int Grab_BrushKind(lua_State *L, int stack_pos)
 }
 
 
-csg_face_c * Grab_Face(lua_State *L, int stack_pos)
-{
-  csg_face_c *F = new csg_face_c();
-
-  Grab_Properties(L, stack_pos, F);
-
-  return F;
-}
-
-
 static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
 {
   if (stack_pos < 0)
@@ -518,36 +513,25 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     return luaL_error(L, "gui.add_brush: missing vertex info");
   }
 
-
-  csg_face_c *face = NULL;
-
-  lua_getfield(L, stack_pos, "face");
-
-  if (! lua_isnil(L, -1))
-  {
-    face = Grab_Face(L, -1);
-  }
-
-  lua_pop(L, 1);
-
-
+  lua_getfield(L, stack_pos, "slope");
   lua_getfield(L, stack_pos, "b");
   lua_getfield(L, stack_pos, "t");
-  lua_getfield(L, stack_pos, "slope");
 
-  if (! lua_isnil(L, -3) || ! lua_isnil(L, -2))
+  if (! lua_isnil(L, -2) || ! lua_isnil(L, -1))
   {
-    if (lua_isnil(L, -3))  // top
+    if (lua_isnil(L, -2))  // top
     {
-      B->t.z = luaL_checknumber(L, -2);
-      B->t.slope = Grab_Slope(L, -1);
-      B->t.face = face;
+      B->t.z = luaL_checknumber(L, -1);
+      B->t.slope = Grab_Slope(L, -3);
+
+      Grab_Properties(L, stack_pos, &B->t.face, true);
     }
     else  // bottom
     {
-      B->b.z = luaL_checknumber(L, -3);
-      B->b.slope = Grab_Slope(L, -1);
-      B->b.face = face;
+      B->b.z = luaL_checknumber(L, -2);
+      B->b.slope = Grab_Slope(L, -3);
+
+      Grab_Properties(L, stack_pos, &B->b.face, true);
     }
   }
   else  // side info
@@ -560,14 +544,14 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     V->x = luaL_checknumber(L, -2);
     V->y = luaL_checknumber(L, -1);
 
-    V->face = face;
-
     lua_pop(L, 2);
+
+    Grab_Properties(L, stack_pos, &V->face, true);
 
     B->verts.push_back(V);
   }
 
-  lua_pop(L, 3);  // b, t, slope
+  lua_pop(L, 3);  // slope, b, t
 
   return 0;
 }
@@ -658,16 +642,12 @@ int CSG2_property(lua_State *L)
 
   if (strcmp(key, "error_tex") == 0)
   {
-    SYS_ASSERT(dummy_side_face);
-
-    dummy_side_face->Add(key, value);
+    dummy_wall_tex = std::string(value);
     return 0;
   }
   else if (strcmp(key, "error_flat") == 0)
   {
-    SYS_ASSERT(dummy_plane_face);
-
-    dummy_plane_face->Add(key, value);
+    dummy_plane_tex = std::string(value);
     return 0;
   }
 
@@ -685,21 +665,19 @@ int CSG2_property(lua_State *L)
 //          can also be "liquid", "sky", "detail", "clip", etc
 //
 // coords is a list of coordinates of the form:
-//   { x=123, y=456, face={ ... } }           -- side of brush
-//   { b=200, slope={ ... }, face={ ... } }   -- top of brush
-//   { t=240, slope={ ... }, face={ ... } }   -- bottom of brush
+//   { x=123, y=456,     tex="foo", ... }   -- side of brush
+//   { b=200, s={ ... }, tex="bar", ... }   -- top of brush
+//   { t=240, s={ ... }, tex="gaz", ... }   -- bottom of brush
 //
 // tops and bottoms are optional, when absent then it means the
 // brush extends to infinity in that direction.
 //
-// slope specifications are optional.  When used, the slope must be
-// "shrinky", i.e. the z1..z2 range needs to cover the sloped brush.
+// 's' are slope specifications, which are optional.
 // They contain these fields: { x1, y1, x2, y2, dz }
+// When used, the slope must be "shrinky", i.e. the z1..z2 range needs
+// to cover the entirety of the full (sloped) brush.
 //
-// faces are NOT optional -- if absent or has no texture field then
-// a dummy face using the error texture is used.
-//
-// face tables may contain:
+// the rest of the fields are for the FACE, and can be:
 //
 //    tex  :  texture name
 //    
@@ -707,8 +685,8 @@ int CSG2_property(lua_State *L)
 //    y_offset
 //    peg
 //
-//    delta_z        : a post-CSG height adjustment (top & bottom only)
-//    mark           : separating number (top & bottom only)
+//    delta_z   : a post-CSG height adjustment (top & bottom only)
+//    mark      : separating number (top & bottom only)
 //
 //    kind   : DOOM sector or linedef type
 //    flags  : DOOM linedef flags
@@ -717,8 +695,6 @@ int CSG2_property(lua_State *L)
 //
 int CSG2_add_brush(lua_State *L)
 {
-  int nargs = lua_gettop(L);
-
   csg_brush_c *B = new csg_brush_c();
 
   B->bkind = Grab_BrushKind(L, 1);
@@ -726,6 +702,7 @@ int CSG2_add_brush(lua_State *L)
   Grab_CoordList(L, 2, B);
 
   // make sure that certain brush kinds have valid faces
+/*   ???? FIXME ????
   if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail ||
       B->bkind == BKIND_Sky)
   {
@@ -742,6 +719,7 @@ int CSG2_add_brush(lua_State *L)
         V->face = (k == 0) ? dummy_side_face : B->verts[0]->face;
     }
   } 
+*/
 
   all_brushes.push_back(B);
 
@@ -779,7 +757,7 @@ int CSG2_add_entity(lua_State *L)
 
   entity_info_c *E = new entity_info_c(name, x, y, z);
 
-  if (nargs >= 5 && lua_type(L, 5) != LUA_TNIL)
+  if (nargs >= 5)
   {
     Grab_Properties(L, 5, &E->props);
   }
@@ -861,22 +839,20 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   return exact ? NULL : best;
 }
 
-csg_face_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
-                               brush_vert_c *V)
+brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+                                 brush_vert_c *V)
 {
   if (! V)
     V = CSG2_FindSideVertex(G, z, is_front, true);
 
   if (V)
-  {
-    return V->face;
-  }
+    return V;
 
   csg_brush_c *B = CSG2_FindSideBrush(G, z, is_front);
 
   // FIXME: OK ???
   if (B)
-    return B->verts[0]->face;
+    return B->verts[0];
 
   return NULL;
 }
@@ -912,20 +888,17 @@ void CSG2_FreeAll(void)
   for (k = 0; k < all_entities.size(); k++)
     delete all_entities[k];
 
-  all_brushes.clear();
+  all_brushes .clear();
   all_entities.clear();
 
-  delete dummy_side_face;  dummy_side_face  = NULL;
-  delete dummy_plane_face; dummy_plane_face = NULL;
+  dummy_wall_tex .clear();
+  dummy_plane_tex.clear();
 }
 
 
 static void CSG2_BeginLevel(void)
 {
   CSG2_FreeAll();
-
-  dummy_side_face  = new csg_face_c();
-  dummy_plane_face = new csg_face_c();
 }
 
 static void CSG2_EndLevel(void)

@@ -33,9 +33,9 @@ public:
   float x1, y1, z1;
   float x2, y2, z2;
 
-  csg_face_c *x_face;
-  csg_face_c *y_face;
-  csg_face_c *z_face;
+  csg_property_set_c x_face;
+  csg_property_set_c y_face;
+  csg_property_set_c z_face;
 
   s32_t nodes[4];
 

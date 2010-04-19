@@ -44,7 +44,8 @@ extern int q1_total_nodes;
 extern int q1_total_mark_surfs;
 extern int q1_total_surf_edges;
 
-extern csg_face_c * Grab_Face(lua_State *L, int stack_pos);
+extern int Grab_Properties(lua_State *L, int stack_pos,
+                           csg_property_set_c *props, bool skip_xybt = false);
 
 extern void Q1_AddEdge(double x1, double y1, double z1,
                        double x2, double y2, double z2,
@@ -70,19 +71,19 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   {
     s[1] = 1.0; t[2] = 1.0;
 
-    texture = model->x_face->getStr("tex", "missing");
+    texture = model->x_face.getStr("tex", "missing");
   }
   else if (face < 4)  // PLANE_Y
   {
     s[0] = 1.0; t[2] = 1.0;
 
-    texture = model->y_face->getStr("tex", "missing");
+    texture = model->y_face.getStr("tex", "missing");
   }
   else // PLANE_Z
   {
     s[0] = 1.0; t[1] = 1.0;
 
-    texture = model->z_face->getStr("tex", "missing");
+    texture = model->z_face.getStr("tex", "missing");
   }
 
   raw_fc.texinfo = Q1_AddTexInfo(texture, 0, s, t);
@@ -346,9 +347,9 @@ int Q1_add_mapmodel(lua_State *L)
   lua_getfield(L, 1, "y_face");
   lua_getfield(L, 1, "z_face");
 
-  model->x_face = Grab_Face(L, -3);
-  model->y_face = Grab_Face(L, -2);
-  model->z_face = Grab_Face(L, -1);
+  Grab_Properties(L, -3, &model->x_face);
+  Grab_Properties(L, -2, &model->y_face);
+  Grab_Properties(L, -1, &model->z_face);
 
   lua_pop(L, 3);
 

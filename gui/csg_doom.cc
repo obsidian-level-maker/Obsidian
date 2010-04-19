@@ -604,11 +604,8 @@ void CSG2_Doom_TestBrushes(void)
     
     int sec_idx = DM_NumSectors();
 
-    const char *b_tex = "LAVA1";
-    const char *t_tex = "LAVA1";
-
-    if (P->b.face) b_tex = P->b.face->getStr("tex", b_tex);
-    if (P->t.face) t_tex = P->t.face->getStr("tex", t_tex);
+    const char *b_tex = P->b.face.getStr("tex", "LAVA1");
+    const char *t_tex = P->t.face.getStr("tex", "LAVA1");
 
     DM_AddSector(I_ROUND(P->b.z), b_tex, I_ROUND(P->t.z), t_tex, 192, 0, 0);
 
@@ -621,8 +618,7 @@ void CSG2_Doom_TestBrushes(void)
 
       brush_vert_c *v1 = P->verts[j1];
 
-      const char *w_tex = "CRACKLE4";
-      if (v1->face) w_tex = v1->face->getStr("tex", w_tex);
+      const char *w_tex = v1->face.getStr("tex", "CRACKLE4");
 
       DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
 
@@ -784,10 +780,8 @@ static void MakeSector(merge_region_c *R)
 
   S->CalcMiddle();
 
-  csg_face_c *f_face = B->t.face ? B->t.face : dummy_plane_face;
-  csg_face_c *c_face = T->b.face ? T->b.face : dummy_plane_face;
-
-  SYS_ASSERT(f_face && c_face);
+  csg_property_set_c *f_face = &B->t.face;
+  csg_property_set_c *c_face = &T->b.face;
 
   // determine floor and ceiling heights
   double f_delta = f_face->getDouble("delta_z");
@@ -800,8 +794,8 @@ static void MakeSector(merge_region_c *R)
       S->c_h = S->f_h;
 
 
-  S->f_tex = f_face->getStr("tex", "-");
-  S->c_tex = c_face->getStr("tex", "-");
+  S->f_tex = f_face->getStr("tex", dummy_plane_tex.c_str());
+  S->c_tex = c_face->getStr("tex", dummy_plane_tex.c_str());
 
   int f_mark = f_face->getInt("mark");
   int c_mark = c_face->getInt("mark");
@@ -853,10 +847,10 @@ static void MakeSector(merge_region_c *R)
     if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
       continue;
 
-    csg_face_c *f_face = B->t.face ? B->t.face : dummy_plane_face;
-    csg_face_c *c_face = B->b.face ? B->b.face : dummy_plane_face;
+    csg_property_set_c *t_face = &B->t.face;
+    csg_property_set_c *b_face = &B->b.face;
 
-    double raw = c_face->getInt("light", f_face->getInt("light"));
+    double raw = b_face->getInt("light", t_face->getInt("light"));
     int light = I_ROUND(raw * 256);
 
     if (light < 0)
@@ -1326,21 +1320,21 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
     brush_vert_c *l_vert = G->FindSide(l_brush);
     brush_vert_c *u_vert = G->FindSide(u_brush);
 
-    csg_face_c *lower_W = (l_vert && l_vert->face) ? l_vert->face : l_brush->verts[0]->face;
-    csg_face_c *upper_W = (u_vert && u_vert->face) ? u_vert->face : u_brush->verts[0]->face;
+    if (! l_vert) l_vert = l_brush->verts[0];
+    if (! u_vert) u_vert = u_brush->verts[0];
 
-    if (! lower_W) lower_W = dummy_side_face;
-    if (! upper_W) upper_W = dummy_side_face;
+    SYS_ASSERT(l_vert && u_vert);
 
-    SYS_ASSERT(lower_W && upper_W);
+    csg_property_set_c *lower_W = &l_vert->face;
+    csg_property_set_c *upper_W = &u_vert->face;
 
-    SD->lower = lower_W->getStr("tex", "-");
-    SD->upper = upper_W->getStr("tex", "-");
+    SD->lower = lower_W->getStr("tex", dummy_wall_tex.c_str());
+    SD->upper = upper_W->getStr("tex", dummy_wall_tex.c_str());
 
     if (lower_W->getInt("peg")) *l_peg = true;
     if (upper_W->getInt("peg")) *u_peg = true;
 
-    csg_face_c *rail_W = rail ? rail->face : NULL;
+    csg_property_set_c *rail_W = rail ? &rail->face : NULL;
 
     if (rail_W)
     {
@@ -1378,21 +1372,29 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
     brush_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
 
-    csg_face_c *mid_W = CSG2_FindSideFace(G, mz, side == 1, m_vert);
-    if (! mid_W) mid_W = dummy_side_face;
+    brush_vert_c *m_side = CSG2_FindSideFace(G, mz, side == 1, m_vert);
 
-    SD->mid = mid_W->getStr("tex", "-");
+    if (! m_side)
+    {
+      SD->mid = dummy_wall_tex.c_str();
+    }
+    else
+    {
+      csg_property_set_c *mid_W = &m_side->face;
 
-    if (mid_W->getInt("peg")) *l_peg = true;
+      SD->mid = mid_W->getStr("tex", dummy_wall_tex.c_str());
 
-    int ox = mid_W->getInt("x_offset", IVAL_NONE);
-    int oy = mid_W->getInt("y_offset", IVAL_NONE);
+      if (mid_W->getInt("peg")) *l_peg = true;
 
-    if (ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, m_vert, ox);
+      int ox = mid_W->getInt("x_offset", IVAL_NONE);
+      int oy = mid_W->getInt("y_offset", IVAL_NONE);
 
-    if (oy != IVAL_NONE)
-      SD->y_offset = oy;
+      if (ox != IVAL_NONE)
+        SD->x_offset = CalcXOffset(G, side, m_vert, ox);
+
+      if (oy != IVAL_NONE)
+        SD->y_offset = oy;
+    }
   }
 
   return SD;
@@ -1443,8 +1445,8 @@ static brush_vert_c *FindSpecialVert(merge_segment_c *G)
     {
       brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
 
-      if (! V->face)
-        continue;
+///---      if (! V->face)
+///---        continue;
 
       if (V->parent->bkind == BKIND_Rail)
         continue;
@@ -1463,10 +1465,10 @@ DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
 DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
             BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
 */
-        if (V->face->getStr("kind"))
+        if (V->face.getStr("kind"))
           return V;
 
-        if (V->face->getStr("tag") || V->face->getStr("flags"))
+        if (V->face.getStr("tag") || V->face.getStr("flags"))
           minor = V;
       }
     }
@@ -1519,15 +1521,15 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
       if (V->parent->bkind != BKIND_Rail)
         continue;
 
-      if (! V->face)
-        continue;
+///---      if (! V->face)
+///---        continue;
 
       if (V->parent->b.z > max_c || V->parent->b.z < min_f)
         continue;
 
-      const char *tex = V->face->getStr("tex", "-");
+      const char *tex = V->face.getStr("tex", "-");
 
-      if (tex[0] == '-' && !V->face->getStr("kind") && !V->face->getStr("flags"))
+      if (tex[0] == '-' && !V->face.getStr("kind") && !V->face.getStr("flags"))
         continue;
 
       // found one
@@ -1605,20 +1607,20 @@ static void MakeLinedefs(void)
 
     if (rail)
     {
-      L->flags |= rail->face->getInt("flags");
+      L->flags |= rail->face.getInt("flags");
 
-      if (! spec && rail->face->getStr("kind"))
+      if (! spec && rail->face.getStr("kind"))
         spec = rail;
     }
 
     if (spec)
     {
-      L->flags |= spec->face->getInt("flags");
+      L->flags |= spec->face.getInt("flags");
 
-      L->type = spec->face->getInt("kind");
-      L->tag  = spec->face->getInt("tag");
+      L->type = spec->face.getInt("kind");
+      L->tag  = spec->face.getInt("tag");
 
-      spec->face->getHexenArgs("args", L->args);
+      spec->face.getHexenArgs("args", L->args);
     }
   }
 }

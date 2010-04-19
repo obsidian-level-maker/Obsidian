@@ -40,24 +40,18 @@
 
 int q1_flat_lightmaps[256];
 
-extern csg_face_c * Grab_Face(lua_State *L, int stack_pos);
-
 
 q1MapModel_c::q1MapModel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),
-    x_face(NULL), y_face(NULL), z_face(NULL)
+    x_face(), y_face(), z_face()
 {
   for (int i = 0; i < 4; i++)
     nodes[i] = 0;
 }
 
 q1MapModel_c::~q1MapModel_c()
-{
-  delete x_face;
-  delete y_face;
-  delete z_face;
-}
+{ }
 
 std::vector<q1MapModel_c *> q1_all_mapmodels;
 

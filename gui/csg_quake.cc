@@ -1350,10 +1350,10 @@ static rFace_c * NewFace(rSide_c *S, double z1, double z2,
   
   if (av)
   {
-  F->w_face =av->face;
+    F->w_face = av->face;
 
-  if (! F->w_face)
-    F->w_face = av->parent->verts[0]->face;
+    if (! F->w_face)
+      F->w_face = av->parent->verts[0]->face;
   }
 
   return F;
