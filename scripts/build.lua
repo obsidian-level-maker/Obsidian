@@ -116,15 +116,15 @@ function Trans.brush(kind, coords)
   -- FIXME: mirroring
 
   -- apply transform
-  coords = table.copy(coords)
+  coords = table.deep_copy(coords)
 
   for _,C in ipairs(coords) do
     if C.x then
       C.x, C.y = Trans.apply(C.x, C.y)
     elseif C.b then
-      C.b, C.slope = Trans.apply_z(C.b, C.slope)
+      C.b, C.s = Trans.apply_z(C.b, C.s)
     else assert(C.t)
-      C.t, C.slope = Trans.apply_z(C.t, C.slope)
+      C.t, C.s = Trans.apply_z(C.t, C.s)
     end
   end
 
@@ -149,11 +149,7 @@ function Trans.old_brush(info, coords, z1, z2)
   for _,C in ipairs(coords) do
     C.x, C.y = Trans.apply(C.x, C.y)
 
-    if C.w_face then
-      C.face = C.w_face ; C.w_face = nil
-    else
-      C.face = info.w_face
-    end
+    table.merge(C, C.w_face or info.w_face) ; C.w_face = nil
   end
 
   if reverse_it then
@@ -174,11 +170,13 @@ function Trans.old_brush(info, coords, z1, z2)
   end
 
   if z1 > -EXTREME_H + 1 then
-    table.insert(coords, { b=z1, face=info.b_face })
+    info.b_face.b = z1
+    table.insert(coords, info.b_face)
   end
 
   if z2 < EXTREME_H - 1 then
-    table.insert(coords, { t=z2, face=info.t_face })
+    info.t_face.t = z2
+    table.insert(coords, info.t_face)
   end
 
 
@@ -224,14 +222,21 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
 
   local coords =
   {
-    { x=x1, y=y1, face=w_face },
-    { x=x2, y=y1, face=w_face },
-    { x=x2, y=y2, face=w_face },
-    { x=x1, y=y2, face=w_face },
+    { x=x1, y=y1 },
+    { x=x2, y=y1 },
+    { x=x2, y=y2 },
+    { x=x1, y=y2 },
   }
 
-  if z1 then table.insert(coords, { b=z1, face=p_face }) end
-  if z2 then table.insert(coords, { t=z2, face=p_face }) end
+  for _,c in ipairs(coords) do
+    table.merge(c, w_face)
+  end
+
+  local t_face = table.copy(p_face) ; t_face.t = z2
+  local b_face = table.copy(p_face) ; b_face.b = z1
+
+  if z1 then table.insert(coords, b_face) end
+  if z2 then table.insert(coords, t_face) end
 
   Trans.brush(kind, coords)
 end
@@ -249,20 +254,20 @@ end
 function Trans.rect_coords(x1, y1, x2, y2)
   return
   {
+    { x=x1, y=y1 },
     { x=x2, y=y1 },
     { x=x2, y=y2 },
     { x=x1, y=y2 },
-    { x=x1, y=y1 },
   }
 end
 
 function Trans.box_coords(x, y, w, h)
   return
   {
+    { x=x,   y=y },
     { x=x+w, y=y },
     { x=x+w, y=y+h },
     { x=x,   y=y+h },
-    { x=x,   y=y },
   }
 end
 
