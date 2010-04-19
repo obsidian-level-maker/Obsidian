@@ -104,7 +104,7 @@ public:
 
   int index;
 
-  csg_face_c *w_face;
+  csg_property_set_c *face;
 
   int light;
 
@@ -120,7 +120,7 @@ public:
   rWindingVerts_c *UU;
 
 public:
-  rFace_c() : index(-1), light(0)
+  rFace_c() : index(-1), face(NULL), light(0)
   { }
 };
 
@@ -1171,12 +1171,7 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
   raw_face.side = flipped ? 1 : 0;
 
 
-  csg_face_c *w_face = F->w_face;
-  if (! w_face) w_face = dummy_side_face;
-
-  SYS_ASSERT(w_face);
-
-  const char *texture = w_face->getStr("tex", "missing");
+  const char *texture = F->face->getStr("tex", "missing");
 
   int flags = CalcTextureFlag(texture);
 
@@ -1263,12 +1258,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
   raw_face.side = flipped ? 1 : 0;
 
 
-  csg_face_c *p_face = F->w_face;
-  if (! p_face) p_face = dummy_plane_face;
-  
-  SYS_ASSERT(p_face);
-
-  const char *texture = p_face->getStr("tex", "missing");
+  const char *texture = F->face->getStr("tex", "missing");
 
   int flags = CalcTextureFlag(texture);
 
@@ -1346,29 +1336,32 @@ static rFace_c * NewFace(rSide_c *S, double z1, double z2,
   F->z1 = z1;
   F->z2 = z2;
 
-  F->w_face = NULL;
-  
-  if (av)
-  {
-    F->w_face = av->face;
+  SYS_ASSERT(av);
 
-    if (! F->w_face)
-      F->w_face = av->parent->verts[0]->face;
-  }
+  F->face = &av->face;
+///---  if (av)
+///---  {
+///---    F->w_face = av->face;
+///---
+///---    if (! F->w_face)
+///---      F->w_face = av->parent->verts[0]->face;
+///---  }
 
   return F;
 }
 
 
 static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
-                         csg_face_c *w_face)
+                         csg_property_set_c *face)
 {
   rFace_c * F = new rFace_c;
 
   F->kind = kind;
   F->index = -1;
 
-  F->w_face = w_face;
+  SYS_ASSERT(face);
+
+  F->face = face;
 
   F->z = z;
   F->UU = UU;
@@ -1382,6 +1375,7 @@ static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
 static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
                       brush_vert_c *av)
 {
+  SYS_ASSERT(av);
   SYS_ASSERT(z2 > z1);
 
   // make sure face height does not exceed the limit
@@ -1494,7 +1488,7 @@ static rNode_c * Z_Leaf(rNode_c *winding, merge_region_c *R, int gap)
 }
 
 
-static void AddFlatFace(rNode_c * N, int gap, int kind, csg_face_c *w_face,
+static void AddFlatFace(rNode_c * N, int gap, int kind, csg_property_set_c *face,
                         rWindingVerts_c *UU)
 {
 if (UU->count < 3) return; //!!!!!!!!!!
@@ -1505,7 +1499,7 @@ if (UU->count < 3) return; //!!!!!!!!!!
 
     if (LEAF->gap == gap)
     {
-      rFace_c *F = NewFace(kind, N->z, UU, w_face);
+      rFace_c *F = NewFace(kind, N->z, UU, face);
       F->light = LEAF->light;
 
       LEAF->AddFace(F);
@@ -1566,7 +1560,7 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
       winding->wi_verts = CollectClockwiseVerts(winding);
 
     AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR,
-                (a1 & 1) ? G->t_brush->b.face : G->b_brush->t.face,
+                (a1 & 1) ? &G->t_brush->b.face : &G->b_brush->t.face,
                 winding->wi_verts);
 
     return node;
