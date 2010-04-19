@@ -2,16 +2,23 @@
 TODO
 ====
 
+
+IDEA:
+  - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
+  - C++ can queue commands to perform, fetched by the Lua loop
+    (this is only mechanism for C++ to "call" Lua code)
+  - build the debugger using Lua
+
+
+Prefabs:
+   FLTK-like resize behavior (allow 2 resize ranges per axis)
+
+
 >>>>  new brush system (gui)
 
    (b) line_kind, line_tag (etc)
    (c) sec_kind, se_tag (etc)
    (a) delta_z
-
-DONE:  class csg_prop_set_c, typedef csg_prop_set_c csg_face_c;
-DONE:  renaming (brush_vert_c, csg_face_c, etc)
-DONE:  create two DUMMY FACES for brush_vert_c and brush_plane_c
-DONE:  remove game-specific "error_tex" handling
 
 
 +  make linedef merging more relaxed (cf. DAVID.wad)
