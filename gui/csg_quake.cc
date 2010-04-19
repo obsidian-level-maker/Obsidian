@@ -1375,7 +1375,8 @@ static rFace_c * NewFace(int kind, double z, rWindingVerts_c *UU,
 static void DoAddFace(rNode_c *LEAF, rSide_c *S, double z1, double z2,
                       brush_vert_c *av)
 {
-  SYS_ASSERT(av);
+  if (! av) return;  // FIXME !!!!!! should not happen
+
   SYS_ASSERT(z2 > z1);
 
   // make sure face height does not exceed the limit
@@ -1452,7 +1453,10 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G)
     if (sz2 < sz1 + 0.99)  // don't create tiny faces
       continue;
 
-    DoAddFace(LEAF, S,  sz1, sz2, CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, on_front));
+    brush_vert_c *V = CSG2_FindSideVertex(seg, (sz1+sz2)/2.0, on_front);
+    if (! V) V = RX->brushes[0]->verts[0];
+
+    DoAddFace(LEAF, S,  sz1, sz2, V);
   }
 }
 
