@@ -9,7 +9,7 @@ ARCHWAY =
       { x = 192, y =  24, mat = "inner" },
       { x = 0,   y =  24, mat = "outer" },
       { x = 0,   y = -24, mat = "outer" },
-      { b = "@ht", mat = "outer" },
+      { b = "?ht", mat = "outer" },
     },
 
     -- left side

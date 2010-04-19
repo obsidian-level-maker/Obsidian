@@ -23,11 +23,11 @@ DOOR_PREFAB =
 
     -- door itself
     {
-      { x = 160, y = -8, kind = "@line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
-      { x = 160, y =  8, kind = "@line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y =  8, kind = "@line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y = -8, kind = "@line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
-      { B = 16, mat = "door", light = 0.7, tag = "@tag" },
+      { x = 160, y = -8, kind = "?line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y =  8, kind = "?line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  8, kind = "?line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = -8, kind = "?line_kind", mat = "door", peg=1, x_offset=0, y_offset=0 },
+      { B = 16, mat = "door", light = 0.7, tag = "?tag" },
     },
 
     -- left side
