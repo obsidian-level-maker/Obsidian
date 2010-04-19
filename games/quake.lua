@@ -1242,7 +1242,7 @@ function QUAKE1.begin_level()
   end
 
   -- select the sky to use (FIXME: make it theme based)
-  GAME.materials["_SKY"].t = rand.pick { "sky1", "sky4" }
+  GAME.MATERIALS["_SKY"].t = rand.pick { "sky1", "sky4" }
 end
 
 
