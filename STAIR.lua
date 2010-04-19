@@ -1,5 +1,5 @@
 
-NICHE_STAIR_8 =
+STAIR_8_NICHE =
 {
   brushes =
   {
