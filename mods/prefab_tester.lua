@@ -16,8 +16,8 @@
 --
 ----------------------------------------------------------------
 
-PREFAB_FILE = "EXIT_PILLAR.lua"
-PREFAB_NAME = "EXIT_PILLAR"
+PREFAB_FILE = "PILLAR.lua"
+PREFAB_NAME = "PILLAR"
 
 
 function Build_Prefab(info)
@@ -53,8 +53,8 @@ function Build_Prefab(info)
 
   local materials =
   {
-    "FLAT1", "FLAT10", "COMPBLUE", "REDWALL",
-    "GRASS1", "STARBR2", "WOOD1", "LAVA1"
+    "FLAT1", "COMPBLUE", "REDWALL", "RROCK14",
+    "GRASS1", "WOOD1", "SFLR6_4", "LAVA1"
   }
   local mapping = { }
 
