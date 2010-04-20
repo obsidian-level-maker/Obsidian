@@ -15,7 +15,7 @@ PICTURE =
     {
       { x =  64, y = 12 },
       { x = 128, y = 12 },
-      { x = 128, y = 16, mat = "pic" peg="?peg", x_offset="?x_offset", y_offset="?y_offset", kind="?line_kind" },
+      { x = 128, y = 16, mat = "pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", kind="?line_kind" },
       { x =  64, y = 16 },
     },
 
@@ -64,7 +64,7 @@ PICTURE =
       { x = 128, y = 24, mat = "wall" },
       { x =  64, y = 24, mat = "wall", flags = 1 },
       { x =  64, y = 12, mat = "wall" },
-      { b = 96, light = "?light" mat = "floor" },
+      { b = 96, light = "?light", mat = "floor" },
     },
   },
 }
