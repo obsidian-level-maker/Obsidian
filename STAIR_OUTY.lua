@@ -1,5 +1,5 @@
 
-STAIR_6_OUTY
+STAIR_6_OUTY =
 {
   brushes =
   {
