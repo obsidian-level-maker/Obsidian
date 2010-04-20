@@ -535,7 +535,7 @@ function Levels.build_it()
 
   -- does the level have a custom build function?
   if LEVEL.build_func then
-    LEVEL.build_func()
+    LEVEL.build_func(LEVEL.build_data)
     if gui.abort() then return "abort" end
 
     gui.progress(90)
