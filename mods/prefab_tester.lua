@@ -16,8 +16,66 @@
 --
 ----------------------------------------------------------------
 
-PREFAB_FILE = "PILLAR.lua"
-PREFAB_NAME = "PILLAR"
+PREFAB_FILE = "SWITCH.lua"
+PREFAB_NAME = "SMALL_SWITCH"
+
+
+function resize_coord(n, groups)
+  --
+  -- GROUPS:
+  --   a set of tables which fully covers the coordinate range,
+  --   must be sorted from lowest to highest.
+  --
+  local T = #groups
+
+  if T == 0 then return n end
+
+  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
+
+  local G = 1
+
+  while (G < T) and (n > G.high) do
+    G = G + 1
+  end
+
+  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
+end
+
+
+function compute_groups(groups, lowest, highest)
+  if #groups == 0 then return end
+
+  local extra = highest - lowest
+  local wt_total = 0
+
+  -- first pass: set size of all RIGID groups, and total the weights
+  for _,G in ipairs(groups) do
+    if not G.weight then
+      G.size = G.high - G.low
+      extra = extra - G.size
+    else
+      assert(G.weight > 0)
+      wt_total = wt_total + G.weight
+    end
+  end
+
+  -- second pas:, set size of all FLEXIBLE groups, and also set
+  -- the new coordinate range in low2 and high2.
+  local pos = lowest
+
+  for _,G in ipairs(groups) do
+    if G.weight then
+      G.size = G.high - G.low + extra * G.weight / wt_total
+      assert(G.size > 1)
+    end
+
+    G.low2  = pos
+    G.high2 = pos + G.size
+
+    pos = G.high2
+  end
+end
 
 
 function Build_Prefab(info)
