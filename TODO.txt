@@ -3,6 +3,9 @@ TODO
 ====
 
 
++  treat corners of indoor rooms as distinct architecture
+
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
