@@ -16,8 +16,8 @@
 --
 ----------------------------------------------------------------
 
-PREFAB_FILE = "STAIR.lua"
-PREFAB_NAME = "STAIR_8_NICHE"
+PREFAB_FILE = "EXIT_PILLAR.lua"
+PREFAB_NAME = "EXIT_PILLAR"
 
 
 function Build_Prefab(info)
@@ -72,7 +72,6 @@ function Build_Prefab(info)
         if not mapping[C.mat] then
           local idx = table.size(mapping) + 1
           mapping[C.mat] = materials[1 + (idx-1) % #materials]
-          gui.printf("  mapping %s --> %s\n", C.mat, mapping[C.mat])
         end
 
         C.tex = mapping[C.mat]
@@ -82,6 +81,8 @@ function Build_Prefab(info)
 
     Trans.brush("solid", B)
   end
+
+  gui.printf("mappings =\n%s\n", table.tostr(mapping))
 
   Trans.clear()
 
