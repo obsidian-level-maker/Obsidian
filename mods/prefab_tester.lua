@@ -21,7 +21,10 @@ PREFAB_NAME = "ARCHWAY"
 
 
 function Build_Prefab()
-  
+  gui.printf("Building prefab....\n")
+
+  local prefab = assert(_G[PREFAB_NAME])
+
   -- empty room
   Trans.brush("solid",
   {
@@ -44,7 +47,39 @@ function Build_Prefab()
   -- player start
   Trans.entity("player1", 0, -400, 0)
 
-  -- FIXME : THE PREFAB
+  -- THE PREFAB
+
+  local materials =
+  {
+    "FLAT1", "FLAT10", "COMPBLUE", "REDWALL",
+    "GRASS1", "STARBR2", "WOOD1", "LAVA1"
+  }
+  local mapping = { }
+
+
+  local brushes = assert(prefab.brushes)
+
+  for _,B0 in ipairs(brushes) do
+    local B = table.deep_copy(B0)
+    local kind = "solid"
+
+    for _,C in ipairs(B) do
+      if C.mat then
+        if not mapping[C.mat] then
+          local idx = table.size(mapping) + 1
+          mapping[C.mat] = materials[1 + (idx-1) % #materials]
+          gui.printf("  material %s --> %s\n", C.mat, mapping[C.mat])
+        end
+
+        C.tex = mapping[C.mat]
+        C.mat = nil
+      end
+    end
+
+    Trans.brush("solid", B)
+  end
+
+  gui.printf("Done prefab\n\n")
 end
 
 
