@@ -16,8 +16,8 @@
 --
 ----------------------------------------------------------------
 
-PREFAB_FILE = "ARCHWAY.lua"
-PREFAB_NAME = "ARCHWAY"
+PREFAB_FILE = "STAIR.lua"
+PREFAB_NAME = "STAIR_8_NICHE"
 
 
 function Build_Prefab()
@@ -45,7 +45,7 @@ function Build_Prefab()
   })
 
   -- player start
-  Trans.entity("player1", 0, -400, 0)
+  Trans.entity("player1", 0, 400, 0, { angle=270 })
 
   -- THE PREFAB
 
