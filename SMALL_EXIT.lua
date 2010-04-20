@@ -86,7 +86,6 @@ SMALL_EXIT =
       { x =  16, y = 248, mat = "inner" },
     },
 
---[[
 
     -- door itself
     {
@@ -94,18 +93,18 @@ SMALL_EXIT =
       { x = 160, y = 64, mat = "door", peg = 1, x_offset = 0, y_offset = 0, line_kind = 1 },
       { x =  96, y = 64, mat = "door", peg = 1, x_offset = 0, y_offset = 0, line_kind = 1 },
       { x =  96, y = 48, mat = "door", peg = 1, x_offset = 0, y_offset = 0, line_kind = 1 },
-      { b = 8, mat = "door" },
+      { b = 16, delta_z=-16, mat = "door" },
     },
 
     {
-      { x = 160, y = 32, mat = "wall" },
-      { x = 160, y = 80, mat = "wall" },
-      { x =  96, y = 80, mat = "wall" },
+      { x = 160, y = 32, mat = "inner" },
+      { x = 160, y = 80, mat = "inner" },
+      { x =  96, y = 80, mat = "inner" },
       { x =  96, y = 32, mat = "outer" },
       { b = 72, mat = "frame" },
     },
 
-
+    -- side of door
     {
       { x =  0, y =  80, mat = "outer" },
       { x =  0, y = -24, mat = "outer" },
@@ -113,11 +112,11 @@ SMALL_EXIT =
       { x = 96, y =  32, mat = "key", peg = 1, x_offset = 0, y_offset = 0 },
       { x = 96, y =  48, mat = "track", peg = 1, x_offset = 0, y_offset = 0 },
       { x = 96, y =  64, mat = "key", peg = 1, x_offset = 0, y_offset = 0 },
-      { x = 96, y =  80, mat = "wall" },
+      { x = 96, y =  80, mat = "inner" },
     },
 
     {
-      { x = 256, y =  80, mat = "wall" },
+      { x = 256, y =  80, mat = "inner" },
       { x = 160, y =  80, mat = "key", peg = 1, x_offset = 0, y_offset = 0 },
       { x = 160, y =  64, mat = "track", peg = 1, x_offset = 0, y_offset = 0 },
       { x = 160, y =  48, mat = "key", peg = 1, x_offset = 0, y_offset = 0 },
@@ -126,7 +125,6 @@ SMALL_EXIT =
       { x = 256, y = -24, mat = "outer" },
     },
 
---]]
     -- exit signs
     {
       { x = 60, y =  -8, mat = "exitside" },
