@@ -5,15 +5,15 @@ SMALL_SWITCH =
   {
     -- the base
     {
-      { x = -40, y = -40, mat = "side" },
-      { x =  40, y = -40, mat = "side" },
-      { x =  56, y = -24, mat = "side" },
-      { x =  56, y =  24, mat = "side" },
-      { x =  40, y =  40, mat = "side" },
-      { x = -40, y =  40, mat = "side" },
-      { x = -56, y =  24, mat = "side" },
-      { x = -56, y = -24, mat = "side" },
-      { t = 12, light = 0.66, mat = "side" },
+      { x = -40, y = -40, mat = "base" },
+      { x =  40, y = -40, mat = "base" },
+      { x =  56, y = -24, mat = "base" },
+      { x =  56, y =  24, mat = "base" },
+      { x =  40, y =  40, mat = "base" },
+      { x = -40, y =  40, mat = "base" },
+      { x = -56, y =  24, mat = "base" },
+      { x = -56, y = -24, mat = "base" },
+      { t = 12, light = 0.66, mat = "base" },
     },
 
     -- switch itself
