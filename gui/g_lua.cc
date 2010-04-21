@@ -910,6 +910,7 @@ void Script_Load(void)
   Script_LoadSubDir("games");
   Script_LoadSubDir("engines");
   Script_LoadSubDir("mods");
+  Script_LoadSubDir("prefabs");
 
   has_loaded = true;
  
