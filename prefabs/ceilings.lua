@@ -1,5 +1,5 @@
 
-CEIL_LIGHT =
+PREFAB.CEIL_LIGHT =
 {
   ceiling_relative = true,
 

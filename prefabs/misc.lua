@@ -1,5 +1,5 @@
 
-PILLAR =
+PREFAB.PILLAR =
 {
   brushes=
   {

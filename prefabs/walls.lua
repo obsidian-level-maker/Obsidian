@@ -1,5 +1,5 @@
 
-PICTURE =
+PREFAB.PICTURE =
 {
   brushes =
   {

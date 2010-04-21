@@ -1,5 +1,5 @@
 
-EXIT_PILLAR =
+PREFAB.EXIT_PILLAR =
 {
   brushes =
   {
@@ -49,7 +49,7 @@ EXIT_PILLAR =
 }
 
 
-OUTDOOR_EXIT_SWITCH =
+PREFAB.OUTDOOR_EXIT_SWITCH =
 {
   brushes =
   {
@@ -120,7 +120,7 @@ OUTDOOR_EXIT_SWITCH =
 }
 
 
-SMALL_EXIT =
+PREFAB.SMALL_EXIT =
 {
   brushes =
   {

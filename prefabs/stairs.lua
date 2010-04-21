@@ -1,5 +1,5 @@
 
-STAIR_6_OUTY =
+PREFAB.STAIR_6 =
 {
   brushes =
   {
@@ -50,42 +50,11 @@ STAIR_6_OUTY =
       { x =  48, y = 72, mat = "side", },
       { t = 18, mat = "top", },
     },
-
---    {
---      { x =  0, y =   0, mat = "wall", },
---      { x = 48, y =   0, mat = "wall", },
---      { x = 48, y = 192, mat = "wall", },
---      { x =  0, y = 192, mat = "wall", },
---      { t =  0, mat = "floor", },
---    },
---
---    {
---      { x = 144, y =   0, mat = "wall", },
---      { x = 192, y =   0, mat = "wall", },
---      { x = 192, y = 192, mat = "wall", },
---      { x = 144, y = 192, mat = "wall", },
---      { t = 0, mat = "floor", }, },
---
---    {
---      { x =  48, y =  96, mat = "wall", },
---      { x = 144, y =  96, mat = "wall", },
---      { x = 144, y = 192, mat = "wall", },
---      { x =  48, y = 192, mat = "wall", },
---      { t = 0, mat = "floor", },
---    },
---
---    {
---      { x =  48, y =  0, mat = "side", },
---      { x = 144, y =  0, mat = "side", },
---      { x = 144, y = 40, mat = "side", },
---      { x =  48, y = 40, mat = "side", },
---      { t = 128, mat = "porch", },
---    },
   },
 }
 
 
-STAIR_8_NICHE =
+PREFAB.NICHE_STAIR_8 =
 {
   brushes =
   {

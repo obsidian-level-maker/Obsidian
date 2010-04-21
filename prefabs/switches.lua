@@ -1,5 +1,5 @@
 
-SMALL_SWITCH =
+PREFAB.SMALL_SWITCH =
 {
   brushes=
   {

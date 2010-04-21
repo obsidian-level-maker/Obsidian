@@ -37,6 +37,9 @@ MODES =
   { "ctf",  "Capture Flag" },
 }
 
+-- all prefabs go here
+PREFAB = {}
+
 -- a place for unfinished stuff
 UNFINISHED = {}
 

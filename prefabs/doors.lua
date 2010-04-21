@@ -1,5 +1,5 @@
 
-ARCHWAY =
+PREFAB.ARCHWAY =
 {
   brushes =
   {
@@ -35,7 +35,7 @@ ARCHWAY =
 }
 
 
-DOOR =
+PREFAB.DOOR =
 {
   brushes =
   {
