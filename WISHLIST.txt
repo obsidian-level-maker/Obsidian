@@ -427,6 +427,8 @@ Monsters:
 
 +  make Oblige easier to mod.
 
++  generate the Boss maps (don't use prebuilt).
+
 -  bridges (activate by a switch)
 
 -  light up levels (a la quake).
