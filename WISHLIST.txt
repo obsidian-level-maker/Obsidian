@@ -10,6 +10,8 @@ WISH-LIST
 
 *  better monster selection
 
+*  escapable slime pits
+
 
 ----------------------------------------------------------------
   OTHER GAMES
@@ -25,6 +27,7 @@ WISH-LIST
 ?  Dark Forces
 ?  Strife
 ?  Half-Life
+?  Doom64: Absolution
 
 
 ----------------------------------------------------------------
@@ -431,6 +434,8 @@ Monsters:
 -  exit via teleporter pad or holes in floor
 
 -  improved use of liquids.
+
+-  a module or style for Claustrophic levels
 
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
 
