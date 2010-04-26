@@ -5,6 +5,8 @@ TODO
 
 +  treat corners of indoor rooms as distinct architecture
 
++  Chris's name stuff!
+
 
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
@@ -75,9 +77,6 @@ Slope fields:  x1, y1, x2, y2, dz
 
 Slopes must be "shrinky" -- i.e. the b..t coordinate range is
 guaranteed to contain the sloped brush.
-
-???  Slope brushes must also follow this rule: there exists height mz
-???  such that all bottom coords <= mz <= all top coords.
 
 
 
