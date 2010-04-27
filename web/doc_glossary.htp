@@ -1,0 +1,40 @@
+
+GLOSSARY
+
+
+Brush
+   XXX
+
+Cell
+   In the old (V2) code this term was used for each room.
+
+Entity
+   XXX
+
+Seed
+   This is a square region on the 2D map.
+   192x192
+
+   The term 'Seed' can also refer to a number which is used to
+   setup the random-number generator.  The same seed value
+   produces the same random numbers, and hence the same levels
+   (when all other settings are the same).
+
+Sub-Theme
+   XXX
+
+V1
+   An early prototype of OBLIGE which ....
+   It was never publicly released
+
+V2
+   The older versions of OBLIGE ...
+   ObligeNG :-)
+   These had version numbers starting with zero (such as 0.85).
+
+   Severe limitations in the code prompted a rewrite, which
+   became the V3 version.
+
+V3 (OB3)
+   The current versions of OBLIGE,
+
