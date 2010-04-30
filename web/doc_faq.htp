@@ -38,21 +38,33 @@ Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
 A/
 
 
+Q/ Why don't you export Quake levels as .MAP files, and let people
+   run the normal BSP compiling tools on them?
+
+A/
+
+
 Q/ How do I compile the EXE?
 
 A/ Firstly note that you can change the Lua files without having
    to compile anything -- OBLIGE will load the changes the next
    time you run it.
 
-   Compiling programs is not easy.  If you are a programme and
-   running Linux, then the INSTALL.txt document has some
-   information.  Otherwise I am not willing to help you do it.
-   sorry, it's nothing personal.
+   Compiling programs is not easy.
+   The INSTALL.txt document has some information (needed libraries etc).
+   But unless you are a C++ programmer and running Linux, then 
+   I am not willing to help you do it.
+   Sorry, it's nothing personal.
 
 
-Q/ Why don't you export Quake levels as .MAP files, and let people
-   run the normal BSP compiling tools on them?
+Q/ Waaaaaaah, you must do such and such, I demand it!
 
-A/
+A/ You got this nice little program for free and are not paying me
+   anything, so you have NO RIGHT AT ALL to demand anything from me.
 
+   People who are demanding, threatening, insulting, 
+   or otherwise being unpleasant will be BANNED from the
+   forum and my email.
+   This is just my hobby and I don't need any grief like that.
+   Be polite and respectful and we'll get along fine.
 
