@@ -20,6 +20,13 @@ Q/ can Deathmatch maps be created?
 A/ 
 
 
+Q/ Water should not be damaging, and pits should have a way to
+   get out of them.
+
+A/
+
+
+
 Q/ Quake maps having collision problems (invisible walls) and
    rendering problems, what's up with that?
 
@@ -29,6 +36,18 @@ A/
 Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
 
 A/
+
+
+Q/ How do I compile the EXE?
+
+A/ Firstly note that you can change the Lua files without having
+   to compile anything -- OBLIGE will load the changes the next
+   time you run it.
+
+   Compiling programs is not easy.  If you are a programme and
+   running Linux, then the INSTALL.txt document has some
+   information.  Otherwise I am not willing to help you do it.
+   sorry, it's nothing personal.
 
 
 Q/ Why don't you export Quake levels as .MAP files, and let people
