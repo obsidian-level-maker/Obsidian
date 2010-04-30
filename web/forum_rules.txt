@@ -1,0 +1,31 @@
+
+FORUM RULES
+===========
+
+1.
+Bad behavior such as insults, threats, excessive whining
+or other unpleasantness will NOT be tolerated.
+People who cause me or other forum members grief like that 
+will be BANNED.
+
+Remember that Oblige is just a hobby, and nobody is paying me
+to make it.  That means you have NO RIGHT to demand anything
+from me.  If you have a request, ask nicely :)
+
+Be polite and respectful here, and we'll all get along fine.
+
+
+2.
+When reporting bugs, please use a new thread for each bug
+(don't put multiple bugs in a single thread).
+
+Be sure to check the existing bugs and make sure that it
+is not a known problem -- check both the Bugs forum and the
+TODO.txt file which comes with OBLIGE.
+
+Do not use [ ] square brackets in your Subject line, that
+is reserved for me to mark the current state of the bug,
+for example [FIXED] or [NOBUG].
+
+
+
