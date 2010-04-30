@@ -27,5 +27,15 @@ Do not use [ ] square brackets in your Subject line, that
 is reserved for me to mark the current state of the bug,
 for example [FIXED] or [NOBUG].
 
+In the bug report, be sure to mention the version of OBLIGE
+you used.  Also there is a file called "LOGS.txt" created by
+OBLIGE after each run -- if you can include a copy of this
+file (directly after the problem occurred)
+then I can usually reproduce the problem and hence fix it
+much faster.  Use the attachment feature of the forums.
 
+When including screenshots, it would be helpful to make sure
+they are not too dark.  A program like the GIMP can be used
+to brighten them up.  If in doubt, too bright is better than
+too dark.
 
