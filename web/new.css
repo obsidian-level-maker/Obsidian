@@ -109,3 +109,14 @@ PRE { font-size: larger; }
     margin-bottom: 1em;
 }
 
+.faq_Q {
+    /* color: #008; */
+    color: #742;
+    font-weight: bold;
+    margin-bottom: 1em;
+}
+
+.faq_A {
+    margin-bottom: 2em;
+}
+

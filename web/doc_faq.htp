@@ -34,6 +34,7 @@ If the phrase is not there, then feel free to ask me
 
 <div class="faq_Q">
 Q/ When is the next release ?
+</div>
 
 <div class="faq_A">
 A/ When it's ready.
@@ -42,6 +43,7 @@ A/ When it's ready.
 
 <div class="faq_Q">
 Q/ Is game XXX going to be supported?
+</div>
 
 <div class="faq_A">
 A/ It depends very much on the game.
@@ -152,18 +154,19 @@ Q/ Water should not hurt the player!
 
 <div class="faq_A">
 A/ I agree!
-   However, since there is no way (yet) to get out of
-   deep pits, and since I like to see water being used in levels,
+   However, since there is no way to get out of deep pits (yet),
+   and since I like to see water being used in levels,
    this is the only option right now.
 </div>
 
 
 <div class="faq_Q">
 Q/ Lava pits should have a way to get out of them.
+</div>
 
 <div class="faq_A">
-A/ On the one hand, it does seem pretty mean to let the player
-   die from making the mistake of falling into a pit.
+A/ On the one hand, it is quite mean to let the player die from
+   making a small mistake and falling into a pit.
 
 <p>
    On the other hand, I think knowing that pits of lava, nukage
@@ -171,13 +174,17 @@ A/ On the one hand, it does seem pretty mean to let the player
 
    @@@
 
+</div>
+
 
 <div class="faq_Q">
 Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
+</div>
 
 <div class="faq_A">
 A/
-   Boss maps usually have special layouts or requirements which are
+   Boss maps usually have special layouts or special requirements
+   which are
    hard to account for (e.g. killing all the Barons in E1M8 of
    DOOM lowers a wall, and a teleporter takes you to a small
    dark room with a special floor type).
@@ -187,12 +194,10 @@ A/
    consider it a very high priority.
 
 <p>
-   Certain Boss maps are so specialized that there is little
-   scope for variation.  For example: MAP30 of DOOM II, and the
-   Chthon and Shub maps of Quake.
-   For these cases the pre-built maps are here to stay, as it is
-   not worth generating them via Lua code (it was tried, and was
-   too hard to maintain).
+   Certain maps are so specialized that there is little
+   scope for variation.  For example: the final map of DOOM 
+   or the Chthon map in Quake.
+   For these cases the pre-built maps are the best way.
 </div>
 
 
@@ -202,18 +207,19 @@ Q/ Quake maps have collision problems (invisible walls) and
 </div>
 
 <div class="faq_A">
-A/ The Quake code is in early stages, and with hindsight I should
-   not have released Oblige with Quake enabled (I wrongly
-   thought that those collision problems were very rare).
+A/ The Quake code is still in its early stages,
+   and with hindsight I should not have released Oblige with Quake
+   in its current state.  I thought, wrongly, that the collision
+   problems were very rare).
 
 <p>
-   I will be fixing the collision problem before the next release,
-   as well as implementing visibility and lighting.  Visibility is
-   especially important for playing large maps.
+   Anyway, I will be fixing the collision problem before the next
+   release, as well as implementing visibility and lighting.
+   Visibility is especially important for playing large maps.
 
 <p>
    There are rendering issues with standard QUAKE.EXE (or WinQuake)
-   which I don't know the cause of yet.  Playing with a port like
+   and I don't know what causes it yet.  Playing with a port like
    FitzQuake or Darkplaces is recommended.
 </div>
 
@@ -233,17 +239,22 @@ Q/ How do I compile the EXE?
 </div>
 
 <div class="faq_A">
-A/ Firstly note that you can change the Lua files without having
-   to compile anything -- Oblige will load your changes the next
-   time you run it.
+A/
+   Compiling Oblige.exe is fairly complicated,
+   and I simply don't have the time or inclination to teach
+   complete strangers on the internet the basics of compilers,
+   makefiles, libraries and all that stuff.
+   Sorry -- nothing personal,
 
 <p>
-   Compiling Oblige is a fairly complicated process.
-   The INSTALL.txt document has some basic information
-   (needed libraries etc).
-   But unless you are a C++ programmer and running Linux, you are
-   on your own.
-   Sorry, it's nothing personal.
+   If you are a programmer and are running Linux, then
+   the INSTALL.txt document (in the source package) has
+   some information to get you started.
+
+<p>
+   Lastly, you can change he Lua files (in the scripts/ folder
+   or games/ folder, ettc) without having to compile anything.
+   Oblige will load your changes the next time you run it.
 </div>
 
 
@@ -252,14 +263,14 @@ Q/ Waaaaaaah, you must do such and such, I demand it!
 </div>
 
 <div class="faq_A">
-A/ You got this nice little program for free and are not paying
-   anything, that means you have NO RIGHT to demand anything
-   from me.
+A/ Dude, you got this little program for free and nobody is
+   getting paid to work on it.
+   That means you have NO RIGHT to demand anything from me.
    If you have a request, ask nicely and it will be considered.
 
 <p>
-   People who are insulting, threatening, harrassing
-   or otherwise being unpleasant will be BANNED from the
+   People who behave in an insulting, threatening, harrassing
+   or otherwise being unpleasant manner will be BANNED from the
    forum and my email.
    This is just a hobby and I don't need any grief like that.
    Be polite and respectful and we'll get along fine.
