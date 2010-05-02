@@ -36,7 +36,7 @@ The top and bottom are usually flat but may be sloped,
 whereas the sides are always perfectly vertical.
 
 <p>
-<i>(See also... CSG)</i>
+<i>(See also.... CSG)</i>
 
 </div>
 
@@ -62,9 +62,9 @@ CSG
 </div><div class="gloss_define">
 CSG stands for "Constructive Solid Geometry".
 For OBLIGE it means the process of taking all the brushes
-which define the map (most of them are solid), and construct the
-output map format from them, e.g. the DOOM wad file
-or the QUAKE bsp file.
+which define the map (most of them are solid), and constructing
+the output map format from them, e.g. the Doom WAD file
+or the Quake BSP file.
 </div>
 
 
@@ -73,17 +73,19 @@ Engine / Port
 </div><div class="gloss_define">
 When Carmack released the DOOM source code, many different people
 hacked away on it and produced their own version of the EXE,
-often with greatly expanded capabilities.  The same thing happened
-when he released the QUAKE and QUAKE II source code.
+often with greatly expanded capabilities.  Examples include BOOM,
+EDGE, Legacy and ZDoom.
+The same thing happened when he released the QUAKE source code,
+people made engines such as Darkplaces, FitzQuake, and ZQuake.
 
 <p>
-Hence the term "Engine" or "Source Port" can refer to one of these
-enhanced versions of the game, but it could also mean the original
-EXE which the game came with when you bought it -- that one
-is often called "Vanilla" since nothing extra has been added.
+Hence the term "Engine" or "Source Port" usually refer to one of
+these enhanced versions of the game, but it can also mean the original
+EXE which the game came with when you bought it.  That one is
+often called "Vanilla", since nothing extra has been added to it.
 
 <p>
-<i>(See also... Limit Removing)</i>
+<i>(See also.... Limit Removing)</i>
 
 </div>
 
@@ -91,8 +93,8 @@ is often called "Vanilla" since nothing extra has been added.
 <div id="entity" class="gloss_term">
 Entity
 </div><div class="gloss_define">
-This is another Quake term, and means an object or thing in the map.
-Players, monsters, weapons, ammo, health, barrels, torches (etc etc)
+This is another term from Quake, and means an object or thing in the map.
+Monsters, weapons, player starts, ammo, health, barrels, torches (etc etc)
 are all entities.
 </div>
 
@@ -100,25 +102,24 @@ are all entities.
 <div id="limit_removing" class="gloss_term">
 Limit Removing
 </div><div class="gloss_define">
-A "Limit Removing" engine is one which people have removed various
-limitations that the original game has.
+A "Limit Removing" engine is one which people have removed some
+limitations that the original game had.
 For example, plain DOOM.EXE will crash if there are more than 128
-visplanes on the screen -- the dreaded VPO (Visplane Overflow) error.
+visplanes on the screen -- the VPO (Visplane Overflow) error which
+was a real nuisance to mappers.
 
 <p>
-However source ports like BOOM have removed this limitation,
-there can be as many visplanes on the screen as necessary to draw
-the level.
+However source ports like BOOM have removed this limitation
+(and others), and there can be as many visplanes on the screen
+as necessary to draw the level.
 
 <p>
 OBLIGE needs a Limit Removing engine because it is impossible
-for it to figure out when a limit (like visplanes) is going
-to be exceeded -- it depends greatly on the architecture of the map.
-The only real way to keep inside the limitations would be to
+for it to figure out when the visplane limit is going to be
+exceeded -- it depends greatly on the architecture of the map.
+The only way to keep within those limitations would be to
 produce very flat, boring, mostly-indoor maps with nothing
 much to look at.
-If that sounds fine to you, then there is another generator
-(called SLIGE) which you can use instead.
 </div>
 
 
@@ -156,7 +157,7 @@ made by a human and Oblige merely copies them into the
 output file.
 Boss maps usually have special requirements which are
 hard to account for.
-Hence it is much easier for someone to "pre-build" them
+It is much easier for someone to simply make them
 in a map editor.
 </div>
 
@@ -168,14 +169,21 @@ In the GUI, the seed is a 5-digit value which is used to
 setup the random-number generator.  The same seed value
 produces the same random numbers, and hence the same levels
 (when all other settings are the same).
+The top three digits are guaranteed to be different on
+different days, so it would take about 16 months before
+they start repeating.
+The BUMP button only changes the bottom two digits.
 
 <p>
-In the Lua code, a seed is a square region on the 2D map,
-which is 192x192 in size.
-In theory, each seed represents a single mapping construct,
+In the Lua code, a seed is a square region on the 2D map.
+The size is usually 192x192 units, but this can depend on the
+selected game.
+Each seed represents a single mapping concept,
 such as a walkway, stair, lift, switch, pillar, or a spot for a
 monster.  The sides of each seed can be used for walls, doors,
 windows, etc...
+The decisions about where to place rooms, how big they are,
+and how they are connected are all done using seeds.
 </div>
 
 
@@ -196,24 +204,26 @@ called the child and the outer room is the parent.
 <div id="sub_theme" class="gloss_term">
 Sub-Theme
 </div><div class="gloss_define">
+XXX <!---
 This term refers to the actual ...
-A "full" theme 
+A "full" theme  --->
 </div>
 
 <div id="svn" class="gloss_term">
 SVN
 </div><div class="gloss_define">
-SVN is short for Subversion, which is a system for storing code
-on a server computer and letting multiple people edit the code
-on their own computers.  It ensures that each developer's
-changes get distributed to all the other developers.
-It also stores a history of all changes, and each change
-can have a message describing what was done.
+SVN is short for Subversion, which is a development tool
+for storing code on a server computer and letting multiple
+people edit that code, using copies on their own computers.
+It ensures that each developer's
+changes get distributed to everyone else.
+It also stores a history of all changes, where each change
+has message describing what was done.
 
 <p>
-Oblige's SVN respository .... @@@@
-LINKY
-
+You can view Oblige's SVN respository here:
+<a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk">
+Browse Code</a>
 </div>
   
 
@@ -228,20 +238,20 @@ It could not do very much and was never publicly released.
 <div id="v2" class="gloss_term">
 V2 / OB2
 </div><div class="gloss_define">
-The older versions of OBLIGE ...
-ObligeNG :-)
-These had version numbers starting with zero (such as 0.85).
+The older versions of OBLIGE, with
+version numbers starting with zero (such as 0.85).
 
+<!---
 Severe limitations in the code prompted a rewrite, which
-became the V3 version.
+became the V3 version.  --->
 </div>
 
 
 <div id="v3" class="gloss_term">
 V3 / OB3
 </div><div class="gloss_define">
-
 The current versions of OBLIGE,
+the first of which was version 3.39.
 </div>
 
 
