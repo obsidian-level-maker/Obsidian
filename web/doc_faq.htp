@@ -50,10 +50,11 @@ A/ Firstly note that you can change the Lua files without having
    to compile anything -- OBLIGE will load the changes the next
    time you run it.
 
-   Compiling programs is not easy.
-   The INSTALL.txt document has some information (needed libraries etc).
-   But unless you are a C++ programmer and running Linux, then 
-   I am not willing to help you do it.
+   Compiling programs is very complicated.
+   The INSTALL.txt document has some basic information
+   (needed libraries etc).
+   But unless you are a C++ programmer and running Linux, you are
+   on your own.
    Sorry, it's nothing personal.
 
 

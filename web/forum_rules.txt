@@ -46,7 +46,7 @@ to brighten them up.  If in doubt, too bright is better than
 too dark.
 
 
-3. OTHER STUFF
+3. FURTHER READING
 
 The FAQ contains answers to some frequently asked questions
 (and some frequent comments too).  Please check it before
@@ -57,9 +57,12 @@ FAQ: http://oblige.sourceforge.net/doc_faq.htm
 OBLIGE comes with two documents called TODO.txt and WISHLIST.txt.
 The TODO file contains some known bugs, and other stuff being
 worked on at the moment.  The WISHLIST.txt contains a great many
-idea for future features (and other junk), and has sections
+ideas for future features (and other junk), and has sections
 for each supported game.  Check that your feature idea is there
 before posting a new thread about it.
 
-WISHLIST: <link>
+WISHLIST: http://oblige.svn.sourceforge.net/viewvc/oblige/trunk/WISHLIST.txt
+
+Lastly, don't forget the other documentation on the website.
+It is there to help you!
 

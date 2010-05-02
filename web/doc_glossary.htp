@@ -14,6 +14,10 @@ Cell
    can be as small as 2x2 or larger than 9x9, and the walls
    are a part of the seeds (and are thinner too).
 
+Engine
+   XXX
+   (See also Limit Removing)
+
 Entity
    XXX
 
