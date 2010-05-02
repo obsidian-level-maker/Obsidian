@@ -1,5 +1,5 @@
 
-Frequently Asked Questions
+FREQUENTLY ASKED QUESTIONS
 --------------------------
 
 Q/ What does the term XXX mean?
@@ -9,9 +9,79 @@ If the phrase is not there, then feel free to ask me
 (preferably on the forums).
 
 
+Q/ When is the next release ?
+
+A/ When it's ready.
+
+
 Q/ Is game XXX going to be supported?
 
-A/ 
+A/ It depends very much on the game.
+
+   Very old games (Wolfenstein 3D, ROTT) are too limited.
+   While it
+   may be possible to support them, they will need a different way of
+   creating levels from the other games like DOOM or Quake.
+   Plus I don't personally play these old games, they make me
+   nauseous after a short while.
+
+   The free game 'Cube' is more modern but the map format is also
+   limited (using a grid of 16x16 squares) which is quite incompatible
+   to how Oblige V3 works.
+
+   Very modern games (e.g. Doom 3) are probably too advanced to be
+   supported.
+
+   A game needs to have very good documentation about its map
+   format to be supported.  Having the source code is absolutely
+   ideal, as you can read it and see exactly how it loads the maps.
+   This is one reason why Id Software games are the
+   main ones at the moment -- John Carmack has released the source
+   code to Wolf3D, DOOM, Quake 1, Quake 2, and Quake 3.
+   Most other companies are not that generous.
+
+   Another thing is that I need to own the game in order to test
+   that Oblige is working for it.
+   @@@
+
+   Some possible future games:
+
+   Hexen : was working in V2, will eventually be done for V3
+           as the map format is similar to DOOM.
+
+   Strife : uses DOOM format, possible but I don't know if the game
+            itself is very compatible with Oblige's kill-monsters
+            get-keys gameplay.
+
+   HacX : a reskinned DOOM -- possible but low priority
+
+   Duke Nukem 3D : in progress
+
+   Quake II : in progress, map output code needs a lot of work.
+
+   Quake 3 Arena : probably not (has no single player)
+
+   Hexen II : uses the Quake map format, so very likely to be added sometime
+
+   Heretic II : uses Quake II format, so possible in future,
+                not sure if gameplay is kill-mons-get-keys compatible
+
+   Half-Life : it uses a modified Quake map format, depends how big
+               the changes are and if documentation exists.
+               also not sure if gameplay is kill-mons-get-keys compatible
+
+   Marathon 1 / 2 : engine is too limited, will abort if too much is
+                    visible at a time,
+                    Also has a small limit on number of objects in a map
+                    AlephOne developers have not removed these limits, grrr
+
+   Dark Forces : @@@
+
+   Thief : no source code and little documentation (OpenDarkEngine may help)
+           DarkEngine may be too limited
+           Gameplay is different from DOOM, sneaky, not sure if Oblige
+           can accommodate that.
+           Hence probably not.
 
 
 Q/ Can Deathmatch maps be created?
@@ -41,7 +111,7 @@ Q/ Water should not hurt the player!
 
 A/ I agree!
    However, since there is no way (yet) to get out of
-   deep pits, and since I like to see water used in levels,
+   deep pits, and since I like to see water being used in levels,
    this is the only option right now.
 
 
