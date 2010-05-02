@@ -110,7 +110,6 @@ PRE { font-size: larger; }
 }
 
 .faq_Q {
-    /* color: #008; */
     color: #742;
     font-weight: bold;
     margin-bottom: 1em;
@@ -118,5 +117,16 @@ PRE { font-size: larger; }
 
 .faq_A {
     margin-bottom: 2em;
+}
+
+.gloss_term {
+    color: #742;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.gloss_define {
+    margin-left: 2.5em;
+    margin-bottom: 1.5em;
 }
 
