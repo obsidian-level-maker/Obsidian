@@ -1,21 +1,49 @@
+<set O_WHERE="FAQ">
 
-FREQUENTLY ASKED QUESTIONS
---------------------------
+<file include="x_common.inc">
+<file include="x_header.inc">
 
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use DocCredits>
+<use SubWhere where="FAQ">
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+
+<h3> FREQUENTLY ASKED QUESTIONS </h3>
+
+<div class="faq_Q">
 Q/ What does the term XXX mean?
+</div>
 
-A/ Please visit the <A ...>Glossary</A> for definitions of terms.
+<div class="faq_A">
+A/
+Please visit the <A href="doc_glossary.html">Glossary</A>
+for definitions of terms.
 If the phrase is not there, then feel free to ask me
 (preferably on the forums).
+</div>
 
 
+<div class="faq_Q">
 Q/ When is the next release ?
 
+<div class="faq_A">
 A/ When it's ready.
+</div>
 
 
+<div class="faq_Q">
 Q/ Is game XXX going to be supported?
 
+<div class="faq_A">
 A/ It depends very much on the game.
 
    Very old games (Wolfenstein 3D, ROTT) are too limited.
@@ -43,6 +71,10 @@ A/ It depends very much on the game.
    Another thing is that I need to own the game in order to test
    that Oblige is working for it.
    @@@
+
+   Also some games have a style of gameplay which is different
+   more complicated than the
+   kill-monsters-get-keys you see in DOOM and Quake.
 
    Some possible future games:
 
@@ -82,13 +114,18 @@ A/ It depends very much on the game.
            Gameplay is different from DOOM, sneaky, not sure if Oblige
            can accommodate that.
            Hence probably not.
+</div>
 
 
+<div class="faq_Q">
 Q/ Can Deathmatch maps be created?
+</div>
 
+<div class="faq_A">
 A/ The old version (V2) could make them, but this has not been
    implemented in the newest versions (V3).
 
+<p>
    I consider that DM or CTF maps are not very
    suitable to being randomly generated.
    With single player or co-op, you will play the map once
@@ -102,95 +139,134 @@ A/ The old version (V2) could make them, but this has not been
    That kind of quality and originality is only possible with
    human made maps.
 
+<p>
    Perhaps one day I will work on generating DM or CTF maps,
    as the topic does actually interest me, but right now I
    have bigger fish to fry.
+</div>
 
 
+<div class="faq_Q">
 Q/ Water should not hurt the player!
+</div>
 
+<div class="faq_A">
 A/ I agree!
    However, since there is no way (yet) to get out of
    deep pits, and since I like to see water being used in levels,
    this is the only option right now.
+</div>
 
 
+<div class="faq_Q">
 Q/ Lava pits should have a way to get out of them.
 
+<div class="faq_A">
 A/ On the one hand, it does seem pretty mean to let the player
    die from making the mistake of falling into a pit.
 
+<p>
    On the other hand, I think knowing that pits of lava, nukage
    (etc) are fatal makes them
 
    @@@
 
 
+<div class="faq_Q">
 Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
 
+<div class="faq_A">
 A/
    Boss maps usually have special layouts or requirements which are
    hard to account for (e.g. killing all the Barons in E1M8 of
    DOOM lowers a wall, and a teleporter takes you to a small
    dark room with a special floor type).
 
+<p>
    Perhaps one day Oblige can make Boss maps, but I don't
    consider it a very high priority.
 
+<p>
    Certain Boss maps are so specialized that there is little
    scope for variation.  For example: MAP30 of DOOM II, and the
    Chthon and Shub maps of Quake.
    For these cases the pre-built maps are here to stay, as it is
    not worth generating them via Lua code (it was tried, and was
    too hard to maintain).
+</div>
 
 
+<div class="faq_Q">
 Q/ Quake maps have collision problems (invisible walls) and
    rendering problems, what's up with that?
+</div>
 
+<div class="faq_A">
 A/ The Quake code is in early stages, and with hindsight I should
    not have released Oblige with Quake enabled (I wrongly
    thought that those collision problems were very rare).
 
+<p>
    I will be fixing the collision problem before the next release,
    as well as implementing visibility and lighting.  Visibility is
    especially important for playing large maps.
 
+<p>
    There are rendering issues with standard QUAKE.EXE (or WinQuake)
    which I don't know the cause of yet.  Playing with a port like
    FitzQuake or Darkplaces is recommended.
+</div>
 
 
+<div class="faq_Q">
 Q/ Why don't you export Quake levels as .MAP files, and let people
    run the normal BSP compiling tools on them?
+</div>
 
+<div class="faq_A">
 A/
+</div>
 
 
+<div class="faq_Q">
 Q/ How do I compile the EXE?
+</div>
 
+<div class="faq_A">
 A/ Firstly note that you can change the Lua files without having
    to compile anything -- Oblige will load your changes the next
    time you run it.
 
-   Compiling programs is a very complicated process.
+<p>
+   Compiling Oblige is a fairly complicated process.
    The INSTALL.txt document has some basic information
    (needed libraries etc).
    But unless you are a C++ programmer and running Linux, you are
    on your own.
    Sorry, it's nothing personal.
+</div>
 
 
+<div class="faq_Q">
 Q/ Waaaaaaah, you must do such and such, I demand it!
+</div>
 
-A/ You got this nice little program for free and are not paying me
+<div class="faq_A">
+A/ You got this nice little program for free and are not paying
    anything, that means you have NO RIGHT to demand anything
    from me.
    If you have a request, ask nicely and it will be considered.
 
+<p>
    People who are insulting, threatening, harrassing
    or otherwise being unpleasant will be BANNED from the
    forum and my email.
    This is just a hobby and I don't need any grief like that.
    Be polite and respectful and we'll get along fine.
+</div>
+
+
+</div class="rest">
+
+<file include="x_footer.inc">
 

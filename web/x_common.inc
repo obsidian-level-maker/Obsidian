@@ -76,6 +76,14 @@
   <a href="doc_credits.html">Credits</a>
 </block>
 
+<block DocGlossary>
+  <a href="doc_glossary.html">Glossary</a>
+</block>
+
+<block DocFAQ>
+  <a href="doc_faq.html">FAQ</a>
+</block>
+
 <block DocHistory>
   <a href="doc_history.html">History</a>
 </block>

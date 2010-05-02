@@ -1,5 +1,22 @@
+<set O_WHERE="Glossary">
 
-GLOSSARY
+<file include="x_common.inc">
+<file include="x_header.inc">
+
+<use DocMENU>
+
+<div class="submenu">
+<use SubSpacer>
+<use DocUsage>
+<use DocAbout>
+<use DocCredits>
+<use SubWhere where="GLOSSARY">
+<use DocHistory>
+</div>
+
+<div class="rest">
+
+<h3> DESCRIPTIONS OF TERMS </h3>
 
 
 Brush
@@ -84,4 +101,8 @@ V2
 
 V3 (OB3)
    The current versions of OBLIGE,
+
+</div class="rest">
+
+<file include="x_footer.inc">
 

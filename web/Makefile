@@ -13,10 +13,12 @@ all:
 	htp -quiet i_download.htp    out/i_download.html
 	htp -quiet i_oldie.htp       out/i_oldie.html
 	htp -quiet i_screens.htp     out/i_screens.html
+	htp -quiet doc_usage.htp     out/doc_usage.html
 	htp -quiet doc_about.htp     out/doc_about.html
 	htp -quiet doc_credits.htp   out/doc_credits.html
+	htp -quiet doc_glossary.htp  out/doc_glossary.html
+	htp -quiet doc_faq.htp       out/doc_faq.html
 	htp -quiet doc_history.htp   out/doc_history.html
-	htp -quiet doc_usage.htp     out/doc_usage.html
 	htp -quiet blog_mar2008.htp  out/blog_mar2008.html
 	htp -quiet blog_nov2008.htp  out/blog_nov2008.html
 
