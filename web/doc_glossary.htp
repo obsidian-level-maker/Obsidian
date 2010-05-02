@@ -22,8 +22,24 @@
 <div id="brush" class="gloss_term">
 Brush
 </div><div class="gloss_define">
-XXX
+This is a term borrowed from Quake mapping.
+A brush is a solid area in 3D space.
+Levels are built by placing a lot of brushes everywhere.
+For example, the floor you are standing on will be one brush,
+and the ceiling overhead will another one.
+Stuff like doors are built from many brushes.
+
+<p>
+In OBLIGE, brushes consists of a top face, a bottom face, and
+a group of side faces.
+The top and bottom are usually flat but may be sloped,
+whereas the sides are always perfectly vertical.
+
+<p>
+<i>(See also... CSG)</i>
+
 </div>
+
 
 <div id="cell" class="gloss_term">
 Cell
@@ -35,30 +51,74 @@ room was surrounded by a 64-unit thick wall.
 
 <p>
 In the new code, rooms are no longer a fixed size, they
-can be as small as 2x2 or bigger than 9x9, and the walls
+can be as small as 2x2 seeds or bigger than 9x9, and the walls
 are no longer separate but "eat" into seeds
 (and are thinner too).
 </div>
 
 
-<div id="engine" class="gloss_term">
-Engine
+<div id="cell" class="gloss_term">
+CSG
 </div><div class="gloss_define">
-XXX
+CSG stands for "Constructive Solid Geometry".
+For OBLIGE it means the process of taking all the brushes
+which define the map (most of them are solid), and construct the
+output map format from them, e.g. the DOOM wad file
+or the QUAKE bsp file.
+</div>
+
+
+<div id="engine" class="gloss_term">
+Engine / Port
+</div><div class="gloss_define">
+When Carmack released the DOOM source code, many different people
+hacked away on it and produced their own version of the EXE,
+often with greatly expanded capabilities.  The same thing happened
+when he released the QUAKE and QUAKE II source code.
+
+<p>
+Hence the term "Engine" or "Source Port" can refer to one of these
+enhanced versions of the game, but it could also mean the original
+EXE which the game came with when you bought it -- that one
+is often called "Vanilla" since nothing extra has been added.
+
+<p>
+<i>(See also... Limit Removing)</i>
+
 </div>
 
 
 <div id="entity" class="gloss_term">
 Entity
 </div><div class="gloss_define">
-XXX
+This is another Quake term, and means an object or thing in the map.
+Players, monsters, weapons, ammo, health, barrels, torches (etc etc)
+are all entities.
 </div>
 
 
 <div id="limit_removing" class="gloss_term">
 Limit Removing
 </div><div class="gloss_define">
-XXX
+A "Limit Removing" engine is one which people have removed various
+limitations that the original game has.
+For example, plain DOOM.EXE will crash if there are more than 128
+visplanes on the screen -- the dreaded VPO (Visplane Overflow) error.
+
+<p>
+However source ports like BOOM have removed this limitation,
+there can be as many visplanes on the screen as necessary to draw
+the level.
+
+<p>
+OBLIGE needs a Limit Removing engine because it is impossible
+for it to figure out when a limit (like visplanes) is going
+to be exceeded -- it depends greatly on the architecture of the map.
+The only real way to keep inside the limitations would be to
+produce very flat, boring, mostly-indoor maps with nothing
+much to look at.
+If that sounds fine to you, then there is another generator
+(called SLIGE) which you can use instead.
 </div>
 
 
@@ -136,7 +196,8 @@ called the child and the outer room is the parent.
 <div id="sub_theme" class="gloss_term">
 Sub-Theme
 </div><div class="gloss_define">
-XXX
+This term refers to the actual ...
+A "full" theme 
 </div>
 
 <div id="svn" class="gloss_term">
