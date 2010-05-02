@@ -2,26 +2,47 @@
 Frequently Asked Questions
 --------------------------
 
-
 Q/ What does the term XXX mean?
 
-A/ See the <A ...>Glossary</A> for definitions of terms.
-If it is not there, ask me.
+A/ Please visit the <A ...>Glossary</A> for definitions of terms.
+If the phrase is not there, then feel free to ask me
+(preferably on the forums).
 
 
-
-Q/ is game XXX going to be supported?
-
-A/ 
-
-
-Q/ can Deathmatch maps be created?
+Q/ Is game XXX going to be supported?
 
 A/ 
 
 
-Q/ Water should not be damaging, and pits should have a way to
-   get out of them.
+Q/ Can Deathmatch maps be created?
+
+A/ The old version (V2) could make them, but this has not been
+   implemented in the newest versions (V3).
+
+   I consider that DM or CTF maps are not very
+   suitable to being randomly generated.
+   With single player or co-op, you will play the map once
+   and move on to the next.
+   However with DM or CTF you usually play the map for long
+   periods of time, learning the layout very well so you can
+   concentrate on tactics.
+   Hence in these types of maps, the layout and flow of the map
+   is absolutely critical, and they should look good too since
+   you are spending so much time in them.
+   That kind of quality and originality is only possible with
+   human made maps.
+
+   Perhaps one day I will work on generating DM or CTF maps,
+   as the topic does actually interest me, but right now I
+   have bigger fish to fry.
+
+
+Q/ Water should not be damaging!
+
+A/
+
+
+Q/ Lava pits should have a way to get out of them.
 
 A/
 
@@ -47,10 +68,10 @@ A/
 Q/ How do I compile the EXE?
 
 A/ Firstly note that you can change the Lua files without having
-   to compile anything -- OBLIGE will load the changes the next
+   to compile anything -- OBLIGE will load your changes the next
    time you run it.
 
-   Compiling programs is very complicated.
+   Compiling programs is a very complicated process.
    The INSTALL.txt document has some basic information
    (needed libraries etc).
    But unless you are a C++ programmer and running Linux, you are
@@ -61,13 +82,13 @@ A/ Firstly note that you can change the Lua files without having
 Q/ Waaaaaaah, you must do such and such, I demand it!
 
 A/ You got this nice little program for free and are not paying me
-   anything, that means you have NO RIGHT AT ALL to demand anything
+   anything, that means you have NO RIGHT to demand anything
    from me.
    If you have a request, ask nicely and it will be considered.
 
-   People who are demanding, threatening, insulting, 
+   People who are insulting, threatening, harrassing
    or otherwise being unpleasant will be BANNED from the
    forum and my email.
-   This is just my hobby and I don't need any grief like that.
+   This is just a hobby and I don't need any grief like that.
    Be polite and respectful and we'll get along fine.
 
