@@ -19,12 +19,11 @@
 
 <h3> FREQUENTLY ASKED QUESTIONS </h3>
 
-<div class="faq_Q">
+<div id="terms" class="faq_Q">
 Q/ What does the term XXX mean?
 </div>
 
 <div class="faq_A">
-A/
 Please visit the <A href="doc_glossary.html">Glossary</A>
 for definitions of terms.
 If the phrase is not there, then feel free to ask me
@@ -32,7 +31,7 @@ If the phrase is not there, then feel free to ask me
 </div>
 
 
-<div class="faq_Q">
+<div id="next_release" class="faq_Q">
 Q/ When is the next release ?
 </div>
 
@@ -41,190 +40,190 @@ A/ When it's ready.
 </div>
 
 
-<div class="faq_Q">
+<div id="games" class="faq_Q">
 Q/ Is game XXX going to be supported?
 </div>
 
 <div class="faq_A">
-A/ It depends very much on the game.
+It depends very much on the game.
 
-   Very old games (Wolfenstein 3D, ROTT) are too limited.
-   While it
-   may be possible to support them, they will need a different way of
-   creating levels from the other games like DOOM or Quake.
-   Plus I don't personally play these old games, they make me
-   nauseous after a short while.
+<p>
+Very old games (Wolfenstein 3D, ROTT) are too limited.
+While it
+may be possible to support them, they will need a different way of
+creating levels from the other games like DOOM or Quake.
+Plus I don't personally play these old games, they make me
+nauseous after a short while.
 
-   The free game 'Cube' is more modern but the map format is also
-   limited (using a grid of 16x16 squares) which is quite incompatible
-   to how Oblige V3 works.
+The free game 'Cube' is more modern but the map format is also
+limited (using a grid of 16x16 squares) which is quite incompatible
+to how Oblige V3 works.
 
-   Very modern games (e.g. Doom 3) are probably too advanced to be
-   supported.
+Very modern games (e.g. Doom 3) are probably too advanced to be
+supported.
 
-   A game needs to have very good documentation about its map
-   format to be supported.  Having the source code is absolutely
-   ideal, as you can read it and see exactly how it loads the maps.
-   This is one reason why Id Software games are the
-   main ones at the moment -- John Carmack has released the source
-   code to Wolf3D, DOOM, Quake 1, Quake 2, and Quake 3.
-   Most other companies are not that generous.
+A game needs to have very good documentation about its map
+format to be supported.  Having the source code is absolutely
+ideal, as you can read it and see exactly how it loads the maps.
+This is one reason why Id Software games are the
+main ones at the moment -- John Carmack has released the source
+code to Wolf3D, DOOM, Quake 1, Quake 2, and Quake 3.
+Most other companies are not that generous.
 
-   Another thing is that I need to own the game in order to test
-   that Oblige is working for it.
-   @@@
+Another thing is that I need to own the game in order to test
+that Oblige is working for it.
+@@@
 
-   Also some games have a style of gameplay which is different
-   more complicated than the
-   kill-monsters-get-keys you see in DOOM and Quake.
+Also some games have a style of gameplay which is different
+more complicated than the
+kill-monsters-get-keys you see in DOOM and Quake.
 
-   Some possible future games:
+Some possible future games:
 
-   Hexen : was working in V2, will eventually be done for V3
-           as the map format is similar to DOOM.
+Hexen : was working in V2, will eventually be done for V3
+       as the map format is similar to DOOM.
 
-   Strife : uses DOOM format, possible but I don't know if the game
-            itself is very compatible with Oblige's kill-monsters
-            get-keys gameplay.
+Strife : uses DOOM format, possible but I don't know if the game
+        itself is very compatible with Oblige's kill-monsters
+        get-keys gameplay.
 
-   HacX : a reskinned DOOM -- possible but low priority
+HacX : a reskinned DOOM -- possible but low priority
 
-   Duke Nukem 3D : in progress
+Duke Nukem 3D : in progress
 
-   Quake II : in progress, map output code needs a lot of work.
+Quake II : in progress, map output code needs a lot of work.
 
-   Quake 3 Arena : probably not (has no single player)
+Quake 3 Arena : probably not (has no single player)
 
-   Hexen II : uses the Quake map format, so very likely to be added sometime
+Hexen II : uses the Quake map format, so very likely to be added sometime
 
-   Heretic II : uses Quake II format, so possible in future,
-                not sure if gameplay is kill-mons-get-keys compatible
+Heretic II : uses Quake II format, so possible in future,
+            not sure if gameplay is kill-mons-get-keys compatible
 
-   Half-Life : it uses a modified Quake map format, depends how big
-               the changes are and if documentation exists.
-               also not sure if gameplay is kill-mons-get-keys compatible
+Half-Life : it uses a modified Quake map format, depends how big
+           the changes are and if documentation exists.
+           also not sure if gameplay is kill-mons-get-keys compatible
 
-   Marathon 1 / 2 : engine is too limited, will abort if too much is
-                    visible at a time,
-                    Also has a small limit on number of objects in a map
-                    AlephOne developers have not removed these limits, grrr
+Marathon 1 / 2 : engine is too limited, will abort if too much is
+                visible at a time,
+                Also has a small limit on number of objects in a map
+                AlephOne developers have not removed these limits, grrr
 
-   Dark Forces : @@@
+Dark Forces : @@@
 
-   Thief : no source code and little documentation (OpenDarkEngine may help)
-           DarkEngine may be too limited
-           Gameplay is different from DOOM, sneaky, not sure if Oblige
-           can accommodate that.
-           Hence probably not.
+Thief : no source code and little documentation (OpenDarkEngine may help)
+       DarkEngine may be too limited
+       Gameplay is different from DOOM, sneaky, not sure if Oblige
+       can accommodate that.
+       Hence probably not.
 </div>
 
 
-<div class="faq_Q">
+<div id="deathmatch" class="faq_Q">
 Q/ Can Deathmatch maps be created?
 </div>
 
 <div class="faq_A">
-A/ The old version (V2) could make them, but this has not been
-   implemented in the newest versions (V3).
+The old version (V2) could make them (for DOOM etc), but this has not been
+implemented in the newest versions.
 
 <p>
-   I consider that DM or CTF maps are not very
-   suitable to being randomly generated.
-   With single player or co-op, you will play the map once
-   and move on to the next.
-   However with DM or CTF you usually play the map for long
-   periods of time, learning the layout very well so you can
-   concentrate on tactics.
-   Hence in these types of maps, the layout and flow of the map
-   is absolutely critical, and they should look good too since
-   you are spending so much time in them.
-   That kind of quality and originality is only possible with
-   human made maps.
+I consider that DM or CTF maps are not very
+suitable to being randomly generated.
+With single player or co-op, you will play the map once
+and move on to the next.
+However with DM or CTF you usually play the map for much
+longer periods of time, learning the layout very well so you can
+concentrate on tactics.
+Hence in these types of maps, the layout and flow of the map
+is absolutely critical, and they should look good too since
+you are spending so much time in them.
+That kind of quality and originality is only possible with
+human made maps.
 
 <p>
-   Perhaps one day I will work on generating DM or CTF maps,
-   as the topic does actually interest me, but right now I
-   have bigger fish to fry.
+Perhaps one day I will work on generating DM or CTF maps,
+as the topic does actually interest me, but right now I
+have bigger fish to fry.
 </div>
 
 
-<div class="faq_Q">
+<div id="water" class="faq_Q">
 Q/ Water should not hurt the player!
 </div>
 
 <div class="faq_A">
-A/ I agree!
-   However, since there is no way to get out of deep pits (yet),
-   and since I like to see water being used in levels,
-   this is the only option right now.
+I agree!&nbsp;
+However, since there is no way to get out of deep pits (yet),
+and since I like to see water being used in levels,
+this is the only option right now.
 </div>
 
 
-<div class="faq_Q">
+<div id="pits" class="faq_Q">
 Q/ Lava pits should have a way to get out of them.
 </div>
 
 <div class="faq_A">
-A/ On the one hand, it is quite mean to let the player die from
-   making a small mistake and falling into a pit.
+On the one hand, it is quite mean to let the player die from
+making a small mistake and falling into a pit.
 
 <p>
-   On the other hand, I think knowing that pits of lava, nukage
-   (etc) are fatal makes them
+On the other hand, I think knowing that pits of lava, nukage
+(etc) are fatal makes them
 
    @@@
 
 </div>
 
 
-<div class="faq_Q">
+<div id="prebuilt" class="faq_Q">
 Q/ I don't like the pre-built maps, will Oblige make its own Boss maps?
 </div>
 
 <div class="faq_A">
-A/
-   Boss maps usually have special layouts or special requirements
-   which are
-   hard to account for (e.g. killing all the Barons in E1M8 of
-   DOOM lowers a wall, and a teleporter takes you to a small
-   dark room with a special floor type).
+Boss maps usually have special layouts or special requirements
+which are
+hard to account for (e.g. killing all the Barons in E1M8 of
+DOOM lowers a wall, and a teleporter takes you to a small
+dark room with a special floor type).
 
 <p>
-   Perhaps one day Oblige can make Boss maps, but I don't
-   consider it a very high priority.
+Perhaps one day Oblige can make Boss maps, but I don't
+consider it a very high priority.
 
 <p>
-   Certain maps are so specialized that there is little
-   scope for variation.  For example: the final map of DOOM 
-   or the Chthon map in Quake.
-   For these cases the pre-built maps are the best way.
+Certain maps are so specialized that there is little
+scope for variation.  For example: the final map of DOOM 
+or the Chthon map in Quake.
+For these cases the pre-built maps are the best way.
 </div>
 
 
-<div class="faq_Q">
+<div id="quake_bugs" class="faq_Q">
 Q/ Quake maps have collision problems (invisible walls) and
    rendering problems, what's up with that?
 </div>
 
 <div class="faq_A">
-A/ The Quake code is still in its early stages,
-   and with hindsight I should not have released Oblige with Quake
-   in its current state.  I thought, wrongly, that the collision
-   problems were very rare).
+The Quake code is still in its early stages,
+and with hindsight I should not have released Oblige with Quake
+in its current state.  I thought, wrongly, that the collision
+problems were very rare).
 
 <p>
-   Anyway, I will be fixing the collision problem before the next
-   release, as well as implementing visibility and lighting.
-   Visibility is especially important for playing large maps.
+Anyway, I will be fixing the collision problem before the next
+release, as well as implementing visibility and lighting.
+Visibility is especially important for playing large maps.
 
 <p>
-   There are rendering issues with standard QUAKE.EXE (or WinQuake)
-   and I don't know what causes it yet.  Playing with a port like
-   FitzQuake or Darkplaces is recommended.
+There are rendering issues with standard QUAKE.EXE (or WinQuake)
+and I don't know what causes it yet.  Playing with a port like
+FitzQuake or Darkplaces is recommended.
 </div>
 
 
-<div class="faq_Q">
+<div id="quake_MAP" class="faq_Q">
 Q/ Why don't you export Quake levels as .MAP files, and let people
    run the normal BSP compiling tools on them?
 </div>
@@ -234,46 +233,46 @@ A/
 </div>
 
 
-<div class="faq_Q">
+<div id="compile" class="faq_Q">
 Q/ How do I compile the EXE?
 </div>
 
 <div class="faq_A">
-A/
-   Compiling Oblige.exe is fairly complicated,
-   and I simply don't have the time or inclination to teach
-   complete strangers on the internet the basics of compilers,
-   makefiles, libraries and all that stuff.
-   Sorry -- nothing personal,
+Compiling Oblige.exe is fairly complicated,
+and I simply don't have the time or inclination to teach
+complete strangers on the internet the basics of compilers,
+makefiles, libraries and all that stuff.
+Sorry -- nothing personal,
 
 <p>
-   If you are a programmer and are running Linux, then
-   the INSTALL.txt document (in the source package) has
-   some information to get you started.
+If you are a programmer and are running Linux, then
+the INSTALL.txt document (in the source package) has
+some information to get you started.
 
 <p>
-   Lastly, you can change he Lua files (in the scripts/ folder
-   or games/ folder, ettc) without having to compile anything.
-   Oblige will load your changes the next time you run it.
+Lastly, be aware you can change the Lua files (in the scripts/ folder
+or games/ folder, etc) without having to compile anything.
+Oblige will load your changes the next time you run it.
 </div>
 
 
-<div class="faq_Q">
+<div id="waah" class="faq_Q">
 Q/ Waaaaaaah, you must do such and such, I demand it!
 </div>
 
 <div class="faq_A">
-A/ Dude, you got this little program for free and nobody is
-   getting paid to work on it.
-   That means you have NO RIGHT to demand anything from me.
-   If you have a request, ask nicely and it will be considered.
+Dude, you got this little program for free and nobody is
+getting paid to work on it.
+That means you have NO RIGHT to demand anything from me.
+However if you have a request and ask nicely, it will be
+considered.
 
 <p>
-   People who behave in an insulting, threatening, harrassing
-   or otherwise being unpleasant manner will be BANNED from the
-   forum and my email.
-   This is just a hobby and I don't need any grief like that.
-   Be polite and respectful and we'll get along fine.
+People who behave in an insulting, threatening, harrassing
+or otherwise being unpleasant manner will be BANNED from the
+forum and my email.
+This is just a hobby and I don't need any grief like that.
+Be polite and respectful and we'll get along fine.
 </div>
 
 
