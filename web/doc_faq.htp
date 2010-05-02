@@ -207,18 +207,18 @@ Q/ Quake maps have collision problems (invisible walls) and
 
 <div class="faq_A">
 The Quake code is still in its early stages,
-and with hindsight I should not have released Oblige with Quake
-in its current state.  I thought, wrongly, that the collision
-problems were very rare).
-
-<p>
-Anyway, I will be fixing the collision problem before the next
-release, as well as implementing visibility and lighting.
+and with hindsight it would have been better to wait
+until the code was more robust instead of enabling it.
+Anyway, I hope to fix the collision problems soon
+(before the next release), as well as implementing
+visibility and lighting.
 Visibility is especially important for playing large maps.
 
 <p>
-There are rendering issues with standard QUAKE.EXE (or WinQuake)
-and I don't know what causes it yet.  Playing with a port like
+There are rendering issues when using standard QUAKE.EXE
+(or WinQuake) and I don't know what causes it yet.
+
+Playing with a port like
 FitzQuake or Darkplaces is recommended.
 </div>
 
@@ -242,11 +242,11 @@ Compiling Oblige.exe is fairly complicated,
 and I simply don't have the time or inclination to teach
 complete strangers on the internet the basics of compilers,
 makefiles, libraries and all that stuff.
-Sorry -- nothing personal,
+Sorry -- it's nothing personal,
 
 <p>
 If you are a programmer and are running Linux, then
-the INSTALL.txt document (in the source package) has
+the INSTALL.txt document in the source package has
 some information to get you started.
 
 <p>
