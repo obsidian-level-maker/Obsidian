@@ -199,7 +199,7 @@ not match either the wall texture or flat name.
 --->
 
 <p>
-Other games allow textures can be placed anywhere.
+Other games allow textures to be placed anywhere.
 However there are usually some which look good on walls
 but not on floors, and vice versa.
 So this material system is be useful for these games too.

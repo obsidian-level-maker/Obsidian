@@ -181,6 +181,7 @@ not to fall in.
 <p>
 So I haven't really decided yet whether to add escape mechanisms
 or to keep the pits are fatal hazards.
+Perhaps giving the user a choice is the way to go.
 
 </div>
 
@@ -274,7 +275,7 @@ Q/ You must do such and such, I demand it!
 </div>
 
 <div class="faq_A">
-Dude, you got this little program for free and nobody is
+Dude, you got this program for free and nobody is
 getting paid to work on it.
 That means you have NO RIGHT to demand anything from me.
 However if you have a request and ask nicely, it will be
