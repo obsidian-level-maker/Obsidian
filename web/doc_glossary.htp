@@ -100,6 +100,32 @@ are all entities.
 </div>
 
 
+<div id="gui" class="gloss_term">
+GUI / EXE
+</div><div class="gloss_define">
+GUI stands for Graphical User Interface,
+but I often use the term to mean the whole EXE
+(executable program) of OBLIGE,
+which is responsible not only for all the interactive
+elements (like the "Game" and "Build" buttons,
+the scrolling module panel, and the map preview),
+but also for doing CSG operations and
+creating the output map formats.
+
+<p>
+This is in contrast to the Lua scripts which handle all the
+logic for building levels (e.g. deciding where to put rooms
+and how big they should be).
+The Lua code is not stored inside the EXE,
+instead it is loaded from various folders
+when OBLIGE starts up.
+
+<p>
+<i>(See also.... CSG, Lua)</i>
+
+</div>
+
+
 <div id="limit_removing" class="gloss_term">
 Limit Removing
 </div><div class="gloss_define">
@@ -124,14 +150,41 @@ much to look at.
 </div>
 
 
-<!---
+<div id="lua" class="gloss_term">
 Lua
---->
+</div><div class="gloss_define">
+Lua is a programming language used for all the level building
+logic in OBLIGE.
+The files in the <b>scripts/</b>, <b>games/</b>, <b>engines/</b> and
+<b>mods/</b> folders are all Lua scripts.
+You can edit these ".lua" files with an ordinary
+text editor (like NOTEPAD, but <u>not</u> MS Word),
+and those changes will be loaded the next time OBLIGE is run.
+This is very convenient, since you don't need to compile anything.
+
+<p>
+Visit the <a href="http://www.lua.org">Lua home page</a>
+to discover more about this great programming language.
+</div>
 
 
-<!---
+<div id="material" class="gloss_term">
 Material
---->
+</div><div class="gloss_define">
+With standard DOOM, there are two types of textures: one for walls
+and one for floors or ceilings.
+The first kind are called "textures" and
+the second kind are called "flats".
+
+<p> @@@@@
+
+<p>
+Even in other games, where textures can be anywhere,
+there are usually ones which look good on walls but not floors,
+and vice versa.
+Hence this material system is useful for them too.
+
+</div>
 
 
 <div id="mega_seed" class="gloss_term">
