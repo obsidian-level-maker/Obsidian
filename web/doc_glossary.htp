@@ -10,6 +10,7 @@
 <use DocUsage>
 <use DocAbout>
 <use DocCredits>
+<use DocFAQ>
 <use SubWhere where="GLOSSARY">
 <use DocHistory>
 </div>
@@ -36,7 +37,7 @@ The top and bottom are usually flat but may be sloped,
 whereas the sides are always perfectly vertical.
 
 <p>
-<i>(See also.... CSG)</i>
+<i>(See also.... CSG, Entity)</i>
 
 </div>
 
@@ -123,11 +124,14 @@ much to look at.
 </div>
 
 
-<div id="material" class="gloss_term">
+<!---
+Lua
+--->
+
+
+<!---
 Material
-</div><div class="gloss_define">
-XXX
-</div>
+--->
 
 
 <div id="mega_seed" class="gloss_term">
@@ -136,6 +140,10 @@ Mega-Seed
 An area on the map consisting of more than one seed, used to
 create larger structures (like wide doors or big prefabs)
 which normally cannot fit in a single seed.
+
+<p>
+<i>(See also.... Seed)</i>
+
 </div>
 
 
@@ -143,9 +151,9 @@ which normally cannot fit in a single seed.
 Prefab
 </div><div class="gloss_define">
 A mapping structure, such as a window or door, whose shape
-and texturing have been designed by a person.  This is in
-contrast to stuff like caves which are generated purely by
-an algorithm.
+and texturing have been previously designed by a person.
+This is in contrast to stuff like caves which are generated
+purely by an algorithm.
 </div>
 
 
@@ -194,6 +202,7 @@ A room or area which the player never visits, and is only used
 for decoration.
 </div>
 
+
 <div id="sub_room" class="gloss_term">
 Sub-Room
 </div><div class="gloss_define">
@@ -201,13 +210,11 @@ A room which lies inside another room.  The sub-room is also
 called the child and the outer room is the parent.
 </div>
 
-<div id="sub_theme" class="gloss_term">
+
+<!---
 Sub-Theme
-</div><div class="gloss_define">
-XXX <!---
-This term refers to the actual ...
-A "full" theme  --->
-</div>
+--->
+
 
 <div id="svn" class="gloss_term">
 SVN
@@ -224,6 +231,9 @@ has message describing what was done.
 You can view Oblige's SVN respository here:
 <a href="http://oblige.svn.sourceforge.net/viewvc/oblige/trunk">
 Browse Code</a>
+
+<!--- LINK to subversion sight or SourceForge page about it --->
+
 </div>
   
 
@@ -241,9 +251,6 @@ V2 / OB2
 The older versions of OBLIGE, with
 version numbers starting with zero (such as 0.85).
 
-<!---
-Severe limitations in the code prompted a rewrite, which
-became the V3 version.  --->
 </div>
 
 
@@ -251,7 +258,12 @@ became the V3 version.  --->
 V3 / OB3
 </div><div class="gloss_define">
 The current versions of OBLIGE,
-the first of which was version 3.39.
+which began with version 3.39.
+
+<p>
+<i>(see the <a href="doc_history.html">History</a> page for more
+information about V1, V2, and V3)</i>
+
 </div>
 
 

@@ -11,6 +11,7 @@
 <use DocAbout>
 <use DocCredits>
 <use SubWhere where="FAQ">
+<use DocGlossary>
 <use DocHistory>
 </div>
 
@@ -36,18 +37,19 @@ Q/ When is the next release ?
 </div>
 
 <div class="faq_A">
-A/ When it's ready.
+When it's ready, and not before.
 </div>
 
 
-<div id="games" class="faq_Q">
+<!---
+[div id="games" class="faq_Q"]
 Q/ Is game XXX going to be supported?
-</div>
+[/div]
 
-<div class="faq_A">
+[div class="faq_A"]
 It depends very much on the game.
 
-<p>
+[p]
 Very old games (Wolfenstein 3D, ROTT) are too limited.
 While it
 may be possible to support them, they will need a different way of
@@ -116,7 +118,8 @@ Thief : no source code and little documentation (OpenDarkEngine may help)
        Gameplay is different from DOOM, sneaky, not sure if Oblige
        can accommodate that.
        Hence probably not.
-</div>
+[/div]
+--->
 
 
 <div id="deathmatch" class="faq_Q">
@@ -126,25 +129,26 @@ Q/ Can Deathmatch maps be created?
 <div class="faq_A">
 The old version (V2) could make them (for DOOM etc), but this has not been
 implemented in the newest versions.
+Let me explain why:
 
 <p>
-I consider that DM or CTF maps are not very
-suitable to being randomly generated.
 With single player or co-op, you will play the map once
 and move on to the next.
-However with DM or CTF you usually play the map for much
-longer periods of time, learning the layout very well so you can
+It doesn't need to be a masterpiece to be fun.
+
+However with DM or CTF you usually play the map for
+long periods of time, learning the layout well so you can
 concentrate on tactics.
-Hence in these types of maps, the layout and flow of the map
-is absolutely critical, and they should look good too since
-you are spending so much time in them.
-That kind of quality and originality is only possible with
-human made maps.
+Hence the layout and flow of the map
+is absolutely critical, and it should be nice to look at too
+since you are spending so much time in there.
+I think the bar is much much higher for generating these
+kinds of maps.
 
 <p>
 Perhaps one day I will work on generating DM or CTF maps,
-as the topic does actually interest me, but right now I
-have bigger fish to fry.
+as the topic does interest me,
+but right now I have bigger fish to fry.
 </div>
 
 
@@ -169,10 +173,14 @@ On the one hand, it is quite mean to let the player die from
 making a small mistake and falling into a pit.
 
 <p>
-On the other hand, I think knowing that pits of lava, nukage
-(etc) are fatal makes them
+On the other hand, I think knowing that those pits of lava,
+nukage (etc) are fatal adds some spice to the gameplay,
+dodging fireballs and weaving around monsters while trying
+not to fall in.
 
-   @@@
+<p>
+So I haven't really decided yet whether to add escape mechanisms
+or to keep the pits are fatal hazards.
 
 </div>
 
@@ -189,7 +197,7 @@ DOOM lowers a wall, and a teleporter takes you to a small
 dark room with a special floor type).
 
 <p>
-Perhaps one day Oblige can make Boss maps, but I don't
+Perhaps one day Oblige can make them, but I don't
 consider it a very high priority.
 
 <p>
@@ -208,7 +216,9 @@ Q/ Quake maps have collision problems (invisible walls) and
 <div class="faq_A">
 The Quake code is still in its early stages,
 and with hindsight it would have been better to wait
-until the code was more robust instead of enabling it.
+until the code was more robust instead of releasing it.
+
+<p>
 Anyway, I hope to fix the collision problems soon
 (before the next release), as well as implementing
 visibility and lighting.
@@ -223,14 +233,16 @@ FitzQuake or Darkplaces is recommended.
 </div>
 
 
-<div id="quake_MAP" class="faq_Q">
+<!---
+[div id="quake_MAP" class="faq_Q"]
 Q/ Why don't you export Quake levels as .MAP files, and let people
    run the normal BSP compiling tools on them?
-</div>
+[/div]
 
-<div class="faq_A">
+[div class="faq_A"]
 A/
-</div>
+[/div]
+--->
 
 
 <div id="compile" class="faq_Q">
@@ -238,6 +250,12 @@ Q/ How do I compile the EXE?
 </div>
 
 <div class="faq_A">
+Firstly, be aware you can change any of the Lua files
+(such as games/doom.lua or scripts/rooms.lua)
+without having to compile anything.
+Oblige will load your changes the next time you run it.
+
+<p>
 Compiling Oblige.exe is fairly complicated,
 and I simply don't have the time or inclination to teach
 complete strangers on the internet the basics of compilers,
@@ -248,16 +266,11 @@ Sorry -- it's nothing personal,
 If you are a programmer and are running Linux, then
 the INSTALL.txt document in the source package has
 some information to get you started.
-
-<p>
-Lastly, be aware you can change the Lua files (in the scripts/ folder
-or games/ folder, etc) without having to compile anything.
-Oblige will load your changes the next time you run it.
 </div>
 
 
 <div id="waah" class="faq_Q">
-Q/ Waaaaaaah, you must do such and such, I demand it!
+Q/ You must do such and such, I demand it!
 </div>
 
 <div class="faq_A">

@@ -10,6 +10,8 @@
 <use DocUsage>
 <use DocAbout>
 <use SubWhere where="CREDITS">
+<use DocFAQ>
+<use DocGlossary>
 <use DocHistory>
 </div>
 

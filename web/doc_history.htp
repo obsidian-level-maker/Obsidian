@@ -10,6 +10,8 @@
 <use DocUsage>
 <use DocAbout>
 <use DocCredits>
+<use DocFAQ>
+<use DocGlossary>
 <use SubWhere where="HISTORY">
 </div>
 
@@ -49,15 +51,17 @@ as often as possible.
 <h3>RELEASE DATES</h3>
 
 <b>Version 3.57</b> : 2010-04-07<br>
+<b>Version 3.51</b> : 2010-02-24<br>
 
 <p>
-<b>Version 3.51</b> : 2010-02-24<br>
 <b>Version 3.47</b> : 2009-09-22<br>
 <b>Version 3.43</b> : 2009-08-11<br>
 <b>Version 3.39</b> : 2009-04-12  (first release of V3)<br>
 
 <p>
 <b>Version 0.97</b> : 2008-05-30<br>
+
+<p>
 <b>Version 0.94</b> : 2007-07-05<br>
 <b>Version 0.85</b> : 2007-02-19<br>
 <b>Version 0.81</b> : 2007-01-21  (first public release)<br>
