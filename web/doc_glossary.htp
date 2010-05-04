@@ -173,17 +173,43 @@ Material
 </div><div class="gloss_define">
 With standard DOOM, there are two types of textures: one for walls
 and one for floors or ceilings.
-The first kind are called "textures" and
-the second kind are called "flats".
-
-<p> @@@@@
+The first kind are called "textures" and the second kind "flats",
+and they are a nuisance because you cannot use flats on walls or
+textures on floors.
 
 <p>
-Even in other games, where textures can be anywhere,
-there are usually ones which look good on walls but not floors,
-and vice versa.
-Hence this material system is useful for them too.
+So in OBLIGE, a "Material" is just a single name which can specify both
+parts (wall texture and floor flat),
+and the code makes sure to use them correctly 
+(put the texture name on walls and the flat name on floors and ceilings).
+This makes a lot of things much simpler, as you only need to
+give the material name and not worry about the kind of surface
+it will be used on.
 
+<p>
+While material names can be anything,
+they usually match the name of one of their components.
+For example the DOOM materials "SHAWN2" and "FLAT23" are equivalent
+(they both specify <b>SHAWN2</b> as the wall texture
+and <b>FLAT23</b> as the flat)
+and hence they can be used interchangeably in OBLIGE.
+<!---
+The special "_SKY" material is an example of where the name does
+not match either the wall texture or flat name.
+--->
+
+<p>
+Other games allow textures can be placed anywhere.
+However there are usually some which look good on walls
+but not on floors, and vice versa.
+So this material system is be useful for these games too.
+
+<p>
+In the future the material definitions may include more
+information, such as the general hue, tiling properties
+or even if it should emit light.
+This could be used to make better decisions about the
+selection and usage of materials.
 </div>
 
 
