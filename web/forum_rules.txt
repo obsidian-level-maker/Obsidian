@@ -2,8 +2,9 @@
 FORUM RULES
 ===========
 
-1. BEHAVIOR
+1. CONDUCT
 
+This forum is a place for co-operative discussion.
 Bad behavior such as insults, threats, harassment,
 or other unpleasantness will NOT be tolerated.
 People who give me or other forum members grief like that 
@@ -12,9 +13,9 @@ will be BANNED.
 Remember that OBLIGE is just a hobby -- you got it for
 free and nobody is getting paid to work on it.
 That means you have NO right to demand anything from me.
-If you have a request, ask nicely :)
+If you have a request, ask nicely.
 
-Be polite and respectful here, and we'll all get along fine.
+Be polite and respectful here, and we'll all get along fine :D
 
 
 2. BUG REPORTS
