@@ -20,7 +20,7 @@
 
 QUAKE1 = { }
 
-QUAKE1.THINGS =
+QUAKE1.ENTITIES =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },

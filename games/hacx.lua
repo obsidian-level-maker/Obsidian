@@ -20,7 +20,7 @@
 
 HACX = { }
 
-HACX.THINGS =
+HACX.ENTITIES =
 {
   --- special stuff ---
   player1 = { id=1, kind="other", r=16,h=56 },

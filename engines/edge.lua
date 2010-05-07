@@ -20,7 +20,7 @@
 
 EDGE = { }
 
-EDGE.THINGS =
+EDGE.ENTITIES =
 {
   -- players --
 

@@ -22,7 +22,7 @@
 
 SKULLTAG = { }
 
-SKULLTAG.THINGS =
+SKULLTAG.ENTITIES =
 {
   -- monsters
   darkimp    = { id=5003, kind="monster", r=20,h=56 },

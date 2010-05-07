@@ -48,7 +48,7 @@
 
 IMMORAL_CONDUCT = { }
 
-IMMORAL_CONDUCT.THINGS =
+IMMORAL_CONDUCT.ENTITIES =
 {
   -- players
   player4 = { id=3000, kind="player", r=20,h=56 },

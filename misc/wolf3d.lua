@@ -25,7 +25,7 @@ WF_NO_OBJ  = 0
 
 WOLF = { }
 
-WOLF.THINGS =
+WOLF.ENTITIES =
 {
   -- players
   player1 = { kind="other", r=30, h=60,

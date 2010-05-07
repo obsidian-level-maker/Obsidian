@@ -20,7 +20,7 @@
 
 HEXEN = { }
 
-HEXEN.THINGS =
+HEXEN.ENTITIES =
 {
   --- players
   player1 = { id=1, kind="other", r=16,h=64 },

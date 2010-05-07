@@ -16,7 +16,6 @@
 --
 ----------------------------------------------------------------
 
-PREFAB_FILE = "SWITCH.lua"
 PREFAB_NAME = "SMALL_SWITCH"
 
 
@@ -83,7 +82,7 @@ function Build_Prefab(info)
 
   gui.printf("transform =\n%s\n", table.tostr(info))
 
-  local prefab = assert(_G[PREFAB_NAME])
+  local prefab = assert(PREFAB[PREFAB_NAME])
 
   -- empty room
   Trans.brush("solid",
@@ -171,12 +170,10 @@ MIRROR_CHOICES =
 
 
 function Test_Prefab(self)
-  -- load it
-  assert(loadfile(PREFAB_FILE))()
-
   local LEV = GAME.all_levels[1]
 
   LEV.build_func = Build_Prefab
+
   LEV.build_data =
   {
     scale_x = SIZE_VALUES[self.options.scale_x.value] or 1,

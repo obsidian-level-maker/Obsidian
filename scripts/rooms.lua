@@ -2194,7 +2194,7 @@ gui.printf("do_teleport\n")
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
 
-      if GAME.THINGS["player2"] then
+      if GAME.ENTITIES["player2"] then
         Trans.entity("player2", mx - dist, my, z1, { angle=angle })
         Trans.entity("player3", mx + dist, my, z1, { angle=angle })
         Trans.entity("player4", mx, my - dist, z1, { angle=angle })

@@ -191,7 +191,7 @@ end
 function Trans.entity(name, x, y, z, props)
   assert(name)
 
-  local info = GAME.THINGS[name]
+  local info = GAME.ENTITIES[name]
   if not info then
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
     return

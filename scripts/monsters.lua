@@ -191,7 +191,7 @@ function Monsters.init()
   table.name_up(GAME.PICKUPS)
 
   for name,info in pairs(GAME.MONSTERS) do
-    info.thing = assert(GAME.THINGS[name])
+    info.ent = assert(GAME.ENTITIES[name])
   end
 
   LEVEL.mon_stats = {}
@@ -806,11 +806,11 @@ end
 function Monsters.fill_room(R)
 
   local function is_big(mon)
-    return GAME.THINGS[mon].r > 30
+    return GAME.ENTITIES[mon].r > 30
   end
 
   local function is_huge(mon)
-    return GAME.THINGS[mon].r > 60
+    return GAME.ENTITIES[mon].r > 60
   end
 
   local function calc_toughness()
@@ -1091,9 +1091,9 @@ function Monsters.fill_room(R)
 
     -- check if fits vertically
     local ceil_h = S.ceil_h or R.ceil_h or SKY_H
-    local thing  = assert(GAME.THINGS[mon])
+    local ent = assert(GAME.ENTITIES[mon])
 
-    if thing.h >= (ceil_h - S.floor_h - 1) then
+    if ent.h >= (ceil_h - S.floor_h - 1) then
       return false
     end
 
@@ -1135,8 +1135,8 @@ function Monsters.fill_room(R)
   end
 
   local function try_occupy_seed(S, x, y, mon, totals)
-    local info  = GAME.MONSTERS[mon]
-    local thing = GAME.THINGS[mon]
+    local info = GAME.MONSTERS[mon]
+    local ent  = GAME.ENTITIES[mon]
 
     local sx2, sy2 = x, y
     if is_huge(mon) then
@@ -1169,13 +1169,13 @@ function Monsters.fill_room(R)
   end
 
   local function try_occupy_spot(spot, mon, totals)
-    local info  = GAME.MONSTERS[mon]
-    local thing = GAME.THINGS[mon]
+    local info = GAME.MONSTERS[mon]
+    local ent  = GAME.ENTITIES[mon]
 
-    if thing.r * 2 > (spot.x2 - spot.x1 - 4) then return false end
-    if thing.r * 2 > (spot.y2 - spot.y1 - 4) then return false end
+    if ent.r * 2 > (spot.x2 - spot.x1 - 4) then return false end
+    if ent.r * 2 > (spot.y2 - spot.y1 - 4) then return false end
 
-    if thing.h > (spot.z2 - spot.z1 - 2) then return false end
+    if ent.h > (spot.z2 - spot.z1 - 2) then return false end
 
     spot.monster = mon
     spot.info    = info

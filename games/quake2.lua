@@ -20,7 +20,7 @@
 
 QUAKE2 = { }
 
-QUAKE2.THINGS =
+QUAKE2.ENTITIES =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 },

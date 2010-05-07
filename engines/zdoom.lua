@@ -20,7 +20,7 @@
 
 ZDOOM = { }
 
-ZDOOM.THINGS =
+ZDOOM.ENTITIES =
 {
   -- players --
 

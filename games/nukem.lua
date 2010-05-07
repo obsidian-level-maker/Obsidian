@@ -20,7 +20,7 @@
 
 NUKEM = { }
 
-NUKEM.THINGS =
+NUKEM.ENTITIES =
 {
   --- special stuff ---
   player1 = { id=1405, kind="other", r=20,h=56 },

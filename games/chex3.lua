@@ -20,7 +20,7 @@
 
 CHEX3 = { }
 
-CHEX3.THINGS =
+CHEX3.ENTITIES =
 {
   --- PLAYERS ---
 

@@ -24,7 +24,7 @@ DOOM1 = { }  -- stuff specific to each game
 DOOM2 = { }  --
 
 
-DOOM.THINGS =
+DOOM.ENTITIES =
 {
   --- PLAYERS ---
 
@@ -188,7 +188,7 @@ DOOM.THINGS =
   brain_shooter = { id=89, kind="other", r=20, h=32 },
   brain_target  = { id=87, kind="other", r=20, h=32, pass=true },
 
-} -- end of DOOM.THINGS
+} -- end of DOOM.ENTITIES
 
 
 DOOM.PARAMETERS =
