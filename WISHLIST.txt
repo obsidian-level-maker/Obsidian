@@ -34,6 +34,17 @@ WISH-LIST
   LEVEL STUFF
 ----------------------------------------------------------------
 
+Monsters:
+  -  give each monster a "class" field (e.g. class="undead")
+     and have a strong tendency to use the same class of
+     monster for the fodder in a room (or group of rooms).
+
+  -  support "Swarms" : a group of 3-N monsters (either a
+     single monster or 2-3 of a certain class), and place
+     all the monsters close to each other, perhaps even
+     have swarm patterns.
+
+
 Facades:
   -  would be nice to "smooth" any odd-one-outs
 
@@ -442,6 +453,8 @@ Monsters:
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
 
 -  a mod for Eternal III
+
+-  more Oblige logos, higher resolution ones too
 
 -  Rooms that lock you in and you have to find the switch on
    the other side of the room to get out.  All "normal" exits
