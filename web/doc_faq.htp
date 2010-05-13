@@ -41,7 +41,7 @@ Short answer: <i>When it's ready.</i>
 
 <p>
 Long answer:
-there is no real planning involved, no roadmap.
+There is no real planning involved, no roadmap.
 This is just a hobby project.
 With each release I try to fix as many problems as I can,
 while introducing new features and better ways
@@ -60,22 +60,22 @@ Q/ Is game XXX going to be supported?
 </div>
 
 <div class="faq_A">
-It depends greatly on the game.
+It depends greatly on the game...
 
 <p>
 Some games, like Wolf-3D, are simply too old and limited
 for the way that Oblige works.
 Supporting them would require a whole different method of
-generating the levels -- possible but not something I am
+generating the levels -- it's possible but not something I am
 keen to do.
-Plus I really don't enjoy playing those games anymore.
+Plus I don't enjoy playing those games anymore.
 
 <p>
-Moderns games, anything released after 2000 or so
+Modern games, anything released after 2000 or so
 (for example: Doom 3) have map formats which are too
-complicated and often poorly documented (if at all).
+complicated, and often poorly documented (if at all).
 Hence it becomes too hard to write the CSG code to
-generate their formats.
+generate those formats.
 Very modern games are excluded since they won't even
 run on my old computer.
 
@@ -84,68 +84,21 @@ Some games have a style of gameplay which is different
 than the find-all-keys &amp; kill-all-monsters
 style which you see in DOOM or Quake.
 Games with extensive RPG elements, or a game like Thief
-where sneaking around is a primary concern, would likely
-require a lot of new logic to cope with them.
+where sneaking around is a primary concern, would probably
+require a lot of new logic to support them well.
 
 <p>
-
-@@@@@
-
-
-<p>
-Firstly, the C++ code needs to be able to generate the
-final map and package formats for a game.
-To do that, I need either good documentation about these formats
-or (ideally) the full source code for the game.
-Plus I need to own the game in order to test that Oblige is
-working for it, and it helps if I find the game
-enjoyable to play.
+Finally, I am only one person and can only do so much.
+One day hopefully Oblige will become so popular that other
+programmers will volunteer to develop and maintain the lua code
+for a particular game that they like.
+Until then, it is probably better to have a few games which
+work really well, instead of lots of games where each one is
+only very basic.
 
 <p>
-Very old games, like Wolf-3D, are simply too limited for
-the way Oblige works.
-Modern games, released after 2000 or so (like Doom 3),
-have map formats which are too complicated, or too poorly documented.
-
-
-<p>
-
-+ support for the map format (and package format) in the C++ CSG code.
-
-+ a lua game definition file
-
-- map format cannot be too limited.
-
-- map format cannot be too complicated (very modern games).
-
-- I need to own the game and have it run on my (oldish) computer
-
-- I am only one person and can only do so much
-
-
-Very old games (e.g. Wolf-3D) are too limited.
-While it
-may be possible to support them, they will need a different way of
-creating levels from the other games like DOOM.
-
-Very modern games (e.g. Doom 3) are probably too advanced to be
-supported.
-
-A game needs to have very good documentation about its map
-format to be supported.  Having the source code is absolutely
-ideal, as you can read it and see exactly how it loads the maps.
-This is one reason why Id Software games are the
-main ones at the moment -- John Carmack has released the source
-code to Wolf3D, DOOM, Quake 1, Quake 2, and Quake 3.
-Most other companies are not that generous.
-
-
-Another thing is that I need to own the game in order to test
-that Oblige is working for it.
-@@@
-
-<p>
-
+<i>See also this forum post:</i>
+<a href="http://sourceforge.net/apps/phpbb/oblige/viewtopic.php?f=1&t=118">Possible Games</a>.
 </div>
 
 
