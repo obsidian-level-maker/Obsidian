@@ -37,10 +37,20 @@ Q/ When is the next release?
 </div>
 
 <div class="faq_A">
-Short answer: When it's ready.
+Short answer: <i>When it's ready.</i>
 
 <p>
 Longer answer:
+there is no real planning involved, no roadmap.
+This is just a hobby after all.
+With each release I try to fix as many problems as I can,
+while introducing new features and better ways
+of doing things.
+Sometimes there will be some very experimental code,
+which you won't see because it will stay disabled until
+it's ready for general use.
+In the past some releases of OBLIGE have been a bit half-baked,
+and I intend to avoid that in the future.
 
 </div>
 
