@@ -40,9 +40,9 @@ Q/ When is the next release?
 Short answer: <i>When it's ready.</i>
 
 <p>
-Longer answer:
+Long answer:
 there is no real planning involved, no roadmap.
-This is just a hobby after all.
+This is just a hobby project.
 With each release I try to fix as many problems as I can,
 while introducing new features and better ways
 of doing things.
@@ -60,11 +60,53 @@ Q/ Is game XXX going to be supported?
 </div>
 
 <div class="faq_A">
-There are a number of factors which determine whether a game
-will be supported or not:
+It depends greatly on the game.
 
 <p>
-The primary factor right now 
+Some games, like Wolf-3D, are simply too old and limited
+for the way that Oblige works.
+Supporting them would require a whole different method of
+generating the levels -- possible but not something I am
+keen to do.
+Plus I really don't enjoy playing those games anymore.
+
+<p>
+Moderns games, anything released after 2000 or so
+(for example: Doom 3) have map formats which are too
+complicated and often poorly documented (if at all).
+Hence it becomes too hard to write the CSG code to
+generate their formats.
+Very modern games are excluded since they won't even
+run on my old computer.
+
+<p>
+Some games have a style of gameplay which is different
+than the find-all-keys &amp; kill-all-monsters
+style which you see in DOOM or Quake.
+Games with extensive RPG elements, or a game like Thief
+where sneaking around is a primary concern, would likely
+require a lot of new logic to cope with them.
+
+<p>
+
+@@@@@
+
+
+<p>
+Firstly, the C++ code needs to be able to generate the
+final map and package formats for a game.
+To do that, I need either good documentation about these formats
+or (ideally) the full source code for the game.
+Plus I need to own the game in order to test that Oblige is
+working for it, and it helps if I find the game
+enjoyable to play.
+
+<p>
+Very old games, like Wolf-3D, are simply too limited for
+the way Oblige works.
+Modern games, released after 2000 or so (like Doom 3),
+have map formats which are too complicated, or too poorly documented.
+
 
 <p>
 
@@ -74,7 +116,7 @@ The primary factor right now
 
 - map format cannot be too limited.
 
-- map format cannot be too complex (very modern games).
+- map format cannot be too complicated (very modern games).
 
 - I need to own the game and have it run on my (oldish) computer
 
@@ -97,23 +139,14 @@ main ones at the moment -- John Carmack has released the source
 code to Wolf3D, DOOM, Quake 1, Quake 2, and Quake 3.
 Most other companies are not that generous.
 
-Also some games have a style of gameplay which is different
-more complicated than the
-kill-monsters-get-keys you see in DOOM and Quake.
-Games with extensive RPG elements, or a game like Thief
-where sneaking around is a primary concern, would require
-a lot of new logic to cope with them.
-
-
-[p]
-
 
 Another thing is that I need to own the game in order to test
 that Oblige is working for it.
 @@@
 
-[/div]
---->
+<p>
+
+</div>
 
 
 <div id="deathmatch" class="faq_Q">
