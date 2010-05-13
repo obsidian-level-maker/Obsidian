@@ -101,7 +101,7 @@ are all entities.
 
 
 <div id="gui" class="gloss_term">
-GUI / EXE
+GUI, EXE
 </div><div class="gloss_define">
 GUI stands for Graphical User Interface,
 but I often use the term to mean the whole EXE
@@ -226,6 +226,20 @@ which normally cannot fit in a single seed.
 </div>
 
 
+<div id="palette" class="gloss_term">
+Palette
+</div><div class="gloss_define">
+This means a selection of of certain things, especially monsters.
+Each room has its own monster palette, and only those monsters
+will be used in that room.
+There is also a "global" palette which controls what monsters
+may or may not appear in the level.
+These palettes help give each room and each level a distinctive
+feel.
+
+</div>
+
+
 <div id="prefab" class="gloss_term">
 Prefab
 </div><div class="gloss_define">
@@ -325,7 +339,7 @@ It could not do very much and was never publicly released.
 
 
 <div id="v2" class="gloss_term">
-V2 / OB2
+V2, OB2
 </div><div class="gloss_define">
 The older versions of OBLIGE, with
 version numbers starting with zero (such as 0.85).
@@ -334,7 +348,7 @@ version numbers starting with zero (such as 0.85).
 
 
 <div id="v3" class="gloss_term">
-V3 / OB3
+V3, OB3
 </div><div class="gloss_define">
 The current versions of OBLIGE,
 which began with version 3.39.
