@@ -362,12 +362,7 @@ function Build.prefab(fab_name, skin)
 
   local fab = assert(PREFAB[fab_name])
 
-  local materials =
-  {
-    "FLAT1", "COMPBLUE", "REDWALL", "RROCK14",
-    "GRASS1", "WOOD1", "SFLR6_4", "LAVA1"
-  }
-  local mapping = { }
+  local materials = { }
 
   local brushes = assert(fab.brushes)
 
@@ -377,15 +372,21 @@ function Build.prefab(fab_name, skin)
 
     for _,C in ipairs(B) do
       if C.mat then
-        if not mapping[C.mat] then
-          mapping[C.mat] = skin[C.mat]
-        end
-        if not mapping[C.mat] then
-          local idx = table.size(mapping) + 1
-          mapping[C.mat] = materials[1 + (idx-1) % #materials]
+        if not materials[C.mat] then
+          materials[C.mat] = safe_get_mat(skin[C.mat])
         end
 
-        C.tex = mapping[C.mat]
+        local mat = materials[C.mat]
+
+        if C.b then
+          C.tex = mat.c or mat.f or mat.t
+        elseif C.t then
+          C.tex = mat.f or mat.t
+        else
+          C.tex = mat.t
+        end
+        assert(C.tex)
+
         C.mat = nil
       end
     end
@@ -438,6 +439,8 @@ end
 
 
 function safe_get_mat(name)
+  if not name then name = "_ERROR" end
+
   if OB_CONFIG.theme == "psycho" then
     name = psychedelic_mat(name)
   end
