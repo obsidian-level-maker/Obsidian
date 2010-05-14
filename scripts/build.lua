@@ -358,7 +358,7 @@ function Trans.compute_groups(groups, lowest, highest)
 end
 
 
-function Build.prefab(fab_name, skin)
+function Build.prefab(fab_name, skin, env)
 
   local fab = assert(PREFAB[fab_name])
 
@@ -371,6 +371,8 @@ function Build.prefab(fab_name, skin)
     local kind = "solid"
 
     for _,C in ipairs(B) do
+
+      -- handle materials : look them up and create a 'tex' field
       if C.mat then
         if not materials[C.mat] then
           materials[C.mat] = safe_get_mat(skin[C.mat])
@@ -389,6 +391,26 @@ function Build.prefab(fab_name, skin)
 
         C.mat = nil
       end
+
+      -- perform some other substitutions
+
+      -- we store changes in this D variable, since we cannot modify
+      -- a table when we are iterating over it.
+      local D = nil
+
+      for field,value in pairs(C) do
+        local t = type(value)
+        if t == "function" then
+          if not D then D = { } end
+          D[field] = value(env)
+        end
+        if t == "string" and string.match(value, "^[?]") then
+          if not D then D = { } end
+          D[field] = skin[string.sub(value, 2)]
+        end
+      end
+
+      if D then table.merge(C, D) end
     end
 
     Trans.brush("solid", B)
