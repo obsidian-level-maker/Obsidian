@@ -46,12 +46,12 @@ Trans.TRANSFORM =
 }
 
 
-function Trans.clear()
-  Trans.TRANSFORM = {}
-end
-
 function Trans.set(T)
   Trans.TRANSFORM = T
+end
+
+function Trans.clear()
+  Trans.set({})
 end
 
 function Trans.modify(what, value)
@@ -299,6 +299,103 @@ end
 
 ------------------------------------------------------------------------
 
+
+function Trans.resize_coord(n, groups)
+  --
+  -- GROUPS:
+  --   a set of tables which fully covers the coordinate range,
+  --   must be sorted from lowest to highest.
+  --
+  local T = #groups
+
+  if T == 0 then return n end
+
+  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
+
+  local G = 1
+
+  while (G < T) and (n > G.high) do
+    G = G + 1
+  end
+
+  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
+end
+
+
+function Trans.compute_groups(groups, lowest, highest)
+  if #groups == 0 then return end
+
+  local extra = highest - lowest
+  local wt_total = 0
+
+  -- first pass: set size of all RIGID groups, and total the weights
+  for _,G in ipairs(groups) do
+    if not G.weight then
+      G.size = G.high - G.low
+      extra = extra - G.size
+    else
+      assert(G.weight > 0)
+      wt_total = wt_total + G.weight
+    end
+  end
+
+  -- second pass: set size of all FLEXIBLE groups, and also set
+  -- the new coordinate range in low2 and high2.
+  local pos = lowest
+
+  for _,G in ipairs(groups) do
+    if G.weight then
+      G.size = G.high - G.low + extra * G.weight / wt_total
+      assert(G.size > 1)
+    end
+
+    G.low2  = pos
+    G.high2 = pos + G.size
+
+    pos = G.high2
+  end
+end
+
+
+function Build.prefab(fab, skin)
+
+  local materials =
+  {
+    "FLAT1", "COMPBLUE", "REDWALL", "RROCK14",
+    "GRASS1", "WOOD1", "SFLR6_4", "LAVA1"
+  }
+  local mapping = { }
+
+  Trans.set(info)
+
+  local brushes = assert(fab.brushes)
+
+  for _,B0 in ipairs(brushes) do
+    local B = table.deep_copy(B0)
+    local kind = "solid"
+
+    for _,C in ipairs(B) do
+      if C.mat then
+        if not mapping[C.mat] then
+---!!!    mapping[C.mat] = skin[C.mat]
+        end
+        if not mapping[C.mat] then
+          local idx = table.size(mapping) + 1
+          mapping[C.mat] = materials[1 + (idx-1) % #materials]
+        end
+
+        C.tex = mapping[C.mat]
+        C.mat = nil
+      end
+    end
+
+    Trans.brush("solid", B)
+  end
+end
+
+
+------------------------------------------------------------------------
 
 function Build.prepare_trip()
 
@@ -890,10 +987,10 @@ function Build.door(S, side, z1, skin, skin2, tag, reversed)
 
   Trans.old_brush(door_info,
   {
-    { x=mx+64, y=my-8, line_kind=KIND, line_tag=tag2 },
-    { x=mx+64, y=my+8, line_kind=KIND, line_tag=tag2 },
-    { x=mx-64, y=my+8, line_kind=KIND, line_tag=tag2 },
-    { x=mx-64, y=my-8, line_kind=KIND, line_tag=tag2 },
+    { x=mx+64, y=my-8, kind=KIND, tag=tag2 },
+    { x=mx+64, y=my+8, kind=KIND, tag=tag2 },
+    { x=mx-64, y=my+8, kind=KIND, tag=tag2 },
+    { x=mx-64, y=my-8, kind=KIND, tag=tag2 },
   },
   z1+16, EXTREME_H)
 
