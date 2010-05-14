@@ -64,7 +64,7 @@ PREFAB.DOOR =
       { x = 192, y =  24, mat = "inner" },
       { x =   0, y =  24, mat = "outer" },
       { x =   0, y = -24, mat = "outer" },
-      { b = 80, mat = "frame" },
+      { b = 136, mat = "frame" },
     },
 
     -- step

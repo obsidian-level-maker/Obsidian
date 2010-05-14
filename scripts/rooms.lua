@@ -2572,7 +2572,7 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
 ---###  Build.door(S, side, z, skin, skin2, 0)
 
---!!!        shrink_ceiling(side, 4)
+--!!!   shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2587,13 +2587,23 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 --if not skin.track then gui.printf("%s", table.tostr(skin,1)); end
         assert(skin.track)
 
-        local skin2 = { inner=w_tex, outer=o_tex }
+        local skin2 = table.copy(skin)
+        
+        skin2.inner = w_tex
+        skin2.outer = o_tex
+        skin2.tag   = LOCK.tag
 
         local reversed = (S == S.conn.dest_S)
 
----!!!!        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
+        Trans.set(doorway_transform(S, z, side))
 
---!!!        shrink_ceiling(side, 4)
+        Build.prefab("DOOR", skin2)
+
+        Trans.clear()
+
+---###  Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
+
+--!!!   shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
