@@ -2366,9 +2366,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
   local function doorway_transform(S, z, side)
     local T = {}
 
-    local ANGS = { [2]=0,    [8]=180,  [4]=90,   [6]=270 }
+    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
     local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
-    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y1, [6]=S.y2 }
+    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y2, [6]=S.y1 }
 
     T.add_x = XS[side]
     T.add_y = YS[side]
