@@ -2560,10 +2560,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local skin = assert(GAME.DOORS[door_name])
 
         local skin2 = table.copy(skin)
-        table.merge(skin2, { inner=w_tex, outer=o_tex })
 
-        assert(skin2.track)
-        assert(skin2.step_w)
+        skin2.inner = w_tex
+        skin2.outer = o_tex
 
         Trans.set(doorway_transform(S, z, side))
 

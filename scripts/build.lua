@@ -378,7 +378,7 @@ function Build.prefab(fab_name, skin)
     for _,C in ipairs(B) do
       if C.mat then
         if not mapping[C.mat] then
----!!!    mapping[C.mat] = skin[C.mat]
+          mapping[C.mat] = skin[C.mat]
         end
         if not mapping[C.mat] then
           local idx = table.size(mapping) + 1

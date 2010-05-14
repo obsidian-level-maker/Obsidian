@@ -1430,30 +1430,33 @@ DOOM.DOORS =
   silver =
   {
     w=128, h=112, door_h=72,
-    key_w="LITE3",
-    door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4",
-    frame_c="FLAT18", track="DOORTRAK",
+    key="LITE3",
+    door="BIGDOOR1", -- door_c="FLAT1",
+    step="STEP4",
+    frame="FLAT18",
+    track="DOORTRAK",
     line_kind=1, tag=0,
   },
 
   silver_fast =
   {
     w=128, h=112, door_h=72,
-    key_w="LITE3",
-    door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4",
-    frame_c="FLAT18", track="DOORTRAK",
+    key="LITE3",
+    door="BIGDOOR1", -- door_c="FLAT1",
+    step="STEP4",
+    frame="FLAT18",
+    track="DOORTRAK",
     line_kind=117, tag=0,
   },
 
   silver_once =
   {
     w=128, h=112, door_h=72,
-    key_w="LITE3",
-    door_w="BIGDOOR1", door_c="FLAT1",
-    step_w="STEP4",
-    frame_c="FLAT18", track="DOORTRAK",
+    key="LITE3",
+    door="BIGDOOR1", -- door_c="FLAT1",
+    step="STEP4",
+    frame="FLAT18",
+    track="DOORTRAK",
     line_kind=31, tag=0,
   },
 
@@ -2799,9 +2802,9 @@ DOOM2.SUB_THEMES =
     doors =
     {
       silver=20, silver_fast=33, silver_once=2,
-      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
-      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
-      bigdoor3=5,
+---!!!      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
+---!!!      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
+---!!!      bigdoor3=5,
     },
 
     steps = { step6=50, },
