@@ -47,7 +47,7 @@ Trans.TRANSFORM =
 
 
 function Trans.set(T)
-  Trans.TRANSFORM = T
+  Trans.TRANSFORM = assert(T)
 end
 
 function Trans.clear()
@@ -358,7 +358,9 @@ function Trans.compute_groups(groups, lowest, highest)
 end
 
 
-function Build.prefab(fab, skin)
+function Build.prefab(fab_name, skin)
+
+  local fab = assert(PREFAB[fab_name])
 
   local materials =
   {
@@ -366,8 +368,6 @@ function Build.prefab(fab, skin)
     "GRASS1", "WOOD1", "SFLR6_4", "LAVA1"
   }
   local mapping = { }
-
-  Trans.set(info)
 
   local brushes = assert(fab.brushes)
 

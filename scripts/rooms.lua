@@ -2363,6 +2363,22 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     end
   end
 
+  local function doorway_transform(S, z, side)
+    local T = {}
+
+    local ANGS = { [2]=0,    [8]=180,  [4]=90,   [6]=270 }
+    local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
+    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y1, [6]=S.y2 }
+
+    T.add_x = XS[side]
+    T.add_y = YS[side]
+    T.add_z = z
+
+    T.rotate = ANGS[side]
+
+    return T
+  end
+
 
   local function build_seed(S)
     if S.already_built then
@@ -2543,13 +2559,21 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
         local door_name = rand.key_by_probs(doors)
         local skin = assert(GAME.DOORS[door_name])
 
-        local skin2 = { inner=w_tex, outer=o_tex }
+        local skin2 = table.copy(skin)
+        table.merge(skin2, { inner=w_tex, outer=o_tex })
 
-        assert(skin.track)
-        assert(skin.step_w)
+        assert(skin2.track)
+        assert(skin2.step_w)
 
-        Build.door(S, side, z, skin, skin2, 0)
-        shrink_ceiling(side, 4)
+        Trans.set(doorway_transform(S, z, side))
+
+        Build.prefab("DOOR", skin2)
+
+        Trans.clear()
+
+---###  Build.door(S, side, z, skin, skin2, 0)
+
+--!!!        shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
@@ -2568,8 +2592,9 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
         local reversed = (S == S.conn.dest_S)
 
-        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
-        shrink_ceiling(side, 4)
+---!!!!        Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
+
+--!!!        shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
         S.conn.already_made_lock = true
