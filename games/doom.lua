@@ -1888,26 +1888,26 @@ DOOM.SWITCHES =
     prefab = "SWITCH_FLOOR",
     skin =
     {
-      switch_w="SW1BLUE", side_w="COMPBLUE",
-      switch_f="FLAT14", switch_h=64,
-
-      beam_w="WOOD1", beam_f="FLAT5_2",
-
-      x_offset=0, y_offset=56, line_kind=103,
+      switch_h=64,
+      switch="SW1BLUE", side="COMPBLUE", base="COMPBLUE",
+      x_offset=0, y_offset=56,
+      line_kind=103,
     }
   },
 
-  sw_blue2 =
+  sw_blue2 =  -- NOT USED
   {
     prefab = "SWITCH_FLOOR_BEAM",
     skin =
     {
+      switch_h=64,
       switch_w="SW1BLUE", side_w="COMPBLUE",
       switch_f="FLAT14", switch_h=64,
 
       beam_w="WOOD1", beam_f="FLAT5_2",
 
-      x_offset=0, y_offset=56, line_kind=103,
+      x_offset=0, y_offset=56,
+      line_kind=103,
     }
   },
 
@@ -1916,8 +1916,8 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1HOT", side_w="SP_HOT1",
-      switch_f="FLAT5_3",
+      switch_h=64,
+      switch="SW1HOT", side="SP_HOT1", base="FLAT5_3",
       x_offset=0, y_offset=52,
       line_kind=103,
     }
@@ -1929,8 +1929,8 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1SKIN", side_w="SKSNAKE2",
-      switch_f="SFLR6_4",
+      switch_h=64,
+      switch="SW1SKIN", side="SKSNAKE2", base="SFLR6_4",
       x_offset=0, y_offset=52,
       line_kind=103,
     }
@@ -1941,25 +1941,27 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1VINE", side_w="GRAYVINE",
-      switch_f="FLAT1",
+      switch_h=64,
+      switch="SW1VINE", side="GRAYVINE", base="FLAT1",
       x_offset=0, y_offset=64,
       line_kind=103,
     }
   },
 
-  sw_metl =
+  sw_metl =  -- NOT USED
   {
     prefab = "SWITCH_CEILING",
     environment = "indoor",
     skin =
     {
+      switch_h=56,
       switch_w="SW1GARG", side_w="METAL",
-      switch_c="CEIL5_2", switch_h=56,
+      switch_c="CEIL5_2",
 
       beam_w="SUPPORT3", beam_c="CEIL5_2",
 
-      x_offset=0, y_offset=64, line_kind=23,
+      x_offset=0, y_offset=64,
+      line_kind=23,
     }
   },
 
@@ -1968,8 +1970,8 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1WOOD", side_w="WOOD1",
-      switch_f="FLAT5_2",
+      switch_h=64,
+      switch="SW1WOOD", side="WOOD1", base="FLAT5_2",
       x_offset=0, y_offset=56,
       line_kind=103,
     }
@@ -1980,8 +1982,7 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1GSTON", side_w="GSTONE1",
-      switch_f="FLOOR7_2",
+      switch="SW1GSTON", side="GSTONE1", base="FLOOR7_2",
       x_offset=0, y_offset=56,
       line_kind=103,
     }
@@ -1992,8 +1993,7 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1WOOD", side_w="WOOD9",
-      switch_f="FLAT5_2",
+      switch="SW1WOOD", side="WOOD9", base="FLAT5_2",
       x_offset=0, y_offset=56,
       line_kind=23,
     }
@@ -2004,8 +2004,7 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1COMM", side_w="SHAWN2",
-      switch_f="FLAT23",
+      switch="SW1COMM", side="SHAWN2", base="FLAT23",
       x_offset=0, y_offset=0,
       line_kind=23,
     }
@@ -2016,8 +2015,7 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1MET2", side_w="METAL2",
-      switch_f="CEIL5_2",
+      switch="SW1MET2", side="METAL2", base="CEIL5_2",
       x_offset=0, y_offset=0,
       line_kind=23,
     }
@@ -2028,8 +2026,7 @@ DOOM.SWITCHES =
     prefab = "SWITCH_PILLAR",
     skin =
     {
-      switch_w="SW1GRAY1", side_w="GRAY1",
-      switch_f="FLAT1",
+      switch="SW1GRAY1", side="GRAY1", base="FLAT1",
       x_offset=0, y_offset=64,
       line_kind=23,
     }

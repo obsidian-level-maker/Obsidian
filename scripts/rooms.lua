@@ -2294,9 +2294,14 @@ gui.printf("do_teleport\n")
 
     elseif R.purpose == "SWITCH" then
       local LOCK = assert(R.lock)
-gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
       local INFO = assert(GAME.SWITCHES[LOCK.item])
-      Build.small_switch(S, dir_for_wotsit(S), z1, INFO.skin, LOCK.tag)
+
+      local skin = table.copy(INFO.skin)
+      skin.tag = LOCK.tag
+
+      Trans.set(centre_transform(S, z1, dir_for_wotsit(S)))
+      Build.prefab("SMALL_SWITCH", skin)
+      Trans.clear()
 
     else
       error("unknown purpose: " .. tostring(R.purpose))

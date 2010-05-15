@@ -1135,7 +1135,7 @@ function Build.lowering_bars(S, side, z_top, skin, tag)
 
   add_pegging(bar_info, skin.x_offset, skin.y_offset)
 
-  bar_info.sec_tag = tag
+  bar_info.t_face.tag = tag
 
   local mx1 = 8 + side_gap + bar_w/2
   local mx2 = long - 8 - side_gap - bar_w/2
