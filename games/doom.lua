@@ -1872,10 +1872,13 @@ DOOM.EXITS =
   {
     door = "EXITDOOR", track = "DOORTRAK",
     exit = "EXITSIGN", exitside = "SHAWN2",
-    frame_c = "FLAT1", key = "LITE5",
-    track = "DOORSTOP",
+    key = "LITE5",
+    track = "DOORSTOP", trim = "DOORSTOP",
     items = { "medikit" },
-    line_kind=11,
+    door_kind=1, line_kind=11,
+
+    switch = "SW1BRN2",
+    floor = "FLOOR0_3", ceil="TLITE6_6",
   },
 
 }

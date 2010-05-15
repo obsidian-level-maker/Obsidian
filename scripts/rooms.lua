@@ -2270,6 +2270,7 @@ gui.printf("do_teleport\n")
         Trans.set(centre_transform(S, z1, dir))
         Build.prefab("EXIT_PILLAR", skin)
         Trans.clear()
+
       end
 
     elseif R.purpose == "KEY" then
@@ -2448,6 +2449,23 @@ gui.printf("do_teleport\n")
         o_tex = R.facade or w_tex
       end
     end
+
+
+--!!!!!!
+if S.content == "wotsit" and R.purpose == "EXIT" then
+  local skin = table.copy(assert(GAME.EXITS["tech_small"]))
+  skin.inner = w_tex
+  skin.outer = o_tex
+
+  Trans.set(doorway_transform(S, z1, 8))
+  Trans.modify("scale_x", 192 / 256)
+  Trans.modify("scale_y", 192 / 256)
+
+  Build.prefab("SMALL_EXIT", skin)
+
+  Trans.clear()
+  return
+end
 
 
     local sec_kind
