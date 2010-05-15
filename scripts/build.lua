@@ -125,7 +125,7 @@ function Trans.collect_flags(C)  -- FIXME: use game-specific code
   local flags = C.flags or 0
 
   for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
-    if C[name] then
+    if C[name] and C[name] ~= 0 then
       flags = bit.bor(flags, value)
     end
   end
