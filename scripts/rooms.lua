@@ -2524,10 +2524,17 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "arch" then
         local z = assert(S.conn and S.conn.conn_h)
-        local skin = { wall=w_tex, floor=f_tex, other=o_tex, break_t=THEME.track_mat }
+        local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Build.archway(S, side, z, z+112, skin)
-        shrink_ceiling(side, 4)
+        Trans.set(doorway_transform(S, z, side))
+
+        Build.prefab("ARCH", skin)
+
+        Trans.clear()
+
+---###     Build.archway(S, side, z, z+112, skin)
+
+---!!!     shrink_ceiling(side, 4)
 
         if R.outdoor and N.room.outdoor then
           Build.shadow(S,  side, 96)
@@ -2540,11 +2547,19 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
 
       if B_kind == "liquid_arch" then
         local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
-        local skin = { wall=w_tex, floor=f_tex, other=other_mat, break_t=THEME.track_mat }
+        local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Build.archway(S, side, z1, z_top, skin)
-        shrink_ceiling(side, 4)
+---###      Build.archway(S, side, z1, z_top, skin)
+
+        Trans.set(doorway_transform(S, z1, side))
+        Trans.modify("scale_z", 0.5)
+
+        Build.prefab("ARCH", skin)
+
+        Trans.clear()
+
+---!!!    shrink_ceiling(side, 4)
       end
 
       if B_kind == "door" then
