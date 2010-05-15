@@ -108,6 +108,34 @@ function Trans.apply_z(z, slope)
 end
 
 
+Trans.DOOM_LINE_FLAGS =
+{
+  blocked     = 0x01,
+  block_mon   = 0x02,
+  sound_block = 0x40,
+
+  draw_secret = 0x20,
+  draw_never  = 0x80,
+  draw_always = 0x100,
+
+  pass_thru   = 0x200,  -- Boom flag
+}
+
+function Trans.collect_flags(C)  -- FIXME: use game-specific code
+  local flags = C.flags or 0
+
+  for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
+    if C[name] then
+      flags = bit.bor(flags, value)
+    end
+  end
+
+  if flags ~= 0 then
+    C.flags = flags
+  end
+end
+
+
 function Trans.brush(kind, coords)
   if not coords then
     kind, coords = "solid", kind
@@ -126,6 +154,8 @@ function Trans.brush(kind, coords)
     else assert(C.t)
       C.t, C.s = Trans.apply_z(C.t, C.s)
     end
+
+    Trans.collect_flags(C)
   end
 
   gui.add_brush(kind, coords)
