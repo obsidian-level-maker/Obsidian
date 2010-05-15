@@ -2068,6 +2068,36 @@ end
 
 function Rooms.build_seeds(R)
 
+  local function centre_transform(S, z, dir)
+    local T = {}
+
+    local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
+
+    T.add_x  = (S.x1 + S.x2) / 2
+    T.add_y  = (S.y1 + S.y2) / 2
+    T.add_z  = z
+
+    T.rotate = ANGS[dir]
+
+    return T
+  end
+
+  local function doorway_transform(S, z, side)
+    local T = {}
+
+    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
+    local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
+    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y2, [6]=S.y1 }
+
+    T.add_x = XS[side]
+    T.add_y = YS[side]
+    T.add_z = z
+
+    T.rotate = ANGS[side]
+
+    return T
+  end
+
   local function do_teleporter(S)
     -- TEMP HACK CRUD JUNK
 
@@ -2227,13 +2257,19 @@ gui.printf("do_teleport\n")
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.EXITS[skin_name])
-        Build.outdoor_exit_switch(S, dir, z1, skin)
+
+        Trans.set(centre_transform(S, z1, dir))
+        Build.prefab("OUTDOOR_EXIT_SWITCH", skin)
+        Trans.clear()
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.exits)
         local skin = assert(GAME.EXITS[skin_name])
-        Build.exit_pillar(S, z1, skin)
+
+        Trans.set(centre_transform(S, z1, dir))
+        Build.prefab("EXIT_PILLAR", skin)
+        Trans.clear()
       end
 
     elseif R.purpose == "KEY" then
@@ -2361,22 +2397,6 @@ gui.debugf("SWITCH ITEM = %s\n", LOCK.item)
     else
       Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
     end
-  end
-
-  local function doorway_transform(S, z, side)
-    local T = {}
-
-    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
-    local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
-    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y2, [6]=S.y1 }
-
-    T.add_x = XS[side]
-    T.add_y = YS[side]
-    T.add_z = z
-
-    T.rotate = ANGS[side]
-
-    return T
   end
 
 

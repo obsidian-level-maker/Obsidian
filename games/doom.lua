@@ -1812,62 +1812,70 @@ DOOM.EXITS =
   skull_pillar =
   {
     h=128,
-    switch_w="SW1SKULL",
-    exit_w="EXITSIGN", exit_h=16,
+    switch="SW1SKULL",
+    exit="EXITSIGN",
     exitside="COMPSPAN",
+    line_kind=11,
   },
 
   demon_pillar2 =
   {
     h=128,
-    switch_w="SW1SATYR",
-    exit_w="EXITSIGN", exit_h=16,
+    switch="SW1SATYR",
+    exit="EXITSIGN",
     exitside="COMPSPAN",
+    line_kind=11,
   },
 
   demon_pillar3 =
   {
     h=128,
-    switch_w="SW1LION",
-    exit_w="EXITSIGN", exit_h=16,
+    switch="SW1LION",
+    exit="EXITSIGN",
     exitside="COMPSPAN",
+    line_kind=11,
   },
 
   skin_pillar =
   {
     h=128,
-    switch_w="SW1SKIN",
-    exit_w="EXITSIGN", exit_h=16,
+    switch="SW1SKIN",
+    exit="EXITSIGN",
     exitside="COMPSPAN",
+    line_kind=11,
   },
 
   stone_pillar =
   {
     h=128,
-    switch_w="SW1STON1",
-    exit_w="EXITSIGN", exit_h=16,
+    switch="SW1STON1",
+    exit="EXITSIGN",
     exitside="COMPSPAN",
+    line_kind=11,
   },
 
   tech_outdoor =
   {
     podium="CEIL5_1", base="SHAWN2",
-    switch_w="SW1COMM", exit_w="EXITSIGN",
+    switch="SW1COMM", exit="EXITSIGN",
+    line_kind=11,
   },
 
   tech_outdoor2 =
   {
     podium="STARTAN2", base="SHAWN2",
-    switch_w="SW2COMM", exit_w="EXITSIGN",
+    switch="SW2COMM", exit="EXITSIGN",
+    line_kind=11,
   },
 
   tech_small =
   {
     door = "EXITDOOR", track = "DOORTRAK",
     exit = "EXITSIGN", exitside = "SHAWN2",
-    frame_c = "FLAT1", key_w = "LITE5",
-    break_w = "DOORSTOP",
+    frame_c = "FLAT1", key = "LITE5",
+    track = "DOORSTOP",
     items = { "medikit" },
+    line_kind=11,
   },
 
 }
