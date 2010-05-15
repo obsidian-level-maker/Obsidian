@@ -2575,8 +2575,6 @@ end
 
         Trans.clear()
 
----###     Build.archway(S, side, z, z+112, skin)
-
 ---!!!     shrink_ceiling(side, 4)
 
         if R.outdoor and N.room.outdoor then
@@ -2592,8 +2590,6 @@ end
         local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
-
----###      Build.archway(S, side, z1, z_top, skin)
 
         Trans.set(doorway_transform(S, z1, side))
         Trans.modify("scale_z", 0.5)
@@ -2628,8 +2624,6 @@ end
 
         Trans.clear()
 
----###  Build.door(S, side, z, skin, skin2, 0)
-
 --!!!   shrink_ceiling(side, 4)
 
         assert(not S.conn.already_made_lock)
@@ -2658,8 +2652,6 @@ end
         Build.prefab("DOOR", skin2)
 
         Trans.clear()
-
----###  Build.door(S, side, S.conn.conn_h, skin, skin2, LOCK.tag, reversed)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2806,7 +2798,10 @@ end
     -- PREFABS
 
     if S.content == "pillar" then
-      Build.pillar(S, z1, z2, assert(S.pillar_skin))
+      Trans.set(centre_transform(S, z1, S.pillar_dir or 2))  -- TODO pillar_dir
+      Trans.modify("scale_z", (z2 - z1) / 128)
+      Build.prefab("PILLAR", assert(S.pillar_skin))
+      Trans.clear()
     end
 
     if S.content == "wotsit" and S.content_kind == "WEAPON" then
