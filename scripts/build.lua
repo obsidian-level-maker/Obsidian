@@ -901,7 +901,7 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
   if GAME.format == "quake" then
     Trans.old_brush(sky_back, s_coords, z_low+4, EXTREME_H)
   else
-    sky_back.delta_z = (z_low+4) - (SKY_H-2)
+    sky_back.b_face.delta_z = (z_low+4) - (SKY_H-2)
     Trans.old_brush(sky_back, s_coords, SKY_H-2, EXTREME_H)
   end
 end
