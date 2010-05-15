@@ -217,9 +217,9 @@ PREFAB.SMALL_EXIT =
     -- the switch iteslf
     {
       { x =  16, y = 240, mat = "inner" },
-      { x =  88, y = 240, mat = "break",  peg = 1, x_offset = 0, y_offset = 0 },
+      { x =  88, y = 240, mat = "trim",  peg = 1, x_offset = 0, y_offset = 0 },
       { x =  96, y = 240, mat = "switch", peg = 0, x_offset = 0, y_offset = 0, line_kind = 11 },
-      { x = 160, y = 240, mat = "break",  peg = 1, x_offset = 0, y_offset = 0 },
+      { x = 160, y = 240, mat = "trim",  peg = 1, x_offset = 0, y_offset = 0 },
       { x = 168, y = 240, mat = "inner" },
       { x = 240, y = 240, mat = "inner" },
       { x = 240, y = 248, mat = "inner" },
