@@ -84,13 +84,10 @@ raw_linedef_t;
 
 typedef enum
 {
-  MLF_BlockAll      = 0x0001,
-  MLF_BlockMonsters = 0x0002,
-  MLF_TwoSided      = 0x0004,
-  MLF_UpperUnpeg    = 0x0008,
-  MLF_LowerUnpeg    = 0x0010,
-  MLF_Secret        = 0x0020,
-  MLF_SoundBlock    = 0x0040,
+  MLF_BlockAll    = 0x0001,
+  MLF_TwoSided    = 0x0004,
+  MLF_UpperUnpeg  = 0x0008,
+  MLF_LowerUnpeg  = 0x0010,
 }
 doom_lineflag_e;
 
