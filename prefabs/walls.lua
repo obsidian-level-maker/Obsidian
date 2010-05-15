@@ -72,7 +72,7 @@ PREFAB.PICTURE =
     {
       { x = 128, y = 12, mat = "wall" },
       { x = 128, y = 24, mat = "wall" },
-      { x =  64, y = 24, mat = "wall", flags = 1 },
+      { x =  64, y = 24, mat = "wall", blocked=1 },
       { x =  64, y = 12, mat = "wall" },
       { t = 32, mat = "floor" },
     },
@@ -81,7 +81,7 @@ PREFAB.PICTURE =
     {
       { x = 128, y = 12, mat = "wall" },
       { x = 128, y = 24, mat = "wall" },
-      { x =  64, y = 24, mat = "wall", flags = 1 },
+      { x =  64, y = 24, mat = "wall", blocked=1 },
       { x =  64, y = 12, mat = "wall" },
       { b = 96, light = "?light", mat = "floor" },
     },

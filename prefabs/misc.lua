@@ -32,18 +32,18 @@ PREFAB.PILLAR =
 
     -- trim closest to stem
     {
-      { x =  40, y = -40, mat = "trim2" },
-      { x =  40, y =  40, mat = "trim2" },
-      { x = -40, y =  40, mat = "trim2" },
-      { x = -40, y = -40, mat = "trim2" },
+      { x =  40, y = -40, mat = "trim2", blocked=1 },
+      { x =  40, y =  40, mat = "trim2", blocked=1 },
+      { x = -40, y =  40, mat = "trim2", blocked=1 },
+      { x = -40, y = -40, mat = "trim2", blocked=1 },
       { t = 20, mat = "trim2" },
     },
 
     {
-      { x =  40, y = -40, mat = "trim2" },
-      { x =  40, y =  40, mat = "trim2" },
-      { x = -40, y =  40, mat = "trim2" },
-      { x = -40, y = -40, mat = "trim2" },
+      { x =  40, y = -40, mat = "trim2", blocked=1 },
+      { x =  40, y =  40, mat = "trim2", blocked=1 },
+      { x = -40, y =  40, mat = "trim2", blocked=1 },
+      { x = -40, y = -40, mat = "trim2", blocked=1 },
       { b = 108, mat = "trim2" },
     },
 
