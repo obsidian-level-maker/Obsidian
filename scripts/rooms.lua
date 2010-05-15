@@ -1925,7 +1925,7 @@ function Rooms.build_cave(R)
 
   if R.is_lake then
     data.info = get_liquid()
-    data.info.delta_z = rand.sel(70, -48, -72)
+    data.info.t_face.delta_z = rand.sel(70, -48, -72)
     data.z2 = R.cave_floor_h + 8
   end
 
@@ -1944,7 +1944,7 @@ function Rooms.build_cave(R)
       then
         -- create a lava/nukage pit
         local pit = get_liquid()
-        pit.delta_z = rand.sel(70, -52, -76)
+        pit.t_face.delta_z = rand.sel(70, -52, -76)
 
         Cave.render(flood, id, base_x, base_y, WALL_brush,
                     { info=pit, z2=R.cave_floor_h+8 })
@@ -1997,8 +1997,8 @@ function Rooms.build_cave(R)
       end
     end
 
-    if not data.f_info.delta_z then
-      data.f_info.delta_z = -(i * 10)
+    if true then
+      data.f_info.t_face.delta_z = -(i * 10)
     end
 
     data.f_z = R.cave_floor_h + i
@@ -2017,7 +2017,7 @@ function Rooms.build_cave(R)
         data.c_info = get_mat(data.ctex)
       end
 
-      data.c_info.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
+      data.c_info.b_face.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
 
       data.c_z = ceil_h - i
     end
