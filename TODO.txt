@@ -8,6 +8,9 @@ TODO
 +  Chris's name stuff!
 
 
+FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
+
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
@@ -19,6 +22,8 @@ Prefabs:
    FLTK-like resize behavior (allow 2 resize ranges per axis)
 
    have material fallbacks e.g. in pedestal: mat="side|top"
+
+   IDEA: have 'skin.scale_z' etc??
 
 
 >>>>  new brush system (gui)

@@ -74,3 +74,18 @@ PREFAB.PILLAR =
   },
 }
 
+
+PREFAB.CRATE =
+{
+  brushes =
+  {
+    {
+      { x = -32, y = -32, mat = "crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 64, mat = "crate", light = "?light" },
+    },
+  },
+}
+

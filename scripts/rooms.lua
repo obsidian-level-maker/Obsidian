@@ -1882,8 +1882,15 @@ function Rooms.add_crates(R)
   for _,spot in ipairs(find_spots()) do
     if rand.odds(chance) then
       spot.S.solid_corner = true
-      local z_top = spot.S.floor_h + (skin.h or 64)
-      Build.crate(spot.S.x2, spot.S.y2, z_top, skin, R.outdoor)
+
+      Trans.set_pos(spot.S.x2, spot.S.y2, spot.S.floor_h)
+      if skin.h then Trans.modify("scale_z", skin.h / 64) end
+      Build.prefab("CRATE", skin)
+      Trans.clear()
+
+--FIXME  if PARAM.outdoor_shadows and is_outdoor then
+--FIXME    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
+--FIXME  end
     end
   end
 end

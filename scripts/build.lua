@@ -50,13 +50,18 @@ function Trans.set(T)
   Trans.TRANSFORM = assert(T)
 end
 
+function Trans.set_pos(x, y, z)
+  Trans.set { add_x=x, add_y=y, add_z=z }
+end
+
 function Trans.clear()
-  Trans.set({})
+  Trans.set {}
 end
 
 function Trans.modify(what, value)
   Trans.TRANSFORM[what] = value
 end
+
 
 
 function Trans.apply(x, y)
@@ -2177,19 +2182,6 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   Trans.clear()
 end
 
-
-
-function Build.crate(x, y, z_top, skin, is_outdoor)
-  local info = add_pegging(get_mat(skin.side_w))
-
-  local coords = Trans.rect_coords(x-32,y-32, x+32,y+32)
-
-  Trans.old_brush(info, coords, -EXTREME_H, z_top)
-
-  if PARAM.outdoor_shadows and is_outdoor then
-    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
-  end
-end
 
 
 function Build.raising_start(S, face_dir, z1, skin)

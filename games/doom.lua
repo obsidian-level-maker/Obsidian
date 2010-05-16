@@ -1408,18 +1408,18 @@ DOOM.PILLARS =
 }
 
 
-DOOM.CRATES =  -- temporary (until good prefab system)
+DOOM.CRATES =
 {
-  crate1 = { side_w="CRATE1", top_f="CRATOP2" },
-  crate2 = { side_w="CRATE2", top_f="CRATOP1" },
+  crate1 = { crate="CRATE1", x_offset=0, y_offset=0 },
+  crate2 = { crate="CRATE2", x_offset=0, y_offset=0 },
   
-  space = { side_w="SPACEW3",  top_f="CEIL5_1" },
-  comp  = { side_w="COMPWERD", top_f="CEIL5_1" },
-  mod   = { side_w="MODWALL3", top_f="FLAT19" },
-  lite5 = { side_w="LITE5",    top_f="FLAT19" },
+  space = { crate="SPACEW3",  x_offset=0, y_offset=0 },
+  comp  = { crate="COMPWERD", x_offset=0, y_offset=0 },
+  mod   = { crate="MODWALL3", x_offset=0, y_offset=0 },
+  lite5 = { crate="LITE5",    x_offset=0, y_offset=0 },
 
-  wood = { side_w="WOOD3",    top_f="CEIL1_1" },
-  ick  = { side_w="ICKWALL4", top_f="FLAT19" },
+  wood = { crate="WOOD3",    x_offset=0, y_offset=0 },
+  ick  = { crate="ICKWALL4", x_offset=0, y_offset=0 },
 }
 
 
