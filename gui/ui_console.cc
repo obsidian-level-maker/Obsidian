@@ -47,18 +47,22 @@
 class UI_Console;
 class UI_ConLine;
 
-static UI_Console       *console_body;
-static Fl_Double_Window *console_win;
+static UI_Console *console_win;
 
 bool debug_onto_console;
 
 char *console_argv[CON_MAX_ARGS];
 int   console_argc;
 
+///-- static int last_W = 600;
+///-- static int last_H = 400;
+
 static std::list<std::string> con_saved_lines;
 static int con_saved_count = 0;
 
 static UI_ConLine *button_line;
+
+static bool console_active;
 
 
 // forward decls
@@ -448,7 +452,7 @@ public:
 };
 
 
-class UI_Console : public Fl_Group
+class UI_Console : public Fl_Double_Window
 {
 private:
   int count;
@@ -488,11 +492,15 @@ private:
 
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
-      Fl_Group(x, y, w, h, label),
+      Fl_Double_Window(x, y, w, h, label),
       count(0), offset_y(0), total_h(0)
   {
     end(); // cancel begin() in Fl_Group constructor
    
+    size_range(240, 160);
+    color(CONSOLE_BG, CONSOLE_BG);
+
+
     int sb_w = Fl::scrollbar_size();
     int in_h = 28 + KF * 2;
 
@@ -527,7 +535,11 @@ public:
 
   virtual ~UI_Console()
   {
-    // TODO
+///--     last_W = w();
+///--     last_H = h();
+
+    console_win = NULL;
+    console_active = false;
   }
 
 public:
@@ -592,6 +604,11 @@ private:
   // FLTK virtual method for handling input events.
   int handle(int event)
   {
+    if (event == FL_SHOW)
+      console_active = true;
+    else if (event == FL_HIDE)
+      console_active = false;
+
     if (event == FL_KEYDOWN || event == FL_SHORTCUT)
     {
       int key = Fl::event_key();
@@ -755,30 +772,20 @@ void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
 
 void UI_OpenConsole()
 {
-  if (console_win)
+  if (console_active)
     return;
 
-  console_win = new Fl_Double_Window(0, 0, 600, 400, "OBLIGE CONSOLE");
-  console_win->end();
-
-  console_win->size_range(240, 160);
-  console_win->color(CONSOLE_BG, CONSOLE_BG);
-
-  if (! console_body)
+  if (! console_win)
   {
-    console_body = new UI_Console(0, 0, console_win->w(), console_win->h());
+    console_win = new UI_Console(0, 0, 600, 400, "OBLIGE CONSOLE");
   }
-  // else RESIZE body to WIN SIZE
-
-  console_win->add(console_body);
-  console_win->resizable(console_body);
 
   console_win->show();
 
   // add the saved lines
   while (! con_saved_lines.empty())
   {
-    console_body->AddLine(con_saved_lines.front().c_str());
+    console_win->AddLine(con_saved_lines.front().c_str());
 
     con_saved_lines.pop_front();
   }
@@ -786,19 +793,20 @@ void UI_OpenConsole()
 
 void UI_CloseConsole()
 {
-  if (! console_win)
-    return;
+  if (console_active)
+  {
+    SYS_ASSERT(console_win);
 
-  // we keep the body around (FIXME: don't)
-  console_win->remove(console_body);
+    console_win->hide();
 
-  delete console_win;
-  console_win = NULL;
+///    delete console_win;
+///    console_win = NULL;
+  }
 }
 
 void UI_ToggleConsole()
 {
-  if (console_win)
+  if (console_active)
     UI_CloseConsole();
   else
     UI_OpenConsole();
@@ -807,9 +815,9 @@ void UI_ToggleConsole()
 
 static void DoAddLine(const char *line)
 {
-  if (console_win)
+  if (console_active)
   {
-    console_body->AddLine(line);
+    console_win->AddLine(line);
     return;
   }
 
@@ -881,7 +889,7 @@ void CMD_Args(void)
 
 void CMD_Clear(void)
 {
-  console_body->Clear();
+  console_win->Clear();
 
   Script_RunString("ob_ref_table(\"clear\")");
 }
@@ -981,7 +989,7 @@ static void KillArgs()
 
 void ConExecute(const char *cmd)
 {
-  if (! console_win)
+  if (! console_active)
     return;
 
   if (cmd[0] == '?')
