@@ -35,11 +35,11 @@ PREFAB.CEIL_LIGHT =
 
     -- light itself
     {
-      { x = -32, y = -32, mat = "glowy" },
-      { x =  32, y = -32, mat = "glowy" },
-      { x =  32, y =  32, mat = "glowy" },
-      { x = -32, y =  32, mat = "glowy" },
-      { b = -18, delta_z = 10, light = 0.9, mat = "glowy" },
+      { x = -32, y = -32, mat = "glow" },
+      { x =  32, y = -32, mat = "glow" },
+      { x =  32, y =  32, mat = "glow" },
+      { x = -32, y =  32, mat = "glow" },
+      { b = -18, delta_z = 10, light = 0.9, mat = "glow" },
     },
   },
 }

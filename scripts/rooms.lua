@@ -1101,6 +1101,9 @@ function Rooms.border_up()
 end
 
 
+------------------------------------------------------------------------
+
+
 function Rooms.make_ceiling(R)
 
   local function outdoor_ceiling()
@@ -1474,7 +1477,7 @@ function Rooms.make_ceiling(R)
     
     if mode == "light" then
       if not R.arena.ceil_light then return end
-      skin = { w=R.lite_w, h=R.lite_h, lite_f=R.arena.ceil_light, trim=THEME.light_trim }
+      skin = { glow=R.arena.ceil_light, trim=THEME.light_trim }
     end
 
     for x = x1,x2 do for y = y1,y2 do
@@ -1484,7 +1487,11 @@ function Rooms.make_ceiling(R)
       if ceil_h and S.kind ~= "void" then
         if mode == "light" then
           if S.content ~= "pillar" then
-            Build.ceil_light(S, ceil_h, skin)
+            Trans.set(Trans.centre_transform(S, ceil_h, 2))  -- TODO; pick a dir
+            if R.lite_w then Trans.modify("scale_x", R.lite_w  / 64) end
+            if R.lite_h then Trans.modify("scale_y", R.lite_h  / 64) end
+            Build.prefab("CEIL_LIGHT", skin)
+            Trans.clear()
           end
         else
           Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
@@ -2068,36 +2075,6 @@ end
 
 function Rooms.build_seeds(R)
 
-  local function centre_transform(S, z, dir)
-    local T = {}
-
-    local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
-
-    T.add_x  = (S.x1 + S.x2) / 2
-    T.add_y  = (S.y1 + S.y2) / 2
-    T.add_z  = z
-
-    T.rotate = ANGS[dir]
-
-    return T
-  end
-
-  local function doorway_transform(S, z, side)
-    local T = {}
-
-    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
-    local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
-    local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y2, [6]=S.y1 }
-
-    T.add_x = XS[side]
-    T.add_y = YS[side]
-    T.add_z = z
-
-    T.rotate = ANGS[side]
-
-    return T
-  end
-
   local function do_teleporter(S)
     -- TEMP HACK CRUD JUNK
 
@@ -2258,7 +2235,7 @@ gui.printf("do_teleport\n")
         local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.EXITS[skin_name])
 
-        Trans.set(centre_transform(S, z1, dir))
+        Trans.set(Trans.centre_transform(S, z1, dir))
         Build.prefab("OUTDOOR_EXIT_SWITCH", skin)
         Trans.clear()
 
@@ -2267,7 +2244,7 @@ gui.printf("do_teleport\n")
         local skin_name = rand.key_by_probs(THEME.exits)
         local skin = assert(GAME.EXITS[skin_name])
 
-        Trans.set(centre_transform(S, z1, dir))
+        Trans.set(Trans.centre_transform(S, z1, dir))
         Build.prefab("EXIT_PILLAR", skin)
         Trans.clear()
 
@@ -2300,7 +2277,7 @@ gui.printf("do_teleport\n")
       local skin = table.copy(INFO.skin)
       skin.tag = LOCK.tag
 
-      Trans.set(centre_transform(S, z1, dir_for_wotsit(S)))
+      Trans.set(Trans.centre_transform(S, z1, dir_for_wotsit(S)))
       Build.prefab("SMALL_SWITCH", skin)
       Trans.clear()
 
@@ -2452,12 +2429,12 @@ gui.printf("do_teleport\n")
 
 
 --!!!!!!
-if S.content == "wotsit" and R.purpose == "EXIT" then
+if false and S.content == "wotsit" and R.purpose == "EXIT" then
   local skin = table.copy(assert(GAME.EXITS["tech_small"]))
   skin.inner = w_tex
   skin.outer = o_tex
 
-  Trans.set(doorway_transform(S, z1, 8))
+  Trans.set(Trans.doorway_transform(S, z1, 8))
   Trans.modify("scale_x", 192 / 256)
   Trans.modify("scale_y", 192 / 256)
 
@@ -2569,7 +2546,7 @@ end
         local z = assert(S.conn and S.conn.conn_h)
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Trans.set(doorway_transform(S, z, side))
+        Trans.set(Trans.doorway_transform(S, z, side))
 
         Build.prefab("ARCH", skin)
 
@@ -2591,7 +2568,7 @@ end
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Trans.set(doorway_transform(S, z1, side))
+        Trans.set(Trans.doorway_transform(S, z1, side))
         Trans.modify("scale_z", 0.5)
 
         Build.prefab("ARCH", skin)
@@ -2618,7 +2595,7 @@ end
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Trans.set(doorway_transform(S, z, side))
+        Trans.set(Trans.doorway_transform(S, z, side))
 
         Build.prefab("DOOR", skin2)
 
@@ -2647,7 +2624,7 @@ end
 
         local reversed = (S == S.conn.dest_S)
 
-        Trans.set(doorway_transform(S, z, side))
+        Trans.set(Trans.doorway_transform(S, z, side))
 
         Build.prefab("DOOR", skin2)
 
@@ -2737,7 +2714,10 @@ end
         end
 
         if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
-          Build.ceil_light(S, z2, { lite_f=LEVEL.hall_lite_ftex, trim=THEME.light_trim })
+          local skin = { glow=LEVEL.hall_lite_ftex, trim=THEME.light_trim }
+          Trans.set(Trans.centre_transform(S, z2, 2))  -- TODO; pick a dir
+          Build.prefab("CEIL_LIGHT", skin)
+          Trans.clear()
         end
       end
     end
@@ -2798,7 +2778,7 @@ end
     -- PREFABS
 
     if S.content == "pillar" then
-      Trans.set(centre_transform(S, z1, S.pillar_dir or 2))  -- TODO pillar_dir
+      Trans.set(Trans.centre_transform(S, z1, S.pillar_dir or 2))  -- TODO pillar_dir
       Trans.modify("scale_z", (z2 - z1) / 128)
       Build.prefab("PILLAR", assert(S.pillar_skin))
       Trans.clear()

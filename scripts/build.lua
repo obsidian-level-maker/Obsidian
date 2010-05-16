@@ -327,6 +327,39 @@ function Trans.strip(info, strip, z1, z2)
 end
 
 
+function Trans.centre_transform(S, z, dir)
+  local T = {}
+
+  local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
+
+  T.add_x  = (S.x1 + S.x2) / 2
+  T.add_y  = (S.y1 + S.y2) / 2
+  T.add_z  = z
+
+  T.rotate = ANGS[dir]
+
+  return T
+end
+
+function Trans.doorway_transform(S, z, side)
+  local T = {}
+
+  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
+  local XS   = { [2]=S.x1, [8]=S.x2, [4]=S.x1, [6]=S.x2 }
+  local YS   = { [2]=S.y1, [8]=S.y2, [4]=S.y2, [6]=S.y1 }
+
+  T.add_x = XS[side]
+  T.add_y = YS[side]
+  T.add_z = z
+
+  T.rotate = ANGS[side]
+
+  return T
+end
+
+
+
+
 ------------------------------------------------------------------------
 
 
