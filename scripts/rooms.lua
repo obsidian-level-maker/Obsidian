@@ -2195,8 +2195,10 @@ gui.printf("do_teleport\n")
         S.raising_start = true
         R.has_raising_start = true
       else
-        local skin = { floor="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-        Build.pedestal(S, z1, skin)
+        local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
+        Trans.set(Trans.centre_transform(S, z1))
+        Build.prefab("PEDESTAL", skin)
+        Trans.clear()
       end
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
@@ -2253,19 +2255,27 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.lock)
 
-      if rand.odds(15) and THEME.lowering_pedestal_skin then
+      if rand.odds(115) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
         end
 
-        Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin)
+        local skin = table.copy(THEME.lowering_pedestal_skin)
+        skin.tag = LEVEL:alloc_tag()
+
+        Trans.set(Trans.centre_transform(S, z1))
+        Trans.modify("scale_z", (z_top - z1) / 128)
+        Build.prefab("LOWERING_PEDESTAL", skin)
+        Trans.clear()
 
         Trans.entity(LOCK.item, mx, my, z_top)
       else
         if rand.odds(98) then
-          local skin = { floor=THEME.pedestal_mat }
-          Build.pedestal(S, z1, skin)
+          local skin = { top=THEME.pedestal_mat, light=0.7 }
+          Trans.set(Trans.centre_transform(S, z1))
+          Build.prefab("PEDESTAL", skin)
+          Trans.clear()
         end
         Trans.entity(LOCK.item, mx, my, z1)
       end
@@ -2300,20 +2310,28 @@ gui.printf("do_teleport\n")
     if R.hallway or R == LEVEL.start_room then
       Trans.entity(weapon, mx, my, z1)
 
-    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
+    elseif rand.odds(140) and THEME.lowering_pedestal_skin2 then
       local z_top = math.max(z1+80, R.floor_max_h+40)
       if z_top > z2-32 then
          z_top = z2-32
       end
 
-      Build.lowering_pedestal(S, z_top, THEME.lowering_pedestal_skin2)
+      local skin = table.copy(THEME.lowering_pedestal_skin2)
+      skin.tag = LEVEL:alloc_tag()
+
+      Trans.set(Trans.centre_transform(S, z1))
+      Trans.modify("scale_z", (z_top - z1) / 128)
+      Build.prefab("LOWERING_PEDESTAL", skin)
+      Trans.clear()
 
       Trans.entity(weapon, mx, my, z_top)
     else
-      local skin = { floor=THEME.pedestal_mat }
-      Build.pedestal(S, z1, skin)
+      local skin = { top=THEME.pedestal_mat, light=0.7 }
+      Trans.set(Trans.centre_transform(S, z1))
+      Build.prefab("PEDESTAL", skin)
+      Trans.clear()
 
-      Trans.entity(weapon, mx, my, z1)
+      Trans.entity(weapon, mx, my, z1+8)
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)

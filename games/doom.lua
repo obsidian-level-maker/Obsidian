@@ -2321,14 +2321,14 @@ DOOM.SUB_THEME_DEFAULTS =
 
   lowering_pedestal_skin =
   {
-    wall="WOOD3", floor="CEIL1_3",
+    side="WOOD3", top="CEIL1_3",
     x_offset=0, y_offset=0, peg=1,
     line_kind=23,
   },
 
   lowering_pedestal_skin2 =
   {
-    wall="PIPEWAL1", floor="CEIL1_2",
+    side="PIPEWAL1", top="CEIL1_2",
     x_offset=0, y_offset=0, peg=1,
     line_kind=23,
   },

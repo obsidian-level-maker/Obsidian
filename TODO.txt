@@ -18,6 +18,8 @@ IDEA:
 Prefabs:
    FLTK-like resize behavior (allow 2 resize ranges per axis)
 
+   have material fallbacks e.g. in pedestal: mat="side|top"
+
 
 >>>>  new brush system (gui)
 

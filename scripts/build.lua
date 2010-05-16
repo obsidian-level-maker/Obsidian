@@ -336,7 +336,7 @@ function Trans.centre_transform(S, z, dir)
   T.add_y  = (S.y1 + S.y2) / 2
   T.add_z  = z
 
-  T.rotate = ANGS[dir]
+  if dir then T.rotate = ANGS[dir] end
 
   return T
 end
@@ -352,11 +352,10 @@ function Trans.doorway_transform(S, z, side)
   T.add_y = YS[side]
   T.add_z = z
 
-  T.rotate = ANGS[side]
+  if side then T.rotate = ANGS[side] end
 
   return T
 end
-
 
 
 
@@ -1066,110 +1065,6 @@ function Build.lowering_bars(S, side, z_top, skin, tag)
   end
 
   Trans.clear()
-end
-
-
-function Build.ceil_light(S, z2, skin)
-  assert(skin)
-  
-  local w = (skin.w or 64) / 2
-  local h = (skin.h or 64) / 2
-
-  local mx = int((S.x1 + S.x2)/2)
-  local my = int((S.y1 + S.y2)/2)
-
-  local light_info = get_mat(skin.lite_f)
-  light_info.b_face.light = 0.90
-
-  Trans.old_brush(light_info,
-  {
-    { x = mx+w, y = my-h },
-    { x = mx+w, y = my+h },
-    { x = mx-w, y = my+h },
-    { x = mx-w, y = my-h },
-  },
-  z2-12, EXTREME_H)
-
-
-  local trim_info = get_mat(skin.trim)
-  trim_info.b_face.light = 0.72
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx-w,     y = my-(h+8) },
-    { x = mx-w,     y = my+(h+8) },
-    { x = mx-(w+8), y = my+(h+8) },
-    { x = mx-(w+8), y = my-(h+8) },
-  },
-  z2-16, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx+(w+8), y = my-(h+8) },
-    { x = mx+(w+8), y = my+(h+8) },
-    { x = mx+w,     y = my+(h+8) },
-    { x = mx+w,     y = my-(h+8) },
-  },
-  z2-16, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx+(w+8), y = my-(h+8) },
-    { x = mx+(w+8), y = my-h },
-    { x = mx-(w+8), y = my-h },
-    { x = mx-(w+8), y = my-(h+8) },
-  },
-  z2-16, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx+(w+8), y = my+h },
-    { x = mx+(w+8), y = my+(h+8) },
-    { x = mx-(w+8), y = my+(h+8) },
-    { x = mx-(w+8), y = my+h },
-  },
-  z2-16, EXTREME_H)
- 
-
---[[ connecting spokes....
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx+4, y = my+40 },
-    { x = mx+4, y = S.y2  },
-    { x = mx-4, y = S.y2  },
-    { x = mx-4, y = my+40 },
-  },
-  z2-10, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx+4, y = S.y1  },
-    { x = mx+4, y = my-40 },
-    { x = mx-4, y = my-40 },
-    { x = mx-4, y = S.y1  },
-  },
-  z2-10, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = mx-40, y = my-4, },
-    { x = mx-40, y = my+4, },
-    { x = S.x1 , y = my+4, },
-    { x = S.x1 , y = my-4, },
-  },
-  z2-10, EXTREME_H)
-
-  Trans.old_brush(trim_info,
-  {
-    { x = S.x2 , y = my-4, },
-    { x = S.x2 , y = my+4, },
-    { x = mx+40, y = my+4, },
-    { x = mx+40, y = my-4, },
-  },
-  z2-10, EXTREME_H)
- 
---]]
 end
 
 
@@ -2282,39 +2177,6 @@ gui.debugf("x1..x2 : %d,%d\n", x1,x2)
   Trans.clear()
 end
 
-
-function Build.pedestal(S, z1, skin)
-  local mx = int((S.x1+S.x2) / 2)
-  local my = int((S.y1+S.y2) / 2)
-
-  local info = get_mat(skin.wall or skin.floor, skin.floor)
-  info.t_face.light = 0.7
-
-  add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
-
-  Trans.old_quad(info, mx-32,my-32, mx+32,my+32, -EXTREME_H, z1+8)
-end
-
-function Build.lowering_pedestal(S, z1, skin)
-  local mx = int((S.x1+S.x2) / 2)
-  local my = int((S.y1+S.y2) / 2)
-
-  local tag = LEVEL:alloc_tag()
-
-  local info = get_mat(skin.wall or skin.floor, skin.floor)
-
-  add_pegging(info, skin.x_offset, skin.y_offset, skin.peg)
-  info.sec_tag = tag
-
-  Trans.old_brush(info,
-  {
-    { x=mx+32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx+32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx-32, y=my+32, line_kind=skin.line_kind, line_tag=tag },
-    { x=mx-32, y=my-32, line_kind=skin.line_kind, line_tag=tag },
-  },
-  -EXTREME_H, z1)
-end
 
 
 function Build.crate(x, y, z_top, skin, is_outdoor)
