@@ -148,8 +148,8 @@ PREFAB.WINDOW =
 
     -- frame top
     {
-      { x =  64, y =  0, mat = "inner" },
-      { x = 128, y =  0, mat = "outer" },
+      { x =  64, y =  0, mat = "outer" },
+      { x = 128, y =  0, mat = "inner" },
       { x = 128, y = 16, mat = "inner" },
       { x =  64, y = 16, mat = "inner" },
       { b = 96, mat = "outer" },
