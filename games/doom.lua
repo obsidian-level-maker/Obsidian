@@ -977,158 +977,158 @@ DOOM.PICTURES =
 
   compsta1 =
   {
-    pic_w="COMPSTA1", width=128, height=52,
+    pic="COMPSTA1", width=128, height=52,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   compsta2 =
   {
-    pic_w="COMPSTA2", width=128, height=52,
+    pic="COMPSTA2", width=128, height=52,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   compsta1_blink =
   {
-    pic_w="COMPSTA1", width=128, height=52,
+    pic="COMPSTA1", width=128, height=52,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
   compsta2_blink =
   {
-    pic_w="COMPSTA2", width=128, height=52,
+    pic="COMPSTA2", width=128, height=52,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
   lite5 =
   {
     count=3, gap=32,
-    pic_w="LITE5", width=16, height=64,
+    pic="LITE5", width=16, height=64,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    side="DOORSTOP", floor="SHAWN2", depth=8, 
     light=0.9, sec_kind=8,  -- oscillate
   },
 
   lite5_05blink =
   {
     count=3, gap=32,
-    pic_w="LITE5", width=16, height=64,
+    pic="LITE5", width=16, height=64,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    side="DOORSTOP", floor="SHAWN2", depth=8, 
     light=0.9, sec_kind=12,  -- 0.5 second sync
   },
 
   lite5_10blink =
   {
     count=4, gap=24,
-    pic_w="LITE5", width=16, height=48,
+    pic="LITE5", width=16, height=48,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    side="DOORSTOP", floor="SHAWN2", depth=8, 
     light=0.9, sec_kind=13,  -- 1.0 second sync
   },
 
   liteblu4 =
   {
     count=3, gap=32,
-    pic_w="LITEBLU4", width=16, height=64,
+    pic="LITEBLU4", width=16, height=64,
     x_offset=0, y_offset=0,
-    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    side="LITEBLU4", floor="FLAT14", depth=8, 
     light=0.9, sec_kind=8,
   },
 
   liteblu4_05sync =
   {
     count=3, gap=32,
-    pic_w="LITEBLU4", width=16, height=64,
+    pic="LITEBLU4", width=16, height=64,
     x_offset=0, y_offset=0,
-    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    side="LITEBLU4", floor="FLAT14", depth=8, 
     light=0.9, sec_kind=12,
   },
 
   liteblu4_10sync =
   {
     count=4, gap=32,
-    pic_w="LITEBLU4", width=16, height=48,
+    pic="LITEBLU4", width=16, height=48,
     x_offset=0, y_offset=0,
-    side_t="LITEBLU4", floor="FLAT14", depth=8, 
+    side="LITEBLU4", floor="FLAT14", depth=8, 
     light=0.9, sec_kind=13,
   },
 
   litered =
   {
     count=3, gap=32,
-    pic_w="LITERED", width=16, height=64,
+    pic="LITERED", width=16, height=64,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2", depth=16, 
+    side="DOORSTOP", floor="SHAWN2", depth=16, 
     light=0.9, sec_kind=8,  -- oscillate
   },
 
   redwall =
   {
     count=2, gap=48,
-    pic_w="REDWALL", width=16, height=128, raise=20,
+    pic="REDWALL", width=16, height=128, raise=20,
     x_offset=0, y_offset=0,
-    side_t="REDWALL", floor="FLAT5_3", depth=8, 
+    side="REDWALL", floor="FLAT5_3", depth=8, 
     light=0.99, sec_kind=8,
   },
 
   silver3 =
   {
     count=1, gap=32,
-    pic_w="SILVER3", width=64, height=96,
+    pic="SILVER3", width=64, height=96,
     x_offset=0, y_offset=16,
-    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    side="DOORSTOP", floor="SHAWN2", depth=8, 
     light=0.8,
   },
 
   shawn1 =
   {
     count=1,
-    pic_w="SHAWN1", width=128, height=72,
+    pic="SHAWN1", width=128, height=72,
     x_offset=-4, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2", depth=8, 
+    side="DOORSTOP", floor="SHAWN2", depth=8, 
   },
 
   pill =
   {
     count=1,
-    pic_w="O_PILL", width=128, height=32, raise=16,
+    pic="O_PILL", width=128, height=32, raise=16,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side="METAL", floor="CEIL5_2", depth=8, 
     light=0.7,
   },
 
   carve =
   {
     count=1,
-    pic_w="O_CARVE", width=64, height=64,
+    pic="O_CARVE", width=64, height=64,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side="METAL", floor="CEIL5_2", depth=8, 
     light=0.7,
   },
 
   neon =
   {
     count=1,
-    pic_w="O_NEON", width=128, height=128,
+    pic="O_NEON", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=16, 
+    side="METAL", floor="CEIL5_2", depth=16, 
     light=0.99, sec_kind=8,
   },
 
   tekwall1 =
   {
     count=1,
-    pic_w="TEKWALL1", width=160, height=80,
+    pic="TEKWALL1", width=160, height=80,
     x_offset=0, y_offset=24,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side="METAL", floor="CEIL5_2", depth=8, 
     line_kind=48, -- scroll left
     light=0.7,
   },
@@ -1136,9 +1136,9 @@ DOOM.PICTURES =
   tekwall4 =
   {
     count=1,
-    pic_w="TEKWALL4", width=128, height=80,
+    pic="TEKWALL4", width=128, height=80,
     x_offset=0, y_offset=24,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
+    side="METAL", floor="CEIL5_2", depth=8, 
     line_kind=48, -- scroll left
     light=0.7,
   },
@@ -1146,72 +1146,72 @@ DOOM.PICTURES =
   pois1 =
   {
     count=2, gap=32,
-    pic_w="BRNPOIS", width=64, height=56,
+    pic="BRNPOIS", width=64, height=56,
     x_offset=0, y_offset=48,
-    side_t="METAL", floor="CEIL5_2",
+    side="METAL", floor="CEIL5_2",
     depth=8, light=0.5,
   },
 
   pois2 =
   {
     count=1, gap=32,
-    pic_w="GRAYPOIS", width=64, height=64,
+    pic="GRAYPOIS", width=64, height=64,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", floor="SHAWN2",
+    side="DOORSTOP", floor="SHAWN2",
     depth=8, light=0.5,
   },
 
   eagle1 =
   {
     count=1,
-    pic_w="ZZWOLF6", width=128, height=128,
+    pic="ZZWOLF6", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="WOODVERT", floor="FLAT5_2",
+    side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.57,
   },
 
   hitler1 =
   {
     count=1,
-    pic_w="ZZWOLF7", width=128, height=128,
+    pic="ZZWOLF7", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="WOODVERT", floor="FLAT5_2",
+    side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.57,
   },
 
   marbface =
   {
     count=1,
-    pic_w="MARBFACE", width=128, height=128,
+    pic="MARBFACE", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.57,
   },
 
   marbfac2 =
   {
     count=1,
-    pic_w="MARBFAC2", width=128, height=128,
+    pic="MARBFAC2", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.57,
   },
 
   marbfac3 =
   {
     count=1,
-    pic_w="MARBFAC3", width=128, height=128,
+    pic="MARBFAC3", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.57,
   },
 
   skinface =
   {
     count=1,
-    pic_w="SKINFACE", width=160, height=80,
+    pic="SKINFACE", width=160, height=80,
     x_offset=0, y_offset=24,
-    -- side_t="METAL", floor="CEIL5_2",
+    -- side="METAL", floor="CEIL5_2",
     depth=8, 
     line_kind=48, -- scroll left
     light=0.7,
@@ -1220,9 +1220,9 @@ DOOM.PICTURES =
   spface1 =
   {
     count=1,
-    pic_w="SP_FACE1", width=160, height=96,
+    pic="SP_FACE1", width=160, height=96,
     x_offset=0, y_offset=0,
-    -- side_t="METAL", floor="CEIL5_2",
+    -- side="METAL", floor="CEIL5_2",
     depth=8, 
     line_kind=48, -- scroll left
     light=0.7,
@@ -1231,155 +1231,155 @@ DOOM.PICTURES =
   firewall =
   {
     count=1,
-    pic_w="FIREWALL", width=128, height=112,
+    pic="FIREWALL", width=128, height=112,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.9,
   },
 
   planet1 =
   {
-    pic_w="PLANET1", width=192, height=128,
+    pic="PLANET1", width=192, height=128,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   planet1_blink =
   {
-    pic_w="PLANET1", width=192, height=128,
+    pic="PLANET1", width=192, height=128,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
   compute1 =
   {
-    pic_w="COMPUTE1", width=128, height=128,
+    pic="COMPUTE1", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   compute1_blink =
   {
-    pic_w="COMPUTE1", width=128, height=128,
+    pic="COMPUTE1", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
   compute2 =
   {
-    pic_w="COMPUTE2", width=192, height=56,
+    pic="COMPUTE2", width=192, height=56,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   compute2_blink =
   {
-    pic_w="COMPUTE2", width=192, height=56,
+    pic="COMPUTE2", width=192, height=56,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8, sec_kind=1,
   },
 
   skulls1 =
   {
     count=1,
-    pic_w="SKULWALL", width=128, height=128,
+    pic="SKULWALL", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   skulls2 =
   {
     count=1,
-    pic_w="SKULWAL3", width=128, height=128,
+    pic="SKULWAL3", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spacewall =
   {
-    pic_w="SPACEW3", width=64, height=128,
+    pic="SPACEW3", width=64, height=128,
     x_offset=0, y_offset=0,
-    side_t="DOORSTOP", depth=8, 
+    side="DOORSTOP", depth=8, 
     floor="SHAWN2", light=0.8,
   },
 
   spdude1 =
   {
     count=1,
-    pic_w="SP_DUDE1", width=128, height=128,
+    pic="SP_DUDE1", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude2 =
   {
     count=1,
-    pic_w="SP_DUDE2", width=128, height=128,
+    pic="SP_DUDE2", width=128, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude3 =
   {
     count=1,
-    pic_w="SP_DUDE3", width=64, height=128,
+    pic="SP_DUDE3", width=64, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude4 =
   {
     count=1,
-    pic_w="SP_DUDE4", width=64, height=128,
+    pic="SP_DUDE4", width=64, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude5 =
   {
     count=1,
-    pic_w="SP_DUDE5", width=64, height=128,
+    pic="SP_DUDE5", width=64, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude6 =
   {
     count=1,
-    pic_w="SP_DUDE6", width=64, height=128,
+    pic="SP_DUDE6", width=64, height=128,
     x_offset=0, y_offset=0,
-    -- side_t="WOODVERT", floor="FLAT5_2",
+    -- side="WOODVERT", floor="FLAT5_2",
     depth=8, light=0.67,
   },
 
   spdude7 =
   {
     count=1,
-    pic_w="SP_DUDE7", width=128, height=128,
+    pic="SP_DUDE7", width=128, height=128,
     x_offset=0, y_offset=0,
-    side_t="METAL", floor="RROCK03",
+    side="METAL", floor="RROCK03",
     depth=8, light=0.67,
   },
 
   spine =
   {
     count=1,
-    pic_w="SKSPINE2", width=160, height=70,
+    pic="SKSPINE2", width=160, height=70,
     x_offset=0, y_offset=24,
-    -- side_t="METAL", floor="CEIL5_2",
+    -- side="METAL", floor="CEIL5_2",
     depth=8, 
     line_kind=48, -- scroll left
     light=0.7,

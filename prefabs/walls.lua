@@ -24,10 +24,10 @@ PREFAB.PICTURE =
   {
     -- wall behind picture
     {
-      { x =   0, y =  0, mat = "wall" },
-      { x = 192, y =  0, mat = "wall" },
-      { x = 192, y = 12, mat = "wall" },
-      { x =   0, y = 12, mat = "wall" },
+      { x =   0, y =  0, mat = "outer" },
+      { x = 192, y =  0, mat = "inner" },
+      { x = 192, y = 12, mat = "inner" },
+      { x =   0, y = 12, mat = "inner" },
     },
 
     -- picture itself
@@ -40,49 +40,49 @@ PREFAB.PICTURE =
 
     -- right side wall
     {
-      { x = 0, y = 12, mat = "wall" },
-      { x = 8, y = 12, mat = "wall" },
-      { x = 8, y = 24, mat = "wall" },
-      { x = 0, y = 24, mat = "wall" },
+      { x = 0, y = 12, mat = "inner" },
+      { x = 8, y = 12, mat = "inner" },
+      { x = 8, y = 24, mat = "inner" },
+      { x = 0, y = 24, mat = "inner" },
     },
 
     {
-      { x =  8, y = 12, mat = "wall" },
+      { x =  8, y = 12, mat = "inner" },
       { x = 64, y = 12, mat = "side" },
-      { x = 64, y = 24, mat = "wall" },
+      { x = 64, y = 24, mat = "inner" },
       { x =  8, y = 24, mat = "side" },
     },
 
     -- left side wall
     {
-      { x = 184, y = 12, mat = "wall" },
-      { x = 192, y = 12, mat = "wall" },
-      { x = 192, y = 24, mat = "wall" },
-      { x = 184, y = 24, mat = "wall" },
+      { x = 184, y = 12, mat = "inner" },
+      { x = 192, y = 12, mat = "inner" },
+      { x = 192, y = 24, mat = "inner" },
+      { x = 184, y = 24, mat = "inner" },
     },
 
     {
-      { x = 128, y = 12, mat = "wall" },
+      { x = 128, y = 12, mat = "inner" },
       { x = 184, y = 12, mat = "side" },
-      { x = 184, y = 24, mat = "wall" },
+      { x = 184, y = 24, mat = "inner" },
       { x = 128, y = 24, mat = "side" },
     },
 
     -- frame bottom
     {
-      { x = 128, y = 12, mat = "wall" },
-      { x = 128, y = 24, mat = "wall" },
-      { x =  64, y = 24, mat = "wall", blocked=1 },
-      { x =  64, y = 12, mat = "wall" },
+      { x = 128, y = 12, mat = "inner" },
+      { x = 128, y = 24, mat = "inner" },
+      { x =  64, y = 24, mat = "inner", blocked=1 },
+      { x =  64, y = 12, mat = "inner" },
       { t = 32, mat = "floor" },
     },
 
     -- frame top
     {
-      { x = 128, y = 12, mat = "wall" },
-      { x = 128, y = 24, mat = "wall" },
-      { x =  64, y = 24, mat = "wall", blocked=1 },
-      { x =  64, y = 12, mat = "wall" },
+      { x = 128, y = 12, mat = "inner" },
+      { x = 128, y = 24, mat = "inner" },
+      { x =  64, y = 24, mat = "inner", blocked=1 },
+      { x =  64, y = 12, mat = "inner" },
       { b = 96, light = "?light", mat = "floor" },
     },
   },

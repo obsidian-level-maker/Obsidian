@@ -162,13 +162,13 @@ CSG CODE:
 +  CSG DOOM: temporary file has ".TMP" extension, delete it on error
              kill the temp/ folder  (NB: used by wolf too)
 
--  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
-   (similarly for 'tag', 'args' etc...).
-   Put delta_z in there too.
+DONE(?)  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
+         (similarly for 'tag', 'args' etc...).
+         Put delta_z in there too.
 
--  make the [wbt]_face field of brushes be like entities and
-   store all the fields in a std::map.
-   Have a utility function to find / extract a field.
+DONE(?)  make the [wbt]_face field of brushes be like entities and
+         store all the fields in a std::map.
+         Have a utility function to find / extract a field.
 
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush

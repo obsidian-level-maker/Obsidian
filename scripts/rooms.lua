@@ -2436,21 +2436,19 @@ gui.printf("do_teleport\n")
       w_tex = assert(LEVEL.well_tex)
     end
 
-    local o_tex = w_tex
-
-    if S.conn_dir then
-      local N = S:neighbor(S.conn_dir)
-
-      if N.room.hallway then
-        o_tex = LEVEL.hall_tex
-      elseif N.room.stairwell then
-        o_tex = LEVEL.well_tex
-      elseif not N.room.outdoor and N.room ~= R.parent then
-        o_tex = N.w_tex or N.room.main_tex
-      elseif N.room.outdoor and not (R.outdoor or R.natural) then
-        o_tex = R.facade or w_tex
-      end
-    end
+---???    if S.conn_dir then
+---???      local N = S:neighbor(S.conn_dir)
+---???
+---???      if N.room.hallway then
+---???        o_tex = LEVEL.hall_tex
+---???      elseif N.room.stairwell then
+---???        o_tex = LEVEL.well_tex
+---???      elseif not N.room.outdoor and N.room ~= R.parent then
+---???        o_tex = N.w_tex or N.room.main_tex
+---???      elseif N.room.outdoor and not (R.outdoor or R.natural) then
+---???        o_tex = R.facade or w_tex
+---???      end
+---???    end
 
 
 --!!!!!!
@@ -2505,6 +2503,15 @@ end
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
+      local o_tex = w_tex
+
+      if N and N.room then
+        o_tex = N.room.main_tex
+        if N.room.outdoor and not R.outdoor and R.facade then
+          o_tex = R.facade
+        end
+      end
+
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
                               (N.edge_of_map and N.building))
       then
@@ -2540,7 +2547,7 @@ end
       end
 
       if B_kind == "facade" then
-        Build.facade(S, side, S.border[side].facade)
+--!!!!!!!        Build.facade(S, side, S.border[side].facade)
       end
 
       if B_kind == "window" then
@@ -2555,9 +2562,16 @@ end
 
       if B_kind == "picture" then
         local B = S.border[side]
-        B.pic_skin.wall = w_tex
 
-        Build.picture(S, side, B.pic_z1, B.pic_z2, B.pic_skin)
+        local skin = table.copy(B.pic_skin)
+        skin.inner = w_tex
+        skin.outer = o_tex
+
+        -- FIXME: scaling
+        Trans.set(Trans.doorway_transform(S, z1, side))
+        Build.prefab("PICTURE", skin)
+        Trans.clear()
+
         shrink_both(side, 4)
       end
 
