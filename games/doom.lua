@@ -924,14 +924,14 @@ DOOM.RAILS =
 
 DOOM.STEPS =
 {
-  step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" },
-  step2 = { step_w="STEP2", side_w="BROWN1",   top_f="FLAT5" },
-  step3 = { step_w="STEP3", side_w="COMPSPAN", top_f="CEIL5_1" },
-  step4 = { step_w="STEP4", side_w="STONE",    top_f="FLAT5_4" },
+  step1 = { step="STEP1", side="BROWNHUG", top="FLOOR7_1" },
+  step2 = { step="STEP2", side="BROWN1",   top="FLAT5" },
+  step3 = { step="STEP3", side="COMPSPAN", top="CEIL5_1" },
+  step4 = { step="STEP4", side="STONE",    top="FLAT5_4" },
 
   -- Doom II only --
-  step4b = { step_w="STEP4", side_w="STONE4",   top_f="FLAT1" },
-  step6  = { step_w="STEP6", side_w="STUCCO",   top_f="FLAT5" },
+  step4b = { step="STEP4", side="STONE4",   top="FLAT1" },
+  step6  = { step="STEP6", side="STUCCO",   top="FLAT5" },
 }
 
 

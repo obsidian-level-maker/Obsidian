@@ -2783,7 +2783,27 @@ end
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
 
-      Build.niche_stair(S, LEVEL.step_skin, skin2)
+      table.merge(skin2, LEVEL.step_skin)
+
+      local z1 = S.stair_z1
+      local z2 = S.stair_z2
+      local dir = S.stair_dir
+      local fab_name
+
+      if z1 < z2 then
+        fab_name = "STAIR_6"
+      else
+        fab_name = "NICHE_STAIR_8"
+        z1, z2 = z2, z1
+        dir = 10-dir
+      end
+
+      Trans.set(Trans.doorway_transform(S, z1, dir))
+      Trans.modify("scale_z", (z2 - z1) / 128)
+      Build.prefab(fab_name, skin2)
+      Trans.clear()
+      
+---####    Build.niche_stair(S, LEVEL.step_skin, skin2)
 
     elseif S.kind == "curve_stair" then
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)

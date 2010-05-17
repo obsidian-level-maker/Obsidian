@@ -69,6 +69,15 @@ PREFAB.STAIR_6 =
       { x =  48, y = 72, mat = "side", },
       { t = 18, mat = "top", },
     },
+
+    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "floor" },
+      { x = 192, y=   0, mat = "floor" },
+      { x = 192, y= 192, mat = "floor" },
+      { x =   0, y= 192, mat = "floor" },
+      { t = 0, mat = "floor" },
+    },
   },
 }
 
@@ -102,14 +111,14 @@ PREFAB.NICHE_STAIR_8 =
       { t = 128, mat = "floor" },
     },
 
-    --[[
-    -- porch
+    -- [[
+    -- porch   FIXME: keep this?
     {
       { x =  24, y = 160, mat = "wall" },
       { x = 168, y = 160, mat = "wall" },
       { x = 168, y = 192, mat = "wall" },
       { x =  24, y = 192, mat = "wall" },
-      { t = 128, mat = "porch" },
+      { t = 0, mat = "floor" },
     },
     --]]
 
