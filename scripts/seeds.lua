@@ -89,6 +89,11 @@ SEED_CLASS =
   mid_point = function(self)
     return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
   end,
+
+  x3 = function(self) return self.x1 + self.thick[4] end,
+  x4 = function(self) return self.x2 - self.thick[6] end,
+  y3 = function(self) return self.y1 + self.thick[2] end,
+  y4 = function(self) return self.y2 - self.thick[8] end,
 }
 
 

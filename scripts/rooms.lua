@@ -2541,8 +2541,13 @@ end
         B_kind = nil
       end
 
-      if B_kind == "wall" and R.kind ~= "scenic" then  -- FIXME; scenic check is bogus
-        Build.wall(S, side, w_tex)
+      if B_kind == "wall" then
+        local skin = { inner = w_tex, outer = o_tex }
+
+        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Build.prefab("WALL", skin)
+        Trans.clear()
+
         shrink_both(side, 4)
       end
 
@@ -2568,7 +2573,7 @@ end
         skin.outer = o_tex
 
         -- FIXME: scaling
-        Trans.set(Trans.doorway_transform(S, z1, side))
+        Trans.set(Trans.sidelet_transform(S, z1, side))
         Build.prefab("PICTURE", skin)
         Trans.clear()
 
@@ -2585,7 +2590,7 @@ end
         local z = assert(S.conn and S.conn.conn_h)
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Trans.set(Trans.doorway_transform(S, z, side))
+        Trans.set(Trans.sidelet_transform(S, z, side))
 
         Build.prefab("ARCH", skin)
 
@@ -2607,7 +2612,7 @@ end
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Trans.set(Trans.doorway_transform(S, z1, side))
+        Trans.set(Trans.sidelet_transform(S, z1, side))
         Trans.modify("scale_z", 0.5)
 
         Build.prefab("ARCH", skin)
@@ -2634,7 +2639,7 @@ end
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Trans.set(Trans.doorway_transform(S, z, side))
+        Trans.set(Trans.sidelet_transform(S, z, side))
 
         Build.prefab("DOOR", skin2)
 
@@ -2663,7 +2668,7 @@ end
 
         local reversed = (S == S.conn.dest_S)
 
-        Trans.set(Trans.doorway_transform(S, z, side))
+        Trans.set(Trans.sidelet_transform(S, z, side))
 
         Build.prefab("DOOR", skin2)
 
