@@ -357,11 +357,15 @@ function Trans.sidelet_transform(S, z, side)
   T.add_y = YS[side]
   T.add_z = z
 
+  -- remember that scaling is done _before_ rotation
+
   if geom.is_vert(side) then
     T.scale_x = (S:x4() - S:x3()) / 192
   else
     T.scale_x = (S:y4() - S:y3()) / 192
   end
+
+  T.scale_y = S.thick[side] / 16
 
   if side then T.rotate = ANGS[side] end
 

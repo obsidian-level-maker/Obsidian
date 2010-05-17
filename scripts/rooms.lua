@@ -627,7 +627,7 @@ function Rooms.border_up()
     else
       S.border[side].kind = "wall"
       S.border[side].can_fake_sky = true
-      S.thick[side] = 24
+---???      S.thick[side] = 24
     end
   end
 
@@ -677,7 +677,7 @@ function Rooms.border_up()
       end
 
       S.border[side].kind = "wall"
-      S.thick[side] = 24
+---???      S.thick[side] = 24
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
@@ -2709,7 +2709,7 @@ end
 
       local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
 
-      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
+--!!!!!!      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
 
       S.kind = assert(S.diag_new_kind)
 
