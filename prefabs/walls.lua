@@ -18,6 +18,34 @@
 --
 ----------------------------------------------------------------
 
+PREFAB.WALL =
+{
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "outer" },
+      { x = 192, y =  0, mat = "inner" },
+      { x = 192, y = 16, mat = "inner" },
+      { x =   0, y = 16, mat = "inner" },
+    },
+  },
+}
+
+
+PREFAB.CORNER =
+{
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "outer" },
+      { x = 16, y =  0, mat = "inner" },
+      { x = 16, y = 16, mat = "inner" },
+      { x =  0, y = 16, mat = "outer" },
+    },
+  },
+}
+
+
 PREFAB.PICTURE =
 {
   brushes =
