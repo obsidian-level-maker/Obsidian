@@ -2557,11 +2557,12 @@ end
 
       if B_kind == "window" then
         local B = S.border[side]
-        local skin = { wall=w_tex, side_t=THEME.window_side_mat or w_tex, facade=R.facade or w_tex }
-        -- skin.floor = f_tex
+        local skin = { inner=w_tex, outer=o_tex, side=THEME.window_side_mat or w_tex }
 
-        Build.window(S, side, B.win_width, B.win_mid_w,
-                     B.win_z1, B.win_z2, skin)
+        -- FIXME: B.win_width, B.win_z1, B.win_z2
+        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Build.prefab("WINDOW", skin)
+        Trans.clear()
         shrink_both(side, 4)
       end
 
