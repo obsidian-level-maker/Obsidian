@@ -463,10 +463,11 @@ private:
 
   UI_ConInput *input;
 
-  // number of pixels "lost" above the top of the module area
+  // number of pixels "lost" below the bottom of the console area.
+  // this is never < 0
   int offset_y;
 
-  // total height of all shown data
+  // total height of all lines in our buffer
   int total_h;
 
 private:
@@ -489,6 +490,8 @@ private:
   }
 
   void PositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
+
+  void MoveAll(int dy);
 
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
@@ -583,6 +586,12 @@ public:
   }
 
 private:
+  // FLTK virtual method for handling input events
+  int handle(int event);
+
+  // FLTK virtual method for size changes
+  void resize(int nx, int ny, int nw, int nh);
+
   void PageUp()
   {
     int dy = MAX(LINE_H, all_lines->h() - LINE_H);
@@ -601,50 +610,12 @@ private:
     Repos(new_offset, true);
   }
 
-  // FLTK virtual method for handling input events.
-  int handle(int event)
+  UI_ConLine *LowestVisibleLine()
   {
-    if (event == FL_SHOW)
-      console_active = true;
-    else if (event == FL_HIDE)
-      console_active = false;
+    int my = all_lines->y();
+    int mh = all_lines->h();
 
-    if (event == FL_KEYDOWN || event == FL_SHORTCUT)
-    {
-      int key = Fl::event_key();
-
-      switch (key)
-      {
-        // do our own PAGE-UP and PAGE-DOWN handling, since FLTK jumps
-        // too far after we sane-ified the slider_size.
-        case FL_Page_Up:
-          PageUp();
-          return 1;
-
-        case FL_Page_Down:
-          PageDown();
-          return 1;
-
-        default: break;
-      }
-    }
-
-    return Fl_Group::handle(event);
-  }
-
-private:
-  static void callback_Scroll(Fl_Widget *w, void *data);
-};
-
-
-void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
-{
-  // determine focus [closest to top without going past it]
-  int my = all_lines->y();
-  int mh = all_lines->h();
-
-  if (! focus)
-  {
+    UI_ConLine *best = NULL;
     int best_dist = 9999;
 
     for (int j = 0; j < all_lines->children(); j++)
@@ -655,16 +626,43 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
       if (!M->visible() || M->y() < my || M->y() >= my+mh)
         continue;
 
-      int dist = M->y() - my;
+      int dist = my+mh - M->y();
 
       if (dist < best_dist)
       {
-        focus = M;
+        best = M;
         best_dist = dist;
       }
     }
+
+    return best;
   }
 
+  static void callback_Scroll(Fl_Widget *w, void *data);
+};
+
+
+void UI_Console::MoveAll(int dy)
+{
+  for (int j = 0; j < all_lines->children(); j++)
+  {
+    Fl_Widget *F = all_lines->child(j);
+
+    SYS_ASSERT(F);
+
+    F->resize(F->x(), F->y() + dy, F->w(), F->h());
+  }
+}
+
+
+void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
+{
+  // determine focus line [closest to input bar]
+  int my = all_lines->y();
+  int mh = all_lines->h();
+
+  if (! focus)
+    focus = LowestVisibleLine();
 
   // calculate new total height
   int new_height = 0;
@@ -681,14 +679,14 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
 
 
   // determine new offset_y
-  if (new_height <= mh)
+  if (new_height <= mh || jump_bottom)
   {
     offset_y = 0;
   }
-  else if (jump_bottom)
-  {
-    offset_y = new_height - mh;
-  }
+///---  else if (jump_bottom)
+///---  {
+///---    offset_y = new_height - mh;
+///---  }
   else if (focus)
   {
     int focus_oy = focus->y() - my;
@@ -721,26 +719,81 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
   SYS_ASSERT(offset_y <= total_h);
 
   // reposition all the modules
-  int ny = my - offset_y;
+  int ny = my + mh + offset_y;
 
-  for (int j = 0; j < all_lines->children(); j++)
+  for (int k = all_lines->children()-1 ; k >= 0 ; k--)
   {
-    UI_ConLine *M = (UI_ConLine *) all_lines->child(j);
+    UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
     SYS_ASSERT(M);
 
     int nh = M->visible() ? M->CalcHeight() : 1;
   
     if (ny != M->y() || nh != M->h())
     {
-      M->resize(M->x(), ny, M->w(), nh);
+      M->resize(M->x(), ny-nh, M->w(), nh);
     }
 
     if (M->visible())
-      ny += M->CalcHeight() + spacing;
+      ny -= M->CalcHeight() + spacing;
   }
 
 
   Repos(offset_y);
+}
+
+
+int UI_Console::handle(int event)
+{
+  if (event == FL_SHOW)
+    console_active = true;
+  else if (event == FL_HIDE)
+    console_active = false;
+
+  if (event == FL_KEYDOWN || event == FL_SHORTCUT)
+  {
+    int key = Fl::event_key();
+
+    switch (key)
+    {
+      // do our own PAGE-UP and PAGE-DOWN handling, since FLTK jumps
+      // too far after we sane-ified the slider_size.
+      case FL_Page_Up:
+        PageUp();
+        return 1;
+
+      case FL_Page_Down:
+        PageDown();
+        return 1;
+
+      default: break;
+    }
+  }
+
+  return Fl_Group::handle(event);
+}
+
+
+void UI_Console::resize(int nx, int ny, int nw, int nh)
+{
+  // BEHAVIOR:
+  //   (1) when there are more lines than are visible, then the one
+  //       closest to the input bar and not obscured by it ('focus')
+  //       should remain the same distance away from the input bar.
+  //
+  //   (2) when less lines visible and growing: do nothing.
+  //
+  //   (3) when less lines visible and shrinking : just ensure that
+  //       bottom-most line ('focus') does not become obscured.
+  //
+
+  // the goal here is to keep a certain text line (the one currently
+  // above the input bar) at the same position.
+
+  UI_ConLine *focus = LowestVisibleLine();
+
+  Fl_Double_Window::resize(nx, ny, nw, nh);
+
+  PositionAll(false, focus);
 }
 
 
@@ -753,16 +806,8 @@ void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
 
   that->offset_y = sbar->value();
 
-  int dy = that->offset_y - previous_y;
-
   // simply reposition all the UI_ConLine widgets
-  for (int j = 0; j < that->all_lines->children(); j++)
-  {
-    Fl_Widget *F = that->all_lines->child(j);
-    SYS_ASSERT(F);
-
-    F->resize(F->x(), F->y() - dy, F->w(), F->h());
-  }
+  that->MoveAll(previous_y - that->offset_y);
 
   that->all_lines->redraw();
 }
