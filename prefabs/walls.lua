@@ -54,63 +54,63 @@ PREFAB.PICTURE =
     {
       { x =   0, y =  0, mat = "outer" },
       { x = 192, y =  0, mat = "inner" },
-      { x = 192, y = 12, mat = "inner" },
-      { x =   0, y = 12, mat = "inner" },
+      { x = 192, y =  4, mat = "inner" },
+      { x =   0, y =  4, mat = "inner" },
     },
 
     -- picture itself
     {
-      { x =  64, y = 12 },
-      { x = 128, y = 12 },
-      { x = 128, y = 16, mat = "pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", kind="?line_kind" },
-      { x =  64, y = 16 },
+      { x =  64, y =  4 },
+      { x = 128, y =  4 },
+      { x = 128, y =  8, mat = "pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", kind="?line_kind" },
+      { x =  64, y =  8 },
     },
 
     -- right side wall
     {
-      { x = 0, y = 12, mat = "inner" },
-      { x = 8, y = 12, mat = "inner" },
-      { x = 8, y = 24, mat = "inner" },
-      { x = 0, y = 24, mat = "inner" },
+      { x = 0, y =  4, mat = "inner" },
+      { x = 8, y =  4, mat = "inner" },
+      { x = 8, y = 16, mat = "inner" },
+      { x = 0, y = 16, mat = "inner" },
     },
 
     {
-      { x =  8, y = 12, mat = "inner" },
-      { x = 64, y = 12, mat = "side" },
-      { x = 64, y = 24, mat = "inner" },
-      { x =  8, y = 24, mat = "side" },
+      { x =  8, y =  4, mat = "inner" },
+      { x = 64, y =  4, mat = "side" },
+      { x = 64, y = 16, mat = "inner" },
+      { x =  8, y = 16, mat = "side" },
     },
 
     -- left side wall
     {
-      { x = 184, y = 12, mat = "inner" },
-      { x = 192, y = 12, mat = "inner" },
-      { x = 192, y = 24, mat = "inner" },
-      { x = 184, y = 24, mat = "inner" },
+      { x = 184, y =  4, mat = "inner" },
+      { x = 192, y =  4, mat = "inner" },
+      { x = 192, y = 16, mat = "inner" },
+      { x = 184, y = 16, mat = "inner" },
     },
 
     {
-      { x = 128, y = 12, mat = "inner" },
-      { x = 184, y = 12, mat = "side" },
-      { x = 184, y = 24, mat = "inner" },
-      { x = 128, y = 24, mat = "side" },
+      { x = 128, y =  4, mat = "inner" },
+      { x = 184, y =  4, mat = "side" },
+      { x = 184, y = 16, mat = "inner" },
+      { x = 128, y = 16, mat = "side" },
     },
 
     -- frame bottom
     {
-      { x = 128, y = 12, mat = "inner" },
-      { x = 128, y = 24, mat = "inner" },
-      { x =  64, y = 24, mat = "inner", blocked=1 },
-      { x =  64, y = 12, mat = "inner" },
+      { x = 128, y =  4, mat = "inner" },
+      { x = 128, y = 16, mat = "inner" },
+      { x =  64, y = 16, mat = "inner", blocked=1 },
+      { x =  64, y =  4, mat = "inner" },
       { t = 32, mat = "floor" },
     },
 
     -- frame top
     {
-      { x = 128, y = 12, mat = "inner" },
-      { x = 128, y = 24, mat = "inner" },
-      { x =  64, y = 24, mat = "inner", blocked=1 },
-      { x =  64, y = 12, mat = "inner" },
+      { x = 128, y =  4, mat = "inner" },
+      { x = 128, y = 16, mat = "inner" },
+      { x =  64, y = 16, mat = "inner", blocked=1 },
+      { x =  64, y =  4, mat = "inner" },
       { b = 96, light = "?light", mat = "floor" },
     },
   },
