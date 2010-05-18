@@ -346,7 +346,7 @@ function Trans.centre_transform(S, z, dir)
   return T
 end
 
-function Trans.sidelet_transform(S, z, side)
+function Trans.border_transform(S, z, side)
   local T = {}
 
   if not corners then corners = 0 end
@@ -386,6 +386,28 @@ function Trans.sidelet_transform(S, z, side)
   T.scale_y = S.thick[side] / 16
 
   if side then T.rotate = ANGS[side] end
+
+  return T
+end
+
+function Trans.corner_transform(S, z, side)
+  local T = {}
+
+  local ANGS = { [1]=0,    [9]=180,  [7]=270,  [3]=90 }
+  local XS   = { [1]=S.x1, [9]=S.x2, [7]=S.x1, [3]=S.x2 }
+  local YS   = { [1]=S.y1, [9]=S.y2, [7]=S.y2, [3]=S.y1 }
+
+  T.add_x = XS[side]
+  T.add_y = YS[side]
+  T.add_z = z
+
+  local L_side = geom.ROTATE[7][side]
+  local R_side = geom.ROTATE[1][side]
+
+  T.scale_x = S.thick[R_side] / 16
+  T.scale_y = S.thick[L_side] / 16
+
+  T.rotate = ANGS[side]
 
   return T
 end

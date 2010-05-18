@@ -3,9 +3,13 @@ TODO
 ====
 
 
-+  treat corners of indoor rooms as distinct architecture
-
 +  Chris's name stuff!
+
+
+DONE:  treat corners of indoor rooms as distinct architecture
+
+
+FIX: 'track' in WINDOW prefab
 
 
 FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?

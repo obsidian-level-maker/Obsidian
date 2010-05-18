@@ -2447,7 +2447,9 @@ gui.printf("do_teleport\n")
       local R1 = border_wants_corner(S.border[R_side])
 
       if L1 and R1 then
-        S.usage_map[dir] = "solid"
+        if not (R.outdoor or R.natural) then
+          S.usage_map[dir] = "solid"
+        end
       elseif L1 then
         S.usage_map[dir] = L_side
       elseif R1 then
@@ -2571,7 +2573,7 @@ end
         end
       end
 
-      local sidelet = Trans.sidelet_transform(S, z1, side)
+      local sidelet = Trans.border_transform(S, z1, side)
 
       -- shadow hack
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
@@ -2758,6 +2760,19 @@ end
         S.conn.already_made_lock = true
       end
     end -- for side
+
+
+    -- CORNERS
+
+    for corner = 1,9,2 do if corner ~= 5 then
+      if S.usage_map[corner] == "solid" then
+        local skin = { inner=w_tex, outer=R.facade or w_tex }
+
+        Trans.set(Trans.corner_transform(S, z1, corner))
+        Build.prefab("CORNER", skin)
+        Trans.clear()
+      end
+    end end -- for corner
 
 
     if R.sides_only then return end
