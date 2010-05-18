@@ -9,7 +9,7 @@ TODO
 DONE:  treat corners of indoor rooms as distinct architecture
 
 
-FIX: 'track' in WINDOW prefab
+-  redo the seed-size "room corners" with prefab system
 
 
 FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?

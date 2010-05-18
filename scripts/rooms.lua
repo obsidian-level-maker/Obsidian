@@ -2618,7 +2618,7 @@ end
 
       if B_kind == "window" then
         local B = S.border[side]
-        local skin = { inner=w_tex, outer=o_tex, side=THEME.window_side_mat or w_tex }
+        local skin = { inner=w_tex, outer=o_tex, track=THEME.window_side_mat or w_tex }
 
         -- FIXME: B.win_width, B.win_z1, B.win_z2
         Trans.set(sidelet)

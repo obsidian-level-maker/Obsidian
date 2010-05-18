@@ -124,7 +124,7 @@ PREFAB.WINDOW =
     -- right side
     {
       { x =  0, y =  0, mat = "outer" },
-      { x = 64, y =  0, mat = "inner" },
+      { x = 64, y =  0, mat = "track" },
       { x = 64, y = 16, mat = "inner" },
       { x =  0, y = 16, mat = "inner" },
     },
@@ -134,7 +134,7 @@ PREFAB.WINDOW =
       { x = 128, y =  0, mat = "outer" },
       { x = 192, y =  0, mat = "inner" },
       { x = 192, y = 16, mat = "inner" },
-      { x = 128, y = 16, mat = "inner" },
+      { x = 128, y = 16, mat = "track" },
     },
 
     -- frame bottom
