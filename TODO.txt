@@ -9,6 +9,8 @@ TODO
 DONE:  treat corners of indoor rooms as distinct architecture
 
 
+-  lifts often assume meshing up at 90 degree turns
+
 -  redo the seed-size "room corners" with prefab system
 
 

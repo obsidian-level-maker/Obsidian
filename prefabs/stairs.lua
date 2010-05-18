@@ -18,6 +18,32 @@
 --
 ----------------------------------------------------------------
 
+
+PREFAB.LIFT =
+{
+  brushes =
+  {
+    -- lift itself
+    {
+      { x =  32, y =  0, mat = "lift", kind="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y =  0, mat = "lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y = 64, mat = "lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = 64, mat = "lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { t = 128, mat = "top", tag = "?tag" },
+    },
+
+    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "floor" },
+      { x = 192, y=   0, mat = "floor" },
+      { x = 192, y= 192, mat = "floor" },
+      { x =   0, y= 192, mat = "floor" },
+      { t = 0, mat = "floor" },
+    },
+  },
+}
+
+
 PREFAB.STAIR_6 =
 {
   brushes =

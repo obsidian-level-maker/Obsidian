@@ -2877,17 +2877,35 @@ gui.printf("do_teleport\n")
       
 ---####    Build.niche_stair(S, LEVEL.step_skin, skin2)
 
+    elseif S.kind == "lift" then
+      local skin = table.copy(LEVEL.lift_skin)
+
+      skin.tag = LEVEL:alloc_tag()
+      skin.floor = f_tex
+
+      local z1 = S.stair_z1
+      local z2 = S.stair_z2
+      local dir = S.stair_dir
+
+      if z1 > z2 then
+        z1, z2 = z2, z1
+        dir = 10 - dir
+      end
+
+      Trans.set(Trans.doorway_transform(S, z1, dir))  -- FIXME: whole_transform ??
+      Trans.modify("scale_z", (z2 - z1) / 128)
+      
+      Build.prefab("LIFT", skin)
+
+      Trans.clear()
+
+---###      Build.lift(S, LEVEL.lift_skin, skin2, tag)
+
     elseif S.kind == "curve_stair" then
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "tall_stair" then
       Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
-
-    elseif S.kind == "lift" then
-      local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
-      local tag = LEVEL:alloc_tag()
-
-      Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!

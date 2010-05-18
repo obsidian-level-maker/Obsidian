@@ -939,25 +939,25 @@ DOOM.LIFTS =
 {
   shiny = 
   {
-    side_w="SUPPORT2", top_f="FLAT20",
+    lift="SUPPORT2", top="FLAT20",
     walk_kind=88, switch_kind=62,
   },
 
   rusty = 
   {
-    side_w="SUPPORT3", top_f="CEIL5_2",
+    lift="SUPPORT3", top="CEIL5_2",
     walk_kind=88, switch_kind=62,
   },
 
   platform = 
   {
-    side_w="PLAT1", top_f="FLAT23",
+    lift="PLAT1", top="FLAT23",
     walk_kind=88, switch_kind=62,
   },
 
   spine = 
   {
-    side_w="SKSPINE1", -- top_f="FLAT23",
+    lift="SKSPINE1", top="FLAT23",
     walk_kind=88, switch_kind=62,
   },
 }
