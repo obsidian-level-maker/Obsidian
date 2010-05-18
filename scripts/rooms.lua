@@ -2064,7 +2064,20 @@ function Rooms.do_small_exit()
   -- FIXME: hacky
   skin.switch = rand.key_by_probs(THEME.exit.switches)
 
-  Build.small_exit(R, THEME.exit, skin, skin2)
+--!!!!!!  Build.small_exit(R, THEME.exit, skin, skin2)
+
+  local skin = table.copy(assert(GAME.EXITS["tech_small"]))
+  skin.inner = w_tex
+  skin.outer = o_tex
+
+  Trans.set(Trans.doorway_transform(S, z1, 8))
+  Trans.modify("scale_x", 192 / 256)
+  Trans.modify("scale_y", 192 / 256)
+
+  Build.prefab("SMALL_EXIT", skin)
+
+  Trans.clear()
+
   return
 end
 
@@ -2504,22 +2517,6 @@ gui.printf("do_teleport\n")
 ---???      end
 ---???    end
 
-
---!!!!!!
-if false and S.content == "wotsit" and R.purpose == "EXIT" then
-  local skin = table.copy(assert(GAME.EXITS["tech_small"]))
-  skin.inner = w_tex
-  skin.outer = o_tex
-
-  Trans.set(Trans.doorway_transform(S, z1, 8))
-  Trans.modify("scale_x", 192 / 256)
-  Trans.modify("scale_y", 192 / 256)
-
-  Build.prefab("SMALL_EXIT", skin)
-
-  Trans.clear()
-  return
-end
 
 
     local sec_kind
