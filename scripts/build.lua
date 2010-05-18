@@ -346,7 +346,7 @@ function Trans.centre_transform(S, z, dir)
   return T
 end
 
-function Trans.sidelet_transform(S, z, side, corners)
+function Trans.sidelet_transform(S, z, side)
   local T = {}
 
   if not corners then corners = 0 end
@@ -355,17 +355,17 @@ function Trans.sidelet_transform(S, z, side, corners)
   local x4, y4 = S:x4(), S:y4()
 
   -- expand middle piece to include corners (when allowed)
-  if side == 8 and not bit.btest(corners, 1) then x3 = S.x1 end
-  if side == 8 and not bit.btest(corners, 2) then x4 = S.x2 end
+  if side == 8 and S.usage_map[7] == 8 then x3 = S.x1 end
+  if side == 8 and S.usage_map[9] == 8 then x4 = S.x2 end
 
-  if side == 2 and not bit.btest(corners, 1) then x4 = S.x2 end
-  if side == 2 and not bit.btest(corners, 2) then x3 = S.x1 end
+  if side == 2 and S.usage_map[1] == 2 then x3 = S.x1 end
+  if side == 2 and S.usage_map[3] == 2 then x4 = S.x2 end
 
-  if side == 4 and not bit.btest(corners, 1) then y3 = S.y1 end
-  if side == 4 and not bit.btest(corners, 2) then y4 = S.y2 end
+  if side == 4 and S.usage_map[1] == 4 then y3 = S.y1 end
+  if side == 4 and S.usage_map[7] == 4 then y4 = S.y2 end
 
-  if side == 6 and not bit.btest(corners, 1) then y4 = S.y2 end
-  if side == 6 and not bit.btest(corners, 2) then y3 = S.y1 end
+  if side == 6 and S.usage_map[3] == 6 then y3 = S.y1 end
+  if side == 6 and S.usage_map[9] == 6 then y4 = S.y2 end
 
   local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
   local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }

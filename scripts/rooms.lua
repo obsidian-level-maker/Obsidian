@@ -2407,22 +2407,55 @@ gui.printf("do_teleport\n")
     end
   end
 
-  local function border_is_cornery(B)
+  local function border_wants_corner(B)
     assert(B)
 
     if B.kind == nil then return false end
     if B.kind == "nothing" then return false end
-    if B.kind == "straddle" then return false end
+    if B.kind == "straddle" then return false end  -- FIXME: verify this one
 
     return true
   end
 
-  local function corner_usage(B, BL, BR)  -- borders
-    B  = border_is_cornery(B)
-    BL = border_is_cornery(BL)
-    BR = border_is_cornery(BR)
+  local function calc_usage_map(S)
+    --
+    -- Usage map is a 3x3 grid, same arrangement as numeric keypad.
+    --
+    -- If an element is nil, then that block is free.
+    -- A numeric value represents a border (2 | 4 | 6 | 8).
+    -- Otherwise it is a string keyword, e.g. "solid".
+    --
+    S.usage_map = {}
 
-    return sel(B and BL, 1, 0) + sel(B and BR, 2, 0)
+    -- process sides
+    for side = 2,8,2 do
+      local B = S.border[side]
+
+      if B.kind == nil or B.kind == "nothing" then
+        -- unused
+      else
+        S.usage_map[side] = side
+      end
+    end
+
+    -- process corners
+    for dir = 1,9,2 do if dir ~= 5 then
+      local L_side = geom.ROTATE[7][dir]
+      local R_side = geom.ROTATE[1][dir]
+
+      local L1 = border_wants_corner(S.border[L_side])
+      local R1 = border_wants_corner(S.border[R_side])
+
+      if L1 and R1 then
+        S.usage_map[dir] = "solid"
+      elseif L1 then
+        S.usage_map[dir] = L_side
+      elseif R1 then
+        S.usage_map[dir] = R_side
+      else
+        -- unused
+      end
+    end end
   end
 
 
@@ -2517,7 +2550,10 @@ end
     end
 
 
+
     -- SIDES
+
+    calc_usage_map(S)
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
@@ -2535,11 +2571,7 @@ end
         end
       end
 
-      -- corner usage
-      local corners = corner_usage(border,
-          S.border[geom.LEFT[side]], S.border[geom.RIGHT[side]])
-
-      local sidelet = Trans.sidelet_transform(S, z1, side, corners)
+      local sidelet = Trans.sidelet_transform(S, z1, side)
 
       -- shadow hack
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
