@@ -432,127 +432,6 @@ end
 
 ------------------------------------------------------------------------
 
-
-function Trans.resize_coord(n, groups)
-  --
-  -- GROUPS:
-  --   a set of tables which fully covers the coordinate range,
-  --   must be sorted from lowest to highest.
-  --
-  local T = #groups
-
-  if T == 0 then return n end
-
-  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-  if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
-
-  local G = 1
-
-  while (G < T) and (n > G.high) do
-    G = G + 1
-  end
-
-  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
-end
-
-
-function Trans.compute_groups(groups, lowest, highest)
-  if #groups == 0 then return end
-
-  local extra = highest - lowest
-  local wt_total = 0
-
-  -- first pass: set size of all RIGID groups, and total the weights
-  for _,G in ipairs(groups) do
-    if not G.weight then
-      G.size = G.high - G.low
-      extra = extra - G.size
-    else
-      assert(G.weight > 0)
-      wt_total = wt_total + G.weight
-    end
-  end
-
-  -- second pass: set size of all FLEXIBLE groups, and also set
-  -- the new coordinate range in low2 and high2.
-  local pos = lowest
-
-  for _,G in ipairs(groups) do
-    if G.weight then
-      G.size = G.high - G.low + extra * G.weight / wt_total
-      assert(G.size > 1)
-    end
-
-    G.low2  = pos
-    G.high2 = pos + G.size
-
-    pos = G.high2
-  end
-end
-
-
-function Build.prefab(fab_name, skin, env)
-
-  local fab = assert(PREFAB[fab_name])
-
-  local materials = { }
-
-  local brushes = assert(fab.brushes)
-
-  for _,B0 in ipairs(brushes) do
-    local B = table.deep_copy(B0)
-    local kind = "solid"
-
-    for _,C in ipairs(B) do
-
-      -- handle materials : look them up and create a 'tex' field
-      if C.mat then
-        if not materials[C.mat] then
-          materials[C.mat] = safe_get_mat(skin[C.mat])
-        end
-
-        local mat = materials[C.mat]
-
-        if C.b then
-          C.tex = mat.c or mat.f or mat.t
-        elseif C.t then
-          C.tex = mat.f or mat.t
-        else
-          C.tex = mat.t
-        end
-        assert(C.tex)
-
-        C.mat = nil
-      end
-
-      -- perform some other substitutions
-
-      -- we store changes in this D variable, since we cannot modify
-      -- a table when we are iterating over it.
-      local D = nil
-
-      for field,value in pairs(C) do
-        local t = type(value)
-        if t == "function" then
-          if not D then D = { } end
-          D[field] = value(env)
-        end
-        if t == "string" and string.match(value, "^[?]") then
-          if not D then D = { } end
-          D[field] = skin[string.sub(value, 2)]
-        end
-      end
-
-      if D then table.merge(C, D) end
-    end
-
-    Trans.brush("solid", B)
-  end
-end
-
-
-------------------------------------------------------------------------
-
 function Build.prepare_trip()
 
   -- build the psychedelic mapping
@@ -723,6 +602,130 @@ function add_pegging(info, x_offset, y_offset, peg)
 
   return info
 end
+
+
+------------------------------------------------------------------------
+
+
+function Trans.resize_coord(n, groups)
+  --
+  -- GROUPS:
+  --   a set of tables which fully covers the coordinate range,
+  --   must be sorted from lowest to highest.
+  --
+  local T = #groups
+
+  if T == 0 then return n end
+
+  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
+
+  local G = 1
+
+  while (G < T) and (n > G.high) do
+    G = G + 1
+  end
+
+  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
+end
+
+
+function Trans.compute_groups(groups, lowest, highest)
+  if #groups == 0 then return end
+
+  local extra = highest - lowest
+  local wt_total = 0
+
+  -- first pass: set size of all RIGID groups, and total the weights
+  for _,G in ipairs(groups) do
+    if not G.weight then
+      G.size = G.high - G.low
+      extra = extra - G.size
+    else
+      assert(G.weight > 0)
+      wt_total = wt_total + G.weight
+    end
+  end
+
+  -- second pass: set size of all FLEXIBLE groups, and also set
+  -- the new coordinate range in low2 and high2.
+  local pos = lowest
+
+  for _,G in ipairs(groups) do
+    if G.weight then
+      G.size = G.high - G.low + extra * G.weight / wt_total
+      assert(G.size > 1)
+    end
+
+    G.low2  = pos
+    G.high2 = pos + G.size
+
+    pos = G.high2
+  end
+end
+
+
+function Build.prefab(fab_name, skin, env)
+
+  local fab = assert(PREFAB[fab_name])
+
+  local materials = { }
+
+  local brushes = assert(fab.brushes)
+
+  for _,B0 in ipairs(brushes) do
+    local B = table.deep_copy(B0)
+    local kind = "solid"
+
+    for _,C in ipairs(B) do
+
+      -- handle materials : look them up and create a 'tex' field
+      if C.mat then
+        if not materials[C.mat] then
+          materials[C.mat] = safe_get_mat(skin[C.mat])
+        end
+
+        local mat = materials[C.mat]
+
+        if C.b then
+          C.tex = mat.c or mat.f or mat.t
+        elseif C.t then
+          C.tex = mat.f or mat.t
+        else
+          C.tex = mat.t
+        end
+        assert(C.tex)
+
+        C.mat = nil
+      end
+
+      -- perform some other substitutions
+
+      -- we store changes in this D variable, since we cannot modify
+      -- a table when we are iterating over it.
+      local D = nil
+
+      for field,value in pairs(C) do
+        local t = type(value)
+        if t == "function" then
+          if not D then D = { } end
+          D[field] = value(env)
+        end
+        if t == "string" and string.match(value, "^[?]") then
+          if not D then D = { } end
+          D[field] = skin[string.sub(value, 2)]
+        end
+      end
+
+      if D then table.merge(C, D) end
+    end
+
+    Trans.brush("solid", B)
+  end
+end
+
+
+------------------------------------------------------------------------
 
 
 function get_transform_for_seed_side(S, side, thick)
