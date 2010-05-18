@@ -2407,11 +2407,30 @@ gui.printf("do_teleport\n")
     end
   end
 
+  local function border_is_cornery(B)
+    assert(B)
+
+    if B.kind == nil then return false end
+    if B.kind == "nothing" then return false end
+    if B.kind == "straddle" then return false end
+
+    return true
+  end
+
+  local function corner_usage(B, BL, BR)  -- borders
+    B  = border_is_cornery(B)
+    BL = border_is_cornery(BL)
+    BR = border_is_cornery(BR)
+
+    return sel(B and BL, 1, 0) + sel(B and BR, 2, 0)
+  end
+
 
   local function build_seed(S)
     if S.already_built then
       return
     end
+
 
     vis_seed(S)
 
@@ -2503,6 +2522,10 @@ end
     for side = 2,8,2 do
       local N = S:neighbor(side)
 
+      local border = S.border[side]
+      local B_kind = S.border[side].kind
+
+      -- determine 'other tex'
       local o_tex = w_tex
 
       if N and N.room then
@@ -2512,6 +2535,13 @@ end
         end
       end
 
+      -- corner usage
+      local corners = corner_usage(border,
+          S.border[geom.LEFT[side]], S.border[geom.RIGHT[side]])
+
+      local sidelet = Trans.sidelet_transform(S, z1, side, corners)
+
+      -- shadow hack
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
                               (N.edge_of_map and N.building))
       then
@@ -2522,9 +2552,6 @@ end
       elseif R.outdoor and N and N.edge_of_map and N.fence_h then
         Build.shadow(S, side, 20, N.fence_h - 4)
       end
-
-      local border = S.border[side]
-      local B_kind = S.border[side].kind
 
       -- hallway hack
       if R.hallway and not (S.kind == "void") and
@@ -2544,7 +2571,7 @@ end
       if B_kind == "wall" then
         local skin = { inner = w_tex, outer = o_tex }
 
-        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Trans.set(sidelet)
         Build.prefab("WALL", skin)
         Trans.clear()
 
@@ -2560,7 +2587,7 @@ end
         local skin = { inner=w_tex, outer=o_tex, side=THEME.window_side_mat or w_tex }
 
         -- FIXME: B.win_width, B.win_z1, B.win_z2
-        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Trans.set(sidelet)
         Build.prefab("WINDOW", skin)
         Trans.clear()
         shrink_both(side, 4)
@@ -2574,7 +2601,7 @@ end
         skin.outer = o_tex
 
         -- FIXME: scaling
-        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Trans.set(sidelet)
         Build.prefab("PICTURE", skin)
         Trans.clear()
 
@@ -2588,10 +2615,11 @@ end
       end
 
       if B_kind == "arch" then
-        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(S.conn and S.conn.conn_h)
+
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Trans.set(Trans.sidelet_transform(S, z, side))
+        Trans.set(sidelet)
 
         Build.prefab("ARCH", skin)
 
@@ -2613,7 +2641,7 @@ end
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Trans.set(Trans.sidelet_transform(S, z1, side))
+        Trans.set(sidelet)
         Trans.modify("scale_z", 0.5)
 
         Build.prefab("ARCH", skin)
@@ -2624,7 +2652,7 @@ end
       end
 
       if B_kind == "door" then
-        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(S.conn and S.conn.conn_h)
 
         -- FIXME: better logic for selecting doors
         local doors = THEME.doors
@@ -2640,7 +2668,7 @@ end
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Trans.set(Trans.sidelet_transform(S, z, side))
+        Trans.set(sidelet)
 
         Build.prefab("DOOR", skin2)
 
@@ -2653,7 +2681,7 @@ end
       end
 
       if B_kind == "lock_door" then
-        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(S.conn and S.conn.conn_h)
 
         local LOCK = assert(S.border[side].lock)
         local skin = assert(GAME.DOORS[LOCK.item])
@@ -2669,7 +2697,7 @@ end
 
         local reversed = (S == S.conn.dest_S)
 
-        Trans.set(Trans.sidelet_transform(S, z, side))
+        Trans.set(sidelet)
 
         Build.prefab("DOOR", skin2)
 

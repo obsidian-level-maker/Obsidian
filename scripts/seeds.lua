@@ -138,7 +138,7 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
 
       for side = 2,8,2 do
         S.border[side] = {}
-        S.thick[side] = 16*1
+        S.thick[side] = 16*2
       end
 
       if x > map_W or y > map_H then

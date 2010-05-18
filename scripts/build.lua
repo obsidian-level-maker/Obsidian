@@ -346,12 +346,30 @@ function Trans.centre_transform(S, z, dir)
   return T
 end
 
-function Trans.sidelet_transform(S, z, side)
+function Trans.sidelet_transform(S, z, side, corners)
   local T = {}
 
-  local ANGS = { [2]=0,      [8]=180,    [4]=270,    [6]=90 }
-  local XS   = { [2]=S:x3(), [8]=S:x4(), [4]=S.x1,   [6]=S.x2 }
-  local YS   = { [2]=S.y1,   [8]=S.y2,   [4]=S:y4(), [6]=S:y3() }
+  if not corners then corners = 0 end
+
+  local x3, y3 = S:x3(), S:y3()
+  local x4, y4 = S:x4(), S:y4()
+
+  -- expand middle piece to include corners (when allowed)
+  if side == 8 and not bit.btest(corners, 1) then x3 = S.x1 end
+  if side == 8 and not bit.btest(corners, 2) then x4 = S.x2 end
+
+  if side == 2 and not bit.btest(corners, 1) then x4 = S.x2 end
+  if side == 2 and not bit.btest(corners, 2) then x3 = S.x1 end
+
+  if side == 4 and not bit.btest(corners, 1) then y3 = S.y1 end
+  if side == 4 and not bit.btest(corners, 2) then y4 = S.y2 end
+
+  if side == 6 and not bit.btest(corners, 1) then y4 = S.y2 end
+  if side == 6 and not bit.btest(corners, 2) then y3 = S.y1 end
+
+  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
+  local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
+  local YS   = { [2]=S.y1, [8]=S.y2, [4]=  y4, [6]=  y3 }
 
   T.add_x = XS[side]
   T.add_y = YS[side]
@@ -360,9 +378,9 @@ function Trans.sidelet_transform(S, z, side)
   -- remember that scaling is done _before_ rotation
 
   if geom.is_vert(side) then
-    T.scale_x = (S:x4() - S:x3()) / 192
+    T.scale_x = (x4 - x3) / 192
   else
-    T.scale_x = (S:y4() - S:y3()) / 192
+    T.scale_x = (y4 - y3) / 192
   end
 
   T.scale_y = S.thick[side] / 16
