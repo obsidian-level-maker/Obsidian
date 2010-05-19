@@ -1,0 +1,54 @@
+
+QUESTION:
+
+Should a _single_ prefab definition for Pictures be able to support
+different picture sizes (especially widths), while keeping the
+size of the prefab the same (no scaling) ?
+
+DICUSSION:
+
+Essentially this means that sizing of certain brushes would be
+parametric.  Nothing wrong with that in principle, although it
+does run counter to the idea of simply scaling prefabs to get
+what is needed.
+
+Without parametric coordinate, a bunch of different prefabs will
+be needed for each picture size, which is inelegant / inefficient.
+
+The downside of parametric coordinates is the extra complexity,
+making some prefabs harder to make, and could well be a barrier
+for people who want to make their own prefabs.
+
+Other prefab which could use parametric coordinates:
+
+(a) Windows
+(b) Lifts ??  (size of the lift)
+(c) Outy stairs  (size of the stair part)
+(d) Switch  (width and height of switch part)
+
+Another option it to treat the Picture part separately from the
+nearby walls, e.g. the PICTURE prefab would stretch to fit the
+picture width (be it 64 or 128 or whatever), and would have a
+little bit of wall with it -- the rest of the wall would used
+the normal wall prefab.  Like in this diagram:
+
+       +----+------+-+-----------+-+------+----+
+       |CORN| WALL |W|  PICTURE  |W| WALL |CORN|
+       +----+------+-+-----------+-+------+----+
+
+That could be considered a kind of recursion, where the 'outer'
+or 'primary' prefab is resized to fit a certain space (border of a seed)
+and the 'inner' / 'secondary' prefab is resized to give the desired
+picture width.  Which is kinda similar to parametric coordinates
+[the inner prefab is parametrised] but implemented differently.
+
+Perhaps it would be enough if the 'groups' which specify how a
+prefab responds to scaling were able to have a parametric size.
+For example:
+
+   x_sizes = {{ 64 }, { "?width",0 }, { 64 }}
+   y_sizes = {{ 16 }}
+
+Note: the ',0' in the x_sizes is the scaling weight, where zero
+signifies that the group has a fixed size.
+
