@@ -422,16 +422,21 @@ private:
   }
 
 private:
+  void DoEnter()
+  {
+    AddHistory(input->value());
+
+    ConExecute(input->value());
+
+    input->value("");
+    browse_pos = -1;
+  }
+
   static void callback_Enter(Fl_Widget *w, void *data)
   {
-    UI_ConInput *that = (UI_ConInput *) data;
+    UI_ConInput *_this = (UI_ConInput *) data;
 
-    that->AddHistory(that->input->value());
-
-    ConExecute(that->input->value());
-
-    that->input->value("");
-    that->browse_pos = -1;
+    _this->DoEnter();
   }
 };
 
@@ -463,40 +468,31 @@ private:
 
   UI_ConInput *input;
 
-  // number of pixels "lost" below the bottom of the console area.
-  // this is never < 0
-  int offset_y;
-
   // total height of all lines in our buffer
   int total_h;
 
+  // this value has been added to the widget y() values to move them
+  // from their default position (which is to anchor the bottom-most
+  // line just above the input bar).
+  //
+  // in other words, it is the number of pixels "hidden" below the
+  // bottom of the console area.
+  //
+  // it is normally the same as: total_h - sbar->value()
+  // and should never be < 0.
+  int offset_y;
+
 private:
-  void Repos(int new_offset, bool call_cb = false)
-  {
-    // p = position, first line displayed
-    // w = window, number of lines displayed
-    // t = top, number of first line
-    // l = length, total number of lines
-    sbar->value(new_offset, all_lines->h(), 0, total_h);
+  void MoveAll(int new_offset, int old_offset);
 
-    // ensure knob never gets too small
-    if (sbar->slider_size() < MIN_SLIDER_SIZE)
-        sbar->slider_size(MIN_SLIDER_SIZE);
+  void RepositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
 
-    if (call_cb)
-      callback_Scroll(sbar, this);
-    else
-      all_lines->redraw();
-  }
-
-  void PositionAll(bool jump_bottom = false, UI_ConLine *focus = NULL);
-
-  void MoveAll(int dy);
+  void ChangeScrollbar(int new_offset, bool move_em = false);
 
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
       Fl_Double_Window(x, y, w, h, label),
-      count(0), offset_y(0), total_h(0)
+      count(0), total_h(0), offset_y(0)
   {
     end(); // cancel begin() in Fl_Group constructor
    
@@ -555,7 +551,7 @@ public:
 
   void AddLine(const char *line)
   {
-    bool at_bottom = (1 + sbar->value() > sbar->maximum());
+    bool at_bottom = (offset_y < 8);
 
     if (count >= CON_MAX_LINES)
     {
@@ -582,7 +578,7 @@ public:
 
     count++;
 
-    PositionAll(at_bottom);
+    RepositionAll(at_bottom);
   }
 
 private:
@@ -596,18 +592,18 @@ private:
   {
     int dy = MAX(LINE_H, all_lines->h() - LINE_H);
 
-    int new_offset = MAX(0, offset_y - dy);
+    int new_offset = MIN(total_h - all_lines->h(), offset_y + dy);
 
-    Repos(new_offset, true);
+    ChangeScrollbar(new_offset, true);
   }
 
   void PageDown()
   {
     int dy = MAX(LINE_H, all_lines->h() - LINE_H);
 
-    int new_offset = MIN(total_h - all_lines->h(), offset_y + dy);
+    int new_offset = MAX(0, offset_y - dy);
 
-    Repos(new_offset, true);
+    ChangeScrollbar(new_offset, true);
   }
 
   UI_ConLine *LowestVisibleLine()
@@ -638,12 +634,25 @@ private:
     return best;
   }
 
+  void DoScroll()
+  {
+    int old_offset = offset_y;
+
+    offset_y = total_h - sbar->value();
+
+    MoveAll(offset_y, old_offset);
+
+    all_lines->redraw();
+  }
+
   static void callback_Scroll(Fl_Widget *w, void *data);
 };
 
 
-void UI_Console::MoveAll(int dy)
+void UI_Console::MoveAll(int new_offset, int old_offset)
 {
+  int dy = new_offset - old_offset;
+
   for (int j = 0; j < all_lines->children(); j++)
   {
     Fl_Widget *F = all_lines->child(j);
@@ -655,7 +664,32 @@ void UI_Console::MoveAll(int dy)
 }
 
 
-void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
+void UI_Console::ChangeScrollbar(int new_offset, bool move_em)
+{
+  int old_offset = offset_y;
+
+  offset_y = new_offset;
+
+  // p = position, first line displayed
+  // w = window, number of lines displayed
+  // t = top, number of first line
+  // l = length, total number of lines
+  sbar->value(total_h - offset_y, all_lines->h(), 0, total_h);
+
+  // ensure knob never gets too small
+  if (sbar->slider_size() < MIN_SLIDER_SIZE)
+      sbar->slider_size(MIN_SLIDER_SIZE);
+
+  if (move_em)
+  {
+    MoveAll(new_offset, old_offset);
+  }
+
+  all_lines->redraw();
+}
+
+
+void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
 {
   // determine focus line [closest to input bar]
   int my = all_lines->y();
@@ -665,6 +699,7 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
     focus = LowestVisibleLine();
 
   // calculate new total height
+
   int new_height = 0;
   int spacing = 0;
 
@@ -679,38 +714,38 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
 
 
   // determine new offset_y
+
   if (new_height <= mh || jump_bottom)
   {
     offset_y = 0;
   }
-///---  else if (jump_bottom)
-///---  {
-///---    offset_y = new_height - mh;
-///---  }
-  else if (focus)
+  else if (! focus)
   {
-    int focus_oy = focus->y() - my;
-
-    int above_h = 0;
-    for (int k = 0; k < all_lines->children(); k++)
-    {
-      UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
-      if (M->visible() && M->y() < focus->y())
-      {
-        above_h += M->CalcHeight() + spacing;
-      }
-    }
-
-    offset_y = above_h - focus_oy;
-
-    offset_y = MAX(offset_y, 0);
-    offset_y = MIN(offset_y, new_height - mh);
+    if (offset_y > new_height)
+      offset_y = new_height;
   }
   else
   {
-    // when not shrinking, offset_y will remain valid
-    if (new_height < total_h)
-      offset_y = 0;
+    int base_y = my+mh - LINE_H;
+
+    int focus_diff = focus->y() - base_y;
+
+    int below_h = 0;
+
+    for (int k = 0; k < all_lines->children(); k++)
+    {
+      UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
+
+      if (M->visible() && M->y() > focus->y())
+      {
+        below_h += M->CalcHeight() + spacing;
+      }
+    }
+
+    offset_y = below_h + focus_diff;
+
+    offset_y = MAX(offset_y, 0);
+    offset_y = MIN(offset_y, new_height - mh);
   }
 
   total_h = new_height;
@@ -718,13 +753,16 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
   SYS_ASSERT(offset_y >= 0);
   SYS_ASSERT(offset_y <= total_h);
 
-  // reposition all the modules
-  int ny = my + mh + offset_y;
+  // reposition all the line widgets
+  // (iterate from bottom-most to top-most)
+
+  int base_y = my+mh - LINE_H;
+
+  int ny = base_y + offset_y;
 
   for (int k = all_lines->children()-1 ; k >= 0 ; k--)
   {
     UI_ConLine *M = (UI_ConLine *) all_lines->child(k);
-    SYS_ASSERT(M);
 
     int nh = M->visible() ? M->CalcHeight() : 1;
   
@@ -738,7 +776,7 @@ void UI_Console::PositionAll(bool jump_bottom, UI_ConLine *focus)
   }
 
 
-  Repos(offset_y);
+  ChangeScrollbar(offset_y);
 }
 
 
@@ -793,23 +831,15 @@ void UI_Console::resize(int nx, int ny, int nw, int nh)
 
   Fl_Double_Window::resize(nx, ny, nw, nh);
 
-  PositionAll(false, focus);
+  RepositionAll(false, focus);
 }
 
 
 void UI_Console::callback_Scroll(Fl_Widget *w, void *data)
 {
-  Fl_Scrollbar *sbar = (Fl_Scrollbar *)w;
-  UI_Console *that = (UI_Console *)data;
+  UI_Console *_this = (UI_Console *)data;
 
-  int previous_y = that->offset_y;
-
-  that->offset_y = sbar->value();
-
-  // simply reposition all the UI_ConLine widgets
-  that->MoveAll(previous_y - that->offset_y);
-
-  that->all_lines->redraw();
+  _this->DoScroll();
 }
 
 
