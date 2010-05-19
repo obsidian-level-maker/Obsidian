@@ -471,6 +471,9 @@ private:
   // total height of all lines in our buffer
   int total_h;
 
+  // number of pixels that don't fit in the console area
+  int spare_h;
+
   // this value has been added to the widget y() values to move them
   // from their default position (which is to anchor the bottom-most
   // line just above the input bar).
@@ -478,8 +481,8 @@ private:
   // in other words, it is the number of pixels "hidden" below the
   // bottom of the console area.
   //
-  // it is normally the same as: total_h - sbar->value()
-  // and should never be < 0.
+  // range is 0 to spare_h.
+  // value should be same as: spare_h - sbar->value()
   int offset_y;
 
 private:
@@ -492,7 +495,7 @@ private:
 public:
   UI_Console(int x, int y, int w, int h, const char *label = NULL) :
       Fl_Double_Window(x, y, w, h, label),
-      count(0), total_h(0), offset_y(0)
+      count(0), total_h(0), spare_h(0), offset_y(0)
   {
     end(); // cancel begin() in Fl_Group constructor
    
@@ -579,6 +582,9 @@ public:
     count++;
 
     RepositionAll(at_bottom);
+
+fprintf(stderr, "ADDED LINE: %s\n", line);
+fprintf(stderr, "total_h = %d  y_offset = %d\n", total_h, offset_y);
   }
 
 private:
@@ -636,9 +642,11 @@ private:
 
   void DoScroll()
   {
+    int mh = all_lines->h();
+
     int old_offset = offset_y;
 
-    offset_y = total_h - sbar->value();
+    offset_y = spare_h - sbar->value();
 
     MoveAll(offset_y, old_offset);
 
@@ -666,6 +674,8 @@ void UI_Console::MoveAll(int new_offset, int old_offset)
 
 void UI_Console::ChangeScrollbar(int new_offset, bool move_em)
 {
+  int mh = all_lines->h();
+
   int old_offset = offset_y;
 
   offset_y = new_offset;
@@ -674,7 +684,7 @@ void UI_Console::ChangeScrollbar(int new_offset, bool move_em)
   // w = window, number of lines displayed
   // t = top, number of first line
   // l = length, total number of lines
-  sbar->value(total_h - offset_y, all_lines->h(), 0, total_h);
+  sbar->value(spare_h - offset_y, mh, 0, total_h);
 
   // ensure knob never gets too small
   if (sbar->slider_size() < MIN_SLIDER_SIZE)
@@ -721,8 +731,8 @@ void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
   }
   else if (! focus)
   {
-    if (offset_y > new_height)
-      offset_y = new_height;
+    if (offset_y > new_height-mh)
+      offset_y = new_height-mh;
   }
   else
   {
@@ -742,16 +752,17 @@ void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
       }
     }
 
-    offset_y = below_h + focus_diff;
+    offset_y = below_h - focus_diff;
 
     offset_y = MAX(offset_y, 0);
     offset_y = MIN(offset_y, new_height - mh);
   }
 
   total_h = new_height;
+  spare_h = MAX(0, new_height - mh);
 
   SYS_ASSERT(offset_y >= 0);
-  SYS_ASSERT(offset_y <= total_h);
+  SYS_ASSERT(offset_y <= spare_h);
 
   // reposition all the line widgets
   // (iterate from bottom-most to top-most)
