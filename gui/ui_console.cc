@@ -938,7 +938,7 @@ void CMD_PrintExpr(const char *expr)
   while (isspace(*expr))
     expr++;
 
-  ConPrintf("%s = \n", expr);
+  ConPrintf("@6? %s\n", expr);
 
   Script_RunString("ob_console_dump(nil, %s)", expr);
 }
