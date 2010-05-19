@@ -605,6 +605,8 @@ int main(int argc, char **argv)
 
     ConPrintf("All Globals: @b2table:e:0:0@\n\n");
 
+    ConPrintf("READY\n");
+
 
     try
     {

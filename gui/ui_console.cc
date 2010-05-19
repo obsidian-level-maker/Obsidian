@@ -530,7 +530,6 @@ public:
 
     resizable(all_lines);
 
-
     // ensure not empty
     AddLine("");
   }
@@ -549,7 +548,8 @@ public:
   {
     all_lines->clear();
 
-    AddLine("");
+    // this will recompute total_h, spare_h and offset_y
+    AddLine("READY");
   }
 
   void AddLine(const char *line)
@@ -582,9 +582,6 @@ public:
     count++;
 
     RepositionAll(at_bottom);
-
-fprintf(stderr, "ADDED LINE: %s\n", line);
-fprintf(stderr, "total_h = %d  y_offset = %d\n", total_h, offset_y);
   }
 
 private:
@@ -598,7 +595,7 @@ private:
   {
     int dy = MAX(LINE_H, all_lines->h() - LINE_H);
 
-    int new_offset = MIN(total_h - all_lines->h(), offset_y + dy);
+    int new_offset = MIN(spare_h, offset_y + dy);
 
     ChangeScrollbar(new_offset, true);
   }
@@ -701,7 +698,8 @@ void UI_Console::ChangeScrollbar(int new_offset, bool move_em)
 
 void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
 {
-  // determine focus line [closest to input bar]
+  // the 'focus' line, when not NULL, w
+
   int my = all_lines->y();
   int mh = all_lines->h();
 
@@ -740,7 +738,7 @@ void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
 
     int focus_diff = focus->y() - base_y;
 
-    int below_h = 0;
+    int below_h = LINE_H;
 
     for (int k = 0; k < all_lines->children(); k++)
     {
@@ -752,7 +750,7 @@ void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
       }
     }
 
-    offset_y = below_h - focus_diff;
+    offset_y = below_h + focus_diff;
 
     offset_y = MAX(offset_y, 0);
     offset_y = MIN(offset_y, new_height - mh);
@@ -779,11 +777,11 @@ void UI_Console::RepositionAll(bool jump_bottom, UI_ConLine *focus)
   
     if (ny != M->y() || nh != M->h())
     {
-      M->resize(M->x(), ny-nh, M->w(), nh);
+      M->resize(M->x(), ny, M->w(), nh);
     }
 
     if (M->visible())
-      ny -= M->CalcHeight() + spacing;
+      ny -= nh + spacing;
   }
 
 
@@ -824,25 +822,9 @@ int UI_Console::handle(int event)
 
 void UI_Console::resize(int nx, int ny, int nw, int nh)
 {
-  // BEHAVIOR:
-  //   (1) when there are more lines than are visible, then the one
-  //       closest to the input bar and not obscured by it ('focus')
-  //       should remain the same distance away from the input bar.
-  //
-  //   (2) when less lines visible and growing: do nothing.
-  //
-  //   (3) when less lines visible and shrinking : just ensure that
-  //       bottom-most line ('focus') does not become obscured.
-  //
-
-  // the goal here is to keep a certain text line (the one currently
-  // above the input bar) at the same position.
-
-  UI_ConLine *focus = LowestVisibleLine();
-
   Fl_Double_Window::resize(nx, ny, nw, nh);
 
-  RepositionAll(false, focus);
+  RepositionAll(false, NULL);
 }
 
 
