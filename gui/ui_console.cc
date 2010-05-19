@@ -845,7 +845,7 @@ void UI_OpenConsole()
 
   if (! console_win)
   {
-    console_win = new UI_Console(0, 0, 600, 400, "OBLIGE CONSOLE");
+    console_win = new UI_Console(0, 0, 600, 400, "OBLIGE DEBUG CONSOLE");
   }
 
   console_win->show();
