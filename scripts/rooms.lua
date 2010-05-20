@@ -2275,7 +2275,7 @@ gui.printf("do_teleport\n")
     elseif R.purpose == "KEY" then
       local LOCK = assert(R.lock)
 
-      if rand.odds(115) and THEME.lowering_pedestal_skin then
+      if rand.odds(15) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
         if z_top > z2-32 then
            z_top = z2-32
@@ -2330,7 +2330,7 @@ gui.printf("do_teleport\n")
     if R.hallway or R == LEVEL.start_room then
       Trans.entity(weapon, mx, my, z1)
 
-    elseif rand.odds(140) and THEME.lowering_pedestal_skin2 then
+    elseif rand.odds(40) and THEME.lowering_pedestal_skin2 then
       local z_top = math.max(z1+80, R.floor_max_h+40)
       if z_top > z2-32 then
          z_top = z2-32
