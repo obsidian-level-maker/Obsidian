@@ -719,6 +719,7 @@ function Build.prefab(fab, skin)
     local new_brushes = {}
 
     for _,B in ipairs(orig_brushes) do
+      assert(#B >= 1)
 
       local b_copy = {}
       for _,C in ipairs(B) do
@@ -728,16 +729,23 @@ function Build.prefab(fab, skin)
           if type(value) == "string" and string.match(value, "^[?]") then
             value = skin[string.sub(value, 2)]
           end
+          if value == nil then
+            if name == "required" then value = false end
+
+            if name == "x" or name == "y" or name == "b" or name == "t" then
+              error("Prefab: substitution of x/y/b/t field failed.")
+            end
+          end
           new_coord[name] = value
         end
 
         table.insert(b_copy, new_coord)
       end -- C
 
-      -- feature: skip brushes based on a skin field
-      if b_copy[1] and b_copy[1].skip_me and b_copy[1].skip_me ~= 0 then
-        -- SKIP IT
-      else
+      -- skip certain brushes unless a skin field is present/true
+      local req = b_copy[1].required
+
+      if req == nil or (req ~= false and req ~= 0) then
         table.insert(new_brushes, b_copy)
       end
     end -- B
