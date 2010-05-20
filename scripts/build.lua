@@ -665,62 +665,122 @@ function Trans.compute_groups(groups, lowest, highest)
 end
 
 
-function Build.prefab(fab_name, skin, env)
+function Build.prefab(fab, skin)
 
-  local fab = assert(PREFAB[fab_name])
+  if type(fab) == "string" then
+    fab = PREFAB[fab]
 
-  local materials = { }
+    if not fab then
+      error("Unknown prefab: " .. fab)
+    end
+  end
 
-  local brushes = assert(fab.brushes)
 
-  for _,B0 in ipairs(brushes) do
-    local B = table.deep_copy(B0)
-    local kind = "solid"
+  function determine_bbox(brushes)
+    local x1, y1, z1
+    local x2, y2, z2
 
-    for _,C in ipairs(B) do
+    -- FIXME: handle slopes
 
-      -- handle materials : look them up and create a 'tex' field
-      if C.mat then
-        if not materials[C.mat] then
-          materials[C.mat] = safe_get_mat(skin[C.mat])
-        end
-
-        local mat = materials[C.mat]
-
-        if C.b then
-          C.tex = mat.c or mat.f or mat.t
-        elseif C.t then
-          C.tex = mat.f or mat.t
+    for _,B in ipairs(brushes) do
+      if B.x then 
+        if not x1 then
+          x1, y1 = B.x, B.y
+          x2, y2 = B.x, B.y
         else
-          C.tex = mat.t
+          x1 = math.min(x1, B.x)
+          y1 = math.min(y1, B.y)
+          x2 = math.max(x2, B.x)
+          y2 = math.max(y2, B.y)
         end
-        assert(C.tex)
-
-        C.mat = nil
+      elseif B.b then
+        z1 = math.min(z1 or B.b, B.b)
+      elseif B.t then
+        z2 = math.max(z2 or B.t, B.t)
       end
-
-      -- perform some other substitutions
-
-      -- we store changes in this D variable, since we cannot modify
-      -- a table when we are iterating over it.
-      local D = nil
-
-      for field,value in pairs(C) do
-        local t = type(value)
-        if t == "function" then
-          if not D then D = { } end
-          D[field] = value(env)
-        end
-        if t == "string" and string.match(value, "^[?]") then
-          if not D then D = { } end
-          D[field] = skin[string.sub(value, 2)]
-        end
-      end
-
-      if D then table.merge(C, D) end
     end
 
-    Trans.brush("solid", B)
+    assert(x1 and y1 and x2 and y2)
+
+    if not z1 then z1 = -EXTREME_H end
+    if not z2 then z2 =  EXTREME_H end
+
+    return { x1=x1, x2=x2, dx=(x2 - x1),
+             y1=y1, y2=y2, dy=(y2 - y1),
+             z1=z1, z2=z2, dz=(z2 - z1)
+           }
+  end
+
+
+  function copy_w_substitution(orig_brushes)
+    -- perform substitutions (begin with '?')
+    -- returns a copy of the brushes
+
+    local new_brushes = {}
+
+    for _,B in ipairs(orig_brushes) do
+
+      -- TODO: feature to skip brushes based on a skin field
+
+      local b_copy = {}
+      for _,C in ipairs(B) do
+
+        local new_coord = {}
+        for name,value in pairs(C) do
+          if type(value) == "string" and string.match(value, "^[?]") then
+            value = skin[string.sub(value, 2)]
+          end
+          new_coord[name] = value
+        end
+
+        table.insert(b_copy, new_coord)
+      end -- C
+
+      table.insert(new_brushes, b_copy)
+    end -- B
+
+    return new_brushes
+  end
+
+
+  function process_materials(brushes)
+    -- modifies a brush list, converting 'mat' fields to 'tex' fields
+
+    for _,B in ipairs(brushes) do
+      for _,C in ipairs(B) do
+
+        if C.mat then
+          local mat = safe_get_mat(C.mat)
+          assert(mat and mat.t)
+
+          if C.b then
+            C.tex = mat.c or mat.f or mat.t
+          elseif C.t then
+            C.tex = mat.f or mat.t
+          else
+            C.tex = mat.t
+          end
+
+          C.mat = nil
+        end
+
+      end -- C
+    end -- B
+  end
+
+
+  ---| Build.prefab |---
+
+  local brushes = copy_w_substitution(fab.brushes)
+
+  process_materials(brushes)
+
+  for _,B in ipairs(brushes) do
+    local kind = "solid"
+
+    -- TODO: first coord can be 'info' (remove it)
+
+    Trans.brush(kind, B)
   end
 end
 
