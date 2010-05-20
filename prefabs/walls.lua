@@ -48,6 +48,10 @@ PREFAB.CORNER =
 
 PREFAB.PICTURE =
 {
+  x_sizes = { {64,1}, {64,"?width"}, {64,1} },
+
+  y_sizes = { {8,1}, {8,0} },
+
   brushes =
   {
     -- wall behind picture
@@ -111,7 +115,7 @@ PREFAB.PICTURE =
       { x = 128, y = 16, mat = "?inner" },
       { x =  64, y = 16, mat = "?inner", blocked=1 },
       { x =  64, y =  4, mat = "?inner" },
-      { b = 96, light = "?light", mat = "?floor" },
+      { b = 96, mat = "?floor", light = "?light"  },
     },
   },
 }
