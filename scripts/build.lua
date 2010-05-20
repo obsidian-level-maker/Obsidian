@@ -713,14 +713,12 @@ function Build.prefab(fab, skin)
 
 
   function copy_w_substitution(orig_brushes)
-    -- perform substitutions (begin with '?')
-    -- returns a copy of the brushes
+    -- perform substitutions (values beginning with '?')
+    -- returns a copy of the brushes.
 
     local new_brushes = {}
 
     for _,B in ipairs(orig_brushes) do
-
-      -- TODO: feature to skip brushes based on a skin field
 
       local b_copy = {}
       for _,C in ipairs(B) do
@@ -736,7 +734,12 @@ function Build.prefab(fab, skin)
         table.insert(b_copy, new_coord)
       end -- C
 
-      table.insert(new_brushes, b_copy)
+      -- feature: skip brushes based on a skin field
+      if b_copy[1] and b_copy[1].skip_me and b_copy[1].skip_me ~= 0 then
+        -- SKIP IT
+      else
+        table.insert(new_brushes, b_copy)
+      end
     end -- B
 
     return new_brushes
@@ -778,7 +781,12 @@ function Build.prefab(fab, skin)
   for _,B in ipairs(brushes) do
     local kind = "solid"
 
-    -- TODO: first coord can be 'info' (remove it)
+    -- the first entry of a brush can be an 'info coord'.
+    -- we remove it as the CSG code does not use them.
+    if B[1] and B[1].brush_kind then
+      brush_kind = B[1].brush_kind
+      table.remove(B, 1)
+    end
 
     Trans.brush(kind, B)
   end
