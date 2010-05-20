@@ -24,11 +24,11 @@ PREFAB.PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 8, mat = "top", light = "?light" },
+      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 8, mat = "?top", light = "?light" },
     },
   },
 }
@@ -39,11 +39,11 @@ PREFAB.LOWERING_PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 128, mat = "top", light = "?light", kind="?sec_kind", tag="?tag" },
+      { x = -32, y = -32, mat = "?side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "?side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "?side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "?side", kind="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 128, mat = "?top", light = "?light", kind="?sec_kind", tag="?tag" },
     },
   },
 }
