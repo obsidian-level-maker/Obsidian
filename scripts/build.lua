@@ -711,6 +711,15 @@ function Build.prefab(fab, skin)
   end
 
 
+  local function substitute(value)
+    if type(value) == "string" and string.match(value, "^[?]") then
+      return skin[string.sub(value, 2)]
+    end
+    
+    return value
+  end
+
+
   local function determine_bbox(brushes)
     local x1, y1, z1
     local x2, y2, z2
@@ -747,6 +756,89 @@ function Build.prefab(fab, skin)
   end
 
 
+  local function calc_resizing(size_list, low, high, low2, high2)
+    if not size_list then
+      return nil
+    end
+
+    assert(#size_list >= 1)
+
+    local size  = high  - low
+    local size2 = high2 - low2
+
+    local info = { }
+    local wt_total = 0
+
+    info.groups = { }
+
+    local extra = size2 - size1
+
+    -- convert size list into a set of groups
+
+    for _,S in ipairs(size_list) do
+      local G = { }  -- new group
+
+      G.size = S[1]
+      G.weight = S[2] or 1
+
+      if G.weight == 0 then
+        G.size2 = G.size
+      end
+
+      if type(G.weight) == "string" then
+        G.size2 = substitute(G.weight)
+        G.weight = 0
+      end
+
+      table.insert(info.groups, G)
+
+      wt_total = wt_total + G.weight
+
+      if G.size2 then
+        extra = extra - G.size2
+      end
+    end
+
+
+    assert(extra >= 0)
+
+
+    -- now compute size of all FLEXIBLE groups
+
+    local x = low2
+
+    for _,G in ipairs(groups) do
+      if G.weight > 0 then
+        G.size2 = G.size + extra * G.weight / wt_total
+        assert(G.size2 > 1)
+      end
+
+      G.low2  = x ; x = x + G.size2
+      G.high2 = x
+    end
+
+    return info
+  end
+
+
+  local function resize_coord(info, n)
+    local groups = info.groups
+    local T = #groups
+
+    if T == 0 then return n end
+
+    if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+    if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
+
+    local G = 1
+
+    while (G < T) and (n > G.high) do
+      G = G + 1
+    end
+
+    return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
+  end
+
   local function fit_groups(brushes, field, resize_info)
     if not resize_info then
       return
@@ -776,9 +868,8 @@ function Build.prefab(fab, skin)
 
         local new_coord = {}
         for name,value in pairs(C) do
-          if type(value) == "string" and string.match(value, "^[?]") then
-            value = skin[string.sub(value, 2)]
-          end
+          value = substitute(value)
+
           if value == nil then
             if name == "required" then value = false end
 
@@ -786,6 +877,7 @@ function Build.prefab(fab, skin)
               error("Prefab: substitution of x/y/b/t field failed.")
             end
           end
+
           new_coord[name] = value
         end
 
