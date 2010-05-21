@@ -58,10 +58,45 @@ function Trans.clear()
   Trans.set {}
 end
 
+function Trans.begin()
+  Trans.set {}
+end
+
+function Trans.finish()
+  Trans.set {}
+end
+
 function Trans.modify(what, value)
   Trans.TRANSFORM[what] = value
 end
 
+
+function Trans.pos_xy(x, y, scale_x, scale_y, rotate)
+  Trans.TRANSFORM.add_x = x
+  Trans.TRANSFORM.add_y = y
+
+  Trans.TRANSFORM.scale_x = scale_x
+  Trans.TRANSFORM.scale_y = scale_y
+  Trans.TRANSFORM.rotate  = rotate
+end
+
+function Trans.pos_z(z, scale_z)
+  Trans.TRANSFORM.add_z = z
+  Trans.TRANSFORM.scale_z = scale_z
+end
+
+
+function Trans.fit_xz(x1, y1, x2, y2, dir, fab_bbox)
+  -- Hmmmmmmmmm.....
+end
+
+function Trans.fit_z(z1, z2, fab_bbox)
+  local scale_z = (z2 - z1) / fab_bbox.dz
+
+  Trans.TRANSFORM.add_z = z1
+  Trans.TRANSFORM.scale_z = z2 / fab_bbox.dz
+
+end
 
 
 function Trans.apply(x, y)
@@ -676,7 +711,7 @@ function Build.prefab(fab, skin)
   end
 
 
-  function determine_bbox(brushes)
+  local function determine_bbox(brushes)
     local x1, y1, z1
     local x2, y2, z2
 
@@ -712,7 +747,22 @@ function Build.prefab(fab, skin)
   end
 
 
-  function copy_w_substitution(orig_brushes)
+  local function fit_groups(brushes, field, resize_info)
+    if not resize_info then
+      return
+    end
+
+    for _,B in ipairs(brushes) do
+      for _,C in ipairs(B) do
+        if C[field] then
+          C[field] = resize_coord(resize_info, C[field])
+        end
+      end -- C
+    end -- B
+  end
+
+
+  local function copy_w_substitution(orig_brushes)
     -- perform substitutions (values beginning with '?')
     -- returns a copy of the brushes.
 
@@ -754,7 +804,7 @@ function Build.prefab(fab, skin)
   end
 
 
-  function process_materials(brushes)
+  local function process_materials(brushes)
     -- modifies a brush list, converting 'mat' fields to 'tex' fields
 
     for _,B in ipairs(brushes) do
@@ -779,25 +829,39 @@ function Build.prefab(fab, skin)
     end -- B
   end
 
+  local function render_brushes(brushes)
+    for _,B in ipairs(brushes) do
+      local kind = "solid"
+
+      -- the first entry of a brush can be an 'info coord'.
+      -- we remove it as the CSG code does not use them.
+      if B[1] and B[1].brush_kind then
+        brush_kind = B[1].brush_kind
+        table.remove(B, 1)
+      end
+
+      Trans.brush(kind, B)
+    end
+  end
+
 
   ---| Build.prefab |---
 
   local brushes = copy_w_substitution(fab.brushes)
 
+  local x_resize_info = calc_resizing(fab.x_sizes, fit_x)
+  local y_resize_info = calc_resizing(fab.y_sizes, fit_y)
+  local z_resize_info = calc_resizing(fab.z_sizes, fit_z)
+
+  fit_groups(brushes, "x", x_resize_info)
+  fit_groups(brushes, "y", y_resize_info)
+
+  fit_groups(brushes, "b", z_resize_info)
+  fit_groups(brushes, "t", z_resize_info)
+
   process_materials(brushes)
 
-  for _,B in ipairs(brushes) do
-    local kind = "solid"
-
-    -- the first entry of a brush can be an 'info coord'.
-    -- we remove it as the CSG code does not use them.
-    if B[1] and B[1].brush_kind then
-      brush_kind = B[1].brush_kind
-      table.remove(B, 1)
-    end
-
-    Trans.brush(kind, B)
-  end
+  render_brushes(brushes)
 end
 
 
