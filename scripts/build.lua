@@ -727,22 +727,24 @@ function Build.prefab(fab, skin, T)
     -- FIXME: handle slopes
 
     for _,B in ipairs(brushes) do
-      if B.x then 
-        if not x1 then
-          x1, y1 = B.x, B.y
-          x2, y2 = B.x, B.y
-        else
-          x1 = math.min(x1, B.x)
-          y1 = math.min(y1, B.y)
-          x2 = math.max(x2, B.x)
-          y2 = math.max(y2, B.y)
+      for _,C in ipairs(B) do
+        if C.x then 
+          if not x1 then
+            x1, y1 = C.x, C.y
+            x2, y2 = C.x, C.y
+          else
+            x1 = math.min(x1, C.x)
+            y1 = math.min(y1, C.y)
+            x2 = math.max(x2, C.x)
+            y2 = math.max(y2, C.y)
+          end
+        elseif C.b then
+          z1 = math.min(z1 or C.b, C.b)
+        elseif C.t then
+          z2 = math.max(z2 or C.t, C.t)
         end
-      elseif B.b then
-        z1 = math.min(z1 or B.b, B.b)
-      elseif B.t then
-        z2 = math.max(z2 or B.t, B.t)
-      end
-    end
+      end -- C
+    end -- B
 
     assert(x1 and y1 and x2 and y2)
 
@@ -971,15 +973,15 @@ function Build.prefab(fab, skin, T)
 
   ---| Build.prefab |---
 
-  local bbox = determine_bbox()
+  local bbox = determine_bbox(fab.brushes)
 
   convert_fitting(bbox)
 
   local brushes = copy_w_substitution(fab.brushes)
 
-  local x_resize_info = calc_resizing(fab.x_sizes, fit_x)
-  local y_resize_info = calc_resizing(fab.y_sizes, fit_y)
-  local z_resize_info = calc_resizing(fab.z_sizes, fit_z)
+  local x_resize_info ; --!!!! = calc_resizing(fab.x_sizes, fit_x)
+  local y_resize_info ; --!!!! = calc_resizing(fab.y_sizes, fit_y)
+  local z_resize_info ; --!!!! = calc_resizing(fab.z_sizes, fit_z)
 
   fit_groups(brushes, "x", x_resize_info)
   fit_groups(brushes, "y", y_resize_info)
