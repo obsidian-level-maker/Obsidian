@@ -709,7 +709,7 @@ function Trans.substitute(value, skin)
 end
 
 
-function Build.prefab(fab, skin)
+function Build.prefab(fab, skin, T)
 
   if type(fab) == "string" then
     fab = PREFAB[fab]
@@ -753,6 +753,38 @@ function Build.prefab(fab, skin)
              y1=y1, y2=y2, dy=(y2 - y1),
              z1=z1, z2=z2, dz=(z2 - z1)
            }
+  end
+
+
+  local function convert_fitting(bbox)
+    -- replace x1/y1/x2/y1/dir in the transform with normal stuff
+    -- (similarly for z1/z2)
+
+    if T.z1 then
+      T.scale_z = (T.z2 - T.z1) / bbox.dz
+      T.add_z   = T.z1 + bbox.z1 * T.scale_z  -- FIXME: correct??
+
+      T.z1 = nil ; T.z2 = nil
+    end
+
+    if T.x1 then
+      assert(T.x2 and T.y1 and T.y2)
+
+      T.scale_x = (T.x2 . T.x1) / bbox.dx
+      T.scale_y = (T.y2 . T.y1) / bbox.dy
+
+      T.add_x = T.x1 + bbox.x1 * T.scale_x
+      T.add_y = T.y1 + bbox.y1 * T.scale_y
+
+      if T.dir then
+        local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
+        T.rotate = ANGS[T.dir]
+        T.dir = nil
+      end
+
+      T.x1 = nil ; T.x2 = nil
+      T.y1 = nil ; T.y2 = nil
+    end
   end
 
 
@@ -938,6 +970,10 @@ function Build.prefab(fab, skin)
 
 
   ---| Build.prefab |---
+
+  local bbox = determine_bbox()
+
+  convert_fitting(bbox)
 
   local brushes = copy_w_substitution(fab.brushes)
 
