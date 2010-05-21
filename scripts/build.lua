@@ -739,9 +739,9 @@ function Build.prefab(fab, skin, T)
             y2 = math.max(y2, C.y)
           end
         elseif C.b then
-          z1 = math.min(z1 or C.b, C.b)
+          z2 = math.min(z2 or C.b, C.b)
         elseif C.t then
-          z2 = math.max(z2 or C.t, C.t)
+          z1 = math.max(z1 or C.t, C.t)
         end
       end -- C
     end -- B
@@ -755,6 +755,73 @@ function Build.prefab(fab, skin, T)
              y1=y1, y2=y2, dy=(y2 - y1),
              z1=z1, z2=z2, dz=(z2 - z1)
            }
+  end
+
+
+  local function process_groups(size_list, pf_min, pf_max)
+    -- pf_min and pf_max are in the 'prefab' space (i.e. before any
+    -- stretching or shrinkin is done).
+
+    local info = { groups={} }
+
+    if not size_list then
+      -- one-to-one mapping
+      local G = { }
+
+      G.low  = pf_min ; G.low2  = pf_min
+      G.high = pf_max ; G.high2 = pf_max
+
+      G.size   = G.high  - G.low
+      G.weight = 1
+
+      table.insert(info.groups, G)
+
+      info.approx_size  = G.size
+      info.weight_total = 1
+
+      return info
+    end
+
+    assert(#size_list >= 1)
+
+
+    -- create groups
+
+    local pf_pos = pf_min
+
+    info.weight_total = 0
+    info.approx_size  = 0
+
+    for _,S in ipairs(size_list) do
+      local G = { }
+
+      G.low = pf_pos
+      G.size = S[1]
+      G.high = G.low + G.size
+
+      G.weight = S[2] or 1
+
+      if G.weight == 0 then
+        G.size2 = G.size
+      elseif type(G.weight) == "string" then
+        G.size2 = Trans.substitute(G.weight, skin)
+        G.weight = 0
+      end
+
+      table.insert(info.groups, G)
+
+      info.approx_size  = info.approx_size + (G.size2 or G.size)
+      info.weight_total = info.weight_total + G.weight
+
+      pf_pos = pf_pos + G.size
+    end
+
+    -- verify that group sizes match the coordinate bbox
+    if math.abs(pf_pos - pf_max) > 0.1 then
+      error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
+    end
+
+    return info
   end
 
 
@@ -973,23 +1040,32 @@ function Build.prefab(fab, skin, T)
 
   ---| Build.prefab |---
 
-  local bbox = determine_bbox(fab.brushes)
-
-  convert_fitting(bbox)
-
   local brushes = copy_w_substitution(fab.brushes)
 
-  local x_resize_info ; --!!!! = calc_resizing(fab.x_sizes, fit_x)
-  local y_resize_info ; --!!!! = calc_resizing(fab.y_sizes, fit_y)
-  local z_resize_info ; --!!!! = calc_resizing(fab.z_sizes, fit_z)
+  process_materials(brushes)
+
+  local ranges = determine_bbox(brushes)
+
+  local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
+  local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
+  local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+
+gui.printf("Prefab: %s\n", fab.name)
+gui.printf("X INFO:\n%s\n", table.tostr(x_info, 3))
+gui.printf("Y INFO:\n%s\n", table.tostr(y_info, 3))
+gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
+
+  local x_approx = assert(x_info.approx_size)
+  local y_approx = assert(y_info.approx_size)
+  local z_approx = assert(z_info.approx_size)
+
+---  convert_fitting(bbox)
 
   fit_groups(brushes, "x", x_resize_info)
   fit_groups(brushes, "y", y_resize_info)
 
   fit_groups(brushes, "b", z_resize_info)
   fit_groups(brushes, "t", z_resize_info)
-
-  process_materials(brushes)
 
   Trans.set(T)
 
