@@ -700,6 +700,15 @@ function Trans.compute_groups(groups, lowest, highest)
 end
 
 
+function Trans.substitute(value, skin)
+  if type(value) == "string" and string.match(value, "^[?]") then
+    return skin[string.sub(value, 2)]
+  end
+  
+  return value
+end
+
+
 function Build.prefab(fab, skin)
 
   if type(fab) == "string" then
@@ -708,15 +717,6 @@ function Build.prefab(fab, skin)
     if not fab then
       error("Unknown prefab: " .. fab)
     end
-  end
-
-
-  local function substitute(value)
-    if type(value) == "string" and string.match(value, "^[?]") then
-      return skin[string.sub(value, 2)]
-    end
-    
-    return value
   end
 
 
@@ -786,7 +786,7 @@ function Build.prefab(fab, skin)
       end
 
       if type(G.weight) == "string" then
-        G.size2 = substitute(G.weight)
+        G.size2 = Trans.substitute(G.weight, skin)
         G.weight = 0
       end
 
@@ -868,7 +868,7 @@ function Build.prefab(fab, skin)
 
         local new_coord = {}
         for name,value in pairs(C) do
-          value = substitute(value)
+          value = Trans.substitute(value, skin)
 
           if value == nil then
             if name == "required" then value = false end
@@ -954,6 +954,51 @@ function Build.prefab(fab, skin)
   process_materials(brushes)
 
   render_brushes(brushes)
+end
+
+
+function Build.does_prefab_fit(fab, skin, width, depth, height)
+
+  -- NOTE: width is in the prefab coordinate system (X)
+  --       depth too (Y) and height as well (Z).
+  --
+  -- Any of those parameters can be nil to skip checking that part.
+
+  local function minimum_size(size_list)
+    local total = 0
+
+    for _,S in ipairs(size_list) do
+      local m
+      if type(S[2]) == "string" then
+        m = Trans.substitute(S[2], skin)
+        assert(m)
+      elseif S[2] == 0 then
+        m = S[1]
+      else
+        m = assert(S[3])
+      end
+      total = total + m
+    end
+
+    return total
+  end
+
+  if width then
+    if fab.x_min   and width < fab.x_min then return false end
+    if fab.x_sizes and width < minimum_size(fab.x_sizes) then return false end
+  end
+
+  if depth then
+    if fab.y_min   and depth < fab.y_min then return false end
+    if fab.y_sizes and depth < minimum_size(fab.y_sizes) then return false end
+  end
+
+  if height then
+    if fab.z_min   and height < fab.z_min then return false end
+    if fab.z_sizes and height < minimum_size(fab.z_sizes) then return false end
+  end
+
+  return true
 end
 
 
