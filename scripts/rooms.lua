@@ -1487,11 +1487,11 @@ function Rooms.make_ceiling(R)
       if ceil_h and S.kind ~= "void" then
         if mode == "light" then
           if S.content ~= "pillar" then
-            Trans.set(Trans.centre_transform(S, ceil_h, 2))  -- TODO; pick a dir
-            if R.lite_w then Trans.modify("scale_x", R.lite_w  / 64) end
-            if R.lite_h then Trans.modify("scale_y", R.lite_h  / 64) end
-            Build.prefab("CEIL_LIGHT", skin)
-            Trans.clear()
+            local T = Trans.centre_transform(S, ceil_h, 2)  -- TODO; pick a dir
+            if R.lite_w then T.scale_x = R.lite_w  / 64 end
+            if R.lite_h then T.scale_y = R.lite_h  / 64 end
+
+            Build.prefab("CEIL_LIGHT", skin, T)
           end
         else
           Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
@@ -1883,10 +1883,10 @@ function Rooms.add_crates(R)
     if rand.odds(chance) then
       spot.S.solid_corner = true
 
-      Trans.set_pos(spot.S.x2, spot.S.y2, spot.S.floor_h)
-      if skin.h then Trans.modify("scale_z", skin.h / 64) end
-      Build.prefab("CRATE", skin)
-      Trans.clear()
+      local T = { add_x=spot.S.x2, add_y = spot.S.y2, add_z = spot.S.floor_h }
+      if skin.h then T.scale_z = skin.h / 64 end
+
+      Build.prefab("CRATE", skin, T)
 
 --FIXME  if PARAM.outdoor_shadows and is_outdoor then
 --FIXME    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
@@ -2070,13 +2070,11 @@ function Rooms.do_small_exit()
   skin.inner = w_tex
   skin.outer = o_tex
 
-  Trans.set(Trans.doorway_transform(S, z1, 8))
+  local T = Trans.doorway_transform(S, z1, 8)
   Trans.modify("scale_x", 192 / 256)
   Trans.modify("scale_y", 192 / 256)
 
-  Build.prefab("SMALL_EXIT", skin)
-
-  Trans.clear()
+  Build.prefab("SMALL_EXIT", skin, T)
 
   return
 end
@@ -2216,9 +2214,8 @@ gui.printf("do_teleport\n")
         R.has_raising_start = true
       else
         local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-        Trans.set(Trans.centre_transform(S, z1))
-        Build.prefab("PEDESTAL", skin)
-        Trans.clear()
+        local T = Trans.centre_transform(S, z1)
+        Build.prefab("PEDESTAL", skin, T)
       end
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
@@ -2257,19 +2254,16 @@ gui.printf("do_teleport\n")
         local skin_name = rand.key_by_probs(THEME.out_exits)
         local skin = assert(GAME.EXITS[skin_name])
 
-        Trans.set(Trans.centre_transform(S, z1, dir))
-        Build.prefab("OUTDOOR_EXIT_SWITCH", skin)
-        Trans.clear()
+        local T = Trans.centre_transform(S, z1, dir)
+        Build.prefab("OUTDOOR_EXIT_SWITCH", skin, T)
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
         local skin_name = rand.key_by_probs(THEME.exits)
         local skin = assert(GAME.EXITS[skin_name])
 
-        Trans.set(Trans.centre_transform(S, z1, dir))
-        Build.prefab("EXIT_PILLAR", skin)
-        Trans.clear()
-
+        local T = Trans.centre_transform(S, z1, dir)
+        Build.prefab("EXIT_PILLAR", skin, T)
       end
 
     elseif R.purpose == "KEY" then
@@ -2284,18 +2278,16 @@ gui.printf("do_teleport\n")
         local skin = table.copy(THEME.lowering_pedestal_skin)
         skin.tag = LEVEL:alloc_tag()
 
-        Trans.set(Trans.centre_transform(S, z1))
-        Trans.modify("scale_z", (z_top - z1) / 128)
-        Build.prefab("LOWERING_PEDESTAL", skin)
-        Trans.clear()
+        local T = Trans.centre_transform(S, z1)
+        T.scale_z = (z_top - z1) / 128
+        Build.prefab("LOWERING_PEDESTAL", skin, T)
 
         Trans.entity(LOCK.item, mx, my, z_top)
       else
         if rand.odds(98) then
           local skin = { top=THEME.pedestal_mat, light=0.7 }
-          Trans.set(Trans.centre_transform(S, z1))
-          Build.prefab("PEDESTAL", skin)
-          Trans.clear()
+          local T = Trans.centre_transform(S, z1)
+          Build.prefab("PEDESTAL", skin, T)
         end
         Trans.entity(LOCK.item, mx, my, z1)
       end
@@ -2307,9 +2299,8 @@ gui.printf("do_teleport\n")
       local skin = table.copy(INFO.skin)
       skin.tag = LOCK.tag
 
-      Trans.set(Trans.centre_transform(S, z1, dir_for_wotsit(S)))
-      Build.prefab("SMALL_SWITCH", skin)
-      Trans.clear()
+      local T = Trans.centre_transform(S, z1, dir_for_wotsit(S))
+      Build.prefab("SMALL_SWITCH", skin, T)
 
     else
       error("unknown purpose: " .. tostring(R.purpose))
@@ -2339,17 +2330,15 @@ gui.printf("do_teleport\n")
       local skin = table.copy(THEME.lowering_pedestal_skin2)
       skin.tag = LEVEL:alloc_tag()
 
-      Trans.set(Trans.centre_transform(S, z1))
-      Trans.modify("scale_z", (z_top - z1) / 128)
-      Build.prefab("LOWERING_PEDESTAL", skin)
-      Trans.clear()
+      local T = Trans.centre_transform(S, z1)
+      T.scale_z = (z_top - z1) / 128
+      Build.prefab("LOWERING_PEDESTAL", skin, T)
 
       Trans.entity(weapon, mx, my, z_top)
     else
       local skin = { top=THEME.pedestal_mat, light=0.7 }
-      Trans.set(Trans.centre_transform(S, z1))
-      Build.prefab("PEDESTAL", skin)
-      Trans.clear()
+      local T = Trans.centre_transform(S, z1)
+      Build.prefab("PEDESTAL", skin, T)
 
       Trans.entity(weapon, mx, my, z1+8)
     end
@@ -2602,9 +2591,7 @@ gui.printf("do_teleport\n")
       if B_kind == "wall" then
         local skin = { inner = w_tex, outer = o_tex }
 
-        Trans.set(sidelet)
-        Build.prefab("WALL", skin)
-        Trans.clear()
+        Build.prefab("WALL", skin, sidelet)
 
         shrink_both(side, 4)
       end
@@ -2618,9 +2605,8 @@ gui.printf("do_teleport\n")
         local skin = { inner=w_tex, outer=o_tex, track=THEME.window_side_mat or w_tex }
 
         -- FIXME: B.win_width, B.win_z1, B.win_z2
-        Trans.set(sidelet)
-        Build.prefab("WINDOW", skin)
-        Trans.clear()
+        Build.prefab("WINDOW", skin, sidelet)
+
         shrink_both(side, 4)
       end
 
@@ -2632,9 +2618,7 @@ gui.printf("do_teleport\n")
         skin.outer = o_tex
 
         -- FIXME: scaling
-        Trans.set(sidelet)
-        Build.prefab("PICTURE", skin)
-        Trans.clear()
+        Build.prefab("PICTURE", skin, sidelet)
 
         shrink_both(side, 4)
       end
@@ -2650,11 +2634,7 @@ gui.printf("do_teleport\n")
 
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Trans.set(sidelet)
-
-        Build.prefab("ARCH", skin)
-
-        Trans.clear()
+        Build.prefab("ARCH", skin, sidelet)
 
 ---!!!     shrink_ceiling(side, 4)
 
@@ -2672,12 +2652,11 @@ gui.printf("do_teleport\n")
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        Trans.set(sidelet)
-        Trans.modify("scale_z", 0.5)
+        local T = table.copy(sidelet)
 
-        Build.prefab("ARCH", skin)
+        T.scale_z = 0.5
 
-        Trans.clear()
+        Build.prefab("ARCH", skin, T)
 
 ---!!!    shrink_ceiling(side, 4)
       end
@@ -2699,11 +2678,7 @@ gui.printf("do_teleport\n")
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Trans.set(sidelet)
-
-        Build.prefab("DOOR", skin2)
-
-        Trans.clear()
+        Build.prefab("DOOR", skin2, sidelet)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2728,11 +2703,7 @@ gui.printf("do_teleport\n")
 
         local reversed = (S == S.conn.dest_S)
 
-        Trans.set(sidelet)
-
-        Build.prefab("DOOR", skin2)
-
-        Trans.clear()
+        Build.prefab("DOOR", skin2, sidelet)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2765,9 +2736,9 @@ gui.printf("do_teleport\n")
       if S.usage_map[corner] == "solid" then
         local skin = { inner=w_tex, outer=R.facade or w_tex }
 
-        Trans.set(Trans.corner_transform(S, z1, corner))
-        Build.prefab("CORNER", skin)
-        Trans.clear()
+        local T = Trans.corner_transform(S, z1, corner)
+
+        Build.prefab("CORNER", skin, T)
       end
     end end -- for corner
 
@@ -2832,9 +2803,9 @@ gui.printf("do_teleport\n")
 
         if x_num == 1 and y_num == 1 and LEVEL.hall_lite_ftex then
           local skin = { glow=LEVEL.hall_lite_ftex, trim=THEME.light_trim }
-          Trans.set(Trans.centre_transform(S, z2, 2))  -- TODO; pick a dir
-          Build.prefab("CEIL_LIGHT", skin)
-          Trans.clear()
+          local T = Trans.centre_transform(S, z2, 2)  -- TODO; pick a dir
+
+          Build.prefab("CEIL_LIGHT", skin, T)
         end
       end
     end
@@ -2870,11 +2841,11 @@ gui.printf("do_teleport\n")
         dir = 10-dir
       end
 
-      Trans.set(Trans.doorway_transform(S, z1, dir))
-      Trans.modify("scale_z", (z2 - z1) / 128)
-      Build.prefab(fab_name, skin2)
-      Trans.clear()
-      
+      local T = Trans.doorway_transform(S, z1, dir)
+      T.scale_z = (z2 - z1) / 128
+
+      Build.prefab(fab_name, skin2, T)
+
 ---####    Build.niche_stair(S, LEVEL.step_skin, skin2)
 
     elseif S.kind == "lift" then
@@ -2892,12 +2863,10 @@ gui.printf("do_teleport\n")
         dir = 10 - dir
       end
 
-      Trans.set(Trans.doorway_transform(S, z1, dir))  -- FIXME: whole_transform ??
-      Trans.modify("scale_z", (z2 - z1) / 128)
+      local T = Trans.doorway_transform(S, z1, dir)  -- FIXME: whole_transform ??
+      T.scale_z = (z2 - z1) / 128
       
-      Build.prefab("LIFT", skin)
-
-      Trans.clear()
+      Build.prefab("LIFT", skin, T)
 
 ---###      Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
@@ -2933,10 +2902,10 @@ gui.printf("do_teleport\n")
     -- PREFABS
 
     if S.content == "pillar" then
-      Trans.set(Trans.centre_transform(S, z1, S.pillar_dir or 2))  -- TODO pillar_dir
-      Trans.modify("scale_z", (z2 - z1) / 128)
-      Build.prefab("PILLAR", assert(S.pillar_skin))
-      Trans.clear()
+      local T = Trans.centre_transform(S, z1, S.pillar_dir or 2)  -- TODO pillar_dir
+      T.scale_z = (z2 - z1) / 128
+
+      Build.prefab("PILLAR", assert(S.pillar_skin), T)
     end
 
     if S.content == "wotsit" and S.content_kind == "WEAPON" then

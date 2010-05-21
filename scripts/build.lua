@@ -989,7 +989,11 @@ function Build.prefab(fab, skin, T)
 
   process_materials(brushes)
 
+  Trans.set(T)
+
   render_brushes(brushes)
+
+  Trans.clear()
 end
 
 
