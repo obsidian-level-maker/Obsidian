@@ -71,34 +71,6 @@ function Trans.modify(what, value)
 end
 
 
-function Trans.pos_xy(x, y, scale_x, scale_y, rotate)
-  Trans.TRANSFORM.add_x = x
-  Trans.TRANSFORM.add_y = y
-
-  Trans.TRANSFORM.scale_x = scale_x
-  Trans.TRANSFORM.scale_y = scale_y
-  Trans.TRANSFORM.rotate  = rotate
-end
-
-function Trans.pos_z(z, scale_z)
-  Trans.TRANSFORM.add_z = z
-  Trans.TRANSFORM.scale_z = scale_z
-end
-
-
-function Trans.fit_xz(x1, y1, x2, y2, dir, fab_bbox)
-  -- Hmmmmmmmmm.....
-end
-
-function Trans.fit_z(z1, z2, fab_bbox)
-  local scale_z = (z2 - z1) / fab_bbox.dz
-
-  Trans.TRANSFORM.add_z = z1
-  Trans.TRANSFORM.scale_z = z2 / fab_bbox.dz
-
-end
-
-
 function Trans.apply(x, y)
   local T = Trans.TRANSFORM
 
@@ -384,8 +356,6 @@ end
 function Trans.border_transform(S, z, side)
   local T = {}
 
-  if not corners then corners = 0 end
-
   local x3, y3 = S:x3(), S:y3()
   local x4, y4 = S:x4(), S:y4()
 
@@ -402,25 +372,42 @@ function Trans.border_transform(S, z, side)
   if side == 6 and S.usage_map[3] == 6 then y3 = S.y1 end
   if side == 6 and S.usage_map[9] == 6 then y4 = S.y2 end
 
-  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
-  local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
-  local YS   = { [2]=S.y1, [8]=S.y2, [4]=  y4, [6]=  y3 }
+---###  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
+---###  local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
+---###  local YS   = { [2]=S.y1, [8]=S.y2, [4]=  y4, [6]=  y3 }
 
-  T.add_x = XS[side]
-  T.add_y = YS[side]
+---###  T.add_x = XS[side]
+---###  T.add_y = YS[side]
+
   T.add_z = z
 
   -- remember that scaling is done _before_ rotation
+  
+  T.dir = side
 
   if geom.is_vert(side) then
-    T.scale_x = (x4 - x3) / 192
+    T.x1 = x3
+    T.x2 = x4
+
+    if side == 2 then
+      T.y1 = S.y1 ; T.y2 = S.y1 + S.thick[2]
+    else
+      T.y2 = S.y2 ; T.y1 = S.y2 - S.thick[8]
+    end
+
   else
-    T.scale_x = (y4 - y3) / 192
+    T.y1 = y3
+    T.y2 = y4
+
+    if side == 4 then
+      T.x1 = S.x1 ; T.x2 = S.x1 + S.thick[4]
+    else
+      T.x2 = S.x2 ; T.x1 = S.x2 - S.thick[6]
+    end
   end
 
-  T.scale_y = S.thick[side] / 16
-
-  if side then T.rotate = ANGS[side] end
+---###  T.scale_y = S.thick[side] / 16
+---###  if side then T.rotate = ANGS[side] end
 
   return T
 end
@@ -642,64 +629,6 @@ end
 ------------------------------------------------------------------------
 
 
-function Trans.resize_coord(n, groups)
-  --
-  -- GROUPS:
-  --   a set of tables which fully covers the coordinate range,
-  --   must be sorted from lowest to highest.
-  --
-  local T = #groups
-
-  if T == 0 then return n end
-
-  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-  if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
-
-  local G = 1
-
-  while (G < T) and (n > G.high) do
-    G = G + 1
-  end
-
-  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
-end
-
-
-function Trans.compute_groups(groups, lowest, highest)
-  if #groups == 0 then return end
-
-  local extra = highest - lowest
-  local wt_total = 0
-
-  -- first pass: set size of all RIGID groups, and total the weights
-  for _,G in ipairs(groups) do
-    if not G.weight then
-      G.size = G.high - G.low
-      extra = extra - G.size
-    else
-      assert(G.weight > 0)
-      wt_total = wt_total + G.weight
-    end
-  end
-
-  -- second pass: set size of all FLEXIBLE groups, and also set
-  -- the new coordinate range in low2 and high2.
-  local pos = lowest
-
-  for _,G in ipairs(groups) do
-    if G.weight then
-      G.size = G.high - G.low + extra * G.weight / wt_total
-      assert(G.size > 1)
-    end
-
-    G.low2  = pos
-    G.high2 = pos + G.size
-
-    pos = G.high2
-  end
-end
-
-
 function Trans.substitute(value, skin)
   if type(value) == "string" and string.match(value, "^[?]") then
     return skin[string.sub(value, 2)]
@@ -864,6 +793,8 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
       if not G.size2 then
         -- FIXME: not correct !!  [should take G.size into account]
         G.size2 = extra * G.weight / info.weight_total
+
+        if (G.size2 <= 1) then info.FUCKED = true ; return end
         assert(G.size2 > 1)
       end
 
@@ -1160,9 +1091,18 @@ gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
   local x1, y1, x2, y2 = foobie_XY(ranges, x_info, y_info)
   local z1,     z2     = foobie_Z (ranges, z_info)
 
-  set_group_sizes(x_info, x1, x2)
-  set_group_sizes(y_info, y1, y2)
+  -- handle rotation (FIXME: still fucked)
+  if false then ---- T.dir and geom.is_horiz(T.dir) then
+    set_group_sizes(x_info, y1, y2)
+    set_group_sizes(y_info, x1, x2)
+  else
+    set_group_sizes(x_info, x1, x2)
+    set_group_sizes(y_info, y1, y2)
+  end
+
   set_group_sizes(z_info, z1, z2)
+
+  if x_info.FUCKED or y_info.FUCKED or z_info.FUCKED then return end
 
 gui.printf("X INFO 2:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO 2:\n%s\n", table.tostr(y_info, 3))
@@ -1176,7 +1116,7 @@ gui.printf("Z INFO 2:\n%s\n", table.tostr(z_info, 3))
   resize_brushes(brushes, "b", z_info)
   resize_brushes(brushes, "t", z_info)
 
-  Trans.set(T)
+  Trans.set({})
 
   render_brushes(brushes)
 
