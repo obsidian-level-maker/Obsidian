@@ -106,7 +106,7 @@ PREFAB.PICTURE =
       { x = 128, y = 16, mat = "?inner" },
       { x =  64, y = 16, mat = "?inner", blocked=1 },
       { x =  64, y =  4, mat = "?inner" },
-      { t = 32, mat = "?floor" },
+      { t = 0, mat = "?floor" },
     },
 
     -- frame top
@@ -115,7 +115,7 @@ PREFAB.PICTURE =
       { x = 128, y = 16, mat = "?inner" },
       { x =  64, y = 16, mat = "?inner", blocked=1 },
       { x =  64, y =  4, mat = "?inner" },
-      { b = 96, mat = "?floor", light = "?light"  },
+      { b = 64, mat = "?floor", light = "?light"  },
     },
   },
 }
@@ -147,7 +147,7 @@ PREFAB.WINDOW =
       { x = 128, y =  0, mat = "?inner" },
       { x = 128, y = 16, mat = "?inner" },
       { x =  64, y = 16, mat = "?inner" },
-      { t = 32, mat = "?outer" },
+      { t = 0, mat = "?outer" },
     },
 
     -- frame top
@@ -156,7 +156,7 @@ PREFAB.WINDOW =
       { x = 128, y =  0, mat = "?inner" },
       { x = 128, y = 16, mat = "?inner" },
       { x =  64, y = 16, mat = "?inner" },
-      { b = 96, mat = "?outer" },
+      { b = 64, mat = "?outer" },
     },
   },
 }
