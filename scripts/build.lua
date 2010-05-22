@@ -744,8 +744,8 @@ function Build.prefab(fab, skin, T)
           if not z1 then
             z1, z2 = z, z
           else
-            z1 = math.max(z1 or z, z)
-            z2 = math.min(z2 or z, z)
+            z1 = math.min(z1 or z, z)
+            z2 = math.max(z2 or z, z)
           end
         end
       end -- C
@@ -774,7 +774,7 @@ function Build.prefab(fab, skin, T)
     -- stretching or shrinkin is done).
 
     if not pf_min then
-      -- only happens with all-solid prefabs (Z coord)
+      -- only happens with all-solid prefabs (and only Z coord).
       -- use some dummy values
       pf_min = 0 ; pf_max = 128
     end
@@ -839,6 +839,24 @@ function Build.prefab(fab, skin, T)
     end
 
     return info
+  end
+
+
+  local function set_group_sizes(info, scale_x)
+    if not info then
+      return
+    end
+
+    local n_pos = info.groups[1].low * scale_x
+
+    for _,G in ipairs(info.groups) do
+      if not G.size2 then
+        G.size2 = G.size * scale_x
+      end
+
+      G.low2  = n_pos ; n_pos = n_pos + G.size2
+      G.high2 = n_pos
+    end
   end
 
 
@@ -943,29 +961,34 @@ function Build.prefab(fab, skin, T)
     local groups = info.groups
     local T = #groups
 
-    if T == 0 then return n end
+    --- if T == 0 then return n end
+    assert(T >= 1)
 
-    if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-    if n >= groups[T].high then return n + (groups[1].high2 - groups[1].high) end
+    if n < groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+    if n > groups[T].high then return n + (groups[T].high2 - groups[T].high) end
 
-    local G = 1
+    local idx = 1
 
-    while (G < T) and (n > G.high) do
-      G = G + 1
+    while (idx < T) and (n > groups[idx].high) do
+      idx = idx + 1
     end
+
+    local G = groups[idx]
 
     return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
   end
 
-  local function fit_groups(brushes, field, resize_info)
-    if not resize_info then
+  local function resize_brushes(brushes, field, info)
+    if not info then
       return
     end
 
     for _,B in ipairs(brushes) do
       for _,C in ipairs(B) do
         if C[field] then
-          C[field] = resize_coord(resize_info, C[field])
+          local orig = C[field]
+          C[field] = resize_coord(info, C[field])
+gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
         end
       end -- C
     end -- B
@@ -1072,17 +1095,29 @@ gui.printf("X INFO:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO:\n%s\n", table.tostr(y_info, 3))
 gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
 
-  local x_approx = assert(x_info.approx_size)
-  local y_approx = assert(y_info.approx_size)
-  local z_approx = assert(z_info.approx_size)
+  local scale_x = T.scale_x or 1
+  local scale_y = T.scale_y or 1
+  local scale_z = T.scale_z or 1
+
+  if ranges.dx then scale_x = scale_x * ranges.dx / x_info.approx_size end
+  if ranges.dy then scale_y = scale_y * ranges.dy / y_info.approx_size end
+  if ranges.dz then scale_z = scale_z * ranges.dz / z_info.approx_size end
+
+  set_group_sizes(x_info, scale_x)
+  set_group_sizes(y_info, scale_y)
+  set_group_sizes(z_info, scale_z)
+
+gui.printf("X INFO 2:\n%s\n", table.tostr(x_info, 3))
+gui.printf("Y INFO 2:\n%s\n", table.tostr(y_info, 3))
+gui.printf("Z INFO 2:\n%s\n", table.tostr(z_info, 3))
 
 ---  convert_fitting(bbox)
 
-  fit_groups(brushes, "x", x_resize_info)
-  fit_groups(brushes, "y", y_resize_info)
+  resize_brushes(brushes, "x", x_info)
+  resize_brushes(brushes, "y", y_info)
 
-  fit_groups(brushes, "b", z_resize_info)
-  fit_groups(brushes, "t", z_resize_info)
+  resize_brushes(brushes, "b", z_info)
+  resize_brushes(brushes, "t", z_info)
 
   Trans.set(T)
 
@@ -1099,6 +1134,8 @@ function Build.does_prefab_fit(fab, skin, width, depth, height)
   --
   -- Any of those parameters can be nil to skip checking that part.
 
+  local DEFAULT_MIN = 16
+
   local function minimum_size(size_list)
     local total = 0
 
@@ -1110,7 +1147,7 @@ function Build.does_prefab_fit(fab, skin, width, depth, height)
       elseif S[2] == 0 then
         m = S[1]
       else
-        m = assert(S[3])
+        m = S[3] or DEFAULT_MIN
       end
       total = total + m
     end
