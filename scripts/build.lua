@@ -738,22 +738,33 @@ function Build.prefab(fab, skin, T)
             x2 = math.max(x2, C.x)
             y2 = math.max(y2, C.y)
           end
-        elseif C.b then
-          z2 = math.min(z2 or C.b, C.b)
-        elseif C.t then
-          z1 = math.max(z1 or C.t, C.t)
+
+        elseif C.b or C.t then
+          local z = C.b or C.t
+          if not z1 then
+            z1, z2 = z, z
+          else
+            z1 = math.max(z1 or z, z)
+            z2 = math.min(z2 or z, z)
+          end
         end
       end -- C
     end -- B
 
     assert(x1 and y1 and x2 and y2)
 
-    if not z1 then z1 = -EXTREME_H end
-    if not z2 then z2 =  EXTREME_H end
+    -- Note: it is OK when z1 and z2 are not set (this happens with
+    --       prefabs consisting entirely of infinitely tall solids).
+ 
+---??    if not z1 then z1 = -EXTREME_H end
+---??    if not z2 then z2 =  EXTREME_H end
+
+    local dz
+    if z1 then dz = z2 - z1 end
 
     return { x1=x1, x2=x2, dx=(x2 - x1),
              y1=y1, y2=y2, dy=(y2 - y1),
-             z1=z1, z2=z2, dz=(z2 - z1)
+             z1=z1, z2=z2, dz=dz,
            }
   end
 
@@ -761,6 +772,12 @@ function Build.prefab(fab, skin, T)
   local function process_groups(size_list, pf_min, pf_max)
     -- pf_min and pf_max are in the 'prefab' space (i.e. before any
     -- stretching or shrinkin is done).
+
+    if not pf_min then
+      -- only happens with all-solid prefabs (Z coord)
+      -- use some dummy values
+      pf_min = 0 ; pf_max = 128
+    end
 
     local info = { groups={} }
 
