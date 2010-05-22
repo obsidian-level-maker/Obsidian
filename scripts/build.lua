@@ -759,6 +759,9 @@ function Build.prefab(fab, skin, T)
 ---??    if not z1 then z1 = -EXTREME_H end
 ---??    if not z2 then z2 =  EXTREME_H end
 
+--!!!!!!! FIXME
+if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
+
     local dz
     if z1 then dz = z2 - z1 end
 
@@ -793,7 +796,7 @@ function Build.prefab(fab, skin, T)
 
       table.insert(info.groups, G)
 
-      info.approx_size  = G.size
+      info.skinned_size = G.size
       info.weight_total = 1
 
       return info
@@ -807,7 +810,7 @@ function Build.prefab(fab, skin, T)
     local pf_pos = pf_min
 
     info.weight_total = 0
-    info.approx_size  = 0
+    info.skinned_size = 0
 
     for _,S in ipairs(size_list) do
       local G = { }
@@ -827,7 +830,7 @@ function Build.prefab(fab, skin, T)
 
       table.insert(info.groups, G)
 
-      info.approx_size  = info.approx_size + (G.size2 or G.size)
+      info.skinned_size = info.skinned_size + (G.size2 or G.size)
       info.weight_total = info.weight_total + G.weight
 
       pf_pos = pf_pos + G.size
@@ -842,21 +845,33 @@ function Build.prefab(fab, skin, T)
   end
 
 
-  local function set_group_sizes(info, scale_x)
+  local function set_group_sizes(info, low, high)
     if not info then
       return
     end
 
-    local n_pos = info.groups[1].low * scale_x
+    local extra = high - low
+
+    for _,G in ipairs(info.groups) do
+      if G.size2 then
+        extra = extra - G.size2
+      end
+    end
+
+    local n_pos = low
 
     for _,G in ipairs(info.groups) do
       if not G.size2 then
-        G.size2 = G.size * scale_x
+        -- FIXME: not correct !!  [should take G.size into account]
+        G.size2 = extra * G.weight / info.weight_total
+        assert(G.size2 > 1)
       end
 
       G.low2  = n_pos ; n_pos = n_pos + G.size2
       G.high2 = n_pos
     end
+
+    assert(math.abs(n_pos - high) < 0.1)
   end
 
 
@@ -1078,6 +1093,51 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
   end
 
 
+  local function foobie_XY(ranges, x_info, y_info)
+    if T.x1 then
+      return T.x1, T.y1, T.x2, T.y2
+    end
+
+    local add_x = assert(T.add_x)
+    local add_y = assert(T.add_y)
+
+    local scale_x = T.scale_x or 1
+    local scale_y = T.scale_y or 1
+
+    local final_dx = x_info.skinned_size * scale_x
+    local final_dy = y_info.skinned_size * scale_y
+
+    local x1 = add_x + final_dx * ranges.x1 / ranges.dx
+    local x2 = add_x + final_dx * ranges.x2 / ranges.dx
+
+    local y1 = add_y + final_dy * ranges.y1 / ranges.dy
+    local y2 = add_y + final_dy * ranges.y2 / ranges.dy
+
+    return x1,y1, x2,y2
+  end
+
+  local function foobie_Z(ranges, z_info)
+    if T.z1 then
+      return T.z1, T.z2
+    end
+
+    if not ranges.dz then  -- UGH WTF TO DO?
+      return 0, 128
+    end
+
+    local add_z = assert(T.add_z)
+
+    local scale_z = T.scale_z or 1
+
+    local final_dz = z_info.skinned_size * scale_z
+
+    local z1 = add_z + final_dz * ranges.z1 / ranges.dz
+    local z2 = add_z + final_dz * ranges.z2 / ranges.dz
+
+    return z1, z2
+  end
+
+
   ---| Build.prefab |---
 
   local brushes = copy_w_substitution(fab.brushes)
@@ -1090,22 +1150,19 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
   local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
   local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
 
+  local x1 = T.x1 or T.add_x
+
 gui.printf("Prefab: %s\n", fab.name)
 gui.printf("X INFO:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO:\n%s\n", table.tostr(y_info, 3))
 gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
 
-  local scale_x = T.scale_x or 1
-  local scale_y = T.scale_y or 1
-  local scale_z = T.scale_z or 1
+  local x1, y1, x2, y2 = foobie_XY(ranges, x_info, y_info)
+  local z1,     z2     = foobie_Z (ranges, z_info)
 
-  if ranges.dx then scale_x = scale_x * ranges.dx / x_info.approx_size end
-  if ranges.dy then scale_y = scale_y * ranges.dy / y_info.approx_size end
-  if ranges.dz then scale_z = scale_z * ranges.dz / z_info.approx_size end
-
-  set_group_sizes(x_info, scale_x)
-  set_group_sizes(y_info, scale_y)
-  set_group_sizes(z_info, scale_z)
+  set_group_sizes(x_info, x1, x2)
+  set_group_sizes(y_info, y1, y2)
+  set_group_sizes(z_info, z1, z2)
 
 gui.printf("X INFO 2:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO 2:\n%s\n", table.tostr(y_info, 3))
