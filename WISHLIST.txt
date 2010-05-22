@@ -45,15 +45,26 @@ Monsters:
      have swarm patterns.
 
 
-Facades:
-  -  would be nice to "smooth" any odd-one-outs
+Intrusions:
+  -  this idea is that part of a room is reserved for the player
+     to travel through in an earlier or later quest.  If the
+     quest is earlier, then the player is prevented from entering
+     that room (due to blocking railings or being too low down).
 
-  -  ability to ensure both inner/outer are the same
+     It's like a kind of window, except the intrusion is built
+     as if it were part of the room you look into.  It may work
+     best in Quake games where the intrusion is a 3D walkway.
 
 
 Porches:
   -  this is 3 or more seeds around a door from outside->inside
      with a non-sky ceiling and some pillars and a raised floor.
+
+
+Facades:
+  -  would be nice to "smooth" any odd-one-outs
+
+  -  ability to ensure both inner/outer are the same
 
 
 Natural areas:
