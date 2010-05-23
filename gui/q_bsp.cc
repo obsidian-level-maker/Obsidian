@@ -107,7 +107,7 @@ void qLump_c::RawPrintf(const char *str)
   // convert each newline into CR/LF pair
   while (*str)
   {
-    char *next = strchr(str, '\n');
+    const char *next = strchr(str, '\n');
 
     Append(str, next ? (next - str) : strlen(str));
 
