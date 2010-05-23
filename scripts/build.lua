@@ -653,7 +653,8 @@ function Build.prefab(fab, skin, T)
     local x1, y1, z1
     local x2, y2, z2
 
-    -- FIXME: handle slopes
+    -- Note: no need to handle slopes, they are defined to be "shrinky"
+    --       (i.e. never higher that t, never lower than b).
 
     for _,B in ipairs(brushes) do
       for _,C in ipairs(B) do
@@ -684,13 +685,9 @@ function Build.prefab(fab, skin, T)
 
     -- Note: it is OK when z1 and z2 are not set (this happens with
     --       prefabs consisting entirely of infinitely tall solids).
+
+    -- Note: It is possible to get dz == 0
  
----??    if not z1 then z1 = -EXTREME_H end
----??    if not z2 then z2 =  EXTREME_H end
-
---!!!!!!! FIXME
-if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
-
     local dz
     if z1 then dz = z2 - z1 end
 
@@ -701,10 +698,41 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
   end
 
 
+  local function process_materials(brushes)
+    -- modifies a brush list, converting 'mat' fields to 'tex' fields
+
+    for _,B in ipairs(brushes) do
+      for _,C in ipairs(B) do
+
+        if C.mat then
+          local mat = safe_get_mat(C.mat)
+          assert(mat and mat.t)
+
+          if C.b then
+            C.tex = mat.c or mat.f or mat.t
+          elseif C.t then
+            C.tex = mat.f or mat.t
+          else
+            C.tex = mat.t
+          end
+
+          C.mat = nil
+        end
+
+      end -- C
+    end -- B
+  end
+
+
   local function process_groups(size_list, pf_min, pf_max)
     -- pf_min and pf_max are in the 'prefab' space (i.e. before any
     -- stretching or shrinkin is done).
 
+    if not pf_min or not size_list then
+      return { }
+    end
+
+--[[
     if not pf_min then
       -- only happens with all-solid prefabs (and only Z coord).
       -- use some dummy values
@@ -721,6 +749,7 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
       G.high = pf_max ; G.high2 = pf_max
 
       G.size   = G.high  - G.low
+      G.size2  = G.size
       G.weight = 1
 
       table.insert(info.groups, G)
@@ -730,6 +759,7 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
 
       return info
     end
+--]]
 
     assert(#size_list >= 1)
 
@@ -744,9 +774,10 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
     for _,S in ipairs(size_list) do
       local G = { }
 
-      G.low = pf_pos
       G.size = S[1]
-      G.high = G.low + G.size
+
+      G.low  = pf_pos ; pf_pos = pf_pos + G.size
+      G.high = pf_pos
 
       G.weight = S[2] or 1
 
@@ -761,8 +792,6 @@ if z1 and z1 > z2-0.1 then z2 = z1 + 128 end
 
       info.skinned_size = info.skinned_size + (G.size2 or G.size)
       info.weight_total = info.weight_total + G.weight
-
-      pf_pos = pf_pos + G.size
     end
 
     -- verify that group sizes match the coordinate bbox
@@ -983,31 +1012,6 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
   end
 
 
-  local function process_materials(brushes)
-    -- modifies a brush list, converting 'mat' fields to 'tex' fields
-
-    for _,B in ipairs(brushes) do
-      for _,C in ipairs(B) do
-
-        if C.mat then
-          local mat = safe_get_mat(C.mat)
-          assert(mat and mat.t)
-
-          if C.b then
-            C.tex = mat.c or mat.f or mat.t
-          elseif C.t then
-            C.tex = mat.f or mat.t
-          else
-            C.tex = mat.t
-          end
-
-          C.mat = nil
-        end
-
-      end -- C
-    end -- B
-  end
-
   local function render_brushes(brushes)
     for _,B in ipairs(brushes) do
       local kind = "solid"
@@ -1080,6 +1084,45 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
   local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
   local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
   local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+
+
+  if fab.placement == "fitted" then
+    if not T.x1 then
+      error("Fitted prefab used without fitted transform")
+    end
+
+
+  else  -- "loose" placement
+    
+    if not (T.add_x and T.add_y) then
+      error("Loose prefab used without focal coord")
+    end
+
+    if T.scale_x then scale_brushes(brushes, "x", x_info, T.scale_x) end
+    if T.scale_y then scale_brushes(brushes, "y", y_info, T.scale_y) end
+
+    if T.scale_z then
+      scale_brushes(brushes, "b", z_info, T.scale_z)
+      scale_brushes(brushes, "t", z_info, T.scale_z)
+    end
+
+    Trans.set(
+    {
+      add_x  = T.add_x,
+      add_y  = T.add_y,
+      add_z  = T.add_z,
+      rotate = T.rotate
+    })
+  end
+
+  render_brushes(brushes)
+
+  Trans.clear()
+
+  do return end
+
+
+
 
   local x1 = T.x1 or T.add_x
 
