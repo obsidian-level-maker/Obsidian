@@ -732,8 +732,10 @@ function Build.prefab(fab, skin, T)
       return { }
     end
 
+    local info = { groups={} }
+
     if not size_list then
-      info,groups = {}
+      info.groups = {}
 
       local G = {}
 
@@ -747,6 +749,8 @@ function Build.prefab(fab, skin, T)
 
       info.skinned_size = G.size
       info.weight_total = G.weight
+
+      return info
     end
 
 --[[
@@ -755,8 +759,6 @@ function Build.prefab(fab, skin, T)
       -- use some dummy values
       pf_min = 0 ; pf_max = 128
     end
-
-    local info = { groups={} }
 
     if not size_list then
       -- one-to-one mapping
@@ -951,6 +953,8 @@ function Build.prefab(fab, skin, T)
 
   ---| Build.prefab |---
 
+gui.printf("Prefab: %s\n", fab.name)
+
   local brushes = copy_w_substitution(fab.brushes)
 
   process_materials(brushes)
@@ -988,7 +992,7 @@ function Build.prefab(fab, skin, T)
 
     local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
     local XS   = { [2]=T.x1, [8]=T.x2, [4]=T.x1, [6]=T.x2 }
-    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y1, [6]=T.y2 }
+    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y2, [6]=T.y1 }
 
     Trans.set(
     {
@@ -1008,11 +1012,11 @@ function Build.prefab(fab, skin, T)
     local scale_x = T.scale_x or 1
     local scale_y = T.scale_y or 1
 
-    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
-    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
+    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / ranges.dx end
+    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / ranges.dy end
 
-    set_group_sizes(x_info, bbox.x1 * scale_x, bbox.x2 * scale_x)
-    set_group_sizes(y_info, bbox.y1 * scale_y, bbox.y2 * scale_y)
+    set_group_sizes(x_info, ranges.x1 * scale_x, ranges.x2 * scale_x)
+    set_group_sizes(y_info, ranges.y1 * scale_y, ranges.y2 * scale_y)
 
     resize_brushes(brushes, "x", x_info)
     resize_brushes(brushes, "y", y_info)
@@ -1084,7 +1088,6 @@ function Build.prefab(fab, skin, T)
 
   local x1 = T.x1 or T.add_x
 
-gui.printf("Prefab: %s\n", fab.name)
 gui.printf("X INFO:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO:\n%s\n", table.tostr(y_info, 3))
 gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
