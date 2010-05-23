@@ -728,8 +728,25 @@ function Build.prefab(fab, skin, T)
     -- pf_min and pf_max are in the 'prefab' space (i.e. before any
     -- stretching or shrinkin is done).
 
-    if not pf_min or not size_list then
+    if not pf_min then
       return { }
+    end
+
+    if not size_list then
+      info,groups = {}
+
+      local G = {}
+
+      G.low  = pf_min
+      G.high = pf_max
+
+      G.size = G.high - G.low
+      G.weight = 1 * G.size
+
+      table.insert(info.groups, G)
+
+      info.skinned_size = G.size
+      info.weight_total = G.weight
     end
 
 --[[
@@ -788,6 +805,8 @@ function Build.prefab(fab, skin, T)
         G.weight = 0
       end
 
+      G.weight = G.weight * G.size
+
       table.insert(info.groups, G)
 
       info.skinned_size = info.skinned_size + (G.size2 or G.size)
@@ -804,7 +823,7 @@ function Build.prefab(fab, skin, T)
 
 
   local function set_group_sizes(info, low, high)
-    if not info then
+    if not info.groups then
       return
     end
 
@@ -820,7 +839,6 @@ function Build.prefab(fab, skin, T)
 
     for _,G in ipairs(info.groups) do
       if not G.size2 then
-        -- FIXME: not correct !!  [should take G.size into account]
         G.size2 = extra * G.weight / info.weight_total
 
         if (G.size2 <= 1) then info.FUCKED = true ; return end
@@ -832,103 +850,6 @@ function Build.prefab(fab, skin, T)
     end
 
     assert(math.abs(n_pos - high) < 0.1)
-  end
-
-
-  local function convert_fitting(bbox)
-    -- replace x1/y1/x2/y1/dir in the transform with normal stuff
-    -- (similarly for z1/z2)
-
-    if T.z1 then
-      T.scale_z = (T.z2 - T.z1) / bbox.dz
-      T.add_z   = T.z1 + bbox.z1 * T.scale_z  -- FIXME: correct??
-
-      T.z1 = nil ; T.z2 = nil
-    end
-
-    if T.x1 then
-      assert(T.x2 and T.y1 and T.y2)
-
-      T.scale_x = (T.x2 . T.x1) / bbox.dx
-      T.scale_y = (T.y2 . T.y1) / bbox.dy
-
-      T.add_x = T.x1 + bbox.x1 * T.scale_x
-      T.add_y = T.y1 + bbox.y1 * T.scale_y
-
-      if T.dir then
-        local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
-        T.rotate = ANGS[T.dir]
-        T.dir = nil
-      end
-
-      T.x1 = nil ; T.x2 = nil
-      T.y1 = nil ; T.y2 = nil
-    end
-  end
-
-
-  local function calc_resizing(size_list, low, high, low2, high2)
-    if not size_list then
-      return nil
-    end
-
-    assert(#size_list >= 1)
-
-    local size  = high  - low
-    local size2 = high2 - low2
-
-    local info = { }
-    local wt_total = 0
-
-    info.groups = { }
-
-    local extra = size2 - size1
-
-    -- convert size list into a set of groups
-
-    for _,S in ipairs(size_list) do
-      local G = { }  -- new group
-
-      G.size = S[1]
-      G.weight = S[2] or 1
-
-      if G.weight == 0 then
-        G.size2 = G.size
-      end
-
-      if type(G.weight) == "string" then
-        G.size2 = Trans.substitute(G.weight, skin)
-        G.weight = 0
-      end
-
-      table.insert(info.groups, G)
-
-      wt_total = wt_total + G.weight
-
-      if G.size2 then
-        extra = extra - G.size2
-      end
-    end
-
-
-    assert(extra >= 0)
-
-
-    -- now compute size of all FLEXIBLE groups
-
-    local x = low2
-
-    for _,G in ipairs(groups) do
-      if G.weight > 0 then
-        G.size2 = G.size + extra * G.weight / wt_total
-        assert(G.size2 > 1)
-      end
-
-      G.low2  = x ; x = x + G.size2
-      G.high2 = x
-    end
-
-    return info
   end
 
 
@@ -954,7 +875,7 @@ function Build.prefab(fab, skin, T)
   end
 
   local function resize_brushes(brushes, field, info)
-    if not info then
+    if not info.groups then
       return
     end
 
@@ -963,14 +884,14 @@ function Build.prefab(fab, skin, T)
         if C[field] then
           local orig = C[field]
           C[field] = resize_coord(info, C[field])
-gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
+-- gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
         end
       end -- C
     end -- B
   end
 
 
-  local function copy_w_substitution(orig_brushes)
+  local function copy_w_substitution(orig_brushes) -- FIXME: move up
     -- perform substitutions (values beginning with '?')
     -- returns a copy of the brushes.
 
@@ -1028,6 +949,95 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
   end
 
 
+  ---| Build.prefab |---
+
+  local brushes = copy_w_substitution(fab.brushes)
+
+  process_materials(brushes)
+
+  local ranges = determine_bbox(brushes)
+
+  local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
+  local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
+  local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+
+
+  if fab.placement == "fitted" then
+    if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
+      error("Fitted prefab used without fitted transform")
+    end
+
+    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
+      error("Fitted prefab should have left/bottom coord at (0, 0)")
+    end
+
+    local width = T.x2 - T.x1
+    local depth = T.y2 - T.y1
+
+    if geom.is_horiz(T.dir) then
+      width, depth = depth, width
+    end
+
+    set_group_sizes(x_info, 0, width)
+    set_group_sizes(y_info, 0, depth)
+
+    resize_brushes(brushes, "x", x_info)
+    resize_brushes(brushes, "y", y_info)
+
+    -- TODO: Z stuff
+
+    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
+    local XS   = { [2]=T.x1, [8]=T.x2, [4]=T.x1, [6]=T.x2 }
+    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y1, [6]=T.y2 }
+
+    Trans.set(
+    {
+      add_x = XS[T.dir],
+      add_y = YS[T.dir],
+      add_z = T.add_z,
+
+      rotate = ANGS[T.dir]
+    })
+
+  else  -- "loose" placement
+
+    if not (T.add_x and T.add_y) then
+      error("Loose prefab used without focal coord")
+    end
+
+    local scale_x = T.scale_x or 1
+    local scale_y = T.scale_y or 1
+
+    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
+    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
+
+    set_group_sizes(x_info, bbox.x1 * scale_x, bbox.x2 * scale_x)
+    set_group_sizes(y_info, bbox.y1 * scale_y, bbox.y2 * scale_y)
+
+    resize_brushes(brushes, "x", x_info)
+    resize_brushes(brushes, "y", y_info)
+
+    -- scale_brushes(brushes, "b", z_info, T.scale_z)
+    -- scale_brushes(brushes, "t", z_info, T.scale_z)
+
+    Trans.set(
+    {
+      add_x  = T.add_x,
+      add_y  = T.add_y,
+      add_z  = T.add_z,
+      rotate = T.rotate
+    })
+  end
+
+  render_brushes(brushes)
+
+  Trans.clear()
+
+  do return end
+
+
+  ----------- OLD CRUD  OLD CRUD  OLD CRUD --------------
+
   local function foobie_XY(ranges, x_info, y_info)
     if T.x1 then
       return T.x1, T.y1, T.x2, T.y2
@@ -1072,85 +1082,6 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
     return z1, z2
   end
 
-
-  ---| Build.prefab |---
-
-  local brushes = copy_w_substitution(fab.brushes)
-
-  process_materials(brushes)
-
-  local ranges = determine_bbox(brushes)
-
-  local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
-  local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
-  local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
-
-
-  if fab.placement == "fitted" then
-    if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
-      error("Fitted prefab used without fitted transform")
-    end
-
-    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
-      error("Fitted prefab should have left/bottom coord at (0, 0)")
-    end
-
-    local width = T.x2 - T.x1
-    local depth = T.y2 - T.y1
-
-    if geom.is_horiz(T.dir) then
-      width, depth = depth, width
-    end
-
-    fit_brushes(brushes, "x", x_info, width)
-    fit_brushes(brushes, "y", y_info, depth)
- -- fit_brushes(brushes, "z", z_info, height)
-
-    -- TODO: scale_z stuff
-
-    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
-    local XS   = { [2]=T.x1, [8]=T.x2, [4]=T.x1, [6]=T.x2 }
-    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y1, [6]=T.y2 }
-
-    Trans.set(
-    {
-      add_x = XS[T.dir],
-      add_y = YS[T.dir],
-      add_z = T.add_z,
-
-      rotate = ANGS[T.dir]
-    })
-
-  else  -- "loose" placement
-    
-    if not (T.add_x and T.add_y) then
-      error("Loose prefab used without focal coord")
-    end
-
-    scale_brushes(brushes, "x", x_info, T.scale_x)
-    scale_brushes(brushes, "y", y_info, T.scale_y)
-
-    -- scale_brushes(brushes, "b", z_info, T.scale_z)
-    -- scale_brushes(brushes, "t", z_info, T.scale_z)
-
-    Trans.set(
-    {
-      add_x  = T.add_x,
-      add_y  = T.add_y,
-      add_z  = T.add_z,
-      rotate = T.rotate
-    })
-  end
-
-  render_brushes(brushes)
-
-  Trans.clear()
-
-  do return end
-
-
-
-
   local x1 = T.x1 or T.add_x
 
 gui.printf("Prefab: %s\n", fab.name)
@@ -1161,7 +1092,6 @@ gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
   local x1, y1, x2, y2 = foobie_XY(ranges, x_info, y_info)
   local z1,     z2     = foobie_Z (ranges, z_info)
 
-  -- handle rotation (FIXME: still fucked)
   if false then ---- T.dir and geom.is_horiz(T.dir) then
     set_group_sizes(x_info, y1, y2)
     set_group_sizes(y_info, x1, x2)
@@ -1171,8 +1101,6 @@ gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
   end
 
   set_group_sizes(z_info, z1, z2)
-
-  if x_info.FUCKED or y_info.FUCKED or z_info.FUCKED then return end
 
 gui.printf("X INFO 2:\n%s\n", table.tostr(x_info, 3))
 gui.printf("Y INFO 2:\n%s\n", table.tostr(y_info, 3))
