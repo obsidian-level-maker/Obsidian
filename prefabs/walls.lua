@@ -20,6 +20,8 @@
 
 PREFAB.WALL =
 {
+  placement = "fitted",
+
   brushes =
   {
     {
@@ -34,6 +36,8 @@ PREFAB.WALL =
 
 PREFAB.CORNER =
 {
+  placement = "fitted",
+
   brushes =
   {
     {
@@ -48,6 +52,8 @@ PREFAB.CORNER =
 
 PREFAB.PICTURE =
 {
+  placement = "fitted",
+
   x_sizes = { {64,1}, {64,"?width"}, {64,1} },
 
   y_sizes = { {8,1}, {8,0} },
@@ -123,6 +129,8 @@ PREFAB.PICTURE =
 
 PREFAB.WINDOW =
 {
+  placement = "fitted",
+
   brushes =
   {
     -- right side

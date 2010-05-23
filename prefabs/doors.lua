@@ -20,6 +20,8 @@
 
 PREFAB.ARCH =
 {
+  placement = "fitted",
+
   brushes =
   {
     -- frame
@@ -56,6 +58,8 @@ PREFAB.ARCH =
 
 PREFAB.DOOR =
 {
+  placement = "fitted",
+
   brushes =
   {
     -- frame
