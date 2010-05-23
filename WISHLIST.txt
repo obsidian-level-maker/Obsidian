@@ -266,10 +266,9 @@ Sam's suggestions:
 +  liquid areas
 
 +  support the Boss maps (next map = "start")
-     E1M7 : get rune, electrocute Chthon
      E2M6 : wood floor, funky bridge, kill vores to get rune
      E3M6 : castley, lavay, teleport-in fiend
-     e4M7 : blue maze, spawn, kill vores to get rune
+     E4M7 : blue maze, spawn, kill vores to get rune
 
 -  better exits
 
@@ -286,8 +285,6 @@ Sam's suggestions:
 -  Option for shrinking textures to 32x32 (scaled in-map)
    which would only require 1/4 of the lightmap space
    (and hence less likely to run out of it)
-
--  QSAVETEX: verify the POP file
 
 
 ----------------------------------------------------------------
