@@ -2736,9 +2736,9 @@ gui.printf("do_teleport\n")
       if S.usage_map[corner] == "solid" then
         local skin = { inner=w_tex, outer=R.facade or w_tex }
 
----!!!!        local T = Trans.corner_transform(S, z1, corner)
----!!!!
----!!!!        Build.prefab("CORNER", skin, T)
+        local T = Trans.corner_transform(S, z1, corner)
+
+        Build.prefab("CORNER", skin, T)
       end
     end end -- for corner
 

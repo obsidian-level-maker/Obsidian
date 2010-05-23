@@ -415,21 +415,24 @@ end
 function Trans.corner_transform(S, z, side)
   local T = {}
 
-  local ANGS = { [1]=0,    [9]=180,  [7]=270,  [3]=90 }
-  local XS   = { [1]=S.x1, [9]=S.x2, [7]=S.x1, [3]=S.x2 }
-  local YS   = { [1]=S.y1, [9]=S.y2, [7]=S.y2, [3]=S.y1 }
+  local x3 = S.x1 + S.thick[4]
+  local y3 = S.y1 + S.thick[2]
+  local x4 = S.x2 - S.thick[6]
+  local y4 = S.y2 - S.thick[8]
 
-  T.add_x = XS[side]
-  T.add_y = YS[side]
+  local X1S = { [1]=S.x1, [9]=  x4, [7]=S.x1, [3]=  x4 }
+  local Y1S = { [1]=S.y1, [9]=  y4, [7]=  y4, [3]=S.y1 }
+  local X2S = { [1]=  x3, [9]=S.x2, [7]=  x3, [3]=S.x2 }
+  local Y2S = { [1]=  y3, [9]=S.y2, [7]=S.y2, [3]=  y3 }
+
+  T.x1 = X1S[side]
+  T.y1 = Y1S[side]
+  T.x2 = X2S[side]
+  T.y2 = Y2S[side]
+
+  T.dir = geom.ROTATE[7][side]
+
   T.add_z = z
-
-  local L_side = geom.ROTATE[7][side]
-  local R_side = geom.ROTATE[1][side]
-
-  T.scale_x = S.thick[R_side] / 16
-  T.scale_y = S.thick[L_side] / 16
-
-  T.rotate = ANGS[side]
 
   return T
 end
@@ -843,8 +846,9 @@ function Build.prefab(fab, skin, T)
       if not G.size2 then
         G.size2 = extra * G.weight / info.weight_total
 
-        if (G.size2 <= 1) then info.FUCKED = true ; return end
-        assert(G.size2 > 1)
+        if (G.size2 <= 1) then
+          error("Prefab does not fit!")
+        end
       end
 
       G.low2  = n_pos ; n_pos = n_pos + G.size2
@@ -982,8 +986,12 @@ gui.printf("Prefab: %s\n", fab.name)
       width, depth = depth, width
     end
 
+--gui.printf("width=%d depth=%d y_info1=\n%s\n", width, depth, table.tostr(y_info,3))
+
     set_group_sizes(x_info, 0, width)
     set_group_sizes(y_info, 0, depth)
+
+--gui.printf("y_info2=\n%s\n", table.tostr(y_info,3))
 
     resize_brushes(brushes, "x", x_info)
     resize_brushes(brushes, "y", y_info)
