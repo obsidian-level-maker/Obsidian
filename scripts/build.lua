@@ -1087,10 +1087,39 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
 
 
   if fab.placement == "fitted" then
-    if not T.x1 then
+    if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
       error("Fitted prefab used without fitted transform")
     end
 
+    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
+      error("Fitted prefab should have left/bottom coord at (0, 0)")
+    end
+
+    local width = T.x2 - T.x1
+    local depth = T.y2 - T.y1
+
+    if geom.is_horiz(T.dir) then
+      width, depth = depth, width
+    end
+
+    fit_brushes(brushes, "x", x_info, width)
+    fit_brushes(brushes, "y", y_info, depth)
+ -- fit_brushes(brushes, "z", z_info, height)
+
+    -- TODO: scale_z stuff
+
+    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
+    local XS   = { [2]=T.x1, [8]=T.x2, [4]=T.x1, [6]=T.x2 }
+    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y1, [6]=T.y2 }
+
+    Trans.set(
+    {
+      add_x = XS[T.dir],
+      add_y = YS[T.dir],
+      add_z = T.add_z,
+
+      rotate = ANGS[T.dir]
+    })
 
   else  -- "loose" placement
     
@@ -1098,13 +1127,11 @@ gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
       error("Loose prefab used without focal coord")
     end
 
-    if T.scale_x then scale_brushes(brushes, "x", x_info, T.scale_x) end
-    if T.scale_y then scale_brushes(brushes, "y", y_info, T.scale_y) end
+    scale_brushes(brushes, "x", x_info, T.scale_x)
+    scale_brushes(brushes, "y", y_info, T.scale_y)
 
-    if T.scale_z then
-      scale_brushes(brushes, "b", z_info, T.scale_z)
-      scale_brushes(brushes, "t", z_info, T.scale_z)
-    end
+    -- scale_brushes(brushes, "b", z_info, T.scale_z)
+    -- scale_brushes(brushes, "t", z_info, T.scale_z)
 
     Trans.set(
     {
