@@ -675,8 +675,8 @@ function Connect.connect_rooms()
     S.border[dir].kind    = "arch"
     T.border[10-dir].kind = "straddle"
 
-    S.thick[dir] = 24
-    T.thick[10-dir] = 24
+--!!!??    S.thick[dir] = 24
+--!!!??    T.thick[10-dir] = 24
 
 gui.debugf("connect_seeds S(%d,%d) ROOM_%d grp:%d --> S(%d,%d) ROOM_%d grp:%d\n",
 S.sx,S.sy, S.room.id, S.room.c_group,
