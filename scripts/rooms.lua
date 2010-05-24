@@ -26,6 +26,12 @@ class ROOM
                   -- "scenic" (unvisitable room)
                   -- "hallway", "stairwell", "small_exit"
 
+  shape : keyword -- "rect" (perfect rectangle)
+                  -- "L"
+                  -- "T"
+                  -- "plus"
+                  -- "odd"  (anything else)
+
   outdoor : bool  -- true for outdoor rooms
   natural : bool  -- true for cave/landscape areas
   scenic  : bool  -- true for scenic (unvisitable) areas
@@ -219,6 +225,8 @@ function Rooms.decide_hallways()
     if R.outdoor or R.natural or R.children or R.purpose then
       return false
     end
+
+    if R.shape ~= "rect" then return false end  -- Fixme??
 
     if #R.teleports > 0 then return false end
     if R.num_branch < 2 then return false end
@@ -1455,6 +1463,8 @@ function Rooms.make_ceiling(R)
 
   local function test_cross_beam(dir, x1,y1, x2,y2, mode)
     -- FIXME: count usable spots, return false for zero
+
+    if R.shape ~= "rect" then return end  -- FIXME
 
     for x = x1,x2 do for y = y1,y2 do
       local S = SEEDS[x][y][1]

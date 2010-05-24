@@ -198,11 +198,96 @@ function Plan.initial_rooms()
     table.insert(R.neighbors, N)
   end
 
-  local function choose_big_size(bx, by)
+  local function check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
+    for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
+      if ROOM then
+        room_map[x][y] = ROOM
+      else
+        if room_map[x][y] then return false end
+      end
+    end end
+
+    return true
+  end
+
+  local function check_or_fill_L(ROOM, bx, by, big_w, big_h, s_dir)
+    for dx = 1,big_w do for dy = 1,big_h do
+      local lx = sel(s_dir == 1 or s_dir == 7, dx, big_w+1-dx)
+      local ly = sel(s_dir == 1 or s_dir == 3, dy, big_h+1-dy)
+
+      local x = bx + dx - 1
+      local y = by + dy - 1
+
+      if dx ~= lx and dy ~= ly then
+        -- not part of L shape, skip it
+      elseif ROOM then
+        room_map[x][y] = ROOM
+      else
+        if room_map[x][y] then return false end
+      end
+    end end
+
+    return true
+  end
+
+  local function check_or_fill_T(ROOM, bx, by, big_w, big_h, s_dir)
+    for dx = 1,big_w do for dy = 1,big_h do
+      local x = bx + dx - 1
+      local y = by + dy - 1
+
+      if (s_dir == 2 and y < big_h and x ~= 2) or
+         (s_dir == 8 and y > 1     and x ~= 2) or
+         (s_dir == 4 and x < big_w and y ~= 2) or
+         (s_dir == 6 and x > 1     and y ~= 2)
+      then
+        -- not part of T shape, skip it
+      elseif ROOM then
+        room_map[x][y] = ROOM
+      else
+        if room_map[x][y] then return false end
+      end
+    end end
+
+    return true
+  end
+
+  local function check_or_fill_PLUS(ROOM, bx, by, big_w, big_h)
+    for dx = 1,big_w do for dy = 1,big_h do
+      local x = bx + dx - 1
+      local y = by + dy - 1
+
+      if (x == 1 or x == big_w) and (y == 1 or y == big_h) then
+        -- not part of plus shape, skip it
+      elseif ROOM then
+        room_map[x][y] = ROOM
+      else
+        if room_map[x][y] then return false end
+      end
+    end end
+
+    return true
+  end
+
+  local function check_or_fill_shape(ROOM, bx, by, big_w, big_h, shape, s_dir)
+    if shape == "rect" then
+      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
+    elseif shape == "L" then
+      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h, s_dir)
+    elseif shape == "T" then
+      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h, s_dir)
+    elseif shape == "plus" then
+      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
+    else
+      error("Unknown shape: " .. tostring(shape))
+    end
+  end
+
+
+  local function choose_big_size(bx, by, want_shape)
     local raw = rand.key_by_probs(BIG_ROOM_TABLE)
 
-    local big_w = int(raw / 10)
-    local big_h =    (raw % 10)
+    local big_w = 3 -- int(raw / 10)
+    local big_h = 3 --   (raw % 10)
 
     if rand.odds(50) then
       big_w, big_h = big_h, big_w
@@ -239,14 +324,18 @@ function Plan.initial_rooms()
 
     assert(big_w > 0 and big_h > 0)
 
-    -- any other rooms in the way?
-    for x = bx,bx+big_w-1 do for y=by,by+big_h-1 do
-      if room_map[x][y] then
-        return 1, 1
-      end
-    end end
+    -- TEMP CRUD
+    if big_w < 3 or big_h < 3 then want_shape = "rect" end
 
-    return big_w, big_h
+    local s_dir = 2
+    if want_shape == "L" then s_dir = 1 end
+
+    -- any other rooms in the way?
+    if not check_or_fill_shape(nil, bx, by, big_w, big_h, want_shape, s_dir) then
+      return 1, 1
+    end
+
+    return big_w, big_h, want_shape, s_dir
   end
 
 
@@ -270,6 +359,7 @@ function Plan.initial_rooms()
           if R and not R.natural then
             R.natural = true
             R.nature_parent = LAST.nature_parent or LAST
+            R.shape = "odd"
             return nx, ny
           end
         end
@@ -286,6 +376,7 @@ function Plan.initial_rooms()
 
       if R and not R.natural then
         R.natural = true
+        R.shape = "odd"
         return x, y
       end
     end
@@ -342,15 +433,19 @@ function Plan.initial_rooms()
     local bx, by = vis.x, vis.y
     
     if not room_map[bx][by] then
-      local ROOM = { id=id, kind="normal", conns={}, }
+      local ROOM = { id=id, kind="normal", shape="rect", conns={}, }
       id = id + 1
 
       table.set_class(ROOM, ROOM_CLASS)
 
-      local big_w, big_h = choose_big_size(bx, by)
+      local want_shape = rand_key_by_probs{ rect=1, L=50, T=50, plus=50 }
+
+      local big_w, big_h, shape, s_dir = choose_big_size(bx, by, want_shape)
 
       ROOM.big_w = big_w
       ROOM.big_h = big_h
+      ROOM.shape = shape or "rect"
+      ROOM.shape_dir = s_dir
 
       -- determine coverage on seed map
       ROOM.sw = calc_width (bx, big_w)
@@ -362,9 +457,7 @@ function Plan.initial_rooms()
       ROOM.sx2 = ROOM.sx1 + ROOM.sw - 1
       ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
 
-      for x = bx,bx+big_w-1 do for y = by,by+big_h-1 do
-        room_map[x][y] = ROOM
-      end end
+      check_or_fill_shape(ROOM, bx, by, big_w, big_h, ROOM.shape, s_dir)
 
       gui.debugf("%s\n", ROOM:tostr())
     end
@@ -710,6 +803,10 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
   for _,R in ipairs(LEVEL.all_rooms) do
     R.nudges = {}
+
+    if R.shape ~= "rect" then
+      R.no_nudge = true
+    end
   end
 
   nudge_big_rooms()
@@ -1109,7 +1206,7 @@ function Plan.create_rooms()
   Plan.make_seeds()
   Plan.merge_naturals()
 
-Plan.weird_experiment()
+-- Plan.weird_experiment()
 
   gui.printf("Seed Map:\n")
   Seed.dump_rooms()
