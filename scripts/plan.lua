@@ -492,13 +492,13 @@ function Plan.weird_experiment()
     S.room.sy2 = math.max(S.room.sy2, N.sy)
   end
 
-  for loop = 1,5000 do
+  for loop = 1,1000 do
     local sx = rand.irange(1, SEED_W)
     local sy = rand.irange(1, SEED_H)
 
     local S = SEEDS[sx][sy][1]
 
-    if not (S and S.room) then
+    if S and S.room then
       try_move(S, rand.dir())
     end
   end
