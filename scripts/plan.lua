@@ -218,7 +218,7 @@ function Plan.initial_rooms()
       local x = bx + dx - 1
       local y = by + dy - 1
 
-      if dx ~= lx and dy ~= ly then
+      if not (lx == 1 or ly == 1) then
         -- not part of L shape, skip it
       elseif ROOM then
         room_map[x][y] = ROOM
@@ -272,11 +272,11 @@ function Plan.initial_rooms()
     if shape == "rect" then
       return check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
     elseif shape == "L" then
-      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h, s_dir)
+      return check_or_fill_L   (ROOM, bx, by, big_w, big_h, s_dir)
     elseif shape == "T" then
-      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h, s_dir)
+      return check_or_fill_T   (ROOM, bx, by, big_w, big_h, s_dir)
     elseif shape == "plus" then
-      return check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
+      return check_or_fill_PLUS(ROOM, bx, by, big_w, big_h)
     else
       error("Unknown shape: " .. tostring(shape))
     end
@@ -327,10 +327,11 @@ function Plan.initial_rooms()
     -- TEMP CRUD
     if big_w < 3 or big_h < 3 then want_shape = "rect" end
 
-    local s_dir = 2
+    local s_dir = 8
     if want_shape == "L" then s_dir = 1 end
 
     -- any other rooms in the way?
+io.stderr:write("want_shape = " .. tostring(want_shape) .. "\n")
     if not check_or_fill_shape(nil, bx, by, big_w, big_h, want_shape, s_dir) then
       return 1, 1
     end
@@ -438,7 +439,7 @@ function Plan.initial_rooms()
 
       table.set_class(ROOM, ROOM_CLASS)
 
-      local want_shape = rand_key_by_probs{ rect=1, L=50, T=50, plus=50 }
+      local want_shape = "rect" -- rand.key_by_probs{ rect=1, L=50, T=50, plus=50 }
 
       local big_w, big_h, shape, s_dir = choose_big_size(bx, by, want_shape)
 
@@ -465,9 +466,10 @@ function Plan.initial_rooms()
 
   LEVEL.last_id = id
 
---!!!!!!  make_naturals(id)
+  make_naturals(id)
 
   dump_rooms()
+
 
 
   -- determines neighboring rooms of each room
