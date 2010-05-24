@@ -459,6 +459,9 @@ geom.ROTATE =
 geom.RIGHT = geom.ROTATE[2]
 geom.LEFT  = geom.ROTATE[6]
 
+geom.RIGHT_45 = geom.ROTATE[1]
+geom.LEFT_45  = geom.ROTATE[7]
+
 geom.ANGLES = { 225,270,315, 180,0,0, 135,90,45 }
 
 
