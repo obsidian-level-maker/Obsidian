@@ -6,7 +6,21 @@ TODO
 +  Chris's name stuff!
 
 
-DONE:  treat corners of indoor rooms as distinct architecture
+DOORS: between two indoor buildings : straddle both rooms
+
+rename: Cave --> cavelib
+
+
+
+prefabs:  support 'defaults' table for skin values
+          (allow functions)
+
+SKIN PREPARATION:
+
+  1. copy skin table
+  2. expand random selection
+  3. apply prefab defaults
+
 
 
 -  lifts often assume meshing up at 90 degree turns
