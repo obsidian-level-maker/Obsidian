@@ -372,7 +372,7 @@ function Plan.initial_rooms()
 
   LEVEL.last_id = id
 
-  make_naturals(id)
+--!!!!!!  make_naturals(id)
 
   dump_rooms()
 
@@ -440,6 +440,66 @@ function Plan.merge_naturals()
       merge_one_natural(R, R.nature_parent)
     else
       table.insert(LEVEL.all_rooms, R)
+    end
+  end
+end
+
+
+function Plan.weird_experiment()
+
+  local function try_move(S, dir)
+    local N = S:neighbor(dir)
+
+    if not (N and N.room) then return end
+
+    if N.room == S.room then return end
+
+    local A = N:neighbor(geom.RIGHT[dir])
+    local B = N:neighbor(geom. LEFT[dir])
+    local X = N:neighbor(dir)
+
+    if X and X.room == N.room then
+
+      if A and A.room == N.room then
+        X = A:neighbor(dir)
+        if not (X and X.room == N.room) then
+          return -- fail
+        end
+      end
+
+      if B and B.room == N.room then
+        X = B:neighbor(dir)
+        if not (X and X.room == N.room) then
+          return -- fail
+        end
+      end
+
+    else
+
+      if A and A.room == N.room and B and B.room == N.room then
+        return -- fail
+      end
+    end
+
+    -- do it !
+
+    N.room = S.room
+
+    S.room.sx1 = math.min(S.room.sx1, N.sx)
+    S.room.sy1 = math.min(S.room.sy1, N.sy)
+
+    S.room.sx2 = math.max(S.room.sx2, N.sx)
+    S.room.sy2 = math.max(S.room.sy2, N.sy)
+  end
+
+  for loop = 1,5000 do
+    local sx = rand.irange(1, SEED_W)
+    local sy = rand.irange(1, SEED_H)
+
+    local S = SEEDS[sx][sy][1]
+
+    if not (S and S.room) then
+      try_move(S, rand.dir())
     end
   end
 end
@@ -1048,6 +1108,8 @@ function Plan.create_rooms()
   -- must create the seeds _AFTER_ nudging
   Plan.make_seeds()
   Plan.merge_naturals()
+
+Plan.weird_experiment()
 
   gui.printf("Seed Map:\n")
   Seed.dump_rooms()
