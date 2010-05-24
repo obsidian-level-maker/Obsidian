@@ -379,8 +379,31 @@ function Trans.border_transform(S, z, side)
 ---###  T.add_x = XS[side]
 ---###  T.add_y = YS[side]
 
+  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
+  local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
+  local YS   = { [2]=S.y1, [8]=S.y2, [4]=  y4, [6]=  y3 }
+
+  T.add_x  = XS[side]
+  T.add_y  = YS[side]
+  T.rotate = ANGS[side]
+
   T.add_z = z
 
+  if geom.is_vert(side) then
+    T.fit_width = x4 - x3
+  else
+    T.fit_width = y4 - y3
+  end
+
+  T.fit_depth = S.thick[side]
+
+  do return T end
+
+
+  ---- OLD CRUD OLD CRUD ----
+
+
+--[[
   -- remember that scaling is done _before_ rotation
   
   T.dir = side
@@ -410,6 +433,7 @@ function Trans.border_transform(S, z, side)
 ---###  if side then T.rotate = ANGS[side] end
 
   return T
+--]]
 end
 
 function Trans.corner_transform(S, z, side)
@@ -969,9 +993,14 @@ gui.printf("Prefab: %s\n", fab.name)
   local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
   local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
 
+  local x_low, x_high
+  local y_low, y_high
+  local z_low, z_high
+
 
   if fab.placement == "fitted" then
-    if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
+    ---### if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
+    if not (T.fit_width and T.fit_depth) then
       error("Fitted prefab used without fitted transform")
     end
 
@@ -979,37 +1008,14 @@ gui.printf("Prefab: %s\n", fab.name)
       error("Fitted prefab should have left/bottom coord at (0, 0)")
     end
 
-    local width = T.x2 - T.x1
-    local depth = T.y2 - T.y1
-
-    if geom.is_horiz(T.dir) then
-      width, depth = depth, width
-    end
-
 --gui.printf("width=%d depth=%d y_info1=\n%s\n", width, depth, table.tostr(y_info,3))
 
-    set_group_sizes(x_info, 0, width)
-    set_group_sizes(y_info, 0, depth)
+    x_low = 0 ; x_high = T.fit_width
+    y_low = 0 ; y_high = T.fit_depth
 
 --gui.printf("y_info2=\n%s\n", table.tostr(y_info,3))
 
-    resize_brushes(brushes, "x", x_info)
-    resize_brushes(brushes, "y", y_info)
-
     -- TODO: Z stuff
-
-    local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
-    local XS   = { [2]=T.x1, [8]=T.x2, [4]=T.x1, [6]=T.x2 }
-    local YS   = { [2]=T.y1, [8]=T.y2, [4]=T.y2, [6]=T.y1 }
-
-    Trans.set(
-    {
-      add_x = XS[T.dir],
-      add_y = YS[T.dir],
-      add_z = T.add_z,
-
-      rotate = ANGS[T.dir]
-    })
 
   else  -- "loose" placement
 
@@ -1023,23 +1029,28 @@ gui.printf("Prefab: %s\n", fab.name)
     if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / ranges.dx end
     if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / ranges.dy end
 
-    set_group_sizes(x_info, ranges.x1 * scale_x, ranges.x2 * scale_x)
-    set_group_sizes(y_info, ranges.y1 * scale_y, ranges.y2 * scale_y)
+    x_low  = ranges.x1 * scale_x
+    x_high = ranges.x2 * scale_x
 
-    resize_brushes(brushes, "x", x_info)
-    resize_brushes(brushes, "y", y_info)
+    y_low  = ranges.y1 * scale_y
+    y_high = ranges.y2 * scale_y
 
-    -- scale_brushes(brushes, "b", z_info, T.scale_z)
-    -- scale_brushes(brushes, "t", z_info, T.scale_z)
-
-    Trans.set(
-    {
-      add_x  = T.add_x,
-      add_y  = T.add_y,
-      add_z  = T.add_z,
-      rotate = T.rotate
-    })
+    -- TODO: Z stuff
   end
+
+  set_group_sizes(x_info, x_low, x_high)
+  set_group_sizes(y_info, y_low, y_high)
+
+  resize_brushes(brushes, "x", x_info)
+  resize_brushes(brushes, "y", y_info)
+
+  Trans.set(
+  {
+    add_x  = T.add_x,
+    add_y  = T.add_y,
+    add_z  = T.add_z,
+    rotate = T.rotate
+  })
 
   render_brushes(brushes)
 
