@@ -372,12 +372,6 @@ function Trans.border_transform(S, z, side)
   if side == 6 and S.usage_map[3] == 6 then y3 = S.y1 end
   if side == 6 and S.usage_map[9] == 6 then y4 = S.y2 end
 
----###  local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
----###  local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
----###  local YS   = { [2]=S.y1, [8]=S.y2, [4]=  y4, [6]=  y3 }
-
----###  T.add_x = XS[side]
----###  T.add_y = YS[side]
 
   local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }
   local XS   = { [2]=  x3, [8]=  x4, [4]=S.x1, [6]=S.x2 }
@@ -398,49 +392,10 @@ function Trans.border_transform(S, z, side)
   T.fit_depth = S.thick[side]
 
   do return T end
-
-
-  ---- OLD CRUD OLD CRUD ----
-
-
---[[
-  -- remember that scaling is done _before_ rotation
-  
-  T.dir = side
-
-  if geom.is_vert(side) then
-    T.x1 = x3
-    T.x2 = x4
-
-    if side == 2 then
-      T.y1 = S.y1 ; T.y2 = S.y1 + S.thick[2]
-    else
-      T.y2 = S.y2 ; T.y1 = S.y2 - S.thick[8]
-    end
-
-  else
-    T.y1 = y3
-    T.y2 = y4
-
-    if side == 4 then
-      T.x1 = S.x1 ; T.x2 = S.x1 + S.thick[4]
-    else
-      T.x2 = S.x2 ; T.x1 = S.x2 - S.thick[6]
-    end
-  end
-
----###  T.scale_y = S.thick[side] / 16
----###  if side then T.rotate = ANGS[side] end
-
-  return T
---]]
 end
 
 function Trans.corner_transform(S, z, side)
   local T = {}
-
----##  local x3,y3 = S.x3(), S.y3()
----##  local x4,y4 = S.x4(), S.y4()
 
   local ANGS = { [1]=0, [9]=180, [3]=90, [7]=270 }
 
@@ -726,6 +681,48 @@ function Build.prefab(fab, skin, T)
   end
 
 
+  local function copy_w_substitution(orig_brushes)
+    -- perform substitutions (values beginning with '?')
+    -- returns a copy of the brushes.
+
+    local new_brushes = {}
+
+    for _,B in ipairs(orig_brushes) do
+      assert(#B >= 1)
+
+      local b_copy = {}
+      for _,C in ipairs(B) do
+
+        local new_coord = {}
+        for name,value in pairs(C) do
+          value = Trans.substitute(value, skin)
+
+          if value == nil then
+            if name == "required" then value = false end
+
+            if name == "x" or name == "y" or name == "b" or name == "t" then
+              error("Prefab: substitution of x/y/b/t field failed.")
+            end
+          end
+
+          new_coord[name] = value
+        end
+
+        table.insert(b_copy, new_coord)
+      end -- C
+
+      -- skip certain brushes unless a skin field is present/true
+      local req = b_copy[1].required
+
+      if req == nil or (req ~= false and req ~= 0) then
+        table.insert(new_brushes, b_copy)
+      end
+    end -- B
+
+    return new_brushes
+  end
+
+
   local function process_materials(brushes)
     -- modifies a brush list, converting 'mat' fields to 'tex' fields
 
@@ -930,48 +927,6 @@ function Build.prefab(fab, skin, T)
   end
 
 
-  local function copy_w_substitution(orig_brushes) -- FIXME: move up
-    -- perform substitutions (values beginning with '?')
-    -- returns a copy of the brushes.
-
-    local new_brushes = {}
-
-    for _,B in ipairs(orig_brushes) do
-      assert(#B >= 1)
-
-      local b_copy = {}
-      for _,C in ipairs(B) do
-
-        local new_coord = {}
-        for name,value in pairs(C) do
-          value = Trans.substitute(value, skin)
-
-          if value == nil then
-            if name == "required" then value = false end
-
-            if name == "x" or name == "y" or name == "b" or name == "t" then
-              error("Prefab: substitution of x/y/b/t field failed.")
-            end
-          end
-
-          new_coord[name] = value
-        end
-
-        table.insert(b_copy, new_coord)
-      end -- C
-
-      -- skip certain brushes unless a skin field is present/true
-      local req = b_copy[1].required
-
-      if req == nil or (req ~= false and req ~= 0) then
-        table.insert(new_brushes, b_copy)
-      end
-    end -- B
-
-    return new_brushes
-  end
-
-
   local function render_brushes(brushes)
     for _,B in ipairs(brushes) do
       local kind = "solid"
@@ -1082,92 +1037,6 @@ gui.printf("Prefab: %s\n", fab.name)
     add_z  = T.add_z,
     rotate = T.rotate
   })
-
-  render_brushes(brushes)
-
-  Trans.clear()
-
-  do return end
-
-
-  ----------- OLD CRUD  OLD CRUD  OLD CRUD --------------
-
-  local function foobie_XY(ranges, x_info, y_info)
-    if T.x1 then
-      return T.x1, T.y1, T.x2, T.y2
-    end
-
-    local add_x = assert(T.add_x)
-    local add_y = assert(T.add_y)
-
-    local scale_x = T.scale_x or 1
-    local scale_y = T.scale_y or 1
-
-    local final_dx = x_info.skinned_size * scale_x
-    local final_dy = y_info.skinned_size * scale_y
-
-    local x1 = add_x + final_dx * ranges.x1 / ranges.dx
-    local x2 = add_x + final_dx * ranges.x2 / ranges.dx
-
-    local y1 = add_y + final_dy * ranges.y1 / ranges.dy
-    local y2 = add_y + final_dy * ranges.y2 / ranges.dy
-
-    return x1,y1, x2,y2
-  end
-
-  local function foobie_Z(ranges, z_info)
-    if T.z1 then
-      return T.z1, T.z2
-    end
-
-    if not ranges.dz then  -- UGH WTF TO DO?
-      return 0, 128
-    end
-
-    local add_z = assert(T.add_z)
-
-    local scale_z = T.scale_z or 1
-
-    local final_dz = z_info.skinned_size * scale_z
-
-    local z1 = add_z + final_dz * ranges.z1 / ranges.dz
-    local z2 = add_z + final_dz * ranges.z2 / ranges.dz
-
-    return z1, z2
-  end
-
-  local x1 = T.x1 or T.add_x
-
-gui.printf("X INFO:\n%s\n", table.tostr(x_info, 3))
-gui.printf("Y INFO:\n%s\n", table.tostr(y_info, 3))
-gui.printf("Z INFO:\n%s\n", table.tostr(z_info, 3))
-
-  local x1, y1, x2, y2 = foobie_XY(ranges, x_info, y_info)
-  local z1,     z2     = foobie_Z (ranges, z_info)
-
-  if false then ---- T.dir and geom.is_horiz(T.dir) then
-    set_group_sizes(x_info, y1, y2)
-    set_group_sizes(y_info, x1, x2)
-  else
-    set_group_sizes(x_info, x1, x2)
-    set_group_sizes(y_info, y1, y2)
-  end
-
-  set_group_sizes(z_info, z1, z2)
-
-gui.printf("X INFO 2:\n%s\n", table.tostr(x_info, 3))
-gui.printf("Y INFO 2:\n%s\n", table.tostr(y_info, 3))
-gui.printf("Z INFO 2:\n%s\n", table.tostr(z_info, 3))
-
----  convert_fitting(bbox)
-
-  resize_brushes(brushes, "x", x_info)
-  resize_brushes(brushes, "y", y_info)
-
-  resize_brushes(brushes, "b", z_info)
-  resize_brushes(brushes, "t", z_info)
-
-  Trans.set({})
 
   render_brushes(brushes)
 
