@@ -578,16 +578,23 @@ function Plan.weird_experiment()
 
     -- do it !
 
-    N.room = S.room
+    N.room.shape = "odd"
+    S.room.shape = "odd"
 
-    S.room.sx1 = math.min(S.room.sx1, N.sx)
-    S.room.sy1 = math.min(S.room.sy1, N.sy)
+    local R = S.room
 
-    S.room.sx2 = math.max(S.room.sx2, N.sx)
-    S.room.sy2 = math.max(S.room.sy2, N.sy)
+    N.room = R
+
+    R.sx1 = math.min(R.sx1, N.sx)
+    R.sy1 = math.min(R.sy1, N.sy)
+
+    R.sx2 = math.max(R.sx2, N.sx)
+    R.sy2 = math.max(R.sy2, N.sy)
+
+    R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
   end
 
-  for loop = 1,1000 do
+  for loop = 1,9000 do
     local sx = rand.irange(1, SEED_W)
     local sy = rand.irange(1, SEED_H)
 
