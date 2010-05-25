@@ -83,7 +83,7 @@ OB_THEMES["psycho"] =
 -- room layout stuff
 EXTREME_H = 4000
 
-ROOM_SIZE_TABLE = { 0,0,6,9,4,1 }
+ROOM_SIZE_TABLE = { 0,0,5,9,5,1 }
 
 BIG_ROOM_TABLE =
 {
