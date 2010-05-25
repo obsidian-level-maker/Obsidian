@@ -55,8 +55,8 @@ PREFAB.PICTURE =
   placement = "fitted",
 
   x_sizes = { {64,1}, {64,"?width"}, {64,1} },
-
   y_sizes = { {8,1}, {8,0} },
+  z_sizes = { {64,"?height"} },
 
   brushes =
   {

@@ -912,10 +912,18 @@ function Build.prefab(fab, skin, T)
 
     for _,B in ipairs(brushes) do
       for _,C in ipairs(B) do
-        if C[field] then
-          local orig = C[field]
-          C[field] = resize_coord(info, C[field])
--- gui.printf("COORD %s : %d --> %d\n", field, orig, C[field])
+        if field == "z" then
+          if C.b then C.b = resize_coord(info, C.b) end
+          if C.t then C.t = resize_coord(info, C.t) end
+          -- FIXME: slopes
+
+        elseif field == "x" then
+          if C.x then C.x = resize_coord(info, C.x) end
+          -- FIXME: slopes
+
+        elseif field == "y" then
+          if C.y then C.y = resize_coord(info, C.y) end
+          -- FIXME: slopes
         end
       end -- C
     end -- B
@@ -990,13 +998,13 @@ gui.printf("Prefab: %s\n", fab.name)
 
   local ranges = determine_bbox(brushes)
 
+  -- XY stuff --
+
   local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
   local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
 
   local x_low, x_high
   local y_low, y_high
-
-  -- XY stuff
 
   if fab.placement == "fitted" then
     ---### if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
@@ -1042,7 +1050,7 @@ gui.printf("Prefab: %s\n", fab.name)
   resize_brushes(brushes, "x", x_info)
   resize_brushes(brushes, "y", y_info)
 
-  -- Z stuff
+  -- Z stuff --
 
   if ranges.dz and ranges.dz > 1 then
 
@@ -1050,14 +1058,20 @@ gui.printf("Prefab: %s\n", fab.name)
     local z_low, z_high
 
     if T.fit_height then
-
+      z_low  = 0
+      z_high = T.fit_height
     else
+      local scale_z = T.scale_z or 1
 
+      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / ranges.dz end
+
+      z_low  = ranges.z1 * scale_z
+      z_high = ranges.z2 * scale_z
     end
 
---!!!    set_group_sizes(z_info, z_low, z_high)
+    set_group_sizes(z_info, z_low, z_high)
 
---!!!    resize_brushes(brushes, "z", z_info)
+    resize_brushes(brushes, "z", z_info)
   end
 
 
