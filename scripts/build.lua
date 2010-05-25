@@ -992,12 +992,11 @@ gui.printf("Prefab: %s\n", fab.name)
 
   local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
   local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
-  local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
 
   local x_low, x_high
   local y_low, y_high
-  local z_low, z_high
 
+  -- XY stuff
 
   if fab.placement == "fitted" then
     ---### if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
@@ -1035,8 +1034,6 @@ gui.printf("Prefab: %s\n", fab.name)
 
     y_low  = ranges.y1 * scale_y
     y_high = ranges.y2 * scale_y
-
-    -- TODO: Z stuff
   end
 
   set_group_sizes(x_info, x_low, x_high)
@@ -1044,6 +1041,25 @@ gui.printf("Prefab: %s\n", fab.name)
 
   resize_brushes(brushes, "x", x_info)
   resize_brushes(brushes, "y", y_info)
+
+  -- Z stuff
+
+  if ranges.dz and ranges.dz > 1 then
+
+    local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+    local z_low, z_high
+
+    if T.fit_height then
+
+    else
+
+    end
+
+--!!!    set_group_sizes(z_info, z_low, z_high)
+
+--!!!    resize_brushes(brushes, "z", z_info)
+  end
+
 
   Trans.set(
   {

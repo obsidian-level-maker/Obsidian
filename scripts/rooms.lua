@@ -2614,8 +2614,10 @@ gui.printf("do_teleport\n")
         local B = S.border[side]
         local skin = { inner=w_tex, outer=o_tex, track=THEME.window_side_mat or w_tex }
 
+        local T = Trans.border_transform(S, B.win_z1, side)
+
         -- FIXME: B.win_width, B.win_z1, B.win_z2
-        Build.prefab("WINDOW", skin, sidelet)
+        Build.prefab("WINDOW", skin, T)
 
         shrink_both(side, 4)
       end
@@ -2627,8 +2629,9 @@ gui.printf("do_teleport\n")
         skin.inner = w_tex
         skin.outer = o_tex
 
-        -- FIXME: scaling
-        Build.prefab("PICTURE", skin, sidelet)
+        local T = Trans.border_transform(S, B.pic_z1, side)
+
+        Build.prefab("PICTURE", skin, T)
 
         shrink_both(side, 4)
       end
