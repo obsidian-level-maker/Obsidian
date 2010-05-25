@@ -6,26 +6,39 @@ TODO
 +  Chris's name stuff!
 
 
-DOORS: between two indoor buildings : straddle both rooms
+??  room_map system outlived its usefulness?
+    being able to make rooms directly in the seed map
+    would add a lot of flexibility.
 
-rename: Cave --> cavelib
+
+rename: Cave --> cavelib, make a class
 
 
+Prefabs:
 
-prefabs:  support 'defaults' table for skin values
-          (allow functions)
+  - DOORS: have x_sizes, y_sizes, z_sizes
 
-SKIN PREPARATION:
+  - DOORS: between two indoor buildings : straddle both rooms
 
-  1. copy skin table
-  2. expand random selection
-  3. apply prefab defaults
+  - get prefab name from skin (_prefab field)
+
+  - test if prefab fits, choose another (etc) if not
+
+  - prepare skin table:
+
+    1. copy it
+    2. expand random selection
+    3. apply prefab defaults
+
+  - Review: use functions in brushes or skins
+
+  - mirroring ?!?
+
+  - Review: material functions like get_liquid() etc
 
 
 
 -  lifts often assume meshing up at 90 degree turns
-
--  redo the seed-size "room corners" with prefab system
 
 
 FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
@@ -38,72 +51,7 @@ IDEA:
   - build the debugger using Lua
 
 
-Prefabs:
-   FLTK-like resize behavior (allow 2 resize ranges per axis)
-
-   have material fallbacks e.g. in pedestal: mat="side|top"
-
-   IDEA: have 'skin.scale_z' etc??
-
-
->>>>  new brush system (gui)
-
-   (b) line_kind, line_tag (etc)
-   (c) sec_kind, se_tag (etc)
-   (a) delta_z
-
-
 +  make linedef merging more relaxed (cf. DAVID.wad)
-
-
-PARAMETRIZE PREFABS WITH FUNCTIONS !!!
-  e.g. { t=function(env) return env.z1 + 128 end, face={ ... }}
-
->>  don't use mirroring to create doors (etc)
-
->>  gui.add_brush([kind,] coords)
-
->>  Mat.solid() etc???
-
-!!  support TRANSFORM.add_z, scale_z, mirror_z
-
-Example:
-    brushes =
-    {
-      {
-        "solid",
-        { x=0, y=50, face={ BLAH } },
-        { x=80, y=50, face={ BLAH } },
-        { x=40, y=90, face={ BLAH } },
-        { b=100, face={ BLAH } },               -- bottom, -EXTREME_H if absent
-        { t=160, slope={..}, face={ BLAH } },   -- top,    +EXTREME_H if absent
-      },
-
-      ...
-    }
-
-Second and subsequent X/Y coords can omit the face, which then
-uses the one from the first face.
-
-Fields of a face:
-    (nothing is compulsory)
-
-    tex
-    x_offset
-    y_offset
-    peg
-    mark
-
-    kind
-    tag
-    flags
-    args
-    light
-
-Slope fields:  x1, y1, x2, y2, dz
-
-Slopes must be "shrinky" -- i.e. the b..t coordinate range is
-guaranteed to contain the sloped brush.
 
 
 
@@ -124,7 +72,7 @@ Console:
   -  don't keep console_body widget when delete console_win
 
 
-DONE:  redefine standard 'print' function to use gui.printf
+---------------------------------------------
 
 
 BUG: some Quake maps have clipping issues (invisible barriers)
