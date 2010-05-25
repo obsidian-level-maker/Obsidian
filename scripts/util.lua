@@ -32,6 +32,12 @@ function sel(cond, yes_val, no_val)
   return no_val
 end
 
+function stderrf(fmt, ...)
+  if fmt then
+    io.stderr:write(string.format(fmt, ...))
+  end
+end
+
 function math.low_high(a, b)
   if b < a then return b, a end
   return a, b
