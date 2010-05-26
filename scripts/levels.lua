@@ -22,9 +22,23 @@
 
 class LEVEL
 {
+  -- FIXME: check this
+
   name : string  -- engine name for this level, e.g. MAP01
 
   epi_along : float  -- how far along the episode, 0.0 -> 1.0
+
+  all_rooms  : array(ROOM) 
+  all_conns  : array(CONN)
+  all_arenas : array(ARENA)
+  all_locks  : array(LOCK)
+
+  last_tag  : number
+  last_mark : number
+  
+  skyfence_h  -- height of fence at edge of map
+
+  -- TODO: lots of other fields : document important ones
 }
 
 

@@ -18,42 +18,20 @@
 --
 ----------------------------------------------------------------
 
---[[ *** CLASS INFORMATION ***
-
-class LEVEL
-{
-  all_rooms  : array(ROOM) 
-  all_conns  : array(CONN)
-  all_arenas : array(ARENA)
-  all_locks  : array(LOCK)
-
-  last_tag  : number
-  last_mark : number
-  
-  skyfence_h  -- height of fence at edge of map
-
-  ....
-}
-
-
---------------------------------------------------------------]]
-
 require 'defs'
 require 'util'
 
 Plan = { }
 
 
-LEVEL_CLASS = {}
-
-function LEVEL_CLASS.alloc_tag(self)
-  self.last_tag = (self.last_tag or 0) + 1
-  return self.last_tag
+function Plan_alloc_tag()
+  LEVEL.last_tag = (LEVEL.last_tag or 0) + 1
+  return LEVEL.last_tag
 end
 
-function LEVEL_CLASS.alloc_mark(self)
-  self.last_mark = (self.last_mark or 0) + 1
-  return self.last_mark
+function Plan_alloc_mark()
+  LEVEL.last_mark = (LEVEL.last_mark or 0) + 1
+  return LEVEL.last_mark
 end
 
 
@@ -1106,8 +1084,6 @@ function Plan.create_rooms()
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
-
-  table.set_class(LEVEL, LEVEL_CLASS)
 
   LEVEL.all_rooms = {}
   LEVEL.all_conns = {}

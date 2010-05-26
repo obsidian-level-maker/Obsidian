@@ -6,10 +6,12 @@ TODO
 +  Chris's name stuff!
 
 
-rename: Cave --> cavelib, make a class
+Cave code
+  -  use the flood map _OR_ separate cave objects ??
 
 
 Prefabs:
+  + test if prefab fits, choose another (etc) if not
 
   - DOORS: have x_sizes, y_sizes, z_sizes
 
@@ -17,15 +19,13 @@ Prefabs:
 
   - get prefab name from skin (_prefab field)
 
-  - test if prefab fits, choose another (etc) if not
-
   - prepare skin table:
 
     1. copy it
     2. expand random selection
     3. apply prefab defaults
 
-  - Review: use functions in brushes or skins
+  - Review: allow functions in brushes or skins
 
   - mirroring ?!?
 

@@ -390,7 +390,7 @@ do return true end  --!!!!!!!
   P.S.content = "wotsit"
   P.S.content_kind = kind
 
-  if R.cave then
+  if R.flood then
     -- clear the middle cell
     local mx = (P.x - R.sx1) * 3 + 2
     local my = (P.y - R.sy1) * 3 + 2

@@ -2370,7 +2370,7 @@ gui.printf("do_teleport\n")
         end
 
         local skin = table.copy(THEME.lowering_pedestal_skin)
-        skin.tag = LEVEL:alloc_tag()
+        skin.tag = Plan_alloc_tag()
 
         local T = Trans.centre_transform(S, z1)
         T.scale_z = (z_top - z1) / 128
@@ -2422,7 +2422,7 @@ gui.printf("do_teleport\n")
       end
 
       local skin = table.copy(THEME.lowering_pedestal_skin2)
-      skin.tag = LEVEL:alloc_tag()
+      skin.tag = Plan_alloc_tag()
 
       local T = Trans.centre_transform(S, z1)
       T.scale_z = (z_top - z1) / 128
@@ -2948,7 +2948,7 @@ gui.printf("do_teleport\n")
     elseif S.kind == "lift" then
       local skin = table.copy(LEVEL.lift_skin)
 
-      skin.tag = LEVEL:alloc_tag()
+      skin.tag = Plan_alloc_tag()
       skin.floor = f_tex
 
       local z1 = S.stair_z1

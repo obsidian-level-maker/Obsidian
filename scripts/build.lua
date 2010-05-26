@@ -2461,7 +2461,7 @@ function Build.raising_start(S, face_dir, z1, skin)
 
   local sw_info = add_pegging(get_mat(skin.switch_w))
 
-  local tag = LEVEL:alloc_tag()
+  local tag = Plan_alloc_tag()
 
   for side = 2,8,2 do
     local T, long, deep = get_transform_for_seed_side(S, side, 48)
@@ -2524,7 +2524,7 @@ function Build.popup_trap(S, z, skin, monster)
     Trans.clear()
   end
 
-  info.sec_tag = LEVEL:alloc_tag()
+  info.sec_tag = Plan_alloc_tag()
 
   local T, long, deep = get_transform_for_seed_center(S)
 
