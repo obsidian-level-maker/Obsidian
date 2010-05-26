@@ -24,6 +24,20 @@
 --
 ----------------------------------------------------------------
 
+--[[ *** CLASS INFORMATION ***
+
+class CAVE
+{
+  w, h   -- width and height (in cells)
+
+  cells  -- ARRAY_2D : number  -- > 0 means solid
+                               -- < 0 means empty
+
+  
+}
+
+--------------------------------------------------------------]]
+
 
 CAVE_CLASS = {}
 
@@ -530,12 +544,26 @@ function CAVE_CLASS.remove_dots(self, keep_edges, callback)
 end
 
 
-function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
-                           square_caves)
-  -- TODO: make base_x/y and square_caves a class field ??
+function CAVE_CLASS.is_land_locked(self, x, y)
+  if x <= 1 or x >= self.w or y <= 1 or y >= self.h then
+    return false
+  end
 
-  -- only solid regions are handled
-  assert(reg_id > 0)
+  local cells = self.cells
+
+  for dx = -1,1 do for dy = -1,1 do
+    if (cells[x+dx][y+dy] or 0) < 0 then
+      return false
+    end
+  end end
+
+  return true
+end
+
+
+function CAVE_CLASS.render(self, base_x, base_y, brush_func, data, square_caves)
+
+  -- TODO: make base_x/y and square_caves a class field ??
 
   local W = self.w
   local H = self.h
@@ -543,20 +571,6 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
   local cells = self.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
-
-  local function is_land_locked(x, y)
-    if x <= 1 or x >= W or y <= 1 or y >= H then
-      return false
-    end
-
-    for dx = -1,1 do for dy = -1,1 do
-      if cells[x+dx][y+dy] ~= reg_id then
-        return false
-      end
-    end end
-
-    return true
-  end
 
   local function analyse_corner(corner_map, x, y, side)
     local dx, dy = geom.delta(side)
@@ -674,7 +688,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
   ---| Cave.render |---
 
   for x = 1,W do for y = 1,H do
-    if cells[x][y] == reg_id then
+    if (cells[x][y] or 0) > 0 then
       for side = 1,9,2 do if side ~= 5 then
         analyse_corner(corner_map, x, y, side)
       end end
@@ -682,7 +696,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
   end end -- for x, y
 
   for x = 1,W do for y = 1,H do
-    if cells[x][y] == reg_id then
+    if (cells[x][y] or 0) > 0 then
       add_brush(corner_map, x, y, base_x, base_y)
     end
   end end

@@ -2038,6 +2038,9 @@ function Rooms.build_cave(R)
     data.shadow_info = get_light(-1)
   end
 
+  R.cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+
+--[[
   for id,reg in pairs(flood.regions) do
     if id > 0 then
       if LEVEL.liquid and not R.is_lake and reg.cells > 4 and
@@ -2055,10 +2058,13 @@ function Rooms.build_cave(R)
       end
     end
   end
+--]]
 
   if R.is_lake then return end
   if THEME.square_caves then return end
   if PARAM.simple_caves then return end
+
+  do return end
 
 
   local walkway = R.flood:copy()

@@ -326,6 +326,8 @@ function Layout.spot_for_wotsit(R, kind)
   local function cave_spot_OK(x, y)
     if not R.cave then return true end
 
+do return true end  --!!!!!!!
+
     local flood = R.flood
 
     local mx = (x - R.sx1) * 3 + 2
@@ -735,24 +737,26 @@ function Layout.do_natural(R, heights)
 
     cave:generate(sel(R.is_lake,58,38))
 
+--[[
     flood = cave:flood_fill()
 
     if cave_is_good(flood) then
       break;
     end
+--]]
 
     --- cave:dump()
   end
 
   R.cave  = cave
-  R.flood = flood
+--!!!!!!  R.flood = flood
 
   gui.debugf("Filled Cave:\n")
 
   cave:dump()
 
-  gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
-  gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
+--!!!!!!  gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
+--!!!!!!  gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 end
 
 
@@ -2580,8 +2584,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.weapon  then add_weapon(R.weapon)  end
 
   if R.natural then
-    Layout.cave_pickup_spots(R)
-    Layout.cave_monster_spots(R)
+--!!!!!!    Layout.cave_pickup_spots(R)
+--!!!!!!    Layout.cave_monster_spots(R)
   end
 
   if R.kind == "normal" and not (R.outdoor or R.natural) then
