@@ -389,16 +389,15 @@ function CAVE_CLASS.main_empty_region(self)
 end
 
 
-function CAVE_CLASS.grow(cave)
+function CAVE_CLASS.grow(self)
   -- grow the cave : it will have more solids, less empties.
   -- nil cells are not affected.
 
---!!!!!!! FIXME: modify self
-
-  local W = cave.w
-  local H = cave.h
+  local W = self.w
+  local H = self.h
 
   local work = table.array_2D(W, H)
+  local cells = self.cells
 
   local function handle_neighbor(x, y, side)
     local nx, ny = geom.nudge(x, y, side)
@@ -407,24 +406,22 @@ function CAVE_CLASS.grow(cave)
       return
     end
 
-    if (cave[nx][ny] or 0) < 0 then
-      work[nx][ny] = cave[x][y]
+    if (cells[nx][ny] or 0) < 0 then
+      work[nx][ny] = cells[x][y]
     end
   end
 
   for x = 1,W do for y = 1,H do
-    work[x][y] = cave[x][y]
-  end end
+    work[x][y] = cells[x][y]
 
-  for x = 1,W do for y = 1,H do
-    if (cave[x][y] or 0) > 0 then
+    if (cells[x][y] or 0) > 0 then
       for side = 2,8,2 do
         handle_neighbor(x, y, side)
       end
     end
   end end
 
-  return work
+  self.cells = work
 end
 
 
@@ -433,12 +430,11 @@ function CAVE_CLASS.shrink(self, keep_edges)
   -- when 'keep_edges' is true, cells at edges are not touched.
   -- nil cells are not affected.
 
---!!!!!!! FIXME: modify self
-
-  local W = cave.w
-  local H = cave.h
+  local W = self.w
+  local H = self.h
 
   local work = table.array_2D(W, H)
+  local cells = self.cells
 
   local SIDES = { 2,4,6,8 }
 
@@ -450,10 +446,10 @@ function CAVE_CLASS.shrink(self, keep_edges)
     for _,side in ipairs(SIDES) do
       local nx, ny = geom.nudge(x, y, side)
     
-      if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
+      if nx < 1 or nx > W or ny < 1 or ny > H or not cells[nx][ny] then
         hit_edge = true
-      elseif cave[nx][ny] < 0 then
-        return cave[nx][ny]
+      elseif cells[nx][ny] < 0 then
+        return cells[nx][ny]
       end
     end
 
@@ -461,27 +457,29 @@ function CAVE_CLASS.shrink(self, keep_edges)
       return nil
     end
 
-    return cave[x][y]
+    return cells[x][y]
   end
 
   for x = 1,W do for y = 1,H do
-    if (cave[x][y] or 0) > 0 then
+    if (cells[x][y] or 0) > 0 then
       work[x][y] = value_for_spot(x, y)
     else
-      work[x][y] = cave[x][y]
+      work[x][y] = cells[x][y]
     end
   end end
 
-  return work
+  self.cells = work
 end
 
 
 function CAVE_CLASS.remove_dots(self, keep_edges, callback)
-  -- modifies the given cave, removing isolated solid cells.
+  -- removes isolated solid cells from the cave.
   -- diagonal cells are NOT checked.
 
-  local W = cave.w
-  local H = cave.h
+  local W = self.w
+  local H = self.h
+
+  local cells = self.cells
 
   local function is_isolated(x, y)
     local count = 0
@@ -489,9 +487,9 @@ function CAVE_CLASS.remove_dots(self, keep_edges, callback)
     for side = 2,8,2 do
       local nx, ny = geom.nudge(x, y, side)
 
-      if nx < 1 or nx > W or ny < 1 or ny > H or not cave[nx][ny] then
+      if nx < 1 or nx > W or ny < 1 or ny > H or not cells[nx][ny] then
         if keep_edges then return false end
-      elseif cave[nx][ny] > 0 then
+      elseif cells[nx][ny] > 0 then
         count = count + 1
       end
     end
@@ -499,13 +497,12 @@ function CAVE_CLASS.remove_dots(self, keep_edges, callback)
     return (count == 0)
   end
 
-
   for x = 1,W do for y = 1,H do
     if is_isolated(x, y) then
       local dx = sel(x > W/2, -1, 1)
-      cave[x][y] = cave[x+dx][y]
+      cells[x][y] = cells[x+dx][y]
       if callback then
-        callback(cave, x, y)
+        callback(self, x, y)
       end
     end
   end end
