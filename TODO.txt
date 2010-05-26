@@ -6,11 +6,6 @@ TODO
 +  Chris's name stuff!
 
 
-??  room_map system outlived its usefulness?
-    being able to make rooms directly in the seed map
-    would add a lot of flexibility.
-
-
 rename: Cave --> cavelib, make a class
 
 
