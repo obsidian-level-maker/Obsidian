@@ -100,6 +100,83 @@ require 'util'
 Rooms = { }
 
 
+ROOM_CLASS = {}
+
+function ROOM_CLASS.tostr(self)
+  return string.format("%s_%s [%d,%d..%d,%d]",
+      sel(self.parent, "SUB_ROOM", "ROOM"),
+      self.id, self.sx1,self.sy1, self.sx2,self.sy2)
+end
+
+function ROOM_CLASS.contains_seed(self, x, y)
+  if x < self.sx1 or x > self.sx2 then return false end
+  if y < self.sy1 or y > self.sy2 then return false end
+  return true
+end
+
+function ROOM_CLASS.has_lock(self, lock)
+  for _,D in ipairs(self.conns) do
+    if D.lock == lock then return true end
+  end
+  return false
+end
+
+function ROOM_CLASS.has_any_lock(self)
+  for _,D in ipairs(self.conns) do
+    if D.lock then return true end
+  end
+  return false
+end
+
+function ROOM_CLASS.has_lock_kind(self, kind)
+  for _,D in ipairs(self.conns) do
+    if D.lock and D.lock.kind == kind then return true end
+  end
+  return false
+end
+
+function ROOM_CLASS.has_sky_neighbor(self)
+  for _,D in ipairs(self.conns) do
+    local N = D:neighbor(self)
+    if N.outdoor then return true end
+  end
+  return false
+end
+
+function ROOM_CLASS.valid_T(self, x, y)
+  if x < self.tx1 or x > self.tx2 then return false end
+  if y < self.ty1 or y > self.ty2 then return false end
+  return true
+end
+
+function ROOM_CLASS.conn_area(self)
+  local lx, ly = 999,999
+  local hx, hy = 0,0
+
+  for _,C in ipairs(self.conns) do
+    local S = C:seed(self)
+    lx = math.min(lx, S.sx)
+    ly = math.min(ly, S.sy)
+    hx = math.max(hx, S.sx)
+    hy = math.max(hy, S.sy)
+  end
+
+  assert(lx <= hx and ly <= hy)
+
+  return lx,ly, hx,hy
+end
+
+function ROOM_CLASS.is_near_exit(self)
+  if self.purpose == "EXIT" then return true end
+  for _,D in ipairs(self.conns) do
+    local N = D:neighbor(self)
+    if N.purpose == "EXIT" then return true end
+  end
+  return false
+end
+
+
+
 function Rooms.setup_theme(R)
   if not R.outdoor then
     R.main_tex = rand.pick(LEVEL.building_walls)
