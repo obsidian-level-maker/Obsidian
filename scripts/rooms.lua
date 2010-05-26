@@ -2041,17 +2041,17 @@ function Rooms.build_cave(R)
   for id,reg in pairs(flood.regions) do
     if id > 0 then
       if LEVEL.liquid and not R.is_lake and reg.cells > 4 and
-         rand.odds(50) and Cave.region_is_island(flood, reg)
+         rand.odds(50) and flood:region_is_island(reg)
       then
         -- create a lava/nukage pit
         local pit = get_liquid()
         pit.t_face.delta_z = rand.sel(70, -52, -76)
 
-        Cave.render(flood, id, base_x, base_y, WALL_brush,
+        flood:render(id, base_x, base_y, WALL_brush,
                     { info=pit, z2=R.cave_floor_h+8 })
       else
         -- make walls normally
-        Cave.render(flood, id, base_x, base_y, WALL_brush, data, THEME.square_caves)
+        flood:render(id, base_x, base_y, WALL_brush, data, THEME.square_caves)
       end
     end
   end
@@ -2061,20 +2061,22 @@ function Rooms.build_cave(R)
   if PARAM.simple_caves then return end
 
 
-  local walkway = Cave.negate(R.flood)
+  local walkway = R.flood:copy()
+
+  walkway:negate()
 
   local ceil_h = R.cave_floor_h + R.cave_h
 
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
   for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
-    walkway = Cave.shrink(walkway, false)
+    walkway:shrink(false)
 
     if rand.odds(sel(i==1, 20, 50)) then
-      walkway = Cave.shrink(walkway, false)
+      walkway:shrink(false)
     end
 
-    Cave.remove_dots(walkway)
+    walkway:remove_dots()
 
     -- DO FLOOR and CEILING --
 
@@ -2124,8 +2126,7 @@ function Rooms.build_cave(R)
     end
 
 
-    Cave.render(walkway, - flood.largest_empty.id, base_x, base_y,
-                FC_brush, data)
+    walkway:render( - flood.largest_empty.id, base_x, base_y, FC_brush, data)
   end
 end
 

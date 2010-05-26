@@ -657,7 +657,7 @@ function Layout.do_natural(R, heights)
   end
 
   local function cave_is_good(flood)
-    local reg, size_ok = Cave.main_empty_region(flood)
+    local reg, size_ok = flood:main_empty_region()
 
     if not reg or not size_ok then
       gui.debugf("cave failed size check\n")
@@ -712,7 +712,7 @@ function Layout.do_natural(R, heights)
 
   clear_conns()
 
-  Cave.dump(map)
+  map:dump()
 
   local cave
   local flood
@@ -722,27 +722,30 @@ function Layout.do_natural(R, heights)
       gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
 
       -- emergency fallback
-      cave = Cave.fallback(map)
-      flood = Cave.flood_fill(cave)
+      cave:gen_empty()
+      flood = cave:flood_fill()
       break;
     end
 
     gui.debugf("Trying to make a cave: loop %d\n", loop)
 
-    cave  = Cave.generate(map, sel(R.is_lake,58,38))
-    flood = Cave.flood_fill(cave)
+    cave = map:copy()
+
+    cave:generate(sel(R.is_lake,58,38))
+
+    flood = cave:flood_fill()
 
     if cave_is_good(flood) then
       break;
     end
 
-    --- Cave.dump(cave)
+    --- cave:dump()
   end
 
   R.cave  = cave
   R.flood = flood
 
-  Cave.dump(cave)
+  cave:dump()
 
   gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
   gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)

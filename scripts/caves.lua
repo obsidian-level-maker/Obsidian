@@ -32,17 +32,56 @@ function Cave_new(w, h)
 end
 
 
-function Cave_generate(self, map, solid_prob)
+function CAVE_CLASS.get(self, x, y)
+  return self.cells[x][y]
+end
+
+
+function CAVE_CLASS.set(self, x, y, val)
+  self.cells[x][y] = val
+end
+
+
+function CAVE_CLASS.set_block(self, x1,y1, x2,y2, val)
+  for x = x1,x2 do for y = y1,y2 do
+    self.cells[x][y] = val
+  end end
+end
+
+
+function CAVE_CLASS.copy(self)
+  local newbie = Cave_new(self.w, self.h)
+
+  for x = 1,self.w do for y = 1,self.h do
+    newbie.cells[x][y] = self.cells[x][y]
+  end end
+
+  return newbie
+end
+
+
+function CAVE_CLASS.negate(self)
+  for x = 1,self.w do for y = 1,self.h do
+    if self.cells[x][y] then
+      self.cells[x][y] = - self.cells[x][y]
+    end
+  end end
+
+  return self
+end
+
+
+
+function CAVE_CLASS.generate(self, solid_prob)
 
 --**
 --**  This algorithm was described by Jim Babcock in his article
 --**  "Cellular Automata Method for Generating Random Cave-Like Levels"
 --**
 
-  -- The 'map' parameter must be created with array_2D().
-  -- The result is a totally new array.
+  -- The initial contents of the cave form a map where the cave
+  -- will be generated.  The following values can be used:
   --
-  -- Elements of the array can start with these values:
   --    nil : never touched
   --     -1 : forced off
   --      0 : computed normally
@@ -50,6 +89,8 @@ function Cave_generate(self, map, solid_prob)
   --
   -- Result elements can be: nil, -1 or +1.
   --
+
+-- FIXME: support -2, +2 as 'forced' on, -1,+1 as initial values
 
   solid_prob = solid_prob or 40
 
@@ -127,7 +168,10 @@ function Cave_generate(self, map, solid_prob)
 end
 
 
-function Cave.fallback(map)
+function CAVE_CLASS.gen_empty(self)
+  
+  -- this is akin to generate(), but making all target cells empty
+
   local W = map.w
   local H = map.h
 
@@ -162,28 +206,6 @@ function CAVE_CLASS.dump(self, title)
     end
     gui.debugf("%s\n", line)
   end
-end
-
-
-function CAVE_CLASS.copy(self)
-  local newbie = Cave_new(self.w, self.h)
-
-  for x = 1,self.w do for y = 1,self.h do
-    newbie.cells[x][y] = self.cells[x][y]
-  end end
-
-  return newbie
-end
-
-
-function CAVE_CLASS.negate(self)
-  for x = 1,self.w do for y = 1,self.h do
-    if self.cells[x][y] then
-      self.cells[x][y] = - self.cells[x][y]
-    end
-  end end
-
-  return self
 end
 
 
@@ -311,7 +333,7 @@ function CAVE_CLASS.flood_fill(self)
 end
 
 
-function Cave.region_is_island(flood, reg)
+function CAVE_CLASS.region_is_island(self, reg)
 
   -- returns true if the region is an "island", i.e. touches neither the
   -- edge of the 2D matrix or a NIL cell.  In other words, it will be
@@ -339,7 +361,7 @@ function Cave.region_is_island(flood, reg)
 end
 
 
-function Cave.main_empty_region(flood)
+function CAVE_CLASS.main_empty_region(self)
 
   -- find the largest empty region
 
@@ -367,9 +389,11 @@ function Cave.main_empty_region(flood)
 end
 
 
-function Cave.grow(cave)
-  -- returns the new cave (more solids, less empties)
-  -- nil cells are not touched.
+function CAVE_CLASS.grow(cave)
+  -- grow the cave : it will have more solids, less empties.
+  -- nil cells are not affected.
+
+--!!!!!!! FIXME: modify self
 
   local W = cave.w
   local H = cave.h
@@ -404,10 +428,12 @@ function Cave.grow(cave)
 end
 
 
-function Cave.shrink(cave, keep_edges)
-  -- returns the new cave (more empties, less solids).
-  -- nil cells are not touched.
+function CAVE_CLASS.shrink(self, keep_edges)
+  -- shrink the cave : it will have more empties, less solids.
   -- when 'keep_edges' is true, cells at edges are not touched.
+  -- nil cells are not affected.
+
+--!!!!!!! FIXME: modify self
 
   local W = cave.w
   local H = cave.h
@@ -450,7 +476,7 @@ function Cave.shrink(cave, keep_edges)
 end
 
 
-function Cave.remove_dots(cave, keep_edges, callback)
+function CAVE_CLASS.remove_dots(self, keep_edges, callback)
   -- modifies the given cave, removing isolated solid cells.
   -- diagonal cells are NOT checked.
 
@@ -486,8 +512,10 @@ function Cave.remove_dots(cave, keep_edges, callback)
 end
 
 
-function Cave.render(cave, reg_id, base_x, base_y, brush_func, data,
-                     square_caves)
+function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
+                           square_caves)
+  -- FIXME: make base_x/y and square_caves a class field
+
   -- only solid regions are handled
   assert(reg_id > 0)
 
