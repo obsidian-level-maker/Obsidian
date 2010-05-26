@@ -108,19 +108,19 @@ PREFAB.PICTURE =
 
     -- frame bottom
     {
-      { x = 128, y =  4, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner" },
-      { x =  64, y = 16, mat = "?inner", blocked=1 },
       { x =  64, y =  4, mat = "?inner" },
+      { x = 128, y =  4, mat = "?inner" },
+      { x = 128, y = 16, mat = "?inner", blocked=1 },
+      { x =  64, y = 16, mat = "?inner" },
       { t = 0, mat = "?floor" },
     },
 
     -- frame top
     {
-      { x = 128, y =  4, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner" },
-      { x =  64, y = 16, mat = "?inner", blocked=1 },
       { x =  64, y =  4, mat = "?inner" },
+      { x = 128, y =  4, mat = "?inner" },
+      { x = 128, y = 16, mat = "?inner", blocked=1 },
+      { x =  64, y = 16, mat = "?inner" },
       { b = 64, mat = "?floor", light = "?light"  },
     },
   },
