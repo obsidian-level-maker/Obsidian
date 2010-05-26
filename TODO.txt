@@ -11,11 +11,15 @@ Cave code
 
 
 Planner:
-  -  rework room_map / nudging / etc code
+  +  rework room_map / nudging / etc code:
+
+     1. create section map
+     2. fill with rooms (big, shaped and sub-rooms)
+     3. decide naturals, indoor/outdoor
+     4. make seeds
+     5. nudge sides
 
   -  need a new term : "roomlet" ??  "section" ??
-
-  ++ decide indoor/outdoor in planning code (as per naturals)
 
   ?? implement L T + shapes by creating a big room and removing the
      unused corners ??
