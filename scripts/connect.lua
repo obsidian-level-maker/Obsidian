@@ -43,32 +43,32 @@ require 'util'
 
 Connect = { }
 
-CONN_CLASS =
-{
-  neighbor = function(self, R)
-    if R == self.src then
-      return self.dest
-    else
-      return self.src
-    end
-  end,
 
-  seed = function(self, R)
-    if R == self.src then
-      return self.src_S
-    else
-      return self.dest_S
-    end
-  end,
+CONN_CLASS = {}
 
-  tostr = function(self)
-    return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
-           self.src_S.sx,  self.src_S.sy,
-           self.dest_S.sx, self.dest_S.sy,
-           sel(self.lock, "LOCK ", ""),
-           tostring(self.conn_h))
-  end,
-}
+function CONN_CLASS.neighbor(self, R)
+  if R == self.src then
+    return self.dest
+  else
+    return self.src
+  end
+end
+
+function CONN_CLASS.seed(self, R)
+  if R == self.src then
+    return self.src_S
+  else
+    return self.dest_S
+  end
+end
+
+function CONN_CLASS.tostr(self)
+  return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
+         self.src_S.sx,  self.src_S.sy,
+         self.dest_S.sx, self.dest_S.sy,
+         sel(self.lock, "LOCK ", ""),
+         tostring(self.conn_h))
+end
 
 
 

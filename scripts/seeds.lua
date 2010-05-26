@@ -71,30 +71,30 @@ SEED_D = 0
 SEED_SIZE = 192
 
 
-SEED_CLASS =
-{
-  tostr = function(self)
-    return string.format("SEED [%d,%d,%s]",
-        self.sx, self.sy, self.kind or "-")
-  end,
+SEED_CLASS = {}
 
-  neighbor = function(self, dir, dist)
-    local nx, ny = geom.nudge(self.sx, self.sy, dir, dist)
-    if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
-      return nil
-    end
-    return SEEDS[nx][ny][1]
-  end,
+function SEED_CLASS.tostr(self)
+  return string.format("SEED [%d,%d,%s]",
+      self.sx, self.sy, self.kind or "-")
+end
 
-  mid_point = function(self)
-    return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
-  end,
+function SEED_CLASS.neighbor(self, dir, dist)
+  local nx, ny = geom.nudge(self.sx, self.sy, dir, dist)
+  if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+    return nil
+  end
+  return SEEDS[nx][ny][1]
+end
 
-  x3 = function(self) return self.x1 + self.thick[4] end,
-  x4 = function(self) return self.x2 - self.thick[6] end,
-  y3 = function(self) return self.y1 + self.thick[2] end,
-  y4 = function(self) return self.y2 - self.thick[8] end,
-}
+function SEED_CLASS.mid_point(self)
+  return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
+end
+
+function SEED_CLASS.x3(self) return self.x1 + self.thick[4] end
+function SEED_CLASS.x4(self) return self.x2 - self.thick[6] end
+function SEED_CLASS.y3(self) return self.y1 + self.thick[2] end
+function SEED_CLASS.y4(self) return self.y2 - self.thick[8] end
+
 
 
 function Seed.init(map_W, map_H, map_D, free_W, free_H)
