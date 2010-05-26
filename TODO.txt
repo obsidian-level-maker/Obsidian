@@ -10,6 +10,24 @@ Cave code
   -  use the flood map _OR_ separate cave objects ??
 
 
+Planner:
+  -  rework room_map / nudging / etc code
+
+  -  need a new term : "roomlet" ??  "section" ??
+
+  ++ decide indoor/outdoor in planning code (as per naturals)
+
+  ?? implement L T + shapes by creating a big room and removing the
+     unused corners ??
+
+     This is similar to sub-rooms ---> maybe do sub-rooms in a
+     similar way (re-assign roomlets of a big room).
+
+
++ proper system to match DOOR skins with SWITCH skins
+  (i.e. allow more than a single door or single switch per lock kind).
+
+
 Prefabs:
   + test if prefab fits, choose another (etc) if not
 
