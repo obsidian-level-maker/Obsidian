@@ -27,8 +27,8 @@ class LEVEL
   all_arenas : array(ARENA)
   all_locks  : array(LOCK)
 
-  free_tag  : number
-  free_mark : number
+  last_tag  : number
+  last_mark : number
   
   skyfence_h  -- height of fence at edge of map
 
@@ -44,20 +44,17 @@ require 'util'
 Plan = { }
 
 
-LEVEL_CLASS =
-{
-  alloc_tag = function(self)
-    local result = self.free_tag
-    LEVEL.free_tag = self.free_tag + 1
-    return result
-  end,
-  
-  alloc_mark = function(self)
-    local result = self.free_mark
-    LEVEL.free_mark = self.free_mark + 1
-    return result
-  end,
-}
+LEVEL_CLASS = {}
+
+function LEVEL_CLASS.alloc_tag(self)
+  self.last_tag = (self.last_tag or 0) + 1
+  return self.last_tag
+end
+
+function LEVEL_CLASS.alloc_mark(self)
+  self.last_mark = (self.last_mark or 0) + 1
+  return self.last_mark
+end
 
 
 
@@ -1117,9 +1114,6 @@ function Plan.create_rooms()
 
   LEVEL.scenic_rooms = {}
   LEVEL.scenic_conns = {}
-
-  LEVEL.free_tag  = 1
-  LEVEL.free_mark = 1
 
   gui.random() ; gui.random()
 
