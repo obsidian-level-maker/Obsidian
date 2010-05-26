@@ -18,9 +18,21 @@
 --
 ----------------------------------------------------------------
 
-Cave = { }
+CAVE_CLASS = {}
 
-function Cave.generate(map, solid_prob)
+
+function Cave_new(w, h)
+  local cave = { w=w, h=h }
+
+  cave.cells = table.array_2D(w, h)
+
+  table.set_class(cave, CAVE_CLASS)
+
+  return cave
+end
+
+
+function Cave_generate(self, map, solid_prob)
 
 --**
 --**  This algorithm was described by Jim Babcock in his article
@@ -135,16 +147,17 @@ function Cave.fallback(map)
 end
 
 
-function Cave.dump(map)
-  gui.debugf("Cave Map:\n")
+function CAVE_CLASS.dump(self, title)
+  gui.debugf("%s\n", title or "Cave Map:")
 
-  for y = map.h,1,-1 do
+  for y = self.h,1,-1 do
     local line = "@c| ";
-    for x = 1,map.w do
+    for x = 1,self.w do
       local ch = " "
-      if map[x][y] == 0       then ch = "?" end
-      if (map[x][y] or 0) > 0 then ch = "#" end
-      if (map[x][y] or 0) < 0 then ch = "." end
+      local cell = self.cells[x][y]
+      if  cell == 0      then ch = "?" end
+      if (cell or 0) > 0 then ch = "#" end
+      if (cell or 0) < 0 then ch = "." end
       line = line .. ch
     end
     gui.debugf("%s\n", line)
@@ -152,7 +165,29 @@ function Cave.dump(map)
 end
 
 
-function Cave.flood_fill(cave)
+function CAVE_CLASS.copy(self)
+  local newbie = Cave_new(self.w, self.h)
+
+  for x = 1,self.w do for y = 1,self.h do
+    newbie.cells[x][y] = self.cells[x][y]
+  end end
+
+  return newbie
+end
+
+
+function CAVE_CLASS.negate(self)
+  for x = 1,self.w do for y = 1,self.h do
+    if self.cells[x][y] then
+      self.cells[x][y] = - self.cells[x][y]
+    end
+  end end
+
+  return self
+end
+
+
+function CAVE_CLASS.flood_fill(self)
   -- returns a new array where each contiguous region has a unique id.
   -- Empty areas use negative values, Solid areas use positive values.
   -- Zero is invalid.  Nil cells remain nil.
@@ -301,24 +336,6 @@ function Cave.region_is_island(flood, reg)
   end end
 
   return true
-end
-
-
-function Cave.negate(cave)
-  -- returns a new cave, converting empty regions to solid and vice versa.
-
-  local W = cave.w
-  local H = cave.h
-
-  local work = table.array_2D(W, H)
-
-  for x = 1,W do for y = 1,H do
-    if cave[x][y] then
-      work[x][y] = - cave[x][y]
-    end
-  end end
-
-  return work
 end
 
 
