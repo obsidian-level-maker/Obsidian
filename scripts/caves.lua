@@ -17,6 +17,13 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  The generation method used here was described by Jim Babcock
+--  in his article: "Cellular Automata Method for Generating Random
+--  Cave-Like Levels".
+--
+----------------------------------------------------------------
+
 
 CAVE_CLASS = {}
 
@@ -42,10 +49,31 @@ function CAVE_CLASS.set(self, x, y, val)
 end
 
 
-function CAVE_CLASS.set_block(self, x1,y1, x2,y2, val)
+function CAVE_CLASS.fill(self, val, x1,y1, x2,y2)
+  if not x1 then
+    x1, x2 = 1,self.w
+    y1, y2 = 1,self.h
+  end
+
   for x = x1,x2 do for y = y1,y2 do
     self.cells[x][y] = val
   end end
+end
+
+
+function CAVE_CLASS.negate(self, x1,y1, x2,y2)
+  if not x1 then
+    x1, x2 = 1,self.w
+    y1, y2 = 1,self.h
+  end
+
+  for x = x1,x2 do for y = y1,y2 do
+    if self.cells[x][y] then
+      self.cells[x][y] = - self.cells[x][y]
+    end
+  end end
+
+  return self
 end
 
 
@@ -60,24 +88,27 @@ function CAVE_CLASS.copy(self)
 end
 
 
-function CAVE_CLASS.negate(self)
-  for x = 1,self.w do for y = 1,self.h do
-    if self.cells[x][y] then
-      self.cells[x][y] = - self.cells[x][y]
+function CAVE_CLASS.dump(self)
+  for y = self.h,1,-1 do
+    local line = "@c| ";
+    
+    for x = 1,self.w do
+      local ch = " "
+      local cell = self.cells[x][y]
+      if  cell == 0      then ch = "?" end
+      if (cell or 0) > 0 then ch = "#" end
+      if (cell or 0) < 0 then ch = "." end
+      line = line .. ch
     end
-  end end
 
-  return self
+    gui.debugf("%s\n", line)
+  end
+
+  gui.debugf("\n")
 end
 
 
-
 function CAVE_CLASS.generate(self, solid_prob)
-
---**
---**  This algorithm was described by Jim Babcock in his article
---**  "Cellular Automata Method for Generating Random Cave-Like Levels"
---**
 
   -- The initial contents of the cave form a map where the cave
   -- will be generated.  The following values can be used:
@@ -94,9 +125,12 @@ function CAVE_CLASS.generate(self, solid_prob)
 
   solid_prob = solid_prob or 40
 
-  local W = map.w
-  local H = map.h
+  local W = self.w
+  local H = self.h
 
+  local map  = self.cells
+
+  -- these arrays only use 0 and 1 as values
   local work = table.array_2D(W, H)
   local temp = table.array_2D(W, H)
 
@@ -164,7 +198,7 @@ function CAVE_CLASS.generate(self, solid_prob)
     end
   end end
 
-  return work
+  self.cells = work
 end
 
 
@@ -172,43 +206,26 @@ function CAVE_CLASS.gen_empty(self)
   
   -- this is akin to generate(), but making all target cells empty
 
-  local W = map.w
-  local H = map.h
+  local W = self.w
+  local H = self.h
 
-  local work = table.array_2D(W, H)
+  local cells = self.cells
 
   for x = 1,W do for y = 1,H do
-    if not map[x][y] then
+    if not cells[x][y] then
       -- skip it
-    elseif map[x][y] > 0 then
-      work[x][y] = 1
+    elseif cells[x][y] > 0 then
+      cells[x][y] = 1
     else
-      work[x][y] = -1
+      cells[x][y] = -1
     end
   end end
 
-  return work
+  return self
 end
 
 
-function CAVE_CLASS.dump(self, title)
-  gui.debugf("%s\n", title or "Cave Map:")
-
-  for y = self.h,1,-1 do
-    local line = "@c| ";
-    for x = 1,self.w do
-      local ch = " "
-      local cell = self.cells[x][y]
-      if  cell == 0      then ch = "?" end
-      if (cell or 0) > 0 then ch = "#" end
-      if (cell or 0) < 0 then ch = "." end
-      line = line .. ch
-    end
-    gui.debugf("%s\n", line)
-  end
-end
-
-
+--TODO
 function CAVE_CLASS.flood_fill(self)
   -- returns a new array where each contiguous region has a unique id.
   -- Empty areas use negative values, Solid areas use positive values.
@@ -217,8 +234,10 @@ function CAVE_CLASS.flood_fill(self)
   -- This also creates a table of regions, and various other statistics
   -- (as named fields of the result).
 
-  local W = cave.w
-  local H = cave.h
+do return end
+
+  local W = self.w
+  local H = self.h
 
   local flood = table.array_2D(W, H)
   local empty_id = -1
@@ -333,6 +352,7 @@ function CAVE_CLASS.flood_fill(self)
 end
 
 
+--TODO
 function CAVE_CLASS.region_is_island(self, reg)
 
   -- returns true if the region is an "island", i.e. touches neither the
@@ -361,6 +381,7 @@ function CAVE_CLASS.region_is_island(self, reg)
 end
 
 
+--TODO
 function CAVE_CLASS.main_empty_region(self)
 
   -- find the largest empty region
@@ -511,16 +532,17 @@ end
 
 function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
                            square_caves)
-  -- FIXME: make base_x/y and square_caves a class field
+  -- TODO: make base_x/y and square_caves a class field ??
 
   -- only solid regions are handled
   assert(reg_id > 0)
 
-  local W = cave.w
-  local H = cave.h
+  local W = self.w
+  local H = self.h
+
+  local cells = self.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
-
 
   local function is_land_locked(x, y)
     if x <= 1 or x >= W or y <= 1 or y >= H then
@@ -528,7 +550,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
     end
 
     for dx = -1,1 do for dy = -1,1 do
-      if cave[x+dx][y+dy] ~= reg_id then
+      if cells[x+dx][y+dy] ~= reg_id then
         return false
       end
     end end
@@ -550,7 +572,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
 
       if nx < 1 or nx > W or ny < 1 or ny > H then return true end
 
-      return not cave[nx][ny] or (cave[nx][ny] > 0)
+      return not cells[nx][ny] or (cells[nx][ny] > 0)
     end
 
     local A = test_nb(0, dy)
@@ -652,7 +674,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
   ---| Cave.render |---
 
   for x = 1,W do for y = 1,H do
-    if cave[x][y] == reg_id then
+    if cells[x][y] == reg_id then
       for side = 1,9,2 do if side ~= 5 then
         analyse_corner(corner_map, x, y, side)
       end end
@@ -660,7 +682,7 @@ function CAVE_CLASS.render(reg_id, base_x, base_y, brush_func, data,
   end end -- for x, y
 
   for x = 1,W do for y = 1,H do
-    if cave[x][y] == reg_id then
+    if cells[x][y] == reg_id then
       add_brush(corner_map, x, y, base_x, base_y)
     end
   end end

@@ -567,8 +567,8 @@ function Layout.do_natural(R, heights)
 
   local function set_cell(mx, my, value)
     -- do not overwrite any cleared areas
-    if not map[mx][my] or map[mx][my] >= 0 then
-      map[mx][my] = value
+    if (map:get(mx, my) or 0) >= 0 then
+      map:set(mx, my, value)
     end
   end
 
@@ -684,7 +684,7 @@ function Layout.do_natural(R, heights)
 
   ---| Layout.do_natural |---
 
-  map = table.array_2D(R.sw * 3, R.sh * 3)
+  map = Cave_new(R.sw * 3, R.sh * 3)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
@@ -697,7 +697,7 @@ function Layout.do_natural(R, heights)
       end
 
       for dx = 0,2 do for dy = 0,2 do
-        map[mx+dx][my+dy] = 0
+        map:set(mx+dx, my+dy, 0)
       end end
 
       for side = 2,8,2 do
@@ -711,6 +711,8 @@ function Layout.do_natural(R, heights)
   end end -- for x, y
 
   clear_conns()
+
+  gui.debugf("Empty Cave:\n")
 
   map:dump()
 
@@ -744,6 +746,8 @@ function Layout.do_natural(R, heights)
 
   R.cave  = cave
   R.flood = flood
+
+  gui.debugf("Filled Cave:\n")
 
   cave:dump()
 
