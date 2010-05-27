@@ -48,7 +48,7 @@ require 'defs'
 require 'util'
 
 require 'seeds'
-require 'plan'
+require 'planner'
 require 'connect'
 require 'naming'
 require 'quests'
