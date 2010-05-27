@@ -1984,7 +1984,8 @@ end
 
 
 function Rooms.build_cave(R)
-  local flood = R.flood
+
+  local cave  = R.cave
 
   local w_tex  = R.cave_tex
   local w_info = get_mat(w_tex)
@@ -2038,7 +2039,27 @@ function Rooms.build_cave(R)
     data.shadow_info = get_light(-1)
   end
 
-  R.cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+  -- handle islands first
+
+    for _,island in ipairs(cave.islands) do
+
+      -- FIXME
+      if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
+         rand.odds(50)
+      then
+
+        -- create a lava/nukage pit
+        local pit = get_liquid()
+
+        pit.t_face.delta_z = rand.sel(70, -52, -76)
+
+        island:render(base_x, base_y, WALL_brush,
+                      { info=pit, z2=R.cave_floor_h+8 })
+
+        cave:subtract(island)
+      end
+
+    end
 
 --[[
   for id,reg in pairs(flood.regions) do
@@ -2059,6 +2080,9 @@ function Rooms.build_cave(R)
     end
   end
 --]]
+
+  cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+
 
   if R.is_lake then return end
   if THEME.square_caves then return end
