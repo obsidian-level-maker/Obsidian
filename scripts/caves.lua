@@ -137,6 +137,50 @@ function CAVE_CLASS.dump(self)
 end
 
 
+function CAVE_CLASS.union(self, other)
+  local W = math.min(self.w, other.w)
+  local H = math.min(self.h, other.h)
+
+  for x = 1,W do for y = 1,H do
+    if (self.cells[x][y] or 0) < 0 and
+       (other.cells[x][y] or 0) > 0
+    then
+      self.cells[x][y] = other.cells[x][y]
+    end
+  end end
+end
+
+
+function CAVE_CLASS.intersection(self, other)
+  local W = math.min(self.w, other.w)
+  local H = math.min(self.h, other.h)
+
+  for x = 1,W do for y = 1,H do
+    if (self.cells[x][y] or 0) > 0 and
+       (other.cells[x][y] or 0) < 0
+    then
+      self.cells[x][y] = other.cells[x][y]
+    end
+  end end
+end
+
+
+function CAVE_CLASS.subtract(self, other)
+  local W = math.min(self.w, other.w)
+  local H = math.min(self.h, other.h)
+
+  local empty_id = self.empty_id or -1
+
+  for x = 1,W do for y = 1,H do
+    if (self.cells[x][y] or 0) > 0 and
+       (other.cells[x][y] or 0) > 0
+    then
+      self.cells[x][y] = empty_id
+    end
+  end end
+end
+
+
 function CAVE_CLASS.generate(self, solid_prob)
 
   -- The initial contents of the cave form a map where the cave
