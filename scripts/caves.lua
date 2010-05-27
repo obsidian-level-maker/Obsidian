@@ -33,7 +33,11 @@ class CAVE
   cells  -- ARRAY_2D : number  -- > 0 means solid
                                -- < 0 means empty
 
-  
+  flood  -- ARRAY_2D : number  -- contiguous areas will have the
+                               -- same value (positive for solid
+                               -- and negative for empty).
+
+  islands  -- LIST : CAVE
 }
 
 --------------------------------------------------------------]]
@@ -239,37 +243,26 @@ function CAVE_CLASS.gen_empty(self)
 end
 
 
---TODO
 function CAVE_CLASS.flood_fill(self)
-  -- returns a new array where each contiguous region has a unique id.
-  -- Empty areas use negative values, Solid areas use positive values.
+  -- generate the 'flood' member, an array where each contiguous region
+  -- has a unique id.  Empty areas are negative, Solid areas use positive.
   -- Zero is invalid.  Nil cells remain nil.
-  --
-  -- This also creates a table of regions, and various other statistics
-  -- (as named fields of the result).
-
-do return end
 
   local W = self.w
   local H = self.h
 
+  local cells = self.cells
   local flood = table.array_2D(W, H)
-  local empty_id = -1
+
   local solid_id =  1
+  local empty_id = -1
 
-  local points = {}
-
-  for x = 1,W do for y = 1,H do
-    if not cave[x][y] then
-      -- ignore it
-    elseif cave[x][y] < 0 then
-      flood[x][y] = empty_id ; empty_id = empty_id - 1
-    else
-      flood[x][y] = solid_id ; solid_id = solid_id + 1
-    end
-  end end
+  local next_points = {}
 
   local function flood_point(x, y)
+
+    -- spread value from this cell to neighbors
+
     for side = 2,8,2 do
       local nx, ny = geom.nudge(x, y, side)
       if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
@@ -278,12 +271,13 @@ do return end
 
         if A and B and ((A > 0 and A < B) or (A < 0 and A > B)) then
           flood[nx][ny] = A
-          table.insert(points, {x=nx, y=ny})
+          table.insert(next_points, {x=nx, y=ny})
         end
       end
     end
   end
 
+--[[
   local function update_info(x, y)
     local f = flood[x][y]
     if not f then return end
@@ -321,22 +315,37 @@ do return end
 
     reg.cells = reg.cells + 1
   end
+--]]
+
+  -- initial setup
+
+  for x = 1,W do for y = 1,H do
+    if not cells[x][y] then
+      -- ignore it
+    elseif cells[x][y] < 0 then
+      flood[x][y] = empty_id ; empty_id = empty_id - 1
+    else
+      flood[x][y] = solid_id ; solid_id = solid_id + 1
+    end
+  end end
 
   -- perform the flood-fill
+
   for x = 1,W do for y = 1,H do
     if flood[x][y] then
       flood_point(x, y)
     end
   end end
 
-  while #points > 0 do
-    local p_list = points ; points = {}
+  while #next_points > 0 do
+    local np_list = next_points ; next_points = {}
 
-    for _,P in ipairs(p_list) do
+    for _,P in ipairs(np_list) do
       flood_point(P.x, P.y)
     end
   end
 
+--[[
   -- create information for each region
   flood.regions = {}
 
@@ -361,8 +370,39 @@ do return end
       end
     end
   end
+--]]
 
-  return flood
+  self.flood = flood
+end
+
+
+function CAVE_CLASS.validate_conns(self, point_list)
+
+  -- checks that all connections can reach each other
+
+  local empty_id
+
+  if not self.flood then
+    self:flood_fill()
+  end
+
+  for _,P in ipairs(point_list) do
+    if (self.flood[P.x][P.y] or 0) >= 0 then
+      -- not valid : the cell is solid or absent
+      return false
+    end
+
+    if not empty_id then
+      empty_id = self.flood[P.x][P.y]
+    else
+      if empty_id ~= self.flood[P.x][P.y] then
+        -- not valid : the empty areas are disjoint
+        return false
+      end
+    end
+  end -- P
+
+  return true
 end
 
 

@@ -658,26 +658,36 @@ function Layout.do_natural(R, heights)
     end
   end
 
-  local function cave_is_good(flood)
+  local function cave_is_good(cave)
+    -- FIXME: size check
+
+    --[[
     local reg, size_ok = flood:main_empty_region()
 
     if not reg or not size_ok then
       gui.debugf("cave failed size check\n")
       return false
     end
+    --]]
 
     -- check connections
+    local point_list = {}
+
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
-      local dir = S.conn_dir
 
-      local mx = (S.sx - R.sx1) * 3 + 2
-      local my = (S.sy - R.sy1) * 3 + 2
+      local P =
+      {
+        x = (S.sx - R.sx1) * 3 + 2,
+        y = (S.sy - R.sy1) * 3 + 2,
+      }
 
-      if flood[mx][my] ~= reg.id then
-        gui.debugf("cave failed connection check\n")
-        return false
-      end
+      table.insert(point_list, P)
+    end
+
+    if not cave:validate_conns(point_list) then
+      gui.debugf("cave failed connection check\n")
+      return false
     end
 
     return true
@@ -737,13 +747,11 @@ function Layout.do_natural(R, heights)
 
     cave:generate(sel(R.is_lake,58,38))
 
---[[
-    flood = cave:flood_fill()
+    cave:flood_fill()
 
-    if cave_is_good(flood) then
+    if cave_is_good(cave) then
       break;
     end
---]]
 
     --- cave:dump()
   end
