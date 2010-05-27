@@ -608,6 +608,18 @@ function add_pegging(info, x_offset, y_offset, peg)
   return info
 end
 
+function mat_similar(A, B)
+  A = GAME.MATERIALS[A]
+  B = GAME.MATERIALS[B]
+
+  if A and B then
+    if A.t == B.t then return true end
+    if A.f and A.f == B.f then return true end
+  end
+
+  return false
+end
+
 
 ------------------------------------------------------------------------
 
