@@ -3088,9 +3088,9 @@ function Rooms.build_all()
 
   Rooms.border_up()
 
-  Layout.edge_of_map()
-
   for _,R in ipairs(LEVEL.scenic_rooms) do Rooms.build_seeds(R) end
   for _,R in ipairs(LEVEL.all_rooms)    do Rooms.build_seeds(R) end
+
+  Layout.edge_of_map()
 end
 
