@@ -7,7 +7,17 @@ TODO
 
 
 Cave code
-  -  use the flood map _OR_ separate cave objects ??
+  -  validate() method : check if N points (from conns) connect
+     --> creates a 'flood' map
+     [it should also remove other empty areas]
+
+  -  find_islands() method : returns a list of new caves, one for
+     each island.
+     an "island" is contiguous solid area which never touches NIL.
+     --> needs the flood map too
+
+  -  furthest_point() : away from N points (conns)
+     --> create a distance map
 
 
 Planner:
