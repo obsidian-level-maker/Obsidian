@@ -318,15 +318,17 @@ function CAVE_CLASS.flood_fill(self)
 
     -- spread value from this cell to neighbors
 
+    local A = flood[x][y]
+    assert(A)
+
     for side = 2,8,2 do
       local nx, ny = geom.nudge(x, y, side)
       if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
-        local A = flood[x][y]
         local B = flood[nx][ny]
 
-        if A and B and ((A > 0 and A < B) or (A < 0 and A > B)) then
+        if B and ((A > 0 and A < B) or (A < 0 and A > B)) then
           flood[nx][ny] = A
-          table.insert(next_points, {x=nx, y=ny})
+          table.insert(next_points, { x=nx, y=ny })
         end
       end
     end
@@ -710,6 +712,104 @@ function CAVE_CLASS.is_land_locked(self, x, y)
   end end
 
   return true
+end
+
+
+function CAVE_CLASS.is_empty_locked(self, x, y)
+  if x <= 1 or x >= self.w or y <= 1 or y >= self.h then
+    return false
+  end
+
+  local cells = self.cells
+
+  for dx = -1,1 do for dy = -1,1 do
+    if (cells[x+dx][y+dy] or 0) >= 0 then
+      return false
+    end
+  end end
+
+  return true
+end
+
+
+function CAVE_CLASS.distance_map(self, ref_points)
+  assert(self.flood)
+  assert(self.empty_id)
+
+  local W = self.w
+  local H = self.h
+
+  local work = table.array_2D(W, H)
+  local flood = self.flood
+
+  local next_points = {}
+
+  local function flood_point(x, y)
+
+    -- spread this distance into neighbor cells
+    local dist = work[x][y] + 1
+
+    for side = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, side)
+      if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
+        local F = flood[nx][ny]
+        local W =  work[nx][ny]
+
+        if F == self.empty_id and (not W or W > dist) then
+          flood[nx][ny] = dist
+          table.insert(next_points, { x=nx, y=ny })
+        end
+      end
+    end
+  end
+
+  -- perform the fill
+
+  for _,P in ipairs(ref_points) do
+    work[P.x][P.y] = 0
+    flood_point(P.x, P.y)
+  end
+
+  while #next_points > 0 do
+    local np_list = next_points ; next_points = {}
+
+    for _,P in ipairs(np_list) do
+      flood_point(P.x, P.y)
+    end
+  end
+
+  return work
+end
+
+
+function CAVE_CLASS.furthest_point(self, ref_points)
+  local dist_map = self:distance_map(ref_points)
+
+  local best_x, best_y
+  local best_dist = 9e9
+
+  for x = 1,W do for y = 1,H do
+    local dist = dist_map[x][y]
+    if dist and dist < (best_dist+3) then
+
+      -- prefer away from edges
+      if x == 1 or x == W then dist = dist + 0.1 end
+      if y == 1 or y == H then dist = dist + 0.2 end
+
+      -- prefer a spot away from the wall
+      if self:is_empty_locked(x, y) then
+        dist = dist - 2.4
+      end
+
+      if dist < best_dist then
+        best_x, best_y = x, y
+        best_dist = dist
+      end
+
+    end
+  end end
+
+  return best_x, best_y  -- could be nil !
 end
 
 

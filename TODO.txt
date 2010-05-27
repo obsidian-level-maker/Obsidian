@@ -7,17 +7,22 @@ TODO
 
 
 Cave code
-  -  validate() method : check if N points (from conns) connect
+  DONE  validate() method : check if N points (from conns) connect
      --> creates a 'flood' map
      [it should also remove other empty areas]
 
-  -  find_islands() method : returns a list of new caves, one for
+  DONE  find_islands() method : returns a list of new caves, one for
      each island.
      an "island" is contiguous solid area which never touches NIL.
      --> needs the flood map too
 
+  +  fix spot_for_wotsit
+
   -  furthest_point() : away from N points (conns)
      --> create a distance map
+
+  +  fix monster spots
+  +  fix pickup spots
 
 
 Planner:
