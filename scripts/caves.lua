@@ -490,6 +490,9 @@ end
 
 
 function CAVE_CLASS.find_islands(self)
+  
+  -- an "island" is contiguous solid area which never touches NIL
+
   local islands = {}
 
   local W = self.w
@@ -541,35 +544,6 @@ function CAVE_CLASS.find_islands(self)
   end
 
   self.islands = islands
-end
-
-
---TODO
-function CAVE_CLASS.region_is_island(self, reg)
-
-  -- returns true if the region is an "island", i.e. touches neither the
-  -- edge of the 2D matrix or a NIL cell.  In other words, it will be
-  -- completely surrounded by its opposite (solid or empty).
-
-  local W = flood.w
-  local H = flood.h
-
-  if reg.x1 <= 1 or reg.x2 >= W or reg.y1 <= 1 or reg.y2 >= H then
-    return false
-  end
-
-  for x = reg.x1,reg.x2 do for y = reg.y1,reg.y2 do
-    if flood[x][y] == reg.id then
-      for side = 2,8,2 do
-        local nx, ny = geom.nudge(x, y, side)
-        if not flood[x][y] then
-          return false
-        end
-      end
-    end
-  end end
-
-  return true
 end
 
 

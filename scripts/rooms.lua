@@ -2050,45 +2050,26 @@ function Rooms.build_cave(R)
 
   -- handle islands first
 
-    for _,island in ipairs(cave.islands) do
+  for _,island in ipairs(cave.islands) do
 
-      -- FIXME
-      if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
-         rand.odds(50)
-      then
+    -- FIXME
+    if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
+       rand.odds(50)
+    then
 
-        -- create a lava/nukage pit
-        local pit = get_liquid()
+      -- create a lava/nukage pit
+      local pit = get_liquid()
 
-        pit.t_face.delta_z = rand.sel(70, -52, -76)
+      pit.t_face.delta_z = rand.sel(70, -52, -76)
 
-        island:render(base_x, base_y, WALL_brush,
-                      { info=pit, z2=R.cave_floor_h+8 })
-
-        cave:subtract(island)
-      end
-
-    end
-
---[[
-  for id,reg in pairs(flood.regions) do
-    if id > 0 then
-      if LEVEL.liquid and not R.is_lake and reg.cells > 4 and
-         rand.odds(50) and flood:region_is_island(reg)
-      then
-        -- create a lava/nukage pit
-        local pit = get_liquid()
-        pit.t_face.delta_z = rand.sel(70, -52, -76)
-
-        flood:render(id, base_x, base_y, WALL_brush,
+      island:render(base_x, base_y, WALL_brush,
                     { info=pit, z2=R.cave_floor_h+8 })
-      else
-        -- make walls normally
-        flood:render(id, base_x, base_y, WALL_brush, data, THEME.square_caves)
-      end
+
+      cave:subtract(island)
     end
+
   end
---]]
+
 
   cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
 
