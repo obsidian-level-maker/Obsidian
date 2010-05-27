@@ -229,7 +229,7 @@ function Plan.initial_rooms()
     if want_shape == "L" then s_dir = 1 end
 
     -- any other rooms in the way?
-io.stderr:write("want_shape = " .. tostring(want_shape) .. "\n")
+
     if not check_or_fill_shape(nil, bx, by, big_w, big_h, want_shape, s_dir) then
       return 1, 1
     end

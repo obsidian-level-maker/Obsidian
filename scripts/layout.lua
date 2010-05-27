@@ -658,7 +658,7 @@ function Layout.do_natural(R, heights)
     end
   end
 
-  local function cave_is_good(cave)
+  local function is_cave_good(cave)
     -- FIXME: size check
 
     --[[
@@ -749,7 +749,7 @@ function Layout.do_natural(R, heights)
 
     cave:flood_fill()
 
-    if cave_is_good(cave) then
+    if is_cave_good(cave) then
       break;
     end
 

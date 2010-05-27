@@ -2014,10 +2014,14 @@ function Rooms.build_cave(R)
 
   local function choose_tex(last, tab)
     local tex = rand.key_by_probs(tab)
-    for loop = 1,4 do
-      if tex ~= last then break; end
-      tex = rand.key_by_probs(tab)
+
+    if last then
+      for loop = 1,5 do
+        if not mat_similar(last, tex) then break; end
+        tex = rand.key_by_probs(tab)
+      end
     end
+
     return tex
   end
 
@@ -2038,6 +2042,11 @@ function Rooms.build_cave(R)
   if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
     data.shadow_info = get_light(-1)
   end
+
+  -- grab walkway now (before main cave is modified)
+
+  local walkway = cave:copy_island(cave.empty_id)
+
 
   -- handle islands first
 
@@ -2088,23 +2097,19 @@ function Rooms.build_cave(R)
   if THEME.square_caves then return end
   if PARAM.simple_caves then return end
 
-  do return end
-
-
-  local walkway = R.flood:copy()
-
-  walkway:negate()
 
   local ceil_h = R.cave_floor_h + R.cave_h
 
   -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
 
+  local last_ftex = R.cave_tex
+
   for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
     walkway:shrink(false)
 
-    if rand.odds(sel(i==1, 20, 50)) then
-      walkway:shrink(false)
-    end
+---???    if rand.odds(sel(i==1, 20, 50)) then
+---???      walkway:shrink(false)
+---???    end
 
     walkway:remove_dots()
 
@@ -2114,10 +2119,12 @@ function Rooms.build_cave(R)
 
 
     if R.outdoor then
-      data.ftex = choose_tex(data.ftex, THEME.landscape_trims or THEME.landscape_walls)
+      data.ftex = choose_tex(last_ftex, THEME.landscape_trims or THEME.landscape_walls)
     else
-      data.ftex = choose_tex(data.ftex, THEME.cave_trims or THEME.cave_walls)
+      data.ftex = choose_tex(last_ftex, THEME.cave_trims or THEME.cave_walls)
     end
+
+    last_ftex = data.ftex
 
     data.f_info = get_mat(data.ftex)
 
@@ -2156,7 +2163,7 @@ function Rooms.build_cave(R)
     end
 
 
-    walkway:render( - flood.largest_empty.id, base_x, base_y, FC_brush, data)
+    walkway:render(base_x, base_y, FC_brush, data)
   end
 end
 
