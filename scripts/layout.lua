@@ -763,6 +763,8 @@ function Layout.do_natural(R, heights)
 
   cave:dump()
 
+  cave:find_islands()
+
 --!!!!!!  gui.debugf("Cave cells:   empty:%d solid:%d\n", flood.empty_cells, flood.solid_cells)
 --!!!!!!  gui.debugf("Cave regions: empty:%d solid:%d\n", flood.empty_regions, flood.solid_regions)
 end

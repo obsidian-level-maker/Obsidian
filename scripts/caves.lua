@@ -435,9 +435,11 @@ function CAVE_CLASS.copy_island(self, reg_id)
     if val == nil then
       -- nothing to copy
     else
-      island[x][y] = sel(val == reg_id, 1, -1)
+      island.cells[x][y] = sel(val == reg_id, 1, -1)
     end
   end end
+
+island:dump("Island for " .. tostring(reg_id))
 
   return island
 end
@@ -469,11 +471,16 @@ function CAVE_CLASS.find_islands(self)
         potentials[reg] = "maybe"
       end
 
+      if x == 1 or x == W or y == 1 or y == H then
+        potentials[reg] = "no"
+      end
+
       if potentials[reg] ~= "no" then
         for side = 2,8,2 do
           local nx, ny = geom.nudge(x, y, side)
           if self:is_valid(nx, ny) and flood[nx][ny] == nil then
             potentials[reg] = "no"
+            break;
           end
         end
       end
