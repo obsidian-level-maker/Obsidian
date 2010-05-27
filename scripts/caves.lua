@@ -37,6 +37,9 @@ class CAVE
                                -- same value (positive for solid
                                -- and negative for empty).
 
+  empty_id  -- the main empty area in the flood_fill
+               this is set by the validate_conns() method
+
   islands  -- LIST : CAVE
 }
 
@@ -54,6 +57,11 @@ function Cave_new(w, h)
   table.set_class(cave, CAVE_CLASS)
 
   return cave
+end
+
+
+function CAVE_CLASS.is_valid(self, x, y)
+  return (1 <= x and x <= self.w) and (1 <= y and y <= self.h)
 end
 
 
@@ -96,6 +104,9 @@ end
 
 
 function CAVE_CLASS.copy(self)
+
+  -- only copies 'w', 'h' and 'cells' members
+
   local newbie = Cave_new(self.w, self.h)
 
   for x = 1,self.w do for y = 1,self.h do
@@ -378,9 +389,9 @@ end
 
 function CAVE_CLASS.validate_conns(self, point_list)
 
-  -- checks that all connections can reach each other
+  -- checks that all connections can reach each other.
 
-  local empty_id
+  local empty_id = nil
 
   if not self.flood then
     self:flood_fill()
@@ -392,17 +403,93 @@ function CAVE_CLASS.validate_conns(self, point_list)
       return false
     end
 
+    local reg = self.flood[P.x][P.y]
+
     if not empty_id then
-      empty_id = self.flood[P.x][P.y]
-    else
-      if empty_id ~= self.flood[P.x][P.y] then
-        -- not valid : the empty areas are disjoint
-        return false
-      end
+      empty_id = reg
+    elseif empty_id ~= reg then
+      -- not valid : the empty areas are disjoint
+      return false
     end
   end -- P
 
+  self.empty_id = empty_id
+
   return true
+end
+
+
+---???  function CAVE_CLASS.solidify_other_empties(self)
+
+
+function CAVE_CLASS.copy_island(self, reg_id)
+  local W = self.w
+  local H = self.h
+
+  local flood = assert(self.flood)
+
+  local island = Cave_new(self.w, self.h)
+
+  for x = 1,W do for y = 1,H do
+    local val = flood[x][y]
+    if val == nil then
+      -- nothing to copy
+    else
+      island[x][y] = sel(val == reg_id, 1, -1)
+    end
+  end end
+
+  return island
+end
+
+
+function CAVE_CLASS.find_islands(self)
+  local islands = {}
+
+  local W = self.w
+  local H = self.h
+
+  if not self.flood then
+    self:flood_fill()
+  end
+
+  local flood = self.flood
+
+  -- scan the cave, determine which regions are islands
+
+  -- a table mapping region ids to a string value: "maybe" if could be
+  -- an island, and "no" when definitely not an island. 
+  local potentials = {}
+
+  for x = 1,W do for y = 1,H do
+    local reg = flood[x][y]
+    if (reg or 0) > 0 then
+
+      if not potentials[reg] then
+        potentials[reg] = "maybe"
+      end
+
+      if potentials[reg] ~= "no" then
+        for side = 2,8,2 do
+          local nx, ny = geom.nudge(x, y, side)
+          if self:is_valid(nx, ny) and flood[nx][ny] == nil then
+            potentials[reg] = "no"
+          end
+        end
+      end
+
+    end
+  end end
+
+  -- create the islands
+
+  for reg,pot in pairs(potentials) do
+    if pot == "maybe" then
+      table.insert(islands, self:copy_island(reg))
+    end
+  end
+
+  self.islands = islands
 end
 
 
