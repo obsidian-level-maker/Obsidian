@@ -83,12 +83,11 @@ function Plan_decide_map_size()
     return pos
   end
 
-  local function dump_sizes(name, t, N)
-    name = name .. ": "
+  local function dump_sizes(line, t, N)
     for i = 1,N do
-      name = name .. tostring(t[i]) .. " "
+      line = line .. tostring(t[i]) .. " "
     end
-    gui.debugf("%s\n", name)
+    gui.printf("%s\n", line)
   end
 
 
@@ -170,6 +169,12 @@ function Plan_create_sections()
 end
 
 
+function Plan_is_section_valid(x, y)
+  return 1 <= x and x <= LEVEL.W and
+         1 <= y and y <= LEVEL.H
+end
+
+
 function Plan_dump_sections()
 
   local function section_char(x, y)
@@ -178,7 +183,7 @@ function Plan_dump_sections()
     if not R then return '.' end
     if R.kind == "scenic" then return '=' end
     if R.natural then return '/' end
-    local n = 1 + (R.id % 26)
+    local n = 1 + ((R.id-1) % 26)
     return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
   end
 
@@ -196,23 +201,29 @@ function Plan_dump_sections()
 end
 
 
-function Plan_new_room(fixme)
+function Plan_new_room()
   local ROOM =
   {
+    kind = "normal",
+    shape = "rect",
+    conns = {},
+    sections = {},
+    neighbors = {},
   }
+
+  table.set_class(ROOM, ROOM_CLASS)
+
+  ROOM.id = Plan_alloc_room_id()
+
+  table.insert(LEVEL.all_rooms, ROOM)
 
   return ROOM
 end
 
 
-function Plan_initial_rooms()
+function OLD_Plan_initial_rooms()  -- REMOVE
   
   -- creates rooms out of contiguous areas on the land-map
-
-  local function valid_R(x, y)
-    return 1 <= x and x <= LEVEL.W and
-           1 <= y and y <= LEVEL.H
-  end
 
 
   local function calc_width(bx, big_w)
@@ -444,9 +455,6 @@ function Plan_initial_rooms()
 
   ---| Plan_initial_rooms |---
 
-  local id = 1
-
-
   local visits = {}
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
@@ -491,6 +499,31 @@ function Plan_initial_rooms()
 
   make_naturals(id)
 
+end
+
+
+function Plan_add_special_rooms()
+  -- nothing here YET
+end
+
+
+function Plan_add_big_rooms()
+  -- TODO
+end
+
+
+function Plan_add_small_rooms()
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+    local SEC = LEVEL.section_map[x][y]
+    if not SEC.room then
+      local R = Plan_new_room()
+
+      R.lx1 = x ; R.lx2 = x
+      R.ly1 = y ; R.ly2 = y
+
+      SEC.room = R
+    end
+  end end
 end
 
 
@@ -586,7 +619,7 @@ function Plan_find_neighbors()
 end
 
 
-function Plan_merge_naturals()
+function Plan_merge_naturals()  -- REMOVE
  
   local function merge_one_natural(src, dest)
     gui.printf("Merging Natural: %s --> %s\n", src:tostr(), dest:tostr())
@@ -627,7 +660,7 @@ function Plan_merge_naturals()
 end
 
 
-function Plan_weird_experiment()
+function Plan_weird_experiment()  -- REMOVE
 
   local function try_move(S, dir)
     local N = S:neighbor(dir)
@@ -911,7 +944,6 @@ end
 
 
 
-
 function Plan_sub_rooms()
 
   --                    1  2  3   4   5   6   7   8+
@@ -1177,10 +1209,10 @@ function Plan_create_rooms()
 
   if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
     local name = rand.key_by_probs(THEME.liquids)
-    gui.printf("Liquid: %s\n", name)
+    gui.printf("Liquid: %s\n\n", name)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
   else
-    gui.printf("Liquids disabled.\n")
+    gui.printf("Liquids disabled.\n\n")
   end
 
   Plan_decide_map_size()
@@ -1192,7 +1224,7 @@ function Plan_create_rooms()
   Plan_add_small_rooms()
 
   Plan_dump_sections()
-  Plan_find_neighbors()
+--!!!!  Plan_find_neighbors()
 
   Plan_decide_outdoors()
 
@@ -1200,7 +1232,7 @@ function Plan_create_rooms()
 
   Plan_make_seeds()
 
---!!!  Plan_nudge_rooms()
+--!!!!  Plan_nudge_rooms()
 
 ---####  Plan_merge_naturals()
 
@@ -1209,7 +1241,7 @@ function Plan_create_rooms()
   Seed.dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
+    gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)
   end
 end
 

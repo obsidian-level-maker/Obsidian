@@ -103,9 +103,13 @@ Rooms = { }
 ROOM_CLASS = {}
 
 function ROOM_CLASS.tostr(self)
-  return string.format("%s_%s [%d,%d..%d,%d]",
-      sel(self.parent, "SUB_ROOM", "ROOM"),
-      self.id, self.sx1,self.sy1, self.sx2,self.sy2)
+  if not self.sx1 then
+    return string.format("ROOM_%d", self.id)
+  else
+    return string.format("%s_%s [%d,%d..%d,%d]",
+        sel(self.parent, "SUB_ROOM", "ROOM"),
+        self.id, self.sx1,self.sy1, self.sx2,self.sy2)
+  end
 end
 
 function ROOM_CLASS.contains_seed(self, x, y)
