@@ -214,8 +214,8 @@ function Plan_new_room()
     kind = "normal",
     shape = "rect",
     conns = {},
-    sections = {},
     neighbors = {},
+---???    sections = {},
   }
 
   table.set_class(ROOM, ROOM_CLASS)
@@ -509,16 +509,6 @@ function OLD_Plan_initial_rooms()  -- REMOVE
 end
 
 
-function Plan_add_special_rooms()
-  -- nothing here YET
-end
-
-
-function Plan_add_big_rooms()
-  -- TODO
-end
-
-
 function Plan_add_small_rooms()
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
     local SEC = LEVEL.section_map[x][y]
@@ -531,6 +521,100 @@ function Plan_add_small_rooms()
       SEC.room = R
     end
   end end
+end
+
+
+function Plan_add_big_rooms()
+
+  -- shapes are defined by a list of neighbors to set.
+
+  local BIG_ROOM_SHAPES =
+  {
+    plus = { 5,2,4,6,8 },
+
+    T1 = { 5,7,8,9 },
+    T2 = { 5,7,8,9,2 },
+
+    L1 = { 5,8,6 },
+    L2 = { 1,2,3,4,7 },
+  }
+
+  local BIG_SHAPE_PROBS =
+  {
+    rect = 30,
+
+    plus = 90
+  }
+
+  local function test_or_set_Rect(lx, ly, rot, w, h, ROOM)
+    if w >= LEVEL.W or h >= LEVEL.H then
+      return false  -- would span the whole map
+    end
+
+    if bit.btest(rot-2, 2) then lx = lx - w + 1 end
+    if bit.btest(rot-2, 4) then ly = ly - h + 1 end
+
+    local lx2 = lx + w - 1
+    local ly2 = ly + h - 1
+
+    if lx < 1 or lx2 > LEVEL.W or
+       ly < 1 or ly2 > LEVEL.H
+    then
+      return false
+    end
+
+    for x = lx,lx2 do for y = ly,ly2 do
+      if ROOM then
+        LEVEL.section_map[x][y].room = ROOM
+      elseif LEVEL.section_map[x][y].room then
+        return false -- would overlap a room
+      end
+    end end
+
+    return true
+  end
+
+  local function test_or_set_Shape(lx, ly, rot, dir_list)
+    local touch_bottom, touch_top
+    local touch_left, touch_right
+
+    for _,orig_dir in ipairs(dir_list) do
+      local dir = geom.ROTATE[rot][orig_dir]
+      local nx, ny = geom.nudge(lx, ly, dir)
+
+      if not Plan_is_section_valid(nx, ny) then
+        return false
+      end
+
+      if nx == 1 then touch_left = true end
+      if ny == 1 then touch_bottom = true end
+
+      if nx == LEVEL.W then touch_right = true end
+      if ny == LEVEL.H then touch_top = true end
+
+      if ROOM then
+        LEVEL.section_map[nx][ny].room = ROOM
+      elseif LEVEL.section_map[nx][ny].room then
+        return false -- would overlap a room
+      end
+    end
+
+    -- would span the whole map?
+    if (touch_left and touch_right) or (touch_bottom and touch_top) then
+      return false
+    end
+
+    return true
+  end
+
+
+  ---| Plan_add_big_rooms |---
+
+end
+
+
+function Plan_add_special_rooms()
+  -- nothing here YET...
 end
 
 
