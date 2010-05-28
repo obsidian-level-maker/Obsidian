@@ -32,42 +32,66 @@ function Plan_alloc_mark()
   return LEVEL.last_mark
 end
 
+function Plan_alloc_room_id()
+  LEVEL.last_room = (LEVEL.last_room or 0) + 1
+  return LEVEL.last_room
+end
+
+
+function Plan_create_sections()
+
+  LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
+
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+    LEVEL.section_map[x][y] = {}
+  end end
+end
+
+
+function Plan_dump_sections()
+
+  local function section_char(x, y)
+    local SEC = LEVEL.section_map[x][y]
+    local R = SEC.room
+    if not R then return '.' end
+    if R.kind == "scenic" then return '=' end
+    if R.natural then return '/' end
+    local n = 1 + (R.id % 26)
+    return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+  end
+
+  gui.printf("\n")
+  gui.printf("Section Map:\n")
+
+  for y = LEVEL.H,1,-1 do
+    local line = "@c  "
+    for x = 1,LEVEL.W do
+      line = line .. section_char(x, y)
+    end
+    gui.printf("%s\n", line)
+  end
+  gui.printf("\n")
+end
+
+
+function Plan_new_room(fixme)
+  local ROOM =
+  {
+  }
+
+  return ROOM
+end
 
 
 function Plan_initial_rooms()
   
   -- creates rooms out of contiguous areas on the land-map
 
-  local room_map
-
   local function valid_R(x, y)
     return 1 <= x and x <= LEVEL.W and
            1 <= y and y <= LEVEL.H
   end
 
-  local function dump_rooms()
-    local function room_char(R)
-      if not R then return '.' end
-      if R.kind == "scenic" then return '=' end
-      if R.natural then return '/' end
-      local n = 1 + (R.id % 26)
-      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
-    end
-
-    --- dump_rooms ---
-
-    gui.printf("\n")
-    gui.printf("Room Map:\n")
-
-    for y = LEVEL.H,1,-1 do
-      local line = "@c  "
-      for x = 1,LEVEL.W do
-        line = line .. room_char(room_map[x][y])
-      end
-      gui.printf("%s\n", line)
-    end
-    gui.printf("\n")
-  end
 
   local function calc_width(bx, big_w)
     local w = 0
@@ -83,15 +107,6 @@ function Plan_initial_rooms()
       h = h + LEVEL.row_H[y]
     end
     return h
-  end
-
-  local function add_neighbor(R, side, N)
-    -- check if already there
-    for _,O in ipairs(R.neighbors) do
-      if O == N then return end
-    end
-
-    table.insert(R.neighbors, N)
   end
 
   local function check_or_fill_RECT(ROOM, bx, by, big_w, big_h)
@@ -307,15 +322,7 @@ function Plan_initial_rooms()
 
   ---| Plan_initial_rooms |---
 
-  room_map = table.array_2D(LEVEL.W, LEVEL.H)
-
   local id = 1
-
-  local col_x = { 3 }  -- two border seeds at [1] and [2]
-  local col_y = { 3 }  --
-
-  for x = 2,LEVEL.W do col_x[x] = col_x[x-1] + LEVEL.col_W[x-1] end
-  for y = 2,LEVEL.H do col_y[y] = col_y[y-1] + LEVEL.row_H[y-1] end
 
 
   local visits = {}
@@ -349,7 +356,7 @@ function Plan_initial_rooms()
       ROOM.sh = calc_height(by, big_h)
 
       ROOM.sx1 = col_x[bx]
-      ROOM.sy1 = col_y[by]
+      ROOM.sy1 = row_y[by]
 
       ROOM.sx2 = ROOM.sx1 + ROOM.sw - 1
       ROOM.sy2 = ROOM.sy1 + ROOM.sh - 1
@@ -360,37 +367,8 @@ function Plan_initial_rooms()
     end
   end
 
-  LEVEL.last_id = id
-
   make_naturals(id)
 
-  dump_rooms()
-
-
-
-  -- determines neighboring rooms of each room
-  -- (including diagonals, which may touch after nudging)
-  
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    local R = room_map[x][y]
-    
-    if not R.neighbors then
-      table.insert(LEVEL.all_rooms, R)
-      R.neighbors = {}
-    end
-
-    for side = 1,9 do if side ~= 5 then
-      local nx, ny = geom.nudge(x, y, side)
-      if valid_R(nx, ny) then
-        local N = room_map[nx][ny]
-        if N ~= R then
-          add_neighbor(R, side, N)
-        end
-      else
-        R.touches_edge = true
-      end
-    end end -- for side / if ~= 5
-  end end -- for x, y
 end
 
 
@@ -414,6 +392,7 @@ function Plan_decide_outdoors()
       return rand.odds(25)
     end
 
+--[[
     if R.children then
       if STYLE.skies == "few" then
         return rand.odds(33)
@@ -421,7 +400,7 @@ function Plan_decide_outdoors()
         return rand.odds(80)
       end
     end
-
+--]]
     if STYLE.skies == "heaps" then return rand.odds(50) end
     if STYLE.skies == "few"   then return rand.odds(5) end
 
@@ -445,6 +424,44 @@ function Plan_decide_outdoors()
   end
 end
 
+
+function Plan_find_neighbors()
+
+  -- determines neighboring rooms of each room
+  -- (including diagonals, which may touch after nudging)
+
+  local function add_neighbor(R, side, N)
+    -- check if already there
+    for _,O in ipairs(R.neighbors) do
+      if O == N then return end
+    end
+
+    table.insert(R.neighbors, N)
+  end
+
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+
+    local R = LEVEL.section_map[x][y].room
+
+    if not R.neighbors then
+      table.insert(LEVEL.all_rooms, R)
+      R.neighbors = {}
+    end
+
+    for side = 1,9 do if side ~= 5 then
+      local nx, ny = geom.nudge(x, y, side)
+      if valid_R(nx, ny) then
+        local N = room_map[nx][ny]
+        if N ~= R then
+          add_neighbor(R, side, N)
+        end
+      else
+        R.touches_edge = true
+      end
+    end end -- side
+
+  end end -- x, y
+end
 
 
 function Plan_merge_naturals()
@@ -774,7 +791,6 @@ end
 
 
 function Plan_sub_rooms()
-  local id = LEVEL.last_id + 1
 
   --                    1  2  3   4   5   6   7   8+
   local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
@@ -870,7 +886,7 @@ function Plan_sub_rooms()
       big_w=1, big_h=1,
     }
 
-    id = id + 1
+    local id = Plan_alloc_room()
 
     table.set_class(ROOM, ROOM_CLASS)
 
@@ -926,8 +942,6 @@ function Plan_sub_rooms()
       end
     end
   end
-
-  LEVEL.last_id = id
 end
 
 
@@ -1015,33 +1029,47 @@ end
 
 function Plan_decide_map_size()
 
-  local function get_column_sizes(W, limit)
+  local function get_size_list(W, limit)
     local SIZE_TABLE = THEME.room_size_table or
                         GAME.room_size_table or
                         ROOM_SIZE_TABLE
-    local cols = {}
+    local sizes = {}
 
     assert(4 + W*2 <= limit)
 
-    for loop = 1,100 do
+    for loop = 1,99 do
       local total = 4  -- border seeds around level
 
       for x = 1,W do
-        cols[x] = rand.index_by_probs(SIZE_TABLE)
-        total = total + cols[x]
+        sizes[x] = rand.index_by_probs(SIZE_TABLE)
+        total = total + sizes[x]
       end
 
       if total <= limit then
-        return cols  -- OK!
+        return sizes  -- OK!
       end
     end
 
     -- emergency fallback
     gui.printf("Using emergency column sizes.\n")
 
-    for x = 1,W do cols[x] = 2 end
+    for x = 1,W do
+      sizes[x] = 2
+    end
 
-    return cols
+    return sizes
+  end
+
+  local function get_position_list(size_list)
+    local pos = {}
+
+    pos[1] = 3  -- two border seeds at [1] and [2]
+
+    for x = 2,#size_list do
+      pos[x] = pos[x-1] + size_list[x-1]
+    end
+
+    return pos
   end
 
   local function dump_sizes(name, t, N)
@@ -1104,23 +1132,20 @@ function Plan_decide_map_size()
   gui.printf("Map Size: %dx%d sections\n", W, H)
 
 
-  -- initial sizes of rooms in each row and column
-  local cols = {}
-  local rows = {}
-
+  -- initial section sizes in each row and column
   local limit = (PARAM.seed_limit or 56)
 
   -- take border seeds (2+2) and free space (3) into account
   limit = limit - (2+2+3)
 
-  cols = get_column_sizes(W, limit)
-  rows = get_column_sizes(H, limit)
+  LEVEL.section_W = get_size_list(W, limit)
+  LEVEL.section_H = get_size_list(H, limit)
  
-  LEVEL.col_W = cols
-  LEVEL.row_H = rows
+  LEVEL.section_X = get_position_list(LEVEL.section_W)
+  LEVEL.section_Y = get_position_list(LEVEL.section_H)
 
-  dump_sizes("Column seeds: ", cols, LEVEL.W)
-  dump_sizes("Row seeds:    ", rows, LEVEL.H)
+  dump_sizes("Column widths: ", LEVEL.section_W, LEVEL.W)
+  dump_sizes("Row heights:   ", LEVEL.section_W, LEVEL.H)
 end
 
 
@@ -1160,11 +1185,14 @@ function Plan_create_rooms()
 
   Plan_decide_map_size()
 
-  Plan_create_section_map()
+  Plan_create_sections()
 
   Plan_add_special_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
+
+  Plan_dump_sections()
+  Plan_find_neighbors()
 
   Plan_decide_outdoors()
 
