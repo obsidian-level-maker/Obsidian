@@ -541,18 +541,27 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 30,
+    rect = 5,
 
-    plus = 90
+    plus = 90,
+    -- FIXME
+    L1 = 1, L2 = 1,
+    T1 = 1, T2 = 1,
   }
 
-  local function test_or_set_Rect(lx, ly, rot, w, h, ROOM)
+  local BIG_RECT_SIZES =
+  {
+    [22] = 80, [21] = 20,
+    [33] = 30, [32] = 15, [31] = 3,
+  }
+
+  local function test_or_set_rect(lx, ly, rot, w, h, ROOM)
     if w >= LEVEL.W or h >= LEVEL.H then
       return false  -- would span the whole map
     end
 
-    if bit.btest(rot-2, 2) then lx = lx - w + 1 end
-    if bit.btest(rot-2, 4) then ly = ly - h + 1 end
+    if bit.btest(rot, 2) then lx = lx - w + 1 end
+    if bit.btest(rot, 4) then ly = ly - h + 1 end
 
     local lx2 = lx + w - 1
     local ly2 = ly + h - 1
@@ -565,6 +574,7 @@ function Plan_add_big_rooms()
 
     for x = lx,lx2 do for y = ly,ly2 do
       if ROOM then
+        assert(not LEVEL.section_map[x][y].room)
         LEVEL.section_map[x][y].room = ROOM
       elseif LEVEL.section_map[x][y].room then
         return false -- would overlap a room
@@ -574,30 +584,31 @@ function Plan_add_big_rooms()
     return true
   end
 
-  local function test_or_set_Shape(lx, ly, rot, dir_list)
+  local function test_or_set_shape(lx, ly, rot, dir_list, ROOM)
     local touch_bottom, touch_top
     local touch_left, touch_right
 
     for _,orig_dir in ipairs(dir_list) do
-      local dir = geom.ROTATE[rot][orig_dir]
-      local nx, ny = geom.nudge(lx, ly, dir)
+      local dir  = geom.ROTATE[rot][orig_dir]
+      local x, y = geom.nudge(lx, ly, dir)
 
-      if not Plan_is_section_valid(nx, ny) then
+      if not Plan_is_section_valid(x, y) then
         return false
       end
 
-      if nx == 1 then touch_left = true end
-      if ny == 1 then touch_bottom = true end
+      if x == 1 then touch_left = true end
+      if y == 1 then touch_bottom = true end
 
-      if nx == LEVEL.W then touch_right = true end
-      if ny == LEVEL.H then touch_top = true end
+      if x == LEVEL.W then touch_right = true end
+      if y == LEVEL.H then touch_top = true end
 
       if ROOM then
-        LEVEL.section_map[nx][ny].room = ROOM
-      elseif LEVEL.section_map[nx][ny].room then
+        assert(not LEVEL.section_map[x][y].room)
+        LEVEL.section_map[x][y].room = ROOM
+      elseif LEVEL.section_map[x][y].room then
         return false -- would overlap a room
       end
-    end
+    end -- orig_dir
 
     -- would span the whole map?
     if (touch_left and touch_right) or (touch_bottom and touch_top) then
@@ -607,9 +618,58 @@ function Plan_add_big_rooms()
     return true
   end
 
+  local function pick_rect_size()
+    local raw = rand.key_by_probs(BIG_RECT_SIZES)
+
+    local rw = int(raw / 10)
+    local rh =    (raw % 10)
+
+    -- bit less that 50%, since maps are usually wider than tall
+    if rand.odds(40) then
+      rw, rh = rh, rw
+    end
+
+    return rw, rh
+  end
+
 
   ---| Plan_add_big_rooms |---
 
+  for loop = 1,900 do
+    local lx  = rand.irange(1, LEVEL.W)
+    local ly  = rand.irange(1, LEVEL.H)
+    local rot = rand.irange(0, 3) * 2
+
+    local ROOM
+
+    local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
+
+    if shape_name == "rect" then
+      local rw, rh = pick_rect_size()
+
+      if test_or_set_rect(lx, ly, rot, rw, rh) then
+        ROOM = Plan_new_room()
+        test_or_set_rect(lx, ly, rot, rw, rh, ROOM)
+      end
+
+    else  -- shaped
+
+      local dir_list = BIG_ROOM_SHAPES[shape_name]
+      assert(dir_list)
+
+      if test_or_set_shape(lx, ly, rot, dir_list) then
+        ROOM = Plan_new_room()
+        test_or_set_shape(lx, ly, rot, dir_list, ROOM)
+      end
+    end
+
+    if ROOM then
+      ROOM.shape = shape_name
+
+      gui.debugf("Loop: %d\n", loop)
+      Plan_dump_sections()
+    end
+  end
 end
 
 
