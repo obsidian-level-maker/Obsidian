@@ -6,6 +6,14 @@ TODO
 +  Chris's name stuff!
 
 
+!!! natural areas in add_big_rooms()
+
+
+??  when to decide WOTSIT, monster and pickup spots ??
+
+??  do placement allocations on a 64x64 grid ??
+
+
 Cave code
   DONE  validate() method : check if N points (from conns) connect
      --> creates a 'flood' map
@@ -29,18 +37,23 @@ Planner:
   +  rework room_map / nudging / etc code:
 
      1. create section map
-     2. fill with rooms (big, shaped and sub-rooms)
+     2. fill with rooms (big / shaped)
      3. decide naturals, indoor/outdoor
-     4. make seeds
-     5. nudge sides
+     4. sub-rooms
+     5. make seeds
+     6. nudge sides
 
-  -  need a new term : "roomlet" ??  "section" ??
+  -  new term "Section" : part of a room
 
   ?? implement L T + shapes by creating a big room and removing the
      unused corners ??
 
      This is similar to sub-rooms ---> maybe do sub-rooms in a
-     similar way (re-assign roomlets of a big room).
+     similar way (re-assign sections of a big room).
+
+
+Quests:
+  +  when deciding to use keys : check for outdoor on both sides
 
 
 + proper system to match DOOR skins with SWITCH skins
@@ -86,25 +99,11 @@ IDEA:
 +  make linedef merging more relaxed (cf. DAVID.wad)
 
 
-
 Console:
-  +  make window resizable
-
-  +  handle lists better
-
-  DONE: make console move to bottom on new lines (if already at bottom)
-  DONE: implement command history
-  DONE: '?' command to display an expression or table
-  DONE: 'clear' command
-  DONE: move con_dump --> oblige.lua as 'ob_console_dump'
-
-  DONE: remember ConPrintf strings when console is not open
-  DONE: @blabel:data@  : make a button, shown as label
-
-  -  don't keep console_body widget when delete console_win
+  +  display lists better
 
 
----------------------------------------------
+--------------------------------------------------------------------
 
 
 BUG: some Quake maps have clipping issues (invisible barriers)
