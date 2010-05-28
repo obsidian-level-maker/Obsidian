@@ -155,7 +155,14 @@ function Plan_decide_map_size()
   LEVEL.section_Y = get_position_list(LEVEL.section_H)
 
   dump_sizes("Column widths: ", LEVEL.section_W, LEVEL.W)
-  dump_sizes("Row heights:   ", LEVEL.section_W, LEVEL.H)
+  dump_sizes("Row heights:   ", LEVEL.section_H, LEVEL.H)
+
+  LEVEL.seed_W = LEVEL.section_X[LEVEL.W] + LEVEL.section_W[LEVEL.W] - 1
+  LEVEL.seed_H = LEVEL.section_Y[LEVEL.H] + LEVEL.section_H[LEVEL.H] - 1
+
+  -- two border seeds at top and right
+  LEVEL.seed_W = LEVEL.seed_W + 2
+  LEVEL.seed_H = LEVEL.seed_H + 2
 end
 
 
@@ -1099,7 +1106,7 @@ function Plan_sub_rooms()
 end
 
 
-function Plan_make_seeds()
+function OLD_Plan_make_seeds()
 
   local function plant_rooms()
     for _,R in ipairs(LEVEL.all_rooms) do
@@ -1178,6 +1185,54 @@ gui.debugf("seed range @ %s\n", R:tostr())
   fill_holes()
 
   Seed.flood_fill_edges()
+end
+
+
+function Plan_make_seeds()
+  
+  local function init_seed(sx, sy, R)
+    assert(Seed.valid(sx, sy, 1))
+
+    local S = SEEDS[sx][sy][1]
+    if S.room then
+      error("Planner: rooms overlap!")
+    end
+
+    S.room = R
+    S.kind = "walk"
+  end
+
+  local function fill_section(lx, ly)
+    local SEC = LEVEL.section_map[lx][ly]
+
+    local R = SEC.room
+    if not R then return end
+
+    local sx1 = LEVEL.section_X[lx]
+    local sy1 = LEVEL.section_Y[ly]
+
+    local sx2 = sx1 + LEVEL.section_W[lx] - 1
+    local sy2 = sy1 + LEVEL.section_H[ly] - 1
+
+    if not R.sx1 or sx1 < R.sx1 then R.sx1 = sx1 end
+    if not R.sy1 or sy1 < R.sy1 then R.sy1 = sy1 end
+    if not R.sx2 or sx2 > R.sx2 then R.sx2 = sx2 end
+    if not R.sy2 or sy2 > R.sy2 then R.sy2 = sy2 end
+
+    R:update_size()
+
+    for x = sx1,sx2 do for y = sy1,sy2 do
+      init_seed(x, y, R) 
+    end end
+  end
+
+  ---| Plan_make_seeds |---
+
+  Seed.init(LEVEL.seed_W, LEVEL.seed_H, 1, 3, 3)
+
+  for lx = 1,LEVEL.W do for ly = 1,LEVEL.H do
+    fill_section(lx, ly)
+  end end
 end
 
 

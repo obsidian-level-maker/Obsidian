@@ -112,6 +112,11 @@ function ROOM_CLASS.tostr(self)
   end
 end
 
+function ROOM_CLASS.update_size(self)
+  self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
+  self.svolume = self.sw * self.sh
+end
+
 function ROOM_CLASS.contains_seed(self, x, y)
   if x < self.sx1 or x > self.sx2 then return false end
   if y < self.sy1 or y > self.sy2 then return false end
