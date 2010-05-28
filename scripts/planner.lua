@@ -394,6 +394,58 @@ function Plan_initial_rooms()
 end
 
 
+function Plan_decide_outdoors()
+
+  local function choose(R)
+---???    if R.parent and R.parent.outdoor then return false end
+---???    if R.parent then return rand.odds(5) end
+
+    if R.natural then
+      if not THEME.landscape_walls then return false end
+    else
+      if not THEME.courtyard_floors then return false end
+    end
+
+    if STYLE.skies == "none"   then return false end
+    if STYLE.skies == "always" then return true end
+
+    if R.natural then
+      if STYLE.skies == "heaps" then return rand.odds(75) end
+      return rand.odds(25)
+    end
+
+    if R.children then
+      if STYLE.skies == "few" then
+        return rand.odds(33)
+      else
+        return rand.odds(80)
+      end
+    end
+
+    if STYLE.skies == "heaps" then return rand.odds(50) end
+    if STYLE.skies == "few"   then return rand.odds(5) end
+
+    -- room on edge of map?
+    if R.touches_edge then
+      return rand.odds(30)
+    end
+
+    return rand.odds(10)
+  end
+
+  ---| Plan_decide_outdoors |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.outdoor == nil then
+      R.outdoor = choose(R)
+    end
+    if R.outdoor then
+      R.sky_h = SKY_H
+    end
+  end
+end
+
+
 
 function Plan_merge_naturals()
  
@@ -961,17 +1013,12 @@ gui.debugf("seed range @ %s\n", R:tostr())
 end
 
 
-function Plan_determine_size()
-
-  local function show_sizes(name, t, N)
-    name = name .. ": "
-    for i = 1,N do
-      name = name .. tostring(t[i]) .. " "
-    end
-    gui.debugf("%s\n", name)
-  end
+function Plan_decide_map_size()
 
   local function get_column_sizes(W, limit)
+    local SIZE_TABLE = THEME.room_size_table or
+                        GAME.room_size_table or
+                        ROOM_SIZE_TABLE
     local cols = {}
 
     assert(4 + W*2 <= limit)
@@ -980,7 +1027,7 @@ function Plan_determine_size()
       local total = 4  -- border seeds around level
 
       for x = 1,W do
-        cols[x] = rand.index_by_probs(ROOM_SIZE_TABLE)
+        cols[x] = rand.index_by_probs(SIZE_TABLE)
         total = total + cols[x]
       end
 
@@ -997,14 +1044,20 @@ function Plan_determine_size()
     return cols
   end
 
+  local function dump_sizes(name, t, N)
+    name = name .. ": "
+    for i = 1,N do
+      name = name .. tostring(t[i]) .. " "
+    end
+    gui.debugf("%s\n", name)
+  end
 
-  ---| Plan_determine_size |---
+
+  ---| Plan_decide_map_size |---
 
   local W, H  -- number of rooms
 
   local ob_size = OB_CONFIG.size
-
----##  if ob_size == "normal" then ob_size = "regular" end
 
   -- there is no real "progression" when making a single level
   -- hence use mixed mode instead.
@@ -1032,8 +1085,8 @@ function Plan_determine_size()
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { small=4, regular=6, large=7 }
-    local HEIGHTS = { small=3, regular=4, large=7 }
+    local WIDTHS  = { small=4, regular=6, large=8 }
+    local HEIGHTS = { small=3, regular=4, large=6 }
 
     W = WIDTHS[ob_size]
     H = HEIGHTS[ob_size]
@@ -1048,13 +1101,7 @@ function Plan_determine_size()
   LEVEL.W = W
   LEVEL.H = H
 
-if TESTING_QUAKE_II then
-  LEVEL.W = 1
-  LEVEL.H = 2
-  LEVEL.join_all = true
-end
-
-  gui.printf("Land size: %dx%d\n", LEVEL.W, LEVEL.H)
+  gui.printf("Map Size: %dx%d sections\n", W, H)
 
 
   -- initial sizes of rooms in each row and column
@@ -1064,16 +1111,16 @@ end
   local limit = (PARAM.seed_limit or 56)
 
   -- take border seeds (2+2) and free space (3) into account
-  limit = limit - 7
+  limit = limit - (2+2+3)
 
   cols = get_column_sizes(W, limit)
   rows = get_column_sizes(H, limit)
-  
+ 
   LEVEL.col_W = cols
   LEVEL.row_H = rows
 
-  show_sizes("col_W", cols, LEVEL.W)
-  show_sizes("row_H", rows, LEVEL.H)
+  dump_sizes("Column seeds: ", cols, LEVEL.W)
+  dump_sizes("Row seeds:    ", rows, LEVEL.H)
 end
 
 
@@ -1105,32 +1152,36 @@ function Plan_create_rooms()
 
   if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
     local name = rand.key_by_probs(THEME.liquids)
-    gui.printf("Liquid = %s\n", name)
+    gui.printf("Liquid: %s\n", name)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
+  else
+    gui.printf("Liquids disabled.\n")
   end
 
-  Plan_determine_size()
+  Plan_decide_map_size()
 
-  Plan_initial_rooms()
-  Plan_nudge_rooms()
+  Plan_create_section_map()
 
-  -- must create the seeds _AFTER_ nudging
+  Plan_add_special_rooms()
+  Plan_add_big_rooms()
+  Plan_add_small_rooms()
+
+  Plan_decide_outdoors()
+
+--!!!!  Plan_sub_rooms()
+
   Plan_make_seeds()
-  Plan_merge_naturals()
+
+--!!!  Plan_nudge_rooms()
+
+---####  Plan_merge_naturals()
 
 -- Plan_weird_experiment()
 
-  gui.printf("Seed Map:\n")
-  Seed.dump_rooms()
-
-  Plan_sub_rooms()
+  Seed.dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final %s   size: %dx%d\n", R:tostr(), R.sw,R.sh)
   end
-
-
-  LEVEL.skyfence_h = rand.sel(50, 192, rand.sel(50, 64, 320))
-
 end
 

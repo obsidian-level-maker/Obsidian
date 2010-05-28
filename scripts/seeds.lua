@@ -212,7 +212,8 @@ function Seed.block_valid_and_free(x1,y1,z1, x2,y2,z2)
 end
 
 
-function Seed.dump_rooms()
+function Seed.dump_rooms(title)
+
   local function seed_to_char(S)
     if not S then return "!" end
     if S.free then return "." end
@@ -228,6 +229,10 @@ function Seed.dump_rooms()
 
     local n = 1 + (S.room.id % 26)
     return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+  end
+
+  if title then
+    gui.printf("%s\n", title)
   end
 
   for y = SEED_H,1,-1 do
