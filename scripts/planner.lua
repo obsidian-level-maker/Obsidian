@@ -519,6 +519,24 @@ function Plan_add_small_rooms()
       R.ly1 = y ; R.ly2 = y
 
       SEC.room = R
+
+      -- sometimes become a 2x1 / 1x2 sized room
+
+      local can_x = (x < LEVEL.W and not LEVEL.section_map[x+1][y].room)
+      local can_y = (y < LEVEL.H and not LEVEL.section_map[x][y+1].room)
+
+      if (can_x or can_y) and rand.odds(50) then
+        
+        if can_x or (can_x and can_y and rand.odds(40)) then
+          SEC = LEVEL.section_map[x+1][y]
+        else
+          SEC = LEVEL.section_map[x][y+1]
+        end
+
+        assert(not SEC.room)
+
+        SEC.room = R
+      end
     end
   end end
 end
@@ -542,11 +560,11 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 20,
+    rect = 40,
     plus = 20,
 
-    T1 = 30, T2 = 3,
-    L1 = 60, L2 = 10, L3 = 2,
+    T1 = 20, T2 = 3,
+    L1 = 40, L2 = 10, L3 = 2,
   }
 
   local BIG_RECT_SIZES =
@@ -635,7 +653,7 @@ function Plan_add_big_rooms()
 
   ---| Plan_add_big_rooms |---
 
-  local num_loop = LEVEL.W * LEVEL.H * 25
+  local num_loop = 25 + LEVEL.W * LEVEL.H * 2
 
   for loop = 1,num_loop do
     local lx  = rand.irange(1, LEVEL.W)
@@ -651,6 +669,7 @@ function Plan_add_big_rooms()
 
       if test_or_set_rect(lx, ly, rot, rw, rh) then
         ROOM = Plan_new_room()
+        ROOM.shape = "rect"
         test_or_set_rect(lx, ly, rot, rw, rh, ROOM)
       end
 
@@ -661,19 +680,18 @@ function Plan_add_big_rooms()
 
       if test_or_set_shape(lx, ly, rot, shape.dirs) then
         ROOM = Plan_new_room()
+        ROOM.shape = shape.name
         test_or_set_shape(lx, ly, rot, shape.dirs, ROOM)
       end
     end
 
     if ROOM then
-      ROOM.shape = shape_name
-
-      gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
-      Plan_dump_sections()
+---      gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
+---      Plan_dump_sections()
     end
   end
 
-  -- FIXME: SEPARATE PASS FOR 1x2 / 2x1 rooms
+  Plan_dump_sections()
 end
 
 
