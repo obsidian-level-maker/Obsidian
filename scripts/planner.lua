@@ -527,7 +527,7 @@ function Plan_add_small_rooms()
 
       if (can_x or can_y) and rand.odds(50) then
         
-        if can_x or (can_x and can_y and rand.odds(40)) then
+        if can_x and (not can_y or rand.odds(60)) then
           SEC = LEVEL.section_map[x+1][y]
         else
           SEC = LEVEL.section_map[x][y+1]
@@ -567,10 +567,9 @@ function Plan_add_big_rooms()
     L1 = 40, L2 = 10, L3 = 2,
   }
 
-  local BIG_RECT_SIZES =
+  local BIG_RECT_PROBS =
   {
-    [22] = 80, [21] = 20,
-    [33] = 30, [32] = 15, [31] = 3,
+    [22] = 80, [33] = 30, [32] = 15, [31] = 3,
   }
 
   local function test_or_set_rect(lx, ly, rot, w, h, ROOM)
@@ -637,7 +636,7 @@ function Plan_add_big_rooms()
   end
 
   local function pick_rect_size()
-    local raw = rand.key_by_probs(BIG_RECT_SIZES)
+    local raw = rand.key_by_probs(BIG_RECT_PROBS)
 
     local rw = int(raw / 10)
     local rh =    (raw % 10)
@@ -653,7 +652,7 @@ function Plan_add_big_rooms()
 
   ---| Plan_add_big_rooms |---
 
-  local num_loop = 25 + LEVEL.W * LEVEL.H * 2
+  local num_loop = int(LEVEL.W * LEVEL.H / 2)
 
   for loop = 1,num_loop do
     local lx  = rand.irange(1, LEVEL.W)
