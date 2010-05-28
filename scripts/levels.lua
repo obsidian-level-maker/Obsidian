@@ -35,9 +35,8 @@ class LEVEL
 
   last_tag  : number
   last_mark : number
+  last_room : number
   
-  skyfence_h  -- height of fence at edge of map
-
   -- TODO: lots of other fields : document important ones
 }
 

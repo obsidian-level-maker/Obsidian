@@ -38,6 +38,128 @@ function Plan_alloc_room_id()
 end
 
 
+function Plan_decide_map_size()
+
+  local function get_size_list(W, limit)
+    local SIZE_TABLE = THEME.room_size_table or
+                        GAME.room_size_table or
+                        ROOM_SIZE_TABLE
+    local sizes = {}
+
+    assert(4 + W*2 <= limit)
+
+    for loop = 1,99 do
+      local total = 4  -- border seeds around level
+
+      for x = 1,W do
+        sizes[x] = rand.index_by_probs(SIZE_TABLE)
+        total = total + sizes[x]
+      end
+
+      if total <= limit then
+        return sizes  -- OK!
+      end
+    end
+
+    -- emergency fallback
+    gui.printf("Using emergency column sizes.\n")
+
+    for x = 1,W do
+      sizes[x] = 2
+    end
+
+    return sizes
+  end
+
+  local function get_position_list(size_list)
+    local pos = {}
+
+    pos[1] = 3  -- two border seeds at [1] and [2]
+
+    for x = 2,#size_list do
+      pos[x] = pos[x-1] + size_list[x-1]
+    end
+
+    return pos
+  end
+
+  local function dump_sizes(name, t, N)
+    name = name .. ": "
+    for i = 1,N do
+      name = name .. tostring(t[i]) .. " "
+    end
+    gui.debugf("%s\n", name)
+  end
+
+
+  ---| Plan_decide_map_size |---
+
+  local W, H  -- number of rooms
+
+  local ob_size = OB_CONFIG.size
+
+  -- there is no real "progression" when making a single level
+  -- hence use mixed mode instead.
+  if ob_size == "prog" and OB_CONFIG.length == "single" then
+    ob_size = "mixed"
+  end
+
+  if ob_size == "mixed" then
+    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
+    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
+
+    if W < H then W, H = H, W end
+
+  elseif ob_size == "prog" then
+    local n = 1 + LEVEL.ep_along * 8.9
+
+    n = int(n)
+    if n < 1 then n = 1 end
+    if n > 9 then n = 9 end
+
+    local WIDTHS  = { 3,4,4, 5,5,6, 6,7,7 }
+    local HEIGHTS = { 3,3,4, 4,5,5, 6,6,7 }
+
+    W = WIDTHS[n]
+    H = HEIGHTS[n]
+
+  else
+    local WIDTHS  = { small=4, regular=6, large=8 }
+    local HEIGHTS = { small=3, regular=4, large=6 }
+
+    W = WIDTHS[ob_size]
+    H = HEIGHTS[ob_size]
+
+    if not W then
+      error("Unknown size keyword: " .. tostring(ob_size))
+    end
+
+    if rand.odds(30) then W = W - 1 end
+  end
+
+  LEVEL.W = W
+  LEVEL.H = H
+
+  gui.printf("Map Size: %dx%d sections\n", W, H)
+
+
+  -- initial section sizes in each row and column
+  local limit = (PARAM.seed_limit or 56)
+
+  -- take border seeds (2+2) and free space (3) into account
+  limit = limit - (2+2+3)
+
+  LEVEL.section_W = get_size_list(W, limit)
+  LEVEL.section_H = get_size_list(H, limit)
+ 
+  LEVEL.section_X = get_position_list(LEVEL.section_W)
+  LEVEL.section_Y = get_position_list(LEVEL.section_H)
+
+  dump_sizes("Column widths: ", LEVEL.section_W, LEVEL.W)
+  dump_sizes("Row heights:   ", LEVEL.section_W, LEVEL.H)
+end
+
+
 function Plan_create_sections()
 
   LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
@@ -1024,128 +1146,6 @@ gui.debugf("seed range @ %s\n", R:tostr())
   fill_holes()
 
   Seed.flood_fill_edges()
-end
-
-
-function Plan_decide_map_size()
-
-  local function get_size_list(W, limit)
-    local SIZE_TABLE = THEME.room_size_table or
-                        GAME.room_size_table or
-                        ROOM_SIZE_TABLE
-    local sizes = {}
-
-    assert(4 + W*2 <= limit)
-
-    for loop = 1,99 do
-      local total = 4  -- border seeds around level
-
-      for x = 1,W do
-        sizes[x] = rand.index_by_probs(SIZE_TABLE)
-        total = total + sizes[x]
-      end
-
-      if total <= limit then
-        return sizes  -- OK!
-      end
-    end
-
-    -- emergency fallback
-    gui.printf("Using emergency column sizes.\n")
-
-    for x = 1,W do
-      sizes[x] = 2
-    end
-
-    return sizes
-  end
-
-  local function get_position_list(size_list)
-    local pos = {}
-
-    pos[1] = 3  -- two border seeds at [1] and [2]
-
-    for x = 2,#size_list do
-      pos[x] = pos[x-1] + size_list[x-1]
-    end
-
-    return pos
-  end
-
-  local function dump_sizes(name, t, N)
-    name = name .. ": "
-    for i = 1,N do
-      name = name .. tostring(t[i]) .. " "
-    end
-    gui.debugf("%s\n", name)
-  end
-
-
-  ---| Plan_decide_map_size |---
-
-  local W, H  -- number of rooms
-
-  local ob_size = OB_CONFIG.size
-
-  -- there is no real "progression" when making a single level
-  -- hence use mixed mode instead.
-  if ob_size == "prog" and OB_CONFIG.length == "single" then
-    ob_size = "mixed"
-  end
-
-  if ob_size == "mixed" then
-    W = 2 + rand.index_by_probs { 1,4,7,4,2,1 }
-    H = 2 + rand.index_by_probs { 4,7,4,2,1 }
-
-    if W < H then W, H = H, W end
-
-  elseif ob_size == "prog" then
-    local n = 1 + LEVEL.ep_along * 8.9
-
-    n = int(n)
-    if n < 1 then n = 1 end
-    if n > 9 then n = 9 end
-
-    local WIDTHS  = { 3,4,4, 5,5,6, 6,7,7 }
-    local HEIGHTS = { 3,3,4, 4,5,5, 6,6,7 }
-
-    W = WIDTHS[n]
-    H = HEIGHTS[n]
-
-  else
-    local WIDTHS  = { small=4, regular=6, large=8 }
-    local HEIGHTS = { small=3, regular=4, large=6 }
-
-    W = WIDTHS[ob_size]
-    H = HEIGHTS[ob_size]
-
-    if not W then
-      error("Unknown size keyword: " .. tostring(ob_size))
-    end
-
-    if rand.odds(30) then W = W - 1 end
-  end
-
-  LEVEL.W = W
-  LEVEL.H = H
-
-  gui.printf("Map Size: %dx%d sections\n", W, H)
-
-
-  -- initial section sizes in each row and column
-  local limit = (PARAM.seed_limit or 56)
-
-  -- take border seeds (2+2) and free space (3) into account
-  limit = limit - (2+2+3)
-
-  LEVEL.section_W = get_size_list(W, limit)
-  LEVEL.section_H = get_size_list(H, limit)
- 
-  LEVEL.section_X = get_position_list(LEVEL.section_W)
-  LEVEL.section_Y = get_position_list(LEVEL.section_H)
-
-  dump_sizes("Column widths: ", LEVEL.section_W, LEVEL.W)
-  dump_sizes("Row heights:   ", LEVEL.section_W, LEVEL.H)
 end
 
 
