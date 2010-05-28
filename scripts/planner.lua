@@ -1079,6 +1079,18 @@ end
 
 function Plan_create_rooms()
 
+  -- Overview of room planning:
+  --
+  --   1. decide map size
+  --   2. do any special rooms or patterns
+  --   3. add big rooms (rect / shaped / natural)
+  --   4. add small rooms
+  --
+  --   5. decide indoor/outdoor
+  --   6. place sub-rooms
+  --   7. convert section map to seeds
+  --   8. nudge sides
+
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
