@@ -558,7 +558,7 @@ function Levels.build_it()
     return "ok"
   end
 
-  Plan.create_rooms()
+  Plan_create_rooms()
     if gui.abort() then return "abort" end
     gui.progress(10)
 
