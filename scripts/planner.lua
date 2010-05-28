@@ -530,23 +530,23 @@ function Plan_add_big_rooms()
 
   local BIG_ROOM_SHAPES =
   {
-    plus = { 5,2,4,6,8 },
+    plus = { name="plus", dirs={ 5,2,4,6,8 }},
 
-    T1 = { 5,7,8,9 },
-    T2 = { 5,7,8,9,2 },
+    T1 = { name="T", dirs={ 5,7,8,9 }},
+    T2 = { name="T", dirs={ 5,7,8,9,2 }},
 
-    L1 = { 5,8,6 },
-    L2 = { 1,2,3,4,7 },
+    L1 = { name="L", dirs={ 5,8,6 }},
+    L2 = { name="L", dirs={ 5,8,2,3 }},
+    L3 = { name="L", dirs={ 4,7,1,2,3 }},
   }
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 5,
+    rect = 20,
+    plus = 20,
 
-    plus = 90,
-    -- FIXME
-    L1 = 1, L2 = 1,
-    T1 = 1, T2 = 1,
+    T1 = 30, T2 = 3,
+    L1 = 60, L2 = 10, L3 = 2,
   }
 
   local BIG_RECT_SIZES =
@@ -635,7 +635,9 @@ function Plan_add_big_rooms()
 
   ---| Plan_add_big_rooms |---
 
-  for loop = 1,900 do
+  local num_loop = LEVEL.W * LEVEL.H * 25
+
+  for loop = 1,num_loop do
     local lx  = rand.irange(1, LEVEL.W)
     local ly  = rand.irange(1, LEVEL.H)
     local rot = rand.irange(0, 3) * 2
@@ -654,22 +656,24 @@ function Plan_add_big_rooms()
 
     else  -- shaped
 
-      local dir_list = BIG_ROOM_SHAPES[shape_name]
-      assert(dir_list)
+      local shape = BIG_ROOM_SHAPES[shape_name]
+      assert(shape)
 
-      if test_or_set_shape(lx, ly, rot, dir_list) then
+      if test_or_set_shape(lx, ly, rot, shape.dirs) then
         ROOM = Plan_new_room()
-        test_or_set_shape(lx, ly, rot, dir_list, ROOM)
+        test_or_set_shape(lx, ly, rot, shape.dirs, ROOM)
       end
     end
 
     if ROOM then
       ROOM.shape = shape_name
 
-      gui.debugf("Loop: %d\n", loop)
+      gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
       Plan_dump_sections()
     end
   end
+
+  -- FIXME: SEPARATE PASS FOR 1x2 / 2x1 rooms
 end
 
 
