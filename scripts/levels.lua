@@ -68,7 +68,7 @@ STYLE_LIST =
   hallways   = { few=10, some=90, heaps=30 },
   liquids    = { few=30, some=50, heaps=20 },
   scenics    = { few=30, some=50, heaps=10 },
-  naturals   = { none=10, few=30, some=70, heaps=4 },
+  naturals   = { none=10, few=30, some=60, heaps=4 },
   lakes      = { few=60, heaps=10 },
   subrooms   = { none=40, some=80, heaps=5 },
   islands    = { few=60, heaps=40 },
