@@ -167,7 +167,6 @@ end
 
 
 function Plan_create_sections()
-
   LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
@@ -182,6 +181,15 @@ function Plan_is_section_valid(x, y)
 end
 
 
+function Plan_has_section(x, y)
+  if LEVEL.section_map[x][y].room then
+    return true
+  else
+    return false
+  end
+end
+
+
 function Plan_dump_sections()
 
   local function section_char(x, y)
@@ -189,9 +197,12 @@ function Plan_dump_sections()
     local R = SEC.room
     if not R then return '.' end
     if R.kind == "scenic" then return '=' end
-    if R.natural then return '/' end
     local n = 1 + ((R.id-1) % 26)
-    return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    if R.natural then
+      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+    else
+      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    end
   end
 
   gui.printf("\n")
@@ -522,8 +533,8 @@ function Plan_add_small_rooms()
 
       -- sometimes become a 2x1 / 1x2 sized room
 
-      local can_x = (x < LEVEL.W and not LEVEL.section_map[x+1][y].room)
-      local can_y = (y < LEVEL.H and not LEVEL.section_map[x][y+1].room)
+      local can_x = (x < LEVEL.W and not Plan_has_section(x+1, y))
+      local can_y = (y < LEVEL.H and not Plan_has_section(x, y+1))
 
       if (can_x or can_y) and rand.odds(50) then
         
@@ -591,9 +602,8 @@ function Plan_add_big_rooms()
 
     for x = lx,lx2 do for y = ly,ly2 do
       if ROOM then
-        assert(not LEVEL.section_map[x][y].room)
         LEVEL.section_map[x][y].room = ROOM
-      elseif LEVEL.section_map[x][y].room then
+      elseif Plan_has_section(x, y) then
         return false -- would overlap a room
       end
     end end
@@ -620,9 +630,8 @@ function Plan_add_big_rooms()
       if y == LEVEL.H then touch_top = true end
 
       if ROOM then
-        assert(not LEVEL.section_map[x][y].room)
         LEVEL.section_map[x][y].room = ROOM
-      elseif LEVEL.section_map[x][y].room then
+      elseif Plan_has_section(x, y) then
         return false -- would overlap a room
       end
     end -- orig_dir
@@ -696,19 +705,82 @@ end
 
 function Plan_add_natural_rooms()
 
-  local function grow_natural(pos, growth)
-    -- pos is a number from 1 to 9
-    local dx, dy = geom.delta(pos)
+  local function find_free_spot(x, y)
+    if not Plan_has_section(x, y) then
+      return x, y
+    end
 
-    dx = (1 + dx) / 2
-    dy = (1 + dy) / 2
-
-    -- FIXME
-
-    -- randomise the growth value
-    growth = int(growth * rand.range(0.6, 1.6))
-
+    do return nil end -- FIXME
+--[[
+    for dist = 0,2 do
+      for x = lx-dist, lx+dist do for y = ly-dist,ly+dist do
+        if not Plan_has_section(x, y) then
+          return x, y
+        end
+      end end
+    end
+--]]
   end
+
+  local function grow_natural(side, growth)
+    local x, y = geom.delta(side)
+
+    -- convert side value to a section coordinate
+    x = 1 + int((LEVEL.W - 0.7) * (x+1) / 2)
+    y = 1 + int((LEVEL.H - 0.7) * (y+1) / 2)
+
+    if LEVEL.W > 5 then x = x + rand.pick { -1, 0, 1 } end
+    if LEVEL.H > 5 then y = y + rand.pick { -1, 0, 1 } end
+
+    x = math.clamp(1, x, LEVEL.W)
+    y = math.clamp(1, y, LEVEL.H)
+
+    -- find a usable spot
+    local cx, cy = find_free_spot(x, y)
+
+    if not cx then
+      gui.printf("Failed to grow natural area @ (%d,%d)\n", x, y)
+      return
+    end
+    
+    -- randomise the growth value
+    growth = int(growth * rand.range(0.7, 1.6))
+
+    -- create room
+    local ROOM = Plan_new_room()
+    ROOM.natural = true
+    ROOM.shape = "odd"
+
+    -- keep track of each natural section
+    local sections = {}
+
+    LEVEL.section_map[x][y].room = ROOM
+
+    local sections = { { cx=cx, cy=cy } }
+
+    growth = growth - 1
+
+    for loop = 1,200 do
+      if growth < 1 then break; end
+
+      local start = rand.pick(sections)
+      local dir   = rand.dir()
+
+      local nx, ny = geom.nudge(start.cx, start.cy, dir)
+
+      if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
+        
+        LEVEL.section_map[nx][ny].room = ROOM
+
+        table.insert(sections, { cx=nx, cy=ny })
+
+        growth = growth - 1
+      end
+    end
+
+    Plan_dump_sections()
+  end
+
 
   ---| Plan_add_natural_rooms |---
 
@@ -718,11 +790,10 @@ function Plan_add_natural_rooms()
 
   if count == 0 then return end
 
-  local growth = (LEVEL.W - 1) * LEVEL.H / count
+  local growth = (LEVEL.W - 1) * (LEVEL.H - 1) / count
 
   if growth < 3 then
     count = count / 2 ; growth = 3
-
   elseif rand.odds(50) then
     count = count - 1
   end
@@ -731,8 +802,10 @@ function Plan_add_natural_rooms()
 
   gui.printf("Natural Areas: %d of %1.1f sections\n", count, growth)
 
+
   local SIDES = { 2,4,6,8, 1,3,7,9 }
 
+  -- middle area is not best place for caves
   if rand.odds(20) then
     table.insert(SIDES, 5)
   end
