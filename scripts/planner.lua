@@ -694,6 +694,57 @@ function Plan_add_big_rooms()
 end
 
 
+function Plan_add_natural_rooms()
+
+  local function grow_natural(pos, growth)
+    -- pos is a number from 1 to 9
+    local dx, dy = geom.delta(pos)
+
+    dx = (1 + dx) / 2
+    dy = (1 + dy) / 2
+
+    -- FIXME
+
+    -- randomise the growth value
+    growth = int(growth * rand.range(0.6, 1.6))
+
+  end
+
+  ---| Plan_add_natural_rooms |---
+
+  if not THEME.cave_walls then return end
+
+  local count = style_sel("naturals", 0, 2, 4, 7)
+
+  if count == 0 then return end
+
+  local growth = (LEVEL.W - 1) * LEVEL.H / count
+
+  if growth < 3 then
+    count = count / 2 ; growth = 3
+
+  elseif rand.odds(50) then
+    count = count - 1
+  end
+
+  if growth > 9 then growth = 9 end
+
+  gui.printf("Natural Areas: %d of %1.1f sections\n", count, growth)
+
+  local SIDES = { 2,4,6,8, 1,3,7,9 }
+
+  if rand.odds(20) then
+    table.insert(SIDES, 5)
+  end
+
+  rand.shuffle(SIDES)
+
+  for i = 1,count do
+    grow_natural(SIDES[i], growth)
+  end
+end
+
+
 function Plan_add_special_rooms()
   -- nothing here YET...
 end
@@ -1440,6 +1491,7 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
+  Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
@@ -1453,8 +1505,6 @@ function Plan_create_rooms()
   Plan_make_seeds()
 
 --!!!!  Plan_nudge_rooms()
-
----####  Plan_merge_naturals()
 
 -- Plan_weird_experiment()
 
