@@ -1572,8 +1572,18 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
-  Plan_add_big_rooms()
-  Plan_add_natural_rooms()
+
+  -- big rooms and natural rooms tend to work against each other
+  -- with the current algorithms.  The following is a workaround.
+  -- FIXME: find a better, simpler way.
+  if rand.odds(40) or STYLE.naturals == "heaps" then
+    Plan_add_natural_rooms()
+    Plan_add_big_rooms()
+  else
+    Plan_add_big_rooms()
+    Plan_add_natural_rooms()
+  end
+
   Plan_add_small_rooms()
 
   Plan_dump_sections()
