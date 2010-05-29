@@ -38,6 +38,12 @@ function stderrf(fmt, ...)
   end
 end
 
+function math.clamp(low, x, high)
+  if x < low  then return low end
+  if x > high then return high end
+  return x
+end
+
 function math.low_high(a, b)
   if b < a then return b, a end
   return a, b
