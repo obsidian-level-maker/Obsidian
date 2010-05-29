@@ -661,7 +661,7 @@ function Plan_add_big_rooms()
 
   ---| Plan_add_big_rooms |---
 
-  local num_loop = int(LEVEL.W * LEVEL.H / 2)
+  local num_loop = int(LEVEL.W * LEVEL.H / 2) ---  + LEVEL.num_naturals * 10
 
   for loop = 1,num_loop do
     local lx  = rand.irange(1, LEVEL.W)
@@ -710,16 +710,26 @@ function Plan_add_natural_rooms()
       return x, y
     end
 
-    do return nil end -- FIXME
---[[
-    for dist = 0,2 do
-      for x = lx-dist, lx+dist do for y = ly-dist,ly+dist do
-        if not Plan_has_section(x, y) then
-          return x, y
+    -- try a neighbor : diagonals after straights
+
+    for pass = 1,2 do
+      local SIDES
+
+      if pass == 1 then
+        SIDES = { 2,4,6,8 }
+      else
+        SIDES = { 1,3,7,9 }
+      end
+
+      for _,side in ipairs(SIDES) do
+        local nx, ny = geom.nudge(x, y, side)
+        if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
+          return nx, ny
         end
-      end end
+      end
     end
---]]
+
+    return nil -- not found
   end
 
   local function grow_natural(side, growth)
@@ -744,7 +754,8 @@ function Plan_add_natural_rooms()
     end
     
     -- randomise the growth value
-    growth = int(growth * rand.range(0.7, 1.6))
+    growth = int(growth * rand.range(0.8, 1.5))
+    if growth < 2 then growth = 2 end
 
     -- create room
     local ROOM = Plan_new_room()
@@ -754,7 +765,7 @@ function Plan_add_natural_rooms()
     -- keep track of each natural section
     local sections = {}
 
-    LEVEL.section_map[x][y].room = ROOM
+    LEVEL.section_map[cx][cy].room = ROOM
 
     local sections = { { cx=cx, cy=cy } }
 
@@ -786,27 +797,24 @@ function Plan_add_natural_rooms()
 
   if not THEME.cave_walls then return end
 
-  local count = style_sel("naturals", 0, 2, 4, 7)
+  local count = style_sel("naturals", 0, 1.3, 2.4, 4.4)
 
   if count == 0 then return end
 
-  local growth = (LEVEL.W - 1) * (LEVEL.H - 1) / count
+  count = int(count * rand.range(1, 1.7))
 
-  if growth < 3 then
-    count = count / 2 ; growth = 3
-  elseif rand.odds(50) then
-    count = count - 1
-  end
+  local growth = LEVEL.H - gui.random()
 
-  if growth > 9 then growth = 9 end
+  LEVEL.num_naturals = count
 
-  gui.printf("Natural Areas: %d of %1.1f sections\n", count, growth)
+  gui.printf("Natural Areas: %s --> %d of %1.1f sections\n", STYLE.naturals,
+             count, growth)
 
 
   local SIDES = { 2,4,6,8, 1,3,7,9 }
 
   -- middle area is not best place for caves
-  if rand.odds(20) then
+  if rand.odds(15) then
     table.insert(SIDES, 5)
   end
 
@@ -1564,8 +1572,8 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
-  Plan_add_natural_rooms()
   Plan_add_big_rooms()
+  Plan_add_natural_rooms()
   Plan_add_small_rooms()
 
   Plan_dump_sections()
