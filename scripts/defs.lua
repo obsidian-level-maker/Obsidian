@@ -83,15 +83,7 @@ OB_THEMES["psycho"] =
 -- room layout stuff
 EXTREME_H = 4000
 
-ROOM_SIZE_TABLE = { 0,0,5,9,5,1 }
-
-BIG_ROOM_TABLE =
-{
-  [11] = 25,
-  [22] = 40, [12] = 10,
-  [33] = 10, [23] = 10, [13] = 1,
-  [44] = 1,  [34] = 1,  [24] = 1,
-}
+ROOM_SIZE_TABLE = { 0,1,5,9,5,1 }
 
 
 -- monster amounts and toughness
