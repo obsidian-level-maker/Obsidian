@@ -222,13 +222,13 @@ function Seed.dump_rooms(title)
 
     if S.room.kind == "scenic" then return "=" end
 
-    if S.room.parent then
-      local n = 1 + (S.room.id % 26)
-      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
-    end
+    local n = 1 + ((S.room.id-1) % 26)
 
-    local n = 1 + (S.room.id % 26)
-    return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    if S.room.natural then
+      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+    else
+      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    end
   end
 
   if title then

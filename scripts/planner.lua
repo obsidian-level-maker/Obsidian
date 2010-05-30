@@ -463,13 +463,18 @@ function Plan_add_big_rooms()
     end
   end
 
-  local function add_biggie()
+  local function add_biggie(quota)
     -- returns size of room
 
     local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
 
     local rw, rh = pick_rect_size()
     local rot    = rand.irange(0, 3) * 2
+
+    while shape_name == "rect" and (rw * rh) > quota do
+      if rw > rh then rw = rw - 1 else rh = rh - 1 end
+      assert(rw > 0 and rh > 0)
+    end
 
     local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
 
@@ -492,12 +497,12 @@ function Plan_add_big_rooms()
 
   local num_sec = Plan_count_free_sections()
 
-  local quota = int(num_sec * rand.pick { 0.2, 0.4, 0.6, 0.8 })
+  local quota = num_sec * rand.pick { 0.2, 0.4, 0.6, 0.8 }
 
-  gui.printf("Big Room Quota: %d sections\n", quota)
+  gui.printf("Big Room Quota: %1.1f sections\n", quota)
 
   while quota >= 3 do
-    local size = add_biggie()
+    local size = add_biggie(quota)
     quota = quota - size
   end
 
@@ -1230,8 +1235,6 @@ function Plan_create_rooms()
   Seed.flood_fill_edges()
 
 --!!!!  Plan_nudge_rooms()
-
--- Plan_weird_experiment()
 
   Seed.dump_rooms("Seed Map:")
 
