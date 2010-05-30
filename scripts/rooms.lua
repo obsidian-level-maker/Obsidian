@@ -1947,6 +1947,8 @@ function Rooms.add_crates(R)
 
   --| Rooms.add_crates |--
 
+do return end
+
   if STYLE.crates == "none" then return end
 
   if R.natural then return end
