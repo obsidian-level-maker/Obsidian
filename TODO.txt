@@ -15,6 +15,16 @@ TODO
 NO:  do placement allocations on a 64x64 grid
 
 
+Planner:
+  ???  sub-rooms  (via section_map)
+
+  +  reimplement Nudging (section sides)
+
+
+Quests:
+  +  when deciding to use keys : check for outdoor on both sides
+
+
 Cave code
   DONE  validate() method : check if N points (from conns) connect
      --> creates a 'flood' map
@@ -25,6 +35,9 @@ Cave code
      an "island" is contiguous solid area which never touches NIL.
      --> needs the flood map too
 
+  -  re-instate size check (on main empty region), and remove the
+     other empty regions.
+
   +  fix spot_for_wotsit
 
   -  furthest_point() : away from N points (conns)
@@ -32,21 +45,6 @@ Cave code
 
   +  fix monster spots
   +  fix pickup spots
-
-
-Planner:
-  +  rework room_map / nudging / etc code:
-
-  DONE: create section map
-  DONE: fill with rooms (big / shaped)
-  DONE: decide naturals, indoor/outdoor
-   ???  sub-rooms  (via section_map)  ???
-  DONE: make seeds
-     6. nudge sides
-
-
-Quests:
-  +  when deciding to use keys : check for outdoor on both sides
 
 
 + proper system to match DOOR skins with SWITCH skins
