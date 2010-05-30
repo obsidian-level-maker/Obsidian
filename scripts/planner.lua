@@ -388,8 +388,8 @@ function Plan_add_big_rooms()
       end
     end -- orig_dir
 
-    -- would span the whole map?
-    if (touch_left and touch_right) or (touch_bottom and touch_top) then
+    -- would span the whole map? (horizontally)
+    if (touch_left and touch_right) then ---??? or (touch_bottom and touch_top) then
       return false
     end
 
