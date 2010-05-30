@@ -732,18 +732,19 @@ function Layout.do_natural(R, heights)
   local flood
 
   for loop = 1,20 do
+    gui.debugf("Trying to make a cave: loop %d\n", loop)
+
+    cave = map:copy()
+
     if loop >= 20 then
       gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
 
       -- emergency fallback
       cave:gen_empty()
-      flood = cave:flood_fill()
+      cave:flood_fill()
+      is_cave_good(cave)  -- set empty_id
       break;
     end
-
-    gui.debugf("Trying to make a cave: loop %d\n", loop)
-
-    cave = map:copy()
 
     cave:generate(sel(R.is_lake,58,38))
 

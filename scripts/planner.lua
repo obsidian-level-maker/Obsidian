@@ -740,7 +740,6 @@ function Plan_find_neighbors()
     local R = LEVEL.section_map[x][y].room
 
     if not R.neighbors then
-      table.insert(LEVEL.all_rooms, R)
       R.neighbors = {}
     end
 
