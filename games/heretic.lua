@@ -2053,7 +2053,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["heretic"] =
+UNFINISHED["heretic"] =
 {
   label = "Heretic",
 
