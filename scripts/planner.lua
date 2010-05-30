@@ -190,6 +190,39 @@ function Plan_has_section(x, y)
 end
 
 
+function Plan_count_free_sections(x, y)
+  local count = 0
+
+  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+    if not Plan_has_section(x, y) then
+      count = count + 1
+    end
+  end end
+
+  return count
+end
+
+
+function Plan_get_visit_list(x1, y1, x2, y2)
+  local visits = {}
+
+  if not x1 then
+    x1, x2 = 1, LEVEL.W
+    y1, y2 = 1, LEVEL.H
+  end
+
+  for x = x1,x2 do for y = y1,y2 do
+    if not Plan_has_section(x, y) then
+      table.insert(visits, { x=x, y=y })
+    end
+  end
+
+  rand.shuffle(visits)
+
+  return visits
+end
+
+
 function Plan_dump_sections()
 
   local function section_char(x, y)
@@ -278,19 +311,19 @@ function Plan_add_big_rooms()
 
   local BIG_ROOM_SHAPES =
   {
-    plus = { name="plus", dirs={ 5,2,4,6,8 }},
+    plus = { name="plus", size=5, dirs={ 5,2,4,6,8 }},
 
-    T1 = { name="T", dirs={ 5,7,8,9 }},
-    T2 = { name="T", dirs={ 5,7,8,9,2 }},
+    T1 = { name="T", size=4, dirs={ 5,7,8,9 }},
+    T2 = { name="T", size=5, dirs={ 5,7,8,9,2 }},
 
-    L1 = { name="L", dirs={ 5,8,6 }},
-    L2 = { name="L", dirs={ 5,8,2,3 }},
-    L3 = { name="L", dirs={ 4,7,1,2,3 }},
+    L1 = { name="L", size=3, dirs={ 5,8,6 }},
+    L2 = { name="L", size=4, dirs={ 5,8,2,3 }},
+    L3 = { name="L", size=5, dirs={ 4,7,1,2,3 }},
   }
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 40,
+    rect = 60,
     plus = 20,
 
     T1 = 20, T2 = 3,
@@ -374,25 +407,17 @@ function Plan_add_big_rooms()
       rw, rh = rh, rw
     end
 
+    -- never span the whole map (horizontally)
+    if rw >= LEVEL.W then rw = LEVEL.W - 1 end
+    if rh >= LEVEL.H then rh = LEVEL.H     end
+
     return rw, rh
   end
 
-
-  ---| Plan_add_big_rooms |---
-
-  local num_loop = int(LEVEL.W * LEVEL.H / 2) ---  + LEVEL.num_naturals * 10
-
-  for loop = 1,num_loop do
-    local lx  = rand.irange(1, LEVEL.W)
-    local ly  = rand.irange(1, LEVEL.H)
-    local rot = rand.irange(0, 3) * 2
-
+  local function try_add_biggie(shape_name, lx, ly, rot, rw, rh)
     local ROOM
 
-    local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
-
     if shape_name == "rect" then
-      local rw, rh = pick_rect_size()
 
       if test_or_set_rect(lx, ly, rot, rw, rh) then
         ROOM = Plan_new_room()
@@ -413,9 +438,47 @@ function Plan_add_big_rooms()
     end
 
     if ROOM then
----      gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
----      Plan_dump_sections()
+---   gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
+---   Plan_dump_sections()
     end
+  end
+
+  local function add_biggie()
+    -- returns size of room
+
+    local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
+
+    local rw, rh = pick_rect_size()
+    local rot    = rand.irange(0, 3) * 2
+
+    local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
+
+    for _,V in ipairs(visits) do
+
+      local size = try_add_biggie(shape_name, V.x, V.y, rot, rw, rh)
+
+      if size then return size end  -- SUCCESS !
+    end
+
+    -- FAILED
+
+    -- use up some quota, to prevent an infinite loop
+    return 1
+  end
+
+
+  ---| Plan_add_big_rooms |---
+
+  if rand.odds(2) then return end  -- None!
+
+  local num_sec = Plan_count_free_sections()
+
+  local quota = int(num_sec * rand.range(0.3, 0.8))
+
+  gui.printf("Big Room Quota: %d sections\n", quota)
+
+  while quota >= 3 do
+    quota = quota - add_biggie()
   end
 
   Plan_dump_sections()
@@ -423,12 +486,6 @@ end
 
 
 function Plan_add_natural_rooms()
-
-    local perc = style_sel("naturals", 0, 18, 46, 92)
-    local count = int(room_num * perc / 100)
-    if count > room_num-2 then
-       count = room_num-2
-    end
 
   local function find_free_spot(x, y)
     if not Plan_has_section(x, y) then
@@ -445,6 +502,8 @@ function Plan_add_natural_rooms()
       else
         SIDES = { 1,3,7,9 }
       end
+
+      rand.shuffle(SIDES)
 
       for _,side in ipairs(SIDES) do
         local nx, ny = geom.nudge(x, y, side)
@@ -522,18 +581,27 @@ function Plan_add_natural_rooms()
 
   if not THEME.cave_walls then return end
 
-  local count = style_sel("naturals", 0, 1.3, 2.4, 4.4)
+  local num_sec = Plan_count_free_sections()
 
-  if count == 0 then return end
+  local perc = style_sel("naturals", 0, 20, 45, 90)
+
+  local quota = int(num_sec * perc / 100)
+  if quota > num_sec-3 then
+     quota = num_sec-3
+  end
+
+  gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
+
+  if quota <= 1 then return end
+
+
+  -- FIXME
+
+  local count = style_sel("naturals", 0, 1.3, 2.4, 4.4)
 
   count = int(count * rand.range(1, 1.7))
 
   local growth = LEVEL.H - gui.random()
-
-  LEVEL.num_naturals = count
-
-  gui.printf("Natural Areas: %s --> %d of %1.1f sections\n", STYLE.naturals,
-             count, growth)
 
 
   local SIDES = { 2,4,6,8, 1,3,7,9 }
@@ -1297,18 +1365,8 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
-
-  -- big rooms and natural rooms tend to work against each other
-  -- with the current algorithms.  The following is a workaround.
-  -- FIXME: find a better, simpler way.
-  if rand.odds(40) or STYLE.naturals == "heaps" then
-    Plan_add_natural_rooms()
-    Plan_add_big_rooms()
-  else
-    Plan_add_big_rooms()
-    Plan_add_natural_rooms()
-  end
-
+  Plan_add_natural_rooms()
+  Plan_add_big_rooms()
   Plan_add_small_rooms()
 
   Plan_dump_sections()
