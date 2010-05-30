@@ -423,6 +423,8 @@ function Plan_add_big_rooms()
         ROOM = Plan_new_room()
         ROOM.shape = "rect"
         test_or_set_rect(lx, ly, rot, rw, rh, ROOM)
+
+        return rw * rh
       end
 
     else  -- shaped
@@ -434,12 +436,9 @@ function Plan_add_big_rooms()
         ROOM = Plan_new_room()
         ROOM.shape = shape.name
         test_or_set_shape(lx, ly, rot, shape.dirs, ROOM)
-      end
-    end
 
-    if ROOM then
----   gui.debugf("Loop: %d  shape:%s  ROOM:%s\n", loop, shape_name, tostring(ROOM))
----   Plan_dump_sections()
+        return assert(shape.size)
+      end
     end
   end
 
@@ -454,7 +453,6 @@ function Plan_add_big_rooms()
     local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
 
     for _,V in ipairs(visits) do
-
       local size = try_add_biggie(shape_name, V.x, V.y, rot, rw, rh)
 
       if size then return size end  -- SUCCESS !
@@ -473,12 +471,13 @@ function Plan_add_big_rooms()
 
   local num_sec = Plan_count_free_sections()
 
-  local quota = int(num_sec * rand.range(0.3, 0.8))
+  local quota = int(num_sec * rand.pick { 0.2, 0.4, 0.6, 0.8 })
 
   gui.printf("Big Room Quota: %d sections\n", quota)
 
   while quota >= 3 do
-    quota = quota - add_biggie()
+    local size = add_biggie()
+    quota = quota - size
   end
 
   Plan_dump_sections()
@@ -1175,7 +1174,7 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
-  Plan_add_natural_rooms()
+---  Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
