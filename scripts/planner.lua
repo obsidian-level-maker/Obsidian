@@ -515,10 +515,9 @@ function Plan_add_natural_rooms()
     return nil -- not found
   end
 
-  local function grow_natural(side, growth)
+  local function side_to_coordinate(side)
     local x, y = geom.delta(side)
 
-    -- convert side value to a section coordinate
     x = 1 + int((LEVEL.W - 0.7) * (x+1) / 2)
     y = 1 + int((LEVEL.H - 0.7) * (y+1) / 2)
 
@@ -527,6 +526,28 @@ function Plan_add_natural_rooms()
 
     x = math.clamp(1, x, LEVEL.W)
     y = math.clamp(1, y, LEVEL.H)
+
+    return x, y
+  end
+
+  local function new_area(x, y)
+    local ROOM = Plan_new_room()
+
+    ROOM.natural = true
+    ROOM.shape = "odd"
+
+    LEVEL.section_map[x][y] = ROOM
+
+    local AREA =
+    {
+      room = ROOM,
+      active = { {x=x, y=y} },
+    }
+
+    return AREA
+  end
+
+  local function OLD_grow_natural(side, growth)  -- REMOVE!!
 
     -- find a usable spot
     local cx, cy = find_free_spot(x, y)
@@ -575,6 +596,29 @@ function Plan_add_natural_rooms()
     Plan_dump_sections()
   end
 
+  local function grow_area(area)
+    if area.dead then return false end
+
+    -- try all possibilities
+    rand.shuffle(area.active)
+
+    for _,A in ipairs(area.active) do
+      for _,dir in ipairs(rand.dir_list()) do
+        local nx, ny = geom.nudge(A.x, A.y, dir)
+
+        if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
+          LEVEL.section_map[nx][ny].room = area.room
+          table.insert(area.active, { x=nx, y=ny })
+          return true -- OK
+        end
+      end -- dir
+    end -- A
+
+    area.dead = true
+
+    return false
+  end
+
 
   ---| Plan_add_natural_rooms |---
 
@@ -591,10 +635,53 @@ function Plan_add_natural_rooms()
 
   gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
 
-  if quota <= 1 then return end
+  if quota < 2 then return end
 
 
-  -- FIXME
+  -- best starting spots are in a corner
+  -- worst starting spot is in the middle of the map
+  local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
+                      [2]=20, [4]=20, [6]=20, [8]=20,
+                      [5]=5
+                    }
+
+  local areas = { }
+
+  while quota / #areas > rand.irange(6,12) and #areas < 7 do
+    if table.empty(locations) then
+      break;
+    end
+
+    -- pick a location
+    local side = rand.key_by_probs(locations)
+    locations[side] = nil
+
+    local x, y = find_free_spot(side_to_coordinate(side))
+
+    if x then
+      table.insert(areas, new_area(x, y))
+    end
+  end
+
+  assert(#areas > 0)
+
+  -- round-robin grow the areas, using up the quota
+
+  local loop = 0
+
+  for loop = 0,200 do
+    if quota <= 0 then break; end
+
+    local index = 1 + (loop % #areas)
+
+    if grow_area(areas[index]) then
+      quota = quota - 1
+    end
+Plan_dump_sections()
+  end
+
+
+--[[  OLDER WAY : REMOVE 
 
   local count = style_sel("naturals", 0, 1.3, 2.4, 4.4)
 
@@ -602,8 +689,6 @@ function Plan_add_natural_rooms()
 
   local growth = LEVEL.H - gui.random()
 
-
-  local SIDES = { 2,4,6,8, 1,3,7,9 }
 
   -- middle area is not best place for caves
   if rand.odds(15) then
@@ -615,11 +700,12 @@ function Plan_add_natural_rooms()
   for i = 1,count do
     grow_natural(SIDES[i], growth)
   end
+--]]
 end
 
 
 function Plan_add_special_rooms()
-  -- nothing here YET...
+  -- nothing here.... YET!
 end
 
 
@@ -1174,8 +1260,8 @@ function Plan_create_rooms()
   Plan_create_sections()
 
   Plan_add_special_rooms()
----  Plan_add_natural_rooms()
-  Plan_add_big_rooms()
+  Plan_add_natural_rooms()
+---  Plan_add_big_rooms()
   Plan_add_small_rooms()
 
   Plan_dump_sections()
