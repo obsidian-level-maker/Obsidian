@@ -223,7 +223,7 @@ function Plan_get_visit_list(x1, y1, x2, y2)
 end
 
 
-function Plan_dump_sections()
+function Plan_dump_sections(title)
 
   local function section_char(x, y)
     local SEC = LEVEL.section_map[x][y]
@@ -239,7 +239,7 @@ function Plan_dump_sections()
   end
 
   gui.printf("\n")
-  gui.printf("Section Map:\n")
+  gui.printf("%s\n", title or "Section Map:")
 
   for y = LEVEL.H,1,-1 do
     local line = "@c  "
@@ -273,6 +273,30 @@ end
 
 
 function Plan_add_small_rooms()
+
+  local function can_make_double(x, y)
+    local can_x = (x < LEVEL.W and not Plan_has_section(x+1, y))
+    local can_y = (y < LEVEL.H and not Plan_has_section(x, y+1))
+
+    if can_x and can_y then
+      local W = LEVEL.section_W[x]
+      local H = LEVEL.section_H[y]
+
+      -- prefer making the room "squarer"
+      if H > W+1 and rand.odds(90) then return "x" end
+      if W > H+1 and rand.odds(90) then return "y" end
+
+      return rand.sel(50, "x", "y")
+    end
+
+    if can_x then return "x" end
+    if can_y then return "y" end
+
+    return nil
+  end
+
+  ---| Plan_add_small_rooms |---
+
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
     local SEC = LEVEL.section_map[x][y]
     if not SEC.room then
@@ -284,13 +308,10 @@ function Plan_add_small_rooms()
       SEC.room = R
 
       -- sometimes become a 2x1 / 1x2 sized room
+      local can_xy = can_make_double(x, y)
 
-      local can_x = (x < LEVEL.W and not Plan_has_section(x+1, y))
-      local can_y = (y < LEVEL.H and not Plan_has_section(x, y+1))
-
-      if (can_x or can_y) and rand.odds(50) then
-        
-        if can_x and (not can_y or rand.odds(60)) then
+      if can_xy and rand.odds(40) then
+        if can_xy == "x" then
           SEC = LEVEL.section_map[x+1][y]
         else
           SEC = LEVEL.section_map[x][y+1]
@@ -461,7 +482,7 @@ function Plan_add_big_rooms()
     -- FAILED
 
     -- use up some quota, to prevent an infinite loop
-    return 1
+    return 0.1
   end
 
 
@@ -480,7 +501,7 @@ function Plan_add_big_rooms()
     quota = quota - size
   end
 
-  Plan_dump_sections()
+--- Plan_dump_sections("Sections with big rooms:")
 end
 
 
@@ -545,55 +566,6 @@ function Plan_add_natural_rooms()
     }
 
     return AREA
-  end
-
-  local function OLD_grow_natural(side, growth)  -- REMOVE!!
-
-    -- find a usable spot
-    local cx, cy = find_free_spot(x, y)
-
-    if not cx then
-      gui.printf("Failed to grow natural area @ (%d,%d)\n", x, y)
-      return
-    end
-    
-    -- randomise the growth value
-    growth = int(growth * rand.range(0.8, 1.5))
-    if growth < 2 then growth = 2 end
-
-    -- create room
-    local ROOM = Plan_new_room()
-    ROOM.natural = true
-    ROOM.shape = "odd"
-
-    -- keep track of each natural section
-    local sections = {}
-
-    LEVEL.section_map[cx][cy].room = ROOM
-
-    local sections = { { cx=cx, cy=cy } }
-
-    growth = growth - 1
-
-    for loop = 1,200 do
-      if growth < 1 then break; end
-
-      local start = rand.pick(sections)
-      local dir   = rand.dir()
-
-      local nx, ny = geom.nudge(start.cx, start.cy, dir)
-
-      if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
-        
-        LEVEL.section_map[nx][ny].room = ROOM
-
-        table.insert(sections, { cx=nx, cy=ny })
-
-        growth = growth - 1
-      end
-    end
-
-    Plan_dump_sections()
   end
 
   local function grow_area(area)
@@ -665,42 +637,24 @@ function Plan_add_natural_rooms()
 
   assert(#areas > 0)
 
-  -- round-robin grow the areas, using up the quota
+  -- round-robin grow the areas, using up the quota.
 
   local loop = 0
 
   for loop = 0,200 do
     if quota <= 0 then break; end
 
-    local index = 1 + (loop % #areas)
+    -- sometimes skip an area
+    if rand.odds(70) then
+      local index = 1 + (loop % #areas)
 
-    if grow_area(areas[index]) then
-      quota = quota - 1
+      if grow_area(areas[index]) then
+        quota = quota - 1
+      end
     end
-Plan_dump_sections()
   end
 
-
---[[  OLDER WAY : REMOVE 
-
-  local count = style_sel("naturals", 0, 1.3, 2.4, 4.4)
-
-  count = int(count * rand.range(1, 1.7))
-
-  local growth = LEVEL.H - gui.random()
-
-
-  -- middle area is not best place for caves
-  if rand.odds(15) then
-    table.insert(SIDES, 5)
-  end
-
-  rand.shuffle(SIDES)
-
-  for i = 1,count do
-    grow_natural(SIDES[i], growth)
-  end
---]]
+---  Plan_dump_sections("Sections with natural areas:")
 end
 
 
@@ -1261,7 +1215,7 @@ function Plan_create_rooms()
 
   Plan_add_special_rooms()
   Plan_add_natural_rooms()
----  Plan_add_big_rooms()
+  Plan_add_big_rooms()
   Plan_add_small_rooms()
 
   Plan_dump_sections()
