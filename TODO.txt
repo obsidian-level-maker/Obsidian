@@ -6,9 +6,8 @@ TODO
 +  Chris's name stuff!
 
 
-
--  quota (of sections) for big rooms and natural rooms
-
++  connections: plan them using sections first
+                i.e. CONN = { sect1, dir, sect2 }
 
 
 ??  when to decide WOTSIT, monster and pickup spots ??
@@ -38,20 +37,12 @@ Cave code
 Planner:
   +  rework room_map / nudging / etc code:
 
-     1. create section map
-     2. fill with rooms (big / shaped)
-     3. decide naturals, indoor/outdoor
-     4. sub-rooms
-     5. make seeds
+  DONE: create section map
+  DONE: fill with rooms (big / shaped)
+  DONE: decide naturals, indoor/outdoor
+   ???  sub-rooms  (via section_map)  ???
+  DONE: make seeds
      6. nudge sides
-
-  -  new term "Section" : part of a room
-
-  ?? implement L T + shapes by creating a big room and removing the
-     unused corners ??
-
-     This is similar to sub-rooms ---> maybe do sub-rooms in a
-     similar way (re-assign sections of a big room).
 
 
 Quests:
