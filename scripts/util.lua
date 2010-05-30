@@ -375,6 +375,12 @@ function rand.dir()
   return rand.irange(1, 4) * 2
 end
 
+function rand.dir_list()
+  local DIRS = { 2,4,6,8 }
+  rand.shuffle(DIRS)
+  return DIRS
+end
+
 function rand.odds(chance)
   return (gui.random() * 100) <= chance
 end
