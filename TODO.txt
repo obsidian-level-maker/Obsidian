@@ -6,12 +6,14 @@ TODO
 +  Chris's name stuff!
 
 
-!!! natural areas in add_big_rooms()
+
+-  quota (of sections) for big rooms and natural rooms
+
 
 
 ??  when to decide WOTSIT, monster and pickup spots ??
 
-??  do placement allocations on a 64x64 grid ??
+NO:  do placement allocations on a 64x64 grid
 
 
 Cave code

@@ -747,11 +747,6 @@ QUAKE1 ENTITY PROPS:
   next stop
 
 
-General:
-
--  put important constants/tables into defs.lua
-
-
 
  ____________________
 |KEY:                |
