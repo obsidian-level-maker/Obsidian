@@ -1595,6 +1595,8 @@ function Plan_create_rooms()
 
   Plan_make_seeds()
 
+  Seed.flood_fill_edges()
+
 --!!!!  Plan_nudge_rooms()
 
 -- Plan_weird_experiment()
