@@ -4061,7 +4061,7 @@ end
 function DOOM.begin_level()
   -- set the description
   if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming.grab_one(LEVEL.name_theme)
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 
   -- determine stuff for prebuilt levels

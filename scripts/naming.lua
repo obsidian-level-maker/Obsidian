@@ -30,9 +30,9 @@
 
 require 'util'
 
-Naming = { }
+namelib = {}
 
-Naming.THEMES =
+namelib.THEMES =
 {
   TECH =
   {
@@ -1342,14 +1342,14 @@ Naming.THEMES =
 }
 
 
-Naming.IGNORE_WORDS =
+namelib.IGNORE_WORDS =
 {
   ["the"]=1, ["a"]=1,  ["an"]=1, ["of"]=1, ["s"]=1,
   ["for"]=1, ["in"]=1, ["on"]=1, ["to"]=1,
 }
 
 
-function Naming.fix_up(name)
+function namelib.fix_up(name)
   -- convert "_" to "-"
   name = string.gsub(name, "_ ", "-")
   name = string.gsub(name, "_",  "-")
@@ -1361,11 +1361,11 @@ function Naming.fix_up(name)
 end
 
 
-function Naming.split_word(tab, word)
+function namelib.split_word(tab, word)
   for w in string.gmatch(word, "%a+") do
     local low = string.lower(w)
 
-    if not Naming.IGNORE_WORDS[low] then
+    if not namelib.IGNORE_WORDS[low] then
       -- truncate to 4 letters
       if #low > 4 then
         low = string.sub(low, 1, 4)
@@ -1377,7 +1377,7 @@ function Naming.split_word(tab, word)
 end
 
 
-function Naming.match_parts(word, parts)
+function namelib.match_parts(word, parts)
   for p,_ in pairs(parts) do
     for w in string.gmatch(word, "%a+") do
       local low = string.lower(w)
@@ -1397,7 +1397,7 @@ function Naming.match_parts(word, parts)
 end
 
 
-function Naming.one_from_pattern(DEF)
+function namelib.one_from_pattern(DEF)
   local name = ""
   local words = {}
 
@@ -1428,7 +1428,7 @@ function Naming.one_from_pattern(DEF)
       local w = rand.key_by_probs(lex)
       name = name .. w
 
-      Naming.split_word(words, w)
+      namelib.split_word(words, w)
     end
   end
 
@@ -1436,28 +1436,28 @@ function Naming.one_from_pattern(DEF)
 end
 
 
-function Naming.choose_one(DEF, max_len)
+function namelib.choose_one(DEF, max_len)
   local name, parts
 
   repeat
-    name, parts = Naming.one_from_pattern(DEF)
+    name, parts = namelib.one_from_pattern(DEF)
   until #name <= max_len
 
   -- adjust probabilities
   for c,divisor in pairs(DEF.divisors) do
     for w,prob in pairs(DEF.lexicon[c]) do
-      if Naming.match_parts(w, parts) then
+      if namelib.match_parts(w, parts) then
         DEF.lexicon[c][w] = prob / divisor
       end
     end
   end
 
-  return Naming.fix_up(name)
+  return namelib.fix_up(name)
 end
 
 
-function Naming.generate(theme, count, max_len)
-  local defs = table.deep_copy(Naming.THEMES)
+function namelib.generate(theme, count, max_len)
+  local defs = table.deep_copy(namelib.THEMES)
 
   if GAME.NAME_THEMES then
     table.deep_merge(defs, GAME.NAME_THEMES)
@@ -1465,13 +1465,13 @@ function Naming.generate(theme, count, max_len)
  
   local DEF = defs[theme]
   if not DEF then
-    error("Naming.generate: unknown theme: " .. tostring(theme))
+    error("namelib.generate: unknown theme: " .. tostring(theme))
   end
 
   local list = {}
 
   for i = 1, count do
-    local name = Naming.choose_one(DEF, max_len)
+    local name = namelib.choose_one(DEF, max_len)
 
     table.insert(list, name)
   end
@@ -1480,24 +1480,11 @@ function Naming.generate(theme, count, max_len)
 end
 
 
-function Naming.grab_one(theme)
-  if not GAME.name_cache then
-    GAME.name_cache = {}
-  end
-
-  if not GAME.name_cache[theme] or table.empty(GAME.name_cache[theme]) then
-    GAME.name_cache[theme] = Naming.generate(theme, 30, PARAM.max_name_length)
-  end
-
-  return table.remove(GAME.name_cache[theme], 1)
-end
-
-
-function Naming.test()
+function namelib.test()
   local function test_theme(T)
     for set = 1,30 do
       gui.rand_seed(set)
-      local list = Naming.generate(T, 12, 28)
+      local list = namelib.generate(T, 12, 28)
 
       for i,name in ipairs(list) do
         gui.debugf("%s Set %d Name %2d: %s\n", T, set, i, name)
@@ -1510,5 +1497,18 @@ function Naming.test()
   test_theme("TECH")
   test_theme("GOTHIC")
   test_theme("URBAN")
+end
+
+
+function Naming_grab_one(theme)
+  if not GAME.name_cache then
+    GAME.name_cache = {}
+  end
+
+  if not GAME.name_cache[theme] or table.empty(GAME.name_cache[theme]) then
+    GAME.name_cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length)
+  end
+
+  return table.remove(GAME.name_cache[theme], 1)
 end
 

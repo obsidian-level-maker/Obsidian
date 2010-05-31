@@ -2393,7 +2393,7 @@ end
 function HEXEN.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming.grab_one(LEVEL.name_theme)
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 end
 
