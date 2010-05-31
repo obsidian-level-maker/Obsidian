@@ -3,9 +3,6 @@ TODO
 ====
 
 
-+  Chris's name stuff!
-
-
 +  connections: plan them using sections first
                 i.e. CONN = { sect1, dir, sect2 }
 
