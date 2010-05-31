@@ -194,24 +194,6 @@ function Seed.valid_and_free(x, y, z)
 end
 
 
-function Seed.block_valid_and_free(x1,y1,z1, x2,y2,z2)
-
-  assert(x1 <= x2 and y1 <= y2 and z1 <= z2)
-
-  if not Seed.valid(x1, y1, z1) then return false end
-  if not Seed.valid(x2, y2, z2) then return false end
-
-  for x = x1,x2 do for y = y1,y2 do for z = z1,z2 do
-    local S = SEEDS[x][y][z]
-    if S.room then
-      return false
-    end
-  end end end -- x, y, z
-
-  return true
-end
-
-
 function Seed.dump_rooms(title)
 
   local function seed_to_char(S)
