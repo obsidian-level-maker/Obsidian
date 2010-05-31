@@ -363,6 +363,13 @@ Secrets:
 -  different item probs, e.g. invuln & berserk are good
 
 
+Name generator:
+
+-  create random weird-looking words for names of Bosses, planets
+   or whatever.  Use them multiple times over an episode or game
+   to make it seem like there is a actual story to the maps.
+
+
 Theme system:
 
 -  Room types:
