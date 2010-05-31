@@ -173,7 +173,7 @@ function Levels.add_game()
     end
 
     if def.format then
-      GAME.format = format
+      GAME.format = def.format
     end
 
     return def
