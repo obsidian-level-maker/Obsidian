@@ -38,8 +38,8 @@ namelib.THEMES =
   {
     patterns =
     {
-      ["%a %n"]    = 60, ["%t %a %n"]    = 17,
-      ["%b %n"]    = 60, ["%t %b %n"]    = 17,
+      ["%a %n"]    = 65, ["%t %a %n"]    = 17,
+      ["%b %n"]    = 65, ["%t %b %n"]    = 17,
       ["%a %b %n"] = 33, ["%t %a %b %n"] = 5,
 
       ["%s"] = 16,
@@ -57,13 +57,15 @@ namelib.THEMES =
         -- size
         Universal=20, Colossal=20, Prodigious=3,
         Secluded=10, Confined=5, Restricted=3,
-        Vast=10, Monstrous=5,
+        Vast=10, Monstrous=5, Cramped=5,
 
         -- location
         Subterrestrial=10, Sub_terra=5,
         Aethereal=10, Hypogean=5,
         Mars=10, Saturn=10, Jupiter=10,
         Deimos=15, Phobos=15, ["Tei Tenga"]=5,
+        Europa=5, Ganymede=5, Dione=5,
+        Callisto=5, Hyperion=5, Vesta=5,
 
         Covert=20, Occult=10, Preliminary=3, Experimental=3,
         Northern=3, Southern=3, Eastern=3, Western=3,
@@ -228,6 +230,7 @@ namelib.THEMES =
         ["Cold Reception"]=10, 
         ["Congestion Collapse"]=10,
         ["Dachronix"]=10,
+        ["Dead Sun Aeon"]=10,
         ["Debris of Aircraft"]=10,
         ["Deconstruction Site"]=10,
         ["Deep Into The Code"]=10,
@@ -335,7 +338,7 @@ namelib.THEMES =
   {
     patterns =
     {
-         ["%a %n"] = 55,
+         ["%a %n"] = 60,
       ["%t %a %n"] = 20,
 
          ["%n of %h"] = 26,
@@ -345,7 +348,7 @@ namelib.THEMES =
       ["%p's %a %n"]    = 8,
       ["%p's %n of %h"] = 6,
 
-      ["%s"] = 10,
+      ["%s"] = 14,
     },
 
     lexicon =
@@ -357,26 +360,30 @@ namelib.THEMES =
 
       p =
       {
-        Satan=10, ["The Devil"]=5, Lucifer=2, Helgor=2, 
+        Satan=10, ["The Devil"]=7, Lucifer=7, Helgor=3, 
         Ceren=2, Mephisto=2, Vuradi=2, Oltion=2, Ktulu=2,
         Dozod=2, Draco=2, Kalrac=2, Minotaur=5, Pandora=1,
         Minos=2, Orgel=2, Nurgle=2, Odin=2, Balrok=2, Mammon=3,
         Orcus=3, Lolth=3, Quenna=3, Saleos=3, Rusalka=3, Haborym=3,
         Erishkigal=3, Jubilex=3, Utukku=3, Vucub=3, Zagan=3,
         Deccal=3, Ipos=3, Xezbeth=3, Yeenoghlu=3, Caasimolar=3,
+        Baal=3, Malthus=3, Beelzebub=3, Moloch=3, Dante=5,
+        Nybbas=2, Namtar=2, Lamashtu=2, 
+        Linguica=1, Bloodshedder=1,
       },
 
       a =
       {
         -- size
         Monumental=5, Colossal=10, Sprawling=5,
-        Small=3, Endless=10, Gigantic=5,
+        Small=3, Endless=10, Gigantic=5, Mighty=5,
 
         -- location
         Underground=10, Subterranean=5,
         Cloaked=3, Hermetic=3,
         Occult=10, Surreptious=15,
         Inner=15, Abysmal=10, Deepest=15,
+        Concealed=7, Clandestine=5,
 
         -- condition
         Elder=15, Ancient=15, Eternal=5,
@@ -395,21 +402,22 @@ namelib.THEMES =
         -- contents
         Blood=20, Bloody=5, Blood_filled=3,
         Blood_stained=2, Blood_soaked=3,
-        Lava=5, Lava_filled=3, Bleeding=3, 
+        Lava=5, Lava_filled=3, Bleeding=3, Acrid=5,
         Monstrous=15, Monster=5, Zombie=10,
         Demonic=15, Demon=5, Ghoulish=5,
         Wizard=5, Warlock=2, Wiccan=3,
         Haunted=10, Ghostly=15, Ghastly=5,
         Heathen=3, Rat_infested=5, Necromancers=5,
-        Baron=5, Cyberdemon=5, Slime=5,
+        Baron=5, Cyberdemon=5, Slime=5, Knights=7,
 
         -- descriptive
         Evil=30, Unholy=20, Wicked=15, Cruel=10,
         Godless=5, God_forsaken=7, Ungodly=3, Vexatious=5,
-        Perverse=5, Hallowed=5, Oppressive=5,
+        Perverse=5, Hallowed=5, Oppressive=5, Painful=5,
         Uncivilised=2, Unsanctified=2, Profane=5, Despoiled=3,
         Brutal=20, Grisly=15, Gothic=7, Ungodly=10,
         Mystic=7, Mystical=2, Magical=2, Magic=2, Tortuous=10,
+        Poignant=3, Sinful=5, Unblessed=3, Bitter=7,
 
         Ominous=20, Terrifying=5, Gruesome=10,
         Gloomy=5, Awful=10, Execrable=10,
@@ -462,7 +470,7 @@ namelib.THEMES =
         Ceremony=3, Threshold=1,
         Ache=2, Apocalypse=1, Resurrection=5,
         Absolution=5, Crux=5, Culmination=5,
-        Sacrament=5, Plight=5,  
+        Sacrament=5, Plight=5, Liturgy=5,
       },
 
       h =
@@ -480,12 +488,12 @@ namelib.THEMES =
         Sorrow=10, Trauma=10, Agony=10, Anguish=10,
         Strain=5, Supplication=5, Witchcraft=5,
 
-        Flesh=10, Corpses=10, Bones=10,
-        Skulls=10, Whispers=5, Tears=3,
-        Dread=5, Fate=5, Locusts=2,
+        Flesh=10, Corpses=10, Bones=10, Chaos=15,
+        Skulls=10, Whispers=5, Tears=3, Viscera=5,
+        Dread=5, Fate=5, Locusts=2, Erebus=5, Lethe=2,
         Treachery=5, Lunacy=5, Woe=5,
-        Reckoning=5, 
-        Leviathan=5, Baphomet=5,
+        Reckoning=5, Minos=3, Hades=7, Acheron=5,
+        Leviathan=5, Baphomet=5, Devils=10,
 
         ["the Dead"]=10,
         ["the Denizens"]=10,
@@ -765,7 +773,7 @@ namelib.THEMES =
       ["%t %n of %h"] = 12,
       ["%a %n of %h"] = 7,
 
-      ["%s"] = 10,
+      ["%s"] = 12,
     },
 
     lexicon =
@@ -890,8 +898,9 @@ namelib.THEMES =
         -- residents
         Ghosts=15, Gods=10, Spirits=5,
         Spectres=5, Banshees=5, Phantoms=5,
-        Menace=15, Evil=5, Ghouls=5,
+        Menace=15, Evil=5, Ghouls=5, Demons=5,
         Ogres=5, Denizens=7, Souls=5,
+        Murderers=3, Vultures=5, Pirates=3,
         Spiders=2, Snakes=5, Vermin=5,
         Madmen=2, Mortals=10, Martyrs=5,
         Prophets=5, Prey=5, Crows=5, 
@@ -1104,6 +1113,7 @@ namelib.THEMES =
         ["Blast Through"]=10,
         ["Bleed on Me"]=10,
         ["Blessed Are the Quick"]=10,
+        ["Border Crossing"]=10,
         ["Boss Cage"]=10,
         ["Captured"]=10,
         ["Caughtyard"]=10,
@@ -1128,6 +1138,7 @@ namelib.THEMES =
         ["Gladiator"]=10,
         ["Ground Zero"]=10,
         ["Guardian"]=10,
+        ["Hail of Bullets"]=10,
         ["Halloween"]=10,
         ["Hard Attack"]=10,
         ["Hardball"]=10,
@@ -1163,6 +1174,7 @@ namelib.THEMES =
         ["Screamin' Marines"]=10,
         ["Sealed Fate"]=10,
         ["Showdown"]=10,
+        ["Showtime!"]=10,
         ["Shoot First Ask Later"]=10,
         ["Sinister"]=10,
         ["Sink or Swim"]=10,
@@ -1170,11 +1182,13 @@ namelib.THEMES =
         ["Slaughterfest"]=10,
         ["Soul Trap"]=10,
         ["Sudden Death"]=10,
+        ["The Hunt"]=10,
         ["The New Fury"]=10,
         ["The Purge"]=10,
         ["The Second Coming"]=10,
         ["The Trap"]=10,
         ["Total Doom"]=10,
+        ["Trapped"]=10,
         ["Trial by Fire"]=10,
         ["Trial of Mankind"]=10,
         ["Trouble in Paradise"]=10,
@@ -1183,6 +1197,7 @@ namelib.THEMES =
         ["Victory Zero"]=10,
         ["Warbringer"]=10,
         ["What Color is Death?"]=10,
+        ["You May Not Pass!"]=10,
       },
     },
 
@@ -1273,6 +1288,7 @@ namelib.THEMES =
         ["ERROR: No Level Name."]=10,
         ["Family Time"]=10,
         ["Fatal Error"]=10,
+        ["Fraggle's Sock"]=10,
         ["Heard of Cows?"]=10,
         ["I See Dead People"]=10,
         ["Idiots Preferred"]=10,
