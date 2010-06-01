@@ -562,7 +562,7 @@ function Plan_add_natural_rooms()
     ROOM.natural = true
     ROOM.shape = "odd"
 
-    LEVEL.section_map[x][y] = ROOM
+    LEVEL.section_map[x][y].room = ROOM
 
     local AREA =
     {
@@ -642,6 +642,8 @@ function Plan_add_natural_rooms()
 
   assert(#areas > 0)
 
+  quota = quota - #areas
+
   -- round-robin grow the areas, using up the quota.
 
   local loop = 0
@@ -659,7 +661,7 @@ function Plan_add_natural_rooms()
     end
   end
 
----  Plan_dump_sections("Sections with natural areas:")
+  Plan_dump_sections("Sections with natural areas:")
 end
 
 
@@ -762,7 +764,8 @@ end
 ------------------------------------------------------------------------
 
 
-function Plan_nudge_rooms()
+function OLD_Plan_nudge_rooms() -- REMOVE
+
   -- This resizes rooms by moving certain borders either one seed
   -- outward or one seed inward.  There are various constraints,
   -- in particular each room must remain a rectangle shape (so we
@@ -1157,6 +1160,9 @@ function Plan_make_seeds()
     local sx2 = sx1 + LEVEL.section_W[lx] - 1
     local sy2 = sy1 + LEVEL.section_H[ly] - 1
 
+    SEC.sx1, SEC.sx2 = sx1, sx2
+    SEC.sy1, SEC.sy2 = sy1, sy2
+
     if not R.sx1 or sx1 < R.sx1 then R.sx1 = sx1 end
     if not R.sy1 or sy1 < R.sy1 then R.sy1 = sy1 end
     if not R.sx2 or sx2 > R.sx2 then R.sx2 = sx2 end
@@ -1176,6 +1182,59 @@ function Plan_make_seeds()
   for lx = 1,LEVEL.W do for ly = 1,LEVEL.H do
     fill_section(lx, ly)
   end end
+end
+
+
+function Plan_nudge_sides()
+
+  -- This resizes rooms by moving certain borders either one seed
+  -- outward or one seed inward.  There are various constraints...
+  --
+  -- Big rooms must be handled first, because small rooms are
+  -- never able to nudge a big border.
+
+  -- A "meta side" is a list of sides (between two sections) which
+  -- need to be moved all at the same time.  Generating the set of
+  -- meta-sides is the hard part, after that the nudging part is
+  -- relatively easy.
+  --
+  -- class META = { borders : LIST, score : number }
+  --
+  -- class BORDER = { lx, ly, side, opposite }
+  --
+
+  local function create_meta_sides()
+    local metas = {}
+
+    -- FIXME
+  end
+
+  local function test_or_nudge_border(B, do_it)
+    -- FIXME
+  end
+
+  local function try_nudge_meta_side(M)
+    for _,B in ipairs(M.borders) do
+      if not test_or_nudge_border(B, false) then
+        return false
+      end
+    end
+
+    for _,B in ipairs(M.borders) do
+      test_or_nudge_border(B, true)
+    end
+  end
+
+
+  ---| Plan_nudge_sides |---
+
+  local metas = create_meta_sides()
+
+  table.sort(metas, function(A, B) return A.score > B.score end)
+
+  for _,M in ipairs(metas) do
+    try_nudge_meta_side(M)
+  end
 end
 
 
@@ -1239,6 +1298,7 @@ function Plan_create_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)
+if R.shape == "rect" then R.shape = "odd" end
   end
 end
 
