@@ -15,7 +15,14 @@ NO:  do placement allocations on a 64x64 grid
 Planner:
   ???  sub-rooms  (via section_map)
 
+  !! IDEA: limit complex nudging to horizontal
+
   +  reimplement Nudging (section sides)
+
+  -  nudging : allow TWO steps if section is wide/deep enough 
+  
+  -  nudging shaped room : pick X or Y for room, only allow
+                           nudging the "internal" sides that way
 
 
 Quests:
