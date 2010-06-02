@@ -286,7 +286,7 @@ function Plan_add_small_rooms()
       if H > W+1 and rand.odds(90) then return "x" end
       if W > H+1 and rand.odds(90) then return "y" end
 
-      return rand.sel(50, "x", "y")
+      return rand.sel(30, "x", "y")
     end
 
     if can_x then return "x" end
@@ -1187,54 +1187,42 @@ end
 
 function Plan_nudge_sides()
 
-  -- This resizes rooms by moving certain borders either one seed
-  -- outward or one seed inward.  There are various constraints...
+  -- This resizes rooms by moving certain borders outward or inward
+  -- (usually by one seed, occasionally by two).
   --
-  -- Big rooms must be handled first, because small rooms are
-  -- never able to nudge a big border.
-
-  -- A "meta side" is a list of sides (between two sections) which
-  -- need to be moved all at the same time.  Generating the set of
-  -- meta-sides is the hard part, after that the nudging part is
-  -- relatively easy.
+  -- NOTES:
   --
-  -- class META = { borders : LIST, score : number }
+  -- +  if we limit nudging to horizontal moves (sides 4 and 6)
+  --    then the problem of rooms overlapping is avoided.  A second
+  --    pass could be done to do simple nudges vertically.
   --
-  -- class BORDER = { lx, ly, side, opposite }
+  -- +  if a side (which could be two or more sections) is moved left
+  --    or right, then the side above/below it should NOT be moved
+  --    the same way.  Similarly for vertical moves.
   --
-
-  local function create_meta_sides()
-    local metas = {}
-
-    -- FIXME
-  end
-
-  local function test_or_nudge_border(B, do_it)
-    -- FIXME
-  end
-
-  local function try_nudge_meta_side(M)
-    for _,B in ipairs(M.borders) do
-      if not test_or_nudge_border(B, false) then
-        return false
-      end
-    end
-
-    for _,B in ipairs(M.borders) do
-      test_or_nudge_border(B, true)
-    end
-  end
+  -- +  the "stem" sides of a T or plus shape room should be moved
+  --    together, either both inward or both outward.  Let's call
+  --    them "complex" sides.  When a side is complex from TWO rooms,
+  --    it becomes hard to track the flow-on effects, hence it is
+  --    easiest to disable nudging those stems.
+  --
+  -- The order of operations is thus:
+  --
+  -- (1) move complex sides horizontally
+  -- (2) move large sides horizontally
+  -- (3) move single/simple sides horizontally
+  -- (4) move simple sides vertically
+  --
 
 
   ---| Plan_nudge_sides |---
 
-  local metas = create_meta_sides()
+  -- collect_sides()
+  -- nudge_complex_sides()
+  -- nudge_sides("large") 
+  -- nudge_sides("small")
+  -- nudge_sides("vert")
 
-  table.sort(metas, function(A, B) return A.score > B.score end)
-
-  for _,M in ipairs(metas) do
-    try_nudge_meta_side(M)
-  end
 end
 
 
@@ -1276,10 +1264,14 @@ function Plan_create_rooms()
 
   Plan_create_sections()
 
+  -- INVOKE AN HOOK
+
   Plan_add_special_rooms()
   Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
+
+  -- INVOKE ANOTHER HOOK
 
   Plan_dump_sections()
 --!!!!  Plan_find_neighbors()
@@ -1290,14 +1282,15 @@ function Plan_create_rooms()
 
   Plan_make_seeds()
 
-  Seed.flood_fill_edges()
+  Plan_nudge_sides()
 
---!!!!  Plan_nudge_rooms()
+  Seed.flood_fill_edges()
 
   Seed.dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)
+-- temp crud to disable layouting
 if R.shape == "rect" then R.shape = "odd" end
   end
 end
