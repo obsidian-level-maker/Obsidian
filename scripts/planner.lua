@@ -1200,24 +1200,29 @@ function Plan_nudge_sides()
   --    or right, then the side above/below it should NOT be moved
   --    the same way.  Similarly for vertical moves.
   --
-  -- +  the "stem" sides of a T or plus shape room should be moved
+  -- +  the "stem" sides of a T or PLUS shape room should be moved
   --    together, either both inward or both outward.  Let's call
   --    them "complex" sides.  When a side is complex from TWO rooms,
   --    it becomes hard to track the flow-on effects, hence it is
   --    easiest to disable nudging those stems.
   --
+  -- +  nudging must ensure that the border between two sections
+  --    can be connected.  If a column is only 2 seeds wide then
+  --    it never shrinks (only grow), and a column 3 or 4 seeds
+  --    wide can only shrink by 1 seed.
+  --
   -- The order of operations is thus:
   --
   -- (1) move complex sides horizontally
   -- (2) move large sides horizontally
-  -- (3) move single/simple sides horizontally
+  -- (3) move small/simple sides horizontally
   -- (4) move simple sides vertically
-  --
 
 
   ---| Plan_nudge_sides |---
 
   -- collect_sides()
+
   -- nudge_complex_sides()
   -- nudge_sides("large") 
   -- nudge_sides("small")
