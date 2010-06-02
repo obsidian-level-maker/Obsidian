@@ -979,7 +979,7 @@ end
 
 
 
-function Plan_sub_rooms()
+function OLD_Plan_sub_rooms()
 
   --                    1  2  3   4   5   6   7   8+
   local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
