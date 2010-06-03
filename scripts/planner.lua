@@ -482,6 +482,36 @@ function Plan_add_big_rooms()
     end
   end
 
+  local function ideal_T_spots(visits)
+    local mx = int((LEVEL.W+1) / 2)
+    local my = int((LEVEL.H+1) / 2)
+
+    local SPOTS =
+    {
+      { x=mx, y=1 },
+      { x=mx, y=LEVEL.H },
+      { y=my, x=1 },
+      { y=my, x=LEVEL.W },
+    }
+
+    for _,spot in ipairs(SPOTS) do
+      if rand.odds(60) then
+        table.insert(visits, 1, spot)
+      end
+    end
+  end
+
+  local function ideal_PLUS_spots(visits)
+    if LEVEL.W < 5 or LEVEL.H < 5 then return end
+
+    local mx = int((LEVEL.W+1) / 2)
+    local my = int((LEVEL.H+1) / 2)
+
+    if rand.odds(75) then
+      table.insert(visits, 1, {x=mx, y=my})
+    end
+  end
+
   local function add_biggie(quota)
     -- returns size of room
 
@@ -497,21 +527,23 @@ function Plan_add_big_rooms()
 
     local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
 
+    -- some shapes fit very well at certain spots.
+    -- here we add those spots to the front of the visit list.
+    if string.sub(shape_name, 1, 1) == "L" then
+      ideal_L_spots(visits)
+
+    elseif string.sub(shape_name, 1, 1) == "T" then
+      ideal_T_spots(visits)
+
+    elseif shape_name == "plus" then
+      ideal_PLUS_spots(visits)
+    end
+
     local ROTS
     if shape_name == "rect" or shape_name == "plus" then
       ROTS = { 0 }
     else
       ROTS = rand.shuffle { 0,2,4,6 }
-    end
-
-    if string.sub(shape_name, 1, 1) == "L" then
-      ideal_L_spots(visits)
---[[
-    elseif string.sub(shape_name, 1, 1) == "T" then
-      ideal_T_spots(visits)
-    elseif shape_name == "plus" then
-      ideal_PLUS_spots(visits)
---]]
     end
 
     for _,V in ipairs(visits) do
