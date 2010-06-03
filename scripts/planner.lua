@@ -346,16 +346,16 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 60,
+    rect = 65,
     plus = 20,
 
-    T1 = 20, T2 = 3,
-    L1 = 40, L2 = 10, L3 = 2,
+    T1 = 24, T2 = 4,
+    L1 = 40, L2 = 10, L3 = 10, L4=3,
   }
 
   local BIG_RECT_PROBS =
   {
-    [22] = 80, [33] = 30, [32] = 15, [31] = 3,
+    [22] = 80, [33] = 40, [32] = 20, [31] = 4,
   }
 
   local function test_or_set_rect(lx, ly, rot, w, h, ROOM)
