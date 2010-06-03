@@ -560,6 +560,54 @@ Connect.BRANCHES =
 }
 
 
+BIG_CONNECTIONS =
+{
+  ---==== TWO EXITS ====---
+
+  -- pass through, directly centered
+  PC1 = { w=3, h=1, exits={ 22, 28 }, symmetry="x" },
+  PC2 = { h=3, h=2, exits={ 22, 58 }, symmetry="x" },
+  PC3 = { h=3, h=3, exits={ 22, 88 }, symmetry="x" },
+
+  -- pass through, opposite edges
+  PO1 = { w=2, h=1, exits={ 12, 28 } },
+  PO2 = { w=2, h=2, exits={ 12, 58 } },
+  PO3 = { w=2, h=3, exits={ 12, 88 } },
+
+  PO4 = { w=3, h=1, exits={ 12, 38 } },
+  PO5 = { w=3, h=2, exits={ 12, 68 } },
+  PO6 = { w=3, h=3, exits={ 12, 98 } },
+
+  -- L shape
+  L1 = { w=2, H=1, exits={ 14, 28 } },
+  L2 = { w=2, H=2, exits={ 14, 58 } },
+  L3 = { w=2, H=3, exits={ 14, 88 } },
+
+  L4 = { w=3, H=1, exits={ 14, 38 } },
+  L5 = { w=3, H=2, exits={ 14, 68 } },
+  L6 = { w=3, H=3, exits={ 14, 98 } },
+
+  ---==== THREE EXITS ====---
+  
+
+  ---==== FOUR EXITS ====---
+
+
+  -- H shape, no turning
+  H1 = { w=2, h=2, exits={ 12,22, 48,58 }, symmetry="x" },
+  H2 = { w=2, h=3, exits={ 12,22, 78,88 }, symmetry="x" },
+  H3 = { w=3, h=2, exits={ 12,22, 48,68 }, symmetry="x" },
+  H4 = { w=3, h=3, exits={ 12,22, 78,98 }, symmetry="x" },
+
+  -- H shape, turning at other end
+  HT1 = { w=2, h=2, exits={ 12,22, 44,56 }, symmetry="x" },
+  HT2 = { w=2, h=3, exits={ 12,22, 74,86 }, symmetry="x" },
+  HT3 = { w=3, h=2, exits={ 12,22, 44,66 }, symmetry="x" },
+  HT4 = { w=3, h=3, exits={ 12,22, 74,96 }, symmetry="x" },
+}
+
+
+
 function Connect.test_branch_gen(name)
   local info = assert(Connect.BRANCHES[name])
 
