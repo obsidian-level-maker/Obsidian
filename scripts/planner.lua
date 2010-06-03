@@ -329,17 +329,19 @@ end
 function Plan_add_big_rooms()
 
   -- shapes are defined by a list of neighbors to set.
+  -- numbers over 10 are two seeds away instead of one.
 
   local BIG_ROOM_SHAPES =
   {
     plus = { name="plus", size=5, dirs={ 5,2,4,6,8 }},
 
-    T1 = { name="T", size=4, dirs={ 5,7,8,9 }},
-    T2 = { name="T", size=5, dirs={ 5,7,8,9,2 }},
+    T1 = { name="T", size=4, dirs={ 5,4,6,2 }},
+    T2 = { name="T", size=5, dirs={ 5,6,6,2,12 }},
 
     L1 = { name="L", size=3, dirs={ 5,8,6 }},
-    L2 = { name="L", size=4, dirs={ 5,8,2,3 }},
-    L3 = { name="L", size=5, dirs={ 4,7,1,2,3 }},
+    L2 = { name="L", size=4, dirs={ 5,8,18,6 }},
+    L3 = { name="L", size=4, dirs={ 5,8,6,16 }},
+    L4 = { name="L", size=5, dirs={ 5,8,18,6,16 }},
   }
 
   local BIG_SHAPE_PROBS =
@@ -389,8 +391,11 @@ function Plan_add_big_rooms()
     local touch_left, touch_right
 
     for _,orig_dir in ipairs(dir_list) do
+      local dist = 1 + int(orig_dir / 10)
+      orig_dir = orig_dir % 10
+
       local dir  = geom.ROTATE[rot][orig_dir]
-      local x, y = geom.nudge(lx, ly, dir)
+      local x, y = geom.nudge(lx, ly, dir, dist)
 
       if not Plan_is_section_valid(x, y) then
         return false
@@ -443,6 +448,7 @@ function Plan_add_big_rooms()
       if test_or_set_rect(lx, ly, rot, rw, rh) then
         ROOM = Plan_new_room()
         ROOM.shape = "rect"
+
         test_or_set_rect(lx, ly, rot, rw, rh, ROOM)
 
         return rw * rh
@@ -456,9 +462,22 @@ function Plan_add_big_rooms()
       if test_or_set_shape(lx, ly, rot, shape.dirs) then
         ROOM = Plan_new_room()
         ROOM.shape = shape.name
+        ROOM.shape_rot = rot
+
         test_or_set_shape(lx, ly, rot, shape.dirs, ROOM)
 
         return assert(shape.size)
+      end
+    end
+  end
+
+  local function ideal_L_spots(visits)
+    local CORNERS = rand.shuffle { 1,3,7,9 }
+    
+    for _,side in ipairs(CORNERS) do
+      if rand.odds(60) then
+        local x, y = geom.pick_corner(side, 1,1, LEVEL.W, LEVEL.H)
+        table.insert(visits, 1, { x=x, y=y })
       end
     end
   end
@@ -478,16 +497,35 @@ function Plan_add_big_rooms()
 
     local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
 
-    for _,V in ipairs(visits) do
-      local size = try_add_biggie(shape_name, V.x, V.y, rot, rw, rh)
+    local ROTS
+    if shape_name == "rect" or shape_name == "plus" then
+      ROTS = { 0 }
+    else
+      ROTS = rand.shuffle { 0,2,4,6 }
+    end
 
-      if size then return size end  -- SUCCESS !
+    if string.sub(shape_name, 1, 1) == "L" then
+      ideal_L_spots(visits)
+--[[
+    elseif string.sub(shape_name, 1, 1) == "T" then
+      ideal_T_spots(visits)
+    elseif shape_name == "plus" then
+      ideal_PLUS_spots(visits)
+--]]
+    end
+
+    for _,V in ipairs(visits) do
+      for _,rot in ipairs(ROTS) do
+        local size = try_add_biggie(shape_name, V.x, V.y, rot, rw, rh)
+
+        if size then return size end  -- SUCCESS !
+      end
     end
 
     -- FAILED
 
     -- use up some quota, to prevent an infinite loop
-    return 0.1
+    return 0.2
   end
 
 
@@ -506,7 +544,7 @@ function Plan_add_big_rooms()
     quota = quota - size
   end
 
---- Plan_dump_sections("Sections with big rooms:")
+Plan_dump_sections("Sections with big rooms:")
 end
 
 
