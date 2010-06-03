@@ -46,9 +46,19 @@ YES: choose starting room BEFORE connecting?
        too few  --> no locked doors are possible
        too many --> creates a lot of dead-end paths
 
-   (5) the connection shapes (T etc) are still a good idea for
+       natural areas are most flexible
+
+   (5) the connection patterns (T, L, etc) are still a good idea for
        large rectangular rooms.  But do it using sections instead
        of seeds.
+
+   (6) large rooms may be best as leafs (can have a big battle
+       to get to the key or switch).
+
+   (7) tiny rooms may be best as in/out (2 exit) rooms, and
+       also OK for start room, and ideal for exit room when
+       using a "small exit" prefab.
+
 
 
 Quests:
