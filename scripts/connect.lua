@@ -583,8 +583,7 @@ BIG_CONNECTIONS =
   L3 = { w=2, h=3, score=5.0, exits={ 14, 88 } },
 
   L4 = { w=3, h=1, score=5.0, exits={ 14, 38 } },
-  L5 = { w=3, h=2, score=5.0, exits={ 14, 68 } },
-  L6 = { w=3, h=3, score=5.0, exits={ 14, 98 } },
+  L5 = { w=3, h=3, score=5.0, exits={ 14, 98 } },
 
   ---==== THREE EXITS ====---
   
@@ -658,10 +657,16 @@ BIG_CONN_POSITIONS =
 
 
 function Connect_test_big_conns()
+  local require_volume -- = 6
 
   local function dump_exits(name, info)
     local W = assert(info.w)
     local H = assert(info.h)
+
+    -- option to only show rooms of a certain size
+    if require_volume and (W*H) ~= require_volume then
+      return
+    end
 
     name = name .. ":" .. "      "
 
@@ -1338,7 +1343,7 @@ gui.debugf("Failed\n")
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
-Connect_test_big_conns()
+-- Connect_test_big_conns()
 
   LEVEL.branched_one = false
 
