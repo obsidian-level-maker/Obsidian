@@ -565,93 +565,107 @@ BIG_CONNECTIONS =
   ---==== TWO EXITS ====---
 
   -- pass through, directly centered
-  PC1 = { w=3, h=1, prob=10, exits={ 22, 28 }, symmetry="x" },
-  PC2 = { h=3, h=2, prob=10, exits={ 22, 58 }, symmetry="x" },
-  PC3 = { h=3, h=3, prob=10, exits={ 22, 88 }, symmetry="x" },
+  PC1 = { w=3, h=1, score=3,0, exits={ 22, 28 }, symmetry="x" },
+  PC2 = { w=3, h=2, score=3,0, exits={ 22, 58 }, symmetry="x" },
+  PC3 = { w=3, h=3, score=3,0, exits={ 22, 88 }, symmetry="x" },
 
   -- pass through, opposite edges
-  PO1 = { w=2, h=1, prob=10, exits={ 12, 28 } },
-  PO2 = { w=2, h=2, prob=10, exits={ 12, 58 } },
-  PO3 = { w=2, h=3, prob=10, exits={ 12, 88 } },
+  PO1 = { w=2, h=1, score=2.0, exits={ 12, 28 } },
+  PO2 = { w=2, h=2, score=2.0, exits={ 12, 58 } },
+  PO3 = { w=2, h=3, score=2.0, exits={ 12, 88 } },
 
-  PO4 = { w=3, h=1, prob=10, exits={ 12, 38 } },
-  PO5 = { w=3, h=2, prob=10, exits={ 12, 68 } },
-  PO6 = { w=3, h=3, prob=10, exits={ 12, 98 } },
+  PO4 = { w=3, h=1, score=2.0, exits={ 12, 38 } },
+  PO5 = { w=3, h=2, score=2.0, exits={ 12, 68 } },
+  PO6 = { w=3, h=3, score=2.0, exits={ 12, 98 } },
 
   -- L shape
-  L1 = { w=2, H=1, prob=10, exits={ 14, 28 } },
-  L2 = { w=2, H=2, prob=10, exits={ 14, 58 } },
-  L3 = { w=2, H=3, prob=10, exits={ 14, 88 } },
+  L1 = { w=2, h=1, score=5.0, exits={ 14, 28 } },
+  L2 = { w=2, h=2, score=5.0, exits={ 14, 58 } },
+  L3 = { w=2, h=3, score=5.0, exits={ 14, 88 } },
 
-  L4 = { w=3, H=1, prob=10, exits={ 14, 38 } },
-  L5 = { w=3, H=2, prob=10, exits={ 14, 68 } },
-  L6 = { w=3, H=3, prob=10, exits={ 14, 98 } },
+  L4 = { w=3, h=1, score=5.0, exits={ 14, 38 } },
+  L5 = { w=3, h=2, score=5.0, exits={ 14, 68 } },
+  L6 = { w=3, h=3, score=5.0, exits={ 14, 98 } },
 
   ---==== THREE EXITS ====---
   
   -- T shape, turning left and right
-  T1 = { w=1, h=2, prob=10, exits={ 12, 44, 46 }, symmetry="x" },
-  T2 = { w=1, h=3, prob=10, exits={ 12, 74, 76 }, symmetry="x" },
+  T1 = { w=1, h=2, score=3.0, exits={ 12, 44, 46 }, symmetry="x" },
+  T2 = { w=1, h=3, score=3.0, exits={ 12, 74, 76 }, symmetry="x" },
 
-  T4 = { w=3, h=1, prob=10, exits={ 22, 14, 36 }, symmetry="x" },
-  T5 = { w=3, h=2, prob=10, exits={ 22, 44, 66 }, symmetry="x" },
-  T6 = { w=3, h=2, prob=10, exits={ 22, 74, 96 }, symmetry="x" },
+  T4 = { w=3, h=1, score=6.0, exits={ 22, 14, 36 }, symmetry="x" },
+  T5 = { w=3, h=2, score=6.0, exits={ 22, 44, 66 }, symmetry="x" },
+  T6 = { w=3, h=3, score=6.0, exits={ 22, 74, 96 }, symmetry="x" },
 
   -- T shape, no turning
-  TN1 = { w=3, h=1, prob=10, exits={ 22, 18, 38 }, symmetry="x" },
-  TN2 = { w=3, h=2, prob=10, exits={ 22, 48, 68 }, symmetry="x" },
-  TN3 = { w=3, h=2, prob=10, exits={ 22, 78, 98 }, symmetry="x" },
+  TN1 = { w=3, h=1, score=4.5, exits={ 22, 18, 38 }, symmetry="x" },
+  TN2 = { w=3, h=2, score=4.5, exits={ 22, 48, 68 }, symmetry="x" },
+  TN3 = { w=3, h=3, score=4.5, exits={ 22, 78, 98 }, symmetry="x" },
 
   -- F shapes
-  F1 = { w=2, h=1, prob=10, exits={ 14, 12, 22 } },
-  F2 = { w=2, h=2, prob=10, exits={ 44, 12, 22 } },
-  F3 = { w=2, h=3, prob=10, exits={ 74, 12, 22 } },
+  F1 = { w=2, h=1, score=2.1, exits={ 14, 12, 22 } },
+  F2 = { w=2, h=2, score=2.1, exits={ 44, 12, 22 } },
+  F3 = { w=2, h=3, score=2.1, exits={ 74, 12, 22 } },
 
-  F4 = { w=3, h=1, prob=10, exits={ 14, 22, 32 } },
-  F5 = { w=3, h=2, prob=10, exits={ 44, 22, 32 } },
-  F6 = { w=3, h=3, prob=10, exits={ 74, 22, 32 } },
+  F4  = { w=3, h=1, score=2.1, exits={ 14, 22, 32 } },
+  F5  = { w=3, h=2, score=2.1, exits={ 44, 22, 32 } },
+  F6A = { w=3, h=3, score=2.1, exits={ 74, 22, 32 } },
+  F6B = { w=3, h=3, score=2.4, exits={ 44, 22, 32 } },
 
-  F7 = { w=3, h=2, prob=10, exits={ 44, 12, 32 } },
-  F8 = { w=3, h=3, prob=10, exits={ 74, 12, 32 } },
+  F7  = { w=3, h=1, score=1.5, exits={ 14, 12, 32 } },
+  F8  = { w=3, h=2, score=3.0, exits={ 44, 12, 32 } },
+  F9A = { w=3, h=3, score=3.0, exits={ 74, 12, 32 } },
+  F9B = { w=3, h=3, score=3.3, exits={ 44, 12, 32 } },
 
   ---==== FOUR EXITS ====---
 
   -- cross shape, all stems perfectly centered
-  XP = { w=3, h=3, prob=10, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+  XP = { w=3, h=3, score=20.0, exits={ 22, 44, 66, 88 }, symmetry="xy" },
 
   -- cross shape, stems at other places
-  X1 = { w=3, h=1, prob=10, exits={ 22, 28, 14, 36 }, symmetry="xy" },
-  X2 = { w=3, h=2, prob=10, exits={ 22, 58, 44, 66 }, symmetry="xy" },
-  X3 = { w=3, h=3, prob=10, exits={ 22, 88, 74, 96 }, symmetry="xy" },
+  X1 = { w=3, h=1, score=9.0, exits={ 22, 28, 14, 36 }, symmetry="xy" },
+  X2 = { w=3, h=2, score=9.0, exits={ 22, 58, 44, 66 }, symmetry="xy" },
+  X3 = { w=3, h=3, score=9.0, exits={ 22, 88, 74, 96 }, symmetry="xy" },
 
   -- H shape, no turning
-  H1 = { w=2, h=2, prob=10, exits={ 12,22, 48,58 }, symmetry="xy" },
-  H2 = { w=2, h=3, prob=10, exits={ 12,22, 78,88 }, symmetry="xy" },
-  H3 = { w=3, h=2, prob=10, exits={ 12,32, 48,68 }, symmetry="xy" },
-  H4 = { w=3, h=3, prob=10, exits={ 12,32, 78,98 }, symmetry="xy" },
+  H1 = { w=2, h=2, score=3.0, exits={ 12,22, 48,58 }, symmetry="xy" },
+  H2 = { w=2, h=3, score=3.0, exits={ 12,22, 78,88 }, symmetry="xy" },
+  H3 = { w=3, h=2, score=3.0, exits={ 12,32, 48,68 }, symmetry="xy" },
+  H4 = { w=3, h=3, score=3.0, exits={ 12,32, 78,98 }, symmetry="xy" },
 
   -- H shape, turning at other end
-  HT1 = { w=2, h=2, prob=10, exits={ 12,22, 44,56 }, symmetry="x" },
-  HT2 = { w=2, h=3, prob=10, exits={ 12,22, 74,86 }, symmetry="x" },
-  HT3 = { w=3, h=2, prob=10, exits={ 12,32, 44,66 }, symmetry="x" },
-  HT4 = { w=3, h=3, prob=10, exits={ 12,32, 74,96 }, symmetry="x" },
+  HT1 = { w=2, h=2, score=4.0, exits={ 12,22, 44,56 }, symmetry="x" },
+  HT2 = { w=2, h=3, score=4.0, exits={ 12,22, 74,86 }, symmetry="x" },
+  HT3 = { w=3, h=2, score=4.0, exits={ 12,32, 44,66 }, symmetry="x" },
+  HT4 = { w=3, h=3, score=4.0, exits={ 12,32, 74,96 }, symmetry="x" },
 
   -- swastika shape
-  SWA1 = { w=2, h=2, prob=10, exits={ 12, 26, 44, 58 } },
-  SWA2 = { w=3, h=2, prob=10, exits={ 12, 36, 44, 68 } },
-  SWA3 = { w=3, h=3, prob=10, exits={ 12, 36, 74, 98 } },
+  SWA1 = { w=2, h=2, score=1.5, exits={ 12, 26, 44, 58 } },
+  SWA2 = { w=3, h=2, score=1.5, exits={ 12, 36, 44, 68 } },
+  SWA3 = { w=3, h=3, score=1.5, exits={ 12, 36, 74, 98 } },
 
   -- double F shape
-  FF1 = { w=3, h=2, prob=10, exits={ 14,44, 22,32 } },
-  FF2 = { w=3, h=3, prob=10, exits={ 44,74, 22,32 } },
+  FF1 = { w=3, h=2, score=1.5, exits={ 14,44, 22,32 } },
+  FF2 = { w=3, h=3, score=1.5, exits={ 44,74, 22,32 } },
+  FF3 = { w=3, h=3, score=1.7, exits={ 14,74, 12,32 } },
+}
+
+
+BIG_CONN_POSITIONS =
+{
+  { x=1,y=1 }, { x=2,y=1 }, { x=3,y=1 },  -- 1 2 3
+  { x=1,y=2 }, { x=2,y=2 }, { x=3,y=2 },  -- 4 5 6
+  { x=1,y=3 }, { x=2,y=3 }, { x=3,y=3 },  -- 7 8 9
 }
 
 
 
-function Connect.test_branch_gen(name)
-  local info = assert(Connect.BRANCHES[name])
+function Connect_test_big_conns()
 
-  local function dump_exits(config, W, H)
+  local function dump_exits(info)
+    local W = assert(info.w)
+    local H = assert(info.h)
+
     local DIR_CHARS = { [2]="|", [8]="|", [4]=">", [6]="<" }
 
     local P = table.array_2D(W+2, H+2)
@@ -660,12 +674,14 @@ function Connect.test_branch_gen(name)
       P[x+1][y+1] = sel(geom.inside_box(x,y, 1,1, W,H), "#", " ")
     end end
 
-    for idx = 1,#config,3 do
-      local x   = config[idx+0]
-      local y   = config[idx+1]
-      local dir = config[idx+2]
+    for _,exit in ipairs(info.exits) do
+      local pos = int(exit / 10)
+      local dir =     exit % 10
 
-      assert(x, y, dir)
+      local x = BIG_CONN_POSITIONS[pos].x
+      local y = BIG_CONN_POSITIONS[pos].y
+
+      assert(x and y)
       assert(geom.inside_box(x,y, 1,1, W,H))
 
       local nx, ny = geom.nudge(x, y, dir)
@@ -688,18 +704,20 @@ function Connect.test_branch_gen(name)
     gui.printf("\n")
   end
 
-  for deep = 1,9 do for long = 1,9 do
-    gui.printf("==== %s %dx%d ==================\n\n", name, long, deep)
+  local name_list = {}
 
-    local configs = info.func(long, deep)
-    if not configs then
-      gui.printf("Unsupported size\n\n")
-    else
-      for _,CONF in ipairs(configs) do
-        dump_exits(CONF, long, deep)
-      end
-    end
-  end end -- deep, long
+  for name,_ in pairs(BIG_CONNECTIONS) do
+    table.insert(name_list, name)
+  end
+
+  table.sort(name_list)
+
+  for _,name in ipairs(name_list) do
+    gui.printf("==== %s ====\n\n", name)
+    dump_exits(BIG_CONNECTIONS[name])
+  end
+
+  error("Connect_test_big_conns finished.")
 end
 
 
@@ -1309,6 +1327,8 @@ gui.debugf("Failed\n")
   --==| Connect.connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
+
+Connect_test_big_conns()
 
   LEVEL.branched_one = false
 
