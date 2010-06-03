@@ -565,45 +565,82 @@ BIG_CONNECTIONS =
   ---==== TWO EXITS ====---
 
   -- pass through, directly centered
-  PC1 = { w=3, h=1, exits={ 22, 28 }, symmetry="x" },
-  PC2 = { h=3, h=2, exits={ 22, 58 }, symmetry="x" },
-  PC3 = { h=3, h=3, exits={ 22, 88 }, symmetry="x" },
+  PC1 = { w=3, h=1, prob=10, exits={ 22, 28 }, symmetry="x" },
+  PC2 = { h=3, h=2, prob=10, exits={ 22, 58 }, symmetry="x" },
+  PC3 = { h=3, h=3, prob=10, exits={ 22, 88 }, symmetry="x" },
 
   -- pass through, opposite edges
-  PO1 = { w=2, h=1, exits={ 12, 28 } },
-  PO2 = { w=2, h=2, exits={ 12, 58 } },
-  PO3 = { w=2, h=3, exits={ 12, 88 } },
+  PO1 = { w=2, h=1, prob=10, exits={ 12, 28 } },
+  PO2 = { w=2, h=2, prob=10, exits={ 12, 58 } },
+  PO3 = { w=2, h=3, prob=10, exits={ 12, 88 } },
 
-  PO4 = { w=3, h=1, exits={ 12, 38 } },
-  PO5 = { w=3, h=2, exits={ 12, 68 } },
-  PO6 = { w=3, h=3, exits={ 12, 98 } },
+  PO4 = { w=3, h=1, prob=10, exits={ 12, 38 } },
+  PO5 = { w=3, h=2, prob=10, exits={ 12, 68 } },
+  PO6 = { w=3, h=3, prob=10, exits={ 12, 98 } },
 
   -- L shape
-  L1 = { w=2, H=1, exits={ 14, 28 } },
-  L2 = { w=2, H=2, exits={ 14, 58 } },
-  L3 = { w=2, H=3, exits={ 14, 88 } },
+  L1 = { w=2, H=1, prob=10, exits={ 14, 28 } },
+  L2 = { w=2, H=2, prob=10, exits={ 14, 58 } },
+  L3 = { w=2, H=3, prob=10, exits={ 14, 88 } },
 
-  L4 = { w=3, H=1, exits={ 14, 38 } },
-  L5 = { w=3, H=2, exits={ 14, 68 } },
-  L6 = { w=3, H=3, exits={ 14, 98 } },
+  L4 = { w=3, H=1, prob=10, exits={ 14, 38 } },
+  L5 = { w=3, H=2, prob=10, exits={ 14, 68 } },
+  L6 = { w=3, H=3, prob=10, exits={ 14, 98 } },
 
   ---==== THREE EXITS ====---
   
+  -- T shape, turning left and right
+  T1 = { w=3, h=1, prob=10, exits={ 22, 14, 36 }, symmetry="x" },
+  T2 = { w=3, h=2, prob=10, exits={ 22, 44, 66 }, symmetry="x" },
+  T3 = { w=3, h=2, prob=10, exits={ 22, 74, 96 }, symmetry="x" },
+
+  -- T shape, no turning
+  TN1 = { w=3, h=1, prob=10, exits={ 22, 18, 38 }, symmetry="x" },
+  TN2 = { w=3, h=2, prob=10, exits={ 22, 48, 68 }, symmetry="x" },
+  TN3 = { w=3, h=2, prob=10, exits={ 22, 78, 98 }, symmetry="x" },
+
+  -- F shapes
+  F1 = { w=2, h=1, prob=10, exits={ 14, 12, 22 } },
+  F2 = { w=2, h=2, prob=10, exits={ 44, 12, 22 } },
+  F3 = { w=2, h=3, prob=10, exits={ 74, 12, 22 } },
+
+  F4 = { w=3, h=1, prob=10, exits={ 14, 22, 32 } },
+  F5 = { w=3, h=2, prob=10, exits={ 44, 22, 32 } },
+  F6 = { w=3, h=3, prob=10, exits={ 74, 22, 32 } },
+
+  F7 = { w=3, h=2, prob=10, exits={ 44, 12, 32 } },
+  F8 = { w=3, h=3, prob=10, exits={ 74, 12, 32 } },
 
   ---==== FOUR EXITS ====---
 
+  -- cross shape, all stems perfectly centered
+  XX = { w=3, h=3, prob=10, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+
+  -- cross shape, stems at other places
+  X1 = { w=3, h=1, prob=10, exits={ 22, 28, 14, 36 }, symmetry="xy" },
+  X2 = { w=3, h=2, prob=10, exits={ 22, 58, 44, 66 }, symmetry="xy" },
+  X3 = { w=3, h=3, prob=10, exits={ 22, 88, 74, 96 }, symmetry="xy" },
 
   -- H shape, no turning
-  H1 = { w=2, h=2, exits={ 12,22, 48,58 }, symmetry="x" },
-  H2 = { w=2, h=3, exits={ 12,22, 78,88 }, symmetry="x" },
-  H3 = { w=3, h=2, exits={ 12,22, 48,68 }, symmetry="x" },
-  H4 = { w=3, h=3, exits={ 12,22, 78,98 }, symmetry="x" },
+  H1 = { w=2, h=2, prob=10, exits={ 12,22, 48,58 }, symmetry="xy" },
+  H2 = { w=2, h=3, prob=10, exits={ 12,22, 78,88 }, symmetry="xy" },
+  H3 = { w=3, h=2, prob=10, exits={ 12,32, 48,68 }, symmetry="xy" },
+  H4 = { w=3, h=3, prob=10, exits={ 12,32, 78,98 }, symmetry="xy" },
 
   -- H shape, turning at other end
-  HT1 = { w=2, h=2, exits={ 12,22, 44,56 }, symmetry="x" },
-  HT2 = { w=2, h=3, exits={ 12,22, 74,86 }, symmetry="x" },
-  HT3 = { w=3, h=2, exits={ 12,22, 44,66 }, symmetry="x" },
-  HT4 = { w=3, h=3, exits={ 12,22, 74,96 }, symmetry="x" },
+  HT1 = { w=2, h=2, prob=10, exits={ 12,22, 44,56 }, symmetry="x" },
+  HT2 = { w=2, h=3, prob=10, exits={ 12,22, 74,86 }, symmetry="x" },
+  HT3 = { w=3, h=2, prob=10, exits={ 12,32, 44,66 }, symmetry="x" },
+  HT4 = { w=3, h=3, prob=10, exits={ 12,32, 74,96 }, symmetry="x" },
+
+  -- swastika shape
+  SWA1 = { w=2, h=2, prob=10, exits={ 12, 26, 44, 58 } },
+  SWA2 = { w=3, h=2, prob=10, exits={ 12, 36, 44, 68 } },
+  SWA3 = { w=3, h=3, prob=10, exits={ 12, 36, 74, 98 } },
+
+  -- double F shape
+  FF1 = { w=3, h=2, prob=10, exits={ 14,44, 22,32 } },
+  FF2 = { w=3, h=3, prob=10, exits={ 44,74, 22,32 } },
 }
 
 
