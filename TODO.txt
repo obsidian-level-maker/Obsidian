@@ -11,16 +11,18 @@ NO:  do placement allocations on a 64x64 grid
 
 Connections:
 
-+  plan them using sections first
-   i.e. CONN = { sect1, dir, sect2 }
-
-   --> connection_map
-       room -> room, allow teleporters and intrusions
-
 YES: choose starting room BEFORE connecting?
 
    - would allow better scoring
    - would be needed if doing heights at this stage
+
++  plan them using sections first
+   i.e. CONN = { sect1, dir, sect2 }
+
+-  The "connect map" is the conns[] list in each room.
+
+   -  need to allow teleporters and intrusions
+   -  intrusions can be locked, teleporters cannot be
 
 -  what makes a good set of connections?
 
@@ -34,7 +36,19 @@ YES: choose starting room BEFORE connecting?
        Big rect rooms have 3 or 4 connections on 3/4 diff sides
        
        (same basic criterion: need to traverse the whole room)
+       This trumps #1.
 
+   (3) in small room, 3 connections is becoming too many.
+       If only two, then prefer to turn 90 degrees.
+
+   (4) need a good number of "hubs" (3 or more connections).
+       
+       too few  --> no locked doors are possible
+       too many --> creates a lot of dead-end paths
+
+   (5) the connection shapes (T etc) are still a good idea for
+       large rectangular rooms.  But do it using sections instead
+       of seeds.
 
 
 Quests:
