@@ -590,9 +590,12 @@ BIG_CONNECTIONS =
   ---==== THREE EXITS ====---
   
   -- T shape, turning left and right
-  T1 = { w=3, h=1, prob=10, exits={ 22, 14, 36 }, symmetry="x" },
-  T2 = { w=3, h=2, prob=10, exits={ 22, 44, 66 }, symmetry="x" },
-  T3 = { w=3, h=2, prob=10, exits={ 22, 74, 96 }, symmetry="x" },
+  T1 = { w=1, h=2, prob=10, exits={ 12, 44, 46 }, symmetry="x" },
+  T2 = { w=1, h=3, prob=10, exits={ 12, 74, 76 }, symmetry="x" },
+
+  T4 = { w=3, h=1, prob=10, exits={ 22, 14, 36 }, symmetry="x" },
+  T5 = { w=3, h=2, prob=10, exits={ 22, 44, 66 }, symmetry="x" },
+  T6 = { w=3, h=2, prob=10, exits={ 22, 74, 96 }, symmetry="x" },
 
   -- T shape, no turning
   TN1 = { w=3, h=1, prob=10, exits={ 22, 18, 38 }, symmetry="x" },
@@ -614,7 +617,7 @@ BIG_CONNECTIONS =
   ---==== FOUR EXITS ====---
 
   -- cross shape, all stems perfectly centered
-  XX = { w=3, h=3, prob=10, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+  XP = { w=3, h=3, prob=10, exits={ 22, 44, 66, 88 }, symmetry="xy" },
 
   -- cross shape, stems at other places
   X1 = { w=3, h=1, prob=10, exits={ 22, 28, 14, 36 }, symmetry="xy" },
