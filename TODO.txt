@@ -48,6 +48,8 @@ YES: choose starting room BEFORE connecting?
 
        natural areas are most flexible
 
+       limit on 4-exit rooms is probably: int(LEVEL.H / 2)
+
    (5) the connection patterns (T, L, etc) are still a good idea for
        large rectangular rooms.  But do it using sections instead
        of seeds.
