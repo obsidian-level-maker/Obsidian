@@ -545,7 +545,10 @@ One-way routes
      The return can occur anywhere where the two arenas touch
      (for physical connection).  A teleporter back is always
      possible (desirable when entry was also via teleporter).
-    
+
+     The return MUST be one-way as well.
+
+     QUESTION: how do one-way routes and locked doos interact??
      
 
 Cycles:
@@ -556,7 +559,17 @@ Cycles:
      group of rooms in a cycle.
 
      I really doubt cycles would add much to a level.
+     However some people may like the non-linearity which it
+     introduces.
 
+     Adding extra locked doors between two arenas (especially
+     using different rooms that the main locked door) is another
+     way to create a cycle (these are probably more interesting).
+
+     Extra locked doors can even be placed between two disjoint
+     arenas (like the first and the last), giving the player a
+     shortcut to earlier parts of the level.  An example is the
+     blue keyed door in E1M2 of Quake.
 
 
 -  module help / explanations ?? (appear above the options)
