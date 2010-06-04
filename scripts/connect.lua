@@ -1,6 +1,6 @@
----------------------------------------------------------------
+------------------------------------------------------------------------
 --  CONNECTIONS
-----------------------------------------------------------------
+------------------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
@@ -16,7 +16,7 @@
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
 --
-----------------------------------------------------------------
+------------------------------------------------------------------------
 
 --[[ *** CLASS INFORMATION ***
 
@@ -736,12 +736,38 @@ function Connect_test_big_conns()
 end
 
 
-function Connect.connect_rooms()
+------------------------------------------------------------------------
 
-  -- Guidelines:
-  -- . prefer ground areas not to be leafs
-  -- . prefer big rooms to have 3 or more connections.
-  -- . prefer small isolated rooms to be leafs (1 connection).
+
+function Connect_decide_start_room()
+
+  local function eval_room(R)
+    local cost = R.sw * R.sh
+
+    cost = cost + 10 * (gui.random() ^ 2)
+
+    gui.debugf("Start cost @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, cost)
+
+    return cost
+  end
+
+  ---| Connect_decide_start_room |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    R.start_cost = eval_room(R)
+  end
+
+  local start = table.pick_best(LEVEL.all_rooms, function(A, B) return A.start_cost < B.start_cost end)
+
+  gui.printf("Start room: %s\n", start:tostr())
+
+  LEVEL.start_room = start
+
+  start.purpose = "START"
+end
+
+
+function Connect.connect_rooms()
 
   local function merge_groups(id1, id2)
     if id1 > id2 then id1,id2 = id2,id1 end
@@ -1351,6 +1377,8 @@ gui.debugf("Failed\n")
     R.c_group = c_group
     R.teleports = {}
   end
+
+  Connect_decide_start_room()
 
 --!!!  sprinkle_scenics()
 

@@ -146,21 +146,10 @@ function Quest.arena_after_lock(LOCK)
 end
 
 
-function Quest.decide_start_room(arena)
+function Quest_natural_flow(R, visited)
+  assert(R.kind ~= "scenic")
 
-  local function eval_room(R)
-    local cost = R.svolume
-
-    -- preference for leaf rooms
-    cost = cost + 20 * #R.conns
-
-    -- large amount of randomness
-    cost = cost + 75 * (gui.random() ^ 0.5)
-
---  gui.printf("Start cost @ %s (svol:%d rconns:%d) --> %1.3f\n", R.svolume, #R.conns, cost)
-
-    return cost
-  end
+  visited[R] = true
 
   local function swap_conn(C)
     C.src, C.dest = C.dest, C.src
@@ -168,50 +157,25 @@ function Quest.decide_start_room(arena)
     C.dir = 10 - C.dir
   end
 
-  local function natural_flow(R, visited)
-    assert(R.kind ~= "scenic")
-
-    visited[R] = true
-
-    for _,C in ipairs(R.conns) do
-      if R == C.dest and not visited[C.src] then
-        swap_conn(C)
-      end
-      if R == C.src and not visited[C.dest] then
-        natural_flow(C.dest, visited)
-        C.dest.entry_conn = C
-      end
+  for _,C in ipairs(R.conns) do
+    if R == C.dest and not visited[C.src] then
+      swap_conn(C)
     end
-
-    for _,T in ipairs(R.teleports) do
-      if R == T.dest and not visited[T.src] then
-        swap_conn(T)
-      end
-      if R == T.src and not visited[T.dest] then
-        natural_flow(T.dest, visited)
-        T.dest.entry_conn = T
-      end
+    if R == C.src and not visited[C.dest] then
+      Quest_natural_flow(C.dest, visited)
+      C.dest.entry_conn = C
     end
   end
 
-
-  ---| Quest.decide_start_room |---
-
-  for _,R in ipairs(arena.rooms) do
-    R.start_cost = eval_room(R)
-    gui.debugf("%s : START COST : %1.4f\n", R:tostr(), R.start_cost)
+  for _,T in ipairs(R.teleports) do
+    if R == T.dest and not visited[T.src] then
+      swap_conn(T)
+    end
+    if R == T.src and not visited[T.dest] then
+      Quest_natural_flow(T.dest, visited)
+      T.dest.entry_conn = T
+    end
   end
-
-  arena.start = table.pick_best(arena.rooms, function(A,B) return A.start_cost < B.start_cost end)
-
-  assert(#arena.start.conns > 0)
-
-  gui.printf("Start room: %s\n", arena.start:tostr())
-
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
-  natural_flow(arena.start, {})
 end
 
 
@@ -1140,16 +1104,17 @@ function Quest.assign_quests()
     rooms = table.copy(LEVEL.all_rooms),
     conns = table.copy(LEVEL.all_conns),
     lock = LOCK,
+    start = LEVEL.start_room,
   }
 
 
   LEVEL.all_arenas = { ARENA }
   LEVEL.all_locks  = { LOCK  }
 
-  Quest.decide_start_room(ARENA)
-
-  LEVEL.start_room = ARENA.start
-  LEVEL.start_room.purpose = "START"
+  -- update connections so that 'src' and 'dest' follow the natural
+  -- flow of the level, i.e. player always walks src -> dest (except
+  -- when backtracking).
+  Quest_natural_flow(LEVEL.start_room, {})
 
 
   Quest.initial_path(ARENA)
