@@ -11,6 +11,12 @@ NO:  do placement allocations on a 64x64 grid
 
 Connections:
 
+POSSIBLE TERMINOLOGY
+  Leaf   : only one exit
+  Stalk  : two exits
+  Branch : three exits
+  Trunk  : four exits
+
 YES: choose starting room BEFORE connecting?
 
    - would allow better scoring
@@ -48,7 +54,10 @@ YES: choose starting room BEFORE connecting?
 
        natural areas are most flexible
 
-       limit on 4-exit rooms is probably: int(LEVEL.H / 2)
+       limit on 4-exit rooms ("mega-hub") is probably: int(LEVEL.H / 2)
+
+       for each room, count how many other rooms it touches.
+       big rects or plus with >= 4 are candidates for mega-hub
 
    (5) the connection patterns (T, L, etc) are still a good idea for
        large rectangular rooms.  But do it using sections instead
