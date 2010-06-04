@@ -757,9 +757,13 @@ function Connect_decide_start_room()
     R.start_cost = eval_room(R)
   end
 
-  local start = table.pick_best(LEVEL.all_rooms, function(A, B) return A.start_cost < B.start_cost end)
+  local start, index = table.pick_best(LEVEL.all_rooms, function(A, B) return A.start_cost < B.start_cost end)
 
   gui.printf("Start room: %s\n", start:tostr())
+
+  -- move it to the front of the list
+  table.remove(LEVEL.all_rooms, index)
+  table.insert(LEVEL.all_rooms, 1, start)
 
   LEVEL.start_room = start
 
