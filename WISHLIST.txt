@@ -558,18 +558,28 @@ Cycles:
      connection map, there would only be a single node for the
      group of rooms in a cycle.
 
-     I really doubt cycles would add much to a level.
+  -  I really doubt cycles would add much to a level.
      However some people may like the non-linearity which it
      introduces.
 
-     Adding extra locked doors between two arenas (especially
+  -  Adding extra locked doors between two arenas (especially
      using different rooms that the main locked door) is another
      way to create a cycle (these are probably more interesting).
+     An example is the blue keyed door in E1M2 of Quake.
 
      Extra locked doors can even be placed between two disjoint
      arenas (like the first and the last), giving the player a
-     shortcut to earlier parts of the level.  An example is the
-     blue keyed door in E1M2 of Quake.
+     shortcut to earlier parts of the level.
+
+  -  a cycle consisting of three rooms, each connected by one-way
+     routes (e.g. fall / fall / one-way lift) could be intersting.
+
+  -  when a cycle (treated as a single node) would have two or more
+     locks coming off it, then it should try hard to ensure that
+     different rooms in the cycle are used for each lock.
+
+     This suggests that the ideal cycles are a group of three or
+     four SMALL rooms, each of which touches 3+ rooms.
 
 
 -  module help / explanations ?? (appear above the options)
