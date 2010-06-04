@@ -449,7 +449,7 @@ Monsters:
 
 +  better global architecture
 
-+  teleporters!
++  teleporters!   (RED is two-way, WHITE is one-way)
 
 +  make Oblige easier to mod.
 
@@ -520,24 +520,50 @@ Monsters:
   IDEAS AND BRAINSTORMS
 ----------------------------------------------------------------
 
+One-way routes
+
+  -  TRUE one-way routes mean you never get back.
+
+      These should be rare (max once per episode).
+      It should be a large fall-off (or 3D hole in Quake).
+      Few rooms near start are "high hub", rest of map is "low hub".
+      High hub has only one quest (the hole / fall-off).
+
+      Health/Ammo placement needs to NOT "go back" past a true
+      one-way connection.  Limit placement to rooms in each hub.
+
+  -  Kinds of one way connections:
+
+     (a) fall-offs
+     (b) teleporters
+     (c) lifts that go up (or down) into a hole
+         (activated by a switch only on one side).
+     (d) doors that only open from one side (esp. via a switch)
+
+  -  returnable one-way routes require a way back.
+     
+     The return can occur anywhere where the two arenas touch
+     (for physical connection).  A teleporter back is always
+     possible (desirable when entry was also via teleporter).
+    
+     
+
+Cycles:
+
+  -  Cycles are equivalent to considering the rooms in the cycle
+     as though they were one big room.  So when creating the
+     connection map, there would only be a single node for the
+     group of rooms in a cycle.
+
+     I really doubt cycles would add much to a level.
+
+
+
 -  module help / explanations ?? (appear above the options)
 
 -  CSG: clipping rectangles (typically a room)
 
 -  friendly monsters
-
-?? one-way routes ??
-   -  for example: at along:3 fall-off -> along:4
-      BUT... how to get back to along:3 ??
-      WITHOUT creating an alternative path?
-      ANSWER: use another one-way connection
-
-   - One way connections:
-     (a) fall-offs
-     (b) teleporters
-     (c) doors that only open from one side (esp. via a switch)
-     (d) lifts that go up (or down) into a hole
-         (activated by a switch only on one side).
 
 -  have a table listing a quantized HSV for each texture/flat
    and make aesthetic decisions using it.
