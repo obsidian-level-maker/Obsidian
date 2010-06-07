@@ -3,10 +3,28 @@ TODO
 ====
 
 
+use kx, ky, K for section_map stuff
 
 ??  when to decide WOTSIT, monster and pickup spots ??
 
 NO:  do placement allocations on a 64x64 grid
+
+
+
+Quests:
+
+-  Simpler method of generating the quests:
+
+   (1) let the current room be the start room
+
+   (2) while the current room has 2 or more free exits,
+       pick one and lock it.  Traverse one of the other free
+       exits until a leaf it hit, and place the key there.
+
+   (3) iterate over the exits, recursively performing this
+       algorithm on the room on the other side.  The order
+       is important, it must be: the final free exit, the last
+       locked exit, ..., the first locked exit.
 
 
 Connections:
@@ -70,6 +88,19 @@ YES: choose starting room BEFORE connecting?
        also OK for start room, and ideal for exit room when
        using a "small exit" prefab.
 
+
+IDEA: "crossover" room is 1x1 (perhaps 2x1) room using a 3D bridge,
+      so that one path goes E/W and other path goes N/S.
+      [90 degree turns are possible too, but way less cool]
+
+      Crossovers do NOT exist as nodes in the connection map
+      (they only exist as links).
+
+      Two crossovers cannot connect to each other (because they
+      would need a node between them, which doesn't exist).
+
+      The quest of the low path is earlier than the quest of the
+      high path (3D bridge).
 
 
 Quests:
