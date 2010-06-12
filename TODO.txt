@@ -89,6 +89,11 @@ YES: choose starting room BEFORE connecting?
        using a "small exit" prefab.
 
 
+- Lock postponing : after decided all locked conns, pick one and
+  if next room is a stalk, then can move the lock to the next
+  door (and the next room becomes part of the earlier quest).
+
+
 IDEA: "crossover" room is 1x1 (perhaps 2x1) room using a 3D bridge,
       so that one path goes E/W and other path goes N/S.
       [90 degree turns are possible too, but way less cool]
