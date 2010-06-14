@@ -7,11 +7,12 @@
 # NOTE: the Lua library must be compiled as C++
 #
 
-PROGRAM=../Oblige.exe
+PROGRAM=Oblige.exe
 
 CXX=i586-mingw32msvc-g++
 
-LIB_LOC=../win32_lib
+LIB_LOC=lib_win32
+OBJ_DIR=obj_win32
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 LUA_DIR=$(LIB_LOC)/lua-5.1.4
@@ -45,58 +46,64 @@ LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
      -lcomctl32 -lwsock32 -lsupc++
 
-OBJS=	main.o      \
-	oblige_res.o \
-	lib_argv.o  \
-	lib_file.o  \
-	lib_signal.o \
-	lib_util.o  \
-	lib_pak.o   \
-	lib_wad.o   \
-	sys_assert.o \
-	sys_debug.o \
-	csg_main.o  \
-	csg_poly.o  \
-	g_cookie.o  \
-	g_lua.o     \
-	img_bolt.o  \
-	img_pill.o  \
-	img_carve.o \
-	img_relief.o \
-	img_font1.o  \
+
+#----- Objects ----------------------------------------------------
+
+OBJS=	$(OBJ_DIR)/main.o      \
+	$(OBJ_DIR)/oblige_res.o \
+	$(OBJ_DIR)/lib_argv.o  \
+	$(OBJ_DIR)/lib_file.o  \
+	$(OBJ_DIR)/lib_signal.o \
+	$(OBJ_DIR)/lib_util.o  \
+	$(OBJ_DIR)/lib_pak.o   \
+	$(OBJ_DIR)/lib_wad.o   \
+	$(OBJ_DIR)/sys_assert.o \
+	$(OBJ_DIR)/sys_debug.o \
+	$(OBJ_DIR)/csg_main.o  \
+	$(OBJ_DIR)/csg_poly.o  \
+	$(OBJ_DIR)/g_cookie.o  \
+	$(OBJ_DIR)/g_lua.o     \
+	$(OBJ_DIR)/img_bolt.o  \
+	$(OBJ_DIR)/img_pill.o  \
+	$(OBJ_DIR)/img_carve.o \
+	$(OBJ_DIR)/img_relief.o \
+	$(OBJ_DIR)/img_font1.o  \
 	\
-	csg_doom.o  \
-	csg_quake.o \
-	dm_extra.o  \
-	dm_glbsp.o  \
-	dm_wad.o    \
-	nk_art.o    \
-	nk_level.o  \
-	q1_clip.o   \
-	q1_doors.o  \
-	q1_main.o   \
-	q_bsp.o     \
-	vis_buffer.o \
-	wolf_map.o  \
+	$(OBJ_DIR)/csg_doom.o  \
+	$(OBJ_DIR)/csg_quake.o \
+	$(OBJ_DIR)/dm_extra.o  \
+	$(OBJ_DIR)/dm_glbsp.o  \
+	$(OBJ_DIR)/dm_wad.o    \
+	$(OBJ_DIR)/nk_art.o    \
+	$(OBJ_DIR)/nk_level.o  \
+	$(OBJ_DIR)/q1_clip.o   \
+	$(OBJ_DIR)/q1_doors.o  \
+	$(OBJ_DIR)/q1_main.o   \
+	$(OBJ_DIR)/q_bsp.o     \
+	$(OBJ_DIR)/vis_buffer.o \
+	$(OBJ_DIR)/wolf_map.o  \
 	\
-	twister.o   \
-	tx_forge.o  \
-	tx_skies.o  \
-	ui_about.o  \
-	ui_build.o  \
-	ui_chooser.o \
-	ui_console.o \
-	ui_dialog.o \
-	ui_game.o   \
-	ui_level.o  \
-	ui_map.o    \
-	ui_module.o \
-	ui_rchoice.o \
-	ui_play.o   \
-	ui_window.o
+	$(OBJ_DIR)/twister.o   \
+	$(OBJ_DIR)/tx_forge.o  \
+	$(OBJ_DIR)/tx_skies.o  \
+	$(OBJ_DIR)/ui_about.o  \
+	$(OBJ_DIR)/ui_build.o  \
+	$(OBJ_DIR)/ui_chooser.o \
+	$(OBJ_DIR)/ui_console.o \
+	$(OBJ_DIR)/ui_dialog.o \
+	$(OBJ_DIR)/ui_game.o   \
+	$(OBJ_DIR)/ui_level.o  \
+	$(OBJ_DIR)/ui_map.o    \
+	$(OBJ_DIR)/ui_module.o \
+	$(OBJ_DIR)/ui_rchoice.o \
+	$(OBJ_DIR)/ui_play.o   \
+	$(OBJ_DIR)/ui_window.o
+
+$(OBJ_DIR)/%.o: gui/%.cc
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
-#--- Targets and Rules ------------------------------------------
+#----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
 
@@ -106,10 +113,10 @@ $(PROGRAM): $(OBJS)
 stripped: $(PROGRAM)
 	i586-mingw32msvc-strip --strip-unneeded $(PROGRAM)
 
-oblige_res.o: oblige.rc
+$(OBJ_DIR)/oblige_res.o: gui/oblige.rc
 	i586-mingw32msvc-windres $^ -o $@
 
-.PHONY: all clean bin
+.PHONY: all clean stripped
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab
