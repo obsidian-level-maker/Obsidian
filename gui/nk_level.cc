@@ -276,7 +276,6 @@ private:
 
 
 
-
 bool nukem_game_interface_c::Start()
 {
   filename = Select_Output_File("grp");
@@ -286,6 +285,9 @@ bool nukem_game_interface_c::Start()
     Main_ProgStatus("Cancelled");
     return false;
   }
+
+  if (create_backups)
+    Main_BackupFile(filename, "bak");
 
   if (! NK_StartGRP(filename))
   {
@@ -306,6 +308,10 @@ bool nukem_game_interface_c::Start()
 bool nukem_game_interface_c::Finish(bool build_ok)
 {
   NK_EndGRP();
+
+  // remove the file if an error occurred
+  if (! build_ok)
+    FileDelete(filename);
 
   return build_ok;
 }

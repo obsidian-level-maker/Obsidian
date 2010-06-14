@@ -40,6 +40,7 @@ extern const char *batch_output_file;
 
 void Main_FatalError(const char *msg, ...);
 void Main_ProgStatus(const char *msg, ...);
+bool Main_BackupFile(const char *filename, const char *ext);
 void Main_Ticker();
 
 

@@ -585,7 +585,8 @@ bool quake1_game_interface_c::Start()
     return false;
   }
 
-  BSP_BackupPAK(filename);
+  if (create_backups)
+    Main_BackupFile(filename, "old");
 
   if (! PAK_OpenWrite(filename))
   {
@@ -609,8 +610,9 @@ bool quake1_game_interface_c::Finish(bool build_ok)
 {
   PAK_CloseWrite();
 
-  // tidy up
-/////  FileDelete(TEMP_FILENAME);
+  // remove the file if an error occurred
+  if (! build_ok)
+    FileDelete(filename);
 
   return build_ok;
 }

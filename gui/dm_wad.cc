@@ -41,8 +41,6 @@
 extern void DM_WriteDoom(void);
 extern void DM_FreeLevelStuff(void);
 
-#define TEMP_FILENAME    "temp/out.wad"
-
 static char *level_name;
 
 bool wad_hexen;  // FIXME: not global (next 3 too)
@@ -435,12 +433,13 @@ public:
   void Property(const char *key, const char *value);
 
 private:
-  bool BuildNodes(const char *target_file);
+  bool BuildNodes();
 
-  bool CheckDirectory(const char *filename);
+///  bool CheckDirectory(const char *filename);
 };
 
 
+#if 0  // UNUSED
 bool doom_game_interface_c::CheckDirectory(const char *filename)
 {
   char *dir_name = StringDup(filename);
@@ -463,27 +462,23 @@ bool doom_game_interface_c::CheckDirectory(const char *filename)
 
   return result;
 }
+#endif
 
 
 bool doom_game_interface_c::Start()
 {
-  for (;;)
+  filename = Select_Output_File("wad");
+
+  if (! filename)
   {
-    filename = Select_Output_File("wad");
-
-    if (! filename)
-    {
-      Main_ProgStatus("Cancelled");
-      return false;
-    }
-
-    if (CheckDirectory(filename))
-      break;
-
-    // keep trying until filename is valid
+    Main_ProgStatus("Cancelled");
+    return false;
   }
 
-  if (! DM_StartWAD(TEMP_FILENAME))
+  if (create_backups)
+    Main_BackupFile(filename, "bak");
+
+  if (! DM_StartWAD(filename))
   {
     Main_ProgStatus("Error (create file)");
     return false;
@@ -499,42 +494,43 @@ bool doom_game_interface_c::Start()
 }
 
 
-bool doom_game_interface_c::BuildNodes(const char *target_file)
+bool doom_game_interface_c::BuildNodes()
 {
-  DebugPrintf("TARGET FILENAME: [%s]\n", target_file);
+  char *temp_name = ReplaceExtension(filename, "tmp");
 
-  // backup any existing wad
+  FileDelete(temp_name);
 
-  if (create_backups && FileExists(target_file))
+  if (! FileRename(filename, temp_name))
   {
-    char *backup_name = ReplaceExtension(target_file, "bak");
-
-    LogPrintf("Backing up existing file to %s\n", backup_name);
-
-    if (! FileCopy(target_file, backup_name))
-      LogPrintf("WARNING: unable to create backup!\n");
-
-    StringFree(backup_name);
+    LogPrintf("WARNING: could not rename file to .TMP!\n");
+    StringFree(temp_name);
+    return false;
   }
+  
+  bool result = DM_BuildNodes(temp_name, filename);
 
-  return DM_BuildNodes(TEMP_FILENAME, target_file);
+  FileDelete(temp_name);
+  StringFree(temp_name);
+
+  return result;
 }
 
 
 bool doom_game_interface_c::Finish(bool build_ok)
 {
-  if (! DM_EndWAD())
-  {
-    // FIXME: there were write errors -- do something
-  }
+  // TODO: handle write errors
+  DM_EndWAD();
 
   if (build_ok)
   {
-    build_ok = BuildNodes(filename);
+    build_ok = BuildNodes();
   }
 
-  // tidy up
-  FileDelete(TEMP_FILENAME);
+  if (! build_ok)
+  {
+    // remove the WAD if an error occurred
+    FileDelete(filename);
+  }
 
   return build_ok;
 }

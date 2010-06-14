@@ -357,24 +357,6 @@ qLump_c *BSP_NewLump(int entry)
 }
 
 
-void BSP_BackupPAK(const char *filename)
-{
-  if (create_backups && FileExists(filename))
-  {
-    char *backup_name = ReplaceExtension(filename, "old");
-
-    LogPrintf("Backing up existing file to %s\n", backup_name);
-
-    if (FileCopy(filename, backup_name))
-      FileDelete(filename);
-    else
-      LogPrintf("WARNING: unable to create backup!\n");
-
-    StringFree(backup_name);
-  }
-}
-
-
 qLump_c * BSP_CreateInfoLump()
 {
   qLump_c *L = new qLump_c();

@@ -168,6 +168,30 @@ void Determine_InstallPath(const char *argv0)
 }
 
 
+bool Main_BackupFile(const char *filename, const char *ext)
+{
+  if (FileExists(filename))
+  {
+    char *backup_name = ReplaceExtension(filename, ext);
+
+    LogPrintf("Backing up existing file to: %s\n", backup_name);
+
+    FileDelete(backup_name);
+
+    if (! FileRename(filename, backup_name))
+    {
+      LogPrintf("WARNING: unable to rename file!\n");
+      StringFree(backup_name);
+      return false;
+    }
+
+    StringFree(backup_name);
+  }
+
+  return true;
+}
+
+
 void Setup_FLTK()
 {
   bool custom_colors = true;

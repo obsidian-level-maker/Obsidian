@@ -59,8 +59,6 @@ private:
 };
 
 
-void BSP_BackupPAK(const char *filename);
-
 bool BSP_OpenLevel(const char *entry_in_pak, int game /* 1 or 2 */);
 bool BSP_CloseLevel();
 
