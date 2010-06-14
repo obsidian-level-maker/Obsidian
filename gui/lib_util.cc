@@ -90,10 +90,19 @@ char *StringNew(int length)
 
 char *StringDup(const char *orig, int limit)
 {
-  char *s = (limit < 0) ? strdup(orig) : strndup(orig, limit);
+  if (limit < 0)
+  {
+    char *s = strdup(orig);
 
-  if (! s)
-    AssertFail("Out of memory (copy string)\n");
+    if (! s)
+      AssertFail("Out of memory (copy string)\n");
+
+    return s;
+  }
+
+  char * s = StringNew(limit+1);
+  strncpy(s, orig, limit);
+  s[limit] = 0;
 
   return s;
 }
