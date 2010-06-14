@@ -39,7 +39,7 @@ GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
-CXXFLAGS=-O2  -Wall -D$(OS) \
+CXXFLAGS=-O2 -Wall -Wno-strict-aliasing -D$(OS) \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=
 LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
