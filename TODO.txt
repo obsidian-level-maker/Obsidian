@@ -2,8 +2,15 @@
 TODO
 ====
 
+TEST:  CSG DOOM: temporary file has ".TMP" extension, delete it on error
+       kill the temp/ folder  (NB: used by wolf too)
 
-use kx, ky, K for section_map stuff
+TEST: output file is deleted on script error.
+
+
+
+-  Makefiles: put .o in obj_linux and obj_win32 folders
+
 
 ??  when to decide WOTSIT, monster and pickup spots ??
 
@@ -29,16 +36,10 @@ Quests:
 
 Connections:
 
-POSSIBLE TERMINOLOGY
+TERMINOLOGY
   Leaf   : only one exit
   Stalk  : two exits
-  Branch : three exits
-  Trunk  : four exits
-
-YES: choose starting room BEFORE connecting?
-
-   - would allow better scoring
-   - would be needed if doing heights at this stage
+  Branch : three or more exits
 
 +  plan them using sections first
    i.e. CONN = { sect1, dir, sect2 }
@@ -171,6 +172,10 @@ IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
     (this is only mechanism for C++ to "call" Lua code)
+
+  ? the console is a text-based interface whereas the GUI
+    is the graphical interface, both using the same mechanism.
+
   - build the debugger using Lua
 
 
@@ -179,12 +184,6 @@ IDEA:
 
 Console:
   +  display lists better
-
-
-Planner:
-  ???  sub-rooms  (via section_map)
-
-  ???  nudging
 
 
 --------------------------------------------------------------------
@@ -197,6 +196,8 @@ BUG: switch in cave may end up inaccessible (clear the seed)
 BUG: place pickups more carefully in caves (otherwise can be unpickupable)
 
 BUG: liquification of caves at a border can subvert quests
+     >>  need to build a normal wall at sides of a connection seed
+         which touch another room (or edge of map).
 
 BUG: items occasionally appear on high fences
      - finding small spots ignores sideway extents (thick[])
@@ -231,7 +232,7 @@ BUG: corner supports are sometimes off the wall
 
 -  some basic lighting objects (torches), esp. Urban/Hell
 
--  have a 'functions' table for games, engines, mods 
+DONE:  have a 'functions' table for games, engines, mods 
    e.g. setup_func = XXX  -->  functions = { setup = XXX }
 
 -  cmdline option: -k (--keep-seed)
@@ -241,9 +242,6 @@ CSG CODE:
 
 +  improve progress bar code to handle Lua part + CSG part
    (especially for Quake)
-
-+  CSG DOOM: temporary file has ".TMP" extension, delete it on error
-             kill the temp/ folder  (NB: used by wolf too)
 
 DONE(?)  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
          (similarly for 'tag', 'args' etc...).
