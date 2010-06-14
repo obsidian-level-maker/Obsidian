@@ -226,8 +226,8 @@ end
 function Plan_dump_sections(title)
 
   local function section_char(x, y)
-    local SEC = LEVEL.section_map[x][y]
-    local R = SEC.room
+    local K = LEVEL.section_map[x][y]
+    local R = K.room
     if not R then return '.' end
     if R.kind == "scenic" then return '=' end
     local n = 1 + ((R.id-1) % 26)
@@ -286,7 +286,7 @@ function Plan_add_small_rooms()
       if H > W+1 and rand.odds(90) then return "x" end
       if W > H+1 and rand.odds(90) then return "y" end
 
-      return rand.sel(30, "x", "y")
+      return rand.sel(33, "x", "y")
     end
 
     if can_x then return "x" end
@@ -298,28 +298,28 @@ function Plan_add_small_rooms()
   ---| Plan_add_small_rooms |---
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    local SEC = LEVEL.section_map[x][y]
-    if not SEC.room then
+    local K = LEVEL.section_map[x][y]
+    if not K.room then
       local R = Plan_new_room()
 
-      R.lx1 = x ; R.lx2 = x
-      R.ly1 = y ; R.ly2 = y
+      R.kx1 = x ; R.kx2 = x
+      R.ky1 = y ; R.ky2 = y
 
-      SEC.room = R
+      K.room = R
 
       -- sometimes become a 2x1 / 1x2 sized room
       local can_xy = can_make_double(x, y)
 
       if can_xy and rand.odds(40) then
         if can_xy == "x" then
-          SEC = LEVEL.section_map[x+1][y]
+          K = LEVEL.section_map[x+1][y]
         else
-          SEC = LEVEL.section_map[x][y+1]
+          K = LEVEL.section_map[x][y+1]
         end
 
-        assert(not SEC.room)
+        assert(not K.room)
 
-        SEC.room = R
+        K.room = R
       end
     end
   end end
@@ -358,24 +358,24 @@ function Plan_add_big_rooms()
     [22] = 80, [33] = 40, [32] = 20, [31] = 4,
   }
 
-  local function test_or_set_rect(lx, ly, rot, w, h, ROOM)
+  local function test_or_set_rect(kx, ky, rot, w, h, ROOM)
     if w >= LEVEL.W or h >= LEVEL.H then
       return false  -- would span the whole map
     end
 
-    if bit.btest(rot, 2) then lx = lx - w + 1 end
-    if bit.btest(rot, 4) then ly = ly - h + 1 end
+    if bit.btest(rot, 2) then kx = kx - w + 1 end
+    if bit.btest(rot, 4) then ky = ky - h + 1 end
 
-    local lx2 = lx + w - 1
-    local ly2 = ly + h - 1
+    local kx2 = kx + w - 1
+    local ky2 = ky + h - 1
 
-    if lx < 1 or lx2 > LEVEL.W or
-       ly < 1 or ly2 > LEVEL.H
+    if kx < 1 or kx2 > LEVEL.W or
+       ky < 1 or ky2 > LEVEL.H
     then
       return false
     end
 
-    for x = lx,lx2 do for y = ly,ly2 do
+    for x = kx,kx2 do for y = ky,ky2 do
       if ROOM then
         LEVEL.section_map[x][y].room = ROOM
       elseif Plan_has_section(x, y) then
@@ -386,7 +386,7 @@ function Plan_add_big_rooms()
     return true
   end
 
-  local function test_or_set_shape(lx, ly, rot, dir_list, ROOM)
+  local function test_or_set_shape(kx, ky, rot, dir_list, ROOM)
     local touch_bottom, touch_top
     local touch_left, touch_right
 
@@ -395,7 +395,7 @@ function Plan_add_big_rooms()
       orig_dir = orig_dir % 10
 
       local dir  = geom.ROTATE[rot][orig_dir]
-      local x, y = geom.nudge(lx, ly, dir, dist)
+      local x, y = geom.nudge(kx, ky, dir, dist)
 
       if not Plan_is_section_valid(x, y) then
         return false
@@ -440,16 +440,16 @@ function Plan_add_big_rooms()
     return rw, rh
   end
 
-  local function try_add_biggie(shape_name, lx, ly, rot, rw, rh)
+  local function try_add_biggie(shape_name, kx, ky, rot, rw, rh)
     local ROOM
 
     if shape_name == "rect" then
 
-      if test_or_set_rect(lx, ly, rot, rw, rh) then
+      if test_or_set_rect(kx, ky, rot, rw, rh) then
         ROOM = Plan_new_room()
         ROOM.shape = "rect"
 
-        test_or_set_rect(lx, ly, rot, rw, rh, ROOM)
+        test_or_set_rect(kx, ky, rot, rw, rh, ROOM)
 
         return rw * rh
       end
@@ -459,12 +459,12 @@ function Plan_add_big_rooms()
       local shape = BIG_ROOM_SHAPES[shape_name]
       assert(shape)
 
-      if test_or_set_shape(lx, ly, rot, shape.dirs) then
+      if test_or_set_shape(kx, ky, rot, shape.dirs) then
         ROOM = Plan_new_room()
         ROOM.shape = shape.name
         ROOM.shape_rot = rot
 
-        test_or_set_shape(lx, ly, rot, shape.dirs, ROOM)
+        test_or_set_shape(kx, ky, rot, shape.dirs, ROOM)
 
         return assert(shape.size)
       end
@@ -925,10 +925,10 @@ gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, gr
 
     -- side sits on border of the map?
 --[[
-    if (side == 2 and R.ly1 == 1) or
-       (side == 4 and R.lx1 == 1) or
-       (side == 6 and R.lx2 == LAND_W) or
-       (side == 8 and R.ly2 == LAND_H)
+    if (side == 2 and R.ky1 == 1) or
+       (side == 4 and R.kx1 == 1) or
+       (side == 6 and R.kx2 == LAND_W) or
+       (side == 8 and R.ky2 == LAND_H)
     then
       return false
     end
@@ -1218,20 +1218,20 @@ function Plan_make_seeds()
     S.kind = "walk"
   end
 
-  local function fill_section(lx, ly)
-    local SEC = LEVEL.section_map[lx][ly]
+  local function fill_section(kx, ky)
+    local K = LEVEL.section_map[kx][ky]
+    local R = K.room
 
-    local R = SEC.room
     if not R then return end
 
-    local sx1 = LEVEL.section_X[lx]
-    local sy1 = LEVEL.section_Y[ly]
+    local sx1 = LEVEL.section_X[kx]
+    local sy1 = LEVEL.section_Y[ky]
 
-    local sx2 = sx1 + LEVEL.section_W[lx] - 1
-    local sy2 = sy1 + LEVEL.section_H[ly] - 1
+    local sx2 = sx1 + LEVEL.section_W[kx] - 1
+    local sy2 = sy1 + LEVEL.section_H[ky] - 1
 
-    SEC.sx1, SEC.sx2 = sx1, sx2
-    SEC.sy1, SEC.sy2 = sy1, sy2
+    K.sx1, K.sx2 = sx1, sx2
+    K.sy1, K.sy2 = sy1, sy2
 
     if not R.sx1 or sx1 < R.sx1 then R.sx1 = sx1 end
     if not R.sy1 or sy1 < R.sy1 then R.sy1 = sy1 end
@@ -1249,8 +1249,8 @@ function Plan_make_seeds()
 
   Seed.init(LEVEL.seed_W, LEVEL.seed_H, 1, 3, 3)
 
-  for lx = 1,LEVEL.W do for ly = 1,LEVEL.H do
-    fill_section(lx, ly)
+  for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
+    fill_section(kx, ky)
   end end
 end
 
