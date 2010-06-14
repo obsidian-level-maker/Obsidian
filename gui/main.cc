@@ -554,9 +554,6 @@ int main(int argc, char **argv)
 
   LogEnableDebug(debug_messages);
 
-  // create directory for temporary files
-  FileMakeDir("temp");
-
   // load icons for file chooser
 #ifndef WIN32
   if (! batch_mode)
