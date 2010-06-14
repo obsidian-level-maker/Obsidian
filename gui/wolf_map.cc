@@ -31,8 +31,8 @@
 #include "g_lua.h"
 
 
-#define TEMP_GAMEFILE  "temp/gamemaps.tmp"
-#define TEMP_HEADFILE  "temp/maphead.tmp"
+#define TEMP_GAMEFILE  "GAMEMAPS.TMP"
+#define TEMP_HEADFILE  "MAPHEAD.TMP"
 
 
 #define RLEW_TAG  0xABCD
