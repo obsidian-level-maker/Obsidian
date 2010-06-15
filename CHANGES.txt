@@ -2,3 +2,5 @@
 CHANGES (since 3.57)
 ====================
 
+- output file is deleted if an error occurs
+
