@@ -42,7 +42,7 @@
 #include "q1_main.h"
 
 
-#define TICKER_TIME  60 /* ms */
+#define TICKER_TIME  50 /* ms */
 
 #define CONFIG_FILENAME  "CONFIG.txt"
 #define LOG_FILENAME     "LOGS.txt"
@@ -446,6 +446,10 @@ bool Build_Cool_Shit()
 
   bool was_ok = game_object->Start();
 
+  // coerce FLTK to redraw the main window
+  for (int r_loop = 0; r_loop < 6; r_loop++)
+    Fl::wait(0.06);
+
   if (was_ok)
   {
     // run the scripts Scotty!
@@ -632,7 +636,7 @@ int main(int argc, char **argv)
       // run the GUI until the user quits
       for (;;)
       {
-        Fl::wait(0.2f);
+        Fl::wait(0.2);
 
         if (main_win->action == UI_MainWin::QUIT)
           break;
