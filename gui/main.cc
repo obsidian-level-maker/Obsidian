@@ -451,16 +451,14 @@ bool Build_Cool_Shit()
     // run the scripts Scotty!
     was_ok = ob_build_cool_shit();
 
-    if (! game_object->Finish(was_ok))
-      was_ok = false;
+    was_ok = game_object->Finish(was_ok);
   }
-
-  u32_t end_time = TimeGetMillies();
 
   if (was_ok)
   {
     Main_ProgStatus("Success");
 
+    u32_t end_time = TimeGetMillies();
     u32_t total_time = end_time - start_time;
 
     LogPrintf("\nTOTAL TIME: %1.2f seconds\n\n", total_time / 1000.0);
