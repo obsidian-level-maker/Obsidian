@@ -273,8 +273,22 @@ void UI_Build::ParseSteps(const char *names)
   step_names.push_back("Rooms");
   step_names.push_back("Mons");
 
-  // FIXME !!!!!
-  step_names.push_back("CSG");
+  while (*names)
+  {
+    const char *comma = strchr(names, ',');
+
+    if (! comma)
+    {
+      step_names.push_back(names);
+      break;
+    }
+
+    SYS_ASSERT(comma > names);
+
+    step_names.push_back(std::string(names, comma - names));
+
+    names = comma+1;
+  }
 }
 
 int UI_Build::FindStep(const char *name)
