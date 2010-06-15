@@ -42,7 +42,7 @@
 #include "q1_main.h"
 
 
-#define TICKER_TIME  40 /* ms */
+#define TICKER_TIME  60 /* ms */
 
 #define CONFIG_FILENAME  "CONFIG.txt"
 #define LOG_FILENAME     "LOGS.txt"
