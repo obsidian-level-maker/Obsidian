@@ -296,7 +296,7 @@ bool nukem_game_interface_c::Start()
   }
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "Lua,CSG");
+    main_win->build_box->Prog_Init(0, "CSG");
 
   return true;
 }

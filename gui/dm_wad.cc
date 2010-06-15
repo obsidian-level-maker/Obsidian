@@ -485,7 +485,7 @@ bool doom_game_interface_c::Start()
   }
 
   if (main_win)
-    main_win->build_box->Prog_Init(25, "Lua,CSG");
+    main_win->build_box->Prog_Init(25, "CSG");
 
   return true;
 }

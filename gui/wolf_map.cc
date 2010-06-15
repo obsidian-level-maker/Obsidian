@@ -409,7 +409,7 @@ bool wolf_game_interface_c::Start()
   write_errors_seen = 0;
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "Lua");
+    main_win->build_box->Prog_Init(0, "");
 
   return true;
 }

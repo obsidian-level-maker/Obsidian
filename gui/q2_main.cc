@@ -407,7 +407,7 @@ bool quake2_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "Lua,CSG,Light,Vis");
+    main_win->build_box->Prog_Init(0, "CSG,Light,Vis");
 
   return true;
 }

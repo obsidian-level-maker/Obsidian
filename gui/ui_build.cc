@@ -145,7 +145,7 @@ void UI_Build::Locked(bool value)
 
 //----------------------------------------------------------------
 
-void UI_Build::Prog_Init(int node_perc, const char *level_steps)
+void UI_Build::Prog_Init(int node_perc, const char *extra_steps)
 {
   level_index = 0;
   level_total = 0;
@@ -154,7 +154,7 @@ void UI_Build::Prog_Init(int node_perc, const char *level_steps)
   node_ratio = node_perc / 100.0;
   node_along = 0;
 
-  ParseSteps(level_steps);
+  ParseSteps(extra_steps);
 
   progress->minimum(0.0);
   progress->maximum(1.0);
