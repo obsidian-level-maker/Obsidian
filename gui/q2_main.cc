@@ -407,7 +407,7 @@ bool quake2_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "CSG,Light,Vis");
+    main_win->build_box->Prog_Init(0, "CSG,BSP,Light,Vis");
 
   return true;
 }
@@ -472,8 +472,14 @@ for (int L=0; L < 512; L++) solid_light[L] = 64;
 BSP_AddLightBlock(16, 32, solid_light);
 
 
+  if (main_win)
+    main_win->build_box->Prog_Step("CSG");
+
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
+
+  if (main_win)
+    main_win->build_box->Prog_Step("BSP");
 
   // this builds the bsp tree
   Q2_CreateModel();

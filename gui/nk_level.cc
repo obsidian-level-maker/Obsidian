@@ -349,6 +349,9 @@ void nukem_game_interface_c::EndLevel()
 
   NK_BeginLevel(level_name);
 
+  if (main_win)
+    main_win->build_box->Prog_Step("CSG");
+
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 

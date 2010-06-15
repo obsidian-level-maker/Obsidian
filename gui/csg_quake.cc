@@ -1882,6 +1882,9 @@ void Q1_CreateModel(void)
 
 
   // clipping hulls
+  if (main_win)
+    main_win->build_box->Prog_Step("Clip");
+
   model.visleafs = q1_total_leafs;
 
   q_clip_nodes = BSP_NewLump(LUMP_CLIPNODES);

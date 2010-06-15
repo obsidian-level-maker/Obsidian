@@ -597,7 +597,7 @@ bool quake1_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "CSG,Hull 1,Hull 2,Light,Vis");
+    main_win->build_box->Prog_Init(0, "CSG,BSP,Clip,Light,Vis");
 
   return true;
 }
@@ -663,8 +663,14 @@ void quake1_game_interface_c::EndLevel()
 
   Q1_MakeFlatLightmaps();
 
+  if (main_win)
+    main_win->build_box->Prog_Step("CSG");
+
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
+
+  if (main_win)
+    main_win->build_box->Prog_Step("BSP");
 
   Q1_CreateModel();
   Q1_CreateMipTex();
