@@ -51,10 +51,6 @@ static std::vector<std::string> * conf_line_buffer;
 // random number generator (Mersenne Twister)
 static MT_rand_c GUI_RNG(0);
 
-// state needed for progress() call
-static int level_IDX = 0;
-static int level_TOTAL = 0;
-
 // color maps
 color_mapping_t color_mappings[MAX_COLOR_MAPS];
 
@@ -378,18 +374,14 @@ int gui_at_level(lua_State *L)
   return 0;
 }
 
-// LUA: progress(percent)     //!!!!!! TODO REMOVE THIS
+// LUA: prog_step(step_name)
 //
-int gui_progress(lua_State *L)
+int gui_prog_step(lua_State *L)
 {
-///---  lua_Number perc = luaL_checknumber(L, 1);
-///---
-///---  SYS_ASSERT(level_TOTAL > 0);
-///---
-///---  perc = ((level_IDX-1) * 100 + perc) / level_TOTAL;
-///---
-///---  if (main_win)
-///---    main_win->build_box->ProgUpdate(perc);
+  const char *name = luaL_checkstring(L,1);
+
+  if (main_win)
+    main_win->build_box->Prog_Step(name);
 
   return 0;
 }
@@ -545,7 +537,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "change_mod_option", gui_change_mod_option },
 
   { "at_level",    gui_at_level },
-  { "progress",    gui_progress },
+  { "prog_step",   gui_prog_step },
   { "ticker",      gui_ticker },
   { "abort",       gui_abort },
   { "rand_seed",   gui_rand_seed },

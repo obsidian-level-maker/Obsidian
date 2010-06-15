@@ -175,6 +175,8 @@ void UI_Build::Prog_AtLevel(int index, int total)
 {
   level_index = index;
   level_total = total;
+
+  Prog_Step("Plan");
 }
 
 
@@ -184,10 +186,11 @@ void UI_Build::Prog_Step(const char *step_name)
 
   if (pos < 0)
     return;
+fprintf(stderr, "Prog_Step: %s --> %d\n", step_name, pos);
 
   SYS_ASSERT(level_total > 0);
 
-  float val = level_index;
+  float val = level_index-1;
 
   val = val + pos / (float)step_names.size();
 
@@ -267,7 +270,7 @@ void UI_Build::ParseSteps(const char *names)
 
   // these three are done in Lua (always the same)
   step_names.push_back("Plan");
-  step_names.push_back("Layout");
+  step_names.push_back("Rooms");
   step_names.push_back("Mons");
 
   // FIXME !!!!!

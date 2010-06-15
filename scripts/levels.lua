@@ -552,39 +552,36 @@ function Levels.build_it()
   if LEVEL.build_func then
     LEVEL.build_func(LEVEL.build_data)
     if gui.abort() then return "abort" end
-
-    gui.progress(90)
     return "ok"
   end
 
   Plan_create_rooms()
-    if gui.abort() then return "abort" end
-    gui.progress(10)
+  if gui.abort() then return "abort" end
 
-  Levels.invoke_hook("connect_rooms",  LEVEL.seed)
+  Levels.invoke_hook("connect_rooms", LEVEL.seed)
 
   Connect.connect_rooms()
-    if gui.abort() then return "abort" end
-    gui.progress(30)
+  if gui.abort() then return "abort" end
 
   Quest.assign_quests()
-    if gui.abort() then return "abort" end
-    gui.progress(50)
+  if gui.abort() then return "abort" end
 
-  Levels.invoke_hook("build_rooms",  LEVEL.seed)
+  gui.prog_step("Rooms");
+
+  Levels.invoke_hook("build_rooms", LEVEL.seed)
 
   Rooms.build_all()
-    if gui.abort() then return "abort" end
-    gui.progress(70)
+  if gui.abort() then return "abort" end
 
   -- here is where the tiler.lua layout code used to kick in
   assert(not PARAM.tiled)
 
-  Levels.invoke_hook("make_battles",  LEVEL.seed)
+  gui.prog_step("Mons");
+
+  Levels.invoke_hook("make_battles", LEVEL.seed)
 
   Monsters.make_battles()
-    if gui.abort() then return "abort" end
-    gui.progress(90)
+  if gui.abort() then return "abort" end
 
   return "ok"
 end

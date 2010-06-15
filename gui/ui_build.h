@@ -29,7 +29,7 @@ private:
 
   char  prog_msg[64];
 
-  int   level_index;
+  int   level_index;  // starts at 1
   int   level_total;
 
   bool  node_begun;
@@ -51,7 +51,7 @@ public:
   virtual ~UI_Build();
 
 public:
-  void Prog_Init(int node_perc, const char *level_steps);
+  void Prog_Init(int node_perc, const char *extra_steps);
   void Prog_AtLevel(int index, int total);
   void Prog_Step(const char *step_name);
   void Prog_Nodes(int pos, int limit);
