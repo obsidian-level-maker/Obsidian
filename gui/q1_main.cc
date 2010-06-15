@@ -597,10 +597,7 @@ bool quake1_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-  {
-    main_win->build_box->ProgInit(1);
-    main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  }
+    main_win->build_box->Prog_Init(0, "Lua,CSG,Hull 1,Hull 2,Light,Vis");
 
   return true;
 }

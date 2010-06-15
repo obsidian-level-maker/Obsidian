@@ -309,6 +309,9 @@ static void WF_DumpMap(void)
 
 static void WF_MakeMiniMap(void)
 {
+  if (! main_win)
+    return;
+
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
 
@@ -405,8 +408,8 @@ bool wolf_game_interface_c::Start()
 
   write_errors_seen = 0;
 
-  main_win->build_box->ProgInit(1);
-  main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
+  if (main_win)
+    main_win->build_box->Prog_Init(0, "Lua");
 
   return true;
 }

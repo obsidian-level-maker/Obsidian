@@ -36,6 +36,7 @@ static nodebuildinfo_t nb_info;
 static volatile nodebuildcomms_t nb_comms;
 
 static int display_mode = DIS_INVALID;
+static int progress_limit;
 
 static char message_buf[MSG_BUF_LEN];
 
@@ -143,8 +144,10 @@ void GB_DisplaySetBarLimit(int barnum, int limit)
 {
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
   {
-    main_win->build_box->ProgBegin(2, limit, GLBSP_PROGRESS_FG);
-    main_win->build_box->ProgStatus("Building nodes");
+    progress_limit = limit;
+
+    main_win->build_box->SetStatus("Building nodes");
+    main_win->build_box->Prog_Nodes(0, limit);
   }
 }
 
@@ -152,7 +155,7 @@ void GB_DisplaySetBar(int barnum, int count)
 {
   if (display_mode == DIS_BUILDPROGRESS && barnum == 2 && main_win)
   {
-    main_win->build_box->ProgUpdate(count);
+    main_win->build_box->Prog_Nodes(count, progress_limit);
   }
 }
 

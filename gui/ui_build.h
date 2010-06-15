@@ -47,11 +47,13 @@ public:
   virtual ~UI_Build();
 
 public:
-  void ProgInit(int num_pass);
-  void ProgBegin(int pass, float limit, Fl_Color color);
-  void ProgUpdate(float val);
-  void ProgFinish();
-  void ProgStatus(const char *msg);
+  void Prog_Init(int node_perc, const char *level_steps);
+  void Prog_AtLevel(const char *name, int index, int total);
+  void Prog_Step(const char *step_name);
+  void Prog_Nodes(int pos, int limit);
+  void Prog_Finish();
+
+  void SetStatus(const char *msg);
 
   void SetAbortButton(bool abort);
   void Locked(bool value);

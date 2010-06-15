@@ -308,7 +308,7 @@ void Main_ProgStatus(const char *msg, ...)
 
   if (main_win)
   {
-    main_win->build_box->ProgStatus(buffer);
+    main_win->build_box->SetStatus(buffer);
   }
   else if (batch_mode)
   {
@@ -439,7 +439,7 @@ bool Build_Cool_Shit()
   {
     main_win->Locked(true);
     main_win->build_box->SetAbortButton(true);
-    main_win->build_box->ProgStatus("Preparing...");
+    main_win->build_box->SetStatus("Preparing...");
   }
 
   u32_t start_time = TimeGetMillies();
@@ -466,7 +466,7 @@ bool Build_Cool_Shit()
 
   if (main_win)
   {
-    main_win->build_box->ProgFinish();
+    main_win->build_box->Prog_Finish();
     main_win->build_box->SetAbortButton(false);
 
     main_win->Locked(false);

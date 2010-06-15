@@ -485,10 +485,7 @@ bool doom_game_interface_c::Start()
   }
 
   if (main_win)
-  {
-    main_win->build_box->ProgInit(2);
-    main_win->build_box->ProgBegin(1, 100, BUILD_PROGRESS_FG);
-  }
+    main_win->build_box->Prog_Init(25, "Lua,CSG");
 
   return true;
 }

@@ -367,26 +367,29 @@ int gui_at_level(lua_State *L)
 {
   const char *name = luaL_checkstring(L,1);
  
-  level_IDX   = luaL_checkint(L, 2);
-  level_TOTAL = luaL_checkint(L, 3);
+  int index = luaL_checkint(L, 2);
+  int total = luaL_checkint(L, 3);
 
   Main_ProgStatus("Making %s", name);
+
+  if (main_win)
+    main_win->build_box->Prog_AtLevel(name, index, total);
 
   return 0;
 }
 
-// LUA: progress(percent)
+// LUA: progress(percent)     //!!!!!! TODO REMOVE THIS
 //
 int gui_progress(lua_State *L)
 {
-  lua_Number perc = luaL_checknumber(L, 1);
-
-  SYS_ASSERT(level_TOTAL > 0);
-
-  perc = ((level_IDX-1) * 100 + perc) / level_TOTAL;
-
-  if (main_win)
-    main_win->build_box->ProgUpdate(perc);
+///---  lua_Number perc = luaL_checknumber(L, 1);
+///---
+///---  SYS_ASSERT(level_TOTAL > 0);
+///---
+///---  perc = ((level_IDX-1) * 100 + perc) / level_TOTAL;
+///---
+///---  if (main_win)
+///---    main_win->build_box->ProgUpdate(perc);
 
   return 0;
 }

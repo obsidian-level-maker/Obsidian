@@ -141,9 +141,9 @@ void UI_Build::Locked(bool value)
 
 //----------------------------------------------------------------
 
-void UI_Build::ProgInit(int num_pass)
+void UI_Build::ProgInit(int node_perc)
 {
-  prog_num_pass = num_pass;
+  prog_num_pass = 1; //!!!!!!!  num_pass;
 
   progress->minimum(0.0);
   progress->maximum(100.0);
@@ -191,7 +191,7 @@ void UI_Build::ProgFinish()
   progress->label("");
 }
 
-void UI_Build::ProgStatus(const char *msg)
+void UI_Build::Status(const char *msg)
 {
   status->copy_label(msg);
 }
