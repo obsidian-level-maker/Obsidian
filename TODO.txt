@@ -2,16 +2,6 @@
 TODO
 ====
 
-TEST:  CSG DOOM: temporary file has ".TMP" extension, delete it on error
-       kill the temp/ folder  (NB: used by wolf too)
-
-TEST: output file is deleted on script error.
-
-
-
--  Makefiles: put .o in obj_linux and obj_win32 folders
-
-
 ??  when to decide WOTSIT, monster and pickup spots ??
 
 NO:  do placement allocations on a 64x64 grid
