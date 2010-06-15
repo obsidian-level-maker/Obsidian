@@ -110,8 +110,7 @@ $(OBJ_DIR)/%.o: gui/%.cc
 all: $(PROGRAM)
 
 clean:
-	rm -f $(PROGRAM) *.o core core.*
-	rm -f ERRS update.log
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
@@ -120,8 +119,6 @@ stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
 
 .PHONY: all clean stripped
-
-
 
 #--- editor settings ------------
 # vi:ts=8:sw=8:noexpandtab

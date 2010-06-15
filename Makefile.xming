@@ -107,6 +107,9 @@ $(OBJ_DIR)/%.o: gui/%.cc
 
 all: $(PROGRAM)
 
+clean:
+	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+
 $(PROGRAM): $(OBJS)
 	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
