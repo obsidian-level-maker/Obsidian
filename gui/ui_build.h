@@ -21,18 +21,22 @@
 #ifndef __UI_BUILD_H__
 #define __UI_BUILD_H__
 
-#define BUILD_PROGRESS_FG  fl_color_cube(3,3,0)
-
 class UI_Build : public Fl_Group
 {
 private:
   Fl_Box *status;
   Fl_Progress *progress;
 
-  char  prog_msg[20];
-  int   prog_pass;
-  int   prog_num_pass;
-  float prog_limit;
+  char  prog_msg[64];
+
+  int   level_index;
+  int   level_total;
+
+  bool  node_begun;
+  float node_ratio;
+  float node_along;
+
+  std::vector<std::string> step_names;
 
   Fl_Button *build;
   Fl_Button *about;
@@ -48,17 +52,19 @@ public:
 
 public:
   void Prog_Init(int node_perc, const char *level_steps);
-  void Prog_AtLevel(const char *name, int index, int total);
+  void Prog_AtLevel(int index, int total);
   void Prog_Step(const char *step_name);
   void Prog_Nodes(int pos, int limit);
   void Prog_Finish();
 
   void SetStatus(const char *msg);
-
   void SetAbortButton(bool abort);
   void Locked(bool value);
 
 private:
+  void ParseSteps(const char *list);
+  int  FindStep(const char *name);  // -1 if not found
+
   static void build_callback(Fl_Widget *, void*);
   static void about_callback(Fl_Widget *, void*);
   static void options_callback(Fl_Widget *, void*);

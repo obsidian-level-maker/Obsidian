@@ -30,6 +30,10 @@
 
 #define ABORT_COLOR  fl_color_cube(3,1,1)
 
+#define PROGRESS_FG  fl_color_cube(3,3,0)
+
+#define NODE_PROGRESS_FG  fl_color_cube(1,4,2)
+
 
 UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
     Fl_Group(x, y, w, h, label)
@@ -141,40 +145,58 @@ void UI_Build::Locked(bool value)
 
 //----------------------------------------------------------------
 
-void UI_Build::ProgInit(int node_perc)
+void UI_Build::Prog_Init(int node_perc, const char *level_steps)
 {
-  prog_num_pass = 1; //!!!!!!!  num_pass;
+  level_index = 0;
+  level_total = 0;
+
+  node_begun = false;
+  node_ratio = node_perc / 100.0;
+  node_along = 0;
+
+  ParseSteps(level_steps);
 
   progress->minimum(0.0);
-  progress->maximum(100.0);
+  progress->maximum(1.0);
 
   progress->value(0.0);
+  progress->color(FL_BACKGROUND_COLOR, PROGRESS_FG);
 }
 
-void UI_Build::ProgBegin(int pass, float limit, Fl_Color color)
+void UI_Build::Prog_Finish()
 {
-  prog_pass  = pass;
-  prog_limit = limit;
-
-  progress->color(FL_BACKGROUND_COLOR, color);
-  progress->show();
+  progress->color(INACTIVE_BG, FL_BLACK);
+  progress->value(0.0);
+  progress->label("");
 }
 
-void UI_Build::ProgUpdate(float val)
+
+void UI_Build::Prog_AtLevel(int index, int total)
 {
-  val = val / prog_limit;
+  level_index = index;
+  level_total = total;
+}
+
+
+void UI_Build::Prog_Step(const char *step_name)
+{
+  int pos = FindStep(step_name);
+
+  if (pos < 0)
+    return;
+
+  SYS_ASSERT(level_total > 0);
+
+  float val = level_index;
+
+  val = val + pos / (float)step_names.size();
+
+  val = (val / (float)level_total) * (1 - node_ratio);
 
   if (val < 0) val = 0;
   if (val > 1) val = 1;
 
-  if (prog_num_pass == 1)
-    val = val * 100.0;
-  else if (prog_pass == 1)
-    val = val * 75.0;
-  else
-    val = 75.0 + (val * 25.0);
-
-  sprintf(prog_msg, "%d%%", int(val));
+  sprintf(prog_msg, "%d%%", int(val * 100));
 
   progress->value(val);
   progress->label(prog_msg);
@@ -182,16 +204,34 @@ void UI_Build::ProgUpdate(float val)
   Main_Ticker();
 }
 
-void UI_Build::ProgFinish()
-{
-///  progress->hide();
 
-  progress->color(INACTIVE_BG, FL_BLACK);
-  progress->value(0.0);
-  progress->label("");
+void UI_Build::Prog_Nodes(int pos, int limit)
+{
+  SYS_ASSERT(limit > 0);
+
+  if (! node_begun)
+  {
+    node_begun = true;
+    progress->color(FL_BACKGROUND_COLOR, NODE_PROGRESS_FG);
+  }
+
+  float val = pos / (float)limit;
+
+  val = 1 + node_ratio * (val - 1);
+
+  if (val < 0) val = 0;
+  if (val > 1) val = 1;
+
+  sprintf(prog_msg, "%d%%", int(val * 100));
+
+  progress->value(val);
+  progress->label(prog_msg);
+
+  Main_Ticker();
 }
 
-void UI_Build::Status(const char *msg)
+
+void UI_Build::SetStatus(const char *msg)
 {
   status->copy_label(msg);
 }
@@ -218,6 +258,29 @@ void UI_Build::SetAbortButton(bool abort)
 
     build->labelfont(FL_HELVETICA_BOLD);
   }
+}
+
+
+void UI_Build::ParseSteps(const char *names)
+{
+  step_names.clear();
+
+  // these three are done in Lua (always the same)
+  step_names.push_back("Plan");
+  step_names.push_back("Layout");
+  step_names.push_back("Mons");
+
+  // FIXME !!!!!
+  step_names.push_back("CSG");
+}
+
+int UI_Build::FindStep(const char *name)
+{
+  for (int i = 0; i < (int)step_names.size(); i++)
+    if (StringCaseCmp(step_names[i].c_str(), name) == 0)
+      return i;
+
+  return -1;  // not found
 }
 
 

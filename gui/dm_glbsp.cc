@@ -41,9 +41,6 @@ static int progress_limit;
 static char message_buf[MSG_BUF_LEN];
 
 
-#define GLBSP_PROGRESS_FG  fl_color_cube(1,4,2)
-
-
 static const char *GetErrorString(glbsp_ret_e ret)
 {
   switch (ret)

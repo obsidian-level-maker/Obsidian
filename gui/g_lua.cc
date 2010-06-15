@@ -373,7 +373,7 @@ int gui_at_level(lua_State *L)
   Main_ProgStatus("Making %s", name);
 
   if (main_win)
-    main_win->build_box->Prog_AtLevel(name, index, total);
+    main_win->build_box->Prog_AtLevel(index, total);
 
   return 0;
 }
