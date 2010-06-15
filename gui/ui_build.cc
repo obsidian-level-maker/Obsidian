@@ -196,14 +196,15 @@ void UI_Build::ProgStatus(const char *msg)
   status->copy_label(msg);
 }
 
-void UI_Build::ProgSetButton(bool abort)
+void UI_Build::SetAbortButton(bool abort)
 {
   if (abort)
   {
-    quit->callback(stop_callback, this);
     quit->label("Cancel");
     quit->labelcolor(ABORT_COLOR);
     quit->labelfont(FL_HELVETICA_BOLD);
+
+    quit->callback(stop_callback, this);
 
     build->labelfont(FL_HELVETICA);
   }
@@ -212,6 +213,7 @@ void UI_Build::ProgSetButton(bool abort)
     quit->label("Quit");
     quit->labelcolor(FL_FOREGROUND_COLOR);
     quit->labelfont(FL_HELVETICA);
+
     quit->callback(quit_callback, this);
 
     build->labelfont(FL_HELVETICA_BOLD);

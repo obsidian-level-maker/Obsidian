@@ -438,7 +438,7 @@ bool Build_Cool_Shit()
   if (main_win)
   {
     main_win->Locked(true);
-    main_win->build_box->ProgSetButton(true);
+    main_win->build_box->SetAbortButton(true);
     main_win->build_box->ProgStatus("Preparing...");
   }
 
@@ -469,7 +469,7 @@ bool Build_Cool_Shit()
   if (main_win)
   {
     main_win->build_box->ProgFinish();
-    main_win->build_box->ProgSetButton(false);
+    main_win->build_box->SetAbortButton(false);
 
     main_win->Locked(false);
 

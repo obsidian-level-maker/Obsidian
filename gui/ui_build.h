@@ -52,8 +52,8 @@ public:
   void ProgUpdate(float val);
   void ProgFinish();
   void ProgStatus(const char *msg);
-  void ProgSetButton(bool abort);
 
+  void SetAbortButton(bool abort);
   void Locked(bool value);
 
 private:
