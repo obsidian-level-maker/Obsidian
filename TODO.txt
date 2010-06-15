@@ -8,7 +8,6 @@ TODO
 NO:  do placement allocations on a 64x64 grid
 
 
-
 Quests:
 
 -  Simpler method of generating the quests:
@@ -86,20 +85,6 @@ TERMINOLOGY
   door (and the next room becomes part of the earlier quest).
 
 
-IDEA: "crossover" room is 1x1 (perhaps 2x1) room using a 3D bridge,
-      so that one path goes E/W and other path goes N/S.
-      [90 degree turns are possible too, but way less cool]
-
-      Crossovers do NOT exist as nodes in the connection map
-      (they only exist as links).
-
-      Two crossovers cannot connect to each other (because they
-      would need a node between them, which doesn't exist).
-
-      The quest of the low path is earlier than the quest of the
-      high path (3D bridge).
-
-
 Quests:
   +  when deciding to use keys : check for outdoor on both sides
 
@@ -126,10 +111,6 @@ Cave code
   +  fix pickup spots
 
 
-+ proper system to match DOOR skins with SWITCH skins
-  (i.e. allow more than a single door or single switch per lock kind).
-
-
 Prefabs:
   + test if prefab fits, choose another (etc) if not
 
@@ -150,6 +131,10 @@ Prefabs:
   - mirroring ?!?
 
   - Review: material functions like get_liquid() etc
+
+
++ proper system to match DOOR skins with SWITCH skins
+  (i.e. allow more than a single door or single switch per lock kind).
 
 
 
@@ -226,14 +211,6 @@ BUG: corner supports are sometimes off the wall
 
 CSG CODE:
 
-DONE(?)  replace 'line_kind' and 'sec_kind' with just 'kind' in area_face_c
-         (similarly for 'tag', 'args' etc...).
-         Put delta_z in there too.
-
-DONE(?)  make the [wbt]_face field of brushes be like entities and
-         store all the fields in a std::map.
-         Have a utility function to find / extract a field.
-
 !!  do a proper face-creation pass (merge_face_c list
     in each merge_segment_c ?) and get proper brush
     and area_vert references.
@@ -246,9 +223,6 @@ DONE(?)  make the [wbt]_face field of brushes be like entities and
 -  CSG DOOM: support entity.light
 
 -  CSG DOOM: fix up extrafloor creation
-
--  Rail brushes: support fake 3D bridges
-                 (create dummy sector from brush's Z2)
 
 q1_nodes:
   -  floor_leaf --> leaf

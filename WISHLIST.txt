@@ -56,6 +56,21 @@ Intrusions:
      best in Quake games where the intrusion is a 3D walkway.
 
 
+CrossOvers:
+  -  room is 1x1 sections (perhaps 2x1) using a 3D bridge,
+     so that one path goes E/W and other path goes N/S.
+     [90 degree turns are possible too, but way less cool]
+
+     Crossovers do NOT exist as nodes in the connection map
+     (they only exist as links).
+
+     Two crossovers cannot connect to each other (because they
+     would need a node between them, which doesn't exist).
+
+     The quest of the low path is earlier than the quest of the
+     high path (3D bridge).
+
+
 Porches:
   -  this is 3 or more seeds around a door from outside->inside
      with a non-sky ceiling and some pillars and a raised floor.
@@ -194,6 +209,9 @@ SKY GENERATOR:
    slightly lower than surrounds.
 
 -  generate episode names (M_EPI# etc).
+
+-  Rail brushes: support fake 3D bridges
+                 (create dummy sector from brush's Z2)
 
 -  build our own REJECT lump (use vis info like Quake)
 
@@ -549,7 +567,16 @@ One-way routes
      The return MUST be one-way as well.
 
      QUESTION: how do one-way routes and locked doos interact??
-     
+
+     ANSWER: they don't interact, one-way route splits a quest
+             into two (drop-off is goal of first quest).
+
+             The target key of the 2nd quest makes a good return
+             door (c.f. MAP02 drop-off, MAP05 drop-off).
+
+             Alternatively, a switch (near key or another room)
+             activates some stairs to get back up.
+
 
 Cycles:
 
@@ -580,6 +607,10 @@ Cycles:
 
      This suggests that the ideal cycles are a group of three or
      four SMALL rooms, each of which touches 3+ rooms.
+
+  +  TO CREATE CYCLES: first create normal non-cyclical connections
+                       and quest structure.  Then look at where the
+                       rooms in each quest can re-connect.
 
 
 -  module help / explanations ?? (appear above the options)
