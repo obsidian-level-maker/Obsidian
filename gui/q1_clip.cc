@@ -903,7 +903,14 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   if (which == 3)
     return 0;
 
-  fprintf(stderr, "Quake1_CreateClipHull %d\n", which);
+  if (main_win)
+  {
+    char hull_name[32];
+    sprintf(hull_name, "Hull %d", which);
+    main_win->build_box->Prog_Step(hull_name);
+  }
+
+// fprintf(stderr, "Quake1_CreateClipHull %d\n", which);
 
   cpSideFactory_c::FreeAll();
 
