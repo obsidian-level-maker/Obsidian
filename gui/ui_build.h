@@ -27,7 +27,8 @@ private:
   Fl_Box *status;
   Fl_Progress *progress;
 
-  char  prog_msg[64];
+  char  status_label[200];
+  char  prog_label[100];
 
   int   level_index;  // starts at 1
   int   level_total;
@@ -64,6 +65,8 @@ public:
 private:
   void ParseSteps(const char *list);
   int  FindStep(const char *name);  // -1 if not found
+
+  void AddStatusStep(const char *name);
 
   static void build_callback(Fl_Widget *, void*);
   static void about_callback(Fl_Widget *, void*);

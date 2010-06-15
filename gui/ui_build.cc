@@ -44,6 +44,8 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   color(BUILD_BG, BUILD_BG);
 
+  status_label[0] = 0;
+
 
   int cy = y + 18 + KF * 4;
 
@@ -186,7 +188,6 @@ void UI_Build::Prog_Step(const char *step_name)
 
   if (pos < 0)
     return;
-fprintf(stderr, "Prog_Step: %s --> %d\n", step_name, pos);
 
   SYS_ASSERT(level_total > 0);
 
@@ -199,10 +200,12 @@ fprintf(stderr, "Prog_Step: %s --> %d\n", step_name, pos);
   if (val < 0) val = 0;
   if (val > 1) val = 1;
 
-  sprintf(prog_msg, "%d%%", int(val * 100));
+  sprintf(prog_label, "%d%%", int(val * 100));
 
   progress->value(val);
-  progress->label(prog_msg);
+  progress->label(prog_label);
+
+  AddStatusStep(step_name);
 
   Main_Ticker();
 }
@@ -225,10 +228,10 @@ void UI_Build::Prog_Nodes(int pos, int limit)
   if (val < 0) val = 0;
   if (val > 1) val = 1;
 
-  sprintf(prog_msg, "%d%%", int(val * 100));
+  sprintf(prog_label, "%d%%", int(val * 100));
 
   progress->value(val);
-  progress->label(prog_msg);
+  progress->label(prog_label);
 
   Main_Ticker();
 }
@@ -236,7 +239,14 @@ void UI_Build::Prog_Nodes(int pos, int limit)
 
 void UI_Build::SetStatus(const char *msg)
 {
-  status->copy_label(msg);
+  int limit = (int)sizeof(status_label);
+
+  strncpy(status_label, msg, limit);
+
+  status_label[limit-1] = 0;
+
+  status->label(status_label);
+  status->redraw();
 }
 
 void UI_Build::SetAbortButton(bool abort)
@@ -268,7 +278,7 @@ void UI_Build::ParseSteps(const char *names)
 {
   step_names.clear();
 
-  // these three are done in Lua (always the same)
+  // these three are done by Lua (no variation)
   step_names.push_back("Plan");
   step_names.push_back("Rooms");
   step_names.push_back("Mons");
@@ -298,6 +308,24 @@ int UI_Build::FindStep(const char *name)
       return i;
 
   return -1;  // not found
+}
+
+void UI_Build::AddStatusStep(const char *name)
+{
+  // modifies the current status string to show the current step
+
+  char *pos = strchr(status_label, ':');
+
+  if (pos)
+    pos[1] = 0;
+  else
+    strcat(status_label, " :");
+
+  strcat(status_label, " ");
+  strcat(status_label, name);
+
+  status->label(status_label);
+  status->redraw();
 }
 
 
