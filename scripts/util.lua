@@ -106,6 +106,10 @@ function table.empty(t)
   return not next(t)
 end
 
+function table.last(t)
+  return t[#t]
+end
+
 function table.contains(t, v)
   for _,value in ipairs(t) do
     if v == value then return true end
