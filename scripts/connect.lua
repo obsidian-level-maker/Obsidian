@@ -1586,3 +1586,70 @@ stderrf("%s : conn_group=%d\n", R:tostr(), R.conn_group or -1)
   natural_flow(LEVEL.start_room, {})
 end
 
+
+
+function Connect_make_quests()
+
+  -- ALGORITHM:
+  --
+  --   (1) let the current room be the start room
+  --
+  --   (2) while the current room has 2 or more free exits,
+  --       pick one and lock it.  Traverse one of the other free
+  --       exits until a leaf it hit, and place the key there.
+  --
+  --   (3) iterate over the exits, recursively performing this
+  --       algorithm on the room on the other side.  The order
+  --       is important, it must be: the final free exit, the last
+  --       locked exit, ..., the first locked exit.
+
+  local function visit_room(R, Q)
+stderrf("quest %d @ %s\n", Q.id, R:tostr())
+
+    R.quest = Q
+
+    -- collect exit connections
+    local exits = {}
+
+    for _,C in ipairs(R.conns) do
+      if C.R1 == R then
+        table.insert(exits, C)
+      end
+    end
+
+    if #exits == 0 then
+stderrf("  HIT LEAF : STOP\n")
+      return
+    end
+
+    -- room is only a stalk : no lock is possible
+    if #exits == 1 then
+stderr("  STALK\n");
+      visit_room(exits[1].R2, Q)
+      return
+    end
+
+    -- room is definitely a branch, lock something
+
+    rand.shuffle(exits)  -- !!!! FIXME: sort into an order
+
+    for idx = 1,#exits-1 do
+      
+      DO LOCK SHIT
+    end
+  end
+
+
+  --==| Connect_make_quests |==--
+
+  local QUEST =
+  {
+    id = 1,
+    start = LEVEL.start
+  }
+
+  LEVEL.all_quests = { QUEST }
+
+  visit_room(QUEST.start, QUEST)
+end
+
