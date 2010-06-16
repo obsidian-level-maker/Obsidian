@@ -175,6 +175,17 @@ Hallway Theming:
 -  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
+IDEA:
+  - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
+  - C++ can queue commands to perform, fetched by the Lua loop
+    (this is only mechanism for C++ to "call" Lua code)
+  ? the console is a text-based interface whereas the GUI
+    is the graphical interface, both using the same mechanism.
+  - build the debugger using Lua
+
+Console:
+  +  display lists better
+
 
 SKY GENERATOR:
 

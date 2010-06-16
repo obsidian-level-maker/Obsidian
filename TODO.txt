@@ -137,29 +137,13 @@ Prefabs:
   (i.e. allow more than a single door or single switch per lock kind).
 
 
-
 -  lifts often assume meshing up at 90 degree turns
 
 
 FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
 
 
-IDEA:
-  - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
-  - C++ can queue commands to perform, fetched by the Lua loop
-    (this is only mechanism for C++ to "call" Lua code)
-
-  ? the console is a text-based interface whereas the GUI
-    is the graphical interface, both using the same mechanism.
-
-  - build the debugger using Lua
-
-
 +  make linedef merging more relaxed (cf. DAVID.wad)
-
-
-Console:
-  +  display lists better
 
 
 --------------------------------------------------------------------
