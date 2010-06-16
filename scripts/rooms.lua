@@ -3084,6 +3084,8 @@ function Rooms.build_all()
     return
   end
 
+---!!  Levels.invoke_hook("layout_rooms", LEVEL.seed)
+
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout.do_room(R)
     Rooms.make_ceiling(R)

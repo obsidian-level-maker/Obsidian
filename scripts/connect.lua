@@ -41,9 +41,6 @@ require 'defs'
 require 'util'
 
 
-Connect = { }
-
-
 CONN_CLASS = {}
 
 function CONN_CLASS.neighbor(self, R)
@@ -71,6 +68,7 @@ function CONN_CLASS.tostr(self)
 end
 
 
+--[[
 
 -- Generator functions for "big branches" (mostly for large rooms
 -- which deserve 3/4/5 exits).
@@ -558,6 +556,7 @@ Connect.BRANCHES =
   -- gigantic six-way shapes
   GG = { conn=6, prob=250, func=Connect.gen_GG, symmetry="x" },
 }
+--]]
 
 
 BIG_CONNECTIONS =
@@ -771,7 +770,7 @@ function Connect_decide_start_room()
 end
 
 
-function Connect.connect_rooms()
+function OLD_connect_rooms()
 
   local function merge_groups(id1, id2)
     if id1 > id2 then id1,id2 = id2,id1 end
@@ -1369,7 +1368,7 @@ gui.debugf("Failed\n")
   end
 
 
-  --==| Connect.connect_rooms |==--
+  --==| OLD_connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
@@ -1393,5 +1392,20 @@ gui.debugf("Failed\n")
 
   gui.printf("New Seed Map:\n")
   Seed.dump_rooms()
+end  -- OLD_connect_rooms
+
+
+
+function Connect_rooms()
+
+  --==| Connect_rooms |==--
+
+  gui.printf("\n--==| Connecting Rooms |==--\n\n")
+
+
+
+---!!  Levels.invoke_hook("connect_rooms", LEVEL.seed)
+
+
 end
 

@@ -1766,6 +1766,8 @@ function Monsters.make_battles()
   Monsters.init()
   Monsters.global_palette()
 
+---!!  Levels.invoke_hook("make_battles", LEVEL.seed)
+
   local cur_arena = -1
 
   -- Rooms have been sorted into a visitation order, so we

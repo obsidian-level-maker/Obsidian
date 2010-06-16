@@ -558,17 +558,13 @@ function Levels.build_it()
   Plan_create_rooms()
   if gui.abort() then return "abort" end
 
-  Levels.invoke_hook("connect_rooms", LEVEL.seed)
-
-  Connect.connect_rooms()
+  Connect_rooms()
   if gui.abort() then return "abort" end
 
   Quest.assign_quests()
   if gui.abort() then return "abort" end
 
   gui.prog_step("Rooms");
-
-  Levels.invoke_hook("build_rooms", LEVEL.seed)
 
   Rooms.build_all()
   if gui.abort() then return "abort" end
@@ -577,8 +573,6 @@ function Levels.build_it()
   assert(not PARAM.tiled)
 
   gui.prog_step("Mons");
-
-  Levels.invoke_hook("make_battles", LEVEL.seed)
 
   Monsters.make_battles()
   if gui.abort() then return "abort" end
