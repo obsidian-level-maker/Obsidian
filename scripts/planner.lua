@@ -170,7 +170,7 @@ function Plan_create_sections()
   LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    LEVEL.section_map[x][y] = {}
+    LEVEL.section_map[x][y] = { kx=x, ky=y }
   end end
 end
 
@@ -301,9 +301,6 @@ function Plan_add_small_rooms()
     local K = LEVEL.section_map[x][y]
     if not K.room then
       local R = Plan_new_room()
-
-      R.kx1 = x ; R.kx2 = x
-      R.ky1 = y ; R.ky2 = y
 
       K.room = R
 
@@ -739,6 +736,26 @@ end
 
 function Plan_add_special_rooms()
   -- nothing here.... YET!
+end
+
+
+function Plan_collect_sections()
+  for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
+    local K = LEVEL.section_map[kx][ky]
+    local R = K.room
+
+    R.kx1 = math.min(kx, R.kx1 or 99)
+    R.ky1 = math.min(ky, R.ky1 or 99)
+
+    R.kx2 = math.max(kx, R.kx2 or -1)
+    R.ky2 = math.max(ky, R.ky2 or -1)
+  end end
+
+  -- determine sizes
+  for _,R in ipairs(LEVEL.all_rooms) do
+    assert(R.kx1 and R.ky2)
+    R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
+  end
 end
 
 
@@ -1349,6 +1366,8 @@ function Plan_create_rooms()
   Plan_add_small_rooms()
 
   -- INVOKE ANOTHER HOOK
+
+  Plan_collect_sections()
 
   Plan_dump_sections()
 --!!!!  Plan_find_neighbors()
