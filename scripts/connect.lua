@@ -1430,6 +1430,9 @@ function Connect_rooms()
 
     if R.conn_group == N.conn_group then return false end
 
+    if R.purpose == "START" and #R.conns >= 1 then return false end
+    if N.purpose == "START" and #N.conns >= 1 then return false end
+
     return true
   end
 
@@ -1543,6 +1546,7 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
   local function natural_flow(R, visited)
     assert(R.kind ~= "scenic")
 
+stderrf("%s : conn_group=%d\n", R:tostr(), R.conn_group or -1)
     visited[R] = true
 
     for _,C in ipairs(R.conns) do
