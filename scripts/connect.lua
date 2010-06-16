@@ -23,7 +23,7 @@
 class CONN
 {
   kind   : keyword  -- "normal", "teleport", "intrusion"
-  lock   : LOCK
+  lock   : QUEST
 
   K1, K2 : sections
   R1, R2 : rooms
@@ -1446,8 +1446,8 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
---stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
---        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
+stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
+        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -1613,12 +1613,17 @@ function Connect_make_quests()
   --       is important, it must be: the final free exit, the last
   --       locked exit, ..., the first locked exit.
 
-  local function visit_room(R, Q)
-stderrf("quest %d @ %s\n", Q.id, R:tostr())
+  local function new_quest(R)
+    local QUEST = { start = R }
 
-    R.quest = Q
+    table.insert(LEVEL.all_quests, QUEST)
 
-    -- collect exit connections
+    QUEST.id = #LEVEL.all_quests
+
+    return QUEST
+  end
+
+  local function get_exits(R)
     local exits = {}
 
     for _,C in ipairs(R.conns) do
@@ -1627,39 +1632,78 @@ stderrf("quest %d @ %s\n", Q.id, R:tostr())
       end
     end
 
+    return exits
+  end
+
+  local function OLD_place_key(R)
+    local exits = get_exits(R)
+
+    if #exits > 0 then
+      rand.shuffle(exits)  -- FIXME order
+      place_key(exits[1].R2)
+      return
+    end
+
+    R.purpose = "KEY"
+
+    return R
+  end
+
+  local function lock_exit(C)
+    C.lock = new_quest(C.R2)
+  end
+
+  local function visit_room(R, Q)
+stderrf("quest %d @ %s\n", Q.id, R:tostr())
+
+    R.quest = Q
+
+    local exits = get_exits(R)
+
     if #exits == 0 then
-stderrf("  HIT LEAF : STOP\n")
+stderrf("  HIT LEAF\n")
+      R.purpose = "KEY"
+      Q.target  = R
       return
     end
 
     -- room is only a stalk : no lock is possible
     if #exits == 1 then
-stderr("  STALK\n");
+stderrf("  STALK\n");
       visit_room(exits[1].R2, Q)
+stderrf("  DONE %s\n", R:tostr())
       return
     end
 
+stderrf("  BRANCH...\n");
     -- room is definitely a branch, lock something
 
     rand.shuffle(exits)  -- !!!! FIXME: sort into an order
 
-    for idx = 1,#exits-1 do
-      
-      -- DO LOCK SHIT
+    for idx = #exits,2,-1 do
+stderrf("   Locking conn to room %s\n", exits[idx].R2:tostr())
+      lock_exit(exits[idx], exits[idx-1])
     end
+
+stderrf("  RECURSING...\n")
+    for _,C in ipairs(exits) do
+      visit_room(C.R2, C.lock or Q)
+    end
+
+stderrf("  DONE %s\n", R:tostr())
   end
 
 
   --==| Connect_make_quests |==--
 
-  local QUEST =
-  {
-    id = 1,
-    start = LEVEL.start
-  }
+  LEVEL.all_quests = {}
 
-  LEVEL.all_quests = { QUEST }
+  local QUEST = new_quest(LEVEL.start_room)
 
   visit_room(QUEST.start, QUEST)
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    stderrf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
+  end
 end
 
