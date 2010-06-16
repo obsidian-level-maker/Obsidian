@@ -790,37 +790,10 @@ function Build.prefab(fab, skin, T)
       return info
     end
 
---[[
-    if not pf_min then
-      -- only happens with all-solid prefabs (and only Z coord).
-      -- use some dummy values
-      pf_min = 0 ; pf_max = 128
-    end
-
-    if not size_list then
-      -- one-to-one mapping
-      local G = { }
-
-      G.low  = pf_min ; G.low2  = pf_min
-      G.high = pf_max ; G.high2 = pf_max
-
-      G.size   = G.high  - G.low
-      G.size2  = G.size
-      G.weight = 1
-
-      table.insert(info.groups, G)
-
-      info.skinned_size = G.size
-      info.weight_total = 1
-
-      return info
-    end
---]]
-
-    assert(#size_list >= 1)
-
 
     -- create groups
+
+    assert(#size_list >= 1)
 
     local pf_pos = pf_min
 
