@@ -1407,7 +1407,7 @@ function Connect_rooms()
   end
 
   local function section_neigbor(kx, ky, dir)
-    local nx, ny = geom.nudge_coord(kx, ky, dir)
+    local nx, ny = geom.nudge(kx, ky, dir)
 
     if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
       return nil
@@ -1417,11 +1417,30 @@ function Connect_rooms()
   end
 
 
+  local function can_connect(K1, K2)
+    if not (K1 and K2) then return false end
+
+    local R = K1.room
+    local N = K2.room
+
+    if not (R and N) then return false end
+
+    if R.kind == "scenic" then return false end
+    if N.kind == "scenic" then return false end
+
+    if R.conn_group == N.conn_group then return false end
+
+    return true
+  end
+
   local function add_connection(K1, K2)
     local R = assert(K1.room)
     local N = assert(K2.room)
-    
-    merge_groups(R.conn_group, N.group)
+
+stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
+        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
+
+    merge_groups(R.conn_group, N.conn_group)
 
     local CONN =
     {
@@ -1460,11 +1479,10 @@ function Connect_rooms()
     local visits = table.copy(LEVEL.all_rooms)
 
     for _,R in ipairs(visits) do
-      R.big_score = big_room_score()
+      R.big_score = big_room_score(R)
     end
 
-    table.sort(visits,
-      function(A, B) return A.big_room_score > B.big_room_score end)
+    table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
     for _,R in ipairs(visits) do
       -- FIXME
@@ -1475,10 +1493,11 @@ function Connect_rooms()
   local function branch_small_rooms()
     local visits = table.copy(LEVEL.all_rooms)
 
-    table.sort(visits,
-      function(A, B)
-        return (A.svolume + A.conn_rand*5) < (B.svolume + B.conn_rand*5)
-      end)
+    for _,R in ipairs(visits) do
+      R.small_score = R.svolume + R.conn_rand*5
+    end
+
+    table.sort(visits, function(A, B) return A.small_score > B.small_score end)
 
     for _,R in ipairs(visits) do
       -- FIXME
@@ -1491,32 +1510,27 @@ function Connect_rooms()
     -- TODO: teleporters
 
     local visits = { }
+    local SIDES = { 2,4,6,8 }
 
     for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
-      table.insert(visits, { x=kx, y=ky })
+      rand.shuffle(SIDES)
+      table.insert(visits, { x=kx, y=ky, sides=table.copy(SIDES) })
     end end
 
     rand.shuffle(visits)
 
-    local SIDES = { 2,4,6,8 }
+    for side_idx = 1,4 do
+      for _,V in ipairs(visits) do
 
-    for _,V in ipairs(visits) do
-      local K = LEVEL.section_map[V.x][V.y]
-      local R = K and K.room
+        local K = LEVEL.section_map[V.x][V.y]
+        local N = section_neigbor(V.x, V.y, V.sides[side_idx])
 
-      if R and R.kind ~= "scenic" then
-        rand.shuffle(SIDES)
+        if can_connect(K, N) then
+          add_connection(K, N)
+        end
 
-        for _,side in pairs(SIDES) do
-          local NK = section_neigbor(V.x, V.y, side)
-          local N  = NK and NK.room
-
-          if N and R ~= N and N.kind ~= "scenic" and R.conn_group ~= N.conn_group then
-            add_connection(K, NK)
-          end
-        end -- for side
-      end
-    end -- for V
+      end -- for V
+    end -- for side_idx
   end
 
 
