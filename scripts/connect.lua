@@ -756,7 +756,8 @@ function Connect_decide_start_room()
     R.start_cost = eval_room(R)
   end
 
-  local start, index = table.pick_best(LEVEL.all_rooms, function(A, B) return A.start_cost < B.start_cost end)
+  local start, index = table.pick_best(LEVEL.all_rooms,
+    function(A, B) return A.start_cost < B.start_cost end)
 
   gui.printf("Start room: %s\n", start:tostr())
 
@@ -1430,8 +1431,13 @@ function Connect_rooms()
 
     if R.conn_group == N.conn_group then return false end
 
+    -- only one way out of the starting room
     if R.purpose == "START" and #R.conns >= 1 then return false end
     if N.purpose == "START" and #N.conns >= 1 then return false end
+
+    -- don't fill small rooms with lots of connections
+    if R.kw <= 1 and R.kh <= 1 and #R.conns >= 3 then return false end
+    if N.kw <= 1 and N.kh <= 1 and #N.conns >= 3 then return false end
 
     return true
   end
@@ -1440,8 +1446,8 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
-stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
-        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
+--stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
+--        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -1546,7 +1552,11 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
   local function natural_flow(R, visited)
     assert(R.kind ~= "scenic")
 
-stderrf("%s : conn_group=%d\n", R:tostr(), R.conn_group or -1)
+    if R.conn_group ~= 1 then
+      error("Connecting rooms failed: separate groups exist")
+    end
+
+--stderrf("%s : conn_group=%d\n", R:tostr(), R.conn_group or -1)
     visited[R] = true
 
     for _,C in ipairs(R.conns) do
@@ -1635,7 +1645,7 @@ stderr("  STALK\n");
 
     for idx = 1,#exits-1 do
       
-      DO LOCK SHIT
+      -- DO LOCK SHIT
     end
   end
 
