@@ -146,39 +146,6 @@ function Quest.arena_after_lock(LOCK)
 end
 
 
-function Quest_natural_flow(R, visited)
-  assert(R.kind ~= "scenic")
-
-  visited[R] = true
-
-  local function swap_conn(C)
-    C.src, C.dest = C.dest, C.src
-    C.src_S, C.dest_S = C.dest_S, C.src_S
-    C.dir = 10 - C.dir
-  end
-
-  for _,C in ipairs(R.conns) do
-    if R == C.dest and not visited[C.src] then
-      swap_conn(C)
-    end
-    if R == C.src and not visited[C.dest] then
-      Quest_natural_flow(C.dest, visited)
-      C.dest.entry_conn = C
-    end
-  end
-
-  for _,T in ipairs(R.teleports) do
-    if R == T.dest and not visited[T.src] then
-      swap_conn(T)
-    end
-    if R == T.src and not visited[T.dest] then
-      Quest_natural_flow(T.dest, visited)
-      T.dest.entry_conn = T
-    end
-  end
-end
-
-
 function Quest.update_tvols(arena)
 
   local function travel_volume(R, seen_conns)
@@ -1110,11 +1077,6 @@ function Quest.assign_quests()
 
   LEVEL.all_arenas = { ARENA }
   LEVEL.all_locks  = { LOCK  }
-
-  -- update connections so that 'src' and 'dest' follow the natural
-  -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
-  Quest_natural_flow(LEVEL.start_room, {})
 
 
   Quest.initial_path(ARENA)

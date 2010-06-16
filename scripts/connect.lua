@@ -22,17 +22,16 @@
 
 class CONN
 {
-  src    : source ROOM
-  dest   : destination ROOM
+  kind   : keyword  -- "normal", "teleport", "intrusion"
+  lock   : LOCK
 
-  src_S  : source SEED
-  dest_S : destination SEED
+  K1, K2 : sections
+  R1, R2 : rooms
+  S1, S2 : seeds 
 
-  dir    : direction 2/4/6/8 (from src_S to dest_S)
+  dir    : direction 2/4/6/8 (from K1 to K2)
 
   conn_h : floor height for connection
-
-  lock   : LOCK
 }
 
 --------------------------------------------------------------]]
@@ -44,28 +43,33 @@ require 'util'
 CONN_CLASS = {}
 
 function CONN_CLASS.neighbor(self, R)
-  if R == self.src then
-    return self.dest
-  else
-    return self.src
-  end
+  return sel(R == self.R1, self.R2, self.R1)
+end
+
+function CONN_CLASS.section(self, R)
+  return sel(R == self.R1, self.K1, self.K2)
 end
 
 function CONN_CLASS.seed(self, R)
-  if R == self.src then
-    return self.src_S
-  else
-    return self.dest_S
-  end
+  return sel(R == self.R1, self.S1, self.S2)
 end
 
 function CONN_CLASS.tostr(self)
   return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
-         self.src_S.sx,  self.src_S.sy,
-         self.dest_S.sx, self.dest_S.sy,
+         self.K1.kx, self.K1.ky,
+         self.K2.kx, self.K2.ky,
          sel(self.lock, "LOCK ", ""),
-         tostring(self.conn_h))
+         tostring(self.conn_h or 0))
 end
+
+function CONN_CLASS.swap(self)
+  self.K1, self.K2 = self.K2, self.K1
+  self.R1, self.R2 = self.R2, self.R1
+  self.S1, self.S2 = self.S2, self.S1
+
+  if self.dir then self.dir = 10 - self.dir end
+end
+
 
 
 --[[
@@ -646,12 +650,8 @@ BIG_CONNECTIONS =
 }
 
 
-BIG_CONN_POSITIONS =
-{
-  { x=1,y=1 }, { x=2,y=1 }, { x=3,y=1 },  -- 1 2 3
-  { x=1,y=2 }, { x=2,y=2 }, { x=3,y=2 },  -- 4 5 6
-  { x=1,y=3 }, { x=2,y=3 }, { x=3,y=3 },  -- 7 8 9
-}
+CONN_POSITION_X = { 1,2,3, 1,2,3, 1,2,3 }
+CONN_POSITION_Y = { 1,1,1, 2,2,2, 3,2,3 }
 
 
 
@@ -681,8 +681,8 @@ function Connect_test_big_conns()
       local pos = int(exit / 10)
       local dir =     exit % 10
 
-      local x = BIG_CONN_POSITIONS[pos].x
-      local y = BIG_CONN_POSITIONS[pos].y
+      local x = CONN_POSITION_X[pos]
+      local y = CONN_POSITION_Y[pos]
 
       assert(x and y)
       assert(geom.inside_box(x,y, 1,1, W,H))
@@ -1433,7 +1433,7 @@ function Connect_rooms()
     return true
   end
 
-  local function add_connection(K1, K2)
+  local function add_connection(K1, K2, kind, dir)
     local R = assert(K1.room)
     local N = assert(K2.room)
 
@@ -1444,13 +1444,18 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
 
     local CONN =
     {
-      src_K  = K1, src_R  = R,
-      dest_K = K2, dest_R = N,
+      kind = kind,
+      K1 = K1, K2 = K2,
+      R1 = R,  R2 = N,
+      dir = dir,
     }
 
     table.set_class(CONN, CONN_CLASS)
 
     table.insert(LEVEL.all_conns, CONN)
+
+    table.insert(R.conns, CONN)
+    table.insert(N.conns, CONN)
   end
 
 
@@ -1522,15 +1527,34 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
     for side_idx = 1,4 do
       for _,V in ipairs(visits) do
 
+        local dir = V.sides[side_idx]
         local K = LEVEL.section_map[V.x][V.y]
-        local N = section_neigbor(V.x, V.y, V.sides[side_idx])
+        local N = section_neigbor(V.x, V.y, dir)
 
         if can_connect(K, N) then
-          add_connection(K, N)
+          add_connection(K, N, "normal", dir)
         end
 
       end -- for V
     end -- for side_idx
+  end
+
+
+  local function natural_flow(R, visited)
+    assert(R.kind ~= "scenic")
+
+    visited[R] = true
+
+    for _,C in ipairs(R.conns) do
+      if R == C.R2 and not visited[C.R1] then
+        C:swap()
+      end
+      if R == C.R1 and not visited[C.R2] then
+        -- recursively handle adjacent room
+        natural_flow(C.R2, visited)
+        C.R2.entry_conn = C
+      end
+    end
   end
 
 
@@ -1552,5 +1576,9 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
 
   emergency_branches()
 
+  -- update connections so that 'src' and 'dest' follow the natural
+  -- flow of the level, i.e. player always walks src -> dest (except
+  -- when backtracking).
+  natural_flow(LEVEL.start_room, {})
 end
 
