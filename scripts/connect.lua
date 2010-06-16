@@ -772,16 +772,6 @@ end
 
 function OLD_connect_rooms()
 
-  local function merge_groups(id1, id2)
-    if id1 > id2 then id1,id2 = id2,id1 end
-
-    for _,R in ipairs(LEVEL.all_rooms) do
-      if R.c_group == id2 then
-        R.c_group = id1
-      end
-    end
-  end
-
   local function min_group_id()
     local result
     
@@ -1381,8 +1371,6 @@ gui.debugf("Failed\n")
     R.teleports = {}
   end
 
-  Connect_decide_start_room()
-
 --!!!  sprinkle_scenics()
 
   branch_big_rooms()
@@ -1398,14 +1386,157 @@ end  -- OLD_connect_rooms
 
 function Connect_rooms()
 
+  -- a "branch" is a room with 3 or more connections.
+  -- a "stalk"  is a room with two connections.
+
+  local function initial_groups()
+    for index,R in ipairs(LEVEL.all_rooms) do
+      R.conn_group = index
+      R.conn_rand  = gui.random()
+    end
+  end
+
+  local function merge_groups(id1, id2)
+    if id1 > id2 then id1,id2 = id2,id1 end
+
+    for _,R in ipairs(LEVEL.all_rooms) do
+      if R.conn_group == id2 then
+        R.conn_group = id1
+      end
+    end
+  end
+
+  local function section_neigbor(kx, ky, dir)
+    local nx, ny = geom.nudge_coord(kx, ky, dir)
+
+    if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
+      return nil
+    end
+
+    return LEVEL.section_map[nx][ny]
+  end
+
+
+  local function add_connection(K1, K2)
+    local R = assert(K1.room)
+    local N = assert(K2.room)
+    
+    merge_groups(R.conn_group, N.group)
+
+    local CONN =
+    {
+      src_K  = K1, src_R  = R,
+      dest_K = K2, dest_R = N,
+    }
+
+    table.set_class(CONN, CONN_CLASS)
+
+    table.insert(LEVEL.all_conns, CONN)
+  end
+
+
+  local function big_room_score(R)
+    local score = 0
+
+    if R.shape == "plus" then
+      score = 5
+    elseif R.shape == "L" and (R.shape_kx == 1 or R.shape_kx == LEVEL.W)
+                           and (R.shape_ky == 1 or R.shape_ky == LEVEL.H) then
+      -- L shape at optimal position (map corner)
+      score = 4
+    elseif R.shape ~= "rect" or R.kw >= 3 or R.kh >= 3 then
+      score = 3
+    elseif R.kw >= 2 and R.kh >= 2 then
+      score = 2
+    elseif R.kw >= 2 or R.kh >= 2 then
+      score = 1
+    end
+
+    return score + 2 * (R.conn_rand ^ 0.5)
+  end
+
+
+  local function branch_big_rooms()
+    local visits = table.copy(LEVEL.all_rooms)
+
+    for _,R in ipairs(visits) do
+      R.big_score = big_room_score()
+    end
+
+    table.sort(visits,
+      function(A, B) return A.big_room_score > B.big_room_score end)
+
+    for _,R in ipairs(visits) do
+      -- FIXME
+    end
+  end
+
+
+  local function branch_small_rooms()
+    local visits = table.copy(LEVEL.all_rooms)
+
+    table.sort(visits,
+      function(A, B)
+        return (A.svolume + A.conn_rand*5) < (B.svolume + B.conn_rand*5)
+      end)
+
+    for _,R in ipairs(visits) do
+      -- FIXME
+    end
+  end
+
+
+  local function emergency_branches()
+    
+    -- TODO: teleporters
+
+    local visits = { }
+
+    for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
+      table.insert(visits, { x=kx, y=ky })
+    end end
+
+    rand.shuffle(visits)
+
+    local SIDES = { 2,4,6,8 }
+
+    for _,V in ipairs(visits) do
+      local K = LEVEL.section_map[V.x][V.y]
+      local R = K and K.room
+
+      if R and R.kind ~= "scenic" then
+        rand.shuffle(SIDES)
+
+        for _,side in pairs(SIDES) do
+          local NK = section_neigbor(V.x, V.y, side)
+          local N  = NK and NK.room
+
+          if N and R ~= N and N.kind ~= "scenic" and R.conn_group ~= N.conn_group then
+            add_connection(K, NK)
+          end
+        end -- for side
+      end
+    end -- for V
+  end
+
+
   --==| Connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
+  Connect_decide_start_room()
 
+  -- give each room a 'conn_group' value, starting at one.
+  -- connecting two rooms will merge the groups together.
+  -- at the end, only a single group will remain (#1).
+  initial_groups()
 
----!!  Levels.invoke_hook("connect_rooms", LEVEL.seed)
+  Levels.invoke_hook("connect_rooms", LEVEL.seed)
 
+  branch_big_rooms()
+  branch_small_rooms()
+
+  emergency_branches()
 
 end
 

@@ -462,6 +462,8 @@ function Plan_add_big_rooms()
       if test_or_set_shape(kx, ky, rot, shape.dirs) then
         ROOM = Plan_new_room()
         ROOM.shape = shape.name
+        ROOM.shape_kx  = kx
+        ROOM.shape_ky  = ky
         ROOM.shape_rot = rot
 
         test_or_set_shape(kx, ky, rot, shape.dirs, ROOM)
