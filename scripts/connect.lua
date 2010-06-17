@@ -1600,20 +1600,16 @@ end
 
 function Connect_make_quests()
 
-  -- ALGORITHM:
+  -- ALGORITHM NOTES:
   --
-  --   (1) let the current room be the start room
-  --
-  --   (2) while the current room has 2 or more free exits,
-  --       pick one and lock it.  Traverse one of the other free
-  --       exits until a leaf it hit, and place the key there.
-  --
-  --   (3) iterate over the exits, recursively performing this
-  --       algorithm on the room on the other side.  The order
-  --       is important, it must be: the final free exit, the last
-  --       locked exit, ..., the first locked exit.
+  -- The main idea in this algorithm is that you LOCK all but one exits
+  -- in each room, and continue down the free exit.  Each lock is added
+  -- to an active list.  When you hit a leaf room, pick a lock from the
+  -- active list (removing it) and mark the room as having its key.
+  -- Then the algorithm continues on the other side of the locked door
+  -- (creating a new quest for those rooms).
+  -- 
 
-  -- list of locked doors without keys
   local active_locks = {}
 
   local function new_quest(R)
@@ -1665,6 +1661,8 @@ function Connect_make_quests()
     R.purpose = "KEY"
     R.purpose_lock = lock
 
+    lock.key_room = R
+
     return new_quest(lock.conn.R2)
   end
 
@@ -1691,9 +1689,10 @@ function Connect_make_quests()
     end
 
 
-    rand.shuffle(exits)  -- !!!! FIXME: sort into an order
+    --!!! FIXME: simply pick one (for the free exit), lock the rest
+    rand.shuffle(exits)
 
-    -- lock up any branches (if any)
+    -- lock up any excess branches
     for idx = 2,#exits do
 stderrf("   Locking conn to room %s\n", exits[idx].R2:tostr())
       add_lock(exits[idx])
