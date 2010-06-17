@@ -3,6 +3,15 @@ TODO
 ====
 
 
+CSG IDEA:
+  -  first divide brushes into seed size chunks (size is not critical).
+     then perform brush-to-brush subdivision (or 2D BSP) to create
+     the region map.
+     lastly merge regions which are the same.
+
+     AFTER all seed size chunks are done, do big merge on whole map.
+
+
 ??  when to decide WOTSIT, monster and pickup spots ??
 
 NO:  do placement allocations on a 64x64 grid
