@@ -1622,6 +1622,7 @@ function Connect_make_quests()
     return QUEST
   end
 
+
   local function get_exits(R)
     local exits = {}
 
@@ -1647,6 +1648,7 @@ function Connect_make_quests()
     table.insert(LEVEL.all_locks, LOCK)
   end
 
+
   local function add_key(R)
     if table.empty(active_locks) then
       LEVEL.exit_room = R
@@ -1654,7 +1656,9 @@ function Connect_make_quests()
       return false
     end
 
-    rand.shuffle(active_locks)  -- FIXME: sort into an order
+    -- FIXME: need heuristics for picking the lock
+    --        (e.g. using newest one gives less back-tracking)
+    rand.shuffle(active_locks)
 
     local lock = table.remove(active_locks, 1)
 
@@ -1663,43 +1667,51 @@ function Connect_make_quests()
 
     lock.key_room = R
 
-    return new_quest(lock.conn.R2)
+    return lock
   end
 
+
   local function visit_room(R, quest)
+    while true do
+      R.quest = quest
 
-    R.quest = quest
+      table.insert(LEVEL.all_rooms, R)
 
-    table.insert(LEVEL.all_rooms, R)
+      local exits = get_exits(R)
 
-    local exits = get_exits(R)
+      if #exits == 0 then
+        -- hit a leaf room
+        quest.target = R
 
-    if #exits == 0 then
-      -- hit a leaf room
-      quest.target = R
+        local lock = add_key(R)
 
-      local new_quest = add_key(R)
+        if not lock then
+          return  -- FINISHED
+        end
 
-      if new_quest then
-        -- recursively process the new quest
-        visit_room(new_quest.start, new_quest)
+        -- create new quest and continue
+        R = lock.conn.R2
+        quest = new_quest(R)
+
+      else
+
+        -- FIXME !!! score them, pick best
+        local free_idx = rand.irange(1, #exits)
+
+        -- lock up any excess branches
+        for idx = 1,#exits do
+          local C = exits[idx]
+
+          if idx ~= free_idx then
+-- stderrf("   Locking conn to room %s\n", C.R2:tostr())
+            add_lock(C)
+          end
+        end
+
+        -- continue down the free exit
+        R = exits[free_idx].R2
       end
-
-      return
-    end
-
-
-    --!!! FIXME: simply pick one (for the free exit), lock the rest
-    rand.shuffle(exits)
-
-    -- lock up any excess branches
-    for idx = 2,#exits do
-stderrf("   Locking conn to room %s\n", exits[idx].R2:tostr())
-      add_lock(exits[idx])
-    end
-
-    -- continue on down the free exit
-    visit_room(exits[1].R2, quest)
+    end -- while
   end
 
 
