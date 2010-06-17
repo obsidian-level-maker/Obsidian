@@ -1658,6 +1658,8 @@ stderrf("quest %d @ %s\n", Q.id, R:tostr())
 
     R.quest = Q
 
+    table.insert(LEVEL.all_rooms, R)
+
     local exits = get_exits(R)
 
     if #exits == 0 then
@@ -1698,9 +1700,17 @@ stderrf("  DONE %s\n", R:tostr())
 
   LEVEL.all_quests = {}
 
+  -- the room list will be rebuilt in visit order
+  LEVEL.all_rooms = {}
+
   local QUEST = new_quest(LEVEL.start_room)
 
   visit_room(QUEST.start, QUEST)
+
+  LEVEL.exit_room = table.last(LEVEL.all_rooms)
+
+  assert(LEVEL.exit_room.purpose == "KEY")
+  LEVEL.exit_room.purpose = "EXIT"
 
   for _,R in ipairs(LEVEL.all_rooms) do
     stderrf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
