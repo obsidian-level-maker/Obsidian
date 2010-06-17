@@ -1613,6 +1613,9 @@ function Connect_make_quests()
   --       is important, it must be: the final free exit, the last
   --       locked exit, ..., the first locked exit.
 
+  -- list of locked doors without keys
+  local active_locks = {}
+
   local function new_quest(R)
     local QUEST = { start = R }
 
@@ -1635,70 +1638,76 @@ function Connect_make_quests()
     return exits
   end
 
-  local function OLD_place_key(R)
-    local exits = get_exits(R)
 
-    if #exits > 0 then
-      rand.shuffle(exits)  -- FIXME order
-      place_key(exits[1].R2)
-      return
+  local function add_lock(C)
+    local LOCK =
+    {
+      conn = C,
+    }
+
+    C.lock = LOCK
+
+    table.insert(active_locks, LOCK)
+    table.insert(LEVEL.all_locks, LOCK)
+  end
+
+  local function add_key(R)
+    if table.empty(active_locks) then
+      LEVEL.exit_room = R
+      R.purpose = "EXIT"
+      return false
     end
 
+    rand.shuffle(active_locks)  -- FIXME: sort into an order
+
+    local lock = table.remove(active_locks, 1)
+
     R.purpose = "KEY"
+    R.purpose_lock = lock
 
-    return R
+    return new_quest(lock.conn.R2)
   end
 
-  local function lock_exit(C)
-    C.lock = new_quest(C.R2)
-  end
+  local function visit_room(R, quest)
 
-  local function visit_room(R, Q)
-stderrf("quest %d @ %s\n", Q.id, R:tostr())
-
-    R.quest = Q
+    R.quest = quest
 
     table.insert(LEVEL.all_rooms, R)
 
     local exits = get_exits(R)
 
     if #exits == 0 then
-stderrf("  HIT LEAF\n")
-      R.purpose = "KEY"
-      Q.target  = R
+      -- hit a leaf room
+      quest.target = R
+
+      local new_quest = add_key(R)
+
+      if new_quest then
+        -- recursively process the new quest
+        visit_room(new_quest.start, new_quest)
+      end
+
       return
     end
 
-    -- room is only a stalk : no lock is possible
-    if #exits == 1 then
-stderrf("  STALK\n");
-      visit_room(exits[1].R2, Q)
-stderrf("  DONE %s\n", R:tostr())
-      return
-    end
-
-stderrf("  BRANCH...\n");
-    -- room is definitely a branch, lock something
 
     rand.shuffle(exits)  -- !!!! FIXME: sort into an order
 
-    for idx = #exits,2,-1 do
+    -- lock up any branches (if any)
+    for idx = 2,#exits do
 stderrf("   Locking conn to room %s\n", exits[idx].R2:tostr())
-      lock_exit(exits[idx], exits[idx-1])
+      add_lock(exits[idx])
     end
 
-stderrf("  RECURSING...\n")
-    for _,C in ipairs(exits) do
-      visit_room(C.R2, C.lock or Q)
-    end
-
-stderrf("  DONE %s\n", R:tostr())
+    -- continue on down the free exit
+    visit_room(exits[1].R2, quest)
   end
 
 
   --==| Connect_make_quests |==--
 
   LEVEL.all_quests = {}
+  LEVEL.all_locks  = {}
 
   -- the room list will be rebuilt in visit order
   LEVEL.all_rooms = {}
@@ -1707,10 +1716,7 @@ stderrf("  DONE %s\n", R:tostr())
 
   visit_room(QUEST.start, QUEST)
 
-  LEVEL.exit_room = table.last(LEVEL.all_rooms)
-
-  assert(LEVEL.exit_room.purpose == "KEY")
-  LEVEL.exit_room.purpose = "EXIT"
+  assert(LEVEL.exit_room)
 
   for _,R in ipairs(LEVEL.all_rooms) do
     stderrf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
