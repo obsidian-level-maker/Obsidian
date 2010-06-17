@@ -1436,8 +1436,8 @@ function Connect_rooms()
     if N.purpose == "START" and #N.conns >= 1 then return false end
 
     -- don't fill small rooms with lots of connections
-    if R.kw <= 1 and R.kh <= 1 and #R.conns >= 3 then return false end
-    if N.kw <= 1 and N.kh <= 1 and #N.conns >= 3 then return false end
+    if R.sw <= 4 and R.sh <= 4 and #R.conns >= 3 then return false end
+    if N.sw <= 4 and N.sh <= 4 and #N.conns >= 3 then return false end
 
     return true
   end
