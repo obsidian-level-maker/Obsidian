@@ -248,18 +248,18 @@ function Quest.key_distances()
 end
 
 
-function Quest.choose_keys()
-  -- there is always at least one "lock" (for EXIT room)
-  local locks_needed = #LEVEL.all_locks - 1
+function Quest_choose_keys()
+  local locks_needed = #LEVEL.all_locks
+
   if locks_needed <= 0 then return end
 
-  local key_tab    = table.copy(THEME.keys     or {}) 
-  local switch_tab = table.copy(THEME.switches or {})
-  local bar_tab    = table.copy(THEME.bars     or {})
+  local key_probs    = table.copy(THEME.keys     or {}) 
+  local switch_probs = table.copy(THEME.switches or {})
+  local bar_probs    = table.copy(THEME.bars     or {})
 
-  local num_keys     = table.size(key_tab)
-  local num_switches = table.size(switch_tab)
-  local num_bars     = table.size(bar_tab)
+  local num_keys     = table.size(key_probs)
+  local num_switches = table.size(switch_probs)
+  local num_bars     = table.size(bar_probs)
 
   -- use less keys when number of locked doors is small
   local want_keys = num_keys
@@ -275,53 +275,56 @@ function Quest.choose_keys()
   gui.printf("locks_needed:%d  keys:%d (of %d)  switches:%d  bars:%d\n",
               locks_needed, want_keys, num_keys, num_switches, num_bars);
 
+
   --- STEP 1 : assign keys (distance based) ---
 
-  for _,LOCK in ipairs(LEVEL.all_locks) do
+  local lock_list = table.copy(LEVEL.all_locks)
+
+  for _,LOCK in ipairs(lock_list) do
     -- when the distance gets large, keys are better than switches
     LOCK.key_score = LOCK.distance or 0
 
     -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-      LOCK.key_score = 0
+    if LOCK.conn and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
+      LOCK.key_score = -1
     end
 
-    LOCK.key_score = LOCK.key_score + gui.random() / 5.0
+    LOCK.key_score = LOCK.key_score + gui.random() / 2
   end
 
-  local lock_list = table.copy(LEVEL.all_locks)
   table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
 
   for _,LOCK in ipairs(lock_list) do
-    if table.empty(key_tab) or want_keys <= 0 then
+    if table.empty(key_probs) or want_keys <= 0 then
       break;
     end
 
-    if LOCK.kind == "UNSET" then
+    if not LOCK.kind then
       LOCK.kind = "KEY"
-      LOCK.item = rand.key_by_probs(key_tab)
+      LOCK.item = rand.key_by_probs(key_probs)
 
       -- cannot use this key again
-      key_tab[LOCK.item] = nil
+      key_probs[LOCK.item] = nil
 
       want_keys = want_keys - 1
     end
   end
 
+
   --- STEP 2 : assign switches (random spread) ---
 
   for _,LOCK in ipairs(lock_list) do
-    if LOCK.kind == "UNSET" then
+    if not LOCK.kind then
       assert(num_switches > 0)
 
       LOCK.kind = "SWITCH"
 
-      if num_bars > 0 and LOCK.conn.src.outdoor and LOCK.conn.dest.outdoor then
-        LOCK.item = rand.key_by_probs(bar_tab)
-        bar_tab[LOCK.item] = bar_tab[LOCK.item] / 8
+      if num_bars > 0 and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
+        LOCK.item = rand.key_by_probs(bar_probs)
+        bar_probs[LOCK.item] = bar_probs[LOCK.item] / 8
       else
-        LOCK.item = rand.key_by_probs(switch_tab)
-        switch_tab[LOCK.item] = switch_tab[LOCK.item] / 8
+        LOCK.item = rand.key_by_probs(switch_probs)
+        switch_probs[LOCK.item] = switch_probs[LOCK.item] / 8
       end
     end
   end
@@ -334,7 +337,7 @@ function Quest.choose_keys()
 end
 
 
-function Quest.add_keys()
+function OLD_Quest_add_keys()
 
   local function make_small_exit(R)
     R.kind = "small_exit"
@@ -795,8 +798,7 @@ function Quest_make_quests()
   end
 
   Quest_select_textures()
-
-  Quest_add_keys()
+  Quest_choose_keys()
   Quest_add_weapons()
 end
 
