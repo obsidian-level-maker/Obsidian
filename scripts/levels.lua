@@ -559,10 +559,9 @@ function Levels.build_it()
   if gui.abort() then return "abort" end
 
   Connect_rooms()
-  Connect_make_quests()
   if gui.abort() then return "abort" end
 
-  Quest.assign_quests()
+  Quest_make_quests()
   if gui.abort() then return "abort" end
 
   gui.prog_step("Rooms");
