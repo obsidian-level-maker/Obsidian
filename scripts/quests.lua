@@ -377,10 +377,8 @@ function Quest.add_keys()
 end
 
 
-function Quest.add_weapons()
+function Quest_add_weapons()
  
-  LEVEL.added_weapons = {}
-
   local function do_mark_weapon(name)
     LEVEL.added_weapons[name] = true
 
@@ -390,7 +388,8 @@ function Quest.add_weapons()
     end
   end
 
-  local function do_start_weapon(arena)
+
+  local function do_start_weapon(quest)
     local name_tab = {}
 
     for name,info in pairs(GAME.WEAPONS) do
@@ -419,15 +418,16 @@ function Quest.add_weapons()
 
     gui.debugf("Start weapon: %s\n", weapon)
 
-    arena.weapon = weapon
+    quest.weapon = weapon
 
-    arena.start.weapon = weapon
-    arena.start.weapon_ammo = info.ammo
+    quest.start.weapon = weapon
+    quest.start.weapon_ammo = info.ammo
 
     do_mark_weapon(weapon)
   end
 
-  local function do_new_weapon(arena)
+
+  local function do_new_weapon(quest)
     local name_tab = {}
 
     for name,info in pairs(GAME.WEAPONS) do
@@ -443,7 +443,7 @@ function Quest.add_weapons()
     end
 
     if table.empty(name_tab) then
-      gui.debugf("No weapon @ ARENA_%d\n", arena.id)
+      gui.debugf("No weapon @ QUEST_%d\n", quest.id)
       return
     end
 
@@ -452,13 +452,13 @@ function Quest.add_weapons()
 
     -- Select a room to put the weapon in.
     -- This is very simplistic, either the start room of the
-    -- arena or a neighboring room.
-    local R = arena.start
+    -- quest or a neighboring room.
+    local R = quest.start
     local neighbors = {}
 
     for _,C in ipairs(R.conns) do
       local N = C:neighbor(R)
-      if N.arena == R.arena and not N.purpose then
+      if N.quest == R.quest and not N.purpose then
         table.insert(neighbors, N)
       end
     end
@@ -472,24 +472,26 @@ function Quest.add_weapons()
       return
     end
 
-    arena.weapon = weapon
+    quest.weapon = weapon
 
     R.weapon = weapon
     R.weapon_ammo = info.ammo
 
     do_mark_weapon(weapon)
 
-    gui.debugf("New weapon: %s @ %s ARENA_%d\n", weapon, R:tostr(), arena.id)
+    gui.debugf("New weapon: %s @ %s QUEST_%d\n", weapon, R:tostr(), quest.id)
   end
 
 
-  ---| Quest.add_weapons |---
+  ---| Quest_add_weapons |---
 
-  for index,A in ipairs(LEVEL.all_arenas) do
+  LEVEL.added_weapons = {}
+
+  for index,Q in ipairs(LEVEL.all_quests) do
     if index == 1  then
-      do_start_weapon(A)
+      do_start_weapon(Q)
     elseif (index == 2) or rand.odds(sel((index % 2) == 1, 80, 20)) then
-      do_new_weapon(A)
+      do_new_weapon(Q)
     end
   end
 end
@@ -518,7 +520,7 @@ function Quest.find_storage_rooms()
 end
 
 
-function Quest.select_textures()
+function Quest_select_textures()
   if not LEVEL.building_facades then
     LEVEL.building_facades = {}
 
@@ -791,5 +793,10 @@ function Quest_make_quests()
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.debugf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
   end
+
+  Quest_select_textures()
+
+  Quest_add_keys()
+  Quest_add_weapons()
 end
 
