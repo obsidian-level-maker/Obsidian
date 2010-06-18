@@ -644,6 +644,7 @@ namelib.THEMES =
         ["Insolent Terror"]=10,
         ["Internal Darkness"]=10,
         ["I Stand Defiant"]=10,
+        ["Lava Love"]=10,
         ["Left Hand Path"]=10,
         ["Locust Hide"]=10,
         ["Lost in Oblivion"]=10,
