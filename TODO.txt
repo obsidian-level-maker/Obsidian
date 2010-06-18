@@ -2,6 +2,18 @@
 TODO
 ====
 
+Quests:
+
+-  make a quest class, tostr() method
+
+-  update class definition for QUEST (no longer ARENA)
+
+-  currently broken if no switches
+   --> have a lock limit, if over then mark branches as "dead_wood"
+
++  when deciding to use keys : check for outdoor on both sides
+
+
 
 CSG IDEA:
   -  first divide brushes into seed size chunks (size is not critical).
@@ -16,21 +28,6 @@ CSG IDEA:
 
 NO:  do placement allocations on a 64x64 grid
 
-
-Quests:
-
--  Simpler method of generating the quests:
-
-   (1) let the current room be the start room
-
-   (2) while the current room has 2 or more free exits,
-       pick one and lock it.  Traverse one of the other free
-       exits until a leaf it hit, and place the key there.
-
-   (3) iterate over the exits, recursively performing this
-       algorithm on the room on the other side.  The order
-       is important, it must be: the final free exit, the last
-       locked exit, ..., the first locked exit.
 
 
 Connections:
@@ -92,10 +89,6 @@ TERMINOLOGY
 - Lock postponing : after decided all locked conns, pick one and
   if next room is a stalk, then can move the lock to the next
   door (and the next room becomes part of the earlier quest).
-
-
-Quests:
-  +  when deciding to use keys : check for outdoor on both sides
 
 
 Cave code
