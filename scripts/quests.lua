@@ -82,57 +82,14 @@ class LOCK
 }
 
 
-ALGORITHM NOTES
-~~~~~~~~~~~~~~~
-
-The fundamental requirement of a locked door is that the player
-needs to reach the door _before_ he/she reaches the key.  Then
-the player knows what they are looking for.  Without this, the
-player can just stumble on the key before finding the door and
-says to themselves "what the hell is this key for ???".
-
-Hence we cannot add locked doors just anywhere into the level.
-This algorithm assumes that in each group of rooms (an ARENA)
-there is a path from the start to the target room (that's the
-room which holds either a key or is the EXIT room of the map).
-So a locked door can be added to a room somewhere along that
-path.
-
-There are two different ways to add a lock:
-   - the "ON" type simply blocks the original path.
-
-   - the "OFF" type does not block the path itself, instead it
-     locks one of the connections coming off the path.  This
-     causes the existing target to change to a new room.
-
-The room where the lock is added must be a "junction", i.e. it
-must have a free branch where the player can travel along to
-find the key to the locked door.
-
-The "ON" type creates more linear progression (see door A,
-find key A, see door B, find key B, etc...).  The "OFF" type
-creates more memory strain (see door A, then see door B, then
-see door C, finally find C key, then find key B, then key A)
-and the level requires more back-tracking.
-
-Once we have found the connection to lock, the arena is split
-into two new arenas: FRONT (which always contains the same
-start room) and BACK.  The two types (ON vs OFF) require
-different logic for splitting the arenas.  After the split,
-the new arenas will have their own start room, target room
-and path, and they might get split again in the future.
-
-
 --------------------------------------------------------------]]
 
 require 'defs'
 require 'util'
 
-Quest = { }
 
 
-
-function Quest.update_tvols(arena)
+function Quest_update_tvols(arena)  -- NOT USED ATM
 
   local function travel_volume(R, seen_conns)
     -- Determine total volume of rooms that are reachable from the
@@ -153,7 +110,7 @@ function Quest.update_tvols(arena)
   end
 
 
-  --| Quest.update_tvols |---  
+  --| Quest_update_tvols |---  
 
   for _,C in ipairs(arena.conns) do
     C.src_tvol  = travel_volume(C.src,  { [C]=true })
@@ -163,7 +120,7 @@ end
 
 
 
-function OLD_Quest_num_locks(num_rooms)
+function Quest_num_locks(num_rooms)  -- NOT USED ATM
   local result
 
   local num_keys     = table.size(THEME.keys or {})
@@ -191,7 +148,7 @@ function OLD_Quest_num_locks(num_rooms)
 end
 
 
-function Quest.find_path_to_room(src, dest)
+function Quest_find_path_to_room(src, dest)  -- NOT USED ATM
   local seen_rooms = {}
 
   local function recurse(R)
@@ -228,7 +185,10 @@ end
 
 
 
-function Quest.key_distances()
+function Quest_key_distances()
+
+  -- FIXME: currently broken
+
   -- determine distance (approx) between key and the door it opens.
   -- the biggest distances will use actual keys (which are limited)
   -- whereas everything else will use switched doors.
@@ -336,48 +296,6 @@ function Quest_choose_keys()
   gui.printf("}\n")
 end
 
-
-function OLD_Quest_add_keys()
-
-  local function make_small_exit(R)
-    R.kind = "small_exit"
-
-    local C = assert(R.conns[1])
-
-    local S = C.src_S
-    local T = C.dest_S
-
-    local B1 = S.border[S.conn_dir]
-    local B2 = T.border[T.conn_dir]
-
-    B1.kind = "straddle"
-    B2.kind = "straddle"
-  end
-
-  --| Quest.add_keys |--
-
-  for _,arena in ipairs(LEVEL.all_arenas) do
-    local R = arena.target
-
-    assert(arena.lock.kind ~= "UNSET")
-
-    R.lock = arena.lock
-
-    if arena.lock.kind == "EXIT" then
-      assert(LEVEL.exit_room == R)
-
-      if not (R.outdoor or R.natural) and
-         not R:has_any_lock() and
-         R.svolume < 25 and THEME.exit
-      then
-        make_small_exit(R)
-      end
-
-    elseif arena.lock.kind ~= "NULL" then
-      R.purpose = arena.lock.kind
-    end
-  end
-end
 
 
 function Quest_add_weapons()
@@ -500,7 +418,8 @@ function Quest_add_weapons()
 end
 
 
-function Quest.find_storage_rooms()
+function Quest_find_storage_rooms()  -- NOT USED ATM
+
   -- a "storage room" is a dead-end room which does not contain
   -- anything special (keys, switches or weapons).  We place some
   -- of the ammo and health needed by the player elsewhere into
@@ -590,80 +509,15 @@ function Quest_select_textures()
 end
 
 
-function OLD_Quest_assign_quests()
-
-  gui.printf("\n--==| Assign Quests |==--\n\n")
-
-  -- need at least a START room and an EXIT room
-  if #LEVEL.all_rooms < 2 then
-    error("Level only has one room! (2 or more are needed)")
-  end
-
-  local LOCK =
-  {
-    kind = "EXIT",
-    item = "normal",
-  }
-
-  local ARENA =
-  {
-    rooms = table.copy(LEVEL.all_rooms),
-    conns = table.copy(LEVEL.all_conns),
-    lock = LOCK,
-    start = LEVEL.start_room,
-  }
-
-
-  LEVEL.all_arenas = { ARENA }
-  LEVEL.all_locks  = { LOCK  }
-
-
-  Quest.initial_path(ARENA)
-
-  local want_lock = Quest.num_locks(#ARENA.rooms)
-
-  for i = 1,want_lock do
-    Quest.add_a_lock()
-  end
-
-  gui.printf("Arena count: %d\n", #LEVEL.all_arenas)
-
-  for index,A in ipairs(LEVEL.all_arenas) do
-    A.id = index
-
-    for _,R in ipairs(A.rooms) do
-      R.arena = A
-    end
-
-    if A.back_path == "FIND" then
-      A.back_path = Quest.find_path_to_room(A.target, A.lock.conn.src)
-    end
-  end
-
-
-  LEVEL.exit_room = LEVEL.all_arenas[#LEVEL.all_arenas].target
-  LEVEL.exit_room.purpose = "EXIT"
-
-  gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
-
-
-  Quest.order_by_visit()
-  Quest.key_distances()
-
-  Quest.add_weapons()
-  Quest.find_storage_rooms()
-
-  Quest.select_textures()
----###  Quest.decide_outdoors()
-
-  Quest.choose_keys()
-  Quest.add_keys()
-end
-
-
 function Quest_make_quests()
 
   -- ALGORITHM NOTES:
+  --
+  -- A fundamental requirement of a locked door is that the player
+  -- needs to reach the door _before_ he/she reaches the key.  Then
+  -- the player knows what they are looking for.  Without this, the
+  -- player can just stumble on the key before finding the door and
+  -- says to themselves "what the hell is this key for ???".
   --
   -- The main idea in this algorithm is that you LOCK all but one exits
   -- in each room, and continue down the free exit.  Each lock is added
@@ -782,6 +636,11 @@ function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
 
+  -- need at least a START room and an EXIT room
+  if #LEVEL.all_rooms < 2 then
+    error("Level only has one room! (2 or more are needed)")
+  end
+
   LEVEL.all_quests = {}
   LEVEL.all_locks  = {}
 
@@ -798,6 +657,10 @@ function Quest_make_quests()
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.debugf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
   end
+
+--??? Quest_find_storage_rooms()
+
+-- Quest_key_distances()
 
   Quest_select_textures()
   Quest_choose_keys()
