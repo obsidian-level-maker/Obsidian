@@ -429,7 +429,7 @@ function Monsters.do_pickups()
   local function try_add_small_spot(R, S)
     local score = gui.random()
 
-    if R.entry_conn then
+    if false then --!!!!!!!  R.entry_conn then
       local e_dist
       if geom.is_vert(R.entry_conn.dir) then
         e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)

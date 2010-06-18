@@ -362,9 +362,9 @@ do return true end  --!!!!!!!
 
       P.score = gui.random() + (S.div_lev or 0) * 20
 
-      if R.entry_conn then
-        local dx = math.abs(R.entry_conn.dest_S.sx - x)
-        local dy = math.abs(R.entry_conn.dest_S.sy - y)
+      if R.entry_conn and false then --!!!!!!
+        local dx = math.abs(R.entry_conn.S2.sx - x)
+        local dy = math.abs(R.entry_conn.S2.sy - y)
 
         P.score = P.score + dx + dy
       end
@@ -650,6 +650,7 @@ function Layout.do_natural(R, heights)
   end
 
   local function clear_conns()
+do return end --!!!!!!!
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
       local dir = S.conn_dir
@@ -671,6 +672,7 @@ function Layout.do_natural(R, heights)
     --]]
 
     -- check connections
+do return true end  --!!!!!!
     local point_list = {}
 
     for _,C in ipairs(R.conns) do
@@ -2097,8 +2099,8 @@ function Layout.do_room(R)
   local function select_floor_texs(focus_C)
     local f_texs  = {}
 
-    if focus_C.conn_ftex and (focus_C.src.outdoor == focus_C.dest.outdoor) and
-       (focus_C.src.kind == focus_C.dest.kind) then
+    if focus_C.conn_ftex and (focus_C.R1.outdoor == focus_C.R2.outdoor) and
+       (focus_C.R1.kind == focus_C.R2.kind) then
       table.insert(f_texs, focus_C.conn_ftex)
     end
 
@@ -2139,7 +2141,7 @@ function Layout.do_room(R)
     -- determine vertical momentum
     local mom_z = 0
     if R.entry_conn then
-      local C2 = R.entry_conn.src.entry_conn
+      local C2 = R.entry_conn.R1.entry_conn
       if C2 and C2.conn_h and C2.conn_h ~= base_h then
         mom_z = sel(C2.conn_h < base_h, 1, -1)
       end
@@ -2587,7 +2589,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   post_processing()
 
   for _,C in ipairs(R.conns) do
-    assert(C.conn_h)
+--!!!!!!    assert(C.conn_h)
   end
 
 

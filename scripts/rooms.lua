@@ -634,6 +634,8 @@ function Rooms.reckon_doors()
 
   ---| Rooms.reckon_doors |---
 
+do return end --!!!!!!!!!
+
   for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
       local S = sel(who == 1, C.src_S, C.dest_S)
@@ -842,7 +844,7 @@ function Rooms.border_up()
 
     local info = { side=side, seeds={} }
 
-    for _,C in ipairs(R.conns) do
+    for _,C in ipairs(R.conns and {}) do   --!!!!!!!!!!
       local S = C:seed(R)
       local B = S.border[side]
 
@@ -2268,7 +2270,7 @@ gui.printf("do_teleport\n")
 
     if #dirs == 3 then return 10 - missing_dir end
 
-    if S.room.entry_conn then
+    if false then --!!!!!!!!!  S.room.entry_conn then
       local entry_S = S.room.entry_conn:seed(S.room)
       local exit_dir = assert(entry_S.conn_dir)
 
@@ -2366,7 +2368,6 @@ gui.printf("do_teleport\n")
       Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
 
     elseif R.purpose == "EXIT" then
-      local CS = R.conns[1]:seed(R)
       local dir = dir_for_wotsit(S)
 
       if R.outdoor and THEME.out_exits then
@@ -2387,7 +2388,7 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "KEY" then
-      local LOCK = assert(R.lock)
+      local LOCK = assert(R.purpose_lock)
 
       if rand.odds(15) and THEME.lowering_pedestal_skin then
         local z_top = math.max(z1+128, R.floor_max_h+64)
@@ -2413,7 +2414,7 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "SWITCH" then
-      local LOCK = assert(R.lock)
+      local LOCK = assert(R.purpose_lock)
       local INFO = assert(GAME.SWITCHES[LOCK.item])
 
       local skin = table.copy(INFO.skin)
@@ -3076,7 +3077,7 @@ function Rooms.build_all()
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   Rooms.choose_themes()
-  Rooms.decide_hallways()
+---!!!!  Rooms.decide_hallways()
 
   Rooms.setup_symmetry()
   Rooms.reckon_doors()
