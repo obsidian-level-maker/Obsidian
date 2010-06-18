@@ -780,6 +780,8 @@ function Quest_make_quests()
 
   --==| Quest_make_quests |==--
 
+  gui.printf("\n--==| Make Quests |==--\n\n")
+
   LEVEL.all_quests = {}
   LEVEL.all_locks  = {}
 

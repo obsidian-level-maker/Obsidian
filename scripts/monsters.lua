@@ -376,8 +376,8 @@ function Monsters.do_pickups()
     if R.is_storage then return end
 
     do
-      distribute_to_list(R, 0.40, get_previous_prefs(R))
-      distribute_to_list(R, 0.30, get_storage_prefs(R.arena))
+      distribute_to_list(R, 0.50, get_previous_prefs(R))
+---!!!      distribute_to_list(R, 0.30, get_storage_prefs(R.arena))
     end
   end
 
@@ -824,7 +824,7 @@ function Monsters.fill_room(R)
     local spice = gui.random()
     toughness = toughness + spice * spice
 
-    if R.arena.id == 1 and #LEVEL.all_arenas > 1 then
+    if R.quest.id == 1 and #LEVEL.all_quests > 1 then
       -- be kinder around the starting area
       toughness = toughness * 0.7
     elseif R:is_near_exit() then
@@ -1768,16 +1768,16 @@ function Monsters.make_battles()
 
 ---!!  Levels.invoke_hook("make_battles", LEVEL.seed)
 
-  local cur_arena = -1
+  local cur_quest = -1
 
   -- Rooms have been sorted into a visitation order, so we
   -- simply visit them one-by-one and insert some monsters
   -- and simulate each battle.
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.arena.weapon and (R.arena.id > cur_arena) then
-      Monsters.player_give_weapon(R.arena.weapon)
-      cur_arena = R.arena.id
+    if R.quest.weapon and (R.quest.id > cur_quest) then
+      Monsters.player_give_weapon(R.quest.weapon)
+      cur_quest = R.quest.id
     end
 
     Monsters.fill_room(R)

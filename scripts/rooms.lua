@@ -46,14 +46,17 @@ class ROOM
   symmetry : keyword   -- symmetry of room, or NIL
                        -- keywords are "x", "y", "xy"
 
+  kx1, ky1, kx2, ky2  -- \ Section range
+  kw, kh              -- /
+
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 
-  floor_h, ceil_h : number
+  quest : QUEST
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
 
-  arena : ARENA
+  floor_h, ceil_h : number
 
 
   --- plan_sp code only:
@@ -192,11 +195,11 @@ function Rooms.setup_theme(R)
     return
   end
 
-  if not R.arena.courtyard_floor then
-    R.arena.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
+  if not R.quest.courtyard_floor then
+    R.quest.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
   end
 
-  R.main_tex = R.arena.courtyard_floor
+  R.main_tex = R.quest.courtyard_floor
 end
 
 function Rooms.setup_theme_Scenic(R)
@@ -751,13 +754,13 @@ function Rooms.border_up()
 --###   end
 
       if N.kind == "liquid" and R2.outdoor and
-        (S.kind == "liquid" or R1.arena == R2.arena)
+        (S.kind == "liquid" or R1.quest == R2.quest)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
         S.border[side].kind = "nothing"
       end
 
-      if STYLE.fences == "none" and R1.arena == R2.arena and R2.outdoor and
+      if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
          (S.kind ~= "liquid" or S.floor_h == N.floor_h)
       then
         S.border[side].kind = "nothing"
@@ -876,7 +879,7 @@ function Rooms.border_up()
           scenics = scenics + 1
         end
 
-        if S.room.arena and N.room.arena and (S.room.arena.id < N.room.arena.id) then
+        if S.room.quest and N.room.quest and (S.room.quest.id < N.room.quest.id) then
           futures = futures + 1
         end
         
@@ -1572,8 +1575,8 @@ function Rooms.make_ceiling(R)
     local skin
     
     if mode == "light" then
-      if not R.arena.ceil_light then return end
-      skin = { glow=R.arena.ceil_light, trim=THEME.light_trim }
+      if not R.quest.ceil_light then return end
+      skin = { glow=R.quest.ceil_light, trim=THEME.light_trim }
     end
 
     for x = x1,x2 do for y = y1,y2 do
@@ -1715,8 +1718,8 @@ function Rooms.make_ceiling(R)
     end
 
 
-    if not R.arena.ceil_light and THEME.ceil_lights then
-      R.arena.ceil_light = rand.key_by_probs(THEME.ceil_lights)
+    if not R.quest.ceil_light and THEME.ceil_lights then
+      R.quest.ceil_light = rand.key_by_probs(THEME.ceil_lights)
     end
 
     local beam_chance = style_sel("beams", 0, 5, 25, 75)
