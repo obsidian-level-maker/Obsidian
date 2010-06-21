@@ -86,6 +86,14 @@ function SEED_CLASS.neighbor(self, dir, dist)
   return SEEDS[nx][ny][1]
 end
 
+function SEED_CLASS.has_conn(self)
+  for side = 2,8,2 do
+    local B = self.border[side]
+    if B and B.conn then return true end
+  end
+  return false
+end
+
 function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
 end
