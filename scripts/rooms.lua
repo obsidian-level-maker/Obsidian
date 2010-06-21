@@ -586,7 +586,7 @@ function Rooms.setup_symmetry()
 end
 
 
-function Rooms.reckon_doors()
+function Rooms_place_doors()
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
@@ -618,9 +618,58 @@ function Rooms.reckon_doors()
   end
 
 
-  ---| Rooms.reckon_doors |---
+  local function place_door(R, C)
 
-do return end --!!!!!!!!!
+    local side = assert(C.dir)
+
+    -- FIXME: too simple
+    if C.R1 ~= R then return end
+
+    -- find spot
+    local spots = { }
+
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
+      local N = S:neighbor(side)
+
+      if S and S.room == R and not S:has_conn() and
+         N and N.room == C.R2 and not N:has_conn()
+      then
+        table.insert(spots, { x=x, y=y, S=S, N=N })
+      end
+    end end
+
+    if table.empty(spots) then
+      error("Failure adding door into room!")
+    end
+
+    local spot = rand.pick(spots)
+
+    assert(not spot.S.border[side])
+    assert(not spot.N.border[10-side])
+
+    local B1 = spot.S:add_border(side, "arch", 24)
+    local B2 = spot.N:add_border(10-side, "straddle", 24)
+
+    B1.conn = C
+    B2.conn = C
+
+    if C.lock then
+      B1.kind = "lock_door"
+      B1.lock = C.lock
+    end
+  end
+
+
+  ---| Rooms_place_doors |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,C in ipairs(R.conns) do
+      place_door(R, C)
+    end
+  end
+
+--[[  OLD CODE
 
   for _,C in ipairs(LEVEL.all_conns) do
     for who = 1,2 do
@@ -673,6 +722,8 @@ do return end --!!!!!!!!!
       end
     end -- for who
   end -- for C
+
+--]]
 end
 
 
@@ -709,56 +760,48 @@ function Rooms.border_up()
     if R.outdoor then
       -- a fence will be created by Layout.edge_of_map()
     else
-      S.border[side] = { kind="wall", map_edge=true, thick=24 }
+      S:add_border(side, "wall", 24)
+
+      S.border[side].at_edge = true
     end
   end
 
   local function make_border(R1, S, R2, N, side)
     if R1 == R2 then
-      -- same room : do nothing
-      return
+      return -- same room : do nothing
     end
 
     if R1.outdoor and R2.natural then
-      S.border[side] = { kind="fence", thick=24 }
+      S:add_border(side, "fence", 24)
 
     elseif R1.natural and R2.outdoor then
-      -- nothing
+      return -- nothing
 
     elseif R1.outdoor then
-      if R2.outdoor or R2.natural then
-        S.border[side] = { kind="fence", thick=24 }
-      else
-        -- nothing
---???        S.border[side] = { kind="facade"
---???        S.border[side].facade = R2.facade
-      end
-
---###   if N.kind == "small_exit" then
---###     S.border[side].kind = "nothing"
---###   end
-
       if N.kind == "liquid" and R2.outdoor and
         (S.kind == "liquid" or R1.quest == R2.quest)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
-        -- nothing
+        return -- nothing
       end
 
       if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
          (S.kind ~= "liquid" or S.floor_h == N.floor_h)
       then
-        -- nothing
+        return -- nothing
+      end
+
+      if R2.outdoor or R2.natural then
+        S:add_border(side, "fence", 24)
       end
 
     else -- R1 indoor
 
       if R2.parent == R1 and not R2.outdoor then
-        -- nothing
-        return
+        return -- nothing
       end
 
-      S.border[side] = { kind="wall", thick=24 }
+      S:add_border(side, "wall", 24)
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
@@ -3065,7 +3108,8 @@ function Rooms.build_all()
 ---!!!!  Rooms.decide_hallways()
 
   Rooms.setup_symmetry()
-  Rooms.reckon_doors()
+
+  Rooms_place_doors()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games

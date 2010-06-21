@@ -94,6 +94,14 @@ function SEED_CLASS.has_conn(self)
   return nil
 end
 
+function SEED_CLASS.add_border(S, side, kind, thick)
+  local BORDER = { kind=kind, thick=thick }
+
+  S.border[side] = BORDER
+
+  return BORDER
+end
+
 function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
 end
