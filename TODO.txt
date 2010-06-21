@@ -3,14 +3,19 @@ TODO
 ====
 
 
-++  remove SEED.thick[], have thick field in BORDER, and
+!!  fix "arch", "door" (etc) to straddle the space
+
+!!  fix bars handling
+
+!!  fix switches not appearing
+
+
+>>  remove SEED.thick[], have thick field in BORDER, and
     if no border then it's as if thick was zero.
 
--  remove SEED.conn & SEED.conn_dir : determine from BORDERs
+>>  remove SEED.conn & SEED.conn_dir : determine from BORDERs
 
--  usage_map : compute in build_seed (not a permantent property)
-
--  rename SEED.content
+Later:  fix Build_stairwell : broken due to conn_dir change
 
 
 Monsters:
