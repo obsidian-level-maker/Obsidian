@@ -3112,7 +3112,7 @@ end
 ---==========================================================---
 
 
-function Builder_quake_test()
+function Quake_test()
 
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)

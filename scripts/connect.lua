@@ -27,7 +27,6 @@ class CONN
 
   K1, K2 : sections
   R1, R2 : rooms
-  S1, S2 : seeds 
 
   dir    : direction 2/4/6/8 (from K1 to K2)
 
@@ -50,9 +49,9 @@ function CONN_CLASS.section(self, R)
   return sel(R == self.R1, self.K1, self.K2)
 end
 
-function CONN_CLASS.seed(self, R)
-  return sel(R == self.R1, self.S1, self.S2)
-end
+---###  function CONN_CLASS.seed(self, R)
+---###    return sel(R == self.R1, self.S1, self.S2)
+---###  end
 
 function CONN_CLASS.tostr(self)
   return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
@@ -65,7 +64,7 @@ end
 function CONN_CLASS.swap(self)
   self.K1, self.K2 = self.K2, self.K1
   self.R1, self.R2 = self.R2, self.R1
-  self.S1, self.S2 = self.S2, self.S1
+---###  self.S1, self.S2 = self.S2, self.S1
 
   if self.dir then self.dir = 10 - self.dir end
 end

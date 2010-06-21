@@ -161,22 +161,6 @@ function ROOM_CLASS.valid_T(self, x, y)
   return true
 end
 
-function ROOM_CLASS.conn_area(self)
-  local lx, ly = 999,999
-  local hx, hy = 0,0
-
-  for _,C in ipairs(self.conns) do
-    local S = C:seed(self)
-    lx = math.min(lx, S.sx)
-    ly = math.min(ly, S.sy)
-    hx = math.max(hx, S.sx)
-    hy = math.max(hy, S.sy)
-  end
-
-  assert(lx <= hx and ly <= hy)
-
-  return lx,ly, hx,hy
-end
 
 function ROOM_CLASS.is_near_exit(self)
   if self.purpose == "EXIT" then return true end

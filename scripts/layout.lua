@@ -1697,7 +1697,24 @@ end
 
 
 function Layout.do_hallway(R)
-  local tx1,ty1, tx2,ty2 = R:conn_area()
+  local function conn_area(R)
+    local lx, ly = 999,999
+    local hx, hy = 0,0
+
+    for _,C in ipairs(R.conns) do
+      local S = C:seed(R)  -- FIXME: do another way
+      lx = math.min(lx, S.sx)
+      ly = math.min(ly, S.sy)
+      hx = math.max(hx, S.sx)
+      hy = math.max(hy, S.sy)
+    end
+
+    assert(lx <= hx and ly <= hy)
+
+    return lx,ly, hx,hy
+  end
+
+  local tx1,ty1, tx2,ty2 = conn_area(R)
   local tw, th = geom.group_size(tx1,ty1, tx2,ty2)
 
   local function T_fill()
