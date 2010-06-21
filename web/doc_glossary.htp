@@ -213,17 +213,19 @@ selection and usage of materials.
 </div>
 
 
-<div id="mega_seed" class="gloss_term">
+<!---
+[div id="mega_seed" class="gloss_term"]
 Mega-Seed
-</div><div class="gloss_define">
+[/div][div class="gloss_define"]
 An area on the map consisting of more than one seed, used to
 create larger structures (like wide doors or big prefabs)
 which normally cannot fit in a single seed.
 
-<p>
-<i>(See also.... Seed)</i>
+[p]
+[i](See also.... Seed)[/i]
 
-</div>
+[/div]
+--->
 
 
 <div id="palette" class="gloss_term">
