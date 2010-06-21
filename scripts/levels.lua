@@ -30,7 +30,7 @@ class LEVEL
 
   all_rooms  : array(ROOM) 
   all_conns  : array(CONN)
-  all_arenas : array(ARENA)
+  all_quests : array(QUEST)
   all_locks  : array(LOCK)
 
   last_tag  : number

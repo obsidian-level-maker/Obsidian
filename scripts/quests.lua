@@ -21,58 +21,30 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class ARENA
+class QUEST
 {
-  -- an Arena is a group of rooms, generally with a locked door
-  -- to a different arena (requiring the player to find the key
-  -- or switch).  There is a start room and a target room.
+  -- a quest is a group of rooms with a particular goal, usually
+  -- a key or switch which allows progression to the next quest.
+  -- The final quest always leads to a room with an exit switch.
 
-  rooms : array(ROOM)  -- all the rooms in this arena
-
-  conns : array(CONN)  -- all the direct connections between rooms
-                       -- in this arena.  Note that teleporters always
-                       -- go between rooms in the same arena
-
-  start : ROOM   -- room which player enters this arena
-                 -- (map's start room for the very first arena)
+  start : ROOM   -- room which player enters this quest.
+                 -- for first quest, this is the map's starting room.
                  -- Never nil.
                  --
                  -- start.entry_conn is the entry to this arena
 
-  target : ROOM  -- room containing the key/switch to exit this
-                 -- arena, _OR_ the level's exit room itself.
+  target : ROOM  -- room containing the goal of this quest (key or switch).
+                 -- the room object will contain more information.
                  -- Never nil.
-
-  lock : LOCK    -- lock info, which defines what the 'target' room
-                 -- will hold (key, switch or an EXIT).  Also defines
-                 -- connection to the next arena (the keyed door etc).
-                 -- Never nil.
-                 --
-                 -- lock.conn is the connection leaving this arena.
-                 --
-                 -- NOTE: the room on the front side of the connection
-                 --       may belong to a different arena.
-
-  path : array(CONN)  -- full path of rooms from 'start' to 'target'
-                      -- (actually only the connections are stored).
-                      -- The list may be empty.
-
-  back_path : array(CONN)
-                 -- path from 'target' to the room with the connection
-                 -- to the next arena.  You need to follow the full
-                 -- path to know whether each connection goes forward
-                 -- or backwards.  Not used for EXIT.
-                 --
-                 -- NOTE: some rooms may belong to other arenas.
 }
 
 
 class LOCK
 {
-  kind : keyword  -- "UNSET" or "KEY" or "SWITCH" or "EXIT"
+  kind : keyword  -- "KEY" or "SWITCH"
   item : string   -- what kind of key or switch (game specific)
 
-  conn : CONN     -- connection between two rooms (and two arenas)
+  conn : CONN     -- connection between two rooms (and two quests)
                   -- which is locked (keyed door, lowering bars, etc)
                   -- Not used for EXITs.
 
@@ -86,7 +58,6 @@ class LOCK
 
 require 'defs'
 require 'util'
-
 
 
 function Quest_update_tvols(arena)  -- NOT USED ATM
