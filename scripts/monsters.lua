@@ -421,7 +421,7 @@ function Monsters.do_pickups()
     if S.sx > (R.tx1 or R.sx1) and S.sx < (R.tx2 or R.sx2) then score = score + 2.4 end
     if S.sy > (R.ty1 or R.sy1) and S.sy < (R.ty2 or R.sy2) then score = score + 2.4 end
 
-    if not S.content then score = score + 1 end
+    if not S.usage then score = score + 1 end
 
     add_big_spot(R, S, score)
   end
@@ -521,7 +521,7 @@ function Monsters.do_pickups()
       local score
 
       if S.room == R and S.kind == "walk" and
-         (not S.content or S.content == "monster")
+         (not S.usage or S.usage == "monster")
       then
         try_add_big_spot(R, S)
         try_add_small_spot(R, S)
@@ -1072,7 +1072,7 @@ function Monsters.fill_room(R)
   end
 
   local function monster_fits(S, mon, info)
-    if S.content or S.no_monster or not S.floor_h then
+    if S.usage or S.no_monster or not S.floor_h then
       return false
     end
 
@@ -1269,7 +1269,7 @@ function Monsters.fill_room(R)
   end
 
   local function can_accommodate_small(S)
-    if S.content or S.no_monster or not S.floor_h then
+    if S.usage or S.no_monster or not S.floor_h then
       return false
     end
 
@@ -1528,7 +1528,7 @@ function Monsters.fill_room(R)
 
     Trans.entity(mon, mx, my, spot.z1, props)
 
-    spot.S.content = "monster"
+    spot.S.usage = "monster"
   end
 
   local function place_barrel(spot)
@@ -1541,7 +1541,7 @@ function Monsters.fill_room(R)
 
     Trans.entity("barrel", mx, my, spot.z1)
 
-    spot.S.content = "monster"  -- allow items to exist here
+    spot.S.usage = "monster"  -- allow items to exist here
   end
 
   local function fill_monster_map(qty, barrel_chance)

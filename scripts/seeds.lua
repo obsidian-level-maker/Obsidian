@@ -27,12 +27,12 @@ class SEED
   room : ROOM
 
   kind : keyword  -- main usage of seed:
-                  -- "walk", "void", "diagonal",
-                  -- "stair", "curve_stair", "tall_stair",
-                  -- "liquid"
+                  --   "walk", "void", "diagonal",
+                  --   "stair", "curve_stair", "tall_stair",
+                  --   "liquid"
 
-  content : keyword  -- normally nil, but can be:
-                     -- "pillar"
+  usage : keyword  -- normally nil, but can be:
+                   --   "pillar"
 
   border[DIR] : BORDER   -- can be nil
 

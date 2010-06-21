@@ -320,7 +320,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout.spot_for_wotsit(R, kind)
+function Layout.spot_for_wotsit(R, usage)
   local spots = {}
 
   local function cave_spot_OK(x, y)
@@ -357,7 +357,7 @@ do return true end  --!!!!!!!
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
 
-    if S.room == R and S.kind == "walk" and not S.content and cave_spot_OK(x, y) then
+    if S.room == R and S.kind == "walk" and not S.usage and cave_spot_OK(x, y) then
       local P = { x=x, y=y, S=S }
 
       P.score = gui.random() + (S.div_lev or 0) * 20
@@ -387,8 +387,7 @@ do return true end  --!!!!!!!
     error("No usable spots in room!")
   end
 
-  P.S.content = "wotsit"
-  P.S.content_kind = kind
+  P.S.usage = usage
 
   if R.flood then
     -- clear the middle cell
@@ -429,7 +428,7 @@ function Layout.cave_pickup_spots(R)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
-    if S.room == R and not S.content then
+    if S.room == R and not S.usage then
       local mx = (S.sx - R.sx1) * 3 + 2
       local my = (S.sy - R.sy1) * 3 + 2
 
@@ -469,7 +468,7 @@ function Layout.cave_monster_spots(R)
 
     for x = sx1,sx2 do for y = sy1,sy2 do
       local S = SEEDS[x][y][1]
-      if S.content then return false end
+      if S.usage then return false end
       if S.conn_dir then return false end
     end end
 
@@ -2022,7 +2021,7 @@ function Layout.do_room(R)
 
 
   local function add_purpose()
-    local sx, sy, S = Layout.spot_for_wotsit(R, R.purpose)
+    local sx, sy, S = Layout.spot_for_wotsit(R, "KEY") --???  R.purpose)
 
     R.guard_spot = S
   end
@@ -2437,10 +2436,10 @@ gui.debugf("BOTH SAME HEIGHT\n")
       assert(ch)
 
       if ch == '-' then
-        if S.content == "pillar" then return false end
+        if S.usage == "pillar" then return false end
       else
         assert(string.is_digit(ch))
-        if S.kind ~= "walk" or S.room ~= R or S.content or
+        if S.kind ~= "walk" or S.room ~= R or S.usage or
            S.conn or S.pseudo_conn or S.must_walk
         then
           return false
@@ -2465,7 +2464,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       pos = pos + 1
 
       if string.is_digit(ch) then
-        S.content = "pillar"
+        S.usage = "pillar"
         S.pillar_skin = assert(GAME.PILLARS[R.pillar_what])
       end
     end end -- for x, y

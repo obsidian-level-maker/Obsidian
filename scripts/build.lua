@@ -360,17 +360,17 @@ function Trans.border_transform(S, z, side)
   local x4, y4 = S:x4(), S:y4()
 
   -- expand middle piece to include corners (when allowed)
-  if side == 8 and S.usage_map[7] == 8 then x3 = S.x1 end
-  if side == 8 and S.usage_map[9] == 8 then x4 = S.x2 end
+  if side == 8 and S.wall_map[7] == 8 then x3 = S.x1 end
+  if side == 8 and S.wall_map[9] == 8 then x4 = S.x2 end
 
-  if side == 2 and S.usage_map[1] == 2 then x3 = S.x1 end
-  if side == 2 and S.usage_map[3] == 2 then x4 = S.x2 end
+  if side == 2 and S.wall_map[1] == 2 then x3 = S.x1 end
+  if side == 2 and S.wall_map[3] == 2 then x4 = S.x2 end
 
-  if side == 4 and S.usage_map[1] == 4 then y3 = S.y1 end
-  if side == 4 and S.usage_map[7] == 4 then y4 = S.y2 end
+  if side == 4 and S.wall_map[1] == 4 then y3 = S.y1 end
+  if side == 4 and S.wall_map[7] == 4 then y4 = S.y2 end
 
-  if side == 6 and S.usage_map[3] == 6 then y3 = S.y1 end
-  if side == 6 and S.usage_map[9] == 6 then y4 = S.y2 end
+  if side == 6 and S.wall_map[3] == 6 then y3 = S.y1 end
+  if side == 6 and S.wall_map[9] == 6 then y4 = S.y2 end
 
 
   local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90   }

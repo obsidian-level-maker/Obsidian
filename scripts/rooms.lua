@@ -1106,7 +1106,7 @@ function Rooms.border_up()
 
       if (R.mirror_x and S.x_peer and S.sx > S.x_peer.sx) or
          (R.mirror_y and S.y_peer and S.sy > S.y_peer.sy) or
-         (S.content == "pillar") or (S.kind == "lift")
+         (S.usage == "pillar") or (S.kind == "lift")
       then
         -- skip it
       else
@@ -1494,7 +1494,7 @@ function Rooms.make_ceiling(R)
     local S = SEEDS[mx][my][1]
 
     -- seed is usable?
-    if S.room ~= R or S.content then return end
+    if S.room ~= R or S.usage then return end
     if not (S.kind == "walk" or S.kind == "liquid") then return end
 
     -- neighbors the same?
@@ -1508,7 +1508,7 @@ function Rooms.make_ceiling(R)
     -- OK !!
     local which = rand.key_by_probs(skin_names)
 
-    S.content = "pillar"
+    S.usage = "pillar"
     S.pillar_skin = assert(GAME.PILLARS[which])
 
     R.has_central_pillar = true
@@ -1525,7 +1525,7 @@ function Rooms.make_ceiling(R)
       if S.room ~= R then return 0 end
       
       if S.kind == "void" or ---#  S.kind == "diagonal" or
-         S.kind == "tall_stair" or S.content == "pillar"
+         S.kind == "tall_stair" or S.usage == "pillar"
       then
         nice = 1
       end
@@ -1569,7 +1569,7 @@ function Rooms.make_ceiling(R)
 
       if ceil_h and S.kind ~= "void" then
         if mode == "light" then
-          if S.content ~= "pillar" then
+          if S.usage ~= "pillar" then
             local T = Trans.centre_transform(S, ceil_h, 2)  -- TODO; pick a dir
             if R.lite_w then T.scale_x = R.lite_w  / 64 end
             if R.lite_h then T.scale_y = R.lite_h  / 64 end
@@ -2477,7 +2477,7 @@ gui.printf("do_teleport\n")
 
     if OB_CONFIG.game == "quake" then prec = "low" end
     if R.outdoor then prec = "low" end
-    if S.content == "wotsit" then prec = "low" end
+    if S.usage then prec = "low" end
 
     if prec == "high" then
       for i = 0,5 do for k = 0,5 do
@@ -2522,15 +2522,15 @@ gui.printf("do_teleport\n")
     return true
   end
 
-  local function calc_usage_map(S)
+  local function calc_wall_map(S)
     --
-    -- Usage map is a 3x3 grid, same arrangement as numeric keypad.
+    -- Wall map is a 3x3 grid, same arrangement as numeric keypad.
     --
     -- If an element is nil, then that block is free.
     -- A numeric value represents a border (2 | 4 | 6 | 8).
     -- Otherwise it is a string keyword, e.g. "solid".
     --
-    S.usage_map = {}
+    S.wall_map = {}
 
     -- process sides
     for side = 2,8,2 do
@@ -2539,7 +2539,7 @@ gui.printf("do_teleport\n")
       if not B or B.kind == nil or B.kind == "nothing" then
         -- unused
       else
-        S.usage_map[side] = side
+        S.wall_map[side] = side
       end
     end
 
@@ -2553,12 +2553,12 @@ gui.printf("do_teleport\n")
 
       if L1 and R1 then
         if not (R.outdoor or R.natural) then
-          S.usage_map[dir] = "solid"
+          S.wall_map[dir] = "solid"
         end
       elseif L1 then
-        S.usage_map[dir] = L_side
+        S.wall_map[dir] = L_side
       elseif R1 then
-        S.usage_map[dir] = R_side
+        S.wall_map[dir] = R_side
       else
         -- unused
       end
@@ -2644,7 +2644,7 @@ gui.printf("do_teleport\n")
 
     -- SIDES
 
-    calc_usage_map(S)
+    calc_wall_map(S)
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
@@ -2842,7 +2842,7 @@ gui.printf("do_teleport\n")
     -- CORNERS
 
     for corner = 1,9,2 do if corner ~= 5 then
-      if S.usage_map[corner] == "solid" then
+      if S.wall_map[corner] == "solid" then
         local skin = { inner=w_tex, outer=R.facade or w_tex }
 
         local T = Trans.corner_transform(S, z1, corner)
@@ -3010,16 +3010,16 @@ gui.printf("do_teleport\n")
 
     -- PREFABS
 
-    if S.content == "pillar" then
+    if S.usage == "pillar" then
       local T = Trans.centre_transform(S, z1, S.pillar_dir or 2)  -- TODO pillar_dir
       T.scale_z = (z2 - z1) / 128
 
       Build.prefab("PILLAR", assert(S.pillar_skin), T)
     end
 
-    if S.content == "wotsit" and S.content_kind == "WEAPON" then
+    if S.usage == "WEAPON" then
       do_weapon(S)
-    elseif S.content == "wotsit" then
+    elseif S.usage == "KEY" then
       do_purpose(S)
     end
 
