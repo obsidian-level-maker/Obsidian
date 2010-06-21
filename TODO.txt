@@ -2,6 +2,27 @@
 TODO
 ====
 
+
+++  remove SEED.thick[], have thick field in BORDER, and
+    if no border then it's as if thick was zero.
+
+-  remove SEED.conn & SEED.conn_dir : determine from BORDERs
+
+-  usage_map : compute in build_seed (not a permantent property)
+
+-  rename SEED.content
+
+
+Monsters:
+-  along = math.min(1000, info.health) ^ 0.3 * info.damage ^ 0.4 / 70
+
+   require LEVEL.epi_along >= along
+
+-  PARAM.episode_factor : 0 = progression continuous over whole game
+                          1 = progression same in all episodes
+                          (defaults to 0.5)
+
+
 Quests:
 
 -  make a quest class, tostr() method
