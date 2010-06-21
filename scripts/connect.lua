@@ -29,6 +29,7 @@ class CONN
   R1, R2 : rooms
 
   dir    : direction 2/4/6/8 (from K1 to K2)
+           nil for teleporters.
 
   conn_h : floor height for connection
 }
@@ -47,6 +48,13 @@ end
 
 function CONN_CLASS.section(self, R)
   return sel(R == self.R1, self.K1, self.K2)
+end
+
+function CONN_CLASS.what_dir(self, R)
+  if self.dir then
+    return sel(R == self.R1, self.dir, 10 - self.dir)
+  end
+  return nil
 end
 
 ---###  function CONN_CLASS.seed(self, R)

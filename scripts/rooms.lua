@@ -826,17 +826,15 @@ function Rooms.border_up()
 
     local info = { side=side, seeds={} }
 
-    for _,C in ipairs(R.conns and {}) do   --!!!!!!!!!!
-      local S = C:seed(R)
-      local B = S.border[side]
+    for _,C in ipairs(R.conns) do
 
-      if S.conn_dir == side then
+      if C:what_dir(R) == side then
         -- never any windows near a locked door
-        if B.kind == "lock_door" then
+        if C.lock then
           return nil
         end
 
-        if B.kind == "door" or B.kind == "arch" then
+        if C.kind == "normal" then
           doors = doors + 1
         end
 
@@ -1662,7 +1660,7 @@ function Rooms.make_ceiling(R)
         local cx = sel((where <= 2), R.tx1, R.tx2)
         local cy = sel((where % 2) == 1, R.ty1, R.ty2)
         local S = SEEDS[cx][cy][1]
-        if S.room == R and not S.conn and
+        if S.room == R and not S:has_conn() and
            (S.kind == "walk" or S.kind == "liquid")
         then
 
@@ -2252,7 +2250,7 @@ gui.printf("do_teleport\n")
 
     if #dirs == 3 then return 10 - missing_dir end
 
-    if false then --!!!!!!!!!  S.room.entry_conn then
+    if false then --!!!!!!!!! FIXME  S.room.entry_conn then
       local entry_S = S.room.entry_conn:seed(S.room)
       local exit_dir = assert(entry_S.conn_dir)
 
@@ -2574,12 +2572,14 @@ gui.printf("do_teleport\n")
 
     vis_seed(S)
 
+    local C = S:has_conn()
+
     local x1 = S.x1
     local y1 = S.y1
     local x2 = S.x2
     local y2 = S.y2
 
-    local z1 = S.floor_h or R.floor_h or (S.conn and S.conn.conn_h) or 0
+    local z1 = S.floor_h or R.floor_h or (C and C.conn_h) or 0
     local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
 
     assert(z1 and z2)
@@ -2739,7 +2739,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "arch" then
----???        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(C and C.conn_h)
 
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
@@ -2752,8 +2752,8 @@ gui.printf("do_teleport\n")
           Build.shadow(S, -side, 96)
         end
 
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+        assert(not C.already_made_lock)
+        C.already_made_lock = true
       end
 
       if B_kind == "liquid_arch" then
@@ -2771,7 +2771,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "door" then
----???        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(C and C.conn_h)
 
         -- FIXME: better logic for selecting doors
         local doors = THEME.doors
@@ -2791,12 +2791,12 @@ gui.printf("do_teleport\n")
 
 --!!!   shrink_ceiling(side, 4)
 
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+        assert(not C.already_made_lock)
+        C.already_made_lock = true
       end
 
       if B_kind == "lock_door" then
----???        local z = assert(S.conn and S.conn.conn_h)
+---???        local z = assert(C and C.conn_h)
 
         local LOCK = assert(S.border[side].lock)
         local skin = assert(GAME.DOORS[LOCK.item])
@@ -2810,14 +2810,14 @@ gui.printf("do_teleport\n")
         skin2.outer = o_tex
         skin2.tag   = LOCK.tag
 
-        local reversed = (S == S.conn.dest_S)
+---???        local reversed = (S == C.dest_S)
 
         Build.prefab("DOOR", skin2, sidelet)
 
 --!!!   shrink_ceiling(side, 4)
 
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+        assert(not C.already_made_lock)
+        C.already_made_lock = true
       end
 
       if B_kind == "bars" then
@@ -2833,8 +2833,8 @@ gui.printf("do_teleport\n")
 
         Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
 
-        assert(not S.conn.already_made_lock)
-        S.conn.already_made_lock = true
+        assert(not C.already_made_lock)
+        C.already_made_lock = true
       end
     end -- for side
 

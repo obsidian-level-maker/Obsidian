@@ -2030,7 +2030,7 @@ end
 
 
 -- NOT ACTUALLY USED:
-function Build.outdoor_ramp_down(ST, f_tex, w_tex)
+function Build.OLD_outdoor_ramp_down(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
@@ -2090,7 +2090,7 @@ gui.debugf("Build.outdoor_ramp_down: S:(%d,%d) conn_dir:%d\n", ST.S.sx, ST.S.sy,
 end
 
 -- NOT ACTUALLY USED:
-function Build.outdoor_ramp_up(ST, f_tex, w_tex)
+function Build.OLD_outdoor_ramp_up(ST, f_tex, w_tex)
   local conn_dir = assert(ST.S.conn_dir)
 
   local oh  = ST.outer_h
