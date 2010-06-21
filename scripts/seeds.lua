@@ -89,9 +89,9 @@ end
 function SEED_CLASS.has_conn(self)
   for side = 2,8,2 do
     local B = self.border[side]
-    if B and B.conn then return true end
+    if B and B.conn then return B.conn end
   end
-  return false
+  return nil
 end
 
 function SEED_CLASS.mid_point(self)
