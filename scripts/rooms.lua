@@ -970,7 +970,7 @@ function Rooms.border_up()
       local N = S:neighbor(side)
       assert(N and N.room)
 
-      N.border[10-side].kind = "nothing"
+---!?!?      N.border[10-side].kind = "nothing"
     end -- for S
   end
 
@@ -1076,7 +1076,7 @@ function Rooms.border_up()
 
         local B = S.border[side]
 
-        if B.kind == "wall" and S.floor_h then
+        if B and B.kind == "wall" and S.floor_h then
           local raise = skin.raise or 32
           if raise + skin.height > v_space-4 then
             raise = int((v_space - skin.height) / 2)

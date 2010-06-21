@@ -1152,22 +1152,22 @@ function get_wall_coords(S, side, thick, pad)
   local x2, y2 = S.x2, S.y2
 
   if side == 4 or side == 1 or side == 7 then
-    x2 = x1 + (thick or S.thick[4])
+    x2 = x1 + (thick or 24) ---???  S.thick[4])
     if pad then x1 = x1 + pad end
   end
 
   if side == 6 or side == 3 or side == 9 then
-    x1 = x2 - (thick or S.thick[6])
+    x1 = x2 - (thick or 24) ---??? S.thick[6])
     if pad then x2 = x2 - pad end
   end
 
   if side == 2 or side == 1 or side == 3 then
-    y2 = y1 + (thick or S.thick[2])
+    y2 = y1 + (thick or 24) ---??? S.thick[2])
     if pad then y1 = y1 + pad end
   end
 
   if side == 8 or side == 7 or side == 9 then
-    y1 = y2 - (thick or S.thick[8])
+    y1 = y2 - (thick or 24) ---??? S.thick[8])
     if pad then y2 = y2 - pad end
   end
 
