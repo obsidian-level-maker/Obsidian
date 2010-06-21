@@ -2705,9 +2705,9 @@ function Layout.edge_of_map()
     for side = 2,8,2 do
       local N = S:neighbor(side)
       if not N or N.free then
-        S.thick[side] = 48 ; shrink(side, 48)
+        shrink(side, 48)
 
-        Build.sky_fence(S, side, S.fence_h, S.fence_h - 64, skin)
+        Build_sky_fence(S, side, 48, S.fence_h, S.fence_h - 64, skin)
       end
 
       if N and ((N.room and not N.room.outdoor) or

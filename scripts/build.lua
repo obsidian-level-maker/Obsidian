@@ -389,7 +389,7 @@ function Trans.border_transform(S, z, side)
     T.fit_width = y4 - y3
   end
 
-  T.fit_depth = S.thick[side]
+  T.fit_depth = S.border[side].thick
 
   do return T end
 end
@@ -411,8 +411,8 @@ function Trans.corner_transform(S, z, side)
   local R_side = geom.RIGHT_45[side]
   local L_side = geom. LEFT_45[side]
 
-  T.fit_width = S.thick[R_side]
-  T.fit_depth = S.thick[L_side]
+  T.fit_width = S.border[R_side].thick
+  T.fit_depth = S.border[L_side].thick
 
   return T
 end
@@ -1081,7 +1081,7 @@ end
 
 function get_transform_for_seed_side(S, side, thick)
   
-  if not thick then thick = S.thick[side] end
+  if not thick then thick = 24 end --!!!
 
   local T = { }
 
@@ -1100,11 +1100,11 @@ end
 function get_transform_for_seed_center(S)
   local T = { }
 
-  T.add_x = S.x1 + S.thick[4]
-  T.add_y = S.y1 + S.thick[2]
+  T.add_x = S.x1 + 24
+  T.add_y = S.y1 + 24
 
-  local long = S.x2 - S.thick[6] - T.add_x
-  local deep = S.y2 - S.thick[8] - T.add_y
+  local long = S.x2 - 24 - T.add_x
+  local deep = S.y2 - 24 - T.add_y
 
   return T, long, deep
 end
@@ -1326,7 +1326,7 @@ function Build.fence(S, side, fence_h, skin)
 end
 
 
-function Build.sky_fence(S, side, z_top, z_low, skin)
+function Build_sky_fence(S, side, thick, z_top, z_low, skin)
   local wall_info = get_mat(skin.fence_w, skin.fence_f)
 
   local sky_info = get_sky()
@@ -1339,27 +1339,25 @@ function Build.sky_fence(S, side, z_top, z_low, skin)
   local sx1, sy1 = S.x1, S.y1
   local sx2, sy2 = S.x2, S.y2
 
-  if S.thick[side] < 17 then
-    error("Sky fence not setup properly (thick <= 16)")
-  end
+  assert(thick > 16)
 
   if side == 4 then
-    wx2 = wx1 + S.thick[4]
+    wx2 = wx1 + thick
     sx2 = wx1 + 16
     wx1 = sx2
 
   elseif side == 6 then
-    wx1 = wx2 - S.thick[6]
+    wx1 = wx2 - thick
     sx1 = wx2 - 16
     wx2 = sx1
 
   elseif side == 2 then
-    wy2 = wy1 + S.thick[2]
+    wy2 = wy1 + thick
     sy2 = wy1 + 16
     wy1 = sy2
 
   elseif side == 8 then
-    wy1 = wy2 - S.thick[8]
+    wy1 = wy2 - thick
     sy1 = wy2 - 16
     wy2 = sy1
   end
@@ -1620,9 +1618,9 @@ function Build.diagonal(S, side, info, floor_h, ceil_h)
   -- but not both to make a diagonal floor or ceiling piece.
   assert(not (floor_h and ceil_h))
   
-  local function get_thick(wsd)
-    if S.border[wsd].kind == "wall" then
-      return S.thick[wsd]
+  local function get_thick(w_side)
+    if S.border[w_side] and S.border[w_side].kind == "wall" then
+      return S.border[w_side].thick
     end
 
     return 0
@@ -1817,7 +1815,7 @@ function Build.ramp_y(skin, x1,ly1,ly2, x2,ry1,ry2, az,bz, exact)
 end
 
 
-function Build.niche_stair(S, skin, skin2)
+function Build.OLD_niche_stair(S, skin, skin2)
   local step_info = get_mat(skin.side_w or skin.step_w, skin.top_f)
 
   local front_info = add_pegging(get_mat(skin.step_w))
@@ -2487,7 +2485,7 @@ function Build.raising_start(S, face_dir, z1, skin)
 end
 
 
-function Build.popup_trap(S, z, skin, monster)
+function Build.OLD_popup_trap(S, z, skin, monster)
   local info = get_mat(skin.wall, skin.floor)
 
   for side = 2,8,2 do

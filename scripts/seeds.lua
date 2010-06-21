@@ -34,9 +34,7 @@ class SEED
   content : keyword  -- normally nil, but can be:
                      -- "pillar"
 
-  border[DIR] : BORDER
-
-  thick[DIR]  -- thickness of each border
+  border[DIR] : BORDER   -- can be nil
 
   x1, y1, x2, y2  -- 2D map coordinates
 
@@ -51,6 +49,8 @@ class BORDER
           "nothing", "straddle",
           "wall", "facade", "fence", "window",
           "arch", "door", "locked_door",
+
+  thick : number  -- thickness of this border
 
   other : SEED  -- seed we are connected to, or nil 
 
@@ -90,10 +90,25 @@ function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
 end
 
-function SEED_CLASS.x3(self) return self.x1 + self.thick[4] end
-function SEED_CLASS.x4(self) return self.x2 - self.thick[6] end
-function SEED_CLASS.y3(self) return self.y1 + self.thick[2] end
-function SEED_CLASS.y4(self) return self.y2 - self.thick[8] end
+function SEED_CLASS.x3(self)
+  if self.border[4] then return self.x1 + self.border[4].thick end
+  return self.x1
+end
+
+function SEED_CLASS.x4(self)
+  if self.border[6] then return self.x2 - self.border[6].thick end
+  return self.x2
+end
+
+function SEED_CLASS.y3(self)
+  if self.border[2] then return self.y1 + self.border[2].thick end
+  return self.y1
+end
+
+function SEED_CLASS.y4(self)
+  if self.border[8] then return self.y2 - self.border[8].thick end
+  return self.y2
+end
 
 
 
@@ -122,7 +137,6 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
         x1 = (x-1) * SEED_SIZE,
         y1 = (y-1) * SEED_SIZE,
 
-        thick  = {},
         border = {},
       }
 
@@ -135,11 +149,6 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
       S.y2 = S.y1 + SEED_SIZE
 
       table.set_class(S, SEED_CLASS)
-
-      for side = 2,8,2 do
-        S.border[side] = {}
-        S.thick[side] = 16*2
-      end
 
       if x > map_W or y > map_H then
         S.free = true

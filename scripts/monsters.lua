@@ -393,10 +393,10 @@ function Monsters.do_pickups()
     for i = 1,count do
       local mx, my = S:mid_point()
 
-      if side == 4 then mx = S.x1 + S.thick[4] + i*dist end
-      if side == 6 then mx = S.x2 - S.thick[6] - i*dist end
-      if side == 2 then my = S.y1 + S.thick[2] + i*dist end
-      if side == 8 then my = S.y2 - S.thick[8] - i*dist end
+      if side == 4 then mx = S:x3() + i*dist end
+      if side == 6 then mx = S:x4() - i*dist end
+      if side == 2 then my = S:y3() + i*dist end
+      if side == 8 then my = S:y4() - i*dist end
 
       if side == 1 then mx, my = mx + i*dist, my + i*dist end
       if side == 3 then mx, my = mx - i*dist, my + i*dist end

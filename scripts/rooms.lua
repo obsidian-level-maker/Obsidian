@@ -431,6 +431,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
   end -- for R
 
   -- we don't need archways where two hallways connect
+--[[   ???
   for _,C in ipairs(LEVEL.all_conns) do
     if not C.lock and C.src.hallway and C.dest.hallway then
       local S = C.src_S
@@ -445,6 +446,7 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       end
     end
   end -- for C
+--]]
 end
 
 
@@ -706,33 +708,30 @@ function Rooms.border_up()
   local function make_map_edge(R, S, side)
     if R.outdoor then
       -- a fence will be created by Layout.edge_of_map()
-      S.border[side].kind = "nothing"
     else
-      S.border[side].kind = "wall"
-      S.border[side].can_fake_sky = true
----???      S.thick[side] = 24
+      S.border[side] = { kind="wall", map_edge=true, thick=24 }
     end
   end
 
   local function make_border(R1, S, R2, N, side)
     if R1 == R2 then
       -- same room : do nothing
-      S.border[side].kind = "nothing"
       return
     end
 
     if R1.outdoor and R2.natural then
-      S.border[side].kind = "fence"
+      S.border[side] = { kind="fence", thick=24 }
 
     elseif R1.natural and R2.outdoor then
-      S.border[side].kind = "nothing"
+      -- nothing
 
     elseif R1.outdoor then
       if R2.outdoor or R2.natural then
-        S.border[side].kind = "fence"
+        S.border[side] = { kind="fence", thick=24 }
       else
-        S.border[side].kind = "facade"
-        S.border[side].facade = R2.facade
+        -- nothing
+--???        S.border[side] = { kind="facade"
+--???        S.border[side].facade = R2.facade
       end
 
 --###   if N.kind == "small_exit" then
@@ -743,31 +742,30 @@ function Rooms.border_up()
         (S.kind == "liquid" or R1.quest == R2.quest)
         --!!! or (N.room.kind == "scenic" and safe_falloff(S, side))
       then
-        S.border[side].kind = "nothing"
+        -- nothing
       end
 
       if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
          (S.kind ~= "liquid" or S.floor_h == N.floor_h)
       then
-        S.border[side].kind = "nothing"
+        -- nothing
       end
 
     else -- R1 indoor
 
       if R2.parent == R1 and not R2.outdoor then
-        S.border[side].kind = "nothing"
+        -- nothing
         return
       end
 
-      S.border[side].kind = "wall"
----???      S.thick[side] = 24
+      S.border[side] = { kind="wall", thick=24 }
 
       -- liquid arches are a kind of window
       if S.kind == "liquid" and N.kind == "liquid" and
          (S.floor_h == N.floor_h)  --- and rand.odds(50)
       then
         S.border[side].kind = "liquid_arch"
-        N.border[10-side].kind = "straddle"
+---!!!        N.border[10-side].kind = "straddle"
         return
       end
     end
@@ -778,8 +776,9 @@ function Rooms.border_up()
     for x = R.sx1, R.sx2 do for y = R.sy1, R.sy2 do
       local S = SEEDS[x][y][1]
       if S.room == R then
+
         for side = 2,8,2 do
-          if not S.border[side].kind then  -- don't clobber connections
+          if not S.border[side] then  -- don't clobber connections
             local N = S:neighbor(side)
   
             if not (N and N.room) then
@@ -788,9 +787,8 @@ function Rooms.border_up()
               make_border(R, S, N.room, N, side)
             end
           end
-
-          assert(S.border[side].kind)
         end -- for side
+
       end
     end end -- for x, y
   end
@@ -806,7 +804,7 @@ function Rooms.border_up()
           S.kind == "tall_stair")
       then
         for side = 2,8,2 do
-          if S.border[side].kind == "wall" then
+          if S.border[side] and S.border[side].kind == "wall" then
             table.insert(list, { S=S, side=side })
           end
         end -- for side
@@ -2464,7 +2462,7 @@ gui.printf("do_teleport\n")
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
-      local B_kind = S.border[side].kind
+      local B_kind = S.border[side] and S.border[side].kind
 
       if not N or N.free or N.kind == "void" or
          B_kind == "wall" or B_kind == "picture"
@@ -2515,7 +2513,7 @@ gui.printf("do_teleport\n")
   end
 
   local function border_wants_corner(B)
-    assert(B)
+    if not B then return false end
 
     if B.kind == nil then return false end
     if B.kind == "nothing" then return false end
@@ -2538,7 +2536,7 @@ gui.printf("do_teleport\n")
     for side = 2,8,2 do
       local B = S.border[side]
 
-      if B.kind == nil or B.kind == "nothing" then
+      if not B or B.kind == nil or B.kind == "nothing" then
         -- unused
       else
         S.usage_map[side] = side
@@ -2652,7 +2650,7 @@ gui.printf("do_teleport\n")
       local N = S:neighbor(side)
 
       local border = S.border[side]
-      local B_kind = S.border[side].kind
+      local B_kind = border and S.border[side].kind
 
       -- determine 'other tex'
       local o_tex = w_tex
@@ -2664,7 +2662,10 @@ gui.printf("do_teleport\n")
         end
       end
 
-      local sidelet = Trans.border_transform(S, z1, side)
+      local sidelet
+      if S.border[side] then
+        sidelet = Trans.border_transform(S, z1, side)
+      end
 
       -- shadow hack
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
