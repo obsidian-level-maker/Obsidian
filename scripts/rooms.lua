@@ -2719,11 +2719,6 @@ gui.printf("do_teleport\n")
         end
       end
 
-      local sidelet
-      if S.border[side] then
-        sidelet = Trans.border_transform(S, z1, side)
-      end
-
       -- shadow hack
       if R.outdoor and N and ((N.room and not N.room.outdoor) or
                               (N.edge_of_map and N.building))
@@ -2752,9 +2747,11 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "wall" then
+      local side_T = Trans.border_transform(S, z1, side)
+
         local skin = { inner = w_tex, outer = o_tex }
 
-        Build.prefab("WALL", skin, sidelet)
+        Build.prefab("WALL", skin, side_T)
 
         shrink_both(side, 4)
       end
@@ -2798,9 +2795,11 @@ gui.printf("do_teleport\n")
       if B_kind == "arch" then
 ---???        local z = assert(C and C.conn_h)
 
+        local door_T = Trans_straddle_transform(S, z1, side)
+
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Build.prefab("ARCH", skin, sidelet)
+        Build.prefab("ARCH", skin, door_T)
 
 ---!!!     shrink_ceiling(side, 4)
 
@@ -2814,21 +2813,23 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "liquid_arch" then
+        local side_T = Trans.border_transform(S, z1, side)
+
         local other_mat = sel(N.room.outdoor, R.facade, N.room.main_tex)
         local skin = { inner=w_tex, floor=f_tex, outer=other_mat, track=THEME.track_mat }
         local z_top = math.max(R.liquid_h + 80, N.room.liquid_h + 48)
 
-        local T = table.copy(sidelet)
+        side_T.scale_z = 0.5
 
-        T.scale_z = 0.5
-
-        Build.prefab("ARCH", skin, T)
+        Build.prefab("ARCH", skin, side_T)
 
 ---!!!    shrink_ceiling(side, 4)
       end
 
       if B_kind == "door" then
 ---???        local z = assert(C and C.conn_h)
+
+        local door_T = Trans_straddle_transform(S, z1, side)
 
         -- FIXME: better logic for selecting doors
         local doors = THEME.doors
@@ -2844,7 +2845,7 @@ gui.printf("do_teleport\n")
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Build.prefab("DOOR", skin2, sidelet)
+        Build.prefab("DOOR", skin2, door_T)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2854,6 +2855,8 @@ gui.printf("do_teleport\n")
 
       if B_kind == "lock_door" then
 ---???        local z = assert(C and C.conn_h)
+
+        local door_T = Trans_straddle_transform(S, z1, side)
 
         local LOCK = assert(S.border[side].lock)
         local skin = assert(GAME.DOORS[LOCK.item])
@@ -2869,7 +2872,7 @@ gui.printf("do_teleport\n")
 
 ---???        local reversed = (S == C.dest_S)
 
-        Build.prefab("DOOR", skin2, sidelet)
+        Build.prefab("DOOR", skin2, door_T)
 
 --!!!   shrink_ceiling(side, 4)
 

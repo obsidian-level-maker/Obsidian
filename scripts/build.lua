@@ -394,6 +394,57 @@ function Trans.border_transform(S, z, side)
   do return T end
 end
 
+function Trans_straddle_transform(S, z, side)
+  local T = {}
+
+  local x3, y3 = S:x3(), S:y3()
+  local x4, y4 = S:x4(), S:y4()
+
+  local B = assert(S.border[side])
+
+  local N  = assert(S:neighbor(side))
+  local NB = assert(N.border[10-side])
+
+  local D1 =  B.thick
+  local D2 = NB.thick
+
+  -- expand middle piece to include corners (when allowed)
+  if side == 8 and S.wall_map[7] == 8 then x3 = S.x1 end
+  if side == 8 and S.wall_map[9] == 8 then x4 = S.x2 end
+
+  if side == 2 and S.wall_map[1] == 2 then x3 = S.x1 end
+  if side == 2 and S.wall_map[3] == 2 then x4 = S.x2 end
+
+  if side == 4 and S.wall_map[1] == 4 then y3 = S.y1 end
+  if side == 4 and S.wall_map[7] == 4 then y4 = S.y2 end
+
+  if side == 6 and S.wall_map[3] == 6 then y3 = S.y1 end
+  if side == 6 and S.wall_map[9] == 6 then y4 = S.y2 end
+
+
+  local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90   }
+
+  local XS = { [2]=  x3   , [8]=  x4,    [4]=S.x1-D2, [6]=S.x2+D2 }
+  local YS = { [2]=S.y1-D2, [8]=S.y2+D2, [4]=  y4   , [6]=  y3 }
+
+  T.add_x  = XS[side]
+  T.add_y  = YS[side]
+  T.rotate = ANGS[side]
+
+  T.add_z = z
+
+  if geom.is_vert(side) then
+    T.fit_width = x4 - x3
+  else
+    T.fit_width = y4 - y3
+  end
+
+  T.fit_depth = D1 + D2
+
+  do return T end
+end
+
+
 function Trans.corner_transform(S, z, side)
   local T = {}
 
