@@ -671,20 +671,21 @@ function Layout.do_natural(R, heights)
     --]]
 
     -- check connections
-do return true end  --!!!!!!
+
     local point_list = {}
 
-    for _,C in ipairs(R.conns) do
-      local S = C:seed(R)
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y][1]
 
-      local P =
-      {
-        x = (S.sx - R.sx1) * 3 + 2,
-        y = (S.sy - R.sy1) * 3 + 2,
-      }
+      if S.room == R and S:has_conn() then
+        table.insert(point_list,
+        {
+          x = (S.sx - R.sx1) * 3 + 2,
+          y = (S.sy - R.sy1) * 3 + 2,
+        })
+      end
 
-      table.insert(point_list, P)
-    end
+    end end
 
     if not cave:validate_conns(point_list) then
       gui.debugf("cave failed connection check\n")
