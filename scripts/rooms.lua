@@ -775,7 +775,12 @@ function Rooms.border_up()
       S:add_border(side, "fence", 24)
 
     elseif R1.natural and R2.outdoor then
-      return -- nothing
+
+      if S:has_conn() then
+        S:add_border(side, "wall", 24)
+      end
+
+      return -- usually nothing
 
     elseif R1.outdoor then
       if N.kind == "liquid" and R2.outdoor and
