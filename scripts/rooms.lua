@@ -655,7 +655,7 @@ function Rooms_place_doors()
     B2.conn = C
 
     if C.lock then
-      B1.kind = "lock_door"
+      B1.kind = sel(C.lock.kind == "BARS", "bars", "lock_door")
       B1.lock = C.lock
     end
   end
@@ -2459,7 +2459,7 @@ gui.printf("do_teleport\n")
 
       if lock.kind == "KEY" then
         do_key(S, lock, z1, z2)
-      elseif lock.kind == "SWITCH" then
+      elseif lock.kind == "SWITCH" or lock.kind == "BARS" then
         do_switch(S, lock, z1)
       else
         error("unknown lock kind: " .. tostring(lock.kind))

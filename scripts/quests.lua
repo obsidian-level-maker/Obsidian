@@ -190,7 +190,7 @@ function Quest_choose_keys()
 
   local num_keys     = table.size(key_probs)
   local num_switches = table.size(switch_probs)
-  local num_bars     = 0 --!!!! FIXME table.size(bar_probs)
+  local num_bars     = table.size(bar_probs)
 
   -- use less keys when number of locked doors is small
   local want_keys = num_keys
@@ -248,16 +248,17 @@ function Quest_choose_keys()
     if not LOCK.kind then
       assert(num_switches > 0)
 
-      LOCK.kind = "SWITCH"
-      LOCK.tag  = Plan_alloc_tag()
-
       if num_bars > 0 and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
+        LOCK.kind = "BARS"
         LOCK.item = rand.key_by_probs(bar_probs)
         bar_probs[LOCK.item] = bar_probs[LOCK.item] / 8
       else
+        LOCK.kind = "SWITCH"
         LOCK.item = rand.key_by_probs(switch_probs)
         switch_probs[LOCK.item] = switch_probs[LOCK.item] / 8
       end
+
+      LOCK.tag  = Plan_alloc_tag()
     end
   end
 

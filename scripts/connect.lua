@@ -348,8 +348,8 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
-stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
-        K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
+--stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
+--      K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -407,6 +407,9 @@ stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
 
 
   local function branch_small_rooms()
+
+    -- Goal here is to make stalks
+
     local visits = table.copy(LEVEL.all_rooms)
 
     for _,R in ipairs(visits) do
