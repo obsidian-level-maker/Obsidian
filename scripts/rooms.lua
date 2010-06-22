@@ -2327,6 +2327,45 @@ gui.printf("do_teleport\n")
     end
   end
 
+  -- FIXME: do KEY and SWITCH same way : via prefabs
+
+  local function do_key(S, lock, z1, z2)
+    local mx, my = S:mid_point()
+
+    if rand.odds(15) and THEME.lowering_pedestal_skin then
+      local z_top = math.max(z1+128, R.floor_max_h+64)
+      if z_top > z2-32 then
+         z_top = z2-32
+      end
+
+      local skin = table.copy(THEME.lowering_pedestal_skin)
+      skin.tag = Plan_alloc_tag()
+
+      local T = Trans.centre_transform(S, z1)
+      T.scale_z = (z_top - z1) / 128
+      Build.prefab("LOWERING_PEDESTAL", skin, T)
+
+      Trans.entity(lock.item, mx, my, z_top)
+    else
+      if rand.odds(98) then
+        local skin = { top=THEME.pedestal_mat, light=0.7 }
+        local T = Trans.centre_transform(S, z1)
+        Build.prefab("PEDESTAL", skin, T)
+      end
+      Trans.entity(lock.item, mx, my, z1)
+    end
+  end
+
+  local function do_switch(S, lock, z1)
+    local INFO = assert(GAME.SWITCHES[lock.item])
+
+    local skin = table.copy(INFO.skin)
+    skin.tag = lock.tag
+
+    local T = Trans.centre_transform(S, z1, dir_for_wotsit(S))
+    Build.prefab("SMALL_SWITCH", skin, T)
+  end
+
   local function do_purpose(S)
     local sx, sy = S.sx, S.sy
 
@@ -2411,40 +2450,15 @@ gui.printf("do_teleport\n")
       end
 
     elseif R.purpose == "KEY" then
-      local LOCK = assert(R.purpose_lock)
+      local lock = assert(R.purpose_lock)
 
-      if rand.odds(15) and THEME.lowering_pedestal_skin then
-        local z_top = math.max(z1+128, R.floor_max_h+64)
-        if z_top > z2-32 then
-           z_top = z2-32
-        end
-
-        local skin = table.copy(THEME.lowering_pedestal_skin)
-        skin.tag = Plan_alloc_tag()
-
-        local T = Trans.centre_transform(S, z1)
-        T.scale_z = (z_top - z1) / 128
-        Build.prefab("LOWERING_PEDESTAL", skin, T)
-
-        Trans.entity(LOCK.item, mx, my, z_top)
+      if lock.kind == "KEY" then
+        do_key(S, lock, z1, z2)
+      elseif lock.kind == "SWITCH" then
+        do_switch(S, lock, z1)
       else
-        if rand.odds(98) then
-          local skin = { top=THEME.pedestal_mat, light=0.7 }
-          local T = Trans.centre_transform(S, z1)
-          Build.prefab("PEDESTAL", skin, T)
-        end
-        Trans.entity(LOCK.item, mx, my, z1)
+        error("unknown lock kind: " .. tostring(lock.kind))
       end
-
-    elseif R.purpose == "SWITCH" then
-      local LOCK = assert(R.purpose_lock)
-      local INFO = assert(GAME.SWITCHES[LOCK.item])
-
-      local skin = table.copy(INFO.skin)
-      skin.tag = LOCK.tag
-
-      local T = Trans.centre_transform(S, z1, dir_for_wotsit(S))
-      Build.prefab("SMALL_SWITCH", skin, T)
 
     else
       error("unknown purpose: " .. tostring(R.purpose))
