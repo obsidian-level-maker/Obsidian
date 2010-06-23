@@ -22,7 +22,7 @@
 
 class SEED
 {
-  sx, sy, sz  -- location in seed map
+  sx, sy  -- location in seed map
 
   room : ROOM
 
@@ -66,7 +66,6 @@ Seed = { }
 
 SEED_W = 0
 SEED_H = 0
-SEED_D = 0
 
 SEED_SIZE = 192
 
@@ -89,7 +88,7 @@ function SEED_CLASS.neighbor(self, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
     return nil
   end
-  return SEEDS[nx][ny][1]
+  return SEEDS[nx][ny]
 end
 
 function SEED_CLASS.has_conn(self, C)
@@ -143,8 +142,8 @@ end
 
 
 
-function Seed.init(map_W, map_H, map_D, free_W, free_H)
-  gui.printf("Seed.init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
+function Seed_init(map_W, map_H, free_W, free_H)
+  gui.printf("Seed_init: %dx%d  Free: %dx%d\n", map_W, map_H, free_W, free_H)
 
   local W = map_W + free_W
   local H = map_H + free_H
@@ -153,13 +152,10 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
   -- setup globals 
   SEED_W = W
   SEED_H = H
-  SEED_D = D
 
   SEEDS = table.array_2D(W, H)
 
   for x = 1,W do for y = 1,H do
-
-      SEEDS[x][y] = {}
 
       local S = SEED_CLASS.new(x, y)
 
@@ -180,46 +176,36 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
         S.edge_of_map = true
       end
 
-      SEEDS[x][y][1] = S
+      SEEDS[x][y] = S
 
   end end -- x,y
 end
 
 
-function Seed.close()  -- REMOVE
-  SEEDS = nil
-
-  SEED_W = 0
-  SEED_H = 0
-  SEED_D = 0
-end
-
-
 function Seed.valid(x, y, z)
   return (x >= 1 and x <= SEED_W) and
-         (y >= 1 and y <= SEED_H) and
-         (z >= 1 and z <= SEED_D)
+         (y >= 1 and y <= SEED_H)
 end
 
 
-function Seed.get_safe(x, y, z)
-  return Seed.valid(x, y, z) and SEEDS[x][y][z]
+function Seed.get_safe(x, y)
+  return Seed.valid(x, y) and SEEDS[x][y]
 end
 
 
-function Seed.is_free(x, y, z)
-  assert(Seed.valid(x, y, z))
+function Seed.is_free(x, y)
+  assert(Seed.valid(x, y))
 
-  return not SEEDS[x][y][z].room
+  return not SEEDS[x][y].room
 end
 
 
-function Seed.valid_and_free(x, y, z)
-  if not Seed.valid(x, y, z) then
+function Seed.valid_and_free(x, y)
+  if not Seed.valid(x, y) then
     return false
   end
 
-  if SEEDS[x][y][z].room then
+  if SEEDS[x][y].room then
     return false
   end
 
@@ -253,7 +239,7 @@ function Seed.dump_rooms(title)
   for y = SEED_H,1,-1 do
     local line = "@c"
     for x = 1,SEED_W do
-      line = line .. seed_to_char(SEEDS[x][y][1])
+      line = line .. seed_to_char(SEEDS[x][y])
     end
     gui.printf("%s\n", line)
   end
@@ -266,7 +252,7 @@ function Seed.flood_fill_edges()
   local active = {}
 
   for x = 1,SEED_W do for y = 1,SEED_H do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.edge_of_map then
       table.insert(active, S)
     end

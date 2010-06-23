@@ -517,7 +517,7 @@ function Monsters.do_pickups()
     local emerg_small
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       local score
 
       if S.room == R and S.kind == "walk" and
@@ -1120,9 +1120,9 @@ function Monsters.fill_room(R)
       add_mon_spot(S, S.x2, S.y2, mon, info)
 
       -- prevent other seeds in 2x2 group from being used
-      SEEDS[sx+1][sy+0][1].no_monster = true
-      SEEDS[sx+0][sy+1][1].no_monster = true
-      SEEDS[sx+1][sy+1][1].no_monster = true
+      SEEDS[sx+1][sy+0].no_monster = true
+      SEEDS[sx+0][sy+1].no_monster = true
+      SEEDS[sx+1][sy+1].no_monster = true
 
     elseif is_big(mon) then
       add_mon_spot(S, mx, my, mon, info)
@@ -1144,7 +1144,7 @@ function Monsters.fill_room(R)
     end
 
     for sx = x,sx2 do for sy = y,sy2 do
-      local S2 = SEEDS[sx][sy][1]
+      local S2 = SEEDS[sx][sy]
       if S2.room ~= S.room then
         return false
       end
@@ -1300,7 +1300,7 @@ function Monsters.fill_room(R)
 
     for dx = 0,1 do for dy = 0,1 do
       if dx > 0 or dy > 0 then
-        local S2 = SEEDS[sx+dx][sy+dy][1]
+        local S2 = SEEDS[sx+dx][sy+dy]
 
         if S2.room ~= S.room then return false end
 
@@ -1340,7 +1340,7 @@ function Monsters.fill_room(R)
     R.monster_spots = {}
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       
       if S.room == R then
         local small_ok, small_diff = can_accommodate_small(S)

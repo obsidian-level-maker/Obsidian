@@ -1107,7 +1107,7 @@ function OLD_Plan_sub_rooms()
     end
     
     for sx = x,x+w-1 do for sy = y,y+h-1 do
-      local S = SEEDS[sx][sy][1]
+      local S = SEEDS[sx][sy]
       if S.room ~= R then return nil end
     end end -- sx, sy
 
@@ -1115,7 +1115,7 @@ function OLD_Plan_sub_rooms()
 
     for sx = x-1,x+w do for sy = y-1,y+h do
       if Seed.valid(sx, sy, 1) then
-        local S = SEEDS[sx][sy][1]
+        local S = SEEDS[sx][sy]
         if S.room and S.room.parent == R then
 
           -- don't allow new sub-room to touch more than one
@@ -1215,7 +1215,7 @@ function OLD_Plan_sub_rooms()
     -- update seed map
     for sx = ROOM.sx1,ROOM.sx2 do
       for sy = ROOM.sy1,ROOM.sy2 do
-        SEEDS[sx][sy][1].room = ROOM
+        SEEDS[sx][sy].room = ROOM
       end
     end
   end
@@ -1250,7 +1250,7 @@ function Plan_make_seeds()
   local function init_seed(sx, sy, R)
     assert(Seed.valid(sx, sy, 1))
 
-    local S = SEEDS[sx][sy][1]
+    local S = SEEDS[sx][sy]
     if S.room then
       error("Planner: rooms overlap!")
     end
@@ -1288,7 +1288,7 @@ function Plan_make_seeds()
 
   ---| Plan_make_seeds |---
 
-  Seed.init(LEVEL.seed_W, LEVEL.seed_H, 1, 3, 3)
+  Seed_init(LEVEL.seed_W, LEVEL.seed_H, 3, 3)
 
   for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
     fill_section(kx, ky)

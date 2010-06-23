@@ -355,7 +355,7 @@ do return true end  --!!!!!!!
   if R.mirror_y and R.th >= 3 then bonus_y = int((R.ty1 + R.ty2) / 2) end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
 
     if S.room == R and S.kind == "walk" and not S.usage and cave_spot_OK(x, y) then
       local P = { x=x, y=y, S=S }
@@ -427,7 +427,7 @@ function Layout.cave_pickup_spots(R)
   -- (probably scrap this function, re-use the monster spots)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R and not S.usage then
       local mx = (S.sx - R.sx1) * 3 + 2
       local my = (S.sy - R.sy1) * 3 + 2
@@ -467,7 +467,7 @@ function Layout.cave_monster_spots(R)
     local sy2 = R.sy1 + int((y2-1) / 3)
 
     for x = sx1,sx2 do for y = sy1,sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.usage then return false end
       if S:has_any_conn() then return false end
     end end
@@ -486,15 +486,15 @@ function Layout.cave_monster_spots(R)
 
   R.monster_spots = {}
 
-  local base_x = SEEDS[R.sx1][R.sy1][1].x1
-  local base_y = SEEDS[R.sx1][R.sy1][1].y1
+  local base_x = SEEDS[R.sx1][R.sy1].x1
+  local base_y = SEEDS[R.sx1][R.sy1].y1
 
   for x = 1,W do for y = 1,H do
     if check_range(x,y, x,y) then
       local sx = R.sx1 + int((x-1) / 3)
       local sy = R.sy1 + int((y-1) / 3)
 
-      local S = SEEDS[sx][sy][1]
+      local S = SEEDS[sx][sy]
 
       assert(S.room == R)
 
@@ -654,7 +654,7 @@ function Layout.do_natural(R, heights)
 
   local function clear_conns()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R and S:has_any_conn() then
         set_whole(S, -1)
       end
@@ -678,7 +678,7 @@ function Layout.do_natural(R, heights)
     local point_list = {}
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
 
       if S.room == R and S:has_any_conn() then
         table.insert(point_list,
@@ -704,7 +704,7 @@ function Layout.do_natural(R, heights)
   map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R then
       local mx = (S.sx - R.sx1) * 3 + 1
       local my = (S.sy - R.sy1) * 3 + 1
@@ -1111,7 +1111,7 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       local y = area.y1 + ey - 1
       assert(Seed.valid(x, y, 1))
 
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       assert(S and S.room == R)
 
       local E  = T.structure[ex][ey]
@@ -1175,7 +1175,7 @@ gui.debugf("install_pattern %s :  hash_h:%d  (%d,%d)..(%d,%d)\n",
       local x = area.x1 + ex - 1
       local y = area.y1 + ey - 1
 
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       local E  = T.structure[ex][ey]
       local ch = E.char
 
@@ -1233,7 +1233,7 @@ gui.debugf("end install_fab\n")
 
   local function install_flat_floor(h, f_tex)
     for x = area.x1,area.x2 do for y = area.y1,area.y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R and not S.floor_h then
         setup_floor(S, h, f_tex)
         S.div_lev = div_lev
@@ -1322,7 +1322,7 @@ gui.debugf("Transposed : %s\n", string.bool(T.transpose))
     -- first pass is merely a test
     for pass = 1,2 do
       for x = box.x1,box.x2 do for y = box.y1,box.y2 do
-        local S = SEEDS[x][y][1]
+        local S = SEEDS[x][y]
         assert(S and S.room == R)
 
         if S.kind == "walk" and not S.floor_h then
@@ -1336,7 +1336,7 @@ gui.debugf("Transposed : %s\n", string.bool(T.transpose))
 
           assert(Seed.valid(ox, oy, 1))
 
-          local OT = SEEDS[ox][oy][1]
+          local OT = SEEDS[ox][oy]
           assert(OT and OT.room == R)
 
           if pass == 1 then
@@ -1639,7 +1639,7 @@ function Layout.set_floor_minmax(R)
   local max_h = -9e9
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R and S.kind == "walk" then
       assert(S.floor_h)
 
@@ -1657,7 +1657,7 @@ function Layout.set_floor_minmax(R)
   R.liquid_h = R.floor_min_h - 48
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
     end
@@ -1670,7 +1670,7 @@ function Layout.do_scenic(R)
   local min_floor = 1000
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R then
       S.kind = sel(LEVEL.liquid, "liquid", "void")
       for side = 2,8,2 do
@@ -1692,7 +1692,7 @@ function Layout.do_scenic(R)
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.room == R and S.kind == "liquid" then
       S.floor_h = R.liquid_h
     end
@@ -1728,14 +1728,14 @@ function Layout.do_hallway(R)
   local function T_fill()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 then
-        SEEDS[x][y][1].kind = "void"
+        SEEDS[x][y].kind = "void"
       end
     end end -- for x, y
   end
 
   local function make_O()
     for x = R.sx1+1,R.sx2-1 do for y = R.sy1+1,R.sy2-1 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       S.kind = "void"
     end end -- for x, y
   end
@@ -1753,7 +1753,7 @@ function Layout.do_hallway(R)
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
          not (x == S1.sx or y == S2.sy)
       then
-        SEEDS[x][y][1].kind = "void"
+        SEEDS[x][y].kind = "void"
       end
     end end -- for x, y
   end
@@ -1784,7 +1784,7 @@ function Layout.do_hallway(R)
       if x < tx1 or x > tx2 or y < ty1 or y > ty2 or
          not (used_x[x] or used_y[y])
       then
-        SEEDS[x][y][1].kind = "void"
+        SEEDS[x][y].kind = "void"
       end
     end end -- for x, y
 
@@ -1847,7 +1847,7 @@ function Layout.do_hallway(R)
   end
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     assert(S.room == R)
     if S.kind == "walk" then
       S.floor_h = h
@@ -1937,7 +1937,7 @@ function Layout.do_room(R)
 
       for x = x1,x2 do for y = y1,y2 do
         for who = 1,3 do
-          local S = SEEDS[x][y][1]
+          local S = SEEDS[x][y]
           if who == 2 then S = R.mirror_x and S.x_peer end
           if who == 3 then S = R.mirror_y and S.y_peer end
 
@@ -1971,7 +1971,7 @@ function Layout.do_room(R)
 
       for x = x1,x2 do for y = y1,y2 do
         for who = 1,3 do
-          local S = SEEDS[x][y][1]
+          local S = SEEDS[x][y]
           if who == 2 then S = R.mirror_x and S.x_peer end
           if who == 3 then S = R.mirror_y and S.y_peer end
 
@@ -1988,7 +1988,7 @@ function Layout.do_room(R)
       end end -- for x,y
 
 --??      for _,P in ipairs(p_conns) do
---??        SEEDS[P.x][P.y][1].pseudo_conn = P.conn
+--??        SEEDS[P.x][P.y].pseudo_conn = P.conn
 --??      end
 
       R.junk_thick[side] = R.junk_thick[side] + 1
@@ -2075,7 +2075,7 @@ function Layout.do_room(R)
     local unset_list = {}
 
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S.room == R and S.kind == "walk" and not S.floor_h then
 --[[ FIXME
         if S:has_conn() and S:has_conn().conn_h then
@@ -2374,7 +2374,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     ---| post_processing |---
 
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S and S.room == R then
         if S.kind == "stair" then
           process_stair(S)
@@ -2387,7 +2387,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     -- need to do diagonals AFTER stairs
 
     for x = R.tx1, R.tx2 do for y = R.ty1, R.ty2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
       if S and S.room == R then
         if S.kind == "diagonal" then
           process_diagonal(S)
@@ -2442,7 +2442,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     x2,y2 = geom.nudge(x2, y2, 10-side, offset)
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
 
       local ch = string.sub(pat, pos, pos)
       pos = pos + 1
@@ -2471,7 +2471,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
     x2,y2 = geom.nudge(x2, y2, 10-side, offset)
 
     for x = x1,x2 do for y = y1,y2 do
-      local S = SEEDS[x][y][1]
+      local S = SEEDS[x][y]
 
       local ch = string.sub(pat, pos, pos)
       pos = pos + 1
@@ -2642,7 +2642,7 @@ function Layout.edge_of_map()
     -- TODO: OPTIMISE
     for loop = 1,3 do
       for x = 1,SEED_W do for y = 1,SEED_H do
-        local S = SEEDS[x][y][1]
+        local S = SEEDS[x][y]
         if (S.room and not S.room.outdoor) or (S.edge_of_map and S.building) then
           if (S.move_loop or 0) < loop then
             for side = 2,8,2 do
@@ -2665,7 +2665,7 @@ function Layout.edge_of_map()
     -- TODO: OPTIMISE
     for loop = 1,5 do
       for x = 1,SEED_W do for y = 1,SEED_H do
-        local S = SEEDS[x][y][1]
+        local S = SEEDS[x][y]
         if S.edge_of_map and not S.building then
           for side = 2,8,2 do
             local N = S:neighbor(side)
@@ -2743,7 +2743,7 @@ function Layout.edge_of_map()
   determine_walk_heights()
 
   for x = 1,SEED_W do for y = 1,SEED_H do
-    local S = SEEDS[x][y][1]
+    local S = SEEDS[x][y]
     if S.edge_of_map then
       build_edge(S)
     end
