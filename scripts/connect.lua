@@ -337,12 +337,12 @@ function Connect_rooms()
 
     if not (R and N) then return false end
 
+    if R.conn_group == N.conn_group then return false end
+
     if R.full or N.full then return false end
 
     if R.kind == "scenic" then return false end
     if N.kind == "scenic" then return false end
-
-    if R.conn_group == N.conn_group then return false end
 
     -- only one way out of the starting room
     if R.purpose == "START" and #R.conns >= 1 then return false end
@@ -491,6 +491,37 @@ function Connect_rooms()
   end
 
 
+  local function visit_small_room(R)
+    if #R.conns >= 2 then return end
+
+    local list = {}
+
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = LEVEL.section_map[x][y]
+      if K.room == R then
+
+        for dir = 2,8,2 do
+          local N = K:neighbor(dir)
+
+          if can_connect(K, N) and #N.room.conns < 2 then
+            table.insert(list, { K=K, N=N, dir=dir })
+          end
+        end
+
+      end
+    end end -- x, y
+
+    if #list == 0 then return end
+
+    local loc = table.pick_best(list,
+        function(A, B) return A.K.room.small_score < B.K.room.small_score end)
+
+stderrf("Stalk from %s to %s\n", loc.K.room:tostr(), loc.N.room:tostr())
+
+    add_connection(loc.K, loc.N, "normal", loc.dir)
+  end
+
+
   local function branch_small_rooms()
 
     -- Goal here is to make stalks
@@ -501,10 +532,13 @@ function Connect_rooms()
       R.small_score = R.svolume + R.conn_rand*5
     end
 
-    table.sort(visits, function(A, B) return A.small_score > B.small_score end)
+    table.sort(visits, function(A, B) return A.small_score < B.small_score end)
 
     for _,R in ipairs(visits) do
-      -- FIXME
+---!!!      if R.small_score < 60 then
+        visit_small_room(R)
+        visit_small_room(R)
+---!!!      end
     end
   end
 
