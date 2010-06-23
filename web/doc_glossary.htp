@@ -298,6 +298,24 @@ for decoration.
 </div>
 
 
+<div id="skin" class="gloss_term">
+Skin
+</div><div class="gloss_define">
+Skins are used with prefabs, and are tables containing all
+the materials (i.e. textures) to use on the prefab.
+Hence they are a similar concept to skins used on models
+(like MD2 or MD3), where the model defines the 3D shape
+and the skin defines what it looks like.
+
+<p>
+Skins can also specify other properties, for example
+the skin of the PICTURE prefab (used for wall pictures)
+must specify the width and height of the picture part,
+and the skin for doors and lifts (in DOOM) must specify the
+linedef types to use.
+</div>
+
+
 <div id="sub_room" class="gloss_term">
 Sub-Room
 </div><div class="gloss_define">
