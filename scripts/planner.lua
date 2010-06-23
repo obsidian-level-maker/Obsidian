@@ -1114,7 +1114,7 @@ function OLD_Plan_sub_rooms()
     local touches_other = nil
 
     for sx = x-1,x+w do for sy = y-1,y+h do
-      if Seed.valid(sx, sy, 1) then
+      if Seed_valid(sx, sy) then
         local S = SEEDS[sx][sy]
         if S.room and S.room.parent == R then
 
@@ -1248,7 +1248,7 @@ end
 function Plan_make_seeds()
   
   local function init_seed(sx, sy, R)
-    assert(Seed.valid(sx, sy, 1))
+    assert(Seed_valid(sx, sy))
 
     local S = SEEDS[sx][sy]
     if S.room then
@@ -1402,9 +1402,9 @@ function Plan_create_rooms()
 
   Plan_nudge_sides()
 
-  Seed.flood_fill_edges()
+  Seed_flood_fill_edges()
 
-  Seed.dump_rooms("Seed Map:")
+  Seed_dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)

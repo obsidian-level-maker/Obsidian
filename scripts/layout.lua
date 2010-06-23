@@ -1109,7 +1109,7 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
     for ex = 1,area.tw do for ey = 1,area.th do
       local x = area.x1 + ex - 1
       local y = area.y1 + ey - 1
-      assert(Seed.valid(x, y, 1))
+      assert(Seed_valid(x, y))
 
       local S = SEEDS[x][y]
       assert(S and S.room == R)
@@ -1334,7 +1334,7 @@ gui.debugf("Transposed : %s\n", string.bool(T.transpose))
             oy = area.y2 - (y - area.y1)
           end
 
-          assert(Seed.valid(ox, oy, 1))
+          assert(Seed_valid(ox, oy))
 
           local OT = SEEDS[ox][oy]
           assert(OT and OT.room == R)

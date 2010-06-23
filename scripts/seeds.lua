@@ -62,12 +62,8 @@ require 'defs'
 require 'util'
 
 
-Seed = { }
-
 SEED_W = 0
 SEED_H = 0
-
-SEED_SIZE = 192
 
 
 SEED_CLASS = {}
@@ -182,38 +178,18 @@ function Seed_init(map_W, map_H, free_W, free_H)
 end
 
 
-function Seed.valid(x, y, z)
+function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H)
 end
 
 
-function Seed.get_safe(x, y)
-  return Seed.valid(x, y) and SEEDS[x][y]
+function Seed_safe_get(x, y)
+  return Seed_valid(x, y) and SEEDS[x][y]
 end
 
 
-function Seed.is_free(x, y)
-  assert(Seed.valid(x, y))
-
-  return not SEEDS[x][y].room
-end
-
-
-function Seed.valid_and_free(x, y)
-  if not Seed.valid(x, y) then
-    return false
-  end
-
-  if SEEDS[x][y].room then
-    return false
-  end
-
-  return true
-end
-
-
-function Seed.dump_rooms(title)
+function Seed_dump_rooms(title)
 
   local function seed_to_char(S)
     if not S then return "!" end
@@ -248,7 +224,7 @@ function Seed.dump_rooms(title)
 end
 
 
-function Seed.flood_fill_edges()
+function Seed_flood_fill_edges()
   local active = {}
 
   for x = 1,SEED_W do for y = 1,SEED_H do

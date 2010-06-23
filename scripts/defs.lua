@@ -24,7 +24,6 @@ PARAM  = {}
 STYLE  = {}
 LEVEL  = {}
 THEME  = {}
-
 SEEDS  = {}
 
 SKILLS = { "easy", "medium", "hard" }
@@ -81,6 +80,8 @@ OB_THEMES["psycho"] =
 
 
 -- room layout stuff
+SEED_SIZE = 192
+
 EXTREME_H = 4000
 
 ROOM_SIZE_TABLE = { 0,1,5,9,5,1 }
