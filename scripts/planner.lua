@@ -25,7 +25,7 @@ require 'util'
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y }
+  local K = { kx=x, ky=y, num_conn=0 }
   table.set_class(K, SECTION_CLASS)
   return K
 end
@@ -588,7 +588,7 @@ function Plan_add_big_rooms()
 
   local num_sec = Plan_count_free_sections()
 
-  local quota = num_sec * rand.pick { 0.2, 0.4, 0.6, 0.8 }
+  local quota = num_sec * rand.pick { 0.3, 0.6, 0.8 }
 
   gui.printf("Big Room Quota: %1.1f sections\n", quota)
 
