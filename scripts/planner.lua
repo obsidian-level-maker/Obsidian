@@ -22,6 +22,28 @@ require 'defs'
 require 'util'
 
 
+SECTION_CLASS = {}
+
+function SECTION_CLASS.new(x, y)
+  local K = { kx=x, ky=y }
+  table.set_class(K, SECTION_CLASS)
+  return K
+end
+
+function SECTION_CLASS.tostr(self)
+  return string.format("SECTION [%d,%d]", self.kx, self.ky)
+end
+
+function SECTION_CLASS.neighbor(self, dir, dist)
+  local nx, ny = geom.nudge(self.kx, self.ky, dir, dist)
+  if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
+    return nil
+  end
+  return LEVEL.section_map[nx][ny]
+end
+
+
+
 function Plan_alloc_tag()
   LEVEL.last_tag = (LEVEL.last_tag or 0) + 1
   return LEVEL.last_tag
@@ -170,7 +192,7 @@ function Plan_create_sections()
   LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    LEVEL.section_map[x][y] = { kx=x, ky=y }
+    LEVEL.section_map[x][y] = SECTION_CLASS.new(x, y)
   end end
 end
 
