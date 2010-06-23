@@ -339,14 +339,27 @@ function Connect_rooms()
 
     if R.conn_group == N.conn_group then return false end
 
-    if R.full or N.full then return false end
-
     if R.kind == "scenic" then return false end
     if N.kind == "scenic" then return false end
 
     -- only one way out of the starting room
     if R.purpose == "START" and #R.conns >= 1 then return false end
     if N.purpose == "START" and #N.conns >= 1 then return false end
+
+    return true
+  end
+
+  local function good_connect(K1, K2)
+    if not can_connect(K1, K2) then
+      return false
+    end
+
+    local R = K1.room
+    local N = K2.room
+
+    -- more than 4 connections is usually too many
+    if R.full or (#R.conns >= 4 and not R.natural) then return false end
+    if N.full or (#N.conns >= 4 and not N.natural) then return false end
 
     -- don't fill small rooms with lots of connections
     if R.sw <= 4 and R.sh <= 4 and #R.conns >= 3 then return false end
@@ -360,8 +373,8 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
---stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s\n",
---      K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr());
+--stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s  %d,%d\n",
+--      K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr(), R.conn_group, N.conn_group);
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -420,13 +433,13 @@ function Connect_rooms()
 
       if K.num_conn > 0 then
         -- OK
-      elseif can_connect(K, N) then
+      elseif good_connect(K, N) then
         add_connection(K, N, "normal", loc.dir)
       else
         -- try the other sides
         for dir = 2,8,2 do
           local N = loc.K:neighbor(dir)
-          if can_connect(K, N) then
+          if good_connect(K, N) then
             add_connection(K, N, "normal", dir)
             break;
           end
@@ -503,7 +516,7 @@ function Connect_rooms()
         for dir = 2,8,2 do
           local N = K:neighbor(dir)
 
-          if can_connect(K, N) and #N.room.conns < 2 then
+          if good_connect(K, N) and #N.room.conns < 2 then
             table.insert(list, { K=K, N=N, dir=dir })
           end
         end
@@ -535,10 +548,9 @@ stderrf("Stalk from %s to %s\n", loc.K.room:tostr(), loc.N.room:tostr())
     table.sort(visits, function(A, B) return A.small_score < B.small_score end)
 
     for _,R in ipairs(visits) do
----!!!      if R.small_score < 60 then
+      if R.kw * R.kh <= 2 then
         visit_small_room(R)
-        visit_small_room(R)
----!!!      end
+      end
     end
   end
 
