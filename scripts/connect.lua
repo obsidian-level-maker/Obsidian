@@ -370,13 +370,33 @@ function Connect_rooms()
   end
 
 
+  local function handle_shaped_room(R)
+    local optimal_locs = {}
+
+    for dir = 2,8,2 do
+      local K = LEVEL.section_map[R.shape_kx][R.shape_ky]
+
+      local N = K:neighbor(dir)
+      if N and N.room == R then
+        local N2 = N:neighbor(dir)
+        if N2 and N2.room == R then
+          N = N2
+        end
+        table.insert(optimal_locs, { K=N, dir=dir })
+      end
+    end
+
+  end
+
+
   local function big_room_score(R)
     local score = 0
 
     if R.shape == "plus" then
       score = 5
     elseif R.shape == "L" and (R.shape_kx == 1 or R.shape_kx == LEVEL.W)
-                           and (R.shape_ky == 1 or R.shape_ky == LEVEL.H) then
+                          and (R.shape_ky == 1 or R.shape_ky == LEVEL.H)
+    then
       -- L shape at optimal position (map corner)
       score = 4
     elseif R.shape ~= "rect" or R.kw >= 3 or R.kh >= 3 then
@@ -387,9 +407,8 @@ function Connect_rooms()
       score = 1
     end
 
-    return score + 2 * (R.conn_rand ^ 0.5)
+    return score + 3 * (R.conn_rand ^ 0.5)
   end
-
 
   local function branch_big_rooms()
     local visits = table.copy(LEVEL.all_rooms)
@@ -401,7 +420,7 @@ function Connect_rooms()
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
     for _,R in ipairs(visits) do
-      -- FIXME
+---TODO      visit_big_room(R)
     end
   end
 
