@@ -73,6 +73,12 @@ SEED_SIZE = 192
 
 SEED_CLASS = {}
 
+function SEED_CLASS.new(x, y)
+  local S = { sx=x, sy=y, border={} }
+  table.set_class(S, SEED_CLASS)
+  return S
+end
+
 function SEED_CLASS.tostr(self)
   return string.format("SEED [%d,%d,%s]",
       self.sx, self.sy, self.kind or "-")
@@ -152,18 +158,13 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
   SEEDS = table.array_2D(W, H)
 
   for x = 1,W do for y = 1,H do
-    SEEDS[x][y] = {}
 
-    for z = 1,D do
-      local S =
-      {
-        sx=x, sy=y, sz=z,
+      SEEDS[x][y] = {}
 
-        x1 = (x-1) * SEED_SIZE,
-        y1 = (y-1) * SEED_SIZE,
+      local S = SEED_CLASS.new(x, y)
 
-        border = {},
-      }
+      S.x1 = (x-1) * SEED_SIZE
+      S.y1 = (y-1) * SEED_SIZE
 
       -- centre the map : needed for Quake, OK for other games
       -- (this formula ensures that 'coord 0' is still a seed boundary)
@@ -173,21 +174,19 @@ function Seed.init(map_W, map_H, map_D, free_W, free_H)
       S.x2 = S.x1 + SEED_SIZE
       S.y2 = S.y1 + SEED_SIZE
 
-      table.set_class(S, SEED_CLASS)
-
       if x > map_W or y > map_H then
         S.free = true
       elseif x == 1 or x == map_W or y == 1 or y == map_H then
         S.edge_of_map = true
       end
 
-      SEEDS[x][y][z] = S
-    end
+      SEEDS[x][y][1] = S
+
   end end -- x,y
 end
 
 
-function Seed.close()
+function Seed.close()  -- REMOVE
   SEEDS = nil
 
   SEED_W = 0
