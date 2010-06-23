@@ -105,6 +105,15 @@ Rooms = { }
 
 ROOM_CLASS = {}
 
+function ROOM_CLASS.new(shape)
+  local id = Plan_alloc_room_id()
+  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={} }
+  table.set_class(R, ROOM_CLASS)
+  table.insert(LEVEL.all_rooms, R)
+  return R
+end
+
+
 function ROOM_CLASS.tostr(self)
   if not self.sx1 then
     return string.format("ROOM_%d", self.id)

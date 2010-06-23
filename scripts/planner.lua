@@ -274,26 +274,6 @@ function Plan_dump_sections(title)
 end
 
 
-function Plan_new_room()
-  local ROOM =
-  {
-    kind = "normal",
-    shape = "rect",
-    conns = {},
-    neighbors = {},
----???    sections = {},
-  }
-
-  table.set_class(ROOM, ROOM_CLASS)
-
-  ROOM.id = Plan_alloc_room_id()
-
-  table.insert(LEVEL.all_rooms, ROOM)
-
-  return ROOM
-end
-
-
 function Plan_add_small_rooms()
 
   local function can_make_double(x, y)
@@ -322,7 +302,7 @@ function Plan_add_small_rooms()
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
     local K = LEVEL.section_map[x][y]
     if not K.room then
-      local R = Plan_new_room()
+      local R = ROOM_CLASS.new("rect")
 
       K.room = R
 
@@ -460,15 +440,13 @@ function Plan_add_big_rooms()
   end
 
   local function try_add_biggie(shape_name, kx, ky, rot, rw, rh)
-    local ROOM
 
     if shape_name == "rect" then
 
       if test_or_set_rect(kx, ky, rot, rw, rh) then
-        ROOM = Plan_new_room()
-        ROOM.shape = "rect"
+        local R = ROOM_CLASS.new("rect")
 
-        test_or_set_rect(kx, ky, rot, rw, rh, ROOM)
+        test_or_set_rect(kx, ky, rot, rw, rh, R)
 
         return rw * rh
       end
@@ -479,13 +457,13 @@ function Plan_add_big_rooms()
       assert(shape)
 
       if test_or_set_shape(kx, ky, rot, shape.dirs) then
-        ROOM = Plan_new_room()
-        ROOM.shape = shape.name
-        ROOM.shape_kx  = kx
-        ROOM.shape_ky  = ky
-        ROOM.shape_rot = rot
+        local R = ROOM_CLASS.new(shape.name)
 
-        test_or_set_shape(kx, ky, rot, shape.dirs, ROOM)
+        R.shape_kx  = kx
+        R.shape_ky  = ky
+        R.shape_rot = rot
+
+        test_or_set_shape(kx, ky, rot, shape.dirs, R)
 
         return assert(shape.size)
       end
@@ -648,16 +626,15 @@ function Plan_add_natural_rooms()
   end
 
   local function new_area(x, y)
-    local ROOM = Plan_new_room()
+    local R = ROOM_CLASS.new("odd")
 
-    ROOM.natural = true
-    ROOM.shape = "odd"
+    R.natural = true
 
-    LEVEL.section_map[x][y].room = ROOM
+    LEVEL.section_map[x][y].room = R
 
     local AREA =
     {
-      room = ROOM,
+      room = R,
       active = { {x=x, y=y} },
     }
 
