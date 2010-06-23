@@ -309,14 +309,17 @@ function Connect_rooms()
     end
   end
 
-  local function section_neigbor(kx, ky, dir)
-    local nx, ny = geom.nudge(kx, ky, dir)
 
-    if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
-      return nil
+  local function already_connected(K1, K2)
+    if not (K1 and K2 and K1.room) then return false end
+    
+    for _,C in ipairs(K1.room.conns) do
+      if (C.K1 == K1 and C.K2 == K2) or
+         (C.K1 == K2 and C.K2 == K1)
+      then
+        return true
+      end
     end
-
-    return LEVEL.section_map[nx][ny]
   end
 
 
@@ -327,6 +330,8 @@ function Connect_rooms()
     local N = K2.room
 
     if not (R and N) then return false end
+
+    if R.full or N.full then return false end
 
     if R.kind == "scenic" then return false end
     if N.kind == "scenic" then return false end
@@ -344,12 +349,13 @@ function Connect_rooms()
     return true
   end
 
+
   local function add_connection(K1, K2, kind, dir)
     local R = assert(K1.room)
     local N = assert(K2.room)
 
---stderrf("add_connection: K%d,%d %s --> K%d,%d %s\n",
---      K1.kx, K1.ky, R:tostr(), K2.kx, K2.ky, N:tostr());
+  stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s\n",
+        K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr());
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -371,12 +377,18 @@ function Connect_rooms()
 
 
   local function handle_shaped_room(R)
+stderrf("R = \n%s\n", table.tostr(R, 2))
     local optimal_locs = {}
 
-    for dir = 2,8,2 do
-      local K = LEVEL.section_map[R.shape_kx][R.shape_ky]
+    local mid_K = LEVEL.section_map[R.shape_kx][R.shape_ky]
+    assert(mid_K and mid_K.room == R)
 
-      local N = K:neighbor(dir)
+    -- determine optimal locations, which are at the extremities of
+    -- the shape and going the same way (e.g. for "plus" shape, they
+    -- are the North end going North, East end going East etc...)
+    for dir = 2,8,2 do
+
+      local N = mid_K:neighbor(dir)
       if N and N.room == R then
         local N2 = N:neighbor(dir)
         if N2 and N2.room == R then
@@ -386,6 +398,59 @@ function Connect_rooms()
       end
     end
 
+    -- for T shapes, sometimes try to go out the middle section
+    if R.shape == "T" and rand.odds(125) then --!!!!! ODDS
+      for dir = 2,8,2 do
+        local N = mid_K:neighbor(dir)
+        if N and N.room ~= R then
+          table.insert(optimal_locs, { K=mid_K, dir=dir })
+        end
+      end
+    end
+
+    -- actually try the connections
+
+stderrf("ADDING CONNS TO %s SHAPED %s\n", R.shape, R:tostr())
+
+    for _,loc in ipairs(optimal_locs) do
+      local K = loc.K
+      local N = loc.K:neighbor(loc.dir)
+stderrf("  optimal loc: K(%d,%d) dir=%d\n", K.kx, K.ky, loc.dir)
+
+      if already_connected(K, N) then
+        -- OK
+      elseif can_connect(K, N) then
+        add_connection(K, N, "normal", loc.dir)
+      else
+        -- try the other sides
+        for dir = 2,8,2 do
+          local N = loc.K:neighbor(dir)
+          if can_connect(K, N) then
+            add_connection(K, N, "normal", dir)
+            break;
+          end
+        end
+      end
+    end
+
+stderrf("DONE\n")
+
+    -- mark room as full (prevent further connections) if all the
+    -- optimal locations worked.  For "plus" shaped rooms, three out
+    -- of four is OK.
+    if #R.conns >= sel(R.shape == "L", 2, 3) then
+      R.full = true
+    end
+  end
+
+
+  local function visit_big_room(R)
+    if R.shape ~= "rect" and R.shape ~= "odd" then
+      handle_shaped_room(R)
+      return
+    end
+
+    -- TODO
   end
 
 
@@ -407,7 +472,7 @@ function Connect_rooms()
       score = 1
     end
 
-    return score + 3 * (R.conn_rand ^ 0.5)
+    return score + 2.1 * (R.conn_rand ^ 0.5)
   end
 
   local function branch_big_rooms()
@@ -420,7 +485,7 @@ function Connect_rooms()
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
     for _,R in ipairs(visits) do
----TODO      visit_big_room(R)
+      visit_big_room(R)
     end
   end
 
@@ -462,7 +527,7 @@ function Connect_rooms()
 
         local dir = V.sides[side_idx]
         local K = LEVEL.section_map[V.x][V.y]
-        local N = section_neigbor(V.x, V.y, dir)
+        local N = K:neighbor(dir)
 
         if can_connect(K, N) then
           add_connection(K, N, "normal", dir)
