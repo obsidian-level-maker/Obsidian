@@ -632,8 +632,8 @@ function Rooms_place_doors()
       local S = SEEDS[x][y][1]
       local N = S:neighbor(side)
 
-      if S and S.room == R and not S:has_conn() and
-         N and N.room == C.R2 and not N:has_conn()
+      if S and S.room == R    and not S:has_any_conn() and
+         N and N.room == C.R2 and not N:has_any_conn()
       then
         table.insert(spots, { x=x, y=y, S=S, N=N })
       end
@@ -776,7 +776,7 @@ function Rooms.border_up()
 
     elseif R1.natural and R2.outdoor then
 
-      if S:has_conn() then
+      if S:has_any_conn() then
         S:add_border(side, "wall", 24)
       end
 
@@ -1708,7 +1708,7 @@ function Rooms.make_ceiling(R)
         local cx = sel((where <= 2), R.tx1, R.tx2)
         local cy = sel((where % 2) == 1, R.ty1, R.ty2)
         local S = SEEDS[cx][cy][1]
-        if S.room == R and not S:has_conn() and
+        if S.room == R and not S:has_any_conn() and
            (S.kind == "walk" or S.kind == "liquid")
         then
 
@@ -2631,17 +2631,14 @@ gui.printf("do_teleport\n")
       return
     end
 
-
     vis_seed(S)
-
-    local C = S:has_conn()
 
     local x1 = S.x1
     local y1 = S.y1
     local x2 = S.x2
     local y2 = S.y2
 
-    local z1 = S.floor_h or R.floor_h or (C and C.conn_h) or 0
+    local z1 = S.floor_h or R.floor_h or 0
     local z2 = S.ceil_h  or R.ceil_h or R.sky_h or SKY_H
 
     assert(z1 and z2)
@@ -2798,6 +2795,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "arch" then
+        local C = border.conn
 ---???        local z = assert(C and C.conn_h)
 
         local door_T = Trans_straddle_transform(S, z1, side)
@@ -2832,6 +2830,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "door" then
+        local C = border.conn
 ---???        local z = assert(C and C.conn_h)
 
         local door_T = Trans_straddle_transform(S, z1, side)
@@ -2859,6 +2858,7 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "lock_door" then
+        local C = border.conn
 ---???        local z = assert(C and C.conn_h)
 
         local door_T = Trans_straddle_transform(S, z1, side)
@@ -2886,7 +2886,8 @@ gui.printf("do_teleport\n")
       end
 
       if B_kind == "bars" then
-        local LOCK = assert(S.border[side].lock)
+        local C = border.conn
+        local LOCK = assert(border.lock)
         local skin = assert(GAME.DOORS[LOCK.item])
 
         local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h

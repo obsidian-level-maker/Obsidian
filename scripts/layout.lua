@@ -372,7 +372,7 @@ do return true end  --!!!!!!!
       if x == bonus_x then P.score = P.score + 15 end
       if y == bonus_y then P.score = P.score + 15 end
 
-      if not S:has_conn() then P.score = P.score + 40 end
+      if not S:has_any_conn() then P.score = P.score + 40 end
 
       table.insert(spots, P)
     end
@@ -469,7 +469,7 @@ function Layout.cave_monster_spots(R)
     for x = sx1,sx2 do for y = sy1,sy2 do
       local S = SEEDS[x][y][1]
       if S.usage then return false end
-      if S:has_conn() then return false end
+      if S:has_any_conn() then return false end
     end end
 
     return true
@@ -558,12 +558,15 @@ function Layout.do_natural(R, heights)
       S.c_tex = R.cave_tex
     end
 
-    local C = S:has_conn()
+    for side = 2,8,2 do
+      local B = S.border[side]
+      local C = B and B.conn
 
-    if C then
-      if C.conn_h then assert(C.conn_h == S.floor_h) end
+      if C then
+        if C.conn_h then assert(C.conn_h == S.floor_h) end
 
-      C.conn_h = h
+        C.conn_h = h
+      end
     end
   end
 
@@ -652,7 +655,7 @@ function Layout.do_natural(R, heights)
   local function clear_conns()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
-      if S.room == R and S:has_conn() then
+      if S.room == R and S:has_any_conn() then
         set_whole(S, -1)
       end
     end end
@@ -677,7 +680,7 @@ function Layout.do_natural(R, heights)
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
 
-      if S.room == R and S:has_conn() then
+      if S.room == R and S:has_any_conn() then
         table.insert(point_list,
         {
           x = (S.sx - R.sx1) * 3 + 2,
@@ -986,18 +989,21 @@ function Layout.try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
 
     S.f_tex = sel(R.outdoor, R.main_tex, f_tex)
 
-    local C = S:has_conn()
+    for side = 2,8,2 do
+      local B = S.border[side]
+      local C = B and B.conn
 
-    if C then
-      if C.conn_h then assert(C.conn_h == S.floor_h) end
+      if C then
+        if C.conn_h then assert(C.conn_h == S.floor_h) end
 
-      C.conn_h = S.floor_h
-      C.conn_ftex = f_tex
+        C.conn_h = S.floor_h
+        C.conn_ftex = f_tex
+      end
     end
   end
 
   local function setup_stair(T, S, E, h, f_tex)
-    assert(not S:has_conn())
+    assert(not S:has_any_conn())
 
     S.kind = "stair"
     S.stair_dir = assert(E.dir)
@@ -1032,7 +1038,7 @@ function Layout.try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   end
 
   local function setup_curve_stair(S, E, ch, h, f_tex)
-    assert(not S:has_conn())
+    assert(not S:has_any_conn())
 
     S.kind = "curve_stair"
 
@@ -1111,7 +1117,7 @@ gui.debugf("NOT ENOUGH HEIGHTS\n")
       local E  = T.structure[ex][ey]
       local ch = assert(E.char)
 
-      if (S:has_conn() or S.pseudo_conn or S.must_walk) then
+      if (S:has_any_conn() or S.pseudo_conn or S.must_walk) then
         if not (ch == '.' or string.is_digit(ch)) then
 gui.debugf("CONN needs PLAIN WALK\n")
           return -1
@@ -1124,7 +1130,7 @@ gui.debugf("CONN needs PLAIN WALK\n")
         end
       end
 
-      if ch == '.' and S:has_conn() == R.focus_conn then
+      if ch == '.' and S:has_any_conn() == R.focus_conn then
         T.has_focus = true
       end
 
@@ -1255,14 +1261,15 @@ gui.debugf("end install_fab\n")
     S.w_tex   = OT.w_tex
 
     -- NB: connection logic copied from setup_floor()
-    if S:has_conn() or S.pseudo_conn then
+--[[ FIXME
+    if S:has_any_conn() or S.pseudo_conn then
       local C = S:has_conn() or S.pseudo_conn
       if C.conn_h then assert(C.conn_h == S.floor_h) end
 
       C.conn_h = S.floor_h
       if S.f_tex then C.conn_ftex = S.f_tex end
     end
-
+--]]
     if OT.kind == "diagonal" then
       if sym == "x" then
         S.diag_char = X_MIRROR_CHARS[OT.diag_char]
@@ -1335,7 +1342,7 @@ gui.debugf("Transposed : %s\n", string.bool(T.transpose))
           if pass == 1 then
             -- check that copy is possible
             -- (Note: most of the time it is OK)
-            if (S:has_conn() or S.pseudo_conn or S.must_walk) and
+            if (S:has_any_conn() or S.pseudo_conn or S.must_walk) and
                not (OT.kind == "walk")
             then
 gui.debugf("symmetry_fill FAILED  S:%s ~= OT:%s\n", S:tostr(), OT:tostr())
@@ -1756,15 +1763,17 @@ function Layout.do_hallway(R)
     local used_x = {}
     local used_y = {}
 
+--[[ FIXME
     for _,C in ipairs(R.conns) do
       local S = C:seed(R)
+
       if geom.is_vert(S:has_conn()) then
         used_x[S.sx] = 1
       else
         used_y[S.sy] = 1
       end
     end
-
+--]]
     -- all connections are parallel => fail
     if table.empty(used_x) or table.empty(used_y) then
       make_O()
@@ -1936,7 +1945,7 @@ function Layout.do_room(R)
             if S.room ~= R then return false end
             if not (S.kind == "walk" or S.kind == "void") then return false end
 
-            if S:has_conn() or S.pseudo_conn then
+            if S:has_any_conn() or S.pseudo_conn then
               hit_conn = hit_conn + 1
             end
           end
@@ -1967,7 +1976,7 @@ function Layout.do_room(R)
           if who == 3 then S = R.mirror_y and S.y_peer end
 
           if S then
-            if S:has_conn() or S.pseudo_conn then
+            if S:has_any_conn() or S.pseudo_conn then
               error("Junked CONN!")
 --??              local P = { x=x-dx, y=y-dy, conn=S:has_conn() or S.pseudo_conn }
 --??              table.insert(p_conns, P)
@@ -2068,12 +2077,14 @@ function Layout.do_room(R)
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y][1]
       if S.room == R and S.kind == "walk" and not S.floor_h then
+--[[ FIXME
         if S:has_conn() and S:has_conn().conn_h then
           S.floor_h = S:has_conn().conn_h
           S.f_tex   = S:has_conn().conn_ftex
         else
           table.insert(unset_list, S)
         end
+--]]
       end
     end end -- for x, y
 
@@ -2442,7 +2453,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
       else
         assert(string.is_digit(ch))
         if S.kind ~= "walk" or S.room ~= R or S.usage or
-           S:has_conn() or S.pseudo_conn or S.must_walk
+           S:has_any_conn() or S.pseudo_conn or S.must_walk
         then
           return false
         end

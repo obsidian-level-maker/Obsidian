@@ -447,7 +447,7 @@ function Monsters.do_pickups()
       if not N then
         walls[side] = 1
       elseif N.room ~= S.room then
-        if not S:has_conn() then walls[side] = 2 end
+        if not S:has_any_conn() then walls[side] = 2 end
       elseif N.kind == "void" then
         walls[side] = 3
       elseif N.kind == "walk" and N.floor_h > S.floor_h then
@@ -1077,7 +1077,7 @@ function Monsters.fill_room(R)
     end
 
     -- keep entryway clear
-    if R.entry_conn and S:has_conn() == R.entry_conn then
+    if R.entry_conn and S:has_conn(R.entry_conn) then
       return false
     end
 
@@ -1274,7 +1274,7 @@ function Monsters.fill_room(R)
     end
 
     -- keep entryway clear
-    if R.entry_conn and S:has_conn() == R.entry_conn then
+    if R.entry_conn and S:has_conn(R.entry_conn) then
       return false
     end
 
@@ -1532,7 +1532,7 @@ function Monsters.fill_room(R)
   end
 
   local function place_barrel(spot)
-    if spot.S:has_conn() or spot.S.kind ~= "walk" then
+    if spot.S:has_any_conn() or spot.S.kind ~= "walk" then
       return
     end
 

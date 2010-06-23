@@ -86,12 +86,21 @@ function SEED_CLASS.neighbor(self, dir, dist)
   return SEEDS[nx][ny][1]
 end
 
-function SEED_CLASS.has_conn(self)
+function SEED_CLASS.has_conn(self, C)
+  assert(C)
   for side = 2,8,2 do
     local B = self.border[side]
-    if B and B.conn then return B.conn end
+    if B and B.conn == C then return true end
   end
-  return nil
+  return false
+end
+
+function SEED_CLASS.has_any_conn(self)
+  for side = 2,8,2 do
+    local B = self.border[side]
+    if B and B.conn then return true end
+  end
+  return false
 end
 
 function SEED_CLASS.add_border(S, side, kind, thick)
