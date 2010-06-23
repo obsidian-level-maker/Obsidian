@@ -42,6 +42,12 @@ require 'util'
 
 CONN_CLASS = {}
 
+function CONN_CLASS.new(K1, K2, kind, dir)
+  local C = { K1=K1, K2=K2, R1=K1.room, R2=K2.room, kind=kind, dir=dir }
+  table.set_class(C, CONN_CLASS)
+  return C
+end
+
 function CONN_CLASS.neighbor(self, R)
   return sel(R == self.R1, self.R2, self.R1)
 end
@@ -354,41 +360,35 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
-  stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s\n",
-        K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr());
+--stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s\n",
+--      K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr());
 
     merge_groups(R.conn_group, N.conn_group)
 
-    local CONN =
-    {
-      kind = kind,
-      K1 = K1, K2 = K2,
-      R1 = R,  R2 = N,
-      dir = dir,
-    }
+    local C = CONN_CLASS.new(K1, K2, kind, dir)
 
-    table.set_class(CONN, CONN_CLASS)
+    table.insert(LEVEL.all_conns, C)
 
-    table.insert(LEVEL.all_conns, CONN)
+    table.insert(R.conns, C)
+    table.insert(N.conns, C)
 
-    table.insert(R.conns, CONN)
-    table.insert(N.conns, CONN)
+    K1.num_conn = K1.num_conn + 1
+    K2.num_conn = K2.num_conn + 1
   end
 
 
   local function handle_shaped_room(R)
-stderrf("R = \n%s\n", table.tostr(R, 2))
-    local optimal_locs = {}
-
     local mid_K = LEVEL.section_map[R.shape_kx][R.shape_ky]
     assert(mid_K and mid_K.room == R)
 
     -- determine optimal locations, which are at the extremities of
     -- the shape and going the same way (e.g. for "plus" shape, they
     -- are the North end going North, East end going East etc...)
-    for dir = 2,8,2 do
+    local optimal_locs = {}
 
+    for dir = 2,8,2 do
       local N = mid_K:neighbor(dir)
+
       if N and N.room == R then
         local N2 = N:neighbor(dir)
         if N2 and N2.room == R then
@@ -399,25 +399,26 @@ stderrf("R = \n%s\n", table.tostr(R, 2))
     end
 
     -- for T shapes, sometimes try to go out the middle section
-    if R.shape == "T" and rand.odds(125) then --!!!!! ODDS
+    if R.shape == "T" and rand.odds(25) then
       for dir = 2,8,2 do
         local N = mid_K:neighbor(dir)
         if N and N.room ~= R then
           table.insert(optimal_locs, { K=mid_K, dir=dir })
+          break;
         end
       end
     end
 
     -- actually try the connections
 
-stderrf("ADDING CONNS TO %s SHAPED %s\n", R.shape, R:tostr())
+--stderrf("ADDING CONNS TO %s SHAPED %s\n", R.shape, R:tostr())
 
     for _,loc in ipairs(optimal_locs) do
       local K = loc.K
       local N = loc.K:neighbor(loc.dir)
-stderrf("  optimal loc: K(%d,%d) dir=%d\n", K.kx, K.ky, loc.dir)
+--stderrf("  optimal loc: K(%d,%d) dir=%d\n", K.kx, K.ky, loc.dir)
 
-      if already_connected(K, N) then
+      if K.num_conn > 0 then
         -- OK
       elseif can_connect(K, N) then
         add_connection(K, N, "normal", loc.dir)
@@ -433,11 +434,11 @@ stderrf("  optimal loc: K(%d,%d) dir=%d\n", K.kx, K.ky, loc.dir)
       end
     end
 
-stderrf("DONE\n")
+--stderrf("DONE\n")
 
     -- mark room as full (prevent further connections) if all the
     -- optimal locations worked.  For "plus" shaped rooms, three out
-    -- of four is OK.
+    -- of four ain't bad.
     if #R.conns >= sel(R.shape == "L", 2, 3) then
       R.full = true
     end
