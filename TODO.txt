@@ -3,6 +3,9 @@ TODO
 ====
 
 
++  allow more than one connection per seed
+
+
 >>  remove SEED.thick[], have thick field in BORDER, and
     if no border then it's as if thick was zero.
 
