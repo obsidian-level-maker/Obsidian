@@ -58,6 +58,19 @@ are no longer separate but "eat" into seeds
 </div>
 
 
+<div id="connection" class="gloss_term">
+Connection
+</div><div class="gloss_define">
+A place where two rooms are connected so the player can pass
+between them.
+Connections may be locked, so that the player needs to find a
+key or switch to open it.
+Doorways and doors are the normal kinds of connections, but
+other kinds (such as teleporters and one-way drop-offs) are
+possible too.
+</div>
+
+
 <div id="cell" class="gloss_term">
 CSG
 </div><div class="gloss_define">
@@ -265,6 +278,27 @@ in a map editor.
 </div>
 
 
+<div id="scenic" class="gloss_term">
+Scenic
+</div><div class="gloss_define">
+A room or area which the player never visits, and is only used
+for decoration.
+</div>
+
+
+<div id="section" class="gloss_term">
+Section
+</div><div class="gloss_define">
+A rectangular area on the map used for placing rooms
+during the planning phase.
+Each section is between 2 and 6 seeds wide, and similarly for
+its height (on the 2D map).
+While small rooms are just a single section, large rooms can
+be formed from a group of sections -- usually a rectangle --
+but other shapes are possible too.
+</div>
+
+
 <div id="seed" class="gloss_term">
 Seed
 </div><div class="gloss_define">
@@ -287,14 +321,6 @@ monster.  The sides of each seed can be used for walls, doors,
 windows, etc...
 The decisions about where to place rooms, how big they are,
 and how they are connected are all done using seeds.
-</div>
-
-
-<div id="scenic" class="gloss_term">
-Scenic
-</div><div class="gloss_define">
-A room or area which the player never visits, and is only used
-for decoration.
 </div>
 
 
