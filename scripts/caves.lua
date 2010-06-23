@@ -49,14 +49,10 @@ class CAVE
 CAVE_CLASS = {}
 
 
-function Cave_new(w, h)
-  local cave = { w=w, h=h }
-
-  cave.cells = table.array_2D(w, h)
-
-  table.set_class(cave, CAVE_CLASS)
-
-  return cave
+function CAVE_CLASS.new(w, h)
+  local C = { w=w, h=h, cells = table.array_2D(w, h) }
+  table.set_class(C, CAVE_CLASS)
+  return C
 end
 
 
@@ -107,7 +103,7 @@ function CAVE_CLASS.copy(self)
 
   -- only copies 'w', 'h' and 'cells' members
 
-  local newbie = Cave_new(self.w, self.h)
+  local newbie = CAVE_CLASS.new(self.w, self.h)
 
   for x = 1,self.w do for y = 1,self.h do
     newbie.cells[x][y] = self.cells[x][y]
@@ -474,7 +470,7 @@ function CAVE_CLASS.copy_island(self, reg_id)
 
   local flood = assert(self.flood)
 
-  local island = Cave_new(self.w, self.h)
+  local island = CAVE_CLASS.new(self.w, self.h)
 
   for x = 1,W do for y = 1,H do
     local val = flood[x][y]

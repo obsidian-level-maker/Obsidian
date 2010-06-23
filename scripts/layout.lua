@@ -701,7 +701,7 @@ function Layout.do_natural(R, heights)
 
   ---| Layout.do_natural |---
 
-  map = Cave_new(R.sw * 3, R.sh * 3)
+  map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
 
   for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
     local S = SEEDS[x][y][1]
