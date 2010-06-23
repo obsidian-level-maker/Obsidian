@@ -60,6 +60,22 @@ require 'defs'
 require 'util'
 
 
+QUEST_CLASS = {}
+
+function QUEST_CLASS.new(start)
+  local id = 1 + #LEVEL.all_quests
+  local QT = { id=id, start=start }
+  table.set_class(QT, QUEST_CLASS)
+  table.insert(LEVEL.all_quests, QT)
+  return QT
+end
+
+function QUEST_CLASS.tostr(self)
+  return string.format("QUEST_%d", self.id)
+end
+
+
+
 function Quest_update_tvols(arena)  -- NOT USED ATM
 
   local function travel_volume(R, seen_conns)
@@ -502,16 +518,6 @@ function Quest_make_quests()
 
   local active_locks = {}
 
-  local function new_quest(R)
-    local QUEST = { start = R }
-
-    table.insert(LEVEL.all_quests, QUEST)
-
-    QUEST.id = #LEVEL.all_quests
-
-    return QUEST
-  end
-
 
   local function get_exits(R)
     local exits = {}
@@ -581,7 +587,7 @@ function Quest_make_quests()
 
         -- create new quest and continue
         R = lock.conn.R2
-        quest = new_quest(R)
+        quest = QUEST_CLASS.new(R)
 
       else
 
@@ -620,9 +626,9 @@ function Quest_make_quests()
   -- the room list will be rebuilt in visit order
   LEVEL.all_rooms = {}
 
-  local QUEST = new_quest(LEVEL.start_room)
+  local QT = QUEST_CLASS.new(LEVEL.start_room)
 
-  visit_room(QUEST.start, QUEST)
+  visit_room(QT.start, QT)
 
   assert(LEVEL.exit_room)
 
