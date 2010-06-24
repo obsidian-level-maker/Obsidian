@@ -1385,8 +1385,6 @@ function Plan_create_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)
--- temp crud to disable layouting
-if R.shape == "rect" then R.shape = "odd" end
   end
 end
 

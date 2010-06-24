@@ -1576,6 +1576,9 @@ gui.debugf("MIN_MAX of %s = %d..%d\n", info.name, info.min_size, info.max_size)
     if R.children then return false end
     if R.natural  then return false end
 
+--!!!!
+do return false end
+
     if R.shape ~= "rect" then return false end
 
     assert(R.kind ~= "hallway")
