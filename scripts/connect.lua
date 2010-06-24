@@ -64,11 +64,9 @@ function CONN_CLASS.what_dir(self, R)
 end
 
 function CONN_CLASS.tostr(self)
-  return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
+  return string.format("CONN [%d,%d -> %d,%d]",
          self.K1.kx, self.K1.ky,
-         self.K2.kx, self.K2.ky,
-         sel(self.lock, "LOCK ", ""),
-         tostring(self.conn_h or 0))
+         self.K2.kx, self.K2.ky)
 end
 
 function CONN_CLASS.swap(self)

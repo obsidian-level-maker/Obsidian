@@ -115,13 +115,13 @@ end
 
 
 function ROOM_CLASS.tostr(self)
-  if not self.sx1 then
-    return string.format("ROOM_%d", self.id)
-  else
-    return string.format("%s_%s [%d,%d..%d,%d]",
-        sel(self.parent, "SUB_ROOM", "ROOM"),
-        self.id, self.sx1,self.sy1, self.sx2,self.sy2)
-  end
+  return string.format("ROOM_%d", self.id)
+end
+
+function ROOM_CLASS.longstr(self)
+  return string.format("%s_%s [%d,%d..%d,%d]",
+      sel(self.parent, "SUB_ROOM", "ROOM"),
+      self.id, self.sx1,self.sy1, self.sx2,self.sy2)
 end
 
 function ROOM_CLASS.update_size(self)
