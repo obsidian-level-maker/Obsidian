@@ -63,10 +63,6 @@ function CONN_CLASS.what_dir(self, R)
   return nil
 end
 
----###  function CONN_CLASS.seed(self, R)
----###    return sel(R == self.R1, self.S1, self.S2)
----###  end
-
 function CONN_CLASS.tostr(self)
   return string.format("CONN [%d,%d -> %d,%d %sh:%s]",
          self.K1.kx, self.K1.ky,
@@ -78,7 +74,6 @@ end
 function CONN_CLASS.swap(self)
   self.K1, self.K2 = self.K2, self.K1
   self.R1, self.R2 = self.R2, self.R1
----###  self.S1, self.S2 = self.S2, self.S1
 
   if self.dir then self.dir = 10 - self.dir end
 end
@@ -90,90 +85,90 @@ BIG_CONNECTIONS =
   ---==== TWO EXITS ====---
 
   -- pass through, directly centered
-  PC1 = { w=3, h=2, score=3,0, exits={ 22, 58 }, symmetry="x" },
-  PC2 = { w=3, h=3, score=3,0, exits={ 22, 88 }, symmetry="x" },
+  P1 = { w=3, h=2, prob=22, exits={ 22, 58 }, symmetry="x" },
+  P2 = { w=3, h=3, prob=22, exits={ 22, 88 }, symmetry="x" },
 
   -- pass through, opposite edges
-  PO1 = { w=2, h=1, score=2.0, exits={ 12, 28 } },
-  PO2 = { w=2, h=2, score=2.0, exits={ 12, 58 } },
-  PO3 = { w=2, h=3, score=2.0, exits={ 12, 88 } },
+  O1 = { w=2, h=1, prob=27, exits={ 12, 28 } },
+  O2 = { w=2, h=2, prob=20, exits={ 12, 58 } },
+  O3 = { w=2, h=3, prob=10, exits={ 12, 88 } },
 
-  PO4 = { w=3, h=1, score=2.0, exits={ 12, 38 } },
-  PO5 = { w=3, h=2, score=2.0, exits={ 12, 68 } },
-  PO6 = { w=3, h=3, score=2.0, exits={ 12, 98 } },
+  O4 = { w=3, h=1, prob=27, exits={ 12, 38 } },
+  O5 = { w=3, h=2, prob=20, exits={ 12, 68 } },
+  O6 = { w=3, h=3, prob=10, exits={ 12, 98 } },
 
   -- L shape
-  L1 = { w=2, h=1, score=5.0, exits={ 14, 28 } },
-  L2 = { w=2, h=2, score=5.0, exits={ 14, 58 } },
-  L3 = { w=2, h=3, score=5.0, exits={ 14, 88 } },
+  L1 = { w=2, h=1, prob=50, exits={ 14, 28 } },
+  L2 = { w=2, h=2, prob=40, exits={ 14, 58 } },
+  L3 = { w=2, h=3, prob=30, exits={ 14, 88 } },
 
-  L4 = { w=3, h=1, score=5.0, exits={ 14, 38 } },
-  L5 = { w=3, h=3, score=5.0, exits={ 14, 98 } },
+  L4 = { w=3, h=1, prob=50, exits={ 14, 38 } },
+  L5 = { w=3, h=3, prob=20, exits={ 14, 98 } },
 
   ---==== THREE EXITS ====---
   
   -- T shape, turning left and right
-  T1 = { w=1, h=2, score=3.0, exits={ 12, 44, 46 }, symmetry="x" },
-  T2 = { w=1, h=3, score=3.0, exits={ 12, 74, 76 }, symmetry="x" },
+  T1 = { w=1, h=2, prob=30, exits={ 12, 44, 46 }, symmetry="x" },
+  T2 = { w=1, h=3, prob=30, exits={ 12, 74, 76 }, symmetry="x" },
 
-  T4 = { w=3, h=1, score=6.0, exits={ 22, 14, 36 }, symmetry="x" },
-  T5 = { w=3, h=2, score=6.0, exits={ 22, 44, 66 }, symmetry="x" },
-  T6 = { w=3, h=3, score=6.0, exits={ 22, 74, 96 }, symmetry="x" },
+  T4 = { w=3, h=1, prob=60, exits={ 22, 14, 36 }, symmetry="x" },
+  T5 = { w=3, h=2, prob=60, exits={ 22, 44, 66 }, symmetry="x" },
+  T6 = { w=3, h=3, prob=60, exits={ 22, 74, 96 }, symmetry="x" },
 
   -- Y shape
-  Y1 = { w=3, h=1, score=4.5, exits={ 22, 18, 38 }, symmetry="x" },
-  Y2 = { w=3, h=2, score=4.5, exits={ 22, 48, 68 }, symmetry="x" },
-  Y3 = { w=3, h=3, score=4.5, exits={ 22, 78, 98 }, symmetry="x" },
+  Y1 = { w=3, h=1, prob=45, exits={ 22, 18, 38 }, symmetry="x" },
+  Y2 = { w=3, h=2, prob=45, exits={ 22, 48, 68 }, symmetry="x" },
+  Y3 = { w=3, h=3, prob=45, exits={ 22, 78, 98 }, symmetry="x" },
 
   -- F shapes
-  F1 = { w=2, h=1, score=2.1, exits={ 14, 12, 22 } },
-  F2 = { w=2, h=2, score=2.1, exits={ 44, 12, 22 } },
-  F3 = { w=2, h=3, score=2.1, exits={ 74, 12, 22 } },
+  F1 = { w=2, h=1, prob=21, exits={ 14, 12, 22 } },
+  F2 = { w=2, h=2, prob=21, exits={ 44, 12, 22 } },
+  F3 = { w=2, h=3, prob=21, exits={ 74, 12, 22 } },
 
-  F4 = { w=3, h=1, score=1.5, exits={ 14, 12, 32 } },
-  F5 = { w=3, h=2, score=2.4, exits={ 44, 12, 32 } },
-  F6 = { w=3, h=3, score=1.5, exits={ 74, 12, 32 } },
+  F4 = { w=3, h=1, prob=15, exits={ 14, 12, 32 } },
+  F5 = { w=3, h=2, prob=24, exits={ 44, 12, 32 } },
+  F6 = { w=3, h=3, prob=15, exits={ 74, 12, 32 } },
 
-  F7 = { w=3, h=1, score=1.3, exits={ 14, 22, 32 } },
-  F8 = { w=3, h=2, score=1.3, exits={ 44, 22, 32 } },
+  F7 = { w=3, h=1, prob=13, exits={ 14, 22, 32 } },
+  F8 = { w=3, h=2, prob=13, exits={ 44, 22, 32 } },
 
   ---==== FOUR EXITS ====---
 
   -- cross shape, all stems perfectly centered
-  XP = { w=3, h=3, score=16.0, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+  XP = { w=3, h=3, prob=400, exits={ 22, 44, 66, 88 }, symmetry="xy" },
 
   -- cross shape, stems at other places
-  X1 = { w=3, h=1, score=9.0, exits={ 22, 28, 14, 36 }, symmetry="xy" },
-  X2 = { w=3, h=2, score=9.0, exits={ 22, 58, 44, 66 }, symmetry="xy" },
-  X3 = { w=3, h=3, score=9.0, exits={ 22, 88, 74, 96 }, symmetry="xy" },
+  X1 = { w=3, h=1, prob=90, exits={ 22, 28, 14, 36 }, symmetry="xy" },
+  X2 = { w=3, h=2, prob=90, exits={ 22, 58, 44, 66 }, symmetry="xy" },
+  X3 = { w=3, h=3, prob=90, exits={ 22, 88, 74, 96 }, symmetry="xy" },
 
-  -- H shape, no turning
-  H1 = { w=2, h=2, score=1.2, exits={ 12,22, 48,58 }, symmetry="xy" },
-  H2 = { w=2, h=3, score=1.2, exits={ 12,22, 78,88 }, symmetry="xy" },
-  H3 = { w=3, h=2, score=1.8, exits={ 12,32, 48,68 }, symmetry="xy" },
-  H4 = { w=3, h=3, score=1.8, exits={ 12,32, 78,98 }, symmetry="xy" },
+  -- H shape
+  H1 = { w=2, h=2, prob=12, exits={ 12,22, 48,58 }, symmetry="xy" },
+  H2 = { w=2, h=3, prob=12, exits={ 12,22, 78,88 }, symmetry="xy" },
+  H3 = { w=3, h=2, prob=18, exits={ 12,32, 48,68 }, symmetry="xy" },
+  H4 = { w=3, h=3, prob=18, exits={ 12,32, 78,98 }, symmetry="xy" },
 
-  -- H shape, turning at other end
-  HT1 = { w=2, h=2, score=1.3, exits={ 12,22, 44,56 }, symmetry="x" },
-  HT2 = { w=2, h=3, score=1.3, exits={ 12,22, 74,86 }, symmetry="x" },
-  HT3 = { w=3, h=2, score=2.8, exits={ 12,32, 44,66 }, symmetry="x" },
-  HT4 = { w=3, h=3, score=2.8, exits={ 12,32, 74,96 }, symmetry="x" },
+  -- double-stem T shape
+  TT1 = { w=2, h=2, prob=13, exits={ 12,22, 44,56 }, symmetry="x" },
+  TT2 = { w=2, h=3, prob=13, exits={ 12,22, 74,86 }, symmetry="x" },
+  TT3 = { w=3, h=2, prob=24, exits={ 12,32, 44,66 }, symmetry="x" },
+  TT4 = { w=3, h=3, prob=24, exits={ 12,32, 74,96 }, symmetry="x" },
 
   -- swastika shape
-  SWA1 = { w=2, h=2, score=1.6, exits={ 12, 26, 44, 58 } },
-  SWA2 = { w=3, h=2, score=1.6, exits={ 12, 36, 44, 68 } },
-  SWA3 = { w=3, h=3, score=1.6, exits={ 12, 36, 74, 98 } },
+  SWA1 = { w=2, h=2, prob=16, exits={ 12, 26, 44, 58 } },
+  SWA2 = { w=3, h=2, prob=16, exits={ 12, 36, 44, 68 } },
+  SWA3 = { w=3, h=3, prob=16, exits={ 12, 36, 74, 98 } },
 
   -- double F shape
-  FF1 = { w=3, h=2, score=1.5, exits={ 14,44, 22,32 } },
-  FF2 = { w=3, h=2, score=1.7, exits={ 14,44, 12,32 } },
-  FF3 = { w=3, h=3, score=1.5, exits={ 44,74, 22,32 } },
-  FF4 = { w=3, h=3, score=3.1, exits={ 14,74, 12,32 } },
+  FF1 = { w=3, h=2, prob=15, exits={ 14,44, 22,32 } },
+  FF2 = { w=3, h=2, prob=17, exits={ 14,44, 12,32 } },
+  FF3 = { w=3, h=3, prob=15, exits={ 44,74, 22,32 } },
+  FF4 = { w=3, h=3, prob=31, exits={ 14,74, 12,32 } },
 }
 
 
 CONN_POSITION_X = { 1,2,3, 1,2,3, 1,2,3 }
-CONN_POSITION_Y = { 1,1,1, 2,2,2, 3,2,3 }
+CONN_POSITION_Y = { 1,1,1, 2,2,2, 3,3,3 }
 
 
 
@@ -458,13 +453,122 @@ function Connect_rooms()
   end
 
 
+  local function test_or_set_pattern(do_it, R, info, MORPH)
+    local transpose = bit.btest(MORPH, 1)
+    local mirror_x  = bit.btest(MORPH, 2)
+    local mirror_y  = bit.btest(MORPH, 4)
+
+    -- size check
+    if R.kw ~= sel(transpose, info.h, info.w) or
+       R.kh ~= sel(transpose, info.w, info.h)
+    then
+      return false
+    end
+
+    local num_already = 0
+
+    for _,exit in ipairs(info.exits) do
+      local pos = int(exit / 10)
+      local dir =     exit % 10
+
+      local x = CONN_POSITION_X[pos] - 1
+      local y = CONN_POSITION_Y[pos] - 1
+
+      if transpose then
+        x,y = y,x
+        dir = geom.TRANSPOSE[dir]
+      end
+
+      if mirror_x then
+        x = R.kw - 1 - x
+        if geom.is_horiz(dir) then dir = 10-dir end
+      end
+
+      if mirror_y then
+        y = R.kh - 1 - y
+        if geom.is_vert(dir) then dir = 10-dir end
+      end
+
+      assert(0 <= x < R.kw)
+      assert(0 <= y < R.kh)
+
+      local K = LEVEL.section_map[R.kx1 + x][R.ky1 + y]
+      assert(K.room == R)
+
+      local N = K:neighbor(dir)
+
+      if already_connected(K, N) then
+        num_already = num_already + 1
+
+      elseif not can_connect(K, N) then
+        return false
+      
+      elseif do_it then
+        add_connection(K, N, "normal", dir)
+      end
+    end
+
+    if not do_it and num_already < #R.conns then
+      return false
+    end
+
+    return true
+  end
+
+  local function try_big_pattern(R, info)
+    --
+    -- MORPH VALUES
+    --   bit 0 : transpose the pattern or not
+    --   bit 1 : mirror horizontally or not
+    --   bit 2 : mirror vertically or not
+    --
+    -- (transpose is done before mirroring)
+    --
+    local morphs = { 0,1,2,3,4,5,6,7 }
+
+    rand.shuffle(morphs)
+
+    for _,MORPH in ipairs(morphs) do
+      if test_or_set_pattern(false, R, info, MORPH) then
+stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
+         test_or_set_pattern(true,  R, info, MORPH)
+         return true
+      end
+    end
+  end
+
+
   local function visit_big_room(R)
     if R.shape ~= "rect" and R.shape ~= "odd" then
       handle_shaped_room(R)
       return
     end
 
-    -- TODO
+    if R.shape == "odd" then
+      -- handle_natural_room(R)
+      return
+    end
+
+    -- find all BIG-CONN patterns which match this room
+    local patterns = {}
+
+    for name,info in pairs(BIG_CONNECTIONS) do
+      if (R.kw == info.w and R.kh == info.h) or
+         (R.kw == info.h and R.kh == info.w)
+      then
+        patterns[name] = info.prob
+      end
+    end
+
+    while not table.empty(patterns) do
+      local name = rand.key_by_probs(patterns)
+
+      patterns[name] = nil  -- don't try it again
+
+      if try_big_pattern(R, BIG_CONNECTIONS[name]) then
+        break;  -- succeeded
+      end
+    end
   end
 
 
@@ -611,6 +715,8 @@ stderrf("Stalk from %s to %s\n", loc.K.room:tostr(), loc.N.room:tostr())
   --==| Connect_rooms |==--
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
+
+  table.name_up(BIG_CONNECTIONS)
 
   Connect_decide_start_room()
 
