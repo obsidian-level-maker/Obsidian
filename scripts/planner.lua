@@ -566,7 +566,7 @@ function Plan_add_big_rooms()
 
   local num_sec = Plan_count_free_sections()
 
-  local quota = num_sec * rand.pick { 0.3, 0.6, 0.8 }
+  local quota = num_sec * rand.pick { 0.4, 0.6, 0.8 }
 
   gui.printf("Big Room Quota: %1.1f sections\n", quota)
 
