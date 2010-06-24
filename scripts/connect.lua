@@ -108,12 +108,12 @@ BIG_CONNECTIONS =
   ---==== THREE EXITS ====---
   
   -- T shape, turning left and right
-  T1 = { w=1, h=2, prob=30, exits={ 12, 44, 46 }, symmetry="x" },
-  T2 = { w=1, h=3, prob=30, exits={ 12, 74, 76 }, symmetry="x" },
+  T1 = { w=1, h=2, prob=50, exits={ 12, 44, 46 }, symmetry="x" },
+  T2 = { w=1, h=3, prob=50, exits={ 12, 74, 76 }, symmetry="x" },
 
-  T4 = { w=3, h=1, prob=60, exits={ 22, 14, 36 }, symmetry="x" },
-  T5 = { w=3, h=2, prob=60, exits={ 22, 44, 66 }, symmetry="x" },
-  T6 = { w=3, h=3, prob=60, exits={ 22, 74, 96 }, symmetry="x" },
+  T4 = { w=3, h=1, prob=70, exits={ 22, 14, 36 }, symmetry="x" },
+  T5 = { w=3, h=2, prob=70, exits={ 22, 44, 66 }, symmetry="x" },
+  T6 = { w=3, h=3, prob=70, exits={ 22, 74, 96 }, symmetry="x" },
 
   -- Y shape
   Y1 = { w=3, h=1, prob=45, exits={ 22, 18, 38 }, symmetry="x" },
@@ -489,8 +489,8 @@ function Connect_rooms()
         if geom.is_vert(dir) then dir = 10-dir end
       end
 
-      assert(0 <= x < R.kw)
-      assert(0 <= y < R.kh)
+      assert(0 <= x and x < R.kw)
+      assert(0 <= y and y < R.kh)
 
       local K = LEVEL.section_map[R.kx1 + x][R.ky1 + y]
       assert(K.room == R)
@@ -566,7 +566,9 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
       patterns[name] = nil  -- don't try it again
 
       if try_big_pattern(R, BIG_CONNECTIONS[name]) then
-        break;  -- succeeded
+        -- SUCCESS
+        R.full = true
+        return
       end
     end
   end
@@ -592,6 +594,7 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
 
     return score + 2.1 * (R.conn_rand ^ 0.5)
   end
+
 
   local function branch_big_rooms()
     local visits = table.copy(LEVEL.all_rooms)
@@ -632,8 +635,6 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
 
     local loc = table.pick_best(list,
         function(A, B) return A.K.room.small_score < B.K.room.small_score end)
-
-stderrf("Stalk from %s to %s\n", loc.K.room:tostr(), loc.N.room:tostr())
 
     add_connection(loc.K, loc.N, "normal", loc.dir)
   end
