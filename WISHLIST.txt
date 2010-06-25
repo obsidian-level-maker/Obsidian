@@ -151,6 +151,8 @@ Miscellaneous:
 
   - rarity for bfg10k and railgun for Skulltag
 
+  - properly count svolume
+
 
 Possible Options:
 -  glBSP section:

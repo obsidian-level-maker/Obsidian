@@ -3,7 +3,16 @@ TODO
 ====
 
 
+-  emergency conns: score, sort and process in that order
+   -  prefer: K1.num_conns + K2.num_conns == 0
+   -  prefer "good_connect" over purely possible connects
+
+-  Quests: method to pick free exit
+
+-  Quests: method to pick lock to "solve" in target room
+
 +  allow more than one connection per seed
+
 
 
 >>  remove SEED.thick[], have thick field in BORDER, and
@@ -139,8 +148,6 @@ Prefabs:
   + test if prefab fits, choose another (etc) if not
 
   - DOORS: have x_sizes, y_sizes, z_sizes
-
-  - DOORS: between two indoor buildings : straddle both rooms
 
   - get prefab name from skin (_prefab field)
 
