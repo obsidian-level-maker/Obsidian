@@ -62,10 +62,13 @@ end
 
 function Plan_decide_map_size()
 
+  local ROOM_SIZE_TABLE = { 0,5,40,40,30,1 }
+
   local function get_size_list(W, limit)
     local SIZE_TABLE = THEME.room_size_table or
                         GAME.room_size_table or
                         ROOM_SIZE_TABLE
+
     local sizes = {}
 
     assert(4 + W*2 <= limit)
