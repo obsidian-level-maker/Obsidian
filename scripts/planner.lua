@@ -345,11 +345,11 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 65,
-    plus = 20,
+    rect = 70,
+    plus = 15,
 
-    T1 = 24, T2 = 4,
-    L1 = 40, L2 = 10, L3 = 10, L4=3,
+    T1 = 25, T2 = 6,
+    L1 = 40, L2 = 10, L3 = 10, L4=4,
   }
 
   local BIG_RECT_PROBS =
