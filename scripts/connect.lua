@@ -133,12 +133,12 @@ BIG_CONNECTIONS =
   ---==== FOUR EXITS ====---
 
   -- cross shape, all stems perfectly centered
-  XP = { w=3, h=3, prob=750, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+  XP = { w=3, h=3, prob=900, exits={ 22, 44, 66, 88 }, symmetry="xy" },
 
   -- cross shape, stems at other places
-  X1 = { w=3, h=1, prob=200, exits={ 22, 28, 14, 36 }, symmetry="xy" },
-  X2 = { w=3, h=2, prob=250, exits={ 22, 58, 44, 66 }, symmetry="xy" },
-  X3 = { w=3, h=3, prob=300, exits={ 22, 88, 74, 96 }, symmetry="xy" },
+  X1 = { w=3, h=1, prob=400, exits={ 22, 28, 14, 36 }, symmetry="xy" },
+  X2 = { w=3, h=2, prob=400, exits={ 22, 58, 44, 66 }, symmetry="xy" },
+  X3 = { w=3, h=3, prob=400, exits={ 22, 88, 74, 96 }, symmetry="xy" },
 
   -- H shape
   H1 = { w=2, h=2, prob=20, exits={ 12,22, 48,58 }, symmetry="xy" },
