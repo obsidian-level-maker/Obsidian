@@ -146,7 +146,7 @@ A "Limit Removing" engine is one which people have removed some
 limitations that the original game had.
 For example, plain DOOM.EXE will crash if there are more than 128
 visplanes on the screen -- the VPO (Visplane Overflow) error which
-was a real nuisance to mappers.
+was a real headache for mappers.
 
 <p>
 However source ports like BOOM have removed this limitation
@@ -275,6 +275,15 @@ Boss maps usually have special requirements which are
 hard to account for.
 It is much easier for someone to simply make them
 in a map editor.
+</div>
+
+
+<div id="quest" class="gloss_term">
+Quest
+</div><div class="gloss_define">
+A group of rooms with a particular goal, usually
+a key or switch which allows progression to the next quest.
+The final quest always leads to the exit room of the level.
 </div>
 
 
