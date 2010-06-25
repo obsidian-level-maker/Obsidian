@@ -424,6 +424,7 @@ function Plan_add_big_rooms()
     return true
   end
 
+
   local function pick_rect_size()
     local raw = rand.key_by_probs(BIG_RECT_PROBS)
 
@@ -441,6 +442,7 @@ function Plan_add_big_rooms()
 
     return rw, rh
   end
+
 
   local function try_add_biggie(shape_name, kx, ky, rot, rw, rh)
 
@@ -472,6 +474,7 @@ function Plan_add_big_rooms()
       end
     end
   end
+
 
   local function ideal_L_spots(visits)
     local CORNERS = rand.shuffle { 1,3,7,9 }
@@ -509,10 +512,28 @@ function Plan_add_big_rooms()
     local mx = int((LEVEL.W+1) / 2)
     local my = int((LEVEL.H+1) / 2)
 
-    if rand.odds(75) then
+    if rand.odds(85) then
       table.insert(visits, 1, {x=mx, y=my})
     end
   end
+
+  local function ideal_RECT_spots(visits, rw, rh)
+    local x2 = LEVEL.W - rw
+    local y2 = LEVEL.H - rh
+
+    if x2 < 2 or y2 < 2 then return end
+
+    local CORNERS = { 1,3,7,9 }
+    rand.shuffle(CORNERS)
+
+    for _,side in ipairs(CORNERS) do
+      if rand.odds(50) then
+        local mx, my = geom.pick_corner(side, 2,2, x2,y2)
+        table.insert(visits, 1, {x=mx, y=my})
+      end
+    end
+  end
+
 
   local function add_biggie(quota)
     -- returns size of room
@@ -539,6 +560,9 @@ function Plan_add_big_rooms()
 
     elseif shape_name == "plus" then
       ideal_PLUS_spots(visits)
+
+    elseif shape_name == "rect" and (rw >= 3 or rh >= 3) then
+      ideal_RECT_spots(visits, rw, rh)
     end
 
     local ROTS
@@ -751,11 +775,13 @@ function Plan_collect_sections()
 
     R.kx2 = math.max(kx, R.kx2 or -1)
     R.ky2 = math.max(ky, R.ky2 or -1)
+
+    R.kvolume = (R.kvolume or 0) + 1
   end end
 
   -- determine sizes
   for _,R in ipairs(LEVEL.all_rooms) do
-    assert(R.kx1 and R.ky2)
+    assert(R.kx1 and R.ky2 and R.kvolume)
     R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
   end
 end
