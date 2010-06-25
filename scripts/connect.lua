@@ -133,12 +133,12 @@ BIG_CONNECTIONS =
   ---==== FOUR EXITS ====---
 
   -- cross shape, all stems perfectly centered
-  XP = { w=3, h=3, prob=700, exits={ 22, 44, 66, 88 }, symmetry="xy" },
+  XP = { w=3, h=3, prob=750, exits={ 22, 44, 66, 88 }, symmetry="xy" },
 
   -- cross shape, stems at other places
   X1 = { w=3, h=1, prob=200, exits={ 22, 28, 14, 36 }, symmetry="xy" },
-  X2 = { w=3, h=2, prob=200, exits={ 22, 58, 44, 66 }, symmetry="xy" },
-  X3 = { w=3, h=3, prob=200, exits={ 22, 88, 74, 96 }, symmetry="xy" },
+  X2 = { w=3, h=2, prob=250, exits={ 22, 58, 44, 66 }, symmetry="xy" },
+  X3 = { w=3, h=3, prob=300, exits={ 22, 88, 74, 96 }, symmetry="xy" },
 
   -- H shape
   H1 = { w=2, h=2, prob=20, exits={ 12,22, 48,58 }, symmetry="xy" },
@@ -294,7 +294,6 @@ function Connect_rooms()
   local function initial_groups()
     for index,R in ipairs(LEVEL.all_rooms) do
       R.conn_group = index
-      R.conn_rand  = gui.random()
     end
   end
 
@@ -573,39 +572,19 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
   end
 
 
-  local function big_room_score(R)
-    local score = 0
-
-    if R.shape == "plus" then
-      score = 5
-    elseif R.shape == "L" and (R.shape_kx == 1 or R.shape_kx == LEVEL.W)
-                          and (R.shape_ky == 1 or R.shape_ky == LEVEL.H)
-    then
-      -- L shape at optimal position (map corner)
-      score = 4
-    elseif R.shape ~= "rect" or R.kw >= 3 or R.kh >= 3 then
-      score = 3
-    elseif R.kw >= 2 and R.kh >= 2 then
-      score = 2
-    elseif R.kw >= 2 or R.kh >= 2 then
-      score = 1
-    end
-
-    return score + 2.1 * (R.conn_rand ^ 0.5)
-  end
-
-
   local function branch_big_rooms()
     local visits = table.copy(LEVEL.all_rooms)
 
     for _,R in ipairs(visits) do
-      R.big_score = big_room_score(R)
+      R.big_score = R.kvolume + 2.5 * gui.random() ^ 2
     end
 
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
     for _,R in ipairs(visits) do
-      visit_big_room(R)
+      if R.kvolume >= 2 then
+        visit_big_room(R)
+      end
     end
   end
 
@@ -646,13 +625,13 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
     local visits = table.copy(LEVEL.all_rooms)
 
     for _,R in ipairs(visits) do
-      R.small_score = R.svolume + R.conn_rand*5
+      R.small_score = R.svolume + 5.0 * gui.random()
     end
 
     table.sort(visits, function(A, B) return A.small_score < B.small_score end)
 
     for _,R in ipairs(visits) do
-      if R.kw * R.kh <= 2 then
+      if R.kvolume <= 2 then
         visit_small_room(R)
       end
     end
