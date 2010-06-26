@@ -170,6 +170,19 @@ function ROOM_CLASS.valid_T(self, x, y)
   return true
 end
 
+function ROOM_CLASS.dist_to_closest_conn(self, K, side)
+  -- TODO: improve this by calculating side coordinates
+  local best
+
+  for _,C in ipairs(self.conns) do 
+    local K2 = C:section(self)
+    local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
+
+    if not best or dist < best then best = dist end
+  end
+
+  return best
+end
 
 function ROOM_CLASS.is_near_exit(self)
   if self.purpose == "EXIT" then return true end

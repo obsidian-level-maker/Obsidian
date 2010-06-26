@@ -382,27 +382,6 @@ function Connect_rooms()
   end
 
 
-  local function dist_to_closest_conn(R, K, side)
-    -- TODO: improve this by calculating coord along the side
-
-    local best = 50
-
-    for _,C in ipairs(R.conns) do 
-      local K2 = C:section(R)
-
-      if K2 == K then
-        return 0
-      end
-
-      local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
-
-      if dist < best then best = dist end
-    end
-
-    return best
-  end
-
-
   local function try_add_natural_conn(R)
     local loc_list = {}
 
@@ -414,7 +393,8 @@ function Connect_rooms()
           local N = K:neighbor(dir)
           if good_connect(K, N) then
             local LOC = { K=K, N=N, dir=dir }
-            LOC.dist = dist_to_closest_conn(R, K, dir) + gui.random()
+            LOC.dist = R:dist_to_closest_conn(K, dir) or 90
+            LOC.dist = LOC.dist + gui.random()
             table.insert(loc_list, LOC)
           end
         end
