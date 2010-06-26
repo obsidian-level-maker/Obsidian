@@ -382,6 +382,73 @@ function Connect_rooms()
   end
 
 
+  local function dist_to_closest_conn(R, K, side)
+    -- TODO: improve this by calculating coord along the side
+
+    local best = 50
+
+    for _,C in ipairs(R.conns) do 
+      local K2 = C:section(R)
+
+      if K2 == K then
+        return 0
+      end
+
+      local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
+
+      if dist < best then best = dist end
+    end
+
+    return best
+  end
+
+
+  local function try_add_natural_conn(R)
+    local loc_list = {}
+
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = LEVEL.section_map[x][y]
+      if K.room == R and K.num_conn == 0 then
+
+        for dir = 2,8,2 do
+          local N = K:neighbor(dir)
+          if good_connect(K, N) then
+            local LOC = { K=K, N=N, dir=dir }
+            LOC.dist = dist_to_closest_conn(R, K, dir) + gui.random()
+            table.insert(loc_list, LOC)
+          end
+        end
+
+      end
+    end end -- x, y
+
+    if #loc_list == 0 then return end
+
+    local loc = table.pick_best(loc_list,
+        function(A, B) return A.dist > B.dist end)
+
+stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.dist)
+    add_connection(loc.K, loc.N, "normal", loc.dir)
+  end
+
+
+  local function handle_natural_room(R)
+    -- the goal here (as usual) is to force the player to traverse
+    -- as much of the cave as possible.  So we want new connections
+    -- to be far away from all existing ones.
+
+    local want_conn = rand.key_by_probs { 1, 10, 40, 80, 40 }    
+
+    want_conn = want_conn + math.min(4, R.kvolume) - 4
+stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_conn)
+    want_conn = want_conn - #R.conns
+
+    for i = 1,want_conn do
+      try_add_natural_conn(R)
+    end
+  end
+
+
   local function handle_shaped_room(R)
     local mid_K = LEVEL.section_map[R.shape_kx][R.shape_ky]
     assert(mid_K and mid_K.room == R)
@@ -536,13 +603,13 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
 
 
   local function visit_big_room(R)
-    if R.shape ~= "rect" and R.shape ~= "odd" then
-      handle_shaped_room(R)
+    if R.natural then
+      handle_natural_room(R)
       return
     end
 
-    if R.shape == "odd" then
-      -- handle_natural_room(R)
+    if R.shape ~= "rect" then
+      handle_shaped_room(R)
       return
     end
 
