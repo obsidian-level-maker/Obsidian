@@ -44,9 +44,8 @@ class LOCK
   kind : keyword  -- "KEY" or "SWITCH"
   item : string   -- what kind of key or switch (game specific)
 
-  conn : CONN     -- connection between two rooms (and two quests)
-                  -- which is locked (keyed door, lowering bars, etc)
-                  -- Not used for EXITs.
+  target : ROOM   -- the room containing the key or switch
+  conn   : CONN   -- the connection which is locked
 
   distance : number  -- number of rooms between key and door
 
@@ -173,25 +172,46 @@ end
 
 
 function Quest_key_distances()
-
-  -- FIXME: currently broken
-
   -- determine distance (approx) between key and the door it opens.
   -- the biggest distances will use actual keys (which are limited)
   -- whereas everything else will use switched doors.
 
+  -- TODO: proper measurement between connections
+
+  local want_lock
+
+  local function dist_to_door(R, entry_C, seen_rooms)
+    seen_rooms[R] = true
+
+    if R:has_lock(want_lock) then
+      return 1
+    end
+
+    for _,C in ipairs(R.conns) do
+      local R2 = C:neighbor(R)
+      if not seen_rooms[R2] then
+        local d = dist_to_door(R2, C, seen_rooms)
+        if d then
+          return d + 1
+        end
+      end
+    end
+
+    -- not in this part of the connection map
+    return nil
+  end
+
   gui.debugf("Key Distances:\n")
 
-  for index,A in ipairs(LEVEL.all_arenas) do
-    if A.lock.kind == "EXIT" then
-      A.lock.distance = 0
-    elseif A.back_path then
-      A.lock.distance = 1 + #A.back_path 
-    else
-      A.lock.distance = rand.irange(1,12)
-    end
-    gui.debugf("  Arena #%d : lock_dist %1.1f\n", index, A.lock.distance)
-  end
+  for _,lock in ipairs(LEVEL.all_locks) do
+    want_lock = lock
+
+    lock.distance = dist_to_door(lock.target, nil, {})
+
+    gui.debugf("  %s --> %s  lock_dist:%1.1f\n",
+        lock.conn.R1.quest:tostr(), lock.conn.R2.quest:tostr(),
+        lock.distance)
+  end 
 end
 
 
@@ -233,7 +253,7 @@ function Quest_choose_keys()
 
     -- prefer not to use keyed doors between two outdoor rooms
     if LOCK.conn and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
-      LOCK.key_score = -1
+      LOCK.key_score = LOCK.key_score / 2
     end
 
     LOCK.key_score = LOCK.key_score + gui.random() / 2
@@ -561,7 +581,7 @@ function Quest_make_quests()
     R.purpose = "KEY"
     R.purpose_lock = lock
 
-    lock.key_room = R
+    lock.target = R
 
     return lock
   end
@@ -639,7 +659,7 @@ function Quest_make_quests()
 
 --??? Quest_find_storage_rooms()
 
--- Quest_key_distances()
+  Quest_key_distances()
 
   Quest_select_textures()
   Quest_choose_keys()
