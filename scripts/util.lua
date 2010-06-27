@@ -206,12 +206,12 @@ end
 function table.pick_best(list, comp)
   assert(list)
 
-  if not comp then
-    comp = function(A,B) return (A < B) end
-  end
-
   if #list == 0 then
     return nil
+  end
+
+  if not comp then
+    comp = function(A,B) return (A > B) end
   end
 
   local cur = 1
