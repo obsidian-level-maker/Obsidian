@@ -256,7 +256,7 @@ function Quest_choose_keys()
       LOCK.key_score = LOCK.key_score / 2
     end
 
-    LOCK.key_score = LOCK.key_score + gui.random() / 2
+    LOCK.key_score = LOCK.key_score + gui.random() / 1.5
   end
 
   table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
