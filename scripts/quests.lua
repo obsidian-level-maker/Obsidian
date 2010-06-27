@@ -587,6 +587,49 @@ function Quest_make_quests()
   end
 
 
+  local function pick_free_exit(R, exits)
+    if #exits == 1 then return 1 end
+
+    -- teleporters cannot be locked, hence must pick it when present
+    for idx,C in ipairs(exits) do
+      if C.kind == "teleporter" then
+        return idx
+      end
+    end
+
+    local scores = {}
+
+    local entry_kx = R.kx1
+    local entry_ky = R.ky1
+
+    if R.entry_conn then
+      entry_kx = R.entry_conn.K2.kx
+      entry_ky = R.entry_conn.K2.ky
+    end
+
+    for idx,C in ipairs(exits) do
+      -- TODO: better distance calc
+      scores[idx] = geom.dist(entry_kx, entry_ky, C.K2.kx, C.K2.ky)
+
+      if R.entry_conn and C.dir ~= (10 - R.entry_conn.dir) then
+        -- strong preference to avoid 180 degree turns
+        scores[idx] = scores[idx] + 4
+      end
+
+      -- tie breaker
+      scores[idx] = scores[idx] + gui.random() / 3
+    end
+
+    local value,index = table.pick_best(scores)
+    assert(value)
+
+stderrf("scores = { %1.2f %1.2f %1.2f %1.2f } --> %d\n",
+        scores[1] or 0, scores[2] or 0,
+        scores[3] or 0, scores[4] or 0, index)
+    return index
+  end
+
+
   local function visit_room(R, quest)
     while true do
       R.quest = quest
@@ -601,9 +644,8 @@ function Quest_make_quests()
 
         local lock = add_key(R)
 
-        if not lock then
-          return  -- FINISHED
-        end
+        -- finished?
+        if not lock then return end
 
         -- create new quest and continue
         R = lock.conn.R2
@@ -611,8 +653,7 @@ function Quest_make_quests()
 
       else
 
-        -- FIXME !!! score them, pick best
-        local free_idx = rand.irange(1, #exits)
+        local free_idx = pick_free_exit(R, exits)
 
         -- lock up any excess branches
         for idx = 1,#exits do
