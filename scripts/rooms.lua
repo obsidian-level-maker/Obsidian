@@ -136,29 +136,29 @@ function ROOM_CLASS.contains_seed(self, x, y)
 end
 
 function ROOM_CLASS.has_lock(self, lock)
-  for _,D in ipairs(self.conns) do
-    if D.lock == lock then return true end
+  for _,C in ipairs(self.conns) do
+    if C.lock == lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_any_lock(self)
-  for _,D in ipairs(self.conns) do
-    if D.lock then return true end
+  for _,C in ipairs(self.conns) do
+    if C.lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_lock_kind(self, kind)
-  for _,D in ipairs(self.conns) do
-    if D.lock and D.lock.kind == kind then return true end
+  for _,C in ipairs(self.conns) do
+    if C.lock and C.lock.kind == kind then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_sky_neighbor(self)
-  for _,D in ipairs(self.conns) do
-    local N = D:neighbor(self)
+  for _,C in ipairs(self.conns) do
+    local N = C:neighbor(self)
     if N.outdoor then return true end
   end
   return false
@@ -186,8 +186,8 @@ end
 
 function ROOM_CLASS.is_near_exit(self)
   if self.purpose == "EXIT" then return true end
-  for _,D in ipairs(self.conns) do
-    local N = D:neighbor(self)
+  for _,C in ipairs(self.conns) do
+    local N = C:neighbor(self)
     if N.purpose == "EXIT" then return true end
   end
   return false
