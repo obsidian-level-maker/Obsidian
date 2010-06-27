@@ -3,13 +3,15 @@ TODO
 ====
 
 
--  emergency conns: score, sort and process in that order
-   -  prefer: K1.num_conns + K2.num_conns == 0
-   -  prefer "good_connect" over purely possible connects
+-  removing fences can wreck traversability
+
 
 -  Quests: method to pick free exit
+   -  if any exit is a teleporter, must choose that one
+   -  strongly prefer NOT to do 180 degree turn
+   -  prefer exit far from entry
 
--  Quests: method to pick lock to "solve" in target room
+-  Quests: method to pick which lock to "solve" in target room
 
 +  allow more than one connection per seed
 
@@ -35,14 +37,8 @@ Monsters:
 
 Quests:
 
--  make a quest class, tostr() method
-
--  update class definition for QUEST (no longer ARENA)
-
 -  currently broken if no switches
    --> have a lock limit, if over then mark branches as "dead_wood"
-
-+  when deciding to use keys : check for outdoor on both sides
 
 
 
