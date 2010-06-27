@@ -426,6 +426,8 @@ stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_co
     for i = 1,want_conn do
       try_add_natural_conn(R)
     end
+
+    R.full = true
   end
 
 
@@ -666,9 +668,9 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
 
 
   local function branch_small_rooms()
-
+    --
     -- Goal here is to make stalks
-
+    --
     local visits = table.copy(LEVEL.all_rooms)
 
     for _,R in ipairs(visits) do
@@ -685,44 +687,63 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
   end
 
 
-  local function emergency_branches()
-    
-    -- TODO: teleporters
+  local function emergency_score(K, N, dir)
+    if not can_connect(K, N) then return -1 end
 
-    local visits = { }
-    local SIDES = { 2,4,6,8 }
+    local score = 0
 
-    for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
-      rand.shuffle(SIDES)
-      table.insert(visits, { x=kx, y=ky, sides=table.copy(SIDES) })
-    end end
+    if good_connect(K, N) then
+      score = score + 10
+    end
 
-    rand.shuffle(visits)
+    local total_conn = K.num_conn + N.num_conn
 
-    for side_idx = 1,4 do
-      for _,V in ipairs(visits) do
+    if total_conn == 0 then
+      score = score + 5 - math.min(total_conn, 5)
+    end
 
-        local dir = V.sides[side_idx]
-        local K = LEVEL.section_map[V.x][V.y]
+    return score + gui.random()
+  end
+
+
+  local function emergency_branch()
+    local loc
+
+    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+      local K = LEVEL.section_map[x][y]
+      for dir = 2,8,2 do
         local N = K:neighbor(dir)
-
-        if can_connect(K, N) then
-          add_connection(K, N, "normal", dir)
+        local score = emergency_score(K, N, dir)
+        if score >= 0 and (not loc or score > loc.score) then
+          loc = { K=K, N=N, dir=dir, score=score }
         end
+      end
+    end end -- x, y
 
-      end -- for V
-    end -- for side_idx
+    -- nothing possible? hence we are done
+    if not loc then return false end
+
+stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
+    add_connection(loc.K, loc.N, "normal", loc.dir)
+
+    return true
+  end
+
+
+  local function validate_connections()
+    for _,R in ipairs(LEVEL.all_rooms) do
+      if R.kind ~= "scenic" then
+        if R.conn_group ~= 1 then
+          error("Connecting rooms failed: separate groups exist")
+        end
+      end
+    end
   end
 
 
   local function natural_flow(R, visited)
     assert(R.kind ~= "scenic")
 
-    if R.conn_group ~= 1 then
-      error("Connecting rooms failed: separate groups exist")
-    end
-
---stderrf("%s : conn_group=%d\n", R:tostr(), R.conn_group or -1)
     visited[R] = true
 
     for _,C in ipairs(R.conns) do
@@ -754,9 +775,14 @@ stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
   Levels.invoke_hook("connect_rooms", LEVEL.seed)
 
   branch_big_rooms()
+
+  -- TODO: teleporters
+
   branch_small_rooms()
 
-  emergency_branches()
+  while emergency_branch() do end
+
+  validate_connections()
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
