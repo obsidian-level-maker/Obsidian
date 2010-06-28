@@ -553,32 +553,55 @@ function Quest_make_quests()
 
 
   local function add_lock(C)
-    local LOCK =
-    {
-      conn = C,
-    }
+    local LOCK = { conn=C }
 
     C.lock = LOCK
 
-    table.insert(active_locks, LOCK)
+    -- keep newest locks at the front of the active list
+    table.insert(active_locks, 1, LOCK)
+
     table.insert(LEVEL.all_locks, LOCK)
   end
 
 
-  local function add_key(R)
+  local function pick_lock_to_solve()
+    --
+    -- choosing the newest lock (at index 1) produces the most linear
+    -- progression, which is easiest on the player.  Choosing older
+    -- locks produces more back-tracking and memory strain, which on
+    -- large levels can make it very confusing to navigate.
+    --
+
+    assert(#active_locks > 0)
+
+    if PERVERSE_MODE then  -- TODO
+      return #active_locks
+    end
+
+    local index = 1
+
+    while (index+1) <= #active_locks and rand.odds(30) do
+      index = index + 1
+    end
+
+    return index
+  end
+
+
+  local function add_goal(R)
     if table.empty(active_locks) then
       LEVEL.exit_room = R
       R.purpose = "EXIT"
       return false
     end
 
-    -- FIXME: need heuristics for picking the lock
-    --        (e.g. using newest one gives less back-tracking)
-    rand.shuffle(active_locks)
+    local lock_idx = pick_lock_to_solve()
 
-    local lock = table.remove(active_locks, 1)
+-- stderrf("ADDING GOAL : %d / %d\n", lock_idx, table.size(active_locks))
 
-    R.purpose = "KEY"
+    local lock = table.remove(active_locks, lock_idx)
+
+    R.purpose = "SOLUTION"
     R.purpose_lock = lock
 
     lock.target = R
@@ -623,9 +646,9 @@ function Quest_make_quests()
     local value,index = table.pick_best(scores)
     assert(value)
 
-stderrf("scores = { %1.2f %1.2f %1.2f %1.2f } --> %d\n",
-        scores[1] or 0, scores[2] or 0,
-        scores[3] or 0, scores[4] or 0, index)
+-- stderrf("scores = { %1.2f %1.2f %1.2f %1.2f } --> %d\n",
+--         scores[1] or 0, scores[2] or 0,
+--         scores[3] or 0, scores[4] or 0, index)
     return index
   end
 
@@ -642,7 +665,7 @@ stderrf("scores = { %1.2f %1.2f %1.2f %1.2f } --> %d\n",
         -- hit a leaf room
         quest.target = R
 
-        local lock = add_key(R)
+        local lock = add_goal(R)
 
         -- finished?
         if not lock then return end
