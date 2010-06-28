@@ -76,6 +76,11 @@ function CONN_CLASS.swap(self)
   if self.dir then self.dir = 10 - self.dir end
 end
 
+function CONN_CLASS.k_coord(self)
+  return (self.K1.kx + self.K2.kx) / 2,
+         (self.K1.ky + self.K2.ky) / 2
+end
+
 
 
 BIG_CONNECTIONS =
