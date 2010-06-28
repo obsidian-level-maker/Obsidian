@@ -2476,7 +2476,7 @@ gui.printf("do_teleport\n")
         Build.prefab("EXIT_PILLAR", skin, T)
       end
 
-    elseif R.purpose == "KEY" then
+    elseif R.purpose == "SOLUTION" then
       local lock = assert(R.purpose_lock)
 
       if lock.kind == "KEY" then
@@ -3107,7 +3107,7 @@ gui.printf("do_teleport\n")
 
     if S.usage == "WEAPON" then
       do_weapon(S)
-    elseif S.usage == "KEY" then
+    elseif S.usage == "SOLUTION" then
       do_purpose(S)
     end
 

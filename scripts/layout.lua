@@ -2035,7 +2035,7 @@ function Layout.do_room(R)
 
 
   local function add_purpose()
-    local sx, sy, S = Layout.spot_for_wotsit(R, "KEY") --???  R.purpose)
+    local sx, sy, S = Layout.spot_for_wotsit(R, "SOLUTION") --???  R.purpose)
 
     R.guard_spot = S
   end
