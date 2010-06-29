@@ -6,21 +6,11 @@ TODO
 -  removing fences can wreck traversability
 
 
--  Quests: method to pick free exit
-   -  if any exit is a teleporter, must choose that one
-   -  strongly prefer NOT to do 180 degree turn
-   -  prefer exit far from entry
-
--  Quests: method to pick which lock to "solve" in target room
-
 +  allow more than one connection per seed
 
 
 
->>  remove SEED.thick[], have thick field in BORDER, and
-    if no border then it's as if thick was zero.
-
->>  remove SEED.conn & SEED.conn_dir : determine from BORDERs
+Later: fix hallways, broken due to conn(_dir) change
 
 Later: fix Build_stairwell : broken due to conn_dir change
 
@@ -181,10 +171,6 @@ BUG: some Quake maps have clipping issues (invisible barriers)
 BUG: switch in cave may end up inaccessible (clear the seed)
 
 BUG: place pickups more carefully in caves (otherwise can be unpickupable)
-
-BUG: liquification of caves at a border can subvert quests
-     >>  need to build a normal wall at sides of a connection seed
-         which touch another room (or edge of map).
 
 BUG: items occasionally appear on high fences
      - finding small spots ignores sideway extents (thick[])
