@@ -32,6 +32,9 @@
 #include "ui_dialog.h"
 
 
+#define SNAG_EPSILON  0.01
+
+
 class region_c;
 
 
@@ -41,17 +44,30 @@ public:
   double x1, y1;
   double x2, y2;
 
-  region_c *front;
+  bool mini;
+
+  bool on_node;
+
+  region_c *where;
 
   snag_c *partner;
 
   std::vector<brush_vert_c *> sides;
 
+private:
+  snag_c(const snag_c& other)
+      x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
+      mini(other.mini), on_node(other.on_node),
+      where(other.where), partner(NULL), sides()
+  {
+    // FIXME: copy sides
+  }
+
 public:
   // side = 0 for outside of brush, 1 for inside
   snag_c(csg_brush_C *P, int side, brush_vert_c *start, brush_vert_c *end) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      front(NULL), partner(NULL), sides()
+      mini(false), on_node(false), front(NULL), partner(NULL), sides()
   {
     if (side == 0)
     {
@@ -66,6 +82,32 @@ public:
 
   ~snag_c()
   { }
+
+  snag_c *Cut(double ix, double iy)
+  {
+    snag_c *T = new snag_c(*this);
+
+    x2 = ix ; T->x1 = ix
+    y2 = iy ; T->y1 = iy
+
+    if (partner)
+    {
+      snag_c *SP = partner;
+      snag_c *TP = new snag_c(*partner);
+
+      SP->x1 = ix ; TP->x2 = ix
+      SP->y1 = iy ; TP->y2 = iy
+
+      SYS_ASSERT(SP->partner == this);
+
+       T->partner = TP;
+      TP->partner = T;
+
+      SYS_ASSERT(T->where);
+
+      where->AddSnag(T2);
+    }
+  }
 };
 
 #define partition_c  snag_c
@@ -90,6 +132,8 @@ public:
   void AddSnag(snag_c *S)
   {
     snags.push_back(S);    
+
+    S->where = this;
   }
 };
 
@@ -136,18 +180,94 @@ static region_c * InitialRegion()
 }
 
 
-static void DivideOneSnag(snag_c *S, partition_c *party,
-                          region_c *back, region_c *front)
+static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
-  // TODO !!
+  // FIXME !!!
 }
 
 
-static void DivideSnags(region_c *R, partition_c *party)
+static void DivideOneSnag(snag_c *S, partition_c *part,
+                          region_c *back, region_c *front)
+{
+	/* get state of lines' relation to each other */
+	float a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
+	float a = PerpDist(S->x2,S->y2, part->x1,part->y1,part->x2,part->y2);
+
+	int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
+	int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
+
+  /* adjust vertices which sit "nearly" on the line */
+  if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
+  if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
+
+	/* check for being on the same line */
+	if (a_side == 0 && b_side == 0)
+	{
+		// this snag runs along the same line as the partition.  check
+		// whether it goes in the same direction or the opposite.
+    S->on_node = true;
+
+    // FIXME: is this correct??
+    if (S->partner)
+      S->partner->on_node = true;
+
+		if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                      S->x2 - S->x1, S->y2 - S->y1))
+		{
+      front->AddSnag(S);
+		}
+		else
+		{
+      back->AddSnag(S);
+		}
+		return;
+	}
+
+	/* check for right side */
+	if (a_side >= 0 && b_side >= 0)
+	{
+    front->AddSnag(S);
+		return;
+	}
+
+	/* check for left side */
+	if (a_side <= 0 && b_side <= 0)
+	{
+    back->AddSnag(S);
+		return;
+	}
+
+	// when we reach here, we have a and b non-zero and opposite sign,
+	// hence this snag will be cut by the partition line.
+
+	SYS_ASSERT(a_side == -b_side);
+
+	double ix, iy;
+
+	CalcIntersection(S->x1, S->y1, S->x2, S->y2,
+                   part->x1, part->y1, part->x2, part->y2,
+                   &ix, &iy);
+
+	snag_c *T = S->Cut(ix, iy);
+
+	if (a_side < 0)
+	{
+		 back->AddSnag(S);
+		front->AddSnag(T);
+	}
+	else
+	{
+		front->AddSnag(S);
+		 back->AddSnag(T);
+	}
+}
+
+
+static void DivideSnags(region_c *R, partition_c *part)
 {
   for (int i = 0; i < (int)R->snags.size(); i++)
   {
-    DivideOneSnag(R->snags[i], party, R->back, R->front);
+    DivideOneSnag(R->snags[i], part, R->back, R->front);
   }
 
   R->snags.clear();
@@ -162,30 +282,38 @@ static void AddMiniSnags(...)
 
 static partition_c * ChoosePartition(region_c *R)
 {
-  if (R->snags.empty())
-    return NULL;
+  partition_c *best = NULL;
 
-  // FIXME: ChoosePartition
+  for (int i = (int)R->snags.size()-1; i >= 0; i--)
+  {
+    partition_c *part = R->snags[i];
 
-  return R->snags[0];
+    if (! part->on_node)
+    {
+      best = part;
+      break;  // FIXME: choose best properly
+    }
+  }
+
+  return best;
 }
 
 
 static void Split(region_c *R)
 {
-  partition_c *party = ChoosePartition(R);
+  partition_c *part = ChoosePartition(R);
 
-  if (! party)
+  if (! part)
     return;
 
   R->back  = new region_c();
   R->front = new region_c();
 
-  DivideSnags(R, party);
+  DivideSnags(R, part);
 
   int cut_list;  // TODO
 
-  AddMiniSnags(cut_list, party, R->back, R->front);
+  AddMiniSnags(cut_list, part, R->back, R->front);
 
   Split(R->back); 
   Split(R->front); 
