@@ -32,9 +32,96 @@
 #include "ui_dialog.h"
 
 
+class seg_1S_c
+{
+public:
+  merge_segment_c *seg;
+
+  int side;
+
+public:
+  // TODO
+};
+
+
+class csg_seg_group_c
+{
+public:
+  csg_seg_group_c *left;
+  csg_seg_group_c *right;
+
+  std::vector<seg_1S_c> segs;
+
+public:
+  // TODO
+};
+
+
+#define partition_c  merge_segment_c
+
+
+
+static void DivideOneSeg(...)
+{
+  // TODO !!
+}
+
+
+static void DivideSegs(csg_seg_group_c *node, partition_c *party)
+{
+  for (int i = 0; i < (int)node->segs.size(); i++)
+  {
+    DivideOneSeg(node->segs[i], party, node->left, node->right);
+  }
+
+  node->segs.clear();
+}
+
+
+static void AddMiniSegs(...)
+{
+  // TODO !!
+}
+
+
+static partition_c * ChoosePartition(csg_seg_group_c *node)
+{
+  if (node->segs.empty())
+    return NULL;
+
+  // TODO !!
+}
+
+
+static void Split(csg_seg_group_c *node)
+{
+  partition_c *party = ChoosePartition(node);
+
+  if (! party)
+    return;
+
+  node->left  = new csg_seg_group_c();
+  node->right = new csg_seg_group_c();
+
+  DivideSegs(node, party);
+
+  int cut_list;  // TODO
+
+  AddMiniSegs(cut_list, party, node->left, node->right);
+
+  Split(node->left); 
+  Split(node->right); 
+}
+
+
 void CSG_BSP()
 {
-  
+  // Setup()
+
+  csg_seg_group_c *root = CreateSegGroup();
+
+  Split(root);
+
 }
 
 
@@ -50,7 +137,6 @@ void CSG_Quantize()
 void CSG_Merge()
 {
 }
-
 
 
 //--- editor settings ---
