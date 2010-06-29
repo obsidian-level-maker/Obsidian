@@ -32,85 +32,163 @@
 #include "ui_dialog.h"
 
 
-class seg_1S_c
+class region_c;
+
+
+class snag_c
 {
 public:
-  merge_segment_c *seg;
+  double x1, y1;
+  double x2, y2;
 
-  int side;
+  region_c *front;
 
-public:
-  // TODO
-};
+  snag_c *partner;
 
-
-class csg_seg_group_c
-{
-public:
-  csg_seg_group_c *left;
-  csg_seg_group_c *right;
-
-  std::vector<seg_1S_c> segs;
+  std::vector<brush_vert_c *> sides;
 
 public:
-  // TODO
-};
-
-
-#define partition_c  merge_segment_c
-
-
-
-static void DivideOneSeg(...)
-{
-  // TODO !!
-}
-
-
-static void DivideSegs(csg_seg_group_c *node, partition_c *party)
-{
-  for (int i = 0; i < (int)node->segs.size(); i++)
+  // side = 0 for outside of brush, 1 for inside
+  snag_c(csg_brush_C *P, int side, brush_vert_c *start, brush_vert_c *end) :
+      x1(start->x), y1(start->y), x2(end->x), y2(end->y),
+      front(NULL), partner(NULL), sides()
   {
-    DivideOneSeg(node->segs[i], party, node->left, node->right);
+    if (side == 0)
+    {
+      // FIXME !!!!  add side
+    }
+
+  // FIXME check for zero-length lines
+//!!!  if (start == end)
+//!!!    Main_FatalError("Line loop contains zero-length line! (%1.2f, %1.2f)\n",
+//!!!                    start->x, start->y);
   }
 
-  node->segs.clear();
+  ~snag_c()
+  { }
+};
+
+#define partition_c  snag_c
+
+
+class region_c
+{
+public:
+  std::vector<snag_c *> snags;
+
+  // for BSP stuff
+  region_c *back;
+  region_c *front;
+
+public:
+  region_c() : snags(), back(NULL), front(NULL)
+  { }
+
+  ~region_c()
+  { }
+
+  void AddSnag(snag_c *S)
+  {
+    snags.push_back(S);    
+  }
+};
+
+
+static bool do_clip_brushes;
+
+
+//------------------------------------------------------------------------
+
+static void AddSnags(region_c *R, csg_brush_c *P)
+{
+  SYS_ASSERT(P);
+
+  if (! do_clip_brushes && P->bkind == BKIND_Clip)
+    return;
+
+  for (int k=0; k < (int)P->verts.size(); k++)
+  {
+    brush_vert_c *v1 = P->verts[k];
+    brush_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
+
+    snag_c *A = new snag_c(P, 0, v1, v2);
+    snag_c *B = new snag_c(P, 1, v2, v1);
+
+    A->partner = B;
+    B->partner = A;
+
+    R->AddSnag(A);
+    R->AddSnag(B);
+  }
 }
 
 
-static void AddMiniSegs(...)
+static region_c * InitialRegion()
+{
+  region_c *R = new region_c();
+
+  for (unsigned int j=0; j < all_brushes.size(); j++)
+  {
+    AddSnags(R, all_brushes[j]);
+  }
+
+  return R;
+}
+
+
+static void DivideOneSnag(snag_c *S, partition_c *party,
+                          region_c *back, region_c *front)
 {
   // TODO !!
 }
 
 
-static partition_c * ChoosePartition(csg_seg_group_c *node)
+static void DivideSnags(region_c *R, partition_c *party)
 {
-  if (node->segs.empty())
+  for (int i = 0; i < (int)R->snags.size(); i++)
+  {
+    DivideOneSnag(R->snags[i], party, R->back, R->front);
+  }
+
+  R->snags.clear();
+}
+
+
+static void AddMiniSnags(...)
+{
+  // TODO !!
+}
+
+
+static partition_c * ChoosePartition(region_c *R)
+{
+  if (R->snags.empty())
     return NULL;
 
-  // TODO !!
+  // FIXME: ChoosePartition
+
+  return R->snags[0];
 }
 
 
-static void Split(csg_seg_group_c *node)
+static void Split(region_c *R)
 {
-  partition_c *party = ChoosePartition(node);
+  partition_c *party = ChoosePartition(R);
 
   if (! party)
     return;
 
-  node->left  = new csg_seg_group_c();
-  node->right = new csg_seg_group_c();
+  R->back  = new region_c();
+  R->front = new region_c();
 
-  DivideSegs(node, party);
+  DivideSnags(R, party);
 
   int cut_list;  // TODO
 
-  AddMiniSegs(cut_list, party, node->left, node->right);
+  AddMiniSnags(cut_list, party, R->back, R->front);
 
-  Split(node->left); 
-  Split(node->right); 
+  Split(R->back); 
+  Split(R->front); 
 }
 
 
@@ -118,7 +196,7 @@ void CSG_BSP()
 {
   // Setup()
 
-  csg_seg_group_c *root = CreateSegGroup();
+  region_c *root = InitialRegion();
 
   Split(root);
 
