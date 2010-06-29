@@ -32,7 +32,7 @@
 #include "ui_dialog.h"
 
 
-#define SNAG_EPSILON  0.01
+#define SNAG_EPSILON  1e-4
 
 
 class region_c;
@@ -55,7 +55,7 @@ public:
   std::vector<brush_vert_c *> sides;
 
 private:
-  snag_c(const snag_c& other)
+  snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
       mini(other.mini), on_node(other.on_node),
       where(other.where), partner(NULL), sides()
@@ -65,7 +65,7 @@ private:
 
 public:
   // side = 0 for outside of brush, 1 for inside
-  snag_c(csg_brush_C *P, int side, brush_vert_c *start, brush_vert_c *end) :
+  snag_c(csg_brush_c *P, int side, brush_vert_c *start, brush_vert_c *end) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
       mini(false), on_node(false), where(NULL), partner(NULL), sides()
   {
@@ -88,31 +88,12 @@ public:
   ~snag_c()
   { }
 
-  snag_c *Cut(double ix, double iy)
+  double Length() const
   {
-    snag_c *T = new snag_c(*this);
-
-    x2 = ix ; T->x1 = ix
-    y2 = iy ; T->y1 = iy
-
-    if (partner)
-    {
-      snag_c *SP = partner;
-      snag_c *TP = new snag_c(*partner);
-
-      SP->x1 = ix ; TP->x2 = ix
-      SP->y1 = iy ; TP->y2 = iy
-
-      SYS_ASSERT(SP->partner == this);
-
-       T->partner = TP;
-      TP->partner = T;
-
-      SYS_ASSERT(T->where);
-
-      where->AddSnag(T2);
-    }
+    return ComputeDist(x1,y1, x2,y2);
   }
+
+  snag_c * Cut(double ix, double iy);
 };
 
 #define partition_c  snag_c
@@ -140,7 +121,46 @@ public:
 
     S->where = this;
   }
+
+  // true if nothing but mini-snags (or nothing at all)
+  bool MostlyEmpty() const
+  {
+    for (int i = 0; i < (int)snags.size(); i++)
+      if (! snags[i]->mini)
+        return false;
+
+    return true;
+  }
 };
+
+
+snag_c * snag_c::Cut(double ix, double iy)
+{
+  snag_c *T = new snag_c(*this);
+
+  x2 = ix; T->x1 = ix;
+  y2 = iy; T->y1 = iy;
+
+  if (partner)
+  {
+    snag_c *SP = partner;
+    snag_c *TP = new snag_c(*partner);
+
+    SP->x1 = ix; TP->x2 = ix;
+    SP->y1 = iy; TP->y2 = iy;
+
+    SYS_ASSERT(SP->partner == this);
+
+     T->partner = TP;
+    TP->partner = T;
+
+    SYS_ASSERT(T->where);
+
+    where->AddSnag(TP);
+  }
+
+  return T;
+}
 
 
 static bool do_clip_brushes;
@@ -161,7 +181,7 @@ static void AddSnags(region_c *R, csg_brush_c *P)
     brush_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
 
     snag_c *A = new snag_c(P, 0, v1, v2);
-    snag_c *B = new snag_c(P, 1, v2, v1);
+    snag_c *B = new snag_c(P, 1, v1, v2);
 
     A->partner = B;
     B->partner = A;
@@ -202,22 +222,22 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
 static void DivideOneSnag(snag_c *S, partition_c *part,
                           region_c *back, region_c *front)
 {
-	/* get state of lines' relation to each other */
-	float a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
-	float a = PerpDist(S->x2,S->y2, part->x1,part->y1,part->x2,part->y2);
+	// get relationship of lines to each other
+	double a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
+	double b = PerpDist(S->x2,S->y2, part->x1,part->y1,part->x2,part->y2);
 
 	int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
 	int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
 
-  /* adjust vertices which sit "nearly" on the line */
+  // adjust vertices which sit "nearly" on the line
   if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
   if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
 
-	/* check for being on the same line */
+	// on the same line?
 	if (a_side == 0 && b_side == 0)
 	{
-		// this snag runs along the same line as the partition.  check
-		// whether it goes in the same direction or the opposite.
+		// this snag runs along the same line as the partition.
+		// check whether it goes in the same direction or the opposite.
     S->on_node = true;
 
     // FIXME: is this correct??
@@ -236,14 +256,14 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 		return;
 	}
 
-	/* check for right side */
+	// completely on front side?
 	if (a_side >= 0 && b_side >= 0)
 	{
     front->AddSnag(S);
 		return;
 	}
 
-	/* check for left side */
+	// completely on back side?
 	if (a_side <= 0 && b_side <= 0)
 	{
     back->AddSnag(S);
@@ -292,30 +312,41 @@ static void DivideSnags(region_c *R, partition_c *part)
 
 static void AddMiniSnags(region_c *R, partition_c *part)
 {
-  // this adds two "mini-snags" along the partition, with a very
-  // long length.  Eventually they will get divided up and/or
-  // merged with any overlapping snags (partition line included),
-  // and the stray bits will get discarded.
+  // this adds four "mini-snags" along the partition, with a very
+  // long length.  Half is before the partition (on the line) and half
+  // is after it.  Eventually they will get divided up and/or merged
+  // with any overlapping snags, and the stray bits will get trimmed.
 
   double len = ComputeDist(part->x1, part->y1, part->x2, part->y2);
 
   double dx = (part->x2 - part->x1) / len;
   double dy = (part->y2 - part->y1) / len;
 
+  // before...
   double x1 = part->x1 - dx * 64000;
   double y1 = part->y1 - dy * 64000;
 
-  double x2 = part->x1 + dx * 64000;
-  double y2 = part->y1 + dy * 64000;
+  snag_c *F1 = new snag_c(x1, y1, part->x1, part->y1); 
+  snag_c *B1 = new snag_c(part->x1, part->y1, x1, y1); 
 
-  snag_c *A = new snag_c(x1, y1, x2, y2); 
-  snag_c *B = new snag_c(x2, y2, x1, y1); 
+  F1->partner = B1;
+  B1->partner = F1;
 
-  A->partner = B;
-  B->partner = A;
+  R->AddSnag(F1);
+  R->AddSnag(B1);
 
-  R->AddSnag(A);
-  R->AddSnag(B);
+  // after...
+  double x2 = part->x2 + dx * 64000;
+  double y2 = part->y2 + dy * 64000;
+
+  snag_c *F2 = new snag_c(part->x2, part->y2, x2, y2); 
+  snag_c *B2 = new snag_c(x2, y2, part->x2, part->y2); 
+
+  F2->partner = B2;
+  B2->partner = F2;
+
+  R->AddSnag(F2);
+  R->AddSnag(B2);
 }
 
 
@@ -338,9 +369,41 @@ static partition_c * ChoosePartition(region_c *R)
 }
 
 
+static void TestOverlap(region_c *R, snag_c *A, snag_c *B)
+{
+  // The BSP partitioning has taken care of splitting snags which
+  // cross over each other.  Hence all this function needs to do
+  // is handle the "on same line" cases.
+
+  // ensure A is shorter than B
+  if (A->Length() > B->Length())
+  {
+    std::swap(A, B);
+  }
+  
+  double p1 = PerpDist(A->x1,A->y1, B->x1,B->y1, B->x2,B->y2);
+  double p2 = PerpDist(A->x2,A->y2, B->x1,B->y1, B->x2,B->y2);
+
+	int side1 = (p1 < -SNAG_EPSILON) ? -1 : (p1 > SNAG_EPSILON) ? +1 : 0;
+	int side2 = (p2 < -SNAG_EPSILON) ? -1 : (p2 > SNAG_EPSILON) ? +1 : 0;
+
+  if (! (side1 == 0 and side2 == 0))
+    return;
+
+  // FIXME: overlap stuff....
+}
+
+
 static void HandleOverlaps(region_c *R)
 {
-  // FIXME
+  // Note that new snags may get added (due to splits) while we are
+  // iterating over them.
+
+  for (int i = 0;   i < (int)R->snags.size(); i++)
+  for (int k = i+1; k < (int)R->snags.size(); k++)
+  {
+    TestOverlap(R, R->snags[i], R->snags[k]);
+  }
 }
 
 
@@ -377,7 +440,7 @@ static void Split(region_c *R)
     Split(R->front); 
   }
 
-  if (R->snags.empty())
+  if (R->MostlyEmpty())
     return;
 
   HandleOverlaps(R);
