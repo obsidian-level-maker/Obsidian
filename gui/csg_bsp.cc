@@ -67,7 +67,7 @@ public:
   // side = 0 for outside of brush, 1 for inside
   snag_c(csg_brush_C *P, int side, brush_vert_c *start, brush_vert_c *end) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      mini(false), on_node(false), front(NULL), partner(NULL), sides()
+      mini(false), on_node(false), where(NULL), partner(NULL), sides()
   {
     if (side == 0)
     {
@@ -79,6 +79,11 @@ public:
 //!!!    Main_FatalError("Line loop contains zero-length line! (%1.2f, %1.2f)\n",
 //!!!                    start->x, start->y);
   }
+
+  snag_c(double _x1, double _y1, double _x2, double _y2) :
+      x1(_x1), y1(_y1), x2(_x2), y2(_y2),
+      mini(true), on_node(true), where(NULL), partner(NULL), sides()
+  { }
 
   ~snag_c()
   { }
@@ -182,7 +187,15 @@ static region_c * InitialRegion()
 
 static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
-  // FIXME !!!
+  double len = ComputeDist(part->x1, part->y1, part->x2, part->y2);
+
+  double dx = (part->x2 - part->x1) / len;
+  double dy = (part->y2 - part->y1) / len;
+
+  double along = AlongDist(*x, *y, part->x1,part->y1,part->x2,part->y2);
+
+  *x = part->x1 + along * dx;
+  *y = part->y1 + along * dy;
 }
 
 
@@ -265,6 +278,9 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 
 static void DivideSnags(region_c *R, partition_c *part)
 {
+  // Note that new snags may get added (due to splits) while we are
+  // iterating over them.
+
   for (int i = 0; i < (int)R->snags.size(); i++)
   {
     DivideOneSnag(R->snags[i], part, R->back, R->front);
@@ -274,9 +290,32 @@ static void DivideSnags(region_c *R, partition_c *part)
 }
 
 
-static void AddMiniSnags(...)
+static void AddMiniSnags(region_c *R, partition_c *part)
 {
-  // TODO !!
+  // this adds two "mini-snags" along the partition, with a very
+  // long length.  Eventually they will get divided up and/or
+  // merged with any overlapping snags (partition line included),
+  // and the stray bits will get discarded.
+
+  double len = ComputeDist(part->x1, part->y1, part->x2, part->y2);
+
+  double dx = (part->x2 - part->x1) / len;
+  double dy = (part->y2 - part->y1) / len;
+
+  double x1 = part->x1 - dx * 64000;
+  double y1 = part->y1 - dy * 64000;
+
+  double x2 = part->x1 + dx * 64000;
+  double y2 = part->y1 + dy * 64000;
+
+  snag_c *A = new snag_c(x1, y1, x2, y2); 
+  snag_c *B = new snag_c(x2, y2, x1, y1); 
+
+  A->partner = B;
+  B->partner = A;
+
+  R->AddSnag(A);
+  R->AddSnag(B);
 }
 
 
@@ -299,24 +338,55 @@ static partition_c * ChoosePartition(region_c *R)
 }
 
 
+static void HandleOverlaps(region_c *R)
+{
+  // FIXME
+}
+
+
+static void TrimMiniSnags(region_c *R)
+{
+  // FIXME
+
+  // removes any stray mini-snags, i.e. ones lying outside of the
+  // convex polygon formed by the snags in this region.
+
+}
+
+
+static void ClockwiseOrder(region_c *R)
+{
+  // FIXME
+}
+
+
 static void Split(region_c *R)
 {
   partition_c *part = ChoosePartition(R);
 
-  if (! part)
+  if (part)
+  {
+    AddMiniSnags(R, part);
+
+    R->back  = new region_c();
+    R->front = new region_c();
+
+    DivideSnags(R, part);
+
+    Split(R->back); 
+    Split(R->front); 
+  }
+
+  if (R->snags.empty())
     return;
 
-  R->back  = new region_c();
-  R->front = new region_c();
+  HandleOverlaps(R);
 
-  DivideSnags(R, part);
+  TrimMiniSnags(R);
 
-  int cut_list;  // TODO
+  ClockwiseOrder(R);
 
-  AddMiniSnags(cut_list, part, R->back, R->front);
-
-  Split(R->back); 
-  Split(R->front); 
+  // all_regions.push_back(R);
 }
 
 
