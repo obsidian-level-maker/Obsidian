@@ -163,6 +163,7 @@ u32_t IntHash(u32_t key)
   return key;
 }
 
+
 u32_t StringHash(const char *str)
 {
   u32_t hash = 0;
@@ -187,6 +188,7 @@ double PerpDist(double x, double y,
   return (x * y2 - y * x2) / len;
 }
 
+
 double AlongDist(double x, double y,
                  double x1, double y1, double x2, double y2)
 {
@@ -199,6 +201,7 @@ double AlongDist(double x, double y,
 
   return (x * x2 + y * y2) / len;
 }
+
 
 double CalcAngle(double sx, double sy, double ex, double ey)
 {
@@ -223,6 +226,7 @@ double CalcAngle(double sx, double sy, double ex, double ey)
   return angle;
 }
 
+
 double ComputeDist(double sx, double sy, double ex, double ey)
 {
   return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy));
@@ -233,6 +237,27 @@ double ComputeDist(double sx, double sy, double sz,
 {
   return sqrt((ex-sx)*(ex-sx) + (ey-sy)*(ey-sy) + (ez-sz)*(ez-sz));
 }
+
+
+void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
+                      double px1, double py1, double px2, double py2,
+                      double *x, double *y)
+{
+  // NOTE: lines are extended to infinity to find the intersection
+
+  double a = PerpDist(nx1, ny1,  px1, py1, px2, py2);
+  double b = PerpDist(nx2, ny2,  px1, py1, px2, py2);
+
+  // BIG ASSUMPTION: lines are not parallel or colinear
+  SYS_ASSERT(fabs(a - b) > 1e-6);
+
+  // determine the intersection point
+  double along = a / (a - b);
+
+  *x = nx1 + along * (nx2 - nx1);
+  *y = ny1 + along * (ny2 - ny1);
+}
+
 
 bool VectorSameDir(double x1, double y1, double x2, double y2)
 {
@@ -259,6 +284,7 @@ u32_t TimeGetMillies()
   return (u32_t) ((tm.tv_sec * 1000) + (tm.tv_usec / 1000));
 #endif
 }
+
 
 void TimeDelay(u32_t millies)
 {

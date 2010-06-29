@@ -92,25 +92,6 @@ static void CalcNormal(double x1, double y1, double x2, double y2,
   *ny /= n_len;
 }
 
-static void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
-                             double px1, double py1, double px2, double py2,
-                             double *x, double *y)
-{
-  // NOTE: lines are extended to infinity to find the intersection
-
-  double a = PerpDist(nx1, ny1,  px1, py1, px2, py2);
-  double b = PerpDist(nx2, ny2,  px1, py1, px2, py2);
-
-  // BIG ASSUMPTION: lines are not parallel or colinear
-  SYS_ASSERT(fabs(a - b) > EPSILON);
-
-  // determine the intersection point
-  double along = a / (a - b);
-
-  *x = nx1 + along * (nx2 - nx1);
-  *y = ny1 + along * (ny2 - ny1);
-}
-
 static double CalcIntersect_Y(double nx1, double ny1, double nx2, double ny2,
                               double x)
 {
