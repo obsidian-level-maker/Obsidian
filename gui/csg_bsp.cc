@@ -137,8 +137,8 @@ public:
   std::vector<region_c *> regions;
 
   // for BSP stuff
-  group_c *back;
   group_c *front;
+  group_c *back;
 
 public:
   group_c() : regions(), front(NULL), back(NULL)
@@ -247,7 +247,9 @@ void region_c::AddIntersection(partition_c *P)
     along_max = MAX(along_max, along);
   }
 
-  if (along_max > along_min + SNAG_EPSILON)
+  // should NOT get here unless region was splittable
+  SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
+
   {
     double x1, y1;
     double x2, y2;
@@ -302,6 +304,31 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
   double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
 
   AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
+}
+
+
+static void DivideOneRegion(region_c *R, partition_c *part,
+                            group_c *front, group_c *back)
+{
+  // FIXME: mark snags as "on_node"
+
+  int side = R->WhatSide(part);
+
+  if (side > 0)
+  {
+    front->regions.push_back(R);
+  }
+  else if (side < 0)
+  {
+    back->regions.push_back(R);
+  }
+  else
+  {
+    region_c *RB = R->Split(part);
+
+    front->regions.push_back(R);
+     back->regions.push_back(RB);
+  }
 }
 
 
