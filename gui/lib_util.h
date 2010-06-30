@@ -59,7 +59,10 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
                       double px1, double py1, double px2, double py2,
                       double *x, double *y);
 
-bool VectorSameDir(double x1, double y1, double x2, double y2);
+void AlongCoord(double along, double px1, double py1, double px2, double py2,
+                double *x, double *y);
+
+bool VectorSameDir(double dx1, double dy1, double dx2, double dy2);
 
 #endif /* __LIB_UTIL_H__ */
 

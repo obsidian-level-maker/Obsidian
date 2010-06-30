@@ -259,9 +259,19 @@ void CalcIntersection(double nx1, double ny1, double nx2, double ny2,
 }
 
 
-bool VectorSameDir(double x1, double y1, double x2, double y2)
+void AlongCoord(double along, double px1, double py1, double px2, double py2,
+                double *x, double *y)
 {
-  return (x1 * x2 + y1 * y2) >= 0;
+  double len = ComputeDist(px1, py1, px2, py2);
+
+  *x = px1 + along * (px2 - px1) / len;
+  *y = py1 + along * (py2 - py1) / len;
+}
+
+
+bool VectorSameDir(double dx1, double dy1, double dx2, double dy2)
+{
+  return (dx1 * dx2 + dy1 * dy2) >= 0;
 }
 
 
