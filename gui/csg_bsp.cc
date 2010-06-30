@@ -45,7 +45,6 @@ public:
   double x2, y2;
 
   bool mini;
-
   bool on_node;
 
   region_c *where;
@@ -104,13 +103,17 @@ class region_c
 public:
   std::vector<snag_c *> snags;
 
-  // for BSP stuff
-  region_c *back;
-  region_c *front;
+  std::vector<csg_brush_c *> brushes;
 
 public:
-  region_c() : snags(), back(NULL), front(NULL)
+  region_c() : snags(), brushes()
   { }
+
+  region_c(const region_c *other) : snags(), brushes()
+  {
+    for (unsigned int i = 0; i < other->brushes.size(); i++)
+      brushes.push_back(other->brushes[i]);
+  }
 
   ~region_c()
   { }
@@ -122,15 +125,27 @@ public:
     S->where = this;
   }
 
-  // true if nothing but mini-snags (or nothing at all)
-  bool MostlyEmpty() const
-  {
-    for (int i = 0; i < (int)snags.size(); i++)
-      if (! snags[i]->mini)
-        return false;
+  bool WhatSide(partition_c *P) const;
 
-    return true;
-  }
+  void Split(partition_c *P);
+};
+
+
+class group_c
+{
+public:
+  std::vector<region_c *> regions;
+
+  // for BSP stuff
+  group_c *back;
+  group_c *front;
+
+public:
+  group_c() : regions(), front(NULL), back(NULL)
+  { }
+
+  ~group_c()
+  { }
 };
 
 
@@ -167,6 +182,83 @@ static bool do_clip_brushes;
 
 
 //------------------------------------------------------------------------
+
+bool region_c::WhatSide(partition_c *P) const
+{
+  bool has_back  = false;
+  bool has_front = false;
+
+  for (unsigned int i = 0; i < snags.size(); i++)
+  {
+    snag_c *S = snags[i];
+    
+    double a = PerpDist(S->x1,S->y1, part->x1,part->y1, part->x2,part->y2);
+    double b = PerpDist(S->x2,S->y2, part->x1,part->y1, part->x2,part->y2);
+
+    int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
+    int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
+
+    if (a_side < 0 || b_side < 0) has_back  = true;
+    if (a_side > 0 || b_side > 0) has_front = true;
+
+    if (has_back && has_front)
+      return 0;
+  }
+
+  return has_back ? -1 : +1;
+}
+
+
+void region_c::Split(double x1, double y1, double x2, double y2)
+{
+  region_c *N = new region_c(this);
+
+  ...
+}
+
+
+void region_c::AddIntersection(partition_c *P)
+{
+  double along_min =  9e9;
+  double along_max = -9e9;
+
+  for (unsigned int i = 0; i < snags.size(); i++)
+  {
+    snag_c *S = snags[i];
+    
+    double a = PerpDist(S->x1,S->y1, part->x1,part->y1, part->x2,part->y2);
+    double b = PerpDist(S->x2,S->y2, part->x1,part->y1, part->x2,part->y2);
+
+    int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
+    int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
+
+    if (a_side == b_side)
+      continue;
+
+    double ix, iy;
+
+    CalcIntersection(S->x1, S->y1, S->x2, S->y2,
+                     part->x1, part->y1, part->x2, part->y2,
+                     &ix, &iy);
+
+    double along = AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
+
+    along_min = MIN(along_min, along);
+    along_max = MAX(along_max, along);
+  }
+
+  if (along_max > along_min + SNAG_EPSILON)
+  {
+    double x1, y1;
+    double x2, y2;
+
+    AlongCoord(along_min, part->x1,part->y1, part->x2,part->y2, &x1, &y1);
+    AlongCoord(along_max, part->x1,part->y1, part->x2,part->y2, &x2, &y2);
+
+    Split(x1, y1, x2, y2);
+  }
+}
+
 
 static void AddSnags(region_c *R, csg_brush_c *P)
 {
@@ -207,15 +299,9 @@ static region_c * InitialRegion()
 
 static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
-  double len = ComputeDist(part->x1, part->y1, part->x2, part->y2);
+  double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
 
-  double dx = (part->x2 - part->x1) / len;
-  double dy = (part->y2 - part->y1) / len;
-
-  double along = AlongDist(*x, *y, part->x1,part->y1,part->x2,part->y2);
-
-  *x = part->x1 + along * dx;
-  *y = part->y1 + along * dy;
+  AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
 }
 
 
