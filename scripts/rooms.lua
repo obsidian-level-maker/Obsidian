@@ -164,6 +164,13 @@ function ROOM_CLASS.has_sky_neighbor(self)
   return false
 end
 
+function ROOM_CLASS.has_teleporter(self)
+  for _,C in ipairs(self.conns) do
+    if C.lock and C.kind == "teleporter" then return true end
+  end
+  return false
+end
+
 function ROOM_CLASS.valid_T(self, x, y)
   if x < self.tx1 or x > self.tx2 then return false end
   if y < self.ty1 or y > self.ty2 then return false end
