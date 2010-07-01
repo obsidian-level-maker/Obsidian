@@ -49,3 +49,22 @@ PREFAB.LOWERING_PEDESTAL =
 }
 
 
+PREFAB.TELEPORT_PAD =
+{
+  brushes =
+  {
+    {
+      { x = -32, y = -32, mat = "?side", kind="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "?side", kind="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "?side", kind="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "?side", kind="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 16, mat = "?top", light = "?light", kind="?sec_kind", tag="?in_tag" },
+    },
+  },
+
+  entities =
+  {
+    { x = 0, y = 0, z = 16, kind="?tele_obj", angle="?angle" },
+  },
+}
+
