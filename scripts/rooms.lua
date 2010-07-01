@@ -694,7 +694,9 @@ function Rooms_place_doors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,C in ipairs(R.conns) do
-      place_door(R, C)
+      if C.kind == "normal" then
+        place_door(R, C)
+      end
     end
   end
 

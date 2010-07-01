@@ -384,6 +384,8 @@ function Connect_rooms()
 
     K1.num_conn = K1.num_conn + 1
     K2.num_conn = K2.num_conn + 1
+
+    return C
   end
 
 
@@ -806,12 +808,32 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
     -- need at least a source and destination
     if #loc_list < 2 then return false end
 
-    -- TODO
+    local K1 = loc_list[1].K
+    table.remove(loc_list, 1)
+
+    for index,loc in ipairs(loc_list) do
+      local K2 = loc.K
+      if can_connect(K1, K2) and
+         not K1.room:has_teleporter() and
+         not K2.room:has_teleporter()
+      then
+stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
+        K1.room:tostr(), K2.room:tostr())
+
+        local C = add_connection(K1, K2, "teleporter")
+        C.tele_tag = Plan_alloc_tag()
+
+        table.remove(loc_list, index)
+        return true
+      end
+    end
+
+    return false
   end
 
 
   local function add_teleporters()
-    local quota = style_sel("teleporters", 0, 0.1, 0.5, 0.5)
+    local quota = style_sel("teleporters", 0, 0.1, 0.4, 0.7)
 
     quota = int(LEVEL.W * LEVEL.H * quota + gui.random())
 
