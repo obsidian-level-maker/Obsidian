@@ -821,12 +821,6 @@ function Rooms.border_up()
         return -- nothing
       end
 
-      if STYLE.fences == "none" and R1.quest == R2.quest and R2.outdoor and
-         (S.kind ~= "liquid" or S.floor_h == N.floor_h)
-      then
-        return -- nothing
-      end
-
       if R2.outdoor or R2.natural then
         S:add_border(side, "fence", 24)
       end
