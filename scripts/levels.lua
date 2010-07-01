@@ -83,7 +83,6 @@ STYLE_LIST =
   windows    = { few=20, some=50, heaps=20 },
   pictures   = { few=10, some=50, heaps=10 },
   cages      = { none=50, some=50, heaps=6 },
-  fences     = { none=30, few=30, some=10 },
   crates     = { none=20, some=40, heaps=10 },
   switches   = { none=2, few=6, some=60, heaps=6 },
 

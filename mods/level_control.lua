@@ -64,7 +64,6 @@ OB_MODULES["level_control"] =
     beams      = { label="Beams",          choices=LEVEL_CONTROL_CHOICES },
     cages      = { label="Cages",          choices=LEVEL_CONTROL_CHOICES },
     crates     = { label="Crates",         choices=LEVEL_CONTROL_CHOICES },
-    fences     = { label="Fences",         choices=LEVEL_CONTROL_CHOICES },
     hallways   = { label="Hallways",       choices=LEVEL_CONTROL_CHOICES },
     lakes      = { label="Lakes",          choices=LEVEL_CONTROL_CHOICES },
     liquids    = { label="Liquids",        choices=LEVEL_CONTROL_CHOICES },
