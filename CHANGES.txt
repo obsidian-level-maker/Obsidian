@@ -5,3 +5,6 @@ CHANGES (since 3.57)
 - improved progress bar and status messages
 - output file is deleted if an error occurs
 
++ support for "shaped" rooms (L, T, +)
++ support for teleporters
+
