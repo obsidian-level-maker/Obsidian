@@ -42,6 +42,16 @@ function SECTION_CLASS.neighbor(self, dir, dist)
   return LEVEL.section_map[nx][ny]
 end
 
+function SECTION_CLASS:is_stem(self)
+  local count = 0  -- # of same room neighbors
+  for side = 2,8,2 do
+    local N = self:neighbor(side)
+    if N and N.room == self.room then
+      count = count + 1
+    end
+  end
+  return (count == 1)
+end
 
 
 function Plan_alloc_tag()
