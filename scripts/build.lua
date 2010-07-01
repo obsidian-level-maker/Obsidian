@@ -240,13 +240,14 @@ function Trans.entity(name, x, y, z, props)
   end
   assert(info.id)
 
+  x, y = Trans.apply(x, y)
+  z    = Trans.apply_z(z)
+
   if info.delta_z then
     z = z + info.delta_z
   elseif PARAM.entity_delta_z then
     z = z + PARAM.entity_delta_z
   end
-
-  x, y = Trans.apply(x, y)
 
   if info.spawnflags then
     props.spawnflags = (props.spawnflags or 0) + info.spawnflags
@@ -938,6 +939,7 @@ function Build.prefab(fab, skin, T)
     return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
   end
 
+
   local function resize_brushes(brushes, field, info)
     if not info.groups then
       return
@@ -975,6 +977,26 @@ function Build.prefab(fab, skin, T)
       end
 
       Trans.brush(kind, B)
+    end
+  end
+
+
+  local function entity_props(E)
+    local props = {}
+    for name,value in pairs(E) do
+      if name ~= "kind" and name ~= "x" and name ~= "y" and name ~= "z" then
+        props[name] = Trans.substitute(value, skin)
+      end
+    end
+  end
+
+
+  local function render_entities(list)
+    if list then
+      for _,E in ipairs(list) do
+        local kind = Trans.substitute(E.kind, skin)
+        Trans.entity(kind, E.x, E.y, E.z, entity_props(E))
+      end
     end
   end
 
@@ -1075,6 +1097,7 @@ gui.printf("Prefab: %s\n", fab.name)
   })
 
   render_brushes(brushes)
+  render_entities(fab.entities)
 
   Trans.clear()
 end
