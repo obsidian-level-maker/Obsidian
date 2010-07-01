@@ -427,7 +427,7 @@ stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(
     local want_conn = rand.key_by_probs { 1, 10, 40, 80, 40 }    
 
     want_conn = want_conn + math.min(4, R.kvolume) - 4
-stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_conn)
+-- stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_conn)
     want_conn = want_conn - #R.conns
 
     for i = 1,want_conn do
@@ -587,7 +587,7 @@ stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_co
 
     for _,MORPH in ipairs(morphs) do
       if test_or_set_pattern(false, R, info, MORPH) then
-stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
+-- stderrf("BIG PATTERN %s morph:%d in %s\n", info.name, MORPH, R:tostr())
          test_or_set_pattern(true,  R, info, MORPH)
          return true
       end
@@ -757,14 +757,7 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
     if K.room.kx1 < K.kx and K.kx < K.room.kx2 and
        K.room.ky1 < K.ky and K.ky < K.room.ky2
     then
-      return rand.sel(30, 2.4*score, -1)
-    end
-
-    -- middle of shaped room
-    if K.room.shape_kx and (K.kx == K.room.shape_kx) and
-                           (K.ky == K.room.shape_ky)
-    then
-      return rand.sel(60, 1.6*score, -1)
+      return rand.sel(40, 2.5*score, -1)
     end
 
     -- corners of map (in big rooms) are good places
@@ -772,12 +765,12 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
        (K.kx == 1 or K.kx == LEVEL.W or
         K.ky == 1 or K.ky == LEVEL.H)
     then
-      return rand.sel(80, 1.6*score, -1)
+      return rand.sel(80, 1.5*score, -1)
     end
 
     -- stems are good too
     if K:same_neighbors() == 1 then
-      return rand.sel(90, score, -1)
+      return rand.sel(80, score, -1)
     end
 
     return rand.sel(20, 0.5*score, -1)
@@ -813,6 +806,9 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
 
     for index,loc in ipairs(loc_list) do
       local K2 = loc.K
+-- stderrf("_____    testing %s --> %s  %s --> %s  %d,%d\n",
+--         K1:tostr(), K2:tostr(), K1.room:tostr(), K2.room:tostr(),
+--         K1.room.conn_group, K2.room.conn_group)
       if can_connect(K1, K2) and
          not K1.room:has_teleporter() and
          not K2.room:has_teleporter()
@@ -834,16 +830,26 @@ stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
 
 
   local function add_teleporters()
-    local quota = style_sel("teleporters", 0, 0.1, 0.4, 0.7)
+    if not PARAM.teleporters then return end
 
-    quota = int(LEVEL.W * LEVEL.H * quota + gui.random())
+    if STYLE.teleporters == "none" then return end
 
-    gui.printf("Teleporter quota: %d\n", quota)
+    local quota = 5
+
+    if STYLE.teleporters == "few" then
+      quota = rand.sel(50, 1, 2)
+    end
+
+    stderrf("Teleporter quota: %d\n", quota)
 
     if quota > 0 then
       local loc_list = collect_teleporter_locs()
-      for i = 1,quota do
-        try_add_teleporter(loc_list)
+
+      for i = 1,quota*3 do
+        if try_add_teleporter(loc_list) then
+          quota = quota - 1
+          if quota <= 0 then break; end
+        end
       end
     end
   end
@@ -893,10 +899,9 @@ stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
 
   Levels.invoke_hook("connect_rooms", LEVEL.seed)
 
-  branch_big_rooms()
-
   add_teleporters()
 
+  branch_big_rooms()
   branch_small_rooms()
 
   while emergency_branch() do end
