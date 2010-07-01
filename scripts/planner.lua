@@ -1,5 +1,5 @@
 ---------------------------------------------------------------
---  PLANNING (NEW!) : Single Player
+--  PLANNING : Single Player
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -17,6 +17,20 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+
+--[[ *** CLASS INFORMATION ***
+
+class SECTION
+{
+  kx, ky  -- location in section map 
+
+  room : ROOM
+
+  num_conn  -- number of connections
+}
+
+
+----------------------------------------------------------------]]
 
 require 'defs'
 require 'util'
@@ -42,15 +56,15 @@ function SECTION_CLASS.neighbor(self, dir, dist)
   return LEVEL.section_map[nx][ny]
 end
 
-function SECTION_CLASS:is_stem(self)
-  local count = 0  -- # of same room neighbors
+function SECTION_CLASS:same_neighbors(self)
+  local count = 0
   for side = 2,8,2 do
     local N = self:neighbor(side)
     if N and N.room == self.room then
       count = count + 1
     end
   end
-  return (count == 1)
+  return count
 end
 
 
