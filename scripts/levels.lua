@@ -72,7 +72,7 @@ STYLE_LIST =
   lakes      = { few=60, heaps=10 },
   subrooms   = { none=40, some=80, heaps=5 },
   islands    = { few=60, heaps=40 },
-  teleporters = { none=60, few=20, some=5 },
+  teleporters ={ none=10, few=30, some=10 }, -- FIXME: none=40
 
   junk       = { few=10, some=60, heaps=20 },
   symmetry   = { few=20, some=60, heaps=20 },

@@ -745,6 +745,8 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
 
     if #K.room.conns >= 3 then return -1 end
 
+    if K.room.purpose == "START" then return -1 end
+
     local svolume = K.sw * K.sh
 
     local score = svolume / 10 + gui.random()
@@ -794,7 +796,6 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
       end
     end end
 
-stderrf(">>> %d\n", #loc_list)
     table.sort(loc_list, function(A, B) return A.score > B.score end)
 
     return loc_list
@@ -810,12 +811,11 @@ stderrf(">>> %d\n", #loc_list)
 
 
   local function add_teleporters()
-    local quota = style_sel("teleporters", 0, 0.1, 0.3, 0.5)
+    local quota = style_sel("teleporters", 0, 0.1, 0.5, 0.5)
 
     quota = int(LEVEL.W * LEVEL.H * quota + gui.random())
 
---!!!!!!!
-quota = 10
+    gui.printf("Teleporter quota: %d\n", quota)
 
     if quota > 0 then
       local loc_list = collect_teleporter_locs()
