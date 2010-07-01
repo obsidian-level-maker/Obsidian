@@ -22,7 +22,7 @@
 
 class CONN
 {
-  kind   : keyword  -- "normal", "teleport", "intrusion"
+  kind   : keyword  -- "normal", "teleporter", "intrusion"
   lock   : QUEST
 
   K1, K2 : sections
@@ -516,7 +516,12 @@ stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_co
       return false
     end
 
-    local num_already = 0
+    local num_matched = 0
+
+    -- allow a teleporter in the room
+    if R:has_teleporter() then
+      num_matched = 1
+    end
 
     for _,exit in ipairs(info.exits) do
       local pos = int(exit / 10)
@@ -549,7 +554,7 @@ stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_co
       local N = K:neighbor(dir)
 
       if already_connected(K, N) then
-        num_already = num_already + 1
+        num_matched = num_matched + 1
 
       elseif not can_connect(K, N) then
         return false
@@ -559,9 +564,8 @@ stderrf("handle_natural_room: kvolume:%d --> want_conn:%d\n", R.kvolume, want_co
       end
     end
 
-    if not do_it and num_already < #R.conns then
-      return false
-    end
+    -- fail if some of the connections don't match up
+    if #R.conns > num_matched then return false end
 
     return true
   end
@@ -735,6 +739,93 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
   end
 
 
+  local function teleporter_score(K)
+    -- REQUIRE: no connections in section
+    if K.num_conn > 0 then return -1 end
+
+    if #K.room.conns >= 3 then return -1 end
+
+    local svolume = K.sw * K.sh
+
+    local score = svolume / 10 + gui.random()
+
+    -- middle of very large rooms is often good
+    if K.room.kx1 < K.kx and K.kx < K.room.kx2 and
+       K.room.ky1 < K.ky and K.ky < K.room.ky2
+    then
+      return rand.sel(30, 2.4*score, -1)
+    end
+
+    -- middle of shaped room
+    if K.room.shape_kx and (K.kx == K.room.shape_kx) and
+                           (K.ky == K.room.shape_ky)
+    then
+      return rand.sel(60, 1.6*score, -1)
+    end
+
+    -- corners of map (in big rooms) are good places
+    if K.room.kvolume >= 3 and
+       (K.kx == 1 or K.kx == LEVEL.W or
+        K.ky == 1 or K.ky == LEVEL.H)
+    then
+      return rand.sel(80, 1.6*score, -1)
+    end
+
+    -- stems are good too
+    if K:same_neighbors() == 1 then
+      return rand.sel(90, score, -1)
+    end
+
+    return rand.sel(20, 0.5*score, -1)
+  end
+
+
+  local function collect_teleporter_locs()
+    local loc_list = {}
+
+    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+      local K = LEVEL.section_map[x][y]
+
+      if K and K.room then
+        local score = teleporter_score(K)
+        if score > 0 then
+          table.insert(loc_list, { K=K, score=score })
+        end
+      end
+    end end
+
+stderrf(">>> %d\n", #loc_list)
+    table.sort(loc_list, function(A, B) return A.score > B.score end)
+
+    return loc_list
+  end
+
+
+  local function try_add_teleporter(loc_list)
+    -- need at least a source and destination
+    if #loc_list < 2 then return false end
+
+    -- TODO
+  end
+
+
+  local function add_teleporters()
+    local quota = style_sel("teleporters", 0, 0.1, 0.3, 0.5)
+
+    quota = int(LEVEL.W * LEVEL.H * quota + gui.random())
+
+--!!!!!!!
+quota = 10
+
+    if quota > 0 then
+      local loc_list = collect_teleporter_locs()
+      for i = 1,quota do
+        try_add_teleporter(loc_list)
+      end
+    end
+  end
+
+
   local function validate_connections()
     for _,R in ipairs(LEVEL.all_rooms) do
       if R.kind ~= "scenic" then
@@ -781,7 +872,7 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
 
   branch_big_rooms()
 
-  -- TODO: teleporters
+  add_teleporters()
 
   branch_small_rooms()
 

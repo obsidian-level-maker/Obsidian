@@ -60,7 +60,7 @@ function SECTION_CLASS.neighbor(self, dir, dist)
   return LEVEL.section_map[nx][ny]
 end
 
-function SECTION_CLASS:same_neighbors(self)
+function SECTION_CLASS.same_neighbors(self)
   local count = 0
   for side = 2,8,2 do
     local N = self:neighbor(side)
