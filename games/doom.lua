@@ -2333,6 +2333,13 @@ DOOM.SUB_THEME_DEFAULTS =
     line_kind=23,
   },
 
+  teleporter_skin =
+  {
+    side="METAL", top="GATE1",
+    x_offset=0, y_offset=0, peg=1,
+    line_kind=97, sec_kind=8, light=0.9,
+    tele_obj="teleport_spot",
+  },
 }
 
 
