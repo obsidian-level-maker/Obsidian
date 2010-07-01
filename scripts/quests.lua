@@ -634,7 +634,7 @@ function Quest_make_quests()
       -- TODO: better distance calc
       scores[idx] = geom.dist(entry_kx, entry_ky, C.K2.kx, C.K2.ky)
 
-      if R.entry_conn and C.dir ~= (10 - R.entry_conn.dir) then
+      if R.entry_conn and R.entry_conn.dir and C.dir ~= (10 - R.entry_conn.dir) then
         -- strong preference to avoid 180 degree turns
         scores[idx] = scores[idx] + 4
       end

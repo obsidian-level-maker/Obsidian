@@ -2274,42 +2274,6 @@ end
 
 function Rooms.build_seeds(R)
 
-  local function do_teleporter(S)
-    -- TEMP HACK CRUD JUNK
-
-    local idx = S.sx - S.room.sx1 + 1
-
-if idx < 1 then return end
-
-    if idx > #S.room.teleports then return end
-
-    local TELEP = S.room.teleports[idx]
-
-
-    local mx = int((S.x1 + S.x2)/2)
-    local my = int((S.y1 + S.y2)/2)
-
-    local x1 = mx - 32
-    local y1 = my - 32
-    local x2 = mx + 32
-    local y2 = my + 32
-
-    local z1 = (S.floor_h or R.floor_h) + 16
-
-    local tag = sel(TELEP.src == S.room, TELEP.src_tag, TELEP.dest_tag)
-    assert(tag)
-
-
-gui.printf("do_teleport\n")
-    local gate_info = get_mat(THEME.teleporter_mat)
-    gate_info.sec_tag = tag
-
-    Trans.old_quad(gate_info, x1,y1, x2,y2, -EXTREME_H, z1)
-
-    Trans.entity("teleport_spot", (x1+x2)/2, (y1+y2)/2, z1, { angle=0 })
-  end
-
-
   local function dir_for_wotsit(S)
     local dirs  = {}
     local missing_dir
@@ -2538,6 +2502,37 @@ gui.printf("do_teleport\n")
     end
 
     gui.debugf("Placed weapon '%s' @ (%d,%d,%d)\n", weapon, mx, my, z1)
+  end
+
+
+  local function do_teleporter(S)
+    local conn
+    for _,C in ipairs(R.conns) do
+      if C.kind == "teleporter" then
+        conn = C
+        break;
+      end
+    end
+    assert(conn)
+
+    local z1 = S.floor_h or R.floor_h
+    local z2 = S.ceil_h  or R.ceil_h or SKY_H
+
+    local skin = table.copy(THEME.teleporter_skin)
+
+    skin.angle = 90  -- FIXME: proper angle
+
+    -- determine correct tag numbers
+    skin.in_tag  = conn.tele_tag1
+    skin.out_tag = conn.tele_tag2
+
+    if R == conn.R2 then
+      skin.in_tag, skin.out_tag = skin.out_tag, skin.in_tag
+    end
+
+    local T = Trans.centre_transform(S, z1)
+
+    Build.prefab("TELEPORT_PAD", skin, T)
   end
 
 
@@ -3118,6 +3113,8 @@ gui.printf("do_teleport\n")
       do_weapon(S)
     elseif S.usage == "SOLUTION" then
       do_purpose(S)
+    elseif S.usage == "TELEPORTER" then
+      do_teleporter(S)
     end
 
 

@@ -2050,6 +2050,12 @@ function Layout.do_room(R)
     end
   end
 
+  local function add_teleporter()
+    local sx, sy, S = Layout.spot_for_wotsit(R, "TELEPORTER")
+
+    R.teleport_spot = S
+  end
+
   local function stairwell_height_diff(focus_C)
     local other_C = R.conns[2]
     if other_C == focus_C then other_C = R.conns[1] end
@@ -2626,6 +2632,9 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 
 
   if R.purpose then add_purpose() end
+
+  if R:has_teleporter() then add_teleporter() end
+
   if R.weapon  then add_weapon(R.weapon)  end
 
   if R.natural then

@@ -819,9 +819,10 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
       then
 stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
         K1.room:tostr(), K2.room:tostr())
-
         local C = add_connection(K1, K2, "teleporter")
-        C.tele_tag = Plan_alloc_tag()
+
+        C.tele_tag1 = Plan_alloc_tag()
+        C.tele_tag2 = Plan_alloc_tag()
 
         table.remove(loc_list, index)
         return true
