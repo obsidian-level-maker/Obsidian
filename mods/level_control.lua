@@ -75,6 +75,7 @@ OB_MODULES["level_control"] =
     subrooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL_CHOICES },
     switches   = { label="Switches / Keys",choices=LEVEL_CONTROL_CHOICES },
     symmetry   = { label="Symmetry",       choices=LEVEL_CONTROL_CHOICES },
+    teleporters ={ label="Teleporters",    choices=LEVEL_CONTROL_CHOICES },
     windows    = { label="Windows",        choices=LEVEL_CONTROL_CHOICES },
 
     favor_shape = { label ="Favor Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES },
