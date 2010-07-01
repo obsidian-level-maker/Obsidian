@@ -48,6 +48,10 @@ function SECTION_CLASS.tostr(self)
   return string.format("SECTION [%d,%d]", self.kx, self.ky)
 end
 
+function SECTION_CLASS.update_size(self)
+  self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
+end
+
 function SECTION_CLASS.neighbor(self, dir, dist)
   local nx, ny = geom.nudge(self.kx, self.ky, dir, dist)
   if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
@@ -1303,6 +1307,8 @@ function Plan_make_seeds()
 
     K.sx1, K.sx2 = sx1, sx2
     K.sy1, K.sy2 = sy1, sy2
+
+    K:update_size()
 
     if not R.sx1 or sx1 < R.sx1 then R.sx1 = sx1 end
     if not R.sy1 or sy1 < R.sy1 then R.sy1 = sy1 end
