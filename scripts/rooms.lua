@@ -166,7 +166,7 @@ end
 
 function ROOM_CLASS.has_teleporter(self)
   for _,C in ipairs(self.conns) do
-    if C.lock and C.kind == "teleporter" then return true end
+    if C.kind == "teleporter" then return true end
   end
   return false
 end
