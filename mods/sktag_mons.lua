@@ -149,15 +149,15 @@ SKTAG_MONS.FACTORS =
 
 function SKTAG_MONS.setup(self)
   if not PARAM.doom2_monsters then
-    GAME.monsters["hectebus"] = nil
-    GAME.monsters["superguy"].give = nil
+    GAME.MONSTERS["hectebus"] = nil
+    GAME.MONSTERS["superguy"].give = nil
   end
 
   -- apply the 'Default Monsters' choice
   local factor = SKTAG_MONS.FACTORS[self.options.def_mon.value]
 
   for name,_ in pairs(SKTAG_MONS.MONSTERS) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
     if M and factor then
       M.prob = M.prob * factor
       M.crazy_prob = (M.crazy_prob or M.prob) * factor
@@ -168,7 +168,7 @@ function SKTAG_MONS.setup(self)
   factor = SKTAG_MONS.FACTORS[self.options.def_weap.value]
 
   for name,_ in pairs(SKTAG_MONS.WEAPONS) do
-    local W = GAME.weapons[name]
+    local W = GAME.WEAPONS[name]
     if W and factor then
       W.add_prob   = math.max(4, W.add_prob)   * factor
       W.start_prob = math.max(4, W.start_prob) * factor
@@ -239,7 +239,7 @@ SKTAG_MONS.CONTROL_PROBS =
 
 function SKTAG_MONS.mon_control_setup(self)
   for name,opt in pairs(self.options) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
 
     if M and opt.value ~= "default" then
       local prob = SKTAG_MONS.CONTROL_PROBS[opt.value]
@@ -285,7 +285,7 @@ OB_MODULES["sktag_mon_control"] =
 
 function SKTAG_MONS.weap_control_setup(self)
   for name,opt in pairs(self.options) do
-    local W = GAME.weapons[name]
+    local W = GAME.WEAPONS[name]
 
     if W and opt.value ~= "default" then
       local prob = SKTAG_MONS.CONTROL_PROBS[opt.value]

@@ -42,7 +42,7 @@ DOOM.MON_CONTROL_PROBS =
 
 function DOOM.mon_control_setup(self)
   for name,opt in pairs(self.options) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
 
     if M and opt.value ~= "default" then
       local prob = DOOM.MON_CONTROL_PROBS[opt.value]
@@ -128,7 +128,7 @@ DOOM.WEAP_CONTROL_PROBS =
 
 function DOOM.weap_control_setup(self)
   for name,opt in pairs(self.options) do
-    local W = GAME.weapons[name]
+    local W = GAME.WEAPONS[name]
 
     if W and opt.value ~= "default" then
       local prob = WEAP_CONTROL_PROBS[opt.value]

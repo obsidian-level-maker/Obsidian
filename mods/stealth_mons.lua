@@ -127,7 +127,7 @@ function STEALTH.setup(self)
   local qty = self.options.qty.value
 
   for name,_ in pairs(STEALTH.MONSTERS) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
     if M and qty == "less" then
       M.replace_prob = M.replace_prob / 2
       M.crazy_prob = M.crazy_prob / 3
@@ -197,7 +197,7 @@ STEALTH.CONTROL_PROBS =
 
 function STEALTH.control_setup(self)
   for name,opt in pairs(self.options) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
 
     if M and opt.value ~= "default" then
       local prob = STEALTH.CONTROL_PROBS[opt.value]

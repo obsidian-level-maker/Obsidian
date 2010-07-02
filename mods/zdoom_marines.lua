@@ -136,13 +136,13 @@ ZDOOM_MARINE.FACTORS =
 
 function ZDOOM_MARINE.setup(self)
   if not PARAM.doom2_weapons then
-    GAME.monsters["marine_ssg"] = nil
+    GAME.MONSTERS["marine_ssg"] = nil
   end
 
   local factor = ZDOOM_MARINE.FACTORS[self.options.qty.value]
 
   for name,_ in pairs(ZDOOM_MARINE.MONSTERS) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
     if M and factor then
       M.prob = M.prob * factor
       M.crazy_prob = (M.crazy_prob or M.prob) * factor
@@ -219,7 +219,7 @@ ZDOOM_MARINE.CTL_PROBS =
 
 function ZDOOM_MARINE.control_setup(self)
   for name,opt in pairs(self.options) do
-    local M = GAME.monsters[name]
+    local M = GAME.MONSTERS[name]
 
     if M and opt.value ~= "default" then
       local prob = ZDOOM_MARINE.CTL_PROBS[opt.value]

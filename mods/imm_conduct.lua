@@ -354,7 +354,7 @@ function IMMORAL_CONDUCT.setup(self)
   local new_prob = NEW_MON_PROBS[new_mons]
 
   if new_prob then
-    for _,M in pairs(GAME.monsters) do
+    for _,M in pairs(GAME.MONSTERS) do
       if M.immoral_conduct then
         M.prob = new_prob
       end

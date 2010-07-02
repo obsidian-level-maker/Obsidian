@@ -85,7 +85,7 @@ function FREEDOOM.setup()
 
   for name,quality in pairs(FREEDOOM.MONSTER_LIST) do
     if quality < 1 then
-      GAME.monsters[name] = nil
+      GAME.MONSTERS[name] = nil
     end
   end
 
@@ -93,7 +93,7 @@ function FREEDOOM.setup()
 
   for name,quality in pairs(FREEDOOM.SCENERY_LIST) do
     if quality < 1 then
-      GAME.things[name] = nil
+      GAME.ENTITIES[name] = nil
     end
   end
 end
