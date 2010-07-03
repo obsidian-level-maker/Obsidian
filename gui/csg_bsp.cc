@@ -277,8 +277,8 @@ static void CreateRegion(group_c *G, csg_brush_c *P)
 
   region_c *R = new region_c();
 
-  // NOTE: brush sides go ANTI-clockwise, region snags go CLOCKWISE.
-  //       hence we need to flip it around here.
+  // NOTE: brush sides go ANTI-clockwise, region snags go CLOCKWISE,
+  //       hence we need to flip them here.
 
   int total = (int)P->verts.size();
 
@@ -289,7 +289,7 @@ static void CreateRegion(group_c *G, csg_brush_c *P)
     brush_vert_c *v1 = P->verts[k];
     brush_vert_c *v2 = P->verts[k2];
 
-    snag_c *S = new snag_c(P, v1, v2, v2);
+    snag_c *S = new snag_c(v1, v2, v2);
 
     R->AddSnag(S);
   }
@@ -306,33 +306,8 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
 }
 
 
-static void DivideOneRegion(region_c *R, partition_c *part,
+static void DivideOneSnag(region_c *R, partition_c *part,
                             group_c *front, group_c *back)
-{
-  // FIXME: mark snags as "on_node"
-
-  int side = R->WhatSide(part);
-
-  if (side > 0)
-  {
-    front->regions.push_back(R);
-  }
-  else if (side < 0)
-  {
-    back->regions.push_back(R);
-  }
-  else
-  {
-    region_c *RB = R->Split(part);
-
-    front->regions.push_back(R);
-     back->regions.push_back(RB);
-  }
-}
-
-
-static void DivideOneSnag(snag_c *S, partition_c *part,
-                          region_c *back, region_c *front)
 {
 	// get relationship of lines to each other
 	double a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
@@ -408,17 +383,49 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 }
 
 
-static void DivideSnags(region_c *R, partition_c *part)
+static void DivideOneRegion(region_c *R, partition_c *part,
+                            group_c *front, group_c *back)
 {
-  // Note that new snags may get added (due to splits) while we are
-  // iterating over them.
+  // FIXME: mark snags as "on_node"
 
-  for (int i = 0 ; i < (int)R->snags.size() ; i++)
+  int side = R->WhatSide(part);
+
+  if (side > 0)
   {
-    DivideOneSnag(R->snags[i], part, R->back, R->front);
+    front->regions.push_back(R);
+    return;
+  }
+  else if (side < 0)
+  {
+    back->regions.push_back(R);
+    return;
   }
 
-  R->snags.clear();
+  // region needs to be split
+
+    region_c *RB = R->Split(part);
+
+    front->regions.push_back(R);
+     back->regions.push_back(RB);
+  }
+}
+
+
+
+
+static void DivideGroup(group_c *G, partition_c *part)
+{
+  G->front = new group_c();
+  G->back  = new group_c();
+
+  for (unsigned int i = 0 ; i < G->regions.size() ; i++)
+  {
+    region_c *R = G->regions[i];
+
+    DivideOneRegion(R, part, G->front, G->back);
+  }
+
+  G->regions.clear();
 }
 
 
@@ -462,18 +469,22 @@ static void AddMiniSnags(region_c *R, partition_c *part)
 }
 
 
-static partition_c * ChoosePartition(region_c *R)
+static partition_c * ChoosePartition(group_c *G)
 {
+  // FIXME !!! do seed-wise binary subdivision thang
+
   partition_c *best = NULL;
 
-  for (int i = (int)R->snags.size()-1 ; i >= 0 ; i--)
+  for (unsigned int i = 0 ; i < G->regions.size() ; i++)
+  for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
   {
-    partition_c *part = R->snags[i];
+    partition_c *part = G->regions[i]->snags[k];
 
     if (! part->on_node)
     {
-      best = part;
-      break;  // FIXME: choose best properly
+      // FIXME !!!! choose properly
+      if (! best)
+        best = part;
     }
   }
 
@@ -519,21 +530,6 @@ static void HandleOverlaps(region_c *R)
 }
 
 
-static void TrimMiniSnags(region_c *R)
-{
-  // FIXME
-
-  // removes any stray mini-snags, i.e. ones lying outside of the
-  // convex polygon formed by the snags in this region.
-
-}
-
-
-static void ClockwiseOrder(region_c *R)
-{
-  // FIXME
-}
-
 
 static void Split(group_c *G)
 {
@@ -541,25 +537,13 @@ static void Split(group_c *G)
 
   if (part)
   {
-    AddMiniSnags(R, part);
+    DivideGroup(G, part);
 
-    R->back  = new region_c();
-    R->front = new region_c();
-
-    DivideSnags(R, part);
-
-    Split(R->back); 
-    Split(R->front); 
+    Split(G->back); 
+    Split(G->front); 
   }
 
-  if (R->MostlyEmpty())
-    return;
-
   HandleOverlaps(R);
-
-  TrimMiniSnags(R);
-
-  ClockwiseOrder(R);
 
   // all_regions.push_back(R);
 }
