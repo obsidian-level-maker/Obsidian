@@ -22,6 +22,27 @@
 #define __QUAKE_LIGHTING_H__
 
 
+class qLightmap_c
+{
+private:
+  int width, height;
+
+  float *samples;
+
+public:
+  qLightmap_c(int w, int h);
+
+  ~qLightmap_c();
+
+  void Clear();
+
+  void Clamp();
+
+  void GetRange(float *low, float *high, float *avg);
+
+};
+
+
 
 #endif /* __QUAKE_LIGHTING_H__ */
 

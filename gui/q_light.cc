@@ -35,22 +35,6 @@
 #include "q1_structs.h"
 
 
-class qLightmap_c
-{
-private:
-  int width, height;
-
-  float *samples;
-
-public:
-  qLightmap_c(int w, int h);
-
-  ~qLightmap_c();
-
-  void Clear();
-};
-
-
 qLightmap_c::qLightmap_c(int w, int h) : width(w), height(h)
 {
   samples = new float[width * height];
@@ -65,8 +49,36 @@ qLightmap_c::~qLightmap_c()
 
 void qLightmap_c::Clear()
 {
-  for (int i = 0; i < w*h; i++)
-    samples[i] = 0.0f;
+  for (int i = 0 ; i < weight*height ; i++)
+    samples[i] = 0;
+}
+
+
+void qLightmap_c::Clamp()
+{
+  for (int i = 0 ; i < weight*height ; i++)
+  {
+    if (samples[i] < 0)   samples[i] = 0;
+    if (samples[i] > 255) samples[i] = 255;
+  }
+}
+
+
+void qLightmap_c::GetRange(float *low, float *high, float *avg)
+{
+  *low  = +9e9;
+  *high = -9e9;
+  *avg  = 0;
+
+  for (int i = 0 ; i < weight*height ; i++)
+  {
+    if (samples[i] < *low)  *low  = samples[i];
+    if (samples[i] > *high) *high = samples[i];
+
+    *avg += samples[i];
+  }
+
+  *avg /= (float)(width * height);
 }
 
 
@@ -86,7 +98,7 @@ s32_t Quake1_LightAddBlock(int w, int h, u8_t level)
 {
   s32_t offset = q1_lightmap->GetSize();
 
-  for (int i = 0; i < w*h; i++)
+  for (int i = 0 ; i < w*h ; i++)
     q1_lightmap->Append(&level, 1);
 
   return offset;
