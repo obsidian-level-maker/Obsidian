@@ -34,6 +34,8 @@
 
 #define SNAG_EPSILON  1e-4
 
+#define partition_c  snag_c
+
 
 class region_c;
 
@@ -76,7 +78,7 @@ public:
 
   snag_c(double _x1, double _y1, double _x2, double _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      on_node(true), where(NULL), partner(NULL), sides()
+      on_node(true), partner(NULL), where(NULL), sides()
   { }
 
   ~snag_c()
@@ -88,9 +90,9 @@ public:
   }
 
   snag_c * Cut(double ix, double iy);
-};
 
-#define partition_c  snag_c
+  void MarkOnNode(partition_c *part);
+};
 
 
 class region_c
@@ -122,7 +124,8 @@ public:
 
   bool WhatSide(partition_c *P) const;
 
-  void Split(partition_c *P);
+  void MarkSnags(partition_c *part);
+
 };
 
 
@@ -183,7 +186,7 @@ static bool do_clip_brushes;
 
 //------------------------------------------------------------------------
 
-bool region_c::WhatSide(partition_c *P) const
+bool region_c::WhatSide(partition_c *part) const
 {
   bool has_back  = false;
   bool has_front = false;
@@ -206,65 +209,6 @@ bool region_c::WhatSide(partition_c *P) const
   }
 
   return has_back ? -1 : +1;
-}
-
-
-void region_c::Split(double x1, double y1, double x2, double y2)
-{
-  region_c *N = new region_c(this);
-
-  snag_c *front_snag = new snag_c(x1,y1, x2,y2);
-  snag_c * back_snag = new snag_c(x2,y2, x1,y1);
-
-  front_snag->partner =  back_snag;
-   back_snag->partner = front_snag;
- 
-  ...
-}
-
-
-void region_c::AddIntersection(partition_c *P)
-{
-  double along_min =  9e9;
-  double along_max = -9e9;
-
-  for (unsigned int i = 0 ; i < snags.size() ; i++)
-  {
-    snag_c *S = snags[i];
-    
-    double a = PerpDist(S->x1,S->y1, part->x1,part->y1, part->x2,part->y2);
-    double b = PerpDist(S->x2,S->y2, part->x1,part->y1, part->x2,part->y2);
-
-    int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
-    int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
-
-    if (a_side == b_side)
-      continue;
-
-    double ix, iy;
-
-    CalcIntersection(S->x1, S->y1, S->x2, S->y2,
-                     part->x1, part->y1, part->x2, part->y2,
-                     &ix, &iy);
-
-    double along = AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
-
-    along_min = MIN(along_min, along);
-    along_max = MAX(along_max, along);
-  }
-
-  // should NOT get here unless region was splittable
-  SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
-
-  {
-    double x1, y1;
-    double x2, y2;
-
-    AlongCoord(along_min, part->x1,part->y1, part->x2,part->y2, &x1, &y1);
-    AlongCoord(along_max, part->x1,part->y1, part->x2,part->y2, &x2, &y2);
-
-    Split(x1, y1, x2, y2);
-  }
 }
 
 
@@ -306,8 +250,33 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
 }
 
 
-static void DivideOneSnag(region_c *R, partition_c *part,
-                            group_c *front, group_c *back)
+void snag_c::MarkOnNode(partition_c *part)
+{
+  if (on_node)
+    return;
+
+	// get relationship of lines to each other
+	double a = PerpDist(x1,y1, part->x1,part->y1,part->x2,part->y2);
+	double b = PerpDist(x2,y2, part->x1,part->y1,part->x2,part->y2);
+
+	int a_side = (a < -SNAG_EPSILON) ? -1 : (a > SNAG_EPSILON) ? +1 : 0;
+	int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
+
+  if (a_side == 0 && b_side == 0)
+    on_node = true;
+}
+
+
+void region_c::MarkSnags(partition_c *part)
+{
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+    snags[i]->MarkOnNode(part);
+}
+
+
+static void DivideOneSnag(snag_c *S, partition_c *part,
+                          region_c *front, region_c *back,
+                          double *along_min, double *along_max)
 {
 	// get relationship of lines to each other
 	double a = PerpDist(S->x1,S->y1, part->x1,part->y1,part->x2,part->y2);
@@ -320,6 +289,25 @@ static void DivideOneSnag(region_c *R, partition_c *part,
   if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
   if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
 
+  // THIS SHOULD NOT HAPPEN
+  SYS_ASSERT(! (a_side == 0 && b_side == 0));
+
+  // intersection stuff  -- FIXME: duplicated code
+  if (a_side != b_side)
+  {
+    double ix, iy;
+
+    CalcIntersection(S->x1, S->y1, S->x2, S->y2,
+                     part->x1, part->y1, part->x2, part->y2,
+                     &ix, &iy);
+
+    double along = AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
+
+    *along_min = MIN(*along_min, along);
+    *along_max = MAX(*along_max, along);
+  }
+
+#if 0
 	// on the same line?
 	if (a_side == 0 && b_side == 0)
 	{
@@ -342,6 +330,7 @@ static void DivideOneSnag(region_c *R, partition_c *part,
 		}
 		return;
 	}
+#endif
 
 	// completely on front side?
 	if (a_side >= 0 && b_side >= 0)
@@ -386,7 +375,8 @@ static void DivideOneSnag(region_c *R, partition_c *part,
 static void DivideOneRegion(region_c *R, partition_c *part,
                             group_c *front, group_c *back)
 {
-  // FIXME: mark snags as "on_node"
+  // mark any snags which lie on the partition line
+  R->MarkSnags(part);
 
   int side = R->WhatSide(part);
 
@@ -401,16 +391,47 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     return;
   }
 
-  // region needs to be split
+  // --- region needs to be split ---
 
-    region_c *RB = R->Split(part);
+  region_c *N = new region_c(*R);
 
-    front->regions.push_back(R);
-     back->regions.push_back(RB);
+  // iterate over a swapped-out version of the region's snags
+  // (so we can safely add certain ones into R->snags)
+  std::vector<snag_c *> snag_list;
+
+  std::swap(R->snags, snag_list);
+
+  // compute intersection points
+  double along_min =  9e9;
+  double along_max = -9e9;
+
+  for (unsigned int i = 0 ; i < snag_list.size() ; i++)
+    DivideOneSnag(snag_list[i], part, R, N, &along_min, &along_max);
+
+  front->regions.push_back(R);
+   back->regions.push_back(N);
+
+  // --- add the mini snags ---
+
+  SYS_ASSERT(along_max > along_min + SNAG_EPSILON);
+
+  {
+    double x1, y1;
+    double x2, y2;
+
+    AlongCoord(along_min, part->x1,part->y1, part->x2,part->y2, &x1, &y1);
+    AlongCoord(along_max, part->x1,part->y1, part->x2,part->y2, &x2, &y2);
+
+    snag_c *front_snag = new snag_c(x1,y1, x2,y2);
+    snag_c * back_snag = new snag_c(x2,y2, x1,y1);
+
+    front_snag->partner =  back_snag;
+     back_snag->partner = front_snag;
+
+    R->snags.push_back(front_snag);
+    N->snags.push_back(back_snag);
   }
 }
-
-
 
 
 static void DivideGroup(group_c *G, partition_c *part)
@@ -429,46 +450,6 @@ static void DivideGroup(group_c *G, partition_c *part)
 }
 
 
-static void AddMiniSnags(region_c *R, partition_c *part)
-{
-  // this adds four "mini-snags" along the partition, with a very
-  // long length.  Half is before the partition (on the line) and half
-  // is after it.  Eventually they will get divided up and/or merged
-  // with any overlapping snags, and the stray bits will get trimmed.
-
-  double len = ComputeDist(part->x1, part->y1, part->x2, part->y2);
-
-  double dx = (part->x2 - part->x1) / len;
-  double dy = (part->y2 - part->y1) / len;
-
-  // before...
-  double x1 = part->x1 - dx * 64000;
-  double y1 = part->y1 - dy * 64000;
-
-  snag_c *F1 = new snag_c(x1, y1, part->x1, part->y1); 
-  snag_c *B1 = new snag_c(part->x1, part->y1, x1, y1); 
-
-  F1->partner = B1;
-  B1->partner = F1;
-
-  R->AddSnag(F1);
-  R->AddSnag(B1);
-
-  // after...
-  double x2 = part->x2 + dx * 64000;
-  double y2 = part->y2 + dy * 64000;
-
-  snag_c *F2 = new snag_c(part->x2, part->y2, x2, y2); 
-  snag_c *B2 = new snag_c(x2, y2, part->x2, part->y2); 
-
-  F2->partner = B2;
-  B2->partner = F2;
-
-  R->AddSnag(F2);
-  R->AddSnag(B2);
-}
-
-
 static partition_c * ChoosePartition(group_c *G)
 {
   // FIXME !!! do seed-wise binary subdivision thang
@@ -476,15 +457,19 @@ static partition_c * ChoosePartition(group_c *G)
   partition_c *best = NULL;
 
   for (unsigned int i = 0 ; i < G->regions.size() ; i++)
-  for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
   {
-    partition_c *part = G->regions[i]->snags[k];
+    region_c *R = G->regions[i];
 
-    if (! part->on_node)
+    for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
     {
-      // FIXME !!!! choose properly
-      if (! best)
-        best = part;
+      partition_c *part = G->regions[i]->snags[k];
+
+      if (! part->on_node)
+      {
+        // FIXME !!!! choose properly
+        if (! best)
+          best = part;
+      }
     }
   }
 
@@ -543,7 +528,7 @@ static void Split(group_c *G)
     Split(G->front); 
   }
 
-  HandleOverlaps(R);
+/// TODO  HandleOverlaps(R);
 
   // all_regions.push_back(R);
 }
