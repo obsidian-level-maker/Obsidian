@@ -44,44 +44,39 @@ public:
   double x1, y1;
   double x2, y2;
 
-  bool mini;
   bool on_node;
 
-  region_c *where;
+  snag_c *partner;  // NULL if not a mini snag
 
-  snag_c *partner;
+  region_c *where;
 
   std::vector<brush_vert_c *> sides;
 
 private:
   snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
-      mini(other.mini), on_node(other.on_node),
-      where(other.where), partner(NULL), sides()
+      on_node(other.on_node), partner(NULL), 
+      where(other.where), sides()
   {
-    // FIXME: copy sides
+    // copy sides
+    for (unsigned int i = 0 ; i < other.sides.size() ; i++)
+      sides.push_back(other.sides[i]);
   }
 
 public:
-  // side = 0 for outside of brush, 1 for inside
-  snag_c(csg_brush_c *P, int side, brush_vert_c *start, brush_vert_c *end) :
+  snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      mini(false), on_node(false), where(NULL), partner(NULL), sides()
+      on_node(false), partner(NULL), where(NULL), sides()
   {
-    if (side == 0)
-    {
-      // FIXME !!!!  add side
-    }
+    if (Length() < SNAG_EPSILON)
+      Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
 
-  // FIXME check for zero-length lines
-//!!!  if (start == end)
-//!!!    Main_FatalError("Line loop contains zero-length line! (%1.2f, %1.2f)\n",
-//!!!                    start->x, start->y);
+    sides.push_back(side);
   }
 
   snag_c(double _x1, double _y1, double _x2, double _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      mini(true), on_node(true), where(NULL), partner(NULL), sides()
+      on_node(true), where(NULL), partner(NULL), sides()
   { }
 
   ~snag_c()
@@ -109,10 +104,10 @@ public:
   region_c() : snags(), brushes()
   { }
 
-  region_c(const region_c *other) : snags(), brushes()
+  region_c(const region_c& other) : snags(), brushes()
   {
-    for (unsigned int i = 0; i < other->brushes.size(); i++)
-      brushes.push_back(other->brushes[i]);
+    for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
+      brushes.push_back(other.brushes[i]);
   }
 
   ~region_c()
@@ -146,6 +141,11 @@ public:
 
   ~group_c()
   { }
+
+  void AddRegion(region_c *R)
+  {
+    regions.push_back(R);
+  }
 };
 
 
@@ -188,7 +188,7 @@ bool region_c::WhatSide(partition_c *P) const
   bool has_back  = false;
   bool has_front = false;
 
-  for (unsigned int i = 0; i < snags.size(); i++)
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
     snag_c *S = snags[i];
     
@@ -213,6 +213,12 @@ void region_c::Split(double x1, double y1, double x2, double y2)
 {
   region_c *N = new region_c(this);
 
+  snag_c *front_snag = new snag_c(x1,y1, x2,y2);
+  snag_c * back_snag = new snag_c(x2,y2, x1,y1);
+
+  front_snag->partner =  back_snag;
+   back_snag->partner = front_snag;
+ 
   ...
 }
 
@@ -222,7 +228,7 @@ void region_c::AddIntersection(partition_c *P)
   double along_min =  9e9;
   double along_max = -9e9;
 
-  for (unsigned int i = 0; i < snags.size(); i++)
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
     snag_c *S = snags[i];
     
@@ -262,40 +268,33 @@ void region_c::AddIntersection(partition_c *P)
 }
 
 
-static void AddSnags(region_c *R, csg_brush_c *P)
+static void CreateRegion(group_c *G, csg_brush_c *P)
 {
   SYS_ASSERT(P);
 
   if (! do_clip_brushes && P->bkind == BKIND_Clip)
     return;
 
-  for (int k=0; k < (int)P->verts.size(); k++)
-  {
-    brush_vert_c *v1 = P->verts[k];
-    brush_vert_c *v2 = P->verts[(k+1) % (int)P->verts.size()];
-
-    snag_c *A = new snag_c(P, 0, v1, v2);
-    snag_c *B = new snag_c(P, 1, v1, v2);
-
-    A->partner = B;
-    B->partner = A;
-
-    R->AddSnag(A);
-    R->AddSnag(B);
-  }
-}
-
-
-static region_c * InitialRegion()
-{
   region_c *R = new region_c();
 
-  for (unsigned int j=0; j < all_brushes.size(); j++)
+  // NOTE: brush sides go ANTI-clockwise, region snags go CLOCKWISE.
+  //       hence we need to flip it around here.
+
+  int total = (int)P->verts.size();
+
+  for (int k = total-1 ; k >= 0 ; k--)
   {
-    AddSnags(R, all_brushes[j]);
+    int k2 = (k + total - 1) % total;
+
+    brush_vert_c *v1 = P->verts[k];
+    brush_vert_c *v2 = P->verts[k2];
+
+    snag_c *S = new snag_c(P, v1, v2, v2);
+
+    R->AddSnag(S);
   }
 
-  return R;
+  G->AddRegion(R);
 }
 
 
@@ -414,7 +413,7 @@ static void DivideSnags(region_c *R, partition_c *part)
   // Note that new snags may get added (due to splits) while we are
   // iterating over them.
 
-  for (int i = 0; i < (int)R->snags.size(); i++)
+  for (int i = 0 ; i < (int)R->snags.size() ; i++)
   {
     DivideOneSnag(R->snags[i], part, R->back, R->front);
   }
@@ -467,7 +466,7 @@ static partition_c * ChoosePartition(region_c *R)
 {
   partition_c *best = NULL;
 
-  for (int i = (int)R->snags.size()-1; i >= 0; i--)
+  for (int i = (int)R->snags.size()-1 ; i >= 0 ; i--)
   {
     partition_c *part = R->snags[i];
 
@@ -512,8 +511,8 @@ static void HandleOverlaps(region_c *R)
   // Note that new snags may get added (due to splits) while we are
   // iterating over them.
 
-  for (int i = 0;   i < (int)R->snags.size(); i++)
-  for (int k = i+1; k < (int)R->snags.size(); k++)
+  for (int i = 0   ; i < (int)R->snags.size() ; i++)
+  for (int k = i+1 ; k < (int)R->snags.size() ; k++)
   {
     TestOverlap(R, R->snags[i], R->snags[k]);
   }
@@ -536,9 +535,9 @@ static void ClockwiseOrder(region_c *R)
 }
 
 
-static void Split(region_c *R)
+static void Split(group_c *G)
 {
-  partition_c *part = ChoosePartition(R);
+  partition_c *part = ChoosePartition(G);
 
   if (part)
   {
@@ -568,12 +567,14 @@ static void Split(region_c *R)
 
 void CSG_BSP()
 {
-  // Setup()
+  group_c *root = new group_c();
 
-  region_c *root = InitialRegion();
+  for (unsigned int i=0; i < all_brushes.size(); i++)
+  {
+    CreateRegion(root,all_brushes[i]);
+  }
 
   Split(root);
-
 }
 
 
