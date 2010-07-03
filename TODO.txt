@@ -3,11 +3,9 @@ TODO
 ====
 
 
--  removing fences can wreck traversability
-
-
-+  allow more than one connection per seed
-
+CSG-BSP : MUST handle overlaps ON EACH PARTITION
+          (i.e. collect all snags sitting on the partition,
+           split/merge them before segregation)
 
 
 Later: fix hallways, broken due to conn(_dir) change
@@ -29,7 +27,6 @@ Quests:
 
 -  currently broken if no switches
    --> have a lock limit, if over then mark branches as "dead_wood"
-
 
 
 CSG IDEA:
