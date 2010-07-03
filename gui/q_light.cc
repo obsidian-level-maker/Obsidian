@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 LIGHTING
+//  QUAKE 1/2 LIGHTING
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -30,34 +30,44 @@
 #include "csg_main.h"
 
 #include "q_bsp.h"
+#include "q_light.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
 
 class qLightmap_c
 {
-public:
-  int w, h;
+private:
+  int width, height;
 
   float *samples;
 
 public:
-  qLightmap_c(int width, int height) : w(width), h(height)
-  {
-    samples = new float[w * h];
-  }
+  qLightmap_c(int w, int h);
 
-  ~qLightmap_c()
-  {
-    delete[] samples;
-  }
+  ~qLightmap_c();
 
-  void Clear()
-  {
-    for (int i = 0; i < w*h; i++)
-      samples[i] = 0.0f;
-  }
+  void Clear();
 };
+
+
+qLightmap_c::qLightmap_c(int w, int h) : width(w), height(h)
+{
+  samples = new float[width * height];
+
+  Clear();
+}
+
+qLightmap_c::~qLightmap_c()
+{
+    delete[] samples;
+}
+
+void qLightmap_c::Clear()
+{
+  for (int i = 0; i < w*h; i++)
+    samples[i] = 0.0f;
+}
 
 
 static qLump_c *q1_lightmap;
@@ -67,9 +77,8 @@ void Quake1_BeginLightmap(void)
 {
   q1_lightmap = BSP_NewLump(LUMP_LIGHTING);
 
-  const char *info = "Lit by " OBLIGE_TITLE " " OBLIGE_VERSION;
 
-  q1_lightmap->Append(info, strlen(info));
+
 }
 
 
