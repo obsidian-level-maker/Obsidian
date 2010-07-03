@@ -38,8 +38,6 @@
 qLightmap_c::qLightmap_c(int w, int h) : width(w), height(h)
 {
   samples = new float[width * height];
-
-  Clear();
 }
 
 qLightmap_c::~qLightmap_c()
@@ -47,16 +45,16 @@ qLightmap_c::~qLightmap_c()
     delete[] samples;
 }
 
-void qLightmap_c::Clear()
+void qLightmap_c::Fill(float value)
 {
-  for (int i = 0 ; i < weight*height ; i++)
-    samples[i] = 0;
+  for (int i = 0 ; i < width*height ; i++)
+    samples[i] = value;
 }
 
 
 void qLightmap_c::Clamp()
 {
-  for (int i = 0 ; i < weight*height ; i++)
+  for (int i = 0 ; i < width*height ; i++)
   {
     if (samples[i] < 0)   samples[i] = 0;
     if (samples[i] > 255) samples[i] = 255;
@@ -70,7 +68,7 @@ void qLightmap_c::GetRange(float *low, float *high, float *avg)
   *high = -9e9;
   *avg  = 0;
 
-  for (int i = 0 ; i < weight*height ; i++)
+  for (int i = 0 ; i < width*height ; i++)
   {
     if (samples[i] < *low)  *low  = samples[i];
     if (samples[i] > *high) *high = samples[i];
@@ -79,6 +77,17 @@ void qLightmap_c::GetRange(float *low, float *high, float *avg)
   }
 
   *avg /= (float)(width * height);
+}
+
+
+void qLightmap_c::Add(double x, double y, float value)
+{
+  if (0 <= x && x < width && 0 <= y && y < height)
+  {
+    int i = (int)x + (int)y * width;
+
+    samples[i] += value;
+  }
 }
 
 

@@ -34,14 +34,14 @@ public:
 
   ~qLightmap_c();
 
-  void Clear();
+  void Fill(float value);
 
   void Clamp();
 
   void GetRange(float *low, float *high, float *avg);
 
+  void Add(double x, double y, float value);
 };
-
 
 
 #endif /* __QUAKE_LIGHTING_H__ */
