@@ -46,6 +46,7 @@ public:
   double x1, y1;
   double x2, y2;
 
+  bool mini;
   bool on_node;
 
   snag_c *partner;  // NULL if not a mini snag
@@ -54,11 +55,16 @@ public:
 
   std::vector<brush_vert_c *> sides;
 
+  // quantized along values, used for overlap detection
+  int q_along1;
+  int q_along2;
+
 private:
   snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
-      on_node(other.on_node), partner(NULL), 
-      where(other.where), sides()
+      mini(other.mini), on_node(other.on_node),
+      partner(NULL), where(other.where),
+      sides()
   {
     // copy sides
     for (unsigned int i = 0 ; i < other.sides.size() ; i++)
@@ -68,7 +74,8 @@ private:
 public:
   snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      on_node(false), partner(NULL), where(NULL), sides()
+      mini(false), on_node(false), partner(NULL), where(NULL),
+      sides()
   {
     if (Length() < SNAG_EPSILON)
       Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
@@ -78,7 +85,8 @@ public:
 
   snag_c(double _x1, double _y1, double _x2, double _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      on_node(true), partner(NULL), where(NULL), sides()
+      mini(true), on_node(true), partner(NULL), where(NULL),
+      sides()
   { }
 
   ~snag_c()
@@ -92,6 +100,18 @@ public:
   snag_c * Cut(double ix, double iy);
 
   void MarkOnNode(partition_c *part);
+
+  void CalcAlongs(partition_c *part)
+  {
+    double a1 = AlongDist(x1, y1, part->x1,part->y1, part->x2,part->y2);
+    double a2 = AlongDist(x2, y2, part->x1,part->y1, part->x2,part->y2);
+
+    a1 /= SNAG_EPSILON;
+    a2 /= SNAG_EPSILON;
+
+    q_along1 = I_ROUND(a1);
+    q_along2 = I_ROUND(a2);
+  }
 };
 
 
@@ -122,7 +142,7 @@ public:
     S->where = this;
   }
 
-  bool WhatSide(partition_c *P) const;
+  bool WhatSide(partition_c *P);
 
   void MarkSnags(partition_c *part);
 
@@ -186,7 +206,7 @@ static bool do_clip_brushes;
 
 //------------------------------------------------------------------------
 
-bool region_c::WhatSide(partition_c *part) const
+bool region_c::WhatSide(partition_c *part)
 {
   bool has_back  = false;
   bool has_front = false;
@@ -477,7 +497,7 @@ static partition_c * ChoosePartition(group_c *G)
 }
 
 
-static void TestOverlap(region_c *R, snag_c *A, snag_c *B)
+static void FOOBIE_TestOverlap(region_c *R, snag_c *A, snag_c *B)
 {
   // The BSP partitioning has taken care of splitting snags which
   // cross over each other.  Hence all this function needs to do
@@ -502,7 +522,7 @@ static void TestOverlap(region_c *R, snag_c *A, snag_c *B)
 }
 
 
-static void HandleOverlaps(region_c *R)
+static void FOOBIE_HandleOverlaps(region_c *R)
 {
   // Note that new snags may get added (due to splits) while we are
   // iterating over them.
@@ -515,6 +535,115 @@ static void HandleOverlaps(region_c *R)
 }
 
 
+static bool SplitSnag(snag_c *S, double ix, double iy, partition_c *part,
+                      std::vector<snag_c *> & overlap_list)
+                      
+{
+  // TODO
+}
+
+
+static bool MergeSnags(snag_c *A, snag_c *B)
+{
+  // TODO
+
+}
+
+
+static bool PartnerSnags(snag_c *A, snag_c *B)
+{
+  // we assume that existing partners will get merged
+
+  A->partner = B;
+  B->partner = A;
+}
+
+
+static bool TestOverlap(partition_c *part, std::vector<snag_c *> & list,
+                        int i, int k)
+{
+  snag_c *A = list[i];
+  snag_c *B = list[k];
+
+  int a_min = MIN(A->q_along1, A->q_along2);
+  int a_max = MAX(A->q_along1, A->q_along2);
+
+  int b_min = MIN(B->q_along1, B->q_along2);
+  int b_max = MAX(B->q_along1, B->q_along2);
+
+  if (a_min >= b_max || a_max <= b_min)
+    return false;
+
+  // Note: it's possible one of the new (split off) snags is still
+  //       overlapping another one.  This will be detected and handled
+  //       in a future pass.
+
+  if (B->q_along1 > a_min && B->q_along1 < a_max)
+    return SplitSnag(A, B->x1, B->y1, part, list);
+
+  if (B->q_along2 > a_min && B->q_along2 < a_max)
+    return SplitSnag(A, B->x2, B->y2, part, list);
+
+  if (A->q_along1 > b_min && A->q_along1 < b_max)
+    return SplitSnag(B, A->x1, A->y1, part, list);
+
+  if (A->q_along2 > b_min && A->q_along2 < b_max)
+    return SplitSnag(B, A->x2, A->y2, part, list);
+
+  // to get here, the snags must be directly overlapping.
+  // MERGE TIME!
+
+  SYS_ASSERT(a_min == b_min);
+  SYS_ASSERT(a_max == b_max);
+
+  if (A->q_along1 == B->q_along1)
+  {
+    // same direction
+    MergeSnags(A, B);
+
+    list[k] = NULL;  // remove B from the list
+  }
+  else
+  {
+    PartnerSnags(A, B);
+  }
+}
+
+
+static void HandleOverlaps(partition_c *part, std::vector<snag_c *> & overlap_list)
+{
+  for (int i = 0 ; i < (int)overlap_list.size() ; i++)
+    overlap_list[i]->CalcAlongs();
+
+  // FIXME: sort list by MIN(q_along), take advantage of that
+
+  int changes;
+
+  do
+  {
+    changes = 0;
+
+    // Note that new snags may get added (due to splits) while we are
+    // iterating over them.  Removed snags become NULL in the list.
+
+    for (int i = 0   ; i < (int)overlap_list.size() ; i++)
+    for (int k = i+1 ; k < (int)overlap_list.size() ; k++)
+    {
+      snag_c *A = list[i];
+      snag_c *B = list[k];
+
+      if (! A || ! B)
+        continue;
+
+      if (TestOverlap(part, overlap_list, i, k))
+        changes++;
+    }
+
+    fprintf(stderr, "  HandleOverlaps: %d changes\n", changes);
+
+  } while (changes > 0);
+}
+
 
 static void Split(group_c *G)
 {
@@ -522,7 +651,14 @@ static void Split(group_c *G)
 
   if (part)
   {
-    DivideGroup(G, part);
+    fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
+            part->x1, part->y1, part->x2, part->y2);
+
+    std::vector<snag_c *> overlap_list;
+
+    DivideGroup(G, part, overlap_list);
+
+    HandleOverlaps(part, overlap_list);
 
     Split(G->back); 
     Split(G->front); 
