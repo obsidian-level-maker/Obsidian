@@ -70,7 +70,7 @@ public:
 
   partition_c * on_node;
 
-  snag_c *partner;  // NULL if not a mini snag
+  snag_c *partner;  // only valid AFTER HandleOverlaps()
 
   std::vector<brush_vert_c *> sides;
 
@@ -116,12 +116,14 @@ public:
     return ComputeDist(x1,y1, x2,y2);
   }
 
-  void Cut(double ix, double iy, snag_c **S2, snag_c **T2);
+  snag_c * Cut(double ix, double iy);
 
-  void CalcAlongs(partition_c *part)
+  void CalcAlongs()
   {
-    double a1 = AlongDist(x1, y1, part->x1,part->y1, part->x2,part->y2);
-    double a2 = AlongDist(x2, y2, part->x1,part->y1, part->x2,part->y2);
+    SYS_ASSERT(on_node);
+
+    double a1 = AlongDist(x1, y1, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
+    double a2 = AlongDist(x2, y2, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
 
     a1 /= SNAG_EPSILON;
     a2 /= SNAG_EPSILON;
@@ -170,6 +172,10 @@ public:
 
   bool TestSide(partition_c *P);
 
+  void ClockwiseSnags()
+  {
+    // FIXME: ClockwiseSnags
+  }
 };
 
 
@@ -197,25 +203,27 @@ public:
 
 
 partition_c::partition_c(const snag_c *S) :
-    x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2),
+    x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
 { }
 
 
-static bool PartnerSnags(snag_c *A, snag_c *B)
+static void PartnerSnags(snag_c *A, snag_c *B)
 {
   A->partner = B;
   B->partner = A;
 }
 
 
-void snag_c::Cut(double ix, double iy, snag_c **S2, snag_c **T2)
+snag_c * snag_c::Cut(double ix, double iy)
 {
-  *S2 = new snag_c(*this);
-  *T2 = NULL;
+  snag_c *T = new snag_c(*this);
 
-  x2 = ix; (*S2)->x1 = ix;
-  y2 = iy; (*S2)->y1 = iy;
+  x2 = ix; T->x1 = ix;
+  y2 = iy; T->y1 = iy;
 
+  return T;
+
+#if 0  // probably not needed
   if (partner)
   {
     snag_c *T1 = partner;
@@ -229,6 +237,7 @@ void snag_c::Cut(double ix, double iy, snag_c **S2, snag_c **T2)
 
     PartnerSnags(T1, *T2);
   }
+#endif
 }
 
 
@@ -237,6 +246,8 @@ void snag_c::Cut(double ix, double iy, snag_c **S2, snag_c **T2)
 static bool do_clip_brushes;
 
 static std::vector<partition_c> all_partitions;
+
+static std::vector<snag_c *> all_snags;
 
 // first region is always a dummy
 static std::vector<region_c *> all_regions;
@@ -269,6 +280,8 @@ static void CreateRegion(group_c *G, csg_brush_c *P)
     brush_vert_c *v2 = P->verts[k2];
 
     snag_c *S = new snag_c(v1, v2, v2);
+
+    all_snags.push_back(S);
 
     R->AddSnag(S);
   }
@@ -332,27 +345,12 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 	int b_side = (b < -SNAG_EPSILON) ? -1 : (b > SNAG_EPSILON) ? +1 : 0;
 
   // THIS SHOULD NOT HAPPEN
-  SYS_ASSERT(! (a_side == 0 && b_side == 0));
-
-  // intersection stuff  -- FIXME: duplicated code
-  if (a_side != b_side)
+  if (a_side == 0 && b_side == 0)
   {
-    double ix, iy;
-
-    CalcIntersection(S->x1, S->y1, S->x2, S->y2,
-                     part->x1, part->y1, part->x2, part->y2,
-                     &ix, &iy);
-
-    double along = AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
-
-    *along_min = MIN(*along_min, along);
-    *along_max = MAX(*along_max, along);
-  }
+    // TODO: a softer landing
+    Main_FatalError("DivideOneSnag: region contains snag along partition line!\n");
 
 #if 0
-	// on the same line?
-	if (a_side == 0 && b_side == 0)
-	{
 		// this snag runs along the same line as the partition.
 		// check whether it goes in the same direction or the opposite.
     S->on_node = true;
@@ -371,8 +369,24 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
       back->AddSnag(S);
 		}
 		return;
-	}
 #endif
+  }
+
+
+  // intersection stuff  -- FIXME: duplicated code
+  if (a_side != b_side)
+  {
+    double ix, iy;
+
+    CalcIntersection(S->x1, S->y1, S->x2, S->y2,
+                     part->x1, part->y1, part->x2, part->y2,
+                     &ix, &iy);
+
+    double along = AlongDist(ix, iy, part->x1, part->y1, part->x2, part->y2);
+
+    *along_min = MIN(*along_min, along);
+    *along_max = MAX(*along_max, along);
+  }
 
 	// completely on front side?
 	if (a_side >= 0 && b_side >= 0)
@@ -399,26 +413,18 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
                    part->x1, part->y1, part->x2, part->y2,
                    &ix, &iy);
 
-  snag_c *S2;
-  snag_c *T2;
-
-  S->Cut(ix, iy, &S2, &T2);
-
-  S->x2 = ix; T->x1 = ix;
-  S->y2 = iy; T->y1 = iy;
+  snag_c *T = S->Cut(ix, iy);
 
 	if (a_side < 0)
 	{
      back->AddSnag(S);
-    front->AddSnag(S2);
+    front->AddSnag(T);
 	}
 	else
 	{
     front->AddSnag(S);
-     back->AddSnag(S2);
+     back->AddSnag(T);
 	}
-
-  if (T2) SHIT.
 }
 
 
@@ -445,8 +451,8 @@ static void DivideOneRegion(region_c *R, partition_c *part,
   all_regions.push_back(N);
 
   // iterate over a swapped-out version of the region's snags
-  // (so we can safely add certain ones into R->snags)
-  region_c *dummy = all_regions[0]l
+  // (so we can safely add certain ones back into R->snags)
+  region_c *dummy = all_regions[0];
 
   std::swap(R->snags, dummy->snags);
 
@@ -510,7 +516,7 @@ static void DivideGroup(group_c *G, partition_c *part)
 
 static partition_c * AddPartition(const snag_c *S)
 {
-  all_partitions.push_back(partition_c(best));
+  all_partitions.push_back(partition_c(S));
 
   return &all_partitions.back();
 }
@@ -549,9 +555,9 @@ static partition_c * ChoosePartition(group_c *G)
 
 static bool SplitSnag(snag_c *S, double ix, double iy, partition_c *part)
 {
-  snag_c *T = new snag_c(*S);
+#if 0   // TODO
 
-  
+  snag_c *T = new snag_c(*S);
 
   S->where->AddSnag(T);
 
@@ -559,12 +565,13 @@ static bool SplitSnag(snag_c *S, double ix, double iy, partition_c *part)
 
   S->CalcAlongs(part);
   T->CalcAlongs(part);
+#endif
 
   return true;
 }
 
 
-static bool MergeSnags(snag_c *A, snag_c *B)
+static void MergeSnags(snag_c *A, snag_c *B)
 {
   // TODO: a better way!
 
@@ -603,16 +610,16 @@ static bool TestOverlap(partition_c *part, std::vector<snag_c *> & list,
   //       in a future pass.
 
   if (B->q_along1 > a_min && B->q_along1 < a_max)
-    return SplitSnag(A, B->x1, B->y1, part, list);
+    return SplitSnag(A, B->x1, B->y1, part);
 
   if (B->q_along2 > a_min && B->q_along2 < a_max)
-    return SplitSnag(A, B->x2, B->y2, part, list);
+    return SplitSnag(A, B->x2, B->y2, part);
 
   if (A->q_along1 > b_min && A->q_along1 < b_max)
-    return SplitSnag(B, A->x1, A->y1, part, list);
+    return SplitSnag(B, A->x1, A->y1, part);
 
   if (A->q_along2 > b_min && A->q_along2 < b_max)
-    return SplitSnag(B, A->x2, A->y2, part, list);
+    return SplitSnag(B, A->x2, A->y2, part);
 
   // to get here, the snags must be directly overlapping.
   // MERGE TIME!
@@ -635,8 +642,10 @@ static bool TestOverlap(partition_c *part, std::vector<snag_c *> & list,
 }
 
 
-static void HandleOverlaps(partition_c *part)
+static void OLD_HandleOverlaps(partition_c *part)
 {
+#if 0
+
   for (unsigned int i = 0 ; i < overlap_list.size() ; i++)
     overlap_list[i]->CalcAlongs();
 
@@ -667,6 +676,7 @@ static void HandleOverlaps(partition_c *part)
     fprintf(stderr, "  HandleOverlaps: %d changes\n", changes);
 
   } while (changes > 0);
+#endif
 }
 
 
@@ -679,11 +689,7 @@ static void Split(group_c *G)
     fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
             part->x1, part->y1, part->x2, part->y2);
 
-    overlap_list.clear();
-
     DivideGroup(G, part);
-
-    HandleOverlaps(part);
 
     // recursively handle each side
     Split(G->back); 
@@ -692,11 +698,22 @@ static void Split(group_c *G)
 }
 
 
+static void HandleOverlaps()
+{
+  // process each set of snags which lie on the same partition
+  // (determined by sorting the snags by their 'on_node' pointer).
+
+  //!!!  std::sort(all_snags.begin(), all_snags.end(), SORT_THINGY)
+}
+
+
 void CSG_BSP()
 {
-  all_regions.clear();
   all_partitions.clear();
+  all_snags.clear();
+  all_regions.clear();
 
+  // create dummy region
   all_regions.push_back(new region_c);
 
   group_c *root = new group_c;
@@ -707,6 +724,8 @@ void CSG_BSP()
   }
 
   Split(root);
+
+  HandleOverlaps();
 
   // FIXME: free stuff
 }
