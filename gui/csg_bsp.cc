@@ -34,10 +34,30 @@
 
 #define SNAG_EPSILON  0.001
 
-#define partition_c  snag_c
+
+/***** CLASSES ******************/
 
 
 class region_c;
+class snag_c;
+
+
+class partition_c
+{
+public:
+  double x1, y1;
+  double x2, y2;
+
+public:
+  partition_c(double _x1, double _y1, double _x2, double _y2) :
+      x1(_x1), y1(_y1), x2(_x2), y2(_y2)
+  { }
+
+  partition_c(const snag_c *S);
+
+  ~partition_c()
+  { }
+};
 
 
 class snag_c
@@ -47,7 +67,8 @@ public:
   double x2, y2;
 
   bool mini;
-  bool on_node;
+
+  partition_c * on_node;
 
   snag_c *partner;  // NULL if not a mini snag
 
@@ -72,7 +93,7 @@ private:
 public:
   snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
       x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      mini(false), on_node(false), partner(NULL), /// where(NULL),
+      mini(false), on_node(NULL), partner(NULL), /// where(NULL),
       sides()
   {
     if (Length() < SNAG_EPSILON)
@@ -83,7 +104,7 @@ public:
 
   snag_c(double _x1, double _y1, double _x2, double _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      mini(true), on_node(true), partner(NULL), /// where(NULL),
+      mini(true), on_node(NULL), partner(NULL), /// where(NULL),
       sides()
   { }
 
@@ -175,6 +196,11 @@ public:
 };
 
 
+partition_c::partition_c(const snag_c *S) :
+    x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2),
+{ }
+
+
 static bool PartnerSnags(snag_c *A, snag_c *B)
 {
   A->partner = B;
@@ -206,9 +232,11 @@ void snag_c::Cut(double ix, double iy, snag_c **S2, snag_c **T2)
 }
 
 
+/***** VARIABLES ******************/
+
 static bool do_clip_brushes;
 
-static std::vector<snag_c *> overlap_list;
+static std::vector<partition_c> all_partitions;
 
 // first region is always a dummy
 static std::vector<region_c *> all_regions;
@@ -274,8 +302,7 @@ bool region_c::TestSide(partition_c *part)
 
     if (a_side == 0 && b_side == 0)
     {
-      S->on_node = true;
-      overlap_list.push_back(S);
+      S->on_node = part;
     }
 
     if (a_side < 0 || b_side < 0) has_back  = true;
@@ -451,16 +478,16 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     AlongCoord(along_min, part->x1,part->y1, part->x2,part->y2, &x1, &y1);
     AlongCoord(along_max, part->x1,part->y1, part->x2,part->y2, &x2, &y2);
 
-    snag_c *front_snag = new snag_c(x1,y1, x2,y2);
-    snag_c * back_snag = new snag_c(x2,y2, x1,y1);
+    snag_c *front_S = new snag_c(x1,y1, x2,y2);
+    snag_c * back_S = new snag_c(x2,y2, x1,y1);
 
-    PartnerSnags(front_snag, back_snag);
+    front_S->on_node = part;
+     back_S->on_node = part;
 
-    R->snags.push_back(front_snag);
-    N->snags.push_back(back_snag);
+    PartnerSnags(front_S, back_S);
 
-    overlap_list.push_back(front_snag);
-    overlap_list.push_back(back_snag);
+    R->snags.push_back(front_S);
+    N->snags.push_back(back_S);
   }
 }
 
@@ -481,11 +508,19 @@ static void DivideGroup(group_c *G, partition_c *part)
 }
 
 
+static partition_c * AddPartition(const snag_c *S)
+{
+  all_partitions.push_back(partition_c(best));
+
+  return &all_partitions.back();
+}
+
+
 static partition_c * ChoosePartition(group_c *G)
 {
   // FIXME !!! do seed-wise binary subdivision thang
 
-  partition_c *best = NULL;
+  snag_c *best = NULL;
 
   for (unsigned int i = 0 ; i < G->regions.size() ; i++)
   {
@@ -493,19 +528,22 @@ static partition_c * ChoosePartition(group_c *G)
 
     for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
     {
-      partition_c *part = G->regions[i]->snags[k];
+      snag_c *S = G->regions[i]->snags[k];
 
-      if (! part->on_node)
+      if (! S->on_node)
       {
         // FIXME !!!! choose properly
         //            (prefer horizontal/vertical which splits bbox well)
         if (! best)
-          best = part;
+          best = S;
       }
     }
   }
 
-  return best;
+  if (! best)
+    return NULL;
+
+  return AddPartition(best);
 }
 
 
@@ -657,6 +695,7 @@ static void Split(group_c *G)
 void CSG_BSP()
 {
   all_regions.clear();
+  all_partitions.clear();
 
   all_regions.push_back(new region_c);
 
