@@ -171,6 +171,23 @@ public:
 
   bool TestSide(partition_c *P);
 
+  void MergeOther(region_c *other)
+  {
+    unsigned int i;
+
+    // TODO: snags and brushes should never be duplicated by a merge,
+    //       however for robustness we should check and skip them.
+
+    for (i = 0 ; i < other->snags.size() ; i++)
+      snags.push_back(other->snags[i]);
+
+    for (i = 0 ; i < other->brushes.size() ; i++)
+      brushes.push_back(other->brushes[i]);
+
+    other->snags.clear();
+    other->brushes.clear();
+  }
+
   void ClockwiseSnags()
   {
     // FIXME: ClockwiseSnags
@@ -485,6 +502,24 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 }
 
 
+static void MergeRegions(std::vector<region_c *> & group)
+{
+  if (group.size() < 2)
+    return;
+
+  region_c *R = group[0];
+
+  for (unsigned int i = 1 ; i < group.size() ; i++)
+  {
+    region_c *R2 = group[i];
+
+    R->MergeOther(R2);
+
+    delete R2;
+  }
+}
+
+
 static partition_c * AddPartition(const snag_c *S)
 {
   all_partitions.push_back(partition_c(S));
@@ -545,11 +580,16 @@ static void SplitGroup(std::vector<region_c *> & group)
     // recursively handle each side
     SplitGroup(back); 
     SplitGroup(front); 
-  }
 
-  // FIXME !!!!
-  // at here, each leaf group is a convex region
-  // hence merge all the regions into one
+    // input group has been consumed now 
+  }
+  else
+  {
+    // at here, we have a leaf group which is convex,
+    // hence merge all the regions into one.
+
+    MergeRegions(group);
+  }
 }
 
 
@@ -668,11 +708,11 @@ static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
       snag_c *A = overlap_list[i];
       snag_c *B = overlap_list[k];
 
-      if (A && B)
-      {
-        if (TestOverlap(part, overlap_list, i, k))
-          changes++;
-      }
+      if (! A || ! B)
+        continue;
+
+      if (TestOverlap(part, overlap_list, i, k))
+        changes++;
     }
 
     fprintf(stderr, "  %d changes\n", changes);
@@ -689,7 +729,7 @@ static void HandleOverlaps()
 
   std::sort(all_snags.begin(), all_snags.end(), snag_on_node_Compare());
 
-  unsigned int i, k, m;
+  unsigned int i, k;
   unsigned int total = all_snags.size();
 
   for (i = 0 ; i < total ; i = k+1 )
@@ -749,7 +789,7 @@ void CSG_Quantize()
 
 //------------------------------------------------------------------------
 
-void CSG_Merge()
+void CSG_FindGaps()
 {
 }
 
