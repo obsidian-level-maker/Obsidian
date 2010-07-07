@@ -241,6 +241,16 @@ snag_c * snag_c::Cut(double ix, double iy)
 }
 
 
+struct snag_on_node_Compare
+{
+  inline bool operator() (const snag_c *A, const snag_c *B) const
+  {
+    return A->on_node < B->on_node;
+  }
+};
+
+
+
 /***** VARIABLES ******************/
 
 static bool do_clip_brushes;
@@ -553,6 +563,30 @@ static partition_c * ChoosePartition(group_c *G)
 }
 
 
+static void Split(group_c *G)
+{
+  partition_c *part = ChoosePartition(G);
+
+  if (part)
+  {
+    fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
+            part->x1, part->y1, part->x2, part->y2);
+
+    DivideGroup(G, part);
+
+    // recursively handle each side
+    Split(G->back); 
+    Split(G->front); 
+  }
+
+  // FIXME !!!!
+  // at here, each leaf group is a convex region
+  // hence merge all the regions into one
+}
+
+
+
+
 static bool SplitSnag(snag_c *S, double ix, double iy, partition_c *part)
 {
 #if 0   // TODO
@@ -642,14 +676,16 @@ static bool TestOverlap(partition_c *part, std::vector<snag_c *> & list,
 }
 
 
-static void OLD_HandleOverlaps(partition_c *part)
+static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
 {
-#if 0
+  fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
+
+  partition_c *part = overlap_list[0].on_node;
 
   for (unsigned int i = 0 ; i < overlap_list.size() ; i++)
     overlap_list[i]->CalcAlongs();
 
-  // FIXME: sort list by MIN(q_along), take advantage of that
+  // TODO: sort list by MIN(q_along), take advantage of that
 
   int changes;
 
@@ -666,36 +702,19 @@ static void OLD_HandleOverlaps(partition_c *part)
       snag_c *A = overlap_list[i];
       snag_c *B = overlap_list[k];
 
-      if (! A || ! B)
-        continue;
-
-      if (TestOverlap(part, overlap_list, i, k))
-        changes++;
+      if (A && B)
+      {
+        if (TestOverlap(part, overlap_list, i, k))
+          changes++;
+      }
     }
 
-    fprintf(stderr, "  HandleOverlaps: %d changes\n", changes);
+    fprintf(stderr, "  %d changes\n", changes);
 
   } while (changes > 0);
 #endif
 }
 
-
-static void Split(group_c *G)
-{
-  partition_c *part = ChoosePartition(G);
-
-  if (part)
-  {
-    fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
-            part->x1, part->y1, part->x2, part->y2);
-
-    DivideGroup(G, part);
-
-    // recursively handle each side
-    Split(G->back); 
-    Split(G->front); 
-  }
-}
 
 
 static void HandleOverlaps()
@@ -703,7 +722,28 @@ static void HandleOverlaps()
   // process each set of snags which lie on the same partition
   // (determined by sorting the snags by their 'on_node' pointer).
 
-  //!!!  std::sort(all_snags.begin(), all_snags.end(), SORT_THINGY)
+  std::sort(all_snags.begin(), all_snags.end(), snag_on_node_Compare());
+
+  unsigned int i, k, m;
+  unsigned int total = all_snags.size();
+
+  for (i = 0 ; i < total ; i = k+1 )
+  {
+    k = i;
+
+    while (k+1 < total && all_snags[k+1] == all_snags[k])
+      k++;
+
+    if (k > i && all_snags[i].on_node)
+    {
+      std::vector<snag_c *> overlap_list;
+
+      for ( ; i <= k ; i++)
+        overlap_list.push_back(all_snags[i]);
+
+      ProcessOverlapList(overlap_list);
+    }
+  }
 }
 
 
@@ -735,6 +775,10 @@ void CSG_BSP()
 
 void CSG_Quantize()
 {
+  // mark segments and regions which become zero size as "degenerate".
+
+  // a segment with a degenerate region on one side (after marking all
+  // degenerates) needs to discover the new region, e.g. point test.
 }
 
 
