@@ -37,7 +37,6 @@
 
 /***** CLASSES ******************/
 
-
 class region_c;
 class snag_c;
 
@@ -179,29 +178,6 @@ public:
 };
 
 
-class group_c
-{
-public:
-  std::vector<region_c *> regions;
-
-  // for BSP stuff
-  group_c *front;
-  group_c *back;
-
-public:
-  group_c() : regions(), front(NULL), back(NULL)
-  { }
-
-  ~group_c()
-  { }
-
-  void AddRegion(region_c *R)
-  {
-    regions.push_back(R);
-  }
-};
-
-
 partition_c::partition_c(const snag_c *S) :
     x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
 { }
@@ -266,7 +242,7 @@ static std::vector<region_c *> all_regions;
 
 //------------------------------------------------------------------------
 
-static void CreateRegion(group_c *G, csg_brush_c *P)
+static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
 {
   SYS_ASSERT(P);
 
@@ -296,7 +272,7 @@ static void CreateRegion(group_c *G, csg_brush_c *P)
     R->AddSnag(S);
   }
 
-  G->AddRegion(R);
+  group.push_back(R);
 }
 
 
@@ -439,18 +415,19 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 
 
 static void DivideOneRegion(region_c *R, partition_c *part,
-                            group_c *front, group_c *back)
+                            std::vector<region_c *> & front,
+                            std::vector<region_c *> & back)
 {
   int side = R->TestSide(part);
 
   if (side > 0)
   {
-    front->regions.push_back(R);
+    front.push_back(R);
     return;
   }
   else if (side < 0)
   {
-    back->regions.push_back(R);
+    back.push_back(R);
     return;
   }
 
@@ -480,8 +457,8 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
   dummy->snags.clear();
 
-  front->regions.push_back(R);
-   back->regions.push_back(N);
+  front.push_back(R);
+   back.push_back(N);
 
   // --- add the mini snags ---
 
@@ -508,22 +485,6 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 }
 
 
-static void DivideGroup(group_c *G, partition_c *part)
-{
-  G->front = new group_c;
-  G->back  = new group_c;
-
-  for (unsigned int i = 0 ; i < G->regions.size() ; i++)
-  {
-    region_c *R = G->regions[i];
-
-    DivideOneRegion(R, part, G->front, G->back);
-  }
-
-  G->regions.clear();
-}
-
-
 static partition_c * AddPartition(const snag_c *S)
 {
   all_partitions.push_back(partition_c(S));
@@ -532,19 +493,19 @@ static partition_c * AddPartition(const snag_c *S)
 }
 
 
-static partition_c * ChoosePartition(group_c *G)
+static partition_c * ChoosePartition(std::vector<region_c *> & group)
 {
   // FIXME !!! do seed-wise binary subdivision thang
 
   snag_c *best = NULL;
 
-  for (unsigned int i = 0 ; i < G->regions.size() ; i++)
+  for (unsigned int i = 0 ; i < group.size() ; i++)
   {
-    region_c *R = G->regions[i];
+    region_c *R = group[i];
 
     for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
     {
-      snag_c *S = G->regions[i]->snags[k];
+      snag_c *S = R->snags[k];
 
       if (! S->on_node)
       {
@@ -563,28 +524,33 @@ static partition_c * ChoosePartition(group_c *G)
 }
 
 
-static void Split(group_c *G)
+static void SplitGroup(std::vector<region_c *> & group)
 {
-  partition_c *part = ChoosePartition(G);
+  partition_c *part = ChoosePartition(group);
 
   if (part)
   {
     fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
             part->x1, part->y1, part->x2, part->y2);
 
-    DivideGroup(G, part);
+    // divide the group
+    std::vector<region_c *> front;
+    std::vector<region_c *> back;
+
+    for (unsigned int i = 0 ; i < group.size() ; i++)
+    {
+      DivideOneRegion(group[i], part, front, back);
+    }
 
     // recursively handle each side
-    Split(G->back); 
-    Split(G->front); 
+    SplitGroup(back); 
+    SplitGroup(front); 
   }
 
   // FIXME !!!!
   // at here, each leaf group is a convex region
   // hence merge all the regions into one
 }
-
-
 
 
 static bool SplitSnag(snag_c *S, double ix, double iy, partition_c *part)
@@ -680,7 +646,7 @@ static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
 {
   fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
 
-  partition_c *part = overlap_list[0].on_node;
+  partition_c *part = overlap_list[0]->on_node;
 
   for (unsigned int i = 0 ; i < overlap_list.size() ; i++)
     overlap_list[i]->CalcAlongs();
@@ -712,7 +678,6 @@ static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
     fprintf(stderr, "  %d changes\n", changes);
 
   } while (changes > 0);
-#endif
 }
 
 
@@ -734,7 +699,7 @@ static void HandleOverlaps()
     while (k+1 < total && all_snags[k+1] == all_snags[k])
       k++;
 
-    if (k > i && all_snags[i].on_node)
+    if (k > i && all_snags[i]->on_node)
     {
       std::vector<snag_c *> overlap_list;
 
@@ -756,14 +721,14 @@ void CSG_BSP()
   // create dummy region
   all_regions.push_back(new region_c);
 
-  group_c *root = new group_c;
+  std::vector<region_c *> root_group;
 
   for (unsigned int i=0; i < all_brushes.size(); i++)
   {
-    CreateRegion(root,all_brushes[i]);
+    CreateRegion(root_group, all_brushes[i]);
   }
 
-  Split(root);
+  SplitGroup(root_group);
 
   HandleOverlaps();
 
