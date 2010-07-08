@@ -35,7 +35,7 @@
 #include "q1_structs.h"
 
 
-qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h)
+qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offset(-1)
 {
   if (width > 1 || height > 1)
     samples = new float[width * height];
@@ -118,29 +118,124 @@ void qLightmap_c::Flatten(float avg)
 }
 
 
+void qLightmap_c::Write(qLump_c *lump, bool colored)
+{
+  if (isFlat())
+  {
+    offset = colored ? 1 : 0;
+    return;
+  }
+
+  offset = lump->GetSize();
+
+  int total = width * height;
+
+  Clamp();
+
+  for (int i = 0 ; i < total ; i++)
+  {
+    byte datum = (byte) samples[i];
+
+    lump->Append(&datum, 1);
+
+    if (colored)
+    {
+      lump->Append(&datum, 1);
+      lump->Append(&datum, 1);
+    }
+  }
+}
+
+
+int qLightmap_c::CalcOffset() const
+{
+  if (! isFlat())
+    return offset;
+
+  // compute offset of a flat lightmap
+  int result = (int) samples[0];
+
+  if (result > 128)
+  {
+    result = 64 + result / 2;
+  }
+
+  return result * (offset ? 3 : 1);
+}
+
+
 //------------------------------------------------------------------------
 
-static qLump_c *q1_lightmap;
+static std::vector<qLightmap_c *> all_lightmaps;
+
+static qLump_c *light_lump;
+static bool light_colored;
 
 
-void Quake1_BeginLightmap(void)
+void BSP_InitLightmaps()
 {
-  q1_lightmap = BSP_NewLump(LUMP_LIGHTING);
-
-
-
+  all_lightmaps.clear();
 }
 
 
-s32_t Quake1_LightAddBlock(int w, int h, u8_t level)
+void BSP_ClearLightmaps()
 {
-  s32_t offset = q1_lightmap->GetSize();
+  for (unsigned int i = 0 ; i < all_lightmaps.size() ; i++)
+    delete all_lightmaps[i];
 
-  for (int i = 0 ; i < w*h ; i++)
-    q1_lightmap->Append(&level, 1);
-
-  return offset;
+  all_lightmaps.clear();
 }
+
+
+static void WriteFlatBlock(int level, int size)
+{
+  if (light_colored)
+    size *= 3;
+
+  byte datum = (byte)level;
+
+  for ( ; level > 0 ; level--)
+    light_lump->Append(&datum, 1);
+}
+
+
+void BSP_BuildLightmap(qLump_c * lump, bool colored, int max_size)
+{
+  light_lump = lump;
+  light_colored = colored;
+
+  // at the start are a bunch of completely flat lightmaps.
+  // for the overbright range (129-255) there are half as many.
+
+  int i;
+
+  for (i = 0 ; i < 128 ; i++)
+  {
+    WriteFlatBlock(i, FLAT_LIGHTMAP_SIZE);
+    max_size -= FLAT_LIGHTMAP_SIZE;
+  }
+
+  for (i = 128 ; i < 256 ; i += 2)
+  {
+    WriteFlatBlock(i, FLAT_LIGHTMAP_SIZE);
+    max_size -= FLAT_LIGHTMAP_SIZE;
+  }
+
+
+  // FIXME !!!! : check if lump would overflow, if yes then flatten some maps
+
+
+  for (unsigned int k = 0 ; k < all_lightmaps.size() ; k++)
+  {
+    qLightmap_c *L = all_lightmaps[k];
+
+    L->Write(light_lump, light_colored);
+  }
+
+
+  BSP_ClearLightmaps();
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

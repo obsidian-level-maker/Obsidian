@@ -22,6 +22,9 @@
 #define __QUAKE_LIGHTING_H__
 
 
+#define FLAT_LIGHTMAP_SIZE  (17*17)
+
+
 class qLightmap_c
 {
 private:
@@ -31,6 +34,9 @@ private:
 
   // when size is 1x1, the sample is stored here
   float flat;
+
+  // final offset in lightmap lump (if not flat)
+  int offset;
 
 public:
   qLightmap_c(int w, int h, float value = -99);
@@ -51,7 +57,21 @@ public:
   void Add(double x, double y, float value);
 
   void Flatten(float avg = -99);
+
+  void Write(qLump_c *lump, bool colored);
+
+  int CalcOffset() const;
 };
+
+
+/***** FUNCTIONS **********/
+
+void BSP_InitLightmaps();
+void BSP_ClearLightmaps();
+
+// TODO: BSP_NewLightmap(w, h, value)
+
+void BSP_BuildLightmap(qLump_c * lump, bool colored, int max_size);
 
 
 #endif /* __QUAKE_LIGHTING_H__ */
