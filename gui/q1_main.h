@@ -24,9 +24,6 @@
 class qLump_c;
 
 
-extern int q1_flat_lightmaps[256];
-
-
 class q1MapModel_c
 {
 public:

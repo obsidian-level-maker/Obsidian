@@ -35,6 +35,7 @@
 #include "g_lua.h"
 
 #include "q_bsp.h"
+#include "q_light.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
@@ -1234,7 +1235,7 @@ static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
     static int foo; foo++;
     raw_face.styles[0] = 0; // (foo & 3); //!!!!!
 
-    raw_face.lightofs = q1_flat_lightmaps[F->light];
+    raw_face.lightofs = 60*17*17;  //!!!! FIXME
   }
 }
 
@@ -1318,7 +1319,7 @@ static void BuildWallFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
     static int foo = 0; foo++;
     raw_face.styles[0] = 0; // (foo & 3); //!!!!!
 
-    raw_face.lightofs = q1_flat_lightmaps[F->light];
+    raw_face.lightofs = 80*17*17; //!!!! FIXME
   }
 }
 

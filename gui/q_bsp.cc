@@ -795,62 +795,6 @@ void BSP_WriteEdges(void)
 
 //------------------------------------------------------------------------
 
-static int bsp_light_lump;
-static int bsp_max_lightmap;
-
-static qLump_c *bsp_lightmap;
-
-
-void BSP_PrepareLightmap(int lump, int max_lightmap)
-{
-  bsp_light_lump = lump;
-  bsp_max_lightmap = max_lightmap;
-
-  bsp_lightmap = BSP_NewLump(bsp_light_lump);
-
-  // tis the season to be jolly
-  const char *info = "Lightmap created by OBLIGE!";
-
-  bsp_lightmap->Append(info, strlen(info));
-
-  // quake II needs all offsets to be divisible by 3
-  const byte zeros[4] = { 0,0,0,0 };
-
-  int count = 3 - (bsp_lightmap->GetSize() % 3);
-
-  bsp_lightmap->Append(zeros, count);
-}
-
-
-s32_t BSP_AddLightBlock(int w, int h, u8_t *levels)
-{
-  s32_t offset = bsp_lightmap->GetSize();
-
-  if (bsp_game == 2)
-  {
-    // QuakeII has RGB lightmaps (but this is just greyscale)
-    for (int i = 0; i < w*h; i++)
-    {
-      bsp_lightmap->Append(& levels[i], 1);
-      bsp_lightmap->Append(& levels[i], 1);
-      bsp_lightmap->Append(& levels[i], 1);
-    }
-  }
-  else
-  {
-    bsp_lightmap->Append(levels, w * h);
-  }
-
-  if ((int)bsp_lightmap->GetSize() >= bsp_max_lightmap)
-    Main_FatalError("Quake build failure: exceeded lightmap limit of %d\n",
-                    bsp_max_lightmap);
-
-  return offset;
-}
-
-
-//------------------------------------------------------------------------
-
 struct Compare_Intersect_pred
 {
   inline bool operator() (const intersect_t& A, const intersect_t& B) const

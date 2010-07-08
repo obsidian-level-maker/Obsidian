@@ -33,6 +33,7 @@
 #include "ui_chooser.h"
 
 #include "q_bsp.h"
+#include "q_light.h"
 #include "q2_main.h"
 #include "q2_structs.h"
 
@@ -464,13 +465,8 @@ void quake2_game_interface_c::EndLevel()
   BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
   BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
-  BSP_PrepareLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 
-//!!!! TEMP CRUD
-byte solid_light[512];
-for (int L=0; L < 512; L++) solid_light[L] = 64;
-BSP_AddLightBlock(16, 32, solid_light);
-
+  BSP_InitLightmaps();
 
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
@@ -491,6 +487,8 @@ BSP_AddLightBlock(16, 32, solid_light);
   DummyVis();
   WriteBrushes();
 
+  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true);
+
   BSP_WritePlanes();
   BSP_WriteVertices();
   BSP_WriteEdges();
@@ -498,6 +496,8 @@ BSP_AddLightBlock(16, 32, solid_light);
   BSP_CloseLevel();
 
   // FREE STUFF !!!!
+
+  BSP_FreeLightmaps();
 }
 
 

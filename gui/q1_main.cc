@@ -34,11 +34,9 @@
 #include "img_all.h"
 
 #include "q_bsp.h"
+#include "q_light.h"
 #include "q1_main.h"
 #include "q1_structs.h"
-
-
-int q1_flat_lightmaps[256];
 
 
 q1MapModel_c::q1MapModel_c() :
@@ -536,21 +534,6 @@ static void DummyTexInfo(void)
 #endif
 
 
-static void Q1_MakeFlatLightmaps()
-{
-  byte data[17*17];
-
-  for (int level = 0; level < 256; level += 2)
-  {
-    for (int i = 0; i < 17*17; i++)
-      data[i] = level;
-
-    q1_flat_lightmaps[level] = BSP_AddLightBlock(17, 17, data);
-
-    q1_flat_lightmaps[level+1] = q1_flat_lightmaps[level];
-  }
-}
-
 
 //------------------------------------------------------------------------
 
@@ -659,9 +642,8 @@ void quake1_game_interface_c::EndLevel()
   BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
   BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
-  BSP_PrepareLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 
-  Q1_MakeFlatLightmaps();
+  BSP_InitLightmaps();
 
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
@@ -681,6 +663,8 @@ void quake1_game_interface_c::EndLevel()
   BSP_WriteVertices();
   BSP_WriteEdges();
 
+  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
+
   BSP_CloseLevel();
 
   // FREE STUFF !!!!
@@ -689,6 +673,8 @@ void quake1_game_interface_c::EndLevel()
 
   if (description)
     StringFree(description);
+
+  BSP_FreeLightmaps();
 }
 
 

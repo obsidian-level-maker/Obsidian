@@ -168,8 +168,7 @@ int qLightmap_c::CalcOffset() const
 
 static std::vector<qLightmap_c *> all_lightmaps;
 
-static qLump_c *light_lump;
-static bool light_colored;
+static qLump_c *lightmap_lump;
 
 
 void BSP_InitLightmaps()
@@ -178,7 +177,7 @@ void BSP_InitLightmaps()
 }
 
 
-void BSP_ClearLightmaps()
+void BSP_FreeLightmaps()
 {
   for (unsigned int i = 0 ; i < all_lightmaps.size() ; i++)
     delete all_lightmaps[i];
@@ -187,39 +186,41 @@ void BSP_ClearLightmaps()
 }
 
 
-static void WriteFlatBlock(int level, int size)
+static void WriteFlatBlock(int level, int count)
 {
-  if (light_colored)
-    size *= 3;
-
   byte datum = (byte)level;
 
-  for ( ; level > 0 ; level--)
-    light_lump->Append(&datum, 1);
+  for ( ; count > 0 ; count--)
+    lightmap_lump->Append(&datum, 1);
 }
 
 
-void BSP_BuildLightmap(qLump_c * lump, bool colored, int max_size)
+void BSP_BuildLightmap(int lump, int max_size, bool colored)
 {
-  light_lump = lump;
-  light_colored = colored;
+  lightmap_lump = BSP_NewLump(lump);
 
   // at the start are a bunch of completely flat lightmaps.
   // for the overbright range (129-255) there are half as many.
 
   int i;
+  int flat_size = FLAT_LIGHTMAP_SIZE * (colored ? 3 : 1);
 
   for (i = 0 ; i < 128 ; i++)
   {
-    WriteFlatBlock(i, FLAT_LIGHTMAP_SIZE);
-    max_size -= FLAT_LIGHTMAP_SIZE;
+    WriteFlatBlock(i, flat_size);
+    max_size -= flat_size;
   }
 
   for (i = 128 ; i < 256 ; i += 2)
   {
-    WriteFlatBlock(i, FLAT_LIGHTMAP_SIZE);
-    max_size -= FLAT_LIGHTMAP_SIZE;
+    WriteFlatBlock(i, flat_size);
+    max_size -= flat_size;
   }
+
+
+  // from here on 'max_size' is in PIXELS (not bytes)
+  if (colored)
+    max_size /= 3;
 
 
   // FIXME !!!! : check if lump would overflow, if yes then flatten some maps
@@ -229,11 +230,8 @@ void BSP_BuildLightmap(qLump_c * lump, bool colored, int max_size)
   {
     qLightmap_c *L = all_lightmaps[k];
 
-    L->Write(light_lump, light_colored);
+    L->Write(lightmap_lump, colored);
   }
-
-
-  BSP_ClearLightmaps();
 }
 
 

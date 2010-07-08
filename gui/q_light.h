@@ -67,11 +67,11 @@ public:
 /***** FUNCTIONS **********/
 
 void BSP_InitLightmaps();
-void BSP_ClearLightmaps();
+void BSP_FreeLightmaps();
 
 // TODO: BSP_NewLightmap(w, h, value)
 
-void BSP_BuildLightmap(qLump_c * lump, bool colored, int max_size);
+void BSP_BuildLightmap(int lump, int max_size, bool colored);
 
 
 #endif /* __QUAKE_LIGHTING_H__ */
