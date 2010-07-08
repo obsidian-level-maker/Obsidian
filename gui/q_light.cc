@@ -35,13 +35,20 @@
 #include "q1_structs.h"
 
 
-qLightmap_c::qLightmap_c(int w, int h) : width(w), height(h)
+qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h)
 {
-  samples = new float[width * height];
+  if (width > 1 || height > 1)
+    samples = new float[width * height];
+  else
+    samples = &flat;
+
+  if (value >= 0)
+    Fill(value);
 }
 
 qLightmap_c::~qLightmap_c()
 {
+  if (width > 1 || height > 1)
     delete[] samples;
 }
 
@@ -90,6 +97,28 @@ void qLightmap_c::Add(double x, double y, float value)
   }
 }
 
+
+void qLightmap_c::Flatten(float avg)
+{
+  if (isFlat())
+    return;
+
+  if (avg < 0)
+  {
+    float low, high;
+
+    GetRange(&low, &high, &avg);
+  }
+
+  flat = avg;
+
+  width = height = 1;
+
+  delete[] samples; samples = NULL;
+}
+
+
+//------------------------------------------------------------------------
 
 static qLump_c *q1_lightmap;
 

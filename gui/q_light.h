@@ -29,10 +29,18 @@ private:
 
   float *samples;
 
+  // when size is 1x1, the sample is stored here
+  float flat;
+
 public:
-  qLightmap_c(int w, int h);
+  qLightmap_c(int w, int h, float value = -99);
 
   ~qLightmap_c();
+
+  inline bool isFlat() const
+  {
+    return (width == 1) && (height == 1);
+  }
 
   void Fill(float value);
 
@@ -41,6 +49,8 @@ public:
   void GetRange(float *low, float *high, float *avg);
 
   void Add(double x, double y, float value);
+
+  void Flatten(float avg = -99);
 };
 
 
