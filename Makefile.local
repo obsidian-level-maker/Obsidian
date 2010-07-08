@@ -82,6 +82,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/q1_doors.o  \
 	$(OBJ_DIR)/q1_main.o   \
 	$(OBJ_DIR)/q_bsp.o     \
+	$(OBJ_DIR)/q_light.o   \
 	$(OBJ_DIR)/vis_buffer.o \
 	$(OBJ_DIR)/wolf_map.o  \
 	\
