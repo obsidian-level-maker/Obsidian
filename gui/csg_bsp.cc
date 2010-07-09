@@ -472,23 +472,20 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
   // iterate over a swapped-out version of the region's snags
   // (so we can safely add certain ones back into R->snags)
-  region_c *dummy = all_regions[0];
+  std::vector<snag_c *> local_snags;
 
-  std::swap(R->snags, dummy->snags);
+  std::swap(R->snags, local_snags);
 
   // compute intersection points
   double along_min =  9e9;
   double along_max = -9e9;
 
-  for (unsigned int i = 0 ; i < dummy->snags.size() ; i++)
+  for (unsigned int i = 0 ; i < local_snags.size() ; i++)
   {
-    snag_c *S = dummy->snags[i];
-    dummy->snags[i] = NULL;
+    snag_c *S = local_snags[i];
 
     DivideOneSnag(S, part, R, N, &along_min, &along_max);
   }
-
-  dummy->snags.clear();
 
   front.push_back(R);
    back.push_back(N);
@@ -774,16 +771,24 @@ static void HandleOverlaps()
 }
 
 
+static void AddBoundingRegion()
+{
+  // FIXME: AddBoundingRegion
+
+//  region_c *R = new region_c;
+//
+//  all_regions.push_back(R);
+}
+
+
 void CSG_BSP()
 {
   all_partitions.clear();
   all_snags.clear();
   all_regions.clear();
 
-  // create dummy region
-  all_regions.push_back(new region_c);
-
-  // FIXME !!!  create a rectangle region around whole map
+  // create a rectangle region around whole map
+  AddBoundingRegion();
 
   std::vector<region_c *> root_group;
 
