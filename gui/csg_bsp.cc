@@ -634,13 +634,11 @@ static bool MergeSnags(snag_c *A, snag_c *B)
 
 static bool PartnerSnags(snag_c *A, snag_c *B)
 {
-  if (A->partner == B && B->partner == A)
-    return false;
-
   A->partner = B;
   B->partner = A;
 
-  return true;
+  // mere partnering is not significant (won't need an extra pass)
+  return false;
 }
 
 
