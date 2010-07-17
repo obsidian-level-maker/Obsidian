@@ -237,6 +237,8 @@ public:
   void ClockwiseSnags()
   {
     // FIXME: ClockwiseSnags
+
+fprintf(stderr, "%u ", snags.size());
   }
 };
 
@@ -875,7 +877,86 @@ void CSG_BSP()
   for (unsigned int i=0; i < all_regions.size(); i++)
     all_regions[i]->ClockwiseSnags();
 
+fprintf(stderr, "\n");
+
   // FIXME: free stuff
+}
+
+
+//------------------------------------------------------------------------
+//   TEMPORARY TEST CRUD
+//------------------------------------------------------------------------
+
+#include "dm_wad.h"
+
+static std::map<int, int> test_vertices;
+
+int TestVertex(snag_c *S, int which)
+{
+  double x = which ? S->x2 : S->x1;
+  double y = which ? S->y2 : S->y1;
+
+  int ix = I_ROUND(x);
+  int iy = I_ROUND(y);
+
+  int id = (iy << 16) | ix;
+
+  if (test_vertices.find(id) != test_vertices.end())
+    return test_vertices[id];
+
+  int vert = DM_NumVertexes();
+
+  test_vertices[id] = vert;
+
+  DM_AddVertex(ix, iy);
+
+  return vert;
+}
+
+
+void CSG_TestRegions_Doom(void)
+{
+  // for debugging only: each region_c becomes a single sector.
+
+  CSG_BSP();
+
+  test_vertices.clear();
+
+  unsigned int i, k;
+
+  for (i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    const char *flat = "FWATER1";
+
+    if (R->brushes.size() > 0)
+    {
+      csg_brush_c *B = R->brushes[0];
+
+      flat = B->t.face.getStr("tex", "FLAT10");
+    }
+ 
+    int sec_id = DM_NumSectors();
+
+    DM_AddSector(0,flat, 144,flat, 255,(int)R->snags.size(), 0);
+
+    for (k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+
+      int side_id = DM_NumSidedefs();
+
+      const char *tex = S->partner ? "MIDSPACE" : "STARTAN3";
+
+      DM_AddSidedef(sec_id, tex, "-", tex, 0, 0);
+
+      DM_AddLinedef(TestVertex(S, 0), TestVertex(S, 1),
+                    side_id, -1,
+                    0, 1 /*impassible*/, 0,
+                    NULL /* args */);
+    }
+  }
 }
 
 
