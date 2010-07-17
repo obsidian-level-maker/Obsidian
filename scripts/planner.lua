@@ -844,7 +844,7 @@ function Plan_decide_outdoors()
       end
     end
 --]]
-    if STYLE.skies == "heaps" then return rand.odds(50) end
+    if STYLE.skies == "heaps" then return rand.odds(60) end
     if STYLE.skies == "few"   then return rand.odds(5) end
 
     -- room on edge of map?
