@@ -192,7 +192,7 @@ public:
     return false;
   }
 
-  bool TestSide(partition_c *P);
+  int TestSide(partition_c *P);
 
   void MergeOther(region_c *other)
   {
@@ -315,10 +315,10 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
 }
 
 
-bool region_c::TestSide(partition_c *part)
+int region_c::TestSide(partition_c *part)
 {
-  bool has_back  = false;
   bool has_front = false;
+  bool has_back  = false;
 
   for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
@@ -335,12 +335,12 @@ bool region_c::TestSide(partition_c *part)
       S->on_node = part;
     }
 
-    if (a_side < 0 || b_side < 0) has_back  = true;
     if (a_side > 0 || b_side > 0) has_front = true;
+    if (a_side < 0 || b_side < 0) has_back  = true;
 
     // adjust vertices which sit "nearly" on the line
-    if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
-    if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
+//!!!!!!    if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
+//!!!!!!    if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
   }
 
   if (has_back && has_front)
@@ -521,7 +521,7 @@ static void MergeRegions(std::vector<region_c *> & group)
 
     R->MergeOther(R2);
 
-    delete R2;
+/////????    delete R2;
   }
 
   // can now set the 'where' field of snags
@@ -581,13 +581,16 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
 
   GetGroupBounds(group, &gx1, &gy1, &gx2, &gy2);
 
-  int sx1 = floor(gx1 / CHUNK_SIZE);
-  int sy1 = floor(gy1 / CHUNK_SIZE);
-  int sx2 =  ceil(gx2 / CHUNK_SIZE);
-  int sy2 =  ceil(gy2 / CHUNK_SIZE);
+  int sx1 = floor(gx1 / CHUNK_SIZE + SNAG_EPSILON);
+  int sy1 = floor(gy1 / CHUNK_SIZE + SNAG_EPSILON);
+  int sx2 =  ceil(gx2 / CHUNK_SIZE - SNAG_EPSILON);
+  int sy2 =  ceil(gy2 / CHUNK_SIZE - SNAG_EPSILON);
 
   int sw  = sx2 - sx1;
   int sh  = sy2 - sy1;
+
+fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
+fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
   if (sw >= 2 || sh >= 2)
   {
@@ -628,12 +631,16 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
   if (! best)
     return NULL;
 
+fprintf(stderr, "best = %p\n", best);
   return AddPartition(best);
 }
 
 
 static void SplitGroup(std::vector<region_c *> & group)
 {
+  if (group.empty())
+    return;
+
   // Note: there is no explicit check for convexitiy.  We keep going until
   //       every snag has been on a partition.  This means that a convex
   //       region will usually get be "split" multiple times where
@@ -656,8 +663,8 @@ static void SplitGroup(std::vector<region_c *> & group)
     }
 
     // recursively handle each side
-    SplitGroup(back); 
     SplitGroup(front); 
+    SplitGroup(back); 
 
     // input group has been consumed now 
   }
@@ -899,7 +906,7 @@ int TestVertex(snag_c *S, int which)
   int ix = I_ROUND(x);
   int iy = I_ROUND(y);
 
-  int id = (iy << 16) | ix;
+  int id = (iy << 16) + ix;
 
   if (test_vertices.find(id) != test_vertices.end())
     return test_vertices[id];
@@ -924,6 +931,8 @@ void CSG_TestRegions_Doom(void)
 
   unsigned int i, k;
 
+
+
   for (i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -941,19 +950,15 @@ void CSG_TestRegions_Doom(void)
 
     DM_AddSector(0,flat, 144,flat, 255,(int)R->snags.size(), 0);
 
+    DM_AddSidedef(0, "-", "-", "-", 0, 0);
+
     for (k = 0 ; k < R->snags.size() ; k++)
     {
       snag_c *S = R->snags[k];
 
-      int side_id = DM_NumSidedefs();
-
-      const char *tex = S->partner ? "MIDSPACE" : "STARTAN3";
-
-      DM_AddSidedef(sec_id, tex, "-", tex, 0, 0);
-
       DM_AddLinedef(TestVertex(S, 0), TestVertex(S, 1),
-                    side_id, -1,
-                    0, 1 /*impassible*/, 0,
+                    sec_id, -1,
+                    S->partner ? 1 : 0, 1 /*impassible*/, 0,
                     NULL /* args */);
     }
   }

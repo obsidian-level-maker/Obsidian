@@ -572,6 +572,9 @@ void doom_game_interface_c::Property(const char *key, const char *value)
 }
 
 
+extern void CSG_TestRegions_Doom(void);
+
+
 void doom_game_interface_c::EndLevel()
 {
   if (! level_name)
@@ -582,10 +585,14 @@ void doom_game_interface_c::EndLevel()
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 
+#if 0
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
   DM_WriteDoom();
+#else  // TESTING STUFF
+  CSG_TestRegions_Doom();
+#endif
 
   DM_EndLevel(level_name);
 
