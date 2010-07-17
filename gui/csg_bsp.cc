@@ -211,6 +211,29 @@ public:
     other->brushes.clear();
   }
 
+  void GetBounds(double *x1, double *y1, double *x2, double *y2)
+  {
+    if (snags.empty())
+    {
+      *x1 = *x2 = *y1 = *y2 = 0;
+      return;
+    }
+
+    *x1 = *y1 = +9e9;
+    *x2 = *y2 = -9e9;
+
+    for (unsigned int i = 0 ; i < snags.size() ; i++)
+    {
+      snag_c *S = snags[i];
+
+      *x1 = MIN(*x1, MIN(S->x1, S->x2));
+      *y1 = MIN(*y1, MIN(S->y1, S->y2));
+
+      *x2 = MAX(*x1, MAX(S->x1, S->x2));
+      *y2 = MAX(*y1, MAX(S->y1, S->y2));
+    }
+  }
+
   void ClockwiseSnags()
   {
     // FIXME: ClockwiseSnags
@@ -221,33 +244,6 @@ public:
 partition_c::partition_c(const snag_c *S) :
     x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
 { }
-
-
-#if 0  // OLD CODE
-snag_c * snag_c::Cut(double ix, double iy)
-{
-  snag_c *T = new snag_c(*this);
-
-  x2 = ix; T->x1 = ix;
-  y2 = iy; T->y1 = iy;
-
-  return T;
-
-  if (partner)
-  {
-    snag_c *T1 = partner;
-
-    SYS_ASSERT(T1->partner == this);
-
-    *T2 = new snag_c(*T1);
-
-    T1->x1 = ix; (*T2)->x2 = ix;
-    T2->y1 = iy; (*T2)->y2 = iy;
-
-    PartnerSnags(T1, *T2);
-  }
-}
-#endif
 
 
 struct snag_on_node_Compare
@@ -773,11 +769,37 @@ static void HandleOverlaps()
 
 static void AddBoundingRegion()
 {
-  // FIXME: AddBoundingRegion
+  // determine map bounds
+  double map_x1 = +9e9; double map_y1 = +9e9;
+  double map_x2 = -9e9; double map_y2 = -9e9;
 
-//  region_c *R = new region_c;
-//
-//  all_regions.push_back(R);
+  for (unsigned int k = 0 ; k < all_regions.size() ; k++)
+  {
+    double x1, y1, x2, y2;
+
+    all_regions[k]->GetBounds(&x1, &y1, &x2, &y2);
+
+    map_x1 = MIN(map_x1, x1);
+    map_y1 = MIN(map_y1, y1);
+    map_x2 = MAX(map_x2, x2);
+    map_y2 = MAX(map_y2, y2);
+  }
+
+  SYS_ASSERT(map_x1 < map_x2);
+
+  // make the coords integers
+  map_x1 = floor(map_x1); map_x2 = ceil(map_x2);
+  map_y1 = floor(map_y1); map_y2 = ceil(map_y2);
+
+  // create the dummy region
+  region_c *R = new region_c;
+
+  R->snags.push_back(new snag_c(map_x1, map_y1, map_x1, map_y2, NULL));
+  R->snags.push_back(new snag_c(map_x1, map_y2, map_x2, map_y2, NULL));
+  R->snags.push_back(new snag_c(map_x2, map_y2, map_x2, map_y1, NULL));
+  R->snags.push_back(new snag_c(map_x2, map_y1, map_x1, map_y1, NULL));
+
+  all_regions.push_front(R);
 }
 
 
@@ -787,13 +809,13 @@ void CSG_BSP()
   all_snags.clear();
   all_regions.clear();
 
-  // create a rectangle region around whole map
-  AddBoundingRegion();
-
   std::vector<region_c *> root_group;
 
   for (unsigned int i=0; i < all_brushes.size(); i++)
     CreateRegion(root_group, all_brushes[i]);
+
+  // create a rectangle region around whole map
+  AddBoundingRegion();
 
   SplitGroup(root_group);
 
