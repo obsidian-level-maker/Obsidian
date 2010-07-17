@@ -538,10 +538,69 @@ static partition_c * AddPartition(const snag_c *S)
   return &all_partitions.back();
 }
 
+static partition_c * AddPartition(double x1, double y1, double x2, double y2)
+{
+  all_partitions.push_back(partition_c(x1, y1, x2, y2));
+
+  return &all_partitions.back();
+}
+
+
+static void GetGroupBounds(std::vector<region_c *> & group,
+                           double *min_x, double *min_y,
+                           double *max_x, double *max_y)
+{
+  *min_x = *min_y = +9e9;
+  *max_x = *max_y = -9e9;
+
+  for (unsigned int k = 0 ; k < group.size() ; k++)
+  {
+    double x1, y1, x2, y2;
+
+    group[k]->GetBounds(&x1, &y1, &x2, &y2);
+
+    *min_x = MIN(*min_x, x1);
+    *min_y = MIN(*min_y, y1);
+
+    *max_x = MAX(*max_x, x1);
+    *max_y = MAX(*max_y, y1);
+  }
+}
+
 
 static partition_c * ChoosePartition(std::vector<region_c *> & group)
 {
-  // FIXME !!! do seed-wise binary subdivision thang
+  // do seed-wise binary subdivision thang
+  // FIXME: EXPLAIN THIS SHITE
+
+#define CHUNK_SIZE  384.0
+
+  double gx1, gy1, gx2, gy2;
+
+  GetGroupBounds(group, &gx1, &gy1, &gx2, &gy2);
+
+  int sx1 = floor(gx1 / CHUNK_SIZE);
+  int sy1 = floor(gy1 / CHUNK_SIZE);
+  int sx2 =  ceil(gx2 / CHUNK_SIZE);
+  int sy2 =  ceil(gy2 / CHUNK_SIZE);
+
+  int sw  = sx2 - sx1;
+  int sh  = sy2 - sy1;
+
+  if (sw >= 2 || sh >= 2)
+  {
+    if (sw >= sh)
+    {
+      double px = (sx1 + sw/2) * CHUNK_SIZE;
+      return AddPartition(px, gy1, px, gy2);
+    }
+    else
+    {
+      double py = (sy1 + sh/2) * CHUNK_SIZE;
+      return AddPartition(gx1, py, gx2, py);
+    }
+  }
+
 
   snag_c *best = NULL;
 
@@ -549,7 +608,7 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
   {
     region_c *R = group[i];
 
-    for (unsigned int k = 0 ; k < R->snags.size()   ; k++)
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
     {
       snag_c *S = R->snags[k];
 
@@ -767,25 +826,15 @@ static void HandleOverlaps()
 }
 
 
-static void AddBoundingRegion()
+static void AddBoundingRegion(std::vector<region_c *> & group)
 {
-  // determine map bounds
-  double map_x1 = +9e9; double map_y1 = +9e9;
-  double map_x2 = -9e9; double map_y2 = -9e9;
+  double map_x1, map_y1;
+  double map_x2, map_y2;
 
-  for (unsigned int k = 0 ; k < all_regions.size() ; k++)
-  {
-    double x1, y1, x2, y2;
-
-    all_regions[k]->GetBounds(&x1, &y1, &x2, &y2);
-
-    map_x1 = MIN(map_x1, x1);
-    map_y1 = MIN(map_y1, y1);
-    map_x2 = MAX(map_x2, x2);
-    map_y2 = MAX(map_y2, y2);
-  }
+  GetGroupBounds(group, &map_x1, &map_y1, &map_x2, &map_y2);
 
   SYS_ASSERT(map_x1 < map_x2);
+  SYS_ASSERT(map_y1 < map_y2);
 
   // make the coords integers
   map_x1 = floor(map_x1); map_x2 = ceil(map_x2);
@@ -794,12 +843,14 @@ static void AddBoundingRegion()
   // create the dummy region
   region_c *R = new region_c;
 
+  all_regions.push_back(R);
+
   R->snags.push_back(new snag_c(map_x1, map_y1, map_x1, map_y2, NULL));
   R->snags.push_back(new snag_c(map_x1, map_y2, map_x2, map_y2, NULL));
   R->snags.push_back(new snag_c(map_x2, map_y2, map_x2, map_y1, NULL));
   R->snags.push_back(new snag_c(map_x2, map_y1, map_x1, map_y1, NULL));
 
-  all_regions.push_front(R);
+  group.push_back(R);
 }
 
 
@@ -815,7 +866,7 @@ void CSG_BSP()
     CreateRegion(root_group, all_brushes[i]);
 
   // create a rectangle region around whole map
-  AddBoundingRegion();
+  AddBoundingRegion(root_group);
 
   SplitGroup(root_group);
 
