@@ -239,6 +239,27 @@ public:
     }
   }
 
+  void GetMidPoint(double *mid_x, double *mid_y)
+  {
+    *mid_x = *mid_y = 0;
+
+    if (snags.empty())
+      return;
+
+    for (unsigned int i = 0 ; i < snags.size() ; i++)
+    {
+      snag_c *S = snags[i];
+
+      *mid_x += S->x1 + S->x2;
+      *mid_y += S->y1 + S->y2;
+    }
+
+    double total = 2 * snags.size();
+
+    *mid_x /= total;
+    *mid_y /= total;
+  }
+
   void SortBrushes();
 
   bool HasSameBrushes(const region_c *other) const
@@ -257,6 +278,9 @@ public:
 
   void ClockwiseSnags()
   {
+    if (snags.size() < 2)
+      return;
+
     // FIXME: ClockwiseSnags
 
 fprintf(stderr, "%u ", snags.size());
