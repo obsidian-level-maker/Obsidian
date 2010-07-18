@@ -281,11 +281,49 @@ public:
     if (snags.size() < 2)
       return;
 
-    // FIXME: ClockwiseSnags
+    int i;
+    int total = (int)snags.size();
 
-fprintf(stderr, "%u ", snags.size());
+    // determine angle of each snag's starting vertex
+    double * angles = new double[total];
+
+    double mid_x, mid_y;
+
+    GetMidPoint(&mid_x, &mid_y);
+
+    for (i = 0 ; i < total ; i++)
+    {
+      snag_c *S = snags[i];
+
+      angles[i] = CalcAngle(mid_x, mid_y, S->x1, S->y1);
+    }
+
+    i = 0;
+
+    const double ANG_EPSILON = 0.0001;
+
+    while (i+1 < total)
+    {
+      snag_c *A = snags[i];
+      snag_c *B = snags[i+1];
+
+      if (angles[i] < angles[i+1] - ANG_EPSILON)
+      {
+        // swap 'em
+        snags[i] = B; snags[i+1] = A;
+
+        std::swap(angles[i], angles[i+1]);
+
+        // bubble down
+        if (i > 0) i--;
+      }
+      else
+      {
+        // bubble up
+        i++;
+      }
+    }
   }
-
 };
 
 
@@ -996,7 +1034,6 @@ int TestVertex(snag_c *S, int which)
   int A2 = (rand() & 7) - 4;
   int A3 = (rand() & 7) - 4;
   int A4 = (rand() & 7) - 4;
-A1 = A2 = A3 = A4 = 0;
 
   double x = which ? (S->x2 + A1) : (S->x1 + A2);
   double y = which ? (S->y2 + A3) : (S->y1 + A4);
