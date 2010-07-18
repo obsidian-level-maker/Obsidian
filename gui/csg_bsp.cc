@@ -239,12 +239,29 @@ public:
     }
   }
 
+  void SortBrushes();
+
+  bool HasSameBrushes(const region_c *other) const
+  {
+    // NOTE WELL: assumes brushes have been sorted
+
+    if (brushes.size() != other->brushes.size())
+      return false;
+
+    for (unsigned int i = 0 ; i < brushes.size() ; i++)
+      if (brushes[i] != other->brushes[i])
+        return false;
+
+    return true;
+  }
+
   void ClockwiseSnags()
   {
     // FIXME: ClockwiseSnags
 
 fprintf(stderr, "%u ", snags.size());
   }
+
 };
 
 
@@ -253,6 +270,14 @@ partition_c::partition_c(const snag_c *S) :
 { }
 
 
+struct csg_brush_ptr_Compare
+{
+  inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
+  {
+    return A < B;
+  }
+};
+
 struct snag_on_node_Compare
 {
   inline bool operator() (const snag_c *A, const snag_c *B) const
@@ -260,6 +285,12 @@ struct snag_on_node_Compare
     return A->on_node < B->on_node;
   }
 };
+
+
+void region_c::SortBrushes()
+{
+  std::sort(brushes.begin(), brushes.end(), csg_brush_ptr_Compare());
+}
 
 
 
@@ -691,6 +722,9 @@ static bool MergeSnags(snag_c *A, snag_c *B)
   SYS_ASSERT(A->where);
   SYS_ASSERT(A->where == B->where);
 
+  if (! B->mini)
+    A->mini = false;
+
   B->where->RemoveSnag(B);
 
   B->where = NULL;  // mark as unused
@@ -913,7 +947,10 @@ void CSG_BSP()
   HandleOverlaps();
 
   for (unsigned int i=0; i < all_regions.size(); i++)
+  {
+    all_regions[i]->SortBrushes();
     all_regions[i]->ClockwiseSnags();
+  }
 
 fprintf(stderr, "\n");
 
