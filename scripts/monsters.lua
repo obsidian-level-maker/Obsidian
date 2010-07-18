@@ -191,7 +191,10 @@ function Monsters.init()
   table.name_up(GAME.PICKUPS)
 
   for name,info in pairs(GAME.MONSTERS) do
-    info.ent = assert(GAME.ENTITIES[name])
+    info.ent = GAME.ENTITIES[name]
+    if not info.ent then
+      error(string.format("Monster '%s' lacks entry in ENTITIES table", name))
+    end
   end
 
   LEVEL.mon_stats = {}
