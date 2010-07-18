@@ -165,7 +165,7 @@ public:
 
   void AddSnag(snag_c *S)
   {
-    snags.push_back(S);    
+    snags.push_back(S);
   }
 
   bool HasSnag(snag_c *S) const
@@ -192,6 +192,11 @@ public:
     return false;
   }
 
+  void AddBrush(csg_brush_c *P)
+  {
+    brushes.push_back(P);
+  }
+
   int TestSide(partition_c *P);
 
   void MergeOther(region_c *other)
@@ -202,10 +207,10 @@ public:
     //       however for robustness we should check and skip them.
 
     for (i = 0 ; i < other->snags.size() ; i++)
-      snags.push_back(other->snags[i]);
+      AddSnag(other->snags[i]);
 
     for (i = 0 ; i < other->brushes.size() ; i++)
-      brushes.push_back(other->brushes[i]);
+      AddBrush(other->brushes[i]);
 
     other->snags.clear();
     other->brushes.clear();
@@ -283,6 +288,8 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
   region_c *R = new region_c;
 
   all_regions.push_back(R);
+
+  R->AddBrush(P);
 
   // NOTE: brush sides go ANTI-clockwise, region snags go CLOCKWISE,
   //       hence we need to flip them here.
@@ -515,18 +522,11 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
 static void MergeRegions(std::vector<region_c *> & group)
 {
-  if (group.empty())
-    return;
-
   region_c *R = group[0];
 
   for (unsigned int i = 1 ; i < group.size() ; i++)
   {
-    region_c *R2 = group[i];
-
-    R->MergeOther(R2);
-
-/////????    delete R2;
+    R->MergeOther(group[i]);
   }
 
   // can now set the 'where' field of snags
