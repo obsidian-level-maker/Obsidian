@@ -28,6 +28,7 @@
 #include "main.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
 #include "g_lua.h"
 #include "ui_dialog.h"
 

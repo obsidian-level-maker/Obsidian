@@ -28,17 +28,13 @@
 #include "main.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
+
 #include "g_lua.h"
 #include "ui_dialog.h"
 
 
 #define SNAG_EPSILON  0.001
-
-
-/***** CLASSES ******************/
-
-class region_c;
-class snag_c;
 
 
 class partition_c
@@ -52,284 +48,266 @@ public:
       x1(_x1), y1(_y1), x2(_x2), y2(_y2)
   { }
 
-  partition_c(const snag_c *S);
+  partition_c(const snag_c *S) :
+      x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
+  { }
 
   ~partition_c()
   { }
 };
 
 
-class snag_c
+//------------------------------------------------------------------------
+
+snag_c::snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
+    x1(start->x), y1(start->y), x2(end->x), y2(end->y),
+    mini(false), on_node(NULL), where(NULL), partner(NULL),
+    sides()
 {
-public:
-  double x1, y1;
-  double x2, y2;
+  if (Length() < SNAG_EPSILON)
+    Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
 
-  bool mini;
+  sides.push_back(side);
+}
 
-  partition_c * on_node;
 
-  region_c *where;  // only valid AFTER MergeRegions()
+snag_c::snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part) :
+    x1(_x1), y1(_y1), x2(_x2), y2(_y2),
+    mini(true), on_node(part), where(NULL), partner(NULL),
+    sides()
+{ }
 
-  snag_c *partner;  // only valid AFTER HandleOverlaps()
 
-  std::vector<brush_vert_c *> sides;
-
-  // quantized along values, used for overlap detection
-  int q_along1;
-  int q_along2;
-
-private:
-  snag_c(const snag_c& other) :
+snag_c::snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
       mini(other.mini), on_node(other.on_node),
       where(other.where), partner(NULL),
       sides()
-  {
-    // copy sides
-    for (unsigned int i = 0 ; i < other.sides.size() ; i++)
-      sides.push_back(other.sides[i]);
-  }
-
-public:
-  snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
-      x1(start->x), y1(start->y), x2(end->x), y2(end->y),
-      mini(false), on_node(NULL), where(NULL), partner(NULL),
-      sides()
-  {
-    if (Length() < SNAG_EPSILON)
-      Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
-
-    sides.push_back(side);
-  }
-
-  snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part) :
-      x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      mini(true), on_node(part), where(NULL), partner(NULL),
-      sides()
-  { }
-
-  ~snag_c()
-  { }
-
-  double Length() const
-  {
-    return ComputeDist(x1,y1, x2,y2);
-  }
-
-  snag_c * Cut(double ix, double iy)
-  {
-    snag_c *T = new snag_c(*this);
-
-    x2 = ix; T->x1 = ix;
-    y2 = iy; T->y1 = iy;
-
-    return T;
-  }
-
-  void CalcAlongs()
-  {
-    SYS_ASSERT(on_node);
-
-    double a1 = AlongDist(x1, y1, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
-    double a2 = AlongDist(x2, y2, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
-
-    a1 /= SNAG_EPSILON;
-    a2 /= SNAG_EPSILON;
-
-    q_along1 = I_ROUND(a1);
-    q_along2 = I_ROUND(a2);
-  }
-};
-
-
-class region_c
 {
-public:
-  std::vector<snag_c *> snags;
+  // copy sides
+  for (unsigned int i = 0 ; i < other.sides.size() ; i++)
+    sides.push_back(other.sides[i]);
+}
 
-  std::vector<csg_brush_c *> brushes;
 
-public:
-  region_c() : snags(), brushes()
-  { }
+snag_c::~snag_c()
+{ }
 
-  region_c(const region_c& other) : snags(), brushes()
+
+double snag_c::Length() const
+{
+  return ComputeDist(x1,y1, x2,y2);
+}
+
+
+snag_c * snag_c::Cut(double ix, double iy)
+{
+  snag_c *T = new snag_c(*this);
+
+  x2 = ix; T->x1 = ix;
+  y2 = iy; T->y1 = iy;
+
+  return T;
+}
+
+
+void snag_c::CalcAlongs()
+{
+  SYS_ASSERT(on_node);
+
+  double a1 = AlongDist(x1, y1, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
+  double a2 = AlongDist(x2, y2, on_node->x1,on_node->y1, on_node->x2,on_node->y2);
+
+  a1 /= SNAG_EPSILON;
+  a2 /= SNAG_EPSILON;
+
+  q_along1 = I_ROUND(a1);
+  q_along2 = I_ROUND(a2);
+}
+
+
+//------------------------------------------------------------------------
+
+region_c::region_c() : snags(), brushes()
+{ }
+
+
+region_c::region_c(const region_c& other) : snags(), brushes()
+{
+  for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
+    brushes.push_back(other.brushes[i]);
+}
+
+
+region_c::~region_c()
+{ }
+
+
+void region_c::AddSnag(snag_c *S)
+{
+  snags.push_back(S);
+}
+
+
+bool region_c::HasSnag(snag_c *S) const
+{
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+    if (snags[i] == S)
+      return true;
+
+  return false;
+}
+
+
+bool region_c::RemoveSnag(snag_c *S)
+{
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
   {
-    for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
-      brushes.push_back(other.brushes[i]);
+    if (snags[i] == S)
+    {
+      snags[i] = snags.back();
+      snags.pop_back();
+      return true;
+    }
   }
 
-  ~region_c()
-  { }
+  return false;
+}
 
-  void AddSnag(snag_c *S)
+
+void region_c::AddBrush(csg_brush_c *P)
+{
+  brushes.push_back(P);
+}
+
+
+void region_c::MergeOther(region_c *other)
+{
+  unsigned int i;
+
+  // TODO: snags and brushes should never be duplicated by a merge,
+  //       however for robustness we should check and skip them.
+
+  for (i = 0 ; i < other->snags.size() ; i++)
+    AddSnag(other->snags[i]);
+
+  for (i = 0 ; i < other->brushes.size() ; i++)
+    AddBrush(other->brushes[i]);
+
+  other->snags.clear();
+  other->brushes.clear();
+}
+
+
+void region_c::GetBounds(double *x1, double *y1, double *x2, double *y2)
+{
+  if (snags.empty())
   {
-    snags.push_back(S);
+    *x1 = *x2 = *y1 = *y2 = 0;
+    return;
   }
 
-  bool HasSnag(snag_c *S) const
-  {
-    for (unsigned int i = 0 ; i < snags.size() ; i++)
-      if (snags[i] == S)
-        return true;
+  *x1 = *y1 = +9e9;
+  *x2 = *y2 = -9e9;
 
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    *x1 = MIN(*x1, MIN(S->x1, S->x2));
+    *y1 = MIN(*y1, MIN(S->y1, S->y2));
+
+    *x2 = MAX(*x1, MAX(S->x1, S->x2));
+    *y2 = MAX(*y1, MAX(S->y1, S->y2));
+  }
+}
+
+
+void region_c::GetMidPoint(double *mid_x, double *mid_y)
+{
+  *mid_x = *mid_y = 0;
+
+  if (snags.empty())
+    return;
+
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    *mid_x += S->x1 + S->x2;
+    *mid_y += S->y1 + S->y2;
+  }
+
+  double total = 2 * snags.size();
+
+  *mid_x /= total;
+  *mid_y /= total;
+}
+
+
+bool region_c::HasSameBrushes(const region_c *other) const
+{
+  // NOTE WELL: assumes brushes have been sorted
+
+  if (brushes.size() != other->brushes.size())
     return false;
-  }
 
-  bool RemoveSnag(snag_c *S)
-  {
-    for (unsigned int i = 0 ; i < snags.size() ; i++)
-    {
-      if (snags[i] == S)
-      {
-        snags[i] = snags.back();
-        snags.pop_back();
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  void AddBrush(csg_brush_c *P)
-  {
-    brushes.push_back(P);
-  }
-
-  int TestSide(partition_c *P);
-
-  void MergeOther(region_c *other)
-  {
-    unsigned int i;
-
-    // TODO: snags and brushes should never be duplicated by a merge,
-    //       however for robustness we should check and skip them.
-
-    for (i = 0 ; i < other->snags.size() ; i++)
-      AddSnag(other->snags[i]);
-
-    for (i = 0 ; i < other->brushes.size() ; i++)
-      AddBrush(other->brushes[i]);
-
-    other->snags.clear();
-    other->brushes.clear();
-  }
-
-  void GetBounds(double *x1, double *y1, double *x2, double *y2)
-  {
-    if (snags.empty())
-    {
-      *x1 = *x2 = *y1 = *y2 = 0;
-      return;
-    }
-
-    *x1 = *y1 = +9e9;
-    *x2 = *y2 = -9e9;
-
-    for (unsigned int i = 0 ; i < snags.size() ; i++)
-    {
-      snag_c *S = snags[i];
-
-      *x1 = MIN(*x1, MIN(S->x1, S->x2));
-      *y1 = MIN(*y1, MIN(S->y1, S->y2));
-
-      *x2 = MAX(*x1, MAX(S->x1, S->x2));
-      *y2 = MAX(*y1, MAX(S->y1, S->y2));
-    }
-  }
-
-  void GetMidPoint(double *mid_x, double *mid_y)
-  {
-    *mid_x = *mid_y = 0;
-
-    if (snags.empty())
-      return;
-
-    for (unsigned int i = 0 ; i < snags.size() ; i++)
-    {
-      snag_c *S = snags[i];
-
-      *mid_x += S->x1 + S->x2;
-      *mid_y += S->y1 + S->y2;
-    }
-
-    double total = 2 * snags.size();
-
-    *mid_x /= total;
-    *mid_y /= total;
-  }
-
-  void SortBrushes();
-
-  bool HasSameBrushes(const region_c *other) const
-  {
-    // NOTE WELL: assumes brushes have been sorted
-
-    if (brushes.size() != other->brushes.size())
+  for (unsigned int i = 0 ; i < brushes.size() ; i++)
+    if (brushes[i] != other->brushes[i])
       return false;
 
-    for (unsigned int i = 0 ; i < brushes.size() ; i++)
-      if (brushes[i] != other->brushes[i])
-        return false;
+  return true;
+}
 
-    return true;
-  }
 
-  void ClockwiseSnags()
+void region_c::ClockwiseSnags()
+{
+  if (snags.size() < 2)
+    return;
+
+  int i;
+  int total = (int)snags.size();
+
+  // determine angle of each snag's starting vertex
+  double * angles = new double[total];
+
+  double mid_x, mid_y;
+
+  GetMidPoint(&mid_x, &mid_y);
+
+  for (i = 0 ; i < total ; i++)
   {
-    if (snags.size() < 2)
-      return;
+    snag_c *S = snags[i];
 
-    int i;
-    int total = (int)snags.size();
+    angles[i] = CalcAngle(mid_x, mid_y, S->x1, S->y1);
+  }
 
-    // determine angle of each snag's starting vertex
-    double * angles = new double[total];
+  i = 0;
 
-    double mid_x, mid_y;
+  const double ANG_EPSILON = 0.0001;
 
-    GetMidPoint(&mid_x, &mid_y);
+  while (i+1 < total)
+  {
+    snag_c *A = snags[i];
+    snag_c *B = snags[i+1];
 
-    for (i = 0 ; i < total ; i++)
+    if (angles[i] < angles[i+1] - ANG_EPSILON)
     {
-      snag_c *S = snags[i];
+      // swap 'em
+      snags[i] = B; snags[i+1] = A;
 
-      angles[i] = CalcAngle(mid_x, mid_y, S->x1, S->y1);
+      std::swap(angles[i], angles[i+1]);
+
+      // bubble down
+      if (i > 0) i--;
     }
-
-    i = 0;
-
-    const double ANG_EPSILON = 0.0001;
-
-    while (i+1 < total)
+    else
     {
-      snag_c *A = snags[i];
-      snag_c *B = snags[i+1];
-
-      if (angles[i] < angles[i+1] - ANG_EPSILON)
-      {
-        // swap 'em
-        snags[i] = B; snags[i+1] = A;
-
-        std::swap(angles[i], angles[i+1]);
-
-        // bubble down
-        if (i > 0) i--;
-      }
-      else
-      {
-        // bubble up
-        i++;
-      }
+      // bubble up
+      i++;
     }
   }
-};
-
-
-partition_c::partition_c(const snag_c *S) :
-    x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
-{ }
+}
 
 
 struct csg_brush_ptr_Compare
@@ -337,14 +315,6 @@ struct csg_brush_ptr_Compare
   inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
     return A < B;
-  }
-};
-
-struct snag_on_node_Compare
-{
-  inline bool operator() (const snag_c *A, const snag_c *B) const
-  {
-    return A->on_node < B->on_node;
   }
 };
 
@@ -915,6 +885,15 @@ for (int z = 0 ; z < (int)overlap_list.size() ; z++)
 
   } while (changes > 0);
 }
+
+
+struct snag_on_node_Compare
+{
+  inline bool operator() (const snag_c *A, const snag_c *B) const
+  {
+    return A->on_node < B->on_node;
+  }
+};
 
 
 static void HandleOverlaps()
