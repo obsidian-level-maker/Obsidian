@@ -73,6 +73,10 @@ public:
 
   std::vector<csg_brush_c *> brushes;
 
+  // regions with same brushes will have same equiv_id
+  // (only valid AFTER CSG_SimpleCoalesce)
+  int equiv_id;
+
 public:
   region_c();
 
@@ -109,6 +113,7 @@ extern std::vector<region_c *> all_regions;
 /***** FUNCTIONS ****************/
 
 void CSG_BSP();
+void CSG_SimpleCoalesce();
 void CSG_Quantize(double grid);
 
 

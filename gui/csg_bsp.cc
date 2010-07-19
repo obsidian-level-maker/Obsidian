@@ -128,11 +128,11 @@ void snag_c::CalcAlongs()
 
 //------------------------------------------------------------------------
 
-region_c::region_c() : snags(), brushes()
+region_c::region_c() : snags(), brushes(), equiv_id(-1)
 { }
 
 
-region_c::region_c(const region_c& other) : snags(), brushes()
+region_c::region_c(const region_c& other) : snags(), brushes(), equiv_id(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
@@ -865,6 +865,7 @@ static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
   {
     changes = 0;
 
+#if 0
 for (int z = 0 ; z < (int)overlap_list.size() ; z++)
   fprintf(stderr, "    snag %p : (%1.0f %1.0f) --> (%1.0f %1.0f)  partner %p\n",
           overlap_list[z],
@@ -873,6 +874,7 @@ for (int z = 0 ; z < (int)overlap_list.size() ; z++)
           overlap_list[z] ? overlap_list[z]->x2 : 0,
           overlap_list[z] ? overlap_list[z]->y2 : 0,
           overlap_list[z] ? overlap_list[z]->partner : NULL);
+#endif
 
     // Note that new snags may get added (due to splits) while we are
     // iterating over them.  Removed snags become NULL in the list.
@@ -972,6 +974,12 @@ static void AddBoundingRegion(std::vector<region_c *> & group)
 }
 
 
+static void RemoveDeadRegions()
+{
+  // FIXME: RemoveDeadRegions
+}
+
+
 void CSG_BSP()
 {
   all_partitions.clear();
@@ -990,13 +998,10 @@ void CSG_BSP()
 
   HandleOverlaps();
 
-  for (unsigned int i=0; i < all_regions.size(); i++)
-  {
-    all_regions[i]->SortBrushes();
-    all_regions[i]->ClockwiseSnags();
-  }
+  RemoveDeadRegions();
 
-fprintf(stderr, "\n");
+  for (unsigned int i=0; i < all_regions.size(); i++)
+    all_regions[i]->ClockwiseSnags();
 
   // FIXME: free stuff
 }
@@ -1043,6 +1048,7 @@ void CSG_TestRegions_Doom(void)
   // for debugging only: each region_c becomes a single sector.
 
   CSG_BSP();
+  CSG_SimpleCoalesce();
 
   test_vertices.clear();
 
