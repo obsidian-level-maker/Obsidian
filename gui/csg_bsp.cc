@@ -334,8 +334,7 @@ static std::vector<partition_c *> all_partitions;
 
 static std::vector<snag_c *> all_snags;
 
-// first region is always a dummy
-static std::vector<region_c *> all_regions;
+std::vector<region_c *> all_regions;
 
 
 
@@ -377,12 +376,14 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
 }
 
 
+#if 0
 static void MoveOntoLine(partition_c *part, double *x, double *y)
 {
   double along = AlongDist(*x, *y, part->x1,part->y1, part->x2,part->y2);
 
   AlongCoord(along, part->x1,part->y1, part->x2,part->y2, x, y);
 }
+#endif
 
 
 int region_c::TestSide(partition_c *part)
@@ -408,9 +409,11 @@ int region_c::TestSide(partition_c *part)
     if (a_side > 0 || b_side > 0) has_front = true;
     if (a_side < 0 || b_side < 0) has_back  = true;
 
+#if 0 // NOTE: this probably wasn't a good idea after all
     // adjust vertices which sit "nearly" on the line
-//!!!!!!    if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
-//!!!!!!    if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
+    if (a_side == 0) MoveOntoLine(part, &S->x1, &S->y1);
+    if (b_side == 0) MoveOntoLine(part, &S->x2, &S->y2);
+#endif
   }
 
   if (has_back && has_front)

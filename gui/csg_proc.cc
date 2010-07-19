@@ -43,7 +43,7 @@ void CSG_SwallowBrushes()
 
 //------------------------------------------------------------------------
 
-void CSG_Quantize()
+void CSG_Quantize(double grid)
 {
   // mark segments and regions which become zero size as "degenerate".
 
