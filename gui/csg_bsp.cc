@@ -1117,23 +1117,5 @@ fprintf(stderr, "  q_alongs: %d %d\n", S->q_along1, S->q_along2);
 }
 
 
-//------------------------------------------------------------------------
-
-void CSG_Quantize()
-{
-  // mark segments and regions which become zero size as "degenerate".
-
-  // a segment with a degenerate region on one side (after marking all
-  // degenerates) needs to discover the new region, e.g. point test.
-}
-
-
-//------------------------------------------------------------------------
-
-void CSG_FindGaps()
-{
-}
-
-
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
