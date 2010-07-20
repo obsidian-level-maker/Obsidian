@@ -1015,18 +1015,18 @@ void CSG_BSP()
 
 static std::map<int, int> test_vertices;
 
+extern double QUANTIZE_GROG; //!!!!!! FIXME
+
 int TestVertex(snag_c *S, int which)
 {
-  int A1 = (rand() & 7) - 4;
-  int A2 = (rand() & 7) - 4;
-  int A3 = (rand() & 7) - 4;
-  int A4 = (rand() & 7) - 4;
+  int RX = (rand() & 3) - 1;
+  int RY = (rand() & 3) - 1;
 
-  double x = which ? (S->x2 + A1) : (S->x1 + A2);
-  double y = which ? (S->y2 + A3) : (S->y1 + A4);
+  double x = which ? S->q_x2 : S->q_x1;
+  double y = which ? S->q_y2 : S->q_y1;
 
-  int ix = I_ROUND(x);
-  int iy = I_ROUND(y);
+  int ix = I_ROUND(x * QUANTIZE_GROG + RX*0);
+  int iy = I_ROUND(y * QUANTIZE_GROG + RY*0);
 
   int id = (iy << 16) + ix;
 
@@ -1043,12 +1043,14 @@ int TestVertex(snag_c *S, int which)
 }
 
 
+
 void CSG_TestRegions_Doom(void)
 {
   // for debugging only: each region_c becomes a single sector.
 
   CSG_BSP();
   CSG_SimpleCoalesce();
+  CSG_Quantize(16.0);
 
   test_vertices.clear();
 
@@ -1060,6 +1062,9 @@ void CSG_TestRegions_Doom(void)
   for (i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
+
+    if (R->isDegen())
+      continue;
 
     const char *flat = "FWATER1";
 
@@ -1079,6 +1084,9 @@ void CSG_TestRegions_Doom(void)
     for (k = 0 ; k < R->snags.size() ; k++)
     {
       snag_c *S = R->snags[k];
+
+      if (S->isDegen())
+        continue;
 
 if (line_id == 7322)
 {
