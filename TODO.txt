@@ -2,10 +2,20 @@
 TODO
 ====
 
+!! CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
+        DOOM (etc)  --> 4 units
+        QUAKE (etc) --> 1 unit
 
-CSG-BSP : MUST handle overlaps ON EACH PARTITION
-          (i.e. collect all snags sitting on the partition,
-           split/merge them before segregation)
+>>>  remove all_snags  ??
+
+>>>  CSG-BSP: simple brush swallowing
+
+
+CHECK STUFF: (a) regions with snags but no brushes
+             (b) snags with partner, but partner->partner != self
+
+
+-  global SECTIONS array
 
 
 Later: fix hallways, broken due to conn(_dir) change
