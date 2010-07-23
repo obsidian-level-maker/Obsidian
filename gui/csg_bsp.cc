@@ -441,7 +441,8 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
     if (qx1 == qx2 && qy1 == qy2)  // degenerate ?
       continue;
 
-    snag_c *S = new snag_c(v2, qx1, qy1, qx2, qy2);
+    snag_c *S = new snag_c(v2, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
+                               qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID);
 
     R->AddSnag(S);
 
@@ -848,6 +849,9 @@ static void MergeSnags(snag_c *A, snag_c *B)
   if (! B->mini)
     A->mini = false;
 
+  if (B->partner && B->partner->partner == B)
+    B->partner->partner = NULL;
+
   B->where->RemoveSnag(B);
 }
 
@@ -986,7 +990,7 @@ struct snag_on_node_Compare
 };
 
 
-static void CollectAllSnags(std::vector<snag_c *> list)
+static void CollectAllSnags(std::vector<snag_c *> & list)
 {
   for (unsigned i = 0 ; i < all_regions.size() ; i++)
   {
@@ -1186,7 +1190,7 @@ void CSG_TestRegions_Doom(void)
       if (v1 == v2)  // degenerate
         continue;
 
-if (line_id == 7322)
+if (line_id == 5172 || line_id == 4976 || line_id == 5190)
 {
 fprintf(stderr, "LINE #%d  SNAG %p  REGION %p / %p  (%s)\n", line_id, S, S->where, R, S->mini ? "MINI" : "normal");
 
