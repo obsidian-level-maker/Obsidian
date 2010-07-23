@@ -1131,6 +1131,7 @@ static void AddBoundingRegion(group_c & group)
 static void RemoveDeadRegions()
 {
   int before = (int)all_regions.size();
+  int lost_ents = 0;
 
   std::vector<region_c *> local_list;
 
@@ -1141,14 +1142,22 @@ static void RemoveDeadRegions()
     region_c *R = local_list[i];
 
     if (! R->snags.empty())
+    {
       all_regions.push_back(R);
-    else
-      delete R;
+      continue;
+    }
+
+    lost_ents += (int)R->entities.size();
+
+    delete R;
   }
 
   int after = (int)all_regions.size();
 
   fprintf(stderr, "RemoveDeadRegions: %d --> %d\n", before, after);
+
+  if (lost_ents > 0)
+    fprintf(stderr, "WARNING: %d entities in dead region\n", lost_ents);
 }
 
 
