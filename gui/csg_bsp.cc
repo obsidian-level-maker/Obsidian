@@ -1148,7 +1148,7 @@ void CSG_TestRegions_Doom(void)
 {
   // for debugging only: each region_c becomes a single sector.
 
-  CSG_BSP(72.0);
+  CSG_BSP(4.0);
   CSG_SimpleCoalesce();
 
   test_vertices.clear();

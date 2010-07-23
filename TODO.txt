@@ -2,11 +2,11 @@
 TODO
 ====
 
-!! CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
+DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
+
         DOOM (etc)  --> 4 units
         QUAKE (etc) --> 1 unit
 
->>>  remove all_snags  ??
 
 >>>  CSG-BSP: simple brush swallowing
 
