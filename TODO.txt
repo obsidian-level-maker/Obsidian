@@ -2,6 +2,8 @@
 TODO
 ====
 
+!!  Clip brushes become SOLID
+
 DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
 
         DOOM (etc)  --> 4 units
