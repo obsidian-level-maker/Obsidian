@@ -56,7 +56,7 @@ private:
   snag_c(const snag_c& other);
 
 public:
-  snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side);
+  snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2);
 
   snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part);
 
@@ -68,7 +68,7 @@ public:
 
   void CalcAlongs();
 
-  void QuantizeCoords(double grid);
+///---  void QuantizeCoords(double grid);
 
   bool isDegen() const
   {

@@ -99,6 +99,7 @@ void CSG_SwallowBrushes()
 
 //------------------------------------------------------------------------
 
+#if 0
 void snag_c::QuantizeCoords(double grid)
 {
   q_x1 = I_ROUND(x1 / grid);
@@ -107,7 +108,6 @@ void snag_c::QuantizeCoords(double grid)
   q_y2 = I_ROUND(y2 / grid);
 }
 
-#if 0
 bool snag_c::isLeftOf(const snag_c *other)
 {
   return MIN(q_x1, q_x2) < MIN(other->q_x1, other->q_x2);

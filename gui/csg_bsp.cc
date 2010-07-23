@@ -62,8 +62,8 @@ public:
 
 //------------------------------------------------------------------------
 
-snag_c::snag_c(brush_vert_c *start, brush_vert_c *end, brush_vert_c *side) :
-    x1(start->x), y1(start->y), x2(end->x), y2(end->y),
+snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2) :
+    x1(_x1), y1(_y1), x2(_x2), y2(_y2),
     mini(false), on_node(NULL), where(NULL), partner(NULL),
     sides()
 {
@@ -341,6 +341,69 @@ std::vector<region_c *> all_regions;
 
 //------------------------------------------------------------------------
 
+static void QuantizeVert(const brush_vert_c *V, int *qx, int *qy)
+{
+  *qx = I_ROUND(V->x / QUANTIZE_GRID);
+  *qy = I_ROUND(V->y / QUANTIZE_GRID);
+}
+
+
+static bool OnSameLine(double x1,double y1, double x2,double y2,
+                       const snag_c *S, double DIST)
+{
+  double d1 = PerpDist(S->x1,S->y1, x1,y1,x2,y2);
+
+  if (fabs(d1) > DIST) return false;
+
+  double d2 = PerpDist(S->x2,S->y2, x1,y1,x2,y2);
+
+  if (fabs(d2) > DIST) return false;
+
+  return true;
+}
+
+
+static bool RegionHasFlattened(region_c *R)
+{
+  SYS_ASSERT(! R->snags.empty());
+
+  unsigned int k;
+
+  double  left_x =  9e9,  left_y =  9e9;
+  double right_x = -9e9, right_y = -9e9;
+
+  // step 1: find a left-most and right-most coordinate
+
+  for (k = 0 ; k < R->snags.size() ; k++)
+  {
+    snag_c *S = R->snags[k];
+
+    if (S->x1 < left_x) { left_x = S->x1; left_y = S->y1; }
+    if (S->x2 < left_x) { left_x = S->x2; left_y = S->y2; }
+
+    if (S->x1 > right_x) { right_x = S->x1; right_y = S->y1; }
+    if (S->x2 > right_x) { right_x = S->x2; right_y = S->y2; }
+  }
+
+  // step 2: check if ALL snags are lying on that line
+
+  double DIST = QUANTIZE_GRID / 1.98;
+
+  if (fabs(right_x - left_x) < DIST)
+    return true;
+
+  for (k = 0 ; k < R->snags.size() ; k++)
+  {
+    snag_c *S = R->snags[k];
+
+    if (! OnSameLine(left_x,left_y, right_x,right_y, S, DIST))
+      return false;
+  }
+
+  return true;
+}
+
+
 static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
 {
   SYS_ASSERT(P);
@@ -350,9 +413,12 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
 
   region_c *R = new region_c;
 
-  all_regions.push_back(R);
-
   R->AddBrush(P);
+
+  int min_qx =  (1 << 30);
+  int min_qy =  (1 << 30);
+  int max_qx = -(1 << 30);
+  int max_qy = -(1 << 30);
 
   // NOTE: brush sides go ANTI-clockwise, region snags go CLOCKWISE,
   //       hence we need to flip them here.
@@ -366,12 +432,38 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
     brush_vert_c *v1 = P->verts[k];
     brush_vert_c *v2 = P->verts[k2];
 
-    snag_c *S = new snag_c(v1, v2, v2);
+    int qx1, qy1;
+    int qx2, qy2;
+
+    QuantizeVert(v1, &qx1, &qy1);
+    QuantizeVert(v2, &qx2, &qy2);
+
+    if (qx1 == qx2 && qy1 == qy2)  // degenerate ?
+      continue;
+
+    snag_c *S = new snag_c(v2, qx1, qy1, qx2, qy2);
 
     R->AddSnag(S);
+
+    min_qx = MIN(min_qx, MIN(qx1, qx2));
+    min_qy = MIN(min_qy, MIN(qy1, qy2));
+
+    max_qx = MAX(max_qx, MAX(qx1, qx2));
+    max_qy = MAX(max_qy, MAX(qy1, qy2));
   }
 
-  group.push_back(R);
+  if (R->snags.size() < 3 || max_qx <= min_qx || max_qy <= min_qy ||
+      RegionHasFlattened(R))
+  {
+    // degenerate region : skip it
+    delete R;
+  }
+  else
+  {
+    group.push_back(R);
+
+    all_regions.push_back(R);
+  }
 }
 
 
@@ -384,6 +476,8 @@ static void MoveOntoLine(partition_c *part, double *x, double *y)
 }
 #endif
 
+
+//------------------------------------------------------------------------
 
 int region_c::TestSide(partition_c *part)
 {
@@ -746,7 +840,7 @@ static void SplitGroup(std::vector<region_c *> & group)
 
 //------------------------------------------------------------------------
 
-static bool MergeSnags(snag_c *A, snag_c *B)
+static void MergeSnags(snag_c *A, snag_c *B)
 {
   SYS_ASSERT(A->where);
   SYS_ASSERT(A->where == B->where);
@@ -755,19 +849,13 @@ static bool MergeSnags(snag_c *A, snag_c *B)
     A->mini = false;
 
   B->where->RemoveSnag(B);
-
-  B->where = NULL;  // mark as unused
-
-  return true;
 }
 
 
-static bool PartnerSnags(snag_c *A, snag_c *B)
+static void PartnerSnags(snag_c *A, snag_c *B)
 {
   A->partner = B;
   B->partner = A;
-
-  return false;
 }
 
 
@@ -1056,7 +1144,7 @@ void CSG_TestRegions_Doom(void)
 {
   // for debugging only: each region_c becomes a single sector.
 
-  CSG_BSP(36.0);
+  CSG_BSP(72.0);
   CSG_SimpleCoalesce();
 
   test_vertices.clear();
