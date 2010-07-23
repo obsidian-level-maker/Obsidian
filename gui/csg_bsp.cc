@@ -249,6 +249,16 @@ void region_c::AddGap(gap_c *G)
 }
 
 
+void region_c::RemoveGap(int index)
+{
+  SYS_ASSERT(index < (int)gaps.size());
+
+  gaps[index] = gaps.back();
+
+  gaps.pop_back();
+}
+
+
 void region_c::MergeOther(region_c *other)
 {
   unsigned int i;

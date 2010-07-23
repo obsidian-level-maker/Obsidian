@@ -135,6 +135,7 @@ int total=0;
       if (CanSwallowBrush(R, i, k))
       { count++;
         R->RemoveBrush(k);
+        k--;
       }
     }
   }
@@ -147,7 +148,7 @@ fprintf(stderr, "Swallowed brushes: %d (of %d)\n", count, total);
 
 static gap_c *GapForEntity(const region_c *R, const entity_info_c *E)
 {
-  for (unsigned int i = 0; i < R->gaps.size(); i++)
+  for (unsigned int i = 0 ; i < R->gaps.size() ; i++)
   {
     gap_c *G = R->gaps[i];
 
@@ -165,7 +166,7 @@ static gap_c *GapForEntity(const region_c *R, const entity_info_c *E)
 
 static void MarkGapsWithEntities()
 {
-  for (unsigned int i = 0; i < all_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
 
@@ -208,20 +209,20 @@ static void SpreadReachability(void)
   {
     changes = 0;
 
-    for (unsigned int i = 0; i < mug_regions.size(); i++)
+    for (unsigned int i = 0 ; i < all_regions.size() ; i++)
     {
-      merge_region_c *R = mug_regions[i];
+      region_c *R = all_regions[i];
 
-      for (unsigned int k = 0; k < R->gaps.size(); k++)
+      for (unsigned int k = 0 ; k < R->gaps.size() ; k++)
       {
-        merge_gap_c *G = R->gaps[k];
+        gap_c *G = R->gaps[k];
 
         if (! G->reachable)
           continue;
 
-        for (unsigned int n = 0; n < G->neighbors.size(); n++)
+        for (unsigned int n = 0 ; n < G->neighbors.size() ; n++)
         {
-          merge_gap_c *H = G->neighbors[n];
+          gap_c *H = G->neighbors[n];
 
           if (! H->reachable)
           {
@@ -238,40 +239,37 @@ static void SpreadReachability(void)
 static void RemoveUnusedGaps()
 {
   // statistics
-  int gap_total  = 0;
-  int gap_filled = 0;
+  int total  = 0;
+  int filled = 0;
 
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
-    merge_region_c *R = mug_regions[i];
+    region_c *R = all_regions[i];
 
-    for (unsigned int k = 0; k < R->gaps.size(); k++)
+    total += (int)R->gaps.size();
+
+    // must go backwards to allow removal to work properly
+    for (int k = (int)R->gaps.size()-1 ; k >= 0 ; k--)
     {
-      merge_gap_c *G = R->gaps[k];
+      gap_c *G = R->gaps[k];
 
-      gap_total++;
+      if (! G->reachable)
+      {
+        filled++;
 
-      if (G->reachable)
-        continue;
+        R->RemoveGap(k);
 
-      gap_filled++;
-
-      delete G;
-      R->gaps[k] = NULL;
+        delete G;
+      }
     }
-
-    // remove the NULL pointers
-    std::vector<merge_gap_c *>::iterator ENDP =
-         std::remove(R->gaps.begin(), R->gaps.end(), (merge_gap_c*)NULL);
-    R->gaps.erase(ENDP, R->gaps.end());
   }
 
-  if (gap_filled == gap_total)
+  if (filled == total)
   {
-    Main_FatalError("CSG2: all gaps were unreachable (no entities?)\n");
+    Main_FatalError("CSG: all gaps were unreachable (no entities?)\n");
   }
 
-  LogPrintf("CSG2: filled %d gaps (of %d total)\n", gap_filled, gap_total);
+  LogPrintf("CSG: filled %d gaps (of %d total)\n", filled, total);
 }
 
 
@@ -294,7 +292,7 @@ static void DiscoverThemGaps()
   // brush, done by maintaining a ref to the brush with the
   // currently highest z2 value.
 
-  for (unsigned int i = 0; i < all_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
 
@@ -305,7 +303,7 @@ static void DiscoverThemGaps()
 
     csg_brush_c *high = R->brushes[0];
 
-    for (unsigned int k = 1; k < R->brushes.size(); k++)
+    for (unsigned int k = 1 ; k < R->brushes.size() ; k++)
     {
       csg_brush_c *A = R->brushes[k];
 

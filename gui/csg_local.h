@@ -97,7 +97,7 @@ public:
   void RemoveBrush(int index);
 
   void AddGap(gap_c *G);
-//  void RemoveGap(int
+  void RemoveGap(int index);
 
   int TestSide(partition_c *P);
 
