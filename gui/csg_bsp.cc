@@ -826,14 +826,24 @@ static partition_c * ChoosePartition(group_c & group)
 static void DivideOneEntity(entity_info_c *E, partition_c *part,
                             group_c & front, group_c & back)
 {
-  // FIXME
+  double d = PerpDist(E->x,E->y, part->x1,part->y1, part->x2,part->y2);
+
+  if (d >= 0)
+    front.AddEntity(E);
+  else
+    back.AddEntity(E);
 }
 
 
 static void SplitGroup(group_c & group)
 {
   if (group.regs.empty())
+  {
+    if (! group.ents.empty())
+      fprintf(stderr, "WARNING: SplitGroup: %u lost entities\n", group.ents.size());
+              
     return;
+  }
 
   // Note: there is no explicit check for convexitiy.  We keep going until
   //       every snag has been on a partition.  This means that a convex
@@ -1243,6 +1253,14 @@ int badref = 0;
     DM_AddSector(0,flat, 144,flat, (int)R->brushes.size(),0,(int)R->snags.size());
 
     DM_AddSidedef(sec_id, "-", "-", "-", 0, 0);
+
+    for (k = 0 ; k < R->entities.size() ; k++)
+    {
+      entity_info_c *E = R->entities[k];
+
+      DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), 0,
+                  11, sec_id, 7, 0, 0, NULL);
+    }
 
     for (k = 0 ; k < R->snags.size() ; k++)
     {
