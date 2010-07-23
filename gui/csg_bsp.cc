@@ -60,6 +60,52 @@ public:
 };
 
 
+class group_c
+{
+public:
+  std::vector<region_c *> regs;
+  std::vector<entity_info_c *> ents;
+
+public:
+  group_c() : regs(), ents()
+  { }
+
+  ~group_c()
+  { }
+
+  void AddRegion(region_c *R)
+  {
+    regs.push_back(R);
+  }
+
+  void AddEntity(entity_info_c *E)
+  {
+    ents.push_back(E);
+  }
+
+  void GetGroupBounds(double *min_x, double *min_y,
+                      double *max_x, double *max_y)
+  {
+    *min_x = *min_y = +9e9;
+    *max_x = *max_y = -9e9;
+
+    for (unsigned int k = 0 ; k < regs.size() ; k++)
+    {
+      double x1, y1, x2, y2;
+
+      regs[k]->GetBounds(&x1, &y1, &x2, &y2);
+
+      *min_x = MIN(*min_x, x1);
+      *min_y = MIN(*min_y, y1);
+
+      *max_x = MAX(*max_x, x1);
+      *max_y = MAX(*max_y, y1);
+    }
+  }
+
+};
+
+
 //------------------------------------------------------------------------
 
 snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2) :
@@ -131,11 +177,12 @@ void snag_c::CalcAlongs()
 
 //------------------------------------------------------------------------
 
-region_c::region_c() : snags(), brushes(), equiv_id(-1)
+region_c::region_c() : snags(), brushes(), entities(), equiv_id(-1)
 { }
 
 
-region_c::region_c(const region_c& other) : snags(), brushes(), equiv_id(-1)
+region_c::region_c(const region_c& other) :
+    snags(), brushes(), entities(), equiv_id(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
@@ -404,7 +451,7 @@ static bool RegionHasFlattened(region_c *R)
 }
 
 
-static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
+static void CreateRegion(group_c & group, csg_brush_c *P)
 {
   SYS_ASSERT(P);
 
@@ -461,7 +508,7 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
   }
   else
   {
-    group.push_back(R);
+    group.AddRegion(R);
 
     all_regions.push_back(R);
   }
@@ -613,19 +660,18 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 
 
 static void DivideOneRegion(region_c *R, partition_c *part,
-                            std::vector<region_c *> & front,
-                            std::vector<region_c *> & back)
+                            group_c & front, group_c & back)
 {
   int side = R->TestSide(part);
 
   if (side > 0)
   {
-    front.push_back(R);
+    front.AddRegion(R);
     return;
   }
   else if (side < 0)
   {
-    back.push_back(R);
+    back.AddRegion(R);
     return;
   }
 
@@ -652,8 +698,8 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     DivideOneSnag(S, part, R, N, &along_min, &along_max);
   }
 
-  front.push_back(R);
-   back.push_back(N);
+  front.AddRegion(R);
+   back.AddRegion(N);
 
   // --- add the mini snags ---
 
@@ -675,14 +721,17 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 }
 
 
-static void MergeRegions(std::vector<region_c *> & group)
+static void MergeGroup(group_c & group)
 {
-  region_c *R = group[0];
+  region_c *R = group.regs[0];
 
-  for (unsigned int i = 1 ; i < group.size() ; i++)
+  for (unsigned int i = 1 ; i < group.regs.size() ; i++)
   {
-    R->MergeOther(group[i]);
+    R->MergeOther(group.regs[i]);
   }
+
+  // grab the entities
+  std::swap(R->entities, group.ents);
 
   // can now set the 'where' field of snags
 
@@ -708,29 +757,7 @@ static partition_c * AddPartition(double x1, double y1, double x2, double y2)
 }
 
 
-static void GetGroupBounds(std::vector<region_c *> & group,
-                           double *min_x, double *min_y,
-                           double *max_x, double *max_y)
-{
-  *min_x = *min_y = +9e9;
-  *max_x = *max_y = -9e9;
-
-  for (unsigned int k = 0 ; k < group.size() ; k++)
-  {
-    double x1, y1, x2, y2;
-
-    group[k]->GetBounds(&x1, &y1, &x2, &y2);
-
-    *min_x = MIN(*min_x, x1);
-    *min_y = MIN(*min_y, y1);
-
-    *max_x = MAX(*max_x, x1);
-    *max_y = MAX(*max_y, y1);
-  }
-}
-
-
-static partition_c * ChoosePartition(std::vector<region_c *> & group)
+static partition_c * ChoosePartition(group_c & group)
 {
   // do seed-wise binary subdivision thang
   // FIXME: EXPLAIN THIS SHITE
@@ -739,7 +766,7 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
 
   double gx1, gy1, gx2, gy2;
 
-  GetGroupBounds(group, &gx1, &gy1, &gx2, &gy2);
+  group.GetGroupBounds(&gx1, &gy1, &gx2, &gy2);
 
   int sx1 = floor(gx1 / CHUNK_SIZE + SNAG_EPSILON);
   int sy1 = floor(gy1 / CHUNK_SIZE + SNAG_EPSILON);
@@ -770,9 +797,9 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
 
   snag_c *best = NULL;
 
-  for (unsigned int i = 0 ; i < group.size() ; i++)
+  for (unsigned int i = 0 ; i < group.regs.size() ; i++)
   {
-    region_c *R = group[i];
+    region_c *R = group.regs[i];
 
     for (unsigned int k = 0 ; k < R->snags.size() ; k++)
     {
@@ -796,9 +823,16 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
 }
 
 
-static void SplitGroup(std::vector<region_c *> & group)
+static void DivideOneEntity(entity_info_c *E, partition_c *part,
+                            group_c & front, group_c & back)
 {
-  if (group.empty())
+  // FIXME
+}
+
+
+static void SplitGroup(group_c & group)
+{
+  if (group.regs.empty())
     return;
 
   // Note: there is no explicit check for convexitiy.  We keep going until
@@ -814,13 +848,14 @@ static void SplitGroup(std::vector<region_c *> & group)
 //            part, part->x1, part->y1, part->x2, part->y2);
 
     // divide the group
-    std::vector<region_c *> front;
-    std::vector<region_c *> back;
+    group_c front;
+    group_c back;
 
-    for (unsigned int i = 0 ; i < group.size() ; i++)
-    {
-      DivideOneRegion(group[i], part, front, back);
-    }
+    for (unsigned int i = 0 ; i < group.regs.size() ; i++)
+      DivideOneRegion(group.regs[i], part, front, back);
+
+    for (unsigned int k = 0 ; k < group.ents.size() ; k++)
+      DivideOneEntity(group.ents[k], part, front, back);
 
     // recursively handle each side
     SplitGroup(front); 
@@ -833,7 +868,7 @@ static void SplitGroup(std::vector<region_c *> & group)
     // at here, we have a leaf group which is convex,
     // hence merge all the regions into one.
 
-    MergeRegions(group);
+    MergeGroup(group);
   }
 }
 
@@ -1038,12 +1073,12 @@ static void HandleOverlaps()
 }
 
 
-static void AddBoundingRegion(std::vector<region_c *> & group)
+static void AddBoundingRegion(group_c & group)
 {
   double map_x1, map_y1;
   double map_x2, map_y2;
 
-  GetGroupBounds(group, &map_x1, &map_y1, &map_x2, &map_y2);
+  group.GetGroupBounds(&map_x1, &map_y1, &map_x2, &map_y2);
 
   SYS_ASSERT(map_x1 < map_x2);
   SYS_ASSERT(map_y1 < map_y2);
@@ -1054,8 +1089,6 @@ static void AddBoundingRegion(std::vector<region_c *> & group)
 
   // create the dummy region
   region_c *R = new region_c;
-
-  all_regions.push_back(R);
 
   snag_c *snags[4];
 
@@ -1069,7 +1102,9 @@ static void AddBoundingRegion(std::vector<region_c *> & group)
     R->snags.push_back(snags[n]);
   }
 
-  group.push_back(R);
+  group.AddRegion(R);
+
+  all_regions.push_back(R);
 }
 
 
@@ -1104,15 +1139,18 @@ void CSG_BSP(double grid)
   all_partitions.clear();
   all_regions.clear();
 
-  std::vector<region_c *> root_group;
+  group_c root;
 
   for (unsigned int i=0; i < all_brushes.size(); i++)
-    CreateRegion(root_group, all_brushes[i]);
+    CreateRegion(root, all_brushes[i]);
+
+  for (unsigned int i = 0; i < all_entities.size(); i++)
+    root.AddEntity(all_entities[i]);
 
   // create a rectangle region around whole map
-  AddBoundingRegion(root_group);
+  AddBoundingRegion(root);
 
-  SplitGroup(root_group);
+  SplitGroup(root);
 
   HandleOverlaps();
 

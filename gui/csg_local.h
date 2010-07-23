@@ -73,6 +73,8 @@ public:
 
   std::vector<csg_brush_c *> brushes;
 
+  std::vector<entity_info_c *> entities;
+
   // regions with same brushes will have same equiv_id
   // (only valid AFTER CSG_SimpleCoalesce)
   int equiv_id;
