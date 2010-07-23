@@ -33,6 +33,16 @@
 #include "ui_dialog.h"
 
 
+gap_c::gap_c(csg_brush_c *bottom, csg_brush_c *top) :
+    b(bottom), t(top), reachable(false)
+{ }
+
+gap_c::~gap_c()
+{ }
+
+
+//------------------------------------------------------------------------
+
 static int SpreadEquivID()
 {
   int changes = 0;
@@ -134,8 +144,73 @@ fprintf(stderr, "Swallowed brushes: %d (of %d)\n", count, total);
 
 //------------------------------------------------------------------------
 
-void CSG_FindGaps()
+struct csg_brush_bz_Compare
 {
+  inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
+  {
+    return A->b.z < B->b.z;
+  }
+};
+
+
+void CSG_DiscoverGaps()
+{
+  // Algorithm:
+  // 
+  // sort the brushes by ascending z1 values.
+  // Hence any gap must occur between two adjacent entries.
+  // We also must check the gap is not covered by a previous
+  // brush, done by maintaining a ref to the brush with the
+  // currently highest z2 value.
+
+  double Z_EPSILON = 0.001;
+
+  for (unsigned int i = 0; i < all_regions.size(); i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->brushes.size() <= 1)
+      continue;
+
+    std::sort(R->brushes.begin(), R->brushes.end(), csg_brush_bz_Compare());
+
+    csg_brush_c *high = R->brushes[0];
+
+    for (unsigned int k = 1; k < R->brushes.size(); k++)
+    {
+      csg_brush_c *A = R->brushes[k];
+
+      // skip the "ephemeral" brushes
+      if (high->bkind == BKIND_Liquid || high->bkind == BKIND_Rail ||
+          high->bkind == BKIND_Light)
+      {
+        high = A;
+        continue;
+      }
+      else if (A->bkind == BKIND_Liquid || A->bkind == BKIND_Rail ||
+               A->bkind == BKIND_Light)
+      {
+        continue;
+      }
+
+      if (A->b.z > high->t.z + Z_EPSILON)
+      {
+        // found a gap
+        gap_c *gap = new gap_c(high, A);
+
+        R->AddGap(gap);
+
+        high = A;
+        continue;
+      }
+
+      // no gap implies that these two brushes touch/overlap,
+      // hence update the highest one.
+      
+      if (A->t.z > high->t.z)
+        high = A;
+    }
+  }
 }
 
 

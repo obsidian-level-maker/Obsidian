@@ -26,6 +26,7 @@
 
 class partition_c;
 class region_c;
+class gap_c;
 
 
 class snag_c
@@ -75,6 +76,8 @@ public:
 
   std::vector<entity_info_c *> entities;
 
+  std::vector<gap_c *> gaps;
+
   // regions with same brushes will have same equiv_id
   // (only valid AFTER CSG_SimpleCoalesce)
   int equiv_id;
@@ -93,6 +96,9 @@ public:
   void AddBrush(csg_brush_c *P);
   void RemoveBrush(int index);
 
+  void AddGap(gap_c *G);
+//  void RemoveGap(int
+
   int TestSide(partition_c *P);
 
   void MergeOther(region_c *other);
@@ -105,6 +111,21 @@ public:
   bool HasSameBrushes(const region_c *other) const;
 
   void ClockwiseSnags();
+};
+
+
+class gap_c
+{
+public:
+  csg_brush_c *b;
+  csg_brush_c *t;
+
+  bool reachable;
+
+public:
+  gap_c(csg_brush_c *bottom, csg_brush_c *top);
+
+  ~gap_c();
 };
 
 

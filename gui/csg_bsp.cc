@@ -177,12 +177,14 @@ void snag_c::CalcAlongs()
 
 //------------------------------------------------------------------------
 
-region_c::region_c() : snags(), brushes(), entities(), equiv_id(-1)
+region_c::region_c() : snags(), brushes(), entities(), gaps(),
+                       equiv_id(-1)
 { }
 
 
 region_c::region_c(const region_c& other) :
-    snags(), brushes(), entities(), equiv_id(-1)
+    snags(), brushes(), entities(), gaps(),
+    equiv_id(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
@@ -238,6 +240,12 @@ void region_c::RemoveBrush(int index)
   brushes[index] = brushes.back();
 
   brushes.pop_back();
+}
+
+
+void region_c::AddGap(gap_c *G)
+{
+  gaps.push_back(G);
 }
 
 
