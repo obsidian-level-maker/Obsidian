@@ -117,13 +117,13 @@ public:
 class gap_c
 {
 public:
-  csg_brush_c *b;
-  csg_brush_c *t;
+  csg_brush_c *bottom;
+  csg_brush_c *top;
 
   bool reachable;
 
 public:
-  gap_c(csg_brush_c *bottom, csg_brush_c *top);
+  gap_c(csg_brush_c *B, csg_brush_c *T);
 
   ~gap_c();
 };
