@@ -65,7 +65,7 @@ if (N->equiv_id == R->equiv_id) sames++; else diffs++; }
     }
   }
 
-fprintf(stderr, "SpreadEquivID  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
+// fprintf(stderr, "SpreadEquivID  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
 
   return changes;
 }

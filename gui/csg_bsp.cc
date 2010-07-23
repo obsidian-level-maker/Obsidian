@@ -749,8 +749,8 @@ static partition_c * ChoosePartition(std::vector<region_c *> & group)
   int sw  = sx2 - sx1;
   int sh  = sy2 - sy1;
 
-fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
-fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
+// fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
+// fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
   if ((sw >= 2 && gy2 > gy1+1) || 
       (sh >= 2 && gx2 > gx1+1))
@@ -792,7 +792,6 @@ fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, 
   if (! best)
     return NULL;
 
-fprintf(stderr, "best = %p\n", best);
   return AddPartition(best);
 }
 
@@ -811,8 +810,8 @@ static void SplitGroup(std::vector<region_c *> & group)
 
   if (part)
   {
-    fprintf(stderr, "Partition: (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
-            part->x1, part->y1, part->x2, part->y2);
+//    fprintf(stderr, "Partition: %p (%1.2f %1.2f) --> (%1.2f %1.2f)\n",
+//            part, part->x1, part->y1, part->x2, part->y2);
 
     // divide the group
     std::vector<region_c *> front;
@@ -941,7 +940,7 @@ static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
 {
   partition_c *part = overlap_list[0]->on_node;
 
-  fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
+//  fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
 
   for (unsigned int i = 0 ; i < overlap_list.size() ; i++)
     overlap_list[i]->CalcAlongs();
@@ -975,7 +974,7 @@ for (int z = 0 ; z < (int)overlap_list.size() ; z++)
         changes++;
     }
 
-    fprintf(stderr, "  %d changes\n", changes);
+//    fprintf(stderr, "  %d changes\n", changes);
 
   } while (changes > 0);
 }
@@ -1023,7 +1022,7 @@ static void HandleOverlaps()
     while (k+1 < total && all_snags[k+1]->on_node == all_snags[k]->on_node)
       k++;
 
-fprintf(stderr, "ON NODE %p : %u snags\n", all_snags[i]->on_node, k-i+1);
+// fprintf(stderr, "ON NODE %p : %u snags\n", all_snags[i]->on_node, k-i+1);
 
     if (k > i && all_snags[i]->on_node)
     {
@@ -1076,7 +1075,25 @@ static void AddBoundingRegion(std::vector<region_c *> & group)
 
 static void RemoveDeadRegions()
 {
-  // FIXME: RemoveDeadRegions
+  int before = (int)all_regions.size();
+
+  std::vector<region_c *> local_list;
+
+  std::swap(all_regions, local_list);
+  
+  for (unsigned int i = 0 ; i < local_list.size() ; i++)
+  {
+    region_c *R = local_list[i];
+
+    if (! R->snags.empty())
+      all_regions.push_back(R);
+    else
+      delete R;
+  }
+
+  int after = (int)all_regions.size();
+
+  fprintf(stderr, "RemoveDeadRegions: %d --> %d\n", before, after);
 }
 
 
@@ -1155,7 +1172,13 @@ void CSG_TestRegions_Doom(void)
 
   unsigned int i, k;
 
+int swob = 0;
+int bwos = 0;
+
   int line_id = 0;
+
+int degens = 0;
+int badref = 0;
 
 
   for (i = 0 ; i < all_regions.size() ; i++)
@@ -1164,6 +1187,9 @@ void CSG_TestRegions_Doom(void)
 
 ///    if (R->isDegen())
 ///      continue;
+
+    if (! R->brushes.empty() && R->  snags.empty()) bwos++;
+    if (! R->  snags.empty() && R->brushes.empty()) swob++;
 
     const char *flat = "FWATER1";
 
@@ -1184,13 +1210,18 @@ void CSG_TestRegions_Doom(void)
     {
       snag_c *S = R->snags[k];
 
+      if (S->partner && S->partner->partner != S)
+        badref++;
+
       int v1 = TestVertex(S, 0);
       int v2 = TestVertex(S, 1);
 
       if (v1 == v2)  // degenerate
+      { degens++;
         continue;
+      }
 
-if (line_id == 5172 || line_id == 4976 || line_id == 5190)
+if (line_id == 12345678)
 {
 fprintf(stderr, "LINE #%d  SNAG %p  REGION %p / %p  (%s)\n", line_id, S, S->where, R, S->mini ? "MINI" : "normal");
 
@@ -1210,6 +1241,9 @@ fprintf(stderr, "  q_alongs: %d %d\n", S->q_along1, S->q_along2);
       line_id++;
     }
   }
+
+  fprintf(stderr, "DEGEN LINES: %d  BAD REF: %d  NORMAL: %d\n", degens, badref, line_id);
+  fprintf(stderr, "REGION SwoB: %d  BwoS:    %d  TOTAL: %u\n", swob, bwos, all_regions.size());
 }
 
 
