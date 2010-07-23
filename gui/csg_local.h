@@ -128,9 +128,8 @@ extern std::vector<region_c *> all_regions;
 
 /***** FUNCTIONS ****************/
 
-void CSG_BSP();
+void CSG_BSP(double grid);
 void CSG_SimpleCoalesce();
-void CSG_Quantize(double grid);
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */

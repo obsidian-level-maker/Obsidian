@@ -37,6 +37,9 @@
 #define SNAG_EPSILON  0.001
 
 
+double QUANTIZE_GRID;
+
+
 class partition_c
 {
 public:
@@ -332,8 +335,6 @@ static bool do_clip_brushes;
 
 static std::vector<partition_c *> all_partitions;
 
-static std::vector<snag_c *> all_snags;
-
 std::vector<region_c *> all_regions;
 
 
@@ -366,8 +367,6 @@ static void CreateRegion(std::vector<region_c *> & group, csg_brush_c *P)
     brush_vert_c *v2 = P->verts[k2];
 
     snag_c *S = new snag_c(v1, v2, v2);
-
-    all_snags.push_back(S);
 
     R->AddSnag(S);
   }
@@ -505,8 +504,6 @@ static void DivideOneSnag(snag_c *S, partition_c *part,
 
   snag_c *T = S->Cut(ix, iy);
 
-  all_snags.push_back(T);
-
 	if (a_side < 0)
 	{
      back->AddSnag(S);
@@ -576,9 +573,6 @@ static void DivideOneRegion(region_c *R, partition_c *part,
 
     snag_c *front_S = new snag_c(x1,y1, x2,y2, part);
     snag_c * back_S = new snag_c(x2,y2, x1,y1, part);
-
-    all_snags.push_back(front_S);
-    all_snags.push_back(back_S);
 
     R->snags.push_back(front_S);
     N->snags.push_back(back_S);
@@ -773,7 +767,6 @@ static bool PartnerSnags(snag_c *A, snag_c *B)
   A->partner = B;
   B->partner = A;
 
-  // mere partnering is not significant (won't need an extra pass)
   return false;
 }
 
@@ -782,8 +775,6 @@ static bool SplitSnag(snag_c *S, double ix, double iy,
                       std::vector<snag_c *> & overlap_list)
 {
   snag_c *T = S->Cut(ix, iy);
-
-  all_snags.push_back(T);
 
   S->where->AddSnag(T);
 
@@ -837,13 +828,19 @@ static bool TestOverlap(std::vector<snag_c *> & list, int i, int k)
   // same direction?
   if (A->q_along1 == B->q_along1)
   {
-    list[k] = NULL;  // remove B from the list
+    MergeSnags(A, B);
 
-    return MergeSnags(A, B);
+    // remove B from list and free it
+    delete list[k]; list[k] = NULL;
+
+    return true;
   }
   else
   {
-    return PartnerSnags(A, B);
+    PartnerSnags(A, B);
+
+    // mere partnering is not significant (won't need an extra pass)
+    return false;
   }
 }
 
@@ -901,12 +898,26 @@ struct snag_on_node_Compare
 };
 
 
+static void CollectAllSnags(std::vector<snag_c *> list)
+{
+  for (unsigned i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    for (unsigned k = 0 ; k < R->snags.size() ; k++)
+      list.push_back(R->snags[k]);
+  }
+}
+
+
 static void HandleOverlaps()
 {
   // process each set of snags which lie on the same partition
   // (determined by sorting the snags by their 'on_node' pointer).
 
-  // !!!! FIXME: collect 'all_snags' now (from all_regions)
+  std::vector<snag_c *> all_snags;
+
+  CollectAllSnags(all_snags);
 
   std::sort(all_snags.begin(), all_snags.end(), snag_on_node_Compare());
 
@@ -924,7 +935,6 @@ fprintf(stderr, "ON NODE %p : %u snags\n", all_snags[i]->on_node, k-i+1);
 
     if (k > i && all_snags[i]->on_node)
     {
-
       // copy into a new list, a place where split pieces can go
       std::vector<snag_c *> overlap_list;
 
@@ -966,8 +976,6 @@ static void AddBoundingRegion(std::vector<region_c *> & group)
   for (int n = 0 ; n < 4 ; n++)
   {
     R->snags.push_back(snags[n]);
-
-    all_snags.push_back(snags[n]);
   }
 
   group.push_back(R);
@@ -980,10 +988,11 @@ static void RemoveDeadRegions()
 }
 
 
-void CSG_BSP()
+void CSG_BSP(double grid)
 {
+  QUANTIZE_GRID = grid;
+
   all_partitions.clear();
-  all_snags.clear();
   all_regions.clear();
 
   std::vector<region_c *> root_group;
@@ -1015,7 +1024,6 @@ void CSG_BSP()
 
 static std::map<int, int> test_vertices;
 
-extern double QUANTIZE_GROG; //!!!!!! FIXME
 
 int TestVertex(snag_c *S, int which)
 {
@@ -1025,8 +1033,8 @@ int TestVertex(snag_c *S, int which)
   double x = which ? S->q_x2 : S->q_x1;
   double y = which ? S->q_y2 : S->q_y1;
 
-  int ix = I_ROUND(x * QUANTIZE_GROG + RX*0);
-  int iy = I_ROUND(y * QUANTIZE_GROG + RY*0);
+  int ix = I_ROUND(x * QUANTIZE_GRID + RX*0);
+  int iy = I_ROUND(y * QUANTIZE_GRID + RY*0);
 
   int id = (iy << 16) + ix;
 
@@ -1048,9 +1056,8 @@ void CSG_TestRegions_Doom(void)
 {
   // for debugging only: each region_c becomes a single sector.
 
-  CSG_BSP();
+  CSG_BSP(36.0);
   CSG_SimpleCoalesce();
-  CSG_Quantize(16.0);
 
   test_vertices.clear();
 

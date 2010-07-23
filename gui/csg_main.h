@@ -23,7 +23,7 @@
 
 
 // grid spacing for quantizing vertices  
-#define QUANTIZE_GRID  0.1
+extern double QUANTIZE_GRID;
 
 // distance between two points to consider them equal.
 // the 1.98 provides a small overlap between two quantized vertices.

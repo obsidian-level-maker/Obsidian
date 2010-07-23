@@ -33,9 +33,6 @@
 #include "ui_dialog.h"
 
 
-double QUANTIZE_GROG;
-
-
 static int SpreadEquivID()
 {
   int changes = 0;
@@ -126,7 +123,7 @@ bool snag_c::isRightOf(const snag_c *other)
 static bool OnSameLine(double ax1,double ay1, double ax2,double ay2,
                        double bx1,double by1, double bx2,double by2)
 {
-  double DIST = QUANTIZE_GROG / 1.7;
+  double DIST = QUANTIZE_GRID / 1.7;
 
   double d1 = PerpDist(bx1,by1, ax1,ay1,ax2,ay2);
 
@@ -145,10 +142,10 @@ static bool RegionHasFlattened(region_c *R, snag_c *longest)
   // check if all quantized coords in the region are sitting
   // on the same line.
 
-  double ax1 = longest->q_x1 * QUANTIZE_GROG;
-  double ay1 = longest->q_y1 * QUANTIZE_GROG;
-  double ax2 = longest->q_x2 * QUANTIZE_GROG;
-  double ay2 = longest->q_y2 * QUANTIZE_GROG;
+  double ax1 = longest->q_x1 * QUANTIZE_GRID;
+  double ay1 = longest->q_y1 * QUANTIZE_GRID;
+  double ax2 = longest->q_x2 * QUANTIZE_GRID;
+  double ay2 = longest->q_y2 * QUANTIZE_GRID;
 
   for (unsigned int k = 0 ; k < R->snags.size() ; k++)
   {
@@ -160,10 +157,10 @@ static bool RegionHasFlattened(region_c *R, snag_c *longest)
     if (S == longest)
       continue;
 
-    double bx1 = S->q_x1 * QUANTIZE_GROG;
-    double by1 = S->q_y1 * QUANTIZE_GROG;
-    double bx2 = S->q_x2 * QUANTIZE_GROG;
-    double by2 = S->q_y2 * QUANTIZE_GROG;
+    double bx1 = S->q_x1 * QUANTIZE_GRID;
+    double by1 = S->q_y1 * QUANTIZE_GRID;
+    double bx2 = S->q_x2 * QUANTIZE_GRID;
+    double by2 = S->q_y2 * QUANTIZE_GRID;
 
     if (! OnSameLine(ax1,ay1,ax2,ay2, bx1,by1,bx2,by2))
       return false;
@@ -221,14 +218,15 @@ fprintf(stderr, "Region %p near (%1.0f %1.0f) is degenerate (valid:%d/%u)\n",
 }
 
 
-void CSG_Quantize(double grid)
+#if (1 == 0)
+void OLD_CSG_Quantize(double grid)
 {
   // mark segments and regions which become zero size as "degenerate".
 
   // a segment with a degenerate region on one side (after marking all
   // degenerates) needs to discover the new region, e.g. point test.
 
-  QUANTIZE_GROG = grid;
+  QUANTIZE_GRID = grid;
 
 int degens  = 0;
 int normals = 0;
@@ -256,6 +254,7 @@ fprintf(stderr, "Degenerate snags: %d  normal: %d\n", degens, normals);
     CheckRegionDegenerate(R);
   }
 }
+#endif
 
 
 //------------------------------------------------------------------------
