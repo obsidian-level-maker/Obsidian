@@ -1118,11 +1118,11 @@ int TestVertex(snag_c *S, int which)
   int RX = (rand() & 3) - 1;
   int RY = (rand() & 3) - 1;
 
-  double x = which ? S->q_x2 : S->q_x1;
-  double y = which ? S->q_y2 : S->q_y1;
+  double x = which ? S->x2 : S->x1;
+  double y = which ? S->y2 : S->y1;
 
-  int ix = I_ROUND(x * QUANTIZE_GRID + RX*0);
-  int iy = I_ROUND(y * QUANTIZE_GRID + RY*0);
+  int ix = I_ROUND(x + RX*0);
+  int iy = I_ROUND(y + RY*0);
 
   int id = (iy << 16) + ix;
 
@@ -1158,8 +1158,8 @@ void CSG_TestRegions_Doom(void)
   {
     region_c *R = all_regions[i];
 
-    if (R->isDegen())
-      continue;
+///    if (R->isDegen())
+///      continue;
 
     const char *flat = "FWATER1";
 
@@ -1180,7 +1180,10 @@ void CSG_TestRegions_Doom(void)
     {
       snag_c *S = R->snags[k];
 
-      if (S->isDegen())
+      int v1 = TestVertex(S, 0);
+      int v2 = TestVertex(S, 1);
+
+      if (v1 == v2)  // degenerate
         continue;
 
 if (line_id == 7322)
@@ -1197,9 +1200,7 @@ fprintf(stderr, "  on_node %p  (%1.0f %1.0f) --> (%1.0f %1.0f)\n", S->on_node,
 fprintf(stderr, "  q_alongs: %d %d\n", S->q_along1, S->q_along2);
 }
 
-
-      DM_AddLinedef(TestVertex(S, 0), TestVertex(S, 1),
-                    sec_id, -1,
+      DM_AddLinedef(v1, v2, sec_id, -1,
                     S->partner ? 1 : 0, 1 /*impassible*/, 0,
                     NULL /* args */);
       line_id++;

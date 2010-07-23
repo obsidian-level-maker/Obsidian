@@ -48,10 +48,6 @@ public:
   int q_along1;
   int q_along2;
 
-  // quantized vertices
-  int q_x1, q_y1;
-  int q_x2, q_y2;
-
 private:
   snag_c(const snag_c& other);
 
@@ -67,13 +63,6 @@ public:
   snag_c * Cut(double ix, double iy);
 
   void CalcAlongs();
-
-///---  void QuantizeCoords(double grid);
-
-  bool isDegen() const
-  {
-    return (q_x1 == q_x2) && (q_y1 == q_y2);
-  }
 };
 
 
@@ -86,7 +75,6 @@ public:
 
   // regions with same brushes will have same equiv_id
   // (only valid AFTER CSG_SimpleCoalesce)
-  // negative --> degenerate region from quantisation
   int equiv_id;
 
 public:
@@ -114,10 +102,6 @@ public:
   bool HasSameBrushes(const region_c *other) const;
 
   void ClockwiseSnags();
-
-  void MarkDegen() { equiv_id = -1; }
-
-  bool isDegen() { return equiv_id < 0; }
 };
 
 
