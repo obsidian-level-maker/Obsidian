@@ -44,6 +44,22 @@ gap_c::~gap_c()
 { }
 
 
+void gap_c::AddNeighbor(gap_c *N)
+{
+  if (! HasNeighbor(N))
+    neighbors.push_back(N);
+}
+
+bool gap_c::HasNeighbor(gap_c *N) const
+{
+  for (unsigned int i = 0 ; i < neighbors.size() ; i++)
+    if (neighbors[i] == N)
+      return true;
+
+  return false;
+}
+
+
 //------------------------------------------------------------------------
 
 static int SpreadEquivID()
@@ -189,9 +205,68 @@ static void MarkGapsWithEntities()
 }
 
 
-static void BuildNeighborMap(...)
+static void CompareRegionGaps(region_c *R1, region_c *R2)
 {
-  // TODO BuildNeighborMap
+  // gaps are sorted from lowest to highest, hence we can optimise
+  // the comparison using a staggered approach.
+  unsigned int b_idx = 0;
+  unsigned int f_idx = 0;
+
+  while (b_idx < R1->gaps.size() && f_idx < R2->gaps.size())
+  {
+    gap_c *B = R1->gaps[b_idx];
+    gap_c *F = R2->gaps[f_idx];
+
+    double B_z1 = B->bottom->t.z;
+    double B_z2 = B->   top->b.z;
+
+    double F_z1 = F->bottom->t.z;
+    double F_z2 = F->   top->b.z;
+
+    if (B_z2 < F_z1 + Z_EPSILON)
+    {
+      b_idx++; continue;
+    }
+    if (F_z2 < B_z1 + Z_EPSILON)
+    {
+      f_idx++; continue;
+    }
+
+    // connection found
+    B->AddNeighbor(F);
+    F->AddNeighbor(B);
+
+    if (F_z2 < B_z2)
+      f_idx++;
+    else
+      b_idx++;
+  }
+}
+
+
+static void BuildNeighborMap()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+      snag_c *T = S->partner;
+
+      if (! T || ! T->where)
+        continue;
+
+      SYS_ASSERT(T->where != R);
+
+      // no need to repeat the checks (only do one side)
+      if (T->where >= R)
+        continue;
+
+      CompareRegionGaps(R, T->where);
+    }
+  }
 }
 
 

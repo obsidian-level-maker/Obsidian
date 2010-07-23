@@ -122,10 +122,15 @@ public:
 
   bool reachable;
 
+  std::vector<gap_c *> neighbors;
+
 public:
   gap_c(csg_brush_c *B, csg_brush_c *T);
 
   ~gap_c();
+
+  void AddNeighbor(gap_c *N);
+  bool HasNeighbor(gap_c *N) const;
 };
 
 
@@ -139,6 +144,7 @@ extern std::vector<region_c *> all_regions;
 void CSG_BSP(double grid);
 void CSG_SimpleCoalesce();
 void CSG_SwallowBrushes();
+void CSG_DiscoverGaps();
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */
