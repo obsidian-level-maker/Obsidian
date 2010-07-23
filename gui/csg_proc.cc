@@ -89,11 +89,46 @@ void CSG_SimpleCoalesce()
 }
 
 
+static bool CanSwallowBrush(region_c *R, int i, int k)
+{
+  double Z_EPSILON = 0.001;
+
+  csg_brush_c *A = R->brushes[i];
+  csg_brush_c *B = R->brushes[k];
+
+  if (A->bkind != BKIND_Solid && A->bkind != BKIND_Sky)
+    return false;
+
+  return (B->b.z > A->b.z - Z_EPSILON) &&
+         (B->t.z < A->t.z + Z_EPSILON);
+}
+
+
 void CSG_SwallowBrushes()
 {
   // check each region_c for redundant brushes, ones which are
   // completely surrounded by another brush (on the Z axis)
 
+int count=0;
+int total=0;
+
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    total += (int)R->brushes.size();
+
+    for (int i = 0   ; i < (int)R->brushes.size() ; i++)
+    for (int k = i+1 ; k < (int)R->brushes.size() ; k++)
+    {
+      if (CanSwallowBrush(R, i, k))
+      { count++;
+        R->RemoveBrush(k);
+      }
+    }
+  }
+
+fprintf(stderr, "Swallowed brushes: %d (of %d)\n", count, total);
 }
 
 

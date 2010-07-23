@@ -91,6 +91,7 @@ public:
   bool RemoveSnag(snag_c *S);
 
   void AddBrush(csg_brush_c *P);
+  void RemoveBrush(int index);
 
   int TestSide(partition_c *P);
 
@@ -116,6 +117,7 @@ extern std::vector<region_c *> all_regions;
 
 void CSG_BSP(double grid);
 void CSG_SimpleCoalesce();
+void CSG_SwallowBrushes();
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */

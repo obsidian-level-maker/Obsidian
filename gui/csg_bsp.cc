@@ -231,6 +231,16 @@ void region_c::AddBrush(csg_brush_c *P)
 }
 
 
+void region_c::RemoveBrush(int index)
+{
+  SYS_ASSERT(index < (int)brushes.size());
+
+  brushes[index] = brushes.back();
+
+  brushes.pop_back();
+}
+
+
 void region_c::MergeOther(region_c *other)
 {
   unsigned int i;
@@ -1215,6 +1225,7 @@ void CSG_TestRegions_Doom(void)
 
   CSG_BSP(4.0);
   CSG_SimpleCoalesce();
+  CSG_SwallowBrushes();
 
   test_vertices.clear();
 
