@@ -57,8 +57,14 @@ slope_info_c::slope_info_c() :
       sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
 
+slope_info_c::slope_info_c(const slope_info_c *other) :
+      sx(other->sx), sy(other->sy),
+      ex(other->ex), ey(other->ey), dz(other->dz)
+{ }
+
 slope_info_c::~slope_info_c()
 { }
+
 
 double slope_info_c::GetAngle() const
 {
@@ -66,6 +72,7 @@ double slope_info_c::GetAngle() const
 
   return CalcAngle(0, 0, xy_dist, dz);
 }
+
 
 double slope_info_c::CalcZ(double base_z, double x, double y) const
 {
@@ -137,9 +144,11 @@ brush_vert_c::~brush_vert_c()
 
 
 brush_plane_c::brush_plane_c(const brush_plane_c& other) :
-    z(other.z), slope(NULL), face()  // FIXME ?!?!?
-{ }
-    
+    z(other.z), slope(NULL), face()
+{
+  // NOTE: slope not cloned
+}
+ 
 brush_plane_c::~brush_plane_c()
 {
   // free slope ??   (or keep all slopes in big list)
@@ -163,9 +172,7 @@ csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
       b(other->b),
       t(other->t)
 {
-  // FIXME: do_verts
-
-  // FIXME: duplicate slopes
+  // NOTE: verts and slopes not cloned
 
   bflags &= ~ BRU_IF_Quad;
 }

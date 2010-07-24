@@ -267,7 +267,7 @@ void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 }
 
 
-void Q1_MapModel_Clip(qLump_c *L, s32_t base,
+void Q1_MapModel_Clip(qLump_c *lump, s32_t base,
                       q1MapModel_c *model, int which,
                       double pad_w, double pad_t, double pad_b)
 {
@@ -305,14 +305,15 @@ void Q1_MapModel_Clip(qLump_c *L, s32_t base,
 
     if (flipped)
     {
-      u16_t tmp = clip.children[0];
-      clip.children[0] = clip.children[1];
-      clip.children[1] = tmp;
+      std::swap(clip.children[0], clip.children[1]);
     }
 
-    // TODO: fix endianness in 'clip'
+    // fix endianness
+    clip.planenum    = LE_S32(clip.planenum);
+    clip.children[0] = LE_U16(clip.children[0]);
+    clip.children[1] = LE_U16(clip.children[1]);
 
-    L->Append(&clip, sizeof(clip));
+    lump->Append(&clip, sizeof(clip));
   }
 }
 

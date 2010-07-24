@@ -65,6 +65,7 @@ public:
 
 public:
    slope_info_c();
+   slope_info_c(const slope_info_c *other);
   ~slope_info_c();
 
   double GetAngle() const;

@@ -130,7 +130,7 @@ public:
 
 #define CONTENT__NODE  12345
 
-  int lf_contents;
+  int contents;
 
   std::vector<cpSide_c *> sides;
 
@@ -157,11 +157,11 @@ public:
 
 public:
   // LEAF
-  cpNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
+  cpNode_c() : contents(CONTENTS_EMPTY), sides(), region(NULL),
                front(NULL), back(NULL), index(-1)
   { }
 
-  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL),
+  cpNode_c(bool _Zsplit) : contents(CONTENT__NODE), sides(), region(NULL),
                           z_splitter(_Zsplit), z(0),
                           x(0), y(0), dx(0), dy(0),
                           front(NULL), back(NULL),
@@ -174,9 +174,9 @@ public:
     if (back)  delete back;
   }
 
-  inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
-  inline bool IsLeaf()  const { return lf_contents != CONTENT__NODE; }
-  inline bool IsSolid() const { return lf_contents == CONTENTS_SOLID; }
+  inline bool IsNode()  const { return contents == CONTENT__NODE; }
+  inline bool IsLeaf()  const { return contents != CONTENT__NODE; }
+  inline bool IsSolid() const { return contents == CONTENTS_SOLID; }
 
   void AddSide(cpSide_c *S)
   {
@@ -190,7 +190,7 @@ public:
 
   void CalcBounds(double *lx, double *ly, double *w, double *h) const
   {
-    SYS_ASSERT(lf_contents != CONTENT__NODE);
+    SYS_ASSERT(contents != CONTENT__NODE);
 
     double hx = -99999; *lx = +99999;
     double hy = -99999; *ly = +99999;
@@ -216,35 +216,28 @@ public:
 };
 
 
-static std::vector<cpSide_c *> all_sides;
+static std::vector<cpSide_c *> all_clip_sides;
 
 
 //------------------------------------------------------------------------
 
 static void SaveBrushes(void)
 {
-  SYS_ASSERT(all_brushes.size() > 0);
-  SYS_ASSERT(saved_all_brushes.empty());
+  saved_all_brushes.clear();
 
   std::swap(all_brushes, saved_all_brushes);
 }
+
 
 static void RestoreBrushes(void)
 {
   // free our modified ones
   for (unsigned int i = 0; i < all_brushes.size(); i++)
-  {
-    csg_brush_c *P2 = all_brushes[i];
-
-    delete P2;
-  }
+    delete all_brushes[i];
 
   all_brushes.clear();
 
   std::swap(all_brushes, saved_all_brushes);
-
-  SYS_ASSERT(all_brushes.size() > 0);
-  SYS_ASSERT(saved_all_brushes.empty());
 }
 
 
@@ -426,30 +419,61 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
 }
 
 
+static void AddFatBrush(csg_brush_c *P2)
+{
+  P2->ComputeBBox();
+  P2->Validate();
+
+  all_brushes.push_back(P2);
+}
+
+
+static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
+{
+  double dx = slope->ex - slope->sx;
+  double dy = slope->ey - slope->sy;
+
+  double len = sqrt(dx*dx + dy*dy);
+
+  dx = dx * pad_w / len;
+  dy = dy * pad_w / len;
+
+#if 0
+  if ((slope->dz > 0) == is_ceil)
+  {
+    slope->sx -= dx;
+    slope->sy -= dy;
+  }
+  else
+  {
+    slope->ex += dx;
+    slope->ey += dy;
+  }
+#else
+  slope->sx -= dx / 2;
+  slope->sy -= dy / 2;
+
+  slope->ex += dx / 2;
+  slope->ey += dy / 2;
+#endif
+}
+
+
 static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 {
   for (unsigned int i = 0; i < saved_all_brushes.size(); i++)
   {
     csg_brush_c *P = saved_all_brushes[i];
 
-    if (! (P->bkind == BKIND_Solid || P->bkind == BKIND_Clip ||
+    if (! (P->bkind == BKIND_Solid ||
+           P->bkind == BKIND_Clip  ||
            P->bkind == BKIND_Sky))
       continue;
 
-    csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
+    // clone it, except vertices or slopes
+    csg_brush_c *P2 = new csg_brush_c(P);
 
     P2->bkind = BKIND_Solid;
-
-    // !!!! FIXME: if floor is sloped, split this poly into two halves
-    //             at the point where the (slope + fh) exceeds (z2 + fh)
-
-    SYS_ASSERT(! P2->t.slope);
-
-    // TODO: if ceiling is sloped, adjust slope to keep it in new bbox
-    //       (this is a kludge.  Floors are a lot more important to get
-    //        right because players and monsters walk on them).
-
-    SYS_ASSERT(! P2->b.slope);
 
     P2->b.z -= pad_b;
     P2->t.z += pad_t;
@@ -459,10 +483,24 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
       FattenVertex3(P, k, P2, pad_w);
     }
 
-    P2->ComputeBBox();
-    P2->Validate();
+    // !!!! FIXME: if floor is sloped, split this poly into two halves
+    //             at the point where the (slope + fh) exceeds (z2 + fh)
+    if (P->t.slope)
+    {
+      P2->t.slope = new slope_info_c(P->t.slope);
 
-    all_brushes.push_back(P2);
+      AdjustSlope(P2->t.slope, pad_w, false);
+    }
+
+    // if ceiling is sloped, merely adjust slope to keep it in new bbox
+    if (P->b.slope)
+    {
+      P2->b.slope = new slope_info_c(P->b.slope);
+
+      AdjustSlope(P2->b.slope, pad_w, true);
+    }
+
+    AddFatBrush(P2);
   }
 }
 
@@ -567,7 +605,7 @@ static cpNode_c * MakeLeaf(int contents)
 {
   cpNode_c *leaf = new cpNode_c();
 
-  leaf->lf_contents = contents;
+  leaf->contents = contents;
 
   return leaf;
 }
@@ -871,25 +909,28 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
 }
 
 
-
 //------------------------------------------------------------------------
 
-static void AssignIndexes(cpNode_c *node, int *idx_var)
+static void AssignIndexes(cpNode_c *node, int *cur_index)
 {
-  node->index = *idx_var;
+  if (! node->IsNode())
+    return;
 
-  (*idx_var) += 1;
+  node->index = *cur_index;
 
-  if (node->front->IsNode())
-    AssignIndexes(node->front, idx_var);
+  (*cur_index) += 1;
 
-  if (node->back->IsNode())
-    AssignIndexes(node->back, idx_var);
+  AssignIndexes(node->front, idx_var);
+  AssignIndexes(node->back,  idx_var);
 }
 
 
-static void WriteClipNodes(qLump_c *L, cpNode_c *node)
+static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 {
+  if (! node->IsNode())
+    return;
+
+
   dclipnode_t clip;
 
   bool flipped;
@@ -905,33 +946,31 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
   if (node->front->IsNode())
     clip.children[0] = (u16_t) node->front->index;
   else
-    clip.children[0] = (u16_t) node->front->lf_contents;
+    clip.children[0] = (u16_t) node->front->contents;
 
   if (node->back->IsNode())
     clip.children[1] = (u16_t) node->back->index;
   else
-    clip.children[1] = (u16_t) node->back->lf_contents;
+    clip.children[1] = (u16_t) node->back->contents;
 
   if (flipped)
   {
-    u16_t tmp = clip.children[0];
-    clip.children[0] = clip.children[1];
-    clip.children[1] = tmp;
+    std::swap(clip.children[0], clip.children[1]);
   }
 
 
-  // TODO: fix endianness in 'clip'
+  // fix endianness
+  clip.planenum    = LE_S32(clip.planenum);
+  clip.children[0] = LE_U16(clip.children[0]);
+  clip.children[1] = LE_U16(clip.children[1]);
 
-  L->Append(&clip, sizeof(clip));
+  lump->Append(&clip, sizeof(clip));
 
 
   // recurse now, AFTER adding the current node
 
-  if (node->front->IsNode())
-    WriteClipNodes(L, node->front);
-
-  if (node->back->IsNode())
-    WriteClipNodes(L, node->back);
+  WriteClipNodes(node->front, lump);
+  WriteClipNodes(node->back,  lump);
 }
 
 
@@ -963,6 +1002,8 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
 
+  cpSideFactory_c::FreeAll();
+
   // 3rd hull is not used in Quake
   if (which == 3)
     return 0;
@@ -976,9 +1017,8 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
 // fprintf(stderr, "Quake1_CreateClipHull %d\n", which);
 
-  cpSideFactory_c::FreeAll();
-
   which--;
+
 
   static double pads[2][3] =
   {
@@ -987,7 +1027,9 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   };
 
   SaveBrushes();
+
   FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
+
 
 //  if (which == 0)
 //   CSG2_Doom_TestBrushes();
@@ -1003,27 +1045,23 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //  if (which == 0)
 //    CSG2_Doom_TestClip();
 
-  cpNode_c *C_LEAF = new cpNode_c();
+  cpNode_c *LEAF = new cpNode_c();
 
-  CreateClipSides(C_LEAF);
+  CreateClipSides(LEAF);
 
 
-  cpNode_c *C_ROOT = Partition_XY(C_LEAF);
-
-  SYS_ASSERT(C_ROOT->IsNode());
+  cpNode_c *ROOT = Partition_XY(LEAF);
 
 
   int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
   int cur_index = start_idx;
 
-  AssignIndexes(C_ROOT, &cur_index);
+  AssignIndexes(ROOT, &cur_index);
 
-  WriteClipNodes(q1_clip, C_ROOT);
+  WriteClipNodes(ROOT, q1_clip);
 
   // this deletes the entire BSP tree (nodes and leafs)
-  delete C_ROOT;
-
-  RestoreBrushes();
+  delete ROOT;
 
 
   // write clip nodes for each MapModel
@@ -1039,6 +1077,9 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   if (cur_index >= MAX_MAP_CLIPNODES)
     Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
                     MAX_MAP_CLIPNODES);
+
+
+  RestoreBrushes();
 
   return start_idx;
 }
