@@ -77,6 +77,20 @@ public:
   {
     return ComputeDist(x1,y1, x2,y2);
   }
+
+  bool TwoSided() const
+  {
+    if (! snag->partner)
+      return false;
+
+    if (! snag->partner->where)
+      return false;
+
+    if (snag->partner->where->equiv_id == 0)
+      return false;
+
+    return true;
+  }
 };
 
 
@@ -141,6 +155,32 @@ public:
 
   ~cpPartition_c()
   { }
+
+  void Set(const cpSide_c * S)
+  {
+    kind = PKIND_SIDE;
+
+    x1 = S->x1; y1 = S->y1;
+    x2 = S->x2; y2 = S->y2;
+  }
+
+  void Set(const cpFlat_c * F)
+  {
+    kind = PKIND_FLAT;
+
+    z  = F->z;
+    dz = F->dz;
+  }
+
+  void Set(const cpPartition_c *other)
+  {
+    kind = other->kind;
+
+    x1 = other->x1; y1 = other->y1;
+    x2 = other->x2; y2 = other->y2;
+
+    z  = other->z;  dz = other->dz;
+  }
 };
 
 
@@ -197,6 +237,8 @@ public:
   std::vector<cpSide_c *> sides;
   std::vector<cpFlat_c *> flats;
 
+  region_c *region;
+
 
   /* NODE STUFF */
 
@@ -209,23 +251,25 @@ public:
 
 public:
   // LEAF
-  cpNode_c() : contents(CONTENTS_EMPTY),
-               sides(), flats(),
-               part(), front(NULL), back(NULL), index(-1)
+  cpNode_c(int _contents = CONTENTS_EMPTY) :
+        contents(_contents),
+        sides(), flats(), region(NULL),
+        part(), front(NULL), back(NULL), index(-1)
   { }
 
-  cpNode_c(const cpPartition_c& _part) : contents(CONTENT__NODE),
-               sides(), flats(),
-               part(_part), 
-  {
-  }
-
-  cpNode_c(bool _Zsplit) : contents(CONTENT__NODE), sides(), region(NULL),
-                          z_splitter(_Zsplit), z(0),
-                          x(0), y(0), dx(0), dy(0),
-                          front(NULL), back(NULL),
-                          index(-1)
+  cpNode_c(const cpPartition_c& _part) :
+        contents(CONTENT__NODE),
+        sides(), flats(), region(NULL),
+        part(_part), front(NULL), back(NULL), index(-1)
   { }
+
+//--  cpNode_c(bool _Zsplit) :
+//--        contents(CONTENT__NODE), sides(), region(NULL),
+//--        z_splitter(_Zsplit), z(0),
+//--        x(0), y(0), dx(0), dy(0),
+//--        front(NULL), back(NULL),
+//--        index(-1)
+//--  { }
 
   ~cpNode_c()
   {
@@ -237,14 +281,31 @@ public:
   inline bool IsLeaf()  const { return contents != CONTENT__NODE; }
   inline bool IsSolid() const { return contents == CONTENTS_SOLID; }
 
+  bool IsEmpty() const
+  {
+    return sides.empty() && flats.empty();
+  }
+
   void AddSide(cpSide_c *S)
   {
     sides.push_back(S);
+
+    region = S->snag->where;
   }
 
   void NewSide(snag_c *S)
   {
     AddSide(new cpSide_c(S));
+  }
+
+  void MakeNode(const cpPartition_c *part)
+  {
+    contents = CONTENT__NODE;
+
+    part.Set(part);
+
+    sides.clear();
+    flats.clear();
   }
 
   void CheckValid() const
@@ -875,7 +936,7 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
     double ix = S->x1 + along * (S->x2 - S->x1);
     double iy = S->y1 + along * (S->y2 - S->y1);
 
-    cpSide_c *T = S->SplitAt(ix, iy);
+    cpSide_c *T = SplitSideAt(S, ix, iy);
 
     front->AddSide((a > 0) ? S : T);
      back->AddSide((a > 0) ? T : S);
@@ -990,6 +1051,9 @@ static bool SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
     Split_XY(leaf, part, front, back);
   else
     Split_Z(leaf, part, front, back);
+    
+  if (front->IsEmpty()) front->contents = CONTENTS_EMPTY;
+  if ( back->IsEmpty())  back->contents = CONTENTS_SOLID;
 }
 
 
@@ -1016,25 +1080,29 @@ static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 }
 
 
-static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
+static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
 {
   if (leaf->sides.empty())
     return FindPartition_Z(leaf, part);
 
   // FIXME: TEMP RUBBISH
 
-  int choice = 0;
-  int total  = leaf->sides.size();
+  cpSide_c *best = NULL;
 
-  if (total > 1)
-    choice = rand() % total;
 
-  cpSide_c *S = leaf->sides[choice];
+  // MUST choose 2-sided snag BEFORE any 1-sided snag
 
-  part->kind = PKIND_SIDE;
+  for (unsigned int i = 0 ; i < leaf->sides.size() ; i++)
+  {
+    cpSide_c *S = leaf->sides[i];
 
-  part->x1 = S->x1; part->y1 = S->y1;
-  part->x2 = S->x2; part->y2 = S->y2;
+    if (S->TwoSided())
+    {
+      best = S; break;  // !!!! FIXME: decide properly
+    }
+  }
+
+  part->Set(best ? best : leaf->sides[0]);
 
   return true;
 }
@@ -1044,22 +1112,23 @@ static cpNode_c * PartitionLeaf(cpNode_c *leaf)
 {
   cpPartition_c part;
 
-  if (! FindPartition_XY(leaf, &part))
-    return leaf;
+  if (FindPartition(leaf, &part))
+  {
+    cpNode_c *front = new cpNode_c();
+    cpNode_c *back  = new cpNode_c();
 
-  cpNode_c *node = new cpNode_c(&part);
+    // default region is from parent
+    front->region = leaf->region;
 
-  cpNode_c *front = new cpNode_c();
-  cpNode_c *back  = new cpNode_c();
+    SplitLeaf(leaf, &part, front, back);
 
-  SplitLeaf(leaf, &part, front, back);
+    leaf->MakeNode(&part);
 
-  node->front = PartitionLeaf(front);
-  node->back  = PartitionLeaf(back);
+    leaf->front = PartitionLeaf(front);
+    leaf->back  = PartitionLeaf(back);
+  }
 
-  delete leaf;
-
-  return node;
+  return leaf;
 }
 
 
@@ -1089,11 +1158,19 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 
   bool flipped;
 
-  if (node->z_splitter)
-    clip.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, 1, &flipped);
+  if (node->part.kind == PKIND_FLAT)
+  {
+    clip.planenum = BSP_AddPlane(0, 0, node->part.z,
+                                 0, 0, node->part.dz,
+                                 &flipped);
+  }
   else
-    clip.planenum = BSP_AddPlane(node->x, node->y, 0,
-                                 node->dy, -node->dx, 0, &flipped);
+  {
+    clip.planenum = BSP_AddPlane(node->part.x1, node->part.y1, 0,
+                                 node->part.y2 - node->part.y1,
+                                 node->part.x1 - node->part.x2, 0,
+                                 &flipped);
+  }
 
   node->CheckValid();
 
@@ -1128,8 +1205,10 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 }
 
 
-static void CreateClipSides(cpNode_c *leaf)
+static cpNode_c * CreateClipSides()
 {
+  cpNode_c * leaf = new cpNode_c();
+
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -1146,9 +1225,11 @@ static void CreateClipSides(cpNode_c *leaf)
       if (N && N->equiv_id == R->equiv_id)
         continue;
 
-      leaf->NewSide(S, N);
+      leaf->NewSide(S);
     }
   }
+
+  return leaf;
 }
 
 
@@ -1203,10 +1284,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
   Leaf_EMPTY = new cpNode_c(CONTENTS_EMPTY);
 
 
-  cpNode_c *LEAF = new cpNode_c();
-
-  CreateClipSides(LEAF);
-
+  cpNode_c *LEAF = CreateClipSides(LEAF);
 
   cpNode_c *ROOT = PartitionLeaf(LEAF);
 
