@@ -45,19 +45,19 @@ extern void CSG2_Doom_TestBrushes(void);
 extern void CSG2_Doom_TestClip(void);
 
 
-std::vector<csg_brush_c *> saved_all_brushes;
-
-
 class cpSide_c
 {
 public:
-  merge_segment_c *seg;
+  snag_c *snag;
+
+  bool on_node;
 
   double x1, y1;
   double x2, y2;
 
 public:
-  cpSide_c(merge_segment_c * _seg = NULL) : seg(_seg)
+  cpSide_c(snag_c *S) : snag(_seg), on_node(false),
+      x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
   { }
 
   ~cpSide_c()
@@ -68,6 +68,56 @@ public:
   {
     return ComputeDist(x1,y1, x2,y2);
   }
+};
+
+
+class cpFlat_c
+{
+public:
+  gap_c *gap;
+
+  bool is_ceil;
+
+  double z;
+
+public:
+  cpFlat_c(gap_c *G, bool _ceil) : gap(G), is_ceil(_ceil)
+  {
+    z = is_ceil ? gap->top->b.z : gap->bottom->t.z;
+  }
+
+  ~cpFlat_c()
+  { }
+};
+
+
+typedef enum
+{
+  PKIND_SIDE = 0,
+  PKIND_FLAT = 1
+}
+clip_partition_kind_e;
+
+
+class cpPartition_c
+{
+public:
+  int kind;
+
+  double x1, y1;
+  double x2, y2;
+
+  double z, dz;
+
+public:
+  cpPartition_c(const cpSide_c * side) : seg(_seg)
+  { }
+
+  cpPartition_c(const cpFlat_c * side) : seg(_seg)
+  { }
+
+  ~cpPartition_c()
+  { }
 };
 
 
@@ -134,7 +184,7 @@ public:
 
   std::vector<cpSide_c *> sides;
 
-  merge_region_c *region;
+  std::vector<cpFlat_c *> flats;
 
 
   /* NODE STUFF */
@@ -183,6 +233,11 @@ public:
     sides.push_back(S);
   }
 
+  void NewSide(snag_c *S)
+  {
+    AddSide(new cpSide_c(S));
+  }
+
   void CheckValid() const
   {
     SYS_ASSERT(index >= 0);
@@ -215,6 +270,12 @@ public:
   }
 };
 
+
+
+static cpNode_c *Leaf_SOLID;
+static cpNode_c *Leaf_EMPTY;
+
+static std::vector<csg_brush_c *> saved_all_brushes;
 
 static std::vector<cpSide_c *> all_clip_sides;
 
@@ -654,7 +715,7 @@ static cpNode_c * DoPartitionZ(merge_region_c *R,
 }
 
 
-static cpNode_c * Partition_Z(merge_region_c *R)
+static cpNode_c * OLD_Partition_Z(merge_region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
@@ -875,7 +936,7 @@ static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
 }
 
 
-static cpNode_c * Partition_XY(cpNode_c * LEAF)
+static cpNode_c * OLD_Partition_XY(cpNode_c * LEAF)
 {
   cpSide_c *part = FindPartition(LEAF);
   SYS_ASSERT(part);
@@ -904,6 +965,87 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
     node->back = XY_SegSide(part->seg, 1);
   else
     node->back = Partition_XY(BACK);
+
+  return node;
+}
+
+
+static bool SplitLeaf(cpNode_c *leaf, cpPartition_c *part,
+                      cpNode_c *front, cpNode_c *back)
+{
+  if (part->kind == PKIND_SIDE)
+    Split_XY(leaf, part, front, back);
+  else
+    Split_Z(leaf, part, front, back);
+}
+
+
+static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
+{
+  if (leaf->flats.empty())
+    return false;
+
+  int choice = 0;
+  int total  = leaf->flats.size();
+
+  if (total > 1)
+    choice = rand() % total;
+
+  cpFlat_c *F = leaf->flats[choice];
+
+
+  part->kind = PKIND_FLAT;
+
+  part->z  = F->z;
+  part->dz = F->dz;
+  
+  return true;
+}
+
+
+static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
+{
+  if (leaf->sides.empty())
+    return FindPartition_Z(leaf, part);
+
+  // FIXME: TEMP RUBBISH
+
+  int choice = 0;
+  int total  = leaf->sides.size();
+
+  if (total > 1)
+    choice = rand() % total;
+
+  cpSide_c *S = leaf->sides[choice];
+
+  part->kind = PKIND_SIDE;
+
+  part->x1 = S->x1; part->y1 = S->y1;
+  part->x2 = S->x2; part->y2 = S->y2;
+
+  return true;
+}
+
+
+static cpNode_c * PartitionLeaf(cpNode_c *leaf)
+{
+  cpPartition_c part;
+
+  if (! FindPartition_XY(leaf, &part))
+    return leaf;
+
+
+  cpNode_c *node = new cpNode_c(&part);
+
+  cpNode_c *front = new cpNode_c();
+  cpNode_c *back  = new cpNode_c();
+
+  SplitLeaf(leaf, &part, front, back);
+
+  node->front = PartitionLeaf(front);
+  node->back  = PartitionLeaf(back);
+
+  delete leaf;
 
   return node;
 }
@@ -1045,12 +1187,16 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //  if (which == 0)
 //    CSG2_Doom_TestClip();
 
+  Leaf_SOLID = new cpNode_c(CONTENTS_SOLID);
+  Leaf_EMPTY = new cpNode_c(CONTENTS_EMPTY);
+
+
   cpNode_c *LEAF = new cpNode_c();
 
   CreateClipSides(LEAF);
 
 
-  cpNode_c *ROOT = Partition_XY(LEAF);
+  cpNode_c *ROOT = PartitionLeaf(LEAF);
 
 
   int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
