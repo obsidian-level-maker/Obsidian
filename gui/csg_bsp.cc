@@ -178,13 +178,13 @@ void snag_c::CalcAlongs()
 //------------------------------------------------------------------------
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
-                       equiv_id(-1)
+                       liquid(NULL), equiv_id(-1)
 { }
 
 
 region_c::region_c(const region_c& other) :
     snags(), brushes(), entities(), gaps(),
-    equiv_id(-1)
+    liquid(NULL), equiv_id(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);
@@ -405,8 +405,6 @@ void region_c::SortBrushes()
 
 
 /***** VARIABLES ******************/
-
-static bool do_clip_brushes;
 
 static std::vector<partition_c *> all_partitions;
 

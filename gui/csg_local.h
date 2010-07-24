@@ -78,6 +78,8 @@ public:
 
   std::vector<gap_c *> gaps;
 
+  csg_brush_c *liquid;
+
   // regions with same brushes will have same equiv_id
   // (only valid AFTER CSG_SimpleCoalesce)
   int equiv_id;

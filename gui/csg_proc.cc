@@ -145,13 +145,12 @@ int total=0;
 
     total += (int)R->brushes.size();
 
-    for (int i = 0   ; i < (int)R->brushes.size() ; i++)
-    for (int k = i+1 ; k < (int)R->brushes.size() ; k++)
+    for (int i = 0 ; i < (int)R->brushes.size() ; i++)
+    for (int k = (int)R->brushes.size()-1 ; k >= 0 ; k--)
     {
       if (CanSwallowBrush(R, i, k))
       { count++;
         R->RemoveBrush(k);
-        k--;
       }
     }
   }
@@ -416,6 +415,41 @@ static void DiscoverThemGaps()
 }
 
 
+void DetermineLiquids()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->gaps.empty())
+      continue;
+
+    double low_z  = R->gaps.front()->top->t.z;
+    double high_z = R->gaps. back()->bottom->b.z;
+
+    for (int k = (int)R->brushes.size()-1 ; k >= 0 ; k--)
+    {
+      csg_brush_c *B = R->brushes[k];
+
+      if (B->bkind != BKIND_Liquid)
+        continue;
+
+      R->RemoveBrush(k);
+
+      // liquid is completely in a solid
+      if (B->t.z < low_z + Z_EPSILON || B->b.z > high_z - Z_EPSILON)
+        continue;
+
+      // more than one liquid : choose highest
+      if (R->liquid && B->t.z < R->liquid->t.z)
+        continue;
+
+      R->liquid = B;
+    }
+  }
+}
+
+
 void CSG_DiscoverGaps()
 {
   DiscoverThemGaps();
@@ -427,6 +461,8 @@ void CSG_DiscoverGaps()
   SpreadReachability();
 
   RemoveUnusedGaps();
+
+  DetermineLiquids();
 }
 
 
