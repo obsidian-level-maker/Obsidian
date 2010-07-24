@@ -237,7 +237,7 @@ public:
   std::vector<cpSide_c *> sides;
   std::vector<cpFlat_c *> flats;
 
-  region_c *region;
+  region_c *region;  // only set by CheckSameRegion()
 
 
   /* NODE STUFF */
@@ -338,12 +338,52 @@ public:
     *w = (*lx > hx) ? 0 : (hx - *lx);
     *h = (*ly > hy) ? 0 : (hy - *ly);
   }
+
+  void AddFlat(cpFlat_c *F)
+  {
+    flats.push_back(F);
+  }
+
+  void CreateFlats()
+  {
+    SYS_ASSERT(region->gaps.size() > 0);
+
+    for (unsigned int i = 0 ; i < region->gaps.size() ; i++)
+    {
+      gap_c *G = region->gaps[i];
+
+      AddFlat(new cpFlat_c(G, false));
+      AddFlat(new cpFlat_c(G, true));
+    }
+  }
+
+  void CheckSameRegion()
+  {
+    if (region)
+      return;
+
+    SYS_ASSERT(sides.size() > 0);
+
+    region_c *reg = sides[0]->snag->where;
+    SYS_ASSERT(reg);
+
+    for (unsigned int i = 1 ; i < sides.size() ; i++)
+    {
+      cpSide_c *S = sides[i];
+
+      if (S->snag->where != reg)
+        return;  // nope
+    }
+
+    // yes!
+
+    region = reg;
+
+    CreateFlats();
+  }
 };
 
 
-
-static cpNode_c *Leaf_SOLID;
-static cpNode_c *Leaf_EMPTY;
 
 static std::vector<csg_brush_c *> saved_all_brushes;
 
@@ -379,7 +419,7 @@ static void CalcNormal(double x1, double y1, double x2, double y2,
   *ny = (x1 - x2);
 
   double n_len = ComputeDist(x1, y1, x2, y2);
-  SYS_ASSERT(n_len > EPSILON);
+  SYS_ASSERT(n_len > 0.0001);
 
   *nx /= n_len;
   *ny /= n_len;
@@ -392,7 +432,7 @@ static double CalcIntersect_Y(double nx1, double ny1, double nx2, double ny2,
     double b = nx2 - x;
 
     // BIG ASSUMPTION: lines are not parallel or colinear
-    SYS_ASSERT(fabs(a - b) > EPSILON);
+    SYS_ASSERT(fabs(a - b) > CLIP_EPSILON);
 
     // determine the intersection point
     double along = a / (a - b);
@@ -407,7 +447,7 @@ static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
     double b = ny2 - y;
 
     // BIG ASSUMPTION: lines are not parallel or colinear
-    SYS_ASSERT(fabs(a - b) > EPSILON);
+    SYS_ASSERT(fabs(a - b) > CLIP_EPSILON);
 
     // determine the intersection point
     double along = a / (a - b);
@@ -429,7 +469,7 @@ static void FattenVertex3(const csg_brush_c *P, unsigned int k,
   // if the two lines are co-linear (or near enough), then we
   // can skip this vertex altogether.
 
-  if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) < 4.0*EPSILON)
+  if (fabs(PerpDist(kv->x, kv->y, pv->x, pv->y, nv->x, nv->y)) < 4.0*CLIP_EPSILON)
     return;
 
   double pdx = kv->x - pv->x;
@@ -581,11 +621,11 @@ static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
     slope->ey += dy;
   }
 #else
-  slope->sx -= dx / 2;
-  slope->sy -= dy / 2;
+  slope->sx -= dx / 1;
+  slope->sy -= dy / 1;
 
-  slope->ex += dx / 2;
-  slope->ey += dy / 2;
+  slope->ex += dx / 1;
+  slope->ey += dy / 1;
 #endif
 }
 
@@ -743,68 +783,7 @@ static cpSide_c * SplitSideAt(cpSide_c *S, double new_x, double new_y)
 }
 
 
-static cpNode_c * MakeLeaf(int contents)
-{
-  cpNode_c *leaf = new cpNode_c();
-
-  leaf->contents = contents;
-
-  return leaf;
-}
-
-
-
-// area number is:
-//    0 for below the lowest floor,
-//    1 for the first gap
-//    2 for above the first gap
-//    3 for the second gap
-//    etc etc...
-
-static cpNode_c * DoPartitionZ(merge_region_c *R,
-                              int min_area, int max_area)
-{
-  SYS_ASSERT(min_area <= max_area);
-
-  if (min_area == max_area)
-  {
-    if ((min_area & 1) == 0)
-      return MakeLeaf(CONTENTS_SOLID);
-    else
-      return MakeLeaf(CONTENTS_EMPTY);
-  }
-
-
-  {
-    cpNode_c *node = new cpNode_c(true /* z_splitter */);
-
-    int a1 = (min_area + max_area) / 2;
-    int a2 = a1 + 1;
-
-    int g = a1 / 2;
-    SYS_ASSERT(g < (int)R->gaps.size());
-
-    if ((a1 & 1) == 0)
-      node->z = R->gaps[g]->GetZ1();
-    else
-      node->z = R->gaps[g]->GetZ2();
-
-    node->back  = DoPartitionZ(R, min_area, a1);
-    node->front = DoPartitionZ(R, a2, max_area);
-
-    return node;
-  }
-}
-
-
-static cpNode_c * OLD_Partition_Z(merge_region_c *R)
-{
-  SYS_ASSERT(R->gaps.size() > 0);
-
-  return DoPartitionZ(R, 0, (int)R->gaps.size() * 2);
-}
-
-
+#if 0
 static double EvaluatePartition(cpNode_c * LEAF,
                                 double px1, double py1, double px2, double py2)
 {
@@ -884,6 +863,7 @@ static double EvaluatePartition(cpNode_c * LEAF,
 
   return cost;
 }
+#endif
 
 
 static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
@@ -892,8 +872,6 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
   std::vector<cpSide_c *> local_sides;
 
   local_sides.swap(leaf->sides);
-
-  FRONT->region = NULL;
 
 
   for (unsigned int k = 0 ; k < local_sides.size() ; k++)
@@ -947,100 +925,26 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
 static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
                     cpNode_c *front, cpNode_c *back)
 {
-}
+  std::vector<cpFlat_c *> local_flats;
+
+  local_flats.swap(leaf->flats);
 
 
-static cpSide_c * FindPartition(cpNode_c * LEAF)
-{
-  if (LEAF->sides.size() == 0)
-    return NULL;
-
-  if (LEAF->sides.size() == 1)
-    return LEAF->sides[0];
-
-  // speed up large maps
-  if (LEAF->sides.size() > 8)
+  for (unsigned int k = 0 ; k < local_flats.size() ; k++)
   {
-    double lx, ly, w, h;
-    LEAF->CalcBounds(&lx, &ly, &w, &h);
+    cpFlat_c *F = local_flats[k];
 
-    if (MAX(w, h) > 400)
+    if (fabs(F->z - part->z) < CLIP_EPSILON)
     {
-			if (w >= h)
-        return cpSideFactory_c::FakePartition(BSP_NiceMidwayPoint(lx, w), 0, 0, 1);
-      else
-        return cpSideFactory_c::FakePartition(0, BSP_NiceMidwayPoint(ly, h), 1, 0);
+      // flat sits on the partition : DROP IT
+      continue;
     }
+
+    if ((F->z < part->z) == (part_z < 0))
+      front->AddFlat(F);
+    else
+      back->AddFlat(F);
   }
-
-  double    best_c = 1e30;
-  cpSide_c *best_p = NULL;
-
-  std::vector<cpSide_c *>::iterator SI;
-
-  for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
-  {
-    cpSide_c *part = *SI;
-
-    double cost = EvaluatePartition(LEAF, part->x1, part->y1, part->x2, part->y2);
-
-    if (! best_p || cost < best_c)
-    {
-      best_c = cost;
-      best_p = part;
-    }
-  }
-// fprintf(stderr, "FIND DONE : best_c=%1.0f best_p=%p\n",
-//         best_p ? best_c : -9999, best_p);
-
-  return best_p;
-}
-
-
-static cpNode_c * OLD_XY_SegSide(merge_segment_c *SEG, int side)
-{
-  SYS_ASSERT(SEG);
-
-  merge_region_c *region = (side == 0) ? SEG->front : SEG->back;
-
-  if (!region || region->gaps.size() == 0)
-    return MakeLeaf(CONTENTS_SOLID);
-
-  return Partition_Z(region);
-}
-
-
-static cpNode_c * OLD_Partition_XY(cpNode_c * LEAF)
-{
-  cpSide_c *part = FindPartition(LEAF);
-  SYS_ASSERT(part);
-
-  cpNode_c *node = new cpNode_c(false /* z_splitter */);
-
-  node->x = part->x1;
-  node->y = part->y1;
-
-  node->dx = part->x2 - node->x;
-  node->dy = part->y2 - node->y;
-
-// fprintf(stderr, "PARTITION_XY = (%1.0f,%1.0f) to (%1.2f,%1.2f)\n",
-//                  node->x, node->y, node->x + node->dx, node->y + node->dy);
-
-  cpNode_c * BACK = new cpNode_c();
-
-  Split_XY(node, LEAF, BACK);
-
-  if (LEAF->sides.size() == 0)
-    node->front = XY_SegSide(part->seg, 0);
-  else
-    node->front = Partition_XY(LEAF);
-
-  if (BACK->sides.size() == 0)
-    node->back = XY_SegSide(part->seg, 1);
-  else
-    node->back = Partition_XY(BACK);
-
-  return node;
 }
 
 
@@ -1052,53 +956,30 @@ static bool SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
   else
     Split_Z(leaf, part, front, back);
     
-  if (front->IsEmpty()) front->contents = CONTENTS_EMPTY;
-  if ( back->IsEmpty())  back->contents = CONTENTS_SOLID;
+  if (front->IsEmpty())
+    front->contents = CONTENTS_EMPTY;
+
+  if (back->IsEmpty())
+    back->contents = CONTENTS_SOLID;
 }
 
 
-static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
-{
-  if (leaf->flats.empty())
-    return false;
-
-  int choice = 0;
-  int total  = leaf->flats.size();
-
-  if (total > 1)
-    choice = rand() % total;
-
-  cpFlat_c *F = leaf->flats[choice];
-
-
-  part->kind = PKIND_FLAT;
-
-  part->z  = F->z;
-  part->dz = F->dz;
-  
-  return true;
-}
-
-
-static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
+static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
 {
   if (leaf->sides.empty())
-    return FindPartition_Z(leaf, part);
-
-  // FIXME: TEMP RUBBISH
+    return false;
 
   cpSide_c *best = NULL;
-
-
-  // MUST choose 2-sided snag BEFORE any 1-sided snag
 
   for (unsigned int i = 0 ; i < leaf->sides.size() ; i++)
   {
     cpSide_c *S = leaf->sides[i];
 
+    // MUST choose 2-sided snag BEFORE any 1-sided snag
+
     if (S->TwoSided())
     {
-      best = S; break;  // !!!! FIXME: decide properly
+      best = S; break;  // !!!!! FIXME: decide properly
     }
   }
 
@@ -1108,17 +989,40 @@ static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
 }
 
 
+static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
+{
+  int total = (int)leaf->flats.size();
+
+  if (total < 1)
+    return false;
+
+  int choice = (total-1) / 2;
+
+  part->Set(leaf->flats[choice]);
+
+  return true;
+}
+
+
+static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
+{
+  if (! leaf->flats.empty())
+    return FindPartition_Z(leaf, part);
+  else
+    return FindPartition_XY(leaf, part);
+}
+
+
 static cpNode_c * PartitionLeaf(cpNode_c *leaf)
 {
+  leaf->CheckSameRegion();
+
   cpPartition_c part;
 
   if (FindPartition(leaf, &part))
   {
     cpNode_c *front = new cpNode_c();
     cpNode_c *back  = new cpNode_c();
-
-    // default region is from parent
-    front->region = leaf->region;
 
     SplitLeaf(leaf, &part, front, back);
 
@@ -1280,8 +1184,6 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //  if (which == 0)
 //    CSG2_Doom_TestClip();
 
-  Leaf_SOLID = new cpNode_c(CONTENTS_SOLID);
-  Leaf_EMPTY = new cpNode_c(CONTENTS_EMPTY);
 
 
   cpNode_c *LEAF = CreateClipSides(LEAF);
