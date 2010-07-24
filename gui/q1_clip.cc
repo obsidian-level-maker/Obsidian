@@ -1,10 +1,10 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 CLIPPING HULLS
+//  QUAKE 1 CLIPPING HULLS
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -28,6 +28,7 @@
 #include "main.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
 
 #include "g_lua.h"
 
@@ -47,6 +48,179 @@ extern void CSG2_Doom_TestClip(void);
 std::vector<csg_brush_c *> saved_all_brushes;
 
 
+class cpSide_c
+{
+public:
+  merge_segment_c *seg;
+
+  double x1, y1;
+  double x2, y2;
+
+public:
+  cpSide_c(merge_segment_c * _seg = NULL) : seg(_seg)
+  { }
+
+  ~cpSide_c()
+  { }
+
+public:
+  double Length() const
+  {
+    return ComputeDist(x1,y1, x2,y2);
+  }
+};
+
+
+class cpSideFactory_c
+{
+  static std::list<cpSide_c> all_sides;
+
+  static cpSide_c *RawNew(merge_segment_c *seg)
+  {
+    all_sides.push_back(cpSide_c(seg));
+    return &all_sides.back();
+  }
+
+public:
+  static cpSide_c *NewSide(merge_segment_c *seg)
+  {
+    cpSide_c *S = RawNew(seg);
+
+    S->x1 = seg->start->x;  S->x2 = seg->end->x;
+    S->y1 = seg->start->y;  S->y2 = seg->end->y;
+
+    return S;
+  }
+
+  static cpSide_c *SplitAt(cpSide_c *S, double new_x, double new_y)
+  {
+    cpSide_c *T = RawNew(S->seg);
+
+    T->x1 = new_x; T->y1 = new_y;
+    T->x2 = S->x2; T->y2 = S->y2;
+
+    S->x2 = new_x; S->y2 = new_y;
+
+    return T;
+  }
+
+  static cpSide_c *FakePartition(double x, double y, double dx, double dy)
+  {
+    cpSide_c * S = RawNew(NULL);
+
+    S->x1 = x;  S->x2 = x+dx;
+    S->y1 = y;  S->y2 = y+dy;
+
+    return S;
+  }
+
+  static void FreeAll()
+  {
+    all_sides.clear();
+  }
+};
+
+std::list<cpSide_c> cpSideFactory_c::all_sides;
+
+
+class cpNode_c
+{
+public:
+  /* LEAF STUFF */
+
+#define CONTENT__NODE  12345
+
+  int lf_contents;
+
+  std::vector<cpSide_c *> sides;
+
+  merge_region_c *region;
+
+
+  /* NODE STUFF */
+
+  // true if this node splits the tree by Z
+  // (with a horizontal upward-facing plane, i.e. dz = 1).
+  bool z_splitter;
+
+  double z;
+
+  // normal splitting planes are vertical, and here are the
+  // coordinates on the map.
+  double x,  y;
+  double dx, dy;
+
+  cpNode_c *front;  // front space
+  cpNode_c *back;   // back space
+
+  int index;
+
+public:
+  // LEAF
+  cpNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
+               front(NULL), back(NULL), index(-1)
+  { }
+
+  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL),
+                          z_splitter(_Zsplit), z(0),
+                          x(0), y(0), dx(0), dy(0),
+                          front(NULL), back(NULL),
+                          index(-1)
+  { }
+
+  ~cpNode_c()
+  {
+    if (front) delete front;
+    if (back)  delete back;
+  }
+
+  inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
+  inline bool IsLeaf()  const { return lf_contents != CONTENT__NODE; }
+  inline bool IsSolid() const { return lf_contents == CONTENTS_SOLID; }
+
+  void AddSide(cpSide_c *S)
+  {
+    sides.push_back(S);
+  }
+
+  void CheckValid() const
+  {
+    SYS_ASSERT(index >= 0);
+  }
+
+  void CalcBounds(double *lx, double *ly, double *w, double *h) const
+  {
+    SYS_ASSERT(lf_contents != CONTENT__NODE);
+
+    double hx = -99999; *lx = +99999;
+    double hy = -99999; *ly = +99999;
+
+    for (unsigned int i = 0; i < sides.size(); i++)
+    {
+      cpSide_c *S = sides[i];
+
+      double x1 = MIN(S->x1, S->x2);
+      double y1 = MIN(S->y1, S->y2);
+      double x2 = MAX(S->x1, S->x2);
+      double y2 = MAX(S->y1, S->y2);
+
+      if (x1 < *lx) *lx = x1;
+      if (y1 < *ly) *ly = y1;
+      if (x2 >  hx)  hx = x2;
+      if (y2 >  hy)  hy = y2;
+    }
+
+    *w = (*lx > hx) ? 0 : (hx - *lx);
+    *h = (*ly > hy) ? 0 : (hy - *ly);
+  }
+};
+
+
+static std::vector<cpSide_c *> all_sides;
+
+
+//------------------------------------------------------------------------
+
 static void SaveBrushes(void)
 {
   SYS_ASSERT(all_brushes.size() > 0);
@@ -61,11 +235,6 @@ static void RestoreBrushes(void)
   for (unsigned int i = 0; i < all_brushes.size(); i++)
   {
     csg_brush_c *P2 = all_brushes[i];
-
-///---    // FIXME DIRTY HACK (copy constructor does not duplicate these)
-///---    P2->t_face = NULL;
-///---    P2->b_face = NULL;
-///---    P2->w_face = NULL;
 
     delete P2;
   }
@@ -121,6 +290,7 @@ static double CalcIntersect_X(double nx1, double ny1, double nx2, double ny2,
 
     return nx1 + along * (nx2 - nx1);
 }
+
 
 static void FattenVertex3(const csg_brush_c *P, unsigned int k,
                           csg_brush_c *P2, double pad)
@@ -299,175 +469,98 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
 //------------------------------------------------------------------------
 
-class cpSide_c
+static bool ClipSameGaps(region_c *R, region_c *N)
 {
-friend class cpSideFactory_c;
+  if (R->gaps.size() != N->gaps.size())
+    return false;
 
-public:
-  merge_segment_c *seg;
-
-  double x1, y1;
-  double x2, y2;
-
-public:
-  cpSide_c(merge_segment_c * _seg = NULL) : seg(_seg)
-  { }
-
-  ~cpSide_c()
-  { }
-
-public:
-  double Length() const
+  for (unsigned int i = 0 ; i < R->gaps.size() ; i++)
   {
-    return ComputeDist(x1,y1, x2,y2);
-  }
-};
+    gap_c *A = R->gaps[i];
+    gap_c *B = N->gaps[i];
 
-
-class cpSideFactory_c
-{
-  static std::list<cpSide_c> all_sides;
-
-  static cpSide_c *RawNew(merge_segment_c *seg)
-  {
-    all_sides.push_back(cpSide_c(seg));
-    return &all_sides.back();
-  }
-
-public:
-  static cpSide_c *NewSide(merge_segment_c *seg)
-  {
-    cpSide_c *S = RawNew(seg);
-
-    S->x1 = seg->start->x;  S->x2 = seg->end->x;
-    S->y1 = seg->start->y;  S->y2 = seg->end->y;
-
-    return S;
-  }
-
-  static cpSide_c *SplitAt(cpSide_c *S, double new_x, double new_y)
-  {
-    cpSide_c *T = RawNew(S->seg);
-
-    T->x1 = new_x; T->y1 = new_y;
-    T->x2 = S->x2; T->y2 = S->y2;
-
-    S->x2 = new_x; S->y2 = new_y;
-
-    return T;
-  }
-
-  static cpSide_c *FakePartition(double x, double y, double dx, double dy)
-  {
-    cpSide_c * S = RawNew(NULL);
-
-    S->x1 = x;  S->x2 = x+dx;
-    S->y1 = y;  S->y2 = y+dy;
-
-    return S;
-  }
-
-  static void FreeAll()
-  {
-    all_sides.clear();
-  }
-};
-
-std::list<cpSide_c> cpSideFactory_c::all_sides;
-
-
-#define CONTENT__NODE  12345
-
-
-class cpNode_c
-{
-public:
-  /* LEAF STUFF */
-
-  int lf_contents;
-
-  std::vector<cpSide_c *> sides;
-
-  merge_region_c *region;
-
-
-  /* NODE STUFF */
-
-  // true if this node splits the tree by Z
-  // (with a horizontal upward-facing plane, i.e. dz = 1).
-  bool z_splitter;
-
-  double z;
-
-  // normal splitting planes are vertical, and here are the
-  // coordinates on the map.
-  double x,  y;
-  double dx, dy;
-
-  cpNode_c *front;  // front space
-  cpNode_c *back;   // back space
-
-  int index;
-
-public:
-  // LEAF
-  cpNode_c() : lf_contents(CONTENTS_EMPTY), sides(), region(NULL),
-               front(NULL), back(NULL), index(-1)
-  { }
-
-  cpNode_c(bool _Zsplit) : lf_contents(CONTENT__NODE), sides(), region(NULL),
-                          z_splitter(_Zsplit), z(0),
-                          x(0), y(0), dx(0), dy(0),
-                          front(NULL), back(NULL),
-                          index(-1)
-  { }
-
-  ~cpNode_c()
-  {
-    if (front) delete front;
-    if (back)  delete back;
-  }
-
-  inline bool IsNode()  const { return lf_contents == CONTENT__NODE; }
-  inline bool IsLeaf()  const { return lf_contents != CONTENT__NODE; }
-  inline bool IsSolid() const { return lf_contents == CONTENTS_SOLID; }
-
-  void AddSide(cpSide_c *S)
-  {
-    sides.push_back(S);
-  }
-
-  void CheckValid() const
-  {
-    SYS_ASSERT(index >= 0);
-  }
-
-  void CalcBounds(double *lx, double *ly, double *w, double *h) const
-  {
-    SYS_ASSERT(lf_contents != CONTENT__NODE);
-
-    double hx = -99999; *lx = +99999;
-    double hy = -99999; *ly = +99999;
-
-    for (unsigned int i = 0; i < sides.size(); i++)
+    if (A->bottom != B->bottom)
     {
-      cpSide_c *S = sides[i];
+      // slopes are deal breakers
+      if (A->bottom->t.slope)
+        return false;
 
-      double x1 = MIN(S->x1, S->x2);
-      double y1 = MIN(S->y1, S->y2);
-      double x2 = MAX(S->x1, S->x2);
-      double y2 = MAX(S->y1, S->y2);
-
-      if (x1 < *lx) *lx = x1;
-      if (y1 < *ly) *ly = y1;
-      if (x2 >  hx)  hx = x2;
-      if (y2 >  hy)  hy = y2;
+      if (fabs(A->bottom->t.z - B->bottom->t.z) > 0.01)
+        return false;
     }
 
-    *w = (*lx > hx) ? 0 : (hx - *lx);
-    *h = (*ly > hy) ? 0 : (hy - *ly);
+    if (A->top != B->top)
+    {
+      if (A->top->b.slope)
+        return false;
+
+      if (fabs(A->top->b.z - B->top->b.z) > 0.01)
+        return false;
+    }
   }
-};
+
+  // for clipping, these two regions are equivalent
+  return true;
+}
+
+
+static void SpreadClipEquiv()
+{
+  int changes = 0;
+
+int sames = 0;
+int diffs = 0;
+
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->equiv_id == 0)
+      continue;
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+
+      region_c *N = S->partner ? S->partner->where : NULL;
+
+      if (! N || N->equiv_id == 0)
+        continue;
+
+      // use '>' so that we only check the relationship once
+      if (N->equiv_id > R->equiv_id && ClipSameGaps(R, N))
+      {
+        N->equiv_id = R->equiv_id;
+        changes++;
+      }
+
+if (N) {
+if (N->equiv_id == R->equiv_id) sames++; else diffs++; }
+
+    }
+  }
+
+fprintf(stderr, "SpreadClipEquiv:  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
+
+  return changes;
+}
+
+
+static void CoalesceClipRegions()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->gaps.empty())
+      R->equiv_id = 0;   // all solid regions become ZERO
+    else
+      R->equiv_id = 1 + (int)i;
+  }
+
+  while (SpreadClipEquiv() > 0)
+  { }
+}
 
 
 static cpNode_c * MakeLeaf(int contents)
@@ -530,8 +623,6 @@ static cpNode_c * Partition_Z(merge_region_c *R)
   return DoPartitionZ(R, 0, (int)R->gaps.size() * 2);
 }
 
-
-//------------------------------------------------------------------------
 
 static double EvaluatePartition(cpNode_c * LEAF,
                                 double px1, double py1, double px2, double py2)
@@ -780,40 +871,6 @@ static cpNode_c * Partition_XY(cpNode_c * LEAF)
 }
 
 
-static bool SameGaps(merge_segment_c *S)
-{
-  bool no_front = (! S->front || S->front->gaps.size() == 0);
-  bool no_back  = (! S->back  || S->back ->gaps.size() == 0);
-
-  if (no_front && no_back)
-    return true;
-
-  if (no_front || no_back)
-    return false;
-
-  if (S->front->gaps.size() != S->back->gaps.size())
-    return false;
-
-  // FIXME: check if any gaps actually touch
-
-  for (unsigned k = 0; k < S->front->gaps.size(); k++)
-  {
-    merge_gap_c *fg = S->front->gaps[k];
-    merge_gap_c *bg = S-> back->gaps[k];
-
-    // FIXME: take slopes into account!
-
-    if (fabs(fg->GetZ1() - bg->GetZ1()) > EPSILON)
-      return false;
-
-    if (fabs(fg->GetZ2() - bg->GetZ2()) > EPSILON)
-      return false;
-  }
-
-  // for clipping, this seg can be ignored
-  return true;
-}
-
 
 //------------------------------------------------------------------------
 
@@ -878,6 +935,30 @@ static void WriteClipNodes(qLump_c *L, cpNode_c *node)
 }
 
 
+static void CreateClipSides(cpNode_c *leaf)
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->equiv_id == 0)
+      continue;
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+
+      region_c *N = S->partner ? S->partner->where : NULL;
+
+      if (N && N->equiv_id == R->equiv_id)
+        continue;
+
+      leaf->NewSide(S, N);
+    }
+  }
+}
+
+
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
@@ -911,23 +992,20 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //  if (which == 0)
 //   CSG2_Doom_TestBrushes();
 
-  CSG2_FreeMerges();
-  CSG2_MergeAreas(true /* do_clips */);
+  CSG_BSP(0.5);
 
+  CSG_SwallowBrushes();
+  CSG_DiscoverGaps();
+
+  CoalesceClipRegions();
+
+  
 //  if (which == 0)
 //    CSG2_Doom_TestClip();
 
   cpNode_c *C_LEAF = new cpNode_c();
 
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    if (! SameGaps(S))
-    {
-      C_LEAF->AddSide(cpSideFactory_c::NewSide(S)); 
-    }
-  }
+  CreateClipSides(C_LEAF);
 
 
   cpNode_c *C_ROOT = Partition_XY(C_LEAF);
