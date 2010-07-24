@@ -2,7 +2,16 @@
 TODO
 ====
 
-!!  Clip brushes become SOLID
+!!! q1_clip : DO NOT SKIP cpSide / cpFlat  :  MARK AS ON_NODE
+
++  q1_clip: MUST choose 2-sided snags as partitions before 1-sided ones
+
+
+!!  usage of plain EPSILON
+
+??  SimpleCoalesce : perhaps do AFTER gap finding / filling,
+                     use the GAPS as the comparison
+
 
 DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
 

@@ -298,6 +298,12 @@ public:
     AddSide(new cpSide_c(S));
   }
 
+  void CopySides(cpNode_c *other)
+  {
+    for (unsigned int i = 0 ; i < other->sides.size() ; i++)
+      AddSide(other->sides[i]);
+  }
+
   void MakeNode(const cpPartition_c *part)
   {
     contents = CONTENT__NODE;
@@ -342,6 +348,12 @@ public:
   void AddFlat(cpFlat_c *F)
   {
     flats.push_back(F);
+  }
+
+  void CopyFlats(cpNode_c *other)
+  {
+    for (unsigned int i = 0 ; i < other->flats.size() ; i++)
+      AddFlat(other->flats[i]);
   }
 
   void CreateFlats()
@@ -945,6 +957,11 @@ static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
     else
       back->AddFlat(F);
   }
+
+  front->CopySides(leaf);
+   back->CopySides(leaf);
+
+  leaf->sides.clear();
 }
 
 
@@ -991,12 +1008,10 @@ static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
 
 static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 {
-  int total = (int)leaf->flats.size();
-
-  if (total < 1)
+  if (leaf->flats.empty())
     return false;
 
-  int choice = (total-1) / 2;
+  int choice = ((int)leaf->flats.size() - 1) / 2;
 
   part->Set(leaf->flats[choice]);
 
