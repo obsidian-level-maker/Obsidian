@@ -37,6 +37,9 @@
 #include "q1_structs.h"
 
 
+#define CLIP_EPSILON  0.01
+
+
 extern void  Q1_MapModel_Clip(qLump_c *L, s32_t base,
                       q1MapModel_c *model, int which,
                       double pad_w, double pad_t, double pad_b);
@@ -56,8 +59,14 @@ public:
   double x2, y2;
 
 public:
-  cpSide_c(snag_c *S) : snag(_seg), on_node(false),
+  cpSide_c(snag_c *S) :
+      snag(S), on_node(false),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
+  { }
+
+  cpSide_c(const cpSide_c *other) :
+      snag(other->snag), on_node(false),
+      x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
   { }
 
   ~cpSide_c()
@@ -76,14 +85,15 @@ class cpFlat_c
 public:
   gap_c *gap;
 
-  bool is_ceil;
+  bool on_node;
 
-  double z;
+  double z, dz;
 
 public:
-  cpFlat_c(gap_c *G, bool _ceil) : gap(G), is_ceil(_ceil)
+  cpFlat_c(gap_c *G, bool _ceil) : gap(G), on_node(false),
   {
-    z = is_ceil ? gap->top->b.z : gap->bottom->t.z;
+    z  = _ceil ? gap->top->b.z : gap->bottom->t.z;
+    dz = _ceil ? -1 : 1;
   }
 
   ~cpFlat_c()
@@ -110,10 +120,23 @@ public:
   double z, dz;
 
 public:
-  cpPartition_c(const cpSide_c * side) : seg(_seg)
+  cpPartition_c(const cpSide_c * S) :
+      kind(PKIND_SIDE),
+      x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2),
+      z(), dz()
   { }
 
-  cpPartition_c(const cpFlat_c * side) : seg(_seg)
+  cpPartition_c(const cpFlat_c * F) :
+      kind(PKIND_FLAT),
+      x1(), y1(), x2(), y2(),
+      z(F->z), dz(F->dz)
+  { }
+
+  cpPartition_c(const cpPartition_c *other) :
+      kind(other->kind),
+      x1(other->x1), y1(other->y1),
+      x2(other->x2), y2(other->y2),
+      z(other->z), dz(other->dz)
   { }
 
   ~cpPartition_c()
@@ -121,6 +144,7 @@ public:
 };
 
 
+#if 0
 class cpSideFactory_c
 {
   static std::list<cpSide_c> all_sides;
@@ -142,17 +166,6 @@ public:
     return S;
   }
 
-  static cpSide_c *SplitAt(cpSide_c *S, double new_x, double new_y)
-  {
-    cpSide_c *T = RawNew(S->seg);
-
-    T->x1 = new_x; T->y1 = new_y;
-    T->x2 = S->x2; T->y2 = S->y2;
-
-    S->x2 = new_x; S->y2 = new_y;
-
-    return T;
-  }
 
   static cpSide_c *FakePartition(double x, double y, double dx, double dy)
   {
@@ -169,8 +182,7 @@ public:
     all_sides.clear();
   }
 };
-
-std::list<cpSide_c> cpSideFactory_c::all_sides;
+#endif
 
 
 class cpNode_c
@@ -183,22 +195,12 @@ public:
   int contents;
 
   std::vector<cpSide_c *> sides;
-
   std::vector<cpFlat_c *> flats;
 
 
   /* NODE STUFF */
 
-  // true if this node splits the tree by Z
-  // (with a horizontal upward-facing plane, i.e. dz = 1).
-  bool z_splitter;
-
-  double z;
-
-  // normal splitting planes are vertical, and here are the
-  // coordinates on the map.
-  double x,  y;
-  double dx, dy;
+  cpPartition_c part;
 
   cpNode_c *front;  // front space
   cpNode_c *back;   // back space
@@ -207,9 +209,16 @@ public:
 
 public:
   // LEAF
-  cpNode_c() : contents(CONTENTS_EMPTY), sides(), region(NULL),
-               front(NULL), back(NULL), index(-1)
+  cpNode_c() : contents(CONTENTS_EMPTY),
+               sides(), flats(),
+               part(), front(NULL), back(NULL), index(-1)
   { }
+
+  cpNode_c(const cpPartition_c& _part) : contents(CONTENT__NODE),
+               sides(), flats(),
+               part(_part), 
+  {
+  }
 
   cpNode_c(bool _Zsplit) : contents(CONTENT__NODE), sides(), region(NULL),
                           z_splitter(_Zsplit), z(0),
@@ -662,6 +671,17 @@ static void CoalesceClipRegions()
 }
 
 
+static cpSide_c * SplitSideAt(cpSide_c *S, double new_x, double new_y)
+{
+  cpSide_c *T = new cpSide_c(S);
+
+  S->x2 = T->x1 = new_x;
+  S->y2 = T->y1 = new_y;
+
+  return T;
+}
+
+
 static cpNode_c * MakeLeaf(int contents)
 {
   cpNode_c *leaf = new cpNode_c();
@@ -670,6 +690,7 @@ static cpNode_c * MakeLeaf(int contents)
 
   return leaf;
 }
+
 
 
 // area number is:
@@ -743,8 +764,8 @@ static double EvaluatePartition(cpNode_c * LEAF,
     double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
     double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
 
-    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
-    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
+    int a_side = (a < -CLIP_EPSILON) ? -1 : (a > CLIP_EPSILON) ? +1 : 0;
+    int b_side = (b < -CLIP_EPSILON) ? -1 : (b > CLIP_EPSILON) ? +1 : 0;
 
     if (a_side == 0 && b_side == 0)
     {
@@ -804,33 +825,29 @@ static double EvaluatePartition(cpNode_c * LEAF,
 }
 
 
-static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
+static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
+                     cpNode_c *front, cpNode_c *back)
 {
-  std::vector<cpSide_c *> all_sides;
+  std::vector<cpSide_c *> local_sides;
 
-  all_sides.swap(FRONT->sides);
+  local_sides.swap(leaf->sides);
 
   FRONT->region = NULL;
 
 
-  for (int k = 0; k < (int)all_sides.size(); k++)
+  for (unsigned int k = 0 ; k < local_sides.size() ; k++)
   {
-    cpSide_c *S = all_sides[k];
+    cpSide_c *S = local_sides[k];
 
-    double sdx = S->x2 - S->x1;
-    double sdy = S->y2 - S->y1;
-
-    // get state of lines' relation to each other
+    // get relationship of this side to the partition line
     double a = PerpDist(S->x1, S->y1,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
+                        part->x1,part->y1, part->x2,part->y2);
 
     double b = PerpDist(S->x2, S->y2,
-                        part->x, part->y,
-                        part->x + part->dx, part->y + part->dy);
+                        part->x1,part->y1, part->x2,part->y2);
 
-    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
-    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
+    int a_side = (a < -CLIP_EPSILON) ? -1 : (a > CLIP_EPSILON) ? +1 : 0;
+    int b_side = (b < -CLIP_EPSILON) ? -1 : (b > CLIP_EPSILON) ? +1 : 0;
 
     if (a_side == 0 && b_side == 0)
     {
@@ -840,13 +857,13 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
 
     if (a_side >= 0 && b_side >= 0)
     {
-      FRONT->AddSide(S);
+      front->AddSide(S);
       continue;
     }
 
     if (a_side <= 0 && b_side <= 0)
     {
-      BACK->AddSide(S);
+      back->AddSide(S);
       continue;
     }
 
@@ -855,24 +872,20 @@ static void Split_XY(cpNode_c *part, cpNode_c *FRONT, cpNode_c *BACK)
     // determine the intersection point
     double along = a / (a - b);
 
-    double ix = S->x1 + along * sdx;
-    double iy = S->y1 + along * sdy;
+    double ix = S->x1 + along * (S->x2 - S->x1);
+    double iy = S->y1 + along * (S->y2 - S->y1);
 
-    cpSide_c *T = cpSideFactory_c::SplitAt(S, ix, iy);
+    cpSide_c *T = S->SplitAt(ix, iy);
 
-    if (a < 0)
-    {
-       BACK->AddSide(S);
-      FRONT->AddSide(T);
-    }
-    else
-    {
-      SYS_ASSERT(b < 0);
-
-      FRONT->AddSide(S);
-       BACK->AddSide(T);
-    }
+    front->AddSide((a > 0) ? S : T);
+     back->AddSide((a > 0) ? T : S);
   }
+}
+
+
+static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
+                    cpNode_c *front, cpNode_c *back)
+{
 }
 
 
@@ -923,7 +936,7 @@ static cpSide_c * FindPartition(cpNode_c * LEAF)
 }
 
 
-static cpNode_c * XY_SegSide(merge_segment_c *SEG, int side)
+static cpNode_c * OLD_XY_SegSide(merge_segment_c *SEG, int side)
 {
   SYS_ASSERT(SEG);
 
@@ -970,7 +983,7 @@ static cpNode_c * OLD_Partition_XY(cpNode_c * LEAF)
 }
 
 
-static bool SplitLeaf(cpNode_c *leaf, cpPartition_c *part,
+static bool SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
                       cpNode_c *front, cpNode_c *back)
 {
   if (part->kind == PKIND_SIDE)
@@ -1033,7 +1046,6 @@ static cpNode_c * PartitionLeaf(cpNode_c *leaf)
 
   if (! FindPartition_XY(leaf, &part))
     return leaf;
-
 
   cpNode_c *node = new cpNode_c(&part);
 
