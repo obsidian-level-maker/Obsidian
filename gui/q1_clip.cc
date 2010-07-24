@@ -268,6 +268,8 @@ static void FattenBrushes(double pad_w, double pad_t, double pad_b)
 
     csg_brush_c *P2 = new csg_brush_c(P);  // clone it, except vertices
 
+    P2->bkind = BKIND_Solid;
+
     // !!!! FIXME: if floor is sloped, split this poly into two halves
     //             at the point where the (slope + fh) exceeds (z2 + fh)
 

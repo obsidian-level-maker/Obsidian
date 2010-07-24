@@ -483,7 +483,7 @@ static void CreateRegion(group_c & group, csg_brush_c *P)
 {
   SYS_ASSERT(P);
 
-  if (! do_clip_brushes && P->bkind == BKIND_Clip)
+  if (P->bkind == BKIND_Clip)
     return;
 
   region_c *R = new region_c;
