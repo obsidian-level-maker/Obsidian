@@ -2,9 +2,8 @@
 TODO
 ====
 
-!!! q1_clip : DO NOT SKIP cpSide / cpFlat  :  MARK AS ON_NODE
 
-+  q1_clip: MUST choose 2-sided snags as partitions before 1-sided ones
+BSP_AddPlane: create dplane_t in memory, compare them to find it
 
 
 !!  usage of plain EPSILON
@@ -17,13 +16,6 @@ DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
 
         DOOM (etc)  --> 4 units
         QUAKE (etc) --> 1 unit
-
-
->>>  CSG-BSP: simple brush swallowing
-
-
-CHECK STUFF: (a) regions with snags but no brushes
-             (b) snags with partner, but partner->partner != self
 
 
 -  global SECTIONS array
