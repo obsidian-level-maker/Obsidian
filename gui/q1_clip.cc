@@ -65,7 +65,7 @@ public:
   { }
 
   cpSide_c(const cpSide_c *other) :
-      snag(other->snag), on_node(false),
+      snag(other->snag), on_node(other->on_node),
       x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
   { }
 
@@ -223,12 +223,15 @@ public:
       return NULL;
 
     region_c *reg = sides[0]->snag->where;
+    SYS_ASSERT(reg);
 
     for (unsigned int i = 1 ; i < sides.size() ; i++)
     {
       cpSide_c *S = sides[i];
 
-      if (S->snag->where != reg)
+      SYS_ASSERT(S->snag->where);
+
+      if (S->snag->where->equiv_id != reg->equiv_id)
         return NULL;  // nope
     }
 
@@ -1064,7 +1067,21 @@ static cpNode_c * PartitionGroup(cpGroup_c & group)
   }
   else
   {
+
+fprintf(stderr, "\nGroup %p:\n", &group);
+
+for (unsigned int k = 0 ; k < group.sides.size() ; k++)
+{
+cpSide_c *S = group.sides[k];
+fprintf(stderr, "  side %p region.equiv_id %d (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+        S, S->snag->where->equiv_id,
+        S->x1, S->y1, S->x2, S->y2);
+}
+
     region_c *region = group.IsSameRegion();
+fprintf(stderr, "  --> region %p %d\n", region, region ? region->equiv_id : -1);
+
+//if (! region) return new cpNode_c(); //!!!!!!!!!!
 
     SYS_ASSERT(region);
 
@@ -1148,6 +1165,7 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 
 static void CreateClipSides(cpGroup_c & group)
 {
+fprintf(stderr, "CREATE CLIP SIDES\n");
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -1164,9 +1182,16 @@ static void CreateClipSides(cpGroup_c & group)
       if (N && N->equiv_id == R->equiv_id)
         continue;
 
-      group.AddSide(new cpSide_c(S));
+      cpSide_c *CS = new cpSide_c(S);
+fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
+        CS, CS->TwoSided() ? "2S" : "1S",
+        CS->x1, CS->y1, CS->x2, CS->y2);
+
+      group.AddSide(CS);
     }
   }
+
+fprintf(stderr, "\n");
 }
 
 
