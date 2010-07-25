@@ -3189,7 +3189,7 @@ function Quake_test()
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
 
-  if true then
+  if false then
     Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
   end
 
@@ -3200,6 +3200,6 @@ function Quake_test()
   Trans.old_quad(wall_i, 0,   128, 256, 144,  0, 192)
   Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
 
-  Trans.entity("player1", 64, 256, 64)
+  Trans.entity("player1", 80, 256, 64)
 end
 
