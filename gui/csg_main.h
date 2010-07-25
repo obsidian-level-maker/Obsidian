@@ -68,6 +68,8 @@ public:
    slope_info_c(const slope_info_c *other);
   ~slope_info_c();
 
+  void Reverse();
+
   double GetAngle() const;
 
   double CalcZ(double base_z, double x, double y) const;

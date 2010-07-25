@@ -66,6 +66,15 @@ slope_info_c::~slope_info_c()
 { }
 
 
+void slope_info_c::Reverse()
+{
+  std::swap(sx, ex);
+  std::swap(sy, ey);
+
+  dz = -dz;
+}
+
+
 double slope_info_c::GetAngle() const
 {
   double xy_dist = ComputeDist(sx, sy, ex, ey);
@@ -452,7 +461,7 @@ int Grab_Properties(lua_State *L, int stack_pos,
 }
 
 
-static slope_info_c * Grab_Slope(lua_State *L, int stack_pos)
+static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -485,6 +494,14 @@ static slope_info_c * Grab_Slope(lua_State *L, int stack_pos)
   P->dz = luaL_checknumber(L, -1);
 
   lua_pop(L, 3);
+
+  // floor slopes should have negative dz, and ceilings positive
+  if ((is_ceil ? 1 : -1) * P->dz < 0)
+  {
+    // P->Reverse();
+    luaL_error(L, "bad slope: dz should be <0 for floor, >0 for ceiling");
+    return NULL; /* NOT REACHED */
+  }
 
   return P;
 }
@@ -529,14 +546,14 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     if (lua_isnil(L, -2))  // top
     {
       B->t.z = luaL_checknumber(L, -1);
-      B->t.slope = Grab_Slope(L, -3);
+      B->t.slope = Grab_Slope(L, -3, false);
 
       Grab_Properties(L, stack_pos, &B->t.face, true);
     }
     else  // bottom
     {
       B->b.z = luaL_checknumber(L, -2);
-      B->b.slope = Grab_Slope(L, -3);
+      B->b.slope = Grab_Slope(L, -3, true);
 
       Grab_Properties(L, stack_pos, &B->b.face, true);
     }
