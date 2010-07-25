@@ -621,24 +621,16 @@ static void AdjustSlope(slope_info_c *slope, double pad_w, bool is_ceil)
   dx = dx * pad_w / len;
   dy = dy * pad_w / len;
 
-#if 0
-  if ((slope->dz > 0) == is_ceil)
-  {
-    slope->sx -= dx;
-    slope->sy -= dy;
-  }
-  else
-  {
-    slope->ex += dx;
-    slope->ey += dy;
-  }
-#else
-  slope->sx -= dx / 1;
-  slope->sy -= dy / 1;
+  // floor slopes have negative dz, ceilings have positive dz.
+  // hence move coordinates BACK by pad_w distance.
 
-  slope->ex += dx / 1;
-  slope->ey += dy / 1;
-#endif
+  slope->sx -= dx;
+  slope->sy -= dy;
+
+  slope->ex -= dx;
+  slope->ey -= dy;
+
+  slope->dz *= len / (pad_w + len);
 }
 
 
