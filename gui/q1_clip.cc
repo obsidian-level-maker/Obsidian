@@ -149,6 +149,14 @@ public:
       z(F->z), dz(F->dz)
   { }
 
+  cpPartition_c(const gap_c * G, bool is_ceil) :
+      kind(PKIND_FLAT),
+      x1(), y1(), x2(), y2()
+  {
+    z  = is_ceil ? G->top->b.z : G->bottom->t.z;
+    dz = is_ceil ? -1 : 1;
+  }
+
   cpPartition_c(const cpPartition_c *other) :
       kind(other->kind),
       x1(other->x1), y1(other->y1),
@@ -185,6 +193,49 @@ public:
     z  = other->z;  dz = other->dz;
   }
 };
+
+
+class cpGroup_c
+{
+public:
+  std::vector<cpSide_c *> sides;
+
+public:
+  cpGroup_c() : sides()
+  { }
+
+  ~cpGroup_c()
+  { }
+
+  void AddSide(cpSide_c *S)
+  {
+    sides.push_back(S);
+  }
+
+  bool IsEmpty() const
+  {
+    return sides.empty();
+  }
+
+  region_c * IsSameRegion() const
+  {
+    if (sides.empty())
+      return NULL;
+
+    region_c *reg = sides[0]->snag->where;
+
+    for (unsigned int i = 1 ; i < sides.size() ; i++)
+    {
+      cpSide_c *S = sides[i];
+
+      if (S->snag->where != reg)
+        return NULL;  // nope
+    }
+
+    return reg; // yep
+  }
+};
+
 
 
 class cpNode_c
@@ -225,6 +276,12 @@ public:
         part(_part), front(NULL), back(NULL), index(-1)
   { }
 
+  cpNode_c(const gap_c *G, bool is_ceil) :
+        contents(CONTENT__NODE),
+        sides(), flats(), region(NULL),
+        part(G, is_ceil), front(NULL), back(NULL), index(-1)
+  { }
+
   ~cpNode_c()
   {
     if (front) delete front;
@@ -254,8 +311,6 @@ public:
   void AddSide(cpSide_c *S)
   {
     sides.push_back(S);
-
-    region = S->snag->where;
   }
 
   void NewSide(snag_c *S)
@@ -334,30 +389,6 @@ public:
     }
   }
 
-  void CheckSameRegion()
-  {
-    if (region)
-      return;
-
-    SYS_ASSERT(sides.size() > 0);
-
-    region_c *reg = sides[0]->snag->where;
-    SYS_ASSERT(reg);
-
-    for (unsigned int i = 1 ; i < sides.size() ; i++)
-    {
-      cpSide_c *S = sides[i];
-
-      if (S->snag->where != reg)
-        return;  // nope
-    }
-
-    // yes!
-
-    region = reg;
-
-    CreateFlats();
-  }
 };
 
 
@@ -835,12 +866,12 @@ static double EvaluatePartition(cpNode_c * LEAF,
 #endif
 
 
-static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
-                     cpNode_c *front, cpNode_c *back)
+static void Split_XY(cpGroup_c & group, const cpPartition_c *part,
+                     cpGroup_c & front, cpGroup_c & back)
 {
   std::vector<cpSide_c *> local_sides;
 
-  local_sides.swap(leaf->sides);
+  local_sides.swap(group.sides);
 
 
   for (unsigned int k = 0 ; k < local_sides.size() ; k++)
@@ -865,24 +896,24 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
       if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
                         S->x2 - S->x1, S->y2 - S->y1))
       {
-        front->AddSide(S);
+        front.AddSide(S);
       }
       else
       {
-        back->AddSide(S);
+        back.AddSide(S);
       }
       continue;
     }
 
     if (a_side >= 0 && b_side >= 0)
     {
-      front->AddSide(S);
+      front.AddSide(S);
       continue;
     }
 
     if (a_side <= 0 && b_side <= 0)
     {
-      back->AddSide(S);
+      back.AddSide(S);
       continue;
     }
 
@@ -896,13 +927,13 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
 
     cpSide_c *T = SplitSideAt(S, ix, iy);
 
-    front->AddSide((a > 0) ? S : T);
-     back->AddSide((a > 0) ? T : S);
+    front.AddSide((a > 0) ? S : T);
+     back.AddSide((a > 0) ? T : S);
   }
 }
 
 
-static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
+static void CRUD_Split_Z(cpNode_c *leaf, const cpPartition_c *part,
                     cpNode_c *front, cpNode_c *back)
 {
   std::vector<cpFlat_c *> local_flats;
@@ -933,30 +964,14 @@ static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
 }
 
 
-static void SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
-                      cpNode_c *front, cpNode_c *back)
-{
-  if (part->kind == PKIND_SIDE)
-    Split_XY(leaf, part, front, back);
-  else
-    Split_Z(leaf, part, front, back);
-    
-  if (front->IsEmpty())
-    front->contents = CONTENTS_EMPTY;
-
-  if (back->IsEmpty())
-    back->contents = CONTENTS_SOLID;
-}
-
-
-static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
+static bool FindPartition_XY(cpGroup_c & group, cpPartition_c *part)
 {
   cpSide_c *poss = NULL;
   cpSide_c *best = NULL;
 
-  for (unsigned int i = 0 ; i < leaf->sides.size() ; i++)
+  for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
-    cpSide_c *S = leaf->sides[i];
+    cpSide_c *S = group.sides[i];
 
     if (S->on_node)
       continue;
@@ -980,7 +995,7 @@ static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
 }
 
 
-static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
+static bool CRUD_FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 {
   SYS_ASSERT(leaf->HasFlat());
 
@@ -992,35 +1007,69 @@ static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 }
 
 
-static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
+static cpNode_c * Partition_Z(region_c *R)
 {
-  if (leaf->HasFlat())
-    return FindPartition_Z(leaf, part);
-  else
-    return FindPartition_XY(leaf, part);
+  SYS_ASSERT(R->gaps.size() > 0);
+
+  cpNode_c *node = new cpNode_c(CONTENTS_EMPTY);
+  
+  for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
+  {
+    gap_c *G = R->gaps[surf / 2];
+
+    bool is_ceil = (surf & 1) ? true : false;
+
+    cpNode_c *last_node = node;
+
+    node = new cpNode_c(G, is_ceil);
+
+    node->front = last_node;
+    node->back  = new cpNode_c(CONTENTS_SOLID);
+
+///---  if (is_ceil)
+///---    std::swap(node->front, node->back);
+  }
+
+  return node;
 }
 
 
-static cpNode_c * PartitionLeaf(cpNode_c *leaf)
+static cpNode_c * PartitionGroup(cpGroup_c & group)
 {
-  leaf->CheckSameRegion();
+  SYS_ASSERT(! group.sides.empty());
 
   cpPartition_c part;
 
-  if (FindPartition(leaf, &part))
+  if (FindPartition_XY(group, &part))
   {
-    cpNode_c *front = new cpNode_c();
-    cpNode_c *back  = new cpNode_c();
+    // divide the group
+    cpGroup_c front;
+    cpGroup_c back;
 
-    SplitLeaf(leaf, &part, front, back);
+    Split_XY(group, &part, front, back);
 
-    leaf->MakeNode(&part);
+    cpNode_c * node = new cpNode_c(part);
 
-    leaf->front = PartitionLeaf(front);
-    leaf->back  = PartitionLeaf(back);
+    // the front should never be empty
+    node->front = PartitionGroup(front);
+
+    if (back.sides.empty())
+      node->back = new cpNode_c(CONTENTS_SOLID);
+    else
+      node->back = PartitionGroup(back);
+
+    // input group has been consumed now 
+
+    return node;
   }
+  else
+  {
+    region_c *region = group.IsSameRegion();
 
-  return leaf;
+    SYS_ASSERT(region);
+
+    return Partition_Z(region);
+  }
 }
 
 
@@ -1097,10 +1146,8 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 }
 
 
-static cpNode_c * CreateClipSides()
+static void CreateClipSides(cpGroup_c & group)
 {
-  cpNode_c * leaf = new cpNode_c();
-
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -1117,11 +1164,9 @@ static cpNode_c * CreateClipSides()
       if (N && N->equiv_id == R->equiv_id)
         continue;
 
-      leaf->NewSide(S);
+      group.AddSide(new cpSide_c(S));
     }
   }
-
-  return leaf;
 }
 
 
@@ -1173,10 +1218,11 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 //    CSG2_Doom_TestClip();
 
 
+  cpGroup_c GROUP;
 
-  cpNode_c *LEAF = CreateClipSides();
+  CreateClipSides(GROUP);
 
-  cpNode_c *ROOT = PartitionLeaf(LEAF);
+  cpNode_c * ROOT = PartitionGroup(GROUP);
 
 
   int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
