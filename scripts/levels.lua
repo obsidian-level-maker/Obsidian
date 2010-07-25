@@ -555,6 +555,10 @@ function Levels.build_it()
     return "ok"
   end
 
+--[[
+  Quake_test() ; do return "ok" end
+--]]
+
   Plan_create_rooms()
   if gui.abort() then return "abort" end
 
