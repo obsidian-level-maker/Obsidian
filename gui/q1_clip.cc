@@ -936,37 +936,6 @@ static void Split_XY(cpGroup_c & group, const cpPartition_c *part,
 }
 
 
-static void CRUD_Split_Z(cpNode_c *leaf, const cpPartition_c *part,
-                    cpNode_c *front, cpNode_c *back)
-{
-  std::vector<cpFlat_c *> local_flats;
-
-  local_flats.swap(leaf->flats);
-
-
-  for (unsigned int k = 0 ; k < local_flats.size() ; k++)
-  {
-    cpFlat_c *F = local_flats[k];
-
-    if (fabs(F->z - part->z) < CLIP_EPSILON)
-    {
-      // flat sits on the partition : DROP IT
-      continue;
-    }
-
-    if ((F->z < part->z) == (part->dz < 0))
-      front->AddFlat(F);
-    else
-      back->AddFlat(F);
-  }
-
-  front->CopySides(leaf);
-   back->CopySides(leaf);
-
-  leaf->sides.clear();
-}
-
-
 static bool FindPartition_XY(cpGroup_c & group, cpPartition_c *part)
 {
   cpSide_c *poss = NULL;
@@ -993,18 +962,6 @@ static bool FindPartition_XY(cpGroup_c & group, cpPartition_c *part)
     return false;
 
   part->Set(best ? best : poss);
-
-  return true;
-}
-
-
-static bool CRUD_FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
-{
-  SYS_ASSERT(leaf->HasFlat());
-
-  int choice = ((int)leaf->flats.size() - 1) / 2;
-
-  part->Set(leaf->flats[choice]);
 
   return true;
 }
@@ -1118,6 +1075,8 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
 
   if (node->part.kind == PKIND_FLAT)
   {
+    // !!!! FIXME: support slopes
+
     clip.planenum = BSP_AddPlane(0, 0, node->part.z,
                                  0, 0, node->part.dz,
                                  &flipped);
