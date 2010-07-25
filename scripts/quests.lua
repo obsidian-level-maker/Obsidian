@@ -695,6 +695,18 @@ function Quest_make_quests()
   end
 
 
+  local function no_quest_order(start, quest)
+    for _,R in ipairs(LEVEL.all_rooms) do
+      R.quest = quest
+    
+      if not LEVEL.exit_room and R ~= start and #R.conns <= 1 then
+        LEVEL.exit_room = R
+        R.purpose = "EXIT"
+      end
+    end
+  end
+
+
   --==| Quest_make_quests |==--
 
   gui.printf("\n--==| Make Quests |==--\n\n")
@@ -707,12 +719,16 @@ function Quest_make_quests()
   LEVEL.all_quests = {}
   LEVEL.all_locks  = {}
 
-  -- the room list will be rebuilt in visit order
-  LEVEL.all_rooms = {}
-
   local QT = QUEST_CLASS.new(LEVEL.start_room)
 
-  visit_room(QT.start, QT)
+  if not THEME.switches then
+    no_quest_order(QT.start, QT)
+  else
+    -- the room list will be rebuilt in visit order
+    LEVEL.all_rooms = {}
+
+    visit_room(QT.start, QT)
+  end
 
   assert(LEVEL.exit_room)
 

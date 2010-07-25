@@ -414,8 +414,8 @@ function Connect_rooms()
     local loc = table.pick_best(loc_list,
         function(A, B) return A.dist > B.dist end)
 
-stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.dist)
-    add_connection(loc.K, loc.N, "normal", loc.dir)
+-- stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.dist)
+--    add_connection(loc.K, loc.N, "normal", loc.dir)
   end
 
 
@@ -734,7 +734,8 @@ stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(
     -- nothing possible? hence we are done
     if not loc then return false end
 
-stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
+-- stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
+
     add_connection(loc.K, loc.N, "normal", loc.dir)
 
     return true
@@ -813,8 +814,8 @@ stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr()
          not K1.room:has_teleporter() and
          not K2.room:has_teleporter()
       then
-stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
-        K1.room:tostr(), K2.room:tostr())
+-- stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
+--         K1.room:tostr(), K2.room:tostr())
         local C = add_connection(K1, K2, "teleporter")
 
         C.tele_tag1 = Plan_alloc_tag()
@@ -840,7 +841,7 @@ stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
       quota = rand.sel(50, 1, 2)
     end
 
-    stderrf("Teleporter quota: %d\n", quota)
+--    stderrf("Teleporter quota: %d\n", quota)
 
     if quota > 0 then
       local loc_list = collect_teleporter_locs()
