@@ -99,12 +99,10 @@ class cpFlat_c
 public:
   gap_c *gap;
 
-  bool on_node;
-
   double z, dz;
 
 public:
-  cpFlat_c(gap_c *G, bool _ceil) : gap(G), on_node(false),
+  cpFlat_c(gap_c *G, bool _ceil) : gap(G)
   {
     z  = _ceil ? gap->top->b.z : gap->bottom->t.z;
     dz = _ceil ? -1 : 1;
@@ -117,8 +115,10 @@ public:
 
 typedef enum
 {
-  PKIND_SIDE = 0,
-  PKIND_FLAT = 1
+  PKIND_INVALID = 0,
+
+  PKIND_SIDE = 1,
+  PKIND_FLAT = 2
 }
 clip_partition_kind_e;
 
@@ -134,6 +134,9 @@ public:
   double z, dz;
 
 public:
+  cpPartition_c() : kind(PKIND_INVALID)
+  { }
+
   cpPartition_c(const cpSide_c * S) :
       kind(PKIND_SIDE),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2),
@@ -184,47 +187,6 @@ public:
 };
 
 
-#if 0
-class cpSideFactory_c
-{
-  static std::list<cpSide_c> all_sides;
-
-  static cpSide_c *RawNew(merge_segment_c *seg)
-  {
-    all_sides.push_back(cpSide_c(seg));
-    return &all_sides.back();
-  }
-
-public:
-  static cpSide_c *NewSide(merge_segment_c *seg)
-  {
-    cpSide_c *S = RawNew(seg);
-
-    S->x1 = seg->start->x;  S->x2 = seg->end->x;
-    S->y1 = seg->start->y;  S->y2 = seg->end->y;
-
-    return S;
-  }
-
-
-  static cpSide_c *FakePartition(double x, double y, double dx, double dy)
-  {
-    cpSide_c * S = RawNew(NULL);
-
-    S->x1 = x;  S->x2 = x+dx;
-    S->y1 = y;  S->y2 = y+dy;
-
-    return S;
-  }
-
-  static void FreeAll()
-  {
-    all_sides.clear();
-  }
-};
-#endif
-
-
 class cpNode_c
 {
 public:
@@ -263,14 +225,6 @@ public:
         part(_part), front(NULL), back(NULL), index(-1)
   { }
 
-//--  cpNode_c(bool _Zsplit) :
-//--        contents(CONTENT__NODE), sides(), region(NULL),
-//--        z_splitter(_Zsplit), z(0),
-//--        x(0), y(0), dx(0), dy(0),
-//--        front(NULL), back(NULL),
-//--        index(-1)
-//--  { }
-
   ~cpNode_c()
   {
     if (front) delete front;
@@ -281,9 +235,20 @@ public:
   inline bool IsLeaf()  const { return contents != CONTENT__NODE; }
   inline bool IsSolid() const { return contents == CONTENTS_SOLID; }
 
+  inline bool HasFlat() const { return ! flats.empty(); }
+
+  bool HasSide() const
+  {
+    for (unsigned int i = 0 ; i < sides.size() ; i++)
+      if (! sides[i]->on_node)
+        return true;
+
+    return false;
+  }
+
   bool IsEmpty() const
   {
-    return sides.empty() && flats.empty();
+    return ! HasFlat() && ! HasSide();
   }
 
   void AddSide(cpSide_c *S)
@@ -304,11 +269,11 @@ public:
       AddSide(other->sides[i]);
   }
 
-  void MakeNode(const cpPartition_c *part)
+  void MakeNode(const cpPartition_c *_part)
   {
     contents = CONTENT__NODE;
 
-    part.Set(part);
+    part.Set(_part);
 
     sides.clear();
     flats.clear();
@@ -717,7 +682,7 @@ static bool ClipSameGaps(region_c *R, region_c *N)
 }
 
 
-static void SpreadClipEquiv()
+static int SpreadClipEquiv()
 {
   int changes = 0;
 
@@ -894,7 +859,18 @@ static void Split_XY(cpNode_c *leaf, const cpPartition_c *part,
 
     if (a_side == 0 && b_side == 0)
     {
-      // side sits on the partition : DROP IT
+      // side sits on the partition
+      S->on_node = true;
+
+      if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                        S->x2 - S->x1, S->y2 - S->y1))
+      {
+        front->AddSide(S);
+      }
+      else
+      {
+        back->AddSide(S);
+      }
       continue;
     }
 
@@ -944,7 +920,7 @@ static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
       continue;
     }
 
-    if ((F->z < part->z) == (part_z < 0))
+    if ((F->z < part->z) == (part->dz < 0))
       front->AddFlat(F);
     else
       back->AddFlat(F);
@@ -957,7 +933,7 @@ static void Split_Z(cpNode_c *leaf, const cpPartition_c *part,
 }
 
 
-static bool SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
+static void SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
                       cpNode_c *front, cpNode_c *back)
 {
   if (part->kind == PKIND_SIDE)
@@ -975,14 +951,17 @@ static bool SplitLeaf(cpNode_c *leaf, const cpPartition_c *part,
 
 static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
 {
-  if (leaf->sides.empty())
-    return false;
-
+  cpSide_c *poss = NULL;
   cpSide_c *best = NULL;
 
   for (unsigned int i = 0 ; i < leaf->sides.size() ; i++)
   {
     cpSide_c *S = leaf->sides[i];
+
+    if (S->on_node)
+      continue;
+
+    poss = S;
 
     // MUST choose 2-sided snag BEFORE any 1-sided snag
 
@@ -992,7 +971,10 @@ static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
     }
   }
 
-  part->Set(best ? best : leaf->sides[0]);
+  if (! poss)
+    return false;
+
+  part->Set(best ? best : poss);
 
   return true;
 }
@@ -1000,8 +982,7 @@ static bool FindPartition_XY(cpNode_c *leaf, cpPartition_c *part)
 
 static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 {
-  if (leaf->flats.empty())
-    return false;
+  SYS_ASSERT(leaf->HasFlat());
 
   int choice = ((int)leaf->flats.size() - 1) / 2;
 
@@ -1013,7 +994,7 @@ static bool FindPartition_Z(cpNode_c *leaf, cpPartition_c *part)
 
 static bool FindPartition(cpNode_c *leaf, cpPartition_c *part)
 {
-  if (! leaf->flats.empty())
+  if (leaf->HasFlat())
     return FindPartition_Z(leaf, part);
   else
     return FindPartition_XY(leaf, part);
@@ -1054,8 +1035,8 @@ static void AssignIndexes(cpNode_c *node, int *cur_index)
 
   (*cur_index) += 1;
 
-  AssignIndexes(node->front, idx_var);
-  AssignIndexes(node->back,  idx_var);
+  AssignIndexes(node->front, cur_index);
+  AssignIndexes(node->back,  cur_index);
 }
 
 
@@ -1148,7 +1129,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
 
-  cpSideFactory_c::FreeAll();
+///???  cpSideFactory_c::FreeAll();
 
   // 3rd hull is not used in Quake
   if (which == 3)
@@ -1193,7 +1174,7 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
 
 
-  cpNode_c *LEAF = CreateClipSides(LEAF);
+  cpNode_c *LEAF = CreateClipSides();
 
   cpNode_c *ROOT = PartitionLeaf(LEAF);
 
