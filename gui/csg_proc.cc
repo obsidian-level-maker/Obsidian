@@ -146,7 +146,7 @@ int total=0;
     total += (int)R->brushes.size();
 
     for (int i = 0 ; i < (int)R->brushes.size() ; i++)
-    for (int k = (int)R->brushes.size()-1 ; k >= 0 ; k--)
+    for (int k = (int)R->brushes.size()-1 ; k > i ; k--)
     {
       if (CanSwallowBrush(R, i, k))
       { count++;

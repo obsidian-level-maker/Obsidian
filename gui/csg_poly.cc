@@ -1780,6 +1780,8 @@ void CSG2_MergeAreas(bool do_clips)
 
   do_clip_brushes = do_clips;
 
+  QUANTIZE_GRID = 0.1;
+
   ClearVertexHash();
 
   for (unsigned int j=0; j < all_brushes.size(); j++)
