@@ -31,6 +31,8 @@
 #include "ui_chooser.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
+
 #include "dm_extra.h"
 #include "dm_glbsp.h"
 #include "dm_wad.h"
@@ -700,6 +702,66 @@ static void DM_MakeExtraFloor(merge_region_c *R, doom_sector_c *sec,
 }
 
 
+static void DM_DoLightingBrush(doom_sector_c *S, merge_region_c *R)
+{
+  for (unsigned int i = 0; i < R->brushes.size(); i++)
+  {
+    csg_brush_c *B = R->brushes[i];
+
+    if (B->bkind != BKIND_Light)
+      continue;
+
+    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
+      continue;
+
+    csg_property_set_c *t_face = &B->t.face;
+    csg_property_set_c *b_face = &B->b.face;
+
+    double raw = b_face->getInt("light", t_face->getInt("light"));
+    int light = I_ROUND(raw * 256);
+
+    if (light < 0)
+    {
+      // don't put shadow in closed doors
+      if (S->f_h < S->c_h)
+        S->misc_flags |= SEC_SHADOW;
+      continue;
+    }
+
+    if (light > S->light)
+    {
+      S->light = light;
+      S->misc_flags |= SEC_PRIMARY_LIT;
+    }
+  }
+}
+
+
+static void DM_DoExtraFloors(doom_sector_c *S, merge_region_c *R)
+{
+  // Note: top-to-bottom is the most natural order, because when
+  // the engine adds an extrafloor into a sector, the upper part
+  // remains the same and the lower part gets the new properties
+  // (lighting/special) from the extrafloor.
+
+  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  {
+    merge_gap_c *T = R->gaps[g];
+    merge_gap_c *B = R->gaps[g-1];
+
+    if (solid_exfloor > 0)
+    {
+      DM_MakeExtraFloor(R, S, T, B);
+    }
+    else
+    {
+      LogPrintf("WARNING: discarding extrafloor @ (%1.0f, %1.0f, %1.0f..%1.0f\n",
+                S->mid_x, S->mid_y, B->GetZ2(), T->GetZ1());
+    }
+  }
+}
+
+
 static void DM_MakeSector(merge_region_c *R)
 {
   // completely solid (no gaps) ?
@@ -779,62 +841,13 @@ static void DM_MakeSector(merge_region_c *R)
     S->misc_flags |= SEC_IS_SKY;
 
 
-  // handle Lighting brushes
-
-  for (unsigned int i = 0; i < R->brushes.size(); i++)
-  {
-    csg_brush_c *B = R->brushes[i];
-
-    if (B->bkind != BKIND_Light)
-      continue;
-
-    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
-      continue;
-
-    csg_property_set_c *t_face = &B->t.face;
-    csg_property_set_c *b_face = &B->b.face;
-
-    double raw = b_face->getInt("light", t_face->getInt("light"));
-    int light = I_ROUND(raw * 256);
-
-    if (light < 0)
-    {
-      // don't put shadow in closed doors
-      if (S->f_h < S->c_h)
-        S->misc_flags |= SEC_SHADOW;
-      continue;
-    }
-
-    if (light > S->light)
-    {
-      S->light = light;
-      S->misc_flags |= SEC_PRIMARY_LIT;
-    }
-  }
+  DM_DoLightingBrush(S, R);
 
 
   // find brushes floating in-between --> make extrafloors
 
-  // Note: top-to-bottom is the most natural order, because when
-  // the engine adds an extrafloor into a sector, the upper part
-  // remains the same and the lower part gets the new properties
-  // (lighting/special) from the extrafloor.
+  DM_DoExtraFloors(S, R);
 
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
-  {
-    merge_gap_c *T = R->gaps[g];
-    merge_gap_c *B = R->gaps[g-1];
-
-    if (solid_exfloor > 0)
-    {
-      DM_MakeExtraFloor(R, S, T, B);
-    }
-    else
-    {
-      LogPrintf("WARNING: discarding extrafloor @ (%1.0f, %1.0f, %1.0f..%1.0f\n",
-                S->mid_x, S->mid_y, B->GetZ2(), T->GetZ1());
-    }
-  }
 }
 
 
