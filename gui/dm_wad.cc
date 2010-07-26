@@ -38,7 +38,8 @@
 #include "q_bsp.h"  // qLump_c
 
 
-extern void DM_WriteDoom(void);
+extern void CSG_DOOM_Write();
+
 extern void DM_FreeLevelStuff(void);
 
 static char *level_name;
@@ -535,7 +536,7 @@ bool doom_game_interface_c::Finish(bool build_ok)
 
 void doom_game_interface_c::BeginLevel()
 {
-  DM_FreeLevelStuff();
+///???  DM_FreeLevelStuff();
 }
 
 
@@ -589,7 +590,7 @@ void doom_game_interface_c::EndLevel()
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  DM_WriteDoom();
+  CSG_DOOM_Write();
 #else  // TESTING STUFF
   CSG_TestRegions_Doom();
 #endif

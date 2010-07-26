@@ -60,19 +60,19 @@ double light_dist_factor = 800.0;
 bool smoother_lighting = false;
 
 
-class sector_info_c;
-class linedef_info_c;
+class doom_sector_c;
+class doom_linedef_c;
 
 
 class extrafloor_c
 {
 public:
   // dummy sector
-  sector_info_c * dummy_sec;
+  doom_sector_c * dummy_sec;
 
   std::string w_tex;
 
-  std::vector<sector_info_c *> users;
+  std::vector<doom_sector_c *> users;
 
 public:
   extrafloor_c() : dummy_sec(NULL), w_tex(), users()
@@ -85,7 +85,7 @@ public:
 };
 
 
-class sector_info_c 
+class doom_sector_c 
 {
 public:
   int f_h;
@@ -111,16 +111,16 @@ public:
   int valid_count;
 
 public:
-  sector_info_c() : f_h(0), c_h(0), f_tex(), c_tex(),
+  doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(64), special(0), tag(0), mark(0),
                     exfloors(), index(-1),
                     region(NULL), misc_flags(0), valid_count(0)
   { }
 
-  ~sector_info_c()
+  ~doom_sector_c()
   { }
 
-  bool SameExtraFloors(const sector_info_c *other) const
+  bool SameExtraFloors(const doom_sector_c *other) const
   {
     if (exfloors.size() != other->exfloors.size())
       return false;
@@ -140,7 +140,7 @@ public:
     return true;
   }
 
-  bool Match(const sector_info_c *other) const
+  bool Match(const doom_sector_c *other) const
   {
     // deliberately absent: misc_flags
 
@@ -178,24 +178,7 @@ public:
     }
   }
 
-  int Write()
-  {
-    if (index < 0)
-    {
-      for (unsigned int k = 0; k < exfloors.size(); k++)
-      {
-//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
-      }
-
-      index = DM_NumSectors();
-
-      DM_AddSector(f_h, f_tex.c_str(),
-                   c_h, c_tex.c_str(),
-                   light, special, tag);
-    }
-
-    return index;
-  }
+  int Write();
 };
 
 
@@ -210,7 +193,7 @@ bool extrafloor_c::Match(const extrafloor_c *other) const
 }
 
 
-class vertex_info_c 
+class doom_vertex_c 
 {
 public:
   int x, y;
@@ -220,18 +203,18 @@ public:
   // keep track of a few (but not all) linedefs touching this vertex.
   // this is used to detect colinear lines which can be merged.
   // (later it may be used for horizontal texture alignment)
-  linedef_info_c *lines[4];
+  doom_linedef_c *lines[4];
  
 public:
-  vertex_info_c() : x(0), y(0), index(-1)
+  doom_vertex_c() : x(0), y(0), index(-1)
   {
     lines[0] = lines[1] = lines[2] = lines[3] = NULL;
   }
 
-  ~vertex_info_c()
+  ~doom_vertex_c()
   { }
 
-  void AddLine(linedef_info_c *L)
+  void AddLine(doom_linedef_c *L)
   {
     for (int i=0; i < 4; i++)
       if (! lines[i])
@@ -240,7 +223,7 @@ public:
       }
   }
 
-  void ReplaceLine(linedef_info_c *old_L, linedef_info_c *new_L)
+  void ReplaceLine(doom_linedef_c *old_L, doom_linedef_c *new_L)
   {
     for (int i=0; i < 4; i++)
       if (lines[i] == old_L)
@@ -250,7 +233,7 @@ public:
       }
   }
 
-  bool HasLine(const linedef_info_c *L) const
+  bool HasLine(const doom_linedef_c *L) const
   {
     for (int i=0; i < 4; i++)
       if (lines[i] == L)
@@ -259,7 +242,7 @@ public:
     return false;
   }
 
-  linedef_info_c *SecondLine(const linedef_info_c *L) const
+  doom_linedef_c *SecondLine(const doom_linedef_c *L) const
   {
     if (lines[2])  // three or more lines?
       return NULL;
@@ -288,7 +271,7 @@ public:
 };
 
 
-class sidedef_info_c 
+class doom_sidedef_c 
 {
 public:
   std::string lower;
@@ -298,22 +281,22 @@ public:
   int x_offset;
   int y_offset;
 
-  sector_info_c * sector;
+  doom_sector_c * sector;
 
   int index;
  
 public:
-  sidedef_info_c() : lower("-"), mid("-"), upper("-"),
+  doom_sidedef_c() : lower("-"), mid("-"), upper("-"),
                      x_offset(0), y_offset(0),
                      sector(NULL), index(-1)
   { }
 
-  ~sidedef_info_c()
+  ~doom_sidedef_c()
   { }
 
   int Write();
 
-  inline bool SameTex(const sidedef_info_c *T) const
+  inline bool SameTex(const doom_sidedef_c *T) const
   {
     return (strcmp(mid  .c_str(), T->mid  .c_str()) == 0) &&
            (strcmp(lower.c_str(), T->lower.c_str()) == 0) &&
@@ -322,14 +305,14 @@ public:
 };
 
 
-class linedef_info_c 
+class doom_linedef_c 
 {
 public:
-  vertex_info_c *start;  // NULL means "unused linedef"
-  vertex_info_c *end;
+  doom_vertex_c *start;  // NULL means "unused linedef"
+  doom_vertex_c *end;
 
-  sidedef_info_c *front;
-  sidedef_info_c *back;
+  doom_sidedef_c *front;
+  doom_sidedef_c *back;
 
   int flags;
   int type;   // 'special' in Hexen format
@@ -342,11 +325,11 @@ public:
   // similar linedef touching our start (end) vertex, or NULL if none.
   // only takes front sidedefs into account.
   // used for texture aligning.
-  linedef_info_c *sim_prev;
-  linedef_info_c *sim_next;
+  doom_linedef_c *sim_prev;
+  doom_linedef_c *sim_next;
 
 public:
-  linedef_info_c() : start(NULL), end(NULL),
+  doom_linedef_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
                      flags(0), type(0), tag(0), length(0),
                      sim_prev(NULL), sim_next(NULL)
@@ -354,7 +337,7 @@ public:
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
   }
 
-  ~linedef_info_c()
+  ~doom_linedef_c()
   { }
 
   void CalcLength()
@@ -362,7 +345,7 @@ public:
     length = ComputeDist(start->x, start->y, end->x, end->y);
   }
 
-  inline vertex_info_c *OtherVertex(const vertex_info_c *V) const
+  inline doom_vertex_c *OtherVertex(const doom_vertex_c *V) const
   {
     if (start == V)
       return end;
@@ -395,8 +378,8 @@ public:
     if (! back)
       return false;
 
-    sector_info_c *F = front->sector;
-    sector_info_c *B = back->sector;
+    doom_sector_c *F = front->sector;
+    doom_sector_c *B = back->sector;
 
     if (F->f_h != B->f_h) return (F->f_h > B->f_h);
     if (F->c_h != B->c_h) return (F->c_h < B->c_h);
@@ -404,9 +387,7 @@ public:
     return false;
   }
 
-  void Write();
-
-  inline bool CanMergeSides(const sidedef_info_c *A, const sidedef_info_c *B) const
+  inline bool CanMergeSides(const doom_sidedef_c *A, const doom_sidedef_c *B) const
   {
     if (! A || ! B)
       return (!A && !B);
@@ -424,7 +405,7 @@ public:
     return A->SameTex(B);
   }
 
-  bool ColinearWith(const linedef_info_c *B) const
+  bool ColinearWith(const doom_linedef_c *B) const
   {
     int adx = end->x - start->x;
     int ady = end->y - start->y;
@@ -435,14 +416,14 @@ public:
     return (adx * bdy == bdx * ady);
   }
 
-  bool CanMerge(const linedef_info_c *B) const
+  bool CanMerge(const doom_linedef_c *B) const
   {
     if (! ColinearWith(B))
       return false;
 
     // test sidedefs
-    sidedef_info_c *B_front = B->front;
-    sidedef_info_c *B_back  = B->back;
+    doom_sidedef_c *B_front = B->front;
+    doom_sidedef_c *B_back  = B->back;
 
 ///---  if ((V == end) == (V == B->end))
 ///---    std::swap(B_front, B_back);
@@ -461,7 +442,7 @@ public:
     return abs(diff) < 4; 
   }
 
-  void Merge(linedef_info_c *B)
+  void Merge(doom_linedef_c *B)
   {
     SYS_ASSERT(B->start == end);
 
@@ -478,7 +459,7 @@ public:
     CalcLength();
   }
 
-  bool isFrontSimilar(const linedef_info_c *P) const
+  bool isFrontSimilar(const doom_linedef_c *P) const
   {
     if (! back && ! P->back)
       return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
@@ -486,7 +467,7 @@ public:
     if (back && P->back)
       return front->SameTex(P->front);
 
-    const linedef_info_c *L = this;
+    const doom_linedef_c *L = this;
 
     if (back)
       std::swap(L, P);
@@ -517,15 +498,17 @@ public:
     return (f1_h < f2_h && c2_h < c1_h) ||
            (f1_h > f2_h && c2_h > c1_h);
   }
+
+  void Write();
 };
 
 
 
-static std::vector<vertex_info_c *>  dm_vertices;
-static std::vector<linedef_info_c *> dm_linedefs;
-static std::vector<sidedef_info_c *> dm_sidedefs;
+static std::vector<doom_vertex_c *>  dm_vertices;
+static std::vector<doom_linedef_c *> dm_linedefs;
+static std::vector<doom_sidedef_c *> dm_sidedefs;
 
-static std::vector<sector_info_c *>  dm_sectors;
+static std::vector<doom_sector_c *>  dm_sectors;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
 
@@ -546,37 +529,6 @@ void DM_FreeLevelStuff(void)
   dm_exfloors.clear();
 }
 
-
-int sidedef_info_c::Write()  
-{
-  if (index < 0)
-  {
-    SYS_ASSERT(sector);
-
-    int sec_index = sector->Write();
-
-    index = DM_NumSidedefs();
-
-    DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
-                  upper.c_str(), x_offset & 1023, y_offset);
-  }
-
-  return index;
-}
-
-
-void linedef_info_c::Write()
-{
-  SYS_ASSERT(start && end);
-
-  int v1 = start->Write();
-  int v2 = end  ->Write();
-
-  int f = front ? front->Write() : -1;
-  int b = back  ? back ->Write() : -1;
-
-  DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
-}
 
 
 void DM_WriteDoom(void);  // forward
@@ -690,8 +642,8 @@ void DM_TestRegions(void)
 //------------------------------------------------------------------------
 
 
-static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
-                           merge_gap_c *T, merge_gap_c *B)
+static void DM_MakeExtraFloor(merge_region_c *R, doom_sector_c *sec,
+                              merge_gap_c *T, merge_gap_c *B)
 {
   // find the brush which we will use for the side texture
   csg_brush_c *MID = NULL;
@@ -732,7 +684,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
   EF->users.push_back(sec);
 
 
-  EF->dummy_sec = new sector_info_c;
+  EF->dummy_sec = new doom_sector_c;
 
   EF->dummy_sec->f_h = I_ROUND(B->t_brush->b.z);
   EF->dummy_sec->c_h = I_ROUND(T->b_brush->t.z);
@@ -748,7 +700,7 @@ static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
 }
 
 
-static void MakeSector(merge_region_c *R)
+static void DM_MakeSector(merge_region_c *R)
 {
   // completely solid (no gaps) ?
   if (R->gaps.size() == 0)
@@ -763,7 +715,7 @@ static void MakeSector(merge_region_c *R)
 
   R->index = (int)dm_sectors.size();
 
-  sector_info_c *S = new sector_info_c;
+  doom_sector_c *S = new doom_sector_c;
 
   dm_sectors.push_back(S);
 
@@ -875,7 +827,7 @@ static void MakeSector(merge_region_c *R)
 
     if (solid_exfloor > 0)
     {
-      MakeExtraFloor(R, S, T, B);
+      DM_MakeExtraFloor(R, S, T, B);
     }
     else
     {
@@ -885,16 +837,17 @@ static void MakeSector(merge_region_c *R)
   }
 }
 
-static void LightingFloodFill(void)
+
+static void DM_LightingFloodFill(void)
 {
   int i;
-  std::vector<sector_info_c *> active;
+  std::vector<doom_sector_c *> active;
 
   int valid_count = 1;
 
   for (i = 1; i < (int)dm_sectors.size(); i++)
   {
-    sector_info_c *S = dm_sectors[i];
+    doom_sector_c *S = dm_sectors[i];
 
     if (S->misc_flags & SEC_PRIMARY_LIT)
     {
@@ -909,11 +862,11 @@ static void LightingFloodFill(void)
 
 //fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
 
-    std::vector<sector_info_c *> changed;
+    std::vector<doom_sector_c *> changed;
 
     for (i = 0; i < (int)active.size(); i++)
     {
-      sector_info_c *S = active[i];
+      doom_sector_c *S = active[i];
 
       for (int k = 0; k < (int)S->region->segs.size(); k++)
       {
@@ -925,8 +878,8 @@ static void LightingFloodFill(void)
         if (G->front->index <= 0 || G->back->index <= 0)
           continue;
 
-        sector_info_c *F = dm_sectors[G->front->index];
-        sector_info_c *B = dm_sectors[G->back ->index];
+        doom_sector_c *F = dm_sectors[G->front->index];
+        doom_sector_c *B = dm_sectors[G->back ->index];
 
         if (! (F==S || B==S))
           continue;
@@ -974,7 +927,7 @@ static void LightingFloodFill(void)
 
   for (i = 0; i < (int)dm_sectors.size(); i++)
   {
-    sector_info_c *S = dm_sectors[i];
+    doom_sector_c *S = dm_sectors[i];
 
     if (smoother_lighting)
       S->light = ((S->light + 1) / 8) * 8;
@@ -993,7 +946,8 @@ static void LightingFloodFill(void)
   }
 }
 
-static void CoalesceSectors(void)
+
+static void DM_CoalesceSectors(void)
 {
   for (int loop=0; loop < 99; loop++)
   {
@@ -1013,8 +967,8 @@ static void CoalesceSectors(void)
       if (S->front->index == S->back->index)
         continue;
 
-      sector_info_c *F = dm_sectors[S->front->index];
-      sector_info_c *B = dm_sectors[S->back ->index];
+      doom_sector_c *F = dm_sectors[S->front->index];
+      doom_sector_c *B = dm_sectors[S->back ->index];
 
       if (F->Match(B))
       {
@@ -1032,7 +986,7 @@ static void CoalesceSectors(void)
   }
 }
 
-static void CoalesceExtraFloors(void)
+static void DM_CoalesceExtraFloors(void)
 {
   for (int loop=0; loop < 99; loop++)
   {
@@ -1048,8 +1002,8 @@ static void CoalesceExtraFloors(void)
       if (S->front->index <= 0 || S->back->index <= 0)
         continue;
 
-      sector_info_c *F = dm_sectors[S->front->index];
-      sector_info_c *B = dm_sectors[S->back ->index];
+      doom_sector_c *F = dm_sectors[S->front->index];
+      doom_sector_c *B = dm_sectors[S->back ->index];
       
       for (unsigned int j = 0; j < F->exfloors.size(); j++)
       for (unsigned int k = 0; k < B->exfloors.size(); k++)
@@ -1098,7 +1052,7 @@ static void CoalesceExtraFloors(void)
   }
 }
 
-static void AssignExtraFloorTags(void)
+static void DM_AssignExtraFloorTags(void)
 {
   for (unsigned int j = 0; j < mug_regions.size(); j++)
   {
@@ -1107,7 +1061,7 @@ static void AssignExtraFloorTags(void)
     if (R->index <= 0)
       continue;
 
-    sector_info_c *S = dm_sectors[R->index];
+    doom_sector_c *S = dm_sectors[R->index];
 
     if (S->exfloors.size() > 0 && S->tag <= 0)
     {
@@ -1116,7 +1070,7 @@ static void AssignExtraFloorTags(void)
   }
 }
 
-static void CreateSectors(void)
+static void DM_CreateSectors(void)
 {
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;
@@ -1124,34 +1078,34 @@ static void CreateSectors(void)
   dm_sectors.clear();
 
   // #0 represents VOID (never written to map lump)
-  dm_sectors.push_back(new sector_info_c);
+  dm_sectors.push_back(new doom_sector_c);
 
   for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
     merge_region_c *R = mug_regions[i];
 
-    MakeSector(R);
+    DM_MakeSector(R);
   }
 
-  LightingFloodFill();
+  DM_LightingFloodFill();
 
-  CoalesceSectors();
+  DM_CoalesceSectors();
 
-  AssignExtraFloorTags();
+  DM_AssignExtraFloorTags();
 
-  CoalesceExtraFloors();
+  DM_CoalesceExtraFloors();
 }
 
 
 //------------------------------------------------------------------------
 
-static vertex_info_c * MakeVertex(merge_vertex_c *MV)
+static doom_vertex_c * DM_MakeVertex(merge_vertex_c *MV)
 {
   if (MV->index >= 0)
     return dm_vertices[MV->index];
 
   // create new one
-  vertex_info_c * V = new vertex_info_c;
+  doom_vertex_c * V = new doom_vertex_c;
 
   MV->index = (int)dm_vertices.size();
 
@@ -1164,86 +1118,8 @@ static vertex_info_c * MakeVertex(merge_vertex_c *MV)
 }
 
 
-static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
-{
-#if 0  ///  FIXME  FIXME
 
-  if (EF->sec->index >= 0)
-    return;
-
-  EF->sec->index = DM_NumSectors();
-
-  DM_AddSector(EF->sec->f_h, EF->sec->f_tex.c_str(),
-               EF->sec->c_h, EF->sec->c_tex.c_str(),
-               EF->sec->light, EF->sec->special, EF->sec->tag);
-
-
-  extrafloor_slot++;
-
-
-  int x1 = bounds_x1 +       (extrafloor_slot % 32) * 64;
-  int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
-
-  if (extrafloor_slot & 1024) x1 += 2200;
-  if (extrafloor_slot & 2048) y1 -= 2200;
-
-  if (extrafloor_slot & 4096)
-    Main_FatalError("Too many extrafloors! (over %d)\n", extrafloor_slot);
-
-  int x2 = x1 + 32;
-  int y2 = y1 + 32;
-
-  int xm = x1 + 16;
-  int ym = y1 + 16;
-
-  bool morev = (EF->users.size() > 4);
-
-  int vert_ref = DM_NumVertexes();
-
-  if (true)  DM_AddVertex(x1, y1);
-  if (morev) DM_AddVertex(x1, ym);
-
-  if (true)  DM_AddVertex(x1, y2);
-  if (morev) DM_AddVertex(xm, y2);
-
-  if (true)  DM_AddVertex(x2, y2);
-  if (morev) DM_AddVertex(x2, ym);
-
-  if (true)  DM_AddVertex(x2, y1);
-  if (morev) DM_AddVertex(xm, y1);
-
- 
-  int side_ref = DM_NumSidedefs();
-
-  DM_AddSidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
-
-
-  int vert_num = morev ? 8 : 4;
-
-  for (int n = 0; n < vert_num; n++)
-  {
-    int type = 0;
-    int tag  = 0;
-
-    if (n < (int)EF->users.size())
-    {
-      type = solid_exfloor;
-      tag  = EF->users[n]->tag;
-
-      SYS_ASSERT(tag > 0);
-    }
-
-    DM_AddLinedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
-                  side_ref, -1 /* side2 */,
-                  type, 1 /* impassible */,
-                  tag, NULL /* args */);
-  }
-#endif
-}
-
-
-
-static int NaturalXOffset(linedef_info_c *G, int side)
+static int NaturalXOffset(doom_linedef_c *G, int side)
 {
   double along;
   
@@ -1278,7 +1154,7 @@ static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 }
 
 
-static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
+static doom_sidedef_c * DM_MakeSidedef(merge_segment_c *G, int side,
                        merge_region_c *F, merge_region_c *B,
                        brush_vert_c *rail,
                        bool *l_peg, bool *u_peg)
@@ -1288,11 +1164,11 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
 ///  int index = (int)dm_sidedefs.size();
 
-  sidedef_info_c *SD = new sidedef_info_c;
+  doom_sidedef_c *SD = new doom_sidedef_c;
 
   dm_sidedefs.push_back(SD);
 
-  sector_info_c *S = dm_sectors[F->index];
+  doom_sector_c *S = dm_sectors[F->index];
 
   SD->sector = S;
 
@@ -1302,7 +1178,7 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
   if (B && B->index > 0)
   {
-    sector_info_c *BS = dm_sectors[B->index];
+    doom_sector_c *BS = dm_sectors[B->index];
 
     csg_brush_c *l_brush = B->gaps.front()->b_brush;
     csg_brush_c *u_brush = B->gaps.back() ->t_brush;
@@ -1395,8 +1271,8 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
 static brush_vert_c *FindSpecialVert(merge_segment_c *G)
 {
-  sector_info_c *FS = NULL;
-  sector_info_c *BS = NULL;
+  doom_sector_c *FS = NULL;
+  doom_sector_c *BS = NULL;
 
   if (G->front && G->front->index > 0)
     FS = dm_sectors[G->front->index];
@@ -1471,8 +1347,8 @@ DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
 
 static brush_vert_c *FindRailVert(merge_segment_c *G)
 {
-  sector_info_c *FS = NULL;  // FIXME: duplicate code
-  sector_info_c *BS = NULL;
+  doom_sector_c *FS = NULL;  // FIXME: duplicate code
+  doom_sector_c *BS = NULL;
 
   if (G->front && G->front->index > 0)
     FS = dm_sectors[G->front->index];
@@ -1533,7 +1409,7 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
 }
 
 
-static void MakeLinedefs(void)
+static void DM_MakeLinedefs(void)
 {
   for (unsigned int i = 0; i < mug_segments.size(); i++)
   {
@@ -1562,12 +1438,12 @@ static void MakeLinedefs(void)
     }
 
 
-    linedef_info_c *L = new linedef_info_c;
+    doom_linedef_c *L = new doom_linedef_c;
 
     dm_linedefs.push_back(L);
 
-    L->start = MakeVertex(G->start);
-    L->end   = MakeVertex(G->end);
+    L->start = DM_MakeVertex(G->start);
+    L->end   = DM_MakeVertex(G->end);
 
     L->start->AddLine(L);
     L->end  ->AddLine(L);
@@ -1578,8 +1454,8 @@ static void MakeLinedefs(void)
     bool l_peg = false;
     bool u_peg = false;
 
-    L->front = MakeSidedef(G, 0, G->front, G->back, rail, &l_peg, &u_peg);
-    L->back  = MakeSidedef(G, 1, G->back, G->front, rail, &l_peg, &u_peg);
+    L->front = DM_MakeSidedef(G, 0, G->front, G->back, rail, &l_peg, &u_peg);
+    L->back  = DM_MakeSidedef(G, 1, G->back, G->front, rail, &l_peg, &u_peg);
 
     SYS_ASSERT(L->front || L->back);
 
@@ -1618,7 +1494,282 @@ static void MakeLinedefs(void)
 }
 
 
-static void WriteLinedefs(void)
+
+static void DM_TryMergeLine(doom_linedef_c *A)
+{
+  doom_vertex_c *V = A->end;
+
+  doom_linedef_c *B = V->SecondLine(A);
+
+  if (! B)
+    return;
+
+  // we only handle the case where B's start == A's end
+  // (which is still the vast majority of mergeable cases)
+
+  if (V != B->start)
+    return;
+
+  SYS_ASSERT(B->Valid());
+
+  if (A->CanMerge(B))
+    A->Merge(B);
+}
+
+
+static void DM_MergeColinearLines(void)
+{
+  for (int pass = 0; pass < 4; pass++)
+    for (int i = 0; i < (int)dm_linedefs.size(); i++)
+      if (dm_linedefs[i]->Valid())
+        DM_TryMergeLine(dm_linedefs[i]);
+}
+
+
+static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
+{
+  doom_linedef_c *best = NULL;
+  int best_score = -1;
+
+  for (int i = 0; i < 4; i++)
+  {
+    doom_linedef_c *M = V->lines[i];
+
+    if (! M) break;
+    if (M == L) continue;
+
+    if (! L->isFrontSimilar(M))
+      continue;
+
+    int score = 0;
+
+    if (! L->back && ! M->back)
+      score += 20;
+
+    if (L->ColinearWith(M))
+      score += 10;
+
+    if (score > best_score)
+    {
+      best = M;
+      best_score = score;
+    }
+  }
+
+  return best;
+}
+
+
+static void DM_AlignTextures(void)
+{
+  // Algorithm:  FIXME out of date
+  //
+  // 1) assign every linedef a "prev_matcher" field (forms a chain)
+  //    [POSSIBILITY: similar field for back sidedefs]
+  //
+  // 2) give every linedef with no prev_matcher the NATURAL X offset
+  //
+  // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
+
+  int i;
+
+  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  {
+    doom_linedef_c *L = dm_linedefs[i];
+    if (! L->Valid())
+      continue;
+
+    L->sim_prev = DM_FindSimilarLine(L, L->start);
+    L->sim_next = DM_FindSimilarLine(L, L->end);
+
+    if (L->front->x_offset == IVAL_NONE && ! L->sim_prev && ! L->sim_next)
+      L->front->x_offset = NaturalXOffset(L, 0);
+    
+    if (L->back && L->back->x_offset == IVAL_NONE)
+      L->back->x_offset = NaturalXOffset(L, 1);
+  }
+
+  for (int pass = 8; pass >= 0; pass--)
+  {
+    int naturals = 0;
+    int prev_count = 0;
+    int next_count = 0;
+
+    for (i = 0; i < (int)dm_linedefs.size(); i++)
+    {
+      doom_linedef_c *L = dm_linedefs[i];
+      if (! L->Valid())
+        continue;
+
+      if (L->front->x_offset == IVAL_NONE)
+      {
+        int mask = (1 << pass) - 1;
+
+        if ((i & mask) == 0)
+        {
+          L->front->x_offset = NaturalXOffset(L, 0);
+          naturals++;
+        }
+        continue;
+      }
+
+      doom_linedef_c *P = L;
+      doom_linedef_c *N = L;
+
+      while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE)
+      {
+        P->sim_prev->front->x_offset = P->front->x_offset - I_ROUND(P->sim_prev->length);
+        P = P->sim_prev;
+        prev_count++;
+      }
+
+      while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE)
+      {
+        N->sim_next->front->x_offset = N->front->x_offset + I_ROUND(N->length);
+        N = N->sim_next;
+        next_count++;
+      }
+    }
+
+    DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
+                pass, naturals, prev_count, next_count);
+  }
+}
+
+
+//------------------------------------------------------------------------
+
+int doom_sector_c::Write()
+{
+  if (index < 0)
+  {
+    for (unsigned int k = 0; k < exfloors.size(); k++)
+    {
+//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
+    }
+
+    index = DM_NumSectors();
+
+    DM_AddSector(f_h, f_tex.c_str(),
+                 c_h, c_tex.c_str(),
+                 light, special, tag);
+  }
+
+  return index;
+}
+
+
+int doom_sidedef_c::Write()  
+{
+  if (index < 0)
+  {
+    SYS_ASSERT(sector);
+
+    int sec_index = sector->Write();
+
+    index = DM_NumSidedefs();
+
+    DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
+                  upper.c_str(), x_offset & 1023, y_offset);
+  }
+
+  return index;
+}
+
+
+void doom_linedef_c::Write()
+{
+  SYS_ASSERT(start && end);
+
+  int v1 = start->Write();
+  int v2 = end  ->Write();
+
+  int f = front ? front->Write() : -1;
+  int b = back  ? back ->Write() : -1;
+
+  DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
+}
+
+
+static void DM_WriteExtraFloor(doom_sector_c *sec, extrafloor_c *EF)
+{
+#if 0  ///  FIXME  FIXME
+
+  if (EF->sec->index >= 0)
+    return;
+
+  EF->sec->index = DM_NumSectors();
+
+  DM_AddSector(EF->sec->f_h, EF->sec->f_tex.c_str(),
+               EF->sec->c_h, EF->sec->c_tex.c_str(),
+               EF->sec->light, EF->sec->special, EF->sec->tag);
+
+
+  extrafloor_slot++;
+
+
+  int x1 = bounds_x1 +       (extrafloor_slot % 32) * 64;
+  int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
+
+  if (extrafloor_slot & 1024) x1 += 2200;
+  if (extrafloor_slot & 2048) y1 -= 2200;
+
+  if (extrafloor_slot & 4096)
+    Main_FatalError("Too many extrafloors! (over %d)\n", extrafloor_slot);
+
+  int x2 = x1 + 32;
+  int y2 = y1 + 32;
+
+  int xm = x1 + 16;
+  int ym = y1 + 16;
+
+  bool morev = (EF->users.size() > 4);
+
+  int vert_ref = DM_NumVertexes();
+
+  if (true)  DM_AddVertex(x1, y1);
+  if (morev) DM_AddVertex(x1, ym);
+
+  if (true)  DM_AddVertex(x1, y2);
+  if (morev) DM_AddVertex(xm, y2);
+
+  if (true)  DM_AddVertex(x2, y2);
+  if (morev) DM_AddVertex(x2, ym);
+
+  if (true)  DM_AddVertex(x2, y1);
+  if (morev) DM_AddVertex(xm, y1);
+
+ 
+  int side_ref = DM_NumSidedefs();
+
+  DM_AddSidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
+
+
+  int vert_num = morev ? 8 : 4;
+
+  for (int n = 0; n < vert_num; n++)
+  {
+    int type = 0;
+    int tag  = 0;
+
+    if (n < (int)EF->users.size())
+    {
+      type = solid_exfloor;
+      tag  = EF->users[n]->tag;
+
+      SYS_ASSERT(tag > 0);
+    }
+
+    DM_AddLinedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
+                  side_ref, -1 /* side2 */,
+                  type, 1 /* impassible */,
+                  tag, NULL /* args */);
+  }
+#endif
+}
+
+
+static void DM_WriteLinedefs(void)
 {
   // this triggers everything else (Sidedefs, Sectors, Vertices) to be
   // written as well.
@@ -1657,7 +1808,8 @@ static void CheckThingOption(const char *name, const char *value,
   // TODO: HEXEN FLAGS
 }
 
-static void WriteThings(void)
+
+static void DM_WriteThings(void)
 {
   // ??? first iterate over entity lists in merge_gaps
 
@@ -1705,149 +1857,9 @@ static void WriteThings(void)
 }
 
 
-static void TryMergeLine(linedef_info_c *A)
-{
-  vertex_info_c *V = A->end;
+//------------------------------------------------------------------------
 
-  linedef_info_c *B = V->SecondLine(A);
-
-  if (! B)
-    return;
-
-  // we only handle the case where B's start == A's end
-  // (which is still the vast majority of mergeable cases)
-
-  if (V != B->start)
-    return;
-
-  SYS_ASSERT(B->Valid());
-
-  if (A->CanMerge(B))
-    A->Merge(B);
-}
-
-
-static void MergeColinearLines(void)
-{
-  for (int pass = 0; pass < 4; pass++)
-    for (int i = 0; i < (int)dm_linedefs.size(); i++)
-      if (dm_linedefs[i]->Valid())
-        TryMergeLine(dm_linedefs[i]);
-}
-
-
-static linedef_info_c * FindSimilarLine(linedef_info_c *L, vertex_info_c *V)
-{
-  linedef_info_c *best = NULL;
-  int best_score = -1;
-
-  for (int i = 0; i < 4; i++)
-  {
-    linedef_info_c *M = V->lines[i];
-
-    if (! M) break;
-    if (M == L) continue;
-
-    if (! L->isFrontSimilar(M))
-      continue;
-
-    int score = 0;
-
-    if (! L->back && ! M->back)
-      score += 20;
-
-    if (L->ColinearWith(M))
-      score += 10;
-
-    if (score > best_score)
-    {
-      best = M;
-      best_score = score;
-    }
-  }
-
-  return best;
-}
-
-
-static void AlignTextures(void)
-{
-  // Algorithm:  FIXME out of date
-  //
-  // 1) assign every linedef a "prev_matcher" field (forms a chain)
-  //    [POSSIBILITY: similar field for back sidedefs]
-  //
-  // 2) give every linedef with no prev_matcher the NATURAL X offset
-  //
-  // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
-
-  int i;
-
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
-  {
-    linedef_info_c *L = dm_linedefs[i];
-    if (! L->Valid())
-      continue;
-
-    L->sim_prev = FindSimilarLine(L, L->start);
-    L->sim_next = FindSimilarLine(L, L->end);
-
-    if (L->front->x_offset == IVAL_NONE && ! L->sim_prev && ! L->sim_next)
-      L->front->x_offset = NaturalXOffset(L, 0);
-    
-    if (L->back && L->back->x_offset == IVAL_NONE)
-      L->back->x_offset = NaturalXOffset(L, 1);
-  }
-
-  for (int pass = 8; pass >= 0; pass--)
-  {
-    int naturals = 0;
-    int prev_count = 0;
-    int next_count = 0;
-
-    for (i = 0; i < (int)dm_linedefs.size(); i++)
-    {
-      linedef_info_c *L = dm_linedefs[i];
-      if (! L->Valid())
-        continue;
-
-      if (L->front->x_offset == IVAL_NONE)
-      {
-        int mask = (1 << pass) - 1;
-
-        if ((i & mask) == 0)
-        {
-          L->front->x_offset = NaturalXOffset(L, 0);
-          naturals++;
-        }
-        continue;
-      }
-
-      linedef_info_c *P = L;
-      linedef_info_c *N = L;
-
-      while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE)
-      {
-        P->sim_prev->front->x_offset = P->front->x_offset - I_ROUND(P->sim_prev->length);
-        P = P->sim_prev;
-        prev_count++;
-      }
-
-      while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE)
-      {
-        N->sim_next->front->x_offset = N->front->x_offset + I_ROUND(N->length);
-        N = N->sim_next;
-        next_count++;
-      }
-    }
-
-    DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
-                pass, naturals, prev_count, next_count);
-  }
-}
-
-
-void DM_WriteDoom(void)
+void CSG_DOOM_Write()
 {
   // converts the Merged list into the sectors, linedefs (etc)
   // required for a DOOM level.
@@ -1864,16 +1876,16 @@ void DM_WriteDoom(void)
 //CSG2_Doom_TestRegions();
 //return;
  
-  CreateSectors();
+  DM_CreateSectors();
 
-  MakeLinedefs();
-  MergeColinearLines();
-  AlignTextures();
+  DM_MakeLinedefs();
+  DM_MergeColinearLines();
+  DM_AlignTextures();
 
 ///  CreateeDummies();
 
-  WriteLinedefs();
-  WriteThings();
+  DM_WriteLinedefs();
+  DM_WriteThings();
 
   // FIXME: Free everything
 }

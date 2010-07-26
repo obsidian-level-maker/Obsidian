@@ -38,8 +38,8 @@
 #include "q_bsp.h"
 
 
-extern void NK_WriteNukem(void);
-extern void DM_FreeLevelStuff(void);
+extern void CSG_NUKEM_Write();
+
 
 // Properties
 static char *level_name;
@@ -316,7 +316,7 @@ bool nukem_game_interface_c::Finish(bool build_ok)
 
 void nukem_game_interface_c::BeginLevel()
 {
-  DM_FreeLevelStuff();
+//???  DM_FreeLevelStuff();
 
   nk_sectors = new qLump_c;
   nk_walls   = new qLump_c;
@@ -355,7 +355,7 @@ void nukem_game_interface_c::EndLevel()
   CSG2_MergeAreas();
   CSG2_MakeMiniMap();
 
-  NK_WriteNukem();
+  CSG_NUKEM_Write();
 
   NK_EndLevel();
 
