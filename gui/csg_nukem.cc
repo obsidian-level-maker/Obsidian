@@ -52,7 +52,7 @@
 #define SEC_SHADOW       (0x4 << 16)
 
 
-double light_dist_factor = 800.0;
+#define light_dist_factor  800.0
 
 
 class nukem_sector_c;

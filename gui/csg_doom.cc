@@ -54,6 +54,8 @@ static int extrafloor_slot;
 #define SEC_PRIMARY_LIT  (0x2 << 16)
 #define SEC_SHADOW       (0x4 << 16)
 
+#define SEC_UNUSED_MARK  (-777)
+
 
 double light_dist_factor = 800.0;
 
@@ -103,9 +105,9 @@ public:
 
   int index;
 
-  merge_region_c *region;  // this is invalid after CoalesceSectors
+  region_c *region;
 
-  double mid_x, mid_y;  // invalid after CoalesceSectors
+  double mid_x, mid_y;  // invalid after DM_CoalesceSectors
 
   int misc_flags;
   int valid_count;
@@ -119,6 +121,16 @@ public:
 
   ~doom_sector_c()
   { }
+
+  void MarkUnused()
+  {
+    mark = SEC_UNUSED_MARK;
+  }
+
+  bool isUnused() const
+  {
+    return (mark == SEC_UNUSED_MARK);
+  }
 
   bool SameExtraFloors(const doom_sector_c *other) const
   {
@@ -153,29 +165,6 @@ public:
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
            SameExtraFloors(other);
-  }
-
-  void CalcMiddle()
-  {
-    mid_x = 0;
-    mid_y = 0;
-
-    int count = (int)region->segs.size();
-
-    for (int i = 0; i < count; i++)
-    {
-      merge_segment_c *G = region->segs[i];
-
-      // tally both start and end, as segs may face either way
-      mid_x = mid_x + G->start->x + G->end->x;
-      mid_y = mid_y + G->start->y + G->end->y;
-    }
-
-    if (count > 0)
-    {
-      mid_x /= (double)(count * 2);
-      mid_y /= (double)(count * 2);
-    }
   }
 
   int Write();
@@ -472,23 +461,6 @@ public:
            (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
   }
 
-  // here "greedy" means that from one side, both the upper and the lower
-  // will be visible at the same time.
-  inline bool isGreedy() const
-  {
-    if (! back)
-      return false;
-
-    int f1_h = front->sector->f_h;
-    int f2_h = back ->sector->f_h;
-
-    int c1_h = front->sector->c_h;
-    int c2_h = back ->sector->c_h;
-
-    return (f1_h < f2_h && c2_h < c1_h) ||
-           (f1_h > f2_h && c2_h > c1_h);
-  }
-
   void Write();
 };
 
@@ -634,9 +606,11 @@ void DM_TestRegions(void)
 
 //------------------------------------------------------------------------
 
-static void DM_MakeExtraFloor(merge_region_c *R, doom_sector_c *sec,
-                              merge_gap_c *T, merge_gap_c *B)
+static void DM_MakeExtraFloor(doom_sector_c *sec, 
+                              region_c *R, gap_c *T, gap_c *B)
 {
+#if 0  // TODO
+
   // find the brush which we will use for the side texture
   csg_brush_c *MID = NULL;
   double best_h = 0;
@@ -689,10 +663,35 @@ static void DM_MakeExtraFloor(merge_region_c *R, doom_sector_c *sec,
 
 
   sec->exfloors.push_back(EF);
+#endif
 }
 
 
-static void DM_DoLightingBrush(doom_sector_c *S, merge_region_c *R)
+static void DM_DoExtraFloors(doom_sector_c *S, region_c *R)
+{
+  // Note: top-to-bottom is the most natural order, because when
+  // the engine adds an extrafloor into a sector, the upper part
+  // remains the same and the lower part gets the new properties
+  // (lighting/special) from the extrafloor.
+
+  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  {
+    gap_c *T = R->gaps[g];
+    gap_c *B = R->gaps[g-1];
+
+    if (solid_exfloor > 0)
+    {
+      DM_MakeExtraFloor(S, R, T, B);
+    }
+    else
+    {
+      LogPrintf("WARNING: discarding extrafloor @ (%1.0f %1.0f)\n");
+    }
+  }
+}
+
+
+static void DM_DoLightingBrush(doom_sector_c *S, region_c *R)
 {
   for (unsigned int i = 0; i < R->brushes.size(); i++)
   {
@@ -727,32 +726,7 @@ static void DM_DoLightingBrush(doom_sector_c *S, merge_region_c *R)
 }
 
 
-static void DM_DoExtraFloors(doom_sector_c *S, merge_region_c *R)
-{
-  // Note: top-to-bottom is the most natural order, because when
-  // the engine adds an extrafloor into a sector, the upper part
-  // remains the same and the lower part gets the new properties
-  // (lighting/special) from the extrafloor.
-
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
-  {
-    merge_gap_c *T = R->gaps[g];
-    merge_gap_c *B = R->gaps[g-1];
-
-    if (solid_exfloor > 0)
-    {
-      DM_MakeExtraFloor(R, S, T, B);
-    }
-    else
-    {
-      LogPrintf("WARNING: discarding extrafloor @ (%1.0f, %1.0f, %1.0f..%1.0f\n",
-                S->mid_x, S->mid_y, B->GetZ2(), T->GetZ1());
-    }
-  }
-}
-
-
-static void DM_MakeSector(merge_region_c *R)
+static void DM_MakeSector(region_c *R)
 {
   // completely solid (no gaps) ?
   if (R->gaps.size() == 0)
@@ -764,18 +738,18 @@ static void DM_MakeSector(merge_region_c *R)
 
   doom_sector_c *S = new doom_sector_c;
 
+  S->region = R;
+
   R->index = (int)dm_sectors.size();
 
   dm_sectors.push_back(S);
 
 
-  S->region = R;
-
-  S->CalcMiddle();
+  R->GetMidPoint(&S->mid_x, &S->mid_y);
 
 
-  csg_brush_c *B = R->gaps.front()->b_brush;
-  csg_brush_c *T = R->gaps.back() ->t_brush;
+  csg_brush_c *B = R->gaps.front()->bottom;
+  csg_brush_c *T = R->gaps.back() ->top;
 
   csg_property_set_c *f_face = &B->t.face;
   csg_property_set_c *c_face = &T->b.face;
@@ -838,12 +812,22 @@ static void DM_MakeSector(merge_region_c *R)
   // find brushes floating in-between --> make extrafloors
 
   DM_DoExtraFloors(S, R);
-
 }
 
 
-static void DM_LightingFloodFill(void)
+static void DM_CreateSectors()
 {
+  for (unsigned int i = 0; i < all_regions.size(); i++)
+  {
+    DM_MakeSector(all_regions[i]);
+  }
+}
+
+
+static void DM_LightingFloodFill()
+{
+#if 0  // !!!!! TODO
+
   int i;
   std::vector<doom_sector_c *> active;
 
@@ -948,51 +932,85 @@ static void DM_LightingFloodFill(void)
     else if (S->light > 255)
       S->light = 255;
   }
+#endif
 }
 
 
-static void DM_CoalesceSectors(void)
+static int DM_CoalescePass()
 {
-  for (int loop=0; loop < 99; loop++)
+int changes = 0;
+int diffs = 0;
+int sames = 0;
+
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
-    int changes = 0;
+    region_c *R = all_regions[i];
 
-    for (unsigned int i = 0; i < mug_segments.size(); i++)
+    if (R->index < 0)
+      continue;
+
+    doom_sector_c *D1 = dm_sectors[R->index];
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
     {
-      merge_segment_c *S = mug_segments[i];
+      snag_c *S = R->snags[k];
 
-      if (! S->front || ! S->back)
+      region_c *N = S->partner ? S->partner->where : NULL;
+
+      if (!N || N->index < 0)
         continue;
 
-      if (S->front->index < 0 || S->back->index < 0)
-        continue;
-      
-      // already merged?
-      if (S->front->index == S->back->index)
-        continue;
+      doom_sector_c *D2 = dm_sectors[N->index];
 
-      doom_sector_c *F = dm_sectors[S->front->index];
-      doom_sector_c *B = dm_sectors[S->back ->index];
-
-      if (F->Match(B))
+      // use '>' so that we only check the relationship once
+      if (N && N->index > R->index && D1->Match(D2))
       {
-        S->front->index = MIN(S->front->index, S->back->index);
-        S->back ->index = S->front->index;
+        D2->MarkUnused();
+
+        N->index = R->index;
 
         changes++;
       }
+
+if (N) {
+if (N->index == R->index) sames++; else diffs++; }
+
     }
+  }
 
-// fprintf(stderr, "CoalesceSectors: changes = %d\n", changes);
+fprintf(stderr, "DM_CoalescePass  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
 
-    if (changes == 0)
-      return;
+  return changes;
+}
+
+
+static void DM_CoalesceSectors()
+{
+  while (DM_CoalescePass() > 0)
+  { }
+
+  // remove the unused sectors
+
+  std::vector<doom_sector_c *> local_secs;
+
+  local_secs.swap(dm_sectors);
+
+  for (unsigned int i = 0 ; i < local_secs.size() ; i++)
+  {
+    doom_sector_c *S = local_secs[i];
+
+    if (S->isUnused())
+      delete S;
+    else
+      dm_sectors.push_back(S);
   }
 }
 
 
-static void DM_CoalesceExtraFloors(void)
+static void DM_CoalesceExtraFloors()
 {
+#if 0  // TODO
+
   for (int loop=0; loop < 99; loop++)
   {
     int changes = 0;
@@ -1055,14 +1073,17 @@ static void DM_CoalesceExtraFloors(void)
     if (changes == 0)
       break;
   }
+#endif
 }
 
 
 static void DM_AssignExtraFloorTags(void)
 {
-  for (unsigned int j = 0; j < mug_regions.size(); j++)
+#if 0  // TODO
+
+  for (unsigned int i = 0; i < mug_regions.size(); i++)
   {
-    merge_region_c *R = mug_regions[j];
+    merge_region_c *R = mug_regions[i];
 
     if (R->index < 0)
       continue;
@@ -1071,18 +1092,12 @@ static void DM_AssignExtraFloorTags(void)
 
     if (S->exfloors.size() > 0 && S->tag <= 0)
     {
-      S->tag = extrafloor_tag++;
+      S->tag = extrafloor_tag;
+
+      extrafloor_tag += 1;
     }
   }
-}
-
-
-static void DM_CreateSectors(void)
-{
-  for (unsigned int i = 0; i < all_regions.size(); i++)
-  {
-    DM_MakeSector(all_regions[i]);
-  }
+#endif
 }
 
 
@@ -1483,6 +1498,7 @@ static void DM_MakeLinedefs(void)
 }
 
 
+//------------------------------------------------------------------------
 
 static void DM_TryMergeLine(doom_linedef_c *A)
 {
@@ -1895,8 +1911,8 @@ void CSG_DOOM_Write()
   DM_LightingFloodFill();
   DM_CoalesceSectors();
 
-  DM_AssignExtraFloorTags();
-  DM_CoalesceExtraFloors();
+///  DM_AssignExtraFloorTags();
+///  DM_CoalesceExtraFloors();
 
   DM_MakeLinedefs();
   DM_MergeColinearLines();
