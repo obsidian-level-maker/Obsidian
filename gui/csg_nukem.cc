@@ -349,10 +349,14 @@ public:
 
   //....  FIXME
 
+  snag_c *snag;
+
+  nukem_wall_c *partner;
+
   int index;
 
 public:
-  nukem_wall_c(linedef_info_c *_L, int _S) :
+  nukem_wall_c(snag_c *S)
       line(_L), right(NULL), back(NULL),
       side(_S), index(-1)
   { }
@@ -427,177 +431,23 @@ public:
   }
 };
 
-typedef std::vector<nukem_wall_c *> nk_wall_list_c;
 
-
-
-
-static std::vector<vertex_info_c *>  dm_vertices;
-static std::vector<linedef_info_c *> dm_linedefs;
-static std::vector<sidedef_info_c *> dm_sidedefs;
-
-static std::vector<nukem_sector_c *>  dm_sectors;
-
-
-void DM_FreeLevelStuff(void)
-{
-  int i;
-
-  for (i=0; i < (int)dm_vertices.size(); i++) delete dm_vertices[i];
-  for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
-  for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
-  for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
-
-  dm_vertices.clear();
-  dm_linedefs.clear();
-  dm_sidedefs.clear();
-  dm_sectors. clear();
-}
-
-
-int sidedef_info_c::Write()  
-{
-  if (index < 0)
-  {
-    SYS_ASSERT(sector);
-
-    int sec_index = sector->Write();
-
-    index = DM_NumSidedefs();
-
-    DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
-                  upper.c_str(), x_offset & 1023, y_offset);
-  }
-
-  return index;
-}
-
-
-void linedef_info_c::Write()
-{
-  SYS_ASSERT(start && end);
-
-  int v1 = start->Write();
-  int v2 = end  ->Write();
-
-  int f = front ? front->Write() : -1;
-  int b = back  ? back ->Write() : -1;
-
-  DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
-}
-
-
-void DM_WriteDoom(void);  // forward
-
-
-void CSG2_Doom_TestBrushes(void)
-{
-  // for debugging only: each csg_brush_c becomes a single
-  // sector on the map.
- 
-  DM_StartWAD("brush_test.wad");
-  DM_BeginLevel();
-
-  for (unsigned int k = 0; k < all_brushes.size(); k++)
-  {
-    csg_brush_c *P = all_brushes[k];
-    
-    int sec_idx = DM_NumSectors();
-
-    const char *b_tex = P->b.face.getStr("tex", "LAVA1");
-    const char *t_tex = P->t.face.getStr("tex", "LAVA1");
-
-    DM_AddSector(I_ROUND(P->b.z), b_tex, I_ROUND(P->t.z), t_tex, 192, 0, 0);
-
-    int side_base = DM_NumSidedefs();
-    int vert_base = DM_NumVertexes();
-
-    for (int j1 = 0; j1 < (int)P->verts.size(); j1++)
-    {
-      int j2 = (j1 + 1) % (int)P->verts.size();
-
-      brush_vert_c *v1 = P->verts[j1];
-
-      const char *w_tex = v1->face.getStr("tex", "CRACKLE4");
-
-      DM_AddVertex(I_ROUND(v1->x), I_ROUND(v1->y));
-
-      DM_AddSidedef(sec_idx, "-", w_tex, "-", 0, 0);
-
-      DM_AddLinedef(vert_base+j2, vert_base+j1, side_base+j1, -1,
-                    0, 1 /*impassible*/, 0, NULL /* args */);
-    }
-  }
-
-  DM_EndLevel("MAP01");
-  DM_EndWAD();
-}
-
-void CSG2_Doom_TestClip(void)
-{
-  // for Quake1 debugging only....
-
-  DM_StartWAD("clip_test.wad");
-  DM_BeginLevel();
-
-  DM_WriteDoom();
-
-  DM_EndLevel("MAP01");
-  DM_EndWAD();
-}
-
-void DM_TestRegions(void)
-{
-  // for debugging only: each merge_region becomes a single
-  // sector on the map.
-
-  unsigned int i;
-
-  for (i = 0; i < mug_vertices.size(); i++)
-  {
-    merge_vertex_c *V = mug_vertices[i];
-    
-    V->index = (int)i;
-
-    DM_AddVertex(I_ROUND(V->x), I_ROUND(V->y));
-  }
-
-
-  for (i = 0; i < mug_regions.size(); i++)
-  {
-    merge_region_c *R = mug_regions[i];
-
-    R->index = (int)i;
-
-    const char *flat = "FLAT1";
- 
-    DM_AddSector(0,flat, 144,flat, 255,(int)R->brushes.size(),(int)R->gaps.size());
-
-    const char *tex = R->faces_out ? "COMPBLUE" : "STARTAN3";
-
-    DM_AddSidedef(R->index, tex, "-", tex, 0, 0);
-  }
-
-
-  for (i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    SYS_ASSERT(S);
-    SYS_ASSERT(S->start);
-
-    DM_AddLinedef(S->start->index, S->end->index,
-                  S->front ? S->front->index : -1,
-                  S->back  ? S->back->index  : -1,
-                  0, 1 /*impassible*/, 0,
-                  NULL /* args */);
-  }
-}
+static std::vector<nukem_wall_c *>   nk_all_walls;
+static std::vector<nukem_sector_c *> nk_all_sectors;
 
 
 //------------------------------------------------------------------------
 
+void NK_FreeStuff()
+{
+  unsigned int i;
 
+  for (i = 0 ; i < nk_all_walls.size()   ; i++) delete nk_all_walls[i];
+  for (i=  0 ; i < nk_all_sectors.size() ; i++) delete nk_all_sectors[i];
+
+  nk_all_walls.clear();
+  nk_all_sectors.clear();
+}
 
 
 static void MakeSector(merge_region_c *R)
@@ -862,7 +712,7 @@ static void CoalesceSectors(void)
 }
 
 
-static void CreateSectors(void)
+static void NK_CreateSectors(void)
 {
   dm_sectors.clear();
 
@@ -883,25 +733,6 @@ static void CreateSectors(void)
 
 
 //------------------------------------------------------------------------
-
-static vertex_info_c * MakeVertex(merge_vertex_c *MV)
-{
-  if (MV->index >= 0)
-    return dm_vertices[MV->index];
-
-  // create new one
-  vertex_info_c * V = new vertex_info_c;
-
-  MV->index = (int)dm_vertices.size();
-
-  dm_vertices.push_back(V);
-
-  V->x = I_ROUND(MV->x); 
-  V->y = I_ROUND(MV->y);
-
-  return V;
-}
-
 
 
 static int NaturalXOffset(linedef_info_c *G, int side)
@@ -1054,146 +885,6 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 }
 
 
-static brush_vert_c *FindSpecialVert(merge_segment_c *G)
-{
-  nukem_sector_c *FS = NULL;
-  nukem_sector_c *BS = NULL;
-
-  if (G->front && G->front->index > 0)
-    FS = dm_sectors[G->front->index];
-
-  if (G->back && G->back->index > 0)
-    BS = dm_sectors[G->back->index];
-
-  if (!BS && !FS)
-    return NULL;
-
-  int min_f = +9999;
-  int max_c = -9999;
-
-  if (FS)
-  {
-    min_f = MIN(min_f, FS->f_h);
-    max_c = MAX(max_c, FS->c_h);
-  }
-
-  if (BS)
-  {
-    min_f = MIN(min_f, BS->f_h);
-    max_c = MAX(max_c, BS->c_h);
-  }
-
-  min_f -= 2;
-  max_c += 2;
-
-
-  brush_vert_c *minor = NULL;
-
-
-  for (int side = 0; side < 2; side++)
-  {
-    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
-
-    for (unsigned int k=0; k < count; k++)
-    {
-      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
-
-///---      if (! V->face)
-///---        continue;
-
-      if (V->parent->bkind == BKIND_Rail)
-        continue;
-
-      if (V->parent->b.z < (double)max_c &&
-          V->parent->t.z > (double)min_f)
-      {
-/*
-DebugPrintf("SEGMENT (%1.0f,%1.0f) --> (%1.0f,%1.0f) SIDE:%d LINE_KIND:%d\n",
-            G->start->x, G->start->y, G->end  ->x, G->end  ->y,
-            side, V->line_kind);
-DebugPrintf("   BRUSH RANGE: %1.0f --> %1.0f  tex:%s\n",
-            V->parent->b.z, V->parent->t.z, V->parent->w_face->tex.c_str());
-DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
-            FS, FS ? FS->f_h : -1, FS ? FS->c_h : -1, FS ? FS->f_tex.c_str() : "");
-DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
-            BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
-*/
-        if (V->face.getStr("kind"))
-          return V;
-
-        if (V->face.getStr("tag") || V->face.getStr("flags"))
-          minor = V;
-      }
-    }
-  }
-
-  return minor;
-}
-
-static brush_vert_c *FindRailVert(merge_segment_c *G)
-{
-  nukem_sector_c *FS = NULL;  // FIXME: duplicate code
-  nukem_sector_c *BS = NULL;
-
-  if (G->front && G->front->index > 0)
-    FS = dm_sectors[G->front->index];
-
-  if (G->back && G->back->index > 0)
-    BS = dm_sectors[G->back->index];
-
-  if (!BS && !FS)
-    return NULL;
-
-  int min_f = +9999;
-  int max_c = -9999;
-
-  if (FS)
-  {
-    min_f = MIN(min_f, FS->f_h);
-    max_c = MAX(max_c, FS->c_h);
-  }
-
-  if (BS)
-  {
-    min_f = MIN(min_f, BS->f_h);
-    max_c = MAX(max_c, BS->c_h);
-  }
-
-  min_f -= 2;
-  max_c += 2;
-
-
-  for (int side = 0; side < 2; side++)
-  {
-    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
-
-    for (unsigned int k=0; k < count; k++)
-    {
-      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
-
-      if (V->parent->bkind != BKIND_Rail)
-        continue;
-
-///---      if (! V->face)
-///---        continue;
-
-      if (V->parent->b.z > max_c || V->parent->b.z < min_f)
-        continue;
-
-      const char *tex = V->face.getStr("tex", "-");
-
-      if (tex[0] == '-' && !V->face.getStr("kind") && !V->face.getStr("flags"))
-        continue;
-
-      // found one
-      return V;
-    }
-  }
-
-  return NULL;
-}
-
-
 static void MakeLinedefs(void)
 {
   for (unsigned int i = 0; i < mug_segments.size(); i++)
@@ -1276,267 +967,6 @@ static void MakeLinedefs(void)
       spec->face.getHexenArgs("args", L->args);
     }
   }
-}
-
-
-static void WriteLinedefs(void)
-{
-  // this triggers everything else (Sidedefs, Sectors, Vertices) to be
-  // written as well.
-
-  for (int i = 0; i < (int)dm_linedefs.size(); i++)
-    if (dm_linedefs[i]->Valid())
-      dm_linedefs[i]->Write();
-}
-
-
-static void CheckThingOption(const char *name, const char *value,
-                             int *options)
-{
-  bool enable = ! (value[0] == '0' || tolower(value[0]) == 'f');
-
-  // skill flags default to 1, hence only need to clear them
-  if (StringCaseCmp(name, "skill_easy") == 0 && !enable)
-    *options &= ~MTF_Easy;
-  if (StringCaseCmp(name, "skill_medium") == 0 && !enable)
-    *options &= ~MTF_Medium;
-  if (StringCaseCmp(name, "skill_hard") == 0 && !enable)
-    *options &= ~MTF_Hard;
-
-  // mode flags are negated (1 means "no")
-  if (StringCaseCmp(name, "mode_sp") == 0 && !enable)
-    *options |= ~MTF_NotSP;
-  if (StringCaseCmp(name, "mode_coop") == 0 && !enable)
-    *options |= ~MTF_NotCOOP;
-  if (StringCaseCmp(name, "mode_dm") == 0 && !enable)
-    *options |= ~MTF_NotDM;
-
-  // other flags...
-  if (StringCaseCmp(name, "ambush") == 0 && enable)
-    *options |= MTF_Ambush;
-  
-  // TODO: HEXEN FLAGS
-}
-
-static void WriteThings(void)
-{
-  // ??? first iterate over entity lists in merge_gaps
-
-  for (unsigned int j = 0; j < all_entities.size(); j++)
-  {
-    entity_info_c *E = all_entities[j];
-
-    int type = atoi(E->name.c_str());
-
-    if (type <= 0)
-    {
-      LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->name.c_str());
-      continue;
-    }
-
-    double h = 0; // FIXME!!! proper height (above ground)
-
-
-    // parse entity properties
-    int angle   = 0;
-    int options = 7;
-    int tid     = 0;
-    int special = 0;
-
-    std::map<std::string, std::string>::iterator MI;
-    for (MI = E->props.begin(); MI != E->props.end(); MI++)
-    {
-      const char *name  = MI->first.c_str();
-      const char *value = MI->second.c_str();
-
-      if (StringCaseCmp(name, "angle") == 0)
-        angle = atoi(value);
-      else if (StringCaseCmp(name, "tid") == 0)
-        tid = atoi(value);
-      else if (StringCaseCmp(name, "special") == 0)
-        special = atoi(value);
-      else
-        CheckThingOption(name, value, &options);
-    }
-
-    DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
-                angle, options, tid, special,
-                NULL /* FIXME: args */);
-  }
-}
-
-
-static void TryMergeLine(linedef_info_c *A)
-{
-  vertex_info_c *V = A->end;
-
-  linedef_info_c *B = V->SecondLine(A);
-
-  if (! B)
-    return;
-
-  // we only handle the case where B's start == A's end
-  // (which is still the vast majority of mergeable cases)
-
-  if (V != B->start)
-    return;
-
-  SYS_ASSERT(B->Valid());
-
-  if (A->CanMerge(B))
-    A->Merge(B);
-}
-
-
-static void MergeColinearLines(void)
-{
-  for (int pass = 0; pass < 4; pass++)
-    for (int i = 0; i < (int)dm_linedefs.size(); i++)
-      if (dm_linedefs[i]->Valid())
-        TryMergeLine(dm_linedefs[i]);
-}
-
-
-static linedef_info_c * FindSimilarLine(linedef_info_c *L, vertex_info_c *V)
-{
-  linedef_info_c *best = NULL;
-  int best_score = -1;
-
-  for (int i = 0; i < 4; i++)
-  {
-    linedef_info_c *M = V->lines[i];
-
-    if (! M) break;
-    if (M == L) continue;
-
-    if (! L->isFrontSimilar(M))
-      continue;
-
-    int score = 0;
-
-    if (! L->back && ! M->back)
-      score += 20;
-
-    if (L->ColinearWith(M))
-      score += 10;
-
-    if (score > best_score)
-    {
-      best = M;
-      best_score = score;
-    }
-  }
-
-  return best;
-}
-
-
-static void AlignTextures(void)
-{
-  // Algorithm:  FIXME out of date
-  //
-  // 1) assign every linedef a "prev_matcher" field (forms a chain)
-  //    [POSSIBILITY: similar field for back sidedefs]
-  //
-  // 2) give every linedef with no prev_matcher the NATURAL X offset
-  //
-  // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
-
-  int i;
-
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
-  {
-    linedef_info_c *L = dm_linedefs[i];
-    if (! L->Valid())
-      continue;
-
-    L->sim_prev = FindSimilarLine(L, L->start);
-    L->sim_next = FindSimilarLine(L, L->end);
-
-    if (L->front->x_offset == IVAL_NONE && ! L->sim_prev && ! L->sim_next)
-      L->front->x_offset = NaturalXOffset(L, 0);
-    
-    if (L->back && L->back->x_offset == IVAL_NONE)
-      L->back->x_offset = NaturalXOffset(L, 1);
-  }
-
-  for (int pass = 8; pass >= 0; pass--)
-  {
-    int naturals = 0;
-    int prev_count = 0;
-    int next_count = 0;
-
-    for (i = 0; i < (int)dm_linedefs.size(); i++)
-    {
-      linedef_info_c *L = dm_linedefs[i];
-      if (! L->Valid())
-        continue;
-
-      if (L->front->x_offset == IVAL_NONE)
-      {
-        int mask = (1 << pass) - 1;
-
-        if ((i & mask) == 0)
-        {
-          L->front->x_offset = NaturalXOffset(L, 0);
-          naturals++;
-        }
-        continue;
-      }
-
-      linedef_info_c *P = L;
-      linedef_info_c *N = L;
-
-      while (P->sim_prev && P->sim_prev->front->x_offset == IVAL_NONE)
-      {
-        P->sim_prev->front->x_offset = P->front->x_offset - I_ROUND(P->sim_prev->length);
-        P = P->sim_prev;
-        prev_count++;
-      }
-
-      while (N->sim_next && N->sim_next->front->x_offset == IVAL_NONE)
-      {
-        N->sim_next->front->x_offset = N->front->x_offset + I_ROUND(N->length);
-        N = N->sim_next;
-        next_count++;
-      }
-    }
-
-    DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
-                pass, naturals, prev_count, next_count);
-  }
-}
-
-
-void DM_WriteDoom(void)
-{
-  // converts the Merged list into the sectors, linedefs (etc)
-  // required for a DOOM level.
-  //
-  // Algorithm:
-  //
-  // 1) reserve first sector to represent VOID space (never written)
-  // 2) create a sector for each region
-  // 3) coalesce neighbouring sectors with same properties
-  //    - mark border segments as unused
-  //    - mark vertices with all unused segs as unused
-  // 4) profit!
-
-//CSG2_Doom_TestRegions();
-//return;
- 
-  CreateSectors();
-
-  MakeLinedefs();
-  MergeColinearLines();
-  AlignTextures();
-
-///  CreateeDummies();
-
-  WriteLinedefs();
-  WriteThings();
-
-  // FIXME: Free everything
 }
 
 
@@ -1643,7 +1073,7 @@ static void NK_CollectWalls(nukem_sector_c *S, int *wall_id, nk_wall_list_c *cir
 }
 
 
-static void NK_WriteWalls(void)
+static void NK_WriteWalls()
 {
   int i;
 
@@ -1823,15 +1253,48 @@ static void NK_WriteSprites(void)
 }
 
 
+static void NK_WriteSectors()
+{
+  for (unsigned int i = 0 ; i < nk_all_sectors.size() ; i++)
+  {
+    nukem_sector_c *S = nk_all_sectors[i];
+
+    if (! S->used)
+      continue;
+
+    S->index = (int)i;
+
+    NK_WriteSprites(S);
+
+    int first_wall = NK_MarkWalls(S->walls);
+    int num_walls  = (int)S->walls.size();
+
+    int c_flags = 0;
+    int visibility = 1;
+
+    NK_AddSector(first_wall, num_walls, visibility,
+                 S->f_h * NK_HT_FACTOR, atoi(S->f_tex.c_str()),
+                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags,
+                 S->special, S->tag);
+  }
+}
+
+
 //------------------------------------------------------------------------
 
 void CSG_NUKEM_Write()
 {
+  CSG_BSP(1.0);
+
+  CSG_SwallowBrushes();
+  CSG_DiscoverGaps();
+
   NK_CreateSectors();
 
   NK_MakeLinedefs();
-  NK_MergeColinearLines();
+//  NK_MergeColinearLines();
 
+  NK_WriteSectors();
   NK_WriteWalls();
   NK_WriteSprites();
 }
