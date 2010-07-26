@@ -46,8 +46,6 @@ int liquid_exfloor;
 extern bool wad_hexen;  // FIXME
 
 
-#define VOID_INDEX  -2
-
 static int extrafloor_tag;
 static int extrafloor_slot;
 
@@ -259,17 +257,7 @@ public:
     return lines[0];
   }
 
-  int Write()
-  {
-    if (index < 0)
-    {
-      index = DM_NumVertexes();
-
-      DM_AddVertex(x, y);
-    }
-
-    return index;
-  }
+  int Write();
 };
 
 
@@ -509,12 +497,13 @@ public:
 static std::vector<doom_vertex_c *>  dm_vertices;
 static std::vector<doom_linedef_c *> dm_linedefs;
 static std::vector<doom_sidedef_c *> dm_sidedefs;
-
 static std::vector<doom_sector_c *>  dm_sectors;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
 
-void DM_FreeLevelStuff(void)
+//------------------------------------------------------------------------
+
+void DM_FreeStuff(void)
 {
   int i;
 
@@ -532,6 +521,7 @@ void DM_FreeLevelStuff(void)
 }
 
 
+#if 0
 
 void DM_WriteDoom(void);  // forward
 
@@ -639,10 +629,10 @@ void DM_TestRegions(void)
                   NULL /* args */);
   }
 }
+#endif
 
 
 //------------------------------------------------------------------------
-
 
 static void DM_MakeExtraFloor(merge_region_c *R, doom_sector_c *sec,
                               merge_gap_c *T, merge_gap_c *B)
@@ -767,17 +757,14 @@ static void DM_MakeSector(merge_region_c *R)
   // completely solid (no gaps) ?
   if (R->gaps.size() == 0)
   {
-    R->index = 0;
+    R->index = -1;
     return;
   }
 
-  csg_brush_c *B = R->gaps.front()->b_brush;
-  csg_brush_c *T = R->gaps.back() ->t_brush;
-
-
-  R->index = (int)dm_sectors.size();
 
   doom_sector_c *S = new doom_sector_c;
+
+  R->index = (int)dm_sectors.size();
 
   dm_sectors.push_back(S);
 
@@ -785,6 +772,10 @@ static void DM_MakeSector(merge_region_c *R)
   S->region = R;
 
   S->CalcMiddle();
+
+
+  csg_brush_c *B = R->gaps.front()->b_brush;
+  csg_brush_c *T = R->gaps.back() ->t_brush;
 
   csg_property_set_c *f_face = &B->t.face;
   csg_property_set_c *c_face = &T->b.face;
@@ -888,7 +879,7 @@ static void DM_LightingFloodFill(void)
         if (! G->front || ! G->back)
           continue;
 
-        if (G->front->index <= 0 || G->back->index <= 0)
+        if (G->front->index < 0 || G->back->index < 0)
           continue;
 
         doom_sector_c *F = dm_sectors[G->front->index];
@@ -973,7 +964,7 @@ static void DM_CoalesceSectors(void)
       if (! S->front || ! S->back)
         continue;
 
-      if (S->front->index <= 0 || S->back->index <= 0)
+      if (S->front->index < 0 || S->back->index < 0)
         continue;
       
       // already merged?
@@ -999,6 +990,7 @@ static void DM_CoalesceSectors(void)
   }
 }
 
+
 static void DM_CoalesceExtraFloors(void)
 {
   for (int loop=0; loop < 99; loop++)
@@ -1012,7 +1004,7 @@ static void DM_CoalesceExtraFloors(void)
       if (! S->front || ! S->back)
         continue;
 
-      if (S->front->index <= 0 || S->back->index <= 0)
+      if (S->front->index < 0 || S->back->index < 0)
         continue;
 
       doom_sector_c *F = dm_sectors[S->front->index];
@@ -1065,13 +1057,14 @@ static void DM_CoalesceExtraFloors(void)
   }
 }
 
+
 static void DM_AssignExtraFloorTags(void)
 {
   for (unsigned int j = 0; j < mug_regions.size(); j++)
   {
     merge_region_c *R = mug_regions[j];
 
-    if (R->index <= 0)
+    if (R->index < 0)
       continue;
 
     doom_sector_c *S = dm_sectors[R->index];
@@ -1083,30 +1076,13 @@ static void DM_AssignExtraFloorTags(void)
   }
 }
 
+
 static void DM_CreateSectors(void)
 {
-  extrafloor_tag  = 9000;
-  extrafloor_slot = 0;
-
-  dm_sectors.clear();
-
-  // #0 represents VOID (never written to map lump)
-  dm_sectors.push_back(new doom_sector_c);
-
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  for (unsigned int i = 0; i < all_regions.size(); i++)
   {
-    merge_region_c *R = mug_regions[i];
-
-    DM_MakeSector(R);
+    DM_MakeSector(all_regions[i]);
   }
-
-  DM_LightingFloodFill();
-
-  DM_CoalesceSectors();
-
-  DM_AssignExtraFloorTags();
-
-  DM_CoalesceExtraFloors();
 }
 
 
@@ -1172,7 +1148,7 @@ static doom_sidedef_c * DM_MakeSidedef(merge_segment_c *G, int side,
                        brush_vert_c *rail,
                        bool *l_peg, bool *u_peg)
 {
-  if (! (F && F->index > 0))
+  if (!F || F->index < 0)
     return NULL;
 
 ///  int index = (int)dm_sidedefs.size();
@@ -1189,7 +1165,7 @@ static doom_sidedef_c * DM_MakeSidedef(merge_segment_c *G, int side,
   SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
   SD->y_offset = - S->c_h;
 
-  if (B && B->index > 0)
+  if (B && B->index >= 0)
   {
     doom_sector_c *BS = dm_sectors[B->index];
 
@@ -1287,10 +1263,10 @@ static brush_vert_c *FindSpecialVert(merge_segment_c *G)
   doom_sector_c *FS = NULL;
   doom_sector_c *BS = NULL;
 
-  if (G->front && G->front->index > 0)
+  if (G->front && G->front->index >= 0)
     FS = dm_sectors[G->front->index];
 
-  if (G->back && G->back->index > 0)
+  if (G->back && G->back->index >= 0)
     BS = dm_sectors[G->back->index];
 
   if (!BS && !FS)
@@ -1363,10 +1339,10 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
   doom_sector_c *FS = NULL;  // FIXME: duplicate code
   doom_sector_c *BS = NULL;
 
-  if (G->front && G->front->index > 0)
+  if (G->front && G->front->index >= 0)
     FS = dm_sectors[G->front->index];
 
-  if (G->back && G->back->index > 0)
+  if (G->back && G->back->index >= 0)
     BS = dm_sectors[G->back->index];
 
   if (!BS && !FS)
@@ -1431,8 +1407,8 @@ static void DM_MakeLinedefs(void)
     SYS_ASSERT(G);
     SYS_ASSERT(G->start);
 
-    if (! (G->front && G->front->index > 0) &&
-        ! (G->back  && G-> back->index > 0))
+    if (! (G->front && G->front->index >= 0) &&
+        ! (G->back  && G-> back->index >= 0))
       continue;
 
     // skip segments which would become zero length linedefs
@@ -1652,20 +1628,33 @@ static void DM_AlignTextures(void)
 
 //------------------------------------------------------------------------
 
+int doom_vertex_c::Write()
+{
+  if (index < 0)  // not written yet?
+  {
+    index = DM_NumVertexes();
+
+    DM_AddVertex(x, y);
+  }
+
+  return index;
+}
+
+
 int doom_sector_c::Write()
 {
-  if (index < 0)
+  if (index < 0)  // not written yet?
   {
-    for (unsigned int k = 0; k < exfloors.size(); k++)
-    {
-//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
-    }
-
     index = DM_NumSectors();
 
     DM_AddSector(f_h, f_tex.c_str(),
                  c_h, c_tex.c_str(),
                  light, special, tag);
+
+    for (unsigned int k = 0; k < exfloors.size(); k++)
+    {
+//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
+    }
   }
 
   return index;
@@ -1674,13 +1663,13 @@ int doom_sector_c::Write()
 
 int doom_sidedef_c::Write()  
 {
-  if (index < 0)
+  if (index < 0)  // not written yet?
   {
+    index = DM_NumSidedefs();
+
     SYS_ASSERT(sector);
 
     int sec_index = sector->Write();
-
-    index = DM_NumSidedefs();
 
     DM_AddSidedef(sec_index, lower.c_str(), mid.c_str(),
                   upper.c_str(), x_offset & 1023, y_offset);
@@ -1889,7 +1878,25 @@ void CSG_DOOM_Write()
 //CSG2_Doom_TestRegions();
 //return;
  
+  DM_FreeStuff();
+
+  CSG_BSP(4.0);
+
+  CSG_SwallowBrushes();
+  CSG_DiscoverGaps();
+
+  //!!!!  CSG2_MakeMiniMap();
+
+  extrafloor_tag  = 9000;
+  extrafloor_slot = 0;
+
   DM_CreateSectors();
+
+  DM_LightingFloodFill();
+  DM_CoalesceSectors();
+
+  DM_AssignExtraFloorTags();
+  DM_CoalesceExtraFloors();
 
   DM_MakeLinedefs();
   DM_MergeColinearLines();
@@ -1900,7 +1907,7 @@ void CSG_DOOM_Write()
   DM_WriteLinedefs();
   DM_WriteThings();
 
-  // FIXME: Free everything
+  DM_FreeStuff();
 }
 
 
