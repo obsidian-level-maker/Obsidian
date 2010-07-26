@@ -75,6 +75,7 @@ public:
   // texturing stuff
 
   int pic;
+  int flags;
 
 public:
   nukem_wall_c(int _x1, int _y1, int _x2, int _y2) :
@@ -159,7 +160,6 @@ public:
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0)
   }
-#endif
 
   void CalcMiddle()
   {
@@ -183,6 +183,7 @@ public:
       mid_y /= (double)(count * 2);
     }
   }
+#endif
 
   nukem_wall_c *FindSnagWall(snag_c *snag)
   {
@@ -204,204 +205,6 @@ public:
   void WriteWalls();
 };
 
-
-class OLD_linedef_info_c 
-{
-public:
-  vertex_info_c *start;  // NULL means "unused linedef"
-  vertex_info_c *end;
-
-  sidedef_info_c *front;
-  sidedef_info_c *back;
-
-  int flags;
-  int type;   // 'special' in Hexen format
-  int tag;
-
-  u8_t args[5];
-
-  double length;
-
-  // similar linedef touching our start (end) vertex, or NULL if none.
-  // only takes front sidedefs into account.
-  // used for texture aligning.
-  linedef_info_c *sim_prev;
-  linedef_info_c *sim_next;
-
-public:
-  linedef_info_c() : start(NULL), end(NULL),
-                     front(NULL), back(NULL),
-                     flags(0), type(0), tag(0), length(0),
-                     sim_prev(NULL), sim_next(NULL),
-                     nk_front(NULL), nk_back(NULL)
-  {
-    args[0] = args[1] = args[2] = args[3] = args[4] = 0;
-  }
-
-  ~linedef_info_c()
-  { }
-
-  void CalcLength()
-  {
-    length = ComputeDist(start->x, start->y, end->x, end->y);
-  }
-
-  inline vertex_info_c *OtherVertex(const vertex_info_c *V) const
-  {
-    if (start == V)
-      return end;
-
-    SYS_ASSERT(end == V);
-    return start;
-  }
-
-  inline bool Valid() const
-  {
-    return (start != NULL);
-  }
-
-  void Kill()
-  {
-    start = end = NULL;
-  }
-
-  void Flip()
-  {
-    std::swap(start, end);
-    std::swap(front, back);
-  }
-
-  inline bool ShouldFlip() const
-  {
-    if (! front)
-      return true;
-
-    if (! back)
-      return false;
-
-    nukem_sector_c *F = front->sector;
-    nukem_sector_c *B = back->sector;
-
-    if (F->f_h != B->f_h) return (F->f_h > B->f_h);
-    if (F->c_h != B->c_h) return (F->c_h < B->c_h);
-
-    return false;
-  }
-
-  void Write();
-
-  inline bool CanMergeSides(const sidedef_info_c *A, const sidedef_info_c *B) const
-  {
-    if (! A || ! B)
-      return (!A && !B);
-
-    if (A->sector != B->sector)
-      return false;
-
-    // X offsets not done here
-
-    if (A->y_offset != B->y_offset &&
-        A->y_offset != IVAL_NONE   &&
-        B->y_offset != IVAL_NONE)
-      return false;
-
-    return A->SameTex(B);
-  }
-
-  bool ColinearWith(const linedef_info_c *B) const
-  {
-    int adx = end->x - start->x;
-    int ady = end->y - start->y;
-
-    int bdx = B->end->x - B->start->x;
-    int bdy = B->end->y - B->start->y;
-
-    return (adx * bdy == bdx * ady);
-  }
-
-  bool CanMerge(const linedef_info_c *B) const
-  {
-    if (! ColinearWith(B))
-      return false;
-
-    // test sidedefs
-    sidedef_info_c *B_front = B->front;
-    sidedef_info_c *B_back  = B->back;
-
-///---  if ((V == end) == (V == B->end))
-///---    std::swap(B_front, B_back);
-
-    if (! CanMergeSides(back,  B_back) ||
-        ! CanMergeSides(front, B_front))
-      return false;
-
-    if (  front->x_offset == IVAL_NONE ||
-        B_front->x_offset == IVAL_NONE)
-      return true;
-
-    int diff = B_front->x_offset - (front->x_offset + I_ROUND(length));
-
-    // the < 4 accounts for precision loss after multiple merges
-    return abs(diff) < 4; 
-  }
-
-  void Merge(linedef_info_c *B)
-  {
-    SYS_ASSERT(B->start == end);
-
-    end = B->end;
-
-    B->end->ReplaceLine(B, this);
-
-    // fix X offset on back sidedef
-    if (back && back->x_offset != IVAL_NONE)
-      back->x_offset += I_ROUND(B->length);
-
-    B->Kill();
-
-    CalcLength();
-  }
-
-  bool isFrontSimilar(const linedef_info_c *P) const
-  {
-    if (! back && ! P->back)
-      return (strcmp(front->mid.c_str(), P->front->mid.c_str()) == 0);
-
-    if (back && P->back)
-      return front->SameTex(P->front);
-
-    const linedef_info_c *L = this;
-
-    if (back)
-      std::swap(L, P);
-
-    // now L is single sided and P is double sided.
-
-///---  if (P->mid[0] != '-')
-///---    return false;
-
-    // allow either upper or lower to match
-    return (strcmp(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
-           (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
-  }
-
-  // here "greedy" means that from one side, both the upper and the lower
-  // will be visible at the same time.
-  inline bool isGreedy() const
-  {
-    if (! back)
-      return false;
-
-    int f1_h = front->sector->f_h;
-    int f2_h = back ->sector->f_h;
-
-    int c1_h = front->sector->c_h;
-    int c2_h = back ->sector->c_h;
-
-    return (f1_h < f2_h && c2_h < c1_h) ||
-           (f1_h > f2_h && c2_h > c1_h);
-  }
-};
 
 
 static std::vector<nukem_wall_c *>   nk_all_walls;
@@ -448,7 +251,7 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
 
 static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face)
 {
-  P->tex = atoi(face->getStr("tex", dummy_plane_tex.c_str()));
+  P->pic = atoi(face->getStr("tex", dummy_plane_tex.c_str()));
 
   // FIXME: other floor / ceiling stuff
 
@@ -527,14 +330,14 @@ static void NK_MakeSector(region_c *R)
   double f_delta = f_face->getDouble("delta_z");
   double c_delta = c_face->getDouble("delta_z");
 
-  dpuble f_h = B->t.z + f_delta;
-  dpuble c_h = T->b.z + c_delta;
+  double f_h = B->t.z + f_delta;
+  double c_h = T->b.z + c_delta;
 
-  S->f_h = I_ROUND(f_h * NK_HEIGHT_MUL);
-  S->c_h = I_ROUND(c_h * NK_HEIGHT_MUL);
+  S->floor.h = I_ROUND(f_h * NK_HEIGHT_MUL);
+  S->ceil.h  = I_ROUND(c_h * NK_HEIGHT_MUL);
 
-  if (S->c_h < S->f_h)
-      S->c_h = S->f_h;
+  if (S->ceil.h < S->floor.h)
+      S->ceil.h = S->floor.h;
 
 
   NK_GetPlaneInfo(&S->floor, f_face);
@@ -550,7 +353,7 @@ static void NK_MakeSector(region_c *R)
 
   if (T->bkind == BKIND_Sky)
   {
-    S->c_flags |= SECTOR_F_PARALLAX;
+    S->ceil.flags |= SECTOR_F_PARALLAX;
   }
 
 
@@ -576,7 +379,7 @@ static void NK_MakeSector(region_c *R)
 
 static void NK_CreateSectors()
 {
-  for (unsigned int i = 0 ; i < regions.size() ; i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     NK_MakeSector(all_regions[i]);
   }
@@ -754,7 +557,7 @@ static void NK_GetTexture(nukem_wall_c *W, csg_brush_c *B)
 
   csg_property_set_c *face = &vert->face;
 
-  const char *tex_name = face->GetStr("tex", dummy_wall_tex.c_str());
+  const char *tex_name = face->getStr("tex", dummy_wall_tex.c_str());
 
   W->pic = atoi(tex_name);
 
@@ -768,7 +571,7 @@ static void NK_TextureSolidWall(nukem_wall_c *W)
 
   if (W->snag->partner)
   {
-    region_c *N = W->snag->partner->region;
+    region_c *N = W->snag->partner->where;
 
     if (N->brushes.size() > 0)
     {
@@ -818,17 +621,17 @@ static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2)
   }
 
 
-  nukem_sector_c *S1 = W1->sector;
-  nukem_sector_c *S2 = W1->sector;
+  region_c *R1 = W1->sector->region;
+  region_c *R2 = W1->sector->region;
 
 
   csg_brush_c *brushes[2][3];
 
-  brushes[0][0] = S1->gaps.front()->bottom;
-  brushes[1][0] = S2->gaps.front()->bottom;
+  brushes[0][0] = R1->gaps.front()->bottom;
+  brushes[1][0] = R2->gaps.front()->bottom;
 
-  brushes[0][1] = S1->gaps.back()->top;
-  brushes[1][1] = S2->gaps.back()->top;
+  brushes[0][1] = R1->gaps.back()->top;
+  brushes[1][1] = R2->gaps.back()->top;
 
   brushes[0][2] = brushes[1][0];
   brushes[1][2] = brushes[0][0];
@@ -885,7 +688,7 @@ void nukem_wall_c::Write()
   int hi_tag = 0;
 
 
-  NK_AddWall(x, y, 999 /* FUCK FIXME !!!!!!!! right->index */,
+  NK_AddWall(x1, y1, 999 /* FUCK FIXME !!!!!!!! right->index */,
              partner ? partner->index : -1,
              partner ? partner->sector->index : -1,          
              flags, pic, 0,
@@ -896,13 +699,13 @@ void nukem_wall_c::Write()
 
 void nukem_sector_c::WriteSprites()
 {
-  for (unsigned int j = 0; j < S->entities.size(); j++)
+  for (unsigned int i = 0 ; i < entities.size() ; i++)
   {
-    entity_info_c *E = S->entities[j];
+    entity_info_c *E = entities[i];
 
-    int x = I_ROUND( E->x * NK_WALL_MUL)
-    int y = I_ROUND(-E->y * NK_WALL_MUL)
-    int z = I_ROUND( E->z * NK_HEIGHT_MUL)
+    int x = I_ROUND( E->x * NK_WALL_MUL);
+    int y = I_ROUND(-E->y * NK_WALL_MUL);
+    int z = I_ROUND( E->z * NK_HEIGHT_MUL);
 
     int type = atoi(E->name.c_str());
 
@@ -936,11 +739,11 @@ void nukem_sector_c::WriteSprites()
 void nukem_sector_c::AssignWallIndices(int *first, int *count)
 {
   *first = nk_current_wall;
-  *count = (int) S->walls.size();
+  *count = (int)walls.size();
 
-  for (unsigned int i = 0 ; i < S->walls.size() ; i++)
+  for (unsigned int i = 0 ; i < walls.size() ; i++)
   {
-    S->walls[i]->index = nk_current_wall;
+    walls[i]->index = nk_current_wall;
 
     nk_current_wall++;
   }
@@ -960,14 +763,13 @@ void nukem_sector_c::Write()
 {
   int first_wall, num_walls;
 
-  NK_AssignWallIndices(S->walls, &first_wall, &num_walls);
+  AssignWallIndices(&first_wall, &num_walls);
 
-  int c_flags = 0;
   int visibility = 1;
 
   NK_AddSector(first_wall, num_walls, visibility,
-               floor.h, floor.tex,
-               ceil.h,  ceil.tex,  ceil.flags,
+               floor.h, floor.pic,
+               ceil.h,  ceil.pic,  ceil.flags,
                0, 0);
 }
 
@@ -980,8 +782,8 @@ static void NK_WriteSectors()
   {
     nukem_sector_c *S = nk_all_sectors[i];
 
-    if (! S->used)
-      continue;
+///    if (! S->used)
+///      continue;
 
     S->index = (int)i;
 
@@ -997,8 +799,8 @@ static void NK_WriteWalls()
   {
     nukem_sector_c *S = nk_all_sectors[i];
 
-    if (! S->used)
-      continue;
+///    if (! S->used)
+///      continue;
 
     S->WriteWalls();
   }
