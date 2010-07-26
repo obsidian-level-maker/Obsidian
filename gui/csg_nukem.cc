@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  CSG 2.5D : DOOM and DUKE NUKEM output
+//  CSG : DUKE NUKEM output
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -31,27 +31,15 @@
 #include "ui_chooser.h"
 
 #include "csg_main.h"
-#include "dm_extra.h"
-#include "dm_glbsp.h"
-#include "dm_wad.h"
 #include "nk_level.h"
-#include "nk_structs.h"  // flags
-
-
-class nk_wall_c;
+#include "nk_structs.h"
 
 
 // Properties
-int solid_exfloor;    // disabled if <= 0
-int liquid_exfloor;
 
-extern bool wad_hexen;  // FIXME
 
 
 #define VOID_INDEX  -2
-
-static int extrafloor_tag;
-static int extrafloor_slot;
 
 
 #define SEC_IS_SKY       (0x1 << 16)
@@ -61,32 +49,11 @@ static int extrafloor_slot;
 
 double light_dist_factor = 800.0;
 
-bool smoother_lighting = false;
-
 
 class sector_info_c;
 class linedef_info_c;
 
 
-class extrafloor_c
-{
-public:
-  // dummy sector
-  sector_info_c * dummy_sec;
-
-  std::string w_tex;
-
-  std::vector<sector_info_c *> users;
-
-public:
-  extrafloor_c() : dummy_sec(NULL), w_tex(), users()
-  { }
-
-  ~extrafloor_c()
-  { } 
-
-  bool Match(const extrafloor_c *other) const;
-};
 
 
 class sector_info_c 
@@ -102,8 +69,6 @@ public:
   int special;
   int tag;
   int mark;
-
-  std::vector<extrafloor_c *> exfloors;
 
   int index;
 
@@ -124,26 +89,6 @@ public:
   ~sector_info_c()
   { }
 
-  bool SameExtraFloors(const sector_info_c *other) const
-  {
-    if (exfloors.size() != other->exfloors.size())
-      return false;
-
-    for (unsigned int i = 0; i < exfloors.size(); i++)
-    {
-      extrafloor_c *E1 = exfloors[i];
-      extrafloor_c *E2 = other->exfloors[i];
-
-      if (E1 == E2)
-        continue;
-
-      if (! E1->Match(E2))
-        return false;
-    }
-
-    return true;
-  }
-
   bool Match(const sector_info_c *other) const
   {
     // deliberately absent: misc_flags
@@ -155,8 +100,7 @@ public:
            (tag  == other->tag)  &&
            (mark == other->mark) &&
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
-           SameExtraFloors(other);
+           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0)
   }
 
   void CalcMiddle()
@@ -186,11 +130,6 @@ public:
   {
     if (index < 0)
     {
-      for (unsigned int k = 0; k < exfloors.size(); k++)
-      {
-//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
-      }
-
       index = DM_NumSectors();
 
       DM_AddSector(f_h, f_tex.c_str(),
@@ -201,17 +140,6 @@ public:
     return index;
   }
 };
-
-
-bool extrafloor_c::Match(const extrafloor_c *other) const
-{
-  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
-    return false;
-
-  SYS_ASSERT(dummy_sec && other->dummy_sec);
-
-  return dummy_sec->Match(other->dummy_sec);
-}
 
 
 class vertex_info_c 
@@ -534,7 +462,6 @@ static std::vector<linedef_info_c *> dm_linedefs;
 static std::vector<sidedef_info_c *> dm_sidedefs;
 
 static std::vector<sector_info_c *>  dm_sectors;
-static std::vector<extrafloor_c *>   dm_exfloors;
 
 
 void DM_FreeLevelStuff(void)
@@ -545,13 +472,11 @@ void DM_FreeLevelStuff(void)
   for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
   for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
   for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
-  for (i=0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
 
   dm_vertices.clear();
   dm_linedefs.clear();
   dm_sidedefs.clear();
   dm_sectors. clear();
-  dm_exfloors.clear();
 }
 
 
@@ -698,62 +623,6 @@ void DM_TestRegions(void)
 //------------------------------------------------------------------------
 
 
-static void MakeExtraFloor(merge_region_c *R, sector_info_c *sec,
-                           merge_gap_c *T, merge_gap_c *B)
-{
-  // find the brush which we will use for the side texture
-  csg_brush_c *MID = NULL;
-  double best_h = 0;
-
-  // FIXME use f_sides/b_sides (FindSideFace)
-  for (unsigned int j = 0; j < R->brushes.size(); j++)
-  {
-    csg_brush_c *A = R->brushes[j];
-
-    if (A->b.z > B->t_brush->b.z - EPSILON &&
-        A->t.z < T->b_brush->t.z + EPSILON)
-    {
-      double h = A->t.z - A->b.z;
-
-      // TODO: priorities
-
-//      if (MID && fabs(h - best_h) < EPSILON)
-//      { /* same height, prioritise */ }
-
-      if (h > best_h)
-      {
-        best_h = h;
-        MID = A;
-      }
-    }
-  }
-
-  SYS_ASSERT(MID);
-
-
-  extrafloor_c *EF = new extrafloor_c;
-
-  dm_exfloors.push_back(EF);
-
-//FIXME !!!!  EF->w_tex = MID->w_face->tex;
-
-  EF->users.push_back(sec);
-
-
-  EF->dummy_sec = new sector_info_c;
-
-  EF->dummy_sec->f_h = I_ROUND(B->t_brush->b.z);
-  EF->dummy_sec->c_h = I_ROUND(T->b_brush->t.z);
-
-//FIXME !!!!  EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
-//FIXME !!!!  EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
-
-
-  // FIXME !!!! light, special
-
-
-  sec->exfloors.push_back(EF);
-}
 
 
 static void MakeSector(merge_region_c *R)
@@ -868,29 +737,6 @@ static void MakeSector(merge_region_c *R)
     }
   }
 
-
-  // find brushes floating in-between --> make extrafloors
-
-  // Note: top-to-bottom is the most natural order, because when
-  // the engine adds an extrafloor into a sector, the upper part
-  // remains the same and the lower part gets the new properties
-  // (lighting/special) from the extrafloor.
-
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
-  {
-    merge_gap_c *T = R->gaps[g];
-    merge_gap_c *B = R->gaps[g-1];
-
-    if (solid_exfloor > 0)
-    {
-      MakeExtraFloor(R, S, T, B);
-    }
-    else
-    {
-      LogPrintf("WARNING: discarding extrafloor @ (%1.0f, %1.0f, %1.0f..%1.0f\n",
-                S->mid_x, S->mid_y, B->GetZ2(), T->GetZ1());
-    }
-  }
 }
 
 static void LightingFloodFill(void)
@@ -1040,95 +886,10 @@ static void CoalesceSectors(void)
   }
 }
 
-static void CoalesceExtraFloors(void)
-{
-  for (int loop=0; loop < 99; loop++)
-  {
-    int changes = 0;
 
-    for (unsigned int i = 0; i < mug_segments.size(); i++)
-    {
-      merge_segment_c *S = mug_segments[i];
-
-      if (! S->front || ! S->back)
-        continue;
-
-      if (S->front->index <= 0 || S->back->index <= 0)
-        continue;
-
-      sector_info_c *F = dm_sectors[S->front->index];
-      sector_info_c *B = dm_sectors[S->back ->index];
-      
-      for (unsigned int j = 0; j < F->exfloors.size(); j++)
-      for (unsigned int k = 0; k < B->exfloors.size(); k++)
-      {
-        extrafloor_c *E1 = F->exfloors[j];
-        extrafloor_c *E2 = B->exfloors[k];
-
-        // already merged?
-        if (E1 == E2)
-          continue;
-
-        if (! E1->Match(E2))
-          continue;
-
-        // don't merge with special stuff
-        if (F->tag < 9000 || B->tag < 9000)
-          continue;
-        
-        // limit how many sectors we can share
-        if (E1->users.size() + E2->users.size() > 8)
-          continue;
-
-        // choose one of them. Using the minimum pointer is a
-        // bit arbitrary, but is repeatable and transitive.
-        extrafloor_c * EF    = MIN(E1, E2);
-        extrafloor_c * other = MAX(E1, E2);
-
-        F->exfloors[j] = EF;
-        B->exfloors[k] = EF;
-
-        // transfer the users
-        while (other->users.size() > 0)
-        {
-          EF->users.push_back(other->users.back());
-          other->users.pop_back();
-        }
-
-        changes++;
-      }
-    }
-
-// fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
-
-    if (changes == 0)
-      break;
-  }
-}
-
-static void AssignExtraFloorTags(void)
-{
-  for (unsigned int j = 0; j < mug_regions.size(); j++)
-  {
-    merge_region_c *R = mug_regions[j];
-
-    if (R->index <= 0)
-      continue;
-
-    sector_info_c *S = dm_sectors[R->index];
-
-    if (S->exfloors.size() > 0 && S->tag <= 0)
-    {
-      S->tag = extrafloor_tag++;
-    }
-  }
-}
 
 static void CreateSectors(void)
 {
-  extrafloor_tag  = 9000;
-  extrafloor_slot = 0;
-
   dm_sectors.clear();
 
   // #0 represents VOID (never written to map lump)
@@ -1144,10 +905,6 @@ static void CreateSectors(void)
   LightingFloodFill();
 
   CoalesceSectors();
-
-  AssignExtraFloorTags();
-
-  CoalesceExtraFloors();
 }
 
 
@@ -1169,84 +926,6 @@ static vertex_info_c * MakeVertex(merge_vertex_c *MV)
   V->y = I_ROUND(MV->y);
 
   return V;
-}
-
-
-static void WriteExtraFloor(sector_info_c *sec, extrafloor_c *EF)
-{
-#if 0  ///  FIXME  FIXME
-
-  if (EF->sec->index >= 0)
-    return;
-
-  EF->sec->index = DM_NumSectors();
-
-  DM_AddSector(EF->sec->f_h, EF->sec->f_tex.c_str(),
-               EF->sec->c_h, EF->sec->c_tex.c_str(),
-               EF->sec->light, EF->sec->special, EF->sec->tag);
-
-
-  extrafloor_slot++;
-
-
-  int x1 = bounds_x1 +       (extrafloor_slot % 32) * 64;
-  int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
-
-  if (extrafloor_slot & 1024) x1 += 2200;
-  if (extrafloor_slot & 2048) y1 -= 2200;
-
-  if (extrafloor_slot & 4096)
-    Main_FatalError("Too many extrafloors! (over %d)\n", extrafloor_slot);
-
-  int x2 = x1 + 32;
-  int y2 = y1 + 32;
-
-  int xm = x1 + 16;
-  int ym = y1 + 16;
-
-  bool morev = (EF->users.size() > 4);
-
-  int vert_ref = DM_NumVertexes();
-
-  if (true)  DM_AddVertex(x1, y1);
-  if (morev) DM_AddVertex(x1, ym);
-
-  if (true)  DM_AddVertex(x1, y2);
-  if (morev) DM_AddVertex(xm, y2);
-
-  if (true)  DM_AddVertex(x2, y2);
-  if (morev) DM_AddVertex(x2, ym);
-
-  if (true)  DM_AddVertex(x2, y1);
-  if (morev) DM_AddVertex(xm, y1);
-
- 
-  int side_ref = DM_NumSidedefs();
-
-  DM_AddSidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
-
-
-  int vert_num = morev ? 8 : 4;
-
-  for (int n = 0; n < vert_num; n++)
-  {
-    int type = 0;
-    int tag  = 0;
-
-    if (n < (int)EF->users.size())
-    {
-      type = solid_exfloor;
-      tag  = EF->users[n]->tag;
-
-      SYS_ASSERT(tag > 0);
-    }
-
-    DM_AddLinedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
-                  side_ref, -1 /* side2 */,
-                  type, 1 /* impassible */,
-                  tag, NULL /* args */);
-  }
-#endif
 }
 
 
