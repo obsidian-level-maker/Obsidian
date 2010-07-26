@@ -31,6 +31,8 @@
 #include "ui_chooser.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
+
 #include "nk_level.h"
 #include "nk_structs.h"
 
@@ -38,8 +40,8 @@
 // Properties
 
 
-#define NK_FACTOR  10
-#define NK_HT_FACTOR  -200
+#define NK_WALL_MUL      10
+#define NK_HEIGHT_MUL  -200
 
 
 #define VOID_INDEX  -2
@@ -64,20 +66,24 @@ public:
 
   std::string f_tex;
   std::string c_tex;
-  
-  int light;
-  int special;
-  int tag;
+
+  region_c *region;
+
+  int f_flags;
+  int c_flags;
+
   int mark;
+
+int light;
+int special;
+int tag;
 
   int index;
 
-  merge_region_c *region;  // this is invalid after CoalesceSectors
+double mid_x, mid_y;  // invalid after CoalesceSectors
 
-  double mid_x, mid_y;  // invalid after CoalesceSectors
-
-  int misc_flags;
-  int valid_count;
+int misc_flags;
+int valid_count;
 
 public:
   nukem_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
@@ -353,12 +359,15 @@ public:
 
   nukem_wall_c *partner;
 
+  nukem_sector_c *sector;
+
   int index;
 
 public:
-  nukem_wall_c(snag_c *S)
-      line(_L), right(NULL), back(NULL),
-      side(_S), index(-1)
+  nukem_wall_c(int _x1, int _y1, int _x2, int _y2) :
+      x1(_x1), y1(_y1), x2(_x2), y2(_y2),
+      snag(NULL), partner(NULL),
+      index(-1)
   { }
 
   ~nukem_wall_c() {}
@@ -450,39 +459,65 @@ void NK_FreeStuff()
 }
 
 
-static void MakeSector(merge_region_c *R)
+static void NK_MakeWall(nukem_sector_c *S, snag_c *snag)
+{
+  int x1 = I_ROUND(snag->x1 * NK_WALL_MUL);
+  int y1 = I_ROUND(snag->y1 * NK_WALL_MUL);
+
+  int x2 = I_ROUND(snag->x2 * NK_WALL_MUL);
+  int y2 = I_ROUND(snag->y2 * NK_WALL_MUL);
+
+  if (x1 == x2 && y1 == y2)
+  {
+    fprintf(stderr, "WARNING: degenerate wall @ (%d %d)\n", x1, y1);
+    return;
+  }
+
+
+  nukem_wall_c *W = new nukem_wall_c(x1, y1, x2, y2);
+
+  S->AddWall(W);
+}
+
+
+static void NK_MakeSector(region_c *R)
 {
   // completely solid (no gaps) ?
   if (R->gaps.size() == 0)
   {
-    R->index = 0;
+    R->index = -1;
     return;
   }
 
-  csg_brush_c *B = R->gaps.front()->b_brush;
-  csg_brush_c *T = R->gaps.back() ->t_brush;
-
-
-  R->index = (int)dm_sectors.size();
 
   nukem_sector_c *S = new nukem_sector_c;
 
-  dm_sectors.push_back(S);
-
-
   S->region = R;
 
-  S->CalcMiddle();
+  R->index = (int)nk_all_sectors.size();
+
+  nk_all_sectors.push_back(S);
+
+
+  csg_brush_c *B = R->gaps.front()->bottom;
+  csg_brush_c *T = R->gaps.back() ->top;
 
   csg_property_set_c *f_face = &B->t.face;
   csg_property_set_c *c_face = &T->b.face;
+
+
+///???  S->CalcMiddle();
+
 
   // determine floor and ceiling heights
   double f_delta = f_face->getDouble("delta_z");
   double c_delta = c_face->getDouble("delta_z");
 
-  S->f_h = I_ROUND(B->t.z + f_delta);
-  S->c_h = I_ROUND(T->b.z + c_delta);
+  dpuble f_h = B->t.z + f_delta;
+  dpuble c_h = T->b.z + c_delta;
+
+  S->f_h = I_ROUND(f_h * NK_HEIGHT_MUL);
+  S->c_h = I_ROUND(c_h * NK_HEIGHT_MUL);
 
   if (S->c_h < S->f_h)
       S->c_h = S->f_h;
@@ -497,40 +532,18 @@ static void MakeSector(merge_region_c *R)
   S->mark = f_mark ? f_mark : c_mark;
 
 
-  // floors have priority over ceilings
-  int f_kind = f_face->getInt("kind");
-  int c_kind = c_face->getInt("kind");
+  // FIXME: other floor / ceiling stuff
 
-  int f_tag = f_face->getInt("tag");
-  int c_tag = c_face->getInt("tag");
-
-  if (f_kind || ! c_kind)
-  {
-    S->special = f_kind;
-    S->tag = (f_tag > 0) ? f_tag : c_tag;
-  }
-  else
-  {
-    S->special = c_kind;
-    S->tag = (c_tag > 0) ? c_tag : f_tag;
-  }
-
-
-  int f_light = f_face->getInt("light");
-  int c_light = c_face->getInt("light");
-
-  if (f_light > 0 || c_light > 0)
-  {
-    S->light = (int)(256 * MAX(f_light, c_light));
-    S->misc_flags |= SEC_PRIMARY_LIT;
-  }
 
   if (T->bkind == BKIND_Sky)
-    S->misc_flags |= SEC_IS_SKY;
+  {
+    S->c_flags |= SECTOR_F_PARALLAX;
+  }
 
 
   // handle Lighting brushes
 
+#if 0
   for (unsigned int i = 0; i < R->brushes.size(); i++)
   {
     csg_brush_c *B = R->brushes[i];
@@ -561,9 +574,19 @@ static void MakeSector(merge_region_c *R)
       S->misc_flags |= SEC_PRIMARY_LIT;
     }
   }
+#endif
 
+
+  // make walls
+
+  for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+  {
+    NK_MakeWall(S, R->snags[k]);
+  }
 }
 
+
+#if 0
 static void LightingFloodFill(void)
 {
   int i;
@@ -671,7 +694,10 @@ static void LightingFloodFill(void)
       S->light = 255;
   }
 }
+#endif
 
+
+#if 0
 static void CoalesceSectors(void)
 {
   for (int loop=0; loop < 99; loop++)
@@ -710,25 +736,15 @@ static void CoalesceSectors(void)
       return;
   }
 }
+#endif
 
 
 static void NK_CreateSectors(void)
 {
-  dm_sectors.clear();
-
-  // #0 represents VOID (never written to map lump)
-  dm_sectors.push_back(new nukem_sector_c);
-
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
+  for (unsigned int i = 0 ; i < regions.size() ; i++)
   {
-    merge_region_c *R = mug_regions[i];
-
-    MakeSector(R);
+    NK_MakeSector(all_regions[i]);
   }
-
-  LightingFloodFill();
-
-  CoalesceSectors();
 }
 
 
@@ -1165,10 +1181,6 @@ static void NK_WriteWalls()
     }
 
 
-    NK_AddSector(first, count, visibility,
-                 S->f_h * NK_HT_FACTOR, atoi(S->f_tex.c_str()),
-                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags,
-                 S->special, S->tag);
 
 
     // WRITE THE WALL LOOP
@@ -1244,9 +1256,9 @@ static void NK_WriteSprites(void)
     }
 
 
-    NK_AddSprite(I_ROUND( E->x * NK_FACTOR),
-                 I_ROUND(-E->y * NK_FACTOR),
-                 I_ROUND( E->z * NK_HT_FACTOR),
+    NK_AddSprite(I_ROUND( E->x * NK_WALL_MUL),
+                 I_ROUND(-E->y * NK_WALL_MUL),
+                 I_ROUND( E->z * NK_HEIGHT_MUL),
                  type, angle, sec,
                  lo_tag, hi_tag);
   }
@@ -1273,8 +1285,8 @@ static void NK_WriteSectors()
     int visibility = 1;
 
     NK_AddSector(first_wall, num_walls, visibility,
-                 S->f_h * NK_HT_FACTOR, atoi(S->f_tex.c_str()),
-                 S->c_h * NK_HT_FACTOR, atoi(S->c_tex.c_str()), c_flags,
+                 S->f_h, atoi(S->f_tex.c_str()),
+                 S->c_h, atoi(S->c_tex.c_str()), c_flags,
                  S->special, S->tag);
   }
 }
@@ -1284,6 +1296,9 @@ static void NK_WriteSectors()
 
 void CSG_NUKEM_Write()
 {
+  nk_all_sectors.clear();
+  nk_all_walls.clear();
+
   CSG_BSP(1.0);
 
   CSG_SwallowBrushes();
@@ -1291,12 +1306,14 @@ void CSG_NUKEM_Write()
 
   NK_CreateSectors();
 
-  NK_MakeLinedefs();
+//  NK_MakeLinedefs();
 //  NK_MergeColinearLines();
 
   NK_WriteSectors();
   NK_WriteWalls();
   NK_WriteSprites();
+
+  NK_FreeStuff();
 }
 
 

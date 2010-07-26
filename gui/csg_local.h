@@ -84,6 +84,9 @@ public:
   // (only valid AFTER CSG_SimpleCoalesce)
   int equiv_id;
 
+  // used by DOOM (etc) conversion code
+  int index;
+
 public:
   region_c();
 
