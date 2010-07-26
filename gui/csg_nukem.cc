@@ -70,33 +70,21 @@ public:
 
   nukem_sector_c *sector;
 
-  // !!!!  FIXME textures and stuff
-
   int index;
+
+  // texturing stuff
+
+  int pic;
 
 public:
   nukem_wall_c(int _x1, int _y1, int _x2, int _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-      snag(NULL), partner(NULL),
-      index(-1)
+      snag(NULL), partner(NULL), index(-1),
+      pic(0)
   { }
 
-  ~nukem_wall_c() {}
-
-  int GetX() const
-  {
-    return (side == 0) ? line->start->x : line->end->x;
-  }
-
-  int GetY() const
-  {
-    return (side == 0) ? line->start->y : line->end->y;
-  }
-
-  int SectorIndex() const
-  {
-    return (side == 0) ? line->front->sector->index : line->back->sector->index;
-  }
+  ~nukem_wall_c()
+  { }
 
   void Write();
 };
@@ -106,11 +94,11 @@ class nukem_plane_c
 {
 public:
   int h;
-  int tex;
+  int pic;
   int flags;
 
 public:
-  nukem_plane_c() : h(0), tex(0), flags(0)
+  nukem_plane_c() : h(0), pic(0), flags(0)
   { }
 
   ~nukem_plane_c()
@@ -436,13 +424,13 @@ void NK_FreeStuff()
 }
 
 
-static void NK_MakeWall(nukem_sector_c *S, snag_c *snag)
+static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
 {
-  int x1 = I_ROUND(snag->x1 * NK_WALL_MUL);
-  int y1 = I_ROUND(snag->y1 * NK_WALL_MUL);
+  int x1 = I_ROUND( snag->x1 * NK_WALL_MUL);
+  int y1 = I_ROUND(-snag->y1 * NK_WALL_MUL);
 
-  int x2 = I_ROUND(snag->x2 * NK_WALL_MUL);
-  int y2 = I_ROUND(snag->y2 * NK_WALL_MUL);
+  int x2 = I_ROUND( snag->x2 * NK_WALL_MUL);
+  int y2 = I_ROUND(-snag->y2 * NK_WALL_MUL);
 
   if (x1 == x2 && y1 == y2)
   {
@@ -575,7 +563,7 @@ static void NK_MakeSector(region_c *R)
 
   for (i = 0 ; i < R->snags.size() ; i++)
   {
-    NK_MakeWall(S, R->snags[i]);
+    NK_MakeBasicWall(S, R->snags[i]);
   }
 
 
@@ -583,28 +571,6 @@ static void NK_MakeSector(region_c *R)
 
   for (i = 0 ; i < R->entities.size() ; i++)
     S->AddEntity(R->entities[i]);
-}
-
-
-static void NK_PartnerWalls()
-{
-  for (unsigned int i = 0 ; i < nk_all_sectors.size() ; i++)
-  {
-    nukem_sector_c *S = nk_all_sectors[i];
-
-    for (unsigned int k = 0 ; k < S->walls.size() ; k++)
-    {
-      nukem_wall_c *W = S->walls[k];
-
-      region_c *N = W->snag->partner ? W->snag->partner->where : NULL;
-
-      if (N && N->index >= 0)
-      {
-        nukem_sector_c *T = nk_all_sectors[N->index];
-
-        W->partner = T->FindSnagWall(W->snag->partner);
-    }
-  }
 }
 
 
@@ -773,207 +739,155 @@ static void CoalesceSectors(void)
 
 //------------------------------------------------------------------------
 
-
-static int NaturalXOffset(linedef_info_c *G, int side)
+static void NK_GetTexture(nukem_wall_c *W, csg_brush_c *B)
 {
-  double along;
-  
-  if (side == 0)
-    along = AlongDist(0, 0,  G->start->x, G->start->y, G->end->x, G->end->y);
-  else
-    along = AlongDist(0, 0,  G->end->x, G->end->y, G->start->x, G->start->y);
+  SYS_ASSERT(B);
 
-  return I_ROUND(- along);
-}
+  brush_vert_c *vert;
 
-static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_offset) 
-{
-  double along = 0;
-  
-  if (V)
-  {
-    if (side == 0)
-      along = ComputeDist(V->x, V->y, G->start->x, G->start->y);
-    else
-      along = ComputeDist(V->x, V->y, G->end->x, G->end->y);
-  }
+  // FIXME !!!  find brush_Vert using W->snag
 
-  return (int)(along + x_offset);
-}
+  if (! vert)
+    vert = B->verts[0];
 
-static int CalcRailYOffset(brush_vert_c *rail, int base_h)
-{
-  int y_offset = I_ROUND(rail->parent->b.z) - base_h;
+  SYS_ASSERT(vert);
 
-  return y_offset;   ///--- MAX(0, y_offset);
+  csg_property_set_c *face = &vert->face;
+
+  const char *tex_name = face->GetStr("tex", dummy_wall_tex.c_str());
+
+  W->pic = atoi(tex_name);
+
+  // FIXME  offsets, shade  etc...
 }
 
 
-static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
-                       merge_region_c *F, merge_region_c *B,
-                       brush_vert_c *rail,
-                       bool *l_peg, bool *u_peg)
+static void NK_TextureSolidWall(nukem_wall_c *W)
 {
-  if (! (F && F->index > 0))
-    return NULL;
+  const char *tex_name = dummy_wall_tex.c_str();
 
-///  int index = (int)dm_sidedefs.size();
-
-  sidedef_info_c *SD = new sidedef_info_c;
-
-  dm_sidedefs.push_back(SD);
-
-  nukem_sector_c *S = dm_sectors[F->index];
-
-  SD->sector = S;
-
-  // the 'natural' X/Y offsets
-  SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
-  SD->y_offset = - S->c_h;
-
-  if (B && B->index > 0)
+  if (W->snag->partner)
   {
-    nukem_sector_c *BS = dm_sectors[B->index];
+    region_c *N = W->snag->partner->region;
 
-    csg_brush_c *l_brush = B->gaps.front()->b_brush;
-    csg_brush_c *u_brush = B->gaps.back() ->t_brush;
-
-    SYS_ASSERT(l_brush && u_brush);
-
-    brush_vert_c *l_vert = G->FindSide(l_brush);
-    brush_vert_c *u_vert = G->FindSide(u_brush);
-
-    if (! l_vert) l_vert = l_brush->verts[0];
-    if (! u_vert) u_vert = u_brush->verts[0];
-
-    SYS_ASSERT(l_vert && u_vert);
-
-    csg_property_set_c *lower_W = &l_vert->face;
-    csg_property_set_c *upper_W = &u_vert->face;
-
-    SD->lower = lower_W->getStr("tex", dummy_wall_tex.c_str());
-    SD->upper = upper_W->getStr("tex", dummy_wall_tex.c_str());
-
-    if (lower_W->getInt("peg")) *l_peg = true;
-    if (upper_W->getInt("peg")) *u_peg = true;
-
-    csg_property_set_c *rail_W = rail ? &rail->face : NULL;
-
-    if (rail_W)
+    if (N->brushes.size() > 0)
     {
-      SD->mid = rail_W->getStr("tex", "-");
+      // FIXME: select brush properly
 
-      *l_peg = false;
-    }
-
-    int r_ox = IVAL_NONE;
-    if (rail_W) r_ox = rail_W->getInt("x_offset", r_ox);
-
-    int l_ox = lower_W->getInt("x_offset", IVAL_NONE);
-    int l_oy = lower_W->getInt("y_offset", IVAL_NONE);
-
-    int u_ox = upper_W->getInt("x_offset", IVAL_NONE);
-    int u_oy = upper_W->getInt("y_offset", IVAL_NONE);
-
-    if (r_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, rail, r_ox);
-    else if (l_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, l_vert, l_ox);
-    else if (u_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, u_vert, u_ox);
-
-    if (rail_W)
-      SD->y_offset = CalcRailYOffset(rail, MAX(S->f_h, BS->f_h));
-    else if (l_oy != IVAL_NONE)
-      SD->y_offset = l_oy;
-    else if (u_oy != IVAL_NONE)
-      SD->y_offset = u_oy;
-  }
-  else  // one-sided line
-  {
-    double mz = (S->f_h + S->c_h) / 2.0;
-
-    brush_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
-
-    brush_vert_c *m_side = CSG2_FindSideFace(G, mz, side == 1, m_vert);
-
-    if (! m_side)
-    {
-      SD->mid = dummy_wall_tex.c_str();
-    }
-    else
-    {
-      csg_property_set_c *mid_W = &m_side->face;
-
-      SD->mid = mid_W->getStr("tex", dummy_wall_tex.c_str());
-
-      if (mid_W->getInt("peg")) *l_peg = true;
-
-      int ox = mid_W->getInt("x_offset", IVAL_NONE);
-      int oy = mid_W->getInt("y_offset", IVAL_NONE);
-
-      if (ox != IVAL_NONE)
-        SD->x_offset = CalcXOffset(G, side, m_vert, ox);
-
-      if (oy != IVAL_NONE)
-        SD->y_offset = oy;
+      NK_GetTexture(W, N->brushes[0]);
+      return;
     }
   }
 
-  return SD;
+  W->pic = atoi(tex_name);
 }
 
+
+static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2)
+{
+  W1->flags |= WALL_F_PEGGED;
+  W2->flags |= WALL_F_PEGGED;
+
+  // figure out which part of the wall sides (upper and lower) should
+  // be used to get the texturing / offsets / etc for each wall.
+  //
+  // When one side has both a lower and upper visible, the SWAP_LOWER
+  // flag is needed to allow different textures on each surface.  It
+  // causes the information to be obtained from the partner wall.
+
+  int f1 = W1->sector->floor.h;  
+  int f2 = W2->sector->floor.h;  
+
+  int c1 = W1->sector->ceil.h;  
+  int c2 = W2->sector->ceil.h;  
+
+  // 0 = lower, 1 = upper, 2 = lower on other side
+  int what1 = 0;
+  int what2 = 0;
+
+  if (c1 > c2) what1 = 1;
+  if (c1 < c2) what2 = 1;
+
+  if (c1 > c2 && f1 < f2) what2 = 2;
+  if (c1 < c2 && f1 > f2) what1 = 2;
+
+  if (what1 == 2 || what2 == 2)
+  {
+    W1->flags |= WALL_F_SWAP_LOWER;
+    W2->flags |= WALL_F_SWAP_LOWER;
+  }
+
+
+  nukem_sector_c *S1 = W1->sector;
+  nukem_sector_c *S2 = W1->sector;
+
+
+  csg_brush_c *brushes[2][3];
+
+  brushes[0][0] = S1->gaps.front()->bottom;
+  brushes[1][0] = S2->gaps.front()->bottom;
+
+  brushes[0][1] = S1->gaps.back()->top;
+  brushes[1][1] = S2->gaps.back()->top;
+
+  brushes[0][2] = brushes[1][0];
+  brushes[1][2] = brushes[0][0];
+
+
+  NK_GetTexture(W1, brushes[0][what1]);
+  NK_GetTexture(W2, brushes[1][what2]);
+}
+
+
+static void NK_PartnerWalls()
+{
+  for (unsigned int i = 0 ; i < nk_all_sectors.size() ; i++)
+  {
+    nukem_sector_c *S = nk_all_sectors[i];
+
+    for (unsigned int k = 0 ; k < S->walls.size() ; k++)
+    {
+      nukem_wall_c *W = S->walls[k];
+
+      if (W->partner)  // already done
+        continue;
+
+      region_c *N = W->snag->partner ? W->snag->partner->where : NULL;
+
+      if (N && N->index >= 0)
+      {
+        nukem_sector_c *T = nk_all_sectors[N->index];
+
+        W->partner = T->FindSnagWall(W->snag->partner);
+
+        if (W->partner)
+          W->partner->partner = W;
+      }
+
+      if (W->partner)
+        NK_TextureWallPair(W, W->partner);
+      else
+        NK_TextureSolidWall(W);
+    }
+  }
+}
 
 
 //----------------------------------------------------------------------
 
 void nukem_wall_c::Write()
 {
-  int pic;
-  int flags = 0;
-
-  if (! back)
-  {
-    pic = atoi(line->front->mid.c_str());
-  }
-  else if (line->isGreedy())
-  {
-    int f1_h = line->front->sector->f_h;
-    int f2_h = line->back ->sector->f_h;
-
-    bool use_upper = ((side==0) == (f1_h < f2_h));
-
-    const sidedef_info_c *SD = (f1_h < f2_h) ? line->front : line->back;
-
-    pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
-
-    flags |= WALL_F_SWAP_LOWER;
-  }
-  else
-  {
-    int c1_h = line->front->sector->c_h;
-    int c2_h = line->back ->sector->c_h;
-
-    bool use_upper = (side==0) ? (c2_h < c1_h) : (c1_h < c2_h);
-
-    const sidedef_info_c *SD = (side==0) ? line->front : line->back;
-
-    pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
-  }
-
-  if (back)
-    flags |= WALL_F_PEGGED;
-
-  int xscale = 1 + (int)line->length / 16;
+  int xscale = 8; // FIXME  1 + (int)line->length / 16;
   if (xscale > 255)
     xscale = 255;
 
-  int lo_tag = (side==0) ? line->type : 0;
-  int hi_tag = (side==0) ? line->tag  : 0;
+  int lo_tag = 0;  // FIXME
+  int hi_tag = 0;
 
 
-  NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
-             back ? back->index : -1, back ? back->SectorIndex() : -1,
+  NK_AddWall(x, y, 999 /* FUCK FIXME !!!!!!!! right->index */,
+             partner ? partner->index : -1,
+             partner ? partner->sector->index : -1,          
              flags, pic, 0,
              xscale, 8, 0, 0,
              lo_tag, hi_tag);
