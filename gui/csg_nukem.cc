@@ -64,13 +64,13 @@ public:
   int x1, y1;
   int x2, y2;
 
-  //....  FIXME
-
   snag_c *snag;
 
   nukem_wall_c *partner;
 
   nukem_sector_c *sector;
+
+  // !!!!  FIXME textures and stuff
 
   int index;
 
@@ -98,57 +98,7 @@ public:
     return (side == 0) ? line->front->sector->index : line->back->sector->index;
   }
 
-  void Write()
-  {
-    int pic;
-    int flags = 0;
-
-    if (! back)
-    {
-      pic = atoi(line->front->mid.c_str());
-    }
-    else if (line->isGreedy())
-    {
-      int f1_h = line->front->sector->f_h;
-      int f2_h = line->back ->sector->f_h;
-
-      bool use_upper = ((side==0) == (f1_h < f2_h));
-
-      const sidedef_info_c *SD = (f1_h < f2_h) ? line->front : line->back;
-
-      pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
-
-      flags |= WALL_F_SWAP_LOWER;
-    }
-    else
-    {
-      int c1_h = line->front->sector->c_h;
-      int c2_h = line->back ->sector->c_h;
-
-      bool use_upper = (side==0) ? (c2_h < c1_h) : (c1_h < c2_h);
-
-      const sidedef_info_c *SD = (side==0) ? line->front : line->back;
-
-      pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
-    }
-
-    if (back)
-      flags |= WALL_F_PEGGED;
-
-    int xscale = 1 + (int)line->length / 16;
-    if (xscale > 255)
-      xscale = 255;
-
-    int lo_tag = (side==0) ? line->type : 0;
-    int hi_tag = (side==0) ? line->tag  : 0;
-
-
-    NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
-               back ? back->index : -1, back ? back->SectorIndex() : -1,
-               flags, pic, 0,
-               xscale, 8, 0, 0,
-               lo_tag, hi_tag);
-  }
+  void Write();
 };
 
 
@@ -258,6 +208,12 @@ public:
 
     return NULL;
   }
+
+  void AssignWallIndices(int *first, int *count);
+
+  void Write();
+  void WriteSprites();
+  void WriteWalls();
 };
 
 
@@ -463,6 +419,8 @@ public:
 static std::vector<nukem_wall_c *>   nk_all_walls;
 static std::vector<nukem_sector_c *> nk_all_sectors;
 
+static int nk_current_wall;
+
 
 //------------------------------------------------------------------------
 
@@ -497,6 +455,52 @@ static void NK_MakeWall(nukem_sector_c *S, snag_c *snag)
   // FIXME: MORE STUFF !!!!!!
 
   S->AddWall(W);
+}
+
+
+static void NK_GetPlaneInfo(nukem_plane_c *P, csg_property_set_c *face)
+{
+  P->tex = atoi(face->getStr("tex", dummy_plane_tex.c_str()));
+
+  // FIXME: other floor / ceiling stuff
+
+}
+
+
+static void NK_DoLightingBrush(...)
+{
+#if 0
+  for (unsigned int i = 0; i < R->brushes.size(); i++)
+  {
+    csg_brush_c *B = R->brushes[i];
+
+    if (B->bkind != BKIND_Light)
+      continue;
+
+    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
+      continue;
+
+    csg_property_set_c *t_face = &B->t.face;
+    csg_property_set_c *b_face = &B->b.face;
+
+    double raw = b_face->getInt("light", t_face->getInt("light"));
+    int light = I_ROUND(raw * 256);
+
+    if (light < 0)
+    {
+      // don't put shadow in closed doors
+      if (S->f_h < S->c_h)
+        S->misc_flags |= SEC_SHADOW;
+      continue;
+    }
+
+    if (light > S->light)
+    {
+      S->light = light;
+      S->misc_flags |= SEC_PRIMARY_LIT;
+    }
+  }
+#endif
 }
 
 
@@ -545,16 +549,15 @@ static void NK_MakeSector(region_c *R)
       S->c_h = S->f_h;
 
 
-  S->f_tex = atoi(f_face->getStr("tex", dummy_plane_tex.c_str()));
-  S->c_tex = atoi(c_face->getStr("tex", dummy_plane_tex.c_str()));
+  NK_GetPlaneInfo(&S->floor, f_face);
+  NK_GetPlaneInfo(&S->ceil,  c_face);
+
 
   int f_mark = f_face->getInt("mark");
   int c_mark = c_face->getInt("mark");
 
   S->mark = f_mark ? f_mark : c_mark;
 
-
-  // FIXME: other floor / ceiling stuff
 
 
   if (T->bkind == BKIND_Sky)
@@ -565,38 +568,7 @@ static void NK_MakeSector(region_c *R)
 
   // handle Lighting brushes
 
-#if 0
-  for (unsigned int i = 0; i < R->brushes.size(); i++)
-  {
-    csg_brush_c *B = R->brushes[i];
-
-    if (B->bkind != BKIND_Light)
-      continue;
-
-    if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
-      continue;
-
-    csg_property_set_c *t_face = &B->t.face;
-    csg_property_set_c *b_face = &B->b.face;
-
-    double raw = b_face->getInt("light", t_face->getInt("light"));
-    int light = I_ROUND(raw * 256);
-
-    if (light < 0)
-    {
-      // don't put shadow in closed doors
-      if (S->f_h < S->c_h)
-        S->misc_flags |= SEC_SHADOW;
-      continue;
-    }
-
-    if (light > S->light)
-    {
-      S->light = light;
-      S->misc_flags |= SEC_PRIMARY_LIT;
-    }
-  }
-#endif
+  NK_DoLightingBrush(S);
 
 
   // create walls
@@ -643,7 +615,6 @@ static void NK_CreateSectors()
     NK_MakeSector(all_regions[i]);
   }
 }
-
 
 
 #if 0
@@ -956,130 +927,60 @@ static sidedef_info_c * MakeSidedef(merge_segment_c *G, int side,
 
 //----------------------------------------------------------------------
 
-static void OLD_NK_WriteWalls()
+void nukem_wall_c::Write()
 {
-  int i;
+  int pic;
+  int flags = 0;
 
-  // mark all visible sectors
-  for (i = 0; i < (int)dm_sectors.size(); i++)
-    dm_sectors[i]->index = -1;
-
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  if (! back)
   {
-    linedef_info_c *L = dm_linedefs[i];
-    if (! L->Valid())
-      continue;
+    pic = atoi(line->front->mid.c_str());
+  }
+  else if (line->isGreedy())
+  {
+    int f1_h = line->front->sector->f_h;
+    int f2_h = line->back ->sector->f_h;
 
-    if (L->front->sector->index < 0)
-    {
-      L->front->sector->index = -2;
-    }
+    bool use_upper = ((side==0) == (f1_h < f2_h));
 
-    if (L->back && L->back->sector->index < 0)
-    {
-      L->back->sector->index = -2;
-    }
+    const sidedef_info_c *SD = (f1_h < f2_h) ? line->front : line->back;
+
+    pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
+
+    flags |= WALL_F_SWAP_LOWER;
+  }
+  else
+  {
+    int c1_h = line->front->sector->c_h;
+    int c2_h = line->back ->sector->c_h;
+
+    bool use_upper = (side==0) ? (c2_h < c1_h) : (c1_h < c2_h);
+
+    const sidedef_info_c *SD = (side==0) ? line->front : line->back;
+
+    pic = atoi(use_upper ? SD->upper.c_str() : SD->lower.c_str());
   }
 
-  int sec_id = 0;
+  if (back)
+    flags |= WALL_F_PEGGED;
 
-  for (i = 0; i < (int)dm_sectors.size(); i++)
-  {
-    nukem_sector_c * S = dm_sectors[i];
+  int xscale = 1 + (int)line->length / 16;
+  if (xscale > 255)
+    xscale = 255;
 
-    if (S->index == -2)
-    {
-      S->index = sec_id;  sec_id += 1;
-    }
-  }
+  int lo_tag = (side==0) ? line->type : 0;
+  int hi_tag = (side==0) ? line->tag  : 0;
 
 
-  // find the walls of each sector
-
-  std::vector<nk_wall_list_c *> sec_walls;
-
-  for (int k = 0; k < sec_id; k++)
-    sec_walls.push_back(new nk_wall_list_c);
-
-
-  int wall_id = 0;
-
-  for (i = 0; i < (int)dm_sectors.size(); i++)
-  {
-    nukem_sector_c *S = dm_sectors[i];
-    if (S->index < 0)
-      continue;
-
-    NK_CollectWalls(S, &wall_id, sec_walls[S->index]);
-  }
-
-
-  // CONNECT FRONT AND BACK
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
-  {
-    linedef_info_c *L = dm_linedefs[i];
-    if (! L->Valid())
-      continue;
-
-    if (L->nk_front && L->nk_back)
-    {
-      L->nk_front->back = L->nk_back;
-      L->nk_back ->back = L->nk_front;
-    }
-  }
-
-
-  // create the sectors
-  for (i = 0; i < (int)dm_sectors.size(); i++)
-  {
-    nukem_sector_c *S = dm_sectors[i];
-    if (S->index < 0)
-      continue;
-
-    int first =      sec_walls[S->index]->at(0)->index; 
-    int count = (int)sec_walls[S->index]->size();
-
-    int c_flags = 0;
-    int visibility = 1;
-
-    if (S->misc_flags & SEC_IS_SKY)
-    {
-      c_flags |= SECTOR_F_PARALLAX;
-    }
-
-
-
-
-    // WRITE THE WALL LOOP
-
-    for (int k = 0; k < count; k++)
-    {
-      sec_walls[S->index]->at(k)->Write();
-    }
-  }
-
-
-  // free stuff
-
-  for (i = 0; i < (int)dm_sectors.size(); i++)
-  {
-    nukem_sector_c *S = dm_sectors[i];
-    if (S->index < 0)
-      continue;
-
-    int count = (int)sec_walls[S->index]->size();
-
-    for (int k = 0; k < count; k++)
-    {
-      delete sec_walls[S->index]->at(k);
-    }
-
-    delete sec_walls[S->index];
-  }
+  NK_AddWall(GetX() * NK_FACTOR, -GetY() * NK_FACTOR, right->index,
+             back ? back->index : -1, back ? back->SectorIndex() : -1,
+             flags, pic, 0,
+             xscale, 8, 0, 0,
+             lo_tag, hi_tag);
 }
 
 
-static void NK_WriteSprites(nukem_sector_c *S)
+void nukem_sector_c::WriteSprites()
 {
   for (unsigned int j = 0; j < S->entities.size(); j++)
   {
@@ -1113,13 +1014,54 @@ static void NK_WriteSprites(nukem_sector_c *S)
     // convert angle to 0-2047 range
     angle = ((405 - angle) * 256 / 45) & 2047;
 
-    NK_AddSprite(x, y, z, type, angle, S->index, lo_tag, hi_tag);
+    NK_AddSprite(x, y, z, type, angle, index, lo_tag, hi_tag);
   }
+}
+
+
+void nukem_sector_c::AssignWallIndices(int *first, int *count)
+{
+  *first = nk_current_wall;
+  *count = (int) S->walls.size();
+
+  for (unsigned int i = 0 ; i < S->walls.size() ; i++)
+  {
+    S->walls[i]->index = nk_current_wall;
+
+    nk_current_wall++;
+  }
+}
+
+
+void nukem_sector_c::WriteWalls()
+{
+  for (unsigned int k = 0 ; k < walls.size() ; k++)
+  {
+    walls[k]->Write();
+  }
+}
+
+
+void nukem_sector_c::Write()
+{
+  int first_wall, num_walls;
+
+  NK_AssignWallIndices(S->walls, &first_wall, &num_walls);
+
+  int c_flags = 0;
+  int visibility = 1;
+
+  NK_AddSector(first_wall, num_walls, visibility,
+               floor.h, floor.tex,
+               ceil.h,  ceil.tex,  ceil.flags,
+               0, 0);
 }
 
 
 static void NK_WriteSectors()
 {
+  nk_current_wall = 0;
+
   for (unsigned int i = 0 ; i < nk_all_sectors.size() ; i++)
   {
     nukem_sector_c *S = nk_all_sectors[i];
@@ -1129,20 +1071,22 @@ static void NK_WriteSectors()
 
     S->index = (int)i;
 
-    int first_wall, num_walls;
+    S->Write();
+    S->WriteSprites();
+  }
+}
 
-    NK_WriteSprites(S);
 
-    NK_AssignWallIndices(S->walls, &first_wall, &num_walls);
+static void NK_WriteWalls()
+{
+  for (unsigned int i = 0 ; i < nk_all_sectors.size() ; i++)
+  {
+    nukem_sector_c *S = nk_all_sectors[i];
 
-    int c_flags = 0;
-    int visibility = 1;
+    if (! S->used)
+      continue;
 
-    NK_AddSector(first_wall, num_walls, visibility,
-                 S->f_h, S->f_tex,
-                 S->c_h, S->c_tex,
-                 c_flags,
-                 S->special, S->tag);
+    S->WriteWalls();
   }
 }
 
