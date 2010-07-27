@@ -31,6 +31,7 @@
 #include "main.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
 
 #include "g_lua.h"
 
@@ -180,9 +181,9 @@ class rSide_c
 friend class rSideFactory_c;
 
 public:
-  merge_segment_c *seg;
+  snag_c *snag;
 
-  int side;  // side on the seg: 0 = front/right, 1 = back/left
+//  int side;  // side on the seg: 0 = front/right, 1 = back/left
 
   rSide_c *partner;
   rNode_c *node;
@@ -568,9 +569,9 @@ rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
 }
 
 
-static rSide_c * CreateSide(rNode_c *LEAF, merge_segment_c *seg, int side)
+static rSide_c * CreateSide(rNode_c *LEAF, snag_c *snag, int side)
 {
-  rSide_c *S = rSideFactory_c::NewSide(seg, side);
+  rSide_c *S = rSideFactory_c::NewSide(S);
 
   LEAF->AddSide(S);
 
@@ -889,7 +890,7 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
       double mx = LN->BBoxMidX();
       double my = LN->BBoxMidY();
 
-      part_reg = CSG2_FindRegionForPoint(mx, my);
+//!!!!!! FIXME      part_reg = CSG2_FindRegionForPoint(mx, my);
     }
 
     if (! part_reg || part_reg->gaps.size() == 0)
@@ -949,23 +950,39 @@ static void Q1_BuildBSP()
 
   rNode_c *R_LEAF = new rNode_c();
 
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
-    merge_segment_c *S = mug_segments[i];
+    region_c *R = all_regions[i];
 
-    rSide_c *F = NULL;
-    rSide_c *B = NULL;
+    if (R->gaps.empty())
+      continue;
 
-    if (S->front && S->front->gaps.size() > 0)
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+
+      rSide_c *F = NULL;
+      rSide_c *B = NULL;
+
+      // only handle partnered pairs ONCE
+      if (S->partner && S > S->partner)
+        continue;
+
+      region_c *N = S->partner ? S->partner->where : NULL;
+
+      if (N && N->equiv_id == R->equiv_id)
+        continue;
+
       F = CreateSide(R_LEAF, S, 0);
 
-    if (S->back && S->back->gaps.size() > 0)
-      B = CreateSide(R_LEAF, S, 1);
+      if (S->partner)
+        B = CreateSide(R_LEAF, S->partner, 1);
 
-    if (F && B)
-    {
-      F->partner = B;
-      B->partner = F;
+      if (F && B)
+      {
+        F->partner = B;
+        B->partner = F;
+      }
     }
   }
 

@@ -29,6 +29,7 @@
 #include "main.h"
 
 #include "csg_main.h"
+#include "csg_local.h"
 
 #include "ui_chooser.h"
 #include "img_all.h"
@@ -648,8 +649,14 @@ void quake1_game_interface_c::EndLevel()
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 
-  CSG2_MergeAreas();
-  CSG2_MakeMiniMap();
+  CSG_BSP(1.0);
+
+  CSG_SwallowBrushes();
+  CSG_DiscoverGaps();
+
+  CSG_SimpleCoalesce();
+
+///  CSG2_MakeMiniMap();
 
   if (main_win)
     main_win->build_box->Prog_Step("BSP");
