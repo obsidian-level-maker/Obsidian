@@ -54,8 +54,6 @@ static int extrafloor_slot;
 #define SEC_PRIMARY_LIT  (0x2 << 16)
 #define SEC_SHADOW       (0x4 << 16)
 
-#define SEC_UNUSED_MARK  (-777)
-
 
 double light_dist_factor = 800.0;
 
@@ -112,11 +110,14 @@ public:
   int misc_flags;
   int valid_count;
 
+  bool unused;
+
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(64), special(0), tag(0), mark(0),
                     exfloors(), index(-1),
-                    region(NULL), misc_flags(0), valid_count(0)
+                    region(NULL), misc_flags(0), valid_count(0),
+                    unused(false)
   { }
 
   ~doom_sector_c()
@@ -124,12 +125,12 @@ public:
 
   void MarkUnused()
   {
-    mark = SEC_UNUSED_MARK;
+    unused = true;
   }
 
   bool isUnused() const
   {
-    return (mark == SEC_UNUSED_MARK);
+    return unused;
   }
 
   bool SameExtraFloors(const doom_sector_c *other) const
@@ -968,7 +969,7 @@ int sames = 0;
       doom_sector_c *D2 = dm_sectors[N->index];
 
       // use '>' so that we only check the relationship once
-      if (N && N->index > R->index && D1->Match(D2))
+      if (N->index > R->index && D2->Match(D1))
       {
         D2->MarkUnused();
 
@@ -996,6 +997,7 @@ static void DM_CoalesceSectors()
 
   // remove the unused sectors
 
+#if 0
   std::vector<doom_sector_c *> local_secs;
 
   local_secs.swap(dm_sectors);
@@ -1009,6 +1011,7 @@ static void DM_CoalesceSectors()
     else
       dm_sectors.push_back(S);
   }
+#endif
 }
 
 
@@ -1289,7 +1292,7 @@ static doom_sidedef_c * DM_MakeSidedef(
   }
 #endif
 
-  if (back)
+  if (! back)
   {
     SD->mid = "STARTAN3";
   }
@@ -1489,8 +1492,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   dm_linedefs.push_back(L);
 
 
-  L->start = DM_MakeVertex(x1, x2);
-  L->end   = DM_MakeVertex(y1, y2);
+  L->start = DM_MakeVertex(x1, y1);
+  L->end   = DM_MakeVertex(x2, y2);
 
   L->start->AddLine(L);
   L->end  ->AddLine(L);
