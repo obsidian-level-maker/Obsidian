@@ -114,7 +114,8 @@ public:
 
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(64), special(0), tag(0), mark(0),
+                    light(64+80), //!!!!!
+                    special(0), tag(0), mark(0),
                     exfloors(), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
                     unused(false)
