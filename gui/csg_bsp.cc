@@ -111,7 +111,7 @@ public:
 snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2) :
     x1(_x1), y1(_y1), x2(_x2), y2(_y2),
     mini(false), on_node(NULL), where(NULL), partner(NULL),
-    sides()
+    sides(), seen(false)
 {
   if (Length() < SNAG_EPSILON)
     Main_FatalError("Line loop contains zero-length line! (%1.2f %1.2f)\n", x1, y1);
@@ -123,7 +123,7 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y
 snag_c::snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part) :
     x1(_x1), y1(_y1), x2(_x2), y2(_y2),
     mini(true), on_node(part), where(NULL), partner(NULL),
-    sides()
+    sides(), seen(false)
 { }
 
 
@@ -131,7 +131,7 @@ snag_c::snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
       mini(other.mini), on_node(other.on_node),
       where(other.where), partner(NULL),
-      sides()
+      sides(), seen(false)
 {
   // copy sides
   for (unsigned int i = 0 ; i < other.sides.size() ; i++)

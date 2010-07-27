@@ -546,7 +546,7 @@ static void NK_GetTexture(nukem_wall_c *W, csg_brush_c *B)
 {
   SYS_ASSERT(B);
 
-  brush_vert_c *vert;
+  brush_vert_c *vert = NULL;
 
   // FIXME !!!  find brush_Vert using W->snag
 

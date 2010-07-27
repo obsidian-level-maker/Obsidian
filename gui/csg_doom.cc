@@ -200,6 +200,11 @@ public:
     lines[0] = lines[1] = lines[2] = lines[3] = NULL;
   }
 
+  doom_vertex_c(int _x, int _y) : x(_x), y(_y), index(-1)
+  {
+    lines[0] = lines[1] = lines[2] = lines[3] = NULL;
+  }
+
   ~doom_vertex_c()
   { }
 
@@ -1103,24 +1108,18 @@ static void DM_AssignExtraFloorTags(void)
 
 //------------------------------------------------------------------------
 
-static doom_vertex_c * DM_MakeVertex(merge_vertex_c *MV)
+static doom_vertex_c * DM_MakeVertex(int x, int y)
 {
-  if (MV->index >= 0)
-    return dm_vertices[MV->index];
+  // FIXME !!!!!
+  // if (find_vertex(x1,y1)) return index
 
   // create new one
-  doom_vertex_c * V = new doom_vertex_c;
-
-  MV->index = (int)dm_vertices.size();
+  doom_vertex_c * V = new doom_vertex_c(x, y);
 
   dm_vertices.push_back(V);
 
-  V->x = I_ROUND(MV->x); 
-  V->y = I_ROUND(MV->y);
-
   return V;
 }
-
 
 
 static int NaturalXOffset(doom_linedef_c *G, int side)
@@ -1158,27 +1157,47 @@ static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 }
 
 
-static doom_sidedef_c * DM_MakeSidedef(merge_segment_c *G, int side,
-                       merge_region_c *F, merge_region_c *B,
-                       brush_vert_c *rail,
-                       bool *l_peg, bool *u_peg)
+static void DM_GetTexture(snag_c *S, csg_brush_c *B,
+                          std::string & tex)
 {
-  if (!F || F->index < 0)
+  SYS_ASSERT(B);
+
+  brush_vert_c *vert = NULL;
+
+  // FIXME !!!  find brush_Vert using snag
+
+  if (! vert)
+    vert = B->verts[0];
+
+  SYS_ASSERT(vert);
+
+  csg_property_set_c *face = &vert->face;
+
+  tex = face->getStr("tex", dummy_wall_tex.c_str());
+}
+
+
+static doom_sidedef_c * DM_MakeSidedef(
+    doom_sector_c *front, doom_sector_c *back,
+    brush_vert_c *rail, bool *l_peg, bool *u_peg)
+{
+  if (! front)
     return NULL;
 
-///  int index = (int)dm_sidedefs.size();
 
   doom_sidedef_c *SD = new doom_sidedef_c;
 
+  SD->sector = front;
+
   dm_sidedefs.push_back(SD);
 
-  doom_sector_c *S = dm_sectors[F->index];
-
-  SD->sector = S;
 
   // the 'natural' X/Y offsets
   SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
-  SD->y_offset = - S->c_h;
+  SD->y_offset = - front->c_h;
+
+
+#if 0  // FIXME : OLD BUT GOOD
 
   if (B && B->index >= 0)
   {
@@ -1268,11 +1287,23 @@ static doom_sidedef_c * DM_MakeSidedef(merge_segment_c *G, int side,
         SD->y_offset = oy;
     }
   }
+#endif
+
+  if (back)
+  {
+    SD->mid = "STARTAN3";
+  }
+  else
+  {
+    SD->lower = "ASHWALL4";
+    SD->upper = "COMPBLUE";
+  }
 
   return SD;
 }
 
 
+#if 0
 static brush_vert_c *FindSpecialVert(merge_segment_c *G)
 {
   doom_sector_c *FS = NULL;
@@ -1411,88 +1442,121 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
 
   return NULL;
 }
+#endif
 
 
-static void DM_MakeLinedefs(void)
+static void DM_MakeLine(region_c *R, snag_c *S)
 {
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
+  region_c *N = S->partner ? S->partner->where : NULL;
+
+  // if same sector on both sides, skip the line
+  // FIXME: don't skip when has rail texture
+  if (N && N->index == R->index)
+    return;
+
+  // for two-sided snags, only make one linedef from the pair
+  if (S->seen)
+    return;
+
+  S->seen = true;
+
+  if (S->partner)
+    S->partner->seen = true;
+
+  // skip snags which would become zero length linedefs
+  int x1 = I_ROUND(S->x1);
+  int y1 = I_ROUND(S->y1);
+
+  int x2 = I_ROUND(S->x2);
+  int y2 = I_ROUND(S->y2);
+
+  if (x1 == x2 && y1 == y2)
   {
-    merge_segment_c *G = mug_segments[i];
+    fprintf(stderr, "WARNING: degenerate linedef @ (%1.0f %1.0f)\n", S->x1, S->y1);
+    return;
+  }
 
-    SYS_ASSERT(G);
-    SYS_ASSERT(G->start);
 
-    if (! (G->front && G->front->index >= 0) &&
-        ! (G->back  && G-> back->index >= 0))
+  doom_sector_c *front = dm_sectors[R->index];
+  doom_sector_c *back  = NULL;
+
+  if (N && N->index >= 0)
+    back = dm_sectors[N->index];
+
+
+  doom_linedef_c *L = new doom_linedef_c();
+
+  dm_linedefs.push_back(L);
+
+
+  L->start = DM_MakeVertex(x1, x2);
+  L->end   = DM_MakeVertex(y1, y2);
+
+  L->start->AddLine(L);
+  L->end  ->AddLine(L);
+
+  L->CalcLength();
+
+
+  brush_vert_c *spec = NULL; //!!!  FindSpecialVert(G);
+  brush_vert_c *rail = NULL; //!!!  FindRailVert(G);
+
+  bool l_peg = false;
+  bool u_peg = false;
+
+  L->front = DM_MakeSidedef(front, back, rail, &l_peg, &u_peg);
+  L->back  = DM_MakeSidedef(back, front, rail, &l_peg, &u_peg);
+
+  SYS_ASSERT(L->front || L->back);
+
+
+  // TODO: a way to ensure a certain orientation (two-sided lines only)
+
+  if (L->ShouldFlip())
+    L->Flip();
+
+
+  if (! L->back)
+    L->flags |= MLF_BlockAll;
+  else
+    L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
+
+  if (l_peg) L->flags ^= MLF_LowerUnpeg;
+  if (u_peg) L->flags ^= MLF_UpperUnpeg;
+
+
+  if (rail)
+  {
+    L->flags |= rail->face.getInt("flags");
+
+    if (! spec && rail->face.getStr("kind"))
+      spec = rail;
+  }
+
+  if (spec)
+  {
+    L->flags |= spec->face.getInt("flags");
+
+    L->type = spec->face.getInt("kind");
+    L->tag  = spec->face.getInt("tag");
+
+    spec->face.getHexenArgs("args", L->args);
+  }
+}
+
+
+static void DM_CreateLinedefs()
+{
+  for (unsigned int i = 0; i < all_regions.size(); i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->index < 0)
       continue;
 
-    // skip segments which would become zero length linedefs
-    if (I_ROUND(G->start->x) == I_ROUND(G->end->x) &&
-        I_ROUND(G->start->y) == I_ROUND(G->end->y))
-      continue;
-
-    brush_vert_c *spec = FindSpecialVert(G);
-    brush_vert_c *rail = FindRailVert(G);
-
-    // if same sector on both sides, skip the line, unless
-    // we have a rail texture or a special line.
-    if (! rail && ! spec && G->front && G->back && G->front->index == G->back->index)
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
     {
-      continue;
-    }
-
-
-    doom_linedef_c *L = new doom_linedef_c;
-
-    dm_linedefs.push_back(L);
-
-    L->start = DM_MakeVertex(G->start);
-    L->end   = DM_MakeVertex(G->end);
-
-    L->start->AddLine(L);
-    L->end  ->AddLine(L);
-
-    L->CalcLength();
-
-
-    bool l_peg = false;
-    bool u_peg = false;
-
-    L->front = DM_MakeSidedef(G, 0, G->front, G->back, rail, &l_peg, &u_peg);
-    L->back  = DM_MakeSidedef(G, 1, G->back, G->front, rail, &l_peg, &u_peg);
-
-    SYS_ASSERT(L->front || L->back);
-
-    // TODO: a way to ensure a certain orientation (two-sided lines only)
-    if (L->ShouldFlip())
-      L->Flip();
-
-
-    if (! L->back)
-      L->flags |= MLF_BlockAll;
-    else
-      L->flags |= MLF_TwoSided | MLF_LowerUnpeg | MLF_UpperUnpeg;
-
-    if (l_peg) L->flags ^= MLF_LowerUnpeg;
-    if (u_peg) L->flags ^= MLF_UpperUnpeg;
-
-
-    if (rail)
-    {
-      L->flags |= rail->face.getInt("flags");
-
-      if (! spec && rail->face.getStr("kind"))
-        spec = rail;
-    }
-
-    if (spec)
-    {
-      L->flags |= spec->face.getInt("flags");
-
-      L->type = spec->face.getInt("kind");
-      L->tag  = spec->face.getInt("tag");
-
-      spec->face.getHexenArgs("args", L->args);
+      DM_MakeLine(R, R->snags[k]);
     }
   }
 }
@@ -1914,7 +1978,8 @@ void CSG_DOOM_Write()
 ///  DM_AssignExtraFloorTags();
 ///  DM_CoalesceExtraFloors();
 
-  DM_MakeLinedefs();
+  DM_CreateLinedefs();
+
   DM_MergeColinearLines();
   DM_AlignTextures();
 

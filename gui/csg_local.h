@@ -49,6 +49,9 @@ public:
   int q_along1;
   int q_along2;
 
+  // used by CSG DOOM code
+  bool seen;
+
 private:
   snag_c(const snag_c& other);
 
