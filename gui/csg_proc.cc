@@ -62,6 +62,15 @@ bool gap_c::HasNeighbor(gap_c *N) const
 
 //------------------------------------------------------------------------
 
+bool snag_c::SameSides() const
+{
+  if (!partner || !partner->where)
+    return false;
+
+  return where->HasSameBrushes(partner->where);
+}
+
+
 static int SpreadEquivID()
 {
   int changes = 0;
@@ -100,6 +109,17 @@ if (N->equiv_id == R->equiv_id) sames++; else diffs++; }
 }
 
 
+void CSG_SortBrushes()
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    R->SortBrushes();
+  }
+}
+
+
 void CSG_SimpleCoalesce()
 {
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
@@ -107,8 +127,6 @@ void CSG_SimpleCoalesce()
     region_c *R = all_regions[i];
 
     R->equiv_id = 1 + (int)i;
-
-    R->SortBrushes();
   }
 
   while (SpreadEquivID() > 0)

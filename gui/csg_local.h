@@ -67,6 +67,10 @@ public:
   snag_c * Cut(double ix, double iy);
 
   void CalcAlongs();
+
+  // this is for the MiniMap code, returns true if brushes are the same
+  // on both sides.  CSG_SortBrushes() must have been called already.
+  bool SameSides() const;
 };
 
 
@@ -116,6 +120,7 @@ public:
 
   void SortBrushes();
 
+  // this requires CSG_SortBrushes() to have been called earlier
   bool HasSameBrushes(const region_c *other) const;
 
   void ClockwiseSnags();
@@ -150,6 +155,8 @@ extern std::vector<region_c *> all_regions;
 /***** FUNCTIONS ****************/
 
 void CSG_BSP(double grid);
+
+void CSG_SortBrushes();
 void CSG_SimpleCoalesce();
 void CSG_SwallowBrushes();
 void CSG_DiscoverGaps();

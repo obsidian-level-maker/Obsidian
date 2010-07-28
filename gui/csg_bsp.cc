@@ -1204,7 +1204,7 @@ void CSG_BSP(double grid)
   for (unsigned int i=0; i < all_regions.size(); i++)
     all_regions[i]->ClockwiseSnags();
 
-  // FIXME: free stuff
+  CSG_SortBrushes();
 }
 
 
