@@ -2,14 +2,45 @@
 TODO
 ====
 
+-  rename snag_c::where --> region
+
 
 BSP_AddPlane: create dplane_t in memory, compare them to find it
+
+
+q1_clip : proper XY partition choice
+
+          proper slope planes
 
 
 !!  usage of plain EPSILON
 
 ??  SimpleCoalesce : perhaps do AFTER gap finding / filling,
                      use the GAPS as the comparison
+
+
+Hexen: have arg1 .. arg5, i.e. de-array-ify
+
+
+-  mirroring : make sure first coord stays the first
+
+
+POSSIBLE FILE RENAMING:
+
+-  q1_clip --> csg_clip
+
+-  q_bsp --> q_common
+
+-  g_lua    --> m_lua        ('m' for 'main')
+-  g_cookie --> m_cookie
+
+-  dm_wad  + dm_glbsp --> g_doom    (also file stuff from dm_extra)
+-  q1_main + q1_doors --> g_quake
+-  q2_main            --> g_quake2
+-  nk_level           --> g_nukem
+-  wolf_map           --> g_wolf
+
+-  dm_extra + nk_art  --> tx_???
 
 
 DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
