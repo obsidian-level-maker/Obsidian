@@ -21,7 +21,6 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
-#include "hdr_ui.h"   // for mini map
 
 #include <algorithm>
 
@@ -335,90 +334,6 @@ void CSG2_UpdateBounds(bool three_d)
   bounds_x2 = (int)ceil(max_x) + 32;
   bounds_y2 = (int)ceil(max_y) + 32;
   bounds_z2 = (int)ceil(max_z) + 64;
-}
-
-
-void CSG2_MakeMiniMap(void)
-{
-  if (! main_win)
-    return;
-
-  int scale = 64;
-
-  double cent_x = (bounds_x1 + bounds_x2) / 2.0;
-  double cent_y = (bounds_y1 + bounds_y2) / 2.0;
-
-  int map_W = main_win->build_box->mini_map->GetWidth();
-  int map_H = main_win->build_box->mini_map->GetHeight();
-
-  main_win->build_box->mini_map->MapBegin();
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    if (! S->HasGap())
-      continue;
-
-    int x1 = I_ROUND(S->start->x - cent_x) / scale + map_W/2;
-    int y1 = I_ROUND(S->start->y - cent_y) / scale + map_H/2;
-
-    int x2 = I_ROUND(S->end->x   - cent_x) / scale + map_W/2;
-    int y2 = I_ROUND(S->end->y   - cent_y) / scale + map_H/2;
-
-    bool two_sided = (S->front && S->front->gaps.size() > 0) &&
-                     (S->back  && S->back ->gaps.size() > 0);
-
-    u8_t r = 255;
-    u8_t g = 255;
-    u8_t b = 255;
-
-    if (two_sided)
-    {
-      double f1 = S->front->MinGapZ();
-      double f2 = S->back ->MinGapZ();
-
-      double c1 = S->front->MaxGapZ();
-      double c2 = S->back ->MaxGapZ();
-
-      if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
-        continue;
-
-      if (MIN(c1, c2) < MAX(f1, f2) + 52.5)
-      {
-        r = 255; g = 0; b = 0;
-      }
-      else if (fabs(f1 - f2) > 24.5)
-      {
-        r = 0; g = 255; b = 160;
-      }
-      else if (fabs(c1 - c2) > 30.5)
-      {
-        r = 96; g = 192; b = 255;
-      }
-      else
-      {
-        r = g = b = 160;
-      }
-    }
-
-    main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
-  }
-
-  // entities
-#if 0
-  for (unsigned k = 0; k < all_entities.size(); k++)
-  {
-    entity_info_c *E = all_entities[k];
-
-    int x = (int)ceil(E->x - cent_x) / scale + map_W/2;
-    int y = (int)ceil(E->y - cent_y) / scale + map_H/2;
-
-    main_win->build_box->mini_map->DrawEntity(x,y, 255,255,0);
-  }
-#endif
-
-  main_win->build_box->mini_map->MapFinish();
 }
 
 

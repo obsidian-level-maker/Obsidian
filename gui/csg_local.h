@@ -160,6 +160,7 @@ void CSG_SortBrushes();
 void CSG_SimpleCoalesce();
 void CSG_SwallowBrushes();
 void CSG_DiscoverGaps();
+void CSG_MakeMiniMap();
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */

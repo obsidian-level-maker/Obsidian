@@ -443,11 +443,9 @@ brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
 
 merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 
-void CSG2_MakeMiniMap(void);
+void CSG2_FreeMerges(void);
 
 void CSG2_UpdateBounds(bool three_d);
-
-void CSG2_FreeMerges(void);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 
