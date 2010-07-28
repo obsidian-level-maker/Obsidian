@@ -479,6 +479,8 @@ static std::vector<doom_sidedef_c *> dm_sidedefs;
 static std::vector<doom_sector_c *>  dm_sectors;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
+static std::map<int, unsigned int>   dm_vertex_map;
+
 
 //------------------------------------------------------------------------
 
@@ -497,6 +499,8 @@ void DM_FreeStuff(void)
   dm_sidedefs.clear();
   dm_sectors. clear();
   dm_exfloors.clear();
+
+  dm_vertex_map.clear();
 }
 
 
@@ -1114,11 +1118,18 @@ static void DM_AssignExtraFloorTags(void)
 
 static doom_vertex_c * DM_MakeVertex(int x, int y)
 {
-  // FIXME !!!!!
-  // if (find_vertex(x1,y1)) return index
+  // look for existing vertex
+  int combo = (x << 16) + y;
+
+  if (dm_vertex_map.find(combo) != dm_vertex_map.end())
+  {
+    return dm_vertices[dm_vertex_map[combo]];
+  }
 
   // create new one
   doom_vertex_c * V = new doom_vertex_c(x, y);
+
+  dm_vertex_map[combo] = dm_vertices.size();
 
   dm_vertices.push_back(V);
 
