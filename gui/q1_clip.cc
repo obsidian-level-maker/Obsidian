@@ -83,10 +83,10 @@ public:
     if (! snag->partner)
       return false;
 
-    if (! snag->partner->where)
+    if (! snag->partner->region)
       return false;
 
-    if (snag->partner->where->equiv_id == 0)
+    if (snag->partner->region->equiv_id == 0)
       return false;
 
     return true;
@@ -222,16 +222,16 @@ public:
     if (sides.empty())
       return NULL;
 
-    region_c *reg = sides[0]->snag->where;
+    region_c *reg = sides[0]->snag->region;
     SYS_ASSERT(reg);
 
     for (unsigned int i = 1 ; i < sides.size() ; i++)
     {
       cpSide_c *S = sides[i];
 
-      SYS_ASSERT(S->snag->where);
+      SYS_ASSERT(S->snag->region);
 
-      if (S->snag->where->equiv_id != reg->equiv_id)
+      if (S->snag->region->equiv_id != reg->equiv_id)
         return NULL;  // nope
     }
 
@@ -734,7 +734,7 @@ int diffs = 0;
     {
       snag_c *S = R->snags[k];
 
-      region_c *N = S->partner ? S->partner->where : NULL;
+      region_c *N = S->partner ? S->partner->region : NULL;
 
       if (! N || N->equiv_id == 0)
         continue;
@@ -1031,7 +1031,7 @@ for (unsigned int k = 0 ; k < group.sides.size() ; k++)
 {
 cpSide_c *S = group.sides[k];
 fprintf(stderr, "  side %p region.equiv_id %d (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-        S, S->snag->where->equiv_id,
+        S, S->snag->region->equiv_id,
         S->x1, S->y1, S->x2, S->y2);
 }
 
@@ -1136,7 +1136,7 @@ fprintf(stderr, "CREATE CLIP SIDES\n");
     {
       snag_c *S = R->snags[k];
 
-      region_c *N = S->partner ? S->partner->where : NULL;
+      region_c *N = S->partner ? S->partner->region : NULL;
 
       if (N && N->equiv_id == R->equiv_id)
         continue;

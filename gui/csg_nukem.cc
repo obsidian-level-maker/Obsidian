@@ -571,7 +571,7 @@ static void NK_TextureSolidWall(nukem_wall_c *W)
 
   if (W->snag->partner)
   {
-    region_c *N = W->snag->partner->where;
+    region_c *N = W->snag->partner->region;
 
     if (N->brushes.size() > 0)
     {
@@ -655,7 +655,7 @@ static void NK_PartnerWalls()
       if (W->partner)  // already done
         continue;
 
-      region_c *N = W->snag->partner ? W->snag->partner->where : NULL;
+      region_c *N = W->snag->partner ? W->snag->partner->region : NULL;
 
       if (N && N->index >= 0)
       {

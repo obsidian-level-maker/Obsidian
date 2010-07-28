@@ -183,6 +183,8 @@ friend class rSideFactory_c;
 public:
   snag_c *snag;
 
+  merge_segment_c *seg;
+
 //  int side;  // side on the seg: 0 = front/right, 1 = back/left
 
   rSide_c *partner;
@@ -197,7 +199,7 @@ public:
 
 public:
   rSide_c(merge_segment_c * _seg = NULL, int _side = 0) :
-      seg(_seg), side(_side), partner(NULL), node(NULL),
+      seg(_seg),              partner(NULL), node(NULL),
       on_partition(NULL), faces()
   { }
 
@@ -218,13 +220,13 @@ public:
   merge_region_c *FrontRegion() const
   {
     if (! seg) return NULL;
-    return side ? seg->back : seg->front;
+///!!!!!    return side ? seg->back : seg->front;
   }
 
   merge_region_c *BackRegion() const
   {
     if (! seg) return NULL;
-    return side ? seg->front : seg->back;
+///!!!!!    return side ? seg->front : seg->back;
   }
 
   void AddFace(int kind, int gap, double z1, double z2, brush_vert_c *av)
@@ -247,8 +249,11 @@ class rSideFactory_c
   }
 
 public:
-  static rSide_c *NewSide(merge_segment_c *seg, int side)
+  static rSide_c *NewSide(snag_c *_snag)
   {
+merge_segment_c *seg;
+int side = 0;
+
     rSide_c *S = RawNew(seg, side);
 
     if (side == 0)
@@ -528,6 +533,8 @@ public:
 
 rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
 {
+//!!!!!! FIXME
+#if 0 
   rSide_c *T = RawNew(S->seg, S->side);
 
   T->x2 = S->x2; T->y2 = S->y2;
@@ -564,14 +571,16 @@ rSide_c *rSideFactory_c::SplitAt(rSide_c *S, double new_x, double new_y)
 
     TP->node->AddSide(TP);
   }
-
   return T;
+#else
+  return NULL;
+#endif
 }
 
 
 static rSide_c * CreateSide(rNode_c *LEAF, snag_c *snag, int side)
 {
-  rSide_c *S = rSideFactory_c::NewSide(S);
+  rSide_c *S = rSideFactory_c::NewSide(snag);
 
   LEAF->AddSide(S);
 
@@ -968,7 +977,7 @@ static void Q1_BuildBSP()
       if (S->partner && S > S->partner)
         continue;
 
-      region_c *N = S->partner ? S->partner->where : NULL;
+      region_c *N = S->partner ? S->partner->region : NULL;
 
       if (N && N->equiv_id == R->equiv_id)
         continue;
@@ -1447,7 +1456,7 @@ static void Side_BuildFaces(rNode_c *LEAF, rSide_c *S, merge_gap_c *G)
   double z2 = G->GetZ2();
 
   // FIXME: this is totally wrong, need to fix CSG2_FindSideVertex et al
-  bool on_front = (S->side == 1);
+  bool on_front = true; //!!!!!  (S->side == 1);
 
   // emergency fallback
   if (RX == NULL)

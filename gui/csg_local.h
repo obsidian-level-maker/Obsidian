@@ -39,7 +39,7 @@ public:
 
   partition_c * on_node;
 
-  region_c *where;  // only valid AFTER MergeRegions()
+  region_c *region;  // only valid AFTER MergeRegions()
 
   snag_c *partner;  // only valid AFTER HandleOverlaps()
 

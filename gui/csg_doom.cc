@@ -966,7 +966,7 @@ int sames = 0;
     {
       snag_c *S = R->snags[k];
 
-      region_c *N = S->partner ? S->partner->where : NULL;
+      region_c *N = S->partner ? S->partner->region : NULL;
 
       if (!N || N->index < 0)
         continue;
@@ -1462,7 +1462,7 @@ static brush_vert_c *FindRailVert(merge_segment_c *G)
 
 static void DM_MakeLine(region_c *R, snag_c *S)
 {
-  region_c *N = S->partner ? S->partner->where : NULL;
+  region_c *N = S->partner ? S->partner->region : NULL;
 
   // if same sector on both sides, skip the line
   // FIXME: don't skip when has rail texture

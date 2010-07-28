@@ -472,7 +472,7 @@ void quake2_game_interface_c::EndLevel()
     main_win->build_box->Prog_Step("CSG");
 
   CSG2_MergeAreas();
-  CSG2_MakeMiniMap();
+///  CSG2_MakeMiniMap();
 
   if (main_win)
     main_win->build_box->Prog_Step("BSP");

@@ -63,10 +63,10 @@ bool gap_c::HasNeighbor(gap_c *N) const
 
 bool snag_c::SameSides() const
 {
-  if (!partner || !partner->where)
+  if (!partner || !partner->region)
     return false;
 
-  return where->HasSameBrushes(partner->where);
+  return region->HasSameBrushes(partner->region);
 }
 
 
@@ -87,7 +87,7 @@ int diffs = 0;
       snag_c *S = R->snags[k];
       SYS_ASSERT(S);
 
-      region_c *N = S->partner ? S->partner->where : NULL;
+      region_c *N = S->partner ? S->partner->region : NULL;
 
       // use '>' so that we only check the relationship once
       if (N && N->equiv_id > R->equiv_id && N->HasSameBrushes(R))
@@ -271,16 +271,16 @@ static void BuildNeighborMap()
       snag_c *S = R->snags[k];
       snag_c *T = S->partner;
 
-      if (! T || ! T->where)
+      if (! T || ! T->region)
         continue;
 
-      SYS_ASSERT(T->where != R);
+      SYS_ASSERT(T->region != R);
 
       // no need to repeat the checks (only do one side)
-      if (T->where >= R)
+      if (T->region >= R)
         continue;
 
-      CompareRegionGaps(R, T->where);
+      CompareRegionGaps(R, T->region);
     }
   }
 }
@@ -496,7 +496,7 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
 
-  region_c *N = S->partner ? S->partner->where : NULL;
+  region_c *N = S->partner ? S->partner->region : NULL;
 
   int x1 = map_W/2 + I_ROUND(S->x1 - mini_map_mid_x) / MINI_MAP_SCALE;
   int y1 = map_H/2 + I_ROUND(S->y1 - mini_map_mid_y) / MINI_MAP_SCALE;

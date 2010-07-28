@@ -110,7 +110,7 @@ public:
 
 snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y2) :
     x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-    mini(false), on_node(NULL), where(NULL), partner(NULL),
+    mini(false), on_node(NULL), region(NULL), partner(NULL),
     sides(), seen(false)
 {
   if (Length() < SNAG_EPSILON)
@@ -122,7 +122,7 @@ snag_c::snag_c(brush_vert_c *side, double _x1, double _y1, double _x2, double _y
 
 snag_c::snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part) :
     x1(_x1), y1(_y1), x2(_x2), y2(_y2),
-    mini(true), on_node(part), where(NULL), partner(NULL),
+    mini(true), on_node(part), region(NULL), partner(NULL),
     sides(), seen(false)
 { }
 
@@ -130,7 +130,7 @@ snag_c::snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part
 snag_c::snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
       mini(other.mini), on_node(other.on_node),
-      where(other.where), partner(NULL),
+      region(other.region), partner(NULL),
       sides(), seen(false)
 {
   // copy sides
@@ -759,10 +759,10 @@ static void MergeGroup(group_c & group)
   // grab the entities
   std::swap(R->entities, group.ents);
 
-  // can now set the 'where' field of snags
+  // can now set the 'region' field of snags
 
   for (unsigned int k = 0 ; k < R->snags.size() ; k++)
-    R->snags[k]->where = R;
+    R->snags[k]->region = R;
 
   // snags themselves get merged/etc in HandleOverlaps()
 }
@@ -913,8 +913,8 @@ static void SplitGroup(group_c & group)
 
 static void MergeSnags(snag_c *A, snag_c *B)
 {
-  SYS_ASSERT(A->where);
-  SYS_ASSERT(A->where == B->where);
+  SYS_ASSERT(A->region);
+  SYS_ASSERT(A->region == B->region);
 
   if (! B->mini)
     A->mini = false;
@@ -922,7 +922,7 @@ static void MergeSnags(snag_c *A, snag_c *B)
   if (B->partner && B->partner->partner == B)
     B->partner->partner = NULL;
 
-  B->where->RemoveSnag(B);
+  B->region->RemoveSnag(B);
 }
 
 
@@ -938,7 +938,7 @@ static bool SplitSnag(snag_c *S, double ix, double iy,
 {
   snag_c *T = S->Cut(ix, iy);
 
-  S->where->AddSnag(T);
+  S->region->AddSnag(T);
 
   overlap_list.push_back(T);
 
@@ -1316,7 +1316,7 @@ int badref = 0;
 
 if (line_id == 12345678)
 {
-fprintf(stderr, "LINE #%d  SNAG %p  REGION %p / %p  (%s)\n", line_id, S, S->where, R, S->mini ? "MINI" : "normal");
+fprintf(stderr, "LINE #%d  SNAG %p  REGION %p / %p  (%s)\n", line_id, S, S->region, R, S->mini ? "MINI" : "normal");
 
 fprintf(stderr, "  coords: (%1.0f %1.0f) --> (%1.0f %1.0f)\n",
         S->x1, S->y1, S->x2, S->y2);
