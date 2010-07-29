@@ -1977,10 +1977,7 @@ void CSG_DOOM_Write()
 
   CSG_BSP(4.0);
 
-  CSG_SwallowBrushes();
-  CSG_DiscoverGaps();
-
-  //!!!!  CSG2_MakeMiniMap();
+  CSG_MakeMiniMap();
 
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;

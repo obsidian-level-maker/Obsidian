@@ -1192,9 +1192,6 @@ s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
 
   CSG_BSP(0.5);
 
-  CSG_SwallowBrushes();
-  CSG_DiscoverGaps();
-
   CoalesceClipRegions();
 
   

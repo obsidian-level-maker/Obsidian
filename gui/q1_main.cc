@@ -651,12 +651,9 @@ void quake1_game_interface_c::EndLevel()
 
   CSG_BSP(1.0);
 
-  CSG_SwallowBrushes();
-  CSG_DiscoverGaps();
-
   CSG_SimpleCoalesce();
 
-///  CSG2_MakeMiniMap();
+  CSG_MakeMiniMap();
 
   if (main_win)
     main_win->build_box->Prog_Step("BSP");

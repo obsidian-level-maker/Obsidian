@@ -1205,6 +1205,9 @@ void CSG_BSP(double grid)
     all_regions[i]->ClockwiseSnags();
 
   CSG_SortBrushes();
+  CSG_SwallowBrushes();
+
+  CSG_DiscoverGaps();
 }
 
 
@@ -1249,9 +1252,8 @@ void CSG_TestRegions_Doom(void)
   // for debugging only: each region_c becomes a single sector.
 
   CSG_BSP(4.0);
-  CSG_SwallowBrushes();
+
   CSG_SimpleCoalesce();
-  CSG_DiscoverGaps();
 
   test_vertices.clear();
 
