@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  CSG 2.5D : QUAKE output
+//  CSG : QUAKE I and II
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -32,6 +32,7 @@
 
 #include "csg_main.h"
 #include "csg_local.h"
+#include "csg_quake.h"
 
 #include "g_lua.h"
 
@@ -1933,6 +1934,23 @@ void Q1_CreateModel(void)
   // there is no need to delete the lumps from BSP_NewLump()
   // since is handled by the q_bsp.c code.
 }
+
+
+void CSG_QUAKE_Build()
+{
+  if (main_win)
+    main_win->build_box->Prog_Step("CSG");
+
+  CSG_BSP(1.0);
+
+  CSG_MakeMiniMap();
+
+  if (main_win)
+    main_win->build_box->Prog_Step("BSP");
+
+  Q1_CreateModel();
+}
+
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

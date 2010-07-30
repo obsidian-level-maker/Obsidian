@@ -46,10 +46,6 @@ extern std::vector<q1MapModel_c *> q1_all_mapmodels;
 
 u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
-// q1_nodes.cc
-
-void Q1_CreateModel(void);
-
 // q1_clip.cc
 
 s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip);

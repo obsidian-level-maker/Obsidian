@@ -22,6 +22,84 @@
 #define __OBLIGE_CSG_QUAKE_H__
 
 
+/***** CLASSES ****************/
+
+class quake_plane_c
+{
+public:
+  float nx, ny, nz;  // normal
+
+  float dist;
+
+public:
+  quake_plane_c()
+  { }
+
+  ~quake_plane_c()
+  { }
+};
+
+
+
+class quake_face_c
+{
+public:
+  quake_plane_c plane;
+
+  // TODO
+
+public:
+  quake_face_c()
+  { }
+
+  ~quake_face_c()
+  { }
+};
+
+
+class quake_leaf_c
+{
+public:
+  int contents;
+
+  std::vector<quake_face_c *> faces;
+
+public:
+  quake_leaf_c()
+  { }
+
+  ~quake_leaf_c()
+  { }
+};
+
+
+class quake_node_c
+{
+public:
+  quake_plane_c plane;
+
+  quake_node_c *front_N;
+  quake_leaf_c *front_L;
+
+  quake_node_c *back_N;
+  quake_leaf_c *back_L;
+
+public:
+  quake_node_c()
+  { }
+
+  ~quake_node_c()
+  { }
+};
+
+
+/***** VARIABLES ****************/
+
+
+/***** FUNCTIONS ****************/
+
+void CSG_QUAKE_Build();
+
 #endif /* __OBLIGE_CSG_QUAKE_H__ */
 
 //--- editor settings ---

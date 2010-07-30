@@ -30,6 +30,7 @@
 
 #include "csg_main.h"
 #include "csg_local.h"
+#include "csg_quake.h"
 
 #include "ui_chooser.h"
 #include "img_all.h"
@@ -646,19 +647,8 @@ void quake1_game_interface_c::EndLevel()
 
   BSP_InitLightmaps();
 
-  if (main_win)
-    main_win->build_box->Prog_Step("CSG");
+  CSG_QUAKE_Build();
 
-  CSG_BSP(1.0);
-
-  CSG_SimpleCoalesce();
-
-  CSG_MakeMiniMap();
-
-  if (main_win)
-    main_win->build_box->Prog_Step("BSP");
-
-  Q1_CreateModel();
   Q1_CreateMipTex();
   Q1_CreateTexInfo();
   Q1_CreateEntities();
