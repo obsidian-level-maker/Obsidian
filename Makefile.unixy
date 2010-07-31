@@ -64,8 +64,10 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/lib_wad.o   \
 	$(OBJ_DIR)/sys_assert.o \
 	$(OBJ_DIR)/sys_debug.o \
+	$(OBJ_DIR)/csg_bsp.o  \
 	$(OBJ_DIR)/csg_main.o  \
 	$(OBJ_DIR)/csg_poly.o  \
+	$(OBJ_DIR)/csg_proc.o  \
 	$(OBJ_DIR)/g_cookie.o  \
 	$(OBJ_DIR)/g_lua.o     \
 	$(OBJ_DIR)/img_bolt.o  \
@@ -75,6 +77,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/img_font1.o  \
 	\
 	$(OBJ_DIR)/csg_doom.o  \
+	$(OBJ_DIR)/csg_nukem.o \
 	$(OBJ_DIR)/csg_quake.o \
 	$(OBJ_DIR)/dm_extra.o  \
 	$(OBJ_DIR)/dm_glbsp.o  \
@@ -84,7 +87,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/q1_clip.o   \
 	$(OBJ_DIR)/q1_doors.o  \
 	$(OBJ_DIR)/q1_main.o   \
-	$(OBJ_DIR)/q_bsp.o     \
+	$(OBJ_DIR)/q_common.o  \
 	$(OBJ_DIR)/q_light.o   \
 	$(OBJ_DIR)/vis_buffer.o \
 	$(OBJ_DIR)/wolf_map.o  \
