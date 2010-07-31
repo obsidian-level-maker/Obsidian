@@ -23,8 +23,8 @@
 #include "hdr_lua.h"
 #include "hdr_ui.h"
 
-#include "g_lua.h"
 #include "lib_util.h"
+#include "m_lua.h"
 
 
 #define MY_GREEN  fl_rgb_color(0,166,0)

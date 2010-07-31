@@ -28,7 +28,7 @@
 #include "lib_wad.h"
 
 #include "main.h"
-#include "g_lua.h"
+#include "m_lua.h"
 
 #include "nk_structs.h"
 #include "q_common.h"  // qLump_c

@@ -29,7 +29,7 @@
 #include "lib_pak.h"
 
 #include "main.h"
-#include "g_lua.h"
+#include "m_lua.h"
 
 #include "q_common.h"
 

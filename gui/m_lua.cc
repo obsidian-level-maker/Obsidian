@@ -29,9 +29,10 @@
 #include "lib_file.h"
 #include "lib_signal.h"
 #include "lib_util.h"
-#include "main.h"
 
-#include "g_lua.h"
+#include "main.h"
+#include "m_lua.h"
+
 #include "twister.h"
 
 

@@ -25,8 +25,7 @@
 
 #include "lib_util.h"
 #include "main.h"
-
-#include "g_lua.h"
+#include "m_lua.h"
 
 
 #define CONSOLE_BG  FL_BLACK

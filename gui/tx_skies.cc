@@ -22,8 +22,8 @@
 
 #include "lib_util.h"
 #include "main.h"
+#include "m_lua.h"
 
-#include "g_lua.h"
 #include "twister.h"
 #include "tx_forge.h"
 #include "tx_skies.h"

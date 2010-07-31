@@ -24,8 +24,7 @@
 #include "hdr_ui.h"
 
 #include "lib_util.h"
-
-#include "g_lua.h"
+#include "m_lua.h"
 
 
 #define MY_PURPLE  fl_rgb_color(208,0,208)

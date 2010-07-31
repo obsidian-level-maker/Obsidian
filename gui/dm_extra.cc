@@ -28,7 +28,7 @@
 #include "lib_wad.h"
 
 #include "main.h"
-#include "g_lua.h"
+#include "m_lua.h"
 
 #include "csg_main.h"
 

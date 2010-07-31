@@ -25,10 +25,11 @@
 
 #include "lib_argv.h"
 #include "lib_util.h"
-#include "main.h"
 
-#include "g_cookie.h"
-#include "g_lua.h"
+#include "main.h"
+#include "m_cookie.h"
+#include "m_lua.h"
+
 #include "ui_chooser.h"
 
 

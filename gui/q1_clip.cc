@@ -25,12 +25,12 @@
 
 #include "lib_file.h"
 #include "lib_util.h"
+
 #include "main.h"
+#include "m_lua.h"
 
 #include "csg_main.h"
 #include "csg_local.h"
-
-#include "g_lua.h"
 
 #include "q_common.h"
 #include "q1_main.h"

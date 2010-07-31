@@ -28,9 +28,10 @@
 #include "lib_wad.h"
 
 #include "main.h"
-#include "g_lua.h"
-#include "ui_chooser.h"
+#include "m_lua.h"
+
 #include "csg_main.h"
+#include "ui_chooser.h"
 
 #include "dm_extra.h"
 #include "dm_glbsp.h"

@@ -31,15 +31,14 @@
 #include "lib_util.h"
 
 #include "main.h"
-
-#include "ui_chooser.h"
-
-#include "g_cookie.h"
-#include "g_lua.h"
+#include "m_cookie.h"
+#include "m_lua.h"
 
 #include "csg_main.h"
 #include "nk_level.h"
 #include "q1_main.h"
+
+#include "ui_chooser.h"
 
 
 #define TICKER_TIME  50 /* ms */
