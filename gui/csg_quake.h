@@ -24,6 +24,23 @@
 
 /***** CLASSES ****************/
 
+class quake_vertex_c
+{
+public:
+  float x, y, z;
+
+public:
+  quake_vertex_c() : x(0), y(0), z(0)
+  { }
+
+  quake_vertex_c(float _x, float _y, float _z) : x(_x), y(_y), z(_z)
+  { }
+
+  ~quake_vertex_c()
+  { }
+};
+
+
 class quake_plane_c
 {
 public:
@@ -40,13 +57,16 @@ public:
 };
 
 
-
 class quake_face_c
 {
 public:
   quake_plane_c plane;
 
-  // TODO
+  std::vector<quake_vertex_c> verts;
+
+  // FIXME: texture and stuff
+
+  qLightmap_c *lmap;
 
 public:
   quake_face_c()
@@ -63,6 +83,8 @@ public:
   int contents;
 
   std::vector<quake_face_c *> faces;
+
+  int cluster;
 
 public:
   quake_leaf_c()
@@ -94,6 +116,8 @@ public:
 
 
 /***** VARIABLES ****************/
+
+extern quake_node_c * qk_bsp_root;
 
 
 /***** FUNCTIONS ****************/

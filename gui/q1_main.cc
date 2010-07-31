@@ -28,6 +28,9 @@
 #include "lib_pak.h"
 #include "main.h"
 
+#include "q_bsp.h"
+#include "q_light.h"
+
 #include "csg_main.h"
 #include "csg_local.h"
 #include "csg_quake.h"
@@ -35,8 +38,6 @@
 #include "ui_chooser.h"
 #include "img_all.h"
 
-#include "q_bsp.h"
-#include "q_light.h"
 #include "q1_main.h"
 #include "q1_structs.h"
 
