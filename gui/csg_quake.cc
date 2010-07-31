@@ -30,7 +30,7 @@
 #include "lib_util.h"
 #include "main.h"
 
-#include "q_bsp.h"
+#include "q_common.h"
 #include "q_light.h"
 
 #include "csg_main.h"
@@ -1933,7 +1933,7 @@ void Q1_CreateModel(void)
 // fprintf(stderr, "DONE.\n");
 
   // there is no need to delete the lumps from BSP_NewLump()
-  // since is handled by the q_bsp.c code.
+  // since is handled by the q_common.c code.
 }
 
 

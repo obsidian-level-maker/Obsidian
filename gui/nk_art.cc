@@ -31,7 +31,7 @@
 #include "g_lua.h"
 
 #include "nk_structs.h"
-#include "q_bsp.h"  // qLump_c
+#include "q_common.h"  // qLump_c
 
 #include "img_all.h"
 #include "tx_forge.h"

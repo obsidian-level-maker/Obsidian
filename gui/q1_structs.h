@@ -84,7 +84,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define HEADER_LUMPS  15
 
-// AJA: moved lump_t and dheader_t to q_bsp.h
+// AJA: moved lump_t and dheader_t to q_common.h
 
 typedef struct
 {
@@ -114,7 +114,7 @@ typedef struct miptex_s
 miptex_t;
 
 
-// AJA: moved dplane_t to q_bsp.h (common stuff)
+// AJA: moved dplane_t to q_common.h
 
 
 #define CONTENTS_EMPTY  -1
@@ -178,7 +178,7 @@ texinfo_t;
 #define TEX_SPECIAL  1
 
 
-// AJA: dvertex_t and dedge_t moved into q_bsp.h
+// AJA: dvertex_t and dedge_t moved into q_common.h
 
 
 #define MAXLIGHTMAPS  4

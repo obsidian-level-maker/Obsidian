@@ -98,7 +98,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 #define HEADER_LUMPS      19
 
-// AJA: moved dheader_t to q_bsp.h
+// AJA: moved dheader_t to q_common.h
 
 typedef struct
 {
@@ -116,7 +116,7 @@ dmodel2_t;
 // AJA: the pair is also ordered, first plane should have a normal
 //      whose greatest axis is positive.
 
-// AJA: moved dplane_t to q_bsp.h (common stuff)
+// AJA: moved dplane_t to q_common.h
 
 
 // contents flags are seperate bits
@@ -195,7 +195,7 @@ typedef struct
 texinfo2_t;
 
 
-// AJA: dvertex_t and dedge_t moved to q_bsp.h
+// AJA: dvertex_t and dedge_t moved to q_common.h
 
 
 #define MAXLIGHTMAPS  4

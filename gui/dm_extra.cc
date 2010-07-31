@@ -34,7 +34,7 @@
 
 #include "dm_extra.h"
 #include "dm_wad.h"
-#include "q_bsp.h"  // qLump_c
+#include "q_common.h"  // qLump_c
 
 #include "img_all.h"
 #include "tx_forge.h"

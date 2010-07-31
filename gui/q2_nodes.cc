@@ -34,7 +34,7 @@
 
 #include "g_lua.h"
 
-#include "q_bsp.h"
+#include "q_common.h"
 #include "q2_main.h"
 #include "q2_structs.h"
 

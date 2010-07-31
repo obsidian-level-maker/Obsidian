@@ -31,7 +31,7 @@
 #include "main.h"
 #include "g_lua.h"
 
-#include "q_bsp.h"
+#include "q_common.h"
 
 
 #define NORMAL_EPSILON  0.0001

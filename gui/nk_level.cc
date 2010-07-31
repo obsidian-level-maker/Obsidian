@@ -35,7 +35,7 @@
 
 #include "csg_main.h"
 #include "lib_wad.h"
-#include "q_bsp.h"
+#include "q_common.h"
 
 
 extern void CSG_NUKEM_Write();
