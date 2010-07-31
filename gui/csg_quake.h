@@ -118,6 +118,7 @@ public:
 /***** VARIABLES ****************/
 
 extern quake_node_c * qk_bsp_root;
+extern quake_leaf_c * qk_solid_leaf;
 
 
 /***** FUNCTIONS ****************/

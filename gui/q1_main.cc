@@ -537,6 +537,147 @@ static void DummyTexInfo(void)
 #endif
 
 
+//------------------------------------------------------------------------
+
+static void Q1_WriteFace(quake_face_c *face, dleaf_t *raw_leaf)
+{
+}
+
+
+static void Q1_WriteLeaf(quake_leaf_c *leaf)
+{
+  if (leaf == qk_solid_leaf)
+    return;
+
+
+  dleaf_t raw_leaf;
+
+  memset(&raw_leaf, 0, sizeof(raw_leaf));
+
+
+  raw_leaf.contents = leaf->contents;
+  raw_leaf.visofs   = -1;  // no visibility info
+
+
+  // create the 'mark surfs'
+  raw_leaf.first_marksurf = q1_total_mark_surfs;
+  raw_leaf.num_marksurf   = 0;
+
+  for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
+    Q1_WriteFace(leaf->faces[i], &raw_leaf);
+
+#if 0  ///?????
+  {
+    rFace_c *F = leaf->faces[i];
+
+    // should have been in a node already
+    if (F->index < 0)
+      LogPrintf("WARNING: face found in leaf but not in node\n");
+    else
+      Q1_AddSurf(F->index, &raw_leaf);
+  }
+#endif
+
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_leaf.mins[b] = I_ROUND(leaf->mins[b]) - 4;
+    raw_leaf.maxs[b] = I_ROUND(leaf->maxs[b]) + 4;
+
+    // fix endianness
+    raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b]);
+    raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b]);
+  }
+
+
+  // fix endianness of everything else
+  raw_leaf.contents = LE_S32(raw_leaf.contents);
+  raw_leaf.visofs   = LE_S32(raw_leaf.visofs);
+
+  raw_leaf.first_marksurf = LE_U16(raw_leaf.first_marksurf);
+  raw_leaf.num_marksurf   = LE_U16(raw_leaf.num_marksurf);
+
+
+  q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
+}
+
+
+static void Q1_WriteNode(quake_node_c *node)
+{
+  dnode_t raw_node;
+
+  bool flipped;
+
+  raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
+
+  
+  if (node->front_N)
+    raw_node.children[0] = (u16_t) node->front_N->index;
+  else
+    raw_node.children[0] = (u16_t) node->front_L->index;
+
+  if (node->back_N)
+    raw_node.children[1] = (u16_t) node->back_N->index;
+  else
+    raw_node.children[1] = (u16_t) node->back_L->index;
+
+  if (flipped)
+  {
+    std::swap(raw_node.children[0], raw_node.children[1]);
+  }
+
+
+  if (node->faces.size() > 0)
+  {
+    raw_node.firstface = q1_total_faces;
+    raw_node.numfaces  = node->faces.size();
+
+    for (unsigned int k = 0 ; k < node->faces.size() ; k++)
+      Q1_WriteFace(node->faces[k], node);
+  }
+
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_node.mins[b] = I_ROUND(node->mins[b]) - 32;
+    raw_node.maxs[b] = I_ROUND(node->maxs[b]) + 32;
+
+    // fix endianness
+    raw_node.mins[b] = LE_S16(raw_node.mins[b]);
+    raw_node.maxs[b] = LE_S16(raw_node.maxs[b]);
+  }
+
+
+  // fix endianness of everything else
+  raw_node.planenum    = LE_S32(raw_node.planenum);
+  raw_node.children[0] = LE_S16(raw_node.children[0]);
+  raw_node.children[1] = LE_S16(raw_node.children[1]);
+  raw_node.firstface   = LE_U16(raw_node.firstface);
+  raw_node.numfaces    = LE_U16(raw_node.numfaces);
+
+
+  q1_nodes->Append(&raw_node, sizeof(raw_node));
+
+
+  // recurse now, AFTER adding the current node
+
+  if (node->front_N)
+    Q1_WriteNode(node->front_N);
+  else
+    Q1_WriteLeaf(node->front_L);
+
+  if (node->back_N)
+    Q1_WriteNode(node->back_N);
+  else
+    Q1_WriteLeaf(node->back_L);
+}
+
+
+static void Q1_WriteBSP()
+{
+  Q1_WriteNode(qk_bsp_root);  
+}
+
 
 //------------------------------------------------------------------------
 
