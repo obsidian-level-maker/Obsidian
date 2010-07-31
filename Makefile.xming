@@ -50,6 +50,8 @@ LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
 #----- Objects ----------------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
+	$(OBJ_DIR)/m_cookie.o  \
+	$(OBJ_DIR)/m_lua.o     \
 	$(OBJ_DIR)/oblige_res.o \
 	$(OBJ_DIR)/lib_argv.o  \
 	$(OBJ_DIR)/lib_file.o  \
@@ -63,8 +65,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/csg_main.o  \
 	$(OBJ_DIR)/csg_poly.o  \
 	$(OBJ_DIR)/csg_proc.o  \
-	$(OBJ_DIR)/g_cookie.o  \
-	$(OBJ_DIR)/g_lua.o     \
 	$(OBJ_DIR)/img_bolt.o  \
 	$(OBJ_DIR)/img_pill.o  \
 	$(OBJ_DIR)/img_carve.o \
