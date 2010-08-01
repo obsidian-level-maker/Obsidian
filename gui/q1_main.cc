@@ -539,8 +539,87 @@ static void DummyTexInfo(void)
 
 //------------------------------------------------------------------------
 
-static void Q1_WriteFace(quake_face_c *face, dleaf_t *raw_leaf)
+static void Q1_WriteEdge(quake_vertex_c *A, quake_vertex_c *B)
 {
+  u16_t v1 = BSP_AddVertex(A->x, A->y, A->z);
+  u16_t v2 = BSP_AddVertex(B->x, B->y, B->z);
+
+  if (v1 == v2)
+  {
+    Main_FatalError("INTERNAL ERROR: Q1 WriteEdge is zero length!\n");
+  }
+
+  s32_t index = BSP_AddEdge(v1, v2);
+
+  // fix endianness
+  index = LE_S32(index);
+
+  q1_surf_edges->Append(&index, sizeof(index));
+  q1_total_surf_edges += 1;
+}
+
+
+static void Q1_WriteFace(quake_face_c *face)
+{
+  face->index = q1_total_faces;
+
+  q1_total_faces += 1;
+
+
+  dface_t raw_face;
+
+  memset(&raw_face, 0, sizeof(raw_face));
+
+
+  bool flipped;
+
+  raw_face.planenum = BSP_AddPlane(&face->plane, &flipped);
+
+  raw_face.side = flipped ? 1 : 0;
+
+
+  unsigned int total_v = face->verts.size();
+
+  raw_face.firstedge = q1_total_surf_edges;
+  raw_face.numedges  = total_v;
+
+  for (unsigned int i = 0 ; i < total_v ; i++)
+  {
+    Q1_WriteEdge(face->verts[i], face->verts[(i+1) % total_v]);
+  }
+
+
+  // FIXME !!!! texinfo
+
+
+  raw_face.lightofs = 0 + (rand() & 16383); //!!!!!! TEST CRUD
+
+  if (face->lmap)
+    raw_face.lightofs = face->lmap->CalcOffset();
+
+
+  // fix endianness
+  raw_face.planenum  = LE_S16(raw_face.planenum);
+  raw_face.side      = LE_S16(raw_face.side);
+  raw_face.firstedge = LE_S32(raw_face.firstedge);
+  raw_face.numedges  = LE_S16(raw_face.numedges);
+  raw_face.texinfo   = LE_S16(raw_face.texinfo);
+  raw_face.lightofs  = LE_S32(raw_face.lightofs);
+
+
+  q1_faces->Append(&raw_face, sizeof(raw_face));
+}
+
+
+static void Q1_WriteMarkSurf(quake_face_c *face)
+{
+  SYS_ASSERT(face->index >= 0);
+
+  // fix endianness
+  u16_t index = LE_U16(face->index);
+
+  q1_mark_surfs->Append(&index, sizeof(index));
+  q1_total_mark_surfs += 1;
 }
 
 
@@ -564,7 +643,11 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
   raw_leaf.num_marksurf   = 0;
 
   for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
-    Q1_WriteFace(leaf->faces[i], &raw_leaf);
+  {
+    Q1_WriteMarkSurf(leaf->faces[i]);
+
+    raw_leaf.num_marksurf += 1;
+  }
 
 #if 0  ///?????
   {
@@ -633,7 +716,9 @@ static void Q1_WriteNode(quake_node_c *node)
     raw_node.numfaces  = node->faces.size();
 
     for (unsigned int k = 0 ; k < node->faces.size() ; k++)
+    {
       Q1_WriteFace(node->faces[k], node);
+    }
   }
 
 
@@ -777,8 +862,7 @@ void quake1_game_interface_c::EndLevel()
   char entry_in_pak[64];
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
-  if (! BSP_OpenLevel(entry_in_pak, 1))
-    return; //!!!!!! ARGH
+  BSP_OpenLevel(entry_in_pak, 1);
 
   ClearMipTex();
   ClearTexInfo();

@@ -160,6 +160,7 @@ int qLightmap_c::CalcOffset() const
     result = 64 + result / 2;
   }
 
+  // for flat maps, 'offset' field remembers colored vs mono
   return result * (offset ? 3 : 1);
 }
 
