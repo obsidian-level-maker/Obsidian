@@ -194,7 +194,7 @@ static void BSP_ClearPlanes()
 }
 
 
-void BSP_PreparePlanes()
+static void BSP_PreparePlanes()
 {
   BSP_ClearPlanes();
 }
@@ -393,7 +393,8 @@ static void BSP_ClearVertices()
   }
 }
 
-void BSP_PrepareVertices()
+
+static void BSP_PrepareVertices()
 {
   BSP_ClearVertices();
 
@@ -482,7 +483,8 @@ static void BSP_ClearEdges()
   bsp_edge_map.clear();
 }
 
-void BSP_PrepareEdges()
+
+static void BSP_PrepareEdges()
 {
   BSP_ClearEdges();
 
@@ -624,6 +626,12 @@ bool BSP_OpenLevel(const char *entry_in_pak, int game)
 
   BSP_ClearLumps();
 
+  BSP_PreparePlanes();
+  BSP_PrepareVertices();
+  BSP_PrepareEdges();
+
+  BSP_InitLightmaps();
+
   return true;
 }
 
@@ -677,6 +685,8 @@ bool BSP_CloseLevel()
 
   // free all the memory
   BSP_ClearLumps();
+
+  BSP_FreeLightmaps();
 
   return true;
 }

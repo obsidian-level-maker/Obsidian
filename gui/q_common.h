@@ -72,10 +72,6 @@ void BSP_AddInfoFile();
 qLump_c *BSP_CreateInfoLump();
 
 
-void BSP_PreparePlanes(int lump, int max_planes);
-void BSP_PrepareVertices(int lump, int max_verts);
-void BSP_PrepareEdges(int lump, int max_edges);
-
 u16_t BSP_AddPlane(float x, float y, float z,
                    float nx, float ny, float nz, bool *flip_var = NULL);
 u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);

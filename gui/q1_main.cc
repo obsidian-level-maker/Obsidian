@@ -867,12 +867,6 @@ void quake1_game_interface_c::EndLevel()
   ClearMipTex();
   ClearTexInfo();
 
-  BSP_PreparePlanes  ();
-  BSP_PrepareVertices();
-  BSP_PrepareEdges   ();
-
-  BSP_InitLightmaps();
-
   CSG_QUAKE_Build();
 
   Q1_CreateMipTex();
@@ -893,8 +887,6 @@ void quake1_game_interface_c::EndLevel()
 
   if (description)
     StringFree(description);
-
-  BSP_FreeLightmaps();
 }
 
 

@@ -456,26 +456,12 @@ void quake2_game_interface_c::EndLevel()
   char entry_in_pak[64];
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
-  if (! BSP_OpenLevel("maps/base1.bsp", 2))
-    return; //!!!!!! ARGH
+  BSP_OpenLevel("maps/base1.bsp", 2);
 
   ClearBrushes();
   ClearTexInfo();
 
-  BSP_PreparePlanes  ();
-  BSP_PrepareVertices();
-  BSP_PrepareEdges   ();
-
-  BSP_InitLightmaps();
-
-  if (main_win)
-    main_win->build_box->Prog_Step("CSG");
-
-  CSG2_MergeAreas();
-///  CSG2_MakeMiniMap();
-
-  if (main_win)
-    main_win->build_box->Prog_Step("BSP");
+  CSG_QUAKE_Build();
 
   // this builds the bsp tree
   Q2_CreateModel();
@@ -497,7 +483,6 @@ void quake2_game_interface_c::EndLevel()
 
   // FREE STUFF !!!!
 
-  BSP_FreeLightmaps();
 }
 
 
