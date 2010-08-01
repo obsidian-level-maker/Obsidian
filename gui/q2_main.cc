@@ -462,9 +462,9 @@ void quake2_game_interface_c::EndLevel()
   ClearBrushes();
   ClearTexInfo();
 
-  BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
-  BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
-  BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
+  BSP_PreparePlanes  ();
+  BSP_PrepareVertices();
+  BSP_PrepareEdges   ();
 
   BSP_InitLightmaps();
 
@@ -489,9 +489,9 @@ void quake2_game_interface_c::EndLevel()
 
   BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true);
 
-  BSP_WritePlanes();
-  BSP_WriteVertices();
-  BSP_WriteEdges();
+  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
+  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
 
   BSP_CloseLevel();
 

@@ -402,9 +402,6 @@ void BSP_AddInfoFile()
 
 //------------------------------------------------------------------------
 
-static int bsp_plane_lump;
-static int bsp_max_planes;
-
 static std::vector<dplane_t> bsp_planes;
 
 #define NUM_PLANE_HASH  128
@@ -423,11 +420,8 @@ static void BSP_ClearPlanes()
 }
 
 
-void BSP_PreparePlanes(int lump, int max_planes)
+void BSP_PreparePlanes()
 {
-  bsp_plane_lump = lump;
-  bsp_max_planes = max_planes;
-
   BSP_ClearPlanes();
 }
 
@@ -479,11 +473,7 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
   *was_new = true;
 
-  int new_index = (int)bsp_planes.size();
-
-  if (new_index >= bsp_max_planes)
-    Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
-                    bsp_max_planes);
+  u16_t new_index = bsp_planes.size();
 
   bsp_planes.push_back(raw_plane);
 
@@ -596,11 +586,13 @@ u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var)
 }
 
 
-void BSP_WritePlanes(void)
+void BSP_WritePlanes(int lump_num, int max_planes)
 {
-  // FIXME: pass bsp_plane_lump as parameter
+  if ((int)bsp_planes.size() >= max_planes)
+    Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
+                    max_planes);
 
-  qLump_c *lump = BSP_NewLump(bsp_plane_lump);
+  qLump_c *lump = BSP_NewLump(lump_num);
 
   lump->Append(&bsp_planes[0], bsp_planes.size() * sizeof(dplane_t));
 
@@ -609,9 +601,6 @@ void BSP_WritePlanes(void)
 
 
 //------------------------------------------------------------------------
-
-static int bsp_vert_lump;
-static int bsp_max_verts;
 
 static std::vector<dvertex_t> bsp_vertices;
 
@@ -630,11 +619,8 @@ static void BSP_ClearVertices()
   }
 }
 
-void BSP_PrepareVertices(int lump, int max_verts)
+void BSP_PrepareVertices()
 {
-  bsp_vert_lump = lump;
-  bsp_max_verts = max_verts;
-
   BSP_ClearVertices();
 
   // insert dummy vertex #0
@@ -645,22 +631,23 @@ void BSP_PrepareVertices(int lump, int max_verts)
 }
 
 
-u16_t BSP_AddVertex(double x, double y, double z)
+u16_t BSP_AddVertex(float x, float y, float z)
 {
-  dvertex_t vert;
-
-  vert.x = x;
-  vert.y = y;
-  vert.z = z;
-
-  // find existing vertex
-  // for speed we use a hash-table
-  int hash;
-  hash = IntHash(       (I_ROUND(x+1.4) >> 7));
-  hash = IntHash(hash ^ (I_ROUND(y+1.4) >> 7));
+  int hash = I_ROUND(x * 1.1);
 
   hash = hash & (NUM_VERTEX_HASH-1);
-  SYS_ASSERT(hash >= 0);
+
+
+  // create on-disk vertex, fixing endianness
+  dvertex_t raw_vert;
+
+  raw_vert.x = LE_Float32(x);
+  raw_vert.y = LE_Float32(y);
+  raw_vert.z = LE_Float32(z);
+
+
+  // find existing vertex...
+  // for speed we use a hash-table
 
   if (! vert_hashtab[hash])
     vert_hashtab[hash] = new std::vector<u16_t>;
@@ -669,46 +656,38 @@ u16_t BSP_AddVertex(double x, double y, double z)
 
   for (unsigned int i = 0; i < hashtab->size(); i++)
   {
-    u16_t vert_idx = (*hashtab)[i];
+    u16_t index = (*hashtab)[i];
  
-    dvertex_t *test = &bsp_vertices[vert_idx];
-
-    if (fabs(test->x - x) < Q_EPSILON &&
-        fabs(test->y - y) < Q_EPSILON &&
-        fabs(test->z - z) < Q_EPSILON)
-    {
-      return vert_idx; // found it!
-    }
+    if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(dvertex_t)) == 0)
+      return index;  // found it!
   }
 
-  // not found, so add new one
-  u16_t vert_idx = bsp_vertices.size();
 
-  if (vert_idx >= bsp_max_verts)
-    Main_FatalError("Quake build failure: exceeded limit of %d VERTEXES\n",
-                    bsp_max_verts);
+  // not found, so add new one...
 
-  bsp_vertices.push_back(vert);
+  u16_t new_index = bsp_vertices.size();
 
-  hashtab->push_back(vert_idx);
+  bsp_vertices.push_back(raw_vert);
 
-  return vert_idx;
+  hashtab->push_back(new_index);
+
+  return new_index;
 }
 
 
-void BSP_WriteVertices(void)
+u16_t BSP_AddVertex(const quake_vertex_c *V)
 {
-  // fix endianness
-  for (unsigned int i = 0; i < bsp_vertices.size(); i++)
-  {
-    dvertex_t& v = bsp_vertices[i];
+  return BSP_AddVertex(V->x, V->y, V->z);
+}
 
-    v.x = LE_Float32(v.x);
-    v.y = LE_Float32(v.y);
-    v.z = LE_Float32(v.z);
-  }
 
-  qLump_c *lump = BSP_NewLump(bsp_vert_lump);
+void BSP_WriteVertices(int lump_num, int max_verts)
+{
+  if ((int)bsp_vertices.size() >= max_verts)
+    Main_FatalError("Quake build failure: exceeded limit of %d VERTEXES\n",
+                    max_verts);
+
+  qLump_c *lump = BSP_NewLump(lump_num);
 
   lump->Append(&bsp_vertices[0], bsp_vertices.size() * sizeof(dvertex_t));
 
@@ -717,9 +696,6 @@ void BSP_WriteVertices(void)
 
 
 //------------------------------------------------------------------------
-
-static int bsp_edge_lump;
-static int bsp_max_edges;
 
 static std::vector<dedge_t> bsp_edges;
 
@@ -732,11 +708,8 @@ static void BSP_ClearEdges()
   bsp_edge_map.clear();
 }
 
-void BSP_PrepareEdges(int lump, int max_edges)
+void BSP_PrepareEdges()
 {
-  bsp_edge_lump = lump;
-  bsp_max_edges = max_edges;
-
   BSP_ClearEdges();
 
   // insert dummy edge #0
@@ -753,50 +726,45 @@ s32_t BSP_AddEdge(u16_t start, u16_t end)
 
   if (start > end)
   {
+    std::swap(start, end);
+
     flipped = true;
-    u16_t tmp = start; start = end; end = tmp;
   }
 
-  dedge_t edge;
 
-  edge.v[0] = start;
-  edge.v[1] = end;
-
+  // find existing edge...
   u32_t key = (u32_t)start + (u32_t)(end << 16);
 
-
-  // find existing edge
   if (bsp_edge_map.find(key) != bsp_edge_map.end())
+  {
     return bsp_edge_map[key] * (flipped ? -1 : 1);
+  }
 
 
-  // not found, so add new one
-  int edge_idx = bsp_edges.size();
+  // not found, so add new one...
+  dedge_t raw_edge;
 
-  if (edge_idx >= bsp_max_edges)
-    Main_FatalError("Quake build failure: exceeded limit of %d EDGES\n",
-                    bsp_max_edges);
+  raw_edge.v[0] = LE_U16(start);
+  raw_edge.v[1] = LE_U16(end);
 
-  bsp_edges.push_back(edge);
 
-  bsp_edge_map[key] = edge_idx;
+  int new_index = (int)bsp_edges.size();
 
-  return flipped ? -edge_idx : edge_idx;
+  bsp_edges.push_back(raw_edge);
+
+  bsp_edge_map[key] = new_index;
+
+  return flipped ? -new_index : new_index;
 }
 
 
-void BSP_WriteEdges(void)
+void BSP_WriteEdges(int lump_num, int max_edges)
 {
-  // fix endianness
-  for (unsigned int i = 0; i < bsp_edges.size(); i++)
-  {
-    dedge_t& e = bsp_edges[i];
+  if ((int)bsp_edges.size() >= max_edges)
+    Main_FatalError("Quake build failure: exceeded limit of %d EDGES\n",
+                    max_edges);
 
-    e.v[0] = LE_U16(e.v[0]);
-    e.v[1] = LE_U16(e.v[1]);
-  }
-
-  qLump_c *lump = BSP_NewLump(bsp_edge_lump);
+  qLump_c *lump = BSP_NewLump(lump_num);
 
   lump->Append(&bsp_edges[0], bsp_edges.size() * sizeof(dedge_t));
 

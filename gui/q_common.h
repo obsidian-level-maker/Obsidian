@@ -26,6 +26,7 @@
 
 
 class quake_plane_c;
+class quake_vertex_c;
 
 
 class qLump_c
@@ -79,12 +80,14 @@ u16_t BSP_AddPlane(float x, float y, float z,
                    float nx, float ny, float nz, bool *flip_var = NULL);
 u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
 
-u16_t BSP_AddVertex(double x, double y, double z);
+u16_t BSP_AddVertex(float x, float y, float z);
+u16_t BSP_AddVertex(const quake_vertex_c *V);
+
 s32_t BSP_AddEdge(u16_t start, u16_t end);
 
-void BSP_WritePlanes(void);
-void BSP_WriteVertices(void);
-void BSP_WriteEdges(void);
+void BSP_WritePlanes  (int lump_num, int max_planes);
+void BSP_WriteVertices(int lump_num, int max_verts);
+void BSP_WriteEdges   (int lump_num, int max_edges);
 
 
 /* ----- Intersection Lists ------------------------- */

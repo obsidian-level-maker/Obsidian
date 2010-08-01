@@ -867,9 +867,9 @@ void quake1_game_interface_c::EndLevel()
   ClearMipTex();
   ClearTexInfo();
 
-  BSP_PreparePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
-  BSP_PrepareVertices(LUMP_VERTEXES, MAX_MAP_VERTS);
-  BSP_PrepareEdges   (LUMP_EDGES,    MAX_MAP_EDGES);
+  BSP_PreparePlanes  ();
+  BSP_PrepareVertices();
+  BSP_PrepareEdges   ();
 
   BSP_InitLightmaps();
 
@@ -879,9 +879,9 @@ void quake1_game_interface_c::EndLevel()
   Q1_CreateTexInfo();
   Q1_CreateEntities();
 
-  BSP_WritePlanes();
-  BSP_WriteVertices();
-  BSP_WriteEdges();
+  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
+  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
 
   BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
 
