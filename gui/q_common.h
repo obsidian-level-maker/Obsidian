@@ -72,8 +72,10 @@ void BSP_PreparePlanes(int lump, int max_planes);
 void BSP_PrepareVertices(int lump, int max_verts);
 void BSP_PrepareEdges(int lump, int max_edges);
 
-u16_t BSP_AddPlane(double x, double y, double z,
-                   double nx, double ny, double nz, bool *flipped = NULL);
+u16_t BSP_AddPlane(float x, float y, float z,
+                   float nx, float ny, float nz, bool *flip_var = NULL);
+u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var = NULL);
+
 u16_t BSP_AddVertex(double x, double y, double z);
 s32_t BSP_AddEdge(u16_t start, u16_t end);
 

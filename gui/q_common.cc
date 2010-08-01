@@ -410,8 +410,6 @@ static std::vector<dplane_t> bsp_planes;
 #define NUM_PLANE_HASH  128
 static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
 
-#define PLANE_NOT_FOUND  0xFFFF
-
 
 static void BSP_ClearPlanes()
 {
@@ -424,6 +422,7 @@ static void BSP_ClearPlanes()
   }
 }
 
+
 void BSP_PreparePlanes(int lump, int max_planes)
 {
   bsp_plane_lump = lump;
@@ -433,12 +432,76 @@ void BSP_PreparePlanes(int lump, int max_planes)
 }
 
 
-u16_t BSP_AddPlane(double x, double y, double z,
-                   double nx, double ny, double nz,
-                   bool *flipped)
+static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 {
-  // NOTE: the 'flipped' parameter should only be provided for Quake1,
-  //       and should be omitted for Quake2/3.
+  // copy it
+  dplane_t raw_plane;
+
+  memcpy(&raw_plane, plane, sizeof(dplane_t));
+
+  *was_new = false;
+
+
+  int hash = I_ROUND(raw_plane.dist * 1.1);
+
+  hash = hash & (NUM_PLANE_HASH-1);
+
+
+  // fix endianness
+  raw_plane.normal[0] = LE_Float32(raw_plane.normal[0]);
+  raw_plane.normal[1] = LE_Float32(raw_plane.normal[1]);
+  raw_plane.normal[2] = LE_Float32(raw_plane.normal[2]);
+
+  raw_plane.dist = LE_Float32(raw_plane.dist);
+  raw_plane.type = LE_S32(raw_plane.type);
+
+
+  // look for it in hash table...
+
+  if (! plane_hashtab[hash])
+    plane_hashtab[hash] = new std::vector<u16_t>;
+    
+  std::vector<u16_t> *hashtab = plane_hashtab[hash];
+
+
+  for (unsigned int i = 0; i < hashtab->size(); i++)
+  {
+    u16_t index = (*hashtab)[i];
+
+    SYS_ASSERT(index < bsp_planes.size());
+
+    if (memcmp(&raw_plane, &bsp_planes[index], sizeof(dplane_t)) == 0)
+      return index;  // found it
+  }
+
+
+  // not found, so add new one...
+
+  *was_new = true;
+
+  unsigned int new_index = bsp_planes.size();
+
+  if (new_index >= bsp_max_planes)
+    Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
+                    bsp_max_planes);
+
+  bsp_planes.push_back(raw_plane);
+
+  hashtab->push_back(new_index);
+
+//  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
+//                   (int)plane_idx, (int)bsp_planes.size());
+
+  return new_index;
+}
+
+
+u16_t BSP_AddPlane(float x, float y, float z,
+                   float nx, float ny, float nz,
+                   bool *flip_var)
+{
+  // NOTE: flip_var should only be provided for Quake 1,
+  //       and should be omitted for Quake 2/3.
 
   bool did_flip = false;
 
@@ -450,9 +513,10 @@ u16_t BSP_AddPlane(double x, double y, double z,
   ny /= len;
   nz /= len;
 
-  double ax = fabs(nx);
-  double ay = fabs(ny);
-  double az = fabs(nz);
+  float ax = fabs(nx);
+  float ay = fabs(ny);
+  float az = fabs(nz);
+
 
   // flip plane to make major axis positive
   if ( (-nx >= MAX(ay, az)) ||
@@ -466,128 +530,75 @@ u16_t BSP_AddPlane(double x, double y, double z,
     nz = -nz;
   }
 
-  // distance to the origin (0,0,0)
-  double dist = (x*nx + y*ny + z*nz);
-
 
   // create plane structure
-  dplane_t dp;
+  dplane_t raw_plane;
 
-  dp.normal[0] = nx;
-  dp.normal[1] = ny;
-  dp.normal[2] = nz;
+  raw_plane.normal[0] = nx;
+  raw_plane.normal[1] = ny;
+  raw_plane.normal[2] = nz;
 
-  dp.dist = dist;
+  // distance to the origin (0,0,0)
+  raw_plane.dist = (x*nx + y*ny + z*nz);
 
-  if (ax > 1.0 - NORMAL_EPSILON)
-    dp.type = PLANE_X;
-  else if (ay > 1.0 - NORMAL_EPSILON)
-    dp.type = PLANE_Y;
-  else if (az > 1.0 - NORMAL_EPSILON)
-    dp.type = PLANE_Z;
+
+  // determine 'type' field
+  if (ax > 0.999)
+    raw_plane.type = PLANE_X;
+  else if (ay > 0.999)
+    raw_plane.type = PLANE_Y;
+  else if (az > 0.999)
+    raw_plane.type = PLANE_Z;
   else if (ax >= MAX(ay, az))
-    dp.type = PLANE_ANYX;
+    raw_plane.type = PLANE_ANYX;
   else if (ay >= MAX(ax, az))
-    dp.type = PLANE_ANYY;
+    raw_plane.type = PLANE_ANYY;
   else
-    dp.type = PLANE_ANYZ;
+    raw_plane.type = PLANE_ANYZ;
 
 
-  // find an existing matching plane.
-  // For speed we use a hash-table based on nx/ny/nz/dist
-  int hash = I_ROUND(dist / 8.0 + 0.333);
-  hash = IntHash(hash ^ I_ROUND((nx+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((ny+1.0) * 8));
-  hash = IntHash(hash ^ I_ROUND((nz+1.0) * 8));
+  bool was_new;
 
-  hash = hash & (NUM_PLANE_HASH-1);
-  SYS_ASSERT(hash >= 0);
-
-  if (! plane_hashtab[hash])
-    plane_hashtab[hash] = new std::vector<u16_t>;
-    
-  std::vector<u16_t> *hashtab = plane_hashtab[hash];
+  u16_t plane_idx = AddRawPlane(&raw_plane, &was_new);
 
 
-  u16_t plane_idx = PLANE_NOT_FOUND;
-
-  for (unsigned int i = 0; i < hashtab->size(); i++)
+  if (flip_var)  // Quake 1
   {
-    u16_t index = (*hashtab)[i];
+    *flip_var = did_flip;
 
-    SYS_ASSERT(index < bsp_planes.size());
-
-    dplane_t *test_p = &bsp_planes[index];
-
-    // Note: we ignore the redundant 'type' field
-    if (fabs(test_p->dist - dist)    < 0.001 &&
-        fabs(test_p->normal[0] - nx) < NORMAL_EPSILON &&
-        fabs(test_p->normal[1] - ny) < NORMAL_EPSILON &&
-        fabs(test_p->normal[2] - nz) < NORMAL_EPSILON)
-    {
-      plane_idx = index; // found it
-      break;
-    }
-  }
-
-
-  if (plane_idx == PLANE_NOT_FOUND)
-  {
-    // not found, so add new one
-    plane_idx = bsp_planes.size();
-
-    if (plane_idx >= bsp_max_planes)
-      Main_FatalError("Quake1 build failure: exceeded limit of %d PLANES\n",
-                      bsp_max_planes);
-
-    bsp_planes.push_back(dp);
-
-    // Quake2/3 have pairs of planes (opposite directions)
-    if (! flipped)
-    {
-      dp.normal[0] = -nx;
-      dp.normal[1] = -ny;
-      dp.normal[2] = -nz;
-
-      dp.dist = -dist;
-
-      bsp_planes.push_back(dp);
-    }
-
-//  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
-//                   (int)plane_idx, (int)bsp_planes.size());
-
-    hashtab->push_back(plane_idx);
-  }
-
-
-  if (flipped)
-  {
-    // Quake1
-    *flipped = did_flip;
     return plane_idx;
   }
-  else
+
+
+  // Quake2/3 have pairs of planes (opposite directions)
+
+  if (was_new)
   {
-    // Quake2/3
-    return plane_idx + (did_flip ? 1 : 0);
+    raw_plane.normal[0] = -nx;
+    raw_plane.normal[1] = -ny;
+    raw_plane.normal[2] = -nz;
+
+    raw_plane.dist = -raw_plane.dist;
+
+    AddRawPlane(&raw_plane, &was_new);
   }
+
+  return plane_idx + (did_flip ? 1 : 0);
+}
+
+
+u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var)
+{
+  // NOTE: flip_var should only be provided for Quake 1,
+  //       and should be omitted for Quake 2/3.
+
+  return BSP_AddPlane(P->x, P->y, P->z, P->nx, P->ny, P->nz, flipped);
 }
 
 
 void BSP_WritePlanes(void)
 {
-  // fix endianness
-  for (unsigned int i = 0; i < bsp_planes.size(); i++)
-  {
-    dplane_t& dp = bsp_planes[i];
-
-    dp.normal[0] = LE_Float32(dp.normal[0]);
-    dp.normal[1] = LE_Float32(dp.normal[1]);
-    dp.normal[2] = LE_Float32(dp.normal[2]);
-
-    dp.dist = LE_Float32(dp.dist);
-  }
+  // FIXME: pass bsp_plane_lump as parameter
 
   qLump_c *lump = BSP_NewLump(bsp_plane_lump);
 

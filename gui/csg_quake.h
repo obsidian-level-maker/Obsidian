@@ -44,9 +44,9 @@ public:
 class quake_plane_c
 {
 public:
-  float nx, ny, nz;  // normal
+  float x, y, z;  // any point on the plane
 
-  float dist;
+  float nx, ny, nz;  // normal
 
 public:
   quake_plane_c()
