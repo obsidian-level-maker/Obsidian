@@ -176,7 +176,6 @@ const char *qLump_c::GetName() const
 
 //------------------------------------------------------------------------
 
-
 #define HEADER_LUMP_MAX  32
 
 static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
@@ -184,39 +183,6 @@ static int bsp_numlumps;
 static int bsp_version;
 
 static qLump_c * bsp_directory[HEADER_LUMP_MAX];
-
-
-#if 0  // OLD STUFF (writing to a FILE)
-static void BSP_RawSeek(u32_t pos)
-{
-  fflush(bsp_fp);
-
-  if (fseek(bsp_fp, pos, SEEK_SET) < 0)
-  {
-    if (seek_errors_seen < 10)
-    {
-      LogPrintf("Failure seeking in bsp file! (offset %u)\n", pos);
-
-      seek_errors_seen += 1;
-    }
-  }
-}
-
-static void BSP_RawWrite(const void *data, u32_t len)
-{
-  SYS_ASSERT(bsp_fp);
-
-  if (1 != fwrite(data, len, 1, bsp_fp))
-  {
-    if (write_errors_seen < 10)
-    {
-      LogPrintf("Failure writing to bsp file! (%u bytes)\n", len);
-
-      write_errors_seen += 1;
-    }
-  }
-}
-#endif
 
 
 static void BSP_ClearLumps(void)
