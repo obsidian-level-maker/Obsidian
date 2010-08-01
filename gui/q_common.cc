@@ -176,198 +176,6 @@ const char *qLump_c::GetName() const
 
 //------------------------------------------------------------------------
 
-#define HEADER_LUMP_MAX  32
-
-static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
-static int bsp_numlumps;
-static int bsp_version;
-
-static qLump_c * bsp_directory[HEADER_LUMP_MAX];
-
-
-static void BSP_ClearLumps(void)
-{
-  for (int i = 0; i < bsp_numlumps; i++)
-  {
-    if (bsp_directory[i])
-    {
-      delete bsp_directory[i];
-      bsp_directory[i] = NULL;
-    }
-  }
-}
-
-
-static void BSP_WriteLump(qLump_c *lump)
-{
-  SYS_ASSERT(lump);
-
-  int len = lump->GetSize();
-
-  if (len == 0)
-    return;
-
-  PAK_AppendData(lump->GetBuffer(), len);
-
-  // pad lumps to a multiple of four bytes
-  u32_t padding = ALIGN_LEN(len) - len;
-
-  SYS_ASSERT(0 <= padding && padding <= 3);
-
-  if (padding > 0)
-  {
-    static u8_t zeros[4] = { 0,0,0,0 };
-
-    PAK_AppendData(zeros, padding);
-  }
-}
-
-
-bool BSP_OpenLevel(const char *entry_in_pak, int game)
-{
-  // assumes that PAK_OpenWrite() has already been called.
-
-  // FIXME: ASSERT(!already opened)
-
-  PAK_NewLump(entry_in_pak);
-
-  bsp_game = game;
-
-  switch (game)
-  {
-    case 1:
-      bsp_version  = Q1_BSP_VERSION;
-      bsp_numlumps = Q1_HEADER_LUMPS;
-      break;
-
-    case 2:
-      bsp_version  = Q2_BSP_VERSION;
-      bsp_numlumps = Q2_HEADER_LUMPS;
-      break;
-
-    default:
-      Main_FatalError("INTERNAL ERROR: BSP_OpenLevel: unknown game %d\n", game);
-      return false; // NOT REACHED
-  }
-
-  BSP_ClearLumps();
-
-  return true;
-}
-
-
-static void BSP_WriteHeader()
-{
-  u32_t offset = 0;
-
-  if (bsp_game == 2)
-  {
-    PAK_AppendData(Q2_IDENT_MAGIC, 4);
-    offset += 4;
-  }
-
-  s32_t raw_version = LE_S32(bsp_version);
-  PAK_AppendData(&raw_version, 4);
-  offset += 4;
-
-  offset += sizeof(lump_t) * bsp_numlumps;
-
-  for (int L = 0; L < bsp_numlumps; L++)
-  {
-    lump_t raw_info;
-
-    // handle missing lumps : create an empty one
-    if (! bsp_directory[L])
-      bsp_directory[L] = new qLump_c();
-
-    u32_t length = bsp_directory[L]->GetSize();
-
-    raw_info.start  = LE_U32(offset);
-    raw_info.length = LE_U32(length);
-
-    PAK_AppendData(&raw_info, sizeof(raw_info));
-
-    offset += (u32_t)ALIGN_LEN(length);
-  }
-}
-
-
-bool BSP_CloseLevel()
-{
-  // FIXME: ASSERT(opened)
-
-  BSP_WriteHeader();
-
-  for (int L = 0; L < bsp_numlumps; L++)
-    BSP_WriteLump(bsp_directory[L]);
-
-  PAK_FinishLump();
-
-  // free all the memory
-  BSP_ClearLumps();
-
-  return true;
-}
-
-
-qLump_c *BSP_NewLump(int entry)
-{
-  SYS_ASSERT(0 <= entry && entry < bsp_numlumps);
-
-  if (bsp_directory[entry] != NULL)
-    Main_FatalError("INTERNAL ERROR: BSP_NewLump: already created entry [%d]\n", entry);
-
-  bsp_directory[entry] = new qLump_c;
-
-  return bsp_directory[entry];
-}
-
-
-qLump_c * BSP_CreateInfoLump()
-{
-  qLump_c *L = new qLump_c();
-
-  L->SetCRLF(true);
-
-  L->Printf("\n");
-  L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
-  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2010 Andrew Apted\n");
-  L->Printf("-- http://oblige.sourceforge.net/\n");
-  L->Printf("\n");
-
-  std::vector<std::string> lines;
-
-  ob_read_all_config(&lines, false /* all_opts */);
-
-  for (unsigned int i = 0; i < lines.size(); i++)
-    L->Printf("%s\n", lines[i].c_str());
- 
-  L->Printf("\n\n\n");
-
-  // terminate lump with ^Z and a NUL character
-  static const byte terminator[2] = { 26, 0 };
-
-  L->Append(terminator, 2);
-
-  return L;
-}
-
-
-void BSP_AddInfoFile()
-{
-  qLump_c *info = BSP_CreateInfoLump();
-
-  PAK_NewLump("oblige_dat.txt");
-  BSP_WriteLump(info);
-  PAK_FinishLump();
-
-  delete info;
-}
-
-
-
-//------------------------------------------------------------------------
-
 static std::vector<dplane_t> bsp_planes;
 
 #define NUM_PLANE_HASH  128
@@ -736,6 +544,198 @@ void BSP_WriteEdges(int lump_num, int max_edges)
 
   BSP_ClearEdges();
 }
+
+
+//------------------------------------------------------------------------
+
+#define HEADER_LUMP_MAX  32
+
+static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
+static int bsp_numlumps;
+static int bsp_version;
+
+static qLump_c * bsp_directory[HEADER_LUMP_MAX];
+
+
+static void BSP_ClearLumps(void)
+{
+  for (int i = 0; i < bsp_numlumps; i++)
+  {
+    if (bsp_directory[i])
+    {
+      delete bsp_directory[i];
+      bsp_directory[i] = NULL;
+    }
+  }
+}
+
+
+static void BSP_WriteLump(qLump_c *lump)
+{
+  SYS_ASSERT(lump);
+
+  int len = lump->GetSize();
+
+  if (len == 0)
+    return;
+
+  PAK_AppendData(lump->GetBuffer(), len);
+
+  // pad lumps to a multiple of four bytes
+  u32_t padding = ALIGN_LEN(len) - len;
+
+  SYS_ASSERT(0 <= padding && padding <= 3);
+
+  if (padding > 0)
+  {
+    static u8_t zeros[4] = { 0,0,0,0 };
+
+    PAK_AppendData(zeros, padding);
+  }
+}
+
+
+bool BSP_OpenLevel(const char *entry_in_pak, int game)
+{
+  // assumes that PAK_OpenWrite() has already been called.
+
+  // FIXME: ASSERT(!already opened)
+
+  PAK_NewLump(entry_in_pak);
+
+  bsp_game = game;
+
+  switch (game)
+  {
+    case 1:
+      bsp_version  = Q1_BSP_VERSION;
+      bsp_numlumps = Q1_HEADER_LUMPS;
+      break;
+
+    case 2:
+      bsp_version  = Q2_BSP_VERSION;
+      bsp_numlumps = Q2_HEADER_LUMPS;
+      break;
+
+    default:
+      Main_FatalError("INTERNAL ERROR: BSP_OpenLevel: unknown game %d\n", game);
+      return false; // NOT REACHED
+  }
+
+  BSP_ClearLumps();
+
+  return true;
+}
+
+
+static void BSP_WriteHeader()
+{
+  u32_t offset = 0;
+
+  if (bsp_game == 2)
+  {
+    PAK_AppendData(Q2_IDENT_MAGIC, 4);
+    offset += 4;
+  }
+
+  s32_t raw_version = LE_S32(bsp_version);
+  PAK_AppendData(&raw_version, 4);
+  offset += 4;
+
+  offset += sizeof(lump_t) * bsp_numlumps;
+
+  for (int L = 0; L < bsp_numlumps; L++)
+  {
+    lump_t raw_info;
+
+    // handle missing lumps : create an empty one
+    if (! bsp_directory[L])
+      bsp_directory[L] = new qLump_c();
+
+    u32_t length = bsp_directory[L]->GetSize();
+
+    raw_info.start  = LE_U32(offset);
+    raw_info.length = LE_U32(length);
+
+    PAK_AppendData(&raw_info, sizeof(raw_info));
+
+    offset += (u32_t)ALIGN_LEN(length);
+  }
+}
+
+
+bool BSP_CloseLevel()
+{
+  // FIXME: ASSERT(opened)
+
+  BSP_WriteHeader();
+
+  for (int L = 0; L < bsp_numlumps; L++)
+    BSP_WriteLump(bsp_directory[L]);
+
+  PAK_FinishLump();
+
+  // free all the memory
+  BSP_ClearLumps();
+
+  return true;
+}
+
+
+qLump_c *BSP_NewLump(int entry)
+{
+  SYS_ASSERT(0 <= entry && entry < bsp_numlumps);
+
+  if (bsp_directory[entry] != NULL)
+    Main_FatalError("INTERNAL ERROR: BSP_NewLump: already created entry [%d]\n", entry);
+
+  bsp_directory[entry] = new qLump_c;
+
+  return bsp_directory[entry];
+}
+
+
+qLump_c * BSP_CreateInfoLump()
+{
+  qLump_c *L = new qLump_c();
+
+  L->SetCRLF(true);
+
+  L->Printf("\n");
+  L->Printf("-- Levels created by OBLIGE %s\n", OBLIGE_VERSION);
+  L->Printf("-- " OBLIGE_TITLE " (C) 2006-2010 Andrew Apted\n");
+  L->Printf("-- http://oblige.sourceforge.net/\n");
+  L->Printf("\n");
+
+  std::vector<std::string> lines;
+
+  ob_read_all_config(&lines, false /* all_opts */);
+
+  for (unsigned int i = 0; i < lines.size(); i++)
+    L->Printf("%s\n", lines[i].c_str());
+ 
+  L->Printf("\n\n\n");
+
+  // terminate lump with ^Z and a NUL character
+  static const byte terminator[2] = { 26, 0 };
+
+  L->Append(terminator, 2);
+
+  return L;
+}
+
+
+void BSP_AddInfoFile()
+{
+  qLump_c *info = BSP_CreateInfoLump();
+
+  PAK_NewLump("oblige_dat.txt");
+  BSP_WriteLump(info);
+  PAK_FinishLump();
+
+  delete info;
+}
+
 
 
 //------------------------------------------------------------------------
