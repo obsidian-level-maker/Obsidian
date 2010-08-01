@@ -25,6 +25,9 @@
 #define Q_EPSILON  0.02
 
 
+class quake_plane_c;
+
+
 class qLump_c
 {
 private:

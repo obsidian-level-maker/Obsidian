@@ -32,9 +32,9 @@
 #include "m_lua.h"
 
 #include "q_common.h"
+#include "q_light.h"
 
-
-#define NORMAL_EPSILON  0.0001
+#include "csg_quake.h"
 
 
 qLump_c::qLump_c() : buffer(), crlf(false)
@@ -479,7 +479,7 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
   *was_new = true;
 
-  unsigned int new_index = bsp_planes.size();
+  int new_index = (int)bsp_planes.size();
 
   if (new_index >= bsp_max_planes)
     Main_FatalError("Quake build failure: exceeded limit of %d PLANES\n",
@@ -592,7 +592,7 @@ u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var)
   // NOTE: flip_var should only be provided for Quake 1,
   //       and should be omitted for Quake 2/3.
 
-  return BSP_AddPlane(P->x, P->y, P->z, P->nx, P->ny, P->nz, flipped);
+  return BSP_AddPlane(P->x, P->y, P->z, P->nx, P->ny, P->nz, flip_var);
 }
 
 
