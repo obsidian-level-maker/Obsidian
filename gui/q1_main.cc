@@ -538,11 +538,28 @@ static void DummyTexInfo(void)
 
 
 //------------------------------------------------------------------------
+//   BSP TREE OUTPUT
+//------------------------------------------------------------------------
 
-static void Q1_WriteEdge(quake_vertex_c *A, quake_vertex_c *B)
+static qLump_c *q1_surf_edges;
+static qLump_c *q1_mark_surfs;
+
+static qLump_c *q1_faces;
+static qLump_c *q1_leafs;
+static qLump_c *q1_nodes;
+
+static int q1_total_surf_edges;
+static int q1_total_mark_surfs;
+
+static int q1_total_faces;
+static int q1_total_leafs;
+static int q1_total_nodes;
+
+
+static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 {
-  u16_t v1 = BSP_AddVertex(A->x, A->y, A->z);
-  u16_t v2 = BSP_AddVertex(B->x, B->y, B->z);
+  u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
+  u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
 
   if (v1 == v2)
   {
@@ -555,6 +572,7 @@ static void Q1_WriteEdge(quake_vertex_c *A, quake_vertex_c *B)
   index = LE_S32(index);
 
   q1_surf_edges->Append(&index, sizeof(index));
+
   q1_total_surf_edges += 1;
 }
 
@@ -562,8 +580,6 @@ static void Q1_WriteEdge(quake_vertex_c *A, quake_vertex_c *B)
 static void Q1_WriteFace(quake_face_c *face)
 {
   face->index = q1_total_faces;
-
-  q1_total_faces += 1;
 
 
   dface_t raw_face;
@@ -608,6 +624,8 @@ static void Q1_WriteFace(quake_face_c *face)
 
 
   q1_faces->Append(&raw_face, sizeof(raw_face));
+
+  q1_total_faces += 1;
 }
 
 
@@ -619,6 +637,7 @@ static void Q1_WriteMarkSurf(quake_face_c *face)
   u16_t index = LE_U16(face->index);
 
   q1_mark_surfs->Append(&index, sizeof(index));
+
   q1_total_mark_surfs += 1;
 }
 
@@ -664,8 +683,8 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_leaf.mins[b] = I_ROUND(leaf->mins[b]) - 4;
-    raw_leaf.maxs[b] = I_ROUND(leaf->maxs[b]) + 4;
+    raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]) - 4;
+    raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]) + 4;
 
     // fix endianness
     raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b]);
@@ -682,6 +701,8 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
 
   q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
+
+  q1_total_leafs += 1;
 }
 
 
@@ -717,15 +738,15 @@ static void Q1_WriteNode(quake_node_c *node)
 
     for (unsigned int k = 0 ; k < node->faces.size() ; k++)
     {
-      Q1_WriteFace(node->faces[k], node);
+      Q1_WriteFace(node->faces[k]);
     }
   }
 
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_node.mins[b] = I_ROUND(node->mins[b]) - 32;
-    raw_node.maxs[b] = I_ROUND(node->maxs[b]) + 32;
+    raw_node.mins[b] = I_ROUND(node->bbox.mins[b]) - 32;
+    raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]) + 32;
 
     // fix endianness
     raw_node.mins[b] = LE_S16(raw_node.mins[b]);
@@ -742,6 +763,8 @@ static void Q1_WriteNode(quake_node_c *node)
 
 
   q1_nodes->Append(&raw_node, sizeof(raw_node));
+
+  q1_total_nodes += 1;
 
 
   // recurse now, AFTER adding the current node
@@ -760,7 +783,35 @@ static void Q1_WriteNode(quake_node_c *node)
 
 static void Q1_WriteBSP()
 {
+  q1_total_nodes = 0;
+  q1_total_leafs = 0;  // not including the solid leaf
+  q1_total_faces = 0;
+
+  q1_total_mark_surfs = 0;
+  q1_total_surf_edges = 0;
+
+  q1_nodes = BSP_NewLump(LUMP_NODES);
+  q1_leafs = BSP_NewLump(LUMP_LEAFS);
+  q1_faces = BSP_NewLump(LUMP_FACES);
+
+  q1_mark_surfs = BSP_NewLump(LUMP_MARKSURFACES);
+  q1_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
+
+
   Q1_WriteNode(qk_bsp_root);  
+
+
+  if (q1_total_faces >= MAX_MAP_FACES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  if (q1_total_leafs >= MAX_MAP_LEAFS)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
+                    MAX_MAP_LEAFS);
+
+  if (q1_total_nodes >= MAX_MAP_NODES)
+    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
+                    MAX_MAP_NODES);
 }
 
 
@@ -869,15 +920,21 @@ void quake1_game_interface_c::EndLevel()
 
   CSG_QUAKE_Build();
 
-  Q1_CreateMipTex();
-  Q1_CreateTexInfo();
-  Q1_CreateEntities();
+  ///  QCOM_Lighting();
+
+  ///  QCOM_Visibility();
+
+  Q1_WriteBSP();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
   BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
 
   BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
+
+  Q1_CreateMipTex();
+  Q1_CreateTexInfo();
+  Q1_CreateEntities();
 
   BSP_CloseLevel();
 

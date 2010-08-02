@@ -68,12 +68,34 @@ public:
 
   qLightmap_c *lmap;
 
+  int index;
+
 public:
   quake_face_c()
   { }
 
   ~quake_face_c()
   { }
+};
+
+
+class quake_bbox_c
+{
+public:
+  float mins[3];
+  float maxs[3];
+
+public:
+  quake_bbox_c()
+  { }
+
+  ~quake_bbox_c()
+  { }
+
+  void Begin();
+  void End();
+
+  void AddPoint(float x, float y, float z);
 };
 
 
@@ -85,6 +107,10 @@ public:
   std::vector<quake_face_c *> faces;
 
   int cluster;
+
+  quake_bbox_c bbox;
+
+  int index;
 
 public:
   quake_leaf_c()
@@ -105,6 +131,12 @@ public:
 
   quake_node_c *back_N;
   quake_leaf_c *back_L;
+
+  std::vector<quake_face_c *> faces;
+
+  quake_bbox_c bbox;
+
+  int index;
 
 public:
   quake_node_c()
