@@ -1035,6 +1035,8 @@ fprintf(stderr, "  side %p region.equiv_id %d (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
         S->x1, S->y1, S->x2, S->y2);
 }
 
+    // FIXME!!!!  don't need IsSameRegion() : just use first side's region
+
     region_c *region = group.IsSameRegion();
 fprintf(stderr, "  --> region %p %d\n", region, region ? region->equiv_id : -1);
 

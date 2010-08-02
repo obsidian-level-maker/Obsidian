@@ -1630,47 +1630,288 @@ static rNode_c * SecondPass(rNode_c *LN)
 
 
 //------------------------------------------------------------------------
-//  LUMP WRITING CODE
+//  NEW LOGIC
 //------------------------------------------------------------------------
 
 
-static void AssignLeafIndex(rNode_c *leaf)
+class quake_side_c
 {
-  if (leaf == SOLID_LEAF)
+public:
+  snag_c *snag;
+
+  bool on_node;
+
+  double x1, y1;
+  double x2, y2;
+
+public:
+  quake_side_c(snag_c *S) :
+      snag(S), on_node(false),
+      x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
+  { }
+
+  quake_side_c(const quake_side_c *other) :
+      snag(other->snag), on_node(other->on_node),
+      x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
+  { }
+
+  ~quake_side_c()
+  { }
+
+public:
+  double Length() const
+  {
+    return ComputeDist(x1,y1, x2,y2);
+  }
+
+  bool TwoSided() const
+  {
+    if (! snag->partner)
+      return false;
+
+    if (! snag->partner->region)
+      return false;
+
+    if (snag->partner->region->gaps.empty())
+      return false;
+
+    return true;
+  }
+};
+
+
+class quake_group_c
+{
+public:
+  std::vector<quake_side_c *> sides;
+
+public:
+  quake_group_c() : sides()
+  { }
+
+  ~quake_group_c()
+  { }
+
+  void AddSide(quake_side_c *S)
+  {
+    sides.push_back(S);
+  }
+
+  bool IsEmpty() const
+  {
+    return sides.empty();
+  }
+};
+
+
+static void CreateSides(quake_group_c & group)
+{
+fprintf(stderr, "CREATE SIDES\n");
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->gaps.empty())
+      continue;
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *snag = R->snags[k];
+
+      region_c *N = snag->partner ? snag->partner->region : NULL;
+
+      if (N && R->HasSameBrushes(N))
+        continue;
+
+      quake_side_c *S = new quake_side_c(S);
+fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
+        CS, CS->TwoSided() ? "2S" : "1S",
+        CS->x1, CS->y1, CS->x2, CS->y2);
+
+      group.AddSide(CS);
+    }
+  }
+
+fprintf(stderr, "\n");
+}
+
+
+static void Partition_Z(region_c *R,
+                        quake_node_c ** node,
+                        quake_leaf_c ** leaf)
+{
+  SYS_ASSERT(R->gaps.size() > 0);
+
+  quake_node_c *cur_node = NULL;
+  quake_node_c *cur_leaf = new quake_leaf_c(CONTENTS_EMPTY);
+  
+  for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
+  {
+    gap_c *G = R->gaps[surf / 2];
+
+    bool is_ceil = (surf & 1) ? true : false;
+
+    quake_node_c *last_node = cur_node;
+    quake_leaf_c *last_leaf = cur_leaf;
+
+    cur_node = new quake_node_c(G, is_ceil);
+    cur_leaf = NULL;
+
+    cur_node->front_N = last_node;
+    cur_node->front_L = last_leaf;
+
+    cur_node->back_L  = qk_solid_leaf;
+
+///---  if (is_ceil)
+///---    std::swap(node->front, node->back);
+  }
+
+  *node = cur_node;
+  *leaf = cur_leaf;
+}
+
+
+static void PartitionGroup(quake_group_c & group,
+                           quake_node_c ** node,
+                           quake_leaf_c ** leaf)
+{
+  // this function "returns" either a node OR a leaf via the
+  // parameters with the same name.
+
+  SYS_ASSERT(! group.sides.empty());
+
+  quake_partition_c part;
+
+  if (FindPartition_XY(group, &part))
+  {
+    // divide the group
+    quake_group_c front;
+    quake_group_c back;
+
+    Split_XY(group, &part, front, back);
+
+    quake_node_c * new_node = new quake_node_c(part);
+
+    // the front should never be empty
+    Partition_Group(front, &new_node->front_N, &new_node->front_L);
+
+    if (back.sides.empty())
+      new_node->back_L = qk_solid_leaf;
+    else
+      Partition_Group(back, &new_node->back_N, &new_node->back_L);
+
+    // input group has been consumed now 
+
+    (*node) = new_node;
+  }
+  else
+  {
+    region_c *region = sides[0]->snag->region;
+
+    SYS_ASSERT(region);
+
+    Partition_Z(region, node, leaf);
+  }
+}
+
+
+
+//------------------------------------------------------------------------
+
+quake_bbox_c::Begin()
+{
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    mins[b] = +9e9;
+    maxs[b] = -9e9;
+  }
+}
+
+quake_bbox_c::End()
+{
+  for (int b = 0 ; b < 3 ; b++)
+    if (mins[b] > maxs[b])
+      mins[b] = maxs[b] = 0;
+}
+
+
+quake_bbox_c::AddPoint(float x, float y, float z)
+{
+  if (x < mins[0]) mins[0] = x;
+  if (y < mins[1]) mins[1] = y;
+  if (z < mins[2]) mins[2] = z;
+
+  if (x > maxs[0]) maxs[0] = x;
+  if (y > maxs[1]) maxs[1] = y;
+  if (z > maxs[2]) maxs[2] = z;
+}
+
+quake_bbox_c::Merge(const quake_bbox_c& other)
+{
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    mins[b] = MIN(mins[b], other->mins[b]);
+    maxs[b] = MAX(maxs[b], other->maxs[b]);
+  }
+}
+
+
+quake_node_c::ComputeBBox()
+{
+  // NOTE: assumes bbox of all children (nodes/leafs) are valid
+
+  bbox.Begin();
+
+  if (front_N)
+    bbox.Merge(front_N->bbox);
+  else if (front_L != qk_solid_leaf)
+    bbox.Merge(front_L->bbox);
+
+  if (back_N)
+    bbox.Merge(back_N->bbox);
+  else if (back_L != qk_solid_leaf)
+    bbox.Merge(back_L->bbox);
+
+  bbox.End();
+}
+
+
+static void AssignLeafIndex(quake_leaf_c *leaf, int *cur_leaf)
+{
+  SYS_ASSERT(leaf);
+
+  if (leaf == qk_solid_leaf)
     return;
 
   // must add 2 (instead of 1) because leaf #0 is the SOLID_LEAF
-  leaf->index = -(q1_total_leafs+2);
+  leaf->index = -((*cur_leaf)+2);
 
-  q1_total_leafs += 1;
-
-  // FIXME: leaf bounding box
+  *cur_leaf += 1;
 }
 
-static void AssignIndexes(rNode_c *node)
+
+static void AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf)
 {
-  node->index = q1_total_nodes;
+  node->index = *cur_node;
 
-  q1_total_nodes += 1;
+  *cur_node += 1;
 
-  if (node->front->IsNode())
-    AssignIndexes(node->front);
+  if (node->front_N)
+    AssignIndexes(node->front_N, cur_node, cur_leaf);
   else
-    AssignLeafIndex(node->front);
+    AssignLeafIndex(node->front_L, cur_leaf);
 
-  if (node->back->IsNode())
-    AssignIndexes(node->back);
+  if (node->back_N)
+    AssignIndexes(node->back_N, cur_node, cur_leaf);
   else
-    AssignLeafIndex(node->back);
+    AssignLeafIndex(node->back_L, cur_leaf);
 
-  // determine node's bounding box
-  node->ComputeNodeBBox();
-
-//fprintf(stderr, "node %p  bbox side (%1.1f %1.1f %1.1f)\n",
-//        node, node->BBoxSizeX(), node->BBoxSizeY(), node->BBoxSizeZ());
+  // determine node's bounding box now
+  node->ComputeBBox();
 }
 
 
+#if 0
 static void AssignClusterID(rNode_c *node, int cluster)
 {
   if (node == SOLID_LEAF)
@@ -1700,33 +1941,11 @@ static void AssignClusters(rNode_c *node)
   AssignClusters(node->front);
   AssignClusters(node->back);
 }
+#endif
 
 
-static void WriteFace(rFace_c *F, rNode_c *N)
-{
-  SYS_ASSERT(F->index < 0);
 
-  F->index = q1_total_faces;
-  q1_total_faces++;
-
-
-  dface_t raw_face;
-
-  memset(&raw_face, 0, sizeof(raw_face));
-
-  raw_face.firstedge = q1_total_surf_edges;
-  raw_face.numedges  = 0;
-
-  if (F->kind == rFace_c::WALL)
-    BuildWallFace(raw_face, F, N);
-  else
-    BuildFloorFace(raw_face, F, N);
-
-  // TODO: fix endianness in face
-  q1_faces->Append(&raw_face, sizeof(raw_face));
-}
-
-
+#if 0
 static void WriteSolidLeaf(void)
 {
   dleaf_t raw_lf;
@@ -1738,110 +1957,8 @@ static void WriteSolidLeaf(void)
 
   q1_leafs->Append(&raw_lf, sizeof(raw_lf));
 }
+#endif
 
-
-static void WriteLeaf(rNode_c *leaf)
-{
-  SYS_ASSERT(leaf);
-
-  if (leaf == SOLID_LEAF)
-    return;
-
-
-  dleaf_t raw_lf;
-
-  memset(&raw_lf, 0, sizeof(raw_lf));
-
-  raw_lf.contents = leaf->lf_contents;
-  raw_lf.visofs   = -1;  // no visibility info
-
-  for (int b = 0; b < 3; b++)
-  {
-    raw_lf.mins[b] = I_ROUND(leaf->mins[b]) - 4;
-    raw_lf.maxs[b] = I_ROUND(leaf->maxs[b]) + 4;
-  }
-
-
-  raw_lf.first_marksurf = q1_total_mark_surfs;
-  raw_lf.num_marksurf   = 0;
-
-
-  // create the 'mark surfs'
-  for (unsigned int i = 0; i < leaf->faces.size(); i++)
-  {
-    rFace_c *F = leaf->faces[i];
-
-    // should have been in a node already
-    if (F->index < 0)
-      LogPrintf("WARNING: face found in leaf but not in node\n");
-    else
-      Q1_AddSurf(F->index, &raw_lf);
-  }
-
-  // TODO: fix endianness in raw_lf
-  q1_leafs->Append(&raw_lf, sizeof(raw_lf));
-}
-
-
-static void WriteNodes(rNode_c *node)
-{
-  node->CheckValid();
-
-  dnode_t raw_nd;
-
-  memset(&raw_nd, 0, sizeof(raw_nd));
-
-  bool flipped;
-
-  if (node->z_splitter)
-    raw_nd.planenum = BSP_AddPlane(0, 0, node->z, 0, 0, node->dz, &flipped);
-  else
-    raw_nd.planenum = BSP_AddPlane(node->x, node->y, 0,
-                                   node->dy, -node->dx, 0, &flipped);
-
-  raw_nd.children[0] = (u16_t) node->front->index;
-  raw_nd.children[1] = (u16_t) node->back ->index;
-
-  if (flipped)
-  {
-    u16_t tmp = raw_nd.children[0];
-    raw_nd.children[0] = raw_nd.children[1];
-    raw_nd.children[1] = tmp;
-  }
-
-  for (int b = 0; b < 3; b++)
-  {
-    raw_nd.mins[b] = I_ROUND(node->mins[b]) - 32;
-    raw_nd.maxs[b] = I_ROUND(node->maxs[b]) + 32;
-  }
-
-
-  if (node->faces.size() > 0)
-  {
-    raw_nd.firstface = q1_total_faces;
-    raw_nd.numfaces  = node->faces.size();
-
-    for (unsigned int k = 0; k < node->faces.size(); k++)
-      WriteFace(node->faces[k], node);
-  }
-
-
-  // TODO: fix endianness in 'raw_nd'
-  q1_nodes->Append(&raw_nd, sizeof(raw_nd));
-
-
-  // recurse now, AFTER adding the current node
-
-  if (node->front->IsNode())
-    WriteNodes(node->front);
-  else
-    WriteLeaf(node->front);
-
-  if (node->back->IsNode())
-    WriteNodes(node->back);
-  else
-    WriteLeaf(node->back);
-}
 
 
 void Q1_CreateModel(void)
@@ -1935,6 +2052,7 @@ void Q1_CreateModel(void)
   // there is no need to delete the lumps from BSP_NewLump()
   // since is handled by the q_common.c code.
 }
+
 
 
 void CSG_QUAKE_Build()

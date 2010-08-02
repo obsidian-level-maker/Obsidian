@@ -96,6 +96,7 @@ public:
   void End();
 
   void AddPoint(float x, float y, float z);
+  void Merge(const quake_bbox_c& other);
 };
 
 

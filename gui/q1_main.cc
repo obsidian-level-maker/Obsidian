@@ -926,6 +926,8 @@ void quake1_game_interface_c::EndLevel()
 
   Q1_WriteBSP();
 
+  ///  Q1_ClippingHulls();
+
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
   BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
