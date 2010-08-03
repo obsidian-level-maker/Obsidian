@@ -1883,7 +1883,7 @@ fprintf(stderr, "CREATE SIDES\n");
       if (N && R->HasSameBrushes(N))
         continue;
 
-      quake_side_c *S = new quake_side_c(S);
+      quake_side_c *S = new quake_side_c(snag);
 fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
         S, S->TwoSided() ? "2S" : "1S",
         S->x1, S->y1, S->x2, S->y2);

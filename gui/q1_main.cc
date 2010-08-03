@@ -833,15 +833,15 @@ static void Q1_WriteBSP()
 }
 
 
-static void Q1_WriteModel(int hull0, int hull1)
+static void Q1_WriteModel(int hull_1, int hull_2)
 {
   q1_models = BSP_NewLump(LUMP_MODELS);
 
   dmodel_t raw_model;
 
   raw_model.headnode[0] = 0;
-  raw_model.headnode[1] = LE_S32(hull0);
-  raw_model.headnode[2] = LE_S32(hull1);
+  raw_model.headnode[1] = LE_S32(hull_1);
+  raw_model.headnode[2] = LE_S32(hull_2);
   raw_model.headnode[3] = 0;
 
   raw_model.visleafs  = LE_S32(q1_total_leafs);
@@ -881,10 +881,10 @@ static void Q1_CreateBSPFile(const char *name)
 
   q1_clip = BSP_NewLump(LUMP_CLIPNODES);
 
-  int hull0 = Q1_ClippingHull(0, q1_clip);
-  int hull1 = Q1_ClippingHull(1, q1_clip);
+  int hull_1 = Q1_ClippingHull(1, q1_clip);
+  int hull_2 = Q1_ClippingHull(2, q1_clip);
 
-  Q1_WriteModel(hull0, hull1);
+  Q1_WriteModel(hull_1, hull_2);
 
 //!!!!  Q1_WriteSubModels();
 
