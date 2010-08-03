@@ -217,7 +217,7 @@ public:
     return sides.empty();
   }
 
-  region_c * IsSameRegion() const
+  region_c * IsSameRegion() const  /// FIXME REMOVE
   {
     if (sides.empty())
       return NULL;

@@ -66,18 +66,23 @@ public:
 
   std::vector<quake_vertex_c> verts;
 
-  // FIXME: texture and stuff
+  std::string tex;
+
+  // FIXME: texture offsets etc
 
   qLightmap_c *lmap;
 
   int index;
 
 public:
-  quake_face_c() : verts()
+  quake_face_c() : verts(), tex(), lmap(NULL), index(-1)
   { }
 
   ~quake_face_c()
   { }
+
+  void CopyWinding(const std::vector<quake_vertex_c> winding,
+                   const quake_plane_c *plane);
 };
 
 
@@ -122,6 +127,8 @@ public:
 
   ~quake_leaf_c()
   { }
+
+  void AddFace(quake_face_c *F);
 };
 
 
@@ -154,6 +161,8 @@ public:
   { }
 
   void ComputeBBox();
+
+  void AddFace(quake_face_c *F);
 };
 
 

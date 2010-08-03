@@ -60,8 +60,6 @@ static rNode_c *R_ROOT;
 
 static rNode_c *SOLID_LEAF;
 
-static dmodel_t model;
-
 qLump_c *q1_nodes;
 qLump_c *q1_leafs;
 qLump_c *q1_faces;
@@ -1064,93 +1062,6 @@ void Q1_AddSurf(u16_t index, dleaf_t *raw_lf )
 }
 
 
-struct Compare_FloorAngle_pred
-{
-  double *angles;
-
-   Compare_FloorAngle_pred(double *p) : angles(p) { }
-  ~Compare_FloorAngle_pred() { }
-
-  inline bool operator() (int A, int B) const
-  {
-    return angles[A] < angles[B];
-  }
-};
-
-
-static rWindingVerts_c * CollectClockwiseVerts(rNode_c *winding)
-{
-  rWindingVerts_c * UU = new rWindingVerts_c;
-
-  int v_num = 0;
-
-  std::vector<rSide_c *>::iterator SI;
-
-  double mid_x = 0;
-  double mid_y = 0;
-  
-
-  for (SI = winding->sides.begin(); SI != winding->sides.end(); SI++)
-  {
-    rSide_c *S = *SI;
-
-    UU->x[v_num] = S->x1;
-    UU->y[v_num] = S->y1;
-
-    mid_x += UU->x[v_num];
-    mid_y += UU->y[v_num];
-
-    v_num++;
-  }
-
-  UU->count = v_num;
-
-  if (UU->count == 0)
-    return UU;
-
-  mid_x /= v_num;
-  mid_y /= v_num;
-
-  
-  // determine angles, then sort into clockwise order
-
-  double angles[256];
-
-  std::vector<int> mapping(v_num);
-
-  for (int a = 0; a < v_num; a++)
-  {
-    angles[a]  = 0 - CalcAngle(mid_x, mid_y, UU->x[a], UU->y[a]);
-    mapping[a] = a;
-  }
-
-
-  std::sort(mapping.begin(), mapping.end(),
-            Compare_FloorAngle_pred(angles));
-
-
-  // apply mapping to vertices
-  float old_x[256];
-  float old_y[256];
-
-  for (int k = 0; k < v_num; k++)
-  {
-    old_x[k] = UU->x[k];
-    old_y[k] = UU->y[k];
-  }
-
-///fprintf(stderr, "\nMIDDLE @ (%1.2f %1.2f) COUNT:%d\n", mid_x, mid_y, v_num);
-  for (int m = 0; m < v_num; m++)
-  {
-    UU->x[m] = old_x[mapping[m]];
-    UU->y[m] = old_y[mapping[m]];
-
-///fprintf(stderr, "___ (%+5.0f %+5.0f)\n", vert_x[m], vert_y[m]);
-  }
-
-  return UU;
-}
-
 
 static int CalcTextureFlag(const char *tex_name)
 {
@@ -1549,7 +1460,7 @@ if (UU->count < 3) return; //!!!!!!!!!!
 //    3 for the second gap
 //    etc etc...
 
-static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
+static rNode_c * OLD_Partition_Z(rNode_c *winding, merge_region_c *R,
                               int min_area, int max_area)
 {
   SYS_ASSERT(min_area <= max_area);
@@ -1582,11 +1493,11 @@ static rNode_c * Partition_Z(rNode_c *winding, merge_region_c *R,
     else
       node->z = G->GetZ1();
 
-    node->back  = Partition_Z(winding, R, min_area, a1);
-    node->front = Partition_Z(winding, R, a2, max_area);
+    node->back  = OLD_Partition_Z(winding, R, min_area, a1);
+    node->front = OLD_Partition_Z(winding, R, a2, max_area);
 
-    if (! winding->wi_verts)
-      winding->wi_verts = CollectClockwiseVerts(winding);
+////    if (! winding->wi_verts)
+////      winding->wi_verts = CollectClockwiseVerts(winding);
 
     AddFlatFace(node, g, (a1 & 1) ? rFace_c::CEIL : rFace_c::FLOOR,
                 (a1 & 1) ? &G->t_brush->b.face : &G->b_brush->t.face,
@@ -1620,7 +1531,7 @@ static rNode_c * SecondPass(rNode_c *LN)
 
   z_leafs.clear();
 
-  return Partition_Z(LN, LN->region, 0, (int)LN->region->gaps.size() * 2);
+  return OLD_Partition_Z(LN, LN->region, 0, (int)LN->region->gaps.size() * 2);
 }
 
 
@@ -1840,6 +1751,34 @@ public:
   {
     return sides.empty();
   }
+
+  void CalcMid(double *mid_x, double *mid_y) const
+  {
+    SYS_ASSERT(! IsEmpty());
+
+    *mid_x = 0;
+    *mid_y = 0;
+
+    for (unsigned int i = 0 ; i < sides.size() ; i++)
+    {
+      *mid_x += sides[i]->x1;
+      *mid_y += sides[i]->y1;
+    }
+
+    *mid_x /= (double)sides.size();
+    *mid_y /= (double)sides.size();
+  }
+
+///---  void StoreVerts(std::vector<quake_vertex_c> & winding)
+///---  {
+///---    for (unsigned int i = 0 ; i < sides.size() ; i++)
+///---    {
+///---      quake_side_c *S = sides[i];
+///---
+///---      winding.push_back(quake_vertex_c(S->x1, S->y1, 0));
+///---    }
+///---  }
+
 };
 
 
@@ -1856,12 +1795,24 @@ void quake_plane_c::Normalize()
 }
 
 
+void quake_leaf_c::AddFace(quake_face_c *F)
+{
+  faces.push_back(F);
+}
+
+
 quake_node_c::quake_node_c(const quake_plane_c& P) :
     plane(P),
     front_N(NULL), front_L(NULL),
      back_N(NULL),  back_L(NULL),
     faces(), index(-1)
 { }
+
+
+void quake_node_c::AddFace(quake_face_c *F)
+{
+  faces.push_back(F);
+}
 
 
 static void CreateSides(quake_group_c & group)
@@ -2065,6 +2016,80 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
 }
 
 
+struct floor_angle_Compare
+{
+  double *angles;
+
+   floor_angle_Compare(double *p) : angles(p) { }
+  ~floor_angle_Compare() { }
+
+  inline bool operator() (int A, int B) const
+  {
+    return angles[A] < angles[B];
+  }
+};
+
+
+static void CollectWinding(std::vector<quake_vertex_c> & winding,
+                           quake_group_c & group)
+{
+  // result is CLOCKWISE when looking DOWN at the winding
+
+  int v_num = (int)group.sides.size();
+
+  SYS_ASSERT(v_num >= 3);
+
+  double mid_x, mid_y;
+
+  group.CalcMid(&mid_x, &mid_y);
+
+  // determine angles, then sort
+
+  std::vector<double> angles (v_num);
+  std::vector<int>    mapping(v_num);
+
+  for (int a = 0 ; a < v_num ; a++)
+  {
+    quake_side_c *S = group.sides[a];
+
+    angles[a]  = 0 - CalcAngle(mid_x, mid_y, S->x1, S->y1);
+    mapping[a] = a;
+  }
+
+  std::sort(mapping.begin(), mapping.end(),
+            floor_angle_Compare(&angles[0]));
+
+  // grab sorted vertices
+
+  for (int i = 0 ; i < v_num ; i++)
+  {
+    int k = mapping[i];
+
+    quake_side_c *S = group.sides[k];
+
+    winding.push_back(quake_vertex_c(S->x1, S->y1, 0));
+  }
+}
+
+
+void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
+                               const quake_plane_c *plane)
+{
+  bool reversed = (plane->nz < 0) ? true : false;
+
+  for (unsigned int i = 0 ; i < winding.size() ; i++)
+  {
+    unsigned int k = reversed ? (winding.size() - 1 - i) : i;
+    
+    const quake_vertex_c& V = winding[k];
+
+    double z = plane->z;  // TODO: support slopes
+
+    verts.push_back(quake_vertex_c(V.x, V.y, z));
+  }
+}
+
+
 static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 {
   // FIXME: support slopes !!
@@ -2079,15 +2104,40 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 }
 
 
-static void Partition_Z(region_c *R,
+static quake_face_c * CreateFace(quake_plane_c *plane, const gap_c *G, bool is_ceil,
+                                 std::vector<quake_vertex_c> & winding)
+                        
+{
+  FlatToPlane(plane, G, is_ceil);
+
+  quake_face_c *F = new quake_face_c;
+
+  F->CopyWinding(winding, plane);
+
+  // FIXME textures ETC
+
+  return F;
+}
+
+
+static void Partition_Z(quake_group_c & group,
                         quake_node_c ** node,
                         quake_leaf_c ** leaf)
 {
+  region_c *R = group.sides[0]->snag->region;
+
+  SYS_ASSERT(R);
   SYS_ASSERT(R->gaps.size() > 0);
 
+  std::vector<quake_vertex_c> winding;
+
+  CollectWinding(winding, group);
+
+  quake_leaf_c *THE_LEAF = new quake_leaf_c(CONTENTS_EMPTY);
+
   quake_node_c *cur_node = NULL;
-  quake_leaf_c *cur_leaf = new quake_leaf_c(CONTENTS_EMPTY);
-  
+  quake_leaf_c *cur_leaf = THE_LEAF;
+
   for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
   {
     gap_c *G = R->gaps[surf / 2];
@@ -2097,10 +2147,13 @@ static void Partition_Z(region_c *R,
     quake_node_c *last_node = cur_node;
     quake_leaf_c *last_leaf = cur_leaf;
 
-    cur_node = new quake_node_c();
+    cur_node = new quake_node_c;
     cur_leaf = NULL;
 
-    FlatToPlane(&cur_node->plane, G, is_ceil);
+    quake_face_c *F = CreateFace(&cur_node->plane, G, is_ceil, winding);
+
+    THE_LEAF->AddFace(F);
+    cur_node->AddFace(F);
 
     cur_node->front_N = last_node;
     cur_node->front_L = last_leaf;
@@ -2110,6 +2163,8 @@ static void Partition_Z(region_c *R,
 ///---  if (is_ceil)
 ///---    std::swap(node->front, node->back);
   }
+
+  // FIXME: bbox in THE_LEAF !!!!!
 
   *node = cur_node;
   *leaf = cur_leaf;
@@ -2154,11 +2209,7 @@ static void Partition_Group(quake_group_c & group,
   }
   else
   {
-    region_c *region = group.sides[0]->snag->region;
-
-    SYS_ASSERT(region);
-
-    Partition_Z(region, node, leaf);
+    Partition_Z(group, node, leaf);
   }
 }
 
