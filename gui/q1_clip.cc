@@ -1156,7 +1156,7 @@ fprintf(stderr, "\n");
 }
 
 
-s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip)
+int Q1_ClippingHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
 

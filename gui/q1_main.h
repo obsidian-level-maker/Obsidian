@@ -48,7 +48,7 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
 
 // q1_clip.cc
 
-s32_t Q1_CreateClipHull(int which, qLump_c *q1_clip);
+int Q1_ClippingHull(int which, qLump_c *q1_clip);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

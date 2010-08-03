@@ -548,6 +548,8 @@ static qLump_c *q1_faces;
 static qLump_c *q1_leafs;
 static qLump_c *q1_nodes;
 
+static qLump_c *q1_models;
+
 static int q1_total_surf_edges;
 static int q1_total_mark_surfs;
 
@@ -815,6 +817,78 @@ static void Q1_WriteBSP()
 }
 
 
+static void Q1_WriteModel(int hull0, int hull1)
+{
+  q1_models = BSP_NewLump(LUMP_MODELS);
+
+  dmodel_t raw_model;
+
+  raw_model.headnode[0] = 0;
+  raw_model.headnode[1] = LE_S32(hull0);
+  raw_model.headnode[2] = LE_S32(hull1);
+  raw_model.headnode[3] = 0;
+
+  raw_model.visleafs  = LE_S32(q1_total_leafs);
+
+  raw_model.firstface = LE_S32(0);
+  raw_model.numfaces  = LE_S32(q1_total_faces);
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    float min_v = qk_bsp_root->bbox.mins[b];
+    float max_v = qk_bsp_root->bbox.mins[b];
+
+    raw_model.mins[b] = LE_Float32(min_v);
+    raw_model.maxs[b] = LE_Float32(max_v);
+
+    raw_model.origin[b] = LE_Float32(0.0);
+  }
+
+  q1_models->Append(&raw_model, sizeof(raw_model));
+}
+
+
+static void Q1_CreateBSPFile(const char *name)
+{
+  BSP_OpenLevel(name, 1);
+
+  ClearMipTex();
+  ClearTexInfo();
+
+  CSG_QUAKE_Build();
+
+  ///  QCOM_Lighting();
+
+  ///  QCOM_Visibility();
+
+  Q1_WriteBSP();
+
+  qLump_c * q1_clip = BSP_NewLump(LUMP_CLIPNODES);
+
+  int hull0 = Q1_ClippingHull(0, q1_clip);
+  int hull1 = Q1_ClippingHull(1, q1_clip);
+
+  Q1_WriteModel(hull0, hull1);
+
+//!!!!  Q1_WriteSubModels();
+
+  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
+  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
+
+  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
+
+  Q1_CreateMipTex();
+  Q1_CreateTexInfo();
+  Q1_CreateEntities();
+
+  BSP_CloseLevel();
+
+  // FREE STUFF !!!!
+
+}
+
+
 //------------------------------------------------------------------------
 
 class quake1_game_interface_c : public game_interface_c
@@ -913,35 +987,7 @@ void quake1_game_interface_c::EndLevel()
   char entry_in_pak[64];
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
-  BSP_OpenLevel(entry_in_pak, 1);
-
-  ClearMipTex();
-  ClearTexInfo();
-
-  CSG_QUAKE_Build();
-
-  ///  QCOM_Lighting();
-
-  ///  QCOM_Visibility();
-
-  Q1_WriteBSP();
-
-  ///  Q1_ClippingHulls();
-
-  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
-  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
-  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
-
-  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
-
-  Q1_CreateMipTex();
-  Q1_CreateTexInfo();
-  Q1_CreateEntities();
-
-  BSP_CloseLevel();
-
-  // FREE STUFF !!!!
-
+  Q1_CreateBSPFile(entry_in_pak);
   StringFree(level_name);
 
   if (description)
