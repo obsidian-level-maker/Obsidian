@@ -24,6 +24,9 @@
 
 /***** CLASSES ****************/
 
+class quake_node_c;
+
+
 class quake_vertex_c
 {
 public:
@@ -62,7 +65,8 @@ public:
 class quake_face_c
 {
 public:
-  quake_plane_c plane;
+  // the node this face sits on
+  quake_node_c *node;
 
   std::vector<quake_vertex_c> verts;
 
@@ -75,7 +79,7 @@ public:
   int index;
 
 public:
-  quake_face_c() : verts(), tex(), lmap(NULL), index(-1)
+  quake_face_c() : node(NULL), verts(), tex(), lmap(NULL), index(-1)
   { }
 
   ~quake_face_c()

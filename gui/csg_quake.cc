@@ -1811,6 +1811,8 @@ quake_node_c::quake_node_c(const quake_plane_c& P) :
 
 void quake_node_c::AddFace(quake_face_c *F)
 {
+  F->node = this;
+
   faces.push_back(F);
 }
 
