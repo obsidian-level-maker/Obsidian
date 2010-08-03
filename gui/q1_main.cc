@@ -549,6 +549,7 @@ static qLump_c *q1_leafs;
 static qLump_c *q1_nodes;
 
 static qLump_c *q1_models;
+static qLump_c *q1_clip;
 
 static int q1_total_surf_edges;
 static int q1_total_mark_surfs;
@@ -708,6 +709,19 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 }
 
 
+static void Q1_WriteSolidLeaf(void)
+{
+  dleaf_t raw_leaf;
+
+  memset(&raw_leaf, 0, sizeof(raw_leaf));
+
+  raw_leaf.contents = LE_S32(CONTENTS_SOLID);
+  raw_leaf.visofs   = LE_S32(-1);  // no visibility info
+
+  q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
+}
+
+
 static void Q1_WriteNode(quake_node_c *node)
 {
   dnode_t raw_node;
@@ -800,6 +814,8 @@ static void Q1_WriteBSP()
   q1_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
 
 
+  Q1_WriteSolidLeaf();
+
   Q1_WriteNode(qk_bsp_root);  
 
 
@@ -863,7 +879,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   Q1_WriteBSP();
 
-  qLump_c * q1_clip = BSP_NewLump(LUMP_CLIPNODES);
+  q1_clip = BSP_NewLump(LUMP_CLIPNODES);
 
   int hull0 = Q1_ClippingHull(0, q1_clip);
   int hull1 = Q1_ClippingHull(1, q1_clip);
@@ -988,6 +1004,7 @@ void quake1_game_interface_c::EndLevel()
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
   Q1_CreateBSPFile(entry_in_pak);
+
   StringFree(level_name);
 
   if (description)

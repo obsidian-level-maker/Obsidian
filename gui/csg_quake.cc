@@ -1737,6 +1737,11 @@ static void MergeIntersections(std::vector<intersect_t> & cut_list)
 //  NEW LOGIC
 //------------------------------------------------------------------------
 
+
+quake_node_c * qk_bsp_root;
+quake_leaf_c * qk_solid_leaf;
+
+
 class quake_side_c
 {
 public:
@@ -2215,24 +2220,11 @@ static void AssignClusters(rNode_c *node)
 #endif
 
 
-
-#if 0
-static void WriteSolidLeaf(void)
-{
-  dleaf_t raw_lf;
-
-  memset(&raw_lf, 0, sizeof(raw_lf));
-
-  raw_lf.contents = CONTENTS_SOLID;
-  raw_lf.visofs   = -1;  // no visibility info
-
-  q1_leafs->Append(&raw_lf, sizeof(raw_lf));
-}
-#endif
-
-
 static void Quake_BSP()
 {
+  qk_solid_leaf = new quake_leaf_c(CONTENTS_SOLID);
+
+
   quake_group_c GROUP;
 
   CreateSides(GROUP);
@@ -2248,6 +2240,9 @@ static void Quake_BSP()
   int cur_leaf = 0;
 
   AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
+
+
+  //??  MakeFaces(qk_bsp_root);
 }
 
 
