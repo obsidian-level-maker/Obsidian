@@ -1753,6 +1753,10 @@ public:
   double x2, y2;
 
 public:
+  // this is only for partitions
+  quake_side_c() : snag(NULL), on_node(false)
+  { }
+
   quake_side_c(snag_c *S) :
       snag(S), on_node(false),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
@@ -1762,6 +1766,20 @@ public:
       snag(other->snag), on_node(other->on_node),
       x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
   { }
+
+  // make a "mini side"
+  quake_side_c(const quake_side_c *part, double along1, double along2) :
+      snag(NULL), on_node(true)
+  {
+    double sx, sy;
+    double ex, ey;
+
+    AlongCoord(along1, part->x1,part->y1, part->x2,part->y2, &sx, &sy);
+    AlongCoord(along2, part->x1,part->y1, part->x2,part->y2, &ex, &ey);
+
+    x1 = sx; y1 = sy;
+    x2 = ex; y2 = ey;
+  }
 
   ~quake_side_c()
   { }
@@ -1784,6 +1802,19 @@ public:
       return false;
 
     return true;
+  }
+
+  void ToPlane(quake_plane_c *plane)
+  {
+    plane->x = x1;
+    plane->y = y1;
+    plane->z = 0;
+
+    plane->nx = (y2 - y1);
+    plane->ny = (x1 - x2);
+    plane->nz = 0;
+
+    plane->Normalize();
   }
 };
 
@@ -1810,6 +1841,27 @@ public:
     return sides.empty();
   }
 };
+
+
+void quake_plane_c::Normalize()
+{
+  double len = sqrt(nx*nx + ny*ny + nz*nz);
+
+  if (len > 0.000001)
+  {
+    nx /= len;
+    ny /= len;
+    nz /= len;
+  }
+}
+
+
+quake_node_c::quake_node_c(const quake_plane_c& P) :
+    plane(P),
+    front_N(NULL), front_L(NULL),
+     back_N(NULL),  back_L(NULL),
+    faces(), index(-1)
+{ }
 
 
 static void CreateSides(quake_group_c & group)
@@ -2013,6 +2065,20 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
 }
 
 
+static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
+{
+  // FIXME: support slopes !!
+
+  plane->x  = plane->y  = 0;
+  plane->nx = plane->ny = 0;
+
+  plane->z  = is_ceil ? G->top->b.z : G->bottom->t.z;
+  plane->nz = is_ceil ? -1 : 1;
+
+  /// NOT NEEDED (YET) : plane->Normalize();
+}
+
+
 static void Partition_Z(region_c *R,
                         quake_node_c ** node,
                         quake_leaf_c ** leaf)
@@ -2031,8 +2097,10 @@ static void Partition_Z(region_c *R,
     quake_node_c *last_node = cur_node;
     quake_leaf_c *last_leaf = cur_leaf;
 
-    cur_node = new quake_node_c(G, is_ceil);
+    cur_node = new quake_node_c();
     cur_leaf = NULL;
+
+    FlatToPlane(&cur_node->plane, G, is_ceil);
 
     cur_node->front_N = last_node;
     cur_node->front_L = last_leaf;
@@ -2058,6 +2126,7 @@ static void Partition_Group(quake_group_c & group,
   SYS_ASSERT(! group.sides.empty());
 
   quake_side_c part;
+  quake_plane_c p_plane;
 
   if (FindPartition_XY(group, &part))
   {
@@ -2067,7 +2136,9 @@ static void Partition_Group(quake_group_c & group,
 
     Split_XY(group, &part, front, back);
 
-    quake_node_c * new_node = new quake_node_c(part);
+    part.ToPlane(&p_plane);
+
+    quake_node_c * new_node = new quake_node_c(p_plane);
 
     // the front should never be empty
     Partition_Group(front, &new_node->front_N, &new_node->front_L);

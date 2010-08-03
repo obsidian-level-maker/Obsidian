@@ -54,6 +54,8 @@ public:
 
   ~quake_plane_c()
   { }
+
+  void Normalize();
 };
 
 
@@ -71,7 +73,7 @@ public:
   int index;
 
 public:
-  quake_face_c()
+  quake_face_c() : verts()
   { }
 
   ~quake_face_c()
@@ -114,7 +116,8 @@ public:
   int index;
 
 public:
-  quake_leaf_c()
+  quake_leaf_c(int _cont) : contents(_cont), faces(),
+                            cluster(-1), index(-1)
   { }
 
   ~quake_leaf_c()
@@ -140,8 +143,12 @@ public:
   int index;
 
 public:
-  quake_node_c()
+  quake_node_c() : front_N(NULL), front_L(NULL),
+                    back_N(NULL),  back_L(NULL),
+                   faces(), index(-1)
   { }
+
+  quake_node_c(const quake_plane_c& P);
 
   ~quake_node_c()
   { }
