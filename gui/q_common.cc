@@ -750,18 +750,6 @@ void BSP_AddInfoFile()
 
 //------------------------------------------------------------------------
 
-struct Compare_Intersect_pred
-{
-  inline bool operator() (const intersect_t& A, const intersect_t& B) const
-  {
-    if (A.q_dist != B.q_dist)
-      return A.q_dist < B.q_dist;
-
-    return A.dir < B.dir;
-  }
-};
-
-
 int BSP_NiceMidwayPoint(float low, float extent)
 {
   int pow2 = 1;
@@ -776,75 +764,6 @@ int BSP_NiceMidwayPoint(float low, float extent)
   return mid;
 }
 
-
-void BSP_AddIntersection(std::vector<intersect_t> & cut_list,
-                         double along, int dir)
-{
-  intersect_t new_cut;
-
-  new_cut.along = along;
-  new_cut.q_dist = I_ROUND(along * 21.6f);
-  new_cut.dir = dir;
-  new_cut.next_along = -1e30;
-
-  cut_list.push_back(new_cut);
-}
-
-
-void BSP_MergeIntersections(std::vector<intersect_t> & cut_list)
-{
-  if (cut_list.empty())
-    return;
-
-  // move input vector contents into a temporary vector, which we
-  // sort and iterate over.  Valid intersections then get pushed
-  // back into the input vector.
-
-  std::vector<intersect_t> temp_list;
-
-  temp_list.swap(cut_list);
-
-  std::sort(temp_list.begin(), temp_list.end(),
-            Compare_Intersect_pred());
-
-  std::vector<intersect_t>::iterator A, B;
-
-  A = temp_list.begin();
-
-  while (A != temp_list.end())
-  {
-    if (A->dir != +1)
-    {
-      A++; continue;
-    }
-
-    B = A; B++;
-
-    if (B == temp_list.end())
-      break;
-
-    // this handles multiple +1 entries and also ensures
-    // that the +2 "remove" entry kills a +1 entry.
-    if (A->q_dist == B->q_dist)
-    {
-      A++; continue;
-    }
-
-    if (B->dir != -1)
-    {
-      DebugPrintf("WARNING: bad pair in intersection list\n");
-
-      A = B; continue;
-    }
-
-    // found a viable intersection!
-    A->next_along = B->along;
-
-    cut_list.push_back(*A);
-
-    B++; A = B; continue;
-  }
-}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

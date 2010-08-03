@@ -712,7 +712,7 @@ static inline double P_Along(rNode_c *p, rSide_c *S, int what)
 }
 
 
-static void DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
+static void OLD_DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
                           std::vector<intersect_t> & cut_list)
 {
   SYS_ASSERT(S && part && FRONT && BACK);
@@ -864,7 +864,7 @@ static rSide_c * FindPartition(rNode_c * LEAF)
 }
 
 
-static void Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
+static void OLD_Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 {
   std::vector<intersect_t> cut_list;
 
@@ -1628,11 +1628,118 @@ static rNode_c * SecondPass(rNode_c *LN)
 }
 
 
+//------------------------------------------------------------------------
+
+// an "intersection" remembers the vertex that touches a BSP divider
+// line (especially a new vertex that is created at a seg split).
+
+// Note: two points can exist in the intersection list with
+//       the same along value but different dirs.
+typedef struct
+{
+  // how far along the partition line the vertex is.
+  // bigger value are further along the partition line.
+  double along;
+
+  // quantized along value
+  int q_dist;
+
+  // direction that miniseg will touch, +1 for further along
+  // the partition, and -1 for backwards on the partition.
+  // The values +2 and -2 indicate REMOVED points.
+  int dir;
+
+  // this is only set after MergeIntersections().
+  double next_along;
+}
+intersect_t;
+
+
+struct intersect_qdist_Compare
+{
+  inline bool operator() (const intersect_t& A, const intersect_t& B) const
+  {
+    if (A.q_dist != B.q_dist)
+      return A.q_dist < B.q_dist;
+
+    return A.dir < B.dir;
+  }
+};
+
+
+static void AddIntersection(std::vector<intersect_t> & cut_list,
+                            double along, int dir)
+{
+  intersect_t new_cut;
+
+  new_cut.along = along;
+  new_cut.q_dist = I_ROUND(along * 21.6f);
+  new_cut.dir = dir;
+  new_cut.next_along = -1e30;
+
+  cut_list.push_back(new_cut);
+}
+
+
+static void MergeIntersections(std::vector<intersect_t> & cut_list)
+{
+  if (cut_list.empty())
+    return;
+
+  // move input vector contents into a temporary vector, which we
+  // sort and iterate over.  Valid intersections then get pushed
+  // back into the input vector.
+
+  std::vector<intersect_t> local_cuts;
+
+  local_cuts.swap(cut_list);
+
+  std::sort(local_cuts.begin(), local_cuts.end(),
+            intersect_qdist_Compare());
+
+  std::vector<intersect_t>::iterator A, B;
+
+  A = local_cuts.begin();
+
+  while (A != local_cuts.end())
+  {
+    if (A->dir != +1)
+    {
+      A++; continue;
+    }
+
+    B = A; B++;
+
+    if (B == local_cuts.end())
+      break;
+
+    // this handles multiple +1 entries and also ensures
+    // that the +2 "remove" entry kills a +1 entry.
+    if (A->q_dist == B->q_dist)
+    {
+      A++; continue;
+    }
+
+    if (B->dir != -1)
+    {
+      DebugPrintf("WARNING: bad pair in intersection list\n");
+
+      A = B; continue;
+    }
+
+    // found a viable intersection!
+    A->next_along = B->along;
+
+    cut_list.push_back(*A);
+
+    B++; A = B; continue;
+  }
+}
+
 
 //------------------------------------------------------------------------
 //  NEW LOGIC
 //------------------------------------------------------------------------
-
 
 class quake_side_c
 {
@@ -1736,6 +1843,140 @@ fprintf(stderr, "\n");
 }
 
 
+static quake_side_c * SplitSideAt(quake_side_c *S, float new_x, float new_y)
+{
+  quake_side_c *T = new quake_side_c(S);
+
+  S->x2 = T->x1 = new_x;
+  S->y2 = T->y1 = new_y;
+
+  return T;
+}
+
+
+static void Split_XY(quake_group_c & group, const quake_side_c *part,
+                     quake_group_c & front, quake_group_c & back)
+{
+  std::vector<quake_side_c *> local_sides;
+
+  local_sides.swap(group.sides);
+
+
+  for (unsigned int k = 0 ; k < local_sides.size() ; k++)
+  {
+    quake_side_c *S = local_sides[k];
+
+    // get relationship of this side to the partition line
+    double a = PerpDist(S->x1, S->y1,
+                        part->x1,part->y1, part->x2,part->y2);
+
+    double b = PerpDist(S->x2, S->y2,
+                        part->x1,part->y1, part->x2,part->y2);
+
+    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
+    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
+
+    if (a_side == 0 && b_side == 0)
+    {
+      // side sits on the partition
+      S->on_node = true;
+
+      if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
+                        S->x2 - S->x1, S->y2 - S->y1))
+      {
+        front.AddSide(S);
+
+        // +2 and -2 mean "remove"
+        AddIntersection(cut_list, P_Along(part, S, 0), +2);
+        AddIntersection(cut_list, P_Along(part, S, 1), -2);
+      }
+      else
+      {
+        back.AddSide(S);
+
+        BSP_AddIntersection(cut_list, P_Along(part, S, 0), -2);
+        BSP_AddIntersection(cut_list, P_Along(part, S, 1), +2);
+      }
+      continue;
+    }
+
+    if (a_side >= 0 && b_side >= 0)
+    {
+      front.AddSide(S);
+
+      if (a_side == 0)
+        AddIntersection(cut_list, P_Along(part, S, 0), -1);
+      else if (b_side == 0)
+        AddIntersection(cut_list, P_Along(part, S, 1), +1);
+
+      continue;
+    }
+
+    if (a_side <= 0 && b_side <= 0)
+    {
+      back.AddSide(S);
+
+      if (a_side == 0)
+        AddIntersection(cut_list, P_Along(part, S, 0), +1);
+      else if (b_side == 0)
+        AddIntersection(cut_list, P_Along(part, S, 1), -1);
+
+      continue;
+    }
+
+    /* need to split it */
+
+    // determine the intersection point
+    double along = a / (a - b);
+
+    double ix = S->x1 + along * (S->x2 - S->x1);
+    double iy = S->y1 + along * (S->y2 - S->y1);
+
+    quake_side_c *T = SplitSideAt(S, ix, iy);
+
+    front.AddSide((a > 0) ? S : T);
+     back.AddSide((a > 0) ? T : S);
+
+    AddIntersection(cut_list, P_Along(part, T, 0), a_side);
+  }
+}
+
+
+static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
+{
+  quake_side_c *poss = NULL;
+  quake_side_c *best = NULL;
+
+  for (unsigned int i = 0 ; i < group.sides.size() ; i++)
+  {
+    quake_side_c *S = group.sides[i];
+
+    if (S->on_node)
+      continue;
+
+    poss = S;
+
+    // MUST choose 2-sided snag BEFORE any 1-sided snag
+
+    if (S->TwoSided())
+    {
+      best = S; break;  // !!!!! FIXME: decide properly
+    }
+  }
+
+  if (! poss)
+    return false;
+
+  if (! best)
+    best = poss;
+
+  part->x1 = S->x1;  part->y1 = S->y1;
+  part->x2 = S->x2;  part->y2 = S->y2;
+
+  return true;
+}
+
+
 static void Partition_Z(region_c *R,
                         quake_node_c ** node,
                         quake_leaf_c ** leaf)
@@ -1780,7 +2021,7 @@ static void PartitionGroup(quake_group_c & group,
 
   SYS_ASSERT(! group.sides.empty());
 
-  quake_partition_c part;
+  quake_side_c part;
 
   if (FindPartition_XY(group, &part))
   {
