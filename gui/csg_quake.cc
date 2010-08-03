@@ -602,6 +602,7 @@ static rNode_c * NewLeaf(int contents)
 }
 
 
+#if 0
 static void CreatePortals(rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
                           std::vector<intersect_t> & cut_list)
 {
@@ -622,6 +623,7 @@ static void CreatePortals(rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
      BACK->AddSide(B);
   }
 }
+#endif
 
 
 static double EvaluatePartition(rNode_c * LEAF,
@@ -702,16 +704,7 @@ static double EvaluatePartition(rNode_c * LEAF,
 }
 
 
-// what: 0 for start, 1 for end
-static inline double P_Along(rNode_c *p, rSide_c *S, int what)
-{
-  if (what == 0)
-    return AlongDist(S->x1, S->y1, p->x, p->y, p->x+p->dx, p->y+p->dy);
-  else
-    return AlongDist(S->x2, S->y2, p->x, p->y, p->x+p->dx, p->y+p->dy);
-}
-
-
+#if 0
 static void OLD_DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c *BACK,
                           std::vector<intersect_t> & cut_list)
 {
@@ -816,9 +809,10 @@ static void OLD_DivideOneSide(rSide_c *S, rNode_c *part, rNode_c *FRONT, rNode_c
 
   BSP_AddIntersection(cut_list, P_Along(part, T, 0), a_side);
 }
+#endif
 
 
-static rSide_c * FindPartition(rNode_c * LEAF)
+static rSide_c * OLD_FindPartition(rNode_c * LEAF)
 {
   double w = LEAF->BBoxSizeX();
   double h = LEAF->BBoxSizeY();
@@ -866,6 +860,7 @@ static rSide_c * FindPartition(rNode_c * LEAF)
 
 static void OLD_Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
 {
+#if 0
   std::vector<intersect_t> cut_list;
 
   // need to loop multiple times, since splits can cause partner
@@ -888,10 +883,11 @@ static void OLD_Split_XY(rNode_c *part, rNode_c *FRONT, rNode_c *BACK)
   BSP_MergeIntersections(cut_list);
 
   CreatePortals(part, FRONT, BACK, cut_list);
+#endif
 }
 
 
-static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
+static rNode_c * OLD_Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
 {
   if (LN->UsableSides() == 0)
   {
@@ -923,7 +919,7 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
   }
 
 
-  rSide_c *part = FindPartition(LN);
+  rSide_c *part = OLD_FindPartition(LN);
   SYS_ASSERT(part);
 
 // fprintf(stderr, "PARTITION_XY = (%1.2f,%1.2f) -> (%1.2f,%1.2f)\n",
@@ -937,21 +933,21 @@ static rNode_c * Partition_XY(rNode_c * LN, merge_region_c *part_reg = NULL)
 
 /// int count = (int)LN->sides.size(); // LN->UsableSides();
 
-  Split_XY(LN, FRONT, BACK);
+  OLD_Split_XY(LN, FRONT, BACK);
 
 /// int c_front = (int)FRONT->sides.size(); //  FRONT->UsableSides();
 /// int c_back  = (int) BACK->sides.size(); //  BACK->UsableSides();
 
 ///  fprintf(stderr, "  SplitXY DONE: %d --> %d / %d\n", count, c_front, c_back);
 
-  LN->front = Partition_XY(FRONT, part->FrontRegion());
-  LN->back  = Partition_XY(BACK,  part->BackRegion());
+  LN->front = OLD_Partition_XY(FRONT, part->FrontRegion());
+  LN->back  = OLD_Partition_XY(BACK,  part->BackRegion());
 
   return LN;
 }
 
 
-static void Q1_BuildBSP()
+static void OLD_Q1_BuildBSP()
 {
   LogPrintf("\nQuake1_BuildBSP BEGUN\n");
 
@@ -998,7 +994,7 @@ static void Q1_BuildBSP()
   }
 
 
-  R_ROOT = Partition_XY(R_LEAF);
+  R_ROOT = OLD_Partition_XY(R_LEAF);
 
   SYS_ASSERT(R_ROOT->IsNode());
 }
@@ -1832,14 +1828,34 @@ fprintf(stderr, "CREATE SIDES\n");
 
       quake_side_c *S = new quake_side_c(S);
 fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
-        CS, CS->TwoSided() ? "2S" : "1S",
-        CS->x1, CS->y1, CS->x2, CS->y2);
+        S, S->TwoSided() ? "2S" : "1S",
+        S->x1, S->y1, S->x2, S->y2);
 
-      group.AddSide(CS);
+      group.AddSide(S);
     }
   }
 
 fprintf(stderr, "\n");
+}
+
+
+static void CreateMiniSides(std::vector<intersect_t> & cut_list,
+                            const quake_side_c *part,
+                            quake_group_c & front, quake_group_c & back)
+{
+  for (unsigned int i = 0 ; i < cut_list.size() ; i++)
+  {
+    double along1 = cut_list[i].along;
+    double along2 = cut_list[i].next_along;
+
+    SYS_ASSERT(along1 < along2);
+
+    quake_side_c *F = new quake_side_c(part, along1, along2);
+    quake_side_c *B = new quake_side_c(part, along2, along1);
+
+    front.AddSide(F);
+     back.AddSide(B);
+  }
 }
 
 
@@ -1854,13 +1870,24 @@ static quake_side_c * SplitSideAt(quake_side_c *S, float new_x, float new_y)
 }
 
 
+// what: 0 for start, 1 for end
+static inline double P_Along(const quake_side_c *p, const quake_side_c *S, int what)
+{
+  if (what == 0)
+    return AlongDist(S->x1, S->y1, p->x1, p->y1, p->x2, p->y2);
+  else
+    return AlongDist(S->x2, S->y2, p->x1, p->y1, p->x2, p->y2);
+}
+
+
 static void Split_XY(quake_group_c & group, const quake_side_c *part,
                      quake_group_c & front, quake_group_c & back)
 {
+  std::vector<intersect_t> cut_list;
+
   std::vector<quake_side_c *> local_sides;
 
   local_sides.swap(group.sides);
-
 
   for (unsigned int k = 0 ; k < local_sides.size() ; k++)
   {
@@ -1894,8 +1921,8 @@ static void Split_XY(quake_group_c & group, const quake_side_c *part,
       {
         back.AddSide(S);
 
-        BSP_AddIntersection(cut_list, P_Along(part, S, 0), -2);
-        BSP_AddIntersection(cut_list, P_Along(part, S, 1), +2);
+        AddIntersection(cut_list, P_Along(part, S, 0), -2);
+        AddIntersection(cut_list, P_Along(part, S, 1), +2);
       }
       continue;
     }
@@ -1939,6 +1966,10 @@ static void Split_XY(quake_group_c & group, const quake_side_c *part,
 
     AddIntersection(cut_list, P_Along(part, T, 0), a_side);
   }
+
+  MergeIntersections(cut_list);
+
+  CreateMiniSides(cut_list, part, front, back);
 }
 
 
@@ -1970,8 +2001,8 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
   if (! best)
     best = poss;
 
-  part->x1 = S->x1;  part->y1 = S->y1;
-  part->x2 = S->x2;  part->y2 = S->y2;
+  part->x1 = best->x1;  part->y1 = best->y1;
+  part->x2 = best->x2;  part->y2 = best->y2;
 
   return true;
 }
@@ -1984,7 +2015,7 @@ static void Partition_Z(region_c *R,
   SYS_ASSERT(R->gaps.size() > 0);
 
   quake_node_c *cur_node = NULL;
-  quake_node_c *cur_leaf = new quake_leaf_c(CONTENTS_EMPTY);
+  quake_leaf_c *cur_leaf = new quake_leaf_c(CONTENTS_EMPTY);
   
   for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
   {
@@ -2012,9 +2043,9 @@ static void Partition_Z(region_c *R,
 }
 
 
-static void PartitionGroup(quake_group_c & group,
-                           quake_node_c ** node,
-                           quake_leaf_c ** leaf)
+static void Partition_Group(quake_group_c & group,
+                            quake_node_c ** node,
+                            quake_leaf_c ** leaf)
 {
   // this function "returns" either a node OR a leaf via the
   // parameters with the same name.
@@ -2047,7 +2078,7 @@ static void PartitionGroup(quake_group_c & group,
   }
   else
   {
-    region_c *region = sides[0]->snag->region;
+    region_c *region = group.sides[0]->snag->region;
 
     SYS_ASSERT(region);
 
@@ -2056,10 +2087,9 @@ static void PartitionGroup(quake_group_c & group,
 }
 
 
-
 //------------------------------------------------------------------------
 
-quake_bbox_c::Begin()
+void quake_bbox_c::Begin()
 {
   for (int b = 0 ; b < 3 ; b++)
   {
@@ -2068,7 +2098,7 @@ quake_bbox_c::Begin()
   }
 }
 
-quake_bbox_c::End()
+void quake_bbox_c::End()
 {
   for (int b = 0 ; b < 3 ; b++)
     if (mins[b] > maxs[b])
@@ -2076,7 +2106,7 @@ quake_bbox_c::End()
 }
 
 
-quake_bbox_c::AddPoint(float x, float y, float z)
+void quake_bbox_c::AddPoint(float x, float y, float z)
 {
   if (x < mins[0]) mins[0] = x;
   if (y < mins[1]) mins[1] = y;
@@ -2087,17 +2117,17 @@ quake_bbox_c::AddPoint(float x, float y, float z)
   if (z > maxs[2]) maxs[2] = z;
 }
 
-quake_bbox_c::Merge(const quake_bbox_c& other)
+void quake_bbox_c::Merge(const quake_bbox_c& other)
 {
   for (int b = 0 ; b < 3 ; b++)
   {
-    mins[b] = MIN(mins[b], other->mins[b]);
-    maxs[b] = MAX(maxs[b], other->maxs[b]);
+    mins[b] = MIN(mins[b], other.mins[b]);
+    maxs[b] = MAX(maxs[b], other.maxs[b]);
   }
 }
 
 
-quake_node_c::ComputeBBox()
+void quake_node_c::ComputeBBox()
 {
   // NOTE: assumes bbox of all children (nodes/leafs) are valid
 
@@ -2201,14 +2231,35 @@ static void WriteSolidLeaf(void)
 #endif
 
 
+static void Quake_BSP()
+{
+  quake_group_c GROUP;
+
+  CreateSides(GROUP);
+
+  quake_leaf_c *root_L = NULL;
+
+  Partition_Group(GROUP, &qk_bsp_root, &root_L);
+
+  SYS_ASSERT(qk_bsp_root);
+
+
+  int cur_node = 0;
+  int cur_leaf = 0;
+
+  AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
+}
+
+
 
 void Q1_CreateModel(void)
 {
+#if 0
   rSideFactory_c::FreeAll();
   all_windings.clear();
 
 // fprintf(stderr, "Q1_BuildBSP...\n");
-  Q1_BuildBSP();
+  OLD_Q1_BuildBSP();
 
   qLump_c *lump = BSP_NewLump(LUMP_MODELS);
 
@@ -2292,6 +2343,7 @@ void Q1_CreateModel(void)
 
   // there is no need to delete the lumps from BSP_NewLump()
   // since is handled by the q_common.c code.
+#endif
 }
 
 
@@ -2308,7 +2360,7 @@ void CSG_QUAKE_Build()
   if (main_win)
     main_win->build_box->Prog_Step("BSP");
 
-  Q1_CreateModel();
+  Quake_BSP();
 }
 
 

@@ -145,6 +145,8 @@ public:
 
   ~quake_node_c()
   { }
+
+  void ComputeBBox();
 };
 
 
