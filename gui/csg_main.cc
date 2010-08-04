@@ -278,6 +278,8 @@ entity_info_c::~entity_info_c()
 
 void CSG2_UpdateBounds(bool three_d)
 {
+#if 0  // FIXME FIXME FIXME !!!!!!!!!1
+
   double min_x, min_y, min_z;
   double max_x, max_y, max_z;
 
@@ -334,6 +336,8 @@ void CSG2_UpdateBounds(bool three_d)
   bounds_x2 = (int)ceil(max_x) + 32;
   bounds_y2 = (int)ceil(max_y) + 32;
   bounds_z2 = (int)ceil(max_z) + 64;
+
+#endif
 }
 
 

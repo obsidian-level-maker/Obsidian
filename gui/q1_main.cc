@@ -487,7 +487,7 @@ static void Q1_CreateTexInfo(void)
 }
 
 
-#if 0  /* TEMP DUMMY STUFF */
+#if 1  /* TEMP DUMMY STUFF */
 static void DummyTexInfo(void)
 {
   // 0 = "error" on PLANE_X / PLANE_ANYX
@@ -500,7 +500,7 @@ static void DummyTexInfo(void)
 
   qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
-  float scale = 8.0;
+  float scale = 2.0;
 
   for (int T = 0; T < 6; T++)
   {
@@ -611,6 +611,12 @@ static void Q1_WriteFace(quake_face_c *face)
 
 
   // FIXME !!!! texinfo
+
+  raw_face.texinfo = (rand() & 1) * 3;
+  if (fabs(face->node->plane.nz) > 0.5)
+    raw_face.texinfo += 2;
+  else if (fabs(face->node->plane.ny) > 0.5)
+    raw_face.texinfo += 1;
 
 
   raw_face.lightofs = 0 + (rand() & 16383); //!!!!!! TEST CRUD
@@ -897,7 +903,8 @@ static void Q1_CreateBSPFile(const char *name)
   BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
 
   Q1_CreateMipTex();
-  Q1_CreateTexInfo();
+//!!!!  Q1_CreateTexInfo();
+DummyTexInfo();
   Q1_CreateEntities();
 
   BSP_CloseLevel();
