@@ -583,6 +583,7 @@ static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 static void Q1_WriteFace(quake_face_c *face)
 {
   SYS_ASSERT(face->node);
+  SYS_ASSERT(face->node_side >= 0);
 
   face->index = q1_total_faces;
 
@@ -596,7 +597,7 @@ static void Q1_WriteFace(quake_face_c *face)
 
   raw_face.planenum = BSP_AddPlane(&face->node->plane, &flipped);
 
-  raw_face.side = flipped ? 1 : 0;
+  raw_face.side = face->node_side ^ (flipped ? 1 : 0);
 
 
   unsigned int total_v = face->verts.size();

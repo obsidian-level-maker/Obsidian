@@ -68,6 +68,8 @@ public:
   // the node this face sits on
   quake_node_c *node;
 
+  int node_side;  // 0 = front, 1 = back
+
   std::vector<quake_vertex_c> verts;
 
   std::string tex;
@@ -79,7 +81,8 @@ public:
   int index;
 
 public:
-  quake_face_c() : node(NULL), verts(), tex(), lmap(NULL), index(-1)
+  quake_face_c() : node(NULL), node_side(-1),
+                   verts(), tex(), lmap(NULL), index(-1)
   { }
 
   ~quake_face_c()

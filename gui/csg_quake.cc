@@ -1660,16 +1660,18 @@ public:
 
   quake_node_c * on_node;
 
+  int node_side;  // 0 = front, 1 = back
+
   double x1, y1;
   double x2, y2;
 
 public:
   // this is only for partitions
-  quake_side_c() : snag(NULL), on_node(NULL)
+  quake_side_c() : snag(NULL), on_node(NULL), node_side(-1)
   { }
 
   quake_side_c(snag_c *S) :
-      snag(S), on_node(NULL),
+      snag(S), on_node(NULL), node_side(-1),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
   { }
 
@@ -1679,9 +1681,10 @@ public:
   { }
 
   // make a "mini side"
-  quake_side_c(quake_node_c *node, const quake_side_c *part,
+  quake_side_c(quake_node_c *node, int _node_side,
+               const quake_side_c *part,
                double along1, double along2) :
-      snag(NULL), on_node(node)
+      snag(NULL), on_node(node), node_side(_node_side)
   {
     double sx, sy;
     double ex, ey;
@@ -1862,8 +1865,8 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
 
     SYS_ASSERT(along1 < along2);
 
-    quake_side_c *F = new quake_side_c(node, part, along1, along2);
-    quake_side_c *B = new quake_side_c(node, part, along2, along1);
+    quake_side_c *F = new quake_side_c(node, 0, part, along1, along2);
+    quake_side_c *B = new quake_side_c(node, 1, part, along2, along1);
 
     front.AddSide(F);
      back.AddSide(B);
@@ -1926,6 +1929,8 @@ static void Split_XY(quake_group_c & group,
       {
         front.AddSide(S);
 
+        S->node_side = 0;
+
         // +2 and -2 mean "remove"
         AddIntersection(cut_list, P_Along(part, S, 0), +2);
         AddIntersection(cut_list, P_Along(part, S, 1), -2);
@@ -1933,6 +1938,8 @@ static void Split_XY(quake_group_c & group,
       else
       {
         back.AddSide(S);
+
+        S->node_side = 1;
 
         AddIntersection(cut_list, P_Along(part, S, 0), -2);
         AddIntersection(cut_list, P_Along(part, S, 1), +2);
@@ -2117,6 +2124,8 @@ static quake_face_c * CreateFace(quake_plane_c *plane, const gap_c *G, bool is_c
 
   quake_face_c *F = new quake_face_c;
 
+  F->node_side = 0;
+
   F->CopyWinding(winding, plane);
 
   // FIXME textures ETC
@@ -2128,6 +2137,10 @@ static quake_face_c * CreateFace(quake_plane_c *plane, const gap_c *G, bool is_c
 static quake_face_c * CreateFace(quake_side_c *S, float z1, float z2)
 {
   quake_face_c *F = new quake_face_c();
+
+  F->node_side = S->node_side;
+
+  // FIXME: F->AddVert(x, y, z)
 
   F->verts.push_back(quake_vertex_c(S->x1, S->y1, z1));
   F->verts.push_back(quake_vertex_c(S->x1, S->y1, z2));
@@ -2158,10 +2171,10 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
     if (S->TwoSided())
     {
-      gap_c *G2 = S->snag->region->gaps[0];
+      gap_c *G2 = S->snag->partner->region->gaps[0];
 
       float f2 = G2->bottom->t.z;
-      float c2 = G2->bottom->t.z;
+      float c2 = G2->top   ->b.z;
 
       if (f2 > f1 + 0.1)
       {
