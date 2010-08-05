@@ -157,7 +157,6 @@ extern std::vector<region_c *> all_regions;
 void CSG_BSP(double grid);
 
 void CSG_SortBrushes();
-void CSG_SimpleCoalesce();
 void CSG_SwallowBrushes();
 void CSG_DiscoverGaps();
 void CSG_MakeMiniMap();

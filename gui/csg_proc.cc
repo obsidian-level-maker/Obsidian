@@ -70,44 +70,6 @@ bool snag_c::SameSides() const
 }
 
 
-static int SpreadEquivID()
-{
-  int changes = 0;
-
-int sames = 0;
-int diffs = 0;
-
-  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-  {
-    region_c *R = all_regions[i];
-    SYS_ASSERT(R);
-
-    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
-    {
-      snag_c *S = R->snags[k];
-      SYS_ASSERT(S);
-
-      region_c *N = S->partner ? S->partner->region : NULL;
-
-      // use '>' so that we only check the relationship once
-      if (N && N->equiv_id > R->equiv_id && N->HasSameBrushes(R))
-      {
-        N->equiv_id = R->equiv_id;
-        changes++;
-      }
-
-if (N) {
-if (N->equiv_id == R->equiv_id) sames++; else diffs++; }
-
-    }
-  }
-
-// fprintf(stderr, "SpreadEquivID  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
-
-  return changes;
-}
-
-
 void CSG_SortBrushes()
 {
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
@@ -116,22 +78,6 @@ void CSG_SortBrushes()
 
     R->SortBrushes();
   }
-}
-
-
-void CSG_SimpleCoalesce()
-{
-  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-  {
-    region_c *R = all_regions[i];
-
-    R->equiv_id = 1 + (int)i;
-  }
-
-  while (SpreadEquivID() > 0)
-  { }
-
-  // TODO: coalesce if only one snag shared
 }
 
 

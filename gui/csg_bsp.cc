@@ -1253,8 +1253,6 @@ void CSG_TestRegions_Doom(void)
 
   CSG_BSP(4.0);
 
-  CSG_SimpleCoalesce();
-
   test_vertices.clear();
 
   unsigned int i, k;
