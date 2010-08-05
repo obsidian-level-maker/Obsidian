@@ -43,7 +43,8 @@
 
 
 extern int Grab_Properties(lua_State *L, int stack_pos,
-                           csg_property_set_c *props, bool skip_xybt = false);
+                           csg_property_set_c *props,
+                           bool skip_xybt = false);
 
 
 q1MapModel_c::q1MapModel_c() :
@@ -658,14 +659,14 @@ static void Q1_WriteFace(quake_face_c *face)
 }
 
 
-static void Q1_WriteMarkSurf(quake_face_c *face)
+static void Q1_WriteMarkSurf(int index)
 {
-  SYS_ASSERT(face->index >= 0);
+  SYS_ASSERT(index >= 0);
 
   // fix endianness
-  u16_t index = LE_U16(face->index);
+  u16_t raw_index = LE_U16(index);
 
-  q1_mark_surfs->Append(&index, sizeof(index));
+  q1_mark_surfs->Append(&raw_index, sizeof(raw_index));
 
   q1_total_mark_surfs += 1;
 }
@@ -692,7 +693,7 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
   for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
   {
-    Q1_WriteMarkSurf(leaf->faces[i]);
+    Q1_WriteMarkSurf(leaf->faces[i]->index);
 
     raw_leaf.num_marksurf += 1;
   }
@@ -894,12 +895,22 @@ static void Q1_WriteModel(int hull_1, int hull_2)
 //   MAP MODEL STUFF
 //------------------------------------------------------------------------
 
+static void MapModel_Edge(float x1, float y1, float z1,
+                          float x2, float y2, float z2)
+{
+  quake_vertex_c A(x1, y1, z1);
+  quake_vertex_c B(x2, y2, z2);
+
+  Q1_WriteEdge(A, B);
+}
+
+
 static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipped)
 {
-  dface_t raw_fc;
+  dface_t raw_face;
 
-  raw_fc.planenum = plane;
-  raw_fc.side = flipped ? 1 : 0;
+  raw_face.planenum = plane;
+  raw_face.side = flipped ? 1 : 0;
  
 
   const char *texture = "error";
@@ -926,19 +937,10 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     texture = model->z_face.getStr("tex", "missing");
   }
 
-  raw_fc.texinfo = Q1_AddTexInfo(texture, 0, s, t);
-
-  raw_fc.styles[0] = 0xFF;  // no lightmap
-  raw_fc.styles[1] = 0xFF;
-  raw_fc.styles[2] = 0xFF;
-  raw_fc.styles[3] = 0xFF;
-
-  raw_fc.lightofs = -1;  // no lightmap
-
   // add the edges
 
-  raw_fc.firstedge = q1_total_surf_edges;
-  raw_fc.numedges  = 0;
+  raw_face.firstedge = q1_total_surf_edges;
+  raw_face.numedges  = 4;
 
   if (face < 2)  // PLANE_X
   {
@@ -947,10 +949,10 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     double y2 = flipped  ? model->y1 : model->y2;
 
     // Note: this assumes the plane is positive
-    Q1_AddEdge(x, y1, model->z1, x, y1, model->z2, &raw_fc);
-    Q1_AddEdge(x, y1, model->z2, x, y2, model->z2, &raw_fc);
-    Q1_AddEdge(x, y2, model->z2, x, y2, model->z1, &raw_fc);
-    Q1_AddEdge(x, y2, model->z1, x, y1, model->z1, &raw_fc);
+    MapModel_Edge(x, y1, model->z1, x, y1, model->z2);
+    MapModel_Edge(x, y1, model->z2, x, y2, model->z2);
+    MapModel_Edge(x, y2, model->z2, x, y2, model->z1);
+    MapModel_Edge(x, y2, model->z1, x, y1, model->z1);
   }
   else if (face < 4)  // PLANE_Y
   {
@@ -958,10 +960,10 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     double x1 = flipped  ? model->x1 : model->x2;
     double x2 = flipped  ? model->x2 : model->x1;
 
-    Q1_AddEdge(x1, y, model->z1, x1, y, model->z2, &raw_fc);
-    Q1_AddEdge(x1, y, model->z2, x2, y, model->z2, &raw_fc);
-    Q1_AddEdge(x2, y, model->z2, x2, y, model->z1, &raw_fc);
-    Q1_AddEdge(x2, y, model->z1, x1, y, model->z1, &raw_fc);
+    MapModel_Edge(x1, y, model->z1, x1, y, model->z2);
+    MapModel_Edge(x1, y, model->z2, x2, y, model->z2);
+    MapModel_Edge(x2, y, model->z2, x2, y, model->z1);
+    MapModel_Edge(x2, y, model->z1, x1, y, model->z1);
   }
   else // PLANE_Z
   {
@@ -969,21 +971,35 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
     double x1 = flipped  ? model->x2 : model->x1;
     double x2 = flipped  ? model->x1 : model->x2;
 
-    Q1_AddEdge(x1, model->y1, z, x1, model->y2, z, &raw_fc);
-    Q1_AddEdge(x1, model->y2, z, x2, model->y2, z, &raw_fc);
-    Q1_AddEdge(x2, model->y2, z, x2, model->y1, z, &raw_fc);
-    Q1_AddEdge(x2, model->y1, z, x1, model->y1, z, &raw_fc);
+    MapModel_Edge(x1, model->y1, z, x1, model->y2, z);
+    MapModel_Edge(x1, model->y2, z, x2, model->y2, z);
+    MapModel_Edge(x2, model->y2, z, x2, model->y1, z);
+    MapModel_Edge(x2, model->y1, z, x1, model->y1, z);
   }
 
-  // lighting
-  if (true)
-  {
-    static int foo = 0; foo++;
-    raw_fc.styles[0] = (foo & 3);
-    raw_fc.lightofs  = 100;  //!!! flat lighting index
-  }
+  // texture and lighting
 
-  q1_faces->Append(&raw_fc, sizeof(raw_fc));
+  raw_face.texinfo = Q1_AddTexInfo(texture, 0, s, t);
+
+  raw_face.styles[0] = 0xFF;  // no lightmap
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
+
+  raw_face.lightofs = 128*17*17;  // FIXME
+
+  // fix endianness
+  raw_face.planenum  = LE_S16(raw_face.planenum);
+  raw_face.side      = LE_S16(raw_face.side);
+  raw_face.firstedge = LE_S32(raw_face.firstedge);
+  raw_face.numedges  = LE_S16(raw_face.numedges);
+  raw_face.texinfo   = LE_S16(raw_face.texinfo);
+  raw_face.lightofs  = LE_S32(raw_face.lightofs);
+
+
+  q1_faces->Append(&raw_face, sizeof(raw_face));
+
+  q1_total_faces += 1;
 }
 
 
@@ -1003,8 +1019,8 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 
   for (int face = 0; face < 6; face++)
   {
-    dnode_t raw_nd;
-    dleaf_t raw_lf;
+    dnode_t raw_node;
+    dleaf_t raw_leaf;
 
     double v;
     double dir;
@@ -1014,56 +1030,56 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
     {
       v = (face==0) ? model->x1 : model->x2;
       dir = (face==0) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+      raw_node.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
     }
     else if (face < 4)  // PLANE_Y
     {
       v = (face==2) ? model->y1 : model->y2;
       dir = (face==2) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+      raw_node.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
     }
     else  // PLANE_Z
     {
       v = (face==5) ? model->z1 : model->z2;
       dir = (face==5) ? -1 : 1;
-      raw_nd.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+      raw_node.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
     }
 
-    raw_nd.children[0] = -(leaf_base + face + 2);
-    raw_nd.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
+    raw_node.children[0] = -(leaf_base + face + 2);
+    raw_node.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
 
     if (flipped)
     {
-      u16_t tmp = raw_nd.children[0];
-      raw_nd.children[0] = raw_nd.children[1];
-      raw_nd.children[1] = tmp;
+      u16_t tmp = raw_node.children[0];
+      raw_node.children[0] = raw_node.children[1];
+      raw_node.children[1] = tmp;
     }
 
-    raw_nd.firstface = face_base + face;
-    raw_nd.numfaces  = 1;
+    raw_node.firstface = face_base + face;
+    raw_node.numfaces  = 1;
 
     for (int i = 0; i < 3; i++)
     {
-      raw_lf.mins[i] = raw_nd.mins[i] = mins[i];
-      raw_lf.maxs[i] = raw_nd.maxs[i] = maxs[i];
+      raw_leaf.mins[i] = raw_node.mins[i] = mins[i];
+      raw_leaf.maxs[i] = raw_node.maxs[i] = maxs[i];
     }
 
-    raw_lf.contents = CONTENTS_EMPTY;
-    raw_lf.visofs = -1;
+    raw_leaf.contents = CONTENTS_EMPTY;
+    raw_leaf.visofs = -1;
 
-    raw_lf.first_marksurf = q1_total_mark_surfs;
-    raw_lf.num_marksurf   = 0;
+    raw_leaf.first_marksurf = q1_total_mark_surfs;
+    raw_leaf.num_marksurf   = 1;
 
-    memset(raw_lf.ambient_level, 0, sizeof(raw_lf.ambient_level));
+    memset(raw_leaf.ambient_level, 0, sizeof(raw_leaf.ambient_level));
 
-    MapModel_Face(model, face, raw_nd.planenum, flipped);
+    MapModel_Face(model, face, raw_node.planenum, flipped);
 
-    Q1_AddSurf(raw_lf.first_marksurf, &raw_lf);
+    Q1_WriteMarkSurf(q1_total_mark_surfs);
 
     // TODO: fix endianness
 
-    q1_nodes->Append(&raw_nd, sizeof(raw_nd));
-    q1_leafs->Append(&raw_lf, sizeof(raw_lf));
+    q1_nodes->Append(&raw_node, sizeof(raw_node));
+    q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
   }
 }
 
