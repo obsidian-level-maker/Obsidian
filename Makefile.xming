@@ -79,7 +79,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/nk_art.o    \
 	$(OBJ_DIR)/nk_level.o  \
 	$(OBJ_DIR)/q1_clip.o   \
-	$(OBJ_DIR)/q1_doors.o  \
 	$(OBJ_DIR)/q1_main.o   \
 	$(OBJ_DIR)/q_common.o  \
 	$(OBJ_DIR)/q_light.o   \
