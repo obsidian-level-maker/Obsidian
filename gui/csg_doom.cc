@@ -1149,6 +1149,7 @@ static int NaturalXOffset(doom_linedef_c *G, int side)
   return I_ROUND(- along);
 }
 
+#if 0
 static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_offset) 
 {
   double along = 0;
@@ -1163,6 +1164,7 @@ static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_o
 
   return (int)(along + x_offset);
 }
+#endif
 
 static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 {

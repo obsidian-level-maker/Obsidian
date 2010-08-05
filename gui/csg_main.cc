@@ -36,10 +36,6 @@ std::vector<csg_brush_c *> all_brushes;
 
 std::vector<entity_info_c *> all_entities;
 
-std::vector<merge_vertex_c *>  mug_vertices;
-std::vector<merge_segment_c *> mug_segments;
-std::vector<merge_region_c *>  mug_regions;
-
 int bounds_x1, bounds_y1, bounds_z1;
 int bounds_x2, bounds_y2, bounds_z2;
 
@@ -144,7 +140,7 @@ void csg_property_set_c::getHexenArgs(const char *key, u8_t *args)
 
 brush_vert_c::brush_vert_c(csg_brush_c *_parent, double _x, double _y) :
       parent(_parent), x(_x), y(_y),
-      face(), partner(NULL)
+      face()
 { }
 
 brush_vert_c::~brush_vert_c()
@@ -713,6 +709,7 @@ int CSG2_add_entity(lua_State *L)
 
 //------------------------------------------------------------------------
 
+#if 0
 brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact)
 {
@@ -799,24 +796,11 @@ brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
 
   return NULL;
 }
+#endif
 
 
 void CSG2_FreeMerges(void)
 {
-  unsigned int k;
-
-  for (k = 0; k < mug_vertices.size(); k++)
-    delete mug_vertices[k];
-
-  for (k = 0; k < mug_segments.size(); k++)
-    delete mug_segments[k];
-
-  for (k = 0; k < mug_regions.size(); k++)
-    delete mug_regions[k];
-
-  mug_vertices.clear();
-  mug_segments.clear();
-  mug_regions .clear();
 }
 
 void CSG2_FreeAll(void)

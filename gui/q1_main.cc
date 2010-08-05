@@ -580,6 +580,18 @@ static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 }
 
 
+static int CalcTextureFlag(const char *tex_name)
+{
+  if (tex_name[0] == '*')
+    return TEX_SPECIAL;
+
+  if (strncmp(tex_name, "sky", 3) == 0)
+    return TEX_SPECIAL;
+
+  return 0;
+}
+
+
 static void Q1_WriteFace(quake_face_c *face)
 {
   SYS_ASSERT(face->node);
