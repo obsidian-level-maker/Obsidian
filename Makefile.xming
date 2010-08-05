@@ -61,17 +61,16 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/lib_wad.o   \
 	$(OBJ_DIR)/sys_assert.o \
 	$(OBJ_DIR)/sys_debug.o \
-	$(OBJ_DIR)/csg_bsp.o  \
-	$(OBJ_DIR)/csg_main.o  \
-	$(OBJ_DIR)/csg_proc.o  \
 	$(OBJ_DIR)/img_bolt.o  \
 	$(OBJ_DIR)/img_pill.o  \
 	$(OBJ_DIR)/img_carve.o \
 	$(OBJ_DIR)/img_relief.o \
 	$(OBJ_DIR)/img_font1.o  \
 	\
+	$(OBJ_DIR)/csg_bsp.o  \
+	$(OBJ_DIR)/csg_main.o  \
 	$(OBJ_DIR)/csg_doom.o  \
-	$(OBJ_DIR)/csg_nukem.o  \
+	$(OBJ_DIR)/csg_nukem.o \
 	$(OBJ_DIR)/csg_quake.o \
 	$(OBJ_DIR)/dm_extra.o  \
 	$(OBJ_DIR)/dm_glbsp.o  \
