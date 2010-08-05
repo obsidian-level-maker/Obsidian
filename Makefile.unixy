@@ -68,7 +68,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/sys_debug.o \
 	$(OBJ_DIR)/csg_bsp.o  \
 	$(OBJ_DIR)/csg_main.o  \
-	$(OBJ_DIR)/csg_poly.o  \
 	$(OBJ_DIR)/csg_proc.o  \
 	$(OBJ_DIR)/img_bolt.o  \
 	$(OBJ_DIR)/img_pill.o  \
