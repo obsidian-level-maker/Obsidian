@@ -267,57 +267,6 @@ void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
 }
 
 
-void Q1_MapModel_Clip(qLump_c *lump, s32_t base,
-                      q1MapModel_c *model, int which,
-                      double pad_w, double pad_t, double pad_b)
-{
-  model->nodes[which] = base;
-
-  for (int face = 0; face < 6; face++)
-  {
-    dclipnode_t clip;
-
-    double v;
-    double dir;
-    bool flipped;
-
-    if (face < 2)  // PLANE_X
-    {
-      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
-      dir = (face==0) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
-    }
-    else if (face < 4)  // PLANE_Y
-    {
-      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
-      dir = (face==2) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
-    }
-    else  // PLANE_Z
-    {
-      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
-      dir = (face==5) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
-    }
-
-    clip.children[0] = (u16_t) CONTENTS_EMPTY;
-    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
-
-    if (flipped)
-    {
-      std::swap(clip.children[0], clip.children[1]);
-    }
-
-    // fix endianness
-    clip.planenum    = LE_S32(clip.planenum);
-    clip.children[0] = LE_U16(clip.children[0]);
-    clip.children[1] = LE_U16(clip.children[1]);
-
-    lump->Append(&clip, sizeof(clip));
-  }
-}
-
-
 //------------------------------------------------------------------------
 
 int Q1_add_mapmodel(lua_State *L)

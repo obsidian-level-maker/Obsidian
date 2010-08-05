@@ -40,10 +40,6 @@
 #define CLIP_EPSILON  0.01
 
 
-extern void  Q1_MapModel_Clip(qLump_c *L, s32_t base,
-                      q1MapModel_c *model, int which,
-                      double pad_w, double pad_t, double pad_b);
-
 extern void CSG2_Doom_TestBrushes(void);
 extern void CSG2_Doom_TestClip(void);
 
@@ -1156,6 +1152,57 @@ fprintf(stderr, "\n");
 }
 
 
+static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
+                            q1MapModel_c *model, int which,
+                            double pad_w, double pad_t, double pad_b)
+{
+  model->nodes[which] = base;
+
+  for (int face = 0; face < 6; face++)
+  {
+    dclipnode_t clip;
+
+    double v;
+    double dir;
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
+      dir = (face==0) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
+      dir = (face==2) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
+      dir = (face==5) ? -1 : 1;
+      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    clip.children[0] = (u16_t) CONTENTS_EMPTY;
+    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
+
+    if (flipped)
+    {
+      std::swap(clip.children[0], clip.children[1]);
+    }
+
+    // fix endianness
+    clip.planenum    = LE_S32(clip.planenum);
+    clip.children[0] = LE_U16(clip.children[0]);
+    clip.children[1] = LE_U16(clip.children[1]);
+
+    lump->Append(&clip, sizeof(clip));
+  }
+}
+
+
 int Q1_ClippingHull(int which, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= which && which <= 3);
@@ -1222,9 +1269,9 @@ int Q1_ClippingHull(int which, qLump_c *q1_clip)
   // write clip nodes for each MapModel
   for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
   {
-    Q1_MapModel_Clip(q1_clip, cur_index,
-                     q1_all_mapmodels[mm], which+1,
-                     pads[which][0], pads[which][1], pads[which][2]);
+    Q1_ClipMapModel(q1_clip, cur_index,
+                    q1_all_mapmodels[mm], which+1,
+                    pads[which][0], pads[which][1], pads[which][2]);
 
     cur_index += 6;
   }
