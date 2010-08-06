@@ -85,6 +85,8 @@ void BSP_WritePlanes  (int lump_num, int max_planes);
 void BSP_WriteVertices(int lump_num, int max_verts);
 void BSP_WriteEdges   (int lump_num, int max_edges);
 
+void BSP_WriteEntities(int lump_num, const char *description);
+
 
 // utility function
 int BSP_NiceMidwayPoint(float low, float extent);

@@ -67,57 +67,6 @@ static char *level_name;
 static char *description;
 
 
-void Q1_WriteEntities()
-{
-  qLump_c *lump = BSP_NewLump(LUMP_ENTITIES);
-
-  /* add the worldspawn entity */
-
-  lump->Printf("{\n");
-
-  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
-
-  if (description)
-    lump->KeyPair("message", description);
-  else
-    lump->KeyPair("message", "Oblige Level");
-
-  lump->KeyPair("worldtype", "0");
-  lump->KeyPair("classname", "worldspawn");
-
-  lump->Printf("}\n");
-
-  // add everything else
-
-  for (unsigned int j = 0; j < all_entities.size(); j++)
-  {
-    entity_info_c *E = all_entities[j];
-
-    lump->Printf("{\n");
-
-    // write entity properties
-    csg_property_set_c::iterator PI;
-    for (PI = E->props.begin(); PI != E->props.end(); PI++)
-    {
-      lump->KeyPair(PI->first.c_str(), "%s", PI->second.c_str());
-    }
-
-    if ((I_ROUND(E->x) | I_ROUND(E->y) | I_ROUND(E->z)) != 0)
-      lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
-
-    lump->KeyPair("classname", E->name.c_str());
-
-    lump->Printf("}\n");
-  }
-
-  // add a trailing nul
-  u8_t zero = 0;
-
-  lump->Append(&zero, 1);
-}
-
-
 //------------------------------------------------------------------------
 
 static std::vector<std::string>   q1_miptexs;
@@ -1212,7 +1161,8 @@ static void Q1_CreateBSPFile(const char *name)
 
   Q1_WriteMipTex();
   Q1_WriteTexInfo();
-  Q1_WriteEntities();
+
+  BSP_WriteEntities(LUMP_ENTITIES, description);
 
   BSP_CloseLevel();
 
