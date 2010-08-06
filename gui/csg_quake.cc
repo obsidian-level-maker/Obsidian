@@ -910,8 +910,8 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 }
 
 
-static quake_face_c * CreateFace(quake_plane_c *plane, const gap_c *G, bool is_ceil,
-                                 std::vector<quake_vertex_c> & winding)
+static quake_face_c * CreateFloorFace(quake_plane_c *plane, const gap_c *G, bool is_ceil,
+                                      std::vector<quake_vertex_c> & winding)
                         
 {
   FlatToPlane(plane, G, is_ceil);
@@ -922,13 +922,16 @@ static quake_face_c * CreateFace(quake_plane_c *plane, const gap_c *G, bool is_c
 
   F->CopyWinding(winding, plane);
 
-  // FIXME textures ETC
+  csg_property_set_c *face_props = is_ceil ? &G->top->b.face : &G->bottom->t.face;
+
+  F->texture = face_props->getStr("tex", "missing");
 
   return F;
 }
 
 
-static quake_face_c * CreateFace(quake_side_c *S, float z1, float z2)
+static quake_face_c * CreateWallFace(quake_side_c *S, csg_brush_c *brush,
+                                     float z1, float z2)
 {
   quake_face_c *F = new quake_face_c();
 
@@ -941,7 +944,9 @@ static quake_face_c * CreateFace(quake_side_c *S, float z1, float z2)
   F->verts.push_back(quake_vertex_c(S->x2, S->y2, z2));
   F->verts.push_back(quake_vertex_c(S->x2, S->y2, z1));
 
-  // FIXME textures ETC
+  csg_property_set_c *face_props = &brush->verts[0]->face; //!!!! FIXME
+
+  F->texture = face_props->getStr("tex", "missing");
 
   return F;
 }
@@ -972,7 +977,7 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
       if (f2 > f1 + 0.1)
       {
-        F = CreateFace(S, f1, f2);
+        F = CreateWallFace(S, G2->bottom, f1, f2);
 
         leaf->AddFace(F);
         S->on_node->AddFace(F);
@@ -980,7 +985,7 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
       if (c2 < c1 - 0.1)
       {
-        F = CreateFace(S, c2, c1);
+        F = CreateWallFace(S, G2->top, c2, c1);
 
         leaf->AddFace(F);
         S->on_node->AddFace(F);
@@ -988,7 +993,7 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
     }
     else
     {
-      F = CreateFace(S, f1, c1);
+      F = CreateWallFace(S, G->bottom, f1, c1); //!!!! FIXME
 
       leaf->AddFace(F);
       S->on_node->AddFace(F);
@@ -1029,7 +1034,7 @@ static void Partition_Z(quake_group_c & group,
     cur_node = new quake_node_c;
     cur_leaf = NULL;
 
-    quake_face_c *F = CreateFace(&cur_node->plane, G, is_ceil, winding);
+    quake_face_c *F = CreateFloorFace(&cur_node->plane, G, is_ceil, winding);
 
     THE_LEAF->AddFace(F);
     cur_node->AddFace(F);
