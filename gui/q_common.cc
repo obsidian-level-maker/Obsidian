@@ -176,17 +176,18 @@ const char *qLump_c::GetName() const
 
 //------------------------------------------------------------------------
 
+#define PLANE_HASH_SIZE  128
+
 static std::vector<dplane_t> bsp_planes;
 
-#define NUM_PLANE_HASH  128
-static std::vector<u16_t> * plane_hashtab[NUM_PLANE_HASH];
+static std::vector<int> * plane_hashtab[PLANE_HASH_SIZE];
 
 
 static void BSP_ClearPlanes()
 {
   bsp_planes.clear();
 
-  for (int h = 0; h < NUM_PLANE_HASH; h++)
+  for (int h = 0 ; h < PLANE_HASH_SIZE ; h++)
   {
     delete plane_hashtab[h];
     plane_hashtab[h] = NULL;
@@ -207,12 +208,10 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
   memcpy(&raw_plane, plane, sizeof(dplane_t));
 
-  *was_new = false;
-
 
   int hash = I_ROUND(raw_plane.dist * 1.1);
 
-  hash = hash & (NUM_PLANE_HASH-1);
+  hash = hash & (PLANE_HASH_SIZE-1);
 
 
   // fix endianness
@@ -226,26 +225,26 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
   // look for it in hash table...
 
+  *was_new = false;
+
   if (! plane_hashtab[hash])
-    plane_hashtab[hash] = new std::vector<u16_t>;
+    plane_hashtab[hash] = new std::vector<int>;
     
-  std::vector<u16_t> *hashtab = plane_hashtab[hash];
+  std::vector<int> * hashtab = plane_hashtab[hash];
 
 
-  for (unsigned int i = 0; i < hashtab->size(); i++)
+  for (unsigned int i = 0 ; i < hashtab->size() ; i++)
   {
-    u16_t index = (*hashtab)[i];
+    int index = (*hashtab)[i];
 
-    SYS_ASSERT(index < bsp_planes.size());
+    SYS_ASSERT(index < (int)bsp_planes.size());
 
-    if (memcmp(&raw_plane, &bsp_planes[index], sizeof(dplane_t)) == 0)
+    if (memcmp(&raw_plane, &bsp_planes[index], sizeof(raw_plane)) == 0)
       return index;  // found it
   }
 
 
   // not found, so add new one...
-
-  *was_new = true;
 
   u16_t new_index = bsp_planes.size();
 
@@ -255,6 +254,8 @@ static u16_t AddRawPlane(const dplane_t *plane, bool *was_new)
 
 //  fprintf(stderr, "ADDED PLANE (idx %d), count %d\n",
 //                   (int)plane_idx, (int)bsp_planes.size());
+
+  *was_new = true;
 
   return new_index;
 }
@@ -376,17 +377,18 @@ void BSP_WritePlanes(int lump_num, int max_planes)
 
 //------------------------------------------------------------------------
 
+#define VERTEX_HASH_SIZE  512
+
 static std::vector<dvertex_t> bsp_vertices;
 
-#define NUM_VERTEX_HASH  512
-static std::vector<u16_t> * vert_hashtab[NUM_VERTEX_HASH];
+static std::vector<int> * vert_hashtab[VERTEX_HASH_SIZE];
 
 
 static void BSP_ClearVertices()
 {
   bsp_vertices.clear();
 
-  for (int h = 0; h < NUM_VERTEX_HASH; h++)
+  for (int h = 0 ; h < VERTEX_HASH_SIZE ; h++)
   {
     delete vert_hashtab[h];
     vert_hashtab[h] = NULL;
@@ -410,7 +412,7 @@ u16_t BSP_AddVertex(float x, float y, float z)
 {
   int hash = I_ROUND(x * 1.1);
 
-  hash = hash & (NUM_VERTEX_HASH-1);
+  hash = hash & (VERTEX_HASH_SIZE-1);
 
 
   // create on-disk vertex, fixing endianness
@@ -425,15 +427,15 @@ u16_t BSP_AddVertex(float x, float y, float z)
   // for speed we use a hash-table
 
   if (! vert_hashtab[hash])
-    vert_hashtab[hash] = new std::vector<u16_t>;
+    vert_hashtab[hash] = new std::vector<int>;
 
-  std::vector<u16_t> *hashtab = vert_hashtab[hash];
+  std::vector<int> * hashtab = vert_hashtab[hash];
 
-  for (unsigned int i = 0; i < hashtab->size(); i++)
+  for (unsigned int i = 0 ; i < hashtab->size() ; i++)
   {
-    u16_t index = (*hashtab)[i];
+    int index = (*hashtab)[i];
  
-    if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(dvertex_t)) == 0)
+    if (memcmp(&raw_vert, &bsp_vertices[index], sizeof(raw_vert)) == 0)
       return index;  // found it!
   }
 

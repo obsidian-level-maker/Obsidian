@@ -67,7 +67,7 @@ static char *level_name;
 static char *description;
 
 
-void Q1_CreateEntities(void)
+void Q1_WriteEntities()
 {
   qLump_c *lump = BSP_NewLump(LUMP_ENTITIES);
 
@@ -125,6 +125,7 @@ static std::map<std::string, int> q1_miptex_map;
 
 s32_t Q1_AddMipTex(const char *name);
 
+
 static void ClearMipTex(void)
 {
   q1_miptexs.clear();
@@ -135,6 +136,7 @@ static void ClearMipTex(void)
   Q1_AddMipTex("missing"); // #1
   Q1_AddMipTex("o_carve"); // #2
 }
+
 
 s32_t Q1_AddMipTex(const char *name)
 {
@@ -150,6 +152,7 @@ s32_t Q1_AddMipTex(const char *name)
 
   return index;
 }
+
 
 static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 {
@@ -192,6 +195,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
     size /= 2;
   }
 }
+
 
 static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
 {
@@ -243,6 +247,7 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
   }
 }
 
+
 static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 {
   if (strcmp(name, "error") == 0)
@@ -293,7 +298,8 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
   CreateDummyMip(lump, name, 4, 12);
 }
 
-static void Q1_CreateMipTex(void)
+
+static void Q1_WriteMipTex()
 {
   qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
 
@@ -393,98 +399,87 @@ static void DummyMipTex(void)
 }
 #endif
 
+
 //------------------------------------------------------------------------
+
+#define TEXINFO_HASH_SIZE  64
 
 static std::vector<texinfo_t> q1_texinfos;
 
-#define NUM_TEXINFO_HASH  32
-static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
+static std::vector<int> * texinfo_hashtab[TEXINFO_HASH_SIZE];
 
 
 static void ClearTexInfo(void)
 {
   q1_texinfos.clear();
 
-  for (int h = 0; h < NUM_TEXINFO_HASH; h++)
+  for (int h = 0 ; h < TEXINFO_HASH_SIZE ; h++)
   {
     delete texinfo_hashtab[h];
     texinfo_hashtab[h] = NULL;
   }
 }
 
-static bool MatchTexInfo(const texinfo_t *A, const texinfo_t *B)
+
+u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4)
 {
-  if (A->miptex != B->miptex)
-    return false;
+  if (! texture[0])
+    texture = "error";
 
-  if (A->flags != B->flags)
-    return false;
+  int miptex = Q1_AddMipTex(texture);
 
-  for (int k = 0; k < 4; k++)
+  // create texinfo structure, fix endianness
+  texinfo_t raw_tex;
+
+  for (int k = 0 ; k < 4 ; k++)
   {
-    if (fabs(A->s[k] - B->s[k]) > 0.01)
-      return false;
-
-    if (fabs(A->t[k] - B->t[k]) > 0.01)
-      return false;
+    raw_tex.s[k] = LE_Float32(s4[k]);
+    raw_tex.t[k] = LE_Float32(t4[k]);
   }
 
-  return true; // yay!
-}
-
-u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4)
-{
-  // create texinfo structure
-  texinfo_t tin;
-
-  for (int k = 0; k < 4; k++)
-  {
-    tin.s[k] = s4[k];
-    tin.t[k] = t4[k];
-  }
-
-  tin.miptex = Q1_AddMipTex(texture);
-  tin.flags  = flags;
+  raw_tex.miptex = LE_S32(miptex);
+  raw_tex.flags  = LE_S32(flags);
 
 
   // find an existing texinfo.
   // For speed we use a hash-table.
-  int hash = (int)tin.miptex % NUM_TEXINFO_HASH;
+  int hash = miptex & (TEXINFO_HASH_SIZE - 1);
 
   SYS_ASSERT(hash >= 0);
 
   if (! texinfo_hashtab[hash])
-    texinfo_hashtab[hash] = new std::vector<u16_t>;
+    texinfo_hashtab[hash] = new std::vector<int>;
 
-  std::vector<u16_t> *hashtab = texinfo_hashtab[hash];
+  std::vector<int> * hashtab = texinfo_hashtab[hash];
 
-  for (unsigned int i = 0; i < hashtab->size(); i++)
+  for (unsigned int i = 0 ; i < hashtab->size() ; i++)
   {
-    u16_t tin_idx = (*hashtab)[i];
+    int index = (*hashtab)[i];
 
-    SYS_ASSERT(tin_idx < q1_texinfos.size());
+    SYS_ASSERT(index < (int)q1_texinfos.size());
 
-    if (MatchTexInfo(&tin, &q1_texinfos[tin_idx]))
-      return tin_idx;  // found it
+    if (memcmp(&raw_tex, &q1_texinfos[index], sizeof(raw_tex)) == 0)
+      return index;  // found it
   }
 
 
   // not found, so add new one
-  u16_t tin_idx = q1_texinfos.size();
+  u16_t new_index = q1_texinfos.size();
 
-  if (tin_idx >= MAX_MAP_TEXINFO)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d TEXINFOS\n",
-                    MAX_MAP_TEXINFO);
+  q1_texinfos.push_back(raw_tex);
 
-  q1_texinfos.push_back(tin);
+  hashtab->push_back(new_index);
 
-  hashtab->push_back(tin_idx);
-
-  return tin_idx;
+  return new_index;
 }
 
-static void Q1_CreateTexInfo(void)
+
+static void Q1_WriteTexInfo(void)
 {
+  if (q1_texinfos.size() >= MAX_MAP_TEXINFO)
+    Main_FatalError("Quake build failure: exceeded limit of %d TEXINFOS\n",
+                    MAX_MAP_TEXINFO);
+
   qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
   // FIXME: write separately, fix endianness as we go
@@ -493,7 +488,7 @@ static void Q1_CreateTexInfo(void)
 }
 
 
-#if 1  /* TEMP DUMMY STUFF */
+#if 0  /* TEMP DUMMY STUFF */
 static void DummyTexInfo(void)
 {
   // 0 = "error" on PLANE_X / PLANE_ANYX
@@ -629,13 +624,29 @@ static void Q1_WriteFace(quake_face_c *face)
   }
 
 
-  // FIXME !!!! texinfo
+  // texture and lighitng...
 
-  raw_face.texinfo = (rand() & 1) * 3;
-  if (fabs(face->node->plane.nz) > 0.5)
-    raw_face.texinfo += 2;
+  const char *texture = face->texture.c_str();
+
+  int flags = CalcTextureFlag(texture);
+
+  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
+
+  if (fabs(face->node->plane.nx) > 0.5)  // PLANE_X
+  {
+    s[1] = 1.0; t[2] = 1.0;
+  }
   else if (fabs(face->node->plane.ny) > 0.5)
-    raw_face.texinfo += 1;
+  {
+    s[0] = 1.0; t[2] = 1.0;
+  }
+  else // PLANE_Z
+  {
+    s[0] = 1.0; t[1] = 1.0;
+  }
+
+  raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
 
   raw_face.lightofs = 0 + (rand() & 16383); //!!!!!! TEST CRUD
@@ -915,8 +926,8 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 
   const char *texture = "error";
 
-  double s[4] = { 0.0, 0.0, 0.0, 0.0 };
-  double t[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
 
   if (face < 2)  // PLANE_X
   {
@@ -1199,10 +1210,9 @@ static void Q1_CreateBSPFile(const char *name)
 
   BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
 
-  Q1_CreateMipTex();
-//!!!!  Q1_CreateTexInfo();
-DummyTexInfo();
-  Q1_CreateEntities();
+  Q1_WriteMipTex();
+  Q1_WriteTexInfo();
+  Q1_WriteEntities();
 
   BSP_CloseLevel();
 

@@ -72,7 +72,7 @@ public:
 
   std::vector<quake_vertex_c> verts;
 
-  std::string tex;
+  std::string texture;
 
   // FIXME: texture offsets etc
 
@@ -82,7 +82,7 @@ public:
 
 public:
   quake_face_c() : node(NULL), node_side(-1),
-                   verts(), tex(), lmap(NULL), index(-1)
+                   verts(), texture(), lmap(NULL), index(-1)
   { }
 
   ~quake_face_c()
