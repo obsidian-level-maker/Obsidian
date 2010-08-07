@@ -1059,8 +1059,7 @@ static void Q1_WriteSubModels()
 
     raw_model.firstface = LE_S32(q1_total_faces);
     raw_model.numfaces  = LE_S32(6);
-
-    raw_model.visleafs  = LE_S32(q1_total_leafs);
+    raw_model.visleafs  = LE_S32(6);
 
     MapModel_Nodes(model);
 
