@@ -963,8 +963,11 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 }
 
 
-static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
+static void MapModel_Nodes(q1MapModel_c *model)
 {
+  int face_base = q1_total_faces;
+  int leaf_base = q1_total_leafs;
+
   model->nodes[0] = q1_total_nodes;
 
   int mins[3], maxs[3];
@@ -977,13 +980,16 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
   maxs[1] = I_ROUND(model->y2)+32;
   maxs[2] = I_ROUND(model->z2)+64;
 
-  for (int face = 0; face < 6; face++)
+  for (int face = 0 ; face < 6 ; face++)
   {
     dnode_t raw_node;
     dleaf_t raw_leaf;
 
+    memset(&raw_leaf, 0, sizeof(raw_leaf));
+
     double v;
     double dir;
+
     bool flipped;
 
     if (face < 2)  // PLANE_X
@@ -1010,18 +1016,16 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 
     if (flipped)
     {
-      u16_t tmp = raw_node.children[0];
-      raw_node.children[0] = raw_node.children[1];
-      raw_node.children[1] = tmp;
+      std::swap(raw_node.children[0], raw_node.children[1]);
     }
 
     raw_node.firstface = face_base + face;
     raw_node.numfaces  = 1;
 
-    for (int i = 0; i < 3; i++)
+    for (int b = 0 ; b < 3 ; b++)
     {
-      raw_leaf.mins[i] = raw_node.mins[i] = mins[i];
-      raw_leaf.maxs[i] = raw_node.maxs[i] = maxs[i];
+      raw_leaf.mins[b] = raw_node.mins[b] = mins[b];
+      raw_leaf.maxs[b] = raw_node.maxs[b] = maxs[b];
     }
 
     raw_leaf.contents = CONTENTS_EMPTY;
@@ -1029,8 +1033,6 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
 
     raw_leaf.first_marksurf = q1_total_mark_surfs;
     raw_leaf.num_marksurf   = 1;
-
-    memset(raw_leaf.ambient_level, 0, sizeof(raw_leaf.ambient_level));
 
     MapModel_Face(model, face, raw_node.planenum, flipped);
 
@@ -1041,45 +1043,45 @@ static void MapModel_Nodes(q1MapModel_c *model, int face_base, int leaf_base)
     q1_nodes->Append(&raw_node, sizeof(raw_node));
     q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
   }
+
+  q1_total_nodes += 6;
+  q1_total_leafs += 6;
 }
 
 
-void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf)
+static void Q1_WriteSubModels()
 {
-  for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
+  for (unsigned int i = 0 ; i < q1_all_mapmodels.size() ; i++)
   {
-    q1MapModel_c *model = q1_all_mapmodels[mm];
+    q1MapModel_c *model = q1_all_mapmodels[i];
 
-    dmodel_t smod;
+    dmodel_t raw_model;
 
-    memset(&smod, 0, sizeof(smod));
+    raw_model.firstface = LE_S32(q1_total_faces);
+    raw_model.numfaces  = LE_S32(6);
 
-    smod.mins[0] = model->x1;  smod.maxs[0] = model->x2;
-    smod.mins[1] = model->y1;  smod.maxs[1] = model->y2;
-    smod.mins[2] = model->z1;  smod.maxs[2] = model->z2;
+    raw_model.visleafs  = LE_S32(q1_total_leafs);
 
-    smod.origin[0] = 0;
-    smod.origin[1] = 0;
-    smod.origin[2] = 0;
+    MapModel_Nodes(model);
 
-    smod.visleafs  = 6;
-    smod.firstface = first_face;
-    smod.numfaces  = 6;
-
-    MapModel_Nodes(model, first_face, first_leaf);
-
-    first_face += 6;
-    first_leaf += 6;
-
-    q1_total_nodes += 6;
-
-    for (int h = 0; h < 4; h++)
+    for (int h = 0 ; h < 4 ; h++)
     {
-      smod.headnode[h] = model->nodes[h];
+      raw_model.headnode[h] = LE_S32(model->nodes[h]);
     }
 
-    // TODO: fix endianness in model
-    L->Append(&smod, sizeof(smod));
+    raw_model.mins[0] = LE_Float32(model->x1);
+    raw_model.mins[1] = LE_Float32(model->y1);
+    raw_model.mins[2] = LE_Float32(model->z1);
+
+    raw_model.maxs[0] = LE_Float32(model->x2);
+    raw_model.maxs[1] = LE_Float32(model->y2);
+    raw_model.maxs[2] = LE_Float32(model->z2);
+
+    raw_model.origin[0] = LE_Float32(0.0);
+    raw_model.origin[1] = LE_Float32(0.0);
+    raw_model.origin[2] = LE_Float32(0.0);
+
+    q1_models->Append(&raw_model, sizeof(raw_model));
   }
 }
 
@@ -1151,7 +1153,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   Q1_WriteModel(hull_1, hull_2);
 
-//!!!!  Q1_WriteSubModels();
+  Q1_WriteSubModels();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
