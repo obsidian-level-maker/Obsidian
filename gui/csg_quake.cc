@@ -1057,9 +1057,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
 }
 
 
-static void Partition_Z(quake_group_c & group,
-                        quake_node_c ** node,
-                        quake_leaf_c ** leaf)
+static quake_node_c * Partition_Z(quake_group_c & group)
 {
   region_c *R = group.sides[0]->snag->region;
 
@@ -1075,21 +1073,20 @@ static void Partition_Z(quake_group_c & group,
   quake_node_c *cur_node = NULL;
   quake_leaf_c *cur_leaf = qk_solid_leaf;
 
-  for (int i = (int)R->gaps.size() ; i >= 0 ; i--)
+  for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
     cur_node = CreateLeaf(R->gaps[i], group, winding, bbox,
                           cur_node, cur_leaf);
     cur_leaf = NULL;
   }
 
-  *node = cur_node;
-  *leaf = cur_leaf;
+  SYS_ASSERT(cur_node);
+
+  return cur_node;
 }
 
 
-static void Partition_Group(quake_group_c & group,
-                            quake_node_c ** node,
-                            quake_leaf_c ** leaf)
+static quake_node_c * Partition_Group(quake_group_c & group)
 {
   // this function "returns" either a node OR a leaf via the
   // parameters with the same name.
@@ -1112,20 +1109,22 @@ static void Partition_Group(quake_group_c & group,
     Split_XY(group, new_node, &part, front, back);
 
     // the front should never be empty
-    Partition_Group(front, &new_node->front_N, &new_node->front_L);
+    SYS_ASSERT(! front.sides.empty());
+
+    new_node->front_N = Partition_Group(front);
 
     if (back.sides.empty())
       new_node->back_L = qk_solid_leaf;
     else
-      Partition_Group(back, &new_node->back_N, &new_node->back_L);
+      new_node->back_N = Partition_Group(back);
 
     // input group has been consumed now 
 
-    (*node) = new_node;
+    return new_node;
   }
   else
   {
-    Partition_Z(group, node, leaf);
+    return Partition_Z(group);
   }
 }
 
@@ -1287,9 +1286,7 @@ static void Quake_BSP()
 
   CreateSides(GROUP);
 
-  quake_leaf_c *root_L = NULL;
-
-  Partition_Group(GROUP, &qk_bsp_root, &root_L);
+  qk_bsp_root = Partition_Group(GROUP);
 
   SYS_ASSERT(qk_bsp_root);
 
