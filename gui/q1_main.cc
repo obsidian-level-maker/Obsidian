@@ -42,6 +42,11 @@
 #include "q1_structs.h"
 
 
+#define LEAF_PADDING   4
+#define NODE_PADDING   16
+#define MODEL_PADDING  24.0
+
+
 extern int Grab_Properties(lua_State *L, int stack_pos,
                            csg_property_set_c *props,
                            bool skip_xybt = false);
@@ -647,8 +652,8 @@ static void DoWriteLeaf(dleaf_t & raw_leaf)
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b]);
-    raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b]);
+    raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b] - LEAF_PADDING);
+    raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b] + LEAF_PADDING);
   }
 
   q1_leafs->Append(&raw_leaf, sizeof(raw_leaf));
@@ -684,8 +689,8 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]) - 4;
-    raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]) + 4;
+    raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]);
+    raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]);
   }
 
   DoWriteLeaf(raw_leaf);
@@ -716,8 +721,8 @@ static void DoWriteNode(dnode_t & raw_node)
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_node.mins[b] = LE_S16(raw_node.mins[b]);
-    raw_node.maxs[b] = LE_S16(raw_node.maxs[b]);
+    raw_node.mins[b] = LE_S16(raw_node.mins[b] - NODE_PADDING);
+    raw_node.maxs[b] = LE_S16(raw_node.maxs[b] + NODE_PADDING);
   }
 
   q1_nodes->Append(&raw_node, sizeof(raw_node));
@@ -765,8 +770,8 @@ static void Q1_WriteNode(quake_node_c *node)
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    raw_node.mins[b] = I_ROUND(node->bbox.mins[b]) - 32;
-    raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]) + 32;
+    raw_node.mins[b] = I_ROUND(node->bbox.mins[b]);
+    raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]);
   }
 
 
@@ -823,6 +828,30 @@ static void Q1_WriteBSP()
 }
 
 
+static void DoWriteModel(dmodel_t & raw_model)
+{
+  // fix endianness
+  raw_model.visleafs  = LE_S32(raw_model.visleafs);
+  raw_model.firstface = LE_S32(raw_model.firstface);
+  raw_model.numfaces  = LE_S32(raw_model.numfaces);
+
+  for (int h = 0 ; h < 4 ; h++)
+  {
+    raw_model.headnode[h] = LE_S32(raw_model.headnode[h]);
+  }
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_model.mins[b] = LE_Float32(raw_model.mins[b] - MODEL_PADDING);
+    raw_model.maxs[b] = LE_Float32(raw_model.maxs[b] + MODEL_PADDING);
+
+    raw_model.origin[b] = LE_Float32(raw_model.origin[b]);
+  }
+
+  q1_models->Append(&raw_model, sizeof(raw_model));
+}
+
+
 static void Q1_WriteModel(int hull_1, int hull_2)
 {
   q1_models = BSP_NewLump(LUMP_MODELS);
@@ -830,27 +859,25 @@ static void Q1_WriteModel(int hull_1, int hull_2)
   dmodel_t raw_model;
 
   raw_model.headnode[0] = 0;
-  raw_model.headnode[1] = LE_S32(hull_1);
-  raw_model.headnode[2] = LE_S32(hull_2);
+  raw_model.headnode[1] = hull_1;
+  raw_model.headnode[2] = hull_2;
   raw_model.headnode[3] = 0;
 
-  raw_model.visleafs  = LE_S32(q1_total_leafs);
+  // -AJA- I don't think original Quake actually uses this value
+  raw_model.visleafs  = q1_total_leafs;
 
-  raw_model.firstface = LE_S32(0);
-  raw_model.numfaces  = LE_S32(q1_total_faces);
+  raw_model.firstface = 0;
+  raw_model.numfaces  = q1_total_faces;
 
   for (int b = 0 ; b < 3 ; b++)
   {
-    float min_v = qk_bsp_root->bbox.mins[b];
-    float max_v = qk_bsp_root->bbox.mins[b];
+    raw_model.mins[b] = qk_bsp_root->bbox.mins[b];
+    raw_model.maxs[b] = qk_bsp_root->bbox.mins[b];
 
-    raw_model.mins[b] = LE_Float32(min_v);
-    raw_model.maxs[b] = LE_Float32(max_v);
-
-    raw_model.origin[b] = LE_Float32(0.0);
+    raw_model.origin[b] = 0;
   }
 
-  q1_models->Append(&raw_model, sizeof(raw_model));
+  DoWriteModel(raw_model);
 }
 
 
@@ -949,29 +976,19 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
   raw_face.styles[2] = 0xFF;
   raw_face.styles[3] = 0xFF;
 
-  raw_face.lightofs = 128*17*17;  // FIXME
+  raw_face.lightofs = 72*17*17;  // FIXME
 
 
   DoWriteFace(raw_face);
 }
 
 
-static void MapModel_Nodes(q1MapModel_c *model)
+static void MapModel_Nodes(q1MapModel_c *model, float *mins, float *maxs)
 {
   int face_base = q1_total_faces;
   int leaf_base = q1_total_leafs;
 
   model->nodes[0] = q1_total_nodes;
-
-  int mins[3], maxs[3];
-
-  mins[0] = I_ROUND(model->x1)-32;
-  mins[1] = I_ROUND(model->y1)-32;
-  mins[2] = I_ROUND(model->z1)-64;
-
-  maxs[0] = I_ROUND(model->x2)+32;
-  maxs[1] = I_ROUND(model->y2)+32;
-  maxs[2] = I_ROUND(model->z2)+64;
 
   for (int face = 0 ; face < 6 ; face++)
   {
@@ -1045,30 +1062,31 @@ static void Q1_WriteSubModels()
 
     dmodel_t raw_model;
 
-    raw_model.firstface = LE_S32(q1_total_faces);
-    raw_model.numfaces  = LE_S32(6);
-    raw_model.visleafs  = LE_S32(6);
+    raw_model.firstface = q1_total_faces;
+    raw_model.numfaces  = 6;
+    raw_model.visleafs  = 6;
 
-    MapModel_Nodes(model);
+    // bbox
+    raw_model.mins[0] = model->x1;
+    raw_model.mins[1] = model->y1;
+    raw_model.mins[2] = model->z1;
+
+    raw_model.maxs[0] = model->x2;
+    raw_model.maxs[1] = model->y2;
+    raw_model.maxs[2] = model->z2;
+
+    raw_model.origin[0] = 0;
+    raw_model.origin[1] = 0;
+    raw_model.origin[2] = 0;
+
+    MapModel_Nodes(model, raw_model.mins, raw_model.maxs);
 
     for (int h = 0 ; h < 4 ; h++)
     {
-      raw_model.headnode[h] = LE_S32(model->nodes[h]);
+      raw_model.headnode[h] = model->nodes[h];
     }
 
-    raw_model.mins[0] = LE_Float32(model->x1);
-    raw_model.mins[1] = LE_Float32(model->y1);
-    raw_model.mins[2] = LE_Float32(model->z1);
-
-    raw_model.maxs[0] = LE_Float32(model->x2);
-    raw_model.maxs[1] = LE_Float32(model->y2);
-    raw_model.maxs[2] = LE_Float32(model->z2);
-
-    raw_model.origin[0] = LE_Float32(0.0);
-    raw_model.origin[1] = LE_Float32(0.0);
-    raw_model.origin[2] = LE_Float32(0.0);
-
-    q1_models->Append(&raw_model, sizeof(raw_model));
+    DoWriteModel(raw_model);
   }
 }
 
