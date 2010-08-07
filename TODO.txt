@@ -2,10 +2,14 @@
 TODO
 ====
 
--  rename snag_c::where --> region
 
+Quake: ensure faces are not too tall (>= 240)
 
-BSP_AddPlane: create dplane_t in memory, compare them to find it
+Quake: lightmap offsets need to be a multiple of 4 ??
+
+Quake: check max size of lightmap : 16x16 or 17x17 ??
+
+Quake: proper XY partition choice, do seed boundary thang
 
 
 q1_clip : proper XY partition choice
@@ -13,10 +17,14 @@ q1_clip : proper XY partition choice
           proper slope planes
 
 
+visibility : can detect in C++ code if each seed side contains a portal
+             (two-sided snag or mini side).  Hence don't need Lua API to
+             communicate that information.
+
+
 !!  usage of plain EPSILON
 
-??  SimpleCoalesce : perhaps do AFTER gap finding / filling,
-                     use the GAPS as the comparison
+??  SimpleCoalesce : needed?
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify
@@ -27,26 +35,16 @@ Hexen: have arg1 .. arg5, i.e. de-array-ify
 
 POSSIBLE FILE RENAMING:
 
--  q1_clip --> csg_clip
+?  q1_clip --> csg_clip
 
--  q_bsp --> q_common
-
--  g_lua    --> m_lua        ('m' for 'main')
--  g_cookie --> m_cookie
-
--  dm_wad  + dm_glbsp --> g_doom    (also file stuff from dm_extra)
--  q1_main + q1_doors --> g_quake
+-  q1_main + q1_doors --> g_quake   ('g' for 'game')
 -  q2_main            --> g_quake2
+-  dm_wad  + dm_glbsp --> g_doom    (also file stuff from dm_extra)
 -  nk_level           --> g_nukem
 -  wolf_map           --> g_wolf
 
 -  dm_extra + nk_art  --> tx_???
 
-
-DONE:  CSG: quantize BRUSHES (in csg_bsp) before CSG_BSP (_not_ after)
-
-        DOOM (etc)  --> 4 units
-        QUAKE (etc) --> 1 unit
 
 
 -  global SECTIONS array
