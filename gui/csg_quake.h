@@ -109,6 +109,10 @@ public:
   void Begin();
   void End();
 
+  void Add_X(float x);
+  void Add_Y(float y);
+  void Add_Z(float z);
+
   void AddPoint(float x, float y, float z);
   void Merge(const quake_bbox_c& other);
 };

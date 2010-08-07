@@ -836,8 +836,9 @@ struct floor_angle_Compare
 };
 
 
-static void CollectWinding(std::vector<quake_vertex_c> & winding,
-                           quake_group_c & group)
+static void CollectWinding(quake_group_c & group,
+                           std::vector<quake_vertex_c> & winding,
+                           quake_bbox_c & bbox)
 {
   // result is CLOCKWISE when looking DOWN at the winding
 
@@ -867,6 +868,8 @@ static void CollectWinding(std::vector<quake_vertex_c> & winding,
 
   // grab sorted vertices
 
+  bbox.Begin();
+
   for (int i = 0 ; i < v_num ; i++)
   {
     int k = mapping[i];
@@ -874,7 +877,13 @@ static void CollectWinding(std::vector<quake_vertex_c> & winding,
     quake_side_c *S = group.sides[k];
 
     winding.push_back(quake_vertex_c(S->x1, S->y1, 0));
+
+    // we don't handle bounding Z here
+    bbox.Add_X(S->x1);
+    bbox.Add_Y(S->y1);
   }
+
+  bbox.End();
 }
 
 
@@ -1002,6 +1011,52 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 }
 
 
+static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
+                                 std::vector<quake_vertex_c> & winding,
+                                 quake_bbox_c & bbox,
+                                 quake_node_c * prev_N,
+                                 quake_leaf_c * prev_L)
+{
+  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_EMPTY);
+
+  CreateWallFaces(group, leaf, G);
+
+  quake_node_c *F_node = new quake_node_c;
+  quake_node_c *C_node = new quake_node_c;
+
+  quake_face_c *F_face = CreateFloorFace(&F_node->plane, G, false, winding);
+  quake_face_c *C_face = CreateFloorFace(&C_node->plane, G, true,  winding);
+
+  F_node->AddFace(F_face);
+  C_node->AddFace(C_face);
+
+  leaf->AddFace(F_face);
+  leaf->AddFace(C_face);
+
+  // copy bbox and update Z (with a hack for slopes)
+
+  leaf->bbox = bbox;
+
+  leaf->bbox.mins[2] = F_face->verts[0].z;
+  leaf->bbox.maxs[2] = C_face->verts[0].z;
+
+  if (G->bottom->t.slope) leaf->bbox.mins[2] = G->bottom->b.z;
+  if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top   ->t.z;
+
+  // floor and ceiling node planes both face upwards
+
+  C_node->front_N = prev_N;
+  C_node->front_L = prev_L;
+
+  F_node->front_N = C_node;
+
+  C_node->back_L = leaf;
+  F_node->back_L = qk_solid_leaf;
+
+  return F_node;
+}
+
+
 static void Partition_Z(quake_group_c & group,
                         quake_node_c ** node,
                         quake_leaf_c ** leaf)
@@ -1011,44 +1066,21 @@ static void Partition_Z(quake_group_c & group,
   SYS_ASSERT(R);
   SYS_ASSERT(R->gaps.size() > 0);
 
+  quake_bbox_c bbox;
+
   std::vector<quake_vertex_c> winding;
 
-  CollectWinding(winding, group);
-
-  quake_leaf_c *THE_LEAF = new quake_leaf_c(CONTENTS_EMPTY);
-
-  CreateWallFaces(group, THE_LEAF, R->gaps[0]);
+  CollectWinding(group, winding, bbox);
 
   quake_node_c *cur_node = NULL;
-  quake_leaf_c *cur_leaf = THE_LEAF;
+  quake_leaf_c *cur_leaf = qk_solid_leaf;
 
-  for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
+  for (int i = (int)R->gaps.size() ; i >= 0 ; i--)
   {
-    gap_c *G = R->gaps[surf / 2];
-
-    bool is_ceil = (surf & 1) ? true : false;
-
-    quake_node_c *last_node = cur_node;
-    quake_leaf_c *last_leaf = cur_leaf;
-
-    cur_node = new quake_node_c;
+    cur_node = CreateLeaf(R->gaps[i], group, winding, bbox,
+                          cur_node, cur_leaf);
     cur_leaf = NULL;
-
-    quake_face_c *F = CreateFloorFace(&cur_node->plane, G, is_ceil, winding);
-
-    THE_LEAF->AddFace(F);
-    cur_node->AddFace(F);
-
-    cur_node->front_N = last_node;
-    cur_node->front_L = last_leaf;
-
-    cur_node->back_L  = qk_solid_leaf;
-
-///---  if (is_ceil)
-///---    std::swap(node->front, node->back);
   }
-
-  // FIXME: bbox in THE_LEAF !!!!!
 
   *node = cur_node;
   *leaf = cur_leaf;
@@ -1117,16 +1149,36 @@ void quake_bbox_c::End()
 }
 
 
+void quake_bbox_c::Add_X(float x)
+{
+  if (x < mins[0]) mins[0] = x;
+  if (x > maxs[0]) maxs[0] = x;
+}
+
+void quake_bbox_c::Add_Y(float y)
+{
+  if (y < mins[1]) mins[1] = y;
+  if (y > maxs[1]) maxs[1] = y;
+}
+
+void quake_bbox_c::Add_Z(float z)
+{
+  if (z < mins[2]) mins[2] = z;
+  if (z > maxs[2]) maxs[2] = z;
+}
+
 void quake_bbox_c::AddPoint(float x, float y, float z)
 {
   if (x < mins[0]) mins[0] = x;
-  if (y < mins[1]) mins[1] = y;
-  if (z < mins[2]) mins[2] = z;
-
   if (x > maxs[0]) maxs[0] = x;
+
+  if (y < mins[1]) mins[1] = y;
   if (y > maxs[1]) maxs[1] = y;
+
+  if (z < mins[2]) mins[2] = z;
   if (z > maxs[2]) maxs[2] = z;
 }
+
 
 void quake_bbox_c::Merge(const quake_bbox_c& other)
 {
