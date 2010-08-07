@@ -872,7 +872,7 @@ static void Q1_WriteModel(int hull_1, int hull_2)
   for (int b = 0 ; b < 3 ; b++)
   {
     raw_model.mins[b] = qk_bsp_root->bbox.mins[b];
-    raw_model.maxs[b] = qk_bsp_root->bbox.mins[b];
+    raw_model.maxs[b] = qk_bsp_root->bbox.maxs[b];
 
     raw_model.origin[b] = 0;
   }
