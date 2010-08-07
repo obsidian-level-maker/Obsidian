@@ -89,7 +89,7 @@ public:
   { }
 
   void CopyWinding(const std::vector<quake_vertex_c> winding,
-                   const quake_plane_c *plane);
+                   const quake_plane_c *plane, bool reverse);
 };
 
 

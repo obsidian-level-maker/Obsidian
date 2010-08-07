@@ -888,13 +888,12 @@ static void CollectWinding(quake_group_c & group,
 
 
 void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
-                               const quake_plane_c *plane)
+                               const quake_plane_c *plane,
+                               bool reverse)
 {
-  bool reversed = (plane->nz < 0) ? true : false;
-
   for (unsigned int i = 0 ; i < winding.size() ; i++)
   {
-    unsigned int k = reversed ? (winding.size() - 1 - i) : i;
+    unsigned int k = reverse ? (winding.size() - 1 - i) : i;
     
     const quake_vertex_c& V = winding[k];
 
@@ -913,7 +912,7 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
   plane->nx = plane->ny = 0;
 
   plane->z  = is_ceil ? G->top->b.z : G->bottom->t.z;
-  plane->nz = is_ceil ? -1 : 1;
+  plane->nz = +1;
 
   /// NOT NEEDED (YET) : plane->Normalize();
 }
@@ -927,9 +926,9 @@ static quake_face_c * CreateFloorFace(quake_plane_c *plane, const gap_c *G, bool
 
   quake_face_c *F = new quake_face_c;
 
-  F->node_side = 0;
+  F->node_side = is_ceil ? 1 : 0;
 
-  F->CopyWinding(winding, plane);
+  F->CopyWinding(winding, plane, is_ceil);
 
   csg_property_set_c *face_props = is_ceil ? &G->top->b.face : &G->bottom->t.face;
 
