@@ -1613,7 +1613,7 @@ void CSG_BSP(double grid)
 //   TEMPORARY TEST CRUD
 //------------------------------------------------------------------------
 
-#include "dm_wad.h"
+#include "g_doom.h"
 
 static std::map<int, int> test_vertices;
 

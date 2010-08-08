@@ -35,7 +35,7 @@
 
 #include "dm_extra.h"
 #include "dm_glbsp.h"
-#include "dm_wad.h"
+#include "g_doom.h"
 
 
 

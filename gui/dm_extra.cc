@@ -33,7 +33,7 @@
 #include "csg_main.h"
 
 #include "dm_extra.h"
-#include "dm_wad.h"
+#include "g_doom.h"
 #include "q_common.h"  // qLump_c
 
 #include "img_all.h"
