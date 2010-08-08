@@ -764,11 +764,11 @@ static void Q1_WriteNode(quake_node_c *node)
   }
 
 
-  if (node->faces.size() > 0)
-  {
-    raw_node.firstface = q1_total_faces;
-    raw_node.numfaces  = node->faces.size();
+  raw_node.firstface = q1_total_faces;
+  raw_node.numfaces  = node->faces.size();
 
+  if (raw_node.numfaces > 0)
+  {
     for (unsigned int k = 0 ; k < node->faces.size() ; k++)
     {
       Q1_WriteFace(node->faces[k]);
