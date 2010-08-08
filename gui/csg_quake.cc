@@ -885,6 +885,12 @@ static void CollectWinding(quake_group_c & group,
 }
 
 
+void quake_face_c::AddVert(float x, float y, float z)
+{
+  verts.push_back(quake_vertex_c(x, y, z));
+}
+
+
 void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
                                const quake_plane_c *plane,
                                bool reverse)
@@ -897,7 +903,7 @@ void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
 
     double z = plane->z;  // TODO: support slopes
 
-    verts.push_back(quake_vertex_c(V.x, V.y, z));
+    AddVert(V.x, V.y, z);
   }
 }
 
@@ -916,45 +922,73 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 }
 
 
-static quake_face_c * CreateFloorFace(quake_plane_c *plane, const gap_c *G, bool is_ceil,
-                                      std::vector<quake_vertex_c> & winding)
+static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
+                            const gap_c *G, bool is_ceil,
+                            std::vector<quake_vertex_c> & winding)
                         
 {
-  FlatToPlane(plane, G, is_ceil);
+  FlatToPlane(&node->plane, G, is_ceil);
 
   quake_face_c *F = new quake_face_c;
 
   F->node_side = is_ceil ? 1 : 0;
 
-  F->CopyWinding(winding, plane, is_ceil);
+  F->CopyWinding(winding, &node->plane, is_ceil);
 
   csg_property_set_c *face_props = is_ceil ? &G->top->b.face : &G->bottom->t.face;
 
   F->texture = face_props->getStr("tex", "missing");
 
-  return F;
+  node->AddFace(F);
+  leaf->AddFace(F);
 }
 
 
-static quake_face_c * CreateWallFace(quake_side_c *S, csg_brush_c *brush,
-                                     float z1, float z2)
+static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
+                             quake_side_c *S, csg_brush_c *brush,
+                             float z1, float z2)
 {
   quake_face_c *F = new quake_face_c();
 
   F->node_side = S->node_side;
 
-  // FIXME: F->AddVert(x, y, z)
-
-  F->verts.push_back(quake_vertex_c(S->x1, S->y1, z1));
-  F->verts.push_back(quake_vertex_c(S->x1, S->y1, z2));
-  F->verts.push_back(quake_vertex_c(S->x2, S->y2, z2));
-  F->verts.push_back(quake_vertex_c(S->x2, S->y2, z1));
+  F->AddVert(S->x1, S->y1, z1);
+  F->AddVert(S->x1, S->y1, z2);
+  F->AddVert(S->x2, S->y2, z2);
+  F->AddVert(S->x2, S->y2, z1);
 
   csg_property_set_c *face_props = &brush->verts[0]->face; //!!!! FIXME
 
   F->texture = face_props->getStr("tex", "missing");
 
-  return F;
+  node->AddFace(F);
+  leaf->AddFace(F);
+}
+
+
+static void CreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
+                           quake_side_c *S, csg_brush_c *brush,
+                           float z1, float z2)
+{
+  // split faces if too tall
+  int pieces = 1;
+
+  while ((z2 - z1) / pieces > 239.9)
+    pieces++;
+
+  if (pieces > 1)
+  {
+    for (int i = 0 ; i < pieces ; i++)
+    {
+      DoCreateWallFace(node, leaf, S, brush,
+                       z1 + (z2 - z1) * (i  ) / pieces,
+                       z1 + (z2 - z1) * (i+1) / pieces);
+    }
+  }
+  else
+  {
+    DoCreateWallFace(node, leaf, S, brush, z1, z2);
+  }
 }
 
 
@@ -967,7 +1001,6 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
   for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
     quake_side_c *S = group.sides[i];
-    quake_face_c *F;
 
     SYS_ASSERT(S->on_node);
 
@@ -983,26 +1016,17 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
       if (f2 > f1 + 0.1)
       {
-        F = CreateWallFace(S, G2->bottom, f1, f2);
-
-        leaf->AddFace(F);
-        S->on_node->AddFace(F);
+        CreateWallFace(S->on_node, leaf, S, G2->bottom, f1, f2);
       }
 
       if (c2 < c1 - 0.1)
       {
-        F = CreateWallFace(S, G2->top, c2, c1);
-
-        leaf->AddFace(F);
-        S->on_node->AddFace(F);
+        CreateWallFace(S->on_node, leaf, S, G2->top, c2, c1);
       }
     }
     else
     {
-      F = CreateWallFace(S, G->bottom, f1, c1); //!!!! FIXME
-
-      leaf->AddFace(F);
-      S->on_node->AddFace(F);
+      CreateWallFace(S->on_node, leaf, S, G->bottom, f1, c1); //!!!! FIXME
     }
   }
 }
@@ -1021,24 +1045,18 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   quake_node_c *F_node = new quake_node_c;
   quake_node_c *C_node = new quake_node_c;
 
-  quake_face_c *F_face = CreateFloorFace(&F_node->plane, G, false, winding);
-  quake_face_c *C_face = CreateFloorFace(&C_node->plane, G, true,  winding);
-
-  F_node->AddFace(F_face);
-  C_node->AddFace(C_face);
-
-  leaf->AddFace(F_face);
-  leaf->AddFace(C_face);
+  CreateFloorFace(F_node, leaf, G, false, winding);
+  CreateFloorFace(C_node, leaf, G, true,  winding);
 
   // copy bbox and update Z (with a hack for slopes)
 
   leaf->bbox = bbox;
 
-  leaf->bbox.mins[2] = F_face->verts[0].z;
-  leaf->bbox.maxs[2] = C_face->verts[0].z;
+  leaf->bbox.mins[2] = G->bottom->t.z;
+  leaf->bbox.maxs[2] = G->top->b.z;
 
   if (G->bottom->t.slope) leaf->bbox.mins[2] = G->bottom->b.z;
-  if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top   ->t.z;
+  if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top->t.z;
 
   // floor and ceiling node planes both face upwards
 
