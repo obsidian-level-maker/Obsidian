@@ -96,6 +96,9 @@ public:
                    const quake_plane_c *plane, bool reverse);
 
   void SetupMatrix(const quake_plane_c *plane);
+
+  void ST_Bounds(double *min_s, double *min_t,
+                 double *max_s, double *max_t);
 };
 
 

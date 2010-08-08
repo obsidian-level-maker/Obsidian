@@ -932,6 +932,28 @@ void quake_face_c::SetupMatrix(const quake_plane_c *plane)
 }
 
 
+void quake_face_c::ST_Bounds(double *min_s, double *min_t,
+                             double *max_s, double *max_t)
+{
+  *min_s = +9e9;  *max_s = -9e9;
+  *min_t = +9e9;  *max_t = -9e9;
+
+  for (unsigned int i = 0 ; i < verts.size() ; i++)
+  {
+    quake_vertex_c& V = verts[i];
+
+    double ss = s[0] * V.x + s[1] * V.y + s[2] * V.z;
+    double tt = t[0] * V.x + t[1] * V.y + t[2] * V.z;
+
+    *min_s = MIN(*min_s, ss);  *max_s = MAX(*max_s, ss);
+    *min_t = MIN(*min_t, tt);  *max_t = MAX(*max_t, tt);
+  }
+
+  if (*min_s > *max_s) *min_s = *max_s = 0;
+  if (*min_t > *max_t) *min_t = *max_t = 0;
+}
+
+
 static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 {
   // FIXME: support slopes !!
