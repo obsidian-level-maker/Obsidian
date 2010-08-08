@@ -177,10 +177,30 @@ public:
 };
 
 
+class quake_mapmodel_c
+{
+public:
+  float x1, y1, z1;
+  float x2, y2, z2;
+
+  csg_property_set_c x_face;
+  csg_property_set_c y_face;
+  csg_property_set_c z_face;
+
+  s32_t nodes[4];
+
+public:
+   quake_mapmodel_c();
+  ~quake_mapmodel_c();
+};
+
+
 /***** VARIABLES ****************/
 
 extern quake_node_c * qk_bsp_root;
 extern quake_leaf_c * qk_solid_leaf;
+
+extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 
 /***** FUNCTIONS ****************/

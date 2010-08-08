@@ -21,34 +21,8 @@
 #ifndef __OBLIGE_QUAKE1_H__
 #define __OBLIGE_QUAKE1_H__
 
-class qLump_c;
 
 
-class q1MapModel_c
-{
-public:
-  float x1, y1, z1;
-  float x2, y2, z2;
-
-  csg_property_set_c x_face;
-  csg_property_set_c y_face;
-  csg_property_set_c z_face;
-
-  s32_t nodes[4];
-
-public:
-   q1MapModel_c();
-  ~q1MapModel_c();
-};
-
-extern std::vector<q1MapModel_c *> q1_all_mapmodels;
-
-
-u16_t Q1_AddTexInfo(const char *texture, int flags, double *s4, double *t4);
-
-// q1_clip.cc
-
-int Q1_ClippingHull(int which, qLump_c *q1_clip);
 
 #endif /* __OBLIGE_QUAKE1_H__ */
 

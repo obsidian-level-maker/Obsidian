@@ -442,9 +442,10 @@ static void MergeIntersections(std::vector<intersect_t> & cut_list)
 //  NEW LOGIC
 //------------------------------------------------------------------------
 
-
 quake_node_c * qk_bsp_root;
 quake_leaf_c * qk_solid_leaf;
+
+std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 
 class quake_side_c
@@ -613,6 +614,20 @@ void quake_node_c::AddFace(quake_face_c *F)
 
   faces.push_back(F);
 }
+
+
+quake_mapmodel_c::quake_mapmodel_c() :
+    x1(0), y1(0), z1(0),
+    x2(0), y2(0), z2(0),
+    x_face(), y_face(), z_face()
+{
+  for (int i = 0 ; i < 4 ; i++)
+    nodes[i] = 0;
+}
+
+
+quake_mapmodel_c::~quake_mapmodel_c()
+{ }
 
 
 static void CreateSides(quake_group_c & group)
@@ -1410,6 +1425,57 @@ void CSG_QUAKE_Build()
     main_win->build_box->Prog_Step("BSP");
 
   Quake_BSP();
+}
+
+
+//------------------------------------------------------------------------
+
+extern int Grab_Properties(lua_State *L, int stack_pos,
+                           csg_property_set_c *props,
+                           bool skip_xybt = false);
+
+int Q1_add_mapmodel(lua_State *L)
+{
+  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
+  //
+  // info is a table containing:
+  //   x_face  : face table for X sides
+  //   y_face  : face table for Y sides
+  //   z_face  : face table for top and bottom
+
+  quake_mapmodel_c *model = new quake_mapmodel_c;
+
+  model->x1 = luaL_checknumber(L, 2);
+  model->y1 = luaL_checknumber(L, 3);
+  model->z1 = luaL_checknumber(L, 4);
+
+  model->x2 = luaL_checknumber(L, 5);
+  model->y2 = luaL_checknumber(L, 6);
+  model->z2 = luaL_checknumber(L, 7);
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, 1, "missing table: mapmodel info");
+  }
+
+  lua_getfield(L, 1, "x_face");
+  lua_getfield(L, 1, "y_face");
+  lua_getfield(L, 1, "z_face");
+
+  Grab_Properties(L, -3, &model->x_face);
+  Grab_Properties(L, -2, &model->y_face);
+  Grab_Properties(L, -1, &model->z_face);
+
+  lua_pop(L, 3);
+
+  qk_all_mapmodels.push_back(model);
+
+  // create model reference (for entity)
+  char ref_name[32];
+  sprintf(ref_name, "*%u", qk_all_mapmodels.size());
+
+  lua_pushstring(L, ref_name);
+  return 1;
 }
 
 

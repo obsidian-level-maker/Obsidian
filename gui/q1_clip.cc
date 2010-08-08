@@ -29,12 +29,15 @@
 #include "main.h"
 #include "m_lua.h"
 
+#include "q_common.h"
+#include "q_light.h"
+#include "q1_structs.h"
+
 #include "csg_main.h"
 #include "csg_local.h"
+#include "csg_quake.h"
 
-#include "q_common.h"
 #include "q1_main.h"
-#include "q1_structs.h"
 
 
 #define CLIP_EPSILON  0.01
@@ -1153,7 +1156,7 @@ fprintf(stderr, "\n");
 
 
 static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
-                            q1MapModel_c *model, int which,
+                            quake_mapmodel_c *model, int which,
                             double pad_w, double pad_t, double pad_b)
 {
   model->nodes[which] = base;
@@ -1203,26 +1206,26 @@ static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
 }
 
 
-int Q1_ClippingHull(int which, qLump_c *q1_clip)
+int Q1_ClippingHull(int hull, qLump_c *q1_clip)
 {
-  SYS_ASSERT(1 <= which && which <= 3);
+  SYS_ASSERT(1 <= hull && hull <= 3);
 
 ///???  cpSideFactory_c::FreeAll();
 
   // 3rd hull is not used in Quake
-  if (which == 3)
+  if (hull == 3)
     return 0;
 
   if (main_win)
   {
     char hull_name[32];
-    sprintf(hull_name, "Hull %d", which);
+    sprintf(hull_name, "Hull %d", hull);
     main_win->build_box->Prog_Step(hull_name);
   }
 
-// fprintf(stderr, "Quake1_CreateClipHull %d\n", which);
+// fprintf(stderr, "Quake1_CreateClipHull %d\n", hull);
 
-  which--;
+  hull--;
 
 
   static double pads[2][3] =
@@ -1233,10 +1236,10 @@ int Q1_ClippingHull(int which, qLump_c *q1_clip)
 
   SaveBrushes();
 
-  FattenBrushes(pads[which][0], pads[which][1], pads[which][2]);
+  FattenBrushes(pads[hull][0], pads[hull][1], pads[hull][2]);
 
 
-//  if (which == 0)
+//  if (hull == 0)
 //   CSG2_Doom_TestBrushes();
 
   CSG_BSP(0.5);
@@ -1244,7 +1247,7 @@ int Q1_ClippingHull(int which, qLump_c *q1_clip)
   CoalesceClipRegions();
 
   
-//  if (which == 0)
+//  if (hull == 0)
 //    CSG2_Doom_TestClip();
 
 
@@ -1267,11 +1270,11 @@ int Q1_ClippingHull(int which, qLump_c *q1_clip)
 
 
   // write clip nodes for each MapModel
-  for (unsigned int mm=0; mm < q1_all_mapmodels.size(); mm++)
+  for (unsigned int m = 0 ; m < qk_all_mapmodels.size() ; m++)
   {
     Q1_ClipMapModel(q1_clip, cur_index,
-                    q1_all_mapmodels[mm], which+1,
-                    pads[which][0], pads[which][1], pads[which][2]);
+                    qk_all_mapmodels[m], hull+1,
+                    pads[hull][0], pads[hull][1], pads[hull][2]);
 
     cur_index += 6;
   }

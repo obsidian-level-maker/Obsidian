@@ -47,25 +47,7 @@
 #define MODEL_PADDING  24.0
 
 
-extern int Grab_Properties(lua_State *L, int stack_pos,
-                           csg_property_set_c *props,
-                           bool skip_xybt = false);
-
-
-q1MapModel_c::q1MapModel_c() :
-    x1(0), y1(0), z1(0),
-    x2(0), y2(0), z2(0),
-    x_face(), y_face(), z_face()
-{
-  for (int i = 0; i < 4; i++)
-    nodes[i] = 0;
-}
-
-q1MapModel_c::~q1MapModel_c()
-{ }
-
-
-std::vector<q1MapModel_c *> q1_all_mapmodels;
+extern int Q1_ClippingHull(int hull, qLump_c *q1_clip);
 
 
 static char *level_name;
@@ -619,7 +601,7 @@ static void Q1_WriteFace(quake_face_c *face)
   raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
 
-  raw_face.lightofs = 0 + (rand() & 16383); //!!!!!! TEST CRUD
+  raw_face.lightofs = 0 + (rand() & 8188); //!!!!!! TEST CRUD
 
   if (face->lmap)
     raw_face.lightofs = face->lmap->CalcOffset();
@@ -895,7 +877,7 @@ static void MapModel_Edge(float x1, float y1, float z1,
 }
 
 
-static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipped)
+static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
 {
   dface_t raw_face;
 
@@ -983,7 +965,7 @@ static void MapModel_Face(q1MapModel_c *model, int face, s16_t plane, bool flipp
 }
 
 
-static void MapModel_Nodes(q1MapModel_c *model, float *mins, float *maxs)
+static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 {
   int face_base = q1_total_faces;
   int leaf_base = q1_total_leafs;
@@ -1056,9 +1038,9 @@ static void MapModel_Nodes(q1MapModel_c *model, float *mins, float *maxs)
 
 static void Q1_WriteSubModels()
 {
-  for (unsigned int i = 0 ; i < q1_all_mapmodels.size() ; i++)
+  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
   {
-    q1MapModel_c *model = q1_all_mapmodels[i];
+    quake_mapmodel_c *model = qk_all_mapmodels[i];
 
     dmodel_t raw_model;
 
@@ -1088,51 +1070,6 @@ static void Q1_WriteSubModels()
 
     DoWriteModel(raw_model);
   }
-}
-
-
-int Q1_add_mapmodel(lua_State *L)
-{
-  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
-  //
-  // info is a table containing:
-  //   x_face  : face table for X sides
-  //   y_face  : face table for Y sides
-  //   z_face  : face table for top and bottom
-
-  q1MapModel_c *model = new q1MapModel_c();
-
-  model->x1 = luaL_checknumber(L, 2);
-  model->y1 = luaL_checknumber(L, 3);
-  model->z1 = luaL_checknumber(L, 4);
-
-  model->x2 = luaL_checknumber(L, 5);
-  model->y2 = luaL_checknumber(L, 6);
-  model->z2 = luaL_checknumber(L, 7);
-
-  if (lua_type(L, 1) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, 1, "missing table: mapmodel info");
-  }
-
-  lua_getfield(L, 1, "x_face");
-  lua_getfield(L, 1, "y_face");
-  lua_getfield(L, 1, "z_face");
-
-  Grab_Properties(L, -3, &model->x_face);
-  Grab_Properties(L, -2, &model->y_face);
-  Grab_Properties(L, -1, &model->z_face);
-
-  lua_pop(L, 3);
-
-  q1_all_mapmodels.push_back(model);
-
-  // create model reference (for entity)
-  char ref_name[32];
-  sprintf(ref_name, "*%u", q1_all_mapmodels.size());
-
-  lua_pushstring(L, ref_name);
-  return 1;
 }
 
 

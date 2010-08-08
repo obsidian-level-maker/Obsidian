@@ -228,7 +228,7 @@ extern std::string dummy_wall_tex;
 extern std::string dummy_plane_tex;
 
 
-/* ----- FUNCTIONS ----- */
+/***** FUNCTIONS ****************/
 
 void CSG2_MergeAreas(bool do_clips = false);
 
