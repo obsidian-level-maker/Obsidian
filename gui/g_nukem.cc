@@ -34,7 +34,6 @@
 #include "lib_wad.h"
 #include "q_common.h"  // qLump_c
 
-#include "nk_structs.h"
 #include "g_nukem.h"
 
 

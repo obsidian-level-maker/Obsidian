@@ -34,7 +34,6 @@
 #include "csg_local.h"
 
 #include "g_nukem.h"
-#include "nk_structs.h"
 
 
 // Properties

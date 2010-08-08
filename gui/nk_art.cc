@@ -30,12 +30,13 @@
 #include "main.h"
 #include "m_lua.h"
 
-#include "nk_structs.h"
 #include "q_common.h"  // qLump_c
 
 #include "img_all.h"
 #include "tx_forge.h"
 #include "tx_skies.h"
+
+#include "g_nukem.h"
 
 
 #define LOGO_ART_FILE  "TILES020.ART"
