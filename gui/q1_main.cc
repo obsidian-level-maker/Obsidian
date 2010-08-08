@@ -515,6 +515,23 @@ static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 }
 
 
+static void Q1_GetExtents(double min_s, double min_t,
+                          double max_s, double max_t,
+                          int *ext_W, int *ext_H)
+{
+  // -AJA- this matches the logic in the Quake engine.
+
+  int bmin_s = (int)floor(min_s / 16.0);
+  int bmin_t = (int)floor(min_t / 16.0);
+
+  int bmax_s = (int)ceil(max_s / 16.0);
+  int bmax_t = (int)ceil(max_t / 16.0);
+
+  *ext_W = bmax_s - bmin_s + 1;
+  *ext_H = bmax_t - bmin_t + 1;
+}
+
+
 static int CalcTextureFlag(const char *tex_name)
 {
   if (tex_name[0] == '*')

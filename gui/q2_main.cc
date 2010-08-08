@@ -41,6 +41,32 @@
 static char *level_name;
 
 
+// IMPORTANT!! Quake II assumes axis-aligned node planes are positive
+//  if (raw_nd.planenum & 1)
+//  {
+//    node->Flip();
+//    raw_nd.planenum ^= 1;
+//  }
+
+
+static void Q2_GetExtents(double min_s, double min_t,
+                          double max_s, double max_t,
+                          int *ext_W, int *ext_H)
+{
+  // -AJA- this matches the logic in the QuakeII engine.
+
+  int bmin_s = (int)floor(min_s / 16.0);
+  int bmin_t = (int)floor(min_t / 16.0);
+
+  int bmax_s = (int)ceil(max_s / 16.0);
+  int bmax_t = (int)ceil(max_t / 16.0);
+
+  *ext_W = MIN(2, bmax_s - bmin_s + 1);
+  *ext_H = MIN(2, bmax_t - bmin_t + 1);
+}
+
+
+
 void Q2_CreateEntities(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_ENTITIES);

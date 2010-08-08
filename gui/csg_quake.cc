@@ -143,21 +143,6 @@ static double DotProduct3(const double *A, const double *B)
   return A[0] * B[0] + A[1] * B[1] + A[2] * B[2];
 }
 
-static void GetExtents(double min_s, double min_t, double max_s, double max_t,
-                       int *ext_W, int *ext_H)
-{
-  // -AJA- this matches the logic in the Quake1 engine.
-
-  int bmin_s = (int)floor(min_s / 16.0);
-  int bmin_t = (int)floor(min_t / 16.0);
-
-  int bmax_s = (int)ceil(max_s / 16.0);
-  int bmax_t = (int)ceil(max_t / 16.0);
-
-  *ext_W = bmax_s - bmin_s + 1;
-  *ext_H = bmax_t - bmin_t + 1;
-}
-
 
 #if 0
 static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
