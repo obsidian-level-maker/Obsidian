@@ -33,10 +33,11 @@
 #include "csg_main.h"
 #include "ui_chooser.h"
 
+#include "q_common.h"  // qLump_c
+
 #include "dm_extra.h"
 #include "dm_glbsp.h"
-#include "dm_wad.h"
-#include "q_common.h"  // qLump_c
+#include "g_doom.h"
 
 
 extern void CSG_DOOM_Write();

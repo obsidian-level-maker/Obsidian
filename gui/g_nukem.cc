@@ -30,12 +30,12 @@
 
 #include "ui_chooser.h"
 
-#include "nk_structs.h"
-#include "nk_level.h"
-
 #include "csg_main.h"
 #include "lib_wad.h"
-#include "q_common.h"
+#include "q_common.h"  // qLump_c
+
+#include "nk_structs.h"
+#include "g_nukem.h"
 
 
 extern void CSG_NUKEM_Write();

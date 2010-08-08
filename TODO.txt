@@ -3,6 +3,14 @@ TODO
 ====
 
 
+FILE MERGES:
+
+dm_glbsp --> g_doom
+dm_extra --> g_doom
+
+nk_structs --> g_nukem.h
+
+
 Quake: ensure faces are not too tall (>= 240)
 
 Quake: lightmap offsets need to be a multiple of 4 ??
@@ -31,19 +39,6 @@ Hexen: have arg1 .. arg5, i.e. de-array-ify
 
 
 -  mirroring : make sure first coord stays the first
-
-
-POSSIBLE FILE RENAMING:
-
-?  q1_clip --> csg_clip
-
--  q1_main + q1_doors --> g_quake   ('g' for 'game')
--  q2_main            --> g_quake2
--  dm_wad  + dm_glbsp --> g_doom    (also file stuff from dm_extra)
--  nk_level           --> g_nukem
--  wolf_map           --> g_wolf
-
--  dm_extra + nk_art  --> tx_???
 
 
 
