@@ -3,14 +3,6 @@ TODO
 ====
 
 
-FILE MERGES:
-
-dm_glbsp --> g_doom
-dm_extra --> g_doom
-
-nk_structs --> g_nukem.h
-
-
 Quake: ensure faces are not too tall (>= 240)
 
 Quake: lightmap offsets need to be a multiple of 4 ??
@@ -18,6 +10,9 @@ Quake: lightmap offsets need to be a multiple of 4 ??
 Quake: check max size of lightmap : 16x16 or 17x17 ??
 
 Quake: proper XY partition choice, do seed boundary thang
+
+
+quake_exit_pad : 224 HIGH
 
 
 q1_clip : proper XY partition choice

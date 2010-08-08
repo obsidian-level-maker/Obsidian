@@ -317,6 +317,10 @@ Sam's suggestions:
    which would only require 1/4 of the lightmap space
    (and hence less likely to run out of it)
 
+-  support colored lighting (FitzQuake, Darkplaces, etc).
+   - add an entry in the pack called "maps/xxx.lit", which
+   - it should contain: QLIT 1 0 0 0 <data>
+
 
 ----------------------------------------------------------------
   QUAKE II
