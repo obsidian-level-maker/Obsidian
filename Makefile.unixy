@@ -73,6 +73,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/img_font1.o  \
 	\
 	$(OBJ_DIR)/csg_bsp.o  \
+	$(OBJ_DIR)/csg_clip.o  \
 	$(OBJ_DIR)/csg_main.o  \
 	$(OBJ_DIR)/csg_doom.o  \
 	$(OBJ_DIR)/csg_nukem.o \
@@ -80,11 +81,10 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/dm_extra.o  \
 	$(OBJ_DIR)/dm_glbsp.o  \
 	$(OBJ_DIR)/dm_wad.o    \
+	$(OBJ_DIR)/g_nukem.o   \
+	$(OBJ_DIR)/g_quake.o   \
 	$(OBJ_DIR)/g_wolf.o    \
 	$(OBJ_DIR)/nk_art.o    \
-	$(OBJ_DIR)/nk_level.o  \
-	$(OBJ_DIR)/q1_clip.o   \
-	$(OBJ_DIR)/q1_main.o   \
 	$(OBJ_DIR)/q_common.o  \
 	$(OBJ_DIR)/q_light.o   \
 	$(OBJ_DIR)/vis_buffer.o \

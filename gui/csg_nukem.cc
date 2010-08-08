@@ -33,7 +33,7 @@
 #include "csg_main.h"
 #include "csg_local.h"
 
-#include "nk_level.h"
+#include "g_nukem.h"
 #include "nk_structs.h"
 
 

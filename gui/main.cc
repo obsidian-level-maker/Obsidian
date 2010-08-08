@@ -35,7 +35,7 @@
 #include "m_lua.h"
 
 #include "csg_main.h"
-#include "nk_level.h"
+#include "g_nukem.h"
 
 #include "ui_chooser.h"
 
