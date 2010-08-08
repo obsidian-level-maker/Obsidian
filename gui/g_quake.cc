@@ -627,6 +627,11 @@ static void Q1_WriteFace(quake_face_c *face)
   raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
 
 
+  raw_face.styles[0] = 0;
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
+
   raw_face.lightofs = 0 + (rand() & 8188); //!!!!!! TEST CRUD
 
   if (face->lmap)
@@ -977,7 +982,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   raw_face.texinfo = Q1_AddTexInfo(texture, 0, s, t);
 
-  raw_face.styles[0] = 0xFF;  // no lightmap
+  raw_face.styles[0] = 0;
   raw_face.styles[1] = 0xFF;
   raw_face.styles[2] = 0xFF;
   raw_face.styles[3] = 0xFF;
