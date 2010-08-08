@@ -138,12 +138,6 @@ static double EvaluatePartition(rNode_c * LEAF,
 //------------------------------------------------------------------------
 
 
-static double DotProduct3(const double *A, const double *B)
-{
-  return A[0] * B[0] + A[1] * B[1] + A[2] * B[2];
-}
-
-
 #if 0
 static void BuildFloorFace(dface_t& raw_face, rFace_c *F, rNode_c *N)
 {

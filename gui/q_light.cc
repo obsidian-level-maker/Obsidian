@@ -167,23 +167,33 @@ int qLightmap_c::CalcOffset() const
 
 //------------------------------------------------------------------------
 
-static std::vector<qLightmap_c *> all_lightmaps;
+static std::vector<qLightmap_c *> qk_all_lightmaps;
 
 static qLump_c *lightmap_lump;
 
 
 void BSP_InitLightmaps()
 {
-  all_lightmaps.clear();
+  qk_all_lightmaps.clear();
 }
 
 
 void BSP_FreeLightmaps()
 {
-  for (unsigned int i = 0 ; i < all_lightmaps.size() ; i++)
-    delete all_lightmaps[i];
+  for (unsigned int i = 0 ; i < qk_all_lightmaps.size() ; i++)
+    delete qk_all_lightmaps[i];
 
-  all_lightmaps.clear();
+  qk_all_lightmaps.clear();
+}
+
+
+qLightmap_c * BSP_NewLightmap(int w, int h, float value)
+{
+  qLightmap_c *lmap = new qLightmap_c(w, h, value);
+
+  qk_all_lightmaps.push_back(lmap);
+
+  return lmap;
 }
 
 
@@ -227,9 +237,9 @@ void BSP_BuildLightmap(int lump, int max_size, bool colored)
   // FIXME !!!! : check if lump would overflow, if yes then flatten some maps
 
 
-  for (unsigned int k = 0 ; k < all_lightmaps.size() ; k++)
+  for (unsigned int k = 0 ; k < qk_all_lightmaps.size() ; k++)
   {
-    qLightmap_c *L = all_lightmaps[k];
+    qLightmap_c *L = qk_all_lightmaps[k];
 
     L->Write(lightmap_lump, colored);
   }

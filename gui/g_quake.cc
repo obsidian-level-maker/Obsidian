@@ -477,10 +477,13 @@ static void DummyTexInfo(void)
 
 //------------------------------------------------------------------------
 
-static void Q1_GetExtents(double min_s, double min_t,
-                          double max_s, double max_t,
-                          int *ext_W, int *ext_H)
+static void Q1_GetExtents(quake_face_c *F, int *ext_W, int *ext_H)
 {
+  double min_s, min_t;
+  double max_s, max_t;
+
+  F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
+
   // -AJA- this matches the logic in the Quake engine.
 
   int bmin_s = (int)floor(min_s / 16.0);
@@ -502,7 +505,13 @@ static void Q1_CreateLightmaps()
 
     // FIXME  if (F->unlit) continue;
 
-  
+    int ext_W, ext_H;
+
+    Q1_GetExtents(F, &ext_W, &ext_H);
+    
+    fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
+
+    F->lmap = BSP_NewLightmap(ext_W, ext_H, rand() & 127);
   }
 }
 
@@ -1101,6 +1110,8 @@ static void Q1_CreateBSPFile(const char *name)
 
   ///  QCOM_Lighting();
 
+  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
+
   ///  QCOM_Visibility();
 
   Q1_WriteBSP();
@@ -1117,8 +1128,6 @@ static void Q1_CreateBSPFile(const char *name)
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
   BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
-
-  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
 
   Q1_WriteMipTex();
   Q1_WriteTexInfo();

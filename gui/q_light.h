@@ -39,7 +39,7 @@ public: //???  private:
   int offset;
 
 public:
-  qLightmap_c(int w, int h, float value = -99);
+  qLightmap_c(int w, int h, float value = -1);
 
   ~qLightmap_c();
 
@@ -69,7 +69,7 @@ public:
 void BSP_InitLightmaps();
 void BSP_FreeLightmaps();
 
-// TODO: BSP_NewLightmap(w, h, value)
+qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
 
 void BSP_BuildLightmap(int lump, int max_size, bool colored);
 
