@@ -74,7 +74,9 @@ public:
 
   std::string texture;
 
-  // FIXME: texture offsets etc
+  // texturing matrix
+  float s[3];
+  float t[3];
 
   qLightmap_c *lmap;
 
@@ -92,6 +94,8 @@ public:
 
   void CopyWinding(const std::vector<quake_vertex_c> winding,
                    const quake_plane_c *plane, bool reverse);
+
+  void SetupMatrix(const quake_plane_c *plane);
 };
 
 
@@ -202,6 +206,7 @@ public:
 extern quake_node_c * qk_bsp_root;
 extern quake_leaf_c * qk_solid_leaf;
 
+extern std::vector<quake_face_c *>     qk_all_faces;
 extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 

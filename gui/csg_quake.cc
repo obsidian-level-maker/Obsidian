@@ -428,6 +428,7 @@ static void MergeIntersections(std::vector<intersect_t> & cut_list)
 quake_node_c * qk_bsp_root;
 quake_leaf_c * qk_solid_leaf;
 
+std::vector<quake_face_c *>     qk_all_faces;
 std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 
@@ -908,6 +909,29 @@ void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
 }
 
 
+void quake_face_c::SetupMatrix(const quake_plane_c *plane)
+{
+  s[0] = s[1] = s[2] = 0;
+  t[0] = t[1] = t[2] = 0;
+  
+  if (fabs(plane->nx) > 0.5)
+  {
+    s[1] = 1;  // PLANE_X
+    t[2] = 1;
+  }
+  else if (fabs(plane->ny) > 0.5)
+  {
+    s[0] = 1;  // PLANE_Y
+    t[2] = 1;
+  }
+  else
+  {
+    s[0] = 1;  // PLANE_Z
+    t[1] = 1;
+  }
+}
+
+
 static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 {
   // FIXME: support slopes !!
@@ -918,7 +942,7 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
   plane->z  = is_ceil ? G->top->b.z : G->bottom->t.z;
   plane->nz = +1;
 
-  /// NOT NEEDED (YET) : plane->Normalize();
+  plane->Normalize();
 }
 
 
@@ -939,8 +963,12 @@ static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
 
   F->texture = face_props->getStr("tex", "missing");
 
+  F->SetupMatrix(&node->plane);
+
   node->AddFace(F);
   leaf->AddFace(F);
+
+  qk_all_faces.push_back(F);
 }
 
 
@@ -961,8 +989,12 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
   F->texture = face_props->getStr("tex", "missing");
 
+  F->SetupMatrix(&node->plane);
+
   node->AddFace(F);
   leaf->AddFace(F);
+
+  qk_all_faces.push_back(F);
 }
 
 

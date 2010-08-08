@@ -27,7 +27,7 @@
 
 class qLightmap_c
 {
-private:
+public: //???  private:
   int width, height;
 
   float *samples;

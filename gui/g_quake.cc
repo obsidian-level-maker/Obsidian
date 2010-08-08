@@ -355,7 +355,7 @@ static void ClearTexInfo(void)
 }
 
 
-u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4)
+u16_t Q1_AddTexInfo(const char *texture, int flags, float *s3, float *t3)
 {
   if (! texture[0])
     texture = "error";
@@ -365,11 +365,14 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4)
   // create texinfo structure, fix endianness
   texinfo_t raw_tex;
 
-  for (int k = 0 ; k < 4 ; k++)
+  for (int k = 0 ; k < 3 ; k++)
   {
-    raw_tex.s[k] = LE_Float32(s4[k]);
-    raw_tex.t[k] = LE_Float32(t4[k]);
+    raw_tex.s[k] = LE_Float32(s3[k]);
+    raw_tex.t[k] = LE_Float32(t3[k]);
   }
+
+  raw_tex.s[4] = LE_Float32(0);
+  raw_tex.t[4] = LE_Float32(0);
 
   raw_tex.miptex = LE_S32(miptex);
   raw_tex.flags  = LE_S32(flags);
@@ -473,6 +476,38 @@ static void DummyTexInfo(void)
 
 
 //------------------------------------------------------------------------
+
+static void Q1_GetExtents(double min_s, double min_t,
+                          double max_s, double max_t,
+                          int *ext_W, int *ext_H)
+{
+  // -AJA- this matches the logic in the Quake engine.
+
+  int bmin_s = (int)floor(min_s / 16.0);
+  int bmin_t = (int)floor(min_t / 16.0);
+
+  int bmax_s = (int)ceil(max_s / 16.0);
+  int bmax_t = (int)ceil(max_t / 16.0);
+
+  *ext_W = bmax_s - bmin_s + 1;
+  *ext_H = bmax_t - bmin_t + 1;
+}
+
+
+static void Q1_CreateLightmaps()
+{
+  for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
+  {
+    quake_face_c *F = qk_all_faces[i];    
+
+    // FIXME  if (F->unlit) continue;
+
+  
+  }
+}
+
+
+//------------------------------------------------------------------------
 //   BSP TREE OUTPUT
 //------------------------------------------------------------------------
 
@@ -512,23 +547,6 @@ static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
   q1_surf_edges->Append(&index, sizeof(index));
 
   q1_total_surf_edges += 1;
-}
-
-
-static void Q1_GetExtents(double min_s, double min_t,
-                          double max_s, double max_t,
-                          int *ext_W, int *ext_H)
-{
-  // -AJA- this matches the logic in the Quake engine.
-
-  int bmin_s = (int)floor(min_s / 16.0);
-  int bmin_t = (int)floor(min_t / 16.0);
-
-  int bmax_s = (int)ceil(max_s / 16.0);
-  int bmax_t = (int)ceil(max_t / 16.0);
-
-  *ext_W = bmax_s - bmin_s + 1;
-  *ext_H = bmax_t - bmin_t + 1;
 }
 
 
@@ -597,23 +615,7 @@ static void Q1_WriteFace(quake_face_c *face)
 
   int flags = CalcTextureFlag(texture);
 
-  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
-  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
-
-  if (fabs(face->node->plane.nx) > 0.5)  // PLANE_X
-  {
-    s[1] = 1.0; t[2] = 1.0;
-  }
-  else if (fabs(face->node->plane.ny) > 0.5)
-  {
-    s[0] = 1.0; t[2] = 1.0;
-  }
-  else // PLANE_Z
-  {
-    s[0] = 1.0; t[1] = 1.0;
-  }
-
-  raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
+  raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
 
 
   raw_face.lightofs = 0 + (rand() & 8188); //!!!!!! TEST CRUD
@@ -902,27 +904,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   const char *texture = "error";
 
-  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
-  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float s[3] = { 0.0, 0.0, 0.0 };
+  float t[3] = { 0.0, 0.0, 0.0 };
 
-  if (face < 2)  // PLANE_X
-  {
-    s[1] = 1.0; t[2] = 1.0;
-
-    texture = model->x_face.getStr("tex", "missing");
-  }
-  else if (face < 4)  // PLANE_Y
-  {
-    s[0] = 1.0; t[2] = 1.0;
-
-    texture = model->y_face.getStr("tex", "missing");
-  }
-  else // PLANE_Z
-  {
-    s[0] = 1.0; t[1] = 1.0;
-
-    texture = model->z_face.getStr("tex", "missing");
-  }
 
   // add the edges
 
@@ -931,6 +915,11 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   if (face < 2)  // PLANE_X
   {
+    s[1] = 1;  // PLANE_X
+    t[2] = 1;
+
+    texture = model->x_face.getStr("tex", "missing");
+
     double x = (face==0) ? model->x1 : model->x2;
     double y1 = flipped  ? model->y2 : model->y1;
     double y2 = flipped  ? model->y1 : model->y2;
@@ -941,8 +930,13 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x, y2, model->z2, x, y2, model->z1);
     MapModel_Edge(x, y2, model->z1, x, y1, model->z1);
   }
-  else if (face < 4)  // PLANE_Y
+  else if (face < 4)
   {
+    s[0] = 1;  // PLANE_Y
+    t[2] = 1;
+
+    texture = model->y_face.getStr("tex", "missing");
+
     double y = (face==2) ? model->y1 : model->y2;
     double x1 = flipped  ? model->x1 : model->x2;
     double x2 = flipped  ? model->x2 : model->x1;
@@ -952,8 +946,13 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x2, y, model->z2, x2, y, model->z1);
     MapModel_Edge(x2, y, model->z1, x1, y, model->z1);
   }
-  else // PLANE_Z
+  else
   {
+    s[0] = 1;  // PLANE_Z
+    t[1] = 1;
+
+    texture = model->z_face.getStr("tex", "missing");
+
     double z = (face==5) ? model->z1 : model->z2;
     double x1 = flipped  ? model->x2 : model->x1;
     double x2 = flipped  ? model->x1 : model->x2;
@@ -963,6 +962,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x2, model->y2, z, x2, model->y1, z);
     MapModel_Edge(x2, model->y1, z, x1, model->y1, z);
   }
+
 
   // texture and lighting
 
@@ -1096,6 +1096,8 @@ static void Q1_CreateBSPFile(const char *name)
   ClearTexInfo();
 
   CSG_QUAKE_Build();
+
+  Q1_CreateLightmaps();
 
   ///  QCOM_Lighting();
 
