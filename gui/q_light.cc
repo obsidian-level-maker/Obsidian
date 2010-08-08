@@ -27,12 +27,12 @@
 #include "lib_util.h"
 #include "main.h"
 
-#include "csg_main.h"
-
 #include "q_common.h"
 #include "q_light.h"
-#include "q1_main.h"
 #include "q1_structs.h"
+
+#include "csg_main.h"
+#include "csg_quake.h"
 
 
 qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offset(-1)

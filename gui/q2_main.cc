@@ -28,14 +28,14 @@
 #include "lib_pak.h"
 #include "main.h"
 
-#include "csg_main.h"
-
-#include "ui_chooser.h"
-
 #include "q_common.h"
 #include "q_light.h"
-#include "q2_main.h"
 #include "q2_structs.h"
+
+#include "csg_main.h"
+#include "csg_quake.h"
+
+#include "ui_chooser.h"
 
 
 static char *level_name;

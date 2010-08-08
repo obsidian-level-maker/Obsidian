@@ -36,7 +36,6 @@
 
 #include "csg_main.h"
 #include "nk_level.h"
-#include "q1_main.h"
 
 #include "ui_chooser.h"
 

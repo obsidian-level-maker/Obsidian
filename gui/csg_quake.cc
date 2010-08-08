@@ -34,13 +34,11 @@
 
 #include "q_common.h"
 #include "q_light.h"
+#include "q1_structs.h"
 
 #include "csg_main.h"
 #include "csg_local.h"
 #include "csg_quake.h"
-
-#include "q1_main.h"
-#include "q1_structs.h"
 
 
 #define FACE_MAX_SIZE  240

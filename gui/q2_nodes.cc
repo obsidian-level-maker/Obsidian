@@ -35,7 +35,6 @@
 #include "csg_main.h"
 
 #include "q_common.h"
-#include "q2_main.h"
 #include "q2_structs.h"
 
 

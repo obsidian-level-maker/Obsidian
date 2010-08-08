@@ -37,8 +37,6 @@
 #include "csg_local.h"
 #include "csg_quake.h"
 
-#include "q1_main.h"
-
 
 #define CLIP_EPSILON  0.01
 
