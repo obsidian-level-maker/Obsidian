@@ -34,7 +34,6 @@
 #include "csg_local.h"
 
 #include "dm_extra.h"
-#include "dm_glbsp.h"
 #include "g_doom.h"
 
 

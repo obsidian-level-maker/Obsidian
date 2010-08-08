@@ -79,7 +79,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/csg_nukem.o \
 	$(OBJ_DIR)/csg_quake.o \
 	$(OBJ_DIR)/dm_extra.o  \
-	$(OBJ_DIR)/dm_glbsp.o  \
 	$(OBJ_DIR)/g_doom.o    \
 	$(OBJ_DIR)/g_nukem.o   \
 	$(OBJ_DIR)/g_quake.o   \
