@@ -2,6 +2,38 @@
 TODO
 ====
 
+HALF-LIFE FORMAT:
+
+  1. LIGHTING lump is colored (as per Quake II)
+
+  2. CLIPPING has a 3rd hull (for crouching)
+
+  3. MIPTEX lump contains no image data (mip offsets are all zero)
+
+  4. entities use a vector for "angles"
+
+  5. new CONTENTS_ values?  (e.g. -6 is probably a liquid, not SKY)
+
+
+HALF-LIFE ENTITIES:
+  
+   info_player_start
+
+   monster_alien_grunt
+   monster_alien_slave
+   monster_headcrab
+   monster_barnacle
+
+   weapon_crowbar
+   weapon_shotgun     ammo_buckshot
+   weapon_9mmAR       ammo_9mmAR
+   weapon_9mmhandgun
+   weapon_handgrenade
+
+   item_healthkit
+
+
+QUAKE: s[] and t[] must be 4 numbers : last is ADDITION
 
 Quake: ensure faces are not too tall (>= 240)
 
