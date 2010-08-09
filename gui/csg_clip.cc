@@ -1154,10 +1154,10 @@ fprintf(stderr, "\n");
 
 
 static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
-                            quake_mapmodel_c *model, int which,
+                            quake_mapmodel_c *model, int hull,
                             double pad_w, double pad_t, double pad_b)
 {
-  model->nodes[which] = base;
+  model->nodes[hull] = base;
 
   for (int face = 0; face < 6; face++)
   {
@@ -1211,8 +1211,10 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
 ///???  cpSideFactory_c::FreeAll();
 
   // 3rd hull is not used in Quake
-  if (hull == 3)
+  if (hull == 3 && qk_sub_format == 0)
     return 0;
+
+  DebugPrintf("Q1_ClippingHull %d\n", hull);
 
   if (main_win)
   {
@@ -1221,34 +1223,25 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
     main_win->build_box->Prog_Step(hull_name);
   }
 
-// fprintf(stderr, "Quake1_CreateClipHull %d\n", hull);
-
-  hull--;
+  int h = hull - 1;
 
 
-  static double pads[2][3] =
+  static double pads[3][3] =
   {
     { 16, 24, 32 },
     { 32, 24, 64 },
+    { 32, 24, 96 },  // crouching in Half-Life and Hexen2
   };
 
   SaveBrushes();
 
-  FattenBrushes(pads[hull][0], pads[hull][1], pads[hull][2]);
-
-
-//  if (hull == 0)
-//   CSG2_Doom_TestBrushes();
+  FattenBrushes(pads[h][0], pads[h][1], pads[h][2]);
 
   CSG_BSP(0.5);
 
   CoalesceClipRegions();
 
   
-//  if (hull == 0)
-//    CSG2_Doom_TestClip();
-
-
   cpGroup_c GROUP;
 
   CreateClipSides(GROUP);
@@ -1271,8 +1264,8 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
   for (unsigned int m = 0 ; m < qk_all_mapmodels.size() ; m++)
   {
     Q1_ClipMapModel(q1_clip, cur_index,
-                    qk_all_mapmodels[m], hull+1,
-                    pads[hull][0], pads[hull][1], pads[hull][2]);
+                    qk_all_mapmodels[m], hull,
+                    pads[h][0], pads[h][1], pads[h][2]);
 
     cur_index += 6;
   }
