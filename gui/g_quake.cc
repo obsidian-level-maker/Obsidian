@@ -235,9 +235,51 @@ static void TransferOneMipTex(qLump_c *lump, unsigned int m, const char *name)
 }
 
 
+static void HL_WriteMipTex(qLump_c *lump)
+{
+  // count
+  int num_miptex = (int)q1_miptexs.size();
+
+  u32_t raw_count = LE_U32(num_miptex);
+
+  lump->Append(&raw_count, sizeof(raw_count));
+
+  // offsets
+  miptex_t raw_mip;
+
+  for (int m = 0 ; m < num_miptex ; m++)
+  {
+    u32_t offset = 4 + 4 * num_miptex + m * sizeof(raw_mip);
+
+    offset = LE_U32(offset);
+
+    lump->Append(&offset, sizeof(offset));
+  }
+
+  // miptex structures
+  for (int m = 0 ; m < num_miptex ; m++)
+  {
+    memset(&raw_mip, 0, sizeof(raw_mip));
+
+    raw_mip.width  = LE_U32(128);  ///!!!!!!! FIXME
+    raw_mip.height = LE_U32(128);
+
+    strcpy(raw_mip.name, q1_miptexs[m].c_str());
+
+    lump->Append(&raw_mip, sizeof(raw_mip));
+  }
+}
+
+
 static void Q1_WriteMipTex()
 {
   qLump_c *lump = BSP_NewLump(LUMP_TEXTURES);
+
+  if (qk_sub_format == SUBFMT_HalfLife)
+  {
+    HL_WriteMipTex(lump);
+    return;
+  }
 
   if (! WAD2_OpenRead("data/quake_tex.wd2"))
   {
@@ -249,11 +291,12 @@ static void Q1_WriteMipTex()
 
   u32_t num_miptex = q1_miptexs.size();
   u32_t dir_size = 4 * num_miptex + 4;
+
   SYS_ASSERT(num_miptex > 0);
 
   u32_t *offsets = new u32_t[num_miptex];
 
-  for (unsigned int m = 0; m < q1_miptexs.size(); m++)
+  for (unsigned int m = 0 ; m < q1_miptexs.size() ; m++)
   {
     offsets[m] = dir_size + (u32_t)lump->GetSize();
 
@@ -515,6 +558,20 @@ static void Q1_CreateLightmaps()
 
     F->lmap = BSP_NewLightmap(ext_W, ext_H, rand() & 127);
   }
+}
+
+
+static void Q1_Lighting()
+{
+  Q1_CreateLightmaps();
+
+  ///  QCOM_Lighting();
+
+  bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
+
+  int max_size = MAX_MAP_LIGHTING * (colored ? 3 : 1);
+
+  BSP_BuildLightmap(LUMP_LIGHTING, max_size, colored);
 }
 
 
@@ -1113,11 +1170,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build();
 
-  Q1_CreateLightmaps();
-
-  ///  QCOM_Lighting();
-
-  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, false);
+  Q1_Lighting();
 
   ///  QCOM_Visibility();
 
