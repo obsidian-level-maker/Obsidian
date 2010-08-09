@@ -24,6 +24,20 @@
 class qLump_c;
 
 
+/***** VARIABLES ****************/
+
+typedef enum
+{
+  SUBFMT_Hexen  = 1,
+  SUBFMT_Strife = 2,
+}
+doom_subformat_e;
+
+extern int dm_sub_format;
+
+
+/***** FUNCTIONS ****************/
+
 bool DM_StartWAD(const char *filename);
 bool DM_EndWAD(void);
 

@@ -42,8 +42,6 @@
 int solid_exfloor;    // disabled if <= 0
 int liquid_exfloor;
 
-extern bool wad_hexen;  // FIXME
-
 
 static int extrafloor_tag;
 static int extrafloor_slot;

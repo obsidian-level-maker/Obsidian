@@ -2383,7 +2383,7 @@ end
 
 function HEXEN.setup()
 
-  gui.property("hexen_format", "true")
+  gui.property("sub_format", "hexen")
 
   rand.shuffle(HEXEN.KEY_PAIRS)
 

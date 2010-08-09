@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  LEVEL building - QUAKE 1 format
+//  LEVEL building - QUAKE and HALFLIFE format
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -47,6 +47,8 @@
 
 extern int Q1_ClippingHull(int hull, qLump_c *q1_clip);
 
+
+int qk_sub_format;
 
 static char *level_name;
 static char *description;
@@ -1171,6 +1173,8 @@ public:
 
 bool quake1_game_interface_c::Start()
 {
+  qk_sub_format = 0;
+
   filename = Select_Output_File("pak");
 
   if (! filename)
@@ -1225,6 +1229,17 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
   else if (StringCaseCmp(key, "description") == 0)
   {
     description = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "sub_format") == 0)
+  {
+    if (StringCaseCmp(value, "quake") == 0)
+      qk_sub_format = 0;
+    else if (StringCaseCmp(value, "hexen2") == 0)
+      qk_sub_format = SUBFMT_Hexen2;
+    else if (StringCaseCmp(value, "halflife") == 0)
+      qk_sub_format = SUBFMT_HalfLife;
+    else
+      LogPrintf("WARNING: QUAKE1: unknown sub_format '%s'\n", value);
   }
   else
   {

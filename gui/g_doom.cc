@@ -45,7 +45,8 @@ extern void DM_FreeLevelStuff(void);
 
 static char *level_name;
 
-bool wad_hexen;  // FIXME: not global (next 3 too)
+
+int dm_sub_format;
 
 extern int solid_exfloor;    // disabled if <= 0
 extern int liquid_exfloor;
@@ -59,6 +60,7 @@ static qLump_c *linedef_lump;
 static int errors_seen;
 
 typedef std::vector<qLump_c *> lump_bag_t;
+
 
 typedef enum
 {
@@ -195,8 +197,6 @@ bool DM_StartWAD(const char *filename)
 
   errors_seen = 0;
 
-  wad_hexen = false;
-
   ClearSections();
 
   qLump_c *info = BSP_CreateInfoLump();
@@ -242,7 +242,7 @@ void DM_EndLevel(const char *level_name)
   DM_WriteLump("NODES",    NULL, 0);
   DM_WriteLump("SECTORS",  sector_lump);
 
-  if (wad_hexen)
+  if (dm_sub_format == SUBFMT_Hexen)
     DM_WriteBehavior();
 
   // free data
@@ -310,7 +310,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
                    int type,  int flags, int tag,
                    const byte *args)
 {
-  if (! wad_hexen)
+  if (dm_sub_format != SUBFMT_Hexen)
   {
     raw_linedef_t line;
 
@@ -355,7 +355,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 void DM_AddThing(int x, int y, int h, int type, int angle, int options,
                  int tid, byte special, const byte *args)
 {
-  if (! wad_hexen)
+  if (dm_sub_format != SUBFMT_Hexen)
   {
     raw_thing_t thing;
 
@@ -667,6 +667,8 @@ bool doom_game_interface_c::CheckDirectory(const char *filename)
 
 bool doom_game_interface_c::Start()
 {
+  dm_sub_format = 0;
+
   filename = Select_Output_File("wad");
 
   if (! filename)
@@ -750,12 +752,16 @@ void doom_game_interface_c::Property(const char *key, const char *value)
     // ignored (for now)
     // [another mechanism sets the description via BEX/DDF]
   }
-  else if (StringCaseCmp(key, "hexen_format") == 0)
+  else if (StringCaseCmp(key, "sub_format") == 0)
   {
-    if (value[0] == '0' || tolower(value[0]) == 'f')
-      wad_hexen = false;
+    if (StringCaseCmp(value, "doom") == 0)
+      dm_sub_format = 0;
+    else if (StringCaseCmp(value, "hexen") == 0)
+      dm_sub_format = SUBFMT_Hexen;
+    else if (StringCaseCmp(value, "strife") == 0)
+      dm_sub_format = SUBFMT_Strife;
     else
-      wad_hexen = true;
+      LogPrintf("WARNING: DOOM: unknown sub_format '%s'\n", value);
   }
   else if (StringCaseCmp(key, "solid_exfloor") == 0)
   {
