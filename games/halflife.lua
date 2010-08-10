@@ -106,7 +106,7 @@ HALFLIFE.MATERIALS =
   _ERROR = { t="generic027" },
   _SKY   = { t="sky" },
 
-  FLOOR  = { t="crete_flr04" },
+  FLOOR  = { t="crete3_flr04" },
   WALL   = { t="fifties_wall14t" },
 
 }
