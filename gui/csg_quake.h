@@ -198,6 +198,10 @@ public:
 
   s32_t nodes[6];
 
+  int firstface;
+  int numfaces;
+  int numleafs;
+
 public:
    quake_mapmodel_c();
   ~quake_mapmodel_c();

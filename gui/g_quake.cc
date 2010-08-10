@@ -53,6 +53,8 @@ int qk_sub_format;
 static char *level_name;
 static char *description;
 
+quake_mapmodel_c *qk_world_model;
+
 
 //------------------------------------------------------------------------
 
@@ -900,62 +902,88 @@ static void Q1_WriteBSP()
 }
 
 
-static void DoWriteModel(dmodel_t & raw_model)
+//------------------------------------------------------------------------
+//   MAP MODEL STUFF
+//------------------------------------------------------------------------
+
+#define H2_MAX_HULLS  8
+
+typedef struct
 {
-  // fix endianness
-  raw_model.visleafs  = LE_S32(raw_model.visleafs);
-  raw_model.firstface = LE_S32(raw_model.firstface);
-  raw_model.numfaces  = LE_S32(raw_model.numfaces);
+  float mins[3], maxs[3];
+  float origin[3];
 
-  for (int h = 0 ; h < 4 ; h++)
+  s32_t headnode[H2_MAX_HULLS];
+
+  s32_t visleafs;
+  s32_t firstface, numfaces;
+}
+h2_dmodel_t;
+
+
+static void H2_WriteModel(quake_mapmodel_c *model)
+{
+  h2_dmodel_t raw_model;
+
+  memset(&raw_model, 0, sizeof(raw_model));
+
+  raw_model.mins[0] = LE_Float32(model->x1 - MODEL_PADDING);
+  raw_model.mins[1] = LE_Float32(model->y1 - MODEL_PADDING);
+  raw_model.mins[2] = LE_Float32(model->z1 - MODEL_PADDING);
+
+  raw_model.maxs[0] = LE_Float32(model->x2 + MODEL_PADDING);
+  raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
+  raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
+
+  // origin stays zero
+
+  for (int n = 0 ; n < 6 ; n++)
   {
-    raw_model.headnode[h] = LE_S32(raw_model.headnode[h]);
+    raw_model.headnode[n] = LE_S32(model->nodes[n]);
   }
 
-  for (int b = 0 ; b < 3 ; b++)
-  {
-    raw_model.mins[b] = LE_Float32(raw_model.mins[b] - MODEL_PADDING);
-    raw_model.maxs[b] = LE_Float32(raw_model.maxs[b] + MODEL_PADDING);
-
-    raw_model.origin[b] = LE_Float32(raw_model.origin[b]);
-  }
+  raw_model.visleafs  = LE_S32(model->numleafs);
+  raw_model.firstface = LE_S32(model->firstface);
+  raw_model.numfaces  = LE_S32(model->numfaces);
 
   q1_models->Append(&raw_model, sizeof(raw_model));
 }
 
 
-static void Q1_WriteModel(int hull_1, int hull_2)
+static void Q1_WriteModel(quake_mapmodel_c *model)
 {
-  q1_models = BSP_NewLump(LUMP_MODELS);
+  if (qk_sub_format == SUBFMT_Hexen2)
+  {
+    H2_WriteModel(model);
+    return;
+  }
 
   dmodel_t raw_model;
 
-  raw_model.headnode[0] = 0;
-  raw_model.headnode[1] = hull_1;
-  raw_model.headnode[2] = hull_2;
-  raw_model.headnode[3] = 0;
+  memset(&raw_model, 0, sizeof(raw_model));
 
-  // -AJA- I don't think original Quake actually uses this value
-  raw_model.visleafs  = q1_total_leafs;
+  raw_model.mins[0] = LE_Float32(model->x1 - MODEL_PADDING);
+  raw_model.mins[1] = LE_Float32(model->y1 - MODEL_PADDING);
+  raw_model.mins[2] = LE_Float32(model->z1 - MODEL_PADDING);
 
-  raw_model.firstface = 0;
-  raw_model.numfaces  = q1_total_faces;
+  raw_model.maxs[0] = LE_Float32(model->x2 + MODEL_PADDING);
+  raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
+  raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
 
-  for (int b = 0 ; b < 3 ; b++)
+  // raw_model.origin stays zero
+
+  for (int n = 0 ; n < 4 ; n++)
   {
-    raw_model.mins[b] = qk_bsp_root->bbox.mins[b];
-    raw_model.maxs[b] = qk_bsp_root->bbox.maxs[b];
-
-    raw_model.origin[b] = 0;
+    raw_model.headnode[n] = LE_S32(model->nodes[n]);
   }
 
-  DoWriteModel(raw_model);
+  raw_model.visleafs  = LE_S32(model->numleafs);
+  raw_model.firstface = LE_S32(model->firstface);
+  raw_model.numfaces  = LE_S32(model->numfaces);
+
+  q1_models->Append(&raw_model, sizeof(raw_model));
 }
 
-
-//------------------------------------------------------------------------
-//   MAP MODEL STUFF
-//------------------------------------------------------------------------
 
 static void MapModel_Edge(float x1, float y1, float z1,
                           float x2, float y2, float z2)
@@ -1124,39 +1152,50 @@ static void MapModel_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 }
 
 
-static void Q1_WriteSubModels()
+static void Q1_ClipModels()
 {
+  qk_world_model = new quake_mapmodel_c();
+
+  qk_world_model->firstface = 0;
+  qk_world_model->numfaces  = q1_total_faces;
+  qk_world_model->numleafs  = q1_total_leafs;
+
+  q1_clip = BSP_NewLump(LUMP_CLIPNODES);
+
+  for (int hull = 1 ; hull < 6 ; hull++)
+  {
+    qk_world_model->nodes[hull] = Q1_ClippingHull(hull, q1_clip);
+  }
+}
+
+
+static void Q1_WriteModels()
+{
+  q1_models = BSP_NewLump(LUMP_MODELS);
+
+  Q1_WriteModel(qk_world_model);
+
   for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
   {
     quake_mapmodel_c *model = qk_all_mapmodels[i];
 
-    dmodel_t raw_model;
+    model->firstface = q1_total_faces;
+    model->numfaces  = 6;
+    model->numleafs  = 6;
 
-    raw_model.firstface = q1_total_faces;
-    raw_model.numfaces  = 6;
-    raw_model.visleafs  = 6;
+    float mins[3], maxs[3];
 
-    // bbox
-    raw_model.mins[0] = model->x1;
-    raw_model.mins[1] = model->y1;
-    raw_model.mins[2] = model->z1;
+    mins[0] = model->x1;
+    mins[1] = model->y1;
+    mins[2] = model->z1;
 
-    raw_model.maxs[0] = model->x2;
-    raw_model.maxs[1] = model->y2;
-    raw_model.maxs[2] = model->z2;
+    maxs[0] = model->x2;
+    maxs[1] = model->y2;
+    maxs[2] = model->z2;
 
-    raw_model.origin[0] = 0;
-    raw_model.origin[1] = 0;
-    raw_model.origin[2] = 0;
+    MapModel_Nodes(model, mins, maxs);
 
-    MapModel_Nodes(model, raw_model.mins, raw_model.maxs);
-
-    for (int h = 0 ; h < 4 ; h++)
-    {
-      raw_model.headnode[h] = model->nodes[h];
-    }
-
-    DoWriteModel(raw_model);
+    Q1_WriteModel(model);
   }
 }
 
@@ -1176,14 +1215,9 @@ static void Q1_CreateBSPFile(const char *name)
 
   Q1_WriteBSP();
 
-  q1_clip = BSP_NewLump(LUMP_CLIPNODES);
+  Q1_ClipModels();
 
-  int hull_1 = Q1_ClippingHull(1, q1_clip);
-  int hull_2 = Q1_ClippingHull(2, q1_clip);
-
-  Q1_WriteModel(hull_1, hull_2);
-
-  Q1_WriteSubModels();
+  Q1_WriteModels();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
   BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
