@@ -47,6 +47,8 @@ STRIFE.ENTITIES =
 
 STRIFE.PARAMETERS =
 {
+  sub_format = "strife",
+
   rails = true,
   switches = true,
   liquids = true,
@@ -179,7 +181,7 @@ STRIFE.PLAYER_MODEL =
 
 
 function STRIFE.setup()
-  gui.property("sub_format", "strife")
+  -- do stuff here
 end
 
 

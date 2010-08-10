@@ -236,6 +236,8 @@ HEXEN.ENTITIES =
 
 HEXEN.PARAMETERS =
 {
+  sub_format = "hexen",
+
   rails = true,
   switches = true,
   liquids = true,
@@ -2382,8 +2384,6 @@ end
 
 
 function HEXEN.setup()
-
-  gui.property("sub_format", "hexen")
 
   rand.shuffle(HEXEN.KEY_PAIRS)
 

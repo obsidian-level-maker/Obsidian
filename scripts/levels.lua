@@ -282,7 +282,11 @@ function Levels.setup()
 
   PARAM = assert(GAME.PARAMETERS)
 
-  Levels.invoke_hook("setup",  OB_CONFIG.seed)
+  Levels.invoke_hook("setup", OB_CONFIG.seed)
+
+  if PARAM.sub_format then
+    gui.property("sub_format", PARAM.sub_format)
+  end
 
   table.name_up(ROOM_PATTERNS)
   table.expand_copies(ROOM_PATTERNS)
