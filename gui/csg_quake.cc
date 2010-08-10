@@ -599,7 +599,7 @@ quake_mapmodel_c::quake_mapmodel_c() :
     x2(0), y2(0), z2(0),
     x_face(), y_face(), z_face()
 {
-  for (int i = 0 ; i < 4 ; i++)
+  for (int i = 0 ; i < 6 ; i++)
     nodes[i] = 0;
 }
 
@@ -1362,103 +1362,6 @@ static void Quake_BSP()
 
   //??  MakeFaces(qk_bsp_root);
 }
-
-
-
-void Q1_CreateModel(void)
-{
-#if 0
-  rSideFactory_c::FreeAll();
-  all_windings.clear();
-
-// fprintf(stderr, "Q1_BuildBSP...\n");
-  OLD_Q1_BuildBSP();
-
-  qLump_c *lump = BSP_NewLump(LUMP_MODELS);
-
-  memset(&model, 0, sizeof(model));
-
-  q1_total_nodes = 0;
-  q1_total_leafs = 0;  // does not include the solid leaf
-  q1_total_faces = 0;
-
-  q1_total_mark_surfs = 0;
-  q1_total_surf_edges = 0;
-  q1_total_clusters   = 0;
-
-  q1_nodes = BSP_NewLump(LUMP_NODES);
-  q1_leafs = BSP_NewLump(LUMP_LEAFS);
-  q1_faces = BSP_NewLump(LUMP_FACES);
-
-  q_mark_surfs = BSP_NewLump(LUMP_MARKSURFACES);
-  q_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
-
-// fprintf(stderr, "Second Pass...\n");
-  SecondPass(R_ROOT);
-
-  AssignIndexes(R_ROOT);
-  AssignClusters(R_ROOT);  // needs bboxes from AssignIndexes
-
-  LogPrintf("render hull: %d nodes, %d leafs, %d clusters\n",
-          q1_total_nodes, q1_total_leafs, q1_total_clusters);
-
-  if (q1_total_nodes >= MAX_MAP_NODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d NODES\n",
-                    MAX_MAP_NODES);
-
-  if (q1_total_leafs >= MAX_MAP_LEAFS)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d LEAFS\n",
-                    MAX_MAP_LEAFS);
-
-  WriteSolidLeaf();
-
-// fprintf(stderr, "Write Nodes...\n");
-  WriteNodes(R_ROOT);
-
-  if (q1_total_faces >= MAX_MAP_FACES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d FACES\n",
-                    MAX_MAP_FACES);
-
-  model.numfaces = q1_total_faces;
-
-
-  // set model bounding box
-  model.mins[0] = bounds_x1;  model.maxs[0] = bounds_x2;
-  model.mins[1] = bounds_y1;  model.maxs[1] = bounds_y2;
-  model.mins[2] = bounds_z1;  model.maxs[2] = bounds_z2;
-
-  model.origin[0] = 0;
-  model.origin[1] = 0;
-  model.origin[2] = 0;
-
-
-  // clipping hulls
-  model.visleafs = q1_total_leafs;
-
-  q_clip_nodes = BSP_NewLump(LUMP_CLIPNODES);
-
-  model.headnode[0] = 0; // root of drawing BSP
-  model.headnode[1] = Q1_CreateClipHull(1, q_clip_nodes);
-  model.headnode[2] = Q1_CreateClipHull(2, q_clip_nodes);
-  model.headnode[3] = Q1_CreateClipHull(3, q_clip_nodes);
-
-
-  // TODO: fix endianness in model
-  lump->Append(&model, sizeof(model));
-
-  Q1_CreateSubModels(lump, model.numfaces, model.visleafs);
-
-
-  delete R_ROOT;  R_ROOT = NULL;
-  delete SOLID_LEAF;  SOLID_LEAF = NULL;
-
-// fprintf(stderr, "DONE.\n");
-
-  // there is no need to delete the lumps from BSP_NewLump()
-  // since is handled by the q_common.c code.
-#endif
-}
-
 
 
 void CSG_QUAKE_Build()
