@@ -38,6 +38,9 @@
 #include "csg_quake.h"
 
 
+static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
+
+
 qLump_c::qLump_c() : buffer(), crlf(false)
 { }
 
@@ -266,8 +269,7 @@ u16_t BSP_AddPlane(float x, float y, float z,
                    float nx, float ny, float nz,
                    bool *flip_var)
 {
-  // NOTE: flip_var should only be provided for Quake 1,
-  //       and should be omitted for Quake 2/3.
+  // NOTE: flip_var is only needed for Quake 1 / Hexen 2
 
   bool did_flip = false;
 
@@ -328,17 +330,9 @@ u16_t BSP_AddPlane(float x, float y, float z,
   u16_t plane_idx = AddRawPlane(&raw_plane, &was_new);
 
 
-  if (flip_var)  // Quake 1
-  {
-    *flip_var = did_flip;
-
-    return plane_idx;
-  }
-
-
   // Quake2/3 have pairs of planes (opposite directions)
 
-  if (was_new)
+  if (was_new && (bsp_game == 2 || qk_sub_format == SUBFMT_HalfLife))
   {
     raw_plane.normal[0] = -nx;
     raw_plane.normal[1] = -ny;
@@ -349,14 +343,17 @@ u16_t BSP_AddPlane(float x, float y, float z,
     AddRawPlane(&raw_plane, &was_new);
   }
 
-  return plane_idx + (did_flip ? 1 : 0);
+
+  if (flip_var)
+    *flip_var = did_flip;
+
+  return plane_idx;
 }
 
 
 u16_t BSP_AddPlane(const quake_plane_c *P, bool *flip_var)
 {
-  // NOTE: flip_var should only be provided for Quake 1,
-  //       and should be omitted for Quake 2/3.
+  // NOTE: flip_var is only needed for Quake 1 / Hexen 2
 
   return BSP_AddPlane(P->x, P->y, P->z, P->nx, P->ny, P->nz, flip_var);
 }
@@ -555,7 +552,6 @@ void BSP_WriteEdges(int lump_num, int max_edges)
 
 #define HEADER_LUMP_MAX  32
 
-static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
 static int bsp_numlumps;
 static int bsp_version;
 
@@ -683,15 +679,21 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
   lump->Printf("{\n");
 
-  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
+//  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
+//  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
   if (description)
     lump->KeyPair("message", description);
   else
     lump->KeyPair("message", "Oblige Level");
 
-  lump->KeyPair("worldtype", "0");
+//  lump->KeyPair("worldtype", "0");
+
+lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
+lump->KeyPair("mapversion", "220");
+lump->KeyPair("MaxRange", "4096");
+lump->KeyPair("sounds", "1");
+
   lump->KeyPair("classname", "worldspawn");
 
   lump->Printf("}\n");
