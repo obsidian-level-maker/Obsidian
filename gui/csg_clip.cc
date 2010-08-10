@@ -1204,6 +1204,23 @@ static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
 }
 
 
+static double hull_sizes[3][3] =
+{
+  { 16, 24, 32 },
+  { 32, 24, 64 },
+  { 16, 24,  0 },  // crouching in Half-Life
+};
+
+static double h2_hull_sizes[5][3] =
+{
+   { 16, 24, 32 },  // player
+   { 24, 20, 20 },  // scorpion
+   { 16, 12, 16 },  // crouch
+   {  8,  8,  8 },  // pentacles
+   { 28, 40, 40 },  // yak
+};
+
+
 int Q1_ClippingHull(int hull, qLump_c *q1_clip)
 {
   SYS_ASSERT(1 <= hull && hull <= 3);
@@ -1226,16 +1243,17 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
   int h = hull - 1;
 
 
-  static double pads[3][3] =
-  {
-    { 16, 24, 32 },
-    { 32, 24, 64 },
-    { 32, 24, 96 },  // crouching in Half-Life and Hexen2
-  };
+  double *pads;
+
+  if (qk_sub_format == SUBFMT_Hexen2)
+    pads = h2_hull_sizes[h];
+  else
+    pads = hull_sizes[h];
+
 
   SaveBrushes();
 
-  FattenBrushes(pads[h][0], pads[h][1], pads[h][2]);
+  FattenBrushes(pads[0], pads[1], pads[2]);
 
   CSG_BSP(0.5);
 
@@ -1265,7 +1283,7 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
   {
     Q1_ClipMapModel(q1_clip, cur_index,
                     qk_all_mapmodels[m], hull,
-                    pads[h][0], pads[h][1], pads[h][2]);
+                    pads[0], pads[1], pads[2]);
 
     cur_index += 6;
   }

@@ -569,7 +569,7 @@ static void Q1_Lighting()
 
   bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
 
-  int max_size = MAX_MAP_LIGHTING * (colored ? 3 : 1);
+  int max_size = MAX_MAP_LIGHTING * (colored ? 2 : 1);
 
   BSP_BuildLightmap(LUMP_LIGHTING, max_size, colored);
 }
