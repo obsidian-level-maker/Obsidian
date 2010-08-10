@@ -918,7 +918,7 @@ typedef struct
 
   s32_t headnode[H2_MAX_HULLS];
 
-  s32_t visleafs;
+  s32_t numleafs;
   s32_t firstface, numfaces;
 }
 h2_dmodel_t;
@@ -945,7 +945,7 @@ static void H2_WriteModel(quake_mapmodel_c *model)
     raw_model.headnode[n] = LE_S32(model->nodes[n]);
   }
 
-  raw_model.visleafs  = LE_S32(model->numleafs);
+  raw_model.numleafs  = LE_S32(model->numleafs);
   raw_model.firstface = LE_S32(model->firstface);
   raw_model.numfaces  = LE_S32(model->numfaces);
 
@@ -980,7 +980,7 @@ static void Q1_WriteModel(quake_mapmodel_c *model)
     raw_model.headnode[n] = LE_S32(model->nodes[n]);
   }
 
-  raw_model.visleafs  = LE_S32(model->numleafs);
+  raw_model.numleafs  = LE_S32(model->numleafs);
   raw_model.firstface = LE_S32(model->firstface);
   raw_model.numfaces  = LE_S32(model->numfaces);
 

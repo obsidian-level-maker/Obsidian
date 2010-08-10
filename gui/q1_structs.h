@@ -92,7 +92,7 @@ typedef struct
   float origin[3];
 
   s32_t headnode[MAX_MAP_HULLS];
-  s32_t visleafs;   // not including the solid leaf 0
+  s32_t numleafs;   // not including the solid leaf 0
   s32_t firstface, numfaces;
 }
 dmodel_t;
