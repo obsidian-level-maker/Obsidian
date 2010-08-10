@@ -45,7 +45,7 @@
 #define MODEL_PADDING  24.0
 
 
-extern int Q1_ClippingHull(int hull, qLump_c *q1_clip);
+extern void Q1_ClippingHull(int hull);
 
 
 int qk_sub_format;
@@ -589,7 +589,6 @@ static qLump_c *q1_leafs;
 static qLump_c *q1_nodes;
 
 static qLump_c *q1_models;
-static qLump_c *q1_clip;
 
 static int q1_total_surf_edges;
 static int q1_total_mark_surfs;
@@ -597,6 +596,10 @@ static int q1_total_mark_surfs;
 static int q1_total_faces;
 static int q1_total_leafs;
 static int q1_total_nodes;
+
+qLump_c *q1_clip;
+
+int q1_total_clip;
 
 
 static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
@@ -1160,11 +1163,21 @@ static void Q1_ClipModels()
   qk_world_model->numfaces  = q1_total_faces;
   qk_world_model->numleafs  = q1_total_leafs;
 
+  // bounds of map
+  qk_world_model->x1 = qk_bsp_root->bbox.mins[0];
+  qk_world_model->y1 = qk_bsp_root->bbox.mins[1];
+  qk_world_model->y1 = qk_bsp_root->bbox.mins[2];
+
+  qk_world_model->x2 = qk_bsp_root->bbox.maxs[0];
+  qk_world_model->y2 = qk_bsp_root->bbox.maxs[1];
+  qk_world_model->y2 = qk_bsp_root->bbox.maxs[2];
+
   q1_clip = BSP_NewLump(LUMP_CLIPNODES);
+  q1_total_clip = 0;
 
   for (int hull = 1 ; hull < 6 ; hull++)
   {
-    qk_world_model->nodes[hull] = Q1_ClippingHull(hull, q1_clip);
+    Q1_ClippingHull(hull);
   }
 }
 

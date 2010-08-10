@@ -41,8 +41,29 @@
 #define CLIP_EPSILON  0.01
 
 
+extern qLump_c *q1_clip;
+
+extern int q1_total_clip;
+
 extern void CSG2_Doom_TestBrushes(void);
 extern void CSG2_Doom_TestClip(void);
+
+
+static double hull_sizes[3][3] =
+{
+  { 16, 24, 32 },  // player
+  { 32, 24, 64 },  // monsters
+  { 16, 24,  0 },  // crouching (Half-Life only)
+};
+
+static double h2_hull_sizes[5][3] =
+{
+   { 16, 24, 32 },  // player
+   { 24, 20, 20 },  // scorpion
+   { 16, 12, 16 },  // crouch
+   {  8,  8,  8 },  // pentacles
+   { 28, 40, 40 },  // yak
+};
 
 
 class cpSide_c
@@ -1062,13 +1083,31 @@ static void AssignIndexes(cpNode_c *node, int *cur_index)
 }
 
 
-static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
+static void DoWriteClip(dclipnode_t & raw_clip, bool flip)
+{
+  if (flip)
+  {
+    std::swap(raw_clip.children[0], raw_clip.children[1]);
+  }
+
+  // fix endianness
+  raw_clip.planenum    = LE_S32(raw_clip.planenum);
+  raw_clip.children[0] = LE_U16(raw_clip.children[0]);
+  raw_clip.children[1] = LE_U16(raw_clip.children[1]);
+
+  q1_clip->Append(&raw_clip, sizeof(raw_clip));
+
+  q1_total_clip += 1;
+}
+
+
+static void WriteClipNodes(cpNode_c *node)
 {
   if (! node->IsNode())
     return;
 
 
-  dclipnode_t clip;
+  dclipnode_t raw_clip;
 
   bool flipped;
 
@@ -1076,13 +1115,13 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
   {
     // !!!! FIXME: support slopes
 
-    clip.planenum = BSP_AddPlane(0, 0, node->part.z,
+    raw_clip.planenum = BSP_AddPlane(0, 0, node->part.z,
                                  0, 0, node->part.dz,
                                  &flipped);
   }
   else
   {
-    clip.planenum = BSP_AddPlane(node->part.x1, node->part.y1, 0,
+    raw_clip.planenum = BSP_AddPlane(node->part.x1, node->part.y1, 0,
                                  node->part.y2 - node->part.y1,
                                  node->part.x1 - node->part.x2, 0,
                                  &flipped);
@@ -1091,33 +1130,23 @@ static void WriteClipNodes(cpNode_c *node, qLump_c *lump)
   node->CheckValid();
 
   if (node->front->IsNode())
-    clip.children[0] = (u16_t) node->front->index;
+    raw_clip.children[0] = (u16_t) node->front->index;
   else
-    clip.children[0] = (u16_t) node->front->contents;
+    raw_clip.children[0] = (u16_t) node->front->contents;
 
   if (node->back->IsNode())
-    clip.children[1] = (u16_t) node->back->index;
+    raw_clip.children[1] = (u16_t) node->back->index;
   else
-    clip.children[1] = (u16_t) node->back->contents;
+    raw_clip.children[1] = (u16_t) node->back->contents;
 
-  if (flipped)
-  {
-    std::swap(clip.children[0], clip.children[1]);
-  }
-
-
-  // fix endianness
-  clip.planenum    = LE_S32(clip.planenum);
-  clip.children[0] = LE_U16(clip.children[0]);
-  clip.children[1] = LE_U16(clip.children[1]);
-
-  lump->Append(&clip, sizeof(clip));
+  
+  DoWriteClip(raw_clip, flipped);
 
 
   // recurse now, AFTER adding the current node
 
-  WriteClipNodes(node->front, lump);
-  WriteClipNodes(node->back,  lump);
+  WriteClipNodes(node->front);
+  WriteClipNodes(node->back);
 }
 
 
@@ -1153,102 +1182,10 @@ fprintf(stderr, "\n");
 }
 
 
-static void Q1_ClipMapModel(qLump_c *lump, s32_t base,
-                            quake_mapmodel_c *model, int hull,
-                            double pad_w, double pad_t, double pad_b)
+
+static void Q1_ClipWorld(int hull, double *pads)
 {
-  model->nodes[hull] = base;
-
-  for (int face = 0; face < 6; face++)
-  {
-    dclipnode_t clip;
-
-    double v;
-    double dir;
-    bool flipped;
-
-    if (face < 2)  // PLANE_X
-    {
-      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
-      dir = (face==0) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
-    }
-    else if (face < 4)  // PLANE_Y
-    {
-      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
-      dir = (face==2) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
-    }
-    else  // PLANE_Z
-    {
-      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
-      dir = (face==5) ? -1 : 1;
-      clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
-    }
-
-    clip.children[0] = (u16_t) CONTENTS_EMPTY;
-    clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
-
-    if (flipped)
-    {
-      std::swap(clip.children[0], clip.children[1]);
-    }
-
-    // fix endianness
-    clip.planenum    = LE_S32(clip.planenum);
-    clip.children[0] = LE_U16(clip.children[0]);
-    clip.children[1] = LE_U16(clip.children[1]);
-
-    lump->Append(&clip, sizeof(clip));
-  }
-}
-
-
-static double hull_sizes[3][3] =
-{
-  { 16, 24, 32 },
-  { 32, 24, 64 },
-  { 16, 24,  0 },  // crouching in Half-Life
-};
-
-static double h2_hull_sizes[5][3] =
-{
-   { 16, 24, 32 },  // player
-   { 24, 20, 20 },  // scorpion
-   { 16, 12, 16 },  // crouch
-   {  8,  8,  8 },  // pentacles
-   { 28, 40, 40 },  // yak
-};
-
-
-int Q1_ClippingHull(int hull, qLump_c *q1_clip)
-{
-  SYS_ASSERT(1 <= hull && hull <= 3);
-
-///???  cpSideFactory_c::FreeAll();
-
-  // 3rd hull is not used in Quake
-  if (hull == 3 && qk_sub_format == 0)
-    return 0;
-
-  DebugPrintf("Q1_ClippingHull %d\n", hull);
-
-  if (main_win)
-  {
-    char hull_name[32];
-    sprintf(hull_name, "Hull %d", hull);
-    main_win->build_box->Prog_Step(hull_name);
-  }
-
-  int h = hull - 1;
-
-
-  double *pads;
-
-  if (qk_sub_format == SUBFMT_Hexen2)
-    pads = h2_hull_sizes[h];
-  else
-    pads = hull_sizes[h];
+  qk_world_model->nodes[hull] = q1_total_clip;
 
 
   SaveBrushes();
@@ -1267,35 +1204,108 @@ int Q1_ClippingHull(int hull, qLump_c *q1_clip)
   cpNode_c * ROOT = PartitionGroup(GROUP);
 
 
-  int start_idx = q1_clip->GetSize() / sizeof(dclipnode_t);
-  int cur_index = start_idx;
+  int cur_index = q1_total_clip;
 
   AssignIndexes(ROOT, &cur_index);
 
-  WriteClipNodes(ROOT, q1_clip);
+  WriteClipNodes(ROOT);
 
   // this deletes the entire BSP tree (nodes and leafs)
   delete ROOT;
 
 
-  // write clip nodes for each MapModel
-  for (unsigned int m = 0 ; m < qk_all_mapmodels.size() ; m++)
-  {
-    Q1_ClipMapModel(q1_clip, cur_index,
-                    qk_all_mapmodels[m], hull,
-                    pads[0], pads[1], pads[2]);
+  RestoreBrushes();
+}
 
-    cur_index += 6;
+
+static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull,
+                            double pad_w, double pad_t, double pad_b)
+{
+  model->nodes[hull] = q1_total_clip;
+
+  int base = q1_total_clip;
+
+  for (int face = 0 ; face < 6 ; face++)
+  {
+    dclipnode_t raw_clip;
+
+    double v;
+    double dir;
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? (model->x1 - pad_w) : (model->x2 + pad_w);
+      dir = (face==0) ? -1 : 1;
+      raw_clip.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? (model->y1 - pad_w) : (model->y2 + pad_w);
+      dir = (face==2) ? -1 : 1;
+      raw_clip.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? (model->z1 - pad_b) : (model->z2 + pad_t);
+      dir = (face==5) ? -1 : 1;
+      raw_clip.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    raw_clip.children[0] = (u16_t) CONTENTS_EMPTY;
+    raw_clip.children[1] = (face == 5) ? CONTENTS_SOLID : base + face + 1;
+
+    DoWriteClip(raw_clip, flipped);
+  }
+}
+
+
+void Q1_ClippingHull(int hull)
+{
+  int num_hulls = 3;
+
+  if (qk_sub_format == SUBFMT_HalfLife) num_hulls = 3;
+  if (qk_sub_format == SUBFMT_Hexen2)   num_hulls = 3;
+
+  SYS_ASSERT(hull >= 1);
+
+  if (hull > num_hulls)
+    return;
+
+
+  DebugPrintf("Q1_ClippingHull %d\n", hull);
+
+  if (main_win)
+  {
+    char hull_name[32];
+    sprintf(hull_name, "Hull %d", hull);
+    main_win->build_box->Prog_Step(hull_name);
   }
 
-  if (cur_index >= MAX_MAP_CLIPNODES)
-    Main_FatalError("Quake1 build failure: exceeded limit of %d CLIPNODES\n",
+///???  cpSideFactory_c::FreeAll();
+
+
+  double *pads;
+
+  if (qk_sub_format == SUBFMT_Hexen2)
+    pads = h2_hull_sizes[hull-1];
+  else
+    pads = hull_sizes[hull-1];
+
+
+  // first clip the world, then the map-models
+
+  Q1_ClipWorld(hull, pads);
+
+  for (unsigned int m = 0 ; m < qk_all_mapmodels.size() ; m++)
+  {
+    Q1_ClipMapModel(qk_all_mapmodels[m], hull,
+                    pads[0], pads[1], pads[2]);
+  }
+
+  if (q1_total_clip >= MAX_MAP_CLIPNODES)
+    Main_FatalError("Quake build failure: exceeded limit of %d CLIPNODES\n",
                     MAX_MAP_CLIPNODES);
-
-
-  RestoreBrushes();
-
-  return start_idx;
 }
 
 //--- editor settings ---
