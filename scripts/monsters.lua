@@ -1507,7 +1507,13 @@ function Monsters.fill_room(R)
     if skill <= 2 then add_to_list(SKILLS[2], info) end
     if skill <= 1 then add_to_list(SKILLS[1], info) end
 
-    local props = { angle = spot.angle or angle }
+    local props = { }
+
+    if OB_CONFIG.game == "halflife" then
+      props.angles = string.format("0 %d 0", spot.angle or angle)
+    else
+      props.angle = spot.angle or angle
+    end
 
     if GAME.format == "quake" then
       props.spawnflags = 0
