@@ -2,17 +2,33 @@
 TODO
 ====
 
+
+PARAMETER.sub_format
+
+
+HEXEN II has __FIVE__ clipping hulls (space for 8) :
+
+   { 16, 24, 32 },
+   { 24, 20, 20 },
+   { 16, 12, 16 },
+   {  8,  8,  8 },
+   { 28, 40, 40 },
+
+
 HALF-LIFE FORMAT:
 
-  1. LIGHTING lump is colored (as per Quake II)
+/ 1. LIGHTING lump is colored (as per Quake II)
 
-  2. CLIPPING has a 3rd hull (for crouching)
+/ 2. CLIPPING has a 3rd hull (for crouching)
 
-  3. MIPTEX lump contains no image data (mip offsets are all zero)
+? 3. MIPTEX lump contains no image data (mip offsets are all zero)
 
-  4. entities use a vector for "angles"
+/ 4. entities use a vector for "angles"
 
-  5. new CONTENTS_ values?  (e.g. -6 is probably a liquid, not SKY)
+  5. MAX_MAP_ENTSTRING and MAX_MAP_LIGHTING are larger
+                           *2
+
+  6. new CONTENTS_ values?  (e.g. -6 is probably a liquid, not SKY)
 
 
 HALF-LIFE ENTITIES:
@@ -31,6 +47,12 @@ HALF-LIFE ENTITIES:
    weapon_handgrenade
 
    item_healthkit
+
+
+SKIES: 2desert black city cliff desert dusk morning
+       neb1 neb2 neb6 neb7 night space
+       alien1 alien2 alien3 xeno8 xeno9 xeno10
+
 
 
 QUAKE: s[] and t[] must be 4 numbers : last is ADDITION
