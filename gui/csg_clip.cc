@@ -1262,14 +1262,14 @@ static void Q1_ClipMapModel(quake_mapmodel_c *model, int hull,
 
 void Q1_ClippingHull(int hull)
 {
-  int num_hulls = 3;
+  int clip_hulls = 2;
 
-  if (qk_sub_format == SUBFMT_HalfLife) num_hulls = 3;
-  if (qk_sub_format == SUBFMT_Hexen2)   num_hulls = 3;
+  if (qk_sub_format == SUBFMT_HalfLife) clip_hulls = 3;
+  if (qk_sub_format == SUBFMT_Hexen2)   clip_hulls = 5;
 
   SYS_ASSERT(hull >= 1);
 
-  if (hull > num_hulls)
+  if (hull > clip_hulls+1)
     return;
 
 
