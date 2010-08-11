@@ -153,6 +153,8 @@ Miscellaneous:
 
   - properly count svolume
 
+  - PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
+
 
 Possible Options:
 -  glBSP section:

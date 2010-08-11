@@ -3,7 +3,9 @@ TODO
 ====
 
 
-PARAMETER.sub_format
+16x16 not 17x17
+
+Lua code to control usage of quake_tex.wd2 / hexen2_tex.wd2
 
 
 HEXEN II has __FIVE__ clipping hulls (space for 8) :
@@ -21,14 +23,13 @@ HALF-LIFE FORMAT:
 
 / 2. CLIPPING has a 3rd hull (for crouching)
 
-? 3. MIPTEX lump contains no image data (mip offsets are all zero)
+  3. MIPTEX lump __often__ no image data (mip offsets are all zero)
+     BUT it can contain image data :
+         directly after last mip: 1 0 <palette>
 
 / 4. entities use a vector for "angles"
 
-  5. MAX_MAP_ENTSTRING and MAX_MAP_LIGHTING are larger
-                           *2
-
-  6. new CONTENTS_ values?  (e.g. -6 is probably a liquid, not SKY)
+/ 5. MAX_MAP_ENTSTRING and MAX_MAP_LIGHTING*2 are larger
 
 
 HALF-LIFE ENTITIES:
