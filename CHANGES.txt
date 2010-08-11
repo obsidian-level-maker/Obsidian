@@ -5,6 +5,10 @@ CHANGES (since 3.57)
 - improved progress bar and status messages
 - output file is deleted if an error occurs
 
+- CSG code can create Hexen II and Half-Life maps
+
+- qsavetex now supports Hexen II
+
 + support for "shaped" rooms (L, T, +)
 + support for teleporters
 
