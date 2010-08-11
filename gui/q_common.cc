@@ -679,6 +679,8 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
   lump->Printf("{\n");
 
+  // !!!! FIXME : let Lua code supply all these values
+
 //  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
 //  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
@@ -689,10 +691,13 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
 //  lump->KeyPair("worldtype", "0");
 
-lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
-lump->KeyPair("mapversion", "220");
-lump->KeyPair("MaxRange", "4096");
-lump->KeyPair("sounds", "1");
+  if (qk_sub_format == SUBFMT_HalfLife)
+  {
+    lump->KeyPair("wad", "\\sierra\\half-life\\valve\\halflife.wad;");
+    lump->KeyPair("mapversion", "220");
+    lump->KeyPair("MaxRange", "4096");
+    lump->KeyPair("sounds", "1");
+  }
 
   lump->KeyPair("classname", "worldspawn");
 
