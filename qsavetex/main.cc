@@ -2,7 +2,7 @@
 //  QSAVETEX : Main program
 //------------------------------------------------------------------------
 // 
-//  Copyright (c) 2009  Andrew J Apted
+//  Copyright (c) 2009-2010  Andrew J Apted
 // 
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -22,16 +22,19 @@
 #include "pakfile.h"
 
 
-#define VERSION  "0.72"
+#define VERSION  "0.75"
 
 #define LOG_FILE  "qsavetex_log.txt"
 
-#define QUAKE1_OUTPUT  "quake_tex.wd2";
+#define QUAKE1_OUTPUT  "quake_tex.wd2"
+#define HEXEN2_OUTPUT  "hexen2_tex.wd2"
 
+
+static FILE *log_file;
 
 static const char * output_name = QUAKE1_OUTPUT;
 
-static FILE *log_file;
+static bool explicit_output = false;
 
 
 void LogInit(const char *filename)
@@ -102,18 +105,17 @@ void FatalError(const char *message, ...)
 }
 
 
-//------------------------------------------------------------------------
-
 void ShowHelp(void)
 {
   printf("\n");
-  printf("**** QSAVETEX v" VERSION "  (C) 2009 Andrew Apted ****\n");
+  printf("**** QSAVETEX v" VERSION "  (C) 2009-2010 Andrew Apted ****\n");
   printf("\n");
   printf("USAGE: qsavetex\n");
   printf("\n");
 
   printf("OPTIONS:\n");
-  printf("   -h  -help    show this help text\n");
+  printf("   -h  --help            show this help text\n");
+  printf("   -o  --output <name>   set the output filename\n");
   printf("\n");
 
   printf("This program is free software, under the terms of the GNU General\n");
@@ -138,17 +140,34 @@ int HandleOption(int argc, char **argv)
       FatalError("Missing output filename after %s\n", argv[0]);
 
     output_name = StringDup(argv[1]);
+    explicit_output = true;
     return 2;
-  }
-
-  if (StringCaseCmp(opt, "-r") == 0 || StringCaseCmp(opt, "-raw") == 0)
-  {
-//    opt_raw = true;
-    return 1;
   }
 
   FatalError("Unknown option: %s\n", argv[0]);
   return 0; // NOT REACHED
+}
+
+
+void DetectGame(void)
+{
+  if (explicit_output)
+    return;
+
+  if (! PAK_OpenRead("pak0.pak"))
+    return;
+
+  bool is_hexen2 = false;
+
+  if (PAK_FindEntry("puzzles.txt") >= 0)
+  {
+    is_hexen2 = true;
+    output_name = HEXEN2_OUTPUT;
+  }
+
+  PAK_CloseRead();
+
+  LogPrintf("\nGame detected: %s\n\n", is_hexen2 ? "Hexen II" : "Quake");
 }
 
 
@@ -194,10 +213,15 @@ int main(int argc, char **argv)
   }
 
 
+  DetectGame();
+
   if (! WAD2_OpenWrite(output_name))
+  {
     FatalError("Could not create file: %s\n", output_name);
+  }
 
   LogPrintf("\n");
+
 
   TEX_ExtractStart();
 
