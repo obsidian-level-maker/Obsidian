@@ -1368,6 +1368,10 @@ QUAKE2.MATERIALS =
   YELLOW1_4  = { t="e1u1/yellow1_4" },
   YELLOW1_6  = { t="e1u1/yellow1_6" },
 
+  -- Oblige special textures
+  O_CARVE    = { t="o_carve" },
+  O_BOLT     = { t="o_carve" },
+
 -- e1u1/+0btshoot1
 -- e1u1/+0btshoot2
 -- e1u3/+0butn1
@@ -1457,11 +1461,34 @@ QUAKE2.EXITS =
 }
 
 
-QUAKE2.KEY_DOORS =
+QUAKE2.STEPS =
 {
-  k_silver = { door_kind="door_silver", door_side=14 },
-  k_gold   = { door_kind="door_gold",   door_side=14 },
+  step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" },
+  step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" },
 }
+
+
+QUAKE2.PICTURES =
+{
+  carve =
+  {
+    count=1,
+    pic_w="O_CARVE", width=64, height=64, raise=64,
+    x_offset=0, y_offset=0,
+    side_t="METAL", floor="CEIL5_2", depth=8, 
+    light=0.7,
+  },
+}
+
+
+
+
+-- QUAKE2.KEY_DOORS =
+-- {
+--   k_silver = { door_kind="door_silver", door_side=14 },
+--   k_gold   = { door_kind="door_gold",   door_side=14 },
+-- }
+
 
 QUAKE2.MISC_PREFABS =
 {
@@ -1562,6 +1589,10 @@ QUAKE2.SUB_THEMES =
     {
       TECH_GROUND=50,
     },
+
+    logos = { carve=50 },
+
+    steps = { step1=50, step2=50 },
 
     hallway =
     {
