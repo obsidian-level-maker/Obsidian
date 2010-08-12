@@ -61,6 +61,8 @@ quake_mapmodel_c *qk_world_model;
 static std::vector<std::string>   q1_miptexs;
 static std::map<std::string, int> q1_miptex_map;
 
+static int num_custom_tex = 0;
+
 s32_t Q1_AddMipTex(const char *name);
 
 
@@ -73,6 +75,8 @@ static void ClearMipTex(void)
   Q1_AddMipTex("error");   // #0
   Q1_AddMipTex("missing"); // #1
   Q1_AddMipTex("o_carve"); // #2
+
+  num_custom_tex = 3;
 }
 
 
@@ -546,6 +550,8 @@ static void Q1_GetExtents(quake_face_c *F, int *ext_W, int *ext_H)
 
 static void Q1_CreateLightmaps()
 {
+return; //!!!!!
+
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
     quake_face_c *F = qk_all_faces[i];    
@@ -559,6 +565,8 @@ static void Q1_CreateLightmaps()
     fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
 
     F->lmap = BSP_NewLightmap(ext_W, ext_H, rand() & 127);
+
+    //!!!!  QCOM_LightFace(F);
   }
 }
 
@@ -566,8 +574,6 @@ static void Q1_CreateLightmaps()
 static void Q1_Lighting()
 {
   Q1_CreateLightmaps();
-
-  ///  QCOM_Lighting();
 
   bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
 
@@ -696,10 +702,13 @@ static void Q1_WriteFace(quake_face_c *face)
   raw_face.styles[2] = 0xFF;
   raw_face.styles[3] = 0xFF;
 
-  raw_face.lightofs = 0 + (rand() & 8188); //!!!!!! TEST CRUD
+  raw_face.lightofs = -1;
 
   if (face->lmap)
     raw_face.lightofs = face->lmap->CalcOffset();
+
+  if (raw_face.lightofs < 0)
+    raw_face.flags |= TEX_SPECIAL;
 
   DoWriteFace(raw_face);
 }
