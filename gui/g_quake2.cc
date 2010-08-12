@@ -405,7 +405,7 @@ static void Q2_WriteLeafBrush(csg_brush_c *B)
 
   q2_leaf_brushes->Append(&index, sizeof(index));
 
-  q2_total_leafs += 1;
+  q2_total_leaf_brushes += 1;
 }
 
 
