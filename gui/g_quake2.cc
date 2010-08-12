@@ -115,6 +115,7 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
 
   // bottom
   side.planenum = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
+  side.planenum ^= 1;
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
@@ -122,11 +123,17 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
 
   for (unsigned int k = 0; k < A->verts.size(); k++)
   {
+    bool flipped;
+
     brush_vert_c *v1 = A->verts[k];
     brush_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
     side.planenum = BSP_AddPlane(v1->x, v1->y, 0,
-                                (v2->y - v1->y), (v1->x - v2->x), 0);
+                                (v2->y - v1->y), (v1->x - v2->x), 0,
+                                &flipped);
+
+    if (flipped)
+      side.planenum ^= 1;
 
     q2_brush_sides.push_back(side);
     brush.numsides++;
