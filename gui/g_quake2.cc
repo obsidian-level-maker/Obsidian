@@ -38,6 +38,11 @@
 #include "ui_chooser.h"
 
 
+#define LEAF_PADDING   4
+#define NODE_PADDING   16
+#define MODEL_PADDING  24.0
+
+
 static char *level_name;
 static char *description;
 
@@ -195,7 +200,7 @@ static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
 
 
 u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
-                    double *s4, double *t4)
+                    float *s4, float *t4)
 {
   // create texinfo structure
   texinfo2_t tin;
@@ -351,6 +356,44 @@ const byte oblige_pop[256] =
 
 //------------------------------------------------------------------------
 
+static qLump_c *q2_surf_edges;
+static qLump_c *q2_mark_surfs;
+
+static qLump_c *q2_faces;
+static qLump_c *q2_leafs;
+static qLump_c *q2_nodes;
+
+static qLump_c *q2_models;
+
+static int q2_total_surf_edges;
+static int q2_total_mark_surfs;
+
+static int q2_total_faces;
+static int q2_total_leafs;
+static int q2_total_nodes;
+
+
+static void Q2_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
+{
+  u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
+  u16_t v2 = BSP_AddVertex(B.x, B.y, B.z);
+
+  if (v1 == v2)
+  {
+    Main_FatalError("INTERNAL ERROR: Q2 WriteEdge is zero length!\n");
+  }
+
+  s32_t index = BSP_AddEdge(v1, v2);
+
+  // fix endianness
+  index = LE_S32(index);
+
+  q2_surf_edges->Append(&index, sizeof(index));
+
+  q2_total_surf_edges += 1;
+}
+
+
 static void Q2_WriteBSP()
 {
   // FIXME: Q2_WriteBSP
@@ -359,15 +402,244 @@ static void Q2_WriteBSP()
 
 //------------------------------------------------------------------------
 
-static void Q2_ClipModels()
+static void Q2_Model_Edge(float x1, float y1, float z1,
+                          float x2, float y2, float z2)
 {
-  // FIXME
+  quake_vertex_c A(x1, y1, z1);
+  quake_vertex_c B(x2, y2, z2);
+
+  Q2_WriteEdge(A, B);
+}
+
+
+static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
+{
+  dface2_t raw_face;
+
+  raw_face.planenum = plane;
+  raw_face.side = flipped ? 1 : 0;
+ 
+
+  const char *texture = "error";
+
+  float s[3] = { 0.0, 0.0, 0.0 };
+  float t[3] = { 0.0, 0.0, 0.0 };
+
+
+  // add the edges
+
+  raw_face.firstedge = q2_total_surf_edges;
+  raw_face.numedges  = 4;
+
+  if (face < 2)  // PLANE_X
+  {
+    s[1] = 1;  // PLANE_X
+    t[2] = 1;
+
+    texture = model->x_face.getStr("tex", "missing");
+
+    double x = (face==0) ? model->x1 : model->x2;
+    double y1 = flipped  ? model->y2 : model->y1;
+    double y2 = flipped  ? model->y1 : model->y2;
+
+    // Note: this assumes the plane is positive
+    Q2_Model_Edge(x, y1, model->z1, x, y1, model->z2);
+    Q2_Model_Edge(x, y1, model->z2, x, y2, model->z2);
+    Q2_Model_Edge(x, y2, model->z2, x, y2, model->z1);
+    Q2_Model_Edge(x, y2, model->z1, x, y1, model->z1);
+  }
+  else if (face < 4)
+  {
+    s[0] = 1;  // PLANE_Y
+    t[2] = 1;
+
+    texture = model->y_face.getStr("tex", "missing");
+
+    double y = (face==2) ? model->y1 : model->y2;
+    double x1 = flipped  ? model->x1 : model->x2;
+    double x2 = flipped  ? model->x2 : model->x1;
+
+    Q2_Model_Edge(x1, y, model->z1, x1, y, model->z2);
+    Q2_Model_Edge(x1, y, model->z2, x2, y, model->z2);
+    Q2_Model_Edge(x2, y, model->z2, x2, y, model->z1);
+    Q2_Model_Edge(x2, y, model->z1, x1, y, model->z1);
+  }
+  else
+  {
+    s[0] = 1;  // PLANE_Z
+    t[1] = 1;
+
+    texture = model->z_face.getStr("tex", "missing");
+
+    double z = (face==5) ? model->z1 : model->z2;
+    double x1 = flipped  ? model->x2 : model->x1;
+    double x2 = flipped  ? model->x1 : model->x2;
+
+    Q2_Model_Edge(x1, model->y1, z, x1, model->y2, z);
+    Q2_Model_Edge(x1, model->y2, z, x2, model->y2, z);
+    Q2_Model_Edge(x2, model->y2, z, x2, model->y1, z);
+    Q2_Model_Edge(x2, model->y1, z, x1, model->y1, z);
+  }
+
+
+  // texture and lighting
+
+  raw_face.texinfo = Q2_AddTexInfo(texture, 0, 0, s, t);
+
+  raw_face.styles[0] = 0;
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
+
+  raw_face.lightofs = 72*17*17;  // FIXME
+
+
+  DoWriteFace(raw_face);
+}
+
+
+static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
+{
+  int face_base = q2_total_faces;
+  int leaf_base = q2_total_leafs;
+
+  model->nodes[0] = q2_total_nodes;
+
+  for (int face = 0 ; face < 6 ; face++)
+  {
+    dnode2_t raw_node;
+    dleaf2_t raw_leaf;
+
+    memset(&raw_leaf, 0, sizeof(raw_leaf));
+
+    double v;
+    double dir;
+
+    bool flipped;
+
+    if (face < 2)  // PLANE_X
+    {
+      v = (face==0) ? model->x1 : model->x2;
+      dir = (face==0) ? -1 : 1;
+      raw_node.planenum = BSP_AddPlane(v,0,0, dir,0,0, &flipped);
+    }
+    else if (face < 4)  // PLANE_Y
+    {
+      v = (face==2) ? model->y1 : model->y2;
+      dir = (face==2) ? -1 : 1;
+      raw_node.planenum = BSP_AddPlane(0,v,0, 0,dir,0, &flipped);
+    }
+    else  // PLANE_Z
+    {
+      v = (face==5) ? model->z1 : model->z2;
+      dir = (face==5) ? -1 : 1;
+      raw_node.planenum = BSP_AddPlane(0,0,v, 0,0,dir, &flipped);
+    }
+
+    raw_node.children[0] = -(leaf_base + face + 2);
+    raw_node.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
+
+    if (flipped)
+    {
+      std::swap(raw_node.children[0], raw_node.children[1]);
+    }
+
+    raw_node.firstface = face_base + face;
+    raw_node.numfaces  = 1;
+
+    for (int b = 0 ; b < 3 ; b++)
+    {
+      raw_leaf.mins[b] = raw_node.mins[b] = mins[b];
+      raw_leaf.maxs[b] = raw_node.maxs[b] = maxs[b];
+    }
+
+    raw_leaf.contents = 0;  // EMPTY
+
+    raw_leaf.first_leafface = q2_total_mark_surfs;
+    raw_leaf.num_leaffaces  = 1;
+
+    // FIXME raw_leaf.first_leafbrush = XXX
+    // FIXME raw_leaf.num_leafbrush   = XXX
+
+    Q2_Model_Face(model, face, raw_node.planenum, flipped);
+
+    Q2_WriteMarkSurf(q2_total_mark_surfs);
+
+    DoWriteNode(raw_node);
+    DoWriteLeaf(raw_leaf);
+  }
+}
+
+
+static void Q2_WriteModel(quake_mapmodel_c *model)
+{
+  dmodel2_t raw_model;
+
+  memset(&raw_model, 0, sizeof(raw_model));
+
+  raw_model.mins[0] = LE_Float32(model->x1 - MODEL_PADDING);
+  raw_model.mins[1] = LE_Float32(model->y1 - MODEL_PADDING);
+  raw_model.mins[2] = LE_Float32(model->z1 - MODEL_PADDING);
+
+  raw_model.maxs[0] = LE_Float32(model->x2 + MODEL_PADDING);
+  raw_model.maxs[1] = LE_Float32(model->y2 + MODEL_PADDING);
+  raw_model.maxs[2] = LE_Float32(model->z2 + MODEL_PADDING);
+
+  // raw_model.origin stays zero
+
+  raw_model.headnode  = LE_S32(model->nodes[0]);
+
+  raw_model.firstface = LE_S32(model->firstface);
+  raw_model.numfaces  = LE_S32(model->numfaces);
+
+  q2_models->Append(&raw_model, sizeof(raw_model));
 }
 
 
 static void Q2_WriteModels()
 {
-  // FIXME
+  // create the world model
+  qk_world_model = new quake_mapmodel_c();
+
+  qk_world_model->firstface = 0;
+  qk_world_model->numfaces  = q2_total_faces;
+  qk_world_model->numleafs  = q2_total_leafs;
+
+  // bounds of map
+  qk_world_model->x1 = qk_bsp_root->bbox.mins[0];
+  qk_world_model->y1 = qk_bsp_root->bbox.mins[1];
+  qk_world_model->y1 = qk_bsp_root->bbox.mins[2];
+
+  qk_world_model->x2 = qk_bsp_root->bbox.maxs[0];
+  qk_world_model->y2 = qk_bsp_root->bbox.maxs[1];
+  qk_world_model->y2 = qk_bsp_root->bbox.maxs[2];
+
+  Q2_WriteModel(qk_world_model);
+
+  // handle the sub-models (doors etc)
+
+  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
+  {
+    quake_mapmodel_c *model = qk_all_mapmodels[i];
+
+    model->firstface = q2_total_faces;
+    model->numfaces  = 6;
+    model->numleafs  = 6;
+
+    float mins[3], maxs[3];
+
+    mins[0] = model->x1;
+    mins[1] = model->y1;
+    mins[2] = model->z1;
+
+    maxs[0] = model->x2;
+    maxs[1] = model->y2;
+    maxs[2] = model->z2;
+
+    Q2_Model_Nodes(model, mins, maxs);
+
+    Q2_WriteModel(model);
+  }
 }
 
 
@@ -391,7 +663,6 @@ static void Q2_CreateBSPFile(const char *name)
 
   Q2_WriteBSP();
 
-  Q2_ClipModels();
   Q2_WriteModels();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
