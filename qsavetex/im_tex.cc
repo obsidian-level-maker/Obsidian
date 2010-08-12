@@ -120,6 +120,9 @@ static void ExtractMipTex(read_func_F read_func)
 //  DebugPrintf("    mip %2d/%d name:%s size:%dx%d\n",
 //              i+1, num_miptex, mip.name, mip.width, mip.height);
 
+    if (mip.offsets[0] == 0)
+      continue;
+
     // already seen it?
     if (tex_db.find((const char *)mip.name) != tex_db.end())
       continue;
