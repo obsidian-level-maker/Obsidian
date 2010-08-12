@@ -694,6 +694,8 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
 static int TestBrushSide(const csg_brush_c *B, const quake_side_c *part) 
 {
   // FIXME !!!!
+
+  return 0;
 }
 
 

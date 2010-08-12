@@ -443,15 +443,15 @@ static void Q2_WriteFace(quake_face_c *face)
 
   // lighting and texture...
 
-  raw_face.styles[0] = 0;
-  raw_face.styles[1] = 0xFF;
-  raw_face.styles[2] = 0xFF;
-  raw_face.styles[3] = 0xFF;
-
   raw_face.lightofs = -1;
 
   if (face->lmap)
     raw_face.lightofs = face->lmap->CalcOffset();
+
+  raw_face.styles[0] = (raw_face.lightofs < 0) ? 0xFF : 0;
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
 
 
   const char *texture = face->texture.c_str();
@@ -512,7 +512,7 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-  raw_leaf.contents = leaf->contents;
+  raw_leaf.contents = (leaf->contents == -1) ? 0 : CONTENTS_SOLID;
 
   raw_leaf.cluster = -1;  // no visibility info
   raw_leaf.area    =  0;
@@ -877,6 +877,8 @@ static void Q2_WriteModel(quake_mapmodel_c *model)
 
 static void Q2_WriteModels()
 {
+  q2_models = BSP_NewLump(LUMP_MODELS);
+
   // create the world model
   qk_world_model = new quake_mapmodel_c();
 

@@ -690,15 +690,15 @@ static void Q1_WriteFace(quake_face_c *face)
 
   // lighting and texture...
 
-  raw_face.styles[0] = 0;
-  raw_face.styles[1] = 0xFF;
-  raw_face.styles[2] = 0xFF;
-  raw_face.styles[3] = 0xFF;
-
   raw_face.lightofs = -1;
 
   if (face->lmap)
     raw_face.lightofs = face->lmap->CalcOffset();
+
+  raw_face.styles[0] = (raw_face.lightofs < 0) ? 0xFF : 0;
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
 
 
   const char *texture = face->texture.c_str();
