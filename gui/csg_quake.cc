@@ -43,12 +43,8 @@
 
 #define FACE_MAX_SIZE  240
 
-#define LIGHT_INDOOR   64
-#define LIGHT_OUTDOOR  100
 
-
-extern void Q1_CreateSubModels(qLump_c *L, int first_face, int first_leaf);
-
+static int csg_game;  // 1 = Quake, 2 = Quake II
 
 
 #if 0
@@ -512,8 +508,10 @@ class quake_group_c
 public:
   std::vector<quake_side_c *> sides;
 
+  std::vector<csg_brush_c *> brushes;
+
 public:
-  quake_group_c() : sides()
+  quake_group_c() : sides(), brushes()
   { }
 
   ~quake_group_c()
@@ -522,6 +520,11 @@ public:
   void AddSide(quake_side_c *S)
   {
     sides.push_back(S);
+  }
+
+  void AddBrush(csg_brush_c *B)
+  {
+    brushes.push_back(B);
   }
 
   bool IsEmpty() const
@@ -575,6 +578,12 @@ void quake_plane_c::Normalize()
 void quake_leaf_c::AddFace(quake_face_c *F)
 {
   faces.push_back(F);
+}
+
+
+void quake_leaf_c::AddSolid(csg_brush_c *B)
+{
+  solids.push_back(B);
 }
 
 
@@ -641,6 +650,26 @@ fprintf(stderr, "\n");
 }
 
 
+static void CreateBrushes(quake_group_c & group)
+{
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    for (unsigned int k = 0 ; k < R->brushes.size() ; k++)
+    {
+      csg_brush_c *B = R->brushes[k];
+
+      if (B->bkind == BKIND_Solid || B->bkind == BKIND_Clip ||
+          B->bkind == BKIND_Sky)
+      {
+        group.AddBrush(R->brushes[k]);
+      }
+    }
+  }
+}
+
+
 static void CreateMiniSides(std::vector<intersect_t> & cut_list,
                             quake_node_c *node,
                             const quake_side_c *part,
@@ -659,6 +688,12 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
     front.AddSide(F);
      back.AddSide(B);
   }
+}
+
+
+static int TestBrushSide(const csg_brush_c *B, const quake_side_c *part) 
+{
+  // FIXME !!!!
 }
 
 
@@ -690,8 +725,10 @@ static void Split_XY(quake_group_c & group,
   std::vector<intersect_t> cut_list;
 
   std::vector<quake_side_c *> local_sides;
+  std::vector<csg_brush_c  *> local_brushes;
 
-  local_sides.swap(group.sides);
+  local_sides.  swap(group.sides);
+  local_brushes.swap(group.brushes);
 
   for (unsigned int k = 0 ; k < local_sides.size() ; k++)
   {
@@ -773,6 +810,16 @@ static void Split_XY(quake_group_c & group,
      back.AddSide((a > 0) ? T : S);
 
     AddIntersection(cut_list, P_Along(part, T, 0), a_side);
+  }
+
+  for (unsigned int n = 0 ; n < local_brushes.size() ; n++)
+  {
+    csg_brush_c *B = local_brushes[n];
+
+    int side = TestBrushSide(B, part);
+
+    if (side <= 0)  back.AddBrush(B);
+    if (side >= 0) front.AddBrush(B);
   }
 
   MergeIntersections(cut_list);
@@ -1022,7 +1069,7 @@ static void CreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
   // split faces if too tall
   int pieces = 1;
 
-  while ((z2 - z1) / pieces > 239.9)
+  while ((z2 - z1) / pieces > (FACE_MAX_SIZE-0.1))
     pieces++;
 
   if (pieces > 1)
@@ -1081,6 +1128,36 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 }
 
 
+static quake_leaf_c * Solid_Leaf(quake_group_c & group)
+{
+  // Quake 1 and related games simply have a single solid leaf
+  if (csg_game == 1)
+    return qk_solid_leaf;
+
+  // optimisation -- VALID ???
+  if (group.brushes.empty())
+    return qk_solid_leaf;
+
+  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
+
+  leaf->bbox.Begin();
+
+  for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
+  {
+    csg_brush_c *B = group.brushes[i];
+
+    leaf->AddSolid(B);
+
+    // FIXME: compute bbox based on brushes
+    // leaf->AddSolidToBBOX(B);
+  }
+
+  leaf->bbox.End();
+
+  return leaf;
+}
+
+
 static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
                                  quake_bbox_c & bbox,
@@ -1115,7 +1192,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   F_node->front_N = C_node;
 
   C_node->back_L = leaf;
-  F_node->back_L = qk_solid_leaf;
+  F_node->back_L = qk_solid_leaf;  // FIXME !!!! Quake II
 
   return F_node;
 }
@@ -1135,7 +1212,7 @@ static quake_node_c * Partition_Z(quake_group_c & group)
   CollectWinding(group, winding, bbox);
 
   quake_node_c *cur_node = NULL;
-  quake_leaf_c *cur_leaf = qk_solid_leaf;
+  quake_leaf_c *cur_leaf = qk_solid_leaf;  // FIXME !!!! Quake II
 
   for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
@@ -1178,7 +1255,7 @@ static quake_node_c * Partition_Group(quake_group_c & group)
     new_node->front_N = Partition_Group(front);
 
     if (back.sides.empty())
-      new_node->back_L = qk_solid_leaf;
+      new_node->back_L = Solid_Leaf(back);
     else
       new_node->back_N = Partition_Group(back);
 
@@ -1350,6 +1427,9 @@ static void Quake_BSP()
 
   CreateSides(GROUP);
 
+  if (csg_game == 2)
+    CreateBrushes(GROUP);
+
   qk_bsp_root = Partition_Group(GROUP);
 
   SYS_ASSERT(qk_bsp_root);
@@ -1365,8 +1445,10 @@ static void Quake_BSP()
 }
 
 
-void CSG_QUAKE_Build()
+void CSG_QUAKE_Build(int game)
 {
+  csg_game = game;
+
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 

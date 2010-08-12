@@ -140,15 +140,20 @@ public:
 
   int index;
 
+  // for Quake II solid leafs
+  std::vector<csg_brush_c *> solids;
+
 public:
   quake_leaf_c(int _cont) : contents(_cont), faces(),
-                            cluster(-1), index(-1)
+                            cluster(-1), index(-1), solids()
   { }
 
   ~quake_leaf_c()
   { }
 
   void AddFace(quake_face_c *F);
+
+  void AddSolid(csg_brush_c *B);
 };
 
 
@@ -221,7 +226,7 @@ extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 /***** FUNCTIONS ****************/
 
-void CSG_QUAKE_Build();
+void CSG_QUAKE_Build(int game);
 
 #endif /* __OBLIGE_CSG_QUAKE_H__ */
 
