@@ -296,6 +296,7 @@ static void Q2_DummyArea(void)
   area.first_portal = LE_U32(0);
 
   lump->Append(&area, sizeof(area));
+  lump->Append(&area, sizeof(area));
 }
 
 
@@ -536,9 +537,16 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 
   raw_leaf.contents = (leaf->contents == -1) ? 0 : CONTENTS_SOLID;
 
-  raw_leaf.cluster = -1;  // no visibility info
-  raw_leaf.area    =  0;
-
+  if (raw_leaf.contents == CONTENTS_SOLID)
+  {
+    raw_leaf.cluster = -1;
+    raw_leaf.area    =  0;
+  }
+  else
+  {
+    raw_leaf.cluster = 0;
+    raw_leaf.area    = 1;
+  }
 
   // create the 'mark surfs'
   raw_leaf.first_leafface = q2_total_mark_surfs;

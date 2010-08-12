@@ -1206,6 +1206,8 @@ static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
 
   quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
 
+  // TODO: add _all_ solid brushes in floor/ceiling
+
   leaf->AddSolid(is_ceil ? gap->top : gap->bottom);
 
   leaf->BBoxFromSolids();
