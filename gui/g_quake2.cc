@@ -394,12 +394,287 @@ static void Q2_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 }
 
 
-static void Q2_WriteBSP()
+static inline void DoWriteFace(dface2_t & raw_face)
 {
-  // FIXME: Q2_WriteBSP
+  // fix endianness
+  raw_face.planenum  = LE_S16(raw_face.planenum);
+  raw_face.side      = LE_S16(raw_face.side);
+  raw_face.firstedge = LE_S32(raw_face.firstedge);
+  raw_face.numedges  = LE_S16(raw_face.numedges);
+  raw_face.texinfo   = LE_S16(raw_face.texinfo);
+  raw_face.lightofs  = LE_S32(raw_face.lightofs);
+
+  q2_faces->Append(&raw_face, sizeof(raw_face));
+
+  q2_total_faces += 1;
 }
 
 
+static void Q2_WriteFace(quake_face_c *face)
+{
+  SYS_ASSERT(face->node);
+  SYS_ASSERT(face->node_side >= 0);
+
+  face->index = q2_total_faces;
+
+
+  dface2_t raw_face;
+
+  memset(&raw_face, 0, sizeof(raw_face));
+
+
+  bool flipped;
+
+  raw_face.planenum = BSP_AddPlane(&face->node->plane, &flipped);
+
+  raw_face.side = face->node_side ^ (flipped ? 1 : 0);
+
+
+  unsigned int total_v = face->verts.size();
+
+  raw_face.firstedge = q2_total_surf_edges;
+  raw_face.numedges  = total_v;
+
+  for (unsigned int i = 0 ; i < total_v ; i++)
+  {
+    Q2_WriteEdge(face->verts[i], face->verts[(i+1) % total_v]);
+  }
+
+
+  // lighting and texture...
+
+  raw_face.styles[0] = 0;
+  raw_face.styles[1] = 0xFF;
+  raw_face.styles[2] = 0xFF;
+  raw_face.styles[3] = 0xFF;
+
+  raw_face.lightofs = -1;
+
+  if (face->lmap)
+    raw_face.lightofs = face->lmap->CalcOffset();
+
+
+  const char *texture = face->texture.c_str();
+
+  int flags = 0; //!!!! FIXME  CalcTextureFlag(texture);
+
+  raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, face->s, face->t);
+
+
+  DoWriteFace(raw_face);
+}
+
+
+static void Q2_WriteMarkSurf(int index)
+{
+  SYS_ASSERT(index >= 0);
+
+  // fix endianness
+  u16_t raw_index = LE_U16(index);
+
+  q2_mark_surfs->Append(&raw_index, sizeof(raw_index));
+
+  q2_total_mark_surfs += 1;
+}
+
+
+static void DoWriteLeaf(dleaf2_t & raw_leaf)
+{
+  // fix endianness
+  raw_leaf.contents = LE_S32(raw_leaf.contents);
+  raw_leaf.cluster  = LE_S16(raw_leaf.cluster);
+  raw_leaf.area     = LE_S16(raw_leaf.area);
+
+  raw_leaf.first_leafface  = LE_U16(raw_leaf.first_leafface);
+  raw_leaf.first_leafbrush = LE_U16(raw_leaf.first_leafbrush);
+  raw_leaf.num_leaffaces   = LE_U16(raw_leaf.num_leaffaces);
+  raw_leaf.num_leafbrushes = LE_U16(raw_leaf.num_leafbrushes);
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_leaf.mins[b] = LE_S16(raw_leaf.mins[b] - LEAF_PADDING);
+    raw_leaf.maxs[b] = LE_S16(raw_leaf.maxs[b] + LEAF_PADDING);
+  }
+
+  q2_leafs->Append(&raw_leaf, sizeof(raw_leaf));
+
+  q2_total_leafs += 1;
+}
+
+
+static void Q2_WriteLeaf(quake_leaf_c *leaf)
+{
+  if (leaf == qk_solid_leaf)
+    return;
+
+
+  dleaf2_t raw_leaf;
+
+  memset(&raw_leaf, 0, sizeof(raw_leaf));
+
+  raw_leaf.contents = leaf->contents;
+
+  raw_leaf.cluster = -1;  // no visibility info
+  raw_leaf.area    =  0;
+
+
+  // create the 'mark surfs'
+  raw_leaf.first_leafface = q2_total_mark_surfs;
+  raw_leaf.num_leaffaces  = 0;
+
+  for (unsigned int i = 0 ; i < leaf->faces.size() ; i++)
+  {
+    Q2_WriteMarkSurf(leaf->faces[i]->index);
+
+    raw_leaf.num_leaffaces += 1;
+  }
+
+  // FIXME !!!!
+  raw_leaf.first_leafbrush = 0;
+  raw_leaf.num_leafbrushes = 0;
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_leaf.mins[b] = I_ROUND(leaf->bbox.mins[b]);
+    raw_leaf.maxs[b] = I_ROUND(leaf->bbox.maxs[b]);
+  }
+
+  DoWriteLeaf(raw_leaf);
+}
+
+
+static void Q2_WriteSolidLeaf(void)
+{
+  dleaf2_t raw_leaf;
+
+  memset(&raw_leaf, 0, sizeof(raw_leaf));
+
+  raw_leaf.contents = LE_S32(CONTENTS_SOLID);
+
+  q2_leafs->Append(&raw_leaf, sizeof(raw_leaf));
+}
+
+
+static void DoWriteNode(dnode2_t & raw_node)
+{
+  // fix endianness
+  raw_node.planenum    = LE_S32(raw_node.planenum);
+  raw_node.children[0] = LE_S32(raw_node.children[0]);
+  raw_node.children[1] = LE_S32(raw_node.children[1]);
+  raw_node.firstface   = LE_U16(raw_node.firstface);
+  raw_node.numfaces    = LE_U16(raw_node.numfaces);
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_node.mins[b] = LE_S16(raw_node.mins[b] - NODE_PADDING);
+    raw_node.maxs[b] = LE_S16(raw_node.maxs[b] + NODE_PADDING);
+  }
+
+  q2_nodes->Append(&raw_node, sizeof(raw_node));
+
+  q2_total_nodes += 1;
+}
+
+
+static void Q2_WriteNode(quake_node_c *node)
+{
+  dnode2_t raw_node;
+
+  bool flipped;
+
+  raw_node.planenum = BSP_AddPlane(&node->plane, &flipped);
+
+  
+  if (node->front_N)
+    raw_node.children[0] = node->front_N->index;
+  else
+    raw_node.children[0] = node->front_L->index;
+
+  if (node->back_N)
+    raw_node.children[1] = node->back_N->index;
+  else
+    raw_node.children[1] = node->back_L->index;
+
+  if (flipped)
+  {
+    std::swap(raw_node.children[0], raw_node.children[1]);
+  }
+
+
+  raw_node.firstface = q2_total_faces;
+  raw_node.numfaces  = node->faces.size();
+
+  if (raw_node.numfaces > 0)
+  {
+    for (unsigned int k = 0 ; k < node->faces.size() ; k++)
+    {
+      Q2_WriteFace(node->faces[k]);
+    }
+  }
+
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    raw_node.mins[b] = I_ROUND(node->bbox.mins[b]);
+    raw_node.maxs[b] = I_ROUND(node->bbox.maxs[b]);
+  }
+
+
+  DoWriteNode(raw_node);
+
+
+  // recurse now, AFTER adding the current node
+
+  if (node->front_N)
+    Q2_WriteNode(node->front_N);
+  else
+    Q2_WriteLeaf(node->front_L);
+
+  if (node->back_N)
+    Q2_WriteNode(node->back_N);
+  else
+    Q2_WriteLeaf(node->back_L);
+}
+
+
+static void Q2_WriteBSP()
+{
+  q2_total_nodes = 0;
+  q2_total_leafs = 0;  // not including the solid leaf
+  q2_total_faces = 0;
+
+  q2_total_mark_surfs = 0;
+  q2_total_surf_edges = 0;
+
+  q2_nodes = BSP_NewLump(LUMP_NODES);
+  q2_leafs = BSP_NewLump(LUMP_LEAFS);
+  q2_faces = BSP_NewLump(LUMP_FACES);
+
+  q2_mark_surfs = BSP_NewLump(LUMP_LEAFFACES);
+  q2_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
+
+
+  Q2_WriteSolidLeaf();
+
+  Q2_WriteNode(qk_bsp_root);  
+
+
+  if (q2_total_faces >= MAX_MAP_FACES)
+    Main_FatalError("Quake2 build failure: exceeded limit of %d FACES\n",
+                    MAX_MAP_FACES);
+
+  if (q2_total_leafs >= MAX_MAP_LEAFS)
+    Main_FatalError("Quake2 build failure: exceeded limit of %d LEAFS\n",
+                    MAX_MAP_LEAFS);
+
+  if (q2_total_nodes >= MAX_MAP_NODES)
+    Main_FatalError("Quake2 build failure: exceeded limit of %d NODES\n",
+                    MAX_MAP_NODES);
+}
+
+
+//------------------------------------------------------------------------
+//   MAP MODEL STUFF
 //------------------------------------------------------------------------
 
 static void Q2_Model_Edge(float x1, float y1, float z1,
@@ -555,11 +830,15 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
     raw_leaf.contents = 0;  // EMPTY
 
+    raw_leaf.cluster = -1;
+    raw_leaf.area    = 0;
+
     raw_leaf.first_leafface = q2_total_mark_surfs;
     raw_leaf.num_leaffaces  = 1;
 
-    // FIXME raw_leaf.first_leafbrush = XXX
-    // FIXME raw_leaf.num_leafbrush   = XXX
+    // FIXME
+    raw_leaf.first_leafbrush = 0;
+    raw_leaf.num_leafbrushes = 0;
 
     Q2_Model_Face(model, face, raw_node.planenum, flipped);
 
