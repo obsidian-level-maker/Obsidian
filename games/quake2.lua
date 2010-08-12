@@ -118,6 +118,7 @@ QUAKE2.PARAMETERS =
 
   seed_limit = 42,
 
+  use_spawnflags = true,
   entity_delta_z = 24,
 
   -- the name buffer in Quake II is huge, but this value

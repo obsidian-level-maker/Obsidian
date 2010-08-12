@@ -111,6 +111,7 @@ QUAKE1.PARAMETERS =
   -- Quake engine needs all coords to lie between -4000 and +4000.
   seed_limit = 42,
 
+  use_spawnflags = true,
   entity_delta_z = 24,
 
   -- the name buffer in Quake can fit 39 characters, however

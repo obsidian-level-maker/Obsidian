@@ -1488,7 +1488,7 @@ function Monsters.fill_room(R)
   end
 
   local function place_monster(spot)
-    local angle  = monster_angle(spot.S)
+    local angle  = spot.angle or monster_angle(spot.S)
     local ambush = rand.sel(92, 1, 0)
 
     local mon  = spot.monster
@@ -1509,13 +1509,13 @@ function Monsters.fill_room(R)
 
     local props = { }
 
-    if OB_CONFIG.game == "halflife" then
-      props.angles = string.format("0 %d 0", spot.angle or angle)
+    if PARAM.pyr_angles then
+      props.angles = string.format("0 %d 0", angle)
     else
-      props.angle = spot.angle or angle
+      props.angle = angle
     end
 
-    if GAME.format == "quake" then
+    if PARAM.use_spawnflags then
       props.spawnflags = 0
 
       if spot.ambush or ambush then
