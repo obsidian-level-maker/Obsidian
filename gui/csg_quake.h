@@ -154,6 +154,8 @@ public:
   void AddFace(quake_face_c *F);
 
   void AddSolid(csg_brush_c *B);
+
+  void BBoxFromSolids();
 };
 
 

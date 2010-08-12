@@ -1150,6 +1150,30 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 }
 
 
+void quake_leaf_c::BBoxFromSolids()
+{
+  bbox.Begin();
+
+  for (unsigned int i = 0 ; i < solids.size() ; i++)
+  {
+    csg_brush_c *B = solids[i];
+
+    bbox.Add_Z(B->t.z);
+    bbox.Add_Z(B->b.z);
+
+    for (unsigned int k = 0 ; k < B->verts.size() ; k++)
+    {
+      brush_vert_c * V = B->verts[k];
+
+      bbox.Add_X(V->x);
+      bbox.Add_Y(V->y);
+    }
+  }
+
+  bbox.End();
+}
+
+
 static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 {
   // Quake 1 and related games simply have a single solid leaf
@@ -1162,19 +1186,29 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 
   quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
 
-  leaf->bbox.Begin();
-
   for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
   {
     csg_brush_c *B = group.brushes[i];
 
     leaf->AddSolid(B);
-
-    // FIXME: compute bbox based on brushes
-    // leaf->AddSolidToBBOX(B);
   }
 
-  leaf->bbox.End();
+  leaf->BBoxFromSolids();
+
+  return leaf;
+}
+
+
+static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
+{
+  if (csg_game == 1)
+    return qk_solid_leaf;
+
+  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
+
+  leaf->AddSolid(is_ceil ? gap->top : gap->bottom);
+
+  leaf->BBoxFromSolids();
 
   return leaf;
 }
@@ -1214,7 +1248,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   F_node->front_N = C_node;
 
   C_node->back_L = leaf;
-  F_node->back_L = qk_solid_leaf;  // FIXME !!!! Quake II
+  F_node->back_L = Solid_Leaf(G, 0);
 
   return F_node;
 }
@@ -1234,7 +1268,7 @@ static quake_node_c * Partition_Z(quake_group_c & group)
   CollectWinding(group, winding, bbox);
 
   quake_node_c *cur_node = NULL;
-  quake_leaf_c *cur_leaf = qk_solid_leaf;  // FIXME !!!! Quake II
+  quake_leaf_c *cur_leaf = Solid_Leaf(R->gaps.back(), 1);
 
   for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
