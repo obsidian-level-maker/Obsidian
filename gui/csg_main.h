@@ -157,6 +157,7 @@ typedef enum
 {
   // internal flags
   BRU_IF_Quad    = (1 << 16),  // brush is a four-sided box
+  BRU_IF_Seen    = (1 << 17),  // already seen (Quake II)
 }
 brush_flags_e;
 

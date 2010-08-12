@@ -357,7 +357,8 @@ const byte oblige_pop[256] =
 //------------------------------------------------------------------------
 
 static qLump_c *q2_surf_edges;
-static qLump_c *q2_mark_surfs;
+static qLump_c *q2_mark_surfs;  // LUMP_LEAFFACES
+static qLump_c *q2_leaf_brushes;
 
 static qLump_c *q2_faces;
 static qLump_c *q2_leafs;
@@ -367,6 +368,7 @@ static qLump_c *q2_models;
 
 static int q2_total_surf_edges;
 static int q2_total_mark_surfs;
+static int q2_total_leaf_brushes;
 
 static int q2_total_faces;
 static int q2_total_leafs;
@@ -391,6 +393,19 @@ static void Q2_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
   q2_surf_edges->Append(&index, sizeof(index));
 
   q2_total_surf_edges += 1;
+}
+
+
+static void Q2_WriteLeafBrush(csg_brush_c *B)
+{
+  u16_t index = Q2_AddBrush(B);
+
+  // fix endianness
+  index = LE_U16(index);
+
+  q2_leaf_brushes->Append(&index, sizeof(index));
+
+  q2_total_leafs += 1;
 }
 
 
@@ -529,9 +544,15 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
     raw_leaf.num_leaffaces += 1;
   }
 
-  // FIXME !!!!
-  raw_leaf.first_leafbrush = 0;
+  raw_leaf.first_leafbrush = q2_total_leaf_brushes;
   raw_leaf.num_leafbrushes = 0;
+
+  for (unsigned int k = 0 ; k < leaf->solids.size() ; k++)
+  {
+    Q2_WriteLeafBrush(leaf->solids[k]);
+
+    raw_leaf.num_leafbrushes += 1;
+  }
 
   for (int b = 0 ; b < 3 ; b++)
   {
@@ -643,15 +664,17 @@ static void Q2_WriteBSP()
   q2_total_leafs = 0;  // not including the solid leaf
   q2_total_faces = 0;
 
-  q2_total_mark_surfs = 0;
   q2_total_surf_edges = 0;
+  q2_total_mark_surfs = 0;
+  q2_total_leaf_brushes = 0;
 
   q2_nodes = BSP_NewLump(LUMP_NODES);
   q2_leafs = BSP_NewLump(LUMP_LEAFS);
   q2_faces = BSP_NewLump(LUMP_FACES);
 
-  q2_mark_surfs = BSP_NewLump(LUMP_LEAFFACES);
-  q2_surf_edges = BSP_NewLump(LUMP_SURFEDGES);
+  q2_surf_edges   = BSP_NewLump(LUMP_SURFEDGES);
+  q2_mark_surfs   = BSP_NewLump(LUMP_LEAFFACES);
+  q2_leaf_brushes = BSP_NewLump(LUMP_LEAFBRUSHES);
 
 
   Q2_WriteSolidLeaf();

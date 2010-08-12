@@ -660,10 +660,15 @@ static void CreateBrushes(quake_group_c & group)
     {
       csg_brush_c *B = R->brushes[k];
 
+      if (B->bflags & BRU_IF_Seen)
+        continue;
+
       if (B->bkind == BKIND_Solid || B->bkind == BKIND_Clip ||
           B->bkind == BKIND_Sky)
       {
         group.AddBrush(R->brushes[k]);
+
+        B->bflags |= BRU_IF_Seen;
       }
     }
   }
