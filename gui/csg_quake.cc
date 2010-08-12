@@ -696,11 +696,26 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
 }
 
 
-static int TestBrushSide(const csg_brush_c *B, const quake_side_c *part) 
+static int Brush_TestSide(const csg_brush_c *B, const quake_side_c *part) 
 {
-  // FIXME !!!!
+  bool on_front = false;
+  bool on_back  = false;
 
-  return 0;
+  for (unsigned int i = 0 ; i < B->verts.size() ; i++)
+  {
+    brush_vert_c * V = B->verts[i];
+
+    double d = PerpDist(V->x,V->y, part->x1,part->y1, part->x2,part->y2);
+
+    if (d >  Q_EPSILON) on_front = true;
+    if (d < -Q_EPSILON) on_back  = true;
+
+    // early out
+    if (on_front && on_back)
+      return 0;
+  }
+
+  return on_back ? -1 : +1;
 }
 
 
@@ -823,7 +838,7 @@ static void Split_XY(quake_group_c & group,
   {
     csg_brush_c *B = local_brushes[n];
 
-    int side = TestBrushSide(B, part);
+    int side = Brush_TestSide(B, part);
 
     if (side <= 0)  back.AddBrush(B);
     if (side >= 0) front.AddBrush(B);
