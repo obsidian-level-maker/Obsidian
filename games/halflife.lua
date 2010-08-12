@@ -34,7 +34,6 @@ HALFLIFE.ENTITIES =
   -- enemies
   grunt    = { id="monster_alien_grunt", kind="monster", r=32, h=80, },
   slave    = { id="monster_alien_slave", kind="monster", r=32, h=80, },
-  barney   = { id="monster_barney",      kind="monster", r=32, h=80, },
   garg     = { id="monster_gargantua",   kind="monster", r=32, h=80, },
 
   baby     = { id="monster_babycrab",    kind="monster", r=32, h=80, },
@@ -49,6 +48,9 @@ HALFLIFE.ENTITIES =
 
   -- bosses
 
+  -- NPCs
+  barney    = { id="monster_barney",     kind="other", r=32, h=80, },
+  scientist = { id="monster_scientist",  kind="other", r=32, h=80, },
 
   -- pickups
 
@@ -219,12 +221,6 @@ HALFLIFE.MONSTERS =
   {
     prob=80,
     health=30, damage=14, attack="hitscan",
-  },
-
-  barney =
-  {
-    prob=40,
-    health=80, damage=18, attack="missile",
   },
 
   garg =
