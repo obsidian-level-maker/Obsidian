@@ -688,14 +688,7 @@ static void Q1_WriteFace(quake_face_c *face)
   }
 
 
-  // texture and lighitng...
-
-  const char *texture = face->texture.c_str();
-
-  int flags = CalcTextureFlag(texture);
-
-  raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
-
+  // lighting and texture...
 
   raw_face.styles[0] = 0;
   raw_face.styles[1] = 0xFF;
@@ -707,8 +700,16 @@ static void Q1_WriteFace(quake_face_c *face)
   if (face->lmap)
     raw_face.lightofs = face->lmap->CalcOffset();
 
+
+  const char *texture = face->texture.c_str();
+
+  int flags = CalcTextureFlag(texture);
+
   if (raw_face.lightofs < 0)
-    raw_face.flags |= TEX_SPECIAL;
+    flags |= TEX_SPECIAL;
+
+  raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
+
 
   DoWriteFace(raw_face);
 }
@@ -1229,7 +1230,7 @@ static void Q1_CreateBSPFile(const char *name)
   ClearMipTex();
   ClearTexInfo();
 
-  CSG_QUAKE_Build();
+  CSG_QUAKE_Build(1);
 
   Q1_Lighting();
 
