@@ -1987,6 +1987,7 @@ function QUAKE2.setup()
   -- nothing needed
 end
 
+
 function QUAKE2.get_levels()
   local EP_NUM  = sel(OB_CONFIG.length == "full", 4, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
@@ -2016,6 +2017,7 @@ function QUAKE2.get_levels()
   end -- for episode
 end
 
+
 function QUAKE2.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
@@ -2027,7 +2029,7 @@ end
 
 ----------------------------------------------------------------
 
-UNFINISHED["quake2"] =
+OB_GAMES["quake2"] =
 {
   label = "Quake 2",
 

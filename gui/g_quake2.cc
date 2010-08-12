@@ -39,6 +39,7 @@
 
 
 static char *level_name;
+static char *description;
 
 
 // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
@@ -66,52 +67,7 @@ static void Q2_GetExtents(double min_s, double min_t,
 }
 
 
-
-void Q2_CreateEntities(void)
-{
-  qLump_c *lump = BSP_NewLump(LUMP_ENTITIES);
-
-  /* add the worldspawn entity */
-
-  lump->Printf("{\n");
-
-  lump->KeyPair("_generated_by", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
-  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
-
-  lump->KeyPair("message",   "level created by Oblige");
-  lump->KeyPair("worldtype", "0");
-//lump->KeyPair("origin",    "0 0 0");
-  lump->KeyPair("classname", "worldspawn");
-
-  lump->Printf("}\n");
-
-  // add everything else
-
-  for (unsigned int j = 0; j < all_entities.size(); j++)
-  {
-    entity_info_c *E = all_entities[j];
-
-    lump->Printf("{\n");
-
-    // TODO: other models (doors etc) --> "model" "*45"
-
-    // FIXME: other entity properties
-
-    lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
-    lump->KeyPair("classname", E->name.c_str());
-
-    lump->Printf("}\n");
-  }
-
-  // add a trailing nul
-  u8_t zero = 0;
-
-  lump->Append(&zero, 1);
-}
-
-
 //------------------------------------------------------------------------
-
 
 static std::vector<dbrush_t> q2_brushes;
 static std::vector<dbrushside_t> q2_brush_sides;
@@ -119,7 +75,7 @@ static std::vector<dbrushside_t> q2_brush_sides;
 static std::map<const csg_brush_c *, u16_t> brush_map;
 
 
-static void ClearBrushes()
+static void Q2_ClearBrushes()
 {
   q2_brushes.clear();
   q2_brush_sides.clear();
@@ -127,7 +83,8 @@ static void ClearBrushes()
   brush_map.clear();
 }
 
-u16_t Q2_AddBrush(const csg_brush_c *A)
+
+static u16_t Q2_AddBrush(const csg_brush_c *A)
 {
   // find existing brush
   if (brush_map.find(A) != brush_map.end())
@@ -145,14 +102,14 @@ u16_t Q2_AddBrush(const csg_brush_c *A)
 
 
   // top
-  side.planenum = BSP_AddPlane(0, 0, A->z2,  0, 0, +1);
+  side.planenum = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
   
 
   // bottom
-  side.planenum = BSP_AddPlane(0, 0, A->z1,  0, 0, -1);
+  side.planenum = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
   
   q2_brush_sides.push_back(side);
   brush.numsides++;
@@ -181,7 +138,8 @@ fprintf(stderr, "BRUSH %d ---> SIDES %d\n", index, brush.numsides);
   return (u16_t) index;
 }
 
-static void WriteBrushes()
+
+static void Q2_WriteBrushes()
 {
   qLump_c *lump  = BSP_NewLump(LUMP_BRUSHES);
 
@@ -203,7 +161,7 @@ static std::vector<texinfo2_t> q2_texinfos;
 static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
 
 
-static void ClearTexInfo(void)
+static void Q2_ClearTexInfo(void)
 {
   q2_texinfos.clear();
 
@@ -213,6 +171,7 @@ static void ClearTexInfo(void)
     texinfo_hashtab[h] = NULL;
   }
 }
+
 
 static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
 {
@@ -233,6 +192,7 @@ static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
 
   return true; // yay!
 }
+
 
 u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
                     double *s4, double *t4)
@@ -301,19 +261,18 @@ DebugPrintf("TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
   return tin_idx;
 }
 
-static void Q2_CreateTexInfo(void)
+
+static void Q2_WriteTexInfo(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
-  // FIXME: write separately, fix endianness as we go
- 
   lump->Append(&q2_texinfos[0], q2_texinfos.size() * sizeof(texinfo2_t));
 }
 
 
 //------------------------------------------------------------------------
 
-static void DummyArea(void)
+static void Q2_DummyArea(void)
 {
   /* TEMP DUMMY STUFF */
 
@@ -327,7 +286,8 @@ static void DummyArea(void)
   lump->Append(&area, sizeof(area));
 }
 
-static void DummyVis(void)
+
+static void Q2_DummyVis(void)
 {
   /* TEMP DUMMY STUFF */
 
@@ -350,6 +310,8 @@ static void DummyVis(void)
   lump->Append(&dummy_v, 1);
 }
 
+
+#if 0
 static void DummyLeafBrush(void)
 {
   qLump_c *lump = BSP_NewLump(LUMP_LEAFBRUSHES);
@@ -363,9 +325,8 @@ static void DummyLeafBrush(void)
 
   lump->Append(&brush, sizeof(brush));
 }
+#endif
 
-
-//------------------------------------------------------------------------
 
 const byte oblige_pop[256] =
 {
@@ -390,6 +351,63 @@ const byte oblige_pop[256] =
 
 //------------------------------------------------------------------------
 
+static void Q2_WriteBSP()
+{
+  // FIXME: Q2_WriteBSP
+}
+
+
+//------------------------------------------------------------------------
+
+static void Q2_ClipModels()
+{
+  // FIXME
+}
+
+
+static void Q2_WriteModels()
+{
+  // FIXME
+}
+
+
+//------------------------------------------------------------------------
+
+static void Q2_CreateBSPFile(const char *name)
+{
+  BSP_OpenLevel(name, 2);
+
+  Q2_ClearBrushes();
+  Q2_ClearTexInfo();
+
+  Q2_DummyArea();
+  Q2_DummyVis();
+
+  CSG_QUAKE_Build(2);
+
+  /// Q2_Lighting();
+
+  /// QCOM_Visibility();
+
+  Q2_WriteBSP();
+
+  Q2_ClipModels();
+  Q2_WriteModels();
+
+  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
+  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
+  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
+
+  Q2_WriteBrushes();
+  Q2_WriteTexInfo();
+
+  BSP_WriteEntities(LUMP_ENTITIES, description);
+
+  BSP_CloseLevel();
+}
+
+
+//------------------------------------------------------------------------
 
 class quake2_game_interface_c : public game_interface_c
 {
@@ -454,7 +472,8 @@ bool quake2_game_interface_c::Finish(bool build_ok)
 
 void quake2_game_interface_c::BeginLevel()
 {
-  // nothing needed
+  level_name  = NULL;
+  description = NULL;
 }
 
 
@@ -463,6 +482,10 @@ void quake2_game_interface_c::Property(const char *key, const char *value)
   if (StringCaseCmp(key, "level_name") == 0)
   {
     level_name = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "description") == 0)
+  {
+    description = StringDup(value);
   }
   else
   {
@@ -482,33 +505,12 @@ void quake2_game_interface_c::EndLevel()
   char entry_in_pak[64];
   sprintf(entry_in_pak, "maps/%s.bsp", level_name);
 
-  BSP_OpenLevel("maps/base1.bsp", 2);
+  Q2_CreateBSPFile(entry_in_pak);
 
-  ClearBrushes();
-  ClearTexInfo();
+  StringFree(level_name);
 
-  CSG_QUAKE_Build();
-
-  // this builds the bsp tree
-  Q2_CreateModel();
-
-  Q2_CreateTexInfo();
-  Q2_CreateEntities();
-
-  DummyArea();
-  DummyVis();
-  WriteBrushes();
-
-  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true);
-
-  BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
-  BSP_WriteVertices(LUMP_VERTEXES, MAX_MAP_VERTS );
-  BSP_WriteEdges   (LUMP_EDGES,    MAX_MAP_EDGES );
-
-  BSP_CloseLevel();
-
-  // FREE STUFF !!!!
-
+  if (description)
+    StringFree(description);
 }
 
 
