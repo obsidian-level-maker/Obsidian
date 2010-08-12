@@ -207,7 +207,7 @@ HEXEN2.SUB_THEMES =
     {
       -- FIXME
     },
-  }, -- LAB1
+  },
 }
 
 
