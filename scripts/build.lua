@@ -1515,7 +1515,7 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
     x_face={ tex="trigger" },
     z_face={ tex="trigger" },
   },
-  x1+12,y1+12, z_top, x2-12,y2-12, z_top+256)
+  x1+12,y1+12, z_top, x2-12,y2-12, z_top+224)
 
   gui.add_entity("trigger_changelevel", 0, 0, 0,
                  { map=next_map, model=assert(m_ref) })
