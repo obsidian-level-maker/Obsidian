@@ -638,7 +638,7 @@ private:
 
   void DoScroll()
   {
-    int mh = all_lines->h();
+    // int mh = all_lines->h();
 
     int old_offset = offset_y;
 

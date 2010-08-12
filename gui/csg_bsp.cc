@@ -1043,7 +1043,7 @@ static bool TestOverlap(std::vector<snag_c *> & list, int i, int k)
 
 static void ProcessOverlapList(std::vector<snag_c *> & overlap_list)
 {
-  partition_c *part = overlap_list[0]->on_node;
+  ///??  partition_c *part = overlap_list[0]->on_node;
 
 //  fprintf(stderr, "ProcessOverlapList: %u snags\n", overlap_list.size());
 
