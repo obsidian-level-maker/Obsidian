@@ -40,6 +40,20 @@
 #include "img_all.h"
 
 
+/*
+ *  Differences between HALF-LIFE and QUAKE
+ *  ---------------------------------------
+ *
+ *   1. third clipping hull for crouching
+ *   2. lighting is colored (3 bytes per luxel)
+ *   3. planes are paired (as per Quake II)
+ *   4. miptex lump can omit the image data
+ *   5. mip-textures have a palette appended (256 triples)
+ *   6. some special fields in the worldspawn entity
+ *
+ */
+
+
 #define LEAF_PADDING   4
 #define NODE_PADDING   16
 #define MODEL_PADDING  24.0
