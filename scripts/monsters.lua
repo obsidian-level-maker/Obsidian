@@ -658,7 +658,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   local function place_item(S, item_name, x, y, SK)
     local props
 
-    if GAME.format == "quake" then
+    if PARAM.use_spawnflags then
       props = {}
 
       if SK == "easy" then
