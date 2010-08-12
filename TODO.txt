@@ -3,71 +3,28 @@ TODO
 ====
 
 
-16x16 not 17x17
++  don't require a game to have 'step skins', 'logo skins' ETC
+
+
+-  CONTENTS_XXX work differently in Q1 than Q2 : unify
+
+-  dface2_t == dface_t, move into common ??
+
+-  replace 'equiv_id' usage with 'index'
+
+
+Create "error", "missing" and "o_carve" for Half-Life (w/ palette)
+
 
 Lua code to control usage of quake_tex.wd2 / hexen2_tex.wd2
-
-
-HEXEN II has __FIVE__ clipping hulls (space for 8) :
-
-   { 16, 24, 32 },
-   { 24, 20, 20 },
-   { 16, 12, 16 },
-   {  8,  8,  8 },
-   { 28, 40, 40 },
-
-
-HALF-LIFE FORMAT:
-
-/ 1. LIGHTING lump is colored (as per Quake II)
-
-/ 2. CLIPPING has a 3rd hull (for crouching)
-
-  3. MIPTEX lump __often__ no image data (mip offsets are all zero)
-     BUT it can contain image data :
-         directly after last mip: 1 0 <palette>
-
-/ 4. entities use a vector for "angles"
-
-/ 5. MAX_MAP_ENTSTRING and MAX_MAP_LIGHTING*2 are larger
-
-
-HALF-LIFE ENTITIES:
-  
-   info_player_start
-
-   monster_alien_grunt
-   monster_alien_slave
-   monster_headcrab
-   monster_barnacle
-
-   weapon_crowbar
-   weapon_shotgun     ammo_buckshot
-   weapon_9mmAR       ammo_9mmAR
-   weapon_9mmhandgun
-   weapon_handgrenade
-
-   item_healthkit
-
-
-SKIES: 2desert black city cliff desert dusk morning
-       neb1 neb2 neb6 neb7 night space
-       alien1 alien2 alien3 xeno8 xeno9 xeno10
 
 
 
 QUAKE: s[] and t[] must be 4 numbers : last is ADDITION
 
-Quake: ensure faces are not too tall (>= 240)
-
-Quake: lightmap offsets need to be a multiple of 4 ??
-
 Quake: check max size of lightmap : 16x16 or 17x17 ??
 
 Quake: proper XY partition choice, do seed boundary thang
-
-
-quake_exit_pad : 224 HIGH
 
 
 q1_clip : proper XY partition choice
@@ -81,8 +38,6 @@ visibility : can detect in C++ code if each seed side contains a portal
 
 
 !!  usage of plain EPSILON
-
-??  SimpleCoalesce : needed?
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify
@@ -113,16 +68,9 @@ Monsters:
 Quests:
 
 -  currently broken if no switches
-   --> have a lock limit, if over then mark branches as "dead_wood"
+   -  have a lock limit, if over then mark branches as "dead_wood"
+   -  keep track of number of "branches to go"
 
-
-CSG IDEA:
-  -  first divide brushes into seed size chunks (size is not critical).
-     then perform brush-to-brush subdivision (or 2D BSP) to create
-     the region map.
-     lastly merge regions which are the same.
-
-     AFTER all seed size chunks are done, do big merge on whole map.
 
 
 ??  when to decide WOTSIT, monster and pickup spots ??
@@ -292,20 +240,10 @@ BUG: corner supports are sometimes off the wall
 
 CSG CODE:
 
-!!  do a proper face-creation pass (merge_face_c list
-    in each merge_segment_c ?) and get proper brush
-    and area_vert references.
-
-    Hence remove the CSG2_FindXXX rubbish.
-
 !!  DOOM: fix y_offset values
     (when have y_offset and brush side is truncated/extended)
 
 -  CSG DOOM: support entity.light
 
 -  CSG DOOM: fix up extrafloor creation
-
-q1_nodes:
-  -  floor_leaf --> leaf
-  ?? move floor/ceiling faces into leaf.faces (instead of leaf.floor)
 

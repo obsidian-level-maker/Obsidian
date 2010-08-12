@@ -20,14 +20,14 @@ WISH-LIST
 +  Duke Nukem 3D
 +  Quake II
 
--  HacX
 -  Hexen II
+-  Half-Life
+
+-  HacX
 -  Chex Quest 1, 2, 3
 
 ?  Dark Forces
 ?  Strife
-?  Half-Life
-?  Doom64: Absolution
 
 
 ----------------------------------------------------------------
@@ -283,6 +283,24 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
+  DUKE NUKEM 3D
+----------------------------------------------------------------
+
+!  exit buttons
+
+!  Oblige logos: create 'TILES020.ART' lump
+
++  monsters
++  weapons
++  health and ammo
+
++  working doors
++  keys and switches
+
+-  fake 3D bridges (created via sprites)
+
+
+----------------------------------------------------------------
   QUAKE
 ----------------------------------------------------------------
 
@@ -330,43 +348,26 @@ Sam's suggestions:
 
 -  create oblige logos (.wal entries)
 
--  need to store wall brushes into a big list (qLeaf_c)
-   and "split" them with Split_XY (if purely on one side,
-   move to that side, otherwise keep in both sides).
 
-   when get to solid wall leaf, keep the ones that match
-   that wall (i.e. not completely in front of wall).
-
-?  use cluster=-1 for SOLID leafs
-
-+  merge Q#_CreateEntities into a common function
-
--  dface2_t == dface_t, move into common ??
+----------------------------------------------------------------
+  HEXEN II
+----------------------------------------------------------------
 
 
 ----------------------------------------------------------------
-  DUKE NUKEM 3D
+  HALF-LIFE
 ----------------------------------------------------------------
 
-!  exit buttons
-
-!  Oblige logos: create 'TILES020.ART' lump
-
-+  monsters
-+  weapons
-+  health and ammo
-
-+  working doors
-+  keys and switches
-
--  fake 3D bridges (created via sprites)
+-  Skies: 2desert black city cliff desert dusk morning
+          neb1 neb2 neb6 neb7 night space
+          alien1 alien2 alien3 xeno8 xeno9 xeno10
 
 
 ----------------------------------------------------------------
   WOLF 3D
 ----------------------------------------------------------------
 
--  get it working (tiler.lua)
+!  get it working (tiler.lua)
 
 +  push-walls for secret quests!
 +  secret elevators
@@ -641,10 +642,6 @@ Cycles:
 -  have a table listing a quantized HSV for each texture/flat
    and make aesthetic decisions using it.
 
-
->>>  a segment with same front and back ????
-
->>>  AssignBrushes: double checking using f/b_sides
 
 
 SKIN TABLE FIELDS
