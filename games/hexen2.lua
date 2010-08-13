@@ -216,7 +216,7 @@ HEXEN2.SUB_THEMES =
 
 HEXEN2.MONSTERS =
 {
-  archer1 =
+  archer =
   {
     prob=50,
     health=25, damage=5, attack="missile",
@@ -228,7 +228,7 @@ HEXEN2.MONSTERS =
     health=30, damage=14, attack="missile",
   },
 
-  mummy1 =
+  mummy =
   {
     prob=40,
     health=80, damage=18, attack="melee",
