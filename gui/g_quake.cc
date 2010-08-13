@@ -1317,6 +1317,22 @@ public:
   void BeginLevel();
   void EndLevel();
   void Property(const char *key, const char *value);
+
+private:
+  const char *StepsForGame(int sub)
+  {
+    switch (sub)
+    {
+      case SUBFMT_HalfLife:
+        return "CSG,BSP,Hull 1,Hull 2,Hull 3"; /* Light,Vis */
+
+      case SUBFMT_Hexen2:
+        return "CSG,BSP,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5"; /* Light,Vis */
+
+      default:
+        return "CSG,BSP,Hull 1,Hull 2"; /* Light,Vis */
+    }
+  }
 };
 
 
@@ -1344,7 +1360,7 @@ bool quake1_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "CSG,BSP,Hull 1,Hull 2" /*Light,Vis*/);
+    main_win->build_box->Prog_Init(0, StepsForGame(0));
 
   return true;
 }
@@ -1390,6 +1406,10 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
       qk_sub_format = SUBFMT_HalfLife;
     else
       LogPrintf("WARNING: QUAKE1: unknown sub_format '%s'\n", value);
+
+    // this assumes the sub_format is only set once at the start
+    if (main_win)
+      main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
   }
   else
   {
