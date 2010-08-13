@@ -22,15 +22,6 @@
 #define __OBLIGE_CSG_MAIN_H__
 
 
-// grid spacing for quantizing vertices  
-extern double QUANTIZE_GRID;
-
-// distance between two points to consider them equal.
-// the 1.98 provides a small overlap between two quantized vertices.
-#define EPSILON  (QUANTIZE_GRID / 1.98)
-
-#define ANGLE_EPSILON  0.0003
-
 // very high (low) value for uncapped brushes
 #define EXTREME_H  4000
 

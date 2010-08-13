@@ -35,6 +35,9 @@
 #include "ui_dialog.h"
 
 
+#define EPSILON  0.001
+
+
 std::vector<csg_brush_c *> all_brushes;
 
 std::vector<entity_info_c *> all_entities;
@@ -229,7 +232,7 @@ const char * csg_brush_c::Validate()
     if (fabs(v1->x - v2->x) >= EPSILON &&
         fabs(v1->y - v2->y) >= EPSILON)
     {
-      bflags &= ~BRU_IF_Quad;
+      bflags &= ~BRU_IF_Quad;  // not a quad
     } 
   }
 

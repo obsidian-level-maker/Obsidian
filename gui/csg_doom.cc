@@ -47,6 +47,8 @@ static int extrafloor_tag;
 static int extrafloor_slot;
 
 
+#define Z_EPSILON  0.01
+
 #define SEC_IS_SKY       (0x1 << 16)
 #define SEC_PRIMARY_LIT  (0x2 << 16)
 #define SEC_SHADOW       (0x4 << 16)
@@ -628,14 +630,14 @@ static void DM_MakeExtraFloor(doom_sector_c *sec,
   {
     csg_brush_c *A = R->brushes[j];
 
-    if (A->b.z > B->t_brush->b.z - EPSILON &&
-        A->t.z < T->b_brush->t.z + EPSILON)
+    if (A->b.z > B->t_brush->b.z - Z_EPSILON &&
+        A->t.z < T->b_brush->t.z + Z_EPSILON)
     {
       double h = A->t.z - A->b.z;
 
       // TODO: priorities
 
-//      if (MID && fabs(h - best_h) < EPSILON)
+//      if (MID && fabs(h - best_h) < Z_EPSILON)
 //      { /* same height, prioritise */ }
 
       if (h > best_h)
