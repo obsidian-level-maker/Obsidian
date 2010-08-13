@@ -308,12 +308,10 @@ static void Q1_WriteMipTex()
     return; /* NOT REACHED */
   }
 
-  const char *wad_filename = FileFindInPath(data_path, qk_texture_wad);
-
-  if (! WAD2_OpenRead(wad_filename))
+  if (! WAD2_OpenRead(qk_texture_wad))
   {
     // should not happen, Lua code has checked that the file exists
-    Main_FatalError("Missing wad file: %s\n", wad_filename);
+    Main_FatalError("Missing wad file: %s\n", qk_texture_wad);
     return; /* NOT REACHED */
   }
 
@@ -332,8 +330,6 @@ static void Q1_WriteMipTex()
   }
 
   WAD2_CloseRead();
-
-  StringFree(wad_filename);
 
   // create miptex directory
   // FIXME: endianness
