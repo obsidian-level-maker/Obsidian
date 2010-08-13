@@ -1230,7 +1230,7 @@ void Q1_ClippingHull(int hull)
 
   SYS_ASSERT(hull >= 1);
 
-  if (hull > clip_hulls+1)
+  if (hull > clip_hulls)
     return;
 
 
