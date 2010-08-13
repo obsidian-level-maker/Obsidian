@@ -445,7 +445,7 @@ public:
   { }
 
   quake_side_c(const quake_side_c *other) :
-      snag(other->snag), on_node(other->on_node),
+      snag(other->snag), on_node(other->on_node), node_side(other->node_side),
       x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
   { }
 
@@ -1124,6 +1124,8 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
     if (! S->snag)  // "mini sides" never have faces
       continue;
+
+    SYS_ASSERT(S->node_side >= 0);
 
     if (S->TwoSided())
     {
