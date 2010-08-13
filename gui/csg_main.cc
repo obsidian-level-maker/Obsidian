@@ -42,9 +42,6 @@ std::vector<csg_brush_c *> all_brushes;
 
 std::vector<entity_info_c *> all_entities;
 
-int bounds_x1, bounds_y1, bounds_z1;
-int bounds_x2, bounds_y2, bounds_z2;
-
 std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
@@ -274,74 +271,6 @@ entity_info_c::entity_info_c(const char *_name, double xpos, double ypos,
 
 entity_info_c::~entity_info_c()
 { }
-
-
-//------------------------------------------------------------------------
-
-void CSG2_UpdateBounds(bool three_d)
-{
-#if 0  // FIXME FIXME FIXME !!!!!!!!!1
-
-  double min_x, min_y, min_z;
-  double max_x, max_y, max_z;
-
-  min_x = min_y = min_z = +9e9;
-  max_x = max_y = max_z = -9e9;
-
-  if (! three_d)
-  {
-    min_z = -EXTREME_H;
-    max_z =  EXTREME_H;
-  }
-
-  for (unsigned int i = 0; i < mug_segments.size(); i++)
-  {
-    merge_segment_c *S = mug_segments[i];
-
-    // ignore lines "in the solid"
-    if (three_d && ! S->HasGap())
-      continue;
-
-    double x1 = MIN(S->start->x, S->end->x);
-    double y1 = MIN(S->start->y, S->end->y);
-
-    double x2 = MAX(S->start->x, S->end->x);
-    double y2 = MAX(S->start->y, S->end->y);
-
-    min_x = MIN(min_x, x1);
-    min_y = MIN(min_y, y1);
-
-    max_x = MAX(max_x, x2);
-    max_y = MAX(max_y, y2);
-
-    if (three_d && S->front && S->front->HasGap())
-    {
-      min_z = MIN(min_z, S->front->MinGapZ());
-      max_z = MAX(max_z, S->front->MaxGapZ());
-    }
-
-    if (three_d && S->back && S->back->HasGap())
-    {
-      min_z = MIN(min_z, S->back->MinGapZ());
-      max_z = MAX(max_z, S->back->MaxGapZ());
-    }
-  }
-
-//??  if (min_x > max_x)
-//??    Main_FatalError("CSG2_GetBounds: map is completely solid!\n");
-
-  // add some leeyway
-  bounds_x1 = (int)floor(min_x) - 32;
-  bounds_y1 = (int)floor(min_y) - 32;
-  bounds_z1 = (int)floor(min_z) - 64;
-
-  bounds_x2 = (int)ceil(max_x) + 32;
-  bounds_y2 = (int)ceil(max_y) + 32;
-  bounds_z2 = (int)ceil(max_z) + 64;
-
-#endif
-}
-
 
 
 //------------------------------------------------------------------------
@@ -717,8 +646,8 @@ int CSG2_add_entity(lua_State *L)
 
 #define MINI_MAP_SCALE  64.0
 
-static double mini_map_mid_x;
-static double mini_map_mid_y;
+static double mini_add_x;
+static double mini_add_y;
 
 
 static void AddMiniMapLine(region_c *R, snag_c *S)
@@ -728,11 +657,11 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
 
   region_c *N = S->partner ? S->partner->region : NULL;
 
-  int x1 = map_W/2 + I_ROUND(S->x1 - mini_map_mid_x) / MINI_MAP_SCALE;
-  int y1 = map_H/2 + I_ROUND(S->y1 - mini_map_mid_y) / MINI_MAP_SCALE;
+  int x1 = map_W/2 + I_ROUND(S->x1 + mini_add_x) / MINI_MAP_SCALE;
+  int y1 = map_H/2 + I_ROUND(S->y1 + mini_add_y) / MINI_MAP_SCALE;
 
-  int x2 = map_W/2 + I_ROUND(S->x2 - mini_map_mid_x) / MINI_MAP_SCALE;
-  int y2 = map_H/2 + I_ROUND(S->y2 - mini_map_mid_y) / MINI_MAP_SCALE;
+  int x2 = map_W/2 + I_ROUND(S->x2 + mini_add_x) / MINI_MAP_SCALE;
+  int y2 = map_H/2 + I_ROUND(S->y2 + mini_add_y) / MINI_MAP_SCALE;
 
   u8_t r = 255;
   u8_t g = 255;
@@ -776,8 +705,9 @@ void CSG_MakeMiniMap(void)
   if (! main_win)
     return;
 
-  mini_map_mid_x = (bounds_x1 + bounds_x2) / 2.0;
-  mini_map_mid_y = (bounds_y1 + bounds_y2) / 2.0;
+  // this assumes the map is centered around (0,0)
+  mini_add_x = 0;
+  mini_add_y = 0;
 
   main_win->build_box->mini_map->MapBegin();
 

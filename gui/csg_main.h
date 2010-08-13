@@ -213,9 +213,6 @@ extern std::vector<csg_brush_c *> all_brushes;
 
 extern std::vector<entity_info_c *> all_entities;
 
-extern int bounds_x1, bounds_y1, bounds_z1;
-extern int bounds_x2, bounds_y2, bounds_z2;
-
 extern std::string dummy_wall_tex;
 extern std::string dummy_plane_tex;
 
@@ -236,8 +233,6 @@ merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 #endif
 
 void CSG2_FreeMerges(void);
-
-void CSG2_UpdateBounds(bool three_d);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 

@@ -46,6 +46,8 @@ int liquid_exfloor;
 static int extrafloor_tag;
 static int extrafloor_slot;
 
+static int map_bound_y1;
+
 
 #define Z_EPSILON  0.01
 
@@ -1493,6 +1495,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   }
 
 
+  if (y1 < map_bound_y1) map_bound_y1 = y1;
+  if (y2 < map_bound_y1) map_bound_y1 = y2;
+
+
   doom_sector_c *front = dm_sectors[R->index];
   doom_sector_c *back  = NULL;
 
@@ -1806,8 +1812,8 @@ static void DM_WriteExtraFloor(doom_sector_c *sec, extrafloor_c *EF)
   extrafloor_slot++;
 
 
-  int x1 = bounds_x1 +       (extrafloor_slot % 32) * 64;
-  int y1 = bounds_y1 - 128 - (extrafloor_slot / 32) * 64;
+  int x1 =                (extrafloor_slot % 64) * 32;
+  int y2 = map_bound_y1 - (extrafloor_slot % 64) * 32;
 
   if (extrafloor_slot & 1024) x1 += 2200;
   if (extrafloor_slot & 2048) y1 -= 2200;
@@ -1983,6 +1989,8 @@ void CSG_DOOM_Write()
   extrafloor_tag  = 9000;
   extrafloor_slot = 0;
 
+  map_bound_y1 = 9999;
+
   DM_CreateSectors();
 
   DM_LightingFloodFill();
@@ -1995,6 +2003,8 @@ void CSG_DOOM_Write()
 
   DM_MergeColinearLines();
   DM_AlignTextures();
+
+  map_bound_y1 -= (map_bound_y1 & 7) + 8;
 
 ///  CreateeDummies();
 
