@@ -175,6 +175,25 @@ dplane_t;
 #define PLANE_ANYZ   5
 
 
+#define NUM_STYLES  4
+
+typedef struct
+{
+  s16_t planenum;
+  s16_t side;
+
+  s32_t firstedge;    // we must support > 64k edges
+  s16_t numedges;
+  s16_t texinfo;
+
+  // lighting info
+  u8_t  styles[NUM_STYLES];
+
+  s32_t lightofs;   // start of [numstyles*surfsize] samples
+}
+dface_t;
+
+
 #endif /* __OBLIGE_BSPOUT_H__ */
 
 //--- editor settings ---

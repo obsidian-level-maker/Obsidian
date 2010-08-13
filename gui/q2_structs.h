@@ -197,23 +197,7 @@ texinfo2_t;
 
 // AJA: dvertex_t and dedge_t moved to q_common.h
 
-
-#define MAXLIGHTMAPS  4
-
-typedef struct
-{
-  s16_t planenum;
-  s16_t side;
-
-  s32_t firstedge;    // we must support > 64k edges
-  s16_t numedges;
-  s16_t texinfo;
-
-  // lighting info
-  u8_t  styles[MAXLIGHTMAPS];
-  s32_t lightofs;   // start of [numstyles*surfsize] samples
-}
-dface2_t;
+// AJA: dface2_t also moved to q_common.h
 
 
 typedef struct

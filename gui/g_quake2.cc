@@ -417,7 +417,7 @@ static void Q2_WriteLeafBrush(csg_brush_c *B)
 }
 
 
-static inline void DoWriteFace(dface2_t & raw_face)
+static inline void DoWriteFace(dface_t & raw_face)
 {
   // fix endianness
   raw_face.planenum  = LE_S16(raw_face.planenum);
@@ -441,7 +441,7 @@ static void Q2_WriteFace(quake_face_c *face)
   face->index = q2_total_faces;
 
 
-  dface2_t raw_face;
+  dface_t raw_face;
 
   memset(&raw_face, 0, sizeof(raw_face));
 
@@ -727,7 +727,7 @@ static void Q2_Model_Edge(float x1, float y1, float z1,
 
 static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
 {
-  dface2_t raw_face;
+  dface_t raw_face;
 
   raw_face.planenum = plane;
   raw_face.side = flipped ? 1 : 0;
