@@ -74,9 +74,9 @@ public:
 
   std::string texture;
 
-  // texturing matrix
-  float s[3];
-  float t[3];
+  // texturing matrix (fourth value is offset)
+  float s[4];
+  float t[4];
 
   qLightmap_c *lmap;
 

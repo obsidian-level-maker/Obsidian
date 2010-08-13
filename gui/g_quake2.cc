@@ -735,8 +735,8 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   const char *texture = "error";
 
-  float s[3] = { 0.0, 0.0, 0.0 };
-  float t[3] = { 0.0, 0.0, 0.0 };
+  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
 
 
   // add the edges

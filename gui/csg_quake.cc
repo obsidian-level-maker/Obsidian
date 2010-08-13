@@ -975,8 +975,8 @@ void quake_face_c::CopyWinding(const std::vector<quake_vertex_c> winding,
 
 void quake_face_c::SetupMatrix(const quake_plane_c *plane)
 {
-  s[0] = s[1] = s[2] = 0;
-  t[0] = t[1] = t[2] = 0;
+  s[0] = s[1] = s[2] = s[3] = 0;
+  t[0] = t[1] = t[2] = t[3] = 0;
   
   if (fabs(plane->nx) > 0.5)
   {
@@ -1006,8 +1006,8 @@ void quake_face_c::ST_Bounds(double *min_s, double *min_t,
   {
     quake_vertex_c& V = verts[i];
 
-    double ss = s[0] * V.x + s[1] * V.y + s[2] * V.z;
-    double tt = t[0] * V.x + t[1] * V.y + t[2] * V.z;
+    double ss = s[0] * V.x + s[1] * V.y + s[2] * V.z + s[3];
+    double tt = t[0] * V.x + t[1] * V.y + t[2] * V.z + t[3];
 
     *min_s = MIN(*min_s, ss);  *max_s = MAX(*max_s, ss);
     *min_t = MIN(*min_t, tt);  *max_t = MAX(*max_t, tt);

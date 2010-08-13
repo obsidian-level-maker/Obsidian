@@ -420,7 +420,7 @@ static void ClearTexInfo(void)
 }
 
 
-u16_t Q1_AddTexInfo(const char *texture, int flags, float *s3, float *t3)
+u16_t Q1_AddTexInfo(const char *texture, int flags, float *s4, float *t4)
 {
   if (! texture[0])
     texture = "error";
@@ -430,14 +430,11 @@ u16_t Q1_AddTexInfo(const char *texture, int flags, float *s3, float *t3)
   // create texinfo structure, fix endianness
   texinfo_t raw_tex;
 
-  for (int k = 0 ; k < 3 ; k++)
+  for (int k = 0 ; k < 4 ; k++)
   {
-    raw_tex.s[k] = LE_Float32(s3[k]);
-    raw_tex.t[k] = LE_Float32(t3[k]);
+    raw_tex.s[k] = LE_Float32(s4[k]);
+    raw_tex.t[k] = LE_Float32(t4[k]);
   }
-
-  raw_tex.s[4] = LE_Float32(0);
-  raw_tex.t[4] = LE_Float32(0);
 
   raw_tex.miptex = LE_S32(miptex);
   raw_tex.flags  = LE_S32(flags);
@@ -1032,8 +1029,8 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   const char *texture = "error";
 
-  float s[3] = { 0.0, 0.0, 0.0 };
-  float t[3] = { 0.0, 0.0, 0.0 };
+  float s[4] = { 0.0, 0.0, 0.0, 0.0 };
+  float t[4] = { 0.0, 0.0, 0.0, 0.0 };
 
 
   // add the edges
