@@ -568,8 +568,6 @@ static void Q1_GetExtents(quake_face_c *F, int *ext_W, int *ext_H)
 
 static void Q1_CreateLightmaps()
 {
-return; //!!!!!
-
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
     quake_face_c *F = qk_all_faces[i];    
@@ -580,7 +578,7 @@ return; //!!!!!
 
     Q1_GetExtents(F, &ext_W, &ext_H);
     
-    fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
+/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
 
     F->lmap = BSP_NewLightmap(ext_W, ext_H, rand() & 127);
 
@@ -589,7 +587,7 @@ return; //!!!!!
 }
 
 
-static void Q1_Lighting()
+static void Q1_LightWorld()
 {
   Q1_CreateLightmaps();
 
@@ -1250,7 +1248,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build(1);
 
-  Q1_Lighting();
+  Q1_LightWorld();
 
   ///  QCOM_Visibility();
 

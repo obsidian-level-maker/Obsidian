@@ -620,7 +620,6 @@ quake_mapmodel_c::~quake_mapmodel_c()
 
 static void CreateSides(quake_group_c & group)
 {
-fprintf(stderr, "CREATE SIDES\n");
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -638,15 +637,15 @@ fprintf(stderr, "CREATE SIDES\n");
         continue;
 
       quake_side_c *S = new quake_side_c(snag);
+
+      group.AddSide(S);
+#if 0
 fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
         S, S->TwoSided() ? "2S" : "1S",
         S->x1, S->y1, S->x2, S->y2);
-
-      group.AddSide(S);
+#endif
     }
   }
-
-fprintf(stderr, "\n");
 }
 
 
