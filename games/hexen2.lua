@@ -389,7 +389,17 @@ HEXEN2.EPISODES =
 ----------------------------------------------------------------
 
 function HEXEN2.setup()
-  -- do stuff here
+  local tex_wad = "hexen2_tex.wd2"
+
+  local primary_tex_file = gui.locate_data(tex_wad)
+
+  if not primary_tex_file then
+    error("cannot find texture file: " .. tex_wad .. "\n\n" ..
+          "Please visit the OBLIGE website for full information on " ..
+          "how to setup Hexen II support.")
+  end
+
+  gui.q1_add_tex_wad(primary_tex_file)
 end
 
 

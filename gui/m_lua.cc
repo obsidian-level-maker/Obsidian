@@ -519,6 +519,7 @@ extern int DM_fsky_add_clouds(lua_State *L);
 extern int DM_fsky_add_hills(lua_State *L);
 
 extern int Q1_add_mapmodel(lua_State *L);
+extern int Q1_add_tex_wad(lua_State *L);
 
 
 static const luaL_Reg gui_script_funcs[] =
@@ -575,7 +576,8 @@ static const luaL_Reg gui_script_funcs[] =
   { "fsky_add_hills",   DM_fsky_add_hills },
 
   // Quake functions
-  { "q1_add_mapmodel",   Q1_add_mapmodel },
+  { "q1_add_mapmodel",  Q1_add_mapmodel },
+  { "q1_add_tex_wad",   Q1_add_tex_wad },
 
   { NULL, NULL } // the end
 };

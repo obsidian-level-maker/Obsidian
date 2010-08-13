@@ -1197,7 +1197,7 @@ function QUAKE1.setup()
           "how to setup Quake support.")
   end
 
-  -- gui.quake_add_wad(primary_tex_file)
+  gui.q1_add_tex_wad(primary_tex_file)
 end
 
 

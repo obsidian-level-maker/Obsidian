@@ -66,6 +66,7 @@ int qk_sub_format;
 
 static char *level_name;
 static char *description;
+static char *qk_texture_wad;
 
 quake_mapmodel_c *qk_world_model;
 
@@ -301,11 +302,18 @@ static void Q1_WriteMipTex()
     return;
   }
 
-  if (! WAD2_OpenRead("data/quake_tex.wd2"))
+  if (! qk_texture_wad)
   {
-    // FIXME: specified by a Lua function
-    //        (do a check there, point user to website if not present)
-    Main_FatalError("No such file: data/quake_tex.wd2");
+    Main_FatalError("Lua code failed to set the texture wad\n");
+    return; /* NOT REACHED */
+  }
+
+  const char *wad_filename = FileFindInPath(data_path, qk_texture_wad);
+
+  if (! WAD2_OpenRead(wad_filename))
+  {
+    // should not happen, Lua code has checked that the file exists
+    Main_FatalError("Missing wad file: %s\n", wad_filename);
     return; /* NOT REACHED */
   }
 
@@ -325,6 +333,8 @@ static void Q1_WriteMipTex()
 
   WAD2_CloseRead();
 
+  StringFree(wad_filename);
+
   // create miptex directory
   // FIXME: endianness
   lump->Prepend(offsets, 4 * num_miptex);
@@ -332,6 +342,7 @@ static void Q1_WriteMipTex()
 
   delete[] offsets;
 }
+
 
 #if 0  /* TEMP DUMMY STUFF */
 static void DummyMipTex(void)
@@ -1271,6 +1282,27 @@ static void Q1_CreateBSPFile(const char *name)
 
 //------------------------------------------------------------------------
 
+int Q1_add_tex_wad(lua_State *L)
+{
+  // LUA: q1_add_tex_wad(filename)
+  //
+  // Note: filename must be relative (no path)
+
+  const char *name = luaL_checkstring(L, 1);
+
+  // TODO: support more than one
+  
+  if (qk_texture_wad)
+    StringFree(qk_texture_wad);
+
+  qk_texture_wad = StringDup(name);
+
+  return 1;
+}
+
+
+//------------------------------------------------------------------------
+
 class quake1_game_interface_c : public game_interface_c
 {
 private:
@@ -1338,6 +1370,7 @@ void quake1_game_interface_c::BeginLevel()
 {
   level_name  = NULL;
   description = NULL;
+  qk_texture_wad = NULL;
 }
 
 
@@ -1386,6 +1419,9 @@ void quake1_game_interface_c::EndLevel()
 
   if (description)
     StringFree(description);
+
+  if (qk_texture_wad)
+    StringFree(qk_texture_wad);
 }
 
 
