@@ -316,6 +316,8 @@ Sam's suggestions:
 
 +  liquid areas
 
++  slopes!
+
 +  support the Boss maps (next map = "start")
      E2M6 : wood floor, funky bridge, kill vores to get rune
      E3M6 : castley, lavay, teleport-in fiend

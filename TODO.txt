@@ -6,6 +6,11 @@ TODO
 +  don't require a game to have 'step skins', 'logo skins' ETC
 
 
+!!  usage of plain EPSILON
+
+
+!! fix the "face->on_side >= 0" assertion
+
 -  CONTENTS_XXX work differently in Q1 than Q2 : unify
 
 -  dface2_t == dface_t, move into common ??
@@ -16,28 +21,17 @@ TODO
 Create "error", "missing" and "o_carve" for Half-Life (w/ palette)
 
 
-Lua code to control usage of quake_tex.wd2 / hexen2_tex.wd2
-
-
-
-QUAKE: s[] and t[] must be 4 numbers : last is ADDITION
-
 Quake: check max size of lightmap : 16x16 or 17x17 ??
 
 Quake: proper XY partition choice, do seed boundary thang
 
-
 q1_clip : proper XY partition choice
-
-          proper slope planes
 
 
 visibility : can detect in C++ code if each seed side contains a portal
              (two-sided snag or mini side).  Hence don't need Lua API to
              communicate that information.
 
-
-!!  usage of plain EPSILON
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify
