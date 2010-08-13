@@ -389,17 +389,7 @@ HEXEN2.EPISODES =
 ----------------------------------------------------------------
 
 function HEXEN2.setup()
-  local tex_wad = "hexen2_tex.wd2"
-
-  local primary_tex_file = gui.locate_data(tex_wad)
-
-  if not primary_tex_file then
-    error("cannot find texture file: " .. tex_wad .. "\n\n" ..
-          "Please visit the OBLIGE website for full information on " ..
-          "how to setup Hexen II support.")
-  end
-
-  gui.q1_add_tex_wad(primary_tex_file)
+  -- nothing needed
 end
 
 
@@ -434,6 +424,17 @@ end
 
 
 function HEXEN2.begin_level()
+  -- find the texture wad
+  local primary_tex_wad = gui.locate_data("hexen2_tex.wd2")
+
+  if not primary_tex_wad then
+    error("cannot find texture file: hexen2_tex.wd2\n\n" ..
+          "Please visit the OBLIGE website for full information on " ..
+          "how to setup Hexen 2 support.")
+  end
+
+  gui.q1_add_tex_wad(primary_tex_wad)
+
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
