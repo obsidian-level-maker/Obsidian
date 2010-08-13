@@ -187,13 +187,13 @@ bool snag_c::SameSides() const
 //------------------------------------------------------------------------
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
-                       liquid(NULL), equiv_id(-1), index(-1)
+                       liquid(NULL), index(-1)
 { }
 
 
 region_c::region_c(const region_c& other) :
     snags(), brushes(), entities(), gaps(),
-    liquid(NULL), equiv_id(-1), index(-1)
+    liquid(NULL), index(-1)
 {
   for (unsigned int i = 0 ; i < other.brushes.size() ; i++)
     brushes.push_back(other.brushes[i]);

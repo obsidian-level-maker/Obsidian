@@ -104,7 +104,7 @@ public:
     if (! snag->partner->region)
       return false;
 
-    if (snag->partner->region->equiv_id == 0)
+    if (snag->partner->region->index == 0)
       return false;
 
     return true;
@@ -234,29 +234,7 @@ public:
   {
     return sides.empty();
   }
-
-  region_c * IsSameRegion() const  /// FIXME REMOVE
-  {
-    if (sides.empty())
-      return NULL;
-
-    region_c *reg = sides[0]->snag->region;
-    SYS_ASSERT(reg);
-
-    for (unsigned int i = 1 ; i < sides.size() ; i++)
-    {
-      cpSide_c *S = sides[i];
-
-      SYS_ASSERT(S->snag->region);
-
-      if (S->snag->region->equiv_id != reg->equiv_id)
-        return NULL;  // nope
-    }
-
-    return reg; // yep
-  }
 };
-
 
 
 class cpNode_c
@@ -745,7 +723,7 @@ int diffs = 0;
   {
     region_c *R = all_regions[i];
 
-    if (R->equiv_id == 0)
+    if (R->index == 0)
       continue;
 
     for (unsigned int k = 0 ; k < R->snags.size() ; k++)
@@ -754,23 +732,23 @@ int diffs = 0;
 
       region_c *N = S->partner ? S->partner->region : NULL;
 
-      if (! N || N->equiv_id == 0)
+      if (! N || N->index == 0)
         continue;
 
       // use '>' so that we only check the relationship once
-      if (N->equiv_id > R->equiv_id && ClipSameGaps(R, N))
+      if (N->index > R->index && ClipSameGaps(R, N))
       {
-        N->equiv_id = R->equiv_id;
+        N->index = R->index;
         changes++;
       }
 
 if (N) {
-if (N->equiv_id == R->equiv_id) sames++; else diffs++; }
+if (N->index == R->index) sames++; else diffs++; }
 
     }
   }
 
-fprintf(stderr, "SpreadClipEquiv:  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
+// fprintf(stderr, "SpreadClipEquiv:  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
 
   return changes;
 }
@@ -783,9 +761,9 @@ static void CoalesceClipRegions()
     region_c *R = all_regions[i];
 
     if (R->gaps.empty())
-      R->equiv_id = 0;   // all solid regions become ZERO
+      R->index = 0;   // all solid regions become ZERO
     else
-      R->equiv_id = 1 + (int)i;
+      R->index = 1 + (int)i;
   }
 
   while (SpreadClipEquiv() > 0)
@@ -1042,23 +1020,7 @@ static cpNode_c * PartitionGroup(cpGroup_c & group)
   }
   else
   {
-
-fprintf(stderr, "\nGroup %p:\n", &group);
-
-for (unsigned int k = 0 ; k < group.sides.size() ; k++)
-{
-cpSide_c *S = group.sides[k];
-fprintf(stderr, "  side %p region.equiv_id %d (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-        S, S->snag->region->equiv_id,
-        S->x1, S->y1, S->x2, S->y2);
-}
-
-    // FIXME!!!!  don't need IsSameRegion() : just use first side's region
-
-    region_c *region = group.IsSameRegion();
-fprintf(stderr, "  --> region %p %d\n", region, region ? region->equiv_id : -1);
-
-//if (! region) return new cpNode_c(); //!!!!!!!!!!
+    region_c *region = group.sides[0]->snag->region;
 
     SYS_ASSERT(region);
 
@@ -1152,12 +1114,11 @@ static void WriteClipNodes(cpNode_c *node)
 
 static void CreateClipSides(cpGroup_c & group)
 {
-fprintf(stderr, "CREATE CLIP SIDES\n");
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
 
-    if (R->equiv_id == 0)
+    if (R->index == 0)
       continue;
 
     for (unsigned int k = 0 ; k < R->snags.size() ; k++)
@@ -1166,19 +1127,19 @@ fprintf(stderr, "CREATE CLIP SIDES\n");
 
       region_c *N = S->partner ? S->partner->region : NULL;
 
-      if (N && N->equiv_id == R->equiv_id)
+      if (N && N->index == R->index)
         continue;
 
       cpSide_c *CS = new cpSide_c(S);
+
+      group.AddSide(CS);
+#if 0
 fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
         CS, CS->TwoSided() ? "2S" : "1S",
         CS->x1, CS->y1, CS->x2, CS->y2);
-
-      group.AddSide(CS);
+#endif
     }
   }
-
-fprintf(stderr, "\n");
 }
 
 

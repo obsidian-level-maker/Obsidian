@@ -87,11 +87,7 @@ public:
 
   csg_brush_c *liquid;
 
-  // regions with same brushes will have same equiv_id
-  // (only valid AFTER CSG_SimpleCoalesce)
-  int equiv_id;
-
-  // used by DOOM (etc) conversion code
+  // used by DOOM and QUAKE Clipping (etc)
   int index;
 
 public:
