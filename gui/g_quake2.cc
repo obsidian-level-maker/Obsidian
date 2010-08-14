@@ -141,8 +141,6 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
 
   int index = (int)q2_brushes.size();
 
-fprintf(stderr, "BRUSH %d ---> SIDES %d\n", index, brush.numsides);
-
   q2_brushes.push_back(brush);
 
   brush_map[A] = (u16_t)index;
@@ -170,7 +168,7 @@ static void Q2_WriteBrushes()
 static std::vector<texinfo2_t> q2_texinfos;
 
 #define NUM_TEXINFO_HASH  64
-static std::vector<u16_t> * texinfo_hashtab[NUM_TEXINFO_HASH];
+static std::vector<int> * texinfo_hashtab[NUM_TEXINFO_HASH];
 
 
 static void Q2_ClearTexInfo(void)
@@ -185,97 +183,72 @@ static void Q2_ClearTexInfo(void)
 }
 
 
-static bool MatchTexInfo(const texinfo2_t *A, const texinfo2_t *B)
-{
-  if (strcmp(A->texture, B->texture) != 0)
-    return false;
-
-  if (A->flags != B->flags)
-    return false;
-
-  for (int k = 0; k < 4; k++)
-  {
-    if (fabs(A->s[k] - B->s[k]) > 0.01)
-      return false;
-
-    if (fabs(A->t[k] - B->t[k]) > 0.01)
-      return false;
-  }
-
-  return true; // yay!
-}
-
-
 u16_t Q2_AddTexInfo(const char *texture, int flags, int value,
                     float *s4, float *t4)
 {
-  // create texinfo structure
-  texinfo2_t tin;
+  if (! texture[0])
+    texture = "error";
 
-  for (int k = 0; k < 4; k++)
+  // create texinfo structure, fix endianness
+  texinfo2_t raw_tex;
+
+  memset(&raw_tex, 0, sizeof(raw_tex));
+
+  if (strlen(texture)+1 >= sizeof(raw_tex.texture))
+    Main_FatalError("Quake2 texture name too long: '%s'\n", texture);
+
+  strcpy(raw_tex.texture, texture);
+
+  for (int k = 0 ; k < 4 ; k++)
   {
-    tin.s[k] = s4[k];
-    tin.t[k] = t4[k];
+    raw_tex.s[k] = LE_Float32(s4[k]);
+    raw_tex.t[k] = LE_Float32(t4[k]);
   }
 
-  if (strlen(texture)+1 >= sizeof(tin.texture))
-    Main_FatalError("TEXTURE NAME TOO LONG: '%s'\n", texture);
+  raw_tex.flags = LE_S32(flags);
+  raw_tex.value = LE_S32(value);
 
-  strcpy(tin.texture, texture);
+  raw_tex.anim_next = LE_S32(0);  // TODO
 
-  tin.flags  = flags;
-  tin.value  = value;
-  tin.anim_next = -1;
 
-  // find an existing texinfo.
-  // For speed we use a hash-table.
-  int hash = (int)StringHash(texture);
-  hash = hash & (NUM_TEXINFO_HASH-1);
+  // find an existing texinfo in the hash table
+  int hash = (int)StringHash(texture) & (NUM_TEXINFO_HASH-1);
 
   SYS_ASSERT(hash >= 0);
 
   if (! texinfo_hashtab[hash])
-    texinfo_hashtab[hash] = new std::vector<u16_t>;
+    texinfo_hashtab[hash] = new std::vector<int>;
 
-  std::vector<u16_t> *hashtab = texinfo_hashtab[hash];
+  std::vector<int> * hashtab = texinfo_hashtab[hash];
 
-  for (unsigned int i = 0; i < hashtab->size(); i++)
+  for (unsigned int i = 0 ; i < hashtab->size() ; i++)
   {
-    u16_t tin_idx = (*hashtab)[i];
+    int index = (*hashtab)[i];
 
-    SYS_ASSERT(tin_idx < q2_texinfos.size());
+    SYS_ASSERT(index < (int)q2_texinfos.size());
 
-    if (MatchTexInfo(&tin, &q2_texinfos[tin_idx]))
-    {
-      return tin_idx;  // found it
-    }
+    if (memcmp(&raw_tex, &q2_texinfos[index], sizeof(raw_tex)) == 0)
+      return index;  // found it
   }
 
 
   // not found, so add new one
-  u16_t tin_idx = q2_texinfos.size();
+  u16_t new_index = q2_texinfos.size();
 
-DebugPrintf("TexInfo %d --> %d '%s' (%1.1f %1.1f %1.1f %1.1f) "
-        "(%1.1f %1.1f %1.1f %1.1f)\n",
-        tin_idx, flags, texture,
-        s4[0], s4[1], s4[2], s4[3],
-        t4[0], t4[1], t4[2], t4[3]);
+  q2_texinfos.push_back(raw_tex);
 
+  hashtab->push_back(new_index);
 
-  if (tin_idx >= MAX_MAP_TEXINFO)
-    Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
-                    MAX_MAP_TEXINFO);
-
-  q2_texinfos.push_back(tin);
-
-  hashtab->push_back(tin_idx);
-
-  return tin_idx;
+  return new_index;
 }
 
 
-static void Q2_WriteTexInfo(void)
+static void Q2_WriteTexInfo()
 {
+  if (q2_texinfos.size() >= MAX_MAP_TEXINFO)
+    Main_FatalError("Quake2 build failure: exceeded limit of %d TEXINFOS\n",
+                    MAX_MAP_TEXINFO);
+
   qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
   lump->Append(&q2_texinfos[0], q2_texinfos.size() * sizeof(texinfo2_t));

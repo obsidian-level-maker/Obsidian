@@ -488,8 +488,6 @@ static void Q1_WriteTexInfo(void)
 
   qLump_c *lump = BSP_NewLump(LUMP_TEXINFO);
 
-  // FIXME: write separately, fix endianness as we go
- 
   lump->Append(&q1_texinfos[0], q1_texinfos.size() * sizeof(texinfo_t));
 }
 
