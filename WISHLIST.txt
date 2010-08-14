@@ -348,6 +348,8 @@ Sam's suggestions:
   QUAKE II
 ----------------------------------------------------------------
 
+-  fix the sky
+
 -  create oblige logos (.wal entries)
 
 
@@ -359,6 +361,10 @@ Sam's suggestions:
 ----------------------------------------------------------------
   HALF-LIFE
 ----------------------------------------------------------------
+
+-  fix the sky
+
+-  create miptex: "error" "missing" "o_carve" (w/ palette)
 
 -  Skies: 2desert black city cliff desert dusk morning
           neb1 neb2 neb6 neb7 night space

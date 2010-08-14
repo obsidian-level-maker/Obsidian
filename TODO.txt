@@ -6,19 +6,12 @@ TODO
 +  don't require a game to have 'step skins', 'logo skins' ETC
 
 
-!!  usage of plain EPSILON
+-  QUAKE2: rework AddTexInfo() like Quake 1
 
-
-!! fix the "face->on_side >= 0" assertion
+-  rename CSG2 --> CSG
 
 -  CONTENTS_XXX work differently in Q1 than Q2 : unify
 
--  dface2_t == dface_t, move into common ??
-
--  replace 'equiv_id' usage with 'index'
-
-
-Create "error", "missing" and "o_carve" for Half-Life (w/ palette)
 
 
 Quake: check max size of lightmap : 16x16 or 17x17 ??
