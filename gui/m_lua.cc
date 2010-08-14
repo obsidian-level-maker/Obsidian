@@ -492,11 +492,11 @@ int gui_bit_not(lua_State *L)
 //------------------------------------------------------------------------
 
 
-extern int CSG2_begin_level(lua_State *L);
-extern int CSG2_end_level(lua_State *L);
-extern int CSG2_property(lua_State *L);
-extern int CSG2_add_brush(lua_State *L);
-extern int CSG2_add_entity(lua_State *L);
+extern int CSG_begin_level(lua_State *L);
+extern int CSG_end_level(lua_State *L);
+extern int CSG_property(lua_State *L);
+extern int CSG_add_brush(lua_State *L);
+extern int CSG_add_entity(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
 
@@ -546,12 +546,11 @@ static const luaL_Reg gui_script_funcs[] =
   { "random",      gui_random },
 
   // CSG functions
-  { "begin_level", CSG2_begin_level },
-  { "end_level",   CSG2_end_level   },
-  { "property",    CSG2_property    },
-
-  { "add_brush",   CSG2_add_brush  },
-  { "add_entity",  CSG2_add_entity },
+  { "begin_level", CSG_begin_level },
+  { "end_level",   CSG_end_level },
+  { "property",    CSG_property },
+  { "add_brush",   CSG_add_brush  },
+  { "add_entity",  CSG_add_entity },
 
   // Wolf-3D functions
   { "wolf_block",  WF_wolf_block },

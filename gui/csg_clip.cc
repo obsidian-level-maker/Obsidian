@@ -45,9 +45,6 @@ extern qLump_c *q1_clip;
 
 extern int q1_total_clip;
 
-extern void CSG2_Doom_TestBrushes(void);
-extern void CSG2_Doom_TestClip(void);
-
 
 static double hull_sizes[3][3] =
 {

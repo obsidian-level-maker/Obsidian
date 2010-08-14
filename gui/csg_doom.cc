@@ -510,7 +510,7 @@ void DM_FreeStuff(void)
 void DM_WriteDoom(void);  // forward
 
 
-void CSG2_Doom_TestBrushes(void)
+void Doom_TestBrushes(void)
 {
   // for debugging only: each csg_brush_c becomes a single
   // sector on the map.
@@ -553,7 +553,8 @@ void CSG2_Doom_TestBrushes(void)
   DM_EndWAD();
 }
 
-void CSG2_Doom_TestClip(void)
+
+void Doom_TestClip(void)
 {
   // for Quake1 debugging only....
 
@@ -565,6 +566,7 @@ void CSG2_Doom_TestClip(void)
   DM_EndLevel("MAP01");
   DM_EndWAD();
 }
+
 
 void DM_TestRegions(void)
 {
@@ -1279,9 +1281,9 @@ static doom_sidedef_c * DM_MakeSidedef(
   {
     double mz = (S->f_h + S->c_h) / 2.0;
 
-    brush_vert_c *m_vert = CSG2_FindSideVertex(G, mz, side == 1, true);
+    brush_vert_c *m_vert = CSG_FindSideVertex(G, mz, side == 1, true);
 
-    brush_vert_c *m_side = CSG2_FindSideFace(G, mz, side == 1, m_vert);
+    brush_vert_c *m_side = CSG_FindSideFace(G, mz, side == 1, m_vert);
 
     if (! m_side)
     {
@@ -1977,8 +1979,8 @@ void CSG_DOOM_Write()
   //    - mark vertices with all unused segs as unused
   // 4) profit!
 
-//CSG2_Doom_TestRegions();
-//return;
+/// Doom_TestRegions();
+/// return;
  
   DM_FreeStuff();
 

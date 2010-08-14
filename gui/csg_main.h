@@ -219,20 +219,15 @@ extern std::string dummy_plane_tex;
 
 /***** FUNCTIONS ****************/
 
-void CSG2_MergeAreas(bool do_clips = false);
-
 #if 0
-brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+brush_vert_c * CSG_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact = false);
-csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
+csg_brush_c * CSG_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact = false);
-brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+brush_vert_c * CSG_FindSideFace(merge_segment_c *G, double z, bool is_front,
                                  brush_vert_c *V = NULL);
-
-merge_region_c *CSG2_FindRegionForPoint(double x, double y);
 #endif
 
-void CSG2_FreeMerges(void);
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */
 

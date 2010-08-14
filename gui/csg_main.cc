@@ -46,8 +46,8 @@ std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
 
-static void CSG2_BeginLevel(void);
-static void CSG2_EndLevel(void);
+static void CSG_BeginLevel(void);
+static void CSG_EndLevel(void);
 
 
 
@@ -477,10 +477,10 @@ static int Grab_CoordList(lua_State *L, int stack_pos, csg_brush_c *B)
 
 // LUA: begin_level()
 //
-int CSG2_begin_level(lua_State *L)
+int CSG_begin_level(lua_State *L)
 {
   // call our own initialisation function first
-  CSG2_BeginLevel();
+  CSG_BeginLevel();
 
   SYS_ASSERT(game_object);
 
@@ -492,14 +492,14 @@ int CSG2_begin_level(lua_State *L)
 
 // LUA: end_level()
 //
-int CSG2_end_level(lua_State *L)
+int CSG_end_level(lua_State *L)
 {
   SYS_ASSERT(game_object);
 
   game_object->EndLevel();
 
   // call our own termination function afterwards
-  CSG2_EndLevel();
+  CSG_EndLevel();
 
   return 0;
 }
@@ -507,7 +507,7 @@ int CSG2_end_level(lua_State *L)
 
 // LUA: property(key, value)
 //
-int CSG2_property(lua_State *L)
+int CSG_property(lua_State *L)
 {
   const char *key   = luaL_checkstring(L,1);
   const char *value = luaL_checkstring(L,2);
@@ -567,7 +567,7 @@ int CSG2_property(lua_State *L)
 //    tag    : DOOM sector or linedef tag
 //    args   : DOOM sector or linedef args (a table)
 //
-int CSG2_add_brush(lua_State *L)
+int CSG_add_brush(lua_State *L)
 {
   csg_brush_c *B = new csg_brush_c();
 
@@ -619,7 +619,7 @@ int CSG2_add_brush(lua_State *L)
 //
 //   light : amount of light emitted
 //
-int CSG2_add_entity(lua_State *L)
+int CSG_add_entity(lua_State *L)
 {
   int nargs = lua_gettop(L);
 
@@ -737,7 +737,7 @@ void CSG_MakeMiniMap(void)
 //------------------------------------------------------------------------
 
 #if 0
-brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
+brush_vert_c * CSG_FindSideVertex(merge_segment_c *G, double z,
                                   bool is_front, bool exact)
 {
   brush_vert_c *best = NULL;
@@ -772,7 +772,7 @@ brush_vert_c * CSG2_FindSideVertex(merge_segment_c *G, double z,
   return exact ? NULL : best;
 }
 
-csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
+csg_brush_c * CSG_FindSideBrush(merge_segment_c *G, double z,
                                  bool is_front, bool exact)
 {
   merge_region_c *R = is_front ? G->front : G->back;
@@ -806,16 +806,16 @@ csg_brush_c * CSG2_FindSideBrush(merge_segment_c *G, double z,
   return exact ? NULL : best;
 }
 
-brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
+brush_vert_c * CSG_FindSideFace(merge_segment_c *G, double z, bool is_front,
                                  brush_vert_c *V)
 {
   if (! V)
-    V = CSG2_FindSideVertex(G, z, is_front, true);
+    V = CSG_FindSideVertex(G, z, is_front, true);
 
   if (V)
     return V;
 
-  csg_brush_c *B = CSG2_FindSideBrush(G, z, is_front);
+  csg_brush_c *B = CSG_FindSideBrush(G, z, is_front);
 
   // FIXME: OK ???
   if (B)
@@ -826,14 +826,8 @@ brush_vert_c * CSG2_FindSideFace(merge_segment_c *G, double z, bool is_front,
 #endif
 
 
-void CSG2_FreeMerges(void)
+void CSG_FreeAll(void)
 {
-}
-
-void CSG2_FreeAll(void)
-{
-  CSG2_FreeMerges();
-
   unsigned int k;
 
   for (k = 0; k < all_brushes.size(); k++)
@@ -850,14 +844,16 @@ void CSG2_FreeAll(void)
 }
 
 
-static void CSG2_BeginLevel(void)
+//------------------------------------------------------------------------
+
+static void CSG_BeginLevel(void)
 {
-  CSG2_FreeAll();
+  CSG_FreeAll();
 }
 
-static void CSG2_EndLevel(void)
+static void CSG_EndLevel(void)
 {
-  CSG2_FreeAll();
+  CSG_FreeAll();
 }
 
 

@@ -84,13 +84,13 @@ public:
   virtual void EndLevel() = 0;
   // called when all the brushes and entities have been added
   // but before the CSG2 performs a cleanup.  Typically the
-  // game-specific code will call CSG2_MergeAreas() and convert
+  // game-specific code will call CSG_BSP() and convert
   // the result to the game-specific level format.
 
   virtual void Property(const char *key, const char *value) = 0;
   // sets a certain property, especially "level_name" which is
   // required by most games (like DOOM and QUAKE).  Unknown
-  // properties are ignored.
+  // properties are ignored.  May be called during startup too.
 };
 
 
