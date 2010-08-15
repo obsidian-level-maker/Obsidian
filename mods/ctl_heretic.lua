@@ -49,9 +49,6 @@ function CTL_HERETIC.monster_setup(self)
     if M and opt.value ~= "default" then
       local prob = CTL_HERETIC.MON_PROBS[opt.value]
 
-      -- allow Spectres to be controlled individually
-      M.replaces = nil
-
       M.prob = prob
       M.crazy_prob = prob
 

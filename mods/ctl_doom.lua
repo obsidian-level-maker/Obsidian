@@ -150,7 +150,7 @@ function CTL_DOOM.weapon_setup(self)
 end
 
 
-OB_MODULES["doom_weap_control"] =
+OB_MODULES["doom_weapon_control"] =
 {
   label = "Doom Weapon Control",
 
