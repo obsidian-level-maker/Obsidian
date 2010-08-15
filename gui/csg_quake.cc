@@ -1185,7 +1185,7 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
   if (group.brushes.empty())
     return qk_solid_leaf;
 
-  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
+  quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
   for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
   {
@@ -1205,7 +1205,7 @@ static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
   if (csg_game == 1)
     return qk_solid_leaf;
 
-  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_SOLID);
+  quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
   // TODO: add _all_ solid brushes in floor/ceiling
 
@@ -1223,7 +1223,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
                                  quake_node_c * prev_N,
                                  quake_leaf_c * prev_L)
 {
-  quake_leaf_c *leaf = new quake_leaf_c(CONTENTS_EMPTY);
+  quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_AIR);
 
   CreateWallFaces(group, leaf, G);
 
@@ -1479,7 +1479,7 @@ static void AssignClusters(rNode_c *node)
 
 static void Quake_BSP()
 {
-  qk_solid_leaf = new quake_leaf_c(CONTENTS_SOLID);
+  qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
 
 
   quake_group_c GROUP;

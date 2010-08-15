@@ -622,6 +622,16 @@ qLump_c *q1_clip;
 int q1_total_clip;
 
 
+static int q1_medium_table[5] =
+{
+  CONTENTS_EMPTY,
+  CONTENTS_WATER,
+  CONTENTS_SLIME,
+  CONTENTS_WATER,
+  CONTENTS_SOLID
+};
+
+
 static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 {
   u16_t v1 = BSP_AddVertex(A.x, A.y, A.z);
@@ -765,6 +775,9 @@ static void DoWriteLeaf(dleaf_t & raw_leaf)
 
 static void Q1_WriteLeaf(quake_leaf_c *leaf)
 {
+  SYS_ASSERT(leaf->medium >= 0);
+  SYS_ASSERT(leaf->medium <= MEDIUM_SOLID);
+
   if (leaf == qk_solid_leaf)
     return;
 
@@ -773,7 +786,7 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
 
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-  raw_leaf.contents = leaf->contents;
+  raw_leaf.contents = q1_medium_table[leaf->medium];
   raw_leaf.visofs   = -1;  // no visibility info
 
 

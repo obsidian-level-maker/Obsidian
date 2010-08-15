@@ -27,6 +27,17 @@
 class quake_node_c;
 
 
+typedef enum
+{
+  MEDIUM_AIR = 0,
+  MEDIUM_WATER,
+  MEDIUM_SLIME,
+  MEDIUM_LAVA,
+  MEDIUM_SOLID,
+}
+quake_medium_e;
+
+
 class quake_vertex_c
 {
 public:
@@ -130,7 +141,7 @@ public:
 class quake_leaf_c
 {
 public:
-  int contents;
+  int medium;
 
   std::vector<quake_face_c *> faces;
 
@@ -144,8 +155,8 @@ public:
   std::vector<csg_brush_c *> solids;
 
 public:
-  quake_leaf_c(int _cont) : contents(_cont), faces(),
-                            cluster(-1), index(-1), solids()
+  quake_leaf_c(int _m) : medium(_m), faces(),
+                         cluster(-1), index(-1), solids()
   { }
 
   ~quake_leaf_c()

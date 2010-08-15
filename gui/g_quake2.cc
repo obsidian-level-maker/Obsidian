@@ -55,6 +55,16 @@ static char *description;
 //  }
 
 
+static int q2_medium_table[5] =
+{
+  0  /* EMPTY */,
+  CONTENTS_WATER,
+  CONTENTS_SLIME,
+  CONTENTS_WATER,
+  CONTENTS_SOLID
+};
+
+
 static void Q2_GetExtents(double min_s, double min_t,
                           double max_s, double max_t,
                           int *ext_W, int *ext_H)
@@ -500,6 +510,9 @@ static void DoWriteLeaf(dleaf2_t & raw_leaf)
 
 static void Q2_WriteLeaf(quake_leaf_c *leaf)
 {
+  SYS_ASSERT(leaf->medium >= 0);
+  SYS_ASSERT(leaf->medium <= MEDIUM_SOLID);
+
   if (leaf == qk_solid_leaf)
     return;
 
@@ -508,9 +521,9 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
 
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
-  raw_leaf.contents = (leaf->contents == -1) ? 0 : CONTENTS_SOLID;
+  raw_leaf.contents = q2_medium_table[leaf->medium];
 
-  if (raw_leaf.contents == CONTENTS_SOLID)
+  if (leaf->medium == MEDIUM_SOLID)
   {
     raw_leaf.cluster = -1;
     raw_leaf.area    =  0;
