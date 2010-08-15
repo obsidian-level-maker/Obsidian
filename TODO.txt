@@ -6,15 +6,9 @@ TODO
 +  don't require a game to have 'step skins', 'logo skins' ETC
 
 
--  QUAKE2: rework AddTexInfo() like Quake 1
+DONE: check max size of lightmap --> 17x17
+      (extent can == 256, hence smax == (extent>>4)+1 == 17)
 
--  rename CSG2 --> CSG
-
--  CONTENTS_XXX work differently in Q1 than Q2 : unify
-
-
-
-Quake: check max size of lightmap : 16x16 or 17x17 ??
 
 Quake: proper XY partition choice, do seed boundary thang
 
