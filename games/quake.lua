@@ -85,7 +85,7 @@ QUAKE1.ENTITIES =
   quad   = { id="item_artifact_super_damage",    kind="pickup", r=30, h=30, pass=true },
 
   -- scenery
-  explode_sm = { id="misc_explobox2", kind="scenery", r=30, h=80, },
+  barrel     = { id="misc_explobox",  kind="scenery", r=30, h=80, },
   explode_bg = { id="misc_explobox2", kind="scenery", r=30, h=40, },
 
   crucified  = { id="monster_zombie", spawnflags=1, kind="scenery", r=32, h=64, },
