@@ -1087,11 +1087,7 @@ function Rooms.border_up()
     v_space = v_space - 16
     -- FIXME: needs more v_space checking
 
-    if not THEME.logos then
-      error("Game is missing logo skins")
-    end
-
-    if rand.odds(sel(LEVEL.has_logo,7,40)) then
+    if THEME.logos and rand.odds(sel(LEVEL.has_logo,7,40)) then
       LEVEL.has_logo = true
       return rand.key_by_probs(THEME.logos)
     end
@@ -1119,8 +1115,7 @@ function Rooms.border_up()
       return rand.key_by_probs(pic_tab)
     end
 
-    -- fallback
-    return rand.key_by_probs(THEME.logos)
+    return nil  -- failed
   end
 
   local function install_pic(R, bd, pic_name, v_space)
@@ -1164,6 +1159,7 @@ function Rooms.border_up()
   local function decide_pictures(R, border_list)
     if R.outdoor or R.natural or R.kind ~= "normal" then return end
     if R.semi_outdoor then return end
+-- do return end --!!!!!!!!!1
 
     -- filter border list to remove symmetrical peers, seeds
     -- with pillars, etc..  Also determine vertical space.
@@ -1211,15 +1207,18 @@ function Rooms.border_up()
     -- select one or two pictures to use
     local pics = {}
     pics[1] = select_picture(R, v_space, 1)
-    pics[2] = pics[1]
+
+    if not pics[1] then return end
 
     if #border_list >= 12 then
       -- prefer a different pic for #2
       for loop = 1,3 do
         pics[2] = select_picture(R, v_space, 2)
-        if pics[2].pic_w ~= pics[1].pic_w then break; end
+        if pics[2] and pics[2].pic_w ~= pics[1].pic_w then break; end
       end
     end
+
+    if not pics[2] then pics[2] = pics[1] end
 
     gui.debugf("Selected pics: %s %s\n", pics[1], pics[2])
 
@@ -1306,6 +1305,7 @@ function Rooms.make_ceiling(R)
   end
 
   local function add_periph_pillars(side, offset)
+-- do return end --!!!!!!!!
     if not THEME.periph_pillar_mat then
       return
     end
