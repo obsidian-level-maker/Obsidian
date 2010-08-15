@@ -123,7 +123,7 @@ int csg_property_set_c::getInt(const char *key, int def_val)
 }
 
 
-void csg_property_set_c::getHexenArgs(const char *key, u8_t *arg5)
+void csg_property_set_c::getHexenArgs(u8_t *arg5)
 {
   arg5[0] = getInt("arg1");
   arg5[1] = getInt("arg2");

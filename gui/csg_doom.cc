@@ -1003,23 +1003,8 @@ static void DM_CoalesceSectors()
   while (DM_CoalescePass() > 0)
   { }
 
-  // remove the unused sectors
-
-#if 0
-  std::vector<doom_sector_c *> local_secs;
-
-  local_secs.swap(dm_sectors);
-
-  for (unsigned int i = 0 ; i < local_secs.size() ; i++)
-  {
-    doom_sector_c *S = local_secs[i];
-
-    if (S->isUnused())
-      delete S;
-    else
-      dm_sectors.push_back(S);
-  }
-#endif
+  // Note: we cannot remove & delete the unused sectors since the
+  // region_c::index fields would need to be updated as well.
 }
 
 
@@ -1564,7 +1549,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     L->type = spec->face.getInt("kind");
     L->tag  = spec->face.getInt("tag");
 
-    spec->face.getHexenArgs("args", L->args);
+    spec->face.getHexenArgs(L->args);
   }
 }
 
@@ -1886,79 +1871,78 @@ static void DM_WriteLinedefs(void)
 }
 
 
-static void CheckThingOption(const char *name, const char *value,
-                             int *options)
+static int ParseThingOptions(csg_property_set_c & props)
 {
-  bool enable = ! (value[0] == '0' || tolower(value[0]) == 'f');
+  int options = props.getInt("flags");
 
-  // skill flags default to 1, hence only need to clear them
-  if (StringCaseCmp(name, "skill_easy") == 0 && !enable)
-    *options &= ~MTF_Easy;
-  if (StringCaseCmp(name, "skill_medium") == 0 && !enable)
-    *options &= ~MTF_Medium;
-  if (StringCaseCmp(name, "skill_hard") == 0 && !enable)
-    *options &= ~MTF_Hard;
+  // TODO: perhaps this should be done by the Lua code...
 
-  // mode flags are negated (1 means "no")
-  if (StringCaseCmp(name, "mode_sp") == 0 && !enable)
-    *options |= ~MTF_NotSP;
-  if (StringCaseCmp(name, "mode_coop") == 0 && !enable)
-    *options |= ~MTF_NotCOOP;
-  if (StringCaseCmp(name, "mode_dm") == 0 && !enable)
-    *options |= ~MTF_NotDM;
+  // skill flags (they all default to 1)
+  if (props.getInt("skill_easy",   -1) != 0) options |= ~MTF_Easy;
+  if (props.getInt("skill_medium", -1) != 0) options |= ~MTF_Medium;
+  if (props.getInt("skill_hard",   -1) != 0) options |= ~MTF_Hard;
+
+  // mode flags
+  if (props.getInt("mode_sp",   -1) == 0) options |= MTF_NotSP;
+  if (props.getInt("mode_coop", -1) == 0) options |= MTF_NotCOOP;
+  if (props.getInt("mode_dm",   -1) == 0) options |= MTF_NotDM;
 
   // other flags...
-  if (StringCaseCmp(name, "ambush") == 0 && enable)
-    *options |= MTF_Ambush;
-  
-  // TODO: HEXEN FLAGS
+  if (props.getInt("ambush") > 0) options |= MTF_Ambush;
+
+  return options;
+}
+
+
+static void DM_WriteThing(doom_sector_c *S, entity_info_c *E)
+{
+  int type = atoi(E->name.c_str());
+
+  if (type <= 0)
+  {
+    LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->name.c_str());
+    return;
+  }
+
+  int x = I_ROUND(E->x);
+  int y = I_ROUND(E->y);
+  int h = I_ROUND(E->z) - S->f_h;
+
+  if (h < 0) h = 0;
+
+  // parse entity properties
+  int angle   = E->props.getInt("angle");
+  int tid     = E->props.getInt("tid");
+  int special = E->props.getInt("special");
+
+  int options = ParseThingOptions(E->props);
+
+  byte args[5] = { 0,0,0,0,0 };
+
+  E->props.getHexenArgs(args);
+
+  DM_AddThing(x, y, h, type, angle, options, tid, special, args);
 }
 
 
 static void DM_WriteThings(void)
 {
-  // ??? first iterate over entity lists in merge_gaps
+  // iterate through regions so that we know which sector each thing
+  // is in, which in turn lets us determine height above the floor.
 
-  for (unsigned int j = 0; j < all_entities.size(); j++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
-    entity_info_c *E = all_entities[j];
+    region_c *R = all_regions[i];
 
-    int type = atoi(E->name.c_str());
-
-    if (type <= 0)
-    {
-      LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->name.c_str());
+    if (R->index < 0)
       continue;
-    }
 
-    double h = 0; // FIXME!!! proper height (above ground)
+    doom_sector_c *S = dm_sectors[R->index];
 
-
-    // parse entity properties
-    int angle   = 0;
-    int options = 7;
-    int tid     = 0;
-    int special = 0;
-
-    std::map<std::string, std::string>::iterator MI;
-    for (MI = E->props.begin(); MI != E->props.end(); MI++)
+    for (unsigned int k = 0 ; k < R->entities.size() ; k++)
     {
-      const char *name  = MI->first.c_str();
-      const char *value = MI->second.c_str();
-
-      if (StringCaseCmp(name, "angle") == 0)
-        angle = atoi(value);
-      else if (StringCaseCmp(name, "tid") == 0)
-        tid = atoi(value);
-      else if (StringCaseCmp(name, "special") == 0)
-        special = atoi(value);
-      else
-        CheckThingOption(name, value, &options);
+      DM_WriteThing(S, R->entities[k]);
     }
-
-    DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), I_ROUND(h), type,
-                angle, options, tid, special,
-                NULL /* FIXME: args */);
   }
 }
 
