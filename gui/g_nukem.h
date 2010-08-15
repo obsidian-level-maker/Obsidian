@@ -31,7 +31,8 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec,
                 int xscale, int yscale, int xpan, int ypan,
                 int lo_tag=0, int hi_tag=0);
 
-void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec,
+void NK_AddSprite(int x, int y, int z, int sec,
+                  int flags, int pic, int angle,
                   int lo_tag=0, int hi_tag=0);
 
 int NK_NumSectors(void);

@@ -709,28 +709,15 @@ void nukem_sector_c::WriteSprites()
     int type = atoi(E->name.c_str());
 
     // parse entity properties
-    int angle  = 0;
-    int lo_tag = 0;
-    int hi_tag = 0;
-
-    std::map<std::string, std::string>::iterator MI;
-    for (MI = E->props.begin(); MI != E->props.end(); MI++)
-    {
-      const char *name  = MI->first.c_str();
-      const char *value = MI->second.c_str();
-
-      if (StringCaseCmp(name, "angle") == 0)
-        angle = atoi(value);
-      else if (StringCaseCmp(name, "lo_tag") == 0)
-        lo_tag = atoi(value);
-      else if (StringCaseCmp(name, "hi_tag") == 0)
-        hi_tag = atoi(value);
-    }
+    int flags  = E->props.getInt("flags");
+    int angle  = E->props.getInt("angle");
+    int lo_tag = E->props.getInt("lo_tag");
+    int hi_tag = E->props.getInt("hi_tag");
 
     // convert angle to 0-2047 range
     angle = ((405 - angle) * 256 / 45) & 2047;
 
-    NK_AddSprite(x, y, z, type, angle, index, lo_tag, hi_tag);
+    NK_AddSprite(x, y, z, index, flags, type, angle, lo_tag, hi_tag);
   }
 }
 

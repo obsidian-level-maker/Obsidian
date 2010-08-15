@@ -83,10 +83,12 @@ bool NK_StartGRP(const char *filename)
   return true;
 }
 
+
 void NK_EndGRP(void)
 {
   GRP_CloseWrite();
 }
+
 
 void NK_BeginLevel(const char *level_name)
 {
@@ -103,6 +105,7 @@ void NK_BeginLevel(const char *level_name)
 
   nk_header.version = LE_U32(DUKE_MAP_VERSION);
 }
+
 
 void NK_EndLevel(void)
 {
@@ -160,6 +163,7 @@ void NK_AddSector(int first_wall, int num_wall, int visibility,
   nk_sectors->Append(&raw, sizeof(raw));
 }
 
+
 void NK_AddWall(int x, int y, int right, int back, int back_sec, 
                 int flags, int pic, int mask_pic,
                 int xscale, int yscale, int xpan, int ypan,
@@ -191,7 +195,9 @@ void NK_AddWall(int x, int y, int right, int back, int back_sec,
   nk_walls->Append(&raw, sizeof(raw));
 }
 
-void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec,
+
+void NK_AddSprite(int x, int y, int z, int sec,
+                  int flags, int pic, int angle,
                   int lo_tag, int hi_tag)
 {
   raw_nukem_sprite_t raw;
@@ -202,6 +208,7 @@ void NK_AddSprite(int x, int y, int z, int pic, int angle, int sec,
   raw.y = LE_S32(y);
   raw.z = LE_S32(z);
 
+  raw.flags  = LE_U16(flags);
   raw.pic    = LE_U16(pic);
   raw.angle  = LE_U16(angle);
   raw.sector = LE_U16(sec);
