@@ -159,16 +159,18 @@ raw_thing_t;
 
 typedef enum
 {
-   MTF_Easy    = 1,
-   MTF_Medium  = 2,
-   MTF_Hard    = 4,
-   MTF_Ambush  = 8,
+  MTF_Easy    = 1,
+  MTF_Medium  = 2,
+  MTF_Hard    = 4,
+  MTF_Ambush  = 8,
 
-   MTF_NotSP   = 16,
-   MTF_NotDM   = 32,
-   MTF_NotCOOP = 64,
+  MTF_NotSP   = 16,
+  MTF_NotDM   = 32,
+  MTF_NotCOOP = 64,
 
-   MTF_BOOM_Reserved = 256,
+  MTF_Friend   = 128,  // MBF
+  MTF_Reserved = 256,  // BOOM
+  MTF_Dormant  = 512,  // Eternity
 }
 doom_thingflag_e;
 

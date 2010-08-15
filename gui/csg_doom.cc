@@ -1888,7 +1888,9 @@ static int ParseThingOptions(csg_property_set_c & props)
   if (props.getInt("mode_dm",   -1) == 0) options |= MTF_NotDM;
 
   // other flags...
-  if (props.getInt("ambush") > 0) options |= MTF_Ambush;
+  if (props.getInt("ambush") > 0)  options |= MTF_Ambush;
+  if (props.getInt("friend") > 0)  options |= MTF_Friend;   // MBF
+  if (props.getInt("dormant") > 0) options |= MTF_Dormant;  // Eternity
 
   return options;
 }
