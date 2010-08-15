@@ -64,7 +64,7 @@ class group_c
 {
 public:
   std::vector<region_c *> regs;
-  std::vector<entity_info_c *> ents;
+  std::vector<csg_entity_c *> ents;
 
 public:
   group_c() : regs(), ents()
@@ -78,7 +78,7 @@ public:
     regs.push_back(R);
   }
 
-  void AddEntity(entity_info_c *E)
+  void AddEntity(csg_entity_c *E)
   {
     ents.push_back(E);
   }
@@ -883,7 +883,7 @@ static partition_c * ChoosePartition(group_c & group)
 }
 
 
-static void DivideOneEntity(entity_info_c *E, partition_c *part,
+static void DivideOneEntity(csg_entity_c *E, partition_c *part,
                             group_c & front, group_c & back)
 {
   double d = PerpDist(E->x,E->y, part->x1,part->y1, part->x2,part->y2);
@@ -1270,7 +1270,7 @@ fprintf(stderr, "Swallowed brushes: %d (of %d)\n", count, total);
 }
 
 
-static gap_c *GapForEntity(const region_c *R, const entity_info_c *E)
+static gap_c *GapForEntity(const region_c *R, const csg_entity_c *E)
 {
   for (unsigned int i = 0 ; i < R->gaps.size() ; i++)
   {
@@ -1296,7 +1296,7 @@ static void MarkGapsWithEntities()
 
     for (unsigned int k = 0 ; k < R->entities.size() ; k++)
     {
-      entity_info_c *E = R->entities[k];
+      csg_entity_c *E = R->entities[k];
 
       gap_c *gap = GapForEntity(R, E);
 
@@ -1691,7 +1691,7 @@ int badref = 0;
 
     for (k = 0 ; k < R->entities.size() ; k++)
     {
-      entity_info_c *E = R->entities[k];
+      csg_entity_c *E = R->entities[k];
 
       DM_AddThing(I_ROUND(E->x), I_ROUND(E->y), 0,
                   11, sec_id, 7, 0, 0, NULL);

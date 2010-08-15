@@ -1896,7 +1896,7 @@ static int ParseThingOptions(csg_property_set_c & props)
 }
 
 
-static void DM_WriteThing(doom_sector_c *S, entity_info_c *E)
+static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
   int type = atoi(E->name.c_str());
 

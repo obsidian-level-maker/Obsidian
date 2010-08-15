@@ -81,7 +81,7 @@ public:
 
   std::vector<csg_brush_c *> brushes;
 
-  std::vector<entity_info_c *> entities;
+  std::vector<csg_entity_c *> entities;
 
   std::vector<gap_c *> gaps;
 

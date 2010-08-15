@@ -40,7 +40,7 @@
 
 std::vector<csg_brush_c *> all_brushes;
 
-std::vector<entity_info_c *> all_entities;
+std::vector<csg_entity_c *> all_entities;
 
 std::string dummy_wall_tex;
 std::string dummy_plane_tex;
@@ -254,14 +254,15 @@ void csg_brush_c::ComputeBBox()
   }
 }
 
-entity_info_c::entity_info_c(const char *_name, double xpos, double ypos,
-                             double zpos, int _flags) :
+
+csg_entity_c::csg_entity_c(const char *_name, double xpos, double ypos,
+                           double zpos, int _flags) :
     name(_name),
     x(xpos), y(ypos), z(zpos),
     props()
 { }
 
-entity_info_c::~entity_info_c()
+csg_entity_c::~csg_entity_c()
 { }
 
 
@@ -621,7 +622,7 @@ int CSG_add_entity(lua_State *L)
   double y = luaL_checknumber(L,3);
   double z = luaL_checknumber(L,4);
 
-  entity_info_c *E = new entity_info_c(name, x, y, z);
+  csg_entity_c *E = new csg_entity_c(name, x, y, z);
 
   if (nargs >= 5)
   {

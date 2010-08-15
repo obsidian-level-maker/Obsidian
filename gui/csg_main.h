@@ -188,7 +188,7 @@ public:
 };
 
 
-class entity_info_c
+class csg_entity_c
 {
 public:
   std::string name;
@@ -198,9 +198,9 @@ public:
   csg_property_set_c props;
 
 public:
-   entity_info_c(const char *_name, double xpos, double ypos, double zpos,
-                 int _flags = 0);
-  ~entity_info_c();
+   csg_entity_c(const char *_name, double xpos, double ypos, double zpos,
+                int _flags = 0);
+  ~csg_entity_c();
 };
 
 
@@ -211,7 +211,7 @@ public:
 
 extern std::vector<csg_brush_c *> all_brushes;
 
-extern std::vector<entity_info_c *> all_entities;
+extern std::vector<csg_entity_c *> all_entities;
 
 extern std::string dummy_wall_tex;
 extern std::string dummy_plane_tex;

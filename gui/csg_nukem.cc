@@ -116,7 +116,7 @@ public:
 
   std::vector<nukem_wall_c *> walls;
 
-  std::vector<entity_info_c *> entities;
+  std::vector<csg_entity_c *> entities;
 
   int mark;
   int index;
@@ -140,7 +140,7 @@ public:
     walls.push_back(W);
   }
 
-  void AddEntity(entity_info_c *E)
+  void AddEntity(csg_entity_c *E)
   {
     entities.push_back(E);
   }
@@ -700,7 +700,7 @@ void nukem_sector_c::WriteSprites()
 {
   for (unsigned int i = 0 ; i < entities.size() ; i++)
   {
-    entity_info_c *E = entities[i];
+    csg_entity_c *E = entities[i];
 
     int x = I_ROUND( E->x * NK_WALL_MUL);
     int y = I_ROUND(-E->y * NK_WALL_MUL);

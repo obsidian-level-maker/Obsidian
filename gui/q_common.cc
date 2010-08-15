@@ -707,7 +707,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
   for (unsigned int j = 0; j < all_entities.size(); j++)
   {
-    entity_info_c *E = all_entities[j];
+    csg_entity_c *E = all_entities[j];
 
     lump->Printf("{\n");
 
