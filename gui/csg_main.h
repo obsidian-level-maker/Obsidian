@@ -82,7 +82,7 @@ public:
   double getDouble(const char *key, double def_val = 0);
   int    getInt   (const char *key, int def_val = 0);
 
-  void getHexenArgs(const char *key, u8_t *args);
+  void getHexenArgs(u8_t *arg5);
 
 public:
   typedef std::map<std::string, std::string>::iterator iterator;

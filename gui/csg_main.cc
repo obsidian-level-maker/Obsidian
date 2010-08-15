@@ -122,22 +122,14 @@ int csg_property_set_c::getInt(const char *key, int def_val)
   return str ? I_ROUND(atof(str)) : def_val;
 }
 
-void csg_property_set_c::getHexenArgs(const char *key, u8_t *args)
+
+void csg_property_set_c::getHexenArgs(const char *key, u8_t *arg5)
 {
-  const char *str = getStr(key);
-
-  if (str)
-  {
-    int a1=0, a2=0, a3=0, a4=0, a5=0;
-
-    sscanf(str, " %d %d %d %d %d ", &a1, &a2, &a3, &a4, &a5);
-
-    args[0] = (u8_t)a1;
-    args[1] = (u8_t)a2;
-    args[2] = (u8_t)a3;
-    args[3] = (u8_t)a4;
-    args[4] = (u8_t)a5;
-  }
+  arg5[0] = getInt("arg1");
+  arg5[1] = getInt("arg2");
+  arg5[2] = getInt("arg3");
+  arg5[3] = getInt("arg4");
+  arg5[4] = getInt("arg5");
 }
 
 

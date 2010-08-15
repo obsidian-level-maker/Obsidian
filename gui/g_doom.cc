@@ -330,7 +330,7 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
   {
     raw_hexen_linedef_t line;
 
-    // clear unused fields (specials)
+    // clear unused fields (esp. arguments)
     memset(&line, 0, sizeof(line));
 
     line.start = LE_U16(vert1);
@@ -372,7 +372,7 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
   {
     raw_hexen_thing_t thing;
 
-    // clear unused fields (tid, specials)
+    // clear unused fields (esp. arguments)
     memset(&thing, 0, sizeof(thing));
 
     thing.x = LE_S16(x);
