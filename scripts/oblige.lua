@@ -542,10 +542,13 @@ function ob_read_all_config(all_opts, print_to_log)
       for o_name,opt in pairs(def.options) do
         do_line("%s.%s = %s", name, o_name, opt.value or unknown)
       end
+
+      do_line("")
     end
   end
 
   do_line("")
+  do_line("-- END --")
 end
 
 
