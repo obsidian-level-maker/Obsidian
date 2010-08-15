@@ -393,7 +393,7 @@ function Connect_rooms()
     local loc_list = {}
 
     for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
-      local K = LEVEL.section_map[x][y]
+      local K = SECTIONS[x][y]
       if K.room == R and K.num_conn == 0 then
 
         for dir = 2,8,2 do
@@ -439,7 +439,7 @@ function Connect_rooms()
 
 
   local function handle_shaped_room(R)
-    local mid_K = LEVEL.section_map[R.shape_kx][R.shape_ky]
+    local mid_K = SECTIONS[R.shape_kx][R.shape_ky]
     assert(mid_K and mid_K.room == R)
 
     -- determine optimal locations, which are at the extremities of
@@ -550,7 +550,7 @@ function Connect_rooms()
       assert(0 <= x and x < R.kw)
       assert(0 <= y and y < R.kh)
 
-      local K = LEVEL.section_map[R.kx1 + x][R.ky1 + y]
+      local K = SECTIONS[R.kx1 + x][R.ky1 + y]
       assert(K.room == R)
 
       local N = K:neighbor(dir)
@@ -655,7 +655,7 @@ function Connect_rooms()
     local list = {}
 
     for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
-      local K = LEVEL.section_map[x][y]
+      local K = SECTIONS[x][y]
       if K.room == R then
 
         for dir = 2,8,2 do
@@ -721,7 +721,7 @@ function Connect_rooms()
     local loc
 
     for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-      local K = LEVEL.section_map[x][y]
+      local K = SECTIONS[x][y]
       for dir = 2,8,2 do
         local N = K:neighbor(dir)
         local score = emergency_score(K, N, dir)
@@ -782,7 +782,7 @@ function Connect_rooms()
     local loc_list = {}
 
     for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-      local K = LEVEL.section_map[x][y]
+      local K = SECTIONS[x][y]
 
       if K and K.room then
         local score = teleporter_score(K)

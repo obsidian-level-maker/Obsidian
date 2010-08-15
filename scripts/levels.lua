@@ -99,8 +99,9 @@ function Levels.clean_up()
   PARAM  = {}
   STYLE  = {}
 
-  LEVEL  = nil
-  SEEDS  = nil
+  LEVEL    = nil
+  SEEDS    = nil
+  SECTIONS = nil
 
   collectgarbage("collect")
 end
@@ -667,8 +668,9 @@ function Levels.make_level(L, index, NUM)
 
   -- intra-level cleanup
   if index < NUM then
-    LEVEL = nil
-    SEEDS = nil
+    LEVEL    = nil
+    SEEDS    = nil
+    SECTIONS = nil
 
     collectgarbage("collect")
   end

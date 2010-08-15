@@ -24,10 +24,12 @@ PARAM  = {}
 STYLE  = {}
 LEVEL  = {}
 THEME  = {}
-SEEDS  = {}
+
+SEEDS    = {}
+SECTIONS = {}
 
 SKILLS = { "easy", "medium", "hard" }
-   
+ 
 MODES =
 {
   { "sp",   "Single Player" },
@@ -36,12 +38,12 @@ MODES =
   { "ctf",  "Capture Flag" },
 }
 
+
 -- all prefabs go here
 PREFAB = {}
 
 -- a place for unfinished stuff
 UNFINISHED = {}
-
 
 -- tables which interface with GUI code
 OB_CONFIG = {}

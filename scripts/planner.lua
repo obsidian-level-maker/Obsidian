@@ -57,7 +57,7 @@ function SECTION_CLASS.neighbor(self, dir, dist)
   if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
     return nil
   end
-  return LEVEL.section_map[nx][ny]
+  return SECTIONS[nx][ny]
 end
 
 function SECTION_CLASS.same_neighbors(self)
@@ -220,10 +220,10 @@ end
 
 
 function Plan_create_sections()
-  LEVEL.section_map = table.array_2D(LEVEL.W, LEVEL.H)
+  SECTIONS = table.array_2D(LEVEL.W, LEVEL.H)
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    LEVEL.section_map[x][y] = SECTION_CLASS.new(x, y)
+    SECTIONS[x][y] = SECTION_CLASS.new(x, y)
   end end
 end
 
@@ -235,7 +235,7 @@ end
 
 
 function Plan_has_section(x, y)
-  if LEVEL.section_map[x][y].room then
+  if SECTIONS[x][y].room then
     return true
   else
     return false
@@ -279,7 +279,7 @@ end
 function Plan_dump_sections(title)
 
   local function section_char(x, y)
-    local K = LEVEL.section_map[x][y]
+    local K = SECTIONS[x][y]
     local R = K.room
     if not R then return '.' end
     if R.kind == "scenic" then return '=' end
@@ -331,7 +331,7 @@ function Plan_add_small_rooms()
   ---| Plan_add_small_rooms |---
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    local K = LEVEL.section_map[x][y]
+    local K = SECTIONS[x][y]
     if not K.room then
       local R = ROOM_CLASS.new("rect")
 
@@ -342,9 +342,9 @@ function Plan_add_small_rooms()
 
       if can_xy and rand.odds(40) then
         if can_xy == "x" then
-          K = LEVEL.section_map[x+1][y]
+          K = SECTIONS[x+1][y]
         else
-          K = LEVEL.section_map[x][y+1]
+          K = SECTIONS[x][y+1]
         end
 
         assert(not K.room)
@@ -407,7 +407,7 @@ function Plan_add_big_rooms()
 
     for x = kx,kx2 do for y = ky,ky2 do
       if ROOM then
-        LEVEL.section_map[x][y].room = ROOM
+        SECTIONS[x][y].room = ROOM
       elseif Plan_has_section(x, y) then
         return false -- would overlap a room
       end
@@ -438,7 +438,7 @@ function Plan_add_big_rooms()
       if y == LEVEL.H then touch_top = true end
 
       if ROOM then
-        LEVEL.section_map[x][y].room = ROOM
+        SECTIONS[x][y].room = ROOM
       elseif Plan_has_section(x, y) then
         return false -- would overlap a room
       end
@@ -685,7 +685,7 @@ function Plan_add_natural_rooms()
 
     R.natural = true
 
-    LEVEL.section_map[x][y].room = R
+    SECTIONS[x][y].room = R
 
     local AREA =
     {
@@ -707,7 +707,7 @@ function Plan_add_natural_rooms()
         local nx, ny = geom.nudge(A.x, A.y, dir)
 
         if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
-          LEVEL.section_map[nx][ny].room = area.room
+          SECTIONS[nx][ny].room = area.room
           table.insert(area.active, { x=nx, y=ny })
           return true -- OK
         end
@@ -795,7 +795,7 @@ end
 
 function Plan_collect_sections()
   for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
-    local K = LEVEL.section_map[kx][ky]
+    local K = SECTIONS[kx][ky]
     local R = K.room
 
     R.kx1 = math.min(kx, R.kx1 or 99)
@@ -884,7 +884,7 @@ function Plan_find_neighbors()
 
   for x = 1,LEVEL.W do for y = 1,LEVEL.H do
 
-    local R = LEVEL.section_map[x][y].room
+    local R = SECTIONS[x][y].room
 
     if not R.neighbors then
       R.neighbors = {}
@@ -1294,7 +1294,7 @@ function Plan_make_seeds()
   end
 
   local function fill_section(kx, ky)
-    local K = LEVEL.section_map[kx][ky]
+    local K = SECTIONS[kx][ky]
     local R = K.room
 
     if not R then return end
