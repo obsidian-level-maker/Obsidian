@@ -71,6 +71,12 @@ CrossOvers:
      high path (3D bridge).
 
 
+Lock postponing:
+  after decided all locked conns, pick one and if next room is a
+  stalk, then can move the lock to the next door (and the next room
+  becomes part of the earlier quest).
+
+
 Porches:
   -  this is 3 or more seeds around a door from outside->inside
      with a non-sky ceiling and some pillars and a raised floor.
@@ -98,6 +104,8 @@ Natural areas:
 
 Lighting:
   -  support w_face.light (maybe even have 'light' in MATERIALS ?)
+
+  FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
 
 
 Ceilings:
@@ -154,6 +162,9 @@ Miscellaneous:
   - properly count svolume
 
   - PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
+
+  -  lifts often assume meshing up at 90 degree turns
+
 
 
 Possible Options:

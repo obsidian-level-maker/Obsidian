@@ -3,7 +3,7 @@ TODO
 ====
 
 
-+  don't require a game to have 'step skins', 'logo skins' ETC
+!  Lua code should create thing 'flags' value (DOOM, HEXEN, etc)
 
 
 DONE: check max size of lightmap --> 17x17
@@ -20,15 +20,11 @@ visibility : can detect in C++ code if each seed side contains a portal
              communicate that information.
 
 
-
 Hexen: have arg1 .. arg5, i.e. de-array-ify
 
 
 -  mirroring : make sure first coord stays the first
 
-
-
--  global SECTIONS array
 
 
 Later: fix hallways, broken due to conn(_dir) change
@@ -55,8 +51,6 @@ Quests:
 
 
 ??  when to decide WOTSIT, monster and pickup spots ??
-
-NO:  do placement allocations on a 64x64 grid
 
 
 
@@ -116,11 +110,6 @@ TERMINOLOGY
        using a "small exit" prefab.
 
 
-- Lock postponing : after decided all locked conns, pick one and
-  if next room is a stalk, then can move the lock to the next
-  door (and the next room becomes part of the earlier quest).
-
-
 Cave code
   DONE  validate() method : check if N points (from conns) connect
      --> creates a 'flood' map
@@ -165,12 +154,6 @@ Prefabs:
 
 + proper system to match DOOR skins with SWITCH skins
   (i.e. allow more than a single door or single switch per lock kind).
-
-
--  lifts often assume meshing up at 90 degree turns
-
-
-FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
 
 
 +  make linedef merging more relaxed (cf. DAVID.wad)
