@@ -48,11 +48,6 @@ static char *description;
 
 
 // IMPORTANT!! Quake II assumes axis-aligned node planes are positive
-//  if (raw_nd.planenum & 1)
-//  {
-//    node->Flip();
-//    raw_nd.planenum ^= 1;
-//  }
 
 
 static int q2_medium_table[5] =
@@ -63,23 +58,6 @@ static int q2_medium_table[5] =
   CONTENTS_WATER,
   CONTENTS_SOLID
 };
-
-
-static void Q2_GetExtents(double min_s, double min_t,
-                          double max_s, double max_t,
-                          int *ext_W, int *ext_H)
-{
-  // -AJA- this matches the logic in the QuakeII engine.
-
-  int bmin_s = (int)floor(min_s / 16.0);
-  int bmin_t = (int)floor(min_t / 16.0);
-
-  int bmax_s = (int)ceil(max_s / 16.0);
-  int bmax_t = (int)ceil(max_t / 16.0);
-
-  *ext_W = MIN(2, bmax_s - bmin_s + 1);
-  *ext_H = MIN(2, bmax_t - bmin_t + 1);
-}
 
 
 //------------------------------------------------------------------------
@@ -110,6 +88,17 @@ static void DoWriteBrushSide(int plane, int texinfo)
 }
 
 
+static void DoWriteBrush(dbrush_t & raw_brush)
+{
+  raw_brush.firstside = LE_S32(raw_brush.firstside);
+  raw_brush.numsides  = LE_S32(raw_brush.numsides);
+
+  raw_brush.contents  = LE_U32(raw_brush.contents);
+
+  q2_brushes.push_back(raw_brush);
+}
+
+
 static u16_t Q2_AddBrush(const csg_brush_c *A)
 {
   // find existing brush
@@ -119,11 +108,11 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
   }
 
 
-  dbrush_t brush;
+  dbrush_t raw_brush;
 
-  brush.firstside = q2_brush_sides.size();
-  brush.numsides  = 0;
-  brush.contents  = CONTENTS_SOLID;
+  raw_brush.firstside = (int)q2_brush_sides.size();
+  raw_brush.numsides  = 2;
+  raw_brush.contents  = CONTENTS_SOLID;
 
   int plane;
   int texinfo = 1; // FIXME !!!!!
@@ -133,16 +122,12 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
   plane = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
   
   DoWriteBrushSide(plane, texinfo);
-
-  brush.numsides++;
   
 
   // bottom
   plane = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
   
   DoWriteBrushSide(plane ^ 1, texinfo);
-
-  brush.numsides++;
 
 
   for (unsigned int k = 0; k < A->verts.size(); k++)
@@ -161,16 +146,15 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
 
     DoWriteBrushSide(plane, texinfo);
 
-    brush.numsides++;
+    raw_brush.numsides++;
   }
 
-  // FIXME !!!! fix endianness here
 
-  int index = (int)q2_brushes.size();
+  u16_t index = q2_brushes.size();
 
-  q2_brushes.push_back(brush);
+  brush_map[A] = index;
 
-  brush_map[A] = (u16_t)index;
+  DoWriteBrush(raw_brush);
 
   return (u16_t) index;
 }
@@ -927,14 +911,13 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
 
   // create brush for inner area of the cuboid (door etc)
-  dbrush_t raw_brush;
+  dbrush_t inner_brush;
 
-  raw_brush.firstside = LE_S32(side_base);
-  raw_brush.numsides  = LE_S32(6);
-  raw_brush.contents  = LE_S32(CONTENTS_SOLID);
+  inner_brush.firstside = side_base;
+  inner_brush.numsides  = 6;
+  inner_brush.contents  = CONTENTS_SOLID;
 
-  // FIXME: DoWriteBrush
-  q2_brushes.push_back(raw_brush);
+  DoWriteBrush(inner_brush);
 }
 
 
