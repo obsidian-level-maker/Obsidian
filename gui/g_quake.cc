@@ -544,8 +544,11 @@ static void DummyTexInfo(void)
 
 //------------------------------------------------------------------------
 
-static void Q1_CreateLightmaps()
+static void Q1_LightWorld()
 {
+  if (main_win)
+    main_win->build_box->Prog_Step("Light");
+
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
     quake_face_c *F = qk_all_faces[i];    
@@ -556,15 +559,6 @@ static void Q1_CreateLightmaps()
 
     QCOM_LightFace(F);
   }
-}
-
-
-static void Q1_LightWorld()
-{
-  if (main_win)
-    main_win->build_box->Prog_Step("Light");
-
-  Q1_CreateLightmaps();
 
   bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
 

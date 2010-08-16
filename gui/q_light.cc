@@ -419,7 +419,7 @@ static void QCOM_TestLight(qLightmap_c *lmap)
   {
     const quake_vertex_c & V = lt_points[t*W + s];
 
-    lmap->samples[t*W + s] = 80 + 40 * sin(V.x / 40.0);
+    lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
   }
 }
 

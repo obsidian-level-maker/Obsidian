@@ -950,6 +950,28 @@ static void Q2_WriteModels()
 
 //------------------------------------------------------------------------
 
+static void Q2_LightWorld()
+{
+  if (main_win)
+    main_win->build_box->Prog_Step("Light");
+
+  for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
+  {
+    quake_face_c *F = qk_all_faces[i];    
+
+    // FIXME: check elsewhere, handling liquid surfaces too 
+    if (strncmp(F->texture.c_str(), "sky", 3) == 0)
+      continue;
+
+    QCOM_LightFace(F);
+  }
+
+  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true /* colored */);
+}
+
+
+//------------------------------------------------------------------------
+
 static void Q2_CreateBSPFile(const char *name)
 {
   BSP_OpenLevel(name, 2);
@@ -962,7 +984,7 @@ static void Q2_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build(2);
 
-  /// Q2_Lighting();
+  Q2_LightWorld();
 
   /// QCOM_Visibility();
 
@@ -1028,7 +1050,7 @@ bool quake2_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "CSG,BSP,Light,Vis");
+    main_win->build_box->Prog_Init(0, "CSG,BSP,Light");  /* Vis */
 
   return true;
 }
