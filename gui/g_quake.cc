@@ -561,6 +561,9 @@ static void Q1_CreateLightmaps()
 
 static void Q1_LightWorld()
 {
+  if (main_win)
+    main_win->build_box->Prog_Step("Light");
+
   Q1_CreateLightmaps();
 
   bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
@@ -1307,13 +1310,13 @@ private:
     switch (sub)
     {
       case SUBFMT_HalfLife:
-        return "CSG,BSP,Hull 1,Hull 2,Hull 3"; /* Light,Vis */
+        return "CSG,BSP,Light,Hull 1,Hull 2,Hull 3"; /* Vis */
 
       case SUBFMT_Hexen2:
-        return "CSG,BSP,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5"; /* Light,Vis */
+        return "CSG,BSP,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5"; /* Vis */
 
       default:
-        return "CSG,BSP,Hull 1,Hull 2"; /* Light,Vis */
+        return "CSG,BSP,Light,Hull 1,Hull 2"; /* Vis */
     }
   }
 };
