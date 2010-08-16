@@ -99,35 +99,49 @@ static void Q2_ClearBrushes()
 }
 
 
+static void DoWriteBrushSide(int plane, int texinfo)
+{
+  dbrushside_t side;
+
+  side.planenum = LE_U16(plane);
+  side.texinfo  = LE_U16(texinfo);
+
+  q2_brush_sides.push_back(side);
+}
+
+
 static u16_t Q2_AddBrush(const csg_brush_c *A)
 {
   // find existing brush
   if (brush_map.find(A) != brush_map.end())
+  {
     return brush_map[A];
+  }
 
 
   dbrush_t brush;
-  dbrushside_t side;
 
   brush.firstside = q2_brush_sides.size();
   brush.numsides  = 0;
   brush.contents  = CONTENTS_SOLID;
 
-  side.texinfo = 1; // FIXME !!!!!
+  int plane;
+  int texinfo = 1; // FIXME !!!!!
 
 
   // top
-  side.planenum = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
+  plane = BSP_AddPlane(0, 0, A->t.z,  0, 0, +1);
   
-  q2_brush_sides.push_back(side);
+  DoWriteBrushSide(plane, texinfo);
+
   brush.numsides++;
   
 
   // bottom
-  side.planenum = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
-  side.planenum ^= 1;
+  plane = BSP_AddPlane(0, 0, A->b.z,  0, 0, -1);
   
-  q2_brush_sides.push_back(side);
+  DoWriteBrushSide(plane ^ 1, texinfo);
+
   brush.numsides++;
 
 
@@ -138,16 +152,19 @@ static u16_t Q2_AddBrush(const csg_brush_c *A)
     brush_vert_c *v1 = A->verts[k];
     brush_vert_c *v2 = A->verts[(k+1) % A->verts.size()];
 
-    side.planenum = BSP_AddPlane(v1->x, v1->y, 0,
-                                (v2->y - v1->y), (v1->x - v2->x), 0,
-                                &flipped);
+    plane = BSP_AddPlane(v1->x, v1->y, 0,
+                         (v2->y - v1->y), (v1->x - v2->x), 0,
+                         &flipped);
 
     if (flipped)
-      side.planenum ^= 1;
+      plane ^= 1;
 
-    q2_brush_sides.push_back(side);
+    DoWriteBrushSide(plane, texinfo);
+
     brush.numsides++;
   }
+
+  // FIXME !!!! fix endianness here
 
   int index = (int)q2_brushes.size();
 
@@ -463,6 +480,9 @@ static void Q2_WriteFace(quake_face_c *face)
   const char *texture = face->texture.c_str();
 
   int flags = 0; //!!!! FIXME  CalcTextureFlag(texture);
+
+  if (strstr(texture, "sky") != NULL)
+    flags |= SURF_SKY;
 
   raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, face->s, face->t);
 
@@ -781,9 +801,15 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
   }
 
 
+
   // texture and lighting
 
-  raw_face.texinfo = Q2_AddTexInfo(texture, 0, 0, s, t);
+  int flags = 0;
+
+  if (strstr(texture, "trigger") != NULL)
+    flags |= SURF_NODRAW;
+
+  raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 
   raw_face.styles[0] = 0;
   raw_face.styles[1] = 0xFF;
@@ -793,6 +819,8 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
   raw_face.lightofs = 72*17*17;  // FIXME
 
 
+  DoWriteBrushSide(raw_face.planenum ^ raw_face.side, raw_face.texinfo);
+
   DoWriteFace(raw_face);
 }
 
@@ -801,9 +829,11 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 {
   int face_base = q2_total_faces;
   int leaf_base = q2_total_leafs;
+  int side_base = (int)q2_brush_sides.size();
 
   model->nodes[0] = q2_total_nodes;
 
+  
   for (int face = 0 ; face < 6 ; face++)
   {
     dnode2_t raw_node;
@@ -836,7 +866,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
     }
 
     raw_node.children[0] = -(leaf_base + face + 2);
-    raw_node.children[1] = (face == 5) ? -1 : (model->nodes[0] + face + 1);
+    raw_node.children[1] = (face == 5) ? -(leaf_base + 6 + 2) : (model->nodes[0] + face + 1);
 
     if (flipped)
     {
@@ -854,13 +884,9 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
 
     raw_leaf.contents = 0;  // EMPTY
 
-    raw_leaf.cluster = -1;
-    raw_leaf.area    = 0;
-
     raw_leaf.first_leafface = q2_total_mark_surfs;
     raw_leaf.num_leaffaces  = 1;
 
-    // FIXME
     raw_leaf.first_leafbrush = 0;
     raw_leaf.num_leafbrushes = 0;
 
@@ -871,6 +897,44 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
     DoWriteNode(raw_node);
     DoWriteLeaf(raw_leaf);
   }
+
+
+  // create leaf for inner area of the cuboid (door etc)
+  dleaf2_t inner_leaf;
+
+  memset(&inner_leaf, 0, sizeof(inner_leaf));
+
+  inner_leaf.contents = CONTENTS_SOLID;
+
+  for (int b = 0 ; b < 3 ; b++)
+  {
+    inner_leaf.mins[b] = mins[b];
+    inner_leaf.maxs[b] = maxs[b];
+  }
+
+  inner_leaf.first_leafbrush = q2_total_leaf_brushes;
+  inner_leaf.num_leafbrushes = 1;
+
+  DoWriteLeaf(inner_leaf);
+
+
+  // leaf brush reference
+  u16_t index = LE_U16(q2_brushes.size());
+
+  q2_leaf_brushes->Append(&index, sizeof(index));
+
+  q2_total_leaf_brushes += 1;
+
+
+  // create brush for inner area of the cuboid (door etc)
+  dbrush_t raw_brush;
+
+  raw_brush.firstside = LE_S32(side_base);
+  raw_brush.numsides  = LE_S32(6);
+  raw_brush.contents  = LE_S32(CONTENTS_SOLID);
+
+  // FIXME: DoWriteBrush
+  q2_brushes.push_back(raw_brush);
 }
 
 
