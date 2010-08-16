@@ -1564,6 +1564,12 @@ QUAKE2.ROOMS =
 }
 
 
+QUAKE2.SUB_THEME_DEFAULTS =
+{
+  periph_pillar_mat = "METAL2_4",
+}
+
+
 QUAKE2.SUB_THEMES =
 {
   quake2_base1 =
