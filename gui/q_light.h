@@ -24,6 +24,8 @@
 
 #define FLAT_LIGHTMAP_SIZE  (17*17)
 
+class quake_face_c;
+
 
 class qLightmap_c
 {
@@ -72,6 +74,8 @@ void BSP_FreeLightmaps();
 qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
 
 void BSP_BuildLightmap(int lump, int max_size, bool colored);
+
+void QCOM_LightFace(quake_face_c *F);
 
 
 #endif /* __QUAKE_LIGHTING_H__ */

@@ -4,7 +4,8 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2010  Andrew Apted
+//  Copyright (C) 1996-1997  Id Software, Inc.
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -243,6 +244,142 @@ void BSP_BuildLightmap(int lump, int max_size, bool colored)
 
     L->Write(lightmap_lump, colored);
   }
+}
+
+
+//------------------------------------------------------------------------
+
+// Lighting variables
+
+static quake_face_c *lt_face;
+
+static double lt_plane_normal[3];
+static double lt_plane_dist;
+
+static double lt_texorg[3];
+static double lt_worldtotex[2][3];
+static double lt_textoworld[2][3];
+
+
+static void CalcFaceVectors(quake_face_c *F)
+{
+  const quake_plane_c * plane = &F->node->plane;
+
+  lt_plane_normal[0] = plane->nx;
+  lt_plane_normal[1] = plane->ny;
+  lt_plane_normal[2] = plane->nz;
+
+  lt_plane_dist = plane->CalcDist();
+
+  if (F->node_side == 1)
+    lt_plane_dist = -lt_plane_dist;
+
+
+  lt_worldtotex[0][0] = F->s[0];
+  lt_worldtotex[0][1] = F->s[1];
+  lt_worldtotex[0][2] = F->s[2];
+
+  lt_worldtotex[1][0] = F->t[0];
+  lt_worldtotex[1][1] = F->t[1];
+  lt_worldtotex[1][2] = F->t[2];
+
+
+  // calculate a normal to the texture axis.  points can be moved
+  // along this without changing their S/T
+  static quake_plane_c texnormal;
+
+  texnormal.nx = F->s[2] * F->t[1] - F->s[1] * F->t[2];
+  texnormal.ny = F->s[0] * F->t[2] - F->s[2] * F->t[0];
+  texnormal.nz = F->s[1] * F->t[0] - F->s[0] * F->t[1];
+
+  texnormal.Normalize();
+
+  // flip it towards plane normal
+  double distscale = texnormal.nx * lt_plane_normal[0] +
+                     texnormal.ny * lt_plane_normal[1] +
+                     texnormal.nz * lt_plane_normal[2];
+
+  if (distscale < 0)
+  {
+    distscale = -distscale;
+    texnormal.Flip();
+  }
+
+  // distscale is the ratio of the distance along the texture normal
+  // to the distance along the plane normal
+  distscale = 1.0 / distscale;
+
+
+  for (int i = 0 ; i < 2 ; i++)
+  {
+    double len_sq = lt_worldtotex[i][0] * lt_worldtotex[i][0] +
+                    lt_worldtotex[i][1] * lt_worldtotex[i][1] +
+                    lt_worldtotex[i][2] * lt_worldtotex[i][2];
+
+    double dist = lt_worldtotex[i][0] * lt_plane_normal[0] +
+                  lt_worldtotex[i][1] * lt_plane_normal[1] +
+                  lt_worldtotex[i][2] * lt_plane_normal[2];
+
+    dist *= distscale;
+    dist /= len_sq;
+
+    lt_textoworld[i][0] = lt_worldtotex[i][0] - texnormal.nx * dist;
+    lt_textoworld[i][1] = lt_worldtotex[i][1] - texnormal.ny * dist;
+    lt_textoworld[i][2] = lt_worldtotex[i][2] - texnormal.nz * dist;
+  }
+
+
+  // calculate texorg on the texture plane
+  lt_texorg[0] = - F->s[3] * lt_textoworld[0][0] - F->t[3] * lt_textoworld[0][0];
+  lt_texorg[1] = - F->s[3] * lt_textoworld[0][1] - F->t[3] * lt_textoworld[0][1];
+  lt_texorg[2] = - F->s[3] * lt_textoworld[0][2] - F->t[3] * lt_textoworld[0][2];
+
+  // project back to the face plane
+
+  // AJA: I assume the "- 1.0" here means 1 unit away from the face
+  double o_dist = lt_texorg[0] * lt_plane_normal[0] +
+                  lt_texorg[1] * lt_plane_normal[1] +
+                  lt_texorg[2] * lt_plane_normal[2] -
+                  lt_plane_dist - 1.0;
+
+  o_dist *= distscale;
+
+  texorg[0] -= texnormal.nx * o_dist;
+  texorg[1] -= texnormal.ny * o_dist;
+  texorg[2] -= texnormal.nz * o_dist;
+}
+
+
+static void CalcFaceExtents(quake_face_c *F)
+{
+  double min_s, min_t;
+  double max_s, max_t;
+
+  F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
+
+  // -AJA- this matches the logic in the Quake engine.
+
+  int bmin_s = (int)floor(min_s / 16.0);
+  int bmin_t = (int)floor(min_t / 16.0);
+
+  int bmax_s = (int)ceil(max_s / 16.0);
+  int bmax_t = (int)ceil(max_t / 16.0);
+
+  *ext_W = bmax_s - bmin_s + 1;
+  *ext_H = bmax_t - bmin_t + 1;
+}
+
+
+void QCOM_LightFace(quake_face_c *F)
+{
+  lt_face = F;
+
+  CalcFaceVectors(F);
+  CalcFaceExtents(F);
+    
+/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
+
+  F->lmap = BSP_NewLightmap(ext_W, ext_H, 25);
 }
 
 

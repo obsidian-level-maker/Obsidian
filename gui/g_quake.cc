@@ -544,43 +544,17 @@ static void DummyTexInfo(void)
 
 //------------------------------------------------------------------------
 
-static void Q1_GetExtents(quake_face_c *F, int *ext_W, int *ext_H)
-{
-  double min_s, min_t;
-  double max_s, max_t;
-
-  F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
-
-  // -AJA- this matches the logic in the Quake engine.
-
-  int bmin_s = (int)floor(min_s / 16.0);
-  int bmin_t = (int)floor(min_t / 16.0);
-
-  int bmax_s = (int)ceil(max_s / 16.0);
-  int bmax_t = (int)ceil(max_t / 16.0);
-
-  *ext_W = bmax_s - bmin_s + 1;
-  *ext_H = bmax_t - bmin_t + 1;
-}
-
-
 static void Q1_CreateLightmaps()
 {
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
     quake_face_c *F = qk_all_faces[i];    
 
-    // FIXME  if (F->unlit) continue;
+    // FIXME: check elsewhere, handling liquid surfaces too 
+    if (strncmp(F->texture.c_str(), "sky", 3) == 0)
+      continue;
 
-    int ext_W, ext_H;
-
-    Q1_GetExtents(F, &ext_W, &ext_H);
-    
-/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
-
-    F->lmap = BSP_NewLightmap(ext_W, ext_H, rand() & 127);
-
-    //!!!!  QCOM_LightFace(F);
+    QCOM_LightFace(F);
   }
 }
 
