@@ -2039,11 +2039,13 @@ function QUAKE2.get_levels()
 
       local LEV =
       {
-        name = string.format("u%dm%d", episode, map),
+        name = string.format("e%dm%d", episode, map),
 
         episode  = episode,
         ep_along = map / MAP_NUM,
         ep_info  = ep_info,
+
+--??    next_map = "base1", --!!!! string.format("e%dm%d", episode, map+1),
 
         theme_ref = "BASE",
       }
