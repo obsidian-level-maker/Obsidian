@@ -562,6 +562,20 @@ public:
 };
 
 
+double quake_plane_c::CalcDist() const
+{
+  return (x * (double)nx) + (y * (double)ny) + (z * (double)nz);
+}
+
+
+void quake_plane_c::Flip()
+{
+  nx = -nx;
+  ny = -ny;
+  nz = -nz;
+}
+
+
 void quake_plane_c::Normalize()
 {
   double len = sqrt(nx*nx + ny*ny + nz*nz);

@@ -69,6 +69,9 @@ public:
   ~quake_plane_c()
   { }
 
+  double CalcDist() const;
+
+  void Flip();
   void Normalize();
 };
 
