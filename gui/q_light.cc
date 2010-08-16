@@ -260,6 +260,14 @@ static double lt_texorg[3];
 static double lt_worldtotex[2][3];
 static double lt_textoworld[2][3];
 
+static int lt_tex_mins[2];
+static int lt_tex_size[2];
+
+static double lt_face_mid_s;
+static double lt_face_mid_t;
+
+static quake_vertex_c lt_points[18*18];
+
 
 static void CalcFaceVectors(quake_face_c *F)
 {
@@ -309,7 +317,6 @@ static void CalcFaceVectors(quake_face_c *F)
   // to the distance along the plane normal
   distscale = 1.0 / distscale;
 
-
   for (int i = 0 ; i < 2 ; i++)
   {
     double len_sq = lt_worldtotex[i][0] * lt_worldtotex[i][0] +
@@ -320,8 +327,7 @@ static void CalcFaceVectors(quake_face_c *F)
                   lt_worldtotex[i][1] * lt_plane_normal[1] +
                   lt_worldtotex[i][2] * lt_plane_normal[2];
 
-    dist *= distscale;
-    dist /= len_sq;
+    dist = dist * distscale / len_sq;
 
     lt_textoworld[i][0] = lt_worldtotex[i][0] - texnormal.nx * dist;
     lt_textoworld[i][1] = lt_worldtotex[i][1] - texnormal.ny * dist;
@@ -336,7 +342,8 @@ static void CalcFaceVectors(quake_face_c *F)
 
   // project back to the face plane
 
-  // AJA: I assume the "- 1.0" here means 1 unit away from the face
+  // AJA: I assume the "- 1" here means the sampling points are 1 unit
+  //      away from the face.
   double o_dist = lt_texorg[0] * lt_plane_normal[0] +
                   lt_texorg[1] * lt_plane_normal[1] +
                   lt_texorg[2] * lt_plane_normal[2] -
@@ -344,9 +351,9 @@ static void CalcFaceVectors(quake_face_c *F)
 
   o_dist *= distscale;
 
-  texorg[0] -= texnormal.nx * o_dist;
-  texorg[1] -= texnormal.ny * o_dist;
-  texorg[2] -= texnormal.nz * o_dist;
+  lt_texorg[0] -= texnormal.nx * o_dist;
+  lt_texorg[1] -= texnormal.ny * o_dist;
+  lt_texorg[2] -= texnormal.nz * o_dist;
 }
 
 
@@ -357,6 +364,9 @@ static void CalcFaceExtents(quake_face_c *F)
 
   F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
 
+  lt_face_mid_s = (min_s + max_s) / 2.0;
+  lt_face_mid_t = (min_t + max_t) / 2.0;
+
   // -AJA- this matches the logic in the Quake engine.
 
   int bmin_s = (int)floor(min_s / 16.0);
@@ -365,8 +375,46 @@ static void CalcFaceExtents(quake_face_c *F)
   int bmax_s = (int)ceil(max_s / 16.0);
   int bmax_t = (int)ceil(max_t / 16.0);
 
-  *ext_W = bmax_s - bmin_s + 1;
-  *ext_H = bmax_t - bmin_t + 1;
+  lt_tex_mins[0] = bmin_s;
+  lt_tex_mins[1] = bmin_t;
+
+  lt_tex_size[0] = bmax_s - bmin_s + 1;
+  lt_tex_size[1] = bmax_t - bmin_t + 1;
+
+/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_tex_size[0], lt_tex_size[1]);
+}
+
+
+static void CalcPoints(int W, int H)
+{
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    float us = (lt_tex_mins[0] + s) << 4;
+    float ut = (lt_tex_mins[1] + t) << 4;
+
+    quake_vertex_c *V = &lt_points[t*W + s];
+
+    V->x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
+    V->y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
+    V->z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
+
+    // FIXME: adjust points which are inside walls
+  }
+}
+
+
+static void QCOM_ProcessLight(qLightmap_c *lmap, csg_entity_c *E)
+{
+#if 0
+  float light = E->props.getDouble("light");
+
+  if (light < 1)
+    return;
+
+  //....
+
+#endif
 }
 
 
@@ -376,10 +424,22 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcFaceVectors(F);
   CalcFaceExtents(F);
-    
-/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, ext_W, ext_H);
 
-  F->lmap = BSP_NewLightmap(ext_W, ext_H, 25);
+  int W = lt_tex_size[0];
+  int H = lt_tex_size[1];
+
+  CalcPoints(W, H);
+
+  F->lmap = BSP_NewLightmap(W, H, 32);
+
+  // TODO: collect all light entities into own list
+
+  for (unsigned int i = 0 ; i < all_entities.size() ; i++)
+  {
+    csg_entity_c *E = all_entities[i];
+
+    QCOM_ProcessLight(F->lmap, E);
+  }
 }
 
 
