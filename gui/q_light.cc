@@ -280,7 +280,12 @@ static void CalcFaceVectors(quake_face_c *F)
   lt_plane_dist = plane->CalcDist();
 
   if (F->node_side == 1)
+  {
     lt_plane_dist = -lt_plane_dist;
+
+    for (int k = 0 ; k < 3 ; k++)
+      lt_plane_normal[k] = -lt_plane_normal[k];
+  }
 
 
   lt_worldtotex[0][0] = F->s[0];
@@ -393,13 +398,28 @@ static void CalcPoints(int W, int H)
     float us = (lt_tex_mins[0] + s) << 4;
     float ut = (lt_tex_mins[1] + t) << 4;
 
-    quake_vertex_c *V = &lt_points[t*W + s];
+    quake_vertex_c & V = lt_points[t*W + s];
 
-    V->x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
-    V->y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
-    V->z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
+    V.x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
+    V.y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
+    V.z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
 
     // FIXME: adjust points which are inside walls
+  }
+}
+
+
+static void QCOM_TestLight(qLightmap_c *lmap)
+{
+  int W = lmap->width;
+  int H = lmap->height;
+
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    const quake_vertex_c & V = lt_points[t*W + s];
+
+    lmap->samples[t*W + s] = 80 + 40 * sin(V.x / 40.0);
   }
 }
 
@@ -440,6 +460,8 @@ void QCOM_LightFace(quake_face_c *F)
 
     QCOM_ProcessLight(F->lmap, E);
   }
+
+  QCOM_TestLight(F->lmap);
 }
 
 
