@@ -898,7 +898,7 @@ function Connect_rooms()
   -- at the end, only a single group will remain (#1).
   initial_groups()
 
-  Levels.invoke_hook("connect_rooms", LEVEL.seed)
+  Levels_invoke_hook("connect_rooms", LEVEL.seed)
 
   add_teleporters()
 
