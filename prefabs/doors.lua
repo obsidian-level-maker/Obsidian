@@ -37,6 +37,44 @@ PREFAB.ARCH =
     {
       { x = 0,  y =  0, mat = "?outer" },
       { x = 40, y =  0, mat = "?outer" },
+      { x = 40, y = 16, mat = "?track" },
+      { x = 40, y = 32, mat = "?inner" },
+      { x = 40, y = 48, mat = "?inner" },
+      { x = 0,  y = 48, mat = "?inner" },
+    },
+
+    -- right side
+    {
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 152, y = 48, mat = "?inner" },
+      { x = 152, y = 32, mat = "?track" },
+      { x = 152, y = 16, mat = "?outer" },
+      { x = 152, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?inner" },
+    },
+  },
+}
+
+
+PREFAB.ARCH2 =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- frame
+    {
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 0,   y = 48, mat = "?outer" },
+      { x = 0,   y =  0, mat = "?outer" },
+      { b = 128, mat = "?outer" },
+    },
+
+    -- left side
+    {
+      { x = 0,  y =  0, mat = "?outer" },
+      { x = 40, y =  0, mat = "?outer" },
       { x = 52, y = 16, mat = "?track" },
       { x = 52, y = 32, mat = "?inner" },
       { x = 40, y = 48, mat = "?inner" },
