@@ -52,7 +52,7 @@
 </block>
 
 <block IndexForums>
-  <a href="http://sourceforge.net/apps/phpbb/oblige/">Forums*</a>
+  <a href="http://sourceforge.net/apps/phpbb/oblige/">Forums</a>
 </block>
 
 
