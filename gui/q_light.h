@@ -73,9 +73,9 @@ void BSP_FreeLightmaps();
 
 qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
 
-void BSP_BuildLightmap(int lump, int max_size, bool colored);
+void QCOM_BuildLightmap(int lump, int max_size, bool colored);
 
-void QCOM_LightFace(quake_face_c *F);
+void QCOM_LightAllFaces();
 
 
 #endif /* __QUAKE_LIGHTING_H__ */

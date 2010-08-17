@@ -1003,22 +1003,9 @@ static void Q2_LightWorld()
   if (main_win)
     main_win->build_box->Prog_Step("Light");
 
-  QCOM_MakeTraceNodes();
+  QCOM_LightAllFaces();
 
-  for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
-  {
-    quake_face_c *F = qk_all_faces[i];    
-
-    // FIXME: check elsewhere, handling liquid surfaces too 
-    if (strncmp(F->texture.c_str(), "sky", 3) == 0)
-      continue;
-
-    QCOM_LightFace(F);
-  }
-
-  QCOM_FreeTraceNodes();
-
-  BSP_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true /* colored */);
+  QCOM_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true /* colored */);
 }
 
 

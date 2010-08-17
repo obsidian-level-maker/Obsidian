@@ -21,7 +21,6 @@
 
 #include "headers.h"
 #include "hdr_fltk.h"
-#include "hdr_lua.h"
 #include "hdr_ui.h"
 
 #include "lib_file.h"
@@ -207,7 +206,7 @@ static void WriteFlatBlock(int level, int count)
 }
 
 
-void BSP_BuildLightmap(int lump, int max_size, bool colored)
+void QCOM_BuildLightmap(int lump, int max_size, bool colored)
 {
   lightmap_lump = BSP_NewLump(lump);
 
@@ -464,6 +463,28 @@ void QCOM_LightFace(quake_face_c *F)
   }
 
   TestingStuff(F->lmap);
+}
+
+
+void QCOM_LightAllFaces()
+{
+  QCOM_MakeTraceNodes();
+
+  for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
+  {
+    quake_face_c *F = qk_all_faces[i];    
+
+    // FIXME: check elsewhere, handling liquid surfaces too 
+    if (strncmp(F->texture.c_str(), "sky", 3) == 0)
+      continue;
+
+    QCOM_LightFace(F);
+
+    if (i % 400 == 0)
+      Main_Ticker();
+  }
+
+  QCOM_FreeTraceNodes();
 }
 
 
