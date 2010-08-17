@@ -39,6 +39,7 @@
 
 #define T_EPSILON  0.1
 
+#define PLANE_OTHER  -1
 
 #define TRACE_SOLID  -1
 #define TRACE_EMPTY  -2
@@ -66,43 +67,60 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
   index_var += 1;
 
 
-  TN->normal[0] = node->plane.nx;
-  TN->normal[1] = node->plane.ny;
-  TN->normal[2] = node->plane.nz;
+  float nx = node->plane.nx;
+  float ny = node->plane.ny;
+  float nz = node->plane.nz;
+
+  float fx = fabs(nx);
+  float fy = fabs(ny);
+  float fz = fabs(nz);
+
+
+  TN->normal[0] = nx;
+  TN->normal[1] = ny;
+  TN->normal[2] = nz;
 
   TN->dist = node->plane.CalcDist();
 
-  // ensure tnode planes are positive
-  if (TN->dist < 0)
-  {
-    TN->dist = -TN->dist;
 
-    for (int i = 0 ; i < 3 ; i++)
-      TN->normal[i] = -TN->normal[i];
+  int side = 0;
+
+  // ensure tnode planes are positive
+  if ( (-nx >= MAX(fy, fz)) ||
+       (-ny >= MAX(fx, fz)) ||
+       (-nz >= MAX(fx, fy)) )
+  {
+    side = 1;
+
+    TN->normal[0] = -nx;
+    TN->normal[1] = -ny;
+    TN->normal[2] = -nz;
+
+    TN->dist = -TN->dist;
   }
 
 
-  float fx = fabs(TN->normal[0]);
-  float fy = fabs(TN->normal[1]);
-  float fz = fabs(TN->normal[2]);
-
-  if (fx > fy && fx > fz)
+  if (fx > 0.9999)
     TN->type = PLANE_X;
-  else if (fy > fx && fy > fz)
+  else if (fy > 0.9999)
     TN->type = PLANE_Y;
-  else
+  else if (fz > 0.9999)
     TN->type = PLANE_Z;
+  else
+    TN->type = PLANE_OTHER;
 
 
   if (node->front_N)
-    TN->children[0] = ConvertTraceNode(node->front_N, index_var);
+    TN->children[side] = ConvertTraceNode(node->front_N, index_var);
   else
-    TN->children[0] = (node->front_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
-  
+    TN->children[side] = (node->front_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
+
+  side ^= 1;
+
   if (node->back_N)
-    TN->children[1] = ConvertTraceNode(node->back_N, index_var);
+    TN->children[side] = ConvertTraceNode(node->back_N, index_var);
   else
-    TN->children[1] = (node->back_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
+    TN->children[side] = (node->back_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
 
 
   return this_idx;
@@ -139,7 +157,7 @@ static bool RecursiveTestRay(int nodenum,
   {
     if (nodenum < 0)
     {
-      return (nodenum == TRACE_EMPTY);  // OK
+      return (nodenum == TRACE_EMPTY);  // ray passed
     }
 
     tnode_t *TN = &trace_nodes[nodenum];

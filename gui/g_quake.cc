@@ -30,6 +30,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
+#include "q_trace.h"
 #include "q1_structs.h"
 
 #include "csg_main.h"
@@ -549,6 +550,8 @@ static void Q1_LightWorld()
   if (main_win)
     main_win->build_box->Prog_Step("Light");
 
+  QCOM_MakeTraceNodes();
+
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
     quake_face_c *F = qk_all_faces[i];    
@@ -559,6 +562,8 @@ static void Q1_LightWorld()
 
     QCOM_LightFace(F);
   }
+
+  QCOM_FreeTraceNodes();
 
   bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
 

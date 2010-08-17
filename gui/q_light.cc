@@ -30,6 +30,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
+#include "q_trace.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -418,7 +419,9 @@ static void QCOM_TestLight(qLightmap_c *lmap)
   {
     const quake_vertex_c & V = lt_points[t*W + s];
 
-    lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
+//  lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
+
+    lmap->samples[t*W + s] = QCOM_TraceRay(0,-1200,250, V.x,V.y,V.z) ? 90 : 40;
   }
 }
 
@@ -449,7 +452,7 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints(W, H);
 
-  F->lmap = BSP_NewLightmap(W, H, 32);
+  F->lmap = BSP_NewLightmap(W, H, 0);
 
   // TODO: collect all light entities into own list
 
