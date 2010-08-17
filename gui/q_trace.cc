@@ -41,8 +41,9 @@
 
 #define PLANE_OTHER  -1
 
-#define TRACE_SOLID  -1
-#define TRACE_EMPTY  -2
+#define TRACE_EMPTY  -1
+#define TRACE_SOLID  -2
+#define TRACE_SKY    -3
 
 typedef struct
 {
@@ -100,6 +101,17 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
   }
 
 
+  // FIXME: face should store flags (like FACE_F_SKY)
+  bool is_sky = false;
+
+  if (fabs(node->plane.nz) > 0.5 &&
+      node->faces.size() == 1 &&
+      strstr(node->faces[0]->texture.c_str(), "sky") != NULL)
+  {
+    is_sky = true;
+  }
+
+
   if (fx > 0.9999)
     TN->type = PLANE_X;
   else if (fy > 0.9999)
@@ -113,14 +125,16 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
   if (node->front_N)
     TN->children[side] = ConvertTraceNode(node->front_N, index_var);
   else
-    TN->children[side] = (node->front_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
+    TN->children[side] = (node->front_L->medium == MEDIUM_SOLID) ?
+          (is_sky ? TRACE_SKY : TRACE_SOLID) : TRACE_EMPTY;
 
   side ^= 1;
 
   if (node->back_N)
     TN->children[side] = ConvertTraceNode(node->back_N, index_var);
   else
-    TN->children[side] = (node->back_L->medium == MEDIUM_SOLID) ? TRACE_SOLID : TRACE_EMPTY;
+    TN->children[side] = (node->back_L->medium == MEDIUM_SOLID) ?
+          (is_sky ? TRACE_SKY : TRACE_SOLID) : TRACE_EMPTY;
 
 
   return this_idx;
@@ -149,16 +163,14 @@ void QCOM_FreeTraceNodes()
 }
 
 
-static bool RecursiveTestRay(int nodenum,
-                             float x1, float y1, float z1,
-                             float x2, float y2, float z2)
+static int RecursiveTestRay(int nodenum,
+                            float x1, float y1, float z1,
+                            float x2, float y2, float z2)
 {
   for (;;)
   {
     if (nodenum < 0)
-    {
-      return (nodenum == TRACE_EMPTY);  // ray passed
-    }
+      return nodenum;
 
     tnode_t *TN = &trace_nodes[nodenum];
 
@@ -215,8 +227,13 @@ static bool RecursiveTestRay(int nodenum,
 
     // check if front half of the ray is OK
 
-    if (! RecursiveTestRay(TN->children[side], x1,y1,z1, mx,my,mz))
-      return false;
+    int r = RecursiveTestRay(TN->children[side], x1,y1,z1, mx,my,mz);
+
+    // -AJA- here is where my TRACE_SKY logic comes into play.
+    //       It assumes the ray is cast from luxel to sun light
+    //       (and won't work the other way around).
+    if (r != TRACE_EMPTY)
+      return r;
 
     // yes it was, so continue with the back half
 
@@ -230,7 +247,9 @@ static bool RecursiveTestRay(int nodenum,
 bool QCOM_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2)
 {
-  return RecursiveTestRay(0, x1,y1,z1, x2,y2,z2);
+  int r = RecursiveTestRay(0, x1,y1,z1, x2,y2,z2);
+  
+  return (r != TRACE_SOLID);
 }
 
 
