@@ -72,6 +72,16 @@ static int ConvertTraceNode(quake_node_c *node, int & index_var)
 
   TN->dist = node->plane.CalcDist();
 
+  // ensure tnode planes are positive
+  if (TN->dist < 0)
+  {
+    TN->dist = -TN->dist;
+
+    for (int i = 0 ; i < 3 ; i++)
+      TN->normal[i] = -TN->normal[i];
+  }
+
+
   float fx = fabs(TN->normal[0]);
   float fy = fabs(TN->normal[1]);
   float fz = fabs(TN->normal[2]);
@@ -121,10 +131,88 @@ void QCOM_FreeTraceNodes()
 }
 
 
+static bool RecursiveTestRay(int nodenum,
+                             float x1, float y1, float z1,
+                             float x2, float y2, float z2)
+{
+  for (;;)
+  {
+    if (nodenum < 0)
+    {
+      return (nodenum == TRACE_EMPTY);  // OK
+    }
+
+    tnode_t *TN = &trace_nodes[nodenum];
+
+    float dist1;
+    float dist2;
+
+    switch (TN->type)
+    {
+      case PLANE_X:
+        dist1 = x1;
+        dist2 = x2;
+        break;
+
+      case PLANE_Y:
+        dist1 = y1;
+        dist2 = y2;
+        break;
+
+      case PLANE_Z:
+        dist1 = z1;
+        dist2 = z2;
+        break;
+
+      default:
+        dist1 = x1 * TN->normal[0] + y1 * TN->normal[1] + z1 * TN->normal[2];
+        dist2 = x2 * TN->normal[0] + y2 * TN->normal[1] + z2 * TN->normal[2];
+        break;
+    }
+
+    dist1 -= TN->dist;
+    dist2 -= TN->dist;
+
+    if (dist1 >= -T_EPSILON && dist2 >= -T_EPSILON)
+    {
+      nodenum = TN->children[0];
+      continue;
+    }
+
+    if (dist1 < T_EPSILON && dist2 < T_EPSILON)
+    {
+      nodenum = TN->children[1];
+      continue;
+    }
+
+    // the ray crosses the node plane.
+
+    int side = (dist1 < 0) ? 1 : 0;
+
+    double frac = dist1 / (double)(dist1 - dist2);
+
+    float mx = x1 + (x2 - x1) * frac;
+    float my = y1 + (y2 - y1) * frac;
+    float mz = z1 + (z2 - z1) * frac;
+
+    // check if front half of the ray is OK
+
+    if (! RecursiveTestRay(TN->children[side], x1,y1,z1, mx,my,mz))
+      return false;
+
+    // yes it was, so continue with the back half
+
+    nodenum = TN->children[side ^ 1];
+
+    x1 = mx;  y1 = my;  z1 = mz;
+  }
+}
+
+
 bool QCOM_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2)
 {
-  // TODO
+  return RecursiveTestRay(0, x1,y1,z1, x2,y2,z2);
 }
 
 

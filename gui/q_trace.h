@@ -26,8 +26,9 @@
 void QCOM_MakeTraceNodes();
 void QCOM_FreeTraceNodes();
 
-bool QCOM_TraceLine(float x1, float y1, float z1,
-                    float x2, float y2, float z2);
+// returns true if OK, false if blocked
+bool QCOM_TraceRay(float x1, float y1, float z1,
+                   float x2, float y2, float z2);
 
 #endif /* __QUAKE_TRACE_H__ */
 
