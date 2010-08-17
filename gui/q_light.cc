@@ -409,7 +409,7 @@ static void CalcPoints(int W, int H)
 }
 
 
-static void QCOM_TestLight(qLightmap_c *lmap)
+static void TestingStuff(qLightmap_c *lmap)
 {
   int W = lmap->width;
   int H = lmap->height;
@@ -421,7 +421,7 @@ static void QCOM_TestLight(qLightmap_c *lmap)
 
 //  lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
 
-    lmap->samples[t*W + s] = QCOM_TraceRay(0,-1200,250, V.x,V.y,V.z) ? 90 : 40;
+    lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
   }
 }
 
@@ -463,7 +463,7 @@ void QCOM_LightFace(quake_face_c *F)
     QCOM_ProcessLight(F->lmap, E);
   }
 
-  QCOM_TestLight(F->lmap);
+  TestingStuff(F->lmap);
 }
 
 
