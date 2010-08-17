@@ -617,6 +617,17 @@ void quake_node_c::AddFace(quake_face_c *F)
 }
 
 
+int quake_node_c::CountNodes() const
+{
+  int count = 1;
+
+  if (front_N) count += front_N->CountNodes();
+  if ( back_N) count +=  back_N->CountNodes();
+
+  return count;
+}
+
+
 quake_mapmodel_c::quake_mapmodel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),

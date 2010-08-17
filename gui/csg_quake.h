@@ -204,6 +204,9 @@ public:
   void ComputeBBox();
 
   void AddFace(quake_face_c *F);
+
+  // returns number of nodes in this tree (including this node)
+  int CountNodes() const;
 };
 
 
