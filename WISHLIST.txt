@@ -163,7 +163,9 @@ Miscellaneous:
 
   - PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
 
-  -  lifts often assume meshing up at 90 degree turns
+  - lifts often assume meshing up at 90 degree turns
+
+  - log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
 
