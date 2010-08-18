@@ -52,11 +52,14 @@ public:
 
   void Fill(float value);
 
+  void Add(int s, int t, float value)
+  {
+    samples[s + t * width] += value;
+  }
+
   void Clamp();
 
   void GetRange(float *low, float *high, float *avg);
-
-  void Add(double x, double y, float value);
 
   void Flatten(float avg = -99);
 

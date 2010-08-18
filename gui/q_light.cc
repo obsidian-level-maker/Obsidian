@@ -91,15 +91,15 @@ void qLightmap_c::GetRange(float *low, float *high, float *avg)
 }
 
 
-void qLightmap_c::Add(double x, double y, float value)
+#if 0
+void qLightmap_c::AddSafe(int s, int t, float value)
 {
-  if (0 <= x && x < width && 0 <= y && y < height)
+  if (0 <= s && s < width && 0 <= t && t < height)
   {
-    int i = (int)x + (int)y * width;
-
-    samples[i] += value;
+    Add(s, t, value);
   }
 }
+#endif
 
 
 void qLightmap_c::Flatten(float avg)
@@ -498,15 +498,41 @@ static void QCOM_FreeLights()
 
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 {
-#if 0
-  float light = E->props.getDouble("light");
-
-  if (light < 1)
+  // skip light when on back side of face
+  float perp = lt_plane_normal[0] * light.x +
+               lt_plane_normal[1] * light.y +
+               lt_plane_normal[2] * light.z - lt_plane_dist;
+   
+  if (perp <= 0)
     return;
 
-  //....
+  int W = lmap->width;
+  int H = lmap->height;
 
-#endif
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    const quake_vertex_c & V = lt_points[t*W + s];
+
+    if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
+      continue;
+
+    if (light.type == LTK_Sun)
+    {
+      lmap->Add(s, t, light.level);
+    }
+    else
+    {
+      float dist = ComputeDist(V.x, V.y, V.z, light.x, light.y, light.z);
+
+      if (dist >= light.radius)
+        continue;
+
+      float level = light.level * (1.0 - dist / light.radius);
+
+      lmap->Add(s, t, level);
+    }
+  }
 }
 
 
