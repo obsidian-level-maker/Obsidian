@@ -87,7 +87,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/nk_art.o    \
 	$(OBJ_DIR)/q_common.o  \
 	$(OBJ_DIR)/q_light.o   \
-	$(OBJ_DIR)/q_trace.o   \
+	$(OBJ_DIR)/q_vis.o     \
 	$(OBJ_DIR)/vis_buffer.o \
 	\
 	$(OBJ_DIR)/twister.o   \
