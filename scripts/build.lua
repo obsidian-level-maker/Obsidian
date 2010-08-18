@@ -688,11 +688,11 @@ end
 function Build.prefab(fab, skin, T)
 
   if type(fab) == "string" then
-    fab = PREFAB[fab]
-
-    if not fab then
+    if not PREFAB[fab] then
       error("Unknown prefab: " .. fab)
     end
+
+    fab = PREFAB[fab]
   end
 
 
