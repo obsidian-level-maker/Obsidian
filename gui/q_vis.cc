@@ -37,6 +37,8 @@
 #include "csg_main.h"
 #include "csg_quake.h"
 
+#include "vis_buffer.h"
+
 
 #define T_EPSILON  0.1
 
@@ -306,7 +308,17 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   v_bytes_per_leaf = (numleafs+7) >> 3;
 
-  // FIXME: add the "see all" list at offset zero
+
+  // FIXME: DO VIS STUFF !!!!
+
+
+  // Todo: handle overflow better: store visdata in memory, and degrade
+  //       clusters to a "see all" list at offset 0 (pick clusters which
+  //       have the most ones).  Also pick clusters where player cannot go
+  //       (scenic areas).
+
+  if (q_visibility->GetSize() >= max_size)
+    Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
 }
 
 //--- editor settings ---

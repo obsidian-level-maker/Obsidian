@@ -1541,9 +1541,6 @@ static void Quake_BSP()
   int cur_leaf = 0;
 
   AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
-
-
-  //??  MakeFaces(qk_bsp_root);
 }
 
 
