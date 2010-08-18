@@ -201,6 +201,8 @@ public:
    csg_entity_c(const char *_name, double xpos, double ypos, double zpos,
                 int _flags = 0);
   ~csg_entity_c();
+
+  bool Match(const char *want_name) const;
 };
 
 

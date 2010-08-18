@@ -266,6 +266,12 @@ csg_entity_c::~csg_entity_c()
 { }
 
 
+bool csg_entity_c::Match(const char *want_name) const
+{
+  return (strcmp(name.c_str(), want_name) == 0);
+}
+
+
 //------------------------------------------------------------------------
 
 int Grab_Properties(lua_State *L, int stack_pos,

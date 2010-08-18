@@ -35,6 +35,10 @@
 #include "csg_quake.h"
 
 
+#define DEFAULT_LIGHTLEVEL  300  // as per the Quake 'light' tool
+#define DEFAULT_SUNLEVEL    30
+
+
 qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offset(-1)
 {
   if (width > 1 || height > 1)
@@ -418,14 +422,81 @@ static void TestingStuff(qLightmap_c *lmap)
   {
     const quake_vertex_c & V = lt_points[t*W + s];
 
-//  lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
+    lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
 
-    lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
+//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
   }
 }
 
 
-static void QCOM_ProcessLight(qLightmap_c *lmap, csg_entity_c *E)
+//------------------------------------------------------------------------
+
+typedef enum
+{
+  LTK_Normal = 0,
+  LTK_Sun,
+}
+quake_light_kind_e;
+
+
+typedef struct
+{
+  int type;
+
+  float x, y, z;
+  float level;
+  float radius;
+  float param;
+}
+quake_light_t;
+
+
+static std::vector<quake_light_t> qk_all_lights;
+
+
+static void QCOM_FindLights()
+{
+  qk_all_lights.clear();
+
+  for (unsigned int i = 0 ; i < all_entities.size() ; i++)
+  {
+    csg_entity_c *E = all_entities[i];
+
+    if (StringCaseCmpPartial(E->name.c_str(), "light") != 0)
+      continue;
+
+    quake_light_t light;
+
+    light.type = LTK_Normal;
+
+    if (E->Match("light_sun"))
+      light.type = LTK_Sun;
+
+    light.x = E->x;
+    light.y = E->y;
+    light.z = E->z;
+
+    float default_level = (light.type == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
+
+    light.level  = E->props.getDouble("light", default_level);
+    light.radius = E->props.getDouble("radius", light.level);
+    light.param  = E->props.getDouble("param");
+
+    if (light.level < 1 || light.radius < 1)
+      continue;
+
+    qk_all_lights.push_back(light);
+  }
+}
+
+
+static void QCOM_FreeLights()
+{
+  qk_all_lights.clear();
+}
+
+
+static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 {
 #if 0
   float light = E->props.getDouble("light");
@@ -453,13 +524,9 @@ void QCOM_LightFace(quake_face_c *F)
 
   F->lmap = BSP_NewLightmap(W, H, 0);
 
-  // TODO: collect all light entities into own list
-
-  for (unsigned int i = 0 ; i < all_entities.size() ; i++)
+  for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
-    csg_entity_c *E = all_entities[i];
-
-    QCOM_ProcessLight(F->lmap, E);
+    QCOM_ProcessLight(F->lmap, qk_all_lights[i]);
   }
 
   TestingStuff(F->lmap);
@@ -468,6 +535,7 @@ void QCOM_LightFace(quake_face_c *F)
 
 void QCOM_LightAllFaces()
 {
+  QCOM_FindLights();
   QCOM_MakeTraceNodes();
 
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
@@ -484,6 +552,7 @@ void QCOM_LightAllFaces()
       Main_Ticker();
   }
 
+  QCOM_FreeLights();
   QCOM_FreeTraceNodes();
 }
 
