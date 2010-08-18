@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  QUAKE LIGHT TRACING
+//  QUAKE VISIBILITY and TRACING
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -32,6 +32,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
+#include "q_vis.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -252,6 +253,61 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
   return (r != TRACE_SOLID);
 }
 
+
+//------------------------------------------------------------------------
+
+static qLump_c *q_visibility;
+
+static byte *v_write_buffer;
+
+static int v_bytes_per_leaf;
+
+
+static int WriteCompressedRow(const byte *src)
+{
+  // returns offset for the written data block
+  int visofs = (int)q_visibility->GetSize();
+
+  const byte *src_e = src + v_bytes_per_leaf;
+
+  byte *dest = v_write_buffer;
+
+  while (src < src_e)
+  {
+    if (*src)
+    {
+      *dest++ = *src++;
+      continue;
+    }
+
+    *dest++ = *src++;
+
+    byte repeat = 1;
+
+    while (src < src_e && *src == 0 && repeat != 255)
+    {
+      src++; repeat++;
+    }
+
+    *dest++ = repeat;
+  }
+
+  q_visibility->Append(v_write_buffer, dest - v_write_buffer);
+
+  return visofs;
+}
+
+
+void QCOM_Visibility(int lump, int max_size, int numleafs)
+{
+  // TODO: QCOM_Visibility
+
+  q_visibility = BSP_NewLump(lump);
+
+  v_bytes_per_leaf = (numleafs+7) >> 3;
+
+  // FIXME: add the "see all" list at offset zero
+}
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

@@ -29,7 +29,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
-#include "q_trace.h"
+#include "q_vis.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"

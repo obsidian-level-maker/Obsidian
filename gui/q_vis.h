@@ -1,12 +1,10 @@
 //------------------------------------------------------------------------
-//  QUAKE LIGHT TRACING
+//  QUAKE VISIBILITY and TRACING
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
 //
-//  Copyright (C)      2010 Andrew Apted
-//  Copyright (C) 2005-2006 Peter Brett
-//  Copyright (C) 1994-2001 iD Software
+//  Copyright (C) 2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -20,8 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __QUAKE_TRACE_H__
-#define __QUAKE_TRACE_H__
+#ifndef __QUAKE_VIS_H__
+#define __QUAKE_VIS_H__
 
 void QCOM_MakeTraceNodes();
 void QCOM_FreeTraceNodes();
@@ -30,7 +28,9 @@ void QCOM_FreeTraceNodes();
 bool QCOM_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2);
 
-#endif /* __QUAKE_TRACE_H__ */
+void QCOM_Visibility(int lump, int max_size, int numleafs);
+
+#endif /* __QUAKE_VIS_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
