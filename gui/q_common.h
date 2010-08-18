@@ -109,6 +109,10 @@ void BSP_WriteEntities(int lump_num, const char *description);
 int BSP_NiceMidwayPoint(float low, float extent);
 
 
+// q_tjuncs.cc
+void QCOM_Fix_T_Junctions();
+
+
 /* ----- BSP lump directory ------------------------- */
 
 #define Q1_HEADER_LUMPS  15
