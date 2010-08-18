@@ -3158,12 +3158,12 @@ function Rooms_add_sun()
     local x = math.sin(angle * math.pi / 180.0) * sun_r
     local y = math.cos(angle * math.pi / 180.0) * sun_r
 
-    local level = sel(i == 1, 32, 4)
+    local level = sel(i == 1, 32, 6)
 
     gui.add_entity("light_sun", x, y, sun_h, { light=level })
   end
 
-  gui.add_entity("light_sun", 0, 0, sun_h, { light=6 })
+  gui.add_entity("light_sun", 0, 0, sun_h, { light=8 })
 end
 
 

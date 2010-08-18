@@ -412,7 +412,7 @@ static void CalcPoints(int W, int H)
 }
 
 
-static void TestingStuff(qLightmap_c *lmap)
+void QLIT_TestingStuff(qLightmap_c *lmap)
 {
   int W = lmap->width;
   int H = lmap->height;
