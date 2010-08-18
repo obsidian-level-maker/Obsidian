@@ -7,8 +7,10 @@ CHANGES (since 3.57)
 
 - CSG code can create Hexen II and Half-Life maps
 
-- qsavetex now supports Hexen II
-
 + support for "shaped" rooms (L, T, +)
 + support for teleporters
+
+- preliminary work on Hexen II and Half-Life
+
+- qsavetex detects and handles Hexen II
 
