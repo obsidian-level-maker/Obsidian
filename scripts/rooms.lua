@@ -3145,6 +3145,28 @@ function Rooms.build_seeds(R)
 end
 
 
+function Rooms_add_sun()
+  local sun_r = 25000
+  local sun_h = 40000
+
+  -- nine lights in the sky, one is "the sun" and the rest are
+  -- to keep outdoor areas from getting too dark.
+
+  for i = 1,8 do
+    local angle = i * 45 - 22.5
+
+    local x = math.sin(angle * math.pi / 180.0) * sun_r
+    local y = math.cos(angle * math.pi / 180.0) * sun_r
+
+    local level = sel(i == 1, 32, 4)
+
+    gui.add_entity("light_sun", x, y, sun_h, { light=level })
+  end
+
+  gui.add_entity("light_sun", 0, 0, sun_h, { light=6 })
+end
+
+
 function Rooms.build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -3183,5 +3205,7 @@ function Rooms.build_all()
   for _,R in ipairs(LEVEL.all_rooms)    do Rooms.build_seeds(R) end
 
   Layout.edge_of_map()
+
+  Rooms_add_sun()
 end
 
