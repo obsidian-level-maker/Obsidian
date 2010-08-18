@@ -548,14 +548,12 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints(W, H);
 
-  F->lmap = BSP_NewLightmap(W, H, 0);
+  F->lmap = BSP_NewLightmap(W, H, 24);
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
     QCOM_ProcessLight(F->lmap, qk_all_lights[i]);
   }
-
-  TestingStuff(F->lmap);
 }
 
 
