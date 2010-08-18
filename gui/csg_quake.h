@@ -207,6 +207,8 @@ public:
 
   // returns number of nodes in this tree (including this node)
   int CountNodes() const;
+
+  int CountLeafs() const;
 };
 
 

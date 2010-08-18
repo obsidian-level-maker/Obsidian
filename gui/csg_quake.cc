@@ -628,6 +628,24 @@ int quake_node_c::CountNodes() const
 }
 
 
+int quake_node_c::CountLeafs() const
+{
+  int count = 0;
+
+  if (front_N)
+    count += front_N->CountLeafs();
+  else if (front_L != qk_solid_leaf)
+    count += 1;
+
+  if (back_N)
+    count += back_N->CountLeafs();
+  else if (back_L != qk_solid_leaf)
+    count += 1;
+
+  return count;
+}
+
+
 quake_mapmodel_c::quake_mapmodel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),

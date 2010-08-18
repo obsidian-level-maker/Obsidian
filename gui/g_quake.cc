@@ -560,6 +560,22 @@ static void Q1_LightWorld()
 }
 
 
+static void Q1_VisWorld()
+{
+  // NOTE: we need to know the total number of leafs, but they haven't
+  //       been written yet.  We compute a value now and hope it's right.
+
+  int numleafs = qk_bsp_root->CountLeafs();
+
+  for (unsigned int i = 1 ; i < qk_all_mapmodels.size() ; i++)
+  {
+    numleafs += 6; ///TODO  qk_all_mapmodels->PredictLeafs();
+  }
+
+  QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
+}
+
+
 //------------------------------------------------------------------------
 //   BSP TREE OUTPUT
 //------------------------------------------------------------------------
@@ -1224,12 +1240,11 @@ static void Q1_CreateBSPFile(const char *name)
 
   Q1_LightWorld();
 
-  ///  QCOM_Visibility();
+  Q1_VisWorld();
 
   Q1_WriteBSP();
 
   Q1_ClipModels();
-
   Q1_WriteModels();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
