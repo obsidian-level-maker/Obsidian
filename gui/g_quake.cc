@@ -1238,6 +1238,8 @@ static void Q1_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build(1);
 
+  QCOM_Fix_T_Junctions();
+
   Q1_LightWorld();
 
   Q1_VisWorld();

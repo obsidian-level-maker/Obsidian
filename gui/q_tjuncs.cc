@@ -22,7 +22,7 @@
 //  This employs same method as in Quake's qbsp tool:
 //
 //    -  use hash table to track 'infinite lines' which edges sit on.
-//    -  for each infinite line, collect all vertices, then sort them.
+//    -  for each infinite line, collect all vertices, remove dups.
 //    -  for each edge of each face, find it's line and see if any
 //       vertices would split the edge.
 //
@@ -119,9 +119,9 @@ public:
   {
     int hash;
 
-    hash = IntHash(I_ROUND(x * 37.0));
-    hash = IntHash(I_ROUND(y * 37.0) ^ hash);
-    hash = IntHash(I_ROUND(z * 37.0) ^ hash);
+    hash = IntHash(I_ROUND(x * 1.4));
+    hash = IntHash(I_ROUND(y * 1.4) ^ hash);
+    hash = IntHash(I_ROUND(z * 1.4) ^ hash);
 
     return hash;
   }
@@ -130,14 +130,14 @@ public:
   {
     if (fabs( x - other.x ) > NORMAL_EPSILON ||
         fabs( y - other.y ) > NORMAL_EPSILON ||
-        fabs( z - other.y ) > NORMAL_EPSILON)
+        fabs( z - other.z ) > NORMAL_EPSILON)
     {
       return false;
     }
 
     if (fabs(nx - other.nx) > NORMAL_EPSILON ||
         fabs(ny - other.ny) > NORMAL_EPSILON ||
-        fabs(nz - other.ny) > NORMAL_EPSILON)
+        fabs(nz - other.nz) > NORMAL_EPSILON)
     {
       return false;
     }
@@ -250,8 +250,8 @@ static infinite_line_c * TJ_HashLookup(const quake_vertex_c & A,
 
   // not found, make new one
 
-fprintf(stderr, "INF-LINE: (%1.2f %1.2f %1.2f) + (%1.4f %1.4f %1.4f) --> %d\n",
-        IL.x, IL.y, IL.z,  IL.nx, IL.ny, IL.nz,  hash);
+/// fprintf(stderr, "INF HASH %04d: (%1.6f %1.6f %1.6f) + (%1.6f %1.6f %1.6f)\n",
+///         hash,  IL.x, IL.y, IL.z,  IL.nx, IL.ny, IL.nz);
 
   int index = (int)infinite_lines.size();
 
@@ -300,8 +300,14 @@ static void TJ_SortVertices()
 }
 
 
-static void TJ_FixOneFace(quake_face_c *F)
+static bool TJ_FixOneFace(quake_face_c *F)
 {
+  // returns true if the face is OK, or false if it was modified.
+  // when it was modified we need to repeat the process again,
+  // since we can only fix one edge at a time.
+
+  bool changed = false;
+
   // iterate over a swapped-out version of the face's vertices
   std::vector<quake_vertex_c> local_verts;
 
@@ -321,7 +327,10 @@ static void TJ_FixOneFace(quake_face_c *F)
     float along_A = IL->CalcAlong(A);
     float along_B = IL->CalcAlong(B);
 
-    SYS_ASSERT(along_B > along_A);
+    if (along_A > along_B)
+    {
+      std::swap(along_A, along_B);
+    }
 
     for (unsigned int n = 0 ; n < IL->vertices.size() ; n++)
     {
@@ -341,10 +350,16 @@ static void TJ_FixOneFace(quake_face_c *F)
       IL->GetCoord(new_vert, along_N);
 
       F->verts.push_back(new_vert);
+
+      // stop now, as the next intersecting vertex may be in the
+      // wrong order for the face's winding.
+      changed = true; break;
     }
 
     F->verts.push_back(B);
   }
+
+  return !changed;  // OK now
 }
 
 
@@ -352,7 +367,9 @@ static void TJ_FixFaces(quake_node_c *node)
 {
   for (unsigned int i = 0 ; i < node->faces.size() ; i++)
   {
-    TJ_FixOneFace(node->faces[i]);
+    for (int loop = 0 ; loop < 16; loop++)
+      if (TJ_FixOneFace(node->faces[i]))
+        break;
   }
 
   if (node->front_N) TJ_AddFaces(node->front_N);
