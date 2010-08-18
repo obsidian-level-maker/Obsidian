@@ -6,6 +6,9 @@ TODO
 !  Lua code should create thing 'flags' value (DOOM, HEXEN, etc)
 
 
+?? use 'int' for lightmap samples ??
+
+
 DONE: check max size of lightmap --> 17x17
       (extent can == 256, hence smax == (extent>>4)+1 == 17)
 
