@@ -317,15 +317,19 @@ Sam's suggestions:
   QUAKE
 ----------------------------------------------------------------
 
+++ fix T-junctions:
+   -  process each node in BSP tree
+   -  collect all vertices which lie on that plane
+   -  for each face on this node, do EDGE/VERTEX intersect test
+
 +  better miptex handling:
    -  only copy _used_ textures into the MipTex lump
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
-++ perform visibility
+>>> perform lighting
 
-++ perform lighting
-   (sky vector = '1 2 4')
+>>> perform visibility
 
 +  liquid areas
 
@@ -360,8 +364,6 @@ Sam's suggestions:
 ----------------------------------------------------------------
   QUAKE II
 ----------------------------------------------------------------
-
--  fix the sky
 
 -  create oblige logos (.wal entries)
 
