@@ -994,7 +994,7 @@ function Layout.try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
       local C = B and B.conn
 
       if C then
-        if C.conn_h then assert(C.conn_h == S.floor_h) end
+--!!!!!!!!!!!!!!!1        if C.conn_h then assert(C.conn_h == S.floor_h) end
 
         C.conn_h = S.floor_h
         C.conn_ftex = f_tex
