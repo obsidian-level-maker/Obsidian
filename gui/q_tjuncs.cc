@@ -342,7 +342,7 @@ static bool TJ_FixOneFace(quake_face_c *F)
       if (along_N > along_B - ALONG_EPSILON)
         break;
 
-      // we have an intersection folks!
+      // we have found a T-junction folks!
       tjunc_count++;
 
       quake_vertex_c new_vert;
@@ -353,13 +353,12 @@ static bool TJ_FixOneFace(quake_face_c *F)
 
       // stop now, as the next intersecting vertex may be in the
       // wrong order for the face's winding.
-      changed = true; break;
+      changed = true;
+      break;
     }
-
-    F->verts.push_back(B);
   }
 
-  return !changed;  // OK now
+  return !changed;  // OK if not changed
 }
 
 
@@ -367,13 +366,15 @@ static void TJ_FixFaces(quake_node_c *node)
 {
   for (unsigned int i = 0 ; i < node->faces.size() ; i++)
   {
-    for (int loop = 0 ; loop < 16; loop++)
+    for (int loop = 0 ; loop < 16 ; loop++)
+    {
       if (TJ_FixOneFace(node->faces[i]))
         break;
+    }
   }
 
-  if (node->front_N) TJ_AddFaces(node->front_N);
-  if (node-> back_N) TJ_AddFaces(node-> back_N);
+  if (node->front_N) TJ_FixFaces(node->front_N);
+  if (node-> back_N) TJ_FixFaces(node-> back_N);
 }
 
 
