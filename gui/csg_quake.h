@@ -250,7 +250,7 @@ extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 /***** FUNCTIONS ****************/
 
-void CSG_QUAKE_Build(int game);
+void CSG_QUAKE_Build();
 
 #endif /* __OBLIGE_CSG_QUAKE_H__ */
 

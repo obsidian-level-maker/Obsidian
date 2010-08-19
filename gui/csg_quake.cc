@@ -44,9 +44,6 @@
 #define FACE_MAX_SIZE  240
 
 
-static int csg_game;  // 1 = Quake, 2 = Quake II
-
-
 #if 0
 
 static double EvaluatePartition(rNode_c * LEAF,
@@ -1047,7 +1044,7 @@ void quake_leaf_c::BBoxFromSolids()
 static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 {
   // Quake 1 and related games simply have a single solid leaf
-  if (csg_game == 1)
+  if (qk_game == 1)
     return qk_solid_leaf;
 
   // optimisation -- VALID ???
@@ -1071,7 +1068,7 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 
 static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
 {
-  if (csg_game == 1)
+  if (qk_game == 1)
     return qk_solid_leaf;
 
   quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
@@ -1355,7 +1352,7 @@ static void Quake_BSP()
 
   CreateSides(GROUP);
 
-  if (csg_game == 2)
+  if (qk_game == 2)
     CreateBrushes(GROUP);
 
   qk_bsp_root = Partition_Group(GROUP);
@@ -1370,11 +1367,9 @@ static void Quake_BSP()
 }
 
 
-void CSG_QUAKE_Build(int game)
+void CSG_QUAKE_Build()
 {
   LogPrintf("QUAKE CSG...\n");
-
-  csg_game = game;
 
   if (main_win)
     main_win->build_box->Prog_Step("CSG");

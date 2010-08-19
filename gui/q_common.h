@@ -29,6 +29,14 @@ class quake_plane_c;
 class quake_vertex_c;
 
 
+typedef enum
+{
+  SUBFMT_Hexen2   = 1,
+  SUBFMT_HalfLife = 2,
+}
+quake_subformat_e;
+
+
 /***** CLASSES ****************/
 
 class qLump_c
@@ -68,19 +76,13 @@ private:
 
 /***** VARIABLES ****************/
 
-typedef enum
-{
-  SUBFMT_Hexen2   = 1,
-  SUBFMT_HalfLife = 2,
-}
-quake_subformat_e;
-
+extern int qk_game;
 extern int qk_sub_format;
 
 
 /***** FUNCTIONS ****************/
 
-bool BSP_OpenLevel(const char *entry_in_pak, int game /* 1 or 2 */);
+bool BSP_OpenLevel(const char *entry_in_pak);
 bool BSP_CloseLevel();
 
 qLump_c *BSP_NewLump(int entry);

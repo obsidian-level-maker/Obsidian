@@ -63,7 +63,7 @@ public:
 
   void Flatten(float avg = -99);
 
-  void Write(qLump_c *lump, bool colored);
+  void Write(qLump_c *lump);
 
   int CalcOffset() const;
 };
@@ -83,7 +83,7 @@ qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
 
 int QCOM_FlatLightOffset(int value);
 
-void QCOM_BuildLightmap(int lump, int max_size, bool colored);
+void QCOM_BuildLightmap(int lump, int max_size);
 
 void QCOM_LightAllFaces();
 

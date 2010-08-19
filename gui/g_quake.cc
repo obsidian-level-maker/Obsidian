@@ -54,6 +54,8 @@
  *
  */
 
+#define HL_MAX_MAP_LIGHTING  0x200000
+
 
 #define LEAF_PADDING   4
 #define NODE_PADDING   16
@@ -62,8 +64,6 @@
 
 extern void Q1_ClippingHull(int hull);
 
-
-int qk_sub_format;
 
 static char *level_name;
 static char *description;
@@ -552,11 +552,12 @@ static void Q1_LightWorld()
 
   QCOM_LightAllFaces();
 
-  bool colored = (qk_sub_format == SUBFMT_HalfLife) ? true : false;
+  int max_size = MAX_MAP_LIGHTING;
 
-  int max_size = MAX_MAP_LIGHTING * (colored ? 2 : 1);
+  if (qk_sub_format == SUBFMT_HalfLife)
+    max_size = HL_MAX_MAP_LIGHTING;
 
-  QCOM_BuildLightmap(LUMP_LIGHTING, max_size, colored);
+  QCOM_BuildLightmap(LUMP_LIGHTING, max_size);
 }
 
 
@@ -1231,12 +1232,17 @@ static void Q1_WriteModels()
 
 static void Q1_CreateBSPFile(const char *name)
 {
-  BSP_OpenLevel(name, 1);
+  qk_color_lighting = false;
+
+  if (qk_sub_format == SUBFMT_HalfLife)
+    qk_color_lighting = true;
+
+  BSP_OpenLevel(name);
 
   ClearMipTex();
   ClearTexInfo();
 
-  CSG_QUAKE_Build(1);
+  CSG_QUAKE_Build();
 
   QCOM_Fix_T_Junctions();
 
@@ -1327,6 +1333,7 @@ private:
 
 bool quake1_game_interface_c::Start()
 {
+  qk_game = 1;
   qk_sub_format = 0;
 
   filename = Select_Output_File("pak");

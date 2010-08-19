@@ -125,13 +125,10 @@ void qLightmap_c::Flatten(float avg)
 }
 
 
-void qLightmap_c::Write(qLump_c *lump, bool colored)
+void qLightmap_c::Write(qLump_c *lump)
 {
   if (isFlat())
-  {
-    offset = colored ? 1 : 0;
     return;
-  }
 
   offset = lump->GetSize();
 
@@ -145,7 +142,7 @@ void qLightmap_c::Write(qLump_c *lump, bool colored)
 
     lump->Append(&datum, 1);
 
-    if (colored)
+    if (qk_color_lighting)
     {
       lump->Append(&datum, 1);
       lump->Append(&datum, 1);
@@ -226,7 +223,7 @@ static void WriteFlatBlock(int level, int count)
 }
 
 
-void QCOM_BuildLightmap(int lump, int max_size, bool colored)
+void QCOM_BuildLightmap(int lump, int max_size)
 {
   lightmap_lump = BSP_NewLump(lump);
 
@@ -234,7 +231,7 @@ void QCOM_BuildLightmap(int lump, int max_size, bool colored)
   // for the overbright range (129-255) there are half as many.
 
   int i;
-  int flat_size = FLAT_LIGHTMAP_SIZE * (colored ? 3 : 1);
+  int flat_size = FLAT_LIGHTMAP_SIZE * (qk_color_lighting ? 3 : 1);
 
   for (i = 0 ; i < 128 ; i++)
   {
@@ -250,7 +247,7 @@ void QCOM_BuildLightmap(int lump, int max_size, bool colored)
 
 
   // from here on 'max_size' is in PIXELS (not bytes)
-  if (colored)
+  if (qk_color_lighting)
     max_size /= 3;
 
 
@@ -261,7 +258,7 @@ void QCOM_BuildLightmap(int lump, int max_size, bool colored)
   {
     qLightmap_c *L = qk_all_lightmaps[k];
 
-    L->Write(lightmap_lump, colored);
+    L->Write(lightmap_lump);
   }
 }
 

@@ -41,6 +41,10 @@
 #define HL_BSP_VERSION  30
 
 
+int qk_game;
+int qk_sub_format;
+
+
 qLump_c::qLump_c() : buffer(), crlf(false)
 { }
 
@@ -620,7 +624,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
       break;
 
     default:
-      Main_FatalError("INTERNAL ERROR: BSP_OpenLevel: unknown game %d\n", game);
+      Main_FatalError("INTERNAL ERROR: invalid qk_game %d\n", qk_game);
       return false; // NOT REACHED
   }
 

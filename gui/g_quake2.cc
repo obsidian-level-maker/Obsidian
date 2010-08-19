@@ -1005,7 +1005,7 @@ static void Q2_LightWorld()
 
   QCOM_LightAllFaces();
 
-  QCOM_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING, true /* colored */);
+  QCOM_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 }
 
 
@@ -1013,7 +1013,9 @@ static void Q2_LightWorld()
 
 static void Q2_CreateBSPFile(const char *name)
 {
-  BSP_OpenLevel(name, 2);
+  qk_color_lighting = true;
+
+  BSP_OpenLevel(name);
 
   Q2_ClearBrushes();
   Q2_ClearTexInfo();
@@ -1021,7 +1023,7 @@ static void Q2_CreateBSPFile(const char *name)
   Q2_DummyArea();
   Q2_DummyVis();
 
-  CSG_QUAKE_Build(2);
+  CSG_QUAKE_Build();
 
   Q2_LightWorld();
 
@@ -1069,6 +1071,8 @@ public:
 
 bool quake2_game_interface_c::Start()
 {
+  qk_game = 2;
+
   filename = Select_Output_File("pak");
 
   if (! filename)
