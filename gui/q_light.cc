@@ -441,7 +441,7 @@ quake_light_kind_e;
 
 typedef struct
 {
-  int type;
+  int kind;
 
   float x, y, z;
   float level;
@@ -467,16 +467,16 @@ static void QCOM_FindLights()
 
     quake_light_t light;
 
-    light.type = LTK_Normal;
+    light.kind = LTK_Normal;
 
     if (E->Match("light_sun"))
-      light.type = LTK_Sun;
+      light.kind = LTK_Sun;
 
     light.x = E->x;
     light.y = E->y;
     light.z = E->z;
 
-    float default_level = (light.type == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
+    float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
     light.level  = E->props.getDouble("light", default_level);
     light.radius = E->props.getDouble("radius", light.level);
@@ -498,12 +498,16 @@ static void QCOM_FreeLights()
 
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 {
-  // skip light when on back side of face
+  // skip lights which are behind the face
   float perp = lt_plane_normal[0] * light.x +
                lt_plane_normal[1] * light.y +
                lt_plane_normal[2] * light.z - lt_plane_dist;
    
   if (perp <= 0)
+    return;
+
+  // skip lights which are too far away
+  if (light.kind != LTK_Sun && perp > light.radius)
     return;
 
   int W = lmap->width;
@@ -517,7 +521,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
       continue;
 
-    if (light.type == LTK_Sun)
+    if (light.kind == LTK_Sun)
     {
       lmap->Add(s, t, light.level);
     }
@@ -559,6 +563,8 @@ void QCOM_LightFace(quake_face_c *F)
 
 void QCOM_LightAllFaces()
 {
+  LogPrintf("Lighting World...\n");
+
   QCOM_FindLights();
   QCOM_MakeTraceNodes();
 
