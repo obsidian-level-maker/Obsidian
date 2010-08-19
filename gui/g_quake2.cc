@@ -801,7 +801,7 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
   raw_face.styles[2] = 0xFF;
   raw_face.styles[3] = 0xFF;
 
-  raw_face.lightofs = 72*17*17;  // FIXME
+  raw_face.lightofs = QCOM_FlatLightOffset(model->light);
 
 
   DoWriteBrushSide(raw_face.planenum ^ raw_face.side, raw_face.texinfo);

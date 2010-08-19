@@ -545,12 +545,10 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     {
       float dist = ComputeDist(V.x, V.y, V.z, light.x, light.y, light.z);
 
-      if (dist >= light.radius)
-        continue;
-
-      float level = light.level * (1.0 - dist / light.radius);
-
-      lmap->Add(s, t, level);
+      if (dist < light.radius)
+      {
+        lmap->Add(s, t, light.level * (1.0 - dist / light.radius));
+      }
     }
   }
 }
@@ -577,6 +575,40 @@ void QCOM_LightFace(quake_face_c *F)
 }
 
 
+void QCOM_LightMapModel(quake_mapmodel_c *model)
+{
+  float value = 24.0;
+
+  float mx = (model->x1 + model->x2) / 2.0;
+  float my = (model->y1 + model->y2) / 2.0;
+  float mz = (model->z1 + model->z2) / 2.0;
+
+  for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+  {
+    quake_light_t & light = qk_all_lights[i];
+
+    if (! QCOM_TraceRay(mx, my, mz, light.x, light.y, light.z))
+      continue;
+
+    if (light.kind == LTK_Sun)
+    {
+      value += light.level;
+    }
+    else
+    {
+      float dist = ComputeDist(mx, my, mz, light.x, light.y, light.z);
+
+      if (dist < light.radius)
+      {
+        value += light.level * (1.0 - dist / light.radius);
+      }
+    }
+  }
+
+  model->light = CLAMP(0, I_ROUND(value), 255);
+}
+
+
 void QCOM_LightAllFaces()
 {
   LogPrintf("\nLighting World...\n");
@@ -596,6 +628,13 @@ void QCOM_LightAllFaces()
 
     if (i % 400 == 0)
       Main_Ticker();
+  }
+
+  // now do map models
+
+  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
+  {
+    QCOM_LightMapModel(qk_all_mapmodels[i]);
   }
 
   QCOM_FreeLights();

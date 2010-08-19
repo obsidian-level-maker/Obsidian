@@ -475,13 +475,11 @@ quake_mapmodel_c::quake_mapmodel_c() :
     x1(0), y1(0), z1(0),
     x2(0), y2(0), z2(0),
     x_face(), y_face(), z_face(),
-    firstface(0), numfaces(0), numleafs(0)
+    firstface(0), numfaces(0), numleafs(0),
+    light(64)
 {
   for (int i = 0 ; i < 6 ; i++)
     nodes[i] = 0;
-
-  for (int k = 0 ; k < 6 ; k++)
-    light[k] = 64;
 }
 
 

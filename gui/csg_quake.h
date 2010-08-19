@@ -228,6 +228,9 @@ public:
   int numfaces;
   int numleafs;
 
+  // light level for whole model
+  int light;
+
 public:
    quake_mapmodel_c();
   ~quake_mapmodel_c();
