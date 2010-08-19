@@ -709,6 +709,10 @@ void BSP_WriteEntities(int lump_num, const char *description)
   {
     csg_entity_c *E = all_entities[j];
 
+    // skip entities which the engine may complain about
+    if (E->props.getInt("nowrite"))
+      continue;
+
     lump->Printf("{\n");
 
     // write entity properties
