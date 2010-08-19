@@ -302,6 +302,8 @@ static int WriteCompressedRow(const byte *src)
 
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
+  LogPrintf("Visibility...\n");
+
   // TODO: QCOM_Visibility
 
   q_visibility = BSP_NewLump(lump);

@@ -150,7 +150,7 @@ extern std::vector<region_c *> all_regions;
 
 /***** FUNCTIONS ****************/
 
-void CSG_BSP(double grid);
+void CSG_BSP(double grid, bool is_clip_hull = false);
 
 void CSG_SortBrushes();
 void CSG_SwallowBrushes();

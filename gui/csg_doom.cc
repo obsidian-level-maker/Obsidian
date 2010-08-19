@@ -1968,6 +1968,8 @@ void CSG_DOOM_Write()
 /// Doom_TestRegions();
 /// return;
  
+  LogPrintf("DOOM CSG...\n");
+
   DM_FreeStuff();
 
   CSG_BSP(4.0);

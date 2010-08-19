@@ -1546,6 +1546,8 @@ static void Quake_BSP()
 
 void CSG_QUAKE_Build(int game)
 {
+  LogPrintf("QUAKE CSG...\n");
+
   csg_game = game;
 
   if (main_win)

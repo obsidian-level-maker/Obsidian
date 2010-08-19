@@ -41,6 +41,8 @@
 
 extern void CSG_DOOM_Write();
 
+// extern void CSG_TestRegions_Doom();
+
 extern void DM_FreeLevelStuff(void);
 
 static char *level_name;
@@ -778,9 +780,6 @@ void doom_game_interface_c::Property(const char *key, const char *value)
 }
 
 
-extern void CSG_TestRegions_Doom(void);
-
-
 void doom_game_interface_c::EndLevel()
 {
   if (! level_name)
@@ -791,11 +790,9 @@ void doom_game_interface_c::EndLevel()
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 
-#if 1
   CSG_DOOM_Write();
-#else
-  // TESTING STUFF
-  // CSG_TestRegions_Doom();
+#if 0
+  CSG_TestRegions_Doom();
 #endif
 
   DM_EndLevel(level_name);

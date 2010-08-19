@@ -797,6 +797,8 @@ static void NK_WriteWalls()
 
 void CSG_NUKEM_Write()
 {
+  LogPrintf("NUKEM CSG...\n");
+
   nk_all_sectors.clear();
   nk_all_walls.clear();
 

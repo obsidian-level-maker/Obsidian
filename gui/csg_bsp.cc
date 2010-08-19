@@ -39,6 +39,8 @@
 
 double QUANTIZE_GRID;
 
+static bool csg_is_clip_hull;
+
 
 class partition_c
 {
@@ -900,7 +902,9 @@ static void SplitGroup(group_c & group)
   if (group.regs.empty())
   {
     if (! group.ents.empty())
-      fprintf(stderr, "WARNING: SplitGroup: %u lost entities\n", group.ents.size());
+    {
+      DebugPrintf("SplitGroup: lost %u entities\n", group.ents.size());
+    }
               
     return;
   }
@@ -1207,7 +1211,9 @@ static void RemoveDeadRegions()
   fprintf(stderr, "RemoveDeadRegions: %d --> %d\n", before, after);
 
   if (lost_ents > 0)
-    fprintf(stderr, "WARNING: %d entities in dead region\n", lost_ents);
+  {
+    LogPrintf("WARNING: %d entities in dead region\n", lost_ents);
+  }
 }
 
 
@@ -1302,8 +1308,12 @@ static void MarkGapsWithEntities()
 
       if (! gap)
       {
-        LogPrintf("WARNING: entity '%s' is inside solid @ (%1.0f,%1.0f,%1.0f)\n",
-                  E->name.c_str(), E->x, E->y, E->z);
+        // sun lights are allowed to be inside the sky
+        if (! csg_is_clip_hull && ! E->Match("light_sun"))
+        {
+          LogPrintf("WARNING: entity '%s' is inside solid @ (%1.0f,%1.0f,%1.0f)\n",
+                    E->name.c_str(), E->x, E->y, E->z);
+        }
         continue;
       }
 
@@ -1452,7 +1462,7 @@ static void RemoveUnusedGaps()
     Main_FatalError("CSG: all gaps were unreachable (no entities?)\n");
   }
 
-  LogPrintf("CSG: filled %d gaps (of %d total)\n", filled, total);
+  LogPrintf("Filled %d gaps (of %d total)\n", filled, total);
 }
 
 
@@ -1575,9 +1585,11 @@ void CSG_DiscoverGaps()
 }
 
 
-void CSG_BSP(double grid)
+void CSG_BSP(double grid, bool is_clip_hull)
 {
   QUANTIZE_GRID = grid;
+
+  csg_is_clip_hull = is_clip_hull;
 
   all_partitions.clear();
   all_regions.clear();
@@ -1610,15 +1622,17 @@ void CSG_BSP(double grid)
 
 
 //------------------------------------------------------------------------
-//   TEMPORARY TEST CRUD
+//   TESTING CRUD
 //------------------------------------------------------------------------
+
+#ifdef DEBUG_CSG_BSP
 
 #include "g_doom.h"
 
 static std::map<int, int> test_vertices;
 
 
-int TestVertex(snag_c *S, int which)
+static int TestVertex(snag_c *S, int which)
 {
   int RX = (rand() & 3) - 1;
   int RY = (rand() & 3) - 1;
@@ -1645,7 +1659,7 @@ int TestVertex(snag_c *S, int which)
 
 
 
-void CSG_TestRegions_Doom(void)
+void CSG_TestRegions_Doom()
 {
   // for debugging only: each region_c becomes a single sector.
 
@@ -1655,21 +1669,18 @@ void CSG_TestRegions_Doom(void)
 
   unsigned int i, k;
 
-int swob = 0;
-int bwos = 0;
+  int swob = 0;  // snags without brushes
+  int bwos = 0;  // brushes without snags
+
+  int degens = 0;
+  int badref = 0;
 
   int line_id = 0;
-
-int degens = 0;
-int badref = 0;
 
 
   for (i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
-
-///    if (R->isDegen())
-///      continue;
 
     if (! R->brushes.empty() && R->  snags.empty()) bwos++;
     if (! R->  snags.empty() && R->brushes.empty()) swob++;
@@ -1708,23 +1719,10 @@ int badref = 0;
       int v2 = TestVertex(S, 1);
 
       if (v1 == v2)  // degenerate
-      { degens++;
+      {
+        degens++;
         continue;
       }
-
-if (line_id == 12345678)
-{
-fprintf(stderr, "LINE #%d  SNAG %p  REGION %p / %p  (%s)\n", line_id, S, S->region, R, S->mini ? "MINI" : "normal");
-
-fprintf(stderr, "  coords: (%1.0f %1.0f) --> (%1.0f %1.0f)\n",
-        S->x1, S->y1, S->x2, S->y2);
-
-fprintf(stderr, "  on_node %p  (%1.0f %1.0f) --> (%1.0f %1.0f)\n", S->on_node,
-  S->on_node ? S->on_node->x1 : 0, S->on_node ? S->on_node->y1 : 0,
-  S->on_node ? S->on_node->x2 : 0, S->on_node ? S->on_node->y2 : 0);
-
-fprintf(stderr, "  q_alongs: %d %d\n", S->q_along1, S->q_along2);
-}
 
       DM_AddLinedef(v1, v2, sec_id, -1,
                     S->partner ? 1 : 0, 1 /*impassible*/, 0,
@@ -1737,6 +1735,7 @@ fprintf(stderr, "  q_alongs: %d %d\n", S->q_along1, S->q_along2);
   fprintf(stderr, "REGION SwoB: %d  BwoS:    %d  TOTAL: %u\n", swob, bwos, all_regions.size());
 }
 
+#endif  // DEBUG_CSG_BSP
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

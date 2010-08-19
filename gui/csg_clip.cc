@@ -1150,7 +1150,7 @@ static void Q1_ClipWorld(int hull, double *pads)
 
   FattenBrushes(pads[0], pads[1], pads[2]);
 
-  CSG_BSP(0.5);
+  CSG_BSP(0.5, true /* is_clip_hull */);
 
   CoalesceClipRegions();
 
@@ -1231,7 +1231,7 @@ void Q1_ClippingHull(int hull)
     return;
 
 
-  DebugPrintf("Q1_ClippingHull %d\n", hull);
+  LogPrintf("Clipping Hull %d...\n", hull);
 
   if (main_win)
   {
