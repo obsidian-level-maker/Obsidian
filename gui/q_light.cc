@@ -563,7 +563,7 @@ void QCOM_LightFace(quake_face_c *F)
 
 void QCOM_LightAllFaces()
 {
-  LogPrintf("Lighting World...\n");
+  LogPrintf("\nLighting World...\n");
 
   QCOM_FindLights();
   QCOM_MakeTraceNodes();

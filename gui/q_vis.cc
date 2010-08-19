@@ -302,7 +302,7 @@ static int WriteCompressedRow(const byte *src)
 
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
-  LogPrintf("Visibility...\n");
+  LogPrintf("\nVisibility...\n");
 
   // TODO: QCOM_Visibility
 

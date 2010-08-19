@@ -1231,7 +1231,7 @@ void Q1_ClippingHull(int hull)
     return;
 
 
-  LogPrintf("Clipping Hull %d...\n", hull);
+  LogPrintf("\nClipping Hull %d...\n", hull);
 
   if (main_win)
   {

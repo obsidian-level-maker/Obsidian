@@ -1083,8 +1083,6 @@ for (int z = 0 ; z < (int)overlap_list.size() ; z++)
         changes++;
     }
 
-//    fprintf(stderr, "  %d changes\n", changes);
-
   } while (changes > 0);
 }
 
@@ -1207,8 +1205,9 @@ static void RemoveDeadRegions()
   }
 
   int after = (int)all_regions.size();
+  int count = before - after;
 
-  fprintf(stderr, "RemoveDeadRegions: %d --> %d\n", before, after);
+  LogPrintf("Removed %d dead regions (of %d)\n", count, before);
 
   if (lost_ents > 0)
   {
@@ -1253,8 +1252,8 @@ void CSG_SwallowBrushes()
   // check each region_c for redundant brushes, ones which are
   // completely surrounded by another brush (on the Z axis)
 
-int count=0;
-int total=0;
+  int count=0;
+  int total=0;
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
@@ -1266,13 +1265,14 @@ int total=0;
     for (int k = (int)R->brushes.size()-1 ; k > i ; k--)
     {
       if (CanSwallowBrush(R, i, k))
-      { count++;
+      {
         R->RemoveBrush(k);
+        count++;
       }
     }
   }
 
-fprintf(stderr, "Swallowed brushes: %d (of %d)\n", count, total);
+  LogPrintf("Swallowed %d brushes (of %d)\n", count, total);
 }
 
 
