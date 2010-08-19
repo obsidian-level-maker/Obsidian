@@ -84,7 +84,6 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/g_quake.o   \
 	$(OBJ_DIR)/g_quake2.o  \
 	$(OBJ_DIR)/g_wolf.o    \
-	$(OBJ_DIR)/nk_art.o    \
 	$(OBJ_DIR)/q_common.o  \
 	$(OBJ_DIR)/q_light.o   \
 	$(OBJ_DIR)/q_tjuncs.o  \
