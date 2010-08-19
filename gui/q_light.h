@@ -69,12 +69,19 @@ public:
 };
 
 
+/***** VARIABLES **********/
+
+extern bool qk_color_lighting;
+
+
 /***** FUNCTIONS **********/
 
 void BSP_InitLightmaps();
 void BSP_FreeLightmaps();
 
 qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
+
+int QCOM_FlatLightOffset(int value);
 
 void QCOM_BuildLightmap(int lump, int max_size, bool colored);
 

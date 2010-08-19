@@ -39,6 +39,9 @@
 #define DEFAULT_SUNLEVEL    30
 
 
+bool qk_color_lighting;
+
+
 qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offset(-1)
 {
   if (width > 1 || height > 1)
@@ -153,19 +156,16 @@ void qLightmap_c::Write(qLump_c *lump, bool colored)
 
 int qLightmap_c::CalcOffset() const
 {
-  if (! isFlat())
-    return offset;
-
-  // compute offset of a flat lightmap
-  int result = (int) samples[0];
-
-  if (result > 128)
+  if (isFlat())
   {
-    result = 64 + result / 2;
-  }
+    int value = (int)samples[0];
 
-  // for flat maps, 'offset' field remembers colored vs mono
-  return result * (offset ? 3 : 1);
+    return QCOM_FlatLightOffset(CLAMP(0, value, 255));
+  }
+  else
+  {
+    return offset;
+  }
 }
 
 
@@ -188,6 +188,22 @@ void BSP_FreeLightmaps()
     delete qk_all_lightmaps[i];
 
   qk_all_lightmaps.clear();
+}
+
+
+int QCOM_FlatLightOffset(int value)
+{
+  SYS_ASSERT(0 <= value && value <= 255);
+
+  if (value > 128)
+  {
+    value = 64 + value / 2;
+  }
+
+  if (qk_color_lighting)
+    value *= 3;
+
+  return value * FLAT_LIGHTMAP_SIZE;
 }
 
 
