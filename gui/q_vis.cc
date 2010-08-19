@@ -20,7 +20,7 @@
 //
 //------------------------------------------------------------------------
 //
-//  Based on code from Quake II lighting tool : q2rad/trace.c
+//  Tracing stuff based on Quake II lighting tool : q2rad/trace.c
 //
 //------------------------------------------------------------------------
 
@@ -39,6 +39,10 @@
 
 #include "vis_buffer.h"
 
+
+//------------------------------------------------------------------------
+//  RAY TRACING
+//------------------------------------------------------------------------
 
 #define T_EPSILON  0.1
 
@@ -256,6 +260,31 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
 }
 
 
+//------------------------------------------------------------------------
+//  CLUSTER MANAGEMENT
+//------------------------------------------------------------------------
+
+int qk_cluster_W;
+int qk_cluster_H;
+
+qCluster_c ** qk_all_clusters;
+
+
+qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs()
+{
+  ambients[0] = ambients[1] = 0;
+  ambients[2] = ambients[3] = 0;
+}
+
+
+qCluster_c::~qCluster_c()
+{
+  // nothing needed
+}
+
+
+//------------------------------------------------------------------------
+//  VISIBILITY
 //------------------------------------------------------------------------
 
 static qLump_c *q_visibility;

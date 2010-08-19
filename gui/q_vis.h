@@ -21,6 +21,39 @@
 #ifndef __QUAKE_VIS_H__
 #define __QUAKE_VIS_H__
 
+class quake_leaf_c;
+
+
+class qCluster_c
+{
+public:
+  int cx, cy;
+
+  std::vector<quake_leaf_c *> leafs;
+
+///  double x1, y1;
+///  double x2, y2;
+
+  // Quake 1 ambient sounds
+  byte ambients[4];
+
+public:
+  qCluster_c(int _x, int _y);
+
+  ~qCluster_c();
+};
+
+
+/***** VARIABLES **********/
+
+extern int qk_cluster_W;
+extern int qk_cluster_H;
+
+extern qCluster_c ** qk_all_clusters;
+
+
+/***** FUNCTIONS **********/
+
 void QCOM_MakeTraceNodes();
 void QCOM_FreeTraceNodes();
 
