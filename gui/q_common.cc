@@ -38,7 +38,7 @@
 #include "csg_quake.h"
 
 
-static int bsp_game;  // 1 for Quake1, 2 for Quake2  [make enum if more!]
+#define HL_BSP_VERSION  30
 
 
 qLump_c::qLump_c() : buffer(), crlf(false)
@@ -332,7 +332,7 @@ u16_t BSP_AddPlane(float x, float y, float z,
 
   // Quake2/3 have pairs of planes (opposite directions)
 
-  if (was_new && (bsp_game == 2 || qk_sub_format == SUBFMT_HalfLife))
+  if (was_new && (qk_game == 2 || qk_sub_format == SUBFMT_HalfLife))
   {
     raw_plane.normal[0] = -nx;
     raw_plane.normal[1] = -ny;
@@ -596,7 +596,7 @@ static void BSP_WriteLump(qLump_c *lump)
 }
 
 
-bool BSP_OpenLevel(const char *entry_in_pak, int game)
+bool BSP_OpenLevel(const char *entry_in_pak)
 {
   // assumes that PAK_OpenWrite() has already been called.
 
@@ -604,13 +604,14 @@ bool BSP_OpenLevel(const char *entry_in_pak, int game)
 
   PAK_NewLump(entry_in_pak);
 
-  bsp_game = game;
-
-  switch (game)
+  switch (qk_game)
   {
     case 1:
       bsp_version  = Q1_BSP_VERSION;
       bsp_numlumps = Q1_HEADER_LUMPS;
+
+      if (qk_sub_format == SUBFMT_HalfLife)
+        bsp_version = HL_BSP_VERSION;
       break;
 
     case 2:
@@ -639,7 +640,7 @@ static void BSP_WriteHeader()
 {
   u32_t offset = 0;
 
-  if (bsp_game == 2)
+  if (qk_game == 2)
   {
     PAK_AppendData(Q2_IDENT_MAGIC, 4);
     offset += 4;
