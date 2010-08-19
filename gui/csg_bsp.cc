@@ -1543,8 +1543,8 @@ void DetermineLiquids()
     if (R->gaps.empty())
       continue;
 
-    double low_z  = R->gaps.front()->top->t.z;
-    double high_z = R->gaps. back()->bottom->b.z;
+    double low_z  = R->gaps.front()->bottom->t.z;
+    double high_z = R->gaps. back()->   top->b.z;
 
     for (int k = (int)R->brushes.size()-1 ; k >= 0 ; k--)
     {
