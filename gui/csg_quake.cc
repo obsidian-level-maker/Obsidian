@@ -924,7 +924,7 @@ static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
 
 
 static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
-                             quake_side_c *S, csg_brush_c *brush,
+                             quake_side_c *S, brush_vert_c *bvert,
                              float z1, float z2)
 {
   quake_face_c *F = new quake_face_c();
@@ -936,7 +936,7 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
   F->AddVert(S->x2, S->y2, z2);
   F->AddVert(S->x2, S->y2, z1);
 
-  csg_property_set_c *face_props = &brush->verts[0]->face; //!!!! FIXME
+  csg_property_set_c *face_props = &bvert->face;
 
   F->texture = face_props->getStr("tex", "missing");
 
@@ -950,27 +950,29 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
 
 static void CreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
-                           quake_side_c *S, csg_brush_c *brush,
+                           quake_side_c *S, brush_vert_c *bvert,
                            float z1, float z2)
 {
+  SYS_ASSERT(z2 > z1 + Z_EPSILON);
+
   // split faces if too tall
   int pieces = 1;
 
-  while ((z2 - z1) / pieces > (FACE_MAX_SIZE-0.1))
+  while ((z2 - z1) / pieces > FACE_MAX_SIZE)
     pieces++;
 
   if (pieces > 1)
   {
     for (int i = 0 ; i < pieces ; i++)
     {
-      DoCreateWallFace(node, leaf, S, brush,
+      DoCreateWallFace(node, leaf, S, bvert,
                        z1 + (z2 - z1) * (i  ) / pieces,
                        z1 + (z2 - z1) * (i+1) / pieces);
     }
   }
   else
   {
-    DoCreateWallFace(node, leaf, S, brush, z1, z2);
+    DoCreateWallFace(node, leaf, S, bvert, z1, z2);
   }
 }
 
@@ -994,24 +996,51 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
 
     if (S->TwoSided())
     {
-      gap_c *G2 = S->snag->partner->region->gaps[0];
+      region_c *back = S->snag->partner->region;
 
-      float f2 = G2->bottom->t.z;
-      float c2 = G2->top   ->b.z;
+      unsigned int numgaps = back->gaps.size();
 
-      if (f2 > f1 + 0.1)
+      // k is not really a gap number here, but the solids in-between
+      for (unsigned int k = 0 ; k <= numgaps ; k++)
       {
-        CreateWallFace(S->on_node, leaf, S, G2->bottom, f1, f2);
-      }
+        csg_brush_c *B;
+        float bz, tz;
 
-      if (c2 < c1 - 0.1)
-      {
-        CreateWallFace(S->on_node, leaf, S, G2->top, c2, c1);
+        if (k < numgaps)
+        {
+          B = back->gaps[k]->bottom;
+
+          tz = B->t.z;
+          bz = (k == 0) ? -EXTREME_H : back->gaps[k-1]->top->b.z;
+        }
+        else
+        {
+          B = back->gaps[k-1]->top;
+
+          bz = B->b.z;
+          tz = EXTREME_H;
+        }
+
+        if (tz < f1 + Z_EPSILON) continue;
+        if (bz > c1 - Z_EPSILON) break;
+
+        bz = MAX(bz, f1);
+        tz = MIN(tz, c1);
+
+        brush_vert_c *bvert = S->snag->FindBrushVert(B);
+
+        CreateWallFace(S->on_node, leaf, S, bvert, bz, tz);
       }
     }
     else
     {
-      CreateWallFace(S->on_node, leaf, S, G->bottom, f1, c1); //!!!! FIXME
+      brush_vert_c *bvert = S->snag->FindOneSidedVert((f1 + c1) / 2.0);
+
+      // fallback to something safe
+      if (! bvert)
+        bvert = G->bottom->verts[0];
+
+      CreateWallFace(S->on_node, leaf, S, bvert, f1, c1);
     }
   }
 }
@@ -1087,7 +1116,8 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
                                  quake_bbox_c & bbox,
                                  quake_node_c * prev_N,
-                                 quake_leaf_c * prev_L)
+                                 quake_leaf_c * prev_L,
+                                 csg_brush_c *liquid)
 {
   quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_AIR);
 
@@ -1108,6 +1138,14 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
 
   if (G->bottom->t.slope) leaf->bbox.mins[2] = G->bottom->b.z;
   if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top->t.z;
+
+  if (liquid && leaf->bbox.maxs[2] < liquid->t.z + 0.1)
+  {
+    leaf->medium = MEDIUM_WATER;
+
+    if (qk_game == 2)
+      leaf->AddSolid(liquid);
+  }
 
   // floor and ceiling node planes both face upwards
 
@@ -1142,7 +1180,7 @@ static quake_node_c * Partition_Z(quake_group_c & group)
   for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
     cur_node = CreateLeaf(R->gaps[i], group, winding, bbox,
-                          cur_node, cur_leaf);
+                          cur_node, cur_leaf, R->liquid);
     cur_leaf = NULL;
   }
 
