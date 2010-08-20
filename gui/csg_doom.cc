@@ -49,8 +49,6 @@ static int extrafloor_slot;
 static int map_bound_y1;
 
 
-#define Z_EPSILON  0.01
-
 #define SEC_IS_SKY       (0x1 << 16)
 #define SEC_PRIMARY_LIT  (0x2 << 16)
 #define SEC_SHADOW       (0x4 << 16)

@@ -21,9 +21,14 @@
 #ifndef __OBLIGE_CSG_MAIN_H__
 #define __OBLIGE_CSG_MAIN_H__
 
+class csg_brush_c;
+
 
 // very high (low) value for uncapped brushes
 #define EXTREME_H  4000
+
+// epsilon for height comparisons
+#define Z_EPSILON  0.01
 
 
 // unset values (handy sometimes)
@@ -31,10 +36,7 @@
 #define FVAL_NONE  -27777.75f
 
 
-/* ----- CLASSES ----- */
-
-class csg_brush_c;
-
+/******* CLASSES ***************/
 
 class slope_info_c
 {
@@ -206,10 +208,8 @@ public:
 };
 
 
-//------------------------------------------------------------------------
 
-
-/* ----- VARIABLES ----- */
+/***** VARIABLES ****************/
 
 extern std::vector<csg_brush_c *> all_brushes;
 
@@ -220,6 +220,9 @@ extern std::string dummy_plane_tex;
 
 
 /***** FUNCTIONS ****************/
+
+void CSG_MakeMiniMap();
+
 
 #if 0
 brush_vert_c * CSG_FindSideVertex(merge_segment_c *G, double z,

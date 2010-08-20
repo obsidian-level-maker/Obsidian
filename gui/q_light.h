@@ -21,10 +21,11 @@
 #ifndef __QUAKE_LIGHTING_H__
 #define __QUAKE_LIGHTING_H__
 
-
-#define FLAT_LIGHTMAP_SIZE  (17*17)
-
 class quake_face_c;
+
+
+// the maximum size of a face's lightmap in Quake I/II
+#define FLAT_LIGHTMAP_SIZE  (17*17)
 
 
 class qLightmap_c
