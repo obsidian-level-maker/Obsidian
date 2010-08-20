@@ -103,8 +103,6 @@ public:
 
   csg_property_set_c face;
 
-///---  merge_vertex_c *partner;
-
 public:
    brush_vert_c(csg_brush_c *_parent, double _x = 0, double _y = 0);
   ~brush_vert_c();
@@ -222,16 +220,6 @@ extern std::string dummy_plane_tex;
 /***** FUNCTIONS ****************/
 
 void CSG_MakeMiniMap();
-
-
-#if 0
-brush_vert_c * CSG_FindSideVertex(merge_segment_c *G, double z,
-                                  bool is_front, bool exact = false);
-csg_brush_c * CSG_FindSideBrush(merge_segment_c *G, double z,
-                                 bool is_front, bool exact = false);
-brush_vert_c * CSG_FindSideFace(merge_segment_c *G, double z, bool is_front,
-                                 brush_vert_c *V = NULL);
-#endif
 
 
 #endif /* __OBLIGE_CSG_MAIN_H__ */

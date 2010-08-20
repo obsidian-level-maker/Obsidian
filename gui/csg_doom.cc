@@ -950,9 +950,7 @@ static void DM_LightingFloodFill()
 
 static int DM_CoalescePass()
 {
-int changes = 0;
-int diffs = 0;
-int sames = 0;
+  int changes = 0;
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
@@ -983,14 +981,10 @@ int sames = 0;
 
         changes++;
       }
-
-if (N) {
-if (N->index == R->index) sames++; else diffs++; }
-
     }
   }
 
-fprintf(stderr, "DM_CoalescePass  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
+  // fprintf(stderr, "DM_CoalescePass  changes:%d\n", changes);
 
   return changes;
 }
@@ -1160,6 +1154,23 @@ static int CalcRailYOffset(brush_vert_c *rail, int base_h)
 }
 
 
+#if 0
+static void DM_GetFaceProps(doom_sidedef_c *SD, snag_c *S, csg_property_set_c *face)
+{
+  const char *tex_name = dummy_wall_tex.c_str();
+
+  if (face)
+  {
+    tex_name = face->getStr("tex", tex_name);
+
+    // FIXME  other stuff
+  }
+  
+  SD->tex = str::string(tex_name);
+}
+#endif
+
+
 static void DM_GetTexture(snag_c *S, csg_brush_c *B,
                           std::string & tex)
 {
@@ -1303,6 +1314,58 @@ static doom_sidedef_c * DM_MakeSidedef(
   }
 
   return SD;
+}
+
+
+static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2)
+{
+  brush_vert_c *V;
+
+  // we want the brushes for the floor or ceiling next to a linedef
+  // to take precedence over any other brushes.  Hence the passes.
+
+  for (int pass = 0 ; pass < 4 ; pass++)
+  {
+    int side = pass & 1;
+
+    // try partner first
+    snag_c *test_S = (side == 0) ? S->partner : S;
+
+    if (! test_S)
+      continue;
+
+    if (pass < 2)
+    {
+      // region to test is one _behind_ the snag
+      region_c *test_R = (side == 0) ? R1 : R2;
+
+      if (! test_R || test_R->gaps.empty())
+        continue;
+
+      V = test_S->FindBrushVert(test_R->gaps.front()->bottom);
+
+      if (V && V->face.getStr("kind"))
+        return &V->face;
+        
+      V = test_S->FindBrushVert(test_R->gaps.back()->top);
+
+      if (V && V->face.getStr("kind"))
+        return &V->face;
+    }
+    else
+    {
+      // check every brush_vert in the snag
+      for (unsigned int i = 0 ; i < test_S->sides.size() ; i++)
+      {
+        V = test_S->sides[i];
+
+        if (V && V->face.getStr("kind"))
+          return &V->face;
+      }
+    }
+  }
+
+  return NULL;
 }
 
 
@@ -1505,7 +1568,6 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   L->CalcLength();
 
 
-  brush_vert_c *spec = NULL; //!!!  FindSpecialVert(G);
   brush_vert_c *rail = NULL; //!!!  FindRailVert(G);
 
   bool l_peg = false;
@@ -1532,22 +1594,25 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   if (u_peg) L->flags ^= MLF_UpperUnpeg;
 
 
+  csg_property_set_c *spec = DM_FindSpecial(S, R, N);
+
+
   if (rail)
   {
     L->flags |= rail->face.getInt("flags");
 
     if (! spec && rail->face.getStr("kind"))
-      spec = rail;
+      spec = &rail->face;
   }
 
   if (spec)
   {
-    L->flags |= spec->face.getInt("flags");
+    L->flags |= spec->getInt("flags");
 
-    L->type = spec->face.getInt("kind");
-    L->tag  = spec->face.getInt("tag");
+    L->type = spec->getInt("kind");
+    L->tag  = spec->getInt("tag");
 
-    spec->face.getHexenArgs(L->args);
+    spec->getHexenArgs(L->args);
   }
 }
 
