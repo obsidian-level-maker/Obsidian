@@ -71,6 +71,12 @@ public:
   // this is for the MiniMap code, returns true if brushes are the same
   // on both sides.  CSG_SortBrushes() must have been called already.
   bool SameSides() const;
+
+  // get the brush_vert for a one-sided snag, NULL if not found
+  brush_vert_c * FindOneSidedVert(double z);
+
+  // returns the brush_vert #0 when not found
+  brush_vert_c *FindBrushVert(const csg_brush_c *B);
 };
 
 
@@ -151,11 +157,6 @@ extern std::vector<region_c *> all_regions;
 /***** FUNCTIONS ****************/
 
 void CSG_BSP(double grid, bool is_clip_hull = false);
-
-void CSG_SortBrushes();
-void CSG_SwallowBrushes();
-void CSG_DiscoverGaps();
-void CSG_MakeMiniMap();
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */

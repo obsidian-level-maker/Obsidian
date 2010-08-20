@@ -186,6 +186,43 @@ bool snag_c::SameSides() const
 }
 
 
+brush_vert_c * snag_c::FindOneSidedVert(double z)
+{
+  brush_vert_c *backup = NULL;
+
+  for (unsigned int i = 0 ; i < sides.size() ; i++)
+  {
+    brush_vert_c *V = sides[i];
+
+    if (! (V->parent->bkind == BKIND_Solid || V->parent->bkind == BKIND_Sky))
+      continue;
+
+    if (! backup)
+      backup = V;
+
+    if (z > V->parent->b.z - Z_EPSILON &&
+        z < V->parent->t.z + Z_EPSILON)
+      return V;
+  }
+
+  return backup;
+}
+
+
+brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
+{
+  for (unsigned int i = 0 ; i < sides.size() ; i++)
+  {
+    brush_vert_c *V = sides[i];
+
+    if (V->parent == B)
+      return V;
+  }
+
+  return B->verts[0];
+}
+
+
 //------------------------------------------------------------------------
 
 region_c::region_c() : snags(), brushes(), entities(), gaps(),
@@ -1219,9 +1256,6 @@ static void RemoveDeadRegions()
 //------------------------------------------------------------------------
 //   GAP STUFF
 //------------------------------------------------------------------------
-
-#define Z_EPSILON  0.001
-
 
 void CSG_SortBrushes()
 {
