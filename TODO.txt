@@ -6,30 +6,31 @@ TODO
 !  Lua code should create thing 'flags' value (DOOM, HEXEN, etc)
 
 
-?? use 'int' for lightmap samples ??
+qLightmap_c : only store the result : byte samples
+              use 'blocklights' buffer for doing each face.
 
 
-DONE: check max size of lightmap --> 17x17
-      (extent can == 256, hence smax == (extent>>4)+1 == 17)
+Quake: proper XY partition choice, create clusters
 
-
-Quake: proper XY partition choice, do seed boundary thang
 
 q1_clip : proper XY partition choice
 
+
+Vis_Buffer : support diagonals / and \ in cells,
+             convert them to _ and | based on source cell, restore after
 
 visibility : can detect in C++ code if each seed side contains a portal
              (two-sided snag or mini side).  Hence don't need Lua API to
              communicate that information.
 
 ambient sounds:
-          - use clusters
-          - the leaf itself gets full volume (maybe less if TALL)
-          - distribute to all other leafs in the 5x5 neighborhood
-          - do it during VIS, skip unseeable neighbors
+          - all leafs in cluster  get 255
+          - neighbors N/S/E/W     get 128
+          - neighbors NE/SE/NW/SW get 64
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify
+       Lua code must handle special "tag" value
 
 
 -  mirroring : make sure first coord stays the first
