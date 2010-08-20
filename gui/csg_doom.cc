@@ -1369,156 +1369,52 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 }
 
 
-#if 0
-static brush_vert_c *FindSpecialVert(merge_segment_c *G)
+static brush_vert_c * DM_FindRail(snag_c *S, doom_sector_c *front, doom_sector_c *back)
 {
-  doom_sector_c *FS = NULL;
-  doom_sector_c *BS = NULL;
-
-  if (G->front && G->front->index >= 0)
-    FS = dm_sectors[G->front->index];
-
-  if (G->back && G->back->index >= 0)
-    BS = dm_sectors[G->back->index];
-
-  if (!BS && !FS)
+  // railings require a two-sided line
+  if (! front || ! back)
     return NULL;
 
-  int min_f = +9999;
-  int max_c = -9999;
+  float f_max = MAX(front->f_h, back->f_h) + 4;
+  float c_min = MIN(front->c_h, back->c_h) - 4;
 
-  if (FS)
-  {
-    min_f = MIN(min_f, FS->f_h);
-    max_c = MAX(max_c, FS->c_h);
-  }
-
-  if (BS)
-  {
-    min_f = MIN(min_f, BS->f_h);
-    max_c = MAX(max_c, BS->c_h);
-  }
-
-  min_f -= 2;
-  max_c += 2;
-
-
-  brush_vert_c *minor = NULL;
-
-
-  for (int side = 0; side < 2; side++)
-  {
-    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
-
-    for (unsigned int k=0; k < count; k++)
-    {
-      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
-
-///---      if (! V->face)
-///---        continue;
-
-      if (V->parent->bkind == BKIND_Rail)
-        continue;
-
-      if (V->parent->b.z < (double)max_c &&
-          V->parent->t.z > (double)min_f)
-      {
-/*
-DebugPrintf("SEGMENT (%1.0f,%1.0f) --> (%1.0f,%1.0f) SIDE:%d LINE_KIND:%d\n",
-            G->start->x, G->start->y, G->end  ->x, G->end  ->y,
-            side, V->line_kind);
-DebugPrintf("   BRUSH RANGE: %1.0f --> %1.0f  tex:%s\n",
-            V->parent->b.z, V->parent->t.z, V->parent->w_face->tex.c_str());
-DebugPrintf("   FS: %p  f_h:%d c_h:%d f_tex:%s\n",
-            FS, FS ? FS->f_h : -1, FS ? FS->c_h : -1, FS ? FS->f_tex.c_str() : "");
-DebugPrintf("   BS: %p  f_h:%d c_h:%d f_tex:%s\n",
-            BS, BS ? BS->f_h : -1, BS ? BS->c_h : -1, BS ? BS->f_tex.c_str() : "");
-*/
-        if (V->face.getStr("kind"))
-          return V;
-
-        if (V->face.getStr("tag") || V->face.getStr("flags"))
-          minor = V;
-      }
-    }
-  }
-
-  return minor;
-}
-
-static brush_vert_c *FindRailVert(merge_segment_c *G)
-{
-  doom_sector_c *FS = NULL;  // FIXME: duplicate code
-  doom_sector_c *BS = NULL;
-
-  if (G->front && G->front->index >= 0)
-    FS = dm_sectors[G->front->index];
-
-  if (G->back && G->back->index >= 0)
-    BS = dm_sectors[G->back->index];
-
-  if (!BS && !FS)
+  if (c_min >= f_max)
     return NULL;
 
-  int min_f = +9999;
-  int max_c = -9999;
-
-  if (FS)
+  for (int side = 0 ; side < 2 ; side++)
   {
-    min_f = MIN(min_f, FS->f_h);
-    max_c = MAX(max_c, FS->c_h);
-  }
+    snag_c *test_S = (side == 0) ? S->partner : S;
 
-  if (BS)
-  {
-    min_f = MIN(min_f, BS->f_h);
-    max_c = MAX(max_c, BS->c_h);
-  }
+    if (! test_S)
+      continue;
 
-  min_f -= 2;
-  max_c += 2;
-
-
-  for (int side = 0; side < 2; side++)
-  {
-    unsigned int count = (side == 0) ? G->f_sides.size() : G->b_sides.size();
-
-    for (unsigned int k=0; k < count; k++)
+    for (unsigned int k = 0 ; k < test_S->sides.size() ; k++)
     {
-      brush_vert_c *V = (side == 0) ? G->f_sides[k] : G->b_sides[k];
+      brush_vert_c *V = test_S->sides[k];
 
       if (V->parent->bkind != BKIND_Rail)
         continue;
 
-///---      if (! V->face)
-///---        continue;
-
-      if (V->parent->b.z > max_c || V->parent->b.z < min_f)
+      // is rail in lala land?
+      if (V->parent->b.z > c_min || V->parent->t.z < f_max)
         continue;
 
       const char *tex = V->face.getStr("tex", "-");
 
-      if (tex[0] == '-' && !V->face.getStr("kind") && !V->face.getStr("flags"))
+      if (tex[0] == '-' && !V->face.getStr("kind"))
         continue;
 
-      // found one
-      return V;
+      return V;  // found it
     }
   }
 
   return NULL;
 }
-#endif
 
 
 static void DM_MakeLine(region_c *R, snag_c *S)
 {
   region_c *N = S->partner ? S->partner->region : NULL;
-
-  // if same sector on both sides, skip the line
-  // FIXME: don't skip when has rail texture
-  if (N && N->index == R->index)
-    return;
 
   // for two-sided snags, only make one linedef from the pair
   if (S->seen)
@@ -1538,7 +1434,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
   if (x1 == x2 && y1 == y2)
   {
-    fprintf(stderr, "WARNING: degenerate linedef @ (%1.0f %1.0f)\n", S->x1, S->y1);
+    LogPrintf("WARNING: degenerate linedef @ (%1.0f %1.0f)\n", S->x1, S->y1);
     return;
   }
 
@@ -1554,6 +1450,13 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     back = dm_sectors[N->index];
 
 
+  brush_vert_c *rail = DM_FindRail(S, front, back);
+
+  // skip the line if same on both sides, except when it has a rail
+  if (front == back && !rail)
+    return;
+
+
   doom_linedef_c *L = new doom_linedef_c();
 
   dm_linedefs.push_back(L);
@@ -1567,8 +1470,6 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
   L->CalcLength();
 
-
-  brush_vert_c *rail = NULL; //!!!  FindRailVert(G);
 
   bool l_peg = false;
   bool u_peg = false;
