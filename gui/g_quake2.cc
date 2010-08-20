@@ -1025,6 +1025,8 @@ static void Q2_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build();
 
+  QCOM_Fix_T_Junctions();
+
   Q2_LightWorld();
 
   /// QCOM_Visibility();
