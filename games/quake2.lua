@@ -1578,22 +1578,22 @@ QUAKE2.SUB_THEMES =
 
     building_walls =
     {
-      TECH_BASE=50,
+      WSLT1_1=50,
     },
 
     building_floors =
     {
-      TECH_BASE=50,
+      FLOOR3_3=50,
     },
 
     building_ceilings =
     {
-      TECH_BASE=50,
+      FLOOR3_3=50,
     },
 
     courtyard_floors =
     {
-      TECH_GROUND=50,
+      GRASS1_4=50,
     },
 
     logos = { carve=50 },
