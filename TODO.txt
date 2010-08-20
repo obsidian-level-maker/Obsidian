@@ -3,11 +3,22 @@ TODO
 ====
 
 
+!!!  DOOM wall textures
+
+!!  NUKEM wall textures
+
+
+use '_' prefix on special entity fields (e.g. _radius, _color)
+
+
 !  Lua code should create thing 'flags' value (DOOM, HEXEN, etc)
 
 
 qLightmap_c : only store the result : byte samples
               use 'blocklights' buffer for doing each face.
+
+
+IDEA: very fast lightmap: only do 1/4 of the luxels, interpolate rest
 
 
 Quake: proper XY partition choice, create clusters

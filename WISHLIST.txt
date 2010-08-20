@@ -303,6 +303,10 @@ Sam's suggestions:
 
 !  Oblige logos: create 'TILES020.ART' lump
 
++  merge sectors where possible:
+   -  same properties on both sides
+   -  the removed walls form a single chain (not separate)
+
 +  monsters
 +  weapons
 +  health and ammo
