@@ -128,7 +128,6 @@ snag_c::snag_c(double _x1, double _y1, double _x2, double _y2, partition_c *part
     sides(), seen(false)
 { }
 
-
 snag_c::snag_c(const snag_c& other) :
       x1(other.x1), y1(other.y1), x2(other.x2), y2(other.y2),
       mini(other.mini), on_node(other.on_node),
@@ -186,6 +185,17 @@ bool snag_c::SameSides() const
 }
 
 
+void snag_c::TransferSides(snag_c *other)
+{
+  for (unsigned int i = 0 ; i < other->sides.size() ; i++)
+  {
+    sides.push_back(other->sides[i]);
+  }
+
+  other->sides.clear();
+}
+
+
 brush_vert_c * snag_c::FindOneSidedVert(double z)
 {
   brush_vert_c *backup = NULL;
@@ -197,7 +207,7 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
     if (! (V->parent->bkind == BKIND_Solid || V->parent->bkind == BKIND_Sky))
       continue;
 
-    if (! backup)
+    if (! backup && V->parent->bkind == BKIND_Solid)
       backup = V;
 
     if (z > V->parent->b.z - Z_EPSILON &&
@@ -992,7 +1002,10 @@ static void MergeSnags(snag_c *A, snag_c *B)
   SYS_ASSERT(A->region == B->region);
 
   if (! B->mini)
+  {
     A->mini = false;
+    A->TransferSides(B);
+  }
 
   if (B->partner && B->partner->partner == B)
     B->partner->partner = NULL;
@@ -1068,7 +1081,7 @@ static bool TestOverlap(std::vector<snag_c *> & list, int i, int k)
     MergeSnags(A, B);
 
     // remove B from list and free it
-    delete list[k]; list[k] = NULL;
+    delete B; list[k] = NULL;
 
     return true;
   }

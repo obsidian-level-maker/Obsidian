@@ -72,6 +72,8 @@ public:
   // on both sides.  CSG_SortBrushes() must have been called already.
   bool SameSides() const;
 
+  void TransferSides(snag_c *other);
+
   // get the brush_vert for a one-sided snag, NULL if not found
   brush_vert_c * FindOneSidedVert(double z);
 
