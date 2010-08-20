@@ -1027,14 +1027,27 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
         bz = MAX(bz, f1);
         tz = MIN(tz, c1);
 
-        brush_vert_c *bvert = S->snag->FindBrushVert(B);
+        brush_vert_c *bvert = NULL;
+        
+        if (S->snag->partner)
+          bvert = S->snag->partner->FindBrushVert(B);
+
+        // fallback to something safe
+        if (! bvert)
+          bvert = B->verts[0];
 
         CreateWallFace(S->on_node, leaf, S, bvert, bz, tz);
       }
     }
     else
     {
-      brush_vert_c *bvert = S->snag->FindOneSidedVert((f1 + c1) / 2.0);
+      brush_vert_c *bvert = NULL;
+
+      // Note: the brush sides we are interested in are on the OPPOSITE
+      //       side of the snag, since regions are created from _inward_
+      //       facing snags (but brush sides face _outward_).
+      if (S->snag->partner)
+        bvert = S->snag->partner->FindOneSidedVert((f1 + c1) / 2.0);
 
       // fallback to something safe
       if (! bvert)

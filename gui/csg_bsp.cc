@@ -198,8 +198,6 @@ void snag_c::TransferSides(snag_c *other)
 
 brush_vert_c * snag_c::FindOneSidedVert(double z)
 {
-  brush_vert_c *backup = NULL;
-
   for (unsigned int i = 0 ; i < sides.size() ; i++)
   {
     brush_vert_c *V = sides[i];
@@ -207,15 +205,12 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
     if (! (V->parent->bkind == BKIND_Solid || V->parent->bkind == BKIND_Sky))
       continue;
 
-    if (! backup && V->parent->bkind == BKIND_Solid)
-      backup = V;
-
     if (z > V->parent->b.z - Z_EPSILON &&
         z < V->parent->t.z + Z_EPSILON)
       return V;
   }
 
-  return backup;
+  return NULL;
 }
 
 
@@ -229,7 +224,7 @@ brush_vert_c * snag_c::FindBrushVert(const csg_brush_c *B)
       return V;
   }
 
-  return B->verts[0];
+  return NULL;
 }
 
 

@@ -74,11 +74,9 @@ public:
 
   void TransferSides(snag_c *other);
 
-  // get the brush_vert for a one-sided snag, NULL if not found
+  // brush side finding functions, return NULL if not found
   brush_vert_c * FindOneSidedVert(double z);
-
-  // returns the brush_vert #0 when not found
-  brush_vert_c *FindBrushVert(const csg_brush_c *B);
+  brush_vert_c * FindBrushVert(const csg_brush_c *B);
 };
 
 
