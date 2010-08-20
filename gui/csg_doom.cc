@@ -1192,23 +1192,68 @@ static void DM_GetTexture(snag_c *S, csg_brush_c *B,
 
 
 static doom_sidedef_c * DM_MakeSidedef(
-    doom_sector_c *front, doom_sector_c *back,
+    doom_sector_c *sec, snag_c *snag, snag_c *other,
     brush_vert_c *rail, bool *l_peg, bool *u_peg)
 {
-  if (! front)
+  if (! sec)
     return NULL;
 
 
   doom_sidedef_c *SD = new doom_sidedef_c;
 
-  SD->sector = front;
+  SD->sector = sec;
 
   dm_sidedefs.push_back(SD);
 
 
   // the 'natural' X/Y offsets
   SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
-  SD->y_offset = - front->c_h;
+  SD->y_offset = - sec->c_h;
+
+
+  brush_vert_c *lower = NULL;
+  brush_vert_c *upper = NULL;
+
+  // Note: 'snag' actually faces into the region _behind_ this sidedef
+
+  if (! snag || snag->region->gaps.empty())
+  {
+    // ONE SIDED LINE
+
+    if (snag)
+    {
+      double z = (sec->f_h + sec->c_h) / 2.0;
+      lower = snag->FindOneSidedVert(z);
+    }
+
+    if (! lower)
+    {
+      SD->mid = dummy_wall_tex;
+    }
+    else
+    {
+      SD->mid = lower->face.getStr("tex", dummy_wall_tex.c_str());
+
+      if (lower->face.getInt("peg"))
+        *l_peg = true;
+
+      int ox = lower->face.getInt("x_offset", IVAL_NONE);
+      int oy = lower->face.getInt("y_offset", IVAL_NONE);
+
+      if (ox != IVAL_NONE)
+        SD->x_offset = ox; //!!!! CalcXOffset(G, side, m_vert, ox);
+
+      if (oy != IVAL_NONE)
+        SD->y_offset = oy;
+    }
+  }
+  else
+  {
+    // Two Sided Line
+
+    SD->lower = "ASHWALL4";
+    SD->upper = "COMPBLUE";
+  }
 
 
 #if 0  // FIXME : OLD BUT GOOD
@@ -1302,16 +1347,6 @@ static doom_sidedef_c * DM_MakeSidedef(
     }
   }
 #endif
-
-  if (! back)
-  {
-    SD->mid = "STARTAN3";
-  }
-  else
-  {
-    SD->lower = "ASHWALL4";
-    SD->upper = "COMPBLUE";
-  }
 
   return SD;
 }
@@ -1474,8 +1509,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   bool l_peg = false;
   bool u_peg = false;
 
-  L->front = DM_MakeSidedef(front, back, rail, &l_peg, &u_peg);
-  L->back  = DM_MakeSidedef(back, front, rail, &l_peg, &u_peg);
+  L->front = DM_MakeSidedef(front, S->partner, S, rail, &l_peg, &u_peg);
+  L->back  = DM_MakeSidedef( back, S, S->partner, rail, &l_peg, &u_peg);
 
   SYS_ASSERT(L->front || L->back);
 
