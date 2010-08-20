@@ -123,11 +123,15 @@ public:
 
 // double mid_x, mid_y;
 
+  int first_wall;
+  int num_walls;
+
 public:
   nukem_sector_c() :
       floor(), ceil(),
       region(NULL), walls(), entities(),
-      mark(0), index(-1)
+      mark(0), index(-1),
+      first_wall(-1), num_walls(-1)
   { }
 
   ~nukem_sector_c()
@@ -197,7 +201,7 @@ public:
     return NULL;
   }
 
-  void AssignWallIndices(int *first, int *count);
+  void AssignWallIndices();
 
   void Write();
   void WriteSprites();
@@ -496,92 +500,59 @@ static void LightingFloodFill(void)
 #endif
 
 
-#if 0
-static void CoalesceSectors(void)
-{
-  for (int loop=0; loop < 99; loop++)
-  {
-    int changes = 0;
-
-    for (unsigned int i = 0; i < mug_segments.size(); i++)
-    {
-      merge_segment_c *S = mug_segments[i];
-
-      if (! S->front || ! S->back)
-        continue;
-
-      if (S->front->index <= 0 || S->back->index <= 0)
-        continue;
-      
-      // already merged?
-      if (S->front->index == S->back->index)
-        continue;
-
-      nukem_sector_c *F = dm_sectors[S->front->index];
-      nukem_sector_c *B = dm_sectors[S->back ->index];
-
-      if (F->Match(B))
-      {
-        S->front->index = MIN(S->front->index, S->back->index);
-        S->back ->index = S->front->index;
-
-        changes++;
-      }
-    }
-
-// fprintf(stderr, "CoalesceSectors: changes = %d\n", changes);
-
-    if (changes == 0)
-      return;
-  }
-}
-#endif
-
-
-
 //------------------------------------------------------------------------
 
-static void NK_GetTexture(nukem_wall_c *W, csg_brush_c *B)
+static void NK_GetFaceProps(nukem_wall_c *W, csg_property_set_c *face)
 {
-  SYS_ASSERT(B);
+  const char *tex_name = dummy_wall_tex.c_str();
 
-  brush_vert_c *vert = NULL;
+  if (face)
+  {
+    tex_name = face->getStr("tex", tex_name);
 
-  // FIXME !!!  find brush_Vert using W->snag
-
-  if (! vert)
-    vert = B->verts[0];
-
-  SYS_ASSERT(vert);
-
-  csg_property_set_c *face = &vert->face;
-
-  const char *tex_name = face->getStr("tex", dummy_wall_tex.c_str());
-
+    // FIXME  offsets, shade  etc...
+  }
+  
   W->pic = atoi(tex_name);
-
-  // FIXME  offsets, shade  etc...
 }
 
 
 static void NK_TextureSolidWall(nukem_wall_c *W)
 {
-  const char *tex_name = dummy_wall_tex.c_str();
+  csg_property_set_c *face = NULL;
 
   if (W->snag->partner)
   {
-    region_c *N = W->snag->partner->region;
+    float f_h = W->sector->floor.h;
+    float c_h = W->sector->ceil.h;
 
-    if (N->brushes.size() > 0)
-    {
-      // FIXME: select brush properly
+    brush_vert_c *bvert = W->snag->partner->FindOneSidedVert((f_h + c_h) / 2.0);
 
-      NK_GetTexture(W, N->brushes[0]);
-      return;
-    }
+    if (bvert) face = &bvert->face;
   }
 
-  W->pic = atoi(tex_name);
+  NK_GetFaceProps(W, face);
+}
+
+
+static void NK_TextureTwoSider(nukem_wall_c *W, csg_brush_c *B)
+{
+  SYS_ASSERT(B);
+
+  brush_vert_c *bvert = NULL;
+
+  if (W->snag->partner)
+    bvert = W->snag->partner->FindBrushVert(B);
+
+  // try other side (important but hacky)
+  if (! bvert)
+    bvert = W->snag->FindBrushVert(B);
+
+  // fallback to something safe
+  if (! bvert)
+    bvert = B->verts[0];
+
+  NK_GetFaceProps(W, &bvert->face);    
 }
 
 
@@ -636,8 +607,8 @@ static void NK_TextureWallPair(nukem_wall_c *W1, nukem_wall_c *W2)
   brushes[1][2] = brushes[0][0];
 
 
-  NK_GetTexture(W1, brushes[0][what1]);
-  NK_GetTexture(W2, brushes[1][what2]);
+  NK_TextureTwoSider(W1, brushes[0][what1]);
+  NK_TextureTwoSider(W2, brushes[1][what2]);
 }
 
 
@@ -679,6 +650,12 @@ static void NK_PartnerWalls()
 
 void nukem_wall_c::Write()
 {
+  int next = index + 1;
+
+  if (next >= sector->first_wall + sector->num_walls)
+    next = sector->first_wall;
+
+
   int xscale = 8; // FIXME  1 + (int)line->length / 16;
   if (xscale > 255)
     xscale = 255;
@@ -687,7 +664,7 @@ void nukem_wall_c::Write()
   int hi_tag = 0;
 
 
-  NK_AddWall(x1, y1, 999 /* FUCK FIXME !!!!!!!! right->index */,
+  NK_AddWall(x1, y1, next,
              partner ? partner->index : -1,
              partner ? partner->sector->index : -1,          
              flags, pic, 0,
@@ -722,10 +699,10 @@ void nukem_sector_c::WriteSprites()
 }
 
 
-void nukem_sector_c::AssignWallIndices(int *first, int *count)
+void nukem_sector_c::AssignWallIndices()
 {
-  *first = nk_current_wall;
-  *count = (int)walls.size();
+  first_wall = nk_current_wall;
+  num_walls  = (int)walls.size();
 
   for (unsigned int i = 0 ; i < walls.size() ; i++)
   {
@@ -747,10 +724,6 @@ void nukem_sector_c::WriteWalls()
 
 void nukem_sector_c::Write()
 {
-  int first_wall, num_walls;
-
-  AssignWallIndices(&first_wall, &num_walls);
-
   int visibility = 1;
 
   NK_AddSector(first_wall, num_walls, visibility,
@@ -772,6 +745,8 @@ static void NK_WriteSectors()
 ///      continue;
 
     S->index = (int)i;
+
+    S->AssignWallIndices();
 
     S->Write();
     S->WriteSprites();
@@ -809,7 +784,6 @@ void CSG_NUKEM_Write()
   NK_CreateSectors();
   NK_PartnerWalls();
 
-//  NK_MakeLinedefs();
 //  NK_MergeColinearLines();
 
   NK_WriteSectors();
