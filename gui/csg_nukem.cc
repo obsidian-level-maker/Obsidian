@@ -80,7 +80,7 @@ public:
   nukem_wall_c(int _x1, int _y1, int _x2, int _y2) :
       x1(_x1), y1(_y1), x2(_x2), y2(_y2),
       snag(NULL), partner(NULL), index(-1),
-      pic(0)
+      pic(0), flags(0)
   { }
 
   ~nukem_wall_c()
@@ -93,7 +93,8 @@ public:
 class nukem_plane_c
 {
 public:
-  int h;
+  float h;
+
   int pic;
   int flags;
 
@@ -240,11 +241,13 @@ static void NK_MakeBasicWall(nukem_sector_c *S, snag_c *snag)
 
   if (x1 == x2 && y1 == y2)
   {
-    fprintf(stderr, "WARNING: degenerate wall @ (%d %d)\n", x1, y1);
+    LogPrintf("WARNING: degenerate wall @ (%d %d)\n", x1, y1);
     return;
   }
 
   nukem_wall_c *W = new nukem_wall_c(x1, y1, x2, y2);
+
+  W->snag = snag;
 
   // FIXME: MORE STUFF !!!!!!
 
@@ -330,14 +333,13 @@ static void NK_MakeSector(region_c *R)
 
 
   // determine floor and ceiling heights
+  // Note: are converted (via NK_HEIGHT_MUL) when sector is written
+
   double f_delta = f_face->getDouble("delta_z");
   double c_delta = c_face->getDouble("delta_z");
 
-  double f_h = B->t.z + f_delta;
-  double c_h = T->b.z + c_delta;
-
-  S->floor.h = I_ROUND(f_h * NK_HEIGHT_MUL);
-  S->ceil.h  = I_ROUND(c_h * NK_HEIGHT_MUL);
+  S->floor.h = B->t.z + f_delta;
+  S-> ceil.h = T->b.z + c_delta;
 
   if (S->ceil.h < S->floor.h)
       S->ceil.h = S->floor.h;
@@ -528,7 +530,8 @@ static void NK_TextureSolidWall(nukem_wall_c *W)
 
     brush_vert_c *bvert = W->snag->partner->FindOneSidedVert((f_h + c_h) / 2.0);
 
-    if (bvert) face = &bvert->face;
+    if (bvert)
+      face = &bvert->face;
   }
 
   NK_GetFaceProps(W, face);
@@ -650,10 +653,10 @@ static void NK_PartnerWalls()
 
 void nukem_wall_c::Write()
 {
-  int next = index + 1;
+  int point2 = index + 1;
 
-  if (next >= sector->first_wall + sector->num_walls)
-    next = sector->first_wall;
+  if (point2 >= sector->first_wall + sector->num_walls)
+    point2 = sector->first_wall;
 
 
   int xscale = 8; // FIXME  1 + (int)line->length / 16;
@@ -664,7 +667,7 @@ void nukem_wall_c::Write()
   int hi_tag = 0;
 
 
-  NK_AddWall(x1, y1, next,
+  NK_AddWall(x1, y1, point2,
              partner ? partner->index : -1,
              partner ? partner->sector->index : -1,          
              flags, pic, 0,
@@ -726,9 +729,12 @@ void nukem_sector_c::Write()
 {
   int visibility = 1;
 
+  int f_h = I_ROUND(floor.h * NK_HEIGHT_MUL);
+  int c_h = I_ROUND( ceil.h * NK_HEIGHT_MUL);
+
   NK_AddSector(first_wall, num_walls, visibility,
-               floor.h, floor.pic,
-               ceil.h,  ceil.pic,  ceil.flags,
+               f_h, floor.pic,
+               c_h,  ceil.pic,  ceil.flags,
                0, 0);
 }
 
