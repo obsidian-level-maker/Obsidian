@@ -58,7 +58,6 @@ NUKEM.PARAMETERS =
   rails = true,
   switches = true,
   liquids = true,
-  teleporters = true,
 
   max_name_length = 28,
 
