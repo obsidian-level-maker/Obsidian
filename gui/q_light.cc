@@ -459,7 +459,6 @@ typedef struct
   float x, y, z;
   float level;
   float radius;
-  float param;
 }
 quake_light_t;
 
@@ -492,8 +491,7 @@ static void QCOM_FindLights()
     float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
     light.level  = E->props.getDouble("light", default_level);
-    light.radius = E->props.getDouble("radius", light.level);
-    light.param  = E->props.getDouble("param");
+    light.radius = E->props.getDouble("_radius", light.level);
 
     if (light.level < 1 || light.radius < 1)
       continue;
