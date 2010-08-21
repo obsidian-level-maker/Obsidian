@@ -154,6 +154,7 @@ function Trans.brush(kind, coords)
   end
 
   -- FIXME: mirroring
+  -- (when mirroring, ensure first coord stays the first)
 
   -- apply transform
   coords = table.deep_copy(coords)
