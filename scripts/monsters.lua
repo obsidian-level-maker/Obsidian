@@ -56,6 +56,15 @@ require 'util'
 
 Monsters = { }
 
+-- Doom flags
+DOOM_FLAGS =
+{
+  EASY    = 1,
+  MEDIUM  = 2,
+  HARD    = 4,
+  AMBUSH  = 8,
+}
+
 -- Quake flags
 QUAKE_FLAGS =
 {
@@ -656,11 +665,9 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
   local function place_item(S, item_name, x, y, SK)
-    local props
+    local props = {}
 
     if PARAM.use_spawnflags then
-      props = {}
-
       if SK == "easy" then
         props.spawnflags = QUAKE_FLAGS.NOT_MEDIUM + QUAKE_FLAGS.NOT_HARD
       elseif SK == "medium" then
@@ -669,12 +676,13 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
         props.spawnflags = QUAKE_FLAGS.NOT_EASY + QUAKE_FLAGS.NOT_MEDIUM
       end
     else
-      props =
-      {
-        skill_hard   = sel(SK == "hard",   1, 0),
-        skill_medium = sel(SK == "medium", 1, 0),
-        skill_easy   = sel(SK == "easy",   1, 0),
-      }
+      if SK == "easy" then
+        props.flags = DOOM_FLAGS.EASY
+      elseif SK == "medium" then
+        props.flags = DOOM_FLAGS.MEDIUM
+      elseif SK == "hard" then
+        props.flags = DOOM_FLAGS.HARD
+      end
     end
 
     Trans.entity(item_name, x, y, S.floor_h, props)
@@ -1525,11 +1533,14 @@ function Monsters.fill_room(R)
       if (skill > 1) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_EASY end
       if (skill > 2) then props.spawnflags = props.spawnflags + QUAKE_FLAGS.NOT_MEDIUM end
     else
-      props.ambush = spot.ambush or ambush
+      props.flags = DOOM_FLAGS.HARD
 
-      props.skill_hard   = sel(skill <= 3, 1, 0)
-      props.skill_medium = sel(skill <= 2, 1, 0)
-      props.skill_easy   = sel(skill <= 1, 1, 0)
+      if spot.ambush or ambush then
+        props.flags = props.flags + DOOM_FLAGS.AMBUSH
+      end
+
+      if (skill <= 1) then props.flags = props.flags + DOOM_FLAGS.EASY end
+      if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
     end
 
     local mx = (spot.x1 + spot.x2) / 2

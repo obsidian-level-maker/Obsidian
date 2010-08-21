@@ -61,6 +61,12 @@ bool smoother_lighting = false;
 #define COLINEAR_THRESHHOLD  0.24
 
 
+#define MTF_ALL_SKILLS  (MTF_Easy | MTF_Medium | MTF_Hard)
+
+#define MTF_HEXEN_CLASSES  (32 + 64 + 128)
+#define MTF_HEXEN_MODES    (256 + 512 + 1024)
+
+
 class doom_sector_c;
 class doom_linedef_c;
 
@@ -1820,31 +1826,6 @@ static void DM_WriteLinedefs(void)
 }
 
 
-static int ParseThingOptions(csg_property_set_c & props)
-{
-  int options = props.getInt("flags");
-
-  // TODO: perhaps this should be done by the Lua code...
-
-  // skill flags (they all default to 1)
-  if (props.getInt("skill_easy",   -1) != 0) options |= ~MTF_Easy;
-  if (props.getInt("skill_medium", -1) != 0) options |= ~MTF_Medium;
-  if (props.getInt("skill_hard",   -1) != 0) options |= ~MTF_Hard;
-
-  // mode flags
-  if (props.getInt("mode_sp",   -1) == 0) options |= MTF_NotSP;
-  if (props.getInt("mode_coop", -1) == 0) options |= MTF_NotCOOP;
-  if (props.getInt("mode_dm",   -1) == 0) options |= MTF_NotDM;
-
-  // other flags...
-  if (props.getInt("ambush") > 0)  options |= MTF_Ambush;
-  if (props.getInt("friend") > 0)  options |= MTF_Friend;   // MBF
-  if (props.getInt("dormant") > 0) options |= MTF_Dormant;  // Eternity
-
-  return options;
-}
-
-
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
   int type = atoi(E->name.c_str());
@@ -1865,8 +1846,16 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
   int angle   = E->props.getInt("angle");
   int tid     = E->props.getInt("tid");
   int special = E->props.getInt("special");
+  int options = E->props.getInt("flags", MTF_ALL_SKILLS);
 
-  int options = ParseThingOptions(E->props);
+  if (dm_sub_format == SUBFMT_Hexen)
+  {
+    if ((options & MTF_HEXEN_CLASSES) == 0)
+      options |= MTF_HEXEN_CLASSES;
+
+    if ((options & MTF_HEXEN_MODES) == 0)
+      options |= MTF_HEXEN_MODES;
+  }
 
   byte args[5] = { 0,0,0,0,0 };
 
