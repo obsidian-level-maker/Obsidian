@@ -71,6 +71,31 @@ class doom_sector_c;
 class doom_linedef_c;
 
 
+class dummy_sector_c
+{
+public:
+  doom_sector_c *sector;
+
+  doom_sector_c *pair;
+
+  std::string texture;
+  std::string flat;
+
+  int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
+
+  int ef_type;
+  int ef_flags;
+  int ef_tag;
+
+public:
+  dummy_sector_c()
+  { }
+
+  ~dummy_sector_c()
+  { }
+};
+
+
 class extrafloor_c
 {
 public:
@@ -502,6 +527,8 @@ static std::vector<doom_vertex_c *>  dm_vertices;
 static std::vector<doom_linedef_c *> dm_linedefs;
 static std::vector<doom_sidedef_c *> dm_sidedefs;
 static std::vector<doom_sector_c *>  dm_sectors;
+
+static std::vector<dummy_sector_c *> dm_dummies;
 static std::vector<extrafloor_c *>   dm_exfloors;
 
 static std::map<int, unsigned int>   dm_vertex_map;
@@ -1438,7 +1465,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
     return;
 
 
-  doom_linedef_c *L = new doom_linedef_c();
+  doom_linedef_c *L = new doom_linedef_c;
 
   dm_linedefs.push_back(L);
 
@@ -1489,10 +1516,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
   if (spec)
   {
-    L->flags |= spec->getInt("flags");
-
     L->type = spec->getInt("kind");
     L->tag  = spec->getInt("tag");
+
+    L->flags |= spec->getInt("flags");
 
     spec->getHexenArgs(L->args);
   }
@@ -1667,6 +1694,104 @@ static void DM_AlignTextures(void)
   }
 
   LogPrintf("Aligned %d textures\n", count);
+}
+
+
+//------------------------------------------------------------------------
+//  EXTRAFLOOR STUFF
+//------------------------------------------------------------------------
+
+static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
+{
+  if (what == 0)
+    return NULL;
+
+  doom_sector_c *sec = dum->sector;
+
+  if (what == 2 && dum->pair)
+    sec = dum->pair;
+
+
+  doom_sidedef_c *SD = new doom_sidedef_c;
+
+  SD->sector = sec;
+
+  dm_sidedefs.push_back(SD);
+
+
+  SD->upper = dum->texture;
+  SD->mid   = dum->texture;
+  SD->lower = dum->texture;
+
+  SD->x_offset = 0;
+  SD->y_offset = 0;
+}
+
+
+static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
+                           int x1, int y1, int x2, int y2,
+                           int front, int back)
+{
+  // handle splitting via a single recurse
+
+  if (split_min > 0 && (dum->ef_count >= split_min))
+  {
+    int mx = (x1 + x2) / 2;
+    int my = (y1 + y2) / 2;
+
+    Dummy_MakeLine(dum, -1, x1, y1, mx, my, front, back);
+    Dummy_MakeLine(dum, -1, mx, my, x2, y2, front, back);
+
+    return;
+  }
+
+  // front and back are 0 for VOID, 1 or 2 for SECTOR#
+
+  if (front == 2 && ! dum->pair) front = 1;
+  if ( back == 2 && ! dum->pair)  back = 1;
+
+  if (front == back)
+    return;
+
+
+  doom_linedef_c *L = new doom_linedef_c;
+
+  dm_linedefs.push_back(L);
+
+
+  L->start = DM_MakeVertex(x1, y1);
+  L->end   = DM_MakeVertex(x2, y2);
+
+  L->CalcLength();
+
+
+  L->front = Dummy_Sidedef(dum, front);
+  L->back  = Dummy_Sidedef(dum, back);
+
+
+  L->type  = dum->ef_type;
+  L->tag   = dum->ef_tag;
+  L->flags = dum->ef_flags;
+}
+
+
+static void DM_CreateDummies()
+{
+  for (unsigned int i = 0 ; i < dm_dummies.size() ; i++)
+  {
+    dummy_sector_c *dum = dm_dummies[i];
+
+    // determine coordinate of bottom/left corner
+    int x = ((int)i % 64) * 32;
+    int y = map_bound_y1 - (extrafloor_slot % 64) * 32 - 16;
+
+    Dummy_MakeLine(dum, 5, x,y+16, x+16,y+16, 1,0);
+    Dummy_MakeLine(dum, 6, x,y,    x+16,y,    0,2);
+    Dummy_MakeLine(dum, 7, x,y,    x,y+16,    1,0);
+    Dummy_MakeLine(dum, 8, x+16,y, x+16,y+16, 0,2);
+
+    Dummy_MakeLine(dum, -1, x,y, x+16,y+16, 2,1);
+  }
 }
 
 
