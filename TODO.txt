@@ -3,15 +3,7 @@ TODO
 ====
 
 
-!!!  DOOM wall textures
-
-!!  NUKEM wall textures
-
-
-use '_' prefix on special entity fields (e.g. _radius, _color)
-
-
-!  Lua code should create thing 'flags' value (DOOM, HEXEN, etc)
+CSG DOOM: fix up extrafloor creation
 
 
 qLightmap_c : only store the result : byte samples
@@ -42,9 +34,6 @@ ambient sounds:
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify
        Lua code must handle special "tag" value
-
-
--  mirroring : make sure first coord stays the first
 
 
 
@@ -177,9 +166,6 @@ Prefabs:
   (i.e. allow more than a single door or single switch per lock kind).
 
 
-+  make linedef merging more relaxed (cf. DAVID.wad)
-
-
 --------------------------------------------------------------------
 
 
@@ -222,13 +208,4 @@ BUG: corner supports are sometimes off the wall
 
 -  some basic lighting objects (torches), esp. Urban/Hell
 
-
-CSG CODE:
-
-!!  DOOM: fix y_offset values
-    (when have y_offset and brush side is truncated/extended)
-
--  CSG DOOM: support entity.light
-
--  CSG DOOM: fix up extrafloor creation
 

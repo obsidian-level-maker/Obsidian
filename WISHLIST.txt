@@ -231,17 +231,22 @@ SKY GENERATOR:
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
--  give sky_fence linedefs the 'never draw' flag
+?  CSG DOOM: support entity.light
 
--  make light level of windows (esp. outdoor -> outdoor)
-   slightly lower than surrounds.
+-  DOOM: fix y_offset values
+    (when have y_offset and brush side is truncated/extended)
 
 -  generate episode names (M_EPI# etc).
 
 -  Rail brushes: support fake 3D bridges
                  (create dummy sector from brush's Z2)
 
--  build our own REJECT lump (use vis info like Quake)
+-  give sky_fence linedefs the 'never draw' flag
+
+-  make light level of windows (esp. outdoor -> outdoor)
+   slightly lower than surrounds.
+
+.  build our own REJECT lump (use vis info like Quake)
 
 
 ----------------------------------------------------------------
@@ -282,17 +287,17 @@ Sam's suggestions:
   HEXEN
 ----------------------------------------------------------------
 
--  get it working again (different WAD formats, args[], etc)
+!! get it working again (different WAD formats, args[], etc)
 
-+  need exit teleporter in final Hub.
++  IDEA: have a DEFAULT_ARGS table for each line special,
+         so that prefabs (etc) aren't cluttered with arguments.
 
 -  put 'fighter only' bit on fighter's weapons, etc..
 
-+  bug report: some doors close and never open.
+-  need exit teleporter in final Hub.
 
-+  rework teleporter gates (make them bi-directional).
++  make teleporter gates bi-directional.
 
-+  fix key usage (REQUIRE both to get to boss level).
 
 
 ----------------------------------------------------------------
@@ -321,11 +326,6 @@ Sam's suggestions:
   QUAKE
 ----------------------------------------------------------------
 
-+  better miptex handling:
-   -  only copy _used_ textures into the MipTex lump
-   -  support multiple WD2 files : gui.quake_add_textures
-   -  create OBLIGE logos : gui.quake_make_logo()
-
 >>> perform lighting
 
 >>> perform visibility
@@ -333,6 +333,13 @@ Sam's suggestions:
 +  liquid areas
 
 +  slopes!
+   -  for clipping, force a node line where slope flattens out,
+      then mark one side as sloped - other side as flat.
+
++  better miptex handling:
+   -  only copy _used_ textures into the MipTex lump
+   -  support multiple WD2 files : gui.quake_add_textures
+   -  create OBLIGE logos : gui.quake_make_logo()
 
 +  support the Boss maps (next map = "start")
      E2M6 : wood floor, funky bridge, kill vores to get rune
