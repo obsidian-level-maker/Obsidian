@@ -39,7 +39,7 @@
 
 
 // Properties
-int solid_exfloor;    // disabled if <= 0
+int solid_exfloor = 400;    // disabled if <= 0
 int liquid_exfloor;
 
 
@@ -67,54 +67,13 @@ bool smoother_lighting = false;
 #define MTF_HEXEN_MODES    (256 + 512 + 1024)
 
 
-class doom_sector_c;
+class extrafloor_c;
+class dummy_sector_c;
+
 class doom_linedef_c;
 
 
-class dummy_sector_c
-{
-public:
-  doom_sector_c *sector;
-
-  doom_sector_c *pair;
-
-  std::string texture;
-  std::string flat;
-
-  int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
-
-  int ef_type;
-  int ef_flags;
-  int ef_tag;
-
-public:
-  dummy_sector_c()
-  { }
-
-  ~dummy_sector_c()
-  { }
-};
-
-
-class extrafloor_c
-{
-public:
-  // dummy sector
-  doom_sector_c * dummy_sec;
-
-  std::string w_tex;
-
-  std::vector<doom_sector_c *> users;
-
-public:
-  extrafloor_c() : dummy_sec(NULL), w_tex(), users()
-  { }
-
-  ~extrafloor_c()
-  { } 
-
-  bool Match(const extrafloor_c *other) const;
-};
+static bool EXFL_Match(extrafloor_c *A, extrafloor_c *B);
 
 
 class doom_sector_c 
@@ -166,21 +125,25 @@ public:
     return unused;
   }
 
+  void AddExtrafloor(extrafloor_c *EF)
+  {
+    exfloors.push_back(EF);
+  }
+
   bool SameExtraFloors(const doom_sector_c *other) const
   {
     if (exfloors.size() != other->exfloors.size())
       return false;
 
-    for (unsigned int i = 0; i < exfloors.size(); i++)
+    for (unsigned int i = 0 ; i < exfloors.size() ; i++)
     {
-      extrafloor_c *E1 = exfloors[i];
-      extrafloor_c *E2 = other->exfloors[i];
+      extrafloor_c *A = exfloors[i];
+      extrafloor_c *B = other->exfloors[i];
 
-      if (E1 == E2)
+      if (A == B || EXFL_Match(A, B))
         continue;
 
-      if (! E1->Match(E2))
-        return false;
+      return false;
     }
 
     return true;
@@ -196,8 +159,10 @@ public:
            (special == other->special) &&
            (tag  == other->tag)  &&
            (mark == other->mark) &&
+
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
            (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
+
            SameExtraFloors(other);
   }
 
@@ -205,15 +170,15 @@ public:
 };
 
 
-bool extrafloor_c::Match(const extrafloor_c *other) const
-{
-  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
-    return false;
-
-  SYS_ASSERT(dummy_sec && other->dummy_sec);
-
-  return dummy_sec->Match(other->dummy_sec);
-}
+///---bool extrafloor_c::Match(const extrafloor_c *other) const
+///---{
+///---  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
+///---    return false;
+///---
+///---  SYS_ASSERT(dummy_sec && other->dummy_sec);
+///---
+///---  return dummy_sec->Match(other->dummy_sec);
+///---}
 
 
 class doom_vertex_c 
@@ -536,26 +501,6 @@ static std::map<int, unsigned int>   dm_vertex_map;
 
 //------------------------------------------------------------------------
 
-void DM_FreeStuff(void)
-{
-  int i;
-
-  for (i=0; i < (int)dm_vertices.size(); i++) delete dm_vertices[i];
-  for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
-  for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
-  for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
-  for (i=0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
-
-  dm_vertices.clear();
-  dm_linedefs.clear();
-  dm_sidedefs.clear();
-  dm_sectors. clear();
-  dm_exfloors.clear();
-
-  dm_vertex_map.clear();
-}
-
-
 #if 0
 
 void DM_WriteDoom(void);  // forward
@@ -671,92 +616,10 @@ void DM_TestRegions(void)
 
 //------------------------------------------------------------------------
 
-static void DM_MakeExtraFloor(doom_sector_c *sec, 
-                              region_c *R, gap_c *T, gap_c *B)
-{
-#if 0  // TODO
-
-  // find the brush which we will use for the side texture
-  csg_brush_c *MID = NULL;
-  double best_h = 0;
-
-  // FIXME use f_sides/b_sides (FindSideFace)
-  for (unsigned int j = 0; j < R->brushes.size(); j++)
-  {
-    csg_brush_c *A = R->brushes[j];
-
-    if (A->b.z > B->t_brush->b.z - Z_EPSILON &&
-        A->t.z < T->b_brush->t.z + Z_EPSILON)
-    {
-      double h = A->t.z - A->b.z;
-
-      // TODO: priorities
-
-//      if (MID && fabs(h - best_h) < Z_EPSILON)
-//      { /* same height, prioritise */ }
-
-      if (h > best_h)
-      {
-        best_h = h;
-        MID = A;
-      }
-    }
-  }
-
-  SYS_ASSERT(MID);
+static void DM_ExtraFloors(doom_sector_c *S, region_c *R);
 
 
-  extrafloor_c *EF = new extrafloor_c;
-
-  dm_exfloors.push_back(EF);
-
-//FIXME !!!!  EF->w_tex = MID->w_face->tex;
-
-  EF->users.push_back(sec);
-
-
-  EF->dummy_sec = new doom_sector_c;
-
-  EF->dummy_sec->f_h = I_ROUND(B->t_brush->b.z);
-  EF->dummy_sec->c_h = I_ROUND(T->b_brush->t.z);
-
-//FIXME !!!!  EF->dummy_sec->f_tex = B->t_brush->b_face->tex.c_str();
-//FIXME !!!!  EF->dummy_sec->c_tex = T->b_brush->t_face->tex.c_str();
-
-
-  // FIXME !!!! light, special
-
-
-  sec->exfloors.push_back(EF);
-#endif
-}
-
-
-static void DM_DoExtraFloors(doom_sector_c *S, region_c *R)
-{
-  // Note: top-to-bottom is the most natural order, because when
-  // the engine adds an extrafloor into a sector, the upper part
-  // remains the same and the lower part gets the new properties
-  // (lighting/special) from the extrafloor.
-
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
-  {
-    gap_c *T = R->gaps[g];
-    gap_c *B = R->gaps[g-1];
-
-    if (solid_exfloor > 0)
-    {
-      DM_MakeExtraFloor(S, R, T, B);
-    }
-    else
-    {
-      LogPrintf("WARNING: discarding extrafloor @ (%1.0f %1.0f)\n");
-    }
-  }
-}
-
-
-static void DM_DoLightingBrush(doom_sector_c *S, region_c *R)
+static void DM_LightingBrush(doom_sector_c *S, region_c *R)
 {
   for (unsigned int i = 0; i < R->brushes.size(); i++)
   {
@@ -871,12 +734,12 @@ static void DM_MakeSector(region_c *R)
     S->misc_flags |= SEC_IS_SKY;
 
 
-  DM_DoLightingBrush(S, R);
+  DM_LightingBrush(S, R);
 
 
   // find brushes floating in-between --> make extrafloors
 
-  DM_DoExtraFloors(S, R);
+  DM_ExtraFloors(S, R);
 }
 
 
@@ -1053,9 +916,9 @@ static void DM_CoalesceSectors()
 }
 
 
+#if 0  // TODO
 static void DM_CoalesceExtraFloors()
 {
-#if 0  // TODO
 
   for (int loop=0; loop < 99; loop++)
   {
@@ -1119,8 +982,8 @@ static void DM_CoalesceExtraFloors()
     if (changes == 0)
       break;
   }
-#endif
 }
+#endif
 
 
 static void DM_AssignExtraFloorTags(void)
@@ -1701,6 +1564,196 @@ static void DM_AlignTextures(void)
 //  EXTRAFLOOR STUFF
 //------------------------------------------------------------------------
 
+class dummy_sector_c
+{
+public:
+  doom_sector_c *sector;
+
+  doom_sector_c *pair;
+
+  std::string texture;
+  std::string flat;
+
+  int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
+
+  int ef_type;
+  int ef_flags;
+  int ef_tag;
+
+public:
+  dummy_sector_c()
+  { }
+
+  ~dummy_sector_c()
+  { }
+};
+
+
+class extrafloor_c
+{
+public:
+  int top_h;
+  int bottom_h;
+
+  std::string top;  // textures
+  std::string bottom;
+  std::string wall;
+
+  int index;
+
+public:
+  extrafloor_c() : top(), bottom(), wall(), index(-1)
+  { }
+
+  ~extrafloor_c()
+  { } 
+
+  bool Match(const extrafloor_c *other) const
+  {
+    return (   top_h == other->   top_h) &&
+           (bottom_h == other->bottom_h) &&
+
+           (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
+           (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
+           (strcmp(wall.c_str(),   other->wall.c_str())   == 0);
+  }
+};
+
+
+static bool EXFL_Match(extrafloor_c *A, extrafloor_c *B)
+{
+  return A->Match(B);
+}
+
+
+static void DM_MakeExtraFloor(doom_sector_c *sec, 
+                              region_c *R, gap_c *gap1, gap_c *gap2)
+{
+  extrafloor_c *EF = new extrafloor_c;
+
+  dm_exfloors.push_back(EF);
+
+  sec->AddExtrafloor(EF);
+
+
+  EF->top_h    = I_ROUND(gap2->bottom->t.z);
+  EF->bottom_h = I_ROUND(gap1->   top->b.z);
+
+  EF->top    = gap2->bottom->t.face.getStr("tex", dummy_plane_tex.c_str());
+  EF->bottom = gap1->   top->b.face.getStr("tex", dummy_plane_tex.c_str());
+
+  brush_vert_c *V = gap2->bottom->verts[0];
+
+  EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
+
+  // TODO: sector special, tag
+}
+
+
+static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
+{
+  if (liquid_exfloor && R->liquid)
+  {
+    // FIXME: make liquid extrafloor
+  }
+
+  if (! solid_exfloor)
+    return;
+
+  // Note: top-to-bottom is the most natural order, because when
+  // the engine adds an extrafloor into a sector, the upper part
+  // remains the same and the lower part gets the new properties
+  // (lighting/special) from the extrafloor.
+
+  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  {
+    gap_c *T = R->gaps[g];
+    gap_c *B = R->gaps[g-1];
+
+    DM_MakeExtraFloor(S, R, T, B);
+  }
+}
+
+
+static int EXFL_CoalescePass()
+{
+  // TODO: sort extrafloors by Z, staggeredly compare
+
+  int changes = 0;
+
+  for (unsigned int i = 0 ; i < dm_linedefs.size() ; i++)
+  {
+    doom_linedef_c *L = dm_linedefs[i];
+
+    if (! L->back)
+      continue;
+
+    doom_sector_c *front_S = L->front->sector;
+    doom_sector_c * back_S = L-> back->sector;
+
+    if (front_S == back_S)
+      continue;
+
+    for (unsigned int k = 0 ; k < front_S->exfloors.size() ; k++)
+    for (unsigned int n = 0 ; n <  back_S->exfloors.size() ; n++)
+    {
+      extrafloor_c *E1 = front_S->exfloors[k];
+      extrafloor_c *E2 =  back_S->exfloors[n];
+
+      if (E1 == E2 || E1->index == E2->index)
+        continue;
+      
+      if (! E1->Match(E2))
+        continue;
+
+      int new_index = MIN(E1->index, E2->index);
+
+      E1->index = new_index;
+      E2->index = new_index;
+
+      changes++;
+    }
+  }
+
+fprintf(stderr, "EXFL_CoalescePass  changes:%d\n", changes);
+
+  return changes;
+}
+
+
+static void DM_CoalesceExtraFloors()
+{
+  for (unsigned int k = 0 ; k < dm_exfloors.size() ; k++)
+    dm_exfloors[k]->index = (int)k;
+
+  while (EXFL_CoalescePass() > 0)
+  { }
+
+  // mark unused extrafloors and replace references
+  int count = 0;
+
+  for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
+  {
+    doom_sector_c *S = dm_sectors[i];
+
+    for (unsigned int k = 0 ; k < S->exfloors.size() ; k++)
+    {
+      extrafloor_c *EF = S->exfloors[k];
+
+      if (dm_exfloors[EF->index] != EF)
+      {
+        S->exfloors[k] = dm_exfloors[EF->index];
+        EF->index = -1;
+
+        count++;
+      }
+    }
+  }
+
+  LogPrintf("Merged %d extrafloors (of %u)\n", count, dm_exfloors.size());
+}
+
+
 static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
 {
   if (what == 0)
@@ -1725,6 +1778,8 @@ static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
 
   SD->x_offset = 0;
   SD->y_offset = 0;
+
+  return SD;
 }
 
 
@@ -1767,6 +1822,9 @@ static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
 
   L->front = Dummy_Sidedef(dum, front);
   L->back  = Dummy_Sidedef(dum, back);
+
+  if (! L->front)
+    L->Flip();
 
 
   L->type  = dum->ef_type;
@@ -2014,6 +2072,30 @@ static void DM_WriteThings(void)
 
 //------------------------------------------------------------------------
 
+void DM_FreeStuff(void)
+{
+  int i;
+
+  for (i=0; i < (int)dm_vertices.size(); i++) delete dm_vertices[i];
+  for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
+  for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
+  for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
+
+  for (i=0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
+  for (i=0; i < (int)dm_dummies .size(); i++) delete dm_dummies [i];
+
+  dm_vertices.clear();
+  dm_linedefs.clear();
+  dm_sidedefs.clear();
+  dm_sectors. clear();
+
+  dm_exfloors.clear();
+  dm_dummies .clear();
+
+  dm_vertex_map.clear();
+}
+
+
 void CSG_DOOM_Write()
 {
   // converts the Merged list into the sectors, linedefs (etc)
@@ -2050,7 +2132,6 @@ void CSG_DOOM_Write()
   DM_CoalesceSectors();
 
 ///  DM_AssignExtraFloorTags();
-///  DM_CoalesceExtraFloors();
 
   DM_CreateLinedefs();
 
@@ -2058,6 +2139,8 @@ void CSG_DOOM_Write()
   DM_AlignTextures();
 
   map_bound_y1 -= (map_bound_y1 & 7) + 8;
+
+  DM_CoalesceExtraFloors();
 
 ///  CreateeDummies();
 
