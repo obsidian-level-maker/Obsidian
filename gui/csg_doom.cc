@@ -58,6 +58,8 @@ double light_dist_factor = 800.0;
 
 bool smoother_lighting = false;
 
+#define COLINEAR_THRESHHOLD  0.24
+
 
 class doom_sector_c;
 class doom_linedef_c;
@@ -392,13 +394,34 @@ public:
 
   bool ColinearWith(const doom_linedef_c *B) const
   {
-    int adx = end->x - start->x;
-    int ady = end->y - start->y;
+    // never merge a pure horizontal/vertical with a diagonal
+    if (start->x == end->x)
+      return B->start->x == B->end->x;
 
-    int bdx = B->end->x - B->start->x;
-    int bdy = B->end->y - B->start->y;
+    if (start->y == end->y)
+      return B->start->y == B->end->y;
 
-    return (adx * bdy == bdx * ady);
+    if (B->start->x == B->end->x || B->start->y == B->end->y)
+      return false;
+
+    float adx = end->x - start->x;
+    float ady = end->y - start->y;
+    float a_len = sqrt(adx*adx + ady*ady);
+
+    float bdx = B->end->x - B->start->x;
+    float bdy = B->end->y - B->start->y;
+    float b_len = sqrt(bdx*bdx + bdy*bdy);
+
+    adx /= a_len;  bdx /= b_len;
+    ady /= a_len;  bdy /= b_len;
+
+    double d = fabs(adx * bdy - bdx * ady);
+
+//  fprintf(stderr, "Colinear Lines: d=%1.4f\n", d);
+//  fprintf(stderr, "  A:(%d %d) .. (%d %d) : %+d %+d\n", start->x,start->y, end->x,end->y, end->x - start->x, end->y - start->y);
+//  fprintf(stderr, "  B:(%d %d) .. (%d %d) : %+d %+d\n", B->start->x,B->start->y, B->end->x,B->end->y, B->end->x - B->start->x, B->end->y - B->start->y);
+
+    return d < COLINEAR_THRESHHOLD;
   }
 
   bool CanMerge(const doom_linedef_c *B) const
@@ -409,9 +432,6 @@ public:
     // test sidedefs
     doom_sidedef_c *B_front = B->front;
     doom_sidedef_c *B_back  = B->back;
-
-///---  if ((V == end) == (V == B->end))
-///---    std::swap(B_front, B_back);
 
     if (! CanMergeSides(back,  B_back) ||
         ! CanMergeSides(front, B_front))
@@ -1492,34 +1512,43 @@ static void DM_CreateLinedefs()
 
 //------------------------------------------------------------------------
 
-static void DM_TryMergeLine(doom_linedef_c *A)
+static bool DM_TryMergeLine(doom_linedef_c *A)
 {
   doom_vertex_c *V = A->end;
 
   doom_linedef_c *B = V->SecondLine(A);
 
   if (! B)
-    return;
+    return false;
 
   // we only handle the case where B's start == A's end
   // (which is still the vast majority of mergeable cases)
 
   if (V != B->start)
-    return;
+    return false;
 
   SYS_ASSERT(B->Valid());
 
-  if (A->CanMerge(B))
-    A->Merge(B);
+  if (! A->CanMerge(B))
+    return false;
+
+  A->Merge(B);
+
+  return true;
 }
 
 
 static void DM_MergeColinearLines(void)
 {
+  int count = 0;
+
   for (int pass = 0; pass < 4; pass++)
     for (int i = 0; i < (int)dm_linedefs.size(); i++)
       if (dm_linedefs[i]->Valid())
         DM_TryMergeLine(dm_linedefs[i]);
+          count++;
+
+  LogPrintf("Merged %d colinear lines\n");
 }
 
 
@@ -1559,18 +1588,10 @@ static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
 
 static void DM_AlignTextures(void)
 {
-  // Algorithm:  FIXME out of date
-  //
-  // 1) assign every linedef a "prev_matcher" field (forms a chain)
-  //    [POSSIBILITY: similar field for back sidedefs]
-  //
-  // 2) give every linedef with no prev_matcher the NATURAL X offset
-  //
-  // 3) iterate over all linedefs, use prev_matcher chain to align X offsets
-
   int i;
+  int count = 0;
 
-  for (i = 0; i < (int)dm_linedefs.size(); i++)
+  for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
     if (! L->Valid())
@@ -1586,13 +1607,18 @@ static void DM_AlignTextures(void)
       L->back->x_offset = NaturalXOffset(L, 1);
   }
 
-  for (int pass = 8; pass >= 0; pass--)
+  // when there are line loops where every x_offset is IVAL_NONE, then
+  // it's a chicken and egg problem.  Hence we perform a bunch of passes,
+  // the first pass checks every 256 lines for IVAL_NONE (which will then
+  // propagate to similar neighbors), the next pass checks 128, 64, etc..
+
+  for (int pass = 8 ; pass >= 0 ; pass--)
   {
     int naturals = 0;
     int prev_count = 0;
     int next_count = 0;
 
-    for (i = 0; i < (int)dm_linedefs.size(); i++)
+    for (i = 0 ; i < (int)dm_linedefs.size() ; i++)
     {
       doom_linedef_c *L = dm_linedefs[i];
       if (! L->Valid())
@@ -1628,9 +1654,13 @@ static void DM_AlignTextures(void)
       }
     }
 
-    DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
-                pass, naturals, prev_count, next_count);
+    count += prev_count + next_count;
+
+//  DebugPrintf("AlignTextures pass %d : naturals:%d prevs:%d nexts:%d\n",
+//              pass, naturals, prev_count, next_count);
   }
+
+  LogPrintf("Aligned %d textures\n", count);
 }
 
 
