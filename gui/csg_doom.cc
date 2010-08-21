@@ -1655,6 +1655,7 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
   if (liquid_exfloor && R->liquid)
   {
     // FIXME: make liquid extrafloor
+    // DM_MakeLiquidFloor(S, R);
   }
 
   if (! solid_exfloor)
@@ -1667,10 +1668,7 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 
   for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
   {
-    gap_c *T = R->gaps[g];
-    gap_c *B = R->gaps[g-1];
-
-    DM_MakeExtraFloor(S, R, T, B);
+    DM_MakeExtraFloor(S, R, R->gaps[g-1], R->gaps[g]);
   }
 }
 
@@ -1700,6 +1698,7 @@ static int EXFL_CoalescePass()
       extrafloor_c *E1 = front_S->exfloors[k];
       extrafloor_c *E2 =  back_S->exfloors[n];
 
+fprintf(stderr, "__ testing %p (%d) + %p (%d)\n", E1,E1->index, E2,E2->index);
       if (E1 == E2 || E1->index == E2->index)
         continue;
       
@@ -1723,6 +1722,9 @@ fprintf(stderr, "EXFL_CoalescePass  changes:%d\n", changes);
 
 static void DM_CoalesceExtraFloors()
 {
+  // FIXME: better method : simply sort dm_exfloors and find duplicates
+
+
   for (unsigned int k = 0 ; k < dm_exfloors.size() ; k++)
     dm_exfloors[k]->index = (int)k;
 
@@ -1751,6 +1753,65 @@ static void DM_CoalesceExtraFloors()
   }
 
   LogPrintf("Merged %d extrafloors (of %u)\n", count, dm_exfloors.size());
+}
+
+
+static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
+{
+  doom_sector_c *ACTUAL_DUMMY = new doom_sector_c;
+
+  dm_sectors.push_back(ACTUAL_DUMMY);
+
+  ACTUAL_DUMMY->f_h = EF->bottom_h;
+  ACTUAL_DUMMY->c_h = EF->top_h;
+
+  ACTUAL_DUMMY->f_tex = EF->bottom;
+  ACTUAL_DUMMY->c_tex = EF->top;
+
+  ACTUAL_DUMMY->light = 144;
+
+
+  dummy_sector_c *dum = new dummy_sector_c;
+
+  dm_dummies.push_back(dum);
+
+  dum->sector = ACTUAL_DUMMY;
+  dum->pair   = NULL;
+
+  dum->texture = EF->wall;
+  dum->flat    = "ZZZZ";
+
+  dum->ef_count = 1;
+
+  dum->ef_type  = solid_exfloor;
+  dum->ef_flags = 1;
+  dum->ef_tag   = S->tag;
+}
+
+
+static void DM_CombibulateExtraFloors()
+{
+  int tag = 10001;
+
+  for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
+  {
+    doom_sector_c *S = dm_sectors[i];
+
+    if (S->unused || S->exfloors.empty())
+      continue;
+
+    if (S->tag > 0)  // SHIT
+      continue;
+
+    S->tag = tag;  tag++;
+
+    for (unsigned int k = 0 ; k < S->exfloors.size() ; k++)
+    {
+      extrafloor_c *EF = S->exfloors[k];
+
+      EXFL_MakeDummy(S, EF);
+    }
+  }
 }
 
 
@@ -1827,9 +1888,14 @@ static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
     L->Flip();
 
 
-  L->type  = dum->ef_type;
-  L->tag   = dum->ef_tag;
-  L->flags = dum->ef_flags;
+  L->flags = 1;
+
+  if (split_min == 7)
+  {
+    L->type  = dum->ef_type;
+    L->tag   = dum->ef_tag;
+    L->flags = dum->ef_flags;
+  }
 }
 
 
@@ -1840,8 +1906,8 @@ static void DM_CreateDummies()
     dummy_sector_c *dum = dm_dummies[i];
 
     // determine coordinate of bottom/left corner
-    int x = ((int)i % 64) * 32;
-    int y = map_bound_y1 - (extrafloor_slot % 64) * 32 - 16;
+    int x = ((int)i % 64 - 30) * 32;
+    int y = map_bound_y1 - 128 - (i / 64) * 32;
 
     Dummy_MakeLine(dum, 5, x,y+16, x+16,y+16, 1,0);
     Dummy_MakeLine(dum, 6, x,y,    x+16,y,    0,2);
@@ -2131,7 +2197,6 @@ void CSG_DOOM_Write()
   DM_LightingFloodFill();
   DM_CoalesceSectors();
 
-///  DM_AssignExtraFloorTags();
 
   DM_CreateLinedefs();
 
@@ -2140,9 +2205,11 @@ void CSG_DOOM_Write()
 
   map_bound_y1 -= (map_bound_y1 & 7) + 8;
 
-  DM_CoalesceExtraFloors();
 
-///  CreateeDummies();
+  DM_CoalesceExtraFloors();
+  DM_CombibulateExtraFloors();
+  DM_CreateDummies();
+
 
   DM_WriteLinedefs();
   DM_WriteThings();
