@@ -1117,82 +1117,50 @@ static doom_vertex_c * DM_MakeVertex(int x, int y)
 }
 
 
-static int NaturalXOffset(doom_linedef_c *G, int side)
+static int NaturalXOffset(doom_linedef_c *L, int side)
 {
   double along;
   
   if (side == 0)
-    along = AlongDist(0, 0,  G->start->x, G->start->y, G->end->x, G->end->y);
+    along = AlongDist(0, 0,  L->start->x, L->start->y, L->end->x, L->end->y);
   else
-    along = AlongDist(0, 0,  G->end->x, G->end->y, G->start->x, G->start->y);
+    along = AlongDist(0, 0,  L->end->x, L->end->y, L->start->x, L->start->y);
 
   return I_ROUND(- along);
 }
 
-#if 0
-static int CalcXOffset(merge_segment_c *G, int side, brush_vert_c *V, double x_offset) 
+
+static int CalcXOffset(snag_c *S, brush_vert_c *V, int ox) 
 {
   double along = 0;
   
-  if (V)
+  if (S)
   {
-    if (side == 0)
-      along = ComputeDist(V->x, V->y, G->start->x, G->start->y);
-    else
-      along = ComputeDist(V->x, V->y, G->end->x, G->end->y);
+    along = ComputeDist(V->x, V->y, S->x2, S->y2);
   }
 
-  return (int)(along + x_offset);
-}
-#endif
-
-static int CalcRailYOffset(brush_vert_c *rail, int base_h)
-{
-  int y_offset = I_ROUND(rail->parent->b.z) - base_h;
-
-  return y_offset;   ///--- MAX(0, y_offset);
+  return (int)(along + ox);
 }
 
 
-#if 0
-static void DM_GetFaceProps(doom_sidedef_c *SD, snag_c *S, csg_property_set_c *face)
+static int CalcYOffset(brush_vert_c *V, int oy, bool u_peg)
 {
-  const char *tex_name = dummy_wall_tex.c_str();
-
-  if (face)
-  {
-    tex_name = face->getStr("tex", tex_name);
-
-    // FIXME  other stuff
-  }
-  
-  SD->tex = str::string(tex_name);
+  // !!! FIXME: handle cut-offs (etc)
+  return oy;
 }
-#endif
 
 
-static void DM_GetTexture(snag_c *S, csg_brush_c *B,
-                          std::string & tex)
+static int CalcRailYOffset(brush_vert_c *rail, doom_sector_c *F, doom_sector_c *B)
 {
-  SYS_ASSERT(B);
+  int base_h = MAX(F->f_h, B->f_h);
 
-  brush_vert_c *vert = NULL;
-
-  // FIXME !!!  find brush_Vert using snag
-
-  if (! vert)
-    vert = B->verts[0];
-
-  SYS_ASSERT(vert);
-
-  csg_property_set_c *face = &vert->face;
-
-  tex = face->getStr("tex", dummy_wall_tex.c_str());
+  return I_ROUND(rail->parent->b.z) - base_h;
 }
 
 
 static doom_sidedef_c * DM_MakeSidedef(
-    doom_sector_c *sec, snag_c *snag, snag_c *other,
+    doom_sector_c *sec, doom_sector_c *back,
+    snag_c *snag, snag_c *other,
     brush_vert_c *rail, bool *l_peg, bool *u_peg)
 {
   if (! sec)
@@ -1207,12 +1175,14 @@ static doom_sidedef_c * DM_MakeSidedef(
 
 
   // the 'natural' X/Y offsets
-  SD->x_offset = IVAL_NONE;  //--- NaturalXOffset(G, side);
+  SD->x_offset = IVAL_NONE;  // updated in DM_AlignTextures()
   SD->y_offset = - sec->c_h;
 
 
   brush_vert_c *lower = NULL;
   brush_vert_c *upper = NULL;
+
+  const char *dummy_tex = dummy_wall_tex.c_str();
 
   // Note: 'snag' actually faces into the region _behind_ this sidedef
 
@@ -1228,11 +1198,11 @@ static doom_sidedef_c * DM_MakeSidedef(
 
     if (! lower)
     {
-      SD->mid = dummy_wall_tex;
+      SD->mid = dummy_tex;
     }
     else
     {
-      SD->mid = lower->face.getStr("tex", dummy_wall_tex.c_str());
+      SD->mid = lower->face.getStr("tex", dummy_tex);
 
       if (lower->face.getInt("peg"))
         *l_peg = true;
@@ -1241,112 +1211,62 @@ static doom_sidedef_c * DM_MakeSidedef(
       int oy = lower->face.getInt("y_offset", IVAL_NONE);
 
       if (ox != IVAL_NONE)
-        SD->x_offset = ox; //!!!! CalcXOffset(G, side, m_vert, ox);
+        SD->x_offset = CalcXOffset(snag, lower, ox);
 
       if (oy != IVAL_NONE)
-        SD->y_offset = oy;
+        SD->y_offset = oy;  // !!! FIXME  CalcYOffset(upper, oy, ???)
     }
   }
   else
   {
     // Two Sided Line
 
-    SD->lower = "ASHWALL4";
-    SD->upper = "COMPBLUE";
-  }
+    csg_brush_c *l_brush = snag->region->gaps.front()->bottom;
+    csg_brush_c *u_brush = snag->region->gaps. back()->top;
 
+    lower = snag->FindBrushVert(l_brush);
+    upper = snag->FindBrushVert(u_brush);
 
-#if 0  // FIXME : OLD BUT GOOD
+    // fallback to something safe
+    if (! lower) lower = l_brush->verts[0];
+    if (! upper) upper = u_brush->verts[0];
 
-  if (B && B->index >= 0)
-  {
-    doom_sector_c *BS = dm_sectors[B->index];
+    if (lower->face.getInt("peg")) *l_peg = true;
+    if (upper->face.getInt("peg")) *u_peg = true;
 
-    csg_brush_c *l_brush = B->gaps.front()->b_brush;
-    csg_brush_c *u_brush = B->gaps.back() ->t_brush;
+    SD->lower = lower->face.getStr("tex", dummy_tex);
+    SD->upper = upper->face.getStr("tex", dummy_tex);
 
-    SYS_ASSERT(l_brush && u_brush);
+    // offset handling
+    int r_ox = IVAL_NONE;
 
-    brush_vert_c *l_vert = G->FindSide(l_brush);
-    brush_vert_c *u_vert = G->FindSide(u_brush);
-
-    if (! l_vert) l_vert = l_brush->verts[0];
-    if (! u_vert) u_vert = u_brush->verts[0];
-
-    SYS_ASSERT(l_vert && u_vert);
-
-    csg_property_set_c *lower_W = &l_vert->face;
-    csg_property_set_c *upper_W = &u_vert->face;
-
-    SD->lower = lower_W->getStr("tex", dummy_wall_tex.c_str());
-    SD->upper = upper_W->getStr("tex", dummy_wall_tex.c_str());
-
-    if (lower_W->getInt("peg")) *l_peg = true;
-    if (upper_W->getInt("peg")) *u_peg = true;
-
-    csg_property_set_c *rail_W = rail ? &rail->face : NULL;
-
-    if (rail_W)
+    if (rail)
     {
-      SD->mid = rail_W->getStr("tex", "-");
-
       *l_peg = false;
+      SD->mid = rail->face.getStr("tex", "-");
+      r_ox = rail->face.getInt("x_offset", r_ox);
     }
 
-    int r_ox = IVAL_NONE;
-    if (rail_W) r_ox = rail_W->getInt("x_offset", r_ox);
+    int l_ox = lower->face.getInt("x_offset", IVAL_NONE);
+    int l_oy = lower->face.getInt("y_offset", IVAL_NONE);
 
-    int l_ox = lower_W->getInt("x_offset", IVAL_NONE);
-    int l_oy = lower_W->getInt("y_offset", IVAL_NONE);
-
-    int u_ox = upper_W->getInt("x_offset", IVAL_NONE);
-    int u_oy = upper_W->getInt("y_offset", IVAL_NONE);
+    int u_ox = upper->face.getInt("x_offset", IVAL_NONE);
+    int u_oy = upper->face.getInt("y_offset", IVAL_NONE);
 
     if (r_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, rail, r_ox);
+      SD->x_offset = CalcXOffset(snag, rail,  r_ox);
     else if (l_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, l_vert, l_ox);
+      SD->x_offset = CalcXOffset(snag, lower, l_ox);
     else if (u_ox != IVAL_NONE)
-      SD->x_offset = CalcXOffset(G, side, u_vert, u_ox);
+      SD->x_offset = CalcXOffset(snag, upper, u_ox);
 
-    if (rail_W)
-      SD->y_offset = CalcRailYOffset(rail, MAX(S->f_h, BS->f_h));
+    if (rail)
+      SD->y_offset = CalcRailYOffset(rail, sec, back);
     else if (l_oy != IVAL_NONE)
-      SD->y_offset = l_oy;
+      SD->y_offset = CalcYOffset(lower, l_oy, *u_peg);
     else if (u_oy != IVAL_NONE)
-      SD->y_offset = u_oy;
+      SD->y_offset = CalcYOffset(upper, u_oy, *u_peg);
   }
-  else  // one-sided line
-  {
-    double mz = (S->f_h + S->c_h) / 2.0;
-
-    brush_vert_c *m_vert = CSG_FindSideVertex(G, mz, side == 1, true);
-
-    brush_vert_c *m_side = CSG_FindSideFace(G, mz, side == 1, m_vert);
-
-    if (! m_side)
-    {
-      SD->mid = dummy_wall_tex.c_str();
-    }
-    else
-    {
-      csg_property_set_c *mid_W = &m_side->face;
-
-      SD->mid = mid_W->getStr("tex", dummy_wall_tex.c_str());
-
-      if (mid_W->getInt("peg")) *l_peg = true;
-
-      int ox = mid_W->getInt("x_offset", IVAL_NONE);
-      int oy = mid_W->getInt("y_offset", IVAL_NONE);
-
-      if (ox != IVAL_NONE)
-        SD->x_offset = CalcXOffset(G, side, m_vert, ox);
-
-      if (oy != IVAL_NONE)
-        SD->y_offset = oy;
-    }
-  }
-#endif
 
   return SD;
 }
@@ -1509,8 +1429,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   bool l_peg = false;
   bool u_peg = false;
 
-  L->front = DM_MakeSidedef(front, S->partner, S, rail, &l_peg, &u_peg);
-  L->back  = DM_MakeSidedef( back, S, S->partner, rail, &l_peg, &u_peg);
+  L->front = DM_MakeSidedef(front,  back, S->partner, S, rail, &l_peg, &u_peg);
+  L->back  = DM_MakeSidedef( back, front, S, S->partner, rail, &l_peg, &u_peg);
 
   SYS_ASSERT(L->front || L->back);
 
