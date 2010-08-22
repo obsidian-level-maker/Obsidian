@@ -1681,7 +1681,7 @@ static void EXFL_SpreadTag(doom_sector_c *S, int tag)
     {
       doom_sector_c *N = S->ef_neighbors[k];
 
-      if (N->tag > 0)
+      if (N->tag == 0)
         visits.push_back(N);
     }
   }
