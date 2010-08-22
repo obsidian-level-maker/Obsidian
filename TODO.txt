@@ -3,9 +3,6 @@ TODO
 ====
 
 
-CSG DOOM: fix up extrafloor creation
-
-
 qLightmap_c : only store the result : byte samples
               use 'blocklights' buffer for doing each face.
 

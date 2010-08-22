@@ -233,6 +233,8 @@ SKY GENERATOR:
 
 ?  CSG DOOM: support entity.light
 
+-  support BOOM's 242 linetype for liquids and fake 3D floors
+
 -  DOOM: fix y_offset values
     (when have y_offset and brush side is truncated/extended)
 
