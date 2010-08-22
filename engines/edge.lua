@@ -67,6 +67,7 @@ EDGE.ENTITIES =
   water_glow  = { id=7043, kind="scenery", r=16,h=16, pass=true },
 }
 
+
 EDGE.PARAMETERS =
 {
   extra_floors = true,
@@ -136,6 +137,12 @@ function EDGE.create_language()
 end
 
 
+function EDGE.setup()
+  gui.property("ef_solid_type",  400)
+  gui.property("ef_liquid_type", 405)
+end
+
+
 function EDGE.all_done()
   EDGE.create_language();
 
@@ -156,6 +163,7 @@ OB_ENGINES["edge"] =
 
   hooks =
   {
+    setup    = EDGE.setup,
     all_done = EDGE.all_done,
   },
 }

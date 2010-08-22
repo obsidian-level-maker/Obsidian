@@ -20,11 +20,19 @@
 
 LEGACY = { }
 
+
 LEGACY.PARAMETERS =
 {
   extra_floors = true,
   liquid_floors = true,
 }
+
+
+function LEGACY.setup()
+  gui.property("ef_solid_type",  281)
+  gui.property("ef_liquid_type", 301)
+end
+
 
 OB_ENGINES["legacy"] =
 {
@@ -35,5 +43,10 @@ OB_ENGINES["legacy"] =
   for_games = { doom1=1, doom2=1 },
 
   tables = { LEGACY },
+
+  hooks =
+  {
+    setup = LEGACY.setup,
+  },
 }
 
