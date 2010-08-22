@@ -38,6 +38,8 @@
 #define DEFAULT_LIGHTLEVEL  300  // as per the Quake 'light' tool
 #define DEFAULT_SUNLEVEL    30
 
+#define LOW_LIGHT  20
+
 
 bool qk_color_lighting;
 
@@ -474,15 +476,14 @@ static void QCOM_FindLights()
   {
     csg_entity_c *E = all_entities[i];
 
-    if (StringCaseCmpPartial(E->name.c_str(), "light") != 0)
-      continue;
-
     quake_light_t light;
 
-    light.kind = LTK_Normal;
-
-    if (E->Match("light_sun"))
+    if (E->Match("light"))
+      light.kind = LTK_Normal;
+    else if (E->Match("oblige_sun"))
       light.kind = LTK_Sun;
+    else
+      continue;
 
     light.x = E->x;
     light.y = E->y;
@@ -561,7 +562,7 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints(W, H);
 
-  F->lmap = BSP_NewLightmap(W, H, 24);
+  F->lmap = BSP_NewLightmap(W, H, LOW_LIGHT);
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
@@ -572,7 +573,7 @@ void QCOM_LightFace(quake_face_c *F)
 
 void QCOM_LightMapModel(quake_mapmodel_c *model)
 {
-  float value = 24.0;
+  float value = LOW_LIGHT;
 
   float mx = (model->x1 + model->x2) / 2.0;
   float my = (model->y1 + model->y2) / 2.0;

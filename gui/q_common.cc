@@ -714,8 +714,10 @@ void BSP_WriteEntities(int lump_num, const char *description)
   {
     csg_entity_c *E = all_entities[j];
 
-    // skip entities which the engine may complain about
-    if (E->props.getInt("nowrite"))
+    const char *name = E->name.c_str();
+
+    // skip special (Oblige only) entities
+    if (strncmp(name, "oblige_", 7) == 0)
       continue;
 
     lump->Printf("{\n");
@@ -728,12 +730,13 @@ void BSP_WriteEntities(int lump_num, const char *description)
       lump->KeyPair(PI->first.c_str(), "%s", PI->second.c_str());
     }
 
+    // skip origin when same as default value
     if ((I_ROUND(E->x) | I_ROUND(E->y) | I_ROUND(E->z)) != 0)
     {
       lump->KeyPair("origin", "%1.1f %1.1f %1.1f", E->x, E->y, E->z);
     }
 
-    lump->KeyPair("classname", E->name.c_str());
+    lump->KeyPair("classname", name);
 
     lump->Printf("}\n");
   }
