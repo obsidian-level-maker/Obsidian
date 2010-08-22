@@ -1767,6 +1767,20 @@ function Rooms.make_ceiling(R)
       return
     end
 
+    
+    -- temporary lighting stuff for Quake
+    if true then
+      local x1 = SEEDS[R.tx1][R.ty1].x1
+      local y1 = SEEDS[R.tx1][R.ty1].y1
+      local x2 = SEEDS[R.tx2][R.ty2].x2
+      local y2 = SEEDS[R.tx2][R.ty2].y2
+
+      local z1 = SEEDS[R.tx1][R.ty1].floor_h or 128
+      local z2 = SEEDS[R.tx1][R.ty1].ceil_h  or 512
+
+      gui.add_entity("light", (x1+x2)/2, (y1+y2)/2, (z1+z2)/2, { light=160, _radius=720 })
+    end
+
 
     if (R.tw * R.th) <= 18 and rand.odds(20) then
       if corner_supports() and rand.odds(35) then return end
