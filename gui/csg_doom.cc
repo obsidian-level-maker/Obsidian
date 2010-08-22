@@ -39,8 +39,9 @@
 
 
 // Properties
-int solid_exfloor = 400;    // disabled if <= 0
-int liquid_exfloor;
+int solid_exfloor  = 400;    // disabled if <= 0
+int liquid_exfloor = 405; 
+/// liquid_special = 4466;
 
 
 static int map_bound_y1;  // valid after DM_CreateLinedefs()
@@ -67,6 +68,8 @@ bool smoother_lighting = false;
 class extrafloor_c
 {
 public:
+  bool liquid;
+
   int top_h;
   int bottom_h;
 
@@ -78,7 +81,7 @@ public:
   int light;
 
 public:
-  extrafloor_c() : top(), bottom(), wall(), light(128)
+  extrafloor_c() : liquid(false), top(), bottom(), wall(), light(128)
   { }
 
   ~extrafloor_c()
@@ -86,7 +89,8 @@ public:
 
   bool Match(const extrafloor_c *other) const
   {
-    return (   top_h == other->top_h)    &&
+    return (  liquid == other->liquid)   &&
+           (   top_h == other->top_h)    &&
            (bottom_h == other->bottom_h) &&
            (   light == other->light)    &&
 
@@ -204,8 +208,8 @@ public:
   int index;
 
   // keep track of a few (but not all) linedefs touching this vertex.
-  // this is used to detect colinear lines which can be merged.
-  // (later it may be used for horizontal texture alignment)
+  // this is used to detect colinear lines which can be merged. and
+  // also for horizontal texture alignment.
   doom_linedef_c *lines[4];
  
 public:
@@ -1362,8 +1366,8 @@ static void DM_MergeColinearLines()
 {
   int count = 0;
 
-  for (int pass = 0; pass < 4; pass++)
-    for (int i = 0; i < (int)dm_linedefs.size(); i++)
+  for (int pass = 0 ; pass < 4 ; pass++)
+    for (int i = 0 ; i < (int)dm_linedefs.size() ; i++)
       if (dm_linedefs[i]->Valid())
         DM_TryMergeLine(dm_linedefs[i]);
           count++;
@@ -1377,7 +1381,7 @@ static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
   doom_linedef_c *best = NULL;
   int best_score = -1;
 
-  for (int i = 0; i < 4; i++)
+  for (int i = 0 ; i < 4 ; i++)
   {
     doom_linedef_c *M = V->lines[i];
 
@@ -1512,8 +1516,7 @@ public:
 };
 
 
-static void DM_MakeExtraFloor(doom_sector_c *sec, 
-                              region_c *R, gap_c *gap1, gap_c *gap2)
+static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
 {
   extrafloor_c *EF = new extrafloor_c;
 
@@ -1537,25 +1540,53 @@ static void DM_MakeExtraFloor(doom_sector_c *sec,
 }
 
 
+static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
+{
+  // Note: we don't care if the liquid is inside the floor or ceiling,
+  //       perhaps that is intentional.  The engine should not mind.
+
+  extrafloor_c *EF = new extrafloor_c;
+
+  dm_exfloors.push_back(EF);
+
+  sec->AddExtrafloor(EF);
+
+
+  EF->liquid = true;
+
+  EF->bottom_h = I_ROUND(liquid->t.z);
+  EF->top_h    = EF->bottom_h + 128;   // not significant
+
+  EF->top    = liquid->t.face.getStr("tex", dummy_plane_tex.c_str());
+  EF->bottom = EF->top;
+
+  brush_vert_c *V = liquid->verts[0];
+
+  EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
+
+
+  // TODO: sector special, tag
+}
+
+
 static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 {
   if (liquid_exfloor && R->liquid)
   {
-    // FIXME: make liquid extrafloor
-    // DM_MakeLiquidFloor(S, R);
+    DM_LiquidExtraFloor(S, R->liquid);
   }
 
-  if (! solid_exfloor)
-    return;
-
-  // Note: top-to-bottom is the most natural order, because when
-  // the engine adds an extrafloor into a sector, the upper part
-  // remains the same and the lower part gets the new properties
-  // (lighting/special) from the extrafloor.
-
-  for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+  if (solid_exfloor)
   {
-    DM_MakeExtraFloor(S, R, R->gaps[g-1], R->gaps[g]);
+    // Note: top-to-bottom is the most natural order, because when
+    // the engine adds an extrafloor into a sector, the upper part
+    // remains the same and the lower part gets the new properties
+    // (lighting/special) from the extrafloor.
+
+    for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+    {
+      DM_SolidExtraFloor(S, R->gaps[g-1], R->gaps[g]);
+    }
   }
 }
 
@@ -1613,8 +1644,8 @@ static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
 
   dum->ef_count = 1;
 
-  dum->ef_type  = solid_exfloor;
-  dum->ef_flags = 1;
+  dum->ef_type  = EF->liquid ? liquid_exfloor : solid_exfloor;
+  dum->ef_flags = 0;
   dum->ef_tag   = S->tag;
 }
 
