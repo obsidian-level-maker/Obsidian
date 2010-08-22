@@ -490,9 +490,6 @@ public:
 
     // now L is single sided and P is double sided.
 
-///---  if (P->mid[0] != '-')
-///---    return false;
-
     // allow either upper or lower to match
     return (strcmp(L->front->mid.c_str(), P->front->lower.c_str()) == 0) ||
            (strcmp(L->front->mid.c_str(), P->front->upper.c_str()) == 0);
@@ -569,7 +566,7 @@ void Doom_TestBrushes(void)
 
 void Doom_TestClip(void)
 {
-  // for Quake1 debugging only....
+  // for Quake debugging only....
 
   DM_StartWAD("clip_test.wad");
   DM_BeginLevel();
@@ -762,7 +759,7 @@ static void DM_MakeSector(region_c *R)
 
 static void DM_CreateSectors()
 {
-  for (unsigned int i = 0; i < all_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     DM_MakeSector(all_regions[i]);
   }
@@ -1361,7 +1358,7 @@ static bool DM_TryMergeLine(doom_linedef_c *A)
 }
 
 
-static void DM_MergeColinearLines(void)
+static void DM_MergeColinearLines()
 {
   int count = 0;
 
@@ -1409,7 +1406,7 @@ static doom_linedef_c * DM_FindSimilarLine(doom_linedef_c *L, doom_vertex_c *V)
 }
 
 
-static void DM_AlignTextures(void)
+static void DM_AlignTextures()
 {
   int i;
   int count = 0;
@@ -1832,7 +1829,7 @@ void doom_linedef_c::Write()
 }
 
 
-static void DM_WriteLinedefs(void)
+static void DM_WriteLinedefs()
 {
   // this triggers everything else (Sidedefs, Sectors, Vertices) to be
   // written as well.
@@ -1882,7 +1879,7 @@ static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 }
 
 
-static void DM_WriteThings(void)
+static void DM_WriteThings()
 {
   // iterate through regions so that we know which sector each thing
   // is in, which in turn lets us determine height above the floor.
@@ -1906,17 +1903,17 @@ static void DM_WriteThings(void)
 
 //------------------------------------------------------------------------
 
-void DM_FreeStuff(void)
+void DM_FreeStuff()
 {
-  int i;
+  unsigned int i;
 
-  for (i=0; i < (int)dm_vertices.size(); i++) delete dm_vertices[i];
-  for (i=0; i < (int)dm_linedefs.size(); i++) delete dm_linedefs[i];
-  for (i=0; i < (int)dm_sidedefs.size(); i++) delete dm_sidedefs[i];
-  for (i=0; i < (int)dm_sectors .size(); i++) delete dm_sectors [i];
-
-  for (i=0; i < (int)dm_exfloors.size(); i++) delete dm_exfloors[i];
-  for (i=0; i < (int)dm_dummies .size(); i++) delete dm_dummies [i];
+  for (i = 0 ; i < dm_vertices.size() ; i++) delete dm_vertices[i];
+  for (i = 0 ; i < dm_linedefs.size() ; i++) delete dm_linedefs[i];
+  for (i = 0 ; i < dm_sidedefs.size() ; i++) delete dm_sidedefs[i];
+  for (i = 0 ; i < dm_sectors .size() ; i++) delete dm_sectors [i];
+                                      
+  for (i = 0 ; i < dm_exfloors.size() ; i++) delete dm_exfloors[i];
+  for (i = 0 ; i < dm_dummies .size() ; i++) delete dm_dummies [i];
 
   dm_vertices.clear();
   dm_linedefs.clear();
@@ -1932,18 +1929,6 @@ void DM_FreeStuff(void)
 
 void CSG_DOOM_Write()
 {
-  // converts the Merged list into the sectors, linedefs (etc)
-  // required for a DOOM level.
-  //
-  // Algorithm:
-  //
-  // 1) reserve first sector to represent VOID space (never written)
-  // 2) create a sector for each region
-  // 3) coalesce neighbouring sectors with same properties
-  //    - mark border segments as unused
-  //    - mark vertices with all unused segs as unused
-  // 4) profit!
-
 /// Doom_TestRegions();
 /// return;
  
@@ -1960,24 +1945,20 @@ void CSG_DOOM_Write()
   DM_LightingFloodFill();
   DM_CoalesceSectors();
 
-
   DM_CreateLinedefs();
 
   DM_MergeColinearLines();
   DM_AlignTextures();
 
-
   DM_ExtraFloorNeighbors();
   DM_ProcessExtraFloors();
   DM_CreateDummies();
-
 
   DM_WriteLinedefs();
   DM_WriteThings();
 
   DM_FreeStuff();
 }
-
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
