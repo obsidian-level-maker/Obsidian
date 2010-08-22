@@ -43,10 +43,7 @@ int solid_exfloor = 400;    // disabled if <= 0
 int liquid_exfloor;
 
 
-static int extrafloor_tag;
-static int extrafloor_slot;
-
-static int map_bound_y1;
+static int map_bound_y1;  // valid after DM_CreateLinedefs()
 
 
 #define SEC_IS_SKY       (0x1 << 16)
@@ -67,13 +64,40 @@ bool smoother_lighting = false;
 #define MTF_HEXEN_MODES    (256 + 512 + 1024)
 
 
-class extrafloor_c;
-class dummy_sector_c;
+class extrafloor_c
+{
+public:
+  int top_h;
+  int bottom_h;
+
+  // textures
+  std::string top;
+  std::string bottom;
+  std::string wall;
+
+  int light;
+
+public:
+  extrafloor_c() : top(), bottom(), wall(), light(128)
+  { }
+
+  ~extrafloor_c()
+  { } 
+
+  bool Match(const extrafloor_c *other) const
+  {
+    return (   top_h == other->top_h)    &&
+           (bottom_h == other->bottom_h) &&
+           (   light == other->light)    &&
+
+           (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
+           (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
+           (strcmp(wall.c_str(),   other->wall.c_str())   == 0);
+  }
+};
+
 
 class doom_linedef_c;
-
-
-static bool EXFL_Match(extrafloor_c *A, extrafloor_c *B);
 
 
 class doom_sector_c 
@@ -94,7 +118,7 @@ public:
 
   region_c *region;
 
-  double mid_x, mid_y;  // invalid after DM_CoalesceSectors
+  double mid_x, mid_y;  // invalid after DM_CoalesceSectors()
 
   int misc_flags;
   int valid_count;
@@ -142,7 +166,7 @@ public:
       extrafloor_c *A = exfloors[i];
       extrafloor_c *B = other->exfloors[i];
 
-      if (A == B || EXFL_Match(A, B))
+      if (A == B || A->Match(B))
         continue;
 
       return false;
@@ -483,6 +507,8 @@ static std::vector<doom_vertex_c *>  dm_vertices;
 static std::vector<doom_linedef_c *> dm_linedefs;
 static std::vector<doom_sidedef_c *> dm_sidedefs;
 static std::vector<doom_sector_c *>  dm_sectors;
+
+class dummy_sector_c;
 
 static std::vector<dummy_sector_c *> dm_dummies;
 static std::vector<extrafloor_c *>   dm_exfloors;
@@ -1288,6 +1314,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 static void DM_CreateLinedefs()
 {
+  map_bound_y1 = 9999;
+
   for (unsigned int i = 0; i < all_regions.size(); i++)
   {
     region_c *R = all_regions[i];
@@ -1300,6 +1328,8 @@ static void DM_CreateLinedefs()
       DM_MakeLine(R, R->snags[k]);
     }
   }
+
+  map_bound_y1 -= (map_bound_y1 & 7) + 8;
 }
 
 
@@ -1469,7 +1499,6 @@ public:
   doom_sector_c *pair;
 
   std::string texture;
-  std::string flat;
 
   int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
 
@@ -1484,45 +1513,6 @@ public:
   ~dummy_sector_c()
   { }
 };
-
-
-class extrafloor_c
-{
-public:
-  int top_h;
-  int bottom_h;
-
-  // textures
-  std::string top;
-  std::string bottom;
-  std::string wall;
-
-  int light;
-
-public:
-  extrafloor_c() : top(), bottom(), wall(), light(128)
-  { }
-
-  ~extrafloor_c()
-  { } 
-
-  bool Match(const extrafloor_c *other) const
-  {
-    return (   top_h == other->top_h)    &&
-           (bottom_h == other->bottom_h) &&
-           (   light == other->light)    &&
-
-           (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
-           (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
-           (strcmp(wall.c_str(),   other->wall.c_str())   == 0);
-  }
-};
-
-
-static bool EXFL_Match(extrafloor_c *A, extrafloor_c *B)
-{
-  return A->Match(B);
-}
 
 
 static void DM_MakeExtraFloor(doom_sector_c *sec, 
@@ -1623,7 +1613,6 @@ static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
   dum->pair   = NULL;
 
   dum->texture = EF->wall;
-  dum->flat    = "ZZZZ";
 
   dum->ef_count = 1;
 
@@ -1966,11 +1955,6 @@ void CSG_DOOM_Write()
 
   CSG_MakeMiniMap();
 
-  extrafloor_tag  = 9000;
-  extrafloor_slot = 0;
-
-  map_bound_y1 = 9999;
-
   DM_CreateSectors();
 
   DM_LightingFloodFill();
@@ -1981,8 +1965,6 @@ void CSG_DOOM_Write()
 
   DM_MergeColinearLines();
   DM_AlignTextures();
-
-  map_bound_y1 -= (map_bound_y1 & 7) + 8;
 
 
   DM_ExtraFloorNeighbors();
