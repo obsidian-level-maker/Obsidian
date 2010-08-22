@@ -53,8 +53,6 @@ static int map_bound_y1;  // valid after DM_CreateLinedefs()
 
 double light_dist_factor = 800.0;
 
-bool smoother_lighting = false;
-
 #define COLINEAR_THRESHHOLD  0.24
 
 
@@ -141,7 +139,7 @@ public:
 
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(64+80), //!!!!!
+                    light(96),
                     special(0), tag(0), mark(0), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
                     unused(false),
@@ -780,14 +778,13 @@ static void DM_CreateSectors()
 
 static void DM_LightingFloodFill()
 {
-#if 0  // !!!!! TODO
+  unsigned int i;
 
-  int i;
   std::vector<doom_sector_c *> active;
 
   int valid_count = 1;
 
-  for (i = 1; i < (int)dm_sectors.size(); i++)
+  for (i = 0 ; i < dm_sectors.size() ; i++)
   {
     doom_sector_c *S = dm_sectors[i];
 
@@ -806,45 +803,39 @@ static void DM_LightingFloodFill()
 
     std::vector<doom_sector_c *> changed;
 
-    for (i = 0; i < (int)active.size(); i++)
+    for (i = 0; i < active.size(); i++)
     {
       doom_sector_c *S = active[i];
 
-      for (int k = 0; k < (int)S->region->segs.size(); k++)
+      for (unsigned int k = 0 ; k < S->region->snags.size() ; k++)
       {
-        merge_segment_c *G = S->region->segs[k];
+        snag_c *snag = S->region->snags[k];
 
-        if (! G->front || ! G->back)
+        if (! snag->partner || ! snag->partner->region)
           continue;
 
-        if (G->front->index < 0 || G->back->index < 0)
+        region_c *N = snag->partner->region;
+
+        if (N->index < 0 || N->index == (int)i)
           continue;
 
-        doom_sector_c *F = dm_sectors[G->front->index];
-        doom_sector_c *B = dm_sectors[G->back ->index];
-
-        if (! (F==S || B==S))
-          continue;
-
-        if (B == S)
-          std::swap(F, B);
+        doom_sector_c *B = dm_sectors[N->index];
 
         if (B->misc_flags & SEC_PRIMARY_LIT)
           continue;
 
-        int light = MIN(F->light, 176);
+        int light = MIN(S->light, 176);
 
-        SYS_ASSERT(B != F);
-
-        double dist = ComputeDist(F->mid_x,F->mid_y, B->mid_x,B->mid_y);
+        double dist = ComputeDist(S->mid_x,S->mid_y, B->mid_x,B->mid_y);
 
         double A = log(light) / log(2);
+
         double L2 = pow(2, A - dist / light_dist_factor);
 
         light = (int)L2;
 
         // less light through closed doors
-        if (F->f_h >= B->c_h || B->f_h >= F->c_h)
+        if (S->f_h >= B->c_h || B->f_h >= S->c_h)
           light -= 32;
 
         if (B->light >= light)
@@ -867,26 +858,20 @@ static void DM_LightingFloodFill()
 
 //fprintf(stderr, "LightingFloodFill EMPTY\n");
 
-  for (i = 0; i < (int)dm_sectors.size(); i++)
+  for (i = 0; i < dm_sectors.size(); i++)
   {
     doom_sector_c *S = dm_sectors[i];
 
-    if (smoother_lighting)
-      S->light = ((S->light + 1) / 8) * 8;
-    else
-      S->light = ((S->light + 3) / 16) * 16;
+    S->light = ((S->light + 3) / 16) * 16;
 
     if ((S->misc_flags & SEC_SHADOW))
       S->light -= (S->light > 168) ? 48 : 32;
 
-    if (S->light <= 64)
-      S->light = 96;
-    else if (S->light < 112)
+    if (S->light < 112)
       S->light = 112;
     else if (S->light > 255)
       S->light = 255;
   }
-#endif
 }
 
 
