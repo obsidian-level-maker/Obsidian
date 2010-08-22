@@ -389,6 +389,8 @@ public:
     doom_sector_c *F = front->sector;
     doom_sector_c *B = back->sector;
 
+    // TODO: a way to ensure a certain orientation (from Lua)
+
     if (F->f_h != B->f_h) return (F->f_h > B->f_h);
     if (F->c_h != B->c_h) return (F->c_h < B->c_h);
 
@@ -1280,11 +1282,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
   SYS_ASSERT(L->front || L->back);
 
-
-  // TODO: a way to ensure a certain orientation (two-sided lines only)
-
   if (L->ShouldFlip())
+  {
     L->Flip();
+  }
 
 
   if (! L->back)
@@ -1666,16 +1667,23 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
 
 static void EXFL_SpreadTag(doom_sector_c *S, int tag)
 {
-  if (S->tag > 0)
-    return;
+  std::vector<doom_sector_c *> visits;
 
-  S->tag = tag;
+  visits.push_back(S);
 
-  // TODO: de-recursify this
-
-  for (unsigned int k = 0 ; k < S->ef_neighbors.size() ; k++)
+  while (! visits.empty())
   {
-    EXFL_SpreadTag(S->ef_neighbors[k], tag);
+    S = visits.back();  visits.pop_back();
+
+    S->tag = tag;
+
+    for (unsigned int k = 0 ; k < S->ef_neighbors.size() ; k++)
+    {
+      doom_sector_c *N = S->ef_neighbors[k];
+
+      if (N->tag > 0)
+        visits.push_back(N);
+    }
   }
 }
 
