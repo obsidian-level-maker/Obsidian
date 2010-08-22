@@ -39,9 +39,8 @@
 
 
 // Properties
-int solid_exfloor  = 400;    // disabled if <= 0
-int liquid_exfloor = 405; 
-int liquid_special = 4466;
+int ef_solid_type;
+int ef_liquid_type;
 
 
 static int map_bound_y1;  // valid after DM_CreateLinedefs()
@@ -1532,13 +1531,18 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
   sec->AddExtrafloor(EF);
 
 
-  EF->kind = solid_exfloor;
+  EF->kind = ef_solid_type;
+
+  EF->special = gap2->bottom->b.face.getInt("special");
+  EF->light   = gap2->bottom->b.face.getInt("light", 128);
+  EF->tag     = gap2->bottom->b.face.getInt("tag");
 
   EF->top_h    = I_ROUND(gap2->bottom->t.z);
   EF->bottom_h = I_ROUND(gap1->   top->b.z);
 
   EF->top    = gap2->bottom->t.face.getStr("tex", dummy_plane_tex.c_str());
   EF->bottom = gap1->   top->b.face.getStr("tex", dummy_plane_tex.c_str());
+
 
   brush_vert_c *V = gap2->bottom->verts[0];
 
@@ -1558,15 +1562,18 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   sec->AddExtrafloor(EF);
 
 
-  EF->kind    = liquid_exfloor;
-  EF->special = liquid_special;
-  EF->light   = 192;
+  EF->kind = ef_liquid_type;
+
+  EF->special = liquid->t.face.getInt("special");
+  EF->light   = liquid->t.face.getInt("light", 144);
+  EF->tag     = liquid->t.face.getInt("tag");
 
   EF->bottom_h = I_ROUND(liquid->t.z);
   EF->top_h    = EF->bottom_h + 128;   // not significant
 
   EF->top    = liquid->t.face.getStr("tex", dummy_plane_tex.c_str());
   EF->bottom = EF->top;
+
 
   brush_vert_c *V = liquid->verts[0];
 
@@ -1576,12 +1583,12 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
 
 static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 {
-  if (liquid_exfloor && R->liquid)
+  if (ef_liquid_type && R->liquid)
   {
     DM_LiquidExtraFloor(S, R->liquid);
   }
 
-  if (solid_exfloor)
+  if (ef_solid_type)
   {
     // Note: top-to-bottom is the most natural order, because when
     // the engine adds an extrafloor into a sector, the upper part

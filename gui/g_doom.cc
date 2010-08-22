@@ -45,13 +45,15 @@ extern void CSG_DOOM_Write();
 
 extern void DM_FreeLevelStuff(void);
 
+extern int ef_solid_type;
+extern int ef_liquid_type;
+extern int ef_liquid_special;
+
+
 static char *level_name;
 
 
 int dm_sub_format;
-
-extern int solid_exfloor;    // disabled if <= 0
-extern int liquid_exfloor;
 
 static qLump_c *thing_lump;
 static qLump_c *vertex_lump;
@@ -765,13 +767,13 @@ void doom_game_interface_c::Property(const char *key, const char *value)
     else
       LogPrintf("WARNING: DOOM: unknown sub_format '%s'\n", value);
   }
-  else if (StringCaseCmp(key, "solid_exfloor") == 0)
+  else if (StringCaseCmp(key, "ef_solid_type") == 0)
   {
-    solid_exfloor = atoi(value);
+    ef_solid_type = atoi(value);
   }
-  else if (StringCaseCmp(key, "liquid_exfloor") == 0)
+  else if (StringCaseCmp(key, "ef_liquid_type") == 0)
   {
-    liquid_exfloor = atoi(value);
+    ef_liquid_type = atoi(value);
   }
   else
   {
