@@ -229,6 +229,17 @@ SKY GENERATOR:
     Also allow light brushes to eat other ones in certain cases
     (e.g. a shadow brush may override a low-level light brush).
 
+++  rename XXX.MATERIALS --> XXX.TEXTURES, different syntax:
+ 
+       STARTAN3 = { match="FLOOR4_8" }
+       FLOOR4_8 = { flat=1, match="METAL1" }
+
+    use the 'id' keyword to explicitly give texture name
+
+       AIRDUC1_1 = { id="e1u3/airduc1_1" }
+
+    allow psycho="XXX" and psycho=0  (remove SANITY_MAP)
+
 +  support MAPINFO lumps (especially for ZDoom ports).
 
 -  support for the DECORATE lump
