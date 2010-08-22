@@ -41,7 +41,7 @@
 // Properties
 int solid_exfloor  = 400;    // disabled if <= 0
 int liquid_exfloor = 405; 
-/// liquid_special = 4466;
+int liquid_special = 4466;
 
 
 static int map_bound_y1;  // valid after DM_CreateLinedefs()
@@ -68,7 +68,7 @@ bool smoother_lighting = false;
 class extrafloor_c
 {
 public:
-  bool liquid;
+  int kind;
 
   int top_h;
   int bottom_h;
@@ -78,10 +78,14 @@ public:
   std::string bottom;
   std::string wall;
 
+  // dummy sector properties
   int light;
+  int special;
+  int tag;
 
 public:
-  extrafloor_c() : liquid(false), top(), bottom(), wall(), light(128)
+  extrafloor_c() : kind(0), top(), bottom(), wall(),
+                   light(128), special(0), tag(0)
   { }
 
   ~extrafloor_c()
@@ -89,10 +93,13 @@ public:
 
   bool Match(const extrafloor_c *other) const
   {
-    return (  liquid == other->liquid)   &&
+    return (    kind == other->kind)     &&
            (   top_h == other->top_h)    &&
            (bottom_h == other->bottom_h) &&
+
            (   light == other->light)    &&
+           ( special == other->special)  &&
+           (     tag == other->tag)      &&
 
            (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
            (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
@@ -1499,7 +1506,7 @@ public:
 
   doom_sector_c *pair;
 
-  std::string texture;
+  std::string wall;
 
   int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
 
@@ -1525,6 +1532,8 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
   sec->AddExtrafloor(EF);
 
 
+  EF->kind = solid_exfloor;
+
   EF->top_h    = I_ROUND(gap2->bottom->t.z);
   EF->bottom_h = I_ROUND(gap1->   top->b.z);
 
@@ -1534,9 +1543,6 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
   brush_vert_c *V = gap2->bottom->verts[0];
 
   EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
-
-  
-  // TODO: sector special, tag
 }
 
 
@@ -1552,7 +1558,9 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   sec->AddExtrafloor(EF);
 
 
-  EF->liquid = true;
+  EF->kind    = liquid_exfloor;
+  EF->special = liquid_special;
+  EF->light   = 192;
 
   EF->bottom_h = I_ROUND(liquid->t.z);
   EF->top_h    = EF->bottom_h + 128;   // not significant
@@ -1563,9 +1571,6 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   brush_vert_c *V = liquid->verts[0];
 
   EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
-
-
-  // TODO: sector special, tag
 }
 
 
@@ -1618,35 +1623,37 @@ static void DM_ExtraFloorNeighbors()
 }
 
 
-static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
+static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
 {
-  doom_sector_c *ACTUAL_DUMMY = new doom_sector_c;
+  doom_sector_c *new_sec = new doom_sector_c;
 
-  dm_sectors.push_back(ACTUAL_DUMMY);
+  dm_sectors.push_back(new_sec);
 
-  ACTUAL_DUMMY->f_h = EF->bottom_h;
-  ACTUAL_DUMMY->c_h = EF->top_h;
+  new_sec->f_h = EF->bottom_h;
+  new_sec->c_h = EF->top_h;
 
-  ACTUAL_DUMMY->f_tex = EF->bottom;
-  ACTUAL_DUMMY->c_tex = EF->top;
+  new_sec->f_tex = EF->bottom;
+  new_sec->c_tex = EF->top;
 
-  ACTUAL_DUMMY->light = EF->light;
+  new_sec->light   = EF->light;
+  new_sec->special = EF->special;
+  new_sec->tag     = EF->tag;
 
 
   dummy_sector_c *dum = new dummy_sector_c;
 
   dm_dummies.push_back(dum);
 
-  dum->sector = ACTUAL_DUMMY;
+  dum->sector = new_sec;
   dum->pair   = NULL;
 
-  dum->texture = EF->wall;
+  dum->wall = EF->wall;
 
   dum->ef_count = 1;
 
-  dum->ef_type  = EF->liquid ? liquid_exfloor : solid_exfloor;
+  dum->ef_type  = EF->kind;
   dum->ef_flags = 0;
-  dum->ef_tag   = S->tag;
+  dum->ef_tag   = tag;
 }
 
 
@@ -1688,7 +1695,7 @@ static void DM_ProcessExtraFloors()
     {
       extrafloor_c *EF = S->exfloors[k];
 
-      EXFL_MakeDummy(S, EF);
+      EXFL_MakeDummy(EF, S->tag);
     }
   }
 }
@@ -1712,9 +1719,9 @@ static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
   dm_sidedefs.push_back(SD);
 
 
-  SD->upper = dum->texture;
-  SD->mid   = dum->texture;
-  SD->lower = dum->texture;
+  SD->upper = dum->wall;
+  SD->mid   = dum->wall;
+  SD->lower = dum->wall;
 
   SD->x_offset = 0;
   SD->y_offset = 0;
