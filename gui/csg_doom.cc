@@ -1565,7 +1565,7 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   EF->kind = ef_liquid_type;
 
   EF->special = liquid->t.face.getInt("special");
-  EF->light   = liquid->t.face.getInt("light", 144);
+  EF->light   = liquid->t.face.getInt("light", 128);
   EF->tag     = liquid->t.face.getInt("tag");
 
   EF->bottom_h = I_ROUND(liquid->t.z);
