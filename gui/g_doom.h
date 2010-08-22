@@ -102,6 +102,7 @@ typedef enum
   MLF_TwoSided    = 0x0004,
   MLF_UpperUnpeg  = 0x0008,
   MLF_LowerUnpeg  = 0x0010,
+  MLF_DontDraw    = 0x0080,
 }
 doom_lineflag_e;
 

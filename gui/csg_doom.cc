@@ -90,8 +90,6 @@ public:
   int tag;
   int mark;
 
-  std::vector<extrafloor_c *> exfloors;
-
   int index;
 
   region_c *region;
@@ -103,13 +101,17 @@ public:
 
   bool unused;
 
+  std::vector<extrafloor_c *> exfloors;
+
+  std::vector<doom_sector_c *> ef_neighbors;
+
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(64+80), //!!!!!
-                    special(0), tag(0), mark(0),
-                    exfloors(), index(-1),
+                    special(0), tag(0), mark(0), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
-                    unused(false)
+                    unused(false),
+                    exfloors(), ef_neighbors()
   { }
 
   ~doom_sector_c()
@@ -168,17 +170,6 @@ public:
 
   int Write();
 };
-
-
-///---bool extrafloor_c::Match(const extrafloor_c *other) const
-///---{
-///---  if (strcmp(w_tex.c_str(), other->w_tex.c_str()) != 0)
-///---    return false;
-///---
-///---  SYS_ASSERT(dummy_sec && other->dummy_sec);
-///---
-///---  return dummy_sec->Match(other->dummy_sec);
-///---}
 
 
 class doom_vertex_c 
@@ -916,100 +907,6 @@ static void DM_CoalesceSectors()
 }
 
 
-#if 0  // TODO
-static void DM_CoalesceExtraFloors()
-{
-
-  for (int loop=0; loop < 99; loop++)
-  {
-    int changes = 0;
-
-    for (unsigned int i = 0; i < mug_segments.size(); i++)
-    {
-      merge_segment_c *S = mug_segments[i];
-
-      if (! S->front || ! S->back)
-        continue;
-
-      if (S->front->index < 0 || S->back->index < 0)
-        continue;
-
-      doom_sector_c *F = dm_sectors[S->front->index];
-      doom_sector_c *B = dm_sectors[S->back ->index];
-      
-      for (unsigned int j = 0; j < F->exfloors.size(); j++)
-      for (unsigned int k = 0; k < B->exfloors.size(); k++)
-      {
-        extrafloor_c *E1 = F->exfloors[j];
-        extrafloor_c *E2 = B->exfloors[k];
-
-        // already merged?
-        if (E1 == E2)
-          continue;
-
-        if (! E1->Match(E2))
-          continue;
-
-        // don't merge with special stuff
-        if (F->tag < 9000 || B->tag < 9000)
-          continue;
-        
-        // limit how many sectors we can share
-        if (E1->users.size() + E2->users.size() > 8)
-          continue;
-
-        // choose one of them. Using the minimum pointer is a
-        // bit arbitrary, but is repeatable and transitive.
-        extrafloor_c * EF    = MIN(E1, E2);
-        extrafloor_c * other = MAX(E1, E2);
-
-        F->exfloors[j] = EF;
-        B->exfloors[k] = EF;
-
-        // transfer the users
-        while (other->users.size() > 0)
-        {
-          EF->users.push_back(other->users.back());
-          other->users.pop_back();
-        }
-
-        changes++;
-      }
-    }
-
-// fprintf(stderr, "CoalesceExtraFloors: changes = %d\n", changes);
-
-    if (changes == 0)
-      break;
-  }
-}
-#endif
-
-
-static void DM_AssignExtraFloorTags(void)
-{
-#if 0  // TODO
-
-  for (unsigned int i = 0; i < mug_regions.size(); i++)
-  {
-    merge_region_c *R = mug_regions[i];
-
-    if (R->index < 0)
-      continue;
-
-    doom_sector_c *S = dm_sectors[R->index];
-
-    if (S->exfloors.size() > 0 && S->tag <= 0)
-    {
-      S->tag = extrafloor_tag;
-
-      extrafloor_tag += 1;
-    }
-  }
-#endif
-}
-
-
 //------------------------------------------------------------------------
 
 static doom_vertex_c * DM_MakeVertex(int x, int y)
@@ -1595,14 +1492,15 @@ public:
   int top_h;
   int bottom_h;
 
-  std::string top;  // textures
+  // textures
+  std::string top;
   std::string bottom;
   std::string wall;
 
-  int index;
+  int light;
 
 public:
-  extrafloor_c() : top(), bottom(), wall(), index(-1)
+  extrafloor_c() : top(), bottom(), wall(), light(128)
   { }
 
   ~extrafloor_c()
@@ -1610,8 +1508,9 @@ public:
 
   bool Match(const extrafloor_c *other) const
   {
-    return (   top_h == other->   top_h) &&
+    return (   top_h == other->top_h)    &&
            (bottom_h == other->bottom_h) &&
+           (   light == other->light)    &&
 
            (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
            (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
@@ -1646,6 +1545,7 @@ static void DM_MakeExtraFloor(doom_sector_c *sec,
 
   EF->wall = V->face.getStr("tex", dummy_wall_tex.c_str());
 
+  
   // TODO: sector special, tag
 }
 
@@ -1673,12 +1573,8 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
 }
 
 
-static int EXFL_CoalescePass()
+static void DM_ExtraFloorNeighbors()
 {
-  // TODO: sort extrafloors by Z, staggeredly compare
-
-  int changes = 0;
-
   for (unsigned int i = 0 ; i < dm_linedefs.size() ; i++)
   {
     doom_linedef_c *L = dm_linedefs[i];
@@ -1692,67 +1588,15 @@ static int EXFL_CoalescePass()
     if (front_S == back_S)
       continue;
 
-    for (unsigned int k = 0 ; k < front_S->exfloors.size() ; k++)
-    for (unsigned int n = 0 ; n <  back_S->exfloors.size() ; n++)
+    SYS_ASSERT(! front_S->unused);
+    SYS_ASSERT(!  back_S->unused);
+
+    if (front_S->SameExtraFloors(back_S))
     {
-      extrafloor_c *E1 = front_S->exfloors[k];
-      extrafloor_c *E2 =  back_S->exfloors[n];
-
-fprintf(stderr, "__ testing %p (%d) + %p (%d)\n", E1,E1->index, E2,E2->index);
-      if (E1 == E2 || E1->index == E2->index)
-        continue;
-      
-      if (! E1->Match(E2))
-        continue;
-
-      int new_index = MIN(E1->index, E2->index);
-
-      E1->index = new_index;
-      E2->index = new_index;
-
-      changes++;
+      front_S->ef_neighbors.push_back( back_S);
+       back_S->ef_neighbors.push_back(front_S);
     }
   }
-
-fprintf(stderr, "EXFL_CoalescePass  changes:%d\n", changes);
-
-  return changes;
-}
-
-
-static void DM_CoalesceExtraFloors()
-{
-  // FIXME: better method : simply sort dm_exfloors and find duplicates
-
-
-  for (unsigned int k = 0 ; k < dm_exfloors.size() ; k++)
-    dm_exfloors[k]->index = (int)k;
-
-  while (EXFL_CoalescePass() > 0)
-  { }
-
-  // mark unused extrafloors and replace references
-  int count = 0;
-
-  for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
-  {
-    doom_sector_c *S = dm_sectors[i];
-
-    for (unsigned int k = 0 ; k < S->exfloors.size() ; k++)
-    {
-      extrafloor_c *EF = S->exfloors[k];
-
-      if (dm_exfloors[EF->index] != EF)
-      {
-        S->exfloors[k] = dm_exfloors[EF->index];
-        EF->index = -1;
-
-        count++;
-      }
-    }
-  }
-
-  LogPrintf("Merged %d extrafloors (of %u)\n", count, dm_exfloors.size());
 }
 
 
@@ -1768,7 +1612,7 @@ static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
   ACTUAL_DUMMY->f_tex = EF->bottom;
   ACTUAL_DUMMY->c_tex = EF->top;
 
-  ACTUAL_DUMMY->light = 144;
+  ACTUAL_DUMMY->light = EF->light;
 
 
   dummy_sector_c *dum = new dummy_sector_c;
@@ -1789,7 +1633,23 @@ static void EXFL_MakeDummy(doom_sector_c *S, extrafloor_c *EF)
 }
 
 
-static void DM_CombibulateExtraFloors()
+static void EXFL_SpreadTag(doom_sector_c *S, int tag)
+{
+  if (S->tag > 0)
+    return;
+
+  S->tag = tag;
+
+  // TODO: de-recursify this
+
+  for (unsigned int k = 0 ; k < S->ef_neighbors.size() ; k++)
+  {
+    EXFL_SpreadTag(S->ef_neighbors[k], tag);
+  }
+}
+
+
+static void DM_ProcessExtraFloors()
 {
   int tag = 10001;
 
@@ -1803,7 +1663,9 @@ static void DM_CombibulateExtraFloors()
     if (S->tag > 0)  // SHIT
       continue;
 
-    S->tag = tag;  tag++;
+    EXFL_SpreadTag(S, tag);
+
+    tag++;
 
     for (unsigned int k = 0 ; k < S->exfloors.size() ; k++)
     {
@@ -1888,14 +1750,14 @@ static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
     L->Flip();
 
 
-  L->flags = 1;
-
   if (split_min == 7)
   {
     L->type  = dum->ef_type;
     L->tag   = dum->ef_tag;
     L->flags = dum->ef_flags;
   }
+
+  L->flags |= MLF_BlockAll | MLF_DontDraw;
 }
 
 
@@ -1943,11 +1805,6 @@ int doom_sector_c::Write()
     DM_AddSector(f_h, f_tex.c_str(),
                  c_h, c_tex.c_str(),
                  light, special, tag);
-
-    for (unsigned int k = 0; k < exfloors.size(); k++)
-    {
-//!!!! FIXME        WriteExtraFloor(this, exfloors[k]);
-    }
   }
 
   return index;
@@ -1983,84 +1840,6 @@ void doom_linedef_c::Write()
   int b = back  ? back ->Write() : -1;
 
   DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
-}
-
-
-static void DM_WriteExtraFloor(doom_sector_c *sec, extrafloor_c *EF)
-{
-#if 0  ///  FIXME  FIXME
-
-  if (EF->sec->index >= 0)
-    return;
-
-  EF->sec->index = DM_NumSectors();
-
-  DM_AddSector(EF->sec->f_h, EF->sec->f_tex.c_str(),
-               EF->sec->c_h, EF->sec->c_tex.c_str(),
-               EF->sec->light, EF->sec->special, EF->sec->tag);
-
-
-  extrafloor_slot++;
-
-
-  int x1 =                (extrafloor_slot % 64) * 32;
-  int y2 = map_bound_y1 - (extrafloor_slot % 64) * 32;
-
-  if (extrafloor_slot & 1024) x1 += 2200;
-  if (extrafloor_slot & 2048) y1 -= 2200;
-
-  if (extrafloor_slot & 4096)
-    Main_FatalError("Too many extrafloors! (over %d)\n", extrafloor_slot);
-
-  int x2 = x1 + 32;
-  int y2 = y1 + 32;
-
-  int xm = x1 + 16;
-  int ym = y1 + 16;
-
-  bool morev = (EF->users.size() > 4);
-
-  int vert_ref = DM_NumVertexes();
-
-  if (true)  DM_AddVertex(x1, y1);
-  if (morev) DM_AddVertex(x1, ym);
-
-  if (true)  DM_AddVertex(x1, y2);
-  if (morev) DM_AddVertex(xm, y2);
-
-  if (true)  DM_AddVertex(x2, y2);
-  if (morev) DM_AddVertex(x2, ym);
-
-  if (true)  DM_AddVertex(x2, y1);
-  if (morev) DM_AddVertex(xm, y1);
-
- 
-  int side_ref = DM_NumSidedefs();
-
-  DM_AddSidedef(EF->sec->index, "-", EF->w_tex.c_str(), "-", 0, 0);
-
-
-  int vert_num = morev ? 8 : 4;
-
-  for (int n = 0; n < vert_num; n++)
-  {
-    int type = 0;
-    int tag  = 0;
-
-    if (n < (int)EF->users.size())
-    {
-      type = solid_exfloor;
-      tag  = EF->users[n]->tag;
-
-      SYS_ASSERT(tag > 0);
-    }
-
-    DM_AddLinedef(vert_ref + (n), vert_ref + ((n+1) % vert_num),
-                  side_ref, -1 /* side2 */,
-                  type, 1 /* impassible */,
-                  tag, NULL /* args */);
-  }
-#endif
 }
 
 
@@ -2206,8 +1985,8 @@ void CSG_DOOM_Write()
   map_bound_y1 -= (map_bound_y1 & 7) + 8;
 
 
-  DM_CoalesceExtraFloors();
-  DM_CombibulateExtraFloors();
+  DM_ExtraFloorNeighbors();
+  DM_ProcessExtraFloors();
   DM_CreateDummies();
 
 
