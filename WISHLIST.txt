@@ -189,7 +189,7 @@ Hallway Theming:
   GUI and C++ CODE
 ----------------------------------------------------------------
 
--  on serious script errors: remember it, so that we
+?  on serious script errors: remember it, so that we
    don't try calling into LUA to write the config.
 
 IDEA:
@@ -221,6 +221,13 @@ SKY GENERATOR:
 ----------------------------------------------------------------
   DOOM and DOOM II
 ----------------------------------------------------------------
+
+!!  rethink way lighting is done, probably use light brushes for
+    every situation (regions without a primary light brush get
+    flood filled with a value less than nearest light).
+
+    Also allow light brushes to eat other ones in certain cases
+    (e.g. a shadow brush may override a low-level light brush).
 
 +  support MAPINFO lumps (especially for ZDoom ports).
 
