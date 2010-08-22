@@ -69,10 +69,13 @@ SKULLTAG.ENTITIES =
   rune_haste    = { id=5109, kind="pickup", r=20,h=45, pass=true },
 }
 
+
 SKULLTAG.PARAMETERS =
 {
-  -- TODO
+  extra_floors = true,
+  liquid_floors = true,
 }
+
 
 SKULLTAG.MATERIALS =
 {
@@ -95,9 +98,16 @@ SKULLTAG.MATERIALS =
 }
 
 
+function SKULLTAG.setup()
+  -- extrafloors : use EDGE types
+  gui.property("ef_solid_type",  400)
+  gui.property("ef_liquid_type", 405)
+end
+
+
 OB_ENGINES["skulltag"] =
 {
-  label = "Skulltag 98b",
+  label = "Skulltag 98c",
 
   extends = "zdoom",
 
@@ -107,5 +117,10 @@ OB_ENGINES["skulltag"] =
   },
 
   tables = { SKULLTAG },
+
+  hooks =
+  {
+    setup = SKULLTAG.setup,
+  },
 }
 

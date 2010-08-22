@@ -69,10 +69,12 @@ ZDOOM.ENTITIES =
   fountain_white  = { id=9033, kind="scenery", r=16,h=16, pass=true },
 }
 
+
 ZDOOM.PARAMETERS =
 {
   -- TODO
 }
+
 
 OB_ENGINES["zdoom"] =
 {
@@ -93,6 +95,20 @@ OB_ENGINES["zdoom"] =
 
 GZDOOM = { }
 
+GZDOOM.PARAMETERS =
+{
+  extra_floors = true,
+  liquid_floors = true,
+}
+
+
+function GZDOOM.setup()
+  -- extrafloors : use EDGE types
+  gui.property("ef_solid_type",  400)
+  gui.property("ef_liquid_type", 405)
+end
+
+
 OB_ENGINES["gzdoom"] =
 {
   label = "GZDoom 1.2",
@@ -106,5 +122,10 @@ OB_ENGINES["gzdoom"] =
   },
 
   tables = { GZDOOM },
+
+  hooks =
+  {
+    setup = GZDOOM.setup,
+  },
 }
 
