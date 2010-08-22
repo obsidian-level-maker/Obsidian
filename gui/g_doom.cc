@@ -712,7 +712,8 @@ bool doom_game_interface_c::BuildNodes()
   
   bool result = DM_BuildNodes(temp_name, filename);
 
-//!!!!!  FileDelete(temp_name);
+  FileDelete(temp_name);
+
   StringFree(temp_name);
 
   return result;
