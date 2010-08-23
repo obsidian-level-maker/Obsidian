@@ -30,18 +30,18 @@
 #include <commdlg.h>
 #endif
 
+
 static char *last_file;
 static bool last_file_from_config;
 
+
 void Default_Location(void)
 {
+  if (last_file_from_config)
+    return;
+
   last_file = StringNew(FL_PATH_MAX + 4);
 
-#if 0 // ifdef WIN32
-  // don't include a path.  Hence GetSaveFileName() will go to
-  // the default place.
-  last_file[0] = 0;
-#else
   fl_filename_absolute(last_file, ".");
 
   // add a directory separator on the end (if needed)
@@ -52,14 +52,12 @@ void Default_Location(void)
     last_file[len] = DIR_SEP_CH;
     last_file[len+1] = 0;
   }
-#endif
 
   strcat(last_file, "TEST");
 
   LogPrintf("default_location: [%s]\n\n", last_file);
-
-  last_file_from_config = false;
 }
+
 
 bool UI_SetLastFile(const char *filename)
 {
@@ -77,7 +75,7 @@ bool UI_SetLastFile(const char *filename)
     return false;
   }
 
-  filename++, len -= 2;
+  filename++;  len -= 2;
 
   SYS_ASSERT(len >= 0);
 
@@ -90,6 +88,7 @@ bool UI_SetLastFile(const char *filename)
 
   return true;
 }
+
 
 const char *UI_GetLastFile(void)
 {
