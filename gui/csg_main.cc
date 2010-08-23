@@ -292,18 +292,26 @@ int Grab_Properties(lua_State *L, int stack_pos,
     if (lua_type(L, -2) != LUA_TSTRING)
       continue;
 
-    // validate the value
-    if (lua_type(L, -1) != LUA_TSTRING && lua_type(L, -1) != LUA_TNUMBER)
-      return luaL_error(L, "bad property: value is not a string or number");
-
-    const char *key   = lua_tostring(L, -2);
-    const char *value = lua_tostring(L, -1);
+    const char *key = lua_tostring(L, -2);
 
     // for faces, skip single letter keys ('x', 'y', 'b', 't', 's') 
     if (skip_xybt && strlen(key) == 1)
       continue;
 
-    props->Add(key, value);
+    // validate the value
+    if (lua_type(L, -1) == LUA_TBOOLEAN)
+    {
+      props->Add(key, lua_toboolean(L, -1) ? "1" : "0");
+      continue;
+    }
+
+    if (lua_type(L, -1) == LUA_TSTRING || lua_type(L, -1) == LUA_TNUMBER)
+    {
+      props->Add(key, lua_tostring(L, -1));
+      continue;
+    }
+
+    return luaL_error(L, "bad property: weird value for '%s'");
   }
 
   return 0;
