@@ -25,9 +25,9 @@ WISH-LIST
 
 -  HacX
 -  Chex Quest 1, 2, 3
+-  Strife
 
 ?  Dark Forces
-?  Strife
 
 
 ----------------------------------------------------------------
@@ -189,9 +189,6 @@ Hallway Theming:
   GUI and C++ CODE
 ----------------------------------------------------------------
 
-?  on serious script errors: remember it, so that we
-   don't try calling into LUA to write the config.
-
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
@@ -229,10 +226,10 @@ SKY GENERATOR:
     Also allow light brushes to eat other ones in certain cases
     (e.g. a shadow brush may override a low-level light brush).
 
-++  rename XXX.MATERIALS --> XXX.TEXTURES, different syntax:
+++  rename XXX.MATERIALS --> XXX.TEXTURES and XXX.FLATS
  
        STARTAN3 = { match="FLOOR4_8" }
-       FLOOR4_8 = { flat=1, match="METAL1" }
+       FLOOR4_8 = { match="METAL1" }
 
     use the 'id' keyword to explicitly give texture name
 
@@ -249,7 +246,7 @@ SKY GENERATOR:
 -  MAP32: find and kill all the Keens to open the door to the exit.
           perhaps use Psychedelic theme and a lower qty Crazy mode.
 
-?  CSG DOOM: support entity.light
+NO:  CSG DOOM: support entity.light
 
 -  support BOOM's 242 linetype for liquids and fake 3D floors
 
