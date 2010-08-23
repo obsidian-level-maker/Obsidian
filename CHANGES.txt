@@ -14,3 +14,5 @@ CHANGES (since 3.57)
 
 - qsavetex detects and handles Hexen II
 
+- cmdline option to load a config file (for Batch mode)
+
