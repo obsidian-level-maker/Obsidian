@@ -77,10 +77,11 @@ static void ShowInfo(void)
     "Usage: Oblige [options...]\n"
     "\n"
     "Available options:\n"
-    "  -b --batch  <file>   Batch mode (no GUI)\n"
-    "  -d --debug           Enable debugging\n"
-    "  -t --terminal        Print log messages to stdout\n"
-    "  -h --help            Show this help message\n"
+    "  -b --batch   <file>   Batch mode (no GUI)\n"
+    "  -c --config  <file>   Load configuration from a file\n"
+    "  -d --debug            Enable debugging\n"
+    "  -h --help             Show this help message\n"
+    "  -t --terminal         Print log messages to stdout\n"
     "\n"
   );
 
@@ -561,6 +562,21 @@ int main(int argc, char **argv)
 #endif
 
 
+  const char *config_file = NULL;
+  
+  int config_arg = ArgvFind('c', "config");
+  if (config_arg >= 0)
+  {
+    if (config_arg+1 >= arg_count || arg_list[config_arg+1][0] == '-')
+    {
+      fprintf(stderr, "OBLIGE ERROR: missing filename for --config\n");
+      exit(9);
+    }
+
+    config_file = arg_list[config_arg+1];
+  }
+
+
   Script_Init();
 
   if (batch_mode)
@@ -568,6 +584,11 @@ int main(int argc, char **argv)
     Script_Load();
 
     Batch_Defaults();
+
+    // only load an explicitly given config file
+    if (config_file)
+      Cookie_Load(config_file);
+
     Cookie_ParseArguments();
 
     if (! Build_Cool_Shit())
@@ -594,7 +615,10 @@ int main(int argc, char **argv)
     main_win->play_box ->Defaults();
 
     // load config after creating window (will set widget values)
-    Cookie_Load(CONFIG_FILENAME);
+    if (! config_file)
+      config_file = CONFIG_FILENAME;
+
+    Cookie_Load(config_file);
 
     Cookie_ParseArguments();
 
