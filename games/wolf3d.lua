@@ -23,7 +23,9 @@ WF_NO_TILE = 48
 WF_NO_OBJ  = 0
 
 
-WOLF = { }
+WOLF  = { }
+SPEAR = { }
+
 
 WOLF.ENTITIES =
 {
@@ -175,6 +177,7 @@ WOLF.ENTITIES =
   angel_statue = { kind="scenery", id=69, r=30, h=60 },
   marble_column = { kind="scenery", id=71, r=30, h=60, add_mode="island" },
 }
+
 
 WOLF.TILE_NUMS =
 {
@@ -524,9 +527,9 @@ WOLF.SUB_THEMES =
   -- 2. CELLS  --> blue_stone, dogs, skeletons 
   -- 3. CAVE   --> cave/rock tex, vines, mutants
 
-  TECH =
+  wolf_bunker1 =
   {
-    building =
+    building_walls =
     {
       TMP_BLUE=50,
       TMP_GSTONE=30,
@@ -534,14 +537,14 @@ WOLF.SUB_THEMES =
       TMP_WOOD=30,
     },
 
-    floors = { },
+    building_floors = { TMP_BLUE=50 },
 
-    ceilings = { },
-
-    courtyard =
-    {
-      TMP_WOOD=30,
-    },
+--##    ceilings = { TMP_BLUE=50 },
+--##
+--##    courtyard_walls =
+--##    {
+--##      TMP_WOOD=30,
+--##    },
 
     hallway =
     {
@@ -947,10 +950,10 @@ function WOLF.get_levels()
     local ep_info = WOLF.EPISODES["episode" .. episode]
     assert(ep_info)
 
-    local boss_kind = WOLF.EPISODE_BOSSES[episode]
-    if OB_CONFIG.length ~= "full" then
-      boss_kind = WOLF.EPISODE_BOSSES[rand.irange(1,6)]
-    end
+--    local boss_kind = WOLF.EPISODE_BOSSES[episode]
+--    if OB_CONFIG.length ~= "full" then
+--      boss_kind = WOLF.EPISODE_BOSSES[rand.irange(1,6)]
+--    end
 
     local secret_kind = "pacman"
 
@@ -959,14 +962,15 @@ function WOLF.get_levels()
       {
         name = string.format("E%dL%d", episode, map),
 
+        episode  = episode,
         ep_along = ((map - 1) % 10) / 9,
 
         styles = {},
       }
 
-      if WOLF.SECRET_EXITS[Level.name] then
-        Level.secret_exit = true
-      end
+--      if WOLF.SECRET_EXITS[Level.name] then
+--        Level.secret_exit = true
+--      end
 
       table.insert(GAME.all_levels, Level)
     end -- for map
@@ -987,19 +991,19 @@ function WOLF.get_levels()
 end
 
 
-----------------------------------------------------------------
-
 function WOLF.setup()
   -- nothing needed
 end
 
 
-function WOLF.Spear_setup()
+function SPEAR.setup()
   -- nothing needed (yet)
 end
 
 
-UNFINISHED["wolf3d"] =
+----------------------------------------------------------------
+
+OB_GAMES["wolf3d"] =
 {
   label = "Wolfenstein 3D",
 
@@ -1035,11 +1039,21 @@ UNFINISHED["spear"] =
 
   hooks =
   {
-    setup      = WOLF.Spear_setup,
-    get_levels = WOLF.Spear_get_levels,
+    setup      = SPEAR.setup,
+    get_levels = SPEAR.get_levels,
   },
 }
 
 
---  TODO: OB_THEMES["wolf_xxx"] = ...
+------------------------------------------------------------
+
+OB_THEMES["wolf_bunker"] =
+{
+  label = "Bunker",
+
+  for_games = { wolf3d=1, spear=1 },
+
+  name_theme = "URBAN",
+  mixed_prob = 50,
+}
 

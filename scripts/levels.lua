@@ -56,6 +56,7 @@ require 'build'
 require 'caves'
 require 'layout'
 require 'rooms'
+require 'tiler'
 require 'fight'
 require 'monsters'
 
@@ -447,7 +448,7 @@ function Levels_choose_themes()
     table.insert(episode_list, episode_list[2 - dist])
   end
 
-  while #episode_list < 40 do
+  while #episode_list < 90 do
     table.insert(episode_list, episode_list[rand.irange(1, total)])
   end
 
@@ -587,8 +588,8 @@ function Levels_build_it()
   Rooms.build_all()
   if gui.abort() then return "abort" end
 
-  -- here is where the tiler.lua layout code used to kick in
-  assert(not PARAM.tiled)
+  -- FIXME : support monster stuff
+  if PARAM.tiled then return "OK" end
 
   gui.prog_step("Mons");
 

@@ -23,7 +23,7 @@ function Tiler_insert_entity(tx, ty, name, angle, skill, flags)
   assert(1 <= tx and tx <= 64)
   assert(1 <= ty and ty <= 64)
 
-  local info = assert(GAME.things[name])
+  local info = assert(GAME.ENTITIES[name])
   
   local id = info.id
 
@@ -34,6 +34,7 @@ function Tiler_insert_entity(tx, ty, name, angle, skill, flags)
 
   gui.wolf_block(tx, ty, 2, id)
 end
+
 
 function Tiler_add_entity(S, ...)
   local tx = (S.sx - 1) * 3 + 1
@@ -57,7 +58,7 @@ function Tiler_do_basic_room(R, wall, floor)
     local sx = int( (tx + 2) / 3 )
     local sy = int( (ty + 2) / 3 )
 
-    local S = SEEDS[sx][sy][1]
+    local S = SEEDS[sx][sy]
     if S.room == R then
 
       if ((tx == x1) or (tx == x2) or (ty == y1) or (ty == y2)) then
@@ -84,11 +85,11 @@ function Tiler_do_basic_room(R, wall, floor)
   end
 
   for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
-    local S = SEEDS[sx][sy][1]
+    local S = SEEDS[sx][sy]
     if S.room == R then
 
       for side = 2,8,2 do
-        local B_kind = S.border[side].kind
+        local B_kind = nil --!!!!!! FIXME  S.border[side].kind
         if B_kind == "door" then
           do_door(S, side, 90, 91)
         elseif B_kind == "arch" or B_kind == "straddle" or B_kind == "nothing" then
@@ -102,11 +103,11 @@ end
 
 
 function Tiler_layout_room(R)
-  local mat = GAME.materials[R.main_tex]
+  local mat = GAME.MATERIALS[R.main_tex]
 
   if not mat then
     gui.printf("LACKING MATERIAL : %s\n", tostring(R.main_tex))
-    mat = assert(GAME.materials["_ERROR"])
+    mat = assert(GAME.MATERIALS["_ERROR"])
   end
 
   assert(mat.t)
@@ -128,15 +129,6 @@ function Tiler_layout_all()
 
 
   --==| Tiler_layout_all |==--
-
-  Rooms_choose_themes()
-
-  Quest_choose_keys()
-  Quest_add_keys()
-
-  Rooms_decide_hallways_II()
-  Rooms_setup_symmetry()
-  Rooms_reckon_doors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Tiler_layout_room(R)

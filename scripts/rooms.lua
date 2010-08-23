@@ -3194,7 +3194,7 @@ function Rooms.build_all()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
-    -- (code in tiler.lua will now kick in).
+    Tiler_layout_all()
     return
   end
 
