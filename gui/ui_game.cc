@@ -267,12 +267,8 @@ void UI_Game::Defaults()
 bool UI_Game::ParseValue(const char *key, const char *value)
 {
   // Note: game, engine are handled by LUA code
- 
-  if (StringCaseCmp(key, "seed") == 0)
-  {
-    StaleSeed(atoi(value));
-    return true;
-  }
+  //
+  // Note 2: seed is handled specially in cookie code
 
   if (StringCaseCmp(key, "mode") == 0)
   {

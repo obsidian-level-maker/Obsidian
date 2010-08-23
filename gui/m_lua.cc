@@ -337,6 +337,7 @@ int gui_change_button(lua_State *L)
   return 0;
 }
 
+
 // LUA: change_mod_option(module, option, value)
 //
 int gui_change_mod_option(lua_State *L)
@@ -347,12 +348,12 @@ int gui_change_mod_option(lua_State *L)
 
   SYS_ASSERT(module && option && value);
 
-  if (! main_win)
-    return 0;
-
 // DebugPrintf("  change_mod_option: %s.%s --> %s\n", module, option, value);
 
-  main_win->mod_box->ParseOptValue(module, option, value);
+  ob_set_mod_option(module, option, value);
+
+  if (main_win)
+    main_win->mod_box->ParseOptValue(module, option, value);
 
   return 0;
 }
@@ -374,6 +375,7 @@ int gui_at_level(lua_State *L)
 
   return 0;
 }
+
 
 // LUA: prog_step(step_name)
 //
@@ -968,7 +970,7 @@ bool ob_set_mod_option(const char *module, const char *option,
 }
 
 
-bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
+bool ob_read_all_config(std::vector<std::string> * lines)
 {
   if (! has_loaded)
   {
@@ -976,14 +978,9 @@ bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts)
     return false;
   }
 
-  const char *params[2];
-
-  params[0] = all_opts ? "true" : NULL;
-  params[1] = NULL;
-
   conf_line_buffer = lines;
  
-  bool result = Script_CallFunc("ob_read_all_config", 0, params);
+  bool result = Script_CallFunc("ob_read_all_config", 0);
 
   conf_line_buffer = NULL;
 

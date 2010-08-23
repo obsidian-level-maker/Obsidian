@@ -495,7 +495,7 @@ function ob_set_config(name, value)
 end
 
 
-function ob_read_all_config(all_opts, print_to_log)
+function ob_read_all_config(print_to_log)
 
   local function do_line(fmt, ...)
     if print_to_log then
@@ -532,22 +532,23 @@ function ob_read_all_config(all_opts, print_to_log)
   do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
   do_line("")
 
-  do_line("-- Custom Modules --");
-
   for name,def in pairs(OB_MODULES) do
-    do_line("%s.self = %s", name, sel(def.enabled, "true", "false"))
+    do_line("-- Module: %s --", def.label or unknown)
+    do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
 
     -- module options
-    if def.options and (all_opts or def.enabled) then
+    if def.options then
+      do_line("{")
+
       for o_name,opt in pairs(def.options) do
-        do_line("%s.%s = %s", name, o_name, opt.value or unknown)
+        do_line("  %s = %s", o_name, opt.value or unknown)
       end
 
+      do_line("}")
       do_line("")
     end
   end
 
-  do_line("")
   do_line("-- END --")
 end
 
@@ -712,7 +713,7 @@ function ob_build_cool_shit()
   gui.printf("\n\n")
   gui.printf("@5~~~~~~~ Making Levels ~~~~~~~\n\n")
 
-  ob_read_all_config(false, true)
+  ob_read_all_config(true)
 
   gui.ticker()
 

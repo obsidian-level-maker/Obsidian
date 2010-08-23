@@ -326,8 +326,6 @@ bool UI_CustomMods::ShowOrHide(const char *id, bool new_shown)
 bool UI_CustomMods::ParseOptValue(const char *module, const char *option,
                                   const char *value)
 {
-  ob_set_mod_option(module, option, value);
-
   // the script takes care of the module itself
   if (StringCaseCmp(option, "self") == 0)
     return true;

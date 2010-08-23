@@ -48,7 +48,7 @@ bool ob_set_config(const char *key, const char *value);
 bool ob_set_mod_option(const char *module, const char *option,
                        const char *value);
 
-bool ob_read_all_config(std::vector<std::string> * lines, bool all_opts);
+bool ob_read_all_config(std::vector<std::string> * lines);
 
 const char * ob_game_format(void);
 
