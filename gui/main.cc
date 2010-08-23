@@ -77,11 +77,20 @@ static void ShowInfo(void)
     "Usage: Oblige [options...]\n"
     "\n"
     "Available options:\n"
-    "  -b --batch   <file>   Batch mode (no GUI)\n"
-    "  -c --config  <file>   Load configuration from a file\n"
-    "  -d --debug            Enable debugging\n"
-    "  -h --help             Show this help message\n"
-    "  -t --terminal         Print log messages to stdout\n"
+    "  -b --batch   <output>  Batch mode (no GUI)\n"
+    "  -c --config  <file>    Load configuration from a file\n"
+    "  -k --keep              Keep seed value from config file\n"
+    "\n"
+    "  -d --debug             Enable debugging\n"
+    "  -t --terminal          Print log messages to stdout\n"
+    "  -h --help              Show this help message\n"
+    "\n"
+  );
+
+  printf(
+ //   "For more information about OBLIGE, please visit the web site:\n"
+    "Please visit the web site for complete information:\n"
+    "   http://oblige.sourceforge.net\n"
     "\n"
   );
 
@@ -89,10 +98,11 @@ static void ShowInfo(void)
     "This program is free software, under the terms of the GNU General\n"
     "Public License, and comes with ABSOLUTELY NO WARRANTY.  See the\n"
     "documentation for more details, or visit the following web page:\n"
-    "http://www.gnu.org/licenses/gpl.html\n"
+    "   http://www.gnu.org/licenses/gpl.html\n"
     "\n"
   );
 }
+
 
 void Determine_WorkingPath(const char *argv0)
 {

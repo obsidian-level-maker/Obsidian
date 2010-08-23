@@ -49,6 +49,8 @@ static int context;
 
 static std::string active_module;
 
+static bool keep_seed;
+
 
 static bool ParseMiscOption(const char *name, const char *value)
 {
@@ -126,15 +128,17 @@ static void Cookie_SetValue(const char *name, const char *value)
     {
       int seed = atoi(value);
 
-      if (context == CCTX_Arguments)
+      if (context == CCTX_Arguments || keep_seed)
         main_win->game_box->SetSeed(seed);
       else
         main_win->game_box->StaleSeed(seed);
     }
     else
     {
-      // ignore seed when loading a config file for Batch mode
-      if (context == CCTX_Arguments)
+      // ignore seed when loading a config file in Batch mode
+      // unless the -k / --keep option is given.
+
+      if (context == CCTX_Arguments || keep_seed)
         ob_set_config(name, value);
     }
 
@@ -256,6 +260,8 @@ static bool Cookie_ParseLine(char *buf)
 bool Cookie_Load(const char *filename, bool pre_load)
 {
   context = pre_load ? CCTX_PreLoad : CCTX_Load;
+
+  keep_seed = (ArgvFind('k', "keep") >= 0);
 
   active_module.clear();
 
