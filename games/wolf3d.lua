@@ -226,62 +226,65 @@ WOLF.MATERIALS =
 {
   -- special materials --
 
-  _ERROR = { t=0x30 },
+  _ERROR = { t=WF_NO_TILE },
+  _FLOOR = { t=WF_NO_TILE },
   _SKY   = { t=0x10 },
 
   -- common stuff --
 
-  BLU_BRIK  = { t=0x28 },
-  BLU_SKUL  = { t=0x22 },
-  BLU_SWAST = { t=0x24 },
-  BLU_STON1 = { t=0x08 },
-  BLU_STON2 = { t=0x09 },
-  BLU_CELL  = { t=0x05 },
-  BLU_SKELE = { t=0x07 },
-  BLU_SIGN  = { t=0x29 },
+  BLU_BRIK  = { t=0x28, hue="#00F" },
+  BLU_SKUL  = { t=0x22, hue="#00F" },
+  BLU_SWAST = { t=0x24, hue="#00F" },
+  BLU_STON1 = { t=0x08, hue="#00F" },
+  BLU_STON2 = { t=0x09, hue="#00F" },
+  BLU_CELL  = { t=0x05, hue="#00F" },
+  BLU_SKELE = { t=0x07, hue="#00F" },
+  BLU_SIGN  = { t=0x29, hue="#00F" },
 
-  BR_BRICK1 = { t=0x2a },
-  BR_BRICK2 = { t=0x2e },
-  BR_FLAG   = { t=0x2f },
-  BR_CAVE1  = { t=0x1d },
-  BR_CAVE2  = { t=0x1e },
-  BR_CAVE3  = { t=0x1f },
-  BR_CAVE4  = { t=0x20 },
-  BR_STONE1 = { t=0x2c },
-  BR_STONE2 = { t=0x2d },
-  ELEVATOR  = { t=0x15 },
-  ELEV_DEAD = { t=0x16 },
-  ELEV_ENTR = { t=0x0d },
+  BR_BRICK1 = { t=0x2a, hue="#C60" },
+  BR_BRICK2 = { t=0x2e, hue="#C60" },
+  BR_FLAG   = { t=0x2f, hue="#C60" },
+  BR_CAVE1  = { t=0x1d, hue="#C60" },
+  BR_CAVE2  = { t=0x1e, hue="#C60" },
+  BR_CAVE3  = { t=0x1f, hue="#C60" },
+  BR_CAVE4  = { t=0x20, hue="#C60" },
+  BR_STONE1 = { t=0x2c, hue="#C60" },
+  BR_STONE2 = { t=0x2d, hue="#C60" },
 
-  GBRK_VENT = { t=0x25 },
-  GBRK_MAP  = { t=0x2b },
-  GBRICK1   = { t=0x23 },
-  GBRICK2   = { t=0x27 },
-  GR_STAIN  = { t=0x21 },
-  GSTONE1   = { t=0x01 },
-  GSTONE2   = { t=0x02 },
-  GSTONE3   = { t=0x1b },
-  GSTN_EAGL = { t=0x06 },
-  GSTN_HIT1 = { t=0x04 },
-  GSTN_HIT2 = { t=0x31 },
-  GSTN_MOS1 = { t=0x18 },
-  GSTN_MOS2 = { t=0x1a },
-  GSTN_FLAG = { t=0x03 },
-  GSTN_SIGN = { t=0x1c },
+  ELEVATOR  = { t=0x15, hue="#FF0" },
+  ELEV_DEAD = { t=0x16, hue="#FF0" },
+  ELEV_ENTR = { t=0x0d, hue="#FF0" },
 
-  PURP_BLOD = { t=0x19 },
-  PURP_STON = { t=0x13 },
-  RED_BRIK  = { t=0x11 },
-  RED_EAGLE = { t=0x14 },
-  RED_MULTI = { t=0x26 },
-  RED_WREAT = { t=0x12 },
-  STEL_SIGN = { t=0x0e },
-  STEL_PLAT = { t=0x0f },
-  WOOD1     = { t=0x0c },
-  WOOD2     = { t=0x30 },
-  WOOD_CROS = { t=0x17 },
-  WOOD_EAGL = { t=0x0a },
-  WOOD_HITL = { t=0x0b },
+  GBRK_VENT = { t=0x25, hue="#CCC" },
+  GBRK_MAP  = { t=0x2b, hue="#CCC" },
+  GBRICK1   = { t=0x23, hue="#CCC" },
+  GBRICK2   = { t=0x27, hue="#CCC" },
+  GR_STAIN  = { t=0x21, hue="#CCC" },
+  GSTONE1   = { t=0x01, hue="#CCC" },
+  GSTONE2   = { t=0x02, hue="#CCC" },
+  GSTONE3   = { t=0x1b, hue="#CCC" },
+  GSTN_EAGL = { t=0x06, hue="#CCC" },
+  GSTN_HIT1 = { t=0x04, hue="#CCC" },
+  GSTN_HIT2 = { t=0x31, hue="#CCC" },
+  GSTN_MOS1 = { t=0x18, hue="#CCC" },
+  GSTN_MOS2 = { t=0x1a, hue="#CCC" },
+  GSTN_FLAG = { t=0x03, hue="#CCC" },
+  GSTN_SIGN = { t=0x1c, hue="#CCC" },
+
+  PURP_BLOD = { t=0x19, hue="#F0F" },
+  PURP_STON = { t=0x13, hue="#F0F" },
+  RED_BRIK  = { t=0x11, hue="#F00" },
+  RED_EAGLE = { t=0x14, hue="#F00" },
+  RED_MULTI = { t=0x26, hue="#F00" },
+  RED_WREAT = { t=0x12, hue="#F00" },
+
+  STEL_SIGN = { t=0x0e, hue="#0FF" },
+  STEL_PLAT = { t=0x0f, hue="#0FF" },
+  WOOD1     = { t=0x0c, hue="#F90" },
+  WOOD2     = { t=0x30, hue="#F90" },
+  WOOD_CROS = { t=0x17, hue="#F90" },
+  WOOD_EAGL = { t=0x0a, hue="#F90" },
+  WOOD_HITL = { t=0x0b, hue="#F90" },
 
   -- wolf3d only --
 
@@ -291,23 +294,23 @@ WOLF.MATERIALS =
 }
 
 
-SPEAR_MATERIALS =
+SPEAR.MATERIALS =
 {
-  BRN_CONC  = { t=0x3e },
-  CONCRETE1 = { t=0x39 },
-  CONCRETE2 = { t=0x36 },
-  CONCRETE3 = { t=0x37 },
-  ELEVATOR2 = { t=0x3c },
-  PURP_BRIK = { t=0x3f },
-  WHIT_PANL = { t=0x3d },
+  BRN_CONC  = { t=0x3e, hue="#C60" },
+  CONCRETE1 = { t=0x39, hue="#CCC" },
+  CONCRETE2 = { t=0x36, hue="#CCC" },
+  CONCRETE3 = { t=0x37, hue="#CCC" },
+  ELEVATOR2 = { t=0x3c, hue="#FF0" },
+  PURP_BRIK = { t=0x3f, hue="#F0F" },
+  WHIT_PANL = { t=0x3d, hue="#FFF" },
 
-  SP_BLOOD  = { t=0x38 },
-  SP_BROWN1 = { t=0x3a },
-  SP_BROWN2 = { t=0x3b },
-  SP_GRAY1  = { t=0x32 },
-  SP_GRAY2  = { t=0x33 },
-  SPGR_FLAG = { t=0x34 },
-  SPGR_WRET = { t=0x35 },
+  SP_BLOOD  = { t=0x38, hue="#F00" },
+  SP_BROWN1 = { t=0x3a, hue="#C60" },
+  SP_BROWN2 = { t=0x3b, hue="#C60" },
+  SP_GRAY1  = { t=0x32, hue="#BBB" },
+  SP_GRAY2  = { t=0x33, hue="#BBB" },
+  SPGR_FLAG = { t=0x34, hue="#CCC" },
+  SPGR_WRET = { t=0x35, hue="#CCC" },
 }
 
 -- FIXME: UNSORTED or SPECIAL --
@@ -531,13 +534,12 @@ WOLF.SUB_THEMES =
   {
     building_walls =
     {
-      TMP_BLUE=50,
-      TMP_GSTONE=30,
-      TMP_RED=30,
-      TMP_WOOD=30,
+      BLU_BRIK=50,
+      GSTONE1=30,
+      WOOD1=30,
     },
 
-    building_floors = { TMP_BLUE=50 },
+    building_floors = { _FLOOR=50 },
 
 --##    ceilings = { TMP_BLUE=50 },
 --##
@@ -564,7 +566,8 @@ WOLF.SUB_THEMES =
       -- FIXME
     },
 
-  }, -- TECH
+  },
+
 
   --[[  FIXME FIXME
   BUNKER =
