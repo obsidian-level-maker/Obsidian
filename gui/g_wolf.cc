@@ -53,7 +53,9 @@ static int current_offset;
 static u16_t *solid_plane;
 static u16_t *thing_plane;
 
-static int *block_colors;
+static int * minimap_colors;
+static int minimap_x1, minimap_y1;
+static int minimap_x2, minimap_y2;
 
 static char *level_name;
 
@@ -233,8 +235,7 @@ int WF_wolf_block(lua_State *L)
   SYS_ASSERT(1 <= x && x <= 64);
   SYS_ASSERT(1 <= y && y <= 64);
 
-  x = x-1;
-  y = 64-y;
+  x--;  y = 64-y;
 
   switch (plane)
   {
@@ -264,17 +265,23 @@ int WF_wolf_mini_map(lua_State *L)
 
   const char *color = luaL_checkstring(L, 3);
 
-  // adjust and validate coords
+  // validate coords
   SYS_ASSERT(1 <= x && x <= 64);
   SYS_ASSERT(1 <= y && y <= 64);
 
-  x = x-1;
-  y = 64-y;
+  // Note: we don't invert the Y coordinate here
+  x--;  y--;
 
   if (color[0] == '#')
   {
-    block_colors[y*64 + x] = strtol(color+1, NULL, 16);
+    minimap_colors[y*64 + x] = strtol(color+1, NULL, 16);
   }
+
+  minimap_x2 = MAX(x, minimap_x2);
+  minimap_y2 = MAX(y, minimap_y2);
+
+  minimap_x1 = MIN(x, minimap_x1);
+  minimap_y1 = MIN(y, minimap_y1);
 
   return 0;
 }
@@ -289,12 +296,11 @@ static void WF_DumpMap(void)
 
   bool show_floors = false;
 
-  int x, y;
   char line_buf[80];
 
-  for (y = 0; y < 64; y++)
+  for (int y = 0 ; y < 64 ; y++)
   {
-    for (x = 0; x < 64; x++)
+    for (int x = 0 ; x < 64 ; x++)
     {
       int tile = solid_plane[PL_START + y*64 + x];
       int obj  = thing_plane[PL_START + y*64 + x];
@@ -346,20 +352,23 @@ static void WF_MakeMiniMap(void)
 
   main_win->build_box->mini_map->MapBegin();
 
+  int mini_mid_x = minimap_x1 + (minimap_x2 - minimap_x1) / 2;
+  int mini_mid_y = minimap_y1 + (minimap_y2 - minimap_y1) / 2;
+
   for (int y = 0 ; y < 64 ; y++)
   for (int x = 0 ; x < 64 ; x++)
   {
-    int hue = block_colors[y*64 + x];
+    int hue = minimap_colors[y*64 + x];
 
     if (hue < 0)
       continue;
 
-    byte r = ((hue >> 16) & 0xF) * 17;
-    byte g = ((hue >>  8) & 0xF) * 17;
-    byte b = ((hue      ) & 0xF) * 17;
+    byte r = ((hue >> 8) & 0xF) * 17;
+    byte g = ((hue >> 4) & 0xF) * 17;
+    byte b = ((hue     ) & 0xF) * 17;
 
-    int bx = map_W/2 - 48 + x*2;
-    int by = map_H/2 + 80 - y*2;
+    int bx = map_W / 2 + (x - mini_mid_x) * 2;
+    int by = map_H / 2 + (y - mini_mid_y) * 2;
 
     main_win->build_box->mini_map->DrawBox(bx, by, bx+1, by+1, r, g, b);
   }
@@ -431,7 +440,7 @@ bool wolf_game_interface_c::Start()
   solid_plane = new u16_t[64*64 + 8]; // extra space for compressor
   thing_plane = new u16_t[64*64 + 8];
 
-  block_colors = new int[64*64];
+  minimap_colors = new int[64*64];
 
 
   write_errors_seen = 0;
@@ -459,7 +468,7 @@ bool wolf_game_interface_c::Finish(bool build_ok)
   delete solid_plane;  solid_plane  = NULL;
   delete thing_plane;  thing_plane  = NULL;
 
-  delete block_colors;  block_colors = NULL;
+  delete minimap_colors;  minimap_colors = NULL;
 
 
   if (! build_ok)
@@ -510,8 +519,11 @@ void wolf_game_interface_c::BeginLevel()
     solid_plane[PL_START + i] = NO_TILE;
     thing_plane[PL_START + i] = NO_OBJ;
 
-    block_colors[i] = -1;
+    minimap_colors[i] = -1;
   }
+
+  minimap_x1 = minimap_y1 = +99;
+  minimap_x2 = minimap_y2 = -99;
 
   current_map += 1;
 
