@@ -720,7 +720,7 @@ function Connect_rooms()
   local function emergency_branch()
     local loc
 
-    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+    for x = 1,SECTION_W do for y = 1,SECTION_H do
       local K = SECTIONS[x][y]
       for dir = 2,8,2 do
         local N = K:neighbor(dir)
@@ -763,8 +763,8 @@ function Connect_rooms()
 
     -- corners of map (in big rooms) are good places
     if K.room.kvolume >= 3 and
-       (K.kx == 1 or K.kx == LEVEL.W or
-        K.ky == 1 or K.ky == LEVEL.H)
+       (K.kx == 1 or K.kx == SECTION_W or
+        K.ky == 1 or K.ky == SECTION_H)
     then
       return rand.sel(80, 1.5*score, -1)
     end
@@ -781,7 +781,7 @@ function Connect_rooms()
   local function collect_teleporter_locs()
     local loc_list = {}
 
-    for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+    for x = 1,SECTION_W do for y = 1,SECTION_H do
       local K = SECTIONS[x][y]
 
       if K and K.room then

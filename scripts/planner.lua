@@ -36,6 +36,10 @@ require 'defs'
 require 'util'
 
 
+SECTION_W = 0
+SECTION_H = 0
+
+
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
@@ -54,7 +58,7 @@ end
 
 function SECTION_CLASS.neighbor(self, dir, dist)
   local nx, ny = geom.nudge(self.kx, self.ky, dir, dist)
-  if nx < 1 or nx > LEVEL.W or ny < 1 or ny > LEVEL.H then
+  if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
     return nil
   end
   return SECTIONS[nx][ny]
@@ -88,64 +92,18 @@ function Plan_alloc_room_id()
 end
 
 
+function Plan_choose_liquid()
+  if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
+    local name = rand.key_by_probs(THEME.liquids)
+    LEVEL.liquid = assert(GAME.LIQUIDS[name])
+    gui.printf("Liquid: %s\n\n", name)
+  else
+    gui.printf("Liquids disabled.\n\n")
+  end
+end
+
+
 function Plan_decide_map_size()
-
-  local ROOM_SIZE_TABLE = { 0,5,40,40,30,1 }
-
-  local function get_size_list(W, limit)
-    local SIZE_TABLE = THEME.room_size_table or
-                        GAME.room_size_table or
-                        ROOM_SIZE_TABLE
-
-    local sizes = {}
-
-    assert(4 + W*2 <= limit)
-
-    for loop = 1,99 do
-      local total = 4  -- border seeds around level
-
-      for x = 1,W do
-        sizes[x] = rand.index_by_probs(SIZE_TABLE)
-        total = total + sizes[x]
-      end
-
-      if total <= limit then
-        return sizes  -- OK!
-      end
-    end
-
-    -- emergency fallback
-    gui.printf("Using emergency column sizes.\n")
-
-    for x = 1,W do
-      sizes[x] = 2
-    end
-
-    return sizes
-  end
-
-  local function get_position_list(size_list)
-    local pos = {}
-
-    pos[1] = 3  -- two border seeds at [1] and [2]
-
-    for x = 2,#size_list do
-      pos[x] = pos[x-1] + size_list[x-1]
-    end
-
-    return pos
-  end
-
-  local function dump_sizes(line, t, N)
-    for i = 1,N do
-      line = line .. tostring(t[i]) .. " "
-    end
-    gui.printf("%s\n", line)
-  end
-
-
-  ---| Plan_decide_map_size |---
-
   local W, H  -- number of rooms
 
   local ob_size = OB_CONFIG.size
@@ -189,48 +147,131 @@ function Plan_decide_map_size()
     if rand.odds(30) then W = W - 1 end
   end
 
-  LEVEL.W = W
-  LEVEL.H = H
-
-  gui.printf("Map Size: %dx%d sections\n", W, H)
-
-
-  -- initial section sizes in each row and column
-  local limit = (PARAM.seed_limit or 56)
-
-  -- take border seeds (2+2) and free space (3) into account
-  limit = limit - (2+2+3)
-
-  LEVEL.section_W = get_size_list(W, limit)
-  LEVEL.section_H = get_size_list(H, limit)
- 
-  LEVEL.section_X = get_position_list(LEVEL.section_W)
-  LEVEL.section_Y = get_position_list(LEVEL.section_H)
-
-  dump_sizes("Column widths: ", LEVEL.section_W, LEVEL.W)
-  dump_sizes("Row heights:   ", LEVEL.section_H, LEVEL.H)
-
-  LEVEL.seed_W = LEVEL.section_X[LEVEL.W] + LEVEL.section_W[LEVEL.W] - 1
-  LEVEL.seed_H = LEVEL.section_Y[LEVEL.H] + LEVEL.section_H[LEVEL.H] - 1
-
-  -- two border seeds at top and right
-  LEVEL.seed_W = LEVEL.seed_W + 2
-  LEVEL.seed_H = LEVEL.seed_H + 2
+  return W, H
 end
 
 
-function Plan_create_sections()
-  SECTIONS = table.array_2D(LEVEL.W, LEVEL.H)
+function Plan_create_sections(W, H)
 
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
-    SECTIONS[x][y] = SECTION_CLASS.new(x, y)
+  local ROOM_SIZE_TABLE = { 0,5,40,40,30,1 }
+
+  local border_seeds = PARAM.border_seeds or 2
+  local free_seeds   = PARAM.free_seeds   or 4
+
+  local function pick_sizes(W, limit)
+    local SIZE_TABLE = THEME.room_size_table or
+                        GAME.room_size_table or
+                        ROOM_SIZE_TABLE
+
+    local sizes = {}
+    local total
+
+    -- take border seeds into account
+    limit = limit - border_seeds*2
+
+    assert(limit >= W * 2)
+
+    for loop = 1,50 do
+      total = 0
+
+      for x = 1,W do
+        sizes[x] = rand.index_by_probs(SIZE_TABLE)
+        total = total + sizes[x]
+      end
+
+      if total <= limit then
+        return sizes  -- OK!
+      end
+    end
+
+    gui.printf("Adjusting column sizes to fit...\n")
+
+    while total > limit do
+      local x = rand.irange(1,W)
+
+      while x < W and sizes[x] <= 2 do
+        x = x + 1
+      end
+
+      if x < W then
+        sizes[x] = sizes[x] - 1
+        total = total - 1
+      end
+    end
+
+    return sizes
+  end
+
+  local function get_positions(size_list)
+    local pos = {}
+
+    pos[1] = 1 + border_seeds
+
+    for x = 2,#size_list do
+      pos[x] = pos[x-1] + size_list[x-1]
+    end
+
+    return pos
+  end
+
+  local function dump_sizes(line, t, N)
+    for i = 1,N do
+      line = line .. tostring(t[i]) .. " "
+    end
+    gui.printf("%s\n", line)
+  end
+
+
+  ---| Plan_create_sections |---
+
+  local limit = (PARAM.seed_limit or 56)
+
+  -- reduce level size if rooms would become too small
+  -- (2x2 is the absolute minimum)
+
+  local max_W = int(limit / 2.5)
+  local max_H = int((limit - free_seeds) / 2.5)
+
+  if W > max_W then W = max_W end
+  if H > max_H then H = max_H end
+
+
+  gui.printf("Map Size: %dx%d sections\n", W, H)
+
+  SECTION_W = W
+  SECTION_H = H
+
+  LEVEL.section_W = pick_sizes(W, limit)
+  LEVEL.section_H = pick_sizes(H, limit - free_seeds)
+
+  LEVEL.section_X = get_positions(LEVEL.section_W)
+  LEVEL.section_Y = get_positions(LEVEL.section_H)
+
+  dump_sizes("Column widths: ", LEVEL.section_W, SECTION_W)
+  dump_sizes("Row heights:   ", LEVEL.section_H, SECTION_H)
+
+
+  SECTIONS = table.array_2D(SECTION_W, SECTION_H)
+
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
+    local K = SECTION_CLASS.new(x, y)
+
+    SECTIONS[x][y] = K
   end end
+
+
+  -- create the SEEDS array too
+
+  local seed_W = LEVEL.section_X[SECTION_W] + LEVEL.section_W[SECTION_W] + border_seeds - 1
+  local seed_H = LEVEL.section_Y[SECTION_H] + LEVEL.section_H[SECTION_H] + border_seeds - 1
+
+  Seed_init(seed_W, seed_H, 0, free_seeds)
 end
 
 
 function Plan_is_section_valid(x, y)
-  return 1 <= x and x <= LEVEL.W and
-         1 <= y and y <= LEVEL.H
+  return 1 <= x and x <= SECTION_W and
+         1 <= y and y <= SECTION_H
 end
 
 
@@ -246,7 +287,7 @@ end
 function Plan_count_free_sections(x, y)
   local count = 0
 
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
     if not Plan_has_section(x, y) then
       count = count + 1
     end
@@ -260,8 +301,8 @@ function Plan_get_visit_list(x1, y1, x2, y2)
   local visits = {}
 
   if not x1 then
-    x1, x2 = 1, LEVEL.W
-    y1, y2 = 1, LEVEL.H
+    x1, x2 = 1, SECTION_W
+    y1, y2 = 1, SECTION_H
   end
 
   for x = x1,x2 do for y = y1,y2 do
@@ -294,9 +335,9 @@ function Plan_dump_sections(title)
   gui.printf("\n")
   gui.printf("%s\n", title or "Section Map:")
 
-  for y = LEVEL.H,1,-1 do
+  for y = SECTION_H,1,-1 do
     local line = "@c  "
-    for x = 1,LEVEL.W do
+    for x = 1,SECTION_W do
       line = line .. section_char(x, y)
     end
     gui.printf("%s\n", line)
@@ -308,8 +349,8 @@ end
 function Plan_add_small_rooms()
 
   local function can_make_double(x, y)
-    local can_x = (x < LEVEL.W and not Plan_has_section(x+1, y))
-    local can_y = (y < LEVEL.H and not Plan_has_section(x, y+1))
+    local can_x = (x < SECTION_W and not Plan_has_section(x+1, y))
+    local can_y = (y < SECTION_H and not Plan_has_section(x, y+1))
 
     if can_x and can_y then
       local W = LEVEL.section_W[x]
@@ -330,7 +371,7 @@ function Plan_add_small_rooms()
 
   ---| Plan_add_small_rooms |---
 
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
     local K = SECTIONS[x][y]
     if not K.room then
       local R = ROOM_CLASS.new("rect")
@@ -389,7 +430,7 @@ function Plan_add_big_rooms()
   }
 
   local function test_or_set_rect(kx, ky, rot, w, h, ROOM)
-    if w >= LEVEL.W or h >= LEVEL.H then
+    if w >= SECTION_W or h >= SECTION_H then
       return false  -- would span the whole map
     end
 
@@ -399,8 +440,8 @@ function Plan_add_big_rooms()
     local kx2 = kx + w - 1
     local ky2 = ky + h - 1
 
-    if kx < 1 or kx2 > LEVEL.W or
-       ky < 1 or ky2 > LEVEL.H
+    if kx < 1 or kx2 > SECTION_W or
+       ky < 1 or ky2 > SECTION_H
     then
       return false
     end
@@ -434,8 +475,8 @@ function Plan_add_big_rooms()
       if x == 1 then touch_left = true end
       if y == 1 then touch_bottom = true end
 
-      if x == LEVEL.W then touch_right = true end
-      if y == LEVEL.H then touch_top = true end
+      if x == SECTION_W then touch_right = true end
+      if y == SECTION_H then touch_top = true end
 
       if ROOM then
         SECTIONS[x][y].room = ROOM
@@ -465,8 +506,8 @@ function Plan_add_big_rooms()
     end
 
     -- never span the whole map (horizontally)
-    if rw >= LEVEL.W then rw = LEVEL.W - 1 end
-    if rh >= LEVEL.H then rh = LEVEL.H     end
+    if rw >= SECTION_W then rw = SECTION_W - 1 end
+    if rh >= SECTION_H then rh = SECTION_H     end
 
     return rw, rh
   end
@@ -509,22 +550,22 @@ function Plan_add_big_rooms()
     
     for _,side in ipairs(CORNERS) do
       if rand.odds(60) then
-        local x, y = geom.pick_corner(side, 1,1, LEVEL.W, LEVEL.H)
+        local x, y = geom.pick_corner(side, 1,1, SECTION_W, SECTION_H)
         table.insert(visits, 1, { x=x, y=y })
       end
     end
   end
 
   local function ideal_T_spots(visits)
-    local mx = int((LEVEL.W+1) / 2)
-    local my = int((LEVEL.H+1) / 2)
+    local mx = int((SECTION_W+1) / 2)
+    local my = int((SECTION_H+1) / 2)
 
     local SPOTS =
     {
       { x=mx, y=1 },
-      { x=mx, y=LEVEL.H },
+      { x=mx, y=SECTION_H },
       { y=my, x=1 },
-      { y=my, x=LEVEL.W },
+      { y=my, x=SECTION_W },
     }
 
     for _,spot in ipairs(SPOTS) do
@@ -535,10 +576,10 @@ function Plan_add_big_rooms()
   end
 
   local function ideal_PLUS_spots(visits)
-    if LEVEL.W < 5 or LEVEL.H < 5 then return end
+    if SECTION_W < 5 or SECTION_H < 5 then return end
 
-    local mx = int((LEVEL.W+1) / 2)
-    local my = int((LEVEL.H+1) / 2)
+    local mx = int((SECTION_W+1) / 2)
+    local my = int((SECTION_H+1) / 2)
 
     if rand.odds(85) then
       table.insert(visits, 1, {x=mx, y=my})
@@ -546,8 +587,8 @@ function Plan_add_big_rooms()
   end
 
   local function ideal_RECT_spots(visits, rw, rh)
-    local x2 = LEVEL.W - rw
-    local y2 = LEVEL.H - rh
+    local x2 = SECTION_W - rw
+    local y2 = SECTION_H - rh
 
     if x2 < 2 or y2 < 2 then return end
 
@@ -576,7 +617,7 @@ function Plan_add_big_rooms()
       assert(rw > 0 and rh > 0)
     end
 
-    local visits = Plan_get_visit_list(1,1, LEVEL.W-1, LEVEL.H-1)
+    local visits = Plan_get_visit_list(1,1, SECTION_W-1, SECTION_H-1)
 
     -- some shapes fit very well at certain spots.
     -- here we add those spots to the front of the visit list.
@@ -668,14 +709,14 @@ function Plan_add_natural_rooms()
   local function side_to_coordinate(side)
     local x, y = geom.delta(side)
 
-    x = 1 + int((LEVEL.W - 0.7) * (x+1) / 2)
-    y = 1 + int((LEVEL.H - 0.7) * (y+1) / 2)
+    x = 1 + int((SECTION_W - 0.7) * (x+1) / 2)
+    y = 1 + int((SECTION_H - 0.7) * (y+1) / 2)
 
-    if LEVEL.W > 5 then x = x + rand.pick { -1, 0, 1 } end
-    if LEVEL.H > 5 then y = y + rand.pick { -1, 0, 1 } end
+    if SECTION_W > 5 then x = x + rand.pick { -1, 0, 1 } end
+    if SECTION_H > 5 then y = y + rand.pick { -1, 0, 1 } end
 
-    x = math.clamp(1, x, LEVEL.W)
-    y = math.clamp(1, y, LEVEL.H)
+    x = math.clamp(1, x, SECTION_W)
+    y = math.clamp(1, y, SECTION_H)
 
     return x, y
   end
@@ -794,7 +835,7 @@ end
 
 
 function Plan_collect_sections()
-  for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
     local R = K.room
 
@@ -882,7 +923,7 @@ function Plan_find_neighbors()
     table.insert(R.neighbors, N)
   end
 
-  for x = 1,LEVEL.W do for y = 1,LEVEL.H do
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
 
     local R = SECTIONS[x][y].room
 
@@ -1324,9 +1365,7 @@ function Plan_make_seeds()
 
   ---| Plan_make_seeds |---
 
-  Seed_init(LEVEL.seed_W, LEVEL.seed_H, 3, 3)
-
-  for kx = 1,LEVEL.W do for ky = 1,LEVEL.H do
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     fill_section(kx, ky)
   end end
 end
@@ -1404,17 +1443,11 @@ function Plan_create_rooms()
 
   gui.random() ; gui.random()
 
-  if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
-    local name = rand.key_by_probs(THEME.liquids)
-    gui.printf("Liquid: %s\n\n", name)
-    LEVEL.liquid = assert(GAME.LIQUIDS[name])
-  else
-    gui.printf("Liquids disabled.\n\n")
-  end
+  Plan_choose_liquid()
 
-  Plan_decide_map_size()
+  local W, H = Plan_decide_map_size()
 
-  Plan_create_sections()
+  Plan_create_sections(W, H)
 
   -- INVOKE AN HOOK
 
