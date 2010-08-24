@@ -44,7 +44,7 @@ function Tiler_add_entity(S, ...)
 end
 
 
-function Tiler_do_basic_room(R, wall, floor)
+function Tiler_do_basic_room(R, wall, w_hue, floor)
   local x1 = (R.sx1 - 1) * 3 + 1
   local y1 = (R.sy1 - 1) * 3 + 1
 
@@ -63,8 +63,10 @@ function Tiler_do_basic_room(R, wall, floor)
 
       if ((tx == x1) or (tx == x2) or (ty == y1) or (ty == y2)) then
         gui.wolf_block(tx, ty, 1, wall)
+        gui.wolf_mini_map(tx, ty, w_hue)
       else
         gui.wolf_block(tx, ty, 1, floor)
+        gui.wolf_mini_map(tx, ty, "#777")
       end
     end
   end end -- for tx, ty
@@ -112,7 +114,7 @@ function Tiler_layout_room(R)
 
   assert(mat.t)
 
-  Tiler_do_basic_room(R, mat.t, 108)
+  Tiler_do_basic_room(R, mat.t, mat.hue, 108)
 
   if R.purpose == "START" then
     local tx = (R.sx1 - 1) * 3 + 3

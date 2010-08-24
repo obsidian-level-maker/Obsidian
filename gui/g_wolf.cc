@@ -53,6 +53,8 @@ static int current_offset;
 static u16_t *solid_plane;
 static u16_t *thing_plane;
 
+static int *block_colors;
+
 static char *level_name;
 
 #define PL_START  2
@@ -88,6 +90,7 @@ static void WF_PutNString(const char *str, int max_len, FILE *fp)
     fputc(0, fp);
   }
 }
+
 
 int rle_compress_plane(u16_t *plane, int src_len)
 {
@@ -155,6 +158,7 @@ static void WF_WritePlane(u16_t *plane, int *offset, int *length)
   }
 }
 
+
 static void WF_WriteBlankPlane(int *offset, int *length)
 {
   *offset = (int)ftell(map_fp);
@@ -169,6 +173,7 @@ static void WF_WriteBlankPlane(int *offset, int *length)
   *length = (int)ftell(map_fp);
   *length -= *offset;
 }
+
 
 static void WF_WriteMap(void)
 {
@@ -203,6 +208,7 @@ static void WF_WriteMap(void)
   WF_PutNString("!ID!", 4, map_fp);
 }
 
+
 static void WF_WriteHead(void)
 {
   // offset to map data (info struct)
@@ -216,15 +222,12 @@ static void WF_WriteHead(void)
 //
 int WF_wolf_block(lua_State *L)
 {
-  int x = luaL_checkint(L,1);
-  int y = luaL_checkint(L,2);
+  int x = luaL_checkint(L, 1);
+  int y = luaL_checkint(L, 2);
 
-  int plane = luaL_checkint(L,3);
-  int data  = luaL_checkint(L,4);
+  int plane = luaL_checkint(L, 3);
+  int data  = luaL_checkint(L, 4);
 
-#if 0
-  int wflags = luaL_optint(L,5, 0);
-#endif
 
   // adjust and validate coords
   SYS_ASSERT(1 <= x && x <= 64);
@@ -236,11 +239,11 @@ int WF_wolf_block(lua_State *L)
   switch (plane)
   {
     case 1:
-      solid_plane[PL_START+y*64+x] = data;
+      solid_plane[PL_START + y*64 + x] = data;
       break;
 
     case 2:
-      thing_plane[PL_START+y*64+x] = data;
+      thing_plane[PL_START + y*64 + x] = data;
       break;
 
     default:
@@ -250,6 +253,32 @@ int WF_wolf_block(lua_State *L)
 
   return 0;
 }
+
+
+// LUA: wolf_mini_map(x, y, color)
+//
+int WF_wolf_mini_map(lua_State *L)
+{
+  int x = luaL_checkint(L, 1);
+  int y = luaL_checkint(L, 2);
+
+  const char *color = luaL_checkstring(L, 3);
+
+  // adjust and validate coords
+  SYS_ASSERT(1 <= x && x <= 64);
+  SYS_ASSERT(1 <= y && y <= 64);
+
+  x = x-1;
+  y = 64-y;
+
+  if (color[0] == '#')
+  {
+    block_colors[y*64 + x] = strtol(color+1, NULL, 16);
+  }
+
+  return 0;
+}
+
 
 //------------------------------------------------------------------------
 
@@ -267,8 +296,8 @@ static void WF_DumpMap(void)
   {
     for (x = 0; x < 64; x++)
     {
-      int tile = solid_plane[PL_START+y*64+x];
-      int obj  = thing_plane[PL_START+y*64+x];
+      int tile = solid_plane[PL_START + y*64 + x];
+      int obj  = thing_plane[PL_START + y*64 + x];
 
       int ch;
 
@@ -306,6 +335,7 @@ static void WF_DumpMap(void)
   }
 }
 
+
 static void WF_MakeMiniMap(void)
 {
   if (! main_win)
@@ -316,21 +346,17 @@ static void WF_MakeMiniMap(void)
 
   main_win->build_box->mini_map->MapBegin();
 
-  for (int y = 0; y < 64; y++)
-  for (int x = 0; x < 64; x++)
+  for (int y = 0 ; y < 64 ; y++)
+  for (int x = 0 ; x < 64 ; x++)
   {
-    int tile = solid_plane[PL_START+y*64+x];
-/// int obj  = thing_plane[PL_START+y*64+x];
+    int hue = block_colors[y*64 + x];
 
-    byte r, g, b;
-
-    if (tile == NO_TILE)
+    if (hue < 0)
       continue;
 
-    if (tile >= 90)
-      r = g = b = 80;
-    else
-      r = g = b= 224;
+    byte r = ((hue >> 16) & 0xF) * 17;
+    byte g = ((hue >>  8) & 0xF) * 17;
+    byte b = ((hue      ) & 0xF) * 17;
 
     int bx = map_W/2 - 48 + x*2;
     int by = map_H/2 + 80 - y*2;
@@ -405,6 +431,9 @@ bool wolf_game_interface_c::Start()
   solid_plane = new u16_t[64*64 + 8]; // extra space for compressor
   thing_plane = new u16_t[64*64 + 8];
 
+  block_colors = new int[64*64];
+
+
   write_errors_seen = 0;
 
   if (main_win)
@@ -427,8 +456,10 @@ bool wolf_game_interface_c::Finish(bool build_ok)
 
   map_fp = head_fp = NULL;
 
-  delete solid_plane;  solid_plane = NULL;
-  delete thing_plane;  thing_plane = NULL;
+  delete solid_plane;  solid_plane  = NULL;
+  delete thing_plane;  thing_plane  = NULL;
+
+  delete block_colors;  block_colors = NULL;
 
 
   if (! build_ok)
@@ -474,10 +505,12 @@ void wolf_game_interface_c::Tidy()
 void wolf_game_interface_c::BeginLevel()
 {
   // clear the planes before use
-  for (int i = 0; i < 64*64; i++)
+  for (int i = 0 ; i < 64*64 ; i++)
   {
-    solid_plane[PL_START+i] = NO_TILE;
-    thing_plane[PL_START+i] = NO_OBJ;
+    solid_plane[PL_START + i] = NO_TILE;
+    thing_plane[PL_START + i] = NO_OBJ;
+
+    block_colors[i] = -1;
   }
 
   current_map += 1;

@@ -501,6 +501,7 @@ extern int CSG_add_brush(lua_State *L);
 extern int CSG_add_entity(lua_State *L);
 
 extern int WF_wolf_block(lua_State *L);
+extern int WF_wolf_mini_map(lua_State *L);
 
 extern int DM_wad_name_gfx(lua_State *L);
 extern int DM_wad_logo_gfx(lua_State *L);
@@ -555,7 +556,8 @@ static const luaL_Reg gui_script_funcs[] =
   { "add_entity",  CSG_add_entity },
 
   // Wolf-3D functions
-  { "wolf_block",  WF_wolf_block },
+  { "wolf_block",     WF_wolf_block },
+  { "wolf_mini_map",  WF_wolf_mini_map },
 
   // Doom/Heretic/Hexen functions
   { "wad_name_gfx",   DM_wad_name_gfx  },
