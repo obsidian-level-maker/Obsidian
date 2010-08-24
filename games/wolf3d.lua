@@ -200,6 +200,12 @@ WOLF.PARAMETERS =
 {
   tiled  = true,
 
+  -- assumes each seed is 3x3 blocks
+  seed_limit = 21,
+
+  border_seeds = 1, 
+  free_seeds   = 0,
+
   no_height = true,
   no_sky = true,
   one_lock_tex = true,
@@ -209,9 +215,6 @@ WOLF.PARAMETERS =
   tiered_skills = true,
   four_dirs = true,
   sealed_start = true,
-
-  -- assumes each seed is 3x3 blocks
-  seed_limit = 21,
 
   time_factor   = 1.0,
   damage_factor = 1.0,
@@ -532,6 +535,8 @@ WOLF.SUB_THEMES =
 
   wolf_bunker1 =
   {
+    room_size_table = { 0,20,60,20,3 },
+
     building_walls =
     {
       BLU_BRIK=50,
