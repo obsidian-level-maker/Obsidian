@@ -7,7 +7,14 @@ qLightmap_c : only store the result : byte samples
               use 'blocklights' buffer for doing each face.
 
 
-IDEA: very fast lightmap: only do 1/4 of the luxels, interpolate rest
+Option for Quake lighting:
+   FASTEST = flat maps, one luxel per face
+   FAST    = only do 1/4 of the luxels, interpolate rest
+   NORMAL  = as now
+   BEST    = do 2x2 samples per luxel, average them
+
+
+?? anomaly_towers (etc) : make directory, single level per wad
 
 
 Quake: proper XY partition choice, create clusters
@@ -27,6 +34,9 @@ ambient sounds:
           - all leafs in cluster  get 255
           - neighbors N/S/E/W     get 128
           - neighbors NE/SE/NW/SW get 64
+
+
+Quake: create dummy .lit files for FitzQuake & DarkPlaces
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify

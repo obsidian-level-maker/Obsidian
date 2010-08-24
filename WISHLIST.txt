@@ -354,7 +354,6 @@ Sam's suggestions:
       then mark one side as sloped - other side as flat.
 
 +  better miptex handling:
-   -  only copy _used_ textures into the MipTex lump
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
