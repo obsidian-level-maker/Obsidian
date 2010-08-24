@@ -127,7 +127,7 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 
   int offset = sizeof(mm_tex);
 
-  for (int i = 0; i < MIP_LEVELS; i++)
+  for (int i = 0 ; i < MIP_LEVELS ; i++)
   {
     mm_tex.offsets[i] = LE_U32(offset);
 
@@ -142,10 +142,10 @@ static void CreateDummyMip(qLump_c *lump, const char *name, int pix1, int pix2)
 
   size = 64;
 
-  for (int i = 0; i < MIP_LEVELS; i++)
+  for (int i = 0 ; i < MIP_LEVELS ; i++)
   {
-    for (int y = 0; y < size; y++)
-    for (int x = 0; x < size; x++)
+    for (int y = 0 ; y < size ; y++)
+    for (int x = 0 ; x < size ; x++)
     {
       lump->Append(pixels + (((x^y) & (size/4)) ? 1 : 0), 1);
     }
@@ -170,7 +170,7 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
 
   int offset = sizeof(mm_tex);
 
-  for (int i = 0; i < MIP_LEVELS; i++)
+  for (int i = 0 ; i < MIP_LEVELS ; i++)
   {
     mm_tex.offsets[i] = LE_U32(offset);
 
@@ -190,10 +190,10 @@ static void CreateLogoMip(qLump_c *lump, const char *name, const byte *data)
     16, 97, 103, 109, 243, 243, 243, 243
   };
 
-  for (int i = 0; i < MIP_LEVELS; i++)
+  for (int i = 0 ; i < MIP_LEVELS ; i++)
   {
-    for (int y = 0; y < size; y++)
-    for (int x = 0; x < size; x++)
+    for (int y = 0 ; y < size ; y++)
+    for (int x = 0 ; x < size ; x++)
     {
       byte pixel = colormap[data[(63-y*scale)*64 + x*scale] >> 5];
 
@@ -323,9 +323,10 @@ static void Q1_WriteMipTex()
 
   u32_t *offsets = new u32_t[num_miptex];
 
-  for (unsigned int m = 0 ; m < q1_miptexs.size() ; m++)
+  for (unsigned int m = 0 ; m < num_miptex ; m++)
   {
     offsets[m] = dir_size + (u32_t)lump->GetSize();
+    offsets[m] = LE_U32(offsets[m]);
 
     TransferOneMipTex(lump, m, q1_miptexs[m].c_str());
   }
@@ -333,7 +334,8 @@ static void Q1_WriteMipTex()
   WAD2_CloseRead();
 
   // create miptex directory
-  // FIXME: endianness
+  num_miptex = LE_S32(num_miptex);
+
   lump->Prepend(offsets, 4 * num_miptex);
   lump->Prepend(&num_miptex, 4);
 
