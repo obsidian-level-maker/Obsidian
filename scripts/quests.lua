@@ -491,7 +491,7 @@ function Quest_select_textures()
 
   if not LEVEL.step_skin then
     if not THEME.steps then
-      gui.printf("WARNING: Theme is missing step skins") 
+      gui.printf("WARNING: Theme is missing step skins\n") 
       LEVEL.step_skin = {}
     else
       local name = rand.key_by_probs(THEME.steps)
