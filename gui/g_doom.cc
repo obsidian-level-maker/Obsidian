@@ -766,7 +766,7 @@ void doom_game_interface_c::Property(const char *key, const char *value)
     else if (StringCaseCmp(value, "strife") == 0)
       dm_sub_format = SUBFMT_Strife;
     else
-      LogPrintf("WARNING: DOOM: unknown sub_format '%s'\n", value);
+      LogPrintf("WARNING: unknown DOOM sub_format '%s'\n", value);
   }
   else if (StringCaseCmp(key, "ef_solid_type") == 0)
   {

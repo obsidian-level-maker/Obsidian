@@ -1132,7 +1132,7 @@ void quake2_game_interface_c::Property(const char *key, const char *value)
   }
   else
   {
-    LogPrintf("WARNING: QUAKE2: unknown level prop: %s=%s\n", key, value);
+    LogPrintf("WARNING: unknown QUAKE2 property: %s=%s\n", key, value);
   }
 }
 

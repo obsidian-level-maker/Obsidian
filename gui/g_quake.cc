@@ -1401,7 +1401,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
     else if (StringCaseCmp(value, "halflife") == 0)
       qk_sub_format = SUBFMT_HalfLife;
     else
-      LogPrintf("WARNING: QUAKE1: unknown sub_format '%s'\n", value);
+      LogPrintf("WARNING: unknown QUAKE1 sub_format '%s'\n", value);
 
     // this assumes the sub_format is only set once at the start
     if (main_win)
@@ -1409,7 +1409,7 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
   }
   else
   {
-    LogPrintf("WARNING: QUAKE1: unknown level prop: %s=%s\n", key, value);
+    LogPrintf("WARNING: unknown QUAKE1 property: %s=%s\n", key, value);
   }
 }
 

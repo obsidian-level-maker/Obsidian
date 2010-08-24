@@ -559,7 +559,7 @@ void wolf_game_interface_c::Property(const char *key, const char *value)
   }
   else
   {
-    LogPrintf("WARNING: WOLF3D: unknown property: %s=%s\n", key, value);
+    LogPrintf("WARNING: unknown WOLF3D property: %s=%s\n", key, value);
   }
 }
 
