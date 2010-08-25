@@ -858,48 +858,56 @@ static partition_c * AddPartition(double x1, double y1, double x2, double y2)
 }
 
 
-static partition_c * ChoosePartition(group_c & group)
+static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
 {
-  // seed-wise binary subdivision thang
-  //
-  // Instead of finding a side to use as the partition line (which is
-  // very slow when there are many sides), we simply pick an arbitrary
-  // horizontal or vertical line, preferably somewhere close to the
-  // middle of the group.
-  //
-  // The logic here splits along seed boundaries (2x2 seeds actually),
-  // which is optimal for avoiding region splits.  It would still work
-  // though if the Lua code used a different seed size.
+  if (! *reached_chunk)
+  {
+    // seed-wise binary subdivision thang
+    //
+    // Instead of finding a side to use as the partition line (which is
+    // very slow when there are many sides), we simply pick an arbitrary
+    // horizontal or vertical line, preferably somewhere close to the
+    // middle of the group.
+    //
+    // The logic here splits along seed boundaries (2x2 seeds actually),
+    // which is optimal for avoiding region splits.  It would still work
+    // though if the Lua code used a different seed size.
 
 #define CHUNK_SIZE  384.0
 
-  double gx1, gy1, gx2, gy2;
+    double gx1, gy1, gx2, gy2;
 
-  group.GetGroupBounds(&gx1, &gy1, &gx2, &gy2);
+    group.GetGroupBounds(&gx1, &gy1, &gx2, &gy2);
 
-  int sx1 = floor(gx1 / CHUNK_SIZE + SNAG_EPSILON);
-  int sy1 = floor(gy1 / CHUNK_SIZE + SNAG_EPSILON);
-  int sx2 =  ceil(gx2 / CHUNK_SIZE - SNAG_EPSILON);
-  int sy2 =  ceil(gy2 / CHUNK_SIZE - SNAG_EPSILON);
+    int sx1 = floor(gx1 / CHUNK_SIZE + SNAG_EPSILON);
+    int sy1 = floor(gy1 / CHUNK_SIZE + SNAG_EPSILON);
+    int sx2 =  ceil(gx2 / CHUNK_SIZE - SNAG_EPSILON);
+    int sy2 =  ceil(gy2 / CHUNK_SIZE - SNAG_EPSILON);
 
-  int sw  = sx2 - sx1;
-  int sh  = sy2 - sy1;
+    int sw  = sx2 - sx1;
+    int sh  = sy2 - sy1;
 
 // fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
 // fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
-  if ((sw >= 2 && gy2 > gy1+1) || 
-      (sh >= 2 && gx2 > gx1+1))
-  {
-    if (sw >= sh)
+    if (sw <= 2 && sh <= 2)
     {
-      double px = (sx1 + sw/2) * CHUNK_SIZE;
-      return AddPartition(px, gy1, px, gy2);
+      *reached_chunk = true;
     }
-    else
+
+    if ((sw >= 2 && gy2 > gy1+1) || 
+        (sh >= 2 && gx2 > gx1+1))
     {
-      double py = (sy1 + sh/2) * CHUNK_SIZE;
-      return AddPartition(gx1, py, gx2, py);
+      if (sw >= sh)
+      {
+        double px = (sx1 + sw/2) * CHUNK_SIZE;
+        return AddPartition(px, gy1, px, gy2);
+      }
+      else
+      {
+        double py = (sy1 + sh/2) * CHUNK_SIZE;
+        return AddPartition(gx1, py, gx2, py);
+      }
     }
   }
 
@@ -952,7 +960,7 @@ static void DivideOneEntity(csg_entity_c *E, partition_c *part,
 }
 
 
-static void SplitGroup(group_c & group)
+static void SplitGroup(group_c & group, bool reached_chunk = false)
 {
   if (group.regs.empty())
   {
@@ -969,7 +977,7 @@ static void SplitGroup(group_c & group)
   //       region will usually be "split" multiple times where everything
   //       goes to the front and nothing to the back.
   //
-  partition_c *part = ChoosePartition(group);
+  partition_c *part = ChoosePartition(group, &reached_chunk);
 
   if (part)
   {
@@ -987,8 +995,8 @@ static void SplitGroup(group_c & group)
       DivideOneEntity(group.ents[k], part, front, back);
 
     // recursively handle each side
-    SplitGroup(front); 
-    SplitGroup(back); 
+    SplitGroup(front, reached_chunk); 
+    SplitGroup(back,  reached_chunk); 
 
     // input group has been consumed now 
   }
