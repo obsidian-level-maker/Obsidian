@@ -646,39 +646,60 @@ function Rooms_place_doors()
     end
   end
 
-
-  local function place_door(R, C)
-
-    local side = assert(C.dir)
-
-    -- FIXME: too simple
-    if C.R1 ~= R then return end
-
-    -- find spot
-    local spots = { }
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      local N = S:neighbor(side)
-
-      if S and S.room == R    and not S:has_any_conn() and
-         N and N.room == C.R2 and not N:has_any_conn()
-      then
-        table.insert(spots, { x=x, y=y, S=S, N=N })
-      end
-    end end
-
-    if table.empty(spots) then
+  local function validate_spot(S, N, side)
+    if S:has_any_conn() or N:has_any_conn() then
       error("Failure adding door into room!")
     end
 
-    local spot = rand.pick(spots)
+    assert(not S.border[side])
+    assert(not N.border[10-side])
+  end
 
-    assert(not spot.S.border[side])
-    assert(not spot.N.border[10-side])
+  local function place_door(R, C)
+    local K    = C.K1
+    local side = assert(C.dir)
 
-    local B1 = spot.S:add_border(side, "arch", 24)
-    local B2 = spot.N:add_border(10-side, "straddle", 24)
+    -- centre the door on the section's side
+    local x, y
+
+    if geom.is_vert(C.dir) then
+      x = K.sx1 + int((K.sw - 1) / 2)
+      y = sel(C.dir == 2, K.sy1, K.sy2)
+    else
+      y = K.sy1 + int((K.sh - 1) / 2)
+      x = sel(C.dir == 4, K.sx1, K.sx2)
+    end
+
+    -- NOTE: when rooms become small and the width and/or height is only
+    --       two seeds, then placing doors becomes problematic, since we
+    --       only want a single door per seed.
+    --
+    --       The solution is to place the doors in a certain pattern which
+    --       is guaranteed to always work.  If you consider the map as a
+    --       chess board, then a north-going door is placed on top-left
+    --       seed on white squares, but top-right on black squares, and
+    --       similarly for the other directions.
+    --
+    --       Once all the doors are placed, they can be moved to other
+    --       locations or made wider where possible.
+
+    local SQ = bit.band(K.kx + K.ky, 1)
+
+    if C.dir == 8 then x = x + SQ end
+    if C.dir == 2 then x = x + 1 - SQ end
+    if C.dir == 4 then y = y + SQ end
+    if C.dir == 6 then y = y + 1 - SQ end
+
+
+    local nx, ny = geom.nudge(x, y, C.dir)
+
+    local S = SEEDS[x][y]
+    local N = SEEDS[nx][ny]
+
+    validate_spot(S, N, side)
+
+    local B1 = S:add_border(side, "arch", 24)
+    local B2 = N:add_border(10-side, "straddle", 24)
 
     B1.conn = C
     B2.conn = C
@@ -687,6 +708,8 @@ function Rooms_place_doors()
       B1.kind = sel(C.lock.kind == "BARS", "bars", "lock_door")
       B1.lock = C.lock
     end
+
+    C.already_placed = true
   end
 
 
@@ -694,11 +717,13 @@ function Rooms_place_doors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,C in ipairs(R.conns) do
-      if C.kind == "normal" then
+      if C.kind == "normal" and not C.already_placed then
         place_door(R, C)
       end
     end
   end
+
+  -- !!!! FIXME: code to move or WIDEN doors
 
 --[[  OLD CODE
 
