@@ -890,25 +890,22 @@ static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
 // fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
 // fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
-    if (sw <= 1 && sh <= 1)
-    {
-      *reached_chunk = true;
-    }
-
-    if ((sw >= 2 && gy2 > gy1+1) || 
-        (sh >= 2 && gx2 > gx1+1))
+    if (sw >= 2 || sh >= 2)
     {
       if (sw >= sh)
       {
         double px = (sx1 + sw/2) * CHUNK_SIZE;
-        return AddPartition(px, gy1, px, gy2);
+        return AddPartition(px, gy1, px, MAX(gy2, gy1+4));
       }
       else
       {
         double py = (sy1 + sh/2) * CHUNK_SIZE;
-        return AddPartition(gx1, py, gx2, py);
+        return AddPartition(gx1, py, MAX(gx2, gx1+4), py);
       }
     }
+
+    // we have reached a chunk, yay!
+    *reached_chunk = true;
   }
 
   // inside a single chunk : find a side normally

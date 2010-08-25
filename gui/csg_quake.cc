@@ -727,57 +727,65 @@ static void Split_XY(quake_group_c & group,
 
 
 static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
-                             int *cx, int *cy)
+                             qCluster_c ** reached_cluster)
 {
-  // FIXME !!!  skip this once cluster is known
+  if (! *reached_cluster)
+  {
+    // seed-based sub-division party trick
+    //
+    // When the group extends (horizontally or vertically) into more
+    // than a single seed, we need to split the group along a seed
+    // boundary.  This is not really for the sake of speed, but for
+    // the sake of the Visibility algorithm.
 
-  // seed-based sub-division party trick
-  //
-  // When the group extends (horizontally or vertically) into more
-  // than a single seed, we need to split the group along a seed
-  // boundary.  This is not mainly for the sake of speed, but for
-  // the sake of the visibility algorithm.
+    double gx1, gy1, gx2, gy2;
 
-  double gx1, gy1, gx2, gy2;
+    group.GetGroupBounds(&gx1, &gy1, &gx2, &gy2);
 
-  group.GetGroupBounds(&gx1, &gy1, &gx2, &gy2);
+    int sx1 = floor(gx1 / CLUSTER_SIZE + SNAG_EPSILON);
+    int sy1 = floor(gy1 / CLUSTER_SIZE + SNAG_EPSILON);
+    int sx2 =  ceil(gx2 / CLUSTER_SIZE - SNAG_EPSILON);
+    int sy2 =  ceil(gy2 / CLUSTER_SIZE - SNAG_EPSILON);
 
-  int sx1 = floor(gx1 / CLUSTER_SIZE + SNAG_EPSILON);
-  int sy1 = floor(gy1 / CLUSTER_SIZE + SNAG_EPSILON);
-  int sx2 =  ceil(gx2 / CLUSTER_SIZE - SNAG_EPSILON);
-  int sy2 =  ceil(gy2 / CLUSTER_SIZE - SNAG_EPSILON);
-
-  int sw  = sx2 - sx1;
-  int sh  = sy2 - sy1;
+    int sw  = sx2 - sx1;
+    int sh  = sy2 - sy1;
 
 // fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
 // fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
-
-  // cluster ref, only valid when 'false' is returned
-  *cx = sx1 - cluster_X;
-  *cy = sy1 - cluster_Y;
-
-
-  if ((sw >= 2 && gy2 > gy1+1) || 
-      (sh >= 2 && gx2 > gx1+1))
-  {
-    if (sw >= sh)
+    if (sw >= 2 || sh >= 2)
     {
-      part->x1 = (sx1 + sw/2) * CLUSTER_SIZE;
-      part->y1 = gy1;
-      part->x2 = part->x1;
-      part->y2 = gy2;
-    }
-    else
-    {
-      part->x1 = gx1;
-      part->y1 = (sy1 + sh/2) * CLUSTER_SIZE;
-      part->x2 = gx2;
-      part->y2 = part->y1;
+      if (sw >= sh)
+      {
+        part->x1 = (sx1 + sw/2) * CLUSTER_SIZE;
+        part->y1 = gy1;
+        part->x2 = part->x1;
+        part->y2 = MAX(gy2, gy1+4);
+      }
+      else
+      {
+        part->x1 = gx1;
+        part->y1 = (sy1 + sh/2) * CLUSTER_SIZE;
+        part->x2 = MAX(gx2, gx1+4);
+        part->y2 = part->y1;
+      }
+
+      return true;
     }
 
-    return true;
+    // we have now reached a cluster
+    if (sw <= 1 && sh <= 1)
+    {
+      int cx = sx1 - cluster_X;
+      int cy = sy1 - cluster_Y;
+
+      SYS_ASSERT(0 <= cx && cx < cluster_W);
+      SYS_ASSERT(0 <= cy && cy < cluster_H);
+
+      *reached_cluster = qk_clusters[cy * cluster_W + cx];
+
+      SYS_ASSERT(*reached_cluster);
+    }
   }
 
   // inside a single cluster : find a side normally
@@ -1249,8 +1257,10 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
 }
 
 
-static quake_node_c * Partition_Z(quake_group_c & group)
+static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 {
+//@@@@@@@@@@@2 cluster
+
   SYS_ASSERT(group.sides[0]->snag);  // FIXME can fail due to partitioning
 
   region_c *R = group.sides[0]->snag->region;
@@ -1280,16 +1290,15 @@ static quake_node_c * Partition_Z(quake_group_c & group)
 }
 
 
-static quake_node_c * Partition_Group(quake_group_c & group)
+static quake_node_c * Partition_Group(quake_group_c & group,
+                                      qCluster_c *reached_cluster = NULL)
 {
   SYS_ASSERT(! group.sides.empty());
 
   quake_side_c part;
   quake_plane_c p_plane;
 
-  int cx, cy;
-
-  if (FindPartition_XY(group, &part, &cx, &cy))
+  if (FindPartition_XY(group, &part, &reached_cluster))
   {
     part.ToPlane(&p_plane);
 
@@ -1304,12 +1313,12 @@ static quake_node_c * Partition_Group(quake_group_c & group)
     // the front should never be empty
     SYS_ASSERT(! front.sides.empty());
 
-    new_node->front_N = Partition_Group(front);
+    new_node->front_N = Partition_Group(front, reached_cluster);
 
     if (back.sides.empty())
       new_node->back_L = Solid_Leaf(back);
     else
-      new_node->back_N = Partition_Group(back);
+      new_node->back_N = Partition_Group(back, reached_cluster);
 
     // input group has been consumed now 
 
@@ -1317,10 +1326,9 @@ static quake_node_c * Partition_Group(quake_group_c & group)
   }
   else
   {
-    SYS_ASSERT(0 <= cx && cx < cluster_W);
-    SYS_ASSERT(0 <= cy && cy < cluster_H);
+    SYS_ASSERT(reached_cluster);
 
-    return Partition_Z(group);  // @@@@@@
+    return Partition_Z(group, reached_cluster);
   }
 }
 
