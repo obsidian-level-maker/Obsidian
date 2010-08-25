@@ -34,9 +34,6 @@
 #include "ui_dialog.h"
 
 
-#define SNAG_EPSILON  0.001
-
-
 double QUANTIZE_GRID;
 
 static bool csg_is_clip_hull;

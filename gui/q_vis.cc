@@ -264,6 +264,8 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
 //  CLUSTER MANAGEMENT
 //------------------------------------------------------------------------
 
+#define VIS_EPSILON  0.01
+
 int cluster_X;
 int cluster_Y;
 int cluster_W;
@@ -290,10 +292,10 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
   SYS_ASSERT(min_x < max_x);
   SYS_ASSERT(min_y < max_y);
 
-  int cx1 = (int) floor(min_x / CLUSTER_SIZE);
-  int cy1 = (int) floor(min_y / CLUSTER_SIZE);
-  int cx2 = (int) ceil (max_x / CLUSTER_SIZE);
-  int cy2 = (int) ceil (max_y / CLUSTER_SIZE);
+  int cx1 = (int) floor(min_x / CLUSTER_SIZE + VIS_EPSILON);
+  int cy1 = (int) floor(min_y / CLUSTER_SIZE + VIS_EPSILON);
+  int cx2 = (int) ceil (max_x / CLUSTER_SIZE - VIS_EPSILON);
+  int cy2 = (int) ceil (max_y / CLUSTER_SIZE - VIS_EPSILON);
 
   SYS_ASSERT(cx1 < cx2);
   SYS_ASSERT(cy1 < cy2);

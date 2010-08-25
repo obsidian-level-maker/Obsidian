@@ -22,6 +22,9 @@
 #define __OBLIGE_CSG_LOCAL_H__
 
 
+#define SNAG_EPSILON  0.001
+
+
 /***** CLASSES ****************/
 
 class partition_c;
