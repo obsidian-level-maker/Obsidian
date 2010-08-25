@@ -863,8 +863,16 @@ static partition_c * AddPartition(double x1, double y1, double x2, double y2)
 
 static partition_c * ChoosePartition(group_c & group)
 {
-  // do seed-wise binary subdivision thang
-  // FIXME: EXPLAIN THIS SHITE
+  // seed-wise binary subdivision thang
+  //
+  // Instead of finding a side to use as the partition line (which is
+  // very slow when there are many sides), we simply pick an arbitrary
+  // horizontal or vertical line, preferably somewhere close to the
+  // middle of the group.
+  //
+  // The logic here splits along seed boundaries (2x2 seeds actually),
+  // which is optimal for avoiding region splits.  It would still work
+  // though if the Lua code used a different seed size.
 
 #define CHUNK_SIZE  384.0
 
@@ -898,8 +906,9 @@ static partition_c * ChoosePartition(group_c & group)
     }
   }
 
+  // inside a single chunk : find a side normally
 
-  snag_c *best = NULL;
+  snag_c *poss = NULL;
 
   for (unsigned int i = 0 ; i < group.regs.size() ; i++)
   {
@@ -909,21 +918,23 @@ static partition_c * ChoosePartition(group_c & group)
     {
       snag_c *S = R->snags[k];
 
-      if (! S->on_node)
-      {
-        // FIXME !!!! choose properly
-        //            (prefer horizontal/vertical which splits bbox well)
+      if (S->on_node)
+        continue;
 
-        if (! best || (best->x1 != best->x2 && best->y1 != best->y2))
-          best = S;
-      }
+      // we prefer a horizontal or vertical snag
+      if (! poss || (S->x1 == S->x2) || (S->y1 == S->y2))
+        poss = S;
+
+      // -AJA- An obvious thing to try here is to choose the best
+      //       horiz/vert node based on distance to the middle.
+      //       But it had no benefit, and was slower as well.
     }
   }
 
-  if (! best)
+  if (! poss)
     return NULL;
 
-  return AddPartition(best);
+  return AddPartition(poss);
 }
 
 
@@ -953,8 +964,8 @@ static void SplitGroup(group_c & group)
 
   // Note: there is no explicit check for convexitiy.  We keep going until
   //       every snag has been on a partition.  This means that a convex
-  //       region will usually get be "split" multiple times where
-  //       everything goes to the front and nothing to the back.
+  //       region will usually be "split" multiple times where everything
+  //       goes to the front and nothing to the back.
   //
   partition_c *part = ChoosePartition(group);
 
