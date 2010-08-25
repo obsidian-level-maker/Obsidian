@@ -232,24 +232,22 @@ public:
     return sides.empty();
   }
 
-  void CalcMiddle(double *mid_x, double *mid_y)
+  void GetGroupBounds(double *lo_x, double *lo_y,
+                      double *hi_x, double *hi_y)
   {
-    double lo_x = +9e9, lo_y = +9e9;
-    double hi_x = -9e9, hi_y = -9e9;
+    *lo_x = +9e9;  *lo_y = +9e9;
+    *hi_x = -9e9;  *hi_y = -9e9;
 
     for (unsigned int k = 0 ; k < sides.size() ; k++)
     {
       clip_side_c *S = sides[k];
 
-      lo_x = MIN(lo_x, MIN(S->x1, S->x2));
-      lo_y = MIN(lo_y, MIN(S->y1, S->y2));
+      *lo_x = MIN(*lo_x, MIN(S->x1, S->x2));
+      *lo_y = MIN(*lo_y, MIN(S->y1, S->y2));
 
-      hi_x = MAX(hi_x, MAX(S->x1, S->x2));
-      hi_y = MAX(hi_y, MAX(S->y1, S->y2));
+      *hi_x = MAX(*hi_x, MAX(S->x1, S->x2));
+      *hi_y = MAX(*hi_y, MAX(S->y1, S->y2));
     }
-
-    *mid_x = (lo_x + hi_x) / 2.0;
-    *mid_y = (lo_y + hi_y) / 2.0;
   }
 };
 
@@ -792,89 +790,6 @@ static clip_side_c * SplitSideAt(clip_side_c *S, double new_x, double new_y)
 }
 
 
-#if 0
-static double EvaluatePartition(cpNode_c * LEAF,
-                                double px1, double py1, double px2, double py2)
-{
-  double pdx = px2 - px1;
-  double pdy = py2 - py1;
-
-  int back   = 0;
-  int front  = 0;
-  int splits = 0;
-
-  std::vector<cpSide_c *>::iterator SI;
-
-  for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
-  {
-    cpSide_c *S = *SI;
-
-    // get state of lines' relation to each other
-    double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
-    double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
-
-    int a_side = (a < -CLIP_EPSILON) ? -1 : (a > CLIP_EPSILON) ? +1 : 0;
-    int b_side = (b < -CLIP_EPSILON) ? -1 : (b > CLIP_EPSILON) ? +1 : 0;
-
-    if (a_side == 0 && b_side == 0)
-    {
-      // lines are colinear
-
-      double sdx = S->x2 - S->x1;
-      double sdy = S->y2 - S->y1;
-
-      if (pdx * sdx + pdy * sdy < 0.0)
-        back++;
-      else
-        front++;
-
-      continue;
-    }
-
-    if (a_side >= 0 && b_side >= 0)
-    {
-      front++;
-      continue;
-    }
-
-    if (a_side <= 0 && b_side <= 0)
-    {
-      back++;
-      continue;
-    }
-
-    // the partition line will split it
-
-    splits++;
-
-    back++;
-    front++;
-  }
-
-
-  // always prefer axis-aligned planes
-  // (this helps prevent the "sticky doorways" bug)
-  bool aligned = (fabs(pdx) < 0.0001 || fabs(pdy) < 0.0001);
-
-  if (front == 0 && back == 0)
-    return aligned ? 1e24 : 1e26;
-
-  if (splits > 1000)
-    splits = 1000;
-
-  double cost = splits * (splits+1) * 3.65;
-
-  cost += ABS(front - back);
-  cost /=    (front + back);
-
-  if (! aligned)
-    cost += 1e12;
-
-  return cost;
-}
-#endif
-
-
 static void Split_XY(clip_group_c & group, const clip_partition_c *part,
                      clip_group_c & front, clip_group_c & back)
 {
@@ -950,9 +865,13 @@ static clip_side_c * FindPartition_XY(clip_group_c & group)
   clip_side_c *best_V = NULL;  float dist_V = +9e9;
   clip_side_c *best_H = NULL;  float dist_H = +9e9;
 
-  double mid_x, mid_y;
+  double lo_x, lo_y;
+  double hi_x, hi_y;
 
-  group.CalcMiddle(&mid_x, &mid_y);
+  group.GetGroupBounds(&lo_x, &lo_y, &hi_x, &hi_y);
+
+  double mid_x = (lo_x + hi_x) / 2.0;
+  double mid_y = (lo_y + hi_y) / 2.0;
 
   for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
@@ -965,30 +884,34 @@ static clip_side_c * FindPartition_XY(clip_group_c & group)
 
     if (! S->TwoSided())
     {
-      poss1 = S;
+      if (! poss1 || (S->x1 == S->x2) || (S->y1 == S->y2))
+        poss1 = S;
+
       continue;
     }
 
     poss2 = S;
 
-    // we prefer purely horizontal or vertical partitions
+    // find the best purely horizontal or vertical partition
 
     if (S->x1 == S->x2)
     {
       float d = fabs(S->x1 - mid_x);
 
-      if (!best_V || dist_V > d)
+      if (!best_V || d < dist_V)
       {
-        best_V = S;  dist_V = d;
+        best_V = S;
+        dist_V = d;
       }
     }
     else if (S->y1 == S->y2)
     {
       float d = fabs(S->y1 - mid_y);
 
-      if (!best_H || dist_H > d)
+      if (!best_H || d < dist_H)
       {
-        best_H = S;  dist_H = d;
+        best_H = S;
+        dist_H = d;
       }
     }
   }
@@ -997,14 +920,16 @@ static clip_side_c * FindPartition_XY(clip_group_c & group)
 
   if (best_H && best_V)
   {
-    return (dist_H < dist_V) ? best_H : best_V;
+    return ((hi_x - lo_x) > (hi_y - lo_y)) ? best_V : best_H;
   }
 
-  if (best_H) return best_H;
   if (best_V) return best_V;
-  if (poss2)  return poss2;
+  if (best_H) return best_H;
 
-  return poss1;
+  if (poss2)  return poss2;
+  if (poss1)  return poss1;
+
+  return NULL;
 }
 
 
