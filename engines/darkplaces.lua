@@ -18,12 +18,30 @@
 --
 ----------------------------------------------------------------
 
+DARKPLACES = { }
+
+DARKPLACES.PARAMETERS =
+{
+  colored_lighting = true,
+  sky_box = true,
+}
+
+
+function DARKPLACES.setup()
+end
+
+
 OB_ENGINES["darkplaces"] =
 {
   label = "DarkPlaces",
 
   for_games = { quake=1 },
 
-  -- TODO
+  tables = { DARKPLACES },
+
+  hooks =
+  {
+    setup = DARKPLACES.setup,
+  },
 }
 

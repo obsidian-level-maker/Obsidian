@@ -27,6 +27,11 @@ FITZ.PARAMETERS =
   sky_box = true,
 }
 
+
+function FITZ.setup()
+end
+
+
 OB_ENGINES["fitz"] =
 {
   label = "FitzQuake",
@@ -34,5 +39,10 @@ OB_ENGINES["fitz"] =
   for_games = { quake=1 },
 
   tables = { FITZ },
+
+  hooks =
+  {
+    setup = FITZ.setup,
+  },
 }
 
