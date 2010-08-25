@@ -231,6 +231,26 @@ public:
   {
     return sides.empty();
   }
+
+  void CalcMiddle(double *mid_x, double *mid_y)
+  {
+    double lo_x = +9e9, lo_y = +9e9;
+    double hi_x = -9e9, hi_y = -9e9;
+
+    for (unsigned int k = 0 ; k < sides.size() ; k++)
+    {
+      clip_side_c *S = sides[k];
+
+      lo_x = MIN(lo_x, MIN(S->x1, S->x2));
+      lo_y = MIN(lo_y, MIN(S->y1, S->y2));
+
+      hi_x = MAX(hi_x, MAX(S->x1, S->x2));
+      hi_y = MAX(hi_y, MAX(S->y1, S->y2));
+    }
+
+    *mid_x = (lo_x + hi_x) / 2.0;
+    *mid_y = (lo_y + hi_y) / 2.0;
+  }
 };
 
 
@@ -922,10 +942,17 @@ static void Split_XY(clip_group_c & group, const clip_partition_c *part,
 }
 
 
-static bool FindPartition_XY(clip_group_c & group, clip_partition_c *part)
+static clip_side_c * FindPartition_XY(clip_group_c & group)
 {
-  clip_side_c *poss = NULL;
-  clip_side_c *best = NULL;
+  clip_side_c *poss1 = NULL;
+  clip_side_c *poss2 = NULL;
+
+  clip_side_c *best_V = NULL;  float dist_V = +9e9;
+  clip_side_c *best_H = NULL;  float dist_H = +9e9;
+
+  double mid_x, mid_y;
+
+  group.CalcMiddle(&mid_x, &mid_y);
 
   for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
@@ -934,22 +961,50 @@ static bool FindPartition_XY(clip_group_c & group, clip_partition_c *part)
     if (S->on_node)
       continue;
 
-    poss = S;
-
     // MUST choose 2-sided snag BEFORE any 1-sided snag
 
-    if (S->TwoSided())
+    if (! S->TwoSided())
     {
-      best = S; break;  // !!!!! FIXME: decide properly
+      poss1 = S;
+      continue;
+    }
+
+    poss2 = S;
+
+    // we prefer purely horizontal or vertical partitions
+
+    if (S->x1 == S->x2)
+    {
+      float d = fabs(S->x1 - mid_x);
+
+      if (!best_V || dist_V > d)
+      {
+        best_V = S;  dist_V = d;
+      }
+    }
+    else if (S->y1 == S->y2)
+    {
+      float d = fabs(S->y1 - mid_y);
+
+      if (!best_H || dist_H > d)
+      {
+        best_H = S;  dist_H = d;
+      }
     }
   }
 
-  if (! poss)
-    return false;
+  // finished checking the sides : select best
 
-  part->Set(best ? best : poss);
+  if (best_H && best_V)
+  {
+    return (dist_H < dist_V) ? best_H : best_V;
+  }
 
-  return true;
+  if (best_H) return best_H;
+  if (best_V) return best_V;
+  if (poss2)  return poss2;
+
+  return poss1;
 }
 
 
@@ -981,10 +1036,12 @@ static clip_node_c * PartitionGroup(clip_group_c & group)
 {
   SYS_ASSERT(! group.sides.empty());
 
-  clip_partition_c part;
+  clip_side_c *divider = FindPartition_XY(group);
 
-  if (FindPartition_XY(group, &part))
+  if (divider)
   {
+    clip_partition_c part(divider);
+
     // divide the group
     clip_group_c front;
     clip_group_c back;
