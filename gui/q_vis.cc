@@ -264,10 +264,12 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
 //  CLUSTER MANAGEMENT
 //------------------------------------------------------------------------
 
-int qk_cluster_W;
-int qk_cluster_H;
+int cluster_X;
+int cluster_Y;
+int cluster_W;
+int cluster_H;
 
-qCluster_c ** qk_all_clusters;
+qCluster_c ** qk_clusters;
 
 
 qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs()
@@ -280,6 +282,52 @@ qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs()
 qCluster_c::~qCluster_c()
 {
   // nothing needed
+}
+
+
+void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
+{
+  SYS_ASSERT(min_x < max_x);
+  SYS_ASSERT(min_y < max_y);
+
+  int cx1 = (int) floor(min_x / CLUSTER_SIZE);
+  int cy1 = (int) floor(min_y / CLUSTER_SIZE);
+  int cx2 = (int) ceil (max_x / CLUSTER_SIZE);
+  int cy2 = (int) ceil (max_y / CLUSTER_SIZE);
+
+  SYS_ASSERT(cx1 < cx2);
+  SYS_ASSERT(cy1 < cy2);
+
+  cluster_X = cx1;
+  cluster_Y = cy1;
+  cluster_W = cx2 - cx1;
+  cluster_H = cy2 - cy1;
+
+  LogPrintf("Cluster Size: %dx%d  (origin %+d %+d)\n", cluster_W, cluster_H,
+            cluster_X, cluster_Y);
+
+  qk_clusters = new qCluster_c* [cluster_W * cluster_H];
+
+  for (int i = 0 ; i < cluster_W * cluster_H ; i++)
+  {
+    int cx = cluster_X + (i % cluster_W);
+    int cy = cluster_Y + (i / cluster_W);
+
+    qk_clusters[i] = new qCluster_c(cx, cy);
+  }
+}
+
+
+void QCOM_FreeClusters()
+{
+  if (qk_clusters)
+  {
+    for (int i = 0 ; i < cluster_W * cluster_H ; i++)
+      delete qk_clusters[i];
+
+    delete[] qk_clusters;
+    qk_clusters = NULL;
+  }
 }
 
 
@@ -333,6 +381,8 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
   LogPrintf("\nVisibility...\n");
 
+  SYS_ASSERT(qk_clusters);
+
   // TODO: QCOM_Visibility
 
   q_visibility = BSP_NewLump(lump);
@@ -350,6 +400,8 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
+
+  QCOM_FreeClusters();
 }
 
 //--- editor settings ---

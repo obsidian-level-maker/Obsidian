@@ -46,10 +46,12 @@ public:
 
 /***** VARIABLES **********/
 
-extern int qk_cluster_W;
-extern int qk_cluster_H;
+#define CLUSTER_SIZE  192.0
 
-extern qCluster_c ** qk_all_clusters;
+extern int cluster_X, cluster_Y;
+extern int cluster_W, cluster_H;
+
+extern qCluster_c ** qk_clusters;
 
 
 /***** FUNCTIONS **********/
@@ -60,6 +62,11 @@ void QCOM_FreeTraceNodes();
 // returns true if OK, false if blocked
 bool QCOM_TraceRay(float x1, float y1, float z1,
                    float x2, float y2, float z2);
+
+void QCOM_CreateClusters(double min_x, double min_y,
+                         double max_x, double max_y);
+
+void QCOM_FreeClusters();
 
 void QCOM_Visibility(int lump, int max_size, int numleafs);
 

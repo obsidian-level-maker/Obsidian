@@ -34,7 +34,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
-#include "q1_structs.h"
+#include "q_vis.h"
 
 #include "csg_main.h"
 #include "csg_local.h"
@@ -370,16 +370,6 @@ public:
     *mid_x /= (double)sides.size();
     *mid_y /= (double)sides.size();
   }
-
-///---  void StoreVerts(std::vector<quake_vertex_c> & winding)
-///---  {
-///---    for (unsigned int i = 0 ; i < sides.size() ; i++)
-///---    {
-///---      quake_side_c *S = sides[i];
-///---
-///---      winding.push_back(quake_vertex_c(S->x1, S->y1, 0));
-///---    }
-///---  }
 
 };
 
@@ -1391,27 +1381,29 @@ static void AssignClusters(rNode_c *node)
 #endif
 
 
-static void Quake_BSP()
+static void CreateClusters(quake_group_c & group)
 {
-  qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
+  QCOM_FreeClusters();
 
+  double min_x = 9e9, max_x = -9e9;
+  double min_y = 9e9, max_y = -9e9;
 
-  quake_group_c GROUP;
+  for (unsigned int i = 0 ; i < group.sides.size() ; i++)
+  {
+    quake_side_c *S = group.sides[i];
 
-  CreateSides(GROUP);
+    double x1 = MIN(S->x1, S->x2);
+    double y1 = MIN(S->y1, S->y2);
+    double x2 = MAX(S->x1, S->x2);
+    double y2 = MAX(S->y1, S->y2);
 
-  if (qk_game == 2)
-    CreateBrushes(GROUP);
+    min_x = MIN(min_x, x1);
+    min_y = MIN(min_y, y1);
+    max_x = MAX(max_x, x2);
+    max_y = MAX(max_y, y2);
+  }
 
-  qk_bsp_root = Partition_Group(GROUP);
-
-  SYS_ASSERT(qk_bsp_root);
-
-
-  int cur_node = 0;
-  int cur_leaf = 0;
-
-  AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
+  QCOM_CreateClusters(min_x, min_y, max_x, max_y);
 }
 
 
@@ -1429,7 +1421,27 @@ void CSG_QUAKE_Build()
   if (main_win)
     main_win->build_box->Prog_Step("BSP");
 
-  Quake_BSP();
+
+  quake_group_c GROUP;
+
+  CreateSides(GROUP);
+
+  if (qk_game == 2)
+    CreateBrushes(GROUP);
+
+  CreateClusters(GROUP);
+
+
+  qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
+
+  qk_bsp_root = Partition_Group(GROUP);
+
+  SYS_ASSERT(qk_bsp_root);
+
+  int cur_node = 0;
+  int cur_leaf = 0;
+
+  AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
 }
 
 
