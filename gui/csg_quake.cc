@@ -707,8 +707,13 @@ static void Split_XY(quake_group_c & group,
 
 static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
 {
-  quake_side_c *poss = NULL;
-  quake_side_c *best = NULL;
+  // FIXME: seed-based sub-division party trick
+
+
+  // inside a single cluster : find a side normally
+
+  quake_side_c *poss1 = NULL;
+  quake_side_c *poss2 = NULL;
 
   for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
@@ -717,21 +722,31 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part)
     if (S->on_node)
       continue;
 
-    poss = S;
+    bool axis_aligned = (S->x1 == S->x2) || (S->y1 == S->y2);
 
     // MUST choose 2-sided snag BEFORE any 1-sided snag
 
-    if (S->TwoSided())
+    if (! S->TwoSided())
     {
-      best = S; break;  // !!!!! FIXME: decide properly
+      if (! poss1 || axis_aligned)
+        poss1 = S;
+
+      continue;
+    }
+
+    poss2 = S;
+
+    // we prefer an axis-aligned node
+    if (axis_aligned)
+    {
+      break;  // look no further
     }
   }
 
-  if (! poss)
-    return false;
+  quake_side_c *best = poss2 ? poss2 : poss1;
 
   if (! best)
-    best = poss;
+    return false;
 
   part->x1 = best->x1;  part->y1 = best->y1;
   part->x2 = best->x2;  part->y2 = best->y2;
