@@ -63,7 +63,7 @@ static double h2_hull_sizes[5][3] =
 };
 
 
-class cpSide_c
+class clip_side_c
 {
 public:
   snag_c *snag;
@@ -74,17 +74,17 @@ public:
   double x2, y2;
 
 public:
-  cpSide_c(snag_c *S) :
+  clip_side_c(snag_c *S) :
       snag(S), on_node(false),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2)
   { }
 
-  cpSide_c(const cpSide_c *other) :
+  clip_side_c(const clip_side_c *other) :
       snag(other->snag), on_node(other->on_node),
       x1(other->x1), y1(other->y1), x2(other->x2), y2(other->y2)
   { }
 
-  ~cpSide_c()
+  ~clip_side_c()
   { }
 
 public:
@@ -109,7 +109,7 @@ public:
 };
 
 
-class cpFlat_c
+class clip_flat_c
 {
 public:
   gap_c *gap;
@@ -117,13 +117,13 @@ public:
   double z, dz;
 
 public:
-  cpFlat_c(gap_c *G, bool _ceil) : gap(G)
+  clip_flat_c(gap_c *G, bool _ceil) : gap(G)
   {
     z  = _ceil ? gap->top->b.z : gap->bottom->t.z;
     dz = _ceil ? -1 : 1;
   }
 
-  ~cpFlat_c()
+  ~clip_flat_c()
   { }
 };
 
@@ -138,7 +138,7 @@ typedef enum
 clip_partition_kind_e;
 
 
-class cpPartition_c
+class clip_partition_c
 {
 public:
   int kind;
@@ -149,22 +149,22 @@ public:
   double z, dz;
 
 public:
-  cpPartition_c() : kind(PKIND_INVALID)
+  clip_partition_c() : kind(PKIND_INVALID)
   { }
 
-  cpPartition_c(const cpSide_c * S) :
+  clip_partition_c(const clip_side_c * S) :
       kind(PKIND_SIDE),
       x1(S->x1), y1(S->y1), x2(S->x2), y2(S->y2),
       z(), dz()
   { }
 
-  cpPartition_c(const cpFlat_c * F) :
+  clip_partition_c(const clip_flat_c * F) :
       kind(PKIND_FLAT),
       x1(), y1(), x2(), y2(),
       z(F->z), dz(F->dz)
   { }
 
-  cpPartition_c(const gap_c * G, bool is_ceil) :
+  clip_partition_c(const gap_c * G, bool is_ceil) :
       kind(PKIND_FLAT),
       x1(), y1(), x2(), y2()
   {
@@ -172,17 +172,17 @@ public:
     dz = is_ceil ? -1 : 1;
   }
 
-  cpPartition_c(const cpPartition_c *other) :
+  clip_partition_c(const clip_partition_c *other) :
       kind(other->kind),
       x1(other->x1), y1(other->y1),
       x2(other->x2), y2(other->y2),
       z(other->z), dz(other->dz)
   { }
 
-  ~cpPartition_c()
+  ~clip_partition_c()
   { }
 
-  void Set(const cpSide_c * S)
+  void Set(const clip_side_c * S)
   {
     kind = PKIND_SIDE;
 
@@ -190,7 +190,7 @@ public:
     x2 = S->x2; y2 = S->y2;
   }
 
-  void Set(const cpFlat_c * F)
+  void Set(const clip_flat_c * F)
   {
     kind = PKIND_FLAT;
 
@@ -198,7 +198,7 @@ public:
     dz = F->dz;
   }
 
-  void Set(const cpPartition_c *other)
+  void Set(const clip_partition_c *other)
   {
     kind = other->kind;
 
@@ -210,19 +210,19 @@ public:
 };
 
 
-class cpGroup_c
+class clip_group_c
 {
 public:
-  std::vector<cpSide_c *> sides;
+  std::vector<clip_side_c *> sides;
 
 public:
-  cpGroup_c() : sides()
+  clip_group_c() : sides()
   { }
 
-  ~cpGroup_c()
+  ~clip_group_c()
   { }
 
-  void AddSide(cpSide_c *S)
+  void AddSide(clip_side_c *S)
   {
     sides.push_back(S);
   }
@@ -234,7 +234,7 @@ public:
 };
 
 
-class cpNode_c
+class clip_node_c
 {
 public:
   /* LEAF STUFF */
@@ -243,42 +243,42 @@ public:
 
   int contents;
 
-  std::vector<cpSide_c *> sides;
-  std::vector<cpFlat_c *> flats;
+  std::vector<clip_side_c *> sides;
+  std::vector<clip_flat_c *> flats;
 
   region_c *region;  // only set by CheckSameRegion()
 
 
   /* NODE STUFF */
 
-  cpPartition_c part;
+  clip_partition_c part;
 
-  cpNode_c *front;  // front space
-  cpNode_c *back;   // back space
+  clip_node_c *front;  // front space
+  clip_node_c *back;   // back space
 
   int index;
 
 public:
   // LEAF
-  cpNode_c(int _contents = CONTENTS_EMPTY) :
+  clip_node_c(int _contents = CONTENTS_EMPTY) :
         contents(_contents),
         sides(), flats(), region(NULL),
         part(), front(NULL), back(NULL), index(-1)
   { }
 
-  cpNode_c(const cpPartition_c& _part) :
+  clip_node_c(const clip_partition_c& _part) :
         contents(CONTENT__NODE),
         sides(), flats(), region(NULL),
         part(_part), front(NULL), back(NULL), index(-1)
   { }
 
-  cpNode_c(const gap_c *G, bool is_ceil) :
+  clip_node_c(const gap_c *G, bool is_ceil) :
         contents(CONTENT__NODE),
         sides(), flats(), region(NULL),
         part(G, is_ceil), front(NULL), back(NULL), index(-1)
   { }
 
-  ~cpNode_c()
+  ~clip_node_c()
   {
     if (front) delete front;
     if (back)  delete back;
@@ -304,23 +304,23 @@ public:
     return ! HasFlat() && ! HasSide();
   }
 
-  void AddSide(cpSide_c *S)
+  void AddSide(clip_side_c *S)
   {
     sides.push_back(S);
   }
 
   void NewSide(snag_c *S)
   {
-    AddSide(new cpSide_c(S));
+    AddSide(new clip_side_c(S));
   }
 
-  void CopySides(cpNode_c *other)
+  void CopySides(clip_node_c *other)
   {
     for (unsigned int i = 0 ; i < other->sides.size() ; i++)
       AddSide(other->sides[i]);
   }
 
-  void MakeNode(const cpPartition_c *_part)
+  void MakeNode(const clip_partition_c *_part)
   {
     contents = CONTENT__NODE;
 
@@ -344,7 +344,7 @@ public:
 
     for (unsigned int i = 0; i < sides.size(); i++)
     {
-      cpSide_c *S = sides[i];
+      clip_side_c *S = sides[i];
 
       double x1 = MIN(S->x1, S->x2);
       double y1 = MIN(S->y1, S->y2);
@@ -361,12 +361,12 @@ public:
     *h = (*ly > hy) ? 0 : (hy - *ly);
   }
 
-  void AddFlat(cpFlat_c *F)
+  void AddFlat(clip_flat_c *F)
   {
     flats.push_back(F);
   }
 
-  void CopyFlats(cpNode_c *other)
+  void CopyFlats(clip_node_c *other)
   {
     for (unsigned int i = 0 ; i < other->flats.size() ; i++)
       AddFlat(other->flats[i]);
@@ -380,8 +380,8 @@ public:
     {
       gap_c *G = region->gaps[i];
 
-      AddFlat(new cpFlat_c(G, false));
-      AddFlat(new cpFlat_c(G, true));
+      AddFlat(new clip_flat_c(G, false));
+      AddFlat(new clip_flat_c(G, true));
     }
   }
 
@@ -391,7 +391,7 @@ public:
 
 static std::vector<csg_brush_c *> saved_all_brushes;
 
-static std::vector<cpSide_c *> all_clip_sides;
+static std::vector<clip_side_c *> all_clip_sides;
 
 
 //------------------------------------------------------------------------
@@ -713,9 +713,6 @@ static int SpreadClipEquiv()
 {
   int changes = 0;
 
-int sames = 0;
-int diffs = 0;
-
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
@@ -738,14 +735,10 @@ int diffs = 0;
         N->index = R->index;
         changes++;
       }
-
-if (N) {
-if (N->index == R->index) sames++; else diffs++; }
-
     }
   }
 
-// fprintf(stderr, "SpreadClipEquiv:  changes:%d sames:%d diffs:%d\n", changes, sames, diffs);
+// fprintf(stderr, "SpreadClipEquiv: changes:%d sames:%d diffs:%d\n", changes, -1, -1);
 
   return changes;
 }
@@ -768,9 +761,9 @@ static void CoalesceClipRegions()
 }
 
 
-static cpSide_c * SplitSideAt(cpSide_c *S, double new_x, double new_y)
+static clip_side_c * SplitSideAt(clip_side_c *S, double new_x, double new_y)
 {
-  cpSide_c *T = new cpSide_c(S);
+  clip_side_c *T = new clip_side_c(S);
 
   S->x2 = T->x1 = new_x;
   S->y2 = T->y1 = new_y;
@@ -862,17 +855,17 @@ static double EvaluatePartition(cpNode_c * LEAF,
 #endif
 
 
-static void Split_XY(cpGroup_c & group, const cpPartition_c *part,
-                     cpGroup_c & front, cpGroup_c & back)
+static void Split_XY(clip_group_c & group, const clip_partition_c *part,
+                     clip_group_c & front, clip_group_c & back)
 {
-  std::vector<cpSide_c *> local_sides;
+  std::vector<clip_side_c *> local_sides;
 
   local_sides.swap(group.sides);
 
 
   for (unsigned int k = 0 ; k < local_sides.size() ; k++)
   {
-    cpSide_c *S = local_sides[k];
+    clip_side_c *S = local_sides[k];
 
     // get relationship of this side to the partition line
     double a = PerpDist(S->x1, S->y1,
@@ -921,7 +914,7 @@ static void Split_XY(cpGroup_c & group, const cpPartition_c *part,
     double ix = S->x1 + along * (S->x2 - S->x1);
     double iy = S->y1 + along * (S->y2 - S->y1);
 
-    cpSide_c *T = SplitSideAt(S, ix, iy);
+    clip_side_c *T = SplitSideAt(S, ix, iy);
 
     front.AddSide((a > 0) ? S : T);
      back.AddSide((a > 0) ? T : S);
@@ -929,14 +922,14 @@ static void Split_XY(cpGroup_c & group, const cpPartition_c *part,
 }
 
 
-static bool FindPartition_XY(cpGroup_c & group, cpPartition_c *part)
+static bool FindPartition_XY(clip_group_c & group, clip_partition_c *part)
 {
-  cpSide_c *poss = NULL;
-  cpSide_c *best = NULL;
+  clip_side_c *poss = NULL;
+  clip_side_c *best = NULL;
 
   for (unsigned int i = 0 ; i < group.sides.size() ; i++)
   {
-    cpSide_c *S = group.sides[i];
+    clip_side_c *S = group.sides[i];
 
     if (S->on_node)
       continue;
@@ -960,11 +953,11 @@ static bool FindPartition_XY(cpGroup_c & group, cpPartition_c *part)
 }
 
 
-static cpNode_c * Partition_Z(region_c *R)
+static clip_node_c * Partition_Z(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
-  cpNode_c *node = new cpNode_c(CONTENTS_EMPTY);
+  clip_node_c *node = new clip_node_c(CONTENTS_EMPTY);
   
   for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
   {
@@ -972,42 +965,39 @@ static cpNode_c * Partition_Z(region_c *R)
 
     bool is_ceil = (surf & 1) ? true : false;
 
-    cpNode_c *last_node = node;
+    clip_node_c *last_node = node;
 
-    node = new cpNode_c(G, is_ceil);
+    node = new clip_node_c(G, is_ceil);
 
     node->front = last_node;
-    node->back  = new cpNode_c(CONTENTS_SOLID);
-
-///---  if (is_ceil)
-///---    std::swap(node->front, node->back);
+    node->back  = new clip_node_c(CONTENTS_SOLID);
   }
 
   return node;
 }
 
 
-static cpNode_c * PartitionGroup(cpGroup_c & group)
+static clip_node_c * PartitionGroup(clip_group_c & group)
 {
   SYS_ASSERT(! group.sides.empty());
 
-  cpPartition_c part;
+  clip_partition_c part;
 
   if (FindPartition_XY(group, &part))
   {
     // divide the group
-    cpGroup_c front;
-    cpGroup_c back;
+    clip_group_c front;
+    clip_group_c back;
 
     Split_XY(group, &part, front, back);
 
-    cpNode_c * node = new cpNode_c(part);
+    clip_node_c * node = new clip_node_c(part);
 
     // the front should never be empty
     node->front = PartitionGroup(front);
 
     if (back.sides.empty())
-      node->back = new cpNode_c(CONTENTS_SOLID);
+      node->back = new clip_node_c(CONTENTS_SOLID);
     else
       node->back = PartitionGroup(back);
 
@@ -1028,7 +1018,7 @@ static cpNode_c * PartitionGroup(cpGroup_c & group)
 
 //------------------------------------------------------------------------
 
-static void AssignIndexes(cpNode_c *node, int *cur_index)
+static void AssignIndexes(clip_node_c *node, int *cur_index)
 {
   if (! node->IsNode())
     return;
@@ -1060,7 +1050,7 @@ static void DoWriteClip(dclipnode_t & raw_clip, bool flip)
 }
 
 
-static void WriteClipNodes(cpNode_c *node)
+static void WriteClipNodes(clip_node_c *node)
 {
   if (! node->IsNode())
     return;
@@ -1109,7 +1099,7 @@ static void WriteClipNodes(cpNode_c *node)
 }
 
 
-static void CreateClipSides(cpGroup_c & group)
+static void CreateClipSides(clip_group_c & group)
 {
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
@@ -1127,7 +1117,7 @@ static void CreateClipSides(cpGroup_c & group)
       if (N && N->index == R->index)
         continue;
 
-      cpSide_c *CS = new cpSide_c(S);
+      clip_side_c *CS = new clip_side_c(S);
 
       group.AddSide(CS);
 #if 0
@@ -1155,11 +1145,11 @@ static void Q1_ClipWorld(int hull, double *pads)
   CoalesceClipRegions();
 
   
-  cpGroup_c GROUP;
+  clip_group_c GROUP;
 
   CreateClipSides(GROUP);
 
-  cpNode_c * ROOT = PartitionGroup(GROUP);
+  clip_node_c * ROOT = PartitionGroup(GROUP);
 
 
   int cur_index = q1_total_clip;
@@ -1240,7 +1230,7 @@ void Q1_ClippingHull(int hull)
     main_win->build_box->Prog_Step(hull_name);
   }
 
-///???  cpSideFactory_c::FreeAll();
+///???  FreeAll();
 
 
   double *pads;
