@@ -36,7 +36,7 @@ ambient sounds:
           - neighbors NE/SE/NW/SW get 64
 
 
-Quake: create dummy .lit files for FitzQuake & DarkPlaces
+Quake: fix level progression
 
 
 Hexen: have arg1 .. arg5, i.e. de-array-ify

@@ -357,6 +357,9 @@ Sam's suggestions:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
++  create dummy .lit files for FitzQuake & DarkPlaces
+   -  gui.pak_add_binary_lump
+
 +  support the Boss maps (next map = "start")
      E2M6 : wood floor, funky bridge, kill vores to get rune
      E3M6 : castley, lavay, teleport-in fiend
