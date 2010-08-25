@@ -274,16 +274,23 @@ int cluster_H;
 qCluster_c ** qk_clusters;
 
 
-qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs()
+qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(), visofs(-1)
 {
   ambients[0] = ambients[1] = 0;
   ambients[2] = ambients[3] = 0;
 }
 
-
 qCluster_c::~qCluster_c()
 {
   // nothing needed
+}
+
+
+void qCluster_c::AddLeaf(quake_leaf_c *leaf)
+{
+  leaf->cluster = this;
+
+  leafs.push_back(leaf);
 }
 
 

@@ -25,6 +25,7 @@
 /***** CLASSES ****************/
 
 class quake_node_c;
+class qCluster_c;
 
 
 typedef enum
@@ -148,9 +149,9 @@ public:
 
   std::vector<quake_face_c *> faces;
 
-  int cluster;
-
   quake_bbox_c bbox;
+
+  qCluster_c *cluster;
 
   int index;
 
@@ -159,7 +160,7 @@ public:
 
 public:
   quake_leaf_c(int _m) : medium(_m), faces(),
-                         cluster(-1), index(-1), solids()
+                         cluster(NULL), index(-1), solids()
   { }
 
   ~quake_leaf_c()

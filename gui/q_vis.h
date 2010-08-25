@@ -32,16 +32,18 @@ public:
 
   std::vector<quake_leaf_c *> leafs;
 
-///  double x1, y1;
-///  double x2, y2;
-
   // Quake 1 ambient sounds
   byte ambients[4];
+
+  // offset into LUMP_VISIBILITY
+  int visofs;
 
 public:
   qCluster_c(int _x, int _y);
 
   ~qCluster_c();
+
+  void AddLeaf(quake_leaf_c *leaf);
 };
 
 

@@ -1210,12 +1210,13 @@ static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
 
 static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
-                                 quake_bbox_c & bbox,
-                                 quake_node_c * prev_N,
-                                 quake_leaf_c * prev_L,
-                                 csg_brush_c *liquid)
+                                 quake_bbox_c & bbox, qCluster_c *cluster,
+                                 csg_brush_c *liquid,
+                                 quake_node_c * prev_N, quake_leaf_c * prev_L)
 {
   quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_AIR);
+
+  cluster->AddLeaf(leaf);
 
   CreateWallFaces(group, leaf, G);
 
@@ -1259,8 +1260,6 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
 
 static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 {
-//@@@@@@@@@@@2 cluster
-
   SYS_ASSERT(group.sides[0]->snag);  // FIXME can fail due to partitioning
 
   region_c *R = group.sides[0]->snag->region;
@@ -1280,7 +1279,7 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
   for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
     cur_node = CreateLeaf(R->gaps[i], group, winding, bbox,
-                          cur_node, cur_leaf, R->liquid);
+                          cluster, R->liquid, cur_node, cur_leaf);
     cur_leaf = NULL;
   }
 
