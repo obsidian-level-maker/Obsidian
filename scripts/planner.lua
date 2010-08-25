@@ -26,6 +26,8 @@ class SECTION
 
   room : ROOM
 
+  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
+
   num_conn  -- number of connections
 }
 
@@ -241,14 +243,14 @@ function Plan_create_sections(W, H)
   SECTION_W = W
   SECTION_H = H
 
-  LEVEL.section_W = pick_sizes(W, limit)
-  LEVEL.section_H = pick_sizes(H, limit - free_seeds)
+  local section_W = pick_sizes(W, limit)
+  local section_H = pick_sizes(H, limit - free_seeds)
 
-  LEVEL.section_X = get_positions(LEVEL.section_W)
-  LEVEL.section_Y = get_positions(LEVEL.section_H)
+  local section_X = get_positions(section_W)
+  local section_Y = get_positions(section_H)
 
-  dump_sizes("Column widths: ", LEVEL.section_W, SECTION_W)
-  dump_sizes("Row heights:   ", LEVEL.section_H, SECTION_H)
+  dump_sizes("Column widths: ", section_W, SECTION_W)
+  dump_sizes("Row heights:   ", section_H, SECTION_H)
 
 
   SECTIONS = table.array_2D(SECTION_W, SECTION_H)
@@ -257,13 +259,21 @@ function Plan_create_sections(W, H)
     local K = SECTION_CLASS.new(x, y)
 
     SECTIONS[x][y] = K
+
+    K.sw = section_W[x]
+    K.sh = section_H[y]
+
+    K.sx1 = section_X[x]
+    K.sy1 = section_Y[y]
+    K.sx2 = K.sx1 + K.sw - 1
+    K.sy2 = K.sy1 + K.sh - 1
   end end
 
 
   -- create the SEEDS array too
 
-  local seed_W = LEVEL.section_X[SECTION_W] + LEVEL.section_W[SECTION_W] + border_seeds - 1
-  local seed_H = LEVEL.section_Y[SECTION_H] + LEVEL.section_H[SECTION_H] + border_seeds - 1
+  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + border_seeds - 1
+  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
@@ -348,17 +358,14 @@ end
 
 function Plan_add_small_rooms()
 
-  local function can_make_double(x, y)
+  local function can_make_double(K, x, y)
     local can_x = (x < SECTION_W and not Plan_has_section(x+1, y))
     local can_y = (y < SECTION_H and not Plan_has_section(x, y+1))
 
     if can_x and can_y then
-      local W = LEVEL.section_W[x]
-      local H = LEVEL.section_H[y]
-
       -- prefer making the room "squarer"
-      if H > W+1 and rand.odds(90) then return "x" end
-      if W > H+1 and rand.odds(90) then return "y" end
+      if K.sh > K.sw+1 and rand.odds(90) then return "x" end
+      if K.sw > K.sh+1 and rand.odds(90) then return "y" end
 
       return rand.sel(33, "x", "y")
     end
@@ -379,7 +386,7 @@ function Plan_add_small_rooms()
       K.room = R
 
       -- sometimes become a 2x1 / 1x2 sized room
-      local can_xy = can_make_double(x, y)
+      local can_xy = can_make_double(K, x, y)
 
       if can_xy and rand.odds(40) then
         if can_xy == "x" then
@@ -1340,25 +1347,14 @@ function Plan_make_seeds()
 
     if not R then return end
 
-    local sx1 = LEVEL.section_X[kx]
-    local sy1 = LEVEL.section_Y[ky]
-
-    local sx2 = sx1 + LEVEL.section_W[kx] - 1
-    local sy2 = sy1 + LEVEL.section_H[ky] - 1
-
-    K.sx1, K.sx2 = sx1, sx2
-    K.sy1, K.sy2 = sy1, sy2
-
-    K:update_size()
-
-    if not R.sx1 or sx1 < R.sx1 then R.sx1 = sx1 end
-    if not R.sy1 or sy1 < R.sy1 then R.sy1 = sy1 end
-    if not R.sx2 or sx2 > R.sx2 then R.sx2 = sx2 end
-    if not R.sy2 or sy2 > R.sy2 then R.sy2 = sy2 end
+    if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
+    if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
+    if not R.sx2 or K.sx2 > R.sx2 then R.sx2 = K.sx2 end
+    if not R.sy2 or K.sy2 > R.sy2 then R.sy2 = K.sy2 end
 
     R:update_size()
 
-    for x = sx1,sx2 do for y = sy1,sy2 do
+    for x = K.sx1,K.sx2 do for y = K.sy1,K.sy2 do
       init_seed(x, y, R) 
     end end
   end
