@@ -890,7 +890,7 @@ static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
 // fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
 // fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
 
-    if (sw <= 2 && sh <= 2)
+    if (sw <= 1 && sh <= 1)
     {
       *reached_chunk = true;
     }
