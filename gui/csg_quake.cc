@@ -1205,9 +1205,6 @@ static quake_node_c * Partition_Z(quake_group_c & group)
 
 static quake_node_c * Partition_Group(quake_group_c & group)
 {
-  // this function "returns" either a node OR a leaf via the
-  // parameters with the same name.
-
   SYS_ASSERT(! group.sides.empty());
 
   quake_side_c part;
