@@ -27,6 +27,7 @@ class quake_leaf_c;
 class qCluster_c
 {
 public:
+  // cluster coordinate (starts at 0)
   int cx, cy;
 
   std::vector<quake_leaf_c *> leafs;

@@ -312,8 +312,8 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 
   for (int i = 0 ; i < cluster_W * cluster_H ; i++)
   {
-    int cx = cluster_X + (i % cluster_W);
-    int cy = cluster_Y + (i / cluster_W);
+    int cx = (i % cluster_W) /* + cluster_X */;
+    int cy = (i / cluster_W) /* + cluster_Y */;
 
     qk_clusters[i] = new qCluster_c(cx, cy);
   }
