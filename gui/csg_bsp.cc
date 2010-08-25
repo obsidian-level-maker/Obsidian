@@ -908,6 +908,10 @@ static partition_c * ChoosePartition(group_c & group)
 
   // inside a single chunk : find a side normally
 
+  // -AJA- An obvious thing to try here is to choose the best
+  //       horiz/vert node based on distance to the middle.
+  //       But it had no benefit, and was slower as well.
+
   snag_c *poss = NULL;
 
   for (unsigned int i = 0 ; i < group.regs.size() ; i++)
@@ -921,20 +925,21 @@ static partition_c * ChoosePartition(group_c & group)
       if (S->on_node)
         continue;
 
-      // we prefer a horizontal or vertical snag
-      if (! poss || (S->x1 == S->x2) || (S->y1 == S->y2))
-        poss = S;
+      // we prefer an axis-aligned node
+      if (S->x1 == S->x2 || S->y1 == S->y2)
+      {
+        // look no further
+        return AddPartition(S);
+      }
 
-      // -AJA- An obvious thing to try here is to choose the best
-      //       horiz/vert node based on distance to the middle.
-      //       But it had no benefit, and was slower as well.
+      poss = S;
     }
   }
 
-  if (! poss)
-    return NULL;
+  if (poss)
+    return AddPartition(poss);
 
-  return AddPartition(poss);
+  return NULL;
 }
 
 
