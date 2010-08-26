@@ -127,6 +127,24 @@ public:
 		}
 	}
 
+	void DrawDiagonal(int sx, int sy, int kind)
+	{
+		if (! (vbuf.at(sx, sy) & kind))
+			return;
+
+		int x1 = x() + sx * SQUARE_SIZE;
+		int y1 = y() + (MAX_SQUARES-1-sy) * SQUARE_SIZE;
+
+		int x2 = x1 + SQUARE_SIZE - 2;
+		int y2 = y1 + SQUARE_SIZE - 1;
+
+		if (kind == V_DIAG_NE)
+			std::swap(x1, x2);
+		
+		fl_line(x1,y1, x2,y2);
+		fl_line(x1+1,y1, x2+1,y2);
+	}
+
 	int GetVis(int x, int y)
 	{
 	  short d = vbuf.at(x, y);
@@ -182,6 +200,9 @@ public:
 				DrawSolidWall(sx, sy, side);
 			}
 		}
+
+		DrawDiagonal(sx, sy, V_DIAG_NE);
+		DrawDiagonal(sx, sy, V_DIAG_SE);
 
 		if (loc_x < 0 || loc_y < 0)
 			return;
@@ -447,8 +468,10 @@ int main(int argc, char **argv)
 
 		// show window (pass some dummy arguments)
 		{
+			char *name = strdup("VisViewer.exe");
+
 			int argc = 1;
-			char *argv[] = { "VisViewer.exe", NULL };
+			char *argv[] = { name, NULL };
 
 			main_win->show(argc, argv);
 		}
