@@ -36,7 +36,7 @@
 
 struct Stair_Pos
 {
-	short x, y, side;
+  short x, y, side;
 };
 
 typedef std::vector<Stair_Pos> Stair_Steps;
@@ -45,95 +45,84 @@ typedef std::vector<Stair_Pos> Stair_Steps;
 class Vis_Buffer
 {
 private:
-	int W, H;  // size
+  int W, H;  // size
 
-	short * data;
+  short * data;
 
-	bool quick_mode;
+  bool quick_mode;
 
-	// square we are processing
-	int loc_x, loc_y;
+  // square we are processing
+  int loc_x, loc_y;
 
-	// current transform
-	int flip_x, flip_y;
+  // current transform
+  int flip_x, flip_y;
 
-	// current limits for DoSteps()
-	int limit_x, limit_y;
-
-public:
-	Vis_Buffer(int width, int height) :
-    	W(width), H(height), quick_mode(false),
-		flip_x(0), flip_y(0)
-	{
-		data = new short[W * H];
-
-		Clear();
-	}
-
-	~Vis_Buffer()
-	{
-		delete[] data;
-	}
+  // current limits for DoSteps()
+  int limit_x, limit_y;
 
 public:
-	inline int Trans_X(int x)
-	{
-		return flip_x ? (loc_x * 2 - x) : x;
-	}
-
-	inline int Trans_Y(int y)
-	{
-		return flip_y ? (loc_y * 2 - y) : y;
-	}
-
-	inline int Trans_Side(int side)
-	{
-		if ( (flip_x && (side == 4 || side == 6)) ||
-		     (flip_y && (side == 2 || side == 8)) )
-		{
-			return 10 - side;
-		}
-		return side;
-	}
-
-	inline bool isValid(int x, int y)
-	{
-		x = Trans_X(x);
-		y = Trans_Y(y);
-
-		return (0 <= x && x < W) && (0 <= y && y < H);
-	}
-
-	inline short& at(int x, int y)
-	{
-		x = Trans_X(x);
-		y = Trans_Y(y);
-
-		return data[y * W + x];
-	}
+   Vis_Buffer(int width, int height);
+  ~Vis_Buffer();
 
 public:
-	void Clear();
-	void SetQuickMode(bool enable);
+  inline int Trans_X(int x)
+  {
+    return flip_x ? (loc_x * 2 - x) : x;
+  }
 
-	void AddWall( int x, int y, int side);
-	bool TestWall(int x, int y, int side);
+  inline int Trans_Y(int y)
+  {
+    return flip_y ? (loc_y * 2 - y) : y;
+  }
 
-	void ReadMap(const char *filename);
+  inline int Trans_Side(int side)
+  {
+    if ( (flip_x && (side == 4 || side == 6)) ||
+         (flip_y && (side == 2 || side == 8)) )
+    {
+      return 10 - side;
+    }
+    return side;
+  }
 
-	void ClearVis();
-	void ProcessVis(int x, int y);
-	int GetVis(int x, int y);
+  inline bool isValid(int x, int y)
+  {
+    x = Trans_X(x);
+    y = Trans_Y(y);
+
+    return (0 <= x && x < W) && (0 <= y && y < H);
+  }
+
+  inline short& at(int x, int y)
+  {
+    x = Trans_X(x);
+    y = Trans_Y(y);
+
+    return data[y * W + x];
+  }
+
+public:
+  void Clear();
+  void SetQuickMode(bool enable);
+
+  void AddWall( int x, int y, int side);
+  bool TestWall(int x, int y, int side);
+
+  void ReadMap(const char *filename);
+
+  void ClearVis();
+  void ProcessVis(int x, int y);
+  int GetVis(int x, int y);
 
 private:
-	void AddStep(Stair_Steps& dest, int x, int y, int side);
-	void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
-	void MarkSteps(const Stair_Steps& steps);
-	void FollowStair(Stair_Steps& steps, int sx, int sy, int side);
+  void AddStep(Stair_Steps& dest, int x, int y, int side);
+  void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
+  void MarkSteps(const Stair_Steps& steps);
+  void FollowStair(Stair_Steps& steps, int sx, int sy, int side);
 
-	void DoBasic(int dx, int dy, int side);
-	void DoFill();
-	void DoSteps(int quadrant);
+  void DoBasic(int dx, int dy, int side);
+  void DoFill();
+  void DoSteps(int quadrant);
 };
 
 #endif /* __OBLIGE_VIS_BUFFER_H__ */
