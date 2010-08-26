@@ -343,15 +343,11 @@ Sam's suggestions:
   QUAKE
 ----------------------------------------------------------------
 
->>> perform lighting
-
->>> perform visibility
-
-+  liquid areas
-
 +  slopes!
    -  for clipping, force a node line where slope flattens out,
       then mark one side as sloped - other side as flat.
+
++  liquids!
 
 +  better miptex handling:
    -  support multiple WD2 files : gui.quake_add_textures
@@ -370,6 +366,9 @@ Sam's suggestions:
 -  intermission camera (only need 1 -- user won't replay level)
      "classname" "info_intermission"
      "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
+
+-  visibility: support diagonals, check if any sides in a cluster
+               touch or cross a line between corners.
 
 -  nail shooters FTW
 
