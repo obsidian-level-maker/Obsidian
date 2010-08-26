@@ -24,7 +24,7 @@
 
 Vis_Buffer::Vis_Buffer(int width, int height) :
       W(width), H(height), quick_mode(false),
-    flip_x(0), flip_y(0)
+      flip_x(0), flip_y(0), saved_cells()
 {
   data = new short[W * H];
 
@@ -94,6 +94,18 @@ bool Vis_Buffer::TestWall(int x, int y, int side)
     return (at(x, y) & V_BOTTOM) ? true : false;
   else
     return (at(x, y) & V_LEFT) ? true : false;
+}
+
+
+void Vis_Buffer::AddDiagonal(int x, int y, int dir)
+{
+  if (! isValid(x, y))
+    return;
+
+  if (dir == 1 || dir == 9)
+    at(x, y) |= V_DIAG_NE;
+  else
+    at(x, y) |= V_DIAG_SE;
 }
 
 
@@ -279,7 +291,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
     if (nx < lx + ww)
       y1 = MAX(y1, ly + hh);
 
-    for (int ny = y1; ny <= y2 && isValid(nx, ny); ny++)
+    for (int ny = y1 ; ny <= y2 && isValid(nx, ny) ; ny++)
     {
       at(nx, ny) |= V_SPAN;
     }
@@ -402,12 +414,96 @@ void Vis_Buffer::DoSteps(int quadrant)
 
 //------------------------------------------------------------------------
 
+void Vis_Buffer::AddWallSave(int x, int y, int side)
+{
+  if (side == 6)
+  {
+    x++; side = 4;
+  }
+
+  if (side == 8)
+  {
+    y++; side = 2;
+  }
+
+  if (! isValid(x, y))
+    return;
+
+  // save original contents
+  Stair_Pos pos;
+
+  pos.x = x;
+  pos.y = y;
+  pos.side = at(x, y);
+
+  saved_cells.push_back(pos);
+
+  if (side == 2)
+    at(x, y) |= V_BOTTOM;
+  else
+    at(x, y) |= V_LEFT;
+}
+
+
+void Vis_Buffer::ConvertDiagonals()
+{
+  // the algorithms above do not handle diagonals directly.
+  // instead we convert them to normal walls based on the source loc.
+  // we need to restore those changes afterwards.
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    if (x == loc_x && y == loc_y)
+      continue;
+
+    short se = (at(x, y) & V_DIAG_SE);
+    short ne = (at(x, y) & V_DIAG_NE);
+
+    if (se && x <= loc_x && y <= loc_y)
+    {
+      AddWallSave(x, y, 6);
+      AddWallSave(x, y, 8);
+    }
+    if (se && x >= loc_x && y >= loc_y)
+    {
+      AddWallSave(x, y, 2);
+      AddWallSave(x, y, 4);
+    }
+
+    if (ne && x >= loc_x && y <= loc_y)
+    {
+      AddWallSave(x, y, 4);
+      AddWallSave(x, y, 8);
+    }
+    if (ne && x <= loc_x && y >= loc_y)
+    {
+      AddWallSave(x, y, 2);
+      AddWallSave(x, y, 6);
+    }
+  }
+}
+
+
+void Vis_Buffer::RestoreDiagonals()
+{
+  // need to go backwards (opposite to the add order)
+
+  for (int i = (int)saved_cells.size()-1 ; i >= 0 ; i--)
+  {
+    const Stair_Pos & pos = saved_cells[i];
+
+    at(pos.x, pos.y) = pos.side;
+  }
+}
+
+
 void Vis_Buffer::ClearVis()
 {
   int len = W * H;
 
   for (int i = 0 ; i < len ; i++)
-    data[i] &= 7;
+    data[i] &= ~ V_ANY;
 }
 
 
@@ -416,6 +512,8 @@ void Vis_Buffer::ProcessVis(int x, int y)
   loc_x = x;
   loc_y = y;
 
+  ConvertDiagonals();
+
   DoBasic(-1, 0, 4);  DoBasic(0, -1, 2);
   DoBasic(+1, 0, 6);  DoBasic(0, +1, 8);
 
@@ -423,6 +521,8 @@ void Vis_Buffer::ProcessVis(int x, int y)
   DoSteps(1);  DoFill();
   DoSteps(2);  DoFill();
   DoSteps(3);  DoFill();
+
+  RestoreDiagonals();
 
   flip_x = flip_y = 0;
 }

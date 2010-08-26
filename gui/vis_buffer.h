@@ -21,17 +21,19 @@
 
 
 // map data
-#define V_BOTTOM  0x0001
-#define V_LEFT    0x0002 
+#define V_BOTTOM   0x01
+#define V_LEFT     0x02 
+#define V_DIAG_NE  0x04   // diagonal like '/'
+#define V_DIAG_SE  0x08   // diagonal like '\'
 
 
 // vis results
-#define V_BASIC   0x0010   // ultra basic
-#define V_SPAN    0x0020   // long spans
-#define V_LSHAPE  0x0040   // L shape testing
-#define V_FILL    0x0080
+#define V_BASIC   0x0100   // ultra basic
+#define V_SPAN    0x0200   // long spans
+#define V_LSHAPE  0x0400   // L shape testing
+#define V_FILL    0x0800
 
-#define V_ANY     0xFFF0
+#define V_ANY     0x7F00
 
 
 struct Stair_Pos
@@ -59,6 +61,8 @@ private:
 
   // current limits for DoSteps()
   int limit_x, limit_y;
+
+  std::vector<Stair_Pos> saved_cells;
 
 public:
    Vis_Buffer(int width, int height);
@@ -105,7 +109,9 @@ public:
   void Clear();
   void SetQuickMode(bool enable);
 
-  void AddWall( int x, int y, int side);
+  void AddWall(int x, int y, int side);
+  void AddDiagonal(int x, int y, int dir);
+
   bool TestWall(int x, int y, int side);
 
   void ReadMap(const char *filename);
@@ -119,6 +125,10 @@ private:
   void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
   void MarkSteps(const Stair_Steps& steps);
   void FollowStair(Stair_Steps& steps, int sx, int sy, int side);
+
+  void ConvertDiagonals();
+  void RestoreDiagonals();
+  void AddWallSave(int x, int y, int side);
 
   void DoBasic(int dx, int dy, int side);
   void DoFill();
