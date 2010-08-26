@@ -378,16 +378,18 @@ static void FloodAmbientSounds()
 
 static qLump_c *q_visibility;
 
+static byte *v_row_buffer;
 static byte *v_write_buffer;
 
 static int v_bytes_per_leaf;
 
 
-static int WriteCompressedRow(const byte *src)
+static int WriteCompressedRow()
 {
   // returns offset for the written data block
   int visofs = (int)q_visibility->GetSize();
 
+  const byte *src   = v_row_buffer;
   const byte *src_e = src + v_bytes_per_leaf;
 
   byte *dest = v_write_buffer;
@@ -412,15 +414,17 @@ static int WriteCompressedRow(const byte *src)
     *dest++ = repeat;
   }
 
+  SYS_ASSERT(dest <= v_write_buffer + v_bytes_per_leaf*2);
+
   q_visibility->Append(v_write_buffer, dest - v_write_buffer);
 
   return visofs;
 }
 
 
-static int CollectRowData(byte *row, int src_x, int src_y)
+static int CollectRowData(int src_x, int src_y)
 {
-  memset(row, 1, v_bytes_per_leaf);
+  memset(v_row_buffer, 0xFF, v_bytes_per_leaf);
 
   unsigned int blocked = 0;
 
@@ -442,9 +446,16 @@ static int CollectRowData(byte *row, int src_x, int src_y)
     {
       int index = cluster->leafs[k]->index;
 
-      SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
+if (index < 0 || (index >> 3) >= v_bytes_per_leaf)
+{
+fprintf(stderr, "skipping index = %d\n", index);
+continue;
+}
 
-      row[index >> 3] &= ~ (1 << (index & 7));
+      SYS_ASSERT((index >> 3) >= 0);
+//!!!!      SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
+
+      v_row_buffer[index >> 3] &= ~ (1 << (index & 7));
     }
   }
 
@@ -485,7 +496,9 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   v_bytes_per_leaf = (numleafs+7) >> 3;
 
-  byte *row_buffer = new byte[v_bytes_per_leaf + 1];
+fprintf(stderr, "numleafs:%d  v_bytes_per_leaf:%d\n", numleafs, v_bytes_per_leaf);
+  v_row_buffer   = new byte[v_bytes_per_leaf + 1];
+  v_write_buffer = new byte[v_bytes_per_leaf*2 + 1];
 
 
   // DO VIS STUFF !!
@@ -495,15 +508,18 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
   {
     qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
+    if (cluster->leafs.empty())
+      continue;
+
     qk_visbuf->ClearVis();
     qk_visbuf->ProcessVis(cx, cy);
 
-    int blocked = CollectRowData(row_buffer, cx, cy);
+    int blocked = CollectRowData(cx, cy);
 
-fprintf(stderr, "cluster %2d %2d  blocked:%d = %1.2f%%\n",
+fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%\n",
         cx, cy, blocked, blocked * 100.0 / numleafs);
 
-    cluster->visofs = WriteCompressedRow(row_buffer);
+    cluster->visofs = WriteCompressedRow();
   }
 
 
@@ -515,7 +531,8 @@ fprintf(stderr, "cluster %2d %2d  blocked:%d = %1.2f%%\n",
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
 
-  delete[] row_buffer;
+  delete[] v_row_buffer;
+  delete[] v_write_buffer;
 
   QCOM_FreeClusters();
 }
