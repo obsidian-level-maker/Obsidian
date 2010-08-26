@@ -8,11 +8,9 @@ PROGRAM=VisViewer
 
 CXX=g++
 
-LIB_LOC=../linux_lib
+LIB_LOC=../lib_linux
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.9
-LUA_DIR=$(LIB_LOC)/lua-5.1.2
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.24
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 
 OPTIMISE=-O1 -g
 
@@ -27,19 +25,12 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
           $(FLTK_DIR)/lib/libfltk.a \
           -lX11 -lXext -lpng -ljpeg
 
-LUA_FLAGS=-I$(LUA_DIR)/src
-LUA_LIBS=$(LUA_DIR)/src/liblua.a
-
-GLBSP_FLAGS=-I$(GLBSP_DIR)/src
-GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
-
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
-         $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) $(FLTK_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib
-LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+LIBS=-lm -lz $(FLTK_LIBS)
 
 
-OBJS=main.o ../gui/vis_buffer.o
+OBJS=main.o ../obj_linux/vis_buffer.o
 
 
 #--- Targets and Rules ------------------------------------------
