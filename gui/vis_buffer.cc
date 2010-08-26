@@ -434,12 +434,12 @@ void Vis_Buffer::AddWallSave(int x, int y, int side)
   if (! isValid(x, y))
     return;
 
-  // save original contents
+  // save original contents (mask out vis results)
   Stair_Pos pos;
 
   pos.x = x;
   pos.y = y;
-  pos.side = at(x, y);
+  pos.side = at(x, y) & ~V_ANY;
 
   saved_cells.push_back(pos);
 
@@ -500,7 +500,8 @@ void Vis_Buffer::RestoreDiagonals()
   {
     const Stair_Pos & pos = saved_cells[i];
 
-    at(pos.x, pos.y) = pos.side;
+    at(pos.x, pos.y) &= V_ANY;
+    at(pos.x, pos.y) |= pos.side;
   }
 
   saved_cells.clear();
