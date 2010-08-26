@@ -572,6 +572,47 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
 }
 
 
+static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
+{
+  // see whether each edge (N/S/E/W) is open or closed
+
+  bool closed_N = true;
+  bool closed_S = true;
+  bool closed_W = true;
+  bool closed_E = true;
+
+  double x1 = (cluster_X + cx) * CLUSTER_SIZE;
+  double y1 = (cluster_Y + cy) * CLUSTER_SIZE;
+
+  double x2 = x1 + CLUSTER_SIZE;
+  double y2 = y1 + CLUSTER_SIZE;
+
+  for (unsigned int i = 0 ; i < group.sides.size() ; i++)
+  {
+    quake_side_c *S = group.sides[i];
+
+    if (! S->TwoSided())
+      continue;
+
+    if (MAX(S->y1, S->y2) > y2 - 2) closed_N = false;
+    if (MIN(S->y1, S->y2) < y1 + 2) closed_S = false;
+
+    if (MAX(S->x1, S->x2) > x2 - 2) closed_W = false;
+    if (MIN(S->x1, S->x2) < x1 + 2) closed_E = false;
+  }
+
+  // FIXME : send data to vis  !!!!!!
+
+  // debugging stuff : write data for VisViewer
+#if 1
+  if (closed_N) fprintf(stderr, "@@@ %d %d 8\n", cx, cy);
+  if (closed_S) fprintf(stderr, "@@@ %d %d 2\n", cx, cy);
+  if (closed_W) fprintf(stderr, "@@@ %d %d 4\n", cx, cy);
+  if (closed_E) fprintf(stderr, "@@@ %d %d 6\n", cx, cy);
+#endif
+}
+
+
 static int Brush_TestSide(const csg_brush_c *B, const quake_side_c *part) 
 {
   bool on_front = false;
@@ -785,6 +826,8 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
       *reached_cluster = qk_clusters[cy * cluster_W + cx];
 
       SYS_ASSERT(*reached_cluster);
+
+      CheckClusterEdges(group, cx, cy);
     }
   }
 
