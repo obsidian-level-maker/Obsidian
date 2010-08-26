@@ -1274,6 +1274,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   // FREE STUFF !!!!
 
+  QCOM_FreeClusters();
 }
 
 

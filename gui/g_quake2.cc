@@ -1050,6 +1050,9 @@ static void Q2_CreateBSPFile(const char *name)
   BSP_WriteEntities(LUMP_ENTITIES, description);
 
   BSP_CloseLevel();
+
+
+  QCOM_FreeClusters();
 }
 
 

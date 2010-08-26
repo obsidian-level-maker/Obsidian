@@ -390,11 +390,11 @@ static int WriteCompressedRow()
   int visofs = (int)q_visibility->GetSize();
 
   const byte *src   = v_row_buffer;
-  const byte *src_e = src + v_bytes_per_leaf;
+  const byte *s_end = src + v_bytes_per_leaf;
 
   byte *dest = v_compress_buffer;
 
-  while (src < src_e)
+  while (src < s_end)
   {
     if (*src)
     {
@@ -406,13 +406,15 @@ static int WriteCompressedRow()
 
     byte repeat = 1;
 
-    while (src < src_e && *src == 0 && repeat != 255)
+    while (src < s_end && *src == 0 && repeat != 255)
     {
       src++; repeat++;
     }
 
     *dest++ = repeat;
   }
+
+  SYS_ASSERT(dest <= v_compress_buffer + v_bytes_per_leaf*2);
 
   q_visibility->Append(v_compress_buffer, dest - v_compress_buffer);
 
@@ -422,6 +424,7 @@ static int WriteCompressedRow()
 
 static int CollectRowData(int src_x, int src_y)
 {
+  // initial state : everything visible
   memset(v_row_buffer, 0xFF, v_bytes_per_leaf);
 
   unsigned int blocked = 0;
@@ -444,7 +447,9 @@ static int CollectRowData(int src_x, int src_y)
     {
       int index = cluster->leafs[k]->index;
 
-      SYS_ASSERT((index >> 3) >= 0);
+      index--;
+
+      SYS_ASSERT(index >= 0);
       SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
 
       v_row_buffer[index >> 3] &= ~ (1 << (index & 7));
@@ -509,10 +514,10 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
     int blocked = CollectRowData(cx, cy);
 
-fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%\n",
-        cx, cy, blocked, blocked * 100.0 / numleafs);
-
     cluster->visofs = WriteCompressedRow();
+
+fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%   visofs=%d\n",
+        cx, cy, blocked, blocked * 100.0 / numleafs, cluster->visofs);
   }
 
 
@@ -526,8 +531,6 @@ fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%\n",
 
   delete[] v_row_buffer;
   delete[] v_compress_buffer;
-
-  QCOM_FreeClusters();
 }
 
 //--- editor settings ---
