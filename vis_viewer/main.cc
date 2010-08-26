@@ -127,6 +127,18 @@ public:
 		}
 	}
 
+	int GetVis(int x, int y)
+	{
+	  short d = vbuf.at(x, y);
+
+	  if (d & V_FILL)   return 4;
+	  if (d & V_LSHAPE) return 3;
+	  if (d & V_BASIC)  return 1;
+	  if (d & V_SPAN)   return 2;
+
+	  return 0;
+	}
+
 	void DrawSquare(int sx, int sy)
 	{
 		int x1 = x() + sx * SQUARE_SIZE;
@@ -140,7 +152,7 @@ public:
 		fl_rectf(x1, y1, SQUARE_SIZE, 1);
 		fl_rectf(x1, y1, 1, SQUARE_SIZE);
 
-		int vis = vbuf.GetVis(sx, sy);
+		int vis = GetVis(sx, sy);
 
 		if (sx == loc_x && sy == loc_y)
 		{

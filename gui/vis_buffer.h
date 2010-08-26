@@ -111,8 +111,8 @@ public:
   void ReadMap(const char *filename);
 
   void ClearVis();
+
   void ProcessVis(int x, int y);
-  int  GetVis(int x, int y);
 
 private:
   void AddStep(Stair_Steps& dest, int x, int y, int side);

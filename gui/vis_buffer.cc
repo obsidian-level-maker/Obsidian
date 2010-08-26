@@ -428,17 +428,5 @@ void Vis_Buffer::ProcessVis(int x, int y)
 }
 
 
-int Vis_Buffer::GetVis(int x, int y)
-{
-  short d = at(x, y);
-
-  if (d & V_FILL)   return 4;
-  if (d & V_LSHAPE) return 3;
-  if (d & V_BASIC)  return 1;
-  if (d & V_SPAN)   return 2;
-
-  return 0;
-}
-
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
