@@ -37,15 +37,17 @@ Vis_Buffer::~Vis_Buffer()
 }
 
 
+void Vis_Buffer::Clear()
+{
+  memset(data, 0, sizeof(short) * W * H);
+}
+
+
 void Vis_Buffer::SetQuickMode(bool enable)
 {
   quick_mode = enable;
 }
 
-void Vis_Buffer::Clear()
-{
-  memset(data, 0, sizeof(short) * W * H);
-}
 
 void Vis_Buffer::AddWall(int x, int y, int side)
 {
@@ -67,6 +69,7 @@ void Vis_Buffer::AddWall(int x, int y, int side)
   else
     at(x, y) |= V_LEFT;
 }
+
 
 bool Vis_Buffer::TestWall(int x, int y, int side)
 {
@@ -92,6 +95,7 @@ bool Vis_Buffer::TestWall(int x, int y, int side)
   else
     return (at(x, y) & V_LEFT) ? true : false;
 }
+
 
 void Vis_Buffer::ReadMap(const char *filename)
 {
@@ -133,11 +137,11 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
   for (;;)
   {
     while (isValid( x+dy*(L+1), y+dx*(L+1)) &&
-         TestWall(x+dy*(L+1), y+dx*(L+1), side))
+           TestWall(x+dy*(L+1), y+dx*(L+1), side))
       L++;
 
     while (isValid( x-dy*(R+1), y-dx*(R+1)) &&
-         TestWall(x-dy*(R+1), y-dx*(R+1), side))
+           TestWall(x-dy*(R+1), y-dx*(R+1), side))
       R++;
 
     x += dx; y += dy;
@@ -145,15 +149,16 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
     if (! isValid(x, y))
       return;
 
-    for (int j = -R; j <= L; j++)
+    for (int j = -R ; j <= L ; j++)
       at(x+dy*j, y+dx*j) |= V_BASIC;
   }
 }
 
+
 void Vis_Buffer::DoFill()
 {
-  for (int dy = 0; dy < H; dy++)
-  for (int dx = 0; dx < W; dx++)
+  for (int dy = 0 ; dy < H ; dy++)
+  for (int dx = 0 ; dx < W ; dx++)
   {
     // if (dx == 0 && dy == 0)
     //    continue;
@@ -167,14 +172,15 @@ void Vis_Buffer::DoFill()
       break;
 
     if (! (at(sx+1, sy+1) & V_ANY) &&
-       ((at(sx+1, sy)   & V_ANY) || TestWall(sx+1, sy, 8)) &&
-       ((at(sx,   sy+1) & V_ANY) || TestWall(sx, sy+1, 6))
+         ((at(sx+1, sy)   & V_ANY) || TestWall(sx+1, sy, 8)) &&
+         ((at(sx,   sy+1) & V_ANY) || TestWall(sx, sy+1, 6))
        )
     {
       at(sx+1, sy+1) |= V_FILL;
     }
   }
 }
+
 
 void Vis_Buffer::AddStep(Stair_Steps& dest, int x, int y, int side)
 {
@@ -187,11 +193,13 @@ void Vis_Buffer::AddStep(Stair_Steps& dest, int x, int y, int side)
   dest.push_back(pos);
 }
 
+
 void Vis_Buffer::CopySteps(Stair_Steps& dest, const Stair_Steps& src)
 {
-  for (unsigned int i = 0; i < src.size(); i++)
+  for (unsigned int i = 0 ; i < src.size() ; i++)
     dest.push_back(src[i]);
 }
+
 
 void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
 {
@@ -216,11 +224,13 @@ void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
     return;
 
   // fill in the "gaps" inside the bbox (behind the stair-step)
-  for (unsigned int i = 0; i < steps.size(); i++)
+  for (unsigned int i = 0 ; i < steps.size() ; i++)
   {
     if (steps[i].side == 4)
-      for (int sx = steps[i].x; sx < lx+ww; sx++)
+    {
+      for (int sx = steps[i].x ; sx < lx+ww ; sx++)
         at(sx, steps[i].y) |= V_LSHAPE;
+    }
   }
 
   // if stair-step covers whole quadrant, then we don't need
@@ -246,7 +256,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
   if (bx == 0 && ly > loc_y)
     return;
 
-  for (int nx = loc_x; nx < loc_x+W; nx++)
+  for (int nx = loc_x ; nx < loc_x+W ; nx++)
   {
     if (! isValid(nx, loc_y))
       return;
@@ -275,6 +285,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
     }
   }
 }
+
 
 void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side)
 {
@@ -350,6 +361,7 @@ void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side)
   MarkSteps(steps);
 }
 
+
 void Vis_Buffer::DoSteps(int quadrant)
 {
   flip_x = (quadrant & 1);
@@ -358,8 +370,8 @@ void Vis_Buffer::DoSteps(int quadrant)
   limit_x = W;
   limit_y = H;
 
-  for (int dy = 0; dy < limit_y; dy++)
-  for (int dx = 0; dx < limit_x; dx++)
+  for (int dy = 0 ; dy < limit_y ; dy++)
+  for (int dx = 0 ; dx < limit_x ; dx++)
   {
     int sx = loc_x + dx;
     int sy = loc_y + dy;
@@ -370,16 +382,16 @@ void Vis_Buffer::DoSteps(int quadrant)
       break;
 
     if (  (dy > 0 && TestWall(sx, sy, 2)) &&
-      ! (dx > 0 && TestWall(sx-1, sy, 2)) &&
-      ! (dx > 0 && TestWall(sx, sy, 4)) )
+        ! (dx > 0 && TestWall(sx-1, sy, 2)) &&
+        ! (dx > 0 && TestWall(sx, sy, 4)) )
     {
       Stair_Steps base;
       FollowStair(base, sx, sy, 2);
     }
 
     if (  (dx > 0 && TestWall(sx, sy, 4)) &&
-      ! (          TestWall(sx-1, sy, 8)) &&
-      ! (isValid(sx, sy+1) && TestWall(sx, sy+1, 4)) )
+        ! (          TestWall(sx-1, sy, 8)) &&
+        ! (isValid(sx, sy+1) && TestWall(sx, sy+1, 4)) )
     {
       Stair_Steps base;
       FollowStair(base, sx, sy, 4);
@@ -394,25 +406,27 @@ void Vis_Buffer::ClearVis()
 {
   int len = W * H;
 
-  for (int i = 0; i < len; i++)
+  for (int i = 0 ; i < len ; i++)
     data[i] &= 7;
 }
+
 
 void Vis_Buffer::ProcessVis(int x, int y)
 {
   loc_x = x;
   loc_y = y;
 
-  DoBasic(-1, 0, 4); DoBasic(0, -1, 2);
-  DoBasic(+1, 0, 6); DoBasic(0, +1, 8);
+  DoBasic(-1, 0, 4);  DoBasic(0, -1, 2);
+  DoBasic(+1, 0, 6);  DoBasic(0, +1, 8);
 
-  DoSteps(0); DoFill();
-  DoSteps(1); DoFill();
-  DoSteps(2); DoFill();
-  DoSteps(3); DoFill();
+  DoSteps(0);  DoFill();
+  DoSteps(1);  DoFill();
+  DoSteps(2);  DoFill();
+  DoSteps(3);  DoFill();
 
   flip_x = flip_y = 0;
 }
+
 
 int Vis_Buffer::GetVis(int x, int y)
 {
