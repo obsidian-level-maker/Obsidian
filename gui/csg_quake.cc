@@ -1458,8 +1458,8 @@ static void AssignLeafIndex(quake_leaf_c *leaf, int *cur_leaf)
   if (leaf == qk_solid_leaf)
     return;
 
-  // must add 2 (instead of 1) because leaf #0 is the SOLID_LEAF
-  leaf->index = -((*cur_leaf)+2);
+  // must add 1 because leaf #0 is the SOLID_LEAF
+  leaf->index = 1 + *cur_leaf;
 
   *cur_leaf += 1;
 }
@@ -1484,39 +1484,6 @@ static void AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf)
   // determine node's bounding box now
   node->ComputeBBox();
 }
-
-
-#if 0
-static void AssignClusterID(rNode_c *node, int cluster)
-{
-  if (node == SOLID_LEAF)
-    return;
-
-  node->cluster = cluster;
-
-  if (node->IsNode())
-  {
-    AssignClusterID(node->front, cluster);
-    AssignClusterID(node->back,  cluster);
-  }
-}
-
-static void AssignClusters(rNode_c *node)
-{
-  if (node == SOLID_LEAF)
-    return;
-
-  if (node->IsLeaf() || MAX(node->BBoxSizeX(), node->BBoxSizeY()) <= FACE_MAX_SIZE)
-  {
-    AssignClusterID(node, q1_total_clusters);
-    q1_total_clusters += 1;
-    return;
-  }
-
-  AssignClusters(node->front);
-  AssignClusters(node->back);
-}
-#endif
 
 
 static void CreateClusters(quake_group_c & group)

@@ -615,12 +615,12 @@ static void Q2_WriteNode(quake_node_c *node)
   if (node->front_N)
     raw_node.children[0] = node->front_N->index;
   else
-    raw_node.children[0] = node->front_L->index;
+    raw_node.children[0] = (-1 - node->front_L->index);
 
   if (node->back_N)
     raw_node.children[1] = node->back_N->index;
   else
-    raw_node.children[1] = node->back_L->index;
+    raw_node.children[1] = (-1 - node->back_L->index);
 
   if (flipped)
   {

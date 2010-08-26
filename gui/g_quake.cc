@@ -769,7 +769,7 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
   raw_leaf.contents = q1_medium_table[leaf->medium];
-  raw_leaf.visofs   = -1;  // no visibility info
+  raw_leaf.visofs   = leaf->cluster ? leaf->cluster->visofs : -1;
 
 
   // create the 'mark surfs'
@@ -839,12 +839,12 @@ static void Q1_WriteNode(quake_node_c *node)
   if (node->front_N)
     raw_node.children[0] = (u16_t) node->front_N->index;
   else
-    raw_node.children[0] = (u16_t) node->front_L->index;
+    raw_node.children[0] = (u16_t) (-1 - node->front_L->index);
 
   if (node->back_N)
     raw_node.children[1] = (u16_t) node->back_N->index;
   else
-    raw_node.children[1] = (u16_t) node->back_L->index;
+    raw_node.children[1] = (u16_t) (-1 - node->back_L->index);
 
   if (flipped)
   {
