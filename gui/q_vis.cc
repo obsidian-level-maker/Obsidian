@@ -368,7 +368,46 @@ void QCOM_VisMarkWall(int cx, int cy, int side)
 
 static void FloodAmbientSounds()
 {
-  // FIXME !!!
+  const byte DIMINISH = 52;
+
+  for (int pass = 0 ; pass < 5 ; pass++)
+  for (int cy = 0 ; cy < cluster_H ; cy++)
+  for (int cx = 0 ; cx < cluster_W ; cx++)
+  {
+    qCluster_c *S = qk_clusters[cy * cluster_W + cx];
+
+    if (S->leafs.empty())
+      continue;
+
+    for (int side = 2 ; side <= 8 ; side += 2)
+    {
+      if (qk_visbuf->TestWall(cx, cy, side))
+        continue;
+
+      int nx = (side == 4) ? -1 : (side == 6 ) ? +1 : 0;
+      int ny = (side == 2) ? -1 : (side == 8 ) ? +1 : 0;
+
+      nx += cx;  ny += cy;
+
+      if (nx < 0 || nx >= cluster_W || ny < 0 || ny >= cluster_H)
+        continue;
+
+      qCluster_c *N = qk_clusters[ny * cluster_W + nx];
+
+      for (int k = 0 ; k < 4 ; k++)
+      {
+        byte src  = S->ambients[k];
+        byte dest = N->ambients[k];
+
+        if (src > DIMINISH)
+        {
+          src -= DIMINISH;
+
+          N->ambients[k] = MAX(src, dest);
+        }
+      }
+    }
+  }
 }
 
 
