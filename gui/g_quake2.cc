@@ -1025,6 +1025,11 @@ static void Q2_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build();
 
+  int num_node = 0;
+  int num_leaf = 0;
+
+  CSG_AssignIndexes(qk_bsp_root, &num_node, &num_leaf);
+
   QCOM_Fix_T_Junctions();
 
   Q2_LightWorld();

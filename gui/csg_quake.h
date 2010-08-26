@@ -253,6 +253,9 @@ extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 
 void CSG_QUAKE_Build();
 
+void CSG_AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf);
+
+
 #endif /* __OBLIGE_CSG_QUAKE_H__ */
 
 //--- editor settings ---

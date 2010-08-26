@@ -1464,19 +1464,19 @@ static void AssignLeafIndex(quake_leaf_c *leaf, int *cur_leaf)
 }
 
 
-static void AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf)
+void CSG_AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf)
 {
   node->index = *cur_node;
 
   *cur_node += 1;
 
   if (node->front_N)
-    AssignIndexes(node->front_N, cur_node, cur_leaf);
+    CSG_AssignIndexes(node->front_N, cur_node, cur_leaf);
   else
     AssignLeafIndex(node->front_L, cur_leaf);
 
   if (node->back_N)
-    AssignIndexes(node->back_N, cur_node, cur_leaf);
+    CSG_AssignIndexes(node->back_N, cur_node, cur_leaf);
   else
     AssignLeafIndex(node->back_L, cur_leaf);
 
@@ -1528,11 +1528,6 @@ void CSG_QUAKE_Build()
   qk_bsp_root = Partition_Group(GROUP);
 
   SYS_ASSERT(qk_bsp_root);
-
-  int cur_node = 0;
-  int cur_leaf = 0;
-
-  AssignIndexes(qk_bsp_root, &cur_node, &cur_leaf);
 }
 
 

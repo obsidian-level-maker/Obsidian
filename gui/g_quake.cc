@@ -563,14 +563,13 @@ static void Q1_LightWorld()
 }
 
 
-static void Q1_VisWorld()
+static void Q1_VisWorld(int base_leafs)
 {
-  // NOTE: we need to know the total number of leafs, but they haven't
-  //       been written yet.  We compute a value now and hope it's right.
+  // take the solid leaf into account
+  int numleafs = 1 + base_leafs;
 
-  int numleafs = qk_bsp_root->CountLeafs();
-
-  for (unsigned int i = 1 ; i < qk_all_mapmodels.size() ; i++)
+  // add in the map models
+  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
   {
     numleafs += 6; ///TODO  qk_all_mapmodels->PredictLeafs();
   }
@@ -1246,11 +1245,16 @@ static void Q1_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Build();
 
+  int num_node = 0;
+  int num_leaf = 0;
+
+  CSG_AssignIndexes(qk_bsp_root, &num_node, &num_leaf);
+
   QCOM_Fix_T_Junctions();
 
   Q1_LightWorld();
 
-  Q1_VisWorld();
+  Q1_VisWorld(num_leaf);
 
   Q1_WriteBSP();
 
