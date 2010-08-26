@@ -811,7 +811,6 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
     }
 
     // we have now reached a cluster
-    if (sw <= 1 && sh <= 1)
     {
       int cx = sx1 - cluster_X;
       int cy = sy1 - cluster_Y;
