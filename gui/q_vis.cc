@@ -386,11 +386,40 @@ static int WriteCompressedRow(const byte *src)
 }
 
 
+void QCOM_VisMarkWall(int cx, int cy, int side)
+{
+  // debugging
+#if 1
+  fprintf(stderr, "@@@ %d %d %d\n", cx, cy, side);
+#endif
+}
+
+
+static void MarkSolidClusters()
+{
+  // any cluster without a leaf must be totally solid
+
+  for (int cy = 0 ; cy < cluster_H ; cy++)
+  for (int cx = 0 ; cx < cluster_W ; cx++)
+  {
+    qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
+
+    if (cluster->leafs.empty())
+    {
+      for (int side = 2 ; side <= 8 ; side += 2)
+        QCOM_VisMarkWall(cx, cy, side);
+    }
+  }
+}
+
+
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
   LogPrintf("\nVisibility...\n");
 
   SYS_ASSERT(qk_clusters);
+
+  MarkSolidClusters();
 
   // TODO: QCOM_Visibility
 

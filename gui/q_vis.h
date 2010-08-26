@@ -68,8 +68,9 @@ bool QCOM_TraceRay(float x1, float y1, float z1,
 
 void QCOM_CreateClusters(double min_x, double min_y,
                          double max_x, double max_y);
-
 void QCOM_FreeClusters();
+
+void QCOM_VisMarkWall(int cx, int cy, int side);
 
 void QCOM_Visibility(int lump, int max_size, int numleafs);
 

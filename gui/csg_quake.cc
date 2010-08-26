@@ -597,19 +597,15 @@ static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
     if (MAX(S->y1, S->y2) > y2 - 2) closed_N = false;
     if (MIN(S->y1, S->y2) < y1 + 2) closed_S = false;
 
-    if (MAX(S->x1, S->x2) > x2 - 2) closed_W = false;
-    if (MIN(S->x1, S->x2) < x1 + 2) closed_E = false;
+    if (MAX(S->x1, S->x2) > x2 - 2) closed_E = false;
+    if (MIN(S->x1, S->x2) < x1 + 2) closed_W = false;
   }
 
-  // FIXME : send data to vis  !!!!!!
-
-  // debugging stuff : write data for VisViewer
-#if 1
-  if (closed_N) fprintf(stderr, "@@@ %d %d 8\n", cx, cy);
-  if (closed_S) fprintf(stderr, "@@@ %d %d 2\n", cx, cy);
-  if (closed_W) fprintf(stderr, "@@@ %d %d 4\n", cx, cy);
-  if (closed_E) fprintf(stderr, "@@@ %d %d 6\n", cx, cy);
-#endif
+  // send data to vis code
+  if (closed_N) QCOM_VisMarkWall(cx, cy, 8);
+  if (closed_S) QCOM_VisMarkWall(cx, cy, 2);
+  if (closed_E) QCOM_VisMarkWall(cx, cy, 6);
+  if (closed_W) QCOM_VisMarkWall(cx, cy, 4);
 }
 
 
