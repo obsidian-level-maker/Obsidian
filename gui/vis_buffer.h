@@ -105,6 +105,11 @@ public:
     return data[y * W + x];
   }
 
+  inline bool CanSee(int x, int y) const
+  {
+    return ((data[y * W + x] & V_ANY) == 0);
+  }
+
 public:
   void Clear();
   void SetQuickMode(bool enable);
@@ -117,7 +122,6 @@ public:
   void ReadMap(const char *filename);
 
   void ClearVis();
-
   void ProcessVis(int x, int y);
 
 private:

@@ -273,6 +273,8 @@ int cluster_H;
 
 qCluster_c ** qk_clusters;
 
+static Vis_Buffer * qk_visbuf;
+
 
 qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(), visofs(-1)
 {
@@ -324,6 +326,11 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 
     qk_clusters[i] = new qCluster_c(cx, cy);
   }
+
+  qk_visbuf = new Vis_Buffer(cluster_W, cluster_H);
+
+  // TODO: if (some_option_name)
+  //         qk_visbuf->SetQuickMode(true);
 }
 
 
@@ -336,7 +343,32 @@ void QCOM_FreeClusters()
 
     delete[] qk_clusters;
     qk_clusters = NULL;
+
+    delete qk_visbuf;
+    qk_visbuf = NULL;
   }
+}
+
+
+void QCOM_VisMarkWall(int cx, int cy, int side)
+{
+  SYS_ASSERT(qk_visbuf);
+
+  if (side & 1)
+    qk_visbuf->AddDiagonal(cx, cy, side);
+  else
+    qk_visbuf->AddWall(cx, cy, side);
+
+  // debugging
+#if 0
+  fprintf(stderr, "@@@ %d %d %d\n", cx, cy, side);
+#endif
+}
+
+
+static void FloodAmbientSounds()
+{
+  // FIXME !!!
 }
 
 
@@ -386,12 +418,37 @@ static int WriteCompressedRow(const byte *src)
 }
 
 
-void QCOM_VisMarkWall(int cx, int cy, int side)
+static int CollectRowData(byte *row, int src_x, int src_y)
 {
-  // debugging
-#if 1
-  fprintf(stderr, "@@@ %d %d %d\n", cx, cy, side);
-#endif
+  memset(row, 1, v_bytes_per_leaf);
+
+  unsigned int blocked = 0;
+
+  for (int cy = 0 ; cy < cluster_H ; cy++)
+  for (int cx = 0 ; cx < cluster_W ; cx++)
+  {
+    if (cx == src_x || cy == src_y || qk_visbuf->CanSee(cx, cy))
+      continue;
+
+    // mark all the leafs in destination cluster as blocked
+
+    qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
+
+    unsigned int total = cluster->leafs.size();
+
+    blocked += total;  // statistics
+
+    for (unsigned int k = 0 ; k < total ; k++)
+    {
+      int index = cluster->leafs[k]->index;
+
+      SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
+
+      row[index >> 3] &= ~ (1 << (index & 7));
+    }
+  }
+
+  return (int)blocked;
 }
 
 
@@ -421,14 +478,33 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   MarkSolidClusters();
 
-  // TODO: QCOM_Visibility
+  FloodAmbientSounds();
+
 
   q_visibility = BSP_NewLump(lump);
 
   v_bytes_per_leaf = (numleafs+7) >> 3;
 
+  byte *row_buffer = new byte[v_bytes_per_leaf + 1];
 
-  // FIXME: DO VIS STUFF !!!!
+
+  // DO VIS STUFF !!
+
+  for (int cy = 0 ; cy < cluster_H ; cy++)
+  for (int cx = 0 ; cx < cluster_W ; cx++)
+  {
+    qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
+
+    qk_visbuf->ClearVis();
+    qk_visbuf->ProcessVis(cx, cy);
+
+    int blocked = CollectRowData(row_buffer, cx, cy);
+
+fprintf(stderr, "cluster %2d %2d  blocked:%d = %1.2f%%\n",
+        cx, cy, blocked, blocked * 100.0 / numleafs);
+
+    cluster->visofs = WriteCompressedRow(row_buffer);
+  }
 
 
   // Todo: handle overflow better: store visdata in memory, and degrade
@@ -438,6 +514,8 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
+
+  delete[] row_buffer;
 
   QCOM_FreeClusters();
 }
