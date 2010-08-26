@@ -771,7 +771,18 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
   raw_leaf.contents = q1_medium_table[leaf->medium];
-  raw_leaf.visofs   = leaf->cluster ? leaf->cluster->visofs : -1;
+
+
+  // visibility and ambient sounds come from the cluster
+  raw_leaf.visofs = -1;
+
+  if (leaf->cluster)
+  {
+    raw_leaf.visofs = leaf->cluster->visofs;
+    
+    for (int i = 0 ; i < 4 ; i++)
+      raw_leaf.ambient_level[i] = leaf->cluster->ambients[i];
+  }
 
 
   // create the 'mark surfs'

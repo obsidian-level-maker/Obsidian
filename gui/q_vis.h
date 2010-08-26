@@ -21,6 +21,14 @@
 #ifndef __QUAKE_VIS_H__
 #define __QUAKE_VIS_H__
 
+
+// Quake 1 ambient sounds
+#define AMBIENT_WATER  0
+#define AMBIENT_SKY    1
+#define AMBIENT_SLIME  2
+#define AMBIENT_LAVA   3
+
+
 class quake_leaf_c;
 
 
@@ -32,7 +40,6 @@ public:
 
   std::vector<quake_leaf_c *> leafs;
 
-  // Quake 1 ambient sounds
   byte ambients[4];
 
   // offset into LUMP_VISIBILITY

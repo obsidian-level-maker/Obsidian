@@ -185,11 +185,6 @@ texinfo_t;
 
 #define NUM_AMBIENTS   4 // automatic ambient sounds
 
-#define AMBIENT_WATER  0
-#define AMBIENT_SKY    1
-#define AMBIENT_SLIME  2
-#define AMBIENT_LAVA   3
-
 // leaf 0 is the generic CONTENTS_SOLID leaf, used for all solid areas
 // all other leafs need visibility info
 typedef struct
