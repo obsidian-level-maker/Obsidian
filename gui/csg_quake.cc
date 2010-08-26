@@ -1524,6 +1524,7 @@ void CSG_QUAKE_Build()
 
 
   qk_solid_leaf = new quake_leaf_c(MEDIUM_SOLID);
+  qk_solid_leaf->index = 0;
 
   qk_bsp_root = Partition_Group(GROUP);
 
