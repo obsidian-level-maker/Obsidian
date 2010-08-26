@@ -119,7 +119,10 @@ void Vis_Buffer::ReadMap(const char *filename)
 
   while (fscanf(fp, " %d %d %d ", &x, &y, &side) == 3)
   {
-    AddWall(x, y, side);
+    if (side & 1)
+      AddDiagonal(x, y, side);
+    else
+      AddWall(x, y, side);
   }
 
   fclose(fp);
@@ -169,6 +172,8 @@ void Vis_Buffer::DoBasic(int dx, int dy, int side)
 
 void Vis_Buffer::DoFill()
 {
+  // NOTE: assumes transform is already set (by DoSteps)
+
   for (int dy = 0 ; dy < H ; dy++)
   for (int dx = 0 ; dx < W ; dx++)
   {
@@ -460,23 +465,23 @@ void Vis_Buffer::ConvertDiagonals()
     short se = (at(x, y) & V_DIAG_SE);
     short ne = (at(x, y) & V_DIAG_NE);
 
-    if (se && x <= loc_x && y <= loc_y)
+    if (se && loc_x <= x && loc_y <= y)
     {
       AddWallSave(x, y, 6);
       AddWallSave(x, y, 8);
     }
-    if (se && x >= loc_x && y >= loc_y)
+    if (se && loc_x >= x && loc_y >= y)
     {
       AddWallSave(x, y, 2);
       AddWallSave(x, y, 4);
     }
 
-    if (ne && x >= loc_x && y <= loc_y)
+    if (ne && loc_x >= x && loc_y <= y)
     {
       AddWallSave(x, y, 4);
       AddWallSave(x, y, 8);
     }
-    if (ne && x <= loc_x && y >= loc_y)
+    if (ne && loc_x <= x && loc_y >= y)
     {
       AddWallSave(x, y, 2);
       AddWallSave(x, y, 6);
@@ -489,12 +494,16 @@ void Vis_Buffer::RestoreDiagonals()
 {
   // need to go backwards (opposite to the add order)
 
-  for (int i = (int)saved_cells.size()-1 ; i >= 0 ; i--)
+  int total = (int)saved_cells.size();
+
+  for (int i = total-1 ; i >= 0 ; i--)
   {
     const Stair_Pos & pos = saved_cells[i];
 
     at(pos.x, pos.y) = pos.side;
   }
+
+  saved_cells.clear();
 }
 
 
@@ -522,9 +531,9 @@ void Vis_Buffer::ProcessVis(int x, int y)
   DoSteps(2);  DoFill();
   DoSteps(3);  DoFill();
 
-  RestoreDiagonals();
-
   flip_x = flip_y = 0;
+
+  RestoreDiagonals();
 }
 
 
