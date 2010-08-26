@@ -565,6 +565,9 @@ static void Q1_LightWorld()
 
 static void Q1_VisWorld(int base_leafs)
 {
+  if (main_win)
+    main_win->build_box->Prog_Step("Vis");
+
   // take the solid leaf into account
   int numleafs = 1 + base_leafs;
 
@@ -1326,13 +1329,13 @@ private:
     switch (sub)
     {
       case SUBFMT_HalfLife:
-        return "CSG,BSP,Light,Hull 1,Hull 2,Hull 3"; /* Vis */
+        return "CSG,BSP,Light,Vis,Hull 1,Hull 2,Hull 3";
 
       case SUBFMT_Hexen2:
-        return "CSG,BSP,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5"; /* Vis */
+        return "CSG,BSP,Light,Vis,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5";
 
       default:
-        return "CSG,BSP,Light,Hull 1,Hull 2"; /* Vis */
+        return "CSG,BSP,Light,Vis,Hull 1,Hull 2";
     }
   }
 };

@@ -447,7 +447,7 @@ static int CollectRowData(int src_x, int src_y)
     {
       int index = cluster->leafs[k]->index;
 
-      index--;
+      index--;  // ignore the solid leaf
 
       SYS_ASSERT(index >= 0);
       SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
@@ -501,6 +501,8 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   // DO VIS STUFF !!
 
+  int done = 0;
+
   for (int cy = 0 ; cy < cluster_H ; cy++)
   for (int cx = 0 ; cx < cluster_W ; cx++)
   {
@@ -516,8 +518,15 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
     cluster->visofs = WriteCompressedRow();
 
+#if 0
 fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%   visofs=%d\n",
         cx, cy, blocked, blocked * 100.0 / numleafs, cluster->visofs);
+#endif
+
+    if (done % 80 == 0)
+      Main_Ticker();
+
+    done++;
   }
 
 
