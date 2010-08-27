@@ -588,6 +588,32 @@ static void Build_PVS()
 }
 
 
+static void Q2_PrependOffsets(int num_clusters)
+{
+  int header_size = 4 + 8 * num_clusters;
+
+  s32_t *header = new s32_t[1 + num_clusters * 2];
+
+  header[0] = LE_S32(num_clusters);
+
+  for (int i = 0 ; i < num_clusters ; i++)
+  {
+    qCluster_c *cluster = qk_clusters[i];
+
+    // dummy offset for unused clusters
+    if (cluster->visofs  < 0) cluster->visofs  = 0;
+    if (cluster->hearofs < 0) cluster->hearofs = 0;
+
+    // fix endianness too
+
+    header[i*2 + 1] = LE_S32(header_size + cluster->visofs);
+    header[i*2 + 2] = LE_S32(header_size + cluster->hearofs);
+  }
+
+  q_visibility->Prepend(header, header_size);
+}
+
+
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
   LogPrintf("\nVisibility...\n");
@@ -621,9 +647,12 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   Build_PVS();
 
+  if (qk_game == 2)
+    Q2_PrependOffsets(num_clusters);
+
 
   // TODO: handle overflow: store visdata in memory, and "merge" the
-  //       clusters into 1x2, 2x1 or 2x2 contiguous pieces.
+  //       clusters into pairs or 2x2 contiguous pieces.
   //       For Quake II, degrade the PHS before the PVS.
 
   if (q_visibility->GetSize() >= max_size)
