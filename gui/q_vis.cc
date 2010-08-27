@@ -463,7 +463,57 @@ static int v_row_bits;  // number of leafs or clusters
 static int v_bytes_per_row;
 
 
-static int WriteCompressedRow()
+// statistic stuff
+typedef struct
+{
+  int uncompressed;
+  int   compressed;
+
+  float best;
+  float worst;
+
+  double average;
+  int total;
+
+public:
+  void Start()
+  {
+    uncompressed = compressed = 0;
+
+    best = 99.9;  worst = 0.0;
+
+    average = 0;  total = 0;
+  }
+
+  void AddValue(float perc)
+  {
+    if (perc < best)  best  = perc;
+    if (perc > worst) worst = perc;
+
+    average += perc;
+    total += 1;
+  }
+
+  void Finish()
+  {
+    if (total > 0)
+      average /= total;
+  }
+
+  float CalcRatio() const
+  {
+    int saved = (uncompressed - compressed);
+
+    return MAX(0, saved) * 100.0 / (float)MAX(1, uncompressed);
+  }
+}
+vis_statistics_t;
+
+static vis_statistics_t pvs_stats;
+static vis_statistics_t phs_stats;
+
+
+static int WriteCompressedRow(bool PHS)
 {
   // returns offset for the written data block
   int visofs = (int)q_visibility->GetSize();
@@ -493,15 +543,26 @@ static int WriteCompressedRow()
     *dest++ = repeat;
   }
 
-  q_visibility->Append(v_compress_buffer, dest - v_compress_buffer);
+  int length = (dest - v_compress_buffer);
 
-  // TODO: compression statistics
+  q_visibility->Append(v_compress_buffer, length);
+
+  if (PHS)
+  {
+    phs_stats.uncompressed += v_bytes_per_row;
+    phs_stats.  compressed += length;
+  }
+  else
+  {
+    pvs_stats.uncompressed += v_bytes_per_row;
+    pvs_stats.  compressed += length;
+  }
 
   return visofs;
 }
 
 
-static void CollectRowData(int src_x, int src_y)
+static void CollectRowData(int src_x, int src_y, bool PHS)
 {
   // initial state : everything visible
   memset(v_row_buffer, 0xFF, v_bytes_per_row);
@@ -554,10 +615,19 @@ fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
         src_x, src_y, blocked, blocked * 100.0 / v_row_bits);
 #endif
 
-  // !!! FIXME: statistics  (blocked / v_row_bits)
+  // update statistics
+  float perc = (v_row_bits - blocked) * 100.0 / (float)MAX(1, v_row_bits);
 
-  
-#if 0  // DEBUGGING : invert the map
+  if (PHS)
+  {
+    phs_stats.AddValue(perc);
+  }
+  else
+  {
+    pvs_stats.AddValue(perc);
+  }
+
+#ifdef DEBUG_INVERT_MAP
   for (int n = 0 ; n < v_bytes_per_row ; n++)
     v_row_buffer[n] ^= 0xFF;
 #endif
@@ -579,9 +649,9 @@ static void Build_PVS()
     qk_visbuf->ClearVis();
     qk_visbuf->ProcessVis(cx, cy);
 
-    CollectRowData(cx, cy);
+    CollectRowData(cx, cy, false);
 
-    cluster->visofs = WriteCompressedRow();
+    cluster->visofs = WriteCompressedRow(false);
 
     if (qk_game == 2)
     {
@@ -594,9 +664,9 @@ static void Build_PVS()
       qk_visbuf->FloodFill(4);
       qk_visbuf->Truncate(8);
 
-      CollectRowData(cx, cy);
+      CollectRowData(cx, cy, true);
 
-      cluster->hearofs = WriteCompressedRow();
+      cluster->hearofs = WriteCompressedRow(true);
     }
 
     //FIXME if (User_Cancel) return;
@@ -635,11 +705,37 @@ static void Q2_PrependOffsets(int num_clusters)
 }
 
 
+static void ShowVisStats()
+{
+  pvs_stats.Finish();
+  phs_stats.Finish();
+
+  LogPrintf("pvs compression ratio %1.0f%% (%d bytes --> %d)\n",
+            pvs_stats.CalcRatio(), pvs_stats.uncompressed, pvs_stats.compressed);
+
+  if (qk_game == 2)
+  {
+    LogPrintf("phs compression ratio %1.0f%% (%d bytes --> %d)\n",
+              phs_stats.CalcRatio(), phs_stats.uncompressed, phs_stats.compressed);
+
+    LogPrintf("average hearability: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
+              phs_stats.average, phs_stats.best, phs_stats.worst);
+  }
+
+  LogPrintf("average visibility: %1.0f%%  best:%1.0f%%  worst:%1.0f%%\n",
+            pvs_stats.average, pvs_stats.best, pvs_stats.worst);
+}
+
+
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
   LogPrintf("\nVisibility...\n");
 
   SYS_ASSERT(qk_clusters);
+
+  // setup statistics
+  pvs_stats.Start();
+  phs_stats.Start();
 
   int num_clusters = cluster_W * cluster_H;
 
@@ -668,13 +764,14 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   Build_PVS();
 
+  ShowVisStats();
+
   if (qk_game == 2)
     Q2_PrependOffsets(num_clusters);
 
 
   // TODO: handle overflow: store visdata in memory, and "merge" the
   //       clusters into pairs or 2x2 contiguous pieces.
-  //       For Quake II, degrade the PHS before the PVS.
 
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
