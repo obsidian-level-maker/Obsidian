@@ -430,7 +430,8 @@ static qLump_c *q_visibility;
 static byte *v_row_buffer;
 static byte *v_compress_buffer;
 
-static int v_bytes_per_leaf;  // bytes per cluster for Quake II
+static int v_row_bits;  // number of leafs or clusters
+static int v_bytes_per_row;
 
 
 static int WriteCompressedRow()
@@ -439,7 +440,7 @@ static int WriteCompressedRow()
   int visofs = (int)q_visibility->GetSize();
 
   const byte *src   = v_row_buffer;
-  const byte *s_end = src + v_bytes_per_leaf;
+  const byte *s_end = src + v_bytes_per_row;
 
   byte *dest = v_compress_buffer;
 
@@ -463,8 +464,6 @@ static int WriteCompressedRow()
     *dest++ = repeat;
   }
 
-  SYS_ASSERT(dest <= v_compress_buffer + v_bytes_per_leaf*2);
-
   q_visibility->Append(v_compress_buffer, dest - v_compress_buffer);
 
   return visofs;
@@ -474,7 +473,7 @@ static int WriteCompressedRow()
 static int CollectRowData(int src_x, int src_y)
 {
   // initial state : everything visible
-  memset(v_row_buffer, 0xFF, v_bytes_per_leaf);
+  memset(v_row_buffer, 0xFF, v_bytes_per_row);
 
   unsigned int blocked = 0;
 
@@ -494,12 +493,13 @@ static int CollectRowData(int src_x, int src_y)
 
     for (unsigned int k = 0 ; k < total ; k++)
     {
+      // FIXME !!!!  Quake II
       int index = cluster->leafs[k]->index;
 
       index--;  // ignore the solid leaf
 
       SYS_ASSERT(index >= 0);
-      SYS_ASSERT((index >> 3) < v_bytes_per_leaf);
+      SYS_ASSERT((index >> 3) < v_bytes_per_row);
 
       v_row_buffer[index >> 3] &= ~ (1 << (index & 7));
     }
@@ -532,7 +532,7 @@ static void AllSeeingEye()
   // the very first block of visdata can see everything, all bits
   // are one.  The visofs is 0 and for Quake II it's cluster #0.
 
-  memset(v_row_buffer, 0xFF, v_bytes_per_leaf);
+  memset(v_row_buffer, 0xFF, v_bytes_per_row);
 
   WriteCompressedRow();
 }
@@ -555,13 +555,11 @@ static void Build_PVS()
 
     int blocked = CollectRowData(cx, cy);
 
-//??  if (blocked == 0) cluster->visofs = 0; else
-
     cluster->visofs = WriteCompressedRow();
 
 #if 0
-fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%   visofs=%d\n",
-        cx, cy, blocked, blocked * 100.0 / numleafs, cluster->visofs);
+fprintf(stderr, "cluster: %2d %2d  visofs:%d  blocked: %d = %1.2f%%   \n",
+        cx, cy, cluster->visofs, blocked, blocked * 100.0 / v_row_bits);
 #endif
 
     //FIXME if (User_Cancel) return;
@@ -595,20 +593,24 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
   MarkSolidClusters();
 
 
+  if (qk_game == 2)
+    v_row_bits = num_clusters;
+  else
+    v_row_bits = numleafs;
+
+  v_bytes_per_row = (v_row_bits+7) >> 3;
+
+  LogPrintf("bits per row: %d --> bytes: %d\n", v_row_bits, v_bytes_per_row);
+
+  v_row_buffer = new byte[1 + v_bytes_per_row];
+
+  // the worst case scenario for compression is 50% larger
+  v_compress_buffer = new byte[1 + 2 * v_bytes_per_row];
+
+
   q_visibility = BSP_NewLump(lump);
 
   AllSeeingEye();
-
-  if (qk_game == 2)
-    v_bytes_per_leaf = (num_clusters+7) >> 3;
-  else
-    v_bytes_per_leaf = (numleafs+7) >> 3;
-
-  v_row_buffer = new byte[1 + v_bytes_per_leaf];
-
-  // the worst case scenario for compression is 50% larger
-  v_compress_buffer = new byte[1 + 2 * v_bytes_per_leaf];
-
 
   Build_PVS();
 
