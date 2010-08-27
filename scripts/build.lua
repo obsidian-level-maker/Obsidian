@@ -1004,7 +1004,7 @@ function Build.prefab(fab, skin, T)
 
   ---| Build.prefab |---
 
-gui.printf("Prefab: %s\n", fab.name)
+---gui.printf("Prefab: %s\n", fab.name)
 
   local brushes = copy_w_substitution(fab.brushes)
 
