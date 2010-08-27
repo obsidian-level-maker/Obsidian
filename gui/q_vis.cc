@@ -511,19 +511,14 @@ static void CollectRowData(int src_x, int src_y)
   for (int cy = 0 ; cy < cluster_H ; cy++)
   for (int cx = 0 ; cx < cluster_W ; cx++)
   {
-    if (cx == src_x || cy == src_y || qk_visbuf->CanSee(cx, cy))
+    if ((cx == src_x && cy == src_y) || qk_visbuf->CanSee(cx, cy))
       continue;
-
-    // mark all the leafs in destination cluster as blocked
 
     qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
-    if (cluster->leafs.empty())
-      continue;
-
     if (qk_game == 2)  // Quake II
     {
-      int index = cluster->CalcID();
+      int index = cy * cluster_W + cx;
 
       SYS_ASSERT(index >= 0);
       SYS_ASSERT((index >> 3) < v_bytes_per_row);
@@ -537,6 +532,8 @@ static void CollectRowData(int src_x, int src_y)
       unsigned int total = cluster->leafs.size();
 
       blocked += total;
+
+      // mark all the leafs in destination cluster as blocked
 
       for (unsigned int k = 0 ; k < total ; k++)
       {
@@ -558,6 +555,12 @@ fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
 #endif
 
   // !!! FIXME: statistics  (blocked / v_row_bits)
+
+  
+#if 0  // DEBUGGING : invert the map
+  for (int n = 0 ; n < v_bytes_per_row ; n++)
+    v_row_buffer[n] ^= 0xFF;
+#endif
 }
 
 
