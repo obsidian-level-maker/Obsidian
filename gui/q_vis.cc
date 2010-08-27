@@ -376,11 +376,24 @@ void QCOM_VisMarkWall(int cx, int cy, int side)
 }
 
 
+//------------------------------------------------------------------------
+//  SOUND DISTRIBUTION
+//------------------------------------------------------------------------
+
+static byte DiminishVolume(byte orig)
+{
+  if (orig > 128) return 128;  // quite low, but seems best
+  if (orig >  96) return  96;
+  if (orig >  64) return  64;
+  if (orig >  32) return  32;
+
+  return 0;
+}
+
+
 static void FloodAmbientSounds()
 {
-  const byte DIMINISH = 52;
-
-  for (int pass = 0 ; pass < 5 ; pass++)
+  for (int pass = 0 ; pass < 6 ; pass++)
   for (int cy = 0 ; cy < cluster_H ; cy++)
   for (int cx = 0 ; cx < cluster_W ; cx++)
   {
@@ -409,12 +422,12 @@ static void FloodAmbientSounds()
         byte src  = S->ambients[k];
         byte dest = N->ambients[k];
 
-        if (src > DIMINISH)
-        {
-          src -= DIMINISH;
+        if (src == 0)
+          continue;
 
-          N->ambients[k] = MAX(src, dest);
-        }
+        src = DiminishVolume(src);
+
+        N->ambients[k] = MAX(src, dest);
       }
     }
   }
