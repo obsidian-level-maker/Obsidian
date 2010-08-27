@@ -44,6 +44,7 @@ public:
 
   // offset into LUMP_VISIBILITY
   int visofs;
+  int hearofs;  // Quake 2 only
 
 public:
   qCluster_c(int _x, int _y);

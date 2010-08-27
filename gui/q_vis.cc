@@ -276,7 +276,8 @@ qCluster_c ** qk_clusters;
 static Vis_Buffer * qk_visbuf;
 
 
-qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(), visofs(-1)
+qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(),
+                                         visofs(-1), hearofs(-1)
 {
   ambients[0] = ambients[1] = 0;
   ambients[2] = ambients[3] = 0;
@@ -301,8 +302,7 @@ int qCluster_c::CalcID() const
   if (leafs.empty())
     return -1;
 
-  // add 1 because #0 is the "see all" cluster
-  return (cy * cluster_W) + cx + 1;
+  return (cy * cluster_W) + cx;
 }
 
 
@@ -376,13 +376,11 @@ void QCOM_VisMarkWall(int cx, int cy, int side)
 }
 
 
-//------------------------------------------------------------------------
-//  SOUND DISTRIBUTION
-//------------------------------------------------------------------------
-
-static byte DiminishVolume(byte orig)
+static byte DiminishVolume(int kind, byte orig)
 {
-  if (orig > 128) return 128;  // quite low, but seems best
+  // TODO: this works well for SKY, but may need different for liquids
+
+  if (orig > 128) return 128;
   if (orig >  96) return  96;
   if (orig >  64) return  64;
   if (orig >  32) return  32;
@@ -425,7 +423,7 @@ static void FloodAmbientSounds()
         if (src == 0)
           continue;
 
-        src = DiminishVolume(src);
+        src = DiminishVolume(k, src);
 
         N->ambients[k] = MAX(src, dest);
       }
@@ -483,7 +481,7 @@ static int WriteCompressedRow()
 }
 
 
-static int CollectRowData(int src_x, int src_y)
+static void CollectRowData(int src_x, int src_y)
 {
   // initial state : everything visible
   memset(v_row_buffer, 0xFF, v_bytes_per_row);
@@ -518,7 +516,12 @@ static int CollectRowData(int src_x, int src_y)
     }
   }
 
-  return (int)blocked;
+#if 0
+fprintf(stderr, "cluster: %2d %2d  offset:%d  blocked: %d = %1.2f%%   \n",
+        src_x, src_y, cluster->visofs, blocked, blocked * 100.0 / v_row_bits);
+#endif
+
+  // !!! FIXME: statistics  (blocked / v_row_bits)
 }
 
 
@@ -540,17 +543,6 @@ static void MarkSolidClusters()
 }
 
 
-static void AllSeeingEye()
-{
-  // the very first block of visdata can see everything, all bits
-  // are one.  The visofs is 0 and for Quake II it's cluster #0.
-
-  memset(v_row_buffer, 0xFF, v_bytes_per_row);
-
-  WriteCompressedRow();
-}
-
-
 static void Build_PVS()
 {
   int done = 0;
@@ -566,14 +558,25 @@ static void Build_PVS()
     qk_visbuf->ClearVis();
     qk_visbuf->ProcessVis(cx, cy);
 
-    int blocked = CollectRowData(cx, cy);
+    CollectRowData(cx, cy);
 
     cluster->visofs = WriteCompressedRow();
 
-#if 0
-fprintf(stderr, "cluster: %2d %2d  visofs:%d  blocked: %d = %1.2f%%   \n",
-        cx, cy, cluster->visofs, blocked, blocked * 100.0 / v_row_bits);
-#endif
+    if (qk_game == 2)
+    {
+      // Quake II's Potentially Hearable Set
+      //
+      // 1. start off with the PVS set
+      // 2. flood fill for a few passes
+      // 3. truncate it based on distance
+
+      qk_visbuf->FloodFill(4);
+      qk_visbuf->Truncate(8);
+
+      CollectRowData(cx, cy);
+
+      cluster->hearofs = WriteCompressedRow();
+    }
 
     //FIXME if (User_Cancel) return;
 
@@ -585,25 +588,18 @@ fprintf(stderr, "cluster: %2d %2d  visofs:%d  blocked: %d = %1.2f%%   \n",
 }
 
 
-static void Build_PHS()
-{
-  // FIXME: for Quake II, create a PHS (Potential Hearable Set)
-
-  if (qk_game == 1)
-    FloodAmbientSounds();
-}
-
-
 void QCOM_Visibility(int lump, int max_size, int numleafs)
 {
   LogPrintf("\nVisibility...\n");
 
   SYS_ASSERT(qk_clusters);
 
-  // add 1 for the "see all" cluster
-  int num_clusters = cluster_W * cluster_H + 1;
+  int num_clusters = cluster_W * cluster_H;
 
   MarkSolidClusters();
+
+  if (qk_game == 1)
+    FloodAmbientSounds();
 
 
   if (qk_game == 2)
@@ -623,16 +619,12 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   q_visibility = BSP_NewLump(lump);
 
-  AllSeeingEye();
-
   Build_PVS();
 
-  Build_PHS();
 
-
-  // WISH: handle overflow: store visdata in memory, and degrade clusters
-  //       to a "see all" list at offset 0 (pick clusters which have the
-  //       most ones).
+  // TODO: handle overflow: store visdata in memory, and "merge" the
+  //       clusters into 1x2, 2x1 or 2x2 contiguous pieces.
+  //       For Quake II, degrade the PHS before the PVS.
 
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");

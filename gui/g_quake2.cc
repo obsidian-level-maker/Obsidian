@@ -868,7 +868,6 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
     }
 
     raw_leaf.contents = 0;  // EMPTY
-    raw_leaf.cluster  = 0;  // the "see all" cluster
 
     raw_leaf.first_leafface = q2_total_mark_surfs;
     raw_leaf.num_leaffaces  = 1;
