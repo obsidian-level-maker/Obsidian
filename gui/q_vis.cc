@@ -376,6 +376,24 @@ void QCOM_VisMarkWall(int cx, int cy, int side)
 }
 
 
+static void MarkSolidClusters()
+{
+  // any cluster without a leaf must be totally solid
+
+  for (int cy = 0 ; cy < cluster_H ; cy++)
+  for (int cx = 0 ; cx < cluster_W ; cx++)
+  {
+    qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
+
+    if (cluster->leafs.empty())
+    {
+      for (int side = 2 ; side <= 8 ; side += 2)
+        QCOM_VisMarkWall(cx, cy, side);
+    }
+  }
+}
+
+
 static byte DiminishVolume(int kind, byte orig)
 {
   // TODO: this works well for SKY, but may need different for liquids
@@ -477,6 +495,8 @@ static int WriteCompressedRow()
 
   q_visibility->Append(v_compress_buffer, dest - v_compress_buffer);
 
+  // TODO: compression statistics
+
   return visofs;
 }
 
@@ -486,7 +506,7 @@ static void CollectRowData(int src_x, int src_y)
   // initial state : everything visible
   memset(v_row_buffer, 0xFF, v_bytes_per_row);
 
-  unsigned int blocked = 0;
+  unsigned int blocked = 0; // statistics
 
   for (int cy = 0 ; cy < cluster_H ; cy++)
   for (int cx = 0 ; cx < cluster_W ; cx++)
@@ -498,48 +518,46 @@ static void CollectRowData(int src_x, int src_y)
 
     qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
 
-    unsigned int total = cluster->leafs.size();
+    if (cluster->leafs.empty())
+      continue;
 
-    blocked += total;  // statistics
-
-    for (unsigned int k = 0 ; k < total ; k++)
+    if (qk_game == 2)  // Quake II
     {
-      // FIXME !!!!  Quake II
-      int index = cluster->leafs[k]->index;
-
-      index--;  // ignore the solid leaf
+      int index = cluster->CalcID();
 
       SYS_ASSERT(index >= 0);
       SYS_ASSERT((index >> 3) < v_bytes_per_row);
 
       v_row_buffer[index >> 3] &= ~ (1 << (index & 7));
+
+      blocked++;
+    }
+    else  // original Quake, data is indexed by leaf number
+    {
+      unsigned int total = cluster->leafs.size();
+
+      blocked += total;
+
+      for (unsigned int k = 0 ; k < total ; k++)
+      {
+        int index = cluster->leafs[k]->index;
+
+        index--;  // skip the solid leaf
+
+        SYS_ASSERT(index >= 0);
+        SYS_ASSERT((index >> 3) < v_bytes_per_row);
+
+        v_row_buffer[index >> 3] &= ~ (1 << (index & 7));
+      }
     }
   }
 
 #if 0
-fprintf(stderr, "cluster: %2d %2d  offset:%d  blocked: %d = %1.2f%%   \n",
-        src_x, src_y, cluster->visofs, blocked, blocked * 100.0 / v_row_bits);
+fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
+        src_x, src_y, blocked, blocked * 100.0 / v_row_bits);
 #endif
 
   // !!! FIXME: statistics  (blocked / v_row_bits)
-}
-
-
-static void MarkSolidClusters()
-{
-  // any cluster without a leaf must be totally solid
-
-  for (int cy = 0 ; cy < cluster_H ; cy++)
-  for (int cx = 0 ; cx < cluster_W ; cx++)
-  {
-    qCluster_c *cluster = qk_clusters[cy * cluster_W + cx];
-
-    if (cluster->leafs.empty())
-    {
-      for (int side = 2 ; side <= 8 ; side += 2)
-        QCOM_VisMarkWall(cx, cy, side);
-    }
-  }
 }
 
 

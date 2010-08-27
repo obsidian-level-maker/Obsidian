@@ -269,7 +269,7 @@ static void Q2_WriteTexInfo()
 
 //------------------------------------------------------------------------
 
-static void Q2_DummyArea(void)
+static void Q2_DummyArea()
 {
   /* TEMP DUMMY STUFF */
 
@@ -285,7 +285,7 @@ static void Q2_DummyArea(void)
 }
 
 
-static void Q2_DummyVis(void)
+static void Q2_DummyVis()
 {
   /* TEMP DUMMY STUFF */
 
@@ -310,7 +310,7 @@ static void Q2_DummyVis(void)
 
 
 #if 0
-static void DummyLeafBrush(void)
+static void Q2_DummyLeafBrush()
 {
   qLump_c *lump = BSP_NewLump(LUMP_LEAFBRUSHES);
 
@@ -577,6 +577,7 @@ static void Q2_WriteSolidLeaf(void)
   memset(&raw_leaf, 0, sizeof(raw_leaf));
 
   raw_leaf.contents = LE_S32(CONTENTS_SOLID);
+  raw_leaf.cluster  = LE_S32(-1);
 
   q2_leafs->Append(&raw_leaf, sizeof(raw_leaf));
 }
@@ -1009,6 +1010,17 @@ static void Q2_LightWorld()
 }
 
 
+static void Q2_VisWorld()
+{
+  if (main_win)
+    main_win->build_box->Prog_Step("Vis");
+
+  // no need for numleafs, as Quake II uses clusters directly
+
+  QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, 0);
+}
+
+
 //------------------------------------------------------------------------
 
 static void Q2_CreateBSPFile(const char *name)
@@ -1021,7 +1033,7 @@ static void Q2_CreateBSPFile(const char *name)
   Q2_ClearTexInfo();
 
   Q2_DummyArea();
-  Q2_DummyVis();
+//  Q2_DummyVis();
 
   CSG_QUAKE_Build();
 
@@ -1034,7 +1046,7 @@ static void Q2_CreateBSPFile(const char *name)
 
   Q2_LightWorld();
 
-  /// QCOM_Visibility();
+  Q2_VisWorld();
 
   Q2_WriteBSP();
 
