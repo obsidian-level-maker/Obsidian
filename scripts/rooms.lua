@@ -2569,28 +2569,6 @@ function Rooms.build_seeds(R)
   end
 
 
-  local function vis_mark_wall(S, side)
-    gui.debugf("VIS %d %d %s\n", S.sx, S.sy, side)
-  end
-
-  local function vis_seed(S)
-    if S.kind == "void" then
-      -- vis_mark_solid(S)
-      return
-    end
-
-    for side = 2,8,2 do
-      local N = S:neighbor(side)
-      local B_kind = S.border[side] and S.border[side].kind
-
-      if not N or N.free or N.kind == "void" or
-         B_kind == "wall" or B_kind == "picture"
-      then
-        vis_mark_wall(S, side)
-      end
-    end
-  end
-
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
     local prec = GAME.lighting_precision or "medium"
 
@@ -2689,8 +2667,6 @@ function Rooms.build_seeds(R)
     if S.already_built then
       return
     end
-
-    vis_seed(S)
 
     local x1 = S.x1
     local y1 = S.y1
