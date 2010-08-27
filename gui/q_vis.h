@@ -51,6 +51,9 @@ public:
   ~qCluster_c();
 
   void AddLeaf(quake_leaf_c *leaf);
+
+  // for Quake II, get the ID of the cluster (-1 for unused ones)
+  int CalcID() const;
 };
 
 

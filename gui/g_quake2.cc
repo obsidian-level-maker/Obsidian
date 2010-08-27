@@ -535,7 +535,7 @@ static void Q2_WriteLeaf(quake_leaf_c *leaf)
   }
   else
   {
-    raw_leaf.cluster = 0;
+    raw_leaf.cluster = leaf->cluster ? leaf->cluster->CalcID() : 0;
     raw_leaf.area    = 1;
   }
 
@@ -868,6 +868,7 @@ static void Q2_Model_Nodes(quake_mapmodel_c *model, float *mins, float *maxs)
     }
 
     raw_leaf.contents = 0;  // EMPTY
+    raw_leaf.cluster  = 0;  // the "see all" cluster
 
     raw_leaf.first_leafface = q2_total_mark_surfs;
     raw_leaf.num_leaffaces  = 1;

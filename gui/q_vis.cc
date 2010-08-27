@@ -296,6 +296,16 @@ void qCluster_c::AddLeaf(quake_leaf_c *leaf)
 }
 
 
+int qCluster_c::CalcID() const
+{
+  if (leafs.empty())
+    return -1;
+
+  // add 1 because #0 is the "see all" cluster
+  return (cy * cluster_W) + cx + 1;
+}
+
+
 void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 {
   SYS_ASSERT(min_x < max_x);
@@ -420,7 +430,7 @@ static qLump_c *q_visibility;
 static byte *v_row_buffer;
 static byte *v_compress_buffer;
 
-static int v_bytes_per_leaf;
+static int v_bytes_per_leaf;  // bytes per cluster for Quake II
 
 
 static int WriteCompressedRow()
@@ -517,29 +527,19 @@ static void MarkSolidClusters()
 }
 
 
-void QCOM_Visibility(int lump, int max_size, int numleafs)
+static void AllSeeingEye()
 {
-  LogPrintf("\nVisibility...\n");
+  // the very first block of visdata can see everything, all bits
+  // are one.  The visofs is 0 and for Quake II it's cluster #0.
 
-  SYS_ASSERT(qk_clusters);
+  memset(v_row_buffer, 0xFF, v_bytes_per_leaf);
 
-  MarkSolidClusters();
-
-  FloodAmbientSounds();
-
-
-  q_visibility = BSP_NewLump(lump);
-
-  v_bytes_per_leaf = (numleafs+7) >> 3;
-
-  v_row_buffer = new byte[1 + v_bytes_per_leaf];
-
-  // the worst case scenario for compression is double the size
-  v_compress_buffer = new byte[1 + 2 * v_bytes_per_leaf];
+  WriteCompressedRow();
+}
 
 
-  // DO VIS STUFF !!
-
+static void Build_PVS()
+{
   int done = 0;
 
   for (int cy = 0 ; cy < cluster_H ; cy++)
@@ -555,6 +555,8 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
     int blocked = CollectRowData(cx, cy);
 
+//??  if (blocked == 0) cluster->visofs = 0; else
+
     cluster->visofs = WriteCompressedRow();
 
 #if 0
@@ -562,17 +564,60 @@ fprintf(stderr, "cluster %2d %2d  blocked: %d = %1.2f%%   visofs=%d\n",
         cx, cy, blocked, blocked * 100.0 / numleafs, cluster->visofs);
 #endif
 
+    //FIXME if (User_Cancel) return;
+
     if (done % 80 == 0)
       Main_Ticker();
 
     done++;
   }
+}
 
 
-  // Todo: handle overflow better: store visdata in memory, and degrade
-  //       clusters to a "see all" list at offset 0 (pick clusters which
-  //       have the most ones).  Also pick clusters where player cannot go
-  //       (scenic areas).
+static void Build_PHS()
+{
+  // FIXME: for Quake II, create a PHS (Potential Hearable Set)
+
+  if (qk_game == 1)
+    FloodAmbientSounds();
+}
+
+
+void QCOM_Visibility(int lump, int max_size, int numleafs)
+{
+  LogPrintf("\nVisibility...\n");
+
+  SYS_ASSERT(qk_clusters);
+
+  // add 1 for the "see all" cluster
+  int num_clusters = cluster_W * cluster_H + 1;
+
+  MarkSolidClusters();
+
+
+  q_visibility = BSP_NewLump(lump);
+
+  AllSeeingEye();
+
+  if (qk_game == 2)
+    v_bytes_per_leaf = (num_clusters+7) >> 3;
+  else
+    v_bytes_per_leaf = (numleafs+7) >> 3;
+
+  v_row_buffer = new byte[1 + v_bytes_per_leaf];
+
+  // the worst case scenario for compression is 50% larger
+  v_compress_buffer = new byte[1 + 2 * v_bytes_per_leaf];
+
+
+  Build_PVS();
+
+  Build_PHS();
+
+
+  // WISH: handle overflow: store visdata in memory, and degrade clusters
+  //       to a "see all" list at offset 0 (pick clusters which have the
+  //       most ones).
 
   if (q_visibility->GetSize() >= max_size)
     Main_FatalError("Quake build failure: exceeded VISIBILITY limit\n");
