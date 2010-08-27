@@ -419,6 +419,70 @@ void Vis_Buffer::DoSteps(int quadrant)
 
 //------------------------------------------------------------------------
 
+#define V_UNLOCK  0x2000
+
+void Vis_Buffer::FloodEmpties()
+{
+  // a blocked cell which neighbors an unblocked cell (with no wall in
+  // the way) will become unblocked.  The trick is to prevent flow-on
+  // effects, and that is what V_UNLOCK is for.
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    if (at(x, y) & V_ANY)
+      continue;
+
+    for (int side = 2 ; side <= 8 ; side += 2)
+    {
+      int nx = x + ((side == 4) ? -1 : (side == 6) ? +1 : 0);
+      int ny = y + ((side == 2) ? -1 : (side == 8) ? +1 : 0);
+
+      if (isValid(nx, ny) && (at(nx, ny) & V_ANY) && ! TestWall(x, y, side))
+      {
+        at(nx, ny) |= V_UNLOCK;
+      }
+    }
+  }
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    if (at(x, y) & V_UNLOCK)
+    {
+      at(x, y) &= ~V_ANY;  // clears V_UNLOCK too
+    }
+  }
+}
+
+
+void Vis_Buffer::FloodFill(int passes)
+{
+  for (; passes > 0 ; passes--)
+  {
+    FloodEmpties();
+  }
+}
+
+
+void Vis_Buffer::Truncate(int dist)
+{
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    int dx = abs(x - loc_x);
+    int dy = abs(y - loc_y);
+
+    if (dx*dx + dy*dy >= dist*dist)
+    {
+      at(x, y) |= V_FILL;
+    }
+  }
+}
+
+
+//------------------------------------------------------------------------
+
 void Vis_Buffer::AddWallSave(int x, int y, int side)
 {
   if (side == 6)
@@ -513,7 +577,7 @@ void Vis_Buffer::ClearVis()
   int len = W * H;
 
   for (int i = 0 ; i < len ; i++)
-    data[i] &= ~ V_ANY;
+    data[i] &= ~V_ANY;
 }
 
 
@@ -536,7 +600,6 @@ void Vis_Buffer::ProcessVis(int x, int y)
 
   RestoreDiagonals();
 }
-
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

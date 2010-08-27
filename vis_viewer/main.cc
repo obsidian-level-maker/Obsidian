@@ -230,6 +230,9 @@ public:
 		if (loc_x >= 0 && loc_y >= 0)
 		    vbuf.ProcessVis(loc_x, loc_y);
 
+	  	// vbuf.FloodFill(4);
+		// vbuf.Truncate(8);
+
 		redraw();
 	}
 

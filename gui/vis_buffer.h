@@ -124,6 +124,9 @@ public:
   void ClearVis();
   void ProcessVis(int x, int y);
 
+  void Truncate(int dist);
+  void FloodFill(int passes);
+
 private:
   void AddStep(Stair_Steps& dest, int x, int y, int side);
   void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
@@ -137,6 +140,8 @@ private:
   void DoBasic(int dx, int dy, int side);
   void DoFill();
   void DoSteps(int quadrant);
+
+  void FloodEmpties();
 };
 
 #endif /* __OBLIGE_VIS_BUFFER_H__ */
