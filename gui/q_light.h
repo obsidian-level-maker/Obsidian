@@ -80,8 +80,7 @@ public:
   int CalcOffset() const;
 
 private:
-  void Store_Fastest();
-  void Store_Interp();
+  void Store_Fast();
   void Store_Normal();
   void Store_Best();
 };

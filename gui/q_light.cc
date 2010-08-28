@@ -45,8 +45,8 @@
 #define LOW_LIGHT  20
 
 
-// 0 = super fast, 1 = fast, 2 = normal, 3 = best
-int qk_lighting_quality = 3;
+// 0 = normal, -1 = fast, +1 = best
+int qk_lighting_quality = -1;
 
 bool qk_color_lighting;
 
@@ -409,7 +409,7 @@ static void CalcPoints()
   float s_step = 16.0;
   float t_step = 16.0;
 
-  if (qk_lighting_quality == 3)
+  if (qk_lighting_quality > 0)  // "best" mode
   {
     s_step = 16 * (lt_W - 1) / (float)(lt_W*2 - 1);
     t_step = 16 * (lt_H - 1) / (float)(lt_H*2 - 1);
@@ -417,6 +417,15 @@ static void CalcPoints()
     lt_W *= 2;
     lt_H *= 2;
   }
+  else if (qk_lighting_quality < 0)  // "fast" mode, 2x2 or 3x3 grid
+  {
+    s_step = 16 * (lt_W - 1);
+    t_step = 16 * (lt_H - 1);
+
+    if (lt_W < 5) lt_W = 2; else { lt_W = 3;  s_step /= 2.0; }
+    if (lt_H < 5) lt_H = 2; else { lt_H = 3;  t_step /= 2.0; }
+  }
+
 
   for (int t = 0 ; t < lt_H ; t++)
   for (int s = 0 ; s < lt_W ; s++)
@@ -463,89 +472,29 @@ void qLightmap_c::Store_Normal()
 }
 
 
-void qLightmap_c::Store_Fastest()
+void qLightmap_c::Store_Fast()
 {
   int W = width;
   int H = height;
 
-  // the "super fast" mode only visits 4 points (the corners),
-  // then bilinearly interpolates all other luxels.
-
-  int A = blocklights[0];
-  int B = blocklights[W-1];
-  int C = blocklights[(H-1) * W];
-  int D = blocklights[(H-1) * W + W-1];
+  // the "super fast" mode uses a 2x2 or 3x3 grid.
+  // result is just a bilinearly scaled version of that.
 
   for (int t = 0 ; t < H ; t++)
   for (int s = 0 ; s < W ; s++)
   {
-    float xc = s / (float)(W - 1);
-    float yc = t / (float)(H - 1);
+    int bs = s * (lt_W-1) / W;
+    int bt = t * (lt_H-1) / H;
 
-    float value = A * (1-xc) * (1-yc) +
-                  B *    xc  * (1-yc) +
-                  C * (1-xc) *    yc  +
-                  D *    xc  *    yc;
+    float xc = s * (lt_W-1) / (float)W - bs;
+    float yc = t * (lt_H-1) / (float)W - bs;
+
+    float value = (1-xc) * (1-yc) * blocklights[bt * lt_W + bs]
+                +    xc  * (1-yc) * blocklights[bt * lt_W + bs + 1]
+                + (1-xc) *    yc  * blocklights[bt * lt_W + lt_W + bs]
+                +    xc  *    yc  * blocklights[bt * lt_W + lt_W + bs + 1];
 
     Set(s, t, (int)value);
-  }
-}
-
-
-void qLightmap_c::Store_Interp()
-{
-  int iw = width  / 2;  // interpolated columns
-  int ih = height / 2;  // interpolated rows
-
-  int bw = 1 + iw;
-  int bh = 1 + ih;
-
-  // separate loops for each four cases
-
-  for (int t = 0 ; t < bh ; t++)
-  for (int s = 0 ; s < bw ; s++)
-  {
-    // this logic handles the far edge when size is even
-    int s2 = MIN(s * 2, width-1);
-    int t2 = MIN(t * 2, height-1);
-
-    Set(s2, t2, blocklights[t * bw + s]);
-  }
-
-
-  for (int t = 0 ; t < bh ; t++)
-  for (int s = 0 ; s < iw ; s++)
-  {
-    int t2 = MIN(t * 2, height-1);
-
-    int A = blocklights[t * bw + s];
-    int B = blocklights[t * bw + s + 1];
-
-    Set(s*2+1, t2, (A + B) >> 1);
-  }
-
-
-  for (int t = 0 ; t < ih ; t++)
-  for (int s = 0 ; s < bw ; s++)
-  {
-    int s2 = MIN(s * 2, width-1);
-
-    int A = blocklights[t * bw + s];
-    int C = blocklights[t * bw + bw + s];
-
-    Set(s2, t*2+1, (A + C) >> 1);
-  }
-
-
-  for (int t = 0 ; t < ih ; t++)
-  for (int s = 0 ; s < iw ; s++)
-  {
-    int A = blocklights[t * bw + s];
-    int B = blocklights[t * bw + s + 1];
-    int C = blocklights[t * bw + bw + s];
-    int D = blocklights[t * bw + bw + s + 1];
-
-    Set(s*2+1, t*2+1, (A + B + C + D) >> 2);
   }
 }
 
@@ -575,10 +524,9 @@ void qLightmap_c::Store()
 {
   switch (qk_lighting_quality)
   {
-    case 0: Store_Fastest(); break;
-    case 1: Store_Interp();  break;
-    case 2: Store_Normal();  break;
-    case 3: Store_Best();    break;
+    case -1: Store_Fast();    break;
+    case  0: Store_Normal();  break;
+    case +1: Store_Best();    break;
 
     default:
       Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
@@ -660,9 +608,6 @@ static inline void Bump(int s, int t, int W, int value)
 }
 
 
-#define IS_INTERP(a, N)  (((a) & 1) && ((a) != ((N)-1)))
-
-
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 {
   // skip lights which are behind the face
@@ -677,26 +622,10 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
   if (light.kind != LTK_Sun && perp > light.radius)
     return;
 
-  int s_step = 1;
-  int t_step = 1;
 
-  if (qk_lighting_quality == 0)
+  for (int t = 0 ; t < lt_H ; t++)
+  for (int s = 0 ; s < lt_W ; s++)
   {
-    // in "super fast" mode, only do the corners
-    s_step = lt_W - 1;
-    t_step = lt_H - 1;
-  }
-
-  for (int t = 0 ; t < lt_H ; t += t_step)
-  for (int s = 0 ; s < lt_W ; s += s_step)
-  {
-    // in the "fast" mode, only do every second row and column
-    if (qk_lighting_quality == 1 && 
-        (IS_INTERP(s, lt_W) || IS_INTERP(t, lt_W)) )
-    {
-      continue;
-    }
-
     const quake_vertex_c & V = lt_points[t * lt_W + s];
 
     if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
