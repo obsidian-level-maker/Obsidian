@@ -42,7 +42,7 @@
 
 
 // 0 = super fast, 1 = fast, 2 = normal, 3 = best
-int qk_lighting_quality = 0;
+int qk_lighting_quality = 3;
 
 bool qk_color_lighting;
 
@@ -269,7 +269,7 @@ static double lt_worldtotex[2][3];
 static double lt_textoworld[2][3];
 
 static int lt_tex_mins[2];
-static int lt_tex_size[2];
+static int lt_W, lt_H;
 
 static quake_vertex_c lt_points[18*18*4];
 
@@ -390,29 +390,51 @@ static void CalcFaceExtents(quake_face_c *F)
   lt_tex_mins[0] = bmin_s;
   lt_tex_mins[1] = bmin_t;
 
-  lt_tex_size[0] = bmax_s - bmin_s + 1;
-  lt_tex_size[1] = bmax_t - bmin_t + 1;
+  lt_W = MAX(2, bmax_s - bmin_s + 1);
+  lt_H = MAX(2, bmax_t - bmin_t + 1);
 
-/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_tex_size[0], lt_tex_size[1]);
+/// fprintf(stderr, "FACE %p  EXTENTS %d %d\n", F, lt_W, lt_H);
 }
 
 
-static void CalcPoints(int W, int H)
+static void CalcPoints()
 {
-  for (int t = 0 ; t < H ; t++)
-  for (int s = 0 ; s < W ; s++)
-  {
-    float us = (lt_tex_mins[0] + s) << 4;
-    float ut = (lt_tex_mins[1] + t) << 4;
+  float step = 16.0;
 
-    quake_vertex_c & V = lt_points[t*W + s];
+  if (qk_lighting_quality == 3)
+  {
+    lt_W *= 2;
+    lt_H *= 2;
+
+    lt_tex_mins[0] -= 0.5;
+    lt_tex_mins[1] -= 0.5;
+
+    step = 8.0;
+  }
+
+  for (int t = 0 ; t < lt_H ; t++)
+  for (int s = 0 ; s < lt_W ; s++)
+  {
+    float us = (lt_tex_mins[0] + s) * step;
+    float ut = (lt_tex_mins[1] + t) * step;
+
+    quake_vertex_c & V = lt_points[t * lt_W + s];
 
     V.x = lt_texorg[0] + lt_textoworld[0][0]*us + lt_textoworld[1][0]*ut;
     V.y = lt_texorg[1] + lt_textoworld[0][1]*us + lt_textoworld[1][1]*ut;
     V.z = lt_texorg[2] + lt_textoworld[0][2]*us + lt_textoworld[1][2]*ut;
 
-    // FIXME: adjust points which are inside walls
+    // TODO: adjust points which are inside walls
   }
+}
+
+
+static void ClearLightBuffer()
+{
+  int total = lt_W * lt_H;
+
+  for (int k = 0 ; k < total ; k++)
+    blocklights[k] = LOW_LIGHT << 8;
 }
 
 
@@ -437,18 +459,16 @@ void qLightmap_c::Store_Normal()
 
 void qLightmap_c::Store_Fastest()
 {
-//---  Set(0, 0, blocklights[0]);
-
   int W = width;
   int H = height;
 
-  int dx = (W > 6) ? 1 : 0;
-  int dy = (H > 6) ? 1 : 0;
+  // the "super fast" mode only visits 4 points (the corners),
+  // then bilinearly interpolates all other luxels.
 
-  int A = blocklights[dx];
-  int B = blocklights[W-1-dx];
-  int C = blocklights[(H-1-dy) * W + dx];
-  int D = blocklights[(H-1-dy) * W + W-1-dx];
+  int A = blocklights[0];
+  int B = blocklights[W-1];
+  int C = blocklights[(H-1) * W];
+  int D = blocklights[(H-1) * W + W-1];
 
   for (int t = 0 ; t < H ; t++)
   for (int s = 0 ; s < W ; s++)
@@ -466,28 +486,10 @@ void qLightmap_c::Store_Fastest()
 }
 
 
-void qLightmap_c::Store_Best()
-{
-  int W = width;
-  int H = height;
-
-  for (int t = 0 ; t < H ; t++)
-  for (int s = 0 ; s < W ; s++)
-  {
-    int value = blocklights[(t*2 + 0) * W + (s*2 + 0)] +
-                blocklights[(t*2 + 0) * W + (s*2 + 1)] +
-                blocklights[(t*2 + 1) * W + (s*2 + 0)] +
-                blocklights[(t*2 + 1) * W + (s*2 + 1)];
-
-    Set(s, t, value >>= 2);
-  }
-}
-
-
 void qLightmap_c::Store_Interp()
 {
-  int iw = width  / 2;  // interpolate #
-  int ih = height / 2;
+  int iw = width  / 2;  // interpolated columns
+  int ih = height / 2;  // interpolated rows
 
   int bw = 1 + iw;
   int bh = 1 + ih;
@@ -504,6 +506,7 @@ void qLightmap_c::Store_Interp()
     Set(s2, t2, blocklights[t * bw + s]);
   }
 
+
   for (int t = 0 ; t < bh ; t++)
   for (int s = 0 ; s < iw ; s++)
   {
@@ -514,6 +517,7 @@ void qLightmap_c::Store_Interp()
 
     Set(s*2+1, t2, (A + B) >> 1);
   }
+
 
   for (int t = 0 ; t < ih ; t++)
   for (int s = 0 ; s < bw ; s++)
@@ -526,6 +530,7 @@ void qLightmap_c::Store_Interp()
     Set(s2, t*2+1, (A + C) >> 1);
   }
 
+
   for (int t = 0 ; t < ih ; t++)
   for (int s = 0 ; s < iw ; s++)
   {
@@ -535,6 +540,27 @@ void qLightmap_c::Store_Interp()
     int D = blocklights[t * bw + bw + s + 1];
 
     Set(s*2+1, t*2+1, (A + B + C + D) >> 2);
+  }
+}
+
+
+void qLightmap_c::Store_Best()
+{
+  // the "best" mode visits 4 times as many points as normal,
+  // then computes the average of each 2x2 block.
+
+  int W = width;
+  int H = height;
+
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    int value = blocklights[(t*2 + 0) * lt_W + (s*2 + 0)] +
+                blocklights[(t*2 + 0) * lt_W + (s*2 + 1)] +
+                blocklights[(t*2 + 1) * lt_W + (s*2 + 0)] +
+                blocklights[(t*2 + 1) * lt_W + (s*2 + 1)];
+
+    Set(s, t, value >> 2);
   }
 }
 
@@ -551,23 +577,6 @@ void qLightmap_c::Store()
     default:
       Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
       break;  /* NOT REACHED */
-  }
-}
-
-
-void QLIT_TestingStuff(qLightmap_c *lmap)
-{
-  int W = lmap->width;
-  int H = lmap->height;
-
-  for (int t = 0 ; t < H ; t++)
-  for (int s = 0 ; s < W ; s++)
-  {
-    const quake_vertex_c & V = lt_points[t*W + s];
-
-    lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
-
-//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
   }
 }
 
@@ -639,10 +648,13 @@ static void QCOM_FreeLights()
 }
 
 
-static inline void Add(int s, int t, int W, int value)
+static inline void Bump(int s, int t, int W, int value)
 {
   blocklights[t * W + s] += value;
 }
+
+
+#define IS_INTERP(a, N)  (((a) & 1) && ((a) != ((N)-1)))
 
 
 static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
@@ -659,20 +671,34 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
   if (light.kind != LTK_Sun && perp > light.radius)
     return;
 
-  int W = lmap->width;
-  int H = lmap->height;
+  int s_step = 1;
+  int t_step = 1;
 
-  for (int t = 0 ; t < H ; t++)
-  for (int s = 0 ; s < W ; s++)
+  if (qk_lighting_quality == 0)
   {
-    const quake_vertex_c & V = lt_points[t*W + s];
+    // in "super fast" mode, only do the corners
+    s_step = lt_W - 1;
+    t_step = lt_H - 1;
+  }
+
+  for (int t = 0 ; t < lt_H ; t += t_step)
+  for (int s = 0 ; s < lt_W ; s += s_step)
+  {
+    // in the "fast" mode, only do every second row and column
+    if (qk_lighting_quality == 1 && 
+        (IS_INTERP(s, lt_W) || IS_INTERP(t, lt_W)) )
+    {
+      continue;
+    }
+
+    const quake_vertex_c & V = lt_points[t * lt_W + s];
 
     if (! QCOM_TraceRay(V.x, V.y, V.z, light.x, light.y, light.z))
       continue;
 
     if (light.kind == LTK_Sun)
     {
-      Add(s, t, W, light.level);
+      Bump(s, t, lt_W, light.level);
     }
     else
     {
@@ -682,22 +708,10 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
       {
         int value = light.level * (1.0 - dist / light.radius);
 
-        Add(s, t, W, value);
+        Bump(s, t, lt_W, value);
       }
     }
   }
-}
-
-
-static void ClearLightBuffer(int W, int H)
-{
-  int total = W * H;
-
-  if (qk_lighting_quality == 3)
-    total *= 4;
-
-  for (int k = 0 ; k < total ; k++)
-    blocklights[k] = LOW_LIGHT << 8;
 }
 
 
@@ -708,18 +722,11 @@ void QCOM_LightFace(quake_face_c *F)
   CalcFaceVectors(F);
   CalcFaceExtents(F);
 
-  int W = lt_tex_size[0];
-  int H = lt_tex_size[1];
+  F->lmap = BSP_NewLightmap(lt_W, lt_H);
 
-  CalcPoints(W, H);
+  CalcPoints();
 
-//  lt_points[0] = lt_points[(H/2)*W + W/2];
-//
-//  W = H = 1;
-
-  F->lmap = BSP_NewLightmap(W, H);
-
-  ClearLightBuffer(W, H);
+  ClearLightBuffer();
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
@@ -727,6 +734,23 @@ void QCOM_LightFace(quake_face_c *F)
   }
 
   F->lmap->Store();
+}
+
+
+void QLIT_TestingStuff(qLightmap_c *lmap)
+{
+  int W = lmap->width;
+  int H = lmap->height;
+
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    const quake_vertex_c & V = lt_points[t*W + s];
+
+    lmap->samples[t*W + s] = 80 + 40 * sin(V.z / 40.0);
+
+//  lmap->samples[t*W + s] = QCOM_TraceRay(V.x,V.y,V.z, 2e5,4e5,3e5) ? 80 : 40;
+  }
 }
 
 
