@@ -487,7 +487,7 @@ void qLightmap_c::Store_Fast()
     int bt = t * (lt_H-1) / H;
 
     float xc = s * (lt_W-1) / (float)W - bs;
-    float yc = t * (lt_H-1) / (float)W - bs;
+    float yc = t * (lt_H-1) / (float)H - bt;
 
     float value = (1-xc) * (1-yc) * blocklights[bt * lt_W + bs]
                 +    xc  * (1-yc) * blocklights[bt * lt_W + bs + 1]
