@@ -18,6 +18,10 @@
 //  GNU General Public License for more details.
 //
 //------------------------------------------------------------------------
+//
+//  Using various bits from the Quake1 'light' program source.
+//
+//------------------------------------------------------------------------
 
 #include "headers.h"
 #include "hdr_fltk.h"
@@ -268,8 +272,8 @@ static double lt_texorg[3];
 static double lt_worldtotex[2][3];
 static double lt_textoworld[2][3];
 
-static int lt_tex_mins[2];
 static int lt_W, lt_H;
+static int lt_tex_mins[2];
 
 static quake_vertex_c lt_points[18*18*4];
 
@@ -399,6 +403,9 @@ static void CalcFaceExtents(quake_face_c *F)
 
 static void CalcPoints()
 {
+  float s_start = lt_tex_mins[0] * 16.0;
+  float t_start = lt_tex_mins[1] * 16.0;
+
   float step = 16.0;
 
   if (qk_lighting_quality == 3)
@@ -406,8 +413,8 @@ static void CalcPoints()
     lt_W *= 2;
     lt_H *= 2;
 
-    lt_tex_mins[0] -= 0.5;
-    lt_tex_mins[1] -= 0.5;
+    s_start -= 8.0;
+    t_start -= 8.0;
 
     step = 8.0;
   }
@@ -415,8 +422,8 @@ static void CalcPoints()
   for (int t = 0 ; t < lt_H ; t++)
   for (int s = 0 ; s < lt_W ; s++)
   {
-    float us = (lt_tex_mins[0] + s) * step;
-    float ut = (lt_tex_mins[1] + t) * step;
+    float us = s_start + s * step;
+    float ut = t_start + t * step;
 
     quake_vertex_c & V = lt_points[t * lt_W + s];
 
