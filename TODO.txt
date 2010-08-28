@@ -12,23 +12,18 @@ DONE:  Quake: proper XY partition choice, create clusters
 
 DONE:  q1_clip proper XY partition choice
 
+DONE: Quake2 visibility
 
-Quake2 visibility
+DONE: qLightmap_c : only store the result : byte samples
+                     use 'blocklights' buffer for doing each face.
+
+DONE: lighting modes: Fast / Normal / Best
 
 
-qLightmap_c : only store the result : byte samples
-              use 'blocklights' buffer for doing each face.
-
-
-Option for Quake lighting:
-   FASTEST = flat maps, one luxel per face
-   FAST    = only do 1/4 of the luxels, interpolate rest
-   NORMAL  = as now
-   BEST    = do 2x2 samples per luxel, average them
+User Option for Quake lighting mode
 
 
 ?? anomaly_towers (etc) : make directory, single level per wad
-
 
 
 Quake: fix level progression
