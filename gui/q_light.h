@@ -43,6 +43,10 @@ public:
   // final offset in lightmap lump (if not flat)
   int offset;
 
+  // these not valid until CalcScore()
+  int score;
+  int average;
+
 public:
   qLightmap_c(int w, int h, int value = -1);
 
@@ -65,21 +69,21 @@ public:
     samples[t * width + s] = raw;
   }
 
-  void Store();  // transfer from blocklights[]
+  void Store();  // transfer from blocklights[] array
 
-  void GetRange(float *low, float *high, float *avg);
+  void CalcScore();
 
-  void Flatten(byte value);
+  void Flatten();
 
   void Write(qLump_c *lump);
 
   int CalcOffset() const;
 
 private:
-  void Store_Normal();
-  void Store_Flat();
-  void Store_Smooth();
+  void Store_Fastest();
   void Store_Interp();
+  void Store_Normal();
+  void Store_Best();
 };
 
 

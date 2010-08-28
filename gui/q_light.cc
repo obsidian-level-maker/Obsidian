@@ -47,12 +47,12 @@ int qk_lighting_quality = 0;
 bool qk_color_lighting;
 
 
-qLightmap_c::qLightmap_c(int w, int h, int value) : width(w), height(h), offset(-1)
+qLightmap_c::qLightmap_c(int w, int h, int value) :
+    width(w), height(h), samples(data),
+    offset(-1), score(-1), average(-1)
 {
   if (width * height > SMALL_LIGHTMAP)
     samples = new byte[width * height];
-  else
-    samples = data;
 
   if (value >= 0)
     Fill(value);
@@ -72,35 +72,42 @@ void qLightmap_c::Fill(int value)
 }
 
 
-void qLightmap_c::GetRange(float *low, float *high, float *avg)
+void qLightmap_c::CalcScore()
 {
-// FIXME !!!!  GetRange
-#if 0
-  *low  = +9e9;
-  *high = -9e9;
-  *avg  = 0;
+  // determine range and average
+  int low  = data[0];
+  int high = data[0];
+
+  float avg = 0;
 
   for (int i = 0 ; i < width*height ; i++)
   {
-    if (samples[i] < *low)  *low  = samples[i];
-    if (samples[i] > *high) *high = samples[i];
+    low  = MIN(low,  samples[i]);
+    high = MAX(high, samples[i]);
 
-    *avg += samples[i];
+    avg  += samples[i];
   }
 
-  *avg /= (float)(width * height);
-#endif
+  avg /= (float)(width * height);
+
+  average = CLAMP(0, I_ROUND(avg), 255);
+
+  // now calculate score
+  score = (width * height) * 2 + (high - low);
 }
 
 
-void qLightmap_c::Flatten(byte value)
+void qLightmap_c::Flatten()
 {
-  data[0] = value;
-
   if (isFlat())
     return;
 
+  if (score < 0)
+    CalcScore();
+
   width = height = 1;
+
+  data[0] = average;
 
   if (samples != data)
   {
@@ -264,9 +271,6 @@ static double lt_textoworld[2][3];
 static int lt_tex_mins[2];
 static int lt_tex_size[2];
 
-static double lt_face_mid_s;
-static double lt_face_mid_t;
-
 static quake_vertex_c lt_points[18*18*4];
 
 static int blocklights[18*18*4];  // * 4 for oversampling
@@ -372,8 +376,8 @@ static void CalcFaceExtents(quake_face_c *F)
 
   F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
 
-  lt_face_mid_s = (min_s + max_s) / 2.0;
-  lt_face_mid_t = (min_t + max_t) / 2.0;
+///  lt_face_mid_s = (min_s + max_s) / 2.0;
+///  lt_face_mid_t = (min_t + max_t) / 2.0;
 
   // -AJA- this matches the logic in the Quake engine.
 
@@ -431,7 +435,7 @@ void qLightmap_c::Store_Normal()
 }
 
 
-void qLightmap_c::Store_Flat()
+void qLightmap_c::Store_Fastest()
 {
 //---  Set(0, 0, blocklights[0]);
 
@@ -462,7 +466,7 @@ void qLightmap_c::Store_Flat()
 }
 
 
-void qLightmap_c::Store_Smooth()
+void qLightmap_c::Store_Best()
 {
   int W = width;
   int H = height;
@@ -539,10 +543,10 @@ void qLightmap_c::Store()
 {
   switch (qk_lighting_quality)
   {
-    case 0: Store_Flat();   break;
-    case 1: Store_Interp(); break;
-    case 2: Store_Normal(); break;
-    case 3: Store_Smooth(); break;
+    case 0: Store_Fastest(); break;
+    case 1: Store_Interp();  break;
+    case 2: Store_Normal();  break;
+    case 3: Store_Best();    break;
 
     default:
       Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
