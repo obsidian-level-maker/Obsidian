@@ -47,12 +47,12 @@ int qk_lighting_quality = 0;
 bool qk_color_lighting;
 
 
-qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offset(-1)
+qLightmap_c::qLightmap_c(int w, int h, int value) : width(w), height(h), offset(-1)
 {
-  if (width > 1 || height > 1)
-    samples = new float[width * height];
+  if (width * height > SMALL_LIGHTMAP)
+    samples = new byte[width * height];
   else
-    samples = &flat;
+    samples = data;
 
   if (value >= 0)
     Fill(value);
@@ -60,29 +60,22 @@ qLightmap_c::qLightmap_c(int w, int h, float value) : width(w), height(h), offse
 
 qLightmap_c::~qLightmap_c()
 {
-  if (width > 1 || height > 1)
+  if (samples != data)
     delete[] samples;
 }
 
-void qLightmap_c::Fill(float value)
+
+void qLightmap_c::Fill(int value)
 {
   for (int i = 0 ; i < width*height ; i++)
     samples[i] = value;
 }
 
 
-void qLightmap_c::Clamp()
-{
-  for (int i = 0 ; i < width*height ; i++)
-  {
-    if (samples[i] < 0)   samples[i] = 0;
-    if (samples[i] > 255) samples[i] = 255;
-  }
-}
-
-
 void qLightmap_c::GetRange(float *low, float *high, float *avg)
 {
+// FIXME !!!!  GetRange
+#if 0
   *low  = +9e9;
   *high = -9e9;
   *avg  = 0;
@@ -96,37 +89,25 @@ void qLightmap_c::GetRange(float *low, float *high, float *avg)
   }
 
   *avg /= (float)(width * height);
-}
-
-
-#if 0
-void qLightmap_c::AddSafe(int s, int t, float value)
-{
-  if (0 <= s && s < width && 0 <= t && t < height)
-  {
-    Add(s, t, value);
-  }
-}
 #endif
+}
 
 
-void qLightmap_c::Flatten(float avg)
+void qLightmap_c::Flatten(byte value)
 {
+  data[0] = value;
+
   if (isFlat())
     return;
 
-  if (avg < 0)
-  {
-    float low, high;
-
-    GetRange(&low, &high, &avg);
-  }
-
-  flat = avg;
-
   width = height = 1;
 
-  delete[] samples; samples = NULL;
+  if (samples != data)
+  {
+    delete[] samples;
+
+    samples = data;
+  }
 }
 
 
@@ -139,19 +120,18 @@ void qLightmap_c::Write(qLump_c *lump)
 
   int total = width * height;
 
-  Clamp();
+  if (! qk_color_lighting)
+  {
+    lump->Append(samples, total);
+    return;
+  }
 
+  // convert to R/G/B triplets
   for (int i = 0 ; i < total ; i++)
   {
-    byte datum = (byte) samples[i];
-
-    lump->Append(&datum, 1);
-
-    if (qk_color_lighting)
-    {
-      lump->Append(&datum, 1);
-      lump->Append(&datum, 1);
-    }
+    lump->Append(&samples[i], 1);
+    lump->Append(&samples[i], 1);
+    lump->Append(&samples[i], 1);
   }
 }
 
@@ -209,9 +189,9 @@ int QCOM_FlatLightOffset(int value)
 }
 
 
-qLightmap_c * BSP_NewLightmap(int w, int h, float value)
+qLightmap_c * BSP_NewLightmap(int w, int h)
 {
-  qLightmap_c *lmap = new qLightmap_c(w, h, value);
+  qLightmap_c *lmap = new qLightmap_c(w, h);
 
   qk_all_lightmaps.push_back(lmap);
 
@@ -578,8 +558,9 @@ typedef struct
   int kind;
 
   float x, y, z;
-  float level;
   float radius;
+
+  int level;  // 16.8 fixed point
 }
 quake_light_t;
 
@@ -610,11 +591,13 @@ static void QCOM_FindLights()
 
     float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
-    light.level  = E->props.getDouble("light", default_level);
+    float level  = E->props.getDouble("light", default_level);
     light.radius = E->props.getDouble("_radius", light.level);
 
-    if (light.level < 1 || light.radius < 1)
+    if (level < 1 || light.radius < 1)
       continue;
+
+    light.level = (int) (level * (1 << 8));
 
     qk_all_lights.push_back(light);
   }
@@ -624,6 +607,12 @@ static void QCOM_FindLights()
 static void QCOM_FreeLights()
 {
   qk_all_lights.clear();
+}
+
+
+static inline void Add(int s, int t, int W, int value)
+{
+  blocklights[t * W + s] += value;
 }
 
 
@@ -654,7 +643,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 
     if (light.kind == LTK_Sun)
     {
-      lmap->Add(s, t, light.level);
+      Add(s, t, W, light.level);
     }
     else
     {
@@ -662,12 +651,12 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 
       if (dist < light.radius)
       {
-        lmap->Add(s, t, light.level * (1.0 - dist / light.radius));
+        int value = light.level * (1.0 - dist / light.radius);
+
+        Add(s, t, W, value);
       }
     }
   }
-
-  lmap->Store();
 }
 
 
@@ -683,12 +672,16 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints(W, H);
 
-  F->lmap = BSP_NewLightmap(W, H, LOW_LIGHT);
+  F->lmap = BSP_NewLightmap(W, H);
+
+  // FIXME !!!!!!!  init blocklights[]
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
     QCOM_ProcessLight(F->lmap, qk_all_lights[i]);
   }
+
+  F->lmap->Store();
 }
 
 

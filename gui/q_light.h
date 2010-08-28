@@ -28,35 +28,32 @@ class quake_face_c;
 #define FLAT_LIGHTMAP_SIZE  (17*17)
 
 
+#define SMALL_LIGHTMAP  16
+
 class qLightmap_c
 {
-public: //???  private:
+public:
   int width, height;
 
-  float *samples;
+  byte * samples;
 
-  // when size is 1x1, the sample is stored here
-  float flat;
+  // for small maps, store data directly here
+  byte data[SMALL_LIGHTMAP];
 
   // final offset in lightmap lump (if not flat)
   int offset;
 
 public:
-  qLightmap_c(int w, int h, float value = -1);
+  qLightmap_c(int w, int h, int value = -1);
 
   ~qLightmap_c();
 
   inline bool isFlat() const
   {
-    return (width == 1) && (height == 1);
+    return (width == 1 && height == 1);
   }
 
-  void Fill(float value);
-
-  void Add(int s, int t, float value)
-  {
-    samples[s + t * width] += value;
-  }
+  void Fill(int value);
 
   inline void Set(int s, int t, int raw)
   {
@@ -70,11 +67,9 @@ public:
 
   void Store();  // transfer from blocklights[]
 
-  void Clamp();
-
   void GetRange(float *low, float *high, float *avg);
 
-  void Flatten(float avg = -99);
+  void Flatten(byte value);
 
   void Write(qLump_c *lump);
 
@@ -98,7 +93,7 @@ extern bool qk_color_lighting;
 void BSP_InitLightmaps();
 void BSP_FreeLightmaps();
 
-qLightmap_c * BSP_NewLightmap(int w, int h, float value = -1);
+qLightmap_c * BSP_NewLightmap(int w, int h);
 
 int QCOM_FlatLightOffset(int value);
 
