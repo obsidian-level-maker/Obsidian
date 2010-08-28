@@ -267,7 +267,7 @@ static int lt_tex_size[2];
 static double lt_face_mid_s;
 static double lt_face_mid_t;
 
-static quake_vertex_c lt_points[18*18];
+static quake_vertex_c lt_points[18*18*4];
 
 static int blocklights[18*18*4];  // * 4 for oversampling
 
@@ -433,7 +433,32 @@ void qLightmap_c::Store_Normal()
 
 void qLightmap_c::Store_Flat()
 {
-  Set(0, 0, blocklights[0]);
+//---  Set(0, 0, blocklights[0]);
+
+  int W = width;
+  int H = height;
+
+  int dx = (W > 6) ? 1 : 0;
+  int dy = (H > 6) ? 1 : 0;
+
+  int A = blocklights[dx];
+  int B = blocklights[W-1-dx];
+  int C = blocklights[(H-1-dy) * W + dx];
+  int D = blocklights[(H-1-dy) * W + W-1-dx];
+
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    float xc = s / (float)(W - 1);
+    float yc = t / (float)(H - 1);
+
+    float value = A * (1-xc) * (1-yc) +
+                  B *    xc  * (1-yc) +
+                  C * (1-xc) *    yc  +
+                  D *    xc  *    yc;
+
+    Set(s, t, (int)value);
+  }
 }
 
 
@@ -660,6 +685,18 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
 }
 
 
+static void ClearLightBuffer(int W, int H)
+{
+  int total = W * H;
+
+  if (qk_lighting_quality == 3)
+    total *= 4;
+
+  for (int k = 0 ; k < total ; k++)
+    blocklights[k] = LOW_LIGHT << 8;
+}
+
+
 void QCOM_LightFace(quake_face_c *F)
 {
   lt_face = F;
@@ -672,9 +709,13 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints(W, H);
 
+//  lt_points[0] = lt_points[(H/2)*W + W/2];
+//
+//  W = H = 1;
+
   F->lmap = BSP_NewLightmap(W, H);
 
-  // FIXME !!!!!!!  init blocklights[]
+  ClearLightBuffer(W, H);
 
   for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
   {
