@@ -398,10 +398,8 @@ static byte DiminishVolume(int kind, byte orig)
 {
   // TODO: this works well for SKY, but may need different for liquids
 
-  if (orig > 128) return 128;
-  if (orig >  96) return  96;
-  if (orig >  64) return  64;
-  if (orig >  32) return  32;
+  if (orig > 160) return 160;
+  if (orig >  40) return orig - 24;
 
   return 0;
 }
@@ -409,7 +407,7 @@ static byte DiminishVolume(int kind, byte orig)
 
 static void FloodAmbientSounds()
 {
-  for (int pass = 0 ; pass < 6 ; pass++)
+  for (int pass = 0 ; pass < 8 ; pass++)
   for (int cy = 0 ; cy < cluster_H ; cy++)
   for (int cx = 0 ; cx < cluster_W ; cx++)
   {
