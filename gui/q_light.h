@@ -58,6 +58,18 @@ public:
     samples[s + t * width] += value;
   }
 
+  inline void Set(int s, int t, int raw)
+  {
+    raw >>= 8;
+
+    if (raw < 0)   raw = 0;
+    if (raw > 255) raw = 255;
+
+    samples[t * width + s] = raw;
+  }
+
+  void Store();  // transfer from blocklights[]
+
   void Clamp();
 
   void GetRange(float *low, float *high, float *avg);
@@ -67,6 +79,12 @@ public:
   void Write(qLump_c *lump);
 
   int CalcOffset() const;
+
+private:
+  void Store_Normal();
+  void Store_Flat();
+  void Store_Smooth();
+  void Store_Interp();
 };
 
 

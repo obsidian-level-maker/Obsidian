@@ -41,6 +41,9 @@
 #define LOW_LIGHT  20
 
 
+// 0 = super fast, 1 = fast, 2 = normal, 3 = best
+int qk_lighting_quality = 0;
+
 bool qk_color_lighting;
 
 
@@ -286,6 +289,8 @@ static double lt_face_mid_t;
 
 static quake_vertex_c lt_points[18*18];
 
+static int blocklights[18*18*4];  // * 4 for oversampling
+
 
 static void CalcFaceVectors(quake_face_c *F)
 {
@@ -427,6 +432,120 @@ static void CalcPoints(int W, int H)
 }
 
 
+void qLightmap_c::Store_Normal()
+{
+  const int *src   = &blocklights[0];
+  const int *s_end = src + (width * height);
+
+  byte *dest = &samples[0];
+
+  while (src < s_end)
+  {
+    int raw = *src++ >> 8;
+
+    if (raw < 0)   raw = 0;
+    if (raw > 255) raw = 255;
+
+    *dest++ = raw;
+  }
+}
+
+
+void qLightmap_c::Store_Flat()
+{
+  Set(0, 0, blocklights[0]);
+}
+
+
+void qLightmap_c::Store_Smooth()
+{
+  int W = width;
+  int H = height;
+
+  for (int t = 0 ; t < H ; t++)
+  for (int s = 0 ; s < W ; s++)
+  {
+    int value = blocklights[(t*2 + 0) * W + (s*2 + 0)] +
+                blocklights[(t*2 + 0) * W + (s*2 + 1)] +
+                blocklights[(t*2 + 1) * W + (s*2 + 0)] +
+                blocklights[(t*2 + 1) * W + (s*2 + 1)];
+
+    Set(s, t, value >>= 2);
+  }
+}
+
+
+void qLightmap_c::Store_Interp()
+{
+  int iw = width  / 2;  // interpolate #
+  int ih = height / 2;
+
+  int bw = 1 + iw;
+  int bh = 1 + ih;
+
+  // separate loops for each four cases
+
+  for (int t = 0 ; t < bh ; t++)
+  for (int s = 0 ; s < bw ; s++)
+  {
+    // this logic handles the far edge when size is even
+    int s2 = MIN(s * 2, width-1);
+    int t2 = MIN(t * 2, height-1);
+
+    Set(s2, t2, blocklights[t * bw + s]);
+  }
+
+  for (int t = 0 ; t < bh ; t++)
+  for (int s = 0 ; s < iw ; s++)
+  {
+    int t2 = MIN(t * 2, height-1);
+
+    int A = blocklights[t * bw + s];
+    int B = blocklights[t * bw + s + 1];
+
+    Set(s*2+1, t2, (A + B) >> 1);
+  }
+
+  for (int t = 0 ; t < ih ; t++)
+  for (int s = 0 ; s < bw ; s++)
+  {
+    int s2 = MIN(s * 2, width-1);
+
+    int A = blocklights[t * bw + s];
+    int C = blocklights[t * bw + bw + s];
+
+    Set(s2, t*2+1, (A + C) >> 1);
+  }
+
+  for (int t = 0 ; t < ih ; t++)
+  for (int s = 0 ; s < iw ; s++)
+  {
+    int A = blocklights[t * bw + s];
+    int B = blocklights[t * bw + s + 1];
+    int C = blocklights[t * bw + bw + s];
+    int D = blocklights[t * bw + bw + s + 1];
+
+    Set(s*2+1, t*2+1, (A + B + C + D) >> 2);
+  }
+}
+
+
+void qLightmap_c::Store()
+{
+  switch (qk_lighting_quality)
+  {
+    case 0: Store_Flat();   break;
+    case 1: Store_Interp(); break;
+    case 2: Store_Normal(); break;
+    case 3: Store_Smooth(); break;
+
+    default:
+      Main_FatalError("INTERNAL ERROR: qk_lighting_quality = %d\n", qk_lighting_quality);
+      break;  /* NOT REACHED */
+  }
+}
+
+
 void QLIT_TestingStuff(qLightmap_c *lmap)
 {
   int W = lmap->width;
@@ -547,6 +666,8 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
       }
     }
   }
+
+  lmap->Store();
 }
 
 
