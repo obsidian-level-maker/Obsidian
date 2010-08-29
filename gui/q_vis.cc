@@ -338,9 +338,6 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
   }
 
   qk_visbuf = new Vis_Buffer(cluster_W, cluster_H);
-
-  // TODO: if (some_option_name)
-  //         qk_visbuf->SetQuickMode(true);
 }
 
 
