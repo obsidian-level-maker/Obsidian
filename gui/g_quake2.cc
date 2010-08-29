@@ -1094,6 +1094,8 @@ public:
 bool quake2_game_interface_c::Start()
 {
   qk_game = 2;
+  qk_sub_format = 0;
+  qk_lighting_quality = 0;
 
   filename = Select_Output_File("pak");
 
@@ -1149,6 +1151,15 @@ void quake2_game_interface_c::Property(const char *key, const char *value)
   else if (StringCaseCmp(key, "description") == 0)
   {
     description = StringDup(value);
+  }
+  else if (StringCaseCmp(key, "lighting_quality") == 0)
+  {
+    if (StringCaseCmp(value, "low") == 0)
+      qk_lighting_quality = -1;
+    else if (StringCaseCmp(value, "high") == 0)
+      qk_lighting_quality = +1;
+    else
+      qk_lighting_quality = 0;
   }
   else
   {

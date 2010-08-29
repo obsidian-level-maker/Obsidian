@@ -90,6 +90,8 @@ private:
 
 extern bool qk_color_lighting;
 
+extern int qk_lighting_quality;
+
 
 /***** FUNCTIONS **********/
 

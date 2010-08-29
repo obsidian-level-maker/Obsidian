@@ -20,7 +20,13 @@
 
 
 function LightControl_setup(self)
-  GAME.lighting_precision = self.options.precision.value
+  local value = self.options.precision.value
+
+  if GAME.format == "quake" or GAME.format == "quake2" then
+    gui.property("lighting_quality", value)
+  else
+    GAME.lighting_precision = self.options.precision.value
+  end
 end
 
 
@@ -28,8 +34,8 @@ OB_MODULES["lighting_control"] =
 {
   label = "Lighting Control",
 
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1,
-                strife=1,
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1,
+                quake=1, quake2=1, hexen2=1, halflife=1
               },
 
   hooks =
@@ -41,8 +47,9 @@ OB_MODULES["lighting_control"] =
   {
     precision =
     {
-      label="Precision",
-      choices=
+      label = "Precision",
+
+      choices =
       {
         "low",  "Fastest",
         "medium", "Medium",

@@ -1356,6 +1356,7 @@ bool quake1_game_interface_c::Start()
 {
   qk_game = 1;
   qk_sub_format = 0;
+  qk_lighting_quality = 0;
 
   filename = Select_Output_File("pak");
 
@@ -1427,6 +1428,15 @@ void quake1_game_interface_c::Property(const char *key, const char *value)
     // this assumes the sub_format is only set once at the start
     if (main_win)
       main_win->build_box->Prog_Init(0, StepsForGame(qk_sub_format));
+  }
+  else if (StringCaseCmp(key, "lighting_quality") == 0)
+  {
+    if (StringCaseCmp(value, "low") == 0)
+      qk_lighting_quality = -1;
+    else if (StringCaseCmp(value, "high") == 0)
+      qk_lighting_quality = +1;
+    else
+      qk_lighting_quality = 0;
   }
   else
   {
