@@ -532,8 +532,12 @@ function ob_read_all_config(print_to_log)
   do_line("ammo = %s",    OB_CONFIG.ammo or unknown)
   do_line("")
 
-  for name,def in pairs(OB_MODULES) do
-    do_line("-- Module: %s --", def.label or unknown)
+  do_line("----- Modules -----")
+  do_line("")
+
+  for _,name in ipairs(table.keys_sorted(OB_MODULES)) do
+    local def = OB_MODULES[name]
+
     do_line("@%s = %s", name, sel(def.enabled, "1", "0"))
 
     -- module options
