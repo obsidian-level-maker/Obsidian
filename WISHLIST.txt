@@ -226,7 +226,9 @@ SKY GENERATOR:
     Also allow light brushes to eat other ones in certain cases
     (e.g. a shadow brush may override a low-level light brush).
 
-++  rename XXX.MATERIALS --> XXX.TEXTURES and XXX.FLATS
+-  move light brush intensity value to props[] 
+
+??? rename XXX.MATERIALS --> XXX.TEXTURES and XXX.FLATS
  
        STARTAN3 = { match="FLOOR4_8" }
        FLOOR4_8 = { match="METAL1" }
@@ -366,6 +368,8 @@ Sam's suggestions:
 -  intermission camera (only need 1 -- user won't replay level)
      "classname" "info_intermission"
      "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
+
+-  CalcPoints : move edges inwards by 2 pixels
 
 -  visibility: support diagonals, check if any sides in a cluster
                touch or cross a line between corners.
