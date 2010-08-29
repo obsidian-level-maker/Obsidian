@@ -2994,7 +2994,7 @@ function Rooms.build_seeds(R)
       local kind, w_face, p_face = Mat_normal(S.u_tex or c_tex or w_tex, c_tex)
       p_face.light = S.c_light
 
-      Trans.quad(cx1,cy1, cx2,cy2, z2,nil, kind, w_face, p_face)
+      Trans.quad(cx1,cy1, cx2,cy2, z2,nil, { k=kind }, w_face, p_face)
 
       -- FIXME: this does not belong here
       if R.hallway and LEVEL.hall_lights then
@@ -3105,7 +3105,7 @@ function Rooms.build_seeds(R)
       local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
       p_face.kind = sec_kind
 
-      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, kind, w_face, p_face)
+      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
     end
 
 

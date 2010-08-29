@@ -148,10 +148,7 @@ function Trans.collect_flags(C)  -- FIXME: use game-specific code
 end
 
 
-function Trans.brush(kind, coords)
-  if not coords then
-    kind, coords = "solid", kind
-  end
+function Trans.brush(coords, props)
 
   -- FIXME: mirroring
   -- (when mirroring, ensure first coord stays the first)
@@ -171,7 +168,7 @@ function Trans.brush(kind, coords)
     Trans.collect_flags(C)
   end
 
-  gui.add_brush(kind, coords)
+  gui.add_brush(coords, props)
 end
 
 
@@ -227,7 +224,7 @@ function Trans.old_brush(info, coords, z1, z2)
 
 -- gui.printf("coords=\n%s\n", table.tostr(coords,4))
 
-  gui.add_brush(info.kind or "solid", coords)
+  gui.add_brush(coords, { k=info.kind } )
 end
 
 
@@ -258,7 +255,7 @@ function Trans.entity(name, x, y, z, props)
 end
 
 
-function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
+function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
   if not w_face then
     -- convenient form: only a material name was given
     kind, w_face, p_face = Mat_normal(kind)
@@ -282,7 +279,7 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, kind, w_face, p_face)
   if z1 then table.insert(coords, b_face) end
   if z2 then table.insert(coords, t_face) end
 
-  Trans.brush(kind, coords)
+  Trans.brush(coords, props)
 end
 
 
@@ -968,16 +965,15 @@ function Build.prefab(fab, skin, T)
 
   local function render_brushes(brushes)
     for _,B in ipairs(brushes) do
-      local kind = "solid"
+      local props
 
-      -- the first entry of a brush can be an 'info coord'.
-      -- we remove it as the CSG code does not use them.
-      if B[1] and B[1].brush_kind then
-        brush_kind = B[1].brush_kind
+      -- the first entry of a brush can be for properties.
+      if B[1] and B[1].k then
+        props = B[1]
         table.remove(B, 1)
       end
 
-      Trans.brush(kind, B)
+      Trans.brush(B, props)
     end
   end
 

@@ -157,19 +157,16 @@ brush_plane_c::~brush_plane_c()
 
 
 csg_brush_c::csg_brush_c() :
-     bkind(BKIND_Solid),
-     bflags(0),
-     verts(),
+     bkind(BKIND_Solid), bflags(0),
+     props(), verts(),
      b(-EXTREME_H),
      t( EXTREME_H)
 { }
 
-csg_brush_c::csg_brush_c(const csg_brush_c *other, bool do_verts) :
-      bkind(other->bkind),
-      bflags(other->bflags),
-      verts(),
-      b(other->b),
-      t(other->t)
+csg_brush_c::csg_brush_c(const csg_brush_c *other) :
+      bkind(other->bkind), bflags(other->bflags),
+      props(other->props), verts(),
+      b(other->b), t(other->t)
 {
   // NOTE: verts and slopes not cloned
 
@@ -364,12 +361,15 @@ static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 }
 
 
-int Grab_BrushKind(lua_State *L, int stack_pos)
+int Grab_BrushKind(lua_State *L, const char *kind)
 {
-  if (stack_pos < 0)
-    stack_pos += lua_gettop(L) + 1;
+  // parse the 'k' field of the props table
 
-  const char *kind = luaL_checkstring(L, stack_pos);
+  if (! kind)
+  {
+    // not present, return the default
+    return BKIND_Solid;
+  }
 
   if (StringCaseCmp(kind, "solid")  == 0) return BKIND_Solid;
   if (StringCaseCmp(kind, "detail") == 0) return BKIND_Detail;
@@ -540,10 +540,13 @@ int CSG_property(lua_State *L)
 }
 
 
-// LUA: add_brush(kind, coords)
+// LUA: add_brush(coords, [props])
 //
-// kind  :  brush kind, usually "solid"
-//          can also be "liquid", "sky", "detail", "clip", etc
+// props is a optional property table, with these fields:
+//      
+//   k : brush kind, the default is "solid"
+//       can also be "liquid", "sky", "detail", "clip", etc
+//   light : for light brushes
 //
 // coords is a list of coordinates of the form:
 //   { x=123, y=456,     tex="foo", ... }   -- side of brush
@@ -576,31 +579,18 @@ int CSG_property(lua_State *L)
 //
 int CSG_add_brush(lua_State *L)
 {
+  int nargs = lua_gettop(L);
+
   csg_brush_c *B = new csg_brush_c();
 
-  B->bkind = Grab_BrushKind(L, 1);
+  Grab_CoordList(L, 1, B);
 
-  Grab_CoordList(L, 2, B);
-
-  // make sure that certain brush kinds have valid faces
-/*   ???? FIXME ????
-  if (B->bkind == BKIND_Solid || B->bkind == BKIND_Detail ||
-      B->bkind == BKIND_Sky)
+  if (nargs >= 2)
   {
-    SYS_ASSERT(dummy_plane_face);
+    Grab_Properties(L, 2, &B->props, false);
 
-    if (! B->b.face) B->b.face = B->t.face ? B->t.face : dummy_plane_face;
-    if (! B->t.face) B->t.face = B->b.face;
-
-    for (unsigned int k = 0; k < B->verts.size(); k++)
-    {
-      brush_vert_c *V = B->verts[k];
-
-      if (! V->face)
-        V->face = (k == 0) ? dummy_side_face : B->verts[0]->face;
-    }
-  } 
-*/
+    B->bkind = Grab_BrushKind(L, B->props.getStr("k"));
+  }
 
   all_brushes.push_back(B);
 

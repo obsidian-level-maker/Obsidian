@@ -77,6 +77,10 @@ public:
   ~csg_property_set_c()
   { }
 
+  // copy constructor
+  csg_property_set_c(const csg_property_set_c& other) : dict(other.dict)
+  { }
+
   void Add(const char *key, const char *value);
 
   const char * getStr(const char *key, const char *def_val = NULL);
@@ -164,6 +168,8 @@ public:
   int bkind;
   int bflags;
 
+  csg_property_set_c props;
+
   std::vector<brush_vert_c *> verts;
 
   brush_plane_c b;  // bottom
@@ -177,7 +183,8 @@ public:
   ~csg_brush_c();
 
   // copy constructor
-  csg_brush_c(const csg_brush_c *other, bool do_verts = false);
+  // NOTE: verts and slopes are not cloned
+  csg_brush_c(const csg_brush_c *other);
 
   void ComputeBBox();
 
