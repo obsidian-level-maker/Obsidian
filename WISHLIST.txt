@@ -735,22 +735,6 @@ NAME GENERATOR
 
             (also: ExMyDesc="%s")
 
-   -  Doomsday:  DD_DEFNS lump  -- comments use '#'
-              
-              Map Info
-              {
-                ID = "MAP01";
-                Name = "Blah Blah";
-              }
-
-   -  Eternity:  EMAPINFO lump  -- comments use '#'
-
-              [MAP01]
-              levelname = Blah Blah
-              music = xxxx
-              creator = Oblige 3.xx
-              skyname = SKY3
-
    -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
 
              gui.mapinfo_map(lump, description)
@@ -779,14 +763,12 @@ MUSIC RE-ORDERING
                          for repeats (same three-letter prefix in a
                          row) and move one to random spot.
 
-   -  BOOM, Eternity: [MUSIC] section in BEX
+   -  BOOM: [MUSIC] section in BEX
 
           [MUSIC]
           ROMERO = RUNNIN
           RUNNIN = STALKS
           STALKS = ROMERO
-
-   -  Eternity native: 'music' setting in EMAPINFO
 
    -  EDGE native:  DDFPLAY lump:
    
