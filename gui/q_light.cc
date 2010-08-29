@@ -622,6 +622,8 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
   if (light.kind != LTK_Sun && perp > light.radius)
     return;
 
+  // TODO: check light against BBOX of face
+
 
   for (int t = 0 ; t < lt_H ; t++)
   for (int s = 0 ; s < lt_W ; s++)
