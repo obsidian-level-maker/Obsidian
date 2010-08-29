@@ -171,12 +171,10 @@ function table.subset_w_field(t, field, value)
   return new_t
 end
 
-function table.tostr(t, depth, prefix)
-  if not t then return "NIL" end
-  if table.empty(t) then return "{}" end
+function table.keys_sorted(t)
+  assert(t)
 
-  depth = depth or 1
-  prefix = prefix or ""
+  if table.empty(t) then return {} end
 
   local keys = {}
   for k,v in pairs(t) do
@@ -185,9 +183,19 @@ function table.tostr(t, depth, prefix)
 
   table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
 
+  return keys
+end
+
+function table.tostr(t, depth, prefix)
+  if not t then return "NIL" end
+  if table.empty(t) then return "{}" end
+
+  depth = depth or 1
+  prefix = prefix or ""
+
   local result = "{\n"
 
-  for idx,k in ipairs(keys) do
+  for idx,k in ipairs(table.keys_sorted(t)) do
     local v = t[k]
     result = result .. prefix .. "  " .. tostring(k) .. " = "
     if type(v) == "table" and depth > 1 then
