@@ -400,6 +400,10 @@ Sam's suggestions:
   HEXEN II
 ----------------------------------------------------------------
 
+-  IDEA: faster clipping hulls:
+   -  re-use #2 for #5 (adjust for floor Z diff)
+   -  re-use #3 or render BSP for #4 (pentacles)
+
 
 ----------------------------------------------------------------
   HALF-LIFE
