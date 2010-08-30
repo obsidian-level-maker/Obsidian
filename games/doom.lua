@@ -3257,67 +3257,49 @@ OLD_COMMON_THEMES =
 
 DOOM.PREBUILT_LEVELS =
 {
-  dead_simple =
+  E1M8 =
   {
-    file = "dead_simples.wad",
-    maps = { MAP01=30, MAP02=50, MAP03=70 },
-    name_theme = "BOSS",
+    { prob=40, file="doom1_boss/anomaly1.wad", map="E1M8" },
+    { prob=80, file="doom1_boss/anomaly2.wad", map="E1M8" },
   },
 
-  icon_of_sin =
+  E2M8 =
   {
-    file = "icon_maps.wad",
-    maps = { MAP01=30, MAP02=50 },
-    name_theme = "BOSS",
+    { prob=50, file="doom1_boss/tower1.wad", map="E2M8" },
   },
 
-  gallow_arena =
+  E3M8 =
   {
-    file = "gallow_arenas.wad",
-    maps = { MAP01=50, MAP02=25 },
-    name_theme = "BOSS",
+    { prob=50, file="doom1_boss/dis1.wad", map="E3M8" },
   },
 
-  gotcha =
+
+  MAP07 =
   {
-    file = "gotcha_maps.wad",
-    maps = { MAP01=50, MAP02=50, MAP03=40, MAP04=10 },
-    name_theme = "BOSS",
+    { prob=30, file="doom2_boss/simple1.wad", map="MAP07" },
+    { prob=50, file="doom2_boss/simple2.wad", map="MAP07" },
+    { prob=70, file="doom2_boss/simple3.wad", map="MAP07" },
   },
 
-  phobos_anomaly =
+  MAP30 =
   {
-    file = "anomaly_towers.wad",
-    maps = { E1M1=40, E1M2=80 },
-    name_theme = "BOSS",
+    { prob=30, file="doom2_boss/icon1.wad", map="MAP30" },
+    { prob=50, file="doom2_boss/icon2.wad", map="MAP30" },
   },
 
-  tower_of_babel =
+  
+  GOTCHA =
   {
-    file = "anomaly_towers.wad",
-    maps = { E2M1=50 },
-    name_theme = "BOSS",
+    { prob=50, file="doom2_boss/gotcha1.wad", map="MAP01" },
+    { prob=50, file="doom2_boss/gotcha2.wad", map="MAP01" },
+    { prob=40, file="doom2_boss/gotcha3.wad", map="MAP01" },
+    { prob=10, file="doom2_boss/gotcha4.wad", map="MAP01" },
   },
 
-  dis =
+  GALLOW =
   {
-    file = "anomaly_towers.wad",
-    maps = { E3M1=50 },
-    name_theme = "BOSS",
-  },
-
-  against_thee =
-  {
-    file = "anomaly_towers.wad",
-    maps = { E2M1=50 },
-    name_theme = "BOSS",
-  },
-
-  unto_the_cruel =
-  {
-    file = "anomaly_towers.wad",
-    maps = { E3M1=50 },
-    name_theme = "BOSS",
+    { prob=50, file="doom2_boss/gallow1.wad", map="MAP01" },
+    { prob=25, file="doom2_boss/gallow2.wad", map="MAP01" },
   },
 }
 
@@ -3807,7 +3789,7 @@ DOOM2.EPISODES =
 ------------------------------------------------------------
 
 
-function DOOM.d1_setup()
+function DOOM1.setup()
   -- remove Doom II only stuff
   GAME.WEAPONS["super"] = nil
   GAME.PICKUPS["mega"]  = nil
@@ -3818,12 +3800,12 @@ function DOOM.d1_setup()
 end
 
 
-function DOOM.d2_setup()
+function DOOM2.setup()
   -- nothing needed
 end
 
 
-function DOOM.d1_get_levels()
+function DOOM1.get_levels()
   local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
   local EP_NUM  = sel(OB_CONFIG.length == "full", EP_MAX, 1)
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
@@ -3866,20 +3848,16 @@ function DOOM.d1_get_levels()
         LEV.episode = few_episodes[map]
       end
 
-      if LEV.name == "E1M8" then
-        LEV.prebuilt = GAME.PREBUILT_LEVELS.phobos_anomaly
-      elseif LEV.name == "E2M8" then
-        LEV.prebuilt = GAME.PREBUILT_LEVELS.tower_of_babel
-      elseif LEV.name == "E3M8" then
-        LEV.prebuilt = GAME.PREBUILT_LEVELS.dis
-      elseif LEV.name == "E4M6" then
-        LEV.prebuilt = GAME.PREBUILT_LEVELS.against_thee
-      elseif LEV.name == "E4M8" then
-        LEV.prebuilt = GAME.PREBUILT_LEVELS.unto_the_cruel
-      end
+      -- prebuilt levels
+      local pb_name = LEV.name
+
+      if LEV.name == "E4M6" then pb_name = "E2M8" end
+      if LEV.name == "E4M8" then pb_name = "E3M8" end
+
+      LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
 
       if LEV.prebuilt then
-        LEV.name_theme = LEV.prebuilt.name_theme
+        LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
       end
 
       if MAP_NUM == 1 or map == 3 then
@@ -3893,7 +3871,7 @@ function DOOM.d1_get_levels()
 end
 
 
-function DOOM.d2_get_levels()
+function DOOM2.get_levels()
   local MAP_NUM = 11
 
   if OB_CONFIG.length == "single" then MAP_NUM = 1  end
@@ -3966,18 +3944,16 @@ function DOOM.d2_get_levels()
       LEV.style_list = { barrels = { heaps=100 } }
     end
 
-    if map == 7 then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS.dead_simple
-    elseif map == gotcha_map then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS.gotcha
-    elseif map == gallow_map then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS.gallow_arena
-    elseif map == 30 then
-      LEV.prebuilt = GAME.PREBUILT_LEVELS.icon_of_sin
-    end
+    -- prebuilt levels
+    local pb_name = LEV.name
+
+    if map == gotcha_map then pb_name = "GOTCHA" end
+    if map == gallow_map then pb_name = "GALLOW" end
+    
+    LEV.prebuilt = GAME.PREBUILT_LEVELS[pb_name]
 
     if LEV.prebuilt then
-      LEV.name_theme = LEV.prebuilt.name_theme
+      LEV.name_theme = LEV.prebuilt.name_theme or "BOSS"
     end
 
     if MAP_NUM == 1 or (map % 10) == 3 then
@@ -4065,20 +4041,14 @@ function DOOM.make_level_gfx()
   gui.wad_name_gfx(LEVEL.patch, LEVEL.description, 1)
 end
 
+
 function DOOM.begin_level()
   -- set the description
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
-
-  -- determine stuff for prebuilt levels
-  if LEVEL.prebuilt then
-    local info = LEVEL.prebuilt
-
-    LEVEL.prebuilt_wad = info.file
-    LEVEL.prebuilt_map = rand.key_by_probs(info.maps)
-  end
 end
+
 
 function DOOM.end_level()
 gui.printf("DOOM.end_level: desc='%s' patch='%s'\n",
@@ -4088,6 +4058,7 @@ gui.printf("DOOM.end_level: desc='%s' patch='%s'\n",
     DOOM.make_level_gfx()
   end
 end
+
 
 function DOOM.all_done()
   DOOM.make_cool_gfx()
@@ -4119,8 +4090,8 @@ OB_GAMES["doom1"] =
 
   hooks =
   {
-    setup        = DOOM.d1_setup,
-    get_levels   = DOOM.d1_get_levels,
+    setup        = DOOM1.setup,
+    get_levels   = DOOM1.get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,
@@ -4160,8 +4131,8 @@ OB_GAMES["doom2"] =
 
   hooks =
   {
-    setup        = DOOM.d2_setup,
-    get_levels   = DOOM.d2_get_levels,
+    setup        = DOOM2.setup,
+    get_levels   = DOOM2.get_levels,
 
     begin_level  = DOOM.begin_level,
     end_level    = DOOM.end_level,

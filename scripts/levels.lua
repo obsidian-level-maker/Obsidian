@@ -601,11 +601,24 @@ end
 
 
 function Levels_handle_prebuilt()
-  assert(LEVEL.prebuilt_wad)
-  assert(LEVEL.prebuilt_map)
+  -- randomly pick one
+  local probs = {}
 
-  -- FIXME: support other games (Wolf3d, Quake, etc)
-  gui.wad_transfer_map(LEVEL.prebuilt_wad, LEVEL.prebuilt_map, LEVEL.name)
+  for idx,info in ipairs(LEVEL.prebuilt) do
+    probs[idx] = info.prob or 50
+  end
+  
+  local info = LEVEL.prebuilt[rand.index_by_probs(probs)]
+
+  assert(info)
+  assert(info.file)
+  assert(info.map)
+
+  if GAME.format == "doom" then
+    gui.wad_transfer_map(info.file, info.map, LEVEL.name)
+  else
+    -- FIXME: support other games (Wolf3d, Quake, etc)
+  end
 
   return "ok"
 end
