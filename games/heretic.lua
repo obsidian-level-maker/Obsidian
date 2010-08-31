@@ -194,11 +194,11 @@ HERETIC.MATERIALS =
   CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11" },
   CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11" },
   CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11" },
-  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11" }, -- poor match
-  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11" }, -- poor match
-  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11" }, -- poor match
-  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11" }, -- poor match
-  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11" }, -- poor match
+  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11" },
+  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11" },
+  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11" },
+  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11" },
+  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11" },
   DMNMSK   = { t="DMNMSK",   f="FLAT521" },
   DOOREXIT = { t="DOOREXIT", f="FLAT520" },
   DOORSTON = { t="DOORSTON", f="FLOOR30" },
@@ -218,7 +218,7 @@ HERETIC.MATERIALS =
   HORSES1  = { t="HORSES1",  f="FLAT520" },
   LAVA1    = { t="LAVA1",    f="FLAT506" },
   LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" },
-  LOOSERCK = { t="LOOSERCK", f="FLOOR04" },  -- poor match
+  LOOSERCK = { t="LOOSERCK", f="FLOOR04" },
   METL1    = { t="METL1",    f="FLOOR29" },
   METL2    = { t="METL2",    f="FLOOR28" },
   MOSAIC1  = { t="MOSAIC1",  f="FLAT502" },
@@ -229,7 +229,7 @@ HERETIC.MATERIALS =
   MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05" },
   ORNGRAY  = { t="ORNGRAY",  f="FLAT504" },
 
-  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" },  -- poor match
+  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" },
   REDWALL  = { t="REDWALL",  f="FLOOR09" },
   ROOTWALL = { t="ROOTWALL", f="FLAT506" },
   SAINT1   = { t="SAINT1",   f="FLAT523" },
@@ -241,10 +241,10 @@ HERETIC.MATERIALS =
   SPINE1   = { t="SPINE1",   f="FLOOR25" },
   SPINE2   = { t="SPINE2",   f="FLOOR25" },
   SQPEB1   = { t="SQPEB1",   f="FLAT504" },
-  SQPEB2   = { t="SQPEB2",   f="FLOOR27" },  -- poor match
-  STNGLS1  = { t="STNGLS1",  f="FLOOR30" },  -- poor match
-  STNGLS2  = { t="STNGLS2",  f="FLOOR30" },  -- poor match
-  STNGLS3  = { t="STNGLS3",  f="FLOOR30" },  -- poor match
+  SQPEB2   = { t="SQPEB2",   f="FLOOR27" },
+  STNGLS1  = { t="STNGLS1",  f="FLOOR30" },
+  STNGLS2  = { t="STNGLS2",  f="FLOOR30" },
+  STNGLS3  = { t="STNGLS3",  f="FLOOR30" },
   SW1OFF   = { t="SW1OFF",   f="FLOOR28" },
   SW1ON    = { t="SW1ON",    f="FLOOR28" },
   TMBSTON1 = { t="TMBSTON1", f="FLAT521" },
@@ -263,25 +263,25 @@ HERETIC.MATERIALS =
   FLAT506  = { t="ROOTWALL", f="FLAT506"  },
   FLAT507  = { t="DOORWOOD", f="FLAT507"  },
   FLAT508  = { t="DOORWOOD", f="FLAT508"  },
-  FLAT509  = { t="LOOSERCK", f="FLAT509"  },  -- poor match
-  FLAT510  = { t="BRWNRCKS", f="FLAT510"  },  -- poor match
+  FLAT509  = { t="LOOSERCK", f="FLAT509"  },
+  FLAT510  = { t="BRWNRCKS", f="FLAT510"  },
   FLAT512  = { t="GRNBLOK1", f="FLAT512"  },
   FLAT513  = { t="GRNBLOK1", f="FLAT513"  },
-  FLAT516  = { t="LOOSERCK", f="FLAT516"  },  -- poor match
-  FLAT517  = { t="BLUEFRAG", f="FLAT517"  },  -- poor match
+  FLAT516  = { t="LOOSERCK", f="FLAT516"  },
+  FLAT517  = { t="BLUEFRAG", f="FLAT517"  },
   FLAT520  = { t="CSTLRCK",  f="FLAT520"  },
   FLAT521  = { t="SQPEB1",   f="FLAT521"  },
   FLAT522  = { t="SNDCHNKS", f="FLAT522"  },
-  FLAT523  = { t="GRSTNPB",  f="FLAT523"  },  -- poor match
+  FLAT523  = { t="GRSTNPB",  f="FLAT523"  },
   FLATHUH1 = { t="LAVAFL1",  f="FLATHUH1" },
 
   FLOOR00  = { t="TRISTON1", f="FLOOR00"  },
-  FLOOR01  = { t="LOOSERCK", f="FLOOR01"  },  -- poor match
+  FLOOR01  = { t="LOOSERCK", f="FLOOR01"  },
   FLOOR03  = { t="CSTLRCK",  f="FLOOR03"  },
   FLOOR04  = { t="CSTLRCK",  f="FLOOR04"  },
   FLOOR05  = { t="MOSSROCK", f="FLOOR05"  },
   FLOOR06  = { t="SANDSQ2",  f="FLOOR06"  },
-  FLOOR07  = { t="MOSAIC1",  f="FLOOR07"  },  -- poor match
+  FLOOR07  = { t="MOSAIC1",  f="FLOOR07"  },
   FLOOR08  = { t="CHAINSD",  f="FLOOR08"  },
   FLOOR09  = { t="REDWALL",  f="FLOOR09"  },
   FLOOR10  = { t="WOODWL",   f="FLOOR10"  },
@@ -304,10 +304,10 @@ HERETIC.MATERIALS =
   FLOOR30  = { t="METL1",    f="FLOOR30"  },
 
   FLTFLWW1 = { t="WATRWAL1", f="FLTFLWW1" },
-  FLTLAVA1 = { t="LAVA1",    f="FLTLAVA1" },  -- poor match
-  FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" },  -- poor match
+  FLTLAVA1 = { t="LAVA1",    f="FLTLAVA1" },
+  FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" },
   FLTTELE1 = { t="CHAINSD",  f="FLTTELE1" },
-  FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" },  -- poor match
+  FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" },
 
 
   -- Oblige stuff
@@ -332,11 +332,6 @@ HERETIC.RAILS =
 --WEB2_B
 --WEB2_F
 --WEB3_M
-}
-
-HERETIC.SANITY_MAP =
-{
-  -- FIXME
 }
 
 

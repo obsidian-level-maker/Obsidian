@@ -227,7 +227,6 @@ DOOM2.PARAMETERS =
 
 ----------------------------------------------------------------
 
-
 DOOM.MATERIALS =
 {
   -- special materials --
@@ -249,9 +248,9 @@ DOOM.MATERIALS =
   BROWN96  = { t="BROWN96",  f="FLOOR7_1" },
   BROWNHUG = { t="BROWNHUG", f="FLOOR7_1" },
   BROWNPIP = { t="BROWNPIP", f="FLOOR0_1" },
-  BROWNGRN = { t="BROWNGRN", f="FLOOR7_1" },  -- poor match
-  BROVINE2 = { t="BROVINE2", f="FLOOR7_1" },  -- poor match
-  BRNPOIS  = { t="BRNPOIS",  f="FLOOR7_1" },  -- poor match
+  BROWNGRN = { t="BROWNGRN", f="FLOOR7_1" },
+  BROVINE2 = { t="BROVINE2", f="FLOOR7_1" },
+  BRNPOIS  = { t="BRNPOIS",  f="FLOOR7_1" },
 
   COMPBLUE = { t="COMPBLUE", f="FLAT14" },
   COMPSPAN = { t="COMPSPAN", f="CEIL5_1" },
@@ -267,20 +266,20 @@ DOOM.MATERIALS =
 
   DOOR1    = { t="DOOR1",    f="FLAT23" },
   DOOR3    = { t="DOOR3",    f="FLAT23" },
-  DOORBLU  = { t="DOORBLU",  f="FLAT23" },
-  DOORRED  = { t="DOORRED",  f="FLAT23" },
-  DOORYEL  = { t="DOORYEL",  f="FLAT23" },
-  DOORBLU2 = { t="DOORBLU2", f="CRATOP2" },
-  DOORRED2 = { t="DOORRED2", f="CRATOP2" },
-  DOORYEL2 = { t="DOORYEL2", f="CRATOP2" },
+  DOORBLU  = { t="DOORBLU",  f="FLAT23",  sane=1 },  -- keep doors recognisable
+  DOORRED  = { t="DOORRED",  f="FLAT23",  sane=1 },
+  DOORYEL  = { t="DOORYEL",  f="FLAT23",  sane=1 },
+  DOORBLU2 = { t="DOORBLU2", f="CRATOP2", sane=1 },
+  DOORRED2 = { t="DOORRED2", f="CRATOP2", sane=1 },
+  DOORYEL2 = { t="DOORYEL2", f="CRATOP2", sane=1 },
   DOORSTOP = { t="DOORSTOP", f="FLAT23" },
   DOORTRAK = { t="DOORTRAK", f="FLAT23" },
   EXITDOOR = { t="EXITDOOR", f="FLAT5_5" },
   EXITSIGN = { t="EXITSIGN", f="CEIL5_1" },
   EXITSTON = { t="EXITSTON", f="MFLR8_1" },
 
-  FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" }, -- poor match
-  FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" }, -- poor match
+  FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" },
+  FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" },
   FIREWALL = { t="FIREWALL", f="FLAT5_3" },
   GRAY1    = { t="GRAY1",    f="FLAT18" },
   GRAY2    = { t="GRAY2",    f="FLAT18" },
@@ -350,34 +349,34 @@ DOOM.MATERIALS =
   SKSNAKE2 = { t="SKSNAKE2", f="SFLR6_4" },
   SKSPINE1 = { t="SKSPINE1", f="FLAT5_6" },
   SKSPINE2 = { t="SKSPINE2", f="FLAT5_6" },
-  SLADPOIS = { t="SLADPOIS", f="FLOOR7_1" },  -- poor match
-  SLADSKUL = { t="SLADSKUL", f="FLOOR7_1" },  -- poor match
-  SLADWALL = { t="SLADWALL", f="FLOOR7_1" },  -- poor match
+  SLADPOIS = { t="SLADPOIS", f="FLOOR7_1" },
+  SLADSKUL = { t="SLADSKUL", f="FLOOR7_1" },
+  SLADWALL = { t="SLADWALL", f="FLOOR7_1" },
   SP_DUDE1 = { t="SP_DUDE1", f="DEM1_5" },
   SP_DUDE2 = { t="SP_DUDE2", f="DEM1_5" },
   SP_DUDE4 = { t="SP_DUDE4", f="DEM1_5" },
   SP_DUDE5 = { t="SP_DUDE5", f="DEM1_5" },
   SP_FACE1 = { t="SP_FACE1", f="CRATOP2" },
   SP_HOT1  = { t="SP_HOT1",  f="FLAT5_3" },
-  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
+  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },
 
-  STARG1   = { t="STARG1",   f="FLAT23" },  -- poor match
-  STARG2   = { t="STARG2",   f="FLAT23" },  -- poor match
-  STARG3   = { t="STARG3",   f="FLAT23" },  -- poor match
+  STARG1   = { t="STARG1",   f="FLAT23" },
+  STARG2   = { t="STARG2",   f="FLAT23" },
+  STARG3   = { t="STARG3",   f="FLAT23" },
   STARGR1  = { t="STARGR1",  f="FLAT3" },
   STARGR2  = { t="STARGR2",  f="FLAT3" },
   STARBR2  = { t="STARBR2",  f="FLOOR0_2" },
   STARTAN2 = { t="STARTAN2", f="FLOOR4_1" },
-  STARTAN3 = { t="STARTAN3", f="FLOOR4_5" },  -- poor match
+  STARTAN3 = { t="STARTAN3", f="FLOOR4_5" },
 
-  STEP1    = { t="STEP1",    f="FLOOR7_1" },
-  STEP2    = { t="STEP2",    f="FLOOR4_6" },
-  STEP3    = { t="STEP3",    f="CEIL5_1" },
-  STEP4    = { t="STEP4",    f="FLAT19" },
-  STEP5    = { t="STEP5",    f="FLOOR7_1" },
-  STEP6    = { t="STEP6",    f="FLAT5" },
-  STEPLAD1 = { t="STEPLAD1", f="FLOOR7_1" },
-  STEPTOP  = { t="STEPTOP",  f="FLOOR7_1" },
+  STEP1    = { t="STEP1",    f="FLOOR7_1", sane=1 },
+  STEP2    = { t="STEP2",    f="FLOOR4_6", sane=1 },
+  STEP3    = { t="STEP3",    f="CEIL5_1",  sane=1 },
+  STEP4    = { t="STEP4",    f="FLAT19",   sane=1 },
+  STEP5    = { t="STEP5",    f="FLOOR7_1", sane=1 },
+  STEP6    = { t="STEP6",    f="FLAT5",    sane=1 },
+  STEPLAD1 = { t="STEPLAD1", f="FLOOR7_1", sane=1 },
+  STEPTOP  = { t="STEPTOP",  f="FLOOR7_1", sane=1 },
 
   STONE    = { t="STONE",    f="FLAT5_4" },
   STONE2   = { t="STONE2",   f="MFLR8_1" },
@@ -385,8 +384,8 @@ DOOM.MATERIALS =
   SUPPORT2 = { t="SUPPORT2", f="FLAT23" },
   SUPPORT3 = { t="SUPPORT3", f="CEIL5_2" },
 
-  TEKWALL1 = { t="TEKWALL1",  f="CEIL5_1" },  -- poor match
-  TEKWALL4 = { t="TEKWALL4",  f="CEIL5_1" },  -- poor match
+  TEKWALL1 = { t="TEKWALL1",  f="CEIL5_1" },
+  TEKWALL4 = { t="TEKWALL4",  f="CEIL5_1" },
   WOOD1    = { t="WOOD1",     f="FLAT5_2" },
   WOOD3    = { t="WOOD3",     f="FLAT5_1" },
   WOOD4    = { t="WOOD4",     f="FLAT5_2" },
@@ -396,7 +395,7 @@ DOOM.MATERIALS =
   SW1BLUE  = { t="SW1BLUE",  f="FLAT14" },
   SW1BRCOM = { t="SW1BRCOM", f="FLOOR7_1" },
   SW1BRN2  = { t="SW1BRN2",  f="FLOOR0_1" },
-  SW1BRNGN = { t="SW1BRNGN", f="FLOOR7_1" }, -- poor match
+  SW1BRNGN = { t="SW1BRNGN", f="FLOOR7_1" },
   SW1BROWN = { t="SW1BROWN", f="FLOOR7_1" },
   SW1COMM  = { t="SW1COMM",  f="FLAT23" },
   SW1COMP  = { t="SW1COMP",  f="CEIL5_1" },
@@ -413,7 +412,7 @@ DOOM.MATERIALS =
   SW1PIPE  = { t="SW1PIPE",  f="FLOOR4_5" },
   SW1SATYR = { t="SW1SATYR", f="CEIL5_2" },
   SW1SKIN  = { t="SW1SKIN",  f="CRATOP2" },
-  SW1SLAD  = { t="SW1SLAD",  f="FLOOR7_1" },  -- poor match
+  SW1SLAD  = { t="SW1SLAD",  f="FLOOR7_1" },
   SW1STON1 = { t="SW1STON1", f="MFLR8_1" },
   SW1STRTN = { t="SW1STRTN", f="FLOOR4_1" },
   SW1VINE  = { t="SW1VINE",  f="FLAT1" },
@@ -437,9 +436,9 @@ DOOM.MATERIALS =
   CEIL5_1  = { t="COMPSPAN", f="CEIL5_1" },
   CEIL5_2  = { t="METAL",    f="CEIL5_2" },
   COMP01   = { t="GRAY1",    f="COMP01" },
-  CONS1_1  = { t="COMPWERD", f="CONS1_1" },  -- poor match
-  CONS1_5  = { t="COMPWERD", f="CONS1_5" },  -- poor match
-  CONS1_7  = { t="COMPWERD", f="CONS1_7" },  -- poor match
+  CONS1_1  = { t="COMPWERD", f="CONS1_1" },
+  CONS1_5  = { t="COMPWERD", f="CONS1_5" },
+  CONS1_7  = { t="COMPWERD", f="CONS1_7" },
 
   DEM1_1   = { t="MARBLE1",  f="DEM1_1" },
   DEM1_2   = { t="MARBLE1",  f="DEM1_2" },
@@ -449,12 +448,12 @@ DOOM.MATERIALS =
   DEM1_6   = { t="MARBLE1",  f="DEM1_6" },
 
   FLAT1    = { t="GRAY1",    f="FLAT1" },
-  FLAT1_1  = { t="BROWN1",   f="FLAT1_1" },  -- poor match
-  FLAT1_2  = { t="BROWN1",   f="FLAT1_2" },  -- poor match
-  FLAT1_3  = { t="BROWN1",   f="FLAT1_3" },  -- poor match
+  FLAT1_1  = { t="BROWN1",   f="FLAT1_1" },
+  FLAT1_2  = { t="BROWN1",   f="FLAT1_2" },
+  FLAT1_3  = { t="BROWN1",   f="FLAT1_3" },
   FLAT2    = { t="GRAY1",    f="FLAT2" },
   FLAT3    = { t="GRAY4",    f="FLAT3" },
-  FLAT4    = { t="COMPSPAN", f="FLAT4" },  -- poor match
+  FLAT4    = { t="COMPSPAN", f="FLAT4" },
   FLAT5    = { t="BROWNHUG", f="FLAT5" },
   FLAT5_1  = { t="WOOD1",    f="FLAT5_1" },
   FLAT5_2  = { t="WOOD1",    f="FLAT5_2" },
@@ -482,7 +481,7 @@ DOOM.MATERIALS =
   FLOOR1_1 = { t="COMPBLUE", f="FLOOR1_1" },
   FLOOR1_6 = { t="REDWALL",  f="FLOOR1_6" },
   FLOOR1_7 = { t="REDWALL",  f="FLOOR1_7" },
-  FLOOR3_3 = { t="BROWN1",   f="FLOOR3_3" },  -- poor match
+  FLOOR3_3 = { t="BROWN1",   f="FLOOR3_3" },
   FLOOR4_1 = { t="STARTAN2", f="FLOOR4_1" },
   FLOOR4_5 = { t="STARTAN2", f="FLOOR4_5" },
   FLOOR4_6 = { t="STARTAN2", f="FLOOR4_6" },
@@ -491,7 +490,7 @@ DOOM.MATERIALS =
   FLOOR5_2 = { t="BROWNHUG", f="FLOOR5_2" },
   FLOOR5_3 = { t="BROWNHUG", f="FLOOR5_3" },
   FLOOR5_4 = { t="BROWNHUG", f="FLOOR5_4" },
-  FLOOR6_1 = { t="REDWALL",  f="FLOOR6_1" },  -- poor match
+  FLOOR6_1 = { t="REDWALL",  f="FLOOR6_1" },
   FLOOR7_1 = { t="BROWNHUG", f="FLOOR7_1" },
   FLOOR7_2 = { t="MARBLE1",  f="FLOOR7_2" },
 
@@ -501,7 +500,7 @@ DOOM.MATERIALS =
   GATE4    = { t="METAL",    f="GATE4" },
   MFLR8_1  = { t="STONE2",   f="MFLR8_1" },
   MFLR8_2  = { t="BROWNHUG", f="MFLR8_2" },
-  MFLR8_3  = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
+  MFLR8_3  = { t="SP_ROCK1", f="MFLR8_3" },
   SFLR6_1  = { t="SKSNAKE1", f="SFLR6_1" },
   SFLR6_4  = { t="SKSNAKE2", f="SFLR6_4" },
   SFLR7_1  = { t="SKSNAKE1", f="SFLR7_1" },
@@ -515,19 +514,19 @@ DOOM.MATERIALS =
 
 
   -- liquid stuff (using new patches)
-  WFALL1   = { t="GSTFONT1", f="FWATER1" },
-  FWATER1  = { t="GSTFONT1", f="FWATER1" },
+  WFALL1   = { t="GSTFONT1", f="FWATER1", sane=1 },
+  FWATER1  = { t="GSTFONT1", f="FWATER1", sane=1 },
 
-  LFALL1   = { t="FIREMAG1", f="LAVA1" },
-  LAVA1    = { t="FIREMAG1", f="LAVA1" },
+  LFALL1   = { t="FIREMAG1", f="LAVA1", sane=1 },
+  LAVA1    = { t="FIREMAG1", f="LAVA1", sane=1 },
 
 
   -- Oblige stuff
-  O_PILL   = { t="CEMENT1",  f="O_PILL" },
-  O_BOLT   = { t="CEMENT2",  f="O_BOLT" },
-  O_RELIEF = { t="CEMENT3",  f="O_RELIEF" },
-  O_CARVE  = { t="CEMENT4",  f="O_CARVE" },
-  O_NEON   = { t="CEMENT6",  f="CEIL5_1" },
+  O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 },
+  O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 },
+  O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 },
+  O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 },
+  O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 },
 
 
   -- Missing stuff:
@@ -574,24 +573,24 @@ DOOM1.MATERIALS =
   LITERED  = { t="LITERED",  f="FLOOR1_6" },
   LITESTON = { t="LITESTON", f="MFLR8_1" },
 
-  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" },  -- poor match
+  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" },
   PLANET1  = { t="PLANET1",  f="FLAT23" },
   REDWALL1 = { t="REDWALL1", f="FLOOR1_6" },
   SKINBORD = { t="SKINBORD", f="FLAT5_5" },
-  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" },  -- poor match
-  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" },  -- poor match
+  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" },
+  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" },
   SKULWAL3 = { t="SKULWAL3", f="FLAT5_6" },
   SKULWALL = { t="SKULWALL", f="FLAT5_6" },
-  SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" },  -- poor match
+  SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" },
   SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" },
   SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" },
-  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },  -- poor match
+  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" },
   STARTAN1 = { t="STARTAN1", f="FLOOR4_1" },
   STONGARG = { t="STONGARG", f="MFLR8_1" },
   STONPOIS = { t="STONPOIS", f="FLAT5_4" },
-  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" },  -- poor match
-  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1" },  -- poor match
-  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" },  -- poor match
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" },
+  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1" },
+  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" },
   WOODSKUL = { t="WOODSKUL", f="FLAT5_2" },
 
   SW1BRN1  = { t="SW1BRN1",  f="FLOOR0_1" },
@@ -614,11 +613,11 @@ DOOM1.MATERIALS =
 
 
   -- liquid stuff (using new patches)
-  BFALL1   = { t="BLODGR1",  f="BLOOD1" },
-  BLOOD1   = { t="BLODGR1",  f="BLOOD1" },
+  BFALL1   = { t="BLODGR1",  f="BLOOD1", sane=1 },
+  BLOOD1   = { t="BLODGR1",  f="BLOOD1", sane=1 },
 
-  SFALL1   = { t="SLADRIP1", f="NUKAGE1" },
-  NUKAGE1  = { t="SLADRIP1", f="NUKAGE1" },
+  SFALL1   = { t="SLADRIP1", f="NUKAGE1", sane=1 },
+  NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 },
 
 }
 
@@ -650,7 +649,7 @@ DOOM2.MATERIALS =
   BRICK9   = { t="BRICK9",   f="FLOOR5_4" },
   BRICK10  = { t="BRICK10",  f="SLIME13" },
   BRICK11  = { t="BRICK11",  f="FLAT5_3" },
-  BRICK12  = { t="BRICK12",  f="FLOOR0_1" },  -- poor match
+  BRICK12  = { t="BRICK12",  f="FLOOR0_1" },
   BRONZE1  = { t="BRONZE1",  f="FLOOR7_1" },
   BRONZE2  = { t="BRONZE2",  f="FLOOR7_1" },
   BRONZE3  = { t="BRONZE3",  f="FLOOR7_1" },
@@ -661,7 +660,7 @@ DOOM2.MATERIALS =
   BSTONE2  = { t="BSTONE2",  f="RROCK12" },
   BSTONE3  = { t="BSTONE3",  f="RROCK12" },
 
-  CEMENT9  = { t="CEMENT9",  f="FLAT19" },  -- poor match
+  CEMENT9  = { t="CEMENT9",  f="FLAT19" },
   CRACKLE2 = { t="CRACKLE2", f="RROCK01" },
   CRACKLE4 = { t="CRACKLE4", f="RROCK02" },
   CRATE3   = { t="CRATE3",   f="CRATOP1" },
@@ -698,21 +697,21 @@ DOOM2.MATERIALS =
   PANEL8   = { t="PANEL8",   f="RROCK09" },
   PANEL9   = { t="PANEL9",   f="RROCK09" },
   PIPES    = { t="PIPES",    f="FLOOR3_3" },
-  PIPEWAL1 = { t="PIPEWAL1", f="RROCK03" },  -- poor match
-  PIPEWAL2 = { t="PIPEWAL2", f="RROCK03" },  -- poor match
+  PIPEWAL1 = { t="PIPEWAL1", f="RROCK03" },
+  PIPEWAL2 = { t="PIPEWAL2", f="RROCK03" },
   ROCK1    = { t="ROCK1",    f="RROCK13" },
   ROCK2    = { t="ROCK2",    f="GRNROCK" },
   ROCK3    = { t="ROCK3",    f="RROCK13" },
-  ROCK4    = { t="ROCK4",    f="FLOOR0_2" }, -- poor match
+  ROCK4    = { t="ROCK4",    f="FLOOR0_2" },
   ROCK5    = { t="ROCK5",    f="RROCK09" },
 
   SILVER1  = { t="SILVER1",  f="FLAT23" },
   SILVER2  = { t="SILVER2",  f="FLAT22" },
   SILVER3  = { t="SILVER3",  f="FLAT23" },
-  SK_LEFT  = { t="SK_LEFT",  f="FLAT5_6" },  -- poor match
-  SK_RIGHT = { t="SK_RIGHT", f="FLAT5_6" },  -- poor match
-  SLOPPY1  = { t="SLOPPY1",  f="FLAT5_6" },  -- poor match
-  SLOPPY2  = { t="SLOPPY2",  f="FLAT5_6" },  -- poor match
+  SK_LEFT  = { t="SK_LEFT",  f="FLAT5_6" },
+  SK_RIGHT = { t="SK_RIGHT", f="FLAT5_6" },
+  SLOPPY1  = { t="SLOPPY1",  f="FLAT5_6" },
+  SLOPPY2  = { t="SLOPPY2",  f="FLAT5_6" },
   SP_DUDE7 = { t="SP_DUDE7", f="FLOOR5_4" },
   SP_FACE2 = { t="SP_FACE2", f="FLAT5_6" },
 
@@ -742,13 +741,13 @@ DOOM2.MATERIALS =
   TEKBRON2 = { t="TEKBRON2", f="FLOOR0_1" },
   TEKLITE  = { t="TEKLITE",  f="FLOOR5_2" },
   TEKLITE2 = { t="TEKLITE2", f="FLOOR5_2" },
-  TEKWALL6 = { t="TEKWALL6", f="CEIL5_1" },  -- poor match
+  TEKWALL6 = { t="TEKWALL6", f="CEIL5_1" },
 
-  TEKGREN1 = { t="TEKGREN1", f="RROCK20" },  -- poor match
-  TEKGREN2 = { t="TEKGREN2", f="RROCK20" },  -- poor match
-  TEKGREN3 = { t="TEKGREN3", f="RROCK20" },  -- poor match
-  TEKGREN4 = { t="TEKGREN4", f="RROCK20" },  -- poor match
-  TEKGREN5 = { t="TEKGREN5", f="RROCK20" },  -- poor match
+  TEKGREN1 = { t="TEKGREN1", f="RROCK20" },
+  TEKGREN2 = { t="TEKGREN2", f="RROCK20" },
+  TEKGREN3 = { t="TEKGREN3", f="RROCK20" },
+  TEKGREN4 = { t="TEKGREN4", f="RROCK20" },
+  TEKGREN5 = { t="TEKGREN5", f="RROCK20" },
 
   WOOD6    = { t="WOOD6",    f="FLAT5_2" },
   WOOD7    = { t="WOOD7",    f="FLAT5_2" },
@@ -822,9 +821,9 @@ DOOM2.MATERIALS =
 
   RROCK01  = { t="CRACKLE2", f="RROCK01" },
   RROCK02  = { t="CRACKLE4", f="RROCK02" },
-  RROCK03  = { t="ASHWALL3", f="RROCK03" },  -- poor match
+  RROCK03  = { t="ASHWALL3", f="RROCK03" },
   RROCK04  = { t="ASHWALL3", f="RROCK04" },
-  RROCK05  = { t="ROCKRED1", f="RROCK05" },  -- poor match
+  RROCK05  = { t="ROCKRED1", f="RROCK05" },
   RROCK09  = { t="TANROCK4", f="RROCK09" },
   RROCK10  = { t="BRICK1",   f="RROCK10" },
   RROCK11  = { t="BSTONE1",  f="RROCK11" },
@@ -838,57 +837,24 @@ DOOM2.MATERIALS =
   RROCK19  = { t="ZIMMER2",  f="RROCK19" },
   RROCK20  = { t="ZIMMER7",  f="RROCK20" },
 
-  SLIME09  = { t="ROCKRED1", f="SLIME09" },  -- poor match
+  SLIME09  = { t="ROCKRED1", f="SLIME09" },
   SLIME13  = { t="BRICK10",  f="SLIME13" },
-  SLIME14  = { t="METAL2",   f="SLIME14" },  -- poor match
-  SLIME15  = { t="COMPSPAN", f="SLIME15" },  -- poor match
+  SLIME14  = { t="METAL2",   f="SLIME14" },
+  SLIME15  = { t="COMPSPAN", f="SLIME15" },
   SLIME16  = { t="SPACEW4",  f="SLIME16" },
 
 
-  -- liquid stuff
-  BFALL1   = { t="BFALL1",  f="BLOOD1" },
-  BLOOD1   = { t="BFALL1",  f="BLOOD1" },
+  -- liquid stuff (keep them recognisable)
+  BFALL1   = { t="BFALL1",  f="BLOOD1", sane=1 },
+  BLOOD1   = { t="BFALL1",  f="BLOOD1", sane=1 },
 
-  SFALL1   = { t="SFALL1",  f="NUKAGE1" },
-  NUKAGE1  = { t="SFALL1",  f="NUKAGE1" },
+  SFALL1   = { t="SFALL1",  f="NUKAGE1", sane=1 },
+  NUKAGE1  = { t="SFALL1",  f="NUKAGE1", sane=1 },
 
-  KFALL1   = { t="BLODRIP1", f="SLIME01" },  -- new patches
-  KFALL5   = { t="BLODRIP1", f="SLIME05" },
-  SLIME01  = { t="BLODRIP1", f="SLIME01" },
-  SLIME05  = { t="BLODRIP1", f="SLIME05" },
-}
-
-
-DOOM.SANITY_MAP =
-{
-  -- liquids kill the player, so keep them recognisable
-  LAVA1   = "FWATER1",
-  FWATER1 = "BLOOD1",
-  BLOOD1  = "NUKAGE1",
-  NUKAGE1 = "LAVA1",
-  LFALL1  = "WFALL1",
-  WFALL1  = "BFALL1",
-  BFALL1  = "SFALL1",
-  SFALL1  = "LFALL1",
-  SLIME01 = "SLIME09",
-  SLIME05 = "SLIME09",
-  SLIME09 = "SLIME01",
-
-  -- keep keyed doors recognisable
-  DOORBLU  = "DOORBLU2",
-  DOORBLU2 = "DOORBLU",
-  DOORRED  = "DOORRED2",
-  DOORRED2 = "DOORRED",
-  DOORYEL  = "DOORYEL2",
-  DOORYEL2 = "DOORYEL",
-  EXITSIGN = "EXITSIGN",
-
-  -- these textures may not tile well vertically
-  STEP1 = "STEP4", STEP2 = "STEP5", STEP3 = "STEP6",
-  STEP4 = "STEP3", STEP5 = "STEP2", STEP6 = "STEP1",
-
-  STEPLAD1 = "STEPLAD1",
-  STEPTOP  = "STEPTOP",
+  KFALL1   = { t="BLODRIP1", f="SLIME01", sane=1 },  -- new patches
+  KFALL5   = { t="BLODRIP1", f="SLIME05", sane=1 },
+  SLIME01  = { t="BLODRIP1", f="SLIME01", sane=1 },
+  SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 },
 }
 
 

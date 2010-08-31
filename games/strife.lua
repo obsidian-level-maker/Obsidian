@@ -87,12 +87,6 @@ STRIFE.MATERIALS =
 }
 
 
-STRIFE.SANITY_MAP =
-{
-  -- FIXME
-}
-
-
 ----------------------------------------------------------------
 
 STRIFE.COMBOS =

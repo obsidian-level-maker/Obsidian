@@ -275,9 +275,9 @@ HEXEN.MATERIALS =
   BOOKS02  = { t="BOOKS02",  f="F_092" },
   BOOKS03  = { t="BOOKS03",  f="F_092" },
   BOOKS04  = { t="BOOKS04",  f="F_092" },
-  BRASS1   = { t="BRASS1",   f="F_037" },  -- poor match
-  BRASS3   = { t="BRASS3",   f="F_037" },  -- poor match
-  BRASS4   = { t="BRASS4",   f="F_037" },  -- poor match
+  BRASS1   = { t="BRASS1",   f="F_037" },
+  BRASS3   = { t="BRASS3",   f="F_037" },
+  BRASS4   = { t="BRASS4",   f="F_037" },
   CASTLE01 = { t="CASTLE01", f="F_012" },
   CASTLE02 = { t="CASTLE02", f="F_012" },
   CASTLE03 = { t="CASTLE03", f="F_012" },
@@ -288,11 +288,11 @@ HEXEN.MATERIALS =
   CASTLE08 = { t="CASTLE08", f="F_057" },
   CASTLE11 = { t="CASTLE11", f="F_073" },
 
-  CAVE01   = { t="CAVE01",   f="F_073" },  -- poor match
+  CAVE01   = { t="CAVE01",   f="F_073" },
   CAVE02   = { t="CAVE02",   f="F_076" },
-  CAVE03   = { t="CAVE03",   f="F_039" },  -- poor match
+  CAVE03   = { t="CAVE03",   f="F_039" },
   CAVE04   = { t="CAVE04",   f="F_039" },
-  CAVE05   = { t="CAVE05",   f="F_007" },  -- poor match
+  CAVE05   = { t="CAVE05",   f="F_007" },
   CAVE06   = { t="CAVE06",   f="F_039" },
   CAVE07   = { t="CAVE07",   f="F_008" },
   CAVE12   = { t="CAVE12",   f="F_076" },
@@ -307,8 +307,8 @@ HEXEN.MATERIALS =
   CRATE05  = { t="CRATE05",  f="F_053" },
 
   D_AXE    = { t="D_AXE",    f="F_092" },
-  D_BRASS1 = { t="D_BRASS1", f="F_037" },  -- poor match
-  D_BRASS2 = { t="D_BRASS2", f="F_037" },  -- poor match
+  D_BRASS1 = { t="D_BRASS1", f="F_037" },
+  D_BRASS2 = { t="D_BRASS2", f="F_037" },
   D_CAST   = { t="D_CAST",   f="F_073" },
   D_CAVE   = { t="D_CAVE",   f="F_073" },
   D_CAVE2  = { t="D_CAVE2",  f="F_007" },
@@ -317,7 +317,7 @@ HEXEN.MATERIALS =
   D_END2   = { t="D_END2",   f="F_073" },
   D_END3   = { t="D_END3",   f="F_092" },
   D_END4   = { t="D_END4",   f="F_092" },
-  D_ENDBR  = { t="D_ENDBR",  f="F_037" },  -- poor match
+  D_ENDBR  = { t="D_ENDBR",  f="F_037" },
   D_ENDSLV = { t="D_ENDSLV", f="F_082" },
   D_FIRE   = { t="D_FIRE",   f="F_013" },
   D_RUST   = { t="D_RUST",   f="F_073" },
@@ -356,14 +356,14 @@ HEXEN.MATERIALS =
   FIRE12   = { t="FIRE12",   f="F_013" },
   FIRE14   = { t="FIRE14",   f="F_032" },
   FIRE15   = { t="FIRE15",   f="F_032" },
-  FIRE17   = { t="FIRE17",   f="F_017" },  -- poor match
+  FIRE17   = { t="FIRE17",   f="F_017" },
 
   FOREST01 = { t="FOREST01", f="F_014" },
   FOREST02 = { t="FOREST02", f="F_038" },
   FOREST03 = { t="FOREST03", f="F_038" },
   FOREST04 = { t="FOREST04", f="F_038" },
   FOREST05 = { t="FOREST05", f="F_048" },
-  FOREST07 = { t="FOREST07", f="F_002" },  -- poor match
+  FOREST07 = { t="FOREST07", f="F_002" },
   FOREST10 = { t="FOREST10", f="F_047" },
   FOREST11 = { t="FOREST11", f="F_038" },
   FORPUZ1  = { t="FORPUZ1",  f="F_005" },
@@ -392,9 +392,9 @@ HEXEN.MATERIALS =
   GRAVE08  = { t="GRAVE08",  f="F_009" },
 
   ICE01    = { t="ICE01",    f="F_033" },
-  ICE02    = { t="ICE02",    f="F_040" },  -- poor match
-  ICE03    = { t="ICE03",    f="F_040" },  -- poor match
-  ICE06    = { t="ICE06",    f="F_040" },  -- poor match
+  ICE02    = { t="ICE02",    f="F_040" },
+  ICE03    = { t="ICE03",    f="F_040" },
+  ICE06    = { t="ICE06",    f="F_040" },
   MONK01   = { t="MONK01",   f="F_027" },
   MONK02   = { t="MONK02",   f="F_025" },
   MONK03   = { t="MONK03",   f="F_025" },
@@ -416,14 +416,14 @@ HEXEN.MATERIALS =
   MONK22   = { t="MONK22",   f="F_028" },
   MONK23   = { t="MONK23",   f="F_025" },
 
-  PILLAR01 = { t="PILLAR01", f="F_037" },  -- poor match
+  PILLAR01 = { t="PILLAR01", f="F_037" },
   PILLAR02 = { t="PILLAR02", f="F_044" },
   PLANET1  = { t="PLANET1",  f="F_025" },
   PLANET2  = { t="PLANET2",  f="F_025" },
   PLAT01   = { t="PLAT01",   f="F_045" },
   PLAT02   = { t="PLAT02",   f="F_045" },
   PRTL02   = { t="PRTL02",   f="F_057" },
-  PRTL03   = { t="PRTL03",   f="F_019" },  -- poor match
+  PRTL03   = { t="PRTL03",   f="F_019" },
   PRTL04   = { t="PRTL04",   f="F_044" },
   PRTL05   = { t="PRTL05",   f="F_044" },
   PRTL06   = { t="PRTL06",   f="F_057" },
@@ -457,12 +457,12 @@ HEXEN.MATERIALS =
   SEWER02  = { t="SEWER02",  f="F_018" },
   SEWER05  = { t="SEWER05",  f="F_018" },
   SEWER06  = { t="SEWER06",  f="F_018" },
-  SEWER07  = { t="SEWER07",  f="F_017" },  -- poor match
-  SEWER08  = { t="SEWER08",  f="F_017" },  -- poor match
-  SEWER09  = { t="SEWER09",  f="F_017" },  -- poor match
-  SEWER10  = { t="SEWER10",  f="F_017" },  -- poor match
-  SEWER11  = { t="SEWER11",  f="F_017" },  -- poor match
-  SEWER12  = { t="SEWER12",  f="F_017" },  -- poor match
+  SEWER07  = { t="SEWER07",  f="F_017" },
+  SEWER08  = { t="SEWER08",  f="F_017" },
+  SEWER09  = { t="SEWER09",  f="F_017" },
+  SEWER10  = { t="SEWER10",  f="F_017" },
+  SEWER11  = { t="SEWER11",  f="F_017" },
+  SEWER12  = { t="SEWER12",  f="F_017" },
   SEWER13  = { t="SEWER13",  f="F_018" },
 
   SPAWN01  = { t="SPAWN01",  f="F_042" },
@@ -496,12 +496,12 @@ HEXEN.MATERIALS =
   VALVE1   = { t="VALVE1",   f="F_047" },
   VALVE2   = { t="VALVE2",   f="F_047" },
   VILL01   = { t="VILL01",   f="F_030" },
-  VILL04   = { t="VILL04",   f="F_055" },  -- poor match
-  VILL05   = { t="VILL05",   f="F_055" },  -- poor match
+  VILL04   = { t="VILL04",   f="F_055" },
+  VILL05   = { t="VILL05",   f="F_055" },
 
   WASTE01  = { t="WASTE01",  f="F_005" },
   WASTE02  = { t="WASTE02",  f="F_044" },
-  WASTE03  = { t="WASTE03",  f="F_082" },  -- poor match
+  WASTE03  = { t="WASTE03",  f="F_082" },
   WASTE04  = { t="WASTE04",  f="F_037" },
   WINN01   = { t="WINN01",   f="F_047" },
   WINNOW02 = { t="WINNOW02", f="F_022" },
@@ -522,26 +522,26 @@ HEXEN.MATERIALS =
   SW51_OFF = { t="SW51_OFF", f="F_082" },
   SW52_OFF = { t="SW52_OFF", f="F_082" },
   SW53_UP  = { t="SW53_UP",  f="F_025" },
-  SW_1_UP  = { t="SW_1_UP",  f="F_048" },  -- poor match
-  SW_2_UP  = { t="SW_2_UP",  f="F_048" },  -- poor match
+  SW_1_UP  = { t="SW_1_UP",  f="F_048" },
+  SW_2_UP  = { t="SW_2_UP",  f="F_048" },
   SW_EL1   = { t="SW_EL1",   f="F_082" },
   SW_OL1   = { t="SW_OL1",   f="F_073" },
 
 
   -- flats --
 
-  F_001 = { t="WASTE01",  f="F_001" },  -- poor match
+  F_001 = { t="WASTE01",  f="F_001" },
   F_002 = { t="WASTE01",  f="F_002" },
   F_003 = { t="WASTE01",  f="F_003" },
   F_004 = { t="WASTE01",  f="F_004" },
   F_005 = { t="WASTE01",  f="F_005" },
   F_006 = { t="WASTE01",  f="F_006" },
-  F_007 = { t="CAVE05",   f="F_007" },  -- poor match
+  F_007 = { t="CAVE05",   f="F_007" },
   F_008 = { t="CAVE07",   f="F_008" },
-  F_009 = { t="PRTL02",   f="F_009" },  -- poor match
-  F_010 = { t="PRTL04",   f="F_010" },  -- poor match
-  F_011 = { t="FOREST01", f="F_011" },  -- poor match
-  F_012 = { t="FIRE06",   f="F_012" },  -- poor match
+  F_009 = { t="PRTL02",   f="F_009" },
+  F_010 = { t="PRTL04",   f="F_010" },
+  F_011 = { t="FOREST01", f="F_011" },
+  F_012 = { t="FIRE06",   f="F_012" },
   F_013 = { t="FIRE06",   f="F_013" },
   F_014 = { t="MONK16",   f="F_014" },
   F_015 = { t="CASTLE01", f="F_015" },
@@ -552,7 +552,7 @@ HEXEN.MATERIALS =
   F_021 = { t="FIRE06",   f="F_021" },
   F_022 = { t="FIRE06",   f="F_022" },
   F_023 = { t="SEWER01",  f="F_023" },
-  F_024 = { t="SEWER08",  f="F_024" },  -- poor match
+  F_024 = { t="SEWER08",  f="F_024" },
   F_025 = { t="MONK02",   f="F_025" },
   F_027 = { t="MONK01",   f="F_027" },
   F_028 = { t="MONK16",   f="F_028" },
@@ -561,18 +561,18 @@ HEXEN.MATERIALS =
   F_031 = { t="MONK07",   f="F_031" },
   F_032 = { t="FIRE01",   f="F_032" },
   F_033 = { t="ICE01",    f="F_033" },
-  F_034 = { t="FOREST02", f="F_034" },  -- poor match
+  F_034 = { t="FOREST02", f="F_034" },
   F_037 = { t="WASTE04",  f="F_037" },
   F_038 = { t="FOREST02", f="F_038" },
   F_039 = { t="CAVE04",   f="F_039" },
-  F_040 = { t="CAVE04",   f="F_040" },  -- poor match
+  F_040 = { t="CAVE04",   f="F_040" },
   F_041 = { t="FIRE06",   f="F_041" },
   F_042 = { t="FIRE06",   f="F_042" },
   F_043 = { t="WASTE02",  f="F_043" },
   F_044 = { t="PRTL04",   f="F_044" },
-  F_045 = { t="WASTE03",  f="F_045" },  -- poor match
-  F_046 = { t="WASTE03",  f="F_046" },  -- poor match
-  F_047 = { t="STEEL01",  f="F_047" },  -- poor match
+  F_045 = { t="WASTE03",  f="F_045" },
+  F_046 = { t="WASTE03",  f="F_046" },
+  F_047 = { t="STEEL01",  f="F_047" },
   F_048 = { t="FOREST05", f="F_048" },
   F_049 = { t="CRATE01",  f="F_049" },
   F_050 = { t="CRATE03",  f="F_050" },

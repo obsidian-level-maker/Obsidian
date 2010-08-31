@@ -186,12 +186,6 @@ NUKEM.MATERIALS =
 }
 
 
-NUKEM.SANITY_MAP =
-{
-  -- FIXME
-}
-
-
 NUKEM.LIQUIDS =
 {
   water  = { mat="WATER", },

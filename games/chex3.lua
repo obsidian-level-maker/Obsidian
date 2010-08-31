@@ -205,23 +205,17 @@ CHEX3.MATERIALS =
   -- textures --
 
   BROWNGRN = { t="BROWNGRN", f="FLAT1" },
-  FIREMAG1 = { t="FIREMAG1", f="NUKAGE1" },
+  FIREMAG1 = { t="FIREMAG1", f="NUKAGE1", sane=1 },
   STARG3   = { t="STARG3",   f="FLAT1" },
 
   -- flats --
 
   FLAT1   = { t="BROWNGRN", f="FLAT1" },
   FLAT5_6 = { t="BROWNGRN", f="FLAT5_6" },
-  LAVA1   = { t="BROWNGRN", f="LAVA1" },
-  NUKAGE1 = { t="BROWNGRN", f="NUKAGE1" },
+  LAVA1   = { t="BROWNGRN", f="LAVA1",   sane=1 },
+  NUKAGE1 = { t="BROWNGRN", f="NUKAGE1", sane=1 },
 }
 
-CHEX3.SANITY_MAP =
-{ 
-  NUKAGE1  = "LAVA1",
-  LAVA1    = "NUKAGE1",
-  FIREMAG1 = "FIREMAG1",
-}
 
 CHEX3.LIFTS =
 {

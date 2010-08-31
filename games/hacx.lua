@@ -125,12 +125,6 @@ HACX.MATERIALS =
 }
 
 
-HACX.SANITY_MAP =
-{
-  -- FIXME
-}
-
-
 ----------------------------------------------------------------
 
 HACX.SUB_THEMES =
