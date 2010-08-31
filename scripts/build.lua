@@ -493,8 +493,8 @@ function Build.prepare_trip()
   local m_before = {}
   local m_after  = {}
 
-  for m,_ in pairs(GAME.MATERIALS) do
-    if not (GAME.SANITY_MAP and GAME.SANITY_MAP[m]) and
+  for m,def in pairs(GAME.MATERIALS) do
+    if not def.sane and
        not (string.sub(m,1,1) == "_") and
        not (string.sub(m,1,2) == "SW") and
        not (string.sub(m,1,3) == "BUT")
@@ -514,24 +514,11 @@ function Build.prepare_trip()
 end
 
 
-function psychedelic_mat(name)
-  if GAME.SANITY_MAP and GAME.SANITY_MAP[name] then
-    return GAME.SANITY_MAP[name]
-  end
-
-  if LEVEL.psycho_map[name] then
-    return LEVEL.psycho_map[name]
-  end
-
-  return name
-end
-
-
 function safe_get_mat(name)
   if not name then name = "_ERROR" end
 
-  if OB_CONFIG.theme == "psycho" then
-    name = psychedelic_mat(name)
+  if OB_CONFIG.theme == "psycho" and LEVEL.psycho_map[name] then
+    name = LEVEL.psycho_map[name]
   end
 
   local mat = GAME.MATERIALS[name]
