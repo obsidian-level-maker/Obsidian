@@ -1173,6 +1173,28 @@ void quake_leaf_c::BBoxFromSolids()
 }
 
 
+static int ParseLiquidMedium(csg_property_set_c *props)
+{
+  const char *str = props->getStr("medium");
+
+  if (str)
+  {
+    if (StringCaseCmp(str, "water") == 0)
+      return MEDIUM_WATER;
+
+    if (StringCaseCmp(str, "slime") == 0)
+      return MEDIUM_SLIME;
+
+    if (StringCaseCmp(str, "lava") == 0)
+      return MEDIUM_LAVA;
+
+    LogPrintf("WARNING: unknown liquid medium '%s'\n", str);
+  }
+
+  return MEDIUM_WATER;  // the default
+}
+
+
 static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 {
   // Quake 1 and related games simply have a single solid leaf
@@ -1263,8 +1285,13 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   }
   else if (liquid && liquid->t.z > leaf->bbox.mins[2] + 0.1)
   {
+    // TODO: 1. should call CreateWallFaces() for each leaf
+    //       2. should move solid floor face into W_leaf
+
+    int medium = ParseLiquidMedium(&liquid->props);
+
     W_node = new quake_node_c;
-    W_leaf = new quake_leaf_c(MEDIUM_SLIME);
+    W_leaf = new quake_leaf_c(medium);
 
     if (qk_game == 2)
       W_leaf->AddSolid(liquid);

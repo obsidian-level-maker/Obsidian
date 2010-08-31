@@ -56,7 +56,7 @@ static int q2_medium_table[5] =
   0  /* EMPTY */,
   CONTENTS_WATER,
   CONTENTS_SLIME,
-  CONTENTS_WATER,
+  CONTENTS_LAVA,
   CONTENTS_SOLID
 };
 
