@@ -623,10 +623,14 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     return;
 
   // skip lights which are too far away
-  if (light.kind != LTK_Sun && perp > light.radius)
-    return;
+  if (light.kind != LTK_Sun)
+  {
+    if (perp > light.radius)
+      return;
 
-  // TODO: check light against BBOX of face
+    if (! lt_face_bbox.Touches(light.x, light.y, light.z, light.radius))
+      return;
+  }
 
 
   for (int t = 0 ; t < lt_H ; t++)
