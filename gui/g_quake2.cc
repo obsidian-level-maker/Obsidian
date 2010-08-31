@@ -469,7 +469,7 @@ static void Q2_WriteFace(quake_face_c *face)
   if (face->flags & FACE_F_Sky)
     flags |= SURF_SKY;
   if (face->flags & FACE_F_Liquid)
-    flags |= SURF_WARP;
+    flags |= SURF_WARP | SURF_TRANS66;
 
   raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, face->s, face->t);
 

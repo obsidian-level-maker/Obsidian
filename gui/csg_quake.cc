@@ -1293,6 +1293,8 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
     W_node = new quake_node_c;
     W_leaf = new quake_leaf_c(medium);
 
+    W_leaf->bbox = leaf->bbox;
+
     if (qk_game == 2)
       W_leaf->AddSolid(liquid);
 
