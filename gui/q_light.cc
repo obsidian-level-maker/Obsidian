@@ -272,6 +272,8 @@ static double lt_texorg[3];
 static double lt_worldtotex[2][3];
 static double lt_textoworld[2][3];
 
+static quake_bbox_c lt_face_bbox;
+
 static int lt_W, lt_H;
 static int lt_tex_mins[2];
 
@@ -377,6 +379,8 @@ static void CalcFaceExtents(quake_face_c *F)
 {
   double min_s, min_t;
   double max_s, max_t;
+
+  F->GetBounds(&lt_face_bbox);
 
   F->ST_Bounds(&min_s, &min_t, &max_s, &max_t);
 
@@ -736,8 +740,7 @@ void QCOM_LightAllFaces()
   {
     quake_face_c *F = qk_all_faces[i];    
 
-    // FIXME: check elsewhere, handling liquid surfaces too 
-    if (strncmp(F->texture.c_str(), "sky", 3) == 0)
+    if (F->flags & (FACE_F_Sky | FACE_F_Liquid))
       continue;
 
     QCOM_LightFace(F);

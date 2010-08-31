@@ -645,18 +645,6 @@ static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 }
 
 
-static int CalcTextureFlag(const char *tex_name)
-{
-  if (tex_name[0] == '*')
-    return TEX_SPECIAL;
-
-  if (strncmp(tex_name, "sky", 3) == 0)
-    return TEX_SPECIAL;
-
-  return 0;
-}
-
-
 static inline void DoWriteFace(dface_t & raw_face)
 {
   // fix endianness
@@ -719,10 +707,13 @@ static void Q1_WriteFace(quake_face_c *face)
 
   const char *texture = face->texture.c_str();
 
-  int flags = CalcTextureFlag(texture);
+  int flags = 0;
 
-  if (raw_face.lightofs < 0)
+  if ((face->flags & (FACE_F_Sky | FACE_F_Liquid)) ||
+      texture[0] == '*' || raw_face.lightofs < 0)
+  {
     flags |= TEX_SPECIAL;
+  }
 
   raw_face.texinfo = Q1_AddTexInfo(texture, flags, face->s, face->t);
 

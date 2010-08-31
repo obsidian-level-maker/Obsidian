@@ -464,10 +464,12 @@ static void Q2_WriteFace(quake_face_c *face)
 
   const char *texture = face->texture.c_str();
 
-  int flags = 0; //!!!! FIXME  CalcTextureFlag(texture);
+  int flags = 0;
 
-  if (strstr(texture, "sky") != NULL)
+  if (face->flags & FACE_F_Sky)
     flags |= SURF_SKY;
+  if (face->flags & FACE_F_Liquid)
+    flags |= SURF_WARP;
 
   raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, face->s, face->t);
 

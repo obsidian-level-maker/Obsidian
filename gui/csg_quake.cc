@@ -424,6 +424,8 @@ void quake_plane_c::Normalize()
 
 void quake_leaf_c::AddFace(quake_face_c *F)
 {
+  F->leaf = this;
+
   faces.push_back(F);
 }
 
@@ -1050,6 +1052,9 @@ static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
 
   F->texture = face_props->getStr("tex", "missing");
 
+  if ((is_ceil ? G->top : G->bottom) ->bkind == BKIND_Sky)
+    F->flags |= FACE_F_Sky;
+
   F->SetupMatrix(&node->plane);
 
   node->AddFace(F);
@@ -1075,6 +1080,9 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
   csg_property_set_c *face_props = &bvert->face;
 
   F->texture = face_props->getStr("tex", "missing");
+
+  if (bvert->parent->bkind == BKIND_Sky)
+    F->flags |= FACE_F_Sky;
 
   F->SetupMatrix(&node->plane);
 

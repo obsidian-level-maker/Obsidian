@@ -24,6 +24,7 @@
 
 /***** CLASSES ****************/
 
+class quake_leaf_c;
 class quake_node_c;
 class qCluster_c;
 
@@ -37,6 +38,14 @@ typedef enum
   MEDIUM_SOLID,
 }
 quake_medium_e;
+
+
+typedef enum
+{
+  FACE_F_Sky     = (1 << 0),
+  FACE_F_Liquid  = (1 << 1),
+}
+quake_face_flags_e;
 
 
 class quake_vertex_c
@@ -109,6 +118,7 @@ class quake_face_c
 public:
   // the node this face sits on
   quake_node_c *node;
+  quake_leaf_c *leaf;
 
   int node_side;  // 0 = front, 1 = back
 
@@ -120,13 +130,16 @@ public:
   float s[4];
   float t[4];
 
+  int flags;
+
   qLightmap_c *lmap;
 
   int index;
 
 public:
-  quake_face_c() : node(NULL), node_side(-1),
-                   verts(), texture(), lmap(NULL), index(-1)
+  quake_face_c() : node(NULL), leaf(NULL), node_side(-1),
+                   verts(), texture(), flags(0),
+                   lmap(NULL), index(-1)
   { }
 
   ~quake_face_c()
