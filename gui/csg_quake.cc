@@ -44,88 +44,6 @@
 #define FACE_MAX_SIZE  240
 
 
-#if 0
-
-static double EvaluatePartition(rNode_c * LEAF,
-                                double px1, double py1, double px2, double py2)
-{
-  double pdx = px2 - px1;
-  double pdy = py2 - py1;
-
-  int back   = 0;
-  int front  = 0;
-  int splits = 0;
-
-  std::vector<rSide_c *>::iterator SI;
-
-  for (SI = LEAF->sides.begin(); SI != LEAF->sides.end(); SI++)
-  {
-    rSide_c *S = *SI;
-
-    // get state of lines' relation to each other
-    double a = PerpDist(S->x1, S->y1, px1, py1, px2, py2);
-    double b = PerpDist(S->x2, S->y2, px1, py1, px2, py2);
-
-    int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
-    int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
-
-    if (a_side == 0 && b_side == 0)
-    {
-      // lines are colinear
-
-      if (VectorSameDir(pdx, pdy, S->x2 - S->x1, S->y2 - S->y1))
-        front++;
-      else
-        back++;
-
-      continue;
-    }
-
-    if (a_side >= 0 && b_side >= 0)
-    {
-      front++;
-      continue;
-    }
-
-    if (a_side <= 0 && b_side <= 0)
-    {
-      back++;
-      continue;
-    }
-
-    // the partition line will split it
-
-    splits++;
-
-    back++;
-    front++;
-  }
-
-
-  // always prefer axis-aligned planes
-  // (this helps prevent the "sticky doorways" problem)
-  bool aligned = (fabs(pdx) < 0.0001 || fabs(pdy) < 0.0001);
-
-  if (front == 0 && back == 0)
-    return aligned ? 1e24 : 1e26;
-
-  if (splits > 1000)
-    splits = 1000;
-
-  double cost = splits * (splits+1) * 3.65;
-
-  cost += ABS(front - back);
-  cost /=    (front + back);
-
-  if (! aligned)
-    cost += 1e12;
-
-  return cost;
-}
-#endif
-
-
-
 // an "intersection" remembers the vertex that touches a BSP divider
 // line (especially a new vertex that is created at a seg split).
 
@@ -1038,7 +956,6 @@ static void FlatToPlane(quake_plane_c *plane, const gap_c *G, bool is_ceil)
 static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
                             const gap_c *G, bool is_ceil,
                             std::vector<quake_vertex_c> & winding)
-                        
 {
   FlatToPlane(&node->plane, G, is_ceil);
 
@@ -1054,6 +971,35 @@ static void CreateFloorFace(quake_node_c *node, quake_leaf_c *leaf,
 
   if ((is_ceil ? G->top : G->bottom) ->bkind == BKIND_Sky)
     F->flags |= FACE_F_Sky;
+
+  F->SetupMatrix(&node->plane);
+
+  node->AddFace(F);
+  leaf->AddFace(F);
+
+  qk_all_faces.push_back(F);
+}
+
+
+static void CreateLiquidFace(quake_node_c *node, quake_leaf_c *leaf,
+                             csg_brush_c *B, bool is_ceil,
+                             std::vector<quake_vertex_c> & winding)
+{
+  node->plane.x  = node->plane.y  = 0;
+  node->plane.nx = node->plane.ny = 0;
+  node->plane.z  = B->t.z;
+  node->plane.nz = +1;
+
+  quake_face_c *F = new quake_face_c;
+
+  F->node_side = is_ceil ? 1 : 0;
+  F->flags |= FACE_F_Liquid;
+
+  F->CopyWinding(winding, &node->plane, is_ceil);
+
+  csg_property_set_c *face_props = &B->t.face;
+
+  F->texture = face_props->getStr("tex", "missing");
 
   F->SetupMatrix(&node->plane);
 
@@ -1300,14 +1246,34 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   if (G->bottom->t.slope) leaf->bbox.mins[2] = G->bottom->b.z;
   if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top->t.z;
 
+  // --- handle liquids ---
+
+  quake_node_c *W_node = NULL;
+  quake_leaf_c *W_leaf = NULL;
+
   if (liquid && leaf->bbox.maxs[2] < liquid->t.z + 0.1)
   {
-    leaf->medium = MEDIUM_WATER;
+    // the liquid covers the whole gap : don't need an extra leaf/node
+    leaf->medium = MEDIUM_SLIME;
 
     if (qk_game == 2)
       leaf->AddSolid(liquid);
 
     cluster->MarkAmbient(AMBIENT_WATER);
+  }
+  else if (liquid && liquid->t.z > leaf->bbox.mins[2] + 0.1)
+  {
+    W_node = new quake_node_c;
+    W_leaf = new quake_leaf_c(MEDIUM_SLIME);
+
+    if (qk_game == 2)
+      W_leaf->AddSolid(liquid);
+
+    cluster->AddLeaf(W_leaf);
+    cluster->MarkAmbient(AMBIENT_WATER);
+
+    CreateLiquidFace(W_node,   leaf, liquid, false, winding);
+    CreateLiquidFace(W_node, W_leaf, liquid, true,  winding);
   }
 
   // floor and ceiling node planes both face upwards
@@ -1315,10 +1281,16 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   C_node->front_N = prev_N;
   C_node->front_L = prev_L;
 
-  F_node->front_N = C_node;
+  F_node->front_N = W_node ? W_node : C_node;
 
   C_node->back_L = leaf;
   F_node->back_L = Solid_Leaf(G, 0);
+
+  if (W_node)
+  {
+    W_node->front_N = C_node;
+    W_node->back_L  = W_leaf;
+  }
 
   return F_node;
 }
