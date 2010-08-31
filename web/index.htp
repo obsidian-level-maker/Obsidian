@@ -36,6 +36,35 @@ OBLIGE 3.57 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">31-Aug-2010:</div>
+<blockquote class="news">
+Update on latest work.
+
+<p>
+It has been a while since the last release,
+but a lot has been happening in OBLIGE's codebase.
+The planning, room connection and quest code have
+gotten an overhaul, with support for special room shapes
+and teleporters.
+Another large (and on-going) change was the introduction of
+a Prefab system, which will be used for nearly all
+architecture in a map.
+
+<p>
+Most of the work has been on the Quake support,
+starting off with new CSG code with the goal to fix
+the collision problems, which then continued on to
+implement proper lighting, visibility and liquid areas.
+Plus I'm really stoked that QUAKE 2 maps are now being
+built correctly, and plan to support it well in the
+next release.
+There is still a lot left to do though.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">07-Apr-2010:</div>
 <blockquote class="news">
 Version 3.57 of OBLIGE has been released.
@@ -60,7 +89,7 @@ So what are you waiting for, go grab it!
 </blockquote>
 
 
-<hr style="clear: right;">
+<hr>
 
 <div class="newsdate">24-Feb-2010:</div>
 <blockquote class="news">
