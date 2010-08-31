@@ -228,17 +228,6 @@ SKY GENERATOR:
 
 -  move light brush intensity value to props[] 
 
-??? rename XXX.MATERIALS --> XXX.TEXTURES and XXX.FLATS
- 
-       STARTAN3 = { match="FLOOR4_8" }
-       FLOOR4_8 = { match="METAL1" }
-
-    use the 'id' keyword to explicitly give texture name
-
-       AIRDUC1_1 = { id="e1u3/airduc1_1" }
-
-    allow psycho="XXX" and psycho=0  (remove SANITY_MAP)
-
 +  support MAPINFO lumps (especially for ZDoom ports).
 
 -  support for the DECORATE lump
@@ -349,14 +338,13 @@ Sam's suggestions:
    -  for clipping, force a node line where slope flattens out,
       then mark one side as sloped - other side as flat.
 
-+  liquids!
++  better texture alignment
+
+>>  liquids!
 
 +  better miptex handling:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
-
-+  create dummy .lit files for FitzQuake & DarkPlaces
-   -  gui.pak_add_binary_lump
 
 +  support the Boss maps (next map = "start")
      E2M6 : wood floor, funky bridge, kill vores to get rune
@@ -364,6 +352,9 @@ Sam's suggestions:
      E4M7 : blue maze, spawn, kill vores to get rune
 
 -  better exits
+
+-  create dummy .lit files for FitzQuake & DarkPlaces
+   -  gui.pak_add_binary_lump
 
 -  intermission camera (only need 1 -- user won't replay level)
      "classname" "info_intermission"

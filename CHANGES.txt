@@ -2,20 +2,24 @@
 CHANGES (since 3.57)
 ====================
 
++ Quake lighting!
++ Quake visibility!
++ Quake II works!
+
 - improved progress bar and status messages
 - output file is deleted if an error occurs
 
-+ support for "shaped" rooms (L, T, +)
++ support for "shaped" rooms (L, T, plus)
 + support for teleporters
 
+- reworked planning, connection and quest code
+- more naming goodies, thanks to Mr Chris
 - preliminary work on Hexen II and Half-Life
-
 - qsavetex detects and handles Hexen II
 
+- fixed Quake collision issues
+- new more reliable CSG code
+- monster control modules for Heretic, Quake, Quake II
 - cmdline option to load a config file (for Batch mode)
 
-+ Quake lighting!
-+ Quake visibility!
-
-- fixed Quake collision issues
 
