@@ -340,8 +340,6 @@ Sam's suggestions:
 
 +  better texture alignment
 
->>  liquids!
-
 +  better miptex handling:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()

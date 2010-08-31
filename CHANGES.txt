@@ -6,6 +6,8 @@ CHANGES (since 3.57)
 + Quake visibility!
 + Quake II works!
 
++ Prefab system!
+
 - improved progress bar and status messages
 - output file is deleted if an error occurs
 
@@ -22,4 +24,5 @@ CHANGES (since 3.57)
 - monster control modules for Heretic, Quake, Quake II
 - cmdline option to load a config file (for Batch mode)
 
+- support for liquids in Quake and Quake II
 

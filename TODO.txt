@@ -2,28 +2,7 @@
 TODO
 ====
 
-
-DONE: ambient sounds:
-
-DONE: Visibility : can detect in C++ code if each seed side contains a portal
-             (two-sided snag or mini side).  Hence don't need Lua API to
-             communicate that information.
-
-DONE:  Quake: proper XY partition choice, create clusters
-
-DONE:  q1_clip proper XY partition choice
-
-DONE: Quake2 visibility
-
-DONE: qLightmap_c : only store the result : byte samples
-                     use 'blocklights' buffer for doing each face.
-
-DONE: lighting modes: Fast / Normal / Best
-
-DONE:  User Option for Quake lighting mode
-
-
-?? anomaly_towers (etc) : make directory, single level per wad
+!!  all CSG code : verify memory freeing
 
 
 Quake: fix level progression
