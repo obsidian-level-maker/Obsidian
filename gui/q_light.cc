@@ -628,7 +628,7 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     SYS_ASSERT(lt_face->leaf);
 
     if (lt_face->leaf->cluster &&
-        lt_face->leaf->cluster->ambient_dists[AMBIENT_SKY] > 5)
+        lt_face->leaf->cluster->ambient_dists[AMBIENT_SKY] > 4)
       return;
   }
   else
