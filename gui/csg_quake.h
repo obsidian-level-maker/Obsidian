@@ -77,6 +77,33 @@ public:
 };
 
 
+class quake_bbox_c
+{
+public:
+  float mins[3];
+  float maxs[3];
+
+public:
+  quake_bbox_c()
+  { }
+
+  ~quake_bbox_c()
+  { }
+
+  void Begin();
+  void End();
+
+  void Add_X(float x);
+  void Add_Y(float y);
+  void Add_Z(float z);
+
+  void AddPoint(float x, float y, float z);
+  void Merge(const quake_bbox_c& other);
+
+  bool Touches(float x, float y, float z, float r) const;
+};
+
+
 class quake_face_c
 {
 public:
@@ -112,33 +139,10 @@ public:
 
   void SetupMatrix(const quake_plane_c *plane);
 
+  void GetBounds(quake_bbox_c *bbox) const;
+
   void ST_Bounds(double *min_s, double *min_t,
-                 double *max_s, double *max_t);
-};
-
-
-class quake_bbox_c
-{
-public:
-  float mins[3];
-  float maxs[3];
-
-public:
-  quake_bbox_c()
-  { }
-
-  ~quake_bbox_c()
-  { }
-
-  void Begin();
-  void End();
-
-  void Add_X(float x);
-  void Add_Y(float y);
-  void Add_Z(float z);
-
-  void AddPoint(float x, float y, float z);
-  void Merge(const quake_bbox_c& other);
+                 double *max_s, double *max_t) const;
 };
 
 

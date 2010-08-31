@@ -982,15 +982,30 @@ void quake_face_c::SetupMatrix(const quake_plane_c *plane)
 }
 
 
+void quake_face_c::GetBounds(quake_bbox_c *bbox) const
+{
+  bbox->Begin();
+
+  for (unsigned int i = 0 ; i < verts.size() ; i++)
+  {
+    const quake_vertex_c& V = verts[i];
+
+    bbox->AddPoint(V.x, V.y, V.z);
+  }
+
+  bbox->End();
+}
+
+
 void quake_face_c::ST_Bounds(double *min_s, double *min_t,
-                             double *max_s, double *max_t)
+                             double *max_s, double *max_t) const
 {
   *min_s = +9e9;  *max_s = -9e9;
   *min_t = +9e9;  *max_t = -9e9;
 
   for (unsigned int i = 0 ; i < verts.size() ; i++)
   {
-    quake_vertex_c& V = verts[i];
+    const quake_vertex_c& V = verts[i];
 
     double ss = s[0] * V.x + s[1] * V.y + s[2] * V.z + s[3];
     double tt = t[0] * V.x + t[1] * V.y + t[2] * V.z + t[3];
@@ -1432,6 +1447,21 @@ void quake_bbox_c::Merge(const quake_bbox_c& other)
     mins[b] = MIN(mins[b], other.mins[b]);
     maxs[b] = MAX(maxs[b], other.maxs[b]);
   }
+}
+
+
+bool quake_bbox_c::Touches(float x, float y, float z, float r) const
+{
+  if (x > maxs[0] + r) return false;
+  if (x < mins[0] - r) return false;
+
+  if (y > maxs[1] + r) return false;
+  if (y < mins[1] - r) return false;
+
+  if (z > maxs[2] + r) return false;
+  if (z < mins[2] - r) return false;
+
+  return true;
 }
 
 
