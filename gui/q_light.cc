@@ -623,7 +623,15 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     return;
 
   // skip lights which are too far away
-  if (light.kind != LTK_Sun)
+  if (light.kind == LTK_Sun)
+  {
+    SYS_ASSERT(lt_face->leaf);
+
+    if (lt_face->leaf->cluster &&
+        lt_face->leaf->cluster->ambient_dists[AMBIENT_SKY] > 5)
+      return;
+  }
+  else
   {
     if (perp > light.radius)
       return;
