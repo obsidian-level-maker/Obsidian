@@ -344,10 +344,10 @@ and the skin defines what it looks like.
 
 <p>
 Skins can also specify other properties, for example
-the skin of the PICTURE prefab (used for wall pictures)
+the skin of the PICTURE prefab
 must specify the width and height of the picture part,
-and the skin for doors and lifts (in DOOM) must specify the
-linedef types to use.
+and the skin for doors and lifts must specify what
+linedef types to use (for DOOM anyway).
 </div>
 
 
