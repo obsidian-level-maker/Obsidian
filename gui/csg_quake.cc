@@ -1257,7 +1257,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   cluster->AddLeaf(leaf);
 
   if (G->top->bkind == BKIND_Sky)
-    cluster->ambients[AMBIENT_SKY] = 255;
+    cluster->MarkAmbient(AMBIENT_SKY);
 
   CreateWallFaces(group, leaf, G);
 
@@ -1284,7 +1284,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
     if (qk_game == 2)
       leaf->AddSolid(liquid);
 
-    cluster->ambients[AMBIENT_WATER] = 255;
+    cluster->MarkAmbient(AMBIENT_WATER);
   }
 
   // floor and ceiling node planes both face upwards

@@ -40,7 +40,7 @@ public:
 
   std::vector<quake_leaf_c *> leafs;
 
-  byte ambients[4];
+  byte ambient_dists[4];
 
   // offset into LUMP_VISIBILITY
   int visofs;
@@ -55,6 +55,8 @@ public:
 
   // for Quake II, get the ID of the cluster (-1 for unused ones)
   int CalcID() const;
+
+  void MarkAmbient(int kind);
 };
 
 

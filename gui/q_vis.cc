@@ -279,8 +279,8 @@ static Vis_Buffer * qk_visbuf;
 qCluster_c::qCluster_c(int _x, int _y) : cx(_x), cy(_y), leafs(),
                                          visofs(-1), hearofs(-1)
 {
-  ambients[0] = ambients[1] = 0;
-  ambients[2] = ambients[3] = 0;
+  ambient_dists[0] = ambient_dists[1] = 255;
+  ambient_dists[2] = ambient_dists[3] = 255;
 }
 
 qCluster_c::~qCluster_c()
@@ -303,6 +303,13 @@ int qCluster_c::CalcID() const
     return -1;
 
   return (cy * cluster_W) + cx;
+}
+
+
+void qCluster_c::MarkAmbient(int kind)
+{
+  // set distance to zero
+  ambient_dists[kind] = 0;
 }
 
 
@@ -391,17 +398,6 @@ static void MarkSolidClusters()
 }
 
 
-static byte DiminishVolume(int kind, byte orig)
-{
-  // TODO: this works well for SKY, but may need different for liquids
-
-  if (orig > 160) return 160;
-  if (orig >  40) return orig - 24;
-
-  return 0;
-}
-
-
 static void FloodAmbientSounds()
 {
   for (int pass = 0 ; pass < 8 ; pass++)
@@ -430,15 +426,15 @@ static void FloodAmbientSounds()
 
       for (int k = 0 ; k < 4 ; k++)
       {
-        byte src  = S->ambients[k];
-        byte dest = N->ambients[k];
+        byte src  = S->ambient_dists[k];
+        byte dest = N->ambient_dists[k];
 
-        if (src == 0)
+        if (src == 255)
           continue;
 
-        src = DiminishVolume(k, src);
+        src++;
 
-        N->ambients[k] = MAX(src, dest);
+        N->ambient_dists[k] = MIN(src, dest);
       }
     }
   }
@@ -736,8 +732,7 @@ void QCOM_Visibility(int lump, int max_size, int numleafs)
 
   MarkSolidClusters();
 
-  if (qk_game == 1)
-    FloodAmbientSounds();
+  FloodAmbientSounds();
 
 
   if (qk_game == 2)

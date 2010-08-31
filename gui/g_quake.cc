@@ -615,6 +615,14 @@ static int q1_medium_table[5] =
   CONTENTS_SOLID
 };
 
+static byte q1_ambient_levels[4][10] =
+{
+  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
+  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
+  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
+  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
+};
+
 
 static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
 {
@@ -780,8 +788,12 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
   {
     raw_leaf.visofs = leaf->cluster->visofs;
     
-    for (int i = 0 ; i < 4 ; i++)
-      raw_leaf.ambient_level[i] = leaf->cluster->ambients[i];
+    for (int k = 0 ; k < 4 ; k++)
+    {
+      int dist = leaf->cluster->ambient_dists[k];
+
+      raw_leaf.ambient_level[k] = (dist < 10) ? q1_ambient_levels[k][dist] : 0;
+    }
   }
 
 
@@ -1266,9 +1278,9 @@ static void Q1_CreateBSPFile(const char *name)
 
   QCOM_Fix_T_Junctions();
 
-  Q1_LightWorld();
-
   Q1_VisWorld(num_leaf);
+
+  Q1_LightWorld();
 
   Q1_WriteBSP();
 
@@ -1340,13 +1352,13 @@ private:
     switch (sub)
     {
       case SUBFMT_HalfLife:
-        return "CSG,BSP,Light,Vis,Hull 1,Hull 2,Hull 3";
+        return "CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3";
 
       case SUBFMT_Hexen2:
-        return "CSG,BSP,Light,Vis,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5";
+        return "CSG,BSP,Vis,Light,Hull 1,Hull 2,Hull 3,Hull 4,Hull 5";
 
       default:
-        return "CSG,BSP,Light,Vis,Hull 1,Hull 2";
+        return "CSG,BSP,Vis,Light,Hull 1,Hull 2";
     }
   }
 };

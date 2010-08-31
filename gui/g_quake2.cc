@@ -1044,9 +1044,9 @@ static void Q2_CreateBSPFile(const char *name)
 
   QCOM_Fix_T_Junctions();
 
-  Q2_LightWorld();
-
   Q2_VisWorld();
+
+  Q2_LightWorld();
 
   Q2_WriteBSP();
 
@@ -1117,7 +1117,7 @@ bool quake2_game_interface_c::Start()
   BSP_AddInfoFile();
 
   if (main_win)
-    main_win->build_box->Prog_Init(0, "CSG,BSP,Light");  /* Vis */
+    main_win->build_box->Prog_Init(0, "CSG,BSP,Vis,Light");
 
   return true;
 }
