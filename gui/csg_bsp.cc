@@ -1364,12 +1364,15 @@ static void MarkGapsWithEntities()
     {
       csg_entity_c *E = R->entities[k];
 
+      // ignore lights
+      if (E->Match("light") || E->Match("oblige_sun"))
+        continue;
+
       gap_c *gap = GapForEntity(R, E);
 
       if (! gap)
       {
-        // sun lights are allowed to be inside the sky
-        if (! csg_is_clip_hull && ! E->Match("oblige_sun"))
+        if (! csg_is_clip_hull)
         {
           LogPrintf("WARNING: entity '%s' is inside solid @ (%1.0f,%1.0f,%1.0f)\n",
                     E->name.c_str(), E->x, E->y, E->z);
