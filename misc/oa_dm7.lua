@@ -3913,7 +3913,7 @@ ENTITIES =
   x = 640, y = -64, z = 376,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 1072, y = -688, z = 188,
 },
 {
@@ -3921,15 +3921,15 @@ ENTITIES =
   x = 448, y = -1104, z = 176,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 432, y = -200, z = 160,
 },
 {
-  kind = "ammo_shells",
+  kind = "item_shells",
   x = 272, y = -880, z = -96,
 },
 {
-  kind = "ammo_shells",
+  kind = "item_shells",
   x = 272, y = -496, z = -96,
 },
 {
@@ -3958,19 +3958,19 @@ ENTITIES =
   x = 928, y = -672, z = 664,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 556, y = -1040, z = 584,
 },
 {
-  kind = "ammo_lightning",
+  kind = "item_lightning",
   x = 620, y = -1040, z = 584,
 },
 {
-  kind = "ammo_shells",
+  kind = "item_shells",
   x = 492, y = -1040, z = 584,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 428, y = -1040, z = 584,
 },
 {
@@ -3994,19 +3994,19 @@ ENTITIES =
   light = 40,
 },
 {
-  kind = "ammo_shells",
+  kind = "item_shells",
   x = 512, y = -768, z = -204,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 512, y = -576, z = -204,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 704, y = -576, z = -204,
 },
 {
-  kind = "ammo_grenades",
+  kind = "item_grenades",
   x = 704, y = -768, z = -204,
 },
 {
@@ -4014,147 +4014,147 @@ ENTITIES =
   x = 608, y = -672, z = -204,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 752, y = -752, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 592, y = -832, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 672, y = -832, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 592, y = -512, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 752, y = -832, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 672, y = -752, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 592, y = -752, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 592, y = -672, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 592, y = -592, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 672, y = -592, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 752, y = -592, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 752, y = -512, z = 660,
 },
 {
-  kind = "item_armor_shard",
+  kind = "item_armor1",
   x = 672, y = -512, z = 660,
 },
 {
-  kind = "ammo_cells",
+  kind = "item_cells",
   x = -24, y = -672, z = -376,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 64, y = -672, z = -376,
 },
 {
-  kind = "item_health_small",
+  kind = "item_health",
   x = -116, y = -672, z = -128,
 },
 {
-  kind = "item_health_small",
+  kind = "item_health",
   x = -116, y = -672, z = 64,
 },
 {
-  kind = "item_health_small",
+  kind = "item_health",
   x = -116, y = -672, z = 256,
 },
 {
-  kind = "item_health_small",
+  kind = "item_health",
   x = -120, y = -672, z = 576,
 },
 {
-  kind = "item_health_small",
+  kind = "item_health",
   x = -116, y = -672, z = 448,
 },
 {
-  kind = "ammo_cells",
+  kind = "item_cells",
   x = 160, y = -160, z = 416,
 },
 {
-  kind = "ammo_grenades",
+  kind = "item_grenades",
   x = 1120, y = -160, z = 416,
 },
 {
-  kind = "ammo_lightning",
+  kind = "item_lightning",
   x = 1120, y = -1120, z = 416,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 64, y = -384, z = -208,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 64, y = -448, z = -208,
 },
 {
-  kind = "ammo_lightning",
+  kind = "item_lightning",
   x = 256, y = -512, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 832, y = -1224, z = -208,
 },
 {
-  kind = "ammo_lightning",
+  kind = "item_lightning",
   x = 256, y = -832, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 192, y = -832, z = -208,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 64, y = -960, z = -208,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 64, y = -1024, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 192, y = -512, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 512, y = -1224, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 832, y = -64, z = -208,
 },
 {
-  kind = "ammo_bullets",
+  kind = "item_bullets",
   x = 512, y = -64, z = -208,
 },
 {
-  kind = "ammo_rockets",
+  kind = "item_rockets",
   x = 1408, y = -672, z = 84,
 },
 {
@@ -4162,11 +4162,11 @@ ENTITIES =
   x = -112, y = -672, z = -368,
 },
 {
-  kind = "ammo_cells",
+  kind = "item_cells",
   x = 1216, y = -960, z = -208,
 },
 {
-  kind = "ammo_cells",
+  kind = "item_cells",
   x = 1216, y = -320, z = -208,
 },
 }
