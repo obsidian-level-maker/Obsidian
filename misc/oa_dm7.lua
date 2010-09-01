@@ -4217,6 +4217,28 @@ TEXTURES =
   blocks17            = "stone1_5",
   beam_dusty2         = "afloor1_8",
 --]]
+
+--[[ QUAKE II
+  caulk               = "e1u1/metal3_4",
+  nitesky             = "e1u1/sky1",
+  water               = "e1u1/water4",
+
+  streetbricks14      = "e1u1/c_met5_1",
+  largerblock3b3      = "e1u1/grnx2_1",
+  pitted_rust3_black  = "e1u2/metal5_4",
+  bluemetal1b_chrome  = "e1u2/metal6_3",
+  e7bmtrim2           = "e3u2/hall01_1",
+  e7panelwood         = "e1u1/grnx3_3",
+  deeprust            = "e1u1/metal1_1",
+
+  pewter              = "e2u3/metal2_2",
+  atech3_a            = "e1u1/pipe1_1",
+  q1metal7_99         = "e1u1/pipe1_1",
+  blocks17slime       = "e3u2/block1_5",
+  ceil1_38            = "e1u1/ceil1_28",
+  blocks17            = "e3u2/block1_5",
+  beam_dusty2         = "e1u1/wsupprt1_3",
+--]]
 }
 
 
