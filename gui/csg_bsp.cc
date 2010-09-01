@@ -301,9 +301,12 @@ void region_c::AddGap(gap_c *G)
 
 void region_c::RemoveGap(int index)
 {
-  SYS_ASSERT(index < (int)gaps.size());
+  int total = (int)gaps.size();
 
-  gaps[index] = gaps.back();
+  SYS_ASSERT(index < total);
+
+  for ( ; index + 1 < total ; index++)
+    gaps[index] = gaps[index+1];
 
   gaps.pop_back();
 }
@@ -370,6 +373,22 @@ void region_c::GetMidPoint(double *mid_x, double *mid_y)
 
   *mid_x /= total;
   *mid_y /= total;
+}
+
+
+bool region_c::ContainsPoint(double x, double y) const
+{
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snag_c *S = snags[i];
+
+    double d = PerpDist(x, y, S->x1,S->y1, S->x2,S->y2);
+
+    if (d < -SNAG_EPSILON)
+      return false;
+  }
+
+  return true;
 }
 
 
@@ -1659,10 +1678,10 @@ void CSG_BSP(double grid, bool is_clip_hull)
 
   group_c root;
 
-  for (unsigned int i=0; i < all_brushes.size(); i++)
+  for (unsigned int i = 0 ; i < all_brushes.size() ; i++)
     CreateRegion(root, all_brushes[i]);
 
-  for (unsigned int i = 0; i < all_entities.size(); i++)
+  for (unsigned int i = 0 ; i < all_entities.size() ; i++)
     root.AddEntity(all_entities[i]);
 
   // create a rectangle region around whole map
@@ -1674,13 +1693,27 @@ void CSG_BSP(double grid, bool is_clip_hull)
 
   RemoveDeadRegions();
 
-  for (unsigned int i=0; i < all_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
     all_regions[i]->ClockwiseSnags();
 
   CSG_SortBrushes();
   CSG_SwallowBrushes();
 
   CSG_DiscoverGaps();
+}
+
+
+region_c * CSG_PointInRegion(double x, double y)
+{
+  for (unsigned int i=0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->ContainsPoint(x, y))
+      return R;
+  }
+
+  return NULL;  // not found
 }
 
 

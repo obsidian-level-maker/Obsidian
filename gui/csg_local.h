@@ -123,6 +123,8 @@ public:
   void GetBounds(double *x1, double *y1, double *x2, double *y2);
   void GetMidPoint(double *mid_x, double *mid_y);
 
+  bool ContainsPoint(double x, double y) const;
+
   void SortBrushes();
 
   // this requires CSG_SortBrushes() to have been called earlier
