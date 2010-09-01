@@ -46,14 +46,13 @@ extern qLump_c *q1_clip;
 extern int q1_total_clip;
 
 
-static double hull_sizes[3][3] =
+static double Q1_hull_sizes[3][2] =
 {
   { 16, 24, 32 },  // player
   { 32, 24, 64 },  // monsters
-  { 16, 24,  0 },  // crouching (Half-Life only)
 };
 
-static double h2_hull_sizes[5][3] =
+static double H2_hull_sizes[5][3] =
 {
    { 16, 24, 32 },  // player
    { 24, 20, 20 },  // scorpion
@@ -61,6 +60,14 @@ static double h2_hull_sizes[5][3] =
    {  8,  8,  8 },  // pentacles
    { 28, 40, 40 },  // yak
 };
+
+static double HL_hull_sizes[3][3] =
+{
+  { 16, 36, 36 },  // player
+  { 32, 32, 32 },  // monsters
+  { 16, 18, 18 },  // crouching
+};
+
 
 
 class clip_side_c
@@ -1256,9 +1263,11 @@ void Q1_ClippingHull(int hull)
   double *pads;
 
   if (qk_sub_format == SUBFMT_Hexen2)
-    pads = h2_hull_sizes[hull-1];
+    pads = H2_hull_sizes[hull-1];
+  else if (qk_sub_format == SUBFMT_HalfLife)
+    pads = HL_hull_sizes[hull-1];
   else
-    pads = hull_sizes[hull-1];
+    pads = Q1_hull_sizes[hull-1];
 
 
   // first clip the world, then the map-models
