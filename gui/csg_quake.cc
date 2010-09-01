@@ -1276,7 +1276,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   if (liquid && leaf->bbox.maxs[2] < liquid->t.z + 0.1)
   {
     // the liquid covers the whole gap : don't need an extra leaf/node
-    leaf->medium = MEDIUM_SLIME;
+    leaf->medium = ParseLiquidMedium(&liquid->props);
 
     if (qk_game == 2)
       leaf->AddSolid(liquid);
