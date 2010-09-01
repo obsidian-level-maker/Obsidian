@@ -1025,7 +1025,10 @@ static void DoCreateWallFace(quake_node_c *node, quake_leaf_c *leaf,
 
   csg_property_set_c *face_props = &bvert->face;
 
-  F->texture = face_props->getStr("tex", "missing");
+  F->texture = face_props->getStr("tex", "");
+
+  if (F->texture.empty())
+    F->texture = bvert->parent->t.face.getStr("tex", "missing");
 
   if (bvert->parent->bkind == BKIND_Sky)
     F->flags |= FACE_F_Sky;

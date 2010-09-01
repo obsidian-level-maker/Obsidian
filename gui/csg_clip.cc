@@ -427,7 +427,7 @@ static std::vector<clip_side_c *> all_clip_sides;
 
 //------------------------------------------------------------------------
 
-static void SaveBrushes(void)
+static void SaveBrushes()
 {
   saved_all_brushes.clear();
 
@@ -435,7 +435,7 @@ static void SaveBrushes(void)
 }
 
 
-static void RestoreBrushes(void)
+static void RestoreBrushes()
 {
   // free our modified ones
   for (unsigned int i = 0; i < all_brushes.size(); i++)
@@ -1135,6 +1135,20 @@ fprintf(stderr, "New Side: %p %s (%1.0f %1.0f) .. (%1.0f %1.0f)\n",
   }
 }
 
+
+#if 0  // debugging stuff
+void CLIP_BEGIN()
+{
+  SaveBrushes();
+
+  FattenBrushes(16, 24, 32);
+}
+
+void CLIP_END()
+{
+  RestoreBrushes();
+}
+#endif
 
 
 static void Q1_ClipWorld(int hull, double *pads)
