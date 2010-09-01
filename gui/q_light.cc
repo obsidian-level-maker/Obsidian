@@ -588,7 +588,7 @@ static void QCOM_FindLights()
     float default_level = (light.kind == LTK_Sun) ? DEFAULT_SUNLEVEL : DEFAULT_LIGHTLEVEL;
 
     float level  = E->props.getDouble("light", default_level);
-    light.radius = E->props.getDouble("_radius", light.level);
+    light.radius = E->props.getDouble("_radius", level);
 
     if (level < 1 || light.radius < 1)
       continue;
