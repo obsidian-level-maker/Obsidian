@@ -207,6 +207,19 @@ public:
 
     z  = other->z;  dz = other->dz;
   }
+
+  void Flip()
+  {
+    if (kind == PKIND_FLAT)
+    {
+      dz = -dz;
+    }
+    else
+    {
+      std::swap(x1, x2);
+      std::swap(y1, y2);
+    }
+  }
 };
 
 
@@ -933,27 +946,38 @@ static clip_side_c * FindPartition_XY(clip_group_c & group)
 }
 
 
+static clip_node_c *Partition_Gap(gap_c *G, clip_node_c *prev_N)
+{
+  clip_node_c *empty = new clip_node_c(CONTENTS_EMPTY);
+  clip_node_c *solid = new clip_node_c(CONTENTS_SOLID);
+
+  clip_node_c *F_node = new clip_node_c(G, false);
+  clip_node_c *C_node = new clip_node_c(G, true);
+
+  C_node->front = empty;
+  C_node->back  = prev_N;
+
+  F_node->front = C_node;
+  F_node->back  = solid;
+
+  return F_node;
+}
+
+
 static clip_node_c * Partition_Z(region_c *R)
 {
   SYS_ASSERT(R->gaps.size() > 0);
 
-  clip_node_c *node = new clip_node_c(CONTENTS_EMPTY);
+  clip_node_c *cur_node = new clip_node_c(CONTENTS_SOLID);
   
-  for (int surf = (int)R->gaps.size() * 2 - 1 ; surf >= 0 ; surf--)
+  for (int i = (int)R->gaps.size() - 1 ; i >= 0 ; i--)
   {
-    gap_c *G = R->gaps[surf / 2];
+    gap_c *G = R->gaps[i];
 
-    bool is_ceil = (surf & 1) ? true : false;
-
-    clip_node_c *last_node = node;
-
-    node = new clip_node_c(G, is_ceil);
-
-    node->front = last_node;
-    node->back  = new clip_node_c(CONTENTS_SOLID);
+    cur_node = Partition_Gap(G, cur_node);
   }
 
-  return node;
+  return cur_node;
 }
 
 
