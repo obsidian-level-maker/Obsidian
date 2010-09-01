@@ -46,10 +46,10 @@ extern qLump_c *q1_clip;
 extern int q1_total_clip;
 
 
-static double Q1_hull_sizes[3][2] =
+static double Q1_hull_sizes[2][3] =
 {
   { 16, 24, 32 },  // player
-  { 32, 24, 64 },  // monsters
+  { 32, 24, 64 },  // big monsters
 };
 
 static double H2_hull_sizes[5][3] =
@@ -64,7 +64,7 @@ static double H2_hull_sizes[5][3] =
 static double HL_hull_sizes[3][3] =
 {
   { 16, 36, 36 },  // player
-  { 32, 32, 32 },  // monsters
+  { 32, 32, 32 },  // fat monsters
   { 16, 18, 18 },  // crouching
 };
 
