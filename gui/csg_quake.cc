@@ -511,7 +511,7 @@ static void CheckClusterEdges(quake_group_c & group, int cx, int cy)
   {
     quake_side_c *S = group.sides[i];
 
-    if (! (S->snag && S->TwoSided()))
+    if (S->snag && ! S->TwoSided())
       continue;
 
     if (MAX(S->y1, S->y2) > y2 - 2) closed_N = false;
