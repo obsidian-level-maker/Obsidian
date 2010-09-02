@@ -548,6 +548,8 @@ static const luaL_Reg gui_script_funcs[] =
   { "rand_seed",   gui_rand_seed },
   { "random",      gui_random },
 
+#ifndef RANDOMIZER
+
   // CSG functions
   { "begin_level", CSG_begin_level },
   { "end_level",   CSG_end_level },
@@ -582,6 +584,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "q1_add_mapmodel",  Q1_add_mapmodel },
   { "q1_add_tex_wad",   Q1_add_tex_wad },
 
+#endif
   { NULL, NULL } // the end
 };
 
