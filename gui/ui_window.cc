@@ -35,7 +35,7 @@
 
 #ifdef RANDOMIZER
 # define MIN_WINDOW_W  200
-# define MIN_WINDOW_H  464
+# define MIN_WINDOW_H  488
 #else
 # define MIN_WINDOW_W  428
 # define MIN_WINDOW_H  432
@@ -75,7 +75,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 #ifdef RANDOMIZER
   int TOP_H  = 104 + KF*22;
   int FIL_H  = 36;
-  int BOT_H  = H - TOP_H - FIL_H - 4;
+  int BOT_H  = H - TOP_H - FIL_H - 8;
   int MOD_W  = W - PANEL_W - 4;
 #else
   int TOP_H  = 214 + KF*22;
@@ -100,7 +100,7 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
   add(build_box);
 
 
-  mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, H - (FIL_H ? FIL_H - 4 : 0));
+  mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, TOP_H+4 + BOT_H);
   add(mod_box);
 
 

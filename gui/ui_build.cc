@@ -84,12 +84,16 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   add(about);
 
-#ifndef RANDOMIZER
+
+#ifdef RANDOMIZER
+  const char *build_text = "Start";
+#else
+  const char *build_text = "Build";
+
   cy += about->h() + 14 + KF;
 #endif
 
-
-  build = new Fl_Button(button_x, cy, button_w, button_h, "Build");
+  build = new Fl_Button(button_x, cy, button_w, button_h, build_text);
   build->labelfont(FL_HELVETICA_BOLD);
   build->labelsize(FL_NORMAL_SIZE + 2);
   build->callback(build_callback, this);
