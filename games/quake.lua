@@ -882,13 +882,17 @@ QUAKE1.SUB_THEMES =
 
     skies = { sky1=80, sky4=20 },
 
+--    building_facades =
+--    {
+--    },
+
     building_walls =
     {
-      BRICKA2_4=50,
+      BRICKA2_4=50,  CITY5_4=60,
       CITY1_4=10, CITY2_1=20, CITY2_3=10, CITY2_5=10,
       CITY2_6=10, CITY2_7=10, CITY2_8=10,
       CITY5_8=40,
-      STONE1_5=60, WALL14_5=60,
+      WALL14_5=60,
     },
 
     building_floors =
