@@ -214,8 +214,10 @@ int gui_add_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->AddPair(id, label);
 
+#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->AddPair(id, label);
+#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->AddModule(id, label);
@@ -290,8 +292,10 @@ int gui_show_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->ShowOrHide(id, shown);
 
+#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->ShowOrHide(id, shown);
+#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ShowOrHide(id, shown);
@@ -325,8 +329,10 @@ int gui_change_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->SetID(id);
 
+#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->SetID(id);
+#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ChangeValue(id, opt_val);
@@ -631,10 +637,17 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetScriptPath(lua_State *L)
 {
+#ifdef RANDOMIZER
+  if (StringCaseCmp(install_path, working_path) == 0)
+    script_path = StringPrintf("%s/r_script/?.lua", install_path);
+  else
+    script_path = StringPrintf("./r_script/?.lua;%s/r_script/?.lua", install_path);
+#else
   if (StringCaseCmp(install_path, working_path) == 0)
     script_path = StringPrintf("%s/scripts/?.lua", install_path);
   else
     script_path = StringPrintf("./scripts/?.lua;%s/scripts/?.lua", install_path);
+#endif
 
   LogPrintf("script_path: [%s]\n", script_path);
 
@@ -899,7 +912,16 @@ static void Script_LoadSubDir(const char *subdir)
 
 void Script_Load(void)
 {
-  int status = luaL_loadstring(LUA_ST, "require 'oblige'");
+#ifdef RANDOMIZER
+  const char *root = "main";
+#else
+  const char *root = "oblige";
+#endif
+
+  char require_text[128];
+  sprintf(require_text, "require '%s'", root);
+
+  int status = luaL_loadstring(LUA_ST, require_text);
 
   if (status == 0)
     status = lua_pcall(LUA_ST, 0, 0, 0);
@@ -908,13 +930,17 @@ void Script_Load(void)
   {
     const char *msg = lua_tolstring(LUA_ST, -1, NULL);
 
-    Main_FatalError("Unable to load script 'oblige.lua' (%d)\n%s", status, msg);
+    Main_FatalError("Unable to load script '%s.lua' (%d)\n%s", root, status, msg);
   }
 
+#ifdef RANDOMIZER
+  Script_LoadSubDir("r_module");
+#else
   Script_LoadSubDir("games");
   Script_LoadSubDir("engines");
   Script_LoadSubDir("mods");
   Script_LoadSubDir("prefabs");
+#endif
 
   has_loaded = true;
  

@@ -134,11 +134,9 @@ R_OBJS=	$(R_OBJ_DIR)/main.o      \
 	$(R_OBJ_DIR)/ui_console.o \
 	$(R_OBJ_DIR)/ui_dialog.o \
 	$(R_OBJ_DIR)/ui_game.o   \
-	$(R_OBJ_DIR)/ui_level.o  \
 	$(R_OBJ_DIR)/ui_map.o    \
 	$(R_OBJ_DIR)/ui_module.o \
 	$(R_OBJ_DIR)/ui_rchoice.o \
-	$(R_OBJ_DIR)/ui_play.o   \
 	$(R_OBJ_DIR)/ui_window.o
 
 $(R_OBJ_DIR)/%.o: gui/%.cc
@@ -151,6 +149,9 @@ all: $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+
+rclean:
+	rm -f $(PROGRAM2) $(R_OBJ_DIR)/*.o ERRS
 
 $(PROGRAM): $(OBJS)
 	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)

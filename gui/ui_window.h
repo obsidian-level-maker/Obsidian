@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -22,9 +22,6 @@
 #define __UI_WINDOW_H__
 
 
-#define MIN_WINDOW_W  428 // 740
-#define MIN_WINDOW_H  432 // 500
-
 #define WINDOW_BG  fl_gray_ramp(3)
 
 #define BUILD_BG   fl_gray_ramp(4)
@@ -36,8 +33,11 @@ public:
   // main child widgets
 
   UI_Game   *game_box;
+
+#ifndef RANDOMIZER
   UI_Level  *level_box;
   UI_Play   *play_box;
+#endif
 
   UI_Build  *build_box;
   UI_CustomMods *mod_box;

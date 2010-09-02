@@ -42,7 +42,12 @@
 
 #define TICKER_TIME  50 /* ms */
 
-#define CONFIG_FILENAME  "CONFIG.txt"
+#ifdef RANDOMIZER
+# define CONFIG_FILENAME  "CONFIG_R.txt"
+#else
+# define CONFIG_FILENAME  "CONFIG.txt"
+#endif
+
 #define LOG_FILENAME     "LOGS.txt"
 
 
@@ -423,6 +428,7 @@ bool Build_Cool_Shit()
 
   // create game object
   {
+#ifndef RANDOMIZER
     if (StringCaseCmp(format, "doom") == 0)
       game_object = Doom_GameObject();
 
@@ -439,6 +445,7 @@ bool Build_Cool_Shit()
       game_object = Quake2_GameObject();
 
     else
+#endif
       Main_FatalError("ERROR: unknown format: '%s'\n", format);
   }
 
@@ -620,9 +627,12 @@ int main(int argc, char **argv)
 
     Script_Load();
 
+#ifndef RANDOMIZER
+    // FIXME: main_win->Defaults();
     main_win->game_box ->Defaults();
     main_win->level_box->Defaults();
     main_win->play_box ->Defaults();
+#endif
 
     // load config after creating window (will set widget values)
     if (! config_file)

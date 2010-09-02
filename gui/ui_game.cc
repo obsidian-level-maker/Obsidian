@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2009 Andrew Apted
+//  Copyright (C) 2006-2010 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -45,7 +45,13 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   int cx = x + 66 + KF * 11;
   int cy = y + y_step + KF * 3;
 
-  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, "Game Settings");
+#ifdef RANDOMIZER
+  const char *heading_text = "Settings";
+#else
+  const char *heading_text = "Game Settings";
+#endif
+
+  Fl_Box *heading = new Fl_Box(FL_NO_BOX, x+6, cy, w-12, 24, heading_text);
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -63,16 +69,18 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
   seed->callback(callback_Seed, this);
   seed->value("1");
 
-  add(seed);
-
   bump = new Fl_Button(x + w - 80-KF*4, cy, 66+KF*4, 24+KF*2, "Bump");
   bump->callback(callback_Bump, this);
+
+#ifndef RANDOMIZER
+  add(seed);
 
   add(bump);
 
   cy += seed->h() + y_step;
 
   cy += y_step + y_step/2;
+#endif
 
 
   int cw = 130 + KF * 14;
@@ -109,9 +117,11 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   setup_Mode();
 
+#ifndef RANDOMIZER
   add(mode);
 
   cy += mode->h() + y_step;
+#endif
 
 
   length = new UI_RChoice(cx, cy, cw, ch, "Length: ");
@@ -121,9 +131,11 @@ UI_Game::UI_Game(int x, int y, int w, int h, const char *label) :
 
   setup_Length();
 
+#ifndef RANDOMIZER
   add(length);
 
   cy += length->h() + y_step;
+#endif
 
 
 //  DebugPrintf("UI_Game: final h = %d\n", cy - y);
