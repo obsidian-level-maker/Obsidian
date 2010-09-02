@@ -19,8 +19,11 @@
 ----------------------------------------------------------------
 
 OB_CONFIG  = { }
+
 OB_GAMES   = { }
+OB_ENGINES = { }
 OB_MODULES = { }
+
 
 require 'util'
 
