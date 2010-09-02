@@ -829,6 +829,8 @@ QUAKE1.SUB_THEMES =
   {
     prob=50,
 
+    skies = { sky1=20, sky4=80 },
+
     building_walls =
       {
         TECH06_1=50, TECH08_2=50, TECH09_3=50,
@@ -871,7 +873,64 @@ QUAKE1.SUB_THEMES =
     {
       -- FIXME
     },
-  }, -- TECH
+  },
+
+
+  quake_castle1 =
+  {
+    prob=50,
+
+    skies = { sky1=80, sky4=20 },
+
+    building_walls =
+    {
+      BRICKA2_4=50,
+      CITY1_4=10, CITY2_1=20, CITY2_3=10, CITY2_5=10,
+      CITY2_6=10, CITY2_7=10, CITY2_8=10,
+      CITY5_8=40,
+      STONE1_5=60, WALL14_5=60,
+    },
+
+    building_floors =
+    {
+      AFLOOR1_4=50, AFLOOR3_1=25,
+      CITY4_1=15, CITY4_2=25, CITY4_5=15, CITY4_6=20,
+      CITY4_7=15, CITY4_8=15,
+      CITY5_1=30, CITY5_2=30,
+    },
+
+    building_ceilings =
+    {
+      DUNG01_4=50, DUNG01_5=50, ECOP1_8=50,
+      
+    },
+
+    courtyard_floors =
+    {
+      GROUND1_2=50, GROUND1_5=50, GROUND1_7=30,
+      ROCK3_7=50, ROCK3_8=50, ROCK4_2=50,
+      VINE1_2=50,
+    },
+
+    xx_hallway =
+    {
+      -- FIXME
+      walls = { TECH02_1=10 },
+      floors = { AFLOOR1_4=10 },
+      ceilings = { AFLOOR1_4=10 },
+    },
+
+    logos = { carve=50 },
+
+    steps = { step1=50, step2=50 },
+
+    exits = { exit_pad=50 },
+
+    scenery =
+    {
+      -- FIXME
+    },
+  },
 }
 
 
@@ -1197,30 +1256,38 @@ function QUAKE1.get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
+  local SKIP_MAPS =
+  {
+    e1m7 = 1,  -- Chthon
+    e2m6 = 1,  -- E2 boss map
+    e3m6 = 1,  -- E3 boss map
+    e3m7 = 1,  -- not in original
+    e3m7 = 1,  -- not in original
+    e4m7 = 1,  -- Shub
+  }
+
   for episode = 1,EP_NUM do
     local ep_info = QUAKE1.EPISODES["episode" .. episode]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
+      local name = string.format("e%dm%d", episode, map)
 
       local LEV =
       {
-        name = string.format("e%dm%d", episode, map),
+        name = name,
 
         episode  = episode,
         map      = map,
         ep_along = map / MAP_NUM,
 
         next_map = string.format("e%dm%d", episode, map+1)
-
---        key_list = { "foo" },
-  --      switch_list = { "foo" },
-    --    bar_list = { "foo" },
       }
 
----   LEV.build_func = Builder_quake_test
+      if not SKIP_MAPS[name] then
+        table.insert(GAME.all_levels, LEV)
+      end
 
-      table.insert(GAME.all_levels, LEV)
     end -- for map
 
   end -- for episode
@@ -1244,8 +1311,9 @@ function QUAKE1.begin_level()
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 
-  -- select the sky to use (FIXME: make it theme based)
-  GAME.MATERIALS["_SKY"].t = rand.pick { "sky1", "sky4" }
+  -- select the sky to use
+  assert(LEVEL.sub_theme.skies)
+  GAME.MATERIALS["_SKY"].t = rand.key_by_probs(LEVEL.sub_theme.skies)
 end
 
 
@@ -1277,6 +1345,15 @@ OB_THEMES["quake_base"] =
   for_games = { quake=1 },
 
   name_theme = "TECH",
+  mixed_prob = 50,
+}
+
+OB_THEMES["quake_castle"] =
+{
+  label = "Castle",
+  for_games = { quake=1 },
+
+  name_theme = "URBAN",
   mixed_prob = 50,
 }
 
