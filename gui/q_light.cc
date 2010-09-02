@@ -46,7 +46,7 @@
 
 
 // 0 = normal, -1 = fast, +1 = best
-int qk_lighting_quality = -1;
+int qk_lighting_quality = +1;
 
 bool qk_color_lighting;
 
