@@ -3409,7 +3409,7 @@ ENTITIES =
 {
 {
   kind = "info_player_start",
-  x = 448, y = -672, z = 160,
+  x = 550, y = -916, z = 640,
   angle = 0,
 },
 {
@@ -4309,13 +4309,15 @@ function Quake_test()
   for i,brush in ipairs(BRUSHES) do
     local tex = get_texture(brush)
 
-    local kind, medium
-    if string.match(tex, "water") then
+    local kind, medium, light, sec_kind
+    if string.match(tex, "water") or string.match(tex, "WATER") then
       kind = "liquid"
       medium = "water"
+      sec_kind = 4466
     end
-    if string.match(tex, "sky") then
+    if string.match(tex, "sky") or string.match(tex, "F_SKY") then
       kind = "sky"
+      light = 0.76
     end
 
     if tex and #brush == 24 then
@@ -4324,8 +4326,8 @@ function Quake_test()
       if good then
         gui.add_brush(
         {
-          { t=z2, tex=tex },
-          { b=z1, tex=tex },
+          { t=z2, tex=tex, special=sec_kind, },
+          { b=z1, tex=tex, light=light },
           { x=x1, y=y1, tex=tex },
           { x=x2, y=y1, tex=tex },
           { x=x2, y=y2, tex=tex },
