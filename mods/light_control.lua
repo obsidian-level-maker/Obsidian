@@ -32,7 +32,7 @@ end
 
 OB_MODULES["light_control"] =
 {
-  label = "Lighting Control",
+  label = "Light Control",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1,
                 quake=1, quake2=1, hexen2=1, halflife=1
@@ -45,16 +45,18 @@ OB_MODULES["light_control"] =
 
   options =
   {
-    precision =
+    quality =
     {
-      label = "Precision",
+      label = "Quality",
 
       choices =
       {
-        "low",  "Fastest",
+        "low",  "Low \\/ Fast",
         "medium", "Medium",
         "high", "High \\/ Slow",
       },
+
+      default = "high",
     },
   }
 }
