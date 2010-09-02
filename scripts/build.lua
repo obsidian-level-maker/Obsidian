@@ -3173,8 +3173,24 @@ function Quake_test()
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
 
+  gui.add_entity("light", 80, 256, 160, { light=200 })
+
+  -- 3D floor test
   if false then
     Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
+  end
+
+  -- liquid test
+  if false then
+    gui.add_brush(
+    {
+      { t=119, tex="e1u1/water4" },
+      { x=0,   y=0,   tex="e1u1/water4" },
+      { x=100, y=0,   tex="e1u1/water4" },
+      { x=100, y=600, tex="e1u1/water4" },
+      { x=0,   y=600, tex="e1u1/water4" },
+    },
+    { k="liquid", medium="water" })
   end
 
   local wall_i = get_mat("COMP1_1")
