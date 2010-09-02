@@ -107,6 +107,44 @@ $(OBJ_DIR)/%.o: gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
+#----- Randomizer Objects ------------------------------------------
+
+PROGRAM2=Randomizer
+
+R_OBJ_DIR=r_obj/linux
+
+R_CXXFLAGS=$(CXXFLAGS) -DRANDOMIZER
+
+R_OBJS=	$(R_OBJ_DIR)/main.o      \
+	$(R_OBJ_DIR)/m_cookie.o  \
+	$(R_OBJ_DIR)/m_lua.o     \
+	$(R_OBJ_DIR)/lib_argv.o  \
+	$(R_OBJ_DIR)/lib_file.o  \
+	$(R_OBJ_DIR)/lib_signal.o \
+	$(R_OBJ_DIR)/lib_util.o  \
+	$(R_OBJ_DIR)/lib_pak.o   \
+	$(R_OBJ_DIR)/lib_wad.o   \
+	$(R_OBJ_DIR)/sys_assert.o \
+	$(R_OBJ_DIR)/sys_debug.o  \
+	\
+	$(R_OBJ_DIR)/twister.o   \
+	$(R_OBJ_DIR)/ui_about.o  \
+	$(R_OBJ_DIR)/ui_build.o  \
+	$(R_OBJ_DIR)/ui_chooser.o \
+	$(R_OBJ_DIR)/ui_console.o \
+	$(R_OBJ_DIR)/ui_dialog.o \
+	$(R_OBJ_DIR)/ui_game.o   \
+	$(R_OBJ_DIR)/ui_level.o  \
+	$(R_OBJ_DIR)/ui_map.o    \
+	$(R_OBJ_DIR)/ui_module.o \
+	$(R_OBJ_DIR)/ui_rchoice.o \
+	$(R_OBJ_DIR)/ui_play.o   \
+	$(R_OBJ_DIR)/ui_window.o
+
+$(R_OBJ_DIR)/%.o: gui/%.cc
+	$(CXX) $(R_CXXFLAGS) -o $@ -c $<
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -115,7 +153,10 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 
 $(PROGRAM): $(OBJS)
-	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+
+$(PROGRAM2): $(R_OBJS)
+	$(CXX) $(R_OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
