@@ -1200,7 +1200,7 @@ static int ParseLiquidMedium(csg_property_set_c *props)
 
 static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 {
-  // Quake 1 and related games simply have a single solid leaf
+  // Quake 1 and related games have a shared solid leaf
   if (qk_game == 1)
     return qk_solid_leaf;
 
@@ -1223,16 +1223,39 @@ static quake_leaf_c * Solid_Leaf(quake_group_c & group)
 }
 
 
-static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
+static quake_leaf_c * Solid_Leaf(region_c *R, unsigned int g, int is_ceil,
+                                 quake_group_c& group)
 {
   if (qk_game == 1)
     return qk_solid_leaf;
 
   quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_SOLID);
 
-  // TODO: add _all_ solid brushes in floor/ceiling
+  // add _all_ solid brushes for the floor/ceiling (Quake II)
+  double brush_z1 = -9e9;
+  double brush_z2 = +9e9;
 
-  leaf->AddSolid(is_ceil ? gap->top : gap->bottom);
+  if (g > 0)
+    brush_z1 = R->gaps[g-1]->top->b.z - 2;
+
+  if (g+1 < R->gaps.size())
+    brush_z2 = R->gaps[g+1]->bottom->t.z + 2;
+
+  for (unsigned int i = 0 ; i < group.brushes.size() ; i++)
+  {
+    csg_brush_c *B = group.brushes[i];
+
+    if (brush_z1 < B->b.z && B->t.z < brush_z2)
+      leaf->AddSolid(B);
+  }
+
+  // this should not happen..... but handle it anyway
+  if (leaf->solids.empty())
+  {
+    LogPrintf("WARNING: solid brush for floor/ceiling is AWOL!\n");
+
+    leaf->AddSolid(is_ceil ? R->gaps[g]->top : R->gaps[g]->bottom);
+  }
 
   leaf->BBoxFromSolids();
 
@@ -1240,36 +1263,39 @@ static quake_leaf_c * Solid_Leaf(gap_c *gap, int is_ceil)
 }
 
 
-static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
+static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
+                                 quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
                                  quake_bbox_c & bbox, qCluster_c *cluster,
                                  csg_brush_c *liquid,
                                  quake_node_c * prev_N, quake_leaf_c * prev_L)
 {
+  gap_c *gap = R->gaps[g];
+
   quake_leaf_c *leaf = new quake_leaf_c(MEDIUM_AIR);
 
   cluster->AddLeaf(leaf);
 
-  if (G->top->bkind == BKIND_Sky)
+  if (gap->top->bkind == BKIND_Sky)
     cluster->MarkAmbient(AMBIENT_SKY);
 
-  CreateWallFaces(group, leaf, G);
+  CreateWallFaces(group, leaf, gap);
 
   quake_node_c *F_node = new quake_node_c;
   quake_node_c *C_node = new quake_node_c;
 
-  CreateFloorFace(F_node, leaf, G, false, winding);
-  CreateFloorFace(C_node, leaf, G, true,  winding);
+  CreateFloorFace(F_node, leaf, gap, false, winding);
+  CreateFloorFace(C_node, leaf, gap, true,  winding);
 
   // copy bbox and update Z (with a hack for slopes)
 
   leaf->bbox = bbox;
 
-  leaf->bbox.mins[2] = G->bottom->t.z;
-  leaf->bbox.maxs[2] = G->top->b.z;
+  leaf->bbox.mins[2] = gap->bottom->t.z;
+  leaf->bbox.maxs[2] = gap->top->b.z;
 
-  if (G->bottom->t.slope) leaf->bbox.mins[2] = G->bottom->b.z;
-  if (G->top   ->b.slope) leaf->bbox.maxs[2] = G->top->t.z;
+  if (gap->bottom->t.slope) leaf->bbox.mins[2] = gap->bottom->b.z;
+  if (gap->top   ->b.slope) leaf->bbox.maxs[2] = gap->top->t.z;
 
   // --- handle liquids ---
 
@@ -1316,7 +1342,7 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
   F_node->front_N = W_node ? W_node : C_node;
 
   C_node->back_L = leaf;
-  F_node->back_L = Solid_Leaf(G, 0);
+  F_node->back_L = Solid_Leaf(R, g, 0, group);
 
   if (W_node)
   {
@@ -1330,7 +1356,10 @@ static quake_node_c * CreateLeaf(gap_c * G, quake_group_c & group,
 
 static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 {
-  SYS_ASSERT(group.sides[0]->snag);  // FIXME can fail due to partitioning
+  // FIXME: this can fail due to getting a "mini side".
+  //        It does not usually happen because the OBLIGE Lua code
+  //        creates seed-size quad brushes everywhere.
+  SYS_ASSERT(group.sides[0]->snag);
 
   region_c *R = group.sides[0]->snag->region;
 
@@ -1344,11 +1373,11 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
   CollectWinding(group, winding, bbox);
 
   quake_node_c *cur_node = NULL;
-  quake_leaf_c *cur_leaf = Solid_Leaf(R->gaps.back(), 1);
+  quake_leaf_c *cur_leaf = Solid_Leaf(R, R->gaps.size()-1, 1, group);
 
   for (int i = (int)R->gaps.size()-1 ; i >= 0 ; i--)
   {
-    cur_node = CreateLeaf(R->gaps[i], group, winding, bbox,
+    cur_node = CreateLeaf(R, i, group, winding, bbox,
                           cluster, R->liquid, cur_node, cur_leaf);
     cur_leaf = NULL;
   }
