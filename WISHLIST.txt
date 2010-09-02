@@ -256,6 +256,16 @@ NO:  CSG DOOM: support entity.light
 
 .  build our own REJECT lump (use vis info like Quake)
 
+-  ZDoom slopes:
+   340 = 0,   Plane_Align (1, 0)  // Slope front floor
+   341 = 0,   Plane_Align (0, 1)  // Slope front ceiling
+   342 = 0,   Plane_Align (1, 1)  // Slope front floor and ceiling
+   343 = 0,   Plane_Align (2, 0)  // Slope back floor
+   344 = 0,   Plane_Align (0, 2)  // Slope back ceiling
+   345 = 0,   Plane_Align (2, 2)  // Slope back floor and ceiling
+   346 = 0,   Plane_Align (2, 1)  // Slope b.f. and f.c.
+   347 = 0,   Plane_Align (1, 2)  // Slope f.f. and b.c.
+
 
 ----------------------------------------------------------------
   FINAL DOOM
