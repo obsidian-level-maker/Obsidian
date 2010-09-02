@@ -745,8 +745,8 @@ static void DM_MakeSector(region_c *R)
   }
 
 
-  int f_light = f_face->getInt("light");
-  int c_light = c_face->getInt("light");
+  double f_light = f_face->getDouble("light");
+  double c_light = c_face->getDouble("light");
 
   if (f_light > 0 || c_light > 0)
   {
