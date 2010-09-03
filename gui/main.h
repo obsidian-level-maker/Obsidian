@@ -26,6 +26,16 @@
 #define OBLIGE_VERSION  "3.64"
 #define OBLIGE_HEX_VER  0x364
 
+
+#ifdef RANDOMIZER
+# define CONFIG_FILENAME  "CONFIG_R.txt"
+#else
+# define CONFIG_FILENAME  "CONFIG.txt"
+#endif
+
+#define LOG_FILENAME     "LOGS.txt"
+
+
 extern const char *install_path;
 extern const char *working_path;
 extern const char *data_path;

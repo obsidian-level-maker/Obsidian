@@ -118,6 +118,8 @@ R_CXXFLAGS=$(CXXFLAGS) -DRANDOMIZER
 R_OBJS=	$(R_OBJ_DIR)/main.o      \
 	$(R_OBJ_DIR)/m_cookie.o  \
 	$(R_OBJ_DIR)/m_lua.o     \
+	$(R_OBJ_DIR)/ran_main.o  \
+	\
 	$(R_OBJ_DIR)/lib_argv.o  \
 	$(R_OBJ_DIR)/lib_file.o  \
 	$(R_OBJ_DIR)/lib_signal.o \
