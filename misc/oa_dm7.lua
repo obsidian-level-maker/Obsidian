@@ -3409,7 +3409,7 @@ ENTITIES =
 {
 {
   id = "info_player_start",
-  x = 550, y = -916, z = 640,
+  x = 550, y = -916, z = 640+24,
   angle = 0,
 },
 {
@@ -4326,14 +4326,14 @@ function Quake_test()
       if good then
         gui.add_brush(
         {
+          { k=kind or "solid", medium=medium },
           { t=z2, tex=tex, special=sec_kind, },
           { b=z1, tex=tex, light=light },
           { x=x1, y=y1, tex=tex },
           { x=x2, y=y1, tex=tex },
           { x=x2, y=y2, tex=tex },
           { x=x1, y=y2, tex=tex },
-        },
-        { k = kind, medium = medium })
+        })
       end
     end
   end

@@ -412,6 +412,23 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     return luaL_error(L, "gui.add_brush: missing vertex info");
   }
 
+  lua_getfield(L, stack_pos, "k");
+
+  if (! lua_isnil(L, -1))
+  {
+    const char *kind_str = luaL_checkstring(L, -1);
+
+    B->bkind = Grab_BrushKind(L, kind_str);
+
+    Grab_Properties(L, stack_pos, &B->props, true);
+
+    lua_pop(L, 1);
+
+    return 0;
+  }
+
+  lua_pop(L, 1);
+
   lua_getfield(L, stack_pos, "slope");
   lua_getfield(L, stack_pos, "b");
   lua_getfield(L, stack_pos, "t");
@@ -558,18 +575,16 @@ int CSG_property(lua_State *L)
 }
 
 
-// LUA: add_brush(coords, [props])
-//
-// props is a optional property table, with these fields:
-//      
-//   k : brush kind, the default is "solid"
-//       can also be "liquid", "sky", "detail", "clip", etc
-//   light : for light brushes
+// LUA: add_brush(coords)
 //
 // coords is a list of coordinates of the form:
+//   { k="solid", ... }                     -- properties
 //   { x=123, y=456,     tex="foo", ... }   -- side of brush
 //   { b=200, s={ ... }, tex="bar", ... }   -- top of brush
 //   { t=240, s={ ... }, tex="gaz", ... }   -- bottom of brush
+//
+// 'k' is the brush kind, default "solid", can also be
+//     "sky", "liquid", "detail", "clip", etc..
 //
 // tops and bottoms are optional, when absent then it means the
 // brush extends to infinity in that direction.
@@ -597,20 +612,9 @@ int CSG_property(lua_State *L)
 //
 int CSG_add_brush(lua_State *L)
 {
-  int nargs = lua_gettop(L);
-
   csg_brush_c *B = new csg_brush_c();
 
   Grab_CoordList(L, 1, B);
-
-  if (nargs >= 2)
-  {
-    Grab_Properties(L, 2, &B->props, false);
-
-    B->bkind = Grab_BrushKind(L, B->props.getStr("k"));
-
-    B->props.Remove("k");
-  }
 
   all_brushes.push_back(B);
 

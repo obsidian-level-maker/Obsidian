@@ -148,7 +148,7 @@ function Trans.collect_flags(C)  -- FIXME: use game-specific code
 end
 
 
-function Trans.brush(coords, props)
+function Trans.brush(coords)
 
   -- FIXME: mirroring
   -- (when mirroring, ensure first coord stays the first)
@@ -157,18 +157,22 @@ function Trans.brush(coords, props)
   coords = table.deep_copy(coords)
 
   for _,C in ipairs(coords) do
-    if C.x then
+    if C.k then
+      -- skip the properties
+    elseif C.x then
       C.x, C.y = Trans.apply(C.x, C.y)
     elseif C.b then
       C.b, C.s = Trans.apply_z(C.b, C.s)
-    else assert(C.t)
+    elseif C.t then
       C.t, C.s = Trans.apply_z(C.t, C.s)
+    else
+      error("weird coords in brush")
     end
 
     Trans.collect_flags(C)
   end
 
-  gui.add_brush(coords, props)
+  gui.add_brush(coords)
 end
 
 
@@ -222,9 +226,13 @@ function Trans.old_brush(info, coords, z1, z2)
 
   -- TODO !!!  transform slope coords (z1 or z2 == table)
 
+  if info.kind then
+    table.insert(coords, 1, { k=info.kind })
+  end
+
 -- gui.printf("coords=\n%s\n", table.tostr(coords,4))
 
-  gui.add_brush(coords, { k=info.kind } )
+  gui.add_brush(coords)
 end
 
 
@@ -292,7 +300,11 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
   if z1 then table.insert(coords, b_face) end
   if z2 then table.insert(coords, t_face) end
 
-  Trans.brush(coords, props)
+  if props and props.k then
+    table.insert(coords, 1, props)
+  end
+
+  Trans.brush(coords)
 end
 
 
@@ -965,15 +977,7 @@ function Build.prefab(fab, skin, T)
 
   local function render_brushes(brushes)
     for _,B in ipairs(brushes) do
-      local props
-
-      -- the first entry of a brush can be for properties.
-      if B[1] and B[1].k then
-        props = B[1]
-        table.remove(B, 1)
-      end
-
-      Trans.brush(B, props)
+      Trans.brush(B)
     end
   end
 
@@ -3195,13 +3199,13 @@ function Quake_test()
   if false then
     gui.add_brush(
     {
+      { k="liquid", medium="water" },
       { t=119, tex="e1u1/water4" },
       { x=0,   y=0,   tex="e1u1/water4" },
       { x=100, y=0,   tex="e1u1/water4" },
       { x=100, y=600, tex="e1u1/water4" },
       { x=0,   y=600, tex="e1u1/water4" },
-    },
-    { k="liquid", medium="water" })
+    })
   end
 
   local wall_i = get_mat("COMP1_1")
