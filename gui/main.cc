@@ -323,7 +323,7 @@ void Main_ProgStatus(const char *msg, ...)
 }
 
 
-static int special_key_handler(int event)
+int Main_key_handler(int event)
 {
   if (event != FL_SHORTCUT)
     return 0;
@@ -649,7 +649,7 @@ int main(int argc, char **argv)
 
     main_win->image(NULL);
 
-    Fl::add_handler(special_key_handler);
+    Fl::add_handler(Main_key_handler);
 
     // draw an empty map (must be done after main window is
     // shown() because that is when FLTK finalises the colors).

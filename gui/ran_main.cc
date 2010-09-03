@@ -49,7 +49,7 @@ static void RMZ_ShowInfo()
 {
   printf(
     "\n"
-    "** " Randomizer " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n"
+    "**   Randomizer   " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n"
     "\n"
   );
 
@@ -86,6 +86,17 @@ static void RMZ_ShowInfo()
 
 //------------------------------------------------------------------------
 
+extern void Determine_WorkingPath(const char *argv0);
+extern void Determine_InstallPath(const char *argv0);
+
+extern void Main_SetupFLTK();
+extern void Main_Shutdown(bool error);
+
+extern int Main_key_handler(int event);
+
+
+//------------------------------------------------------------------------
+
 bool Randomize_Dat_Shit()
 {
   // clear the map
@@ -98,6 +109,7 @@ bool Randomize_Dat_Shit()
     Main_FatalError("ERROR: missing 'format' for game?!?\n");
 
   // create game object
+#if 0   // TODO
   {
     if (StringCaseCmp(format, "doom") == 0)
       game_object = Doom_GameObject();
@@ -117,6 +129,7 @@ bool Randomize_Dat_Shit()
     else
       Main_FatalError("ERROR: unknown format: '%s'\n", format);
   }
+#endif
 
 
   // lock most widgets of user interface
@@ -259,8 +272,11 @@ int main(int argc, char **argv)
 
   Script_Init();
 
-  if (batch_mode)
+  if (batch_mode)  // TODO
   {
+    Main_FatalError("Randomizer does not support batch mode.\n"); 
+
+#if 0
     Script_Load();
 
     Batch_Defaults();
@@ -278,6 +294,7 @@ int main(int argc, char **argv)
       Main_Shutdown(false);
       return 3;
     }
+#endif
   }
   else
   {
@@ -320,7 +337,7 @@ int main(int argc, char **argv)
 
     main_win->image(NULL);
 
-    Fl::add_handler(special_key_handler);
+    Fl::add_handler(Main_key_handler);
 
     // draw an empty map (must be done after main window is
     // shown() because that is when FLTK finalises the colors).
