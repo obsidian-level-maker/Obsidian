@@ -98,6 +98,27 @@ void csg_property_set_c::Add(const char *key, const char *value)
   dict[key] = std::string(value);
 }
 
+void csg_property_set_c::Remove(const char *key)
+{
+  dict.erase(key);
+}
+
+
+void csg_property_set_c::DebugDump()
+{
+  std::map<std::string, std::string>::iterator PI;
+
+  fprintf(stderr, "{\n");
+
+  for (PI = dict.begin() ; PI != dict.end() ; PI++)
+  {
+    fprintf(stderr, "  %s = \"%s\"\n", PI->first.c_str(), PI->second.c_str());
+  }
+
+  fprintf(stderr, "}\n");
+}
+
+
 const char * csg_property_set_c::getStr(const char *key, const char *def_val)
 {
   std::map<std::string, std::string>::iterator PI = dict.find(key);
@@ -598,23 +619,15 @@ int CSG_add_brush(lua_State *L)
 }
 
 
-// LUA: add_entity(name, x, y, z, [props])
+// LUA: add_entity(props)
 //
-// props is a table which may contain:
-//
+//   id      -- number or name of thing
+//   x y z   -- coordinates
 //   angle
-//   ambush
+//   flags
+//   light   -- amount of light emitted
 //
-//   mode_sp
-//   mode_coop
-//   mode_dm
-//   mode_ctf
-//
-//   skill_easy
-//   skill_medium
-//   skill_hard
-//
-//   light : amount of light emitted
+//   etc...
 //
 int CSG_add_entity(lua_State *L)
 {

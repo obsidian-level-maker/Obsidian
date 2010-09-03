@@ -82,6 +82,7 @@ public:
   { }
 
   void Add(const char *key, const char *value);
+  void Remove(const char *key);
 
   const char * getStr(const char *key, const char *def_val = NULL);
 
@@ -89,6 +90,8 @@ public:
   int    getInt   (const char *key, int def_val = 0);
 
   void getHexenArgs(u8_t *arg5);
+
+  void DebugDump();
 
 public:
   typedef std::map<std::string, std::string>::iterator iterator;
