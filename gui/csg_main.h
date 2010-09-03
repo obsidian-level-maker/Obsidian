@@ -228,6 +228,8 @@ extern std::string dummy_plane_tex;
 
 /***** FUNCTIONS ****************/
 
+void CSG_Main_Free();
+
 void CSG_MakeMiniMap();
 
 

@@ -46,11 +46,6 @@ std::string dummy_wall_tex;
 std::string dummy_plane_tex;
 
 
-static void CSG_BeginLevel(void);
-static void CSG_EndLevel(void);
-
-
-
 slope_info_c::slope_info_c() :
       sx(0),sy(0), ex(1),ey(0),dz(0)
 { }
@@ -521,10 +516,9 @@ static int Grab_CoordList(lua_State *L, int stack_pos, csg_brush_c *B)
 //
 int CSG_begin_level(lua_State *L)
 {
-  // call our own initialisation function first
-  CSG_BeginLevel();
-
   SYS_ASSERT(game_object);
+
+  CSG_Main_Free();
 
   game_object->BeginLevel();
 
@@ -540,8 +534,8 @@ int CSG_end_level(lua_State *L)
 
   game_object->EndLevel();
 
-  // call our own termination function afterwards
-  CSG_EndLevel();
+  CSG_Main_Free();
+  CSG_BSP_Free();
 
   return 0;
 }
@@ -748,15 +742,14 @@ void CSG_MakeMiniMap(void)
 
 //------------------------------------------------------------------------
 
-
-void CSG_FreeAll(void)
+void CSG_Main_Free()
 {
   unsigned int k;
 
-  for (k = 0; k < all_brushes.size(); k++)
+  for (k = 0 ; k < all_brushes.size() ; k++)
     delete all_brushes[k];
 
-  for (k = 0; k < all_entities.size(); k++)
+  for (k = 0 ; k < all_entities.size() ; k++)
     delete all_entities[k];
 
   all_brushes .clear();
@@ -764,19 +757,6 @@ void CSG_FreeAll(void)
 
   dummy_wall_tex .clear();
   dummy_plane_tex.clear();
-}
-
-
-//------------------------------------------------------------------------
-
-static void CSG_BeginLevel(void)
-{
-  CSG_FreeAll();
-}
-
-static void CSG_EndLevel(void)
-{
-  CSG_FreeAll();
 }
 
 

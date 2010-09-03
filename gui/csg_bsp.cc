@@ -242,7 +242,15 @@ region_c::region_c(const region_c& other) :
 
 
 region_c::~region_c()
-{ }
+{
+  unsigned int i;
+
+  for (i = 0 ; i < snags.size() ; i++)
+    delete snags[i];
+
+  for (i = 0 ; i < gaps.size() ; i++)
+    delete gaps[i];
+}
 
 
 void region_c::AddSnag(snag_c *S)
@@ -835,8 +843,8 @@ static void DivideOneRegion(region_c *R, partition_c *part,
     snag_c *front_S = new snag_c(x1,y1, x2,y2, part);
     snag_c * back_S = new snag_c(x2,y2, x1,y1, part);
 
-    R->snags.push_back(front_S);
-    N->snags.push_back(back_S);
+    R->AddSnag(front_S);
+    N->AddSnag(back_S);
   }
 }
 
@@ -1669,12 +1677,11 @@ void CSG_DiscoverGaps()
 
 void CSG_BSP(double grid, bool is_clip_hull)
 {
+  CSG_BSP_Free();
+
   QUANTIZE_GRID = grid;
 
   csg_is_clip_hull = is_clip_hull;
-
-  all_partitions.clear();
-  all_regions.clear();
 
   group_c root;
 
@@ -1714,6 +1721,21 @@ region_c * CSG_PointInRegion(double x, double y)
   }
 
   return NULL;  // not found
+}
+
+
+void CSG_BSP_Free()
+{
+  unsigned int i;
+
+  for (i = 0 ; i < all_partitions.size() ; i++)
+    delete all_partitions[i];
+
+  for (i = 0 ; i < all_regions.size() ; i++)
+    delete all_regions[i];
+
+  all_partitions.clear();
+  all_regions.clear();
 }
 
 
