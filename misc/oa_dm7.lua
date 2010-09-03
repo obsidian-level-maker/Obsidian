@@ -3408,765 +3408,765 @@ BRUSHES =
 ENTITIES =
 {
 {
-  kind = "info_player_start",
+  id = "info_player_start",
   x = 550, y = -916, z = 640,
   angle = 0,
 },
 {
-  kind = "light",
+  id = "light",
   x = 768, y = -512, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 768, y = -832, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 256, y = -832, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 256, y = -512, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 688, y = -944, z = 480,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 688, y = -1072, z = 480,
 },
 {
-  kind = "light",
+  id = "light",
   x = 544, y = -944, z = 480,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 544, y = -1072, z = 480,
 },
 {
-  kind = "light",
+  id = "light",
   x = 400, y = -944, z = 480,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 400, y = -1072, z = 480,
 },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 400, y = -944, z = 464,
 -- "target" "t5",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 400, y = -1072, z = 464,
 -- "target" "t6",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 544, y = -944, z = 464,
 -- "target" "t3",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 544, y = -1072, z = 464,
 -- "target" "t4",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 688, y = -944, z = 464,
 -- "target" "t1",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 688, y = -1072, z = 464,
 -- "target" "t2",
 --   light = 100,
 -- },
 {
-  kind = "light",
+  id = "light",
   x = 400, y = -1200, z = 336,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 528, y = -1200, z = 336,
 },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 592, y = -1200, z = 480,
 --   light = 50,
 -- "target" "t8",
 -- },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 688, y = -1200, z = 480,
 },
 {
-  kind = "light",
+  id = "light",
   x = 592, y = -1200, z = 464,
   light = 100,
 },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 688, y = -1200, z = 464,
 -- "target" "t7",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 400, y = -1200, z = 320,
 -- "target" "t9",
 --   light = 100,
 -- },
 -- {
---   kind = "light",
+--   id = "light",
 --   x = 528, y = -1200, z = 320,
 -- "target" "t10",
 --   light = 100,
 -- },
 {
-  kind = "light",
+  id = "light",
   x = 448, y = -960, z = 160,
   light = 100,
 },
 {
-  kind = "light",
+  id = "light",
   light = 100,
   x = 448, y = -1048, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 464, y = -1128, z = 160,
   light = 100,
 },
 {
-  kind = "light",
+  id = "light",
   light = 100,
   x = 560, y = -1168, z = 160,
 },
 {
-  kind = "light",
+  id = "light",
   x = 640, y = -1152, z = 160,
   light = 100,
 },
 {
-  kind = "light",
+  id = "light",
   light = 100,
   x = 640, y = -1152, z = 272,
 },
 {
-  kind = "light",
+  id = "light",
   x = 288, y = -544, z = 364,
   light = 150,
 },
 {
-  kind = "light",
+  id = "light",
   light = 150,
   x = 288, y = -672, z = 364,
 },
 {
-  kind = "light",
+  id = "light",
   x = 288, y = -800, z = 364,
   light = 150,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1024, y = -256, z = 736,
   light = 600,
 },
 {
-  kind = "light",
+  id = "light",
   light = 600,
   x = 448, y = -184, z = 736,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1080, y = -696, z = 736,
   light = 600,
 },
 {
-  kind = "light",
+  id = "light",
   light = 600,
   x = 1088, y = -1088, z = 736,
 },
 {
-  kind = "light",
+  id = "light",
   x = 128, y = -384, z = 736,
   light = 600,
 },
 {
-  kind = "light",
+  id = "light",
   x = 200, y = -1088, z = 736,
   light = 600,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1024, y = -608, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 256, y = -320, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 256, y = -1024, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 192, y = -1216, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 960, y = -320, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 960, y = -960, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 832, y = -1216, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 576, y = -1024, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 576, y = -320, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1216, y = -64, z = -192,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1216, y = -280, z = -104,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 1000, y = -64, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 296, y = -64, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 64, y = -320, z = -104,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   x = 80, y = -64, z = -192,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 1216, y = -1000, z = -104,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1000, y = -1216, z = -104,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1216, y = -1216, z = -192,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 1408, y = -672, z = -56,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1408, y = -672, z = 208,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 1216, y = -672, z = -72,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 384, y = -64, z = 192,
 },
 {
-  kind = "light",
+  id = "light",
   x = 896, y = -64, z = 192,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 640, y = -64, z = 192,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 1088, y = -320, z = 256,
 },
 {
-  kind = "light",
+  id = "light",
   x = 1088, y = -576, z = 256,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 1088, y = -832, z = 256,
 },
 {
-  kind = "light",
+  id = "light",
   x = 896, y = -192, z = 256,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = 640, y = -192, z = 256,
 },
 {
-  kind = "light",
+  id = "light",
   x = 424, y = -192, z = 256,
   light = 200,
 },
 {
-  kind = "light",
+  id = "light",
   light = 25,
   x = 640, y = -448, z = 392,
 },
 {
-  kind = "light",
+  id = "light",
   x = 640, y = -640, z = 392,
   light = 25,
 },
 {
-  kind = "light",
+  id = "light",
   light = 25,
   x = 640, y = -848, z = 392,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = 248, y = -672, z = -368,
 },
 {
-  kind = "light",
+  id = "light",
   x = 224, y = -672, z = -88,
 },
 {
-  kind = "light",
+  id = "light",
   x = 96, y = -672, z = -368,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 200,
   x = -56, y = -672, z = -368,
 },
 {
-  kind = "light",
+  id = "light",
   x = -128, y = -672, z = -248,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   light = 50,
   x = -104, y = -672, z = -80,
 },
 {
-  kind = "light",
+  id = "light",
   x = -144, y = -648, z = 56,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   x = -144, y = -704, z = 240,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   x = -104, y = -704, z = 384,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   x = -120, y = -648, z = 520,
   light = 50,
 },
 {
-  kind = "light",
+  id = "light",
   x = -152, y = -672, z = 712,
   light = 50,
 },
 {
-  kind = "info_player_deathmatch",
+  id = "info_player_deathmatch",
   angle = 315,
   x = 24, y = -24, z = 352,
 },
 {
-  kind = "info_player_deathmatch",
+  id = "info_player_deathmatch",
   angle = 225,
   x = 1256, y = -24, z = 352,
 },
 {
-  kind = "info_player_deathmatch",
+  id = "info_player_deathmatch",
   x = 1256, y = -1256, z = 352,
   angle = 135,
 },
 {
-  kind = "weapon_rocketlauncher",
+  id = "weapon_rocketlauncher",
   x = 448, y = -672, z = 360,
 },
 {
-  kind = "info_player_deathmatch",
+  id = "info_player_deathmatch",
   angle = 0,
   x = 448, y = -672, z = 160,
 },
 {
-  kind = "weapon_lightning",
+  id = "weapon_lightning",
   x = 444, y = -1152, z = 584,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 492, y = -1168, z = 584,
 },
 {
-  kind = "weapon_grenadelauncher",
+  id = "weapon_grenadelauncher",
   x = 1244, y = -32, z = 360,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 432, y = -80, z = -72,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 816, y = -80, z = -72,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 1200, y = -400, z = -100,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 1200, y = -976, z = -100,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 48, y = -400, z = -112,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 48, y = -1040, z = -112,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 304, y = -1232, z = -112,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 880, y = -1232, z = -92,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 760, y = -688, z = 188,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 624, y = -328, z = 320,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = 624, y = -864, z = 320,
 },
 {
-  kind = "weapon_rocketlauncher",
+  id = "weapon_rocketlauncher",
   x = 1248, y = -1248, z = 360,
 },
 {
-  kind = "weapon_plasmagun",
+  id = "weapon_plasmagun",
   x = 32, y = -32, z = 380,
 },
 {
-  kind = "item_invis",
+  id = "item_invis",
   x = 640, y = -64, z = 376,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 1072, y = -688, z = 188,
 },
 {
-  kind = "item_armor_combat",
+  id = "item_armor_combat",
   x = 448, y = -1104, z = 176,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 432, y = -200, z = 160,
 },
 {
-  kind = "item_shells",
+  id = "item_shells",
   x = 272, y = -880, z = -96,
 },
 {
-  kind = "item_shells",
+  id = "item_shells",
   x = 272, y = -496, z = -96,
 },
 {
-  kind = "weapon_plasmagun",
+  id = "weapon_plasmagun",
   x = 224, y = -64, z = -72,
 },
 {
-  kind = "weapon_shotgun",
+  id = "weapon_shotgun",
   x = 1216, y = -256, z = -100,
 },
 {
-  kind = "weapon_plasmagun",
+  id = "weapon_plasmagun",
   x = 1104, y = -1216, z = -92,
 },
 {
-  kind = "weapon_shotgun",
+  id = "weapon_shotgun",
   x = 52, y = -1232, z = -112,
 },
 {
-  kind = "info_player_intermission",
+  id = "info_player_intermission",
   x = 1168, y = -1192, z = 560,
   angle = 136.007,
 },
 {
-  kind = "item_quad",
+  id = "item_quad",
   x = 928, y = -672, z = 664,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 556, y = -1040, z = 584,
 },
 {
-  kind = "item_lightning",
+  id = "item_lightning",
   x = 620, y = -1040, z = 584,
 },
 {
-  kind = "item_shells",
+  id = "item_shells",
   x = 492, y = -1040, z = 584,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 428, y = -1040, z = 584,
 },
 {
-  kind = "light",
+  id = "light",
   x = 512, y = -768, z = -204,
   light = 40,
 },
 {
-  kind = "light",
+  id = "light",
   x = 704, y = -768, z = -204,
   light = 40,
 },
 {
-  kind = "light",
+  id = "light",
   x = 704, y = -576, z = -204,
   light = 40,
 },
 {
-  kind = "light",
+  id = "light",
   x = 512, y = -576, z = -204,
   light = 40,
 },
 {
-  kind = "item_shells",
+  id = "item_shells",
   x = 512, y = -768, z = -204,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 512, y = -576, z = -204,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 704, y = -576, z = -204,
 },
 {
-  kind = "item_grenades",
+  id = "item_grenades",
   x = 704, y = -768, z = -204,
 },
 {
-  kind = "holdable_teleporter",
+  id = "holdable_teleporter",
   x = 608, y = -672, z = -204,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 752, y = -752, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 592, y = -832, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 672, y = -832, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 592, y = -512, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 752, y = -832, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 672, y = -752, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 592, y = -752, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 592, y = -672, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 592, y = -592, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 672, y = -592, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 752, y = -592, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 752, y = -512, z = 660,
 },
 {
-  kind = "item_armor1",
+  id = "item_armor1",
   x = 672, y = -512, z = 660,
 },
 {
-  kind = "item_cells",
+  id = "item_cells",
   x = -24, y = -672, z = -376,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 64, y = -672, z = -376,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = -116, y = -672, z = -128,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = -116, y = -672, z = 64,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = -116, y = -672, z = 256,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = -120, y = -672, z = 576,
 },
 {
-  kind = "item_health",
+  id = "item_health",
   x = -116, y = -672, z = 448,
 },
 {
-  kind = "item_cells",
+  id = "item_cells",
   x = 160, y = -160, z = 416,
 },
 {
-  kind = "item_grenades",
+  id = "item_grenades",
   x = 1120, y = -160, z = 416,
 },
 {
-  kind = "item_lightning",
+  id = "item_lightning",
   x = 1120, y = -1120, z = 416,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 64, y = -384, z = -208,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 64, y = -448, z = -208,
 },
 {
-  kind = "item_lightning",
+  id = "item_lightning",
   x = 256, y = -512, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 832, y = -1224, z = -208,
 },
 {
-  kind = "item_lightning",
+  id = "item_lightning",
   x = 256, y = -832, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 192, y = -832, z = -208,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 64, y = -960, z = -208,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 64, y = -1024, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 192, y = -512, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 512, y = -1224, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 832, y = -64, z = -208,
 },
 {
-  kind = "item_bullets",
+  id = "item_bullets",
   x = 512, y = -64, z = -208,
 },
 {
-  kind = "item_rockets",
+  id = "item_rockets",
   x = 1408, y = -672, z = 84,
 },
 {
-  kind = "item_armor_body",
+  id = "item_armor_body",
   x = -112, y = -672, z = -368,
 },
 {
-  kind = "item_cells",
+  id = "item_cells",
   x = 1216, y = -960, z = -208,
 },
 {
-  kind = "item_cells",
+  id = "item_cells",
   x = 1216, y = -320, z = -208,
 },
 }
@@ -4339,17 +4339,7 @@ function Quake_test()
   end
 
   for _,ent in ipairs(ENTITIES) do
-    local kind = ent.kind or "null"
-    local x    = ent.x  or 0
-    local y    = ent.y  or 0
-    local z    = ent.z  or 0
-
-    ent.kind = nil
-    ent.x = nil
-    ent.y = nil
-    ent.z = nil
-
-    gui.add_entity(kind, x, y, z, ent)
+    gui.add_entity(ent)
   end
 end
 

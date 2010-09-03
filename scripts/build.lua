@@ -229,6 +229,14 @@ end
 
 
 function Trans.entity(name, x, y, z, props)
+  local ent
+
+  if props then
+    ent = table.copy(props)
+  else
+    ent = {}
+  end
+
   assert(name)
 
   local info = GAME.ENTITIES[name]
@@ -236,7 +244,8 @@ function Trans.entity(name, x, y, z, props)
     gui.printf("\nLACKING ENTITY : %s\n\n", name)
     return
   end
-  assert(info.id)
+
+  ent.id = assert(info.id)
 
   x, y = Trans.apply(x, y)
   z    = Trans.apply_z(z)
@@ -247,11 +256,15 @@ function Trans.entity(name, x, y, z, props)
     z = z + PARAM.entity_delta_z
   end
 
+  ent.x = x
+  ent.y = y
+  ent.z = z
+
   if info.spawnflags then
-    props.spawnflags = (props.spawnflags or 0) + info.spawnflags
+    ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
   end
 
-  gui.add_entity(tostring(info.id), x, y, z, props)
+  gui.add_entity(ent)
 end
 
 
@@ -1463,8 +1476,8 @@ function Build.quake_door(S, side)
   -1664+64,  -328-12, 0,
   -1664+128, -328+12, 128)
 
-  gui.add_entity("func_door", 0, 0, 0,
-                 { angle="180", sounds="2",
+  gui.add_entity({ id="func_door",
+                   angle="180", sounds="2",
                    model=assert(m_ref)
                  })
 
@@ -1478,8 +1491,8 @@ function Build.quake_door(S, side)
   -1664+128, -328-12, 0,
   -1664+192, -328+12, 128)
 
-  gui.add_entity("func_door", 0, 0, 0,
-                 { angle="0", sounds="2",
+  gui.add_entity({ id="func_door",
+                   angle="0", sounds="2",
                    model=assert(m_ref)
                  })
 end
@@ -1501,8 +1514,8 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
   },
   x1+12,y1+12, z_top, x2-12,y2-12, z_top+224)
 
-  gui.add_entity("trigger_changelevel", 0, 0, 0,
-                 { map=next_map, model=assert(m_ref) })
+  gui.add_entity({ id="trigger_changelevel",
+                   map=next_map, model=assert(m_ref) })
 
   -- the pad itself
 
@@ -3173,8 +3186,6 @@ function Quake_test()
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
 
-  gui.add_entity("light", 80, 256, 160, { light=200 })
-
   -- 3D floor test
   if false then
     Trans.old_quad(get_mat("METAL2_4"), 112, 192, 144, 208, 20, 30);
@@ -3201,5 +3212,6 @@ function Quake_test()
   Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
 
   Trans.entity("player1", 80, 256, 64)
+  Trans.entity("light",   80, 256, 160, { light=200 })
 end
 

@@ -1803,7 +1803,7 @@ function Rooms.make_ceiling(R)
       local z1 = SEEDS[R.tx1][R.ty1].floor_h or 128
       local z2 = SEEDS[R.tx1][R.ty1].ceil_h  or 512
 
-      gui.add_entity("light", (x1+x2)/2, (y1+y2)/2, (z1+z2)/2, { light=160, _radius=720 })
+      Trans.entity("light", (x1+x2)/2, (y1+y2)/2, (z1+z2)/2, { light=160, _radius=720 })
     end
 
 
@@ -3175,10 +3175,10 @@ function Rooms_add_sun()
 
     local level = sel(i == 1, 32, 6)
 
-    gui.add_entity("oblige_sun", x, y, sun_h, { light=level })
+    Trans.entity("sun", x, y, sun_h, { light=level })
   end
 
-  gui.add_entity("oblige_sun", 0, 0, sun_h, { light=8 })
+  Trans.entity("sun", 0, 0, sun_h, { light=8 })
 end
 
 
