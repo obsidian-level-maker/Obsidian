@@ -33,6 +33,7 @@
 
 #include "q_common.h"
 #include "q_light.h"
+#include "q_vis.h"
 
 #include "csg_main.h"
 #include "csg_quake.h"
@@ -764,6 +765,7 @@ bool BSP_CloseLevel()
   BSP_ClearLumps();
 
   BSP_FreeLightmaps();
+  QCOM_FreeClusters();
 
   return true;
 }

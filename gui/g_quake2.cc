@@ -1063,10 +1063,8 @@ static void Q2_CreateBSPFile(const char *name)
 
   BSP_WriteEntities(LUMP_ENTITIES, description);
 
+  // this will free lots of stuff (lightmaps etc)
   BSP_CloseLevel();
-
-
-  QCOM_FreeClusters();
 }
 
 

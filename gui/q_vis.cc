@@ -338,8 +338,8 @@ void QCOM_CreateClusters(double min_x, double min_y, double max_x, double max_y)
 
   for (int i = 0 ; i < cluster_W * cluster_H ; i++)
   {
-    int cx = (i % cluster_W) /* + cluster_X */;
-    int cy = (i / cluster_W) /* + cluster_Y */;
+    int cx = (i % cluster_W);
+    int cy = (i / cluster_W);
 
     qk_clusters[i] = new qCluster_c(cx, cy);
   }
@@ -472,7 +472,6 @@ public:
     uncompressed = compressed = 0;
 
     best = 99.9;  worst = 0.0;
-
     average = 0;  total = 0;
   }
 
@@ -693,6 +692,8 @@ static void Q2_PrependOffsets(int num_clusters)
   }
 
   q_visibility->Prepend(header, header_size);
+
+  delete[] header;
 }
 
 
