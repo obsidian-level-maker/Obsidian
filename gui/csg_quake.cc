@@ -1612,7 +1612,7 @@ void CSG_QUAKE_Build()
 
 extern int Grab_Properties(lua_State *L, int stack_pos,
                            csg_property_set_c *props,
-                           bool skip_xybt = false);
+                           bool skip_singles = false);
 
 int Q1_add_mapmodel(lua_State *L)
 {

@@ -686,7 +686,7 @@ void nukem_sector_c::WriteSprites()
     int y = I_ROUND(-E->y * NK_WALL_MUL);
     int z = I_ROUND( E->z * NK_HEIGHT_MUL);
 
-    int type = atoi(E->name.c_str());
+    int type = atoi(E->id.c_str());
 
     // parse entity properties
     int flags  = E->props.getInt("flags");

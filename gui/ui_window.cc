@@ -81,7 +81,6 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
   int TOP_H  = 214 + KF*22;
   int BOT_H  = H - TOP_H - 4;
   int MOD_W  = W - PANEL_W*2 - 8;
-  int FIL_H  = 0;
 #endif
 
   game_box = new UI_Game(0, 0, PANEL_W, TOP_H);

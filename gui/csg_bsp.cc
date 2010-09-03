@@ -1394,7 +1394,7 @@ static void MarkGapsWithEntities()
         if (! csg_is_clip_hull)
         {
           LogPrintf("WARNING: entity '%s' is inside solid @ (%1.0f,%1.0f,%1.0f)\n",
-                    E->name.c_str(), E->x, E->y, E->z);
+                    E->id.c_str(), E->x, E->y, E->z);
         }
         continue;
       }

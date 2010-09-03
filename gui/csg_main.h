@@ -201,15 +201,14 @@ public:
 class csg_entity_c
 {
 public:
-  std::string name;
+  std::string id;
 
   double x, y, z;
 
   csg_property_set_c props;
 
 public:
-   csg_entity_c(const char *_name, double xpos, double ypos, double zpos,
-                int _flags = 0);
+   csg_entity_c();
   ~csg_entity_c();
 
   bool Match(const char *want_name) const;

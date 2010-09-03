@@ -273,11 +273,7 @@ void csg_brush_c::ComputeBBox()
 }
 
 
-csg_entity_c::csg_entity_c(const char *_name, double xpos, double ypos,
-                           double zpos, int _flags) :
-    name(_name),
-    x(xpos), y(ypos), z(zpos),
-    props()
+csg_entity_c::csg_entity_c() : id(), x(0), y(0), z(0), props()
 { }
 
 csg_entity_c::~csg_entity_c()
@@ -286,14 +282,15 @@ csg_entity_c::~csg_entity_c()
 
 bool csg_entity_c::Match(const char *want_name) const
 {
-  return (strcmp(name.c_str(), want_name) == 0);
+  return (strcmp(id.c_str(), want_name) == 0);
 }
 
 
 //------------------------------------------------------------------------
 
 int Grab_Properties(lua_State *L, int stack_pos,
-                    csg_property_set_c *props, bool skip_xybt = false)
+                    csg_property_set_c *props,
+                    bool skip_singles = false)
 {
   if (stack_pos < 0)
     stack_pos += lua_gettop(L) + 1;
@@ -312,8 +309,8 @@ int Grab_Properties(lua_State *L, int stack_pos,
 
     const char *key = lua_tostring(L, -2);
 
-    // for faces, skip single letter keys ('x', 'y', 'b', 't', 's') 
-    if (skip_xybt && strlen(key) == 1)
+    // optionally skip single letter keys ('x', 'y', etc)
+    if (skip_singles && strlen(key) == 1)
       continue;
 
     // validate the value
@@ -611,6 +608,8 @@ int CSG_add_brush(lua_State *L)
     Grab_Properties(L, 2, &B->props, false);
 
     B->bkind = Grab_BrushKind(L, B->props.getStr("k"));
+
+    B->props.Remove("k");
   }
 
   all_brushes.push_back(B);
@@ -631,20 +630,19 @@ int CSG_add_brush(lua_State *L)
 //
 int CSG_add_entity(lua_State *L)
 {
-  int nargs = lua_gettop(L);
+  csg_entity_c *E = new csg_entity_c();
 
-  const char *name = luaL_checkstring(L,1);
+  Grab_Properties(L, 1, &E->props);
 
-  double x = luaL_checknumber(L,2);
-  double y = luaL_checknumber(L,3);
-  double z = luaL_checknumber(L,4);
+  E->id = E->props.getStr("id", "");
+  
+  E->x = E->props.getDouble("x");
+  E->y = E->props.getDouble("y");
+  E->z = E->props.getDouble("z");
 
-  csg_entity_c *E = new csg_entity_c(name, x, y, z);
-
-  if (nargs >= 5)
-  {
-    Grab_Properties(L, 5, &E->props);
-  }
+  // save a bit of space
+  E->props.Remove("id"); E->props.Remove("x");
+  E->props.Remove("y");  E->props.Remove("z");
 
   all_entities.push_back(E);
 

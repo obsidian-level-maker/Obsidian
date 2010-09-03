@@ -714,7 +714,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
   {
     csg_entity_c *E = all_entities[j];
 
-    const char *name = E->name.c_str();
+    const char *name = E->id.c_str();
 
     // skip special (Oblige only) entities
     if (strncmp(name, "oblige_", 7) == 0)

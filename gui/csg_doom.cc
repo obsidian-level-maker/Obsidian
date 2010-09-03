@@ -1880,11 +1880,11 @@ static void DM_WriteLinedefs()
 
 static void DM_WriteThing(doom_sector_c *S, csg_entity_c *E)
 {
-  int type = atoi(E->name.c_str());
+  int type = atoi(E->id.c_str());
 
   if (type <= 0)
   {
-    LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->name.c_str());
+    LogPrintf("WARNING: bad doom entity number: '%s'\n",  E->id.c_str());
     return;
   }
 
