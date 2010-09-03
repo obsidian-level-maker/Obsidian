@@ -75,6 +75,9 @@ HALFLIFE.ENTITIES =
 
   -- special
 
+  light = { id="light",      kind="other", r=1, h=1, pass=true },
+  sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true },
+
 }
 
 
