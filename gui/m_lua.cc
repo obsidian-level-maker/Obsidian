@@ -934,6 +934,7 @@ void Script_Load(void)
   }
 
 #ifdef RANDOMIZER
+  Script_LoadSubDir("r_games");
   Script_LoadSubDir("r_module");
 #else
   Script_LoadSubDir("games");

@@ -23,6 +23,9 @@ OB_CONFIG  = { }
 OB_GAMES   = { }
 OB_ENGINES = { }
 OB_MODULES = { }
+OB_THEMES  = { }
+
+UNFINISHED = { }
 
 
 require 'util'
