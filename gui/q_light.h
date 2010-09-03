@@ -95,14 +95,13 @@ extern int qk_lighting_quality;
 
 /***** FUNCTIONS **********/
 
-void BSP_InitLightmaps();
 void BSP_FreeLightmaps();
 
 qLightmap_c * BSP_NewLightmap(int w, int h);
 
 int QCOM_FlatLightOffset(int value);
 
-void QCOM_BuildLightmap(int lump, int max_size);
+void QCOM_BuildLightingLump(int lump, int max_size);
 
 void QCOM_LightAllFaces();
 

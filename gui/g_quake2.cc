@@ -1008,7 +1008,7 @@ static void Q2_LightWorld()
 
   QCOM_LightAllFaces();
 
-  QCOM_BuildLightmap(LUMP_LIGHTING, MAX_MAP_LIGHTING);
+  QCOM_BuildLightingLump(LUMP_LIGHTING, MAX_MAP_LIGHTING);
 }
 
 

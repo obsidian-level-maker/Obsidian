@@ -169,12 +169,6 @@ static std::vector<qLightmap_c *> qk_all_lightmaps;
 static qLump_c *lightmap_lump;
 
 
-void BSP_InitLightmaps()
-{
-  qk_all_lightmaps.clear();
-}
-
-
 void BSP_FreeLightmaps()
 {
   for (unsigned int i = 0 ; i < qk_all_lightmaps.size() ; i++)
@@ -219,7 +213,7 @@ static void WriteFlatBlock(int level, int count)
 }
 
 
-void QCOM_BuildLightmap(int lump, int max_size)
+void QCOM_BuildLightingLump(int lump, int max_size)
 {
   lightmap_lump = BSP_NewLump(lump);
 
@@ -564,10 +558,14 @@ quake_light_t;
 static std::vector<quake_light_t> qk_all_lights;
 
 
-static void QCOM_FindLights()
+static void QCOM_FreeLights()
 {
   qk_all_lights.clear();
+}
 
+
+static void QCOM_FindLights()
+{
   for (unsigned int i = 0 ; i < all_entities.size() ; i++)
   {
     csg_entity_c *E = all_entities[i];
@@ -597,12 +595,6 @@ static void QCOM_FindLights()
 
     qk_all_lights.push_back(light);
   }
-}
-
-
-static void QCOM_FreeLights()
-{
-  qk_all_lights.clear();
 }
 
 
@@ -745,7 +737,9 @@ void QCOM_LightAllFaces()
 {
   LogPrintf("\nLighting World...\n");
 
+  QCOM_FreeLights();
   QCOM_FindLights();
+
   QCOM_MakeTraceNodes();
 
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)

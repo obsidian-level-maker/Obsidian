@@ -559,7 +559,7 @@ static void Q1_LightWorld()
   if (qk_sub_format == SUBFMT_HalfLife)
     max_size = HL_MAX_MAP_LIGHTING;
 
-  QCOM_BuildLightmap(LUMP_LIGHTING, max_size);
+  QCOM_BuildLightingLump(LUMP_LIGHTING, max_size);
 }
 
 

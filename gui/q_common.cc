@@ -634,7 +634,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
   BSP_PrepareVertices();
   BSP_PrepareEdges();
 
-  BSP_InitLightmaps();
+  BSP_FreeLightmaps();
 
   return true;
 }
