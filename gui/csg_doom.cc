@@ -510,6 +510,9 @@ public:
 
 
 
+/********* TABLES *********/
+
+
 static std::vector<doom_vertex_c *>  dm_vertices;
 static std::vector<doom_linedef_c *> dm_linedefs;
 static std::vector<doom_sidedef_c *> dm_sidedefs;
@@ -690,11 +693,11 @@ static void DM_MakeSector(region_c *R)
 
   doom_sector_c *S = new doom_sector_c;
 
+  dm_sectors.push_back(S);
+
   S->region = R;
 
   R->index = (int)dm_sectors.size();
-
-  dm_sectors.push_back(S);
 
 
   R->GetMidPoint(&S->mid_x, &S->mid_y);
@@ -942,9 +945,9 @@ static doom_vertex_c * DM_MakeVertex(int x, int y)
   // create new one
   doom_vertex_c * V = new doom_vertex_c(x, y);
 
-  dm_vertex_map[combo] = dm_vertices.size();
-
   dm_vertices.push_back(V);
+
+  dm_vertex_map[combo] = dm_vertices.size();
 
   return V;
 }
@@ -1002,9 +1005,9 @@ static doom_sidedef_c * DM_MakeSidedef(
 
   doom_sidedef_c *SD = new doom_sidedef_c;
 
-  SD->sector = sec;
-
   dm_sidedefs.push_back(SD);
+
+  SD->sector = sec;
 
 
   // the 'natural' X/Y offsets
@@ -1554,8 +1557,16 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   EF->light   = liquid->t.face.getInt("light", 128);
   EF->tag     = liquid->t.face.getInt("tag");
 
-  EF->bottom_h = I_ROUND(liquid->t.z);
-  EF->top_h    = EF->bottom_h + 128;   // not significant
+  if (true)  // EDGE style
+  {
+    EF->bottom_h = I_ROUND(liquid->t.z);
+    EF->top_h    = EF->bottom_h + 128;   // not significant
+  }
+  else  // Legacy style   !! FIXME: proper way to enable this
+  {
+    EF->bottom_h = sec->f_h;
+    EF->top_h    = I_ROUND(liquid->t.z);
+  }
 
   EF->top    = liquid->t.face.getStr("tex", dummy_plane_tex.c_str());
   EF->bottom = EF->top;
@@ -1714,9 +1725,9 @@ static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
 
   doom_sidedef_c *SD = new doom_sidedef_c;
 
-  SD->sector = sec;
-
   dm_sidedefs.push_back(SD);
+
+  SD->sector = sec;
 
 
   SD->upper = dum->wall;
