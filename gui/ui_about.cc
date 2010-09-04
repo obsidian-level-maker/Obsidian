@@ -25,9 +25,13 @@
 #include "main.h"
 
 
-#define TITLE_COLOR  FL_BLUE
-
-#define INFO_COLOR  fl_color_cube(0,6,4)
+#ifdef RANDOMIZER
+# define TITLE_COLOR  FL_RED
+# define INFO_COLOR   fl_color_cube(6,0,2)
+#else
+# define TITLE_COLOR  FL_BLUE
+# define INFO_COLOR  fl_color_cube(0,6,4)
+#endif
 
 
 class UI_About : public Fl_Window
@@ -83,8 +87,13 @@ private:
 
 
 const char *UI_About::Text =
+#ifdef RANDOMIZER
+  "Randomizer is a tool to randomly replace\n"
+  "monsters and items in DOOM (etc) maps.\n"
+#else
   "OBLIGE is a random level generator for\n"
   "DOOM, DOOM II, Heretic and Quake\n"
+#endif
   "\n"
   "Copyright (C) 2006-2010 Andrew Apted\n"
   "\n"
@@ -114,7 +123,10 @@ UI_About::UI_About(int W, int H, const char *label) :
   int cy = 0;
 
   // nice big logo text
-  Fl_Box *box = new Fl_Box(0, cy, W, 50, OBLIGE_TITLE " " OBLIGE_VERSION);
+  const char *logo_text = randomizer ? RMZ_TITLE " " RMZ_VERSION :
+                                       OBLIGE_TITLE " " OBLIGE_VERSION;
+
+  Fl_Box *box = new Fl_Box(0, cy, W, 50, logo_text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
   box->labelcolor(TITLE_COLOR);
   box->labelsize(24);
@@ -172,7 +184,7 @@ void DLG_AboutText(void)
   int about_w = 350 + KF * 30;
   int about_h = 370 + KF * 40;
 
-  about_window = new UI_About(about_w, about_h, "About Oblige");
+  about_window = new UI_About(about_w, about_h, "About Box");
 
   about_window->show();
 

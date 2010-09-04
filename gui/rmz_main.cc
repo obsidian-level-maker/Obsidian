@@ -49,7 +49,7 @@ static void RMZ_ShowInfo()
 {
   printf(
     "\n"
-    "**   Randomizer   " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n"
+    "** " RMZ_TITLE " " RMZ_VERSION " (C) 2006-2010 Andrew Apted **\n"
     "\n"
   );
 
@@ -229,7 +229,7 @@ int main(int argc, char **argv)
 
   LogPrintf("\n");
   LogPrintf("********************************************************\n");
-  LogPrintf("** Randomizer       " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n");
+  LogPrintf("** " RMZ_TITLE " " RMZ_VERSION " (C) 2006-2010 Andrew Apted **\n");
   LogPrintf("********************************************************\n");
   LogPrintf("\n");
 
@@ -303,7 +303,7 @@ int main(int argc, char **argv)
     int main_w, main_h;
     UI_MainWin::CalcWindowSize(false, &main_w, &main_h);
 
-    main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
+    main_win = new UI_MainWin(main_w, main_h, RMZ_TITLE " " RMZ_VERSION);
 
     Script_Load();
 
