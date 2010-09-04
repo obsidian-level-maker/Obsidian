@@ -371,8 +371,8 @@ quake_node_c::quake_node_c(const quake_plane_c& P) :
 quake_node_c::~quake_node_c()
 {
   // free child leafs
-  if (front_L) delete front_L;
-  if ( back_L) delete  back_L;
+  if (front_L && front_L != qk_solid_leaf) delete front_L;
+  if ( back_L &&  back_L != qk_solid_leaf) delete  back_L;
 
   // free child nodes
   if (front_N) delete front_N;
@@ -1631,6 +1631,8 @@ void CSG_QUAKE_Build()
 void CSG_QUAKE_Free()
 {
   unsigned int i;
+
+  // Note: must delete bsp tree _before_ the solid leaf
 
   delete qk_bsp_root;   qk_bsp_root   = NULL;
   delete qk_solid_leaf; qk_solid_leaf = NULL;
