@@ -565,7 +565,7 @@ static qLump_c * bsp_directory[HEADER_LUMP_MAX];
 
 static void BSP_ClearLumps(void)
 {
-  for (int i = 0; i < bsp_numlumps; i++)
+  for (int i = 0 ; i < bsp_numlumps ; i++)
   {
     if (bsp_directory[i])
     {
@@ -605,8 +605,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
 {
   // assumes that PAK_OpenWrite() has already been called.
 
-  // FIXME: ASSERT(!already opened)
-
+  // begin the .BSP file
   PAK_NewLump(entry_in_pak);
 
   switch (qk_game)
@@ -635,7 +634,7 @@ bool BSP_OpenLevel(const char *entry_in_pak)
   BSP_PrepareVertices();
   BSP_PrepareEdges();
 
-  BSP_FreeLightmaps();
+  QCOM_FreeLightmaps();
 
   return true;
 }
@@ -657,15 +656,15 @@ static void BSP_WriteHeader()
 
   offset += sizeof(lump_t) * bsp_numlumps;
 
-  for (int L = 0; L < bsp_numlumps; L++)
+  for (int i = 0 ; i < bsp_numlumps ; i++)
   {
     lump_t raw_info;
 
     // handle missing lumps : create an empty one
-    if (! bsp_directory[L])
-      bsp_directory[L] = new qLump_c();
+    if (! bsp_directory[i])
+      bsp_directory[i] = new qLump_c();
 
-    u32_t length = bsp_directory[L]->GetSize();
+    u32_t length = bsp_directory[i]->GetSize();
 
     raw_info.start  = LE_U32(offset);
     raw_info.length = LE_U32(length);
@@ -711,9 +710,9 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
   // add everything else
 
-  for (unsigned int j = 0; j < all_entities.size(); j++)
+  for (unsigned int i = 0 ; i < all_entities.size() ; i++)
   {
-    csg_entity_c *E = all_entities[j];
+    csg_entity_c *E = all_entities[i];
 
     const char *name = E->id.c_str();
 
@@ -752,19 +751,20 @@ void BSP_WriteEntities(int lump_num, const char *description)
 
 bool BSP_CloseLevel()
 {
-  // FIXME: ASSERT(opened)
-
   BSP_WriteHeader();
 
-  for (int L = 0; L < bsp_numlumps; L++)
-    BSP_WriteLump(bsp_directory[L]);
+  for (int i = 0 ; i < bsp_numlumps ; i++)
+  {
+    BSP_WriteLump(bsp_directory[i]);
+  }
 
+  // finish the .BSP file
   PAK_FinishLump();
 
   // free all the memory
   BSP_ClearLumps();
 
-  BSP_FreeLightmaps();
+  QCOM_FreeLightmaps();
   QCOM_FreeClusters();
 
   return true;

@@ -95,9 +95,7 @@ extern int qk_lighting_quality;
 
 /***** FUNCTIONS **********/
 
-void BSP_FreeLightmaps();
-
-qLightmap_c * BSP_NewLightmap(int w, int h);
+void QCOM_FreeLightmaps();
 
 int QCOM_FlatLightOffset(int value);
 

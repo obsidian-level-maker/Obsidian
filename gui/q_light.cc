@@ -169,7 +169,7 @@ static std::vector<qLightmap_c *> qk_all_lightmaps;
 static qLump_c *lightmap_lump;
 
 
-void BSP_FreeLightmaps()
+void QCOM_FreeLightmaps()
 {
   for (unsigned int i = 0 ; i < qk_all_lightmaps.size() ; i++)
     delete qk_all_lightmaps[i];
@@ -194,7 +194,7 @@ int QCOM_FlatLightOffset(int value)
 }
 
 
-qLightmap_c * BSP_NewLightmap(int w, int h)
+qLightmap_c * QCOM_NewLightmap(int w, int h)
 {
   qLightmap_c *lmap = new qLightmap_c(w, h);
 
@@ -667,7 +667,7 @@ void QCOM_LightFace(quake_face_c *F)
   CalcFaceVectors(F);
   CalcFaceExtents(F);
 
-  F->lmap = BSP_NewLightmap(lt_W, lt_H);
+  F->lmap = QCOM_NewLightmap(lt_W, lt_H);
 
   CalcPoints();
 
