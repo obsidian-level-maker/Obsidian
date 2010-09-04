@@ -55,6 +55,14 @@ static qLump_c *nk_sprites;
 static raw_nukem_map_t nk_header;
 
 
+static void NK_FreeLumps()
+{
+  delete nk_sectors;  nk_sectors = NULL;
+  delete nk_walls  ;  nk_walls   = NULL;
+  delete nk_sprites;  nk_sprites = NULL;
+}
+
+
 static void NK_WriteLump(const char *name, qLump_c *lump)
 {
   SYS_ASSERT(strlen(name) <= 11);
@@ -104,14 +112,20 @@ void NK_BeginLevel(const char *level_name)
   GRP_NewLump(lump_name);
 
   // initialise the header
-
   memset(&nk_header, 0, sizeof(nk_header));
 
   nk_header.version = LE_U32(DUKE_MAP_VERSION);
+
+  // create the lumps
+  NK_FreeLumps();
+
+  nk_sectors = new qLump_c;
+  nk_walls   = new qLump_c;
+  nk_sprites = new qLump_c;
 }
 
 
-void NK_EndLevel(void)
+void NK_EndLevel()
 {
   // write everything...
 
@@ -131,6 +145,8 @@ void NK_EndLevel(void)
   GRP_AppendData(nk_sprites->GetBuffer(), nk_sprites->GetSize());
 
   GRP_FinishLump();
+
+  NK_FreeLumps();
 }
 
 
@@ -240,17 +256,17 @@ void NK_AddSprite(int x, int y, int z, int sec,
 }
 
 
-int NK_NumSectors(void)
+int NK_NumSectors()
 {
   return nk_sectors->GetSize() / sizeof(raw_nukem_sector_t);
 }
 
-int NK_NumWalls(void)
+int NK_NumWalls()
 {
   return nk_walls->GetSize() / sizeof(raw_nukem_wall_t);
 }
 
-int NK_NumSprites(void)
+int NK_NumSprites()
 {
   return nk_sprites->GetSize() / sizeof(raw_nukem_sprite_t);
 }
@@ -509,11 +525,6 @@ bool nukem_game_interface_c::Finish(bool build_ok)
 
 void nukem_game_interface_c::BeginLevel()
 {
-//???  DM_FreeLevelStuff();
-
-  nk_sectors = new qLump_c;
-  nk_walls   = new qLump_c;
-  nk_sprites = new qLump_c;
 }
 
 
@@ -551,10 +562,6 @@ void nukem_game_interface_c::EndLevel()
 
   StringFree(level_name);
   level_name = NULL;
-
-  delete nk_sectors;  nk_sectors = NULL;
-  delete nk_walls;    nk_walls   = NULL;
-  delete nk_sprites;  nk_sprites = NULL;
 }
 
 

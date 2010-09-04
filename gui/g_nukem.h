@@ -35,9 +35,9 @@ void NK_AddSprite(int x, int y, int z, int sec,
                   int flags, int pic, int angle,
                   int lo_tag=0, int hi_tag=0);
 
-int NK_NumSectors(void);
-int NK_NumWalls(void);
-int NK_NumSprites(void);
+int NK_NumSectors();
+int NK_NumWalls();
+int NK_NumSprites();
 
 
 /* ----- MAP structures ---------------------- */
