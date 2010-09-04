@@ -2,18 +2,7 @@
 TODO
 ====
 
-!!  all CSG code : verify memory freeing
-
-    DONE  csg_main
-    DONE  csg_bsp
-
-    -  csg_doom
-    -  csg_quake
-    DONE  csg_nukem
-
-    -  q_common
-    DONE  q_vis
-    DONE  q_light
++  pictures are missing blocking lines
 
 
 Terminology (face fields etc) : 'special' for linetypes, sectortypes
