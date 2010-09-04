@@ -287,8 +287,6 @@ int WF_wolf_mini_map(lua_State *L)
 }
 
 
-//------------------------------------------------------------------------
-
 static void WF_DumpMap(void)
 {
   static const char *turning_points = ">/^\\</v\\";
@@ -377,6 +375,15 @@ static void WF_MakeMiniMap(void)
 }
 
 
+static void WF_FreeStuff()
+{
+  delete[] solid_plane;  solid_plane  = NULL;
+  delete[] thing_plane;  thing_plane  = NULL;
+
+  delete[] minimap_colors;  minimap_colors = NULL;
+}
+
+
 //------------------------------------------------------------------------
 //  PUBLIC INTERFACE
 //------------------------------------------------------------------------
@@ -408,6 +415,11 @@ private:
 
 bool wolf_game_interface_c::Start()
 {
+  WF_FreeStuff();
+
+  write_errors_seen = 0;
+
+
   map_fp = fopen(TEMP_GAMEFILE, "wb");
 
   if (! map_fp)
@@ -443,8 +455,6 @@ bool wolf_game_interface_c::Start()
   minimap_colors = new int[64*64];
 
 
-  write_errors_seen = 0;
-
   if (main_win)
     main_win->build_box->Prog_Init(0, "");
 
@@ -454,8 +464,10 @@ bool wolf_game_interface_c::Start()
 
 bool wolf_game_interface_c::Finish(bool build_ok)
 {
-  // set remaining offsets to zero (=> no map)
-  for (; current_map <= 100; current_map++)
+  WF_FreeStuff();
+
+  // set remaining map offsets to zero (no map)
+  for ( ; current_map <= 100 ; current_map++)
   {
     WF_PutU32(0, head_fp);
   }
@@ -464,11 +476,6 @@ bool wolf_game_interface_c::Finish(bool build_ok)
   fclose(head_fp);
 
   map_fp = head_fp = NULL;
-
-  delete solid_plane;  solid_plane  = NULL;
-  delete thing_plane;  thing_plane  = NULL;
-
-  delete minimap_colors;  minimap_colors = NULL;
 
 
   if (! build_ok)
