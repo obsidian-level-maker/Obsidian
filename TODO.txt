@@ -19,28 +19,6 @@ TODO
 Terminology (face fields etc) : 'special' for linetypes, sectortypes
 
 
-Randomizer
-    +  Lua API
-
-       -  gui.rmz_start(format, sub)  -- WAD_OpenRead(in_wad)
-                                      -- WAD_OpenWrite(out_wad)
-       -  gui.rmz_end()
-
-       -  gui.rmz_num_maps()
-       -  gui.rmz_map_info(index)
-
-       -  gui.rmz_load_map(name)
-       -  gui.rmz_save_map(name)
-
-       -  gui.num_entities()
-       -  gui.get_entity(index)
-       -  gui.set_entity(index, props)  -- or "REMOVE"
-
-    -  global var 'randomizer' to make for nicer code
-
-    -  RMZ_TITLE, RMZ_VERSION
-
-
 TEST:  Quake: fix level progression
 
 
