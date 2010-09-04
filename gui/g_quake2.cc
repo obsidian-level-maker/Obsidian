@@ -63,7 +63,7 @@ static int q2_medium_table[5] =
 
 //------------------------------------------------------------------------
 
-static std::vector<dbrush_t> q2_brushes;
+static std::vector<dbrush_t>     q2_brushes;
 static std::vector<dbrushside_t> q2_brush_sides;
 
 static std::map<const csg_brush_c *, u16_t> brush_map;
@@ -179,7 +179,7 @@ static void Q2_WriteBrushes()
 
 static std::vector<texinfo2_t> q2_texinfos;
 
-#define NUM_TEXINFO_HASH  64
+#define NUM_TEXINFO_HASH  128
 static std::vector<int> * texinfo_hashtab[NUM_TEXINFO_HASH];
 
 
@@ -187,7 +187,7 @@ static void Q2_ClearTexInfo(void)
 {
   q2_texinfos.clear();
 
-  for (int h = 0; h < NUM_TEXINFO_HASH; h++)
+  for (int h = 0 ; h < NUM_TEXINFO_HASH ; h++)
   {
     delete texinfo_hashtab[h];
     texinfo_hashtab[h] = NULL;
@@ -285,10 +285,9 @@ static void Q2_DummyArea()
 }
 
 
+#if 0
 static void Q2_DummyVis()
 {
-  /* TEMP DUMMY STUFF */
-
   qLump_c *lump = BSP_NewLump(LUMP_VISIBILITY);
 
   dvis_t vis;
@@ -307,6 +306,7 @@ static void Q2_DummyVis()
   lump->Append(&dummy_v, 1);
   lump->Append(&dummy_v, 1);
 }
+#endif
 
 
 #if 0
@@ -366,6 +366,26 @@ static int q2_total_leaf_brushes;
 static int q2_total_faces;
 static int q2_total_leafs;
 static int q2_total_nodes;
+
+
+static void Q2_FreeStuff()
+{
+  Q2_ClearBrushes();
+  Q2_ClearTexInfo();
+
+  delete qk_world_model;
+  qk_world_model = NULL;
+
+  // lumps are handled (freed) in q_common code
+  q2_surf_edges = NULL;
+  q2_mark_surfs = NULL;
+  q2_leaf_brushes = NULL;
+
+  q2_faces = NULL;
+  q2_leafs = NULL;
+  q2_nodes = NULL;
+  q2_models = NULL;
+}
 
 
 static void Q2_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
@@ -1023,19 +1043,15 @@ static void Q2_VisWorld()
 }
 
 
-//------------------------------------------------------------------------
-
 static void Q2_CreateBSPFile(const char *name)
 {
   qk_color_lighting = true;
 
+  Q2_FreeStuff();
+
   BSP_OpenLevel(name);
 
-  Q2_ClearBrushes();
-  Q2_ClearTexInfo();
-
   Q2_DummyArea();
-//  Q2_DummyVis();
 
   CSG_QUAKE_Build();
 
@@ -1047,11 +1063,9 @@ static void Q2_CreateBSPFile(const char *name)
   QCOM_Fix_T_Junctions();
 
   Q2_VisWorld();
-
   Q2_LightWorld();
 
   Q2_WriteBSP();
-
   Q2_WriteModels();
 
   BSP_WritePlanes  (LUMP_PLANES,   MAX_MAP_PLANES);
@@ -1068,8 +1082,7 @@ static void Q2_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Free();
 
-  delete qk_world_model;
-  qk_world_model = NULL;
+  Q2_FreeStuff();
 }
 
 

@@ -82,7 +82,7 @@ static int num_custom_tex = 0;
 s32_t Q1_AddMipTex(const char *name);
 
 
-static void ClearMipTex(void)
+static void Q1_ClearMipTex(void)
 {
   q1_miptexs.clear();
   q1_miptex_map.clear();
@@ -411,14 +411,14 @@ static void DummyMipTex(void)
 
 //------------------------------------------------------------------------
 
-#define TEXINFO_HASH_SIZE  64
+#define TEXINFO_HASH_SIZE  128
 
 static std::vector<texinfo_t> q1_texinfos;
 
 static std::vector<int> * texinfo_hashtab[TEXINFO_HASH_SIZE];
 
 
-static void ClearTexInfo(void)
+static void Q1_ClearTexInfo(void)
 {
   q1_texinfos.clear();
 
@@ -495,7 +495,7 @@ static void Q1_WriteTexInfo(void)
 }
 
 
-#if 0  /* TEMP DUMMY STUFF */
+#if 0  /* TEMP STUFF */
 static void DummyTexInfo(void)
 {
   // 0 = "error" on PLANE_X / PLANE_ANYX
@@ -546,42 +546,6 @@ static void DummyTexInfo(void)
 
 
 //------------------------------------------------------------------------
-
-static void Q1_LightWorld()
-{
-  if (main_win)
-    main_win->build_box->Prog_Step("Light");
-
-  QCOM_LightAllFaces();
-
-  int max_size = MAX_MAP_LIGHTING;
-
-  if (qk_sub_format == SUBFMT_HalfLife)
-    max_size = HL_MAX_MAP_LIGHTING;
-
-  QCOM_BuildLightingLump(LUMP_LIGHTING, max_size);
-}
-
-
-static void Q1_VisWorld(int base_leafs)
-{
-  if (main_win)
-    main_win->build_box->Prog_Step("Vis");
-
-  // take the solid leaf into account
-  int numleafs = 1 + base_leafs;
-
-  // add in the map models
-  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
-  {
-    numleafs += 6; ///TODO  qk_all_mapmodels->PredictLeafs();
-  }
-
-  QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
-}
-
-
-//------------------------------------------------------------------------
 //   BSP TREE OUTPUT
 //------------------------------------------------------------------------
 
@@ -622,6 +586,27 @@ static byte q1_ambient_levels[4][10] =
   { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
   { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
 };
+
+
+static void Q1_FreeStuff()
+{
+  Q1_ClearMipTex();
+  Q1_ClearTexInfo();
+
+  delete qk_world_model;
+  qk_world_model = NULL;
+
+  // lumps are handled (freed) in q_common code
+  q1_surf_edges = NULL;
+  q1_mark_surfs = NULL;
+
+  q1_faces = NULL;
+  q1_leafs = NULL;
+  q1_nodes = NULL;
+
+  q1_models = NULL;
+  q1_clip   = NULL;
+}
 
 
 static void Q1_WriteEdge(const quake_vertex_c & A, const quake_vertex_c & B)
@@ -1248,6 +1233,42 @@ static void Q1_WriteModels()
 }
 
 
+//------------------------------------------------------------------------
+
+static void Q1_LightWorld()
+{
+  if (main_win)
+    main_win->build_box->Prog_Step("Light");
+
+  QCOM_LightAllFaces();
+
+  int max_size = MAX_MAP_LIGHTING;
+
+  if (qk_sub_format == SUBFMT_HalfLife)
+    max_size = HL_MAX_MAP_LIGHTING;
+
+  QCOM_BuildLightingLump(LUMP_LIGHTING, max_size);
+}
+
+
+static void Q1_VisWorld(int base_leafs)
+{
+  if (main_win)
+    main_win->build_box->Prog_Step("Vis");
+
+  // take the solid leaf into account
+  int numleafs = 1 + base_leafs;
+
+  // add in the map models
+  for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
+  {
+    numleafs += 6; ///TODO  qk_all_mapmodels->PredictLeafs();
+  }
+
+  QCOM_Visibility(LUMP_VISIBILITY, MAX_MAP_VISIBILITY, numleafs);
+}
+
+
 static void Q1_CreateBSPFile(const char *name)
 {
   qk_color_lighting = false;
@@ -1255,10 +1276,9 @@ static void Q1_CreateBSPFile(const char *name)
   if (qk_sub_format == SUBFMT_HalfLife)
     qk_color_lighting = true;
 
-  BSP_OpenLevel(name);
+  Q1_FreeStuff();
 
-  ClearMipTex();
-  ClearTexInfo();
+  BSP_OpenLevel(name);
 
   CSG_QUAKE_Build();
 
@@ -1270,7 +1290,6 @@ static void Q1_CreateBSPFile(const char *name)
   QCOM_Fix_T_Junctions();
 
   Q1_VisWorld(num_leaf);
-
   Q1_LightWorld();
 
   Q1_WriteBSP();
@@ -1292,8 +1311,7 @@ static void Q1_CreateBSPFile(const char *name)
 
   CSG_QUAKE_Free();
 
-  delete qk_world_model;
-  qk_world_model = NULL;
+  Q1_FreeStuff();
 }
 
 
