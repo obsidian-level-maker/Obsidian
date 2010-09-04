@@ -209,15 +209,10 @@ public:
   int index;
 
 public:
-  quake_node_c() : front_N(NULL), front_L(NULL),
-                    back_N(NULL),  back_L(NULL),
-                   faces(), index(-1)
-  { }
-
+  quake_node_c();
   quake_node_c(const quake_plane_c& P);
 
-  ~quake_node_c()
-  { }
+  ~quake_node_c();
 
   void ComputeBBox();
 
@@ -269,6 +264,7 @@ extern std::vector<quake_mapmodel_c *> qk_all_mapmodels;
 /***** FUNCTIONS ****************/
 
 void CSG_QUAKE_Build();
+void CSG_QUAKE_Free();
 
 void CSG_AssignIndexes(quake_node_c *node, int *cur_node, int *cur_leaf);
 

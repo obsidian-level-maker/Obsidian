@@ -354,12 +354,30 @@ void quake_leaf_c::AddSolid(csg_brush_c *B)
 }
 
 
+quake_node_c::quake_node_c() :
+    front_N(NULL), front_L(NULL),
+    back_N(NULL),  back_L(NULL),
+    faces(), index(-1)
+{ }
+
 quake_node_c::quake_node_c(const quake_plane_c& P) :
     plane(P),
     front_N(NULL), front_L(NULL),
      back_N(NULL),  back_L(NULL),
     faces(), index(-1)
 { }
+
+
+quake_node_c::~quake_node_c()
+{
+  // free child leafs
+  if (front_L) delete front_L;
+  if ( back_L) delete  back_L;
+
+  // free child nodes
+  if (front_N) delete front_N;
+  if ( back_N) delete  back_N;
+}
 
 
 void quake_node_c::AddFace(quake_face_c *F)
@@ -1578,6 +1596,8 @@ void CSG_QUAKE_Build()
 {
   LogPrintf("QUAKE CSG...\n");
 
+  CSG_QUAKE_Free();
+
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 
@@ -1605,6 +1625,24 @@ void CSG_QUAKE_Build()
   qk_bsp_root = Partition_Group(GROUP);
 
   SYS_ASSERT(qk_bsp_root);
+}
+
+
+void CSG_QUAKE_Free()
+{
+  unsigned int i;
+
+  delete qk_bsp_root;   qk_bsp_root   = NULL;
+  delete qk_solid_leaf; qk_solid_leaf = NULL;
+
+  for (i = 0 ; i < qk_all_faces.size() ; i++)
+    delete qk_all_faces[i];
+
+  for (i = 0 ; i < qk_all_mapmodels.size() ; i++)
+    delete qk_all_mapmodels[i];
+
+  qk_all_faces.    clear();
+  qk_all_mapmodels.clear();
 }
 
 

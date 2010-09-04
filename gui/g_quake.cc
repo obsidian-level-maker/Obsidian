@@ -1289,6 +1289,11 @@ static void Q1_CreateBSPFile(const char *name)
 
   // this will free lots of stuff (lightmaps etc)
   BSP_CloseLevel();
+
+  CSG_QUAKE_Free();
+
+  delete qk_world_model;
+  qk_world_model = NULL;
 }
 
 
