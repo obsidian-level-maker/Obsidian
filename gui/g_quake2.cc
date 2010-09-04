@@ -1047,8 +1047,6 @@ static void Q2_CreateBSPFile(const char *name)
 {
   qk_color_lighting = true;
 
-  Q2_FreeStuff();
-
   BSP_OpenLevel(name);
 
   Q2_DummyArea();
@@ -1157,6 +1155,10 @@ void quake2_game_interface_c::BeginLevel()
 {
   level_name  = NULL;
   description = NULL;
+
+  Q2_FreeStuff();
+
+  CSG_QUAKE_Free();
 }
 
 

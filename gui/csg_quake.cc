@@ -1596,8 +1596,6 @@ void CSG_QUAKE_Build()
 {
   LogPrintf("QUAKE CSG...\n");
 
-  CSG_QUAKE_Free();
-
   if (main_win)
     main_win->build_box->Prog_Step("CSG");
 
@@ -1665,6 +1663,8 @@ int Q1_add_mapmodel(lua_State *L)
 
   quake_mapmodel_c *model = new quake_mapmodel_c;
 
+  qk_all_mapmodels.push_back(model);
+
   model->x1 = luaL_checknumber(L, 2);
   model->y1 = luaL_checknumber(L, 3);
   model->z1 = luaL_checknumber(L, 4);
@@ -1687,8 +1687,6 @@ int Q1_add_mapmodel(lua_State *L)
   Grab_Properties(L, -1, &model->z_face);
 
   lua_pop(L, 3);
-
-  qk_all_mapmodels.push_back(model);
 
   // create model reference (for entity)
   char ref_name[32];

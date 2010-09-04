@@ -740,6 +740,7 @@ bool doom_game_interface_c::Finish(bool build_ok)
 
 void doom_game_interface_c::BeginLevel()
 {
+  DM_BeginLevel();
 }
 
 
@@ -784,8 +785,6 @@ void doom_game_interface_c::EndLevel()
 {
   if (! level_name)
     Main_FatalError("Script problem: did not set level name!\n");
-
-  DM_BeginLevel();
 
   if (main_win)
     main_win->build_box->Prog_Step("CSG");

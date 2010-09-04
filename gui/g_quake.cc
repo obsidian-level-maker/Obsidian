@@ -1276,8 +1276,6 @@ static void Q1_CreateBSPFile(const char *name)
   if (qk_sub_format == SUBFMT_HalfLife)
     qk_color_lighting = true;
 
-  Q1_FreeStuff();
-
   BSP_OpenLevel(name);
 
   CSG_QUAKE_Build();
@@ -1424,6 +1422,10 @@ void quake1_game_interface_c::BeginLevel()
   level_name  = NULL;
   description = NULL;
   qk_texture_wad = NULL;
+
+  Q1_FreeStuff();
+
+  CSG_QUAKE_Free();
 }
 
 
