@@ -693,11 +693,10 @@ static void DM_MakeSector(region_c *R)
 
   doom_sector_c *S = new doom_sector_c;
 
-  dm_sectors.push_back(S);
-
   S->region = R;
-
   R->index = (int)dm_sectors.size();
+
+  dm_sectors.push_back(S);
 
 
   R->GetMidPoint(&S->mid_x, &S->mid_y);
@@ -945,9 +944,9 @@ static doom_vertex_c * DM_MakeVertex(int x, int y)
   // create new one
   doom_vertex_c * V = new doom_vertex_c(x, y);
 
-  dm_vertices.push_back(V);
-
   dm_vertex_map[combo] = dm_vertices.size();
+
+  dm_vertices.push_back(V);
 
   return V;
 }
@@ -1312,7 +1311,7 @@ static void DM_CreateLinedefs()
 {
   map_bound_y1 = 9999;
 
-  for (unsigned int i = 0; i < all_regions.size(); i++)
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
 
