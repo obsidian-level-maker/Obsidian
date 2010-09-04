@@ -39,9 +39,9 @@ extern int dm_sub_format;
 /***** FUNCTIONS ****************/
 
 bool DM_StartWAD(const char *filename);
-bool DM_EndWAD(void);
+bool DM_EndWAD();
 
-void DM_BeginLevel(void);
+void DM_BeginLevel();
 void DM_EndLevel(const char *level_name);
 
 void DM_WriteLump(const char *name, qLump_c *lump);
@@ -70,9 +70,11 @@ void DM_AddLinedef(int vert1, int vert2, int side1, int side2,
 void DM_AddThing(int x, int y, int h, int type, int angle, int options,
                  int tid, byte special, const byte *args);
 
-int DM_NumVertexes(void);
-int DM_NumSectors(void);
-int DM_NumSidedefs(void);
+int DM_NumVertexes();
+int DM_NumSectors();
+int DM_NumSidedefs();
+int DM_NumLinedefs();
+int DM_NumThings();
 
 
 /* ----- Level structures ---------------------- */

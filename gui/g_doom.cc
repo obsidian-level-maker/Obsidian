@@ -43,8 +43,6 @@ extern void CSG_DOOM_Write();
 
 // extern void CSG_TestRegions_Doom();
 
-extern void DM_FreeLevelStuff(void);
-
 extern int ef_solid_type;
 extern int ef_liquid_type;
 extern int ef_liquid_special;
@@ -63,8 +61,6 @@ static qLump_c *linedef_lump;
 
 static int errors_seen;
 
-typedef std::vector<qLump_c *> lump_bag_t;
-
 
 typedef enum
 {
@@ -78,17 +74,21 @@ typedef enum
 }
 wad_section_e;
 
+
+typedef std::vector<qLump_c *> lump_bag_t;
+
 static lump_bag_t * sections[NUM_SECTIONS];
 
-static const char * section_markers[NUM_SECTIONS * 2] =
+
+static const char * section_markers[NUM_SECTIONS][2] =
 {
-  "PP_START", "PP_END",
-  "SS_START", "SS_END",
-  "C_START",  "C_END",
-  "TX_START", "TX_END",
+  { "PP_START", "PP_END" },
+  { "SS_START", "SS_END" },
+  { "C_START",  "C_END"  },
+  { "TX_START", "TX_END" },
 
   // flats must end with F_END (a single 'F') to be vanilla compatible
-  "FF_START", "F_END"
+  { "FF_START", "F_END" }
 };
 
 
@@ -113,10 +113,12 @@ void DM_WriteLump(const char *name, const void *data, u32_t len)
   WAD_FinishLump();
 }
 
+
 void DM_WriteLump(const char *name, qLump_c *lump)
 {
   DM_WriteLump(name, lump->GetBuffer(), lump->GetSize());
 }
+
 
 static void DM_WriteBehavior()
 {
@@ -132,22 +134,44 @@ static void DM_WriteBehavior()
 }
 
 
-static void ClearSections()
+static void DM_ClearSections()
 {
-  for (int k = 0; k < NUM_SECTIONS; k++)
+  for (int k = 0 ; k < NUM_SECTIONS ; k++)
   {
     if (! sections[k])
       sections[k] = new lump_bag_t;
 
-    for (unsigned int i = 0; i < sections[k]->size(); i++)
+    for (unsigned int n = 0 ; n < sections[k]->size() ; n++)
     {
-      delete sections[k]->at(i);
-      sections[k]->at(i) = NULL;
+      delete sections[k]->at(n);
+      sections[k]->at(n) = NULL;
     }
 
     sections[k]->clear();
   }
 }
+
+
+static void DM_WriteSections()
+{
+  for (int k = 0 ; k < NUM_SECTIONS ; k++)
+  {
+    if (sections[k]->size() == 0)
+      continue;
+
+    DM_WriteLump(section_markers[k][0], NULL, 0);
+
+    for (unsigned int n = 0 ; n < sections[k]->size() ; n++)
+    {
+      qLump_c *lump = sections[k]->at(n);
+
+      DM_WriteLump(lump->GetName(), lump);
+    }
+
+    DM_WriteLump(section_markers[k][1], NULL, 0);
+  }
+}
+
 
 void DM_AddSectionLump(char ch, const char *name, qLump_c *lump)
 {
@@ -170,26 +194,6 @@ void DM_AddSectionLump(char ch, const char *name, qLump_c *lump)
   sections[k]->push_back(lump);
 }
 
-static void WriteSections()
-{
-  for (int k = 0; k < NUM_SECTIONS; k++)
-  {
-    if (sections[k]->size() == 0)
-      continue;
-
-    DM_WriteLump(section_markers[k*2], NULL, 0);
-
-    for (unsigned int i = 0; i < sections[k]->size(); i++)
-    {
-      qLump_c *lump = sections[k]->at(i);
-
-      DM_WriteLump(lump->GetName(), lump);
-    }
-
-    DM_WriteLump(section_markers[k*2+1], NULL, 0);
-  }
-}
-
 
 bool DM_StartWAD(const char *filename)
 {
@@ -201,7 +205,7 @@ bool DM_StartWAD(const char *filename)
 
   errors_seen = 0;
 
-  ClearSections();
+  DM_ClearSections();
 
   qLump_c *info = BSP_CreateInfoLump();
   DM_WriteLump("OBLIGDAT", info);
@@ -211,10 +215,10 @@ bool DM_StartWAD(const char *filename)
 }
 
 
-bool DM_EndWAD(void)
+bool DM_EndWAD()
 {
-  WriteSections();
-  ClearSections();
+  DM_WriteSections();
+  DM_ClearSections();
 
   WAD_CloseWrite();
 
@@ -222,8 +226,20 @@ bool DM_EndWAD(void)
 }
 
 
-void DM_BeginLevel(void)
+static void DM_FreeLumps()
 {
+  delete thing_lump;   thing_lump   = NULL;
+  delete sector_lump;  sector_lump  = NULL;
+  delete vertex_lump;  vertex_lump  = NULL;
+  delete sidedef_lump; sidedef_lump = NULL;
+  delete linedef_lump; linedef_lump = NULL;
+}
+
+
+void DM_BeginLevel()
+{
+  DM_FreeLumps();
+
   thing_lump   = new qLump_c();
   vertex_lump  = new qLump_c();
   sector_lump  = new qLump_c();
@@ -249,12 +265,7 @@ void DM_EndLevel(const char *level_name)
   if (dm_sub_format == SUBFMT_Hexen)
     DM_WriteBehavior();
 
-  // free data
-  delete thing_lump;   thing_lump   = NULL;
-  delete sector_lump;  sector_lump  = NULL;
-  delete vertex_lump;  vertex_lump  = NULL;
-  delete sidedef_lump; sidedef_lump = NULL;
-  delete linedef_lump; linedef_lump = NULL;
+  DM_FreeLumps();
 }
 
 
@@ -398,19 +409,35 @@ void DM_AddThing(int x, int y, int h, int type, int angle, int options,
 }
 
 
-int DM_NumVertexes(void)
+int DM_NumVertexes()
 {
   return vertex_lump->GetSize() / sizeof(raw_vertex_t);
 }
 
-int DM_NumSectors(void)
+int DM_NumSectors()
 {
   return sector_lump->GetSize() / sizeof(raw_sector_t);
 }
 
-int DM_NumSidedefs(void)
+int DM_NumSidedefs()
 {
   return sidedef_lump->GetSize() / sizeof(raw_sidedef_t);
+}
+
+int DM_NumLinedefs()
+{
+  if (dm_sub_format == SUBFMT_Hexen)
+    return linedef_lump->GetSize() / sizeof(raw_hexen_linedef_t);
+
+  return linedef_lump->GetSize() / sizeof(raw_linedef_t);
+}
+
+int DM_NumThings()
+{
+  if (dm_sub_format == SUBFMT_Hexen)
+    return thing_lump->GetSize() / sizeof(raw_hexen_thing_t);
+
+  return thing_lump->GetSize() / sizeof(raw_thing_t);
 }
 
 
@@ -614,7 +641,6 @@ static bool DM_BuildNodes(const char *filename, const char *out_name)
 
 //------------------------------------------------------------------------
 
-
 class doom_game_interface_c : public game_interface_c
 {
 private:
@@ -638,35 +664,7 @@ public:
 
 private:
   bool BuildNodes();
-
-///  bool CheckDirectory(const char *filename);
 };
-
-
-#if 0  // UNUSED
-bool doom_game_interface_c::CheckDirectory(const char *filename)
-{
-  char *dir_name = StringDup(filename);
-
-  // remove the base filename to get the plain directory
-  const char *base = FindBaseName(filename);
-
-  dir_name[base - filename] = 0;
-
-  if (strlen(dir_name) == 0)
-    return true;
-
-  // this badly-named function checks the directory exists
-  bool result = fl_filename_isdir(dir_name);
-
-  if (! result)
-    DLG_ShowError("The specified folder does not exist:\n\n  %s", dir_name);
-
-  StringFree(dir_name);
-
-  return result;
-}
-#endif
 
 
 bool doom_game_interface_c::Start()
@@ -742,7 +740,6 @@ bool doom_game_interface_c::Finish(bool build_ok)
 
 void doom_game_interface_c::BeginLevel()
 {
-///???  DM_FreeLevelStuff();
 }
 
 
