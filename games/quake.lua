@@ -1264,12 +1264,12 @@ function QUAKE1.get_levels()
 
   local SKIP_MAPS =
   {
-    e1m7 = 1,  -- Chthon
-    e2m6 = 1,  -- E2 boss map
-    e3m6 = 1,  -- E3 boss map
-    e3m7 = 1,  -- not in original
-    e3m7 = 1,  -- not in original
-    e4m7 = 1,  -- Shub
+    -- not in original
+    e2m7 = 1, e3m7 = 1,
+
+    -- boss maps
+    e1m7 = 2, e2m6 = 2,
+    e3m6 = 2, e4m7 = 2,
   }
 
   for episode = 1,EP_NUM do
