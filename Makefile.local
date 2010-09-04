@@ -119,6 +119,7 @@ R_OBJS=	$(R_OBJ_DIR)/main.o      \
 	$(R_OBJ_DIR)/m_cookie.o  \
 	$(R_OBJ_DIR)/m_lua.o     \
 	$(R_OBJ_DIR)/rmz_main.o  \
+	$(R_OBJ_DIR)/csg_main.o  \
 	\
 	$(R_OBJ_DIR)/lib_argv.o  \
 	$(R_OBJ_DIR)/lib_file.o  \

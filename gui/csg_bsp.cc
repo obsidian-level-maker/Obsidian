@@ -21,6 +21,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_lua.h"
+#include "hdr_ui.h"   // for mini map
 
 #include <algorithm>
 
@@ -1736,6 +1737,98 @@ void CSG_BSP_Free()
 
   all_partitions.clear();
   all_regions.clear();
+}
+
+
+//------------------------------------------------------------------------
+
+#define MINI_MAP_SCALE  64.0
+
+static double mini_add_x;
+static double mini_add_y;
+
+
+static void AddMiniMapLine(region_c *R, snag_c *S)
+{
+  int map_W = main_win->build_box->mini_map->GetWidth();
+  int map_H = main_win->build_box->mini_map->GetHeight();
+
+  region_c *N = S->partner ? S->partner->region : NULL;
+
+  int x1 = map_W/2 + I_ROUND(S->x1 + mini_add_x) / MINI_MAP_SCALE;
+  int y1 = map_H/2 + I_ROUND(S->y1 + mini_add_y) / MINI_MAP_SCALE;
+
+  int x2 = map_W/2 + I_ROUND(S->x2 + mini_add_x) / MINI_MAP_SCALE;
+  int y2 = map_H/2 + I_ROUND(S->y2 + mini_add_y) / MINI_MAP_SCALE;
+
+  u8_t r = 255;
+  u8_t g = 255;
+  u8_t b = 255;
+
+  if (N && N->gaps.size() > 0)  // two sided?
+  {
+    double f1 = R->gaps.front()->bottom->t.z;
+    double f2 = N->gaps.front()->bottom->t.z;
+
+    double c1 = R->gaps.back()->top->b.z;
+    double c2 = N->gaps.back()->top->b.z;
+
+    if (fabs(f1 - f2) < 0.1 && fabs(c1 - c2) < 0.1)
+      return;
+
+    if (MIN(c1, c2) < MAX(f1, f2) + 52.5)
+    {
+      r = 255; g = 0; b = 0;
+    }
+    else if (fabs(f1 - f2) > 24.5)
+    {
+      r = 0; g = 255; b = 160;
+    }
+    else if (fabs(c1 - c2) > 30.5)
+    {
+      r = 96; g = 192; b = 255;
+    }
+    else
+    {
+      r = g = b = 160;
+    }
+  }
+
+  main_win->build_box->mini_map->DrawLine(x1,y1, x2,y2, r,g,b);
+}
+
+
+void CSG_MakeMiniMap(void)
+{
+  if (! main_win)
+    return;
+
+  // this assumes the map is centered around (0,0)
+  mini_add_x = 0;
+  mini_add_y = 0;
+
+  main_win->build_box->mini_map->MapBegin();
+
+  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
+  {
+    region_c *R = all_regions[i];
+
+    if (R->gaps.empty())
+      continue;
+
+    for (unsigned int k = 0 ; k < R->snags.size() ; k++)
+    {
+      snag_c *S = R->snags[k];
+
+      // only handle partnered pairs ONCE
+      if (S->partner && S->partner < S)
+        continue;
+
+      AddMiniMapLine(R, S);
+    }
+  }
+
+  main_win->build_box->mini_map->MapFinish();
 }
 
 

@@ -590,7 +590,12 @@ static const luaL_Reg gui_script_funcs[] =
   { "q1_add_mapmodel",  Q1_add_mapmodel },
   { "q1_add_tex_wad",   Q1_add_tex_wad },
 
+#else
+  // Randomizer functions
+
+  { "add_entity",  CSG_add_entity },
 #endif
+
   { NULL, NULL } // the end
 };
 
