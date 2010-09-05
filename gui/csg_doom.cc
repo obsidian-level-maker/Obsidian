@@ -65,7 +65,7 @@ double light_dist_factor = 800.0;
 class extrafloor_c
 {
 public:
-  int kind;
+  int line_special;
 
   int top_h;
   int bottom_h;
@@ -75,14 +75,14 @@ public:
   std::string bottom;
   std::string wall;
 
-  // dummy sector properties
-  int light;
-  int special;
-  int tag;
+  // sector properties underneath
+  int u_light;
+  int u_special;
+  int u_tag;
 
 public:
-  extrafloor_c() : kind(0), top(), bottom(), wall(),
-                   light(128), special(0), tag(0)
+  extrafloor_c() : line_special(0), top(), bottom(), wall(),
+                   u_light(128), u_special(0), u_tag(0)
   { }
 
   ~extrafloor_c()
@@ -90,13 +90,14 @@ public:
 
   bool Match(const extrafloor_c *other) const
   {
-    return (    kind == other->kind)     &&
+    return (line_special == other->line_special) &&
+
            (   top_h == other->top_h)    &&
            (bottom_h == other->bottom_h) &&
 
-           (   light == other->light)    &&
-           ( special == other->special)  &&
-           (     tag == other->tag)      &&
+           (u_light   == other->u_light)   &&
+           (u_special == other->u_special) &&
+           (u_tag     == other->u_tag)     &&
 
            (strcmp(top.c_str(),    other->top.c_str())    == 0) &&
            (strcmp(bottom.c_str(), other->bottom.c_str()) == 0) &&
@@ -321,7 +322,7 @@ public:
   doom_sidedef_c *back;
 
   int flags;
-  int type;   // 'special' in Hexen format
+  int special;
   int tag;
 
   u8_t args[5];
@@ -337,7 +338,7 @@ public:
 public:
   doom_linedef_c() : start(NULL), end(NULL),
                      front(NULL), back(NULL),
-                     flags(0), type(0), tag(0), length(0),
+                     flags(0), special(0), tag(0), length(0),
                      sim_prev(NULL), sim_next(NULL)
   {
     args[0] = args[1] = args[2] = args[3] = args[4] = 0;
@@ -729,20 +730,20 @@ static void DM_MakeSector(region_c *R)
 
 
   // floors have priority over ceilings
-  int f_kind = f_face->getInt("kind");
-  int c_kind = c_face->getInt("kind");
+  int f_special = f_face->getInt("special");
+  int c_special = c_face->getInt("special");
 
   int f_tag = f_face->getInt("tag");
   int c_tag = c_face->getInt("tag");
 
-  if (f_kind || ! c_kind)
+  if (f_special || ! c_special)
   {
-    S->special = f_kind;
+    S->special = f_special;
     S->tag = (f_tag > 0) ? f_tag : c_tag;
   }
   else
   {
-    S->special = c_kind;
+    S->special = c_special;
     S->tag = (c_tag > 0) ? c_tag : f_tag;
   }
 
@@ -1134,12 +1135,12 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
 
       V = test_S->FindBrushVert(test_R->gaps.front()->bottom);
 
-      if (V && V->face.getStr("kind"))
+      if (V && V->face.getStr("special"))
         return &V->face;
         
       V = test_S->FindBrushVert(test_R->gaps.back()->top);
 
-      if (V && V->face.getStr("kind"))
+      if (V && V->face.getStr("special"))
         return &V->face;
     }
     else
@@ -1149,7 +1150,7 @@ static csg_property_set_c * DM_FindSpecial(snag_c *S, region_c *R1, region_c *R2
       {
         V = test_S->sides[i];
 
-        if (V && V->face.getStr("kind"))
+        if (V && V->face.getStr("special"))
           return &V->face;
       }
     }
@@ -1191,7 +1192,7 @@ static brush_vert_c * DM_FindRail(snag_c *S, doom_sector_c *front, doom_sector_c
 
       const char *tex = V->face.getStr("tex", "-");
 
-      if (tex[0] == '-' && !V->face.getStr("kind"))
+      if (tex[0] == '-' && !V->face.getStr("special"))
         continue;
 
       return V;  // found it
@@ -1291,14 +1292,14 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   {
     L->flags |= rail->face.getInt("flags");
 
-    if (! spec && rail->face.getStr("kind"))
+    if (! spec && rail->face.getStr("special"))
       spec = &rail->face;
   }
 
   if (spec)
   {
-    L->type = spec->getInt("kind");
-    L->tag  = spec->getInt("tag");
+    L->special = spec->getInt("special");
+    L->tag     = spec->getInt("tag");
 
     L->flags |= spec->getInt("flags");
 
@@ -1497,7 +1498,7 @@ public:
 
   int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
 
-  int ef_type;
+  int ef_special;
   int ef_flags;
   int ef_tag;
 
@@ -1519,11 +1520,11 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
   sec->AddExtrafloor(EF);
 
 
-  EF->kind = ef_solid_type;
+  EF->line_special = ef_solid_type;
 
-  EF->special = gap2->bottom->b.face.getInt("special");
-  EF->light   = gap2->bottom->b.face.getInt("light", 128);
-  EF->tag     = gap2->bottom->b.face.getInt("tag");
+  EF->u_special = gap2->bottom->b.face.getInt("special");
+  EF->u_light   = gap2->bottom->b.face.getInt("light", 128);
+  EF->u_tag     = gap2->bottom->b.face.getInt("tag");
 
   EF->top_h    = I_ROUND(gap2->bottom->t.z);
   EF->bottom_h = I_ROUND(gap1->   top->b.z);
@@ -1550,21 +1551,21 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   sec->AddExtrafloor(EF);
 
 
-  EF->kind = ef_liquid_type;
+  EF->line_special = ef_liquid_type;
 
-  EF->special = liquid->t.face.getInt("special");
-  EF->light   = liquid->t.face.getInt("light", 128);
-  EF->tag     = liquid->t.face.getInt("tag");
+  EF->u_special = liquid->t.face.getInt("special");
+  EF->u_light   = liquid->t.face.getInt("light", 128);
+  EF->u_tag     = liquid->t.face.getInt("tag");
 
-  if (true)  // EDGE style
-  {
-    EF->bottom_h = I_ROUND(liquid->t.z);
-    EF->top_h    = EF->bottom_h + 128;   // not significant
-  }
-  else  // Legacy style   !! FIXME: proper way to enable this
+  if (EF->line_special == 301)  // Legacy style
   {
     EF->bottom_h = sec->f_h;
     EF->top_h    = I_ROUND(liquid->t.z);
+  }
+  else  // EDGE style
+  {
+    EF->bottom_h = I_ROUND(liquid->t.z);
+    EF->top_h    = EF->bottom_h + 128;   // not significant
   }
 
   EF->top    = liquid->t.face.getStr("tex", dummy_plane_tex.c_str());
@@ -1638,9 +1639,9 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
   new_sec->f_tex = EF->bottom;
   new_sec->c_tex = EF->top;
 
-  new_sec->light   = EF->light;
-  new_sec->special = EF->special;
-  new_sec->tag     = EF->tag;
+  new_sec->light   = EF->u_light;
+  new_sec->special = EF->u_special;
+  new_sec->tag     = EF->u_tag;
 
 
   dummy_sector_c *dum = new dummy_sector_c;
@@ -1654,7 +1655,7 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
 
   dum->ef_count = 1;
 
-  dum->ef_type  = EF->kind;
+  dum->ef_special = EF->line_special;
   dum->ef_flags = 0;
   dum->ef_tag   = tag;
 }
@@ -1786,9 +1787,9 @@ static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
 
   if (split_min == 7)
   {
-    L->type  = dum->ef_type;
-    L->tag   = dum->ef_tag;
-    L->flags = dum->ef_flags;
+    L->special = dum->ef_special;
+    L->tag     = dum->ef_tag;
+    L->flags   = dum->ef_flags;
   }
 
   L->flags |= MLF_BlockAll | MLF_DontDraw;
@@ -1873,7 +1874,7 @@ void doom_linedef_c::Write()
   int f = front ? front->Write() : -1;
   int b = back  ? back ->Write() : -1;
 
-  DM_AddLinedef(v1, v2, f, b, type, flags, tag, args);
+  DM_AddLinedef(v1, v2, f, b, special, flags, tag, args);
 }
 
 
