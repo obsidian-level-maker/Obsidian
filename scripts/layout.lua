@@ -22,8 +22,6 @@ require 'defs'
 require 'util'
 require 'ht_fabs'
 
-Layout = { }
-
 
 X_MIRROR_CHARS =
 {
@@ -63,7 +61,7 @@ STAIR_DIRS =
 }
 
 
-function Layout.test_room_fabs()
+function Layout_test_room_fabs()
   
   local function pos_size(s, n)
     local ch = string.sub(s, n, n)
@@ -320,7 +318,7 @@ end
 ------------------------------------------------------------------------
 
 
-function Layout.spot_for_wotsit(R, usage)
+function Layout_spot_for_wotsit(R, usage)
   local spots = {}
 
   local function cave_spot_OK(x, y)
@@ -402,7 +400,7 @@ end
 
 
 
-function Layout.cave_pickup_spots(R)
+function Layout_cave_pickup_spots(R)
   local flood = R.flood
   assert(flood.largest_empty)
 
@@ -418,7 +416,7 @@ function Layout.cave_pickup_spots(R)
   end
 
 
-  --| Layout.cave_pickup_spots |--
+  --| Layout_cave_pickup_spots |--
 
   R.small_spots = {}
   R.big_spots = {}
@@ -441,7 +439,7 @@ function Layout.cave_pickup_spots(R)
 end
 
 
-function Layout.cave_monster_spots(R)
+function Layout_cave_monster_spots(R)
   local flood = R.flood
   assert(flood.largest_empty)
 
@@ -482,7 +480,7 @@ function Layout.cave_monster_spots(R)
   end
 
 
-  --| Layout.cave_monster_spots |--
+  --| Layout_cave_monster_spots |--
 
   R.monster_spots = {}
 
@@ -527,7 +525,7 @@ function Layout.cave_monster_spots(R)
 end
 
 
-function Layout.do_natural(R, heights)
+function Layout_do_natural(R, heights)
 
   local map
 
@@ -699,7 +697,7 @@ function Layout.do_natural(R, heights)
   end
 
 
-  ---| Layout.do_natural |---
+  ---| Layout_do_natural |---
 
   map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
 
@@ -776,7 +774,7 @@ function Layout.do_natural(R, heights)
 end
 
 
-function Layout.try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
+function Layout_try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
   -- find a usable pattern in the ROOM_PATTERNS table and
   -- apply it to the room.
 
@@ -785,7 +783,7 @@ function Layout.try_pattern(R, is_top, div_lev, req_sym, area, heights, f_texs)
 
   area.tw, area.th = geom.group_size(area.x1, area.y1, area.x2, area.y2)
 
-  gui.debugf("Layout.try_pattern @ %s  div_lev:%d\n", R:tostr(), div_lev)
+  gui.debugf("Layout_try_pattern @ %s  div_lev:%d\n", R:tostr(), div_lev)
   gui.debugf("Area: (%d,%d)..(%d,%d) heights: %d %d %d\n",
     area.x1, area.y1, area.x2, area.y2,
     heights[1] or -1, heights[2] or -1, heights[3] or -1)
@@ -1472,7 +1470,7 @@ gui.debugf("Chose pattern with score %1.4f\n", T.score)
           new_sym = nil
         end
 
-        Layout.try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
+        Layout_try_pattern(R, false, div_lev+1, new_sym, new_area, new_hs, new_ft)
       end
     end
 
@@ -1621,10 +1619,10 @@ do return false end
   end
 
 
-  ---==| Layout.try_pattern |==---
+  ---==| Layout_try_pattern |==---
  
   if R.natural then
-    Layout.do_natural(R, heights)
+    Layout_do_natural(R, heights)
     return
   end
 
@@ -1637,7 +1635,7 @@ gui.debugf("Failed @ %s (div_lev %d)\n\n", R:tostr(), div_lev)
 end
 
 
-function Layout.set_floor_minmax(R)
+function Layout_set_floor_minmax(R)
   local min_h =  9e9
   local max_h = -9e9
 
@@ -1668,7 +1666,7 @@ function Layout.set_floor_minmax(R)
 end
 
 
-function Layout.do_scenic(R)
+function Layout_do_scenic(R)
 
   local min_floor = 1000
 
@@ -1707,7 +1705,7 @@ function Layout.do_scenic(R)
 end
 
 
-function Layout.do_hallway(R)
+function Layout_do_hallway(R)
   local function conn_area(R)
     local lx, ly = 999,999
     local hx, hy = 0,0
@@ -1795,7 +1793,7 @@ function Layout.do_hallway(R)
   end
 
 
-  ---| Layout.do_hallway |---
+  ---| Layout_do_hallway |---
 
   R.tx1, R.ty1 = R.sx1, R.sy1
   R.tx2, R.ty2 = R.sx2, R.sy2
@@ -1865,7 +1863,7 @@ function Layout.do_hallway(R)
     end
   end end -- for x, y
 
-  Layout.set_floor_minmax(R)
+  Layout_set_floor_minmax(R)
 
   for _,C in ipairs(R.conns) do
     C.conn_h = h
@@ -1874,7 +1872,7 @@ end
 
 
 
-function Layout.do_room(R)
+function Layout_do_room(R)
 
   local function junk_sides()
     -- Adds solid seeds (kind "void") to the edges of large rooms.
@@ -2035,13 +2033,13 @@ function Layout.do_room(R)
 
 
   local function add_purpose()
-    local sx, sy, S = Layout.spot_for_wotsit(R, "SOLUTION") --???  R.purpose)
+    local sx, sy, S = Layout_spot_for_wotsit(R, "SOLUTION") --???  R.purpose)
 
     R.guard_spot = S
   end
 
   local function add_weapon(weapon)
-    local sx, sy, S = Layout.spot_for_wotsit(R, "WEAPON")
+    local sx, sy, S = Layout_spot_for_wotsit(R, "WEAPON")
 
     S.content_weapon = weapon
 
@@ -2051,7 +2049,7 @@ function Layout.do_room(R)
   end
 
   local function add_teleporter()
-    local sx, sy, S = Layout.spot_for_wotsit(R, "TELEPORTER")
+    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
 
     R.teleport_spot = S
   end
@@ -2077,7 +2075,7 @@ function Layout.do_room(R)
 
   local function flood_fill_for_junk()
     -- sets the floor_h (etc) for seeds in a junked side
-    -- (which are ignored by Layout.try_pattern).
+    -- (which are ignored by Layout_try_pattern).
 
     gui.debugf("flood_fill_for_junk @ %s\n", R:tostr())
 
@@ -2561,7 +2559,7 @@ gui.debugf("BOTH SAME HEIGHT\n")
   end
 
 
-  ---==| Layout.do_room |==---
+  ---==| Layout_do_room |==---
 
 gui.debugf("LAYOUT %s >>>>\n", R:tostr())
 
@@ -2591,7 +2589,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   end
 
   if R.kind == "hallway" then
-    Layout.do_hallway(R, focus_C.conn_h)
+    Layout_do_hallway(R, focus_C.conn_h)
     if R.weapon then add_weapon(R.weapon) end
     return
   end
@@ -2617,12 +2615,12 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   local heights = select_heights(focus_C)
   local f_texs  = select_floor_texs(focus_C)
 
-  Layout.try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
+  Layout_try_pattern(R, true, 1, R.symmetry, area, heights, f_texs)
 
 
 ---??  flood_fill_for_junk()
 
-  Layout.set_floor_minmax(R)
+  Layout_set_floor_minmax(R)
 
   post_processing()
 
@@ -2638,8 +2636,8 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
   if R.weapon  then add_weapon(R.weapon)  end
 
   if R.natural then
---!!!!!!    Layout.cave_pickup_spots(R)
---!!!!!!    Layout.cave_monster_spots(R)
+--!!!!!!    Layout_cave_pickup_spots(R)
+--!!!!!!    Layout_cave_monster_spots(R)
   end
 
   if R.kind == "normal" and not (R.outdoor or R.natural) then
@@ -2648,7 +2646,7 @@ gui.debugf("NO ENTRY HEIGHT @ %s\n", R:tostr())
 end
 
 
-function Layout.edge_of_map()
+function Layout_edge_of_map()
   
   local function stretch_buildings()
     -- TODO: OPTIMISE
@@ -2746,9 +2744,9 @@ function Layout.edge_of_map()
     Trans.old_quad(get_sky(), x1,y1, x2,y2, SKY_H, EXTREME_H)
   end
 
-  ---| Layout.edge_of_map |---
+  ---| Layout_edge_of_map |---
   
-  gui.debugf("Layout.edge_of_map\n")
+  gui.debugf("Layout_edge_of_map\n")
 
   stretch_buildings()
 

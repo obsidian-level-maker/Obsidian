@@ -60,8 +60,6 @@ require 'tiler'
 require 'fight'
 require 'monsters'
 
-Levels = { }
-
 
 STYLE_LIST =
 {

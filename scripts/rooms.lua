@@ -814,7 +814,7 @@ function Rooms.border_up()
 
   local function make_map_edge(R, S, side)
     if R.outdoor then
-      -- a fence will be created by Layout.edge_of_map()
+      -- a fence will be created by Layout_edge_of_map()
     else
       S:add_border(side, "wall", 24)
 
@@ -3202,13 +3202,13 @@ function Rooms.build_all()
 ---!!  Levels.invoke_hook("layout_rooms", LEVEL.seed)
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout.do_room(R)
+    Layout_do_room(R)
     Rooms.make_ceiling(R)
     Rooms.add_crates(R)
   end
 
   for _,R in ipairs(LEVEL.scenic_rooms) do
-    Layout.do_scenic(R)
+    Layout_do_scenic(R)
     Rooms.make_ceiling(R)
   end
 
@@ -3219,7 +3219,7 @@ function Rooms.build_all()
   for _,R in ipairs(LEVEL.scenic_rooms) do Rooms.build_seeds(R) end
   for _,R in ipairs(LEVEL.all_rooms)    do Rooms.build_seeds(R) end
 
-  Layout.edge_of_map()
+  Layout_edge_of_map()
 
   Rooms_add_sun()
 end
