@@ -695,7 +695,7 @@ function Trans.substitute(value, skin)
 end
 
 
-function Build.prefab(fab, skin, T)
+function Fabricate(fab, skin, T)
 
   if type(fab) == "string" then
     if not PREFAB[fab] then
@@ -1002,7 +1002,7 @@ function Build.prefab(fab, skin, T)
   end
 
 
-  ---| Build.prefab |---
+  ---| Fabricate |---
 
 ---gui.printf("Prefab: %s\n", fab.name)
 

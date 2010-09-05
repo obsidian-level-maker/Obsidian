@@ -1668,7 +1668,7 @@ function Rooms_make_ceiling(R)
             if R.lite_w then T.scale_x = R.lite_w  / 64 end
             if R.lite_h then T.scale_y = R.lite_h  / 64 end
 
-            Build.prefab("CEIL_LIGHT", skin, T)
+            Fabricate("CEIL_LIGHT", skin, T)
           end
         else
           Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
@@ -2079,7 +2079,7 @@ do return end
       local T = { add_x=spot.S.x2, add_y = spot.S.y2, add_z = spot.S.floor_h }
       if skin.h then T.scale_z = skin.h / 64 end
 
-      Build.prefab("CRATE", skin, T)
+      Fabricate("CRATE", skin, T)
 
 --FIXME  if PARAM.outdoor_shadows and is_outdoor then
 --FIXME    Trans.old_brush(get_light(-1), shadowify_brush(coords, 20), -EXTREME_H, z_top-4)
@@ -2286,7 +2286,7 @@ function Rooms_do_small_exit()
   Trans.modify("scale_x", 192 / 256)
   Trans.modify("scale_y", 192 / 256)
 
-  Build.prefab("SMALL_EXIT", skin, T)
+  Fabricate("SMALL_EXIT", skin, T)
 
   return
 end
@@ -2374,14 +2374,14 @@ function Rooms_build_seeds(R)
 
       local T = Trans.centre_transform(S, z1)
       T.scale_z = (z_top - z1) / 128
-      Build.prefab("LOWERING_PEDESTAL", skin, T)
+      Fabricate("LOWERING_PEDESTAL", skin, T)
 
       Trans.entity(lock.item, mx, my, z_top)
     else
       if rand.odds(98) then
         local skin = { top=THEME.pedestal_mat, light=0.7 }
         local T = Trans.centre_transform(S, z1)
-        Build.prefab("PEDESTAL", skin, T)
+        Fabricate("PEDESTAL", skin, T)
       end
       Trans.entity(lock.item, mx, my, z1)
     end
@@ -2394,7 +2394,7 @@ function Rooms_build_seeds(R)
     skin.tag = lock.tag
 
     local T = Trans.centre_transform(S, z1, dir_for_wotsit(S))
-    Build.prefab("SMALL_SWITCH", skin, T)
+    Fabricate("SMALL_SWITCH", skin, T)
   end
 
   local function do_purpose(S)
@@ -2430,7 +2430,7 @@ function Rooms_build_seeds(R)
       else
         local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
         local T = Trans.centre_transform(S, z1)
-        Build.prefab("PEDESTAL", skin, T)
+        Fabricate("PEDESTAL", skin, T)
       end
 
       Trans.entity("player1", mx, my, z1, { angle=angle })
@@ -2469,7 +2469,7 @@ function Rooms_build_seeds(R)
         local skin = assert(GAME.EXITS[skin_name])
 
         local T = Trans.centre_transform(S, z1, dir)
-        Build.prefab("OUTDOOR_EXIT_SWITCH", skin, T)
+        Fabricate("OUTDOOR_EXIT_SWITCH", skin, T)
 
       elseif THEME.exits then
         -- FIXME: use single one for a whole episode
@@ -2477,7 +2477,7 @@ function Rooms_build_seeds(R)
         local skin = assert(GAME.EXITS[skin_name])
 
         local T = Trans.centre_transform(S, z1, dir)
-        Build.prefab("EXIT_PILLAR", skin, T)
+        Fabricate("EXIT_PILLAR", skin, T)
       end
 
     elseif R.purpose == "SOLUTION" then
@@ -2521,13 +2521,13 @@ function Rooms_build_seeds(R)
 
       local T = Trans.centre_transform(S, z1)
       T.scale_z = (z_top - z1) / 128
-      Build.prefab("LOWERING_PEDESTAL", skin, T)
+      Fabricate("LOWERING_PEDESTAL", skin, T)
 
       Trans.entity(weapon, mx, my, z_top)
     else
       local skin = { top=THEME.pedestal_mat, light=0.7 }
       local T = Trans.centre_transform(S, z1)
-      Build.prefab("PEDESTAL", skin, T)
+      Fabricate("PEDESTAL", skin, T)
 
       Trans.entity(weapon, mx, my, z1+8)
     end
@@ -2563,7 +2563,7 @@ function Rooms_build_seeds(R)
 
     local T = Trans.centre_transform(S, z1)
 
-    Build.prefab("TELEPORT_PAD", skin, T)
+    Fabricate("TELEPORT_PAD", skin, T)
   end
 
 
@@ -2786,7 +2786,7 @@ function Rooms_build_seeds(R)
 
         local skin = { inner = w_tex, outer = o_tex }
 
-        Build.prefab("WALL", skin, side_T)
+        Fabricate("WALL", skin, side_T)
 
         shrink_both(side, 4)
       end
@@ -2802,7 +2802,7 @@ function Rooms_build_seeds(R)
         local T = Trans.border_transform(S, B.win_z1, side)
 
         -- FIXME: B.win_width, B.win_z1, B.win_z2
-        Build.prefab("WINDOW", skin, T)
+        Fabricate("WINDOW", skin, T)
 
         shrink_both(side, 4)
       end
@@ -2816,7 +2816,7 @@ function Rooms_build_seeds(R)
 
         local T = Trans.border_transform(S, B.pic_z1, side)
 
-        Build.prefab("PICTURE", skin, T)
+        Fabricate("PICTURE", skin, T)
 
         shrink_both(side, 4)
       end
@@ -2835,7 +2835,7 @@ function Rooms_build_seeds(R)
 
         local skin = { inner=w_tex, outer=o_tex, track=THEME.track_mat }
 
-        Build.prefab("ARCH", skin, door_T)
+        Fabricate("ARCH", skin, door_T)
 
 ---!!!     shrink_ceiling(side, 4)
 
@@ -2857,7 +2857,7 @@ function Rooms_build_seeds(R)
 
         side_T.scale_z = 0.5
 
-        Build.prefab("ARCH", skin, side_T)
+        Fabricate("ARCH", skin, side_T)
 
 ---!!!    shrink_ceiling(side, 4)
       end
@@ -2882,7 +2882,7 @@ function Rooms_build_seeds(R)
         skin2.inner = w_tex
         skin2.outer = o_tex
 
-        Build.prefab("DOOR", skin2, door_T)
+        Fabricate("DOOR", skin2, door_T)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2910,7 +2910,7 @@ function Rooms_build_seeds(R)
 
 ---???        local reversed = (S == C.dest_S)
 
-        Build.prefab("DOOR", skin2, door_T)
+        Fabricate("DOOR", skin2, door_T)
 
 --!!!   shrink_ceiling(side, 4)
 
@@ -2946,7 +2946,7 @@ function Rooms_build_seeds(R)
 
         local T = Trans.corner_transform(S, z1, corner)
 
-        Build.prefab("CORNER", skin, T)
+        Fabricate("CORNER", skin, T)
       end
     end end -- for corner
 
@@ -3013,7 +3013,7 @@ function Rooms_build_seeds(R)
           local skin = { glow=LEVEL.hall_lite_ftex, trim=THEME.light_trim }
           local T = Trans.centre_transform(S, z2, 2)  -- TODO; pick a dir
 
-          Build.prefab("CEIL_LIGHT", skin, T)
+          Fabricate("CEIL_LIGHT", skin, T)
         end
       end
     end
@@ -3052,7 +3052,7 @@ function Rooms_build_seeds(R)
       local T = Trans.doorway_transform(S, z1, dir)
       T.scale_z = (z2 - z1) / 128
 
-      Build.prefab(fab_name, skin2, T)
+      Fabricate(fab_name, skin2, T)
 
 ---####    Build.niche_stair(S, LEVEL.step_skin, skin2)
 
@@ -3074,7 +3074,7 @@ function Rooms_build_seeds(R)
       local T = Trans.doorway_transform(S, z1, dir)  -- FIXME: whole_transform ??
       T.scale_z = (z2 - z1) / 128
       
-      Build.prefab("LIFT", skin, T)
+      Fabricate("LIFT", skin, T)
 
 ---###      Build.lift(S, LEVEL.lift_skin, skin2, tag)
 
@@ -3113,7 +3113,7 @@ function Rooms_build_seeds(R)
       local T = Trans.centre_transform(S, z1, S.pillar_dir or 2)  -- TODO pillar_dir
       T.scale_z = (z2 - z1) / 128
 
-      Build.prefab("PILLAR", assert(S.pillar_skin), T)
+      Fabricate("PILLAR", assert(S.pillar_skin), T)
     end
 
     if S.usage == "WEAPON" then
