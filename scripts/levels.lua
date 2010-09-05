@@ -583,7 +583,7 @@ function Levels_build_it()
 
   gui.prog_step("Rooms");
 
-  Rooms.build_all()
+  Rooms_build_all()
   if gui.abort() then return "abort" end
 
   -- FIXME : support monster stuff
