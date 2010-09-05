@@ -277,9 +277,11 @@ end
 
 
 function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
+  assert(x1)
+
   if not w_face then
     -- convenient form: only a material name was given
-    kind, w_face, p_face = Mat_normal(kind)
+    kind, w_face, p_face = Mat_normal(props)
   end
 
   local coords =
@@ -290,20 +292,27 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
     { x=x1, y=y2 },
   }
 
-  for _,c in ipairs(coords) do
-    table.merge(c, w_face)
+  for _,C in ipairs(coords) do
+    table.merge(C, w_face)
   end
-
-  local t_face = table.copy(p_face) ; t_face.t = z2
-  local b_face = table.copy(p_face) ; b_face.b = z1
-
-  if z1 then table.insert(coords, b_face) end
-  if z2 then table.insert(coords, t_face) end
 
   if props and props.k then
     table.insert(coords, 1, props)
   end
 
+  if z1 then
+    local face = table.copy(p_face)
+    face.b = z1
+    table.insert(coords, face)
+  end
+
+  if z2 then
+    local face = table.copy(p_face)
+    face.t = z2
+    table.insert(coords, face)
+  end
+
+--stderrf("coords = \n%s\n\n", table.tostr(coords, 3))
   Trans.brush(coords)
 end
 
@@ -605,6 +614,7 @@ function get_mat(wall, floor, ceil)
   }
 end
 
+
 function Mat_normal(wall, floor)
   if not wall then wall = "_ERROR" end
 
@@ -617,6 +627,28 @@ function Mat_normal(wall, floor)
 
   return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
 end
+
+
+function Mat_sky()
+  local mat = assert(GAME.MATERIALS["_SKY"])
+
+  local light = LEVEL.sky_light or 0.75
+
+  return "sky", { tex=mat.t }, { tex=mat.f or mat.t, light=light }
+end
+
+
+function Mat_liquid()
+  assert(LEVEL.liquid)
+
+  local mat = safe_get_mat(LEVEL.liquid.mat)
+
+  local light   = LEVEL.liquid.light
+  local special = LEVEL.liquid.special
+
+  return "solid", { tex=mat.t }, { tex=mat.f or mat.t, light=light, speial=special }
+end
+
 
 function get_sky()
   local mat = assert(GAME.MATERIALS["_SKY"])

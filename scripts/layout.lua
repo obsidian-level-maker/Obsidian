@@ -2700,7 +2700,9 @@ function Layout_edge_of_map()
       local tex = S.building.cave_tex or S.building.facade or S.building.main_tex
       assert(tex)
 
-      Trans.old_quad(get_mat(tex), S.x1,S.y1, S.x2,S.y2, -EXTREME_H, EXTREME_H)
+      local kind, w_face, p_face = Mat_normal(tex)
+
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil,nil, { k=kind }, w_face, p_face)
       return
     end
 
@@ -2739,9 +2741,13 @@ function Layout_edge_of_map()
       end
     end
 
-    Trans.old_quad(get_mat(LEVEL.outer_fence_tex), x1,y1, x2,y2, -EXTREME_H, S.fence_h)
-
-    Trans.old_quad(get_sky(), x1,y1, x2,y2, SKY_H, EXTREME_H)
+    do
+      local kind, w_face, p_face = Mat_normal(LEVEL.outer_fence_tex)
+      Trans.quad(x1,y1, x2,y2, nil,S.fence_h, { k=kind }, w_face, p_face)
+    
+      kind, w_face, p_face = Mat_sky()
+      Trans.quad(x1,y1, x2,y2, SKY_H,nil, { k=kind }, w_face, p_face)
+    end
   end
 
   ---| Layout_edge_of_map |---

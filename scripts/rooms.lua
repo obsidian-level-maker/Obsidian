@@ -1333,7 +1333,11 @@ function Rooms_make_ceiling(R)
       return
     end
 
-    local info = add_pegging(get_mat(THEME.periph_pillar_mat))
+    local b_kind, w_face, p_face = Mat_normal(THEME.periph_pillar_mat)
+
+    w_face.x_offset = 0
+    w_face.y_offset = 0
+    w_face.peg = true
 
     local x1,y1, x2,y2 = geom.side_coords(side, R.tx1,R.ty1, R.tx2,R.ty2, offset)
 
@@ -1363,8 +1367,8 @@ function Rooms_make_ceiling(R)
         local px = sel(x_dir < 0, S.x1, S.x2)
         local py = sel(y_dir < 0, S.y1, S.y2)
 
-        Trans.old_quad(info, px-w, py-w, px+w, py+w, -EXTREME_H, EXTREME_H)
-        
+        Trans.quad(px-w, py-w, px+w, py+w, nil,nil, nil, w_face, p_face)
+
         R.has_periph_pillars = true
 
         -- mark seeds [crude way to prevent stuck masterminds]
@@ -2580,6 +2584,7 @@ function Rooms_build_seeds(R)
   end
 
 
+--[[
   local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
     local prec = GAME.lighting_precision or "medium"
 
@@ -2619,6 +2624,7 @@ function Rooms_build_seeds(R)
       Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
     end
   end
+--]]
 
   local function border_wants_corner(B)
     if not B then return false end
@@ -2773,10 +2779,10 @@ function Rooms_build_seeds(R)
       then
         local dist = 24 + int((z2 - z1) / 4)
         if dist > 160 then dist = 160 end
-        Build.shadow(S, side, dist)
+--!!!!        Build.shadow(S, side, dist)
 
       elseif R.outdoor and N and N.edge_of_map and N.fence_h then
-        Build.shadow(S, side, 20, N.fence_h - 4)
+--!!!!        Build.shadow(S, side, 20, N.fence_h - 4)
       end
 
       -- hallway hack
@@ -2853,8 +2859,8 @@ function Rooms_build_seeds(R)
 ---!!!     shrink_ceiling(side, 4)
 
         if R.outdoor and N.room.outdoor then
-          Build.shadow(S,  side, 96)
-          Build.shadow(S, -side, 96)
+--!!!!          Build.shadow(S,  side, 96)
+--!!!!          Build.shadow(S, -side, 96)
         end
 
         assert(not C.already_made_lock)
@@ -2994,8 +3000,9 @@ function Rooms_build_seeds(R)
     if S.kind ~= "void" and not S.no_ceil and 
        (S.is_sky or c_tex == "_SKY")
     then
+      local kind, w_face, p_face = Mat_sky()
 
-      Trans.old_quad(get_sky(), x1,y1, x2,y2, z2, EXTREME_H)
+      Trans.quad(x1,y1, x2,y2, z2,nil, { k=kind }, w_face, p_face)
 
     elseif S.kind ~= "void" and not S.no_ceil then
       ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
@@ -3042,7 +3049,9 @@ function Rooms_build_seeds(R)
         w_tex = R.corner_tex
       end
 
-      Trans.old_quad(get_mat(w_tex), x1,y1, x2,y2, -EXTREME_H, EXTREME_H);
+      local kind, w_face, p_face = Mat_normal(w_tex)
+
+      Trans.quad(x1,y1, x2,y2, nil,nil, nil, w_face, p_face)
 
     elseif S.kind == "stair" then
       local skin2 = { wall=S.room.main_tex, floor=S.f_tex or S.room.main_tex }
@@ -3104,17 +3113,18 @@ function Rooms_build_seeds(R)
 
     elseif S.kind == "liquid" then
       assert(LEVEL.liquid)
-      local info = get_liquid()
 
-      Trans.old_quad(info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      local kind, w_face, p_face = Mat_liquid()
+
+      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
 
     elseif not S.no_floor then
-      --!!!  local info = get_mat(S.l_tex or w_tex, f_tex)
-      --!!!  info.sec_kind = sec_kind
-      --!!!  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
+      --???  local info = get_mat(S.l_tex or w_tex, f_tex)
+      --???  info.sec_kind = sec_kind
+      --???  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
 
       local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
-      p_face.kind = sec_kind
+      p_face.special = sec_kind
 
       Trans.quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
     end
