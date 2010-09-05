@@ -2106,8 +2106,8 @@ function Rooms_build_cave(R)
 --!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
 
-    if data.f_z then table.insert(coords, { t=data.f_z }) end
-    if data.c_z then table.insert(coords, { b=data.c_z }) end
+    if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.delta_f }) end
+    if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.delta_c }) end
 
     Trans.set_mat(coords, data.wtex, data.ftex)
 
@@ -2117,7 +2117,7 @@ function Rooms_build_cave(R)
   local function FC_brush(data, coords)
     if data.f_info then
       local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { t=data.f_z })
+      table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
 
       Trans.set_mat(coord2, data.wtex, data.ftex)
       Trans.brush(coord2)
@@ -2125,7 +2125,7 @@ function Rooms_build_cave(R)
 
     if data.c_info then
       local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { b=data.c_z })
+      table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
 
       Trans.set_mat(coords, data.wtex, data.ctex)
       Trans.brush(coord2)
@@ -2151,7 +2151,7 @@ function Rooms_build_cave(R)
 
   if R.is_lake then
     data.info = get_liquid()
-    data.info.t_face.delta_z = rand.sel(70, -48, -72)
+    data.delta_f = rand.sel(70, -48, -72)
     data.f_z = R.cave_floor_h + 8
   end
 
@@ -2180,10 +2180,9 @@ function Rooms_build_cave(R)
       -- create a lava/nukage pit
       local pit = get_liquid()
 
-      pit.t_face.delta_z = rand.sel(70, -52, -76)
-
       island:render(base_x, base_y, WALL_brush,
-                    { info=pit, f_z=R.cave_floor_h+8 })
+                    { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
+                      delta_f=rand.sel(70, -52, -76) })
 
       cave:subtract(island)
     end
@@ -2233,15 +2232,16 @@ function Rooms_build_cave(R)
 
       -- FIXME: this bugs up monster/pickup/key spots
       if rand.odds(0) then
-        data.f_trim.delta_z = -(i * 10 + 40)
+        data.delta_f = -(i * 10 + 40)
       end
     end
 
     if true then
-      data.f_info.t_face.delta_z = -(i * 10)
+      data.delta_f = -(i * 10)
     end
 
     data.f_z = R.cave_floor_h + i
+    data.ftex = data.f_info.t_face.tex
 
     data.c_info = nil
 
@@ -2257,7 +2257,7 @@ function Rooms_build_cave(R)
         data.c_info = get_mat(data.ctex)
       end
 
-      data.c_info.b_face.delta_z = int((0.6 + (i-1)*0.3) * R.cave_h)
+      data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)
 
       data.c_z = ceil_h - i
     end
