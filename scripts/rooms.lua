@@ -2101,20 +2101,34 @@ function Rooms_build_cave(R)
   local base_y = SEEDS[R.sx1][R.sy1].y1
 
   local function WALL_brush(data, coords)
-    Trans.old_brush(data.info, coords, data.z1 or -EXTREME_H, data.z2 or EXTREME_H)
-
     if data.shadow_info then
       local sh_coords = shadowify_brush(coords, 40)
-      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
+--!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
+
+    if data.f_z then table.insert(coords, { t=data.f_z }) end
+    if data.c_z then table.insert(coords, { b=data.c_z }) end
+
+    Trans.set_mat(coords, data.wtex, data.ftex)
+
+    Trans.brush(coords)
   end
 
   local function FC_brush(data, coords)
     if data.f_info then
-      Trans.old_brush(data.f_info, coords, -EXTREME_H, data.f_z)
+      local coord2 = table.deep_copy(coords)
+      table.insert(coord2, { t=data.f_z })
+
+      Trans.set_mat(coord2, data.wtex, data.ftex)
+      Trans.brush(coord2)
     end
+
     if data.c_info then
-      Trans.old_brush(data.c_info, coords, data.c_z, EXTREME_H)
+      local coord2 = table.deep_copy(coords)
+      table.insert(coord2, { b=data.c_z })
+
+      Trans.set_mat(coords, data.wtex, data.ctex)
+      Trans.brush(coord2)
     end
   end
 
@@ -2133,16 +2147,16 @@ function Rooms_build_cave(R)
 
   -- DO WALLS --
 
-  local data = { info=w_info, ftex=w_tex, ctex=w_tex }
+  local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
 
   if R.is_lake then
     data.info = get_liquid()
     data.info.t_face.delta_z = rand.sel(70, -48, -72)
-    data.z2 = R.cave_floor_h + 8
+    data.f_z = R.cave_floor_h + 8
   end
 
   if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
-    data.z2 = R.cave_floor_h + rand.sel(65, 80, 144)
+    data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
   end
 
   if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
@@ -2169,11 +2183,10 @@ function Rooms_build_cave(R)
       pit.t_face.delta_z = rand.sel(70, -52, -76)
 
       island:render(base_x, base_y, WALL_brush,
-                    { info=pit, z2=R.cave_floor_h+8 })
+                    { info=pit, f_z=R.cave_floor_h+8 })
 
       cave:subtract(island)
     end
-
   end
 
 

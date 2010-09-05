@@ -338,6 +338,20 @@ function Trans.box_coords(x, y, w, h)
 end
 
 
+function Trans.set_tex(coords, wall, flat)
+  for _,C in ipairs(coords) do
+    if wall and C.x and not C.tex then
+      C.tex = wall
+    end
+    if flat and (C.b or C.t) and not C.tex then
+      C.tex = flat
+    end
+  end
+
+  return coords
+end
+
+
 function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
   Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
@@ -680,6 +694,21 @@ function mat_similar(A, B)
   end
 
   return false
+end
+
+
+function Trans.set_mat(coords, wall, flat)
+  if wall then
+    wall = safe_get_mat(wall)
+    wall = assert(wall.t)
+  end
+
+  if flat then
+    flat = safe_get_mat(flat)
+    flat = flat.f or assert(flat.t)
+  end
+
+  Trans.set_tex(coords, wall, flat)
 end
 
 
