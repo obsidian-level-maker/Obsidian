@@ -8,13 +8,6 @@ TODO
 Terminology (face fields etc) : 'special' for linetypes, sectortypes
 
 
-TEST:  Quake: fix level progression
-
-
-Hexen: have arg1 .. arg5, i.e. de-array-ify
-       Lua code must handle special "tag" value
-
-
 
 Later: fix hallways, broken due to conn(_dir) change
 

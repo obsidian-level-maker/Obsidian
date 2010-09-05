@@ -313,12 +313,13 @@ Sam's suggestions:
 +  IDEA: have a DEFAULT_ARGS table for each line special,
          so that prefabs (etc) aren't cluttered with arguments.
 
+-  need arg1 .. arg5 in faces, Lua code to assign tag number
+
 -  put 'fighter only' bit on fighter's weapons, etc..
 
 -  need exit teleporter in final Hub.
 
 +  make teleporter gates bi-directional.
-
 
 
 ----------------------------------------------------------------
