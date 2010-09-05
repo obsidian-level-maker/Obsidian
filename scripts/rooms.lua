@@ -2584,44 +2584,27 @@ function Rooms_build_seeds(R)
   end
 
 
---[[
-  local function Split_quad(S, info, x1,y1, x2,y2, z1,z2)
-    local prec = GAME.lighting_precision or "medium"
-
-    if OB_CONFIG.game == "quake" then prec = "low" end
-    if R.outdoor then prec = "low" end
-    if S.usage then prec = "low" end
-
-    if prec == "high" then
-      for i = 0,5 do for k = 0,5 do
-        local ax = int((x1*i+x2*(6-i)) / 6)
-        local ay = int((y1*k+y2*(6-k)) / 6)
-        local bx = int((x1*(i+1)+x2*(5-i)) / 6)
-        local by = int((y1*(k+1)+y2*(5-k)) / 6)
-        
-        Trans.old_quad(info, ax,ay, bx,by, z1,z2)
-      end end
-
-    elseif prec == "medium" then
+  local function Split_quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
+    if GAME.format == "doom" then
       local ax = int((x1*2+x2) / 3)
       local ay = int((y1*2+y2) / 3)
       local bx = int((x1+x2*2) / 3)
       local by = int((y1+y2*2) / 3)
 
-      Trans.old_quad(info, x1,y1, ax,ay, z1,z2)
-      Trans.old_quad(info, ax,y1, bx,ay, z1,z2)
-      Trans.old_quad(info, bx,y1, x2,ay, z1,z2)
+      Trans.quad(x1,y1, ax,ay, z1,z2, props, w_face, p_face)
+      Trans.quad(ax,y1, bx,ay, z1,z2, props, w_face, p_face)
+      Trans.quad(bx,y1, x2,ay, z1,z2, props, w_face, p_face)
 
-      Trans.old_quad(info, x1,ay, ax,by, z1,z2)
-      Trans.old_quad(info, ax,ay, bx,by, z1,z2)
-      Trans.old_quad(info, bx,ay, x2,by, z1,z2)
+      Trans.quad(x1,ay, ax,by, z1,z2, props, w_face, p_face)
+      Trans.quad(ax,ay, bx,by, z1,z2, props, w_face, p_face)
+      Trans.quad(bx,ay, x2,by, z1,z2, props, w_face, p_face)
 
-      Trans.old_quad(info, x1,by, ax,y2, z1,z2)
-      Trans.old_quad(info, ax,by, bx,y2, z1,z2)
-      Trans.old_quad(info, bx,by, x2,y2, z1,z2)
+      Trans.quad(x1,by, ax,y2, z1,z2, props, w_face, p_face)
+      Trans.quad(ax,by, bx,y2, z1,z2, props, w_face, p_face)
+      Trans.quad(bx,by, x2,y2, z1,z2, props, w_face, p_face)
 
     else
-      Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
+      Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
     end
   end
 --]]
@@ -3119,14 +3102,10 @@ function Rooms_build_seeds(R)
       Trans.quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
 
     elseif not S.no_floor then
-      --???  local info = get_mat(S.l_tex or w_tex, f_tex)
-      --???  info.sec_kind = sec_kind
-      --???  Split_quad(S, info, fx1,fy1, fx2,fy2, -EXTREME_H, z1)
-
       local kind, w_face, p_face = Mat_normal(S.l_tex or w_tex, f_tex)
       p_face.special = sec_kind
 
-      Trans.quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
+      Split_quad(fx1,fy1, fx2,fy2, nil,z1, { k=kind }, w_face, p_face)
     end
 
 
