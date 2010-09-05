@@ -24,10 +24,10 @@ PREFAB.EXIT_PILLAR =
   {
     -- pillar itself
     {
-      { x = -32, y = -32, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y = -32, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y =  32, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
-      { x = -32, y =  32, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y = -32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = -32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y =  32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
       { t = 128, mat = "?switch" },
     },
 
@@ -97,9 +97,9 @@ PREFAB.OUTDOOR_EXIT_SWITCH =
     -- switch itself
     {
       { x =  32, y = -8, mat = "?base" },
-      { x =  32, y =  8, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
       { x = -32, y =  8, mat = "?base" },
-      { x = -32, y = -8, mat = "?switch", kind="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y = -8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
       { t = 86, mat = "?base" },
     },
 
@@ -216,7 +216,7 @@ PREFAB.SMALL_EXIT =
     {
       { x =  16, y = 240, mat = "?inner" },
       { x =  88, y = 240, mat = "?trim",  peg=1, x_offset=0, y_offset=0 },
-      { x =  96, y = 240, mat = "?switch", kind="?line_kind", peg=0, x_offset=0, y_offset=0 },
+      { x =  96, y = 240, mat = "?switch", special="?line_kind", peg=0, x_offset=0, y_offset=0 },
       { x = 160, y = 240, mat = "?trim",  peg=1, x_offset=0, y_offset=0 },
       { x = 168, y = 240, mat = "?inner" },
       { x = 240, y = 240, mat = "?inner" },
@@ -227,10 +227,10 @@ PREFAB.SMALL_EXIT =
 
     -- door itself
     {
-      { x = 160, y = 48, mat = "?door", kind="?door_kind", peg=1, x_offset=0, y_offset=0 },
-      { x = 160, y = 64, mat = "?door", kind="?door_kind", peg=1, x_offset=0, y_offset=0 },
-      { x =  96, y = 64, mat = "?door", kind="?door_kind", peg=1, x_offset=0, y_offset=0 },
-      { x =  96, y = 48, mat = "?door", kind="?door_kind", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y = 48, mat = "?door", special="?door_kind", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y = 64, mat = "?door", special="?door_kind", peg=1, x_offset=0, y_offset=0 },
+      { x =  96, y = 64, mat = "?door", special="?door_kind", peg=1, x_offset=0, y_offset=0 },
+      { x =  96, y = 48, mat = "?door", special="?door_kind", peg=1, x_offset=0, y_offset=0 },
       { b = 16, delta_z=-16, mat = "?door" },
     },
 

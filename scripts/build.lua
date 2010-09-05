@@ -984,9 +984,9 @@ function Build.prefab(fab, skin, T)
 
   local function entity_props(E)
     local props = {}
-    for name,value in pairs(E) do
-      if name ~= "kind" and name ~= "x" and name ~= "y" and name ~= "z" then
-        props[name] = Trans.substitute(value, skin)
+    for key,value in pairs(E) do
+      if key ~= "ent" and key ~= "x" and key ~= "y" and key ~= "z" then
+        props[key] = Trans.substitute(value, skin)
       end
     end
   end
@@ -995,8 +995,8 @@ function Build.prefab(fab, skin, T)
   local function render_entities(list)
     if list then
       for _,E in ipairs(list) do
-        local kind = Trans.substitute(E.kind, skin)
-        Trans.entity(kind, E.x, E.y, E.z, entity_props(E))
+        local name = Trans.substitute(E.ent, skin)
+        Trans.entity(name, E.x, E.y, E.z, entity_props(E))
       end
     end
   end

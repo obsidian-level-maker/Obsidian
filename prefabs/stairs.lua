@@ -25,10 +25,10 @@ PREFAB.LIFT =
   {
     -- lift itself
     {
-      { x =  32, y =  0, mat = "?lift", kind="?walk_kind",   tag="?tag" },
-      { x = 160, y =  0, mat = "?lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
-      { x = 160, y = 64, mat = "?lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y = 64, mat = "?lift", kind="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  0, mat = "?lift", special="?walk_kind",   tag="?tag" },
+      { x = 160, y =  0, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x = 160, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
       { t = 123, mat = "?top", tag = "?tag" },
     },
 
