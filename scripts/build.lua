@@ -535,7 +535,7 @@ end
 
 ------------------------------------------------------------------------
 
-function Build.prepare_trip()
+function Build_prepare_trip()
 
   -- build the psychedelic mapping
   local m_before = {}
