@@ -1378,41 +1378,6 @@ function Build.shadow(S, side, dist, z2)
 end
 
 
-function Build.quake_door(S, side)
-  
-  -- FIXME : way incomplete
-
-  local m_ref = gui.q1_add_mapmodel(
-  {
-    y_face={ tex="edoor01_1" },
-    x_face={ tex="met5_1" },
-    z_face={ tex="met5_1" },
-  },
-  -1664+64,  -328-12, 0,
-  -1664+128, -328+12, 128)
-
-  gui.add_entity({ id="func_door",
-                   angle="180", sounds="2",
-                   model=assert(m_ref)
-                 })
-
-
-  m_ref = gui.q1_add_mapmodel(
-  {
-    y_face={ tex="edoor01_1" },
-    x_face={ tex="met5_1" },
-    z_face={ tex="met5_1" },
-  },
-  -1664+128, -328-12, 0,
-  -1664+192, -328+12, 128)
-
-  gui.add_entity({ id="func_door",
-                   angle="0", sounds="2",
-                   model=assert(m_ref)
-                 })
-end
-
-
 ---==========================================================---
 
 
