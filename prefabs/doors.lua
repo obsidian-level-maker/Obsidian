@@ -418,3 +418,90 @@ PREFAB.QUAKE_4_WAY =
   },
 }
 
+
+PREFAB.QUAKE2_DIAG_4_WAY =
+{
+  team_models = true,
+
+  brushes =
+  {
+    -- door frame
+    {
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 0,   y = 48, mat = "?outer" },
+      { x = 0,   y =  0, mat = "?outer" },
+      { b = 128, mat = "?outer" },
+    },
+
+    {
+      { x = 0,  y =  0, mat = "?outer" },
+      { x = 32, y =  0, mat = "?outer" },
+      { x = 32, y = 16, mat = "?track" },
+      { x = 32, y = 32, mat = "?inner" },
+      { x = 32, y = 48, mat = "?inner" },
+      { x = 0,  y = 48, mat = "?inner" },
+    },
+
+    {
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 160, y = 48, mat = "?inner" },
+      { x = 160, y = 32, mat = "?track" },
+      { x = 160, y = 16, mat = "?outer" },
+      { x = 160, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?inner" },
+    },
+  },
+
+  models =
+  {
+    -- bottom left
+    {
+      x1 = 32, x2 = 96, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 = 32, y_face = { mat="DR05_2" },
+      z1 =  0, z2 = 64, z_face = { mat="METAL1_2" },
+
+      entity =
+      {
+        ent = "door", angles = "45 180 0", lip=24, sounds=2,
+      },
+    },
+
+    -- bottom right
+    {
+      x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      z1 =  0, z2 =  64, z_face = { mat="METAL1_2" },
+
+      entity =
+      {
+        ent = "door", angles = "45 0 0", lip=24,
+      },
+    },
+
+    -- top left
+    {
+      x1 = 32, x2 =  96, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      z1 = 64, z2 = 128, z_face = { mat="METAL1_2" },
+
+      entity =
+      {
+        ent = "door", angles = "315 180 0", lip=24,
+      },
+    },
+
+    -- top right
+    {
+      x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      z1 = 64, z2 = 128, z_face = { mat="METAL1_2" },
+
+      entity =
+      {
+        ent = "door", angles = "315 0 0", lip=24,
+      },
+    },
+  },
+}
+
