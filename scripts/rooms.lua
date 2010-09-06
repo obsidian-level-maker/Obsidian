@@ -3248,6 +3248,7 @@ function Rooms_build_all()
   local T6 = Trans.doorway_transform(S, 64, 6);
   local T8 = Trans.doorway_transform(S, 64, 8);
 
-  Fabricate("QUAKE_V_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T2)
+  Fabricate("QUAKE_V_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T4)
+  Fabricate("QUAKE_V_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T6)
 end
 

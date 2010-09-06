@@ -210,6 +210,8 @@ PREFAB.BARS =
 
 PREFAB.QUAKE_DOOR =
 {
+  team_models = true,
+
   brushes =
   {
     -- door frame
@@ -269,6 +271,8 @@ PREFAB.QUAKE_DOOR =
 
 PREFAB.QUAKE_V_DOOR =
 {
+  team_models = true,
+
   brushes =
   {
     -- door frame

@@ -1060,7 +1060,7 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function add_mapmodel(M)
+  local function add_mapmodel(M, team)
     local x1, y1 = Trans.apply(M.x1, M.y1)
     local x2, y2 = Trans.apply(M.x2, M.y2)
 
@@ -1095,17 +1095,26 @@ function Fabricate(fab, skin, T)
     local name = Trans.substitute(E.ent, skin)
     local props = entity_props(E)
 
-    props.model = ref;
+    props.model = ref
+    props.team  = team
 
     Trans.entity(name, E.x, E.y, E.z, props)
   end
 
 
   local function render_models(list)
-    if list then
-      for _,M in ipairs(list) do
-        add_mapmodel(M)
-      end
+    if not list then
+      return
+    end
+
+    local team
+
+    if GAME.format == "quake2" and fab.team_models then
+      team = Plan_alloc_tag()
+    end
+
+    for _,M in ipairs(list) do
+      add_mapmodel(M, team)
     end
   end
 
