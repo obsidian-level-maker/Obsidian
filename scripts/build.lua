@@ -120,6 +120,29 @@ function Trans.apply_z(z, slope)
 end
 
 
+function Trans.apply_angle(ang)
+  local T = Trans.TRANSFORM
+
+  if not (T.rotate or T.mirror_x or T.mirror_y) then
+    return ang
+  end
+
+  if not (T.mirror_x or T.mirror_y) then
+    return ang + T.rotate
+  end
+
+  local dx = math.cos(ang * math.pi / 180)
+  local dy = math.sin(ang * math.pi / 180)
+
+  if T.mirror_x then dx = -dx end
+  if T.mirror_y then dy = -dy end
+
+  ang = geom.calc_angle(dx, dy)
+
+  return ang + (T.rotate or 0)
+end
+
+
 Trans.DOOM_LINE_FLAGS =
 {
   blocked     = 0x01,
@@ -1039,6 +1062,11 @@ function Fabricate(fab, skin, T)
 
     local z1 = Trans.apply_z(M.z1)
     local z2 = Trans.apply_z(M.z2)
+
+    -- this is for rotation, but we only support pure N/S/E/W
+    if x1 > x2 then x1,x2 = x2,x1 end
+    if y1 > y2 then y1,y2 = y2,y1 end
+    if z1 > z2 then z1,z2 = z2,z1 end
 
     local ref = gui.q1_add_mapmodel(
     {
