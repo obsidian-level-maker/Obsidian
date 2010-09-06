@@ -240,6 +240,10 @@ function Trans.entity(name, x, y, z, props)
     ent.z = z
   end
 
+  if ent.angle then
+    ent.angle = Trans.apply_angle(ent.angle)
+  end
+
   if info.spawnflags then
     ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
   end
