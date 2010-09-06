@@ -34,6 +34,23 @@ PREFAB.WALL =
 }
 
 
+PREFAB.FENCE =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x = 192, y =  0, mat = "?fence" },
+      { x = 192, y = 16, mat = "?fence" },
+      { x =   0, y = 16, mat = "?fence" },
+      { t =  50,         mat = "?fence" },
+    },
+  },
+}
+
+
 PREFAB.CORNER =
 {
   placement = "fitted",

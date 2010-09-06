@@ -2285,7 +2285,7 @@ function Layout_do_room(R)
         local y_void = not (OY and OY.room and OY.room == R) or (OY.kind == "void")
 
         if x_void and y_void then
-          S.kind = "tall_stair"
+--!!!!!!  S.kind = "tall_stair"
         end
       end
     end

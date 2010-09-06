@@ -451,8 +451,8 @@ gui.debugf("Reverted HALLWAY @ %s\n", R:tostr())
       if hall_nb == 1 then prob = 40 end
 
       if rand.odds(prob) then
-        gui.printf("  Made Stairwell @ %s\n", R:tostr())
-        R.kind = "stairwell"
+--!!!!        gui.printf("  Made Stairwell @ %s\n", R:tostr())
+--!!!!        R.kind = "stairwell"
       end
     end
   end -- for R
@@ -1675,7 +1675,7 @@ function Rooms_make_ceiling(R)
             Fabricate("CEIL_LIGHT", skin, T)
           end
         else
-          Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
+--!!!!    Build.cross_beam(S, dir, 64, ceil_h - 16, THEME.beam_mat)
         end
       end
     end end -- for x, y
@@ -1771,7 +1771,7 @@ function Rooms_make_ceiling(R)
             ---## if R.has_lift or (R.id % 5) == 4 then
             ---##   skin = { w=24, beam_w="SUPPORT3", x_offset=0 }
             ---## end
-            Build.corner_beam(S, SIDES[where], skin)
+--!!!!      Build.corner_beam(S, SIDES[where], skin)
           end
 
         end
@@ -1901,11 +1901,11 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     local h = 96 + 140 * (R.ch - 1)
     local z = (R.cw + R.ch) * 8
 
-    Build.sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
-                   ceil_info, R.ceil_h,
-                   sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
-                       rand.sel(75, light_info, brown_info)), R.ceil_h + z,
-                   trim, spokes)
+--!!!!    Build.sky_hole(R.cx1,R.cy1, R.cx2,R.cy2, shape, w, h,
+--!!!!                   ceil_info, R.ceil_h,
+--!!!!                   sel(not has_sky_nb and not R.parent and rand.odds(60), sky_info,
+--!!!!                       rand.sel(75, light_info, brown_info)), R.ceil_h + z,
+--!!!!                   trim, spokes)
   end
 
   local function indoor_ceiling()
@@ -2157,6 +2157,7 @@ function Rooms_build_cave(R)
     data.info = get_liquid()
     data.delta_f = rand.sel(70, -48, -72)
     data.f_z = R.cave_floor_h + 8
+    data.ftex = data.info.t_face.tex -- TEMP CRUD
   end
 
   if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
@@ -2784,7 +2785,7 @@ function Rooms_build_seeds(R)
       end
 
       if B_kind == "wall" then
-      local side_T = Trans.border_transform(S, z1, side)
+        local side_T = Trans.border_transform(S, z1, side)
 
         local skin = { inner = w_tex, outer = o_tex }
 
@@ -2824,8 +2825,12 @@ function Rooms_build_seeds(R)
       end
 
       if B_kind == "fence"  then
-        local skin = { h=30, wall=w_tex, floor=f_tex }
-        Build.fence(S, side, R.fence_h or ((R.floor_h or z1)+skin.h), skin)
+        local skin = { h=30, fence=w_tex }
+
+        local side_T = Trans.border_transform(S, z1, side)
+
+        Fabricate("FENCE", skin, side_T)
+
         shrink_floor(side, 4)
       end
 
@@ -3087,7 +3092,8 @@ function Rooms_build_seeds(R)
       Build.low_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "tall_stair" then
-      Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
+      error("tall_stair")
+---!!!  Build.tall_curved_stair(S, LEVEL.step_skin, S.x_side, S.y_side, S.x_height, S.y_height)
 
     elseif S.kind == "popup" then
       -- FIXME: monster!!
