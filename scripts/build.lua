@@ -1072,11 +1072,21 @@ function Fabricate(fab, skin, T)
     if y1 > y2 then y1,y2 = y2,y1 end
     if z1 > z2 then z1,z2 = z2,z1 end
 
+    local x_face = process_model_face(M.x_face, false)
+    local y_face = process_model_face(M.y_face, false)
+    local z_face = process_model_face(M.z_face, true)
+
+    -- handle 90 and 270 degree rotations : swap X and Y faces
+    local rotate = Trans.TRANSFORM.rotate or 0
+    if math.abs(rotate - 90) < 15 or math.abs(rotate - 270) < 15 then
+      x_face, y_face = y_face, x_face
+    end
+
     local ref = gui.q1_add_mapmodel(
     {
-      y_face = process_model_face(M.x_face, false),
-      x_face = process_model_face(M.y_face, false),
-      z_face = process_model_face(M.z_face, true),
+      x_face = x_face,
+      y_face = y_face,
+      z_face = z_face,
     },
     x1, y1, z1, x2, y2, z2)
 
