@@ -41,7 +41,7 @@
 
 #define LEAF_PADDING   4
 #define NODE_PADDING   16
-#define MODEL_PADDING  24.0
+#define MODEL_PADDING  1.0
 
 
 static char *level_name;
