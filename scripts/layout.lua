@@ -2717,21 +2717,42 @@ function Layout_edge_of_map()
     local x2 = S.x2
     local y2 = S.y2
 
-    local function shrink(side, len)
-      if side == 2 then y1 = y1 + len end
-      if side == 8 then y2 = y2 - len end
-      if side == 4 then x1 = x1 + len end
-      if side == 6 then x2 = x2 - len end
+    local function side_quad(side,len, z1,z2, props, w_face, p_face)
+      local ax1, ay1 = x1, y1
+      local ax2, ay2 = x2, y2
+
+      if side == 2 then ay2 = ay1 + len end
+      if side == 8 then ay1 = ay2 - len end
+      if side == 4 then ax2 = ax1 + len end
+      if side == 6 then ax1 = ax2 - len end
+
+      Trans.quad(ax1,ay1, ax2,ay2, z1,z2, props, w_face, p_face)
     end
 
-    local skin = { fence_w=LEVEL.outer_fence_tex }
+    local function sky_side(side, fh, ch, props, w_face, p_face)
+      if GAME.format == "doom" then
+        -- use delta_z to make the sky go down to the floor
+        -- (as per MAP01 of DOOM II)
+        local p_face2 = table.copy(p_face)
+        p_face2.delta_z = fh - (ch-4);
+
+        side_quad(side, 16, ch-4,nil, props, w_face, p_face2)
+      else
+        -- solid sky wall for Quake engines
+        side_quad(side, 16, nil,nil, props, w_face, p_face)
+      end
+    end
+
+    local kind, w_face, p_face = Mat_normal(LEVEL.outer_fence_tex)
+    Trans.quad(x1,y1, x2,y2, nil,S.fence_h, { k=kind }, w_face, p_face)
+
+    kind, w_face, p_face = Mat_sky()
+    Trans.quad(x1,y1, x2,y2, SKY_H,nil, { k=kind }, w_face, p_face)
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
       if not N or N.free then
-        shrink(side, 48)
-
-        Build_sky_fence(S, side, 48, S.fence_h, S.fence_h - 64, skin)
+        sky_side(side, S.fence_h, SKY_H, { k=kind }, w_face, p_face)
       end
 
       if N and ((N.room and not N.room.outdoor) or
@@ -2739,14 +2760,6 @@ function Layout_edge_of_map()
       then
 --!!!!        Build_shadow(S, side, 64)
       end
-    end
-
-    do
-      local kind, w_face, p_face = Mat_normal(LEVEL.outer_fence_tex)
-      Trans.quad(x1,y1, x2,y2, nil,S.fence_h, { k=kind }, w_face, p_face)
-    
-      kind, w_face, p_face = Mat_sky()
-      Trans.quad(x1,y1, x2,y2, SKY_H,nil, { k=kind }, w_face, p_face)
     end
   end
 
