@@ -2,10 +2,25 @@
 TODO
 ====
 
-+  pictures are missing blocking lines
+Build_sky_fence
+Build.lowering_bars
+Build.quake_exit_pad
+Build.low_curved_stair
+
+DONE:  Build.fence
+
+x  Build.sky_hole
+x  Build.cross_beam
+x  Build.corner_beam
+x  Build.detailed_hall
+x  Build.tall_curved_stair
+x  Build.stairwell
 
 
 Terminology (face fields etc) : 'special' for linetypes, sectortypes
+
+
+-  pictures are missing blocking lines
 
 
 
