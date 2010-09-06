@@ -144,6 +144,9 @@ function Trans.collect_flags(C)  -- FIXME: use game-specific code
 
   if flags ~= 0 then
     C.flags = flags
+
+    -- this makes sure the flags get applied
+    if not C.special then C.special = 0 end
   end
 end
 
