@@ -56,6 +56,8 @@
 
 #define HL_MAX_MAP_LIGHTING  0x200000
 
+#define MODEL_LIGHT  64
+
 
 #define LEAF_PADDING   4
 #define NODE_PADDING   16
@@ -1097,7 +1099,7 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
   raw_face.styles[2] = 0xFF;
   raw_face.styles[3] = 0xFF;
 
-  raw_face.lightofs = QCOM_FlatLightOffset(model->light);
+  raw_face.lightofs = QCOM_FlatLightOffset(MODEL_LIGHT);
 
 
   DoWriteFace(raw_face);

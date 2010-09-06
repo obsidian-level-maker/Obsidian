@@ -755,12 +755,13 @@ void QCOM_LightAllFaces()
       Main_Ticker();
   }
 
-  // now do map models
-
+  // TODO: map models
+#if 0
   for (unsigned int i = 0 ; i < qk_all_mapmodels.size() ; i++)
   {
     QCOM_LightMapModel(qk_all_mapmodels[i]);
   }
+#endif
 
   QCOM_FreeLights();
   QCOM_FreeTraceNodes();
