@@ -2474,9 +2474,10 @@ function Rooms_build_seeds(R)
       end
 
     elseif R.purpose == "EXIT" and OB_CONFIG.game == "quake" then
-      local skin = { floor="SLIP2", wall="SLIPSIDE" }
+      local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }
+      local T = Trans.centre_transform(S, z1)
 
-      Build.quake_exit_pad(S, z1 + 16, skin, LEVEL.next_map)
+      Fabricate("QUAKE_EXIT_PAD", skin, T)
 
     elseif R.purpose == "EXIT" then
       local dir = dir_for_wotsit(S)

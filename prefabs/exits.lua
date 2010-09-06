@@ -300,14 +300,16 @@ PREFAB.QUAKE_EXIT_PAD =
 
   models =
   {
-    x1 = -20, x2 = 20,  x_face = { mat="TRIGGER" },
-    y1 = -20, y2 = 20,  y_face = { mat="TRIGGER" },
-    z1 =  16, z2 = 240, z_Face = { mat="TRIGGER" },
-
-    entity =
+    -- the trigger
     {
-      ent = "change_lev",
-      map = "?nextmap",      
+      x1 = -20, x2 = 20,  x_face = { mat="TRIGGER" },
+      y1 = -20, y2 = 20,  y_face = { mat="TRIGGER" },
+      z1 =  16, z2 = 240, z_face = { mat="TRIGGER" },
+
+      entity =
+      {
+        ent = "change_lev", map = "?nextmap",      
+      },
     },
   },
 }

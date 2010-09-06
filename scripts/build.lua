@@ -195,18 +195,24 @@ function Trans.entity(name, x, y, z, props)
 
   ent.id = assert(info.id)
 
-  x, y = Trans.apply(x, y)
-  z    = Trans.apply_z(z)
+  if x then
+    x, y = Trans.apply(x, y)
 
-  if info.delta_z then
-    z = z + info.delta_z
-  elseif PARAM.entity_delta_z then
-    z = z + PARAM.entity_delta_z
+    ent.x = x
+    ent.y = y
   end
 
-  ent.x = x
-  ent.y = y
-  ent.z = z
+  if z then
+    z = Trans.apply_z(z)
+
+    if info.delta_z then
+      z = z + info.delta_z
+    elseif PARAM.entity_delta_z then
+      z = z + PARAM.entity_delta_z
+    end
+
+    ent.z = z
+  end
 
   if info.spawnflags then
     ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
@@ -983,11 +989,14 @@ function Fabricate(fab, skin, T)
 
   local function entity_props(E)
     local props = {}
+    
     for key,value in pairs(E) do
       if key ~= "ent" and key ~= "x" and key ~= "y" and key ~= "z" then
         props[key] = Trans.substitute(value, skin)
       end
     end
+
+    return props
   end
 
 
@@ -996,6 +1005,61 @@ function Fabricate(fab, skin, T)
       for _,E in ipairs(list) do
         local name = Trans.substitute(E.ent, skin)
         Trans.entity(name, E.x, E.y, E.z, entity_props(E))
+      end
+    end
+  end
+
+
+  local function process_model_face(F, is_flat)
+    assert(F)
+    local new_face = table.copy(F)
+
+    new_face.mat = nil
+
+    if F.mat then
+      local mat = safe_get_mat(F.mat)
+
+      if is_flat and mat.f then
+        new_face.tex = mat.f
+      else
+        new_face.tex = mat.t
+      end
+    end
+
+    return new_face
+  end
+
+
+  local function add_mapmodel(M)
+    local x1, y1 = Trans.apply(M.x1, M.y1)
+    local x2, y2 = Trans.apply(M.x2, M.y2)
+
+    local z1 = Trans.apply_z(M.z1)
+    local z2 = Trans.apply_z(M.z2)
+
+    local ref = gui.q1_add_mapmodel(
+    {
+      y_face = process_model_face(M.x_face, false),
+      x_face = process_model_face(M.y_face, false),
+      z_face = process_model_face(M.z_face, true),
+    },
+    x1, y1, z1, x2, y2, z2)
+
+    local E = assert(M.entity)
+
+    local name = Trans.substitute(E.ent, skin)
+    local props = entity_props(E)
+
+    props.model = ref;
+
+    Trans.entity(name, E.x, E.y, E.z, props)
+  end
+
+
+  local function render_models(list)
+    if list then
+      for _,M in ipairs(list) do
+        add_mapmodel(M)
       end
     end
   end
@@ -1097,6 +1161,7 @@ function Fabricate(fab, skin, T)
   })
 
   render_brushes(brushes)
+  render_models(fab.models)
   render_entities(fab.entities)
 
   Trans.clear()
@@ -1301,35 +1366,6 @@ function Build.quake_door(S, side)
                    model=assert(m_ref)
                  })
 end
-
-
-function Build.quake_exit_pad(S, z_top, skin, next_map)
-  local x1 = S.x1 + 64
-  local y1 = S.y1 + 64
-
-  local x2 = x1 + 64
-  local y2 = y1 + 64
-
-  -- trigger is a bit smaller than the pad
-  local m_ref = gui.q1_add_mapmodel(
-  {
-    y_face={ tex="trigger" },
-    x_face={ tex="trigger" },
-    z_face={ tex="trigger" },
-  },
-  x1+12,y1+12, z_top, x2-12,y2-12, z_top+224)
-
-  gui.add_entity({ id="trigger_changelevel",
-                   map=next_map, model=assert(m_ref) })
-
-  -- the pad itself
-
-  local info = get_mat(skin.wall or skin.floor, skin.floor)
-  info.t_face.light = 0.8
-
-  Trans.old_quad(info, x1,y1, x2,y2, -EXTREME_H, z_top)
-end
-
 
 
 ---==========================================================---
