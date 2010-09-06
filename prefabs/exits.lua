@@ -284,3 +284,31 @@ PREFAB.SMALL_EXIT =
 }
 
 
+PREFAB.QUAKE_EXIT_PAD =
+{
+  brushes =
+  {
+    -- the pad itself
+    {
+      { x = -32, y = -32, mat = "?wall", x_offset=0, y_offset=0 },
+      { x =  32, y = -32, mat = "?wall", x_offset=0, y_offset=0 },
+      { x =  32, y =  32, mat = "?wall", x_offset=0, y_offset=0 },
+      { x = -32, y =  32, mat = "?wall", x_offset=0, y_offset=0 },
+      { t = 16, mat = "?floor" },
+    },
+  },
+
+  models =
+  {
+    x1 = -20, x2 = 20,  x_face = { mat="TRIGGER" },
+    y1 = -20, y2 = 20,  y_face = { mat="TRIGGER" },
+    z1 =  16, z2 = 240, z_Face = { mat="TRIGGER" },
+
+    entity =
+    {
+      ent = "change_lev",
+      map = "?nextmap",      
+    },
+  },
+}
+
