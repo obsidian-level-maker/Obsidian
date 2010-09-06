@@ -2,12 +2,22 @@
 TODO
 ====
 
-Build.quake_exit_pad
+
+rotate 'angles' field of ents too (middle number)
+
+
+Trains, WOO WOO !!
+
+
+DONE: orientation of mapmodels
+
+
 Build.low_curved_stair
 
 DONE:  Build.fence
 DONE:  Build_sky_fence
 DONE:  Build.lowering_bars
+DONE:  Build.quake_exit_pad
 
 x  Build.sky_hole
 x  Build.cross_beam
@@ -18,10 +28,6 @@ x  Build.stairwell
 
 
 Terminology (face fields etc) : 'special' for linetypes, sectortypes
-
-
--  pictures are missing blocking lines
-
 
 
 Later: fix hallways, broken due to conn(_dir) change
