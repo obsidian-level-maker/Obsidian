@@ -365,6 +365,7 @@ function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
   Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
 end
 
+--[[ FIXME : reimplement
 function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
   Trans.old_brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
 end
@@ -384,6 +385,7 @@ function Trans.strip(info, strip, z1, z2)
     z1, z2)
   end
 end
+--]]
 
 
 function Trans.centre_transform(S, z, dir)
@@ -1488,56 +1490,13 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
 end
 
 
-function Build.diagonal(S, side, info, floor_h, ceil_h)
-
-  -- floor_h and ceil_h are usually absent, which makes a
-  -- totally solid diagonal piece.  One of them can be given
-  -- but not both to make a diagonal floor or ceiling piece.
-  assert(not (floor_h and ceil_h))
-  
-  local function get_thick(w_side)
-    if S.border[w_side] and S.border[w_side].kind == "wall" then
-      return S.border[w_side].thick
-    end
-
-    return 0
-  end
-
-  local x1 = S.x1 + get_thick(4)
-  local y1 = S.y1 + get_thick(2)
-
-  local x2 = S.x2 - get_thick(6)
-  local y2 = S.y2 - get_thick(8)
-
-
-  Trans.old_brush(info,
-      diagonal_coords(side,x1,y1,x2,y2),
-      ceil_h or -EXTREME_H, floor_h or EXTREME_H)
-end
-
-
-function Build.debug_arrow(S, dir, f_h)
- 
-  local mx = int((S.x1 + S.x2)/2)
-  local my = int((S.y1 + S.y2)/2)
-
-  local dx, dy = geom.delta(dir)
-  local ax, ay = geom.delta(geom.RIGHT[dir])
-
-  Trans.old_brush(get_mat("FWATER1"),
-  {
-    { x = mx - ax*20,  y = my - ay * 20  },
-    { x = mx + ax*20,  y = my + ay * 20  },
-    { x = mx + dx*100, y = my + dy * 100 },
-  },
-  -EXTREME_H, f_h + 8)
-end
-
 
 ---==========================================================---
 
 
 function Quake_test()
+
+  -- FIXME: update for new brush system
 
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
