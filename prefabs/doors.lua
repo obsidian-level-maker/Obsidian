@@ -159,3 +159,51 @@ PREFAB.DOOR =
   },
 }
 
+
+PREFAB.BARS =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- step
+    {
+      { x =   0, y =  0, mat = "?step" },
+      { x = 192, y =  0, mat = "?step" },
+      { x = 192, y = 48, mat = "?step" },
+      { x =   0, y = 48, mat = "?step" },
+      { t =   4,         mat = "?step" },
+    },
+
+    -- the actual bars
+    {
+      { x = 18, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 42, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 42, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 18, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 62, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 86, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 86, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 62, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 106, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 130, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 130, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 106, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 150, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 174, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 174, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 150, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+  },
+}
+

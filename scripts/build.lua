@@ -1488,42 +1488,6 @@ function Build.quake_exit_pad(S, z_top, skin, next_map)
 end
 
 
-
-function Build.lowering_bars(S, side, z_top, skin, tag)
-
-  local T, long, deep = get_transform_for_seed_side(S, side)
-
-  local bar_w = 24
-  local bar_tw = 6+bar_w+6
-
-  local num_bars = int((long-16) / bar_tw)
-  local side_gap = int((long-16 - num_bars * bar_tw) / 2)
-
-  assert(num_bars >= 2)
-
-  local bar_info = get_mat(skin.bar_w, skin.bar_f)
-
-  add_pegging(bar_info, skin.x_offset, skin.y_offset)
-
-  bar_info.t_face.tag = tag
-
-  local mx1 = 8 + side_gap + bar_w/2
-  local mx2 = long - 8 - side_gap - bar_w/2
-
-  Trans.set(T)
-
-  for i = 1,num_bars do
-    local mx = mx1 + (mx2 - mx1) * (i-1) / (num_bars-1)
-    local my = 0
-
-    Trans.old_quad(bar_info, mx-bar_w/2, my-bar_w/2, mx+bar_w/2, my+bar_w/2,
-        -EXTREME_H, z_top)
-  end
-
-  Trans.clear()
-end
-
-
 function Build.diagonal(S, side, info, floor_h, ceil_h)
 
   -- floor_h and ceil_h are usually absent, which makes a

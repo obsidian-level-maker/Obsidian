@@ -1744,31 +1744,22 @@ DOOM.DOORS =
 
   bar_wood =
   {
-    bar_w="WOOD9",
-    bar_f="FLAT5_2",
-    bar_h=64,
-    line_kind=0,
+    bar="WOOD9",
   },
 
   bar_silver =
   {
-    bar_w="SUPPORT2",
-    bar_h=64,
-    line_kind=0,
+    bar="SUPPORT2",
   },
 
   bar_metal =
   {
-    bar_w="SUPPORT3",
-    bar_h=64,
-    line_kind=0,
+    bar="SUPPORT3",
   },
 
   bar_gray =
   {
-    bar_w="GRAY7", bar_f="FLAT19",
-    bar_h=64,
-    line_kind=0
+    bar="GRAY7",
   },
 } -- end of DOOM.DOORS
 

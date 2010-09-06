@@ -2927,17 +2927,28 @@ function Rooms_build_seeds(R)
 
       if B_kind == "bars" then
         local C = border.conn
+
+        local door_T = Trans_straddle_transform(S, z1, side)
+
         local LOCK = assert(border.lock)
         local skin = assert(GAME.DOORS[LOCK.item])
 
-        local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + skin.bar_h
+        local z_top = math.max(R.floor_max_h, N.room.floor_max_h) + 64
         local ceil_min = math.min(R.ceil_h or SKY_H, N.room.ceil_h or SKY_H)
 
         if z_top > ceil_min-32 then
            z_top = ceil_min-32
         end
 
-        Build.lowering_bars(S, side, z_top, skin, LOCK.tag)
+        local skin2 = table.copy(skin)
+
+        if not skin2.step then
+          skin2.step = "METAL"
+        end
+        skin2.height = z_top - z1
+        skin2.tag = LOCK.tag
+
+        Fabricate("BARS", skin2, door_T)
 
         assert(not C.already_made_lock)
         C.already_made_lock = true
