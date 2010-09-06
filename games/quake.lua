@@ -105,6 +105,8 @@ QUAKE1.ENTITIES =
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true },
 
   change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true },
+
+  door = { id="func_door",  kind="other", r=1, h=1, pass=true },
 }
 
 

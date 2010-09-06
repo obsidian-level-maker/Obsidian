@@ -3240,5 +3240,11 @@ function Rooms_build_all()
   Layout_edge_of_map()
 
   Rooms_add_sun()
+
+
+  local S = SEEDS[12][8]
+  local T = Trans.centre_transform(S, 64, 2);
+
+  Fabricate("QUAKE_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T)
 end
 

@@ -207,3 +207,62 @@ PREFAB.BARS =
   },
 }
 
+
+PREFAB.QUAKE_DOOR =
+{
+  brushes =
+  {
+    -- door frame
+    {
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 0,   y = 48, mat = "?outer" },
+      { x = 0,   y =  0, mat = "?outer" },
+      { b = 128, mat = "?outer" },
+    },
+
+    {
+      { x = 0,  y =  0, mat = "?outer" },
+      { x = 32, y =  0, mat = "?outer" },
+      { x = 32, y = 24, mat = "?inner" },
+      { x = 32, y = 48, mat = "?inner" },
+      { x = 0,  y = 48, mat = "?inner" },
+    },
+
+    {
+      { x = 192, y = 48, mat = "?inner" },
+      { x = 160, y = 48, mat = "?inner" },
+      { x = 160, y = 24, mat = "?outer" },
+      { x = 160, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?inner" },
+    },
+  },
+
+  models =
+  {
+    -- left side
+    {
+      x1 = 32, x2 = 96,  x_face = { mat="DR05_2" },
+      y1 = 16, y2 = 32,  y_face = { mat="DR05_2" },
+      z1 =  0, z2 = 128, z_face = { mat="DR05_2" },
+
+      entity =
+      {
+        ent = "door", angle = 180, sounds = 2,
+      },
+    },
+
+    -- right side
+    {
+      x1 = 96, x2 = 160, x_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      z1 =  0, z2 = 128, z_face = { mat="DR05_2" },
+
+      entity =
+      {
+        ent = "door", angle = 0,
+      },
+    },
+  },
+}
+
