@@ -32,7 +32,7 @@ end
 
 OB_MODULES["light_control"] =
 {
-  label = "Light Control",
+  label = "Lighting Control",
 
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1,
                 quake=1, quake2=1, hexen2=1, halflife=1
