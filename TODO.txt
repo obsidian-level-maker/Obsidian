@@ -2,12 +2,12 @@
 TODO
 ====
 
-Build_sky_fence
-Build.lowering_bars
 Build.quake_exit_pad
 Build.low_curved_stair
 
 DONE:  Build.fence
+DONE:  Build_sky_fence
+DONE:  Build.lowering_bars
 
 x  Build.sky_hole
 x  Build.cross_beam
