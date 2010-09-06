@@ -176,66 +176,6 @@ function Trans.brush(coords)
 end
 
 
-function Trans.old_brush(info, coords, z1, z2)
----???  if type(info) ~= "table" then
----???    info = get_mat(info)
----???  end
-
-  -- check mirroring
-  local reverse_it = false
-
-  if Trans.TRANSFORM.mirror_x then reverse_it = not reverse_it end
-  if Trans.TRANSFORM.mirror_y then reverse_it = not reverse_it end
-
-  -- apply transform
-  coords = table.deep_copy(coords)
-
-  for _,C in ipairs(coords) do
-    C.x, C.y = Trans.apply(C.x, C.y)
-
-    table.merge(C, C.w_face or info.w_face) ; C.w_face = nil
-  end
-
-  if reverse_it then
-    -- make sure side properties (w_face, line_kind, etc)
-    -- are associated with the correct vertex....
-    local x1 = coords[1].x
-    local y1 = coords[1].y
-
-    for i = 1, #coords-1 do
-      coords[i].x = coords[i+1].x
-      coords[i].y = coords[i+1].y
-    end
-
-    coords[#coords].x = x1
-    coords[#coords].y = y1
-
-    table.reverse(coords)
-  end
-
-  if z1 > -EXTREME_H + 1 then
-    info.b_face.b = z1
-    table.insert(coords, info.b_face)
-  end
-
-  if z2 < EXTREME_H - 1 then
-    info.t_face.t = z2
-    table.insert(coords, info.t_face)
-  end
-
-
-  -- TODO !!!  transform slope coords (z1 or z2 == table)
-
-  if info.kind then
-    table.insert(coords, 1, { k=info.kind })
-  end
-
--- gui.printf("coords=\n%s\n", table.tostr(coords,4))
-
-  gui.add_brush(coords)
-end
-
-
 function Trans.entity(name, x, y, z, props)
   local ent
 
@@ -360,10 +300,6 @@ function Trans.set_tex(coords, wall, flat)
   return coords
 end
 
-
-function Trans.old_quad(info, x1,y1, x2,y2, z1,z2)
-  Trans.old_brush(info, Trans.rect_coords(x1,y1, x2,y2), z1,z2)
-end
 
 --[[ FIXME : reimplement
 function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
@@ -1401,6 +1337,7 @@ function Build.shadow(S, side, dist, z2)
     local N = S:neighbor(6)
     local clip = not (N and N.room and N.room.outdoor)
 
+    -- FIXME: update for new brush system
     Trans.old_brush(get_light(-1),
     {
       { x=x2, y=y2 },
