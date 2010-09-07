@@ -651,52 +651,6 @@ function Mat_liquid()
 end
 
 
-function get_sky()
-  local mat = assert(GAME.MATERIALS["_SKY"])
-
-  local light = LEVEL.sky_light or 0.75
-
-  return
-  {
-    kind = "sky",
-    w_face = { tex=mat.t },
-    t_face = { tex=mat.f or mat.t },
-    b_face = { tex=mat.f or mat.t, light=light },
-  }
-end
-
-function get_liquid()
-  assert(LEVEL.liquid)
-  local mat = get_mat(LEVEL.liquid.mat)
-
-  mat.t_face.light = LEVEL.liquid.light
-  mat.b_face.light = LEVEL.liquid.light
-
-  mat.sec_kind = LEVEL.liquid.sec_kind
-
-  return mat
-end
-
-function get_light(intensity)
-  return
-  {
-    kind = "light",
-    w_face = { tex="-" },
-    t_face = { tex="-" },
-    b_face = { tex="-", light=intensity },
-  }
-end
-
-function get_rail()
-  return
-  {
-    kind = "rail",
-    w_face = { tex="-" },
-    t_face = { tex="-" },
-    b_face = { tex="-" },
-  }
-end
-
 function rail_coord(x, y, name)
   local rail = GAME.RAILS[name]
 

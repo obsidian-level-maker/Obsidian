@@ -1860,7 +1860,7 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
     if nice ~= 2 or not THEME.big_lights then return end
 
       local ceil_info  = get_mat(R.main_tex)
-      local sky_info   = get_sky()
+      local sky_info  --!!!! = get_sky()
       local brown_info = get_mat(rand.key_by_probs(THEME.building_ceilings))
 
       local light_name = rand.key_by_probs(THEME.big_lights)
@@ -2154,7 +2154,7 @@ function Rooms_build_cave(R)
   local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
 
   if R.is_lake then
-    data.info = get_liquid()
+    data.info = Mat_liquid()
     data.delta_f = rand.sel(70, -48, -72)
     data.f_z = R.cave_floor_h + 8
     data.ftex = data.info.t_face.tex -- TEMP CRUD
@@ -2165,7 +2165,7 @@ function Rooms_build_cave(R)
   end
 
   if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
-    data.shadow_info = get_light(-1)
+--!!!!!    data.shadow_info = get_light(-1)
   end
 
   -- grab walkway now (before main cave is modified)
@@ -2183,7 +2183,7 @@ function Rooms_build_cave(R)
     then
 
       -- create a lava/nukage pit
-      local pit = get_liquid()
+      local pit = Mat_liquid()
 
       island:render(base_x, base_y, WALL_brush,
                     { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
@@ -2254,7 +2254,7 @@ function Rooms_build_cave(R)
       data.c_info = w_info
 
       if i==2 and rand.odds(60) then
-        data.c_info = get_sky()
+        data.c_info = Mat_sky()
       elseif rand.odds(50) then
         data.c_info = get_mat(data.ftex)
       elseif rand.odds(80) then
@@ -3243,12 +3243,8 @@ function Rooms_build_all()
 
 
   local S = SEEDS[12][8]
-  local T2 = Trans.doorway_transform(S, 64, 2);
-  local T4 = Trans.doorway_transform(S, 64, 4);
-  local T6 = Trans.doorway_transform(S, 64, 6);
-  local T8 = Trans.doorway_transform(S, 64, 8);
+  local T = Trans.centre_transform(S, 64, 2);
 
-  Fabricate("QUAKE_V_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T4)
-  Fabricate("QUAKE_V_DOOR", { inner="TECH04_1", outer="TECH08_1" }, T6)
+  Fabricate("QUAKE_4_WAY", { inner="TECH04_1", outer="TECH08_1" }, T)
 end
 
