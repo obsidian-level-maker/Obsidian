@@ -3,17 +3,15 @@ TODO
 ====
 
 
-rotate 'angles' field of ents too (middle number)
+Trans.brush : fix mirroring
 
 
-Trains, WOO WOO !!
-
+DONE: rotate 'angles' field of ents too (middle number)
 
 DONE: orientation of mapmodels
 
 
-Build.low_curved_stair
-
+DONE:  Build.low_curved_stair
 DONE:  Build.fence
 DONE:  Build_sky_fence
 DONE:  Build.lowering_bars
