@@ -128,18 +128,35 @@ function Trans.apply_angle(ang)
   end
 
   if not (T.mirror_x or T.mirror_y) then
-    return ang + T.rotate
+    ang = ang + T.rotate
+  else
+    local dx = math.cos(ang * math.pi / 180)
+    local dy = math.sin(ang * math.pi / 180)
+
+    if T.mirror_x then dx = -dx end
+    if T.mirror_y then dy = -dy end
+
+    ang = geom.calc_angle(dx, dy)
+
+    if T.rotate then ang = ang + T.rotate end
   end
 
-  local dx = math.cos(ang * math.pi / 180)
-  local dy = math.sin(ang * math.pi / 180)
+  if ang >= 360 then ang = ang - 360 end
+  if ang <    0 then ang = ang + 360 end
 
-  if T.mirror_x then dx = -dx end
-  if T.mirror_y then dy = -dy end
+  return ang
+end
 
-  ang = geom.calc_angle(dx, dy)
 
-  return ang + (T.rotate or 0)
+function Trans.apply_mlook(ang)
+  local T = Trans.TRANSFORM
+
+  if T.mirror_z then
+    if ang == 0 then return 0 end
+    return 360 - ang
+  else
+    return ang
+  end
 end
 
 
@@ -242,6 +259,16 @@ function Trans.entity(name, x, y, z, props)
 
   if ent.angle then
     ent.angle = Trans.apply_angle(ent.angle)
+  end
+
+  if ent.angles then
+    -- handle three-part angle strings (Quake)
+    local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
+
+    mlook = Trans.apply_mlook(0 + mlook)
+    angle = Trans.apply_angle(0 + angle)
+
+    ent.angles = string.format("%d %d %d", mlook, angle, roll)
   end
 
   if info.spawnflags then
