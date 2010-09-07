@@ -215,3 +215,77 @@ PREFAB.NICHE_STAIR_8 =
   },
 }
 
+
+PREFAB.LOW_CURVE_STAIR =
+{
+  brushes =
+  {
+    -- post
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 24, y =  0, mat = "?wall" },
+      { x = 24, y = 24, mat = "?wall" },
+      { x =  0, y = 24, mat = "?wall" },
+      { t = 128, mat = "?floor" },
+    },
+
+    -- surrounding bit (L shape)
+    {
+      { x =   0, y = 176, mat = "?wall" },
+      { x = 192, y = 176, mat = "?wall" },
+      { x = 192, y = 192, mat = "?wall" },
+      { x =   0, y = 192, mat = "?wall" },
+      { t = 128, mat = "?floor" },
+    },
+
+    {
+      { x = 176, y =   0, mat = "?wall" },
+      { x = 192, y =   0, mat = "?wall" },
+      { x = 192, y = 192, mat = "?wall" },
+      { x = 176, y = 192, mat = "?wall" },
+      { t = 128, mat = "?floor" },
+    },
+
+    -- steps
+    {
+      { x =  24, y =  0, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x = 176, y =  0, mat = "?wall" },
+      { x = 176, y = 64, mat = "?wall" },
+      { x =  24, y = 12, mat = "?wall" },
+      { t = 21, mat = "?top" },
+    },
+
+    {
+      { x =  24, y =  12, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x = 176, y =  64, mat = "?wall" },
+      { x = 176, y = 128, mat = "?wall" },
+      { x =  24, y =  24, mat = "?wall" },
+      { t = 42, mat = "?top" },
+    },
+
+    {
+      { x =  24, y =  24, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x = 176, y = 128, mat = "?wall" },
+      { x = 176, y = 176, mat = "?wall" },
+      { x = 128, y = 176, mat = "?wall" },
+      { t = 64, mat = "?top" },
+    },
+
+    {
+      { x =  24, y =  24, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x = 128, y = 176, mat = "?wall" },
+      { x =  64, y = 176, mat = "?wall" },
+      { x =  12, y =  24, mat = "?wall" },
+      { t = 85, mat = "?top" },
+    },
+
+    {
+      { x =  12, y =  24, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  64, y = 176, mat = "?wall" },
+      { x =   0, y = 176, mat = "?wall" },
+      { x =   0, y =  24, mat = "?wall" },
+      { t = 106, mat = "?top" },
+    },
+  },
+}
+
