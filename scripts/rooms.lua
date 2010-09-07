@@ -3242,9 +3242,15 @@ function Rooms_build_all()
   Rooms_add_sun()
 
 
+  local tele_name = "tele_" .. Plan_alloc_tag()
+
   local S = SEEDS[12][8]
   local T = Trans.centre_transform(S, 64, 2);
 
-  Fabricate("QUAKE_4_WAY", { inner="TECH04_1", outer="TECH08_1" }, T)
+  local skin = { frame="WIZMET1_2", teleport="TELEPORT", target=tele_name }
+
+  Fabricate("QUAKE_TELEPORTER", skin, T)
+
+  Trans.entity("teleport_spot", S.x1 + 300, S.y1 - 300, 64, { targetname=tele_name })
 end
 

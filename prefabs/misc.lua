@@ -89,3 +89,78 @@ PREFAB.CRATE =
   },
 }
 
+
+PREFAB.QUAKE_TELEPORTER =
+{
+  brushes =
+  {
+    -- frame bottom
+    {
+      { x = -32, y = -8, mat = "?frame" },
+      { x =  32, y = -8, mat = "?frame" },
+      { x =  32, y =  8, mat = "?frame" },
+      { x = -32, y =  8, mat = "?frame" },
+      { b =  8, mat = "?frame" },
+      { t = 16, mat = "?frame" },
+    },
+
+    -- frame top
+    {
+      { x = -32, y = -8, mat = "?frame" },
+      { x =  32, y = -8, mat = "?frame" },
+      { x =  32, y =  8, mat = "?frame" },
+      { x = -32, y =  8, mat = "?frame" },
+      { b = 136, mat = "?frame" },
+      { t = 144, mat = "?frame" },
+    },
+
+    -- frame left
+    {
+      { x = -48, y = -8, mat = "?frame" },
+      { x = -32, y = -8, mat = "?frame" },
+      { x = -32, y =  8, mat = "?frame" },
+      { x = -48, y =  8, mat = "?frame" },
+      { b =   8, mat = "?frame" },
+      { t = 144, mat = "?frame" },
+    },
+
+    -- frame right
+    {
+      { x =  32, y = -8, mat = "?frame" },
+      { x =  48, y = -8, mat = "?frame" },
+      { x =  48, y =  8, mat = "?frame" },
+      { x =  32, y =  8, mat = "?frame" },
+      { b =   8, mat = "?frame" },
+      { t = 144, mat = "?frame" },
+    },
+  },
+  
+  models =
+  {
+    -- swirly bit
+    {
+      x1 = -32, x2 =  32, x_face = { mat="TELEPORT" },
+      y1 =  -2, y2 =   2, y_face = { mat="TELEPORT" },
+      z1 =  16, z2 = 136, z_face = { mat="TELEPORT" },
+
+      entity =
+      {
+        ent = "wall", light = 10,
+      },
+    },
+
+    -- trigger
+    {
+      x1 = -32, x2=  32, x_face = { mat="TRIGGER" },
+      y1 = -32, y2=  32, y_face = { mat="TRIGGER" },
+      z1 =   0, z2= 144, z_face = { mat="TRIGGER" },
+
+      entity =
+      {
+        ent = "teleport", target = "?target"
+      },
+    },
+  },
+
+}
+

@@ -30,6 +30,8 @@ QUAKE1.ENTITIES =
 
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 },
 
+  teleport_spot = { id="info_teleport_destination", kind="other", r=16,h=56, pass=true },
+
   -- enemies
   dog      = { id="monster_dog",      kind="monster", r=32, h=80, },
   grunt    = { id="monster_army",     kind="monster", r=32, h=80, },
@@ -105,8 +107,10 @@ QUAKE1.ENTITIES =
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true },
 
   change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true },
+  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true },
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true },
+  wall = { id="func_wall",  kind="other", r=1, h=1, pass=true },
 }
 
 
@@ -524,7 +528,6 @@ QUAKE1.MATERIALS =
   TLIGHT09   = { t="tlight09" },
   TLIGHT10   = { t="tlight10" },
   TLIGHT11   = { t="tlight11" },
-  TRIGGER    = { t="trigger" },
   TWALL1_1   = { t="twall1_1" },
   TWALL1_2   = { t="twall1_2" },
   TWALL1_4   = { t="twall1_4" },
@@ -627,7 +630,12 @@ QUAKE1.MATERIALS =
   WWOOD1_7   = { t="wwood1_7" },
   Z_EXIT     = { t="z_exit" },
 
-  -- Oblige special textures
+  -- special stuff
+  TRIGGER    = { t="trigger" },
+
+  TELEPORT   = { t="*teleport" },
+
+  -- Oblige specific textures
   O_CARVE    = { t="o_carve" },
   O_BOLT     = { t="o_carve" },
 
@@ -685,7 +693,6 @@ QUAKE1.MATERIALS =
 ---  *slime
 ---  *slime0
 ---  *slime1
----  *teleport
 ---  *water0
 ---  *water1
 ---  *water2
