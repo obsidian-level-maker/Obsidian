@@ -536,7 +536,7 @@ end
 
 ------------------------------------------------------------------------
 
-function Build_prepare_trip()
+function Mat_prepare_trip()
 
   -- build the psychedelic mapping
   local m_before = {}
@@ -563,7 +563,7 @@ function Build_prepare_trip()
 end
 
 
-function safe_get_mat(name)
+function Mat_lookup(name)
   if not name then name = "_ERROR" end
 
   if OB_CONFIG.theme == "psycho" and LEVEL.psycho_map[name] then
@@ -592,38 +592,15 @@ function safe_get_mat(name)
   return mat
 end
 
-function get_mat(wall, floor, ceil)
-  if not wall then wall = "_ERROR" end
-
-  local w_mat = safe_get_mat(wall)
-
-  local f_mat = w_mat
-  if floor then
-    f_mat = safe_get_mat(floor)
-  end
-
-  local c_mat = f_mat
-  if ceil then
-    c_mat = safe_get_mat(ceil)
-  end
-
-  return
-  {
-    w_face = { tex=w_mat.t },
-    t_face = { tex=f_mat.f or f_mat.t },
-    b_face = { tex=c_mat.f or c_mat.t },
-  }
-end
-
 
 function Mat_normal(wall, floor)
   if not wall then wall = "_ERROR" end
 
-  local w_mat = safe_get_mat(wall)
+  local w_mat = Mat_lookup(wall)
 
   local f_mat = w_mat
   if floor then
-    f_mat = safe_get_mat(floor)
+    f_mat = Mat_lookup(floor)
   end
 
   return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
@@ -642,7 +619,7 @@ end
 function Mat_liquid()
   assert(LEVEL.liquid)
 
-  local mat = safe_get_mat(LEVEL.liquid.mat)
+  local mat = Mat_lookup(LEVEL.liquid.mat)
 
   local light   = LEVEL.liquid.light
   local special = LEVEL.liquid.special
@@ -671,7 +648,7 @@ function add_pegging(info, x_offset, y_offset, peg)
   return info
 end
 
-function mat_similar(A, B)
+function Mat_similar(A, B)
   A = GAME.MATERIALS[A]
   B = GAME.MATERIALS[B]
 
@@ -686,12 +663,12 @@ end
 
 function Trans.set_mat(coords, wall, flat)
   if wall then
-    wall = safe_get_mat(wall)
+    wall = Mat_lookup(wall)
     wall = assert(wall.t)
   end
 
   if flat then
-    flat = safe_get_mat(flat)
+    flat = Mat_lookup(flat)
     flat = flat.f or assert(flat.t)
   end
 
@@ -820,7 +797,7 @@ function Fabricate(fab, skin, T)
       for _,C in ipairs(B) do
 
         if C.mat then
-          local mat = safe_get_mat(C.mat)
+          local mat = Mat_lookup(C.mat)
           assert(mat and mat.t)
 
           if C.b then
@@ -1028,7 +1005,7 @@ function Fabricate(fab, skin, T)
     new_face.mat = nil
 
     if F.mat then
-      local mat = safe_get_mat(F.mat)
+      local mat = Mat_lookup(F.mat)
 
       if is_flat and mat.f then
         new_face.tex = mat.f

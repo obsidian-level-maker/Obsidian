@@ -1859,6 +1859,8 @@ gui.debugf("Niceness @ %s over %dx%d -> %d\n", R:tostr(), R.cw, R.ch, nice)
 
     if nice ~= 2 or not THEME.big_lights then return end
 
+do return end --!!!!!!!
+
       local ceil_info  = get_mat(R.main_tex)
       local sky_info  --!!!! = get_sky()
       local brown_info = get_mat(rand.key_by_probs(THEME.building_ceilings))
@@ -2095,6 +2097,8 @@ end
 
 function Rooms_build_cave(R)
 
+do return end --!!!!!!!!!  FIXME CAVES
+
   local cave  = R.cave
 
   local w_tex  = R.cave_tex
@@ -2141,7 +2145,7 @@ function Rooms_build_cave(R)
 
     if last then
       for loop = 1,5 do
-        if not mat_similar(last, tex) then break; end
+        if not Mat_similar(last, tex) then break; end
         tex = rand.key_by_probs(tab)
       end
     end
@@ -2587,7 +2591,7 @@ function Rooms_build_seeds(R)
 
 
   local function Split_quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
-    if GAME.format == "doom" then
+    if GAME.format == "doom" and not R.outdoor then
       local ax = int((x1*2+x2) / 3)
       local ay = int((y1*2+y2) / 3)
       local bx = int((x1+x2*2) / 3)
@@ -2977,10 +2981,11 @@ function Rooms_build_seeds(R)
 
     if S.kind == "diagonal" then
 
+--[[ !!!!!!!
       local diag_info = get_mat(w_tex, S.stuckie_ftex) ---### , c_tex)
 
---!!!!!!      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
-
+      Build.diagonal(S, S.stuckie_side, diag_info, S.stuckie_z)
+--]]
       S.kind = assert(S.diag_new_kind)
 
       if S.diag_new_z then
@@ -3005,10 +3010,6 @@ function Rooms_build_seeds(R)
       Trans.quad(x1,y1, x2,y2, z2,nil, { k=kind }, w_face, p_face)
 
     elseif S.kind ~= "void" and not S.no_ceil then
-      ---## local info = get_mat(S.u_tex or c_tex or w_tex, c_tex)
-      ---## info.b_face.light = S.c_light
-      ---## Trans.old_quad(info, cx1,cy1, cx2,cy2, z2, EXTREME_H)
-
       local kind, w_face, p_face = Mat_normal(S.u_tex or c_tex or w_tex, c_tex)
       p_face.light = S.c_light
 
@@ -3242,15 +3243,13 @@ function Rooms_build_all()
   Rooms_add_sun()
 
 
-  local tele_name = "tele_" .. Plan_alloc_tag()
-
-  local S = SEEDS[12][8]
+  local S = SEEDS[12][7]
   local T = Trans.centre_transform(S, 64, 2);
+  T.scale_z = 1.0
 
-  local skin = { frame="WIZMET1_2", teleport="TELEPORT", target=tele_name }
+  local skin = { wall="WIZMET1_2", floor="WIZMET1_2", step="AZWALL3_2", top="AZWALL1_5" }
 
-  Fabricate("QUAKE_TELEPORTER", skin, T)
+  Fabricate("LOW_CURVE_STAIR", skin, T)
 
-  Trans.entity("teleport_spot", S.x1 + 300, S.y1 - 300, 64, { targetname=tele_name })
 end
 
