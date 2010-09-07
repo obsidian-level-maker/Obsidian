@@ -30,6 +30,9 @@ QUAKE2.ENTITIES =
 
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 },
 
+  teleport_spot = { id="misc_teleporter_dest", kind="other", r=16,h=56, pass=true },
+  teleporter    = { id="misc_teleporter",      kind="other", r=16,h=56, pass=true },
+
   -- enemies
   guard      = { id="monster_soldier_light", kind="monster", r=16, h=56, },
   guard_sg   = { id="monster_soldier", kind="monster", r=16, h=56, },
@@ -112,6 +115,7 @@ QUAKE2.ENTITIES =
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true },
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true },
+  wall = { id="func_wall",  kind="other", r=1, h=1, pass=true },
 
   -- TODO
 }
@@ -1373,7 +1377,12 @@ QUAKE2.MATERIALS =
   YELLOW1_4  = { t="e1u1/yellow1_4" },
   YELLOW1_6  = { t="e1u1/yellow1_6" },
 
-  -- Oblige special textures
+  
+  -- special stuff
+
+  TRIGGER    = { t="e1u1/trigger" },
+
+  -- Oblige specific textures
   O_CARVE    = { t="o_carve" },
   O_BOLT     = { t="o_carve" },
 
@@ -1428,7 +1437,6 @@ QUAKE2.MATERIALS =
 ---- e1u1/sky1
 ---- e3u3/xsky1
 
----- e1u1/trigger
 ---- e1u1/clip
 ---- e1u1/hint
 ---- e1u1/origin
