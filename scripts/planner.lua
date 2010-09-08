@@ -155,16 +155,12 @@ end
 
 function Plan_create_sections(W, H)
 
-  local ROOM_SIZE_TABLE = { 0,5,40,40,30,1 }
+  local SIZE_TABLE = THEME.room_size_table or { 0,5,40,40,30,1 }
 
   local border_seeds = PARAM.border_seeds or 2
   local free_seeds   = PARAM.free_seeds   or 4
 
   local function pick_sizes(W, limit)
-    local SIZE_TABLE = THEME.room_size_table or
-                        GAME.room_size_table or
-                        ROOM_SIZE_TABLE
-
     local sizes = {}
     local total
 
@@ -864,10 +860,14 @@ end
 
 
 function Plan_decide_outdoors()
+  local OUTDOOR_PROBS = THEME.outdoor_probs or { 10, 25, 35, 60 }
+
+  if #OUTDOOR_PROBS ~= 4 then
+    error("Theme has bad outdoor_probs table")
+  end
 
   local function choose(R)
----???    if R.parent and R.parent.outdoor then return false end
----???    if R.parent then return rand.odds(5) end
+    if R.parent then return false end
 
     if R.natural then
       if not THEME.landscape_walls then return false end
@@ -878,29 +878,18 @@ function Plan_decide_outdoors()
     if STYLE.skies == "none"   then return false end
     if STYLE.skies == "always" then return true end
 
-    if R.natural then
-      if STYLE.skies == "heaps" then return rand.odds(75) end
-      return rand.odds(25)
-    end
+    if STYLE.skies == "heaps" then return rand.odds(OUTDOOR_PROBS[4]) end
+    if STYLE.skies == "few"   then return rand.odds(OUTDOOR_PROBS[1] / 2) end
 
---[[
-    if R.children then
-      if STYLE.skies == "few" then
-        return rand.odds(33)
-      else
-        return rand.odds(80)
-      end
-    end
---]]
-    if STYLE.skies == "heaps" then return rand.odds(60) end
-    if STYLE.skies == "few"   then return rand.odds(5) end
+    if R.natural then return rand.odds(OUTDOOR_PROBS[2]) end
 
-    -- room on edge of map?
-    if R.kx1 == 1 or R.kx2 == SECTION_W or R.ky1 == 1 or R.ky2 == SECTION_H then
-      return rand.odds(30)
-    end
+    -- higher probs for sides of map, even higher for the corners
+    local what = 1
 
-    return rand.odds(10)
+    if R.kx1 == 1 or R.kx2 == SECTION_W then what = what + 1 end
+    if R.ky1 == 1 or R.ky2 == SECTION_H then what = what + 1 end
+
+    return rand.odds(OUTDOOR_PROBS[what])
   end
 
   ---| Plan_decide_outdoors |---
