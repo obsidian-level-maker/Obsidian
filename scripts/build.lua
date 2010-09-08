@@ -23,7 +23,6 @@ require 'util'
 require 'seeds'
 
 
-Build = {}
 Trans = {}
 
 
@@ -628,26 +627,6 @@ function Mat_liquid()
 end
 
 
-function rail_coord(x, y, name)
-  local rail = GAME.RAILS[name]
-
-  if not rail then
-    gui.printf("LACKING RAIL %s\n", name)
-    return { x=x, y=y }
-  end
-
-  return { x=x, y=y, w_face={ tex=rail.t }, line_flags=rail.line_flags }
-end
-
-
-function add_pegging(info, x_offset, y_offset, peg)
-  info.w_face.x_offset = x_offset or 0
-  info.w_face.y_offset = y_offset or 0
-  info.w_face.peg = sel(peg == nil, 1, peg)
-
-  return info
-end
-
 function Mat_similar(A, B)
   A = GAME.MATERIALS[A]
   B = GAME.MATERIALS[B]
@@ -1180,7 +1159,7 @@ function Fabricate(fab, skin, T)
 end
 
 
-function Build.does_prefab_fit(fab, skin, width, depth, height)
+function Fab_check_fits(fab, skin, width, depth, height)
 
   -- NOTE: width is in the prefab coordinate system (X)
   --       depth too (Y) and height as well (Z).
@@ -1298,7 +1277,7 @@ function shadowify_brush(coords, dist)
 end
 
 
-function Build.shadow(S, side, dist, z2)
+function Build_shadow(S, side, dist, z2)
   assert(dist)
 
   if not PARAM.outdoor_shadows then return end
