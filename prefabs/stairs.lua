@@ -289,3 +289,74 @@ PREFAB.LOW_CURVE_STAIR =
   },
 }
 
+
+PREFAB.QUAKE_3D_STAIR =
+{
+  brushes =
+  {
+    {
+      { x =  48, y =  8, mat = "?wall", },
+      { x = 144, y =  8, mat = "?wall", },
+      { x = 144, y = 20, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 20, mat = "?wall", },
+      { b =  98, mat = "?top", },
+      { t = 110, mat = "?top", },
+    },
+
+    {
+      { x =  48, y = 28, mat = "?wall", },
+      { x = 144, y = 28, mat = "?wall", },
+      { x = 144, y = 40, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 40, mat = "?wall", },
+      { b = 80, mat = "?top", },
+      { t = 92, mat = "?top", },
+    },
+
+    {
+      { x =  48, y = 48, mat = "?wall", },
+      { x = 144, y = 48, mat = "?wall", },
+      { x = 144, y = 60, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 60, mat = "?wall", },
+      { b = 62, mat = "?top", },
+      { t = 74, mat = "?top", },
+    },
+
+    {
+      { x =  48, y = 68, mat = "?wall", },
+      { x = 144, y = 68, mat = "?wall", },
+      { x = 144, y = 80, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 80, mat = "?wall", },
+      { b = 44, mat = "?top", },
+      { t = 56, mat = "?top", },
+    },
+
+    {
+      { x =  48, y =  88, mat = "?wall", },
+      { x = 144, y =  88, mat = "?wall", },
+      { x = 144, y = 100, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 100, mat = "?wall", },
+      { b = 26, mat = "?top", },
+      { t = 38, mat = "?top", },
+    },
+
+    {
+      { x =  48, y = 108, mat = "?wall", },
+      { x = 144, y = 108, mat = "?wall", },
+      { x = 144, y = 120, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =  48, y = 120, mat = "?wall", },
+      { b =  8, mat = "?top", },
+      { t = 20, mat = "?top", },
+    },
+
+    -- surrounding floor  FIXME: keep???
+    {
+      { x =   0, y=   0, mat = "?floor" },
+      { x = 192, y=   0, mat = "?floor" },
+      { x = 192, y= 192, mat = "?floor" },
+      { x =   0, y= 192, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+  },
+}
+
+

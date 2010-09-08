@@ -3243,13 +3243,13 @@ function Rooms_build_all()
   Rooms_add_sun()
 
 
-  local S = SEEDS[12][7]
-  local T = Trans.centre_transform(S, 64, 2);
-  T.scale_z = 1.0
+  local S = SEEDS[5][6]
+  local T = Trans.centre_transform(S, S.floor_h or 192, 2);
+  T.scale_z = 0.8
 
   local skin = { wall="WIZMET1_2", floor="WIZMET1_2", step="AZWALL3_2", top="AZWALL1_5" }
 
-  Fabricate("LOW_CURVE_STAIR", skin, T)
+  Fabricate("QUAKE_3D_STAIR", skin, T)
 
 end
 
