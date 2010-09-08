@@ -896,7 +896,7 @@ function Plan_decide_outdoors()
     if STYLE.skies == "few"   then return rand.odds(5) end
 
     -- room on edge of map?
-    if R.touches_edge then
+    if R.kx1 == 1 or R.kx2 == SECTION_W or R.ky1 == 1 or R.ky2 == SECTION_H then
       return rand.odds(30)
     end
 
@@ -945,8 +945,6 @@ function Plan_find_neighbors()
         if N ~= R then
           add_neighbor(R, side, N)
         end
-      else
-        R.touches_edge = true
       end
     end end -- side
 
@@ -955,376 +953,6 @@ end
 
 
 ------------------------------------------------------------------------
-
-
-function OLD_Plan_nudge_rooms() -- REMOVE
-
-  -- This resizes rooms by moving certain borders either one seed
-  -- outward or one seed inward.  There are various constraints,
-  -- in particular each room must remain a rectangle shape (so we
-  -- disallow nudges that would create an L shaped room).
-  --
-  -- Big rooms must be handled first, because small rooms are
-  -- never able to nudge a big border.
-
-  local function volume_after_nudge(R, side, grow)
-    if (side == 6 or side == 4) then
-      return (R.sw + grow) * R.sh
-    else
-      return R.sw * (R.sh + grow)
-    end
-  end
-
-  local function depth_after_nudge(R, side, grow)
-    return sel(side == 6 or side == 4, R.sw, R.sh) + grow
-  end
-
-  local function allow_nudge(R, side, grow, N, list)
-
-    -- above or below a sidewards nudge?
-    if (side == 6 or side == 4) then
-      if N.sy1 > R.sy2 then return true end
-      if R.sy1 > N.sy2 then return true end
-    else
-      if N.sx1 > R.sx2 then return true end
-      if R.sx1 > N.sx2 then return true end
-    end
-
-    -- opposite side?
-    if side == 6 and (N.sx2 < R.sx2) then return true end
-    if side == 4 and (N.sx1 > R.sx1) then return true end
-    if side == 8 and (N.sy2 < R.sy2) then return true end
-    if side == 2 and (N.sy1 > R.sy1) then return true end
-
-    if (side == 6 or side == 4) then
-      if (N.sy1 < R.sy1) or (N.sy2 > R.sy2) then return false end
-    else
-      if (N.sx1 < R.sx1) or (N.sx2 > R.sx2) then return false end
-    end
-
-    -- the nudge is possible (pushing the neighbor also)
-
-    if N.no_nudge or N.nudges[10-side] then return false end
-
----##   if volume_after_nudge(N, 10-side, -grow) < 3 then return false end
-
-    if depth_after_nudge(N, 10-side, -grow) < 2 then return false end
-
---???    if side == 6 then assert(N.sx1 == R.sx2+1) end
---???    if side == 4 then assert(N.sx2 == R.sx1-1) end
---???    if side == 8 then assert(N.sy1 == R.sy2+1) end
---???    if side == 2 then assert(N.sy2 == R.sy1-1) end
-
-    table.insert(list, { room=N, side=10-side, grow=-grow })
-
-    return true
-  end
-
-  local function try_nudge_room(R, side, grow)
-    -- 'grow' is positive to nudge outward, negative to nudge inward
-
-    -- Note: any shrinkage must pull neighbors too
-
-    if not grow then
-      grow = rand.sel(75,1,-1)
-    end
-
-gui.debugf("Trying to nudge room %dx%d, side:%d grow:%d\n", R.sw, R.sh, side, grow)
-
-    if R.no_nudge then return false end
-
---[[
-    if R.no_grow   and grow > 0 then return false end
-    if R.no_shrink and grow < 0 then return false end
---]]
-
-    -- already moved this border?
-    if R.nudges[side] then return false end
-
-    -- would get too small?  or too big?
-    local new_d = depth_after_nudge(R, side, grow)
-
-    if new_d < 2 or new_d > 13 then return false end
-
-    -- side sits on border of the map?
---[[
-    if (side == 2 and R.ky1 == 1) or
-       (side == 4 and R.kx1 == 1) or
-       (side == 6 and R.kx2 == LAND_W) or
-       (side == 8 and R.ky2 == LAND_H)
-    then
-      return false
-    end
---]]
-
-    local push_list = {}
-
-    for _,K in ipairs(R.neighbors) do
-      if not allow_nudge(R, side, grow, K, push_list) then return false end
-    end
-
-    -- Nudge is OK!
-    gui.printf("Nudging %s side:%d grow:%d\n", R:tostr(), side, grow)
-
-    table.insert(push_list, { room=R, side=side, grow=grow })
-
-    for _,push in ipairs(push_list) do
-      local R = push.room
-
-          if push.side == 2 then R.sy1 = R.sy1 - push.grow
-      elseif push.side == 8 then R.sy2 = R.sy2 + push.grow
-      elseif push.side == 4 then R.sx1 = R.sx1 - push.grow
-      elseif push.side == 6 then R.sx2 = R.sx2 + push.grow
-      end
-
-      -- fix up seed size
-      R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
-
-      assert(not R.nudges[push.side])
-      R.nudges[push.side] = true
-    end
-
-    return true
-  end
-
-  local function nudge_big_rooms()
-    local rooms = {}
-
-    for _,R in ipairs(LEVEL.all_rooms) do
-      if R.big_w > 1 or R.big_h > 1 then
-        R.big_volume = R.big_w * R.big_h
-        table.insert(rooms, R)
-      end
-    end
-
-    if #rooms == 0 then return end
-
-    table.sort(rooms, function(A, B) return A.big_volume > B.big_volume end)
-
-    local sides = { 2,4,6,8 }
-
-    for _,R in ipairs(rooms) do
-      rand.shuffle(sides)
-      for _,side in ipairs(sides) do
-        local depth = sel(side==4 or side==6, R.sw, R.sh)
-        if (depth % 2) == 0 then
-          if not (rand.odds(30) and try_nudge_room(R, side, 1)) then
-            try_nudge_room(R, side, -1)
-          end
-        end
-      end
-      R.no_nudge = true
-    end
-  end
-
-  local function get_NE_corner_rooms(R)
-
-    local E, N, NE -- East, North, NorthEast
-
-    for _,K in ipairs(R.neighbors) do
-
-      if K.sx2 == R.sx2 and K.sy1 > R.sy2 then N = K end
-      if K.sy2 == R.sy2 and K.sx1 > R.sx2 then E = K end
-
-      if K.sx1 > R.sx2 and K.sy1 > R.sy2 then NE = K end
-    end
-
-    return E, N, NE
-  end
-
-  local function nudge_the_rest()
-    local rooms = {}
-    for _,R in ipairs(LEVEL.all_rooms) do
-      if R.big_w == 1 and R.big_h == 1 then
-        table.insert(rooms, R)
-      end
-    end
-
-    local sides = { 2,4,6,8 }
-
-    for pass = 1,2 do
-      rand.shuffle(rooms)
-      for _,R in ipairs(rooms) do
-        rand.shuffle(sides)
-        for _,side in ipairs(sides) do
-          if rand.odds(30) then
-            try_nudge_room(R, side)
-          end
-        end
-      end -- R in all_rooms
-    end -- pass
-  end
-
-
-  ---| Plan_nudge_rooms |---
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    R.nudges = {}
-
-    if R.shape ~= "rect" then
-      R.no_nudge = true
-    end
-  end
-
-  nudge_big_rooms()
-  nudge_the_rest()
-end
-
-
-
-function OLD_Plan_sub_rooms()
-
-  --                    1  2  3   4   5   6   7   8+
-  local SUB_CHANCES = { 0, 0, 1,  3,  6, 10, 20, 30 }
-  local SUB_HEAPS   = { 0, 0, 6, 20, 40, 60, 75, 90 }
-
-  local function can_fit(R, x, y, w, h)
-    if w >= R.sw or h >= R.sh then return nil end
-
-    if x+w > R.sx2 or y+h > R.sy2 then return nil end
-
-    local touches_wall = false
-    if x == R.sx1 or x+w == R.sx2 or y == R.sy1 or y+h == R.sy2 then
-      touches_wall = true
-    end
-    
-    for sx = x,x+w-1 do for sy = y,y+h-1 do
-      local S = SEEDS[sx][sy]
-      if S.room ~= R then return nil end
-    end end -- sx, sy
-
-    local touches_other = nil
-
-    for sx = x-1,x+w do for sy = y-1,y+h do
-      if Seed_valid(sx, sy) then
-        local S = SEEDS[sx][sy]
-        if S.room and S.room.parent == R then
-
-          -- don't allow new sub-room to touch more than one
-          -- existing sub-room, since it is possible to split
-          -- the room into separate parts that way.
-          if touches_other and touches_other ~= S.room then
-            return nil
-          end
-
-          touches_other = S.room
-        end
-      end
-    end end -- sx, sy
-
-    -- if it touches the outside wall, make sure it does NOT touch
-    -- another sub-room (otherwise the room could be split into
-    -- two separated parts, which is bad).
-    -- TODO: smarter test
-    if touches_wall and touches_other then
-      return nil
-    end
-
-    if STYLE.islands == "heaps" then
-      if touches_wall  then return 10 end
-      if touches_other then return 40 end
-      return 200
-    end
-
-    -- probability based on volume ratio
-    local vr = w * h * 3 / R.svolume
-    if vr < 1 then vr = 1 / vr end
-
-    return 200 / (vr * vr)
-  end
-
-  local function try_add_sub_room(parent)
-    local infos = {}
-    local probs = {}
-    for x = parent.sx1,parent.sx2 do for y = parent.sy1,parent.sy2 do
-      for w = 2,6 do
-        local prob = can_fit(parent, x, y, w, w)
-        if prob then
-          local INFO = { x=x, y=y, w=w, h=w, islandy=islandy }
-
-          -- make rectangles sometimes
-          if INFO.w >= 3 and rand.odds(30) then
-            INFO.w = INFO.w - 1
-            if rand.odds(50) then INFO.x = INFO.x + 1 end
-          elseif INFO.h >= 3 and rand.odds(30) then
-            INFO.h = INFO.h - 1
-            if rand.odds(50) then INFO.y = INFO.y + 1 end
-          end
-
-          table.insert(infos, INFO)
-          table.insert(probs, prob)
-        end
-      end
-    end end -- x, y
-
-    if #infos == 0 then return end
-
-    local info = infos[rand.index_by_probs(probs)]
-
-    -- actually add it !
-    local ROOM =
-    {
-      id=id, kind="normal", conns={},
-      big_w=1, big_h=1,
-    }
-
-    local id = Plan_alloc_room()
-
-    table.set_class(ROOM, ROOM_CLASS)
-
-    ROOM.parent = parent
-    ROOM.neighbors = { }  -- ???
-
-    ROOM.sx1 = info.x
-    ROOM.sy1 = info.y
-
-    ROOM.sx2 = info.x + info.w - 1
-    ROOM.sy2 = info.y + info.h - 1
-
-    ROOM.sw, ROOM.sh = geom.group_size(ROOM.sx1, ROOM.sy1, ROOM.sx2, ROOM.sy2)
-    ROOM.svolume = ROOM.sw * ROOM.sh
-
-    ROOM.is_island = (ROOM.sx1 > parent.sx1) and (ROOM.sx2 < parent.sx2) and
-                     (ROOM.sy1 > parent.sy1) and (ROOM.sy2 < parent.sy2)
-
-    table.insert(LEVEL.all_rooms, ROOM)
-
-    if not parent.children then parent.children = {} end
-    table.insert(parent.children, ROOM)
-
-    parent.svolume = parent.svolume - ROOM.svolume
-
-    -- update seed map
-    for sx = ROOM.sx1,ROOM.sx2 do
-      for sy = ROOM.sy1,ROOM.sy2 do
-        SEEDS[sx][sy].room = ROOM
-      end
-    end
-  end
-
-
-  ---| Plan_sub_rooms |---
-
-  if STYLE.subrooms == "none" then return end
-
-  local chance_tab = sel(STYLE.subrooms == "heaps", SUB_HEAPS, SUB_CHANCES)
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    if not R.parent and not R.natural then
-      local min_d = math.max(R.sw, R.sh)
-      if min_d > 8 then min_d = 8 end
-
-      if rand.odds(chance_tab[min_d]) then
-        try_add_sub_room(R)
-
-        if min_d >= 5 and rand.odds(10) then try_add_sub_room(R) end
-        if min_d >= 6 and rand.odds(65) then try_add_sub_room(R) end
-        if min_d >= 7 and rand.odds(25) then try_add_sub_room(R) end
-        if min_d >= 8 and rand.odds(90) then try_add_sub_room(R) end
-      end
-    end
-  end
-end
 
 
 function Plan_make_seeds()
@@ -1367,52 +995,6 @@ function Plan_make_seeds()
 end
 
 
-function Plan_nudge_sides()
-
-  -- This resizes rooms by moving certain borders outward or inward
-  -- (usually by one seed, occasionally by two).
-  --
-  -- NOTES:
-  --
-  -- +  if we limit nudging to horizontal moves (sides 4 and 6)
-  --    then the problem of rooms overlapping is avoided.  A second
-  --    pass could be done to do simple nudges vertically.
-  --
-  -- +  if a side (which could be two or more sections) is moved left
-  --    or right, then the side above/below it should NOT be moved
-  --    the same way.  Similarly for vertical moves.
-  --
-  -- +  the "stem" sides of a T or PLUS shape room should be moved
-  --    together, either both inward or both outward.  Let's call
-  --    them "complex" sides.  When a side is complex from TWO rooms,
-  --    it becomes hard to track the flow-on effects, hence it is
-  --    easiest to disable nudging those stems.
-  --
-  -- +  nudging must ensure that the border between two sections
-  --    can be connected.  If a column is only 2 seeds wide then
-  --    it never shrinks (only grow), and a column 3 or 4 seeds
-  --    wide can only shrink by 1 seed.
-  --
-  -- The order of operations is thus:
-  --
-  -- (1) move complex sides horizontally
-  -- (2) move large sides horizontally
-  -- (3) move small/simple sides horizontally
-  -- (4) move simple sides vertically
-
-
-  ---| Plan_nudge_sides |---
-
-  -- collect_sides()
-
-  -- nudge_complex_sides()
-  -- nudge_sides("large") 
-  -- nudge_sides("small")
-  -- nudge_sides("vert")
-
-end
-
-
 function Plan_create_rooms()
 
   -- Overview of room planning:
@@ -1421,11 +1003,10 @@ function Plan_create_rooms()
   --   2. do any special rooms or patterns
   --   3. add big rooms (rect / shaped / natural)
   --   4. add small rooms
-  --
   --   5. decide indoor/outdoor
   --   6. place sub-rooms
   --   7. convert section map to seeds
-  --   8. nudge sides
+  --
 
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
@@ -1445,14 +1026,14 @@ function Plan_create_rooms()
 
   Plan_create_sections(W, H)
 
-  -- INVOKE AN HOOK
+  Levels_invoke_hook("add_rooms")
 
   Plan_add_special_rooms()
   Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
-  -- INVOKE ANOTHER HOOK
+  Levels_invoke_hook("adjust_rooms")
 
   Plan_collect_sections()
 
@@ -1461,11 +1042,9 @@ function Plan_create_rooms()
 
   Plan_decide_outdoors()
 
---!!!!  Plan_sub_rooms()
+--????  Plan_sub_rooms()
 
   Plan_make_seeds()
-
-  Plan_nudge_sides()
 
   Seed_flood_fill_edges()
 
