@@ -180,10 +180,12 @@ function ROOM_CLASS.dist_to_closest_conn(self, K, side)
   local best
 
   for _,C in ipairs(self.conns) do 
-    local K2 = C:section(self)
-    local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
+    if C.K1 then
+      local K2 = C:section(self)
+      local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
 
-    if not best or dist < best then best = dist end
+      if not best or dist < best then best = dist end
+    end
   end
 
   return best

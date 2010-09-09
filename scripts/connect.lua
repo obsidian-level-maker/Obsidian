@@ -42,8 +42,14 @@ require 'util'
 
 CONN_CLASS = {}
 
-function CONN_CLASS.new(K1, K2, kind, dir)
+function CONN_CLASS.new_K(K1, K2, kind, dir)
   local C = { K1=K1, K2=K2, R1=K1.room, R2=K2.room, kind=kind, dir=dir }
+  table.set_class(C, CONN_CLASS)
+  return C
+end
+
+function CONN_CLASS.new_R(R1, R2, kind, dir)
+  local C = { R1=R1, R2=R2, kind=kind, dir=dir }
   table.set_class(C, CONN_CLASS)
   return C
 end
@@ -375,7 +381,7 @@ function Connect_rooms()
 
     merge_groups(R.conn_group, N.conn_group)
 
-    local C = CONN_CLASS.new(K1, K2, kind, dir)
+    local C = CONN_CLASS.new_K(K1, K2, kind, dir)
 
     table.insert(LEVEL.all_conns, C)
 
@@ -386,6 +392,23 @@ function Connect_rooms()
     K2.num_conn = K2.num_conn + 1
 
     return C
+  end
+
+
+  local function add_teleporter(R1, R2)
+    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    merge_groups(R1.conn_group, R2.conn_group)
+
+    local C = CONN_CLASS.new_R(R1, R2, "teleporter")
+
+    table.insert(LEVEL.all_conns, C)
+
+    table.insert(R1.conns, C)
+    table.insert(R2.conns, C)
+
+    C.tele_tag1 = Plan_alloc_tag()
+    C.tele_tag2 = Plan_alloc_tag()
   end
 
 
@@ -742,55 +765,35 @@ function Connect_rooms()
   end
 
 
-  local function teleporter_score(K)
-    -- REQUIRE: no connections in section
-    if K.num_conn > 0 then return -1 end
+  local function teleporter_score(R)
+    -- no teleporters already
+    if R:has_teleporter() then return -1 end
 
-    if #K.room.conns >= 3 then return -1 end
+    if #R.conns > 0 then return -1 end
 
-    if K.room.purpose == "START" then return -1 end
+    -- too small?
+    if R.sw <= 2 or R.sh <= 2 then return -1 end
 
-    local svolume = K.sw * K.sh
+    local score = 0
 
-    local score = svolume / 10 + gui.random()
+    if R.purpose == "START" then score = score + 0.3 end
 
-    -- middle of very large rooms is often good
-    if K.room.kx1 < K.kx and K.kx < K.room.kx2 and
-       K.room.ky1 < K.ky and K.ky < K.room.ky2
-    then
-      return rand.sel(40, 2.5*score, -1)
-    end
+    -- better if more than one section
+    if R.kvolume >= 2 then score = score + 0.8 end
 
-    -- corners of map (in big rooms) are good places
-    if K.room.kvolume >= 3 and
-       (K.kx == 1 or K.kx == SECTION_W or
-        K.ky == 1 or K.ky == SECTION_H)
-    then
-      return rand.sel(80, 1.5*score, -1)
-    end
-
-    -- stems are good too
-    if K:same_neighbors() == 1 then
-      return rand.sel(80, score, -1)
-    end
-
-    return rand.sel(20, 0.5*score, -1)
+    return score + gui.random()
   end
 
 
   local function collect_teleporter_locs()
     local loc_list = {}
 
-    for x = 1,SECTION_W do for y = 1,SECTION_H do
-      local K = SECTIONS[x][y]
-
-      if K and K.room then
-        local score = teleporter_score(K)
-        if score > 0 then
-          table.insert(loc_list, { K=K, score=score })
-        end
+    for _,R in ipairs(LEVEL.all_rooms) do
+      local score = teleporter_score(R)
+      if score > 0 then
+        table.insert(loc_list, { R=R, score=score })
       end
-    end end
+    end
 
     table.sort(loc_list, function(A, B) return A.score > B.score end)
 
@@ -802,24 +805,16 @@ function Connect_rooms()
     -- need at least a source and destination
     if #loc_list < 2 then return false end
 
-    local K1 = loc_list[1].K
+    local R = loc_list[1].R
     table.remove(loc_list, 1)
 
     for index,loc in ipairs(loc_list) do
-      local K2 = loc.K
--- stderrf("_____    testing %s --> %s  %s --> %s  %d,%d\n",
---         K1:tostr(), K2:tostr(), K1.room:tostr(), K2.room:tostr(),
---         K1.room.conn_group, K2.room.conn_group)
-      if can_connect(K1, K2) and
-         not K1.room:has_teleporter() and
-         not K2.room:has_teleporter()
-      then
--- stderrf("Teleporter connection %s --> %s  %s --> %s\n", K1:tostr(), K2:tostr(),
---         K1.room:tostr(), K2.room:tostr())
-        local C = add_connection(K1, K2, "teleporter")
+      local N = loc.R
 
-        C.tele_tag1 = Plan_alloc_tag()
-        C.tele_tag2 = Plan_alloc_tag()
+      if R.conn_group ~= N.conn_group and
+         teleporter_score(N) >= 0
+      then
+        add_teleporter(R, N)
 
         table.remove(loc_list, index)
         return true
@@ -830,27 +825,50 @@ function Connect_rooms()
   end
 
 
-  local function add_teleporters()
+  local function decide_teleporters(list)
+    LEVEL.teleporter_list = {}
+
     if not PARAM.teleporters then return end
 
     if STYLE.teleporters == "none" then return end
 
-    local quota = 5
+    local quota = 2
 
-    if STYLE.teleporters == "few" then
-      quota = rand.sel(50, 1, 2)
+    if STYLE.teleporters == "few"   then quota = 1 end
+    if STYLE.teleporters == "heaps" then quota = 5 end
+
+    gui.debugf("Teleporter quota: %d\n", quota)
+
+    local loc_list = collect_teleporter_locs()
+
+    for i = 1,quota*3 do
+      if try_add_teleporter(loc_list) then
+        quota = quota - 1
+        if quota <= 0 then break; end
+      end
+    end
+  end
+
+
+  local function place_one_tele(R)
+    -- FIXME: TEMP SHITE
+    for kx = R.kx1, R.kx2 do
+      local K = SECTIONS[kx][R.ky1]
+      if K.room == R then
+        return K
+      end
     end
 
---    stderrf("Teleporter quota: %d\n", quota)
+    error("place_one_tele failed")
+  end
 
-    if quota > 0 then
-      local loc_list = collect_teleporter_locs()
 
-      for i = 1,quota*3 do
-        if try_add_teleporter(loc_list) then
-          quota = quota - 1
-          if quota <= 0 then break; end
-        end
+  local function place_teleporters()
+    -- determine which section(s) of each room to use for teleporters
+    for _,C in ipairs(LEVEL.all_conns) do
+      if C.kind == "teleporter" then
+        if not C.K1 then C.K1 = place_one_tele(C.R1) end
+        if not C.K2 then C.K2 = place_one_tele(C.R2) end
       end
     end
   end
@@ -898,14 +916,16 @@ function Connect_rooms()
   -- at the end, only a single group will remain (#1).
   initial_groups()
 
-  Levels_invoke_hook("connect_rooms", LEVEL.seed)
+  Levels_invoke_hook("connect_rooms")
 
-  add_teleporters()
+  decide_teleporters()
 
   branch_big_rooms()
   branch_small_rooms()
 
   while emergency_branch() do end
+
+  place_teleporters()
 
   validate_connections()
 
