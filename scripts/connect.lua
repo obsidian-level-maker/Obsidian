@@ -868,7 +868,7 @@ function Connect_rooms()
           score = score + 11
         end
 
-        score = score + gui.random()
+        score = score + gui.random() / 5
 
         table.insert(loc_list, { K=K, score=score })
       end
