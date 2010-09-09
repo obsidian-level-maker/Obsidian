@@ -180,11 +180,13 @@ function ROOM_CLASS.dist_to_closest_conn(self, K, side)
   local best
 
   for _,C in ipairs(self.conns) do 
-    if C.K1 then
-      local K2 = C:section(self)
+    local K2 = C:section(self)
+    if K2 then
       local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
 
-      if not best or dist < best then best = dist end
+      if not best or dist < best then
+        best = dist
+      end
     end
   end
 
@@ -2588,7 +2590,17 @@ function Rooms_build_seeds(R)
 
     local T = Trans.centre_transform(S, z1)
 
-    Fabricate("TELEPORT_PAD", skin, T)
+    if S.usage == "TELE_OUT" then
+      skin.in_tag = 0
+
+      Fabricate("TELEPORT_PAD", skin, T)
+    else
+      skin.line_kind = 0
+      skin.out_tag = 0
+      skin.top = "GATE4" -- silvery one
+
+      Fabricate("TELEPORT_PAD", skin, T)
+    end
   end
 
 
@@ -2838,7 +2850,7 @@ function Rooms_build_seeds(R)
 
         Fabricate("FENCE", skin, side_T)
 
-        shrink_floor(side, 4)
+---        shrink_floor(side, 4)
       end
 
       if B_kind == "arch" then
@@ -3143,7 +3155,7 @@ function Rooms_build_seeds(R)
       do_weapon(S)
     elseif S.usage == "SOLUTION" then
       do_purpose(S)
-    elseif S.usage == "TELEPORTER" then
+    elseif S.usage == "TELE_OUT" or S.usage == "TELE_IN" then
       do_teleporter(S)
     end
 

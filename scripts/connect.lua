@@ -423,7 +423,7 @@ function Connect_rooms()
           local N = K:neighbor(dir)
           if good_connect(K, N) then
             local LOC = { K=K, N=N, dir=dir }
-            LOC.dist = R:dist_to_closest_conn(K, dir) or 90
+            LOC.dist = R:dist_to_closest_conn(K, dir) or 9
             LOC.dist = LOC.dist + gui.random()
             table.insert(loc_list, LOC)
           end
@@ -850,16 +850,48 @@ function Connect_rooms()
   end
 
 
-  local function place_one_tele(R)
-    -- FIXME: TEMP SHITE
-    for kx = R.kx1, R.kx2 do
-      local K = SECTIONS[kx][R.ky1]
-      if K.room == R then
-        return K
-      end
-    end
+  local function pick_tele_spot(R, other_K)
+    local loc_list = {}
 
-    error("place_one_tele failed")
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R then
+        local score
+        
+        if other_K then
+          score = geom.dist(x, y, other_K.kx, other_K.ky)
+        else
+          score = R:dist_to_closest_conn(K) or 9
+        end
+
+        if K.num_conn == 0 and K ~= other_K then
+          score = score + 11
+        end
+
+        score = score + gui.random()
+
+        table.insert(loc_list, { K=K, score=score })
+      end
+    end end -- x, y
+
+    local loc = table.pick_best(loc_list,
+        function(A, B) return A.score > B.score end)
+
+    return loc.K  
+  end
+
+
+  local function place_one_tele(R)
+    -- we choose two sections, one for outgoing teleporter and one
+    -- for the returning spot.
+
+    local out_K = pick_tele_spot(R)
+    local in_K  = pick_tele_spot(R, out_K)
+
+    out_K.teleport_out = true
+     in_K.teleport_in  = true
+
+    return out_K
   end
 
 

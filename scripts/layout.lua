@@ -2049,9 +2049,32 @@ function Layout_do_room(R)
   end
 
   local function add_teleporter()
-    local sx, sy, S = Layout_spot_for_wotsit(R, "TELEPORTER")
+    for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
+      local K = SECTIONS[kx][ky]
+      if K.room == R then
+        
+        if K.teleport_out then
+          local sx = int((K.sx1 + K.sx2) / 2)
+          local sy = int((K.sy1 + K.sy2) / 2)
 
-    R.teleport_spot = S
+          local S = SEEDS[sx][sy]
+
+          S.usage = "TELE_OUT"
+        end
+
+        if K.teleport_in then
+          local sx = int((K.sx1 + K.sx2) / 2)
+          local sy = int((K.sy1 + K.sy2) / 2)
+
+          if K.sh >= 3 then sy = sy + 1 else sx = sx + 1 end
+
+          local S = SEEDS[sx][sy]
+
+          S.usage = "TELE_IN"
+        end
+
+      end
+    end end
   end
 
   local function stairwell_height_diff(focus_C)
