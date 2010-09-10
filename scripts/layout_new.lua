@@ -83,8 +83,8 @@ function Layout_room(R)
 
   local K = SECTIONS[kx][ky]
 
-  local ex = K.x1 + 96
-  local ey = K.y1 + 96
+  local ex = (K.x1 + K.x2) / 2
+  local ey = (K.y1 + K.y2) / 2
   local ent = "potion"
 
   if R.purpose == "START" then
@@ -96,7 +96,7 @@ function Layout_room(R)
   end
 
   Trans.entity(ent, ex, ey, 0)
-  Trans.entity("light", ex, ey, 170, { light=100, _radius=200 })
+  Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
 end
 
 
