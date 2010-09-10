@@ -50,7 +50,22 @@ MODDING  (LATER....)
    - materials, themes
  
 
-SOMEWHERE: mention ObHack, perhaps link too
+BATCH MODE
+
+You can run OBLIGE from the console (it's called "batch mode"), but it cannot
+load a config file, so you need to specify the settings on the command line.
+
+Batch mode needs '-b' followed by the output filename, and then followed by
+settings of the form [i]name[/i]=[i]value[/i].
+
+The defaults are similar to the GUI defaults, DOOM is the default game, but
+the default 'Length' is a single map.
+
+Examples:
+[code]> Oblige -b out.wad
+> Oblige -b out.wad length=full mons=heaps
+> Oblige -b pak2.pak game=quake size=small mons=few
+[/code]
 
 
 LINKS??
@@ -58,6 +73,7 @@ LINKS??
 -  HacX : http://www.sonic.net/~nostromo/hacx/Hacx.html
 -  HexenII textures: http://www.raven-games.com/essentials
 (glbsp, FLTK, lua, yawn)
+-  ObHack
 
 
 USER-GUIDE:
@@ -89,9 +105,9 @@ the Oblige output together.
 
 COMPILATION DEPENDENCIES
 
--  glBSP 2.24  (this needs ZLib)
--  Lua 5.1.x
--  FLTK 1.1.9
+-  glBSP 2.27  (this needs ZLib)
+-  Lua 5.1.4
+-  FLTK 1.1.10
 -  GNU C++ compiler (nothing else has been tested)
 
 
