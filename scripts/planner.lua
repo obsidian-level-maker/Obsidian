@@ -77,6 +77,14 @@ function SECTION_CLASS.same_neighbors(self)
   return count
 end
 
+function SECTION_CLASS.side_has_conn(self, side)
+  for _,C in ipairs(self.room.conns) do
+    if C.K1 == self and C.dir == side    then return true end
+    if C.K2 == self and C.dir == 10-side then return true end
+  end
+  return false
+end
+
 
 function Plan_alloc_tag()
   LEVEL.last_tag = (LEVEL.last_tag or 0) + 1
@@ -272,6 +280,16 @@ function Plan_create_sections(W, H)
   local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
+
+
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
+    local K = SECTION_CLASS.new(x, y)
+    -- FIXME: compute properly
+    K.x1 = SEEDS[K.sx1][K.sy1].x1
+    K.y1 = SEEDS[K.sx1][K.sy1].y1
+    K.x2 = SEEDS[K.sx2][K.sy2].x2
+    K.y2 = SEEDS[K.sx2][K.sy2].y2
+  end end
 end
 
 

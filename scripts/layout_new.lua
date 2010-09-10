@@ -25,16 +25,56 @@ require 'util'
 
 function Layout_room(R)
 
-
   ---==| Layout_room |==---
 
 --  R.entry_conn
-
 
 --  if R.purpose then add_purpose() end
 --  if R:has_teleporter() then add_teleporter() end
 --  if R.weapon  then add_weapon(R.weapon)  end
 
+
+  --!!! TEMP SHIT !!!--
+
+  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
+    local K = SECTIONS[kx][ky]
+
+    local c_mat = sel(R.outdoor, "_SKY", "FLAT10")
+    local f_mat = "FLAT1"
+    local w_mat = "STARTAN3"
+
+    Trans.quad(K.x1,K.y1, K.x2,K.y2, nil, 0,   Mat_normal(f_mat))
+    Trans.quad(K.x1,K.y1, K.x2,K.y2, 256, nil, Mat_normal(c_mat))
+
+    for side = 2,8,2 do
+      local ax1, ay1 = x1, y1
+      local ax2, ay2 = x2, y2
+
+      if side == 4 then ax2 = ax1 + 16 end
+      if side == 6 then ax1 = ax2 - 16 end
+      if side == 2 then ay2 = ay1 + 16 end
+      if side == 8 then ay1 = ay2 - 16 end
+
+      if not K:side_has_conn(side) then
+        Trans.quad(ax1,ay1, ax2,ay2, nil,nil, Mat_norma(w_mat))
+      end
+    end
+
+  end end
+
+  local kx = int((R.kx1 + R.kx2) / 2)
+  local ky = int((R.ky1 + R.ky2) / 2)
+
+  local K = SECTIONS[kx][ky]
+
+  local ex = int((K.x1 + K.x2) / 2)
+  local ey = int((K.y1 + K.y2) / 2)
+
+  if R.purpose == "START" then
+    Trans.entity("1", ex, ey, 0)
+  end
+
+  Trans.entity("light", ex, ey, 170, { light=100, _radius=200 })
 end
 
 

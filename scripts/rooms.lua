@@ -68,34 +68,7 @@ class ROOM
 }
 
 
-----------------------------------------------------------------
-
-
-Room Layouting Notes
-====================
-
-
-DIAGONALS:
-   How they work:
-
-   1. basic model: seed is a liquid or walk area which has an
-      extra piece stuck in it (the diagonal) which is
-      either totally solid or same as a neighbouring higher floor.
-      We first build the extra bit, then convert the seed to what
-      it should be (change S.kind from "diagonal" --> "liquid" or "walk")
-      and build the ceiling/floor normally.
-
-   2. The '/' and '%' in patterns go horizontally, whereas
-      the 'Z' and 'N' go vertically.  If the pattern is
-      transposed then we exchange '/' with 'Z', '%' with 'N'.
-
-   3. once the room is fully laid out, then we can process
-      these diagonals and determine the main seed info
-      (e.g. liquid) and the Stuckie piece (e.g. void).
-
-
---------------------------------------------------------------]]
-
+----------------------------------------------------------------]]
 
 require 'defs'
 require 'util'
@@ -119,7 +92,7 @@ end
 function ROOM_CLASS.longstr(self)
   return string.format("%s_%s [%d,%d..%d,%d]",
       sel(self.parent, "SUB_ROOM", "ROOM"),
-      self.id, self.sx1,self.sy1, self.sx2,self.sy2)
+      self.id, self.kx1,self.ky1, self.kx2,self.ky2)
 end
 
 function ROOM_CLASS.update_size(self)
@@ -169,12 +142,6 @@ function ROOM_CLASS.has_teleporter(self)
   return false
 end
 
-function ROOM_CLASS.valid_T(self, x, y)
-  if x < self.tx1 or x > self.tx2 then return false end
-  if y < self.ty1 or y > self.ty2 then return false end
-  return true
-end
-
 function ROOM_CLASS.dist_to_closest_conn(self, K, side)
   -- TODO: improve this by calculating side coordinates
   local best
@@ -217,50 +184,13 @@ function Rooms_setup_theme(R)
   R.main_tex = R.quest.courtyard_floor
 end
 
+
 function Rooms_setup_theme_Scenic(R)
-  R.outdoor = true  -- ???
-
-  --[[
-
-  -- find closest non-scenic room
-  local mx = int((R.sx1 + R.sx2) / 2)
-  local my = int((R.sy1 + R.sy2) / 2)
-
-  for dist = -SEED_W,SEED_W do
-    if Seed_valid(mx + dist, my) then
-      local S = SEEDS[mx + dist][my]
-      if S.room and S.room.kind == "scenic" and
-         S.room.combo
----      and (not S.room.outdoor) == (not R.outdoor)
-      then
-        R.combo = S.room.combo
-        -- R.outdoor = S.room.outdoor
-        return
-      end
-    end
-
-    if Seed_valid(mx, my + dist) then
-      local S = SEEDS[mx][my + dist]
-      if S.room and S.room.kind == "scenic" and
-         S.room.combo
----      and (not S.room.outdoor) == (not R.outdoor)
-      then
-        R.combo = S.room.combo
-        R.outdoor = S.room.outdoor
-        return
-      end
-    end
-  end
-
-  --]]
-
-  -- fallback
-  if R.outdoor then
-    R.main_tex = rand.pick(LEVEL.courtyard_floors)
-  else
-    R.main_tex = rand.pick(LEVEL.building_walls)
-  end
+  -- TODO
+  R.outdoor = true
+  Rooms_setup_theme(R)
 end
+
 
 function Rooms_assign_facades()
   for i = 1,#LEVEL.all_rooms,4 do
@@ -300,15 +230,15 @@ function Rooms_assign_facades()
   end
 end
 
+
 function Rooms_choose_themes()
   for _,R in ipairs(LEVEL.all_rooms) do
     Rooms_setup_theme(R)
   end
+
   for _,R in ipairs(LEVEL.scenic_rooms) do
     Rooms_setup_theme_Scenic(R)
   end
-
-  Rooms_assign_facades()
 end
 
 
@@ -405,6 +335,8 @@ function Rooms_decide_hallways()
 
 
   ---| Rooms_decide_hallways |---
+
+  do return end  --!!!!
 
   if not THEME.hallway_walls then
     gui.printf("Hallways disabled (no theme info)\n")
@@ -596,6 +528,8 @@ function Rooms_setup_symmetry()
 
   --| Rooms_setup_symmetry |--
 
+  do return end  --!!!!
+
   for _,R in ipairs(LEVEL.all_rooms) do
     decide_layout_symmetry(R)
 
@@ -617,7 +551,7 @@ function Rooms_setup_symmetry()
 end
 
 
-function Rooms_place_doors()
+function OLD__OLD__Rooms_place_doors()
   local DEFAULT_PROBS = {}
 
   local function door_chance(R1, R2)
@@ -809,6 +743,34 @@ function Rooms_synchronise_skies()
 
     if not changes then break; end
   end -- for loop
+end
+
+
+function Rooms_place_windows()
+
+  local function score_side(K, side)
+    local N = K:neighbor(side)
+
+    if not N or N.room == K.room then
+      return -1
+    end
+
+    -- FIXME: if has_conn(K, side) then return -1 end
+
+    if not N.room.outdoor then
+      return 0.1
+    end
+
+    if R.num_windows > 0 then
+      return 1
+    end
+
+    return 3
+  end
+
+  if STYLE.windows == "none" then return end
+
+  -- FIXME : Rooms_place_windows
 end
 
 
@@ -3194,6 +3156,10 @@ end
 
 
 function Rooms_add_sun()
+  if GAME.format == "doom" then
+    return
+  end
+
   local sun_r = 25000
   local sun_h = 40000
 
@@ -3220,11 +3186,10 @@ function Rooms_build_all()
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   Rooms_choose_themes()
----!!!!  Rooms_decide_hallways()
+  Rooms_assign_facades()
 
+  Rooms_decide_hallways()
   Rooms_setup_symmetry()
-
-  Rooms_place_doors()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
@@ -3232,38 +3197,19 @@ function Rooms_build_all()
     return
   end
 
----!!  Levels.invoke_hook("layout_rooms", LEVEL.seed)
+  Rooms_place_windows()
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_do_room(R)
-    Rooms_make_ceiling(R)
-    Rooms_add_crates(R)
+    Layout_room(R)
   end
 
   for _,R in ipairs(LEVEL.scenic_rooms) do
-    Layout_do_scenic(R)
-    Rooms_make_ceiling(R)
+    -- FIXME: scenic room
   end
-
-  Rooms_synchronise_skies()
-
-  Rooms_border_up()
-
-  for _,R in ipairs(LEVEL.scenic_rooms) do Rooms_build_seeds(R) end
-  for _,R in ipairs(LEVEL.all_rooms)    do Rooms_build_seeds(R) end
 
   Layout_edge_of_map()
 
   Rooms_add_sun()
-
-
-  local S = SEEDS[5][6]
-  local T = Trans.centre_transform(S, S.floor_h or 192, 2);
-  T.scale_z = 0.8
-
-  local skin = { wall="WIZMET1_2", floor="WIZMET1_2", step="AZWALL3_2", top="AZWALL1_5" }
-
-  Fabricate("QUAKE_3D_STAIR", skin, T)
 
 end
 

@@ -54,7 +54,7 @@ require 'quests'
 require 'build'
 
 require 'caves'
-require 'layout'
+require 'layout_new'
 require 'rooms'
 require 'tiler'
 require 'fight'
