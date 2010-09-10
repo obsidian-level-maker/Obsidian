@@ -310,6 +310,30 @@ public:
       *max_y = MAX(*max_y, y2);
     }
   }
+
+  region_c * FinalRegion()
+  {
+    // determine region when we reach a 2D leaf
+    // (result is not valid any other time)
+
+    for (unsigned int i = 0 ; i < sides.size() ; i++)
+    {
+      quake_side_c *S = sides[i];
+
+      if (S->snag && S->snag->region)
+        return S->snag->region;
+    }
+
+    // failed to find one, because all the sides were "mini sides".
+    // to handle this we perform a point-to-region lookup, which is
+    // currently very slow, so hopefully this occurs rarely.
+
+    double mid_x, mid_y;
+
+    CalcMid(&mid_x, &mid_y);
+
+    return CSG_PointInRegion(mid_x, mid_y);
+  }
 };
 
 
@@ -1374,12 +1398,7 @@ static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
 
 static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 {
-  // FIXME: this can fail due to getting a "mini side".
-  //        It does not usually happen because the OBLIGE Lua code
-  //        creates seed-size quad brushes everywhere.
-  SYS_ASSERT(group.sides[0]->snag);
-
-  region_c *R = group.sides[0]->snag->region;
+  region_c *R = group.FinalRegion();
 
   SYS_ASSERT(R);
   SYS_ASSERT(R->gaps.size() > 0);

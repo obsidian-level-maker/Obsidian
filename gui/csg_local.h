@@ -162,8 +162,9 @@ extern std::vector<region_c *> all_regions;
 /***** FUNCTIONS ****************/
 
 void CSG_BSP(double grid, bool is_clip_hull = false);
-
 void CSG_BSP_Free();
+
+region_c * CSG_PointInRegion(double x, double y);
 
 
 #endif /* __OBLIGE_CSG_LOCAL_H__ */
