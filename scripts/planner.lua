@@ -910,8 +910,8 @@ function Plan_find_neighbors()
   -- determines neighboring rooms of each room
   -- (including diagonals, which may touch after nudging)
 
-  local function add_neighbor(R, side, N)
-    -- check if already there
+  local function add_neighbor(R, N)
+    -- already there?
     for _,O in ipairs(R.neighbors) do
       if O == N then return end
     end
@@ -920,20 +920,17 @@ function Plan_find_neighbors()
   end
 
   for x = 1,SECTION_W do for y = 1,SECTION_H do
-
-    local R = SECTIONS[x][y].room
+    local K = SECTIONS[x][y]
+    local R = K.room
 
     if not R.neighbors then
       R.neighbors = {}
     end
 
     for side = 1,9 do if side ~= 5 then
-      local nx, ny = geom.nudge(x, y, side)
-      if valid_R(nx, ny) then
-        local N = room_map[nx][ny]
-        if N ~= R then
-          add_neighbor(R, side, N)
-        end
+      local NK = K:neighbor(side)
+      if NK and NK.room ~= R then
+        add_neighbor(R, NK.room)
       end
     end end -- side
 
@@ -1025,13 +1022,11 @@ function Plan_create_rooms()
   Levels_invoke_hook("adjust_rooms")
 
   Plan_collect_sections()
-
   Plan_dump_sections()
---!!!!  Plan_find_neighbors()
+
+  Plan_find_neighbors()
 
   Plan_decide_outdoors()
-
---????  Plan_sub_rooms()
 
   Plan_make_seeds()
 
@@ -1040,7 +1035,7 @@ function Plan_create_rooms()
   Seed_dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw,R.sh)
+    gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw, R.sh)
   end
 end
 
