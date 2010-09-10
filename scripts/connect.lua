@@ -828,6 +828,8 @@ function Connect_rooms()
   local function decide_teleporters(list)
     LEVEL.teleporter_list = {}
 
+    do return end --!!!!!!
+
     if not PARAM.teleporters then return end
 
     if STYLE.teleporters == "none" then return end

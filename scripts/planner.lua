@@ -283,7 +283,7 @@ function Plan_create_sections(W, H)
 
 
   for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local K = SECTION_CLASS.new(x, y)
+    local K = SECTIONS[x][y]
     -- FIXME: compute properly
     K.x1 = SEEDS[K.sx1][K.sy1].x1
     K.y1 = SEEDS[K.sx1][K.sy1].y1

@@ -1746,6 +1746,8 @@ end
 
 function Monsters_make_battles()
   
+  do return end --!!!!!!
+
   gui.printf("\n--==| Make Battles |==--\n\n")
 
   Player_init()
