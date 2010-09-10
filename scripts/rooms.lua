@@ -746,16 +746,19 @@ function Rooms_synchronise_skies()
 end
 
 
-function Rooms_place_windows()
+function Rooms_decide_windows()
 
-  local function score_side(K, side)
+  local function UNUSED_score_side(K, side)
     local N = K:neighbor(side)
 
     if not N or N.room == K.room then
       return -1
     end
 
-    -- FIXME: if has_conn(K, side) then return -1 end
+    -- windows next to doors are handled differently
+    if K:side_has_conn(side) then
+      return -1
+    end
 
     if not N.room.outdoor then
       return 0.1
@@ -768,9 +771,71 @@ function Rooms_place_windows()
     return 3
   end
 
+
+  local function add_window(K, N, side)
+    local WINDOW =
+    {
+      K1=K, K2=N, dir=side
+    }
+
+    table.insert(K.room.windows, WINDOW)
+    table.insert(N.room.windows, WINDOW)
+
+    gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
+  end
+
+
+  local function try_add_windows(R, side)
+    if STYLE.windows == "few"  and #R.windows > 0 then return end
+    if STYLE.windows == "some" and #R.windows > 2 then return end
+
+    local kx1,ky1,kx2,ky2 = geom.side_coords(side, R.kx1,R.ky1, R.kx2,R.ky2)
+
+    for x = kx1,kx2 do for y = ky1,ky2 do
+      local K = SECTIONS[x][y]
+      if K and K.room == R then
+        
+        local N = K:neighbor(side)
+
+        if N and N.room ~= R and N.room.outdoor then
+          add_window(K, N, side)      
+        end
+      end
+    end end
+  end
+
+  
+  local function do_windows(R)
+    if STYLE.windows == "none" then return end
+
+    if R.outdoor or R.semi_outdoor then return end
+
+    -- TODO: cavey see-through holes
+    if R.natural then return end
+
+    -- TODO: windows in L/T/+ shaped rooms
+    if R.shape ~= "rect" then return end
+
+    local SIDES = { 2,4,6,8 }
+    rand.shuffle(SIDES)
+
+    for _,side in ipairs(SIDES) do
+      try_add_windows(R, side)
+    end
+  end
+
+
+  ---| Rooms_decide_windows |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    R.windows = {}
+  end
+
   if STYLE.windows == "none" then return end
 
-  -- FIXME : Rooms_place_windows
+  for _,R in ipairs(LEVEL.all_rooms) do
+    do_windows(R)
+  end
 end
 
 
@@ -1049,7 +1114,6 @@ function Rooms_border_up()
   local function decide_windows(R, border_list)
     if R.outdoor or R.natural or R.kind ~= "normal" then return end
     if R.semi_outdoor then return end
-    if STYLE.windows == "none" then return end
 
     local poss = {}
 
@@ -3197,7 +3261,7 @@ function Rooms_build_all()
     return
   end
 
-  Rooms_place_windows()
+  Rooms_decide_windows()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_room(R)
