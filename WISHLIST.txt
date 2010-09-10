@@ -247,6 +247,8 @@ NO:  CSG DOOM: support entity.light
 -  DOOM: fix y_offset values
     (when have y_offset and brush side is truncated/extended)
 
+-  only use separated teleporters in large rooms (kvol >= 3)
+
 -  generate episode names (M_EPI# etc).
 
 -  Rail brushes: support fake 3D bridges
