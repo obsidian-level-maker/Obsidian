@@ -1146,40 +1146,6 @@ function Monsters_fill_room(R)
     end
   end
 
-  local function try_occupy_seed(S, x, y, mon, totals)
-    local info = GAME.MONSTERS[mon]
-    local ent  = GAME.ENTITIES[mon]
-
-    local sx2, sy2 = x, y
-    if is_huge(mon) then
-      sx2, sy2 = x+1, y+1
-    end
-
-    for sx = x,sx2 do for sy = y,sy2 do
-      local S2 = SEEDS[sx][sy]
-      if S2.room ~= S.room then
-        return false
-      end
-
-      if not monster_fits(S2, mon, info) then
-        return false
-      end
-
-      -- ensure no floor difference for huge monsters
-      if sx > x or sy > y then
-        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
-        if diff > 1 then return false end
-      end
-    end end -- sx, sy
-
-    -- create spots
-    add_spot_group(S, mon, info)
-
-    totals[mon] = totals[mon] + 1
-
-    return true
-  end
-
   local function try_occupy_spot(spot, mon, totals)
     local info = GAME.MONSTERS[mon]
     local ent  = GAME.ENTITIES[mon]
