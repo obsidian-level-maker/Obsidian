@@ -981,6 +981,46 @@ function Plan_make_seeds()
 end
 
 
+function Plan_dump_rooms(title)
+  if title then
+    gui.printf("%s\n", title)
+  end
+
+  local function seed_to_char(sx, sy)
+    -- find the section
+    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if geom.inside_box(sx,sy, K.sx1,K.sy1, K.sx2,K.sy2) then
+        local R = K.room
+
+        if R.kind == "scenic" then return "=" end
+
+        local n = 1 + ((R.id - 1) % 26)
+
+        if R.natural then
+          return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+        else
+          return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+        end
+      end
+    end end
+
+    return "."
+  end
+
+  for y = SEED_H,1,-1 do
+    local line = ""
+    for x = 1,SEED_W do
+      line = line .. seed_to_char(x, y)
+    end
+    gui.printf("%s\n", line)
+  end
+
+  gui.printf("\n")
+end
+
+
 function Plan_create_rooms()
 
   -- Overview of room planning:
@@ -1032,7 +1072,7 @@ function Plan_create_rooms()
 
   Seed_flood_fill_edges()
 
-  Seed_dump_rooms("Seed Map:")
+  Plan_dump_rooms("Seed Map:")
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw, R.sh)

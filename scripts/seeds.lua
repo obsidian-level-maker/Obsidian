@@ -188,40 +188,6 @@ function Seed_safe_get(x, y)
 end
 
 
-function Seed_dump_rooms(title)
-
-  local function seed_to_char(S)
-    if not S then return "!" end
-    if S.free then return "." end
-    if S.edge_of_map then return "#" end
-    if not S.room then return "?" end
-
-    if S.room.kind == "scenic" then return "=" end
-
-    local n = 1 + ((S.room.id-1) % 26)
-
-    if S.room.natural then
-      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
-    else
-      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
-    end
-  end
-
-  if title then
-    gui.printf("%s\n", title)
-  end
-
-  for y = SEED_H,1,-1 do
-    local line = "@c"
-    for x = 1,SEED_W do
-      line = line .. seed_to_char(SEEDS[x][y])
-    end
-    gui.printf("%s\n", line)
-  end
-
-  gui.printf("\n")
-end
-
 
 function Seed_flood_fill_edges()
   local active = {}
