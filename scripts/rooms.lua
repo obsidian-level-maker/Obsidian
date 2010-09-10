@@ -785,7 +785,7 @@ function Rooms_decide_windows()
   end
 
 
-  local function try_add_windows(R, side)
+  local function try_add_windows(R, side, prob)
     if STYLE.windows == "few"  and #R.windows > 0 then return end
     if STYLE.windows == "some" and #R.windows > 2 then return end
 
@@ -798,7 +798,9 @@ function Rooms_decide_windows()
         local N = K:neighbor(side)
 
         if N and N.room ~= R and N.room.outdoor then
-          add_window(K, N, side)      
+          if rand.odds(prob) then
+            add_window(K, N, side)      
+          end
         end
       end
     end end
@@ -816,11 +818,13 @@ function Rooms_decide_windows()
     -- TODO: windows in L/T/+ shaped rooms
     if R.shape ~= "rect" then return end
 
+    local prob = style_sel("windows", 0, 20, 40, 80)
+
     local SIDES = { 2,4,6,8 }
     rand.shuffle(SIDES)
 
     for _,side in ipairs(SIDES) do
-      try_add_windows(R, side)
+      try_add_windows(R, side, prob)
     end
   end
 

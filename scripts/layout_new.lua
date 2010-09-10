@@ -22,6 +22,14 @@ require 'defs'
 require 'util'
 
 
+function SECTION_CLASS.has_window(self, side)
+  for _,W in ipairs(self.room.windows) do
+    if W.K1 == self and W.dir == side    then return true end
+    if W.K2 == self and W.dir == 10-side then return true end
+  end
+  return false
+end
+
 
 function Layout_room(R)
 
@@ -44,6 +52,7 @@ function Layout_room(R)
       local f_mat = "FLAT1"
       local w_mat = "STARTAN3"
       local d_mat = "TEKGREN3"
+      local win_mat = "COMPBLUE"
 
       Trans.quad(K.x1,K.y1, K.x2,K.y2, nil, 0,   Mat_normal(f_mat))
       Trans.quad(K.x1,K.y1, K.x2,K.y2, 256, nil, Mat_normal(c_mat))
@@ -63,6 +72,9 @@ function Layout_room(R)
           -- nothing if same room
         elseif K:side_has_conn(side) then
           Trans.quad(ax1,ay1, ax2,ay2, 128,nil, Mat_normal(d_mat))
+        elseif K:has_window(side) then
+          Trans.quad(ax1,ay1, ax2,ay2, nil,40, Mat_normal(win_mat))
+          Trans.quad(ax1,ay1, ax2,ay2, 80,nil, Mat_normal(win_mat))
         else
           Trans.quad(ax1,ay1, ax2,ay2, nil,nil, Mat_normal(w_mat))
         end
