@@ -376,8 +376,7 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
---stderrf("add_connection: K%d,%d --> K%d,%d  %s --> %s  %d,%d\n",
---      K1.kx, K1.ky, K2.kx, K2.ky, R:tostr(), N:tostr(), R.conn_group, N.conn_group);
+    gui.debugf("add_connection: %s --> %s\n", K1:tostr(), K2:tostr())
 
     merge_groups(R.conn_group, N.conn_group)
 
