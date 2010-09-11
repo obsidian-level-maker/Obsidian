@@ -56,11 +56,17 @@ function Layout_prepare_room(R)
     end
   end
 
+  local function mark_block(x, y, kw, kh)
+    for dx = 0,kw-1 do for dy = 0,kh-1 do
+      SECTIONS[x+dx][y+dy].contig_used = true
+    end end
+  end
+
   --| Layout_prepare_room |--
 
   for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
     local K = SECTIONS[x][y]
-    if K.room == R then
+    if K.room == R and not K.contig_used then
       
       local kw,kh = biggest_block(x, y)
 
@@ -76,10 +82,7 @@ function Layout_prepare_room(R)
 stderrf("initial space in %s : (%d %d) .. (%d %d)\n", R:tostr(),
         SPACE.x1, SPACE.y1, SPACE.x2, SPACE.y2)
 
-      for dx = 0,kw-1 do for dy = 0,kh-1 do
-        SECTIONS[x+dx][y+dy].contig_used = true
-      end end
-
+      mark_block(x, y, kw, kh)
     end
   end end
 end
