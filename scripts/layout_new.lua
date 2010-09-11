@@ -96,50 +96,76 @@ function Layout_merge_space(R, N)  -- N is new one
   local spaces = R.spaces
   R.spaces = {}
 
-  local function split_space(S, N)
-    local x1_edge = N.x1 <= S.x1
-    local x2_edge = N.x2 >= S.x2
-
-    local y1_edge = N.y1 <= S.y1
-    local y2_edge = N.y2 >= S.y2
-
-    if N.y1 > S.y1 then
-      local T = table.copy(S)
-      S.y1 = N.y1
-      T.y2 = N.y1
-      table.insert(spaces, T)
-      assert(S.y1 < S.y2)
-      assert(T.y1 < T.y2)
-    end
-
-    if N.y2 < S.y2 then
-      local T = table.copy(S)
-      S.y2 = N.y2
-      T.y1 = N.y2
-      table.insert(spaces, T)
-      assert(S.y1 < S.y2)
-      assert(T.y1 < T.y2)
-    end
-     
+  local function split_space_X(S, N)
     if N.x1 > S.x1 then
       local T = table.copy(S)
-      S.x1 = N.x1
-      T.x2 = N.x1
+      S.x1 = N.x1 ; T.x2 = N.x1
       table.insert(spaces, T)
-      assert(S.x1 < S.x2)
-      assert(T.x1 < T.x2)
     end
 
     if N.x2 < S.x2 then
       local T = table.copy(S)
-      S.x2 = N.x2
-      T.x1 = N.x2
+      S.x2 = N.x2 ; T.x1 = N.x2
       table.insert(spaces, T)
-      assert(S.x1 < S.x2)
-      assert(T.x1 < T.x2)
+    end
+
+    if N.y1 > S.y1 then
+      local T = table.copy(S)
+      S.y1 = N.y1 ; T.y2 = N.y1
+      table.insert(spaces, T)
+    end
+
+    if N.y2 < S.y2 then
+      local T = table.copy(S)
+      S.y2 = N.y2 ; T.y1 = N.y2
+      table.insert(spaces, T)
     end
   end
   
+  local function split_space_Y(S, N)
+    -- same code as above, but do Y first
+
+    if N.y1 > S.y1 then
+      local T = table.copy(S)
+      S.y1 = N.y1 ; T.y2 = N.y1
+      table.insert(spaces, T)
+    end
+
+    if N.y2 < S.y2 then
+      local T = table.copy(S)
+      S.y2 = N.y2 ; T.y1 = N.y2
+      table.insert(spaces, T)
+    end
+     
+    if N.x1 > S.x1 then
+      local T = table.copy(S)
+      S.x1 = N.x1 ; T.x2 = N.x1
+      table.insert(spaces, T)
+    end
+
+    if N.x2 < S.x2 then
+      local T = table.copy(S)
+      S.x2 = N.x2 ; T.x1 = N.x2
+      table.insert(spaces, T)
+    end
+  end
+
+  local function split_space(S, N)
+    local x_dist = math.min(
+      math.abs(S.x1 - N.x1), math.abs(S.x1 - N.x2),
+      math.abs(S.x2 - N.x1), math.abs(S.x2 - N.x2))
+
+    local y_dist = math.min(
+      math.abs(S.y1 - N.y1), math.abs(S.y1 - N.y2),
+      math.abs(S.y2 - N.y1), math.abs(S.y2 - N.y2))
+
+    if x_dist < y_dist then
+      split_space_X(S, N)
+    else
+      split_space_Y(S, N)
+    end
+  end
+
   for _,S in ipairs(spaces) do
     if geom.boxes_overlap(S.x1,S.y1,S.x2,S.y2, N.x1,N.y1,N.x2,N.y2) then
       assert(S.free)    
