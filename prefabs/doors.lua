@@ -210,17 +210,27 @@ PREFAB.BARS =
 
 PREFAB.QUAKE_DOOR =
 {
+  placement = "fitted",
   team_models = true,
 
   brushes =
   {
+    -- step
+    {
+      { x = 192, y =  0, mat = "?step" },
+      { x = 192, y = 48, mat = "?step" },
+      { x =   0, y = 48, mat = "?step" },
+      { x =   0, y =  0, mat = "?step" },
+      { t = 8, mat = "?step" },
+    },
+
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
       { x = 192, y = 48, mat = "?inner" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
-      { b = 128, mat = "?outer" },
+      { b = 136, mat = "?outer" },
     },
 
     {
@@ -246,7 +256,7 @@ PREFAB.QUAKE_DOOR =
     {
       x1 = 32, x2 = 96,  x_face = { mat="METAL1_2" },
       y1 = 16, y2 = 32,  y_face = { mat="DR05_2" },
-      z1 =  0, z2 = 128, z_face = { mat="METAL1_2" },
+      z1 =  8, z2 = 128, z_face = { mat="METAL1_2" },
 
       entity =
       {
@@ -258,7 +268,7 @@ PREFAB.QUAKE_DOOR =
     {
       x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
       y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
-      z1 =  0, z2 = 128, z_face = { mat="METAL1_2" },
+      z1 =  8, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
@@ -271,17 +281,27 @@ PREFAB.QUAKE_DOOR =
 
 PREFAB.QUAKE_V_DOOR =
 {
+  placement = "fitted",
   team_models = true,
 
   brushes =
   {
+    -- step
+    {
+      { x = 192, y =  0, mat = "?step" },
+      { x = 192, y = 48, mat = "?step" },
+      { x =   0, y = 48, mat = "?step" },
+      { x =   0, y =  0, mat = "?step" },
+      { t = 8, mat = "?step" },
+    },
+
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
       { x = 192, y = 48, mat = "?inner" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
-      { b = 128, mat = "?outer" },
+      { b = 136, mat = "?outer" },
     },
 
     {
@@ -309,7 +329,7 @@ PREFAB.QUAKE_V_DOOR =
     {
       x1 = 32, x2 = 160, x_face = { mat="METAL1_2" },
       y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
-      z1 =  0, z2 =  64, z_face = { mat="METAL1_2" },
+      z1 =  8, z2 =  72, z_face = { mat="METAL1_2" },
 
       entity =
       {
@@ -321,7 +341,7 @@ PREFAB.QUAKE_V_DOOR =
     {
       x1 = 32, x2 = 160, x_face = { mat="METAL1_2" },
       y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
-      z1 = 64, z2 = 128, z_face = { mat="METAL1_2" },
+      z1 = 72, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
@@ -332,8 +352,9 @@ PREFAB.QUAKE_V_DOOR =
 }
 
 
-PREFAB.QUAKE_4_WAY =
+PREFAB.QUAKE_4_WAY =  -- FIXME: step
 {
+  placement = "fitted",
   team_models = true,
 
   brushes =
@@ -419,8 +440,9 @@ PREFAB.QUAKE_4_WAY =
 }
 
 
-PREFAB.QUAKE2_DIAG_4_WAY =
+PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
 {
+  placement = "fitted",
   team_models = true,
 
   brushes =
