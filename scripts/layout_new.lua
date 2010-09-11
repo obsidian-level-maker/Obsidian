@@ -48,6 +48,10 @@ function Layout_prepare_room(R)
   local function biggest_block(x, y)
     local kw, kh = 1,1
 
+
+--- DISABLED FOR NOW, MUCKS UP WALLS:
+---   if R.shape == "rect" then return R.kw, R.kh end
+
     while true do
       if block_is_contig(x, y, kw+1, kh) then
         kw = kw + 1
@@ -336,6 +340,9 @@ function Layout_room(R)
   end
 
 
+  local THICK = 80
+
+
   local function try_add_corner()
     for _,S in ipairs(R.spaces) do
       for side = 1,9,2 do if side ~= 5 then
@@ -344,19 +351,19 @@ function Layout_room(R)
           local x1, y1 = S.x1, S.y1
           local x2, y2 = S.x2, S.y2
 
-          if x2 - x1 >= 96 then
+          if x2 - x1 >= THICK then
             if side == 1 or side == 7 then
-              x2 = x1 + 64
+              x2 = x1 + THICK
             else
-              x1 = x2 - 64
+              x1 = x2 - THICK
             end
           end
 
-          if y2 - y1 >= 96 then
+          if y2 - y1 >= THICK then
             if side == 1 or side == 3 then
-              y2 = y1 + 64
+              y2 = y1 + THICK
             else
-              y1 = y2 - 64
+              y1 = y2 - THICK
             end
           end
 
@@ -386,10 +393,10 @@ function Layout_room(R)
           local x1, y1 = S.x1, S.y1
           local x2, y2 = S.x2, S.y2
 
-          if side == 4 and x2 - x1 >= 64 then x2 = x1 + 32 end
-          if side == 6 and x2 - x1 >= 64 then x1 = x2 - 32 end
-          if side == 2 and y2 - y1 >= 64 then y2 = y1 + 32 end
-          if side == 8 and y2 - y1 >= 64 then y1 = y2 - 32 end
+          if side == 4 and x2 - x1 >= THICK then x2 = x1 + THICK end
+          if side == 6 and x2 - x1 >= THICK then x1 = x2 - THICK end
+          if side == 2 and y2 - y1 >= THICK then y2 = y1 + THICK end
+          if side == 8 and y2 - y1 >= THICK then y1 = y2 - THICK end
 
           local SPACE =
           {
@@ -427,7 +434,8 @@ function Layout_room(R)
     local win_mat = "COMPBLUE"
 
     local kind, w_face, p_face = Mat_normal(f_mat)
-    p_face.mark = Plan_alloc_mark()
+    p_face.mark  = Plan_alloc_mark()
+    p_face.light = 0.75
 
     Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 0, kind, w_face, p_face)
 
