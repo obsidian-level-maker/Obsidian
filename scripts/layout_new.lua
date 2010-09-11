@@ -26,6 +26,9 @@ function Layout_prepare_room(R)
   R.spaces = {}
 
   local function block_is_contig(kx1, ky1, kw, kh)
+
+    do return false end  -- DISABLED FOR NOW, MUCKS UP WALLS
+
     local kx2 = kx1 + kw - 1
     local ky2 = ky1 + kh - 1
 
@@ -274,12 +277,22 @@ function Layout_room(R)
 --  if R.weapon  then add_weapon(R.weapon)  end
 
 
+  local function not_same_room(K, side)
+    local N = K:neighbor(side)
+    return not (N and N.room == K.room)
+  end
+
   local function touches_side(S, side)
     for _,K in ipairs(R.sections) do
-      if side == 4 and math.abs(S.x1 - K.x1) < 1 then return true end
-      if side == 6 and math.abs(S.x2 - K.x2) < 1 then return true end
-      if side == 2 and math.abs(S.y1 - K.y1) < 1 then return true end
-      if side == 8 and math.abs(S.y2 - K.y2) < 1 then return true end
+      if not_same_room(K, side) and
+         geom.inside_box(S.x1, S.y1, K.x1,K.y1, K.x2,K.y2) and
+         geom.inside_box(S.x2, S.y2, K.x1,K.y1, K.x2,K.y2)
+      then
+        if side == 4 and S.x1 < K.x1+1 then return true end
+        if side == 6 and S.x2 > K.x2-1 then return true end
+        if side == 2 and S.y1 < K.y1+1 then return true end
+        if side == 8 and S.y2 > K.y2-1 then return true end
+      end
     end
     return false
   end
@@ -387,12 +400,14 @@ function Layout_room(R)
 
     if S.straddle == "door" then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 12 , Mat_normal(d_mat))
     elseif S.straddle == "window" then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 64, nil, Mat_normal(win_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
     elseif S.corner then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 16, nil, Mat_normal(corn_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
     elseif S.wall then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 32, nil, Mat_normal(w_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(w_mat))
     else
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
     end
@@ -400,18 +415,6 @@ function Layout_room(R)
 
 
   ---==| Layout_room |==---
-
-  R.sections = {}  -- FIXME: create this in planner
-
-  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
-    local K = SECTIONS[kx][ky]
-    if K.room == R then
-      table.insert(R.sections, K)
-
-      Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
-    end
-  end end
-
 
   add_corners()
 
@@ -423,6 +426,13 @@ function Layout_room(R)
 
 
   --!!! TEMP SHIT !!!--
+
+  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
+    local K = SECTIONS[kx][ky]
+    if K.room == R then
+      Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
+    end
+  end end
 
   local kx = R.kx1
   local ky = R.ky1

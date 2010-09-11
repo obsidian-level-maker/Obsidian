@@ -78,7 +78,8 @@ ROOM_CLASS = {}
 
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_room_id()
-  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={}, spaces={} }
+  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
+              sections={}, windows={}, spaces={} }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.all_rooms, R)
   return R
@@ -788,21 +789,15 @@ function Rooms_decide_windows()
     if STYLE.windows == "few"  and #R.windows > 0 then return end
     if STYLE.windows == "some" and #R.windows > 2 then return end
 
-    local kx1,ky1,kx2,ky2 = geom.side_coords(side, R.kx1,R.ky1, R.kx2,R.ky2)
+    for _,K in ipairs(R.sections) do
+      local N = K:neighbor(side)
 
-    for x = kx1,kx2 do for y = ky1,ky2 do
-      local K = SECTIONS[x][y]
-      if K and K.room == R then
-        
-        local N = K:neighbor(side)
-
-        if N and N.room ~= R and N.room.outdoor then
-          if rand.odds(prob) then
-            add_window(K, N, side)      
-          end
-        end
+      if N and N.room ~= R and N.room.outdoor and
+         not K:side_has_conn(side) and rand.odds(prob)
+      then
+        add_window(K, N, side)      
       end
-    end end
+    end
   end
 
   
@@ -829,10 +824,6 @@ function Rooms_decide_windows()
 
 
   ---| Rooms_decide_windows |---
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    R.windows = {}
-  end
 
   if STYLE.windows == "none" then return end
 

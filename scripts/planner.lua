@@ -869,6 +869,8 @@ function Plan_collect_sections()
     local K = SECTIONS[kx][ky]
     local R = K.room
 
+    table.insert(R.sections, K)
+
     R.kx1 = math.min(kx, R.kx1 or 99)
     R.ky1 = math.min(ky, R.ky1 or 99)
 
