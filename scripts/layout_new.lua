@@ -277,29 +277,62 @@ function Layout_room(R)
 --  if R.weapon  then add_weapon(R.weapon)  end
 
 
+  local function section_for_space(S)
+    for _,K in ipairs(R.sections) do
+      if geom.inside_box(S.x1, S.y1, K.x1,K.y1, K.x2,K.y2) and
+         geom.inside_box(S.x2, S.y2, K.x1,K.y1, K.x2,K.y2)
+      then
+        return K
+      end
+    end
+  end
+
   local function not_same_room(K, side)
     local N = K:neighbor(side)
     return not (N and N.room == K.room)
   end
 
-  local function touches_side(S, side)
-    for _,K in ipairs(R.sections) do
-      if not_same_room(K, side) and
-         geom.inside_box(S.x1, S.y1, K.x1,K.y1, K.x2,K.y2) and
-         geom.inside_box(S.x2, S.y2, K.x1,K.y1, K.x2,K.y2)
-      then
+  local function touches_side(S, side, foobie)
+    local K = section_for_space(S)
+    if foobie or not_same_room(K, side) then
         if side == 4 and S.x1 < K.x1+1 then return true end
         if side == 6 and S.x2 > K.x2-1 then return true end
         if side == 2 and S.y1 < K.y1+1 then return true end
         if side == 8 and S.y2 > K.y2-1 then return true end
-      end
     end
     return false
   end
 
   local function touches_corner(S, side)
-    return touches_side(S, geom.RIGHT_45[side]) and
-           touches_side(S, geom. LEFT_45[side])
+    local R_dir = geom.RIGHT_45[side]
+    local L_dir = geom. LEFT_45[side]
+
+    if touches_side(S, R_dir) and touches_side(S, L_dir) then
+      return 1
+    end
+
+    -- handle 270 degree corners (in shaped rooms)
+    if not (touches_side(S, R_dir, true) and touches_side(S, L_dir, true)) then
+      return nil
+    end
+
+    local K = section_for_space(S)
+    if not K then return nil end
+
+    local L = K:neighbor(L_dir)
+    local R = K:neighbor(R_dir)
+
+    if not (L and L.room == K.room) then return nil end
+    if not (R and R.room == K.room) then return nil end
+
+    local L2 = L:neighbor(R_dir)
+    local R2 = R:neighbor(L_dir)
+
+    assert(L2 == R2)
+
+    if L2 and L2.room == K.room then return nil end
+
+    return 2
   end
 
 
