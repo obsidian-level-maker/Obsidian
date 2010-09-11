@@ -291,14 +291,15 @@ function Layout_room(R)
     end
   end
 
-  local function not_same_room(K, side)
+  local function same_room(K, side)
     local N = K:neighbor(side)
-    return not (N and N.room == K.room)
+    if not N and R.outdoor then return true end ---- FIXME HACK CRAP for SKY BORDERS
+    return N and N.room == K.room
   end
 
   local function touches_side(S, side, foobie)
     local K = section_for_space(S)
-    if foobie or not_same_room(K, side) then
+    if foobie or not same_room(K, side) then
         if side == 4 and S.x1 < K.x1+1 then return true end
         if side == 6 and S.x2 > K.x2-1 then return true end
         if side == 2 and S.y1 < K.y1+1 then return true end
@@ -577,6 +578,8 @@ function Layout_edge_of_map()
   end
 
   local function build_edge(S)
+if not S.walk_h then S.walk_h = 16 end
+
     if S.building then
       local tex = S.building.cave_tex or S.building.facade or S.building.main_tex
       assert(tex)
