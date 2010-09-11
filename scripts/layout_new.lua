@@ -86,6 +86,9 @@ end
 
 
 function Layout_merge_space(R, N)  -- N is new one
+  assert(N.x1 < N.x2)
+  assert(N.y1 < N.y2)
+
   -- rebuild list
   local spaces = R.spaces
   R.spaces = {}
@@ -102,6 +105,8 @@ function Layout_merge_space(R, N)  -- N is new one
       S.y1 = N.y1
       T.y2 = N.y1
       table.insert(spaces, T)
+      assert(S.y1 < S.y2)
+      assert(T.y1 < T.y2)
     end
 
     if N.y2 < S.y2 then
@@ -109,6 +114,8 @@ function Layout_merge_space(R, N)  -- N is new one
       S.y2 = N.y2
       T.y1 = N.y2
       table.insert(spaces, T)
+      assert(S.y1 < S.y2)
+      assert(T.y1 < T.y2)
     end
      
     if N.x1 > S.x1 then
@@ -116,6 +123,8 @@ function Layout_merge_space(R, N)  -- N is new one
       S.x1 = N.x1
       T.x2 = N.x1
       table.insert(spaces, T)
+      assert(S.x1 < S.x2)
+      assert(T.x1 < T.x2)
     end
 
     if N.x2 < S.x2 then
@@ -123,11 +132,13 @@ function Layout_merge_space(R, N)  -- N is new one
       S.x2 = N.x2
       T.x1 = N.x2
       table.insert(spaces, T)
+      assert(S.x1 < S.x2)
+      assert(T.x1 < T.x2)
     end
   end
   
   for _,S in ipairs(spaces) do
-    if geom.boxes_overlap(S.x1,S.x2,S.y1,S.y2, N.x1,N.y1,N.x2,N.y2) then
+    if geom.boxes_overlap(S.x1,S.y1,S.x2,S.y2, N.x1,N.y1,N.x2,N.y2) then
       assert(S.free)    
       split_space(S, N)
     else
@@ -182,6 +193,9 @@ function Layout_place_straddlers(R)
       end
     end
 
+    assert(x1 < x2)
+    assert(y1 < y2)
+
     local SPACE =
     {
       straddle = kind,
@@ -234,12 +248,7 @@ function Layout_room(R)
     local K = SECTIONS[kx][ky]
     if K.room == R then
 
-      local c_mat = sel(R.outdoor, "_SKY", "FLAT10")
-      local f_mat = "FLAT1"
-      local w_mat = "STARTAN3"
-      local d_mat = "TEKGREN3"
-      local win_mat = "COMPBLUE"
-
+--[[
       Trans.quad(K.x1,K.y1, K.x2,K.y2, nil, 0,   Mat_normal(f_mat))
       Trans.quad(K.x1,K.y1, K.x2,K.y2, 256, nil, Mat_normal(c_mat))
 
@@ -265,11 +274,41 @@ function Layout_room(R)
           Trans.quad(ax1,ay1, ax2,ay2, nil,nil, Mat_normal(w_mat))
         end
       end
+--]]
 
       Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
 
     end
   end end
+
+
+  local function build_space(S)
+    local c_mat = sel(R.outdoor, "_SKY", "FLAT10")
+    local f_mat = "FLAT1"
+    local w_mat = "STARTAN3"
+    local d_mat = "TEKGREN3"
+    local win_mat = "COMPBLUE"
+
+    local kind, w_face, p_face = Mat_normal(f_mat)
+    p_face.mark = Plan_alloc_mark()
+
+    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 0, kind, w_face, p_face)
+
+    if S.straddle == "door" then
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
+    elseif S.straddle == "window" then
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 64, nil, Mat_normal(win_mat))
+    elseif S.wall then
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 16, nil, Mat_normal(w_mat))
+    else
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
+    end
+  end
+
+
+  for _,S in ipairs(R.spaces) do
+    build_space(S)
+  end
 
 
   local kx = R.kx1
