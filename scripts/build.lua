@@ -942,9 +942,10 @@ function Fabricate(fab, skin, T)
 
   local function resize_coord(info, n)
     local groups = info.groups
-    local T = #groups
 
-    --- if T == 0 then return n end
+    if not groups then return n end
+
+    local T = #groups
     assert(T >= 1)
 
     if n < groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
@@ -994,9 +995,13 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function entity_props(E)
+  local function entity_props(E, extra_props)
     local props = {}
-    
+
+    if extra_props then
+      table.merge(props, extra_props)
+    end
+
     for key,value in pairs(E) do
       if key ~= "ent" and key ~= "x" and key ~= "y" and key ~= "z" then
         props[key] = Trans.substitute(value, skin)
@@ -1007,11 +1012,21 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function render_entities(list)
+  local function render_one_ent(E, props, x_info, y_info, z_info)
+    local name = Trans.substitute(E.ent, skin)
+
+    local ex = E.x and resize_coord(x_info, E.x)
+    local ey = E.y and resize_coord(y_info, E.y)
+    local ez = E.z and resize_coord(z_info, E.z)
+
+    Trans.entity(name, ex, ey, ez, entity_props(E, props))
+  end
+
+
+  local function render_entities(list, x_info, y_info, z_info)
     if list then
       for _,E in ipairs(list) do
-        local name = Trans.substitute(E.ent, skin)
-        Trans.entity(name, E.x, E.y, E.z, entity_props(E))
+        render_one_ent(E, nil, x_info, y_info, z_info)
       end
     end
   end
@@ -1037,14 +1052,22 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function add_mapmodel(M, team)
-    local x1, y1 = Trans.apply(M.x1, M.y1)
-    local x2, y2 = Trans.apply(M.x2, M.y2)
+  local function add_mapmodel(M, team, x_info, y_info, z_info)
+    local x1, x2 = M.x1, M.x2
+    local y1, y2 = M.y1, M.y2
+    local z1, z2 = M.z1, M.z2
 
-    local z1 = Trans.apply_z(M.z1)
-    local z2 = Trans.apply_z(M.z2)
+    x1 = resize_coord(x_info, x1) ; x2 = resize_coord(x_info, x2)
+    y1 = resize_coord(y_info, y1) ; y2 = resize_coord(y_info, y2)
+    z1 = resize_coord(z_info, z1) ; z2 = resize_coord(z_info, z2)
 
-    -- this is for rotation, but we only support pure N/S/E/W
+    x1, y1 = Trans.apply(x1, y1)
+    x2, y2 = Trans.apply(x2, y2)
+
+    z1 = Trans.apply_z(z1)
+    z2 = Trans.apply_z(z2)
+
+    -- this is for rotation, but we only support 0/90/180/270
     if x1 > x2 then x1,x2 = x2,x1 end
     if y1 > y2 then y1,y2 = y2,y1 end
     if z1 > z2 then z1,z2 = z2,z1 end
@@ -1067,19 +1090,13 @@ function Fabricate(fab, skin, T)
     },
     x1, y1, z1, x2, y2, z2)
 
-    local E = assert(M.entity)
+    assert(M.entity)
 
-    local name = Trans.substitute(E.ent, skin)
-    local props = entity_props(E)
-
-    props.model = ref
-    props.team  = team
-
-    Trans.entity(name, E.x, E.y, E.z, props)
+    render_one_ent(M.entity, { model=ref, team=team }, x_info, y_info, z_info)
   end
 
 
-  local function render_models(list)
+  local function render_models(list, x_info, y_info, z_info)
     if not list then
       return
     end
@@ -1091,7 +1108,7 @@ function Fabricate(fab, skin, T)
     end
 
     for _,M in ipairs(list) do
-      add_mapmodel(M, team)
+      add_mapmodel(M, team, x_info, y_info, z_info)
     end
   end
 
@@ -1160,9 +1177,12 @@ function Fabricate(fab, skin, T)
 
   -- Z stuff --
 
+  local z_info = {}
+
   if ranges.dz and ranges.dz > 1 then
 
-    local z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+    z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+
     local z_low, z_high
 
     if T.fit_height then
@@ -1192,8 +1212,8 @@ function Fabricate(fab, skin, T)
   })
 
   render_brushes(brushes)
-  render_models(fab.models)
-  render_entities(fab.entities)
+  render_models(fab.models, x_info, y_info, z_info)
+  render_entities(fab.entities, x_info, y_info, z_info)
 
   Trans.clear()
 end
