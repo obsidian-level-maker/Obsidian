@@ -105,10 +105,6 @@ function ROOM_CLASS.contains_seed(self, x, y)
   return true
 end
 
-function ROOM_CLASS.add_space(self, S)
-  table.insert(self.spaces, S)  
-end
-
 function ROOM_CLASS.has_lock(self, lock)
   for _,C in ipairs(self.conns) do
     if C.lock == lock then return true end
@@ -3269,6 +3265,10 @@ function Rooms_build_all()
   end
 
   Rooms_decide_windows()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_prepare_room(R)
+  end
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_place_straddlers(R)

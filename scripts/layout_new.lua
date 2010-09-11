@@ -22,6 +22,124 @@ require 'defs'
 require 'util'
 
 
+function Layout_prepare_room(R)
+  R.spaces = {}
+
+  local function block_is_contig(kx1, ky1, kw, kh)
+    local kx2 = kx1 + kw - 1
+    local ky2 = ky1 + kh - 1
+
+    if kx2 > R.kx2 or ky2 > R.ky2 then
+      return false
+    end
+
+    for x = kx1,kx2 do for y = ky1,ky2 do
+      local K = SECTIONS[x][y]
+      if K.room ~= R then return false end
+      if K.contig_used then return false end
+    end end
+
+    return true
+  end
+
+  local function biggest_block(x, y)
+    local kw, kh = 1,1
+
+    while true do
+      if block_is_contig(x, y, kw+1, kh) then
+        kw = kw + 1
+      elseif block_is_contig(x, y, kw, kh+1) then
+        kh = kh + 1
+      else
+        return kw, kh
+      end
+    end
+  end
+
+  --| Layout_prepare_room |--
+
+  for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+    local K = SECTIONS[x][y]
+    if K.room == R then
+      
+      local kw,kh = biggest_block(x, y)
+
+      local SPACE =
+      {
+        free = true,
+        x1 = K.x1, y1 = K.y1,
+        x2 = SECTIONS[x + kw - 1][y].x2,
+        y2 = SECTIONS[x][y + kh - 1].y2,
+      }
+
+      table.insert(R.spaces, SPACE)
+stderrf("initial space in %s : (%d %d) .. (%d %d)\n", R:tostr(),
+        SPACE.x1, SPACE.y1, SPACE.x2, SPACE.y2)
+
+      for dx = 0,kw-1 do for dy = 0,kh-1 do
+        SECTIONS[x+dx][y+dy].contig_used = true
+      end end
+
+    end
+  end end
+end
+
+
+function Layout_merge_space(R, N)  -- N is new one
+  -- rebuild list
+  local spaces = R.spaces
+  R.spaces = {}
+
+  local function split_space(S, N)
+    local x1_edge = N.x1 <= S.x1
+    local x2_edge = N.x2 >= S.x2
+
+    local y1_edge = N.y1 <= S.y1
+    local y2_edge = N.y2 >= S.y2
+
+    if N.y1 > S.y1 then
+      local T = table.copy(S)
+      S.y1 = N.y1
+      T.y2 = N.y1
+      table.insert(spaces, T)
+    end
+
+    if N.y2 < S.y2 then
+      local T = table.copy(S)
+      S.y2 = N.y2
+      T.y1 = N.y2
+      table.insert(spaces, T)
+    end
+     
+    if N.x1 > S.x1 then
+      local T = table.copy(S)
+      S.x1 = N.x1
+      T.x2 = N.x1
+      table.insert(spaces, T)
+    end
+
+    if N.x2 < S.x2 then
+      local T = table.copy(S)
+      S.x2 = N.x2
+      T.x1 = N.x2
+      table.insert(spaces, T)
+    end
+  end
+  
+  for _,S in ipairs(spaces) do
+    if geom.boxes_overlap(S.x1,S.x2,S.y1,S.y2, N.x1,N.y1,N.x2,N.y2) then
+      assert(S.free)    
+      split_space(S, N)
+    else
+      table.insert(R.spaces, S)
+    end
+  end
+
+  table.insert(R.spaces, N)
+end
+
+
+
 function Layout_place_straddlers(R)
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
@@ -66,8 +184,7 @@ function Layout_place_straddlers(R)
 
     local SPACE =
     {
-      mode = "wall",
-      straddler = kind,
+      straddle = kind,
       side = side,
       builder = N.room,
 
@@ -75,8 +192,8 @@ function Layout_place_straddlers(R)
       x2 = x2, y2 = y2,
     }
 
-    K.room:add_space(SPACE)
-    N.room:add_space(SPACE)
+    Layout_merge_space(K.room, SPACE)
+    Layout_merge_space(N.room, SPACE)
 
 stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
 stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
