@@ -116,6 +116,8 @@ Ceilings:
 Pickups:
   -  add some powerups
 
+  -  don't require "bullet=0" etc in the PLAYER_MODEL
+
 
 Planner:
 -  review / improve 'emergency' connections
