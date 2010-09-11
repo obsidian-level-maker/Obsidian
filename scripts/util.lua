@@ -610,11 +610,13 @@ function geom.inside_box(x,y, bx1,by1, bx2,by2)
 end
 
 function geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4)
+  -- NOTE: mere touching is not enough
+
   assert(x2 >= x1 and y2 >= y1)
   assert(x4 >= x3 and y4 >= y3)
 
-  if x3 > x2 or x4 < x1 then return false end
-  if y3 > y2 or y4 < y1 then return false end
+  if x3 >= x2 or x4 <= x1 then return false end
+  if y3 >= y2 or y4 <= y1 then return false end
 
   return true
 end
