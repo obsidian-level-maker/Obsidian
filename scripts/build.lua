@@ -708,6 +708,9 @@ end
 
 
 function Fabricate(fab, skin, T)
+  local x_info
+  local y_info
+  local z_info
 
   if type(fab) == "string" then
     if not PREFAB[fab] then
@@ -809,29 +812,25 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function process_materials(brushes)
-    -- modifies a brush list, converting 'mat' fields to 'tex' fields
+  local function process_materials(brush)
+    -- modifies a brush, converting 'mat' fields to 'tex' fields
 
-    for _,B in ipairs(brushes) do
-      for _,C in ipairs(B) do
+    for _,C in ipairs(brush) do
+      if C.mat then
+        local mat = Mat_lookup(C.mat)
+        assert(mat and mat.t)
 
-        if C.mat then
-          local mat = Mat_lookup(C.mat)
-          assert(mat and mat.t)
-
-          if C.b then
-            C.tex = mat.c or mat.f or mat.t
-          elseif C.t then
-            C.tex = mat.f or mat.t
-          else
-            C.tex = mat.t
-          end
-
-          C.mat = nil
+        if C.b then
+          C.tex = mat.c or mat.f or mat.t
+        elseif C.t then
+          C.tex = mat.f or mat.t
+        else
+          C.tex = mat.t
         end
 
-      end -- C
-    end -- B
+        C.mat = nil
+      end
+    end
   end
 
 
@@ -963,33 +962,25 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function resize_brushes(brushes, field, info)
-    if not info.groups then
-      return
+  local function resize_brush(brush)
+    for _,C in ipairs(brush) do
+      if C.x then C.x = resize_coord(x_info, C.x) end
+      if C.y then C.y = resize_coord(y_info, C.y) end
+
+      if C.b then C.b = resize_coord(z_info, C.b) end
+      if C.t then C.t = resize_coord(z_info, C.t) end
+
+      if C.s then
+        -- FIXME: slopes
+      end
     end
-
-    for _,B in ipairs(brushes) do
-      for _,C in ipairs(B) do
-        if field == "z" then
-          if C.b then C.b = resize_coord(info, C.b) end
-          if C.t then C.t = resize_coord(info, C.t) end
-          -- FIXME: slopes
-
-        elseif field == "x" then
-          if C.x then C.x = resize_coord(info, C.x) end
-          -- FIXME: slopes
-
-        elseif field == "y" then
-          if C.y then C.y = resize_coord(info, C.y) end
-          -- FIXME: slopes
-        end
-      end -- C
-    end -- B
-  end
+  end 
 
 
   local function render_brushes(brushes)
     for _,B in ipairs(brushes) do
+      process_materials(B)
+      resize_brush(B)
       Trans.brush(B)
     end
   end
@@ -1012,7 +1003,7 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function render_one_ent(E, props, x_info, y_info, z_info)
+  local function render_one_ent(E, props)
     local name = Trans.substitute(E.ent, skin)
 
     local ex = E.x and resize_coord(x_info, E.x)
@@ -1023,10 +1014,10 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function render_entities(list, x_info, y_info, z_info)
+  local function render_entities(list)
     if list then
       for _,E in ipairs(list) do
-        render_one_ent(E, nil, x_info, y_info, z_info)
+        render_one_ent(E, nil)
       end
     end
   end
@@ -1052,7 +1043,7 @@ function Fabricate(fab, skin, T)
   end
 
 
-  local function add_mapmodel(M, team, x_info, y_info, z_info)
+  local function add_mapmodel(M, team)
     local x1, x2 = M.x1, M.x2
     local y1, y2 = M.y1, M.y2
     local z1, z2 = M.z1, M.z2
@@ -1092,11 +1083,11 @@ function Fabricate(fab, skin, T)
 
     assert(M.entity)
 
-    render_one_ent(M.entity, { model=ref, team=team }, x_info, y_info, z_info)
+    render_one_ent(M.entity, { model=ref, team=team })
   end
 
 
-  local function render_models(list, x_info, y_info, z_info)
+  local function render_models(list)
     if not list then
       return
     end
@@ -1108,7 +1099,7 @@ function Fabricate(fab, skin, T)
     end
 
     for _,M in ipairs(list) do
-      add_mapmodel(M, team, x_info, y_info, z_info)
+      add_mapmodel(M, team)
     end
   end
 
@@ -1119,20 +1110,17 @@ function Fabricate(fab, skin, T)
 
   local brushes = copy_w_substitution(fab.brushes)
 
-  process_materials(brushes)
-
   local ranges = determine_bbox(brushes)
 
   -- XY stuff --
 
-  local x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
-  local y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
+  x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
+  y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
 
   local x_low, x_high
   local y_low, y_high
 
   if fab.placement == "fitted" then
-    ---### if not (T.x1 and T.y1 and T.x2 and T.y2 and T.dir) then
     if not (T.fit_width and T.fit_depth) then
       error("Fitted prefab used without fitted transform")
     end
@@ -1141,14 +1129,8 @@ function Fabricate(fab, skin, T)
       error("Fitted prefab should have left/bottom coord at (0, 0)")
     end
 
---gui.printf("width=%d depth=%d y_info1=\n%s\n", width, depth, table.tostr(y_info,3))
-
     x_low = 0 ; x_high = T.fit_width
     y_low = 0 ; y_high = T.fit_depth
-
---gui.printf("y_info2=\n%s\n", table.tostr(y_info,3))
-
-    -- TODO: Z stuff
 
   else  -- "loose" placement
 
@@ -1172,18 +1154,12 @@ function Fabricate(fab, skin, T)
   set_group_sizes(x_info, x_low, x_high)
   set_group_sizes(y_info, y_low, y_high)
 
-  resize_brushes(brushes, "x", x_info)
-  resize_brushes(brushes, "y", y_info)
-
   -- Z stuff --
 
-  local z_info = {}
-
   if ranges.dz and ranges.dz > 1 then
+    local z_low, z_high
 
     z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
-
-    local z_low, z_high
 
     if T.fit_height then
       z_low  = 0
@@ -1198,8 +1174,8 @@ function Fabricate(fab, skin, T)
     end
 
     set_group_sizes(z_info, z_low, z_high)
-
-    resize_brushes(brushes, "z", z_info)
+  else
+    z_info = {}
   end
 
 
@@ -1211,9 +1187,9 @@ function Fabricate(fab, skin, T)
     rotate = T.rotate
   })
 
-  render_brushes(brushes)
-  render_models(fab.models, x_info, y_info, z_info)
-  render_entities(fab.entities, x_info, y_info, z_info)
+  render_brushes (brushes)
+  render_models  (fab.models)
+  render_entities(fab.entities)
 
   Trans.clear()
 end
