@@ -78,12 +78,11 @@ ROOM_CLASS = {}
 
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_room_id()
-  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={} }
+  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={}, spaces={} }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.all_rooms, R)
   return R
 end
-
 
 function ROOM_CLASS.tostr(self)
   return string.format("ROOM_%d", self.id)
@@ -104,6 +103,10 @@ function ROOM_CLASS.contains_seed(self, x, y)
   if x < self.sx1 or x > self.sx2 then return false end
   if y < self.sy1 or y > self.sy2 then return false end
   return true
+end
+
+function ROOM_CLASS.add_space(self, S)
+  table.insert(self.spaces, S)  
 end
 
 function ROOM_CLASS.has_lock(self, lock)
@@ -3266,6 +3269,10 @@ function Rooms_build_all()
   end
 
   Rooms_decide_windows()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_place_straddlers(R)
+  end
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_room(R)

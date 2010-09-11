@@ -22,12 +22,81 @@ require 'defs'
 require 'util'
 
 
-function SECTION_CLASS.has_window(self, side)
-  for _,W in ipairs(self.room.windows) do
-    if W.K1 == self and W.dir == side    then return true end
-    if W.K2 == self and W.dir == 10-side then return true end
+function Layout_place_straddlers(R)
+  -- Straddlers are architecture which sits across two rooms.
+  -- Currently there are only two kinds: DOORS and WINDOWS.
+  -- 
+  -- There are placed (i.e. allocated on a 2D map) before
+  -- everything else.  The actual prefab and heights will be
+  -- decided later in the normal layout code.
+
+  local function place_straddler(kind, K, N, side)
+    local deep1 = 24
+    local deep2 = 24
+    local long = 256
+
+    local mx = int((K.x1 + K.x2) / 2)
+    local my = int((K.y1 + K.y2) / 2)
+
+    local x1,y1, x2,y2
+
+    if geom.is_vert(side) then
+      x1 = mx - long/2
+      x2 = mx + long/2
+
+      if side == 8 then
+        y1 = K.y2 - deep1
+        y2 = K.y2 + deep2
+      else
+        y1 = K.y1 - deep2
+        y2 = K.y1 + deep1
+      end
+    else
+      y1 = my - long/2
+      y2 = my + long/2
+
+      if side == 6 then
+        x1 = K.x2 - deep1
+        x2 = K.x2 + deep2
+      else
+        x1 = K.x1 - deep2
+        x2 = K.x1 + deep1
+      end
+    end
+
+    local SPACE =
+    {
+      mode = "wall",
+      straddler = kind,
+      side = side,
+      builder = N.room,
+
+      x1 = x1, y1 = y1,
+      x2 = x2, y2 = y2,
+    }
+
+    K.room:add_space(SPACE)
+    N.room:add_space(SPACE)
+
+stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
+stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
   end
-  return false
+  
+  --| Layout_place_straddlers |--
+
+  for _,C in ipairs(R.conns) do
+    if not C.placed and C.kind == "normal" and C.K1.room == R then
+      place_straddler("door", C.K1, C.K2, C.dir)
+      C.placed = true
+    end
+  end
+
+  for _,W in ipairs(R.windows) do
+    if not W.placed and W.K1.room == R then
+      place_straddler("window", W.K1, W.K2, W.dir)
+      W.placed = true
+    end
+  end
 end
 
 
@@ -72,7 +141,7 @@ function Layout_room(R)
           -- nothing if same room
         elseif K:side_has_conn(side) then
           Trans.quad(ax1,ay1, ax2,ay2, 128,nil, Mat_normal(d_mat))
-        elseif K:has_window(side) then
+        elseif K:side_has_window(side) then
           Trans.quad(ax1,ay1, ax2,ay2, nil,40, Mat_normal(win_mat))
           Trans.quad(ax1,ay1, ax2,ay2, 80,nil, Mat_normal(win_mat))
         else
