@@ -256,7 +256,7 @@ PREFAB.QUAKE_DOOR =
     {
       x1 = 32, x2 = 96,  x_face = { mat="METAL1_2" },
       y1 = 16, y2 = 32,  y_face = { mat="DR05_2" },
-      z1 =  8, z2 = 128, z_face = { mat="METAL1_2" },
+      z1 =  8, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
