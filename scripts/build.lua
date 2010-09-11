@@ -283,7 +283,11 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
 
   if not w_face then
     -- convenient form: only a material name was given
-    kind, w_face, p_face = Mat_normal(props)
+    props, w_face, p_face = Mat_normal(props)
+  end
+
+  if type(props) == "string" then
+    props = { k=props }
   end
 
   local coords =
@@ -384,6 +388,42 @@ function Trans.strip(info, strip, z1, z2)
   end
 end
 --]]
+
+
+function Trans.spot_transform(x, y, z, angle)
+  return
+  {
+    add_x = x,
+    add_y = y,
+    add_z = z,
+    rotate = angle,
+  }
+end
+
+
+function Trans.box_transform(x1, y1, x2, y2, z, dir)
+  local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
+  local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
+  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+
+  local T = {}
+
+  T.add_x = XS[dir]
+  T.add_y = YS[dir]
+  T.add_z = z
+
+  T.rotate = ANGS[dir]
+
+  if geom.is_vert(dir) then
+    T.fit_width = x2 - x1
+    T.fit_depth = y2 - y1
+  else
+    T.fit_width = y2 - y1
+    T.fit_depth = x2 - x1
+  end
+
+  return T
+end
 
 
 function Trans.centre_transform(S, z, dir)
