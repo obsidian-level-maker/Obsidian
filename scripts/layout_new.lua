@@ -168,7 +168,11 @@ function Layout_merge_space(R, N)  -- N is new one
 
   for _,S in ipairs(spaces) do
     if geom.boxes_overlap(S.x1,S.y1,S.x2,S.y2, N.x1,N.y1,N.x2,N.y2) then
-      assert(S.free)    
+      if not S.free then
+        stderrf("S =\n%s\n\n", table.tostr(S, 1))
+        stderrf("N =\n%s\n\n", table.tostr(N, 1))
+        error("merge space overlaps non-free")
+      end
       split_space(S, N)
     else
       table.insert(R.spaces, S)
@@ -286,10 +290,10 @@ function Layout_room(R)
   end
 
 
-  local function add_corners()
+  local function try_add_corner()
     for _,S in ipairs(R.spaces) do
       for side = 1,9,2 do if side ~= 5 then
-        if touches_corner(S, side) then
+        if S.free and touches_corner(S, side) then
           
           local x1, y1 = S.x1, S.y1
           local x2, y2 = S.x2, S.y2
@@ -318,15 +322,53 @@ function Layout_room(R)
           }
 
           Layout_merge_space(R, SPACE)
+
+          -- the spaces have changed, hence must start from beginning
+          return true
+
         end
       end end
     end
   end
 
 
-  local function add_walls()
+  local function try_add_wall()
     for _,S in ipairs(R.spaces) do
+      for side = 2,8,2 do
+        if S.free and touches_side(S, side) then
+
+          local x1, y1 = S.x1, S.y1
+          local x2, y2 = S.x2, S.y2
+
+          if side == 4 and x2 - x1 >= 64 then x2 = x1 + 32 end
+          if side == 6 and x2 - x1 >= 64 then x1 = x2 - 32 end
+          if side == 2 and y2 - y1 >= 64 then y2 = y1 + 32 end
+          if side == 8 and y2 - y1 >= 64 then y1 = y2 - 32 end
+
+          local SPACE =
+          {
+            wall = true,
+            x1 = x1, y1 = y1,
+            x2 = x2, y2 = y2,
+          }
+
+          Layout_merge_space(R, SPACE)
+
+          -- the spaces have changed, hence must start from beginning
+          return true
+
+        end
+      end
     end
+  end
+
+
+  local function add_corners()
+    while try_add_corner() do end
+  end
+
+  local function add_walls()
+    while try_add_wall() do end
   end
 
 
@@ -348,9 +390,9 @@ function Layout_room(R)
     elseif S.straddle == "window" then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 64, nil, Mat_normal(win_mat))
     elseif S.corner then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 16, nil, Mat_normal(corn_mat))
     elseif S.wall then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(w_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 32, nil, Mat_normal(w_mat))
     else
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
     end
