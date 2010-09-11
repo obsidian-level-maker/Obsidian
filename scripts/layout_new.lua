@@ -195,21 +195,21 @@ function Layout_place_straddlers(R)
   -- everything else.  The actual prefab and heights will be
   -- decided later in the normal layout code.
 
-  local function place_straddler(kind, K, N, side)
-    local deep1 = 24
-    local deep2 = 124
-    local long = 304
+  local function place_straddler(kind, K, N, dir)
+    local deep1 = 64
+    local deep2 = 64
+    local long = 240
 
     local mx = int((K.x1 + K.x2) / 2)
     local my = int((K.y1 + K.y2) / 2)
 
     local x1,y1, x2,y2
 
-    if geom.is_vert(side) then
+    if geom.is_vert(dir) then
       x1 = mx - long/2
       x2 = mx + long/2
 
-      if side == 8 then
+      if dir == 8 then
         y1 = K.y2 - deep1
         y2 = K.y2 + deep2
       else
@@ -220,7 +220,7 @@ function Layout_place_straddlers(R)
       y1 = my - long/2
       y2 = my + long/2
 
-      if side == 6 then
+      if dir == 6 then
         x1 = K.x2 - deep1
         x2 = K.x2 + deep2
       else
@@ -235,7 +235,7 @@ function Layout_place_straddlers(R)
     local SPACE =
     {
       straddle = kind,
-      side = side,
+      dir = dir,
       builder = N.room,
 
       x1 = x1, y1 = y1,
@@ -432,15 +432,22 @@ function Layout_room(R)
     Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 0, kind, w_face, p_face)
 
     if S.straddle == "door" then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 12 , Mat_normal(d_mat))
+      assert(S.dir)
+      local skin = GAME.DOORS["silver"] or {}
+      Fabricate("DOOR", skin, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir))
+--    Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
+--    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 12 , Mat_normal(d_mat))
     elseif S.straddle == "window" then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
+      assert(S.dir)
+--    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
+--    Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
+      Fabricate("WINDOW", {outer="STARG1", inner="STARG1"}, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir))
     elseif S.corner then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
     elseif S.wall then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(w_mat))
+    elseif R.outdoor then
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 384, nil, Mat_sky())
     else
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
     end
@@ -481,6 +488,9 @@ function Layout_room(R)
   local ent = "potion"
 
   if R.purpose == "START" then
+    local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
+    Fabricate("PEDESTAL", skin, Trans.spot_transform(ex, ey, 0))
+
     ent = "player1"
   end
 
@@ -489,7 +499,10 @@ function Layout_room(R)
   end
 
   Trans.entity(ent, ex, ey, 0)
-  Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
+
+  if not R.outdoor then
+    Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
+  end
 end
 
 
