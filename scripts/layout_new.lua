@@ -190,8 +190,8 @@ function Layout_place_straddlers(R)
 
   local function place_straddler(kind, K, N, side)
     local deep1 = 24
-    local deep2 = 24
-    local long = 256
+    local deep2 = 124
+    local long = 304
 
     local mx = int((K.x1 + K.x2) / 2)
     local my = int((K.y1 + K.y2) / 2)
@@ -262,7 +262,6 @@ end
 
 function Layout_room(R)
 
-  ---==| Layout_room |==---
 
 --  R.entry_conn
 
@@ -271,50 +270,71 @@ function Layout_room(R)
 --  if R.weapon  then add_weapon(R.weapon)  end
 
 
-  --!!! TEMP SHIT !!!--
-
-  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
-    local K = SECTIONS[kx][ky]
-    if K.room == R then
-
---[[
-      Trans.quad(K.x1,K.y1, K.x2,K.y2, nil, 0,   Mat_normal(f_mat))
-      Trans.quad(K.x1,K.y1, K.x2,K.y2, 256, nil, Mat_normal(c_mat))
-
-      for side = 2,8,2 do
-        local NK = K:neighbor(side)
-
-        local ax1, ay1 = K.x1, K.y1
-        local ax2, ay2 = K.x2, K.y2
-
-        if side == 4 then ax2 = ax1 + 16 end
-        if side == 6 then ax1 = ax2 - 16 end
-        if side == 2 then ay2 = ay1 + 16 end
-        if side == 8 then ay1 = ay2 - 16 end
-
-        if NK and NK.room == R then
-          -- nothing if same room
-        elseif K:side_has_conn(side) then
-          Trans.quad(ax1,ay1, ax2,ay2, 128,nil, Mat_normal(d_mat))
-        elseif K:side_has_window(side) then
-          Trans.quad(ax1,ay1, ax2,ay2, nil,40, Mat_normal(win_mat))
-          Trans.quad(ax1,ay1, ax2,ay2, 80,nil, Mat_normal(win_mat))
-        else
-          Trans.quad(ax1,ay1, ax2,ay2, nil,nil, Mat_normal(w_mat))
-        end
-      end
---]]
-
-      Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
-
+  local function touches_side(S, side)
+    for _,K in ipairs(R.sections) do
+      if side == 4 and math.abs(S.x1 - K.x1) < 1 then return true end
+      if side == 6 and math.abs(S.x2 - K.x2) < 1 then return true end
+      if side == 2 and math.abs(S.y1 - K.y1) < 1 then return true end
+      if side == 8 and math.abs(S.y2 - K.y2) < 1 then return true end
     end
-  end end
+    return false
+  end
+
+  local function touches_corner(S, side)
+    return touches_side(S, geom.RIGHT_45[side]) and
+           touches_side(S, geom. LEFT_45[side])
+  end
+
+
+  local function add_corners()
+    for _,S in ipairs(R.spaces) do
+      for side = 1,9,2 do if side ~= 5 then
+        if touches_corner(S, side) then
+          
+          local x1, y1 = S.x1, S.y1
+          local x2, y2 = S.x2, S.y2
+
+          if x2 - x1 >= 96 then
+            if side == 1 or side == 7 then
+              x2 = x1 + 64
+            else
+              x1 = x2 - 64
+            end
+          end
+
+          if y2 - y1 >= 96 then
+            if side == 1 or side == 3 then
+              y2 = y1 + 64
+            else
+              y1 = y2 - 64
+            end
+          end
+
+          local SPACE =
+          {
+            wall = true,  corner = true,
+            x1 = x1, y1 = y1,
+            x2 = x2, y2 = y2,
+          }
+
+          Layout_merge_space(R, SPACE)
+        end
+      end end
+    end
+  end
+
+
+  local function add_walls()
+    for _,S in ipairs(R.spaces) do
+    end
+  end
 
 
   local function build_space(S)
     local c_mat = sel(R.outdoor, "_SKY", "FLAT10")
     local f_mat = "FLAT1"
     local w_mat = "STARTAN3"
+    local corn_mat = "CRACKLE2"
     local d_mat = "TEKGREN3"
     local win_mat = "COMPBLUE"
 
@@ -327,18 +347,40 @@ function Layout_room(R)
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
     elseif S.straddle == "window" then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 64, nil, Mat_normal(win_mat))
+    elseif S.corner then
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
     elseif S.wall then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 16, nil, Mat_normal(w_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(w_mat))
     else
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
     end
   end
 
 
+  ---==| Layout_room |==---
+
+  R.sections = {}  -- FIXME: create this in planner
+
+  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
+    local K = SECTIONS[kx][ky]
+    if K.room == R then
+      table.insert(R.sections, K)
+
+      Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
+    end
+  end end
+
+
+  add_corners()
+
+  add_walls()
+
   for _,S in ipairs(R.spaces) do
     build_space(S)
   end
 
+
+  --!!! TEMP SHIT !!!--
 
   local kx = R.kx1
   local ky = R.ky1
