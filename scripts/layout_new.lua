@@ -439,6 +439,16 @@ function Layout_room(R)
 
     Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 0, kind, w_face, p_face)
 
+    -- handle straddlers, which exist in two rooms
+    if S.straddle == "window" then
+      if not S.prepped then S.prepped = true; return; end
+    end
+    if S.straddle == "door" then
+      if S.built then return; end
+    end
+
+    S.built = true
+
     if S.straddle == "door" then
       assert(S.dir)
       local skin = GAME.DOORS["silver"] or {}
