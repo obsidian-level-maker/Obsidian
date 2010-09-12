@@ -52,7 +52,7 @@ SPACE_CLASS = {}
 
 function SPACE_CLASS.new(kind)
   local S = { kind=kind, id=Plan_alloc_mark() }
-  table.set_class(S, SPACECLASS)
+  table.set_class(S, SPACE_CLASS)
   return S
 end
 
@@ -91,7 +91,7 @@ function SPACE_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
   for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(x, y, C.x2,C.y2, C.x1,C.y1)
+    local d = geom.perp_dist(x, y, C.x1,C.y1, C.x2,C.y2)
     if d > fudge then return false end
   end
 
@@ -101,10 +101,12 @@ end
 
 function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   if not fudge then fudge = 0.5 end
+
+  fudge = -fudge
   
   for _,C in ipairs(self.coords) do
     local d = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
-    if d > fudge then return false end
+    if d < fudge then return false end
   end
 
   return true
@@ -185,4 +187,40 @@ function spacelib.find_point(x, y)
   end
   return nil  -- not found
 end
+
+
+function spacelib.test_stuff()
+  LEVEL = {}
+
+  gui.debugf("spacelib test_stuff\n")
+
+  spacelib.clear()
+  spacelib.initial_rect(0, 100, 300, 200)
+
+  SPACES[1]:dump()
+
+  for x = -50,350,100 do for y = -50,350,50 do
+    local c = SPACES[1]:contains(x, y)
+    gui.debugf("%-3d %-3d = %s\n", x, y, sel(c, "INSIDE", "OUTSIDE"))
+  end end
+
+  gui.debugf("\n")
+  
+  for y = -50,250,100 do
+    local c = SPACES[1]:on_front(0, y, 20, y)
+    gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
+               0, y, 20, y, sel(c, "YES", "no"))
+  end
+
+  gui.debugf("\n")
+
+  for x = -50,350,100 do
+    local c = SPACES[1]:on_front(x, 0, x, 20)
+    gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
+               x, 0, x, 20, sel(c, "YES", "no"))
+  end
+
+  error("TEST DONE")
+end
+
 
