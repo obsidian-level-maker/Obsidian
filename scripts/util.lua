@@ -362,6 +362,7 @@ table.INHERIT_META =
 }
 
 function table.set_class(child, parent)
+  assert(parent)
   child.__parent = parent
   setmetatable(child, table.INHERIT_META)
 end
@@ -511,7 +512,7 @@ function geom.perp_dist(x, y, sx,sy, ex,ey)
     error("perp_dist: zero-length line")
   end
 
-  return (x * ey - y * ex) / len;
+  return (x * ey - y * ex) / len
 end
 
 function geom.delta(dir)
