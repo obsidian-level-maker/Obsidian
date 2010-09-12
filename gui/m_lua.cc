@@ -881,7 +881,8 @@ static bool Script_LoadAllFromDir(const char *path)
     file_list[i] = NULL;
   }
  
-  LogPrintf("\n");
+  LogPrintf("DONE.\n\n");
+
   return true;  // OK
 }
 
@@ -923,6 +924,8 @@ void Script_Load(void)
   const char *root = "oblige";
 #endif
 
+  LogPrintf("Loading main script: %s.lua\n", root);
+
   char require_text[128];
   sprintf(require_text, "require '%s'", root);
 
@@ -937,6 +940,8 @@ void Script_Load(void)
 
     Main_FatalError("Unable to load script '%s.lua' (%d)\n%s", root, status, msg);
   }
+
+  LogPrintf("DONE.\n\n");
 
 #ifdef RANDOMIZER
   Script_LoadSubDir("r_games");
