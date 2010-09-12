@@ -51,7 +51,7 @@ spacelib = {}
 SPACE_CLASS = {}
 
 function SPACE_CLASS.new(kind)
-  local S = { kind=kind, id=Plan_alloc_mark() }
+  local S = { kind=kind, id=Plan_alloc_mark(), coords={} }
   table.set_class(S, SPACE_CLASS)
   return S
 end
@@ -75,6 +75,11 @@ function SPACE_CLASS.dump(self)
     gui.debugf("  (%d %d) .. (%d %d)\n", C.x1, C.y1, C.x2, C.y2)
   end
   gui.debugf("}\n")
+end
+
+
+function SPACE_CLASS.add_coord(self, x1, y1, x2, y2)
+  table.insert(self.coords, { x1=x1, y1=y1, x2=x2, y2=y2 })
 end
 
 
@@ -176,9 +181,7 @@ function SPACE_CLASS.cut(self, px1, py1, px2, py2)
   local T = SPACE_CLASS.bare_copy(self)
 
   local coords = self.coords
-
   self.coords = {}
-     T.coords = {}
 
   local ox, oy -- other intersection point
 
@@ -248,18 +251,20 @@ function spacelib.initial_rect(x1, y1, x2, y2)
 
   local S = SPACE_CLASS.new("empty")
 
-  S.coords =
-  {
-    { x1=x1, y1=y1, x2=x2, y2=y1 },
-    { x1=x2, y1=y1, x2=x2, y2=y2 },
-    { x1=x2, y1=y2, x2=x1, y2=y2 },
-    { x1=x1, y1=y2, x2=x1, y2=y1 },
-  }
+  S:add_coord(x1, y1, x2, y1)
+  S:add_coord(x2, y1, x2, y2)
+  S:add_coord(x2, y2, x1, y2)
+  S:add_coord(x1, y2, x1, y1)
 
   S.bx1 = x1 ; S.bx2 = x2
   S.by1 = y1 ; S.by2 = y2
 
   table.insert(SPACES, S)
+end
+
+
+function spacelib.make_current(group)
+  SPACES = assert(group)
 end
 
 
@@ -276,7 +281,7 @@ end
 function spacelib.test_stuff()
   LEVEL = {}
 
-  gui.debugf("spacelib test_stuff\n")
+  gui.debugf("---- spacelib test_stuff ----\n")
 
   spacelib.clear()
   spacelib.initial_rect(0, 100, 300, 200)
@@ -322,4 +327,33 @@ function spacelib.test_stuff()
   error("TEST DONE")
 end
 
+
+function spacelib.merge(M)
+  -- validate our parameter
+  assert(M)
+  assert(M.coords)
+  assert(#M.coords >= 3)
+
+  assert(M.bx1)
+  assert(M.bx1 < M.bx2)
+  assert(M.by1 < M.by2)
+
+  -- collect overlapping spaces
+  local overlaps = {}
+
+  for i = #SPACES,1,-1 do
+    local S = SPACES[i]
+
+    if S:overlaps(M) then
+      table.insert(overlaps, S)
+      table.remove(SPACES, i)
+    end
+  end
+
+  assert(#overlaps > 0)
+
+  for _,S in ipairs(overlaps) do
+    -- TODO
+  end
+end
 
