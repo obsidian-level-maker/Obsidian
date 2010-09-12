@@ -56,6 +56,12 @@ function SPACE_CLASS.new(kind)
   return S
 end
 
+function SPACE_CLASS.bare_copy(other)
+  local S = SPACE_CLASS.new(other.kind)
+  S.floor_h = other.floor_h
+  return S
+end
+
 
 function SPACE_CLASS.tostr(self)
   return string.format("SPACE_%d %s [%d %d .. %d %d]",
@@ -160,6 +166,71 @@ function SPACE_CLASS.surrounds(self, other)
   end
 
   return true
+end
+
+
+function SPACE_CLASS.cut(self, px1, py1, px2, py2)
+  -- returns the cut-off piece (on back of given line)
+  -- NOTE: assumes the line actually cuts the space
+
+  local T = SPACE_CLASS.bare_copy(self)
+
+  local coords = self.coords
+
+  self.coords = {}
+     T.coords = {}
+
+  local ox, oy -- other intersection point
+
+  for _,C in ipairs(coords) do
+    local a = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
+    local b = geom.perp_dist(C.x2, C.y2, px1,py1, px2,py2)
+
+    if a > -0.5 and b > -0.5 then
+      table.insert(self.coords, C)
+    elseif a < 0.5 and b < 0.5 then
+      table.insert(T.coords, C)
+    else
+      -- this side crosses the cutting line --
+
+      -- calc the intersection point
+      local along = a / (a - b)
+
+      local ix = C.x1 + along * (C.x2 - C.x1)
+      local iy = C.y1 + along * (C.y2 - C.y1)
+
+      local C1 = { x1=C.x1, y1=C.y1, x2=ix, y2=iy }
+      local C2 = { x2=C.x2, y2=C.y2, x1=ix, y1=iy }
+
+      local N1, N2
+
+      -- new edge along cutting line
+      if ox then
+        N1 = { x1=ix, y1=ix, x2=ox, y2=oy }
+        N2 = { x2=ix, y2=ix, x1=ox, y1=oy }
+      end
+
+      -- destinations for new edges
+      local D1 = T.coords
+      local D2 = self.coords
+
+      if a >= 0 then D1, D2 = D2, D1 end
+
+      table.insert(D1, C1)
+      if ox then
+        table.insert(D1, N1)
+        table.insert(D2, N2)
+      end
+      table.insert(D2, C2)
+
+      if not ox then ox, oy = ix, iy end
+    end
+  end
+
+  self:update_bbox()
+     T:update_bbox()
+
+  return T
 end
   
 
