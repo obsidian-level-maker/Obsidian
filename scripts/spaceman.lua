@@ -66,7 +66,7 @@ end
 function SPACE_CLASS.tostr(self)
   return string.format("SPACE_%d %s [%d %d .. %d %d]",
       self.id, self.kind,
-      self.bx1, self.by1, self.bx2, self.by2)
+      self.bx1 or 0, self.by1 or 0, self.bx2 or 0, self.by2 or 0)
 end
 
 function SPACE_CLASS.dump(self)
@@ -81,8 +81,8 @@ end
 function SPACE_CLASS.update_bbox(self)
   assert(#self.coords > 0)
 
-  self.bx1, self.by1 =  9e9
-  self.bx2, self.by2 = -9e9
+  self.bx1, self.bx2 = 9e9, -9e9
+  self.by1, self.by2 = 9e9, -9e9
 
   for _,C in ipairs(self.coords) do
     if C.x1 < self.bx1 then self.bx1 = C.x1 end
@@ -206,8 +206,8 @@ function SPACE_CLASS.cut(self, px1, py1, px2, py2)
 
       -- new edge along cutting line
       if ox then
-        N1 = { x1=ix, y1=ix, x2=ox, y2=oy }
-        N2 = { x2=ix, y2=ix, x1=ox, y1=oy }
+        N1 = { x1=ix, y1=iy, x2=ox, y2=oy }
+        N2 = { x2=ix, y2=iy, x1=ox, y1=oy }
       end
 
       -- destinations for new edges
@@ -311,6 +311,13 @@ function spacelib.test_stuff()
     gui.debugf("line_cuts (%d %d) .. (%d %d) : %s\n",
                x, 0, x+20, 20, sel(c, "YES", "no"))
   end
+
+  gui.debugf("\n")
+
+  local T = SPACES[1]:cut(0, 160, 100, 0)
+
+  SPACES[1]:dump()
+          T:dump()
 
   error("TEST DONE")
 end
