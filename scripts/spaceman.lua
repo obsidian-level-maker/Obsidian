@@ -338,6 +338,16 @@ function spacelib.merge(M)
   assert(M.bx1 < M.bx2)
   assert(M.by1 < M.by2)
 
+  local function valid(S_kind, M_kind)
+    if S_kind == "empty" then return true end
+    if S_kind == "solid" then return false end
+
+    if S_kind == "walk"  and M_kind == "walk"  then return true end
+    if S_kind == "floor" and M_kind == "floor" then return false end
+
+    return (S_kind == "floor")
+  end
+
   -- collect overlapping spaces
   local overlaps = {}
 
@@ -353,7 +363,27 @@ function spacelib.merge(M)
   assert(#overlaps > 0)
 
   for _,S in ipairs(overlaps) do
-    -- TODO
+    if not valid(S.kind, M.kind) then
+      error(string.format("Attempt to merge %s space into %s", M.kind, S.kind))
+    end
+
+    for _,C in ipairs(M.coords) do
+      if S:line_cuts(C.x2,C.y2, C.x1,C.y1) then
+        local T = S:cut(C.x2,C.y2, C.x1,C.y1)
+
+        -- T is the piece outside of M
+        table.insert(SPACES, T)
+      end
+    end
+
+    -- at here, S will lie completely inside M
+    -- hence we drop S and keep M in the SPACES list
+
+    table.insert(SPACES, M)
+
+    if M.kind == "walk" and S.kind == "walk" and S.floor_h then
+      M.floor_h = S.floor_h
+    end
   end
 end
 
