@@ -22,7 +22,7 @@
 
 class SPACE
 {
-  mode  -- keyword:
+  kind  -- keyword:
         --   "empty" : space is not used, free
         --   "floor" : area with known floor height
         --   "walk"  : player always can walk here
@@ -30,12 +30,12 @@ class SPACE
 
   id  -- identifying number (to help debugging)
 
-  x1, y1, x2, y2  -- bounding box
+  coords  -- array of {x1,y1,x2,y2} for edges of this space
+          -- spaces are always convex, coords go anti-clockwise
 
-  coords  -- array of {x,y} for sides of space, convex shape
-          -- NIL for simple boxes.
+  bx1, by1, bx2, by2 -- bounding box
 
-  floor_h -- height for "floor"
+  floor_h -- height for "floor" kind
 }
 
 
@@ -50,37 +50,84 @@ spacelib = {}
 
 SPACE_CLASS = {}
 
-function SPACE_CLASS.new(mode)
-  local S = { mode=mode, id=Plan_alloc_mark() }
+function SPACE_CLASS.new(kind)
+  local S = { kind=kind, id=Plan_alloc_mark() }
   table.set_class(S, SPACECLASS)
   return S
 end
 
+
 function SPACE_CLASS.tostr(self)
   return string.format("SPACE_%d %s [%d %d .. %d %d]",
-      self.id, self.mode,
-      self.x1, self.y1, self.x2, self.y2)
+      self.id, self.kind,
+      self.bx1, self.by1, self.bx2, self.by2)
 end
 
 function SPACE_CLASS.dump(self)
-  -- TODO
+  gui.debugf("%s =\n{\n", self:tostr())
+  for _,C in ipairs(self.coords) do
+    gui.debugf("  (%d %d) .. (%d %d)\n", C.x1, C.y1, C.x2, C.y2)
+  end
+  gui.debugf("}\n")
 end
+
+
+function SPACE_CLASS.update_bbox(self)
+  assert(#self.coords > 0)
+
+  self.bx1, self.by1 =  9e9
+  self.bx2, self.by2 = -9e9
+
+  for _,C in ipairs(self.coords) do
+    if C.x1 < self.bx1 then self.bx1 = C.x1 end
+    if C.x1 > self.bx2 then self.bx2 = C.x2 end
+    if C.y1 < self.by1 then self.by1 = C.y1 end
+    if C.y1 > self.by2 then self.by2 = C.y2 end
+  end
+end
+
 
 function SPACE_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
-  if coords then
-    for _,C in ipairs(self.coords) do
-
-    end
-  else
-    if x < self.x1 - fudge then return false end
-    if x > self.x2 + fudge then return false end
-    if y < self.y1 - fudge then return false end
-    if y > self.y2 + fudge then return false end
-    return true
+  for _,C in ipairs(self.coords) do
+    local d = geom.perp_dist(x, y, C.x1,C.y1, C.x2,C.y2)
+    if d > fudge then return false end
   end
+
+  return true
 end
+
+
+function SPACE_CLASS.overlaps(self, other)
+  -- check bboxes first
+  if other.bx2 < self.bx1 + 0.5 then return false end
+  if other.bx1 > self.bx2 - 0.5 then return false end
+  if other.by2 < self.by1 + 0.5 then return false end
+  if other.by1 > self.by2 - 0.5 then return false end
+
+  -- FIXME
+
+  return true
+end
+
+
+function SPACE_CLASS.surrounds(self, other)
+  -- check bboxes first
+  if self.bx1 > other.bx1 + 0.5 then return false end
+  if self.bx2 < other.bx2 - 0.5 then return false end
+  if self.by1 > other.by1 + 0.5 then return false end
+  if self.by2 < other.by2 - 0.5 then return false end
+
+  if self.coords then
+    for _,D in ipairs(other.coords) do
+      if not self:contains(D.x1, D.y1) then return false end
+    end
+  end
+
+  return true
+end
+  
 
 
 function spacelib.clear()
@@ -94,9 +141,27 @@ function spacelib.initial_rect(x1, y1, x2, y2)
 
   local S = SPACE_CLASS.new("empty")
 
-  S.x1, S.y1 = x1, y1
-  S.x2, S.y2 = x2, y2
+  S.coords =
+  {
+    { x1=x1, y1=y1, x2=x2, y2=y1 },
+    { x1=x2, y1=y1, x2=x2, y2=y2 },
+    { x1=x2, y1=y2, x2=x1, y2=y2 },
+    { x1=x1, y1=y2, x2=x1, y2=y1 },
+  }
+
+  S.bx1 = x1 ; S.bx2 = x2
+  S.by1 = y1 ; S.by2 = y2
 
   table.insert(SPACES, S)
+end
+
+
+function spacelib.find_point(x, y)
+  for _,S in ipairs(SPACES) do
+    if S:contains(x, y) then
+      return S
+    end
+  end
+  return nil  -- not found
 end
 
