@@ -91,7 +91,19 @@ function SPACE_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
   for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(x, y, C.x1,C.y1, C.x2,C.y2)
+    local d = geom.perp_dist(x, y, C.x2,C.y2, C.x1,C.y1)
+    if d > fudge then return false end
+  end
+
+  return true
+end
+
+
+function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
+  if not fudge then fudge = 0.5 end
+  
+  for _,C in ipairs(self.coords) do
+    local d = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
     if d > fudge then return false end
   end
 
@@ -106,7 +118,14 @@ function SPACE_CLASS.overlaps(self, other)
   if other.by2 < self.by1 + 0.5 then return false end
   if other.by1 > self.by2 - 0.5 then return false end
 
-  -- FIXME
+  -- slower method, check if other space lies totally on back side of
+  -- one of our edges.
+
+  for _,C in ipairs(self.coords) do
+    if other:on_front(C.x1, C.y1, C.x2, C.y2) then
+      return false
+    end
+  end
 
   return true
 end
@@ -119,15 +138,17 @@ function SPACE_CLASS.surrounds(self, other)
   if self.by1 > other.by1 + 0.5 then return false end
   if self.by2 < other.by2 - 0.5 then return false end
 
-  if self.coords then
-    for _,D in ipairs(other.coords) do
-      if not self:contains(D.x1, D.y1) then return false end
+  for _,D in ipairs(other.coords) do
+    if not self:contains(D.x1, D.y1) then
+      return false
     end
   end
 
   return true
 end
   
+
+-----==========================================================-----
 
 
 function spacelib.clear()
