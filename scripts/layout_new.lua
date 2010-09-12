@@ -23,12 +23,8 @@ require 'util'
 
 
 function Layout_prepare_room(R)
-  R.spaces = {}
 
   local function block_is_contig(kx1, ky1, kw, kh)
-
-    do return false end  -- DISABLED FOR NOW, MUCKS UP WALLS
-
     local kx2 = kx1 + kw - 1
     local ky2 = ky1 + kh - 1
 
@@ -48,9 +44,7 @@ function Layout_prepare_room(R)
   local function biggest_block(x, y)
     local kw, kh = 1,1
 
-
---- DISABLED FOR NOW, MUCKS UP WALLS:
----   if R.shape == "rect" then return R.kw, R.kh end
+    if R.shape == "rect" then return R.kw, R.kh end
 
     while true do
       if block_is_contig(x, y, kw+1, kh) then
@@ -71,31 +65,32 @@ function Layout_prepare_room(R)
 
   --| Layout_prepare_room |--
 
+  spacelib.clear()
+
   for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
     local K = SECTIONS[x][y]
     if K.room == R and not K.contig_used then
       
       local kw,kh = biggest_block(x, y)
 
-      local SPACE =
-      {
-        free = true,
-        x1 = K.x1, y1 = K.y1,
-        x2 = SECTIONS[x + kw - 1][y].x2,
-        y2 = SECTIONS[x][y + kh - 1].y2,
-      }
+      local x1 = K.x1
+      local y1 = K.y1
+      local x2 = SECTIONS[x + kw - 1][y].x2
+      local y2 = SECTIONS[x][y + kh - 1].y2
 
-      table.insert(R.spaces, SPACE)
-stderrf("initial space in %s : (%d %d) .. (%d %d)\n", R:tostr(),
-        SPACE.x1, SPACE.y1, SPACE.x2, SPACE.y2)
+      spacelib.initial_rect(x1,y1, x2,y2)
+
+stderrf("initial space in %s : (%d %d) .. (%d %d)\n", R:tostr(), x1, y1, x2, y2)
 
       mark_block(x, y, kw, kh)
     end
   end end
+
+  R.spaces = SPACES
 end
 
 
-function Layout_merge_space(R, N)  -- N is new one
+function OLD__Layout_merge_space(R, N)  -- N is new one
   assert(N.x1 < N.x2)
   assert(N.y1 < N.y2)
 
@@ -236,18 +231,26 @@ function Layout_place_straddlers(R)
     assert(x1 < x2)
     assert(y1 < y2)
 
-    local SPACE =
-    {
-      straddle = kind,
-      dir = dir,
-      builder = N.room,
+    local S = SPACE_CLASS.new("solid")
 
-      x1 = x1, y1 = y1,
-      x2 = x2, y2 = y2,
-    }
+    S.straddle = kind
+    S.dir = dir
 
-    Layout_merge_space(K.room, SPACE)
-    Layout_merge_space(N.room, SPACE)
+    S:add_coord(x1,y1, x2,y1)
+    S:add_coord(x2,y1, x2,y2)
+    S:add_coord(x2,y2, x1,y2)
+    S:add_coord(x1,y2, x1,y1)
+
+    S:update_bbox()
+
+    local T = SPACE_CLASS.new("solid")
+    table.deep_merge(T, S)
+
+    spacelib.make_current(K.room.spaces)
+    spacelib.merge(S)
+
+    spacelib.make_current(N.room.spaces)
+    spacelib.merge(T)
 
 stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
 stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
@@ -434,15 +437,25 @@ function Layout_room(R)
     local d_mat = "TEKGREN3"
     local win_mat = "COMPBLUE"
 
+    if S.kind == "empty" then f_mat = "NUKAGE1" end
+    if S.kind == "walk"  then f_mat = "LAVA1"   end
+    if S.kind == "floor" then f_mat = "FWATER1" end
+
     local kind, w_face, p_face = Mat_normal(f_mat)
     p_face.mark  = Plan_alloc_mark()
     p_face.light = 0.75
 
-    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 0, kind, w_face, p_face)
+    S.x1 = S.bx1 ; S.y1 = S.by1
+    S.x2 = S.bx2 ; S.y2 = S.by2
+
+    local z1 = rand.irange(0,12)
+
+    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, z1, kind, w_face, p_face)
 
     -- handle straddlers, which exist in two rooms
     if S.straddle == "window" then
-      if not S.prepped then S.prepped = true; return; end
+--    if not S.prepped then S.prepped = true; return; end
+      if S.built then return; end
     end
     if S.straddle == "door" then
       if S.built then return; end
@@ -451,16 +464,16 @@ function Layout_room(R)
     S.built = true
 
     if S.straddle == "door" then
-      assert(S.dir)
-      local skin = GAME.DOORS["silver"] or {}
-      Fabricate("DOOR", skin, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir))
---    Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
---    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 12 , Mat_normal(d_mat))
+--      assert(S.dir)
+--      local skin = GAME.DOORS["silver"] or {}
+--      Fabricate("DOOR", skin, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir))
+    Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
+--  Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 16 , Mat_normal(d_mat))
     elseif S.straddle == "window" then
-      assert(S.dir)
---    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
---    Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
-      Fabricate("WINDOW", {outer="STARG1", inner="STARG1"}, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir))
+--    assert(S.dir)
+--    Fabricate("WINDOW", {outer="STARG1", inner="STARG1"}, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
     elseif S.corner then
       Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
     elseif S.wall then
@@ -475,11 +488,13 @@ function Layout_room(R)
 
   ---==| Layout_room |==---
 
-  add_corners()
+  spacelib.make_current(R.spaces)
 
-  add_walls()
+---!!!!  add_corners()
 
-  for _,S in ipairs(R.spaces) do
+---!!!!  add_walls()
+
+  for _,S in ipairs(SPACES) do
     build_space(S)
   end
 
