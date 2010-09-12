@@ -54,6 +54,7 @@ require 'quests'
 require 'build'
 
 require 'caves'
+require 'spaceman'
 require 'layout_new'
 require 'rooms'
 require 'tiler'
