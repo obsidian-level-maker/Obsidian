@@ -98,7 +98,6 @@ function SPACE_CLASS.contains(self, x, y, fudge)
   return true
 end
 
-
 function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   if not fudge then fudge = 0.5 end
 
@@ -110,6 +109,20 @@ function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   end
 
   return true
+end
+
+function SPACE_CLASS.line_cuts(self, px1, py1, px2, py2)
+  local front, back
+
+  for _,C in ipairs(self.coords) do
+    local d = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
+    if d >  0.5 then front = true end
+    if d < -0.5 then  back = true end
+
+    if front and back then return true end
+  end
+
+  return false
 end
 
 
@@ -218,6 +231,14 @@ function spacelib.test_stuff()
     local c = SPACES[1]:on_front(x, 0, x, 20)
     gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
                x, 0, x, 20, sel(c, "YES", "no"))
+  end
+
+  gui.debugf("\n")
+
+  for x = -350,350,50 do
+    local c = SPACES[1]:line_cuts(x, 0, x+20, 20)
+    gui.debugf("line_cuts (%d %d) .. (%d %d) : %s\n",
+               x, 0, x+20, 20, sel(c, "YES", "no"))
   end
 
   error("TEST DONE")
