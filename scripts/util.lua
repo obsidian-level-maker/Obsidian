@@ -501,6 +501,19 @@ function geom.dist(x1,y1, x2,y2)
   return math.sqrt( (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) )
 end
 
+function geom.perp_dist(x, y, sx,sy, ex,ey)
+  x = x - sx ; ex = ex - sx
+  y = y - sy ; ey = ey - sy
+
+  local len = math.sqrt(ex*ex + ey*ey)
+
+  if len < 0.001 then
+    error("perp_dist: zero-length line")
+  end
+
+  return (x * ey - y * ex) / len;
+end
+
 function geom.delta(dir)
   if dir == 1 then return -1, -1 end
   if dir == 2 then return  0, -1 end
