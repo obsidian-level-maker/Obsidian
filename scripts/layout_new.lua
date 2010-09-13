@@ -23,68 +23,34 @@ require 'util'
 
 
 function Layout_prepare_room(R)
-
-  local function block_is_contig(kx1, ky1, kw, kh)
-    local kx2 = kx1 + kw - 1
-    local ky2 = ky1 + kh - 1
-
-    if kx2 > R.kx2 or ky2 > R.ky2 then
-      return false
-    end
-
-    for x = kx1,kx2 do for y = ky1,ky2 do
-      local K = SECTIONS[x][y]
-      if K.room ~= R then return false end
-      if K.contig_used then return false end
-    end end
-
-    return true
-  end
-
-  local function biggest_block(x, y)
-    local kw, kh = 1,1
-
-    if R.shape == "rect" then return R.kw, R.kh end
-
-    while true do
-      if block_is_contig(x, y, kw+1, kh) then
-        kw = kw + 1
-      elseif block_is_contig(x, y, kw, kh+1) then
-        kh = kh + 1
-      else
-        return kw, kh
-      end
-    end
-  end
-
-  local function mark_block(x, y, kw, kh)
-    for dx = 0,kw-1 do for dy = 0,kh-1 do
-      SECTIONS[x+dx][y+dy].contig_used = true
-    end end
-  end
-
-  --| Layout_prepare_room |--
-
   spacelib.clear()
 
-  for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
-    local K = SECTIONS[x][y]
-    if K.room == R and not K.contig_used then
-      
-      local kw,kh = biggest_block(x, y)
+  local function initial(x1,y1, x2,y2)
+    spacelib.initial_rect(x1,y1, x2,y2)
 
-      local x1 = K.x1
-      local y1 = K.y1
-      local x2 = SECTIONS[x + kw - 1][y].x2
-      local y2 = SECTIONS[x][y + kh - 1].y2
+    -- this is to prevent wall prefabs getting too thick
+--[[ ????????
+    local mw = int((x2 - x1) / 2)
+    local mh = int((y2 - y1) / 2)
 
-      spacelib.initial_rect(x1,y1, x2,y2)
+    local sw = math.min(mw - 64, 256)
+    local sh = math.min(mh - 64, 256)
+ 
+    spacelib.merge_quad("nowall", x1+mw-48, y1+sh, x1+mw+48, y2-sh)
+    spacelib.merge_quad("nowall", x1+sw, y1+mh-48, x2-sw, y1+mh+48)
+--]]
+  end
 
-stderrf("initial space in %s : (%d %d) .. (%d %d)\n", R:tostr(), x1, y1, x2, y2)
+  if R.shape == "rect" then
+    local K1 = SECTIONS[R.kx1][R.ky1]
+    local K2 = SECTIONS[R.kx2][R.ky2]
 
-      mark_block(x, y, kw, kh)
+    initial(K1.x1, K1.y1, K2.x2, K2.y2)
+  else
+    for _,K in ipairs(R.sections) do
+      initial(K.x1, K.y1, K.x2, K.y2)
     end
-  end end
+  end
 
   R.spaces = SPACES
 end
