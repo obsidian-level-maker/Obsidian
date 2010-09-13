@@ -98,29 +98,43 @@ function Layout_place_straddlers(R)
       end
     end
 
-    assert(x1 < x2)
-    assert(y1 < y2)
 
-    local S = SPACE_CLASS.new("solid")
-
-    S.straddle = kind
-    S.dir = dir
-
-    S:add_coord(x1,y1, x2,y1)
-    S:add_coord(x2,y1, x2,y2)
-    S:add_coord(x2,y2, x1,y2)
-    S:add_coord(x1,y2, x1,y1)
-
-    S:update_bbox()
-
-    local T = SPACE_CLASS.new("solid")
-    table.deep_merge(T, S)
+    local res_kind = sel(kind == "door", "walk", "air")
+    local res_d = 220
+    
 
     spacelib.make_current(K.room.spaces)
-    spacelib.merge(S)
+
+    spacelib.merge_quad("solid", x1,y1, x2,y2)
+
+    if dir == 2 then
+      spacelib.merge_quad(res_kind, x1,y2, x2,y2+res_d)
+    elseif dir == 8 then
+      spacelib.merge_quad(res_kind, x1,y1-res_d, x2,y1)
+    elseif dir == 6 then
+      spacelib.merge_quad(res_kind, x1-res_d,y1, x1,y2)
+    elseif dir == 4 then
+      spacelib.merge_quad(res_kind, x2,y1, x2+res_d,y2)
+    end
+
 
     spacelib.make_current(N.room.spaces)
-    spacelib.merge(T)
+
+-- [[
+    spacelib.merge_quad("solid", x1,y1, x2,y2)
+
+    -- place walk areas (etc) in front of spaces
+
+    if dir == 8 then
+      spacelib.merge_quad(res_kind, x1,y2, x2,y2+res_d)
+    elseif dir == 2 then
+      spacelib.merge_quad(res_kind, x1,y1-res_d, x2,y1)
+    elseif dir == 4 then
+      spacelib.merge_quad(res_kind, x1-res_d,y1, x1,y2)
+    elseif dir == 6 then
+      spacelib.merge_quad(res_kind, x2,y1, x2+res_d,y2)
+    end
+--]]
 
 stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
 stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
@@ -300,20 +314,26 @@ function Layout_room(R)
 
 
   local function build_space(S)
-    local c_mat = sel(R.outdoor, "_SKY", "FLAT10")
-    local f_mat = "FLAT1"
+    local c_mat = sel(R.outdoor, "_SKY", "CEIL1_1")
+    local f_mat = "FLAT14"
     local w_mat = "STARTAN3"
     local corn_mat = "CRACKLE2"
     local d_mat = "TEKGREN3"
     local win_mat = "COMPBLUE"
 
-    if S.kind == "empty" then f_mat = "NUKAGE1" end
+    if S.kind == "free"  then f_mat = "NUKAGE1" end
     if S.kind == "walk"  then f_mat = "LAVA1"   end
-    if S.kind == "floor" then f_mat = "FWATER1" end
+    if S.kind == "air"   then f_mat = "FLAT5_7" end
+
+    if S.kind == "floor"  then f_mat = "FLAT18" end
+    if S.kind == "liquid" then f_mat = "FWATER1" end
+    if S.kind == "solid"  then f_mat = "FLAT10"  end
 
     local kind, w_face, p_face = Mat_normal(f_mat)
     p_face.mark  = Plan_alloc_mark()
     p_face.light = 0.75
+
+    if S.kind == "walk" or S.kind == "air" then p_face.special = 1 end
 
     S.x1 = S.bx1 ; S.y1 = S.by1
     S.x2 = S.bx2 ; S.y2 = S.by2
@@ -357,6 +377,8 @@ function Layout_room(R)
 
 
   ---==| Layout_room |==---
+
+gui.random()
 
   spacelib.make_current(R.spaces)
 

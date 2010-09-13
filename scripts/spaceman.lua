@@ -252,7 +252,7 @@ function spacelib.initial_rect(x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
 
-  local S = SPACE_CLASS.new("empty")
+  local S = SPACE_CLASS.new("free")
 
   S:add_coord(x1, y1, x2, y1)
   S:add_coord(x2, y1, x2, y2)
@@ -380,7 +380,10 @@ function spacelib.merge(M)
     end
 
     -- this is a bit rude, when an AIR space overlaps any WALK space,
-    -- then we "upgrade" the new one to be a WALK space.
+    -- then we "upgrade" the new one to be a WALK space.  Otherwise
+    -- the AIR space would replace the WALK space (because we never
+    -- subdivide the incoming space in M).
+
     if S.kind == "walk" and M.kind == "air" then
       final_kind = "walk"
     end
