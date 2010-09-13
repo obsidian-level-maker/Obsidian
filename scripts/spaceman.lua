@@ -67,7 +67,7 @@ end
 
 
 function SPACE_CLASS.tostr(self)
-  return string.format("SPACE_%d %s [%d %d .. %d %d]",
+  return string.format("SPACE_%d %s [%1.1f %1.1f .. %1.1f %1.1f]",
       self.id, self.kind,
       self.bx1 or 0, self.by1 or 0, self.bx2 or 0, self.by2 or 0)
 end
@@ -95,10 +95,13 @@ function SPACE_CLASS.update_bbox(self)
 
   for _,C in ipairs(self.coords) do
     if C.x1 < self.bx1 then self.bx1 = C.x1 end
-    if C.x1 > self.bx2 then self.bx2 = C.x2 end
+    if C.x1 > self.bx2 then self.bx2 = C.x1 end
     if C.y1 < self.by1 then self.by1 = C.y1 end
-    if C.y1 > self.by2 then self.by2 = C.y2 end
+    if C.y1 > self.by2 then self.by2 = C.y1 end
   end
+
+  assert(self.bx2 > self.bx1 + 0.001)
+  assert(self.by2 > self.by1 + 0.001)
 end
 
 
