@@ -22,41 +22,28 @@ require 'defs'
 require 'util'
 
 
-function Layout_prepare_room(R)
-  spacelib.clear()
+function Layout_prepare_rooms()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    spacelib.clear()
 
-  local function initial(x1,y1, x2,y2)
-    spacelib.initial_rect(x1,y1, x2,y2)
+    if R.shape == "rect" then
+      local K1 = SECTIONS[R.kx1][R.ky1]
+      local K2 = SECTIONS[R.kx2][R.ky2]
 
-    -- this is to prevent wall prefabs getting too thick
---[[ ????????
-    local mw = int((x2 - x1) / 2)
-    local mh = int((y2 - y1) / 2)
-
-    local sw = math.min(mw - 64, 256)
-    local sh = math.min(mh - 64, 256)
- 
-    spacelib.merge_quad("nowall", x1+mw-48, y1+sh, x1+mw+48, y2-sh)
-    spacelib.merge_quad("nowall", x1+sw, y1+mh-48, x2-sw, y1+mh+48)
---]]
-  end
-
-  if R.shape == "rect" then
-    local K1 = SECTIONS[R.kx1][R.ky1]
-    local K2 = SECTIONS[R.kx2][R.ky2]
-
-    initial(K1.x1, K1.y1, K2.x2, K2.y2)
-  else
-    for _,K in ipairs(R.sections) do
-      initial(K.x1, K.y1, K.x2, K.y2)
+      spacelib.initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
+    else
+      for _,K in ipairs(R.sections) do
+        spacelib.initial_rect(K.x1, K.y1, K.x2, K.y2)
+      end
     end
-  end
 
-  R.spaces = SPACES
+    -- save the group of spaces
+    R.spaces = SPACES
+  end
 end
 
 
-function Layout_place_straddlers(R)
+function Layout_place_straddler(kind, K, N, dir)
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
   -- 
@@ -64,7 +51,8 @@ function Layout_place_straddlers(R)
   -- everything else.  The actual prefab and heights will be
   -- decided later in the normal layout code.
 
-  local function place_straddler(kind, K, N, dir)
+  R = K.room
+
     local deep1 = 64
     local deep2 = 64
     local long = 240
@@ -138,27 +126,35 @@ function Layout_place_straddlers(R)
 
 stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
 stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
-  end
+end
   
-  --| Layout_place_straddlers |--
 
-  for _,C in ipairs(R.conns) do
-    if not C.placed and C.kind == "normal" and C.K1.room == R then
-      place_straddler("door", C.K1, C.K2, C.dir)
-      C.placed = true
+
+function Layout_place_straddlers()
+  -- do doors after windows, as doors may want to become really big
+  -- and hence would need to know about the windows.
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,W in ipairs(R.windows) do
+      if not W.placed and W.K1.room == R then
+        Layout_place_straddler("window", W.K1, W.K2, W.dir)
+        W.placed = true
+      end
     end
   end
 
-  for _,W in ipairs(R.windows) do
-    if not W.placed and W.K1.room == R then
-      place_straddler("window", W.K1, W.K2, W.dir)
-      W.placed = true
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,C in ipairs(R.conns) do
+      if not C.placed and C.K1.room == R and C.kind == "normal" then
+        Layout_place_straddler("door", C.K1, C.K2, C.dir)
+        C.placed = true
+      end
     end
   end
 end
 
 
-function Layout_room(R)
+function Layout_the_room(R)
 
 
 --  R.entry_conn
@@ -428,6 +424,13 @@ gui.random()
 
   if not R.outdoor then
     Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
+  end
+end
+
+
+function Layout_rooms()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_the_room(R)
   end
 end
 

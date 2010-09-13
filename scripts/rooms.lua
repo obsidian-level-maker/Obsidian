@@ -3257,21 +3257,11 @@ function Rooms_build_all()
 
   Rooms_decide_windows()
 
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_prepare_room(R)
-  end
+  Layout_prepare_rooms()
+  Layout_place_straddlers()
+  Layout_rooms()
 
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_place_straddlers(R)
-  end
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_room(R)
-  end
-
-  for _,R in ipairs(LEVEL.scenic_rooms) do
-    -- FIXME: scenic room
-  end
+  -- FIXME: scenic rooms ??
 
   Layout_edge_of_map()
 
