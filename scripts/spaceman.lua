@@ -387,3 +387,20 @@ function spacelib.merge(M)
   end
 end
 
+
+function spacelib.merge_quad(kind, x1, y1, x2, y2, ...)
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  local M = SPACE_CLASS.new(kind)
+
+  M:add_coord(x1,y1, x2,y1)
+  M:add_coord(x2,y1, x2,y2)
+  M:add_coord(x2,y2, x1,y2)
+  M:add_coord(x1,y2, x1,y1)
+
+  M:update_bbox()
+
+  return spacelib.merge(M, ...)
+end
+
