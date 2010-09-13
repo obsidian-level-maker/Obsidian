@@ -72,6 +72,7 @@ function SPACE_CLASS.tostr(self)
       self.bx1 or 0, self.by1 or 0, self.bx2 or 0, self.by2 or 0)
 end
 
+
 function SPACE_CLASS.dump(self)
   gui.debugf("%s =\n{\n", self:tostr())
   for _,C in ipairs(self.coords) do
@@ -101,6 +102,44 @@ function SPACE_CLASS.update_bbox(self)
 end
 
 
+function SPACE_CLASS.calc_middle(self)
+  local x = 0
+  local y = 0
+
+  for _,C in ipairs(self.coords) do
+    x = x + C.x1
+    y = y + C.y1
+  end
+
+  local total = #self.coords
+
+  return x / total, y / total
+end
+
+
+--[[
+function SPACE_CLASS.to_boundary(self, x, y, dx, dy)
+  -- starting with a point inside the space, move along the vector in
+  -- (dx, dy) until we hit a boundary and return that coordinate.
+  -- returns NIL if something goes wrong.
+
+  local x2 = x + dx * 10000
+  local y2 = y + dy * 10000
+
+  local best_d
+
+  for _,C in ipairs(self.coords) do
+    local a = geom.perp_dist(C.x1, C.y1, x,y,x2,y2)
+    local b = geom.perp_dist(C.x2, C.y2, x,y,x2,y2)
+
+    INTERSECTION TEST
+  end
+
+  return nil
+end
+--]]
+
+
 function SPACE_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
@@ -111,6 +150,7 @@ function SPACE_CLASS.contains(self, x, y, fudge)
 
   return true
 end
+
 
 function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   if not fudge then fudge = 0.5 end
@@ -124,6 +164,7 @@ function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
 
   return true
 end
+
 
 function SPACE_CLASS.line_cuts(self, px1, py1, px2, py2)
   local front, back
@@ -271,16 +312,6 @@ function spacelib.make_current(group)
 end
 
 
-function spacelib.find_point(x, y)
-  for _,S in ipairs(SPACES) do
-    if S:contains(x, y) then
-      return S
-    end
-  end
-  return nil  -- not found
-end
-
-
 function spacelib.debugging_test()
   LEVEL = {}
 
@@ -329,6 +360,30 @@ function spacelib.debugging_test()
 
   error("TEST DONE")
 end
+
+
+function spacelib.find_point(x, y)
+  for _,S in ipairs(SPACES) do
+    if S:contains(x, y) then
+      return S
+    end
+  end
+  return nil  -- not found
+end
+
+
+--[[
+function spacelib.next_space(S, x, y, dx, dy)
+  local nx, ny = S:to_boundary(x, y, dx, dy)
+
+  if not nx then return nil end
+
+  nx = nx + dx*2
+  ny = ny + dy*2
+
+  return spacelib.find_point(nx, ny), nx, ny
+end
+--]]
 
 
 function spacelib.quad(kind, x1, y1, x2, y2)
@@ -433,9 +488,7 @@ function spacelib.test(M, keep_air)
   -- with 'keep_air' is true, this fails if an AIR space would overlap
   -- any WALK spaces.
 
-  for i = #SPACES,1,-1 do
-    local S = SPACES[i]
-
+  for _,S in ipairs(SPACES) do
     if S:overlaps(M) then
       if not spacelib.can_merge(S.kind, M.kind) then
         return S.kind, M.kind
@@ -448,5 +501,18 @@ function spacelib.test(M, keep_air)
   end
 
   return nil
+end
+
+
+function spacelib.find_overlaps(M)
+  local list = {}
+
+  for _,S in ipairs(SPACES) do
+    if S:overlaps(M) then
+      table.insert(list, S)
+    end
+  end
+ 
+  return list
 end
 
