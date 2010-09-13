@@ -3,7 +3,28 @@ TODO
 ====
 
 
+Layouter:
+
+  -  put all the "stuff" (switches, teleporters, etc) which
+     needs to be placed into a list
+
+  -  decide which stuff can be stuffed into walls, and try to
+     wall them up during the PERIMETER PASS
+
+  -  otherwise place them in the IMPORTANT STUFF pass
+
+  -  then perform FLOOR HEIGHT / STAIR PLACING pass
+
+  -  then do DECORATION pass
+
+  -  then bask in the glory, oh yeah
+
+
+
 Trans.brush : fix mirroring
+
+
+-  use the space manager to clip Light brushes to room of origin
 
 
 DONE: rotate 'angles' field of ents too (middle number)
