@@ -23,10 +23,13 @@
 class SPACE
 {
   kind  -- keyword:
-        --   "empty" : space is not used, free
-        --   "floor" : area with known floor height
-        --   "walk"  : player always can walk here
-        --   "solid" : for walls, stairs, lifts, decoration
+        --   "free"   : space is not used, free
+        --   "air"    : somewhat free, but disallow solids
+        --   "walk"   : player always can walk here
+        --
+        --   "floor"  : used area, known floor height
+        --   "liquid" : used area with a liquid floor
+        --   "solid"  : used area, blocks the player
 
   id  -- identifying number (to help debugging)
 
@@ -328,6 +331,23 @@ function spacelib.test_stuff()
 end
 
 
+function spacelib.can_merge(exist_kind, new_kind)
+  assert(new_kind ~= "free")
+
+  if exist_kind == "free"  then return true end
+
+  if exist_kind == "solid" then return false end
+  if new_kind   == "solid" then return false end
+
+  if exist_kind == "air"  then return true end
+  if exist_kind ~= "walk" then return false end
+
+  if new_kind == "liquid" then return false end
+
+  return true
+end
+
+
 function spacelib.merge(M)
   -- validate our parameter
   assert(M)
@@ -338,17 +358,7 @@ function spacelib.merge(M)
   assert(M.bx1 < M.bx2)
   assert(M.by1 < M.by2)
 
-  local function valid(S_kind, M_kind)
-    if S_kind == "empty" then return true end
-    if S_kind == "solid" then return false end
-
-    if S_kind == "walk"  and M_kind == "walk"  then return true end
-    if S_kind == "floor" and M_kind == "floor" then return false end
-
-    return (S_kind == "floor")
-  end
-
-  -- collect overlapping spaces
+  -- collect overlapping spaces, removing them from main set
   local overlaps = {}
 
   for i = #SPACES,1,-1 do
@@ -362,9 +372,17 @@ function spacelib.merge(M)
 
   assert(#overlaps > 0)
 
+  local final_kind = M.kind
+
   for _,S in ipairs(overlaps) do
-    if not valid(S.kind, M.kind) then
+    if not spacelib.can_merge(S.kind, M.kind) then
       error(string.format("Attempt to merge %s space into %s", M.kind, S.kind))
+    end
+
+    -- this is a bit rude, when an AIR space overlaps any WALK space,
+    -- then we "upgrade" the new one to be a WALK space.
+    if S.kind == "walk" and M.kind == "air" then
+      final_kind = "walk"
     end
 
     for _,C in ipairs(M.coords) do
@@ -378,13 +396,11 @@ function spacelib.merge(M)
 
     -- at here, S will lie completely inside M
     -- hence we drop S and keep M in the SPACES list
-
-    table.insert(SPACES, M)
-
-    if M.kind == "walk" and S.kind == "walk" and S.floor_h then
-      M.floor_h = S.floor_h
-    end
   end
+
+  M.kind = final_kind 
+
+  table.insert(SPACES, M)
 end
 
 
