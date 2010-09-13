@@ -105,34 +105,34 @@ function Layout_place_straddlers(R)
 
     spacelib.make_current(K.room.spaces)
 
-    spacelib.merge_quad("solid", x1,y1, x2,y2)
+    spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
 
     if dir == 2 then
-      spacelib.merge_quad(res_kind, x1,y2, x2,y2+res_d)
+      spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
     elseif dir == 8 then
-      spacelib.merge_quad(res_kind, x1,y1-res_d, x2,y1)
+      spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
     elseif dir == 6 then
-      spacelib.merge_quad(res_kind, x1-res_d,y1, x1,y2)
+      spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
     elseif dir == 4 then
-      spacelib.merge_quad(res_kind, x2,y1, x2+res_d,y2)
+      spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
     end
 
 
     spacelib.make_current(N.room.spaces)
 
 -- [[
-    spacelib.merge_quad("solid", x1,y1, x2,y2)
+    spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
 
     -- place walk areas (etc) in front of spaces
 
     if dir == 8 then
-      spacelib.merge_quad(res_kind, x1,y2, x2,y2+res_d)
+      spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
     elseif dir == 2 then
-      spacelib.merge_quad(res_kind, x1,y1-res_d, x2,y1)
+      spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
     elseif dir == 4 then
-      spacelib.merge_quad(res_kind, x1-res_d,y1, x1,y2)
+      spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
     elseif dir == 6 then
-      spacelib.merge_quad(res_kind, x2,y1, x2+res_d,y2)
+      spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
     end
 --]]
 

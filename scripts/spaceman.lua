@@ -281,10 +281,10 @@ function spacelib.find_point(x, y)
 end
 
 
-function spacelib.test_stuff()
+function spacelib.debugging_test()
   LEVEL = {}
 
-  gui.debugf("---- spacelib test_stuff ----\n")
+  gui.debugf("---- spacelib debugging_test ----\n")
 
   spacelib.clear()
   spacelib.initial_rect(0, 100, 300, 200)
@@ -328,6 +328,23 @@ function spacelib.test_stuff()
           T:dump()
 
   error("TEST DONE")
+end
+
+
+function spacelib.quad(kind, x1, y1, x2, y2)
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  local M = SPACE_CLASS.new(kind)
+
+  M:add_coord(x1,y1, x2,y1)
+  M:add_coord(x2,y1, x2,y2)
+  M:add_coord(x2,y2, x1,y2)
+  M:add_coord(x1,y2, x1,y1)
+
+  M:update_bbox()
+
+  return M
 end
 
 
@@ -407,19 +424,29 @@ function spacelib.merge(M)
 end
 
 
-function spacelib.merge_quad(kind, x1, y1, x2, y2, ...)
-  assert(x1 < x2)
-  assert(y1 < y2)
+function spacelib.test(M, keep_air)
+  -- dry-run of doing a merge()
+  --
+  -- returns NIL on success, otherwise the kinds of the conflicting
+  -- spaces (existing first, new one second).
+  --
+  -- with 'keep_air' is true, this fails if an AIR space would overlap
+  -- any WALK spaces.
 
-  local M = SPACE_CLASS.new(kind)
+  for i = #SPACES,1,-1 do
+    local S = SPACES[i]
 
-  M:add_coord(x1,y1, x2,y1)
-  M:add_coord(x2,y1, x2,y2)
-  M:add_coord(x2,y2, x1,y2)
-  M:add_coord(x1,y2, x1,y1)
+    if S:overlaps(M) then
+      if not spacelib.can_merge(S.kind, M.kind) then
+        return S.kind, M.kind
+      end
 
-  M:update_bbox()
+      if keep_air and S.kind == "walk" and M.kind == "air" then
+        return S.kind, M.kind
+      end
+    end
+  end
 
-  return spacelib.merge(M, ...)
+  return nil
 end
 
