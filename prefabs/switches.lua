@@ -46,3 +46,77 @@ PREFAB.SMALL_SWITCH =
   },
 }
 
+
+PREFAB.WALL_SWITCH =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind picture
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x =   0, y =  4, mat = "?wall" },
+    },
+
+    -- switch itself
+    {
+      { x =  64, y =  4 },
+      { x = 128, y =  4 },
+      { x = 128, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  64, y =  8 },
+    },
+
+    -- right side wall
+    {
+      { x = 0, y =  4, mat = "?wall" },
+      { x = 8, y =  4, mat = "?wall" },
+      { x = 8, y = 16, mat = "?wall" },
+      { x = 0, y = 16, mat = "?wall" },
+    },
+
+    {
+      { x =  8, y =  4, mat = "?wall" },
+      { x = 64, y =  4, mat = "?side" },
+      { x = 64, y = 16, mat = "?wall" },
+      { x =  8, y = 16, mat = "?side" },
+    },
+
+    -- left side wall
+    {
+      { x = 184, y =  4, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x = 184, y = 16, mat = "?wall" },
+    },
+
+    {
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 184, y =  4, mat = "?side" },
+      { x = 184, y = 16, mat = "?wall" },
+      { x = 128, y = 16, mat = "?side" },
+    },
+
+    -- frame bottom
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall", blocked=1 },
+      { x =  64, y = 16, mat = "?wall" },
+      { t = 0, mat = "?floor" },
+    },
+
+    -- frame top
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall", blocked=1 },
+      { x =  64, y = 16, mat = "?wall" },
+      { b = 64, mat = "?ceil", light = "?light", kind = "?sec_kind" },
+    },
+
+  },
+}
+
