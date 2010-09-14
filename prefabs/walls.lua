@@ -243,3 +243,49 @@ PREFAB.ITEM_NICHE =
   },
 }
 
+
+PREFAB.CORNER_NICHE =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- walls
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 64, y =  0, mat = "?wall" },
+      { x = 64, y =  4, mat = "?wall" },
+      { x =  0, y =  4, mat = "?wall" },
+    },
+
+    {
+      { x =   0, y =  4, mat = "?wall" },
+      { x =   4, y =  4, mat = "?wall" },
+      { x =   4, y = 64, mat = "?wall" },
+      { x =   0, y = 64, mat = "?wall" },
+    },
+
+    -- bottom
+    {
+      { x =   4, y =  4, mat = "?wall" },
+      { x =  64, y =  4, mat = "?wall" },
+      { x =   4, y = 64, mat = "?wall" },
+      { t = 0, mat = "?wall" },
+    },
+
+    -- top
+    {
+      { x =   4, y =  4, mat = "?wall" },
+      { x =  64, y =  4, mat = "?wall" },
+      { x =   4, y = 64, mat = "?wall" },
+      { x =  64, y =  4, mat = "?wall" },
+      { b = 64, mat = "?wall", light = "?light", special = "?special" },
+    },
+  },
+
+  entities =
+  {
+    { x = 32, y = 32, z = 0, ent = "?item", angle = 45 },
+  },
+}
+
