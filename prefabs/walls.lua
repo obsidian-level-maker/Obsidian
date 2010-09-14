@@ -186,3 +186,60 @@ PREFAB.WINDOW =
   },
 }
 
+
+PREFAB.ITEM_NICHE =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x =   0, y =  4, mat = "?wall" },
+    },
+
+    -- right side
+
+    {
+      { x =  0, y =  4, mat = "?wall" },
+      { x = 64, y =  4, mat = "?wall" },
+      { x = 32, y = 64, mat = "?wall" },
+      { x =  0, y = 64, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x = 192, y = 64, mat = "?wall" },
+      { x = 160, y = 64, mat = "?wall" },
+    },
+
+    -- frame bottom
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 64, mat = "?wall", blocked=1 },
+      { x =  64, y = 64, mat = "?wall" },
+      { t = 0, mat = "?floor" },
+    },
+
+    -- frame top
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 64, mat = "?wall", blocked=1 },
+      { x =  64, y = 64, mat = "?wall" },
+      { b = 64, mat = "?wall", light = "?light", kind = "?sec_kind"  },
+    },
+  },
+
+  entities =
+  {
+    { ent = "?item", x = 96, y = 48, z = 0, angle = 270 },
+  },
+}
+
