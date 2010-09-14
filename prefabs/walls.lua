@@ -58,10 +58,10 @@ PREFAB.CORNER =
   brushes =
   {
     {
-      { x =  0, y =  0, mat = "?outer" },
-      { x = 16, y =  0, mat = "?inner" },
-      { x = 16, y = 16, mat = "?inner" },
-      { x =  0, y = 16, mat = "?outer" },
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 16, y =  0, mat = "?wall" },
+      { x = 16, y = 16, mat = "?wall" },
+      { x =  0, y = 16, mat = "?wall" },
     },
   },
 }
@@ -79,10 +79,10 @@ PREFAB.PICTURE =
   {
     -- wall behind picture
     {
-      { x =   0, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
-      { x = 192, y =  4, mat = "?inner" },
-      { x =   0, y =  4, mat = "?inner" },
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x =   0, y =  4, mat = "?wall" },
     },
 
     -- picture itself
@@ -95,49 +95,49 @@ PREFAB.PICTURE =
 
     -- right side wall
     {
-      { x = 0, y =  4, mat = "?inner" },
-      { x = 8, y =  4, mat = "?inner" },
-      { x = 8, y = 16, mat = "?inner" },
-      { x = 0, y = 16, mat = "?inner" },
+      { x = 0, y =  4, mat = "?wall" },
+      { x = 8, y =  4, mat = "?wall" },
+      { x = 8, y = 16, mat = "?wall" },
+      { x = 0, y = 16, mat = "?wall" },
     },
 
     {
-      { x =  8, y =  4, mat = "?inner" },
+      { x =  8, y =  4, mat = "?wall" },
       { x = 64, y =  4, mat = "?side" },
-      { x = 64, y = 16, mat = "?inner" },
+      { x = 64, y = 16, mat = "?wall" },
       { x =  8, y = 16, mat = "?side" },
     },
 
     -- left side wall
     {
-      { x = 184, y =  4, mat = "?inner" },
-      { x = 192, y =  4, mat = "?inner" },
-      { x = 192, y = 16, mat = "?inner" },
-      { x = 184, y = 16, mat = "?inner" },
+      { x = 184, y =  4, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x = 184, y = 16, mat = "?wall" },
     },
 
     {
-      { x = 128, y =  4, mat = "?inner" },
+      { x = 128, y =  4, mat = "?wall" },
       { x = 184, y =  4, mat = "?side" },
-      { x = 184, y = 16, mat = "?inner" },
+      { x = 184, y = 16, mat = "?wall" },
       { x = 128, y = 16, mat = "?side" },
     },
 
     -- frame bottom
     {
-      { x =  64, y =  4, mat = "?inner" },
-      { x = 128, y =  4, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner", blocked=1 },
-      { x =  64, y = 16, mat = "?inner" },
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall", blocked=1 },
+      { x =  64, y = 16, mat = "?wall" },
       { t = 0, mat = "?floor" },
     },
 
     -- frame top
     {
-      { x =  64, y =  4, mat = "?inner" },
-      { x = 128, y =  4, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner", blocked=1 },
-      { x =  64, y = 16, mat = "?inner" },
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall", blocked=1 },
+      { x =  64, y = 16, mat = "?wall" },
       { b = 64, mat = "?floor", light = "?light"  },
     },
   },
