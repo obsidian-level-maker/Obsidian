@@ -87,8 +87,23 @@ function Layout_place_straddler(kind, K, N, dir)
     end
 
 
+  local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
+                      long=long, deep1=deep1, deep2=deep2,
+                      x1=x1, y1=y1, x2=x2, y2=y2,
+                    }
+
+  if not K.room.straddlers then K.room.straddlers = {} end
+  if not N.room.straddlers then N.room.straddlers = {} end
+
+  table.insert(K.room.straddlers, STRADDLER)
+  table.insert(N.room.straddlers, STRADDLER)
+
+
+  -- !!! FIXME: clip box to room (i.e. compute separate spaces)
+
+
     local res_kind = sel(kind == "door", "walk", "air")
-    local res_d = 220
+    local res_d = 80
     
 
     spacelib.make_current(K.room.spaces)
@@ -437,6 +452,27 @@ function Layout_the_room(R)
   end
 
 
+  local function pick_imp_spot(IM, middles, corners, walls)
+    
+    FUCK THIS SHIT
+  end
+
+
+  local function place_importants()
+    
+    local middles = table.copy(R.sections)
+
+    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
+
+    local corners = table.copy(R.corners)
+    local walls   = table.copy(R.walls)
+
+    for _,IM in ipairs(R.importants) do
+      IM.spot = pick_imp_spot(IM, middles, corners, walls)
+    end
+  end
+
+
   ---==| Layout_room |==---
 
   spacelib.make_current(R.spaces)
@@ -445,6 +481,8 @@ function Layout_the_room(R)
 
   find_corner_spots()
   find_wall_spots()
+
+  place_importants()
 
 ---!!!!  add_corners()
 
