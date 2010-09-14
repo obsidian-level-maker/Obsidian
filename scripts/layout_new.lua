@@ -453,22 +453,42 @@ function Layout_the_room(R)
 
 
   local function pick_imp_spot(IM, middles, corners, walls)
-    
-    FUCK THIS SHIT
+    for loop = 1,30 do
+      if rand.odds(50) and #middles > 0 then
+        IM.spot = "MIDDLE"
+        IM.middle = table.remove(middles, 1)
+        return
+      end
+
+      if rand.odds(50) and #walls > 0 then
+        IM.spot = "WALL"
+        IM.middle = table.remove(walls, 1)
+        return
+      end
+    end
+
+    -- TODO: corners (where applicable)
+
+    -- TODO: allow up to 4 stuff in a "middle" (subdivide section 2 or 4 ways)
+
+    error("could not place important stuff!")
   end
 
 
   local function place_importants()
-    
     local middles = table.copy(R.sections)
-
     table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
 
-    local corners = table.copy(R.corners)
-    local walls   = table.copy(R.walls)
+    local corners = {}
+    for _,C in ipairs(R.corners) do
+      if not C.concave then table.insert(corners, C) end
+    end
+
+    local walls = table.copy(R.walls)
+    rand.shuffle(walls)
 
     for _,IM in ipairs(R.importants) do
-      IM.spot = pick_imp_spot(IM, middles, corners, walls)
+      pick_imp_spot(IM, middles, corners, walls)
     end
   end
 
