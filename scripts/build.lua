@@ -1006,11 +1006,14 @@ function Fabricate(fab, skin, T)
   local function render_one_ent(E, props)
     local name = Trans.substitute(E.ent, skin)
 
-    local ex = E.x and resize_coord(x_info, E.x)
-    local ey = E.y and resize_coord(y_info, E.y)
-    local ez = E.z and resize_coord(z_info, E.z)
+    -- if substitution fails ignore the entity
+    if name then
+      local ex = E.x and resize_coord(x_info, E.x)
+      local ey = E.y and resize_coord(y_info, E.y)
+      local ez = E.z and resize_coord(z_info, E.z)
 
-    Trans.entity(name, ex, ey, ez, entity_props(E, props))
+      Trans.entity(name, ex, ey, ez, entity_props(E, props))
+    end
   end
 
 
