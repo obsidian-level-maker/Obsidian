@@ -18,7 +18,6 @@
 --
 ----------------------------------------------------------------
 
-
 PREFAB.PEDESTAL =
 {
   brushes =
@@ -30,6 +29,11 @@ PREFAB.PEDESTAL =
       { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = 8, mat = "?top", light = "?light" },
     },
+  },
+
+  entities =
+  {
+    { x = 0, y = 0, z = 8, ent = "?item", angle = "?angle" },
   },
 }
 
@@ -45,6 +49,11 @@ PREFAB.LOWERING_PEDESTAL =
       { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = 128, mat = "?top", light = "?light", special="?sec_kind", tag="?tag" },
     },
+  },
+
+  entities =
+  {
+    { x = 0, y = 0, z = 128, ent = "?item" },
   },
 }
 

@@ -239,7 +239,7 @@ PREFAB.ITEM_NICHE =
 
   entities =
   {
-    { ent = "?item", x = 96, y = 48, z = 0, angle = 270 },
+    { x = 96, y = 48, z = 0, ent = "?item", angle = 90 },
   },
 }
 
