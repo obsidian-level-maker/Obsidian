@@ -233,7 +233,7 @@ PREFAB.ITEM_NICHE =
       { x = 128, y =  4, mat = "?wall" },
       { x = 128, y = 64, mat = "?wall", blocked=1 },
       { x =  64, y = 64, mat = "?wall" },
-      { b = 64, mat = "?wall", light = "?light", kind = "?sec_kind"  },
+      { b = 64, mat = "?wall", light = "?light", special = "?special"  },
     },
   },
 

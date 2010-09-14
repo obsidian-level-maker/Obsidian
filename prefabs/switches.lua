@@ -114,7 +114,7 @@ PREFAB.WALL_SWITCH =
       { x = 128, y =  4, mat = "?wall" },
       { x = 128, y = 16, mat = "?wall", blocked=1 },
       { x =  64, y = 16, mat = "?wall" },
-      { b = 64, mat = "?ceil", light = "?light", kind = "?sec_kind" },
+      { b = 64, mat = "?ceil", light = "?light", special = "?special" },
     },
 
   },
