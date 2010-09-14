@@ -105,7 +105,7 @@ function SPACE_CLASS.update_bbox(self)
 end
 
 
-function SPACE_CLASS.calc_middle(self)
+function SPACE_CLASS.calc_mid(self)
   local x = 0
   local y = 0
 

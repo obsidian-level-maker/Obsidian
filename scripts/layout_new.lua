@@ -372,11 +372,79 @@ function Layout_the_room(R)
   end
 
 
+  local function collect_importants()
+    -- determine the stuff which MUST go into this room
+
+    R.importants = {}
+
+    if R.purpose then
+      table.insert(R.importants, { kind=R.purpose })
+    end
+
+    if R:has_teleporter() then
+      table.insert(R.importants, { kind="TELEPORTER" })
+    end
+
+    if R.weapon then
+      table.insert(R.importants, { kind="WEAPON" })
+    end
+  end
+
+
+  local function find_corner_spots()
+    R.corners = {}
+
+    for _,K in ipairs(R.sections) do
+      for side = 1,9,2 do if side ~= 5 then
+        local R_dir = geom.RIGHT_45[side]
+        local L_dir = geom. LEFT_45[side]
+
+        local N  = K:neighbor(side)
+        local N1 = K:neighbor(R_dir)
+        local N2 = K:neighbor(L_dir)
+
+        local same1 = (N1 and N1.room == R)
+        local same2 = (N2 and N2.room == R)
+
+        if not same1 and not same2 then
+          table.insert(R.corners, { K=K, side=side })
+        end
+
+        -- detect the "concave" kind, these turn 270 degrees
+        if same1 and same2 and not (N and N.room == R) then
+          table.insert(R.corners, { K=K, side=side, concave=true })
+        end
+      end end
+    end
+  end
+
+
+  local function find_wall_spots()
+    R.walls = {}
+
+    for _,K in ipairs(R.sections) do
+      for side = 2,8,2 do
+        local N = K:neighbor(side)
+
+        if not (N and N.room == R) and
+           not K:side_has_conn(side) and
+           not K:side_has_window(side)
+        then
+          table.insert(R.walls, { K=K, side=side })
+        end
+      end
+    end
+  end
+
+
   ---==| Layout_room |==---
 
-gui.random()
-
   spacelib.make_current(R.spaces)
+
+  collect_importants()
+
+  find_corner_spots()
+  find_wall_spots()
 
 ---!!!!  add_corners()
 
