@@ -56,12 +56,12 @@ function Layout_prepare_rooms()
       local same2 = (N2 and N2.room == K.room)
 
       if not same1 and not same2 then
-        table.insert(K.corners, { K=K, side=side })
+        K.corners[side] = { K=K, side=side }
       end
 
       -- detect the "concave" kind, these turn 270 degrees
       if same1 and same2 and not (N and N.room == K.room) then
-        table.insert(K.corners, { K=K, side=side, concave=true })
+        K.corners[side] = { K=K, side=side, concave=true }
       end
     end end
   end
@@ -80,7 +80,7 @@ function Layout_prepare_rooms()
           EDGE.long = K.y2 - K.y1
         end
 
-        table.insert(K.edges, EDGE)
+        K.edges[side] = EDGE
       end
     end
   end
@@ -102,8 +102,42 @@ function Layout_prepare_rooms()
 end
 
 
-function Layout_add_span(E, blah)
+function Layout_add_span(E, long1, long2, deep)
+  -- check if valid
 
+  assert(long1 >= 16)
+  assert(long2 <= E.long - 16)
+
+  -- corner check
+  if E.L_long then assert(long1 >= E.L_long) end
+  if E.R_long then assert(long2 <= E.R_long) end
+
+  for _,SP in ipairs(E.spans) do
+    if (long2 <= SP.long1) or (long1 >= SP.long2) then
+      -- OK
+    else
+      error("Layout_add_span: overlaps existing one!")
+    end
+  end
+
+  -- create and add it
+  local SPAN =
+  {
+    long1 = long1,
+    long2 = long2,
+    deep1 = deep,
+    deep2 = deep,
+  }
+
+  table.insert(E.spans, SPAN)
+
+  -- keep them sorted
+  if #E.spans > 1 then
+    table.sort(E.spans,
+        function(A, B) return A.long1 < B.long1 end)
+  end
+
+  return SPAN
 end
 
 
@@ -134,7 +168,7 @@ function Layout_place_straddlers()
     N.edges[10-dir].straddler = STRADDLER
 
 
-    local edge_long = K.edges[dir]
+    local edge_long = K.edges[dir].long
 
     local long1 = (edge_long - long) / 2
     local long2 = (edge_long + long) / 2
