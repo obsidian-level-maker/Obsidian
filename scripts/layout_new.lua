@@ -145,6 +145,8 @@ end
 
 
 function Layout_add_span(E, long1, long2, deep)
+  assert(long2 > long1)
+
   -- check if valid
 
   assert(long1 >= 16)
@@ -484,6 +486,8 @@ function Layout_the_room(R)
     if S.kind == "liquid" then f_mat = "FWATER1" end
     if S.kind == "solid"  then f_mat = "FLAT10"  end
 
+f_mat = "FLAT18"
+
     local kind, w_face, p_face = Mat_normal(f_mat)
     p_face.mark  = Plan_alloc_mark()
     p_face.light = 0.75
@@ -747,11 +751,29 @@ function Layout_the_room(R)
 
 
   local function build_span(E, SP)
-    -- FIXME
+    local K = E.K
+
+    local T = Trans.box_transform(K.x1,K.y1, K.x2,K.y2, 0, E.side)
+
+    Trans.set(T)
+
+    assert(SP.long2 > SP.long1)
+    assert(SP.deep1 > 0)
+
+    if SP.usage == "fake" then
+      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, nil,nil, Mat_normal("TEKGREN3"))
+    else
+      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, nil,24, Mat_normal("COMPBLUE"))
+      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, 96,nil, Mat_normal("COMPBLUE"))
+    end
+
+    Trans.clear()
   end
   
 
   local function build_fake_span(E, long1, long2)
+    assert(long2 > long1)
+
     local deep = 16
     
     local SPAN =
@@ -790,7 +812,9 @@ function Layout_the_room(R)
       L_long = SP.long2
     end
 
-    build_fake_span(E, R_long, L_long)
+    if R_long > L_long then
+      build_fake_span(E, L_long, R_long)
+    end
   end
 
 
