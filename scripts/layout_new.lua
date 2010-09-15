@@ -521,12 +521,13 @@ f_mat = "FLAT18"
     if S.straddle == "door" then
 --      assert(S.dir)
 --      local skin = GAME.DOORS["silver"] or {}
---      Fabricate("DOOR", skin, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir))
+--      Fabricate("DOOR", Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir), skin)
     Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
 --  Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 16 , Mat_normal(d_mat))
     elseif S.straddle == "window" then
 --    assert(S.dir)
---    Fabricate("WINDOW", {outer="STARG1", inner="STARG1"}, Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir))
+--    local skin = {outer="STARG1", inner="STARG1"}
+--    Fabricate("WINDOW", Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir), skin)
       Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
       Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
     elseif S.corner then
@@ -829,6 +830,8 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   ---===| Layout_room |===---
 
+  ROOM = R  -- set global
+
   Layout_initial_space(R)
 
   decide_corner_sizes()
@@ -872,7 +875,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   if R.purpose == "START" then
     local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-    Fabricate("PEDESTAL", skin, Trans.spot_transform(ex, ey, 0))
+    Fabricate("PEDESTAL", Trans.spot_transform(ex, ey, 0), skin)
 
     ent = "player1"
   end

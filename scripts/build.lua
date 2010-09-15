@@ -1145,11 +1145,12 @@ function Fabricate(fab, T, skin, skin2)
 
   ---| Fabricate |---
 
----gui.printf("Prefab: %s\n", fab.name)
+  gui.debugf("Fabricating: %s\n", fab.name)
 
-  Trans.process_skins(THEME and THEME.skin,
+  Trans.process_skins(fab.defaults,
+                       THEME and THEME.skin,
                        ROOM and  ROOM.skin,
-                       fab.skin, skin, skin2)
+                       skin, skin2)
 
   local brushes = copy_w_substitution(fab.brushes)
 
