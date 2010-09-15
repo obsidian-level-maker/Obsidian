@@ -26,9 +26,47 @@ class SECTION
 
   room : ROOM
 
+  x1, y1, x2, y2  -- map coordinates
+
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
   num_conn  -- number of connections
+
+  corners[DIR] : CORNER  -- each can be nil
+
+  edges[DIR] : EDGE   -- each can be nil
+}
+
+
+class CORNER
+{
+  K, side  -- identification
+
+  horiz, vert  -- connecting sizes
+
+  FIXME: usage stuff
+}
+
+
+class EDGE
+{
+  K, side  -- identification
+
+  long  --  real length of edge
+
+  L_long, R_long  -- length allocated to corners
+  L_deep, R_deep  -- depth (sticking out) at corners
+
+  spans[] : SPAN  -- allocated stuff on this edge
+}
+
+
+class SPAN
+{
+  long1, long2  -- length range along edge
+  deep1, deep2  -- depth (sticking out)
+
+  FIXME: usage stuff
 }
 
 
