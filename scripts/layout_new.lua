@@ -348,7 +348,7 @@ function Layout_the_room(R)
     return N and N.room == K.room
   end
 
-  local function touches_side(S, side, foobie)
+  local function OLD__touches_side(S, side, foobie)
     local K = section_for_space(S)
     if foobie or not same_room(K, side) then
         if side == 4 and S.x1 < K.x1+1 then return true end
@@ -395,7 +395,7 @@ function Layout_the_room(R)
   local THICK = 80
 
 
-  local function try_add_corner()
+  local function OLD__try_add_corner()
     for _,S in ipairs(R.spaces) do
       for side = 1,9,2 do if side ~= 5 then
         if S.free and touches_corner(S, side) then
@@ -437,7 +437,7 @@ function Layout_the_room(R)
   end
 
 
-  local function try_add_wall()
+  local function OLD__try_add_wall()
     for _,S in ipairs(R.spaces) do
       for side = 2,8,2 do
         if S.free and touches_side(S, side) then
@@ -465,15 +465,6 @@ function Layout_the_room(R)
         end
       end
     end
-  end
-
-
-  local function add_corners()
-    while try_add_corner() do end
-  end
-
-  local function add_walls()
-    while try_add_wall() do end
   end
 
 
@@ -732,6 +723,94 @@ function Layout_the_room(R)
   end
 
 
+  local function build_corner(C)
+    local K = C.K
+    
+    local x1, y1 = K.x1, K.y1
+    local x2, y2 = K.x2, K.y2
+
+    if C.side == 1 or C.side == 7 then
+      x2 = x1 + C.horiz
+    else
+      x1 = x2 - C.horiz
+    end
+
+    if C.side == 1 or C.side == 3 then
+      y2 = y1 + C.vert
+    else
+      y1 = y2 - C.vert
+    end
+
+    Trans.quad(x1,y1, x2,y2, nil, 64, Mat_normal("CRACKLE2"))
+    Trans.quad(x1,y1, x2,y2, 72, nil, Mat_normal("CRACKLE2"))
+  end
+
+
+  local function build_span(E, SP)
+    -- FIXME
+  end
+  
+
+  local function build_fake_span(E, long1, long2)
+    local deep = 16
+    
+    local SPAN =
+    {
+      long1 = long1,
+      long2 = long2,
+      deep1 = deep,
+      deep2 = deep,
+      usage = "fake"
+    }
+
+    build_span(E, SPAN)
+  end
+
+
+  local function build_edge(E)
+    local L_long = 8  --!!!
+    local R_long = 8
+
+    local is_vert = geom.is_vert(E)
+    
+    if E.corn1 then
+      L_long = sel(is_vert, E.corn1.horiz, E.corn1.vert)
+    end
+
+    if E.corn2 then
+      R_long = E.long - sel(is_vert, E.corn2.horiz, E.corn2.vert)
+    end
+    
+    for _,SP in ipairs(E.spans) do
+      if SP.long1 > L_long+1 then
+        build_fake_span(E, L_long, SP.long1)
+      end
+
+      build_span(E, SP)
+      L_long = SP.long2
+    end
+
+    build_fake_span(E, R_long, L_long)
+  end
+
+
+  local function build_corners()
+    for _,K in ipairs(R.sections) do
+      for _,C in pairs(K.corners) do
+        build_corner(C)
+      end
+    end
+  end
+
+  local function build_edges()
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        build_edge(E)
+      end
+    end
+  end
+
+
   ---===| Layout_room |===---
 
   Layout_initial_space(R)
@@ -740,14 +819,13 @@ function Layout_the_room(R)
 
   collect_importants()
 
-  find_corner_spots()
-  find_wall_spots()
+--!! FIXME  place_importants()
 
-  place_importants()
 
----!!!!  add_corners()
+  build_corners()
 
----!!!!  add_walls()
+  build_edges()
+
 
   for _,S in ipairs(SPACES) do
     build_space(S)
