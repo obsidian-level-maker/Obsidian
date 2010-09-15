@@ -56,6 +56,8 @@ class EDGE
 
   long  --  real length of edge
 
+  corn1, corn2 : CORNER
+
   L_long, R_long  -- length allocated to corners
   L_deep, R_deep  -- depth (sticking out) at corners
 

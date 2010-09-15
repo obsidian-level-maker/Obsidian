@@ -86,6 +86,37 @@ function Layout_prepare_rooms()
   end
 
 
+  local function corner_near_edge(E, want_left)
+    local side
+    if want_left then side = geom.LEFT_45 [E.side]
+                 else side = geom.RIGHT_45[E.side]
+    end
+
+    if E.K.corners[side] then
+      return E.K.corners[side]
+    end
+
+    -- check for concave corners, a bit trickier since it will be
+    -- in a different section.
+
+    if want_left then side = geom.LEFT_45 [side]
+                 else side = geom.RIGHT_45[side]
+    end
+
+    local N = E.K:neighbor(side)
+
+    if not (N and N.room == E.K.room) then
+      return nil
+    end
+
+    if want_left then side = geom.RIGHT_45[E.side]
+                 else side = geom.LEFT_45 [E.side]
+    end
+
+    return N.corners[side]
+  end
+
+
   local function prepare_room(R)
     for _,K in ipairs(R.sections) do
       add_corners(K)
@@ -94,10 +125,21 @@ function Layout_prepare_rooms()
   end
 
 
+  local function connect_corners(R)
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        E.corn1 = corner_near_edge(E, true)
+        E.corn2 = corner_near_edge(E, false)
+      end
+    end
+  end
+
+
   ---| Layout_prepare_rooms |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
     prepare_room(R)
+    connect_corners(R)
   end
 end
 
@@ -557,6 +599,92 @@ function Layout_the_room(R)
            not K:side_has_window(side)
         then
           table.insert(R.walls, { K=K, side=side })
+        end
+      end
+    end
+  end
+
+
+  local function edge_near_corner(corn, want_horiz)
+    -- want_horiz : true for the edge travelling horizontally,
+    --              false for the vertical edge
+    local side
+
+    if want_horiz then
+      side = sel(corn.side == 1 or corn.side == 3, 2, 8)
+    else
+      side = sel(corn.side == 1 or corn.side == 7, 4, 6)
+    end
+
+    if not corn.concave then
+      return assert(corn.K.edges[side])
+    end
+
+    -- trickier for concave corners, edge is in a different section
+    local kx = corn.K.kx
+    local ky = corn.K.ky
+
+    local dx, dy = geom.delta(corn.side)
+
+    if want_horiz then
+      kx = kx + dx
+    else
+      ky = ky + dx
+    end
+
+    assert(Plan_is_section_valid(kx, ky))
+
+    local K = SECTIONS[kx][ky]
+    assert(K.room == corn.K.room)
+
+    return assert(K.edges[side])
+  end
+
+
+  local function adjust_corner(C, side, long, deep)
+    if geom.is_vert(side) then
+      C.horiz = math.min(C.horiz, long)
+      C.vert  = math.min(C.vert,  deep)
+    else
+      C.vert  = math.min(C.vert,  long)
+      C.horiz = math.min(C.horiz, deep)
+    end
+  end
+
+
+  local function adjust_corner_sizes(E)
+    local L_long, L_deep
+    local R_long, R_deep
+
+    if E.spans[1] then
+      L_long = E.spans[1].long1
+      L_deep = E.spans[1].deep1
+
+      R_long = E.long - E.spans[#E.spans].long2
+      R_deep = E.spans[#E.spans].deep2
+
+      if E.corn1 then
+        adjust_corner(E.corn1, E.side, L_long, L_deep)
+      end
+
+      if E.corn2 then
+        adjust_corner(E.corn2, E.side, L_long, L_deep)
+      end
+    end
+  end
+
+
+  local function decide_corner_sizes()
+    for _,R in ipairs(LEVEL.all_rooms) do
+      for _,K in ipairs(R.sections) do
+        for _,C in pairs(K.corners) do
+          C.horiz = 96  -- STUPID TEST NUMBERS
+          C.vert  = 96
+        end
+      end
+      for _,K in ipairs(R.sections) do
+        for _,E in pairs(K.edges) do
+          adjust_corner_sizes(E)
         end
       end
     end
