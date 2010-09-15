@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  BUILDER
+--  BUILDING TOOLS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -717,7 +717,23 @@ end
 function Trans.process_skins(...)
 
   local function random_pass(keys)
-    -- TODO
+    -- most fields with a table value are considered to be random
+    -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
+    --
+    -- fields starting with an underscore are ignored, to allow for
+    -- special fields in the skin.
+
+    for _,name in ipairs(keys) do
+      local value = Trans.SKIN[name]
+
+      if type(value) == "table" and not string.match(name, "^_") then
+        if table.size(value) == 0 then
+          error("process_skins: random table is empty: " .. tostring(name))
+        end
+
+        Trans.SKIN[name] = rand.key_by_probs(value)
+      end
+    end
   end
 
 
@@ -772,7 +788,7 @@ function Trans.process_skins(...)
   end
 
   -- Note: iterate over a copy of the key names, since we cannot
-  --       modify a table while iterating through it.
+  --       safely modify a table while iterating through it.
   local keys = table.keys(Trans.SKIN)
 
   random_pass(keys)
