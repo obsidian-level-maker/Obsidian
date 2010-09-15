@@ -22,28 +22,92 @@ require 'defs'
 require 'util'
 
 
+function Layout_initial_space(R)
+  spacelib.clear()
+
+  if R.shape == "rect" then
+    local K1 = SECTIONS[R.kx1][R.ky1]
+    local K2 = SECTIONS[R.kx2][R.ky2]
+
+    spacelib.initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
+  else
+    for _,K in ipairs(R.sections) do
+      spacelib.initial_rect(K.x1, K.y1, K.x2, K.y2)
+    end
+  end
+
+  -- save the group of spaces
+  R.spaces = SPACES
+end
+
+
 function Layout_prepare_rooms()
-  for _,R in ipairs(LEVEL.all_rooms) do
-    spacelib.clear()
 
-    if R.shape == "rect" then
-      local K1 = SECTIONS[R.kx1][R.ky1]
-      local K2 = SECTIONS[R.kx2][R.ky2]
+  local function add_corners(K)
+    for side = 1,9,2 do if side ~= 5 then
+      local R_dir = geom.RIGHT_45[side]
+      local L_dir = geom. LEFT_45[side]
 
-      spacelib.initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
-    else
-      for _,K in ipairs(R.sections) do
-        spacelib.initial_rect(K.x1, K.y1, K.x2, K.y2)
+      local N  = K:neighbor(side)
+      local N1 = K:neighbor(R_dir)
+      local N2 = K:neighbor(L_dir)
+
+      local same1 = (N1 and N1.room == K.room)
+      local same2 = (N2 and N2.room == K.room)
+
+      if not same1 and not same2 then
+        table.insert(K.corners, { K=K, side=side })
+      end
+
+      -- detect the "concave" kind, these turn 270 degrees
+      if same1 and same2 and not (N and N.room == K.room) then
+        table.insert(K.corners, { K=K, side=side, concave=true })
+      end
+    end end
+  end
+
+
+  local function add_edges(K)
+    for side = 2,8,2 do
+      local N = K:neighbor(side)
+
+      if not (N and N.room == K.room) then
+        local EDGE = { K=K, side=side, spans={} }
+
+        if geom.is_vert(side) then
+          EDGE.long = K.x2 - K.x1
+        else
+          EDGE.long = K.y2 - K.y1
+        end
+
+        table.insert(K.edges, EDGE)
       end
     end
+  end
 
-    -- save the group of spaces
-    R.spaces = SPACES
+
+  local function prepare_room(R)
+    for _,K in ipairs(R.sections) do
+      add_corners(K)
+      add_edges(K)
+    end
+  end
+
+
+  ---| Layout_prepare_rooms |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    prepare_room(R)
   end
 end
 
 
-function Layout_place_straddler(kind, K, N, dir)
+function Layout_add_span(E, blah)
+
+end
+
+
+function Layout_place_straddlers()
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
   -- 
@@ -51,108 +115,53 @@ function Layout_place_straddler(kind, K, N, dir)
   -- everything else.  The actual prefab and heights will be
   -- decided later in the normal layout code.
 
-  R = K.room
+  local function place_straddler(kind, K, N, dir)
+    R = K.room
 
+    -- FIXME : pick these properly
+    local long = 240
     local deep1 = 64
     local deep2 = 64
-    local long = 240
 
-    local mx = int((K.x1 + K.x2) / 2)
-    local my = int((K.y1 + K.y2) / 2)
+    local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
+                        long=long, deep1=deep1, deep2=deep2,
+                      }
 
-    local x1,y1, x2,y2
+    assert(K.edges[dir])
+    assert(N.edges[10-dir])
 
-    if geom.is_vert(dir) then
-      x1 = mx - long/2
-      x2 = mx + long/2
-
-      if dir == 8 then
-        y1 = K.y2 - deep1
-        y2 = K.y2 + deep2
-      else
-        y1 = K.y1 - deep2
-        y2 = K.y1 + deep1
-      end
-    else
-      y1 = my - long/2
-      y2 = my + long/2
-
-      if dir == 6 then
-        x1 = K.x2 - deep1
-        x2 = K.x2 + deep2
-      else
-        x1 = K.x1 - deep2
-        x2 = K.x1 + deep1
-      end
-    end
+    K.edges[dir]   .straddler = STRADDLER
+    N.edges[10-dir].straddler = STRADDLER
 
 
-  local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
-                      long=long, deep1=deep1, deep2=deep2,
-                      x1=x1, y1=y1, x2=x2, y2=y2,
-                    }
+    local edge_long = K.edges[dir]
 
-  if not K.room.straddlers then K.room.straddlers = {} end
-  if not N.room.straddlers then N.room.straddlers = {} end
-
-  table.insert(K.room.straddlers, STRADDLER)
-  table.insert(N.room.straddlers, STRADDLER)
+    local long1 = (edge_long - long) / 2
+    local long2 = (edge_long + long) / 2
 
 
-  -- !!! FIXME: clip box to room (i.e. compute separate spaces)
-
-
-    local res_kind = sel(kind == "door", "walk", "air")
-    local res_d = 80
+    local SP
     
+    SP = Layout_add_span(K.edges[dir],    long1, long2, deep1)
+    SP.usage = "straddler"
+    SP.straddler = STRADDLER
 
-    spacelib.make_current(K.room.spaces)
-
-    spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
-
-    if dir == 2 then
-      spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
-    elseif dir == 8 then
-      spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
-    elseif dir == 6 then
-      spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
-    elseif dir == 4 then
-      spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
-    end
+    -- NOTE: if not centred, would need different long1/long2 for other side
+    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2)
+    SP.usage = "straddler"
+    SP.straddler = STRADDLER
+  end
 
 
-    spacelib.make_current(N.room.spaces)
+  ---| Layout_place_straddlers |---
 
--- [[
-    spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
-
-    -- place walk areas (etc) in front of spaces
-
-    if dir == 8 then
-      spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
-    elseif dir == 2 then
-      spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
-    elseif dir == 4 then
-      spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
-    elseif dir == 6 then
-      spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
-    end
---]]
-
-stderrf(">>>>>>>>>>>> %s straddler %s --> %s\n", kind, K:tostr(), N:tostr())
-stderrf("             (%d %d) --> (%d %d)\n", x1, y1, x2, y2)
-end
-  
-
-
-function Layout_place_straddlers()
   -- do doors after windows, as doors may want to become really big
   -- and hence would need to know about the windows.
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,W in ipairs(R.windows) do
       if not W.placed and W.K1.room == R then
-        Layout_place_straddler("window", W.K1, W.K2, W.dir)
+        place_straddler("window", W.K1, W.K2, W.dir)
         W.placed = true
       end
     end
@@ -161,12 +170,80 @@ function Layout_place_straddlers()
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,C in ipairs(R.conns) do
       if not C.placed and C.K1.room == R and C.kind == "normal" then
-        Layout_place_straddler("door", C.K1, C.K2, C.dir)
+        place_straddler("door", C.K1, C.K2, C.dir)
         C.placed = true
       end
     end
   end
 end
+
+
+--[[  STRADDLER
+      local mx = int((K.x1 + K.x2) / 2)
+      local my = int((K.y1 + K.y2) / 2)
+
+      local x1,y1, x2,y2
+
+      if geom.is_vert(dir) then
+        x1 = mx - long/2
+        x2 = mx + long/2
+
+        if dir == 8 then
+          y1 = K.y2 - deep1
+          y2 = K.y2 + deep2
+        else
+          y1 = K.y1 - deep2
+          y2 = K.y1 + deep1
+        end
+      else
+        y1 = my - long/2
+        y2 = my + long/2
+
+        if dir == 6 then
+          x1 = K.x2 - deep1
+          x2 = K.x2 + deep2
+        else
+          x1 = K.x1 - deep2
+          x2 = K.x1 + deep1
+        end
+      end
+
+
+      local res_kind = sel(kind == "door", "walk", "air")
+      local res_d = 80
+      
+
+      spacelib.make_current(K.room.spaces)
+
+      spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
+
+      if dir == 2 then
+        spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
+      elseif dir == 8 then
+        spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
+      elseif dir == 6 then
+        spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
+      elseif dir == 4 then
+        spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
+      end
+
+
+      spacelib.make_current(N.room.spaces)
+
+      spacelib.merge(spacelib.quad("solid", x1,y1, x2,y2))
+
+      -- place walk areas (etc) in front of spaces
+
+      if dir == 8 then
+        spacelib.merge(spacelib.quad(res_kind, x1,y2, x2,y2+res_d))
+      elseif dir == 2 then
+        spacelib.merge(spacelib.quad(res_kind, x1,y1-res_d, x2,y1))
+      elseif dir == 4 then
+        spacelib.merge(spacelib.quad(res_kind, x1-res_d,y1, x1,y2))
+      elseif dir == 6 then
+        spacelib.merge(spacelib.quad(res_kind, x2,y1, x2+res_d,y2))
+      end
+--]]
 
 
 function Layout_the_room(R)
@@ -493,9 +570,11 @@ function Layout_the_room(R)
   end
 
 
-  ---==| Layout_room |==---
+  ---===| Layout_room |===---
 
-  spacelib.make_current(R.spaces)
+  Layout_initial_space(R)
+
+  decide_corner_sizes()
 
   collect_importants()
 

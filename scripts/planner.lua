@@ -42,6 +42,8 @@ class CORNER
 {
   K, side  -- identification
 
+  concave  -- true for 270 degree corners
+
   horiz, vert  -- connecting sizes
 
   FIXME: usage stuff
@@ -83,7 +85,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0 }
+  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
   table.set_class(K, SECTION_CLASS)
   return K
 end
