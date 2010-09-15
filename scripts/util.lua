@@ -171,15 +171,20 @@ function table.subset_w_field(t, field, value)
   return new_t
 end
 
-function table.keys_sorted(t)
+function table.keys(t)
   assert(t)
 
-  if table.empty(t) then return {} end
-
   local keys = {}
+
   for k,v in pairs(t) do
     table.insert(keys, k)
   end
+
+  return keys
+end
+
+function table.keys_sorted(t)
+  local keys = table.keys(t)
 
   table.sort(keys, function (A,B) return tostring(A) < tostring(B) end)
 
