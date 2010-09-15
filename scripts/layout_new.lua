@@ -99,6 +99,9 @@ function Layout_prepare_rooms()
     -- check for concave corners, a bit trickier since it will be
     -- in a different section.
 
+-- NOTE : DISABLED, DOES NOT WORK WELL
+do return nil end 
+
     if want_left then side = geom.LEFT_45 [side]
                  else side = geom.RIGHT_45[side]
     end
@@ -198,8 +201,8 @@ function Layout_place_straddlers()
 
     -- FIXME : pick these properly
     local long = 240
-    local deep1 = 64
-    local deep2 = 64
+    local deep1 = 34
+    local deep2 = 34
 
     local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
                         long=long, deep1=deep1, deep2=deep2,
@@ -746,7 +749,7 @@ f_mat = "FLAT18"
     end
 
     Trans.quad(x1,y1, x2,y2, nil, 64, Mat_normal("CRACKLE2"))
-    Trans.quad(x1,y1, x2,y2, 72, nil, Mat_normal("CRACKLE2"))
+    Trans.quad(x1,y1, x2,y2, 108, nil, Mat_normal("CRACKLE2"))
   end
 
 
@@ -760,11 +763,16 @@ f_mat = "FLAT18"
     assert(SP.long2 > SP.long1)
     assert(SP.deep1 > 0)
 
+    local x1 = E.long - SP.long2
+    local x2 = E.long - SP.long1
+    local y1 = 0
+    local y2 = SP.deep1
+
     if SP.usage == "fake" then
-      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, nil,nil, Mat_normal("TEKGREN3"))
+      Trans.quad(x1, y1, x2, y2, nil,nil, Mat_normal("TEKGREN3"))
     else
-      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, nil,24, Mat_normal("COMPBLUE"))
-      Trans.quad(SP.long1, 0, SP.long2, SP.deep1, 96,nil, Mat_normal("COMPBLUE"))
+      Trans.quad(x1, y1, x2, y2, nil,24, Mat_normal("COMPBLUE"))
+      Trans.quad(x1, y1, x2, y2, 96,nil, Mat_normal("COMPBLUE"))
     end
 
     Trans.clear()
@@ -774,7 +782,7 @@ f_mat = "FLAT18"
   local function build_fake_span(E, long1, long2)
     assert(long2 > long1)
 
-    local deep = 16
+    local deep = 64
     
     local SPAN =
     {
@@ -790,17 +798,17 @@ f_mat = "FLAT18"
 
 
   local function build_edge(E)
-    local L_long = 8  --!!!
-    local R_long = 8
+    local L_long = 0
+    local R_long = E.long
 
-    local is_vert = geom.is_vert(E)
+    local goes_horiz = geom.is_vert(E.side)
     
     if E.corn1 then
-      L_long = sel(is_vert, E.corn1.horiz, E.corn1.vert)
+      L_long = sel(goes_horiz, E.corn1.horiz, E.corn1.vert)
     end
 
     if E.corn2 then
-      R_long = E.long - sel(is_vert, E.corn2.horiz, E.corn2.vert)
+      R_long = E.long - sel(goes_horiz, E.corn2.horiz, E.corn2.vert)
     end
     
     for _,SP in ipairs(E.spans) do
