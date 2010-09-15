@@ -92,16 +92,18 @@ function Layout_prepare_rooms()
                  else side = geom.RIGHT_45[E.side]
     end
 
-    if E.K.corners[side] then
-      return E.K.corners[side]
+    local C = E.K.corners[side]
+
+    if C then
+      assert(not C.concave)
+      return C
     end
 
     -- check for concave corners, a bit trickier since it will be
     -- in a different section.
 
--- NOTE : DISABLED, DOES NOT WORK WELL
-do return nil end 
-
+-- NOTE : DISABLED, NEEDS DIFFERENT HANDLING
+--[[
     if want_left then side = geom.LEFT_45 [side]
                  else side = geom.RIGHT_45[side]
     end
@@ -117,6 +119,7 @@ do return nil end
     end
 
     return N.corners[side]
+--]]
   end
 
 
@@ -200,7 +203,7 @@ function Layout_place_straddlers()
     R = K.room
 
     -- FIXME : pick these properly
-    local long = 240
+    local long = 340
     local deep1 = 34
     local deep2 = 34
 
@@ -557,35 +560,7 @@ f_mat = "FLAT18"
   end
 
 
-  local function find_corner_spots()
-    R.corners = {}
-
-    for _,K in ipairs(R.sections) do
-      for side = 1,9,2 do if side ~= 5 then
-        local R_dir = geom.RIGHT_45[side]
-        local L_dir = geom. LEFT_45[side]
-
-        local N  = K:neighbor(side)
-        local N1 = K:neighbor(R_dir)
-        local N2 = K:neighbor(L_dir)
-
-        local same1 = (N1 and N1.room == R)
-        local same2 = (N2 and N2.room == R)
-
-        if not same1 and not same2 then
-          table.insert(R.corners, { K=K, side=side })
-        end
-
-        -- detect the "concave" kind, these turn 270 degrees
-        if same1 and same2 and not (N and N.room == R) then
-          table.insert(R.corners, { K=K, side=side, concave=true })
-        end
-      end end
-    end
-  end
-
-
-  local function find_wall_spots()
+  local function OLD_find_wall_spots()
     R.walls = {}
 
     for _,K in ipairs(R.sections) do
@@ -642,10 +617,10 @@ f_mat = "FLAT18"
   local function adjust_corner(C, side, long, deep)
     if geom.is_vert(side) then
       C.horiz = math.min(C.horiz, long)
-      C.vert  = math.min(C.vert,  deep)
+--    C.vert  = math.min(C.vert,  deep)
     else
       C.vert  = math.min(C.vert,  long)
-      C.horiz = math.min(C.horiz, deep)
+--    C.horiz = math.min(C.horiz, deep)
     end
   end
 
@@ -676,8 +651,13 @@ f_mat = "FLAT18"
     for _,R in ipairs(LEVEL.all_rooms) do
       for _,K in ipairs(R.sections) do
         for _,C in pairs(K.corners) do
-          C.horiz = 96  -- STUPID TEST NUMBERS
-          C.vert  = 96
+          if C.concave then
+            C.horiz = 24
+            C.vert  = 24
+          else
+            C.horiz = 64  -- ????
+            C.vert  = 64
+          end
         end
       end
       for _,K in ipairs(R.sections) do
@@ -748,8 +728,9 @@ f_mat = "FLAT18"
       y1 = y2 - C.vert
     end
 
-    Trans.quad(x1,y1, x2,y2, nil, 64, Mat_normal("CRACKLE2"))
-    Trans.quad(x1,y1, x2,y2, 108, nil, Mat_normal("CRACKLE2"))
+    local mat = "SUPPORT2"
+
+    Trans.quad(x1,y1, x2,y2, nil, nil, Mat_normal(mat))
   end
 
 
@@ -769,7 +750,9 @@ f_mat = "FLAT18"
     local y2 = SP.deep1
 
     if SP.usage == "fake" then
-      Trans.quad(x1, y1, x2, y2, nil,nil, Mat_normal("TEKGREN3"))
+      local mat = rand.pick { "TEKGREN3", "STARTAN3", "STARGR1",
+                              "BROWNGRN", "BROWN1", "COMPSPAN" }
+      Trans.quad(x1, y1, x2, y2, nil,nil, Mat_normal(mat))
     else
       Trans.quad(x1, y1, x2, y2, nil,24, Mat_normal("COMPBLUE"))
       Trans.quad(x1, y1, x2, y2, 96,nil, Mat_normal("COMPBLUE"))
@@ -782,7 +765,7 @@ f_mat = "FLAT18"
   local function build_fake_span(E, long1, long2)
     assert(long2 > long1)
 
-    local deep = 64
+    local deep = 16
     
     local SPAN =
     {
@@ -792,6 +775,7 @@ f_mat = "FLAT18"
       deep2 = deep,
       usage = "fake"
     }
+stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     build_span(E, SPAN)
   end
