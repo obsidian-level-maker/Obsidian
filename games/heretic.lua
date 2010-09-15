@@ -1568,21 +1568,21 @@ HERETIC.MONSTERS =
 {
   gargoyle =
   {
-    prob=30,
+    level=1, prob=30,
     health=20, damage=5, attack="melee",
     float=true,
   },
 
   fire_garg =
   {
-    prob=10,
+    level=3, prob=10,
     health=80, damage=8, attack="missile",
     float=true,
   },
 
   mummy =
   {
-    prob=60,
+    level=1, prob=60,
     health=80, damage=8, attack="melee",
     give={ {ammo="crystal",count=1} },
   },
@@ -1597,14 +1597,14 @@ HERETIC.MONSTERS =
 
   sabreclaw =  -- MT_CLINK
   {
-    prob=25,
+    level=5, prob=25,
     health=150, damage=12, attack="melee",
     give={ {ammo="rune",count=6} },
   },
 
   knight =
   {
-    prob=70,
+    level=1, prob=70,
     health=200, damage=12, attack="missile",
     give={ {ammo="arrow",count=1.6} },
   },
@@ -1619,7 +1619,7 @@ HERETIC.MONSTERS =
 
   leader =
   {
-    prob=70,
+    level=4, prob=70,
     health=100, damage=16, attack="missile",
     give={ {ammo="crystal",count=1} },
   },
@@ -1634,7 +1634,7 @@ HERETIC.MONSTERS =
 
   disciple =  -- MT_WIZARD
   {
-    prob=25,
+    level=6, prob=25,
     health=180, damage=20, attack="missile",
     give={ {ammo="claw_orb",count=3} },
     float=true,
@@ -1642,14 +1642,14 @@ HERETIC.MONSTERS =
 
   weredragon =  -- MT_BEAST
   {
-    prob=30,
+    level=6, prob=30,
     health=220, damage=25, attack="missile",
     give={ {ammo="arrow",count=3} },
   },
 
   ophidian =  -- MT_SNAKE
   {
-    prob=30,
+    level=7, prob=30,
     health=280, damage=25, attack="missile",
     give={ {ammo="flame_orb",count=1.6} },
   },

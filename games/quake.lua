@@ -39,7 +39,7 @@ QUAKE1.ENTITIES =
   fiend    = { id="monster_demon1",   kind="monster", r=32, h=80, },
 
   knight   = { id="monster_knight",   kind="monster", r=32, h=80, },
-  hell_knt = { id="monster_hell_knight", kind="monster", r=32, h=80, },
+  death_kt = { id="monster_hell_knight", kind="monster", r=32, h=80, },
   ogre     = { id="monster_ogre",     kind="monster", r=32, h=80, },
   fish     = { id="monster_fish",     kind="monster", r=32, h=80, },
   scrag    = { id="monster_wizard",   kind="monster", r=32, h=80, },
@@ -142,7 +142,7 @@ QUAKE1.PARAMETERS =
 QUAKE1.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="METAL1_1" },
+  _ERROR = { t="tech08_1" },  -- METAL1_1
   _SKY   = { t="sky4" },
 
   ADOOR01_2  = { t="adoor01_2" },
@@ -972,14 +972,14 @@ QUAKE1.MONSTERS =
 
   grunt =
   {
-    prob=80,
+    level=1, prob=80,
     health=30, damage=14, attack="hitscan",
     give={ {ammo="shell",count=5} },
   },
 
   enforcer =
   {
-    prob=40,
+    level=2, prob=40,
     health=80, damage=18, attack="missile",
     give={ {ammo="cell",count=5} },
   },
@@ -987,20 +987,20 @@ QUAKE1.MONSTERS =
   zombie =
   {
     -- Note: currently disabled (can only be killed with rockets)
-    -- prob=10,
+    -- level=2, prob=10,
     health=60, damage=8,  attack="melee",
   },
 
   scrag =
   {
-    prob=60,
+    level=2, prob=60,
     health=80, damage=18, attack="missile",
     weap_prefs={ grenade=0.2 },
   },
 
   tarbaby =
   {
-    prob=1,
+    level=3, prob=1,
     health=80, damage=10, attack="melee",
     density=0.3,
     weap_prefs={ rocket=0.2, grenade=0.2 },
@@ -1008,39 +1008,39 @@ QUAKE1.MONSTERS =
 
   knight =
   {
-    prob=60,
+    level=1, prob=60,
     health=75, damage=9,  attack="melee",
   },
 
-  hell_knt =
+  death_kt =
   {
-    prob=30,
+    level=5, prob=30,
     health=250, damage=30, attack="missile",
   },
 
   ogre =
   {
-    prob=40,
+    level=2, prob=40,
     health=200, damage=15, attack="missile",
     give={ {ammo="rocket",count=2} },
   },
 
   fiend =
   {
-    prob=10,
+    level=3, prob=10,
     health=300, damage=20, attack="melee",
     weap_prefs={ grenade=0.2 },
   },
 
   vore =
   {
-    prob=10,
+    level=7, prob=10,
     health=400, damage=25, attack="missile",
   },
 
   shambler =
   {
-    prob=10,
+    level=7, prob=10,
     health=600, damage=30, attack="hitscan",
     immunity ={ rocket=0.5, grenade=0.5 },
     weap_prefs={ rocket=0.2, grenade=0.2 },

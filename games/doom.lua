@@ -264,14 +264,16 @@ DOOM.MATERIALS =
   CRATINY  = { t="CRATINY",  f="CRATOP1" },
   CRATWIDE = { t="CRATWIDE", f="CRATOP1" },
 
-  DOOR1    = { t="DOOR1",    f="FLAT23" },
-  DOOR3    = { t="DOOR3",    f="FLAT23" },
-  DOORBLU  = { t="DOORBLU",  f="FLAT23",  sane=1 },  -- keep doors recognisable
+  -- keep locked doors recognisable
+  DOORBLU  = { t="DOORBLU",  f="FLAT23",  sane=1 },
   DOORRED  = { t="DOORRED",  f="FLAT23",  sane=1 },
   DOORYEL  = { t="DOORYEL",  f="FLAT23",  sane=1 },
   DOORBLU2 = { t="DOORBLU2", f="CRATOP2", sane=1 },
   DOORRED2 = { t="DOORRED2", f="CRATOP2", sane=1 },
   DOORYEL2 = { t="DOORYEL2", f="CRATOP2", sane=1 },
+
+  DOOR1    = { t="DOOR1",    f="FLAT23" },
+  DOOR3    = { t="DOOR3",    f="FLAT23" },
   DOORSTOP = { t="DOORSTOP", f="FLAT23" },
   DOORTRAK = { t="DOORTRAK", f="FLAT23" },
   EXITDOOR = { t="EXITDOOR", f="FLAT5_5" },
@@ -3300,7 +3302,7 @@ DOOM.MONSTERS =
 {
   zombie =
   {
-    prob=40,
+    level=1, prob=40,
     health=20, damage=4, attack="hitscan",
     give={ {ammo="bullet",count=5} },
     density=1.5,
@@ -3308,20 +3310,20 @@ DOOM.MONSTERS =
 
   shooter =
   {
-    prob=50,
+    level=2, prob=50,
     health=30, damage=10, attack="hitscan",
     give={ {weapon="shotty"}, {ammo="shell",count=4} },
   },
 
   imp =
   {
-    prob=60,
+    level=1, prob=60,
     health=60, damage=20, attack="missile",
   },
 
   skull =
   {
-    prob=20,
+    level=2, prob=20,
     health=100, damage=7, attack="melee",
     density=0.7, float=true,
     weap_prefs={ launch=0.2 },
@@ -3329,7 +3331,7 @@ DOOM.MONSTERS =
 
   demon =
   {
-    prob=35,
+    level=1, prob=35,
     health=150, damage=25, attack="melee",
     weap_prefs={ launch=0.5 },
   },
@@ -3344,14 +3346,14 @@ DOOM.MONSTERS =
 
   caco =
   {
-    prob=40,
+    level=3, prob=40,
     health=400, damage=35, attack="missile",
     density=0.5, float=true,
   },
 
   baron =
   {
-    prob=20,
+    level=7, prob=20,
     health=1000, damage=45, attack="missile",
     density=0.5,
     weap_prefs={ bfg=3.0 },
@@ -3362,7 +3364,7 @@ DOOM.MONSTERS =
 
   Cyberdemon =
   {
-    prob=10, crazy_prob=12, skip_prob=150,
+    level=9, prob=10, crazy_prob=12, skip_prob=150,
     health=4000, damage=150, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0 },
@@ -3370,7 +3372,7 @@ DOOM.MONSTERS =
 
   Mastermind =
   {
-    prob=5, crazy_prob=18, skip_prob=150,
+    level=9, prob=5, crazy_prob=18, skip_prob=150,
     health=3000, damage=100, attack="hitscan",
     density=0.2,
     weap_prefs={ bfg=5.0 },
@@ -3382,49 +3384,49 @@ DOOM2.MONSTERS =
 {
   gunner =
   {
-    prob=20,
+    level=3, prob=20,
     health=70, damage=50, attack="hitscan",
     give={ {weapon="chain"}, {ammo="bullet",count=10} },
   },
 
   revenant =
   {
-    prob=40, skip_prob=90,
+    level=5, prob=40, skip_prob=90,
     health=300, damage=70, attack="missile",
     density=0.6,
   },
 
   knight =
   {
-    prob=60, skip_prob=75, crazy_prob=40,
+    level=5, prob=60, skip_prob=75, crazy_prob=40,
     health=500, damage=45, attack="missile",
     density=0.7,
   },
 
   mancubus =
   {
-    prob=33,
+    level=6, prob=33,
     health=600, damage=70, attack="missile",
     density=0.6,
   },
 
   arach =
   {
-    prob=25,
+    level=5, prob=25,
     health=500, damage=70, attack="missile",
     density=0.8,
   },
 
   vile =
   {
-    prob=16, skip_prob=100,
+    level=7, prob=16, skip_prob=100,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    prob=7, crazy_prob=15, skip_prob=150,
+    level=4, prob=7, crazy_prob=15, skip_prob=150,
     health=700, damage=20, attack="missile",
     density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
