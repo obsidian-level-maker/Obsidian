@@ -697,17 +697,53 @@ end
 
 ------------------------------------------------------------------------
 
-
-function Trans.substitute(value, skin)
+function Trans.substitute(value)
   if type(value) == "string" and string.match(value, "^[?]") then
-    return skin[string.sub(value, 2)]
+    return Trans.SKIN[string.sub(value, 2)]
   end
-  
+
   return value
 end
 
 
-function Fabricate(fab, skin, T)
+function Trans.process_skins(...)
+
+  local function process_pass()
+    -- returns number of changes made
+
+    -- Note: iterate over a copy of the key names, since we cannot
+    --       modify a table while iterating through it.
+    for _,name in ipairs(table.keys(Trans.SKIN)) do
+      local value = Trans.SKIN[value]
+    end
+
+    return 0
+  end
+
+
+  ---| Trans.process_skins |---
+
+  Trans.SKIN = {}
+
+  for i = 1,10 do
+    local skin = select(i, ...)
+
+    if skin then
+      table.merge(Trans.SKIN, skin)
+    end
+  end
+
+  for loop = 1,20 do
+    if process_pass() == 0 then
+      return;
+    end
+  end
+
+  error("process_skins: cannot resolve refs (circular?)")
+end
+
+
+function Fabricate(fab, T, skin, skin2)
   local x_info
   local y_info
   local z_info
@@ -784,7 +820,7 @@ function Fabricate(fab, skin, T)
 
         local new_coord = {}
         for name,value in pairs(C) do
-          value = Trans.substitute(value, skin)
+          value = Trans.substitute(value)
 
           if value == nil then
             if name == "required" then value = false end
@@ -886,7 +922,7 @@ function Fabricate(fab, skin, T)
       if G.weight == 0 then
         G.size2 = G.size
       elseif type(G.weight) == "string" then
-        G.size2 = Trans.substitute(G.weight, skin)
+        G.size2 = Trans.substitute(G.weight)
         G.weight = 0
       end
 
@@ -995,7 +1031,7 @@ function Fabricate(fab, skin, T)
 
     for key,value in pairs(E) do
       if key ~= "ent" and key ~= "x" and key ~= "y" and key ~= "z" then
-        props[key] = Trans.substitute(value, skin)
+        props[key] = Trans.substitute(value)
       end
     end
 
@@ -1004,7 +1040,7 @@ function Fabricate(fab, skin, T)
 
 
   local function render_one_ent(E, props)
-    local name = Trans.substitute(E.ent, skin)
+    local name = Trans.substitute(E.ent)
 
     -- if substitution fails ignore the entity
     if name then
@@ -1111,6 +1147,10 @@ function Fabricate(fab, skin, T)
 
 ---gui.printf("Prefab: %s\n", fab.name)
 
+  Trans.process_skins(THEME and THEME.skin,
+                       ROOM and  ROOM.skin,
+                       fab.skin, skin, skin2)
+
   local brushes = copy_w_substitution(fab.brushes)
 
   local ranges = determine_bbox(brushes)
@@ -1213,7 +1253,7 @@ function Fab_check_fits(fab, skin, width, depth, height)
     for _,S in ipairs(size_list) do
       local m
       if type(S[2]) == "string" then
-        m = Trans.substitute(S[2], skin)
+        m = Trans.substitute(S[2])
         assert(m)
       elseif S[2] == 0 then
         m = S[1]
