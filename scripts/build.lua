@@ -697,8 +697,16 @@ end
 
 ------------------------------------------------------------------------
 
+
+function is_subst(value)
+  return type(value) == "string" and string.match(value, "^[?]")
+end
+
+
 function Trans.substitute(value)
-  if type(value) == "string" and string.match(value, "^[?]") then
+  -- FIXME: support a fallback value, e.g. "?height:0"
+
+  if is_subst(value) then
     return Trans.SKIN[string.sub(value, 2)]
   end
 
@@ -708,16 +716,46 @@ end
 
 function Trans.process_skins(...)
 
-  local function process_pass()
-    -- returns number of changes made
+  local function random_pass(keys)
+    -- TODO
+  end
 
-    -- Note: iterate over a copy of the key names, since we cannot
-    --       modify a table while iterating through it.
-    for _,name in ipairs(table.keys(Trans.SKIN)) do
-      local value = Trans.SKIN[value]
+
+  local function function_pass(keys)
+    for _,name in ipairs(keys) do
+      local value = Trans.SKIN[name]
+
+      if type(value) == "function" then
+        Trans.SKIN = value(Trans.SKIN)
+      end
+    end
+  end
+
+
+  local function subst_pass(keys)
+    local changes = 0
+
+    -- look for unresolved substitutions first
+    for _,name in ipairs(keys) do
+      local value = Trans.SKIN[name]
+
+      if is_subst(value) then
+        local ref = Trans.substitute(value)
+
+        if ref and type(ref) == "function" then
+          error("Substitution references a function: " .. value)
+        end
+
+        if ref and is_subst(ref) then
+          -- need to resolve the other one first
+        else
+          Trans.SKIN[name] = ref
+          changes = changes + 1
+        end
+      end
     end
 
-    return 0
+    return changes
   end
 
 
@@ -733,13 +771,20 @@ function Trans.process_skins(...)
     end
   end
 
+  -- Note: iterate over a copy of the key names, since we cannot
+  --       modify a table while iterating through it.
+  local keys = table.keys(Trans.SKIN)
+
+  random_pass(keys)
+
   for loop = 1,20 do
-    if process_pass() == 0 then
+    if subst_pass(keys) == 0 then
+      function_pass(keys)
       return;
     end
   end
 
-  error("process_skins: cannot resolve refs (circular?)")
+  error("process_skins: cannot resolve refs")
 end
 
 
