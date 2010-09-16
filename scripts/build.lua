@@ -715,6 +715,12 @@ end
 function Trans.process_skins(...)
 
   local function misc_stuff()
+    -- standard defaults
+    Trans.SKIN["floor"] = "?wall"
+    Trans.SKIN["ceil"]  = "?floor"
+    Trans.SKIN["outer"] = "?wall"
+
+    -- these are useful for conditional brushes/ents
     if GAME.format == "doom" or GAME.format == "nukem" then
       Trans.SKIN["doomy"] = 1
     else
