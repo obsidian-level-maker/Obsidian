@@ -174,6 +174,7 @@ end
 function Rooms_setup_theme(R)
   if not R.outdoor then
     R.main_tex = rand.pick(LEVEL.building_walls)
+    R.skin = { wall=R.main_tex }
     return
   end
 
@@ -182,6 +183,7 @@ function Rooms_setup_theme(R)
   end
 
   R.main_tex = R.quest.courtyard_floor
+  R.skin = { wall=R.main_tex }
 end
 
 
