@@ -154,33 +154,33 @@ PREFAB.WINDOW =
     {
       { x =  0, y =  0, mat = "?outer" },
       { x = 64, y =  0, mat = "?track" },
-      { x = 64, y = 16, mat = "?inner" },
-      { x =  0, y = 16, mat = "?inner" },
+      { x = 64, y = 16, mat = "?wall" },
+      { x =  0, y = 16, mat = "?wall" },
     },
 
     -- left side
     {
       { x = 128, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
-      { x = 192, y = 16, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
       { x = 128, y = 16, mat = "?track" },
     },
 
     -- frame bottom
     {
       { x =  64, y =  0, mat = "?outer" },
-      { x = 128, y =  0, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner" },
-      { x =  64, y = 16, mat = "?inner" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall" },
+      { x =  64, y = 16, mat = "?wall" },
       { t = 0, mat = "?outer" },
     },
 
     -- frame top
     {
       { x =  64, y =  0, mat = "?outer" },
-      { x = 128, y =  0, mat = "?inner" },
-      { x = 128, y = 16, mat = "?inner" },
-      { x =  64, y = 16, mat = "?inner" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall" },
+      { x =  64, y = 16, mat = "?wall" },
       { b = 64, mat = "?outer" },
     },
   },

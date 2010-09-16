@@ -27,7 +27,7 @@ PREFAB.ARCH =
     -- frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 128, mat = "?outer" },
@@ -38,19 +38,19 @@ PREFAB.ARCH =
       { x = 0,  y =  0, mat = "?outer" },
       { x = 40, y =  0, mat = "?outer" },
       { x = 40, y = 16, mat = "?track" },
-      { x = 40, y = 32, mat = "?inner" },
-      { x = 40, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 40, y = 32, mat = "?wall" },
+      { x = 40, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     -- right side
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 152, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 152, y = 48, mat = "?wall" },
       { x = 152, y = 32, mat = "?track" },
       { x = 152, y = 16, mat = "?outer" },
       { x = 152, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 }
@@ -65,7 +65,7 @@ PREFAB.ARCH2 =
     -- frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 128, mat = "?outer" },
@@ -76,19 +76,19 @@ PREFAB.ARCH2 =
       { x = 0,  y =  0, mat = "?outer" },
       { x = 40, y =  0, mat = "?outer" },
       { x = 52, y = 16, mat = "?track" },
-      { x = 52, y = 32, mat = "?inner" },
-      { x = 40, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 52, y = 32, mat = "?wall" },
+      { x = 40, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     -- right side
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 152, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 152, y = 48, mat = "?wall" },
       { x = 140, y = 32, mat = "?track" },
       { x = 140, y = 16, mat = "?outer" },
       { x = 152, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 }
@@ -103,7 +103,7 @@ PREFAB.DOOR =
     -- frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x =   0, y = 48, mat = "?outer" },
       { x =   0, y =  0, mat = "?outer" },
       { b = 136, mat = "?frame" },
@@ -137,7 +137,7 @@ PREFAB.DOOR =
 
     {
       { x = 14, y =  0, mat = "?outer" },
-      { x = 14, y = 48, mat = "?inner" },
+      { x = 14, y = 48, mat = "?wall" },
       { x =  0, y = 48, mat = "?outer" },
       { x =  0, y =  0, mat = "?outer" },
     },
@@ -153,7 +153,7 @@ PREFAB.DOOR =
     {
       { x = 178, y =  0, mat = "?outer" },
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 178, y = 48, mat = "?outer" },
     },
   },
@@ -227,7 +227,7 @@ PREFAB.QUAKE_DOOR =
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 136, mat = "?outer" },
@@ -236,17 +236,17 @@ PREFAB.QUAKE_DOOR =
     {
       { x = 0,  y =  0, mat = "?outer" },
       { x = 32, y =  0, mat = "?outer" },
-      { x = 32, y = 24, mat = "?inner" },
-      { x = 32, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 32, y = 24, mat = "?wall" },
+      { x = 32, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 160, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 24, mat = "?outer" },
       { x = 160, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 
@@ -298,7 +298,7 @@ PREFAB.QUAKE_V_DOOR =
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 136, mat = "?outer" },
@@ -308,18 +308,18 @@ PREFAB.QUAKE_V_DOOR =
       { x = 0,  y =  0, mat = "?outer" },
       { x = 32, y =  0, mat = "?outer" },
       { x = 32, y = 16, mat = "?track" },
-      { x = 32, y = 32, mat = "?inner" },
-      { x = 32, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 32, y = 32, mat = "?wall" },
+      { x = 32, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 160, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 32, mat = "?track" },
       { x = 160, y = 16, mat = "?outer" },
       { x = 160, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 
@@ -362,7 +362,7 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 128, mat = "?outer" },
@@ -372,18 +372,18 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
       { x = 0,  y =  0, mat = "?outer" },
       { x = 32, y =  0, mat = "?outer" },
       { x = 32, y = 16, mat = "?track" },
-      { x = 32, y = 32, mat = "?inner" },
-      { x = 32, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 32, y = 32, mat = "?wall" },
+      { x = 32, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 160, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 32, mat = "?track" },
       { x = 160, y = 16, mat = "?outer" },
       { x = 160, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 
@@ -450,7 +450,7 @@ PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
     -- door frame
     {
       { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
       { x = 0,   y =  0, mat = "?outer" },
       { b = 128, mat = "?outer" },
@@ -460,18 +460,18 @@ PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
       { x = 0,  y =  0, mat = "?outer" },
       { x = 32, y =  0, mat = "?outer" },
       { x = 32, y = 16, mat = "?track" },
-      { x = 32, y = 32, mat = "?inner" },
-      { x = 32, y = 48, mat = "?inner" },
-      { x = 0,  y = 48, mat = "?inner" },
+      { x = 32, y = 32, mat = "?wall" },
+      { x = 32, y = 48, mat = "?wall" },
+      { x = 0,  y = 48, mat = "?wall" },
     },
 
     {
-      { x = 192, y = 48, mat = "?inner" },
-      { x = 160, y = 48, mat = "?inner" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 32, mat = "?track" },
       { x = 160, y = 16, mat = "?outer" },
       { x = 160, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?inner" },
+      { x = 192, y =  0, mat = "?wall" },
     },
   },
 
