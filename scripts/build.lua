@@ -704,13 +704,11 @@ end
 
 
 function Trans.substitute(value)
-  -- FIXME: support a fallback value, e.g. "?height:0"
-
-  if is_subst(value) then
-    return Trans.SKIN[string.sub(value, 2)]
+  if not is_subst(value) then
+    return value
   end
 
-  return value
+  return Trans.SKIN[string.sub(value, 2)]
 end
 
 
