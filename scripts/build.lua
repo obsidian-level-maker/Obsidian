@@ -714,6 +714,13 @@ end
 
 function Trans.process_skins(...)
 
+  local function misc_stuff()
+    if GAME.format == "doom" or GAME.format == "nukem" then
+      Trans.SKIN["doomy"] = 1
+    end
+  end
+
+
   local function random_pass(keys)
     -- most fields with a table value are considered to be random
     -- replacement, e.g. pic = { COMPSTA1=50, COMPWERD=50 }.
@@ -776,6 +783,8 @@ function Trans.process_skins(...)
   ---| Trans.process_skins |---
 
   Trans.SKIN = {}
+
+  misc_stuff()
 
   for i = 1,10 do
     local skin = select(i, ...)
