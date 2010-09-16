@@ -717,6 +717,8 @@ function Trans.process_skins(...)
   local function misc_stuff()
     if GAME.format == "doom" or GAME.format == "nukem" then
       Trans.SKIN["doomy"] = 1
+    else
+      Trans.SKIN["quakey"] = 1
     end
   end
 
