@@ -491,6 +491,12 @@ Secrets:
 -  different item probs, e.g. invuln & berserk are good
 
 
+Co-op mode:
+
+-  "checkpoint" areas that players pass through, with loads of
+   ammunition or health, enough to allow players to restock
+
+
 Name generator:
 
 -  create random weird-looking words for names of Bosses, planets
