@@ -3,6 +3,27 @@ TODO
 ====
 
 
+EDGES should be as long as possible : decouple from sections
+
+(decouple CORNERS too)
+
+--->  create a "LOOP" : edge / corner / edge / corner
+
+
+
+TEST process_skins stuff
+
+
+?  "joiners" -- a piece where two edges meet in large rooms
+
+
+-  create a usable path by connecting walk areas
+
+
+-  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
+
+
 Layouter:
 
   -  put all the "stuff" (switches, teleporters, etc) which
@@ -55,9 +76,10 @@ Later: fix Build_stairwell : broken due to conn_dir change
 
 
 Monsters:
--  along = math.min(1000, info.health) ^ 0.3 * info.damage ^ 0.4 / 70
 
-   require LEVEL.epi_along >= along
+-  use 'level' value in monster definitions,
+   e.g. require LEVEL.epi_along >= (def.level - 1) / 9
+   (adjust for Strength setting).
 
 -  PARAM.episode_factor : 0 = progression continuous over whole game
                           1 = progression same in all episodes
