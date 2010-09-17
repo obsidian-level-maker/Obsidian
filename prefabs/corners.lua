@@ -17,7 +17,12 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
-
+--
+--  Corner prefabs are built where (0,0) is the corner point
+--  of the room, and positive coordinates go into the room
+--  (i.e. as if sitting in the S/W corner and facing N/E).
+--
+----------------------------------------------------------------
 
 PREFAB.CORNER =
 {
@@ -30,6 +35,84 @@ PREFAB.CORNER =
       { x = 16, y =  0, mat = "?wall" },
       { x = 16, y = 16, mat = "?wall" },
       { x =  0, y = 16, mat = "?wall" },
+    },
+  },
+}
+
+
+PREFAB.CORNER_DIAGONAL =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 32, y =  0, mat = "?wall" },
+      { x = 32, y = 16, mat = "?wall" },
+      { x = 16, y = 32, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
+    },
+  },
+}
+
+
+PREFAB.CORNER_CURVED =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 48, y =  0, mat = "?wall" },
+      { x = 48, y = 16, mat = "?wall" },
+      { x = 32, y = 20, mat = "?wall" },
+    },
+
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 32, y = 20, mat = "?wall" },
+      { x = 20, y = 32, mat = "?wall" },
+    },
+
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 20, y = 32, mat = "?wall" },
+      { x = 16, y = 48, mat = "?wall" },
+      { x =  0, y = 48, mat = "?wall" },
+    },
+  },
+}
+
+
+PREFAB.CORNER_CONCAVE_TRI =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 16, y =  0, mat = "?wall" },
+      { x =  0, y = 16, mat = "?wall" },
+    },
+  },
+}
+
+
+PREFAB.CORNER_CONCAVE_CURVED =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 32, y =  0, mat = "?wall" },
+      { x = 28, y = 16, mat = "?wall" },
+      { x = 16, y = 28, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
     },
   },
 }
