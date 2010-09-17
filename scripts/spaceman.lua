@@ -330,19 +330,30 @@ function SPACE_CLASS.new()
 end
 
 
+function SPACE_CLASS.copy(self)
+  local S = SPACE_CLASS.new()
+
+  for _,P in ipairs(self.polys) do
+    table.insert(S.polys, P:copy())
+  end
+
+  return S
+end
+
+
 function SPACE_CLASS.initial_rect(self, x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
 
   local P = POLYGON_CLASS.new("free")
 
-  S:add_coord(x1, y1, x2, y1)
-  S:add_coord(x2, y1, x2, y2)
-  S:add_coord(x2, y2, x1, y2)
-  S:add_coord(x1, y2, x1, y1)
+  P:add_coord(x1, y1, x2, y1)
+  P:add_coord(x2, y1, x2, y2)
+  P:add_coord(x2, y2, x1, y2)
+  P:add_coord(x1, y2, x1, y1)
 
-  S.bx1 = x1 ; S.bx2 = x2
-  S.by1 = y1 ; S.by2 = y2
+  P.bx1 = x1 ; P.bx2 = x2
+  P.by1 = y1 ; P.by2 = y2
 
   table.insert(self.polys, P)
 end
