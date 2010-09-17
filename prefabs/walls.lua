@@ -51,22 +51,6 @@ PREFAB.FENCE =
 }
 
 
-PREFAB.CORNER =
-{
-  placement = "fitted",
-
-  brushes =
-  {
-    {
-      { x =  0, y =  0, mat = "?wall" },
-      { x = 16, y =  0, mat = "?wall" },
-      { x = 16, y = 16, mat = "?wall" },
-      { x =  0, y = 16, mat = "?wall" },
-    },
-  },
-}
-
-
 PREFAB.PICTURE =
 {
   placement = "fitted",
@@ -240,52 +224,6 @@ PREFAB.ITEM_NICHE =
   entities =
   {
     { x = 96, y = 48, z = 0, ent = "?item", angle = 90 },
-  },
-}
-
-
-PREFAB.CORNER_NICHE =
-{
-  placement = "fitted",
-
-  brushes =
-  {
-    -- walls
-    {
-      { x =  0, y =  0, mat = "?wall" },
-      { x = 64, y =  0, mat = "?wall" },
-      { x = 64, y =  4, mat = "?wall" },
-      { x =  0, y =  4, mat = "?wall" },
-    },
-
-    {
-      { x =   0, y =  4, mat = "?wall" },
-      { x =   4, y =  4, mat = "?wall" },
-      { x =   4, y = 64, mat = "?wall" },
-      { x =   0, y = 64, mat = "?wall" },
-    },
-
-    -- bottom
-    {
-      { x =   4, y =  4, mat = "?wall" },
-      { x =  64, y =  4, mat = "?wall" },
-      { x =   4, y = 64, mat = "?wall" },
-      { t = 0, mat = "?wall" },
-    },
-
-    -- top
-    {
-      { x =   4, y =  4, mat = "?wall" },
-      { x =  64, y =  4, mat = "?wall" },
-      { x =   4, y = 64, mat = "?wall" },
-      { x =  64, y =  4, mat = "?wall" },
-      { b = 64, mat = "?wall", light = "?light", special = "?special" },
-    },
-  },
-
-  entities =
-  {
-    { x = 32, y = 32, z = 0, ent = "?item", angle = 45 },
   },
 }
 
