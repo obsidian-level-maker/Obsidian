@@ -23,21 +23,20 @@ require 'util'
 
 
 function Layout_initial_space(R)
-  spacelib.clear()
+  local S = SPACE_CLASS.new()
 
   if R.shape == "rect" then
     local K1 = SECTIONS[R.kx1][R.ky1]
     local K2 = SECTIONS[R.kx2][R.ky2]
 
-    spacelib.initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
+    S:initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
   else
     for _,K in ipairs(R.sections) do
-      spacelib.initial_rect(K.x1, K.y1, K.x2, K.y2)
+      S:initial_rect(K.x1, K.y1, K.x2, K.y2)
     end
   end
 
-  -- save the group of spaces
-  R.spaces = SPACES
+  return S
 end
 
 
@@ -477,6 +476,8 @@ function Layout_the_room(R)
 
 
   local function build_space(S)
+    if S.kind == "solid" then return end
+
     local c_mat = sel(R.outdoor, "_SKY", "CEIL1_1")
     local f_mat = "FLAT14"
     local w_mat = "STARTAN3"
@@ -490,7 +491,6 @@ function Layout_the_room(R)
 
     if S.kind == "floor"  then f_mat = "FLAT18" end
     if S.kind == "liquid" then f_mat = "FWATER1" end
-    if S.kind == "solid"  then f_mat = "FLAT10"  end
 
 f_mat = "FLAT18"
 
@@ -832,7 +832,8 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   ROOM = R  -- set global
 
-  Layout_initial_space(R)
+  R.floor_space = Layout_initial_space(R)
+  R.ceil_space  = R.floor_space:copy()
 
   decide_corner_sizes()
 
@@ -846,8 +847,8 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   build_edges()
 
 
-  for _,S in ipairs(SPACES) do
-    build_space(S)
+  for _,P in ipairs(R.floor_space.polys) do
+    build_space(P)
   end
 
 
