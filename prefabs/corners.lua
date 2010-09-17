@@ -163,3 +163,57 @@ PREFAB.CORNER_NICHE =
   },
 }
 
+
+PREFAB.CORNER_JUTTING_TORCH =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- corner piece
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 64, y =  0, mat = "?wall" },
+      { x = 64, y = 16, mat = "?wall" },
+      { x = 16, y = 64, mat = "?wall" },
+      { x =  0, y = 64, mat = "?wall" },
+    },
+
+    -- air space around jutty bit
+    {
+      { m = "air" },
+      { x =  64, y =  16 },
+      { x = 128, y =  80 },
+      { x =  80, y = 128 },
+      { x =  16, y =  64 },
+    },
+
+    -- jutty bit
+    {
+      { x = 48, y = 32, mat = "?wall" },
+      { x = 64, y = 48, mat = "?wall" },
+      { x = 48, y = 64, mat = "?wall" },
+      { x = 32, y = 48, mat = "?wall" },
+      { t = 32, mat = "?wall" },
+    },
+
+    {
+      { x = 48, y = 64, mat = "?wall" },
+      { x = 64, y = 48, mat = "?wall" },
+      { x = 80, y = 48, mat = "?wall" },
+      { x = 96, y = 64, mat = "?wall" },
+
+      { x = 96, y = 80, mat = "?wall" },
+      { x = 80, y = 96, mat = "?wall" },
+      { x = 64, y = 96, mat = "?wall" },
+      { x = 48, y = 80, mat = "?wall" },
+      { t = 32, mat = "?wall" },
+    },
+  },
+
+  entities =
+  {
+    { x = 72, y = 72, z = 0, ent = "?torch", angle = 45 },
+  },
+}
+
