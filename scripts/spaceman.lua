@@ -37,8 +37,6 @@ class SPACE
           -- spaces are always convex, coords go anti-clockwise
 
   bx1, by1, bx2, by2 -- bounding box
-
-  floor_h -- height for "floor" kind
 }
 
 
@@ -59,9 +57,23 @@ function SPACE_CLASS.new(kind)
   return S
 end
 
-function SPACE_CLASS.bare_copy(other)
-  local S = SPACE_CLASS.new(other.kind)
-  S.floor_h = other.floor_h
+
+function SPACE_CLASS.bare_copy(self)
+  local S = SPACE_CLASS.new(self.kind)
+  return S
+end
+
+
+function SPACE_CLASS.copy(self)
+  local S = SPACE_CLASS.new(self.kind)
+  
+  for _,C in ipairs(self.coords) do
+    table.insert(S.coords, table.copy(C))
+  end
+
+  S.bx1, S.by1 = self.bx1, self.by1
+  S.bx2, S.by2 = self.bx2, self.by2
+
   return S
 end
 
@@ -225,7 +237,7 @@ function SPACE_CLASS.cut(self, px1, py1, px2, py2)
   -- returns the cut-off piece (on back of given line)
   -- NOTE: assumes the line actually cuts the space
 
-  local T = SPACE_CLASS.bare_copy(self)
+  local T = self:bare_copy()
 
   local coords = self.coords
   self.coords = {}
