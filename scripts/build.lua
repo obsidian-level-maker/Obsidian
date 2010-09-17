@@ -199,7 +199,7 @@ function Trans.brush(coords)
   coords = table.deep_copy(coords)
 
   for _,C in ipairs(coords) do
-    if C.k then
+    if C.m then
       -- skip the properties
     elseif C.x then
       C.x, C.y = Trans.apply(C.x, C.y)
@@ -287,7 +287,7 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
   end
 
   if type(props) == "string" then
-    props = { k=props }
+    props = { m=props }
   end
 
   local coords =
@@ -302,7 +302,7 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
     table.merge(C, w_face)
   end
 
-  if props and props.k then
+  if props and props.m then
     table.insert(coords, 1, props)
   end
 
@@ -1499,7 +1499,7 @@ function Quake_test()
   if false then
     gui.add_brush(
     {
-      { k="liquid", medium="water" },
+      { m="liquid", medium="water" },
       { t=119, tex="e1u1/water4" },
       { x=0,   y=0,   tex="e1u1/water4" },
       { x=100, y=0,   tex="e1u1/water4" },

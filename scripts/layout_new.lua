@@ -961,7 +961,7 @@ if not S.walk_h then S.walk_h = 16 end
 
       local kind, w_face, p_face = Mat_normal(tex)
 
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil,nil, { k=kind }, w_face, p_face)
+      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil,nil, { m=kind }, w_face, p_face)
       return
     end
 
@@ -1003,15 +1003,15 @@ if not S.walk_h then S.walk_h = 16 end
     end
 
     local kind, w_face, p_face = Mat_normal(LEVEL.outer_fence_tex)
-    Trans.quad(x1,y1, x2,y2, nil,S.fence_h, { k=kind }, w_face, p_face)
+    Trans.quad(x1,y1, x2,y2, nil,S.fence_h, { m=kind }, w_face, p_face)
 
     kind, w_face, p_face = Mat_sky()
-    Trans.quad(x1,y1, x2,y2, SKY_H,nil, { k=kind }, w_face, p_face)
+    Trans.quad(x1,y1, x2,y2, SKY_H,nil, { m=kind }, w_face, p_face)
 
     for side = 2,8,2 do
       local N = S:neighbor(side)
       if not N or N.free then
-        sky_side(side, S.fence_h, SKY_H, { k=kind }, w_face, p_face)
+        sky_side(side, S.fence_h, SKY_H, { m=kind }, w_face, p_face)
       end
 
       if N and ((N.room and not N.room.outdoor) or

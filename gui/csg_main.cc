@@ -373,9 +373,9 @@ static slope_info_c * Grab_Slope(lua_State *L, int stack_pos, bool is_ceil)
 }
 
 
-int Grab_BrushKind(lua_State *L, const char *kind)
+int Grab_BrushMode(lua_State *L, const char *kind)
 {
-  // parse the 'k' field of the props table
+  // parse the 'm' field of the props table
 
   if (! kind)
   {
@@ -406,13 +406,13 @@ static int Grab_Vertex(lua_State *L, int stack_pos, csg_brush_c *B)
     return luaL_error(L, "gui.add_brush: missing vertex info");
   }
 
-  lua_getfield(L, stack_pos, "k");
+  lua_getfield(L, stack_pos, "m");
 
   if (! lua_isnil(L, -1))
   {
     const char *kind_str = luaL_checkstring(L, -1);
 
-    B->bkind = Grab_BrushKind(L, kind_str);
+    B->bkind = Grab_BrushMode(L, kind_str);
 
     Grab_Properties(L, stack_pos, &B->props, true);
 
@@ -574,12 +574,12 @@ int CSG_property(lua_State *L)
 // LUA: add_brush(coords)
 //
 // coords is a list of coordinates of the form:
-//   { k="solid", ... }                     -- properties
+//   { m="solid", ... }                     -- properties
 //   { x=123, y=456,     tex="foo", ... }   -- side of brush
 //   { b=200, s={ ... }, tex="bar", ... }   -- top of brush
 //   { t=240, s={ ... }, tex="gaz", ... }   -- bottom of brush
 //
-// 'k' is the brush kind, default "solid", can also be
+// 'm' is the brush mode, default "solid", can also be
 //     "sky", "liquid", "detail", "clip", etc..
 //
 // tops and bottoms are optional, when absent then it means the
