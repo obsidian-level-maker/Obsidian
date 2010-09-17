@@ -101,8 +101,6 @@ function Layout_prepare_rooms()
     -- check for concave corners, a bit trickier since it will be
     -- in a different section.
 
--- NOTE : DISABLED, NEEDS DIFFERENT HANDLING
---[[
     if want_left then side = geom.LEFT_45 [side]
                  else side = geom.RIGHT_45[side]
     end
@@ -118,7 +116,6 @@ function Layout_prepare_rooms()
     end
 
     return N.corners[side]
---]]
   end
 
 
@@ -788,11 +785,11 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     local goes_horiz = geom.is_vert(E.side)
     
-    if E.corn1 then
+    if E.corn1 and not E.corn1.concave then
       L_long = sel(goes_horiz, E.corn1.horiz, E.corn1.vert)
     end
 
-    if E.corn2 then
+    if E.corn2 and not E.corn2.concave then
       R_long = E.long - sel(goes_horiz, E.corn2.horiz, E.corn2.vert)
     end
     
