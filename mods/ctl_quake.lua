@@ -80,7 +80,7 @@ OB_MODULES["quake_mon_control"] =
     zombie   = { label="Zombie",     choices=CTL_QUAKE.MON_CHOICES },
 
     knight   = { label="Knight",       choices=CTL_QUAKE.MON_CHOICES },
-    hell_knt = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES },
+    death_kt = { label="Death Knight", choices=CTL_QUAKE.MON_CHOICES },
     scrag    = { label="Scrag",        choices=CTL_QUAKE.MON_CHOICES },
     tarbaby  = { label="Spawn",        choices=CTL_QUAKE.MON_CHOICES },
 
