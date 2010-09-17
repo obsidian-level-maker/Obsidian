@@ -20,7 +20,7 @@
 
 --[[ *** CLASS INFORMATION ***
 
-class SPACE
+class POLYGON
 {
   kind  -- keyword:
         --   "free"   : space is not used, free
@@ -40,52 +40,74 @@ class SPACE
 }
 
 
+class SPACE
+{
+  polys : array(POLYGON)
+}
+
+
 --------------------------------------------------------------]]
 
 require 'defs'
 require 'util'
 
 
-spacelib = {}
+POLYGON_CLASS = {}
 
-
-SPACE_CLASS = {}
-
-function SPACE_CLASS.new(kind)
-  local S = { kind=kind, id=Plan_alloc_mark(), coords={} }
-  table.set_class(S, SPACE_CLASS)
-  return S
+function POLYGON_CLASS.new(kind)
+  local P = { kind=kind, id=Plan_alloc_mark(), coords={} }
+  table.set_class(P, POLYGON_CLASS)
+  return P
 end
 
 
-function SPACE_CLASS.bare_copy(self)
-  local S = SPACE_CLASS.new(self.kind)
-  return S
+function POLYGON_CLASS.new_quad(kind, x1, y1, x2, y2)
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  local M = POLYGON_CLASS.new(kind)
+
+  M:add_coord(x1,y1, x2,y1)
+  M:add_coord(x2,y1, x2,y2)
+  M:add_coord(x2,y2, x1,y2)
+  M:add_coord(x1,y2, x1,y1)
+
+  M:update_bbox()
+
+  return M
 end
 
 
-function SPACE_CLASS.copy(self)
-  local S = SPACE_CLASS.new(self.kind)
+
+
+function POLYGON_CLASS.bare_copy(self)
+  local P = POLYGON_CLASS.new(self.kind)
+  return P
+end
+
+
+function POLYGON_CLASS.copy(self)
+  local P = POLYGON_CLASS.new(self.kind)
   
   for _,C in ipairs(self.coords) do
-    table.insert(S.coords, table.copy(C))
+    table.insert(P.coords, table.copy(C))
   end
 
-  S.bx1, S.by1 = self.bx1, self.by1
-  S.bx2, S.by2 = self.bx2, self.by2
+  P.bx1, P.by1 = self.bx1, self.by1
+  P.bx2, P.by2 = self.bx2, self.by2
 
-  return S
+  return P
 end
 
 
-function SPACE_CLASS.tostr(self)
-  return string.format("SPACE_%d %s [%1.1f %1.1f .. %1.1f %1.1f]",
+function POLYGON_CLASS.tostr(self)
+  return string.format("POLY_%d %s [%1.1f %1.1f .. %1.1f %1.1f]",
       self.id, self.kind,
       self.bx1 or 0, self.by1 or 0, self.bx2 or 0, self.by2 or 0)
 end
 
 
-function SPACE_CLASS.dump(self)
+function POLYGON_CLASS.dump(self)
   gui.debugf("%s =\n{\n", self:tostr())
   for _,C in ipairs(self.coords) do
     gui.debugf("  (%d %d) .. (%d %d)\n", C.x1, C.y1, C.x2, C.y2)
@@ -94,12 +116,12 @@ function SPACE_CLASS.dump(self)
 end
 
 
-function SPACE_CLASS.add_coord(self, x1, y1, x2, y2)
+function POLYGON_CLASS.add_coord(self, x1, y1, x2, y2)
   table.insert(self.coords, { x1=x1, y1=y1, x2=x2, y2=y2 })
 end
 
 
-function SPACE_CLASS.update_bbox(self)
+function POLYGON_CLASS.update_bbox(self)
   assert(#self.coords > 0)
 
   self.bx1, self.bx2 = 9e9, -9e9
@@ -117,7 +139,7 @@ function SPACE_CLASS.update_bbox(self)
 end
 
 
-function SPACE_CLASS.calc_mid(self)
+function POLYGON_CLASS.calc_mid(self)
   local x = 0
   local y = 0
 
@@ -133,7 +155,7 @@ end
 
 
 --[[
-function SPACE_CLASS.to_boundary(self, x, y, dx, dy)
+function POLYGON_CLASS.to_boundary(self, x, y, dx, dy)
   -- starting with a point inside the space, move along the vector in
   -- (dx, dy) until we hit a boundary and return that coordinate.
   -- returns NIL if something goes wrong.
@@ -155,7 +177,7 @@ end
 --]]
 
 
-function SPACE_CLASS.contains(self, x, y, fudge)
+function POLYGON_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
   for _,C in ipairs(self.coords) do
@@ -167,7 +189,7 @@ function SPACE_CLASS.contains(self, x, y, fudge)
 end
 
 
-function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
+function POLYGON_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   if not fudge then fudge = 0.5 end
 
   fudge = -fudge
@@ -181,7 +203,7 @@ function SPACE_CLASS.on_front(self, px1, py1, px2, py2, fudge)
 end
 
 
-function SPACE_CLASS.line_cuts(self, px1, py1, px2, py2)
+function POLYGON_CLASS.line_cuts(self, px1, py1, px2, py2)
   local front, back
 
   for _,C in ipairs(self.coords) do
@@ -196,7 +218,7 @@ function SPACE_CLASS.line_cuts(self, px1, py1, px2, py2)
 end
 
 
-function SPACE_CLASS.overlaps(self, other)
+function POLYGON_CLASS.overlaps(self, other)
   -- check bboxes first
   if other.bx2 < self.bx1 + 0.5 then return false end
   if other.bx1 > self.bx2 - 0.5 then return false end
@@ -216,7 +238,7 @@ function SPACE_CLASS.overlaps(self, other)
 end
 
 
-function SPACE_CLASS.surrounds(self, other)
+function POLYGON_CLASS.surrounds(self, other)
   -- check bboxes first
   if self.bx1 > other.bx1 + 0.5 then return false end
   if self.bx2 < other.bx2 - 0.5 then return false end
@@ -233,7 +255,7 @@ function SPACE_CLASS.surrounds(self, other)
 end
 
 
-function SPACE_CLASS.cut(self, px1, py1, px2, py2)
+function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
   -- returns the cut-off piece (on back of given line)
   -- NOTE: assumes the line actually cuts the space
 
@@ -299,16 +321,20 @@ end
 -----==========================================================-----
 
 
-function spacelib.clear()
-  SPACES = {}
+SPACE_CLASS = {}
+
+function SPACE_CLASS.new()
+  local S = { polys={} }
+  table.set_class(S, SPACE_CLASS)
+  return S
 end
 
 
-function spacelib.initial_rect(x1, y1, x2, y2)
+function SPACE_CLASS.initial_rect(self, x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
 
-  local S = SPACE_CLASS.new("free")
+  local P = POLYGON_CLASS.new("free")
 
   S:add_coord(x1, y1, x2, y1)
   S:add_coord(x2, y1, x2, y2)
@@ -318,34 +344,32 @@ function spacelib.initial_rect(x1, y1, x2, y2)
   S.bx1 = x1 ; S.bx2 = x2
   S.by1 = y1 ; S.by2 = y2
 
-  table.insert(SPACES, S)
+  table.insert(self.polys, P)
 end
 
 
-function spacelib.make_current(group)
-  SPACES = assert(group)
-end
-
-
-function spacelib.debugging_test()
+function SPACE_CLASS.debugging_test()
   LEVEL = {}
 
   gui.debugf("---- spacelib debugging_test ----\n")
 
-  spacelib.clear()
-  spacelib.initial_rect(0, 100, 300, 200)
+  local S = SPACE_CLASS.new()
 
-  SPACES[1]:dump()
+  S:initial_rect(0, 100, 300, 200)
+
+  local P1 = S.polys[1]
+
+  P1:dump()
 
   for x = -50,350,100 do for y = -50,350,50 do
-    local c = SPACES[1]:contains(x, y)
+    local c = P1:contains(x, y)
     gui.debugf("%-3d %-3d = %s\n", x, y, sel(c, "INSIDE", "OUTSIDE"))
   end end
 
   gui.debugf("\n")
   
   for y = -50,250,100 do
-    local c = SPACES[1]:on_front(0, y, 20, y)
+    local c = P1:on_front(0, y, 20, y)
     gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
                0, y, 20, y, sel(c, "YES", "no"))
   end
@@ -353,7 +377,7 @@ function spacelib.debugging_test()
   gui.debugf("\n")
 
   for x = -50,350,100 do
-    local c = SPACES[1]:on_front(x, 0, x, 20)
+    local c = P1:on_front(x, 0, x, 20)
     gui.debugf("on_front of (%d %d) .. (%d %d) : %s\n",
                x, 0, x, 20, sel(c, "YES", "no"))
   end
@@ -361,26 +385,26 @@ function spacelib.debugging_test()
   gui.debugf("\n")
 
   for x = -350,350,50 do
-    local c = SPACES[1]:line_cuts(x, 0, x+20, 20)
+    local c = P1:line_cuts(x, 0, x+20, 20)
     gui.debugf("line_cuts (%d %d) .. (%d %d) : %s\n",
                x, 0, x+20, 20, sel(c, "YES", "no"))
   end
 
   gui.debugf("\n")
 
-  local T = SPACES[1]:cut(0, 160, 100, 0)
+  local T = P1:cut(0, 160, 100, 0)
 
-  SPACES[1]:dump()
-          T:dump()
+  P1:dump()
+   T:dump()
 
   error("TEST DONE")
 end
 
 
-function spacelib.find_point(x, y)
-  for _,S in ipairs(SPACES) do
-    if S:contains(x, y) then
-      return S
+function SPACE_CLASS.find_point(self, x, y)
+  for _,P in ipairs(self.polys) do
+    if P:contains(x, y) then
+      return P
     end
   end
   return nil  -- not found
@@ -401,24 +425,7 @@ end
 --]]
 
 
-function spacelib.quad(kind, x1, y1, x2, y2)
-  assert(x1 < x2)
-  assert(y1 < y2)
-
-  local M = SPACE_CLASS.new(kind)
-
-  M:add_coord(x1,y1, x2,y1)
-  M:add_coord(x2,y1, x2,y2)
-  M:add_coord(x2,y2, x1,y2)
-  M:add_coord(x1,y2, x1,y1)
-
-  M:update_bbox()
-
-  return M
-end
-
-
-function spacelib.can_merge(exist_kind, new_kind)
+function SPACE_CLASS.can_merge(exist_kind, new_kind)  -- NOT a method
   assert(new_kind ~= "free")
 
   if exist_kind == "free"  then return true end
@@ -435,7 +442,7 @@ function spacelib.can_merge(exist_kind, new_kind)
 end
 
 
-function spacelib.merge(M)
+function SPACE_CLASS.merge(self, M)
   -- validate our parameter
   assert(M)
   assert(M.coords)
@@ -448,12 +455,12 @@ function spacelib.merge(M)
   -- collect overlapping spaces, removing them from main set
   local overlaps = {}
 
-  for i = #SPACES,1,-1 do
-    local S = SPACES[i]
+  for i = #self.polys,1,-1 do
+    local P = self.polys[i]
 
-    if S:overlaps(M) then
-      table.insert(overlaps, S)
-      table.remove(SPACES, i)
+    if P:overlaps(M) then
+      table.insert(overlaps, P)
+      table.remove(self.polys, i)
     end
   end
 
@@ -461,9 +468,9 @@ function spacelib.merge(M)
 
   local final_kind = M.kind
 
-  for _,S in ipairs(overlaps) do
-    if not spacelib.can_merge(S.kind, M.kind) then
-      error(string.format("Attempt to merge %s space into %s", M.kind, S.kind))
+  for _,P in ipairs(overlaps) do
+    if not spacelib.can_merge(P.kind, M.kind) then
+      error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
     end
 
     -- this is a bit rude, when an AIR space overlaps any WALK space,
@@ -471,30 +478,30 @@ function spacelib.merge(M)
     -- the AIR space would replace the WALK space (because we never
     -- subdivide the incoming space in M).
 
-    if S.kind == "walk" and M.kind == "air" then
+    if P.kind == "walk" and M.kind == "air" then
       final_kind = "walk"
     end
 
     for _,C in ipairs(M.coords) do
-      if S:line_cuts(C.x2,C.y2, C.x1,C.y1) then
-        local T = S:cut(C.x2,C.y2, C.x1,C.y1)
+      if P:line_cuts(C.x2,C.y2, C.x1,C.y1) then
+        local T = P:cut(C.x2,C.y2, C.x1,C.y1)
 
         -- T is the piece outside of M
-        table.insert(SPACES, T)
+        table.insert(self.polys, T)
       end
     end
 
     -- at here, S will lie completely inside M
-    -- hence we drop S and keep M in the SPACES list
+    -- hence we drop S and keep M in the polygon list
   end
 
   M.kind = final_kind 
 
-  table.insert(SPACES, M)
+  table.insert(self.polys, M)
 end
 
 
-function spacelib.test(M, keep_air)
+function SPACE_CLASS.test(self, M, keep_air)
   -- dry-run of doing a merge()
   --
   -- returns NIL on success, otherwise the kinds of the conflicting
@@ -503,14 +510,14 @@ function spacelib.test(M, keep_air)
   -- with 'keep_air' is true, this fails if an AIR space would overlap
   -- any WALK spaces.
 
-  for _,S in ipairs(SPACES) do
-    if S:overlaps(M) then
-      if not spacelib.can_merge(S.kind, M.kind) then
-        return S.kind, M.kind
+  for _,P in ipairs(self.polys) do
+    if P:overlaps(M) then
+      if not SPACE_CLASS.can_merge(P.kind, M.kind) then
+        return P.kind, M.kind
       end
 
-      if keep_air and S.kind == "walk" and M.kind == "air" then
-        return S.kind, M.kind
+      if keep_air and P.kind == "walk" and M.kind == "air" then
+        return P.kind, M.kind
       end
     end
   end
@@ -519,12 +526,12 @@ function spacelib.test(M, keep_air)
 end
 
 
-function spacelib.find_overlaps(M)
+function SPACE_CLASS.find_overlaps(self, M)
   local list = {}
 
-  for _,S in ipairs(SPACES) do
-    if S:overlaps(M) then
-      table.insert(list, S)
+  for _,P in ipairs(self.polys) do
+    if P:overlaps(M) then
+      table.insert(list, P)
     end
   end
  
