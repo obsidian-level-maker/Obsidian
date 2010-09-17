@@ -28,23 +28,26 @@ render_models : attach to entity ?
 
 +  find monster spot algorithm:
 
-   (1) basically "draw" (filled) each POLYGON into an "image" where
-       each pixel covers 20x20 units
+   (1) use all polygons in the space which are NOT part of the floor
+       (optimise: skip polys outside floor's slightly expanded bbox)
 
-   (2) when a pixel gets non-floor or two different floor heights,
-       then that pixel is "unusable"
+   (2) do a filled draw of all these polygons into an "image" where
+       each pixel covers 20x20 (or so) units.
+       The edges will set _any_ pixels they cross.
 
-   (3) the other floory pixels are usable for monsters and items
+   (3) the usable areas will be the ones remaining clear
 
    (4) collect largest squares of NxN pixels to form monster spots
 
-   (5) collect "near wall" pixels for item spots
+   (5) collect "near wall" pixels for item spots, probably not the
+       pixels directly near the wall but one pixel away
+       (i.e. do a grow step)
 
-   (6) do this in C++ for speed:
+   (6) do all this in C++ for speed, API would be:
 
-       gui.spot_begin(bbox)
-       gui.spot_add_polygon(kind, f_h, coords)
-       gui.spot_end(mons, items)
+       gui.spots_begin(bbox)
+       gui.spots_fill_polygon(coords)
+       gui.spots_end(mons, items)
 
 
 
