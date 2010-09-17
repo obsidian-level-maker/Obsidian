@@ -3,24 +3,48 @@ TODO
 ====
 
 
-EDGES should be as long as possible : decouple from sections
-
-(decouple CORNERS too)
-
---->  create a "LOOP" : edge / corner / edge / corner
++  have CEILING space and FLOOR space
 
 
+render_models : attach to entity ?
+                (wouldn't need a separate Lua API then)
 
-TEST process_skins stuff
+-  put concave corners into EDGE objects, BUT ignore them a lot
 
+-  outdoor rooms: create "joiners" (180 degree corners) where
+                  two edges meet and they are from different
+                  indoor rooms.
 
-?  "joiners" -- a piece where two edges meet in large rooms
 
 
 -  create a usable path by connecting walk areas
 
+   OR :  "grow" the walk areas, becoming separate floor heights
+
 
 -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
+
+
++  find monster spot algorithm:
+
+   (1) basically "draw" (filled) each POLYGON into an "image" where
+       each pixel covers 20x20 units
+
+   (2) when a pixel gets non-floor or two different floor heights,
+       then that pixel is "unusable"
+
+   (3) the other floory pixels are usable for monsters and items
+
+   (4) collect largest squares of NxN pixels to form monster spots
+
+   (5) collect "near wall" pixels for item spots
+
+   (6) do this in C++ for speed:
+
+       gui.spot_begin(bbox)
+       gui.spot_add_polygon(kind, f_h, coords)
+       gui.spot_end(mons, items)
 
 
 
