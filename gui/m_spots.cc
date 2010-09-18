@@ -27,7 +27,7 @@
 #include "main.h"
 
 
-#define GRID_SIZE  24
+#define GRID_SIZE  18
 
 #define MAX_GRID_DIM  256
 
@@ -103,7 +103,7 @@ void SPOT_DumpGrid(const char *info)
 
     buffer[grid_W] = 0;
 
-    DebugPrintf("   %s\n", buffer);
+    DebugPrintf("  %s\n", buffer);
   }
 
   DebugPrintf("\n");
@@ -175,14 +175,20 @@ void SPOT_FloodOutside()
 static int grid_lefties[MAX_GRID_DIM];
 static int grid_righties[MAX_GRID_DIM];
 
+static int grid_toppy;
+static int grid_botty;
+
 
 static void clear_rows()
 {
   for (int y = 0 ; y < grid_H ; y++)
   {
-    grid_lefties[y]  = 99999;
-    grid_righties[y] = -1;
+    grid_lefties[y]  = +9999;
+    grid_righties[y] = -9999;
   }
+
+  grid_botty = +9999;
+  grid_toppy = -9999;
 }
 
 
@@ -193,11 +199,16 @@ static void raw_pixel(int gx, int gy)
 
   grid_lefties[gy]  = MIN(grid_lefties[gy],  gx);
   grid_righties[gy] = MAX(grid_righties[gy], gx);
+
+  grid_botty = MIN(grid_botty, gy);
+  grid_toppy = MAX(grid_toppy, gy);
 }
 
 
 static void draw_line(int x1, int y1, int x2, int y2)
 {
+DebugPrintf("draw_line: (%d %d) --> (%d %d)\n", x1,y1, x2,y2);
+
   x1 -= grid_min_x;  y1 -= grid_min_y;
   x2 -= grid_min_x;  y2 -= grid_min_y;
 
@@ -211,11 +222,13 @@ static void draw_line(int x1, int y1, int x2, int y2)
   int py1 = y1 / GRID_SIZE;
   int py2 = y2 / GRID_SIZE;
 
+DebugPrintf("  pixel coords: (%d %d) --> (%d %d)\n", px1,py1, px2,py2);
   int h2 = grid_H-1;
 
   // same row ?
   if (py1 == py2)
   {
+DebugPrintf("  same row\n");
     if (py1 < 0 || py1 > h2)
       return;
 
@@ -225,12 +238,24 @@ static void draw_line(int x1, int y1, int x2, int y2)
     return;
   }
 
+  if (py1 > py2)
+  {
+    int temp;
+    
+    temp = px1 ; px1 = px2 ; px2 = temp;
+    temp = py1 ; py1 = py2 ; py2 = temp;
+
+    temp = x1 ; x1 = x2 ; x2 = temp;
+    temp = y1 ; y1 = y2 ; y2 = temp;
+  }
+
   py1 = MAX(0,  py1);
   py2 = MIN(h2, py2);
 
   // same column ?
   if (px1 == px2)
   {
+DebugPrintf("  same column\n");
     for ( ; py1 <= py2 ; py1++)
       raw_pixel(px1, py1);
 
@@ -247,9 +272,13 @@ static void draw_line(int x1, int y1, int x2, int y2)
     int sy = (py == py1) ? y1 : GRID_SIZE * py;
     int ey = (py == py2) ? y2 : GRID_SIZE * (py+1);
 
+DebugPrintf("py = %d  (%d .. %d)\n", py, py1, py2);
+DebugPrintf("--> sy:%d  ey:%d\n", sy, ey);
+
     int sx = x1 + (int)((sy - y1) * slope);
     int ex = x1 + (int)((ey - y1) * slope);
 
+DebugPrintf("    sx:%d  ex:%d\n", sx, ex);
     int psx = sx / GRID_SIZE;
     int pex = ex / GRID_SIZE;
 
@@ -261,11 +290,10 @@ static void draw_line(int x1, int y1, int x2, int y2)
 
 static void fill_rows()
 {
-  // FIXME remember minimum/maximum Y coord
-
   int w2 = grid_W-1;
+//int h2 = grid_H-1;
 
-  for (int y = 0 ; y < grid_H ; y++)
+  for (int y = grid_botty ; y <= grid_toppy ; y++)
   {
     if (grid_righties[y] < 0)
       continue;
@@ -293,9 +321,64 @@ void SPOT_FillPolygon(const grid_point_c *points, int count)
     int k = (i + 1) % count;
 
     draw_line(points[i].x, points[i].y, points[k].x, points[k].y);
+
+    fill_rows();
+    SPOT_DumpGrid("");
   }
 
   fill_rows();
+}
+
+
+void SPOT_FillPolygon(const int *shape, int count)
+{
+  grid_point_c points[100];
+
+  for (int i = 0 ; i < count ; i++)
+  {
+    points[i].x = shape[i*2 + 0];
+    points[i].y = shape[i*2 + 1];
+  }
+
+  SPOT_FillPolygon(points, count);
+}
+
+
+void SPOT_DebuggingTest()
+{
+  static const int shape_A[4*2] =
+  {
+     100, 100 ,  150, 100 ,
+     150, 900 ,  100, 900 ,
+  };
+
+  static const int shape_B[4*2] =
+  {
+     150, 896 ,  912, 568 ,
+     918, 568 ,  150, 900 ,
+  };
+
+  static const int shape_C[6*2] =
+  {
+     150, 70  ,  610, 245 ,
+     934, 424 ,  918, 568 ,
+     788, 568 ,  150, 321 ,
+  };
+
+
+  SPOT_CreateGrid(0, 0, 1000, 1000);
+
+  SPOT_FillPolygon(shape_A, 4);  
+  SPOT_FillPolygon(shape_B, 4);  
+  SPOT_FillPolygon(shape_C, 6);
+
+  SPOT_DumpGrid("");
+
+  SPOT_FloodOutside();
+
+  SPOT_DumpGrid("Flooded");
+
+  SPOT_FreeGrid();
 }
 
 
