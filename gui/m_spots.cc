@@ -102,7 +102,7 @@ void SPOT_DumpGrid(const char *info)
 
     buffer[grid_W] = 0;
 
-    DebugPrintf("  %s\n", buffer);
+    DebugPrintf(" % 3d %s\n", y, buffer);
   }
 
   DebugPrintf("\n");
@@ -169,6 +169,75 @@ void SPOT_FloodOutside()
 }
 
 
+static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
+{
+  bool near_wall = false;
+
+  for (int dx = 0 ; dx < 2 ; dx++)
+  for (int dy = 0 ; dy < 2 ; dy++)
+  {
+    byte content = spot_grid[x+dx][y+dy];
+
+    if (content & 7)
+      return; // no good, something in the way
+
+    if (content & 8)
+      near_wall = true;
+  }
+
+  if (! near_wall)
+    return; // no good, not near a wall
+
+  int real_x = grid_min_x - GRID_SIZE + (x+1) * GRID_SIZE;
+  int real_y = grid_min_y - GRID_SIZE + (y+1) * GRID_SIZE;
+
+  DebugPrintf("Found item spot @ (%d %d)  [grid %d %d]\n", real_x,real_y, x,y);
+
+  spots.push_back(grid_point_c(real_x, real_y));
+
+  // reserve this spot, prevent overlap of with items
+  spot_grid[x+0][y+0] |= 4;
+  spot_grid[x+0][y+1] |= 4;
+  spot_grid[x+1][y+0] |= 4;
+  spot_grid[x+1][y+1] |= 4;
+}
+
+
+void SPOT_FindItemSpots(std::vector<grid_point_c> & spots)
+{
+  // The ideal spots are close to a wall.
+  // Using the middle of a grid square is too close though.
+  // Hence we use the middle of a 2x2 empty space.
+  int w2 = grid_W - 1;
+  int h2 = grid_H - 1;
+
+  int x, y;
+
+  // first, mark squares which are near a wall
+  for (x = 0 ; x < grid_W ; x++)
+  for (y = 0 ; y < grid_H ; y++)
+  {
+    if (spot_grid[x][y] & 1)
+    {
+      if (x > 0)  spot_grid[x-1][y] |= 8;
+      if (x < w2) spot_grid[x+1][y] |= 8;
+
+      if (y > 0)  spot_grid[x][y-1] |= 8;
+      if (y < h2) spot_grid[x][y+1] |= 8;
+    }
+  }
+
+  for (y = 1 ; y < grid_H-2 ; y++)
+  for (x = 1 ; x < grid_W-2 ; x++)
+  {
+    test_item_spot(x, y, spots);
+  }
+}
+
+
+
+//------------------------------------------------------------------------
+//  POLYGON FILLING
 //------------------------------------------------------------------------
 
 static int grid_lefties[MAX_GRID_DIM];
@@ -386,6 +455,12 @@ void SPOT_DebuggingTest()
   SPOT_FloodOutside();
 
   SPOT_DumpGrid("Flooded");
+
+  std::vector<grid_point_c> items;
+
+  SPOT_FindItemSpots(items);
+
+  LogPrintf("\nTotal item spots = %u\n\n", items.size());
 
   SPOT_FreeGrid();
 }
