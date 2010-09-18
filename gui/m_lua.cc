@@ -500,6 +500,10 @@ int gui_bit_not(lua_State *L)
 //------------------------------------------------------------------------
 
 
+extern int SPOT_begin(lua_State *L);
+extern int SPOT_fill_poly(lua_State *L);
+extern int SPOT_end(lua_State *L);
+
 extern int CSG_begin_level(lua_State *L);
 extern int CSG_end_level(lua_State *L);
 extern int CSG_property(lua_State *L);
@@ -589,6 +593,11 @@ static const luaL_Reg gui_script_funcs[] =
   // Quake functions
   { "q1_add_mapmodel",  Q1_add_mapmodel },
   { "q1_add_tex_wad",   Q1_add_tex_wad },
+
+  // SPOT functions
+  { "spots_begin",     SPOT_begin },
+  { "spots_fill_poly", SPOT_fill_poly },
+  { "spots_end",       SPOT_end },
 
 #else
   // Randomizer functions

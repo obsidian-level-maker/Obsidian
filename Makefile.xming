@@ -52,6 +52,7 @@ LIBS=-lm $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_cookie.o  \
 	$(OBJ_DIR)/m_lua.o     \
+	$(OBJ_DIR)/m_spots.o   \
 	$(OBJ_DIR)/oblige_res.o \
 	$(OBJ_DIR)/lib_argv.o  \
 	$(OBJ_DIR)/lib_file.o  \
