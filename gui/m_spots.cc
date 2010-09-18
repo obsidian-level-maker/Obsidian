@@ -591,7 +591,17 @@ static void fill_rows(byte content)
 }
 
 
-void SPOT_FillPolygon(byte content, std::vector<grid_point_c> & points, int count)
+void SPOT_DrawLine(byte content, int x1, int y1, int x2, int y2)
+{
+  clear_rows();
+
+  draw_line(x1, y1, x2, y2);
+
+  fill_rows(content);
+}
+
+
+void SPOT_FillPolygon(byte content, std::vector<grid_point_c> & points)
 {
   // Algorithm:
   //   rather simplistic, draw each edge of the polygon and keep
@@ -599,6 +609,8 @@ void SPOT_FillPolygon(byte content, std::vector<grid_point_c> & points, int coun
   //   later fill in the intermediate squares in each row.
 
   clear_rows();
+
+  int count = (int)points.size();
 
   for (int i = 0 ; i < count ; i++)
   {
@@ -626,7 +638,7 @@ void SPOT_FillPolygon(byte content, const int *shape, int count)
     points.push_back(grid_point_c(x, y));
   }
 
-  SPOT_FillPolygon(content, points, count);
+  SPOT_FillPolygon(content, points);
 }
 
 
@@ -706,21 +718,59 @@ int SPOT_begin(lua_State *L)
 }
 
 
+// LUA: spots_draw_line(content, x1, y1, x2, y2)
+//
+int SPOT_draw_line(lua_State *L)
+{
+  int content = luaL_checkint(L, 1);
+
+  int x1 = luaL_checkint(L, 2);
+  int y1 = luaL_checkint(L, 3);
+  int x2 = luaL_checkint(L, 4);
+  int y2 = luaL_checkint(L, 5);
+
+  SPOT_DrawLine(content, x1, y1, x2, y2);
+
+  return 0;
+}
+
+
+static int polygon_coord(lua_State *L, int stack_pos,
+                         std::vector<grid_point_c> & points)
+{
+  if (stack_pos < 0)
+    stack_pos += lua_gettop(L) + 1;
+
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  {
+    return luaL_error(L, "gui.spots_fill_poly: bad coordinate");
+  }
+
+  lua_getfield(L, stack_pos, "x");
+  lua_getfield(L, stack_pos, "y");
+
+  double x = luaL_checknumber(L, -2);
+  double y = luaL_checknumber(L, -1);
+
+  lua_pop(L, 2);
+
+  points.push_back(grid_point_c(I_ROUND(x), I_ROUND(y)));
+
+  return 0;
+}
+
+
 // LUA: spots_fill_poly(content, polygon)
 //
 int SPOT_fill_poly(lua_State *L)
 {
   int content = luaL_checkint(L, 1);
 
-  // TODO
-
-
   std::vector<grid_point_c> points;
 
-#if 0
-  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  if (lua_type(L, 2) != LUA_TTABLE)
   {
-    return luaL_argerror(L, stack_pos, "missing table: coords");
+    return luaL_argerror(L, 2, "missing table: polygon");
   }
 
   int index = 1;
@@ -728,7 +778,7 @@ int SPOT_fill_poly(lua_State *L)
   for (;;)
   {
     lua_pushinteger(L, index);
-    lua_gettable(L, stack_pos);
+    lua_gettable(L, 2);
 
     if (lua_isnil(L, -1))
     {
@@ -736,13 +786,14 @@ int SPOT_fill_poly(lua_State *L)
       break;
     }
 
-    Grab_Vertex(L, -1, B);
+    polygon_coord(L, -1, points);
 
     lua_pop(L, 1);
 
     index++;
   }
-#endif
+
+  SPOT_FillPolygon(content, points);
 
   return 0;
 }

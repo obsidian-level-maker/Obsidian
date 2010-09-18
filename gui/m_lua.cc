@@ -501,6 +501,7 @@ int gui_bit_not(lua_State *L)
 
 
 extern int SPOT_begin(lua_State *L);
+extern int SPOT_draw_line(lua_State *L);
 extern int SPOT_fill_poly(lua_State *L);
 extern int SPOT_end(lua_State *L);
 
@@ -596,6 +597,7 @@ static const luaL_Reg gui_script_funcs[] =
 
   // SPOT functions
   { "spots_begin",     SPOT_begin },
+  { "spots_draw_line", SPOT_fill_poly },
   { "spots_fill_poly", SPOT_fill_poly },
   { "spots_end",       SPOT_end },
 
