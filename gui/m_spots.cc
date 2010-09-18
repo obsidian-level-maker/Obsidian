@@ -27,7 +27,7 @@
 #include "main.h"
 
 
-#define GRID_SIZE  20
+#define GRID_SIZE  24
 
 #define MAX_GRID_DIM  256
 
