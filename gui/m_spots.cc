@@ -264,6 +264,9 @@ void SPOT_ItemSpots(std::vector<grid_point_c> & spots)
 
 static int biggest_gap(int *y1, int *y2)
 {
+  // Note: this also fills in single square spots, which will never
+  //       get used because they'll never form a 2x2 group.
+
   int best_x   = -1;
   int best_num = 0;
 
@@ -294,6 +297,10 @@ static int biggest_gap(int *y1, int *y2)
         *y2 = ey;
       }
 
+      // single squares are useless, remove them now
+      if (ey == y)
+        spot_grid[x][y] |= HAS_MON;
+
       y = ey + 1;
     }
   }
@@ -302,12 +309,78 @@ static int biggest_gap(int *y1, int *y2)
 }
 
 
-static void grow_spot(int& x1, int& y1, int& x2, int& y2)
+static bool test_mon_area(int x1, int y1, int x2, int y2)
+{
+  if (x1 < 0 or x2 >= grid_W or y1 < 0 or y2 >= grid_H)
+    return false;
+    
+  for (int x = x1 ; x <= x2 ; x++)
+  for (int y = y1 ; y <= y2 ; y++)
+  {
+    if (spot_grid[x][y])
+      return false;
+  }
+
+  return true;
+}
+
+
+static bool grow_spot(int& x1, int& y1, int& x2, int& y2)
 {
   // (passing parameters by reference for nicer code)
 
-  
-  // FIXME:
+#if 1
+  // special case for initial square, try to become a 2x2 square
+  // since that is the minimum requirement.
+
+  if (x1 == x2 && y1 == y2)
+  {
+    if (test_mon_area(x1, y1, x2+1, y2+1)) { x2++; y2++; return true; }
+    if (test_mon_area(x1, y1-1, x2+1, y2)) { x2++; y1--; return true; }
+    if (test_mon_area(x1-1, y1, x2, y2+1)) { x1--; y2++; return true; }
+    if (test_mon_area(x1-1, y1-1, x2, y2)) { x1--; y1--; return true; }
+
+    // return now, will mark this square as a dud
+    return false;
+  }
+#endif
+
+  // determine the order of sides to try and grow
+  int x1_pass = 0;
+  int x2_pass = 1;
+
+  int y1_pass = 2;
+  int y2_pass = 3;
+
+  // wider than tall? then do Y first, otherwise X
+  if (x2 - x1 > y2 - y1)
+  {
+    x1_pass ^= 2;  x2_pass ^= 2;
+    y1_pass ^= 2;  y2_pass ^= 2;
+  }
+
+  // also vary whether we go left or right first
+  if ((x2 - x1) & 1)
+  {
+    x1_pass ^= 1;  x2_pass ^= 1;
+  }
+
+  if ((y2 - y1) & 1)
+  {
+    y1_pass ^= 1;  y2_pass ^= 1;
+  }
+
+
+  for (int pass = 0 ; pass < 4 ; pass++)
+  {
+    if (pass == x1_pass && test_mon_area(x1-1, y1, x1-1, y2)) { x1--; return true; }
+    if (pass == x2_pass && test_mon_area(x2+1, y1, x2+1, y2)) { x2++; return true; }
+
+    if (pass == y1_pass && test_mon_area(x1, y1-1, x2, y1-1)) { y1--; return true; }
+    if (pass == y2_pass && test_mon_area(x1, y2+1, x2, y2+1)) { y2++; return true; }
+  }
+
+  return false;
 }
 
 
@@ -340,7 +413,7 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
     if (x1 < 0)
       return;
 
-fprintf(stderr, "biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
+DebugPrintf("biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
 
     y1 = (y1 + y2) / 2;
 
@@ -349,9 +422,21 @@ fprintf(stderr, "biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
     x2 = x1;
     y2 = y1;
 
-    grow_spot(x1,y1, x2,y2);
+    while (grow_spot(x1,y1, x2,y2))
+    { }
 
     mark_monster(x1,y1, x2,y2);
+
+    if (x2 > x1 && y2 > y1)
+    {
+      // TODO: use a proper class
+      spots.push_back(grid_point_c(x1, y1));
+      spots.push_back(grid_point_c(x2, y2));
+
+DebugPrintf("spot ---> (%d %d) size (%d %d)\n", x1,y1, x2-x1+1,y2-y1+1);
+    }
+
+    SPOT_DumpGrid("Monster");
   }
 }
 
