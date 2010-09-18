@@ -29,6 +29,8 @@
 
 #define GRID_SIZE  20
 
+#define MAX_GRID_DIM  256
+
 
 static int grid_min_x, grid_min_y;
 static int grid_max_x, grid_max_y;
@@ -57,6 +59,9 @@ void SPOT_CreateGrid(int min_x, int min_y, int max_x, int max_y)
   grid_W += 2;
   grid_H += 2;
 
+  SYS_ASSERT(grid_W <= MAX_GRID_DIM);
+  SYS_ASSERT(grid_H <= MAX_GRID_DIM);
+
   spot_grid = new byte* [grid_W];
   
   for (int x = 0 ; x < grid_W ; x++)
@@ -82,16 +87,14 @@ void SPOT_FreeGrid()
 }
 
 
-void SPOT_DumpGrid()
+void SPOT_DumpGrid(const char *info)
 {
-  DebugPrintf("Grid: (%d %d) .. (%d %d)\n",
+  DebugPrintf("Grid %s: (%d %d) .. (%d %d)\n", info,
               grid_min_x, grid_min_y, grid_max_x, grid_max_y);
-
-  SYS_ASSERT(grid_W < 256);
 
   for (int y = grid_H-1 ; y >= 0 ; y--)
   {
-    char buffer[256];
+    char buffer[MAX_GRID_DIM+2];
     
     for (int x = 0 ; x < grid_W ; x++)
       buffer[x] = spot_grid[x][y] ? '#' : '.';
@@ -111,6 +114,9 @@ public:
   int x, y;
 
 public:
+  grid_point_c()
+  { }
+
   grid_point_c(int _x, int _y) : x(_x), y(_y)
   { }
 
@@ -162,6 +168,87 @@ void SPOT_FloodOutside()
 }
 
 
+//------------------------------------------------------------------------
+
+static int grid_lefties[MAX_GRID_DIM];
+static int grid_righties[MAX_GRID_DIM];
+
+
+static void clear_rows()
+{
+  for (int y = 0 ; y < grid_H ; y++)
+  {
+    grid_lefties[y]  = 99999;
+    grid_righties[y] = -1;
+  }
+}
+
+
+static void raw_pixel(int gx, int gy)
+{
+  if (gy < 0 || gy >= grid_H)
+    return;
+
+  grid_lefties[gy]  = MIN(grid_lefties[gy],  gx);
+  grid_righties[gy] = MAX(grid_righties[gy], gx);
+}
+
+
+static void draw_line(int x1, int y1, int x2, int y2)
+{
+  int px1 = (x1 - grid_min_x) / GRID_SIZE + 1;
+  int px2 = (x2 - grid_min_x) / GRID_SIZE + 1;
+
+  int py1 = (y1 - grid_min_y) / GRID_SIZE + 1;
+  int py2 = (y2 - grid_min_y) / GRID_SIZE + 1;
+
+  // same column ?
+  if (px1 == px2)
+  {
+    
+  }
+}
+
+
+static void fill_rows()
+{
+  // FIXME remember minimum/maximum Y coord
+
+  int w2 = grid_W-1;
+
+  for (int y = 0 ; y < grid_H ; y++)
+  {
+    if (grid_righties[y] < 0)
+      continue;
+
+    int low_x  = MAX(0,  grid_lefties[y]);
+    int high_x = MIN(w2, grid_righties[y]);
+
+    for (int x = low_x ; x <= high_x ; x++)
+      spot_grid[x][y] = 1;
+  }
+}
+
+
+void SPOT_FillPolygon(const grid_point_c *points, int count)
+{
+  // Algorithm:
+  //   rather simplistic, draw each edge of the polygon and
+  //   keep track of the minimum and maximum X coordinates,
+  //   later fill in the intermediate squares in each row.
+
+  clear_rows();
+
+  for (int i = 0 ; i < count ; i++)
+  {
+    int k = (i + 1) % count;
+
+    draw_line(points[i].x, points[i].y, points[k].x, points[k].y);
+  }
+
+  fill_rows();
+}
+
 
 //------------------------------------------------------------------------
 //  LUA INTERFACE
@@ -172,7 +259,13 @@ void SPOT_FloodOutside()
 //
 int SPOT_begin(lua_State *L)
 {
-  // TODO
+  int min_x = (int)floor(luaL_checknumber(L, 1));
+  int min_y = (int)floor(luaL_checknumber(L, 2));
+
+  int max_x = (int)ceil(luaL_checknumber(L, 3));
+  int max_y = (int)ceil(luaL_checknumber(L, 4));
+
+  SPOT_CreateGrid(min_x, min_y, max_x, max_y);
 
   return 0;
 }
@@ -195,7 +288,13 @@ int SPOT_fill_poly(lua_State *L)
 //
 int SPOT_end(lua_State *L)
 {
-  // TODO
+  SPOT_DumpGrid("Before");
+
+  SPOT_FloodOutside();
+
+  SPOT_DumpGrid("After");
+
+  // TODO collect the spots
 
   return 0;
 }
