@@ -207,11 +207,10 @@ static void raw_pixel(int gx, int gy)
 
 static void draw_line(int x1, int y1, int x2, int y2)
 {
-DebugPrintf("draw_line: (%d %d) --> (%d %d)\n", x1,y1, x2,y2);
+/// DebugPrintf("draw_line: (%d %d) --> (%d %d)\n", x1,y1, x2,y2);
 
   x1 -= grid_min_x;  y1 -= grid_min_y;
   x2 -= grid_min_x;  y2 -= grid_min_y;
-
 
   // TODO: clip to bounding box
 
@@ -222,13 +221,13 @@ DebugPrintf("draw_line: (%d %d) --> (%d %d)\n", x1,y1, x2,y2);
   int py1 = y1 / GRID_SIZE;
   int py2 = y2 / GRID_SIZE;
 
-DebugPrintf("  pixel coords: (%d %d) --> (%d %d)\n", px1,py1, px2,py2);
+/// DebugPrintf("  pixel coords: (%d %d) --> (%d %d)\n", px1,py1, px2,py2);
+
   int h2 = grid_H-1;
 
   // same row ?
   if (py1 == py2)
   {
-DebugPrintf("  same row\n");
     if (py1 < 0 || py1 > h2)
       return;
 
@@ -255,7 +254,6 @@ DebugPrintf("  same row\n");
   // same column ?
   if (px1 == px2)
   {
-DebugPrintf("  same column\n");
     for ( ; py1 <= py2 ; py1++)
       raw_pixel(px1, py1);
 
@@ -272,13 +270,9 @@ DebugPrintf("  same column\n");
     int sy = (py == py1) ? y1 : GRID_SIZE * py;
     int ey = (py == py2) ? y2 : GRID_SIZE * (py+1);
 
-DebugPrintf("py = %d  (%d .. %d)\n", py, py1, py2);
-DebugPrintf("--> sy:%d  ey:%d\n", sy, ey);
-
     int sx = x1 + (int)((sy - y1) * slope);
     int ex = x1 + (int)((ey - y1) * slope);
 
-DebugPrintf("    sx:%d  ex:%d\n", sx, ex);
     int psx = sx / GRID_SIZE;
     int pex = ex / GRID_SIZE;
 
@@ -291,7 +285,6 @@ DebugPrintf("    sx:%d  ex:%d\n", sx, ex);
 static void fill_rows()
 {
   int w2 = grid_W-1;
-//int h2 = grid_H-1;
 
   for (int y = grid_botty ; y <= grid_toppy ; y++)
   {
@@ -310,8 +303,8 @@ static void fill_rows()
 void SPOT_FillPolygon(const grid_point_c *points, int count)
 {
   // Algorithm:
-  //   rather simplistic, draw each edge of the polygon and
-  //   keep track of the minimum and maximum X coordinates,
+  //   rather simplistic, draw each edge of the polygon and keep
+  //   track of the minimum and maximum X coordinates on each row.
   //   later fill in the intermediate squares in each row.
 
   clear_rows();
@@ -322,8 +315,8 @@ void SPOT_FillPolygon(const grid_point_c *points, int count)
 
     draw_line(points[i].x, points[i].y, points[k].x, points[k].y);
 
-    fill_rows();
-    SPOT_DumpGrid("");
+/// fill_rows();
+/// SPOT_DumpGrid("");
   }
 
   fill_rows();
@@ -366,13 +359,15 @@ void SPOT_DebuggingTest()
   };
 
 
+  LogPrintf("\n--- SPOT_DebuggingTest ---\n\n");
+
   SPOT_CreateGrid(0, 0, 1000, 1000);
 
   SPOT_FillPolygon(shape_A, 4);  
   SPOT_FillPolygon(shape_B, 4);  
   SPOT_FillPolygon(shape_C, 6);
 
-  SPOT_DumpGrid("");
+  SPOT_DumpGrid("Raw");
 
   SPOT_FloodOutside();
 
@@ -420,11 +415,11 @@ int SPOT_fill_poly(lua_State *L)
 //
 int SPOT_end(lua_State *L)
 {
-  SPOT_DumpGrid("Before");
+  SPOT_DumpGrid("Raw");
 
   SPOT_FloodOutside();
 
-  SPOT_DumpGrid("After");
+  SPOT_DumpGrid("Flooded");
 
   // TODO collect the spots
 
