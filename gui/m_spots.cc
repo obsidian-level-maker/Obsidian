@@ -103,7 +103,22 @@ void SPOT_DumpGrid(const char *info)
     char buffer[MAX_GRID_DIM+2];
     
     for (int x = 0 ; x < grid_W ; x++)
-      buffer[x] = spot_grid[x][y] ? '#' : '.';
+    {
+      byte content = spot_grid[x][y];
+
+      if (content & HAS_MON)
+        buffer[x] = 'm';
+      else if (content & HAS_ITEM)
+        buffer[x] = 'i';
+      else if (content & 1)
+        buffer[x] = '#';
+      else if (content & 6)
+        buffer[x] = '/';
+      else if (content & NEAR_WALL)
+        buffer[x] = '%';
+      else
+        buffer[x] = '.';
+    }
 
     buffer[grid_W] = 0;
 
@@ -237,20 +252,62 @@ void SPOT_ItemSpots(std::vector<grid_point_c> & spots)
   {
     test_item_spot(x, y, spots);
   }
+
+  // clean up
+  for (x = 0 ; x < grid_W ; x++)
+  for (y = 0 ; y < grid_H ; y++)
+  {
+    spot_grid[x][y] &= 7;
+  }
 }
 
 
 static int biggest_gap(int *y1, int *y2)
 {
-  
+  int best_x   = -1;
+  int best_num = 0;
+
+  for (int x = 0 ; x < grid_W ; x++)
+  {
+    int y = 0;
+
+    while (y < grid_H-1)
+    {
+      if (spot_grid[x][y])
+      {
+        y++; continue;
+      }
+
+      int ey = y;
+
+      while (ey < grid_H-1 && ! spot_grid[x][ey+1])
+        ey++;
+
+      int num = ey - y + 1;
+
+      if (num > best_num)
+      {
+        best_x   = x;
+        best_num = num;
+
+        *y1 = y;
+        *y2 = ey;
+      }
+
+      y = ey + 1;
+    }
+  }
+
+  return best_x;
 }
 
 
 static void grow_spot(int& x1, int& y1, int& x2, int& y2)
 {
-  // (using references for nicer code)
+  // (passing parameters by reference for nicer code)
 
-
+  
+  // FIXME:
 }
 
 
@@ -283,10 +340,11 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
     if (x1 < 0)
       return;
 
+fprintf(stderr, "biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
+
     y1 = (y1 + y2) / 2;
 
-    byte content = spot_grid[x1][y1];
-    SYS_ASSERT(! (content & (7 | HAS_MON)));
+    SYS_ASSERT(! spot_grid[x1][y1]);
 
     x2 = x1;
     y2 = y1;
@@ -518,11 +576,20 @@ void SPOT_DebuggingTest()
 
   SPOT_DumpGrid("Flooded");
 
+
   std::vector<grid_point_c> items;
 
   SPOT_ItemSpots(items);
 
   LogPrintf("\nTotal item spots = %u\n\n", items.size());
+
+
+  items.clear();
+
+  SPOT_MonsterSpots(items);
+
+  LogPrintf("\nTotal monster spots = %u\n\n", items.size() / 2);
+
 
   SPOT_FreeGrid();
 }
