@@ -35,7 +35,7 @@
 static int grid_min_x, grid_min_y;
 static int grid_max_x, grid_max_y;
 
-// number of grid squares (including padding)
+// number of grid squares
 static int grid_W, grid_H;
 
 static byte ** spot_grid;
@@ -55,9 +55,11 @@ void SPOT_CreateGrid(int min_x, int min_y, int max_x, int max_y)
   SYS_ASSERT(grid_W >= 1);
   SYS_ASSERT(grid_H >= 1);
 
+#if 0
   // padding : one square on each side
   grid_W += 2;
   grid_H += 2;
+#endif
 
   SYS_ASSERT(grid_W <= MAX_GRID_DIM);
   SYS_ASSERT(grid_H <= MAX_GRID_DIM);
@@ -196,16 +198,63 @@ static void raw_pixel(int gx, int gy)
 
 static void draw_line(int x1, int y1, int x2, int y2)
 {
-  int px1 = (x1 - grid_min_x) / GRID_SIZE + 1;
-  int px2 = (x2 - grid_min_x) / GRID_SIZE + 1;
+  x1 -= grid_min_x;  y1 -= grid_min_y;
+  x2 -= grid_min_x;  y2 -= grid_min_y;
 
-  int py1 = (y1 - grid_min_y) / GRID_SIZE + 1;
-  int py2 = (y2 - grid_min_y) / GRID_SIZE + 1;
+
+  // TODO: clip to bounding box
+
+
+  int px1 = x1 / GRID_SIZE;
+  int px2 = x2 / GRID_SIZE;
+
+  int py1 = y1 / GRID_SIZE;
+  int py2 = y2 / GRID_SIZE;
+
+  int h2 = grid_H-1;
+
+  // same row ?
+  if (py1 == py2)
+  {
+    if (py1 < 0 || py1 > h2)
+      return;
+
+    raw_pixel(px1, py1);
+    raw_pixel(px2, py1);
+
+    return;
+  }
+
+  py1 = MAX(0,  py1);
+  py2 = MIN(h2, py2);
 
   // same column ?
   if (px1 == px2)
   {
-    
+    for ( ; py1 <= py2 ; py1++)
+      raw_pixel(px1, py1);
+
+    return;
+  }
+
+  // general case
+
+  double slope = (x2 - x1) / (double)(y2 - y1);
+
+  for (int py = py1 ; py <= py2 ; py++)
+  {
+    // compute intersection of current row
+    int sy = (py == py1) ? y1 : GRID_SIZE * py;
+    int ey = (py == py2) ? y2 : GRID_SIZE * (py+1);
+
+    int sx = x1 + (int)((sy - y1) * slope);
+    int ex = x1 + (int)((ey - y1) * slope);
+
+    int psx = sx / GRID_SIZE;
+    int pex = ex / GRID_SIZE;
+
+    raw_pixel(psx, py);
+    raw_pixel(pex, py);
   }
 }
 
