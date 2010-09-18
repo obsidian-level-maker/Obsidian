@@ -55,8 +55,7 @@ void SPOT_CreateGrid(int min_x, int min_y, int max_x, int max_y)
   SYS_ASSERT(grid_W >= 1);
   SYS_ASSERT(grid_H >= 1);
 
-#if 0
-  // padding : one square on each side
+#if 1  // padding
   grid_W += 2;
   grid_H += 2;
 #endif
@@ -209,10 +208,22 @@ static void draw_line(int x1, int y1, int x2, int y2)
 {
 /// DebugPrintf("draw_line: (%d %d) --> (%d %d)\n", x1,y1, x2,y2);
 
+  // basic cull, Y only
+  // (doing X messes up polygons which overlap the sides)
+  if (MAX(y1, y2) < grid_min_y || MIN(y1, y2) > grid_max_y)
+    return;
+
+
   x1 -= grid_min_x;  y1 -= grid_min_y;
   x2 -= grid_min_x;  y2 -= grid_min_y;
 
   // TODO: clip to bounding box
+
+
+#if 1  // padding
+  x1 += GRID_SIZE;  y1 += GRID_SIZE;
+  x2 += GRID_SIZE;  y2 += GRID_SIZE;
+#endif
 
 
   int px1 = x1 / GRID_SIZE;
@@ -248,6 +259,9 @@ static void draw_line(int x1, int y1, int x2, int y2)
     temp = y1 ; y1 = y2 ; y2 = temp;
   }
 
+  int orig_py1 = py1;
+  int orig_py2 = py2;
+
   py1 = MAX(0,  py1);
   py2 = MIN(h2, py2);
 
@@ -267,8 +281,8 @@ static void draw_line(int x1, int y1, int x2, int y2)
   for (int py = py1 ; py <= py2 ; py++)
   {
     // compute intersection of current row
-    int sy = (py == py1) ? y1 : GRID_SIZE * py;
-    int ey = (py == py2) ? y2 : GRID_SIZE * (py+1);
+    int sy = (py == orig_py1) ? y1 : GRID_SIZE * py;
+    int ey = (py == orig_py2) ? y2 : GRID_SIZE * (py+1);
 
     int sx = x1 + (int)((sy - y1) * slope);
     int ex = x1 + (int)((ey - y1) * slope);
