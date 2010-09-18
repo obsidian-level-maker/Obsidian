@@ -799,6 +799,38 @@ int SPOT_fill_poly(lua_State *L)
 }
 
 
+static void store_mon_or_item(lua_State *L, int stack_pos,
+                              unsigned int index, bool is_mon,
+                              int x, int y, int x2 = -1, int y2 = -1)
+{
+  lua_pushinteger(L, index);
+
+  // build the coordinate table
+  //   items: { x=123, y=200 } 
+  //   mons:  { x1=50, y1=200, x2=150, y2=400 }
+
+  lua_newtable(L);
+
+  lua_pushinteger(L, x);
+  lua_setfield(L, -2, is_mon ? "x1" : "x");
+
+  lua_pushinteger(L, y);
+  lua_setfield(L, -2, is_mon ? "y1" : "y");
+
+  if (is_mon)
+  {
+    lua_pushinteger(L, x2);
+    lua_setfield(L, -2, "x2");
+
+    lua_pushinteger(L, y2);
+    lua_setfield(L, -2, "y2");
+  }
+
+  // store coordinate table into user-provided list
+  lua_settable(L, stack_pos);
+}
+
+
 // LUA: spots_end(mons, items)
 //
 // mons and items are tables where the monster and item spots
@@ -806,13 +838,42 @@ int SPOT_fill_poly(lua_State *L)
 //
 int SPOT_end(lua_State *L)
 {
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: mons");
+
+  if (lua_type(L, 2) != LUA_TTABLE)
+    return luaL_argerror(L, 2, "missing table: items");
+
+
   SPOT_DumpGrid("Raw");
 
-  SPOT_FloodOutside();
+///  SPOT_FloodOutside();
+///
+///  SPOT_DumpGrid("Flooded");
 
-  SPOT_DumpGrid("Flooded");
 
-  // TODO collect the spots
+  std::vector<grid_point_c> items;
+
+  SPOT_ItemSpots(items);
+
+  for (unsigned int i = 0 ; i < items.size() ; i++)
+  {
+    store_mon_or_item(L, 2, 1+i, false, items[i].x, items[i].y);
+  }
+
+
+  std::vector<grid_point_c> mons;
+
+  SPOT_MonsterSpots(mons);
+
+  for (unsigned int m = 0 ; m < mons.size() ; m += 2)
+  {
+    store_mon_or_item(L, 1, 1+m/2, true, mons[m+0].x, mons[m+0].y,
+                                         mons[m+1].x, mons[m+1].y);
+  }
+
+
+  SPOT_FreeGrid();
 
   return 0;
 }
