@@ -46,7 +46,7 @@ static int grid_W, grid_H;
 static byte ** spot_grid;
 
 
-void SPOT_CreateGrid(int min_x, int min_y, int max_x, int max_y)
+void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y)
 {
   grid_min_x = min_x;
   grid_min_y = min_y;
@@ -74,7 +74,7 @@ void SPOT_CreateGrid(int min_x, int min_y, int max_x, int max_y)
   {
     spot_grid[x] = new byte[grid_H];
 
-    memset(spot_grid[x], 0, grid_H);
+    memset(spot_grid[x], content, grid_H);
   }
 }
 
@@ -573,7 +573,7 @@ static void draw_line(int x1, int y1, int x2, int y2)
 }
 
 
-static void fill_rows()
+static void fill_rows(byte content)
 {
   int w2 = grid_W-1;
 
@@ -586,12 +586,12 @@ static void fill_rows()
     int high_x = MIN(w2, grid_righties[y]);
 
     for (int x = low_x ; x <= high_x ; x++)
-      spot_grid[x][y] = 1;
+      spot_grid[x][y] = content;
   }
 }
 
 
-void SPOT_FillPolygon(const grid_point_c *points, int count)
+void SPOT_FillPolygon(byte content, std::vector<grid_point_c> & points, int count)
 {
   // Algorithm:
   //   rather simplistic, draw each edge of the polygon and keep
@@ -606,25 +606,27 @@ void SPOT_FillPolygon(const grid_point_c *points, int count)
 
     draw_line(points[i].x, points[i].y, points[k].x, points[k].y);
 
-/// fill_rows();
+/// fill_rows(content);
 /// SPOT_DumpGrid("");
   }
 
-  fill_rows();
+  fill_rows(content);
 }
 
 
-void SPOT_FillPolygon(const int *shape, int count)
+void SPOT_FillPolygon(byte content, const int *shape, int count)
 {
-  grid_point_c points[100];
+  std::vector<grid_point_c> points;
 
   for (int i = 0 ; i < count ; i++)
   {
-    points[i].x = shape[i*2 + 0];
-    points[i].y = shape[i*2 + 1];
+    int x = shape[i*2 + 0];
+    int y = shape[i*2 + 1];
+
+    points.push_back(grid_point_c(x, y));
   }
 
-  SPOT_FillPolygon(points, count);
+  SPOT_FillPolygon(content, points, count);
 }
 
 
@@ -652,11 +654,11 @@ void SPOT_DebuggingTest()
 
   LogPrintf("\n--- SPOT_DebuggingTest ---\n\n");
 
-  SPOT_CreateGrid(0, 0, 1000, 1000);
+  SPOT_CreateGrid(0 /* content */, 0, 0, 1000, 1000);
 
-  SPOT_FillPolygon(shape_A, 4);  
-  SPOT_FillPolygon(shape_B, 4);  
-  SPOT_FillPolygon(shape_C, 6);
+  SPOT_FillPolygon(1, shape_A, 4);  
+  SPOT_FillPolygon(1, shape_B, 4);  
+  SPOT_FillPolygon(1, shape_C, 6);
 
   SPOT_DumpGrid("Raw");
 
@@ -695,20 +697,52 @@ int SPOT_begin(lua_State *L)
   int min_x = (int)floor(luaL_checknumber(L, 1));
   int min_y = (int)floor(luaL_checknumber(L, 2));
 
-  int max_x = (int)ceil(luaL_checknumber(L, 3));
-  int max_y = (int)ceil(luaL_checknumber(L, 4));
+  int max_x = (int) ceil(luaL_checknumber(L, 3));
+  int max_y = (int) ceil(luaL_checknumber(L, 4));
 
-  SPOT_CreateGrid(min_x, min_y, max_x, max_y);
+  SPOT_CreateGrid(0 /* content */, min_x, min_y, max_x, max_y);
 
   return 0;
 }
 
 
-// LUA: spots_fill_poly(coords)
+// LUA: spots_fill_poly(content, polygon)
 //
 int SPOT_fill_poly(lua_State *L)
 {
+  int content = luaL_checkint(L, 1);
+
   // TODO
+
+
+  std::vector<grid_point_c> points;
+
+#if 0
+  if (lua_type(L, stack_pos) != LUA_TTABLE)
+  {
+    return luaL_argerror(L, stack_pos, "missing table: coords");
+  }
+
+  int index = 1;
+
+  for (;;)
+  {
+    lua_pushinteger(L, index);
+    lua_gettable(L, stack_pos);
+
+    if (lua_isnil(L, -1))
+    {
+      lua_pop(L, 1);
+      break;
+    }
+
+    Grab_Vertex(L, -1, B);
+
+    lua_pop(L, 1);
+
+    index++;
+  }
+#endif
 
   return 0;
 }
