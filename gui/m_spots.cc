@@ -724,10 +724,10 @@ int SPOT_draw_line(lua_State *L)
 {
   int content = luaL_checkint(L, 1);
 
-  int x1 = luaL_checkint(L, 2);
-  int y1 = luaL_checkint(L, 3);
-  int x2 = luaL_checkint(L, 4);
-  int y2 = luaL_checkint(L, 5);
+  int x1 = I_ROUND(luaL_checknumber(L, 2));
+  int y1 = I_ROUND(luaL_checknumber(L, 3));
+  int x2 = I_ROUND(luaL_checknumber(L, 4));
+  int y2 = I_ROUND(luaL_checknumber(L, 5));
 
   SPOT_DrawLine(content, x1, y1, x2, y2);
 
@@ -749,12 +749,12 @@ static int polygon_coord(lua_State *L, int stack_pos,
   lua_getfield(L, stack_pos, "x");
   lua_getfield(L, stack_pos, "y");
 
-  double x = luaL_checknumber(L, -2);
-  double y = luaL_checknumber(L, -1);
+  int x = I_ROUND(luaL_checknumber(L, -2));
+  int y = I_ROUND(luaL_checknumber(L, -1));
 
   lua_pop(L, 2);
 
-  points.push_back(grid_point_c(I_ROUND(x), I_ROUND(y)));
+  points.push_back(grid_point_c(x, y));
 
   return 0;
 }
