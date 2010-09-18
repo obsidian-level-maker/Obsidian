@@ -712,7 +712,7 @@ int SPOT_begin(lua_State *L)
   int max_x = (int) ceil(luaL_checknumber(L, 3));
   int max_y = (int) ceil(luaL_checknumber(L, 4));
 
-  SPOT_CreateGrid(0 /* content */, min_x, min_y, max_x, max_y);
+  SPOT_CreateGrid(1 /* blocked */, min_x, min_y, max_x, max_y);
 
   return 0;
 }
