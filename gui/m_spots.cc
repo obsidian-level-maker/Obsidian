@@ -208,10 +208,11 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
   if (! near_wall)
     return; // no good, not near a wall
 
-  int real_x = grid_min_x - GRID_SIZE + (x+1) * GRID_SIZE;
-  int real_y = grid_min_y - GRID_SIZE + (y+1) * GRID_SIZE;
+  // this would be (x + 1) if there was no padding
+  int real_x = grid_min_x - (x + 0) * GRID_SIZE;
+  int real_y = grid_min_y - (y + 0) * GRID_SIZE;
 
-  DebugPrintf("Found item spot @ (%d %d)  [grid %d %d]\n", real_x,real_y, x,y);
+  DebugPrintf("Item spot ---> [%d %d] real: (%d %d)\n", x,y, real_x,real_y);
 
   spots.push_back(grid_point_c(real_x, real_y));
 
@@ -399,9 +400,9 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
   // Algorithm:
   //   find the biggest vertical gap which is free, and use the
   //   middle square as our starting point.  Then grow it as much as
-  //   as possible.
+  //   as possible (minimum size is 2x2 squares).
   //   
-  //   rinse & repeat until no more spots at least 2x2 exist.
+  //   repeat until no more available.
 
   for (;;)
   {
@@ -412,8 +413,6 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
   
     if (x1 < 0)
       return;
-
-DebugPrintf("biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
 
     y1 = (y1 + y2) / 2;
 
@@ -429,14 +428,18 @@ DebugPrintf("biggest_gap : x=%d  y=%d .. %d\n", x1, y1, y2);
 
     if (x2 > x1 && y2 > y1)
     {
-      // TODO: use a proper class
-      spots.push_back(grid_point_c(x1, y1));
-      spots.push_back(grid_point_c(x2, y2));
+      int real_x1 = grid_min_x + (x1 - 1) * GRID_SIZE;
+      int real_y1 = grid_min_y + (y1 - 1) * GRID_SIZE;
 
-DebugPrintf("spot ---> (%d %d) size (%d %d)\n", x1,y1, x2-x1+1,y2-y1+1);
+      int real_x2 = grid_min_x + (x2 + 0) * GRID_SIZE;
+      int real_y2 = grid_min_y + (y2 + 0) * GRID_SIZE;
+
+      // TODO: use a proper rectangle class
+      spots.push_back(grid_point_c(real_x1, real_y1));
+      spots.push_back(grid_point_c(real_x2, real_y2));
+
+      DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1,y1, x2-x1+1,y2-y1+1);
     }
-
-    SPOT_DumpGrid("Monster");
   }
 }
 
