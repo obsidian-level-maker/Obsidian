@@ -140,7 +140,7 @@ public:
 
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(96),
+                    light(96+64), //!!!!
                     special(0), tag(0), mark(0), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
                     unused(false),
@@ -1991,7 +1991,7 @@ void CSG_DOOM_Write()
 
   DM_CreateSectors();
 
-  DM_LightingFloodFill();
+///!!!  DM_LightingFloodFill();
   DM_CoalesceSectors();
 
   DM_CreateLinedefs();
