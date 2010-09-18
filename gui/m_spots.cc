@@ -32,6 +32,11 @@
 #define MAX_GRID_DIM  256
 
 
+#define NEAR_WALL  0x08
+#define HAS_ITEM   0x10
+#define HAS_MON    0x20
+
+
 static int grid_min_x, grid_min_y;
 static int grid_max_x, grid_max_y;
 
@@ -178,10 +183,10 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
   {
     byte content = spot_grid[x+dx][y+dy];
 
-    if (content & 7)
+    if (content & (7 | HAS_ITEM))
       return; // no good, something in the way
 
-    if (content & 8)
+    if (content & NEAR_WALL)
       near_wall = true;
   }
 
@@ -196,14 +201,14 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
   spots.push_back(grid_point_c(real_x, real_y));
 
   // reserve this spot, prevent overlap of with items
-  spot_grid[x+0][y+0] |= 4;
-  spot_grid[x+0][y+1] |= 4;
-  spot_grid[x+1][y+0] |= 4;
-  spot_grid[x+1][y+1] |= 4;
+  spot_grid[x+0][y+0] |= HAS_ITEM;
+  spot_grid[x+0][y+1] |= HAS_ITEM;
+  spot_grid[x+1][y+0] |= HAS_ITEM;
+  spot_grid[x+1][y+1] |= HAS_ITEM;
 }
 
 
-void SPOT_FindItemSpots(std::vector<grid_point_c> & spots)
+void SPOT_ItemSpots(std::vector<grid_point_c> & spots)
 {
   // The ideal spots are close to a wall.
   // Using the middle of a grid square is too close though.
@@ -219,11 +224,11 @@ void SPOT_FindItemSpots(std::vector<grid_point_c> & spots)
   {
     if (spot_grid[x][y] & 1)
     {
-      if (x > 0)  spot_grid[x-1][y] |= 8;
-      if (x < w2) spot_grid[x+1][y] |= 8;
+      if (x > 0)  spot_grid[x-1][y] |= NEAR_WALL;
+      if (x < w2) spot_grid[x+1][y] |= NEAR_WALL;
 
-      if (y > 0)  spot_grid[x][y-1] |= 8;
-      if (y < h2) spot_grid[x][y+1] |= 8;
+      if (y > 0)  spot_grid[x][y-1] |= NEAR_WALL;
+      if (y < h2) spot_grid[x][y+1] |= NEAR_WALL;
     }
   }
 
@@ -234,6 +239,63 @@ void SPOT_FindItemSpots(std::vector<grid_point_c> & spots)
   }
 }
 
+
+static int biggest_gap(int *y1, int *y2)
+{
+  
+}
+
+
+static void grow_spot(int& x1, int& y1, int& x2, int& y2)
+{
+  // (using references for nicer code)
+
+
+}
+
+
+static void mark_monster(int x1, int y1, int x2, int y2)
+{
+  for (int x = x1 ; x <= x2 ; x++)
+  for (int y = y1 ; y <= y2 ; y++)
+  {
+    spot_grid[x][y] |= HAS_MON;
+  }
+}
+
+
+void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
+{
+  // Algorithm:
+  //   find the biggest vertical gap which is free, and use the
+  //   middle square as our starting point.  Then grow it as much as
+  //   as possible.
+  //   
+  //   rinse & repeat until no more spots at least 2x2 exist.
+
+  for (;;)
+  {
+    int x1, x2;
+    int y1, y2;
+
+    x1 = biggest_gap(&y1, &y2);
+  
+    if (x1 < 0)
+      return;
+
+    y1 = (y1 + y2) / 2;
+
+    byte content = spot_grid[x1][y1];
+    SYS_ASSERT(! (content & (7 | HAS_MON)));
+
+    x2 = x1;
+    y2 = y1;
+
+    grow_spot(x1,y1, x2,y2);
+
+    mark_monster(x1,y1, x2,y2);
+  }
+}
 
 
 //------------------------------------------------------------------------
@@ -458,7 +520,7 @@ void SPOT_DebuggingTest()
 
   std::vector<grid_point_c> items;
 
-  SPOT_FindItemSpots(items);
+  SPOT_ItemSpots(items);
 
   LogPrintf("\nTotal item spots = %u\n\n", items.size());
 
