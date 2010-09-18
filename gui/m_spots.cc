@@ -105,6 +105,63 @@ void SPOT_DumpGrid()
 }
 
 
+class grid_point_c
+{
+public:
+  int x, y;
+
+public:
+  grid_point_c(int _x, int _y) : x(_x), y(_y)
+  { }
+
+  ~grid_point_c()
+  { }
+};
+
+
+#define ADD_ACTIVE(x, y)  actives.push_back(grid_point_c(x, y))
+
+
+void SPOT_FloodOutside()
+{
+  int w2 = grid_W-1;
+  int h2 = grid_H-1;
+
+  std::list<grid_point_c> actives;
+
+  for (int x = 0 ; x < grid_W ; x++)
+  {
+    if (! spot_grid[x][0])  ADD_ACTIVE(x, 0);
+    if (! spot_grid[x][h2]) ADD_ACTIVE(x, h2);
+  } 
+
+  for (int y = 0 ; y < grid_H ; y++)
+  {
+    if (! spot_grid[0 ][y]) ADD_ACTIVE(0,  y);
+    if (! spot_grid[w2][y]) ADD_ACTIVE(w2, y);
+  } 
+
+  while (! actives.empty())
+  {
+    int x = actives.front().x;
+    int y = actives.front().y;
+
+    actives.pop_front();
+
+    if (! spot_grid[x][y])
+    {
+      spot_grid[x][y] = 1;
+
+      if (x > 0  && ! spot_grid[x-1][y]) ADD_ACTIVE(x-1, y);
+      if (x < w2 && ! spot_grid[x+1][y]) ADD_ACTIVE(x+1, y);
+
+      if (y > 0  && ! spot_grid[x][y-1]) ADD_ACTIVE(x, y-1);
+      if (y < h2 && ! spot_grid[x][y+1]) ADD_ACTIVE(x, y+1);
+    }
+  }
+}
+
+
 
 //------------------------------------------------------------------------
 //  LUA INTERFACE
