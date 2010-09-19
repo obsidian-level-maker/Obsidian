@@ -354,23 +354,29 @@ static bool grow_spot(int& x1, int& y1, int& x2, int& y2)
   int y2_pass = 3;
 
   // wider than tall? then do Y first, otherwise X
-  if (x2 - x1 > y2 - y1)
+  int w = x2 - x1;
+  int h = y2 - y1;
+
+  if (w > h)
   {
     x1_pass ^= 2;  x2_pass ^= 2;
     y1_pass ^= 2;  y2_pass ^= 2;
   }
 
   // also vary whether we go left or right first
-  if ((x2 - x1) & 1)
+  if (w & 1)
   {
     x1_pass ^= 1;  x2_pass ^= 1;
   }
 
-  if ((y2 - y1) & 1)
+  if (h & 1)
   {
     y1_pass ^= 1;  y2_pass ^= 1;
   }
 
+  // don't make long narrow areas, i.e. keep aspect nice
+  if (w > h*2) x1_pass = x2_pass = -1;
+  if (h > w*2) y1_pass = y2_pass = -1;
 
   for (int pass = 0 ; pass < 4 ; pass++)
   {
