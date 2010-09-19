@@ -33,7 +33,7 @@ class POLYGON
 
   id  -- identifying number (to help debugging)
 
-  coords  -- array of {x1,y1,x2,y2} for edges of this space
+  coords  -- array of {x,y,x2,y2} for edges of this space
           -- spaces are always convex, coords go anti-clockwise
 
   bx1, by1, bx2, by2 -- bounding box
@@ -61,6 +61,12 @@ function POLYGON_CLASS.new(kind)
 end
 
 
+function POLYGON_CLASS.add_coord(self, x1, y1, x2, y2)
+  table.insert(self.coords, { x=x1, y=y1, x2=x2, y2=y2 })
+end
+
+
+
 function POLYGON_CLASS.new_quad(kind, x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
@@ -76,8 +82,6 @@ function POLYGON_CLASS.new_quad(kind, x1, y1, x2, y2)
 
   return M
 end
-
-
 
 
 function POLYGON_CLASS.bare_copy(self)
@@ -110,14 +114,9 @@ end
 function POLYGON_CLASS.dump(self)
   gui.debugf("%s =\n{\n", self:tostr())
   for _,C in ipairs(self.coords) do
-    gui.debugf("  (%d %d) .. (%d %d)\n", C.x1, C.y1, C.x2, C.y2)
+    gui.debugf("  (%d %d) .. (%d %d)\n", C.x, C.y, C.x2, C.y2)
   end
   gui.debugf("}\n")
-end
-
-
-function POLYGON_CLASS.add_coord(self, x1, y1, x2, y2)
-  table.insert(self.coords, { x1=x1, y1=y1, x2=x2, y2=y2 })
 end
 
 
@@ -128,10 +127,10 @@ function POLYGON_CLASS.update_bbox(self)
   self.by1, self.by2 = 9e9, -9e9
 
   for _,C in ipairs(self.coords) do
-    if C.x1 < self.bx1 then self.bx1 = C.x1 end
-    if C.x1 > self.bx2 then self.bx2 = C.x1 end
-    if C.y1 < self.by1 then self.by1 = C.y1 end
-    if C.y1 > self.by2 then self.by2 = C.y1 end
+    if C.x < self.bx1 then self.bx1 = C.x1 end
+    if C.x > self.bx2 then self.bx2 = C.x1 end
+    if C.y < self.by1 then self.by1 = C.y1 end
+    if C.y > self.by2 then self.by2 = C.y1 end
   end
 
   assert(self.bx2 > self.bx1 + 0.001)
@@ -144,8 +143,8 @@ function POLYGON_CLASS.calc_mid(self)
   local y = 0
 
   for _,C in ipairs(self.coords) do
-    x = x + C.x1
-    y = y + C.y1
+    x = x + C.x
+    y = y + C.y
   end
 
   local total = #self.coords
@@ -181,7 +180,7 @@ function POLYGON_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
   for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(x, y, C.x1,C.y1, C.x2,C.y2)
+    local d = geom.perp_dist(x, y, C.x,C.y, C.x2,C.y2)
     if d > fudge then return false end
   end
 
@@ -195,7 +194,7 @@ function POLYGON_CLASS.on_front(self, px1, py1, px2, py2, fudge)
   fudge = -fudge
   
   for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
+    local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
     if d < fudge then return false end
   end
 
@@ -207,7 +206,7 @@ function POLYGON_CLASS.line_cuts(self, px1, py1, px2, py2)
   local front, back
 
   for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
+    local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
     if d >  0.5 then front = true end
     if d < -0.5 then  back = true end
 
@@ -229,7 +228,7 @@ function POLYGON_CLASS.overlaps(self, other)
   -- one of our edges.
 
   for _,C in ipairs(self.coords) do
-    if other:on_front(C.x1, C.y1, C.x2, C.y2) then
+    if other:on_front(C.x, C.y, C.x2, C.y2) then
       return false
     end
   end
@@ -246,7 +245,7 @@ function POLYGON_CLASS.surrounds(self, other)
   if self.by2 < other.by2 - 0.5 then return false end
 
   for _,D in ipairs(other.coords) do
-    if not self:contains(D.x1, D.y1) then
+    if not self:contains(D.x, D.y) then
       return false
     end
   end
@@ -267,7 +266,7 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
   local ox, oy -- other intersection point
 
   for _,C in ipairs(coords) do
-    local a = geom.perp_dist(C.x1, C.y1, px1,py1, px2,py2)
+    local a = geom.perp_dist(C.x , C.y , px1,py1, px2,py2)
     local b = geom.perp_dist(C.x2, C.y2, px1,py1, px2,py2)
 
     if a > -0.5 and b > -0.5 then
@@ -280,18 +279,18 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
       -- calc the intersection point
       local along = a / (a - b)
 
-      local ix = C.x1 + along * (C.x2 - C.x1)
-      local iy = C.y1 + along * (C.y2 - C.y1)
+      local ix = C.x + along * (C.x2 - C.x)
+      local iy = C.y + along * (C.y2 - C.y)
 
-      local C1 = { x1=C.x1, y1=C.y1, x2=ix, y2=iy }
-      local C2 = { x2=C.x2, y2=C.y2, x1=ix, y1=iy }
+      local C1 = { x=C.x, y=C.y, x2=ix,   y2=iy }
+      local C2 = { x=ix,  y=iy,  x2=C.x2, y2=C.y2 }
 
       local N1, N2
 
       -- new edge along cutting line
       if ox then
-        N1 = { x1=ix, y1=iy, x2=ox, y2=oy }
-        N2 = { x2=ix, y2=iy, x1=ox, y1=oy }
+        N1 = { x=ix, y=iy, x2=ox, y2=oy }
+        N2 = { x=ox, y=oy, x2=ix, y2=iy }
       end
 
       -- destinations for new edges
@@ -494,8 +493,8 @@ function SPACE_CLASS.merge(self, M)
     end
 
     for _,C in ipairs(M.coords) do
-      if P:line_cuts(C.x2,C.y2, C.x1,C.y1) then
-        local T = P:cut(C.x2,C.y2, C.x1,C.y1)
+      if P:line_cuts(C.x2,C.y2, C.x,C.y) then
+        local T = P:cut(C.x2,C.y2, C.x,C.y)
 
         -- T is the piece outside of M
         table.insert(self.polys, T)

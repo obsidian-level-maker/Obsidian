@@ -336,7 +336,7 @@ function Layout_the_room(R)
 --  if R.weapon  then add_weapon(R.weapon)  end
 
 
-  local function section_for_space(S)
+  local function OLD__section_for_space(S)
     for _,K in ipairs(R.sections) do
       if geom.inside_box(S.x1, S.y1, K.x1,K.y1, K.x2,K.y2) and
          geom.inside_box(S.x2, S.y2, K.x1,K.y1, K.x2,K.y2)
@@ -363,7 +363,7 @@ function Layout_the_room(R)
     return false
   end
 
-  local function touches_corner(S, side)
+  local function OLD__touches_corner(S, side)
     local R_dir = geom.RIGHT_45[side]
     local L_dir = geom. LEFT_45[side]
 
@@ -472,7 +472,7 @@ function Layout_the_room(R)
   end
 
 
-  local function build_space(S)
+  local function build_polygon(S)
     if S.kind == "solid" then return end
 
     local c_mat = sel(R.outdoor, "_SKY", "CEIL1_1")
@@ -845,7 +845,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
 
   for _,P in ipairs(R.floor_space.polys) do
-    build_space(P)
+    build_polygon(P)
   end
 
 
