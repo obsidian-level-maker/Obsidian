@@ -581,3 +581,21 @@ function SPACE_CLASS.find_overlaps(self, M)
   return list
 end
 
+
+function SPACE_CLASS.calc_bbox(self)
+  local x1, x2 = 9e9, -9e9
+  local y1, y2 = 9e9, -9e9
+
+  for _,P in ipairs(self.polys) do
+    if P.bx1 < x1 then x1 = P.bx1 end
+    if P.bx2 > x2 then x2 = P.bx2 end
+    if P.by1 < y1 then y1 = P.by1 end
+    if P.by2 > y2 then y2 = P.by2 end
+  end
+
+  assert(x2 - x1 >= 40)
+  assert(y2 - y1 >= 40)
+
+  return x1, y1, x2, y2
+end
+
