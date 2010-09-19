@@ -660,7 +660,7 @@ f_mat = "FLAT18"
       end
       for _,K in ipairs(R.sections) do
         for _,E in pairs(K.edges) do
-          adjust_corner_sizes(E)
+---       adjust_corner_sizes(E)
         end
       end
     end
@@ -711,24 +711,12 @@ f_mat = "FLAT18"
   local function build_corner(C)
     local K = C.K
     
-    local x1, y1 = K.x1, K.y1
-    local x2, y2 = K.x2, K.y2
+    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, 0,
+                                     C.side, C.horiz, C.vert)
 
-    if C.side == 1 or C.side == 7 then
-      x2 = x1 + C.horiz
-    else
-      x1 = x2 - C.horiz
-    end
+    local fab = sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
 
-    if C.side == 1 or C.side == 3 then
-      y2 = y1 + C.vert
-    else
-      y1 = y2 - C.vert
-    end
-
-    local mat = "SUPPORT2"
-
-    Trans.quad(x1,y1, x2,y2, nil, nil, Mat_normal(mat))
+    Fabricate(fab, T)
   end
 
 
