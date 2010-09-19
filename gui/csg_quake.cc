@@ -1673,29 +1673,43 @@ extern int Grab_Properties(lua_State *L, int stack_pos,
 
 int Q1_add_mapmodel(lua_State *L)
 {
-  // LUA: q1_add_mapmodel(info, x1,y1,z1, x2,y2,z2)
+  // LUA: q1_add_mapmodel(info)
   //
-  // info is a table containing:
+  // info is a table containing these fields:
+  //   x1, x2  : X coordinates
+  //   y1, y2  : Y coordinates
+  //   z1, z2  : Z coordinates
+  //
   //   x_face  : face table for X sides
   //   y_face  : face table for Y sides
   //   z_face  : face table for top and bottom
+
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: mapmodel info");
 
   quake_mapmodel_c *model = new quake_mapmodel_c;
 
   qk_all_mapmodels.push_back(model);
 
-  model->x1 = luaL_checknumber(L, 2);
-  model->y1 = luaL_checknumber(L, 3);
-  model->z1 = luaL_checknumber(L, 4);
+  lua_getfield(L, 1, "x1");
+  lua_getfield(L, 1, "y1");
+  lua_getfield(L, 1, "z1");
 
-  model->x2 = luaL_checknumber(L, 5);
-  model->y2 = luaL_checknumber(L, 6);
-  model->z2 = luaL_checknumber(L, 7);
+  model->x1 = luaL_checknumber(L, -3);
+  model->y1 = luaL_checknumber(L, -2);
+  model->z1 = luaL_checknumber(L, -1);
+  
+  lua_pop(L, 3);
 
-  if (lua_type(L, 1) != LUA_TTABLE)
-  {
-    return luaL_argerror(L, 1, "missing table: mapmodel info");
-  }
+  lua_getfield(L, 1, "x2");
+  lua_getfield(L, 1, "y2");
+  lua_getfield(L, 1, "z2");
+
+  model->x2 = luaL_checknumber(L, -3);
+  model->y2 = luaL_checknumber(L, -2);
+  model->z2 = luaL_checknumber(L, -1);
+
+  lua_pop(L, 3);
 
   lua_getfield(L, 1, "x_face");
   lua_getfield(L, 1, "y_face");
