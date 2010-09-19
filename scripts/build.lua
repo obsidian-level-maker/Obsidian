@@ -457,6 +457,31 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
 end
 
 
+function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
+  local XS   = { [1]=x1, [9]= x2, [7]= x1, [3]=x2 }
+  local YS   = { [1]=y1, [9]= y2, [7]= y2, [3]=y1 }
+  local ANGS = { [1]=0,  [9]=180, [7]=270, [3]=90 }
+
+  local T = {}
+
+  T.add_x = XS[side]
+  T.add_y = YS[side]
+  T.add_z = z
+
+  T.rotate = ANGS[side]
+
+  if side == 1 or side == 9 then
+    T.fit_width = horiz
+    T.fit_depth = vert
+  else
+    T.fit_width = vert
+    T.fit_depth = horiz
+  end
+
+  return T
+end
+
+
 function Trans.centre_transform(S, z, dir)
   local T = {}
 
@@ -562,29 +587,6 @@ function Trans_straddle_transform(S, z, side)
   do return T end
 end
 
-
-function Trans.corner_transform(S, z, side)
-  local T = {}
-
-  local ANGS = { [1]=0, [9]=180, [3]=90, [7]=270 }
-
-  local XS = { [1]=S.x1, [9]=S.x2, [7]=S.x1, [3]=S.x2 }
-  local YS = { [1]=S.y1, [9]=S.y2, [7]=S.y2, [3]=S.y1 }
-
-  T.add_x = XS[side]
-  T.add_y = YS[side]
-  T.add_z = z
-
-  T.rotate = ANGS[side]
-
-  local R_side = geom.RIGHT_45[side]
-  local L_side = geom. LEFT_45[side]
-
-  T.fit_width = S.border[R_side].thick
-  T.fit_depth = S.border[L_side].thick
-
-  return T
-end
 
 function Trans.doorway_transform(S, z, side)
   local T = {}
