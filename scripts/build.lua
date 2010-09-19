@@ -219,7 +219,7 @@ function Trans.brush(coords)
 
   -- the overrider can peek at the brush, or even steal it entirely
   if Trans.overrider then
-    if Trans.overrider(coords, Trans.override_data) then
+    if not Trans.overrider(coords, Trans.override_data) then
       return
     end
   end

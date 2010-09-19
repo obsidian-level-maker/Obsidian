@@ -326,6 +326,37 @@ end
 --]]
 
 
+
+function Layout_check_brush(coords, data)
+  local R = data
+
+  local allow = true
+
+  local mode
+  local m = coords[1].m
+
+      if m == "used" then
+    mode = "solid" ; allow = false
+  elseif m == "walk" then
+    mode = "walk" ; allow = false
+  elseif m == "air" then
+    mode = "air" ; allow = false
+  elseif not m or m == "solid" or m == "sky" then
+    mode = "solid"
+  else
+    -- don't update the space (e.g. light brushes)
+  end
+
+  if mode then
+    local POLY = POLYGON_CLASS:from_brush(mode, coords)
+    R.floor_space:merge(POLY)
+  end
+
+  return allow
+end
+
+
+
 function Layout_the_room(R)
 
 
@@ -500,7 +531,7 @@ f_mat = "FLAT18"
     S.x1 = S.bx1 ; S.y1 = S.by1
     S.x2 = S.bx2 ; S.y2 = S.by2
 
-    local z1 = rand.irange(0,12)
+    local z1 = 0 --  rand.irange(0,12)
 
     Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, z1, kind, w_face, p_face)
 
@@ -708,6 +739,15 @@ f_mat = "FLAT18"
   end
 
 
+  local function Fab_with_update(...)
+    Trans.set_override(Layout_check_brush, R)
+
+    Fabricate(...)
+
+    Trans.clear_override()
+  end
+
+
   local function build_corner(C)
     local K = C.K
     
@@ -716,7 +756,7 @@ f_mat = "FLAT18"
 
     local fab = sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
 
-    Fabricate(fab, T)
+    Fab_with_update(fab, T)
   end
 
 
@@ -731,7 +771,7 @@ f_mat = "FLAT18"
   
     local fab = "WALL"
 
-    Fabricate(fab, T)
+    Fab_with_update(fab, T)
   end
 
 
@@ -754,6 +794,27 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   end
 
 
+  local function do_straddler_solid(E, SP)
+    local K = E.K
+
+    local gap = 64 -- FIXME put in span and/or STRADDLER
+
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
+                                   SP.long1, SP.long2, 0, SP.deep1)
+
+    Fab_with_update("MARK_USED", T)
+
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
+                                   SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
+
+    if SP.kind == "window" then
+      Fab_with_update("MARK_AIR", T)
+    else
+      Fab_with_update("MARK_WALK", T)
+    end
+  end
+
+
   local function build_straddler(E, SP)
     local K = E.K
 
@@ -766,10 +827,12 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     if info.kind == "window" then
       if not info.seen then
         info.seen = true
+        do_straddler_solid(E, SP)
         return
       end
     else
       if info.built then
+        do_straddler_solid(E, SP)
         return
       end
       info.built = true
@@ -804,6 +867,12 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, -back, SP.deep1)
+
+    -- Note: not using Fab_with_update() for automatic space updating,
+    --       because straddlers affect TWO rooms at the same time.
+    --       instead we mark the quads directly.
+
+    do_straddler_solid(E, SP)
 
     Fabricate(fab, T, skin, sk2)
   end
@@ -861,7 +930,6 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   ROOM = R  -- set global
 
   R.floor_space = Layout_initial_space(R)
-  R.ceil_space  = R.floor_space:copy()
 
   decide_corner_sizes()
 
@@ -873,6 +941,9 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   build_corners()
 
   build_edges()
+
+
+  R.ceil_space  = R.floor_space:copy()
 
 
   for _,P in ipairs(R.floor_space.polys) do

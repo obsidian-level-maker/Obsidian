@@ -18,6 +18,57 @@
 --
 ----------------------------------------------------------------
 
+PREFAB.MARK_USED =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { m = "used" },
+      { x =   0, y =  0 },
+      { x = 192, y =  0 },
+      { x = 192, y = 16 },
+      { x =   0, y = 16 },
+    },
+  },
+}
+
+
+PREFAB.MARK_WALK =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { m = "walk" },
+      { x =   0, y =  0 },
+      { x = 192, y =  0 },
+      { x = 192, y = 16 },
+      { x =   0, y = 16 },
+    },
+  },
+}
+
+
+PREFAB.MARK_AIR =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { m = "air" },
+      { x =   0, y =  0 },
+      { x = 192, y =  0 },
+      { x = 192, y = 16 },
+      { x =   0, y = 16 },
+    },
+  },
+}
+
+
 PREFAB.PILLAR =
 {
   brushes=
