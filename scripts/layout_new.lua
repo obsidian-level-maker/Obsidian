@@ -352,8 +352,6 @@ function Layout_check_brush(coords, data)
     R.floor_space:merge(POLY)
   end
 
-do return false end --!!!!!!1
-
   return allow
 end
 
@@ -524,7 +522,7 @@ function Layout_the_room(R)
     if S.kind == "solid"  then f_mat = "CEIL5_2" end
 
     local kind, w_face, p_face = Mat_normal(f_mat)
-    p_face.mark  = Plan_alloc_mark()
+---!!    p_face.mark  = Plan_alloc_mark()
     p_face.light = 0.75
 
     if S.kind == "walk" or S.kind == "air" then p_face.special = 1 end
@@ -796,6 +794,8 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
 
   local function do_straddler_solid(E, SP)
+    -- TODO: do it with the prefab, clip the polygons at edge
+
     local K = E.K
     local info = assert(SP.straddler)
 
@@ -876,7 +876,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     do_straddler_solid(E, SP)
 
---!!!!!    Fabricate(fab, T, skin, sk2)
+    Fabricate(fab, T, skin, sk2)
   end
 
 
@@ -927,6 +927,19 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   end
 
 
+  local function clear_polygon(P)
+    if P.kind == "free" or P.kind == "walk" then
+      gui.spots_fill_poly(0, P.coords)
+    end
+  end
+
+  local function solid_polygon(P)
+    if not (P.kind == "free" or P.kind == "walk") then
+      gui.spots_fill_poly(1, P.coords)
+    end
+  end
+
+
   ---===| Layout_room |===---
 
   ROOM = R  -- set global
@@ -950,6 +963,26 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   for _,P in ipairs(R.floor_space.polys) do
     build_polygon(P)
+  end
+
+
+
+  local mon_spots  = {}
+  local item_spots = {}
+
+  gui.spots_begin(R.floor_space:calc_bbox())
+
+  for _,P in ipairs(R.floor_space.polys) do
+    clear_polygon(P)
+  end
+  for _,P in ipairs(R.floor_space.polys) do
+    solid_polygon(P)
+  end
+
+  gui.spots_end(mon_spots, item_spots)
+
+  for _,spot in ipairs(item_spots) do
+    Trans.entity("barrel", spot.x, spot.y, 0)
   end
 
 
