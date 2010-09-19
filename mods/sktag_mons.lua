@@ -3,7 +3,7 @@
 ----------------------------------------------------------------
 --
 --  Copyright (C)      2009 Andrew Apted
---  Copyright (C)      2009 Chris Pisarczyk
+--  Copyright (C) 2009-2010 Chris Pisarczyk
 --  Copyright (C) 2009-2010 Enhas
 --
 --  This program is free software; you can redistribute it and/or
@@ -24,14 +24,14 @@ SKTAG_MONS.MONSTERS =
 {
   darkimp =
   {
-    prob=55,
+    level=1, prob=55,
     health=120, damage=30, attack="missile",
     density=0.7,
   },
 
   superguy =
   {
-    prob=33,
+    level=3, prob=33,
     health=120, damage=65, attack="hitscan",
     give={ {weapon="super"}, {ammo="shell",count=4} },
     density=0.5,
@@ -39,35 +39,35 @@ SKTAG_MONS.MONSTERS =
 
   bldemon =
   {
-    prob=20,
+    level=3, prob=20,
     health=300, damage=25, attack="melee",
     density=0.5,
   },
 
   cacolant =
   {
-    prob=25, crazy_prob=10,
+    level=5, prob=25, crazy_prob=10,
     health=800, damage=55, attack="missile",
     density=0.4, float=true,
   },
 
   hectebus =
   {
-    prob=10, skip_prob=100,
+    level=7, prob=10, skip_prob=100,
     health=1200, damage=120, attack="missile",
     density=0.2, never_promote=true,
   },
 
   abaddon =
   {
-    prob=15,
+    level=7, prob=15,
     health=1200, damage=65, attack="missile",
     density=0.2, float=true,
   },
 
   belphegor =
   {
-    prob=10,
+    level=8, prob=10,
     health=1500, damage=80, attack="missile",
     density=0.2,
   },
