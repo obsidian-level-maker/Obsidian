@@ -57,16 +57,19 @@ function Trans.clear()
   Trans.set {}
 end
 
-function Trans.begin()
-  Trans.set {}
-end
-
-function Trans.finish()
-  Trans.set {}
-end
-
 function Trans.modify(what, value)
   Trans.TRANSFORM[what] = value
+end
+
+
+function Trans.set_override(func, data, no_ents)
+  Trans.overrider = func
+  Trans.override_data = data
+  Trans.no_entities = no_ents
+end
+
+function Trans.clear_override()
+  Trans.set_override(nil, nil, nil)
 end
 
 
@@ -214,11 +217,21 @@ function Trans.brush(coords)
     Trans.collect_flags(C)
   end
 
+  -- the overrider can peek at the brush, or even steal it entirely
+  if Trans.overrider then
+    if Trans.overrider(coords, Trans.override_data) then
+      return
+    end
+  end
+
   gui.add_brush(coords)
 end
 
 
 function Trans.entity(name, x, y, z, props)
+  -- prevent the addition of entities
+  if Trans.no_entities then return end
+
   local ent
 
   if props then
