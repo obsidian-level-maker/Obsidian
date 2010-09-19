@@ -66,7 +66,6 @@ function POLYGON_CLASS.add_coord(self, x1, y1, x2, y2)
 end
 
 
-
 function POLYGON_CLASS.new_quad(kind, x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
@@ -127,10 +126,10 @@ function POLYGON_CLASS.update_bbox(self)
   self.by1, self.by2 = 9e9, -9e9
 
   for _,C in ipairs(self.coords) do
-    if C.x < self.bx1 then self.bx1 = C.x1 end
-    if C.x > self.bx2 then self.bx2 = C.x1 end
-    if C.y < self.by1 then self.by1 = C.y1 end
-    if C.y > self.by2 then self.by2 = C.y1 end
+    if C.x < self.bx1 then self.bx1 = C.x end
+    if C.x > self.bx2 then self.bx2 = C.x end
+    if C.y < self.by1 then self.by1 = C.y end
+    if C.y > self.by2 then self.by2 = C.y end
   end
 
   assert(self.bx2 > self.bx1 + 0.001)
@@ -150,6 +149,40 @@ function POLYGON_CLASS.calc_mid(self)
   local total = #self.coords
 
   return x / total, y / total
+end
+
+
+function POLYGON_CLASS.from_brush(kind, coords)
+  local P = POLYGON_CLASS.new(kind)
+
+  for _,C in ipairs(coords) do
+    if C.x then
+      P:add_coord(C.x, C.y)
+    end
+  end
+
+  -- add the x2/y2 values now
+  for i = 1,#P.coords do
+    local k = 1 + (i % #P.coords)
+
+    P.coords[i].x2 = P.coords[k].x
+    P.coords[i].y2 = P.coords[k].y
+  end
+
+  P:update_bbox()
+
+  return P
+end
+
+
+function POLYGON_CLASS.to_brush(self, mat)
+  local B = {}
+
+  for _,C in ipairs(self, coords) do
+    table.insert(B, { x=C.x, y=C.y, mat=mat })
+  end
+
+  return B
 end
 
 
@@ -479,7 +512,7 @@ function SPACE_CLASS.merge(self, M)
   local final_kind = M.kind
 
   for _,P in ipairs(overlaps) do
-    if not spacelib.can_merge(P.kind, M.kind) then
+    if not SPACE_CLASS.can_merge(P.kind, M.kind) then
       error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
     end
 
