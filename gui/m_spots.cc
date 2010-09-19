@@ -209,8 +209,8 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
     return; // no good, not near a wall
 
   // this would be (x + 1) if there was no padding
-  int real_x = grid_min_x - (x + 0) * GRID_SIZE;
-  int real_y = grid_min_y - (y + 0) * GRID_SIZE;
+  int real_x = grid_min_x + (x + 0) * GRID_SIZE;
+  int real_y = grid_min_y + (y + 0) * GRID_SIZE;
 
   DebugPrintf("Item spot ---> [%d %d] real: (%d %d)\n", x,y, real_x,real_y);
 
