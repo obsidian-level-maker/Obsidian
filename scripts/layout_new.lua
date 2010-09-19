@@ -199,7 +199,7 @@ function Layout_place_straddlers()
     R = K.room
 
     -- FIXME : pick these properly
-    local long = 340
+    local long = 192
     local deep1 = 24
     local deep2 = 24
 
@@ -348,9 +348,11 @@ function Layout_check_brush(coords, data)
   end
 
   if mode then
-    local POLY = POLYGON_CLASS:from_brush(mode, coords)
+    local POLY = POLYGON_CLASS.from_brush(mode, coords)
     R.floor_space:merge(POLY)
   end
+
+do return false end --!!!!!!1
 
   return allow
 end
@@ -504,23 +506,22 @@ function Layout_the_room(R)
 
 
   local function build_polygon(S)
-    if S.kind == "solid" then return end
+--- if S.kind == "solid" then return end
 
     local c_mat = sel(R.outdoor, "_SKY", "CEIL1_1")
-    local f_mat = "FLAT14"
+    local f_mat = "FLAT18"
     local w_mat = "STARTAN3"
     local corn_mat = "CRACKLE2"
     local d_mat = "TEKGREN3"
     local win_mat = "COMPBLUE"
 
-    if S.kind == "free"  then f_mat = "NUKAGE1" end
+--  if S.kind == "free"  then f_mat = "FLAT18" end
     if S.kind == "walk"  then f_mat = "LAVA1"   end
-    if S.kind == "air"   then f_mat = "FLAT5_7" end
+    if S.kind == "air"   then f_mat = "NUKAGE1" end
 
     if S.kind == "floor"  then f_mat = "FLAT18" end
     if S.kind == "liquid" then f_mat = "FWATER1" end
-
-f_mat = "FLAT18"
+    if S.kind == "solid"  then f_mat = "CEIL5_2" end
 
     local kind, w_face, p_face = Mat_normal(f_mat)
     p_face.mark  = Plan_alloc_mark()
@@ -754,7 +755,7 @@ f_mat = "FLAT18"
     local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, 0,
                                      C.side, C.horiz, C.vert)
 
-    local fab = sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
+    local fab = "CORNER" -- sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
 
     Fab_with_update(fab, T)
   end
@@ -796,8 +797,9 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   local function do_straddler_solid(E, SP)
     local K = E.K
+    local info = assert(SP.straddler)
 
-    local gap = 64 -- FIXME put in span and/or STRADDLER
+    local gap = 80 -- FIXME put in span and/or STRADDLER
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
@@ -807,7 +809,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
                                    SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
 
-    if SP.kind == "window" then
+    if info.kind == "window" then
       Fab_with_update("MARK_AIR", T)
     else
       Fab_with_update("MARK_WALK", T)
@@ -874,7 +876,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     do_straddler_solid(E, SP)
 
-    Fabricate(fab, T, skin, sk2)
+--!!!!!    Fabricate(fab, T, skin, sk2)
   end
 
 
