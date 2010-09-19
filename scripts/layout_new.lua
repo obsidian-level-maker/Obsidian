@@ -204,7 +204,7 @@ function Layout_place_straddlers()
     local deep2 = 24
 
     local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
-                        long=long, deep1=deep1, deep2=deep2,
+                        long=long, out=deep1, back=deep2,
                       }
 
     assert(K.edges[dir])
@@ -720,26 +720,16 @@ f_mat = "FLAT18"
   end
 
 
-  local function build_span(E, SP)
+  local function build_wall(E, SP)
     assert(SP.long1 < SP.long2)
     assert(SP.deep1 > 0)
 
     local K = E.K
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0,
-                                   E.side, SP.long1, SP.long2, SP.deep1)
+                                   E.side, SP.long1, SP.long2, 0, SP.deep1)
   
     local fab = "WALL"
-
-    if SP.straddler then
-      return
-    end
---      if SP.straddler.kind == "WINDOW" then
---        fab = "WINDOW"
---      else
---        fab = "DOOR"
---      end
---    end
 
     Fabricate(fab, T)
   end
@@ -760,7 +750,62 @@ f_mat = "FLAT18"
     }
 stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
-    build_span(E, SPAN)
+    build_wall(E, SPAN)
+  end
+
+
+  local function build_straddler(E, SP)
+    local K = E.K
+
+    local info = assert(SP.straddler)
+
+    -- build it only once :
+    --    DOOR on first room (as it sets up the initial floor height for second room) 
+    --    WINDOW on second room (since there it knows height range on both sides)
+
+    if info.kind == "window" then
+      if not info.seen then
+        info.seen = true
+        return
+      end
+    else
+      if info.built then
+        return
+      end
+      info.built = true
+    end
+
+    local back = info.back
+
+    if E.K.room ~= info.K.room then
+      back = info.out
+    end
+
+
+    local fab
+    local z = 0
+    local skin = {}
+    local sk2
+
+    if E.K.room == info.K.room then
+      skin.outer = info.N.room.skin.wall
+    else
+      skin.outer = info.K.room.skin.wall
+    end
+
+
+    if info.kind == "window" then
+      fab = "WINDOW"
+      z = 40
+    else
+      fab = "DOOR"
+      sk2 = GAME.DOORS["silver"]  -- FIXME
+    end
+
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
+                                   SP.long1, SP.long2, -back, SP.deep1)
+
+    Fabricate(fab, T, skin, sk2)
   end
 
 
@@ -777,13 +822,14 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     if E.corn2 and not E.corn2.concave then
       R_long = E.long - sel(goes_horiz, E.corn2.horiz, E.corn2.vert)
     end
-    
+
     for _,SP in ipairs(E.spans) do
       if SP.long1 > L_long+1 then
         build_fake_span(E, L_long, SP.long1)
       end
 
-      build_span(E, SP)
+      build_straddler(E, SP)
+
       L_long = SP.long2
     end
 
