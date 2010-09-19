@@ -200,8 +200,8 @@ function Layout_place_straddlers()
 
     -- FIXME : pick these properly
     local long = 340
-    local deep1 = 34
-    local deep2 = 34
+    local deep1 = 24
+    local deep2 = 24
 
     local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
                         long=long, deep1=deep1, deep2=deep2,
@@ -222,7 +222,7 @@ function Layout_place_straddlers()
 
     local SP
     
-    SP = Layout_add_span(K.edges[dir],    long1, long2, deep1)
+    SP = Layout_add_span(K.edges[dir], long1, long2, deep1)
     SP.usage = "straddler"
     SP.straddler = STRADDLER
 
@@ -653,8 +653,8 @@ f_mat = "FLAT18"
             C.horiz = 24
             C.vert  = 24
           else
-            C.horiz = 64  -- ????
-            C.vert  = 64
+            C.horiz = 72
+            C.vert  = 72
           end
         end
       end
@@ -721,37 +721,34 @@ f_mat = "FLAT18"
 
 
   local function build_span(E, SP)
-    local K = E.K
-
-    local T = Trans.box_transform(K.x1,K.y1, K.x2,K.y2, 0, E.side)
-
-    Trans.set(T)
-
-    assert(SP.long2 > SP.long1)
+    assert(SP.long1 < SP.long2)
     assert(SP.deep1 > 0)
 
-    local x1 = E.long - SP.long2
-    local x2 = E.long - SP.long1
-    local y1 = 0
-    local y2 = SP.deep1
+    local K = E.K
 
-    if SP.usage == "fake" then
-      local mat = rand.pick { "TEKGREN3", "STARTAN3", "STARGR1",
-                              "BROWNGRN", "BROWN1", "COMPSPAN" }
-      Trans.quad(x1, y1, x2, y2, nil,nil, Mat_normal(mat))
-    else
-      Trans.quad(x1, y1, x2, y2, nil,24, Mat_normal("COMPBLUE"))
-      Trans.quad(x1, y1, x2, y2, 96,nil, Mat_normal("COMPBLUE"))
-    end
-
-    Trans.clear()
-  end
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0,
+                                   E.side, SP.long1, SP.long2, SP.deep1)
   
+    local fab = "WALL"
+
+    if SP.straddler then
+      return
+    end
+--      if SP.straddler.kind == "WINDOW" then
+--        fab = "WINDOW"
+--      else
+--        fab = "DOOR"
+--      end
+--    end
+
+    Fabricate(fab, T)
+  end
+
 
   local function build_fake_span(E, long1, long2)
     assert(long2 > long1)
 
-    local deep = 16
+    local deep = 24
     
     local SPAN =
     {
