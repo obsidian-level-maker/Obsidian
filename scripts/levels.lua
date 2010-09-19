@@ -51,10 +51,10 @@ require 'planner'
 require 'connect'
 require 'naming'
 require 'quests'
-require 'build'
-
-require 'caves'
 require 'spaceman'
+require 'caves'
+
+require 'build'
 require 'layout_new'
 require 'rooms'
 require 'tiler'

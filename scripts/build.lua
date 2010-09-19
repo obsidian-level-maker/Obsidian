@@ -274,6 +274,24 @@ function Trans.entity(name, x, y, z, props)
     ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
   end
 
+  -- handle map-models for Quake etc...
+  if ent.model then
+    local M = table.copy(ent.model)
+
+    M.x1, M.y1 = Trans.apply(M.x1, M.y1)
+    M.x2, M.y2 = Trans.apply(M.x2, M.y2)
+
+    M.z1 = Trans.apply_z(M.z1)
+    M.z2 = Trans.apply_z(M.z2)
+
+    -- this is for rotation, but we only support 0/90/180/270
+    if M.x1 > M.x2 then M.x1, M.x2 = M.x2, M.x1 end
+    if M.y1 > M.y2 then M.y1, M.y2 = M.y2, M.y1 end
+    if M.z1 > M.z2 then M.z1, M.z2 = M.z2, M.z1 end
+
+    ent.model = gui.q1_add_mapmodel(M)
+  end
+
   gui.add_entity(ent)
 end
 
@@ -1119,13 +1137,15 @@ function Fabricate(fab, T, skin, skin2)
     local name = Trans.substitute(E.ent)
 
     -- if substitution fails ignore the entity
-    if name then
-      local ex = E.x and resize_coord(x_info, E.x)
-      local ey = E.y and resize_coord(y_info, E.y)
-      local ez = E.z and resize_coord(z_info, E.z)
-
-      Trans.entity(name, ex, ey, ez, entity_props(E, props))
+    if not name then
+      return
     end
+
+    local ex = E.x and resize_coord(x_info, E.x)
+    local ey = E.y and resize_coord(y_info, E.y)
+    local ez = E.z and resize_coord(z_info, E.z)
+
+    Trans.entity(name, ex, ey, ez, entity_props(E, props))
   end
 
 
@@ -1158,47 +1178,32 @@ function Fabricate(fab, T, skin, skin2)
   end
 
 
-  local function add_mapmodel(M, team)
-    local x1, x2 = M.x1, M.x2
-    local y1, y2 = M.y1, M.y2
-    local z1, z2 = M.z1, M.z2
+  local function add_model(M, team)
+    assert(M.entity)
 
-    x1 = resize_coord(x_info, x1) ; x2 = resize_coord(x_info, x2)
-    y1 = resize_coord(y_info, y1) ; y2 = resize_coord(y_info, y2)
-    z1 = resize_coord(z_info, z1) ; z2 = resize_coord(z_info, z2)
+    local model =
+    {
+      x1 = resize_coord(x_info, M.x1),
+      x2 = resize_coord(x_info, M.x2),
 
-    x1, y1 = Trans.apply(x1, y1)
-    x2, y2 = Trans.apply(x2, y2)
+      y1 = resize_coord(y_info, M.y1),
+      y2 = resize_coord(y_info, M.y2),
+    
+      z1 = resize_coord(z_info, M.z1),
+      z2 = resize_coord(z_info, M.z2),
 
-    z1 = Trans.apply_z(z1)
-    z2 = Trans.apply_z(z2)
-
-    -- this is for rotation, but we only support 0/90/180/270
-    if x1 > x2 then x1,x2 = x2,x1 end
-    if y1 > y2 then y1,y2 = y2,y1 end
-    if z1 > z2 then z1,z2 = z2,z1 end
-
-    local x_face = process_model_face(M.x_face, false)
-    local y_face = process_model_face(M.y_face, false)
-    local z_face = process_model_face(M.z_face, true)
+      x_face = process_model_face(M.x_face, false),
+      y_face = process_model_face(M.y_face, false),
+      z_face = process_model_face(M.z_face, true),
+    }
 
     -- handle 90 and 270 degree rotations : swap X and Y faces
     local rotate = Trans.TRANSFORM.rotate or 0
     if math.abs(rotate - 90) < 15 or math.abs(rotate - 270) < 15 then
-      x_face, y_face = y_face, x_face
+      model.x_face, model.y_face = model.y_face, model.x_face
     end
 
-    local ref = gui.q1_add_mapmodel(
-    {
-      x_face = x_face,
-      y_face = y_face,
-      z_face = z_face,
-    },
-    x1, y1, z1, x2, y2, z2)
-
-    assert(M.entity)
-
-    render_one_ent(M.entity, { model=ref, team=team })
+    render_one_ent(M.entity, { model=model, team=team })
   end
 
 
@@ -1214,7 +1219,7 @@ function Fabricate(fab, T, skin, skin2)
     end
 
     for _,M in ipairs(list) do
-      add_mapmodel(M, team)
+      add_model(M, team)
     end
   end
 
