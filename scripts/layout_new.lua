@@ -757,6 +757,22 @@ function Layout_the_room(R)
   end
 
 
+  local function inner_outer_tex(skin, R, N)
+    assert(R)
+    if not N then return end
+
+    if R.outdoor and not N.outdoor then
+      skin.wall = N.skin.wall
+    end
+
+    if N.outdoor and not R.outdoor then
+      skin.outer = R.skin.wall
+    else
+      skin.outer = N.skin.wall
+    end
+  end
+
+
   local function build_corner(C)
     local K = C.K
     
@@ -779,8 +795,13 @@ function Layout_the_room(R)
                                    E.side, SP.long1, SP.long2, 0, SP.deep1)
   
     local fab = "WALL"
+    local skin = {}
 
-    Fab_with_update(fab, T)
+    local N = E.K:neighbor(E.side)
+
+    inner_outer_tex(skin, E.K.room, N and N.room)
+
+    Fab_with_update(fab, T, skin)
   end
 
 
@@ -868,7 +889,11 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     local back = info.back
 
+    local  this_R = E.K.room
+    local other_R = info.N.room
+
     if E.K.room ~= info.K.room then
+      other_R = info.K.room
       back = info.out
     end
 
@@ -878,11 +903,8 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     local skin = {}
     local sk2
 
-    if E.K.room == info.K.room then
-      skin.outer = info.N.room.skin.wall
-    else
-      skin.outer = info.K.room.skin.wall
-    end
+
+    inner_outer_tex(skin, this_R, other_R)
 
 
     if info.kind == "window" then
