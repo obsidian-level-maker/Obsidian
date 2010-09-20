@@ -550,6 +550,14 @@ function geom.is_vert(dir)
   return (dir == 2) or (dir == 8)
 end
 
+function geom.vert_sel(dir, V, H)
+  if geom.is_vert(dir) then
+    return V
+  else
+    return H
+  end
+end
+
 function geom.is_parallel(dir1, dir2)
   return dir1 == dir2 or (dir1 + dir2) == 10
 end
