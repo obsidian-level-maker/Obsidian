@@ -289,7 +289,12 @@ static int biggest_gap(int *y1, int *y2)
 
       int num = ey - y + 1;
 
-      if (num > best_num)
+      if (num == 1)
+      {
+        // single squares are useless, remove them now
+        spot_grid[x][y] |= HAS_MON;
+      }
+      else if (num > best_num)
       {
         best_x   = x;
         best_num = num;
@@ -297,10 +302,6 @@ static int biggest_gap(int *y1, int *y2)
         *y1 = y;
         *y2 = ey;
       }
-
-      // single squares are useless, remove them now
-      if (ey == y)
-        spot_grid[x][y] |= HAS_MON;
 
       y = ey + 1;
     }
