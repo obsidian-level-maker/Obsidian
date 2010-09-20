@@ -22,6 +22,8 @@ PREFAB.WINDOW =
 {
   placement = "fitted",
 
+  x_sizes = { {64,1}, {64,4}, {64,1} },
+
   brushes =
   {
     -- right side

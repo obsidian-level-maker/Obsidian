@@ -98,6 +98,16 @@ PREFAB.DOOR =
 {
   placement = "fitted",
 
+  x_sizes = { {32}, {128,"?width"}, {32} },
+
+  z_sizes = { {128,"?height"} },
+
+  defaults =
+  {
+    width  = 128,
+    height = 128,
+  },
+
   brushes =
   {
     -- frame
