@@ -512,17 +512,21 @@ function SPACE_CLASS.merge(self, M)
   local final_kind = M.kind
 
   for _,P in ipairs(overlaps) do
-    if not SPACE_CLASS.can_merge(P.kind, M.kind) then
-      error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
-    end
+    if M.fab_id and M.fab_id == P.fab_id then
+      -- skip test if part of same prefab
+    else
+      if not SPACE_CLASS.can_merge(P.kind, M.kind) then
+        error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
+      end
 
-    -- this is a bit rude, when an AIR space overlaps any WALK space,
-    -- then we "upgrade" the new one to be a WALK space.  Otherwise
-    -- the AIR space would replace the WALK space (because we never
-    -- subdivide the incoming space in M).
+      -- this is a bit rude, when an AIR space overlaps any WALK space,
+      -- then we "upgrade" the new one to be a WALK space.  Otherwise
+      -- the AIR space would replace the WALK space (because we never
+      -- subdivide the incoming space in M).
 
-    if P.kind == "walk" and M.kind == "air" then
-      final_kind = "walk"
+      if P.kind == "walk" and M.kind == "air" then
+        final_kind = "walk"
+      end
     end
 
     for _,C in ipairs(M.coords) do
@@ -534,8 +538,8 @@ function SPACE_CLASS.merge(self, M)
       end
     end
 
-    -- at here, S will lie completely inside M
-    -- hence we drop S and keep M in the polygon list
+    -- at here, P will lie completely inside M
+    -- hence we drop P and keep M in the polygon list
   end
 
   M.kind = final_kind 
