@@ -2,19 +2,17 @@
 TODO
 ====
 
+Trans.brush : fix mirroring
+
 
 +  have CEILING space and FLOOR space
 
-
-render_models : attach to entity ?
-                (wouldn't need a separate Lua API then)
 
 -  put concave corners into EDGE objects, BUT ignore them a lot
 
 -  outdoor rooms: create "joiners" (180 degree corners) where
                   two edges meet and they are from different
                   indoor rooms.
-
 
 
 -  create a usable path by connecting walk areas
@@ -25,30 +23,7 @@ render_models : attach to entity ?
 -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
 
-
-+  find monster spot algorithm:
-
-   (1) use all polygons in the space which are NOT part of the floor
-       (optimise: skip polys outside floor's slightly expanded bbox)
-
-   (2) do a filled draw of all these polygons into an "image" where
-       each pixel covers 20x20 (or so) units.
-       The edges will set _any_ pixels they cross.
-
-   (3) the usable areas will be the ones remaining clear
-
-   (4) collect largest squares of NxN pixels to form monster spots
-
-   (5) collect "near wall" pixels for item spots, probably not the
-       pixels directly near the wall but one pixel away
-       (i.e. do a grow step)
-
-   (6) do all this in C++ for speed, API would be:
-
-       gui.spots_begin(bbox)
-       gui.spots_fill_polygon(coords)
-       gui.spots_end(mons, items)
-
+DONE:  find monster spot algorithm:
 
 
 Layouter:
@@ -69,15 +44,7 @@ Layouter:
 
 
 
-Trans.brush : fix mirroring
-
-
 -  use the space manager to clip Light brushes to room of origin
-
-
-DONE: rotate 'angles' field of ents too (middle number)
-
-DONE: orientation of mapmodels
 
 
 DONE:  Build.low_curved_stair
