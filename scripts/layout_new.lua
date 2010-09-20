@@ -198,8 +198,18 @@ function Layout_place_straddlers()
   local function place_straddler(kind, K, N, dir)
     R = K.room
 
+    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
+
+    assert(long >= 256)
+    
+    if kind == "door" then
+      long = 208
+    else
+      -- windows use most of the length
+      long = long - 72*2
+    end
+
     -- FIXME : pick these properly
-    local long = 256
     local deep1 = 24
     local deep2 = 24
 
@@ -881,12 +891,14 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     else
       fab = "DOOR"
       sk2 = GAME.DOORS["silver"]  -- FIXME
+
+      sk2.door = "BIGDOOR4"
     end
 
 
     local long = SP.long2 - SP.long1
 
-    if false then  -- test : make two of them
+    if long >= 560 then  -- test : make two of them
       local mid = SP.long1 + int(long / 2)
 
       SP.long2 = mid
@@ -1003,7 +1015,7 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   gui.spots_end(mon_spots, item_spots)
 
   for _,spot in ipairs(item_spots) do
-    Trans.entity("barrel", spot.x, spot.y, 0)
+    Trans.entity("potion", spot.x, spot.y, 0)
   end
 
 
