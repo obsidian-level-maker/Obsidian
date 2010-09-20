@@ -338,7 +338,7 @@ end
 
 
 function Layout_check_brush(coords, data)
-  local R = data
+  local R = data.R
 
   local allow = true
 
@@ -359,6 +359,7 @@ function Layout_check_brush(coords, data)
 
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
+    POLY.fab_id = data.fab_id
     R.floor_space:merge(POLY)
   end
 
@@ -749,7 +750,15 @@ function Layout_the_room(R)
 
 
   local function Fab_with_update(...)
-    Trans.set_override(Layout_check_brush, R)
+    gui.debugf("Fab_with_update : %s\n", tostring(...))
+
+    local data =
+    {
+      R = R,
+      fab_id = Plan_alloc_mark(),
+    }
+
+    Trans.set_override(Layout_check_brush, data)
 
     Fabricate(...)
 
@@ -1013,14 +1022,49 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   build_edges()
 
 
-  R.ceil_space  = R.floor_space:copy()
+-- TODO  R.ceil_space  = R.floor_space:copy()
 
+
+  local K = R.sections[1]
+
+  local ex = (K.x1 + K.x2) / 2
+  local ey = (K.y1 + K.y2) / 2
+
+
+  if R.purpose == "START" then
+    local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
+    local T = Trans.spot_transform(ex, ey, 0)
+
+    Fab_with_update("START_SPOT", T, skin)
+  
+  elseif R.purpose == "EXIT" then
+
+    local skin_name = rand.key_by_probs(THEME.exits)
+    local skin = assert(GAME.EXITS[skin_name])
+
+    local T = Trans.spot_transform(ex, ey, 0)
+
+    Fab_with_update("EXIT_PILLAR", T, skin)
+  
+  else
+
+    Trans.entity("potion", ex, ey, 0)
+  end
+
+
+  if not R.outdoor then
+    Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
+  end
+
+
+  -- this builds the floor
 
   for _,P in ipairs(R.floor_space.polys) do
     build_polygon(P)
   end
 
 
+  -- collect spots for the monster code
 
   local mon_spots  = {}
   local item_spots = {}
@@ -1038,46 +1082,6 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
   for _,spot in ipairs(item_spots) do
     Trans.entity("potion", spot.x, spot.y, 0)
-  end
-
-
-  --!!! TEMP SHIT !!!--
-
-  for kx = R.kx1,R.kx2 do for ky = R.ky1,R.ky2 do
-    local K = SECTIONS[kx][ky]
-    if K.room == R then
-      Trans.entity("zombie", K.x2 - 96, K.y2 - 96, 0)
-    end
-  end end
-
-  local kx = R.kx1
-  local ky = R.ky1
-
-  while SECTIONS[kx][ky].room ~= R do
-    kx = kx + 1
-  end
-
-  local K = SECTIONS[kx][ky]
-
-  local ex = (K.x1 + K.x2) / 2
-  local ey = (K.y1 + K.y2) / 2
-  local ent = "potion"
-
-  if R.purpose == "START" then
-    local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-    Fabricate("PEDESTAL", Trans.spot_transform(ex, ey, 0), skin)
-
-    ent = "player1"
-  end
-
-  if R.purpose == "EXIT" then
-    ent = "evil_eye"
-  end
-
-  Trans.entity(ent, ex, ey, 0)
-
-  if not R.outdoor then
-    Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
   end
 end
 
