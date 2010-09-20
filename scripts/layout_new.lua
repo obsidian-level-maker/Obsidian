@@ -199,7 +199,7 @@ function Layout_place_straddlers()
     R = K.room
 
     -- FIXME : pick these properly
-    local long = 192
+    local long = 256
     local deep1 = 24
     local deep2 = 24
 
@@ -817,6 +817,22 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   end
 
 
+  local function build_straddler_span(E, SP, z, back, fab, ...)
+    local K = E.K
+
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
+                                   SP.long1, SP.long2, -back, SP.deep1)
+
+    -- Note: not using Fab_with_update() for automatic space updating,
+    --       because straddlers affect TWO rooms at the same time.
+    --       instead we mark the quads directly.
+
+    do_straddler_solid(E, SP)
+
+    Fabricate(fab, T, ...)
+  end
+
+
   local function build_straddler(E, SP)
     local K = E.K
 
@@ -867,16 +883,21 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
       sk2 = GAME.DOORS["silver"]  -- FIXME
     end
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
-                                   SP.long1, SP.long2, -back, SP.deep1)
 
-    -- Note: not using Fab_with_update() for automatic space updating,
-    --       because straddlers affect TWO rooms at the same time.
-    --       instead we mark the quads directly.
+    local long = SP.long2 - SP.long1
 
-    do_straddler_solid(E, SP)
+    if false then  -- test : make two of them
+      local mid = SP.long1 + int(long / 2)
 
-    Fabricate(fab, T, skin, sk2)
+      SP.long2 = mid
+
+      build_straddler_span(E, SP, z, back, fab, skin, sk2)
+
+      SP.long2 = SP.long1 + long
+      SP.long1 = mid
+    end
+
+    build_straddler_span(E, SP, z, back, fab, skin, sk2)
   end
 
 
