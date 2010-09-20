@@ -33,7 +33,7 @@ class POLYGON
 
   id  -- identifying number (to help debugging)
 
-  coords  -- array of {x,y,x2,y2} for edges of this space
+  coords  -- array of { x, y } for edges of this space
           -- spaces are always convex, coords go anti-clockwise
 
   bx1, by1, bx2, by2 -- bounding box
@@ -61,8 +61,15 @@ function POLYGON_CLASS.new(kind)
 end
 
 
-function POLYGON_CLASS.add_coord(self, x1, y1, x2, y2)
-  table.insert(self.coords, { x=x1, y=y1, x2=x2, y2=y2 })
+function POLYGON_CLASS.add_coord(self, x, y)
+  table.insert(self.coords, { x=x, y=y })
+end
+
+
+function POLYGON_CLASS.second(self, idx)
+  local k = 1 + (idx % #self.coords)
+
+  return self.coords[k].x, self.coords[k].y
 end
 
 
@@ -70,16 +77,17 @@ function POLYGON_CLASS.new_quad(kind, x1, y1, x2, y2)
   assert(x1 < x2)
   assert(y1 < y2)
 
-  local M = POLYGON_CLASS.new(kind)
+  local P = POLYGON_CLASS.new(kind)
 
-  M:add_coord(x1,y1, x2,y1)
-  M:add_coord(x2,y1, x2,y2)
-  M:add_coord(x2,y2, x1,y2)
-  M:add_coord(x1,y2, x1,y1)
+  P:add_coord(x1, y1)
+  P:add_coord(x2, y1)
+  P:add_coord(x2, y2)
+  P:add_coord(x1, y2)
 
-  M:update_bbox()
+  P.bx1 = x1 ; P.bx2 = x2
+  P.by1 = y1 ; P.by2 = y2
 
-  return M
+  return P
 end
 
 
@@ -113,7 +121,7 @@ end
 function POLYGON_CLASS.dump(self)
   gui.debugf("%s =\n{\n", self:tostr())
   for _,C in ipairs(self.coords) do
-    gui.debugf("  (%d %d) .. (%d %d)\n", C.x, C.y, C.x2, C.y2)
+    gui.debugf("  (%d %d)\n", C.x, C.y)
   end
   gui.debugf("}\n")
 end
@@ -132,8 +140,8 @@ function POLYGON_CLASS.update_bbox(self)
     if C.y > self.by2 then self.by2 = C.y end
   end
 
-  assert(self.bx2 > self.bx1 + 0.001)
-  assert(self.by2 > self.by1 + 0.001)
+  assert(self.bx2 > self.bx1 + 0.01)
+  assert(self.by2 > self.by1 + 0.01)
 end
 
 
@@ -161,14 +169,6 @@ function POLYGON_CLASS.from_brush(kind, coords)
     end
   end
 
-  -- add the x2/y2 values now
-  for i = 1,#P.coords do
-    local k = 1 + (i % #P.coords)
-
-    P.coords[i].x2 = P.coords[k].x
-    P.coords[i].y2 = P.coords[k].y
-  end
-
   P:update_bbox()
 
   return P
@@ -186,34 +186,11 @@ function POLYGON_CLASS.to_brush(self, mat)
 end
 
 
---[[
-function POLYGON_CLASS.to_boundary(self, x, y, dx, dy)
-  -- starting with a point inside the space, move along the vector in
-  -- (dx, dy) until we hit a boundary and return that coordinate.
-  -- returns NIL if something goes wrong.
-
-  local x2 = x + dx * 10000
-  local y2 = y + dy * 10000
-
-  local best_d
-
-  for _,C in ipairs(self.coords) do
-    local a = geom.perp_dist(C.x1, C.y1, x,y,x2,y2)
-    local b = geom.perp_dist(C.x2, C.y2, x,y,x2,y2)
-
-    INTERSECTION TEST
-  end
-
-  return nil
-end
---]]
-
-
 function POLYGON_CLASS.contains(self, x, y, fudge)
   if not fudge then fudge = 0.5 end
 
-  for _,C in ipairs(self.coords) do
-    local d = geom.perp_dist(x, y, C.x,C.y, C.x2,C.y2)
+  for idx,C in ipairs(self.coords) do
+    local d = geom.perp_dist(x, y, C.x, C.y, self:second(idx))
     if d > fudge then return false end
   end
 
@@ -260,8 +237,8 @@ function POLYGON_CLASS.overlaps(self, other)
   -- slower method, check if other space lies totally on back side of
   -- one of our edges.
 
-  for _,C in ipairs(self.coords) do
-    if other:on_front(C.x, C.y, C.x2, C.y2) then
+  for idx,C in ipairs(self.coords) do
+    if other:on_front(C.x, C.y, self:second(idx)) then
       return false
     end
   end
@@ -296,50 +273,36 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
   local coords = self.coords
   self.coords = {}
 
-  local ox, oy -- other intersection point
+  for idx,C in ipairs(coords) do
+    local k = 1 + (idx % #coords)
 
-  for _,C in ipairs(coords) do
-    local a = geom.perp_dist(C.x , C.y , px1,py1, px2,py2)
-    local b = geom.perp_dist(C.x2, C.y2, px1,py1, px2,py2)
+    local cx2 = coords[k].x
+    local cy2 = coords[k].y
+
+    local a = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
+    local b = geom.perp_dist(cx2, cy2, px1,py1, px2,py2)
 
     if a > -0.5 and b > -0.5 then
       table.insert(self.coords, C)
     elseif a < 0.5 and b < 0.5 then
       table.insert(T.coords, C)
     else
-      -- this side crosses the cutting line --
+      -- this edge crosses the cutting line --
 
       -- calc the intersection point
       local along = a / (a - b)
 
-      local ix = C.x + along * (C.x2 - C.x)
-      local iy = C.y + along * (C.y2 - C.y)
+      local ix = C.x + along * (cx2 - C.x)
+      local iy = C.y + along * (cy2 - C.y)
 
-      local C1 = { x=C.x, y=C.y, x2=ix,   y2=iy }
-      local C2 = { x=ix,  y=iy,  x2=C.x2, y2=C.y2 }
-
-      local N1, N2
-
-      -- new edge along cutting line
-      if ox then
-        N1 = { x=ix, y=iy, x2=ox, y2=oy }
-        N2 = { x=ox, y=oy, x2=ix, y2=iy }
+      if a >= 0 then
+        table.insert(self.coords, C)
+      else
+        table.insert(T.coords, C)
       end
 
-      -- destinations for new edges
-      local D1 = T.coords
-      local D2 = self.coords
-
-      if a >= 0 then D1, D2 = D2, D1 end
-
-      table.insert(D1, C1)
-      if ox then
-        table.insert(D1, N1)
-        table.insert(D2, N2)
-      end
-      table.insert(D2, C2)
-
-      if not ox then ox, oy = ix, iy end
+      self:add_coord(ix, iy)
+         T:add_coord(ix, iy)
     end
   end
 
@@ -374,19 +337,7 @@ end
 
 
 function SPACE_CLASS.initial_rect(self, x1, y1, x2, y2)
-  assert(x1 < x2)
-  assert(y1 < y2)
-
-  local P = POLYGON_CLASS.new("free")
-
-  P:add_coord(x1, y1, x2, y1)
-  P:add_coord(x2, y1, x2, y2)
-  P:add_coord(x2, y2, x1, y2)
-  P:add_coord(x1, y2, x1, y1)
-
-  P.bx1 = x1 ; P.bx2 = x2
-  P.by1 = y1 ; P.by2 = y2
-
+  local P = POLYGON_CLASS.new_quad("free", x1,y1, x2,y2)
   table.insert(self.polys, P)
 end
 
@@ -439,6 +390,37 @@ function SPACE_CLASS.debugging_test()
 
   P1:dump()
    T:dump()
+
+
+  gui.debugf("\n---- merge test ----\n\n")
+
+  local S = SPACE_CLASS.new()
+
+  S:initial_rect(0, 0, 90, 90)
+
+  gui.debugf("ORIG SPACE:\n\n")
+
+  S.polys[1]:dump()
+
+  local M = POLYGON_CLASS.new("walk")
+
+  M:add_coord(50, 10)
+  M:add_coord(80, 20)
+  M:add_coord(60, 60)
+  M:add_coord(30, 30)
+
+  M:update_bbox()
+
+  gui.debugf("\nMerge with:\n");
+  M:dump()
+
+  S:merge(M)
+
+  gui.debugf("\nNEW SPACE:\n\n")
+
+  for _,P in ipairs(S.polys) do
+    P:dump()
+  end
 
   error("TEST DONE")
 end
@@ -529,9 +511,22 @@ function SPACE_CLASS.merge(self, M)
       end
     end
 
-    for _,C in ipairs(M.coords) do
-      if P:line_cuts(C.x2,C.y2, C.x,C.y) then
-        local T = P:cut(C.x2,C.y2, C.x,C.y)
+    for idx,C in ipairs(M.coords) do
+      local x1, y1 = M:second(idx)
+      local x2, y2 = C.x, C.y
+
+      if P:line_cuts(x1,y1, x2,y2) then
+gui.debugf("[\n")
+gui.debugf("  cuttint along (%1.3f %1.3f) .. (%1.3f %1.3f)\n", x1,y1, x2,y2)
+gui.debugf("  P before:\n")
+P:dump()
+        local T = P:cut(x1,y1, x2,y2)
+
+gui.debugf("  P after:\n")
+P:dump()
+gui.debugf("  T =\n")
+T:dump()
+gui.debugf("]\n\n")
 
         -- T is the piece outside of M
         table.insert(self.polys, T)
