@@ -363,7 +363,7 @@ function Layout_check_brush(coords, data)
     R.floor_space:merge(POLY)
   end
 
-  return allow
+  return false --!!!!!!!!1 allow
 end
 
 
@@ -517,66 +517,24 @@ function Layout_the_room(R)
   local function build_polygon(S)
 --- if S.kind == "solid" then return end
 
-    local c_mat = sel(R.outdoor, "_SKY", "CEIL1_1")
-    local f_mat = "FLAT18"
-    local w_mat = "STARTAN3"
-    local corn_mat = "CRACKLE2"
-    local d_mat = "TEKGREN3"
-    local win_mat = "COMPBLUE"
+    local mat = "FLAT18"
 
---  if S.kind == "free"  then f_mat = "FLAT18" end
-    if S.kind == "walk"  then f_mat = "LAVA1"   end
-    if S.kind == "air"   then f_mat = "NUKAGE1" end
+    if S.kind == "walk"   then mat = "LAVA1"   end
+    if S.kind == "air"    then mat = "NUKAGE1" end
 
-    if S.kind == "floor"  then f_mat = "FLAT18" end
-    if S.kind == "liquid" then f_mat = "FWATER1" end
-    if S.kind == "solid"  then f_mat = "CEIL5_2" end
+    if S.kind == "floor"  then mat = "FLAT18" end
+    if S.kind == "liquid" then mat = "FWATER1" end
+    if S.kind == "solid"  then mat = "CEIL5_2" end
 
-    local kind, w_face, p_face = Mat_normal(f_mat)
----!!    p_face.mark  = Plan_alloc_mark()
-    p_face.light = 0.75
+    local BRUSH = S:to_brush(mat)
 
-    if S.kind == "walk" or S.kind == "air" then p_face.special = 1 end
+    table.insert(BRUSH, { t=0, tex=mat, mark=Plan_alloc_mark() })
 
-    S.x1 = S.bx1 ; S.y1 = S.by1
-    S.x2 = S.bx2 ; S.y2 = S.by2
-
-    local z1 = 0 --  rand.irange(0,12)
-
-    Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, z1, kind, w_face, p_face)
-
-    -- handle straddlers, which exist in two rooms
-    if S.straddle == "window" then
---    if not S.prepped then S.prepped = true; return; end
-      if S.built then return; end
-    end
-    if S.straddle == "door" then
-      if S.built then return; end
-    end
+    Trans.brush(BRUSH)
 
     S.built = true
 
-    if S.straddle == "door" then
---      assert(S.dir)
---      local skin = GAME.DOORS["silver"] or {}
---      Fabricate("DOOR", Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 0, S.dir), skin)
-    Trans.quad(S.x1,S.y1, S.x2,S.y2, 128, nil, Mat_normal(d_mat))
---  Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 16 , Mat_normal(d_mat))
-    elseif S.straddle == "window" then
---    assert(S.dir)
---    local skin = {outer="STARG1", inner="STARG1"}
---    Fabricate("WINDOW", Trans.box_transform(S.x1,S.y1, S.x2,S.y2, 40, S.dir), skin)
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, 40, Mat_normal(win_mat))
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 80, nil, Mat_normal(win_mat))
-    elseif S.corner then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(corn_mat))
-    elseif S.wall then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, nil, nil, Mat_normal(w_mat))
-    elseif R.outdoor then
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 384, nil, Mat_sky())
-    else
-      Trans.quad(S.x1,S.y1, S.x2,S.y2, 256, nil, Mat_normal(c_mat))
-    end
+    Trans.quad(S.bx1,S.by1, S.bx2,S.by2, 256, nil, Mat_normal(c_mat))
   end
 
 
