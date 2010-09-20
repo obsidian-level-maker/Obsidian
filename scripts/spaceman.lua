@@ -178,7 +178,7 @@ end
 function POLYGON_CLASS.to_brush(self, mat)
   local B = {}
 
-  for _,C in ipairs(self, coords) do
+  for _,C in ipairs(self.coords) do
     table.insert(B, { x=C.x, y=C.y, mat=mat })
   end
 
@@ -282,11 +282,19 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
     local a = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
     local b = geom.perp_dist(cx2, cy2, px1,py1, px2,py2)
 
-    if a > -0.5 and b > -0.5 then
-      table.insert(self.coords, C)
-    elseif a < 0.5 and b < 0.5 then
-      table.insert(T.coords, C)
-    else
+    local a_side = 0
+    local b_side = 0
+    
+    if a < -0.5 then a_side = -1 end
+    if a >  0.5 then a_side =  1 end
+
+    if b < -0.5 then b_side = -1 end
+    if b >  0.5 then b_side =  1 end
+
+    if a_side >= 0 then table.insert(self.coords, C) end
+    if a_side <= 0 then T:add_coord(C.x, C.y) end
+
+    if a_side ~= 0 and b_side ~= 0 and a_side ~= b_side then
       -- this edge crosses the cutting line --
 
       -- calc the intersection point
@@ -295,16 +303,16 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
       local ix = C.x + along * (cx2 - C.x)
       local iy = C.y + along * (cy2 - C.y)
 
-      if a >= 0 then
-        table.insert(self.coords, C)
-      else
-        table.insert(T.coords, C)
-      end
-
       self:add_coord(ix, iy)
          T:add_coord(ix, iy)
     end
   end
+
+self:dump()
+  T:dump()
+
+  assert(#self.coords >= 3)
+  assert(#   T.coords >= 3)
 
   self:update_bbox()
      T:update_bbox()
@@ -498,7 +506,7 @@ function SPACE_CLASS.merge(self, M)
       -- skip test if part of same prefab
     else
       if not SPACE_CLASS.can_merge(P.kind, M.kind) then
-        error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
+-----!!!!!!!        error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
       end
 
       -- this is a bit rude, when an AIR space overlaps any WALK space,
