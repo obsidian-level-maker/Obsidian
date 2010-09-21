@@ -8,6 +8,13 @@ Trans.brush : fix mirroring
 +  have CEILING space and FLOOR space
 
 
+!!  Space Manager: when splitting a polygon edge, ensure that a
+                   neighbor edge is split too.
+
+             _OR_  do a fix-t-junction pass before using the
+                   space to create floor (etc) brushes.
+
+
 -  put concave corners into EDGE objects, BUT ignore them a lot
 
 -  outdoor rooms: create "joiners" (180 degree corners) where
