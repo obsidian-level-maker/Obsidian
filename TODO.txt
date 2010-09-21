@@ -1,79 +1,52 @@
 
-TODO
-====
-
-Trans.brush : fix mirroring
+V4 TODO
+=======
 
 
-+  have CEILING space and FLOOR space
+Games:
+
+DOOM and QUAKE only
 
 
-!!  Space Manager: when splitting a polygon edge, ensure that a
-                   neighbor edge is split too.
+Layout:
 
-             _OR_  do a fix-t-junction pass before using the
-                   space to create floor (etc) brushes.
++  rooms with multiple layers
 
++  Cross-Overs
 
--  put concave corners into EDGE objects, BUT ignore them a lot
++  corner prefabs
+       - normal
+       - curved
+       - torch in niche
+       - jutting out torch 
 
--  outdoor rooms: create "joiners" (180 degree corners) where
-                  two edges meet and they are from different
-                  indoor rooms.
++  wall prefabs:
+       - cage
+       - closet
+       - torch
+       - picture
+       - teleporter
+       - item niche
+ 
++  middle prefabs:
+       - cage
+       - pillar
+       - variety of crates
+       - fountain (outdoor)
+       - a couple techy ones
 
++  light brushes for DOOM, clipped to room
 
--  create a usable path by connecting walk areas
++  small exits
 
-   OR :  "grow" the walk areas, becoming separate floor heights
+-  have separate 'spaces' in prefabs 
 
+-  proper system to match DOOR skins with SWITCH skins
+   (allow more than a single door or single switch per lock kind)
 
--  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+-  prevent escapes over fences/windows near key pedestals (etc) by
+   raising the height of the fences/windows there.
 
-
-DONE:  find monster spot algorithm:
-
-
-Layouter:
-
-  -  put all the "stuff" (switches, teleporters, etc) which
-     needs to be placed into a list
-
-  -  decide which stuff can be stuffed into walls, and try to
-     wall them up during the PERIMETER PASS
-
-  -  otherwise place them in the IMPORTANT STUFF pass
-
-  -  then perform FLOOR HEIGHT / STAIR PLACING pass
-
-  -  then do DECORATION pass
-
-  -  then bask in the glory, oh yeah
-
-
-
--  use the space manager to clip Light brushes to room of origin
-
-
-DONE:  Build.low_curved_stair
-DONE:  Build.fence
-DONE:  Build_sky_fence
-DONE:  Build.lowering_bars
-DONE:  Build.quake_exit_pad
-
-x  Build.sky_hole
-x  Build.cross_beam
-x  Build.corner_beam
-x  Build.detailed_hall
-x  Build.tall_curved_stair
-x  Build.stairwell
-
-
-Terminology (face fields etc) : 'special' for linetypes, sectortypes
-
-
-Later: fix hallways, broken due to conn(_dir) change
-
-Later: fix Build_stairwell : broken due to conn_dir change
 
 
 Monsters:
@@ -86,161 +59,9 @@ Monsters:
                           1 = progression same in all episodes
                           (defaults to 0.5)
 
-
-Quests:
-
--  currently broken if no switches
-   -  have a lock limit, if over then mark branches as "dead_wood"
-   -  keep track of number of "branches to go"
-
-
-
-??  when to decide WOTSIT, monster and pickup spots ??
-
-
-
-Connections:
-
-TERMINOLOGY
-  Leaf   : only one exit
-  Stalk  : two exits
-  Branch : three or more exits
-
-+  plan them using sections first
-   i.e. CONN = { sect1, dir, sect2 }
-
--  The "connect map" is the conns[] list in each room.
-
-   -  need to allow teleporters and intrusions
-   -  intrusions can be locked, teleporters cannot be
-
--  what makes a good set of connections?
-
-   (1) don't exit a room on same wall as entering it
-       (which has no need to traverse through the room)
-
-   (2) T shape rooms have 3 connections in the three outer
-       sections (ideally same direction as T shape)
-       L shape rooms have at least 2 connects in outer tips
-       plus shape rooms have 3 or 4 connections in outer tips
-       Big rect rooms have 3 or 4 connections on 3/4 diff sides
-       
-       (same basic criterion: need to traverse the whole room)
-       This trumps #1.
-
-   (3) in small room, 3 connections is becoming too many.
-       If only two, then prefer to turn 90 degrees.
-
-   (4) need a good number of "hubs" (3 or more connections).
-       
-       too few  --> no locked doors are possible
-       too many --> creates a lot of dead-end paths
-
-       natural areas are most flexible
-
-       limit on 4-exit rooms ("mega-hub") is probably: int(LEVEL.H / 2)
-
-       for each room, count how many other rooms it touches.
-       big rects or plus with >= 4 are candidates for mega-hub
-
-   (5) the connection patterns (T, L, etc) are still a good idea for
-       large rectangular rooms.  But do it using sections instead
-       of seeds.
-
-   (6) large rooms may be best as leafs (can have a big battle
-       to get to the key or switch).
-
-   (7) tiny rooms may be best as in/out (2 exit) rooms, and
-       also OK for start room, and ideal for exit room when
-       using a "small exit" prefab.
-
-
-Cave code
-  DONE  validate() method : check if N points (from conns) connect
-     --> creates a 'flood' map
-     [it should also remove other empty areas]
-
-  DONE  find_islands() method : returns a list of new caves, one for
-     each island.
-     an "island" is contiguous solid area which never touches NIL.
-     --> needs the flood map too
-
-  -  re-instate size check (on main empty region), and remove the
-     other empty regions.
-
-  +  fix spot_for_wotsit
-
-  -  furthest_point() : away from N points (conns)
-     --> create a distance map
-
-  +  fix monster spots
-  +  fix pickup spots
-
-
-Prefabs:
-  + test if prefab fits, choose another (etc) if not
-
-  - DOORS: have x_sizes, y_sizes, z_sizes
-
-  - get prefab name from skin (_prefab field)
-
-  - prepare skin table:
-
-    1. copy it
-    2. expand random selection
-    3. apply prefab defaults
-
-  - Review: allow functions in brushes or skins
-
-  - mirroring ?!?
-
-  - Review: material functions like get_liquid() etc
-
-
-+ proper system to match DOOR skins with SWITCH skins
-  (i.e. allow more than a single door or single switch per lock kind).
-
-
---------------------------------------------------------------------
-
-
-BUG: some Quake maps have clipping issues (invisible barriers)
-
-BUG: switch in cave may end up inaccessible (clear the seed)
-
-BUG: place pickups more carefully in caves (otherwise can be unpickupable)
-
-BUG: items occasionally appear on high fences
-     - finding small spots ignores sideway extents (thick[])
-
-BUG: corner supports are sometimes off the wall
-
-
 +  fix monster quantities, which was messed up by cave code.
 
    Also need some increase over the course of a level
    (like 50% more monsters at end compared to start) and
    vary the quantity (e.g. nothing in a room occasionally).
-
-   For Less or Scarce settings, create smaller room palettes
-
--  Cave code: give each cave an 'info' field and make it a class
-              with various methods, in particular for mapping
-              between seed coords and cave cell coords.
-
-+  get small exits working again
-   -  rework Build_small_exit to only use a single transform
-
-+  improve the jaggy edge algorithm (support corner triangles)
-
--  missing stairwells:
-     The stairwell problem can be fixed by changing THEME.stairwell
-     in rooms.lua to 'THEME.stairwell_walls and THEME.stairwell_floors'.
-
-
--  prevent escapes over fences/windows near key pedestals (etc) by
-   raising the height of the fences/windows there.
-
--  some basic lighting objects (torches), esp. Urban/Hell
-
 

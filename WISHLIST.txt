@@ -8,6 +8,8 @@ WISH-LIST
 
 *  add in more scenery: lamps, computers etc
 
+*  get cave code working again
+
 *  better monster selection
 
 *  escapable slime pits
@@ -88,6 +90,85 @@ Facades:
   -  ability to ensure both inner/outer are the same
 
 
+Quests:
+
+-  currently broken if no switches
+   -  have a lock limit, if over then mark branches as "dead_wood"
+   -  keep track of number of "branches to go"
+
+
+Caves:
+
+-  improve the jaggy edge algorithm (support corner triangles)
+
+-  re-instate size check (on main empty region), and remove the
+   other empty regions.
+
++  fix spot_for_wotsit
+
+-  furthest_point() : away from N points (conns)
+   --> create a distance map
+
++  fix monster spots
++  fix pickup spots
+
+
+Connections:
+
+TERMINOLOGY
+  Leaf   : only one exit
+  Stalk  : two exits
+  Branch : three or more exits
+
++  plan them using sections first
+   i.e. CONN = { sect1, dir, sect2 }
+
+-  The "connect map" is the conns[] list in each room.
+
+   -  need to allow teleporters and intrusions
+   -  intrusions can be locked, teleporters cannot be
+
+-  what makes a good set of connections?
+
+   (1) don't exit a room on same wall as entering it
+       (which has no need to traverse through the room)
+
+   (2) T shape rooms have 3 connections in the three outer
+       sections (ideally same direction as T shape)
+       L shape rooms have at least 2 connects in outer tips
+       plus shape rooms have 3 or 4 connections in outer tips
+       Big rect rooms have 3 or 4 connections on 3/4 diff sides
+       
+       (same basic criterion: need to traverse the whole room)
+       This trumps #1.
+
+   (3) in small room, 3 connections is becoming too many.
+       If only two, then prefer to turn 90 degrees.
+
+   (4) need a good number of "hubs" (3 or more connections).
+       
+       too few  --> no locked doors are possible
+       too many --> creates a lot of dead-end paths
+
+       natural areas are most flexible
+
+       limit on 4-exit rooms ("mega-hub") is probably: int(LEVEL.H / 2)
+
+       for each room, count how many other rooms it touches.
+       big rects or plus with >= 4 are candidates for mega-hub
+
+   (5) the connection patterns (T, L, etc) are still a good idea for
+       large rectangular rooms.  But do it using sections instead
+       of seeds.
+
+   (6) large rooms may be best as leafs (can have a big battle
+       to get to the key or switch).
+
+   (7) tiny rooms may be best as in/out (2 exit) rooms, and
+       also OK for start room, and ideal for exit room when
+       using a "small exit" prefab.
+
+
 Natural areas:
   -  height changes?
 
@@ -156,6 +237,8 @@ Nicety:
 
 
 Miscellaneous:
+  -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
   - Can disable the custom levels
   - More than one theme per episode.
 
