@@ -93,6 +93,7 @@ end
 
 function POLYGON_CLASS.bare_copy(self)
   local P = POLYGON_CLASS.new(self.kind)
+  P.fab_id = self.fab_id
   return P
 end
 
@@ -106,6 +107,8 @@ function POLYGON_CLASS.copy(self)
 
   P.bx1, P.by1 = self.bx1, self.by1
   P.bx2, P.by2 = self.bx2, self.by2
+
+  P.fab_id = self.fab_id
 
   return P
 end
@@ -308,8 +311,8 @@ function POLYGON_CLASS.cut(self, px1, py1, px2, py2)
     end
   end
 
-self:dump()
-  T:dump()
+--self:dump()
+--  T:dump()
 
   assert(#self.coords >= 3)
   assert(#   T.coords >= 3)
@@ -506,7 +509,10 @@ function SPACE_CLASS.merge(self, M)
       -- skip test if part of same prefab
     else
       if not SPACE_CLASS.can_merge(P.kind, M.kind) then
------!!!!!!!        error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
+gui.debugf("M.fab_id:%s  P.fab_id:%s\n", tostring(M.fab_id), tostring(P.fab_id))
+gui.debugf("M=\n"); M:dump()
+gui.debugf("P=\n"); P:dump()
+        error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
       end
 
       -- this is a bit rude, when an AIR space overlaps any WALK space,
@@ -524,17 +530,7 @@ function SPACE_CLASS.merge(self, M)
       local x2, y2 = C.x, C.y
 
       if P:line_cuts(x1,y1, x2,y2) then
-gui.debugf("[\n")
-gui.debugf("  cuttint along (%1.3f %1.3f) .. (%1.3f %1.3f)\n", x1,y1, x2,y2)
-gui.debugf("  P before:\n")
-P:dump()
         local T = P:cut(x1,y1, x2,y2)
-
-gui.debugf("  P after:\n")
-P:dump()
-gui.debugf("  T =\n")
-T:dump()
-gui.debugf("]\n\n")
 
         -- T is the piece outside of M
         table.insert(self.polys, T)
