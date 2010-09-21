@@ -22,6 +22,14 @@ PREFAB.EXIT_PILLAR =
 {
   brushes =
   {
+    {
+      { m = "walk" },
+      { x = -96, y = -96 },
+      { x =  96, y = -96 },
+      { x =  96, y =  96 },
+      { x = -96, y =  96 },
+    },
+
     -- pillar itself
     {
       { x = -32, y = -32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 },
