@@ -606,3 +606,51 @@ function SPACE_CLASS.calc_bbox(self)
   return x1, y1, x2, y2
 end
 
+
+function POLYGON_CLASS.do_tjunc(self, tx, ty)
+  local coords = self.coords
+  self.coords = {}
+
+  for idx,C in ipairs(coords) do
+    table.insert(self.coords, C)
+
+    local k = 1 + (idx % #coords)
+
+    local x1, y1 = C.x, C.y
+    
+    local x2 = coords[k].x
+    local y2 = coords[k].y
+
+    local d = geom.perp_dist(tx,ty, x1,y1, x2,y2)
+
+    if math.abs(d) < 0.1 then
+      local a = geom.along_dist(tx,ty, x1,y1, x2,y2)
+
+      if a > 1 and a < geom.dist(x1,y1, x2,y2)-1 then
+        self:add_coord(tx, ty)
+
+        for N = idx+1,#coords do
+          table.insert(self.coords, coords[N])
+        end
+
+        return
+      end
+    end
+  end
+end
+
+
+function SPACE_CLASS.fix_tjuncs(self)
+  for _,P in ipairs(self.polys) do
+    for _,O in ipairs(self.polys) do
+      if P ~= O and geom.boxes_overlap(P.bx1,P.by1, P.bx2,P.by2,
+                                       O.bx1-2,O.by1-2, O.bx2+2,O.by2+2)
+      then
+        for _,C in ipairs(O.coords) do
+          P:do_tjunc(C.x, C.y)
+        end
+      end
+    end
+  end
+end
+
