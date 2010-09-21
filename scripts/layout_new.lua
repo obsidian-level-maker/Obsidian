@@ -363,7 +363,7 @@ function Layout_check_brush(coords, data)
     R.floor_space:merge(POLY)
   end
 
-  return false --!!!!!!!!1 allow
+  return allow
 end
 
 
@@ -511,30 +511,6 @@ function Layout_the_room(R)
         end
       end
     end
-  end
-
-
-  local function build_polygon(S)
---- if S.kind == "solid" then return end
-
-    local mat = "FLAT18"
-
-    if S.kind == "walk"   then mat = "LAVA1"   end
-    if S.kind == "air"    then mat = "NUKAGE1" end
-
-    if S.kind == "floor"  then mat = "FLAT18" end
-    if S.kind == "liquid" then mat = "FWATER1" end
-    if S.kind == "solid"  then mat = "CEIL5_2" end
-
-    local BRUSH = S:to_brush(mat)
-
-    table.insert(BRUSH, { t=0, tex=mat, mark=Plan_alloc_mark() })
-
-    Trans.brush(BRUSH)
-
-    S.built = true
-
-    Trans.quad(S.bx1,S.by1, S.bx2,S.by2, 256, nil, Mat_normal(c_mat))
   end
 
 
@@ -962,6 +938,44 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   end
 
 
+  local function floor_polygon(S)
+if S.kind == "solid" then return end
+
+    local mat = "FLAT18"
+
+    if S.kind == "walk"   then mat = "LAVA1"   end
+    if S.kind == "air"    then mat = "NUKAGE1" end
+
+    if S.kind == "floor"  then mat = "FLAT18" end
+    if S.kind == "liquid" then mat = "FWATER1" end
+    if S.kind == "solid"  then mat = "CEIL5_2" end
+
+    local BRUSH = S:to_brush(mat)
+
+    table.insert(BRUSH, { t=0, tex=mat, mark=Plan_alloc_mark() })
+
+    Trans.brush(BRUSH)
+  end
+
+
+  local function build_floor()
+    -- TEMP CRUD
+    for _,P in ipairs(R.floor_space.polys) do
+      floor_polygon(P)
+    end
+  end
+
+  local function build_ceiling()
+    -- TEMP CRUD
+    local h   = sel(R.outdoor, 512, 384)
+    local mat = sel(R.outdoor, "_SKY", "METAL1")
+
+    for _,K in ipairs(R.sections) do
+      Trans.quad(K.x1, K.y1, K.x2, K.y2, h, nil, Mat_normal(mat))
+    end
+  end
+
+
   ---===| Layout_room |===---
 
   ROOM = R  -- set global
@@ -1015,11 +1029,9 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
   end
 
 
-  -- this builds the floor
+  build_floor()
 
-  for _,P in ipairs(R.floor_space.polys) do
-    build_polygon(P)
-  end
+  build_ceiling()
 
 
   -- collect spots for the monster code
