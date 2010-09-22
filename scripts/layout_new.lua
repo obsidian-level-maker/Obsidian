@@ -1039,12 +1039,17 @@ if S.kind == "solid" then return end
   
   elseif R.purpose == "EXIT" then
 
-    local skin_name = rand.key_by_probs(THEME.exits)
-    local skin = assert(GAME.EXITS[skin_name])
-
     local T = Trans.spot_transform(ex, ey, 0)
 
-    Fab_with_update("EXIT_PILLAR", T, skin)
+    if GAME.format == "quake" then
+      local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }
+      Fab_with_update("QUAKE_EXIT_PAD", T, skin)
+    else
+      local skin_name = rand.key_by_probs(THEME.exits)
+      local skin = assert(GAME.EXITS[skin_name])
+
+      Fab_with_update("EXIT_PILLAR", T, skin)
+    end
   
   else
 
