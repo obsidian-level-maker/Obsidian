@@ -1069,9 +1069,6 @@ if S.kind == "solid" then return end
 
   -- collect spots for the monster code
 
-  local mon_spots  = {}
-  local item_spots = {}
-
   gui.spots_begin(R.floor_space:calc_bbox())
 
   for _,P in ipairs(R.floor_space.polys) do
@@ -1081,11 +1078,16 @@ if S.kind == "solid" then return end
     solid_polygon(P)
   end
 
-  gui.spots_end(mon_spots, item_spots)
+  R.mon_spots  = {}
+  R.item_spots = {}
 
+  gui.spots_end(R.mon_spots, R.item_spots)
+
+--[[  TEST
   for _,spot in ipairs(item_spots) do
     Trans.entity("potion", spot.x, spot.y, 0)
   end
+--]]
 end
 
 

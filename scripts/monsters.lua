@@ -395,184 +395,11 @@ function Monsters_do_pickups()
   end
 
 
-  local function add_big_spot(R, S, score)
-    local mx, my = S:mid_point()
-    table.insert(R.big_spots, { S=S, x=mx, y=my, score=score })
-  end
-
-  local function add_small_spots(R, S, side, count, score)
-    local dist = 40
-
-    for i = 1,count do
-      local mx, my = S:mid_point()
-
-      if side == 4 then mx = S:x3() + i*dist end
-      if side == 6 then mx = S:x4() - i*dist end
-      if side == 2 then my = S:y3() + i*dist end
-      if side == 8 then my = S:y4() - i*dist end
-
-      if side == 1 then mx, my = mx + i*dist, my + i*dist end
-      if side == 3 then mx, my = mx - i*dist, my + i*dist end
-      if side == 7 then mx, my = mx + i*dist, my - i*dist end
-      if side == 9 then mx, my = mx - i*dist, my - i*dist end
-
-      local dir = geom.RIGHT[side]
-
-      table.insert(R.small_spots, { S=S, x=mx, y=my, dir=dir, score=score })
-
-      -- the rows further away from the wall should only be
-      -- used when absolutely necessary.
-      score = score - 100
-    end
-  end
-
-  local function try_add_big_spot(R, S)
-    local score = gui.random()
-
-    if S.div_lev and S.div_lev >= 2 then score = score + 10 end
-
-    if S.sx > (R.tx1 or R.sx1) and S.sx < (R.tx2 or R.sx2) then score = score + 2.4 end
-    if S.sy > (R.ty1 or R.sy1) and S.sy < (R.ty2 or R.sy2) then score = score + 2.4 end
-
-    if not S.usage then score = score + 1 end
-
-    add_big_spot(R, S, score)
-  end
-
-  local function try_add_small_spot(R, S)
-    local score = gui.random()
-
-    if false then --!!!!!!!  R.entry_conn then
-      local e_dist
-      if geom.is_vert(R.entry_conn.dir) then
-        e_dist = math.abs(R.entry_conn.dest_S.sy - S.sy)
-      else
-        e_dist = math.abs(R.entry_conn.dest_S.sx - S.sx)
-      end
-
-      score = score + e_dist / 2.5
-    end
-
-    local walls = {}
-
-    for side = 2,8,2 do
-      local N = S:neighbor(side)
-      if not N then
-        walls[side] = 1
-      elseif N.room ~= S.room then
-        if not S:has_any_conn() then walls[side] = 2 end
-      elseif N.kind == "void" then
-        walls[side] = 3
-      elseif N.kind == "walk" and N.floor_h > S.floor_h then
-        walls[side] = 4
-      end
-    end -- for side
-
-    if table.empty(walls) then return end
-
-    if walls[4] and walls[6] then
-      add_small_spots(R, S, 4, 2, score)
-      add_small_spots(R, S, 6, 2, score - 0.3)
-
-    elseif walls[2] and walls[8] then
-      add_small_spots(R, S, 2, 2, score)
-      add_small_spots(R, S, 8, 2, score - 0.3)
-
-    else
-      for loop = 1,100 do
-        local side = rand.irange(1,4) * 2
-        if walls[side] then
-          add_small_spots(R, S, side, 4, score)
-          break;
-        end
-      end
-    end
-  end
-
-  local function try_add_diagonal_spot(R, S)
-    if S.diag_new_kind ~= "walk" then return end
-
-    local score = 80 + gui.random()
-
-    add_small_spots(R, S, S.stuckie_side, 2, score)
-  end
-
-  local function find_pickup_spots(R)
-    -- Creates a map over the room of which seeds we can place
-    -- pickup items in.  We distinguish two types: 'big' items
-    -- (Mega Health or Blue Armor) and 'small' items:
-    --
-    -- 1. big items prefer to have a seed for itself, and
-    --    somewhere near to the centre of the room.
-    --
-    -- 2. small items prefer to sit next to walls (or ledges)
-    --    and be grouped in clusters.
-    --
-    -- To achieve this, our map will consist of two lists (big
-    -- and small) of seeds, sorted into best --> worst order
-    -- (with a healthy dose of randomness of course).
-
-    gui.debugf("find_pickup_spots @ %s\n", R:tostr())
-
-    -- already there?? (caves)
-    if R.small_spots then
-      if #R.small_spots == 0 or #R.big_spots == 0 then
-        return false
-      end
-
-      return true
-    end
-
-    R.big_spots = {}
-    R.small_spots = {}
-
-    local emerg_big
-    local emerg_small
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      local score
-
-      if S.room == R and S.kind == "walk" and
-         (not S.usage or S.usage == "monster")
-      then
-        try_add_big_spot(R, S)
-        try_add_small_spot(R, S)
-
-        if not emerg_big then emerg_big = S end
-        emerg_small = S
-      end
-
-      if S.room == R and S.kind == "diagonal" then
-        try_add_diagonal_spot(R, S)
-      end
-    end end -- for x, y
-
-    -- luckily this is very rare
-    if not emerg_small then
-      gui.printf("No spots for pickups in %s\n", R:tostr())
-      return false
-    end
-
-    assert(emerg_big)
-
-    if #R.big_spots == 0 then
-      gui.debugf("No big spots found : using emergency\n")
-      add_big_spot(R, emerg_big, 0)
-    end
-
-    if #R.small_spots == 0 then
-      gui.debugf("No small spots found : using emergency\n")
-      add_small_spots(R, emerg_small, 2, 4, 0)
-    end
-
-    return true
-  end
-
   local function sort_spots(R)
     table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
     table.sort(R.small_spots, function(A,B) return A.score > B.score end)
   end
+
 
   local function decide_pickup(R, stat, qty)
     local item_tab = {}
@@ -620,6 +447,7 @@ function Monsters_do_pickups()
     return GAME.PICKUPS[name], count
   end
 
+
   local function select_pickups(R, item_list, stat, qty, hmodel)
 gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
 
@@ -665,6 +493,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     end
   end
 
+
   local function place_item(S, item_name, x, y, SK)
     local props = {}
 
@@ -689,6 +518,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     Trans.entity(item_name, x, y, S.floor_h, props)
   end
 
+
   local function place_big_item(spot, item, SK)
     local x, y = spot.x, spot.y
 
@@ -699,6 +529,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
     place_item(spot.S, item, x, y, SK)
   end
+
 
   local function place_small_item(spot, item, count, SK)
     local x1, y1 = spot.x, spot.y
@@ -734,6 +565,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     end
   end
 
+
   local function place_item_list(R, item_list, SK, CL)
     for _,pair in ipairs(item_list) do
       local item  = pair.item
@@ -756,6 +588,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       end
     end
   end
+
 
   local function pickups_for_hmodel(R, SK, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
@@ -801,6 +634,8 @@ gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
 
   ---| Monsters_do_pickups |---
 
+do return end --!!!!!!!!! FIXME
+
   for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
       distribute_fight_stats(R)
@@ -824,6 +659,7 @@ function Monsters_fill_room(R)
   local function is_huge(mon)
     return GAME.ENTITIES[mon].r > 60
   end
+
 
   local function calc_toughness()
     -- determine a "toughness" value, where 1.0 is easy and
@@ -851,6 +687,7 @@ function Monsters_fill_room(R)
 
     return toughness
   end
+
 
   local function calc_quantity()
     local qty
@@ -969,6 +806,7 @@ function Monsters_fill_room(R)
     return prob
   end
 
+
   local function number_of_kinds(fp)
     local size = (R.tw or R.sw) + (R.th or R.sh)
     local num  = int(size / 5.0 + 0.55 + gui.random())
@@ -986,6 +824,7 @@ function Monsters_fill_room(R)
 
     return num
   end
+
 
   local function crazy_palette()
     local size = (R.tw or R.sw) + (R.th or R.sh)
@@ -1036,6 +875,7 @@ function Monsters_fill_room(R)
     return palette
   end
 
+
   local function select_monsters(toughness)
     if OB_CONFIG.strength == "crazy" then
       return crazy_palette()
@@ -1083,6 +923,7 @@ function Monsters_fill_room(R)
     return palette
   end
 
+
   local function monster_fits(S, mon, info)
     if S.usage or S.no_monster or not S.floor_h then
       return false
@@ -1116,6 +957,7 @@ function Monsters_fill_room(R)
     return true
   end
 
+
   local function add_mon_spot(S, x, y, mon, info)
     local SPOT =
     {
@@ -1146,6 +988,7 @@ function Monsters_fill_room(R)
     end
   end
 
+
   local function try_occupy_spot(spot, mon, totals)
     local info = GAME.MONSTERS[mon]
     local ent  = GAME.ENTITIES[mon]
@@ -1162,250 +1005,22 @@ function Monsters_fill_room(R)
     return true
   end
 
-  local function steal_a_seed(mon, totals)
-    if is_huge(mon) then
-      -- monster requires 2x2 seeds, but we cannot steal that
-      return
-    end
-
-    local victim
-
-    for name,count in pairs(totals) do
-      if name ~= mon and (count >= 2) and (not victim or count > totals[victim]) then
-        victim = name
-      end
-    end
-
-    if not victim then
-      gui.debugf("steal_a_seed(%s): nobody to steal from!\n", mon)
-      return
-    end
-
-    gui.debugf("steal_a_seed(%s): stealing from %s\n", mon, victim)
-
-    local new_info = GAME.MONSTERS[mon]
-
-    local qty = 1
-    if totals[victim] >= 10 then qty = 2 end
-
-    for loop = 1,qty do
-      local victim_S
-
-      -- recreate the spot list
-      local old_list = R.monster_spots
-      R.monster_spots = {}
-
-      for _,spot in ipairs(old_list) do
-        if victim_S and spot.S == victim_S then
-          -- skip other spots in the same seed
-        elseif not victim_S and spot.monster == victim and
-               monster_fits(spot.S, mon, new_info)
-        then
-          add_spot_group(spot.S, mon, new_info)
-          victim_S = spot.S
-
-          totals[mon]    = totals[mon] + 1
-          totals[victim] = totals[victim] - 1
-        else
-          table.insert(R.monster_spots, spot)
-        end
-      end
-
-      -- may not have worked (different requirements)
-      gui.debugf("  loop:%d %s\n", loop, sel(victim_S, "OK", "FAILED"))
-      if not victim_S then break; end
-    end
-
-    rand.shuffle(R.monster_spots)
-  end
-
-
-  local function add_small_mon_spot(S, h_diff)
-    -- FIXME: take walls (etc) into consideration
-
-    local mx, my = S:mid_point()
-
-    table.insert(R.monster_spots,
-    {
-      S=S, score=gui.random(),  -- FIXME score
-      x1=mx-64, y1=my-64, z1=(S.floor_h or 0),
-      x2=mx+64, y2=my+64, z2=(S.floor_h or 0) + h_diff,
-    })
-  end
-
-  local function add_large_mon_spot(S, h_diff)
-    -- FIXME: take walls (etc) into consideration
-
-    local mx, my = S.x2, S.y2
-
-    table.insert(R.monster_spots,
-    {
-      S=S, score=gui.random(),  -- FIXME score
-      x1=mx-128, y1=my-128, z1=(S.floor_h or 0),
-      x2=mx+128, y2=my+128, z2=(S.floor_h or 0) + h_diff,
-    })
-  end
-
-  local function can_accommodate_small(S)
-    if S.usage or S.no_monster or not S.floor_h then
-      return false
-    end
-
-    -- keep entryway clear
-    if R.entry_conn and S:has_conn(R.entry_conn) then
-      return false
-    end
-
-    -- check seed kind
-    if S.kind ~= "walk" then
-      return false
-    end
-
-    local h_diff = (S.ceil_h or R.ceil_h or SKY_H) - (S.floor_h or 0)
-
-    return true, h_diff
-  end
-
-  local function can_accommodate_large(S, sx, sy)
-    if (sx+1 > R.sx2) or (sy+1 > R.sy2) then
-      return false
-    end
-
-    if S.solid_corner then return false end
-
-    local low_ceil = S.ceil_h or R.ceil_h or SKY_H
-    local hi_floor = S.floor_h or 0
-
-    for dx = 0,1 do for dy = 0,1 do
-      if dx > 0 or dy > 0 then
-        local S2 = SEEDS[sx+dx][sy+dy]
-
-        if S2.room ~= S.room then return false end
-
-        if not can_accommodate_small(S2) then return false end
-
-        if S2.solid_corner then return false end
-
-        if S2.ceil_h then
-          low_ceil = math.min(low_ceil, S2.ceil_h)
-        end
-
-        -- ensure no floor difference for huge monsters
-        local diff = math.abs((S.floor_h or 0) - (S2.floor_h or 0))
-
-        if diff > 1 then return false end
-      end
-    end end -- for dx, dy
-
-    -- NOTE: arachnotrons can fit in lower rooms, but we have to allow for
-    --       the tallest of the large monsters (Hexen bosses).
-    local h_diff = (low_ceil - hi_floor)
-
----???   if h_diff < 128 then return false end
-
-    -- FIXME: ugh -- hack to allow more monsters in the room
-    if rand.odds(50) then return false end
-
-    return true, h_diff
-  end
-
-  local function find_monster_spots()
-    -- already there?? (caves)
-    if R.monster_spots then
-      return
-    end
-
-    R.monster_spots = {}
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      
-      if S.room == R then
-        local small_ok, small_diff = can_accommodate_small(S)
-
-        if small_ok then
-          local large_ok, large_diff = can_accommodate_large(S, x, y)
-
-          if large_ok then
-            add_large_mon_spot(S, large_diff)
-          else
-            add_small_mon_spot(S, small_diff)
-          end
-        end
-      end
-    end end
-  end
 
   local function create_monster_map(palette)
 
     -- adjust probs in palette to account for monster size,
-    -- i.e. we can fit 4 imps in a seed but only one mancubus,
-    -- hence imps should occur less often (per seed).
-
-    local pal_2  = {}
-    local totals = {}
+    -- e.g. we can fit 4 revenants in the same space as a mancubus.
 
     for mon,prob in pairs(palette) do
       pal_2[mon]  = prob
       totals[mon] = 0
 
-      if is_big(mon) and not is_huge(mon) then
+      if is_big(mon) then
         pal_2[mon] = pal_2[mon] * 3
       end
     end
-
-    rand.shuffle(R.monster_spots)
-    
-    for _,spot in ipairs(R.monster_spots) do
-
-        assert(not spot.monster)
-
-        local try_pal = table.copy(pal_2)
-
-        -- try other monsters if the first doesn't fit
-        while not table.empty(try_pal) do
-          local mon = rand.key_by_probs(try_pal)
-          try_pal[mon] = nil
-
-          if try_occupy_spot(spot, mon, totals) then
-            break;
-          end
-        end
-    end
-
-    -- make sure each monster has at least one seed
---[[ !!!!
-    for mon,_ in pairs(palette) do
-      if totals[mon] == 0 then
-        steal_a_seed(mon, totals)
-      end
-    end
---]]
-
-    gui.debugf("Monster map totals:\n")
-    for mon,count in pairs(totals) do
-      gui.debugf("  %s = %d seeds\n", mon, count)
-    end
   end
 
-  local function how_many_dudes(mon, count, qty)
-    local info = GAME.MONSTERS[mon]
-
-    if count <= 1 then return count end
-
-    count = count * (qty / 100.0)
-
-    -- adjust quantity based on monster's health
-    if info.density then
-      count = count * info.density
-    end
- 
-    -- some random variation
-    count = count * rand.range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
-    count = count + gui.random() ^ 2
-
-    return math.max(1, int(count))
-  end
 
   local function monster_angle(S)
     -- TODO: sometimes make all monsters (or a certain type) face
@@ -1433,6 +1048,7 @@ function Monsters_fill_room(R)
     end
   end
 
+
   local function add_to_list(SK, info)
     if not R.monster_list[SK] then
       R.monster_list[SK] = {}
@@ -1440,6 +1056,7 @@ function Monsters_fill_room(R)
 
     table.insert(R.monster_list[SK], info)
   end
+
 
   local function calc_min_skill()
     if not LEVEL.mon_dither then
@@ -1461,6 +1078,7 @@ function Monsters_fill_room(R)
       return rand.sel(50, 1, 3)
     end
   end
+
 
   local function place_monster(spot)
     local angle  = spot.angle or monster_angle(spot.S)
@@ -1518,6 +1136,7 @@ function Monsters_fill_room(R)
     spot.S.usage = "monster"
   end
 
+
   local function place_barrel(spot)
     if spot.S:has_any_conn() or spot.S.kind ~= "walk" then
       return
@@ -1531,36 +1150,123 @@ function Monsters_fill_room(R)
     spot.S.usage = "monster"  -- allow items to exist here
   end
 
-  local function fill_monster_map(qty, barrel_chance)
-    local totals  = {}
-    local actuals = {}
 
-    for _,spot in ipairs(R.monster_spots) do
-      if spot.monster then
-        totals[spot.monster] = (totals[spot.monster] or 0) + 1
+  local function how_many_for_spot(mon, spot)
+    local ent  = GAME.ENTITIES[mon]
+
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    w = int(w / ent.r / 2)
+    h = int(h / ent.r / 2)
+
+    return w * h
+  end
+
+
+  local function place_in_spot(mon, spot, count)
+    local ent  = GAME.ENTITIES[mon]
+
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    w = int(w / ent.r / 2)
+    h = int(h / ent.r / 2)
+
+    -- TODO
+  end
+
+
+  local function try_add_monster(mon, max_num)
+    local info = GAME.MONSTERS[mon]
+    local ent  = GAME.ENTITIES[mon]
+
+    -- find a spot
+    for _,spot in ipairs(R.mon_spots) do
+      local fit_num = how_many_for_spot(mon, spot)
+      if fit_num >= 1 then
+        fit_num = math.min(fit_num, max_num)
+        place_in_spot(mon, spot, fit_num)
+        return fit_num
       end
     end
 
-    for mon,count in pairs(totals) do
-      actuals[mon] = how_many_dudes(mon, count, qty)
+    return 0  -- not possible
+  end
+
+
+
+
+  local function how_many_dudes(mon, count, qty)
+    local info = GAME.MONSTERS[mon]
+
+    if count <= 1 then return count end
+
+    count = count * (qty / 100.0)
+
+    -- adjust quantity based on monster's health
+    if info.density then
+      count = count * info.density
+    end
+ 
+    -- some random variation
+    count = count * rand.range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
+    count = count + gui.random() ^ 2
+
+    return math.max(1, int(count))
+  end
+
+
+  local function fill_monster_map(palette, barrel_chance)
+    -- add at least one monster of each kind
+    for pass = 1,3 do
+      for mon,prob in pairs(palette) do
+        if (pass == 1 and is_huge(mon)) or
+           (pass == 2 and is_big(mon) and not is_huge(mon)) or
+           (pass == 3 and not is_big(mon))
+        then
+          try_add_monster(mon, 1)
+        end
+      end
     end
 
-    for index,spot in ipairs(R.monster_spots) do
-      if spot.monster then
-        if (actuals[spot.monster] or 0) >= 1 then
-          place_monster(spot)
-          actuals[spot.monster] = actuals[spot.monster] - 1
-        elseif rand.odds(barrel_chance) then
-          place_barrel(spot)
+
+    local qty = calc_quantity()
+
+    local count = math.min(6, R.sw) * math.min(6 * R.sh)
+    count = int(count / 3)
+
+
+    local wants = {}
+    local pal2 = table.copy(palette)
+
+    for mon,_ in pairs(palette) do
+      wants[mon] = how_many_dudes(mon, count, qty) - 1
+
+      if wants[mon] < 1 then
+         wants[mon] = nil
+         pal2[mon]  = nil
+      end
+    end
+
+
+    while not table.empty(pal2) and not table.empty(R.mon_spots) do
+      local mon = rand.key_by_probs(pal2)
+
+      if wants[mon] >= 1 then
+        local actual = try_add_monster(mon, wants[mon])
+
+        if actual == 0 or actual >= wants[mon] then
+          wants[mon] = nil
+          pal2]mon]  = nil
+        else
+          wants[mon] = wants[mon] - actual
         end
       end
     end
   end
 
+
   local function add_monsters()
     local toughness = calc_toughness()
-
-    local qty = calc_quantity()
 
     local palette = select_monsters(toughness)
 
@@ -1582,7 +1288,7 @@ function Monsters_fill_room(R)
 
     if not table.empty(palette) then
       create_monster_map(palette)
-      fill_monster_map(qty, barrel_chance)
+      fill_monster_map(palette, barrel_chance)
     end
   end
 
@@ -1599,6 +1305,7 @@ function Monsters_fill_room(R)
 
     return stats
   end
+
 
   local function collect_weapons(hmodel)
     local list = {}
@@ -1617,6 +1324,7 @@ function Monsters_fill_room(R)
     return list
   end
 
+
   local function give_monster_drops(mon_list, hmodel)
     for _,info in ipairs(mon_list) do
       if info.give then
@@ -1624,6 +1332,7 @@ function Monsters_fill_room(R)
       end
     end
   end
+
 
   local function user_adjust_result(stats)
     -- apply the user's health/ammo adjustments here
@@ -1644,6 +1353,7 @@ function Monsters_fill_room(R)
     end
   end
 
+
   local function subtract_gotten_stuff(stats, hmodel)
     for name,got_qty in pairs(hmodel.stats) do
       local st_qty = stats[name] or 0
@@ -1657,12 +1367,42 @@ function Monsters_fill_room(R)
   end
 
 
+  local function sim_battle(CL, hmodel, SK, mon_list)
+    local weap_list = collect_weapons(hmodel)
+
+    local stats = R.fight_stats[SK][CL]
+
+    gui.debugf("Fight simulator @ %s  SK:%s\n", R:tostr(), SK)
+    gui.debugf("weapons = \n")
+    for _,info in ipairs(weap_list) do
+      gui.debugf("  %s\n", info.name)
+    end
+
+    local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
+
+    Fight_simulator(mon_list, weap_list, weap_prefs, SK, stats)
+
+    gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
+
+    user_adjust_result(stats)
+    gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
+
+    give_monster_drops(mon_list, hmodel)
+
+    subtract_gotten_stuff(stats, hmodel)
+
+    gui.debugf("final result = \n%s\n", table.tostr(stats,1))
+  end
+
+
   ---| Monsters_fill_room |---
 
   gui.debugf("Monsters_fill_room @ %s\n", R:tostr())
 
   R.monster_list = {}
   R.fight_stats  = make_empty_stats()
+
+  R.big_item_spots = table.deep_copy(R.item_spots)
 
   if OB_CONFIG.mons == "none" then
     return
@@ -1678,8 +1418,6 @@ function Monsters_fill_room(R)
   end
 
 
-  find_monster_spots()
-
   add_monsters()
 
 
@@ -1690,30 +1428,8 @@ function Monsters_fill_room(R)
     if mon_list and #mon_list >= 1 then
 
       for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
-        local weap_list = collect_weapons(hmodel)
-        local stats = R.fight_stats[SK][CL]
-
-        gui.debugf("Fight simulator @ %s  SK:%s\n", R:tostr(), SK)
-        gui.debugf("weapons = \n")
-        for _,info in ipairs(weap_list) do
-          gui.debugf("  %s\n", info.name)
-        end
-
-        local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
-
-        Fight_simulator(mon_list, weap_list, weap_prefs, SK, stats)
-        gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
-
-        user_adjust_result(stats)
-        gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
-
-        give_monster_drops(mon_list, hmodel)
-
-        subtract_gotten_stuff(stats, hmodel)
-
-        gui.debugf("final result = \n%s\n", table.tostr(stats,1))
-      end -- for CL
-
+        sim_battle(CL, hmodel, SK, mon_list)
+      end
     end
   end -- for SK
 end
@@ -1746,8 +1462,6 @@ end
 
 function Monsters_make_battles()
   
-  do return end --!!!!!!
-
   gui.printf("\n--==| Make Battles |==--\n\n")
 
   Player_init()
@@ -1755,7 +1469,7 @@ function Monsters_make_battles()
   Monsters_init()
   Monsters_global_palette()
 
----!!  Levels.invoke_hook("make_battles", LEVEL.seed)
+  Levels_invoke_hook("make_battles", LEVEL.seed)
 
   local cur_quest = -1
 
@@ -1770,7 +1484,7 @@ function Monsters_make_battles()
     end
 
     Monsters_fill_room(R)
-  end -- for R
+  end
 
   Monsters_show_stats()
 
