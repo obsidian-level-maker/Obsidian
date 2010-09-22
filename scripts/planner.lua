@@ -108,11 +108,15 @@ function SECTION_CLASS.neighbor(self, dir, dist)
   return SECTIONS[nx][ny]
 end
 
+function SECTION_CLASS.same_room(self, dir)
+  local N = self:neighbor(dir)
+  return N and N.room == self.room
+end
+
 function SECTION_CLASS.same_neighbors(self)
   local count = 0
   for side = 2,8,2 do
-    local N = self:neighbor(side)
-    if N and N.room == self.room then
+    if self:same_room(side) then
       count = count + 1
     end
   end

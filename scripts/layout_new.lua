@@ -958,11 +958,35 @@ if S.kind == "solid" then return end
   end
 
 
+  local function shrunk_section_coords(K)
+    local x1, y1 = K.x1, K.y1
+    local x2, y2 = K.x2, K.y2
+
+    if not K:same_room(4) then K.x1 = K.x1 + 8 end
+    if not K:same_room(6) then K.x2 = K.x2 - 8 end
+    if not K:same_room(2) then K.y1 = K.y1 + 8 end
+    if not K:same_room(8) then K.y2 = K.y2 - 8 end
+
+    return x1,y1, x2,y2
+  end
+
   local function build_floor()
-    -- TEMP CRUD
-    for _,P in ipairs(R.floor_space.polys) do
-      floor_polygon(P)
+    -- TEMPER CRUDDIER CRUD
+    local h = 0
+    local mat = R.skin.wall
+    if not R.outdoor and THEME.building_floors then
+      mat = rand.key_by_probs(THEME.building_floors)
     end
+
+    for _,K in ipairs(R.sections) do
+      local x1, y1, x2, y2 = shrunk_section_coords(K)
+      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal(mat))
+    end
+
+---    -- TEMP CRUD
+---    for _,P in ipairs(R.floor_space.polys) do
+---      floor_polygon(P)
+---    end
   end
 
   local function build_ceiling()
@@ -971,7 +995,8 @@ if S.kind == "solid" then return end
     local mat = sel(R.outdoor, "_SKY", "METAL1")
 
     for _,K in ipairs(R.sections) do
-      Trans.quad(K.x1, K.y1, K.x2, K.y2, h, nil, Mat_normal(mat))
+      local x1, y1, x2, y2 = shrunk_section_coords(K)
+      Trans.quad(x1, y1, x2, y2, h, nil, Mat_normal(mat))
     end
   end
 
