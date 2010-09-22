@@ -1011,14 +1011,17 @@ function Monsters_fill_room(R)
     -- adjust probs in palette to account for monster size,
     -- e.g. we can fit 4 revenants in the same space as a mancubus.
 
+    local pal2 = {}
+
     for mon,prob in pairs(palette) do
-      pal_2[mon]  = prob
-      totals[mon] = 0
+      pal2[mon] = prob
 
       if is_big(mon) then
-        pal_2[mon] = pal_2[mon] * 3
+        pal2[mon] = pal2[mon] * 3
       end
     end
+
+    return pal2
   end
 
 
@@ -1080,12 +1083,11 @@ function Monsters_fill_room(R)
   end
 
 
-  local function place_monster(spot)
-    local angle  = spot.angle or monster_angle(spot.S)
+  local function place_monster(mon, x, y, z)
+    local angle  = 0 --!!!!! FIXME spot.angle or monster_angle(spot.S)
     local ambush = rand.sel(92, 1, 0)
 
-    local mon  = spot.monster
-    local info = spot.info
+    local info = GAME.MONSTERS[mon]
 
     -- handle replacements
     if LEVEL.mon_replacement[mon] and not R.no_replacement then
@@ -1111,7 +1113,7 @@ function Monsters_fill_room(R)
     if PARAM.use_spawnflags then
       props.spawnflags = 0
 
-      if spot.ambush or ambush then
+      if ambush then
         props.spawnflags = props.spawnflags + QUAKE_FLAGS.AMBUSH
       end
 
@@ -1120,7 +1122,7 @@ function Monsters_fill_room(R)
     else
       props.flags = DOOM_FLAGS.HARD
 
-      if spot.ambush or ambush then
+      if ambush then
         props.flags = props.flags + DOOM_FLAGS.AMBUSH
       end
 
@@ -1128,12 +1130,7 @@ function Monsters_fill_room(R)
       if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
     end
 
-    local mx = (spot.x1 + spot.x2) / 2
-    local my = (spot.y1 + spot.y2) / 2
-
-    Trans.entity(mon, mx, my, spot.z1, props)
-
-    spot.S.usage = "monster"
+    Trans.entity(mon, x, y, z, props)
   end
 
 
@@ -1154,10 +1151,13 @@ function Monsters_fill_room(R)
   local function how_many_for_spot(mon, spot)
     local ent  = GAME.ENTITIES[mon]
 
+    -- FIXME !!!
+    -- if ent.h >= (spot.z2 - spot.z1) then return 0 end
+
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / ent.r / 2)
-    h = int(h / ent.r / 2)
+    w = int(w / ent.r / 2.2)
+    h = int(h / ent.r / 2.2)
 
     return w * h
   end
@@ -1168,8 +1168,19 @@ function Monsters_fill_room(R)
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    w = int(w / ent.r / 2)
-    h = int(h / ent.r / 2)
+    w = int(w / ent.r / 2.2)
+    h = int(h / ent.r / 2.2)
+
+    for mx = 1,w do for my = 1,h do
+      local x = spot.x1 + ent.r * 2.2 * (mx-0.5)
+      local y = spot.y1 + ent.r * 2.2 * (my-0.5)
+      local z = spot.z1 or 0
+
+      place_monster(mon, x, y, z)
+
+      count = count - 1
+      if count < 1 then return end
+    end end
 
     -- TODO
   end
@@ -1180,19 +1191,20 @@ function Monsters_fill_room(R)
     local ent  = GAME.ENTITIES[mon]
 
     -- find a spot
-    for _,spot in ipairs(R.mon_spots) do
+    for idx,spot in ipairs(R.mon_spots) do
       local fit_num = how_many_for_spot(mon, spot)
       if fit_num >= 1 then
+gui.printf("fit_num = %d  max = %d\n", fit_num, max_num)
         fit_num = math.min(fit_num, max_num)
         place_in_spot(mon, spot, fit_num)
+
+        table.remove(R.mon_spots, idx)
         return fit_num
       end
     end
 
     return 0  -- not possible
   end
-
-
 
 
   local function how_many_dudes(mon, count, qty)
@@ -1216,8 +1228,10 @@ function Monsters_fill_room(R)
 
 
   local function fill_monster_map(palette, barrel_chance)
+    local pal2 = create_monster_map(palette)
+
     -- add at least one monster of each kind
-    for pass = 1,3 do
+    for pass = 1,-3 do  -- FIXME
       for mon,prob in pairs(palette) do
         if (pass == 1 and is_huge(mon)) or
            (pass == 2 and is_big(mon) and not is_huge(mon)) or
@@ -1236,7 +1250,6 @@ function Monsters_fill_room(R)
 
 
     local wants = {}
-    local pal2 = table.copy(palette)
 
     for mon,_ in pairs(palette) do
       wants[mon] = how_many_dudes(mon, count, qty) - 1
@@ -1253,10 +1266,11 @@ function Monsters_fill_room(R)
 
       if wants[mon] >= 1 then
         local actual = try_add_monster(mon, wants[mon])
+gui.debugf("wanted %d : actual %d\n", wants[mon], actual)
 
         if actual == 0 or actual >= wants[mon] then
           wants[mon] = nil
-          pal2]mon]  = nil
+          pal2[mon]  = nil
         else
           wants[mon] = wants[mon] - actual
         end
@@ -1287,7 +1301,6 @@ function Monsters_fill_room(R)
     -- FIXME: add barrels even when no monsters in room
 
     if not table.empty(palette) then
-      create_monster_map(palette)
       fill_monster_map(palette, barrel_chance)
     end
   end
