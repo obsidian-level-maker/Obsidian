@@ -3798,6 +3798,7 @@ function DOOM1.get_levels()
         map      = map,
         episode  = episode,
         ep_along = ep_along,
+        mon_along = ep_along,
 
         sky_light   = ep_info.sky_light,
         secret_kind = (map == 9) and "plain",
@@ -3885,6 +3886,7 @@ function DOOM2.get_levels()
       map      = map,
       episode  = episode,
       ep_along = ep_along,
+      mon_along = math.min(1, map / 10),
 
       sky_light = ep_info.sky_light,
     }

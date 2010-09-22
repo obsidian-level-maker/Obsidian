@@ -254,14 +254,25 @@ function Monsters_global_palette()
     LEVEL.monster_prefs = {}
   end
 
-  LEVEL.global_skip = {}
+  LEVEL.global_palette = {}
 
-  local list = {}
+  local max_level = (LEVEL.mon_along or 0) * 10
+  if max_level < 1 then max_level = 1 end
+
+stderrf("---------------> %1.3f\n", max_level)
+
   for name,info in pairs(GAME.MONSTERS) do
-    if info.prob and info.prob > 0 then
-      table.insert(list, name)
+    if info.prob and info.prob > 0 and
+       (info.level or 1) <= max_level
+    then
+      LEVEL.global_palette[name] = 1
     end
   end
+
+  do return end
+
+
+  --- OLD OLD:  FIXME
 
   -- is there enough monsters to actually bother?
   if #list <= 2 then return end
@@ -726,7 +737,7 @@ function Monsters_fill_room(R)
       if prob then return prob end
     end
 
-    if LEVEL.global_skip[name] then
+    if not LEVEL.global_palette[name] then
       return 0
     end
 
@@ -835,9 +846,9 @@ function Monsters_fill_room(R)
     for name,info in pairs(GAME.MONSTERS) do
       local prob = info.crazy_prob or info.prob or 0
 
-      if LEVEL.global_skip[name] then
-        prob = 0
-      end
+---      if not LEVEL.global_palette[name] then
+---        prob = 0
+---      end
 
       if THEME.force_mon_probs then
         prob = THEME.force_mon_probs[name] or
@@ -1246,7 +1257,7 @@ gui.printf("fit_num = %d  max = %d\n", fit_num, max_num)
     local qty = calc_quantity()
 
     local count = math.min(6, R.sw) * math.min(6 * R.sh)
-    count = int(count / 3)
+    count = int(count / 5)
 
 
     local wants = {}

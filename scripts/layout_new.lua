@@ -761,7 +761,6 @@ function Layout_the_room(R)
       deep2 = deep,
       usage = "fake"
     }
-stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
 
     build_wall(E, SPAN)
   end
