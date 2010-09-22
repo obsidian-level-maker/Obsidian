@@ -690,6 +690,10 @@ function Mat_normal(wall, floor)
     f_mat = Mat_lookup(floor)
   end
 
+  if wall == "_SKY" then
+    return "sky", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
+  end
+
   return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
 end
 

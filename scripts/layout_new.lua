@@ -853,6 +853,9 @@ stderrf("FAKE SPAN -----------------> %d units\n", long2 - long1)
     if info.kind == "window" then
       fab = "WINDOW"
       z = 40
+    elseif GAME.format == "quake" then
+      fab = "QUAKE_DOOR"
+      sk2 = {}
     else
       fab = "DOOR"
       sk2 = GAME.DOORS["silver"]  -- FIXME
