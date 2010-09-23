@@ -149,6 +149,8 @@ end
 function Layout_add_span(E, long1, long2, deep)
   assert(long2 > long1)
 
+  E.place_used = true
+
   -- check if valid
 
   assert(long1 >= 16)
@@ -378,179 +380,6 @@ function Layout_the_room(R)
 --  if R.weapon  then add_weapon(R.weapon)  end
 
 
-  local function OLD__section_for_space(S)
-    for _,K in ipairs(R.sections) do
-      if geom.inside_box(S.x1, S.y1, K.x1,K.y1, K.x2,K.y2) and
-         geom.inside_box(S.x2, S.y2, K.x1,K.y1, K.x2,K.y2)
-      then
-        return K
-      end
-    end
-  end
-
-  local function same_room(K, side)
-    local N = K:neighbor(side)
-    if not N and R.outdoor then return true end ---- FIXME HACK CRAP for SKY BORDERS
-    return N and N.room == K.room
-  end
-
-  local function OLD__touches_side(S, side, foobie)
-    local K = section_for_space(S)
-    if foobie or not same_room(K, side) then
-        if side == 4 and S.x1 < K.x1+1 then return true end
-        if side == 6 and S.x2 > K.x2-1 then return true end
-        if side == 2 and S.y1 < K.y1+1 then return true end
-        if side == 8 and S.y2 > K.y2-1 then return true end
-    end
-    return false
-  end
-
-  local function OLD__touches_corner(S, side)
-    local R_dir = geom.RIGHT_45[side]
-    local L_dir = geom. LEFT_45[side]
-
-    if touches_side(S, R_dir) and touches_side(S, L_dir) then
-      return 1
-    end
-
-    -- handle 270 degree corners (in shaped rooms)
-    if not (touches_side(S, R_dir, true) and touches_side(S, L_dir, true)) then
-      return nil
-    end
-
-    local K = section_for_space(S)
-    if not K then return nil end
-
-    local L = K:neighbor(L_dir)
-    local R = K:neighbor(R_dir)
-
-    if not (L and L.room == K.room) then return nil end
-    if not (R and R.room == K.room) then return nil end
-
-    local L2 = L:neighbor(R_dir)
-    local R2 = R:neighbor(L_dir)
-
-    assert(L2 == R2)
-
-    if L2 and L2.room == K.room then return nil end
-
-    return 2
-  end
-
-
-  local THICK = 80
-
-
-  local function OLD__try_add_corner()
-    for _,S in ipairs(R.spaces) do
-      for side = 1,9,2 do if side ~= 5 then
-        if S.free and touches_corner(S, side) then
-          
-          local x1, y1 = S.x1, S.y1
-          local x2, y2 = S.x2, S.y2
-
-          if x2 - x1 >= THICK then
-            if side == 1 or side == 7 then
-              x2 = x1 + THICK
-            else
-              x1 = x2 - THICK
-            end
-          end
-
-          if y2 - y1 >= THICK then
-            if side == 1 or side == 3 then
-              y2 = y1 + THICK
-            else
-              y1 = y2 - THICK
-            end
-          end
-
-          local SPACE =
-          {
-            wall = true,  corner = true,
-            x1 = x1, y1 = y1,
-            x2 = x2, y2 = y2,
-          }
-
-          Layout_merge_space(R, SPACE)
-
-          -- the spaces have changed, hence must start from beginning
-          return true
-
-        end
-      end end
-    end
-  end
-
-
-  local function OLD__try_add_wall()
-    for _,S in ipairs(R.spaces) do
-      for side = 2,8,2 do
-        if S.free and touches_side(S, side) then
-
-          local x1, y1 = S.x1, S.y1
-          local x2, y2 = S.x2, S.y2
-
-          if side == 4 and x2 - x1 >= THICK then x2 = x1 + THICK end
-          if side == 6 and x2 - x1 >= THICK then x1 = x2 - THICK end
-          if side == 2 and y2 - y1 >= THICK then y2 = y1 + THICK end
-          if side == 8 and y2 - y1 >= THICK then y1 = y2 - THICK end
-
-          local SPACE =
-          {
-            wall = true,
-            x1 = x1, y1 = y1,
-            x2 = x2, y2 = y2,
-          }
-
-          Layout_merge_space(R, SPACE)
-
-          -- the spaces have changed, hence must start from beginning
-          return true
-
-        end
-      end
-    end
-  end
-
-
-  local function collect_importants()
-    -- determine the stuff which MUST go into this room
-
-    R.importants = {}
-
-    if R.purpose then
-      table.insert(R.importants, { kind=R.purpose })
-    end
-
-    if R:has_teleporter() then
-      table.insert(R.importants, { kind="TELEPORTER" })
-    end
-
-    if R.weapon then
-      table.insert(R.importants, { kind="WEAPON" })
-    end
-  end
-
-
-  local function OLD_find_wall_spots()
-    R.walls = {}
-
-    for _,K in ipairs(R.sections) do
-      for side = 2,8,2 do
-        local N = K:neighbor(side)
-
-        if not (N and N.room == R) and
-           not K:side_has_conn(side) and
-           not K:side_has_window(side)
-        then
-          table.insert(R.walls, { K=K, side=side })
-        end
-      end
-    end
-  end
-
-
   local function edge_near_corner(corn, want_horiz)
     -- want_horiz : true for the edge travelling horizontally,
     --              false for the vertical edge
@@ -643,21 +472,28 @@ function Layout_the_room(R)
 
 
   local function pick_imp_spot(IM, middles, corners, walls)
-    for loop = 1,30 do
-      if rand.odds(50) and #middles > 0 then
-        IM.spot = "MIDDLE"
-        IM.middle = table.remove(middles, 1)
+    for loop = 3,19 do
+      if rand.odds(loop * 10) and #middles > 0 then
+        IM.place_kind = "MIDDLE"
+        IM.place_K = table.remove(middles, 1)
+        IM.place_K.place_used = true
         return
       end
 
-      if rand.odds(50) and #walls > 0 then
-        IM.spot = "WALL"
-        IM.middle = table.remove(walls, 1)
+      if rand.odds(loop * 10) and #walls > 0 then
+        IM.place_kind = "WALL"
+        IM.place_E = table.remove(walls, 1)
+        IM.place_E.place_used = true
+        return
+      end
+
+      if rand.odds(loop * 10) and #corners > 0 then
+        IM.place_kind = "CORNER"
+        IM.place_C = table.remove(corners, 1)
+        IM.place_C.place_used = true
         return
       end
     end
-
-    -- TODO: corners (where applicable)
 
     -- TODO: allow up to 4 stuff in a "middle" (subdivide section 2 or 4 ways)
 
@@ -666,19 +502,56 @@ function Layout_the_room(R)
 
 
   local function place_importants()
-    local middles = table.copy(R.sections)
-    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
+    -- determine available places
 
+    local middles = table.copy(R.sections)
     local corners = {}
-    for _,C in ipairs(R.corners) do
-      if not C.concave then table.insert(corners, C) end
+    local walls = {}
+
+    for _,K in ipairs(R.sections) do
+      for _,C in pairs(K.corners) do
+        if not C.place_used then
+          table.insert(corners, C)
+        end
+      end
+      for _,E in pairs(K.edges) do
+        if not E.place_used then
+          table.insert(walls, E)
+        end
+      end
     end
 
-    local walls = table.copy(R.walls)
+    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
+
+    rand.shuffle(corners)
     rand.shuffle(walls)
 
+    -- determine the stuff which MUST go into this room
+
+    R.importants = {}
+
+    if R.purpose then
+      table.insert(R.importants, { kind=R.purpose })
+    end
+
+    if R:has_teleporter() then
+      table.insert(R.importants, { kind="TELEPORTER" })
+    end
+
+--[[ FIXME (currently added by pickup code)
+    if R.weapon then
+      table.insert(R.importants, { kind="WEAPON" })
+    end
+--]]
+
+    -- TODO: more combinations, check what prefabs can be used
+
     for _,IM in ipairs(R.importants) do
-      pick_imp_spot(IM, middles, corners, walls)
+      if IM.kind == "TELEPORTER" then
+        pick_imp_spot(IM, {}, {}, walls)
+      else
+        pick_imp_spot(IM, middles, {}, {})
+      end
     end
   end
 
@@ -850,12 +723,12 @@ function Layout_the_room(R)
 
 
     if info.kind == "window" then
-      fab = "QUAKE_WINDOW"
+      fab = "WINDOW_W_BARS"
       z = 40
       sk2 = { frame="METAL1_1" }
     elseif GAME.format == "quake" then
-      fab = "QUAKE_DOOR"
-      sk2 = {}
+      fab = "QUAKE_ARCH"
+      sk2 = { frame="METAL1_1" }
     else
       fab = "DOOR"
       sk2 = GAME.DOORS["silver"]  -- FIXME
@@ -1021,9 +894,7 @@ if S.kind == "solid" then return end
 
   decide_corner_sizes()
 
-  collect_importants()
-
---!! FIXME  place_importants()
+  place_importants()
 
 
   build_corners()
