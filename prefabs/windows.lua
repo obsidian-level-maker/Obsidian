@@ -67,7 +67,9 @@ PREFAB.QUAKE_WINDOW =
 {
   placement = "fitted",
 
-  x_sizes = { {64,2}, {64,1}, {64,2} },
+  x_sizes = { {64,1}, {64,1}, {64,1} },
+
+  repeat_width = 192,
 
   brushes =
   {

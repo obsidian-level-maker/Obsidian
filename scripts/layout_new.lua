@@ -864,20 +864,29 @@ function Layout_the_room(R)
     end
 
 
-    local long = SP.long2 - SP.long1
+    local long1 = SP.long1
+    local long2 = SP.long2
 
-    if long >= 560 then  -- test : make two of them
-      local mid = SP.long1 + int(long / 2)
+    local long = long2 - long1
+    local count = 1
 
-      SP.long2 = mid
 
-      build_straddler_span(E, SP, z, back, fab, skin, sk2)
+    local fab_info = assert(PREFAB[fab])
 
-      SP.long2 = SP.long1 + long
-      SP.long1 = mid
+    if fab_info.repeat_width and (long / fab_info.repeat_width) >= 2 then
+      count = int(long / fab_info.repeat_width)
     end
 
-    build_straddler_span(E, SP, z, back, fab, skin, sk2)
+
+    for i = 1,count do
+      SP.long1 = long1
+      SP.long2 = long2
+
+      if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
+      if i < count then SP.long2 = long1 + int(long * (i)   / count) end
+
+      build_straddler_span(E, SP, z, back, fab, skin, sk2)
+    end
   end
 
 
