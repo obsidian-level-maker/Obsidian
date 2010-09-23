@@ -979,7 +979,7 @@ QUAKE1.MONSTERS =
 
   enforcer =
   {
-    level=2, prob=40,
+    level=3, prob=40,
     health=80, damage=18, attack="missile",
     give={ {ammo="cell",count=5} },
   },
@@ -988,6 +988,7 @@ QUAKE1.MONSTERS =
   {
     -- Note: currently disabled (can only be killed with rockets)
     -- level=2, prob=10,
+    level=3,
     health=60, damage=8,  attack="melee",
   },
 
@@ -1272,6 +1273,7 @@ function QUAKE1.get_levels()
   local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 7)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+  if OB_CONFIG.length == "episode" then MAP_NUM = 6 end
 
   local SKIP_MAPS =
   {
@@ -1297,6 +1299,7 @@ function QUAKE1.get_levels()
         episode  = episode,
         map      = map,
         ep_along = map / MAP_NUM,
+        mon_along = (map + episode - 1) / MAP_NUM,
 
         next_map = string.format("e%dm%d", episode, map+1)
       }

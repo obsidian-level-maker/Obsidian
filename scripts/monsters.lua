@@ -257,7 +257,8 @@ function Monsters_global_palette()
   LEVEL.global_palette = {}
 
   local max_level = (LEVEL.mon_along or 0) * 10
-  if max_level < 1 then max_level = 1 end
+
+  max_level = math.clamp(1, max_level, 10)
 
 stderrf("---------------> %1.3f\n", max_level)
 
