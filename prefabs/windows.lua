@@ -68,6 +68,78 @@ PREFAB.WINDOW =
 }
 
 
+PREFAB.WINDOW_W_BARS =
+{
+  placement = "fitted",
+
+  x_sizes = { {64,1}, {64,2}, {64,1} },
+
+  repeat_width = 256,
+
+  defaults =
+  {
+    track = "?wall",
+  },
+
+  brushes =
+  {
+    -- right side
+    {
+      { x =  0, y =  0, mat = "?outer" },
+      { x = 64, y =  0, mat = "?track" },
+      { x = 64, y = 32, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 128, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 32, mat = "?wall" },
+      { x = 128, y = 32, mat = "?track" },
+    },
+
+    -- bottom
+    {
+      { x =  64, y =  0, mat = "?outer" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
+      { t = 0, mat = "?outer" },
+    },
+
+    -- top
+    {
+      { x =  64, y =  0, mat = "?outer" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
+      { b = 96, mat = "?outer" },
+    },
+
+    -- bars
+    {
+      { x =  94, y = 12, mat = "?frame" },
+      { x =  98, y = 12, mat = "?frame" },
+      { x =  98, y = 20, mat = "?frame" },
+      { x =  94, y = 20, mat = "?frame" },
+    },
+    {
+      { x =  76, y = 12, mat = "?frame" },
+      { x =  80, y = 12, mat = "?frame" },
+      { x =  80, y = 20, mat = "?frame" },
+      { x =  76, y = 20, mat = "?frame" },
+    },
+    {
+      { x = 112, y = 12, mat = "?frame" },
+      { x = 116, y = 12, mat = "?frame" },
+      { x = 116, y = 20, mat = "?frame" },
+      { x = 112, y = 20, mat = "?frame" },
+    },
+  },
+}
+
+
 PREFAB.WINDOW_W_CROSS =
 {
   placement = "fitted",
