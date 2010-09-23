@@ -785,7 +785,7 @@ function Monsters_fill_room(R)
 
 
     -- would the monster take too long to kill?
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 14
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 15
 
     if time >= max_time then return 0 end
 
@@ -807,7 +807,7 @@ function Monsters_fill_room(R)
     end
 
     if damage < low_damage then
-      local factor = damage / low_damage
+      local factor = 0.5 ---  damage / low_damage
       prob = prob * factor
     end
 
