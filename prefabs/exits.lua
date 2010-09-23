@@ -49,6 +49,49 @@ PREFAB.START_SPOT =
 }
 
 
+PREFAB.START_LEDGE =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind ledge
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- ledge
+    {
+      { x =   0, y = 16, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x = 192, y = 80, mat = "?wall" },
+      { x =   0, y = 80, mat = "?wall" },
+      { t = 128, y = 80, mat = "?wall" },
+    },
+
+    -- area in front of ledge
+    {
+      { m = "walk" },
+      { x =   0, y =  80 },
+      { x = 192, y =  80 },
+      { x = 192, y = 128 },
+      { x =   0, y = 128 },
+    },
+  },
+
+  entities =
+  {
+    { x =  80, y = 48, z = 128, ent = "player1", angle = "?angle" },
+    { x =  40, y = 48, z = 128, ent = "player2", angle = "?angle" },
+    { x = 120, y = 48, z = 128, ent = "player3", angle = "?angle" },
+    { x = 160, y = 48, z = 128, ent = "player4", angle = "?angle" },
+  },
+}
+
+
 PREFAB.EXIT_PILLAR =
 {
   brushes =
