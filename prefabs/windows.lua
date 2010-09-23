@@ -42,7 +42,7 @@ PREFAB.WINDOW =
       { x = 128, y = 16, mat = "?track" },
     },
 
-    -- frame bottom
+    -- bottom
     {
       { x =  64, y =  0, mat = "?outer" },
       { x = 128, y =  0, mat = "?wall" },
@@ -51,13 +51,100 @@ PREFAB.WINDOW =
       { t = 0, mat = "?outer" },
     },
 
-    -- frame top
+    -- top
     {
       { x =  64, y =  0, mat = "?outer" },
       { x = 128, y =  0, mat = "?wall" },
       { x = 128, y = 16, mat = "?wall" },
       { x =  64, y = 16, mat = "?wall" },
       { b = 64, mat = "?outer" },
+    },
+  },
+}
+
+
+PREFAB.QUAKE_WINDOW =
+{
+  placement = "fitted",
+
+  x_sizes = { {64,2}, {64,1}, {64,2} },
+
+  brushes =
+  {
+    -- right side
+    {
+      { x =  0, y =  8, mat = "?outer" },
+      { x = 56, y =  8, mat = "?track" },
+      { x = 56, y = 24, mat = "?wall" },
+      { x =  0, y = 24, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 136, y =  8, mat = "?outer" },
+      { x = 192, y =  8, mat = "?wall" },
+      { x = 192, y = 24, mat = "?wall" },
+      { x = 132, y = 24, mat = "?track" },
+    },
+
+    -- bottom
+    {
+      { x =  56, y =  8, mat = "?outer" },
+      { x = 136, y =  8, mat = "?wall" },
+      { x = 136, y = 24, mat = "?wall" },
+      { x =  56, y = 24, mat = "?wall" },
+      { t = 0, mat = "?outer" },
+    },
+
+    -- top
+    {
+      { x =  56, y =  8, mat = "?outer" },
+      { x = 136, y =  8, mat = "?wall" },
+      { x = 136, y = 24, mat = "?wall" },
+      { x =  56, y = 24, mat = "?wall" },
+      { b = 128, mat = "?outer" },
+    },
+
+    ---- 3D frame ----
+
+    -- left
+    {
+      { x =  56, y =  0, mat = "?frame" },
+      { x =  64, y =  0, mat = "?frame" },
+      { x =  64, y = 32, mat = "?frame" },
+      { x =  56, y = 32, mat = "?frame" },
+      { b =   0, mat = "?frame" },
+      { t = 128, mat = "?frame" },
+    },
+
+    -- right
+    {
+      { x = 128, y =  0, mat = "?frame" },
+      { x = 136, y =  0, mat = "?frame" },
+      { x = 136, y = 32, mat = "?frame" },
+      { x = 128, y = 32, mat = "?frame" },
+      { b =   0, mat = "?frame" },
+      { t = 128, mat = "?frame" },
+    },
+
+    -- top
+    {
+      { x =  64, y =  0, mat = "?frame" },
+      { x = 128, y =  0, mat = "?frame" },
+      { x = 128, y = 32, mat = "?frame" },
+      { x =  64, y = 32, mat = "?frame" },
+      { b = 120, mat = "?frame" },
+      { t = 128, mat = "?frame" },
+    },
+
+    -- bottom
+    {
+      { x =  64, y =  0, mat = "?frame" },
+      { x = 128, y =  0, mat = "?frame" },
+      { x = 128, y = 32, mat = "?frame" },
+      { x =  64, y = 32, mat = "?frame" },
+      { b = 0, mat = "?frame" },
+      { t = 8, mat = "?frame" },
     },
   },
 }

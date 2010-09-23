@@ -850,8 +850,9 @@ function Layout_the_room(R)
 
 
     if info.kind == "window" then
-      fab = "WINDOW"
+      fab = "QUAKE_WINDOW"
       z = 40
+      sk2 = { frame="METAL1_1" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_DOOR"
       sk2 = {}
