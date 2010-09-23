@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  EXIT PREFABS
+--  START and EXIT PREFABS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -17,6 +17,37 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+
+PREFAB.START_SPOT =
+{
+  brushes =
+  {
+    {
+      { m = "walk" },
+      { x = -80, y = -80 },
+      { x =  80, y = -80 },
+      { x =  80, y =  80 },
+      { x = -80, y =  80 },
+    },
+
+    {
+      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 8, mat = "?top", light = "?light" },
+    },
+  },
+
+  entities =
+  {
+    { x =   0, y =   0, z = 8, ent = "player1", angle = "?angle" },
+    { x =  36, y =   0, z = 8, ent = "player2", angle = "?angle" },
+    { x = -36, y =   0, z = 8, ent = "player3", angle = "?angle" },
+    { x =   0, y = -36, z = 8, ent = "player4", angle = "?angle" },
+  },
+}
+
 
 PREFAB.EXIT_PILLAR =
 {
@@ -321,4 +352,5 @@ PREFAB.QUAKE_EXIT_PAD =
     },
   },
 }
+
 
