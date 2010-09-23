@@ -3891,6 +3891,10 @@ function DOOM2.get_levels()
       sky_light = ep_info.sky_light,
     }
 
+    if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
+      LEV.mon_along = ep_along
+    end
+
     if OB_CONFIG.length == "few" then
       LEV.episode = few_episodes[map]
     end

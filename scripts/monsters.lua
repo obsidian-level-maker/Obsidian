@@ -355,6 +355,7 @@ function Monsters_do_pickups()
     end -- for SK
   end
 
+
   local function get_storage_prefs(arena)
     local ratios = {}
 
@@ -364,6 +365,7 @@ function Monsters_do_pickups()
 
     return ratios, arena.storage_rooms
   end
+
 
   local function get_previous_prefs(R)
     local room_list = {}
@@ -383,6 +385,7 @@ function Monsters_do_pickups()
     return ratios, room_list
   end
 
+
   local function distribute_to_list(R, qty, ratios, room_list)
     assert(#ratios == #room_list)
 
@@ -397,6 +400,7 @@ function Monsters_do_pickups()
     end
   end
 
+
   local function distribute_fight_stats(R)
     if R.is_storage then return end
 
@@ -408,8 +412,7 @@ function Monsters_do_pickups()
 
 
   local function sort_spots(R)
-    table.sort(R.big_spots,   function(A,B) return A.score > B.score end)
-    table.sort(R.small_spots, function(A,B) return A.score > B.score end)
+    rand.shuffle(R.item_spots)
   end
 
 
@@ -444,6 +447,8 @@ function Monsters_do_pickups()
       local each_qty = info.give[1].health or info.give[1].count
       local min_num  = info.cluster[1]
       local max_num  = info.cluster[2]
+
+      assert(max_num <= 9)
 
       --- count = rand.irange(min_num, max_num)
 
@@ -506,7 +511,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
-  local function place_item(S, item_name, x, y, SK)
+  local function place_item(item_name, x, y, z, SK)
     local props = {}
 
     if PARAM.use_spawnflags then
@@ -527,7 +532,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       end
     end
 
-    Trans.entity(item_name, x, y, S.floor_h, props)
+    Trans.entity(item_name, x, y, z, props)
   end
 
 
@@ -539,11 +544,11 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     x = x + rand.irange(-16, 16)
     y = y + rand.irange(-16, 16)
 
-    place_item(spot.S, item, x, y, SK)
+    place_item(item, x, y, spot.z or 0, SK)
   end
 
 
-  local function place_small_item(spot, item, count, SK)
+  local function OLD__place_small_item(spot, item, count, SK)
     local x1, y1 = spot.x, spot.y
     local x2, y2 = spot.x, spot.y
 
@@ -584,19 +589,20 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       local count = pair.count
       local spot
 
-      if item.big_item then
-        spot = table.remove(R.big_spots, 1)
-        spot.used = true
-        table.insert(R.big_spots, spot)
-
+      if item.big_item and not table.empty(R.big_item_spots) then
         assert(count == 1)
+
+        spot = table.remove(R.big_item_spots)
+        spot.x, spot.y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+
         place_big_item(spot, item.name, SK, CL)
       else
-        spot = table.remove(R.small_spots, 1)
-        spot.used = true
-        table.insert(R.small_spots, spot)
+        for i = 1,count do
+          spot = table.remove(R.item_spots, 1)
+          table.insert(R.item_spots, spot)
 
-        place_small_item(spot, item.name, count, SK, CL)
+          place_item(item.name, spot.x, spot.y, spot.z or 0, SK)
+        end
       end
     end
   end
@@ -629,24 +635,28 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     -- place large clusters before small ones
     table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
 
+    -- FIXME: place weapon in layout code
+    if R.weapon then
+      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1, SK=SK})
+    end
+
     place_item_list(R, item_list, SK, CL)
   end
 
+
   local function pickups_in_room(R)
 gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
-    if find_pickup_spots(R) then
+
       for _,SK in ipairs(SKILLS) do
         for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
           pickups_for_hmodel(R, SK, CL, hmodel)
         end -- for CL
       end -- for SK
-    end
+
   end
 
 
   ---| Monsters_do_pickups |---
-
-do return end --!!!!!!!!! FIXME
 
   for _,R in ipairs(LEVEL.all_rooms) do
     if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
@@ -936,7 +946,7 @@ function Monsters_fill_room(R)
   end
 
 
-  local function monster_fits(S, mon, info)
+  local function FIXME__monster_fits(S, mon, info)
     if S.usage or S.no_monster or not S.floor_h then
       return false
     end
@@ -967,37 +977,6 @@ function Monsters_fill_room(R)
     end
 
     return true
-  end
-
-
-  local function add_mon_spot(S, x, y, mon, info)
-    local SPOT =
-    {
-      S=S, x=x, y=y, monster=mon, info=info
-    }
-    table.insert(R.monster_spots, SPOT)
-  end
-
-  local function add_spot_group(S, mon, info)
-    local sx, sy = S.sx, S.sy
-    local mx, my = S:mid_point()
-
-    if is_huge(mon) then
-      add_mon_spot(S, S.x2, S.y2, mon, info)
-
-      -- prevent other seeds in 2x2 group from being used
-      SEEDS[sx+1][sy+0].no_monster = true
-      SEEDS[sx+0][sy+1].no_monster = true
-      SEEDS[sx+1][sy+1].no_monster = true
-
-    elseif is_big(mon) then
-      add_mon_spot(S, mx, my, mon, info)
-    else
-      add_mon_spot(S, mx-36, my-36, mon, info)
-      add_mon_spot(S, mx-36, my+36, mon, info)
-      add_mon_spot(S, mx+36, my-36, mon, info)
-      add_mon_spot(S, mx+36, my+36, mon, info)
-    end
   end
 
 
@@ -1146,7 +1125,7 @@ function Monsters_fill_room(R)
   end
 
 
-  local function place_barrel(spot)
+  local function OLD__place_barrel(spot)
     if spot.S:has_any_conn() or spot.S.kind ~= "walk" then
       return
     end
@@ -1427,7 +1406,7 @@ gui.debugf("wanted %d : actual %d\n", wants[mon], actual)
   R.monster_list = {}
   R.fight_stats  = make_empty_stats()
 
-  R.big_item_spots = table.deep_copy(R.item_spots)
+  R.big_item_spots = table.deep_copy(R.mon_spots)
 
   if OB_CONFIG.mons == "none" then
     return
