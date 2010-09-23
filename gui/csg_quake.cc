@@ -1165,7 +1165,11 @@ static void CreateWallFaces(quake_group_c & group, quake_leaf_c *leaf,
         brush_vert_c *bvert = NULL;
         
         if (S->snag->partner)
+#if 0
           bvert = S->snag->partner->FindBrushVert(B);
+#else
+          bvert = S->snag->partner->FindOneSidedVert((bz + tz) / 2.0);
+#endif
 
         // fallback to something safe
         if (! bvert)
