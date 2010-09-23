@@ -477,6 +477,7 @@ function Layout_the_room(R)
         IM.place_kind = "MIDDLE"
         IM.place_K = table.remove(middles, 1)
         IM.place_K.place_used = true
+gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
         return
       end
 
@@ -484,6 +485,19 @@ function Layout_the_room(R)
         IM.place_kind = "WALL"
         IM.place_E = table.remove(walls, 1)
         IM.place_E.place_used = true
+gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
+
+        local E = IM.place_E
+
+        local long1 = int(E.long - 200) / 2
+        local long2 = int(E.long + 200) / 2
+
+        local SP = Layout_add_span(E, long1, long2, 128)
+
+        SP.usage = "prefab"
+        SP.prefab = "START_LEDGE"
+        SP.skin = {}
+
         return
       end
 
@@ -491,6 +505,7 @@ function Layout_the_room(R)
         IM.place_kind = "CORNER"
         IM.place_C = table.remove(corners, 1)
         IM.place_C.place_used = true
+gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
         return
       end
     end
@@ -547,7 +562,7 @@ function Layout_the_room(R)
     -- TODO: more combinations, check what prefabs can be used
 
     for _,IM in ipairs(R.importants) do
-      if IM.kind == "TELEPORTER" then
+      if true then --- IM.kind == "TELEPORTER" then
         pick_imp_spot(IM, {}, {}, walls)
       else
         pick_imp_spot(IM, middles, {}, {})
@@ -763,6 +778,20 @@ function Layout_the_room(R)
   end
 
 
+  local function build_edge_prefab(E, SP)
+    assert(SP.prefab)
+    assert(SP.skin)
+
+    local K = E.K
+
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
+                                   SP.long1, SP.long2, 0, SP.deep1)
+
+stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
+    Fab_with_update(SP.prefab, T, SP.skin)
+  end
+
+
   local function build_edge(E)
     local L_long = 0
     local R_long = E.long
@@ -782,7 +811,11 @@ function Layout_the_room(R)
         build_fake_span(E, L_long, SP.long1)
       end
 
-      build_straddler(E, SP)
+      if SP.usage == "straddler" then
+        build_straddler(E, SP)
+      else
+        build_edge_prefab(E, SP)
+      end
 
       L_long = SP.long2
     end
@@ -915,7 +948,7 @@ if S.kind == "solid" then return end
     local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
     local T = Trans.spot_transform(ex, ey, 0)
 
-    Fab_with_update("START_SPOT", T, skin)
+--- Fab_with_update("START_SPOT", T, skin)
   
   elseif R.purpose == "EXIT" then
 
