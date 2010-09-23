@@ -3412,7 +3412,7 @@ DOOM2.MONSTERS =
 
   arach =
   {
-    level=5, prob=25,
+    level=6, prob=25,
     health=500, damage=70, attack="missile",
     density=0.8,
   },
@@ -3426,7 +3426,7 @@ DOOM2.MONSTERS =
 
   pain =
   {
-    level=4, prob=7, crazy_prob=15, skip_prob=150,
+    level=6, prob=7, crazy_prob=15, skip_prob=150,
     health=700, damage=20, attack="missile",
     density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
