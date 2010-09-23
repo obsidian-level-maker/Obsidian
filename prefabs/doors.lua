@@ -94,6 +94,71 @@ PREFAB.ARCH2 =
 }
 
 
+PREFAB.QUAKE_ARCH =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- frame
+    {
+      { x = 0,   y = 12, mat = "?outer" },
+      { x = 192, y = 12, mat = "?outer" },
+      { x = 192, y = 36, mat = "?wall" },
+      { x = 0,   y = 36, mat = "?outer" },
+      { b = 136, mat = "?outer" },
+    },
+
+    -- left side
+    {
+      { x = 0,  y = 12, mat = "?outer" },
+      { x = 40, y = 12, mat = "?wall" },
+      { x = 40, y = 36, mat = "?wall" },
+      { x = 0,  y = 36, mat = "?wall" },
+    },
+
+    -- right side
+    {
+      { x = 152, y = 12, mat = "?outer" },
+      { x = 192, y = 12, mat = "?wall" },
+      { x = 192, y = 36, mat = "?wall" },
+      { x = 152, y = 36, mat = "?wall" },
+    },
+
+    ---- 3D FRAME ----
+
+    -- top
+    {
+      { x = 48,  y =  0, mat = "?frame" },
+      { x = 144, y =  0, mat = "?frame" },
+      { x = 144, y = 48, mat = "?frame" },
+      { x = 48,  y = 48, mat = "?frame" },
+      { b = 128, mat = "?frame" },
+      { t = 136, mat = "?frame" },
+    },
+
+    -- left
+    {
+      { x = 40, y =  0, mat = "?frame" },
+      { x = 48, y =  0, mat = "?frame" },
+      { x = 48, y = 48, mat = "?frame" },
+      { x = 40, y = 48, mat = "?frame" },
+      { t = 136, mat = "?frame" },
+    },
+
+    -- right
+    {
+      { x = 144, y =  0, mat = "?frame" },
+      { x = 152, y =  0, mat = "?frame" },
+      { x = 152, y = 48, mat = "?frame" },
+      { x = 144, y = 48, mat = "?frame" },
+      { t = 136, mat = "?frame" },
+    },
+  },
+}
+
+
+
 PREFAB.DOOR =
 {
   placement = "fitted",
