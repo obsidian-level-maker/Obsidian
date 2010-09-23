@@ -982,6 +982,7 @@ QUAKE1.MONSTERS =
     level=3, prob=40,
     health=80, damage=18, attack="missile",
     give={ {ammo="cell",count=5} },
+    density = 0.5,
   },
 
   zombie =
@@ -1010,12 +1011,14 @@ QUAKE1.MONSTERS =
   knight =
   {
     level=1, prob=60,
+    density = 0.6,
     health=75, damage=9,  attack="melee",
   },
 
   death_kt =
   {
     level=5, prob=30,
+    density = 0.4,
     health=250, damage=30, attack="missile",
   },
 
@@ -1024,12 +1027,14 @@ QUAKE1.MONSTERS =
     level=2, prob=40,
     health=200, damage=15, attack="missile",
     give={ {ammo="rocket",count=2} },
+    density = 0.4,
   },
 
   fiend =
   {
     level=3, prob=10,
     health=300, damage=20, attack="melee",
+    density = 0.3,
     weap_prefs={ grenade=0.2 },
   },
 
@@ -1037,6 +1042,7 @@ QUAKE1.MONSTERS =
   {
     level=7, prob=10,
     health=400, damage=25, attack="missile",
+    density = 0.2,
   },
 
   shambler =
@@ -1045,6 +1051,7 @@ QUAKE1.MONSTERS =
     health=600, damage=30, attack="hitscan",
     immunity ={ rocket=0.5, grenade=0.5 },
     weap_prefs={ rocket=0.2, grenade=0.2 },
+    density = 0.2,
   },
 }
 
