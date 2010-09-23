@@ -24,30 +24,35 @@ PREFAB.WINDOW =
 
   x_sizes = { {64,1}, {64,4}, {64,1} },
 
+  defaults =
+  {
+    track = "?wall",
+  },
+
   brushes =
   {
     -- right side
     {
       { x =  0, y =  0, mat = "?outer" },
       { x = 64, y =  0, mat = "?track" },
-      { x = 64, y = 16, mat = "?wall" },
-      { x =  0, y = 16, mat = "?wall" },
+      { x = 64, y = 32, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
     },
 
     -- left side
     {
       { x = 128, y =  0, mat = "?outer" },
       { x = 192, y =  0, mat = "?wall" },
-      { x = 192, y = 16, mat = "?wall" },
-      { x = 128, y = 16, mat = "?track" },
+      { x = 192, y = 32, mat = "?wall" },
+      { x = 128, y = 32, mat = "?track" },
     },
 
     -- bottom
     {
       { x =  64, y =  0, mat = "?outer" },
       { x = 128, y =  0, mat = "?wall" },
-      { x = 128, y = 16, mat = "?wall" },
-      { x =  64, y = 16, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
       { t = 0, mat = "?outer" },
     },
 
@@ -55,9 +60,77 @@ PREFAB.WINDOW =
     {
       { x =  64, y =  0, mat = "?outer" },
       { x = 128, y =  0, mat = "?wall" },
-      { x = 128, y = 16, mat = "?wall" },
-      { x =  64, y = 16, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
       { b = 64, mat = "?outer" },
+    },
+  },
+}
+
+
+PREFAB.WINDOW_W_CROSS =
+{
+  placement = "fitted",
+
+  x_sizes = { {64,1}, {64,1}, {64,1} },
+
+  repeat_width = 256,
+
+  defaults =
+  {
+    track = "?wall",
+  },
+
+  brushes =
+  {
+    -- right side
+    {
+      { x =  0, y =  0, mat = "?outer" },
+      { x = 64, y =  0, mat = "?track" },
+      { x = 64, y = 32, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 128, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 32, mat = "?wall" },
+      { x = 128, y = 32, mat = "?track" },
+    },
+
+    -- bottom
+    {
+      { x =  64, y =  0, mat = "?outer" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
+      { t = 0, mat = "?outer" },
+    },
+
+    -- top
+    {
+      { x =  64, y =  0, mat = "?outer" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 32, mat = "?wall" },
+      { x =  64, y = 32, mat = "?wall" },
+      { b = 128, mat = "?outer" },
+    },
+
+    -- cross
+    {
+      { x =  92, y = 12, mat = "?frame" },
+      { x = 100, y = 12, mat = "?frame" },
+      { x = 100, y = 20, mat = "?frame" },
+      { x =  92, y = 20, mat = "?frame" },
+    },
+    {
+      { x =  64, y = 12, mat = "?frame" },
+      { x = 128, y = 12, mat = "?frame" },
+      { x = 128, y = 20, mat = "?frame" },
+      { x =  64, y = 20, mat = "?frame" },
+      { b =  60, mat = "?frame" },
+      { t =  68, mat = "?frame" },
     },
   },
 }
@@ -76,7 +149,7 @@ PREFAB.QUAKE_WINDOW =
     -- right side
     {
       { x =  0, y =  8, mat = "?outer" },
-      { x = 56, y =  8, mat = "?track" },
+      { x = 56, y =  8, mat = "?wall" },
       { x = 56, y = 24, mat = "?wall" },
       { x =  0, y = 24, mat = "?wall" },
     },
@@ -86,7 +159,7 @@ PREFAB.QUAKE_WINDOW =
       { x = 136, y =  8, mat = "?outer" },
       { x = 192, y =  8, mat = "?wall" },
       { x = 192, y = 24, mat = "?wall" },
-      { x = 132, y = 24, mat = "?track" },
+      { x = 132, y = 24, mat = "?wall" },
     },
 
     -- bottom
@@ -161,8 +234,8 @@ PREFAB.FENCE =
     {
       { x =   0, y =  0, mat = "?fence" },
       { x = 192, y =  0, mat = "?fence" },
-      { x = 192, y = 16, mat = "?fence" },
-      { x =   0, y = 16, mat = "?fence" },
+      { x = 192, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
       { t =  50,         mat = "?fence" },
     },
   },
