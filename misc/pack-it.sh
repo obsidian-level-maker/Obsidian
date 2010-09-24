@@ -30,7 +30,7 @@ dest=PACK-RAT
 mkdir $dest
 
 #
-#  Copy Lua scripts
+#  Lua scripts
 #
 mkdir $dest/scripts
 cp -av $src/scripts/*.* $dest/scripts
@@ -48,7 +48,7 @@ mkdir $dest/prefabs
 cp -av $src/prefabs/*.* $dest/prefabs
 
 #
-#  Copy data files
+#  Data files
 #
 mkdir $dest/data
 mkdir $dest/mods/data
@@ -57,8 +57,14 @@ cp -av $src/data/*.lmp $dest/data || true
 cp -av $src/data/*.wad $dest/data || true
 cp -av $src/data/*.pak $dest/data || true
 
+mkdir $dest/data/doom1_boss
+mkdir $dest/data/doom2_boss
+
+cp -av $src/data/doom1_boss/*.* $dest/data/doom1_boss
+cp -av $src/data/doom2_boss/*.* $dest/data/doom2_boss
+
 #
-#  Copy executables
+#  Executables
 #
 
 mkdir $dest/tools
@@ -73,7 +79,7 @@ cp -av $src/qsavetex/qsavetex.exe $dest/tools
 fi
 
 #
-#  Copy documentation
+#  Documentation
 #
 cp -av $src/GPL.txt $dest
 cp -av $src/TODO.txt $dest

@@ -11,7 +11,7 @@ dest=PACK-SRC
 mkdir $dest
 
 #
-#  Copy Lua scripts
+#  Lua scripts
 #
 mkdir $dest/scripts
 cp -av $src/scripts/*.* $dest/scripts
@@ -29,7 +29,7 @@ mkdir $dest/prefabs
 cp -av $src/prefabs/*.* $dest/prefabs
 
 #
-#  Copy source code
+#  Source code
 #
 mkdir $dest/gui
 cp -av $src/gui/*.[chr]* $dest/gui
@@ -56,8 +56,14 @@ cp -av $src/data/*.lmp $dest/data || true
 cp -av $src/data/*.wad $dest/data || true
 cp -av $src/data/*.pak $dest/data || true
 
+mkdir $dest/data/doom1_boss
+mkdir $dest/data/doom2_boss
+
+cp -av $src/data/doom1_boss/*.* $dest/data/doom1_boss
+cp -av $src/data/doom2_boss/*.* $dest/data/doom2_boss
+
 #
-#  Copy documentation
+#  Documentation
 #
 mkdir $dest/doc
 cp -av $src/doc/*.* $dest/doc
