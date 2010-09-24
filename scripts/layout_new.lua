@@ -22,6 +22,11 @@ require 'defs'
 require 'util'
 
 
+-- FIXME: appropriate place
+DOOR_SILVER_KEY = 16
+DOOR_GOLD_KEY   = 8
+
+
 function Layout_initial_space(R)
   local S = SPACE_CLASS.new()
 
@@ -777,6 +782,13 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
       sk2 = { frame="METAL1_1" }
+
+      if info.conn and info.conn.lock then
+        fab = "QUAKE_DOOR"
+        sk2 = { door="DOOR01_2" }
+        if info.conn.lock.item == "k_silver" then sk2.spawnflags = DOOR_SILVER_KEY end
+        if info.conn.lock.item == "k_gold"   then sk2.spawnflags = DOOR_GOLD_KEY end
+      end
     else
       fab = "DOOR"
 

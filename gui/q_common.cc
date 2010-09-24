@@ -697,7 +697,7 @@ void BSP_WriteEntities(int lump_num, const char *description)
 //  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
 //  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
-//  lump->KeyPair("worldtype", "0");
+  lump->KeyPair("worldtype", "0");
 
   if (description)
     lump->KeyPair("message", description);

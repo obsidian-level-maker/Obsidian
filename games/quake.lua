@@ -828,6 +828,9 @@ QUAKE1.ROOMS =
 
 QUAKE1.SUB_THEME_DEFAULTS =
 {
+  keys = { k_silver=60, k_gold=20 },
+  switches = { sw_blue=50 },
+
   teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",
   pedestal_mat = "LIGHT1_1",
