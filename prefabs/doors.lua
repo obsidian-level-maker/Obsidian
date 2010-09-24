@@ -171,6 +171,9 @@ PREFAB.DOOR =
   {
     width  = 128,
     height = 128,
+
+    key  = "?wall",
+    step = "?wall",
   },
 
   brushes =

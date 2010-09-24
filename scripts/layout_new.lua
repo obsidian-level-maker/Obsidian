@@ -242,6 +242,8 @@ function Layout_place_straddlers()
     SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2)
     SP.usage = "straddler"
     SP.straddler = STRADDLER
+
+    return STRADDLER
   end
 
 
@@ -262,7 +264,8 @@ function Layout_place_straddlers()
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,C in ipairs(R.conns) do
       if not C.placed and C.K1.room == R and C.kind == "normal" then
-        place_straddler("door", C.K1, C.K2, C.dir)
+        local STR = place_straddler("door", C.K1, C.K2, C.dir)
+        STR.conn = C
         C.placed = true
       end
     end
@@ -502,7 +505,17 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
           skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
           long = 200
           deep = 64
-        else  -- if IM.kind == "EXIT" then
+        elseif IM.lock and IM.lock.kind == "SWITCH" then
+          prefab = "WALL_SWITCH"
+          skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
+          long = 200
+          deep = 64
+        elseif IM.lock and IM.lock.kind == "KEY" then
+          prefab = "ITEM_NICHE"
+          skin = { item = IM.lock.item }
+          long = 200
+          deep = 64
+        else
           prefab = "ITEM_NICHE"
           skin = { item = "mega", key="LITE5" }
           long = 200
@@ -566,7 +579,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     R.importants = {}
 
     if R.purpose then
-      table.insert(R.importants, { kind=R.purpose })
+      table.insert(R.importants, { kind=R.purpose, lock=R.purpose_lock })
     end
 
     if R:has_teleporter() then
@@ -766,9 +779,15 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
       sk2 = { frame="METAL1_1" }
     else
       fab = "DOOR"
-      sk2 = GAME.DOORS["silver"]  -- FIXME
 
-      sk2.door = "BIGDOOR4"
+      if info.conn and info.conn.lock then
+        sk2 = GAME.DOORS[info.conn.lock.item]
+        sk2.tag = info.conn.lock.tag
+      else
+        sk2 = GAME.DOORS["silver"]
+        sk2.door = "BIGDOOR4"
+      end
+      assert(sk2)
     end
 
 
@@ -978,10 +997,10 @@ if S.kind == "solid" then return end
       local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }
       Fab_with_update("QUAKE_EXIT_PAD", T, skin)
     else
-      local skin_name = rand.key_by_probs(THEME.exits)
-      local skin = assert(GAME.EXITS[skin_name])
-
-      Fab_with_update("EXIT_PILLAR", T, skin)
+---      local skin_name = rand.key_by_probs(THEME.exits)
+---      local skin = assert(GAME.EXITS[skin_name])
+---
+---      Fab_with_update("EXIT_PILLAR", T, skin)
     end
   
   else
