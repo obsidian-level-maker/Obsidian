@@ -681,11 +681,11 @@ static void Script_SetScriptPath(lua_State *L)
 
 static void Script_SetDataPath(void)
 {
-  data_path = "./mods/data;./data";
+  data_path = "./modules/data;./data";
 
   if (StringCaseCmp(install_path, working_path) != 0)
   {
-    data_path = StringPrintf("%s;%s/mods/data;%s/data", data_path, install_path, install_path);
+    data_path = StringPrintf("%s;%s/modules/data;%s/data", data_path, install_path, install_path);
   }
 
   LogPrintf("data_path:   [%s]\n\n", data_path);
@@ -960,7 +960,7 @@ void Script_Load(void)
 #else
   Script_LoadSubDir("games");
   Script_LoadSubDir("engines");
-  Script_LoadSubDir("mods");
+  Script_LoadSubDir("modules");
   Script_LoadSubDir("prefabs");
 #endif
 

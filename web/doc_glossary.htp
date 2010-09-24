@@ -169,7 +169,7 @@ Lua
 Lua is a programming language used for all the level building
 logic in OBLIGE.
 The files in the <b>scripts/</b>, <b>games/</b>, <b>engines/</b> and
-<b>mods/</b> folders are all Lua scripts.
+<b>modules/</b> folders are all Lua scripts.
 You can edit these ".lua" files with an ordinary
 text editor (like NOTEPAD, but <u>not</u> MS Word),
 and those changes will be loaded the next time OBLIGE is run.

@@ -144,7 +144,7 @@ anything yet)</I>
 Modules are a great new feature in Oblige V3.
 The idea is that new functionality can be implemented
 as a module file (Lua code),
-and simply dropped into the 'mods' folder, and OBLIGE
+and simply dropped into the 'modules' folder, and OBLIGE
 will load it automatically and allow that module to
 be enabled or disabled.
 Modules can even have their own option buttons.

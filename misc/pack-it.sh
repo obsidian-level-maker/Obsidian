@@ -41,8 +41,8 @@ cp -av $src/games/*.* $dest/games
 mkdir $dest/engines
 cp -av $src/engines/*.* $dest/engines
 
-mkdir $dest/mods
-cp -av $src/mods/*.* $dest/mods
+mkdir $dest/modules
+cp -av $src/modules/*.* $dest/modules
 
 mkdir $dest/prefabs
 cp -av $src/prefabs/*.* $dest/prefabs
@@ -51,7 +51,7 @@ cp -av $src/prefabs/*.* $dest/prefabs
 #  Data files
 #
 mkdir $dest/data
-mkdir $dest/mods/data
+mkdir $dest/modules/data
 
 cp -av $src/data/*.lmp $dest/data || true
 cp -av $src/data/*.wad $dest/data || true
