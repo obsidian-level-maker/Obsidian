@@ -44,6 +44,9 @@ cp -av $src/engines/*.* $dest/engines
 mkdir $dest/mods
 cp -av $src/mods/*.* $dest/mods
 
+mkdir $dest/prefabs
+cp -av $src/prefabs/*.* $dest/prefabs
+
 #
 #  Copy data files
 #
