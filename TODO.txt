@@ -3,6 +3,11 @@ V4 TODO
 =======
 
 
+Idea: "flush depth" of walls
+
+Idea: "wall extenders" for easier prefabbing
+
+
 Games:
 
 DOOM and QUAKE only
@@ -17,12 +22,14 @@ Layout:
 +  corner prefabs
        - normal
        - curved
+       - big diagonal
        - torch in niche
        - jutting out torch 
 
 +  wall prefabs:
        - cage
-       - closet
+       - monster closet
+       - secret closet
        - torch
        - picture
        - teleporter
