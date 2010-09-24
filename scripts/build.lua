@@ -1199,12 +1199,16 @@ function Fabricate(fab, T, skin, skin2)
     new_face.mat = nil
 
     if F.mat then
-      local mat = Mat_lookup(F.mat)
+      local mat = Trans.substitute(F.mat)
 
-      if is_flat and mat.f then
-        new_face.tex = mat.f
-      else
-        new_face.tex = mat.t
+      if mat then
+        mat = Mat_lookup(mat)
+
+        if is_flat and mat.f then
+          new_face.tex = mat.f
+        else
+          new_face.tex = mat.t
+        end
       end
     end
 
