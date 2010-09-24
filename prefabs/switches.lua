@@ -53,7 +53,7 @@ PREFAB.WALL_SWITCH =
 
   brushes =
   {
-    -- wall behind picture
+    -- wall behind it
     {
       { x =   0, y =  0, mat = "?wall" },
       { x = 192, y =  0, mat = "?wall" },
@@ -99,15 +99,6 @@ PREFAB.WALL_SWITCH =
       { x = 128, y = 16, mat = "?side" },
     },
 
-    -- frame bottom
-    {
-      { x =  64, y =  4, mat = "?wall" },
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 128, y = 16, mat = "?wall", blocked=1 },
-      { x =  64, y = 16, mat = "?wall" },
-      { t = 0, mat = "?floor" },
-    },
-
     -- frame top
     {
       { x =  64, y =  4, mat = "?wall" },
@@ -117,6 +108,16 @@ PREFAB.WALL_SWITCH =
       { b = 64, mat = "?ceil", light = "?light", special = "?special" },
     },
 
+    -- frame bottom
+    --[[
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall", blocked=1 },
+      { x =  64, y = 16, mat = "?wall" },
+      { t = 0, mat = "?floor" },
+    },
+    --]]
   },
 }
 

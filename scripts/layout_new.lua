@@ -489,14 +489,29 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
 
         local E = IM.place_E
 
-        local long1 = int(E.long - 200) / 2
-        local long2 = int(E.long + 200) / 2
+        local prefab, skin
+        local long, deep
 
-        local SP = Layout_add_span(E, long1, long2, 128)
+        if IM.kind == "START" then
+          prefab = "START_LEDGE"
+          skin = {}
+          long = 200
+          deep = 128
+        else  -- if IM.kind == "EXIT" then
+          prefab = "WALL_SWITCH"
+          skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
+          long = 200
+          deep = 64
+        end
+
+        local long1 = int(E.long - long) / 2
+        local long2 = int(E.long + long) / 2
+
+        local SP = Layout_add_span(E, long1, long2, deep)
 
         SP.usage = "prefab"
-        SP.prefab = "START_LEDGE"
-        SP.skin = {}
+        SP.prefab = prefab
+        SP.skin = skin
 
         return
       end
