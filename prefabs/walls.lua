@@ -162,7 +162,7 @@ PREFAB.ITEM_NICHE =
       { x = 128, y =  4, mat = "?wall" },
       { x = 160, y = 64, mat = "?wall", blocked=1 },
       { x =  32, y = 64, mat = "?wall" },
-      { b = 96, mat = "?wall", light = "?light", special = "?special"  },
+      { b = 128, mat = "?wall", light = "?light", special = "?special"  },
     },
 
     -- FIXME: walk space
@@ -170,7 +170,7 @@ PREFAB.ITEM_NICHE =
 
   entities =
   {
-    { x = 96, y = 48, z = 0, ent = "?item", angle = 90 },
+    { x = 96, y = 48, z = 32, ent = "?item", angle = 90 },
   },
 }
 
