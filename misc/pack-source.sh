@@ -34,7 +34,7 @@ cp -av $src/prefabs/*.* $dest/prefabs
 mkdir $dest/gui
 cp -av $src/gui/*.[chr]* $dest/gui
 cp -av $src/gui/*.ico $dest/gui
-cp -av $src/gui/Makefile.* $dest/gui
+cp -av $src/Makefile.* $dest/
 
 mkdir $dest/qsavetex
 cp -av $src/qsavetex/*.[ch]* $dest/qsavetex
