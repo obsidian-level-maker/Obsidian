@@ -115,6 +115,11 @@ PREFAB.ITEM_NICHE =
 {
   placement = "fitted",
 
+  defaults =
+  {
+    key = "?wall",
+  },
+
   brushes =
   {
     -- wall behind it
@@ -129,7 +134,7 @@ PREFAB.ITEM_NICHE =
 
     {
       { x =  0, y =  4, mat = "?wall" },
-      { x = 64, y =  4, mat = "?wall" },
+      { x = 64, y =  4, mat = "?key" },
       { x = 32, y = 64, mat = "?wall" },
       { x =  0, y = 64, mat = "?wall" },
     },
@@ -139,26 +144,28 @@ PREFAB.ITEM_NICHE =
       { x = 128, y =  4, mat = "?wall" },
       { x = 192, y =  4, mat = "?wall" },
       { x = 192, y = 64, mat = "?wall" },
-      { x = 160, y = 64, mat = "?wall" },
+      { x = 160, y = 64, mat = "?key" },
     },
 
     -- frame bottom
     {
       { x =  64, y =  4, mat = "?wall" },
       { x = 128, y =  4, mat = "?wall" },
-      { x = 128, y = 64, mat = "?wall", blocked=1 },
-      { x =  64, y = 64, mat = "?wall" },
-      { t = 0, mat = "?floor" },
+      { x = 160, y = 64, mat = "?wall", blocked=1 },
+      { x =  32, y = 64, mat = "?wall" },
+      { t = 32, mat = "?floor" },
     },
 
     -- frame top
     {
       { x =  64, y =  4, mat = "?wall" },
       { x = 128, y =  4, mat = "?wall" },
-      { x = 128, y = 64, mat = "?wall", blocked=1 },
-      { x =  64, y = 64, mat = "?wall" },
-      { b = 64, mat = "?wall", light = "?light", special = "?special"  },
+      { x = 160, y = 64, mat = "?wall", blocked=1 },
+      { x =  32, y = 64, mat = "?wall" },
+      { b = 96, mat = "?wall", light = "?light", special = "?special"  },
     },
+
+    -- FIXME: walk space
   },
 
   entities =

@@ -497,9 +497,14 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
           skin = {}
           long = 200
           deep = 128
-        else  -- if IM.kind == "EXIT" then
+        elseif IM.kind == "EXIT" then
           prefab = "WALL_SWITCH"
           skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
+          long = 200
+          deep = 64
+        else  -- if IM.kind == "EXIT" then
+          prefab = "ITEM_NICHE"
+          skin = { item = "mega", key="LITE5" }
           long = 200
           deep = 64
         end
