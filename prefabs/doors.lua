@@ -291,6 +291,11 @@ PREFAB.QUAKE_DOOR =
   placement = "fitted",
   team_models = true,
 
+  defaults =
+  {
+    door = "DR05_2",
+  },
+
   brushes =
   {
     -- step
@@ -333,24 +338,24 @@ PREFAB.QUAKE_DOOR =
     -- left side
     {
       x1 = 32, x2 = 96,  x_face = { mat="METAL1_2" },
-      y1 = 16, y2 = 32,  y_face = { mat="DR05_2" },
+      y1 = 16, y2 = 32,  y_face = { mat="?door" },
       z1 =  8, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angle = 180, sounds = 2,
+        ent = "door", angle = 180, sounds = 2, spawnflags = "?door_flags",
       },
     },
 
     -- right side
     {
       x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 =  8, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angle = 0,
+        ent = "door", angle = 0, spawnflags = "?door_flags",
       },
     },
   },
@@ -361,6 +366,11 @@ PREFAB.QUAKE_V_DOOR =
 {
   placement = "fitted",
   team_models = true,
+
+  defaults =
+  {
+    door = "DR05_2",
+  },
 
   brushes =
   {
@@ -406,24 +416,25 @@ PREFAB.QUAKE_V_DOOR =
     -- low part
     {
       x1 = 32, x2 = 160, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 =  8, z2 =  72, z_face = { mat="METAL1_2" },
 
       entity =
       {
         ent = "door", angles = "90 0 0", sounds = 2,
+        spawnflags = "?door_flags",
       },
     },
 
     -- high part
     {
       x1 = 32, x2 = 160, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 = 72, z2 = 136, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angles = "270 0 0",
+        ent = "door", angles = "270 0 0", spawnflags = "?door_flags",
       },
     },
   },
@@ -434,6 +445,11 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
 {
   placement = "fitted",
   team_models = true,
+
+  defaults =
+  {
+    door = "DR05_2",
+  },
 
   brushes =
   {
@@ -470,48 +486,49 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
     -- bottom left
     {
       x1 = 32, x2 = 96, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 = 32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 = 32, y_face = { mat="?door" },
       z1 =  0, z2 = 64, z_face = { mat="METAL1_2" },
 
       entity =
       {
         ent = "door", angles = "90 0 0", sounds = 2,
+        spawnflags = "?door_flags",
       },
     },
 
     -- bottom right
     {
       x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 =  0, z2 =  64, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angle = 0,
+        ent = "door", angle = 0, spawnflags = "?door_flags",
       },
     },
 
     -- top left
     {
       x1 = 32, x2 =  96, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 = 64, z2 = 128, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angle = 180,
+        ent = "door", angle = 180, spawnflags = "?door_flags",
       },
     },
 
     -- top right
     {
       x1 = 96, x2 = 160, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 =  32, y_face = { mat="DR05_2" },
+      y1 = 16, y2 =  32, y_face = { mat="?door" },
       z1 = 64, z2 = 128, z_face = { mat="METAL1_2" },
 
       entity =
       {
-        ent = "door", angles = "270 0 0",
+        ent = "door", angles = "270 0 0", spawnflags = "?door_flags",
       },
     },
   },

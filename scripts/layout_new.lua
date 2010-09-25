@@ -786,8 +786,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
       if info.conn and info.conn.lock then
         fab = "QUAKE_DOOR"
         sk2 = { door="DOOR01_2" }
-        if info.conn.lock.item == "k_silver" then sk2.spawnflags = DOOR_SILVER_KEY end
-        if info.conn.lock.item == "k_gold"   then sk2.spawnflags = DOOR_GOLD_KEY end
+        if info.conn.lock.item == "k_silver" then sk2.door_flags = DOOR_SILVER_KEY end
+        if info.conn.lock.item == "k_gold"   then sk2.door_flags = DOOR_GOLD_KEY end
       end
     else
       fab = "DOOR"
