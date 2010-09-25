@@ -970,7 +970,26 @@ if S.kind == "solid" then return end
   end
 
 
-  ---===| Layout_room |===---
+  local function ambient_lighting()
+    if GAME.format ~= "doom" then return end
+
+    local light = rand.pick { 128, 144, 160 }
+    if R.outdoor then light = 192 end
+
+    for _,K in ipairs(R.sections) do
+      gui.add_brush(
+      {
+        { m="light", ambient=light },
+        { x=K.x1, y=K.y1 },
+        { x=K.x2, y=K.y1 },
+        { x=K.x2, y=K.y2 },
+        { x=K.x1, y=K.y2 },
+      })
+    end
+  end
+
+
+  ---===| Layout_the_room |===---
 
   ROOM = R  -- set global
 
@@ -1029,6 +1048,8 @@ if S.kind == "solid" then return end
   build_floor()
 
   build_ceiling()
+
+  ambient_lighting()
 
 
   -- collect spots for the monster code

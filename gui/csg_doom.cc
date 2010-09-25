@@ -647,9 +647,34 @@ void DM_TestRegions(void)
 static void DM_ExtraFloors(doom_sector_c *S, region_c *R);
 
 
-static void DM_LightingBrush(doom_sector_c *S, region_c *R)
+static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
+                               csg_property_set_c *f_face,
+                               csg_property_set_c *c_face)
 {
-  for (unsigned int i = 0; i < R->brushes.size(); i++)
+  // final light value for the sector is the 'ambient' lighting
+  // in a room PLUS the greatest additive light brush MINUS the
+  // greatest subtractive (shadow) brush.
+
+#if 0
+  // floor faces can override this with an absolute value, which
+  // is a hack to keep doors working (otherwise the two rooms'
+  // ambient values make the door sector split, breaking it).
+
+  double f_light = f_face->getInt("light");
+
+  if (f_light > 0)
+  {
+    S->light = CLAMP(96, f_light, 255);
+    return;
+  }
+#endif
+
+  int max_add = 0;
+  int max_sub = 0;
+
+  S->light = 144;  // sane default
+
+  for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
   {
     csg_brush_c *B = R->brushes[i];
 
@@ -659,26 +684,28 @@ static void DM_LightingBrush(doom_sector_c *S, region_c *R)
     if (B->t.z < S->f_h+1 || B->b.z > S->c_h-1)
       continue;
 
-    csg_property_set_c *t_face = &B->t.face;
-    csg_property_set_c *b_face = &B->b.face;
+    int ambient = B->props.getInt("ambient");
 
-    double raw = b_face->getInt("light", t_face->getInt("light"));
-    int light = I_ROUND(raw * 256);
+    int add = B->props.getInt("add");
+    int sub = B->props.getInt("sub");
 
-    if (light < 0)
-    {
-      // don't put shadow in closed doors
-      if (S->f_h < S->c_h)
-        S->misc_flags |= SEC_SHADOW;
-      continue;
-    }
+    if (ambient > 0)
+      S->light = ambient;
 
-    if (light > S->light)
-    {
-      S->light = light;
-      S->misc_flags |= SEC_PRIMARY_LIT;
-    }
+    max_add = MAX(max_add, add);
+    max_sub = MAX(max_sub, sub);
   }
+
+  // apply additive and subtractive, except in closed doors
+  if (S->f_h < S->c_h)
+  {
+    S->light += max_add;
+    S->light -= max_sub;
+  }
+  else
+    S->light = 176;  // FIXME MUNDO HACK !!!!
+
+  S->light = CLAMP(96, S->light, 255);
 }
 
 
@@ -748,20 +775,12 @@ static void DM_MakeSector(region_c *R)
   }
 
 
-  double f_light = f_face->getDouble("light");
-  double c_light = c_face->getDouble("light");
-
-  if (f_light > 0 || c_light > 0)
-  {
-    S->light = (int)(256 * MAX(f_light, c_light));
-    S->misc_flags |= SEC_PRIMARY_LIT;
-  }
-
+  // TODO : decide whether to allow this
   if (T->bkind == BKIND_Sky)
     S->misc_flags |= SEC_IS_SKY;
 
 
-  DM_LightingBrush(S, R);
+  DM_LightingBrushes(S, R, f_face, c_face);
 
 
   // find brushes floating in-between --> make extrafloors
@@ -779,8 +798,10 @@ static void DM_CreateSectors()
 }
 
 
-static void DM_LightingFloodFill()
+static void OLD__DM_LightingFloodFill()
 {
+  // NOTE USED ANYMORE : lighting brushes used instead
+
   unsigned int i;
 
   std::vector<doom_sector_c *> active;
