@@ -345,7 +345,7 @@ PREFAB.QUAKE_DOOR =
       {
         ent = "door", angle = 180, sounds = 2,
         targetname = "?targetname", wait ="?wait",
-        spawnflags = "?door_flags",
+        spawnflags = "?door_flags", message = "?message",
       },
     },
 
@@ -426,7 +426,7 @@ PREFAB.QUAKE_V_DOOR =
       {
         ent = "door", angles = "90 0 0", sounds = 2,
         targetname = "?targetname", wait ="?wait",
-        spawnflags = "?door_flags",
+        spawnflags = "?door_flags", message = "?message",
       },
     },
 
@@ -497,7 +497,7 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
       entity =
       {
         ent = "door", angles = "90 0 0", sounds = 2,
-        spawnflags = "?door_flags",
+        spawnflags = "?door_flags", message = "?message",
         targetname = "?targetname", wait ="?wait",
       },
     },

@@ -803,6 +803,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
         if info.conn.lock.kind == "SWITCH" then
           sk2.door = "ADOOR09_1"
           sk2.targetname = string.format("t%d", info.conn.lock.tag)
+          sk2.message = "Find the button dude!"
           sk2.wait = -1
         end
       end
