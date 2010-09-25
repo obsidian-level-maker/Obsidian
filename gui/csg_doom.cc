@@ -1190,7 +1190,7 @@ static brush_vert_c * DM_FindRail(snag_c *S, doom_sector_c *front, doom_sector_c
   float f_max = MAX(front->f_h, back->f_h) + 4;
   float c_min = MIN(front->c_h, back->c_h) - 4;
 
-  if (c_min >= f_max)
+  if (f_max >= c_min)
     return NULL;
 
   for (int side = 0 ; side < 2 ; side++)
