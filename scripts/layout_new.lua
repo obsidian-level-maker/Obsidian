@@ -590,6 +590,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     rand.shuffle(corners)
     rand.shuffle(walls)
 
+    R.middles = middles
+
     -- determine the stuff which MUST go into this room
 
     R.importants = {}
@@ -912,6 +914,24 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
   end
 
 
+  local function build_middles()
+    for _,K in ipairs(R.middles) do
+      local w, h = geom.box_size(K.x1, K.y1, K.x2, K.y2)
+      if w >= 512 and h >= 512 then
+        
+        local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
+
+        local T = Trans.spot_transform(mx, my, 0)
+
+        local fab = "CAGE"
+        local skin = { pillar="GRAY5", rail="MIDGRATE" }
+
+        Fab_with_update(fab, T, skin)
+      end
+    end
+  end
+
+
   local function clear_polygon(P)
     if P.kind == "free" or P.kind == "walk" then
       gui.spots_fill_poly(0, P.coords)
@@ -1022,6 +1042,8 @@ if S.kind == "solid" then return end
 
   build_edges()
 
+  build_middles()
+
 
 -- TODO  R.ceil_space  = R.floor_space:copy()
 
@@ -1087,7 +1109,7 @@ if S.kind == "solid" then return end
   gui.spots_end(R.mon_spots, R.item_spots)
 
 --[[  TEST
-  for _,spot in ipairs(item_spots) do
+  for _,spot in ipairs(R.item_spots) do
     Trans.entity("potion", spot.x, spot.y, 0)
   end
 --]]

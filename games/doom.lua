@@ -532,6 +532,9 @@ DOOM.MATERIALS =
   O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 },
 
 
+MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 },
+
+
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos
   --   SKY1/2/3 : not very useful
