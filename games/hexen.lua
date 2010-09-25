@@ -244,6 +244,7 @@ HEXEN.PARAMETERS =
   teleporters = true,
   infighting  =  true,
   prefer_stairs = true,
+  light_brushes = true,
    
   hubs = true,
   polyobjs = true,

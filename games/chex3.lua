@@ -176,6 +176,7 @@ CHEX3.PARAMETERS =
   liquids = true,
   teleporters = true,
   raising_start = true,
+  light_brushes = true,
 
   -- NOTE: no infighting at all
 

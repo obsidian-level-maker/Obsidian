@@ -53,6 +53,7 @@ STRIFE.PARAMETERS =
   switches = true,
   liquids = true,
   teleporters = true,
+  light_brushes = true,
 
   max_name_length = 28,
 

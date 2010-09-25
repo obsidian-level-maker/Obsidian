@@ -199,6 +199,7 @@ DOOM.PARAMETERS =
   teleporters = true,
   infighting = true,
   raising_start = true,
+  light_brushes = true,
 
   custom_flats = true,
 

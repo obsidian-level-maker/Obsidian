@@ -58,6 +58,7 @@ NUKEM.PARAMETERS =
   rails = true,
   switches = true,
   liquids = true,
+  light_brushes = true,
 
   max_name_length = 28,
 

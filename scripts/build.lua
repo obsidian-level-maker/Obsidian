@@ -203,7 +203,9 @@ function Trans.brush(coords)
 
   for _,C in ipairs(coords) do
     if C.m then
-      -- skip the properties
+      -- light and rail brushes only make sense for 2.5D games
+      if C.m == "light" and not PARAM.light_brushes then return end
+      if C.m == "rail"  and not PARAM.rails then return end
     elseif C.x then
       C.x, C.y = Trans.apply(C.x, C.y)
     elseif C.b then
