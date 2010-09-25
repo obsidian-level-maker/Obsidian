@@ -111,6 +111,7 @@ QUAKE1.ENTITIES =
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true },
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true },
+  button = { id="func_button", kind="other", r=1, h=1, pass=true },
 }
 
 
@@ -638,6 +639,9 @@ QUAKE1.MATERIALS =
   -- Oblige specific textures
   O_CARVE    = { t="o_carve" },
   O_BOLT     = { t="o_carve" },
+
+
+  BUTTON = { t="+0button" },
 
 ---  +0basebtn
 ---  +0butn

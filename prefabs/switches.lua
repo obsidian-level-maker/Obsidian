@@ -121,3 +121,37 @@ PREFAB.WALL_SWITCH =
   },
 }
 
+
+PREFAB.QUAKE_WALL_SWITCH =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+  },
+
+  models =
+  {
+    -- button
+    {
+      x1 = 32, x2 = 96, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 = 32, y_face = { mat="BUTTON" },
+      z1 = 24, z2 = 88, z_face = { mat="METAL1_2" },
+
+      entity =
+      {
+        ent = "button", angle = 270, sounds = 2,
+        target = "?target", wait ="?wait",
+      },
+    },
+  },
+}
+
+

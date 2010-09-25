@@ -505,21 +505,32 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
           skin = {}
           long = 200
           deep = 128
+        
         elseif IM.kind == "EXIT" then
           prefab = "WALL_SWITCH"
           skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
           long = 200
           deep = 64
+
         elseif IM.lock and IM.lock.kind == "SWITCH" then
-          prefab = "WALL_SWITCH"
-          skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
-          long = 200
-          deep = 64
+          if GAME.format == "quake" then
+            prefab = "QUAKE_WALL_SWITCH"
+            skin = { target = string.format("t%d", IM.lock.tag), }
+            long = 192
+            deep = 32
+          else
+            prefab = "WALL_SWITCH"
+            skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
+            long = 200
+            deep = 64
+          end
+
         elseif IM.lock and IM.lock.kind == "KEY" then
           prefab = "ITEM_NICHE"
           skin = { item = IM.lock.item }
           long = 200
           deep = 64
+
         else
           prefab = "ITEM_NICHE"
           skin = { item = "mega", key="LITE5" }
@@ -788,6 +799,12 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
         sk2 = { door="DOOR01_2" }
         if info.conn.lock.item == "k_silver" then sk2.door_flags = DOOR_SILVER_KEY end
         if info.conn.lock.item == "k_gold"   then sk2.door_flags = DOOR_GOLD_KEY end
+
+        if info.conn.lock.kind == "SWITCH" then
+          sk2.door = "ADOOR09_1"
+          sk2.targetname = string.format("t%d", info.conn.lock.tag)
+          sk2.wait = -1
+        end
       end
     else
       fab = "DOOR"
