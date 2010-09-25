@@ -174,3 +174,59 @@ PREFAB.ITEM_NICHE =
   },
 }
 
+
+PREFAB.WALL_CAGE =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- space around it
+    {
+      { m = "air" },
+      { x =   0, y =  16 },
+      { x = 192, y =  16 },
+      { x = 192, y = 144 },
+      { x =   0, y = 144 },
+    },
+
+    -- platform
+    {
+      { x =   0, y =  16, mat = "?wall" },
+      { x = 192, y =  16, mat = "?wall" },
+      { x = 192, y = 144, mat = "?wall" },
+      { x =   0, y = 144, mat = "?wall" },
+      { t = 80, mat = "?wall" },
+    },
+
+    -- railing
+    {
+      { m = "rail" },
+      { x =  16, y =  16,                blocked=1 },
+      { x = 176, y =  16, mat = "?rail", blocked=1 },
+      { x = 176, y = 128, mat = "?rail", blocked=1 },
+      { x =  16, y = 128, mat = "?rail", blocked=1 },
+      { b = 80 },
+      { t = 208 },
+    },
+  },
+
+  mon_spots =
+  {
+    {
+      kind = "cage",
+      x1 =  24, y1 =  24, z1 = 80,
+      x2 = 168, y2 = 120, z2 = 208,
+    },
+  },
+}
+
+
