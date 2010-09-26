@@ -252,6 +252,121 @@ PREFAB.QUAKE_TELEPORTER =
       },
     },
   },
+}
 
+
+PREFAB.TECH_DITTO_1 =
+{
+  brushes =
+  {
+    -- carpet floor
+    {
+      { m = "air" },
+      { x =  -64, y = -160 },
+      { x =   64, y = -160 },
+      { x =  160, y =  -64 },
+      { x =  160, y =   64 },
+      { x =   64, y =  160 },
+      { x =  -64, y =  160 },
+      { x = -160, y =   64 },
+      { x = -160, y =  -64 },
+    },
+
+    {
+      { x =  -64, y = -128, mat = "?carpet" },
+      { x =   64, y = -128, mat = "?carpet" },
+      { x =  128, y =  -64, mat = "?carpet" },
+      { x =  128, y =   64, mat = "?carpet" },
+      { x =   64, y =  128, mat = "?carpet" },
+      { x =  -64, y =  128, mat = "?carpet" },
+      { x = -128, y =   64, mat = "?carpet" },
+      { x = -128, y =  -64, mat = "?carpet" },
+      { t = 2, mat = "?carpet", delta_z = -8 },
+    },
+
+    -- central computer pillar
+    {
+      { x = -32, y = -32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = -32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { t = 112, mat = "?computer" },
+    },
+
+    -- side computer bits
+    {
+      { x =  32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x =  56, y = -32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x =  56, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { t = 64, mat = "?compside" },
+    },
+
+    {
+      { x = -56, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x = -56, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { t = 64, mat = "?compside" },
+    },
+
+    {
+      { x = -32, y = -56, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = -56, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { t = 64, mat = "?compside" },
+    },
+
+    {
+      { x = -32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { x =  32, y =  56, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
+      { x = -32, y =  56, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
+      { t = 64, mat = "?compside" },
+    },
+
+    -- feet
+    {
+      { x = 56, y = -32, mat = "?feet" },
+      { x = 72, y = -48, mat = "?feet" },
+      { x = 88, y = -48, mat = "?feet" },
+      { x = 88, y =  48, mat = "?feet" },
+      { x = 72, y =  48, mat = "?feet" },
+      { x = 56, y =  32, mat = "?feet" },
+      { t = 16, mat = "?feet" },
+    },
+
+    {
+      { x = -88, y = -48, mat = "?feet" },
+      { x = -72, y = -48, mat = "?feet" },
+      { x = -56, y = -32, mat = "?feet" },
+      { x = -56, y =  32, mat = "?feet" },
+      { x = -72, y =  48, mat = "?feet" },
+      { x = -88, y =  48, mat = "?feet" },
+      { t = 16, mat = "?feet" },
+    },
+
+    {
+      { x = -48, y = -88, mat = "?feet" },
+      { x =  48, y = -88, mat = "?feet" },
+      { x =  48, y = -72, mat = "?feet" },
+      { x =  32, y = -56, mat = "?feet" },
+      { x = -32, y = -56, mat = "?feet" },
+      { x = -48, y = -72, mat = "?feet" },
+      { t = 16, mat = "?feet" },
+    },
+
+    {
+      { x =  48, y = 88, mat = "?feet" },
+      { x = -48, y = 88, mat = "?feet" },
+      { x = -48, y = 72, mat = "?feet" },
+      { x = -32, y = 56, mat = "?feet" },
+      { x =  32, y = 56, mat = "?feet" },
+      { x =  48, y = 72, mat = "?feet" },
+      { t = 16, mat = "?feet" },
+    },
+
+  },
 }
 

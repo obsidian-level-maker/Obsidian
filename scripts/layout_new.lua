@@ -923,14 +923,19 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
   local function build_middles()
     for _,K in ipairs(R.middles) do
       local w, h = geom.box_size(K.x1, K.y1, K.x2, K.y2)
-      if w >= 512 and h >= 512 then
+      if w >= 600 and h >= 600 then
         
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
         local T = Trans.spot_transform(mx, my, 0)
 
-        local fab = "CAGE"
-        local skin = { pillar="GRAY5", rail="MIDGRATE" }
+        fab = "TECH_DITTO_1"
+        skin = { carpet = "FLAT14", computer = "SPACEW3",
+                 compside = "COMPSPAN", feet = "FLAT4" }
+
+--      local fab = "CAGE"
+--      local skin = { pillar="GRAY5", rail="MIDGRATE" }
+
 
         Fab_with_update(fab, T, skin)
       end
