@@ -234,6 +234,11 @@ function Trans.entity(name, x, y, z, props)
   -- prevent the addition of entities
   if Trans.no_entities then return end
 
+  -- don't add light entities for DOOM / Duke3D
+  if PARAM.light_brushes and (name == "light" or name == "sun") then
+    return
+  end
+
   local ent
 
   if props then
