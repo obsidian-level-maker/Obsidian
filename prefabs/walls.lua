@@ -204,7 +204,7 @@ PREFAB.WALL_CAGE =
       { x = 192, y =  16, mat = "?wall" },
       { x = 192, y = 144, mat = "?wall" },
       { x =   0, y = 144, mat = "?wall" },
-      { t = 80, mat = "?wall" },
+      { t = 64, mat = "?wall" },
     },
 
     -- railing
@@ -214,19 +214,14 @@ PREFAB.WALL_CAGE =
       { x = 176, y =  16, mat = "?rail", blocked=1 },
       { x = 176, y = 128, mat = "?rail", blocked=1 },
       { x =  16, y = 128, mat = "?rail", blocked=1 },
-      { b = 80 },
-      { t = 208 },
+      { b = 64 },
+      { t = 192 },
     },
   },
 
-  mon_spots =
+  entities =
   {
-    {
-      kind = "cage",
-      x1 =  24, y1 =  24, z1 = 80,
-      x2 = 168, y2 = 120, z2 = 208,
-    },
+    { ent = "cage_spot", x = 96, y = 72, z = 80, r = 72, angle = 90 },
   },
 }
-
 

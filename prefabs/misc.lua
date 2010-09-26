@@ -146,11 +146,11 @@ PREFAB.CAGE =
   brushes =
   {
     {
-      { x = -48, y = -48, mat = "?pillar" },
-      { x =  48, y = -48, mat = "?pillar" },
-      { x =  48, y =  48, mat = "?pillar" },
-      { x = -48, y =  48, mat = "?pillar" },
-      { t = 64, mat = "?pillar" },
+      { x = -48, y = -48, mat = "?base" },
+      { x =  48, y = -48, mat = "?base" },
+      { x =  48, y =  48, mat = "?base" },
+      { x = -48, y =  48, mat = "?base" },
+      { t = 48, mat = "?base" },
     },
 
 --[[
@@ -159,7 +159,7 @@ PREFAB.CAGE =
       { x =  48, y = -48, mat = "?pillar" },
       { x =  48, y =  48, mat = "?pillar" },
       { x = -48, y =  48, mat = "?pillar" },
-      { b = 192, mat = "?pillar" },
+      { b = 176, mat = "?pillar" },
     },
 --]]
 
@@ -169,18 +169,14 @@ PREFAB.CAGE =
       { x =  48, y = -48, mat = "?rail", blocked=1 },
       { x =  48, y =  48, mat = "?rail", blocked=1 },
       { x = -48, y =  48, mat = "?rail", blocked=1 },
-      { b = 64 },
-      { t = 192 },
+      { b = 48 },
+      { t = 176 },
     },
   },
 
-  mon_spots =
+  entities =
   {
-    {
-      kind = "cage",
-      x1 = -40, y1 = -40, z1 = 64,
-      x2 =  40, y2 =  40, z2 = 192,
-    },
+    { ent = "cage_spot", x = 0, y = 0, z = 48, r = 80, angle = 90 },
   },
 }
 
