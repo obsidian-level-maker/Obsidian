@@ -174,9 +174,9 @@ PREFAB.CAGE =
     },
   },
 
-  entities =
+  spots =
   {
-    { ent = "cage_spot", x = 0, y = 0, z = 48, r = 80, angle = 90 },
+    { kind = "cage", x = 0, y = 0, z = 48, r = 80, h = 128, angle = 90 },
   },
 }
 

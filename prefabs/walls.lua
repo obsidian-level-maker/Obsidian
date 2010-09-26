@@ -219,9 +219,9 @@ PREFAB.WALL_CAGE =
     },
   },
 
-  entities =
+  spots =
   {
-    { ent = "cage_spot", x = 96, y = 72, z = 80, r = 72, angle = 90 },
+    { kind = "cage", x = 96, y = 72, z = 80, r = 72, h = 128, angle = 90 },
   },
 }
 
