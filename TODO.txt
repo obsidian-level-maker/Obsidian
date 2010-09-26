@@ -3,6 +3,8 @@ V4 TODO
 =======
 
 
+Idea: COMPOSITION of prefabs
+
 Idea: "flush depth" of walls
 
 Idea: "wall extenders" for easier prefabbing
