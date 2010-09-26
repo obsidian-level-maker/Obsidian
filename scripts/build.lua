@@ -437,6 +437,10 @@ function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)
 
   local spot = {}
 
+  spot.x, spot.y = Trans.apply((x1+x2) / 2, (y1+y2) / 2)
+
+  spot.z = Trans.apply_z(z1)
+
   spot.r = math.min(x_size, y_size)
   spot.h = z_size
 
@@ -1280,7 +1284,7 @@ function Fabricate(fab, T, skin, skin2)
 
 
   local function render_models(list)
-    if not list then
+    if not list or Trans.no_entities then
       return
     end
 
@@ -1297,7 +1301,9 @@ function Fabricate(fab, T, skin, skin2)
 
 
   local function render_spots(list)
-    if Trans.no_entities then return end
+    if not list or Trans.no_entities then
+      return
+    end
 
     for _,P in ipairs(list) do
       -- adjust size of spot

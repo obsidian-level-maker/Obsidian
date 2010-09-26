@@ -1048,6 +1048,9 @@ if S.kind == "solid" then return end
 
   ROOM = R  -- set global
 
+  R.cage_spots = {}
+  R.trap_spots = {}
+
   R.floor_space = Layout_initial_space(R)
 
   decide_corner_sizes()
