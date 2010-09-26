@@ -428,6 +428,33 @@ end
 --]]
 
 
+function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)
+  local T = Trans.TRANSFORM
+
+  local x_size = (x2 - x1) * (T.scale_x or 1)
+  local y_size = (y2 - y1) * (T.scale_y or 1)
+  local z_size = (z2 - z1) * (T.scale_z or 1)
+
+  local spot = {}
+
+  spot.r = math.min(x_size, y_size)
+  spot.h = z_size
+
+  -- when rotated, find largest square that will fit inside it
+  if T.rotate then
+    local k = T.rotate % 90
+    if k > 45 then k = 90 - k end
+
+    local t = math.tan((45 - k) * math.pi / 180.0)
+    local s = math.sqrt(0.5 * (1 + t*t))
+
+    spot.r = spot.r * s
+  end
+
+  return spot
+end
+
+
 function Trans.spot_transform(x, y, z, angle)
   return
   {
@@ -1269,6 +1296,38 @@ function Fabricate(fab, T, skin, skin2)
   end
 
 
+  local function render_spots(list)
+    if Trans.no_entities then return end
+
+    for _,P in ipairs(list) do
+      -- adjust size of spot
+
+      local x1 = resize_coord(x_info, P.x - P.r)
+      local x2 = resize_coord(x_info, P.x + P.r)
+
+      local y1 = resize_coord(y_info, P.y - P.r)
+      local y2 = resize_coord(y_info, P.y + P.r)
+
+      local z1 = resize_coord(z_info, P.z)
+      local z2 = resize_coord(z_info, P.z + P.h)
+
+      local N = Trans.adjust_spot(x1,x2, y1,y2, z1,z2)
+
+      if P.angle then
+        N.angle = Trans.apply_angle(P.angle)
+      end
+
+      if P.kind == "cage" then
+        table.insert(ROOM.cage_spots, N)
+      elseif P.kind == "trap" then
+        table.insert(ROOM.trap_spots, N)
+      else
+        error("Unknown spot kind in prefab: " .. tostring(P.kind))
+      end
+    end
+  end
+
+
   ---| Fabricate |---
 
   gui.debugf("Fabricating: %s\n", fab.name)
@@ -1360,6 +1419,7 @@ function Fabricate(fab, T, skin, skin2)
   render_brushes (brushes)
   render_models  (fab.models)
   render_entities(fab.entities)
+  render_spots   (fab.spots)
 
   Trans.clear()
 end
