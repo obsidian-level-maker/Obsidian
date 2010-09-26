@@ -281,7 +281,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  -64, y =  128, mat = "?carpet" },
       { x = -128, y =   64, mat = "?carpet" },
       { x = -128, y =  -64, mat = "?carpet" },
-      { t = 2, mat = "?carpet", delta_z = -8 },
+      { t = 2, mat = "?carpet", delta_z = -12 },
     },
 
     -- central computer pillar
@@ -290,7 +290,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  32, y = -32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
       { x =  32, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
       { x = -32, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
-      { t = 112, mat = "?computer" },
+      { t = 104, mat = "?computer" },
     },
 
     -- side computer bits
@@ -299,7 +299,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  56, y = -32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
       { x =  56, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x =  32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
-      { t = 64, mat = "?compside" },
+      { t = 56, mat = "?compside" },
     },
 
     {
@@ -307,7 +307,7 @@ PREFAB.TECH_DITTO_1 =
       { x = -32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x = -32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x = -56, y =  32, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
-      { t = 64, mat = "?compside" },
+      { t = 56, mat = "?compside" },
     },
 
     {
@@ -315,7 +315,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  32, y = -56, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x =  32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x = -32, y = -32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
-      { t = 64, mat = "?compside" },
+      { t = 56, mat = "?compside" },
     },
 
     {
@@ -323,7 +323,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  32, y =  32, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
       { x =  32, y =  56, mat = "?computer", peg=1, x_offset=0, y_offset=0 },
       { x = -32, y =  56, mat = "?compside", peg=1, x_offset=0, y_offset=0 },
-      { t = 64, mat = "?compside" },
+      { t = 56, mat = "?compside" },
     },
 
     -- feet
@@ -334,7 +334,7 @@ PREFAB.TECH_DITTO_1 =
       { x = 88, y =  48, mat = "?feet" },
       { x = 72, y =  48, mat = "?feet" },
       { x = 56, y =  32, mat = "?feet" },
-      { t = 16, mat = "?feet" },
+      { t = 8, mat = "?feet" },
     },
 
     {
@@ -344,7 +344,7 @@ PREFAB.TECH_DITTO_1 =
       { x = -56, y =  32, mat = "?feet" },
       { x = -72, y =  48, mat = "?feet" },
       { x = -88, y =  48, mat = "?feet" },
-      { t = 16, mat = "?feet" },
+      { t = 8, mat = "?feet" },
     },
 
     {
@@ -354,7 +354,7 @@ PREFAB.TECH_DITTO_1 =
       { x =  32, y = -56, mat = "?feet" },
       { x = -32, y = -56, mat = "?feet" },
       { x = -48, y = -72, mat = "?feet" },
-      { t = 16, mat = "?feet" },
+      { t = 8, mat = "?feet" },
     },
 
     {
@@ -364,9 +364,21 @@ PREFAB.TECH_DITTO_1 =
       { x = -32, y = 56, mat = "?feet" },
       { x =  32, y = 56, mat = "?feet" },
       { x =  48, y = 72, mat = "?feet" },
-      { t = 16, mat = "?feet" },
+      { t = 8, mat = "?feet" },
     },
 
+    -- lighting
+    {
+      { m = "light", add = 32 },
+      { x =  -64, y = -128 },
+      { x =   64, y = -128 },
+      { x =  128, y =  -64 },
+      { x =  128, y =   64 },
+      { x =   64, y =  128 },
+      { x =  -64, y =  128 },
+      { x = -128, y =   64 },
+      { x = -128, y =  -64 },
+    },
   },
 }
 
