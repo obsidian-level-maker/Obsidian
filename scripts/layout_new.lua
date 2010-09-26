@@ -486,6 +486,12 @@ function Layout_the_room(R)
         IM.place_K = table.remove(middles, 1)
         IM.place_K.place_used = true
 gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
+
+        if IM.lock and IM.lock.kind == "KEY" then
+          IM.prefab = "OCTO_PEDESTAL"
+          IM.skin = { item = IM.lock.item, top = "CEIL1_2", base = "FLAT1" }
+        end
+
         return
       end
 
@@ -613,7 +619,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     -- TODO: more combinations, check what prefabs can be used
 
     for _,IM in ipairs(R.importants) do
-      if true then --- IM.kind == "TELEPORTER" then
+      if IM.kind ~= "SOLUTION" then ---  IM.kind == "TELEPORTER" then
         pick_imp_spot(IM, {}, {}, walls)
       else
         pick_imp_spot(IM, middles, {}, {})
@@ -927,6 +933,17 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
         local skin = { pillar="GRAY5", rail="MIDGRATE" }
 
         Fab_with_update(fab, T, skin)
+      end
+    end
+
+    for _,IM in ipairs(R.importants) do
+      if IM.place_K and IM.prefab then
+        local K = IM.place_K
+        local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
+
+        local T = Trans.spot_transform(mx, my, 0)
+        
+        Fab_with_update(IM.prefab, T, IM.skin)
       end
     end
   end

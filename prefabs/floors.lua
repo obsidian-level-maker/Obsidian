@@ -38,6 +38,76 @@ PREFAB.PEDESTAL =
 }
 
 
+PREFAB.OCTO_PEDESTAL =
+{
+  brushes =
+  {
+    {
+      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 16, mat = "?top" },
+    },
+
+    -- octogon base
+    {
+      { x = -40, y = -56, mat = "?base" },
+      { x =  40, y = -56, mat = "?base" },
+      { x =  56, y = -40, mat = "?base" },
+      { x =  56, y =  40, mat = "?base" },
+      { x =  40, y =  56, mat = "?base" },
+      { x = -40, y =  56, mat = "?base" },
+      { x = -56, y =  40, mat = "?base" },
+      { x = -56, y = -40, mat = "?base" },
+      { t = 8, mat = "?base" },
+    },
+
+    -- lighting
+    {
+      { m = "light", add = 48 },
+      { x = -32, y = -56 },
+      { x =  32, y = -56 },
+      { x =  56, y = -32 },
+      { x =  56, y =  32 },
+      { x =  32, y =  56 },
+      { x = -32, y =  56 },
+      { x = -56, y =  32 },
+      { x = -56, y = -32 },
+    },
+
+    {
+      { m = "light", add = 32 },
+      { x = -40, y = -80 },
+      { x =  40, y = -80 },
+      { x =  80, y = -40 },
+      { x =  80, y =  40 },
+      { x =  40, y =  80 },
+      { x = -40, y =  80 },
+      { x = -80, y =  40 },
+      { x = -80, y = -40 },
+    },
+
+    {
+      { m = "light", add = 16 },
+      { x =  -48, y = -112 },
+      { x =   48, y = -112 },
+      { x =  112, y =  -48 },
+      { x =  112, y =   48 },
+      { x =   48, y =  112 },
+      { x =  -48, y =  112 },
+      { x = -112, y =   48 },
+      { x = -112, y =  -48 },
+    },
+  },
+
+  entities =
+  {
+    { x = 0, y = 0, z = 16, ent = "?item", angle = "?angle" },
+  },
+}
+
+
 PREFAB.LOWERING_PEDESTAL =
 {
   brushes =
