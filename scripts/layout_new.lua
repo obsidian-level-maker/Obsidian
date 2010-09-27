@@ -954,15 +954,12 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
   end
 
 
-  local function clear_polygon(P)
-    if P.kind == "free" or P.kind == "walk" then
-      gui.spots_fill_poly(0, P.coords)
-    end
-  end
-
-  local function solid_polygon(P)
-    if not (P.kind == "free" or P.kind == "walk") then
-      gui.spots_fill_poly(1, P.coords)
+  local function fill_polygons(space, values)
+    for _,P in ipairs(space.polys) do
+      local val = values[P.kind]
+      if val then
+        gui.spots_fill_poly(val, P.coords)
+      end
     end
   end
 
@@ -999,6 +996,52 @@ if S.kind == "solid" then return end
     return x1,y1, x2,y2
   end
 
+
+  local function expand_walk_group(grid, x, y)
+    local x1 = x
+    local x2 = x
+
+    grid[x][y].value = 0
+
+    while x1-1 >= 1 and grid[x1-1][y].value == 2 do
+      x1 = x1 - 1
+      grid[x1][y].value = 0
+    end
+
+    while x2+1 <= grid.w and grid[x2+1][y].value == 2 do
+      x2 = x2 + 1
+      grid[x2][y].value = 0
+    end
+
+    for x = x1,x2 do
+      if y-1 >= 1 and grid[x][y-1].value == 2 then
+        expand_walk_group(grid, x, y-1)
+      end
+      if y+1 <= grid.h and grid[x][y+1].value == 2 then
+        expand_walk_group(grid, x, y+1)
+      end
+    end
+  end
+
+
+  local function find_walk_groups(grid)
+    local list = {}
+ 
+    for x = 1,grid.w do for y = 1,grid.h do
+      local G = grid[x][y]
+      if G.value == 2 then
+        local GROUP = { x=x, y=y, id=1 + #list }
+        table.insert(list, GROUP)
+stderrf("WALK GROUP @ (%d %d)\n", x, y)
+        expand_walk_group(grid, x, y)
+      end
+    end end
+
+stderrf("\n\n")
+    return list
+  end
+
+
   local function build_floor()
     -- TEMPER CRUDDIER CRUD
     local h = 0
@@ -1009,14 +1052,35 @@ if S.kind == "solid" then return end
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal(mat))
+      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal("LAVA"))
     end
 
----    -- TEMP CRUD
----    for _,P in ipairs(R.floor_space.polys) do
----      floor_polygon(P)
----    end
+
+    local bx1,by1, bx2,by2 = R.floor_space:calc_bbox()
+
+    local fw = int((bx2 - bx1) / 64.0)
+    local fh = int((by2 - by1) / 64.0)
+
+    gui.spots_begin(bx1,by1, bx2,by2)
+
+    fill_polygons(R.floor_space, { free=0, air=0 })
+    fill_polygons(R.floor_space, { walk=2 })
+    fill_polygons(R.floor_space, { solid=1 })
+
+    gui.spots_dump("Floor grid")
+
+    local grid = table.array_2D(fw, fh)
+
+    for x = 1,fw do for y = 1,fh do
+      grid[x][y] = {}
+      grid[x][y].value = gui.spots_read_grid((x-1)*4+1, (y-1)*4+1, 4, 4);
+    end end
+
+    gui.spots_end()
+
+    local walks = find_walk_groups(grid)
   end
+
 
   local function build_ceiling()
     -- TEMP CRUD
@@ -1121,12 +1185,8 @@ if S.kind == "solid" then return end
 
   gui.spots_begin(R.floor_space:calc_bbox())
 
-  for _,P in ipairs(R.floor_space.polys) do
-    clear_polygon(P)
-  end
-  for _,P in ipairs(R.floor_space.polys) do
-    solid_polygon(P)
-  end
+  fill_polygons(R.floor_space, { free=0, air=0, walk=0 })
+  fill_polygons(R.floor_space, { solid=1 })
 
   R.mon_spots  = {}
   R.item_spots = {}
