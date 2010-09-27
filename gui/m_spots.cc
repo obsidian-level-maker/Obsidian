@@ -27,7 +27,7 @@
 #include "main.h"
 
 
-#define GRID_SIZE  18
+#define GRID_SIZE  16
 
 #define MAX_GRID_DIM  256
 
@@ -450,6 +450,28 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
       DebugPrintf("Monster spot ---> [%d %d] size [%d %d]\n", x1,y1, x2-x1+1,y2-y1+1);
     }
   }
+}
+
+
+int SPOT_FloorArea(int x1, int y1, int x2, int y2)
+{
+  SYS_ASSERT(0 <= x1 && x1 <= x2 && x2 < grid_W);
+  SYS_ASSERT(0 <= y1 && y1 <= y2 && y2 < grid_H);
+
+  bool has_walk = false;
+
+  for (int x = x1 ; x <= x2 ; x++)
+  for (int y = y1 ; y <= y2 ; y++)
+  {
+    int val = spot_grid[x][y];
+
+    // solid overrides all others
+    if (val == 1) return 1;
+
+    if (val == 2) has_walk = true;
+  }
+
+  return has_walk ? 2 : 0;
 }
 
 
@@ -893,11 +915,39 @@ int SPOT_get_items(lua_State *L)
 }
 
 
-// LUA: spots_get_floor(array2D)
+// LUA: spots_get_floor(array2D, w, h)
 //
 int SPOT_get_floor(lua_State *L)
 {
-  // FIXME: SPOT_get_floor
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing array2D");
+
+  int w = luaL_checkint(L, 2);
+  int h = luaL_checkint(L, 3);
+
+  SYS_ASSERT(w >= 1);
+  SYS_ASSERT(h >= 1);
+
+  for (int x = 1 ; x <= w ; x++)
+  for (int y = 1 ; y <= h ; y++)
+  {
+    int gx = (x - 1) * 4;
+    int gy = (y - 1) * 4;
+
+    int value = SPOT_FloorArea(gx, gy, gx+3, gy+3);
+
+    lua_pushinteger(L, x);
+    lua_gettable(L, 1);
+
+    lua_pushinteger(L, y);
+    lua_gettable(L, -2);
+
+    lua_pushinteger(L, value);
+    lua_setfield(L, -2, "value");
+
+    lua_pop(L, 2);
+  }
+
   return 0;
 }
 
