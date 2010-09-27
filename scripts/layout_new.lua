@@ -1001,23 +1001,25 @@ if S.kind == "solid" then return end
     local x1 = x
     local x2 = x
 
-    grid[x][y].value = 0
+    grid[x][y].walk = 2
 
-    while x1-1 >= 1 and grid[x1-1][y].value == 2 do
+    -- clear current row first, which will limit the amount of recursion
+
+    while x1-1 >= 1 and grid[x1-1][y].walk == 1 do
       x1 = x1 - 1
-      grid[x1][y].value = 0
+      grid[x1][y].walk = 2
     end
 
-    while x2+1 <= grid.w and grid[x2+1][y].value == 2 do
+    while x2+1 <= grid.w and grid[x2+1][y].walk == 1 do
       x2 = x2 + 1
-      grid[x2][y].value = 0
+      grid[x2][y].walk = 2
     end
 
     for x = x1,x2 do
-      if y-1 >= 1 and grid[x][y-1].value == 2 then
+      if y-1 >= 1 and grid[x][y-1].walk == 1 then
         expand_walk_group(grid, x, y-1)
       end
-      if y+1 <= grid.h and grid[x][y+1].value == 2 then
+      if y+1 <= grid.h and grid[x][y+1].walk == 1 then
         expand_walk_group(grid, x, y+1)
       end
     end
@@ -1029,7 +1031,7 @@ if S.kind == "solid" then return end
  
     for x = 1,grid.w do for y = 1,grid.h do
       local G = grid[x][y]
-      if G.value == 2 then
+      if G.walk == 1 then
         local GROUP = { x=x, y=y, id=1 + #list }
         table.insert(list, GROUP)
 stderrf("WALK GROUP @ (%d %d)\n", x, y)
@@ -1072,8 +1074,14 @@ stderrf("\n\n")
     local grid = table.array_2D(fw, fh)
 
     for x = 1,fw do for y = 1,fh do
-      grid[x][y] = {}
-      grid[x][y].value = gui.spots_read_grid((x-1)*4+1, (y-1)*4+1, 4, 4);
+      local G = {}
+      grid[x][y] = G
+
+      local val = gui.spots_read_grid((x-1)*4+1, (y-1)*4+1, 4, 4);
+
+      if bit.btest(val, 1) then G.free  = 1 end
+      if bit.btest(val, 2) then G.walk  = 1 end
+      if bit.btest(val, 4) then G.solid = 1 end
     end end
 
     gui.spots_end()

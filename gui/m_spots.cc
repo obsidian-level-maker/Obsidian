@@ -457,8 +457,8 @@ int SPOT_FloorArea(int x1, int y1, int x2, int y2)
 {
   SYS_ASSERT(x1 <= x2 && y1 <= y2);
 
-  if (x1 >= grid_W || x2 < 0) return 1;
-  if (y1 >= grid_H || y2 < 0) return 1;
+  if (x1 >= grid_W || x2 < 0) return 4;
+  if (y1 >= grid_H || y2 < 0) return 4;
 
   if (x1 < 0) x1 = 0;
   if (y1 < 0) y1 = 0;
@@ -466,21 +466,19 @@ int SPOT_FloorArea(int x1, int y1, int x2, int y2)
   if (x2 >= grid_W) x2 = grid_W-1;
   if (y2 >= grid_H) y2 = grid_H-1;
 
-  bool has_solid = false;
-  bool has_walk  = false;
+  int result = 0;
 
   for (int x = x1 ; x <= x2 ; x++)
   for (int y = y1 ; y <= y2 ; y++)
   {
     int val = spot_grid[x][y];
 
-    if (val == 1) has_solid = true;
-    if (val == 2) has_walk = true;
+    if (val == 0) result |= 1;  // free
+    if (val == 2) result |= 2;  // walk
+    if (val == 1) result |= 4;  // solid
   }
 
-  // solid overrides all others
-
-  return has_solid ? 1 : has_walk ? 2 : 0;
+  return result;
 }
 
 
