@@ -42,6 +42,20 @@ PREFAB.OCTO_PEDESTAL =
 {
   brushes =
   {
+    -- reachability
+    {
+      { m = "walk" },
+      { x =  -48, y = -112 },
+      { x =   48, y = -112 },
+      { x =  112, y =  -48 },
+      { x =  112, y =   48 },
+      { x =   48, y =  112 },
+      { x =  -48, y =  112 },
+      { x = -112, y =   48 },
+      { x = -112, y =  -48 },
+    },
+
+    -- pedestal
     {
       { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
@@ -99,6 +113,7 @@ PREFAB.OCTO_PEDESTAL =
       { x = -112, y =   48 },
       { x = -112, y =  -48 },
     },
+
   },
 
   entities =
