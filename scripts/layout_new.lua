@@ -1131,7 +1131,12 @@ if S.kind == "solid" then return end
   R.mon_spots  = {}
   R.item_spots = {}
 
-  gui.spots_end(R.mon_spots, R.item_spots)
+  gui.spots_dump("Spot grid")
+
+  gui.spots_get_mons (R.mon_spots)
+  gui.spots_get_items(R.item_spots)
+
+  gui.spots_end()
 
 --[[  TEST
   for _,spot in ipairs(R.item_spots) do

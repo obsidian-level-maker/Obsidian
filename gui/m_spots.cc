@@ -95,7 +95,7 @@ void SPOT_FreeGrid()
 
 void SPOT_DumpGrid(const char *info)
 {
-  DebugPrintf("Grid %s: (%d %d) .. (%d %d)\n", info,
+  DebugPrintf("%s: (%d %d) .. (%d %d)\n", info,
               grid_min_x, grid_min_y, grid_max_x, grid_max_y);
 
   for (int y = grid_H-1 ; y >= 0 ; y--)
@@ -151,6 +151,8 @@ public:
 
 void SPOT_FloodOutside()
 {
+  // NOTE: currently not used 
+
   int w2 = grid_W-1;
   int h2 = grid_H-1;
 
@@ -838,36 +840,24 @@ static void store_mon_or_item(lua_State *L, int stack_pos,
 }
 
 
-// LUA: spots_end(mons, items)
+// LUA: spots_dump(text)
 //
-// mons and items are tables where the monster and item spots
-// will be placed.
+int SPOT_dump(lua_State *L)
+{
+  const char *text = luaL_checkstring(L, 1);
+
+  SPOT_DumpGrid(text);
+
+  return 0;
+}
+
+
+// LUA: spots_get_mons(list)
 //
-int SPOT_end(lua_State *L)
+int SPOT_get_mons(lua_State *L)
 {
   if (lua_type(L, 1) != LUA_TTABLE)
     return luaL_argerror(L, 1, "missing table: mons");
-
-  if (lua_type(L, 2) != LUA_TTABLE)
-    return luaL_argerror(L, 2, "missing table: items");
-
-
-  SPOT_DumpGrid("Raw");
-
-///  SPOT_FloodOutside();
-///
-///  SPOT_DumpGrid("Flooded");
-
-
-  std::vector<grid_point_c> items;
-
-  SPOT_ItemSpots(items);
-
-  for (unsigned int i = 0 ; i < items.size() ; i++)
-  {
-    store_mon_or_item(L, 2, 1+i, false, items[i].x, items[i].y);
-  }
-
 
   std::vector<grid_point_c> mons;
 
@@ -879,7 +869,43 @@ int SPOT_end(lua_State *L)
                                          mons[m+1].x, mons[m+1].y);
   }
 
+  return 0;
+}
 
+
+// LUA: spots_get_items(list)
+//
+int SPOT_get_items(lua_State *L)
+{
+  if (lua_type(L, 1) != LUA_TTABLE)
+    return luaL_argerror(L, 1, "missing table: items");
+
+  std::vector<grid_point_c> items;
+
+  SPOT_ItemSpots(items);
+
+  for (unsigned int i = 0 ; i < items.size() ; i++)
+  {
+    store_mon_or_item(L, 1, 1+i, false, items[i].x, items[i].y);
+  }
+
+  return 0;
+}
+
+
+// LUA: spots_get_floor(array2D)
+//
+int SPOT_get_floor(lua_State *L)
+{
+  // FIXME: SPOT_get_floor
+  return 0;
+}
+
+
+// LUA: spots_end()
+//
+int SPOT_end(lua_State *L)
+{
   SPOT_FreeGrid();
 
   return 0;
