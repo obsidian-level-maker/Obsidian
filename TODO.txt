@@ -3,6 +3,10 @@ V4 TODO
 =======
 
 
+Idea: brushes can have a "flavor" and a priority.
+      If two brushes with the same flavor exist in a 2D region at the
+      same time, only the highest priority brush is kept.
+
 Idea: COMPOSITION of prefabs
 
 Idea: "flush depth" of walls
