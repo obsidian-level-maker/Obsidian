@@ -765,23 +765,6 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
 
     local info = assert(SP.straddler)
 
-    -- build it only once :
-    --    DOOR on first room (as it sets up the initial floor height for second room) 
-    --    WINDOW on second room (since there it knows height range on both sides)
-
-    if info.kind == "window" then
-      if not info.seen then
-        info.seen = true
-        do_straddler_solid(E, SP)
-        return
-      end
-    else
-      if info.built then
-        do_straddler_solid(E, SP)
-        return
-      end
-      info.built = true
-    end
 
     local back = info.back
 
@@ -856,13 +839,31 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
 
     if info.kind == "door" then
       -- TODO: if any Z scaling, apply to room_dy
-      other_R.entry_floor_h = ROOM.entry_floor_h + (fab_info.room_dz or 0)
+      other_R.entry_floor_h = ROOM.entry_floor_h - (fab_info.room_dz or 0)
     end
 
     if fab_info.repeat_width and (long / fab_info.repeat_width) >= 2 then
       count = int(long / fab_info.repeat_width)
     end
 
+
+    -- build it only once :
+    --    DOOR on first room (as it sets up the initial floor height for second room) 
+    --    WINDOW on second room (since there it knows height range on both sides)
+
+    if info.kind == "window" or info.kind == "door" then
+      if not info.seen then
+        info.seen = true
+        do_straddler_solid(E, SP)
+        return
+      end
+    else
+      if info.built then
+        do_straddler_solid(E, SP)
+        return
+      end
+      info.built = true
+    end
 
 
     for i = 1,count do
