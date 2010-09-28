@@ -535,7 +535,7 @@ function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out1, out2)
 end
 
 
-function Trans.centre_transform(S, z, dir)
+function Trans.OLD__centre_transform(S, z, dir)
   local T = {}
 
   local ANGS = { [2]=0, [8]=180,  [4]=270,  [6]=90 }
@@ -549,7 +549,7 @@ function Trans.centre_transform(S, z, dir)
   return T
 end
 
-function Trans.border_transform(S, z, side)
+function Trans.OLD__border_transform(S, z, side)
   local T = {}
 
   local x3, y3 = S:x3(), S:y3()
@@ -590,7 +590,7 @@ function Trans.border_transform(S, z, side)
   do return T end
 end
 
-function Trans_straddle_transform(S, z, side)
+function Trans.OLD__straddle_transform(S, z, side)
   local T = {}
 
   local x3, y3 = S:x3(), S:y3()
@@ -641,7 +641,7 @@ function Trans_straddle_transform(S, z, side)
 end
 
 
-function Trans.doorway_transform(S, z, side)
+function Trans.OLD__doorway_transform(S, z, side)
   local T = {}
 
   local ANGS = { [2]=0,    [8]=180,  [4]=270,  [6]=90 }
