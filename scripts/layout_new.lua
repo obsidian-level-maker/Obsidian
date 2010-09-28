@@ -997,6 +997,39 @@ if S.kind == "solid" then return end
   end
 
 
+  local function path_square(grid, x, y, h, mat)
+    local x1 = grid.base_x + (x-1) * 64
+    local y1 = grid.base_y + (y-1) * 64
+
+    Trans.quad(x1, y1, x1+64, y1+64, nil, h, Mat_normal(mat))
+  end
+
+
+  local function build_a_path(grid, A, B)
+
+    local function scorer(cx,cy, nx,ny, dir)
+      local G = grid[nx][ny]
+      if not (G.walk or G.free) then return -1 end
+      if G.solid then return 9 end
+      return 1
+    end
+
+    local path = astar_find_path(grid.w, grid.h, A.x, A.y, B.x, B.y, scorer)
+
+    if not path then
+stderrf("******************* NO PATH *****************\n")
+stderrf("******************* NO PATH *****************\n")
+stderrf("******************* NO PATH *****************\n")
+stderrf("******************* NO PATH *****************\n")
+      return
+    end
+
+    for _,p in ipairs(path) do
+      path_square(grid, p.x, p.y, 16, "FLAT18")
+    end
+  end
+
+
   local function expand_walk_group(grid, x, y)
     local x1 = x
     local x2 = x
@@ -1044,6 +1077,23 @@ stderrf("\n\n")
   end
 
 
+  local function dump_floor(grid)
+    gui.debugf("FLOOR AREAS:\n")
+    for y = grid.h,1,-1 do
+      local line = ""
+      for x = 1,grid.w do
+        local G = grid[x][y]
+            if G.solid then line = line .. "#"
+        elseif G.walk  then line = line .. "/"
+        elseif G.free  then line = line .. "."
+        else                line = line .. "?"
+        end
+      end
+      gui.debugf("  %s\n", line)
+    end
+  end
+
+
   local function build_floor()
     -- TEMPER CRUDDIER CRUD
     local h = 0
@@ -1051,10 +1101,11 @@ stderrf("\n\n")
     if not R.outdoor and THEME.building_floors then
       mat = rand.key_by_probs(THEME.building_floors)
     end
+ROOM.floor_mat = mat
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal("LAVA"))
+      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal("FWATER1"))
     end
 
 
@@ -1073,6 +1124,9 @@ stderrf("\n\n")
 
     local grid = table.array_2D(fw, fh)
 
+    grid.base_x = bx1
+    grid.base_y = by1
+
     for x = 1,fw do for y = 1,fh do
       local G = {}
       grid[x][y] = G
@@ -1086,7 +1140,19 @@ stderrf("\n\n")
 
     gui.spots_end()
 
+    dump_floor(grid)
+
+    for x = 1,fw do for y = 1,fh do
+      if grid[x][y].walk and not grid[x][y].solid then
+        path_square(grid, x, y, 8, "LAVA1")
+      end
+    end end
+
     local walks = find_walk_groups(grid)
+
+    for i = 1,#walks-1 do
+      build_a_path(grid, walks[i], walks[i+1])
+    end
   end
 
 
