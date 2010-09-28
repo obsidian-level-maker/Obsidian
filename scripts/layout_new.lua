@@ -624,10 +624,14 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     -- TODO: more combinations, check what prefabs can be used
 
     for _,IM in ipairs(R.importants) do
-      if IM.kind ~= "SOLUTION" then ---  IM.kind == "TELEPORTER" then
-        pick_imp_spot(IM, {}, {}, walls)
-      else
+
+stderrf("IM.kind '%s'  IM.lock.kind '%s'\n",
+tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
+
+      if IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
         pick_imp_spot(IM, middles, {}, {})
+      else
+        pick_imp_spot(IM, {}, {}, walls)
       end
     end
   end
@@ -880,6 +884,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     local K = E.K
     local z = ROOM.entry_floor_h
 
+stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
