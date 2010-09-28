@@ -173,7 +173,7 @@ PREFAB.ARCH_W_STAIR =
       { x = 192, y = 128, mat = "?wall" },
       { x = 0,   y = 128, mat = "?wall" },
       { x = 0,   y =   0, mat = "?wall" },
-      { b = 128, mat = "?wall" },
+      { b = 192, mat = "?wall" },
     },
 
     -- left side
@@ -194,6 +194,7 @@ PREFAB.ARCH_W_STAIR =
 
     -- steps
     {
+      { m = "solid", flavor = "floor:2" },
       { x =  16, y =  0, mat = "?step" },
       { x = 176, y =  0, mat = "?step" },
       { x = 176, y = 32, mat = "?step" },
@@ -202,6 +203,7 @@ PREFAB.ARCH_W_STAIR =
     },
 
     {
+      { m = "solid", flavor = "floor:2" },
       { x =  16, y = 32, mat = "?step" },
       { x = 176, y = 32, mat = "?step" },
       { x = 176, y = 64, mat = "?step" },
@@ -210,6 +212,7 @@ PREFAB.ARCH_W_STAIR =
     },
 
     {
+      { m = "solid", flavor = "floor:2" },
       { x =  16, y = 64, mat = "?step" },
       { x = 176, y = 64, mat = "?step" },
       { x = 176, y = 96, mat = "?step" },
@@ -218,6 +221,7 @@ PREFAB.ARCH_W_STAIR =
     },
 
     {
+      { m = "solid", flavor = "floor:2" },
       { x =  16, y =  96, mat = "?step" },
       { x = 176, y =  96, mat = "?step" },
       { x = 176, y = 128, mat = "?step" },

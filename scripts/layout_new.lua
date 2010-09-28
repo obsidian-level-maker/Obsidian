@@ -1123,7 +1123,8 @@ ROOM.floor_mat = mat
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal(ROOM.floor_mat))
+      local kind, w_face, p_face = Mat_normal(mat)
+      Trans.quad(x1, y1, x2, y2, nil, h, { m=kind, flavor="floor:1" }, w_face, p_face)
     end
 
 
