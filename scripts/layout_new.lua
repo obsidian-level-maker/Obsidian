@@ -1129,6 +1129,19 @@ ROOM.floor_mat = mat
     end
 
 
+-- BRIDGE TEST
+if R.kw == 1 and R.kh == 2 then
+  local x1, y1, x2, y2 = shrunk_section_coords(SECTIONS[R.kx1][R.ky1])
+  local y2 = SECTIONS[R.kx1][R.ky2].y2 - 8
+
+  local mx, my = geom.box_mid(x1,y1, x2,y2)
+
+  local T = Trans.box_transform(x1, my - 128, x2, my + 128, h, 8)
+
+  Fabricate("BRIDGE_TEST", T, { liquid="LAVA1" } )
+end
+
+
     do return end
 
     -- TEMP EXPERIMENTAL PATH CRUD
