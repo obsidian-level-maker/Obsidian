@@ -1333,22 +1333,25 @@ static int FlavorCompare(const char *flavor1, const char *flavor2)
   SYS_ASSERT(flavor1);
   SYS_ASSERT(flavor2);
 
+  const char *A = flavor1;
+  const char *B = flavor2;
+
   for (;;)
   {
-    if (! *flavor1) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor1);
-    if (! *flavor2) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor2);
+    if (! *A) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor1);
+    if (! *B) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor2);
 
-    if (*flavor1 != *flavor2)
+    if (*A != *B)
       break;  // different flavors
 
-    if (*flavor1 != ':')
+    if (*A != ':')
     {
-      flavor1++;  flavor2++;
+      A++;  B++;
       continue;
     }
 
-    int pri_1 = atoi(flavor1 + 1);
-    int pri_2 = atoi(flavor2 + 1);
+    int pri_1 = atoi(A + 1);
+    int pri_2 = atoi(B + 1);
 
     if (pri_1 <= 0) Main_FatalError("Bad brush flavor (bad pri) : '%s'\n", flavor1);
     if (pri_2 <= 0) Main_FatalError("Bad brush flavor (bad pri) : '%s'\n", flavor2);
