@@ -1311,17 +1311,6 @@ static void RemoveDeadRegions()
 //   GAP STUFF
 //------------------------------------------------------------------------
 
-void CSG_SortBrushes()
-{
-  for (unsigned int i = 0 ; i < all_regions.size() ; i++)
-  {
-    region_c *R = all_regions[i];
-
-    R->SortBrushes();
-  }
-}
-
-
 static bool CanSwallowBrush(region_c *R, int i, int k)
 {
   csg_brush_c *A = R->brushes[i];
@@ -1419,8 +1408,6 @@ void CSG_SwallowBrushes()
   // completely surrounded by another brush (on the Z axis).
   // this also handles flavored brushes.
 
-  CSG_SortBrushes();
-
   int count=0;
   int total=0;
 
@@ -1435,6 +1422,8 @@ void CSG_SwallowBrushes()
     {
       count++;
     }
+
+    R->SortBrushes();
 
     for (int i = 0 ; i < (int)R->brushes.size() ; i++)
     for (int k = (int)R->brushes.size()-1 ; k > i ; k--)
