@@ -208,17 +208,22 @@ function Layout_place_straddlers()
     local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
 
     assert(long >= 256)
+
+    local deep
     
     if kind == "door" then
       long = 208
+      deep = 128
     else
       -- windows use most of the length
       long = long - 72*2
+      deep = 32
     end
 
     -- FIXME : pick these properly
-    local deep1 = 24
-    local deep2 = 24
+    local deep1 = deep / 2
+    local deep2 = deep / 2
+
 
     local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
                         long=long, out=deep1, back=deep2,
@@ -462,8 +467,8 @@ function Layout_the_room(R)
       for _,K in ipairs(R.sections) do
         for _,C in pairs(K.corners) do
           if C.concave then
-            C.horiz = 24
-            C.vert  = 24
+            C.horiz = 64
+            C.vert  = 64
           else
             C.horiz = 72
             C.vert  = 72
@@ -664,7 +669,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   local function build_corner(C)
     local K = C.K
     
-    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, 0,
+    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h,
                                      C.side, C.horiz, C.vert)
 
     local fab = "CORNER" -- sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
@@ -679,7 +684,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     local K = E.K
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h,
                                    E.side, SP.long1, SP.long2, 0, SP.deep1)
   
     local fab = "WALL"
@@ -696,7 +701,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   local function build_fake_span(E, long1, long2)
     assert(long2 > long1)
 
-    local deep = 24
+    local deep = 64
     
     local SPAN =
     {
@@ -719,12 +724,12 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     local gap = 80 -- FIXME put in span and/or STRADDLER
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
     Fab_with_update("MARK_USED", T)
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, 0, E.side,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h, E.side,
                                    SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
 
     if info.kind == "window" then
@@ -786,7 +791,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
 
     local fab
-    local z = 0
+    local z = ROOM.entry_floor_h
     local skin = {}
     local sk2
 
@@ -796,7 +801,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
-      z = 40
+      z = z + 40
       sk2 = { frame="METAL1_1" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
@@ -824,9 +829,16 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
       else
         sk2 = GAME.DOORS["silver"]
         sk2.door = "BIGDOOR4"
+
+        -- TEST
+        fab = "ARCH_W_STAIR"
+        sk2.top = "FLAT1"
+        sk2.step = "FLAT23"
       end
       assert(sk2)
     end
+
+
 
 
     local long1 = SP.long1
@@ -838,9 +850,15 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     local fab_info = assert(PREFAB[fab])
 
+    if info.kind == "door" then
+      -- TODO: if any Z scaling, apply to room_dy
+      other_R.entry_floor_h = ROOM.entry_floor_h + (fab_info.room_dz or 0)
+    end
+
     if fab_info.repeat_width and (long / fab_info.repeat_width) >= 2 then
       count = int(long / fab_info.repeat_width)
     end
+
 
 
     for i = 1,count do
@@ -860,11 +878,11 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     assert(SP.skin)
 
     local K = E.K
+    local z = ROOM.entry_floor_h
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
-stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
     Fab_with_update(SP.prefab, T, SP.skin)
   end
 
@@ -927,7 +945,7 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
         
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-        local T = Trans.spot_transform(mx, my, 0)
+        local T = Trans.spot_transform(mx, my, ROOM.entry_floor_h)
 
         fab = "TECH_DITTO_1"
         skin = { carpet = "FLAT14", computer = "SPACEW3",
@@ -946,7 +964,7 @@ stderrf("build_edge_prefab %s @ side:%d %s\n", SP.prefab, E.side, K:tostr())
         local K = IM.place_K
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-        local T = Trans.spot_transform(mx, my, 0)
+        local T = Trans.spot_transform(mx, my, ROOM.entry_floor_h)
         
         Fab_with_update(IM.prefab, T, IM.skin)
       end
@@ -1096,7 +1114,7 @@ stderrf("\n\n")
 
   local function build_floor()
     -- TEMPER CRUDDIER CRUD
-    local h = 0
+    local h = ROOM.entry_floor_h
     local mat = R.skin.wall
     if not R.outdoor and THEME.building_floors then
       mat = rand.key_by_probs(THEME.building_floors)
@@ -1105,9 +1123,13 @@ ROOM.floor_mat = mat
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal("FWATER1"))
+      Trans.quad(x1, y1, x2, y2, nil, h, Mat_normal(ROOM.floor_mat))
     end
 
+
+    do return end
+
+    -- TEMP EXPERIMENTAL PATH CRUD
 
     local bx1,by1, bx2,by2 = R.floor_space:calc_bbox()
 
@@ -1158,7 +1180,7 @@ ROOM.floor_mat = mat
 
   local function build_ceiling()
     -- TEMP CRUD
-    local h   = sel(R.outdoor, 512, 384)
+    local h   = ROOM.entry_floor_h + sel(R.outdoor, 512, 384)
     local mat = sel(R.outdoor, "_SKY", "METAL1")
 
     for _,K in ipairs(R.sections) do
@@ -1191,6 +1213,10 @@ ROOM.floor_mat = mat
 
   ROOM = R  -- set global
 
+  if not ROOM.entry_floor_h then
+    ROOM.entry_floor_h = 128 --- rand.pick { 128, 192, 256, 320 }
+  end
+
   R.cage_spots = {}
   R.trap_spots = {}
 
@@ -1219,13 +1245,13 @@ ROOM.floor_mat = mat
 
   if R.purpose == "START" then
     local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-    local T = Trans.spot_transform(ex, ey, 0)
+    local T = Trans.spot_transform(ex, ey, ROOM.entry_floor_h)
 
 --- Fab_with_update("START_SPOT", T, skin)
   
   elseif R.purpose == "EXIT" then
 
-    local T = Trans.spot_transform(ex, ey, 0)
+    local T = Trans.spot_transform(ex, ey, ROOM.entry_floor_h)
 
     if GAME.format == "quake" then
       local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }

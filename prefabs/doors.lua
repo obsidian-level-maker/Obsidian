@@ -159,6 +159,76 @@ PREFAB.QUAKE_ARCH =
 
 
 
+PREFAB.ARCH_W_STAIR =
+{
+  placement = "fitted",
+
+  room_dz = 80,
+
+  brushes =
+  {
+    -- frame
+    {
+      { x = 192, y =   0, mat = "?outer" },
+      { x = 192, y = 128, mat = "?wall" },
+      { x = 0,   y = 128, mat = "?wall" },
+      { x = 0,   y =   0, mat = "?wall" },
+      { b = 128, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 0,  y =   0, mat = "?outer" },
+      { x = 16, y =   0, mat = "?wall" },
+      { x = 16, y = 128, mat = "?wall" },
+      { x = 0,  y = 128, mat = "?wall" },
+    },
+
+    -- right side
+    {
+      { x = 176, y =   0, mat = "?outer" },
+      { x = 192, y =   0, mat = "?wall" },
+      { x = 192, y = 128, mat = "?wall" },
+      { x = 176, y = 128, mat = "?wall" },
+    },
+
+    -- steps
+    {
+      { x =  16, y =  0, mat = "?step" },
+      { x = 176, y =  0, mat = "?step" },
+      { x = 176, y = 32, mat = "?step" },
+      { x =  16, y = 32, mat = "?step" },
+      { t = 64, mat = "top" },
+    },
+
+    {
+      { x =  16, y = 32, mat = "?step" },
+      { x = 176, y = 32, mat = "?step" },
+      { x = 176, y = 64, mat = "?step" },
+      { x =  16, y = 64, mat = "?step" },
+      { t = 48, mat = "top" },
+    },
+
+    {
+      { x =  16, y = 64, mat = "?step" },
+      { x = 176, y = 64, mat = "?step" },
+      { x = 176, y = 96, mat = "?step" },
+      { x =  16, y = 96, mat = "?step" },
+      { t = 32, mat = "top" },
+    },
+
+    {
+      { x =  16, y =  96, mat = "?step" },
+      { x = 176, y =  96, mat = "?step" },
+      { x = 176, y = 128, mat = "?step" },
+      { x =  16, y = 128, mat = "?step" },
+      { t = 16, mat = "top" },
+    },
+  },
+}
+
+
+
 PREFAB.DOOR =
 {
   placement = "fitted",
