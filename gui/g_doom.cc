@@ -671,6 +671,9 @@ bool doom_game_interface_c::Start()
 {
   dm_sub_format = 0;
 
+  ef_solid_type = 0;
+  ef_liquid_type = 0;
+
   filename = Select_Output_File("wad");
 
   if (! filename)
