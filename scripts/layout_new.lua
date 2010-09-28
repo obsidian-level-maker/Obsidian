@@ -625,9 +625,6 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     for _,IM in ipairs(R.importants) do
 
-stderrf("IM.kind '%s'  IM.lock.kind '%s'\n",
-tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
-
       if IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
         pick_imp_spot(IM, middles, {}, {})
       else
@@ -768,10 +765,9 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
 
     local back = info.back
 
-    local  this_R = E.K.room
     local other_R = info.N.room
 
-    if E.K.room ~= info.K.room then
+    if ROOM ~= info.K.room then
       other_R = info.K.room
       back = info.out
     end
@@ -783,11 +779,12 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
     local sk2
 
 
-    inner_outer_tex(skin, this_R, other_R)
+    inner_outer_tex(skin, ROOM, other_R)
 
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
+      z = math.max(z, other_R.entry_floor_h or 0)
       z = z + 40
       sk2 = { frame="METAL1_1" }
     elseif GAME.format == "quake" then
@@ -826,8 +823,6 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
     end
 
 
-
-
     local long1 = SP.long1
     local long2 = SP.long2
 
@@ -837,7 +832,7 @@ tostring(IM.kind), tostring(IM.lock and IM.lock.kind))
 
     local fab_info = assert(PREFAB[fab])
 
-    if info.kind == "door" then
+    if info.kind == "door" and not info.seen then
       -- TODO: if any Z scaling, apply to room_dy
       other_R.entry_floor_h = ROOM.entry_floor_h - (fab_info.room_dz or 0)
     end
@@ -1221,7 +1216,7 @@ ROOM.floor_mat = mat
   ROOM = R  -- set global
 
   if not ROOM.entry_floor_h then
-    ROOM.entry_floor_h = 128 --- rand.pick { 128, 192, 256, 320 }
+    ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
 
   R.cage_spots = {}
