@@ -374,7 +374,7 @@ function Layout_check_brush(coords, data)
 
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
-    POLY.fab_id = data.fab_id
+    POLY.fab_tag = data.fab_tag
     R.floor_space:merge(POLY)
   end
 
@@ -640,7 +640,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     local data =
     {
       R = R,
-      fab_id = Plan_alloc_mark(),
+      fab_tag = Plan_alloc_mark(),
     }
 
     Trans.set_override(Layout_check_brush, data)

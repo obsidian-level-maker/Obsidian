@@ -93,7 +93,7 @@ end
 
 function POLYGON_CLASS.bare_copy(self)
   local P = POLYGON_CLASS.new(self.kind)
-  P.fab_id = self.fab_id
+  P.fab_tag = self.fab_tag
   return P
 end
 
@@ -108,7 +108,7 @@ function POLYGON_CLASS.copy(self)
   P.bx1, P.by1 = self.bx1, self.by1
   P.bx2, P.by2 = self.bx2, self.by2
 
-  P.fab_id = self.fab_id
+  P.fab_tag = self.fab_tag
 
   return P
 end
@@ -505,11 +505,11 @@ function SPACE_CLASS.merge(self, M)
   local final_kind = M.kind
 
   for _,P in ipairs(overlaps) do
-    if M.fab_id and M.fab_id == P.fab_id then
+    if M.fab_tag and M.fab_tag == P.fab_tag then
       -- skip test if part of same prefab
     else
       if not SPACE_CLASS.can_merge(P.kind, M.kind) then
-gui.debugf("M.fab_id:%s  P.fab_id:%s\n", tostring(M.fab_id), tostring(P.fab_id))
+gui.debugf("M.fab_tag:%s  P.fab_tag:%s\n", tostring(M.fab_tag), tostring(P.fab_tag))
 gui.debugf("M=\n"); M:dump()
 gui.debugf("P=\n"); P:dump()
         error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
