@@ -480,7 +480,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
         excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
       end
 
-      if GAME.AMMOS then
+      if GAME.AMMOS and GAME.AMMOS[stat] then
         excess = math.max(excess, GAME.AMMOS[stat].start_bonus)
       end
       gui.debugf("Bonus %s = %1.1f\n", stat, excess)
