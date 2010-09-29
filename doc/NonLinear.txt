@@ -1,0 +1,68 @@
+
+NON-LINEARITY
+=============
+
+Dew:
+
+how about this definition: take a map considered as linear and
+remember hub rooms in your copy&paste clipboard. you will be
+very likely able to move&stretch the whole level into one long
+line. there might be optional rooms going sideways and there
+might be two parallel ways from one room to another, but it will
+still look like a line. a non-linear level will have unavoidable
+circles in this diagram, because there will be too many joints
+between areas to create a line. or perhaps you could draw it as
+a complicated tree structure...
+
+
+Jodwin:
+
+Really, that's the simplest possible "formula" for a non-linear
+map: Have a "hub", with X paths going away from it that you need
+to finish all to reach the exit, but you can pick the order of
+playing them freely.
+
+Putting non-linearity into a nutshell isn't exactly easy, but I
+guess you could say it means "having a map where the player is
+GIVEN CHOICES to make, and the choices he makes EFFECT HOW THE
+GAMEPLAY WILL PROGRESS."
+
+
+NaturalTvventy:
+
+So maybe we should go a bit further and not only try to define
+non-linear play but also why exactly it's desirable in a map. I
+think the greatest benefit to non-linear design is replayability.
+At the risk of blatantly self-promoting, I think the nonlinear
+gameplay of Awakening and similar levels extends the enjoyment
+of the DOOM experience. In Awakening the player eventually finds
+he has 5 different paths to choose from, and each has it's own
+benefits and drawbacks. Some provide ammo, some armor, some new
+weapons, some health, etc. Each time a player plays through the
+level he can choose a different order to play through and
+experience each with different amounts of ammo, health, and
+firepower. It's fun to try to figure out the 'best' order to
+complete the five sections, or challenge oneself on the tougher
+areas with less firepower.
+
+With linear levels everything feels planned and once you've done
+it once, that's it. No need to go back. You may have missed some
+secrets, or a side room, but if you survived the level it
+doesn't feel all that important to search out more. 
+
+
+The Ultimate DooMer
+
+Yeah, after all it's so difficult to THINK when playing Doom
+maps as opposed to following the only available path. God forbid
+we have to actually SEARCH for weapons, ammo, keys etc. instead
+of them being put in front of us as we follow said path.
+
+
+Snakes:
+
+the ability to enter a room from more than one angle causes
+different things to happen, the way it all unfolds is more
+unpredictable. The ability to explore different areas early on
+means the player can have a new experience every time. 
+
