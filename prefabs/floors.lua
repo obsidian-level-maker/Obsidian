@@ -181,7 +181,7 @@ PREFAB.BRIDGE_TEST =
 
     -- bridge
     {
-      { m = "solid", flavor = "floor:3" },
+      { m = "solid" },
       { x = 112, y =   0, mat = "?wall" },
       { x = 144, y =   0, mat = "?wall" },
       { x = 144, y = 256, mat = "?wall" },
