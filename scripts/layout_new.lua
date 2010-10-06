@@ -375,7 +375,7 @@ function Layout_check_brush(coords, data)
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
     POLY.fab_tag = data.fab_tag
-    R.floor_space:merge(POLY)
+    R.wall_space:merge(POLY)
   end
 
   return allow
@@ -625,7 +625,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     for _,IM in ipairs(R.importants) do
 
-      if IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
+      if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
         pick_imp_spot(IM, middles, {}, {})
       else
         pick_imp_spot(IM, {}, {}, walls)
@@ -1113,7 +1113,8 @@ stderrf("\n\n")
   end
 
 
-  local function build_floor()
+
+  local function OLD__build_floor()
     -- TEMPER CRUDDIER CRUD
     local h = ROOM.entry_floor_h
     local mat = R.skin.wall
@@ -1130,7 +1131,7 @@ ROOM.floor_mat = mat
 
 
 -- BRIDGE TEST
-if R.kw == 1 and R.kh == 2 then
+if false and R.kw == 1 and R.kh == 2 then
   local x1, y1, x2, y2 = shrunk_section_coords(SECTIONS[R.kx1][R.ky1])
   local y2 = SECTIONS[R.kx1][R.ky2].y2 - 8
 
@@ -1144,18 +1145,19 @@ end
 
     do return end
 
+
     -- TEMP EXPERIMENTAL PATH CRUD
 
-    local bx1,by1, bx2,by2 = R.floor_space:calc_bbox()
+    local bx1,by1, bx2,by2 = R.wall_space:calc_bbox()
 
     local fw = int((bx2 - bx1) / 64.0)
     local fh = int((by2 - by1) / 64.0)
 
     gui.spots_begin(bx1,by1, bx2,by2)
 
-    fill_polygons(R.floor_space, { free=0, air=0 })
-    fill_polygons(R.floor_space, { walk=2 })
-    fill_polygons(R.floor_space, { solid=1 })
+    fill_polygons(R.wall_space, { free=0, air=0 })
+    fill_polygons(R.wall_space, { walk=2 })
+    fill_polygons(R.wall_space, { solid=1 })
 
     gui.spots_dump("Floor grid")
 
@@ -1190,6 +1192,98 @@ end
     for i = 1,#walks-1 do
       build_a_path(grid, walks[i], walks[i+1])
     end
+  end
+
+
+  local function narrow_zone_for_edge(edge_deeps, E)
+    for _,SP in ipairs(E.spans) do
+      local deep = SP.deep1
+
+      assert(E.side and edge_deeps[E.side])
+
+      if deep > edge_deeps[E.side] then
+        edge_deeps[E.side] = deep
+      end
+    end
+  end
+
+
+  local function safe_walking_zone()
+
+    -- determine a rectangle inside the current room which
+    -- could be make solid while still allowing the player to
+    -- traverse the room (from one door to another etc).
+
+    -- FIXME this assumes a rectangular room
+    local K1 = SECTIONS[R.kx1][R.ky1]
+    local K2 = SECTIONS[R.kx2][R.ky2]
+
+    local zone = 
+    {
+      x1 = K1.x1,
+      y1 = K1.y1,
+      x2 = K2.x2,
+      y2 = K2.y2,
+    }
+
+    local edge_deeps =
+    {
+      [2] = 16, [4] = 16, [6] = 16, [8] = 16
+    }
+
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        narrow_zone_for_edge(edge_deeps, E)
+      end
+    end
+
+    -- FIXME: check corners too
+
+    for side = 2,8,2 do
+      if side == 4 then zone.x1 = zone.x1 + edge_deeps[4] end
+      if side == 6 then zone.x2 = zone.x2 - edge_deeps[6] end
+      if side == 2 then zone.y1 = zone.y1 + edge_deeps[2] end
+      if side == 8 then zone.y2 = zone.y2 - edge_deeps[8] end
+    end
+
+    -- allow some space for player
+    zone.x1 = zone.x1 + 64
+    zone.y1 = zone.y1 + 64
+
+    zone.x2 = zone.x2 - 64
+    zone.y2 = zone.y2 - 64
+
+    zone.width = zone.x2 - zone.x1
+    zone.depth = zone.y2 - zone.y1
+
+    if zone.width < 64 or zone.depth < 64 then
+      return nil  -- not enough room to play with
+    end
+
+    return zone
+  end
+
+
+  local function build_floor()
+
+    if R.shape ~= "rect" then
+      OLD__build_floor()
+      return
+    end
+
+    local zone = safe_walking_zone()
+
+    if not zone then
+      OLD__build_floor()
+      return
+    end
+
+stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
+        R:tostr(), zone.x1, zone.y1, zone.x2, zone.y2)
+
+    local space = Layout_initial_space(R)
+
+    OLD__build_floor()
   end
 
 
@@ -1235,7 +1329,7 @@ end
   R.cage_spots = {}
   R.trap_spots = {}
 
-  R.floor_space = Layout_initial_space(R)
+  R.wall_space = Layout_initial_space(R)
 
   decide_corner_sizes()
 
@@ -1246,7 +1340,7 @@ end
 
   build_edges()
 
-  build_middles()
+--FIXME  build_middles()
 
 
 -- TODO  R.ceil_space  = R.floor_space:copy()
@@ -1298,10 +1392,10 @@ end
 
   -- collect spots for the monster code
 
-  gui.spots_begin(R.floor_space:calc_bbox())
+  gui.spots_begin(R.wall_space:calc_bbox())
 
-  fill_polygons(R.floor_space, { free=0, air=0, walk=0 })
-  fill_polygons(R.floor_space, { solid=1 })
+  fill_polygons(R.wall_space, { free=0, air=0, walk=0 })
+  fill_polygons(R.wall_space, { solid=1 })
 
   R.mon_spots  = {}
   R.item_spots = {}
