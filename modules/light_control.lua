@@ -30,7 +30,7 @@ function LightControl_setup(self)
 end
 
 
-OB_MODULES["light_control"] =
+UNFINISHED["light_control"] =
 {
   label = "Lighting Control",
 
