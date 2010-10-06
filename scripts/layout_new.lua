@@ -714,6 +714,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     }
 
     build_wall(E, SPAN)
+
+    E.fake_deep = deep  -- FIXME hack
   end
 
 
@@ -889,6 +891,8 @@ stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
 
 
   local function build_edge(E)
+    local max_deep = 0
+
     local L_long = 0
     local R_long = E.long
 
@@ -913,12 +917,16 @@ stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
         build_edge_prefab(E, SP)
       end
 
+      if SP.deep1 > max_deep then max_deep = SP.deep1 end
+
       L_long = SP.long2
     end
 
     if R_long > L_long then
       build_fake_span(E, L_long, R_long)
     end
+
+    E.max_deep = math.max(max_deep, E.fake_deep or 0)
   end
 
 
@@ -1196,13 +1204,11 @@ end
 
 
   local function narrow_zone_for_edge(edge_deeps, E)
-    for _,SP in ipairs(E.spans) do
-      local deep = SP.deep1
-
+    if E.max_deep then
       assert(E.side and edge_deeps[E.side])
 
-      if deep > edge_deeps[E.side] then
-        edge_deeps[E.side] = deep
+      if edge_deeps[E.side] < E.max_deep then
+         edge_deeps[E.side] = E.max_deep
       end
     end
   end
@@ -1247,16 +1253,16 @@ end
     end
 
     -- allow some space for player
-    zone.x1 = zone.x1 + 64
-    zone.y1 = zone.y1 + 64
+    zone.x1 = zone.x1 + 96
+    zone.y1 = zone.y1 + 96
 
-    zone.x2 = zone.x2 - 64
-    zone.y2 = zone.y2 - 64
+    zone.x2 = zone.x2 - 96
+    zone.y2 = zone.y2 - 96
 
     zone.width = zone.x2 - zone.x1
     zone.depth = zone.y2 - zone.y1
 
-    if zone.width < 64 or zone.depth < 64 then
+    if zone.width < 96 or zone.depth < 96 then
       return nil  -- not enough room to play with
     end
 
@@ -1284,6 +1290,8 @@ stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
     local space = Layout_initial_space(R)
 
     OLD__build_floor()
+
+    Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
   end
 
 
