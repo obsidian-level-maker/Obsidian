@@ -657,12 +657,12 @@ function geom.inside_box(x,y, bx1,by1, bx2,by2)
          (by1 <= y) and (y <= by2)
 end
 
-function geom.box_inside_box(in_x1,in_y1,in_x2,in_y2, out_x1,out_y1,out_x2,out_y2)
-  assert(in_x1  < in_x2  and in_y1  < in_y2)
-  assert(out_x1 < out_x2 and out_y1 < out_y2)
+function geom.box_inside_box(x1,y1,x2,y2, x3,y3,x4,y4)
+  assert(x1 < x2 and y1  < y2)
+  assert(x3 < x4 and y3 < y4)
 
-  if in_x1 > out_x2 or in_y1 > out_y2 then return false end
-  if in_x2 < out_x1 or in_y2 < out_y1 then return false end
+  if x1 < x3 or x2 > x4 then return false end
+  if y1 < y3 or y2 > y4 then return false end
 
   return true
 end
