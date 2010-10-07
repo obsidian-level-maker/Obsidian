@@ -931,28 +931,32 @@ function Fabricate(fab, T, skin, skin2)
     --       (i.e. never higher that t, never lower than b).
 
     for _,B in ipairs(brushes) do
-      for _,C in ipairs(B) do
-        if C.x then 
-          if not x1 then
-            x1, y1 = C.x, C.y
-            x2, y2 = C.x, C.y
-          else
-            x1 = math.min(x1, C.x)
-            y1 = math.min(y1, C.y)
-            x2 = math.max(x2, C.x)
-            y2 = math.max(y2, C.y)
+      if B[1].insider or not (B[1].m == "walk" or B[1].m == "air" or B[1].m == "light" or B[1].outsider) then
+        for _,C in ipairs(B) do
+
+          if C.x then 
+            if not x1 then
+              x1, y1 = C.x, C.y
+              x2, y2 = C.x, C.y
+            else
+              x1 = math.min(x1, C.x)
+              y1 = math.min(y1, C.y)
+              x2 = math.max(x2, C.x)
+              y2 = math.max(y2, C.y)
+            end
+
+          elseif C.b or C.t then
+            local z = C.b or C.t
+            if not z1 then
+              z1, z2 = z, z
+            else
+              z1 = math.min(z1 or z, z)
+              z2 = math.max(z2 or z, z)
+            end
           end
 
-        elseif C.b or C.t then
-          local z = C.b or C.t
-          if not z1 then
-            z1, z2 = z, z
-          else
-            z1 = math.min(z1 or z, z)
-            z2 = math.max(z2 or z, z)
-          end
-        end
-      end -- C
+        end -- C
+      end
     end -- B
 
     assert(x1 and y1 and x2 and y2)
