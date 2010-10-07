@@ -1271,6 +1271,8 @@ stderrf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
 stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
         #G.polys, G.x1, G.y1, G.x2, G.y2)
     end  
+
+    return walk_groups
   end
 
 
@@ -1367,12 +1369,44 @@ floor.h = rand.pick { 0,64,128,192,256 }
     --   2. staircase must fit completely inside the SWZ
     --   3. no walk group is "cut" by dividing lines
 
-    -- FIXME
+    if not geom.box_inside_box(loc.stair.x1, loc.stair.y1,
+                               loc.stair.x2, loc.stair.y2,
+                               floor.zone.x1, floor.zone.y1,
+                               floor.zone.x2, floor.zone.y2)
+    then
+      return false
+    end
+
+    local in_walks  = 0
+    local out_walks = 0
+
+    assert(loc.x or loc.y)
+
+    for _,G in ipairs(floor.walks) do
+      if loc.x then
+            if G.x2 < loc.x then in_walks  = in_walks  + 1
+        elseif G.x1 > loc.x then out_walks = out_walks + 1
+        else return false -- cuts the group
+        end
+      else
+            if G.y2 < loc.y then in_walks  = in_walks  + 1
+        elseif G.y1 > loc.y then out_walks = out_walks + 1
+        else return false -- cuts the group
+        end
+      end
+    end
+
+stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
+
+    if in_walks < 1 or out_walks < 1 then
+      return false
+    end
+
+    return true  -- OK
   end
 
 
   local function choose_division(floor)
-
     local locs = {}
 
     -- Man, this is way too simplistic (pure cut in half),
@@ -1395,9 +1429,11 @@ floor.h = rand.pick { 0,64,128,192,256 }
 
     rand.shuffle(locs)
 
-    for _,L in ipairs(locs) do
-      if check_binary_subdiv(floor, L) then
-        return L
+    for _,loc in ipairs(locs) do
+stderrf("trying loc x=%d y=%d\n", loc.x or -1, loc.y or -1)
+      if check_binary_subdiv(floor, loc) then
+stderrf("--> OK\n")
+        return loc
       end
     end
   end
@@ -1407,13 +1443,15 @@ floor.h = rand.pick { 0,64,128,192,256 }
     local loc
 
     if #floor.walks >= 2 then
-      loc = check_binary_subdiv(floor)
+      loc = choose_division(floor)
     end
 
     if not loc then
       table.insert(R.all_floors, floor)
       return
     end
+
+stderrf("\nsubdivide_floor:\n%s\n", table.tostr(loc, 3))
 
     -- FIXME: DO THE SUBDIVISION
 
