@@ -250,6 +250,22 @@ function POLYGON_CLASS.overlaps(self, other)
 end
 
 
+function POLYGON_CLASS.touches(self, other)
+  if other.bx2 < self.bx1 - 0.5 then return false end
+  if other.bx1 > self.bx2 + 0.5 then return false end
+  if other.by2 < self.by1 - 0.5 then return false end
+  if other.by1 > self.by2 + 0.5 then return false end
+
+  for idx,C in ipairs(self.coords) do
+    if other:on_front(C.x, C.y, self:second(idx), -0.5) then
+      return false
+    end
+  end
+
+  return true
+end
+
+
 function POLYGON_CLASS.surrounds(self, other)
   -- check bboxes first
   if self.bx1 > other.bx1 + 0.5 then return false end
