@@ -1003,7 +1003,7 @@ if S.kind == "solid" then return end
     if S.kind == "liquid" then mat = "FWATER1" end
     if S.kind == "solid"  then mat = "CEIL5_2" end
 
-    local BRUSH = S:to_brush(mat)
+    local BRUSH = P:to_brush(mat)
 
     table.insert(BRUSH, { t=0, tex=mat, mark=Plan_alloc_mark() })
 
@@ -1341,6 +1341,89 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function render_floor(floor)
+floor.h = rand.pick { 0,64,128,192,256 }
+
+    local mat = R.skin.wall
+
+    if not R.outdoor and THEME.building_floors then
+      mat = rand.key_by_probs(THEME.building_floors)
+    end
+
+    for _,P in ipairs(floor.space.polys) do
+      local BRUSH = P:to_brush(mat)
+
+      table.insert(BRUSH, 1, { m="solid", flavor="floor:1" })
+      table.insert(BRUSH,    { t=floor.h, tex=mat })
+
+      Trans.brush(BRUSH)
+    end
+  end
+
+
+  local function check_binary_subdiv(floor, loc)
+    -- Requirements:
+    --   1. at least one walk group in each half
+    --   2. staircase must fit completely inside the SWZ
+    --   3. no walk group is "cut" by dividing lines
+
+    -- FIXME
+  end
+
+
+  local function choose_division(floor)
+
+    local locs = {}
+
+    -- Man, this is way too simplistic (pure cut in half),
+    -- but we gotta start somewhere!!
+
+    local x1, y1 = floor.zone.x1, floor.zone.y1
+    local x2, y2 = floor.zone.x2, floor.zone.y2
+
+    local mx = int((x1 + x2)/2)
+    local my = int((y1 + y2)/2)
+
+    table.insert(locs, { x=x1, stair={ x1=x1, x2=x1+128, y1=my-64, y2=my+64 }})
+    table.insert(locs, { x=x2, stair={ x2=x2, x1=x2-128, y1=my-64, y2=my+64 }})
+
+    table.insert(locs, { y=x1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
+    table.insert(locs, { y=x2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
+
+    table.insert(locs, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+    table.insert(locs, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+
+    rand.shuffle(locs)
+
+    for _,L in ipairs(locs) do
+      if check_binary_subdiv(floor, L) then
+        return L
+      end
+    end
+  end
+
+
+  local function subdivide_floor(floor)
+    local loc
+
+    if #floor.walks >= 2 then
+      loc = check_binary_subdiv(floor)
+    end
+
+    if not loc then
+      table.insert(R.all_floors, floor)
+      return
+    end
+
+    -- FIXME: DO THE SUBDIVISION
+
+    -- recursively handle new pieces
+
+    subdivide_floor(floor1)
+    subdivide_floor(floor2)
+  end
+
+
   local function build_floor()
 
     if R.shape ~= "rect" then
@@ -1350,6 +1433,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
     local zone = safe_walking_zone()
 
+    -- no room for anything?
     if not zone then
       OLD__build_floor()
       return
@@ -1358,13 +1442,36 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
         R:tostr(), zone.x1, zone.y1, zone.x2, zone.y2)
 
-    local space = Layout_initial_space(R)
-
     local walks = collect_walk_groups()
 
+    -- nothing to connect? (Note: shouldn't actually happen)
+    if not walks or #walks == 0 then
+      OLD__build_floor()
+      return
+    end
+
+
+--[[ TEST : fill SWZ with a solid
     OLD__build_floor()
 
     Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
+--]]
+    
+
+    local floor =
+    {
+      space = Layout_initial_space(R),
+      zone  = zone,
+      walks = walks,
+    }
+
+    R.all_floors = {}
+
+    subdivide_floor(floor)
+
+    for _,F in ipairs(R.all_floors) do
+      render_floor(F)
+    end
   end
 
 
