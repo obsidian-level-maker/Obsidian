@@ -130,6 +130,15 @@ PREFAB.ITEM_NICHE =
       { x =   0, y =  4, mat = "?wall" },
     },
 
+    -- space in front of it
+    {
+      { m = "walk" },
+      { x =   0, y =  64 },
+      { x = 192, y =  64 },
+      { x = 192, y = 128 },
+      { x =   0, y = 128 },
+    },
+
     -- right side
 
     {

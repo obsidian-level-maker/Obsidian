@@ -25,7 +25,7 @@ PREFAB.MARK_USED =
   brushes =
   {
     {
-      { m = "used" },
+      { m = "used", insider=1 },
       { x =   0, y =  0 },
       { x = 192, y =  0 },
       { x = 192, y = 16 },
@@ -42,7 +42,7 @@ PREFAB.MARK_WALK =
   brushes =
   {
     {
-      { m = "walk" },
+      { m = "walk", insider=1 },
       { x =   0, y =  0 },
       { x = 192, y =  0 },
       { x = 192, y = 16 },
@@ -59,7 +59,7 @@ PREFAB.MARK_AIR =
   brushes =
   {
     {
-      { m = "air" },
+      { m = "air", insider=1 },
       { x =   0, y =  0 },
       { x = 192, y =  0 },
       { x = 192, y = 16 },
