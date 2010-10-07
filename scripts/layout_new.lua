@@ -1155,7 +1155,7 @@ end
 
 
     -- TEMP EXPERIMENTAL PATH CRUD
-
+--[[
     local bx1,by1, bx2,by2 = R.wall_space:calc_bbox()
 
     local fw = int((bx2 - bx1) / 64.0)
@@ -1200,6 +1200,7 @@ end
     for i = 1,#walks-1 do
       build_a_path(grid, walks[i], walks[i+1])
     end
+--]]
   end
 
 
@@ -1325,7 +1326,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
       if side == 8 then zone.y2 = zone.y2 - edge_deeps[8] end
     end
 
-    -- allow some space for player
+    -- allow some room for player
     zone.x1 = zone.x1 + 96
     zone.y1 = zone.y1 + 96
 
@@ -1344,7 +1345,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
 
   local function render_floor(floor)
-floor.h = rand.pick { 0,64,128,192,256 }
+floor.h = rand.pick { 0,32,64,96,128,160,192,256 }
 
     local mat = R.skin.wall
 
@@ -1453,7 +1454,42 @@ stderrf("--> OK\n")
 
 stderrf("\nsubdivide_floor:\n%s\n", table.tostr(loc, 3))
 
-    -- FIXME: DO THE SUBDIVISION
+    ----- DO THE SUBDIVISION -----
+
+    floor1 = { walks={} }
+    floor2 = { walks={} }
+
+    -- actually split the space
+    floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
+
+    -- create new SWZ (safe walking zones)
+
+    floor1.zone = table.copy(floor.zone)
+    floor2.zone = table.copy(floor.zone)
+
+    if loc.x then
+      floor1.zone.x2 = loc.stair.x1
+      floor2.zone.x1 = loc.stair.x2
+    else
+      floor1.zone.y2 = loc.stair.y1
+      floor2.zone.y1 = loc.stair.y2
+    end
+
+    -- transfer walking groups
+
+    for _,G in ipairs(floor.walks) do
+      if (loc.x and G.x1 < loc.x) or (loc.y and G.y1 < loc.y) then
+        table.insert(floor1.walks, G)
+      else
+        table.insert(floor2.walks, G)
+      end
+    end
+
+    assert(#floor1.walks >= 1)
+    assert(#floor2.walks >= 1)
+
+    -- create stair (and NEW walking groups)
+    -- FIXME FIXME !!!!
 
     -- recursively handle new pieces
 

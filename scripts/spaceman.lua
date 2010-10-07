@@ -666,3 +666,45 @@ function SPACE_CLASS.fix_tjuncs(self)
   end
 end
 
+
+function SPACE_CLASS.cut_in_half(self, mx, my)
+  -- either mx or my contains the split coord
+  -- the other should be nil.
+  -- returns two new spaces: left,right -OR- bottom,top
+  
+  local left  = SPACE_CLASS.new()  
+  local right = SPACE_CLASS.new()
+
+  for _,P in ipairs(self.polys) do
+    local N = P:copy()
+
+    if mx then
+
+      if P:line_cuts(mx, 0, mx, 40) then
+        local N2 = N:cut(mx, 0, mx, 40)
+        table.insert(left.polys,  N2)
+        table.insert(right.polys, N)
+      elseif P.bx2 < mx then
+        table.insert(left.polys, N)
+      else
+        table.insert(right.polys, N)
+      end
+    
+    else -- my
+
+      if P:line_cuts(0, my, 40, my) then
+        local N2 = N:cut(0, my, 40, my)
+        table.insert(left.polys,  N)
+        table.insert(right.polys, N2)
+      elseif P.by2 < my then
+        table.insert(left.polys, N)
+      else
+        table.insert(right.polys, N)
+      end
+
+    end
+  end
+
+  return left, right
+end
+
