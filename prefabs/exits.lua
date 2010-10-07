@@ -84,10 +84,10 @@ PREFAB.START_LEDGE =
 
   entities =
   {
-    { x =  80, y = 48, z = 128, ent = "player1", angle = "?angle" },
-    { x =  40, y = 48, z = 128, ent = "player2", angle = "?angle" },
-    { x = 120, y = 48, z = 128, ent = "player3", angle = "?angle" },
-    { x = 160, y = 48, z = 128, ent = "player4", angle = "?angle" },
+    { x =  80, y = 48, z = 128, ent = "player1", angle = 90 },
+    { x =  40, y = 48, z = 128, ent = "player2", angle = 90 },
+    { x = 120, y = 48, z = 128, ent = "player3", angle = 90 },
+    { x = 160, y = 48, z = 128, ent = "player4", angle = 90 },
   },
 }
 
