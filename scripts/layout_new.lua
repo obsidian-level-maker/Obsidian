@@ -1333,19 +1333,12 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     zone.x2 = zone.x2 - 96
     zone.y2 = zone.y2 - 96
 
-    zone.width = zone.x2 - zone.x1
-    zone.depth = zone.y2 - zone.y1
-
-    if zone.width < 96 or zone.depth < 96 then
-      return nil  -- not enough room to play with
-    end
-
     return zone
   end
 
 
   local function render_floor(floor)
-floor.h = rand.pick { 0,32,64,96,128,160,192,256 }
+floor.h = ROOM.entry_floor_h - rand.irange(1,16) * 4
 
     local mat = R.skin.wall
 
@@ -1408,6 +1401,13 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
 
 
   local function choose_division(floor)
+    local zone_dx = floor.zone.x2 - floor.zone.x1
+    local zone_dy = floor.zone.y2 - floor.zone.y1
+
+    if zone_dx < 96 or zone_dy < 96 then
+      return nil  -- not enough room to swing a cat
+    end
+
     local locs = {}
 
     -- Man, this is way too simplistic (pure cut in half),
@@ -1425,8 +1425,8 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
     table.insert(locs, { y=x1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
     table.insert(locs, { y=x2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
 
-    table.insert(locs, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
-    table.insert(locs, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+--!!!!    table.insert(locs, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+--!!!!    table.insert(locs, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
 
     rand.shuffle(locs)
 
@@ -1447,17 +1447,17 @@ stderrf("--> OK\n")
       loc = choose_division(floor)
     end
 
+stderrf("\nsubdivide_floor:%s \n%s\n", tostring(floor), table.tostr(loc, 3))
+
     if not loc then
       table.insert(R.all_floors, floor)
       return
     end
 
-stderrf("\nsubdivide_floor:\n%s\n", table.tostr(loc, 3))
-
     ----- DO THE SUBDIVISION -----
 
-    floor1 = { walks={} }
-    floor2 = { walks={} }
+    local floor1 = { walks={} }
+    local floor2 = { walks={} }
 
     -- actually split the space
     floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
@@ -1505,25 +1505,6 @@ stderrf("\nsubdivide_floor:\n%s\n", table.tostr(loc, 3))
       return
     end
 
-    local zone = safe_walking_zone()
-
-    -- no room for anything?
-    if not zone then
-      OLD__build_floor()
-      return
-    end
-
-stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
-        R:tostr(), zone.x1, zone.y1, zone.x2, zone.y2)
-
-    local walks = collect_walk_groups()
-
-    -- nothing to connect? (Note: shouldn't actually happen)
-    if not walks or #walks == 0 then
-      OLD__build_floor()
-      return
-    end
-
 
 --[[ TEST : fill SWZ with a solid
     OLD__build_floor()
@@ -1535,8 +1516,8 @@ stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
     local floor =
     {
       space = Layout_initial_space(R),
-      zone  = zone,
-      walks = walks,
+      zone  = safe_walking_zone(),
+      walks = collect_walk_groups(),
     }
 
     R.all_floors = {}
