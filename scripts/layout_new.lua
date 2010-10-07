@@ -1203,6 +1203,77 @@ end
   end
 
 
+  local function merge_walks(polys, tag1, tag2)
+    if tag1 > tag2 then
+      tag1, tag2 = tag2, tag1
+    end
+
+    for _,P in ipairs(polys) do
+      if P.walk_tag == tag2 then
+         P.walk_tag = tag1
+      end
+    end
+  end
+
+
+  local function try_merge_walks(polys, P1, P2)
+    if P1.walk_tag == P2.walk_tag then
+      return
+    end
+
+    if P1:touches(P2) then
+      merge_walks(polys, P1.walk_tag, P2.walk_tag)
+    end
+  end
+
+
+  -- FIXME: THIS PROBABLY BELONGS IN THE SPACE MANAGER
+  local function collect_walk_groups()
+    -- first collect the walk polys
+    local walk_polys = {}
+
+    for idx,P in ipairs(R.wall_space.polys) do
+      if P.kind == "walk" then
+        P.walk_tag = idx
+        table.insert(walk_polys, P)
+      end
+    end
+
+    -- now merge tags of walk areas which touch / overlap
+    for pn1 = 1,#walk_polys do
+      for pn2 = pn1+1,#walk_polys do
+        local P1 = walk_polys[pn1]
+        local P2 = walk_polys[pn1]
+        try_merge_walks(walk_polys, P1, P2)
+      end
+    end
+
+    -- finally collect all polys with same walk_tag, and compute bbox
+    local walk_groups  = {}
+    local tag_to_group = {}
+
+    for _,P in ipairs(walk_polys) do
+      local GROUP = tag_to_group[P.walk_tag]
+      if not GROUP then
+        GROUP = { polys={} }
+        table.insert(walk_groups, GROUP)
+        tag_to_group[P.walk_tag] = GROUP
+      end
+      table.insert(GROUP.polys, P)
+    end
+
+stderrf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
+
+    for _,G in ipairs(walk_groups) do
+      -- FIXME: big hack (assumes GROUP == SPACE)
+      G.x1, G.y1, G.x2, G.y2 = SPACE_CLASS.calc_bbox(G)
+
+stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
+        #G.polys, G.x1, G.y1, G.x2, G.y2)
+    end  
+  end
+
+
   local function narrow_zone_for_edge(edge_deeps, E)
     if E.max_deep then
       assert(E.side and edge_deeps[E.side])
@@ -1288,6 +1359,8 @@ stderrf("safe_walking_zone of %s : (%d %d) .. (%d %d)\n",
         R:tostr(), zone.x1, zone.y1, zone.x2, zone.y2)
 
     local space = Layout_initial_space(R)
+
+    local walks = collect_walk_groups()
 
     OLD__build_floor()
 
