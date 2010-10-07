@@ -1378,13 +1378,13 @@ floor.h = ROOM.entry_floor_h - rand.irange(1,16) * 4
 
     for _,G in ipairs(floor.walks) do
       if loc.x then
-            if G.x2 < loc.x then in_walks  = in_walks  + 1
-        elseif G.x1 > loc.x then out_walks = out_walks + 1
+            if G.x2 - 1 < loc.x then in_walks  = in_walks  + 1
+        elseif G.x1 + 1 > loc.x then out_walks = out_walks + 1
         else return false -- cuts the group
         end
       else
-            if G.y2 < loc.y then in_walks  = in_walks  + 1
-        elseif G.y1 > loc.y then out_walks = out_walks + 1
+            if G.y2 - 1 < loc.y then in_walks  = in_walks  + 1
+        elseif G.y1 + 1 > loc.y then out_walks = out_walks + 1
         else return false -- cuts the group
         end
       end
@@ -1404,7 +1404,8 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
     local zone_dx = floor.zone.x2 - floor.zone.x1
     local zone_dy = floor.zone.y2 - floor.zone.y1
 
-    if zone_dx < 96 or zone_dy < 96 then
+    if zone_dx < 64 or zone_dy < 64 then
+gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
       return nil  -- not enough room to swing a cat
     end
 
@@ -1422,32 +1423,39 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
     table.insert(locs, { x=x1, stair={ x1=x1, x2=x1+128, y1=my-64, y2=my+64 }})
     table.insert(locs, { x=x2, stair={ x2=x2, x1=x2-128, y1=my-64, y2=my+64 }})
 
-    table.insert(locs, { y=x1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
-    table.insert(locs, { y=x2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
-
---!!!!    table.insert(locs, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
---!!!!    table.insert(locs, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+    table.insert(locs, { y=y1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
+    table.insert(locs, { y=y2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
 
     rand.shuffle(locs)
 
+    table.insert(locs, 1, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+    table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+
     for _,loc in ipairs(locs) do
-stderrf("trying loc x=%d y=%d\n", loc.x or -1, loc.y or -1)
       if check_binary_subdiv(floor, loc) then
-stderrf("--> OK\n")
         return loc
       end
     end
+gui.debugf("[all locs failed]\n")
   end
 
 
   local function subdivide_floor(floor)
+    gui.debugf("\nsubdivide_floor in %s\n", R:tostr())
+    gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
+               floor.zone.x1, floor.zone.y1,
+               floor.zone.x2, floor.zone.y2, #floor.walks)
+    for _,G in ipairs(floor.walks) do
+      gui.debugf("WALK: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
+    end
+
     local loc
 
     if #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
-stderrf("\nsubdivide_floor:%s \n%s\n", tostring(floor), table.tostr(loc, 3))
+gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     if not loc then
       table.insert(R.all_floors, floor)
@@ -1462,19 +1470,6 @@ stderrf("\nsubdivide_floor:%s \n%s\n", tostring(floor), table.tostr(loc, 3))
     -- actually split the space
     floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
 
-    -- create new SWZ (safe walking zones)
-
-    floor1.zone = table.copy(floor.zone)
-    floor2.zone = table.copy(floor.zone)
-
-    if loc.x then
-      floor1.zone.x2 = loc.stair.x1
-      floor2.zone.x1 = loc.stair.x2
-    else
-      floor1.zone.y2 = loc.stair.y1
-      floor2.zone.y1 = loc.stair.y2
-    end
-
     -- transfer walking groups
 
     for _,G in ipairs(floor.walks) do
@@ -1488,8 +1483,37 @@ stderrf("\nsubdivide_floor:%s \n%s\n", tostring(floor), table.tostr(loc, 3))
     assert(#floor1.walks >= 1)
     assert(#floor2.walks >= 1)
 
-    -- create stair (and NEW walking groups)
-    -- FIXME FIXME !!!!
+    -- create stair
+    -- FIXME FIXME !!!
+
+    -- create walk groups for stair
+    -- TODO: create POLYGON objects
+    local G1 = table.copy(loc.stair)
+    local G2 = table.copy(loc.stair)
+
+    if loc.x then
+      G1.x2 = G1.x1 ; G1.x1 = G1.x1 - 64 
+      G2.x1 = G2.x2 ; G2.x2 = G2.x2 + 64 
+    else
+      G1.y2 = G1.y1 ; G1.y1 = G1.y1 - 64
+      G2.y1 = G2.y2 ; G2.y2 = G2.y2 + 64
+    end
+
+    table.insert(floor1.walks, G1)
+    table.insert(floor2.walks, G2)
+
+    -- create new SWZ (safe walking zones)
+
+    floor1.zone = table.copy(floor.zone)
+    floor2.zone = table.copy(floor.zone)
+
+    if loc.x then
+      floor1.zone.x2 = G1.x1
+      floor2.zone.x1 = G2.x2
+    else
+      floor1.zone.y2 = G1.y1
+      floor2.zone.y1 = G2.y2
+    end
 
     -- recursively handle new pieces
 
