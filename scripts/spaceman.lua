@@ -524,12 +524,14 @@ function SPACE_CLASS.merge(self, M)
     if M.fab_tag and M.fab_tag == P.fab_tag then
       -- skip test if part of same prefab
     else
+--[[
       if not SPACE_CLASS.can_merge(P.kind, M.kind) then
 gui.debugf("M.fab_tag:%s  P.fab_tag:%s\n", tostring(M.fab_tag), tostring(P.fab_tag))
 gui.debugf("M=\n"); M:dump()
 gui.debugf("P=\n"); P:dump()
         error(string.format("Attempt to merge %s space into %s", M.kind, P.kind))
       end
+--]]
 
       -- this is a bit rude, when an AIR space overlaps any WALK space,
       -- then we "upgrade" the new one to be a WALK space.  Otherwise
