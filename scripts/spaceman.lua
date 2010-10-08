@@ -614,8 +614,8 @@ function SPACE_CLASS.calc_bbox(self)
     if P.by2 > y2 then y2 = P.by2 end
   end
 
-  assert(x2 - x1 >= 40)
-  assert(y2 - y1 >= 40)
+  assert(x2 > x1)
+  assert(y2 > y1)
 
   return x1, y1, x2, y2
 end
