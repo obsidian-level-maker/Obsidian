@@ -218,7 +218,7 @@ end
 
 function Plan_create_sections(W, H)
 
-  local SIZE_TABLE = THEME.room_size_table or { 0,5,40,40,30,1 }
+  local SIZE_TABLE = THEME.room_size_table or { 0,30,70,70,40,4 }
 
   local border_seeds = PARAM.border_seeds or 2
   local free_seeds   = PARAM.free_seeds   or 4
