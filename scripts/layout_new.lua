@@ -378,7 +378,7 @@ function Layout_check_brush(coords, data)
     R.wall_space:merge(POLY)
   end
 
-  return allow
+  return false
 end
 
 
@@ -634,18 +634,29 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   end
 
 
-  local function Fab_with_update(...)
-    gui.debugf("Fab_with_update : %s\n", tostring(...))
+  local function Fab_with_update(fab, T, skin1, skin2, skin3) 
+    gui.debugf("Fab_with_update : %s\n", tostring(fab))
 
-    local data =
+    local POST_FAB =
     {
+      fab = fab,
+      trans = T,
+
+      skin1 = skin1,
+      skin2 = skin2,
+      skin3 = skin3,
+
       R = R,
       fab_tag = Plan_alloc_mark(),
     }
 
-    Trans.set_override(Layout_check_brush, data)
+    -- save info to render it later
+    -- FIXME: only process the skins ONCE
+    table.insert(R.post_fabs, POST_FAB)
 
-    Fabricate(...)
+    Trans.set_override(Layout_check_brush, POST_FAB, true)
+
+    Fabricate(fab, T, skin1, skin2, skin3)
 
     Trans.clear_override()
   end
@@ -743,7 +754,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   end
 
 
-  local function build_straddler_span(E, SP, z, back, fab, ...)
+  local function build_straddler_span(E, SP, z, back, fab, skin1, skin2, skin3)
     local K = E.K
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
@@ -755,7 +766,20 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     do_straddler_solid(E, SP)
 
-    Fabricate(fab, T, ...)
+    local POST_FAB =
+    {
+      fab = fab,
+      trans = T,
+
+      skin1 = skin1,
+      skin2 = skin2,
+      skin3 = skin3,
+
+      R = R,
+      fab_tag = Plan_alloc_mark(),
+    }
+
+    table.insert(R.post_fabs, POST_FAB)
   end
 
 
@@ -1590,6 +1614,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
+  local function render_post_fab(PF)
+    Fabricate(PF.fab, PF.trans, PF.skin1, PF.skin2, PF.skin3)
+  end
+
+
   local function spots_for_floor(floor)
     gui.spots_begin(floor.space:calc_bbox())
 
@@ -1628,6 +1657,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   R.cage_spots = {}
   R.trap_spots = {}
+  R.mon_spots  = {}
+  R.item_spots = {}
+
+  R.post_fabs = {}
 
   R.wall_space = Layout_initial_space(R)
 
@@ -1690,10 +1723,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   ambient_lighting()
 
 
-  -- collect spots for the monster code
-  R.mon_spots  = {}
-  R.item_spots = {}
+  for _,PF in ipairs(R.post_fabs) do
+    render_post_fab(PF)
+  end
 
+
+  -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
     spots_for_floor(F)
   end

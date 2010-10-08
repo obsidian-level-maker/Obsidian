@@ -196,16 +196,20 @@ end
 function Trans.brush(coords)
 
   -- FIXME: mirroring
-  -- (when mirroring, ensure first coord stays the first)
+  -- (when mirroring, ensure first XY coord stays the first)
 
   -- apply transform
   coords = table.deep_copy(coords)
 
+  local mode = coords[1].m
+
+  -- light and rail brushes only make sense for 2.5D games
+  if mode == "light" and not PARAM.light_brushes then return end
+  if mode == "rail"  and not PARAM.rails then return end
+
   for _,C in ipairs(coords) do
     if C.m then
-      -- light and rail brushes only make sense for 2.5D games
-      if C.m == "light" and not PARAM.light_brushes then return end
-      if C.m == "rail"  and not PARAM.rails then return end
+      -- brush info : skip
     elseif C.x then
       C.x, C.y = Trans.apply(C.x, C.y)
     elseif C.b then
@@ -224,6 +228,11 @@ function Trans.brush(coords)
     if not Trans.overrider(coords, Trans.override_data) then
       return
     end
+  end
+
+  -- ignore space management brushes here
+  if mode == "walk" or mode == "air" or mode == "used" then
+    return
   end
 
   gui.add_brush(coords)
