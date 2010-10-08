@@ -3,23 +3,13 @@ V4 TODO
 =======
 
 
-space manager:
-  (a) POLYGONS have 'wall_tags', a table like: { name=true }
-
-  (b) allow the test function to check the tags, if an existing polygon
-      contains a tag which was not supplied to the test, then the
-      test fails.
-
-
 DONE: brushes can have a "flavor" and a priority.
       If two brushes with the same flavor exist in a 2D region at the
       same time, only the highest priority brush is kept.
 
-Idea: COMPOSITION of prefabs
+Idea: Composition of prefabs
 
 Idea: "flush depth" of walls
-
-Idea: "wall extenders" for easier prefabbing
 
 
 Games:
@@ -56,7 +46,9 @@ Layout:
        - fountain (outdoor)
        - a couple techy ones
 
-+  light brushes for DOOM, clipped to room
++  light brushes for DOOM, clipped to room:
+   (a) have group of rectangles to clip to
+   (b) clip light brush to each rectangle
 
 +  small exits
 
