@@ -374,7 +374,7 @@ function Layout_check_brush(coords, data)
 
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
-    POLY.fab_tag = data.fab_tag
+    POLY.post_fab = data
     R.wall_space:merge(POLY)
   end
 
@@ -702,6 +702,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     local fab = "WALL"
     local skin = {}
 
+if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
+
     local N = E.K:neighbor(E.side)
 
     inner_outer_tex(skin, E.K.room, N and N.room)
@@ -764,8 +766,6 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     --       because straddlers affect TWO rooms at the same time.
     --       instead we mark the quads directly.
 
-    do_straddler_solid(E, SP)
-
     local POST_FAB =
     {
       fab = fab,
@@ -780,6 +780,10 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     }
 
     table.insert(R.post_fabs, POST_FAB)
+
+    do_straddler_solid(E, SP)
+
+    return POST_FAB
   end
 
 
@@ -858,11 +862,6 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     local fab_info = assert(PREFAB[fab])
 
-    if info.kind == "door" and not info.seen then
-      -- TODO: if any Z scaling, apply to room_dy
-      other_R.entry_floor_h = ROOM.entry_floor_h - (fab_info.room_dz or 0)
-    end
-
     if fab_info.repeat_width and (long / fab_info.repeat_width) >= 2 then
       count = int(long / fab_info.repeat_width)
     end
@@ -887,6 +886,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     end
 
 
+    local POST_FAB
+
     for i = 1,count do
       SP.long1 = long1
       SP.long2 = long2
@@ -894,8 +895,16 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
       if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
       if i < count then SP.long2 = long1 + int(long * (i)   / count) end
 
-      build_straddler_span(E, SP, z, back, fab, skin, sk2)
+      POST_FAB = build_straddler_span(E, SP, z, back, fab, skin, sk2)
     end
+
+
+    if info.kind == "door" then
+      POST_FAB.set_height_in = other_R
+      -- TODO: if any Z scaling, apply to room_dz
+      POST_FAB.set_height_dz = - (fab_info.room_dz or 0)
+    end
+
   end
 
 
@@ -1362,7 +1371,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
 
   local function render_floor(floor)
-floor.h = ROOM.entry_floor_h - rand.irange(1,16) * 4
+floor.z = ROOM.entry_floor_h - rand.irange(1,16) * 4
 
     local mat = R.skin.wall
 
@@ -1374,9 +1383,22 @@ floor.h = ROOM.entry_floor_h - rand.irange(1,16) * 4
       local BRUSH = P:to_brush(mat)
 
       table.insert(BRUSH, 1, { m="solid", flavor="floor:1" })
-      table.insert(BRUSH,    { t=floor.h, tex=mat })
+      table.insert(BRUSH,    { t=floor.z, tex=mat })
 
       Trans.brush(BRUSH)
+    end
+
+    -- assign heights to prefabs
+    -- FIXME !!!!!!!!  transfer prefabs to floor.prefabs
+    for _,G in ipairs(floor.walks) do
+      if G.polys then
+        for _,P in ipairs(G.polys) do
+          if P.post_fab then
+stderrf("************************** %s z = %d\n", P.post_fab.fab, floor.z)
+            P.post_fab.z = floor.z
+          end
+        end
+      end
     end
   end
 
@@ -1615,7 +1637,15 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function render_post_fab(PF)
+    PF.trans.add_z = PF.z or 256
+
     Fabricate(PF.fab, PF.trans, PF.skin1, PF.skin2, PF.skin3)
+
+    if PF.set_height_in then
+      assert(PF.z)
+      local other_R = PF.set_height_in
+      other_R.entry_floor_h = PF.z + PF.set_height_dz
+    end
   end
 
 

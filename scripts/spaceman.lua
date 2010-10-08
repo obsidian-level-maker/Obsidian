@@ -93,7 +93,7 @@ end
 
 function POLYGON_CLASS.bare_copy(self)
   local P = POLYGON_CLASS.new(self.kind)
-  P.fab_tag = self.fab_tag
+  P.post_fab = self.post_fab
   return P
 end
 
@@ -108,7 +108,7 @@ function POLYGON_CLASS.copy(self)
   P.bx1, P.by1 = self.bx1, self.by1
   P.bx2, P.by2 = self.bx2, self.by2
 
-  P.fab_tag = self.fab_tag
+  P.post_fab = self.post_fab
 
   return P
 end
@@ -521,7 +521,7 @@ function SPACE_CLASS.merge(self, M)
   local final_kind = M.kind
 
   for _,P in ipairs(overlaps) do
-    if M.fab_tag and M.fab_tag == P.fab_tag then
+    if M.post_fab and M.post_fab == P.post_fab then
       -- skip test if part of same prefab
     else
 --[[
