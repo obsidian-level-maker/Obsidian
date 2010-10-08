@@ -1404,6 +1404,11 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
     local zone_dx = floor.zone.x2 - floor.zone.x1
     local zone_dy = floor.zone.y2 - floor.zone.y1
 
+    -- FIXME we only support subdividing rectangles right now
+    if R.shape ~= "rect" then
+      return nil
+    end
+
     if zone_dx < 64 or zone_dy < 64 then
 gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
       return nil  -- not enough room to swing a cat
@@ -1485,6 +1490,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- create stair
     -- FIXME FIXME !!!
+    Trans.brush(
+    {
+      { x=loc.stair.x1, y=loc.stair.y1, tex="COMPBLUE" },
+      { x=loc.stair.x2, y=loc.stair.y1, tex="COMPBLUE" },
+      { x=loc.stair.x2, y=loc.stair.y2, tex="COMPBLUE" },
+      { t=ROOM.entry_floor_h + 8, tex="FLAT14" },
+    })
 
     -- create walk groups for stair
     -- TODO: create POLYGON objects
@@ -1524,19 +1536,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   local function build_floor()
 
-    if R.shape ~= "rect" then
-      OLD__build_floor()
-      return
-    end
-
-
---[[ TEST : fill SWZ with a solid
-    OLD__build_floor()
-
-    Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
---]]
-    
-
     local floor =
     {
       space = Layout_initial_space(R),
@@ -1550,6 +1549,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for _,F in ipairs(R.all_floors) do
       render_floor(F)
+
+--[[ TEST : fill SWZ with a solid
+      if F.zone.x2 >= F.zone.x1+16 and F.zone.y2 >= F.zone.y1+16 then
+        Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
+      end
+--]]
     end
   end
 
@@ -1582,6 +1587,34 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
         { x=K.x1, y=K.y2 },
       })
     end
+  end
+
+
+  local function spots_for_floor(floor)
+    gui.spots_begin(floor.space:calc_bbox())
+
+    fill_polygons(floor.space, { free=0, air=0, walk=0 })
+
+    fill_polygons(R.wall_space, { solid=1 })
+
+    for _,F in ipairs(R.all_floors) do
+      if F ~= floor then
+        fill_polygons(F.space, { free=1, air=1, walk=1 })
+      end
+    end
+
+    gui.spots_dump("Spot grid")
+
+    gui.spots_get_mons (R.mon_spots)
+    gui.spots_get_items(R.item_spots)
+
+    gui.spots_end()
+
+--[[  TEST
+    for _,spot in ipairs(R.item_spots) do
+      Trans.entity("potion", spot.x, spot.y, 0)
+    end
+--]]
   end
 
 
@@ -1658,27 +1691,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   -- collect spots for the monster code
-
-  gui.spots_begin(R.wall_space:calc_bbox())
-
-  fill_polygons(R.wall_space, { free=0, air=0, walk=0 })
-  fill_polygons(R.wall_space, { solid=1 })
-
   R.mon_spots  = {}
   R.item_spots = {}
 
-  gui.spots_dump("Spot grid")
-
-  gui.spots_get_mons (R.mon_spots)
-  gui.spots_get_items(R.item_spots)
-
-  gui.spots_end()
-
---[[  TEST
-  for _,spot in ipairs(R.item_spots) do
-    Trans.entity("potion", spot.x, spot.y, 0)
+  for _,F in ipairs(R.all_floors) do
+    spots_for_floor(F)
   end
---]]
+    
 end
 
 
