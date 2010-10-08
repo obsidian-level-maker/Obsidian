@@ -58,6 +58,15 @@ PREFAB.PICTURE =
       { x =   0, y =  4, mat = "?wall" },
     },
 
+    -- space in front of it
+    {
+      { m = "air" },
+      { x =   0, y =  16 },
+      { x = 192, y =  16 },
+      { x = 192, y =  80 },
+      { x =   0, y =  80 },
+    },
+
     -- picture itself
     {
       { x =  64, y =  4 },
