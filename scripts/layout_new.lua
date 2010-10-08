@@ -374,8 +374,9 @@ function Layout_check_brush(coords, data)
 
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
-    POLY.post_fab = data
     R.wall_space:merge(POLY)
+
+    table.insert(data.polys, POLY:copy())
   end
 
   return false
@@ -648,6 +649,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
       R = R,
       fab_tag = Plan_alloc_mark(),
+
+      polys = {},
     }
 
     -- save info to render it later
@@ -659,6 +662,18 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     Fabricate(fab, T, skin1, skin2, skin3)
 
     Trans.clear_override()
+
+    -- associate the walk/air polygons to this POST-FAB
+    if not (fab == "MARK_USED" or fab == "MARK_WALK" or fab == "MARK_AIR") then
+      for _,P in ipairs(POST_FAB.polys) do
+        if P.kind == "walk" or P.kind == "air" then
+          P.post_fab = POST_FAB
+          table.insert(R.poly_assoc, P)
+        end
+      end
+    end
+
+    return POST_FAB
   end
 
 
@@ -732,9 +747,7 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
   end
 
 
-  local function do_straddler_solid(E, SP)
-    -- TODO: do it with the prefab, clip the polygons at edge
-
+  local function do_straddler_solid(E, SP, POST_FAB)
     local K = E.K
     local info = assert(SP.straddler)
 
@@ -748,10 +761,22 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h, E.side,
                                    SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
 
+    local PF
+
     if info.kind == "window" then
-      Fab_with_update("MARK_AIR", T)
+      PF = Fab_with_update("MARK_AIR", T)
     else
-      Fab_with_update("MARK_WALK", T)
+      PF = Fab_with_update("MARK_WALK", T)
+    end
+
+    -- if same room, associate the walk/area polygons with this prefab
+    if POST_FAB then
+      for _,P in ipairs(PF.polys) do
+        if P.kind == "walk" or P.kind == "air" then
+          P.post_fab = POST_FAB
+          table.insert(R.poly_assoc, P)
+        end
+      end
     end
   end
 
@@ -780,8 +805,6 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
     }
 
     table.insert(R.post_fabs, POST_FAB)
-
-    do_straddler_solid(E, SP)
 
     return POST_FAB
   end
@@ -874,12 +897,12 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
     if info.kind == "window" or info.kind == "door" then
       if not info.seen then
         info.seen = true
-        do_straddler_solid(E, SP)
+        do_straddler_solid(E, SP, false)
         return
       end
     else
       if info.built then
-        do_straddler_solid(E, SP)
+        do_straddler_solid(E, SP, false)
         return
       end
       info.built = true
@@ -897,6 +920,9 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
 
       POST_FAB = build_straddler_span(E, SP, z, back, fab, skin, sk2)
     end
+
+
+    do_straddler_solid(E, SP, POST_FAB)
 
 
     if info.kind == "door" then
@@ -1261,12 +1287,11 @@ end
   end
 
 
-  -- FIXME: THIS PROBABLY BELONGS IN THE SPACE MANAGER
   local function collect_walk_groups()
     -- first collect the walk polys
     local walk_polys = {}
 
-    for idx,P in ipairs(R.wall_space.polys) do
+    for idx,P in ipairs(R.poly_assoc) do
       if P.kind == "walk" then
         P.walk_tag = idx
         table.insert(walk_polys, P)
@@ -1293,7 +1318,7 @@ end
         table.insert(walk_groups, GROUP)
         tag_to_group[P.walk_tag] = GROUP
       end
-      table.insert(GROUP.polys, P)
+      table.insert(GROUP.polys, PA)
     end
 
 stderrf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
@@ -1307,6 +1332,19 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     end  
 
     return walk_groups
+  end
+
+
+  local function collect_airs()
+    local air_polys = {}
+
+    for idx,P in ipairs(R.poly_assoc) do
+      if P.kind == "air" then
+        table.insert(air_polys, P)
+      end
+    end
+
+    return air_polys
   end
 
 
@@ -1370,8 +1408,33 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function transmit_height(PF, z)
+    if not PF.z or z > PF.z then
+stderrf("************************** %s z = %d\n", PF.fab, z)
+      PF.z = z
+    end
+  end
+
+
+  local function transmit_height_to_prefabs(floor, z)
+    for _,G in ipairs(floor.walks) do
+      for _,P in ipairs(G.polys) do
+        if P.post_fab then
+          transmit_height(P.post_fab, z)
+        end
+      end
+    end
+
+    for _,P in ipairs(floor.airs) do
+      if P.post_fab then
+        transmit_height(P.post_fab, z)
+      end
+    end
+  end
+
+
   local function render_floor(floor)
-floor.z = ROOM.entry_floor_h - rand.irange(1,16) * 4
+floor.z = ROOM.entry_floor_h - rand.irange(1,16) * 8
 
     local mat = R.skin.wall
 
@@ -1388,18 +1451,7 @@ floor.z = ROOM.entry_floor_h - rand.irange(1,16) * 4
       Trans.brush(BRUSH)
     end
 
-    -- assign heights to prefabs
-    -- FIXME !!!!!!!!  transfer prefabs to floor.prefabs
-    for _,G in ipairs(floor.walks) do
-      if G.polys then
-        for _,P in ipairs(G.polys) do
-          if P.post_fab then
-stderrf("************************** %s z = %d\n", P.post_fab.fab, floor.z)
-            P.post_fab.z = floor.z
-          end
-        end
-      end
-    end
+    transmit_height_to_prefabs(floor, floor.z)
   end
 
 
@@ -1515,8 +1567,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     ----- DO THE SUBDIVISION -----
 
-    local floor1 = { walks={} }
-    local floor2 = { walks={} }
+    local floor1 = { walks={}, airs={} }
+    local floor2 = { walks={}, airs={} }
 
     -- actually split the space
     floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
@@ -1534,6 +1586,16 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     assert(#floor1.walks >= 1)
     assert(#floor2.walks >= 1)
 
+    -- transfer airs (which may exist in both halves)
+    for _,A in ipairs(floor.airs) do
+      if (loc.x and A.x1 < loc.x) or (loc.y and A.y1 < loc.y) then
+        table.insert(floor1.airs, A)
+      end
+      if (loc.x and A.x2 > loc.x) or (loc.y and A.y2 > loc.y) then
+        table.insert(floor2.airs, A)
+      end
+    end
+
     -- create stair
     -- FIXME FIXME !!!
     Trans.brush(
@@ -1546,8 +1608,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- create walk groups for stair
     -- TODO: create POLYGON objects
-    local G1 = table.copy(loc.stair)
-    local G2 = table.copy(loc.stair)
+    local G1 = table.copy(loc.stair) ; G1.polys = {}
+    local G2 = table.copy(loc.stair) ; G2.polys = {}
 
     if loc.x then
       G1.x2 = G1.x1 ; G1.x1 = G1.x1 - 64 
@@ -1587,11 +1649,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       space = Layout_initial_space(R),
       zone  = safe_walking_zone(),
       walks = collect_walk_groups(),
+      airs  = collect_airs(),
     }
 
     R.all_floors = {}
 
     subdivide_floor(floor)
+
+--!!!!    assign_floor_heights()
 
     for _,F in ipairs(R.all_floors) do
       render_floor(F)
@@ -1691,6 +1756,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   R.item_spots = {}
 
   R.post_fabs = {}
+  R.poly_assoc = {}
+
 
   R.wall_space = Layout_initial_space(R)
 
