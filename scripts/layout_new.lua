@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  Layouting Logic
+--  V4 Layouting Logic
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -374,9 +374,8 @@ function Layout_check_brush(coords, data)
 
   if mode then
     local POLY = POLYGON_CLASS.from_brush(mode, coords)
-    R.wall_space:merge(POLY)
-
     table.insert(data.polys, POLY:copy())
+    R.wall_space:merge(POLY)
   end
 
   return false
@@ -747,7 +746,7 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
   end
 
 
-  local function do_straddler_solid(E, SP, POST_FAB)
+  local function do_straddler_solid(E, SP, same_room, POST_FAB)
     local K = E.K
     local info = assert(SP.straddler)
 
@@ -769,15 +768,15 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
       PF = Fab_with_update("MARK_WALK", T)
     end
 
-    -- if same room, associate the walk/area polygons with this prefab
-    if POST_FAB then
+    -- associate the walk/area polygons with this prefab (if any)
+gui.debugf("########################### MARK_WALK ##################\n")
       for _,P in ipairs(PF.polys) do
         if P.kind == "walk" or P.kind == "air" then
+gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fab) or "NONE")
           P.post_fab = POST_FAB
           table.insert(R.poly_assoc, P)
         end
       end
-    end
   end
 
 
@@ -894,7 +893,7 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
     --    DOOR on first room (as it sets up the initial floor height for second room) 
     --    WINDOW on second room (since there it knows height range on both sides)
 
-    if info.kind == "window" or info.kind == "door" then
+    if info.kind == "window" then
       if not info.seen then
         info.seen = true
         do_straddler_solid(E, SP, false)
@@ -922,13 +921,13 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
     end
 
 
-    do_straddler_solid(E, SP, POST_FAB)
+    do_straddler_solid(E, SP, true, POST_FAB)
 
 
     if info.kind == "door" then
       POST_FAB.set_height_in = other_R
       -- TODO: if any Z scaling, apply to room_dz
-      POST_FAB.set_height_dz = - (fab_info.room_dz or 0)
+      POST_FAB.set_height_dz =   (fab_info.room_dz or 0)
     end
 
   end
@@ -1103,10 +1102,7 @@ if S.kind == "solid" then return end
     local path = astar_find_path(grid.w, grid.h, A.x, A.y, B.x, B.y, scorer)
 
     if not path then
-stderrf("******************* NO PATH *****************\n")
-stderrf("******************* NO PATH *****************\n")
-stderrf("******************* NO PATH *****************\n")
-stderrf("******************* NO PATH *****************\n")
+stderrf("NO PATHn")
       return
     end
 
@@ -1294,9 +1290,12 @@ end
     for idx,P in ipairs(R.poly_assoc) do
       if P.kind == "walk" then
         P.walk_tag = idx
+gui.debugf("walk poly #%d kind:%s fab:%s  loc: (%d %d)\n",
+           idx, P.kind, (P.post_fab and P.post_fab.fab) or "NONE", P.bx1, P.by1)
         table.insert(walk_polys, P)
       end
     end
+gui.debugf("walk_polys: %d\n", #walk_polys)
 
     -- now merge tags of walk areas which touch / overlap
     for pn1 = 1,#walk_polys do
@@ -1318,10 +1317,10 @@ end
         table.insert(walk_groups, GROUP)
         tag_to_group[P.walk_tag] = GROUP
       end
-      table.insert(GROUP.polys, PA)
+      table.insert(GROUP.polys, P)
     end
 
-stderrf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
+gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
 
     for _,G in ipairs(walk_groups) do
       -- FIXME: big hack (assumes GROUP == SPACE)
@@ -1410,7 +1409,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
   local function transmit_height(PF, z)
     if not PF.z or z > PF.z then
-stderrf("************************** %s z = %d\n", PF.fab, z)
+stderrf("*** %s z = %d\n", PF.fab, z)
       PF.z = z
     end
   end
@@ -1434,7 +1433,7 @@ stderrf("************************** %s z = %d\n", PF.fab, z)
 
 
   local function render_floor(floor)
-floor.z = ROOM.entry_floor_h - rand.irange(1,16) * 8
+floor.z = ROOM.entry_floor_h ---  - rand.irange(1,16) * 8
 
     local mat = R.skin.wall
 
@@ -1588,10 +1587,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- transfer airs (which may exist in both halves)
     for _,A in ipairs(floor.airs) do
-      if (loc.x and A.x1 < loc.x) or (loc.y and A.y1 < loc.y) then
+      if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
         table.insert(floor1.airs, A)
       end
-      if (loc.x and A.x2 > loc.x) or (loc.y and A.y2 > loc.y) then
+      if (loc.x and A.bx2 > loc.x) or (loc.y and A.by2 > loc.y) then
         table.insert(floor2.airs, A)
       end
     end
@@ -1745,6 +1744,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   ---===| Layout_the_room |===---
 
   ROOM = R  -- set global
+
+  gui.debugf("\nLayout_the_room @ %s\n\n", ROOM:tostr())
 
   if not ROOM.entry_floor_h then
     ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
