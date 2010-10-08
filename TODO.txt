@@ -3,6 +3,13 @@ V4 TODO
 =======
 
 
+>>>  stairs :-)
+
+
+-  in a large (multi-section) room, if any section has no connection
+   and no items or switches -- then give it a nice pickup item (etc)
+   or at least a walk space.
+
 DONE: brushes can have a "flavor" and a priority.
       If two brushes with the same flavor exist in a 2D region at the
       same time, only the highest priority brush is kept.
