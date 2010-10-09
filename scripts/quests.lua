@@ -733,6 +733,8 @@ function Quest_make_quests()
 
   assert(LEVEL.exit_room)
 
+  gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
+
   gui.debugf("Room Visit Order:\n")
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.debugf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
