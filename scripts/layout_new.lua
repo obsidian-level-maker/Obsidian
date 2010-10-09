@@ -908,6 +908,11 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     end
 
 
+    gui.debugf("Building straddler %s at %s side:%d\n", fab, K:tostr(), E.side)
+
+    -- TODO: might be better to do the "repeat" thing in render_post_fab()
+    --       instead of here
+
     local POST_FAB
 
     for i = 1,count do
@@ -918,18 +923,19 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       if i < count then SP.long2 = long1 + int(long * (i)   / count) end
 
       POST_FAB = build_straddler_span(E, SP, z, back, fab, skin, sk2)
+
+      do_straddler_solid(E, SP, true, POST_FAB)
     end
 
 
-    do_straddler_solid(E, SP, true, POST_FAB)
-
+    -- setup door prefab to transmit height to next room
+    -- (cannot be done here, we don't know the height yet)
 
     if info.kind == "door" then
       POST_FAB.set_height_in = other_R
       -- TODO: if any Z scaling, apply to room_dz
       POST_FAB.set_height_dz =   (fab_info.room_dz or 0)
     end
-
   end
 
 
@@ -1433,7 +1439,7 @@ stderrf("*** %s z = %d\n", PF.fab, z)
 
 
   local function render_floor(floor)
-floor.z = ROOM.entry_floor_h ---  - rand.irange(1,16) * 8
+floor.z = ROOM.entry_floor_h ---   - rand.irange(1,16) * 8
 
     local mat = R.skin.wall
 
