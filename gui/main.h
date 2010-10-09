@@ -23,8 +23,8 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "4.01"
-#define OBLIGE_HEX_VER  0x401
+#define OBLIGE_VERSION  "4.02"
+#define OBLIGE_HEX_VER  0x402
 
 
 #define RMZ_TITLE   "OBLIGE Randomizer"
