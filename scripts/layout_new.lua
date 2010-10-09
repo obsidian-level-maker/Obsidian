@@ -1678,13 +1678,16 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     start_F.z = R.entry_floor_h
 
-    for _,ST in ipairs(R.all_stairs) do
-      assert(ST.walk1)
-      assert(ST.walk2)
-      assert(ST.walk1.floor)
-      assert(ST.walk2.floor)
-      assert(ST.walk1 ~= ST.walk2)
-      assert(ST.walk1.floor ~= ST.walk2.floor)
+    local delta = rand.pick { 32, -32, 64, -64 }
+
+    for loop = 1, 2*#R.all_floors do
+      for _,ST in ipairs(R.all_stairs) do
+        local F1 = assert(ST.walk1.floor)
+        local F2 = assert(ST.walk2.floor)
+
+        if F1.z and not F2.z then F2.z = F1.z + delta end
+        if F2.z and not F1.z then F1.z = F2.z + delta end
+      end
     end
   end
 
