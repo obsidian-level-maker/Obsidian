@@ -477,7 +477,7 @@ end
 
 UNFINISHED["hacx"] =
 {
-  label = "HacX 1.1",
+  label = "HacX 1.2",
 
   format = "doom",
 
