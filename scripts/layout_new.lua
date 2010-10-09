@@ -1630,6 +1630,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     STAIR.walk1 = G1
     STAIR.walk2 = G2
+    
+    STAIR.dir = sel(loc.x, 4, 2)
 
     table.insert(R.all_stairs, STAIR)
 
@@ -1693,7 +1695,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function render_stair(stair)
-    -- TEMP CRUD
+    local F1 = stair.walk1.floor
+    local F2 = stair.walk2.floor
+
+    assert(F1.z)
+    assert(F2.z)
+
+--[[ TEST CRUD
     Trans.brush(
     {
       { x=stair.x1, y=stair.y1, tex="COMPBLUE" },
@@ -1701,6 +1709,22 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       { x=stair.x2, y=stair.y2, tex="COMPBLUE" },
       { t=ROOM.entry_floor_h + 8, tex="FLAT14" },
     })
+--]]
+    if F1.z > F2.z then
+      F1, F2 = F2, F1
+      stair.dir = 10 - stair.dir
+    end
+
+    local z_diff = F2.z - F1.z
+
+    local T = Trans.box_transform(stair.x1, stair.y1, stair.x2, stair.y2,
+                                  F1.z, 10 - stair.dir)
+    
+    T.scale_z = z_diff / 128
+
+    local skin = { }
+
+    Fabricate("STAIR_6", T, skin)
   end
 
 

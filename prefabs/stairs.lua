@@ -46,57 +46,65 @@ PREFAB.LIFT =
 
 PREFAB.STAIR_6 =
 {
+  placement = "fitted",
+
   brushes =
   {
     {
-      { x =  48, y =  0, mat = "?side", },
-      { x = 144, y =  0, mat = "?side", },
-      { x = 144, y = 12, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 12, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y =  0, mat = "?side", },
+      { x = 128, y =  0, mat = "?side", },
+      { x = 128, y = 12, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 12, mat = "?side", },
       { t = 109, mat = "?top", },
     },
 
     {
-      { x =  48, y = 12, mat = "?side", },
-      { x = 144, y = 12, mat = "?side", },
-      { x = 144, y = 24, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 24, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y = 12, mat = "?side", },
+      { x = 128, y = 12, mat = "?side", },
+      { x = 128, y = 24, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 24, mat = "?side", },
       { t = 91, mat = "?top", },
     },
 
     {
-      { x =  48, y = 24, mat = "?side", },
-      { x = 144, y = 24, mat = "?side", },
-      { x = 144, y = 36, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 36, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y = 24, mat = "?side", },
+      { x = 128, y = 24, mat = "?side", },
+      { x = 128, y = 36, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 36, mat = "?side", },
       { t = 73, mat = "?top", },
     },
 
     {
-      { x =  48, y = 36, mat = "?side", },
-      { x = 144, y = 36, mat = "?side", },
-      { x = 144, y = 48, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 48, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y = 36, mat = "?side", },
+      { x = 128, y = 36, mat = "?side", },
+      { x = 128, y = 48, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 48, mat = "?side", },
       { t = 54, mat = "?top", },
     },
 
     {
-      { x =  48, y = 48, mat = "?side", },
-      { x = 144, y = 48, mat = "?side", },
-      { x = 144, y = 60, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 60, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y = 48, mat = "?side", },
+      { x = 128, y = 48, mat = "?side", },
+      { x = 128, y = 60, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 60, mat = "?side", },
       { t = 36, mat = "?top", },
     },
 
     {
-      { x =  48, y = 60, mat = "?side", },
-      { x = 144, y = 60, mat = "?side", },
-      { x = 144, y = 72, mat = "?step", peg=1, x_offset=0, y_offset=0 },
-      { x =  48, y = 72, mat = "?side", },
+      { m = "solid", flavor = "floor:2" },
+      { x =   0, y = 60, mat = "?side", },
+      { x = 128, y = 60, mat = "?side", },
+      { x = 128, y = 72, mat = "?step", peg=1, x_offset=0, y_offset=0 },
+      { x =   0, y = 72, mat = "?side", },
       { t = 18, mat = "?top", },
     },
 
-    -- surrounding floor  FIXME: keep???
+--[[    -- surrounding floor  FIXME: keep???
     {
       { x =   0, y=   0, mat = "?floor" },
       { x = 192, y=   0, mat = "?floor" },
@@ -104,6 +112,7 @@ PREFAB.STAIR_6 =
       { x =   0, y= 192, mat = "?floor" },
       { t = 0, mat = "?floor" },
     },
+--]]
   },
 }
 
