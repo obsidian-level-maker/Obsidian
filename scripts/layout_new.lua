@@ -776,6 +776,11 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
           P.post_fab = POST_FAB
           table.insert(R.poly_assoc, P)
         end
+
+        -- find the entry walk area (a bit presumptuous)
+        if P.kind == "walk" and not same_room then
+          P.is_entry = true
+        end
       end
   end
 
@@ -1415,7 +1420,6 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
   local function transmit_height(PF, z)
     if not PF.z or z > PF.z then
-stderrf("*** %s z = %d\n", PF.fab, z)
       PF.z = z
     end
   end
@@ -1439,7 +1443,7 @@ stderrf("*** %s z = %d\n", PF.fab, z)
 
 
   local function render_floor(floor)
-floor.z = ROOM.entry_floor_h ---   - rand.irange(1,16) * 8
+    assert(floor.z)
 
     local mat = R.skin.wall
 
@@ -1567,6 +1571,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     if not loc then
       table.insert(R.all_floors, floor)
+
+      for _,G in ipairs(floor.walks) do G.floor = floor end
+      for _,A in ipairs(floor.airs)  do A.floor = floor end
+
       return
     end
 
@@ -1601,16 +1609,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       end
     end
 
-    -- create stair
-    -- FIXME FIXME !!!
-    Trans.brush(
-    {
-      { x=loc.stair.x1, y=loc.stair.y1, tex="COMPBLUE" },
-      { x=loc.stair.x2, y=loc.stair.y1, tex="COMPBLUE" },
-      { x=loc.stair.x2, y=loc.stair.y2, tex="COMPBLUE" },
-      { t=ROOM.entry_floor_h + 8, tex="FLAT14" },
-    })
-
     -- create walk groups for stair
     -- TODO: create POLYGON objects
     local G1 = table.copy(loc.stair) ; G1.polys = {}
@@ -1626,6 +1624,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     table.insert(floor1.walks, G1)
     table.insert(floor2.walks, G2)
+
+    -- create stair
+    local STAIR = loc.stair
+
+    STAIR.walk1 = G1
+    STAIR.walk2 = G2
+
+    table.insert(R.all_stairs, STAIR)
 
     -- create new SWZ (safe walking zones)
 
@@ -1647,6 +1653,54 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
+  local function assign_floor_heights()
+    -- find the floor which touches the entrance
+    local start_F
+
+    for _,floor in ipairs(R.all_floors) do
+      for _,G in ipairs(floor.walks) do
+        for _,P in ipairs(G.polys) do
+          if P.is_entry then
+            start_F = floor
+            break;
+          end
+        end
+      end
+      if start_F then break; end
+    end
+
+    -- if not found (e.g. start room, teleporter entry), pick any one
+    if not start_F then
+      start_F = R.all_floors[1]
+    end
+
+    assert(start_F)
+
+    start_F.z = R.entry_floor_h
+
+    for _,ST in ipairs(R.all_stairs) do
+      assert(ST.walk1)
+      assert(ST.walk2)
+      assert(ST.walk1.floor)
+      assert(ST.walk2.floor)
+      assert(ST.walk1 ~= ST.walk2)
+      assert(ST.walk1.floor ~= ST.walk2.floor)
+    end
+  end
+
+
+  local function render_stair(stair)
+    -- TEMP CRUD
+    Trans.brush(
+    {
+      { x=stair.x1, y=stair.y1, tex="COMPBLUE" },
+      { x=stair.x2, y=stair.y1, tex="COMPBLUE" },
+      { x=stair.x2, y=stair.y2, tex="COMPBLUE" },
+      { t=ROOM.entry_floor_h + 8, tex="FLAT14" },
+    })
+  end
+
+
   local function build_floor()
 
     local floor =
@@ -1658,10 +1712,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     }
 
     R.all_floors = {}
+    R.all_stairs = {}
 
     subdivide_floor(floor)
 
---!!!!    assign_floor_heights()
+    assign_floor_heights()
 
     for _,F in ipairs(R.all_floors) do
       render_floor(F)
@@ -1671,6 +1726,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
         Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
       end
 --]]
+    end
+
+    for _,stair in ipairs(R.all_stairs) do
+      render_stair(stair)
     end
   end
 
