@@ -29,8 +29,6 @@
 
 #define GRID_SIZE  16
 
-#define MAX_GRID_DIM  256
-
 
 #define NEAR_WALL  0x08
 #define HAS_ITEM   0x10
@@ -44,6 +42,10 @@ static int grid_max_x, grid_max_y;
 static int grid_W, grid_H;
 
 static byte ** spot_grid;
+
+static int * grid_lefties;
+static int * grid_righties;
+
 
 
 void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y)
@@ -65,17 +67,17 @@ void SPOT_CreateGrid(byte content, int min_x, int min_y, int max_x, int max_y)
   grid_H += 2;
 #endif
 
-  SYS_ASSERT(grid_W <= MAX_GRID_DIM);
-  SYS_ASSERT(grid_H <= MAX_GRID_DIM);
-
   spot_grid = new byte* [grid_W];
-  
+
   for (int x = 0 ; x < grid_W ; x++)
   {
     spot_grid[x] = new byte[grid_H];
 
     memset(spot_grid[x], content, grid_H);
   }
+
+  grid_lefties  = new int[grid_H];
+  grid_righties = new int[grid_H];
 }
 
 
@@ -98,11 +100,15 @@ void SPOT_DumpGrid(const char *info)
   DebugPrintf("%s: (%d %d) .. (%d %d)\n", info,
               grid_min_x, grid_min_y, grid_max_x, grid_max_y);
 
+  const int MAX_WIDTH = 256;
+
   for (int y = grid_H-1 ; y >= 0 ; y--)
   {
-    char buffer[MAX_GRID_DIM+2];
+    char buffer[MAX_WIDTH+2];
+
+    int width = MIN(MAX_WIDTH, grid_W);
     
-    for (int x = 0 ; x < grid_W ; x++)
+    for (int x = 0 ; x < width ; x++)
     {
       byte content = spot_grid[x][y];
 
@@ -485,9 +491,6 @@ int SPOT_FloorArea(int x1, int y1, int x2, int y2)
 //------------------------------------------------------------------------
 //  POLYGON FILLING
 //------------------------------------------------------------------------
-
-static int grid_lefties[MAX_GRID_DIM];
-static int grid_righties[MAX_GRID_DIM];
 
 static int grid_toppy;
 static int grid_botty;
