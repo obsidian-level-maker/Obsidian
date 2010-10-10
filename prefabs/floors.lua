@@ -97,7 +97,7 @@ PREFAB.H1_DOWN_4 =
 
     -- walk areas
     {
-      { m = "walk" },
+      { m = "walk", space = "old" },
       { x = 304, y = 128 },
       { x = 400, y = 128 },
       { x = 400, y = 384 },
@@ -105,7 +105,7 @@ PREFAB.H1_DOWN_4 =
     },
 
     {
-      { m = "walk", walk_dz = -64 },
+      { m = "walk", space = "new", walk_dz = -64 },
       { x = 112, y = 128 },
       { x = 208, y = 128 },
       { x = 208, y = 384 },

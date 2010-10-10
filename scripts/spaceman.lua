@@ -722,7 +722,7 @@ function SPACE_CLASS.raw_union(self, other)
   -- also destroys the other space
 
   for _,P in ipairs(other.polys) do
-    table.insert(polys, P)
+    table.insert(self.polys, P)
   end
 
   other.polys = {}

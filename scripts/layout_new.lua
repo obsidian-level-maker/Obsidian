@@ -1464,18 +1464,94 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function transfer_walks(floor, loc, floor1, floor2)
+    for _,G in ipairs(floor.walks) do
+      if (loc.x and G.x1 < loc.x) or (loc.y and G.y1 < loc.y) then
+        table.insert(floor1.walks, G)
+      else
+        table.insert(floor2.walks, G)
+      end
+    end
+
+    assert(#floor1.walks >= 1)
+    assert(#floor2.walks >= 1)
+  end
+
+
+  local function transfer_airs(floor, loc, floor1, floor2)
+    -- airs may overlap both halves
+    for _,A in ipairs(floor.airs) do
+      if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
+        table.insert(floor1.airs, A)
+      end
+      if (loc.x and A.bx2 > loc.x) or (loc.y and A.by2 > loc.y) then
+        table.insert(floor2.airs, A)
+      end
+    end
+  end
+
+
+  local function brush_bbox(coords)
+    -- TODO
+  end
+
+
   local function floor_check_brush(coords, data)
-    local mode
     local m = coords[1].m
 
     if m == "floor" then
-      stuff()
+      local POLY = POLYGON_CLASS.from_brush("free", coords)
+      -- FIXME: use :merge here
+      if coords[1].space == "old" then
+        table.insert(data.floor1.space, POLY)
+      elseif coords[1].space == "new" then
+        table.insert(data.floor2.space, POLY)
+      else
+        error("bad or missing space field in floor brush")
+      end
 
     elseif m == "walk" then
-      foo()
+      local POLY = POLYGON_CLASS.from_brush("walk", coords)
+
+      -- new walk group
+      local G =
+      {
+        polys = { POLY },
+        x1 = POLY.bx1, y1 = POLY.by1,
+        x2 = POLY.bx2, y2 = POLY.by2,
+        walk_dz = coords[1].walk_dz,
+      }
+
+      if G.walk_dz then data.walk_dz = G.walk_dz end
+
+      if coords[1].space == "old" then
+        table.insert(data.floor1.walks, G)
+      elseif coords[1].space == "new" then
+        table.insert(data.floor2.walks, G)
+      else
+        error("bad or missing space field in walk brush")
+      end
+
+    elseif m == "zone" then
+      -- hack, use polygon class to get bbox
+      local POLY = POLYGON_CLASS.from_brush("free", coords)
+
+      local zone =
+      {
+        x1 = POLY.bx1, y1 = POLY.by1,
+        x2 = POLY.bx2, y2 = POLY.by2,
+      }
+
+      if coords[1].space == "old" then
+        data.floor1.zone = zone
+      elseif coords[1].space == "new" then
+        data.floor2.zone = zone
+      else
+        error("bad or missing space field in zone brush")
+      end
     end
 
-    return false  -- allow?
+    return false
   end
 
 
@@ -1567,7 +1643,7 @@ gui.debugf("[all locs failed]\n")
   end
 
 
-  local function subdivide_floor(floor)
+  local function subdivide_floor(floor, recurse_lev)
     gui.debugf("\nsubdivide_floor in %s\n", R:tostr())
     gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
                floor.zone.x1, floor.zone.y1,
@@ -1578,7 +1654,8 @@ gui.debugf("[all locs failed]\n")
 
     local loc
 
-    if #floor.walks >= 2 then
+    -- !!!
+    if recurse_lev == 1 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
@@ -1600,7 +1677,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local floor2 = { walks={}, airs={} }
 
 
-    -- TODO: part of loc
+    -- FIXME: assuming here no walks or airs in the safe zone
+    transfer_walks(floor, loc, floor1, floor2)
+
+    transfer_airs(floor, loc, floor1, floor2)
+
+
+    -- TODO: field of loc
     local x1 = floor.zone.x1
     local y1 = floor.zone.y1
     local x2 = floor.zone.x2
@@ -1675,8 +1758,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
       polys = {},
 
-      floor = floor,
-      loc   = loc,
+      floor1 = floor1,
+      floor2 = floor2,
+      loc = loc,
     }
 
     -- FIXME: only process the skins ONCE
@@ -1688,6 +1772,22 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     Trans.clear_override()
 
+
+    local STAIR =
+    {
+      floor1 = floor1,
+      floor2 = floor2,
+
+      delta = assert(POST_FAB.walk_dz),
+    }
+
+    table.insert(R.all_stairs, STAIR)
+
+    -- recursively handle new pieces
+
+    subdivide_floor(floor1, recurse_lev+1)
+    subdivide_floor(floor2, recurse_lev+1)
+
     do return end
 
 
@@ -1698,28 +1798,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     -- actually split the space
     floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
 
-    -- transfer walking groups
-
-    for _,G in ipairs(floor.walks) do
-      if (loc.x and G.x1 < loc.x) or (loc.y and G.y1 < loc.y) then
-        table.insert(floor1.walks, G)
-      else
-        table.insert(floor2.walks, G)
-      end
-    end
-
-    assert(#floor1.walks >= 1)
-    assert(#floor2.walks >= 1)
-
-    -- transfer airs (which may exist in both halves)
-    for _,A in ipairs(floor.airs) do
-      if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
-        table.insert(floor1.airs, A)
-      end
-      if (loc.x and A.bx2 > loc.x) or (loc.y and A.by2 > loc.y) then
-        table.insert(floor2.airs, A)
-      end
-    end
 
     -- create walk groups for stair
     -- TODO: create POLYGON objects
@@ -1762,8 +1840,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- recursively handle new pieces
 
-    subdivide_floor(floor1)
-    subdivide_floor(floor2)
+    subdivide_floor(floor1, recurse_lev+1)
+    subdivide_floor(floor2, recurse_lev+1)
   end
 
 
@@ -1794,8 +1872,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for loop = 1, 2*#R.all_floors do
       for _,ST in ipairs(R.all_stairs) do
-        local F1 = assert(ST.walk1.floor)
-        local F2 = assert(ST.walk2.floor)
+        local F1 = assert(ST.floor1)
+        local F2 = assert(ST.floor2)
         assert(ST.delta)
 
         if F1.z and not F2.z then F2.z = F1.z + ST.delta end
@@ -1852,7 +1930,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     R.all_floors = {}
     R.all_stairs = {}
 
-    subdivide_floor(floor)
+    subdivide_floor(floor, 1)
 
     assign_floor_heights()
 
