@@ -203,6 +203,8 @@ function Trans.brush(coords)
 
   local mode = coords[1].m
 
+  if mode == "nothing" then return end
+
   -- light and rail brushes only make sense for 2.5D games
   if mode == "light" and not PARAM.light_brushes then return end
   if mode == "rail"  and not PARAM.rails then return end
@@ -231,7 +233,7 @@ function Trans.brush(coords)
   end
 
   -- ignore space management brushes here
-  if mode == "walk" or mode == "air" or mode == "used" then
+  if mode == "walk" or mode == "air" or mode == "used" or mode == "zone" then
     return
   end
 
@@ -940,7 +942,10 @@ function Fabricate(fab, T, skin, skin2)
     --       (i.e. never higher that t, never lower than b).
 
     for _,B in ipairs(brushes) do
-      if B[1].insider or not (B[1].m == "walk" or B[1].m == "air" or B[1].m == "light" or B[1].outsider) then
+      if B[1].insider or not (B[1].m == "walk" or B[1].m == "air" or
+                              B[1].m == "zone" or B[1].m == "light" or
+                              B[1].outsider)
+      then
         for _,C in ipairs(B) do
 
           if C.x then 
