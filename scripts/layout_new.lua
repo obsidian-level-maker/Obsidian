@@ -1464,6 +1464,21 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function floor_check_brush(coords, data)
+    local mode
+    local m = coords[1].m
+
+    if m == "floor" then
+      stuff()
+
+    elseif m == "walk" then
+      foo()
+    end
+
+    return false  -- allow?
+  end
+
+
   local function check_binary_subdiv(floor, loc)
     -- Requirements:
     --   1. at least one walk group in each half
@@ -1516,7 +1531,7 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
       return nil
     end
 
-    if zone_dx < 64 or zone_dy < 64 then
+    if zone_dx < 264 or zone_dy < 264 then
 gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
       return nil  -- not enough room to swing a cat
     end
@@ -1532,16 +1547,16 @@ gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
     local mx = int((x1 + x2)/2)
     local my = int((y1 + y2)/2)
 
-    table.insert(locs, { x=x1, stair={ x1=x1, x2=x1+128, y1=my-64, y2=my+64 }})
-    table.insert(locs, { x=x2, stair={ x2=x2, x1=x2-128, y1=my-64, y2=my+64 }})
+--- table.insert(locs, { x=x1, stair={ x1=x1, x2=x1+128, y1=my-64, y2=my+64 }})
+--- table.insert(locs, { x=x2, stair={ x2=x2, x1=x2-128, y1=my-64, y2=my+64 }})
 
-    table.insert(locs, { y=y1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
-    table.insert(locs, { y=y2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
+--- table.insert(locs, { y=y1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
+--- table.insert(locs, { y=y2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
 
-    rand.shuffle(locs)
+--- rand.shuffle(locs)
 
     table.insert(locs, 1, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
-    table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+--- table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
 
     for _,loc in ipairs(locs) do
       if check_binary_subdiv(floor, loc) then
@@ -1578,10 +1593,107 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       return
     end
 
+
     ----- DO THE SUBDIVISION -----
 
     local floor1 = { walks={}, airs={} }
     local floor2 = { walks={}, airs={} }
+
+
+    -- TODO: part of loc
+    local x1 = floor.zone.x1
+    local y1 = floor.zone.y1
+    local x2 = floor.zone.x2
+    local y2 = floor.zone.y2
+
+
+    if loc.x then
+
+      local bx = loc.bx or loc.x  -- TODO
+      local tx = loc.tx or loc.x
+
+      local left_bottom = floor.space:intersect_rect(nil, nil, bx, y1)
+      local left_mid    = floor.space:intersect_rect(nil,  y1, x1, y2)
+      local left_top    = floor.space:intersect_rect(nil,  y2, tx, nil)
+
+      floor2.space = left_bottom
+      floor2.space:raw_union(left_mid)
+      floor2.space:raw_union(left_top)
+
+      local right_bottom = floor.space:intersect_rect(bx, nil, nil, y1)
+      local right_mid    = floor.space:intersect_rect(x2,  y1, nil, y2)
+      local right_top    = floor.space:intersect_rect(tx,  y2, nil, nil)
+
+      floor1.space = right_bottom
+      floor1.space:raw_union(right_mid)
+      floor1.space:raw_union(right_top)
+
+    else -- loc.y
+
+      local ly = loc.ly or loc.y  -- TODO
+      local ry = loc.ry or loc.y
+
+      local bottom_left  = floor.space:intersect_rect(nil, nil, x1, ly)
+      local bottom_mid   = floor.space:intersect_rect(x1, nil, x2, y1)
+      local bottom_right = floor.space:intersect_rect(x2, nil, nil, ry)
+
+      floor2.space = bottom_left
+      floor2.space:raw_union(bottom_mid)
+      floor2.space:raw_union(bottom_right)
+
+      local top_left  = floor.space:intersect_rect(nil, ly, x1, nil)
+      local top_mid   = floor.space:intersect_rect(x1, y2, x2, nil)
+      local top_right = floor.space:intersect_rect(x2, ry, nil, nil)
+
+      floor1.space = top_left
+      floor1.space:raw_union(top_mid)
+      floor1.space:raw_union(top_right)
+    end
+
+
+    local fab = "H1_DOWN_4"
+    local info = PREFAB[fab]
+    if not info then error("unknown floor prefab: " .. tostring(fab)) end
+
+
+    local T = Trans.box_transform(x1, y1, x2, y2, 0, sel(loc.x, 2, 4))
+
+    local skin = { top="FLAT23" }
+
+    -- save info to render it later
+    local POST_FAB =
+    {
+      fab = fab,
+      trans = T,
+
+      skin1 = skin1,
+      skin2 = skin2,
+      skin3 = skin3,
+
+      R = R,
+      fab_tag = Plan_alloc_mark(),
+
+      polys = {},
+
+      floor = floor,
+      loc   = loc,
+    }
+
+    -- FIXME: only process the skins ONCE
+    table.insert(R.post_fabs, POST_FAB)
+
+    Trans.set_override(floor_check_brush, POST_FAB)
+
+    Fabricate(fab, T, skin)
+
+    Trans.clear_override()
+
+    do return end
+
+
+
+-- [[  OLD OLD
+
 
     -- actually split the space
     floor1.space, floor2.space = floor.space:cut_in_half(loc.x, loc.y)
@@ -1680,15 +1792,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     start_F.z = R.entry_floor_h
 
-    local delta = rand.pick { 32, -32, 64, -64 }
-
     for loop = 1, 2*#R.all_floors do
       for _,ST in ipairs(R.all_stairs) do
         local F1 = assert(ST.walk1.floor)
         local F2 = assert(ST.walk2.floor)
+        assert(ST.delta)
 
-        if F1.z and not F2.z then F2.z = F1.z + delta end
-        if F2.z and not F1.z then F1.z = F2.z + delta end
+        if F1.z and not F2.z then F2.z = F1.z + ST.delta end
+        if F2.z and not F1.z then F1.z = F2.z - ST.delta end
       end
     end
   end
@@ -1755,9 +1866,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 --]]
     end
 
-    for _,stair in ipairs(R.all_stairs) do
-      render_stair(stair)
-    end
+---##    for _,stair in ipairs(R.all_stairs) do
+---##      render_stair(stair)
+---##    end
   end
 
 
@@ -1797,6 +1908,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     Fabricate(PF.fab, PF.trans, PF.skin1, PF.skin2, PF.skin3)
 
+    -- FIXME: separate this e.g. R.height_links[]
     if PF.set_height_in then
       assert(PF.z)
       local other_R = PF.set_height_in

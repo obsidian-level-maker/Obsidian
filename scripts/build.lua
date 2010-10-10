@@ -233,7 +233,9 @@ function Trans.brush(coords)
   end
 
   -- ignore space management brushes here
-  if mode == "walk" or mode == "air" or mode == "used" or mode == "zone" then
+  if mode == "walk" or mode == "air" or mode == "used" or 
+     mode == "floor" or mode == "zone" or mode == "nosplit"
+  then
     return
   end
 
@@ -934,9 +936,9 @@ function Fab_size_stuff(fab, T, brushes)
     --       (i.e. never higher that t, never lower than b).
 
     for _,B in ipairs(brushes) do
-      if B[1].insider or not (B[1].m == "walk" or B[1].m == "air" or
-                              B[1].m == "zone" or B[1].m == "light" or
-                              B[1].outsider)
+      if B[1].insider or not (B[1].m == "walk"  or B[1].m == "air" or
+                              B[1].m == "zone"  or B[1].m == "nosplit" or
+                              B[1].m == "light" or B[1].outsider)
       then
         for _,C in ipairs(B) do
 

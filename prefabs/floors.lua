@@ -45,29 +45,31 @@ PREFAB.H1_DOWN_4 =
 {
   placement = "fitted",
 
+  shape = "H",
+
   brushes =
   {
-    -- set total size
+    -- new floor area : left side
     {
-      { m = "nothing" },
-      { x =   0, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x =   0, y = 512 },
-    },
-
-    -- new floor area
-    {
-      { m = "floor" },
+      { m = "floor", space = "new" },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 512 },
       { x =   0, y = 512 },
     },
 
+    -- old floor area : right side
+    {
+      { m = "floor", space = "old" },
+      { x = 256, y =   0 },
+      { x = 512, y =   0 },
+      { x = 512, y = 512 },
+      { x = 256, y = 512 },
+    },
+
     -- steps
     {
-      { m = "solid", flavor = "floor:2" },
+      { m = "solid", flavor = "floor:3" },
       { x = 208, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 240, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 240, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
@@ -76,7 +78,7 @@ PREFAB.H1_DOWN_4 =
     },
 
     {
-      { m = "solid", flavor = "floor:2" },
+      { m = "solid", flavor = "floor:3" },
       { x = 240, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 272, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 272, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
@@ -85,7 +87,7 @@ PREFAB.H1_DOWN_4 =
     },
 
     {
-      { m = "solid", flavor = "floor:2" },
+      { m = "solid", flavor = "floor:3" },
       { x = 272, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 304, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 304, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
@@ -112,19 +114,19 @@ PREFAB.H1_DOWN_4 =
 
     -- new safe zones
     {
-      { m = "zone", space = "old" },
-      { x = 400, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x = 400, y = 512 },
-    },
-
-    {
       { m = "zone", space = "new" },
       { x =   0, y =   0 },
       { x = 112, y =   0 },
       { x = 112, y = 512 },
       { x =   0, y = 512 },
+    },
+
+    {
+      { m = "zone", space = "old" },
+      { x = 400, y =   0 },
+      { x = 512, y =   0 },
+      { x = 512, y = 512 },
+      { x = 400, y = 512 },
     },
   },
 }
