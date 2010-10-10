@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  FLOOR PREFABS
+--  PEDESTAL PREFABS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -159,35 +159,6 @@ PREFAB.TELEPORT_PAD =
   entities =
   {
     { x = 0, y = 0, z = 16, ent="?tele_obj", angle="?angle" },
-  },
-}
-
-
-PREFAB.BRIDGE_TEST =
-{
-  placement = "fitted",
-
-  brushes =
-  {
-    -- liquid area
-    {
-      { m = "solid", flavor = "floor:2" },
-      { x =   0, y =   0, mat = "?liquid" },
-      { x = 256, y =   0, mat = "?liquid" },
-      { x = 256, y = 256, mat = "?liquid" },
-      { x =   0, y = 256, mat = "?liquid" },
-      { t = -72, mat = "?liquid" },
-    },
-
-    -- bridge
-    {
-      { m = "solid" },
-      { x = 112, y =   0, mat = "?wall" },
-      { x = 144, y =   0, mat = "?wall" },
-      { x = 144, y = 256, mat = "?wall" },
-      { x = 112, y = 256, mat = "?wall" },
-      { t =   0, mat = "?wall" },
-    },
   },
 }
 
