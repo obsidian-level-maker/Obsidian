@@ -529,9 +529,9 @@ end
 
 math.randomseed(0 + 1 * os.time())
 
---recursive_fill(1,1, SEED_W,SEED_H)
+recursive_fill(1,1, SEED_W,SEED_H)
 --merge_areas(SEED_W * 3)
 
-build_rooms(rand_irange(8,24), rand_irange(4,12), 8)
+--build_rooms(rand_irange(8,24), rand_irange(4,12), 8)
 
 write_seeds()

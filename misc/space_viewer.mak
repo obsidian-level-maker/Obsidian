@@ -8,9 +8,9 @@ PROGRAM=space_viewer
 
 CXX=g++
 
-LIB_LOC=../linux_lib
+LIB_LOC=../lib_linux
 
-FLTK_DIR=$(LIB_LOC)/fltk-1.1.9
+FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 
 OPTIMISE=-O1 -g
 
