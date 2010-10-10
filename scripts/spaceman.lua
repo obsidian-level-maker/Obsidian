@@ -716,3 +716,35 @@ function SPACE_CLASS.cut_in_half_Y(self, my)
   return bottom, top
 end
 
+
+function SPACE_CLASS.raw_union(self, other)
+  -- assumes both spaces never overlap anywhere : USE WITH CAUTION
+  -- also destroys the other space
+
+  for _,P in ipairs(other.polys) do
+    table.insert(polys, P)
+  end
+
+  other.polys = {}
+end
+
+
+function SPACE_CLASS.intersect_rect(self, x1, y1, x2, y2)
+  -- produces a new space by intersecting this space with the
+  -- given rectangle.  Coordinates may be NIL, and this means
+  -- that coordinate is +/- infinity.
+
+  local result = self
+  local temp
+
+  -- TODO: optimise this
+
+  if x1 then temp, result = result:cut_in_half_X(x1) end
+  if x2 then result, temp = result:cut_in_half_X(x2) end
+
+  if y1 then temp, result = result:cut_in_half_Y(y1) end
+  if y2 then result, temp = result:cut_in_half_Y(y2) end
+
+  return result
+end
+
