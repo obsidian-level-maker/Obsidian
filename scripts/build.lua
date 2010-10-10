@@ -920,21 +920,13 @@ function Trans.process_skins(...)
 end
 
 
-function Fabricate(fab, T, skin, skin2)
+function Fab_size_stuff(fab, T, brushes)
   local x_info
   local y_info
   local z_info
 
-  if type(fab) == "string" then
-    if not PREFAB[fab] then
-      error("Unknown prefab: " .. fab)
-    end
 
-    fab = PREFAB[fab]
-  end
-
-
-  local function determine_bbox(brushes)
+  local function determine_bbox()
     local x1, y1, z1
     local x2, y2, z2
 
@@ -987,70 +979,6 @@ function Fabricate(fab, T, skin, skin2)
              y1=y1, y2=y2, dy=(y2 - y1),
              z1=z1, z2=z2, dz=dz,
            }
-  end
-
-
-  local function copy_w_substitution(orig_brushes)
-    -- perform substitutions (values beginning with '?')
-    -- returns a copy of the brushes.
-
-    local new_brushes = {}
-
-    for _,B in ipairs(orig_brushes) do
-      assert(#B >= 1)
-
-      local b_copy = {}
-      for _,C in ipairs(B) do
-
-        local new_coord = {}
-        for name,value in pairs(C) do
-          value = Trans.substitute(value)
-
-          if value == nil then
-            if name == "required" then value = false end
-
-            if name == "x" or name == "y" or name == "b" or name == "t" then
-              error("Prefab: substitution of x/y/b/t field failed.")
-            end
-          end
-
-          new_coord[name] = value
-        end
-
-        table.insert(b_copy, new_coord)
-      end -- C
-
-      -- skip certain brushes unless a skin field is present/true
-      local req = b_copy[1].required
-
-      if req == nil or (req ~= false and req ~= 0) then
-        table.insert(new_brushes, b_copy)
-      end
-    end -- B
-
-    return new_brushes
-  end
-
-
-  local function process_materials(brush)
-    -- modifies a brush, converting 'mat' fields to 'tex' fields
-
-    for _,C in ipairs(brush) do
-      if C.mat then
-        local mat = Mat_lookup(C.mat)
-        assert(mat and mat.t)
-
-        if C.b then
-          C.tex = mat.c or mat.f or mat.t
-        elseif C.t then
-          C.tex = mat.f or mat.t
-        else
-          C.tex = mat.t
-        end
-
-        C.mat = nil
-      end
-    end
   end
 
 
@@ -1156,6 +1084,154 @@ function Fabricate(fab, T, skin, skin2)
     end
 
     assert(math.abs(n_pos - high) < 0.1)
+  end
+
+
+  ---| Fab_size_stuff |---
+
+  local ranges = determine_bbox()
+
+  -- XY stuff --
+
+  x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
+  y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
+
+  local x_low, x_high
+  local y_low, y_high
+
+  if fab.placement == "fitted" then
+    if not (T.fit_width and T.fit_depth) then
+      error("Fitted prefab used without fitted transform")
+    end
+
+    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
+      error("Fitted prefab should have left/bottom coord at (0, 0)")
+    end
+
+    x_low = 0 ; x_high = T.fit_width
+    y_low = 0 ; y_high = T.fit_depth
+
+  else  -- "loose" placement
+
+    if not (T.add_x and T.add_y) then
+      error("Loose prefab used without focal coord")
+    end
+
+    local scale_x = T.scale_x or 1
+    local scale_y = T.scale_y or 1
+
+    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / ranges.dx end
+    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / ranges.dy end
+
+    x_low  = ranges.x1 * scale_x
+    x_high = ranges.x2 * scale_x
+
+    y_low  = ranges.y1 * scale_y
+    y_high = ranges.y2 * scale_y
+  end
+
+  set_group_sizes(x_info, x_low, x_high)
+  set_group_sizes(y_info, y_low, y_high)
+
+  -- Z stuff --
+
+  if ranges.dz and ranges.dz > 1 then
+    local z_low, z_high
+
+    z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+
+    if T.fit_height then
+      z_low  = 0
+      z_high = T.fit_height
+    else
+      local scale_z = T.scale_z or 1
+
+      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / ranges.dz end
+
+      z_low  = ranges.z1 * scale_z
+      z_high = ranges.z2 * scale_z
+    end
+
+    set_group_sizes(z_info, z_low, z_high)
+  else
+    z_info = {}
+  end
+
+  -- DONE --
+
+  return x_info, y_info, z_info
+end
+
+
+function Fab_render(fab, T, skin, skin2)
+  local x_info
+  local y_info
+  local z_info
+
+  assert(type(fab) == "table")
+
+
+  local function copy_w_substitution(orig_brushes)
+    -- perform substitutions (values beginning with '?')
+    -- returns a copy of the brushes.
+
+    local new_brushes = {}
+
+    for _,B in ipairs(orig_brushes) do
+      assert(#B >= 1)
+
+      local b_copy = {}
+      for _,C in ipairs(B) do
+
+        local new_coord = {}
+        for name,value in pairs(C) do
+          value = Trans.substitute(value)
+
+          if value == nil then
+            if name == "required" then value = false end
+
+            if name == "x" or name == "y" or name == "b" or name == "t" then
+              error("Prefab: substitution of x/y/b/t field failed.")
+            end
+          end
+
+          new_coord[name] = value
+        end
+
+        table.insert(b_copy, new_coord)
+      end -- C
+
+      -- skip certain brushes unless a skin field is present/true
+      local req = b_copy[1].required
+
+      if req == nil or (req ~= false and req ~= 0) then
+        table.insert(new_brushes, b_copy)
+      end
+    end -- B
+
+    return new_brushes
+  end
+
+
+  local function process_materials(brush)
+    -- modifies a brush, converting 'mat' fields to 'tex' fields
+
+    for _,C in ipairs(brush) do
+      if C.mat then
+        local mat = Mat_lookup(C.mat)
+        assert(mat and mat.t)
+
+        if C.b then
+          C.tex = mat.c or mat.f or mat.t
+        elseif C.t then
+          C.tex = mat.f or mat.t
+        else
+          C.tex = mat.t
+        end
+
+        C.mat = nil
+      end
+    end
   end
 
 
@@ -1352,84 +1428,11 @@ function Fabricate(fab, T, skin, skin2)
   end
 
 
-  ---| Fabricate |---
-
-  gui.debugf("Fabricating: %s\n", fab.name)
-
-  Trans.process_skins(fab.defaults,
-                       THEME and THEME.skin,
-                       ROOM and  ROOM.skin,
-                       skin, skin2)
+  ---| Fab_render |---
 
   local brushes = copy_w_substitution(fab.brushes)
 
-  local ranges = determine_bbox(brushes)
-
-  -- XY stuff --
-
-  x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
-  y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
-
-  local x_low, x_high
-  local y_low, y_high
-
-  if fab.placement == "fitted" then
-    if not (T.fit_width and T.fit_depth) then
-      error("Fitted prefab used without fitted transform")
-    end
-
-    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
-      error("Fitted prefab should have left/bottom coord at (0, 0)")
-    end
-
-    x_low = 0 ; x_high = T.fit_width
-    y_low = 0 ; y_high = T.fit_depth
-
-  else  -- "loose" placement
-
-    if not (T.add_x and T.add_y) then
-      error("Loose prefab used without focal coord")
-    end
-
-    local scale_x = T.scale_x or 1
-    local scale_y = T.scale_y or 1
-
-    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / ranges.dx end
-    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / ranges.dy end
-
-    x_low  = ranges.x1 * scale_x
-    x_high = ranges.x2 * scale_x
-
-    y_low  = ranges.y1 * scale_y
-    y_high = ranges.y2 * scale_y
-  end
-
-  set_group_sizes(x_info, x_low, x_high)
-  set_group_sizes(y_info, y_low, y_high)
-
-  -- Z stuff --
-
-  if ranges.dz and ranges.dz > 1 then
-    local z_low, z_high
-
-    z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
-
-    if T.fit_height then
-      z_low  = 0
-      z_high = T.fit_height
-    else
-      local scale_z = T.scale_z or 1
-
-      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / ranges.dz end
-
-      z_low  = ranges.z1 * scale_z
-      z_high = ranges.z2 * scale_z
-    end
-
-    set_group_sizes(z_info, z_low, z_high)
-  else
-    z_info = {}
-  end
+  x_info, y_info, z_info = Fab_size_stuff(fab, T, brushes)
 
 
   Trans.set(
@@ -1446,6 +1449,26 @@ function Fabricate(fab, T, skin, skin2)
   render_spots   (fab.spots)
 
   Trans.clear()
+end
+
+
+function Fabricate(fab, T, skin, skin2)
+  if type(fab) == "string" then
+    if not PREFAB[fab] then
+      error("Unknown prefab: " .. fab)
+    end
+
+    fab = PREFAB[fab]
+  end
+
+  gui.debugf("Fabricating: %s\n", fab.name)
+
+  Trans.process_skins(fab.defaults,
+                      THEME and THEME.skin,
+                      ROOM and  ROOM.skin,
+                      skin, skin2)
+
+  Fab_render(fab, T)
 end
 
 
