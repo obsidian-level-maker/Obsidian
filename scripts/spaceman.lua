@@ -516,7 +516,10 @@ function SPACE_CLASS.merge(self, M)
     end
   end
 
-  assert(#overlaps > 0)
+  if #overlaps == 0 then
+    table.insert(self.polys, M)
+    return
+  end
 
   local final_kind = M.kind
 
