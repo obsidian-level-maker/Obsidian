@@ -1501,11 +1501,10 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
     if m == "floor" then
       local POLY = POLYGON_CLASS.from_brush("free", coords)
-      -- FIXME: use :merge here
       if coords[1].space == "old" then
-        table.insert(data.floor1.space, POLY)
+        data.floor1.space:merge(POLY)
       elseif coords[1].space == "new" then
-        table.insert(data.floor2.space, POLY)
+        data.floor2.space:merge(POLY)
       else
         error("bad or missing space field in floor brush")
       end
@@ -1632,7 +1631,7 @@ gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
 --- rand.shuffle(locs)
 
     table.insert(locs, 1, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
---- table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+    table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
 
     for _,loc in ipairs(locs) do
       if check_binary_subdiv(floor, loc) then
@@ -1739,7 +1738,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     if not info then error("unknown floor prefab: " .. tostring(fab)) end
 
 
-    local T = Trans.box_transform(x1, y1, x2, y2, 0, sel(loc.x, 2, 4))
+    local T = Trans.box_transform(x1, y1, x2, y2, 0, sel(loc.x, 2, 6))
 
     local skin = { top="FLAT23" }
 
