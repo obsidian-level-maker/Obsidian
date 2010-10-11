@@ -601,6 +601,14 @@ function geom.angle_diff(A, B)
 end
 
 function geom.rotate_vec(x, y, angle)
+  if angle < 0 then angle = angle + 360 end
+
+  -- special cases to ensure accuracy
+  if angle ==   0 then return  x,  y end
+  if angle ==  90 then return -y,  x end
+  if angle == 180 then return -x, -y end
+  if angle == 270 then return  y, -x end
+
   local cos_R = math.cos(angle * math.pi / 180)
   local sin_R = math.sin(angle * math.pi / 180)
 
