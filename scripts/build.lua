@@ -138,7 +138,7 @@ function Trans.apply_angle(ang)
     if T.mirror_x then dx = -dx end
     if T.mirror_y then dy = -dy end
 
-    ang = geom.calc_angle(dx, dy)
+    ang = math.round(geom.calc_angle(dx, dy))
 
     if T.rotate then ang = ang + T.rotate end
   end
@@ -237,6 +237,10 @@ function Trans.brush(coords)
      mode == "floor" or mode == "zone" or mode == "nosplit"
   then
     return
+  end
+
+  if Trans.dump_brushes then
+    gui.debugf("gui.add_brush\n%s\n", table.tostr(coords, 2))
   end
 
   gui.add_brush(coords)
