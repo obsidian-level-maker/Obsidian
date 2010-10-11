@@ -191,7 +191,7 @@ function POLYGON_CLASS.to_brush(self, mat)
   local B = {}
 
   for _,C in ipairs(self.coords) do
-    table.insert(B, { x=C.x, y=C.y, mat=mat })
+    table.insert(B, { x=C.x, y=C.y, tex=mat })
   end
 
   return B

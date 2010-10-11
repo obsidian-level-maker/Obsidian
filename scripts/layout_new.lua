@@ -1419,7 +1419,6 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
 
   local function transmit_height(PF, z)
-stderrf("***************** %s --> %d\n", PF.fab, z)
     if not PF.z or z > PF.z then
       PF.z = z
     end
@@ -2115,30 +2114,33 @@ gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
 
     local T = Trans.spot_transform(ex, ey, ROOM.entry_floor_h)
 
+--[[ !!!!
     if GAME.format == "quake" then
       local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }
       Fab_with_update("QUAKE_EXIT_PAD", T, skin)
     else
+--]]
+
 ---      local skin_name = rand.key_by_probs(THEME.exits)
 ---      local skin = assert(GAME.EXITS[skin_name])
 ---
 ---      Fab_with_update("EXIT_PILLAR", T, skin)
-    end
-  
+ 
   else
 
     Trans.entity("potion", ex, ey, 0)
   end
 
 
-  if not R.outdoor then
-    Trans.entity("light", ex, ey, 170, { light=150, _radius=600 })
-  end
-
-
   build_floor()
 
   build_ceiling()
+
+
+  if not R.outdoor then
+    Trans.entity("light", ex, ey, R.entry_floor_h + 170, { light=100, _radius=360 })
+  end
+
 
   ambient_lighting()
 
