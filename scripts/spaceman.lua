@@ -130,6 +130,15 @@ function POLYGON_CLASS.dump(self)
 end
 
 
+function POLYGON_CLASS.coord_str(self)
+  local line = string.format("POLY_%d", self.id)
+  for _,C in ipairs(self.coords) do
+    line = line .. string.format("  (%d %d)", C.x, C.y)
+  end
+  return line
+end
+
+
 function POLYGON_CLASS.update_bbox(self)
   assert(#self.coords > 0)
 
@@ -346,7 +355,7 @@ end
 SPACE_CLASS = {}
 
 function SPACE_CLASS.new()
-  local S = { polys={} }
+  local S = { polys={}, id=Plan_alloc_mark() }
   table.set_class(S, SPACE_CLASS)
   return S
 end
@@ -360,6 +369,22 @@ function SPACE_CLASS.copy(self)
   end
 
   return S
+end
+
+
+function SPACE_CLASS.tostr(self)
+  return string.format("SPACE_%d [%d polys]", self.id, #self.polys)
+end
+
+
+function SPACE_CLASS.dump(self)
+  gui.debugf("%s =\n{\n", self:tostr())
+
+  for _,P in ipairs(self.polys) do
+    gui.debugf("  %s\n", P:coord_str())
+  end
+
+  gui.debugf("}\n")
 end
 
 
@@ -685,7 +710,7 @@ function SPACE_CLASS.cut_in_half_X(self, mx)
       local N2 = N:cut(mx, 0, mx, 40)
       table.insert(left.polys,  N2)
       table.insert(right.polys, N)
-    elseif P.bx2 < mx then
+    elseif P.bx2 < mx+0.5 then
       table.insert(left.polys, N)
     else
       table.insert(right.polys, N)
@@ -709,7 +734,7 @@ function SPACE_CLASS.cut_in_half_Y(self, my)
       local N2 = N:cut(0, my, 40, my)
       table.insert(bottom.polys,  N)
       table.insert(top.polys, N2)
-    elseif P.by2 < my then
+    elseif P.by2 < my+0.5 then
       table.insert(bottom.polys, N)
     else
       table.insert(top.polys, N)
@@ -736,6 +761,10 @@ function SPACE_CLASS.intersect_rect(self, x1, y1, x2, y2)
   -- produces a new space by intersecting this space with the
   -- given rectangle.  Coordinates may be NIL, and this means
   -- that coordinate is +/- infinity.
+
+  if not (x1 or y1 or x2 or y2) then
+    return self:copy()
+  end
 
   local result = self
   local temp
