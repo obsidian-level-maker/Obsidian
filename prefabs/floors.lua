@@ -41,6 +41,69 @@
 ----------------------------------------------------------------
 
 
+PREFAB.H1_DOWN_1 =
+{
+  placement = "fitted",
+
+  shape = "H",
+
+  brushes =
+  {
+    -- new floor area : left side
+    {
+      { m = "floor", space = "new" },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 512 },
+      { x =   0, y = 512 },
+    },
+
+    -- old floor area : right side
+    {
+      { m = "floor", space = "old" },
+      { x = 256, y =   0 },
+      { x = 512, y =   0 },
+      { x = 512, y = 512 },
+      { x = 256, y = 512 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = "old" },
+      { x = 256, y =   0 },
+      { x = 304, y =   0 },
+      { x = 304, y =  64 },
+      { x = 256, y =  64 },
+    },
+
+    {
+      { m = "walk", space = "new", walk_dz = -24 },
+      { x = 208, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y =  64 },
+      { x = 208, y =  64 },
+    },
+
+    -- new safe zones
+    {
+      { m = "zone", space = "new" },
+      { x =   0, y =   0 },
+      { x = 208, y =   0 },
+      { x = 208, y = 512 },
+      { x =   0, y = 512 },
+    },
+
+    {
+      { m = "zone", space = "old" },
+      { x = 304, y =   0 },
+      { x = 512, y =   0 },
+      { x = 512, y = 512 },
+      { x = 304, y = 512 },
+    },
+  },
+}
+
+
 PREFAB.H1_DOWN_4 =
 {
   placement = "fitted",
