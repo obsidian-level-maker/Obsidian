@@ -38,6 +38,14 @@ function stderrf(fmt, ...)
   end
 end
 
+function math.round(x)
+  if x < 0 then
+    return math.ceil(x - 0.5)
+  else
+    return math.floor(x + 0.5)
+  end
+end
+
 function math.clamp(low, x, high)
   if x < low  then return low end
   if x > high then return high end
