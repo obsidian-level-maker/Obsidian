@@ -3,8 +3,11 @@ V4 TODO
 =======
 
 
->>>  stairs :-)
++  allow more than one safe zone per floor
 
+-  floor prefabs (ETC) should be as small as possible
+
+?  remove R.wall_space, merely collect the polygons and test them
 
 -  in a large (multi-section) room, if any section has no connection
    and no items or switches -- then give it a nice pickup item (etc)
