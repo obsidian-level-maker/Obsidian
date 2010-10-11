@@ -73,7 +73,7 @@ PREFAB.H1_DOWN_4 =
       { x = 208, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 240, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 240, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 209, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 208, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = -48, mat = "?top", light = "?light" },
     },
 
