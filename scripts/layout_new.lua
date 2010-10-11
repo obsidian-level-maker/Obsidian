@@ -1750,7 +1750,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
 
 
-    local fab = "H1_DOWN_4"
+    local fab = "H1_DOWN_1"
     local info = PREFAB[fab]
     if not info then error("unknown floor prefab: " .. tostring(fab)) end
 
@@ -2026,7 +2026,7 @@ gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
 
     Fabricate(PF.fab, PF.trans, PF.skin1, PF.skin2, PF.skin3)
 
-    -- FIXME: separate this e.g. R.height_links[]
+    -- FIXME: do this in assign_floor_heights OR render_floors
     if PF.set_height_in then
       assert(PF.z)
       local other_R = PF.set_height_in
