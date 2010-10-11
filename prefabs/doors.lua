@@ -165,6 +165,12 @@ PREFAB.ARCH_W_STAIR =
 
   room_dz = 80,
 
+  defaults =
+  {
+    top = "?step",
+    outer = "?wall",
+  },
+
   brushes =
   {
     -- frame
@@ -199,7 +205,7 @@ PREFAB.ARCH_W_STAIR =
       { x = 176, y =  0, mat = "?step" },
       { x = 176, y = 32, mat = "?step" },
       { x =  16, y = 32, mat = "?step" },
-      { t = 64, mat = "top" },
+      { t = 64, mat = "?top" },
     },
 
     {
@@ -208,7 +214,7 @@ PREFAB.ARCH_W_STAIR =
       { x = 176, y = 32, mat = "?step" },
       { x = 176, y = 64, mat = "?step" },
       { x =  16, y = 64, mat = "?step" },
-      { t = 48, mat = "top" },
+      { t = 48, mat = "?top" },
     },
 
     {
@@ -217,7 +223,7 @@ PREFAB.ARCH_W_STAIR =
       { x = 176, y = 64, mat = "?step" },
       { x = 176, y = 96, mat = "?step" },
       { x =  16, y = 96, mat = "?step" },
-      { t = 32, mat = "top" },
+      { t = 32, mat = "?top" },
     },
 
     {
@@ -226,7 +232,7 @@ PREFAB.ARCH_W_STAIR =
       { x = 176, y =  96, mat = "?step" },
       { x = 176, y = 128, mat = "?step" },
       { x =  16, y = 128, mat = "?step" },
-      { t = 16, mat = "top" },
+      { t = 16, mat = "?top" },
     },
   },
 }
