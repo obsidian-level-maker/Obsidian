@@ -77,7 +77,7 @@ PREFAB.H1_DOWN_1 =
     },
 
     {
-      { m = "walk", space = "new", walk_dz = -24 },
+      { m = "walk", space = "new", walk_dz = -16 },
       { x = 208, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y =  64 },
@@ -191,6 +191,26 @@ PREFAB.H1_DOWN_4 =
       { x = 512, y = 512 },
       { x = 400, y = 512 },
     },
+
+--[[ FENCE TEST
+    {
+      { m = "solid", outlier = 1 },
+      { x = 248, y = -128, mat = "?wall" },
+      { x = 264, y = -128, mat = "?wall" },
+      { x = 264, y =  128, mat = "?wall" },
+      { x = 248, y =  128, mat = "?wall" },
+      { t = 32, mat = "?wall" },
+    },
+
+    {
+      { m = "solid", outlier = 1 },
+      { x = 248, y = 384, mat = "?wall" },
+      { x = 264, y = 384, mat = "?wall" },
+      { x = 264, y = 640, mat = "?wall" },
+      { x = 248, y = 640, mat = "?wall" },
+      { t = 32, mat = "?wall" },
+    },
+--]]
   },
 }
 
