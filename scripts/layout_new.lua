@@ -1418,25 +1418,28 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function transmit_height(PF, z)
-    if not PF.z or z > PF.z then
-      PF.z = z
+  local function transmit_height_to_fabs(floor, z)
+    for _,PF in ipairs(floor.fabs) do
+stderrf("***************** %s --> %d\n", PF.fab, z)
+      if not PF.z or z > PF.z then
+        PF.z = z
+      end
     end
   end
 
 
-  local function transmit_height_to_prefabs(floor, z)
+  local function collect_floor_fabs(floor)
     for _,G in ipairs(floor.walks) do
       for _,P in ipairs(G.polys) do
         if P.post_fab then
-          transmit_height(P.post_fab, z)
+          table.insert(floor.fabs, P.post_fab)
         end
       end
     end
 
-    for _,P in ipairs(floor.airs) do
-      if P.post_fab then
-        transmit_height(P.post_fab, z)
+    for _,A in ipairs(floor.airs) do
+      if A.post_fab then
+        table.insert(floor.fabs, A.post_fab)
       end
     end
   end
@@ -1460,16 +1463,16 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
       Trans.brush(BRUSH)
     end
 
-    transmit_height_to_prefabs(floor, floor.z)
+    transmit_height_to_fabs(floor, floor.z)
   end
 
 
   local function transfer_walks(floor, loc, floor1, floor2)
     for _,G in ipairs(floor.walks) do
       if (loc.x and G.x1 < loc.x) or (loc.y and G.y1 < loc.y) then
-        table.insert(floor1.walks, G)
-      else
         table.insert(floor2.walks, G)
+      else
+        table.insert(floor1.walks, G)
       end
     end
 
@@ -1482,10 +1485,10 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     -- airs may overlap both halves
     for _,A in ipairs(floor.airs) do
       if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
-        table.insert(floor1.airs, A)
+        table.insert(floor2.airs, A)
       end
       if (loc.x and A.bx2 > loc.x) or (loc.y and A.by2 > loc.y) then
-        table.insert(floor2.airs, A)
+        table.insert(floor1.airs, A)
       end
     end
   end
@@ -1643,7 +1646,7 @@ gui.debugf("[all locs failed]\n")
 
 
   local function subdivide_floor(floor, recurse_lev)
-    gui.debugf("\nsubdivide_floor in %s\n", R:tostr())
+    gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
     gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
                floor.zone.x1, floor.zone.y1,
                floor.zone.x2, floor.zone.y2, #floor.walks)
@@ -1672,8 +1675,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     ----- DO THE SUBDIVISION -----
 
-    local floor1 = { walks={}, airs={} }
-    local floor2 = { walks={}, airs={} }
+    local floor1 = { walks={}, airs={}, fabs={} }
+    local floor2 = { walks={}, airs={}, fabs={} }
 
 
     -- FIXME: assuming here no walks or airs in the safe zone
@@ -1764,6 +1767,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- FIXME: only process the skins ONCE
     table.insert(R.post_fabs, POST_FAB)
+    table.insert(floor1.fabs, POST_FAB)
 
     Trans.set_override(floor_check_brush, POST_FAB)
 
@@ -1924,6 +1928,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       zone  = safe_walking_zone(),
       walks = collect_walk_groups(),
       airs  = collect_airs(),
+      fabs  = {},
     }
 
     R.all_floors = {}
@@ -1934,11 +1939,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     assign_floor_heights()
 
     for _,F in ipairs(R.all_floors) do
+      collect_floor_fabs(F)
+
       render_floor(F)
 
 --[[ TEST : fill SWZ with a solid
       if F.zone.x2 >= F.zone.x1+16 and F.zone.y2 >= F.zone.y1+16 then
-        Trans.quad(zone.x1, zone.y1, zone.x2, zone.y2, nil, nil, Mat_normal("ASHWALL"))
+        Trans.quad(F.zone.x1, F.zone.y1, F.zone.x2, F.zone.y2, nil, nil, Mat_normal("ASHWALL"))
       end
 --]]
     end
