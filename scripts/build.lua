@@ -942,7 +942,7 @@ function Fab_size_stuff(fab, T, brushes)
     for _,B in ipairs(brushes) do
       if B[1].insider or not (B[1].m == "walk"  or B[1].m == "air" or
                               B[1].m == "zone"  or B[1].m == "nosplit" or
-                              B[1].m == "light" or B[1].outsider)
+                              B[1].m == "light" or B[1].outlier)
       then
         for _,C in ipairs(B) do
 
