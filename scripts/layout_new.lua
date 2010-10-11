@@ -1418,12 +1418,17 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function transmit_height(PF, z)
+stderrf("***************** %s --> %d\n", PF.fab, z)
+    if not PF.z or z > PF.z then
+      PF.z = z
+    end
+  end
+
+
   local function transmit_height_to_fabs(floor, z)
     for _,PF in ipairs(floor.fabs) do
-stderrf("***************** %s --> %d\n", PF.fab, z)
-      if not PF.z or z > PF.z then
-        PF.z = z
-      end
+      transmit_height(PF, z)
     end
   end
 
@@ -1433,6 +1438,12 @@ stderrf("***************** %s --> %d\n", PF.fab, z)
       for _,P in ipairs(G.polys) do
         if P.post_fab then
           table.insert(floor.fabs, P.post_fab)
+        end
+      end
+
+      if G.fabs then
+        for _,PF in ipairs(G.fabs) do
+          table.insert(floor.fabs, PF)
         end
       end
     end
@@ -1482,7 +1493,7 @@ stderrf("***************** %s --> %d\n", PF.fab, z)
 
 
   local function transfer_airs(floor, loc, floor1, floor2)
-    -- airs may overlap both halves
+    -- air spaces may exist in both halves
     for _,A in ipairs(floor.airs) do
       if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
         table.insert(floor2.airs, A)
@@ -1528,8 +1539,10 @@ stderrf("***************** %s --> %d\n", PF.fab, z)
 
       if coords[1].space == "old" then
         table.insert(data.floor1.walks, G)
+        if not data.walk1 then data.walk1 = G end
       elseif coords[1].space == "new" then
         table.insert(data.floor2.walks, G)
+        if not data.walk2 then data.walk2 = G end
       else
         error("bad or missing space field in walk brush")
       end
@@ -1609,7 +1622,7 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
       return nil
     end
 
-    if zone_dx < 264 or zone_dy < 264 then
+    if zone_dx <  64 or zone_dy <  64 then
 gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
       return nil  -- not enough room to swing a cat
     end
@@ -1656,8 +1669,7 @@ gui.debugf("[all locs failed]\n")
 
     local loc
 
-    -- !!!
-    if recurse_lev == 1 and #floor.walks >= 2 then
+    if recurse_lev <= 4 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
@@ -1692,22 +1704,24 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local y2 = floor.zone.y2
 
 
+    local old_space = floor.space
+
     if loc.x then
 
       local bx = loc.bx or loc.x  -- TODO
       local tx = loc.tx or loc.x
 
-      local left_bottom = floor.space:intersect_rect(nil, nil, bx, y1)
-      local left_mid    = floor.space:intersect_rect(nil,  y1, x1, y2)
-      local left_top    = floor.space:intersect_rect(nil,  y2, tx, nil)
+      local left_bottom = old_space:intersect_rect(nil, nil, bx, y1)
+      local left_mid    = old_space:intersect_rect(nil,  y1, x1, y2)
+      local left_top    = old_space:intersect_rect(nil,  y2, tx, nil)
 
       floor2.space = left_bottom
       floor2.space:raw_union(left_mid)
       floor2.space:raw_union(left_top)
 
-      local right_bottom = floor.space:intersect_rect(bx, nil, nil, y1)
-      local right_mid    = floor.space:intersect_rect(x2,  y1, nil, y2)
-      local right_top    = floor.space:intersect_rect(tx,  y2, nil, nil)
+      local right_bottom = old_space:intersect_rect(bx, nil, nil, y1)
+      local right_mid    = old_space:intersect_rect(x2,  y1, nil, y2)
+      local right_top    = old_space:intersect_rect(tx,  y2, nil, nil)
 
       floor1.space = right_bottom
       floor1.space:raw_union(right_mid)
@@ -1718,17 +1732,17 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       local ly = loc.ly or loc.y  -- TODO
       local ry = loc.ry or loc.y
 
-      local bottom_left  = floor.space:intersect_rect(nil, nil, x1, ly)
-      local bottom_mid   = floor.space:intersect_rect(x1, nil, x2, y1)
-      local bottom_right = floor.space:intersect_rect(x2, nil, nil, ry)
+      local bottom_left  = old_space:intersect_rect(nil, nil, x1, ly)
+      local bottom_mid   = old_space:intersect_rect(x1, nil, x2, y1)
+      local bottom_right = old_space:intersect_rect(x2, nil, nil, ry)
 
       floor2.space = bottom_left
       floor2.space:raw_union(bottom_mid)
       floor2.space:raw_union(bottom_right)
 
-      local top_left  = floor.space:intersect_rect(nil, ly, x1, nil)
-      local top_mid   = floor.space:intersect_rect(x1, y2, x2, nil)
-      local top_right = floor.space:intersect_rect(x2, ry, nil, nil)
+      local top_left  = old_space:intersect_rect(nil, ly, x1, nil)
+      local top_mid   = old_space:intersect_rect(x1, y2, x2, nil)
+      local top_right = old_space:intersect_rect(x2, ry, nil, nil)
 
       floor1.space = top_left
       floor1.space:raw_union(top_mid)
@@ -1767,7 +1781,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- FIXME: only process the skins ONCE
     table.insert(R.post_fabs, POST_FAB)
-    table.insert(floor1.fabs, POST_FAB)
 
     Trans.set_override(floor_check_brush, POST_FAB)
 
@@ -1776,10 +1789,31 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     Trans.clear_override()
 
 
+    -- the prefab for this floor is associated with it's first walk area
+    -- in the old space.  That is the mechanism which allows the old
+    -- space to tbe further sub-divided and yet allow the prefab to
+    -- get the correct floor height.
+    assert(POST_FAB.walk1)
+
+    if not POST_FAB.walk1.fabs then POST_FAB.walk1.fabs = {} end
+
+    table.insert(POST_FAB.walk1.fabs, POST_FAB)
+
+
+--[[
+gui.debugf("\nold_space\n--------------\n")   ; old_space:dump()
+gui.debugf("\nfloor.space\n--------------\n") ; floor1.space:dump()
+gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
+--]]
+
+
+    -- similar logic for stairs, use the walk area to determine the
+    -- correct floor -- cannot reference the floor directly since
+    -- they "die" when they are split into two.
     local STAIR =
     {
-      floor1 = floor1,
-      floor2 = floor2,
+      walk1 = assert(POST_FAB.walk1),
+      walk2 = assert(POST_FAB.walk2),
 
       delta = assert(POST_FAB.walk_dz),
     }
@@ -1875,8 +1909,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for loop = 1, 2*#R.all_floors do
       for _,ST in ipairs(R.all_stairs) do
-        local F1 = assert(ST.floor1)
-        local F2 = assert(ST.floor2)
+        local F1 = assert(ST.walk1.floor)
+        local F2 = assert(ST.walk2.floor)
         assert(ST.delta)
 
         if F1.z and not F2.z then F2.z = F1.z + ST.delta end
