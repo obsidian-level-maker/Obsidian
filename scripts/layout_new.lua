@@ -1326,28 +1326,32 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function transfer_walks(floor, loc, floor1, floor2)
+  local function transfer_walks(floor, loc, new_floors)
     for _,G in ipairs(floor.walks) do
-      if (loc.x and G.x1 < loc.x) or (loc.y and G.y1 < loc.y) then
-        table.insert(floor2.walks, G)
-      else
-        table.insert(floor1.walks, G)
-      end
-    end
+      local space = find_walk_in_neighborhood(loc.neighbor, loc.base_x, loc.base_y, G.x1,G.y1, G.x2,G.y2)
+      
+      assert(space >= 1)
+      assert(new_floors[space])
 
-    assert(#floor1.walks >= 1)
-    assert(#floor2.walks >= 1)
+      table.insert(new_floors[space].walks, G)
+    end
   end
 
 
-  local function transfer_airs(floor, loc, floor1, floor2)
+  local function transfer_airs(floor, loc, new_floors)
     -- air spaces may exist in both halves
+
     for _,A in ipairs(floor.airs) do
-      if (loc.x and A.bx1 < loc.x) or (loc.y and A.by1 < loc.y) then
-        table.insert(floor2.airs, A)
-      end
-      if (loc.x and A.bx2 > loc.x) or (loc.y and A.by2 > loc.y) then
-        table.insert(floor1.airs, A)
+      local space = find_walk_in_neighborhood(loc.neighbor, loc.base_x, loc.base_y, A.bx1,A.by1, A.bx2,A.by2)
+
+      if space >= 1 then
+        assert(new_floors[space])
+        table.insert(new_floors[space].airs, A)
+      else
+        -- add it to all floors (FIXME)
+        for _,F in ipairs(new_floors) do
+          table.insert(F.airs, A)
+        end
       end
     end
   end
@@ -1362,16 +1366,23 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     local m = coords[1].m
 
     if m == "floor" then
-      local POLY = POLYGON_CLASS.from_brush("free", coords)
-      if coords[1].space == "old" then
-        data.floor1.space:merge(POLY)
-      elseif coords[1].space == "new" then
-        data.floor2.space:merge(POLY)
-      else
+      local space = coords[1].space
+      if not space then
         error("bad or missing space field in floor brush")
       end
 
+      local F = data.new_floors[space]
+      local POLY = POLYGON_CLASS.from_brush("free", coords)
+
+      F.space:merge(POLY)
+
     elseif m == "walk" then
+      local space = coords[1].space
+      if not space then
+        error("bad or missing space field in walk brush")
+      end
+
+      local F = data.new_floors[space]
       local POLY = POLYGON_CLASS.from_brush("walk", coords)
 
       -- new walk group
@@ -1385,32 +1396,10 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
       if G.walk_dz then data.walk_dz = G.walk_dz end
 
-      if coords[1].space == "old" then
-        table.insert(data.floor1.walks, G)
-        if not data.walk1 then data.walk1 = G end
-      elseif coords[1].space == "new" then
-        table.insert(data.floor2.walks, G)
-        if not data.walk2 then data.walk2 = G end
-      else
-        error("bad or missing space field in walk brush")
-      end
+      table.insert(F.walks, G)
 
-    elseif m == "zone" then
-      -- hack, use polygon class to get bbox
-      local POLY = POLYGON_CLASS.from_brush("free", coords)
-
-      local zone =
-      {
-        x1 = POLY.bx1, y1 = POLY.by1,
-        x2 = POLY.bx2, y2 = POLY.by2,
-      }
-
-      if coords[1].space == "old" then
-        data.floor1.zone = zone
-      elseif coords[1].space == "new" then
-        data.floor2.zone = zone
-      else
-        error("bad or missing space field in zone brush")
+      if not data.new_walks[space] then
+        data.new_walks[space] = G
       end
     end
 
@@ -1429,19 +1418,19 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function find_walk_in_neighborhood(nblist, base_x, base_y, G)
+  local function find_walk_in_neighborhood(nblist, base_x, base_y, x1,y1, x2,y2)
 
     -- FIXME: this fails if a walk group crosses the line where two
     --        rectangles of the same space touch.
 
+    x1 = x1 - base_x
+    y1 = y1 - base_y
+
+    x2 = x2 - base_x
+    y2 = y2 - base_y
+
     for _,NB in nblist do
       if not NB.m then
-        local x1 = G.x1 - base_x
-        local y1 = G.y1 - base_y
-
-        local x2 = G.x2 - base_x
-        local y2 = G.y2 - base_y
-
         if inside_nb_rect(NB, x1,y1, x2,y2) then
           return assert(NB.space)
         end
@@ -1480,7 +1469,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     local walk_counts = {}
 
     for _,G in ipairs(floor.walks) do
-      local space = find_walk_in_neighborhood(neighborhood, base_x, base_y, G)
+      local space = find_walk_in_neighborhood(neighborhood, base_x, base_y, G.x1,G.y1, G.x2,G.y2)
 
       if space < 0 then
         return false  -- the group was cut
@@ -1494,6 +1483,26 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     end
 
     return true  -- OK
+  end
+
+
+  local function space_from_neighborhood(old_space, space_index, loc)
+    local new_space = SPACE_CLASS.new()
+
+    for _,NB in ipairs(loc.neighborhood) do
+      local x1, y1, x2, y2
+
+      if NB.x1 then x1 = loc.base_x + NB.x1 end
+      if NB.y1 then y1 = loc.base_y + NB.y1 end
+      if NB.x2 then x2 = loc.base_x + NB.x2 end
+      if NB.y2 then y2 = loc.base_y + NB.y2 end
+
+      local piece = old_space:intersect_rect(x1, y1, x2, y2)
+
+      new_space:raw_union(piece)
+    end
+
+    return new_space
   end
 
 
@@ -1574,7 +1583,7 @@ gui.debugf("[all locs failed]\n")
 
     -- !!!!
     if recurse_lev <= 1 and #floor.walks >= 2 then
-      loc = choose_division(floor, fab_info)
+      loc = choose_division(floor)
     end
 
 gui.debugf("location =\n%s\n", table.tostr(loc, 3))
@@ -1587,6 +1596,64 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
       return
     end
+
+
+    ----- DO THE SUBDIVISION -----
+
+    local fab_info   = PREFAB[loc.fab]
+    local num_spaces = fab_info.num_spaces or 2
+
+    local new_floors = {}
+
+    for i = 1,num_spaces do
+      new_floors[i] = { walks={}, airs={}, fabs={} }
+    end
+
+    transfer_walks(floor, loc, new_floors)
+    transfer_airs (floor, loc, new_floors)
+
+    local old_space = floor.space
+
+    for idx,F in ipairs(new_floors) do
+      F.space = space_from_neighborhood(old_space, idx, loc)
+    end
+
+
+    local T = Trans.box_transform(loc.x1, loc.y1, loc.x2, loc.y2, 0,
+                                  2)  -- FIXME convert rotate to DIR
+
+    local skin = { top="FLAT23" }
+
+    -- save info to render it later
+    local POST_FAB =
+    {
+      fab = fab,
+      trans = T,
+
+      skin1 = skin1,
+      skin2 = skin2,
+      skin3 = skin3,
+
+      R = R,
+      fab_tag = Plan_alloc_mark(),
+
+      polys = {},
+
+      loc = loc,
+      new_floors = new_floors,
+      new_walks = {},
+    }
+
+    -- FIXME: only process the skins ONCE
+    table.insert(R.post_fabs, POST_FAB)
+
+    Trans.set_override(floor_check_brush, POST_FAB)
+
+    Fabricate(fab, T, skin)
+
+    Trans.clear_override()
+
+    ....
   end
 
 
