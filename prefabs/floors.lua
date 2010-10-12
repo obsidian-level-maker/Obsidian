@@ -45,57 +45,60 @@ PREFAB.H1_DOWN_1 =
 {
   placement = "fitted",
 
+  x_size = 256,
+  y_size = 256,
+
   brushes =
   {
     -- new floor area : left side
     {
       { m = "floor", space = 2 },
       { x =   0, y =   0 },
-      { x = 256, y =   0 },
-      { x = 256, y = 512 },
-      { x =   0, y = 512 },
+      { x = 128, y =   0 },
+      { x = 128, y = 256 },
+      { x =   0, y = 256 },
     },
 
     -- old floor area : right side
     {
       { m = "floor", space = 1 },
+      { x = 128, y =   0 },
       { x = 256, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x = 256, y = 512 },
+      { x = 256, y = 256 },
+      { x = 128, y = 256 },
     },
 
     -- walk areas
     {
       { m = "walk", space = 1 },
-      { x = 256, y =   0 },
-      { x = 304, y =   0 },
-      { x = 304, y =  64 },
-      { x = 256, y =  64 },
+      { x = 128, y =   0 },
+      { x = 176, y =   0 },
+      { x = 176, y =  64 },
+      { x = 128, y =  64 },
     },
 
     {
       { m = "walk", space = 2, walk_dz = -16 },
-      { x = 208, y =   0 },
-      { x = 256, y =   0 },
-      { x = 256, y =  64 },
-      { x = 208, y =  64 },
+      { x =  80, y =   0 },
+      { x = 128, y =   0 },
+      { x = 128, y =  64 },
+      { x =  80, y =  64 },
     },
   },
 
   neighborhood =
   {
-    { space = 2, x2 = 256, y2 = 0 },
-    { space = 2, x2 = 256, y1 = 512 },
-    { space = 2, x2 = 0,   y1 = 0, y2 = 512 },
+    { space = 2, x2 = 128, y2 = 0 },
+    { space = 2, x2 = 128, y1 = 256 },
+    { space = 2, x2 = 0,   y1 = 0, y2 = 256 },
 
-    { space = 1, x1 = 256, y2 = 0 },
-    { space = 1, x1 = 256, y1 = 512 },
-    { space = 1, x1 = 512, y1 = 0, y2 = 512 },
+    { space = 1, x1 = 128, y2 = 0 },
+    { space = 1, x1 = 128, y1 = 256 },
+    { space = 1, x1 = 256, y1 = 0, y2 = 256 },
 
     -- new safe zones
-    { m = "zone", space = 1, x1 = 304 },
-    { m = "zone", space = 2, x2 = 208 },
+    { m = "zone", space = 1, x1 = 152 },
+    { m = "zone", space = 2, x2 = 104 },
   },
 }
 
@@ -104,105 +107,88 @@ PREFAB.H1_DOWN_4 =
 {
   placement = "fitted",
 
+  x_size = 256,
+  y_size = 256,
+
   brushes =
   {
     -- new floor area : left side
     {
       { m = "floor", space = 2 },
       { x =   0, y =   0 },
-      { x = 256, y =   0 },
-      { x = 256, y = 512 },
-      { x =   0, y = 512 },
+      { x = 128, y =   0 },
+      { x = 128, y = 256 },
+      { x =   0, y = 256 },
     },
 
     -- old floor area : right side
     {
       { m = "floor", space = 1 },
+      { x = 128, y =   0 },
       { x = 256, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x = 256, y = 512 },
+      { x = 256, y = 256 },
+      { x = 128, y = 256 },
     },
 
     -- steps
     {
       { m = "solid", flavor = "floor:3" },
-      { x = 208, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 240, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 240, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 208, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 104, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 120, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 120, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 104, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = -48, mat = "?top", light = "?light" },
     },
 
     {
       { m = "solid", flavor = "floor:3" },
-      { x = 240, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 272, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 272, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 240, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 120, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 136, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 136, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 120, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = -32, mat = "?top", light = "?light" },
     },
 
     {
       { m = "solid", flavor = "floor:3" },
-      { x = 272, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 304, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 304, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = 272, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 136, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 152, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 152, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 136, y = 192, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = -16, mat = "?top", light = "?light" },
     },
 
     -- walk areas
     {
       { m = "walk", space = 1 },
-      { x = 304, y = 128 },
-      { x = 400, y = 128 },
-      { x = 400, y = 384 },
-      { x = 304, y = 384 },
+      { x = 152, y =  64 },
+      { x = 200, y =  64 },
+      { x = 200, y = 192 },
+      { x = 152, y = 192 },
     },
 
     {
       { m = "walk", space = 2, walk_dz = -64 },
-      { x = 112, y = 128 },
-      { x = 208, y = 128 },
-      { x = 208, y = 384 },
-      { x = 112, y = 384 },
+      { x =  56, y =  64 },
+      { x = 104, y =  64 },
+      { x = 104, y = 192 },
+      { x =  56, y = 192 },
     },
-
---[[ FENCE TEST
-    {
-      { m = "solid", outlier = 1 },
-      { x = 248, y = -128, mat = "?wall" },
-      { x = 264, y = -128, mat = "?wall" },
-      { x = 264, y =  128, mat = "?wall" },
-      { x = 248, y =  128, mat = "?wall" },
-      { t = 32, mat = "?wall" },
-    },
-
-    {
-      { m = "solid", outlier = 1 },
-      { x = 248, y = 384, mat = "?wall" },
-      { x = 264, y = 384, mat = "?wall" },
-      { x = 264, y = 640, mat = "?wall" },
-      { x = 248, y = 640, mat = "?wall" },
-      { t = 32, mat = "?wall" },
-    },
---]]
   },
 
   neighborhood =
   {
-    { space = 2, x2 = 256, y2 = 0 },
-    { space = 2, x2 = 256, y1 = 512 },
-    { space = 2, x2 = 0,   y1 = 0, y2 = 512 },
+    { space = 2, x2 = 128, y2 = 0 },
+    { space = 2, x2 = 128, y1 = 256 },
+    { space = 2, x2 = 0,   y1 = 0, y2 = 256 },
 
-    { space = 1, x1 = 256, y2 = 0 },
-    { space = 1, x1 = 256, y1 = 512 },
-    { space = 1, x1 = 512, y1 = 0, y2 = 512 },
+    { space = 1, x1 = 128, y2 = 0 },
+    { space = 1, x1 = 128, y1 = 256 },
+    { space = 1, x1 = 256, y1 = 0, y2 = 256 },
 
     -- new safe zones
-    { m = "zone", space = 1, x1 = 400 },
-    { m = "zone", space = 2, x2 = 112 },
+    { m = "zone", space = 1, x1 = 200 },
+    { m = "zone", space = 2, x2 =  56 },
   },
 }
 
