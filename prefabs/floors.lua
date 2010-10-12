@@ -101,6 +101,21 @@ PREFAB.H1_DOWN_1 =
       { x = 304, y = 512 },
     },
   },
+
+  neighborhood =
+  {
+    { m = "new", x2 = 256, y2 = 0 },
+    { m = "new", x2 = 256, y1 = 512 },
+    { m = "new", x2 = 0,   y1 = 0, y2 = 512 },
+
+    { m = "old", x1 = 256, y2 = 0 },
+    { m = "old", x1 = 256, y1 = 512 },
+    { m = "old", x1 = 512,   y1 = 0, y2 = 512 },
+
+    { m = "zone", space = "old", x1 = 304 },
+
+    { m = "zone", space = "new", x2 = 208 },
+  },
 }
 
 
