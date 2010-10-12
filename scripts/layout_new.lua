@@ -1512,15 +1512,17 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     local new_zone = table.copy(old_zone)
 
     for _,NB in ipairs(loc.neighborhood) do
-      if not NB.m and NB.space == space_index then
+      if NB.m == "zone" and NB.space == space_index then
         if NB.x1 then new_zone.x1 = NB.x1 end
         if NB.y1 then new_zone.y1 = NB.y1 end
         if NB.x2 then new_zone.x2 = NB.x2 end
         if NB.y2 then new_zone.y2 = NB.y2 end
+
+        return new_zone -- FIXME: multiple zones
       end
     end
 
-    return new_zone
+    error("floor prefab missing zone for space " .. tostring(space_index))
   end
 
 
@@ -1558,8 +1560,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
     -- FIXME: rotations!! 
 
-    --!!!!!! FIXME 1,3
-    for xp = 1,3 do for yp = 1,1 do
+    for xp = 1,3 do for yp = 1,3 do
       local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
       local can_y = (yp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
 
@@ -1603,7 +1604,7 @@ gui.debugf("[all locs failed]\n")
     local loc
 
     -- !!!!
-    if recurse_lev <= 3 and #floor.walks >= 2 then
+    if recurse_lev <= 4 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
@@ -1721,7 +1722,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     local loc
 
-    if recurse_lev <= 4 and #floor.walks >= 2 then
+    if recurse_lev <= 5 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
