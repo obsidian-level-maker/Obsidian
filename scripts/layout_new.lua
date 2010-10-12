@@ -1543,12 +1543,22 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     local fab = "H1_DOWN_4"
     local fab_info = assert(PREFAB[fab])
 
-    local extra_x = zone_dx - fab_info.x_size
-    local extra_y = zone_dy - fab_info.y_size
+    -- FIXME: ARGH, rotate affects size
+    local rotate = 90
+
+    local x_size = fab_info.x_size
+    local y_size = fab_info.y_size
+
+    if rotate == 90 or rotate == 270 then
+      x_size, y_size = y_size, x_size
+    end
+
+    local extra_x = zone_dx - x_size
+    local extra_y = zone_dy - y_size
 
     if extra_x < 0 or extra_y < 0 then
 gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
-           fab_info.x_size, fab_info.y_size)
+           x_size, y_size)
       return nil
     end
 
@@ -1566,16 +1576,16 @@ gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
 
       if can_x and can_y then
         local x1, x2
-        if xp == 1 then x1 = zone.x1 ; x2 = x1 + fab_info.x_size end
-        if xp == 2 then x1 = zone.x1 + half_ex ; x2 = x1 + fab_info.x_size end
-        if xp == 3 then x2 = zone.x2 ; x1 = x2 - fab_info.x_size end
+        if xp == 1 then x1 = zone.x1 ; x2 = x1 + x_size end
+        if xp == 2 then x1 = zone.x1 + half_ex ; x2 = x1 + x_size end
+        if xp == 3 then x2 = zone.x2 ; x1 = x2 - x_size end
 
         local y1, y2
-        if yp == 1 then y1 = zone.y1 ; y2 = y1 + fab_info.y_size end
-        if yp == 2 then y1 = zone.y1 + half_ey ; y2 = y1 + fab_info.y_size end
-        if yp == 3 then y2 = zone.y2 ; y1 = y2 - fab_info.y_size end
+        if yp == 1 then y1 = zone.y1 ; y2 = y1 + y_size end
+        if yp == 2 then y1 = zone.y1 + half_ey ; y2 = y1 + y_size end
+        if yp == 3 then y2 = zone.y2 ; y1 = y2 - y_size end
 
-        table.insert(locs, { fab=fab, x1=x1, y1=y1, x2=x2, y2=y2, rotate=0 })
+        table.insert(locs, { fab=fab, x1=x1, y1=y1, x2=x2, y2=y2, rotate=rotate })
       end
     end end
 
@@ -1641,8 +1651,25 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
 
 
-    local T = Trans.box_transform(loc.x1, loc.y1, loc.x2, loc.y2, 0,
-                                  2)  -- FIXME convert rotate to DIR
+    -- create transform
+    local T = {}
+
+    T.add_x = loc.base_x
+    T.add_y = loc.base_y
+    T.add_z = 0  -- dummy value
+
+    T.rotate = loc.rotate
+
+    if loc.rotate == 90 or loc.rotate == 270 then
+      T.fit_width = loc.y2 - loc.y1
+      T.fit_depth = loc.x2 - loc.x1
+    elseif loc.rotate == 0 or loc.rotate == 180 then
+      T.fit_width = loc.x2 - loc.x1
+      T.fit_depth = loc.y2 - loc.y1
+    else
+      error("Bad floor rotate: " .. tostring(loc.rotate))
+    end
+
 
     local skin = { top="FLAT23" }
 
