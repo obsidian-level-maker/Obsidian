@@ -1221,6 +1221,52 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function neg_nb_coord(x)
+    if not x then return nil end
+    return -x
+  end
+
+  local function rotate_neighborhood_rect(NB, angle)
+    local NB2 = table.copy(NB)
+
+    if angle < 0 then angle = angle + 360 end
+    
+    if angle == 0 then
+      -- nothing needed
+    elseif angle == 90 then
+      NB2.y1 = NB.x1
+      NB2.y2 = NB.x2
+      NB2.x1 = neg_nb_coord(NB.y2)
+      NB2.x2 = neg_nb_coord(NB.y1)
+    elseif angle == 180 then
+      NB2.x1 = neg_nb_coord(NB.x2)
+      NB2.x2 = neg_nb_coord(NB.x1)
+      NB2.y1 = neg_nb_coord(NB.y2)
+      NB2.y2 = neg_nb_coord(NB.y1)
+    elseif angle == 270 then
+      NB2.x1 = NB.y1
+      NB2.x2 = NB.y2
+      NB2.y1 = neg_nb_coord(NB.x2)
+      NB2.y2 = neg_nb_coord(NB.x1)
+    else
+      error("bad angle for rotate_neighborhood_rect: " .. tostring(angle))
+    end
+
+    return NB2
+  end
+
+
+  local function rotate_neighborhood(list, angle)
+    local new_list = {}
+
+    for _,NB in ipairs(list) do
+      table.insert(new_list, rotate_neighborhood_rect(NB, angle))
+    end
+
+    return new_list
+  end
+
+
   local function transmit_height(PF, z)
     if not PF.z or z > PF.z then
       PF.z = z
