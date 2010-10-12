@@ -1256,14 +1256,34 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function rotate_neighborhood(list, angle)
-    local new_list = {}
+  local function translate_neighborhood(list, loc)
+    local new_nb = {}
 
     for _,NB in ipairs(list) do
-      table.insert(new_list, rotate_neighborhood_rect(NB, angle))
+      table.insert(new_nb, rotate_neighborhood_rect(NB, loc.rotate))
     end
 
-    return new_list
+    local base_x, base_y
+
+        if loc.rotate ==   0 then base_x, base_y = loc.x1, loc.y1
+    elseif loc.rotate ==  90 then base_x, base_y = loc.x2, loc.y1
+    elseif loc.rotate == 180 then base_x, base_y = loc.x2, loc.y2
+    elseif loc.rotate == 270 then base_x, base_y = loc.x1, loc.y2
+    else error("Bad rotate in floor loc")
+    end
+
+    loc.base_x = base_x
+    loc.base_y = base_y
+
+    for _,NB in ipairs(new_nb) do
+      if NB.x1 then NB.x1 = NB.x1 + base_x end
+      if NB.y1 then NB.y1 = NB.y1 + base_y end
+
+      if NB.x2 then NB.x2 = NB.x2 + base_x end
+      if NB.y2 then NB.y2 = NB.y2 + base_y end
+    end
+
+    return new_nb
   end
 
 
@@ -1326,9 +1346,37 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
+  local function inside_nb_rect(NB, x1,y1, x2,y2)
+    if NB.x1 and x1 < NB.x1 - 0.1 then return false end
+    if NB.x2 and x2 > NB.x2 + 0.1 then return false end
+
+    if NB.y1 and y1 < NB.y1 - 0.1 then return false end
+    if NB.y2 and y2 > NB.y2 + 0.1 then return false end
+
+    return true
+  end
+
+
+  local function find_walk_in_neighborhood(nb_list, x1,y1, x2,y2)
+
+    -- FIXME: this fails if a walk group crosses the line where two
+    --        rectangles of the same space touch.
+
+    for _,NB in ipairs(nb_list) do
+      if not NB.m then
+        if inside_nb_rect(NB, x1,y1, x2,y2) then
+          return assert(NB.space)
+        end
+      end
+    end
+
+    return -1  -- not found
+  end
+
+
   local function transfer_walks(floor, loc, new_floors)
     for _,G in ipairs(floor.walks) do
-      local space = find_walk_in_neighborhood(loc.neighbor, loc.base_x, loc.base_y, G.x1,G.y1, G.x2,G.y2)
+      local space = find_walk_in_neighborhood(loc.neighborhood, G.x1,G.y1, G.x2,G.y2)
       
       assert(space >= 1)
       assert(new_floors[space])
@@ -1342,7 +1390,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     -- air spaces may exist in both halves
 
     for _,A in ipairs(floor.airs) do
-      local space = find_walk_in_neighborhood(loc.neighbor, loc.base_x, loc.base_y, A.bx1,A.by1, A.bx2,A.by2)
+      local space = find_walk_in_neighborhood(loc.neighborhood, A.bx1,A.by1, A.bx2,A.by2)
 
       if space >= 1 then
         assert(new_floors[space])
@@ -1407,60 +1455,17 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function inside_nb_rect(NB, x1,y1, x2,y2)
-    if NB.x1 and x1 < NB.x1 - 0.1 then return false end
-    if NB.x2 and x2 > NB.x2 + 0.1 then return false end
-
-    if NB.y1 and y1 < NB.y1 - 0.1 then return false end
-    if NB.y2 and y2 > NB.y2 + 0.1 then return false end
-
-    return true
-  end
-
-
-  local function find_walk_in_neighborhood(nblist, base_x, base_y, x1,y1, x2,y2)
-
-    -- FIXME: this fails if a walk group crosses the line where two
-    --        rectangles of the same space touch.
-
-    x1 = x1 - base_x
-    y1 = y1 - base_y
-
-    x2 = x2 - base_x
-    y2 = y2 - base_y
-
-    for _,NB in nblist do
-      if not NB.m then
-        if inside_nb_rect(NB, x1,y1, x2,y2) then
-          return assert(NB.space)
-        end
-      end
-    end
-
-    return -1  -- not found
-  end
-
-
   local function check_floor_fab(floor, loc)
     -- Requirements:
     --   1. at least one walk group in each new space
     --   2. no walk group is "cut" by dividing lines
 
+gui.debugf("check_floor_fab:\n%s\n", table.tostr(loc, 1))
+
     local fab_info = PREFAB[loc.fab]
 
-    local neighborhood = rotate_neighborhood(floor.neighborhood, loc.rotate)
+    local neighborhood = translate_neighborhood(fab_info.neighborhood, loc)
 
-    local base_x, base_y
-
-        if loc.rotate ==   0 then base_x, base_y = loc.x1, loc.y1
-    elseif loc.rotate ==  90 then base_x, base_y = loc.x2, loc.y1
-    elseif loc.rotate == 180 then base_x, base_y = loc.x2, loc.y2
-    elseif loc.rotate == 270 then base_x, base_y = loc.x1, loc.y2
-    else error("Bad rotate in floor loc")
-    end
-
-    loc.base_x = base_x
-    loc.base_y = base_y
     loc.neighborhood = neighborhood
 
 
@@ -1469,15 +1474,17 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     local walk_counts = {}
 
     for _,G in ipairs(floor.walks) do
-      local space = find_walk_in_neighborhood(neighborhood, base_x, base_y, G.x1,G.y1, G.x2,G.y2)
+      local space = find_walk_in_neighborhood(neighborhood, G.x1,G.y1, G.x2,G.y2)
 
       if space < 0 then
+gui.debugf("  cut walk space: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
         return false  -- the group was cut
       end
 
       walk_counts[space] = 1
     end
 
+gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     for n = 1,num_spaces do
       if not walk_counts[n] then return false end
     end
@@ -1490,19 +1497,30 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     local new_space = SPACE_CLASS.new()
 
     for _,NB in ipairs(loc.neighborhood) do
-      local x1, y1, x2, y2
+      if not NB.m and NB.space == space_index then
+        local piece = old_space:intersect_rect(NB.x1, NB.y1, NB.x2, NB.y2)
 
-      if NB.x1 then x1 = loc.base_x + NB.x1 end
-      if NB.y1 then y1 = loc.base_y + NB.y1 end
-      if NB.x2 then x2 = loc.base_x + NB.x2 end
-      if NB.y2 then y2 = loc.base_y + NB.y2 end
-
-      local piece = old_space:intersect_rect(x1, y1, x2, y2)
-
-      new_space:raw_union(piece)
+        new_space:raw_union(piece)
+      end
     end
 
     return new_space
+  end
+
+
+  local function zone_from_neighborhood(old_zone, space_index, loc)
+    local new_zone = table.copy(old_zone)
+
+    for _,NB in ipairs(loc.neighborhood) do
+      if not NB.m and NB.space == space_index then
+        if NB.x1 then new_zone.x1 = NB.x1 end
+        if NB.y1 then new_zone.y1 = NB.y1 end
+        if NB.x2 then new_zone.x2 = NB.x2 end
+        if NB.y2 then new_zone.y2 = NB.y2 end
+      end
+    end
+
+    return new_zone
   end
 
 
@@ -1537,12 +1555,13 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     local half_ex = int(extra_x / 2)
     local half_ey = int(extra_y / 2)
 
+gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
     -- FIXME: rotations!! 
 
     --!!!!!! FIXME 1,3
-    for xp = 1,1 do for yp = 1,1 do
+    for xp = 1,3 do for yp = 1,1 do
       local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
-      local can_y = (xp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
+      local can_y = (yp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
 
       if can_x and can_y then
         local x1, x2
@@ -1567,12 +1586,14 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
       end
     end
 gui.debugf("[all locs failed]\n")
+
+    return nil
   end
 
 
   local function subdivide_floor(floor, recurse_lev)
     gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
-    gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
+    gui.debugf("safe zone: (%d %d) .. (%d %d)  walks:%d\n",
                floor.zone.x1, floor.zone.y1,
                floor.zone.x2, floor.zone.y2, #floor.walks)
     for _,G in ipairs(floor.walks) do
@@ -1582,7 +1603,7 @@ gui.debugf("[all locs failed]\n")
     local loc
 
     -- !!!!
-    if recurse_lev <= 1 and #floor.walks >= 2 then
+    if recurse_lev <= 3 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
@@ -1600,7 +1621,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     ----- DO THE SUBDIVISION -----
 
-    local fab_info   = PREFAB[loc.fab]
+    local fab        = loc.fab
+    local fab_info   = PREFAB[fab]
     local num_spaces = fab_info.num_spaces or 2
 
     local new_floors = {}
@@ -1612,10 +1634,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     transfer_walks(floor, loc, new_floors)
     transfer_airs (floor, loc, new_floors)
 
-    local old_space = floor.space
-
     for idx,F in ipairs(new_floors) do
-      F.space = space_from_neighborhood(old_space, idx, loc)
+      F.space = space_from_neighborhood(floor.space, idx, loc)
+      F.zone  =  zone_from_neighborhood(floor.zone,  idx, loc)
     end
 
 
@@ -1653,7 +1674,38 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     Trans.clear_override()
 
-    ....
+
+    -- the prefab for this floor is associated with it's first walk area
+    -- in the old space.  That is the mechanism which allows the old
+    -- space to tbe further sub-divided and yet allow the prefab to
+    -- get the correct floor height.
+    assert(POST_FAB.new_walks[1])
+
+    if not POST_FAB.new_walks[1].fabs then POST_FAB.new_walks[1].fabs = {} end
+
+    table.insert(POST_FAB.new_walks[1].fabs, POST_FAB)
+
+
+    -- similar logic for stairs, use the walk area to determine the
+    -- correct floor -- cannot reference the floor directly since
+    -- they "die" when they are split into two.
+
+    -- FIXME: does not handle triple spaces
+    local STAIR =
+    {
+      walk1 = assert(POST_FAB.new_walks[1]),
+      walk2 = assert(POST_FAB.new_walks[2]),
+
+      delta = assert(POST_FAB.walk_dz),
+    }
+
+    table.insert(R.all_stairs, STAIR)
+
+    -- recursively handle new pieces (order does not matter)
+
+    for _,F in ipairs(new_floors) do
+      subdivide_floor(F, recurse_lev+1)
+    end
   end
 
 
@@ -1880,7 +1932,7 @@ gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
     local floor =
     {
       space = Layout_initial_space(R),
-      zones = safe_walking_zone(),  -- TODO : a list of zones
+      zone  = safe_walking_zone(),  -- TODO : a list of zones
       walks = collect_walk_groups(),
       airs  = collect_airs(),
       fabs  = {},
