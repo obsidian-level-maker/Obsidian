@@ -1540,7 +1540,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H1_DOWN_4"
+    local fab = "L1_DOWN_4"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size

@@ -48,6 +48,21 @@ PREFAB.H1_DOWN_1 =
   x_size = 256,
   y_size = 256,
 
+  neighborhood =
+  {
+    { space = 2, x2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y1 = 256 },
+
+    { space = 1, x1 = 256 },
+    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 128, x2 = 256, y1 = 256 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x1 = 152 },
+    { m = "zone", space = 2, x2 = 104 },
+  },
+
   brushes =
   {
     -- new floor area : left side
@@ -85,21 +100,6 @@ PREFAB.H1_DOWN_1 =
       { x =  80, y =  64 },
     },
   },
-
-  neighborhood =
-  {
-    { space = 2, x2 = 0 },
-    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
-    { space = 2, x1 = 0, x2 = 128, y1 = 256 },
-
-    { space = 1, x1 = 256 },
-    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
-    { space = 1, x1 = 128, x2 = 256, y1 = 256 },
-
-    -- new safe zones
-    { m = "zone", space = 1, x1 = 152 },
-    { m = "zone", space = 2, x2 = 104 },
-  },
 }
 
 
@@ -109,6 +109,21 @@ PREFAB.H1_DOWN_4 =
 
   x_size = 256,
   y_size = 192,
+
+  neighborhood =
+  {
+    { space = 2, x2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y1 = 192 },
+
+    { space = 1, x1 = 256 },
+    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 128, x2 = 256, y1 = 192 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x1 = 200 },
+    { m = "zone", space = 2, x2 =  56 },
+  },
 
   brushes =
   {
@@ -175,20 +190,86 @@ PREFAB.H1_DOWN_4 =
       { x =  56, y = 144 },
     },
   },
+}
+
+
+
+PREFAB.L1_DOWN_4 =
+{
+  placement = "fitted",
+
+  x_size = 192,
+  y_size = 192,
 
   neighborhood =
   {
-    { space = 2, x2 = 0 },
-    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
-    { space = 2, x1 = 0, x2 = 128, y1 = 192 },
+    { space = 2, x2 = 0, y2 = 192 },
+    { space = 2, x1 = 0, x2 = 192, y2 = 0 },
 
-    { space = 1, x1 = 256 },
-    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
-    { space = 1, x1 = 128, x2 = 256, y1 = 192 },
+    { space = 1, y1 = 192 },
+    { space = 1, x1 = 192, y2 = 192 },
 
     -- new safe zones
-    { m = "zone", space = 1, x1 = 200 },
-    { m = "zone", space = 2, x2 =  56 },
+    { m = "zone", space = 1, x1 = 256, y1 = 256 },
+    { m = "zone", space = 2, x2 = 64, y2 = 64 },
+
+    -- TODO { m = "zone", space = 1, x1 = 256, y2 = 192 },
+  },
+
+  brushes =
+  {
+    -- new floor area : bottom left corner
+    {
+      { m = "floor", space = 2 },
+      { x =   0, y =   0 },
+      { x = 192, y =   0 },
+      { x = 192, y =  64 },
+      { x =  64, y = 192 },
+      { x =   0, y = 192 },
+    },
+
+    -- old floor area : top right corner
+    {
+      { m = "floor", space = 1 },
+      { x =  64, y = 192 },
+      { x = 192, y =  64 },
+      { x = 192, y = 192 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x =  64, y = 192 },
+      { x = 192, y =  64 },
+      { x = 192, y = 192 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 36 },
+      { x =  64, y = 128 },
+      { x =  32, y =  96 },
+      { x =  96, y =  32 },
+      { x = 128, y =  64 },
+    },
+
+    -- steps
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x =  96, y = 160, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  80, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y =  80, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 160, y =  96, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t =  12, mat = "?top" },
+    },
+
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x =  80, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  64, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 128, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y =  80, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t =  24, mat = "?top" },
+    },
   },
 }
 
