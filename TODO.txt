@@ -3,9 +3,17 @@ V4 TODO
 =======
 
 
+>> explicit 'neighborhood' in floor prefabs
+
 +  allow more than one safe zone per floor
 
 -  floor prefabs (ETC) should be as small as possible
+
+-  allow "thick" floor-fab segs : especially fence or liquid
+
+Note: allocated middlers (e.g. key pedestal) should not exist
+      inside the safe zone.  If their section is small, just inhibit
+      subdivision, if large then have upto 4 safe zones around it.
 
 ?  remove R.wall_space, merely collect the polygons and test them
 
