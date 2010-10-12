@@ -1418,43 +1418,79 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function check_binary_subdiv(floor, loc)
-    -- Requirements:
-    --   1. at least one walk group in each half
-    --   2. staircase must fit completely inside the SWZ
-    --   3. no walk group is "cut" by dividing lines
+  local function inside_nb_rect(NB, x1,y1, x2,y2)
+    if NB.x1 and x1 < NB.x1 - 0.1 then return false end
+    if NB.x2 and x2 > NB.x2 + 0.1 then return false end
 
-    if not geom.box_inside_box(loc.stair.x1, loc.stair.y1,
-                               loc.stair.x2, loc.stair.y2,
-                               floor.zone.x1, floor.zone.y1,
-                               floor.zone.x2, floor.zone.y2)
-    then
-      return false
-    end
+    if NB.y1 and y1 < NB.y1 - 0.1 then return false end
+    if NB.y2 and y2 > NB.y2 + 0.1 then return false end
 
-    local in_walks  = 0
-    local out_walks = 0
+    return true
+  end
 
-    assert(loc.x or loc.y)
 
-    for _,G in ipairs(floor.walks) do
-      if loc.x then
-            if G.x2 - 1 < loc.x then in_walks  = in_walks  + 1
-        elseif G.x1 + 1 > loc.x then out_walks = out_walks + 1
-        else return false -- cuts the group
-        end
-      else
-            if G.y2 - 1 < loc.y then in_walks  = in_walks  + 1
-        elseif G.y1 + 1 > loc.y then out_walks = out_walks + 1
-        else return false -- cuts the group
+  local function find_walk_in_neighborhood(nblist, base_x, base_y, G)
+
+    -- FIXME: this fails if a walk group crosses the line where two
+    --        rectangles of the same space touch.
+
+    for _,NB in nblist do
+      if not NB.m then
+        local x1 = G.x1 - base_x
+        local y1 = G.y1 - base_y
+
+        local x2 = G.x2 - base_x
+        local y2 = G.y2 - base_y
+
+        if inside_nb_rect(NB, x1,y1, x2,y2) then
+          return assert(NB.space)
         end
       end
     end
 
-stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
+    return -1  -- not found
+  end
 
-    if in_walks < 1 or out_walks < 1 then
-      return false
+
+  local function check_floor_fab(floor, loc)
+    -- Requirements:
+    --   1. at least one walk group in each new space
+    --   2. no walk group is "cut" by dividing lines
+
+    local fab_info = PREFAB[loc.fab]
+
+    local neighborhood = rotate_neighborhood(floor.neighborhood, loc.rotate)
+
+    local base_x, base_y
+
+        if loc.rotate ==   0 then base_x, base_y = loc.x1, loc.y1
+    elseif loc.rotate ==  90 then base_x, base_y = loc.x2, loc.y1
+    elseif loc.rotate == 180 then base_x, base_y = loc.x2, loc.y2
+    elseif loc.rotate == 270 then base_x, base_y = loc.x1, loc.y2
+    else error("Bad rotate in floor loc")
+    end
+
+    loc.base_x = base_x
+    loc.base_y = base_y
+    loc.neighborhood = neighborhood
+
+
+    local num_spaces = fab_info.num_spaces or 2
+
+    local walk_counts = {}
+
+    for _,G in ipairs(floor.walks) do
+      local space = find_walk_in_neighborhood(neighborhood, base_x, base_y, G)
+
+      if space < 0 then
+        return false  -- the group was cut
+      end
+
+      walk_counts[space] = 1
+    end
+
+    for n = 1,num_spaces do
+      if not walk_counts[n] then return false end
     end
 
     return true  -- OK
@@ -1462,43 +1498,62 @@ stderrf("  in_walks:%d  out_walks:%d\n", in_walks, out_walks)
 
 
   local function choose_division(floor)
-    local zone_dx = floor.zone.x2 - floor.zone.x1
-    local zone_dy = floor.zone.y2 - floor.zone.y1
+    -- TODO: allow multiple zones, chech each one
+
+    local zone = floor.zone
+
+    local zone_dx = zone.x2 - zone.x1
+    local zone_dy = zone.y2 - zone.y1
 
     -- FIXME we only support subdividing rectangles right now
     if R.shape ~= "rect" then
       return nil
     end
 
-    if zone_dx <  64 or zone_dy <  64 then
-gui.debugf("choose_division: zone too small: %dx%d\n", zone_dx, zone_dy)
-      return nil  -- not enough room to swing a cat
+    -- FIXME: try lots of different floor prefabs
+    local fab = "H1_DOWN_4"
+    local fab_info = assert(PREFAB[fab])
+
+    local extra_x = zone_dx - fab_info.x_size
+    local extra_y = zone_dy - fab_info.y_size
+
+    if extra_x < 0 or extra_y < 0 then
+gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
+           fab_info.x_size, fab_info.y_size)
+      return nil
     end
 
     local locs = {}
 
-    -- Man, this is way too simplistic (pure cut in half),
-    -- but we gotta start somewhere!!
+    local half_ex = int(extra_x / 2)
+    local half_ey = int(extra_y / 2)
 
-    local x1, y1 = floor.zone.x1, floor.zone.y1
-    local x2, y2 = floor.zone.x2, floor.zone.y2
+    -- FIXME: rotations!! 
 
-    local mx = int((x1 + x2)/2)
-    local my = int((y1 + y2)/2)
+    --!!!!!! FIXME 1,3
+    for xp = 1,1 do for yp = 1,1 do
+      local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
+      local can_y = (xp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
 
---- table.insert(locs, { x=x1, stair={ x1=x1, x2=x1+128, y1=my-64, y2=my+64 }})
---- table.insert(locs, { x=x2, stair={ x2=x2, x1=x2-128, y1=my-64, y2=my+64 }})
+      if can_x and can_y then
+        local x1, x2
+        if xp == 1 then x1 = zone.x1 ; x2 = x1 + fab_info.x_size end
+        if xp == 2 then x1 = zone.x1 + half_ex ; x2 = x1 + fab_info.x_size end
+        if xp == 3 then x2 = zone.x2 ; x1 = x2 - fab_info.x_size end
 
---- table.insert(locs, { y=y1, stair={ y1=y1, y2=y1+128, x1=mx-64, x2=mx+64 }})
---- table.insert(locs, { y=y2, stair={ y2=y2, y1=y2-128, x1=mx-64, x2=mx+64 }})
+        local y1, y2
+        if yp == 1 then y1 = zone.y1 ; y2 = y1 + fab_info.y_size end
+        if yp == 2 then y1 = zone.y1 + half_ey ; y2 = y1 + fab_info.y_size end
+        if yp == 3 then y2 = zone.y2 ; y1 = y2 - fab_info.y_size end
 
---- rand.shuffle(locs)
+        table.insert(locs, { fab=fab, x1=x1, y1=y1, x2=x2, y2=y2, rotate=0 })
+      end
+    end end
 
-    table.insert(locs, 1, { x=mx, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
-    table.insert(locs, 1, { y=my, stair={ x1=mx-64, y1=my-64, x2=mx+64, y2=my+64 }})
+    rand.shuffle(locs)
 
     for _,loc in ipairs(locs) do
-      if check_binary_subdiv(floor, loc) then
+      if check_floor_fab(floor, loc) then
         return loc
       end
     end
@@ -1507,6 +1562,36 @@ gui.debugf("[all locs failed]\n")
 
 
   local function subdivide_floor(floor, recurse_lev)
+    gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
+    gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
+               floor.zone.x1, floor.zone.y1,
+               floor.zone.x2, floor.zone.y2, #floor.walks)
+    for _,G in ipairs(floor.walks) do
+      gui.debugf("WALK: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
+    end
+
+    local loc
+
+    -- !!!!
+    if recurse_lev <= 1 and #floor.walks >= 2 then
+      loc = choose_division(floor, fab_info)
+    end
+
+gui.debugf("location =\n%s\n", table.tostr(loc, 3))
+
+    if not loc then
+      table.insert(R.all_floors, floor)
+
+      for _,G in ipairs(floor.walks) do G.floor = floor end
+      for _,A in ipairs(floor.airs)  do A.floor = floor end
+
+      return
+    end
+  end
+
+
+
+  local function OLD__subdivide_floor(floor, recurse_lev)
     gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
     gui.debugf("SWZ: (%d %d) .. (%d %d)  walks:%d\n",
                floor.zone.x1, floor.zone.y1,
@@ -1710,49 +1795,25 @@ gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
         if F2.z and not F1.z then F1.z = F2.z - ST.delta end
       end
     end
-  end
 
-
-  local function render_stair(stair)
-    local F1 = stair.walk1.floor
-    local F2 = stair.walk2.floor
-
-    assert(F1.z)
-    assert(F2.z)
-
---[[ TEST CRUD
-    Trans.brush(
-    {
-      { x=stair.x1, y=stair.y1, tex="COMPBLUE" },
-      { x=stair.x2, y=stair.y1, tex="COMPBLUE" },
-      { x=stair.x2, y=stair.y2, tex="COMPBLUE" },
-      { t=ROOM.entry_floor_h + 8, tex="FLAT14" },
-    })
---]]
-    if F1.z > F2.z then
-      F1, F2 = F2, F1
-      stair.dir = 10 - stair.dir
+    -- validate
+    for _,F in ipairs(R.all_floors) do
+      if not F.z then
+        error("floor space did not get any height!")
+      end
     end
-
-    local z_diff = F2.z - F1.z
-
-    local T = Trans.box_transform(stair.x1, stair.y1, stair.x2, stair.y2,
-                                  F1.z, 10 - stair.dir)
-    
-    T.scale_z = z_diff / 128
-
-    local skin = { }
-
-    Fabricate("STAIR_6", T, skin)
   end
 
 
   local function build_floor()
 
+    -- initial floor space
+    -- TODO: split "odd" rooms into monotonic spaces
+
     local floor =
     {
       space = Layout_initial_space(R),
-      zone  = safe_walking_zone(),
+      zones = safe_walking_zone(),  -- TODO : a list of zones
       walks = collect_walk_groups(),
       airs  = collect_airs(),
       fabs  = {},
@@ -1770,16 +1831,12 @@ gui.debugf("\nnew_f.space\n--------------\n") ; floor2.space:dump()
 
       render_floor(F)
 
---[[ TEST : fill SWZ with a solid
+--[[ TEST : fill zone with a solid
       if F.zone.x2 >= F.zone.x1+16 and F.zone.y2 >= F.zone.y1+16 then
         Trans.quad(F.zone.x1, F.zone.y1, F.zone.x2, F.zone.y2, nil, nil, Mat_normal("ASHWALL"))
       end
 --]]
     end
-
----##    for _,stair in ipairs(R.all_stairs) do
----##      render_stair(stair)
----##    end
   end
 
 
