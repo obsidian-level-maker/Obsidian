@@ -3,11 +3,13 @@ V4 TODO
 =======
 
 
->> explicit 'neighborhood' in floor prefabs
+DONE: explicit 'neighborhood' in floor prefabs
 
 +  allow more than one safe zone per floor
 
 -  floor prefabs (ETC) should be as small as possible
+
+-  Fabricate: remove "fab" parameter -- get name from skin
 
 -  allow "thick" floor-fab segs : especially fence or liquid
 
@@ -69,8 +71,6 @@ Layout:
    (b) clip light brush to each rectangle
 
 +  small exits
-
--  have separate 'spaces' in prefabs 
 
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
