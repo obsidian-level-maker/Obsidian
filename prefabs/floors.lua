@@ -45,13 +45,11 @@ PREFAB.H1_DOWN_1 =
 {
   placement = "fitted",
 
-  shape = "H",
-
   brushes =
   {
     -- new floor area : left side
     {
-      { m = "floor", space = "new" },
+      { m = "floor", space = 2 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 512 },
@@ -60,7 +58,7 @@ PREFAB.H1_DOWN_1 =
 
     -- old floor area : right side
     {
-      { m = "floor", space = "old" },
+      { m = "floor", space = 1 },
       { x = 256, y =   0 },
       { x = 512, y =   0 },
       { x = 512, y = 512 },
@@ -69,7 +67,7 @@ PREFAB.H1_DOWN_1 =
 
     -- walk areas
     {
-      { m = "walk", space = "old" },
+      { m = "walk", space = 1 },
       { x = 256, y =   0 },
       { x = 304, y =   0 },
       { x = 304, y =  64 },
@@ -77,44 +75,27 @@ PREFAB.H1_DOWN_1 =
     },
 
     {
-      { m = "walk", space = "new", walk_dz = -16 },
+      { m = "walk", space = 2, walk_dz = -16 },
       { x = 208, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y =  64 },
       { x = 208, y =  64 },
     },
-
-    -- new safe zones
-    {
-      { m = "zone", space = "new" },
-      { x =   0, y =   0 },
-      { x = 208, y =   0 },
-      { x = 208, y = 512 },
-      { x =   0, y = 512 },
-    },
-
-    {
-      { m = "zone", space = "old" },
-      { x = 304, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x = 304, y = 512 },
-    },
   },
 
   neighborhood =
   {
-    { m = "new", x2 = 256, y2 = 0 },
-    { m = "new", x2 = 256, y1 = 512 },
-    { m = "new", x2 = 0,   y1 = 0, y2 = 512 },
+    { space = 2, x2 = 256, y2 = 0 },
+    { space = 2, x2 = 256, y1 = 512 },
+    { space = 2, x2 = 0,   y1 = 0, y2 = 512 },
 
-    { m = "old", x1 = 256, y2 = 0 },
-    { m = "old", x1 = 256, y1 = 512 },
-    { m = "old", x1 = 512,   y1 = 0, y2 = 512 },
+    { space = 1, x1 = 256, y2 = 0 },
+    { space = 1, x1 = 256, y1 = 512 },
+    { space = 1, x1 = 512, y1 = 0, y2 = 512 },
 
-    { m = "zone", space = "old", x1 = 304 },
-
-    { m = "zone", space = "new", x2 = 208 },
+    -- new safe zones
+    { m = "zone", space = 1, x1 = 304 },
+    { m = "zone", space = 2, x2 = 208 },
   },
 }
 
@@ -123,13 +104,11 @@ PREFAB.H1_DOWN_4 =
 {
   placement = "fitted",
 
-  shape = "H",
-
   brushes =
   {
     -- new floor area : left side
     {
-      { m = "floor", space = "new" },
+      { m = "floor", space = 2 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 512 },
@@ -138,7 +117,7 @@ PREFAB.H1_DOWN_4 =
 
     -- old floor area : right side
     {
-      { m = "floor", space = "old" },
+      { m = "floor", space = 1 },
       { x = 256, y =   0 },
       { x = 512, y =   0 },
       { x = 512, y = 512 },
@@ -175,7 +154,7 @@ PREFAB.H1_DOWN_4 =
 
     -- walk areas
     {
-      { m = "walk", space = "old" },
+      { m = "walk", space = 1 },
       { x = 304, y = 128 },
       { x = 400, y = 128 },
       { x = 400, y = 384 },
@@ -183,28 +162,11 @@ PREFAB.H1_DOWN_4 =
     },
 
     {
-      { m = "walk", space = "new", walk_dz = -64 },
+      { m = "walk", space = 2, walk_dz = -64 },
       { x = 112, y = 128 },
       { x = 208, y = 128 },
       { x = 208, y = 384 },
       { x = 112, y = 384 },
-    },
-
-    -- new safe zones
-    {
-      { m = "zone", space = "new" },
-      { x =   0, y =   0 },
-      { x = 112, y =   0 },
-      { x = 112, y = 512 },
-      { x =   0, y = 512 },
-    },
-
-    {
-      { m = "zone", space = "old" },
-      { x = 400, y =   0 },
-      { x = 512, y =   0 },
-      { x = 512, y = 512 },
-      { x = 400, y = 512 },
     },
 
 --[[ FENCE TEST
@@ -226,6 +188,21 @@ PREFAB.H1_DOWN_4 =
       { t = 32, mat = "?wall" },
     },
 --]]
+  },
+
+  neighborhood =
+  {
+    { space = 2, x2 = 256, y2 = 0 },
+    { space = 2, x2 = 256, y1 = 512 },
+    { space = 2, x2 = 0,   y1 = 0, y2 = 512 },
+
+    { space = 1, x1 = 256, y2 = 0 },
+    { space = 1, x1 = 256, y1 = 512 },
+    { space = 1, x1 = 512, y1 = 0, y2 = 512 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x1 = 400 },
+    { m = "zone", space = 2, x2 = 112 },
   },
 }
 
