@@ -88,13 +88,13 @@ PREFAB.H1_DOWN_1 =
 
   neighborhood =
   {
-    { space = 2, x2 = 128, y2 = 0 },
-    { space = 2, x2 = 128, y1 = 256 },
-    { space = 2, x2 = 0,   y1 = 0, y2 = 256 },
+    { space = 2, x2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y1 = 256 },
 
-    { space = 1, x1 = 128, y2 = 0 },
-    { space = 1, x1 = 128, y1 = 256 },
-    { space = 1, x1 = 256, y1 = 0, y2 = 256 },
+    { space = 1, x1 = 256 },
+    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 128, x2 = 256, y1 = 256 },
 
     -- new safe zones
     { m = "zone", space = 1, x1 = 152 },
@@ -178,13 +178,13 @@ PREFAB.H1_DOWN_4 =
 
   neighborhood =
   {
-    { space = 2, x2 = 128, y2 = 0 },
-    { space = 2, x2 = 128, y1 = 256 },
-    { space = 2, x2 = 0,   y1 = 0, y2 = 256 },
+    { space = 2, x2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y2 = 0 },
+    { space = 2, x1 = 0, x2 = 128, y1 = 256 },
 
-    { space = 1, x1 = 128, y2 = 0 },
-    { space = 1, x1 = 128, y1 = 256 },
-    { space = 1, x1 = 256, y1 = 0, y2 = 256 },
+    { space = 1, x1 = 256 },
+    { space = 1, x1 = 128, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 128, x2 = 256, y1 = 256 },
 
     -- new safe zones
     { m = "zone", space = 1, x1 = 200 },
