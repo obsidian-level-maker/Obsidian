@@ -1540,7 +1540,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "L1_DOWN_4"
+    local fab = "H1_SIDE_STAIR"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -1570,7 +1570,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
     -- FIXME: rotations!! 
 
-    for xp = 1,3 do for yp = 1,3 do
+    for xp = 1,3 do for yp = 3,3 do
       local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
       local can_y = (yp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
 

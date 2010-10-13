@@ -152,7 +152,7 @@ PREFAB.H1_DOWN_4 =
       { x = 120, y =  48, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 120, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 104, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = -48, mat = "?top", light = "?light" },
+      { t = -48, mat = "?top" },
     },
 
     {
@@ -161,7 +161,7 @@ PREFAB.H1_DOWN_4 =
       { x = 136, y =  48, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 136, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 120, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = -32, mat = "?top", light = "?light" },
+      { t = -32, mat = "?top" },
     },
 
     {
@@ -170,7 +170,7 @@ PREFAB.H1_DOWN_4 =
       { x = 152, y =  48, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 152, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 136, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = -16, mat = "?top", light = "?light" },
+      { t = -16, mat = "?top" },
     },
 
     -- walk areas
@@ -188,6 +188,128 @@ PREFAB.H1_DOWN_4 =
       { x = 104, y =  48 },
       { x = 104, y = 144 },
       { x =  56, y = 144 },
+    },
+  },
+}
+
+
+
+PREFAB.H1_SIDE_STAIR =
+{
+  placement = "fitted",
+
+  x_size = 384,
+  y_size = 192,
+
+  neighborhood =
+  {
+    { space = 2, x2 = 320 },
+    { space = 1, x1 = 320 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x1 = 384 },
+    { m = "zone", space = 2, x2 = 0   },
+  },
+
+  brushes =
+  {
+    -- new floor area : left side
+    {
+      { m = "floor", space = 2 },
+      { x =   0, y =   0 },
+      { x = 320, y =   0 },
+      { x = 320, y = 192 },
+      { x =   0, y = 192 },
+    },
+
+    -- old floor area : right side
+    {
+      { m = "floor", space = 1 },
+      { x = 320, y =   0 },
+      { x = 384, y =   0 },
+      { x = 384, y = 192 },
+      { x = 320, y = 192 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = 320, y = 128 },
+      { x = 384, y = 128 },
+      { x = 384, y = 192 },
+      { x = 320, y = 192 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = -128 },
+      { x =   0, y = 128 },
+      { x =  96, y = 128 },
+      { x =  06, y = 192 },
+      { x =   0, y = 192 },
+    },
+
+    -- steps
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 288, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 320, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 320, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 288, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -16, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 256, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 288, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 288, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 256, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -32, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 224, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 256, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 256, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 224, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -48, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 192, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 224, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 224, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 192, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -64, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 160, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 192, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 192, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 160, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -80, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x = 128, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 160, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 160, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 128, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -96, mat = "?top" },
+    },
+    
+    {
+      { m = "solid", flavor = "floor:3", outlier=1 },
+      { x =  96, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 128, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 128, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x =  96, y = 384, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = -112, mat = "?top" },
     },
   },
 }
