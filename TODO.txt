@@ -2,6 +2,49 @@
 V4 TODO
 =======
 
+Current Work
+------------
+
+-  consider allowing "minor" wall prefabs to be decided during/after
+   floor fabbing.  In particular to allow a floor prefab to supply
+   a lift or staircase against the wall (in even in a corner).
+
++  implement "nosplit" areas, which are like "walk" areas in that
+   they must not be split, but which aren't considered to be
+   player destinations.
+
+?  spaces in floor prefabs can specify number of walk areas
+   required (e.g. none for a liquid space).
+
+?  Perhaps make spaces an explicit table, move the neighborhood
+   stuff into them, e.g.:
+ 
+   spaces =
+   {
+     -- #1
+     {
+       kind = "floor"  -- "3dfloor"  "liquid"
+ 
+       rects =
+       {
+         ...
+       },
+ 
+       walks =
+       {
+         ...
+       },
+ 
+       zones =
+       {
+         ...
+       },
+     },
+   }
+
+Idea: reserve small "connector" gaps on edge sides, these are places
+      where an outlier fence (or mere trim) of a floor prefab could
+      nicely join the wall.
 
 DONE: explicit 'neighborhood' in floor prefabs
 
@@ -19,9 +62,9 @@ Note: allocated middlers (e.g. key pedestal) should not exist
 
 ?  remove R.wall_space, merely collect the polygons and test them
 
--  in a large (multi-section) room, if any section has no connection
-   and no items or switches -- then give it a nice pickup item (etc)
-   or at least a walk space.
+-  in a large (multi-section) room, if any section has no "events"
+   (a connection or switch or key or major item) then give it a
+   nice pickup item (etc) or at least a walk space.
 
 DONE: brushes can have a "flavor" and a priority.
       If two brushes with the same flavor exist in a 2D region at the
@@ -31,6 +74,10 @@ Idea: Composition of prefabs
 
 Idea: "flush depth" of walls
 
+
+
+Release Goals
+-------------
 
 Games:
 
@@ -70,14 +117,13 @@ Layout:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
 
-+  small exits
+-  small exits
 
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
 
 -  prevent escapes over fences/windows near key pedestals (etc) by
    raising the height of the fences/windows there.
-
 
 
 Monsters:
