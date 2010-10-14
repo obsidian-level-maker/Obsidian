@@ -326,6 +326,59 @@ PREFAB.H_3DFLOOR_A =
 
 
 
+PREFAB.H_LIQ_BRIDGE_A =
+{
+  placement = "fitted",
+
+  x_size = 512,
+  y_size = 384,
+
+  neighborhood =
+  {
+    { space = 1, x2 = 64 },
+    { space = 2, x1 = 448 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x2 = 0 },
+    { m = "zone", space = 2, x1 = 512 },
+
+    { m = "liquid", x1 = 64, x2 = 448 },
+  },
+
+  brushes =
+  {
+    -- bridge
+    {
+      { m = "solid" },
+      { x =  64, y = 160, mat = "?wall" },
+      { x = 448, y = 160, mat = "?wall" },
+      { x = 448, y = 224, mat = "?wall" },
+      { x =  64, y = 224, mat = "?wall" },
+      { b = -16, mat = "?wall" },
+      { t =   0, mat = "?wall" },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x =   0, y = 144 },
+      { x =  64, y = 144 },
+      { x =  64, y = 240 },
+      { x =   0, y = 240 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 0 },
+      { x = 448, y = 144 },
+      { x = 512, y = 144 },
+      { x = 512, y = 240 },
+      { x = 448, y = 240 },
+    },
+  },
+}
+
+
+
 PREFAB.L1_DOWN_4 =
 {
   placement = "fitted",
@@ -405,33 +458,4 @@ PREFAB.L1_DOWN_4 =
   },
 }
 
-
-
-PREFAB.BRIDGE_TEST =
-{
-  placement = "fitted",
-
-  brushes =
-  {
-    -- liquid area
-    {
-      { m = "solid", flavor = "floor:2" },
-      { x =   0, y =   0, mat = "?liquid" },
-      { x = 256, y =   0, mat = "?liquid" },
-      { x = 256, y = 256, mat = "?liquid" },
-      { x =   0, y = 256, mat = "?liquid" },
-      { t = -72, mat = "?liquid" },
-    },
-
-    -- bridge
-    {
-      { m = "solid" },
-      { x = 112, y =   0, mat = "?wall" },
-      { x = 144, y =   0, mat = "?wall" },
-      { x = 144, y = 256, mat = "?wall" },
-      { x = 112, y = 256, mat = "?wall" },
-      { t =   0, mat = "?wall" },
-    },
-  },
-}
 

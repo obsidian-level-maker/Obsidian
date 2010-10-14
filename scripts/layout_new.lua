@@ -1348,8 +1348,34 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
       Trans.brush(BRUSH)
     end
+  end
 
-    transmit_height_to_fabs(floor, floor.z)
+
+  local function render_liquid(floor)
+    assert(floor.z)
+
+    for _,P in ipairs(floor.space.polys) do
+      if GAME.format == "doom" then
+        local BRUSH = P:to_brush("LAVA1")
+        table.insert(BRUSH, { t=floor.z - 64, tex="LAVA1", special=16 })
+        Trans.brush(BRUSH)
+
+      else  -- QUAKE
+
+        local mat = R.skin.wall
+        local liq = "*lava1"
+
+        local BRUSH = P:to_brush(mat)
+
+        table.insert(BRUSH, { t=floor.z - 128, tex=mat })
+
+        local LIQUID = P:to_brush(liq)
+        table.insert(LIQUID, { t=floor.z - 64, tex=liq })
+        table.insert(LIQUID, { b=floor.z - 128, tex=liq })
+        Trans.brush(LIQUID)
+
+      end
+    end
   end
 
 
@@ -1533,6 +1559,27 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
   end
 
 
+  local function liquid_from_neighborhood(old_space, loc)
+    local new_space  -- return nothing if no liquid rects
+
+    for _,NB in ipairs(loc.neighborhood) do
+      if NB.m == "liquid" then
+        if not new_space then
+          new_space = SPACE_CLASS.new()
+        end
+
+        local piece = old_space:intersect_rect(NB.x1, NB.y1, NB.x2, NB.y2)
+
+        new_space:raw_union(piece)
+      end
+    end
+
+    return new_space
+  end
+
+
+
+
   local function choose_division(floor)
     -- TODO: allow multiple zones, chech each one
 
@@ -1547,7 +1594,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H_3DFLOOR_A"
+    local fab = "H_LIQ_BRIDGE_A"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -1663,6 +1710,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       if fab_info.neighborhood[1].z1 and idx == 2 then  -- FIXME !!!!!
         F.three_d = 16
       end
+    end
+
+
+    local liquid = liquid_from_neighborhood(floor.space, loc)
+
+    if liquid then
+      table.insert(R.all_liquids, { space=liquid })
     end
 
 
@@ -1813,21 +1867,33 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     R.all_floors = {}
     R.all_stairs = {}
+    R.all_liquids = {}
 
     subdivide_floor(floor, 1)
 
     assign_floor_heights()
+
+    local floor_min = 9e9
 
     for _,F in ipairs(R.all_floors) do
       collect_floor_fabs(F)
 
       render_floor(F)
 
+      floor_min = math.min(floor_min, F.z)
+
+      transmit_height_to_fabs(F, F.z)
+
 --[[ TEST : fill zone with a solid
       if F.zone.x2 >= F.zone.x1+16 and F.zone.y2 >= F.zone.y1+16 then
         Trans.quad(F.zone.x1, F.zone.y1, F.zone.x2, F.zone.y2, nil, nil, Mat_normal("ASHWALL"))
       end
 --]]
+    end
+
+    for _,F in ipairs(R.all_liquids) do
+      F.z = floor_min
+      render_liquid(F)
     end
   end
 
