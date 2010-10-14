@@ -7,7 +7,8 @@ Current Work
 
 -  consider allowing "minor" wall prefabs to be decided during/after
    floor fabbing.  In particular to allow a floor prefab to supply
-   a lift or staircase against the wall (in even in a corner).
+   a lift or staircase against the wall (in even in a corner),
+   perhaps also for liquidy stuff.
 
 +  implement "nosplit" areas, which are like "walk" areas in that
    they must not be split, but which aren't considered to be
@@ -88,8 +89,6 @@ Layout:
 
 +  rooms with multiple layers
 
-+  Cross-Overs
-
 +  corner prefabs
        - normal
        - curved
@@ -117,7 +116,13 @@ Layout:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
 
--  small exits
++  symmetry
+
++  get caves working again
+
+-  Cross-Overs
+
+?  small exits
 
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
