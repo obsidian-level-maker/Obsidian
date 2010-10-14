@@ -1366,14 +1366,13 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
         local liq = "*lava1"
 
         local BRUSH = P:to_brush(mat)
-
         table.insert(BRUSH, { t=floor.z - 128, tex=mat })
+        Trans.brush(BRUSH)
 
         local LIQUID = P:to_brush(liq)
+        table.insert(LIQUID, 1, { m="liquid", medium="lava" })
         table.insert(LIQUID, { t=floor.z - 64, tex=liq })
-        table.insert(LIQUID, { b=floor.z - 128, tex=liq })
         Trans.brush(LIQUID)
-
       end
     end
   end
