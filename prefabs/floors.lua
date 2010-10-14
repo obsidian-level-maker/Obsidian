@@ -204,8 +204,8 @@ PREFAB.H_3DFLOOR_A =
 
   neighborhood =
   {
+    { space = 2, x1 =  96, z1 = 144 },
     { space = 1, z2 = 128 },
-    { space = 2, x2 =  96, z1 = 144 },
 
     -- new safe zones
     { m = "zone", space = 1, x1 = 192 },
@@ -214,27 +214,27 @@ PREFAB.H_3DFLOOR_A =
 
   brushes =
   {
-    -- new floor area : left side
-    {
-      { m = "floor", space = 2 },
-      { x =   0, y =   0 },
-      { x = 320, y =   0 },
-      { x = 320, y = 192 },
-      { x =   0, y = 192 },
-    },
-
-    -- old floor area : right side
-    {
-      { m = "floor", space = 1 },
-      { x = 320, y =   0 },
-      { x = 384, y =   0 },
-      { x = 384, y = 192 },
-      { x = 320, y = 192 },
-    },
+--##    -- new floor area : left side
+--##    {
+--##      { m = "floor", space = 2 },
+--##      { x =   0, y =   0 },
+--##      { x = 320, y =   0 },
+--##      { x = 320, y = 192 },
+--##      { x =   0, y = 192 },
+--##    },
+--##
+--##    -- old floor area : right side
+--##    {
+--##      { m = "floor", space = 1 },
+--##      { x = 320, y =   0 },
+--##      { x = 384, y =   0 },
+--##      { x = 384, y = 192 },
+--##      { x = 320, y = 192 },
+--##    },
 
     -- walk areas
     {
-      { m = "walk", space = 1 },
+      { m = "walk", space = 1, insider=1 },
       { x =   0, y =   0 },
       { x =  96, y =   0 },
       { x =  96, y =  64 },
@@ -242,10 +242,10 @@ PREFAB.H_3DFLOOR_A =
     },
 
     {
-      { m = "walk", space = 2, walk_dz = 144 },
+      { m = "walk", space = 2, insider=1, walk_dz = 144 },
       { x =  96, y = 256 },
-      { x = 160, y = 256 },
-      { x = 160, y = 320 },
+      { x = 192, y = 256 },
+      { x = 192, y = 320 },
       { x =  96, y = 320 },
     },
 

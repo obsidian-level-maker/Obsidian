@@ -1333,11 +1333,18 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
       mat = rand.key_by_probs(THEME.building_floors)
     end
 
+    local flavor = "floor:1"
+    if floor.three_d then flavor = "exfloor:1" end
+
     for _,P in ipairs(floor.space.polys) do
       local BRUSH = P:to_brush(mat)
 
-      table.insert(BRUSH, 1, { m="solid", flavor="floor:1" })
+      table.insert(BRUSH, 1, { m="solid", flavor=flavor })
       table.insert(BRUSH,    { t=floor.z, tex=mat })
+
+      if floor.three_d then
+        table.insert(BRUSH,  { b=floor.z - floor.three_d, tex=mat })
+      end
 
       Trans.brush(BRUSH)
     end
@@ -1540,7 +1547,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H1_SIDE_STAIR"
+    local fab = "H_3DFLOOR_A"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -1552,6 +1559,10 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     if rotate == 90 or rotate == 270 then
       x_size, y_size = y_size, x_size
     end
+
+---    if fab_info.z_size and fab_info.z_size > zone_dz then
+---      return
+---    end
 
     local extra_x = zone_dx - x_size
     local extra_y = zone_dy - y_size
@@ -1614,7 +1625,7 @@ gui.debugf("[all locs failed]\n")
     local loc
 
     -- !!!!
-    if recurse_lev <= 4 and #floor.walks >= 2 then
+    if recurse_lev <= 1 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
 
@@ -1648,6 +1659,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     for idx,F in ipairs(new_floors) do
       F.space = space_from_neighborhood(floor.space, idx, loc)
       F.zone  =  zone_from_neighborhood(floor.zone,  idx, loc)
+
+      if fab_info.neighborhood[1].z1 and idx == 2 then  -- FIXME !!!!!
+        F.three_d = 16
+      end
     end
 
 
@@ -1671,7 +1686,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
 
 
-    local skin = { top="FLAT23" }
+    local skin1 = { top="WIZMET1_1" }
 
     -- save info to render it later
     local POST_FAB =
