@@ -142,6 +142,8 @@ function Layout_monotonic_spaces(R)
       sections = {},
 
       space = SPACE_CLASS.new(),
+
+      blocks = {},
     }
 
     table.insert(list, INFO)
@@ -184,6 +186,74 @@ function Layout_monotonic_spaces(R)
     gui.debugf("\n")
   end
 
+
+  local function block_is_contig(kx1, ky1, kw, kh)
+    local kx2 = kx1 + kw - 1
+    local ky2 = ky1 + kh - 1
+
+    if kx2 > R.kx2 or ky2 > R.ky2 then
+      return false
+    end
+
+    local id = SECTIONS[kx1][ky1].m_used
+
+    for x = kx1,kx2 do for y = ky1,ky2 do
+      local K = SECTIONS[x][y]
+      if K.room ~= R    then return false end
+      if K.m_used ~= id then return false end
+      if K.contig_used  then return false end
+    end end
+
+    return true
+  end
+
+
+  local function mark_block(x, y, kw, kh)
+    for dx = 0,kw-1 do for dy = 0,kh-1 do
+      SECTIONS[x+dx][y+dy].contig_used = true
+    end end
+  end
+
+
+  local function biggest_block(x, y)
+    local kw, kh = 1,1
+
+    if R.shape == "rect" then return R.kw, R.kh end
+
+    while true do
+      if block_is_contig(x, y, kw+1, kh) then
+        kw = kw + 1
+      elseif block_is_contig(x, y, kw, kh+1) then
+        kh = kh + 1
+      else
+        return kw, kh
+      end
+    end
+  end
+
+
+  local function break_into_blocks()
+    gui.debugf("Blocks:\n")
+
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R and not K.contig_used then
+
+        local kw,kh = biggest_block(x, y)
+        mark_block(x, y, kw, kh)
+
+        local BLOCK = { kx1=x, ky1=y, kx2=x+kw-1, ky2=y+kh-1 }
+
+        table.insert(list[K.m_used].blocks, BLOCK)
+
+        gui.debugf("  space:%d  K: (%d %d) .. (%d %d)\n", K.m_used,
+                   BLOCK.kx1, BLOCK.ky1, BLOCK.kx2, BLOCK.ky2)
+      end
+    end end
+
+    gui.debugf("\n")
+  end
+
   
   --| Layout_monotonic_spaces |--
 
@@ -195,8 +265,11 @@ function Layout_monotonic_spaces(R)
     pass = pass + 1
   end
 
+  break_into_blocks()
+
   return list
 end
+
 
 
 function Layout_prepare_rooms()
@@ -1747,7 +1820,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H_LIQ_BRIDGE_A"
+    local fab = "H1_DOWN_4"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -1825,9 +1898,11 @@ gui.debugf("[all locs failed]\n")
     local loc
 
     -- !!!!
-    if recurse_lev <= 1 and #floor.walks >= 2 then
+    if recurse_lev <= 3 and #floor.walks >= 2 then
       loc = choose_division(floor)
     end
+
+if #R.mono_list > 1 then loc = nil end
 
 gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
@@ -2007,7 +2082,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function build_floor()
 
     -- initial floor space
-    -- TODO: split "odd" rooms into monotonic spaces
 
     local floor =
     {
