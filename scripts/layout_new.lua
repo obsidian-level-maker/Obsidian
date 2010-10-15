@@ -2178,17 +2178,33 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     fill_polygons(R.wall_space, { solid=1 })
 
     for _,F in ipairs(R.all_floors) do
-      if F ~= floor then
+      if F ~= floor and F.layer == floor.layer then
         fill_polygons(F.space, { free=1, air=1, walk=1 })
       end
     end
 
     gui.spots_dump("Spot grid")
 
-    gui.spots_get_mons (R.mon_spots)
-    gui.spots_get_items(R.item_spots)
+    local mon_spots  = {}
+    local item_spots = {}
+
+    gui.spots_get_mons (mon_spots)
+    gui.spots_get_items(item_spots)
 
     gui.spots_end()
+
+    -- set Z positions
+
+    for _,spot in ipairs(mon_spots) do
+      spot.z1 = floor.z
+      spot.z2 = floor.z2 or (spot.z1 + 200)  -- FIXME
+      table.insert(R.mon_spots, spot)
+    end
+
+    for _,spot in ipairs(item_spots) do
+      spot.z = floor.z
+      table.insert(R.item_spots, spot)
+    end
 
 --[[  TEST
     for _,spot in ipairs(R.item_spots) do

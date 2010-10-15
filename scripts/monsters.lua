@@ -544,7 +544,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     x = x + rand.irange(-16, 16)
     y = y + rand.irange(-16, 16)
 
-    place_item(item, x, y, spot.z or 0, SK)
+    place_item(item, x, y, spot.z, SK)
   end
 
 
@@ -594,6 +594,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
         spot = table.remove(R.big_item_spots)
         spot.x, spot.y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+        spot.z = spot.z1
 
         place_big_item(spot, item.name, SK, CL)
       else
@@ -601,7 +602,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
           spot = table.remove(R.item_spots, 1)
           table.insert(R.item_spots, spot)
 
-          place_item(item.name, spot.x, spot.y, spot.z or 0, SK)
+          place_item(item.name, spot.x, spot.y, spot.z, SK)
         end
       end
     end
@@ -1165,7 +1166,7 @@ function Monsters_fill_room(R)
     for mx = 1,w do for my = 1,h do
       local x = spot.x1 + ent.r * 2.2 * (mx-0.5)
       local y = spot.y1 + ent.r * 2.2 * (my-0.5)
-      local z = spot.z1 or 0
+      local z = spot.z1
 
       place_monster(mon, x, y, z)
 
