@@ -45,6 +45,90 @@ function Layout_initial_space(R)
 end
 
 
+function Layout_monotonic_spaces(R)
+  -- Monotonic here means that if you cut the space in half either
+  -- horizontally or vertically, you will always end up with two
+  -- contiguous pieces.
+  --
+  -- Rectangles, regular polygons, axis-aligned L shapes are all
+  -- monotonic.  A counter example is a U shape, which if you cut it
+  -- horizontally the top half will have two separated bits.
+  --
+  -- ALGORITHM:
+  --   the basic idea is that "allocating" a free square will
+  --   check each side, if the neighbor is solid then all free
+  --   squares beyond that solid get "shadowed" and cannot be
+  --   allocated for the current group.  The next square can be
+  --   a free non-shadowed neighbor of one of the used squares.
+
+  local list = {}
+
+  
+  local function starter()
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R and not K.m_used then
+        return x, y
+      end
+    end end
+
+    return nil, nil  -- no more free squares
+  end
+
+
+  local function clear_shadows()
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R then K.m_shadowed = nil end
+    end end
+  end
+
+
+  local function alloc(x, y)
+    local K = SECTIONS[x][y]
+
+    assert(not K.m_used)
+    assert(not K.m_shadowed)
+
+    K.m_used = 1
+
+    for side = 2,8,2 do
+      local N = K:neighbor(side)
+
+      if N and N.room ~= R then
+        -- do the shadowing
+        for dist = 2,60 do
+          local P = K:neighbor(side, dist)
+          if P.room == R then
+            P.m_shadowed = 1
+          end
+        end
+      end
+    end
+  end
+
+
+  local function grab_space()
+    clear_shadows()
+
+    local x, y = starter()
+
+    if not x then return false end  -- finished
+
+    alloc(x, y)
+
+    ...
+
+    return true
+  end
+
+
+  while grab_space() do end
+
+  return list
+end
+
+
 function Layout_prepare_rooms()
 
   local function add_corners(K)
