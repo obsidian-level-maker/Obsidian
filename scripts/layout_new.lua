@@ -1388,26 +1388,36 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function narrow_zone_for_edge(edge_deeps, E)
-    if E.max_deep then
-      assert(E.side and edge_deeps[E.side])
+  local function narrow_zone_for_edge(zone, E)
+    if not E.max_deep then return end
 
-      if edge_deeps[E.side] < E.max_deep then
-         edge_deeps[E.side] = E.max_deep
-      end
+    local K = E.K
+
+    if E.side == 4 then
+      local x = K.x1 + E.max_deep
+      if x > zone.x1 then zone.x1 = x end
+
+    elseif E.side == 6 then
+      local x = K.x2 - E.max_deep
+      if x < zone.x2 then zone.x2 = x end
+
+    elseif E.side == 2 then
+      local y = K.y1 + E.max_deep
+      if y > zone.y1 then zone.y1 = y end
+
+    elseif E.side == 8 then
+      local y = K.y2 - E.max_deep
+      if y < zone.y2 then zone.y2 = y end
+
+    else
+      error("bad edge side")
     end
   end
 
 
-  local function safe_walking_zone()
-
-    -- determine a rectangle inside the current room which
-    -- could be make solid while still allowing the player to
-    -- traverse the room (from one door to another etc).
-
-    -- FIXME this assumes a rectangular room
-    local K1 = SECTIONS[R.kx1][R.ky1]
-    local K2 = SECTIONS[R.kx2][R.ky2]
+  local function zone_from_block(kx1, ky1, kx2, ky2)
+    local K1 = SECTIONS[kx1][ky1]
+    local K2 = SECTIONS[kx2][ky2]
 
     local zone = 
     {
@@ -1417,34 +1427,41 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
       y2 = K2.y2,
     }
 
-    local edge_deeps =
-    {
-      [2] = 16, [4] = 16, [6] = 16, [8] = 16
-    }
-
-    for _,K in ipairs(R.sections) do
+    for kx = kx1,kx2 do for ky = ky1,ky2 do
+      local K = SECTIONS[kx][ky]
       for _,E in pairs(K.edges) do
-        narrow_zone_for_edge(edge_deeps, E)
+        narrow_zone_for_edge(zone, E)
       end
-    end
+    end end
 
     -- FIXME: check corners too
 
-    for side = 2,8,2 do
-      if side == 4 then zone.x1 = zone.x1 + edge_deeps[4] end
-      if side == 6 then zone.x2 = zone.x2 - edge_deeps[6] end
-      if side == 2 then zone.y1 = zone.y1 + edge_deeps[2] end
-      if side == 8 then zone.y2 = zone.y2 - edge_deeps[8] end
-    end
-
     -- allow some room for player
-    zone.x1 = zone.x1 + 96
-    zone.y1 = zone.y1 + 96
+    zone.x1 = zone.x1 + 64
+    zone.y1 = zone.y1 + 64
 
-    zone.x2 = zone.x2 - 96
-    zone.y2 = zone.y2 - 96
+    zone.x2 = zone.x2 - 64
+    zone.y2 = zone.y2 - 64
 
     return zone
+  end
+
+
+  local function determine_safe_zones()
+    --
+    -- A "safe zone" is a rectangle inside the current room which
+    -- could be make solid while still allowing the player to fully
+    -- traverse the room (from one door to another etc).
+    --
+    -- Since safe zones must be rectangles, but rooms can be more
+    -- interesting shapes (plus, L, odd) then we allow multiple
+    -- (non overlapping) safe zones to exist.
+
+    local list = {}
+
+    -- TODO : process R.mono_list
+
+    return list
   end
 
 
