@@ -62,13 +62,14 @@ function Layout_monotonic_spaces(R)
   --   a free non-shadowed neighbor of one of the used squares.
 
   local list = {}
+  local pass = 1
 
-  
+
   local function starter()
     for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
       local K = SECTIONS[x][y]
       if K.room == R and not K.m_used then
-        return x, y
+        return K
       end
     end end
 
@@ -79,18 +80,16 @@ function Layout_monotonic_spaces(R)
   local function clear_shadows()
     for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
       local K = SECTIONS[x][y]
-      if K.room == R then K.m_shadowed = nil end
+      K.m_shadowed = nil
     end end
   end
 
 
-  local function alloc(x, y)
-    local K = SECTIONS[x][y]
-
+  local function alloc(K)
     assert(not K.m_used)
     assert(not K.m_shadowed)
 
-    K.m_used = 1
+    K.m_used = pass
 
     for side = 2,8,2 do
       local N = K:neighbor(side)
@@ -99,8 +98,10 @@ function Layout_monotonic_spaces(R)
         -- do the shadowing
         for dist = 2,60 do
           local P = K:neighbor(side, dist)
+          if not P then break; end
+
           if P.room == R then
-            P.m_shadowed = 1
+            P.m_shadowed = pass
           end
         end
       end
@@ -108,22 +109,91 @@ function Layout_monotonic_spaces(R)
   end
 
 
+  local function find_next()
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R and K.m_used == pass then
+
+        for side = 2,8,2 do
+          local N = K:neighbor(side)
+          if N and N.room == R and not (N.m_used or N.m_shadowed) then
+            return N
+          end
+        end
+        
+      end
+    end end
+
+    return nil  -- nothing usable
+  end
+
+
   local function grab_space()
     clear_shadows()
 
-    local x, y = starter()
+    local K = starter()
 
-    if not x then return false end  -- finished
+    if not K then  -- finished?
+      return false
+    end
 
-    alloc(x, y)
+    local INFO =
+    {
+      sections = {},
 
-    ...
+      space = SPACE_CLASS.new(),
+    }
+
+    table.insert(list, INFO)
+
+    repeat
+      table.insert(INFO.sections, K)
+
+      INFO.space:initial_rect(K.x1, K.y1, K.x2, K.y2)
+
+      alloc(K)
+
+      K = find_next()
+    until not K
 
     return true
   end
 
 
-  while grab_space() do end
+  local function dump_space()
+    gui.debugf("space %d:\n", pass)
+
+    for y = R.ky2,R.ky1,-1 do
+      local line = ""
+      for x = R.kx1,R.kx2 do
+        local K = SECTIONS[x][y]
+
+        if K.room ~= R then
+          line = line .. "#"
+        elseif K.m_used == pass then
+          line = line .. "/"
+        elseif K.m_used or K.m_shadowed then
+          line = line .. "-"
+        else
+          line = line .. " "
+        end
+      end
+      gui.debugf("  #%s#\n", line)
+    end
+
+    gui.debugf("\n")
+  end
+
+  
+  --| Layout_monotonic_spaces |--
+
+  gui.debugf("Monotonic spaces in %s\n", R:tostr())
+
+  while grab_space() do
+    dump_space()
+
+    pass = pass + 1
+  end
 
   return list
 end
@@ -2072,6 +2142,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   R.post_fabs = {}
   R.poly_assoc = {}
 
+
+  R.mono_list = Layout_monotonic_spaces(R)
 
   R.wall_space = Layout_initial_space(R)
 
