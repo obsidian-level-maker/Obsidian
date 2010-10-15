@@ -1414,8 +1414,27 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     end
   end
 
+  
+  local function narrow_zone_for_walk(zone, G)
+    -- this is meant to handle a walk group penetrating a small
+    -- distance into one side of the zone.
+    --
+    -- it is NOT meant for a walk gorup IN THE MIDDLE of the zone
+    -- (from a pickup or switch).  That should be prevented, e.g.
+    -- create multiple zones around it.
 
-  local function zone_from_block(kx1, ky1, kx2, ky2)
+    if geom.boxes_overlap(zone.x1, zone.y1, zone.x2, zone.y2,
+                          G.x1, G.y1, G.x2, G.y2)
+    then
+      -- FIXME !!!
+    end
+  end
+
+
+  local function zone_from_block(block, walks)
+    local kx1, ky1 = block.kx1, block.ky1
+    local kx2, ky2 = block.kx2, block.ky2
+
     local K1 = SECTIONS[kx1][ky1]
     local K2 = SECTIONS[kx2][ky2]
 
@@ -1427,6 +1446,8 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
       y2 = K2.y2,
     }
 
+    -- check wall edges
+
     for kx = kx1,kx2 do for ky = ky1,ky2 do
       local K = SECTIONS[kx][ky]
       for _,E in pairs(K.edges) do
@@ -1435,6 +1456,12 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     end end
 
     -- FIXME: check corners too
+
+    -- check walk groups
+
+    for _,G in ipairs(walks) do
+      narrow_zone_for_walk(zone, G)
+    end
 
     -- allow some room for player
     zone.x1 = zone.x1 + 64
@@ -1447,7 +1474,7 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
   end
 
 
-  local function determine_safe_zones()
+  local function determine_safe_zones(mono, walks)
     --
     -- A "safe zone" is a rectangle inside the current room which
     -- could be make solid while still allowing the player to fully
@@ -1459,7 +1486,9 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
     local list = {}
 
-    -- TODO : process R.mono_list
+    for _,block in ipairs(mono.blocks) do
+      table.insert(list, zone_from_block(block, walks))
+    end
 
     return list
   end
@@ -1822,19 +1851,13 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
 
 
 
-
-  local function choose_division(floor)
-    -- TODO: allow multiple zones, chech each one
-
-    local zone = floor.zone
-
+  local function choose_division(floor, zone)
     local zone_dx = zone.x2 - zone.x1
     local zone_dy = zone.y2 - zone.y1
+gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
 
-    -- FIXME we only support subdividing rectangles right now
-    if R.shape ~= "rect" then
-      return nil
-    end
+    -- FIXME we only support subdividing single monotones right now
+    if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
     local fab = "H1_DOWN_4"
@@ -1905,21 +1928,26 @@ gui.debugf("[all locs failed]\n")
 
   local function subdivide_floor(floor, recurse_lev)
     gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
-    gui.debugf("safe zone: (%d %d) .. (%d %d)  walks:%d\n",
-               floor.zone.x1, floor.zone.y1,
-               floor.zone.x2, floor.zone.y2, #floor.walks)
+
+    for _,Z in ipairs(floor.zones) do
+      gui.debugf("zone: (%d %d) .. (%d %d)\n", Z.x1, Z.y1, Z.x2, Z.y2)
+    end
     for _,G in ipairs(floor.walks) do
       gui.debugf("WALK: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
     end
 
-    local loc
+    local loc, zone
 
     -- !!!!
-    if recurse_lev <= 3 and #floor.walks >= 2 then
-      loc = choose_division(floor)
+    if recurse_lev <= 1 and #floor.walks >= 2 then
+      -- try each safe zone
+      rand.shuffle(floor.zones)
+      for _,Z in ipairs(floor.zones) do
+        zone = Z
+        loc  = choose_division(floor, zone)
+        if loc then break; end
+      end
     end
-
-if #R.mono_list > 1 then loc = nil end
 
 gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
@@ -1950,7 +1978,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for idx,F in ipairs(new_floors) do
       F.space = space_from_neighborhood(floor.space, idx, loc)
-      F.zone  =  zone_from_neighborhood(floor.zone,  idx, loc)
+
+      --!!!! FIXME !!!! FIXME !!!!
+      F.zones = { zone_from_neighborhood(zone, idx, loc) }
 
       if fab_info.neighborhood[1].z1 and idx == 2 then  -- FIXME !!!!!
         F.three_d = 16
@@ -2103,11 +2133,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local floor =
     {
       space = Layout_initial_space(R),
-      zone  = safe_walking_zone(),  -- TODO : a list of zones
-      walks = collect_walk_groups(),
+      walks = collect_walk_groups(),  -- FIXME only walks in each monotone
       airs  = collect_airs(),
       fabs  = {},
     }
+
+    floor.zones = determine_safe_zones(R.mono_list[1], floor.walks)
 
     R.all_floors = {}
     R.all_stairs = {}
@@ -2129,8 +2160,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       transmit_height_to_fabs(F, F.z)
 
 --[[ TEST : fill zone with a solid
-      if F.zone.x2 >= F.zone.x1+16 and F.zone.y2 >= F.zone.y1+16 then
-        Trans.quad(F.zone.x1, F.zone.y1, F.zone.x2, F.zone.y2, nil, nil, Mat_normal("ASHWALL"))
+      for _,Z in ipairs(F.zones) do
+        if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
+          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, nil, nil, Mat_normal("ASHWALL"))
+        end
       end
 --]]
     end
