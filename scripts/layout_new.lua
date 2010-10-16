@@ -1419,14 +1419,34 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     -- this is meant to handle a walk group penetrating a small
     -- distance into one side of the zone.
     --
-    -- it is NOT meant for a walk gorup IN THE MIDDLE of the zone
+    -- it is NOT meant for a walk group IN THE MIDDLE of the zone
     -- (from a pickup or switch).  That should be prevented, e.g.
     -- create multiple zones around it.
+
+    if zone.x2 < zone.x1 or zone.y2 < zone.y1 then
+      return
+    end
 
     if geom.boxes_overlap(zone.x1, zone.y1, zone.x2, zone.y2,
                           G.x1, G.y1, G.x2, G.y2)
     then
-      -- FIXME !!!
+      local dx = math.max(16, zone.x2 - zone.x1)
+      local dy = math.max(16, zone.y2 - zone.y1)
+
+      -- pick side which wastes the least volume
+      local vol_x1 = int(G.x2 - zone.x1) * int(dy)
+      local vol_x2 = int(zone.x2 - G.x1) * int(dy)
+
+      local vol_y1 = int(G.y2 - zone.y1) * int(dx)
+      local vol_y2 = int(zone.y2 - G.y1) * int(dx)
+
+      local min_vol = math.min(vol_x1, vol_y1, vol_x2, vol_y2)
+
+          if vol_x1 == min_vol then zone.x1 = G.x2  -- move left side
+      elseif vol_x2 == min_vol then zone.x2 = G.x1  -- move right side
+      elseif vol_y1 == min_vol then zone.y1 = G.y2  -- move bottom side
+      else                          zone.y2 = G.y1  -- move top side
+      end
     end
   end
 
@@ -1457,18 +1477,24 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
 
     -- FIXME: check corners too
 
+    -- allow some room for player
+    zone.x1 = zone.x1 + 64
+    zone.y1 = zone.y1 + 64
+    zone.x2 = zone.x2 - 64
+    zone.y2 = zone.y2 - 64
+
     -- check walk groups
+    -- (done AFTER allowing some room for player, since walk areas
+    --  already guarantee the player can fit).
 
     for _,G in ipairs(walks) do
       narrow_zone_for_walk(zone, G)
     end
 
-    -- allow some room for player
-    zone.x1 = zone.x1 + 64
-    zone.y1 = zone.y1 + 64
-
-    zone.x2 = zone.x2 - 64
-    zone.y2 = zone.y2 - 64
+    zone.x1 = zone.x1 + 8
+    zone.y1 = zone.y1 + 8
+    zone.x2 = zone.x2 - 8
+    zone.y2 = zone.y2 - 8
 
     return zone
   end
@@ -1487,7 +1513,11 @@ stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
     local list = {}
 
     for _,block in ipairs(mono.blocks) do
-      table.insert(list, zone_from_block(block, walks))
+      local zone = zone_from_block(block, walks)
+
+      if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
+        table.insert(list, zone)
+      end
     end
 
     return list
