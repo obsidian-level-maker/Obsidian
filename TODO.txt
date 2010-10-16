@@ -5,6 +5,37 @@ V4 TODO
 Current Work
 ------------
 
+!!  multiple safe zones in neighborhood tables
+
+!!  fix the "bars"
+
+!!  improve placement of key/switch : NOT NEAR ENTRANCE
+
++  in a large (multi-section) room, if any section has no "events"
+   (a connection or switch or key or major item) then give it a
+   nice pickup item (etc) or at least a walk space.
+
+   ALSO: when traversibility is poor (exit near entrance), make
+         the exit into a switched door and put a switch far away.
+
+!!  prevent ceiling too low : compute min_floor (etc)
+
++  allow "thick" floor-fab segs : especially fence or liquid
+   make sure they (a) don't split walk/nosplit (b) update heights
+
+
+///////////////////////
+
+-  support floor prefabs in non-monotonic rooms
+
+Idea: prefab "families" -- they can use the same skin info
+
+Idea: "single minis" : a single room (not too big, kvolume <= 2)
+      which contains something nice to get (weapon, powerup, etc).
+
+x  "thin wall fabs" which can be placed inside "fat wall fabs"
+   (including corners).  
+
 -  consider allowing "minor" wall prefabs to be decided during/after
    floor fabbing.  In particular to allow a floor prefab to supply
    a lift or staircase against the wall (in even in a corner),
@@ -17,59 +48,17 @@ Current Work
 ?  spaces in floor prefabs can specify number of walk areas
    required (e.g. none for a liquid space).
 
-?  Perhaps make spaces an explicit table, move the neighborhood
-   stuff into them, e.g.:
- 
-   spaces =
-   {
-     -- #1
-     {
-       kind = "floor"  -- "3dfloor"  "liquid"
- 
-       rects =
-       {
-         ...
-       },
- 
-       walks =
-       {
-         ...
-       },
- 
-       zones =
-       {
-         ...
-       },
-     },
-   }
-
-Idea: reserve small "connector" gaps on edge sides, these are places
-      where an outlier fence (or mere trim) of a floor prefab could
-      nicely join the wall.
-
-DONE: explicit 'neighborhood' in floor prefabs
-
-+  allow more than one safe zone per floor
+DONE: allow more than one safe zone per floor
 
 -  floor prefabs (ETC) should be as small as possible
 
 -  Fabricate: remove "fab" parameter -- get name from skin
-
--  allow "thick" floor-fab segs : especially fence or liquid
 
 Note: allocated middlers (e.g. key pedestal) should not exist
       inside the safe zone.  If their section is small, just inhibit
       subdivision, if large then have upto 4 safe zones around it.
 
 ?  remove R.wall_space, merely collect the polygons and test them
-
--  in a large (multi-section) room, if any section has no "events"
-   (a connection or switch or key or major item) then give it a
-   nice pickup item (etc) or at least a walk space.
-
-DONE: brushes can have a "flavor" and a priority.
-      If two brushes with the same flavor exist in a 2D region at the
-      same time, only the highest priority brush is kept.
 
 Idea: Composition of prefabs
 
@@ -122,7 +111,7 @@ Layout:
 
 -  Cross-Overs
 
-?  small exits
+-  small exits
 
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
