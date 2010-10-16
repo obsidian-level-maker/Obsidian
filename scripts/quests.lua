@@ -284,7 +284,8 @@ function Quest_choose_keys()
     if not LOCK.kind then
       assert(num_switches > 0)
 
-      if num_bars > 0 and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
+      -- FIXME: redo bars
+      if false and num_bars > 0 and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
         LOCK.kind = "BARS"
         LOCK.item = rand.key_by_probs(bar_probs)
         bar_probs[LOCK.item] = bar_probs[LOCK.item] / 8
