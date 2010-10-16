@@ -1843,21 +1843,36 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
   end
 
 
-  local function zone_from_neighborhood(old_zone, space_index, loc)
+  local function zone_clip_to_nb(old_zone, space_index, loc)
     local new_zone = table.copy(old_zone)
 
     for _,NB in ipairs(loc.neighborhood) do
       if NB.m == "zone" and NB.space == space_index then
-        if NB.x1 then new_zone.x1 = NB.x1 end
-        if NB.y1 then new_zone.y1 = NB.y1 end
-        if NB.x2 then new_zone.x2 = NB.x2 end
-        if NB.y2 then new_zone.y2 = NB.y2 end
+        if NB.x1 and NB.x1 > new_zone.x1 then new_zone.x1 = NB.x1 end
+        if NB.y1 and NB.y1 > new_zone.y1 then new_zone.y1 = NB.y1 end
+        if NB.x2 and NB.x2 < new_zone.x2 then new_zone.x2 = NB.x2 end
+        if NB.y2 and NB.y2 < new_zone.y2 then new_zone.y2 = NB.y2 end
 
-        return new_zone -- FIXME: multiple zones
+        return new_zone
       end
     end
 
     error("floor prefab missing zone for space " .. tostring(space_index))
+  end
+
+
+  local function zones_from_neighborhood(list, space_index, loc)
+    local new_list = {}
+
+    for _,old_zone in ipairs(list) do
+      local zone = zone_clip_to_nb(old_zone, space_index, loc)
+
+      if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
+        table.insert(new_list, zone)
+      end
+    end
+
+    return new_list
   end
 
 
@@ -1890,7 +1905,7 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H1_DOWN_4"
+    local fab = "H_LIQ_BRIDGE_A"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -1924,7 +1939,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
     -- FIXME: rotations!! 
 
-    for xp = 1,3 do for yp = 3,3 do
+    for xp = 1,3 do for yp = 1,3 do
       local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
       local can_y = (yp == 1) or (yp == 2 and half_ey >= 32) or (yp == 3 and extra_y >= 32)
 
@@ -1969,7 +1984,7 @@ gui.debugf("[all locs failed]\n")
     local loc, zone
 
     -- !!!!
-    if recurse_lev <= 1 and #floor.walks >= 2 then
+    if recurse_lev <= 7 and #floor.walks >= 2 then
       -- try each safe zone
       rand.shuffle(floor.zones)
       for _,Z in ipairs(floor.zones) do
@@ -2008,9 +2023,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for idx,F in ipairs(new_floors) do
       F.space = space_from_neighborhood(floor.space, idx, loc)
-
-      --!!!! FIXME !!!! FIXME !!!!
-      F.zones = { zone_from_neighborhood(zone, idx, loc) }
+      F.zones = zones_from_neighborhood(floor.zones, idx, loc)
 
       if fab_info.neighborhood[1].z1 and idx == 2 then  -- FIXME !!!!!
         F.three_d = 16
