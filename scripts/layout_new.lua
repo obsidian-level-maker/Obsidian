@@ -1843,32 +1843,30 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
   end
 
 
-  local function zone_clip_to_nb(old_zone, space_index, loc)
+  local function zone_clip_to_nb(old_zone, NB)
     local new_zone = table.copy(old_zone)
 
-    for _,NB in ipairs(loc.neighborhood) do
-      if NB.m == "zone" and NB.space == space_index then
-        if NB.x1 and NB.x1 > new_zone.x1 then new_zone.x1 = NB.x1 end
-        if NB.y1 and NB.y1 > new_zone.y1 then new_zone.y1 = NB.y1 end
-        if NB.x2 and NB.x2 < new_zone.x2 then new_zone.x2 = NB.x2 end
-        if NB.y2 and NB.y2 < new_zone.y2 then new_zone.y2 = NB.y2 end
+    if NB.x1 and NB.x1 > new_zone.x1 then new_zone.x1 = NB.x1 end
+    if NB.y1 and NB.y1 > new_zone.y1 then new_zone.y1 = NB.y1 end
+    if NB.x2 and NB.x2 < new_zone.x2 then new_zone.x2 = NB.x2 end
+    if NB.y2 and NB.y2 < new_zone.y2 then new_zone.y2 = NB.y2 end
 
-        return new_zone
-      end
-    end
-
-    error("floor prefab missing zone for space " .. tostring(space_index))
+    return new_zone
   end
 
 
-  local function zones_from_neighborhood(list, space_index, loc)
+  local function zones_from_neighborhood(old_list, space_index, loc)
     local new_list = {}
 
-    for _,old_zone in ipairs(list) do
-      local zone = zone_clip_to_nb(old_zone, space_index, loc)
+    for _,old_zone in ipairs(old_list) do
+      for _,NB in ipairs(loc.neighborhood) do
+        if NB.m == "zone" and NB.space == space_index then
+          local zone = zone_clip_to_nb(old_zone, NB)
 
-      if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
-        table.insert(new_list, zone)
+          if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
+            table.insert(new_list, zone)
+          end
+        end
       end
     end
 
@@ -1905,7 +1903,7 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H_LIQ_BRIDGE_A"
+    local fab = "H1_DOWN_4"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
