@@ -2189,14 +2189,16 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     assign_floor_heights()
 
-    local floor_min = 9e9
+    R.floor_min_h =  9e9
+    R.floor_max_h = -9e9
 
     for _,F in ipairs(R.all_floors) do
       collect_floor_fabs(F)
 
       render_floor(F)
 
-      floor_min = math.min(floor_min, F.z)
+      R.floor_min_h = math.min(R.floor_min_h, F.z)
+      R.floor_max_h = math.max(R.floor_max_h, F.z)
 
       transmit_height_to_fabs(F, F.z)
 
@@ -2210,7 +2212,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
 
     for _,F in ipairs(R.all_liquids) do
-      F.z = floor_min
+      F.z = R.floor_min_h
       render_liquid(F)
     end
   end
@@ -2218,7 +2220,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   local function build_ceiling()
     -- TEMP CRUD
-    local h   = ROOM.entry_floor_h + sel(R.outdoor, 512, 384)
+    local h   = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
     local mat = sel(R.outdoor, "_SKY", "METAL1")
 
     for _,K in ipairs(R.sections) do
@@ -2439,7 +2441,6 @@ function Layout_edge_of_map()
   end
 
   local function determine_walk_heights()
-    -- TODO: OPTIMISE
     for loop = 1,5 do
       for x = 1,SEED_W do for y = 1,SEED_H do
         local S = SEEDS[x][y]
