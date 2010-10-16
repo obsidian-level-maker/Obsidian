@@ -541,8 +541,8 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
     -- assume big spots will sometimes run out (and be reused),
     -- so don't put multiple items at exactly the same place.
-    x = x + rand.irange(-16, 16)
-    y = y + rand.irange(-16, 16)
+    x = x + rand.irange(-6, 6)
+    y = y + rand.irange(-6, 6)
 
     place_item(item, x, y, spot.z, SK)
   end
