@@ -308,7 +308,7 @@ PREFAB.FENCE =
       { x = 192, y =  0, mat = "?fence" },
       { x = 192, y = 32, mat = "?fence" },
       { x =   0, y = 32, mat = "?fence" },
-      { t =  50,         mat = "?fence" },
+      { t =  32,         mat = "?fence" },
     },
   },
 }
