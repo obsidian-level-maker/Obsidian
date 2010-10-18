@@ -609,6 +609,19 @@ function Layout_check_brush(coords, data)
 end
 
 
+function Layout_shrunk_section_coords(K)
+  local x1, y1 = K.x1, K.y1
+  local x2, y2 = K.x2, K.y2
+
+  if not K:same_room(4) then K.x1 = K.x1 + 8 end
+  if not K:same_room(6) then K.x2 = K.x2 - 8 end
+  if not K:same_room(2) then K.y1 = K.y1 + 8 end
+  if not K:same_room(8) then K.y2 = K.y2 - 8 end
+
+  return x1,y1, x2,y2
+end
+
+
 
 function Layout_the_room(R)
 
@@ -1068,6 +1081,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
+      if R.outdoor and other_R.outdoor then fab = "FENCE" end
       z = math.max(z, other_R.entry_floor_h or 0)
       z = z + 40
       sk2 = { frame="METAL1_1" }
@@ -1284,19 +1298,6 @@ stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
         gui.spots_fill_poly(val, P.coords)
       end
     end
-  end
-
-
-  local function shrunk_section_coords(K)
-    local x1, y1 = K.x1, K.y1
-    local x2, y2 = K.x2, K.y2
-
-    if not K:same_room(4) then K.x1 = K.x1 + 8 end
-    if not K:same_room(6) then K.x2 = K.x2 - 8 end
-    if not K:same_room(2) then K.y1 = K.y1 + 8 end
-    if not K:same_room(8) then K.y2 = K.y2 - 8 end
-
-    return x1,y1, x2,y2
   end
 
 
@@ -2223,8 +2224,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local h   = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
     local mat = sel(R.outdoor, "_SKY", "METAL1")
 
+    if R.outdoor then
+      R.sky_h = h
+      return
+    end
+
     for _,K in ipairs(R.sections) do
-      local x1, y1, x2, y2 = shrunk_section_coords(K)
+      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
       Trans.quad(x1, y1, x2, y2, h, nil, Mat_normal(mat))
     end
   end
@@ -2259,6 +2265,15 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       assert(PF.z)
       local other_R = PF.set_height_in
       other_R.entry_floor_h = PF.z + PF.set_height_dz
+    end
+
+    if PF.set_window_h then
+      assert(PF.window)
+      if not PF.window.z then
+        PF.window.z = PF.z
+      else
+        PF.window.z = math.max(PF.window.z, PF.z)
+      end
     end
   end
 
@@ -2405,9 +2420,27 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 end
 
 
+
+function Layout_the_ceiling(R)
+  if R.sky_h then
+    for _,K in ipairs(R.sections) do
+      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
+      Trans.quad(x1, y1, x2, y2, R.sky_h, nil, Mat_normal("_SKY"))
+    end
+  end
+end
+
+
+
 function Layout_rooms()
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_the_room(R)
+  end
+
+  Rooms_synchronise_skies()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_the_ceiling(R)
   end
 end
 
