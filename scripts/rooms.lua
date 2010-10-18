@@ -3237,7 +3237,7 @@ function Rooms_add_sun()
     Trans.entity("sun", x, y, sun_h, { light=level })
   end
 
-  Trans.entity("sun", 0, 0, sun_h, { light=8 })
+  Trans.entity("sun", 0, 0, sun_h, { light=12 })
 end
 
 
