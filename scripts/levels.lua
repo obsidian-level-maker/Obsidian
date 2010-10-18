@@ -298,9 +298,6 @@ function Levels_setup()
     gui.property("sub_format", PARAM.sub_format)
   end
 
----  table.name_up(ROOM_PATTERNS)
----  table.expand_copies(ROOM_PATTERNS)
-
   table.name_up(PREFAB)
 end
 
