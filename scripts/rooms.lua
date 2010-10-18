@@ -183,7 +183,7 @@ function Rooms_setup_theme(R)
   end
 
   R.main_tex = R.quest.courtyard_floor
-  R.skin = { wall=R.main_tex }
+  R.skin = { wall=R.main_tex, fence="ICKWALL7" }
 end
 
 
@@ -727,16 +727,16 @@ function Rooms_synchronise_skies()
   for loop = 1,10 do
     local changes = false
 
-    for x = 1,SEED_W do for y = 1,SEED_H do
-      local S = SEEDS[x][y]
-      if S and S.room and S.room.sky_h then
+    for x = 1,SECTION_W do for y = 1,SECTION_H do
+      local K = SECTIONS[x][y]
+      if K and K.room and K.room.sky_h then
         for side = 2,8,2 do
-          local N = S:neighbor(side)
-          if N and N.room and N.room ~= S.room and N.room.sky_h and
-             S.room.sky_h ~= N.room.sky_h
+          local N = K:neighbor(side)
+          if N and N.room and N.room ~= K.room and N.room.sky_h and
+             K.room.sky_h ~= N.room.sky_h
           then
-            S.room.sky_h = math.max(S.room.sky_h, N.room.sky_h)
-            N.room.sky_h = S.room.sky_h
+            K.room.sky_h = math.max(K.room.sky_h, N.room.sky_h)
+            N.room.sky_h = K.room.sky_h
             changes = true
           end
         end -- for side
@@ -794,7 +794,9 @@ function Rooms_decide_windows()
     for _,K in ipairs(R.sections) do
       local N = K:neighbor(side)
 
-      if N and N.room ~= R and N.room.outdoor and
+      -- FIXME: sometimes make windows from indoor to indoor
+
+      if N and N.room.id > R.id and N.room.outdoor and
          not K:side_has_conn(side) and rand.odds(prob)
       then
         add_window(K, N, side)      
@@ -806,13 +808,10 @@ function Rooms_decide_windows()
   local function do_windows(R)
     if STYLE.windows == "none" then return end
 
-    if R.outdoor or R.semi_outdoor then return end
+---    if R.outdoor or R.semi_outdoor then return end
 
     -- TODO: cavey see-through holes
     if R.natural then return end
-
-    -- TODO: windows in L/T/+ shaped rooms
-    if R.shape ~= "rect" then return end
 
     local prob = style_sel("windows", 0, 20, 40, 80)
 
