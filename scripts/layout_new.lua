@@ -1025,7 +1025,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
   end
 
 
-  local function build_straddler_span(E, SP, z, back, fab, skin1, skin2, skin3)
+  local function build_straddler_span(kind, E, SP, z, back, fab, skin1, skin2, skin3)
     local K = E.K
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
@@ -1047,6 +1047,10 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       R = R,
       fab_tag = Plan_alloc_mark(),
     }
+
+    if kind == "window" then
+      POST_FAB.z = z
+    end
 
     table.insert(R.post_fabs, POST_FAB)
 
@@ -1082,8 +1086,8 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
       if R.outdoor and other_R.outdoor then fab = "FENCE" end
-      z = math.max(z, other_R.entry_floor_h or 0)
-      z = z + 40
+      z = math.max(z, other_R.floor_min_h or 0)
+      z = z + 32
       sk2 = { frame="METAL1_1" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
@@ -1168,7 +1172,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
       if i < count then SP.long2 = long1 + int(long * (i)   / count) end
 
-      POST_FAB = build_straddler_span(E, SP, z, back, fab, skin, sk2)
+      POST_FAB = build_straddler_span(info.kind, E, SP, z, back, fab, skin, sk2)
 
       do_straddler_solid(E, SP, true, POST_FAB)
     end
@@ -1368,8 +1372,8 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
       -- FIXME: big hack (assumes GROUP == SPACE)
       G.x1, G.y1, G.x2, G.y2 = SPACE_CLASS.calc_bbox(G)
 
-stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
-        #G.polys, G.x1, G.y1, G.x2, G.y2)
+---## stderrf("  polys:%d  bbox: (%d %d) .. (%d %d)\n",
+---##        #G.polys, G.x1, G.y1, G.x2, G.y2)
     end  
 
     return walk_groups
