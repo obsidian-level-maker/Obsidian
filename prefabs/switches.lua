@@ -144,6 +144,15 @@ PREFAB.QUAKE_WALL_SWITCH =
       { x = 192, y = 16, mat = "?wall" },
       { x =   0, y = 16, mat = "?wall" },
     },
+
+    -- area in front of it
+    {
+      { m = "walk" },
+      { x =   0, y = 16 },
+      { x = 192, y = 16 },
+      { x = 192, y = 80 },
+      { x =   0, y = 80 },
+    },
   },
 
   models =
@@ -157,7 +166,7 @@ PREFAB.QUAKE_WALL_SWITCH =
       entity =
       {
         ent = "button", angle = 270, sounds = 2,
-        target = "?target", wait ="?wait",
+        target = "?target", wait ="?wait", lip = 8,
       },
     },
   },
