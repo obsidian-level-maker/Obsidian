@@ -1189,6 +1189,42 @@ function Monsters_fill_room(R)
   end
 
 
+  local function split_huge_spots(max_size)
+    local list = R.mon_spots
+
+    -- recreate the spot list
+    R.mon_spots = {}
+
+    for _,spot in ipairs(list) do
+      local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+      local XN = math.ceil(w / max_size)
+      local YN = math.ceil(h / max_size)
+
+      assert(XN > 0 and YN > 0)
+
+      if XN < 2 and YN < 2 then
+        table.insert(R.mon_spots, spot)
+      else
+        for x = 1,XN do for y = 1,YN do
+          local x1 = spot.x1 + (x - 1) * w / XN
+          local x2 = spot.x1 + (x    ) * w / XN
+
+          local y1 = spot.y1 + (y - 1) * h / YN
+          local y2 = spot.y1 + (y    ) * h / YN
+
+          local new_spot = table.copy(spot)
+
+          new_spot.x1 = int(x1) ; new_spot.y1 = int(y1)
+          new_spot.x2 = int(x2) ; new_spot.y2 = int(y2)
+
+          table.insert(R.mon_spots, new_spot)
+        end end
+      end
+    end
+  end
+
+
   local function split_spot(index, r, near_to)
     local spot = table.remove(R.mon_spots, index)
 
@@ -1265,11 +1301,11 @@ function Monsters_fill_room(R)
         if near_to then
           spot.find_cost = dist_between_spots(spot, near_to)
         else
-          spot.find_cost = fit_num / 10
+          spot.find_cost = 0
         end 
 
         -- tie breeker
-        spot.find_cost  = spot.find_cost + gui.random() * 24
+        spot.find_cost  = spot.find_cost + gui.random() * 16
         spot.find_index = index
 
         table.insert(poss_spots, spot)
@@ -1326,6 +1362,16 @@ function Monsters_fill_room(R)
 
 
   local function fill_monster_map(palette, barrel_chance)
+    -- check if any huge monsters
+    local has_huge = false
+    for mon,prob in pairs(palette) do
+      if is_huge(mon) then has_huge = true end
+    end
+
+    -- break up really large monster spots, so that we get a better
+    -- distribution of monsters.
+    split_huge_spots(sel(has_huge, 288, 144))
+
     local pal2 = create_monster_pal(palette)
 
     -- add at least one monster of each kind
