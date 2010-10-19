@@ -998,7 +998,7 @@ function Monsters_fill_room(R)
   end
 
 
-  local function create_monster_map(palette)
+  local function create_monster_pal(palette)
 
     -- adjust probs in palette to account for monster size,
     -- e.g. we can fit 4 revenants in the same space as a mancubus.
@@ -1140,7 +1140,7 @@ function Monsters_fill_room(R)
   end
 
 
-  local function how_many_for_spot(mon, spot)
+  local function mon_fits(mon, spot)
     local ent  = GAME.ENTITIES[mon]
 
     -- FIXME !!!
@@ -1155,9 +1155,15 @@ function Monsters_fill_room(R)
   end
 
 
-  local function place_in_spot(mon, spot, count)
+  local function place_in_spot(mon, spot)
     local ent  = GAME.ENTITIES[mon]
 
+    local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+    local z = spot.z1
+
+    place_monster(mon, x, y, z)
+
+--[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
     w = int(w / ent.r / 2.2)
@@ -1173,29 +1179,142 @@ function Monsters_fill_room(R)
       count = count - 1
       if count < 1 then return end
     end end
-
-    -- TODO
+--]]
   end
 
 
-  local function try_add_monster(mon, max_num)
+  local function dist_between_spots(A, B)
+    local dist_x = 0
+    local dist_y = 0
+
+        if A.x1 > B.x2 then dist_x = A.x1 - B.x2
+    elseif A.x2 < B.x1 then dist_x = B.x1 - A.x2
+    end
+
+        if A.y1 > B.y2 then dist_y = A.y1 - B.y2
+    elseif A.y2 < B.y1 then dist_y = B.y1 - A.y2
+    end
+
+    local dist = math.min(dist_x, dist_y)
+
+    -- large penalty for height difference
+    if A.z1 ~= B.z1 then
+      dist = dist + 1000
+    end
+
+    return dist
+  end
+
+
+  local function split_spot(index, r, near_to)
+    local spot = table.remove(R.mon_spots, index)
+
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+    assert(w >= r and h >= r)
+
+    -- increase the split-off size, in order to allow other kinds of
+    -- monsters (which may be a bit bigger) to fit in the remnants.
+    local r2 = math.max(r, 64)
+
+    if w >= r2 + 64 then
+      local remain = table.copy(spot)
+
+      local side = rand.sel(50, 4, 6)
+
+      if near_to then
+        local d1 = math.abs(near_to.x1 - spot.x1)
+        local d2 = math.abs(near_to.x2 - spot.x2)
+        side = sel(d1 < d2, 4, 6)
+      end
+
+      if side == 4 then
+        spot.x2   = spot.x1 + r2
+        remain.x1 = spot.x1 + r2
+      else
+        spot.x1   = spot.x2 - r2
+        remain.x2 = spot.x2 - r2
+      end
+
+      table.insert(R.mon_spots, remain)
+    end
+
+    if h >= r2 + 64 then
+      local remain = table.copy(spot)
+
+      local side = rand.sel(50, 2, 8)
+
+      if near_to then
+        local d1 = math.abs(near_to.y1 - spot.y1)
+        local d2 = math.abs(near_to.y2 - spot.y2)
+        side = sel(d1 < d2, 2, 8)
+      end
+
+      if side == 2 then
+        spot.y2   = spot.y1 + r2
+        remain.y1 = spot.y1 + r2
+      else
+        spot.y1   = spot.y2 - r2
+        remain.y2 = spot.y2 - r2
+      end
+
+      table.insert(R.mon_spots, remain)
+    end
+
+    return spot
+  end
+
+
+  local function find_spot(mon, near_to)
     local info = GAME.MONSTERS[mon]
     local ent  = GAME.ENTITIES[mon]
 
-    -- find a spot
-    for idx,spot in ipairs(R.mon_spots) do
-      local fit_num = how_many_for_spot(mon, spot)
-      if fit_num >= 1 then
-gui.printf("fit_num = %d  max = %d\n", fit_num, max_num)
-        fit_num = math.min(fit_num, max_num)
-        place_in_spot(mon, spot, fit_num)
+    local poss_spots = {}
 
-        table.remove(R.mon_spots, idx)
-        return fit_num
+    for index,spot in ipairs(R.mon_spots) do
+      local fit_num = mon_fits(mon, spot)
+      if fit_num > 0 then
+
+        if near_to then
+          spot.find_cost = dist_between_spots(spot, near_to)
+        else
+          spot.find_cost = fit_num
+        end 
+
+        -- tie breeker
+        spot.find_cost  = spot.find_cost + gui.random() * 16
+        spot.find_index = index
+
+        table.insert(poss_spots, spot)
       end
     end
 
-    return 0  -- not possible
+    if table.empty(poss_spots) then
+      return nil  -- no available spots!
+    end
+
+    local result = table.pick_best(poss_spots,
+        function(A, B) return A.find_cost < B.find_cost end)
+  
+    return split_spot(result.find_index, ent.r, near_to)
+  end
+
+
+  local function try_add_mon_group(mon, count)
+    local spot
+    local actual = 0
+    
+    for i = 1,count do
+      spot = find_spot(mon, spot)
+
+      if not spot then break; end
+
+      place_in_spot(mon, spot)
+
+      actual = actual + 1
+    end
+
+    return actual
   end
 
 
@@ -1220,16 +1339,21 @@ gui.printf("fit_num = %d  max = %d\n", fit_num, max_num)
 
 
   local function fill_monster_map(palette, barrel_chance)
-    local pal2 = create_monster_map(palette)
+    local pal2 = create_monster_pal(palette)
 
     -- add at least one monster of each kind
-    for pass = 1,-3 do  -- FIXME
+    for pass = 1,3 do
       for mon,prob in pairs(palette) do
         if (pass == 1 and is_huge(mon)) or
            (pass == 2 and is_big(mon) and not is_huge(mon)) or
            (pass == 3 and not is_big(mon))
         then
-          try_add_monster(mon, 1)
+          try_add_mon_group(mon, 1)
+
+          -- extra one for very large rooms
+          if R.svolume >= 50 then
+            try_add_mon_group(mon, 1)
+          end
         end
       end
     end
@@ -1255,10 +1379,18 @@ gui.printf("fit_num = %d  max = %d\n", fit_num, max_num)
 
     while not table.empty(pal2) and not table.empty(R.mon_spots) do
       local mon = rand.key_by_probs(pal2)
+      local info = GAME.MONSTERS[mon]
 
       if wants[mon] >= 1 then
-        local actual = try_add_monster(mon, wants[mon])
-gui.debugf("wanted %d : actual %d\n", wants[mon], actual)
+
+        local horde  = 1
+        if info.hp <= 500 and rand_odds(30) then horde = horde + 1 end
+        if info.hp <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
+
+        horde = math.min(horde, wants[mon])
+
+        local actual = try_add_mon_group(mon, horde)
+gui.debugf("%s : horde %d : actual %d\n", horde, actual)
 
         if actual == 0 or actual >= wants[mon] then
           wants[mon] = nil
