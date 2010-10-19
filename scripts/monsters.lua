@@ -981,23 +981,6 @@ function Monsters_fill_room(R)
   end
 
 
-  local function try_occupy_spot(spot, mon, totals)
-    local info = GAME.MONSTERS[mon]
-    local ent  = GAME.ENTITIES[mon]
-
-    if ent.r * 2 > (spot.x2 - spot.x1 - 4) then return false end
-    if ent.r * 2 > (spot.y2 - spot.y1 - 4) then return false end
-
-    if ent.h > (spot.z2 - spot.z1 - 2) then return false end
-
-    spot.monster = mon
-    spot.info    = info
-
-    totals[mon] = totals[mon] + 1
-    return true
-  end
-
-
   local function create_monster_pal(palette)
 
     -- adjust probs in palette to account for monster size,
@@ -1126,20 +1109,6 @@ function Monsters_fill_room(R)
   end
 
 
-  local function OLD__place_barrel(spot)
-    if spot.S:has_any_conn() or spot.S.kind ~= "walk" then
-      return
-    end
-
-    local mx = (spot.x1 + spot.x2) / 2
-    local my = (spot.y1 + spot.y2) / 2
-
-    Trans.entity("barrel", mx, my, spot.z1)
-
-    spot.S.usage = "monster"  -- allow items to exist here
-  end
-
-
   local function mon_fits(mon, spot)
     local ent  = GAME.ENTITIES[mon]
 
@@ -1158,8 +1127,22 @@ function Monsters_fill_room(R)
   local function place_in_spot(mon, spot)
     local ent  = GAME.ENTITIES[mon]
 
-    local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+    local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
+    local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
     local z = spot.z1
+
+    -- move monster to random place within the box
+    local dx = w / 2 - ent.r
+    local dy = h / 2 - ent.r
+
+    if dx > 0 then
+      x = x + rand.range(-dx, dx)
+    end
+
+    if dy > 0 then
+      y = y + rand.range(-dy, dy)
+    end
 
     place_monster(mon, x, y, z)
 
@@ -1211,11 +1194,12 @@ function Monsters_fill_room(R)
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
-    assert(w >= r and h >= r)
+    assert(w >= r*2 and h >= r*2)
 
-    -- increase the split-off size, in order to allow other kinds of
-    -- monsters (which may be a bit bigger) to fit in the remnants.
-    local r2 = math.max(r, 64)
+    -- for small monsters, up their size to 64 units so that when
+    -- the split-off pieces are created it allows other kinds of
+    -- small monsters to fit in those pieces.
+    local r2 = math.max(r*2, 64)
 
     if w >= r2 + 64 then
       local remain = table.copy(spot)
@@ -1261,6 +1245,9 @@ function Monsters_fill_room(R)
       table.insert(R.mon_spots, remain)
     end
 
+    w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+    assert(w >= r*2 and h >= r*2)
+
     return spot
   end
 
@@ -1278,11 +1265,11 @@ function Monsters_fill_room(R)
         if near_to then
           spot.find_cost = dist_between_spots(spot, near_to)
         else
-          spot.find_cost = fit_num
+          spot.find_cost = fit_num / 10
         end 
 
         -- tie breeker
-        spot.find_cost  = spot.find_cost + gui.random() * 16
+        spot.find_cost  = spot.find_cost + gui.random() * 24
         spot.find_index = index
 
         table.insert(poss_spots, spot)
@@ -1351,7 +1338,7 @@ function Monsters_fill_room(R)
           try_add_mon_group(mon, 1)
 
           -- extra one for very large rooms
-          if R.svolume >= 50 then
+          if R.kvolume >= 4 and rand.odds(50) then
             try_add_mon_group(mon, 1)
           end
         end
@@ -1384,13 +1371,12 @@ function Monsters_fill_room(R)
       if wants[mon] >= 1 then
 
         local horde  = 1
-        if info.hp <= 500 and rand_odds(30) then horde = horde + 1 end
-        if info.hp <= 100 then horde = horde + rand_index_by_probs { 90, 40, 10, 3, 0.5 } end
+        if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
+        if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
 
         horde = math.min(horde, wants[mon])
 
         local actual = try_add_mon_group(mon, horde)
-gui.debugf("%s : horde %d : actual %d\n", horde, actual)
 
         if actual == 0 or actual >= wants[mon] then
           wants[mon] = nil
