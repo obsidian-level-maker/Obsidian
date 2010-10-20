@@ -815,9 +815,7 @@ function Rooms_build_all()
   Layout_place_straddlers()
   Layout_rooms()
 
-  -- FIXME: scenic rooms ??
-
-  Layout_edge_of_map()
+  -- scenic rooms ??
 
   Rooms_add_sun()
 
