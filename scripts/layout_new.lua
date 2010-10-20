@@ -1094,8 +1094,10 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     local fab
     local z = ROOM.entry_floor_h
+
     local skin = {}
     local sk2
+    local sk3
 
 
     inner_outer_tex(skin, ROOM, other_R)
@@ -1129,7 +1131,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
       if info.conn and info.conn.lock then
         sk2 = GAME.DOORS[info.conn.lock.item]
-        sk2.tag = info.conn.lock.tag
+        sk3 = { tag = info.conn.lock.tag }
       else
         sk2 = GAME.DOORS["silver"]
         sk2.door = "BIGDOOR4"
@@ -1190,7 +1192,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
       if i < count then SP.long2 = long1 + int(long * (i)   / count) end
 
-      POST_FAB = build_straddler_span(info.kind, E, SP, z, back, fab, skin, sk2)
+      POST_FAB = build_straddler_span(info.kind, E, SP, z, back, fab, skin, sk2, sk3)
 
       do_straddler_solid(E, SP, true, POST_FAB)
     end

@@ -1462,7 +1462,7 @@ function Fab_render(fab, T, skin, skin2)
 end
 
 
-function Fabricate(fab, T, skin, skin2)
+function Fabricate(fab, T, skin, skin2, skin3)
   if type(fab) == "string" then
     if not PREFAB[fab] then
       error("Unknown prefab: " .. fab)
@@ -1476,7 +1476,7 @@ function Fabricate(fab, T, skin, skin2)
   Trans.process_skins(fab.defaults,
                       THEME and THEME.skin,
                       ROOM and  ROOM.skin,
-                      skin, skin2)
+                      skin, skin2, skin3)
 
   Fab_render(fab, T)
 end
