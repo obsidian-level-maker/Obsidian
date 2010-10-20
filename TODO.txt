@@ -5,33 +5,32 @@ V4 TODO
 Current Work
 ------------
 
-!!  multiple safe zones in neighborhood tables
-
-!!  fix the "bars"
-
 !!  improve placement of key/switch : NOT NEAR ENTRANCE
+
+!!  fix items and monsters on fences / staircases
 
 +  in a large (multi-section) room, if any section has no "events"
    (a connection or switch or key or major item) then give it a
    nice pickup item (etc) or at least a walk space.
 
-   ALSO: when traversibility is poor (exit near entrance), make
-         the exit into a switched door and put a switch far away.
-
-!!  prevent ceiling too low : compute min_floor (etc)
-
-+  allow "thick" floor-fab segs : especially fence or liquid
++  implement "fence" rects in prefab neighborhoods.
    make sure they (a) don't split walk/nosplit (b) update heights
+   (liquids too)
+
++  implement "nosplit" areas, which are like "walk" areas in that
+   they must not be split, but which aren't considered to be
+   player destinations.
+
+DONE: BUG : switched doors can get wrong tag  !!!
+DONE: place "important stuff" before decide_windows
+DONE: fix Quake button placement
+DONE: multiple safe zones in neighborhood tables
+DONE: prevent ceiling too low : compute min_floor (etc)
 
 
 ///////////////////////
 
 -  support floor prefabs in non-monotonic rooms
-
-Idea: prefab "families" -- they can use the same skin info
-
-Idea: "single minis" : a single room (not too big, kvolume <= 2)
-      which contains something nice to get (weapon, powerup, etc).
 
 x  "thin wall fabs" which can be placed inside "fat wall fabs"
    (including corners).  
@@ -40,13 +39,6 @@ x  "thin wall fabs" which can be placed inside "fat wall fabs"
    floor fabbing.  In particular to allow a floor prefab to supply
    a lift or staircase against the wall (in even in a corner),
    perhaps also for liquidy stuff.
-
-+  implement "nosplit" areas, which are like "walk" areas in that
-   they must not be split, but which aren't considered to be
-   player destinations.
-
-?  spaces in floor prefabs can specify number of walk areas
-   required (e.g. none for a liquid space).
 
 DONE: allow more than one safe zone per floor
 
@@ -59,8 +51,6 @@ Note: allocated middlers (e.g. key pedestal) should not exist
       subdivision, if large then have upto 4 safe zones around it.
 
 ?  remove R.wall_space, merely collect the polygons and test them
-
-Idea: Composition of prefabs
 
 Idea: "flush depth" of walls
 
@@ -104,8 +94,6 @@ Layout:
 +  light brushes for DOOM, clipped to room:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
-
-+  symmetry
 
 +  get caves working again
 

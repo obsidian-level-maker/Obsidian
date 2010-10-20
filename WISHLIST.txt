@@ -14,6 +14,8 @@ WISH-LIST
 
 *  escapable slime pits
 
+*  symmetrical rooms
+
 
 ----------------------------------------------------------------
   OTHER GAMES
@@ -95,6 +97,9 @@ Quests:
 -  currently broken if no switches
    -  have a lock limit, if over then mark branches as "dead_wood"
    -  keep track of number of "branches to go"
+
+Idea: "single minis" : a single room (not too big, kvolume <= 2)
+      which contains something nice to get (weapon, powerup, etc).
 
 
 Caves:
@@ -237,6 +242,10 @@ Nicety:
 
 
 Miscellaneous:
+  +  when traversibility in a room is poor (exit near entrance),
+     make the exit into a switched door and put a switch at other
+     end of room.
+
   -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
   - Can disable the custom levels
@@ -811,6 +820,10 @@ Cycles:
                        and quest structure.  Then look at where the
                        rooms in each quest can re-connect.
 
+
++  Composition of prefabs
+
+-  prefab "families" -- they can use the same skin info
 
 -  module help / explanations ?? (appear above the options)
 
