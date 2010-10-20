@@ -784,6 +784,31 @@ function Rooms_decide_windows()
     table.insert(N.room.windows, WINDOW)
 
     gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
+
+    local E1 = K.edges[side]
+    local E2 = N.edges[10-side]
+
+    E1.place_used = true
+    E2.place_used = true
+  end
+
+
+  local function can_add_window(K, side)
+    local N = K:neighbor(side)
+
+    if not N then return false end
+    if N.room == K.room then return false end
+
+    local E1 = K.edges[side]
+    local E2 = N.edges[10-side]
+
+    if not E1 or not E2 then return false end
+
+    if E1.place_used or E2.place_used then return false end
+
+    assert(not K:side_has_conn(side))
+
+    return true
   end
 
 
@@ -796,8 +821,8 @@ function Rooms_decide_windows()
 
       -- FIXME: sometimes make windows from indoor to indoor
 
-      if N and N.room.id > R.id and N.room.outdoor and
-         not K:side_has_conn(side) and rand.odds(prob)
+      if can_add_window(K, side) and N.room.outdoor
+         and rand.odds(prob)
       then
         add_window(K, N, side)      
       end
@@ -813,7 +838,7 @@ function Rooms_decide_windows()
     -- TODO: cavey see-through holes
     if R.natural then return end
 
-    local prob = style_sel("windows", 0, 20, 40, 80)
+    local prob = style_sel("windows", 0, 20, 40, 80+19)
 
     local SIDES = { 2,4,6,8 }
     rand.shuffle(SIDES)
@@ -3256,9 +3281,12 @@ function Rooms_build_all()
     return
   end
 
-  Rooms_decide_windows()
 
   Layout_prepare_rooms()
+  Layout_place_importants()
+
+  Rooms_decide_windows()
+
   Layout_place_straddlers()
   Layout_rooms()
 

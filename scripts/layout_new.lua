@@ -312,6 +312,10 @@ function Layout_prepare_rooms()
         end
 
         K.edges[side] = EDGE
+
+        if K:side_has_conn(side) then
+          EDGE.place_used = true
+        end
       end
     end
   end
@@ -378,7 +382,10 @@ function Layout_prepare_rooms()
 end
 
 
-function Layout_add_span(E, long1, long2, deep)
+function Layout_add_span(E, long1, long2, deep, kind)
+
+gui.debugf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
+
   assert(long2 > long1)
 
   E.place_used = true
@@ -471,12 +478,12 @@ function Layout_place_straddlers()
 
     local SP
     
-    SP = Layout_add_span(K.edges[dir], long1, long2, deep1)
+    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
     SP.usage = "straddler"
     SP.straddler = STRADDLER
 
     -- NOTE: if not centred, would need different long1/long2 for other side
-    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2)
+    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
     SP.usage = "straddler"
     SP.straddler = STRADDLER
 
@@ -623,6 +630,167 @@ end
 
 
 
+function Layout_place_importants()
+
+  local function pick_imp_spot(IM, middles, corners, walls)
+    for loop = 3,19 do
+      if rand.odds(loop * 10) and #middles > 0 then
+        IM.place_kind = "MIDDLE"
+        IM.place_K = table.remove(middles, 1)
+        IM.place_K.place_used = true
+gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
+
+        if IM.lock and IM.lock.kind == "KEY" then
+          IM.prefab = "OCTO_PEDESTAL"
+          IM.skin = { item = IM.lock.item, top = "CEIL1_2", base = "FLAT1" }
+        end
+
+        return
+      end
+
+      if rand.odds(loop * 10) and #walls > 0 then
+        IM.place_kind = "WALL"
+        IM.place_E = table.remove(walls, 1)
+        IM.place_E.place_used = true
+gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
+
+        local E = IM.place_E
+
+        local prefab, skin
+        local long, deep
+
+        if IM.kind == "START" then
+          prefab = "START_LEDGE"
+          skin = {}
+          long = 200
+          deep = 128
+        
+        elseif IM.kind == "EXIT" then
+          prefab = "WALL_SWITCH"
+          skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
+          long = 200
+          deep = 64
+
+        elseif IM.lock and IM.lock.kind == "SWITCH" then
+          if GAME.format == "quake" then
+            prefab = "QUAKE_WALL_SWITCH"
+            skin = { target = string.format("t%d", IM.lock.tag), }
+            long = 192
+            deep = 32
+          else
+            prefab = "WALL_SWITCH"
+            skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
+            long = 200
+            deep = 64
+          end
+
+        elseif IM.lock and IM.lock.kind == "KEY" then
+          prefab = "ITEM_NICHE"
+          skin = { item = IM.lock.item }
+          long = 200
+          deep = 64
+
+        else
+          prefab = "ITEM_NICHE"
+          skin = { item = "mega", key="LITE5" }
+          long = 200
+          deep = 64
+        end
+
+        local long1 = int(E.long - long) / 2
+        local long2 = int(E.long + long) / 2
+
+        local SP = Layout_add_span(E, long1, long2, deep, prefab)
+
+        SP.usage = "prefab"
+        SP.prefab = prefab
+        SP.skin = skin
+
+        return
+      end
+
+      if rand.odds(loop * 10) and #corners > 0 then
+        IM.place_kind = "CORNER"
+        IM.place_C = table.remove(corners, 1)
+        IM.place_C.place_used = true
+gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
+        return
+      end
+    end
+
+    -- TODO: allow up to 4 stuff in a "middle" (subdivide section 2 or 4 ways)
+
+    error("could not place important stuff!")
+  end
+
+
+  local function place_importants(R)
+    -- determine available places
+
+    local middles = table.copy(R.sections)
+    local corners = {}
+    local walls = {}
+
+    for _,K in ipairs(R.sections) do
+      for _,C in pairs(K.corners) do
+        if not C.place_used then
+          table.insert(corners, C)
+        end
+      end
+      for _,E in pairs(K.edges) do
+        if not E.place_used then
+          table.insert(walls, E)
+        end
+      end
+    end
+
+    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
+
+    rand.shuffle(corners)
+    rand.shuffle(walls)
+
+    R.middles = middles
+
+    -- determine the stuff which MUST go into this room
+
+    R.importants = {}
+
+    if R.purpose then
+      table.insert(R.importants, { kind=R.purpose, lock=R.purpose_lock })
+    end
+
+    if R:has_teleporter() then
+      table.insert(R.importants, { kind="TELEPORTER" })
+    end
+
+--[[ FIXME (currently added by pickup code)
+    if R.weapon then
+      table.insert(R.importants, { kind="WEAPON" })
+    end
+--]]
+
+    -- TODO: more combinations, check what prefabs can be used
+
+    for _,IM in ipairs(R.importants) do
+
+      if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
+        pick_imp_spot(IM, middles, {}, {})
+      else
+        pick_imp_spot(IM, {}, {}, walls)
+      end
+    end
+  end
+
+
+  --| Layout_place_importants |--
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    place_importants(R)
+  end
+end
+
+
+
 function Layout_the_room(R)
 
 
@@ -719,156 +887,6 @@ function Layout_the_room(R)
         for _,E in pairs(K.edges) do
 ---       adjust_corner_sizes(E)
         end
-      end
-    end
-  end
-
-
-  local function pick_imp_spot(IM, middles, corners, walls)
-    for loop = 3,19 do
-      if rand.odds(loop * 10) and #middles > 0 then
-        IM.place_kind = "MIDDLE"
-        IM.place_K = table.remove(middles, 1)
-        IM.place_K.place_used = true
-gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
-
-        if IM.lock and IM.lock.kind == "KEY" then
-          IM.prefab = "OCTO_PEDESTAL"
-          IM.skin = { item = IM.lock.item, top = "CEIL1_2", base = "FLAT1" }
-        end
-
-        return
-      end
-
-      if rand.odds(loop * 10) and #walls > 0 then
-        IM.place_kind = "WALL"
-        IM.place_E = table.remove(walls, 1)
-        IM.place_E.place_used = true
-gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
-
-        local E = IM.place_E
-
-        local prefab, skin
-        local long, deep
-
-        if IM.kind == "START" then
-          prefab = "START_LEDGE"
-          skin = {}
-          long = 200
-          deep = 128
-        
-        elseif IM.kind == "EXIT" then
-          prefab = "WALL_SWITCH"
-          skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
-          long = 200
-          deep = 64
-
-        elseif IM.lock and IM.lock.kind == "SWITCH" then
-          if GAME.format == "quake" then
-            prefab = "QUAKE_WALL_SWITCH"
-            skin = { target = string.format("t%d", IM.lock.tag), }
-            long = 192
-            deep = 32
-          else
-            prefab = "WALL_SWITCH"
-            skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
-            long = 200
-            deep = 64
-          end
-
-        elseif IM.lock and IM.lock.kind == "KEY" then
-          prefab = "ITEM_NICHE"
-          skin = { item = IM.lock.item }
-          long = 200
-          deep = 64
-
-        else
-          prefab = "ITEM_NICHE"
-          skin = { item = "mega", key="LITE5" }
-          long = 200
-          deep = 64
-        end
-
-        local long1 = int(E.long - long) / 2
-        local long2 = int(E.long + long) / 2
-
-        local SP = Layout_add_span(E, long1, long2, deep)
-
-        SP.usage = "prefab"
-        SP.prefab = prefab
-        SP.skin = skin
-
-        return
-      end
-
-      if rand.odds(loop * 10) and #corners > 0 then
-        IM.place_kind = "CORNER"
-        IM.place_C = table.remove(corners, 1)
-        IM.place_C.place_used = true
-gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
-        return
-      end
-    end
-
-    -- TODO: allow up to 4 stuff in a "middle" (subdivide section 2 or 4 ways)
-
-    error("could not place important stuff!")
-  end
-
-
-  local function place_importants()
-    -- determine available places
-
-    local middles = table.copy(R.sections)
-    local corners = {}
-    local walls = {}
-
-    for _,K in ipairs(R.sections) do
-      for _,C in pairs(K.corners) do
-        if not C.place_used then
-          table.insert(corners, C)
-        end
-      end
-      for _,E in pairs(K.edges) do
-        if not E.place_used then
-          table.insert(walls, E)
-        end
-      end
-    end
-
-    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
-
-    rand.shuffle(corners)
-    rand.shuffle(walls)
-
-    R.middles = middles
-
-    -- determine the stuff which MUST go into this room
-
-    R.importants = {}
-
-    if R.purpose then
-      table.insert(R.importants, { kind=R.purpose, lock=R.purpose_lock })
-    end
-
-    if R:has_teleporter() then
-      table.insert(R.importants, { kind="TELEPORTER" })
-    end
-
---[[ FIXME (currently added by pickup code)
-    if R.weapon then
-      table.insert(R.importants, { kind="WEAPON" })
-    end
---]]
-
-    -- TODO: more combinations, check what prefabs can be used
-
-    for _,IM in ipairs(R.importants) do
-
-      if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
-        pick_imp_spot(IM, middles, {}, {})
-      else
-        pick_imp_spot(IM, {}, {}, walls)
       end
     end
   end
@@ -1196,7 +1214,8 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     local K = E.K
     local z = ROOM.entry_floor_h
 
-stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
+-- stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
+
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
@@ -2349,9 +2368,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   R.wall_space = Layout_initial_space(R)
 
-  decide_corner_sizes()
 
-  place_importants()
+  decide_corner_sizes()
 
 
   build_corners()
