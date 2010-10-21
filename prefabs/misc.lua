@@ -141,46 +141,6 @@ PREFAB.CRATE =
 }
 
 
-PREFAB.CAGE =
-{
-  brushes =
-  {
-    {
-      { x = -48, y = -48, mat = "?base" },
-      { x =  48, y = -48, mat = "?base" },
-      { x =  48, y =  48, mat = "?base" },
-      { x = -48, y =  48, mat = "?base" },
-      { t = 48, mat = "?base" },
-    },
-
---[[
-    {
-      { x = -48, y = -48, mat = "?pillar" },
-      { x =  48, y = -48, mat = "?pillar" },
-      { x =  48, y =  48, mat = "?pillar" },
-      { x = -48, y =  48, mat = "?pillar" },
-      { b = 176, mat = "?pillar" },
-    },
---]]
-
-    {
-      { m = "rail" },
-      { x = -48, y = -48, mat = "?rail", blocked=1 },
-      { x =  48, y = -48, mat = "?rail", blocked=1 },
-      { x =  48, y =  48, mat = "?rail", blocked=1 },
-      { x = -48, y =  48, mat = "?rail", blocked=1 },
-      { b = 48 },
-      { t = 176 },
-    },
-  },
-
-  spots =
-  {
-    { kind = "cage", x = 0, y = 0, z = 48, r = 80, h = 128, angle = 90 },
-  },
-}
-
-
 PREFAB.QUAKE_TELEPORTER =
 {
   brushes =
