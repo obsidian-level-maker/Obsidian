@@ -53,7 +53,85 @@ PREFAB.CAGE_1 =
 
   spots =
   {
-    { kind = "cage", x = 0, y = 0, z = 48, r = 80, h = 128, angle = 90 },
+    { kind = "cage", x = 0, y = 0, z = 48, r = 40, h = 128, angle = 90 },
+  },
+}
+
+
+PREFAB.CAGE_LARGE =
+{
+  brushes =
+  {
+    -- main trunk
+    {
+      { x = -96, y = -96, mat = "?wall" },
+      { x =  96, y = -96, mat = "?wall" },
+      { x =  96, y =  96, mat = "?wall" },
+      { x = -96, y =  96, mat = "?wall" },
+      { t = 80, mat = "?wall" },
+    },
+
+    -- railing
+    {
+      { m = "rail" },
+      { x = -96, y = -96, mat = "?rail", blocked=1 },
+      { x =  96, y = -96, mat = "?rail", blocked=1 },
+      { x =  96, y =  96, mat = "?rail", blocked=1 },
+      { x = -96, y =  96, mat = "?rail", blocked=1 },
+      { b = 80 },
+      { t = 208 },
+    },
+
+    -- trim at bottom
+    {
+      { x =  -96, y = -144, mat = "?trim" },
+      { x =   96, y = -144, mat = "?trim" },
+      { x =  144, y =  -96, mat = "?trim" },
+      { x =  144, y =   96, mat = "?trim" },
+      { x =   96, y =  144, mat = "?trim" },
+      { x =  -96, y =  144, mat = "?trim" },
+      { x = -144, y =   96, mat = "?trim" },
+      { x = -144, y =  -96, mat = "?trim" },
+      { t =  8, mat = "?trim" },
+    },
+
+    -- posts on each corner
+    {
+      { x = -108, y = -108, mat = "?support", x_offset=0 },
+      { x =  -84, y = -108, mat = "?support", x_offset=0 },
+      { x =  -84, y =  -84, mat = "?support", x_offset=0 },
+      { x = -108, y =  -84, mat = "?support", x_offset=0 },
+      { t = 224, mat = "?support" },
+    },
+
+    {
+      { x =  84, y = -108, mat = "?support", x_offset=0 },
+      { x = 108, y = -108, mat = "?support", x_offset=0 },
+      { x = 108, y =  -84, mat = "?support", x_offset=0 },
+      { x =  84, y =  -84, mat = "?support", x_offset=0 },
+      { t = 224, mat = "?support" },
+    },
+
+    {
+      { x = -108, y =  84, mat = "?support", x_offset=0 },
+      { x =  -84, y =  84, mat = "?support", x_offset=0 },
+      { x =  -84, y = 108, mat = "?support", x_offset=0 },
+      { x = -108, y = 108, mat = "?support", x_offset=0 },
+      { t = 224, mat = "?support" },
+    },
+
+    {
+      { x =  84, y =  84, mat = "?support", x_offset=0 },
+      { x = 108, y =  84, mat = "?support", x_offset=0 },
+      { x = 108, y = 108, mat = "?support", x_offset=0 },
+      { x =  84, y = 108, mat = "?support", x_offset=0 },
+      { t = 224, mat = "?support" },
+    },
+  },
+
+  spots =
+  {
+    { kind = "cage", x = 0, y = 0, z = 80, r = 80, h = 160, angle = 90 },
   },
 }
 
