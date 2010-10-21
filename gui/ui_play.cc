@@ -286,6 +286,7 @@ const char * UI_Play::monster_syms[] =
   "normal", "Normal",
   "more",   "More",
   "heaps",  "Hordes",
+  "nuts",   "Nuts!",
 
   "prog",   "Progressive",
   "mixed",  "Mix It Up",

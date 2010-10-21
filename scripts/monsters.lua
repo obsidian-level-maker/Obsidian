@@ -724,6 +724,9 @@ function Monsters_fill_room(R)
     elseif OB_CONFIG.mons == "prog" then
       qty = LEVEL.prog_mons_qty
 
+    elseif OB_CONFIG.mons == "nuts" then
+      qty = 100
+
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
     end
@@ -1396,6 +1399,10 @@ function Monsters_fill_room(R)
 
     local count = math.min(6, R.sw) * math.min(6 * R.sh)
     count = int(count / 5)
+
+    if OB_CONFIG.mons == "nuts" then
+      count = 500
+    end
 
 
     local wants = {}
