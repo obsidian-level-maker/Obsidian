@@ -665,13 +665,15 @@ function Quest_make_quests()
 
 
   local function setup_lev_alongs()
-    local k_along = 0
+    local w_along = 0
 
     for index,R in ipairs(LEVEL.all_rooms) do
       R.lev_along  = index / #LEVEL.all_rooms
-      R.weap_along = (k_along + R.kvolume / 2) / SECTION_W
+      
+      R.weap_along = (w_along + R.kvolume / 3) / SECTION_W
+      R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
 
-      k_along = k_along + R.kvolume
+      w_along = w_along + R.kvolume * rand.range(0.5, 0.8)
     end
   end
 
