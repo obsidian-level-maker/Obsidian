@@ -25,7 +25,6 @@ STYLE  = {}
 LEVEL  = {}
 THEME  = {}
 
-SEEDS    = {}
 SECTIONS = {}
 
 SKILLS = { "easy", "medium", "hard" }

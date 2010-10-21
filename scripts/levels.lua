@@ -46,7 +46,6 @@ class LEVEL
 require 'defs'
 require 'util'
 
-require 'seeds'
 require 'planner'
 require 'connect'
 require 'naming'
@@ -100,7 +99,6 @@ function Levels_clean_up()
 
   LEVEL    = nil
   STYLE    = nil
-  SEEDS    = nil
   SECTIONS = nil
 
   collectgarbage("collect")
@@ -109,7 +107,6 @@ end
 
 function Levels_between_clean()
   LEVEL    = nil
-  SEEDS    = nil
   SECTIONS = nil
 
   collectgarbage("collect")

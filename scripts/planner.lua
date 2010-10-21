@@ -80,6 +80,12 @@ require 'defs'
 require 'util'
 
 
+SEED_W = 0
+SEED_H = 0
+
+SEED_DX = 0
+SEED_DY = 0
+
 SECTION_W = 0
 SECTION_H = 0
 
@@ -329,21 +335,28 @@ function Plan_create_sections(W, H)
   end end
 
 
-  -- create the SEEDS array too
+  --- create the SEED mapping ---
 
   local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + border_seeds - 1
   local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
 
-  Seed_init(seed_W, seed_H, 0, free_seeds)
+  -- setup globals 
+  SEED_W = seed_W
+  SEED_H = seed_H + free_seeds
 
+  -- centre the map : needed for Quake, OK for other games
+  -- (this formula ensures that 'coord 0' is still a seed boundary)
+  SEED_DX = int(SEED_W / 2) * SEED_SIZE
+  SEED_DY = int(SEED_H / 2) * SEED_SIZE
 
   for x = 1,SECTION_W do for y = 1,SECTION_H do
     local K = SECTIONS[x][y]
-    -- FIXME: compute properly
-    K.x1 = SEEDS[K.sx1][K.sy1].x1
-    K.y1 = SEEDS[K.sx1][K.sy1].y1
-    K.x2 = SEEDS[K.sx2][K.sy2].x2
-    K.y2 = SEEDS[K.sx2][K.sy2].y2
+
+    K.x1 = (K.sx1 - 1) * SEED_SIZE - SEED_DX
+    K.y1 = (K.sy1 - 1) * SEED_SIZE - SEED_DY
+
+    K.x2 = K.sx2 * SEED_SIZE - SEED_DX
+    K.y2 = K.sy2 * SEED_SIZE - SEED_DY
   end end
 end
 
@@ -1018,18 +1031,6 @@ end
 
 function Plan_make_seeds()
   
-  local function init_seed(sx, sy, R)
-    assert(Seed_valid(sx, sy))
-
-    local S = SEEDS[sx][sy]
-    if S.room then
-      error("Planner: rooms overlap!")
-    end
-
-    S.room = R
-    S.kind = "walk"
-  end
-
   local function fill_section(kx, ky)
     local K = SECTIONS[kx][ky]
     local R = K.room
@@ -1042,10 +1043,6 @@ function Plan_make_seeds()
     if not R.sy2 or K.sy2 > R.sy2 then R.sy2 = K.sy2 end
 
     R:update_size()
-
-    for x = K.sx1,K.sx2 do for y = K.sy1,K.sy2 do
-      init_seed(x, y, R) 
-    end end
   end
 
   ---| Plan_make_seeds |---
@@ -1144,8 +1141,6 @@ function Plan_create_rooms()
   Plan_decide_outdoors()
 
   Plan_make_seeds()
-
-  Seed_flood_fill_edges()
 
   Plan_dump_rooms("Seed Map:")
 

@@ -20,7 +20,6 @@
 
 require 'defs'
 require 'util'
-require 'seeds'
 
 
 Trans = {}

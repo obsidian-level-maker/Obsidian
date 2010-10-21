@@ -537,8 +537,8 @@ do return end --!!!!!!!!!  FIXME CAVES
   local w_info = get_mat(w_tex)
   local high_z = EXTREME_H
 
-  local base_x = SEEDS[R.sx1][R.sy1].x1
-  local base_y = SEEDS[R.sx1][R.sy1].y1
+  local base_x = SECTIONS[R.kx1][R.ky1].x1
+  local base_y = SECTIONS[R.kx1][R.ky1].y1
 
   local function WALL_brush(data, coords)
     if data.shadow_info then
