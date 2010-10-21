@@ -3864,12 +3864,8 @@ function DOOM2.get_levels()
       episode = 1 ; ep_along = map / 11
     end
 
-    if MAP_NUM == 1 then
-      ep_along = rand.range(0.3, 0.7)
-    end
-
     if OB_CONFIG.length == "single" then
-      ep_along = 0.5
+      ep_along = rand.pick{ 0.2, 0.3, 0.4, 0.6, 0.8 }
     elseif OB_CONFIG.length == "few" then
       ep_along = map / MAP_NUM
     end
@@ -3890,13 +3886,16 @@ function DOOM2.get_levels()
       map      = map,
       episode  = episode,
       ep_along = ep_along,
-      mon_along = math.min(1, map / 10),
 
       sky_light = ep_info.sky_light,
     }
 
-    if OB_CONFIG.length == "single" or OB_CONFIG.length == "few" then
-      LEV.mon_along = ep_along
+    LEV.mon_along = LEV.ep_along
+
+    if OB_CONFIG.length == "episode" then
+      LEV.mon_along = math.min(1, map / 9)
+    elseif OB_CONFIG.length == "full" then
+      LEV.mon_along = math.min(1, map / 16)
     end
 
     if OB_CONFIG.length == "few" then
