@@ -320,49 +320,21 @@ function Quest_add_weapons()
   end
 
 
-  local function do_start_weapon(quest)
-    local name_tab = {}
-
-    for name,info in pairs(GAME.WEAPONS) do
-      local prob = info.start_prob
-
-      if OB_CONFIG.strength == "crazy" then
-        prob = info.add_prob
-      end
-
-      if LEVEL.allowances[name] == 0 then
-        prob = 0
-      end
-
-      if prob and prob > 0 then
-        name_tab[name] = prob
-      end
-    end -- for weapons
-
-    if table.empty(name_tab) then
-      gui.debugf("Start weapon: NONE!!\n")
+  local function add_weapon(R)
+    -- putting weapons in the exit room is a tad silly
+    if R.purpose == "EXIT" then
       return
     end
 
-    local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.WEAPONS[weapon]
-
-    gui.debugf("Start weapon: %s\n", weapon)
-
-    quest.weapon = weapon
-
-    quest.start.weapon = weapon
-    quest.start.weapon_ammo = info.ammo
-
-    do_mark_weapon(weapon)
-  end
-
-
-  local function do_new_weapon(quest)
+    -- determine probabilities, ignore already gotten weapons
     local name_tab = {}
 
     for name,info in pairs(GAME.WEAPONS) do
       local prob = info.add_prob
+
+      if R.purpose == "START" and not (OB_CONFIG.strength == "crazy") then
+        prob = info.start_prob
+      end
 
       if LEVEL.added_weapons[name] or LEVEL.allowances[name] == 0 then
         prob = 0
@@ -374,57 +346,40 @@ function Quest_add_weapons()
     end
 
     if table.empty(name_tab) then
-      gui.debugf("No weapon @ QUEST_%d\n", quest.id)
+      gui.printf("  %s: NONE!!\n", R:tostr())
       return
     end
 
     local weapon = rand.key_by_probs(name_tab)
     local info = GAME.WEAPONS[weapon]
 
-    -- Select a room to put the weapon in.
-    -- This is very simplistic, either the start room of the
-    -- quest or a neighboring room.
-    local R = quest.start
-    local neighbors = {}
-
-    for _,C in ipairs(R.conns) do
-      local N = C:neighbor(R)
-      if N.quest == R.quest and not N.purpose then
-        table.insert(neighbors, N)
-      end
-    end
-
-    if #neighbors >= 1 and rand.odds(75) then
-      R = rand.pick(neighbors)
-    end
-
-    -- putting weapons in the exit room is a tad silly
-    if R.purpose == "EXIT" then
-      return
-    end
-
-    quest.weapon = weapon
+    gui.printf("  %s: %s\n", R:tostr(), weapon)
 
     R.weapon = weapon
     R.weapon_ammo = info.ammo
 
     do_mark_weapon(weapon)
-
-    gui.debugf("New weapon: %s @ %s QUEST_%d\n", weapon, R:tostr(), quest.id)
   end
 
 
   ---| Quest_add_weapons |---
 
+  gui.printf("Weapon List:\n")
+
   LEVEL.added_weapons = {}
 
-  for index,Q in ipairs(LEVEL.all_quests) do
-    if index == 1  then
-      do_start_weapon(Q)
-    elseif (index == 2) or rand.odds(sel((index % 2) == 1, 80, 20)) then
-      do_new_weapon(Q)
+  add_weapon(LEVEL.all_rooms[1])
+
+  local next_weap_at = 1.0
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.weap_along >= next_weap_at then
+      add_weapon(R)
+      next_weap_at = next_weap_at + 1
     end
   end
+
+  gui.printf("\n")
 end
 
 
@@ -709,6 +664,27 @@ function Quest_make_quests()
   end
 
 
+  local function setup_lev_alongs()
+    local k_along = 0
+
+    for index,R in ipairs(LEVEL.all_rooms) do
+      R.lev_along  = index / #LEVEL.all_rooms
+      R.weap_along = (k_along + R.kvolume / 2) / SECTION_W
+
+      k_along = k_along + R.kvolume
+    end
+  end
+
+
+  local function dump_visit_order()
+    gui.debugf("Room Visit Order:\n")
+    for _,R in ipairs(LEVEL.all_rooms) do
+      gui.debugf("%s : %1.2f : quest %d : purpose %s\n", R:tostr(),
+                 R.lev_along, R.quest.id, R.purpose or "-")
+    end
+  end
+
+
   --==| Quest_make_quests |==--
 
   gui.printf("\n--==| Make Quests |==--\n\n")
@@ -732,14 +708,13 @@ function Quest_make_quests()
     visit_room(QT.start, QT)
   end
 
+  setup_lev_alongs()
+
   assert(LEVEL.exit_room)
 
   gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
 
-  gui.debugf("Room Visit Order:\n")
-  for _,R in ipairs(LEVEL.all_rooms) do
-    gui.debugf("%s : quest %d : purpose %s\n", R:tostr(), R.quest.id, R.purpose or "-")
-  end
+  dump_visit_order()
 
 --??? Quest_find_storage_rooms()
 

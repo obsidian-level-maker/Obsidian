@@ -103,6 +103,13 @@ function Player_give_weapon(weapon, to_CL)
 end
 
 
+function Player_give_room_stuff(R)
+  if R.weapon then
+    Player_give_weapon(R.weapon)
+  end
+end
+
+
 function Player_give_stuff(hmodel, give_list)
   for _,give in ipairs(give_list) do
     if give.health then
@@ -1647,17 +1654,12 @@ function Monsters_make_battles()
 
   Levels_invoke_hook("make_battles", LEVEL.seed)
 
-  local cur_quest = -1
-
   -- Rooms have been sorted into a visitation order, so we
   -- simply visit them one-by-one and insert some monsters
   -- and simulate each battle.
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.quest.weapon and (R.quest.id > cur_quest) then
-      Player_give_weapon(R.quest.weapon)
-      cur_quest = R.quest.id
-    end
+    Player_give_room_stuff(R)
 
     Monsters_fill_room(R)
   end
