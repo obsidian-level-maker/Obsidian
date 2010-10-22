@@ -70,42 +70,6 @@ class ROOM
 }
 
 
-class CORNER
-{
-  K, side  -- identification
-
-  concave  -- true for 270 degree corners
-
-  horiz, vert  -- connecting sizes
-
-  FIXME: usage stuff
-}
-
-
-class EDGE
-{
-  K, side  -- identification
-
-  long  --  real length of edge
-
-  corn1, corn2 : CORNER
-
-  L_long, R_long  -- length allocated to corners
-  L_deep, R_deep  -- depth (sticking out) at corners
-
-  spans[] : SPAN  -- allocated stuff on this edge
-}
-
-
-class SPAN
-{
-  long1, long2  -- length range along edge
-  deep1, deep2  -- depth (sticking out)
-
-  FIXME: usage stuff
-}
-
-
 ----------------------------------------------------------------]]
 
 require 'defs'
