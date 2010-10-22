@@ -81,7 +81,7 @@ ROOM_CLASS = {}
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_room_id()
   local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
-              sections={}, windows={}, spaces={} }
+              sections={}, spaces={} }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.all_rooms, R)
   return R
@@ -383,19 +383,17 @@ function Rooms_decide_windows()
   local function add_window(K, N, side)
     gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
 
-    local WINDOW =
+    local USAGE =
     {
-      K1=K, K2=N, dir=side
+      kind = "window",
+      K1 = K, K2 = N, dir = side
     }
-
-    table.insert(K.room.windows, WINDOW)
-    table.insert(N.room.windows, WINDOW)
 
     local E1 = K.edges[side]
     local E2 = N.edges[10-side]
 
-    E1.usage = "window"
-    E2.usage = "window"
+    E1.usage = USAGE
+    E2.usage = USAGE
   end
 
 

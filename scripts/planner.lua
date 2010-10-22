@@ -101,14 +101,6 @@ function SECTION_CLASS.side_has_conn(self, side)
   return false
 end
 
-function SECTION_CLASS.side_has_window(self, side)
-  for _,W in ipairs(self.room.windows) do
-    if W.K1 == self and W.dir == side    then return true end
-    if W.K2 == self and W.dir == 10-side then return true end
-  end
-  return false
-end
-
 
 ------------------------------------------------------------------------
 

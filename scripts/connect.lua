@@ -393,8 +393,14 @@ function Connect_rooms()
     local E1 = K1.edges[dir]
     local E2 = K2.edges[10-dir]
 
-    E1.usage = "door"
-    E2.usage = "door"
+    local USAGE =
+    {
+      kind = "door",
+      conn = C,
+    }
+
+    E1.usage = USAGE
+    E2.usage = USAGE
 
     return C
   end

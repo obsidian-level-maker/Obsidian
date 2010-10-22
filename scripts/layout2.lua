@@ -31,6 +31,8 @@ class EDGE
   L_long, R_long  -- length allocated to corners
   L_deep, R_deep  -- depth (sticking out) at corners
 
+  usage : USAGE   -- primary usage (door, window, etc)
+
   spans[] : SPAN  -- allocated stuff on this edge
 }
 
@@ -52,7 +54,7 @@ class CORNER
 
   horiz, vert  -- connecting sizes
 
-  FIXME: usage stuff
+  usage : USAGE  -- primary usage
 }
 
 
@@ -314,7 +316,7 @@ end
 
 function Layout_add_span(E, long1, long2, deep, kind)
 
-gui.debugf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
+stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
 
   assert(long2 > long1)
 
@@ -427,20 +429,26 @@ function Layout_place_straddlers()
   -- and hence would need to know about the windows.
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    for _,W in ipairs(R.windows) do
-      if not W.placed and W.K1.room == R then
-        place_straddler("window", W.K1, W.K2, W.dir)
-        W.placed = true
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        if E.usage and E.usage.kind == "window" and not E.usage.placed then
+          local W = E.usage
+          place_straddler("window", W.K1, W.K2, W.dir)
+          E.usage.placed = true
+        end
       end
     end
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    for _,C in ipairs(R.conns) do
-      if not C.placed and C.K1.room == R and C.kind == "normal" then
-        local STR = place_straddler("door", C.K1, C.K2, C.dir)
-        STR.conn = C
-        C.placed = true
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        if E.usage and E.usage.kind == "door" and not E.usage.placed then
+          local C = E.usage.conn
+          local STR = place_straddler("door", C.K1, C.K2, C.dir)
+          STR.conn = C
+          E.usage.placed = true
+        end
       end
     end
   end
@@ -499,7 +507,8 @@ function Layout_place_importants()
       if rand.odds(loop * 10) and #middles > 0 then
         IM.place_kind = "MIDDLE"
         IM.place_K = table.remove(middles, 1)
-        IM.place_K.usage = "important"
+        IM.place_K.usage = { kind="important" }
+
 gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
 
         if IM.lock and IM.lock.kind == "KEY" then
@@ -513,7 +522,7 @@ gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
       if rand.odds(loop * 10) and #walls > 0 then
         IM.place_kind = "WALL"
         IM.place_E = table.remove(walls, 1)
-        IM.place_E.usage = "important"
+        IM.place_E.usage = { kind="important" }
 gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
 
         local E = IM.place_E
@@ -574,7 +583,7 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
       if rand.odds(loop * 10) and #corners > 0 then
         IM.place_kind = "CORNER"
         IM.place_C = table.remove(corners, 1)
-        IM.place_C.usage = "important"
+        IM.place_C.usage = { kind="important" }
 gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
         return
       end
@@ -586,13 +595,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   end
 
 
-  local function place_importants(R)
-    -- determine available places
-
-    local middles = {}
-    local corners = {}
-    local edges   = {}
-
+  local function collect_free_edges(R, edges, corners, middles)
     for _,K in ipairs(R.sections) do
       if not K.usage then
         table.insert(middles, K)
@@ -610,6 +613,18 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
         end
       end
     end
+  end
+
+
+  local function place_importants(R)
+    -- determine available places
+
+    local edges   = {}
+    local corners = {}
+    local middles = {}
+
+    collect_free_edges(R, edges, corners, middles)
+
 
     table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
 
