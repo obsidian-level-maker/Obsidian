@@ -21,11 +21,12 @@ Current Work
    they must not be split, but which aren't considered to be
    player destinations.
 
-DONE: BUG : switched doors can get wrong tag  !!!
-DONE: place "important stuff" before decide_windows
-DONE: fix Quake button placement
-DONE: multiple safe zones in neighborhood tables
-DONE: prevent ceiling too low : compute min_floor (etc)
+
+!!  EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
+
+    For 2  seed wide room, thickest door is  64 units + 64 walk
+    For 3  seed wide room, thickest door is 160 units + 64 walk
+    For 4+ seed wide room, thickest door is 256 units + 64 walk
 
 
 ///////////////////////
@@ -104,23 +105,13 @@ Layout:
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
 
--  prevent escapes over fences/windows near key pedestals (etc) by
-   raising the height of the fences/windows there.
-
 
 Monsters:
 
--  use 'level' value in monster definitions,
-   e.g. require LEVEL.epi_along >= (def.level - 1) / 9
-   (adjust for Strength setting).
++  automatic 'level' for monsters if value is missing
 
--  PARAM.episode_factor : 0 = progression continuous over whole game
-                          1 = progression same in all episodes
-                          (defaults to 0.5)
++  fix monster quantities (too many right now)
 
-+  fix monster quantities, which was messed up by cave code.
-
-   Also need some increase over the course of a level
-   (like 50% more monsters at end compared to start) and
-   vary the quantity (e.g. nothing in a room occasionally).
+-  increase monster quantities and toughness over course of a
+   level, with extra boost for KEY and EXIT rooms.
 

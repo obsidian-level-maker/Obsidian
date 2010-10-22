@@ -246,6 +246,9 @@ Miscellaneous:
      make the exit into a switched door and put a switch at other
      end of room.
 
+  -  prevent escapes over fences/windows near key pedestals (etc) by
+     raising the height of the fences/windows there.
+
   -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
 
   - Can disable the custom levels
