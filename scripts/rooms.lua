@@ -49,6 +49,8 @@ class ROOM
   kx1, ky1, kx2, ky2  -- \ Section range
   kw, kh              -- /
 
+  sections   -- list of all sections of room
+
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 

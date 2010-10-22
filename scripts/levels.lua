@@ -54,7 +54,7 @@ require 'spaceman'
 require 'caves'
 
 require 'build'
-require 'layout_new'
+require 'layout2'
 require 'rooms'
 require 'tiler'
 require 'fight'
