@@ -55,7 +55,7 @@ require 'util'
 POLYGON_CLASS = {}
 
 function POLYGON_CLASS.new(kind)
-  local P = { kind=kind, id=Plan_alloc_mark(), coords={} }
+  local P = { kind=kind, id=Plan_alloc_id("poly"), coords={} }
   table.set_class(P, POLYGON_CLASS)
   return P
 end
@@ -355,7 +355,7 @@ end
 SPACE_CLASS = {}
 
 function SPACE_CLASS.new()
-  local S = { polys={}, id=Plan_alloc_mark() }
+  local S = { polys={}, id=Plan_alloc_id("space") }
   table.set_class(S, SPACE_CLASS)
   return S
 end

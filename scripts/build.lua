@@ -1394,7 +1394,7 @@ function Fab_render(fab, T, skin, skin2)
     local team
 
     if GAME.format == "quake2" and fab.team_models then
-      team = Plan_alloc_tag()
+      team = Plan_alloc_id("team")
     end
 
     for _,M in ipairs(list) do

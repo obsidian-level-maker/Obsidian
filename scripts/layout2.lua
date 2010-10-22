@@ -316,7 +316,7 @@ end
 
 function Layout_add_span(E, long1, long2, deep, kind)
 
-stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
+-- stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
 
   assert(long2 > long1)
 
@@ -787,7 +787,7 @@ function Layout_the_room(R)
       skin3 = skin3,
 
       R = R,
-      fab_tag = Plan_alloc_mark(),
+      fab_tag = Plan_alloc_id("prefab"),
 
       polys = {},
     }
@@ -945,7 +945,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       skin3 = skin3,
 
       R = R,
-      fab_tag = Plan_alloc_mark(),
+      fab_tag = Plan_alloc_id("prefab"),
     }
 
     if kind == "window" then
@@ -1977,7 +1977,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       skin3 = skin3,
 
       R = R,
-      fab_tag = Plan_alloc_mark(),
+      fab_tag = Plan_alloc_id("prefab"),
 
       polys = {},
 

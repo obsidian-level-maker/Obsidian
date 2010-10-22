@@ -629,6 +629,7 @@ function Levels_make_level(L, index, NUM)
 
 
   LEVEL.seed = OB_CONFIG.seed * 100 + index
+  LEVEL.ids  = {}
 
   THEME = table.copy(assert(LEVEL.sub_theme))
 

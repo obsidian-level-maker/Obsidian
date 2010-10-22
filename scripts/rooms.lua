@@ -79,7 +79,7 @@ require 'util'
 ROOM_CLASS = {}
 
 function ROOM_CLASS.new(shape)
-  local id = Plan_alloc_room_id()
+  local id = Plan_alloc_id("room")
   local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
               sections={}, spaces={} }
   table.set_class(R, ROOM_CLASS)

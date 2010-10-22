@@ -418,8 +418,8 @@ function Connect_rooms()
     table.insert(R1.conns, C)
     table.insert(R2.conns, C)
 
-    C.tele_tag1 = Plan_alloc_tag()
-    C.tele_tag2 = Plan_alloc_tag()
+    C.tele_tag1 = Plan_alloc_id("tag")
+    C.tele_tag2 = Plan_alloc_id("tag")
   end
 
 

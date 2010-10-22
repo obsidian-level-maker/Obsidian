@@ -105,19 +105,10 @@ end
 ------------------------------------------------------------------------
 
 
-function Plan_alloc_tag()
-  LEVEL.last_tag = (LEVEL.last_tag or 0) + 1
-  return LEVEL.last_tag
-end
-
-function Plan_alloc_mark()
-  LEVEL.last_mark = (LEVEL.last_mark or 0) + 1
-  return LEVEL.last_mark
-end
-
-function Plan_alloc_room_id()
-  LEVEL.last_room = (LEVEL.last_room or 0) + 1
-  return LEVEL.last_room
+function Plan_alloc_id(kind)
+  local result = (LEVEL.ids[kind] or 0) + 1
+  LEVEL.ids[kind] = result
+  return result
 end
 
 

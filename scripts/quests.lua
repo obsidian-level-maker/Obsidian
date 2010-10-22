@@ -295,7 +295,7 @@ function Quest_choose_keys()
         switch_probs[LOCK.item] = switch_probs[LOCK.item] / 8
       end
 
-      LOCK.tag  = Plan_alloc_tag()
+      LOCK.tag = Plan_alloc_id("tag")
     end
   end
 
