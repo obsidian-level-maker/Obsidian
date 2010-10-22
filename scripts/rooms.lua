@@ -380,30 +380,6 @@ end
 
 function Rooms_decide_windows()
 
-  local function UNUSED_score_side(K, side)
-    local N = K:neighbor(side)
-
-    if not N or N.room == K.room then
-      return -1
-    end
-
-    -- windows next to doors are handled differently
-    if K:side_has_conn(side) then
-      return -1
-    end
-
-    if not N.room.outdoor then
-      return 0.1
-    end
-
-    if R.num_windows > 0 then
-      return 1
-    end
-
-    return 3
-  end
-
-
   local function add_window(K, N, side)
     local WINDOW =
     {
@@ -435,8 +411,6 @@ function Rooms_decide_windows()
     if not E1 or not E2 then return false end
 
     if E1.place_used or E2.place_used then return false end
-
-    assert(not K:side_has_conn(side))
 
     return true
   end
