@@ -786,7 +786,16 @@ function Rooms_build_all()
   Rooms_decide_windows()
 
   Layout_place_straddlers()
-  Layout_rooms()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_the_room(R)
+  end
+
+  Rooms_synchronise_skies()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_the_ceiling(R)
+  end
 
   -- scenic rooms ??
 
