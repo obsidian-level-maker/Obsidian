@@ -390,6 +390,12 @@ function Connect_rooms()
     K1.num_conn = K1.num_conn + 1
     K2.num_conn = K2.num_conn + 1
 
+    local E1 = K1.edges[dir]
+    local E2 = K2.edges[10-dir]
+
+    E1.place_used = true
+    E2.place_used = true
+
     return C
   end
 

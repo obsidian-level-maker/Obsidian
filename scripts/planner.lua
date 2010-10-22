@@ -110,6 +110,8 @@ function SECTION_CLASS.side_has_window(self, side)
 end
 
 
+------------------------------------------------------------------------
+
 
 function Plan_alloc_tag()
   LEVEL.last_tag = (LEVEL.last_tag or 0) + 1
@@ -1018,9 +1020,6 @@ end
 
 
 function Plan_dump_rooms(title)
-  if title then
-    gui.printf("%s\n", title)
-  end
 
   local function seed_to_char(sx, sy)
     -- find the section
@@ -1045,6 +1044,8 @@ function Plan_dump_rooms(title)
     return "."
   end
 
+  gui.printf("%s\n", title or "Seed Map:")
+
   for y = SEED_H,1,-1 do
     local line = ""
     for x = 1,SEED_W do
@@ -1057,8 +1058,116 @@ function Plan_dump_rooms(title)
 end
 
 
-function Plan_create_rooms()
+function Plan_prepare_rooms()
 
+  local function add_edges(K)
+    for side = 2,8,2 do
+      local N = K:neighbor(side)
+
+      if not (N and N.room == K.room) then
+        local EDGE = { K=K, side=side, spans={} }
+
+        if geom.is_vert(side) then
+          EDGE.long = K.x2 - K.x1
+        else
+          EDGE.long = K.y2 - K.y1
+        end
+
+        K.edges[side] = EDGE
+      end
+    end
+  end
+
+
+  local function add_corners(K)
+    for side = 1,9,2 do if side ~= 5 then
+      local R_dir = geom.RIGHT_45[side]
+      local L_dir = geom. LEFT_45[side]
+
+      local N = K:neighbor(side)
+      local R = K:neighbor(R_dir)
+      local L = K:neighbor(L_dir)
+
+      local R_same = (R and R.room == K.room)
+      local L_same = (L and L.room == K.room)
+
+      if not R_same and not L_same then
+        K.corners[side] = { K=K, side=side }
+      end
+
+      -- detect the "concave" kind, these turn 270 degrees
+      if R_same and L_same and not (N and N.room == K.room) then
+        K.corners[side] = { K=K, side=side, concave=true }
+      end
+    end end
+  end
+
+
+  local function corner_near_edge(E, want_left)
+    local side
+    if want_left then side = geom.LEFT_45 [E.side]
+                 else side = geom.RIGHT_45[E.side]
+    end
+
+    local C = E.K.corners[side]
+
+    if C then
+      assert(not C.concave)
+      return C
+    end
+
+    -- check for concave corners, a bit trickier since it will be
+    -- in a different section.
+
+    if want_left then side = geom.LEFT_45 [side]
+                 else side = geom.RIGHT_45[side]
+    end
+
+    local N = E.K:neighbor(side)
+
+    if not (N and N.room == E.K.room) then
+      return nil
+    end
+
+    if want_left then side = geom.RIGHT_45[E.side]
+                 else side = geom.LEFT_45 [E.side]
+    end
+
+    return N.corners[side]
+  end
+
+
+  local function connect_corners(R)
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        E.corn1 = corner_near_edge(E, true)
+        E.corn2 = corner_near_edge(E, false)
+      end
+    end
+  end
+
+
+  local function prepare_room(R)
+    for _,K in ipairs(R.sections) do
+      add_edges(K)
+      add_corners(K)
+    end
+
+    connect_corners(R)
+  end
+
+
+  ---| Plan_prepare_rooms |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    prepare_room(R)
+  end
+end
+
+
+
+function Plan_create_rooms()
+  --
   -- Overview of room planning:
   --
   --   1. decide map size
@@ -1066,10 +1175,8 @@ function Plan_create_rooms()
   --   3. add big rooms (rect / shaped / natural)
   --   4. add small rooms
   --   5. decide indoor/outdoor
-  --   6. place sub-rooms
-  --   7. convert section map to seeds
+  --   6. create edge and corner lists
   --
-
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
   assert(LEVEL.ep_along)
@@ -1105,8 +1212,9 @@ function Plan_create_rooms()
   Plan_decide_outdoors()
 
   Plan_make_seeds()
+  Plan_dump_rooms()
 
-  Plan_dump_rooms("Seed Map:")
+  Plan_prepare_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw, R.sh)

@@ -783,7 +783,6 @@ function Rooms_build_all()
   end
 
 
-  Layout_prepare_rooms()
   Layout_place_importants()
 
   Rooms_decide_windows()
