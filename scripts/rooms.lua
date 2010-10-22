@@ -381,6 +381,8 @@ end
 function Rooms_decide_windows()
 
   local function add_window(K, N, side)
+    gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
+
     local WINDOW =
     {
       K1=K, K2=N, dir=side
@@ -389,13 +391,11 @@ function Rooms_decide_windows()
     table.insert(K.room.windows, WINDOW)
     table.insert(N.room.windows, WINDOW)
 
-    gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
-
     local E1 = K.edges[side]
     local E2 = N.edges[10-side]
 
-    E1.place_used = true
-    E2.place_used = true
+    E1.usage = "window"
+    E2.usage = "window"
   end
 
 
@@ -410,7 +410,7 @@ function Rooms_decide_windows()
 
     if not E1 or not E2 then return false end
 
-    if E1.place_used or E2.place_used then return false end
+    if E1.usage or E2.usage then return false end
 
     return true
   end

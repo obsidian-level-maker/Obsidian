@@ -318,7 +318,7 @@ gui.debugf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
 
   assert(long2 > long1)
 
-  E.place_used = true
+  assert(E.usage)
 
   -- check if valid
 
@@ -499,7 +499,7 @@ function Layout_place_importants()
       if rand.odds(loop * 10) and #middles > 0 then
         IM.place_kind = "MIDDLE"
         IM.place_K = table.remove(middles, 1)
-        IM.place_K.place_used = true
+        IM.place_K.usage = "important"
 gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
 
         if IM.lock and IM.lock.kind == "KEY" then
@@ -513,7 +513,7 @@ gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
       if rand.odds(loop * 10) and #walls > 0 then
         IM.place_kind = "WALL"
         IM.place_E = table.remove(walls, 1)
-        IM.place_E.place_used = true
+        IM.place_E.usage = "important"
 gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
 
         local E = IM.place_E
@@ -574,7 +574,7 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
       if rand.odds(loop * 10) and #corners > 0 then
         IM.place_kind = "CORNER"
         IM.place_C = table.remove(corners, 1)
-        IM.place_C.place_used = true
+        IM.place_C.usage = "important"
 gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
         return
       end
@@ -589,19 +589,24 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   local function place_importants(R)
     -- determine available places
 
-    local middles = table.copy(R.sections)
+    local middles = {}
     local corners = {}
-    local walls = {}
+    local edges   = {}
 
     for _,K in ipairs(R.sections) do
+      if not K.usage then
+        table.insert(middles, K)
+      end
+
       for _,C in pairs(K.corners) do
-        if not C.place_used then
+        if not C.usage then
           table.insert(corners, C)
         end
       end
+      
       for _,E in pairs(K.edges) do
-        if not E.place_used then
-          table.insert(walls, E)
+        if not E.usage then
+          table.insert(edges, E)
         end
       end
     end
@@ -609,7 +614,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
 
     rand.shuffle(corners)
-    rand.shuffle(walls)
+    rand.shuffle(edges)
 
     R.middles = middles
 
@@ -638,7 +643,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
       if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
         pick_imp_spot(IM, middles, {}, {})
       else
-        pick_imp_spot(IM, {}, {}, walls)
+        pick_imp_spot(IM, {}, {}, edges)
       end
     end
   end

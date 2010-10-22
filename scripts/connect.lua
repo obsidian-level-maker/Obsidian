@@ -376,7 +376,7 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
-    gui.debugf("add_connection: %s --> %s\n", K1:tostr(), K2:tostr())
+    gui.printf("Doorway from %s --> %s\n", K1:tostr(), K2:tostr())
 
     merge_groups(R.conn_group, N.conn_group)
 
@@ -393,8 +393,8 @@ function Connect_rooms()
     local E1 = K1.edges[dir]
     local E2 = K2.edges[10-dir]
 
-    E1.place_used = true
-    E2.place_used = true
+    E1.usage = "door"
+    E2.usage = "door"
 
     return C
   end
