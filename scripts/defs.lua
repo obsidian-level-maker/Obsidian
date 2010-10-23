@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -26,16 +26,6 @@ LEVEL  = {}
 THEME  = {}
 
 SECTIONS = {}
-
-SKILLS = { "easy", "medium", "hard" }
- 
-MODES =
-{
-  { "sp",   "Single Player" },
-  { "coop", "Co-op" },
-  { "dm",   "Deathmatch" },
-  { "ctf",  "Capture Flag" },
-}
 
 
 -- all prefabs go here
@@ -102,7 +92,6 @@ MON_VARIATION_LOW  = 0.5
 MON_VARIATION_HIGH = 1.5
 
 
--- Fight Simulator constants and tables
 HEALTH_AMMO_ADJUSTS =
 {
   none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
@@ -110,14 +99,4 @@ HEALTH_AMMO_ADJUSTS =
 
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
-
-PLAYER_ACCURACIES = { easy=0.65, medium=0.75, hard=0.85 }
-
-HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
-MISSILE_RATIOS = { 1.0, 0.3, 0.1 }
-MELEE_RATIOS   = { 1.0, 0.1 }
-
-HITSCAN_DODGES = { easy=0.05, medium=0.15, hard=0.25 }
-MISSILE_DODGES = { easy=0.75, medium=0.90, hard=0.90 }
-MELEE_DODGES   = { easy=0.80, medium=0.90, hard=0.95 }
 

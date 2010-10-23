@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -29,13 +29,13 @@ Inputs:
    monsters   : list of monsters that the player must kill
    weapons    : list of weapons that player can use
    weap_prefs : weapon preference table (can be empty)
-   skill      : skill level
 
 Output:
    stats    : health that player needs to survive the battle
               + ammo quantities required by the player
 
 Notes:
+------
 
 *  Health result is stored in the 'stats' table.  All the
    values are >= 0 and can be partial (like 3.62 rockets).
@@ -50,13 +50,12 @@ Notes:
    by being stingy on health/ammo in the room containing
    the powerup (and subsequent rooms).
 
-*  Monsters are "fought" one by one in the given list.
-   Typically they should be in order of distance from the
-   room's entrance (with some preference for having the
-   toughest monsters first, which is how the real player
-   would tackle them).  Your weapons can damage other
-   monsters though, to model such things as rocket splash,
-   shotgun spread, the BFG etc...
+*  Monsters are "fought" one by one in the given list,
+   sorted from most threatening to least threatening
+   (which is likely how the real player would tackle them).
+   Your weapons can damage other monsters though, including
+   such things as rocket splash, shotgun spread, the BFG
+   etc...
 
    All of the monsters are fighting the player.  They are
    assumed to be linearly spread out (first one is closest
@@ -80,11 +79,19 @@ require 'defs'
 require 'util'
 
 
-function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
+function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   local active_mons = {}
 
-  local shoot_accuracy = PLAYER_ACCURACIES[skill]
+  local PLAYER_ACCURACY = 0.8
+
+  local HITSCAN_DODGE = 0.25
+  local MISSILE_DODGE = 0.85
+  local MELEE_DODGE   = 0.95
+
+  local HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
+  local MISSILE_RATIOS = { 1.0, 0.3, 0.1 }
+  local MELEE_RATIOS   = { 1.0, 0.1 }
 
 
   local function remove_dead_mon()
@@ -94,6 +101,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
       end
     end
   end
+
 
   local function select_weapon()
     local first_mon = active_mons[1].info
@@ -139,14 +147,16 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
     M.health = M.health - damage
   end
 
+
   local function splash_mons(W, list)
     for idx,damage in ipairs(list) do
       hurt_mon(idx, W, damage)
     end
   end
 
+
   local function player_shoot(W)
-    hurt_mon(1, W, W.damage * shoot_accuracy)
+    hurt_mon(1, W, W.damage * PLAYER_ACCURACY)
 
     -- simulate splash damage | shotgun spread
     if W.splash then
@@ -180,15 +190,15 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
 
     elseif info.attack == "melee" then
       hit_ratio   = MELEE_RATIOS[idx]
-      dodge_ratio = MELEE_DODGES[skill]
+      dodge_ratio = MELEE_DODGE
 
     elseif info.attack == "hitscan" then
       hit_ratio   = HITSCAN_RATIOS[idx]
-      dodge_ratio = HITSCAN_DODGES[skill]
+      dodge_ratio = HITSCAN_DODGE
 
     elseif info.attack == "missile" then
       hit_ratio   = MISSILE_RATIOS[idx]
-      dodge_ratio = MISSILE_DODGES[skill]
+      dodge_ratio = MISSILE_DODGE
 
     else
       error("Unknown monster attack kind: " .. tostring(info.attack))
@@ -207,6 +217,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
 
     stats.health = stats.health + damage
   end
+
 
   local function monster_infight(M, N, time)
     -- FIXME: properly model pseudo-infighting, where one monster
@@ -243,6 +254,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
     N.health = N.health - dm1 * factor
   end
 
+
   local function monsters_shoot(time)
     for idx,M in ipairs(active_mons) do
       if M.health > 0 then
@@ -255,7 +267,16 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
   end
 
 
-  ---==| Fight_simulator |==---
+  local function fixup_hexen_mana()
+    if stats.dual_mana then
+      stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
+      stats.green_mana = (stats.green_mana or 0) + stats.dual_mana
+      stats.dual_mana  = nil
+    end
+  end
+
+
+  ---==| Fight_Simulator |==---
 
   stats.health = 0
 
@@ -263,7 +284,7 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
     local MON =
     {
       info=info, health=info.health,
-      power=info.damage + info.health/100 + gui.random(),
+      power=info.damage + info.health/30 + gui.random(),
     }
     table.insert(active_mons, MON)
   end
@@ -272,7 +293,6 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
   table.sort(active_mons, function(A,B) return A.power > B.power end)
 
   -- let the monsters throw the first punch (albeit a weak one)
-  -- IDEA: can pass in a 'surprise_time' value
   monsters_shoot(0.5)
 
   while #active_mons > 0 do
@@ -290,11 +310,6 @@ function Fight_simulator(monsters, weapons, weap_prefs, skill, stats)
     end
   end
 
-  -- Hexen fixup for double-mana weapons
-  if stats.dual_mana then
-    stats.blue_mana  = (stats.blue_mana  or 0) + stats.dual_mana
-    stats.green_mana = (stats.green_mana or 0) + stats.dual_mana
-    stats.dual_mana  = nil
-  end
+  fixup_hexen_mana()
 end
 
