@@ -314,3 +314,40 @@ PREFAB.FENCE =
 }
 
 
+PREFAB.FENCE_W_GAP =
+{
+  placement = "fitted",
+
+  x_sizes = { {80,1}, {32,0}, {80,1} },
+
+  repeat_width = 192,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  80, y =  0, mat = "?fence" },
+      { x =  80, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 0, mat = "?fence" },
+    },
+
+    {
+      { x =  80, y =  8, mat = "?metal", blocked=1 },
+      { x = 112, y =  8, mat = "?metal", blocked=1 },
+      { x = 112, y = 24, mat = "?metal", blocked=1 },
+      { x =  80, y = 24, mat = "?metal", blocked=1 },
+      { t = -16, mat = "?metal" },
+    },
+
+    {
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 192, y =  0, mat = "?fence" },
+      { x = 192, y = 32, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { t = 0, mat = "?fence" },
+    },
+  },
+}
+
+

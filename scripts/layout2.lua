@@ -963,7 +963,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
-      if R.outdoor and other_R.outdoor then fab = "FENCE" end
+      if R.outdoor and other_R.outdoor then fab = "FENCE_W_GAP" end
       z = math.max(z, other_R.floor_min_h or 0)
       z = z + 32
       sk2 = { frame="METAL1_1" }
