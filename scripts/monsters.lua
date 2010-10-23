@@ -75,31 +75,22 @@ QUAKE_FLAGS =
 
 
 function Player_init()
-  LEVEL.hmodels = {}
+  LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
-  for _,SK in ipairs(SKILLS) do
-    local hm_set = table.deep_copy(GAME.PLAYER_MODEL)
-
-    for CL,hmodel in pairs(hm_set) do
-      hmodel.skill = SK
-      hmodel.class = CL
-    end -- for CL
-
-    LEVEL.hmodels[SK] = hm_set
-  end -- for SK
+  for CL,hmodel in pairs(LEVEL.hmodels) do
+    hmodel.class = CL
+  end
 end
 
 
-function Player_give_weapon(weapon, to_CL)
-  gui.debugf("Giving weapon: %s\n", weapon)
+function Player_give_weapon(weapon, only_CL)
+  gui.printf("Giving weapon: %s\n", weapon)
 
-  for _,SK in ipairs(SKILLS) do
-    for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
-      if not to_CL or (to_CL == CL) then
-        hmodel.weapons[weapon] = 1
-      end
-    end -- for CL
-  end -- for SK
+  for CL,hmodel in pairs(LEVEL.hmodels) do
+    if not only_CL or (only_CL == CL) then
+      hmodel.weapons[weapon] = 1
+    end
+  end
 end
 
 
@@ -113,20 +104,20 @@ end
 function Player_give_stuff(hmodel, give_list)
   for _,give in ipairs(give_list) do
     if give.health then
-      gui.debugf("Giving [%s/%s] health: %d\n",
-                 hmodel.class, hmodel.skill, give.health)
+      gui.debugf("Giving [%s] health: %d\n",
+                 hmodel.class, give.health)
       hmodel.stats.health = hmodel.stats.health + give.health
 
     elseif give.ammo then
-      gui.debugf("Giving [%s/%s] ammo: %dx %s\n",
-                 hmodel.class, hmodel.skill, give.count, give.ammo)
+      gui.debugf("Giving [%s] ammo: %dx %s\n",
+                 hmodel.class, give.count, give.ammo)
 
       local count = assert(hmodel.stats[give.ammo])
       hmodel.stats[give.ammo] = count + give.count
 
     elseif give.weapon then
-      gui.debugf("Giving [%s/%s] weapon: %s\n",
-                 hmodel.class, hmodel.skill, give.weapon)
+      gui.debugf("Giving [%s] weapon: %s\n",
+                 hmodel.class, give.weapon)
 
       hmodel.weapons[give.weapon] = 1
     else
@@ -140,8 +131,6 @@ function Player_firepower()
   -- The 'firepower' is (roughly) how much damage per second
   -- the player would normally do using their current set of
   -- weapons.
-  --
-  -- We assume all skills have the same weapons.
   --
   -- If there are different classes (Hexen) then the result
   -- will be an average of each class, as all classes face
@@ -189,12 +178,10 @@ function Player_firepower()
   local fp_total  = 0
   local class_num = 0
 
-  local SK = SKILLS[1]
-
-  for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
+  for CL,hmodel in pairs(LEVEL.hmodels) do
     fp_total = fp_total + get_firepower(hmodel)
     class_num = class_num + 1
-  end -- for CL
+  end
 
   assert(class_num > 0)
 
@@ -344,22 +331,20 @@ end
 
 function Monsters_do_pickups()
 
-  local function distribute(R, qty, D)  -- Dest
-    for _,SK in ipairs(SKILLS) do
-      for CL,stats in pairs(R.fight_stats[SK]) do
-        local dest_am = D.fight_stats[SK][CL]
+  local function distribute(R, qty, N)
+    for CL,stats in pairs(R.fight_stats) do
+      local dest_am = N.fight_stats[CL]
 
-        for stat,count in pairs(stats) do
-          if count > 0 then
-            dest_am[stat] = (dest_am[stat] or 0) + count * qty
-            stats[stat]   = count * (1-qty)
+      for stat,count in pairs(stats) do
+        if count > 0 then
+          dest_am[stat] = (dest_am[stat] or 0) + count * qty
+          stats[stat]   = count * (1-qty)
 
-            gui.debugf("Distributing %s:%1.1f  [%s/%s]  ROOM_%d --> ROOM_%d\n",
-                       stat, count*qty,  CL, SK,  R.id, D.id)
-          end
+          gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
+                     stat, count*qty,  CL, R:tostr(), N:tostr())
         end
-      end -- for CL
-    end -- for SK
+      end
+    end
   end
 
 
@@ -497,7 +482,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
 
     while qty > 0 do
       local item, count = decide_pickup(R, stat, qty)
-      table.insert(item_list, { item=item, count=count, SK=hmodel.skill, random=gui.random() })
+      table.insert(item_list, { item=item, count=count, random=gui.random() })
       
       if stat == "health" then
         qty = qty - item.give[1].health * count
@@ -518,32 +503,20 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
-  local function place_item(item_name, x, y, z, SK)
+  local function place_item(item_name, x, y, z)
     local props = {}
 
     if PARAM.use_spawnflags then
-      if SK == "easy" then
-        props.spawnflags = QUAKE_FLAGS.NOT_MEDIUM + QUAKE_FLAGS.NOT_HARD
-      elseif SK == "medium" then
-        props.spawnflags = QUAKE_FLAGS.NOT_EASY + QUAKE_FLAGS.NOT_HARD
-      elseif SK == "hard" then
-        props.spawnflags = QUAKE_FLAGS.NOT_EASY + QUAKE_FLAGS.NOT_MEDIUM
-      end
+      -- no change
     else
-      if SK == "easy" then
-        props.flags = DOOM_FLAGS.EASY
-      elseif SK == "medium" then
-        props.flags = DOOM_FLAGS.MEDIUM
-      elseif SK == "hard" then
-        props.flags = DOOM_FLAGS.HARD
-      end
+      props.flags = DOOM_FLAGS.EASY + DOOM_FLAGS.MEDIUM + DOOM_FLAGS.HARD
     end
 
     Trans.entity(item_name, x, y, z, props)
   end
 
 
-  local function place_big_item(spot, item, SK)
+  local function place_big_item(spot, item)
     local x, y = spot.x, spot.y
 
     -- assume big spots will sometimes run out (and be reused),
@@ -551,16 +524,16 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     x = x + rand.irange(-6, 6)
     y = y + rand.irange(-6, 6)
 
-    place_item(item, x, y, spot.z, SK)
+    place_item(item, x, y, spot.z)
   end
 
 
-  local function OLD__place_small_item(spot, item, count, SK)
+  local function OLD__place_small_item(spot, item, count)
     local x1, y1 = spot.x, spot.y
     local x2, y2 = spot.x, spot.y
 
     if count == 1 then
-      place_item(spot.S, item, x1,y1, SK)
+      place_item(spot.S, item, x1,y1)
       return
     end
 
@@ -585,12 +558,12 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       local x = x1 + (x2 - x1) * (i-1) / (count-1)
       local y = y1 + (y2 - y1) * (i-1) / (count-1)
 
-      place_item(spot.S, item, x, y, SK)
+      place_item(spot.S, item, x, y)
     end
   end
 
 
-  local function place_item_list(R, item_list, SK, CL)
+  local function place_item_list(R, item_list, CL)
     for _,pair in ipairs(item_list) do
       local item  = pair.item
       local count = pair.count
@@ -603,37 +576,37 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
         spot.x, spot.y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
         spot.z = spot.z1
 
-        place_big_item(spot, item.name, SK, CL)
+        place_big_item(spot, item.name, CL)
       else
         for i = 1,count do
           spot = table.remove(R.item_spots, 1)
           table.insert(R.item_spots, spot)
 
-          place_item(item.name, spot.x, spot.y, spot.z, SK)
+          place_item(item.name, spot.x, spot.y, spot.z)
         end
       end
     end
   end
 
 
-  local function pickups_for_hmodel(R, SK, CL, hmodel)
+  local function pickups_for_hmodel(R, CL, hmodel)
     if table.empty(GAME.PICKUPS) then
       return
     end
 
+    local stats = R.fight_stats[CL]
     local item_list = {}
-
-    local stats = R.fight_stats[SK][CL]
 
     for stat,qty in pairs(stats) do
       if qty > 0 then
         select_pickups(R, item_list, stat, qty, hmodel)
 
-        gui.debugf("Item list for %s:%1.1f [%s/%s] @ %s\n", stat,qty, CL,SK, R:tostr())
+        gui.debugf("Item list for %s:%1.1f [%s] @ %s\n", stat,qty, CL, R:tostr())
+
         for _,pair in ipairs(item_list) do
           local item = pair.item
-          gui.debugf("   %dx %s (%d) @ %s\n", pair.count, item.name,
-                     item.give[1].health or item.give[1].count, SK)
+          gui.debugf("   %dx %s (%d)\n", pair.count, item.name,
+                     item.give[1].health or item.give[1].count)
         end
       end
     end
@@ -645,22 +618,17 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
     -- FIXME: place weapon in layout code
     if R.weapon then
-      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1, SK=SK})
+      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1 })
     end
 
-    place_item_list(R, item_list, SK, CL)
+    place_item_list(R, item_list, CL)
   end
 
 
   local function pickups_in_room(R)
-gui.debugf("Weapon_ammo @ %s --> %s\n", R:tostr(), tostring(R.weapon_ammo))
-
-      for _,SK in ipairs(SKILLS) do
-        for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
-          pickups_for_hmodel(R, SK, CL, hmodel)
-        end -- for CL
-      end -- for SK
-
+    for CL,hmodel in pairs(LEVEL.hmodels) do
+      pickups_for_hmodel(R, CL, hmodel)
+    end
   end
 
 
@@ -1037,30 +1005,14 @@ function Monsters_fill_room(R)
   end
 
 
-  local function add_to_list(SK, info)
-    if not R.monster_list[SK] then
-      R.monster_list[SK] = {}
-    end
-
-    table.insert(R.monster_list[SK], info)
-  end
-
-
   local function calc_min_skill()
-    if not LEVEL.mon_dither then
-      LEVEL.mon_dither = 0
-    end
-
-    -- bump the dither, but have some randomness here too
-    if rand.odds(80) then
-      LEVEL.mon_dither = LEVEL.mon_dither + 1
-    end
+    local dither = Plan_alloc_id("mon_dither")
 
     -- skill 3 (hard) is always added
     -- skill 2 (medium) alternates between 100% and 50% chance
     -- skill 1 (easy) is always 50% chance of adding
 
-    if (LEVEL.mon_dither % 2) == 0 then
+    if (dither % 2) == 0 then
       return rand.sel(50, 1, 2)
     else
       return rand.sel(50, 1, 3)
@@ -1080,12 +1032,10 @@ function Monsters_fill_room(R)
       info = assert(GAME.MONSTERS[mon])
     end
 
+    table.insert(R.monster_list, info)
+
     -- minimum skill needed for the monster to appear
     local skill = calc_min_skill()
-
-    if skill <= 3 then add_to_list(SKILLS[3], info) end
-    if skill <= 2 then add_to_list(SKILLS[2], info) end
-    if skill <= 1 then add_to_list(SKILLS[1], info) end
 
     local props = { }
 
@@ -1479,11 +1429,8 @@ function Monsters_fill_room(R)
   local function make_empty_stats()
     local stats = {}
 
-    for _,SK in ipairs(SKILLS) do
-      stats[SK] = {}
-      for CL,_ in pairs(GAME.PLAYER_MODEL) do
-        stats[SK][CL] = {}
-      end
+    for CL,_ in pairs(GAME.PLAYER_MODEL) do
+      stats[CL] = {}
     end
 
     return stats
@@ -1550,12 +1497,13 @@ function Monsters_fill_room(R)
   end
 
 
-  local function sim_battle(CL, hmodel, SK, mon_list)
+  local function battle_for_class(CL, hmodel, mon_list)
     local weap_list = collect_weapons(hmodel)
 
-    local stats = R.fight_stats[SK][CL]
+    local stats = R.fight_stats[CL]
 
-    gui.debugf("Fight simulator @ %s  SK:%s\n", R:tostr(), SK)
+    gui.debugf("Fight Simulator @ %s  class: %s\n", R:tostr(), CL)
+
     gui.debugf("weapons = \n")
     for _,info in ipairs(weap_list) do
       gui.debugf("  %s\n", info.name)
@@ -1563,7 +1511,7 @@ function Monsters_fill_room(R)
 
     local weap_prefs = LEVEL.weap_prefs or THEME.weap_prefs or {}
 
-    Fight_simulator(mon_list, weap_list, weap_prefs, SK, stats)
+    Fight_Simulator(mon_list, weap_list, weap_prefs, stats)
 
     gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
@@ -1578,6 +1526,35 @@ function Monsters_fill_room(R)
   end
 
 
+  local function sim_battle()
+    assert(R.monster_list)
+
+    if #R.monster_list >= 1 then
+      for CL,hmodel in pairs(LEVEL.hmodels) do
+        battle_for_class(CL, hmodel, R.monster_list)
+      end
+    end
+  end
+
+
+  local function should_add_monsters()
+    if OB_CONFIG.mons == "none" then
+      return false
+    end
+
+    if R.kind == "stairwell" then return false end
+    if R.kind == "smallexit" then return false end
+
+    assert(R.kind ~= "scenic")
+
+    if R.purpose == "START" and not R.has_raising_start then
+      return false
+    end
+
+    return true
+  end
+
+
   ---| Monsters_fill_room |---
 
   gui.debugf("Monsters_fill_room @ %s\n", R:tostr())
@@ -1587,34 +1564,10 @@ function Monsters_fill_room(R)
 
   R.big_item_spots = table.deep_copy(R.mon_spots)
 
-  if OB_CONFIG.mons == "none" then
-    return
+  if should_add_monsters() then
+    add_monsters()
+    sim_battle()
   end
-
-  if R.kind == "stairwell" then return end
-  if R.kind == "smallexit" then return end
-
-  assert(R.kind ~= "scenic")
-
-  if R.purpose == "START" and not R.has_raising_start then
-    return
-  end
-
-
-  add_monsters()
-
-
-  -- simulate the battle!!
-
-  for _,SK in ipairs(SKILLS) do
-    local mon_list = R.monster_list[SK]
-    if mon_list and #mon_list >= 1 then
-
-      for CL,hmodel in pairs(LEVEL.hmodels[SK]) do
-        sim_battle(CL, hmodel, SK, mon_list)
-      end
-    end
-  end -- for SK
 end
 
 
