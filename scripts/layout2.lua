@@ -103,7 +103,8 @@ function Layout_monotonic_spaces(R)
   --   allocated for the current group.  The next square can be
   --   a free non-shadowed neighbor of one of the used squares.
 
-  local list = {}
+  R.mono_list = {}
+
   local pass = 1
 
 
@@ -188,7 +189,7 @@ function Layout_monotonic_spaces(R)
       blocks = {},
     }
 
-    table.insert(list, INFO)
+    table.insert(R.mono_list, INFO)
 
     repeat
       table.insert(INFO.sections, K)
@@ -286,7 +287,7 @@ function Layout_monotonic_spaces(R)
 
         local BLOCK = { kx1=x, ky1=y, kx2=x+kw-1, ky2=y+kh-1 }
 
-        table.insert(list[K.m_used].blocks, BLOCK)
+        table.insert(R.mono_list[K.m_used].blocks, BLOCK)
 
         gui.debugf("  space:%d  K: (%d %d) .. (%d %d)\n", K.m_used,
                    BLOCK.kx1, BLOCK.ky1, BLOCK.kx2, BLOCK.ky2)
@@ -308,8 +309,6 @@ function Layout_monotonic_spaces(R)
   end
 
   break_into_blocks()
-
-  return list
 end
 
 
@@ -360,7 +359,7 @@ function Layout_add_span(E, long1, long2, deep, kind)
 end
 
 
-function Layout_place_straddlers()
+function Layout_size_straddlers()
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
   -- 
@@ -673,51 +672,28 @@ end
 
 
 
-function Layout_the_room(R)
+function Layout_extra_room_stuff()
 
+  -- this function is meant to ensure good traversibility in a room.
+  -- e.g. put a nice item in sections without any connections or
+  -- importants, or if the exit is close to the entrance then make
+  -- the exit door require a far-away switch to open it.
 
---  R.entry_conn
-
---  if R.purpose then add_purpose() end
---  if R:has_teleporter() then add_teleporter() end
---  if R.weapon  then add_weapon(R.weapon)  end
-
-
-  local function edge_near_corner(corn, want_horiz)
-    -- want_horiz : true for the edge travelling horizontally,
-    --              false for the vertical edge
-    local side
-
-    if want_horiz then
-      side = sel(corn.side == 1 or corn.side == 3, 2, 8)
-    else
-      side = sel(corn.side == 1 or corn.side == 7, 4, 6)
-    end
-
-    if not corn.concave then
-      return assert(corn.K.edges[side])
-    end
-
-    -- trickier for concave corners, edge is in a different section
-    local kx = corn.K.kx
-    local ky = corn.K.ky
-
-    local dx, dy = geom.delta(corn.side)
-
-    if want_horiz then
-      kx = kx + dx
-    else
-      ky = ky + dx
-    end
-
-    assert(Plan_is_section_valid(kx, ky))
-
-    local K = SECTIONS[kx][ky]
-    assert(K.room == corn.K.room)
-
-    return assert(K.edges[side])
+  local function extra_stuff(R)
+    -- TODO
   end
 
+
+  --| Layout_extra_room_stuff |--
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    extra_stuff(R)
+  end
+end
+
+
+
+function Layout_the_room(R)
 
   local function adjust_corner(C, side, long, deep)
     if geom.is_vert(side) then
@@ -2239,16 +2215,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
 
-  R.cage_spots = {}
-  R.trap_spots = {}
-  R.mon_spots  = {}
-  R.item_spots = {}
-
-  R.post_fabs = {}
-  R.poly_assoc = {}
-
-
-  R.mono_list = Layout_monotonic_spaces(R)
 
   R.wall_space = Layout_initial_space(R)
 

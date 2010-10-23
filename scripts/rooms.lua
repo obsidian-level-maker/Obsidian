@@ -739,6 +739,18 @@ end
 
 
 
+function Rooms_setup_bits(R)
+  R.cage_spots = {}
+  R.trap_spots = {}
+  R.mon_spots  = {}
+  R.item_spots = {}
+
+  R.post_fabs = {}
+  R.poly_assoc = {}
+end
+
+
+
 function Rooms_add_sun()
   if GAME.format == "doom" then
     return
@@ -781,11 +793,25 @@ function Rooms_build_all()
   end
 
 
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Rooms_setup_bits(R)
+
+    Layout_monotonic_spaces(R)
+  end
+
+
   Layout_place_importants()
 
   Rooms_decide_windows()
 
-  Layout_place_straddlers()
+  Layout_extra_room_stuff()
+
+
+  Layout_size_straddlers()
+
+  -- Layout_flesh_out_walls()
+
+  -- Layout_all_floors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_the_room(R)
@@ -800,6 +826,5 @@ function Rooms_build_all()
   -- scenic rooms ??
 
   Rooms_add_sun()
-
 end
 
