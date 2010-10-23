@@ -1475,6 +1475,10 @@ static void MarkGapsWithEntities()
       if (E->Match("light") || E->Match("oblige_sun"))
         continue;
 
+      // ignore map models
+      if (E->props.getStr("model"))
+        continue;
+
       gap_c *gap = GapForEntity(R, E);
 
       if (! gap)
