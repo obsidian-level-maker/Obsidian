@@ -693,7 +693,59 @@ end
 
 
 
-function Layout_the_room(R)
+function Fab_with_update(R, fab, T, skin1, skin2, skin3) 
+  gui.debugf("Fab_with_update : %s\n", tostring(fab))
+
+  local POST_FAB =
+  {
+    fab = fab,
+    trans = T,
+
+    skin1 = skin1,
+    skin2 = skin2,
+    skin3 = skin3,
+
+    R = R,
+    fab_tag = Plan_alloc_id("prefab"),
+
+    polys = {},
+  }
+
+  -- save info to render it later
+  -- FIXME: only process the skins ONCE
+  table.insert(R.post_fabs, POST_FAB)
+
+  Trans.set_override(Layout_check_brush, POST_FAB, true)
+
+  Fabricate(fab, T, skin1, skin2, skin3)
+
+  Trans.clear_override()
+
+  -- associate the walk/air polygons to this POST-FAB
+  if not (fab == "MARK_USED" or fab == "MARK_WALK" or fab == "MARK_AIR") then
+    for _,P in ipairs(POST_FAB.polys) do
+      if P.kind == "walk" or P.kind == "air" then
+        P.post_fab = POST_FAB
+        table.insert(R.poly_assoc, P)
+      end
+    end
+  end
+
+  return POST_FAB
+end
+
+
+
+
+function Layout_initial_walls()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    -- FIXME
+  end
+end
+
+
+
+function Layout_do_walls(R)
 
   local function adjust_corner(C, side, long, deep)
     if geom.is_vert(side) then
@@ -750,48 +802,6 @@ function Layout_the_room(R)
   end
 
 
-  local function Fab_with_update(fab, T, skin1, skin2, skin3) 
-    gui.debugf("Fab_with_update : %s\n", tostring(fab))
-
-    local POST_FAB =
-    {
-      fab = fab,
-      trans = T,
-
-      skin1 = skin1,
-      skin2 = skin2,
-      skin3 = skin3,
-
-      R = R,
-      fab_tag = Plan_alloc_id("prefab"),
-
-      polys = {},
-    }
-
-    -- save info to render it later
-    -- FIXME: only process the skins ONCE
-    table.insert(R.post_fabs, POST_FAB)
-
-    Trans.set_override(Layout_check_brush, POST_FAB, true)
-
-    Fabricate(fab, T, skin1, skin2, skin3)
-
-    Trans.clear_override()
-
-    -- associate the walk/air polygons to this POST-FAB
-    if not (fab == "MARK_USED" or fab == "MARK_WALK" or fab == "MARK_AIR") then
-      for _,P in ipairs(POST_FAB.polys) do
-        if P.kind == "walk" or P.kind == "air" then
-          P.post_fab = POST_FAB
-          table.insert(R.poly_assoc, P)
-        end
-      end
-    end
-
-    return POST_FAB
-  end
-
-
   local function inner_outer_tex(skin, R, N)
     assert(R)
     if not N then return end
@@ -811,12 +821,12 @@ function Layout_the_room(R)
   local function build_corner(C)
     local K = C.K
     
-    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h,
+    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, -88,
                                      C.side, C.horiz, C.vert)
 
     local fab = "CORNER" -- sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
 
-    Fab_with_update(fab, T)
+    Fab_with_update(R, fab, T)
   end
 
 
@@ -826,7 +836,7 @@ function Layout_the_room(R)
 
     local K = E.K
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88,
                                    E.side, SP.long1, SP.long2, 0, SP.deep1)
   
     local fab = "WALL"
@@ -838,7 +848,7 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
 
     inner_outer_tex(skin, E.K.room, N and N.room)
 
-    Fab_with_update(fab, T, skin)
+    Fab_with_update(R, fab, T, skin)
   end
 
 
@@ -868,20 +878,20 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
 
     local gap = 80 -- FIXME put in span and/or STRADDLER
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h, E.side,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
-    Fab_with_update("MARK_USED", T)
+    Fab_with_update(R, "MARK_USED", T)
 
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, ROOM.entry_floor_h, E.side,
+    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88, E.side,
                                    SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
 
     local PF
 
     if info.kind == "window" then
-      PF = Fab_with_update("MARK_AIR", T)
+      PF = Fab_with_update(R, "MARK_AIR", T)
     else
-      PF = Fab_with_update("MARK_WALK", T)
+      PF = Fab_with_update(R, "MARK_WALK", T)
     end
 
     -- associate the walk/area polygons with this prefab (if any)
@@ -951,7 +961,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
 
     local fab
-    local z = ROOM.entry_floor_h
+    local z = -88 --- ROOM.entry_floor_h
 
     local skin = {}
     local sk2
@@ -1072,14 +1082,14 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     assert(SP.skin)
 
     local K = E.K
-    local z = ROOM.entry_floor_h
+    local z = -88 --- ROOM.entry_floor_h
 
 -- stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
-    Fab_with_update(SP.prefab, T, SP.skin)
+    Fab_with_update(R, SP.prefab, T, SP.skin)
   end
 
 
@@ -1147,7 +1157,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
         
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-        local T = Trans.spot_transform(mx, my, ROOM.entry_floor_h)
+        local T = Trans.spot_transform(mx, my, -88)
 
         fab = "TECH_DITTO_1"
         skin = { carpet = "FLAT14", computer = "SPACEW3",
@@ -1157,7 +1167,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 --      local skin = { pillar="GRAY5", rail="MIDGRATE" }
 
 
-        Fab_with_update(fab, T, skin)
+        Fab_with_update(R, fab, T, skin)
       end
     end
 
@@ -1166,13 +1176,40 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
         local K = IM.place_K
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-        local T = Trans.spot_transform(mx, my, ROOM.entry_floor_h)
+        local T = Trans.spot_transform(mx, my, -88)
         
-        Fab_with_update(IM.prefab, T, IM.skin)
+        Fab_with_update(R, IM.prefab, T, IM.skin)
       end
     end
   end
 
+
+  --| Layout_do_walls |--
+
+  ROOM = R
+
+  R.wall_space = Layout_initial_space(R)
+
+
+  decide_corner_sizes()
+
+
+  build_corners()
+
+  build_edges()
+end
+
+
+
+function Layout_flesh_out_walls()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_do_walls(R)
+  end
+end
+
+
+
+function Layout_the_floor(R)
 
   local function fill_polygons(space, values)
     for _,P in ipairs(space.polys) do
@@ -2112,6 +2149,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       return
     end
 
+    R.ceil_h = h
+
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
       Trans.quad(x1, y1, x2, y2, h, nil, Mat_normal(mat))
@@ -2205,65 +2244,19 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  ---===| Layout_the_room |===---
+  ---===| Layout_the_floor |===---
 
   ROOM = R  -- set global
 
-  gui.debugf("\nLayout_the_room @ %s\n\n", ROOM:tostr())
+  gui.debugf("\nLayout_all_floors @ %s\n\n", ROOM:tostr())
 
   if not ROOM.entry_floor_h then
     ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
 
 
-  R.wall_space = Layout_initial_space(R)
-
-
-  decide_corner_sizes()
-
-
-  build_corners()
-
-  build_edges()
-
---FIXME  build_middles()
-
-
 -- TODO  R.ceil_space  = R.floor_space:copy()
 
-
-  local K = R.sections[1]
-
-  local ex = (K.x1 + K.x2) / 2
-  local ey = (K.y1 + K.y2) / 2
-
-
-  if R.purpose == "START" then
-    local skin = { top="O_BOLT", x_offset=36, y_offset=-8, peg=1 }
-    local T = Trans.spot_transform(ex, ey, ROOM.entry_floor_h)
-
---- Fab_with_update("START_SPOT", T, skin)
-  
-  elseif R.purpose == "EXIT" then
-
-    local T = Trans.spot_transform(ex, ey, ROOM.entry_floor_h)
-
---[[ !!!!
-    if GAME.format == "quake" then
-      local skin = { floor="SLIP2", wall="SLIPSIDE", nextmap = LEVEL.next_map }
-      Fab_with_update("QUAKE_EXIT_PAD", T, skin)
-    else
---]]
-
----      local skin_name = rand.key_by_probs(THEME.exits)
----      local skin = assert(GAME.EXITS[skin_name])
----
----      Fab_with_update("EXIT_PILLAR", T, skin)
- 
-  else
-
-    Trans.entity("potion", ex, ey, 0)
-  end
 
 
   build_floor()
@@ -2271,19 +2264,17 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   build_ceiling()
 
 
-  if not R.outdoor then
-    Trans.entity("light", ex, ey, R.entry_floor_h + 170, { light=100, _radius=360 })
-  end
-
-
+  -- FIXME: move into another function
   ambient_lighting()
 
 
+  -- FIXME: move into another function
   for _,PF in ipairs(R.post_fabs) do
     render_post_fab(PF)
   end
 
 
+  -- FIXME: move into another function
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
     spots_for_floor(F)
@@ -2293,13 +2284,45 @@ end
 
 
 
-function Layout_the_ceiling(R)
-  if R.sky_h then
-    for _,K in ipairs(R.sections) do
-      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, R.sky_h, nil, Mat_normal("_SKY"))
-    end
+function Layout_all_floors()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_the_floor(R)
   end
 end
 
+
+
+function Layout_all_ceilings()
+
+  local function quake_temp_lights(R)
+    for _,K in ipairs(R.sections) do
+      local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
+      local light = rand.pick { 50, 100, 150, 200 }
+      local radius = ((K.x2 - K.x1) + (K.y2 - K.y1)) / 3
+
+      local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
+
+      Trans.entity("light", mx, my, z, { light=light, _radius=radius })
+    end
+  end
+
+
+  local function do_the_ceiling(R)
+    if R.sky_h then
+      for _,K in ipairs(R.sections) do
+        Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
+      end
+    else
+      if GAME.format ~= "doom" then
+        quake_temp_lights(R)
+      end
+    end
+  end
+
+  --| Layout_all_ceilings |--
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    do_the_ceiling(R)
+  end
+end
 

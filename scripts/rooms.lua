@@ -795,33 +795,20 @@ function Rooms_build_all()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Rooms_setup_bits(R)
-
     Layout_monotonic_spaces(R)
   end
 
-
   Layout_place_importants()
-
   Rooms_decide_windows()
-
   Layout_extra_room_stuff()
 
-
+  Layout_initial_walls()
   Layout_size_straddlers()
+  Layout_flesh_out_walls()
 
-  -- Layout_flesh_out_walls()
-
-  -- Layout_all_floors()
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_the_room(R)
-  end
-
+  Layout_all_floors()
   Rooms_synchronise_skies()
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_the_ceiling(R)
-  end
+  Layout_all_ceilings()
 
   -- scenic rooms ??
 
