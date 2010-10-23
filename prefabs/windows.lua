@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  WINDOW PREFABS
+--  WINDOW and FENCE PREFABS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -15,6 +15,11 @@
 --  but WITHOUT ANY WARRANTY; without even the implied warranty of
 --  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 --  GNU General Public License for more details.
+--
+----------------------------------------------------------------
+--
+--  Window and Fence prefabs are relative (in Z coord) to
+--  the highest floor on either side.
 --
 ----------------------------------------------------------------
 
@@ -308,7 +313,7 @@ PREFAB.FENCE =
       { x = 192, y =  0, mat = "?fence" },
       { x = 192, y = 32, mat = "?fence" },
       { x =   0, y = 32, mat = "?fence" },
-      { t = 0, mat = "?fence" },
+      { t = 32, mat = "?fence" },
     },
   },
 }
@@ -329,7 +334,7 @@ PREFAB.FENCE_W_GAP =
       { x =  80, y =  0, mat = "?fence" },
       { x =  80, y = 32, mat = "?fence" },
       { x =   0, y = 32, mat = "?fence" },
-      { t = 0, mat = "?fence" },
+      { t = 32, mat = "?fence" },
     },
 
     {
@@ -337,7 +342,7 @@ PREFAB.FENCE_W_GAP =
       { x = 112, y =  8, mat = "?metal", blocked=1 },
       { x = 112, y = 24, mat = "?metal", blocked=1 },
       { x =  80, y = 24, mat = "?metal", blocked=1 },
-      { t = -16, mat = "?metal" },
+      { t = 16, mat = "?metal" },
     },
 
     {
@@ -345,7 +350,7 @@ PREFAB.FENCE_W_GAP =
       { x = 192, y =  0, mat = "?fence" },
       { x = 192, y = 32, mat = "?fence" },
       { x = 112, y = 32, mat = "?fence" },
-      { t = 0, mat = "?fence" },
+      { t = 32, mat = "?fence" },
     },
   },
 }
