@@ -487,3 +487,47 @@ PREFAB.FENCE_W_RAIL_INSET =
   },
 }
 
+
+PREFAB.FENCE_W_TORCHES =
+{
+  placement = "fitted",
+
+  x_sizes = { {16,0}, {96,1}, {16,0} },
+
+  repeat_width = 128,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  16, y =  0, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 72, mat = "?fence" },
+    },
+
+    {
+      { x =  16, y =  0, mat = "?fence" },
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+
+    {
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 128, y =  0, mat = "?fence" },
+      { x = 128, y = 32, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { t = 72, mat = "?fence" },
+    },
+  },
+
+  entities =
+  {
+    { x = 46, y = 16, z = 32, ent = "?torch", angle = 90 },
+    { x = 82, y = 16, z = 32, ent = "?torch", angle = 90 },
+  },
+}
+
+
