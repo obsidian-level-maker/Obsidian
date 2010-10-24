@@ -430,7 +430,7 @@ HACX.PLAYER_MODEL =
 {
   danny =
   {
-    stats = { health=0, bullet=0, shell=0, torpedo=0, molecule=0 },
+    stats = { health=0 },
 
     weapons = { pistol=1, boot=1 },
   }

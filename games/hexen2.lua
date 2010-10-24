@@ -353,7 +353,7 @@ HEXEN2.PLAYER_MODEL =
 
   assassin =
   {
-    stats   = { health=0, blue_mana=0, green_mana=0 },
+    stats   = { health=0 },
     weapons = { weapon1=1 },
   }
 }

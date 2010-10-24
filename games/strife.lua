@@ -164,9 +164,7 @@ STRIFE.PLAYER_MODEL =
 {
   strifeguy =
   {
-    stats = { health=0, bolt=0, bullet=0, missile=0,
-              grenade=0, cell=0 },
-
+    stats   = { health=0 },
     weapons = { dagger=1 },
   }
 }

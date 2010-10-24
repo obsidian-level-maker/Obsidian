@@ -334,7 +334,7 @@ HALFLIFE.PLAYER_MODEL =
 {
   gordon =
   {
-    stats   = { health=0, shell=0 },
+    stats   = { health=0 },
     weapons = { crowbar=1 },
   }
 }

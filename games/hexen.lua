@@ -1741,19 +1741,19 @@ HEXEN.PLAYER_MODEL =
 {
   fighter =
   {
-    stats   = { health=0, blue_mana=0, green_mana=0 },
+    stats   = { health=0 },
     weapons = { f_gaunt=1 },
   },
 
   cleric =
   {
-    stats   = { health=0, blue_mana=0, green_mana=0 },
+    stats   = { health=0 },
     weapons = { c_mace=1 },
   },
 
   mage =
   {
-    stats   = { health=0, blue_mana=0, green_mana=0 },
+    stats   = { health=0 },
     weapons = { m_wand=1 },
   },
 }

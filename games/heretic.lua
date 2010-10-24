@@ -1888,8 +1888,7 @@ HERETIC.PLAYER_MODEL =
 {
   cleric =
   {
-    stats = { health=0, crystal=0, arrow=0, rune=0,
-              claw_orb=0, flame_orb=0, mace_orb=0 },
+    stats = { health=0 },
     weapons = { staff=1, wand=1 },
   }
 }

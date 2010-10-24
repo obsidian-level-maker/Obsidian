@@ -1239,7 +1239,7 @@ QUAKE1.PLAYER_MODEL =
 {
   quakeguy =
   {
-    stats   = { health=0, shell=0, nail=0, rocket=0, cell=0 },
+    stats   = { health=0 },
     weapons = { pistol=1, axe=1 },
   }
 }

@@ -543,7 +543,7 @@ CHEX3.PLAYER_MODEL =
 {
   chexguy =
   {
-    stats   = { health=0, mzorch=0, lzorch=0, propulsor=0, phase=0 },
+    stats   = { health=0 },
     weapons = { minizorcher=1, bootspoon=1 },
   }
 }

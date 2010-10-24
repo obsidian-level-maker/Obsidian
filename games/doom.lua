@@ -3688,7 +3688,7 @@ DOOM.PLAYER_MODEL =
 {
   doomguy =
   {
-    stats   = { health=0, bullet=0, shell=0, rocket=0, cell=0 },
+    stats   = { health=0 },
     weapons = { pistol=1, fist=1 },
   }
 }
