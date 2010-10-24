@@ -356,3 +356,41 @@ PREFAB.FENCE_W_GAP =
 }
 
 
+PREFAB.FENCE_W_BOLLARD =
+{
+  placement = "fitted",
+
+  x_sizes = { {56,1}, {16,0}, {56,1} },
+  y_sizes = { {8,0},  {16,1}, {8,0}  },
+
+  repeat_width = 128,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  8, mat = "?fence" },
+      { x =  56, y =  8, mat = "?fence" },
+      { x =  56, y = 24, mat = "?fence" },
+      { x =   0, y = 24, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+
+    {
+      { x =  56, y =  0, mat = "?metal" },
+      { x =  72, y =  0, mat = "?metal" },
+      { x =  72, y = 32, mat = "?metal" },
+      { x =  56, y = 32, mat = "?metal" },
+      { t = 48, mat = "?metal" },
+    },
+
+    {
+      { x =  72, y =  8, mat = "?fence" },
+      { x = 128, y =  8, mat = "?fence" },
+      { x = 128, y = 24, mat = "?fence" },
+      { x =  72, y = 24, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+  },
+}
+
+
