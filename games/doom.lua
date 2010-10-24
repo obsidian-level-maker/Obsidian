@@ -533,6 +533,7 @@ DOOM.MATERIALS =
 
 
 MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 },
+MIDBARS3 = { t="MIDBARS3", h=64,  line_flags=1 },
 
 
   -- Missing stuff:

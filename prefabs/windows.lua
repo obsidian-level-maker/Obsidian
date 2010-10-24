@@ -394,3 +394,96 @@ PREFAB.FENCE_W_BOLLARD =
 }
 
 
+
+PREFAB.FENCE_W_INSET =
+{
+  placement = "fitted",
+
+  x_sizes = { {16,0}, {96,1}, {16,0} },
+  y_sizes = { {12,1}, { 8,0}, {12,1} },
+
+  repeat_width = 128,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  16, y =  0, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 72, mat = "?fence" },
+    },
+
+    {
+      { x =  16, y =  0, mat = "?fence" },
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { t = 8, mat = "?fence" },
+    },
+
+    {
+      { x =  16, y = 12, mat = "?metal" },
+      { x = 112, y = 12, mat = "?metal" },
+      { x = 112, y = 20, mat = "?metal" },
+      { x =  16, y = 20, mat = "?metal" },
+      { t = 48, mat = "?metal" },
+    },
+
+    {
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 128, y =  0, mat = "?fence" },
+      { x = 128, y = 32, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { t = 72, mat = "?fence" },
+    },
+  },
+}
+
+
+PREFAB.FENCE_W_RAIL_INSET =
+{
+  placement = "fitted",
+
+  x_sizes = { {16,0}, {96,1}, {16,0} },
+
+  repeat_width = 96,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  16, y =  0, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 96, mat = "?fence" },
+    },
+
+    {
+      { x =  16, y =  0, mat = "?fence" },
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { x =  16, y = 32, mat = "?fence" },
+      { t = 16, mat = "?fence" },
+    },
+
+    {
+      { m = "rail" },
+      { x =  16, y = 16, mat = "?rail", blocked=1 },
+      { x = 112, y = 16 },
+      { x = 112, y = 32 },
+      { x =  16, y = 32 },
+      { b = 16 },
+      { t = 80 },
+    },
+
+    {
+      { x = 112, y =  0, mat = "?fence" },
+      { x = 128, y =  0, mat = "?fence" },
+      { x = 128, y = 32, mat = "?fence" },
+      { x = 112, y = 32, mat = "?fence" },
+      { t = 96, mat = "?fence" },
+    },
+  },
+}
+
