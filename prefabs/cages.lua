@@ -136,9 +136,12 @@ PREFAB.CAGE_LARGE =
 }
 
 
-PREFAB.WALL_CAGE =
+
+PREFAB.WALL_CAGE_1 =
 {
   placement = "fitted",
+
+  flush = 144,
 
   brushes =
   {
@@ -150,13 +153,13 @@ PREFAB.WALL_CAGE =
       { x =   0, y = 16, mat = "?wall" },
     },
 
-    -- space around it
+    -- space in front
     {
       { m = "air" },
-      { x =   0, y =  16 },
-      { x = 192, y =  16 },
-      { x = 192, y = 144 },
       { x =   0, y = 144 },
+      { x = 192, y = 144 },
+      { x = 192, y = 176 },
+      { x =   0, y = 176 },
     },
 
     -- platform
@@ -171,10 +174,10 @@ PREFAB.WALL_CAGE =
     -- railing
     {
       { m = "rail" },
-      { x =  16, y =  16,                blocked=1 },
-      { x = 176, y =  16, mat = "?rail", blocked=1 },
-      { x = 176, y = 128, mat = "?rail", blocked=1 },
-      { x =  16, y = 128, mat = "?rail", blocked=1 },
+      { x =   0, y =  16 },
+      { x = 192, y =  16, mat = "?rail", blocked=1 },
+      { x = 192, y = 144, mat = "?rail", blocked=1 },
+      { x =   0, y = 144, mat = "?rail", blocked=1 },
       { b = 64 },
       { t = 192 },
     },
@@ -182,7 +185,65 @@ PREFAB.WALL_CAGE =
 
   spots =
   {
-    { kind = "cage", x = 96, y = 72, z = 80, r = 72, h = 128, angle = 90 },
+    { kind = "cage", x = 96, y = 80, z = 64, r = 64, h = 128, angle = 90 },
   },
 }
+
+
+PREFAB.WALL_CAGE_2 =
+{
+  placement = "fitted",
+
+  flush = 144,
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 256, y =  0, mat = "?wall" },
+      { x = 256, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- space in front
+    {
+      { m = "air" },
+      { x =   0, y = 144 },
+      { x = 256, y = 144 },
+      { x = 256, y = 176 },
+      { x =   0, y = 176 },
+    },
+
+    -- platform
+    {
+      { x =  40, y =  16, mat = "?wall" },
+      { x = 216, y =  16, mat = "?wall" },
+      { x = 216, y = 120, mat = "?wall" },
+      { x = 192, y = 144, mat = "?wall" },
+      { x =  64, y = 144, mat = "?wall" },
+      { x =  40, y = 120, mat = "?wall" },
+      { t = 64, mat = "?wall" },
+    },
+
+    -- railing
+    {
+      { m = "rail" },
+      { x =  40, y =  16 },
+      { x = 216, y =  16, mat = "?rail", blocked=1 },
+      { x = 216, y = 120, mat = "?rail", blocked=1 },
+      { x = 192, y = 144, mat = "?rail", blocked=1 },
+      { x =  64, y = 144, mat = "?rail", blocked=1 },
+      { x =  40, y = 120, mat = "?rail", blocked=1 },
+      { b = 64 },
+      { t = 192 },
+    },
+  },
+
+  spots =
+  {
+    { kind = "cage", x = 96, y = 80, z = 64, r = 64, h = 128, angle = 90 },
+  },
+}
+
 
