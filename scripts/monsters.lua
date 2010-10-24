@@ -112,8 +112,7 @@ function Player_give_stuff(hmodel, give_list)
       gui.debugf("Giving [%s] ammo: %dx %s\n",
                  hmodel.class, give.count, give.ammo)
 
-      local count = assert(hmodel.stats[give.ammo])
-      hmodel.stats[give.ammo] = count + give.count
+      hmodel.stats[give.ammo] = (hmodel.stats[give.ammo] or 0) + give.count
 
     elseif give.weapon then
       gui.debugf("Giving [%s] weapon: %s\n",
@@ -333,12 +332,12 @@ function Monsters_do_pickups()
 
   local function distribute(R, qty, N)
     for CL,stats in pairs(R.fight_stats) do
-      local dest_am = N.fight_stats[CL]
+      local dest = N.fight_stats[CL]
 
       for stat,count in pairs(stats) do
         if count > 0 then
-          dest_am[stat] = (dest_am[stat] or 0) + count * qty
-          stats[stat]   = count * (1-qty)
+           dest[stat] = (dest[stat] or 0) + count * qty
+          stats[stat] = count * (1-qty)
 
           gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
                      stat, count*qty,  CL, R:tostr(), N:tostr())
@@ -349,13 +348,8 @@ function Monsters_do_pickups()
 
 
   local function get_storage_prefs(arena)
-    local ratios = {}
-
-    for i = 1, #arena.storage_rooms do
-      ratios[i] = rand.irange(2,5)
-    end
-
-    return ratios, arena.storage_rooms
+    -- Note: there are no storage rooms ATM
+    return {}, {}
   end
 
 
@@ -397,8 +391,8 @@ function Monsters_do_pickups()
     if R.is_storage then return end
 
     do
-      distribute_to_list(R, 0.50, get_previous_prefs(R))
----!!!      distribute_to_list(R, 0.30, get_storage_prefs(R.arena))
+      distribute_to_list(R, 0.60, get_previous_prefs(R))
+      distribute_to_list(R, 0.10, get_storage_prefs(R.arena))
     end
   end
 
@@ -458,10 +452,10 @@ function Monsters_do_pickups()
 
 
   local function select_pickups(R, item_list, stat, qty, hmodel)
-gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
+gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
 
     -- subtract any previous gotten stuff
-    qty = qty - hmodel.stats[stat]
+    qty = qty - (hmodel.stats[stat] or 0)
     hmodel.stats[stat] = 0
 
     -- more ammo in start room
@@ -498,7 +492,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat])
 
     if excess > 0 then
 gui.debugf("Excess %s = %1.1f\n", stat, excess)
-      hmodel.stats[stat] = assert(hmodel.stats[stat]) + excess
+      hmodel.stats[stat] = hmodel.stats[stat] + excess
     end
   end
 
@@ -648,7 +642,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 end
 
 
-function Monsters_fill_room(R)
+function Monsters_in_room(R)
 
   local function is_big(mon)
     return GAME.ENTITIES[mon].r > 30
@@ -1455,7 +1449,7 @@ function Monsters_fill_room(R)
   end
 
 
-  local function give_monster_drops(mon_list, hmodel)
+  local function give_monster_drops(hmodel, mon_list)
     for _,info in ipairs(mon_list) do
       if info.give then
         Player_give_stuff(hmodel, info.give)
@@ -1484,14 +1478,14 @@ function Monsters_fill_room(R)
   end
 
 
-  local function subtract_gotten_stuff(stats, hmodel)
-    for name,got_qty in pairs(hmodel.stats) do
-      local st_qty = stats[name] or 0
-      if st_qty > 0 and got_qty > 0 then
-        local min_q = math.min(st_qty, got_qty)
+  local function subtract_stuff_we_have(stats, hmodel)
+    for name,have_qty in pairs(hmodel.stats) do
+      local need_qty = stats[name] or 0
+      if have_qty > 0 and need_qty > 0 then
+        local min_q = math.min(have_qty, need_qty)
 
-        hmodel.stats[name] = hmodel.stats[name] - min_q
                stats[name] =        stats[name] - min_q
+        hmodel.stats[name] = hmodel.stats[name] - min_q
       end
     end
   end
@@ -1513,16 +1507,16 @@ function Monsters_fill_room(R)
 
     Fight_Simulator(mon_list, weap_list, weap_prefs, stats)
 
-    gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
+--  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
     user_adjust_result(stats)
-    gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
+--  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
-    give_monster_drops(mon_list, hmodel)
+    give_monster_drops(hmodel, mon_list)
 
-    subtract_gotten_stuff(stats, hmodel)
+    subtract_stuff_we_have(stats, hmodel)
 
-    gui.debugf("final result = \n%s\n", table.tostr(stats,1))
+--  gui.debugf("final result = \n%s\n", table.tostr(stats,1))
   end
 
 
@@ -1555,9 +1549,9 @@ function Monsters_fill_room(R)
   end
 
 
-  ---| Monsters_fill_room |---
+  ---| Monsters_in_room |---
 
-  gui.debugf("Monsters_fill_room @ %s\n", R:tostr())
+  gui.debugf("Monsters_in_room @ %s\n", R:tostr())
 
   R.monster_list = {}
   R.fight_stats  = make_empty_stats()
@@ -1614,7 +1608,7 @@ function Monsters_make_battles()
   for _,R in ipairs(LEVEL.all_rooms) do
     Player_give_room_stuff(R)
 
-    Monsters_fill_room(R)
+    Monsters_in_room(R)
   end
 
   Monsters_show_stats()
