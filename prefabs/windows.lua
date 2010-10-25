@@ -423,11 +423,11 @@ PREFAB.FENCE_W_INSET =
     },
 
     {
-      { x =  16, y = 12, mat = "?metal" },
-      { x = 112, y = 12, mat = "?metal" },
-      { x = 112, y = 20, mat = "?metal" },
-      { x =  16, y = 20, mat = "?metal" },
-      { t = 48, mat = "?metal" },
+      { x =  16, y = 12, mat = "?inset" },
+      { x = 112, y = 12, mat = "?inset" },
+      { x = 112, y = 20, mat = "?inset" },
+      { x =  16, y = 20, mat = "?inset" },
+      { t = 48, mat = "?inset" },
     },
 
     {
@@ -527,6 +527,52 @@ PREFAB.FENCE_W_TORCHES =
   {
     { x = 46, y = 16, z = 32, ent = "?torch", angle = 90 },
     { x = 82, y = 16, z = 32, ent = "?torch", angle = 90 },
+  },
+}
+
+
+PREFAB.FENCE_W_HIGH_TORCH =
+{
+  placement = "fitted",
+
+  x_sizes = { {32,1}, {64,0}, {32,1} },
+
+  repeat_width = 160,
+
+  brushes =
+  {
+    {
+      { x =   0, y = 24, mat = "?fence" },
+      { x =  32, y = 24, mat = "?fence" },
+      { x =  32, y = 40, mat = "?fence" },
+      { x =   0, y = 40, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+
+    {
+      { x =  52, y =  0, mat = "?metal" },
+      { x =  76, y =  0, mat = "?metal" },
+      { x =  96, y = 24, mat = "?metal" },
+      { x =  96, y = 40, mat = "?metal" },
+      { x =  76, y = 64, mat = "?metal" },
+      { x =  52, y = 64, mat = "?metal" },
+      { x =  32, y = 40, mat = "?metal" },
+      { x =  32, y = 24, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    {
+      { x =  96, y = 24, mat = "?fence" },
+      { x = 128, y = 24, mat = "?fence" },
+      { x = 128, y = 40, mat = "?fence" },
+      { x =  96, y = 40, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+  },
+
+  entities =
+  {
+    { x = 64, y = 32, z = 72, ent = "?torch", angle = 90 },
   },
 }
 
