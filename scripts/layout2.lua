@@ -973,10 +973,10 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
-      if R.outdoor and other_R.outdoor then fab = "FENCE_W_HIGH_TORCH" end
+      if R.outdoor and other_R.outdoor then fab = "FENCE_W_WEIRD_BLOB" end
       z = math.max(z, other_R.floor_min_h or 0)
       z = z + 32
-      sk2 = { fence="WOOD9", metal="METAL", rail="MIDBARS3", torch="red_torch_sm" }
+      sk2 = { fence="WOOD9", metal="METAL", blob="GSTLION", rail="MIDBARS3", torch="red_torch_sm" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
       sk2 = { frame="METAL1_1" }

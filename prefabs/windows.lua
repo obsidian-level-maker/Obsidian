@@ -577,3 +577,57 @@ PREFAB.FENCE_W_HIGH_TORCH =
 }
 
 
+PREFAB.FENCE_W_WEIRD_BLOB =
+{
+  placement = "fitted",
+
+  x_sizes = { {64,1}, {64,0}, {64,1} },
+
+  repeat_width = 192,
+
+  brushes =
+  {
+    {
+      { x =   0, y = 24, mat = "?fence" },
+      { x =  88, y = 24, mat = "?fence" },
+      { x =  88, y = 40, mat = "?fence" },
+      { x =   0, y = 40, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+
+    {
+      { x =  88, y = 16, mat = "?metal" },
+      { x = 104, y = 16, mat = "?metal" },
+      { x = 104, y = 48, mat = "?metal" },
+      { x =  88, y = 48, mat = "?metal" },
+      { t = 128, mat = "?metal" },
+    },
+
+    {
+      { x =  64, y =  0, mat = "?blob", x_offset=0, y_offset=0 },
+      { x = 128, y =  0, mat = "?blob", x_offset=0, y_offset=0 },
+      { x = 128, y = 64, mat = "?blob", x_offset=0, y_offset=0 },
+      { x =  64, y = 64, mat = "?blob", x_offset=0, y_offset=0 },
+      { b = 128, mat = "?blob" },
+    },
+
+    {
+      { m = "sky", outlier=1 },
+      { x =  60, y = -4, mat = "_SKY" },
+      { x = 132, y = -4, mat = "_SKY" },
+      { x = 132, y = 68, mat = "_SKY" },
+      { x =  60, y = 68, mat = "_SKY" },
+      { b = 192, mat = "_SKY" },
+    },
+
+    {
+      { x = 104, y = 24, mat = "?fence" },
+      { x = 192, y = 24, mat = "?fence" },
+      { x = 192, y = 40, mat = "?fence" },
+      { x = 104, y = 40, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+  },
+}
+
+
