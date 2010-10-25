@@ -441,6 +441,56 @@ PREFAB.FENCE_W_INSET =
 }
 
 
+PREFAB.FENCE_W_RAIL =
+{
+  placement = "fitted",
+
+  x_sizes = { {12,0}, {104,1}, {12,0} },
+
+  repeat_width = 192,
+
+  brushes =
+  {
+    -- base
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x = 128, y =  0, mat = "?fence" },
+      { x = 128, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 16, mat = "?fence" },
+    },
+
+    -- post(s)
+    {
+      { x =  0, y =  8, mat = "?metal" },
+      { x = 12, y =  8, mat = "?metal" },
+      { x = 12, y = 24, mat = "?metal" },
+      { x =  0, y = 24, mat = "?metal" },
+      { t = 160, mat = "?metal" },
+    },
+
+    {
+      { x = 116, y =  8, mat = "?metal" },
+      { x = 128, y =  8, mat = "?metal" },
+      { x = 128, y = 24, mat = "?metal" },
+      { x = 116, y = 24, mat = "?metal" },
+      { t = 160, mat = "?metal" },
+    },
+
+    -- railing
+    {
+      { m = "rail" },
+      { x =  12, y = 16, mat = "?rail", blocked=1 },
+      { x = 116, y = 16 },
+      { x = 116, y = 32 },
+      { x =  12, y = 32 },
+      { b = 16 },
+      { t = 144 },
+    },
+  },
+}
+
+
 PREFAB.FENCE_W_RAIL_INSET =
 {
   placement = "fitted",
