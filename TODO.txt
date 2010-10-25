@@ -5,9 +5,26 @@ V4 TODO
 Current Work
 ------------
 
-!!  improve placement of key/switch : NOT NEAR ENTRANCE
+>>>>>>>  IMPORTANTS PLACEMENT
 
-!!  fix items and monsters on fences / staircases
+DONE:  improve placement of key/switch : NOT NEAR ENTRANCE
+
+-  fix window prefabs: raise up by 32 units or whatever
+
+DONE: QUAKE: prevent warnings about map-models "in solid @ (0,0,0)"
+
+DONE:  allocate corners for importants : requre nearby edges are unused
+
+>>>  straddler sizes affect TWO rooms at same time
+     (implications for edge and corner layouting)
+
+>>>  3D floor prefab is often a TRIPLE splitter
+     (left side, right bottom, right top)
+
+-  consider if floor fabbing can do heights on-the-fly instead of
+   a separate pass at the end.
+
++  fix items and monsters on fences / staircases
 
 +  in a large (multi-section) room, if any section has no "events"
    (a connection or switch or key or major item) then give it a
