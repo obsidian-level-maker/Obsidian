@@ -58,6 +58,14 @@ class CORNER
 }
 
 
+class MIDDLE
+{
+  K  -- section
+
+  usage : USAGE
+}
+
+
 ----------------------------------------------------------------]]
 
 require 'defs'
@@ -359,102 +367,6 @@ function Layout_add_span(E, long1, long2, deep, kind)
 end
 
 
-function Layout_size_straddlers()
-  -- Straddlers are architecture which sits across two rooms.
-  -- Currently there are only two kinds: DOORS and WINDOWS.
-  -- 
-  -- There are placed (i.e. allocated on a 2D map) before
-  -- everything else.  The actual prefab and heights will be
-  -- decided later in the normal layout code.
-
-  local function place_straddler(kind, K, N, dir)
-    R = K.room
-
-    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
-
-    assert(long >= 256)
-
-    local deep
-    
-    if kind == "door" then
-      long = 208
-      deep = 128
-    else
-      -- windows use most of the length
-      long = long - 72*2
-      deep = 32
-    end
-
-    -- FIXME : pick these properly
-    local deep1 = deep / 2
-    local deep2 = deep / 2
-
-
-    local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
-                        long=long, out=deep1, back=deep2,
-                      }
-
-    assert(K.edges[dir])
-    assert(N.edges[10-dir])
-
-    K.edges[dir]   .straddler = STRADDLER
-    N.edges[10-dir].straddler = STRADDLER
-
-
-    local edge_long = K.edges[dir].long
-
-    local long1 = (edge_long - long) / 2
-    local long2 = (edge_long + long) / 2
-
-
-    local SP
-    
-    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
-    SP.usage = "straddler"
-    SP.straddler = STRADDLER
-
-    -- NOTE: if not centred, would need different long1/long2 for other side
-    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
-    SP.usage = "straddler"
-    SP.straddler = STRADDLER
-
-    return STRADDLER
-  end
-
-
-  ---| Layout_place_straddlers |---
-
-  -- do doors after windows, as doors may want to become really big
-  -- and hence would need to know about the windows.
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,K in ipairs(R.sections) do
-      for _,E in pairs(K.edges) do
-        if E.usage and E.usage.kind == "window" and not E.usage.placed then
-          local W = E.usage
-          place_straddler("window", W.K1, W.K2, W.dir)
-          E.usage.placed = true
-        end
-      end
-    end
-  end
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,K in ipairs(R.sections) do
-      for _,E in pairs(K.edges) do
-        if E.usage and E.usage.kind == "door" and not E.usage.placed then
-          local C = E.usage.conn
-          local STR = place_straddler("door", C.K1, C.K2, C.dir)
-          STR.conn = C
-          E.usage.placed = true
-        end
-      end
-    end
-  end
-end
-
-
-
 function Layout_check_brush(coords, data)
   local R = data.R
 
@@ -495,6 +407,70 @@ function Layout_shrunk_section_coords(K)
   if not K:same_room(8) then K.y2 = K.y2 - 8 end
 
   return x1,y1, x2,y2
+end
+
+
+
+function Layout_dists_from_entrance()
+
+  local function spread_entry_dist(R)
+    local count = 1
+    local total = #R.sections
+
+    local K = R.entry_conn:section(R)
+
+    K.entry_dist = 0
+
+    while count < total do
+      for _,K in ipairs(R.sections) do
+        for side = 2,8,2 do
+          local N = K:neighbor(side)
+          if N and N.room == R and N.entry_dist then
+
+            if not K.entry_dist then
+              K.entry_dist = N.entry_dist
+              count = count + 1
+            elseif N.entry_dist < K.entry_dist then
+              K.entry_dist = N.entry_dist
+            end
+
+          end
+        end
+      end
+    end
+  end
+
+  --| Layout_dists_from_entrance |--
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.entry_conn then
+      spread_entry_dist(R)
+    end
+  end
+end
+
+
+
+function Layout_collect_free_edges(R, edges, corners, middles)
+  for _,M in ipairs(R.middles) do
+    if not M.usage then
+      table.insert(middles, M)
+    end
+  end
+
+  for _,K in ipairs(R.sections) do
+    for _,C in pairs(K.corners) do
+      if not C.usage then
+        table.insert(corners, C)
+      end
+    end
+    
+    for _,E in pairs(K.edges) do
+      if not E.usage then
+        table.insert(edges, E)
+      end
+    end
+  end
 end
 
 
@@ -594,27 +570,6 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   end
 
 
-  local function collect_free_edges(R, edges, corners, middles)
-    for _,K in ipairs(R.sections) do
-      if not K.usage then
-        table.insert(middles, K)
-      end
-
-      for _,C in pairs(K.corners) do
-        if not C.usage then
-          table.insert(corners, C)
-        end
-      end
-      
-      for _,E in pairs(K.edges) do
-        if not E.usage then
-          table.insert(edges, E)
-        end
-      end
-    end
-  end
-
-
   local function place_importants(R)
     -- determine available places
 
@@ -622,7 +577,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     local corners = {}
     local middles = {}
 
-    collect_free_edges(R, edges, corners, middles)
+    Layout_collect_free_edges(R, edges, corners, middles)
 
 
     table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
@@ -630,7 +585,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     rand.shuffle(corners)
     rand.shuffle(edges)
 
-    R.middles = middles
+--####   R.middles = middles
 
     -- determine the stuff which MUST go into this room
 
@@ -664,6 +619,8 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
 
   --| Layout_place_importants |--
+
+  Layout_dists_from_entrance()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     place_importants(R)
@@ -740,6 +697,102 @@ end
 function Layout_initial_walls()
   for _,R in ipairs(LEVEL.all_rooms) do
     -- FIXME
+  end
+end
+
+
+
+function Layout_size_straddlers()
+  -- Straddlers are architecture which sits across two rooms.
+  -- Currently there are only two kinds: DOORS and WINDOWS.
+  -- 
+  -- There are placed (i.e. allocated on a 2D map) before
+  -- everything else.  The actual prefab and heights will be
+  -- decided later in the normal layout code.
+
+  local function place_straddler(kind, K, N, dir)
+    R = K.room
+
+    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
+
+    assert(long >= 256)
+
+    local deep
+    
+    if kind == "door" then
+      long = 208
+      deep = 128
+    else
+      -- windows use most of the length
+      long = long - 72*2
+      deep = 32
+    end
+
+    -- FIXME : pick these properly
+    local deep1 = deep / 2
+    local deep2 = deep / 2
+
+
+    local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
+                        long=long, out=deep1, back=deep2,
+                      }
+
+    assert(K.edges[dir])
+    assert(N.edges[10-dir])
+
+    K.edges[dir]   .straddler = STRADDLER
+    N.edges[10-dir].straddler = STRADDLER
+
+
+    local edge_long = K.edges[dir].long
+
+    local long1 = (edge_long - long) / 2
+    local long2 = (edge_long + long) / 2
+
+
+    local SP
+    
+    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
+    SP.usage = "straddler"
+    SP.straddler = STRADDLER
+
+    -- NOTE: if not centred, would need different long1/long2 for other side
+    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
+    SP.usage = "straddler"
+    SP.straddler = STRADDLER
+
+    return STRADDLER
+  end
+
+
+  ---| Layout_place_straddlers |---
+
+  -- do doors after windows, as doors may want to become really big
+  -- and hence would need to know about the windows.
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        if E.usage and E.usage.kind == "window" and not E.usage.placed then
+          local W = E.usage
+          place_straddler("window", W.K1, W.K2, W.dir)
+          E.usage.placed = true
+        end
+      end
+    end
+  end
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        if E.usage and E.usage.kind == "door" and not E.usage.placed then
+          local C = E.usage.conn
+          local STR = place_straddler("door", C.K1, C.K2, C.dir)
+          STR.conn = C
+          E.usage.placed = true
+        end
+      end
+    end
   end
 end
 
@@ -1171,7 +1224,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       end
     end
 
-    for _,IM in ipairs(R.importants) do
+    for _,IM in ipairs(R.importants) do -- FIXME !!!!!
       if IM.place_K and IM.prefab then
         local K = IM.place_K
         local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
