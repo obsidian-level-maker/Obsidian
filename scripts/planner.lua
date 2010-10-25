@@ -57,7 +57,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={}, middles={} }
+  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
   table.set_class(K, SECTION_CLASS)
   return K
 end
@@ -1086,7 +1086,7 @@ function Plan_prepare_rooms()
   end
 
 
-  local function add_middle(K)
+  local function add_middle(R, K)
     local MIDDLE =
     {
       K = K
@@ -1144,7 +1144,7 @@ function Plan_prepare_rooms()
     for _,K in ipairs(R.sections) do
       add_edges(K)
       add_corners(K)
-      add_middle(K)
+      add_middle(R, K)
     end
 
     connect_corners(R)

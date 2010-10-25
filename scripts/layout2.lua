@@ -427,11 +427,12 @@ function Layout_dists_from_entrance()
           local N = K:neighbor(side)
           if N and N.room == R and N.entry_dist then
 
+            local dist = N.entry_dist + 1
             if not K.entry_dist then
-              K.entry_dist = N.entry_dist
+              K.entry_dist = dist
               count = count + 1
-            elseif N.entry_dist < K.entry_dist then
-              K.entry_dist = N.entry_dist
+            elseif dist < K.entry_dist then
+              K.entry_dist = dist
             end
 
           end
@@ -445,6 +446,10 @@ function Layout_dists_from_entrance()
   for _,R in ipairs(LEVEL.all_rooms) do
     if R.entry_conn then
       spread_entry_dist(R)
+    else
+      for _,K in ipairs(R.sections) do
+        K.entry_dist = 0
+      end
     end
   end
 end
@@ -457,8 +462,8 @@ function Layout_collect_free_edges(R, edges, corners, middles)
     if C.usage then return false end
 
     -- size check (TODO: probably better elsewhere)
-    if (C.K.x2 - C.K.x1) < 768 then return false end
-    if (C.K.y2 - C.K.y1) < 768 then return false end
+    if (C.K.x2 - C.K.x1) < 512 then return false end
+    if (C.K.y2 - C.K.y1) < 512 then return false end
 
     -- check if the edges touching the corner are also free
 
@@ -517,7 +522,7 @@ function Layout_place_importants()
   end
 
 
-  local function pick_imp_spot(IM, middles, corners, walls)
+  local function pick_imp_spot(IM, edges, corners, middles)
     for loop = 3,19 do
       if rand.odds(loop * 10) and #middles > 0 then
         IM.place_kind = "MIDDLE"
@@ -534,9 +539,9 @@ gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
         return
       end
 
-      if rand.odds(loop * 10) and #walls > 0 then
+      if rand.odds(loop * 10) and #edges > 0 then
         IM.place_kind = "WALL"
-        IM.place_E = table.remove(walls, 1)
+        IM.place_E = table.remove(edges, 1)
         IM.place_E.usage = { kind="important" }
 gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
 
@@ -620,14 +625,18 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     Layout_collect_free_edges(R, edges, corners, middles)
 
     -- this arrangement is for the purpose
-    Layout_sort_free_edges(R, edges,   1, -0.6, -0.2)
-    Layout_sort_free_edges(R, corners, 1, -0.6, -0.2)
-    Layout_sort_free_edges(R, middles, 1, -0.6, -0.2)
+    Layout_sort_free_edges(edges,   1, -0.6, -0.2)
+    Layout_sort_free_edges(corners, 1, -0.6, -0.2)
+    Layout_sort_free_edges(middles, 1, -0.6, -0.2)
+
+
 
     -- this arrangement is for teleporter and weapon
-    Layout_sort_free_edges(R, edges,   0.4, -1, -0.8)
-    Layout_sort_free_edges(R, corners, 0.4, -1, -0.8)
-    Layout_sort_free_edges(R, middles, 0.4, -1, -0.8)
+--[[
+    Layout_sort_free_edges(edges,   0.4, -1, -0.8)
+    Layout_sort_free_edges(corners, 0.4, -1, -0.8)
+    Layout_sort_free_edges(middles, 0.4, -1, -0.8)
+--]]
 
 
 --####   R.middles = middles
@@ -655,9 +664,9 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
     for _,IM in ipairs(R.importants) do
 
       if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
-        pick_imp_spot(IM, middles, {}, {})
+        pick_imp_spot(IM, {}, {}, middles)
       else
-        pick_imp_spot(IM, {}, {}, edges)
+        pick_imp_spot(IM, edges, {}, {})
       end
     end
   end
