@@ -346,14 +346,11 @@ function Quest_add_weapons()
     end
 
     if table.empty(name_tab) then
-      gui.printf("  %s: NONE!!\n", R:tostr())
       return
     end
 
     local weapon = rand.key_by_probs(name_tab)
     local info = GAME.WEAPONS[weapon]
-
-    gui.printf("  %s: %s\n", R:tostr(), weapon)
 
     R.weapon = weapon
     R.weapon_ammo = info.ammo
@@ -362,9 +359,41 @@ function Quest_add_weapons()
   end
 
 
-  ---| Quest_add_weapons |---
+  local function should_swap(early, later)
+    if not early or not later then return false end
 
-  gui.printf("Weapon List:\n")
+    local info1 = assert(GAME.WEAPONS[early])
+    local info2 = assert(GAME.WEAPONS[later])
+
+    -- tend to place non-melee weapons before normal ones
+    if info2.attack == "melee" and info1.attack ~= "melee" and rand.odds(65) then
+      return true
+    end
+
+    -- otherwise only swap when the ammo is the same
+    if info1.ammo == info2.ammo and
+       (info1.rate * info1.damage) > (info2.rate * info2.damage)
+    then
+      return true
+    end
+
+    return false
+  end
+
+
+  local function swap_weapons(index, R)
+    for i = index+1, #LEVEL.all_rooms do
+      local N = LEVEL.all_rooms[i]
+
+      if should_swap(R.weapon, N.weapon) then
+        R.weapon, N.weapon = N.weapon, R.weapon
+        R.weapon_ammo, N.weapon_ammo = N.weapon_ammo, R.weapon_ammo
+      end
+    end
+  end
+
+
+  ---| Quest_add_weapons |---
 
   LEVEL.added_weapons = {}
 
@@ -376,6 +405,19 @@ function Quest_add_weapons()
     if R.weap_along >= next_weap_at then
       add_weapon(R)
       next_weap_at = next_weap_at + 1
+    end
+  end
+
+  gui.printf("Weapon List:\n")
+
+  -- make sure weapon order is reasonable, e.g. the shotgun should
+  -- appear before the super shotgun, plasma rifle before BFG, etc...
+
+  for index,R in ipairs(LEVEL.all_rooms) do
+    swap_weapons(index, R)
+
+    if R.weapon then
+      gui.printf("  %s: %s\n", R:tostr(), R.weapon)
     end
   end
 
@@ -724,6 +766,7 @@ function Quest_make_quests()
 
   Quest_select_textures()
   Quest_choose_keys()
+
   Quest_add_weapons()
 end
 
