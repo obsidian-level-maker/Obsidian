@@ -143,7 +143,7 @@ QUAKE1.PARAMETERS =
 QUAKE1.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="tech08_1" },  -- METAL1_1
+  _ERROR = { t="metal1_1" },  -- METAL1_1
   _SKY   = { t="sky4" },
 
   ADOOR01_2  = { t="adoor01_2" },

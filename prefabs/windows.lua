@@ -734,3 +734,112 @@ PREFAB.FENCE_BULGY =
 }
 
 
+PREFAB.FENCE_STICKS_DOOM =
+{
+  placement = "fitted",
+
+  x_sizes = { {6,0}, {20,1}, {6,0} },
+
+  repeat_width = 64,
+
+  brushes =
+  {
+    -- base
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  32, y =  0, mat = "?fence" },
+      { x =  32, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 12, mat = "?fence" },
+    },
+
+    -- post(s)
+    {
+      { x =  0, y = 12, mat = "?metal" },
+      { x =  6, y = 12, mat = "?metal" },
+      { x =  6, y = 20, mat = "?metal" },
+      { x =  0, y = 20, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    {
+      { x = 26, y = 12, mat = "?metal" },
+      { x = 32, y = 12, mat = "?metal" },
+      { x = 32, y = 20, mat = "?metal" },
+      { x = 26, y = 20, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    -- railing
+    {
+      { m = "rail" },
+      { x =  6, y = 16, mat = "?rail", blocked=1 },
+      { x = 26, y = 16 },
+      { x = 26, y = 32 },
+      { x =  6, y = 32 },
+      { b = 56 },
+      { t = 72 },
+    },
+  },
+}
+
+
+PREFAB.FENCE_STICKS_QUAKE =
+{
+  placement = "fitted",
+
+  x_sizes = { {6,0}, {20,1}, {6,0} },
+
+  repeat_width = 48,
+
+  brushes =
+  {
+    -- base
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  32, y =  0, mat = "?fence" },
+      { x =  32, y = 32, mat = "?fence" },
+      { x =   0, y = 32, mat = "?fence" },
+      { t = 12, mat = "?fence" },
+    },
+
+    -- post(s)
+    {
+      { x =  0, y = 12, mat = "?metal" },
+      { x =  6, y = 12, mat = "?metal" },
+      { x =  6, y = 20, mat = "?metal" },
+      { x =  0, y = 20, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    {
+      { x = 26, y = 12, mat = "?metal" },
+      { x = 32, y = 12, mat = "?metal" },
+      { x = 32, y = 20, mat = "?metal" },
+      { x = 26, y = 20, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    -- railing
+    {
+      { x =  6, y = 12, mat = "?metal" },
+      { x = 26, y = 12, mat = "?metal" },
+      { x = 26, y = 20, mat = "?metal" },
+      { x =  6, y = 20, mat = "?metal" },
+      { b = 64, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    -- player clip
+    {
+      { m = "clip" },
+      { x =  0, y = 12 },
+      { x = 32, y = 12 },
+      { x = 32, y = 20 },
+      { x =  0, y = 20 },
+      { t = 112 },
+    },
+  },
+}
+
+

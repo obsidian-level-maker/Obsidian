@@ -382,7 +382,7 @@ function Layout_size_straddlers()
     else
       -- windows use most of the length
       long = long - 72*2
-      deep = 64
+      deep = 32
     end
 
     -- FIXME : pick these properly
@@ -973,10 +973,10 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     if info.kind == "window" then
       fab = "WINDOW_W_BARS"
-      if R.outdoor and other_R.outdoor then fab = "FENCE_W_WEIRD_BLOB" end
+      if R.outdoor and other_R.outdoor then fab = "FENCE_STICKS_QUAKE" end
       z = math.max(z, other_R.floor_min_h or 0)
       z = z + 32
-      sk2 = { fence="WOOD9", metal="METAL", blob="GSTLION", rail="MIDBARS3", torch="red_torch_sm" }
+      sk2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
       sk2 = { frame="METAL1_1" }
