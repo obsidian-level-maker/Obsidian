@@ -452,6 +452,28 @@ end
 
 
 function Layout_collect_free_edges(R, edges, corners, middles)
+
+  local function corner_very_free(C)
+    if C.usage then return false end
+
+    -- size check (TODO: probably better elsewhere)
+    if (C.K.x2 - C.K.x1) < 768 then return false end
+    if (C.K.y2 - C.K.y1) < 768 then return false end
+
+    -- check if the edges touching the corner are also free
+
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        if E.corn1 == C and E.usage then return false end
+        if E.corn2 == C and E.usage then return false end
+      end
+    end
+  
+    return true
+  end
+
+  --| Layout_collect_free_edges |--
+
   for _,M in ipairs(R.middles) do
     if not M.usage then
       table.insert(middles, M)
@@ -460,11 +482,11 @@ function Layout_collect_free_edges(R, edges, corners, middles)
 
   for _,K in ipairs(R.sections) do
     for _,C in pairs(K.corners) do
-      if not C.usage then
+      if not C.concave and corner_very_free(C) then
         table.insert(corners, C)
       end
     end
-    
+
     for _,E in pairs(K.edges) do
       if not E.usage then
         table.insert(edges, E)
@@ -474,8 +496,26 @@ function Layout_collect_free_edges(R, edges, corners, middles)
 end
 
 
+function Layout_sort_free_edges(list, entry_factor, conn_factor, busy_factor)
+  for _,E in ipairs(list) do
+    E.free_score = E.K.entry_dist * entry_factor +
+                   E.K.num_conn   * conn_factor  +
+                   E.K.num_busy   * busy_factor  +
+                   gui.random()   * 0.1
+  end
+
+  table.sort(list, function(A, B) return A.free_score > B.free_score end)
+end
+
 
 function Layout_place_importants()
+
+  local function clear_busyness(R)
+    for _,K in ipairs(R.sections) do
+      K.num_busy = 0
+    end
+  end
+
 
   local function pick_imp_spot(IM, middles, corners, walls)
     for loop = 3,19 do
@@ -579,11 +619,16 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
 
     Layout_collect_free_edges(R, edges, corners, middles)
 
+    -- this arrangement is for the purpose
+    Layout_sort_free_edges(R, edges,   1, -0.6, -0.2)
+    Layout_sort_free_edges(R, corners, 1, -0.6, -0.2)
+    Layout_sort_free_edges(R, middles, 1, -0.6, -0.2)
 
-    table.sort(middles, function(A, B) return A.num_conn < B.num_conn end)
+    -- this arrangement is for teleporter and weapon
+    Layout_sort_free_edges(R, edges,   0.4, -1, -0.8)
+    Layout_sort_free_edges(R, corners, 0.4, -1, -0.8)
+    Layout_sort_free_edges(R, middles, 0.4, -1, -0.8)
 
-    rand.shuffle(corners)
-    rand.shuffle(edges)
 
 --####   R.middles = middles
 
@@ -623,6 +668,7 @@ gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.p
   Layout_dists_from_entrance()
 
   for _,R in ipairs(LEVEL.all_rooms) do
+    clear_busyness(R)
     place_importants(R)
   end
 end
