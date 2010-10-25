@@ -631,3 +631,56 @@ PREFAB.FENCE_W_WEIRD_BLOB =
 }
 
 
+PREFAB.FENCE_BULGY =
+{
+  placement = "fitted",
+
+--##  x_sizes = { {48,1}, {96,0}, {48,1} },
+
+  repeat_width = 192,
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?fence" },
+      { x =  48, y =  0, mat = "?fence" },
+      { x =  48, y = 64, mat = "?fence" },
+      { x =   0, y = 64, mat = "?fence" },
+      { t = 48, mat = "?fence" },
+    },
+
+    {
+      { x =  48, y =  0, mat = "?fence" },
+      { x =  80, y = 24, mat = "?fence" },
+      { x =  80, y = 40, mat = "?fence" },
+      { x =  48, y = 64, mat = "?fence" },
+      { t = 40, mat = "?fence" },
+    },
+
+    {
+      { x =  80, y = 24, mat = "?fence" },
+      { x = 112, y = 24, mat = "?fence" },
+      { x = 112, y = 40, mat = "?fence" },
+      { x =  80, y = 40, mat = "?fence" },
+      { t = 32, mat = "?fence" },
+    },
+
+    {
+      { x = 112, y = 24, mat = "?fence" },
+      { x = 144, y =  0, mat = "?fence" },
+      { x = 144, y = 64, mat = "?fence" },
+      { x = 112, y = 40, mat = "?fence" },
+      { t = 40, mat = "?fence" },
+    },
+
+    {
+      { x = 144, y =  0, mat = "?fence" },
+      { x = 192, y =  0, mat = "?fence" },
+      { x = 192, y = 64, mat = "?fence" },
+      { x = 144, y = 64, mat = "?fence" },
+      { t = 48, mat = "?fence" },
+    },
+  },
+}
+
+
