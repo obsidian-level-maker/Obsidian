@@ -57,7 +57,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
+  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={}, middles={} }
   table.set_class(K, SECTION_CLASS)
   return K
 end
@@ -1086,6 +1086,16 @@ function Plan_prepare_rooms()
   end
 
 
+  local function add_middle(K)
+    local MIDDLE =
+    {
+      K = K
+    }
+
+    table.insert(R.middles, MIDDLE)
+  end
+
+
   local function corner_near_edge(E, want_left)
     local side
     if want_left then side = geom.LEFT_45 [E.side]
@@ -1134,6 +1144,7 @@ function Plan_prepare_rooms()
     for _,K in ipairs(R.sections) do
       add_edges(K)
       add_corners(K)
+      add_middle(K)
     end
 
     connect_corners(R)
