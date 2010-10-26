@@ -587,12 +587,18 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
   local skinname = rand.key_by_probs(E.usage.edge_fabs)
 
   local skin = assert(GAME.SKINS[skinname])
+  local skin2
 
   local prefab = assert(skin._prefab)
 
   -- FIXME
   local long = skin._long
   local deep = skin._deep
+
+
+  if GAME.format == "quake" and kind == "EXIT" then
+    skin2 = { next_map = LEVEL.next_map }
+  end
 
 
   if OLD_OLD_OLD_CRUD_CRUD then
@@ -644,6 +650,7 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
   SP.usage = "prefab"
   SP.prefab = prefab
   SP.skin = skin
+  SP.skin2 = skin2
 end
 
 
@@ -1288,7 +1295,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
 
-    Fab_with_update(R, SP.prefab, T, SP.skin)
+    Fab_with_update(R, SP.prefab, T, SP.skin, SP.skin2)
   end
 
 

@@ -761,6 +761,40 @@ QUAKE1.MISC_PREFABS =
 }
 
 
+QUAKE1.SKINS =
+{
+  ----| STARTS |----
+
+  START_LEDGE =
+  {
+    _prefab = "START_LEDGE",
+    _target = "edge",
+    _long   = 200,
+    _deep   = 128,
+  },
+
+
+  ----| EXITS |----
+
+  WALL_EXIT =
+  {
+    _prefab = "QUAKE_WALL_EXIT",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 96,
+
+    pad = "TELE_TOP",
+  },
+
+
+  ----| KEY |----
+
+
+  ----| SWITCHES |----
+
+
+} -- end of QUAKE1.SKINS
+
 
 QUAKE1.ROOMS =
 {
@@ -833,7 +867,7 @@ QUAKE1.ROOMS =
 QUAKE1.SUB_THEME_DEFAULTS =
 {
   keys = { k_silver=60, k_gold=20 },
-  switches = { sw_blue=50 },
+  OLD__switches = { sw_blue=50 },
 
   teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",
@@ -887,7 +921,15 @@ QUAKE1.SUB_THEMES =
 
     steps = { step1=50, step2=50 },
 
-    exits = { exit_pad=50 },
+    starts =
+    {
+      START_LEDGE = 50,
+    },
+
+    exits =
+    {
+      WALL_EXIT = 50,
+    },
 
     scenery =
     {
@@ -948,7 +990,15 @@ QUAKE1.SUB_THEMES =
 
     steps = { step1=50, step2=50 },
 
-    exits = { exit_pad=50 },
+    starts =
+    {
+      START_LEDGE = 50,
+    },
+
+    exits =
+    {
+      WALL_EXIT = 50,
+    },
 
     scenery =
     {
