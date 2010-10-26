@@ -744,9 +744,10 @@ function Quest_make_quests()
   local QT = QUEST_CLASS.new(LEVEL.start_room)
 
   if not THEME.switches then
+    -- room list remains in the "natural flow" order
     no_quest_order(QT.start, QT)
   else
-    -- the room list will be rebuilt in visit order
+    -- room list will be rebuilt in visit order
     LEVEL.all_rooms = {}
 
     visit_room(QT.start, QT)

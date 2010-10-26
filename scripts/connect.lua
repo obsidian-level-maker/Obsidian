@@ -935,6 +935,8 @@ function Connect_rooms()
 
     visited[R] = true
 
+    table.insert(LEVEL.all_rooms, R)
+
     for _,C in ipairs(R.conns) do
       if R == C.R2 and not visited[C.R1] then
         C:swap()
@@ -976,7 +978,10 @@ function Connect_rooms()
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
-  -- when backtracking).
+  -- when backtracking).  Room order is updated too, though quests
+  -- will normally change it again.
+  LEVEL.all_rooms = {}
+
   natural_flow(LEVEL.start_room, {})
 end
 
