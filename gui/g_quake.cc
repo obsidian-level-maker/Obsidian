@@ -683,13 +683,15 @@ static void Q1_WriteFace(quake_face_c *face)
 
   raw_face.lightofs = -1;
 
+  memset(raw_face.styles, 255, 4);
+
   if (face->lmap)
+  {
     raw_face.lightofs = face->lmap->CalcOffset();
 
-  raw_face.styles[0] = (raw_face.lightofs < 0) ? 0xFF : 0;
-  raw_face.styles[1] = 0xFF;
-  raw_face.styles[2] = 0xFF;
-  raw_face.styles[3] = 0xFF;
+    for (int n = 0 ; n < 4 ; n++)
+      raw_face.styles[n] = face->lmap->styles[n];
+  }
 
 
   const char *texture = face->texture.c_str();

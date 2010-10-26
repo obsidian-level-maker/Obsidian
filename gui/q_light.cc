@@ -58,7 +58,8 @@ qLightmap_c::qLightmap_c(int w, int h, int value) :
   if (width * height > SMALL_LIGHTMAP)
     samples = new byte[width * height];
 
-  styles[0] = styles[1] = styles[2] = styles[3] = 0;
+  styles[0] = 0;
+  styles[1] = styles[2] = styles[3] = 255;  // unused
 
   if (value >= 0)
     Fill(value);
