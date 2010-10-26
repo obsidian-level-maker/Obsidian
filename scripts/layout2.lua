@@ -527,16 +527,8 @@ function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-function Layout_place_importants()
 
-  local function clear_busyness(R)
-    for _,K in ipairs(R.sections) do
-      K.num_busy = 0
-    end
-  end
-
-
-  local function temp_cruddy_edge_prefab_gunk(E, kind, lock)
+  function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
       local prefab, skin
       local long, deep
@@ -590,6 +582,16 @@ function Layout_place_importants()
   end
 
 
+
+function Layout_place_importants()
+
+  local function clear_busyness(R)
+    for _,K in ipairs(R.sections) do
+      K.num_busy = 0
+    end
+  end
+
+
   local function pick_target(R, usage)
     local prob_tab = {}
 
@@ -614,17 +616,21 @@ function Layout_place_importants()
       local edge = table.remove(R.targets.edges, 1)
       edge.usage = usage
 
-      temp_cruddy_edge_prefab_gunk(edge, usage.sub, usage.lock)
+      edge.K.num_busy = edge.K.num_busy + 1
 
     elseif what == "corner" then
 
       local corner = table.remove(R.targets.corners, 1)
       corner.usage = usage
 
+      corner.K.num_busy = corner.K.num_busy + 1
+
     else assert(what == "middle")
 
       local middle = table.remove(R.targets.middles, 1)
       middle.usage = usage
+
+      middle.K.num_busy = middle.K.num_busy + 1
 
     end
   end
@@ -704,6 +710,8 @@ function Layout_extra_room_stuff()
   -- the exit door require a far-away switch to open it.
 
   local function extra_stuff(R)
+    Layout_sort_targets(R.targets, 0.4, -1, -0.8)
+
     -- TODO
   end
 
@@ -1311,8 +1319,15 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
   R.wall_space = Layout_initial_space(R)
 
 
-  decide_corner_sizes()
+  for _,K in ipairs(R.sections) do
+    for _,E in pairs(K.edges) do
+      if E.usage and E.usage.kind == "important" then
+        temp_cruddy_edge_prefab_gunk(E, E.usage.sub, E.usage.lock)
+      end
+    end
+  end
 
+  decide_corner_sizes()
 
   build_corners()
 
