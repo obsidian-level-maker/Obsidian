@@ -1848,9 +1848,44 @@ DOOM.EXITS =
 }
 
 
-DOOM.SWITCHES =
+DOOM.SKINS =
 {
-  sw_blue =
+  ----| STARTS |----
+
+  START_LEDGE =
+  {
+    _prefab = "START_LEDGE",
+    _target = "edge",
+    _long   = 200,
+    _deep   = 128,
+
+    wall = "CRACKLE2",
+  },
+
+
+  ----| EXITS |----
+
+  EXIT_SWITCH =
+  {
+    _prefab = "WALL_SWITCH",
+    _target = "edge",
+    _long   = 200,
+    _deep   = 64,
+
+    wall = "CRACKLE2",
+
+    switch="SW1HOT", line_kind=11, x_offset=0, y_offset=0,
+  },
+
+
+  ----| KEY |----
+
+
+  ----| SWITCHES |----
+
+
+
+  OLD_sw_blue =
   {
     prefab = "SWITCH_FLOOR",
     skin =
@@ -1862,7 +1897,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_blue2 =  -- NOT USED
+  OLD_sw_blue2 =  -- NOT USED
   {
     prefab = "SWITCH_FLOOR_BEAM",
     skin =
@@ -1878,7 +1913,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_hot =
+  OLD_sw_hot =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1891,7 +1926,7 @@ DOOM.SWITCHES =
 
   },
 
-  sw_skin =
+  OLD_sw_skin =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1903,7 +1938,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_vine =
+  OLD_sw_vine =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1915,7 +1950,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_metl =  -- NOT USED
+  OLD_sw_metl =  -- NOT USED
   {
     prefab = "SWITCH_CEILING",
     environment = "indoor",
@@ -1932,7 +1967,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_wood =
+  OLD_sw_wood =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1944,7 +1979,7 @@ DOOM.SWITCHES =
     }
   },
 
-  sw_marble =
+  OLD_sw_marble =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1955,7 +1990,7 @@ DOOM.SWITCHES =
     }
   },
 
-  bar_wood =
+  OLD_bar_wood =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1966,7 +2001,7 @@ DOOM.SWITCHES =
     }
   },
 
-  bar_silver =
+  OLD_bar_silver =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1977,7 +2012,7 @@ DOOM.SWITCHES =
     }
   },
 
-  bar_metal =
+  OLD_bar_metal =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1988,7 +2023,7 @@ DOOM.SWITCHES =
     }
   },
 
-  bar_gray =
+  OLD_bar_gray =
   {
     prefab = "SWITCH_PILLAR",
     skin =
@@ -1999,7 +2034,7 @@ DOOM.SWITCHES =
     }
   },
 
-} -- end of DOOM.SWITCHES
+} -- end of DOOM.SKINS
 
 
 
@@ -2259,12 +2294,12 @@ DOOM.SUB_THEME_DEFAULTS =
   out_crates = { wood=50, ick=50 },
 
   -- FIXME: next three should not be separated
-  exits = { demon_pillar2=50 },
-  small_exits = { tech_small=50 },
-  out_exits = { tech_outdoor=50 },
+  __exits = { demon_pillar2=50 },
+  __small_exits = { tech_small=50 },
+  __out_exits = { tech_outdoor=50 },
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
-  switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
+  OLD__switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
   bars = { bar_silver=50 },
 
   -- MISC STUFF : these don't quite fit in yet --  (FIXME)
@@ -2423,9 +2458,9 @@ DOOM1.SUB_THEMES =
       litered=10,
     },
 
-    exits = { stone_pillar=50 },
+    OLD__exits = { stone_pillar=50 },
 
-    switches = { sw_blue=50, sw_hot=50 },
+    OLD__switches = { sw_blue=50, sw_hot=50 },
 
     bars = { bar_silver=50, bar_gray=50 },
 
@@ -2550,10 +2585,10 @@ DOOM1.SUB_THEMES =
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
-    exits = { skin_pillar=40,
+    OLD__exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
 
-    switches = { sw_marble=50, sw_vine=50, sw_wood=50 },
+    OLD__switches = { sw_marble=50, sw_vine=50, sw_wood=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -2628,10 +2663,10 @@ DOOM1.SUB_THEMES =
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
-    exits = { skin_pillar=40,
+    OLD__exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
 
-    switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
+    OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -2799,6 +2834,16 @@ DOOM2.SUB_THEMES =
       },
     },
 
+    starts =
+    {
+      START_LEDGE = 50,
+    },
+
+    exits =
+    {
+      EXIT_SWITCH = 50,
+    },
+
     doors =
     {
       silver=20, silver_fast=33, silver_once=2,
@@ -2849,9 +2894,9 @@ DOOM2.SUB_THEMES =
     crates = { crate1=50, crate2=50, comp=70, lite5=20,
                space=90, mod=15 },
 
-    exits = { skull_pillar=50, stone_pillar=5 },
+    OLD__exits = { skull_pillar=50, stone_pillar=5 },
 
-    switches = { sw_blue=50, sw_hot=50 },
+    OLD__switches = { sw_blue=50, sw_hot=50 },
 
     bars = { bar_silver=50, bar_gray=50 },
 
@@ -2915,7 +2960,7 @@ DOOM2.SUB_THEMES =
         RROCK04=70,
       },
 
-    exits = { skin_pillar=40, skull_pillar=20,
+    OLD__exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
 
     logos = { carve=90, pill=50, neon=5 },
@@ -2933,7 +2978,7 @@ DOOM2.SUB_THEMES =
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
 
-    switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
+    OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -2992,7 +3037,7 @@ DOOM2.SUB_THEMES =
         RROCK04=70,
       },
 
-    exits = { skin_pillar=40, skull_pillar=20,
+    OLD__exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
@@ -3013,7 +3058,7 @@ DOOM2.SUB_THEMES =
 
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
-    switches = { sw_skin=50, sw_marble=50, sw_vine=50 },
+    OLD__switches = { sw_skin=50, sw_marble=50, sw_vine=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -3115,13 +3160,13 @@ DOOM2.SUB_THEMES =
       marbfac2=3, marbfac3=3,
     },
 
-    exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30, },
+    OLD__exits = { demon_pillar2=20, demon_pillar3=20, stone_pillar=30, },
 
     steps = { step6=50, },
 
     lifts = { shiny=20, platform=20, rusty=50 },
 
-    switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
+    OLD__switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
 
     bars = { bar_wood=50, bar_metal=50 },
 
@@ -3177,9 +3222,9 @@ DOOM2.SUB_THEMES =
 
     pictures = { eagle1=50, hitler1=10 },
 
-    exits = { skull_pillar=50, stone_pillar=8 },
+    OLD__exits = { skull_pillar=50, stone_pillar=8 },
 
-    switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
+    OLD__switches = { sw_wood=50, sw_blue=50, sw_hot=50 },
 
     bars = { bar_wood=50, bar_gray=50, bar_silver=50 },
 
