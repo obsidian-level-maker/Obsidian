@@ -390,10 +390,59 @@ PREFAB.QUAKE_EXIT_PAD =
 
       entity =
       {
-        ent = "change_lev", map = "?nextmap",      
+        ent = "change_lev", map = "?next_map",      
       },
     },
   },
 }
 
+
+PREFAB.QUAKE_WALL_EXIT =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- area in front of it
+    {
+      { m = "walk" },
+      { x =   0, y = 16 },
+      { x = 192, y = 16 },
+      { x = 192, y = 96 },
+      { x =   0, y = 96 },
+    },
+
+    -- the pad itself
+    {
+      { x =  64, y = 32, mat = "?pad", x_offset=0, y_offset=0 },
+      { x = 128, y = 32, mat = "?pad", x_offset=0, y_offset=0 },
+      { x = 128, y = 96, mat = "?pad", x_offset=0, y_offset=0 },
+      { x =  64, y = 96, mat = "?pad", x_offset=0, y_offset=0 },
+      { t = 16, mat = "?pad" },
+    },
+  },
+
+  models =
+  {
+    -- the trigger
+    {
+      x1 =  76, x2 = 116, x_face = { mat="TRIGGER" },
+      y1 =  44, y2 = 84,  y_face = { mat="TRIGGER" },
+      z1 =  16, z2 = 240, z_face = { mat="TRIGGER" },
+
+      entity =
+      {
+        ent = "change_lev", map = "?next_map",      
+      },
+    },
+  },
+}
 
