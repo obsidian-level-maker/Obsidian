@@ -582,58 +582,69 @@ end
 
 
 
-  function temp_cruddy_edge_prefab_gunk(E, kind, lock)
+function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
-      local prefab, skin
-      local long, deep
+  local skinname = rand.key_by_probs(E.usage.edge_fabs)
 
-        if kind == "START" then
-          prefab = "START_LEDGE"
-          skin = {}
-          long = 200
-          deep = 128
-        
-        elseif kind == "EXIT" then
-          prefab = "WALL_SWITCH"
-          skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
-          long = 200
-          deep = 64
+  local skin = assert(GAME.SKINS[skinname])
 
-        elseif lock and lock.kind == "SWITCH" then
-          if GAME.format == "quake" then
-            prefab = "QUAKE_WALL_SWITCH"
-            skin = { target = string.format("t%d", lock.tag), }
-            long = 192
-            deep = 32
-          else
-            prefab = "WALL_SWITCH"
-            skin = { line_kind=103, tag=lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
-            long = 200
-            deep = 64
-          end
+  local prefab = assert(skin._prefab)
 
-        elseif lock and lock.kind == "KEY" then
-          prefab = "ITEM_NICHE"
-          skin = { item = lock.item }
-          long = 200
-          deep = 64
+  -- FIXME
+  local long = skin._long
+  local deep = skin._deep
 
+
+  if OLD_OLD_OLD_CRUD_CRUD then
+
+      if kind == "START" then
+        prefab = "START_LEDGE"
+        skin = {}
+        long = 200
+        deep = 128
+      
+      elseif kind == "EXIT" then
+        prefab = "WALL_SWITCH"
+        skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
+        long = 200
+        deep = 64
+
+      elseif lock and lock.kind == "SWITCH" then
+        if GAME.format == "quake" then
+          prefab = "QUAKE_WALL_SWITCH"
+          skin = { target = string.format("t%d", lock.tag), }
+          long = 192
+          deep = 32
         else
-          prefab = "ITEM_NICHE"
-          skin = { item = "mega", key="LITE5" }
+          prefab = "WALL_SWITCH"
+          skin = { line_kind=103, tag=lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
           long = 200
           deep = 64
         end
 
-        local long1 = int(E.long - long) / 2
-        local long2 = int(E.long + long) / 2
+      elseif lock and lock.kind == "KEY" then
+        prefab = "ITEM_NICHE"
+        skin = { item = lock.item }
+        long = 200
+        deep = 64
 
-        local SP = Layout_add_span(E, long1, long2, deep, prefab)
-
-        SP.usage = "prefab"
-        SP.prefab = prefab
-        SP.skin = skin
+      else
+        prefab = "ITEM_NICHE"
+        skin = { item = "mega", key="LITE5" }
+        long = 200
+        deep = 64
+      end
   end
+
+  local long1 = int(E.long - long) / 2
+  local long2 = int(E.long + long) / 2
+
+  local SP = Layout_add_span(E, long1, long2, deep, prefab)
+
+  SP.usage = "prefab"
+  SP.prefab = prefab
+  SP.skin = skin
+end
 
 
 
