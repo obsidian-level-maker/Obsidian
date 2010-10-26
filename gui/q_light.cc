@@ -52,11 +52,13 @@ bool qk_color_lighting;
 
 
 qLightmap_c::qLightmap_c(int w, int h, int value) :
-    width(w), height(h), samples(data),
+    width(w), height(h), num_styles(1), samples(data),
     offset(-1), score(-1), average(-1)
 {
   if (width * height > SMALL_LIGHTMAP)
     samples = new byte[width * height];
+
+  styles[0] = styles[1] = styles[2] = styles[3] = 0;
 
   if (value >= 0)
     Fill(value);
@@ -73,6 +75,26 @@ void qLightmap_c::Fill(int value)
 {
   for (int i = 0 ; i < width*height ; i++)
     samples[i] = value;
+}
+
+
+void qLightmap_c::AddStyle(byte style)
+{
+  SYS_ASSERT(! isFlat());
+
+  if (num_styles > 4)
+    return;
+
+  styles[num_styles++] = style;
+
+  byte *new_samples = new byte[width * height * (num_styles+1)];
+
+  memcpy(new_samples, samples, width * height * num_styles);
+
+  if (samples != data)
+    delete[] samples;
+
+  samples = new_samples;
 }
 
 
@@ -129,7 +151,7 @@ void qLightmap_c::Write(qLump_c *lump)
 
   offset = lump->GetSize();
 
-  int total = width * height;
+  int total = width * height * num_styles;
 
   if (! qk_color_lighting)
   {
@@ -456,7 +478,7 @@ void qLightmap_c::Store_Normal()
   const int *src   = &blocklights[0];
   const int *s_end = src + (width * height);
 
-  byte *dest = &samples[0];
+  byte *dest = samples + (width * height * (num_styles-1));
 
   while (src < s_end)
   {
@@ -551,6 +573,7 @@ typedef struct
   float radius;
 
   int level;  // 16.8 fixed point
+  int style;
 }
 quake_light_t;
 
@@ -592,6 +615,7 @@ static void QCOM_FindLights()
       continue;
 
     light.level = (int) (level * (1 << 8));
+    light.style = E->props.getInt("style", 0);
 
     qk_all_lights.push_back(light);
   }
@@ -604,8 +628,12 @@ static inline void Bump(int s, int t, int W, int value)
 }
 
 
-static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
+static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass)
 {
+  // first pass is normal lights, second pass is styled lights
+  if ((light.style ? 1 : 0) != pass)
+    return;
+
   // skip lights which are behind the face
   float perp = lt_plane_normal[0] * light.x +
                lt_plane_normal[1] * light.y +
@@ -631,6 +659,11 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light)
     if (! lt_face_bbox.Touches(light.x, light.y, light.z, light.radius))
       return;
   }
+
+
+  // add style to lightmap if not already there
+  if (light.style && lmap->num_styles < 2)
+      lmap->AddStyle(light.style);
 
 
   for (int t = 0 ; t < lt_H ; t++)
@@ -671,14 +704,18 @@ void QCOM_LightFace(quake_face_c *F)
 
   CalcPoints();
 
-  ClearLightBuffer();
-
-  for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+  for (int pass = 0 ; pass < 2 ; pass++)
   {
-    QCOM_ProcessLight(F->lmap, qk_all_lights[i]);
-  }
+    ClearLightBuffer();
 
-  F->lmap->Store();
+    for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
+    {
+      QCOM_ProcessLight(F->lmap, qk_all_lights[i], pass);
+    }
+
+    if (pass == F->lmap->num_styles-1)
+      F->lmap->Store();
+  }
 }
 
 

@@ -34,11 +34,14 @@ class qLightmap_c
 {
 public:
   int width, height;
+  int num_styles;
 
   byte * samples;
 
   // for small maps, store data directly here
   byte data[SMALL_LIGHTMAP];
+
+  byte styles[4];
 
   // final offset in lightmap lump (if not flat)
   int offset;
@@ -54,7 +57,7 @@ public:
 
   inline bool isFlat() const
   {
-    return (width == 1 && height == 1);
+    return (width == 1 && height == 1 && num_styles == 1);
   }
 
   void Fill(int value);
@@ -66,8 +69,11 @@ public:
     if (raw < 0)   raw = 0;
     if (raw > 255) raw = 255;
 
-    samples[t * width + s] = raw;
+    // FIXME: UGH  UGH  UGH  !!!
+    samples[t * width + s + (num_styles-1)*width*height] = raw;
   }
+
+  void AddStyle(byte style);
 
   void Store();  // transfer from blocklights[] array
 
