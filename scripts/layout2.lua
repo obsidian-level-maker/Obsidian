@@ -527,6 +527,60 @@ function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
+function Layout_possible_prefabs(kind, target)
+
+  -- kind : "START", "EXIT", "ITEM", "SWITCH"
+
+  -- target : "edge", "corner", "middle"
+
+  local KIND_MAP =
+  {
+    START   = "starts",
+    EXIT    = "exits",
+    ITEM    = "pedestals",
+    KEY     = "pedestals",
+    SWITCH  = "switches",
+    TELEPORTER = "teleporters",
+  }
+
+  local tab_name = assert(KIND_MAP[kind])
+
+  local tab = THEME[tab_name]
+  if not tab then return nil end
+
+  local result = {}
+
+  for name,prob in pairs(tab) do
+    local skin = GAME.SKINS[name]
+
+    if not skin then
+      -- FIXME: WARNING or ERROR ??
+      error("no such skin: " .. tostring(name))
+    else
+      -- TODO: more sophisticated matches (prefab.environment)
+      if skin._target == target then
+        result[name] = prob
+      end
+    end
+  end
+
+  if table.empty(result) then return nil end
+
+  return result
+end
+
+
+function Layout_possible_fab_group(usage, fab_kind)
+  usage.edge_fabs   = Layout_possible_prefabs(fab_kind, "edge")
+  usage.corner_fabs = Layout_possible_prefabs(fab_kind, "corner")
+  usage.middle_fabs = Layout_possible_prefabs(fab_kind, "middle")
+
+  if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
+    error("Theme is missing usable prefabs for: " .. tostring(fab_kind))
+  end
+end
+
+
 
   function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
@@ -648,9 +702,17 @@ function Layout_place_importants()
         kind = "important",
         sub  = R.purpose,
         lock = R.purpose_lock,
-
-        edge_fabs = "WTF",
       }
+
+      local fab_kind = R.purpose
+
+      if R.purpose == "SOLUTION" then
+        fab_kind = R.purpose_lock.kind
+      end
+
+      Layout_possible_fab_group(USAGE, fab_kind)
+
+      pick_target(R, USAGE)
 --[[
         if R.purpose_lock and R.purpose_lock.kind == "KEY" then
           USAGE.middle_prefabs = 
@@ -662,8 +724,6 @@ function Layout_place_importants()
           }
         end
 --]]
-      pick_target(R, USAGE)
-
       -- FIXME: cheap hack, should just remove the invalidated targets
       --        (a bit complicated since corners use the nearby edges
       --         and hence one can invalidate the other)
@@ -678,6 +738,8 @@ function Layout_place_importants()
         kind = "important",
         sub  = "teleporter",
       }
+
+      Layout_possible_fab_group(USAGE, "TELEPORTER")
 
       pick_target(R, USAGE)
 
@@ -710,8 +772,6 @@ function Layout_extra_room_stuff()
   -- the exit door require a far-away switch to open it.
 
   local function extra_stuff(R)
-    Layout_sort_targets(R.targets, 0.4, -1, -0.8)
-
     -- TODO
   end
 
