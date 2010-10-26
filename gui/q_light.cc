@@ -465,12 +465,12 @@ static void CalcPoints()
 }
 
 
-static void ClearLightBuffer()
+static void ClearLightBuffer(int level)
 {
   int total = lt_W * lt_H;
 
   for (int k = 0 ; k < total ; k++)
-    blocklights[k] = LOW_LIGHT << 8;
+    blocklights[k] = level << 8;
 }
 
 
@@ -707,14 +707,14 @@ void QCOM_LightFace(quake_face_c *F)
 
   for (int pass = 0 ; pass < 2 ; pass++)
   {
-    ClearLightBuffer();
+    ClearLightBuffer(pass ? 0 : LOW_LIGHT);
 
     for (unsigned int i = 0 ; i < qk_all_lights.size() ; i++)
     {
       QCOM_ProcessLight(F->lmap, qk_all_lights[i], pass);
     }
 
-    if (pass == F->lmap->num_styles-1)
+    if (pass == 0 || (pass == 1 && F->lmap->num_styles == 2))
       F->lmap->Store();
   }
 }
