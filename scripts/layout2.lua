@@ -456,7 +456,14 @@ end
 
 
 
-function Layout_collect_free_edges(R, edges, corners, middles)
+function Layout_collect_targets(R)
+
+  local targets =
+  {
+    edges = {},
+    corners = {},
+    middles = {},
+  }
 
   local function corner_very_free(C)
     if C.usage then return false end
@@ -477,39 +484,46 @@ function Layout_collect_free_edges(R, edges, corners, middles)
     return true
   end
 
-  --| Layout_collect_free_edges |--
+  --| Layout_collect_targets |--
 
   for _,M in ipairs(R.middles) do
     if not M.usage then
-      table.insert(middles, M)
+      table.insert(targets.middles, M)
     end
   end
 
   for _,K in ipairs(R.sections) do
     for _,C in pairs(K.corners) do
       if not C.concave and corner_very_free(C) then
-        table.insert(corners, C)
+        table.insert(targets.corners, C)
       end
     end
 
     for _,E in pairs(K.edges) do
       if not E.usage then
-        table.insert(edges, E)
+        table.insert(targets.edges, E)
       end
     end
   end
+
+  return targets
 end
 
 
-function Layout_sort_free_edges(list, entry_factor, conn_factor, busy_factor)
-  for _,E in ipairs(list) do
-    E.free_score = E.K.entry_dist * entry_factor +
-                   E.K.num_conn   * conn_factor  +
-                   E.K.num_busy   * busy_factor  +
-                   gui.random()   * 0.1
-  end
+function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
+  for _,listname in ipairs { "edges", "corners", "middles" } do
+    local list = targets[listname]
+    if list then
+      for _,E in ipairs(list) do
+        E.free_score = E.K.entry_dist * entry_factor +
+                       E.K.num_conn   * conn_factor  +
+                       E.K.num_busy   * busy_factor  +
+                       gui.random()   * 0.1
+      end
 
-  table.sort(list, function(A, B) return A.free_score > B.free_score end)
+      table.sort(list, function(A, B) return A.free_score > B.free_score end)
+    end
+  end
 end
 
 
@@ -522,62 +536,39 @@ function Layout_place_importants()
   end
 
 
-  local function pick_imp_spot(IM, edges, corners, middles)
-    for loop = 3,19 do
-      if rand.odds(loop * 10) and #middles > 0 then
-        IM.place_kind = "MIDDLE"
-        IM.place_K = table.remove(middles, 1)
-        IM.place_K.usage = { kind="important" }
+  local function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
-gui.debugf("IMPORTANT '%s' in middle of %s\n", IM.kind, IM.place_K:tostr())
+      local prefab, skin
+      local long, deep
 
-        if IM.lock and IM.lock.kind == "KEY" then
-          IM.prefab = "OCTO_PEDESTAL"
-          IM.skin = { item = IM.lock.item, top = "CEIL1_2", base = "FLAT1" }
-        end
-
-        return
-      end
-
-      if rand.odds(loop * 10) and #edges > 0 then
-        IM.place_kind = "WALL"
-        IM.place_E = table.remove(edges, 1)
-        IM.place_E.usage = { kind="important" }
-gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.place_E.K:tostr())
-
-        local E = IM.place_E
-
-        local prefab, skin
-        local long, deep
-
-        if IM.kind == "START" then
+        if kind == "START" then
           prefab = "START_LEDGE"
           skin = {}
           long = 200
           deep = 128
         
-        elseif IM.kind == "EXIT" then
+        elseif kind == "EXIT" then
           prefab = "WALL_SWITCH"
           skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
           long = 200
           deep = 64
 
-        elseif IM.lock and IM.lock.kind == "SWITCH" then
+        elseif lock and lock.kind == "SWITCH" then
           if GAME.format == "quake" then
             prefab = "QUAKE_WALL_SWITCH"
-            skin = { target = string.format("t%d", IM.lock.tag), }
+            skin = { target = string.format("t%d", lock.tag), }
             long = 192
             deep = 32
           else
             prefab = "WALL_SWITCH"
-            skin = { line_kind=103, tag=IM.lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
+            skin = { line_kind=103, tag=lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
             long = 200
             deep = 64
           end
 
-        elseif IM.lock and IM.lock.kind == "KEY" then
+        elseif lock and lock.kind == "KEY" then
           prefab = "ITEM_NICHE"
-          skin = { item = IM.lock.item }
+          skin = { item = lock.item }
           long = 200
           deep = 64
 
@@ -596,79 +587,100 @@ gui.debugf("IMPORTANT '%s' on WALL:%d of %s\n", IM.kind, IM.place_E.side, IM.pla
         SP.usage = "prefab"
         SP.prefab = prefab
         SP.skin = skin
+  end
 
-        return
-      end
 
-      if rand.odds(loop * 10) and #corners > 0 then
-        IM.place_kind = "CORNER"
-        IM.place_C = table.remove(corners, 1)
-        IM.place_C.usage = { kind="important" }
-gui.debugf("IMPORTANT '%s' in CORNER:%d of %s\n", IM.kind, IM.place_C.side, IM.place_C.K:tostr())
-        return
-      end
+  local function pick_target(R, usage)
+    local prob_tab = {}
+
+    if #R.targets.edges > 0 and usage.edge_fabs then
+      prob_tab["edge"] = #R.targets.edges * 5
+    end
+    if #R.targets.corners > 0 and usage.corner_fabs then
+      prob_tab["corner"] = #R.targets.corners * 3
+    end
+    if #R.targets.middles > 0 and usage.middle_fabs then
+      prob_tab["middle"] = #R.targets.middles * 11
     end
 
-    -- TODO: allow up to 4 stuff in a "middle" (subdivide section 2 or 4 ways)
+    if table.empty(prob_tab) then
+      error("could not place important stuff in room!")
+    end
 
-    error("could not place important stuff!")
+    local what = rand.key_by_probs(prob_tab)
+
+    if what == "edge" then
+
+      local edge = table.remove(R.targets.edges, 1)
+      edge.usage = usage
+
+      temp_cruddy_edge_prefab_gunk(edge, usage.sub, usage.lock)
+
+    elseif what == "corner" then
+
+      local corner = table.remove(R.targets.corners, 1)
+      corner.usage = usage
+
+    else assert(what == "middle")
+
+      local middle = table.remove(R.targets.middles, 1)
+      middle.usage = usage
+
+    end
   end
 
 
   local function place_importants(R)
     -- determine available places
-
-    local edges   = {}
-    local corners = {}
-    local middles = {}
-
-    Layout_collect_free_edges(R, edges, corners, middles)
-
-    -- this arrangement is for the purpose
-    Layout_sort_free_edges(edges,   1, -0.6, -0.2)
-    Layout_sort_free_edges(corners, 1, -0.6, -0.2)
-    Layout_sort_free_edges(middles, 1, -0.6, -0.2)
-
-
-
-    -- this arrangement is for teleporter and weapon
---[[
-    Layout_sort_free_edges(edges,   0.4, -1, -0.8)
-    Layout_sort_free_edges(corners, 0.4, -1, -0.8)
-    Layout_sort_free_edges(middles, 0.4, -1, -0.8)
---]]
-
-
---####   R.middles = middles
-
-    -- determine the stuff which MUST go into this room
-
-    R.importants = {}
+    R.targets = Layout_collect_targets(R, edges, corners, middles)
 
     if R.purpose then
-      table.insert(R.importants, { kind=R.purpose, lock=R.purpose_lock })
+      Layout_sort_targets(R.targets, 1, -0.6, -0.2)
+
+      local USAGE =
+      {
+        kind = "important",
+        sub  = R.purpose,
+        lock = R.purpose_lock,
+
+        edge_fabs = "WTF",
+      }
+--[[
+        if R.purpose_lock and R.purpose_lock.kind == "KEY" then
+          USAGE.middle_prefabs = 
+          {
+            { _prefab = "OCTO_PEDESTAL",
+              item = R.purpose.lock.item,
+              top = "CEIL1_2", base = "FLAT1"
+            }
+          }
+        end
+--]]
+      pick_target(R, USAGE)
+
+      -- FIXME: cheap hack, should just remove the invalidated targets
+      --        (a bit complicated since corners use the nearby edges
+      --         and hence one can invalidate the other)
+      R.targets = Layout_collect_targets(R, edges, corners, middles)
     end
+
+    Layout_sort_targets(R.targets, 0.4, -1, -0.8)
 
     if R:has_teleporter() then
-      table.insert(R.importants, { kind="TELEPORTER" })
+      local USAGE =
+      {
+        kind = "important",
+        sub  = "teleporter",
+      }
+
+      pick_target(R, USAGE)
+
+      R.targets = Layout_collect_targets(R, edges, corners, middles)
     end
 
---[[ FIXME (currently added by pickup code)
-    if R.weapon then
-      table.insert(R.importants, { kind="WEAPON" })
-    end
---]]
 
-    -- TODO: more combinations, check what prefabs can be used
+    -- ??? TODO: weapon (currently added by pickup code)
 
-    for _,IM in ipairs(R.importants) do
-
-      if false then --!!! FIXME  IM.kind == "SOLUTION" and IM.lock and IM.lock.kind == "KEY" then
-        pick_imp_spot(IM, {}, {}, middles)
-      else
-        pick_imp_spot(IM, edges, {}, {})
-      end
-    end
   end
 
 
