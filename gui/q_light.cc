@@ -666,6 +666,10 @@ static void QCOM_ProcessLight(qLightmap_c *lmap, quake_light_t & light, int pass
   if (light.style && lmap->num_styles < 2)
       lmap->AddStyle(light.style);
 
+  // ignore light if style is different (OUCH!)
+  if (light.style && lmap->styles[1] != light.style)
+    return;
+
 
   for (int t = 0 ; t < lt_H ; t++)
   for (int s = 0 ; s < lt_W ; s++)
