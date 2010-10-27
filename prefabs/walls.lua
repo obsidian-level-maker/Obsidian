@@ -271,21 +271,10 @@ PREFAB.WALL_SPIKE_SHOOTER =
 
   models =
   {
-    -- the triggers
+    -- the trigger
     {
       x1 =  16, x2 = 112, x_face = { mat="TRIGGER" },
-      y1 =  16, y2 = 224, y_face = { mat="TRIGGER" },
-      z1 =   0, z2 =  80, z_face = { mat="TRIGGER" },
-
-      entity =
-      {
-        ent = "trigger_multiple", target = "?targetname",
-      },
-    },
-
-    {
-      x1 =  16, x2 = 112, x_face = { mat="TRIGGER" },
-      y1 = 256, y2 = 480, y_face = { mat="TRIGGER" },
+      y1 =  16, y2 = 480, y_face = { mat="TRIGGER" },
       z1 =   0, z2 =  80, z_face = { mat="TRIGGER" },
 
       entity =
