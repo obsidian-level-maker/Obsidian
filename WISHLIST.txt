@@ -464,13 +464,6 @@ Sam's suggestions:
 
 -  better exits
 
--  create dummy .lit files for FitzQuake & DarkPlaces
-   -  gui.pak_add_binary_lump
-
--  intermission camera (only need 1 -- user won't replay level)
-     "classname" "info_intermission"
-     "mangle"    "pitch roll yaw"  (pitch often 20, yaw 0)
-
 -  CalcPoints : move edges inwards by 2 pixels
 
 -  visibility: support diagonals, check if any sides in a cluster
@@ -489,6 +482,9 @@ Sam's suggestions:
 -  support colored lighting (FitzQuake, Darkplaces, etc).
    - add an entry in the pack called "maps/xxx.lit", which
    - it should contain: QLIT 1 0 0 0 <data>
+
+?  create dummy .lit files for FitzQuake & DarkPlaces
+   -  gui.pak_add_binary_lump
 
 
 ----------------------------------------------------------------
