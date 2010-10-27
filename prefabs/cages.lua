@@ -247,3 +247,62 @@ PREFAB.WALL_CAGE_2 =
 }
 
 
+PREFAB.CAGE_3D_WALL_1 =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 256, y =  0, mat = "?wall" },
+      { x = 256, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- space in front
+    {
+      { m = "air" },
+      { x =   0, y = 160 },
+      { x = 256, y = 160 },
+      { x = 256, y = 192 },
+      { x =   0, y = 192 },
+    },
+
+    -- platform
+    {
+      { x =  40, y =  16, mat = "?cage" },
+      { x = 216, y =  16, mat = "?cage" },
+      { x = 216, y = 136, mat = "?cage" },
+      { x = 192, y = 160, mat = "?cage" },
+      { x =  64, y = 160, mat = "?cage" },
+      { x =  40, y = 136, mat = "?cage" },
+      { b = 128, mat = "?cage" },
+      { t = 144, mat = "?cage" },
+    },
+
+    -- posts
+    {
+      { x =  64, y = 112, mat = "support" },
+      { x =  80, y = 112, mat = "support" },
+      { x =  80, y = 128, mat = "support" },
+      { x =  64, y = 128, mat = "support" },
+      { t = 132 },
+    },
+
+    {
+      { x = 176, y = 112, mat = "support" },
+      { x = 192, y = 112, mat = "support" },
+      { x = 192, y = 128, mat = "support" },
+      { x = 176, y = 128, mat = "support" },
+      { t = 132 },
+    },
+  },
+
+  spots =
+  {
+    { kind = "cage", x = 128, y = 88, z = 144, r = 64, h = 128, angle = 90 },
+  },
+}
+
