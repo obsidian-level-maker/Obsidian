@@ -2037,7 +2037,7 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H1_DOWN_4"
+    local fab = "H_3DFLOOR_A"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -2364,9 +2364,24 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     R.ceil_h = h
 
+    local props, w_face, p_face = Mat_normal(mat)
+
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, h, nil, Mat_normal(mat))
+      Trans.quad(x1, y1, x2, y2, h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
+    end
+
+    if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
+      local K1 = SECTIONS[R.kx1][R.ky1]
+      local K2 = SECTIONS[R.kx2][R.ky2]
+
+      local mx, my = geom.box_mid(K1.x1, K1.y1, K2.x2, K2.y2)
+
+      local T = Trans.spot_transform(mx, my, h)
+
+      Fabricate("SKYLITE_1", T, { trim="WIZWOOD1_5", metal="WIZMET1_2" })
+
+      R.has_skylite = 1
     end
   end
 
@@ -2508,6 +2523,8 @@ end
 function Layout_all_ceilings()
 
   local function quake_temp_lights(R)
+    if R.has_skylite then return end
+
     for _,K in ipairs(R.sections) do
       local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
       local light = rand.pick { 50, 100, 150, 200 }

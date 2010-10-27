@@ -44,3 +44,49 @@ PREFAB.CEIL_LIGHT =
   },
 }
 
+
+PREFAB.SKYLITE_1 =
+{
+  ceiling_relative = true,
+
+  brushes =
+  {
+    -- sky part
+    {
+      { m = "sky", flavor = "ceil:3" },
+      { x = -128, y = -128, mat = "_SKY" },
+      { x =  128, y = -128, mat = "_SKY" },
+      { x =  128, y =  128, mat = "_SKY" },
+      { x = -128, y =  128, mat = "_SKY" },
+      { b = 16, mat = "_SKY" },
+    },
+
+    -- trim around sky
+    {
+      { m = "solid", flavor = "ceil:2" },
+      { x = -160, y = -160, mat = "?trim" },
+      { x =  160, y = -160, mat = "?trim" },
+      { x =  160, y =  160, mat = "?trim" },
+      { x = -160, y =  160, mat = "?trim" },
+      { b = -16, mat = "?trim" },
+    },
+
+    -- spokes
+    {
+      { x = -192, y = -12, mat = "?metal" },
+      { x = -112, y = -12, mat = "?metal" },
+      { x = -112, y =  12, mat = "?metal" },
+      { x = -192, y =  12, mat = "?metal" },
+      { b = -32, mat = "?metal" },
+    },
+
+    {
+      { x =  112, y = -12, mat = "?metal" },
+      { x =  192, y = -12, mat = "?metal" },
+      { x =  192, y =  12, mat = "?metal" },
+      { x =  112, y =  12, mat = "?metal" },
+      { b = -32, mat = "?metal" },
+    },
+  },
+}
+
