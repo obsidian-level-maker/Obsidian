@@ -211,7 +211,7 @@ PREFAB.WALL_SPIKE_SHOOTER =
 
   defaults =
   {
-    targetname = "spikey",
+    spike_group = "spikey",
   },
 
   brushes =
@@ -279,14 +279,14 @@ PREFAB.WALL_SPIKE_SHOOTER =
 
       entity =
       {
-        ent = "trigger_multiple", target = "?targetname",
+        ent = "trigger_multiple", target = "?spike_group",
       },
     },
   },
 
   entities =
   {
-    { x = 64, y = 20, z = 20, ent = "spiker", angle = 90, targetname="?targetname" },
+    { x = 64, y = 20, z = 20, ent = "spiker", angle = 90, targetname="?spike_group" },
   },
 }
 

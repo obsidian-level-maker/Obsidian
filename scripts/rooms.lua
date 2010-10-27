@@ -176,9 +176,13 @@ end
 
 
 function Rooms_setup_theme(R)
+  R.skin = {}
+
+  R.skin.spike_group = "spike" .. tostring(R.id)
+
   if not R.outdoor then
     R.main_tex = rand.pick(LEVEL.building_walls)
-    R.skin = { wall=R.main_tex }
+    R.skin.wall = R.main_tex
     return
   end
 
@@ -187,7 +191,9 @@ function Rooms_setup_theme(R)
   end
 
   R.main_tex = R.quest.courtyard_floor
-  R.skin = { wall=R.main_tex, fence="ICKWALL7" }
+
+  R.skin.wall = R.main_tex
+  R.skin.fence = "ICKWALL7"
 end
 
 
