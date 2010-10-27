@@ -864,7 +864,7 @@ function Layout_size_straddlers()
   -- decided later in the normal layout code.
 
   local function place_straddler(kind, K, N, dir)
-    R = K.room
+    local R = K.room
 
     local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
 
