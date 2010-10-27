@@ -108,12 +108,14 @@ QUAKE1.ENTITIES =
 
   change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true },
   teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true },
+  trigger_multiple = { id="trigger_multiple", kind="other", r=1, h=1, pass=true },
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true },
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true },
   button = { id="func_button", kind="other", r=1, h=1, pass=true },
 
-  camera = { id="info_intermission", r=1, h=1, pass=true },
+  camera = { id="info_intermission", kind="other", r=1, h=1, pass=true },
+  spiker = { id="trap_spikeshooter", kind="other", r=1, h=1, pass=true },
 }
 
 
@@ -780,12 +782,14 @@ QUAKE1.SKINS =
 
   WALL_EXIT =
   {
-    _prefab = "QUAKE_WALL_EXIT",
+    _prefab = "WALL_EXIT",
     _target = "edge",
     _long   = 192,
     _deep   = 96,
 
     pad = "TELE_TOP",
+
+    metal = "METAL1_1",
   },
 
 

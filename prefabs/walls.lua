@@ -199,3 +199,106 @@ PREFAB.ITEM_NICHE =
 }
 
 
+
+PREFAB.WALL_SPIKE_SHOOTER =
+{
+  placement = "fitted",
+
+  x_sizes = { {16,1}, {96,0}, {16,1} },
+  y_sizes = { {16,1}, {24,0} },
+
+  repeat_width = 128,
+
+  defaults =
+  {
+    targetname = "spikey",
+  },
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 128, y =  0, mat = "?wall" },
+      { x = 128, y = 16, mat = "?wall" },
+      { x =   0, y = 16, mat = "?wall" },
+    },
+
+    -- space in front of it
+    {
+      { m = "walk" },
+      { x =   0, y =  16 },
+      { x = 128, y =  16 },
+      { x = 128, y = 112 },
+      { x =   0, y = 112 },
+    },
+
+    -- the shooter
+    {
+      { x =  40, y = 16, mat = "?metal" },
+      { x =  60, y = 16, mat = "?metal" },
+      { x =  60, y = 40, mat = "?metal" },
+      { b = 32, mat = "?metal" },
+      { t = 56, mat = "?metal" },
+    },
+
+    {
+      { x =  68, y = 16, mat = "?metal" },
+      { x =  88, y = 16, mat = "?metal" },
+      { x =  68, y = 40, mat = "?metal" },
+      { b = 32, mat = "?metal" },
+      { t = 56, mat = "?metal" },
+    },
+
+    {
+      { x =  60, y = 16, mat = "?metal" },
+      { x =  68, y = 16, mat = "?metal" },
+      { x =  68, y = 40, mat = "?metal" },
+      { x =  60, y = 40, mat = "?metal" },
+      { b = 32, mat = "?metal" },
+      { t = 36, mat = "?metal" },
+    },
+
+    {
+      { x =  60, y = 16, mat = "?metal" },
+      { x =  68, y = 16, mat = "?metal" },
+      { x =  68, y = 40, mat = "?metal" },
+      { x =  60, y = 40, mat = "?metal" },
+      { b = 52, mat = "?metal" },
+      { t = 56, mat = "?metal" },
+    },
+  },
+
+  models =
+  {
+    -- the triggers
+    {
+      x1 =  16, x2 = 112, x_face = { mat="TRIGGER" },
+      y1 =  16, y2 = 224, y_face = { mat="TRIGGER" },
+      z1 =   0, z2 =  80, z_face = { mat="TRIGGER" },
+
+      entity =
+      {
+        ent = "trigger_multiple", target = "?targetname",
+      },
+    },
+
+    {
+      x1 =  16, x2 = 112, x_face = { mat="TRIGGER" },
+      y1 = 256, y2 = 480, y_face = { mat="TRIGGER" },
+      z1 =   0, z2 =  80, z_face = { mat="TRIGGER" },
+
+      entity =
+      {
+        ent = "trigger_multiple", target = "?targetname",
+      },
+    },
+  },
+
+  entities =
+  {
+    { x = 64, y = 20, z = 20, ent = "spiker", angle = 90, targetname="?targetname" },
+  },
+}
+
+
