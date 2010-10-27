@@ -818,8 +818,11 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   int flags = 0;
 
+  // using SURF_WARP to disable the check on extents
+  // (trigger models are never rendered anyway)
+
   if (strstr(texture, "trigger") != NULL)
-    flags |= SURF_NODRAW;
+    flags |= SURF_NODRAW | SURF_WARP;
 
   raw_face.texinfo = Q2_AddTexInfo(texture, flags, 0, s, t);
 

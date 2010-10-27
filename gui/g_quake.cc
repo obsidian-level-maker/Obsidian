@@ -1094,7 +1094,12 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   // texture and lighting
 
-  raw_face.texinfo = Q1_AddTexInfo(texture, 0, s, t);
+  int flags = 0;
+
+  if (strstr(texture, "trigger") != NULL)
+    flags |= TEX_SPECIAL;
+
+  raw_face.texinfo = Q1_AddTexInfo(texture, flags, s, t);
 
   raw_face.styles[0] = 0;
   raw_face.styles[1] = 0xFF;
