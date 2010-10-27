@@ -444,5 +444,10 @@ PREFAB.QUAKE_WALL_EXIT =
       },
     },
   },
+
+  entities =
+  {
+    { x = 96, y = 80, z = 20, ent = "light", light = 128, style = 10 },
+  },
 }
 
