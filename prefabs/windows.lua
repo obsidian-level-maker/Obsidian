@@ -213,6 +213,86 @@ PREFAB.WINDOW_W_CROSS =
 }
 
 
+PREFAB.WINDOW_GOTHIC =
+{
+  placement = "fitted",
+
+  x_sizes = { {32,1}, {128,0}, {32,1} },
+
+  repeat_width = 192,
+
+  brushes =
+  {
+    -- right side
+    {
+      { x =  0, y =  0, mat = "?outer" },
+      { x = 32, y =  0, mat = "?wall" },
+      { x = 32, y = 32, mat = "?wall" },
+      { x =  0, y = 32, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 160, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y = 32, mat = "?wall" },
+      { x = 160, y = 32, mat = "?wall" },
+    },
+
+    -- bottom
+    {
+      { x =  32, y =  0, mat = "?outer" },
+      { x = 160, y =  0, mat = "?wall" },
+      { x = 160, y = 32, mat = "?wall" },
+      { x =  32, y = 32, mat = "?wall" },
+      { t = 48, mat = "?wall" },
+    },
+
+    -- arch pieces
+    {
+      { x =  32, y =  0, mat = "?outer" },
+      { x =  56, y =  0, mat = "?wall" },
+      { x =  56, y = 32, mat = "?wall" },
+      { x =  32, y = 32, mat = "?wall" },
+      { b = 168, mat = "?wall" },
+    },
+
+    {
+      { x =  56, y =  0, mat = "?outer" },
+      { x =  80, y =  0, mat = "?wall" },
+      { x =  80, y = 32, mat = "?wall" },
+      { x =  56, y = 32, mat = "?wall" },
+      { b = 216, mat = "?wall" },
+    },
+
+    {
+      { x =  80, y =  0, mat = "?outer" },
+      { x = 112, y =  0, mat = "?wall" },
+      { x = 112, y = 32, mat = "?wall" },
+      { x =  80, y = 32, mat = "?wall" },
+      { b = 240, mat = "?wall" },
+    },
+
+    {
+      { x = 112, y =  0, mat = "?outer" },
+      { x = 136, y =  0, mat = "?wall" },
+      { x = 136, y = 32, mat = "?wall" },
+      { x = 112, y = 32, mat = "?wall" },
+      { b = 216, mat = "?wall" },
+    },
+
+    {
+      { x = 136, y =  0, mat = "?outer" },
+      { x = 160, y =  0, mat = "?wall" },
+      { x = 160, y = 32, mat = "?wall" },
+      { x = 136, y = 32, mat = "?wall" },
+      { b = 168, mat = "?wall" },
+    },
+  },
+}
+
+
+
 PREFAB.QUAKE_WINDOW =
 {
   placement = "fitted",
