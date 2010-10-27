@@ -764,8 +764,8 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   if (face < 2)  // PLANE_X
   {
-    s[1] = 1;  // PLANE_X
-    t[2] = 1;
+    s[1] =  1;  // PLANE_X
+    t[2] = -1;
 
     texture = model->x_face.getStr("tex", "missing");
 
@@ -781,8 +781,8 @@ static void Q2_Model_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
   }
   else if (face < 4)
   {
-    s[0] = 1;  // PLANE_Y
-    t[2] = 1;
+    s[0] =  1;  // PLANE_Y
+    t[2] = -1;
 
     texture = model->y_face.getStr("tex", "missing");
 

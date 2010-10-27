@@ -928,13 +928,13 @@ void quake_face_c::SetupMatrix(const quake_plane_c *plane)
   
   if (fabs(plane->nx) > 0.5)
   {
-    s[1] = 1;  // PLANE_X
-    t[2] = 1;
+    s[1] =  1;  // PLANE_X
+    t[2] = -1;
   }
   else if (fabs(plane->ny) > 0.5)
   {
-    s[0] = 1;  // PLANE_Y
-    t[2] = 1;
+    s[0] =  1;  // PLANE_Y
+    t[2] = -1;
   }
   else
   {
