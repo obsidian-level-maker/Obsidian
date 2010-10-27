@@ -777,6 +777,76 @@ function Rooms_add_sun()
 end
 
 
+
+function Rooms_intermission_camera()
+  if GAME.format ~= "quake" then return end
+
+  -- determine the room (biggest one, excluding starts and exits)
+  local room
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.purpose ~= "START" and R.purpose ~= "EXIT" then
+      if not room or (R.kvolume > room.kvolume) then
+        room = R
+      end
+    end
+  end
+
+  if not room then return end
+
+  -- determine place in room
+  local K
+  local dir
+
+  local SIDES = { 1,3,7,9 }
+  rand.shuffle(SIDES)
+
+  for side in pairs(SIDES) do
+    local kx = sel(side == 1 or side == 7, room.kx1, room.kx2)
+    local ky = sel(side == 1 or side == 3, room.ky1, room.ky2)
+
+    if SECTIONS[kx][ky].room == room then
+      K = SECTIONS[kx][ky]
+      dir = 10 - side
+      break;
+    end
+  end
+
+  if not K then
+    K = room.sections[1]
+    dir = 9
+  end
+
+  local z1
+  local z2 = room.entry_floor_h
+
+  if room.ceil_h then z1 = room.ceil_h - 64
+  elseif room.sky_h then z1 = room.sky_h - 96
+  else z1 = room.entry_floor_h + 128
+  end
+
+  local W = K.x2 - K.x1
+  local H = K.y2 - K.y1
+
+  local x1 = K.x1 + int(W / 3)
+  local y1 = K.y1 + int(H / 3)
+  local x2 = K.x2 - int(W / 3)
+  local y2 = K.y2 - int(H / 3)
+
+  if dir == 1 or dir == 7 then x1,x2 = x2,x1 end
+  if dir == 1 or dir == 3 then y1,y2 = y2,y1 end
+
+  local dist  = geom.dist(x1,y1, x2,y2)
+  local angle = geom.calc_angle(x2 - x1, y2 - y1)
+  local mlook = geom.calc_angle(dist, z1 - z2)
+
+  local mangle = string.format("%d %d 0", mlook, angle)
+
+  Trans.entity("camera", x1, y1, z1, { mangle=mangle })
+end
+
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -813,5 +883,6 @@ function Rooms_build_all()
   -- scenic rooms ??
 
   Rooms_add_sun()
+  Rooms_intermission_camera()
 end
 
