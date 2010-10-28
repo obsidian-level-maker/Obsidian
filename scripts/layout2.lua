@@ -847,10 +847,8 @@ end
 
 
 
-function Layout_initial_walls()
-  for _,R in ipairs(LEVEL.all_rooms) do
+function Layout_initial_walls(R)
     -- FIXME
-  end
 end
 
 
@@ -951,7 +949,7 @@ end
 
 
 
-function Layout_do_walls(R)
+function Layout_flesh_out_walls(R)
 
   local function adjust_corner(C, side, long, deep)
     if geom.is_vert(side) then
@@ -1390,7 +1388,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
   end
 
 
-  --| Layout_do_walls |--
+  --| Layout_flesh_out_walls |--
 
   ROOM = R
 
@@ -1414,9 +1412,17 @@ end
 
 
 
-function Layout_flesh_out_walls()
+function Layout_all_walls()
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_do_walls(R)
+    Layout_initial_walls(R)
+  end
+
+---  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_size_straddlers(R)
+---  end
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Layout_flesh_out_walls(R)
   end
 end
 

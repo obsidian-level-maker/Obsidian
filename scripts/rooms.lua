@@ -875,14 +875,14 @@ function Rooms_build_all()
   end
 
   Layout_place_importants()
+
   Rooms_decide_windows()
   Layout_extra_room_stuff()
 
-  Layout_initial_walls()
-  Layout_size_straddlers()
-  Layout_flesh_out_walls()
+  Layout_all_walls()
 
   Layout_all_floors()
+
   Rooms_synchronise_skies()
   Layout_all_ceilings()
 
