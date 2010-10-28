@@ -106,34 +106,6 @@ end
 
 
 
-function Quest_num_locks(num_rooms)  -- NOT USED ATM
-  local result
-
-  local num_keys     = table.size(THEME.keys or {})
-  local num_switches = table.size(THEME.switches or {})
-
-  if STYLE.switches == "none" then
-    result = 0
-  elseif STYLE.switches == "heaps" then
-    result = num_rooms
-  elseif STYLE.switches == "few" then
-    result = int(num_rooms / 14 + gui.random())
-  else
-    result = int(num_rooms / 7 + (gui.random() ^ 2) * 4)
-  end
-
-  -- if we have no switches, then limit is number of keys
-  -- (since keys can only be used once per level)
-  if num_switches == 0 then
-    result = math.min(result, num_keys)
-  end
-
-  gui.printf("Number of locks: %d  (rooms:%d)\n", result, num_rooms)
-
-  return result
-end
-
-
 function Quest_find_path_to_room(src, dest)  -- NOT USED ATM
   local seen_rooms = {}
 
