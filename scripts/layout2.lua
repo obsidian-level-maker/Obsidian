@@ -600,6 +600,10 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
     skin2 = { next_map = LEVEL.next_map }
   end
 
+  if lock and lock.key then
+    skin2 = { item = lock.key }
+  end
+
 
   if OLD_OLD_OLD_CRUD_CRUD then
 

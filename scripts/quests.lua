@@ -191,7 +191,10 @@ end
 function Quest_choose_keys()
   local num_locks = #LEVEL.all_locks
 
-  if num_locks <= 0 then return end
+  if num_locks <= 0 then
+    gui.printf("Locks: NONE\n\n")
+    return
+  end
 
   local key_probs = table.copy(THEME.keys or {}) 
   local num_keys  = table.size(key_probs)

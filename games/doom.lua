@@ -1880,6 +1880,14 @@ DOOM.SKINS =
 
   ----| KEY |----
 
+  ITEM_NICHE =
+  {
+    _prefab = "ITEM_NICHE",
+    _target = "edge",
+    _long   = 200,
+    _deep   = 96,
+  },
+
 
   ----| SWITCHES |----
 
@@ -2269,6 +2277,12 @@ DOOM2.ROOMS =
 
 DOOM.SUB_THEME_DEFAULTS =
 {
+  starts = { START_LEDGE = 50 },
+
+  exits = { EXIT_SWITCH = 50 },
+
+  pedestals = { ITEM_NICHE = 50 },
+
   doors = { wooden=30, wooden_fast=20,
             wooden2=20, wooden2_fast=10 },
 
@@ -2527,6 +2541,8 @@ DOOM1.SUB_THEMES =
 
     liquids = { lava=30, blood=90, nukage=5 },
 
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
+
     building_walls =
       {
         MARBLE1=25, MARBLE2=10, MARBLE3=20,
@@ -2583,8 +2599,6 @@ DOOM1.SUB_THEMES =
     steps = { step1=50, step3=50, step4=50 },
     lifts = { platform=10, rusty=50, spine=30 },
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
-
     OLD__exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
 
@@ -2605,6 +2619,8 @@ DOOM1.SUB_THEMES =
     prob = 25,
 
     liquids = { lava=90, blood=40 },
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     building_walls =
       {
@@ -2661,8 +2677,6 @@ DOOM1.SUB_THEMES =
     steps = { step1=50, step3=50, step4=50 },
     lifts = { platform=10, rusty=50, spine=30 },
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
-
     OLD__exits = { skin_pillar=40,
               demon_pillar2=10, demon_pillar3=10 },
 
@@ -2684,6 +2698,8 @@ DOOM2.SUB_THEMES =
     prob=60,
 
     liquids = { nukage=90, water=15, lava=10, slime=5 },
+
+    switches = true,  -- ?!?!?
 
     building_facades =
     {
@@ -2805,7 +2821,7 @@ DOOM2.SUB_THEMES =
         FLAT1=50, FLOOR7_1=50,
       },
 
-    __exit =  -- FIXME
+    __exit =  -- FIXME : move this stuff into a skin
     {
       walls =
       {
@@ -2832,16 +2848,6 @@ DOOM2.SUB_THEMES =
         SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
         SW1TEK=50,   SW1STON1=50
       },
-    },
-
-    starts =
-    {
-      START_LEDGE = 50,
-    },
-
-    exits =
-    {
-      EXIT_SWITCH = 50,
     },
 
     doors =
@@ -2896,10 +2902,6 @@ DOOM2.SUB_THEMES =
 
     OLD__exits = { skull_pillar=50, stone_pillar=5 },
 
-    OLD__switches = { sw_blue=50, sw_hot=50 },
-
-    bars = { bar_silver=50, bar_gray=50 },
-
     monster_prefs = { arach=2.0 },
 
     style_list =
@@ -2914,6 +2916,8 @@ DOOM2.SUB_THEMES =
     prob = 50,
 
     liquids = { lava=30, blood=90, nukage=5 },
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     building_walls =
       {
@@ -2974,8 +2978,6 @@ DOOM2.SUB_THEMES =
     steps = { step1=50, step3=50, step4=50 },
     lifts = { platform=10, rusty=50, spine=30 },
 
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
-
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, },
 
     OLD__switches = { sw_skin=50, sw_vine=50, sw_wood=50 },
@@ -2993,6 +2995,8 @@ DOOM2.SUB_THEMES =
     prob = 25,
 
     liquids = { lava=90, blood=40, slime=10 },
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     building_walls =
       {
@@ -3055,8 +3059,6 @@ DOOM2.SUB_THEMES =
 
     steps = { step1=50, step3=50, step4=50 },
     lifts = { platform=10, rusty=50, spine=30 },
-
-    keys = { ks_red=50, ks_blue=50, ks_yellow=50 },
 
     OLD__switches = { sw_skin=50, sw_marble=50, sw_vine=50 },
 
