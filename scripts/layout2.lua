@@ -1418,7 +1418,7 @@ function Layout_all_walls()
   end
 
 ---  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_size_straddlers(R)
+    Layout_size_straddlers()
 ---  end
 
   for _,R in ipairs(LEVEL.all_rooms) do
@@ -1429,16 +1429,6 @@ end
 
 
 function Layout_the_floor(R)
-
-  local function fill_polygons(space, values)
-    for _,P in ipairs(space.polys) do
-      local val = values[P.kind]
-      if val then
-        gui.spots_fill_poly(val, P.coords)
-      end
-    end
-  end
-
 
   local function merge_walks(polys, tag1, tag2)
     if tag1 > tag2 then
@@ -2342,13 +2332,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
       transmit_height_to_fabs(F, F.z)
 
---[[ TEST : fill zone with a solid
-      for _,Z in ipairs(F.zones) do
-        if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
-          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, nil, nil, Mat_normal("ASHWALL"))
-        end
-      end
---]]
     end
 
     for _,F in ipairs(R.all_liquids) do
@@ -2387,6 +2370,43 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
         PF.window.z = PF.z
       else
         PF.window.z = math.max(PF.window.z, PF.z)
+      end
+    end
+  end
+
+
+
+  ---===| Layout_the_floor |===---
+
+  ROOM = R  -- set global
+
+  gui.debugf("\nLayout_all_floors @ %s\n\n", ROOM:tostr())
+
+  if not ROOM.entry_floor_h then
+    ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
+  end
+
+
+  build_floor()
+
+  prepare_ceiling()
+
+
+  -- FIXME: move into another function  (WHY ?)
+  for _,PF in ipairs(R.post_fabs) do
+    render_post_fab(PF)
+  end
+end
+
+
+
+function Layout_spots_in_room(R)
+
+  local function fill_polygons(space, values)
+    for _,P in ipairs(space.polys) do
+      local val = values[P.kind]
+      if val then
+        gui.spots_fill_poly(val, P.coords)
       end
     end
   end
@@ -2436,29 +2456,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  ---===| Layout_the_floor |===---
+  ---| Layout_spots_in_room |---
 
-  ROOM = R  -- set global
-
-  gui.debugf("\nLayout_all_floors @ %s\n\n", ROOM:tostr())
-
-  if not ROOM.entry_floor_h then
-    ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
-  end
-
-
-  build_floor()
-
-  prepare_ceiling()
-
-
-  -- FIXME: move into another function
-  for _,PF in ipairs(R.post_fabs) do
-    render_post_fab(PF)
-  end
-
-
-  -- FIXME: move into another function (do after ceilings?)
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
     spots_for_floor(F)
@@ -2467,9 +2466,29 @@ end
 
 
 
+function Layout_flesh_out_floors(R)
+  -- use the safe zones to place stuff in unused areas
+
+  -- HMMMMMMM!!!!  similar to normal floor "divide" mechanism
+  --               except that floor is not divided, lololol
+
+  -- FIXME
+
+  for _,F in ipairs(R.all_floors) do
+      for _,Z in ipairs(F.zones) do
+        if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
+          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + rand.irange(1,5)*8, Mat_normal("ASHWALL"))
+        end
+      end
+  end
+end
+
+
+
 function Layout_all_floors()
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_the_floor(R)
+    Layout_flesh_out_floors(R)
   end
 end
 
@@ -2550,9 +2569,13 @@ function Layout_all_ceilings()
 
   --| Layout_all_ceilings |--
 
+  Rooms_synchronise_skies()
+
   for _,R in ipairs(LEVEL.all_rooms) do
     build_ceiling(R)
     ambient_lighting(R)
+
+    Layout_spots_in_room(R)
   end
 end
 

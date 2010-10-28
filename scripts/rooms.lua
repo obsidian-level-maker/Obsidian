@@ -880,10 +880,7 @@ function Rooms_build_all()
   Layout_extra_room_stuff()
 
   Layout_all_walls()
-
   Layout_all_floors()
-
-  Rooms_synchronise_skies()
   Layout_all_ceilings()
 
   -- scenic rooms ??
