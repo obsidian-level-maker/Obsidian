@@ -848,18 +848,33 @@ end
 
 
 function Layout_initial_walls(R)
+  --
+  -- this picks the smallest prefab available for each usage on
+  -- each edge.  It is assumed that everything will fit, since the
+  -- minimum room size is 384x384 and there should be a prefab of
+  -- each kind (door, window, start, exit, etc) which is small
+  -- enough.
+  --
+  -- this also creates an initial "wall space" marking where those
+  -- minimal prefabs are.  Later functions will try to enlarge some
+  -- of the prefabs (and add new ones) and will verify placement
+  -- using the wall_space (previous prefabs can get updated in it).
+  --
+
     -- FIXME
 end
 
 
 
-function Layout_size_straddlers()
+function Layout_decide_straddlers()
+  --
   -- Straddlers are architecture which sits across two rooms.
   -- Currently there are only two kinds: DOORS and WINDOWS.
   -- 
-  -- There are placed (i.e. allocated on a 2D map) before
+  -- The prefab to use (and hence their size) are decided before
   -- everything else.  The actual prefab and heights will be
   -- decided later in the normal layout code.
+  --
 
   local function place_straddler(kind, K, N, dir)
     local R = K.room
@@ -916,7 +931,7 @@ function Layout_size_straddlers()
   end
 
 
-  ---| Layout_place_straddlers |---
+  ---| Layout_decide_straddlers |---
 
   -- do doors after windows, as doors may want to become really big
   -- and hence would need to know about the windows.
@@ -950,6 +965,12 @@ end
 
 
 function Layout_flesh_out_walls(R)
+  --
+  -- the goal of this function is to fill in the gaps along walls
+  -- (including the corners) with interesting prefabs.  It can also
+  -- replace existing non-straddler prefabs with a bigger variation,
+  -- of course ensuring that everything fits and nothing overlaps.
+  --
 
   local function adjust_corner(C, side, long, deep)
     if geom.is_vert(side) then
@@ -1418,7 +1439,7 @@ function Layout_all_walls()
   end
 
 ---  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_size_straddlers()
+    Layout_decide_straddlers()
 ---  end
 
   for _,R in ipairs(LEVEL.all_rooms) do
@@ -2467,20 +2488,22 @@ end
 
 
 function Layout_flesh_out_floors(R)
-  -- use the safe zones to place stuff in unused areas
+  -- use the safe zones to place scenery fabs in unused areas
 
   -- HMMMMMMM!!!!  similar to normal floor "divide" mechanism
   --               except that floor is not divided, lololol
 
   -- FIXME
 
+--[[ TEST
   for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
         if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
-          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + rand.irange(1,5)*8, Mat_normal("ASHWALL"))
+          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
         end
       end
   end
+--]]
 end
 
 
