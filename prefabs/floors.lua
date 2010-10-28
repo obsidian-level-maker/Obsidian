@@ -395,10 +395,10 @@ PREFAB.L1_DOWN_4 =
     { space = 1, x1 = 192, y2 = 192 },
 
     -- new safe zones
-    { m = "zone", space = 1, x1 = 256, y1 = 256 },
-    { m = "zone", space = 2, x2 = 64, y2 = 64 },
+    { m = "zone", space = 1, y1 = 256 },
+    { m = "zone", space = 1, x1 = 256, y2 = 192 },
 
-    -- TODO { m = "zone", space = 1, x1 = 256, y2 = 192 },
+    { m = "zone", space = 2, x2 = 128, y2 = 0 },
   },
 
   brushes =
@@ -430,7 +430,7 @@ PREFAB.L1_DOWN_4 =
     },
 
     {
-      { m = "walk", space = 2, walk_dz = 36 },
+      { m = "walk", space = 2, walk_dz = 48 },
       { x =  64, y = 128 },
       { x =  32, y =  96 },
       { x =  96, y =  32 },
@@ -444,7 +444,7 @@ PREFAB.L1_DOWN_4 =
       { x =  80, y = 144, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 144, y =  80, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 160, y =  96, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t =  12, mat = "?top" },
+      { t =  16, mat = "?top" },
     },
 
     {
@@ -453,7 +453,7 @@ PREFAB.L1_DOWN_4 =
       { x =  64, y = 128, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 128, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 144, y =  80, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t =  24, mat = "?top" },
+      { t =  32, mat = "?top" },
     },
   },
 }
