@@ -1178,7 +1178,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
 
     if info.kind == "window" then
-      fab = "WINDOW_W_BARS"
+      fab = "WINDOW_GOTHIC"
       if R.outdoor and other_R.outdoor then fab = "FENCE_STICKS_QUAKE" end
       z = math.max(z, other_R.floor_min_h or 0)
       z = z + 32
@@ -2037,7 +2037,7 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "H_3DFLOOR_A"
+    local fab = "L1_DOWN_4"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
@@ -2352,55 +2352,13 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function build_ceiling()
-    -- TEMP CRUD
-    local h   = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
-    local mat = sel(R.outdoor, "_SKY", "METAL1")
+  local function prepare_ceiling()
+    local h = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
 
     if R.outdoor then
       R.sky_h = h
-      return
-    end
-
-    R.ceil_h = h
-
-    local props, w_face, p_face = Mat_normal(mat)
-
-    for _,K in ipairs(R.sections) do
-      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
-    end
-
-    if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
-      local K1 = SECTIONS[R.kx1][R.ky1]
-      local K2 = SECTIONS[R.kx2][R.ky2]
-
-      local mx, my = geom.box_mid(K1.x1, K1.y1, K2.x2, K2.y2)
-
-      local T = Trans.spot_transform(mx, my, h)
-
-      Fabricate("SKYLITE_1", T, { trim="WIZWOOD1_5", metal="WIZMET1_2" })
-
-      R.has_skylite = 1
-    end
-  end
-
-
-  local function ambient_lighting()
-    if GAME.format ~= "doom" then return end
-
-    local light = rand.pick { 128, 144, 160 }
-    if R.outdoor then light = 192 end
-
-    for _,K in ipairs(R.sections) do
-      gui.add_brush(
-      {
-        { m="light", ambient=light },
-        { x=K.x1, y=K.y1 },
-        { x=K.x2, y=K.y1 },
-        { x=K.x2, y=K.y2 },
-        { x=K.x1, y=K.y2 },
-      })
+    else
+      R.ceil_h = h
     end
   end
 
@@ -2483,17 +2441,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
--- TODO  R.ceil_space  = R.floor_space:copy()
-
-
-
   build_floor()
 
-  build_ceiling()
-
-
-  -- FIXME: move into another function
-  ambient_lighting()
+  prepare_ceiling()
 
 
   -- FIXME: move into another function
@@ -2502,12 +2452,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  -- FIXME: move into another function
+  -- FIXME: move into another function (do after ceilings?)
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
     spots_for_floor(F)
   end
-    
 end
 
 
@@ -2523,8 +2472,6 @@ end
 function Layout_all_ceilings()
 
   local function quake_temp_lights(R)
-    if R.has_skylite then return end
-
     for _,K in ipairs(R.sections) do
       local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
       local light = rand.pick { 50, 100, 150, 200 }
@@ -2537,22 +2484,69 @@ function Layout_all_ceilings()
   end
 
 
-  local function do_the_ceiling(R)
+  local function build_ceiling(R)
     if R.sky_h then
       for _,K in ipairs(R.sections) do
         Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
       end
+
+      return
+    end
+
+    assert(R.ceil_h)
+
+    local mat = rand.key_by_probs(THEME.building_ceilings)
+
+    local props, w_face, p_face = Mat_normal(mat)
+
+    for _,K in ipairs(R.sections) do
+      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
+      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
+    end
+
+    if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
+      local K1 = SECTIONS[R.kx1][R.ky1]
+      local K2 = SECTIONS[R.kx2][R.ky2]
+
+      local mx, my = geom.box_mid(K1.x1, K1.y1, K2.x2, K2.y2)
+
+      local T = Trans.spot_transform(mx, my, R.ceil_h)
+
+      Fabricate("SKYLITE_1", T, { trim="WIZWOOD1_5", metal="WIZMET1_2" })
     else
-      if GAME.format ~= "doom" then
+      if GAME.format == "quake" then
         quake_temp_lights(R)
       end
     end
   end
 
+
+  local function ambient_lighting(R)
+    if not (GAME.format == "doom" or GAME.format == "nukem") then
+      return
+    end
+
+    local light = rand.pick { 128, 144, 160 }
+    if R.outdoor then light = 192 end
+
+    for _,K in ipairs(R.sections) do
+      gui.add_brush(
+      {
+        { m="light", ambient=light },
+        { x=K.x1, y=K.y1 },
+        { x=K.x2, y=K.y1 },
+        { x=K.x2, y=K.y2 },
+        { x=K.x1, y=K.y2 },
+      })
+    end
+  end
+
+
   --| Layout_all_ceilings |--
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    do_the_ceiling(R)
+    build_ceiling(R)
+    ambient_lighting(R)
   end
 end
 
