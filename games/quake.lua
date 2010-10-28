@@ -782,7 +782,7 @@ QUAKE1.SKINS =
 
   WALL_EXIT =
   {
-    _prefab = "WALL_EXIT",
+    _prefab = "QUAKE_WALL_EXIT",  -- QUAKE_WALL_EXIT
     _target = "edge",
     _long   = 192,
     _deep   = 96,
