@@ -42,14 +42,15 @@ class QUEST
 class LOCK
 {
   kind : keyword  -- "KEY" or "SWITCH"
-  item : string   -- what kind of key or switch (game specific)
+  key  : string   -- name of key (game specific)
+
+  tag : number    -- tag number to use for a switched door
+                  -- (also an identifying number)
 
   target : ROOM   -- the room containing the key or switch
   conn   : CONN   -- the connection which is locked
 
   distance : number  -- number of rooms between key and door
-
-  tag : number    -- tag number to use for a switched door
 }
 
 
@@ -188,31 +189,27 @@ end
 
 
 function Quest_choose_keys()
-  local locks_needed = #LEVEL.all_locks
+  local num_locks = #LEVEL.all_locks
 
-  if locks_needed <= 0 then return end
+  if num_locks <= 0 then return end
 
-  local key_probs    = table.copy(THEME.keys     or {}) 
-  local switch_probs = table.copy(THEME.switches or {})
-  local bar_probs    = table.copy(THEME.bars     or {})
-
-  local num_keys     = table.size(key_probs)
-  local num_switches = table.size(switch_probs)
-  local num_bars     = table.size(bar_probs)
+  local key_probs = table.copy(THEME.keys or {}) 
+  local num_keys  = table.size(key_probs)
 
   -- use less keys when number of locked doors is small
   local want_keys = num_keys
 
-  if num_switches == 0 then
-    assert(locks_needed <= num_keys)
+  if not THEME.switches then
+    assert(num_locks <= num_keys)
   else
-    while want_keys > 1 and (want_keys*2 > locks_needed) and rand.odds(80) do
+    while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(80) do
       want_keys = want_keys - 1
     end
   end
 
-  gui.printf("locks_needed:%d  keys:%d (of %d)  switches:%d  bars:%d\n",
-              locks_needed, want_keys, num_keys, num_switches, num_bars);
+  gui.printf("Lock count:%d  want_keys:%d (of %d)  switches:%s\n",
+              num_locks, want_keys, num_keys,
+              string.bool(THEME.switches));
 
 
   --- STEP 1 : assign keys (distance based) ---
@@ -240,10 +237,10 @@ function Quest_choose_keys()
 
     if not LOCK.kind then
       LOCK.kind = "KEY"
-      LOCK.item = rand.key_by_probs(key_probs)
+      LOCK.key  = rand.key_by_probs(key_probs)
 
       -- cannot use this key again
-      key_probs[LOCK.item] = nil
+      key_probs[LOCK.key] = nil
 
       want_keys = want_keys - 1
     end
@@ -254,28 +251,18 @@ function Quest_choose_keys()
 
   for _,LOCK in ipairs(lock_list) do
     if not LOCK.kind then
-      assert(num_switches > 0)
-
-      -- FIXME: redo bars
-      if false and num_bars > 0 and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
-        LOCK.kind = "BARS"
-        LOCK.item = rand.key_by_probs(bar_probs)
-        bar_probs[LOCK.item] = bar_probs[LOCK.item] / 8
-      else
-        LOCK.kind = "SWITCH"
-        LOCK.item = rand.key_by_probs(switch_probs)
-        switch_probs[LOCK.item] = switch_probs[LOCK.item] / 8
-      end
-
-      LOCK.tag = Plan_alloc_id("tag")
+      assert(THEME.switches)
+      LOCK.kind = "SWITCH"
     end
   end
 
-  gui.printf("all_locks =\n{\n")
+  gui.printf("Lock list:\n")
+
   for idx,LOCK in ipairs(LEVEL.all_locks) do
-    gui.printf("  %d = %s : %s\n", idx, LOCK.kind, LOCK.item or "NIL")
+    gui.printf("  %d = %s %s\n", idx, LOCK.kind, LOCK.key or "")
   end
-  gui.printf("}\n")
+
+  gui.printf("\n")
 end
 
 
@@ -524,7 +511,11 @@ function Quest_make_quests()
 
 
   local function add_lock(C)
-    local LOCK = { conn=C }
+    local LOCK =
+    {
+      conn = C,
+      tag = Plan_alloc_id("tag"),
+    }
 
     C.lock = LOCK
 

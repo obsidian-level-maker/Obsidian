@@ -630,7 +630,7 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
       elseif lock and lock.kind == "KEY" then
         prefab = "ITEM_NICHE"
-        skin = { item = lock.item }
+        skin = { item = lock.key }
         long = 200
         deep = 64
 
@@ -736,7 +736,7 @@ function Layout_place_importants()
           USAGE.middle_prefabs = 
           {
             { _prefab = "OCTO_PEDESTAL",
-              item = R.purpose.lock.item,
+              item = R.purpose.lock.key,
               top = "CEIL1_2", base = "FLAT1"
             }
           }
@@ -1209,8 +1209,8 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       if info.conn and info.conn.lock then
         fab = "QUAKE_DOOR"
         sk2 = { door="DOOR01_2" }
-        if info.conn.lock.item == "k_silver" then sk2.door_flags = DOOR_SILVER_KEY end
-        if info.conn.lock.item == "k_gold"   then sk2.door_flags = DOOR_GOLD_KEY end
+        if info.conn.lock.key == "k_silver" then sk2.door_flags = DOOR_SILVER_KEY end
+        if info.conn.lock.key == "k_gold"   then sk2.door_flags = DOOR_GOLD_KEY end
 
         if info.conn.lock.kind == "SWITCH" then
           sk2.door = "ADOOR09_1"
@@ -1223,7 +1223,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       fab = "DOOR"
 
       if info.conn and info.conn.lock then
-        sk2 = GAME.DOORS[info.conn.lock.item]
+        sk2 = GAME.DOORS[info.conn.lock.key]  -- FIXME WTF?
         sk3 = { tag = info.conn.lock.tag }
       else
         sk2 = GAME.DOORS["silver"]
