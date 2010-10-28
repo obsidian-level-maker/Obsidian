@@ -1050,10 +1050,10 @@ QUAKE1.MONSTERS =
 
   zombie =
   {
-    -- Note: currently disabled (can only be killed with rockets)
-    -- level=2, prob=10,
-    level=3,
+    level=2, prob=40,
     health=60, damage=8,  attack="melee",
+    weap_needed={ grenade=1, rocket=1 },
+    weap_prefs={ grenade=99, rocket=99 },
   },
 
   scrag =

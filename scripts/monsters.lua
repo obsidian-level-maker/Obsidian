@@ -188,6 +188,34 @@ function Player_firepower()
 end
 
 
+function Player_has_weapon(weap_needed)
+  
+  local function class_has_one(hmodel)
+    for name,_ in pairs(hmodel.weapons) do
+      if weap_needed[name] then
+        return true
+      end
+    end
+    return false
+  end
+
+  --| Player_has_weapon |--
+
+  -- we require a match for every class
+
+  for CL,hmodel in pairs(LEVEL.hmodels) do
+    if not class_has_one(hmodel) then
+      return false
+    end
+  end
+
+  return true -- OK
+end
+
+
+----------------------------------------------------------------
+
+
 function Monsters_init()
   table.name_up(GAME.MONSTERS)
   table.name_up(GAME.WEAPONS)
@@ -725,6 +753,10 @@ function Monsters_in_room(R)
       return 0
     end
 
+    if info.weap_needed and not Player_has_weapon(info.weap_needed) then
+      return 0
+    end
+
     prob = prob or 0
 
     -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
@@ -833,6 +865,10 @@ function Monsters_in_room(R)
 ---      if not LEVEL.global_palette[name] then
 ---        prob = 0
 ---      end
+
+      if info.weap_needed and not Player_has_weapon(info.weap_needed) then
+        prob = 0
+      end
 
       if THEME.force_mon_probs then
         prob = THEME.force_mon_probs[name] or
@@ -953,7 +989,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function create_monster_pal(palette)
+  local function adjust_monster_pal(palette)
 
     -- adjust probs in palette to account for monster size,
     -- e.g. we can fit 4 revenants in the same space as a mancubus.
@@ -1042,7 +1078,8 @@ function Monsters_in_room(R)
     if PARAM.use_spawnflags then
       props.spawnflags = 0
 
-      if ambush then
+      -- UGH, special check needed for Quake zombie
+      if ambush and mon ~= "zombie" then
         props.spawnflags = props.spawnflags + QUAKE_FLAGS.AMBUSH
       end
 
@@ -1326,7 +1363,7 @@ function Monsters_in_room(R)
     -- distribution of monsters.
     split_huge_spots(sel(has_huge, 288, 144))
 
-    local pal2 = create_monster_pal(palette)
+    local pal2 = adjust_monster_pal(palette)
 
     -- add at least one monster of each kind
     for pass = 1,3 do
