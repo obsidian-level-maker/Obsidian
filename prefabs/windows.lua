@@ -27,7 +27,7 @@ PREFAB.WINDOW =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,4}, {64,1} },
+  x_ranges = { {64,1}, {64,4}, {64,1} },
 
   defaults =
   {
@@ -77,7 +77,7 @@ PREFAB.WINDOW_W_BARS =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,2}, {64,1} },
+  x_ranges = { {64,1}, {64,2}, {64,1} },
 
   repeat_width = 256,
 
@@ -149,7 +149,7 @@ PREFAB.WINDOW_W_CROSS =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,1}, {64,1} },
+  x_ranges = { {64,1}, {64,1}, {64,1} },
 
   repeat_width = 256,
 
@@ -217,7 +217,7 @@ PREFAB.WINDOW_GOTHIC =
 {
   placement = "fitted",
 
-  x_sizes = { {32,1}, {128,0}, {32,1} },
+  x_ranges = { {32,1}, {128,0}, {32,1} },
 
   repeat_width = 192,
 
@@ -297,7 +297,7 @@ PREFAB.QUAKE_WINDOW =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,1}, {64,1} },
+  x_ranges = { {64,1}, {64,1}, {64,1} },
 
   repeat_width = 192,
 
@@ -403,7 +403,7 @@ PREFAB.FENCE_W_GAP =
 {
   placement = "fitted",
 
-  x_sizes = { {80,1}, {32,0}, {80,1} },
+  x_ranges = { {80,1}, {32,0}, {80,1} },
 
   repeat_width = 192,
 
@@ -440,8 +440,8 @@ PREFAB.FENCE_W_BOLLARD =
 {
   placement = "fitted",
 
-  x_sizes = { {56,1}, {16,0}, {56,1} },
-  y_sizes = { {8,0},  {16,1}, {8,0}  },
+  x_ranges = { {56,1}, {16,0}, {56,1} },
+  y_ranges = { {8,0},  {16,1}, {8,0}  },
 
   repeat_width = 128,
 
@@ -479,8 +479,8 @@ PREFAB.FENCE_W_INSET =
 {
   placement = "fitted",
 
-  x_sizes = { {16,0}, {96,1}, {16,0} },
-  y_sizes = { {12,1}, { 8,0}, {12,1} },
+  x_ranges = { {16,0}, {96,1}, {16,0} },
+  y_ranges = { {12,1}, { 8,0}, {12,1} },
 
   repeat_width = 128,
 
@@ -525,7 +525,7 @@ PREFAB.FENCE_W_RAIL =
 {
   placement = "fitted",
 
-  x_sizes = { {12,0}, {104,1}, {12,0} },
+  x_ranges = { {12,0}, {104,1}, {12,0} },
 
   repeat_width = 192,
 
@@ -575,7 +575,7 @@ PREFAB.FENCE_W_RAIL_INSET =
 {
   placement = "fitted",
 
-  x_sizes = { {16,0}, {96,1}, {16,0} },
+  x_ranges = { {16,0}, {96,1}, {16,0} },
 
   repeat_width = 96,
 
@@ -622,7 +622,7 @@ PREFAB.FENCE_W_TORCHES =
 {
   placement = "fitted",
 
-  x_sizes = { {16,0}, {96,1}, {16,0} },
+  x_ranges = { {16,0}, {96,1}, {16,0} },
 
   repeat_width = 128,
 
@@ -665,7 +665,7 @@ PREFAB.FENCE_W_HIGH_TORCH =
 {
   placement = "fitted",
 
-  x_sizes = { {32,1}, {64,0}, {32,1} },
+  x_ranges = { {32,1}, {64,0}, {32,1} },
 
   repeat_width = 160,
 
@@ -711,7 +711,7 @@ PREFAB.FENCE_W_WEIRD_BLOB =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,0}, {64,1} },
+  x_ranges = { {64,1}, {64,0}, {64,1} },
 
   repeat_width = 192,
 
@@ -765,7 +765,7 @@ PREFAB.FENCE_BULGY =
 {
   placement = "fitted",
 
---##  x_sizes = { {48,1}, {96,0}, {48,1} },
+--##  x_ranges = { {48,1}, {96,0}, {48,1} },
 
   repeat_width = 192,
 
@@ -818,7 +818,7 @@ PREFAB.FENCE_STICKS_DOOM =
 {
   placement = "fitted",
 
-  x_sizes = { {6,0}, {20,1}, {6,0} },
+  x_ranges = { {6,0}, {20,1}, {6,0} },
 
   repeat_width = 64,
 
@@ -868,7 +868,7 @@ PREFAB.FENCE_STICKS_QUAKE =
 {
   placement = "fitted",
 
-  x_sizes = { {6,0}, {20,1}, {6,0} },
+  x_ranges = { {6,0}, {20,1}, {6,0} },
 
   repeat_width = 48,
 

@@ -38,9 +38,9 @@ PREFAB.PICTURE =
 {
   placement = "fitted",
 
-  x_sizes = { {64,1}, {64,"?width"}, {64,1} },
-  y_sizes = { {8,1}, {8,0} },
-  z_sizes = { {64,"?height"} },
+  x_ranges = { {64,1}, {64,"?width"}, {64,1} },
+  y_ranges = { {8,1}, {8,0} },
+  z_ranges = { {64,"?height"} },
 
   defaults =
   {
@@ -204,8 +204,8 @@ PREFAB.WALL_SPIKE_SHOOTER =
 {
   placement = "fitted",
 
-  x_sizes = { {16,1}, {96,0}, {16,1} },
-  y_sizes = { {16,1}, {24,0} },
+  x_ranges = { {16,1}, {96,0}, {16,1} },
+  y_ranges = { {16,1}, {24,0} },
 
   repeat_width = 128,
 

@@ -243,9 +243,9 @@ PREFAB.DOOR =
 {
   placement = "fitted",
 
-  x_sizes = { {32}, {128,"?width"}, {32} },
+  x_ranges = { {32}, {128,"?width"}, {32} },
 
-  z_sizes = { {128,"?height"} },
+  z_ranges = { {128,"?height"} },
 
   defaults =
   {

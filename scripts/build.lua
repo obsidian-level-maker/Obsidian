@@ -1098,12 +1098,12 @@ function Fab_size_stuff(fab, T, brushes)
 
   ---| Fab_size_stuff |---
 
-  local ranges = determine_bbox()
+  local bbox = determine_bbox()
 
   -- XY stuff --
 
-  x_info = process_groups(fab.x_sizes, ranges.x1, ranges.x2)
-  y_info = process_groups(fab.y_sizes, ranges.y1, ranges.y2)
+  x_info = process_groups(fab.x_ranges, bbox.x1, bbox.x2)
+  y_info = process_groups(fab.y_ranges, bbox.y1, bbox.y2)
 
   local x_low, x_high
   local y_low, y_high
@@ -1113,7 +1113,7 @@ function Fab_size_stuff(fab, T, brushes)
       error("Fitted prefab used without fitted transform")
     end
 
-    if math.abs(ranges.x1) > 0.1 or math.abs(ranges.y1) > 0.1 then
+    if math.abs(bbox.x1) > 0.1 or math.abs(bbox.y1) > 0.1 then
       error("Fitted prefab should have left/bottom coord at (0, 0)")
     end
 
@@ -1129,14 +1129,14 @@ function Fab_size_stuff(fab, T, brushes)
     local scale_x = T.scale_x or 1
     local scale_y = T.scale_y or 1
 
-    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / ranges.dx end
-    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / ranges.dy end
+    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
+    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
 
-    x_low  = ranges.x1 * scale_x
-    x_high = ranges.x2 * scale_x
+    x_low  = bbox.x1 * scale_x
+    x_high = bbox.x2 * scale_x
 
-    y_low  = ranges.y1 * scale_y
-    y_high = ranges.y2 * scale_y
+    y_low  = bbox.y1 * scale_y
+    y_high = bbox.y2 * scale_y
   end
 
   set_group_sizes(x_info, x_low, x_high)
@@ -1144,10 +1144,10 @@ function Fab_size_stuff(fab, T, brushes)
 
   -- Z stuff --
 
-  if ranges.dz and ranges.dz > 1 then
+  if bbox.dz and bbox.dz > 1 then
     local z_low, z_high
 
-    z_info = process_groups(fab.z_sizes, ranges.z1, ranges.z2)
+    z_info = process_groups(fab.z_ranges, bbox.z1, bbox.z2)
 
     if T.fit_height then
       z_low  = 0
@@ -1155,10 +1155,10 @@ function Fab_size_stuff(fab, T, brushes)
     else
       local scale_z = T.scale_z or 1
 
-      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / ranges.dz end
+      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / bbox.dz end
 
-      z_low  = ranges.z1 * scale_z
-      z_high = ranges.z2 * scale_z
+      z_low  = bbox.z1 * scale_z
+      z_high = bbox.z2 * scale_z
     end
 
     set_group_sizes(z_info, z_low, z_high)
@@ -1510,18 +1510,18 @@ function Fab_check_fits(fab, skin, width, depth, height)
   end
 
   if width then
-    if fab.x_min   and width < fab.x_min then return false end
-    if fab.x_sizes and width < minimum_size(fab.x_sizes) then return false end
+    if fab.x_min    and width < fab.x_min then return false end
+    if fab.x_ranges and width < minimum_size(fab.x_ranges) then return false end
   end
 
   if depth then
-    if fab.y_min   and depth < fab.y_min then return false end
-    if fab.y_sizes and depth < minimum_size(fab.y_sizes) then return false end
+    if fab.y_min    and depth < fab.y_min then return false end
+    if fab.y_ranges and depth < minimum_size(fab.y_ranges) then return false end
   end
 
   if height then
-    if fab.z_min   and height < fab.z_min then return false end
-    if fab.z_sizes and height < minimum_size(fab.z_sizes) then return false end
+    if fab.z_min    and height < fab.z_min then return false end
+    if fab.z_ranges and height < minimum_size(fab.z_ranges) then return false end
   end
 
   return true
