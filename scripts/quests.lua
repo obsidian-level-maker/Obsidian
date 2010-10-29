@@ -209,7 +209,6 @@ function Quest_choose_keys()
       want_keys = want_keys - 1
     end
   end
-want_keys = 0
 
   gui.printf("Lock count:%d  want_keys:%d (of %d)  switch_doors:%s\n",
               num_locks, want_keys, num_keys,
