@@ -246,6 +246,10 @@ Miscellaneous:
      make the exit into a switched door and put a switch at other
      end of room.
 
+  +  double or triple switches: each one raises a 24 unit stair,
+     but player can only traverse stairs when ALL are raised.
+     Might work best if stairs are parallel to height diff.
+
   -  prevent escapes over fences/windows near key pedestals (etc) by
      raising the height of the fences/windows there.
 
