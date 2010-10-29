@@ -1599,76 +1599,6 @@ DOOM.DOORS =
   },
 
 
-  --- LOCKED DOORS ---
-
-  kc_blue =
-  {
-    w=128, h=112, door_h=112,
-    key="DOORBLU",
-    door="BIGDOOR3", door_c="FLOOR7_2",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT18",
-    line_kind=32, tag=0,  -- kind_mult=26
-  },
-
-  kc_yellow =
-  {
-    w=128, h=112, door_h=112,
-    key="DOORYEL",
-    door="BIGDOOR4",  door_c="FLOOR3_3",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT4",
-    line_kind=34, tag=0, -- kind_mult=27
-  },
-
-  kc_red =
-  {
-    w=128, h=112,
-
-    key="DOORRED", door_h=112,
-    door="BIGDOOR2", door_c="FLAT1",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT18",
-    line_kind=33, tag=0, -- kind_mult=28
-  },
-
-  ks_blue =
-  {
-    w=128, h=112, door_h=112,
-    key="DOORBLU2", key_ox=4, key_oy=-10,
-    door="BIGDOOR7", door_c="FLOOR7_2",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT18",
-    line_kind=32, tag=0,  -- kind_mult=26
-  },
-
-  ks_yellow =
-  {
-    w=128, h=112, door_h=112,
-    key="DOORYEL2", key_ox=4, key_oy=-10,
-    door="BIGDOOR7", door_c="FLOOR3_3",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT4",
-    line_kind=34, tag=0, -- kind_mult=27
-  },
-
-  ks_red =
-  {
-    w=128, h=112, door_h=112,
-    key="DOORRED2", key_ox=4, key_oy=-10,
-    door="BIGDOOR7", door_c="FLAT1",
-    step="STEP4",
-    track="DOORTRAK",
-    frame="FLAT18",
-    line_kind=33, tag=0, -- kind_mult=28
-  },
-
-
   --- SWITCHED DOORS ---
 
   sw_blue =
@@ -1852,7 +1782,7 @@ DOOM.SKINS =
 {
   ----| STARTS |----
 
-  START_LEDGE =
+  Start_ledge =
   {
     _prefab = "START_LEDGE",
     _target = "edge",
@@ -1865,7 +1795,7 @@ DOOM.SKINS =
 
   ----| EXITS |----
 
-  EXIT_SWITCH =
+  Exit_switch =
   {
     _prefab = "WALL_SWITCH",
     _target = "edge",
@@ -1880,7 +1810,7 @@ DOOM.SKINS =
 
   ----| KEY |----
 
-  ITEM_NICHE =
+  Item_niche =
   {
     _prefab = "ITEM_NICHE",
     _target = "edge",
@@ -2041,6 +1971,102 @@ DOOM.SKINS =
       line_kind=23,
     }
   },
+
+
+  --- LOCKED DOORS ---
+
+  Locked_kc_blue =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { kc_blue=1 },
+
+    w=128, h=112, door_h=112,
+    key="DOORBLU",
+    door="BIGDOOR3", door_c="FLOOR7_2",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT18",
+    line_kind=32, tag=0,  -- kind_mult=26
+  },
+
+  Locked_kc_yellow =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { kc_yellow=1 },
+
+    w=128, h=112, door_h=112,
+    key="DOORYEL",
+    door="BIGDOOR4",  door_c="FLOOR3_3",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT4",
+    line_kind=34, tag=0, -- kind_mult=27
+  },
+
+  Locked_kc_red =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { kc_red=1 },
+
+    w=128, h=112,
+
+    key="DOORRED", door_h=112,
+    door="BIGDOOR2", door_c="FLAT1",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT18",
+    line_kind=33, tag=0, -- kind_mult=28
+  },
+
+  Locked_ks_blue =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { ks_blue=1 },
+
+    w=128, h=112, door_h=112,
+    key="DOORBLU2", key_ox=4, key_oy=-10,
+    door="BIGDOOR7", door_c="FLOOR7_2",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT18",
+    line_kind=32, tag=0,  -- kind_mult=26
+  },
+
+  Locked_ks_yellow =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { ks_yellow=1 },
+
+    w=128, h=112, door_h=112,
+    key="DOORYEL2", key_ox=4, key_oy=-10,
+    door="BIGDOOR7", door_c="FLOOR3_3",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT4",
+    line_kind=34, tag=0, -- kind_mult=27
+  },
+
+  Locked_ks_red =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _keys = { ks_red=1 },
+
+    w=128, h=112, door_h=112,
+    key="DOORRED2", key_ox=4, key_oy=-10,
+    door="BIGDOOR7", door_c="FLAT1",
+    step="STEP4",
+    track="DOORTRAK",
+    frame="FLAT18",
+    line_kind=33, tag=0, -- kind_mult=28
+  },
+
+
 
 } -- end of DOOM.SKINS
 
@@ -2277,11 +2303,18 @@ DOOM2.ROOMS =
 
 DOOM.SUB_THEME_DEFAULTS =
 {
-  starts = { START_LEDGE = 50 },
+  starts = { Start_ledge = 50 },
 
-  exits = { EXIT_SWITCH = 50 },
+  exits = { Exit_switch = 50 },
 
-  pedestals = { ITEM_NICHE = 50 },
+  pedestals = { Item_niche = 50 },
+
+  keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
+
+  switch_doors = { Door_blue = 50 },
+
+  lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
+                 Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 },
 
   doors = { wooden=30, wooden_fast=20,
             wooden2=20, wooden2_fast=10 },
@@ -2312,7 +2345,6 @@ DOOM.SUB_THEME_DEFAULTS =
   __small_exits = { tech_small=50 },
   __out_exits = { tech_outdoor=50 },
 
-  keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
   OLD__switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 },
   bars = { bar_silver=50 },
 
@@ -2698,8 +2730,6 @@ DOOM2.SUB_THEMES =
     prob=60,
 
     liquids = { nukage=90, water=15, lava=10, slime=5 },
-
-    switches = true,  -- ?!?!?
 
     building_facades =
     {

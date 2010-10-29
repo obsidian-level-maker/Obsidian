@@ -527,11 +527,21 @@ function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-function Layout_possible_prefabs(kind, target)
+function Layout_possible_prefabs(kind, target, lock)
 
   -- kind : "START", "EXIT", "ITEM", "SWITCH"
 
   -- target : "edge", "corner", "middle"
+
+  local function match(skin)
+    -- TODO: more sophisticated matches (prefab.environment)
+
+    if skin._target ~= target then return false end
+
+    if kind == "LOCK_DOOR" and not skin._keys[lock.key] then return false end
+
+    return true
+  end
 
   local KIND_MAP =
   {
@@ -539,13 +549,20 @@ function Layout_possible_prefabs(kind, target)
     EXIT    = "exits",
     ITEM    = "pedestals",
     KEY     = "pedestals",
-    SWITCH  = "switches",
+    LOCK_DOOR   = "lock_doors",
+    SWITCH_DOOR = "switch_doors",
     TELEPORTER = "teleporters",
   }
 
-  local tab_name = assert(KIND_MAP[kind])
+  local tab
 
-  local tab = THEME[tab_name]
+  if kind == "SWITCH" then
+    tab = assert(lock.switches)
+  else
+    local tab_name = assert(KIND_MAP[kind])
+    tab = THEME[tab_name]
+  end
+
   if not tab then return nil end
 
   local result = {}
@@ -557,8 +574,7 @@ function Layout_possible_prefabs(kind, target)
       -- FIXME: WARNING or ERROR ??
       error("no such skin: " .. tostring(name))
     else
-      -- TODO: more sophisticated matches (prefab.environment)
-      if skin._target == target then
+      if match(skin) then
         result[name] = prob
       end
     end
@@ -570,10 +586,10 @@ function Layout_possible_prefabs(kind, target)
 end
 
 
-function Layout_possible_fab_group(usage, fab_kind)
-  usage.edge_fabs   = Layout_possible_prefabs(fab_kind, "edge")
-  usage.corner_fabs = Layout_possible_prefabs(fab_kind, "corner")
-  usage.middle_fabs = Layout_possible_prefabs(fab_kind, "middle")
+function Layout_possible_fab_group(usage, fab_kind, lock)
+  usage.edge_fabs   = Layout_possible_prefabs(fab_kind, "edge",   lock)
+  usage.corner_fabs = Layout_possible_prefabs(fab_kind, "corner", lock)
+  usage.middle_fabs = Layout_possible_prefabs(fab_kind, "middle", lock)
 
   if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
     error("Theme is missing usable prefabs for: " .. tostring(fab_kind))
@@ -604,47 +620,6 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
     skin2 = { item = lock.key }
   end
 
-
-  if OLD_OLD_OLD_CRUD_CRUD then
-
-      if kind == "START" then
-        prefab = "START_LEDGE"
-        skin = {}
-        long = 200
-        deep = 128
-      
-      elseif kind == "EXIT" then
-        prefab = "WALL_SWITCH"
-        skin = { line_kind=11, switch="SW1HOT", x_offset=0, y_offset=0 }
-        long = 200
-        deep = 64
-
-      elseif lock and lock.kind == "SWITCH" then
-        if GAME.format == "quake" then
-          prefab = "QUAKE_WALL_SWITCH"
-          skin = { target = string.format("t%d", lock.tag), }
-          long = 192
-          deep = 32
-        else
-          prefab = "WALL_SWITCH"
-          skin = { line_kind=103, tag=lock.tag, switch="SW1BLUE", x_offset=0, y_offset=0 }
-          long = 200
-          deep = 64
-        end
-
-      elseif lock and lock.kind == "KEY" then
-        prefab = "ITEM_NICHE"
-        skin = { item = lock.key }
-        long = 200
-        deep = 64
-
-      else
-        prefab = "ITEM_NICHE"
-        skin = { item = "mega", key="LITE5" }
-        long = 200
-        deep = 64
-      end
-  end
 
   local long1 = int(E.long - long) / 2
   local long2 = int(E.long + long) / 2
@@ -732,7 +707,7 @@ function Layout_place_importants()
         fab_kind = R.purpose_lock.kind
       end
 
-      Layout_possible_fab_group(USAGE, fab_kind)
+      Layout_possible_fab_group(USAGE, fab_kind, R.purpose_lock)
 
       pick_target(R, USAGE)
 --[[
@@ -945,6 +920,9 @@ function Layout_decide_straddlers()
       for _,E in pairs(K.edges) do
         if E.usage and E.usage.kind == "window" and not E.usage.placed then
           local W = E.usage
+          E.usage.fab = "WINDOW"
+          if R.outdoor and E.K:neighbor(E.side).room.outdoor then E.usage.fab = "FENCE" end
+          E.skin2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
           place_straddler("window", W.K1, W.K2, W.dir)
           E.usage.placed = true
         end
@@ -957,9 +935,19 @@ function Layout_decide_straddlers()
       for _,E in pairs(K.edges) do
         if E.usage and E.usage.kind == "door" and not E.usage.placed then
           local C = E.usage.conn
+          E.usage.fab = "ARCH"
           local STR = place_straddler("door", C.K1, C.K2, C.dir)
           STR.conn = C
           E.usage.placed = true
+
+          if C.lock and C.lock.kind == "KEY" then
+            E.usage.edge_fabs = Layout_possible_prefabs("LOCK_DOOR", "edge", C.lock)
+stderrf("locked doors =\n%s\n", table.tostr(E.usage.edge_fabs, 1))
+            local skinname = rand.key_by_probs(E.usage.edge_fabs)
+
+            E.usage.skin = assert(GAME.SKINS[skinname])
+            E.usage.fab  = assert(E.usage.skin._prefab)
+          end
         end
       end
     end
@@ -1189,23 +1177,23 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     end
 
 
-    local fab
     local z = -88 --- ROOM.entry_floor_h
 
-    local skin = {}
-    local sk2
-    local sk3
 
+    local fab = assert(E.usage.fab)
+    local skin = E.usage.skin or {}
+    local sk2 = E.usage.skin2
+    local sk3 = E.usage.skin3
 
     inner_outer_tex(skin, ROOM, other_R)
 
 
+--[[
     if info.kind == "window" then
-      fab = "WINDOW_GOTHIC"
-      if R.outdoor and other_R.outdoor then fab = "FENCE_STICKS_QUAKE" end
+      fab = E.usage.fab
+      sk2 = E.usage.skin2
       z = math.max(z, other_R.floor_min_h or 0)
       z = z + 32
-      sk2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
     elseif GAME.format == "quake" then
       fab = "QUAKE_ARCH"
       sk2 = { frame="METAL1_1" }
@@ -1240,7 +1228,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       end
       assert(sk2)
     end
-
+--]]
 
     local long1 = SP.long1
     local long2 = SP.long2
