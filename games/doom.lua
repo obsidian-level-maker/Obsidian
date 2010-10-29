@@ -1601,45 +1601,6 @@ DOOM.DOORS =
 
   --- SWITCHED DOORS ---
 
-  sw_hot =
-  {
-    w=128, h=112,
-
-    key="REDWALL",
-    door="BIGDOOR2", door_c="FLAT1",
-    step="REDWALL",
-    track="DOORTRAK",
-    frame="FLAT5_3",
-    door_h=112,
-    line_kind=0,
-  },
-
-  sw_skin =
-  {
-    w=128, h=112,
-
-    key="SKINFACE",
-    door="BIGDOOR4", door_c="FLOOR7_2",
-    step="SKINFACE",
-    track="DOORTRAK",
-    frame="SKINFACE",
-    door_h=112,
-    line_kind=0,
-  },
-
-  sw_vine =
-  {
-    w=128, h=112,
-
-    key="GRAYVINE",
-    door="BIGDOOR4", door_c="FLOOR7_2",
-    step="GRAYVINE",
-    track="DOORTRAK",
-    frame="FLAT1",
-    door_h=112,
-    line_kind=0,
-  },
-
   sw_wood =
   {
     w=128, h=112,
@@ -2044,7 +2005,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR",
     _target = "edge",
-    _switches = { Switch_blue=50 },
+    _switches = { Switch_blue1=50 },
 
     w=128, h=112,
 
@@ -2057,7 +2018,7 @@ DOOM.SKINS =
     line_kind=0,
   },
 
-  Switch_blue =
+  Switch_blue1 =
   {
     _prefab = "WALL_SWITCH",
     _target = "edge",
@@ -2070,6 +2031,99 @@ DOOM.SKINS =
     line_kind=103,
   },
 
+
+  Door_red =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _switches = { Switch_red1=50 },
+
+    w=128, h=112,
+
+    key="REDWALL",
+    door="BIGDOOR2", door_c="FLAT1",
+    step="REDWALL",
+    track="DOORTRAK",
+    frame="FLAT5_3",
+    door_h=112,
+    line_kind=0,
+  },
+
+  Switch_red1 =
+  {
+    _prefab = "WALL_SWITCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 48,
+
+    switch_h=64,
+    switch="SW1HOT",
+    x_offset=0, y_offset=0,
+    line_kind=103,
+  },
+
+
+  Door_pink =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _switches = { Switch_pink1=50 },
+
+    w=128, h=112,
+
+    key="SKINFACE",
+    door="BIGDOOR4", door_c="FLOOR7_2",
+    step="SKINFACE",
+    track="DOORTRAK",
+    frame="SKINFACE",
+    door_h=112,
+    line_kind=0,
+  },
+
+  Switch_pink1 =
+  {
+    _prefab = "WALL_SWITCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 48,
+
+    switch_h=64,
+    switch="SW1SKIN",
+    x_offset=0, y_offset=0,
+    line_kind=103,
+  },
+
+
+
+  Door_vine =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _switches = { Switch_vine1=50 },
+
+    w=128, h=112,
+
+    key="GRAYVINE",
+    door="BIGDOOR4", door_c="FLOOR7_2",
+    step="GRAYVINE",
+    track="DOORTRAK",
+    frame="FLAT1",
+    door_h=112,
+    line_kind=0,
+  },
+
+  Switch_vine1 =
+  {
+    _prefab = "WALL_SWITCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 48,
+
+    switch_h=64,
+    switch="SW1VINE",
+    x_offset=0, y_offset=0,
+    line_kind=103,
+  },
 
 } -- end of DOOM.SKINS
 
@@ -2314,7 +2368,7 @@ DOOM.SUB_THEME_DEFAULTS =
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
 
-  switch_doors = { Door_blue = 50 },
+  switch_doors = { Door_blue = 50, Door_red = 50 },
 
   lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
                  Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 },
@@ -2620,6 +2674,8 @@ DOOM1.SUB_THEMES =
         SP_ROCK1=50, ROCKRED1=90,
         SKSNAKE1=10, SKSNAKE2=10,
       },
+
+    switch_doors = { Door_pink = 50, Door_vine = 50 },
 
     logos = { carve=90, pill=50, neon=5 },
 
@@ -2997,6 +3053,8 @@ DOOM2.SUB_THEMES =
         RROCK04=70,
       },
 
+    switch_doors = { Door_pink = 50, Door_vine = 50 },
+
     OLD__exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
 
@@ -3073,6 +3131,8 @@ DOOM2.SUB_THEMES =
 
         RROCK04=70,
       },
+
+    switch_doors = { Door_pink = 50, Door_vine = 50 },
 
     OLD__exits = { skin_pillar=40, skull_pillar=20,
              demon_pillar2=10, demon_pillar3=10 },
