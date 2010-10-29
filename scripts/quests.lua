@@ -411,10 +411,17 @@ end
 
 
 function Quest_select_textures()
+  local base_num = 3
+
+  -- more variety in large levels
+  if SECTION_W * SECTION_H >= 30 then
+    base_num = 4
+  end
+
   if not LEVEL.building_facades then
     LEVEL.building_facades = {}
 
-    for num = 1,2 do
+    for num = 1,base_num - rand.sel(75,1,0) do
       local name = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
       LEVEL.building_facades[num] = name
     end
@@ -423,9 +430,18 @@ function Quest_select_textures()
   if not LEVEL.building_walls then
     LEVEL.building_walls = {}
 
-    for num = 1,3 do
+    for num = 1,base_num do
       local name = rand.key_by_probs(THEME.building_walls)
       LEVEL.building_walls[num] = name
+    end
+  end
+
+  if not LEVEL.building_floors then
+    LEVEL.building_floors = {}
+
+    for num = 1,base_num do
+      local name = rand.key_by_probs(THEME.building_floors)
+      LEVEL.building_floors[num] = name
     end
   end
 
@@ -435,7 +451,7 @@ function Quest_select_textures()
     if not THEME.courtyard_floors then
       LEVEL.courtyard_floors[1] = rand.key_by_probs(THEME.building_floors)
     else
-      for num = 1,2 do
+      for num = 1,base_num do
         local name = rand.key_by_probs(THEME.courtyard_floors)
         LEVEL.courtyard_floors[num] = name
       end
@@ -470,11 +486,14 @@ function Quest_select_textures()
 
   -- TODO: caves and landscapes
 
-  gui.printf("Selected room textures:\n")
+  gui.printf("\nSelected textures:\n")
 
-  gui.printf("building_facades =\n%s\n\n", table.tostr(LEVEL.building_facades))
-  gui.printf("building_walls =\n%s\n\n",   table.tostr(LEVEL.building_walls))
-  gui.printf("courtyard_floors =\n%s\n\n", table.tostr(LEVEL.courtyard_floors))
+  gui.printf("facades =\n%s\n", table.tostr(LEVEL.building_facades))
+  gui.printf("walls =\n%s\n", table.tostr(LEVEL.building_walls))
+  gui.printf("floors =\n%s\n", table.tostr(LEVEL.building_floors))
+  gui.printf("courtyards =\n%s\n", table.tostr(LEVEL.courtyard_floors))
+
+  gui.printf("\n")
 end
 
 

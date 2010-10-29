@@ -1879,23 +1879,30 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   local function render_floor(floor)
     assert(floor.z)
 
-    local mat = R.skin.wall
+    local mat
 
-    if not R.outdoor and THEME.building_floors then
-      mat = rand.key_by_probs(THEME.building_floors)
+    if R.outdoor then
+      mat = rand.pick(LEVEL.courtyard_floors)
+    else
+      mat = rand.pick(LEVEL.building_floors)
     end
+
+    mat = Mat_lookup(mat)
+
+    local w_tex = mat.t
+    local f_tex = mat.f or mat.t
 
     local flavor = "floor:1"
     if floor.three_d then flavor = "exfloor:1" end
 
     for _,P in ipairs(floor.space.polys) do
-      local BRUSH = P:to_brush(mat)
+      local BRUSH = P:to_brush(w_tex)
 
       table.insert(BRUSH, 1, { m="solid", flavor=flavor })
-      table.insert(BRUSH,    { t=floor.z, tex=mat })
+      table.insert(BRUSH,    { t=floor.z, tex=f_tex })
 
       if floor.three_d then
-        table.insert(BRUSH,  { b=floor.z - floor.three_d, tex=mat })
+        table.insert(BRUSH,  { b=floor.z - floor.three_d, tex=f_tex })
       end
 
       Trans.brush(BRUSH)
