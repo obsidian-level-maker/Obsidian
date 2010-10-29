@@ -881,7 +881,10 @@ function Layout_decide_straddlers()
   -- decided later in the normal layout code.
   --
 
-  local function place_straddler(kind, K, N, dir)
+  local function place_straddler(E, kind, K, N, dir)
+    local NK = E.K:neighbor(E.side)
+    local E2 = NK.edges[10 - E.side]
+
     local R = K.room
 
     local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
@@ -904,15 +907,13 @@ function Layout_decide_straddlers()
     local deep2 = deep / 2
 
 
-    local STRADDLER = { kind=kind, K=K, N=N, dir=dir,
-                        long=long, out=deep1, back=deep2,
-                      }
+    -- FIXME : BOGUS  BOGUS  BOGUS
+     E.strad_deep = deep / 2
+    E2.strad_deep = deep / 2
+
 
     assert(K.edges[dir])
     assert(N.edges[10-dir])
-
-    K.edges[dir]   .straddler = STRADDLER
-    N.edges[10-dir].straddler = STRADDLER
 
 
     local edge_long = K.edges[dir].long
@@ -925,14 +926,10 @@ function Layout_decide_straddlers()
     
     SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
     SP.usage = "straddler"
-    SP.straddler = STRADDLER
 
     -- NOTE: if not centred, would need different long1/long2 for other side
     SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
     SP.usage = "straddler"
-    SP.straddler = STRADDLER
-
-    return STRADDLER
   end
 
 
@@ -949,7 +946,7 @@ function Layout_decide_straddlers()
           E.usage.fab = "WINDOW"
           if R.outdoor and E.K:neighbor(E.side).room.outdoor then E.usage.fab = "FENCE" end
           E.skin2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
-          place_straddler("window", W.K1, W.K2, W.dir)
+          place_straddler(E, "window", W.K1, W.K2, W.dir)
           E.usage.placed = true
         end
       end
@@ -962,8 +959,7 @@ function Layout_decide_straddlers()
         if E.usage and E.usage.kind == "door" and not E.usage.placed then
           local C = E.usage.conn
           E.usage.fab = "ARCH"
-          local STR = place_straddler("door", C.K1, C.K2, C.dir)
-          STR.conn = C
+          place_straddler(E, "door", C.K1, C.K2, C.dir)
           E.usage.placed = true
 
           if C.lock and C.lock.kind == "KEY" then
@@ -1129,9 +1125,8 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
 
   local function do_straddler_solid(E, SP, same_room, POST_FAB)
     local K = E.K
-    local info = assert(SP.straddler)
 
-    local gap = 80 -- FIXME put in span and/or STRADDLER
+    local gap = 80 -- FIXME put in span or USAGE
 
     local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88, E.side,
                                    SP.long1, SP.long2, 0, SP.deep1)
@@ -1143,7 +1138,7 @@ if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
 
     local PF
 
-    if info.kind == "window" then
+    if E.usage.kind == "window" then
       PF = Fab_with_update(R, "MARK_AIR", T)
     else
       PF = Fab_with_update(R, "MARK_WALK", T)
@@ -1201,18 +1196,15 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
   local function build_straddler(E, SP)
     local K = E.K
+    local N = K:neighbor(E.side)
 
-    local info = assert(SP.straddler)
 
+    local other_R = N.room
 
-    local back = info.back
+    local E2 = N.edges[10 - E.side]
+    assert(E2.usage.kind == E.usage.kind)
 
-    local other_R = info.N.room
-
-    if ROOM ~= info.K.room then
-      other_R = info.K.room
-      back = info.out
-    end
+    local back = E.strad_deep
 
 
     local z = -88 --- ROOM.entry_floor_h
@@ -1226,7 +1218,8 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     inner_outer_tex(skin, ROOM, other_R)
 
 
---[[
+--[[  REMOVE THIS SHITE
+
     if info.kind == "window" then
       fab = E.usage.fab
       sk2 = E.usage.skin2
@@ -1286,18 +1279,19 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     --    DOOR on first room (as it sets up the initial floor height for second room) 
     --    WINDOW on second room (since there it knows height range on both sides)
 
-    if info.kind == "window" then
-      if not info.seen then
-        info.seen = true
+    if E.usage.kind == "window" then
+      if not E.usage.seen then
+        E.usage.seen = true
         do_straddler_solid(E, SP, false)
         return
       end
-    else
-      if info.built then
+    else assert(E.usage.kind == "door")
+
+      if E.usage.built then
         do_straddler_solid(E, SP, false)
         return
       end
-      info.built = true
+      E.usage.built = true
     end
 
 
@@ -1315,7 +1309,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
       if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
       if i < count then SP.long2 = long1 + int(long * (i)   / count) end
 
-      POST_FAB = build_straddler_span(info.kind, E, SP, z, back, fab, skin, sk2, sk3)
+      POST_FAB = build_straddler_span(E.usage.kind, E, SP, z, back, fab, skin, sk2, sk3)
 
       do_straddler_solid(E, SP, true, POST_FAB)
     end
@@ -1324,7 +1318,7 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
     -- setup door prefab to transmit height to next room
     -- (cannot be done here, we don't know the height yet)
 
-    if info.kind == "door" then
+    if E.usage.kind == "door" then
       POST_FAB.set_height_in = other_R
       -- TODO: if any Z scaling, apply to room_dz
       POST_FAB.set_height_dz =   (fab_info.room_dz or 0)
