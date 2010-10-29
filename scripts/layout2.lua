@@ -85,6 +85,16 @@ require 'util'
 ---  Basic corner -->  32 x 32
 --  
 
+  --
+  -- Straddlers are architecture which sits across two rooms.
+  -- Currently there are only two kinds: DOORS and WINDOWS.
+  -- 
+  -- The prefab to use (and hence their size) are decided before
+  -- everything else.  The actual prefab and heights will be
+  -- decided later in the normal layout code.
+  --
+
+
 
 -- FIXME: appropriate place
 DOOR_SILVER_KEY = 16
@@ -871,15 +881,7 @@ end
 
 
 
-function Layout_decide_straddlers()
-  --
-  -- Straddlers are architecture which sits across two rooms.
-  -- Currently there are only two kinds: DOORS and WINDOWS.
-  -- 
-  -- The prefab to use (and hence their size) are decided before
-  -- everything else.  The actual prefab and heights will be
-  -- decided later in the normal layout code.
-  --
+function Layout_select_windows()
 
   local function place_straddler(E, kind, K, N, dir)
     local NK = E.K:neighbor(E.side)
@@ -933,55 +935,123 @@ function Layout_decide_straddlers()
   end
 
 
-  ---| Layout_decide_straddlers |---
+  local function select_window(R, K, E)
+    local W = E.usage
+    E.usage.fab = "WINDOW"
+    if R.outdoor and E.K:neighbor(E.side).room.outdoor then E.usage.fab = "FENCE" end
+    E.skin2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
 
-  -- do doors after windows, as doors may want to become really big
-  -- and hence would need to know about the windows.
+    place_straddler(E, "window", W.K1, W.K2, W.dir)
+  end
+
+
+  --| Layout_select_windows |--
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,K in ipairs(R.sections) do
       for _,E in pairs(K.edges) do
         if E.usage and E.usage.kind == "window" and not E.usage.placed then
-          local W = E.usage
-          E.usage.fab = "WINDOW"
-          if R.outdoor and E.K:neighbor(E.side).room.outdoor then E.usage.fab = "FENCE" end
-          E.skin2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
-          place_straddler(E, "window", W.K1, W.K2, W.dir)
+          select_window(R, K, E)
           E.usage.placed = true
         end
       end
     end
   end
+end
+
+
+function Layout_select_doors()
+
+  local function place_straddler(E, kind, K, N, dir)
+    local NK = E.K:neighbor(E.side)
+    local E2 = NK.edges[10 - E.side]
+
+    local R = K.room
+
+    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
+
+    assert(long >= 256)
+
+    local deep
+    
+    if kind == "door" then
+      long = 208
+      deep = 128
+    else
+      -- windows use most of the length
+      long = long - 72*2
+      deep = 32
+    end
+
+    -- FIXME : pick these properly
+    local deep1 = deep / 2
+    local deep2 = deep / 2
+
+
+    -- FIXME : BOGUS  BOGUS  BOGUS
+     E.strad_deep = deep / 2
+    E2.strad_deep = deep / 2
+
+
+    assert(K.edges[dir])
+    assert(N.edges[10-dir])
+
+
+    local edge_long = K.edges[dir].long
+
+    local long1 = (edge_long - long) / 2
+    local long2 = (edge_long + long) / 2
+
+
+    local SP
+    
+    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
+    SP.usage = "straddler"
+
+    -- NOTE: if not centred, would need different long1/long2 for other side
+    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
+    SP.usage = "straddler"
+  end
+
+
+  local function select_door(R, K, E)
+    local C = E.usage.conn
+
+    E.usage.fab = "ARCH"
+    
+    place_straddler(E, "door", C.K1, C.K2, C.dir)
+
+    if C.lock and C.lock.kind == "KEY" then
+      E.usage.edge_fabs = Layout_possible_prefabs("LOCK_DOOR", "edge", C.lock)
+      local skinname = rand.key_by_probs(E.usage.edge_fabs)
+stderrf("Locked door for %s ----> %s\n", C.lock.key, skinname)
+
+      E.usage.skin = assert(GAME.SKINS[skinname])
+      E.usage.fab  = assert(E.usage.skin._prefab)
+    end
+
+    if C.lock and C.lock.kind == "SWITCH" then
+      E.usage.edge_fabs = Layout_possible_prefabs("SWITCH_DOOR", "edge", C.lock)
+      local skinname = rand.key_by_probs(E.usage.edge_fabs)
+stderrf("Switched door ----> %s\n", skinname)
+      
+      E.usage.skin = assert(GAME.SKINS[skinname])
+      E.usage.fab  = assert(E.usage.skin._prefab)
+      E.usage.skin2 = { tag=C.lock.tag }
+
+      C.lock.switches = assert(E.usage.skin._switches)
+    end
+  end
+
+
+  --| Layout_select_doors |--
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,K in ipairs(R.sections) do
       for _,E in pairs(K.edges) do
         if E.usage and E.usage.kind == "door" and not E.usage.placed then
-          local C = E.usage.conn
-          E.usage.fab = "ARCH"
-          place_straddler(E, "door", C.K1, C.K2, C.dir)
+          select_door(R, K, E)
           E.usage.placed = true
-
-          if C.lock and C.lock.kind == "KEY" then
-            E.usage.edge_fabs = Layout_possible_prefabs("LOCK_DOOR", "edge", C.lock)
-            local skinname = rand.key_by_probs(E.usage.edge_fabs)
-stderrf("Locked door for %s ----> %s\n", C.lock.key, skinname)
-
-            E.usage.skin = assert(GAME.SKINS[skinname])
-            E.usage.fab  = assert(E.usage.skin._prefab)
-          end
-
-          if C.lock and C.lock.kind == "SWITCH" then
-            E.usage.edge_fabs = Layout_possible_prefabs("SWITCH_DOOR", "edge", C.lock)
-            local skinname = rand.key_by_probs(E.usage.edge_fabs)
-stderrf("Switched door ----> %s\n", skinname)
-            
-            E.usage.skin = assert(GAME.SKINS[skinname])
-            E.usage.fab  = assert(E.usage.skin._prefab)
-            E.usage.skin2 = { tag=C.lock.tag }
-
-            C.lock.switches = assert(E.usage.skin._switches)
-          end
         end
       end
     end
@@ -1462,15 +1532,19 @@ function Layout_all_walls()
     Layout_initial_walls(R)
   end
 
----  for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_decide_straddlers()
----  end
+  -- do doors after windows, as doors may want to become really big
+  -- and hence would need to know about the windows.
+
+  Layout_select_windows()
+  Layout_select_doors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_flesh_out_walls(R)
   end
 end
 
+
+--------------------------------------------------------------------
 
 
 function Layout_the_floor(R)
