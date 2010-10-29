@@ -72,6 +72,20 @@ require 'defs'
 require 'util'
 
 
+----
+---  MINIMUM SIZES
+---  -------------
+---  
+---  Door / Window / Important  @  EDGE  -->  192 x 64  (64 walk)
+--- 
+---  Item / Switch  @  MIDDLE  -->  128 x 128  (64 walk)
+---  
+---  Basic wall -->  32 thick
+---  
+---  Basic corner -->  32 x 32
+--  
+
+
 -- FIXME: appropriate place
 DOOR_SILVER_KEY = 16
 DOOR_GOLD_KEY   = 8
