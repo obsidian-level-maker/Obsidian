@@ -1601,19 +1601,6 @@ DOOM.DOORS =
 
   --- SWITCHED DOORS ---
 
-  sw_blue =
-  {
-    w=128, h=112,
-
-    key="COMPBLUE",
-    door="BIGDOOR3", door_c="FLOOR7_2",
-    step="COMPBLUE",
-    track="DOORTRAK",
-    frame="FLAT14",
-    door_h=112,
-    line_kind=0,
-  },
-
   sw_hot =
   {
     w=128, h=112,
@@ -1818,22 +1805,6 @@ DOOM.SKINS =
     _deep   = 96,
   },
 
-
-  ----| SWITCHES |----
-
-
-
-  OLD_sw_blue =
-  {
-    prefab = "SWITCH_FLOOR",
-    skin =
-    {
-      switch_h=64,
-      switch="SW1BLUE", side="COMPBLUE", base="COMPBLUE",
-      x_offset=0, y_offset=56,
-      line_kind=103,
-    }
-  },
 
   OLD_sw_blue2 =  -- NOT USED
   {
@@ -2066,6 +2037,38 @@ DOOM.SKINS =
     line_kind=33, tag=0, -- kind_mult=28
   },
 
+
+  --- SWITCHED DOORS ---
+
+  Door_blue =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _switches = { Switch_blue=50 },
+
+    w=128, h=112,
+
+    key="COMPBLUE",
+    door="BIGDOOR3", door_c="FLOOR7_2",
+    step="COMPBLUE",
+    track="DOORTRAK",
+    frame="FLAT14",
+    door_h=112,
+    line_kind=0,
+  },
+
+  Switch_blue =
+  {
+    _prefab = "WALL_SWITCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 48,
+
+    switch_h=64,
+    switch="SW1BLUE", side="COMPBLUE", base="COMPBLUE",
+    x_offset=0, y_offset=0,
+    line_kind=103,
+  },
 
 
 } -- end of DOOM.SKINS

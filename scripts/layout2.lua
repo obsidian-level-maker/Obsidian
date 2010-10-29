@@ -557,7 +557,9 @@ function Layout_possible_prefabs(kind, target, lock)
   local tab
 
   if kind == "SWITCH" then
-    tab = assert(lock.switches)
+    if target ~= "edge" then return nil end  -- FIXME !!!
+    return { FUCK=999 }
+--- tab = assert(lock.switches)
   else
     local tab_name = assert(KIND_MAP[kind])
     tab = THEME[tab_name]
@@ -602,6 +604,12 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
   local skinname = rand.key_by_probs(E.usage.edge_fabs)
 
+if skinname == "FUCK" then
+  assert(E.usage.lock.switches)
+  skinname = rand.key_by_probs(E.usage.lock.switches)
+stderrf("Switch skin --> %s\n", skinname)
+end
+
   local skin = assert(GAME.SKINS[skinname])
   local skin2
 
@@ -616,8 +624,10 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
     skin2 = { next_map = LEVEL.next_map }
   end
 
-  if lock and lock.key then
+  if lock and lock.kind == "KEY" then
     skin2 = { item = lock.key }
+  elseif lock and lock.kind == "SWITCH" then
+    skin2 = { tag = lock.tag }
   end
 
 
@@ -666,6 +676,8 @@ function Layout_place_importants()
 
       local edge = table.remove(R.targets.edges, 1)
       edge.usage = usage
+
+stderrf("EDGE %s:%d ---> USAGE %s %s\n", edge.K:tostr(), edge.side, usage.kind, usage.sub or "-")
 
       edge.K.num_busy = edge.K.num_busy + 1
 
@@ -942,11 +954,23 @@ function Layout_decide_straddlers()
 
           if C.lock and C.lock.kind == "KEY" then
             E.usage.edge_fabs = Layout_possible_prefabs("LOCK_DOOR", "edge", C.lock)
-stderrf("locked doors =\n%s\n", table.tostr(E.usage.edge_fabs, 1))
             local skinname = rand.key_by_probs(E.usage.edge_fabs)
+stderrf("Locked door for %s ----> %s\n", C.lock.key, skinname)
 
             E.usage.skin = assert(GAME.SKINS[skinname])
             E.usage.fab  = assert(E.usage.skin._prefab)
+          end
+
+          if C.lock and C.lock.kind == "SWITCH" then
+            E.usage.edge_fabs = Layout_possible_prefabs("SWITCH_DOOR", "edge", C.lock)
+            local skinname = rand.key_by_probs(E.usage.edge_fabs)
+stderrf("Switched door ----> %s\n", skinname)
+            
+            E.usage.skin = assert(GAME.SKINS[skinname])
+            E.usage.fab  = assert(E.usage.skin._prefab)
+            E.usage.skin2 = { tag=C.lock.tag }
+
+            C.lock.switches = assert(E.usage.skin._switches)
           end
         end
       end
