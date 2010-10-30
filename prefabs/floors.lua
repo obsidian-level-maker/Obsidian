@@ -342,7 +342,7 @@ PREFAB.H_LIQ_BRIDGE_A =
     { m = "zone", space = 1, x2 = 0 },
     { m = "zone", space = 2, x1 = 512 },
 
-    { m = "liquid", x1 = 64, x2 = 448 },
+    { m = "lava", x1 = 64, x2 = 448 },
   },
 
   brushes =
@@ -454,6 +454,100 @@ PREFAB.L1_DOWN_4 =
       { x = 128, y =  64, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = 144, y =  80, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t =  32, mat = "?top" },
+    },
+  },
+}
+
+
+
+PREFAB.U_LIQUID_A =
+{
+  placement = "fitted",
+
+  x_size = 384,
+  y_size = 256,
+
+  neighborhood =
+  {
+    { space = 1, y1 = 256 },
+    { space = 2, y2 = 0, x1 = 0, x2 = 384 },
+
+    { m = "lava", x1 = 384, y2 = 256 },
+    { m = "lava", x2 =   0, y2 = 256 },
+    { m = "lava", x1 =   0, x2 = 384, y1 =   0, y2 = 256 },
+
+    -- new safe zones
+    { m = "zone", space = 1, y1 = 320 },
+    { m = "zone", space = 2, y2 = 128 },
+  },
+
+  brushes =
+  {
+    -- new floor area : bottom middle
+    {
+      { m = "floor", space = 2 },
+      { x =   0, y =   0 },
+      { x = 384, y =   0 },
+      { x = 384, y = 128 },
+      { x = 320, y = 216 },
+      { x = 256, y = 256 },
+      { x = 128, y = 256 },
+      { x =  64, y = 216 },
+      { x =   0, y = 128 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x =   0, y = 256 },
+      { x = 384, y = 256 },
+      { x = 384, y = 320 },
+      { x =   0, y = 320 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 80 },
+      { x = 128, y = 128 },
+      { x = 128, y = 128 },
+      { x = 256, y = 256 },
+      { x = 256, y = 256 },
+    },
+
+    -- steps
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x = 144, y = 236, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 236, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 256, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y = 256, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 16, mat = "?top" },
+    },
+ 
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x = 144, y = 216, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 216, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 236, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y = 236, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 32, mat = "?top" },
+    },
+ 
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x = 144, y = 196, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 196, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 216, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y = 216, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 48, mat = "?top" },
+    },
+ 
+    {
+      { m = "solid", flavor = "floor:3" },
+      { x = 144, y = 176, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 176, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 240, y = 196, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { x = 144, y = 196, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
+      { t = 64, mat = "?top" },
     },
   },
 }

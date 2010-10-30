@@ -2132,7 +2132,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
     local new_space  -- return nothing if no liquid rects
 
     for _,NB in ipairs(loc.neighborhood) do
-      if NB.m == "liquid" then
+      if NB.m == "lava" then
         if not new_space then
           new_space = SPACE_CLASS.new()
         end
@@ -2157,11 +2157,11 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: try lots of different floor prefabs
-    local fab = "L1_DOWN_4"
+    local fab = "U_LIQUID_A"
     local fab_info = assert(PREFAB[fab])
 
     -- FIXME: ARGH, rotate affects size
-    local rotate = 0
+    local rotate = 90
 
     local x_size = fab_info.x_size
     local y_size = fab_info.y_size
