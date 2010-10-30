@@ -1432,33 +1432,186 @@ static void DM_AlignTextures()
 }
 
 
+
 //------------------------------------------------------------------------
-//  EXTRAFLOOR STUFF
+//  DUMMY SECTORS
 //------------------------------------------------------------------------
+
+#define DUMMY_MAX_SHARE  8
+
+class dummy_line_info_c
+{
+public:
+  std::string tex;
+
+  int special;
+  int tag;
+  int flags;
+
+public:
+  // FIXME
+   dummy_line_info_c() : tex() {}
+  ~dummy_line_info_c() {}
+};
+
 
 class dummy_sector_c
 {
 public:
   doom_sector_c *sector;
-
   doom_sector_c *pair;
 
-  std::string wall;
+  int share_count;
 
-  int ef_count;  // # of extrafloors sharing this dummy, MAX 8 !!
-
-  int ef_special;
-  int ef_flags;
-  int ef_tag;
+  dummy_line_info_c * info[DUMMY_MAX_SHARE];
 
 public:
-  dummy_sector_c()
-  { }
+  dummy_sector_c() : sector(NULL), pair(NULL), share_count(0)
+  {
+    for (int i = 0 ; i < DUMMY_MAX_SHARE ; i++)
+      info[i] = NULL;
+  }
 
   ~dummy_sector_c()
-  { }
+  {
+    for (int i = 0 ; i < DUMMY_MAX_SHARE ; i++)
+      delete info[i];
+  }
+
+  bool isFull() const
+  {
+    return (share_count >= DUMMY_MAX_SHARE);
+  }
+
+  void AddInfo(...)
+  {
+    SYS_ASSERT(! isFull());
+
+    dummy_line_info_c *info = new dummy_line_info_c(...);
+
+    info[share_count++] = info;
+  }
+
+  /// construction ///
+
+  doom_sidedef_c * MakeSidedef(int what, index)
+  {
+    if (what == 0)
+      return NULL;
+
+    doom_sector_c *cur_sec = (what == 2) ? pair : sector;
+    
+    SYS_ASSERT(cur_sec);
+
+
+    doom_sidedef_c *SD = new doom_sidedef_c;
+
+    dm_sidedefs.push_back(SD);
+
+    SD->sector = cur_sec;
+
+    if (index >= 0)
+    {
+      SD->upper = info[index]->tex;
+      SD->mid   = info[index]->tex;
+      SD->lower = info[index]->tex;
+    }
+
+    SD->x_offset = 0;
+    SD->y_offset = 0;
+
+    return SD;
+  }
+
+
+  void MakeLine(int index, int x1, int y1, int x2, int y2,
+                int front, int back, bool is_split = false)
+  {
+    // handle splitting via a single recurse
+
+    if (!is_split && index >= 0 && share_count > (4 + index))
+    {
+      int mx = (x1 + x2) / 2;
+      int my = (y1 + y2) / 2;
+
+      MakeLine(index,   x1, y1, mx, my, front, back, true);
+      MakeLine(index+4, mx, my, x2, y2, front, back, true);
+
+      return;
+    }
+
+    // front and back are: 0 for VOID, 1 for SECTOR, 2 for PAIR
+    
+    SYS_ASSERT(sector);
+
+    if (front == 2 && ! pair) front = 1;
+    if ( back == 2 && ! pair)  back = 1;
+
+    if (front == back)
+      return;
+
+
+    doom_linedef_c *L = new doom_linedef_c;
+
+    dm_linedefs.push_back(L);
+
+
+    L->start = DM_MakeVertex(x1, y1);
+    L->end   = DM_MakeVertex(x2, y2);
+
+    L->CalcLength();
+
+    if (index >= 0)
+    {
+      SYS_ASSERT(index < share_count);
+      SYS_ASSERT(info[index]);
+
+      L->special = info[index]->special;
+      L->tag     = info[index]->tag;
+      L->flags   = info[index]->flags;
+    }
+
+    L->flags |= MLF_BlockAll | MLF_DontDraw;
+
+    L->front = MakeSidedef(front, index);
+    L->back  = MakeSidedef(back,  index);
+
+    SYS_ASSERT(L->front);
+  }
+
+
+  void Construct()
+  {
+    // determine coordinate of bottom/left corner
+    int x1 = ((int)i % 64 - 30) * 32;
+    int y1 = map_bound_y1 - 128 - (i / 64) * 32;
+
+    int x2 = x1 + 16;
+    int y2 = y1 + 16;
+
+    MakeLine( 0, x1,y1, x1,y2, 1,0);
+    MakeLine( 1, x1,y2, x2,y2, 1,0);
+    MakeLine( 2, x2,y2, x2,y1, 2,0);
+    MakeLine( 3, x2,y1, x1,y1, 2,0);
+
+    MakeLine(-1, x1,y1, x2,y2, 2,1);
+  }
 };
 
+
+static void DM_CreateDummies()
+{
+  for (unsigned int i = 0 ; i < dm_dummies.size() ; i++)
+  {
+    dm_dummies[i]->Construct();
+  }
+}
+
+
+
+//------------------------------------------------------------------------
+//  EXTRAFLOOR STUFF
+//------------------------------------------------------------------------
 
 static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
 {
@@ -1602,7 +1755,7 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
 
   dum->wall = EF->wall;
 
-  dum->ef_count = 1;
+  dum->share_count = 1;
 
   dum->ef_special = EF->line_special;
   dum->ef_flags = 0;
@@ -1657,110 +1810,6 @@ static void DM_ProcessExtraFloors()
 
       EXFL_MakeDummy(EF, S->tag);
     }
-  }
-}
-
-
-static doom_sidedef_c * Dummy_Sidedef(dummy_sector_c *dum, int what)
-{
-  if (what == 0)
-    return NULL;
-
-  doom_sector_c *sec = dum->sector;
-
-  if (what == 2 && dum->pair)
-    sec = dum->pair;
-
-
-  doom_sidedef_c *SD = new doom_sidedef_c;
-
-  dm_sidedefs.push_back(SD);
-
-  SD->sector = sec;
-
-
-  SD->upper = dum->wall;
-  SD->mid   = dum->wall;
-  SD->lower = dum->wall;
-
-  SD->x_offset = 0;
-  SD->y_offset = 0;
-
-  return SD;
-}
-
-
-static void Dummy_MakeLine(dummy_sector_c *dum, int split_min,
-                           int x1, int y1, int x2, int y2,
-                           int front, int back)
-{
-  // handle splitting via a single recurse
-
-  if (split_min > 0 && (dum->ef_count >= split_min))
-  {
-    int mx = (x1 + x2) / 2;
-    int my = (y1 + y2) / 2;
-
-    Dummy_MakeLine(dum, -1, x1, y1, mx, my, front, back);
-    Dummy_MakeLine(dum, -1, mx, my, x2, y2, front, back);
-
-    return;
-  }
-
-  // front and back are 0 for VOID, 1 or 2 for SECTOR#
-
-  if (front == 2 && ! dum->pair) front = 1;
-  if ( back == 2 && ! dum->pair)  back = 1;
-
-  if (front == back)
-    return;
-
-
-  doom_linedef_c *L = new doom_linedef_c;
-
-  dm_linedefs.push_back(L);
-
-
-  L->start = DM_MakeVertex(x1, y1);
-  L->end   = DM_MakeVertex(x2, y2);
-
-  L->CalcLength();
-
-
-  L->front = Dummy_Sidedef(dum, front);
-  L->back  = Dummy_Sidedef(dum, back);
-
-  if (! L->front)
-    L->Flip();
-
-
-  if (split_min == 7)
-  {
-    L->special = dum->ef_special;
-    L->tag     = dum->ef_tag;
-    L->flags   = dum->ef_flags;
-  }
-
-  L->flags |= MLF_BlockAll | MLF_DontDraw;
-}
-
-
-static void DM_CreateDummies()
-{
-  for (unsigned int i = 0 ; i < dm_dummies.size() ; i++)
-  {
-    dummy_sector_c *dum = dm_dummies[i];
-
-    // determine coordinate of bottom/left corner
-    int x = ((int)i % 64 - 30) * 32;
-    int y = map_bound_y1 - 128 - (i / 64) * 32;
-
-    Dummy_MakeLine(dum, 5, x,y+16, x+16,y+16, 1,0);
-    Dummy_MakeLine(dum, 6, x,y,    x+16,y,    0,2);
-    Dummy_MakeLine(dum, 7, x,y,    x,y+16,    1,0);
-    Dummy_MakeLine(dum, 8, x+16,y, x+16,y+16, 0,2);
-
-    Dummy_MakeLine(dum, -1, x,y, x+16,y+16, 2,1);
   }
 }
 
@@ -1947,6 +1996,7 @@ void CSG_DOOM_Write()
 
   DM_ExtraFloorNeighbors();
   DM_ProcessExtraFloors();
+
   DM_CreateDummies();
 
   // this writes vertices, sidedefs and sectors too
