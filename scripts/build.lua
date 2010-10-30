@@ -192,7 +192,7 @@ function Trans.collect_flags(C)  -- FIXME: use game-specific code
 end
 
 
-function Trans.brush(coords)
+function Trans.brush(coords, clip_rects)
 
   -- FIXME: mirroring
   -- (when mirroring, ensure first XY coord stays the first)
@@ -240,6 +240,15 @@ function Trans.brush(coords)
 
   if Trans.dump_brushes then
     gui.debugf("gui.add_brush\n%s\n", table.tostr(coords, 2))
+  end
+
+  if clip_rects then
+    local list = { coords }
+    Trans.clip_brushes_to_rects(list, clip_rects)
+    for _,B in ipairs(list) do
+      gui.add_brush(B)
+    end
+    return
   end
 
   gui.add_brush(coords)
@@ -1432,10 +1441,21 @@ function Fab_render(fab, T, skin, skin2)
 
 
   local function render_brushes(brushes)
+    local clip_rects
+    if ROOM and not Trans.overrider then
+      clip_rects = ROOM.sections
+    end
+
     for _,B in ipairs(brushes) do
       process_materials(B)
       resize_brush(B)
-      Trans.brush(B)
+
+      -- clip lights to the room
+      if B[1].m == "light" and clip_rects then
+        Trans.brush(B, clip_rects)
+      else
+        Trans.brush(B)
+      end
     end
   end
 

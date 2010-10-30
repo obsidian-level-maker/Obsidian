@@ -1163,8 +1163,6 @@ function Layout_flesh_out_walls(R)
     local fab = "WALL"
     local skin = {}
 
-if SP.long2 >= SP.long1+128 then fab = "PICTURE" end
-
     local N = E.K:neighbor(E.side)
 
     inner_outer_tex(skin, E.K.room, N and N.room)
@@ -2506,7 +2504,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   ROOM = R  -- set global
 
-  gui.debugf("\nLayout_all_floors @ %s\n\n", ROOM:tostr())
+  gui.debugf("\nLayout_the_floor @ %s\n\n", ROOM:tostr())
 
   if not ROOM.entry_floor_h then
     ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
