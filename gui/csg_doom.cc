@@ -1449,9 +1449,12 @@ public:
   int flags;
 
 public:
-  // FIXME
-   dummy_line_info_c() : tex() {}
-  ~dummy_line_info_c() {}
+  dummy_line_info_c(std::string& _tex, int _special = 0, int _tag = 0, int _flags = 0 ) :
+     tex(_tex), special(_special), tag(_tag), flags(_flags)
+  { }
+
+  ~dummy_line_info_c()
+  { }
 };
 
 
@@ -1466,7 +1469,8 @@ public:
   dummy_line_info_c * info[DUMMY_MAX_SHARE];
 
 public:
-  dummy_sector_c() : sector(NULL), pair(NULL), share_count(0)
+  dummy_sector_c(doom_sector_c *_sec = NULL, doom_sector_c *_pair = NULL) :
+      sector(_sec), pair(_pair), share_count(0)
   {
     for (int i = 0 ; i < DUMMY_MAX_SHARE ; i++)
       info[i] = NULL;
@@ -1483,18 +1487,16 @@ public:
     return (share_count >= DUMMY_MAX_SHARE);
   }
 
-  void AddInfo(...)
+  void AddInfo(std::string& tex, int special, int tag, int flags)
   {
     SYS_ASSERT(! isFull());
 
-    dummy_line_info_c *info = new dummy_line_info_c(...);
-
-    info[share_count++] = info;
+    info[share_count++] = new dummy_line_info_c(tex, special, tag, flags);
   }
 
   /// construction ///
 
-  doom_sidedef_c * MakeSidedef(int what, index)
+  doom_sidedef_c * MakeSidedef(int what, int index)
   {
     if (what == 0)
       return NULL;
@@ -1580,11 +1582,11 @@ public:
   }
 
 
-  void Construct()
+  void Construct(int index)
   {
     // determine coordinate of bottom/left corner
-    int x1 = ((int)i % 64 - 30) * 32;
-    int y1 = map_bound_y1 - 128 - (i / 64) * 32;
+    int x1 = (index % 64 - 30) * 32;
+    int y1 = map_bound_y1 - 128 - (index / 64) * 32;
 
     int x2 = x1 + 16;
     int y2 = y1 + 16;
@@ -1603,7 +1605,7 @@ static void DM_CreateDummies()
 {
   for (unsigned int i = 0 ; i < dm_dummies.size() ; i++)
   {
-    dm_dummies[i]->Construct();
+    dm_dummies[i]->Construct((int) i);
   }
 }
 
@@ -1746,20 +1748,11 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
   new_sec->tag     = EF->u_tag;
 
 
-  dummy_sector_c *dum = new dummy_sector_c;
+  dummy_sector_c *dum = new dummy_sector_c(new_sec);
 
   dm_dummies.push_back(dum);
 
-  dum->sector = new_sec;
-  dum->pair   = NULL;
-
-  dum->wall = EF->wall;
-
-  dum->share_count = 1;
-
-  dum->ef_special = EF->line_special;
-  dum->ef_flags = 0;
-  dum->ef_tag   = tag;
+  dum->AddInfo(EF->wall, EF->line_special, tag, 0);
 }
 
 
