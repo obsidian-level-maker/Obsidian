@@ -675,16 +675,25 @@ end
 
 
 
+function Trans.copy_brush(brush)
+  local newb = {}
+
+  for _,C in ipairs(brush) do
+    table.insert(newb, table.copy(C))
+  end
+
+  return newb
+end
+
+
 function Trans.brush_bbox(brush)
   local x1, x2 = 9e9, -9e9
   local y1, y2 = 9e9, -9e9
 
   for _,C in ipairs(brush) do
     if C.x then
-      x1 = math.min(x1, C.x)
-      y1 = math.min(y1, C.y)
-      x2 = math.max(x2, C.x)
-      y2 = math.max(y2, C.y)
+      x1 = math.min(x1, C.x) ; x2 = math.max(x2, C.x)
+      y1 = math.min(y1, C.y) ; y2 = math.max(y2, C.y)
     end
   end
 
@@ -775,21 +784,23 @@ end
 
 
 function Trans.clip_brushes_to_rects(brushes, rects)
-  local process = {}
+  local process_list = {}
 
   -- transfer brushes to a separate list for processing, new brushes
   -- will be added back into the 'brushes' lists (if any).
   for index = 1,#brushes do
-    table.insert(process, table.remove(brushes))
+    table.insert(process_list, table.remove(brushes))
   end
   
   local function clip_to_line(B, x1, y1, x2, y2)
     if Trans.line_cuts_brush(B, x1, y1, x2, y2) then
-      Trans.cut_brush(B, x1, y1, x2, y2)
+       Trans.cut_brush(B, x1, y1, x2, y2)
     end
   end
 
   local function clip_brush(B, R)
+    B = Trans.copy_brush(B)
+
     clip_to_line(B, R.x1, R.y1, R.x1, R.y2)  -- left
     clip_to_line(B, R.x2, R.y2, R.x2, R.y1)  -- right
     clip_to_line(B, R.x1, R.y2, R.x2, R.y2)  -- top
@@ -804,7 +815,7 @@ function Trans.clip_brushes_to_rects(brushes, rects)
     table.insert(brushes, B)
   end
 
-  for _,B in ipairs(brushes) do
+  for _,B in ipairs(process_list) do
     for _,R in ipairs(rects) do
       clip_brush(B, R)
     end
