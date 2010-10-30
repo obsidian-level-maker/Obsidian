@@ -675,6 +675,144 @@ end
 
 
 
+function Trans.brush_bbox(brush)
+  local x1, x2 = 9e9, -9e9
+  local y1, y2 = 9e9, -9e9
+
+  for _,C in ipairs(brush) do
+    if C.x then
+      x1 = math.min(x1, C.x)
+      y1 = math.min(y1, C.y)
+      x2 = math.max(x2, C.x)
+      y2 = math.max(y2, C.y)
+    end
+  end
+
+  assert(x1 < x2)
+  assert(y1 < y2)
+
+  return x1,y1, x2,y2
+end
+
+
+function Trans.line_cuts_brush(brush, px1, py1, px2, py2)
+  local front, back
+
+  for _,C in ipairs(brush) do
+    if C.x then
+      local d = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
+      if d >  0.5 then front = true end
+      if d < -0.5 then  back = true end
+
+      if front and back then return true end
+    end
+  end
+
+  return false
+end
+
+
+function Trans.cut_brush(brush, px1, py1, px2, py2)
+  -- returns the cut-off piece (on back of given line)
+  -- NOTE: assumes the line actually cuts the brush
+
+  local newb = {}
+
+  -- transfer XY coords to a separate list for processing
+  local coords = {}
+
+  for index = #brush,1,-1 do
+    local C = brush[index]
+    
+    if C.x then
+      table.insert(coords, 1, table.remove(brush, index))
+    else
+      -- copy non-XY-coordinates into new brush
+      table.insert(newb, table.copy(C))
+    end
+  end
+
+  for idx,C in ipairs(coords) do
+    local k = 1 + (idx % #coords)
+
+    local cx2 = coords[k].x
+    local cy2 = coords[k].y
+
+    local a = geom.perp_dist(C.x, C.y, px1,py1, px2,py2)
+    local b = geom.perp_dist(cx2, cy2, px1,py1, px2,py2)
+
+    local a_side = 0
+    local b_side = 0
+    
+    if a < -0.5 then a_side = -1 end
+    if a >  0.5 then a_side =  1 end
+
+    if b < -0.5 then b_side = -1 end
+    if b >  0.5 then b_side =  1 end
+
+    if a_side >= 0 then table.insert(brush, C) end
+    if a_side <= 0 then table.insert(newb,  table.copy(C)) end
+
+    if a_side ~= 0 and b_side ~= 0 and a_side ~= b_side then
+      -- this edge crosses the cutting line --
+
+      -- calc the intersection point
+      local along = a / (a - b)
+
+      local ix = C.x + along * (cx2 - C.x)
+      local iy = C.y + along * (cy2 - C.y)
+
+      local C1 = table.copy(C) ; C1.x = ix ; C1.y = iy
+      local C2 = table.copy(C) ; C2.x = ix ; C2.y = iy
+
+      table.insert(brush, C1)
+      table.insert(newb,  C2)
+    end
+  end
+
+  return newb
+end
+
+
+function Trans.clip_brushes_to_rects(brushes, rects)
+  local process = {}
+
+  -- transfer brushes to a separate list for processing, new brushes
+  -- will be added back into the 'brushes' lists (if any).
+  for index = 1,#brushes do
+    table.insert(process, table.remove(brushes))
+  end
+  
+  local function clip_to_line(B, x1, y1, x2, y2)
+    if Trans.line_cuts_brush(B, x1, y1, x2, y2) then
+      Trans.cut_brush(B, x1, y1, x2, y2)
+    end
+  end
+
+  local function clip_brush(B, R)
+    clip_to_line(B, R.x1, R.y1, R.x1, R.y2)  -- left
+    clip_to_line(B, R.x2, R.y2, R.x2, R.y1)  -- right
+    clip_to_line(B, R.x1, R.y2, R.x2, R.y2)  -- top
+    clip_to_line(B, R.x2, R.y1, R.x1, R.y1)  -- bottom
+
+    local bx1,by1, bx2,by2 = Trans.brush_bbox(B)
+
+    -- it lies completely outside the rectangle?
+    if bx2 <= R.x1 + 1 or bx1 >= R.x2 - 1 then return end
+    if by2 <= R.y1 + 1 or by1 >= R.y2 - 1 then return end
+
+    table.insert(brushes, B)
+  end
+
+  for _,B in ipairs(brushes) do
+    for _,R in ipairs(rects) do
+      clip_brush(B, R)
+    end
+  end
+end
+
+
+
 ------------------------------------------------------------------------
 
 function Mat_prepare_trip()
