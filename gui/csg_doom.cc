@@ -131,6 +131,7 @@ public:
 
   int misc_flags;
   int valid_count;
+  int light2;
 
   bool unused;
 
@@ -140,10 +141,9 @@ public:
 
 public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
-                    light(96+64), //!!!!
-                    special(0), tag(0), mark(0), index(-1),
+                    light(0), special(0), tag(0), mark(0), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
-                    unused(false),
+                    light2(-1), unused(false),
                     exfloors(), ef_neighbors()
   { }
 
@@ -655,28 +655,25 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
                                csg_property_set_c *f_face,
                                csg_property_set_c *c_face)
 {
+  // FIXME: HACK for doors which cross two rooms
+  //        (prevent splitting due to different ambients)
+  if (S->f_h < S->c_h)
+  {
+    S->light = 176;
+    return;
+  }
+
   // final light value for the sector is the 'ambient' lighting
   // in a room PLUS the greatest additive light brush MINUS the
   // greatest subtractive (shadow) brush.
 
-#if 0
-  // floor faces can override this with an absolute value, which
-  // is a hack to keep doors working (otherwise the two rooms'
-  // ambient values make the door sector split, breaking it).
-
-  double f_light = f_face->getInt("light");
-
-  if (f_light > 0)
-  {
-    S->light = CLAMP(96, f_light, 255);
-    return;
-  }
-#endif
+  S->light = 144;  // sane default
 
   int max_add = 0;
   int max_sub = 0;
 
-  S->light = 144;  // sane default
+  int effect = 0;
+  int delta  = 0;
 
   for (unsigned int i = 0 ; i < R->brushes.size() ; i++)
   {
@@ -696,20 +693,47 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
     if (ambient > 0)
       S->light = ambient;
 
-    max_add = MAX(max_add, add);
     max_sub = MAX(max_sub, sub);
+
+    // this logic means that the highest 'add' brush can also supply
+    // a lighting effect (a sector special) and delta difference.
+
+    if (add > max_add)
+    {
+      max_add = add;
+      effect = delta = 0;  // clear previous fx
+    }
+
+    if (add >= max_add)
+    {
+      int val = B->props.getInt("effect");
+
+      if (val > 0)
+      {
+        effect = val;
+        delta  = B->props.getInt("delta", -128);
+      }
+    }
   }
 
-  // apply additive and subtractive, except in closed doors
-  if (S->f_h < S->c_h)
-  {
-    S->light += max_add;
+  // an existing sector special overrides the lighting effect
+  if (S->special > 0)
+    effect = 0;
+
+  // additive component
+  S->light += max_add;
+
+  // subtractive component (shadow), but don't disturb the FX
+  if (effect == 0)
     S->light -= max_sub;
-  }
-  else
-    S->light = 176;  // FIXME MUNDO HACK !!!!
 
   S->light = CLAMP(96, S->light, 255);
+
+  if (effect > 0)
+  {
+    S->special = effect;
+    S->light2  = CLAMP(0, S->light + delta, 255);
+  }
 }
 
 
