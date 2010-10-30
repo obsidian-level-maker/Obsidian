@@ -448,6 +448,9 @@ public:
 
   bool CanMerge(const doom_linedef_c *B) const
   {
+    if (start == B->end)
+      return false;
+
     if (! ColinearWith(B))
       return false;
 
@@ -472,6 +475,7 @@ public:
   void Merge(doom_linedef_c *B)
   {
     SYS_ASSERT(B->start == end);
+    SYS_ASSERT(B->end != start);
 
     end = B->end;
 
@@ -1277,6 +1281,8 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   L->start = DM_MakeVertex(x1, y1);
   L->end   = DM_MakeVertex(x2, y2);
 
+  SYS_ASSERT(L->start != L->end);
+
   L->start->AddLine(L);
   L->end  ->AddLine(L);
 
@@ -1363,7 +1369,6 @@ static bool DM_TryMergeLine(doom_linedef_c *A)
 
   // we only handle the case where B's start == A's end
   // (which is still the vast majority of mergeable cases)
-
   if (V != B->start)
     return false;
 
