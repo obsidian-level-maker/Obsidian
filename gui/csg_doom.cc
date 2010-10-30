@@ -657,7 +657,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
 {
   // FIXME: HACK for doors which cross two rooms
   //        (prevent splitting due to different ambients)
-  if (S->f_h < S->c_h)
+  if (S->f_h >= S->c_h)
   {
     S->light = 176;
     return;
