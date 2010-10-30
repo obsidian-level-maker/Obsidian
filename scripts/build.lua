@@ -238,8 +238,8 @@ function Trans.brush(coords, clip_rects)
     return
   end
 
-  if Trans.dump_brushes then
-    gui.debugf("gui.add_brush\n%s\n", table.tostr(coords, 2))
+  if Trans.debug_brushes then
+    Trans.dump_brush(coords)
   end
 
   if clip_rects then
@@ -682,6 +682,44 @@ function Trans.OLD__doorway_transform(S, z, side)
   return T
 end
 
+
+
+function Trans.dump_brush(brush, title)
+  gui.debugf("%s:\n{\n", title or "Brush")
+
+  for _,C in ipairs(brush) do
+    local field_list = {}
+
+    for name,val in pairs(C) do
+      local pos
+      if name == "m" or name == "x" or name == "b" or name == "t" then
+        pos = 1
+      elseif name == "y" then
+        pos = 2
+      end
+
+      if pos then
+        table.insert(field_list, pos, name) 
+      else
+        table.insert(field_list, name)
+      end
+    end
+
+    local line = ""
+
+    for idx,name in ipairs(field_list) do
+      local val = C[name]
+      
+      if idx > 1 then line = line .. ", " end
+
+      line = line .. string.format("%s=%s", name, tostring(val))
+    end
+
+    gui.debugf("  { %s }\n", line)
+  end
+
+  gui.debugf("|\n")
+end
 
 
 function Trans.copy_brush(brush)
