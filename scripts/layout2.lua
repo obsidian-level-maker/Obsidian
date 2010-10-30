@@ -425,10 +425,10 @@ function Layout_shrunk_section_coords(K)
   local x1, y1 = K.x1, K.y1
   local x2, y2 = K.x2, K.y2
 
-  if not K:same_room(4) then K.x1 = K.x1 + 8 end
-  if not K:same_room(6) then K.x2 = K.x2 - 8 end
-  if not K:same_room(2) then K.y1 = K.y1 + 8 end
-  if not K:same_room(8) then K.y2 = K.y2 - 8 end
+  if not K:same_room(4) then x1 = x1 + 8 end
+  if not K:same_room(6) then x2 = x2 - 8 end
+  if not K:same_room(2) then y1 = y1 + 8 end
+  if not K:same_room(8) then y2 = y2 - 8 end
 
   return x1,y1, x2,y2
 end
