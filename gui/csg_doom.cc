@@ -826,107 +826,6 @@ static void DM_CreateSectors()
 }
 
 
-static void OLD__DM_LightingFloodFill()
-{
-  // NOTE USED ANYMORE : lighting brushes used instead
-
-  unsigned int i;
-
-  std::vector<doom_sector_c *> active;
-
-  int valid_count = 1;
-
-  for (i = 0 ; i < dm_sectors.size() ; i++)
-  {
-    doom_sector_c *S = dm_sectors[i];
-
-    if (S->misc_flags & SEC_PRIMARY_LIT)
-    {
-      active.push_back(dm_sectors[i]);
-      S->valid_count = valid_count;
-    }
-  }
-
-  while (! active.empty())
-  {
-    valid_count++;
-
-//fprintf(stderr, "LightingFloodFill: active=%d\n", active.size());
-
-    std::vector<doom_sector_c *> changed;
-
-    for (i = 0; i < active.size(); i++)
-    {
-      doom_sector_c *S = active[i];
-
-      for (unsigned int k = 0 ; k < S->region->snags.size() ; k++)
-      {
-        snag_c *snag = S->region->snags[k];
-
-        if (! snag->partner || ! snag->partner->region)
-          continue;
-
-        region_c *N = snag->partner->region;
-
-        if (N->index < 0 || N->index == (int)i)
-          continue;
-
-        doom_sector_c *B = dm_sectors[N->index];
-
-        if (B->misc_flags & SEC_PRIMARY_LIT)
-          continue;
-
-        int light = MIN(S->light, 176);
-
-        double dist = ComputeDist(S->mid_x,S->mid_y, B->mid_x,B->mid_y);
-
-        double A = log(light) / log(2);
-
-        double L2 = pow(2, A - dist / light_dist_factor);
-
-        light = (int)L2;
-
-        // less light through closed doors
-        if (S->f_h >= B->c_h || B->f_h >= S->c_h)
-          light -= 32;
-
-        if (B->light >= light)
-          continue;
-
-        // spread brighter light into back sector
-          
-        B->light = light;
-
-        if (B->valid_count != valid_count)
-        {
-          B->valid_count = valid_count;
-          changed.push_back(B);
-        }
-      }
-    }
-
-    std::swap(active, changed);
-  }
-
-//fprintf(stderr, "LightingFloodFill EMPTY\n");
-
-  for (i = 0; i < dm_sectors.size(); i++)
-  {
-    doom_sector_c *S = dm_sectors[i];
-
-    S->light = ((S->light + 3) / 16) * 16;
-
-    if ((S->misc_flags & SEC_SHADOW))
-      S->light -= (S->light > 168) ? 48 : 32;
-
-    if (S->light < 112)
-      S->light = 112;
-    else if (S->light > 255)
-      S->light = 255;
-  }
-}
-
-
 static int DM_CoalescePass()
 {
   int changes = 0;
@@ -1642,7 +1541,7 @@ static void DM_ExtraFloors(doom_sector_c *S, region_c *R)
     // remains the same and the lower part gets the new properties
     // (lighting/special) from the extrafloor.
 
-    for (unsigned int g = R->gaps.size() - 1; g > 0; g--)
+    for (unsigned int g = R->gaps.size() - 1 ; g > 0 ; g--)
     {
       DM_SolidExtraFloor(S, R->gaps[g-1], R->gaps[g]);
     }
@@ -2040,12 +1939,9 @@ void CSG_DOOM_Write()
   CSG_MakeMiniMap();
 
   DM_CreateSectors();
-
-///!!!  DM_LightingFloodFill();
   DM_CoalesceSectors();
 
   DM_CreateLinedefs();
-
   DM_MergeColinearLines();
   DM_AlignTextures();
 
@@ -2053,7 +1949,9 @@ void CSG_DOOM_Write()
   DM_ProcessExtraFloors();
   DM_CreateDummies();
 
+  // this writes vertices, sidedefs and sectors too
   DM_WriteLinedefs();
+
   DM_WriteThings();
 
   DM_FreeStuff();
