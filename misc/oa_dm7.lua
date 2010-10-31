@@ -3408,7 +3408,7 @@ BRUSHES =
 ENTITIES =
 {
 {
-  id = "info_player_start",
+  id = "1", --- info_player_start",
   x = 550, y = -916, z = 640+24,
   angle = 0,
 },
@@ -4174,7 +4174,7 @@ ENTITIES =
 
 TEXTURES =
 {
---[[ DOOM
+-- [[ DOOM
   caulk               = "STONE",
   nitesky             = "F_SKY1",
   water               = "FWATER1",
@@ -4196,7 +4196,7 @@ TEXTURES =
   beam_dusty2         = "SUPPORT3",
 --]]
 
--- [[ QUAKE
+--[[ QUAKE
   caulk               = "bricka2_4",
   nitesky             = "sky4",
   water               = "*water0",
@@ -4304,7 +4304,7 @@ function get_bounds(brush)
 end
 
 
-function Quake_test()
+function DM7_test()
 
   for i,brush in ipairs(BRUSHES) do
     local tex = get_texture(brush)
@@ -4326,7 +4326,7 @@ function Quake_test()
       if good then
         gui.add_brush(
         {
-          { k=kind or "solid", medium=medium },
+          { m=kind or "solid", medium=medium },
           { t=z2, tex=tex, special=sec_kind, },
           { b=z1, tex=tex, light=light },
           { x=x1, y=y1, tex=tex },
