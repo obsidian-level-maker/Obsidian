@@ -833,12 +833,12 @@ function Rooms_intermission_camera()
 
   local K2 = K
 
-  while (dir == 3 or dir == 9) and K2:same_room(6) do K2 = K2:neighbor(6) end
-  while (dir == 7 or dir == 9) and K2:same_room(8) do K2 = K2:neighbor(8) end
-  while (dir == 1 or dir == 3) and K2:same_room(2) do K2 = K2:neighbor(2) end
-  while (dir == 1 or dir == 7) and K2:same_room(4) do K2 = K2:neighbor(4) end
+      if (dir == 3 or dir == 9) and K2:same_room(6) then K2 = K2:neighbor(6)
+  elseif (dir == 7 or dir == 9) and K2:same_room(8) then K2 = K2:neighbor(8)
+  elseif (dir == 1 or dir == 3) and K2:same_room(2) then K2 = K2:neighbor(2)
+  elseif (dir == 1 or dir == 7) and K2:same_room(4) then K2 = K2:neighbor(4)
+  end
 
-stderrf("K %s  K2 %s\n", K:tostr(), K2:tostr())
   local x1 = math.min(K.x1, K2.x1)
   local y1 = math.min(K.y1, K2.y1)
   local x2 = math.max(K.x2, K2.x2)
