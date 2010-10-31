@@ -651,7 +651,7 @@ end
   if lock and lock.kind == "KEY" then
     skin2 = { item = lock.key }
   elseif lock and lock.kind == "SWITCH" then
-    skin2 = { tag = lock.tag }
+    skin2 = { tag = lock.tag, targetname = "sw" .. tostring(lock.tag) }
   end
 
 
@@ -1037,7 +1037,7 @@ stderrf("Switched door ----> %s\n", skinname)
       
       E.usage.skin = assert(GAME.SKINS[skinname])
       E.usage.fab  = assert(E.usage.skin._prefab)
-      E.usage.skin2 = { tag=C.lock.tag }
+      E.usage.skin2 = { tag=C.lock.tag, targetname = "sw" .. tostring(C.lock.tag) }
 
       C.lock.switches = assert(E.usage.skin._switches)
     end

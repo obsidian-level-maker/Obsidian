@@ -796,7 +796,28 @@ QUAKE1.SKINS =
   ----| KEY |----
 
 
-  ----| SWITCHES |----
+  ----| SWITCHED DOORS |---- 
+
+  Door_sw =
+  {
+    _prefab = "QUAKE_DOOR",
+    _target = "edge",
+    _switches = { Switch_1=50 },
+
+    door = "ADOOR09_1",
+    message = "Find the button dude!",
+    wait = -1,
+  },
+
+  Switch_1 =
+  {
+    _prefab = "QUAKE_WALL_SWITCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 48,
+
+  },
+
 
 
 } -- end of QUAKE1.SKINS
@@ -872,8 +893,9 @@ QUAKE1.ROOMS =
 
 QUAKE1.SUB_THEME_DEFAULTS =
 {
-  keys = { k_silver=60, k_gold=20 },
-  OLD__switches = { sw_blue=50 },
+  __keys = { k_silver=60, k_gold=20 },
+
+  switch_doors = { Door_sw = 50 },
 
   teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",

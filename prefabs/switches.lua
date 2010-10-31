@@ -166,7 +166,7 @@ PREFAB.QUAKE_WALL_SWITCH =
       entity =
       {
         ent = "button", angle = 270, sounds = 2,
-        target = "?target", wait ="?wait", lip = 8,
+        target = "?targetname", wait ="?wait", lip = 8,
       },
     },
   },
