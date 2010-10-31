@@ -141,6 +141,37 @@ PREFAB.CRATE =
 }
 
 
+PREFAB.QUAKE_TECHLAMP =
+{
+  defaults =
+  {
+    side  = "TLIGHT11",
+    top   = "METAL1_1",
+    light = 128,
+    style = { [0]=50, [10]=10 },
+  },
+
+  brushes =
+  {
+    {
+      { x = -8, y = -8, mat = "?side", peg=1, x_offset=0, y_offset=0 },
+      { x =  8, y = -8, mat = "?side", peg=1, x_offset=0, y_offset=0 },
+      { x =  8, y =  8, mat = "?side", peg=1, x_offset=0, y_offset=0 },
+      { x = -8, y =  8, mat = "?side", peg=1, x_offset=0, y_offset=0 },
+      { t = 64, mat = "?top" },
+    },
+  },
+
+  entities =
+  {
+    { x = -16, y = 0, z = 56, ent="light", light = "?light", style = "?style" },
+    { x =  16, y = 0, z = 56, ent="light", light = "?light", style = "?style" },
+    { x = 0, y = -16, z = 56, ent="light", light = "?light", style = "?style" },
+    { x = 0, y =  16, z = 56, ent="light", light = "?light", style = "?style" },
+  },
+}
+
+
 PREFAB.TELEPORT_PAD =
 {
   brushes =
