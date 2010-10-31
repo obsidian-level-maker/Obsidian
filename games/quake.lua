@@ -801,6 +801,8 @@ QUAKE1.SKINS =
     _target = "edge",
     _long   = 200,
     _deep   = 96,
+
+    light = 128, style = 11,
   },
 
 
