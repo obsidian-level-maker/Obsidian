@@ -143,7 +143,7 @@ public:
   doom_sector_c() : f_h(0), c_h(0), f_tex(), c_tex(),
                     light(0), special(0), tag(0), mark(0), index(-1),
                     region(NULL), misc_flags(0), valid_count(0),
-                    light2(-1), unused(false),
+                    light2(0), unused(false),
                     exfloors(), ef_neighbors()
   { }
 
@@ -715,7 +715,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
       if (val > 0)
       {
         effect = val;
-        delta  = B->props.getInt("delta", -128);
+        delta  = B->props.getInt("delta", -64);
       }
     }
   }
@@ -736,7 +736,7 @@ static void DM_LightingBrushes(doom_sector_c *S, region_c *R,
   if (effect > 0)
   {
     S->special = effect;
-    S->light2  = CLAMP(0, S->light + delta, 255);
+    S->light2  = CLAMP(1, S->light + delta, 255);
   }
 }
 
@@ -1840,6 +1840,34 @@ static void DM_ProcessExtraFloors()
 }
 
 
+static void DM_ProcessLightFX()
+{
+  for (unsigned int i = 0 ; i < dm_sectors.size() ; i++)
+  {
+    doom_sector_c *S = dm_sectors[i];
+
+    if (S->unused)
+      continue;
+
+    if (S->special > 0 && S->light2 > 0)
+    {
+      doom_sector_c *new_sec = new doom_sector_c;
+
+      dm_sectors.push_back(new_sec);
+
+      new_sec->f_h   = 0;
+      new_sec->c_h   = 1;
+      new_sec->light = S->light2;
+
+      new_sec->f_tex = dummy_plane_tex.c_str();
+      new_sec->c_tex = dummy_plane_tex.c_str();
+
+      Dummy_New(new_sec, S);
+    }
+  }
+}
+
+
 //------------------------------------------------------------------------
 
 int doom_vertex_c::Write()
@@ -2022,6 +2050,7 @@ void CSG_DOOM_Write()
 
   DM_ExtraFloorNeighbors();
   DM_ProcessExtraFloors();
+  DM_ProcessLightFX();
 
   DM_CreateDummies();
 
