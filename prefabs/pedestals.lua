@@ -143,22 +143,80 @@ PREFAB.LOWERING_PEDESTAL =
 }
 
 
-PREFAB.TELEPORT_PAD =
+PREFAB.ITEM_NICHE =
 {
+  placement = "fitted",
+
+  defaults =
+  {
+    key = "?wall",
+  },
+
   brushes =
   {
+    -- wall behind it
     {
-      { x = -32, y = -32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 16, mat = "?top", light = "?light", special="?sec_kind", tag="?in_tag" },
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x =   0, y =  4, mat = "?wall" },
     },
+
+    -- space in front of it
+    {
+      { m = "walk" },
+      { x =   0, y =  64 },
+      { x = 192, y =  64 },
+      { x = 192, y = 128 },
+      { x =   0, y = 128 },
+    },
+
+    -- right side
+
+    {
+      { x =  0, y =  4, mat = "?wall" },
+      { x = 64, y =  4, mat = "?key" },
+      { x = 32, y = 64, mat = "?wall" },
+      { x =  0, y = 64, mat = "?wall" },
+    },
+
+    -- left side
+    {
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 192, y =  4, mat = "?wall" },
+      { x = 192, y = 64, mat = "?wall" },
+      { x = 160, y = 64, mat = "?key" },
+    },
+
+    -- frame bottom
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 160, y = 64, mat = "?wall", blocked=1 },
+      { x =  32, y = 64, mat = "?wall" },
+      { t = 32, mat = "?floor" },
+    },
+
+    -- frame top
+    {
+      { x =  64, y =  4, mat = "?wall" },
+      { x = 128, y =  4, mat = "?wall" },
+      { x = 160, y = 64, mat = "?wall", blocked=1 },
+      { x =  32, y = 64, mat = "?wall" },
+      { b = 128, mat = "?wall", light = "?light", special = "?special"  },
+    },
+
+    -- FIXME: walk space
   },
 
   entities =
   {
-    { x = 0, y = 0, z = 16, ent="?tele_obj", angle="?angle" },
+    { x = 96, y = 48, z = 32, ent = "?item", angle = 90 },
+
+    { x = 96, y = 48, z = 32, ent = "light",
+      light = "?light", _radius = "?radius", style = "?style",
+    },
   },
 }
+
 
