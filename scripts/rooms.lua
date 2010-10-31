@@ -831,13 +831,23 @@ function Rooms_intermission_camera()
   else z1 = room.entry_floor_h + 128
   end
 
-  local W = K.x2 - K.x1
-  local H = K.y2 - K.y1
+  local K2 = K
 
-  local x1 = K.x1 + int(W / 3)
-  local y1 = K.y1 + int(H / 3)
-  local x2 = K.x2 - int(W / 3)
-  local y2 = K.y2 - int(H / 3)
+  if (dir == 3 or dir == 9) and K:same_room(6) then K2 = K:neighbor(6) end
+  if (dir == 7 or dir == 9) and K:same_room(8) then K2 = K:neighbor(8) end
+  if (dir == 1 or dir == 3) and K:same_room(2) then K2 = K:neighbor(2) end
+  if (dir == 1 or dir == 7) and K:same_room(4) then K2 = K:neighbor(4) end
+
+  local x1 = math.min(K.x1, K2.x1)
+  local y1 = math.min(K.y1, K2.y1)
+  local x2 = math.max(K.x2, K2.x2)
+  local y2 = math.max(K.y2, K2.y2)
+  
+  local W = x2 - x1
+  local H = y2 - y1
+
+  x1 = x1 + int(W / 3) ; x2 = x2 - int(W / 3)
+  y1 = y1 + int(H / 3) ; y2 = y2 - int(H / 3)
 
   if dir == 1 or dir == 7 then x1,x2 = x2,x1 end
   if dir == 1 or dir == 3 then y1,y2 = y2,y1 end
