@@ -2147,8 +2147,7 @@ gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
   end
 
 
-
-  local function choose_division(floor, zone)
+  local function choose_division(floor, zone, fab, rotate)
     local zone_dx = zone.x2 - zone.x1
     local zone_dy = zone.y2 - zone.y1
 gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
@@ -2156,12 +2155,7 @@ gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
     -- FIXME we only support subdividing single monotones right now
     if #R.mono_list > 1 then return nil end
 
-    -- FIXME: try lots of different floor prefabs
-    local fab = "U_LIQUID_A"
     local fab_info = assert(PREFAB[fab])
-
-    -- FIXME: ARGH, rotate affects size
-    local rotate = 90
 
     local x_size = fab_info.x_size
     local y_size = fab_info.y_size
@@ -2189,7 +2183,6 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     local half_ey = int(extra_y / 2)
 
 gui.debugf("extra_x/y: %dx%d\n", extra_x, extra_y)
-    -- FIXME: rotations!! 
 
     for xp = 1,3 do for yp = 1,3 do
       local can_x = (xp == 1) or (xp == 2 and half_ex >= 32) or (xp == 3 and extra_x >= 32)
@@ -2223,6 +2216,29 @@ gui.debugf("[all locs failed]\n")
   end
 
 
+  local function choose_div_lotsa_stuff(floor)
+    local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A", "U_LIQUID_A" }
+    local rots = { 0, 90, 180, 270 }
+
+    rand.shuffle(fabs)
+
+    for _,fab in ipairs(fabs) do
+      rand.shuffle(rots)
+      for _,rot in ipairs(rots) do
+
+        -- try each safe zone
+        rand.shuffle(floor.zones)
+        for _,zone in ipairs(floor.zones) do
+          loc  = choose_division(floor, zone, fab, rot)
+          if loc then return loc, zone end
+        end
+      end
+    end
+
+    return nil, nil  -- failed
+  end
+
+
   local function subdivide_floor(floor, recurse_lev)
     gui.debugf("\nsubdivide_floor in %s  lev:%d\n", R:tostr(), recurse_lev)
 
@@ -2235,15 +2251,8 @@ gui.debugf("[all locs failed]\n")
 
     local loc, zone
 
-    -- !!!!
-    if recurse_lev <= 7 and #floor.walks >= 2 then
-      -- try each safe zone
-      rand.shuffle(floor.zones)
-      for _,Z in ipairs(floor.zones) do
-        zone = Z
-        loc  = choose_division(floor, zone)
-        if loc then break; end
-      end
+    if recurse_lev <= 5 and #floor.walks >= 2 then
+      loc, zone = choose_div_lotsa_stuff(floor)
     end
 
 gui.debugf("location =\n%s\n", table.tostr(loc, 3))
