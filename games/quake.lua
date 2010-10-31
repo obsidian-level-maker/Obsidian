@@ -795,6 +795,37 @@ QUAKE1.SKINS =
 
   ----| KEY |----
 
+  Item_niche =
+  {
+    _prefab = "ITEM_NICHE",
+    _target = "edge",
+    _long   = 200,
+    _deep   = 96,
+  },
+
+
+  --- LOCKED DOORS ---
+
+  Locked_silver =
+  {
+    _prefab = "QUAKE_DOOR",
+    _target = "edge",
+    _keys = { k_silver=1 },
+
+    door = "DOOR01_2",
+    door_flags = 16,  -- 16 = DOOR_SILVER_KEY
+  },
+
+  Locked_gold =
+  {
+    _prefab = "QUAKE_DOOR",
+    _target = "edge",
+    _keys = { k_gold=1 },
+
+    door = "DOOR01_2",
+    door_flags = 8,  -- 8 = DOOR_GOLD_KEY
+  },
+
 
   ----| SWITCHED DOORS |---- 
 
@@ -893,7 +924,15 @@ QUAKE1.ROOMS =
 
 QUAKE1.SUB_THEME_DEFAULTS =
 {
-  __keys = { k_silver=60, k_gold=20 },
+  starts = { START_LEDGE = 50 }, 
+
+  exits = { WALL_EXIT = 50 },
+
+  pedestals = { Item_niche = 50 },
+
+  keys = { k_silver=60, k_gold=20 },
+
+  lock_doors = { Locked_silver = 50, Locked_gold = 50 },
 
   switch_doors = { Door_sw = 50 },
 
@@ -948,16 +987,6 @@ QUAKE1.SUB_THEMES =
     logos = { carve=50 },
 
     steps = { step1=50, step2=50 },
-
-    starts =
-    {
-      START_LEDGE = 50,
-    },
-
-    exits =
-    {
-      WALL_EXIT = 50,
-    },
 
     scenery =
     {
@@ -1017,16 +1046,6 @@ QUAKE1.SUB_THEMES =
     logos = { carve=50 },
 
     steps = { step1=50, step2=50 },
-
-    starts =
-    {
-      START_LEDGE = 50,
-    },
-
-    exits =
-    {
-      WALL_EXIT = 50,
-    },
 
     scenery =
     {
