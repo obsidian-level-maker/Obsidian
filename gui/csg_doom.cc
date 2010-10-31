@@ -184,20 +184,24 @@ public:
     return true;
   }
 
-  bool Match(const doom_sector_c *other) const
+  bool MatchMost(const doom_sector_c *other) const
   {
-    // deliberately absent: misc_flags
-
     return (f_h == other->f_h) &&
            (c_h == other->c_h) &&
            (light == other->light) &&
            (special == other->special) &&
            (tag  == other->tag)  &&
-           (mark == other->mark) &&
 
            (strcmp(f_tex.c_str(), other->f_tex.c_str()) == 0) &&
-           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0) &&
+           (strcmp(c_tex.c_str(), other->c_tex.c_str()) == 0);
+  }
 
+  bool Match(const doom_sector_c *other) const
+  {
+    // deliberately absent: misc_flags
+
+    return (mark == other->mark) &&
+           MatchMost(other) &&
            SameExtraFloors(other);
   }
 
@@ -1512,7 +1516,7 @@ public:
 
     SD->sector = cur_sec;
 
-    if (index >= 0)
+    if (index >= 0 && index < share_count)
     {
       SD->upper = info[index]->tex;
       SD->mid   = info[index]->tex;
@@ -1563,9 +1567,8 @@ public:
 
     L->CalcLength();
 
-    if (index >= 0)
+    if (index >= 0 && index < share_count)
     {
-      SYS_ASSERT(index < share_count);
       SYS_ASSERT(info[index]);
 
       L->special = info[index]->special;
@@ -1609,6 +1612,38 @@ static void DM_CreateDummies()
   }
 }
 
+
+static dummy_sector_c * Dummy_New(doom_sector_c *sec, doom_sector_c *pair = NULL)
+{
+  dummy_sector_c *dum = new dummy_sector_c(sec, pair);
+
+  dm_dummies.push_back(dum);
+
+  return dum;
+}
+
+
+static dummy_sector_c * Dummy_FindMatch(doom_sector_c *new_sec)
+{
+  for (unsigned int i = 0 ; i < dm_dummies.size() ; i++)
+  {
+    dummy_sector_c *dum = dm_dummies[i];
+
+    if (dum->isFull())
+      continue;
+
+    if (new_sec->MatchMost(dum->sector))
+    {
+      // won't need the newly created sector now
+      new_sec->MarkUnused();
+
+      return dum;
+    }
+  }
+
+  // create a new one
+  return Dummy_New(new_sec);
+}
 
 
 //------------------------------------------------------------------------
@@ -1748,10 +1783,8 @@ static void EXFL_MakeDummy(extrafloor_c *EF, int tag)
   new_sec->tag     = EF->u_tag;
 
 
-  dummy_sector_c *dum = new dummy_sector_c(new_sec);
-
-  dm_dummies.push_back(dum);
-
+  dummy_sector_c *dum = Dummy_FindMatch(new_sec);
+  
   dum->AddInfo(EF->wall, EF->line_special, tag, 0);
 }
 
