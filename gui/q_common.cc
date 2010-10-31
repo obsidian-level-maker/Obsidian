@@ -44,6 +44,7 @@
 
 int qk_game;
 int qk_sub_format;
+int qk_worldtype;
 
 
 qLump_c::qLump_c() : buffer(), crlf(false)
@@ -697,7 +698,12 @@ void BSP_WriteEntities(int lump_num, const char *description)
 //  lump->KeyPair("_generator", "OBLIGE " OBLIGE_VERSION " (c) Andrew Apted");
 //  lump->KeyPair("_homepage", "http://oblige.sourceforge.net");
 
-  lump->KeyPair("worldtype", "0");
+  {
+    char buffer[80];
+    sprintf(buffer, "%d", qk_worldtype);
+
+    lump->KeyPair("worldtype", buffer);
+  }
 
   if (description)
     lump->KeyPair("message", description);

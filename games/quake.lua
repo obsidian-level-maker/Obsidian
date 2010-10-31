@@ -952,6 +952,8 @@ QUAKE1.SUB_THEMES =
   {
     prob=50,
 
+    worldtype = 2,
+
     skies = { sky1=20, sky4=80 },
 
     building_walls =
@@ -1000,6 +1002,8 @@ QUAKE1.SUB_THEMES =
   quake_castle1 =
   {
     prob=50,
+
+    worldtype = 0,
 
     skies = { sky1=80, sky4=20 },
 
@@ -1443,6 +1447,9 @@ function QUAKE1.begin_level()
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
+
+  -- set worldtype (controls the way keys look, doors sound, etc)
+  gui.property("worldtype", LEVEL.sub_theme.worldtype)
 
   -- select the sky to use
   assert(LEVEL.sub_theme.skies)

@@ -78,6 +78,7 @@ private:
 
 extern int qk_game;
 extern int qk_sub_format;
+extern int qk_worldtype;
 
 
 /***** FUNCTIONS ****************/
