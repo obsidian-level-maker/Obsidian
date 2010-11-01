@@ -807,7 +807,7 @@ function Rooms_intermission_camera()
   local SIDES = { 1,3,7,9 }
   rand.shuffle(SIDES)
 
-  for side in pairs(SIDES) do
+  for _,side in pairs(SIDES) do
     local kx = sel(side == 1 or side == 7, room.kx1, room.kx2)
     local ky = sel(side == 1 or side == 3, room.ky1, room.ky2)
 
@@ -820,8 +820,13 @@ function Rooms_intermission_camera()
 
   if not K then
     K = room.sections[1]
-    dir = 9
+    dir = 1
+
+    if K:same_room(6) then dir = 3 end
+    if K.same_room(8) then dir = dir + 6 end
   end
+
+  gui.printf("Camera @ %s dir:%d\n", K:tostr(), dir)
 
   local z1
   local z2 = room.entry_floor_h
