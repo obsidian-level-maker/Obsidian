@@ -330,8 +330,8 @@ function Trans.entity(name, x, y, z, props)
     M.z2 = Trans.apply_z(M.z2)
 
     -- this is for rotation, but we only support 0/90/180/270
-    if M.x1 > M.x2 then M.x1, M.x2 = M.x2, M.x1 end
-    if M.y1 > M.y2 then M.y1, M.y2 = M.y2, M.y1 end
+    if M.x1 > M.x2 then M.x1, M.x2 = M.x2, M.x1 ; M.y_face.u1, M.y_face.u2 = M.y_face.u2, M.y_face.u1 end
+    if M.y1 > M.y2 then M.y1, M.y2 = M.y2, M.y1 ; M.x_face.u1, M.x_face.u2 = M.x_face.u2, M.x_face.u1  end
     if M.z1 > M.z2 then M.z1, M.z2 = M.z2, M.z1 end
 
     ent.model = gui.q1_add_mapmodel(M)
