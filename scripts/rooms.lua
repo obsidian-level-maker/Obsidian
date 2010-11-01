@@ -823,7 +823,7 @@ function Rooms_intermission_camera()
     dir = 1
 
     if K:same_room(6) then dir = 3 end
-    if K.same_room(8) then dir = dir + 6 end
+    if K:same_room(8) then dir = dir + 6 end
   end
 
   gui.printf("Camera @ %s dir:%d\n", K:tostr(), dir)
