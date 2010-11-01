@@ -1930,6 +1930,12 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
         table.insert(LIQUID, 1, { m="liquid", medium="lava" })
         table.insert(LIQUID, { t=floor.z - 64, tex=liq })
         Trans.brush(LIQUID)
+
+        if rand.odds(90) then
+          local x, y = geom.box_mid(P.bx1, P.by1, P.bx2, P.by2)
+          local speed = rand.pick { 200,300,350,450 }
+          Trans.entity("fireball", x, y, floor.z - 32, { speed=speed })
+        end
       end
     end
   end
@@ -2607,11 +2613,14 @@ function Layout_flesh_out_floors(R)
 
   -- FIXME
 
---[[ TEST
+-- [[ TEST
   for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
         if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
-          Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
+--        Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
+          
+          local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
+          Fabricate("QUAKE_TECHLAMP", T)
         end
       end
   end

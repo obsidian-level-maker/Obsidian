@@ -93,6 +93,8 @@ QUAKE1.ENTITIES =
   crucified  = { id="monster_zombie", spawnflags=1, kind="scenery", r=32, h=64, },
   torch      = { id="light_torch_small_walltorch",  kind="scenery", r=30, h=60, pass=true },
 
+  fireball   = { id="misc_fireball",  kind="scenery", r=10, h=10, pass=true },
+
   -- ambient sounds
   snd_computer = { id="ambient_comp_hum",  kind="scenery", r=30, h=30, pass=true },
   snd_drip     = { id="ambient_drip",      kind="scenery", r=30, h=30, pass=true },
