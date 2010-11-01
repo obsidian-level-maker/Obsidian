@@ -1022,6 +1022,37 @@ static void MapModel_Edge(float x1, float y1, float z1,
 }
 
 
+static void MapModel_TexCoord(float *scale, float *offset,
+                              double low, double high,
+                              csg_property_set_c & face,
+                              const char *l_field, const char *h_field,
+                              bool invert)
+{
+  *scale  = 1;
+  *offset = 0;
+
+  if (face.getStr(l_field))
+  {
+    double u1 = face.getDouble(l_field);
+
+    if (face.getStr(h_field))
+    {
+      double u2 = face.getDouble(h_field);
+
+      *scale = (u2 - u1) / (high - low);
+    }
+
+    *offset = u1 - low * (*scale);
+  }
+
+  if (invert)
+  {
+    *scale  *= -1;
+    *offset *= -1;
+  }
+}
+
+
 static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool flipped)
 {
   dface_t raw_face;
@@ -1043,9 +1074,6 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
 
   if (face < 2)  // PLANE_X
   {
-    s[1] =  1;  // PLANE_X
-    t[2] = -1;
-
     texture = model->x_face.getStr("tex", "missing");
 
     double x = (face==0) ? model->x1 : model->x2;
@@ -1057,12 +1085,12 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x, y1, model->z2, x, y2, model->z2);
     MapModel_Edge(x, y2, model->z2, x, y2, model->z1);
     MapModel_Edge(x, y2, model->z1, x, y1, model->z1);
-  }
-  else if (face < 4)
-  {
-    s[0] =  1;  // PLANE_Y
-    t[2] = -1;
 
+    MapModel_TexCoord(s+1, s+3, model->y1, model->y2, model->x_face, "u1", "u2", false);
+    MapModel_TexCoord(t+2, t+3, model->z1, model->z2, model->x_face, "v1", "v2", true);
+  }
+  else if (face < 4)  // PLANE_Y
+  {
     texture = model->y_face.getStr("tex", "missing");
 
     double y = (face==2) ? model->y1 : model->y2;
@@ -1073,12 +1101,12 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x1, y, model->z2, x2, y, model->z2);
     MapModel_Edge(x2, y, model->z2, x2, y, model->z1);
     MapModel_Edge(x2, y, model->z1, x1, y, model->z1);
-  }
-  else
-  {
-    s[0] = 1;  // PLANE_Z
-    t[1] = 1;
 
+    MapModel_TexCoord(s+0, s+3, model->x1, model->x2, model->y_face, "u1", "u2", false);
+    MapModel_TexCoord(t+2, t+3, model->z1, model->z2, model->y_face, "v1", "v2", true);
+  }
+  else  // PLANE_Z
+  {
     texture = model->z_face.getStr("tex", "missing");
 
     double z = (face==5) ? model->z1 : model->z2;
@@ -1089,6 +1117,9 @@ static void MapModel_Face(quake_mapmodel_c *model, int face, s16_t plane, bool f
     MapModel_Edge(x1, model->y2, z, x2, model->y2, z);
     MapModel_Edge(x2, model->y2, z, x2, model->y1, z);
     MapModel_Edge(x2, model->y1, z, x1, model->y1, z);
+
+    MapModel_TexCoord(s+0, s+3, model->x1, model->x2, model->z_face, "u1", "u2", false);
+    MapModel_TexCoord(t+1, t+3, model->y1, model->y2, model->z_face, "v1", "v2", false);
   }
 
 
@@ -1386,7 +1417,7 @@ bool quake1_game_interface_c::Start()
 {
   qk_game = 1;
   qk_sub_format = 0;
-  qk_lighting_quality = +1;  // default to HIGH
+  qk_lighting_quality = 0;  // default to HIGH
 
   filename = Select_Output_File("pak");
 
