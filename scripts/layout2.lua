@@ -399,12 +399,10 @@ function Layout_check_brush(coords, data)
   local mode
   local m = coords[1].m
 
-      if m == "used" then
-    mode = "solid" ; allow = false
-  elseif m == "walk" then
-    mode = "walk" ; allow = false
-  elseif m == "air" then
-    mode = "air" ; allow = false
+      if m == "used"    then allow = false ; mode = "solid"
+  elseif m == "walk"    then allow = false ; mode = "walk"
+  elseif m == "air"     then allow = false ; mode = "air"
+  elseif m == "nosplit" then allow = false ; mode = "nosplit"
   elseif not m or m == "solid" or m == "sky" then
     mode = "solid"
   else
@@ -849,7 +847,7 @@ function Fab_with_update(R, fab, T, skin1, skin2, skin3)
   -- associate the walk/air polygons to this POST-FAB
   if not (fab == "MARK_USED" or fab == "MARK_WALK" or fab == "MARK_AIR") then
     for _,P in ipairs(POST_FAB.polys) do
-      if P.kind == "walk" or P.kind == "air" then
+      if P.kind == "walk" or P.kind == "air" or P.kind == "nosplit" then
         P.post_fab = POST_FAB
         table.insert(R.poly_assoc, P)
       end
@@ -1147,6 +1145,17 @@ function Layout_flesh_out_walls(R)
     local fab = "CORNER" -- sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
 
     Fab_with_update(R, fab, T)
+
+    -- mark concave corners with a "nosplit" brush, which prevents a
+    -- problem where a floor prefab splits the room close to the corner
+    -- and the different rloor heights messes up a door (etc).
+
+    if C.concave then
+      T = Trans.box_transform(T.add_x - 48, T.add_y - 48,
+                              T.add_x + 48, T.add_y + 48, 0, 2)
+
+      Fab_with_update(R, "MARK_NOSPLIT", T)
+    end
   end
 
 
@@ -1636,6 +1645,19 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
+  local function collect_no_splits()
+    local polys = {}
+
+    for idx,P in ipairs(R.poly_assoc) do
+      if P.kind == "nosplit" then
+        table.insert(polys, P)
+      end
+    end
+
+    return polys
+  end
+
+
   local function narrow_zone_for_edge(zone, E)
     if not E.max_deep then return end
 
@@ -2002,6 +2024,23 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
+  local function transfer_nosplits(floor, loc, new_floors)
+    for _,A in ipairs(floor.nosplits) do
+      local space = find_walk_in_neighborhood(loc.neighborhood, A.bx1,A.by1, A.bx2,A.by2)
+
+      if space >= 1 then
+        assert(new_floors[space])
+        table.insert(new_floors[space].nosplits, A)
+      else
+        -- add it to all floors (FIXME)
+        for _,F in ipairs(new_floors) do
+          table.insert(F.nosplits, A)
+        end
+      end
+    end
+  end
+
+
   local function brush_bbox(coords)
     -- TODO
   end
@@ -2081,7 +2120,14 @@ gui.debugf("  cut walk space: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
       walk_counts[space] = 1
     end
 
-gui.debugf("  walk counts: %d %d\n", walk_counts[1] or 0, walk_counts[2] or 0)
+    for _,G in ipairs(floor.nosplits) do
+      local space = find_walk_in_neighborhood(neighborhood, G.bx1,G.by1, G.bx2,G.by2)
+
+      if space < 0 then
+        return false  -- was cut
+      end
+    end
+
     for n = 1,num_spaces do
       if not walk_counts[n] then return false end
     end
@@ -2286,11 +2332,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local new_floors = {}
 
     for i = 1,num_spaces do
-      new_floors[i] = { walks={}, airs={}, fabs={} }
+      new_floors[i] = { walks={}, airs={}, nosplits={}, fabs={} }
     end
 
     transfer_walks(floor, loc, new_floors)
     transfer_airs (floor, loc, new_floors)
+    transfer_nosplits (floor, loc, new_floors)
 
     for idx,F in ipairs(new_floors) do
       F.space = space_from_neighborhood(floor.space, idx, loc)
@@ -2449,6 +2496,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       space = Layout_initial_space(R),
       walks = collect_walk_groups(),  -- FIXME only walks in each monotone
       airs  = collect_airs(),
+      nosplits = collect_no_splits(),
       fabs  = {},
     }
 

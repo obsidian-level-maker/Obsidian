@@ -69,6 +69,23 @@ PREFAB.MARK_AIR =
 }
 
 
+PREFAB.MARK_NOSPLIT =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    {
+      { m = "nosplit", insider=1 },
+      { x =   0, y =  0 },
+      { x = 192, y =  0 },
+      { x = 192, y = 16 },
+      { x =   0, y = 16 },
+    },
+  },
+}
+
+
 PREFAB.PILLAR =
 {
   brushes=
