@@ -2225,7 +2225,9 @@ gui.debugf("[all locs failed]\n")
 
 
   local function choose_div_lotsa_stuff(floor)
-    local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A", "U_LIQUID_A" }
+    local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A",
+                   "L_LIQUID_1", "L_LIQUID_1" }
+
     local rots = { 0, 90, 180, 270 }
 
     rand.shuffle(fabs)

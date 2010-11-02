@@ -459,6 +459,81 @@ PREFAB.L1_DOWN_4 =
 }
 
 
+PREFAB.L_LIQUID_1 =
+{
+  placement = "fitted",
+
+  x_size = 384,
+  y_size = 384,
+
+  neighborhood =
+  {
+    { space = 1, y1 = 384 },
+    { space = 1, y2 = 384, x1 = 384 },
+
+    { space = 2, x2 = 0, y2 = 192 },
+    { space = 2, x1 = 0, x2 = 192, y2 = 192 }, --!!!! y2 = 0
+
+    { m = "lava", y1 = 192, y2 = 384, x2 = 384 },
+    { m = "lava", x1 = 192, x2 = 384, y2 = 192 },
+
+    -- new safe zones
+    { m = "zone", space = 1, y1 = 464 },
+    { m = "zone", space = 1, y2 = 384, x1 = 464 },
+
+    { m = "zone", space = 2, x2 = 64, y2 = 64 },
+  },
+
+  brushes =
+  {
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = 304, y = 384 },
+      { x = 384, y = 464 },
+      { x = 384, y = 464 },
+      { x = 304, y = 384 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 0 },
+      { x =  64, y = 64 },
+      { x = 192, y = 64 },
+      { x = 192, y = 192 },
+      { x =  64, y = 192 },
+    },
+
+    -- steps
+    {
+      { x = 280, y = 376, mat = "?wall" },
+      { x = 264, y = 360, mat = "?wall" },
+      { x = 360, y = 264, mat = "?wall" },
+      { x = 376, y = 280, mat = "?wall" },
+      { t =  -4, mat = "?wall" },
+      { b = -24, mat = "?wall" },
+    },
+
+    {
+      { x = 240, y = 336, mat = "?wall" },
+      { x = 224, y = 320, mat = "?wall" },
+      { x = 320, y = 224, mat = "?wall" },
+      { x = 336, y = 240, mat = "?wall" },
+      { t =  -4, mat = "?wall" },
+      { b = -24, mat = "?wall" },
+    },
+
+    {
+      { x = 200, y = 296, mat = "?wall" },
+      { x = 184, y = 280, mat = "?wall" },
+      { x = 280, y = 184, mat = "?wall" },
+      { x = 296, y = 200, mat = "?wall" },
+      { t =  -4, mat = "?wall" },
+      { b = -24, mat = "?wall" },
+    },
+  },
+}
+
+
 
 PREFAB.U_LIQUID_A =
 {

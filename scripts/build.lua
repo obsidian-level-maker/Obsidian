@@ -1043,11 +1043,11 @@ function Fab_size_stuff(fab, T, brushes)
       end
     end -- B
 
-    assert(x1 and y1 and x2 and y2)
-
     -- FIXME !!!!!!!!  this is for floor prefabs : needs deeper consideration
     if fab.x_size then x1 = 0 ; x2 = fab.x_size end
     if fab.y_size then y1 = 0 ; y2 = fab.y_size end
+
+    assert(x1 and y1 and x2 and y2)
 
     -- Note: it is OK when z1 and z2 are not set (this happens with
     --       prefabs consisting entirely of infinitely tall solids).
