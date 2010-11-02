@@ -505,31 +505,47 @@ PREFAB.L_LIQUID_1 =
 
     -- steps
     {
-      { x = 280, y = 376, mat = "?wall" },
-      { x = 264, y = 360, mat = "?wall" },
-      { x = 360, y = 264, mat = "?wall" },
-      { x = 376, y = 280, mat = "?wall" },
+      { m = "detail" },
+      { x = 272, y = 368, mat = "?wall" },
+      { x = 256, y = 352, mat = "?wall" },
+      { x = 352, y = 256, mat = "?wall" },
+      { x = 368, y = 272, mat = "?wall" },
       { t =  -4, mat = "?wall" },
       { b = -24, mat = "?wall" },
     },
 
     {
-      { x = 240, y = 336, mat = "?wall" },
-      { x = 224, y = 320, mat = "?wall" },
-      { x = 320, y = 224, mat = "?wall" },
-      { x = 336, y = 240, mat = "?wall" },
+      { m = "detail" },
+      { x = 232, y = 328, mat = "?wall" },
+      { x = 216, y = 312, mat = "?wall" },
+      { x = 312, y = 216, mat = "?wall" },
+      { x = 328, y = 232, mat = "?wall" },
       { t =  -4, mat = "?wall" },
       { b = -24, mat = "?wall" },
     },
 
     {
-      { x = 200, y = 296, mat = "?wall" },
-      { x = 184, y = 280, mat = "?wall" },
-      { x = 280, y = 184, mat = "?wall" },
-      { x = 296, y = 200, mat = "?wall" },
+      { m = "detail" },
+      { x = 192, y = 288, mat = "?wall" },
+      { x = 176, y = 272, mat = "?wall" },
+      { x = 272, y = 176, mat = "?wall" },
+      { x = 288, y = 192, mat = "?wall" },
       { t =  -4, mat = "?wall" },
       { b = -24, mat = "?wall" },
     },
+
+    -- player clip
+    {
+      { m = "clip" },
+      { x = 384, y = 384 },
+      { x = 288, y = 384 },
+      { x =  88, y = 184 },
+      { x = 184, y =  88 },
+      { x = 384, y = 288 },
+      { t =   0 },
+      { b = -28 },
+    },
+
   },
 }
 
