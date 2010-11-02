@@ -1127,14 +1127,13 @@ function Layout_flesh_out_walls(R)
     assert(R)
     if not N then return end
 
-    if R.outdoor and not N.outdoor then
-      skin.wall = N.skin.wall
-    end
+    skin.wall  = R.skin.wall
+    skin.outer = N.skin.wall
 
-    if N.outdoor and not R.outdoor then
-      skin.outer = R.skin.wall
-    else
-      skin.outer = N.skin.wall
+    if R.outdoor and not N.outdoor then
+      skin.wall  = skin.outer
+    elseif N.outdoor and not R.outdoor then
+      skin.outer = skin.inner
     end
   end
 
@@ -1280,11 +1279,8 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
     local fab = assert(E.usage.fab)
     local skin = E.usage.skin or {}
-    local sk2 = E.usage.skin2
+    local sk2 = E.usage.skin2 or {}
     local sk3 = E.usage.skin3
-
-    inner_outer_tex(skin, ROOM, other_R)
-
 
 --[[  REMOVE THIS SHITE
 
@@ -1364,6 +1360,11 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
 
     gui.debugf("Building straddler %s at %s side:%d\n", fab, K:tostr(), E.side)
+
+    -- FIXME!!!!!!
+    local skin0 = {}
+
+    inner_outer_tex(skin0, ROOM, other_R)
 
     -- TODO: might be better to do the "repeat" thing in render_post_fab()
     --       instead of here
@@ -1931,6 +1932,7 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
         table.insert(LIQUID, { t=floor.z - 64, tex=liq })
         Trans.brush(LIQUID)
 
+        -- FIXME: do this later, use spot finder to determine valid places
         if rand.odds(90) then
           local x, y = geom.box_mid(P.bx1, P.by1, P.bx2, P.by2)
           local speed = rand.pick { 200,300,350,450 }
