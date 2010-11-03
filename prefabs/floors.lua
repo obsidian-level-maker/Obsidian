@@ -40,7 +40,6 @@
 --
 ----------------------------------------------------------------
 
-
 PREFAB.H1_DOWN_1 =
 {
   placement = "fitted",
@@ -720,4 +719,91 @@ PREFAB.U_LIQUID_A =
   },
 }
 
+
+
+PREFAB.ZZ_LAVA_HOLE =
+{
+  placement = "fitted",
+
+-- legless = true,
+
+  x_size = 256,
+  y_size = 256,
+
+  neighborhood =
+  {
+    { space = 1, x2 = 0 },
+    { space = 2, x1 = 256 },
+    { space = 1, x1 = 0, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 0, x2 = 256, y1 = 256 },
+
+    { m = "lava", x1 = 0, x2 = 256, y1 = 0, y2 = 256 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x2 = -16 },
+    { m = "zone", space = 2, x1 = 272 },
+    { m = "zone", space = 1, x1 = 16, x2 = 240, y2 = -16 },
+    { m = "zone", space = 1, x1 = 16, x2 = 240, y1 = 272 },
+  },
+
+  brushes =
+  {
+    {
+      { m = "solid" },
+      { x =  0, y =  0, mat = "?floor" },
+      { x = 64, y =  0, mat = "?floor" },
+      { x =  0, y = 64, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 192, y =  0, mat = "?floor" },
+      { x = 256, y =  0, mat = "?floor" },
+      { x = 256, y = 64, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 64, y = 256, mat = "?floor" },
+      { x =  0, y = 256, mat = "?floor" },
+      { x =  0, y = 192, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 256, y = 256, mat = "?floor" },
+      { x = 192, y = 256, mat = "?floor" },
+      { x = 256, y = 192, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "nosplit" },
+      { x = -32, y = -32 },
+      { x = 288, y = -32 },
+      { x = 288, y = 288 },
+      { x = -32, y = 288 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = -48, y =   0 },
+      { x =   0, y =   0 },
+      { x =   0, y = 256 },
+      { x = -48, y = 256 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 0 },
+      { x = 256, y =   0 },
+      { x = 256, y =   0 },
+      { x = 304, y = 256 },
+      { x = 304, y = 256 },
+    },
+  },
+}
 

@@ -1879,12 +1879,14 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
       for _,P in ipairs(G.polys) do
         if P.post_fab then
           table.insert(floor.fabs, P.post_fab)
+          P.post_fab.for_floor = floor
         end
       end
 
       if G.fabs then
         for _,PF in ipairs(G.fabs) do
           table.insert(floor.fabs, PF)
+          PF.for_floor = floor
         end
       end
     end
@@ -1892,6 +1894,7 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
     for _,A in ipairs(floor.airs) do
       if A.post_fab then
         table.insert(floor.fabs, A.post_fab)
+        A.post_fab.for_floor = floor
       end
     end
   end
@@ -1907,6 +1910,8 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
     else
       mat = rand.pick(LEVEL.building_floors)
     end
+
+    floor.mat = mat
 
     mat = Mat_lookup(mat)
 
@@ -2128,8 +2133,10 @@ gui.debugf("  cut walk space: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
       end
     end
 
-    for n = 1,num_spaces do
-      if not walk_counts[n] then return false end
+    if not fab_info.legless then
+      for n = 1,num_spaces do
+        if not walk_counts[n] then return false end
+      end
     end
 
     return true  -- OK
@@ -2272,7 +2279,7 @@ gui.debugf("[all locs failed]\n")
 
   local function choose_div_lotsa_stuff(floor)
     local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A",
-                   "L_LIQUID_1", "H_WALL_1", "H_WALL_1" }
+                   "L_LIQUID_1", "H_WALL_1", "ZZ_LAVA_HOLE", "ZZ_LAVA_HOLE" }
 
     local rots = { 0, 90, 180, 270 }
 
@@ -2322,6 +2329,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       return
     end
 
+stderrf("*************** : %s\n", loc.fab)
 
     ----- DO THE SUBDIVISION -----
 
@@ -2545,6 +2553,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   local function render_post_fab(PF)
     PF.trans.add_z = PF.z or 256
+
+    if not PF.skin2 then PF.skin2 = {} end
+
+    if PF.for_floor then PF.skin2.floor = PF.for_floor.mat end
 
     Fabricate(PF.fab, PF.trans, { PF.skin1, PF.skin2, PF.skin3 })
 
