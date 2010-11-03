@@ -2279,7 +2279,8 @@ gui.debugf("[all locs failed]\n")
 
   local function choose_div_lotsa_stuff(floor)
     local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A",
-                   "L_LIQUID_1", "H_WALL_1", "ZZ_LAVA_HOLE", "ZZ_LAVA_HOLE" }
+                   "L_LIQUID_1", "H_WALL_1",
+                   "ZZ_LAVA_HOLE_W_GRATE", "ZZ_LAVA_HOLE_W_GRATE" }
 
     local rots = { 0, 90, 180, 270 }
 

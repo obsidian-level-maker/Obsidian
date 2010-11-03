@@ -807,3 +807,177 @@ PREFAB.ZZ_LAVA_HOLE =
   },
 }
 
+
+PREFAB.ZZ_LAVA_HOLE_W_GRATE =
+{
+  placement = "fitted",
+
+-- legless = true,
+
+  x_size = 256,
+  y_size = 256,
+
+  defaults = { metal = "METAL1_1" },
+
+  neighborhood =
+  {
+    { space = 1, x2 = 0 },
+    { space = 2, x1 = 256 },
+    { space = 1, x1 = 0, x2 = 256, y2 = 0 },
+    { space = 1, x1 = 0, x2 = 256, y1 = 256 },
+
+    { m = "lava", x1 = 0, x2 = 256, y1 = 0, y2 = 256 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x2 = -16 },
+    { m = "zone", space = 2, x1 = 272 },
+    { m = "zone", space = 1, x1 = 16, x2 = 240, y2 = -16 },
+    { m = "zone", space = 1, x1 = 16, x2 = 240, y1 = 272 },
+  },
+
+  brushes =
+  {
+    {
+      { m = "solid" },
+      { x =  0, y =  0, mat = "?floor" },
+      { x = 64, y =  0, mat = "?floor" },
+      { x =  0, y = 64, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 192, y =  0, mat = "?floor" },
+      { x = 256, y =  0, mat = "?floor" },
+      { x = 256, y = 64, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 64, y = 256, mat = "?floor" },
+      { x =  0, y = 256, mat = "?floor" },
+      { x =  0, y = 192, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "solid" },
+      { x = 256, y = 256, mat = "?floor" },
+      { x = 192, y = 256, mat = "?floor" },
+      { x = 256, y = 192, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    {
+      { m = "nosplit" },
+      { x = -32, y = -32 },
+      { x = 288, y = -32 },
+      { x = 288, y = 288 },
+      { x = -32, y = 288 },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = -48, y =   0 },
+      { x =   0, y =   0 },
+      { x =   0, y = 256 },
+      { x = -48, y = 256 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 0 },
+      { x = 256, y =   0 },
+      { x = 256, y =   0 },
+      { x = 304, y = 256 },
+      { x = 304, y = 256 },
+    },
+
+    -- grating X
+    {
+      { x =   0, y = 68, mat = "?metal" },
+      { x = 256, y = 68, mat = "?metal" },
+      { x = 256, y = 76, mat = "?metal" },
+      { x =   0, y = 76, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x =   0, y = 180, mat = "?metal" },
+      { x = 256, y = 180, mat = "?metal" },
+      { x = 256, y = 188, mat = "?metal" },
+      { x =   0, y = 188, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x =   0, y = 108, mat = "?metal" },
+      { x = 256, y = 108, mat = "?metal" },
+      { x = 256, y = 116, mat = "?metal" },
+      { x =   0, y = 116, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x =   0, y = 140, mat = "?metal" },
+      { x = 256, y = 140, mat = "?metal" },
+      { x = 256, y = 148, mat = "?metal" },
+      { x =   0, y = 148, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    -- grating Y
+    {
+      { x = 68 , y =   0},
+      { x = 76 , y =   0},
+      { x = 76 , y = 256},
+      { x = 68 , y = 256},
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x = 180, y =   0, mat = "?metal" },
+      { x = 188, y =   0, mat = "?metal" },
+      { x = 188, y = 256, mat = "?metal" },
+      { x = 180, y = 256, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x = 108, y =   0, mat = "?metal" },
+      { x = 116, y =   0, mat = "?metal" },
+      { x = 116, y = 256, mat = "?metal" },
+      { x = 108, y = 256, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    {
+      { x = 140, y =   0, mat = "?metal" },
+      { x = 148, y =   0, mat = "?metal" },
+      { x = 148, y = 256, mat = "?metal" },
+      { x = 140, y = 256, mat = "?metal" },
+      { t =  -4, mat = "?metal" },
+      { b = -16, mat = "?metal" },
+    },
+
+    -- player clip
+    {
+      { m = "clip" },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { x =   0, y = 256 },
+      { t = 0 },
+      { b = -32 },
+    },
+  },
+}
+
