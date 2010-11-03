@@ -99,7 +99,6 @@ end
 
 function ROOM_CLASS.update_size(self)
   self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
-  self.svolume = self.sw * self.sh
 end
 
 function ROOM_CLASS.contains_seed(self, x, y)

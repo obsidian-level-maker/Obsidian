@@ -992,6 +992,8 @@ function Plan_make_seeds()
     if not R.sy2 or K.sy2 > R.sy2 then R.sy2 = K.sy2 end
 
     R:update_size()
+
+    R.svolume = (R.svolume or 0) + (K.sw * K.sh)
   end
 
   ---| Plan_make_seeds |---
@@ -1211,7 +1213,7 @@ function Plan_create_rooms()
   Plan_prepare_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    gui.printf("Final size of %s = %dx%d\n", R:tostr(), R.sw, R.sh)
+    gui.printf("Final size of %s = %dx%d volume:%d\n", R:tostr(), R.sw, R.sh, R.svolume)
   end
 end
 
