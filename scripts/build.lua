@@ -1559,7 +1559,7 @@ function Fabricate(fab, T, skins)
   Trans.process_skins(fab.defaults,
                       THEME and THEME.skin,
                       ROOM and  ROOM.skin,
-                      skins[1], skins[2], skins[3], skins[4]
+                      skins[1], skins[2], skins[3], skins[4],
                       skins[5], skins[6], skins[7], skins[8])
 
   Fab_render(fab, T)

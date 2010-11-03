@@ -2272,7 +2272,7 @@ gui.debugf("[all locs failed]\n")
 
   local function choose_div_lotsa_stuff(floor)
     local fabs = { "H1_DOWN_4", "L1_DOWN_4", "H_LIQ_BRIDGE_A",
-                   "L_LIQUID_1", "L_LIQUID_1" }
+                   "L_LIQUID_1", "H_WALL_1", "H_WALL_1" }
 
     local rots = { 0, 90, 180, 270 }
 
@@ -2604,6 +2604,7 @@ function Layout_spots_in_room(R)
 
 
   local function spots_for_floor(floor)
+if table.empty(floor.space.polys) then return end
     gui.spots_begin(floor.space:calc_bbox())
 
     fill_polygons(floor.space, { free=0, air=0, walk=0 })
@@ -2672,7 +2673,7 @@ function Layout_flesh_out_floors(R)
 --        Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
           
           local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
-          Fabricate("QUAKE_TECHLAMP", T)
+          Fabricate("QUAKE_TECHLAMP", T, {})
         end
       end
   end

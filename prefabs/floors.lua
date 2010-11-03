@@ -379,6 +379,83 @@ PREFAB.H_LIQ_BRIDGE_A =
 
 
 
+PREFAB.H_WALL_1 =
+{
+  placement = "fitted",
+
+  x_size = 64,
+  y_size = 512,
+
+  neighborhood =
+  {
+    { space = 1, x2 = 0 },
+
+    { space = 2, x1 = 64 },
+
+    { m = "lava", tt = 512, x1 = 0, x2 = 64, y2 = 0 },
+    { m = "lava", tt = 512, x1 = 0, x2 = 64, y1 = 512 },
+
+    -- new safe zones
+    { m = "zone", space = 1, x2 = -64 },
+    { m = "zone", space = 2, x1 = 128 },
+  },
+
+  brushes =
+  {
+    -- floor
+    {
+      { x =  0, y =   0, mat = "?floor" },
+      { x = 64, y =   0, mat = "?floor" },
+      { x = 64, y = 512, mat = "?floor" },
+      { x =  0, y = 512, mat = "?floor" },
+      { t = 8, mat = "?floor" },
+    },
+
+    -- ceil
+    {
+      { x =  0, y =   0, mat = "?floor" },
+      { x = 64, y =   0, mat = "?floor" },
+      { x = 64, y = 512, mat = "?floor" },
+      { x =  0, y = 512, mat = "?floor" },
+      { b = 136, mat = "?floor" },
+    },
+
+    -- posts
+    {
+      { x = 16, y = 128, mat = "?wall" },
+      { x = 48, y = 128, mat = "?wall" },
+      { x = 48, y = 216, mat = "?wall" },
+      { x = 16, y = 216, mat = "?wall" },
+    },
+
+    {
+      { x = 16, y = 296, mat = "?wall" },
+      { x = 48, y = 296, mat = "?wall" },
+      { x = 48, y = 384, mat = "?wall" },
+      { x = 16, y = 384, mat = "?wall" },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = -64, y = 216 },
+      { x =  32, y = 216 },
+      { x =  32, y = 296 },
+      { x = -64, y = 296 },
+    },
+
+    {
+      { m = "walk", space = 2, walk_dz = 0 },
+      { x =  32, y = 216 },
+      { x = 128, y = 216 },
+      { x = 128, y = 296 },
+      { x =  32, y = 296 },
+    },
+  },
+}
+
+
+
 PREFAB.L1_DOWN_4 =
 {
   placement = "fitted",
