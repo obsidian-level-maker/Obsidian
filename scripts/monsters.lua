@@ -54,6 +54,31 @@ require 'defs'
 require 'util'
 
 
+MONSTER_QUANTITIES =
+{
+  scarce=10, less=20, normal=35, more=60, heaps=90, nuts=400
+}
+
+MONSTER_KIND_TAB =
+{
+  scarce=2, less=3, normal=4, more=4.5, heaps=6, nuts=6
+}
+
+HEALTH_AMMO_ADJUSTS =
+{
+  none=0, scarce=0.4, less=0.7, normal=1.0, more=1.5, heaps=2.5,
+}
+
+
+COOP_MON_FACTOR = 1.5
+COOP_HEALTH_FACTOR = 1.3
+COOP_AMMO_FACTOR   = 1.6
+
+MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
+MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360, }
+MONSTER_LOW_DAMAGE = { weak=0.1, medium=1.0, tough=4, }
+
+
 -- Doom flags
 DOOM_FLAGS =
 {
@@ -721,9 +746,6 @@ function Monsters_in_room(R)
     elseif OB_CONFIG.mons == "prog" then
       qty = LEVEL.prog_mons_qty
 
-    elseif OB_CONFIG.mons == "nuts" then
-      qty = 100
-
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
     end
@@ -835,19 +857,17 @@ function Monsters_in_room(R)
 
 
   local function number_of_kinds(fp)
-    local size = (R.tw or R.sw) + (R.th or R.sh)
-    local num  = int(size / 5.0 + 0.55 + gui.random())
+    local size = math.sqrt(R.svolume)
+    local kind = MONSTER_KIND_TAB[OB_CONFIG.mons]
+    assert(kind)
+
+    local num = int(size * kind / 12 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
-    if num > 4 then num = 4 end
+    if num > 4 then num = 4 end  -- FIXME: game specific --> PARAM.xxx
 
-    local ONE_MORE_CHANCES = { normal=30, more=50, heaps=80 }
-
-    local bump_prob = ONE_MORE_CHANCES[OB_CONFIG.mons] or 20
-
-    if rand.odds(bump_prob) then
-      num = num + 1
-    end
+    if rand.odds(30) then num = num + 1 end
+    if rand.odds(3)  then num = num + 1 end
 
     return num
   end
@@ -945,6 +965,10 @@ function Monsters_in_room(R)
         mon = rand.key_by_probs(LEVEL.mon_replacement[mon])
       end
 
+      -- give large monsters a boost so they are more likely to find a
+      -- usable spot.  This does not affect the desired quantity.
+      if is_big(mon) then prob = prob * 2 end
+
       palette[mon] = prob
 
       gui.debugf("  #%d %s\n", i, mon)
@@ -989,34 +1013,16 @@ function Monsters_in_room(R)
   end
 
 
-  local function adjust_monster_pal(palette)
-
-    -- adjust probs in palette to account for monster size,
-    -- e.g. we can fit 4 revenants in the same space as a mancubus.
-
-    local pal2 = {}
-
-    for mon,prob in pairs(palette) do
-      pal2[mon] = prob
-
-      if is_big(mon) then
-        pal2[mon] = pal2[mon] * 3
-      end
-    end
-
-    return pal2
-  end
-
-
-  local function monster_angle(S)
+  local function monster_angle(x, y, z)
     -- TODO: sometimes make all monsters (or a certain type) face
     --       the same direction, or look towards the entrance, or
     --       towards the guard_spot.
 
-    if rand.odds(20) then
+---    if rand.odds(40) then
       return rand.irange(0,7) * 45
-    end
+---    end
 
+--[[  TODO
     local delta = rand.irange(-1,1) * 45
 
     if R.sh > R.sw then
@@ -1032,10 +1038,13 @@ function Monsters_in_room(R)
         return sel(delta < 0, 315, delta)
       end
     end
+--]]
   end
 
 
-  local function calc_min_skill()
+  local function calc_min_skill(all_skills)
+    if all_skills then return 1 end
+
     local dither = Plan_alloc_id("mon_dither")
 
     -- skill 3 (hard) is always added
@@ -1050,9 +1059,9 @@ function Monsters_in_room(R)
   end
 
 
-  local function place_monster(mon, x, y, z)
-    local angle  = 0 --!!!!! FIXME spot.angle or monster_angle(spot.S)
-    local ambush = rand.sel(92, 1, 0)
+  local function place_monster(mon, x, y, z, all_skills)
+    local angle  = monster_angle(x, y, z)
+    local ambush = rand.sel(70, 1, 0)
 
     local info = GAME.MONSTERS[mon]
 
@@ -1065,7 +1074,7 @@ function Monsters_in_room(R)
     table.insert(R.monster_list, info)
 
     -- minimum skill needed for the monster to appear
-    local skill = calc_min_skill()
+    local skill = calc_min_skill(all_skills)
 
     local props = { }
 
@@ -1115,7 +1124,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function place_in_spot(mon, spot)
+  local function place_in_spot(mon, spot, all_skills)
     local ent  = GAME.ENTITIES[mon]
 
     local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1135,7 +1144,7 @@ function Monsters_in_room(R)
       y = y + rand.range(-dy, dy)
     end
 
-    place_monster(mon, x, y, z)
+    place_monster(mon, x, y, z, all_skills)
 
 --[[
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1314,7 +1323,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function try_add_mon_group(mon, count)
+  local function try_add_mon_group(mon, count, all_skills)
     local spot
     local actual = 0
     
@@ -1323,7 +1332,7 @@ function Monsters_in_room(R)
 
       if not spot then break; end
 
-      place_in_spot(mon, spot)
+      place_in_spot(mon, spot, all_skills)
 
       actual = actual + 1
     end
@@ -1332,23 +1341,21 @@ function Monsters_in_room(R)
   end
 
 
-  local function how_many_dudes(mon, count, qty)
+  local function how_many_dudes(mon, count)
     local info = GAME.MONSTERS[mon]
 
-    if count <= 1 then return count end
-
-    count = count * (qty / 100.0)
-
-    -- adjust quantity based on monster's health
+    -- adjust quantity based on nastiness of monster
     if info.density then
       count = count * info.density
     end
  
     -- some random variation
-    count = count * rand.range(MON_VARIATION_LOW, MON_VARIATION_HIGH)
-    count = count + gui.random() ^ 2
+    if rand.odds(R.kvolume) then count = count / 5 end
+    if rand.odds(R.kvolume) then count = count * 5 end
 
-    return math.max(1, int(count))
+    count = count * rand.range(0.5, 1.7)
+
+    return int(count + gui.random())
   end
 
 
@@ -1363,8 +1370,6 @@ function Monsters_in_room(R)
     -- distribution of monsters.
     split_huge_spots(sel(has_huge, 288, 144))
 
-    local pal2 = adjust_monster_pal(palette)
-
     -- add at least one monster of each kind
     for pass = 1,3 do
       for mon,prob in pairs(palette) do
@@ -1372,10 +1377,10 @@ function Monsters_in_room(R)
            (pass == 2 and is_big(mon) and not is_huge(mon)) or
            (pass == 3 and not is_big(mon))
         then
-          try_add_mon_group(mon, 1)
+          try_add_mon_group(mon, 1, true)
 
           -- extra one for very large rooms
-          if R.kvolume >= 4 and rand.odds(50) then
+          if R.svolume > 70 then
             try_add_mon_group(mon, 1)
           end
         end
@@ -1383,35 +1388,35 @@ function Monsters_in_room(R)
     end
 
 
+    -- determine how many of each kind of monster we want
+
     local qty = calc_quantity()
 
-    local count = math.min(6, R.sw) * math.min(6 * R.sh)
-    count = int(count / 5)
+    local count = int(R.svolume / table.size(palette))
 
-    if OB_CONFIG.mons == "nuts" then
-      count = 500
-    end
-
+    count = count * qty / 100
 
     local wants = {}
 
     for mon,_ in pairs(palette) do
       wants[mon] = how_many_dudes(mon, count, qty) - 1
-
-      if wants[mon] < 1 then
-         wants[mon] = nil
-         pal2[mon]  = nil
-      end
     end
 
+
+    -- try to add these monsters until we have the desired number or
+    -- we have run out of monster spots.
+
+    local pal2 = table.copy(palette)
 
     while not table.empty(pal2) and not table.empty(R.mon_spots) do
       local mon = rand.key_by_probs(pal2)
       local info = GAME.MONSTERS[mon]
 
-      if wants[mon] >= 1 then
+      if wants[mon] < 1 then
+        pal2[mon] = nil
+      else
 
-        local horde  = 1
+        local horde = 1
         if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
         if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
 
@@ -1419,11 +1424,10 @@ function Monsters_in_room(R)
 
         local actual = try_add_mon_group(mon, horde)
 
-        if actual == 0 or actual >= wants[mon] then
-          wants[mon] = nil
-          pal2[mon]  = nil
-        else
+        if actual > 0 and actual < wants[mon] then
           wants[mon] = wants[mon] - actual
+        else
+          pal2[mon] = nil
         end
       end
     end
