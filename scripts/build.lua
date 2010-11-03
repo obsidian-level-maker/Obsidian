@@ -973,7 +973,7 @@ function Trans.process_skins(...)
 
   misc_stuff()
 
-  for i = 1,10 do
+  for i = 1,20 do
     local skin = select(i, ...)
 
     if skin then
@@ -1545,7 +1545,7 @@ function Fab_render(fab, T, skin, skin2)
 end
 
 
-function Fabricate(fab, T, skin, skin2, skin3)
+function Fabricate(fab, T, skins)
   if type(fab) == "string" then
     if not PREFAB[fab] then
       error("Unknown prefab: " .. fab)
@@ -1559,7 +1559,8 @@ function Fabricate(fab, T, skin, skin2, skin3)
   Trans.process_skins(fab.defaults,
                       THEME and THEME.skin,
                       ROOM and  ROOM.skin,
-                      skin, skin2, skin3)
+                      skins[1], skins[2], skins[3], skins[4]
+                      skins[5], skins[6], skins[7], skins[8])
 
   Fab_render(fab, T)
 end
