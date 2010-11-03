@@ -255,8 +255,8 @@ function Monsters_init()
 
   LEVEL.mon_stats = {}
 
-  local low  = (MONSTER_QUANTITIES.scarce + MONSTER_QUANTITIES.less) / 2
-  local high =  MONSTER_QUANTITIES.more
+  local low  = MONSTER_QUANTITIES.scarce
+  local high = MONSTER_QUANTITIES.more
 
   LEVEL.prog_mons_qty    = low + LEVEL.ep_along * (high - low)
   LEVEL.mixed_mons_qty   = rand.range(low, high)
@@ -1348,12 +1348,20 @@ function Monsters_in_room(R)
     if info.density then
       count = count * info.density
     end
- 
-    -- some random variation
-    if rand.odds(R.kvolume) then count = count / 5 end
-    if rand.odds(R.kvolume) then count = count * 5 end
 
-    count = count * rand.range(0.5, 1.7)
+    -- tend to have more monsters in later rooms
+    count = count * (1 + R.lev_along * 0.7)
+ 
+    if R.purpose then
+      -- more in EXIT or KEY rooms
+      count = count * rand.range(2, 3)
+    else
+      -- otherwise : random variation
+      count = count * rand.range(0.4, 1.7)
+
+      if rand.odds(4 * R.kvolume) then count = count / 6 end
+      if rand.odds(4 * R.kvolume) then count = count * 4 end
+    end
 
     return int(count + gui.random())
   end
