@@ -22,35 +22,61 @@ PREFAB.ARCH =
 {
   placement = "fitted",
 
+  defaults =
+  {
+    outer = "?wall",
+    track = "?wall",
+  },
+
   brushes =
   {
-    -- frame
-    {
-      { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?wall" },
-      { x = 0,   y = 48, mat = "?outer" },
-      { x = 0,   y =  0, mat = "?outer" },
-      { b = 128, mat = "?outer" },
-    },
-
     -- left side
     {
       { x = 0,  y =  0, mat = "?outer" },
       { x = 40, y =  0, mat = "?outer" },
       { x = 40, y = 16, mat = "?track" },
-      { x = 40, y = 32, mat = "?wall" },
-      { x = 40, y = 48, mat = "?wall" },
-      { x = 0,  y = 48, mat = "?wall" },
+      { x = 40, y = 32, mat = "?wall"  },
+      { x = 40, y = 48, mat = "?wall"  },
+      { x = 0,  y = 48, mat = "?wall"  },
+      { x = 0,  y = 24, mat = "?outer" },
     },
 
     -- right side
     {
-      { x = 192, y = 48, mat = "?wall" },
-      { x = 152, y = 48, mat = "?wall" },
+      { x = 152, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 24, mat = "?wall"  },
+      { x = 192, y = 48, mat = "?wall"  },
+      { x = 152, y = 48, mat = "?wall"  },
       { x = 152, y = 32, mat = "?track" },
       { x = 152, y = 16, mat = "?outer" },
+    },
+
+    -- top back
+    {
+      { x =  40, y =  0, mat = "?outer" },
       { x = 152, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?wall" },
+      { x = 152, y = 16, mat = "?outer" },
+      { x =  40, y = 16, mat = "?outer" },
+      { b = 128, mat = "?outer" },
+    },
+
+    -- top back
+    {
+      { x =  40, y = 32, mat = "?wall" },
+      { x = 152, y = 32, mat = "?wall" },
+      { x = 152, y = 48, mat = "?wall" },
+      { x =  40, y = 48, mat = "?wall" },
+      { b = 128, mat = "?wall" },
+    },
+
+    -- track
+    {
+      { x =  40, y = 16, mat = "?track" },
+      { x = 152, y = 16, mat = "?track" },
+      { x = 152, y = 32, mat = "?track" },
+      { x =  40, y = 32, mat = "?track" },
+      { b = 128, mat = "?track" },
     },
   },
 }
@@ -64,10 +90,10 @@ PREFAB.ARCH2 =
   {
     -- frame
     {
+      { x = 0,   y =  0, mat = "?outer" },
       { x = 192, y =  0, mat = "?outer" },
       { x = 192, y = 48, mat = "?wall" },
       { x = 0,   y = 48, mat = "?outer" },
-      { x = 0,   y =  0, mat = "?outer" },
       { b = 128, mat = "?outer" },
     },
 
@@ -252,6 +278,8 @@ PREFAB.DOOR =
     width  = 128,
     height = 128,
 
+    outer = "?wall",
+
     key  = "?wall",
     step = "?wall",
   },
@@ -318,54 +346,6 @@ PREFAB.DOOR =
 }
 
 
-PREFAB.BARS =
-{
-  placement = "fitted",
-
-  brushes =
-  {
-    -- step
-    {
-      { x =   0, y =  0, mat = "?step" },
-      { x = 192, y =  0, mat = "?step" },
-      { x = 192, y = 48, mat = "?step" },
-      { x =   0, y = 48, mat = "?step" },
-      { t =   4,         mat = "?step" },
-    },
-
-    -- the actual bars
-    {
-      { x = 18, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 42, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 42, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 18, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { t = "?height", mat = "?bar", tag="?tag" },
-    },
-    {
-      { x = 62, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 86, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 86, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 62, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { t = "?height", mat = "?bar", tag="?tag" },
-    },
-    {
-      { x = 106, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 130, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 130, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 106, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { t = "?height", mat = "?bar", tag="?tag" },
-    },
-    {
-      { x = 150, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 174, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 174, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { x = 150, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
-      { t = "?height", mat = "?bar", tag="?tag" },
-    },
-  },
-}
-
-
 PREFAB.QUAKE_DOOR =
 {
   placement = "fitted",
@@ -373,29 +353,24 @@ PREFAB.QUAKE_DOOR =
 
   defaults =
   {
+    outer = "?wall",
+
     door = "DR05_2",
+    step = "?wall",
   },
 
   brushes =
   {
     -- step
     {
-      { x = 192, y =  0, mat = "?step" },
-      { x = 192, y = 48, mat = "?step" },
-      { x =   0, y = 48, mat = "?step" },
-      { x =   0, y =  0, mat = "?step" },
+      { x =  32, y =  0, mat = "?step" },
+      { x = 160, y =  0, mat = "?step" },
+      { x = 160, y = 48, mat = "?step" },
+      { x =  32, y = 48, mat = "?step" },
       { t = 8, mat = "?step" },
     },
 
     -- door frame
-    {
-      { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?wall" },
-      { x = 0,   y = 48, mat = "?outer" },
-      { x = 0,   y =  0, mat = "?outer" },
-      { b = 136, mat = "?outer" },
-    },
-
     {
       { x = 0,  y =  0, mat = "?outer" },
       { x = 32, y =  0, mat = "?outer" },
@@ -405,11 +380,19 @@ PREFAB.QUAKE_DOOR =
     },
 
     {
+      { x = 32,  y =  0, mat = "?outer" },
+      { x = 160, y =  0, mat = "?wall" },
+      { x = 160, y = 48, mat = "?wall" },
+      { x = 32,  y = 48, mat = "?wall" },
+      { b = 136, mat = "?wall" },
+    },
+
+    {
+      { x = 160, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?wall" },
       { x = 192, y = 48, mat = "?wall" },
       { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 24, mat = "?outer" },
-      { x = 160, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?wall" },
     },
   },
 
@@ -710,4 +693,53 @@ PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
     },
   },
 }
+
+
+PREFAB.BARS =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- step
+    {
+      { x =   0, y =  0, mat = "?step" },
+      { x = 192, y =  0, mat = "?step" },
+      { x = 192, y = 48, mat = "?step" },
+      { x =   0, y = 48, mat = "?step" },
+      { t =   4,         mat = "?step" },
+    },
+
+    -- the actual bars
+    {
+      { x = 18, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 42, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 42, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 18, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 62, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 86, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 86, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 62, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 106, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 130, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 130, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 106, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+    {
+      { x = 150, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 174, y = 12, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 174, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { x = 150, y = 36, mat = "?bar", peg=1, x_offset=0, y_offset=0 },
+      { t = "?height", mat = "?bar", tag="?tag" },
+    },
+  },
+}
+
 

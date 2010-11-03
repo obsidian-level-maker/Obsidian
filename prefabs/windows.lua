@@ -31,7 +31,9 @@ PREFAB.WINDOW =
 
   defaults =
   {
+    outer = "?wall",
     track = "?wall",
+    frame = "?wall",
   },
 
   brushes =
@@ -42,12 +44,14 @@ PREFAB.WINDOW =
       { x = 64, y =  0, mat = "?track" },
       { x = 64, y = 32, mat = "?wall" },
       { x =  0, y = 32, mat = "?wall" },
+      { x =  0, y = 16, mat = "?outer" },
     },
 
     -- left side
     {
       { x = 128, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 16, mat = "?wall" },
       { x = 192, y = 32, mat = "?wall" },
       { x = 128, y = 32, mat = "?track" },
     },
@@ -58,7 +62,7 @@ PREFAB.WINDOW =
       { x = 128, y =  0, mat = "?wall" },
       { x = 128, y = 32, mat = "?wall" },
       { x =  64, y = 32, mat = "?wall" },
-      { t = 0, mat = "?outer" },
+      { t = 0, mat = "?frame" },
     },
 
     -- top
@@ -67,7 +71,7 @@ PREFAB.WINDOW =
       { x = 128, y =  0, mat = "?wall" },
       { x = 128, y = 32, mat = "?wall" },
       { x =  64, y = 32, mat = "?wall" },
-      { b = 64, mat = "?outer" },
+      { b = 64, mat = "?frame" },
     },
   },
 }
