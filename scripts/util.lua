@@ -385,6 +385,10 @@ end
 
 rand = { }
 
+function rand.odds(chance)
+  return (gui.random() * 100) <= chance
+end
+
 function rand.range(L,H)
   return L + gui.random() * (H-L)
 end
@@ -405,10 +409,6 @@ function rand.dir_list()
   local DIRS = { 2,4,6,8 }
   rand.shuffle(DIRS)
   return DIRS
-end
-
-function rand.odds(chance)
-  return (gui.random() * 100) <= chance
 end
 
 function rand.sel(chance, yes_val, no_val)
