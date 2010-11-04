@@ -5,26 +5,39 @@ V4 TODO
 Current Work
 ------------
 
->>>>>>>  IMPORTANTS PLACEMENT
+MONSTERS:
 
-DONE:  improve placement of key/switch : NOT NEAR ENTRANCE
+(1) have the room palette
+
+(2) simplify selection of room palette:
+    -  use info.prob
+    -  basic criterion is: harder monsters occur later
+    -  want harder monsters in KEY/EXIT rooms
+
+(3) give each mon a 'density' value:
+    -  use info.density (NOT info.prob)
+    -  adjust with damage/time/along/level/purpose
+    -  when all monsters have a density, normalise by dividing by total
+
+(4) give each room a TOTAL count (adjust for along, purpose)
+    -  want[mon] = total * density[mon]
+
+
+!!  skin lists, not skin1/sk2/yada
+
+!!  u1..v2 for texture coords on brushes
+
+!!  remove flavored brushes :-(
+
+-  fix inner/outer tex on door and window prefabs
 
 -  fix window prefabs: raise up by 32 units or whatever
-
-DONE: QUAKE: prevent warnings about map-models "in solid @ (0,0,0)"
-
-DONE:  allocate corners for importants : requre nearby edges are unused
 
 >>>  straddler sizes affect TWO rooms at same time
      (implications for edge and corner layouting)
 
->>>  3D floor prefab is often a TRIPLE splitter
-     (left side, right bottom, right top)
-
 -  consider if floor fabbing can do heights on-the-fly instead of
    a separate pass at the end.
-
-+  fix items and monsters on fences / staircases
 
 +  in a large (multi-section) room, if any section has no "events"
    (a connection or switch or key or major item) then give it a
@@ -37,6 +50,8 @@ DONE:  allocate corners for importants : requre nearby edges are unused
 +  implement "nosplit" areas, which are like "walk" areas in that
    they must not be split, but which aren't considered to be
    player destinations.
+
++  fix items and monsters on fences / staircases
 
 
 !!  EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
@@ -62,13 +77,14 @@ DONE: allow more than one safe zone per floor
 
 -  floor prefabs (ETC) should be as small as possible
 
--  Fabricate: remove "fab" parameter -- get name from skin
-
 Note: allocated middlers (e.g. key pedestal) should not exist
       inside the safe zone.  If their section is small, just inhibit
       subdivision, if large then have upto 4 safe zones around it.
 
 ?  remove R.wall_space, merely collect the polygons and test them
+
+-  3D floor prefab is often a TRIPLE splitter
+   (left side, right bottom, right top)
 
 Idea: "flush depth" of walls
 
@@ -125,10 +141,10 @@ Layout:
 
 Monsters:
 
-+  automatic 'level' for monsters if value is missing
+DONE:  automatic 'level' for monsters if value is missing
 
-+  fix monster quantities (too many right now)
+IN PROGRESS:  fix monster quantities (too many right now)
 
--  increase monster quantities and toughness over course of a
-   level, with extra boost for KEY and EXIT rooms.
+IN PROGRESS:  increase monster quantities and toughness over course of a
+              level, with extra boost for KEY and EXIT rooms.
 
