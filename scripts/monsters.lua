@@ -74,9 +74,9 @@ COOP_MON_FACTOR = 1.5
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
 
-MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24 }
-MONSTER_MAX_DAMAGE = { weak=80,  medium=200, tough=360, }
-MONSTER_LOW_DAMAGE = { weak=0.1, medium=1.0, tough=4, }
+MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24  }
+MONSTER_MAX_DAMAGE = { weak=140, medium=220, tough=360 }
+MONSTER_ALONG_POW  = { weak=1.5, medium=1.0, tough=0.5 }
 
 
 -- Doom flags
@@ -282,6 +282,16 @@ function Monsters_init()
         LEVEL.mon_replacement[orig][name] = info.replace_prob
       end
     end
+
+    -- calculate a level if not present
+    if not info.level then
+      local hp = info.health * (PARAM.level_factor or 1)
+          if hp < 45  then info.level = 1
+      elseif hp < 130 then info.level = 3
+      elseif hp < 450 then info.level = 5
+      else  info.level = 7
+      end
+    end
   end
 
   -- remove a replacement monster if the monster it replaces
@@ -296,24 +306,30 @@ function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
-  if not LEVEL.monster_prefs then
-    LEVEL.monster_prefs = {}
-  end
-
   LEVEL.global_palette = {}
 
-  local max_level = (LEVEL.mon_along or 0) * 10
+  local max_level = LEVEL.mon_along or 0.5
 
-  max_level = math.clamp(1, max_level, 10)
+  -- adjust level based on Strength setting
+  local pow = MONSTER_ALONG_POW[OB_CONFIG.strength] or 1
+  max_level = max_level ^ pow
+
+  max_level = math.clamp(1, max_level * 10, 10)
+
+  LEVEL.max_level = max_level
 
 stderrf("---------------> %1.3f\n", max_level)
 
   for name,info in pairs(GAME.MONSTERS) do
-    if info.prob and info.prob > 0 and
-       (info.level or 1) <= max_level
+    if info.prob  and info.prob > 0 and
+       info.level and info.level <= max_level
     then
       LEVEL.global_palette[name] = 1
     end
+  end
+
+  if not LEVEL.monster_prefs then
+    LEVEL.monster_prefs = {}
   end
 
   do return end
@@ -713,6 +729,9 @@ function Monsters_in_room(R)
     -- each level gets progressively tougher
     local toughness = LEVEL.episode + LEVEL.ep_along * 4
 
+    -- each room is tougher too
+    toughness = toughness + R.lev_along
+
     -- spice it up
     local spice = gui.random()
     toughness = toughness + spice * spice
@@ -771,6 +790,8 @@ function Monsters_in_room(R)
       if prob then return prob end
     end
 
+    prob = prob or 0
+
     if not LEVEL.global_palette[name] then
       return 0
     end
@@ -778,8 +799,6 @@ function Monsters_in_room(R)
     if info.weap_needed and not Player_has_weapon(info.weap_needed) then
       return 0
     end
-
-    prob = prob or 0
 
     -- TODO: merge THEME.monster_prefs into LEVEL.monster_prefs
     if LEVEL.monster_prefs then
@@ -793,16 +812,34 @@ function Monsters_in_room(R)
       prob = prob * (R.room_type.theme.monster_prefs[name] or 1)
     end
 
+    if R.outdoor then
+      prob = prob * (info.outdoor_factor or 1)
+    end
+
     if prob == 0 then return 0 end
 
+    
+    -- level check (harder monsters occur in later rooms)
+    assert(info.level)
+
+    if not R.purpose then
+      local max_level = LEVEL.max_level * (0.6 + R.lev_along * 0.6)
+
+      if info.level > max_level then
+        prob = prob / 5
+      end
+    end
+
+
+    -- time and damage checks
 
     local time   = info.health / fp
     local damage = info.damage * time
 
     if info.attack == "melee" then
-      damage = damage / 4.0
+      damage = damage / 5
     elseif info.attack == "missile" then
-      damage = damage / 1.5
+      damage = damage / 2
     end
 
     if toughness > 1 then
@@ -834,22 +871,12 @@ function Monsters_in_room(R)
 
     -- would the monster inflict too much damage on the player?
     local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
-    local low_damage = MONSTER_LOW_DAMAGE[OB_CONFIG.strength] or 1
 
     if damage >= max_damage then return 0 end
 
     if damage > max_damage/2 then
       local factor = (max_damage - damage) / (max_damage/2)
       prob = prob * factor
-    end
-
-    if damage < low_damage then
-      local factor = 0.5 ---  damage / low_damage
-      prob = prob * factor
-    end
-
-    if R.outdoor then
-      prob = prob * (info.outdoor_factor or 1)
     end
 
     return prob
@@ -882,9 +909,9 @@ function Monsters_in_room(R)
     for name,info in pairs(GAME.MONSTERS) do
       local prob = info.crazy_prob or info.prob or 0
 
----      if not LEVEL.global_palette[name] then
----        prob = 0
----      end
+--??  if not LEVEL.global_palette[name] then
+--??    prob = 0
+--??  end
 
       if info.weap_needed and not Player_has_weapon(info.weap_needed) then
         prob = 0
@@ -1350,7 +1377,7 @@ function Monsters_in_room(R)
     end
 
     -- tend to have more monsters in later rooms
-    count = count * (1 + R.lev_along * 0.7)
+    count = count * (0.8 + R.lev_along)
  
     if R.purpose then
       -- more in EXIT or KEY rooms
@@ -1359,8 +1386,15 @@ function Monsters_in_room(R)
       -- otherwise : random variation
       count = count * rand.range(0.4, 1.7)
 
-      if rand.odds(4 * R.kvolume) then count = count / 6 end
-      if rand.odds(4 * R.kvolume) then count = count * 4 end
+      -- level check
+      local max_level = LEVEL.max_level * (0.6 + R.lev_along * 0.6)
+
+      if info.level > max_level then
+        count = count / 2
+      else
+        if rand.odds(4 * R.kvolume) then count = count / 4 end
+        if rand.odds(4 * R.kvolume) then count = count * 4 end
+      end
     end
 
     return int(count + gui.random())
