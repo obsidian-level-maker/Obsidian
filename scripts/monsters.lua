@@ -789,12 +789,13 @@ function Monsters_in_room(R)
     -- tend to have more monsters in later rooms and levels
     qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
 
-    -- more in EXIT or KEY rooms
+    -- more in EXIT or KEY rooms (extra boost in small rooms)
     if R.purpose then
-      qty = qty * rand.range(1.5, 2.1)
-
-      -- extra if room is small
-      if R.svolume <= 20 then qty = qty * 1.3 end
+      if R.svolume <= 20 then
+        qty = qty * rand.range(1.7, 2.3)
+      else
+        qty = qty * rand.range(1.4, 1.8)
+      end
     else
       -- random variation
       qty = qty * rand.pick { 0.3, 0.5, 0.8, 1.0, 1.2 }
@@ -871,15 +872,38 @@ function Monsters_in_room(R)
     assert(info.level)
 
     if not R.purpose then
-      local max_level = LEVEL.max_level * (0.6 + R.lev_along * 0.6)
+      local max_level = LEVEL.max_level * R.lev_along
+      if max_level < 2 then max_level = 2 end
 
       if info.level > max_level then
-        prob = prob / 5
+        prob = prob / 20
       end
     end
 
+    return prob
+  end
+
+
+  local function density_for_mon(mon, fp)
+    local info = GAME.MONSTERS[mon]
+
+    local d = info.density or 1
+    
+    -- level check
+    local max_level = LEVEL.max_level * R.lev_along
+    if max_level < 2 then max_level = 2 end
+
+    if info.level > max_level then
+      d = d / 4
+    end
+
+    -- random variation
+    d = d * rand.range(0.5, 1.5)
+
 
     -- time and damage checks
+
+    local toughness = 1  -- FIXME
 
     local time   = info.health / fp
     local damage = info.damage * time
@@ -903,31 +927,25 @@ function Monsters_in_room(R)
       damage = damage * PARAM.damage_factor
     end
 
-    gui.debugf("  %s --> damage:%1.1f   time:%1.2f\n", name, damage, time)
-
 
     -- would the monster take too long to kill?
     local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 15
+    max_time = max_time / 2
 
-    if time >= max_time then return 0 end
-
-    if time > max_time/2 then
-      local factor = (max_time - time) / (max_time/2)
-      prob = prob * factor
+    if time > max_time then
+      d = d * max_time / time
     end
 
 
     -- would the monster inflict too much damage on the player?
     local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
+    max_damage = max_damage / 2
 
-    if damage >= max_damage then return 0 end
-
-    if damage > max_damage/2 then
-      local factor = (max_damage - damage) / (max_damage/2)
-      prob = prob * factor
+    if damage > max_damage then
+      d = d * max_damage / damage
     end
 
-    return prob
+    return d
   end
 
 
@@ -1414,29 +1432,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function density_for_mon(mon, info)
-    local info = GAME.MONSTERS[mon]
-
-    local d = info.density or 1
-    
-    -- level check
-    local max_level = LEVEL.max_level * R.lev_along
-    if max_level < 2 then max_level = 2 end
-
-    if info.level > max_level + 3 then
-      d = d / 10
-    elseif info.level > max_level then
-      d = d / 4
-    end
-
-    -- random variation
-    d = d * rand.range(0.5, 1.5)
-
-    return d
-  end
-
-
-  local function how_many_dudes(palette, want_total)
+  local function how_many_dudes(palette, want_total, fp)
     -- the 'NONE' entry is a stabilizing element, in case we have a
     -- palette containing mostly undesirable monsters (Archviles etc).
     local densities = { NONE=0.5 }
@@ -1444,7 +1440,7 @@ function Monsters_in_room(R)
     local total_density = densities.NONE
 
     for mon,_ in pairs(palette) do
-      densities[mon] = density_for_mon(mon)
+      densities[mon] = density_for_mon(mon, fp)
 
       total_density = total_density + densities[mon]
     end
@@ -1467,6 +1463,8 @@ function Monsters_in_room(R)
 
 
   local function fill_monster_map(palette, barrel_chance)
+    local fp = Player_firepower()
+
     -- check if any huge monsters
     local has_huge = false
     for mon,prob in pairs(palette) do
@@ -1487,7 +1485,7 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
     want_total = int(want_total * qty / 100 + gui.random())
 
     -- determine how many of each kind of monster we want
-    local wants = how_many_dudes(palette, want_total)
+    local wants = how_many_dudes(palette, want_total, fp)
 
 
     -- add at least one monster of each kind, trying larger ones first
