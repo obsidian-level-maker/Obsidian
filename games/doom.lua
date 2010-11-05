@@ -3468,9 +3468,9 @@ DOOM.MONSTERS =
 
   skull =
   {
-    level=2, prob=20,
+    level=3, prob=16,
     health=100, damage=7, attack="melee",
-    density=0.7, float=true,
+    density=0.5, float=true,
     weap_prefs={ launch=0.2 },
   },
 
