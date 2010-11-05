@@ -5,22 +5,11 @@ V4 TODO
 Current Work
 ------------
 
-MONSTERS:
+CAGE / TRAP / GUARD PALETTE:
 
-(1) have the room palette
-
-(2) simplify selection of room palette:
-    -  use info.prob
-    -  basic criterion is: harder monsters occur later
-    -  want harder monsters in KEY/EXIT rooms
-
-(3) give each mon a 'density' value:
-    -  use info.density (NOT info.prob)
-    -  adjust with damage/time/along/level/purpose
-    -  when all monsters have a density, normalise by dividing by total
-
-(4) give each room a TOTAL count (adjust for along, purpose)
-    -  want[mon] = total * density[mon]
+-  similar selection code _but_ prefer monsters not in room palette
+-  apply damage/time factor to probability
+-  cage palette: no more than two per room
 
 
 !!  skin lists, not skin1/sk2/yada
@@ -137,14 +126,4 @@ Layout:
 
 -  proper system to match DOOR skins with SWITCH skins
    (allow more than a single door or single switch per lock kind)
-
-
-Monsters:
-
-DONE:  automatic 'level' for monsters if value is missing
-
-IN PROGRESS:  fix monster quantities (too many right now)
-
-IN PROGRESS:  increase monster quantities and toughness over course of a
-              level, with extra boost for KEY and EXIT rooms.
 
