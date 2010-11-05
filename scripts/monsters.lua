@@ -74,7 +74,7 @@ require 'util'
 
 MONSTER_QUANTITIES =
 {
-  scarce=8, less=16, normal=30, more=55, heaps=80, nuts=250
+  scarce=8, less=15, normal=25, more=45, heaps=80, nuts=250
 }
 
 MONSTER_KIND_TAB =
