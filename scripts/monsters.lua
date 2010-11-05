@@ -74,7 +74,7 @@ require 'util'
 
 MONSTER_QUANTITIES =
 {
-  scarce=10, less=20, normal=35, more=60, heaps=90, nuts=400
+  scarce=8, less=16, normal=30, more=55, heaps=80, nuts=250
 }
 
 MONSTER_KIND_TAB =
@@ -743,17 +743,6 @@ function Monsters_in_room(R)
     -- spice it up
     toughness = toughness + gui.random() ^ 2
 
-    if R.quest.id == 1 and #LEVEL.all_quests > 1 then
-      -- be kinder around the starting area
-      toughness = toughness * 0.7
-    elseif R:is_near_exit() then
-      -- give the player greater resistance near the exit
-      toughness = toughness + 3
-    elseif R.hallway then
-      -- don't fill hallways with big beasts
-      toughness = rand.range(1.0, 2.0)
-    end
-
     gui.debugf("Toughness = %1.3f\n", toughness)
 
     return toughness
@@ -829,8 +818,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function prob_for_mon(info, fp, toughness)
-    local name = info.name
+  local function prob_for_mon(name, info)
     local prob = info.prob
 
     if THEME.force_mon_probs then
@@ -884,7 +872,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function density_for_mon(mon, fp)
+  local function density_for_mon(mon)
     local info = GAME.MONSTERS[mon]
 
     local d = info.density or 1
@@ -905,7 +893,7 @@ function Monsters_in_room(R)
 
     local toughness = 1  -- FIXME
 
-    local time   = info.health / fp
+    local time   = info.health / R.firepower
     local damage = info.damage * time
 
     if info.attack == "melee" then
@@ -949,7 +937,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function number_of_kinds(fp)
+  local function number_of_kinds()
     local size = math.sqrt(R.svolume)
     local kind = MONSTER_KIND_TAB[OB_CONFIG.mons]
     assert(kind)
@@ -1021,24 +1009,19 @@ function Monsters_in_room(R)
 
 
   local function room_palette()
-    local toughness = calc_toughness()
-
-    local fp = Player_firepower()
-    gui.debugf("Firepower = %1.3f\n", fp)
-    
     local list = {}
     gui.debugf("Monster list:\n")
 
-    for name,info in pairs(GAME.MONSTERS) do
-      local prob = prob_for_mon(info, fp, toughness)
+    for mon,info in pairs(GAME.MONSTERS) do
+      local prob = prob_for_mon(mon, info)
 
       if prob > 0 then
-        list[name] = prob
-        gui.debugf("  %s --> prob:%1.1f\n", name, prob)
+        list[mon] = prob
+        gui.debugf("  %s --> prob:%1.1f\n", mon, prob)
       end
     end
 
-    local num_kinds = number_of_kinds(fp)
+    local num_kinds = number_of_kinds()
 
     local palette = {}
 
@@ -1432,7 +1415,7 @@ function Monsters_in_room(R)
   end
 
 
-  local function how_many_dudes(palette, want_total, fp)
+  local function how_many_dudes(palette, want_total)
     -- the 'NONE' entry is a stabilizing element, in case we have a
     -- palette containing mostly undesirable monsters (Archviles etc).
     local densities = { NONE=0.5 }
@@ -1440,7 +1423,7 @@ function Monsters_in_room(R)
     local total_density = densities.NONE
 
     for mon,_ in pairs(palette) do
-      densities[mon] = density_for_mon(mon, fp)
+      densities[mon] = density_for_mon(mon)
 
       total_density = total_density + densities[mon]
     end
@@ -1463,8 +1446,6 @@ function Monsters_in_room(R)
 
 
   local function fill_monster_map(palette, barrel_chance)
-    local fp = Player_firepower()
-
     -- check if any huge monsters
     local has_huge = false
     for mon,prob in pairs(palette) do
@@ -1485,7 +1466,7 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
     want_total = int(want_total * qty / 100 + gui.random())
 
     -- determine how many of each kind of monster we want
-    local wants = how_many_dudes(palette, want_total, fp)
+    local wants = how_many_dudes(palette, want_total)
 
 
     -- add at least one monster of each kind, trying larger ones first
@@ -1712,6 +1693,11 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
   R.fight_stats  = make_empty_stats()
 
   R.big_item_spots = table.deep_copy(R.mon_spots)
+
+  R.toughness = calc_toughness()
+  R.firepower = Player_firepower()
+
+  gui.debugf("Firepower = %1.3f\n", R.firepower)
 
   if should_add_monsters() then
     add_monsters()
