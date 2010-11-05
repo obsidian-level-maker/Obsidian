@@ -312,13 +312,13 @@ function Monsters_global_palette()
 
   -- adjust level based on Strength setting
   local pow = MONSTER_ALONG_POW[OB_CONFIG.strength] or 1
-  max_level = max_level ^ pow
+  max_level = 10 * (max_level ^ pow)
 
-  max_level = math.clamp(1, max_level * 10, 10)
+  if max_level < 1 then max_level = 1 end
 
   LEVEL.max_level = max_level
 
-stderrf("---------------> %1.3f\n", max_level)
+  gui.printf("Monster max_level -------> %1.3f\n", max_level)
 
   for name,info in pairs(GAME.MONSTERS) do
     if info.prob  and info.prob > 0 and
@@ -332,34 +332,24 @@ stderrf("---------------> %1.3f\n", max_level)
     LEVEL.monster_prefs = {}
   end
 
-  do return end
 
-
-  --- OLD OLD:  FIXME
-
-  -- is there enough monsters to actually bother?
-  if #list <= 2 then return end
-
-  rand.shuffle(list)
-
-  -- sometimes promote a particular monster
-  if rand.odds(30) then
-    local promote = list[#list]
-    local M = GAME.MONSTERS[promote]
-    if not M.never_promote then
-      gui.debugf("Promoting monster: %s\n", promote)
-      LEVEL.monster_prefs[promote] = 3.5
-      table.remove(list, #list)
-    end
-  end
+  -- sometimes skip monsters (for more variety).
+  -- we don't skip when their level is close to max_level, to allow
+  -- the gradual introduction of monsters to occur normally.
 
   if PARAM.skip_monsters then
+    local perc = rand.pick(PARAM.skip_monsters)
+
     local skip_list = {}
     local skip_total = 0
+    local mon_total  = 0
 
-    for _,name in ipairs(list) do
+    for name,_ in pairs(LEVEL.global_palette) do
       local M = GAME.MONSTERS[name]
       local prob = M.skip_prob or 50
+
+      if M.level > LEVEL.max_level - 4 then prob = 0 end
+
       if prob > 0 then
         -- NOTE: we _could_ adjust probability based on Strength setting.
         -- _BUT_ it is probably better not to, otherwise we would just be
@@ -367,22 +357,25 @@ stderrf("---------------> %1.3f\n", max_level)
 
         -- adjust skip chance based on monster_prefs
         if LEVEL.monster_prefs then
-          prob = prob / (LEVEL.monster_prefs[name] or 1)
+          prob = prob / (0.1 + (LEVEL.monster_prefs[name] or 1))
         end
         if THEME.monster_prefs then
-          prob = prob / (THEME.monster_prefs[name] or 1)
+          prob = prob / (0.1 + (THEME.monster_prefs[name] or 1))
         end
 
         skip_list[name] = prob
-gui.debugf("skip_list %s = %1.0f\n", name, prob)
         skip_total = skip_total + 1
       end
+
+      mon_total = mon_total + 1
     end
 
-    local perc  = rand.range(PARAM.skip_monsters[1], PARAM.skip_monsters[2])
-    local count = int(#list * perc / 100 + gui.random())
+    local count = int(mon_total * perc / 100 + gui.random())
 
     if count >= skip_total then count = skip_total - 1 end
+gui.printf("FOOBIE: perc %d  skip_total %d  mon_total %d ---> %d\n", perc, skip_total, mon_total, count)
+
+    assert(count < mon_total)
 
     for i = 1,count do
       if table.empty(skip_list) then break; end
@@ -390,10 +383,12 @@ gui.debugf("skip_list %s = %1.0f\n", name, prob)
       local name = rand.key_by_probs(skip_list)
       skip_list[name] = nil
 
-      gui.debugf("Skipping monster: %s\n", name)
-      LEVEL.global_skip[name] = 1
+      gui.printf("Skipping monster: %s\n", name)
+      LEVEL.global_palette[name] = nil
     end
   end
+
+  gui.printf("\n")
 end
 
 
@@ -733,8 +728,7 @@ function Monsters_in_room(R)
     toughness = toughness + R.lev_along
 
     -- spice it up
-    local spice = gui.random()
-    toughness = toughness + spice * spice
+    toughness = toughness + gui.random() ^ 2
 
     if R.quest.id == 1 and #LEVEL.all_quests > 1 then
       -- be kinder around the starting area
