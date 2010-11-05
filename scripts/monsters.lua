@@ -88,7 +88,7 @@ HEALTH_AMMO_ADJUSTS =
 }
 
 
-COOP_MON_FACTOR = 1.5
+COOP_MON_FACTOR = 1.35
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
 
@@ -776,13 +776,34 @@ function Monsters_in_room(R)
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
     end
 
-    assert(qty);
+    assert(qty)
 
+    -- game specific adjustment
+    qty = qty * (PARAM.monster_factor or 1)
+
+    -- more monsters for Co-operative games
     if OB_CONFIG.mode == "coop" then
       qty = qty * COOP_MON_FACTOR
     end
 
-    gui.debugf("Quantity = %1.0f\n", qty)
+    -- tend to have more monsters in later rooms and levels
+    qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
+
+    -- more in EXIT or KEY rooms
+    if R.purpose then
+      qty = qty * rand.range(1.5, 2.1)
+
+      -- extra if room is small
+      if R.svolume <= 20 then qty = qty * 1.3 end
+    else
+      -- random variation
+      qty = qty * rand.pick { 0.3, 0.5, 0.8, 1.0, 1.2 }
+
+      if rand.odds(4) then qty = qty / 5 end
+      if rand.odds(2) then qty = qty * 4 end
+    end
+
+    gui.debugf("Quantity = %1.1f\n", qty)
     return qty
   end
 
@@ -1395,39 +1416,30 @@ function Monsters_in_room(R)
 
   local function density_for_mon(mon, info)
     local info = GAME.MONSTERS[mon]
+
     local d = info.density or 1
+    
+    -- level check
+    local max_level = LEVEL.max_level * R.lev_along
+    if max_level < 2 then max_level = 2 end
 
-do return d end
-
---FIXME !!!! FIXME !!!!
-
-    -- tend to have more monsters in later rooms
-    count = count * (0.8 + R.lev_along)
- 
-    if R.purpose then
-      -- more in EXIT or KEY rooms
-      count = count * rand.range(2, 3)
-    else
-      -- otherwise : random variation
-      count = count * rand.range(0.4, 1.7)
-
-      -- level check
-      local max_level = LEVEL.max_level * (0.6 + R.lev_along * 0.6)
-
-      if info.level > max_level then
-        count = count / 2
-      else
-        if rand.odds(4 * R.kvolume) then count = count / 4 end
-        if rand.odds(4 * R.kvolume) then count = count * 4 end
-      end
+    if info.level > max_level + 3 then
+      d = d / 10
+    elseif info.level > max_level then
+      d = d / 4
     end
+
+    -- random variation
+    d = d * rand.range(0.5, 1.5)
+
+    return d
   end
 
 
   local function how_many_dudes(palette, want_total)
     -- the 'NONE' entry is a stabilizing element, in case we have a
     -- palette containing mostly undesirable monsters (Archviles etc).
-    local densities = { NONE=0.3 }
+    local densities = { NONE=0.5 }
 
     local total_density = densities.NONE
 
@@ -1437,7 +1449,7 @@ do return d end
       total_density = total_density + densities[mon]
     end
 
-stderrf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densities,1))
+----stderrf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densities,1))
 
     -- convert density map to monster counts
     local wants = {}
