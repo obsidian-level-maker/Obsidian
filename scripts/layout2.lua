@@ -2331,7 +2331,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       return
     end
 
-stderrf("*************** : %s\n", loc.fab)
+-- stderrf("*************** : %s\n", loc.fab)
 
     ----- DO THE SUBDIVISION -----
 

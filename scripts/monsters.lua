@@ -370,12 +370,7 @@ function Monsters_global_palette()
       mon_total = mon_total + 1
     end
 
-    local count = int(mon_total * perc / 100 + gui.random())
-
-    if count >= skip_total then count = skip_total - 1 end
-gui.printf("FOOBIE: perc %d  skip_total %d  mon_total %d ---> %d\n", perc, skip_total, mon_total, count)
-
-    assert(count < mon_total)
+    local count = int(skip_total * perc / 100 + gui.random())
 
     for i = 1,count do
       if table.empty(skip_list) then break; end

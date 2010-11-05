@@ -208,7 +208,7 @@ DOOM.PARAMETERS =
   -- not reflect any buffer limits in Doom ports.
   max_name_length = 28,
 
-  skip_monsters = { 26,40 },
+  skip_monsters = { 15,25,35 },
 
   time_factor   = 1.0,
   damage_factor = 1.0,
@@ -222,7 +222,7 @@ DOOM2.PARAMETERS =
   doom2_weapons  = true,
   doom2_skies    = true,  -- RSKY# patches
 
-  skip_monsters = { 30,44 },
+  skip_monsters = { 20,30,45 },
 }
 
 
@@ -3543,7 +3543,7 @@ DOOM2.MONSTERS =
 
   knight =
   {
-    level=5, prob=60, skip_prob=75, crazy_prob=40,
+    level=5, prob=60, skip_prob=90, crazy_prob=40,
     health=500, damage=45, attack="missile",
     density=0.7,
   },
@@ -3564,14 +3564,14 @@ DOOM2.MONSTERS =
 
   vile =
   {
-    level=7, prob=16, skip_prob=100,
+    level=7, prob=16, skip_prob=120,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    level=6, prob=7, crazy_prob=15, skip_prob=150,
+    level=6, prob=7, crazy_prob=15, skip_prob=180,
     health=700, damage=20, attack="missile",
     density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
@@ -3579,8 +3579,8 @@ DOOM2.MONSTERS =
 
   ss_dude =
   {
-    -- not generated in normal levels
-    crazy_prob=7, skip_prob=100,
+    -- NOTE: not generated in normal levels
+    level=1, crazy_prob=7, skip_prob=300,
     health=50, damage=15, attack="hitscan",
     give={ {ammo="bullet",count=5} },
     density=2.0,
