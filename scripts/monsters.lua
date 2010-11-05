@@ -32,6 +32,24 @@ Main usages:
 (e) surprises (behind entry door, closets on back path)
 
 
+MONSTERS:
+
+(1) have the room palette
+
+(2) simplify selection of room palette:
+    -  use info.prob
+    -  basic criterion is: harder monsters occur later
+    -  want harder monsters in KEY/EXIT rooms
+
+(3) give each mon a 'density' value:
+    -  use info.density (NOT info.prob)
+    -  adjust with damage/time/along/level/purpose
+    -  when all monsters have a density, normalise by dividing by total
+
+(4) give each room a TOTAL count (adjust for along, purpose)
+    -  want[mon] = total * density[mon]
+
+
 IDEAS:
 
 Free range monsters make up the bulk of the level, and are
@@ -769,6 +787,26 @@ function Monsters_in_room(R)
   end
 
 
+  local function tally_spots(list)
+    -- This is meant to give a rough estimate, and assumes each monster
+    -- fits in a 64x64 square and there is no height restrictions.
+    -- We can adjust for the real monster size later.
+
+    local count = 0
+
+    for _,spot in ipairs(list) do
+      local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
+
+      w = int(w / 64) ; if w < 1 then w = 1 end
+      h = int(h / 64) ; if h < 1 then h = 1 end
+
+      count = count + w * h
+    end
+
+    return count
+  end
+
+
   local function prob_for_mon(info, fp, toughness)
     local name = info.name
     local prob = info.prob
@@ -943,10 +981,8 @@ function Monsters_in_room(R)
   end
 
 
-  local function select_monsters(toughness)
-    if OB_CONFIG.strength == "crazy" then
-      return crazy_palette()
-    end
+  local function room_palette()
+    local toughness = calc_toughness()
 
     local fp = Player_firepower()
     gui.debugf("Firepower = %1.3f\n", fp)
@@ -1357,13 +1393,13 @@ function Monsters_in_room(R)
   end
 
 
-  local function how_many_dudes(mon, count)
+  local function density_for_mon(mon, info)
     local info = GAME.MONSTERS[mon]
+    local d = info.density or 1
 
-    -- adjust quantity based on nastiness of monster
-    if info.density then
-      count = count * info.density
-    end
+do return d end
+
+--FIXME !!!! FIXME !!!!
 
     -- tend to have more monsters in later rooms
     count = count * (0.8 + R.lev_along)
@@ -1385,8 +1421,36 @@ function Monsters_in_room(R)
         if rand.odds(4 * R.kvolume) then count = count * 4 end
       end
     end
+  end
 
-    return int(count + gui.random())
+
+  local function how_many_dudes(palette, want_total)
+    -- the 'NONE' entry is a stabilizing element, in case we have a
+    -- palette containing mostly undesirable monsters (Archviles etc).
+    local densities = { NONE=0.3 }
+
+    local total_density = densities.NONE
+
+    for mon,_ in pairs(palette) do
+      densities[mon] = density_for_mon(mon)
+
+      total_density = total_density + densities[mon]
+    end
+
+stderrf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densities,1))
+
+    -- convert density map to monster counts
+    local wants = {}
+
+    for mon,d in pairs(densities) do
+      if mon ~= "NONE" then
+        local num = want_total * d / total_density
+
+        wants[mon] = int(num + gui.random())
+      end
+    end
+
+    return wants
   end
 
 
@@ -1401,14 +1465,29 @@ function Monsters_in_room(R)
     -- distribution of monsters.
     split_huge_spots(sel(has_huge, 288, 144))
 
-    -- add at least one monster of each kind
+
+    -- total number of monsters wanted
+    local qty = calc_quantity()
+
+    local want_total = tally_spots(R.mon_spots)
+
+stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
+    want_total = int(want_total * qty / 100 + gui.random())
+
+    -- determine how many of each kind of monster we want
+    local wants = how_many_dudes(palette, want_total)
+
+
+    -- add at least one monster of each kind, trying larger ones first
     for pass = 1,3 do
-      for mon,prob in pairs(palette) do
+      for mon,prob in pairs(wants) do
         if (pass == 1 and is_huge(mon)) or
            (pass == 2 and is_big(mon) and not is_huge(mon)) or
            (pass == 3 and not is_big(mon))
         then
           try_add_mon_group(mon, 1, true)
+
+          wants[mon] = wants[mon] - 1
 
           -- extra one for very large rooms
           if R.svolume > 70 then
@@ -1419,25 +1498,15 @@ function Monsters_in_room(R)
     end
 
 
-    -- determine how many of each kind of monster we want
-
-    local qty = calc_quantity()
-
-    local count = int(R.svolume / table.size(palette))
-
-    count = count * qty / 100
-
-    local wants = {}
-
-    for mon,_ in pairs(palette) do
-      wants[mon] = how_many_dudes(mon, count, qty) - 1
-    end
-
-
     -- try to add these monsters until we have the desired number or
     -- we have run out of monster spots.
 
-    local pal2 = table.copy(palette)
+    local pal2 = {}
+
+    for mon,_ in pairs(palette) do
+      pal2[mon] = 50
+    end
+
 
     while not table.empty(pal2) and not table.empty(R.mon_spots) do
       local mon = rand.key_by_probs(pal2)
@@ -1466,9 +1535,13 @@ function Monsters_in_room(R)
 
 
   local function add_monsters()
-    local toughness = calc_toughness()
+    local palette
 
-    local palette = select_monsters(toughness)
+    if OB_CONFIG.strength == "crazy" then
+      palette = crazy_palette()
+    else
+      palette = room_palette()
+    end
 
     local barrel_chance = sel(R.outdoor, 2, 15)
     if R.natural then barrel_chance = 3 end
