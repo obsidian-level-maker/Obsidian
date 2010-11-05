@@ -3920,6 +3920,10 @@ function DOOM1.get_levels()
 
   local few_episodes = { 1, 1, 2, 2 }
 
+  -- this accounts for last two levels are BOSS and SECRET level
+  local LEV_MAX = MAP_NUM
+  if LEV_MAX == 9 then LEV_MAX = 7 end
+
   for episode = 1,EP_NUM do
     local ep_info = DOOM1.EPISODES["episode" .. episode]
     assert(ep_info)
@@ -3927,7 +3931,7 @@ function DOOM1.get_levels()
     GAME.original_themes[episode] = ep_info.orig_theme
 
     for map = 1,MAP_NUM do
-      local ep_along = map / MAP_NUM
+      local ep_along = map / LEV_MAX
 
       if MAP_NUM == 1 then
         ep_along = rand.range(0.3, 0.7);
@@ -3943,7 +3947,7 @@ function DOOM1.get_levels()
         map      = map,
         episode  = episode,
         ep_along = ep_along,
-        mon_along = ep_along + (episode-1) / 3,
+        mon_along = ep_along + (episode-1) / 5,
 
         sky_light   = ep_info.sky_light,
         secret_kind = (map == 9) and "plain",
@@ -4034,9 +4038,9 @@ function DOOM2.get_levels()
     LEV.mon_along = LEV.ep_along
 
     if OB_CONFIG.length == "episode" then
-      LEV.mon_along = math.min(1, map / 9)
+      LEV.mon_along = map / 9
     elseif OB_CONFIG.length == "full" then
-      LEV.mon_along = math.min(1, map / 16)
+      LEV.mon_along = map / 16
     end
 
     if OB_CONFIG.length == "few" then
