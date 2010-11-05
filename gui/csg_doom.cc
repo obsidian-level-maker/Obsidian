@@ -46,9 +46,9 @@ int ef_liquid_type;
 static int map_bound_y1;  // valid after DM_CreateLinedefs()
 
 
-#define SEC_IS_SKY       (0x1 << 16)
-#define SEC_PRIMARY_LIT  (0x2 << 16)
-#define SEC_SHADOW       (0x4 << 16)
+#define SEC_IS_SKY         (1 << 0)
+#define SEC_FLOOR_SPECIAL  (1 << 1)
+#define SEC_CEIL_SPECIAL   (1 << 2)
 
 
 double light_dist_factor = 800.0;
@@ -799,11 +799,15 @@ static void DM_MakeSector(region_c *R)
   {
     S->special = f_special;
     S->tag = (f_tag > 0) ? f_tag : c_tag;
+
+    S->misc_flags |= SEC_FLOOR_SPECIAL;
   }
   else
   {
     S->special = c_special;
     S->tag = (c_tag > 0) ? c_tag : f_tag;
+
+    S->misc_flags |= SEC_CEIL_SPECIAL;
   }
 
 
@@ -1662,8 +1666,16 @@ static void DM_SolidExtraFloor(doom_sector_c *sec, gap_c *gap1, gap_c *gap2)
   EF->line_special = ef_solid_type;
 
   EF->u_special = gap2->bottom->b.face.getInt("special");
-  EF->u_light   = gap2->bottom->b.face.getInt("light", 128);
+  EF->u_light   = gap2->bottom->b.face.getInt("light", sec->light - 24);
   EF->u_tag     = gap2->bottom->b.face.getInt("tag");
+
+  if (EF->u_light < 112) EF->u_light = 112;
+
+  if (sec->misc_flags & SEC_FLOOR_SPECIAL)
+  {
+    EF->u_special = sec->special;
+    sec->special  = gap2->bottom->t.face.getInt("special");
+  }
 
   EF->top_h    = I_ROUND(gap2->bottom->t.z);
   EF->bottom_h = I_ROUND(gap1->   top->b.z);
@@ -1693,7 +1705,7 @@ static void DM_LiquidExtraFloor(doom_sector_c *sec, csg_brush_c *liquid)
   EF->line_special = ef_liquid_type;
 
   EF->u_special = liquid->t.face.getInt("special");
-  EF->u_light   = liquid->t.face.getInt("light", 128);
+  EF->u_light   = liquid->t.face.getInt("light", 144);
   EF->u_tag     = liquid->t.face.getInt("tag");
 
   if (EF->line_special == 301)  // Legacy style
