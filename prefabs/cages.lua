@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  CAGE PREFABS
+--  CAGE and TRAP PREFABS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -303,6 +303,84 @@ PREFAB.CAGE_3D_WALL_1 =
   spots =
   {
     { kind = "cage", x = 128, y = 88, z = 144, r = 64, h = 128, angle = 90 },
+  },
+}
+
+
+------------------------------------------------------------------------
+
+
+PREFAB.TRAP_CLOSET_DOOM =
+{
+  placement = "fitted",
+
+  brushes =
+  {
+    -- wall behind it
+    {
+      { x =   0, y =  0, mat = "?wall" },
+      { x = 192, y =  0, mat = "?wall" },
+      { x = 192, y =  8, mat = "?wall" },
+      { x =   0, y =  8, mat = "?wall" },
+    },
+
+    -- space in front of it
+    {
+      { m = "walk" },
+      { x =   0, y =  88 },
+      { x = 192, y =  88 },
+      { x = 192, y = 128 },
+      { x =   0, y = 128 },
+    },
+
+    -- left side wall
+    {
+      { x =  0, y =  8, mat = "?wall" },
+      { x = 16, y =  8, mat = "?wall" },
+      { x = 16, y = 88, mat = "?wall" },
+      { x =  0, y = 88, mat = "?wall" },
+    },
+
+    -- right side wall
+    {
+      { x = 176, y =  8, mat = "?wall" },
+      { x = 192, y =  8, mat = "?wall" },
+      { x = 192, y = 88, mat = "?wall" },
+      { x = 176, y = 88, mat = "?wall" },
+    },
+
+    -- floor
+    {
+      { x =  16, y =  8, mat = "?floor" },
+      { x = 176, y =  8, mat = "?floor" },
+      { x = 176, y = 88, mat = "?floor" },
+      { x =  16, y = 88, mat = "?floor" },
+      { t = 0, mat = "?floor" },
+    },
+
+    -- ceiling
+    {
+      { x =  16, y =  8, mat = "?wall" },
+      { x = 176, y =  8, mat = "?wall" },
+      { x = 176, y = 80, mat = "?wall" },
+      { x =  16, y = 80, mat = "?wall" },
+      { b = 128, mat = "?wall" },
+    },
+
+    -- opening part
+    {
+      { x = 160, y = 16, mat = "?wall" },
+      { x = 160, y = 32, mat = "?wall" },
+      { x =  32, y = 32, mat = "?wall" },
+      { x =  32, y = 16, mat = "?wall" },
+      { b = 24, delta_z=-24, mat = "?wall", tag = "?tag" },
+    },
+  },
+
+  spots =
+  {
+    { kind = "cage", x =  56, y = 44, z = 0, r = 36, h = 120, angle = 90 },
+    { kind = "cage", x = 136, y = 44, z = 0, r = 36, h = 120, angle = 90 },
   },
 }
 
