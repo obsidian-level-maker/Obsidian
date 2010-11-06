@@ -72,7 +72,7 @@ function Trans.clear_override()
 end
 
 
-function Trans.apply(x, y)
+function Trans.apply_xy(x, y)
   local T = Trans.TRANSFORM
 
   -- apply mirroring first
@@ -94,6 +94,9 @@ function Trans.apply(x, y)
 
   return x, y
 end
+
+
+Trans.apply = Trans.apply_xy  -- TODO: fix names
 
 
 function Trans.apply_z(z, slope)
@@ -159,6 +162,22 @@ function Trans.apply_mlook(ang)
     return ang
   end
 end
+
+
+-- handle three-part angle strings (Quake)
+function Trans.apply_angles_xy(ang)
+  local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
+  angle = Trans.apply_angle(0 + angle)
+  return string.format("%d %d %d", mlook, angle, roll)
+end
+
+
+function Trans.apply_angles_z(ang)
+  local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
+  mlook = Trans.apply_mlook(0 + mlook)
+  return string.format("%d %d %d", mlook, angle, roll)
+end
+
 
 
 Trans.DOOM_LINE_FLAGS =
@@ -306,13 +325,8 @@ function Trans.entity(name, x, y, z, props)
   end
 
   if ent.angles then
-    -- handle three-part angle strings (Quake)
-    local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
-
-    mlook = Trans.apply_mlook(0 + mlook)
-    angle = Trans.apply_angle(0 + angle)
-
-    ent.angles = string.format("%d %d %d", mlook, angle, roll)
+    ent.angles = Trans.apply_angles_xy(ent.angles)
+    ent.angles = Trans.apply_angles_z(ent.angles)
   end
 
   if info.spawnflags then
@@ -1006,109 +1020,8 @@ function Fab_size_stuff(fab, T, brushes)
 
 
 
-  local function process_groups(size_list, pf_min, pf_max)
-    -- pf_min and pf_max are in the 'prefab' space (i.e. before any
-    -- stretching or shrinkin is done).
-
-    if not pf_min then
-      return { }
-    end
-
-    local info = { groups={} }
-
-    if not size_list then
-      info.groups = {}
-
-      local G = {}
-
-      G.low  = pf_min
-      G.high = pf_max
-
-      G.size = G.high - G.low
-      G.weight = 1 * G.size
-
-      table.insert(info.groups, G)
-
-      info.skinned_size = G.size
-      info.weight_total = G.weight
-
-      return info
-    end
 
 
-    -- create groups
-
-    assert(#size_list >= 1)
-
-    local pf_pos = pf_min
-
-    info.weight_total = 0
-    info.skinned_size = 0
-
-    for _,S in ipairs(size_list) do
-      local G = { }
-
-      G.size = S[1]
-
-      G.low  = pf_pos ; pf_pos = pf_pos + G.size
-      G.high = pf_pos
-
-      G.weight = S[2] or 1
-
-      if G.weight == 0 then
-        G.size2 = G.size
-      elseif type(G.weight) == "string" then
-        G.size2 = Trans.substitute(G.weight)
-        G.weight = 0
-      end
-
-      G.weight = G.weight * G.size
-
-      table.insert(info.groups, G)
-
-      info.skinned_size = info.skinned_size + (G.size2 or G.size)
-      info.weight_total = info.weight_total + G.weight
-    end
-
-    -- verify that group sizes match the coordinate bbox
-    if math.abs(pf_pos - pf_max) > 0.1 then
-      error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
-    end
-
-    return info
-  end
-
-
-  local function set_group_sizes(info, low, high)
-    if not info.groups then
-      return
-    end
-
-    local extra = high - low
-
-    for _,G in ipairs(info.groups) do
-      if G.size2 then
-        extra = extra - G.size2
-      end
-    end
-
-    local n_pos = low
-
-    for _,G in ipairs(info.groups) do
-      if not G.size2 then
-        G.size2 = extra * G.weight / info.weight_total
-
-        if (G.size2 <= 1) then
-          error("Prefab does not fit!")
-        end
-      end
-
-      G.low2  = n_pos ; n_pos = n_pos + G.size2
-      G.high2 = n_pos
-    end
-
-    assert(math.abs(n_pos - high) < 0.1)
-  end
 
 
   ---| Fab_size_stuff |---
@@ -1259,27 +1172,6 @@ function OLD_Fab_render(fab, T, skin, skin2)
   end
 
 
-  local function resize_coord(info, n)
-    local groups = info.groups
-
-    if not groups then return n end
-
-    local T = #groups
-    assert(T >= 1)
-
-    if n < groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-    if n > groups[T].high then return n + (groups[T].high2 - groups[T].high) end
-
-    local idx = 1
-
-    while (idx < T) and (n > groups[idx].high) do
-      idx = idx + 1
-    end
-
-    local G = groups[idx]
-
-    return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
-  end
 
 
   local function resize_brush(brush)
@@ -1696,6 +1588,14 @@ function Fab_apply_skins(fab, list)
     E.name = nil
     E.id = assert(info.id)
 
+    if E.z then
+      E.delta_z = info.delta_z or PARAM.entity_delta_z
+    end
+
+    if info.spawnflags then
+      E.spawnflags = bit.bor((E.spawnflags or 0), info.spawnflags)
+    end
+
     return true -- OK --
   end
 
@@ -1745,14 +1645,344 @@ end
 
 
 
-function Fab_transform_2D(fab, T)
-  -- FIXME
+function Trans.process_groups(size_list, pf_min, pf_max)
+
+  -- pf_min and pf_max are in the 'prefab' space (i.e. before any
+  -- stretching or shrinkin is done).
+
+  if not pf_min then
+    return { }
+  end
+
+  local info = { groups={} }
+
+  if not size_list then
+    info.groups = {}
+
+    local G = {}
+
+    G.low  = pf_min
+    G.high = pf_max
+
+    G.size = G.high - G.low
+    G.weight = 1 * G.size
+
+    table.insert(info.groups, G)
+
+    info.skinned_size = G.size
+    info.weight_total = G.weight
+
+    return info
+  end
+
+
+  -- create groups
+
+  assert(#size_list >= 1)
+
+  local pf_pos = pf_min
+
+  info.weight_total = 0
+  info.skinned_size = 0
+
+  for _,S in ipairs(size_list) do
+    local G = { }
+
+    G.size = S[1]
+
+    G.low  = pf_pos ; pf_pos = pf_pos + G.size
+    G.high = pf_pos
+
+    G.weight = S[2] or 1
+
+    if G.weight == 0 then
+      G.size2 = G.size
+    elseif type(G.weight) == "string" then
+      G.size2 = Trans.substitute(G.weight)
+      G.weight = 0
+    end
+
+    G.weight = G.weight * G.size
+
+    table.insert(info.groups, G)
+
+    info.skinned_size = info.skinned_size + (G.size2 or G.size)
+    info.weight_total = info.weight_total + G.weight
+  end
+
+  -- verify that group sizes match the coordinate bbox
+  if math.abs(pf_pos - pf_max) > 0.1 then
+    error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
+  end
+
+  return info
 end
 
 
 
-function Fab_transform_Z(fab, add_z)
-  -- FIXME
+function Trans.set_group_sizes(info, low, high)
+  if info.groups then
+    local extra = high - low
+
+    for _,G in ipairs(info.groups) do
+      if G.size2 then
+        extra = extra - G.size2
+      end
+    end
+
+    local n_pos = low
+
+    for _,G in ipairs(info.groups) do
+      if not G.size2 then
+        G.size2 = extra * G.weight / info.weight_total
+
+        if (G.size2 <= 1) then
+          error("Prefab does not fit!")
+        end
+      end
+
+      G.low2  = n_pos ; n_pos = n_pos + G.size2
+      G.high2 = n_pos
+    end
+
+    assert(math.abs(n_pos - high) < 0.1)
+  end
+end
+
+
+
+function Trans.resize_coord(info, n)
+  local groups = info.groups
+
+  if not groups then return n end
+
+  local T = #groups
+  assert(T >= 1)
+
+  if n < groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n > groups[T].high then return n + (groups[T].high2 - groups[T].high) end
+
+  local idx = 1
+
+  while (idx < T) and (n > groups[idx].high) do
+    idx = idx + 1
+  end
+
+  local G = groups[idx]
+
+  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
+end
+
+
+
+function Fab_transform_XY(fab, T)
+  local x_info
+  local y_info
+
+  local function brush_xy(brush)
+    -- FIXME
+  end
+
+  
+  local function entity_xy(E)
+    if E.x then
+      E.x = resize_coord(x_info, E.x)
+      E.y = resize_coord(y_info, E.y)
+
+      E.x, E.y = Trans.apply_xy(E.x, E.y)
+    end
+
+    if E.angle then
+      E.angle = Trans.apply_angle(E.angle)
+    end
+
+    if E.angles then
+      E.angles = Trans.apply_angles_xy(E.angles)
+    end
+
+  end
+
+
+  local function model_xy(M)
+    M.x1 = Trans.resize_coord(x_info, M.x1)
+    M.x2 = Trans.resize_coord(x_info, M.x2)
+
+    M.y1 = Trans.resize_coord(y_info, M.y1)
+    M.y2 = Trans.resize_coord(y_info, M.y2)
+
+    M.x1, M.y1 = Trans.apply_xy(M.x1, M.y1)
+    M.x2, M.y2 = Trans.apply_xy(M.x2, M.y2)
+
+    -- handle rotation / mirroring
+    -- NOTE: we only support 0/90/180/270 rotations
+
+    if M.x1 > M.x2 then M.x1, M.x2 = M.x2, M.x1 ; M.y_face.u1, M.y_face.u2 = M.y_face.u2, M.y_face.u1 end
+    if M.y1 > M.y2 then M.y1, M.y2 = M.y2, M.y1 ; M.x_face.u1, M.x_face.u2 = M.x_face.u2, M.x_face.u1 end
+
+    -- handle 90 and 270 degree rotations : swap X and Y faces
+    local rotate = T.rotate or 0
+
+    if math.abs(T.rotate - 90) < 15 or math.abs(T.rotate - 270) < 15 then
+      M.x_face, M.y_face = M.y_face, M.x_face
+    end
+  end
+
+  
+  ---| Fab_transform_XY |---
+
+  x_info = process_groups(fab.x_ranges, bbox.x1, bbox.x2)
+  y_info = process_groups(fab.y_ranges, bbox.y1, bbox.y2)
+
+  local x_low, x_high
+  local y_low, y_high
+
+  if fab.placement == "fitted" then
+    if not (T.fit_width and T.fit_depth) then
+      error("Fitted prefab used without fitted transform")
+    end
+
+    if math.abs(bbox.x1) > 0.1 or math.abs(bbox.y1) > 0.1 then
+      error("Fitted prefab should have left/bottom coord at (0, 0)")
+    end
+
+    x_low = 0 ; x_high = T.fit_width
+    y_low = 0 ; y_high = T.fit_depth
+
+  else  -- "loose" placement
+
+    if not (T.add_x and T.add_y) then
+      error("Loose prefab used without focal coord")
+    end
+
+    -- !!!!!! FIXME: scale_z will be applied TWICE
+    local scale_x = T.scale_x or 1
+    local scale_y = T.scale_y or 1
+
+    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
+    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
+
+    x_low  = bbox.x1 * scale_x
+    x_high = bbox.x2 * scale_x
+
+    y_low  = bbox.y1 * scale_y
+    y_high = bbox.y2 * scale_y
+  end
+
+  set_group_sizes(x_info, x_low, x_high)
+  set_group_sizes(y_info, y_low, y_high)
+
+  Trans.set(T)
+
+  for _,B in ipairs(fab.brushes) do
+    brush_xy(B)
+  end
+
+  for _,E in ipairs(fab.entities) do
+    entity_xy(E)
+  end
+
+  for _,M in ipairs(fab.models) do
+    model_xy(M)
+    entity_xy(M.entity)
+  end
+
+  Trans.clear()
+end
+
+
+
+function Fab_transform_Z(fab, T)
+  local z_info
+
+  local function brush_z(brush)
+    for _,C in ipairs(brush) do
+      if C.b then C.b = Trans.resize_coord(z_info, C.b) end
+      if C.t then C.t = Trans.resize_coord(z_info, C.t) end
+
+      if Trans.mirror_z then
+        C.b, C.t = C.t, C.b
+      end
+
+      if C.b then C.b = Trans.apply_z(C.b) end
+      if C.t then C.t = Trans.apply_z(C.t) end
+
+      if C.s then
+        -- FIXME: slopes
+      end
+    end
+  end
+
+  
+  local function entity_z(E)
+    if E.z then
+      E.z = Trans.apply_z(E.z)
+
+      if E.delta_z then
+        E.z = E.z + E.delta_z
+        E.delta_z = nil
+      end
+
+      if E.angles then
+        E.angles = Trans.apply_angles_z(E.angles)
+      end
+    end
+  end
+
+
+  local function model_z(M)
+    M.z1 = Trans.resize_coord(z_info, M.z1)
+    M.z2 = Trans.resize_coord(z_info, M.z2)
+
+    M.z1 = Trans.apply_z(M.z1)
+    M.z2 = Trans.apply_z(M.z2)
+
+    -- handle mirroring
+    if M.z1 > M.z2 then M.z1, M.z2 = M.z2, M.z1 end
+  end
+
+  
+  ---| Fab_transform_Z |---
+
+  local bbox = fab.bbox
+
+  if bbox.dz and bbox.dz > 1 then
+    local z_low, z_high
+
+    z_info = Trans.process_groups(fab.z_ranges, bbox.z1, bbox.z2)
+
+    if T.fit_height then
+      z_low  = 0
+      z_high = T.fit_height
+    else
+      -- !!!!!! FIXME: scale_z will be applied TWICE
+      local scale_z = T.scale_z or 1
+
+      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / bbox.dz end
+
+      z_low  = bbox.z1 * scale_z
+      z_high = bbox.z2 * scale_z
+    end
+
+    Trans.set_group_sizes(z_info, z_low, z_high)
+  else
+    z_info = {}
+  end
+
+  Trans.set(T)
+
+  for _,B in ipairs(fab.brushes) do
+    brush_z(B)
+  end
+
+  for _,E in ipairs(fab.entities) do
+    entity_z(E)
+  end
+
+  for _,M in ipairs(fab.models) do
+    model_z(B)
+  end
+
+  Trans.clear()
 end
 
 
