@@ -1586,15 +1586,21 @@ function Fab_apply_skins(fab, list)
   
 
   local function process_entity(E)
-    assert(E.ent)
-    local info = GAME.ENTITIES[E.ent]
+    local name = E.ent
+    assert(name)
 
-    if E.ent == "none" then
+    local info = GAME.ENTITIES[name]
+
+    if name == "none" then
+      return false
+    end
+
+    if PARAM.light_brushes and (name == "light" or name == "sun") then
       return false
     end
 
     if not info then
-      error("No such entity: " .. tostring(E.ent))
+      error("No such entity: " .. tostring(name))
     end
 
     E.id = assert(info.id)
