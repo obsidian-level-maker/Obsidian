@@ -326,7 +326,7 @@ function Trans.entity(name, x, y, z, props)
 
   if ent.angles then
     ent.angles = Trans.apply_angles_xy(ent.angles)
-    ent.angles = Trans.apply_angles_z(ent.angles)
+    ent.angles = Trans.apply_angles_z (ent.angles)
   end
 
   if info.spawnflags then
@@ -1379,7 +1379,7 @@ function OLD_Fab_render(fab, T, skin, skin2)
 end
 
 
-function Fabricate(fab, T, skins)
+function OLD__Fabricate(fab, T, skins)
   if type(fab) == "string" then
     if not PREFAB[fab] then
       error("Unknown prefab: " .. fab)
@@ -1397,6 +1397,16 @@ function Fabricate(fab, T, skins)
                       skins[5], skins[6], skins[7], skins[8])
 
   OLD_Fab_render(fab, T)
+end
+
+
+
+function Trans.brush_is_space(B)
+  if not B[1].m then return false end
+
+  return B[1].m == "used" or B[1].m == "walk" or
+         B[1].m == "air"  or B[1].m == "nosplit" or
+         B[1].m == "zone"
 end
 
 
@@ -1482,6 +1492,8 @@ function Fab_create(name)
 
   local fab = table.deep_copy(info)
 
+  fab.name = name
+
   if not fab.brushes  then fab.brushes  = {} end
   if not fab.models   then fab.models   = {} end
   if not fab.entities then fab.entities = {} end
@@ -1518,7 +1530,7 @@ function Fab_apply_skins(fab, list)
 
       -- recursively handle sub-tables
       if type(v) == "table" then
-        substitutions(v)
+        do_substitutions(v)
       end
     end
   end
@@ -1574,19 +1586,19 @@ function Fab_apply_skins(fab, list)
   
 
   local function process_entity(E)
-    assert(E.name)
-    local info = GAME.ENTITIES[E.name]
+    assert(E.ent)
+    local info = GAME.ENTITIES[E.ent]
 
-    if E.name == "none" then
+    if E.ent == "none" then
       return false
     end
 
     if not info then
-      error("No such entity: " .. tostring(E.name))
+      error("No such entity: " .. tostring(E.ent))
     end
 
-    E.name = nil
     E.id = assert(info.id)
+    E.ent = nil
 
     if E.z then
       E.delta_z = info.delta_z or PARAM.entity_delta_z
@@ -1620,8 +1632,15 @@ function Fab_apply_skins(fab, list)
   
   ---| Fab_apply_skins |---
 
+  local global_defaults =
+  {
+    tag = 0, special = 0, light = 0, style = 0,
+    side = "FOO",
+  }
+
   -- FIXME: move the code here
-  Trans.process_skins(fab.defaults,
+  Trans.process_skins(global_defaults,
+                      fab.defaults,
                       list[1], list[2], list[3],
                       list[4], list[5], list[6],
                       list[7], list[8], list[9])
@@ -1641,6 +1660,8 @@ function Fab_apply_skins(fab, list)
 
   -- lookup entity names
   do_entities(fab)
+
+  Trans.SKIN = nil
 end
 
 
@@ -1695,11 +1716,10 @@ function Trans.process_groups(size_list, pf_min, pf_max)
 
     G.weight = S[2] or 1
 
-    if G.weight == 0 then
+    if S[3] then
+      G.size2 = S[3]
+    elseif G.weight == 0 then
       G.size2 = G.size
-    elseif type(G.weight) == "string" then
-      G.size2 = Trans.substitute(G.weight)
-      G.weight = 0
     end
 
     G.weight = G.weight * G.size
@@ -1780,14 +1800,25 @@ function Fab_transform_XY(fab, T)
   local y_info
 
   local function brush_xy(brush)
-    -- FIXME
+    for _,C in ipairs(brush) do
+      if C.x then
+        C.x = Trans.resize_coord(x_info, C.x)
+        C.y = Trans.resize_coord(y_info, C.y)
+
+        C.x, C.y = Trans.apply_xy(C.x, C.y)
+      end
+
+      if C.s then
+        -- FIXME: slopes
+      end
+    end
   end
 
   
   local function entity_xy(E)
     if E.x then
-      E.x = resize_coord(x_info, E.x)
-      E.y = resize_coord(y_info, E.y)
+      E.x = Trans.resize_coord(x_info, E.x)
+      E.y = Trans.resize_coord(y_info, E.y)
 
       E.x, E.y = Trans.apply_xy(E.x, E.y)
     end
@@ -1830,8 +1861,10 @@ function Fab_transform_XY(fab, T)
   
   ---| Fab_transform_XY |---
 
-  x_info = process_groups(fab.x_ranges, bbox.x1, bbox.x2)
-  y_info = process_groups(fab.y_ranges, bbox.y1, bbox.y2)
+  local bbox = fab.bbox
+
+  x_info = Trans.process_groups(fab.x_ranges, bbox.x1, bbox.x2)
+  y_info = Trans.process_groups(fab.y_ranges, bbox.y1, bbox.y2)
 
   local x_low, x_high
   local y_low, y_high
@@ -1854,7 +1887,7 @@ function Fab_transform_XY(fab, T)
       error("Loose prefab used without focal coord")
     end
 
-    -- !!!!!! FIXME: scale_z will be applied TWICE
+    -- !!!!!! FIXME: scale will be applied TWICE
     local scale_x = T.scale_x or 1
     local scale_y = T.scale_y or 1
 
@@ -1868,8 +1901,15 @@ function Fab_transform_XY(fab, T)
     y_high = bbox.y2 * scale_y
   end
 
-  set_group_sizes(x_info, x_low, x_high)
-  set_group_sizes(y_info, y_low, y_high)
+--[[
+stderrf("T.fit_width = %s\n", tostring(T.fit_width))
+stderrf("x_low = %s | x_high = %s\n", tostring(x_low), tostring(x_high))
+stderrf("bbox =\n%s\n", table.tostr(bbox))
+stderrf("x_info =\n%s\n", table.tostr(x_info, 3))
+--]]
+
+  Trans.set_group_sizes(x_info, x_low, x_high)
+  Trans.set_group_sizes(y_info, y_low, y_high)
 
   Trans.set(T)
 
@@ -2000,8 +2040,13 @@ function Fab_render(fab)
 
   ---| Fab_render |---
 
+-- FIXME: more junk, remove it
+if Trans.overrider then return end
+
   for _,B in ipairs(fab.brushes) do
-    gui.add_brush(B)
+    if not Trans.brush_is_space(B) then
+      gui.add_brush(B)
+    end
   end
 
   for _,M in ipairs(fab.models) do
@@ -2060,6 +2105,27 @@ function OLD__Fab_check_fits(fab, skin, width, depth, height)
 
   return true
 end
+
+
+
+function Fabricate(name, T, skins)
+  
+stderrf("=========  FABRICATE %s\n", name)
+
+  local fab = Fab_create(name)
+
+  -- FIXME: not here
+  if  ROOM and  ROOM.skin then table.insert(skins, 1, ROOM.skin) end
+  if THEME and THEME.skin then table.insert(skins, 1, THEME.skin) end
+
+  Fab_apply_skins(fab, skins)
+
+  Fab_transform_XY(fab, T)
+  Fab_transform_Z (fab, T)
+
+  Fab_render(fab)
+end
+
 
 
 ------------------------------------------------------------------------
