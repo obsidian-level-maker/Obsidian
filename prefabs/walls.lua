@@ -38,9 +38,9 @@ PREFAB.PICTURE =
 {
   placement = "fitted",
 
-  x_ranges = { {64,1}, {64,"?width"}, {64,1} },
+  x_ranges = { {64,1}, {64,0,"?width"}, {64,1} },
   y_ranges = { {8,1}, {8,0} },
-  z_ranges = { {64,"?height"} },
+  z_ranges = { {64,0,"?height"} },
 
   defaults =
   {

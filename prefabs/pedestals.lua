@@ -214,7 +214,7 @@ PREFAB.ITEM_NICHE =
     { x = 96, y = 48, z = 32, ent = "?item", angle = 90 },
 
     { x = 96, y = 48, z = 32, ent = "light",
-      light = "?light", _radius = "?radius", style = "?style",
+      light = "?light", style = "?style",
     },
   },
 }
