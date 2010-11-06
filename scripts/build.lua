@@ -1004,64 +1004,6 @@ function Fab_size_stuff(fab, T, brushes)
   local z_info
 
 
-  local function determine_bbox()
-    local x1, y1, z1
-    local x2, y2, z2
-
-    -- Note: no need to handle slopes, they are defined to be "shrinky"
-    --       (i.e. never higher that t, never lower than b).
-
-    for _,B in ipairs(brushes) do
-      if B[1].insider or not (B[1].m == "walk"  or B[1].m == "air" or
-                              B[1].m == "zone"  or B[1].m == "nosplit" or
-                              B[1].m == "light" or B[1].outlier)
-      then
-        for _,C in ipairs(B) do
-
-          if C.x then 
-            if not x1 then
-              x1, y1 = C.x, C.y
-              x2, y2 = C.x, C.y
-            else
-              x1 = math.min(x1, C.x)
-              y1 = math.min(y1, C.y)
-              x2 = math.max(x2, C.x)
-              y2 = math.max(y2, C.y)
-            end
-
-          elseif C.b or C.t then
-            local z = C.b or C.t
-            if not z1 then
-              z1, z2 = z, z
-            else
-              z1 = math.min(z1 or z, z)
-              z2 = math.max(z2 or z, z)
-            end
-          end
-
-        end -- C
-      end
-    end -- B
-
-    -- FIXME !!!!!!!!  this is for floor prefabs : needs deeper consideration
-    if fab.x_size then x1 = 0 ; x2 = fab.x_size end
-    if fab.y_size then y1 = 0 ; y2 = fab.y_size end
-
-    assert(x1 and y1 and x2 and y2)
-
-    -- Note: it is OK when z1 and z2 are not set (this happens with
-    --       prefabs consisting entirely of infinitely tall solids).
-
-    -- Note: It is possible to get dz == 0
- 
-    local dz
-    if z1 then dz = z2 - z1 end
-
-    return { x1=x1, x2=x2, dx=(x2 - x1),
-             y1=y1, y2=y2, dy=(y2 - y1),
-             z1=z1, z2=z2, dz=dz,
-           }
-  end
 
 
   local function process_groups(size_list, pf_min, pf_max)
@@ -1566,38 +1508,117 @@ function Fabricate(fab, T, skins)
 end
 
 
+
 function Fab_create(name)
+
+  local function mark_outliers(fab)
+    for _,B in ipairs(fab.brushes) do
+      if B[1].m and not B[1].insider and
+         (B[1].m == "walk"  or B[1].m == "air" or
+          B[1].m == "zone"  or B[1].m == "nosplit" or
+          B[1].m == "light")
+      then
+        B[1].outlier = true
+      end
+    end
+  end
+
+  local function determine_bbox(fab)
+    local x1, y1, z1
+    local x2, y2, z2
+
+    -- Note: no need to handle slopes, they are defined to be "shrinky"
+    --       (i.e. never higher that t, never lower than b).
+
+    for _,B in ipairs(fab.brushes) do
+      if not B[1].outlier then
+        for _,C in ipairs(B) do
+
+          if C.x then 
+            if not x1 then
+              x1, y1 = C.x, C.y
+              x2, y2 = C.x, C.y
+            else
+              x1 = math.min(x1, C.x)
+              y1 = math.min(y1, C.y)
+              x2 = math.max(x2, C.x)
+              y2 = math.max(y2, C.y)
+            end
+
+          elseif C.b or C.t then
+            local z = C.b or C.t
+            if not z1 then
+              z1, z2 = z, z
+            else
+              z1 = math.min(z1, z)
+              z2 = math.max(z2, z)
+            end
+          end
+
+        end -- C
+      end
+    end -- B
+
+    -- FIXME !!!!!!!!  this is for floor prefabs : needs deeper consideration
+    if fab.x_size then x1 = 0 ; x2 = fab.x_size end
+    if fab.y_size then y1 = 0 ; y2 = fab.y_size end
+
+    assert(x1 and y1 and x2 and y2)
+
+    -- Note: it is OK when z1 and z2 are not set (this happens with
+    --       prefabs consisting entirely of infinitely tall solids).
+
+    -- Note: It is possible to get dz == 0
+ 
+    local dz
+    if z1 then dz = z2 - z1 end
+
+    fab.bbox = { x1=x1, x2=x2, dx=(x2 - x1),
+                 y1=y1, y2=y2, dy=(y2 - y1),
+                 z1=z1, z2=z2, dz=dz,
+               }
+  end
+
+
+  ---| Fab_create |---
+
   local info = PREFAB[name]
 
   if not info then
     error("Unknown prefab: " .. name)
   end
 
-  local result = table.deep_copy(info)
+  local fab = table.deep_copy(info)
 
-  if not result.brushes  then result.brushes  = {} end
-  if not result.models   then result.models   = {} end
-  if not result.entities then result.entities = {} end
+  if not fab.brushes  then fab.brushes  = {} end
+  if not fab.models   then fab.models   = {} end
+  if not fab.entities then fab.entities = {} end
 
-  return result
+  mark_outliers(fab)
+
+  determine_bbox(fab)
+
+  return fab
 end
+
 
 
 function Fab_apply_skins(fab, list)
 
-  local function substitutions(t)
+  local function do_substitutions(t)
     for _,k in ipairs(table.keys(t)) do
       local v = t[k]
 
       if type(v) == "string" then
-        v = Trans.substitute(value)
+        v = Trans.substitute(v)
 
         if v == nil then
           if name == "required" then v = false end
         end
 
         if v == nil then
-          error("Prefab: substitution of " .. tostring(k) " failed")
+          error(string.format("Prefab: missing value for %s = \"%s\"",
+                              tostring(k), t[k]))
         end
 
         t[k] = v
@@ -1647,7 +1668,7 @@ function Fab_apply_skins(fab, list)
   end
 
 
-  local function materials(fab)
+  local function do_materials(fab)
     for _,B in ipairs(fab.brushes) do
       process_materials(B)
     end
@@ -1656,6 +1677,43 @@ function Fab_apply_skins(fab, list)
       process_model_face(M.x_face, false)
       process_model_face(M.y_face, false)
       process_model_face(M.z_face, true)
+    end
+  end
+  
+
+  local function process_entity(E)
+    assert(E.name)
+    local info = GAME.ENTITIES[E.name]
+
+    if E.name == "none" then
+      return false
+    end
+
+    if not info then
+      error("No such entity: " .. tostring(E.name))
+    end
+
+    E.name = nil
+    E.id = assert(info.id)
+
+    return true -- OK --
+  end
+
+
+  local function do_entities(fab)
+    for index = #fab.entities,1,-1 do
+      local E = fab.entities[index]
+
+      -- we allow entities to be unknown, removing them from the list
+      if not process_entity(E) then
+        table.remove(fab.entities, index)
+      end
+    end
+
+    for _,M in ipairs(fab.models) do
+      if not process_entity(M.entity) then
+        error("Prefab model has 'none' entity")
+      end
     end
   end
 
@@ -1676,21 +1734,27 @@ function Fab_apply_skins(fab, list)
   end
 
   -- perform substitutions (values beginning with '?' are skin refs)
-  substitutions(fab)
+  do_substitutions(fab)
 
   -- convert 'mat' fields to 'tex' fields
-  materials(fab)
+  do_materials(fab)
+
+  -- lookup entity names
+  do_entities(fab)
 end
 
 
-function Fab_transform_2D(fab)
+
+function Fab_transform_2D(fab, T)
   -- FIXME
 end
 
 
-function Fab_transform_Z(fab)
+
+function Fab_transform_Z(fab, add_z)
   -- FIXME
 end
+
 
 
 function Fab_render(fab)
