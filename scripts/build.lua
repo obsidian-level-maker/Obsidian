@@ -1245,7 +1245,7 @@ function Fab_size_stuff(fab, T, brushes)
 end
 
 
-function Fab_render(fab, T, skin, skin2)
+function OLD_Fab_render(fab, T, skin, skin2)
   local x_info
   local y_info
   local z_info
@@ -1521,7 +1521,7 @@ function Fab_render(fab, T, skin, skin2)
   end
 
 
-  ---| Fab_render |---
+  ---| OLD_Fab_render |---
 
   local brushes = copy_w_substitution(fab.brushes)
 
@@ -1562,11 +1562,166 @@ function Fabricate(fab, T, skins)
                       skins[1], skins[2], skins[3], skins[4],
                       skins[5], skins[6], skins[7], skins[8])
 
-  Fab_render(fab, T)
+  OLD_Fab_render(fab, T)
 end
 
 
-function Fab_check_fits(fab, skin, width, depth, height)
+function Fab_create(name)
+  local info = PREFAB[name]
+
+  if not info then
+    error("Unknown prefab: " .. name)
+  end
+
+  local result = table.deep_copy(info)
+
+  if not result.brushes  then result.brushes  = {} end
+  if not result.models   then result.models   = {} end
+  if not result.entities then result.entities = {} end
+
+  return result
+end
+
+
+function Fab_apply_skins(fab, list)
+
+  local function substitutions(t)
+    for _,k in ipairs(table.keys(t)) do
+      local v = t[k]
+
+      if type(v) == "string" then
+        v = Trans.substitute(value)
+
+        if v == nil then
+          if name == "required" then v = false end
+        end
+
+        if v == nil then
+          error("Prefab: substitution of " .. tostring(k) " failed")
+        end
+
+        t[k] = v
+      end
+
+      -- recursively handle sub-tables
+      if type(v) == "table" then
+        substitutions(v)
+      end
+    end
+  end
+
+
+  local function process_materials(brush)
+    for _,C in ipairs(brush) do
+      if C.mat then
+        local mat = Mat_lookup(C.mat)
+        assert(mat and mat.t)
+
+        if C.b then
+          C.tex = mat.c or mat.f or mat.t
+        elseif C.t then
+          C.tex = mat.f or mat.t
+        else
+          C.tex = mat.t
+        end
+
+        C.mat = nil
+      end
+    end
+  end
+
+
+  local function process_model_face(face, is_flat)
+    if face.mat then
+      local mat = Mat_lookup(mat)
+      assert(mat and mat.t)
+
+      if is_flat and mat.f then
+        face.tex = mat.f
+      else
+        face.tex = mat.t
+      end
+
+      face.mat = nil
+    end
+  end
+
+
+  local function materials(fab)
+    for _,B in ipairs(fab.brushes) do
+      process_materials(B)
+    end
+
+    for _,M in ipairs(fab.models) do
+      process_model_face(M.x_face, false)
+      process_model_face(M.y_face, false)
+      process_model_face(M.z_face, true)
+    end
+  end
+
+  
+  ---| Fab_apply_skins |---
+
+  -- FIXME: move the code here
+  Trans.process_skins(fab.defaults,
+                      list[1], list[2], list[3],
+                      list[4], list[5], list[6],
+                      list[7], list[8], list[9])
+
+  -- defaults are applied, don't need it anymore
+  fab.defaults = nil
+
+  if fab.team_models then
+    Trans.SKIN.team = Plan_alloc_id("team")
+  end
+
+  -- perform substitutions (values beginning with '?' are skin refs)
+  substitutions(fab)
+
+  -- convert 'mat' fields to 'tex' fields
+  materials(fab)
+end
+
+
+function Fab_transform_2D(fab)
+  -- FIXME
+end
+
+
+function Fab_transform_Z(fab)
+  -- FIXME
+end
+
+
+function Fab_render(fab)
+
+  local function render_model(M)
+    assert(M.entity)
+
+    M.entity.model = M
+
+    gui.add_entity(M.entity)
+  end
+
+
+  ---| Fab_render |---
+
+  for _,B in ipairs(fab.brushes) do
+    gui.add_brush(B)
+  end
+
+  for _,M in ipairs(fab.models) do
+    render_model(M)
+  end
+
+  for _,E in ipairs(fab.entities) do
+    gui.add_entity(E)
+  end
+end
+
+
+
+function OLD__Fab_check_fits(fab, skin, width, depth, height)
 
   -- NOTE: width is in the prefab coordinate system (X)
   --       depth too (Y) and height as well (Z).
