@@ -210,6 +210,7 @@ namelib.THEMES =
         ["Alien Carnage"]=10,
         ["Assault"]=10,
         ["Backbone Breakage"]=10,
+        ["Baryogenesis"]=10,
         ["Battlezone"]=10,
         ["Battlefield"]=10,
         ["Beleaguered Unit"]=10,
