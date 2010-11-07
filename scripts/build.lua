@@ -1430,7 +1430,7 @@ function Fab_create(name)
       if B[1].m and not B[1].insider and
          (B[1].m == "walk"  or B[1].m == "air" or
           B[1].m == "zone"  or B[1].m == "nosplit" or
-          B[1].m == "light")
+          B[1].m == "light" or B[1].m == "spot")
       then
         B[1].outlier = true
       end
@@ -2098,8 +2098,8 @@ function Fab_read_spots(fab)
     if Trans.brush_is_quad(B) then
       x1,y1, x2,y2 = Trans.brush_bbox(B)
       for _,C in ipairs(B) do
-        if C.t then z1 = C.t end
-        if C.b then z2 = C.b end
+        if C.b then z1 = C.b end
+        if C.t then z2 = C.t end
       end
     else
       -- FIXME: use original brushes (assume quads), break into squares,
