@@ -1030,388 +1030,6 @@ function Trans.process_skins(...)
 end
 
 
-function OLD_Fab_size_stuff(fab, T, brushes)
-  local x_info
-  local y_info
-  local z_info
-
-
-  ---| Fab_size_stuff |---
-
-  local bbox = determine_bbox()
-
-  -- XY stuff --
-
-  x_info = process_groups(fab.x_ranges, bbox.x1, bbox.x2)
-  y_info = process_groups(fab.y_ranges, bbox.y1, bbox.y2)
-
-  local x_low, x_high
-  local y_low, y_high
-
-  if fab.placement == "fitted" then
-    if not (T.fit_width and T.fit_depth) then
-      error("Fitted prefab used without fitted transform")
-    end
-
-    if math.abs(bbox.x1) > 0.1 or math.abs(bbox.y1) > 0.1 then
-      error("Fitted prefab should have left/bottom coord at (0, 0)")
-    end
-
-    x_low = 0 ; x_high = T.fit_width
-    y_low = 0 ; y_high = T.fit_depth
-
-  else  -- "loose" placement
-
-    if not (T.add_x and T.add_y) then
-      error("Loose prefab used without focal coord")
-    end
-
-    local scale_x = T.scale_x or 1
-    local scale_y = T.scale_y or 1
-
-    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
-    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
-
-    x_low  = bbox.x1 * scale_x
-    x_high = bbox.x2 * scale_x
-
-    y_low  = bbox.y1 * scale_y
-    y_high = bbox.y2 * scale_y
-  end
-
-  set_group_sizes(x_info, x_low, x_high)
-  set_group_sizes(y_info, y_low, y_high)
-
-  -- Z stuff --
-
-  if bbox.dz and bbox.dz > 1 then
-    local z_low, z_high
-
-    z_info = process_groups(fab.z_ranges, bbox.z1, bbox.z2)
-
-    if T.fit_height then
-      z_low  = 0
-      z_high = T.fit_height
-    else
-      local scale_z = T.scale_z or 1
-
-      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / bbox.dz end
-
-      z_low  = bbox.z1 * scale_z
-      z_high = bbox.z2 * scale_z
-    end
-
-    set_group_sizes(z_info, z_low, z_high)
-  else
-    z_info = {}
-  end
-
-  -- DONE --
-
-  return x_info, y_info, z_info
-end
-
-
-function OLD_Fab_render(fab, T, skin, skin2)
-  local x_info
-  local y_info
-  local z_info
-
-  assert(type(fab) == "table")
-
-
-  local function copy_w_substitution(orig_brushes)
-    -- perform substitutions (values beginning with '?')
-    -- returns a copy of the brushes.
-
-    local new_brushes = {}
-
-    for _,B in ipairs(orig_brushes) do
-      assert(#B >= 1)
-
-      local b_copy = {}
-      for _,C in ipairs(B) do
-
-        local new_coord = {}
-        for name,value in pairs(C) do
-          value = Trans.substitute(value)
-
-          if value == nil then
-            if name == "required" then value = false end
-
-            if name == "x" or name == "y" or name == "b" or name == "t" then
-              error("Prefab: substitution of x/y/b/t field failed.")
-            end
-          end
-
-          new_coord[name] = value
-        end
-
-        table.insert(b_copy, new_coord)
-      end -- C
-
-      -- skip certain brushes unless a skin field is present/true
-      local req = b_copy[1].required
-
-      if req == nil or (req ~= false and req ~= 0) then
-        table.insert(new_brushes, b_copy)
-      end
-    end -- B
-
-    return new_brushes
-  end
-
-
-  local function process_materials(brush)
-    -- modifies a brush, converting 'mat' fields to 'tex' fields
-
-    for _,C in ipairs(brush) do
-      if C.mat then
-        local mat = Mat_lookup(C.mat)
-        assert(mat and mat.t)
-
-        if C.b then
-          C.tex = mat.c or mat.f or mat.t
-        elseif C.t then
-          C.tex = mat.f or mat.t
-        else
-          C.tex = mat.t
-        end
-
-        C.mat = nil
-      end
-    end
-  end
-
-
-
-
-  local function resize_brush(brush)
-    for _,C in ipairs(brush) do
-      if C.x then C.x = resize_coord(x_info, C.x) end
-      if C.y then C.y = resize_coord(y_info, C.y) end
-
-      if C.b then C.b = resize_coord(z_info, C.b) end
-      if C.t then C.t = resize_coord(z_info, C.t) end
-
-      if C.s then
-        -- FIXME: slopes
-      end
-    end
-  end 
-
-
-  local function render_brushes(brushes)
-    local clip_rects
-    if ROOM and not Trans.overrider then
-      clip_rects = ROOM.sections
-    end
-
-    for _,B in ipairs(brushes) do
-      process_materials(B)
-      resize_brush(B)
-
-      -- clip lights to the room
-      if B[1].m == "light" and clip_rects then
-        Trans.brush(B, clip_rects)
-      else
-        Trans.brush(B)
-      end
-    end
-  end
-
-
-  local function entity_props(E, extra_props)
-    local props = {}
-
-    if extra_props then
-      table.merge(props, extra_props)
-    end
-
-    for key,value in pairs(E) do
-      if key ~= "ent" and key ~= "x" and key ~= "y" and key ~= "z" then
-        props[key] = Trans.substitute(value)
-      end
-    end
-
-    return props
-  end
-
-
-  local function render_one_ent(E, props)
-    local name = Trans.substitute(E.ent)
-
-    -- if substitution fails ignore the entity
-    if not name then
-      return
-    end
-
-    local ex = E.x and resize_coord(x_info, E.x)
-    local ey = E.y and resize_coord(y_info, E.y)
-    local ez = E.z and resize_coord(z_info, E.z)
-
-    Trans.entity(name, ex, ey, ez, entity_props(E, props))
-  end
-
-
-  local function render_entities(list)
-    if list then
-      for _,E in ipairs(list) do
-        render_one_ent(E, nil)
-      end
-    end
-  end
-
-
-  local function process_model_face(F, is_flat)
-    assert(F)
-    local new_face = table.copy(F)
-
-    new_face.mat = nil
-
-    if F.mat then
-      local mat = Trans.substitute(F.mat)
-
-      if mat then
-        mat = Mat_lookup(mat)
-
-        if is_flat and mat.f then
-          new_face.tex = mat.f
-        else
-          new_face.tex = mat.t
-        end
-      end
-    end
-
-    return new_face
-  end
-
-
-  local function add_model(M, team)
-    assert(M.entity)
-
-    local model =
-    {
-      x1 = resize_coord(x_info, M.x1),
-      x2 = resize_coord(x_info, M.x2),
-
-      y1 = resize_coord(y_info, M.y1),
-      y2 = resize_coord(y_info, M.y2),
-    
-      z1 = resize_coord(z_info, M.z1),
-      z2 = resize_coord(z_info, M.z2),
-
-      x_face = process_model_face(M.x_face, false),
-      y_face = process_model_face(M.y_face, false),
-      z_face = process_model_face(M.z_face, true),
-    }
-
-    -- handle 90 and 270 degree rotations : swap X and Y faces
-    local rotate = Trans.TRANSFORM.rotate or 0
-    if math.abs(rotate - 90) < 15 or math.abs(rotate - 270) < 15 then
-      model.x_face, model.y_face = model.y_face, model.x_face
-    end
-
-    render_one_ent(M.entity, { model=model, team=team })
-  end
-
-
-  local function render_models(list)
-    if not list or Trans.no_entities then
-      return
-    end
-
-    local team
-
-    if GAME.format == "quake2" and fab.team_models then
-      team = Plan_alloc_id("team")
-    end
-
-    for _,M in ipairs(list) do
-      add_model(M, team)
-    end
-  end
-
-
-  local function render_spots(list)
-    if not list or Trans.no_entities then
-      return
-    end
-
-    for _,P in ipairs(list) do
-      -- adjust size of spot
-
-      local x1 = resize_coord(x_info, P.x - P.r)
-      local x2 = resize_coord(x_info, P.x + P.r)
-
-      local y1 = resize_coord(y_info, P.y - P.r)
-      local y2 = resize_coord(y_info, P.y + P.r)
-
-      local z1 = resize_coord(z_info, P.z)
-      local z2 = resize_coord(z_info, P.z + P.h)
-
-      local N = Trans.adjust_spot(x1,x2, y1,y2, z1,z2)
-
-      if P.angle then
-        N.angle = Trans.apply_angle(P.angle)
-      end
-
-      if P.kind == "cage" then
-        table.insert(ROOM.cage_spots, N)
-      elseif P.kind == "trap" then
-        table.insert(ROOM.trap_spots, N)
-      else
-        error("Unknown spot kind in prefab: " .. tostring(P.kind))
-      end
-    end
-  end
-
-
-  ---| OLD_Fab_render |---
-
-  local brushes = copy_w_substitution(fab.brushes)
-
-  x_info, y_info, z_info = Fab_size_stuff(fab, T, brushes)
-
-
-  Trans.set(
-  {
-    add_x  = T.add_x,
-    add_y  = T.add_y,
-    add_z  = T.add_z,
-    rotate = T.rotate
-  })
-
-  render_brushes (brushes)
-  render_models  (fab.models)
-  render_entities(fab.entities)
-  render_spots   (fab.spots)
-
-  Trans.clear()
-end
-
-
-function OLD__Fabricate(fab, T, skins)
-  if type(fab) == "string" then
-    if not PREFAB[fab] then
-      error("Unknown prefab: " .. fab)
-    end
-
-    fab = PREFAB[fab]
-  end
-
-  gui.debugf("Fabricating: %s\n", fab.name)
-
-  Trans.process_skins(fab.defaults,
-                      THEME and THEME.skin,
-                      ROOM and  ROOM.skin,
-                      skins[1], skins[2], skins[3], skins[4],
-                      skins[5], skins[6], skins[7], skins[8])
-
-  OLD_Fab_render(fab, T)
-end
-
-
 
 function Trans.brush_is_space(B)
   if not B[1].m then return false end
@@ -1820,14 +1438,12 @@ end
 
 
 function Fab_transform_XY(fab, T)
-  local x_info
-  local y_info
 
   local function brush_xy(brush)
     for _,C in ipairs(brush) do
       if C.x then
-        C.x = Trans.resize_coord(x_info, C.x)
-        C.y = Trans.resize_coord(y_info, C.y)
+        C.x = Trans.resize_coord(fab.x_info, C.x)
+        C.y = Trans.resize_coord(fab.y_info, C.y)
 
         C.x, C.y = Trans.apply_xy(C.x, C.y)
       end
@@ -1845,8 +1461,8 @@ function Fab_transform_XY(fab, T)
   
   local function entity_xy(E)
     if E.x then
-      E.x = Trans.resize_coord(x_info, E.x)
-      E.y = Trans.resize_coord(y_info, E.y)
+      E.x = Trans.resize_coord(fab.x_info, E.x)
+      E.y = Trans.resize_coord(fab.y_info, E.y)
 
       E.x, E.y = Trans.apply_xy(E.x, E.y)
     end
@@ -1863,11 +1479,11 @@ function Fab_transform_XY(fab, T)
 
 
   local function model_xy(M)
-    M.x1 = Trans.resize_coord(x_info, M.x1)
-    M.x2 = Trans.resize_coord(x_info, M.x2)
+    M.x1 = Trans.resize_coord(fab.x_info, M.x1)
+    M.x2 = Trans.resize_coord(fab.x_info, M.x2)
 
-    M.y1 = Trans.resize_coord(y_info, M.y1)
-    M.y2 = Trans.resize_coord(y_info, M.y2)
+    M.y1 = Trans.resize_coord(fab.y_info, M.y1)
+    M.y2 = Trans.resize_coord(fab.y_info, M.y2)
 
     M.x1, M.y1 = Trans.apply_xy(M.x1, M.y1)
     M.x2, M.y2 = Trans.apply_xy(M.x2, M.y2)
@@ -1891,8 +1507,8 @@ function Fab_transform_XY(fab, T)
 
   local bbox = fab.bbox
 
-  x_info = Trans.process_groups(fab.x_ranges, bbox.x1, bbox.x2)
-  y_info = Trans.process_groups(fab.y_ranges, bbox.y1, bbox.y2)
+  fab.x_info = Trans.process_groups(fab.x_ranges, bbox.x1, bbox.x2)
+  fab.y_info = Trans.process_groups(fab.y_ranges, bbox.y1, bbox.y2)
 
   local x_low, x_high
   local y_low, y_high
@@ -1919,8 +1535,8 @@ function Fab_transform_XY(fab, T)
     local scale_x = T.scale_x or 1
     local scale_y = T.scale_y or 1
 
-    if x_info.skinned_size then scale_x = scale_x * x_info.skinned_size / bbox.dx end
-    if y_info.skinned_size then scale_y = scale_y * y_info.skinned_size / bbox.dy end
+    if fab.x_info.skinned_size then scale_x = scale_x * fab.x_info.skinned_size / bbox.dx end
+    if fab.y_info.skinned_size then scale_y = scale_y * fab.y_info.skinned_size / bbox.dy end
 
     x_low  = bbox.x1 * scale_x
     x_high = bbox.x2 * scale_x
@@ -1936,8 +1552,8 @@ stderrf("bbox =\n%s\n", table.tostr(bbox))
 stderrf("x_info =\n%s\n", table.tostr(x_info, 3))
 --]]
 
-  Trans.set_group_sizes(x_info, x_low, x_high)
-  Trans.set_group_sizes(y_info, y_low, y_high)
+  Trans.set_group_sizes(fab.x_info, x_low, x_high)
+  Trans.set_group_sizes(fab.y_info, y_low, y_high)
 
   Trans.set(T)
 
@@ -1960,12 +1576,11 @@ end
 
 
 function Fab_transform_Z(fab, T)
-  local z_info
 
   local function brush_z(brush)
     for _,C in ipairs(brush) do
-      if C.b then C.b = Trans.resize_coord(z_info, C.b) end
-      if C.t then C.t = Trans.resize_coord(z_info, C.t) end
+      if C.b then C.b = Trans.resize_coord(fab.z_info, C.b) end
+      if C.t then C.t = Trans.resize_coord(fab.z_info, C.t) end
 
       if Trans.mirror_z then
         C.b, C.t = C.t, C.b
@@ -1998,8 +1613,8 @@ function Fab_transform_Z(fab, T)
 
 
   local function model_z(M)
-    M.z1 = Trans.resize_coord(z_info, M.z1)
-    M.z2 = Trans.resize_coord(z_info, M.z2)
+    M.z1 = Trans.resize_coord(fab.z_info, M.z1)
+    M.z2 = Trans.resize_coord(fab.z_info, M.z2)
 
     M.z1 = Trans.apply_z(M.z1)
     M.z2 = Trans.apply_z(M.z2)
@@ -2016,7 +1631,7 @@ function Fab_transform_Z(fab, T)
   if bbox.dz and bbox.dz > 1 then
     local z_low, z_high
 
-    z_info = Trans.process_groups(fab.z_ranges, bbox.z1, bbox.z2)
+    fab.z_info = Trans.process_groups(fab.z_ranges, bbox.z1, bbox.z2)
 
     if T.fit_height then
       z_low  = 0
@@ -2025,15 +1640,15 @@ function Fab_transform_Z(fab, T)
       -- !!!!!! FIXME: scale_z will be applied TWICE
       local scale_z = T.scale_z or 1
 
-      if z_info.skinned_size then scale_z = scale_z * z_info.skinned_size / bbox.dz end
+      if fab.z_info.skinned_size then scale_z = scale_z * fab.z_info.skinned_size / bbox.dz end
 
       z_low  = bbox.z1 * scale_z
       z_high = bbox.z2 * scale_z
     end
 
-    Trans.set_group_sizes(z_info, z_low, z_high)
+    Trans.set_group_sizes(fab.z_info, z_low, z_high)
   else
-    z_info = {}
+    fab.z_info = {}
   end
 
   Trans.set(T)
