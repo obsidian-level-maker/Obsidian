@@ -49,11 +49,16 @@ PREFAB.CAGE_1 =
       { b = 48 },
       { t = 176 },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x = 0, y = 0, z = 48, r = 40, h = 128, angle = 90 },
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 },
+      { x = -40, y = -40 },
+      { x =  40, y = -40 },
+      { x =  40, y =  40 },
+      { x = -40, y =  40 },
+      { b =  48 },
+      { t = 176 },
+    },
   },
 }
 
@@ -127,11 +132,17 @@ PREFAB.CAGE_LARGE =
       { x =  84, y = 108, mat = "?support", x_offset=0 },
       { t = 224, mat = "?support" },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x = 0, y = 0, z = 80, r = 80, h = 160, angle = 90 },
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 },
+      { x = -80, y = -80 },
+      { x =  80, y = -80 },
+      { x =  80, y =  80 },
+      { x = -80, y =  80 },
+      { b =  80 },
+      { t = 240 },
+    },
   },
 }
 
@@ -327,60 +338,65 @@ PREFAB.TRAP_CLOSET_DOOM =
     -- space in front of it
     {
       { m = "walk" },
-      { x =   0, y =  88 },
-      { x = 192, y =  88 },
-      { x = 192, y = 128 },
-      { x =   0, y = 128 },
+      { x =   0, y = 104 },
+      { x = 192, y = 104 },
+      { x = 192, y = 144 },
+      { x =   0, y = 144 },
     },
 
     -- left side wall
     {
       { x =  0, y =  8, mat = "?wall" },
       { x = 16, y =  8, mat = "?wall" },
-      { x = 16, y = 88, mat = "?wall" },
-      { x =  0, y = 88, mat = "?wall" },
+      { x = 16, y = 104, mat = "?wall" },
+      { x =  0, y = 104, mat = "?wall" },
     },
 
     -- right side wall
     {
       { x = 176, y =  8, mat = "?wall" },
       { x = 192, y =  8, mat = "?wall" },
-      { x = 192, y = 88, mat = "?wall" },
-      { x = 176, y = 88, mat = "?wall" },
+      { x = 192, y = 104, mat = "?wall" },
+      { x = 176, y = 104, mat = "?wall" },
     },
 
     -- floor
     {
       { x =  16, y =  8, mat = "?floor" },
       { x = 176, y =  8, mat = "?floor" },
-      { x = 176, y = 88, mat = "?floor" },
-      { x =  16, y = 88, mat = "?floor" },
+      { x = 176, y = 104, mat = "?floor" },
+      { x =  16, y = 104, mat = "?floor" },
       { t = 0, mat = "?floor" },
     },
 
     -- ceiling
     {
-      { x =  16, y =  8, mat = "?wall" },
-      { x = 176, y =  8, mat = "?wall" },
-      { x = 176, y = 80, mat = "?wall" },
-      { x =  16, y = 80, mat = "?wall" },
-      { b = 128, mat = "?wall" },
+      { x =  16, y =  8, mat = "?ceil" },
+      { x = 176, y =  8, mat = "?ceil" },
+      { x = 176, y = 96, mat = "?ceil" },
+      { x =  16, y = 96, mat = "?ceil" },
+      { b = 128, mat = "?ceil" },
     },
 
     -- opening part
     {
-      { x = 160, y = 16, mat = "?wall" },
-      { x = 160, y = 32, mat = "?wall" },
-      { x =  32, y = 32, mat = "?wall" },
-      { x =  32, y = 16, mat = "?wall" },
+      { x = 160, y =  96, mat = "?wall" },
+      { x = 160, y =  96, mat = "?wall" },
+      { x =  32, y = 104, mat = "?wall" },
+      { x =  32, y = 104, mat = "?wall" },
       { b = 24, delta_z=-24, mat = "?wall", tag = "?tag" },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x =  56, y = 44, z = 0, r = 36, h = 120, angle = 90 },
-    { kind = "cage", x = 136, y = 44, z = 0, r = 36, h = 120, angle = 90 },
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "trap", angle = 90 },
+      { x =  24, y = 20 },
+      { x = 168, y = 20 },
+      { x = 168, y = 92 },
+      { x =  24, y = 92 },
+      { b =   0 },
+      { t = 120 },
+    },
   },
 }
 
