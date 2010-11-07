@@ -192,11 +192,17 @@ PREFAB.WALL_CAGE_1 =
       { b = 64 },
       { t = 192 },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x = 96, y = 80, z = 64, r = 64, h = 128, angle = 90 },
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 },
+      { x =  32, y =  16 },
+      { x = 160, y =  16 },
+      { x = 160, y = 144 },
+      { x =  32, y = 144 },
+      { b =  64 },
+      { t = 192 },
+    },
   },
 }
 
@@ -249,11 +255,17 @@ PREFAB.WALL_CAGE_2 =
       { b = 64 },
       { t = 192 },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x = 96, y = 80, z = 64, r = 64, h = 128, angle = 90 },
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 },
+      { x =  32, y =  16 },
+      { x = 160, y =  16 },
+      { x = 160, y = 144 },
+      { x =  32, y = 144 },
+      { b =  64 },
+      { t = 192 },
+    },
   },
 }
 
@@ -309,11 +321,17 @@ PREFAB.CAGE_3D_WALL_1 =
       { x = 176, y = 128, mat = "support" },
       { t = 132 },
     },
-  },
 
-  spots =
-  {
-    { kind = "cage", x = 128, y = 88, z = 144, r = 64, h = 128, angle = 90 },
+    -- monster spot
+    {
+      { m = "spot", spot_kind = "cage", angle = 90 },
+      { x =  64, y =  24 },
+      { x = 192, y =  24 },
+      { x = 192, y = 152 },
+      { x =  64, y = 152 },
+      { b = 144 },
+      { t = 272 },
+    },
   },
 }
 
