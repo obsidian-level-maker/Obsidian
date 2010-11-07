@@ -643,6 +643,23 @@ function Trans.brush_bbox(brush)
 end
 
 
+function Trans.brush_is_quad(brush)
+  local coords = {}
+  for _,C in ipairs(brush) do
+    if C.x then table.insert(coords, C) end
+  end
+
+  for i = 1,#coords do
+    local k = 1 + (i % coords)
+
+    if math.abs(coords[i].x - coords[k].x) > 0.1 then return false end
+    if math.abs(coords[i].y - coords[k].y) > 0.1 then return false end
+  end
+
+  return true
+end
+
+
 function Trans.line_cuts_brush(brush, px1, py1, px2, py2)
   local front, back
 
@@ -1013,16 +1030,10 @@ function Trans.process_skins(...)
 end
 
 
-function Fab_size_stuff(fab, T, brushes)
+function OLD_Fab_size_stuff(fab, T, brushes)
   local x_info
   local y_info
   local z_info
-
-
-
-
-
-
 
 
   ---| Fab_size_stuff |---
@@ -1423,6 +1434,10 @@ function Fab_create(name)
       then
         B[1].outlier = true
       end
+
+      if B[1].m == "spot" then
+        fab.has_spots = true
+      end
     end
   end
 
@@ -1820,6 +1835,10 @@ function Fab_transform_XY(fab, T)
       if C.s then
         -- FIXME: slopes
       end
+
+      if C.angle then
+        C.angle = Trans.apply_angle(C.angle)
+      end
     end
   end
 
@@ -2065,6 +2084,53 @@ if Trans.overrider then return end
   for _,E in ipairs(fab.entities) do
     gui.add_entity(E)
   end
+end
+
+
+
+function Fab_read_spots(fab)
+  -- prefab must be rendered (or ready to render)
+
+  local function add_spot(list, B)
+    local x1,y1, x2,y2
+    local z1,z2
+
+    if Trans.brush_is_quad(B) then
+      x1,y1, x2,y2 = Trans.brush_bbox(B)
+      for _,C in ipairs(B) do
+        if C.t then z1 = C.t end
+        if C.b then z2 = C.b end
+      end
+    else
+      -- FIXME: use original brushes (assume quads), break into squares,
+      --        apply the rotated square formula from Trans.apply_spot. 
+      error("Unimplemented: cage spots on rotated prefabs")
+    end
+
+    local SPOT =
+    {
+      kind  = B[1].spot_kind,
+      angle = B[1].angle,
+
+      x1 = assert(x1), x2 = assert(x2),
+      y1 = assert(y1), y2 = assert(y2),
+      z1 = assert(z1), z2 = assert(z2),
+    }
+
+    table.insert(list, SPOT)
+  end
+
+  ---| Fab_read_spots |---
+
+  local list = {}
+
+  for _,B in ipairs(fab.brushes) do
+    if B[1].m == "spot" then
+      add_spot(list, B)
+    end
+  end
+
+  return list
 end
 
 
