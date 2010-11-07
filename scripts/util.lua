@@ -627,6 +627,15 @@ function geom.calc_angle(dx, dy)
   return angle
 end
 
+function geom.axis_angle(ang)
+  if ang <    0 then ang = ang + 360 end
+  if ang >= 360 then ang = ang - 360 end
+  if ang >= 180 then ang = ang - 180 end
+  if ang >=  90 then ang = ang -  90 end
+
+  return (ang < 0.5) or (ang > 89.5)
+end
+
 function geom.closest_dir(dx, dy)
   if math.abs(dx) < 0.002 and math.abs(dy) < 0.002 then
     return 5
