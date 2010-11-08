@@ -750,7 +750,8 @@ function Rooms_setup_bits(R)
   R.mon_spots  = {}
   R.item_spots = {}
 
-  R.post_fabs = {}
+  R.prefabs = {}
+  R.blocks  = {}
   R.poly_assoc = {}
 end
 

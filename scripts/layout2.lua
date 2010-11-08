@@ -319,6 +319,7 @@ function Layout_monotonic_spaces(R)
 
         local BLOCK = { kx1=x, ky1=y, kx2=x+kw-1, ky2=y+kh-1 }
 
+        table.insert(R.blocks, BLOCK)
         table.insert(R.mono_list[K.m_used].blocks, BLOCK)
 
         gui.debugf("  space:%d  K: (%d %d) .. (%d %d)\n", K.m_used,
@@ -625,44 +626,6 @@ end
 
 
 
-function temp_cruddy_edge_prefab_gunk(E, kind, lock)
-
-  local skinname = rand.key_by_probs(E.usage.edge_fabs)
-
-  local skin = assert(GAME.SKINS[skinname])
-  local skin2
-
-  local prefab = assert(skin._prefab)
-
-  -- FIXME
-  local long = skin._long
-  local deep = skin._deep
-
-
-  if GAME.format == "quake" and kind == "EXIT" then
-    skin2 = { next_map = LEVEL.next_map }
-  end
-
-  if lock and lock.kind == "KEY" then
-    skin2 = { item = lock.key }
-  elseif lock and lock.kind == "SWITCH" then
-    skin2 = { tag = lock.tag, targetname = "sw" .. tostring(lock.tag) }
-  end
-
-
-  local long1 = int(E.long - long) / 2
-  local long2 = int(E.long + long) / 2
-
-  local SP = Layout_add_span(E, long1, long2, deep, prefab)
-
-  SP.usage = "prefab"
-  SP.prefab = prefab
-  SP.skin = skin
-  SP.skin2 = skin2
-end
-
-
-
 function Layout_place_importants()
 
   local function clear_busyness(R)
@@ -877,29 +840,37 @@ function Layout_initial_walls(R)
     if E.usage.FOOBIE then return end
     E.usage.FOOBIE = true
 
-    local fab = Fab_create(skin._prefab)
-
-if not R.wall_fab_list then R.wall_fab_list = {} end
-table.insert(R.wall_fab_list, fab)
-
 
     if R.skin then table.insert(extra_skins, 1, R.skin) end
     if THEME.skin then table.insert(extra_skins, 1, THEME.skin) end
 
-    SP.fab = fab
-    SP.extra_skins = extra_skins
-    
-    
     local skins = table.copy(extra_skins)
     table.insert(skins, skin)
 
+    local fab = Fab_create(skin._prefab)
+
     Fab_apply_skins(fab, skins)
+
+
+    fab.room = R
+    table.insert(R.prefabs, fab)
+
+    SP.fab = fab
+    SP.extra_skins = extra_skins
 
 
     local back = 0
 
     if E.usage.kind == "window" or E.usage.kind == "door" then
       back = -deep
+
+      -- add the straddler prefab to the other room too
+
+      local N = E.K:neighbor(E.side)
+
+      fab.straddler = { E = E, R2 = N.room }
+
+      table.insert(N.room.prefabs, fab)
     end
 
     local T = Trans.edge_transform(E.K.x1, E.K.y1, E.K.x2, E.K.y2, 0, E.side,
@@ -969,13 +940,16 @@ table.insert(extra_skins, CRUD)
       table.insert(extra_skins, { tag = E.usage.lock.tag })
     end
 
+    if E.usage.sub == "EXIT" and GAME.format == "quake" then
+      table.insert(extra_skins, { next_map = LEVEL.next_map })
+    end
+
     create_span(E, E.minimal.skin, extra_skins)
   end
 
 
   ---| Layout_initial_walls |---
 
-gui.printf("initial_walls\n")
   R.wall_space = Layout_initial_space(R)
 
   -- FIXME!!!!  do initial middles here too
@@ -1101,16 +1075,18 @@ end
 
 
 function Layout_build_walls(R)
-  for _,fab in ipairs(R.wall_fab_list or {}) do
-    
+  for _,fab in ipairs(R.prefabs) do
+    if fab.room == R then
+
 --FIXME !!!!!!!! TEMP CRUD
 if not fab.z then fab.z = rand.irange(128,384) end
 
-    local T = { add_z = fab.z }
+      local T = { add_z = fab.z }
 
-    Fab_transform_Z(fab, T)
+      Fab_transform_Z(fab, T)
 
-    Fab_render(fab)
+      Fab_render(fab)
+    end
   end
 end
 
@@ -1120,6 +1096,34 @@ end
 
 
 function Layout_the_floor(R)
+
+  local function extract_t(brush)
+    for _,C in ipairs(brush) do
+      if C.t then
+        R.entry_floor_h = C.t
+stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
+        return
+      end
+    end
+
+    error("Missing height in straddler walk brush")
+  end
+
+
+  local function find_entry_walk()
+    for _,fab in ipairs(R.prefabs) do
+      if fab.straddler and fab.straddler.R2 == R then
+        for _,B in ipairs(fab.brushes) do
+          if B[1].m == "walk" and B[1].room == 2 then
+            -- found it
+            extract_t(B)
+            return
+          end
+        end
+      end
+    end
+  end
+
 
   local function merge_walks(polys, tag1, tag2)
     if tag1 > tag2 then
@@ -2118,40 +2122,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function render_post_fab(PF)
-    PF.trans.add_z = PF.z or 256
-
-    if not PF.skin2 then PF.skin2 = {} end
-
-    if PF.for_floor then PF.skin2.floor = PF.for_floor.mat end
-
-    Fabricate(PF.fab, PF.trans, { PF.skin1, PF.skin2, PF.skin3 })
-
-    -- FIXME: do this in assign_floor_heights OR render_floors
-    if PF.set_height_in then
-if not PF.z then PF.z = 256 end --!!!!!!!
-      assert(PF.z)
-      local other_R = PF.set_height_in
-      other_R.entry_floor_h = PF.z + PF.set_height_dz
-    end
-
-    if PF.set_window_h then
-      assert(PF.window)
-      if not PF.window.z then
-        PF.window.z = PF.z
-      else
-        PF.window.z = math.max(PF.window.z, PF.z)
-      end
-    end
-  end
-
-
 
   ---===| Layout_the_floor |===---
 
   ROOM = R  -- set global
 
   gui.debugf("\nLayout_the_floor @ %s\n\n", ROOM:tostr())
+
+  find_entry_walk()
 
   if not ROOM.entry_floor_h then
     ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
@@ -2162,11 +2140,6 @@ if not PF.z then PF.z = 256 end --!!!!!!!
 
   prepare_ceiling()
 
-
-  -- FIXME: move into another function  (WHY ?)
-  for _,PF in ipairs(R.post_fabs) do
-    render_post_fab(PF)
-  end
 end
 
 
@@ -2246,7 +2219,7 @@ function Layout_flesh_out_floors(R)
 
   -- FIXME
 
--- [[ TEST
+--[[ TEST
   for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
         if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
