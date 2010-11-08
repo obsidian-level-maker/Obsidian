@@ -719,7 +719,7 @@ function Rooms_do_small_exit()
   Trans.modify("scale_x", 192 / 256)
   Trans.modify("scale_y", 192 / 256)
 
-  Fabricate("SMALL_EXIT", T, { skin })
+  ttfn_fabricate("SMALL_EXIT", T, { skin })
 
   return
 end

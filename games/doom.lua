@@ -1795,7 +1795,7 @@ DOOM.SKINS =
     _prefab = "ITEM_NICHE",
     _where  = "edge",
     _long   = 192,
-    _deep   = 96,
+    _deep   = 64,
   },
 
 --[[
@@ -1945,6 +1945,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { kc_blue=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112, door_h=112,
     key="DOORBLU",
@@ -1960,6 +1962,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { kc_yellow=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112, door_h=112,
     key="DOORYEL",
@@ -1975,6 +1979,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { kc_red=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112,
 
@@ -1991,6 +1997,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { ks_blue=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112, door_h=112,
     key="DOORBLU2", key_ox=4, key_oy=-10,
@@ -2006,6 +2014,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { ks_yellow=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112, door_h=112,
     key="DOORYEL2", key_ox=4, key_oy=-10,
@@ -2021,6 +2031,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _keys = { ks_red=1 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112, door_h=112,
     key="DOORRED2", key_ox=4, key_oy=-10,
@@ -2039,6 +2051,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _switches = { Switch_blue1=50 },
+    _long = 192,
+    _deep = 32,
 
     w=128, h=112,
 
@@ -2070,6 +2084,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _switches = { Switch_red1=50 },
+    _long = 192,
+    _deep = 32,
 
     w=128, h=112,
 
@@ -2101,6 +2117,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _switches = { Switch_pink1=50 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112,
 
@@ -2133,6 +2151,8 @@ DOOM.SKINS =
     _prefab = "DOOR",
     _where  = "edge",
     _switches = { Switch_vine1=50 },
+    _long   = 192,
+    _deep   = 32,
 
     w=128, h=112,
 

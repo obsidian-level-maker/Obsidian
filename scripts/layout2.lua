@@ -549,16 +549,16 @@ function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-function Layout_possible_prefabs(kind, target, lock)
+function Layout_possible_prefabs(kind, where, lock)
 
   -- kind : "START", "EXIT", "ITEM", "SWITCH"
 
-  -- target : "edge", "corner", "middle"
+  -- where : "edge", "corner", "middle"
 
   local function match(skin)
     -- TODO: more sophisticated matches (prefab.environment)
 
-    if skin._target ~= target then return false end
+    if skin._where ~= where then return false end
 
     if kind == "LOCK_DOOR" and not skin._keys[lock.key] then return false end
 
@@ -571,16 +571,22 @@ function Layout_possible_prefabs(kind, target, lock)
     EXIT    = "exits",
     ITEM    = "pedestals",
     KEY     = "pedestals",
+
+    ARCH    = "arches",
+    DOOR    = "doors",
     LOCK_DOOR   = "lock_doors",
     SWITCH_DOOR = "switch_doors",
+
+    WINDOW  = "windows",
+    FENCE   = "fences",
     TELEPORTER = "teleporters",
   }
 
   local tab
 
   if kind == "SWITCH" then
-    if target ~= "edge" then return nil end  -- FIXME !!!
-    return { FUCK=999 }
+    if where ~= "edge" then return nil end  -- FIXME !!!
+    return "SWITCH"
 --- tab = assert(lock.switches)
   else
     local tab_name = assert(KIND_MAP[kind])
@@ -859,7 +865,6 @@ end
 
 
 
-
 function Layout_initial_walls(R)
   --
   -- this picks the smallest prefab available for each usage on
@@ -874,7 +879,104 @@ function Layout_initial_walls(R)
   -- using the wall_space (previous prefabs can get updated in it).
   --
 
-    -- FIXME
+  local function is_minimal_edge(skin)
+    if not skin._long then return false end
+    if not skin._deep then return false end
+
+    return skin._long <= 192 and skin._deep <= 64
+  end
+
+
+  local function possible_doors(E)
+    local kind = "ARCH"
+    local lock
+    local C = E.usage.conn
+
+    if C.lock and C.lock.kind == "KEY" then
+      kind = "LOCK_DOOR"
+      lock = C.lock
+    elseif C.lock and C.lock.kind == "SWITCH" then
+      kind = "SWITCH_DOOR"
+      lock = C.lock
+    elseif rand.odds(20) then
+      kind = "DOOR"
+    end
+
+    E.usage.edge_fabs = Layout_possible_prefabs(kind, "edge", lock)
+  end
+
+
+  local function possible_windows(E)
+    local kind = "WINDOW"
+
+    if E.usage.K1.room.outdoor and E.usage.K2.room.outdoor then
+      kind = "FENCE"
+    end
+
+    E.usage.edge_fabs = Layout_possible_prefabs(kind, "edge")
+  end
+
+
+  local function initial_edge(E)
+    if not E.usage then
+      return
+    end
+
+    if E.usage.kind == "door" then
+      possible_doors(E)
+    elseif E.usage.kind == "window" then
+      possible_windows(E)
+    end
+
+    local fabs = assert(E.usage.edge_fabs)
+
+    if fabs == "SWITCH" then
+      fabs = assert(E.usage.lock.switches)
+    end
+
+    for name,_ in pairs(fabs) do
+      local skin = GAME.SKINS[name]
+      if not skin then
+        error("No such skin: " .. tostring(name))
+      end
+
+      if is_minimal_edge(skin) then
+        gui.printf("  minimal_fab @ %s:%d ---> %s\n", E.K:tostr(), E.side, name)
+        E.minimal_fab = skin
+        break;
+      end
+    end
+
+    if not E.minimal_fab then
+      gui.printf("E.usage =\n%s\n", table.tostr(E.usage, 2))
+      error("Lacking minimal prefab for: " .. tostring(E.usage.kind))
+    end
+
+    if E.usage.kind == "door" and E.usage.conn.lock and E.usage.conn.lock.kind == "SWITCH" then
+      E.usage.conn.lock.switches = assert(E.minimal_fab._switches)
+    end
+  end
+
+
+  ---| Layout_initial_walls |---
+
+gui.printf("initial_walls\n")
+  R.wall_space = Layout_initial_space(R)
+
+  -- FIXME!!!!  do initial middles here too
+
+  for pass = 1,2 do
+    for _,K in ipairs(R.sections) do
+      for _,E in pairs(K.edges) do
+        -- do doors before everything else, since switched doors
+        -- control what switches will be available.
+        local is_door = sel(E.usage and E.usage.kind == "door", 1, 2)
+        if pass == is_door then
+          initial_edge(E)
+        end
+      end
+    end
+  end
 end
 
 
@@ -1515,13 +1617,10 @@ gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fa
 
   ROOM = R
 
-  R.wall_space = Layout_initial_space(R)
-
-
   for _,K in ipairs(R.sections) do
     for _,E in pairs(K.edges) do
       if E.usage and E.usage.kind == "important" then
-        temp_cruddy_edge_prefab_gunk(E, E.usage.sub, E.usage.lock)
+---     temp_cruddy_edge_prefab_gunk(E, E.usage.sub, E.usage.lock)
       end
     end
   end
@@ -2320,6 +2419,7 @@ gui.debugf("[all locs failed]\n")
       loc, zone = choose_div_lotsa_stuff(floor)
     end
 
+loc = nil
 gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     if not loc then
@@ -2564,6 +2664,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- FIXME: do this in assign_floor_heights OR render_floors
     if PF.set_height_in then
+if not PF.z then PF.z = 256 end --!!!!!!!
       assert(PF.z)
       local other_R = PF.set_height_in
       other_R.entry_floor_h = PF.z + PF.set_height_dz
@@ -2723,7 +2824,7 @@ function Layout_all_ceilings()
   local function build_ceiling(R)
     if R.sky_h then
       for _,K in ipairs(R.sections) do
-        Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
+        Trans.quad(K.x1, K.y1, K.x2, K.y2, 384+R.sky_h, nil, Mat_normal("_SKY"))
       end
 
       return
@@ -2737,7 +2838,7 @@ function Layout_all_ceilings()
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
+      Trans.quad(x1, y1, x2, y2, 512+R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
     end
 
     if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
