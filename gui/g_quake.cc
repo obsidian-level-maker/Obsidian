@@ -581,12 +581,12 @@ static int q1_medium_table[5] =
   CONTENTS_SOLID
 };
 
-static byte q1_ambient_levels[4][10] =
+static byte q1_ambient_levels[4][8] =
 {
-  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
-  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
-  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
-  { 255, 176, 152, 128, 104, 80, 56, 32, 16, 8 },
+  { 255, 208, 176, 144, 112, 80, 48, 16 },  // Water
+  { 255, 160, 128,  96,  64, 32,  0,  0 },  // Sky
+  { 255, 208, 176, 144, 112, 80, 48, 16 },  // Slime (unused)
+  { 255, 208, 176, 144, 112, 80, 48, 16 },  // Lava
 };
 
 
@@ -772,7 +772,7 @@ static void Q1_WriteLeaf(quake_leaf_c *leaf)
     {
       int dist = leaf->cluster->ambient_dists[k];
 
-      raw_leaf.ambient_level[k] = (dist < 10) ? q1_ambient_levels[k][dist] : 0;
+      raw_leaf.ambient_level[k] = (dist < 8) ? q1_ambient_levels[k][dist] : 0;
     }
   }
 
