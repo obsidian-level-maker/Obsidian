@@ -1734,8 +1734,8 @@ DOOM.SKINS =
   {
     _prefab = "START_LEDGE",
     _target = "edge",
-    _long   = 200,
-    _deep   = 128,
+    _long   = 192,
+    _deep   =  64,
 
     wall = "CRACKLE2",
   },
@@ -1747,12 +1747,44 @@ DOOM.SKINS =
   {
     _prefab = "WALL_SWITCH",
     _target = "edge",
-    _long   = 200,
+    _long   = 192,
     _deep   = 64,
 
     wall = "CRACKLE2",
 
     switch="SW1HOT", line_kind=11, x_offset=0, y_offset=0,
+  },
+
+
+  ----| ARCHES |----
+
+  Arch1 =
+  {
+    _prefab = "ARCH",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 64,
+  },
+
+
+  ----| DOORS |----
+
+  Silver1 =
+  {
+    _prefab = "DOOR",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 64,
+
+    width=128, height=72,
+
+    door="BIGDOOR1",
+    track="DOORTRAK",
+    key="LITE3",
+    step="STEP4",
+
+    x_offset=0, y_offset=0,
+    line_kind=1, tag=0,
   },
 
 
@@ -1762,12 +1794,12 @@ DOOM.SKINS =
   {
     _prefab = "ITEM_NICHE",
     _target = "edge",
-    _long   = 200,
+    _long   = 192,
     _deep   = 96,
   },
 
-
-  OLD_sw_blue2 =  -- NOT USED
+--[[
+  OLD_sw_blue2 =
   {
     prefab = "SWITCH_FLOOR_BEAM",
     skin =
@@ -1903,9 +1935,10 @@ DOOM.SKINS =
       line_kind=23,
     }
   },
+--]]
 
 
-  --- LOCKED DOORS ---
+  ---| LOCKED DOORS |---
 
   Locked_kc_blue =
   {
@@ -1999,7 +2032,7 @@ DOOM.SKINS =
   },
 
 
-  --- SWITCHED DOORS ---
+  ---| SWITCHED DOORS |---
 
   Door_blue =
   {
@@ -2124,6 +2157,33 @@ DOOM.SKINS =
     x_offset=0, y_offset=0,
     line_kind=103,
   },
+
+
+  ---| WINDOWS |---
+
+  Window1 =
+  {
+    _prefab = "WINDOW",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    track = "SHAWN2",
+  },
+
+
+  ---| FENCES |---
+
+  Fence1 =
+  {
+    _prefab = "FENCE",
+    _target = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    fence = "ICKWALL7",
+  },
+
 
 } -- end of DOOM.SKINS
 
@@ -2373,8 +2433,15 @@ DOOM.SUB_THEME_DEFAULTS =
   lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
                  Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 },
 
-  doors = { wooden=30, wooden_fast=20,
-            wooden2=20, wooden2_fast=10 },
+  arches = { Arch1 = 50 },
+
+  doors = { Silver1 = 50 },
+
+  windows = { Window1 = 50 }, 
+
+  fences = { Fence1 = 50 },
+
+  --------- OLD CRUD --------> > >
 
   steps = { step1=50 },
 
@@ -2591,7 +2658,7 @@ DOOM1.SUB_THEMES =
       },
     },
 
-    doors =
+    OLD__doors =
     {
       silver=20, silver_fast=33, silver_once=2,
       bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
@@ -2939,7 +3006,7 @@ DOOM2.SUB_THEMES =
       },
     },
 
-    doors =
+    OLD__doors =
     {
       silver=20, silver_fast=33, silver_once=2,
       bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
@@ -3323,7 +3390,7 @@ DOOM2.SUB_THEMES =
 
     bars = { bar_wood=50, bar_gray=50, bar_silver=50 },
 
-    doors = { wolf_door=90, wolf_elev_door=5 },
+    OLD__doors = { wolf_door=90, wolf_elev_door=5 },
 
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _else=0 },
 
@@ -4188,7 +4255,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["doom1"] =
+UNFINISHED["doom1"] =
 {
   label = "Doom 1",
 
