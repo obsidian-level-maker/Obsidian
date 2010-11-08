@@ -61,17 +61,6 @@ function Trans.modify(what, value)
 end
 
 
-function Trans.set_override(func, data, no_ents)
-  Trans.overrider = func
-  Trans.override_data = data
-  Trans.no_entities = no_ents
-end
-
-function Trans.clear_override()
-  Trans.set_override(nil, nil, nil)
-end
-
-
 function Trans.apply_xy(x, y)
   local T = Trans.TRANSFORM
 
@@ -241,13 +230,6 @@ function Trans.brush(coords, clip_rects)
     end
 
     Trans.collect_flags(C)
-  end
-
-  -- the overrider can peek at the brush, or even steal it entirely
-  if Trans.overrider then
-    if not Trans.overrider(coords, Trans.override_data) then
-      return
-    end
   end
 
   -- ignore space management brushes here
@@ -1682,9 +1664,6 @@ function Fab_render(fab)
 
 
   ---| Fab_render |---
-
--- FIXME: more junk, remove it
-if Trans.overrider then return end
 
   for _,B in ipairs(fab.brushes) do
     if not Trans.brush_is_space(B) then

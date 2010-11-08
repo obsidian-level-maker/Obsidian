@@ -813,52 +813,6 @@ end
 
 
 
-function Fab_with_update(R, fab, T, skin1, skin2, skin3) 
-
-error("WTF")
-
-  gui.debugf("Fab_with_update : %s\n", tostring(fab))
-
-  local POST_FAB =
-  {
-    fab = fab,
-    trans = T,
-
-    skin1 = skin1,
-    skin2 = skin2,
-    skin3 = skin3,
-
-    R = R,
-    fab_tag = Plan_alloc_id("prefab"),
-
-    polys = {},
-  }
-
-  -- save info to render it later
-  -- FIXME: only process the skins ONCE
-  table.insert(R.post_fabs, POST_FAB)
-
-  Trans.set_override(Layout_check_brush, POST_FAB, true)
-
-  Fabricate(fab, T, { skin1, skin2, skin3 })
-
-  Trans.clear_override()
-
-  -- associate the walk/air polygons to this POST-FAB
-  if not (fab == "MARK_USED" or fab == "MARK_WALK" or fab == "MARK_AIR") then
-    for _,P in ipairs(POST_FAB.polys) do
-      if P.kind == "walk" or P.kind == "air" or P.kind == "nosplit" then
-        P.post_fab = POST_FAB
-        table.insert(R.poly_assoc, P)
-      end
-    end
-  end
-
-  return POST_FAB
-end
-
-
-
 function Layout_initial_walls(R)
   --
   -- this picks the smallest prefab available for each usage on
@@ -911,7 +865,7 @@ function Layout_initial_walls(R)
   end
 
 
-  local function create_span(E, skin)
+  local function create_span(E, skin, extra_skins)
     local long = assert(skin._long)
     local deep = assert(skin._deep)
 
@@ -928,8 +882,19 @@ function Layout_initial_walls(R)
 if not R.wall_fab_list then R.wall_fab_list = {} end
 table.insert(R.wall_fab_list, fab)
 
-    Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {},
-                    { item="none", outer="FOO",track="BAR",frame="FOO" }, skin })
+
+    if R.skin then table.insert(extra_skins, 1, R.skin) end
+    if THEME.skin then table.insert(extra_skins, 1, THEME.skin) end
+
+    SP.fab = fab
+    SP.extra_skins = extra_skins
+    
+    
+    local skins = table.copy(extra_skins)
+    table.insert(skins, skin)
+
+    Fab_apply_skins(fab, skins)
+
 
     local back = 0
 
@@ -941,8 +906,6 @@ table.insert(R.wall_fab_list, fab)
                                    long1, long2, back, deep)
 
     Fab_transform_XY(fab, T)
-
-    SP.fab = fab
   end
 
 
@@ -985,7 +948,28 @@ table.insert(R.wall_fab_list, fab)
       E.usage.conn.lock.switches = assert(E.minimal.skin._switches)
     end
 
-    create_span(E, E.minimal.skin)
+    local extra_skins = {}
+
+local CRUD = { item="none", outer="_ERROR",track="_ERROR",frame="_ERROR",
+               rail="STEPTOP", metal="METAL", }
+table.insert(extra_skins, CRUD)
+
+    if E.usage.kind == "door" and E.usage.conn.lock then
+      local lock = E.usage.conn.lock
+      if lock.tag then
+        table.insert(extra_skins, { tag = lock.tag, targetname = "sw" .. tostring(lock.tag) })
+      end
+    end
+
+    if E.usage.kind == "important" and E.usage.lock and E.usage.lock.kind == "KEY" then
+      table.insert(extra_skins, { item = E.usage.lock.key })
+    end
+
+    if E.usage.kind == "important" and E.usage.lock and E.usage.lock.kind == "SWITCH" then
+      table.insert(extra_skins, { tag = E.usage.lock.tag })
+    end
+
+    create_span(E, E.minimal.skin, extra_skins)
   end
 
 
@@ -1004,185 +988,6 @@ gui.printf("initial_walls\n")
         local is_door = sel(E.usage and E.usage.kind == "door", 1, 2)
         if pass == is_door then
           initial_edge(E)
-        end
-      end
-    end
-  end
-end
-
-
-
-function Layout_select_windows()
-
-  local function place_straddler(E, kind, K, N, dir)
-    local NK = E.K:neighbor(E.side)
-    local E2 = NK.edges[10 - E.side]
-
-    local R = K.room
-
-    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
-
-    assert(long >= 256)
-
-    local deep
-    
-    if kind == "door" then
-      long = 208
-      deep = 128
-    else
-      -- windows use most of the length
-      long = long - 72*2
-      deep = 32
-    end
-
-    -- FIXME : pick these properly
-    local deep1 = deep / 2
-    local deep2 = deep / 2
-
-
-    -- FIXME : BOGUS  BOGUS  BOGUS
-     E.strad_deep = deep / 2
-    E2.strad_deep = deep / 2
-
-
-    assert(K.edges[dir])
-    assert(N.edges[10-dir])
-
-
-    local edge_long = K.edges[dir].long
-
-    local long1 = (edge_long - long) / 2
-    local long2 = (edge_long + long) / 2
-
-
-    local SP
-    
-    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
-    SP.usage = "straddler"
-
-    -- NOTE: if not centred, would need different long1/long2 for other side
-    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
-    SP.usage = "straddler"
-  end
-
-
-  local function select_window(R, K, E)
-    local W = E.usage
-    E.usage.fab = "WINDOW"
-    if R.outdoor and E.K:neighbor(E.side).room.outdoor then E.usage.fab = "FENCE" end
-    E.skin2 = { fence="ICKWALL7", rail="STEPTOP", metal="METAL", blob="GSTLION", torch="red_torch_sm" }
-
-    place_straddler(E, "window", W.K1, W.K2, W.dir)
-  end
-
-
-  --| Layout_select_windows |--
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,K in ipairs(R.sections) do
-      for _,E in pairs(K.edges) do
-        if E.usage and E.usage.kind == "window" and not E.usage.placed then
-          select_window(R, K, E)
-          E.usage.placed = true
-        end
-      end
-    end
-  end
-end
-
-
-function Layout_select_doors()
-
-  local function place_straddler(E, kind, K, N, dir)
-    local NK = E.K:neighbor(E.side)
-    local E2 = NK.edges[10 - E.side]
-
-    local R = K.room
-
-    local long = geom.vert_sel(dir, K.x2 - K.x1, K.y2 - K.y1)
-
-    assert(long >= 256)
-
-    local deep
-    
-    if kind == "door" then
-      long = 208
-      deep = 128
-    else
-      -- windows use most of the length
-      long = long - 72*2
-      deep = 32
-    end
-
-    -- FIXME : pick these properly
-    local deep1 = deep / 2
-    local deep2 = deep / 2
-
-
-    -- FIXME : BOGUS  BOGUS  BOGUS
-     E.strad_deep = deep / 2
-    E2.strad_deep = deep / 2
-
-
-    assert(K.edges[dir])
-    assert(N.edges[10-dir])
-
-
-    local edge_long = K.edges[dir].long
-
-    local long1 = (edge_long - long) / 2
-    local long2 = (edge_long + long) / 2
-
-
-    local SP
-    
-    SP = Layout_add_span(K.edges[dir], long1, long2, deep1, kind)
-    SP.usage = "straddler"
-
-    -- NOTE: if not centred, would need different long1/long2 for other side
-    SP = Layout_add_span(N.edges[10-dir], long1, long2, deep2, kind)
-    SP.usage = "straddler"
-  end
-
-
-  local function select_door(R, K, E)
-    local C = E.usage.conn
-
-    E.usage.fab = "ARCH"
-    
-    place_straddler(E, "door", C.K1, C.K2, C.dir)
-
-    if C.lock and C.lock.kind == "KEY" then
-      E.usage.edge_fabs = Layout_possible_prefabs("LOCK_DOOR", "edge", C.lock)
-      local skinname = rand.key_by_probs(E.usage.edge_fabs)
-stderrf("Locked door for %s ----> %s\n", C.lock.key, skinname)
-
-      E.usage.skin = assert(GAME.SKINS[skinname])
-      E.usage.fab  = assert(E.usage.skin._prefab)
-    end
-
-    if C.lock and C.lock.kind == "SWITCH" then
-      E.usage.edge_fabs = Layout_possible_prefabs("SWITCH_DOOR", "edge", C.lock)
-      local skinname = rand.key_by_probs(E.usage.edge_fabs)
-stderrf("Switched door ----> %s\n", skinname)
-      
-      E.usage.skin = assert(GAME.SKINS[skinname])
-      E.usage.fab  = assert(E.usage.skin._prefab)
-      E.usage.skin2 = { tag=C.lock.tag, targetname = "sw" .. tostring(C.lock.tag) }
-
-      C.lock.switches = assert(E.usage.skin._switches)
-    end
-  end
-
-
-  --| Layout_select_doors |--
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,K in ipairs(R.sections) do
-      for _,E in pairs(K.edges) do
-        if E.usage and E.usage.kind == "door" and not E.usage.placed then
-          select_door(R, K, E)
-          E.usage.placed = true
         end
       end
     end
@@ -1269,398 +1074,9 @@ function Layout_flesh_out_walls(R)
   end
 
 
-  local function build_corner(C)
-    local K = C.K
-    
-    local T = Trans.corner_transform(K.x1, K.y1, K.x2, K.y2, -88,
-                                     C.side, C.horiz, C.vert)
+  ---| Layout_flesh_out_walls |---
 
-    local fab = "CORNER" -- sel(C.concave, "CORNER_CONCAVE_CURVED", "CORNER_CURVED")
-
-    Fab_with_update(R, fab, T)
-
-    -- mark concave corners with a "nosplit" brush, which prevents a
-    -- problem where a floor prefab splits the room close to the corner
-    -- and the different rloor heights messes up a door (etc).
-
-    if C.concave then
-      T = Trans.box_transform(T.add_x - 48, T.add_y - 48,
-                              T.add_x + 48, T.add_y + 48, 0, 2)
-
-      Fab_with_update(R, "MARK_NOSPLIT", T)
-    end
-  end
-
-
-  local function build_wall(E, SP)
-    assert(SP.long1 < SP.long2)
-    assert(SP.deep1 > 0)
-
-    local K = E.K
-
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88,
-                                   E.side, SP.long1, SP.long2, 0, SP.deep1)
-  
-    local fab = "WALL"
-    local skin = {}
-
-    local N = E.K:neighbor(E.side)
-
-    inner_outer_tex(skin, E.K.room, N and N.room)
-
-    Fab_with_update(R, fab, T, skin)
-  end
-
-
-  local function build_fake_span(E, long1, long2)
-    assert(long2 > long1)
-
-    local deep = 64
-    
-    local SPAN =
-    {
-      long1 = long1,
-      long2 = long2,
-      deep1 = deep,
-      deep2 = deep,
-      usage = "fake"
-    }
-
-    build_wall(E, SPAN)
-
-    E.fake_deep = deep  -- FIXME hack
-  end
-
-
-  local function do_straddler_solid(E, SP, same_room, POST_FAB)
-    local K = E.K
-
-    local gap = 80 -- FIXME put in span or USAGE
-
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88, E.side,
-                                   SP.long1, SP.long2, 0, SP.deep1)
-
-    Fab_with_update(R, "MARK_USED", T)
-
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, -88, E.side,
-                                   SP.long1, SP.long2, SP.deep1, SP.deep1 + gap)
-
-    local PF
-
-    if E.usage.kind == "window" then
-      PF = Fab_with_update(R, "MARK_AIR", T)
-    else
-      PF = Fab_with_update(R, "MARK_WALK", T)
-    end
-
-    -- associate the walk/area polygons with this prefab (if any)
-gui.debugf("########################### MARK_WALK ##################\n")
-      for _,P in ipairs(PF.polys) do
-        if P.kind == "walk" or P.kind == "air" then
-gui.debugf("found one: kind = %s  fab = %s\n", P.kind, (POST_FAB and POST_FAB.fab) or "NONE")
-          P.post_fab = POST_FAB
-          table.insert(R.poly_assoc, P)
-        end
-
-        -- find the entry walk area (a bit presumptuous)
-        if P.kind == "walk" and not same_room then
-          P.is_entry = true
-        end
-      end
-  end
-
-
-  local function build_straddler_span(kind, E, SP, z, back, fab, skin1, skin2, skin3)
-    local K = E.K
-
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
-                                   SP.long1, SP.long2, -back, SP.deep1)
-
-    -- Note: not using Fab_with_update() for automatic space updating,
-    --       because straddlers affect TWO rooms at the same time.
-    --       instead we mark the quads directly.
-
-    local POST_FAB =
-    {
-      fab = fab,
-      trans = T,
-
-      skin1 = skin1,
-      skin2 = skin2,
-      skin3 = skin3,
-
-      R = R,
-      fab_tag = Plan_alloc_id("prefab"),
-    }
-
-    if kind == "window" then
-      POST_FAB.z = z
-    end
-
-    table.insert(R.post_fabs, POST_FAB)
-
-    return POST_FAB
-  end
-
-
-  local function build_straddler(E, SP)
-    local K = E.K
-    local N = K:neighbor(E.side)
-
-
-    local other_R = N.room
-
-    local E2 = N.edges[10 - E.side]
-    assert(E2.usage.kind == E.usage.kind)
-
-    local back = E.strad_deep
-
-
-    local z = -88 --- ROOM.entry_floor_h
-
-
-    local fab = assert(E.usage.fab)
-    local skin = E.usage.skin or {}
-    local sk2 = E.usage.skin2 or {}
-    local sk3 = E.usage.skin3
-
---[[  REMOVE THIS SHITE
-
-    if info.kind == "window" then
-      fab = E.usage.fab
-      sk2 = E.usage.skin2
-      z = math.max(z, other_R.floor_min_h or 0)
-      z = z + 32
-    elseif GAME.format == "quake" then
-      fab = "QUAKE_ARCH"
-      sk2 = { frame="METAL1_1" }
-
-      if info.conn and info.conn.lock then
-        fab = "QUAKE_DOOR"
-        sk2 = { door="DOOR01_2" }
-        if info.conn.lock.key == "k_silver" then sk2.door_flags = DOOR_SILVER_KEY end
-        if info.conn.lock.key == "k_gold"   then sk2.door_flags = DOOR_GOLD_KEY end
-
-        if info.conn.lock.kind == "SWITCH" then
-          sk2.door = "ADOOR09_1"
-          sk2.targetname = string.format("t%d", info.conn.lock.tag)
-          sk2.message = "Find the button dude!"
-          sk2.wait = -1
-        end
-      end
-    else
-      fab = "DOOR"
-
-      if info.conn and info.conn.lock then
-        sk2 = GAME.DOORS[info.conn.lock.key]  -- FIXME WTF?
-        sk3 = { tag = info.conn.lock.tag }
-      else
-        sk2 = GAME.DOORS["silver"]
-        sk2.door = "BIGDOOR4"
-
-        -- TEST
-        fab = "ARCH_W_STAIR"
-        sk2.top = "FLAT1"
-        sk2.step = "FLAT23"
-      end
-      assert(sk2)
-    end
---]]
-
-    local long1 = SP.long1
-    local long2 = SP.long2
-
-    local long = long2 - long1
-    local count = 1
-
-
-    local fab_info = assert(PREFAB[fab])
-
-    if fab_info.repeat_width and (long / fab_info.repeat_width) >= 2 then
-      count = int(long / fab_info.repeat_width)
-    end
-
-
-    -- build it only once :
-    --    DOOR on first room (as it sets up the initial floor height for second room) 
-    --    WINDOW on second room (since there it knows height range on both sides)
-
-    if E.usage.kind == "window" then
-      if not E.usage.seen then
-        E.usage.seen = true
-        do_straddler_solid(E, SP, false)
-        return
-      end
-    else assert(E.usage.kind == "door")
-
-      if E.usage.built then
-        do_straddler_solid(E, SP, false)
-        return
-      end
-      E.usage.built = true
-    end
-
-
-    gui.debugf("Building straddler %s at %s side:%d\n", fab, K:tostr(), E.side)
-
-    -- FIXME!!!!!!
-    local skin0 = {}
-
-    inner_outer_tex(skin0, ROOM, other_R)
-
-    -- TODO: might be better to do the "repeat" thing in render_post_fab()
-    --       instead of here
-
-    local POST_FAB
-
-    for i = 1,count do
-      SP.long1 = long1
-      SP.long2 = long2
-
-      if i > 1     then SP.long1 = long1 + int(long * (i-1) / count) end
-      if i < count then SP.long2 = long1 + int(long * (i)   / count) end
-
-      POST_FAB = build_straddler_span(E.usage.kind, E, SP, z, back, fab, skin, sk2, sk3)
-
-      do_straddler_solid(E, SP, true, POST_FAB)
-    end
-
-
-    -- setup door prefab to transmit height to next room
-    -- (cannot be done here, we don't know the height yet)
-
-    if E.usage.kind == "door" then
-      POST_FAB.set_height_in = other_R
-      -- TODO: if any Z scaling, apply to room_dz
-      POST_FAB.set_height_dz =   (fab_info.room_dz or 0)
-    end
-  end
-
-
-  local function build_edge_prefab(E, SP)
-    assert(SP.prefab)
-    assert(SP.skin)
-
-    local K = E.K
-    local z = -88 --- ROOM.entry_floor_h
-
--- stderrf("build_edge_prefab: %s @ z:%d\n", SP.prefab, z)
-
-    local T = Trans.edge_transform(K.x1, K.y1, K.x2, K.y2, z, E.side,
-                                   SP.long1, SP.long2, 0, SP.deep1)
-
-    Fab_with_update(R, SP.prefab, T, SP.skin, SP.skin2)
-  end
-
-
-  local function build_edge(E)
-    local max_deep = 0
-
-    local L_long = 0
-    local R_long = E.long
-
-    local goes_horiz = geom.is_vert(E.side)
-    
-    if E.corn1 and not E.corn1.concave then
-      L_long = sel(goes_horiz, E.corn1.horiz, E.corn1.vert)
-    end
-
-    if E.corn2 and not E.corn2.concave then
-      R_long = E.long - sel(goes_horiz, E.corn2.horiz, E.corn2.vert)
-    end
-
-    for _,SP in ipairs(E.spans) do
-      if SP.long1 > L_long+1 then
-        build_fake_span(E, L_long, SP.long1)
-      end
-
-      if SP.usage == "straddler" then
-        build_straddler(E, SP)
-      else
-        build_edge_prefab(E, SP)
-      end
-
-      if SP.deep1 > max_deep then max_deep = SP.deep1 end
-
-      L_long = SP.long2
-    end
-
-    if R_long > L_long then
-      build_fake_span(E, L_long, R_long)
-    end
-
-    E.max_deep = math.max(max_deep, E.fake_deep or 0)
-  end
-
-
-  local function build_corners()
-    for _,K in ipairs(R.sections) do
-      for _,C in pairs(K.corners) do
-        build_corner(C)
-      end
-    end
-  end
-
-  local function build_edges()
-    for _,K in ipairs(R.sections) do
-      for _,E in pairs(K.edges) do
-        build_edge(E)
-      end
-    end
-  end
-
-
-  local function build_middles()
-    for _,K in ipairs(R.middles) do
-      local w, h = geom.box_size(K.x1, K.y1, K.x2, K.y2)
-      if w >= 600 and h >= 600 then
-        
-        local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
-
-        local T = Trans.spot_transform(mx, my, -88)
-
-        fab = "TECH_DITTO_1"
-        skin = { carpet = "FLAT14", computer = "SPACEW3",
-                 compside = "COMPSPAN", feet = "FLAT4" }
-
---      local fab = "CAGE"
---      local skin = { pillar="GRAY5", rail="MIDGRATE" }
-
-
-        Fab_with_update(R, fab, T, skin)
-      end
-    end
-
-    for _,IM in ipairs(R.importants) do -- FIXME !!!!!
-      if IM.place_K and IM.prefab then
-        local K = IM.place_K
-        local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
-
-        local T = Trans.spot_transform(mx, my, -88)
-        
-        Fab_with_update(R, IM.prefab, T, IM.skin)
-      end
-    end
-  end
-
-
-  --| Layout_flesh_out_walls |--
-
-  ROOM = R
-
-  for _,K in ipairs(R.sections) do
-    for _,E in pairs(K.edges) do
-      if E.usage and E.usage.kind == "important" then
----     temp_cruddy_edge_prefab_gunk(E, E.usage.sub, E.usage.lock)
-      end
-    end
-  end
-
-  decide_corner_sizes()
-
-  build_corners()
-
-  build_edges()
+  -- FIXME !!!!
 end
 
 
@@ -1673,14 +1089,12 @@ function Layout_all_walls()
   -- do doors after windows, as doors may want to become really big
   -- and hence would need to know about the windows.
 
-----FIXME !!!!!!!1
-do return end
-
-  Layout_select_windows()
-  Layout_select_doors()
+--##    Layout_select_windows()
+--##    Layout_select_doors()
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_flesh_out_walls(R)
+   Layout_flesh_out_walls(R)
+--TODO    Layout_flesh_out_middles(R)
   end
 end
 
@@ -2901,7 +2315,7 @@ function Layout_all_ceilings()
 
       local T = Trans.spot_transform(mx, my, R.ceil_h)
 
-      Fabricate("SKYLITE_1", T, {{ trim="WIZWOOD1_5", metal="WIZMET1_2" }})
+---???   Fabricate("SKYLITE_1", T, {{ trim="WIZWOOD1_5", metal="WIZMET1_2" }})
     else
       if GAME.format == "quake" then
         quake_temp_lights(R)
