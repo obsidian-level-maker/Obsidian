@@ -1769,7 +1769,7 @@ DOOM.SKINS =
 
   ----| DOORS |----
 
-  Silver1 =
+  Door_silver =
   {
     _prefab = "DOOR",
     _target = "edge",
@@ -2034,7 +2034,7 @@ DOOM.SKINS =
 
   ---| SWITCHED DOORS |---
 
-  Door_blue =
+  Door_SW_blue =
   {
     _prefab = "DOOR",
     _target = "edge",
@@ -2065,7 +2065,7 @@ DOOM.SKINS =
   },
 
 
-  Door_red =
+  Door_SW_red =
   {
     _prefab = "DOOR",
     _target = "edge",
@@ -2428,14 +2428,14 @@ DOOM.SUB_THEME_DEFAULTS =
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 },
 
-  switch_doors = { Door_blue = 50, Door_red = 50 },
+  switch_doors = { Door_SW_blue = 50, Door_SW_red = 50 },
 
   lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
                  Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 },
 
   arches = { Arch1 = 50 },
 
-  doors = { Silver1 = 50 },
+  doors = { Door_silver = 50 },
 
   windows = { Window1 = 50 }, 
 
