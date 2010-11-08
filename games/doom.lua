@@ -1733,7 +1733,7 @@ DOOM.SKINS =
   Start_ledge =
   {
     _prefab = "START_LEDGE",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   =  64,
 
@@ -1746,7 +1746,7 @@ DOOM.SKINS =
   Exit_switch =
   {
     _prefab = "WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 64,
 
@@ -1761,7 +1761,7 @@ DOOM.SKINS =
   Arch1 =
   {
     _prefab = "ARCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 64,
   },
@@ -1772,7 +1772,7 @@ DOOM.SKINS =
   Door_silver =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 64,
 
@@ -1793,7 +1793,7 @@ DOOM.SKINS =
   Item_niche =
   {
     _prefab = "ITEM_NICHE",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 96,
   },
@@ -1943,7 +1943,7 @@ DOOM.SKINS =
   Locked_kc_blue =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { kc_blue=1 },
 
     w=128, h=112, door_h=112,
@@ -1958,7 +1958,7 @@ DOOM.SKINS =
   Locked_kc_yellow =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { kc_yellow=1 },
 
     w=128, h=112, door_h=112,
@@ -1973,7 +1973,7 @@ DOOM.SKINS =
   Locked_kc_red =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { kc_red=1 },
 
     w=128, h=112,
@@ -1989,7 +1989,7 @@ DOOM.SKINS =
   Locked_ks_blue =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { ks_blue=1 },
 
     w=128, h=112, door_h=112,
@@ -2004,7 +2004,7 @@ DOOM.SKINS =
   Locked_ks_yellow =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { ks_yellow=1 },
 
     w=128, h=112, door_h=112,
@@ -2019,7 +2019,7 @@ DOOM.SKINS =
   Locked_ks_red =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { ks_red=1 },
 
     w=128, h=112, door_h=112,
@@ -2037,7 +2037,7 @@ DOOM.SKINS =
   Door_SW_blue =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _switches = { Switch_blue1=50 },
 
     w=128, h=112,
@@ -2054,7 +2054,7 @@ DOOM.SKINS =
   Switch_blue1 =
   {
     _prefab = "WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 48,
 
@@ -2068,7 +2068,7 @@ DOOM.SKINS =
   Door_SW_red =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _switches = { Switch_red1=50 },
 
     w=128, h=112,
@@ -2085,7 +2085,7 @@ DOOM.SKINS =
   Switch_red1 =
   {
     _prefab = "WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 48,
 
@@ -2099,7 +2099,7 @@ DOOM.SKINS =
   Door_pink =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _switches = { Switch_pink1=50 },
 
     w=128, h=112,
@@ -2116,7 +2116,7 @@ DOOM.SKINS =
   Switch_pink1 =
   {
     _prefab = "WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 48,
 
@@ -2131,7 +2131,7 @@ DOOM.SKINS =
   Door_vine =
   {
     _prefab = "DOOR",
-    _target = "edge",
+    _where  = "edge",
     _switches = { Switch_vine1=50 },
 
     w=128, h=112,
@@ -2148,7 +2148,7 @@ DOOM.SKINS =
   Switch_vine1 =
   {
     _prefab = "WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 48,
 
@@ -2164,7 +2164,7 @@ DOOM.SKINS =
   Window1 =
   {
     _prefab = "WINDOW",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 32,
 
@@ -2177,7 +2177,7 @@ DOOM.SKINS =
   Fence1 =
   {
     _prefab = "FENCE",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 32,
 

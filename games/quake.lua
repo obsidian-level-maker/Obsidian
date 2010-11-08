@@ -774,7 +774,7 @@ QUAKE1.SKINS =
   START_LEDGE =
   {
     _prefab = "START_LEDGE",
-    _target = "edge",
+    _where  = "edge",
     _long   = 200,
     _deep   = 128,
   },
@@ -785,7 +785,7 @@ QUAKE1.SKINS =
   WALL_EXIT =
   {
     _prefab = "QUAKE_WALL_EXIT",  -- QUAKE_WALL_EXIT
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 96,
 
@@ -800,7 +800,7 @@ QUAKE1.SKINS =
   Item_niche =
   {
     _prefab = "ITEM_NICHE",
-    _target = "edge",
+    _where  = "edge",
     _long   = 200,
     _deep   = 96,
 
@@ -813,7 +813,7 @@ QUAKE1.SKINS =
   Locked_silver =
   {
     _prefab = "QUAKE_DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { k_silver=1 },
 
     door = "DOOR01_2",
@@ -823,7 +823,7 @@ QUAKE1.SKINS =
   Locked_gold =
   {
     _prefab = "QUAKE_DOOR",
-    _target = "edge",
+    _where  = "edge",
     _keys = { k_gold=1 },
 
     door = "DOOR01_2",
@@ -836,7 +836,7 @@ QUAKE1.SKINS =
   Door_sw =
   {
     _prefab = "QUAKE_DOOR",
-    _target = "edge",
+    _where  = "edge",
     _switches = { Switch_1=50 },
 
     door = "ADOOR09_1",
@@ -847,7 +847,7 @@ QUAKE1.SKINS =
   Switch_1 =
   {
     _prefab = "QUAKE_WALL_SWITCH",
-    _target = "edge",
+    _where  = "edge",
     _long   = 192,
     _deep   = 48,
 
