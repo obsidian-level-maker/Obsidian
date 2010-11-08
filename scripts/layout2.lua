@@ -345,16 +345,13 @@ end
 
 
 
-function Layout_add_span(E, long1, long2, deep, kind)
+function Layout_add_span(E, long1, long2, deep)
 
 -- stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
 
   assert(long2 > long1)
 
-  assert(E.usage)
-
   -- check if valid
-
   assert(long1 >= 16)
   assert(long2 <= E.long - 16)
 
@@ -632,12 +629,6 @@ function temp_cruddy_edge_prefab_gunk(E, kind, lock)
 
   local skinname = rand.key_by_probs(E.usage.edge_fabs)
 
-if skinname == "FUCK" then
-  assert(E.usage.lock.switches)
-  skinname = rand.key_by_probs(E.usage.lock.switches)
-stderrf("Switch skin --> %s\n", skinname)
-end
-
   local skin = assert(GAME.SKINS[skinname])
   local skin2
 
@@ -823,6 +814,9 @@ end
 
 
 function Fab_with_update(R, fab, T, skin1, skin2, skin3) 
+
+error("WTF")
+
   gui.debugf("Fab_with_update : %s\n", tostring(fab))
 
   local POST_FAB =
@@ -917,6 +911,41 @@ function Layout_initial_walls(R)
   end
 
 
+  local function create_span(E, skin)
+    local long = assert(skin._long)
+    local deep = assert(skin._deep)
+
+    local long1 = int(E.long - long) / 2
+    local long2 = int(E.long + long) / 2
+
+    local SP = Layout_add_span(E, long1, long2, deep, prefab)
+
+    if E.usage.FOOBIE then return end
+    E.usage.FOOBIE = true
+
+    local fab = Fab_create(skin._prefab)
+
+if not R.wall_fab_list then R.wall_fab_list = {} end
+table.insert(R.wall_fab_list, fab)
+
+    Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {},
+                    { item="none", outer="FOO",track="BAR",frame="FOO" }, skin })
+
+    local back = 0
+
+    if E.usage.kind == "window" or E.usage.kind == "door" then
+      back = -deep
+    end
+
+    local T = Trans.edge_transform(E.K.x1, E.K.y1, E.K.x2, E.K.y2, 0, E.side,
+                                   long1, long2, back, deep)
+
+    Fab_transform_XY(fab, T)
+
+    SP.fab = fab
+  end
+
+
   local function initial_edge(E)
     if not E.usage then
       return
@@ -942,19 +971,21 @@ function Layout_initial_walls(R)
 
       if is_minimal_edge(skin) then
         gui.printf("  minimal_fab @ %s:%d ---> %s\n", E.K:tostr(), E.side, name)
-        E.minimal_fab = skin
+        E.minimal = { skin=skin }
         break;
       end
     end
 
-    if not E.minimal_fab then
+    if not E.minimal then
       gui.printf("E.usage =\n%s\n", table.tostr(E.usage, 2))
       error("Lacking minimal prefab for: " .. tostring(E.usage.kind))
     end
 
     if E.usage.kind == "door" and E.usage.conn.lock and E.usage.conn.lock.kind == "SWITCH" then
-      E.usage.conn.lock.switches = assert(E.minimal_fab._switches)
+      E.usage.conn.lock.switches = assert(E.minimal.skin._switches)
     end
+
+    create_span(E, E.minimal.skin)
   end
 
 
@@ -1642,6 +1673,9 @@ function Layout_all_walls()
   -- do doors after windows, as doors may want to become really big
   -- and hence would need to know about the windows.
 
+----FIXME !!!!!!!1
+do return end
+
   Layout_select_windows()
   Layout_select_doors()
 
@@ -1649,6 +1683,23 @@ function Layout_all_walls()
     Layout_flesh_out_walls(R)
   end
 end
+
+
+
+function Layout_build_walls(R)
+  for _,fab in ipairs(R.wall_fab_list or {}) do
+    
+--FIXME !!!!!!!! TEMP CRUD
+if not fab.z then fab.z = rand.irange(128,384) end
+
+    local T = { add_z = fab.z }
+
+    Fab_transform_Z(fab, T)
+
+    Fab_render(fab)
+  end
+end
+
 
 
 --------------------------------------------------------------------
@@ -2800,6 +2851,7 @@ end
 function Layout_all_floors()
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_the_floor(R)
+    Layout_build_walls(R)
     Layout_flesh_out_floors(R)
   end
 end
