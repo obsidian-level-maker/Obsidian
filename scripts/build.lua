@@ -383,6 +383,22 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
 end
 
 
+function Trans.bare_quad(x1,y1, x2,y2, b,t)
+  local coords =
+  {
+    { x=x1, y=y1 },
+    { x=x2, y=y1 },
+    { x=x2, y=y2 },
+    { x=x1, y=y2 },
+  }
+
+  if b then table.insert(coords, { b=b }) end
+  if t then table.insert(coords, { t=t }) end
+
+  return coords
+end
+
+
 function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
   return
   {

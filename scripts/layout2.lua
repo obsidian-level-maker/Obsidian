@@ -119,6 +119,21 @@ function Layout_initial_space(R)
 end
 
 
+function Layout_initial_space2(R)
+  local list = {}
+
+  -- FIXME: blocks
+  for _,B in ipairs(R.sections) do
+    local BRUSH = Trans.bare_quad(B.x1, B.y1, B.x2, B.y2)
+
+    table.insert(list, BRUSH)
+  end
+
+  return list
+end
+
+
+
 function Layout_monotonic_spaces(R)
   -- Monotonic here means that if you cut the space in half either
   -- horizontally or vertically, you will always end up with two
@@ -1097,34 +1112,6 @@ end
 
 function Layout_the_floor(R)
 
-  local function extract_t(brush)
-    for _,C in ipairs(brush) do
-      if C.t then
-        R.entry_floor_h = C.t
-stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
-        return
-      end
-    end
-
-    error("Missing height in straddler walk brush")
-  end
-
-
-  local function find_entry_walk()
-    for _,fab in ipairs(R.prefabs) do
-      if fab.straddler and fab.straddler.R2 == R then
-        for _,B in ipairs(fab.brushes) do
-          if B[1].m == "walk" and B[1].room == 2 then
-            -- found it
-            extract_t(B)
-            return
-          end
-        end
-      end
-    end
-  end
-
-
   local function merge_walks(polys, tag1, tag2)
     if tag1 > tag2 then
       tag1, tag2 = tag2, tag1
@@ -1468,7 +1455,7 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
-  local function render_floor(floor)
+  local function OLD__render_floor(floor)
     assert(floor.z)
 
     local mat
@@ -2089,8 +2076,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     assign_floor_heights()
 
-    R.floor_min_h =  9e9
-    R.floor_max_h = -9e9
 
     for _,F in ipairs(R.all_floors) do
       collect_floor_fabs(F)
@@ -2121,6 +2106,113 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
   end
 
+  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+  local function extract_t(brush)
+    for _,C in ipairs(brush) do
+      if C.t then
+        R.entry_floor_h = C.t
+stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
+        return
+      end
+    end
+
+    error("Missing height in straddler walk brush")
+  end
+
+
+  local function find_entry_walk()
+    for _,fab in ipairs(R.prefabs) do
+      if fab.straddler and fab.straddler.R2 == R then
+        for _,B in ipairs(fab.brushes) do
+          if B[1].m == "walk" and B[1].room == 2 then
+            -- found it
+            extract_t(B)
+            return
+          end
+        end
+      end
+    end
+  end
+
+
+  local function collect_walks()
+    local list = {}
+
+    for _,fab in ipairs(R.prefabs) do
+      local is_entry = (fab.straddler and fab.straddler.R2 == R)
+      
+      if fab.room == R or is_entry then
+        for _,B in ipairs(fab.brushes) do
+          if B[1].m == "walk" and
+             (not is_entry or (is_entry and B[1].room == 2))
+          then
+            B[1].fab = fab
+            table.insert(list, B)
+          end
+        end
+      end
+    end
+
+    return list
+  end
+
+
+  local function initial_floor()
+    -- FIXME
+
+    local F =
+    {
+      z = R.entry_floor_h,
+      brushes = Layout_initial_space2(R),
+      walks   = collect_walks(),
+    }
+
+    return F
+  end
+
+
+  local function render_floor(F)
+    assert(F.z)
+
+    table.insert(R.all_floors, F)
+
+    -- assign height to prefabs and out-going straddlers
+    for _,walk in ipairs(F.walks) do
+      local fab = walk[1].fab
+      if not fab.z then fab.z = F.z end
+    end
+
+    -- pick a floor texture
+    if not F.mat then
+      if R.outdoor then
+        F.mat = rand.pick(LEVEL.courtyard_floors)
+      else
+        F.mat = rand.pick(LEVEL.building_floors)
+      end
+    end
+
+    -- create the brushes
+    local mat = Mat_lookup(F.mat)
+
+    local w_tex = mat.t
+    local f_tex = mat.f or mat.t
+
+    for _,B in ipairs(F.brushes) do
+      table.insert(B, { t=F.z, tex=f_tex })
+
+      Trans.brush(B)
+    end
+  end
+
+
+  local function try_subdivide_floor(F)
+    
+    -- FIXME .... try possible stuff .... FIXME
+
+    -- unable to divide further
+    render_floor(F)
+  end
 
 
   ---===| Layout_the_floor |===---
@@ -2131,15 +2223,22 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
   find_entry_walk()
 
-  if not ROOM.entry_floor_h then
-    ROOM.entry_floor_h = rand.pick { 128, 192, 256, 320 }
+  if not R.entry_floor_h then
+    R.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
 
+  R.all_floors = {}
 
-  build_floor()
+  R.floor_min_h = R.entry_floor_h
+  R.floor_max_h = R.entry_floor_h
+
+
+  local floor = initial_floor()
+
+  -- this will render floors as it goes
+  try_subdivide_floor(floor)
 
   prepare_ceiling()
-
 end
 
 
@@ -2205,7 +2304,7 @@ if table.empty(floor.space.polys) then return end
 
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
-    spots_for_floor(F)
+--!!!!!! FIXME FIXME    spots_for_floor(F)
   end
 end
 
