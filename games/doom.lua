@@ -2205,6 +2205,13 @@ DOOM.SKINS =
   },
 
 
+  ---| FLOORS |---
+
+  H_Stair6 =
+  {
+    _prefab = "H_STAIR_6",
+  },
+
 } -- end of DOOM.SKINS
 
 
@@ -2460,6 +2467,8 @@ DOOM.SUB_THEME_DEFAULTS =
   windows = { Window1 = 50 }, 
 
   fences = { Fence1 = 50 },
+
+  floors = { H_Stair6 = 50 },
 
   --------- OLD CRUD --------> > >
 
