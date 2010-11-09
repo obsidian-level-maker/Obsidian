@@ -1467,11 +1467,6 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
-  local function brush_bbox(coords)
-    -- TODO
-  end
-
-
   local function floor_check_brush(coords, data)
     local m = coords[1].m
 
@@ -1962,17 +1957,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function prepare_ceiling()
-    local h = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
-
-    if R.outdoor then
-      R.sky_h = h
-    else
-      R.ceil_h = h
-    end
-  end
-
-
   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
   local function extract_t(brush)
@@ -2003,7 +1987,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function collect_brushes(kind)
+  local function collect_spaces(kind)
     local list = {}
 
     for _,fab in ipairs(R.prefabs) do
@@ -2170,11 +2154,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       entry = R.entry_walk,
     }
 
-    F.brushes = Layout_initial_space2(R),
+    F.brushes = Layout_initial_space2(R)
 
-    F.walks    = collect_brushes("walk"),
-    F.airs     = collect_brushes("air"),
-    F.nosplits = collect_brushes("nosplit"),
+    F.walks    = collect_spaces("walk")
+    F.nosplits = collect_spaces("nosplit")
+    F.airs     = collect_spaces("air")
 
     assert(#F.walks > 0)
 
@@ -2231,8 +2215,17 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function test_floor(...)
-    -- FIXME
+  local function test_floor_fab(F, skin, rotate)
+    -- FIXME : preliminary size check
+
+    --[[ FIXME
+
+      local raw_fab = assert(PREFABS[skin._prefab])
+
+      local fab = Fab_create(skin._prefab)
+
+      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
+    --]]
   end
 
 
@@ -2242,23 +2235,69 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     local poss = possible_floor_prefabs()
 
+    local ROTS = { 0, 90, 180, 270 }
+
     for loop = 1,20 do
       if table.empty(poss) then break; end
 
       local skinname = rand.key_by_probs(poss)
+      poss[skinname] = nil
 
       local skin = assert(GAME.SKINS[skinname])
 
-      local raw_fab = assert(PREFABS[skin._prefab])
+      rand.shuffle(ROTS)
 
-      -- FIXME : preliminary size check
+      for _,rotate in ipairs(ROTS) do
+        local info = test_floor_fab(skin, rotate)
 
-      local fab = Fab_create(skin._prefab)
-
-      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
-
-      
+        -- found a usable prefab?
+        if info then return info end
+      end
     end
+
+    return nil  -- failed
+  end
+
+
+  local function do_intersection(list, info, FB, B)
+    -- FIXME
+  end
+
+  local function intersect_brushes(origs, info, space)
+    local list = {}
+
+    for _,FB in ipairs(info.fab.brushes) do
+      if FB[1].m == "floor" and FB[1].space == space then
+        for _,B in ipairs(origs) do
+          do_intersection(list, info, FB, B)
+        end
+      end
+    end
+
+    return list
+  end
+
+
+  local function transfer_spaces(origs, info, space)
+    local kind = origs[1]
+    local list = {}
+
+    for _,B in ipairs(origs) do
+      -- FIXME
+    end
+
+    return list
+  end
+
+
+  local function transfer_zones(origs, info, space)
+    local list = {}
+
+    for _,zones in ipairs(origs) do
+      -- FIXME
+    end
+
+    return list
   end
 
 
@@ -2267,7 +2306,25 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     {
       level = F.level + 1,
     }
-    -- FIXME
+
+    floor.brushes  = intersect_brushes(F.brushes, info, space)
+
+    floor.walks    = transfer_spaces(F.walks,    info, space)
+    floor.nosplits = transfer_spaces(F.nosplits, info, space)
+    floor.airs     = transfer_spaces(F.airs,     info, space)
+
+    floor.zones    = transfer_zones(F.zones, info, space)
+
+    --FIXME entry
+
+    -- add walks/airs/nosplits from prefab
+    for _,B in ipairs(info.fab.brushes) do
+      if B[1].space == space then
+        if B[1].m == "walk"    then table.insert(floor.walks, B) end
+        if B[1].m == "air"     then table.insert(floor.airs,  B) end
+        if B[1].m == "nosplit" then table.insert(floor.nosplits, B) end
+      end
+    end 
 
     return floor
   end
@@ -2278,7 +2335,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function subdivide(F, info)
-    
     local new_floors = {}
 
     for i = 1,info.num_spaces do
@@ -2303,6 +2359,17 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- unable to divide further
     render_floor(F)
+  end
+
+
+  local function prepare_ceiling()
+    local h = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
+
+    if R.outdoor then
+      R.sky_h = h
+    else
+      R.ceil_h = h
+    end
   end
 
 
