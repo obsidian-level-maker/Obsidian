@@ -641,6 +641,20 @@ function Trans.brush_bbox(brush)
 end
 
 
+function Trans.brush_get_b(brush)
+  for _,C in ipairs(brush) do
+    if C.b then return C.b end
+  end
+end
+
+
+function Trans.brush_get_t(brush)
+  for _,C in ipairs(brush) do
+    if C.t then return C.t end
+  end
+end
+
+
 function Trans.brush_is_quad(brush)
   local coords = {}
   for _,C in ipairs(brush) do

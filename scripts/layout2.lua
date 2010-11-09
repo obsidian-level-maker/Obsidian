@@ -1112,6 +1112,10 @@ end
 
 function Layout_the_floor(R)
 
+  -- fwd decl --
+  local function try_subdivide_floor() end
+
+
   local function merge_walks(polys, tag1, tag2)
     if tag1 > tag2 then
       tag1, tag2 = tag2, tag1
@@ -1960,12 +1964,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
   local function extract_t(brush)
-    for _,C in ipairs(brush) do
-      if C.t then
-        R.entry_floor_h = C.t
-        R.entry_walk = brush
-        return
-      end
+    local t = Trans.brush_get_t(brush)
+
+    if t then
+      R.entry_floor_h = t
+      R.entry_walk = brush
+      return
     end
 
     error("Missing height in straddler walk brush")
@@ -2110,8 +2114,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     -- (done AFTER allowing some room for player, since walk areas
     --  already guarantee the player can fit).
 
-    for _,brush in ipairs(walks) do
-      narrow_zone_for_walk(zone, brush)
+    for _,W in ipairs(walks) do
+      narrow_zone_for_walk(zone, W)
     end
 
     zone.x1 = zone.x1 + 8
@@ -2180,8 +2184,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     table.insert(R.all_floors, F)
 
     -- assign height to prefabs and out-going straddlers
-    for _,walk in ipairs(F.walks) do
-      local fab = walk[1].fab
+    for _,W in ipairs(F.walks) do
+      local fab = W[1].fab
       if not fab.z then fab.z = F.z end
     end
 
@@ -2232,6 +2236,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function find_usable_floor(F)
     -- FIXME we only support subdividing single monotones right now
     if #R.mono_list > 1 then return nil end
+
+    -- FIXME: .....recursion limit for testing.....
+    if F.level >= 2 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -2305,6 +2312,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     local floor =
     {
       level = F.level + 1,
+      space = space,
     }
 
     floor.brushes  = intersect_brushes(F.brushes, info, space)
@@ -2315,9 +2323,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     floor.zones    = transfer_zones(F.zones, info, space)
 
-    --FIXME entry
+    -- is entry brush in this floor?
+    for _,W in ipairs(floor.walks) do
+      if W == F.entry then
+        F.entry_space = space
+      end
+    end
 
-    -- add walks/airs/nosplits from prefab
+    -- add the walks/airs/nosplits from prefab
     for _,B in ipairs(info.fab.brushes) do
       if B[1].space == space then
         if B[1].m == "walk"    then table.insert(floor.walks, B) end
@@ -2330,8 +2343,27 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  -- fwd decl --
-  local function try_subdivide_floor() end
+  local function find_prefab_add_z(info)
+    for _,B in ipairs(info.fab.brushes) do
+      if B[1].m == "walk" and B[1].walk_z then
+        local t = assert(Trans.brush_get_t(B))
+        return B[1].walk_z - t
+      end
+    end
+
+    error("prefab walk brushes failed to get a height") 
+  end
+
+
+  local function find_new_entry_walk(F, info)
+    for _,B in ipairs(info.fab.brushes) do
+      if B[1].m == "walk" and B[1].space == F.space then
+        return B
+      end
+    end
+
+    error("unable to find new floor's entry walk")
+  end
 
 
   local function subdivide(F, info)
@@ -2341,9 +2373,42 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       new_floors[i] = create_new_floor(F, info, i)
     end
 
-    -- FIXME
+    -- grab the new floor which contains the entry walk brush.  That
+    -- brush is the only one with a known fixed height, and we need
+    -- to recursively handle that floor before the others (since the
+    -- others floors have nothing to get their heights from).
 
+    assert(F.entry_space)
+
+    local first = table.remove(new_floors, F.entry_space)
+
+    first.entry = F.entry
+
+    -- TODO: if we allow prefab with "unused" spaces (i.e. there
+    --       were less walk brushes than spaces), then we need to
+    --       ensure that the entry brush exists in a used space.
+
+    -- recursively handle it
+    try_subdivide_floor(first)
+
+    -- at this point, one of our prefab's walk brushes should have
+    -- a known height (since the first floor has been rendered now).
+    --
+    -- Hence we can now transform and render the floor prefab, which
+    -- will give all the other walk brushes in the prefab a known
+    -- fixed height.
+
+    local add_z = find_prefab_add_z(info)
+
+    Fab_transform_Z(info.fab, add_z)
+
+    Fab_render(info.fab)
+
+    -- recursively handle the remaining pieces
     for _,F2 in ipairs(new_floors) do
+      F2.entry = find_new_entry_walk(F2, info, )
+      F2.entry[1].walk_z = assert(Trans.brush_get_t(F2.entry))
+
       try_subdivide_floor(F2)
     end
   end
