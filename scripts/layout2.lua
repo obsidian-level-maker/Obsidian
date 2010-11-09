@@ -2179,7 +2179,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function render_floor(F)
-    assert(F.z)
+    assert(F.entry)
+
+    F.z = assert(F.entry[1].walk_z)
 
     table.insert(R.all_floors, F)
 
@@ -2209,6 +2211,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
       Trans.brush(B)
     end
+
+    R.floor_min_h = math.min(R.floor_min_h, F.z)
+    R.floor_max_h = math.max(R.floor_max_h, F.z)
   end
 
 
@@ -2274,12 +2279,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       local con = find_containing_space(fab, W)
       if not con then return nil end
 
+      W[1].con = con
       space_has_walk[con.space] = 1
     end
 
     for _,NS in ipairs(F.nosplits) do
       local con = find_containing_space(fab, NS)
       if not con then return nil end
+      NS[1].con = con
     end
        
     for _,A in ipairs(F.airs) do
@@ -2299,9 +2306,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     local zone_dx = zone.x2 - zone.x1
     local zone_dy = zone.y2 - zone.y1
-gui.debugf("choose_division: zone = %dx%d\n", dx, dy)
+gui.debugf("choose_division: zone = %dx%d\n", zone_dx, zone_dy)
 
-    local raw_fab = assert(PREFABS[skin._prefab])
+    local raw_fab = assert(PREFAB[skin._prefab])
 
     local x_size = raw_fab.x_size
     local y_size = raw_fab.y_size
@@ -2390,15 +2397,50 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 
 
   local function do_intersection(list, info, FB, B)
-    -- FIXME
+    local x1,y1,x2,y2 = Trans.brush_bbox(FB)
+    local x3,y3,x4,y4 = Trans.brush_bbox(B)
+
+    if not geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4) then
+      return
+    end
+
+    if Trans.brush_contains_brush(FB, B) then
+      table.insert(list, B)
+      return
+    end
+
+    -- FIXME !!!!
+    assert(Trans.brush_is_quad(FB))
+
+    local B = Trans.copy_brush(B)
+
+    local function try_cut(px1, py1, px2, py2)
+      if Trans.line_cuts_brush(B, px1, py1, px2, py2) then
+         Trans.      cut_brush(B, px1, py1, px2, py2)
+      end
+    end
+
+    try_cut(B, x1, 0, x1, 40)
+    try_cut(B, x2, 40, x2, 0)
+    try_cut(B, 0, y2, 40, y2)
+    try_cut(B, 40, y1, 0, y1)
+      
+    local x3,y3,x4,y4 = Trans.brush_bbox(B)
+
+    if not geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4) then
+      return
+    end
+
+    table.insert(list, B)
   end
 
-  local function intersect_brushes(origs, info, space)
+
+  local function intersect_brushes(brushes, info, space)
     local list = {}
 
     for _,FB in ipairs(info.fab.brushes) do
       if FB[1].m == "floor" and FB[1].space == space then
-        for _,B in ipairs(origs) do
+        for _,B in ipairs(brushes) do
           do_intersection(list, info, FB, B)
         end
       end
@@ -2408,23 +2450,46 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
   end
 
 
-  local function transfer_spaces(origs, info, space)
-    local kind = origs[1]
+  local function transfer_spaces(walks, info, space)
     local list = {}
 
     for _,B in ipairs(origs) do
-      -- FIXME
+      -- the 'con' field was set by full_test_floor_fab()
+      local con = B[1].con
+
+      if con then
+        assert(con[1].space)
+        if con[1].space == space then
+          table.insert(list, B)
+        end
+
+      else
+        assert(B[1].m == "air")
+
+        -- FIXME: if air_touches_space(info.fab, space, B) then ... end
+      end
     end
 
     return list
   end
 
 
-  local function transfer_zones(origs, info, space)
+  local function transfer_zones(zones, info, space)
     local list = {}
 
-    for _,zones in ipairs(origs) do
-      -- FIXME
+    for _,zone in ipairs(zones) do
+      for _,ZB in ipairs(info.fab.brushes) do
+        if ZB[1].m == "zone" and ZB[1].space == space then
+          local x1, y1, x2, y2 = Trans.brush_bbox(ZB)
+          
+          x1 = math.max(x1, zone.x1) ; x2 = math.min(x2, zone.x2)
+          y1 = math.max(y1, zone.y1) ; y2 = math.min(y2, zone.y2)
+
+          if x1 < x2 and y1 < y2 then
+            table.insert(list, { x1=x1, y1=y1, x2=x2, y2=y2 })
+          end
+        end
+      end
     end
 
     return list

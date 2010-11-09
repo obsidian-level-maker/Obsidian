@@ -2210,6 +2210,8 @@ DOOM.SKINS =
   H_Stair6 =
   {
     _prefab = "H_STAIR_6",
+
+    step = "STEP1",
   },
 
 } -- end of DOOM.SKINS

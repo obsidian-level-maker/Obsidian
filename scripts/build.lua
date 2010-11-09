@@ -662,7 +662,7 @@ function Trans.brush_is_quad(brush)
   end
 
   for i = 1,#coords do
-    local k = 1 + (i % coords)
+    local k = 1 + (i % #coords)
 
     if math.abs(coords[i].x - coords[k].x) > 0.1 then return false end
     if math.abs(coords[i].y - coords[k].y) > 0.1 then return false end
