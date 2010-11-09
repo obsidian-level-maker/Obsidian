@@ -2187,8 +2187,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- assign height to prefabs and out-going straddlers
     for _,W in ipairs(F.walks) do
+gui.debugf("WALK = \n")
+Trans.dump_brush(W)
       local fab = W[1].fab
-      if not fab.z then fab.z = F.z end
+      if not fab.z then fab.z = F.z end  -- FIXME: REMOVE ??
+      W[1].walk_z = F.z
     end
 
     -- pick a floor texture
@@ -2218,9 +2221,15 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function possible_floor_prefabs()
-    -- TODO: filter based on various stuff...
+    local tab = table.copy(THEME.floors)
 
-    return THEME.floors
+    -- TODO: filter based on various stuff...
+    
+    if table.empty(tab) then
+      error("No floor prefabs are possible in room")
+    end
+
+    return tab
   end
 
 
@@ -2240,7 +2249,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function find_containing_space(fab, walk)
     for _,B in ipairs(fab.brushes) do
       if B[1].m == "floor" then
+--!!!!!!!!!!!
+if R.id == 12 then
+gui.debugf("brush_contains_brush:\n")
+Trans.dump_brush(B)
+Trans.dump_brush(walk)
+end
         if Trans.brush_contains_brush(B, walk) then
+gui.debugf("\nYES\n")
           return B
         end
       end
@@ -2277,14 +2293,16 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     for _,W in ipairs(F.walks) do
       local con = find_containing_space(fab, W)
+gui.debugf("|  walk con : %s\n", tostring(con))
       if not con then return nil end
 
       W[1].con = con
-      space_has_walk[con.space] = 1
+      space_has_walk[con[1].space] = 1
     end
 
     for _,NS in ipairs(F.nosplits) do
       local con = find_containing_space(fab, NS)
+gui.debugf("|  nosplit con : %s\n", tostring(con))
       if not con then return nil end
       NS[1].con = con
     end
@@ -2343,11 +2361,16 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     -- check each location...
 
     for _,T in ipairs(locs) do
+gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
       -- create prefab to perform full check
       local fab = Fab_create(skin._prefab)
 
       Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
       Fab_transform_XY(fab, T)
+
+      for _,W in ipairs(fab.brushes) do
+        if W[1].m == "walk" then W[1].fab = fab end
+      end
 
       local info = full_test_floor_fab(F, fab)
 
@@ -2360,6 +2383,8 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 
 
   local function find_usable_floor(F)
+gui.debugf("find_usable_floor in %s level:%d\n", R:tostr(), F.level)
+gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
     -- FIXME we only support subdividing single monotones right now
     if #R.mono_list > 1 then return nil end
 
@@ -2384,6 +2409,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 
       for _,rotate in ipairs(ROTS) do
         for _,zone in ipairs(F.zones) do
+gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
           local info = test_floor_fab(F, skin, zone, rotate)
 
           -- found a usable prefab?
@@ -2420,10 +2446,10 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
       end
     end
 
-    try_cut(B, x1, 0, x1, 40)
-    try_cut(B, x2, 40, x2, 0)
-    try_cut(B, 0, y2, 40, y2)
-    try_cut(B, 40, y1, 0, y1)
+    try_cut(x1,  0, x1, 40)
+    try_cut(x2, 40, x2,  0)
+    try_cut( 0, y2, 40, y2)
+    try_cut(40, y1,  0, y1)
       
     local x3,y3,x4,y4 = Trans.brush_bbox(B)
 
@@ -2453,7 +2479,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
   local function transfer_spaces(walks, info, space)
     local list = {}
 
-    for _,B in ipairs(origs) do
+    for _,B in ipairs(walks) do
       -- the 'con' field was set by full_test_floor_fab()
       local con = B[1].con
 
@@ -2588,7 +2614,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 
     local add_z = find_prefab_add_z(info)
 
-    Fab_transform_Z(info.fab, add_z)
+    Fab_transform_Z(info.fab, { add_z = add_z })
 
     Fab_render(info.fab)
 

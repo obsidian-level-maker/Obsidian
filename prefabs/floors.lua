@@ -71,7 +71,7 @@ PREFAB.H_STAIR_6 =
       { m = "floor", space = 2 },
       { x = -INF, y =   0 },
       { x =    0, y =   0 },
-      { x =   72, y = 144 },
+      { x =    0, y = 144 },
       { x = -INF, y = 144 },
     },
 
@@ -80,7 +80,7 @@ PREFAB.H_STAIR_6 =
       { x = 216, y =   0 },
       { x = INF, y =   0 },
       { x = INF, y = 144 },
-      { x = 144, y = 144 },
+      { x = 216, y = 144 },
     },
 
     -- safe zones
@@ -175,6 +175,21 @@ PREFAB.H_STAIR_6 =
       { x = 212, y = 144, mat = "?step", peg=1, y_offset=0 },
       { x =   4, y = 144, mat = "?step", peg=1, y_offset=0 },
       { t = 60, mat = "?step" },
+    },
+
+    -- diagonal pieces (OUCH, should've been floor brushes)
+    {
+      { x =   0, y =   0 },
+      { x =  72, y = 144 },
+      { x =   0, y = 144 },
+      { t = 72, mat = "?wall" },
+    },
+
+    {
+      { x = 144, y = 144 },
+      { x = 216, y =   0 },
+      { x = 216, y = 144 },
+      { t = 72, mat = "?wall" },
     },
   },
 }

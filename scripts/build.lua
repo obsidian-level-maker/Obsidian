@@ -656,16 +656,13 @@ end
 
 
 function Trans.brush_is_quad(brush)
-  local coords = {}
+  local x1,y1, x2,y2 = Trans.brush_bbox(brush)
+
   for _,C in ipairs(brush) do
-    if C.x then table.insert(coords, C) end
-  end
-
-  for i = 1,#coords do
-    local k = 1 + (i % #coords)
-
-    if math.abs(coords[i].x - coords[k].x) > 0.1 then return false end
-    if math.abs(coords[i].y - coords[k].y) > 0.1 then return false end
+    if C.x then
+      if C.x > x1+0.1 and C.x < x2-0.1 then return false end
+      if C.y > y1+0.1 and C.y < y2-0.1 then return false end
+    end
   end
 
   return true
@@ -793,7 +790,10 @@ end
 
 function Trans.brush_contains_brush(B, W)
   -- FIXME !!!!!!
-  if not Trans.brush_is_quad(B) then return false end
+  if not Trans.brush_is_quad(B) then
+gui.debugf("first NOT quad\n")
+  return false
+  end
 
   local x1, y1, x2, y2 = Trans.brush_bbox(W)
   local x3, y3, x4, y4 = Trans.brush_bbox(B)
@@ -1059,7 +1059,8 @@ function Trans.brush_is_space(B)
 
   return B[1].m == "used" or B[1].m == "walk" or
          B[1].m == "air"  or B[1].m == "nosplit" or
-         B[1].m == "zone" or B[1].m == "spot"
+         B[1].m == "zone" or B[1].m == "spot"   or
+         B[1].m == "floor"
 end
 
 
@@ -1071,7 +1072,8 @@ function Fab_create(name)
       if B[1].m and not B[1].insider and
          (B[1].m == "walk"  or B[1].m == "air" or
           B[1].m == "zone"  or B[1].m == "nosplit" or
-          B[1].m == "light" or B[1].m == "spot")
+          B[1].m == "light" or B[1].m == "spot" or
+          B[1].m == "floor")
       then
         B[1].outlier = true
       end
