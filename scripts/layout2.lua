@@ -1213,140 +1213,6 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
-  local function narrow_zone_for_edge(zone, E)
-    if not E.max_deep then return end
-
-    local K = E.K
-
-    if E.side == 4 then
-      local x = K.x1 + E.max_deep
-      if x > zone.x1 then zone.x1 = x end
-
-    elseif E.side == 6 then
-      local x = K.x2 - E.max_deep
-      if x < zone.x2 then zone.x2 = x end
-
-    elseif E.side == 2 then
-      local y = K.y1 + E.max_deep
-      if y > zone.y1 then zone.y1 = y end
-
-    elseif E.side == 8 then
-      local y = K.y2 - E.max_deep
-      if y < zone.y2 then zone.y2 = y end
-
-    else
-      error("bad edge side")
-    end
-  end
-
-  
-  local function narrow_zone_for_walk(zone, G)
-    -- this is meant to handle a walk group penetrating a small
-    -- distance into one side of the zone.
-    --
-    -- it is NOT meant for a walk group IN THE MIDDLE of the zone
-    -- (from a pickup or switch).  That should be prevented, e.g.
-    -- create multiple zones around it.
-
-    if zone.x2 < zone.x1 or zone.y2 < zone.y1 then
-      return
-    end
-
-    if geom.boxes_overlap(zone.x1, zone.y1, zone.x2, zone.y2,
-                          G.x1, G.y1, G.x2, G.y2)
-    then
-      local dx = math.max(16, zone.x2 - zone.x1)
-      local dy = math.max(16, zone.y2 - zone.y1)
-
-      -- pick side which wastes the least volume
-      local vol_x1 = int(G.x2 - zone.x1) * int(dy)
-      local vol_x2 = int(zone.x2 - G.x1) * int(dy)
-
-      local vol_y1 = int(G.y2 - zone.y1) * int(dx)
-      local vol_y2 = int(zone.y2 - G.y1) * int(dx)
-
-      local min_vol = math.min(vol_x1, vol_y1, vol_x2, vol_y2)
-
-          if vol_x1 == min_vol then zone.x1 = G.x2  -- move left side
-      elseif vol_x2 == min_vol then zone.x2 = G.x1  -- move right side
-      elseif vol_y1 == min_vol then zone.y1 = G.y2  -- move bottom side
-      else                          zone.y2 = G.y1  -- move top side
-      end
-    end
-  end
-
-
-  local function zone_from_block(block, walks)
-    local kx1, ky1 = block.kx1, block.ky1
-    local kx2, ky2 = block.kx2, block.ky2
-
-    local K1 = SECTIONS[kx1][ky1]
-    local K2 = SECTIONS[kx2][ky2]
-
-    local zone = 
-    {
-      x1 = K1.x1,
-      y1 = K1.y1,
-      x2 = K2.x2,
-      y2 = K2.y2,
-    }
-
-    -- check wall edges
-
-    for kx = kx1,kx2 do for ky = ky1,ky2 do
-      local K = SECTIONS[kx][ky]
-      for _,E in pairs(K.edges) do
-        narrow_zone_for_edge(zone, E)
-      end
-    end end
-
-    -- FIXME: check corners too
-
-    -- allow some room for player
-    zone.x1 = zone.x1 + 64
-    zone.y1 = zone.y1 + 64
-    zone.x2 = zone.x2 - 64
-    zone.y2 = zone.y2 - 64
-
-    -- check walk groups
-    -- (done AFTER allowing some room for player, since walk areas
-    --  already guarantee the player can fit).
-
-    for _,G in ipairs(walks) do
-      narrow_zone_for_walk(zone, G)
-    end
-
-    zone.x1 = zone.x1 + 8
-    zone.y1 = zone.y1 + 8
-    zone.x2 = zone.x2 - 8
-    zone.y2 = zone.y2 - 8
-
-    return zone
-  end
-
-
-  local function determine_safe_zones(mono, walks)
-    --
-    -- A "safe zone" is a rectangle inside the current room which
-    -- could be make solid while still allowing the player to fully
-    -- traverse the room (from one door to another etc).
-    --
-    -- Since safe zones must be rectangles, but rooms can be more
-    -- interesting shapes (plus, L, odd) then we allow multiple
-    -- (non overlapping) safe zones to exist.
-
-    local list = {}
-
-    for _,block in ipairs(mono.blocks) do
-      local zone = zone_from_block(block, walks)
-
-      if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
-        table.insert(list, zone)
-      end
-    end
-
-    return list
-  end
 
 
   local function neg_nb_coord(x)
@@ -2137,7 +2003,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function collect_walks()
+  local function collect_brushes(kind)
     local list = {}
 
     for _,fab in ipairs(R.prefabs) do
@@ -2145,8 +2011,8 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       
       if fab.room == R or is_entry then
         for _,B in ipairs(fab.brushes) do
-          if B[1].m == "walk" and
-             (not is_entry or (is_entry and B[1].room == 2))
+          if B[1].m == kind and
+             (not B[1].room or B[1].room == sel(is_entry, 2, 1))
           then
             B[1].fab = fab
             table.insert(list, B)
@@ -2159,21 +2025,166 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function initial_floor()
-    -- FIXME
+  local function narrow_zone_for_edge(zone, E)
+    if not E.max_deep then return end
 
+    local K = E.K
+
+    if E.side == 4 then
+      local x = K.x1 + E.max_deep
+      if x > zone.x1 then zone.x1 = x end
+
+    elseif E.side == 6 then
+      local x = K.x2 - E.max_deep
+      if x < zone.x2 then zone.x2 = x end
+
+    elseif E.side == 2 then
+      local y = K.y1 + E.max_deep
+      if y > zone.y1 then zone.y1 = y end
+
+    elseif E.side == 8 then
+      local y = K.y2 - E.max_deep
+      if y < zone.y2 then zone.y2 = y end
+
+    else
+      error("bad edge side")
+    end
+  end
+
+  
+  local function narrow_zone_for_walk(zone, brush)
+    -- this is meant to handle a walk group penetrating a small
+    -- distance into one side of the zone.
+    --
+    -- it is NOT meant for a walk group IN THE MIDDLE of the zone
+    -- (from a pickup or switch).  That should be prevented, e.g.
+    -- create multiple zones around it.
+
+    if zone.x2 < zone.x1 or zone.y2 < zone.y1 then
+      return
+    end
+
+    local x1, y1, x2, y2 = Trans.brush_bbox(brush)
+
+    if geom.boxes_overlap(zone.x1, zone.y1, zone.x2, zone.y2,
+                          x1, y1, x2, y2)
+    then
+      local dx = math.max(16, zone.x2 - zone.x1)
+      local dy = math.max(16, zone.y2 - zone.y1)
+
+      -- pick side which wastes the least volume
+      local vol_x1 = int(x2 - zone.x1) * int(dy)
+      local vol_x2 = int(zone.x2 - x1) * int(dy)
+
+      local vol_y1 = int(y2 - zone.y1) * int(dx)
+      local vol_y2 = int(zone.y2 - y1) * int(dx)
+
+      local min_vol = math.min(vol_x1, vol_y1, vol_x2, vol_y2)
+
+          if vol_x1 == min_vol then zone.x1 = x2  -- move left side
+      elseif vol_x2 == min_vol then zone.x2 = x1  -- move right side
+      elseif vol_y1 == min_vol then zone.y1 = y2  -- move bottom side
+      else                          zone.y2 = y1  -- move top side
+      end
+    end
+  end
+
+
+  local function zone_from_block(block, walks)
+    local kx1, ky1 = block.kx1, block.ky1
+    local kx2, ky2 = block.kx2, block.ky2
+
+    local K1 = SECTIONS[kx1][ky1]
+    local K2 = SECTIONS[kx2][ky2]
+
+    local zone = 
+    {
+      x1 = K1.x1,
+      y1 = K1.y1,
+      x2 = K2.x2,
+      y2 = K2.y2,
+    }
+
+    -- check wall edges
+
+    for kx = kx1,kx2 do for ky = ky1,ky2 do
+      local K = SECTIONS[kx][ky]
+      for _,E in pairs(K.edges) do
+        narrow_zone_for_edge(zone, E)
+      end
+    end end
+
+    -- !!!! FIXME: check corners too
+
+    -- allow some room for player
+    zone.x1 = zone.x1 + 64
+    zone.y1 = zone.y1 + 64
+    zone.x2 = zone.x2 - 64
+    zone.y2 = zone.y2 - 64
+
+    -- check walk brushes
+    -- (done AFTER allowing some room for player, since walk areas
+    --  already guarantee the player can fit).
+
+    for _,brush in ipairs(walks) do
+      narrow_zone_for_walk(zone, brush)
+    end
+
+    zone.x1 = zone.x1 + 8
+    zone.y1 = zone.y1 + 8
+    zone.x2 = zone.x2 - 8
+    zone.y2 = zone.y2 - 8
+
+    return zone
+  end
+
+
+  local function determine_safe_zones(mono, walks)
+    --
+    -- A "safe zone" is a rectangle inside the current room which
+    -- could be make solid while still allowing the player to fully
+    -- traverse the room (from one door to another etc).
+    --
+    -- Since safe zones must be rectangles, but rooms can be more
+    -- interesting shapes (plus, L, odd) then we allow multiple
+    -- (non overlapping) safe zones to exist.
+
+    local list = {}
+
+    for _,block in ipairs(mono.blocks) do
+      local zone = zone_from_block(block, walks)
+
+      if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
+        table.insert(list, zone)
+      end
+    end
+
+    return list
+  end
+
+
+  local function initial_floor()
     local F =
     {
-      z = R.entry_floor_h,
       level = 1,
-      brushes = Layout_initial_space2(R),
-      walks   = collect_walks(),
-      entry   = R.entry_walk,
+      entry = R.entry_walk,
     }
+
+    F.brushes = Layout_initial_space2(R),
+
+    F.walks    = collect_brushes("walk"),
+    F.airs     = collect_brushes("air"),
+    F.nosplits = collect_brushes("nosplit"),
 
     assert(#F.walks > 0)
 
----??    if not F.entry then F.entry = rand.pick(F.walks) end
+    F.zones = determine_safe_zones(R.mono_list[1], F.walks)
+
+    if not F.entry then
+      F.entry = rand.pick(F.walks)
+    end
+
+    F.entry[1].walk_z = R.entry_floor_h
 
     return F
   end
