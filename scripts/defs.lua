@@ -75,5 +75,7 @@ SEED_SIZE = 192
 
 EXTREME_H = 4000
 
+-- special prefab value
+INF = 9999
 
 

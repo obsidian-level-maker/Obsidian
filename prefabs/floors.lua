@@ -40,6 +40,148 @@
 --
 ----------------------------------------------------------------
 
+PREFAB.H_STAIR_6 =
+{
+  placement = "fitted",
+
+  x_size = 216,
+  y_size = 144,
+
+  brushes =
+  {
+    -- old floor : south
+    {
+      { m = "floor", space = 1 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =    0 },
+      { x = -INF, y =    0 },
+    },
+
+    -- new floor : north
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y = 144 },
+      { x =  INF, y = 144 },
+      { x =  INF, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y =   0 },
+      { x =    0, y =   0 },
+      { x =   72, y = 144 },
+      { x = -INF, y = 144 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = 216, y =   0 },
+      { x = INF, y =   0 },
+      { x = INF, y = 144 },
+      { x = 144, y = 144 },
+    },
+
+    -- safe zones
+    {
+      { m = "zone", space = 1 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  -80 },
+      { x = -INF, y =  -80 },
+    },
+
+    {
+      { m = "zone", space = 2 },
+      { x = -INF, y =  80 },
+      { x =  INF, y =  80 },
+      { x =  INF, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", space = 1 },
+      { x = 152, y =  48 },
+      { x = 200, y =  48 },
+      { x = 200, y = 144 },
+      { x = 152, y = 144 },
+      { t = 0 },
+    },
+
+    {
+      { m = "walk", space = 2 },
+      { x =  56, y =  48 },
+      { x = 104, y =  48 },
+      { x = 104, y = 144 },
+      { x =  56, y = 144 },
+      { t = 72 },
+    },
+
+    -- no split area 
+    {
+      { m = "nosplit", space = 1 },
+      { x =   0, y =   0 },
+      { x = 216, y =   0 },
+      { x = 216, y = 144 },
+      { x =   0, y = 144 },
+    },
+
+    -- steps
+    {
+      { x =   0, y =   0, mat = "?step", peg=1, y_offset=0 },
+      { x = 216, y =   0, mat = "?step", peg=1, y_offset=0 },
+      { x = 216, y =  24, mat = "?step", peg=1, y_offset=0 },
+      { x =   0, y =  24, mat = "?step", peg=1, y_offset=0 },
+      { t =  0, mat = "?step" },
+    },
+
+    {
+      { x =   4, y =  24, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  24, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  48, mat = "?step", peg=1, y_offset=0 },
+      { x =   4, y =  48, mat = "?step", peg=1, y_offset=0 },
+      { t = 12, mat = "?step" },
+    },
+
+    {
+      { x =   4, y =  48, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  48, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  72, mat = "?step", peg=1, y_offset=0 },
+      { x =   4, y =  72, mat = "?step", peg=1, y_offset=0 },
+      { t = 24, mat = "?step" },
+    },
+
+    {
+      { x =   4, y =  72, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  72, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  96, mat = "?step", peg=1, y_offset=0 },
+      { x =   4, y =  96, mat = "?step", peg=1, y_offset=0 },
+      { t = 36, mat = "?step" },
+    },
+
+    {
+      { x =   4, y =  96, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y =  96, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y = 120, mat = "?step", peg=1, y_offset=0 },
+      { x =   4, y = 120, mat = "?step", peg=1, y_offset=0 },
+      { t = 48, mat = "?step" },
+    },
+
+    {
+      { x =   4, y = 120, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y = 120, mat = "?step", peg=1, y_offset=0 },
+      { x = 212, y = 144, mat = "?step", peg=1, y_offset=0 },
+      { x =   4, y = 144, mat = "?step", peg=1, y_offset=0 },
+      { t = 60, mat = "?step" },
+    },
+  },
+}
+
+
+--- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- > > >
+
 PREFAB.H_DIAGONAL_A =
 {
   placement = "fitted",
