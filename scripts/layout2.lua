@@ -2106,13 +2106,14 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     end
   end
 
+
   --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
   local function extract_t(brush)
     for _,C in ipairs(brush) do
       if C.t then
         R.entry_floor_h = C.t
-stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
+        R.entry_walk = brush
         return
       end
     end
@@ -2164,9 +2165,15 @@ stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
     local F =
     {
       z = R.entry_floor_h,
+      level = 1,
       brushes = Layout_initial_space2(R),
       walks   = collect_walks(),
+      entry   = R.entry_walk,
     }
+
+    assert(#F.walks > 0)
+
+---??    if not F.entry then F.entry = rand.pick(F.walks) end
 
     return F
   end
@@ -2206,9 +2213,82 @@ stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
   end
 
 
-  local function try_subdivide_floor(F)
+  local function possible_floor_prefabs()
+    -- TODO: filter based on various stuff...
+
+    return THEME.floors
+  end
+
+
+  local function test_floor(...)
+    -- FIXME
+  end
+
+
+  local function find_usable_floor(F)
+    -- FIXME we only support subdividing single monotones right now
+    if #R.mono_list > 1 then return nil end
+
+    local poss = possible_floor_prefabs()
+
+    for loop = 1,20 do
+      if table.empty(poss) then break; end
+
+      local skinname = rand.key_by_probs(poss)
+
+      local skin = assert(GAME.SKINS[skinname])
+
+      local raw_fab = assert(PREFABS[skin._prefab])
+
+      -- FIXME : preliminary size check
+
+      local fab = Fab_create(skin._prefab)
+
+      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
+
+      
+    end
+  end
+
+
+  local function create_new_floor(F, info, space)
+    local floor =
+    {
+      level = F.level + 1,
+    }
+    -- FIXME
+
+    return floor
+  end
+
+
+  -- fwd decl --
+  local function try_subdivide_floor() end
+
+
+  local function subdivide(F, info)
     
-    -- FIXME .... try possible stuff .... FIXME
+    local new_floors = {}
+
+    for i = 1,info.num_spaces do
+      new_floors[i] = create_new_floor(F, info, i)
+    end
+
+    -- FIXME
+
+    for _,F2 in ipairs(new_floors) do
+      try_subdivide_floor(F2)
+    end
+  end
+
+
+  function try_subdivide_floor(F)
+    local info = find_usable_floor(F)
+
+    if info then
+      subdivide(F, info)
+      return
+    end
 
     -- unable to divide further
     render_floor(F)
@@ -2228,6 +2308,7 @@ stderrf("find_entry_walk ::::::::::::::::: %d\n", R.entry_floor_h)
   end
 
   R.all_floors = {}
+  R.floor_fabs = {}
 
   R.floor_min_h = R.entry_floor_h
   R.floor_max_h = R.entry_floor_h

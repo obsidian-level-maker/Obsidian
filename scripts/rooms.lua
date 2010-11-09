@@ -752,7 +752,6 @@ function Rooms_setup_bits(R)
 
   R.prefabs = {}
   R.blocks  = {}
-  R.poly_assoc = {}
 end
 
 
