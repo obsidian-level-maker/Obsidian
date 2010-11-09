@@ -791,6 +791,17 @@ function Trans.clip_brushes_to_rects(brushes, rects)
 end
 
 
+function Trans.brush_contains_brush(B, W)
+  -- FIXME !!!!!!
+  if not Trans.brush_is_quad(B) then return false end
+
+  local x1, y1, x2, y2 = Trans.brush_bbox(W)
+  local x3, y3, x4, y4 = Trans.brush_bbox(B)
+
+  return geom.box_inside_box(x1,y1,x2,y2, x3,y3,x4,y4)
+end
+
+
 
 ------------------------------------------------------------------------
 

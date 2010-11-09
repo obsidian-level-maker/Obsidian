@@ -2219,6 +2219,38 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
+  local function count_spaces(fab)
+    local count = 0
+
+    for _,B in ipairs(fab.brushes) do
+      if B[1].m and B[1].space then
+        count = math.max(count, B[1].space)
+      end
+    end
+
+    fab.num_spaces = count
+  end
+
+
+  local function find_containing_space(fab, walk)
+    for _,B in ipairs(fab.brushes) do
+      if B[1].m == "floor" then
+        if Trans.brush_contains_brush(B, walk) then
+          return B
+        end
+      end
+    end
+
+    return nil -- not found
+  end
+
+
+  local function check_air_clobbered(fab, A)
+    -- FIXME
+    return false
+  end
+
+
   local function full_test_floor_fab(F, fab)
     --
     -- Requirements:
@@ -2227,12 +2259,37 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
     --      one of the new floor spaces.
     --
     --   2. each new floor space contains at least one existing walk brush.
+    --      TODO: relax this requirement if num_spaces >= 3
     --
     --   3. existing air brushes do not touch any new solid which is
     --      infinitely tall or so.
     --
 
-    -- TODO TODO TODO
+    local space_has_walk = {}
+
+    -- FIXME: this is too simple, allow a walk (etc) to span two or more
+    --        floor brushes of the same space.
+
+    for _,W in ipairs(F.walks) do
+      local con = find_containing_space(fab, W)
+      if not con then return nil end
+
+      space_has_walk[con.space] = 1
+    end
+
+    for _,NS in ipairs(F.nosplits) do
+      local con = find_containing_space(fab, NS)
+      if not con then return nil end
+    end
+       
+    for _,A in ipairs(F.airs) do
+      if check_air_clobbered(fab, A) then return nil end
+    end
+
+    -- SUCCESS --
+    local info = { fab=fab }
+
+    return info
   end
 
 
@@ -2246,8 +2303,8 @@ gui.debugf("choose_division: zone = %dx%d\n", dx, dy)
 
     local raw_fab = assert(PREFABS[skin._prefab])
 
-    local x_size = fab_info.x_size
-    local y_size = fab_info.y_size
+    local x_size = raw_fab.x_size
+    local y_size = raw_fab.y_size
 
     if rotate == 90 or rotate == 270 then
       x_size, y_size = y_size, x_size
@@ -2260,6 +2317,8 @@ gui.debugf("choose_division: zone = %dx%d\n", dx, dy)
 gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy, x_size, y_size)
       return nil
     end
+
+    count_spaces(raw_fab)
 
     -- make a list of locations to try
     local locs = {}
@@ -2433,7 +2492,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
   local function subdivide(F, info)
     local new_floors = {}
 
-    for i = 1,info.num_spaces do
+    for i = 1,info.fab.num_spaces do
       new_floors[i] = create_new_floor(F, info, i)
     end
 
