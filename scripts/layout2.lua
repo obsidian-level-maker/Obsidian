@@ -1961,7 +1961,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+  --- NEW --- NEW --- NEW --- NEW --- NEW --- NEW --- NEW --- > > >
 
   local function extract_t(brush)
     local t = Trans.brush_get_t(brush)
@@ -2219,17 +2219,77 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function test_floor_fab(F, skin, rotate)
-    -- FIXME : preliminary size check
+  local function full_test_floor_fab(F, fab)
+    --
+    -- Requirements:
+    --
+    --   1. each existing walk / nosplit brush exists completely inside
+    --      one of the new floor spaces.
+    --
+    --   2. each new floor space contains at least one existing walk brush.
+    --
+    --   3. existing air brushes do not touch any new solid which is
+    --      infinitely tall or so.
+    --
 
-    --[[ FIXME
+    -- TODO TODO TODO
+  end
 
-      local raw_fab = assert(PREFABS[skin._prefab])
 
+  local function test_floor_fab(F, skin, zone, rotate)
+    -- preliminary size check
+    -- (try to avoid the expensive prefab creation)
+
+    local zone_dx = zone.x2 - zone.x1
+    local zone_dy = zone.y2 - zone.y1
+gui.debugf("choose_division: zone = %dx%d\n", dx, dy)
+
+    local raw_fab = assert(PREFABS[skin._prefab])
+
+    local x_size = fab_info.x_size
+    local y_size = fab_info.y_size
+
+    if rotate == 90 or rotate == 270 then
+      x_size, y_size = y_size, x_size
+    end
+
+    local extra_x = zone_dx - x_size
+    local extra_y = zone_dy - y_size
+
+    if extra_x < 0 or extra_y < 0 then
+gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy, x_size, y_size)
+      return nil
+    end
+
+    -- make a list of locations to try
+    local locs = {}
+
+    -- FIXME: check many places
+
+    local dir = 2
+    if rotate ==  90 then dir = 6 end
+    if rotate == 180 then dir = 8 end
+    if rotate == 270 then dir = 4 end
+
+    table.insert(locs, Trans.box_transform(zone.x1, zone.y1,
+                         zone.x1 + x_size, zone.y1 + y_size, nil, dir))
+
+    -- check each location...
+
+    for _,T in ipairs(locs) do
+      -- create prefab to perform full check
       local fab = Fab_create(skin._prefab)
 
       Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
-    --]]
+      Fab_transform_XY(fab, T)
+
+      local info = full_test_floor_fab(F, fab)
+
+      -- success?
+      if info then return info end
+    end
+
+    return nil  -- fail
   end
 
 
@@ -2242,7 +2302,9 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     local poss = possible_floor_prefabs()
 
-    local ROTS = { 0, 90, 180, 270 }
+    local ROTS = { 0 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
+
+    rand.shuffle(F.zones)
 
     for loop = 1,20 do
       if table.empty(poss) then break; end
@@ -2255,10 +2317,12 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       rand.shuffle(ROTS)
 
       for _,rotate in ipairs(ROTS) do
-        local info = test_floor_fab(skin, rotate)
+        for _,zone in ipairs(F.zones) do
+          local info = test_floor_fab(F, skin, zone, rotate)
 
-        -- found a usable prefab?
-        if info then return info end
+          -- found a usable prefab?
+          if info then return info end
+        end
       end
     end
 
@@ -2406,7 +2470,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     -- recursively handle the remaining pieces
     for _,F2 in ipairs(new_floors) do
-      F2.entry = find_new_entry_walk(F2, info, )
+      F2.entry = find_new_entry_walk(F2, info)
       F2.entry[1].walk_z = assert(Trans.brush_get_t(F2.entry))
 
       try_subdivide_floor(F2)
@@ -2451,7 +2515,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
   R.all_floors = {}
-  R.floor_fabs = {}
 
   R.floor_min_h = R.entry_floor_h
   R.floor_max_h = R.entry_floor_h
