@@ -1387,6 +1387,7 @@ namelib.THEMES =
         ["Anthem for Doom"]=10,
         ["Axis of Evil"]=10,
         ["Andrew's Jumpy Castle"]=10,
+        ["A Wibbly Wobbly World"]=10,
         ["Baron's Hideout"]=10,
         ["Bait the Hook"]=10,
         ["Beginning of the Line"]=10,
