@@ -5,11 +5,24 @@ V4 TODO
 Current Work
 ------------
 
+>>>>  Prefab Pipeline
+
+-  collect_flags
+
+
 CAGE / TRAP / GUARD PALETTE:
 
 -  similar selection code _but_ prefer monsters not in room palette
 -  apply damage/time factor to probability
 -  cage palette: no more than two per room
+
+
+?  allow floor prefabs with diagonal outlier shapes
+   in RECTANGLE rooms, or decompose non-rect rooms
+   into rect areas as per non-monotonic rooms.
+
+IDEA: instead of prefab-in-prefab, have "brush macros" where
+      a group of brushes can be reused by different prefabs.
 
 
 !!  skin lists, not skin1/sk2/yada
@@ -18,9 +31,10 @@ CAGE / TRAP / GUARD PALETTE:
 
 !!  remove flavored brushes :-(
 
--  fix inner/outer tex on door and window prefabs
 
--  fix window prefabs: raise up by 32 units or whatever
+DONE  use "spot" brushes instead of explicit ones
+
+-  fix inner/outer tex on door and window prefabs
 
 >>>  straddler sizes affect TWO rooms at same time
      (implications for edge and corner layouting)
@@ -54,15 +68,10 @@ CAGE / TRAP / GUARD PALETTE:
 
 -  support floor prefabs in non-monotonic rooms
 
-x  "thin wall fabs" which can be placed inside "fat wall fabs"
-   (including corners).  
-
 -  consider allowing "minor" wall prefabs to be decided during/after
    floor fabbing.  In particular to allow a floor prefab to supply
    a lift or staircase against the wall (in even in a corner),
    perhaps also for liquidy stuff.
-
-DONE: allow more than one safe zone per floor
 
 -  floor prefabs (ETC) should be as small as possible
 
@@ -97,6 +106,7 @@ Layout:
        - big diagonal
        - torch in niche
        - jutting out torch 
+       - picture
 
 +  wall prefabs:
        - cage
@@ -110,15 +120,19 @@ Layout:
 +  middle prefabs:
        - cage
        - pillar
-       - variety of crates
+       - item pedestal
+       - crates
        - fountain (outdoor)
        - a couple techy ones
+
++  floor prefabs:
+      ????
 
 +  light brushes for DOOM, clipped to room:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
 
-+  get caves working again
+?  get caves working again
 
 -  Cross-Overs
 
