@@ -440,6 +440,7 @@ function Plan_add_big_rooms()
   -- shapes are defined by a list of neighbors to set.
   -- numbers over 10 are two seeds away instead of one.
   -- numbers 4xx are moved left, 6xx are moved right.
+  -- TODO: use a better system
 
   local BIG_ROOM_SHAPES =
   {
@@ -546,7 +547,19 @@ function Plan_add_big_rooms()
 
 
   local function adjust_shape_probs()
-    -- FIXME
+    local shape = STYLE.room_shape
+
+    if shape == "none" then return end
+
+    local new_prob = rand.sel(50, 100, 900)
+
+    gui.printf("Prefer room shape '%s' with prob %d\n", shape, new_prob)
+
+    for name,prob in pairs(BIG_SHAPE_PROBS) do
+      if string.sub(name, 1, 1) == shape then
+        BIG_SHAPE_PROBS[name] = new_prob
+      end
+    end
   end
 
 

@@ -32,9 +32,8 @@ LEVEL_CONTROL_SHAPES =
   "none",   "NONE",
   "L",      "L",
   "T",      "T",
-  "O",      "O",
-  "S",      "S",
-  "X",      "X",
+  "U",      "U",
+  "H",      "H",
 }
 
 
@@ -76,7 +75,7 @@ OB_MODULES["level_control"] =
     teleporters ={ label="Teleporters",    choices=LEVEL_CONTROL_CHOICES },
     windows    = { label="Windows",        choices=LEVEL_CONTROL_CHOICES },
 
-    favor_shape = { label ="Favor Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES },
+    room_shape = { label ="Room Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES },
   }, 
 }
 

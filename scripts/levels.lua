@@ -88,7 +88,7 @@ STYLE_LIST =
   lt_spokes  = { none=90, some=20, heaps=5 },
   lt_swapped = { none=90, heaps=20 },
 
-  favor_shape = { none=80, L=5, T=5, O=5, S=5, X=5 },
+  room_shape = { none=30, L=5, T=5, U=10, H=10 },
 }
 
 
@@ -585,7 +585,7 @@ function Levels_build_it()
 
   gui.prog_step("Mons");
 
-  Monsters_make_battles()
+--!!!!!!!!  Monsters_make_battles()
   if gui.abort() then return "abort" end
 
   return "ok"
