@@ -439,18 +439,24 @@ function Plan_add_big_rooms()
 
   -- shapes are defined by a list of neighbors to set.
   -- numbers over 10 are two seeds away instead of one.
+  -- numbers 4xx are moved left, 6xx are moved right.
 
   local BIG_ROOM_SHAPES =
   {
     plus = { name="plus", size=5, dirs={ 5,2,4,6,8 }},
 
     T1 = { name="T", size=4, dirs={ 5,4,6,2 }},
-    T2 = { name="T", size=5, dirs={ 5,6,6,2,12 }},
+    T2 = { name="T", size=5, dirs={ 5,4,6,2,12 }},
 
     L1 = { name="L", size=3, dirs={ 5,8,6 }},
     L2 = { name="L", size=4, dirs={ 5,8,18,6 }},
     L3 = { name="L", size=4, dirs={ 5,8,6,16 }},
     L4 = { name="L", size=5, dirs={ 5,8,18,6,16 }},
+
+    U1 = { name="U", size=5, dirs={ 5,4,6,402,602 }},
+    U2 = { name="U", size=7, dirs={ 5,4,6,402,602,412,612 }},
+
+    HH = { name="odd", size=7, dirs={ 5,4,6,402,602,408,608 }},
   }
 
   local BIG_SHAPE_PROBS =
@@ -459,7 +465,8 @@ function Plan_add_big_rooms()
     plus = 15,
 
     T1 = 25, T2 = 6,
-    L1 = 40, L2 = 10, L3 = 10, L4=4,
+    L1 = 40, L2 = 10, L3 = 10, L4=5,
+    U1 = 15, U2 = 4,  HH = 4,
   }
 
   local BIG_RECT_PROBS =
@@ -500,11 +507,17 @@ function Plan_add_big_rooms()
     local touch_left, touch_right
 
     for _,orig_dir in ipairs(dir_list) do
-      local dist = 1 + int(orig_dir / 10)
+      local perp = int(orig_dir / 100)
+
+      local dist = 1 + int(orig_dir / 10) % 10
       orig_dir = orig_dir % 10
 
       local dir  = geom.ROTATE[rot][orig_dir]
       local x, y = geom.nudge(kx, ky, dir, dist)
+
+      if perp > 0 then
+        x, y = geom.nudge(x, y, geom.ROTATE[rot][perp])
+      end
 
       if not Plan_is_section_valid(x, y) then
         return false
@@ -529,6 +542,11 @@ function Plan_add_big_rooms()
     end
 
     return true
+  end
+
+
+  local function adjust_shape_probs()
+    -- FIXME
   end
 
 
@@ -659,10 +677,12 @@ function Plan_add_big_rooms()
 
     -- some shapes fit very well at certain spots.
     -- here we add those spots to the front of the visit list.
-    if string.sub(shape_name, 1, 1) == "L" then
+    local letter = string.sub(shape_name, 1, 1)
+
+    if letter == "L" then
       ideal_L_spots(visits)
 
-    elseif string.sub(shape_name, 1, 1) == "T" then
+    elseif letter == "T" or letter == "U" then
       ideal_T_spots(visits)
 
     elseif shape_name == "plus" then
@@ -697,6 +717,8 @@ function Plan_add_big_rooms()
   ---| Plan_add_big_rooms |---
 
   if rand.odds(2) then return end  -- None!
+
+  adjust_shape_probs()
 
   local num_sec = Plan_count_free_sections()
 

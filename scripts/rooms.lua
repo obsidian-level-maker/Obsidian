@@ -27,8 +27,7 @@ class ROOM
                   -- "hallway", "stairwell", "small_exit"
 
   shape : keyword -- "rect" (perfect rectangle)
-                  -- "L"
-                  -- "T"
+                  -- "L"  "T"  "U"
                   -- "plus"
                   -- "odd"  (anything else)
 

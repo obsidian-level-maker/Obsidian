@@ -481,20 +481,39 @@ function Connect_rooms()
     -- are the North end going North, East end going East etc...)
     local optimal_locs = {}
 
-    for dir = 2,8,2 do
-      local N = mid_K:neighbor(dir)
+    if R.shape == "U" then
+      local dir = geom.ROTATE[R.shape_rot][2]
 
-      if N and N.room == R then
-        local N2 = N:neighbor(dir)
-        if N2 and N2.room == R then
-          N = N2
+      local N1 = mid_K:neighbor(geom.RIGHT[dir])
+      local N2 = mid_K:neighbor(geom.LEFT[dir])
+
+      assert(N1.room == R and N2.room == R)
+
+      N1 = N1:neighbor(dir)
+      N2 = N2:neighbor(dir)
+
+      assert(N1.room == R and N2.room == R)
+
+      if N1:same_room(dir) then N1 = N1:neighbor(dir) end
+      if N2:same_room(dir) then N2 = N2:neighbor(dir) end
+        
+      table.insert(optimal_locs, { K=N1, dir=dir })
+      table.insert(optimal_locs, { K=N2, dir=dir })
+
+    else  -- T or L or plus
+      for dir = 2,8,2 do
+        if mid_K:same_room(dir) then
+          local N = mid_K:neighbor(dir)
+
+          if N:same_room(dir) then N = N:neighbor(dir) end
+
+          table.insert(optimal_locs, { K=N, dir=dir })
         end
-        table.insert(optimal_locs, { K=N, dir=dir })
       end
     end
 
     -- for T shapes, sometimes try to go out the middle section
-    if R.shape == "T" and rand.odds(25) then
+    if (R.shape == "T" or R.shape == "U") and rand.odds(25) then
       for dir = 2,8,2 do
         local N = mid_K:neighbor(dir)
         if N and N.room ~= R then
@@ -534,7 +553,7 @@ function Connect_rooms()
     -- mark room as full (prevent further connections) if all the
     -- optimal locations worked.  For "plus" shaped rooms, three out
     -- of four ain't bad.
-    if #R.conns >= sel(R.shape == "L", 2, 3) then
+    if #R.conns >= sel(R.shape == "L" or R.shape == "U", 2, 3) then
       R.full = true
     end
   end
