@@ -320,7 +320,9 @@ int Grab_Properties(lua_State *L, int stack_pos,
       continue;
     }
 
-    return luaL_error(L, "bad property: weird value for '%s'", key);
+    // ignore other values (tables etc)
+
+//// return luaL_error(L, "bad property: weird value for '%s'", key);
   }
 
   return 0;
