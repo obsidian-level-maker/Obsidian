@@ -1069,6 +1069,12 @@ function Fab_create(name)
 
   local function mark_outliers(fab)
     for _,B in ipairs(fab.brushes) do
+      if not B[1].m then
+        table.insert(B, 1, { m="solid" })
+      end
+
+      B[1].fab = fab
+
       if B[1].m and not B[1].insider and
          (B[1].m == "walk"  or B[1].m == "air" or
           B[1].m == "zone"  or B[1].m == "nosplit" or
@@ -1295,6 +1301,9 @@ function Fab_apply_skins(fab, list)
 
   
   ---| Fab_apply_skins |---
+
+  assert(not fab.skinned)
+  fab.skinned = true
 
   local global_defaults =
   {
@@ -1530,6 +1539,11 @@ function Fab_transform_XY(fab, T)
   
   ---| Fab_transform_XY |---
 
+  assert(fab.skinned)
+  assert(not fab.moved)
+
+  fab.moved = true
+
   local bbox = fab.bbox
 
   fab.x_info = Trans.process_groups(fab.x_ranges, bbox.x1, bbox.x2)
@@ -1651,6 +1665,11 @@ function Fab_transform_Z(fab, T)
   
   ---| Fab_transform_Z |---
 
+  assert(fab.skinned)
+  assert(not fab.bumped)
+
+  fab.bumped = true
+
   local bbox = fab.bbox
 
   if bbox.dz and bbox.dz > 1 then
@@ -1707,6 +1726,11 @@ function Fab_render(fab)
 
 
   ---| Fab_render |---
+
+  assert(fab.moved and fab.bumped)
+  assert(not fab.built)
+
+  fab.built = true
 
   for _,B in ipairs(fab.brushes) do
     if not Trans.brush_is_space(B) then

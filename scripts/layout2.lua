@@ -1091,14 +1091,14 @@ end
 
 function Layout_build_walls(R)
   for _,fab in ipairs(R.prefabs) do
-    if fab.room == R then
+    if fab.room == R and not fab.built then
 
---FIXME !!!!!!!! TEMP CRUD
-if not fab.z then fab.z = rand.irange(128,384) end
+      if not fab.bumped then
+        --FIXME !!!!!!!! TEMP CRUD
+        local T = { add_z = rand.irange(128,384) }
 
-      local T = { add_z = fab.z }
-
-      Fab_transform_Z(fab, T)
+        Fab_transform_Z(fab, T)
+      end
 
       Fab_render(fab)
     end
@@ -2002,7 +2002,6 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
           if B[1].m == kind and
              (not B[1].room or B[1].room == sel(is_entry, 2, 1))
           then
-            B[1].fab = fab
             table.insert(list, B)
           end
         end
@@ -2151,11 +2150,21 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
+  local function bump_and_build_fab(fab, walk, z)
+    assert(not fab.built)
+
+    local walk_t = assert(Trans.brush_get_t(walk))
+
+    Fab_transform_Z(fab, { add_z = z - walk_t })
+
+    Fab_render(fab)
+  end
+
+
   local function initial_floor()
     local F =
     {
       level = 1,
-      entry = R.entry_walk,
     }
 
     F.brushes = Layout_initial_space2(R)
@@ -2168,11 +2177,20 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     F.zones = determine_safe_zones(R.mono_list[1], F.walks)
 
-    if not F.entry then
-      F.entry = rand.pick(F.walks)
-    end
+    if R.entry_walk then
+      F.entry = R.entry_walk
+      -- should be a door which has already been built
+      assert(F.entry[1].fab.built)
+    else
+      -- entry must be a teleporter.
+      -- pick any walk brush and built it's prefab
 
-    F.entry[1].walk_z = R.entry_floor_h
+      F.entry = rand.pick(F.walks)
+
+      local fab = assert(F.entry[1].fab)
+
+      bump_and_build_fab(fab, F.entry, R.entry_floor_h)
+    end
 
     return F
   end
@@ -2181,7 +2199,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function render_floor(F)
     assert(F.entry)
 
-    F.z = assert(F.entry[1].walk_z)
+    F.z = assert(Trans.get_brush_t(F.entry))
 
     table.insert(R.all_floors, F)
 
@@ -2190,8 +2208,10 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 gui.debugf("WALK = \n")
 Trans.dump_brush(W)
       local fab = W[1].fab
-      if not fab.z then fab.z = F.z end  -- FIXME: REMOVE ??
-      W[1].walk_z = F.z
+
+      if not fab.built then
+        bump_and_build_fab(fab, W, F.z)
+      end
     end
 
     -- pick a floor texture
@@ -2368,9 +2388,9 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
       Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
       Fab_transform_XY(fab, T)
 
-      for _,W in ipairs(fab.brushes) do
-        if W[1].m == "walk" then W[1].fab = fab end
-      end
+---###      for _,W in ipairs(fab.brushes) do
+---###        if W[1].m == "walk" then W[1].fab = fab end
+---###      end
 
       local info = full_test_floor_fab(F, fab)
 
@@ -2557,15 +2577,16 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   end
 
 
-  local function find_prefab_add_z(info)
-    for _,B in ipairs(info.fab.brushes) do
+  local function find_prefab_walk_t(fab)
+    assert(fab.bumped)
+
+    for _,B in ipairs(fab.brushes) do
       if B[1].m == "walk" and B[1].walk_z then
-        local t = assert(Trans.brush_get_t(B))
-        return B[1].walk_z - t
+        return assert(Trans.brush_get_t(B))
       end
     end
 
-    error("prefab walk brushes failed to get a height") 
+    error("WTF")
   end
 
 
@@ -2605,18 +2626,18 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     -- recursively handle it
     try_subdivide_floor(first)
 
-    -- at this point, one of our prefab's walk brushes should have
-    -- a known height (since the first floor has been rendered now).
-    --
-    -- Hence we can now transform and render the floor prefab, which
-    -- will give all the other walk brushes in the prefab a known
-    -- fixed height.
-
-    local add_z = find_prefab_add_z(info)
-
-    Fab_transform_Z(info.fab, { add_z = add_z })
-
-    Fab_render(info.fab)
+---##    -- at this point, one of our prefab's walk brushes should have
+---##    -- a known height (since the first floor has been rendered now).
+---##    --
+---##    -- Hence we can now transform and render the floor prefab, which
+---##    -- will give all the other walk brushes in the prefab a known
+---##    -- fixed height.
+---##
+---##    local walk_t = find_prefab_walk_t(info.fab)
+---##
+---##    Fab_transform_Z(info.fab, { add_z = add_z })
+---##
+---##    Fab_render(info.fab)
 
     -- recursively handle the remaining pieces
     for _,F2 in ipairs(new_floors) do
