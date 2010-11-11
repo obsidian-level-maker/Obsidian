@@ -1091,7 +1091,7 @@ end
 
 function Layout_build_walls(R)
   for _,fab in ipairs(R.prefabs) do
-    if fab.room == R and not fab.built then
+    if fab.room == R and not fab.rendered then
 
       if not fab.bumped then
         --FIXME !!!!!!!! TEMP CRUD
@@ -2151,7 +2151,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
 
   local function bump_and_build_fab(fab, walk, z)
-    assert(not fab.built)
+    assert(not fab.rendered)
 
     local walk_t = assert(Trans.brush_get_t(walk))
 
@@ -2179,11 +2179,11 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
 
     if R.entry_walk then
       F.entry = R.entry_walk
-      -- should be a door which has already been built
-      assert(F.entry[1].fab.built)
+      -- should be a door which has already been rendered
+      assert(F.entry[1].fab.rendered)
     else
       -- entry must be a teleporter.
-      -- pick any walk brush and built it's prefab
+      -- pick any walk brush and build it's prefab
 
       F.entry = rand.pick(F.walks)
 
@@ -2209,7 +2209,7 @@ gui.debugf("WALK = \n")
 Trans.dump_brush(W)
       local fab = W[1].fab
 
-      if not fab.built then
+      if not fab.rendered then
         bump_and_build_fab(fab, W, F.z)
       end
     end

@@ -1728,9 +1728,9 @@ function Fab_render(fab)
   ---| Fab_render |---
 
   assert(fab.moved and fab.bumped)
-  assert(not fab.built)
+  assert(not fab.rendered)
 
-  fab.built = true
+  fab.rendered = true
 
   for _,B in ipairs(fab.brushes) do
     if not Trans.brush_is_space(B) then
