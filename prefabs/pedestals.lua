@@ -42,19 +42,6 @@ PREFAB.OCTO_PEDESTAL =
 {
   brushes =
   {
-    -- reachability
-    {
-      { m = "walk" },
-      { x =  -48, y = -112 },
-      { x =   48, y = -112 },
-      { x =  112, y =  -48 },
-      { x =  112, y =   48 },
-      { x =   48, y =  112 },
-      { x =  -48, y =  112 },
-      { x = -112, y =   48 },
-      { x = -112, y =  -48 },
-    },
-
     -- pedestal
     {
       { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
@@ -114,6 +101,20 @@ PREFAB.OCTO_PEDESTAL =
       { x = -112, y =  -48 },
     },
 
+    -- reachability
+    {
+      { m = "walk" },
+      { x =  -48, y = -112 },
+      { x =   48, y = -112 },
+      { x =  112, y =  -48 },
+      { x =  112, y =   48 },
+      { x =   48, y =  112 },
+      { x =  -48, y =  112 },
+      { x = -112, y =   48 },
+      { x = -112, y =  -48 },
+      { t = 0 },
+    },
+
   },
 
   entities =
@@ -162,15 +163,6 @@ PREFAB.ITEM_NICHE =
       { x =   0, y =  4, mat = "?wall" },
     },
 
-    -- space in front of it
-    {
-      { m = "walk" },
-      { x =   0, y =  64 },
-      { x = 192, y =  64 },
-      { x = 192, y = 128 },
-      { x =   0, y = 128 },
-    },
-
     -- right side
 
     {
@@ -206,7 +198,16 @@ PREFAB.ITEM_NICHE =
       { b = 128, mat = "?wall", light = "?light", special = "?special"  },
     },
 
-    -- FIXME: walk space
+    -- space in front of it
+    {
+      { m = "walk" },
+      { x =   0, y =  64 },
+      { x = 192, y =  64 },
+      { x = 192, y = 128 },
+      { x =   0, y = 128 },
+      { t = 0 },
+    },
+
   },
 
   entities =

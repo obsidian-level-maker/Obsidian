@@ -360,6 +360,7 @@ PREFAB.TRAP_CLOSET_DOOM =
       { x = 192, y = 104 },
       { x = 192, y = 144 },
       { x =   0, y = 144 },
+      { t = 0 },
     },
 
     -- left side wall

@@ -23,20 +23,22 @@ PREFAB.START_SPOT =
   brushes =
   {
     {
-      { m = "walk" },
-      { x = -80, y = -80 },
-      { x =  80, y = -80 },
-      { x =  80, y =  80 },
-      { x = -80, y =  80 },
-    },
-
-    {
       { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { t = 8, mat = "?top", light = "?light" },
     },
+
+    {
+      { m = "walk" },
+      { x = -80, y = -80 },
+      { x =  80, y = -80 },
+      { x =  80, y =  80 },
+      { x = -80, y =  80 },
+      { t = 0 },
+    },
+
   },
 
   entities =
@@ -79,6 +81,7 @@ PREFAB.START_LEDGE =
       { x = 192, y =  80 },
       { x = 192, y = 128 },
       { x =   0, y = 128 },
+      { t = 0 },
     },
   },
 
@@ -102,6 +105,7 @@ PREFAB.EXIT_PILLAR =
       { x =  96, y = -96 },
       { x =  96, y =  96 },
       { x = -96, y =  96 },
+      { t = 0 },
     },
 
     -- pillar itself
@@ -418,6 +422,7 @@ PREFAB.QUAKE_WALL_EXIT =
       { x = 192, y = 16 },
       { x = 192, y = 96 },
       { x =   0, y = 96 },
+      { t = 0 },
     },
 
     -- the pad itself
