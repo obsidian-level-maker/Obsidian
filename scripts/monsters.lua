@@ -74,7 +74,7 @@ require 'util'
 
 MONSTER_QUANTITIES =
 {
-  scarce=8, less=15, normal=25, more=45, heaps=80, nuts=250
+  scarce=6, less=12, normal=20, more=35, heaps=60, nuts=200
 }
 
 MONSTER_KIND_TAB =
@@ -776,21 +776,19 @@ function Monsters_in_room(R)
     end
 
     -- tend to have more monsters in later rooms and levels
-    qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 5
+    qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 4
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     if R.purpose then
-      if R.svolume <= 20 then
-        qty = qty * rand.range(1.7, 2.3)
-      else
-        qty = qty * rand.range(1.4, 1.8)
-      end
+      qty = qty * rand.pick { 1.4, 1.6, 1.8 }
+
+      if R.svolume <= 20 then qty = qty * 1.25 end
     else
       -- random variation
       qty = qty * rand.pick { 0.3, 0.5, 0.8, 1.0, 1.2 }
 
-      if rand.odds(4) then qty = qty / 5 end
-      if rand.odds(2) then qty = qty * 4 end
+      if rand.odds(5) then qty = qty / 5 end
+      if rand.odds(1) then qty = qty * 5 end
     end
 
     gui.debugf("Quantity = %1.1f\n", qty)
@@ -945,7 +943,7 @@ function Monsters_in_room(R)
     local num = int(size * kind / 12 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
-    if num > 4 then num = 4 end  -- FIXME: game specific --> PARAM.xxx
+    if num > 5 then num = 5 end  -- FIXME: game specific --> PARAM.xxx
 
     if rand.odds(30) then num = num + 1 end
     if rand.odds(3)  then num = num + 1 end
