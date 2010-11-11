@@ -2164,7 +2164,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function initial_floor()
     local F =
     {
-      level = 1,
+      recursion = 0,
     }
 
     F.brushes = Layout_initial_space2(R)
@@ -2199,7 +2199,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   local function render_floor(F)
     assert(F.entry)
 
-    F.z = assert(Trans.get_brush_t(F.entry))
+    F.z = assert(Trans.brush_get_t(F.entry))
 
     table.insert(R.all_floors, F)
 
@@ -2403,13 +2403,13 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 
 
   local function find_usable_floor(F)
-gui.debugf("find_usable_floor in %s level:%d\n", R:tostr(), F.level)
+gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
     -- FIXME we only support subdividing single monotones right now
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: .....recursion limit for testing.....
-    if F.level >= 2 then return nil end
+    if F.recursion >= 2 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -2545,7 +2545,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   local function create_new_floor(F, info, space)
     local floor =
     {
-      level = F.level + 1,
+      recursion = F.recursion + 1,
       space = space,
     }
 

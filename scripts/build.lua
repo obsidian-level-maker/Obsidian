@@ -1069,12 +1069,6 @@ function Fab_create(name)
 
   local function mark_outliers(fab)
     for _,B in ipairs(fab.brushes) do
-      if not B[1].m then
-        table.insert(B, 1, { m="solid" })
-      end
-
-      B[1].fab = fab
-
       if B[1].m and not B[1].insider and
          (B[1].m == "walk"  or B[1].m == "air" or
           B[1].m == "zone"  or B[1].m == "nosplit" or
@@ -1299,6 +1293,17 @@ function Fab_apply_skins(fab, list)
                }
   end
 
+
+  local function brush_stuff()
+    for _,B in ipairs(fab.brushes) do
+      if not B[1].m then
+        table.insert(B, 1, { m="solid" })
+      end
+
+      B[1].fab = fab
+    end
+  end
+
   
   ---| Fab_apply_skins |---
 
@@ -1338,6 +1343,8 @@ function Fab_apply_skins(fab, list)
 
   -- find bounding box (in prefab space)
   determine_bbox(fab)
+
+  brush_stuff()
 end
 
 
