@@ -50,7 +50,6 @@ require 'planner'
 require 'connect'
 require 'naming'
 require 'quests'
-require 'spaceman'
 require 'caves'
 
 require 'build'

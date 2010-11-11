@@ -95,45 +95,6 @@ require 'util'
   --
 
 
-
--- FIXME: appropriate place
-DOOR_SILVER_KEY = 16
-DOOR_GOLD_KEY   = 8
-
-
-function Layout_initial_space(R)
-  local S = SPACE_CLASS.new()
-
-  if R.shape == "rect" then
-    local K1 = SECTIONS[R.kx1][R.ky1]
-    local K2 = SECTIONS[R.kx2][R.ky2]
-
-    S:initial_rect(K1.x1, K1.y1, K2.x2, K2.y2)
-  else
-    for _,K in ipairs(R.sections) do
-      S:initial_rect(K.x1, K.y1, K.x2, K.y2)
-    end
-  end
-
-  return S
-end
-
-
-function Layout_initial_space2(R)
-  local list = {}
-
-  -- FIXME: blocks
-  for _,B in ipairs(R.sections) do
-    local BRUSH = Trans.bare_quad(B.x1, B.y1, B.x2, B.y2)
-
-    table.insert(list, BRUSH)
-  end
-
-  return list
-end
-
-
-
 function Layout_monotonic_spaces(R)
   -- Monotonic here means that if you cut the space in half either
   -- horizontally or vertically, you will always end up with two
@@ -231,7 +192,7 @@ function Layout_monotonic_spaces(R)
     {
       sections = {},
 
-      space = SPACE_CLASS.new(),
+---##      space = SPACE_CLASS.new(),
 
       blocks = {},
     }
@@ -241,7 +202,7 @@ function Layout_monotonic_spaces(R)
     repeat
       table.insert(INFO.sections, K)
 
-      INFO.space:initial_rect(K.x1, K.y1, K.x2, K.y2)
+---##      INFO.space:initial_rect(K.x1, K.y1, K.x2, K.y2)
 
       alloc(K)
 
@@ -361,6 +322,21 @@ end
 
 
 
+function Layout_initial_space(R)
+  local list = {}
+
+  -- FIXME: blocks
+  for _,B in ipairs(R.sections) do
+    local BRUSH = Trans.bare_quad(B.x1, B.y1, B.x2, B.y2)
+
+    table.insert(list, BRUSH)
+  end
+
+  return list
+end
+
+
+
 function Layout_add_span(E, long1, long2, deep)
 
 -- stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
@@ -404,7 +380,7 @@ function Layout_add_span(E, long1, long2, deep)
 end
 
 
-function Layout_check_brush(coords, data)
+function OLD__Layout_check_brush(coords, data)
   local R = data.R
 
   local allow = true
@@ -965,7 +941,7 @@ table.insert(extra_skins, CRUD)
 
   ---| Layout_initial_walls |---
 
-  R.wall_space = Layout_initial_space(R)
+  R.wall_space = {}
 
   -- FIXME!!!!  do initial middles here too
 
@@ -1471,7 +1447,7 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
-  local function floor_check_brush(coords, data)
+  local function OLD__floor_check_brush(coords, data)
     local m = coords[1].m
 
     if m == "floor" then
@@ -1918,7 +1894,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
   end
 
 
-  local function build_floor()
+  local function OLD_build_floor()
 
     -- initial floor space
 
@@ -2167,7 +2143,7 @@ gui.debugf("location =\n%s\n", table.tostr(loc, 3))
       recursion = 0,
     }
 
-    F.brushes = Layout_initial_space2(R)
+    F.brushes = Layout_initial_space(R)
 
     F.walks    = collect_spaces("walk")
     F.nosplits = collect_spaces("nosplit")
