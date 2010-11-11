@@ -775,8 +775,8 @@ QUAKE1.SKINS =
   {
     _prefab = "START_LEDGE",
     _where  = "edge",
-    _long   = 200,
-    _deep   = 128,
+    _long   = 192,
+    _deep   = 64,
   },
 
 
@@ -787,11 +787,35 @@ QUAKE1.SKINS =
     _prefab = "QUAKE_WALL_EXIT",  -- QUAKE_WALL_EXIT
     _where  = "edge",
     _long   = 192,
-    _deep   = 96,
+    _deep   = 64,
 
     pad = "TELE_TOP",
 
     metal = "METAL1_1",
+  },
+
+
+  ----| ARCHES |----
+
+  Arch1 =
+  {
+    _prefab = "ARCH",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 64,
+  },
+
+
+  ----| DOORS |----
+
+  Door_plain =
+  {
+    _prefab = "QUAKE_DOOR",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    door = "ADOOR02_2",
   },
 
 
@@ -801,8 +825,8 @@ QUAKE1.SKINS =
   {
     _prefab = "ITEM_NICHE",
     _where  = "edge",
-    _long   = 200,
-    _deep   = 96,
+    _long   = 192,
+    _deep   = 64,
 
     light = 128, style = 11,
   },
@@ -815,6 +839,8 @@ QUAKE1.SKINS =
     _prefab = "QUAKE_DOOR",
     _where  = "edge",
     _keys = { k_silver=1 },
+    _long = 192,
+    _deep = 32,
 
     door = "DOOR01_2",
     door_flags = 16,  -- 16 = DOOR_SILVER_KEY
@@ -825,6 +851,8 @@ QUAKE1.SKINS =
     _prefab = "QUAKE_DOOR",
     _where  = "edge",
     _keys = { k_gold=1 },
+    _long = 192,
+    _deep = 32,
 
     door = "DOOR01_2",
     door_flags = 8,  -- 8 = DOOR_GOLD_KEY
@@ -833,11 +861,13 @@ QUAKE1.SKINS =
 
   ----| SWITCHED DOORS |---- 
 
-  Door_sw =
+  Door_SW_1 =
   {
     _prefab = "QUAKE_DOOR",
     _where  = "edge",
     _switches = { Switch_1=50 },
+    _long = 192,
+    _deep = 32,
 
     door = "ADOOR09_1",
     message = "Find the button dude!",
@@ -851,6 +881,42 @@ QUAKE1.SKINS =
     _long   = 192,
     _deep   = 48,
 
+  },
+
+
+  ---| WINDOWS |---
+
+  Window1 =
+  {
+    _prefab = "WINDOW",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    track = "RUNE2_2",
+  },
+
+
+  ---| FENCES |---
+
+  Fence1 =
+  {
+    _prefab = "FENCE",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    fence = "WIZWOOD1_8",
+  },
+
+
+  ---| FLOORS |---
+
+  H_Stair6 =
+  {
+    _prefab = "H_STAIR_6",
+
+    step = "MET5_1",
   },
 
 
@@ -938,7 +1004,19 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   lock_doors = { Locked_silver = 50, Locked_gold = 50 },
 
-  switch_doors = { Door_sw = 50 },
+  switch_doors = { Door_SW_1 = 50 },
+
+  arches = { Arch1 = 50 },
+
+  doors = { Door_plain = 50 },
+
+  windows = { Window1 = 50 }, 
+
+  fences = { Fence1 = 50 },
+
+  floors = { H_Stair6 = 50 },
+
+  --------- OLD CRUD --------> > >
 
   teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",

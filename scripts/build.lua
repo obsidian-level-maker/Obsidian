@@ -1713,7 +1713,7 @@ function Fab_transform_Z(fab, T)
   end
 
   for _,M in ipairs(fab.models) do
-    model_z(B)
+    model_z(M)
   end
 
   Trans.clear()

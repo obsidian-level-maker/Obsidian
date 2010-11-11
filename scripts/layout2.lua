@@ -928,7 +928,8 @@ table.insert(extra_skins, CRUD)
     end
 
     if E.usage.kind == "important" and E.usage.lock and E.usage.lock.kind == "SWITCH" then
-      table.insert(extra_skins, { tag = E.usage.lock.tag })
+      local lock = E.usage.lock
+      table.insert(extra_skins, { tag = lock.tag, targetname = "sw" .. tostring(lock.tag) })
     end
 
     if E.usage.sub == "EXIT" and GAME.format == "quake" then

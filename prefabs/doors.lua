@@ -397,6 +397,11 @@ PREFAB.QUAKE_DOOR =
 
     door = "DR05_2",
     step = "?wall",
+
+    door_flags = 0,
+    message = "",
+    targetname = "",
+    wait = "",
   },
 
   brushes =
