@@ -60,7 +60,7 @@ require 'fight'
 require 'monsters'
 
 
-STYLE_LIST =
+GLOBAL_STYLE_LIST =
 {
   skies      = { few=20, some=60, heaps=40 },
   hallways   = { few=10, some=90, heaps=30 },
@@ -518,11 +518,11 @@ end
 function Levels_do_styles()
   gui.rand_seed(LEVEL.seed)
 
-  local style_tab = table.copy(STYLE_LIST)
+  local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
   -- per game, per level and per theme style_lists
-  if GAME.STYLES then
-    table.merge(style_tab, GAME.STYLES)
+  if GAME.STYLE_LIST then
+    table.merge(style_tab, GAME.STYLE_LIST)
   end
   if LEVEL.style_list then
     table.merge(style_tab, LEVEL.style_list)
