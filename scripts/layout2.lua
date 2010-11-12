@@ -2015,13 +2015,15 @@ Trans.dump_brush(W)
     for _,B in ipairs(fab.brushes) do
       if B[1].m == "floor" then
 --!!!!!!!!!!!
-if R.id == 12 then
+if R.id == 4 then
 gui.debugf("brush_contains_brush:\n")
 Trans.dump_brush(B)
 Trans.dump_brush(walk)
 end
         if Trans.brush_contains_brush(B, walk) then
+if R.id == 4 then
 gui.debugf("\nYES\n")
+end
           return B
         end
       end
@@ -2041,40 +2043,58 @@ gui.debugf("\nYES\n")
     --
     -- Requirements:
     --
-    --   1. each existing walk / nosplit brush exists completely inside
-    --      one of the new floor spaces.
+    --   1. each existing walk brush exists completely inside one of
+    --      the new floor spaces.
     --
-    --   2. each new floor space contains at least one existing walk brush.
-    --      TODO: relax this requirement if num_spaces >= 3
+    --TODO 2. no existing nosplit brush straddles one of the new floor
+    --        spaces, or is clobbered by solid brushes.
     --
     --   3. existing air brushes do not touch any new solid which is
     --      infinitely tall or so.
     --
+    --   4. each new floor space contains at least one existing walk brush.
+    --      TODO: relax this requirement if num_spaces >= 3
+    --
+    --TODO 5. each new walk brush is not clobbered by existing solids.
+    --
 
-    local space_has_walk = {}
+    local walk_counts = {}
 
     -- FIXME: this is too simple, allow a walk (etc) to span two or more
     --        floor brushes of the same space.
 
+    -- #1 --
     for _,W in ipairs(F.walks) do
       local con = find_containing_space(fab, W)
-gui.debugf("|  walk con : %s\n", tostring(con))
+gui.debugf("|  walk con %d/%d : %s\n", _, #F.walks, tostring(con))
       if not con then return nil end
 
       W[1].con = con
-      space_has_walk[con[1].space] = 1
+
+      walk_counts[con[1].space] = 1
     end
 
+    -- #2 --
     for _,NS in ipairs(F.nosplits) do
+      -- FIXME: is OK if nosplit ends up in no space (e.g. lava)
       local con = find_containing_space(fab, NS)
 gui.debugf("|  nosplit con : %s\n", tostring(con))
       if not con then return nil end
       NS[1].con = con
     end
        
+    -- #3 --
     for _,A in ipairs(F.airs) do
       if check_air_clobbered(fab, A) then return nil end
     end
+
+    -- #4 --
+    for n = 1,fab.num_spaces do
+      if not walk_counts[n] then return false end
+    end
+
+    -- #5 --
+    -- TODO
 
     -- SUCCESS --
     local info = { fab=fab }
