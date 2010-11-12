@@ -2199,7 +2199,7 @@ Trans.dump_brush(W)
     end
 
     -- prepare bounding box
-    floor.bbox = geom.bbox_new()
+    F.bbox = geom.bbox_new()
 
     -- create the brushes
     local mat = Mat_lookup(F.mat)
@@ -2214,7 +2214,7 @@ Trans.dump_brush(W)
 
       local x1,y1, x2,y2 = Trans.brush_bbox(B)
 
-      geom.bbox_add_rect(floor.bbox, x1,y1, x2,y2)
+      geom.bbox_add_rect(F.bbox, x1,y1, x2,y2)
     end
 
     R.floor_min_h = math.min(R.floor_min_h, F.z)
