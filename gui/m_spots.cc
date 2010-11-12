@@ -743,7 +743,7 @@ void SPOT_DebuggingTest()
 //------------------------------------------------------------------------
 
 
-// LUA: spots_begin(min_x, min_y, max_x, max_y)
+// LUA: spots_begin(min_x, min_y, max_x, max_y, content)
 //
 int SPOT_begin(lua_State *L)
 {
@@ -753,22 +753,24 @@ int SPOT_begin(lua_State *L)
   int max_x = (int) ceil(luaL_checknumber(L, 3));
   int max_y = (int) ceil(luaL_checknumber(L, 4));
 
-  SPOT_CreateGrid(1 /* blocked */, min_x, min_y, max_x, max_y);
+  int content = luaL_checkint(L, 5);
+
+  SPOT_CreateGrid(content, min_x, min_y, max_x, max_y);
 
   return 0;
 }
 
 
-// LUA: spots_draw_line(content, x1, y1, x2, y2)
+// LUA: spots_draw_line(x1, y1, x2, y2, content)
 //
 int SPOT_draw_line(lua_State *L)
 {
-  int content = luaL_checkint(L, 1);
+  int x1 = I_ROUND(luaL_checknumber(L, 1));
+  int y1 = I_ROUND(luaL_checknumber(L, 2));
+  int x2 = I_ROUND(luaL_checknumber(L, 3));
+  int y2 = I_ROUND(luaL_checknumber(L, 4));
 
-  int x1 = I_ROUND(luaL_checknumber(L, 2));
-  int y1 = I_ROUND(luaL_checknumber(L, 3));
-  int x2 = I_ROUND(luaL_checknumber(L, 4));
-  int y2 = I_ROUND(luaL_checknumber(L, 5));
+  int content = luaL_checkint(L, 5);
 
   SPOT_DrawLine(content, x1, y1, x2, y2);
 
@@ -790,28 +792,33 @@ static int polygon_coord(lua_State *L, int stack_pos,
   lua_getfield(L, stack_pos, "x");
   lua_getfield(L, stack_pos, "y");
 
-  int x = I_ROUND(luaL_checknumber(L, -2));
-  int y = I_ROUND(luaL_checknumber(L, -1));
+  // ignore non-XY coordinates, to allow brushes
+
+  if (! lua_isnil(L, -2))
+  {
+    int x = I_ROUND(luaL_checknumber(L, -2));
+    int y = I_ROUND(luaL_checknumber(L, -1));
+
+    points.push_back(grid_point_c(x, y));
+  }
 
   lua_pop(L, 2);
-
-  points.push_back(grid_point_c(x, y));
 
   return 0;
 }
 
 
-// LUA: spots_fill_poly(content, polygon)
+// LUA: spots_fill_poly(polygon, content)
 //
 int SPOT_fill_poly(lua_State *L)
 {
-  int content = luaL_checkint(L, 1);
+  int content = luaL_checkint(L, 2);
 
   std::vector<grid_point_c> points;
 
-  if (lua_type(L, 2) != LUA_TTABLE)
+  if (lua_type(L, 1) != LUA_TTABLE)
   {
-    return luaL_argerror(L, 2, "missing table: polygon");
+    return luaL_argerror(L, 1, "missing table: polygon");
   }
 
   int index = 1;
@@ -819,7 +826,7 @@ int SPOT_fill_poly(lua_State *L)
   for (;;)
   {
     lua_pushinteger(L, index);
-    lua_gettable(L, 2);
+    lua_gettable(L, 1);
 
     if (lua_isnil(L, -1))
     {
@@ -833,6 +840,9 @@ int SPOT_fill_poly(lua_State *L)
 
     index++;
   }
+
+  if (points.size() < 3)
+    return luaL_error(L, "gui.spots_fill_poly: bad polygon");
 
   SPOT_FillPolygon(content, points);
 
