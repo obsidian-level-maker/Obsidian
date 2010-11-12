@@ -2103,6 +2103,37 @@ gui.debugf("|  nosplit con : %s\n", tostring(con))
   end
 
 
+  local function determine_1D_locs(low, high, size, scalable)
+    -- make a set of good positions to try across a certain axis (X or Y)
+
+    local list = {}
+
+    local extra  = high - low - size
+    if extra < 0 then extra = 0 end
+
+    local s_half = int(size  / 2)
+    local mx     = int((low + high) / 2)
+
+    if scalable then
+      if extra > size / 2.1 then
+        table.insert(list, { low=low, high=high })
+      end
+      -- TODO: more scaling positions (touch low, mid, touch high)
+    end
+
+    table.insert(list, { low=mx-s_half, high=mx-s_half+size })
+
+    if extra > math.min(size / 1.7, 100) then
+---   table.insert(list, { low=low, high=low+size })
+---   table.insert(list, { low=high-size, high=high })
+    end
+
+    -- TODO: more unscaled positions (2/5, 4/5)
+
+    return list
+  end
+
+
   local function test_floor_fab(F, skin, zone, rotate)
     -- preliminary size check
     -- (try to avoid the expensive prefab creation)
@@ -2140,8 +2171,17 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     if rotate == 180 then dir = 8 end
     if rotate == 270 then dir = 4 end
 
-    table.insert(locs, Trans.box_transform(zone.x1, zone.y1,
-                         zone.x1 + x_size, zone.y1 + y_size, nil, dir))
+    local xlocs = determine_1D_locs(zone.x1, zone.x2, x_size, raw_fab.scalable)
+    local ylocs = determine_1D_locs(zone.y1, zone.y2, y_size, raw_fab.scalable)
+
+    for _,XL in ipairs(xlocs) do
+      for _,YL in ipairs(ylocs) do
+        table.insert(locs, Trans.box_transform(XL.low, YL.low, XL.high, YL.high, nil, dir))
+      end
+    end
+
+    -- FIXME!!!  score them or give probabilities and pick
+    rand.shuffle(locs)
 
     -- check each location...
 
@@ -2173,11 +2213,11 @@ gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: .....recursion limit for testing.....
-    if F.recursion >= 2 then return nil end
+    if F.recursion >= 5 then return nil end
 
     local poss = possible_floor_prefabs()
 
-    local ROTS = { 0 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
+    local ROTS = { 0, 90, 180, 270 }
 
     rand.shuffle(F.zones)
 
