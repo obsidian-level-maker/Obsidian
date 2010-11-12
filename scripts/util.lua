@@ -704,6 +704,31 @@ function geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4)
   return true
 end
 
+
+function geom.bbox_new()
+  return { x1=9e9, y1=9e9, x2=-9e9, y2=-9e9 }
+end
+
+function geom.bbox_add_point(bbox, x, y)
+  bbox.x1 = math.min(bbox.x1, x)
+  bboy.y1 = math.min(bboy.y1, y)
+  bbox.x2 = math.max(bbox.x2, x)
+  bboy.y2 = math.max(bboy.y2, y)
+end
+
+function geom.bbox_add_rect(bbox, x1, y1, x2, y2)
+  bbox.x1 = math.min(bbox.x1, x1)
+  bboy.y1 = math.min(bboy.y1, y1)
+  bbox.x2 = math.max(bbox.x2, x2)
+  bboy.y2 = math.max(bboy.y2, y2)
+end
+
+function geom.bbox_sanitize(bbox)
+  if bbox.x1 > bbox.x2 then bbox.x1, bbox.x2 = 0, 0 end
+  if bbox.y1 > bbox.y2 then bbox.y1, bbox.y2 = 0, 0 end
+end
+
+
 function geom.side_coords(side, x1,y1, x2,y2, ofs)
   if not ofs then ofs = 0 end
 
