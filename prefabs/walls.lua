@@ -46,6 +46,8 @@ PREFAB.PICTURE =
   {
     width  = 64,
     height = 64,
+
+    side = "?wall",
   },
 
   brushes =

@@ -51,6 +51,11 @@ PREFAB.WALL_SWITCH =
 {
   placement = "fitted",
 
+  defaults =
+  {
+    side = "?wall",
+  },
+
   brushes =
   {
     -- wall behind it
@@ -135,11 +140,6 @@ PREFAB.WALL_SWITCH =
 PREFAB.QUAKE_WALL_SWITCH =
 {
   placement = "fitted",
-
-  defaults =
-  {
-    wait = "",
-  },
 
   brushes =
   {

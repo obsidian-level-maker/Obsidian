@@ -992,6 +992,11 @@ QUAKE1.ROOMS =
 }
 
 
+QUAKE1.SKIN_DEFAULTS =
+{
+}
+
+
 QUAKE1.SUB_THEME_DEFAULTS =
 {
   starts = { START_LEDGE = 50 }, 

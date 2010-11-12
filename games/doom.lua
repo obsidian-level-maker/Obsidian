@@ -2447,6 +2447,11 @@ DOOM2.ROOMS =
 }
 
 
+DOOM.SKIN_DEFAULTS =
+{
+}
+
+
 DOOM.SUB_THEME_DEFAULTS =
 {
   starts = { Start_ledge = 50 },
