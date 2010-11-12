@@ -399,9 +399,6 @@ PREFAB.QUAKE_DOOR =
     step = "?wall",
 
     door_flags = 0,
-    message = "",
-    targetname = "",
-    wait = "",
   },
 
   brushes =
@@ -438,6 +435,25 @@ PREFAB.QUAKE_DOOR =
       { x = 192, y = 48, mat = "?wall" },
       { x = 160, y = 48, mat = "?wall" },
       { x = 160, y = 24, mat = "?outer" },
+    },
+
+    -- walk areas
+    {
+      { m = "walk", room = 1 },
+      { x =  40, y =  24 },
+      { x = 152, y =  24 },
+      { x = 152, y = 112 },
+      { x =  40, y = 112 },
+      { t = 0 },
+    },
+
+    {
+      { m = "walk", room = 2 },
+      { x =  40, y = -64 },
+      { x = 152, y = -64 },
+      { x = 152, y =  24 },
+      { x =  40, y =  24 },
+      { t = 0 },
     },
   },
 
