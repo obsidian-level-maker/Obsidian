@@ -380,33 +380,6 @@ function Layout_add_span(E, long1, long2, deep)
 end
 
 
-function OLD__Layout_check_brush(coords, data)
-  local R = data.R
-
-  local allow = true
-
-  local mode
-  local m = coords[1].m
-
-      if m == "used"    then allow = false ; mode = "solid"
-  elseif m == "walk"    then allow = false ; mode = "walk"
-  elseif m == "air"     then allow = false ; mode = "air"
-  elseif m == "nosplit" then allow = false ; mode = "nosplit"
-  elseif not m or m == "solid" or m == "sky" then
-    mode = "solid"
-  else
-    -- don't update the space (e.g. light brushes)
-  end
-
-  if mode then
-    local POLY = POLYGON_CLASS.from_brush(mode, coords)
-    table.insert(data.polys, POLY:copy())
-    R.wall_space:merge(POLY)
-  end
-
-  return false
-end
-
 
 function Layout_shrunk_section_coords(K)
   local x1, y1 = K.x1, K.y1
@@ -1114,7 +1087,7 @@ function Layout_the_floor(R)
   end
 
 
-  local function collect_walk_groups()
+  local function OLD_collect_walk_groups()
     -- first collect the walk polys
     local walk_polys = {}
 
@@ -1299,41 +1272,6 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
   end
 
 
-  local function OLD__render_floor(floor)
-    assert(floor.z)
-
-    local mat
-
-    if R.outdoor then
-      mat = rand.pick(LEVEL.courtyard_floors)
-    else
-      mat = rand.pick(LEVEL.building_floors)
-    end
-
-    floor.mat = mat
-
-    mat = Mat_lookup(mat)
-
-    local w_tex = mat.t
-    local f_tex = mat.f or mat.t
-
-    local flavor = "floor:1"
-    if floor.three_d then flavor = "exfloor:1" end
-
-    for _,P in ipairs(floor.space.polys) do
-      local BRUSH = P:to_brush(w_tex)
-
-      table.insert(BRUSH, 1, { m="solid", flavor=flavor })
-      table.insert(BRUSH,    { t=floor.z, tex=f_tex })
-
-      if floor.three_d then
-        table.insert(BRUSH,  { b=floor.z - floor.three_d, tex=f_tex })
-      end
-
-      Trans.brush(BRUSH)
-    end
-  end
-
 
   local function render_liquid(floor)
     assert(floor.z)
@@ -1377,116 +1315,6 @@ gui.debugf("%s has %d walk groups:\n", R:tostr(), #walk_groups)
     if NB.y2 and y2 > NB.y2 + 0.1 then return false end
 
     return true
-  end
-
-
-  local function find_walk_in_neighborhood(nb_list, x1,y1, x2,y2)
-
-    -- FIXME: this fails if a walk group crosses the line where two
-    --        rectangles of the same space touch.
-
-    for _,NB in ipairs(nb_list) do
-      if not NB.m then
-        if inside_nb_rect(NB, x1,y1, x2,y2) then
-          return assert(NB.space)
-        end
-      end
-    end
-
-    return -1  -- not found
-  end
-
-
-  local function transfer_walks(floor, loc, new_floors)
-    for _,G in ipairs(floor.walks) do
-      local space = find_walk_in_neighborhood(loc.neighborhood, G.x1,G.y1, G.x2,G.y2)
-      
-      assert(space >= 1)
-      assert(new_floors[space])
-
-      table.insert(new_floors[space].walks, G)
-    end
-  end
-
-
-  local function transfer_airs(floor, loc, new_floors)
-    -- air spaces may exist in both halves
-
-    for _,A in ipairs(floor.airs) do
-      local space = find_walk_in_neighborhood(loc.neighborhood, A.bx1,A.by1, A.bx2,A.by2)
-
-      if space >= 1 then
-        assert(new_floors[space])
-        table.insert(new_floors[space].airs, A)
-      else
-        -- add it to all floors (FIXME)
-        for _,F in ipairs(new_floors) do
-          table.insert(F.airs, A)
-        end
-      end
-    end
-  end
-
-
-  local function transfer_nosplits(floor, loc, new_floors)
-    for _,A in ipairs(floor.nosplits) do
-      local space = find_walk_in_neighborhood(loc.neighborhood, A.bx1,A.by1, A.bx2,A.by2)
-
-      if space >= 1 then
-        assert(new_floors[space])
-        table.insert(new_floors[space].nosplits, A)
-      else
-        -- add it to all floors (FIXME)
-        for _,F in ipairs(new_floors) do
-          table.insert(F.nosplits, A)
-        end
-      end
-    end
-  end
-
-
-  local function OLD__floor_check_brush(coords, data)
-    local m = coords[1].m
-
-    if m == "floor" then
-      local space = coords[1].space
-      if not space then
-        error("bad or missing space field in floor brush")
-      end
-
-      local F = data.new_floors[space]
-      local POLY = POLYGON_CLASS.from_brush("free", coords)
-
-      F.space:merge(POLY)
-
-    elseif m == "walk" then
-      local space = coords[1].space
-      if not space then
-        error("bad or missing space field in walk brush")
-      end
-
-      local F = data.new_floors[space]
-      local POLY = POLYGON_CLASS.from_brush("walk", coords)
-
-      -- new walk group
-      local G =
-      {
-        polys = { POLY },
-        x1 = POLY.bx1, y1 = POLY.by1,
-        x2 = POLY.bx2, y2 = POLY.by2,
-        walk_dz = coords[1].walk_dz,
-      }
-
-      if G.walk_dz then data.walk_dz = G.walk_dz end
-
-      table.insert(F.walks, G)
-
-      if not data.new_walks[space] then
-        data.new_walks[space] = G
-      end
-    end
-
-    return false
   end
 
 
@@ -1536,70 +1364,6 @@ gui.debugf("  cut walk space: (%d %d) .. (%d %d)\n", G.x1,G.y1, G.x2,G.y2)
     return true  -- OK
   end
 
-
-  local function space_from_neighborhood(old_space, space_index, loc)
-    local new_space = SPACE_CLASS.new()
-
-    for _,NB in ipairs(loc.neighborhood) do
-      if not NB.m and NB.space == space_index then
-        local piece = old_space:intersect_rect(NB.x1, NB.y1, NB.x2, NB.y2)
-
-        new_space:raw_union(piece)
-      end
-    end
-
-    return new_space
-  end
-
-
-  local function zone_clip_to_nb(old_zone, NB)
-    local new_zone = table.copy(old_zone)
-
-    if NB.x1 and NB.x1 > new_zone.x1 then new_zone.x1 = NB.x1 end
-    if NB.y1 and NB.y1 > new_zone.y1 then new_zone.y1 = NB.y1 end
-    if NB.x2 and NB.x2 < new_zone.x2 then new_zone.x2 = NB.x2 end
-    if NB.y2 and NB.y2 < new_zone.y2 then new_zone.y2 = NB.y2 end
-
-    return new_zone
-  end
-
-
-  local function zones_from_neighborhood(old_list, space_index, loc)
-    local new_list = {}
-
-    for _,old_zone in ipairs(old_list) do
-      for _,NB in ipairs(loc.neighborhood) do
-        if NB.m == "zone" and NB.space == space_index then
-          local zone = zone_clip_to_nb(old_zone, NB)
-
-          if zone.x2 > zone.x1 and zone.y2 > zone.y1 then
-            table.insert(new_list, zone)
-          end
-        end
-      end
-    end
-
-    return new_list
-  end
-
-
-  local function liquid_from_neighborhood(old_space, loc)
-    local new_space  -- return nothing if no liquid rects
-
-    for _,NB in ipairs(loc.neighborhood) do
-      if NB.m == "lava" then
-        if not new_space then
-          new_space = SPACE_CLASS.new()
-        end
-
-        local piece = old_space:intersect_rect(NB.x1, NB.y1, NB.x2, NB.y2)
-
-        new_space:raw_union(piece)
-      end
-    end
-
-    return new_space
-  end
 
 
   local function choose_division(floor, zone, fab, rotate)
@@ -2393,7 +2157,7 @@ gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
     local poss = possible_floor_prefabs()
 
-    local ROTS = { 180 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
+    local ROTS = { 0 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
 
     rand.shuffle(F.zones)
 
@@ -2721,7 +2485,7 @@ function Layout_spots_in_room(R)
       end
     end
 
-    gui.spots_dump("Spot grid")
+--  gui.spots_dump("Spot grid")
 
     local mon_spots  = {}
     local item_spots = {}
