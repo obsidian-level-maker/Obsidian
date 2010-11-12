@@ -942,8 +942,6 @@ table.insert(extra_skins, CRUD)
 
   ---| Layout_initial_walls |---
 
-  R.wall_space = {}
-
   -- FIXME!!!!  do initial middles here too
 
   for pass = 1,2 do
@@ -2200,6 +2198,9 @@ Trans.dump_brush(W)
       end
     end
 
+    -- prepare bounding box
+    floor.bbox = geom.bbox_new()
+
     -- create the brushes
     local mat = Mat_lookup(F.mat)
 
@@ -2210,6 +2211,10 @@ Trans.dump_brush(W)
       table.insert(B, { t=F.z, tex=f_tex })
 
       Trans.brush(B)
+
+      local x1,y1, x2,y2 = Trans.brush_bbox(B)
+
+      geom.bbox_add_rect(floor.bbox, x1,y1, x2,y2)
     end
 
     R.floor_min_h = math.min(R.floor_min_h, F.z)
@@ -2362,12 +2367,11 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
       -- create prefab to perform full check
       local fab = Fab_create(skin._prefab)
 
-      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
-      Fab_transform_XY(fab, T)
+      table.insert(R.prefabs, fab)
 
----###      for _,W in ipairs(fab.brushes) do
----###        if W[1].m == "walk" then W[1].fab = fab end
----###      end
+      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
+
+      Fab_transform_XY(fab, T)
 
       local info = full_test_floor_fab(F, fab)
 
@@ -2390,7 +2394,7 @@ gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
     local poss = possible_floor_prefabs()
 
-    local ROTS = { 0 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
+    local ROTS = { 180 }  --!!!!!! FIXME  { 0, 90, 180, 270 }
 
     rand.shuffle(F.zones)
 
@@ -2680,27 +2684,41 @@ end
 
 function Layout_spots_in_room(R)
 
-  local function fill_polygons(space, values)
-    for _,P in ipairs(space.polys) do
-      local val = values[P.kind]
-      if val then
-        gui.spots_fill_poly(val, P.coords)
+  local function remove_prefab(fab)
+    for _,B in ipairs(fab.brushes) do
+      if B[1].m == "solid" then
+        -- TODO: height check
+        gui.spots_fill_poly(B, 1)
       end
     end
   end
 
 
+  local function remove_neighbor_floor(floor, N)
+    -- FIXME
+  end
+
+
   local function spots_for_floor(floor)
-if table.empty(floor.space.polys) then return end
-    gui.spots_begin(floor.space:calc_bbox())
+    local bbox = assert(floor.bbox)
 
-    fill_polygons(floor.space, { free=0, air=0, walk=0 })
+    -- begin with a completely solid area
+    gui.spots_begin(bbox.x1, bbox.y1, bbox.x2, bbox.y2, 1)
 
-    fill_polygons(R.wall_space, { solid=1 })
+    -- carve out the floor brushes (make them empty)
+    for _,B in ipairs(floor.brushes) do
+      gui.spots_fill_poly(B, 0)
+    end
 
+    -- solidify brushes from prefabs
+    for _,fab in ipairs(R.prefabs) do
+      remove_prefab(fab)
+    end
+
+    -- mark edges with neighboring floors
     for _,F in ipairs(R.all_floors) do
-      if F ~= floor and F.layer == floor.layer then
-        fill_polygons(F.space, { free=1, air=1, walk=1 })
+      if F ~= floor then
+        remove_neighbor_floor(floor, F)
       end
     end
 
@@ -2739,7 +2757,7 @@ if table.empty(floor.space.polys) then return end
 
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
---!!!!!! FIXME FIXME    spots_for_floor(F)
+    spots_for_floor(F)
   end
 end
 
