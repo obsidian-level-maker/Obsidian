@@ -711,16 +711,16 @@ end
 
 function geom.bbox_add_point(bbox, x, y)
   bbox.x1 = math.min(bbox.x1, x)
-  bboy.y1 = math.min(bboy.y1, y)
+  bbox.y1 = math.min(bbox.y1, y)
   bbox.x2 = math.max(bbox.x2, x)
-  bboy.y2 = math.max(bboy.y2, y)
+  bbox.y2 = math.max(bbox.y2, y)
 end
 
 function geom.bbox_add_rect(bbox, x1, y1, x2, y2)
   bbox.x1 = math.min(bbox.x1, x1)
-  bboy.y1 = math.min(bboy.y1, y1)
+  bbox.y1 = math.min(bbox.y1, y1)
   bbox.x2 = math.max(bbox.x2, x2)
-  bboy.y2 = math.max(bboy.y2, y2)
+  bbox.y2 = math.max(bbox.y2, y2)
 end
 
 function geom.bbox_sanitize(bbox)
