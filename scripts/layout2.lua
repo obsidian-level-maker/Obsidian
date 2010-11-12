@@ -833,7 +833,6 @@ function Layout_initial_walls(R)
 
 
     if R.skin then table.insert(extra_skins, 1, R.skin) end
-    if THEME.skin then table.insert(extra_skins, 1, THEME.skin) end
 
     local skins = table.copy(extra_skins)
     table.insert(skins, skin)
@@ -2369,7 +2368,7 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 
       table.insert(R.prefabs, fab)
 
-      Fab_apply_skins(fab, { THEME.skin or {}, R.skin or {}, skin })
+      Fab_apply_skins(fab, { R.skin or {}, skin })
 
       Fab_transform_XY(fab, T)
 

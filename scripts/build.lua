@@ -22,6 +22,15 @@ require 'defs'
 require 'util'
 
 
+GLOBAL_SKIN_DEFAULTS =
+{
+  tag = "", special = "",
+  light = "", style = "",
+  message = "", wait = "",
+  targetname = "",
+}
+
+
 Trans = {}
 
 
@@ -1126,6 +1135,9 @@ function Fab_apply_skins(fab, list)
                               tostring(k), t[k]))
         end
 
+        -- empty strings are the way to specify NIL
+        if v == "" then v = nil end
+
         t[k] = v
       end
 
@@ -1310,15 +1322,11 @@ function Fab_apply_skins(fab, list)
   assert(not fab.skinned)
   fab.skinned = true
 
-  local global_defaults =
-  {
-    tag = 0, special = 0, light = 0, style = 0,
-    side = "FOO",
-  }
-
   -- FIXME: move the code here
-  Trans.process_skins(global_defaults,
+  Trans.process_skins(GLOBAL_SKIN_DEFAULTS,
+                      GAME.SKIN_DEFAULTS,
                       fab.defaults,
+                      THEME.defaults,
                       list[1], list[2], list[3],
                       list[4], list[5], list[6],
                       list[7], list[8], list[9])
