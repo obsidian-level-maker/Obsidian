@@ -1171,7 +1171,7 @@ function Fab_apply_skins(fab, list)
 
   local function process_model_face(face, is_flat)
     if face.mat then
-      local mat = Mat_lookup(mat)
+      local mat = Mat_lookup(face.mat)
       assert(mat and mat.t)
 
       if is_flat and mat.f then
@@ -1734,7 +1734,7 @@ function Fab_render(fab)
   local function render_model(M)
     assert(M.entity)
 
-    M.entity.model = M
+    M.entity.model = gui.q1_add_mapmodel(M)
 
     gui.add_entity(M.entity)
   end
