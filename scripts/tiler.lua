@@ -135,12 +135,25 @@ function Tiler_fill_section(K, wall, w_hue, floor)
     end
 
     if not K:same_room(side) then
+      local door_pos = int((long+1) / 2)
+
       for n = 1,long do
         local x = lx + ax * (n-1)
         local y = ly + ay * (n-1)
 
-        gui.wolf_block(x, y, 1, wall)
-        gui.wolf_mini_map(x, y, w_hue)
+        if n == door_pos and K:side_has_conn(side) then
+          local N = K:neighbor(side)
+          if K.room.id < N.room.id and rand.odds(30) then
+            -- add a door
+            local door = sel(geom.is_horiz(side), 90, 91)
+            gui.wolf_block(x, y, 1, door)
+          else
+            -- keep it blank
+          end
+        else
+          gui.wolf_block(x, y, 1, wall)
+          gui.wolf_mini_map(x, y, w_hue)
+        end
       end
     end
   end
@@ -161,13 +174,17 @@ function Tiler_layout_room(R)
     Tiler_fill_section(K, mat.t, mat.hue, 108)
   end
 
-  if R.purpose == "START" then
+  if R.purpose == "START" or R.purpose == "EXIT" then
     local K = R.sections[1]    
 
     local x = K.bx1 + int(K.bw / 2)
     local y = K.by1 + int(K.bh / 2)
 
-    Tiler_insert_entity(x, y, "player1")
+    if R.purpose == "START" then
+      Tiler_insert_entity(x, y, "player1")
+    else
+      Tiler_insert_entity(x, y, "chest")
+    end
   end
 end
 
