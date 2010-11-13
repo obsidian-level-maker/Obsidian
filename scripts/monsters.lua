@@ -650,10 +650,21 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
         place_big_item(spot, item.name, CL)
       else
         for i = 1,count do
-          spot = table.remove(R.item_spots, 1)
-          table.insert(R.item_spots, spot)
+          if table.empty(R.item_spots) then
+            gui.printf("Unable to place items: %s x %d\n", item.name, count+1-i)
+            break;
+          end
 
-          place_item(item.name, spot.x, spot.y, spot.z)
+          spot = table.remove(R.item_spots, 1)
+
+          if PARAM.tiled then
+            Tiler_add_entity(item.name, spot.block_x, spot.block_y)
+          else
+            place_item(item.name, spot.x, spot.y, spot.z)
+
+            -- reuse spots if they run out (except in Wolf3D)
+            table.insert(R.item_spots, spot)
+          end
         end
       end
     end
@@ -800,6 +811,9 @@ function Monsters_in_room(R)
     -- This is meant to give a rough estimate, and assumes each monster
     -- fits in a 64x64 square and there is no height restrictions.
     -- We can adjust for the real monster size later.
+
+    -- simple for Wolf3D :-)
+    if PARAM.tiled then return #list end
 
     local count = 0
 
@@ -1182,6 +1196,9 @@ function Monsters_in_room(R)
 
 
   local function mon_fits(mon, spot)
+    -- in tiled games, each spot can hold a single monster (no more, no less)
+    if PARAM.tiled then return 1 end
+
     local ent  = GAME.ENTITIES[mon]
 
     -- FIXME !!!
@@ -1197,7 +1214,13 @@ function Monsters_in_room(R)
 
 
   local function place_in_spot(mon, spot, all_skills)
-    local ent  = GAME.ENTITIES[mon]
+    -- tiled games like Wolf3D do things differently
+    if PARAM.tiled then
+      Tiler_add_monster(mon, spot, calc_min_skill(all_skills))
+      return
+    end
+
+    local ent = GAME.ENTITIES[mon]
 
     local x, y = geom.box_mid (spot.x1, spot.y1, spot.x2, spot.y2)
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
@@ -1242,6 +1265,13 @@ function Monsters_in_room(R)
     local dist_x = 0
     local dist_y = 0
 
+    if PARAM.tiled then
+      dist_x = math.abs(A.block_x - B.block_x)
+      dist_y = math.abs(A.block_y - B.block_y)
+
+      return geom.dist(0, 0, dist_x, dist_y) * 32
+    end
+
         if A.x1 > B.x2 then dist_x = A.x1 - B.x2
     elseif A.x2 < B.x1 then dist_x = B.x1 - A.x2
     end
@@ -1262,6 +1292,8 @@ function Monsters_in_room(R)
 
 
   local function split_huge_spots(max_size)
+    if PARAM.tiled then return end
+
     local list = R.mon_spots
 
     -- recreate the spot list
@@ -1299,6 +1331,8 @@ function Monsters_in_room(R)
 
   local function split_spot(index, r, near_to)
     local spot = table.remove(R.mon_spots, index)
+
+    if PARAM.tiled then return spot end
 
     local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
@@ -1690,7 +1724,7 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
   R.monster_list = {}
   R.fight_stats  = make_empty_stats()
 
-  R.big_item_spots = table.deep_copy(R.mon_spots)
+  R.big_item_spots = {} -- FIXME table.deep_copy(R.mon_spots)
 
   R.toughness = calc_toughness()
   R.firepower = Player_firepower()

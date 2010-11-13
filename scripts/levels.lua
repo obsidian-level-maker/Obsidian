@@ -579,9 +579,6 @@ function Levels_build_it()
   Rooms_build_all()
   if gui.abort() then return "abort" end
 
-  -- FIXME : support monster stuff
-  if PARAM.tiled then return "OK" end
-
   gui.prog_step("Mons");
 
   Monsters_make_battles()

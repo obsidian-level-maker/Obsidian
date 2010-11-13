@@ -19,7 +19,7 @@
 ----------------------------------------------------------------
 
 
-function Tiler_insert_entity(tx, ty, name, angle, skill, flags)
+function Tiler_add_entity(name, tx, ty, angle, skill, flags)
   assert(1 <= tx and tx <= 64)
   assert(1 <= ty and ty <= 64)
 
@@ -36,7 +36,12 @@ function Tiler_insert_entity(tx, ty, name, angle, skill, flags)
 end
 
 
-function Tiler_do_basic_room(R, wall, w_hue, floor)
+function Tiler_add_monster(name, spot, skill)
+  Tiler_add_entity(name, spot.block_x, spot.block_y, 0, skill)
+end
+
+
+function OLD__Tiler_do_basic_room(R, wall, w_hue, floor)
   local x1 = (R.sx1 - 1) * 3 + 1
   local y1 = (R.sy1 - 1) * 3 + 1
 
@@ -93,6 +98,58 @@ function Tiler_do_basic_room(R, wall, w_hue, floor)
 
     end
   end end -- for sx, sy
+end
+
+
+function Tiler_near_wall(x, y)
+  if x == 1 or x == 64 or y == 1 or y == 64 then
+    return true
+  end
+
+  for dir = 2,8,2 do
+    local nx, ny = geom.nudge(x, y, dir)
+
+    if gui.wolf_read(nx, ny, 1) < 96 then
+      return true
+    end
+  end
+
+  return false
+end
+
+
+function Tiler_create_spots(R)
+  local dither = 0
+
+  local function add_spot(K, x, y)
+    -- places near a wall get mostly items,
+    -- places in the middle get mostly monsters.
+
+    local near_wall = Tiler_near_wall(x, y)
+
+    local spot = { block_x = x, block_y = y }
+
+    if rand.odds(sel(near_wall, 0, 95)) then
+      table.insert(R.mon_spots, spot)
+    else
+      table.insert(R.item_spots, spot)
+    end
+  end
+
+  ---| Tiler_create_spots |---
+
+  local floor_id = 108
+
+  for _,K in ipairs(R.sections) do
+    for x = K.bx1, K.bx2 do for y = K.by1, K.by2 do
+      local wall  = gui.wolf_read(x, y, 1)
+      local thing = gui.wolf_read(x, y, 2)
+
+      if wall == floor_id and thing == 0 then
+        add_spot(K, x, y)
+      end
+    end end
+  end
 end
 
 
@@ -181,11 +238,13 @@ function Tiler_layout_room(R)
     local y = K.by1 + int(K.bh / 2)
 
     if R.purpose == "START" then
-      Tiler_insert_entity(x, y, "player1")
+      Tiler_add_entity("player1", x, y)
     else
-      Tiler_insert_entity(x, y, "chest")
+      Tiler_add_entity("chest", x, y)
     end
   end
+
+  Tiler_create_spots(R)
 end
 
 
