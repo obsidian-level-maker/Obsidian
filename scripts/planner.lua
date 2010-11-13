@@ -182,6 +182,13 @@ function Plan_create_sections(W, H)
     local sizes = {}
     local total
 
+    -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
+    -- block to every section row and column for centered doors (etc).
+    if PARAM.tiled then
+      limit = PARAM.block_limit - W
+      limit = int(limit / 2)
+    end
+
     -- take border seeds into account
     limit = limit - border_seeds*2
 
@@ -240,17 +247,16 @@ function Plan_create_sections(W, H)
 
   ---| Plan_create_sections |---
 
-  local limit = (PARAM.seed_limit or 56)
+  local limit = PARAM.seed_limit or 56
 
   -- reduce level size if rooms would become too small
-  -- (2x2 is the absolute minimum)
+  -- (2x2 seeds is the absolute minimum)
 
   local max_W = int(limit / 2.5)
   local max_H = int((limit - free_seeds) / 2.5)
 
   if W > max_W then W = max_W end
   if H > max_H then H = max_H end
-
 
   gui.printf("Map Size: %dx%d sections\n", W, H)
 
@@ -293,8 +299,10 @@ function Plan_create_sections(W, H)
   SEED_W = seed_W
   SEED_H = seed_H + free_seeds
 
-  -- centre the map : needed for Quake, OK for other games
-  -- (this formula ensures that 'coord 0' is still a seed boundary)
+  -- centre the map : needed for Quake, OK for other games.
+  -- this formula ensures that 'coord 0' is still a seed boundary,
+  -- which is VITAL for the Quake visibility code.
+
   SEED_DX = int(SEED_W / 2) * SEED_SIZE
   SEED_DY = int(SEED_H / 2) * SEED_SIZE
 

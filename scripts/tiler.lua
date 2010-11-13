@@ -114,14 +114,76 @@ function Tiler_layout_room(R)
 
   assert(mat.t)
 
-  Tiler_do_basic_room(R, mat.t, mat.hue, 108)
+---  Tiler_do_basic_room(R, mat.t, mat.hue, 108)
 
   if R.purpose == "START" then
     local tx = (R.sx1 - 1) * 3 + 3
     local ty = (R.sy1 - 1) * 3 + 3
 
-    Tiler_insert_entity(tx, ty, "player1")
+---    Tiler_insert_entity(tx, ty, "player1")
   end
+end
+
+
+function Tiler_setup_sections()
+
+  local function dump_sizes(line, t, total)
+    for i = 1,#t do
+      line = line .. tostring(t[i]) .. " "
+    end
+    gui.printf("%s = %d\n", line, total)
+  end
+
+  ---| Tiler_setup_sections |---
+
+  -- calculate section coordinates in BLOCKS
+  local section_W = {}
+  local section_H = {}
+
+  local section_X = {}
+  local section_Y = {}
+
+  local total_W = PARAM.border_seeds * 2
+  local total_H = PARAM.border_seeds * 2
+
+  for x = 1,SECTION_W do
+    section_W[x] = SECTIONS[x][1].sw * 2 + 1
+    section_X[x] = total_W + 1
+
+    total_W = total_W + section_W[x]
+  end
+
+  for y = 1,SECTION_H do
+    section_H[y] = SECTIONS[1][y].sh * 2 + 1
+    section_Y[y] = total_H + 1
+
+    total_H = total_H + section_H[y]
+  end
+
+  total_W = total_W + PARAM.border_seeds * 2
+  total_H = total_H + PARAM.border_seeds * 2
+
+  dump_sizes("Tiler Column widths: ", section_W, total_W)
+  dump_sizes("Tiler Row heights:   ", section_H, total_H)
+
+  if total_W > PARAM.block_limit or total_H > PARAM.block_limit then
+    error("Tiler planner failure, map is too large")
+  end
+
+  -- assign coordinates to all sections
+
+  for x = 1,SECTION_W do for y = 1,SECTION_H do
+    local K = SECTIONS[x][y]
+
+    K.bx1 = section_X[x]
+    K.by1 = section_Y[y]
+
+    K.bw = section_W[x]
+    K.bh = section_H[y]
+
+    K.bx2 = K.bx1 + K.bw - 1
+    K.by2 = K.by1 + K.bh - 1
+  end end
 end
 
 
@@ -129,8 +191,9 @@ function Tiler_layout_all()
 
   gui.printf("\n--==| Tiler_layout_all |==--\n\n")
 
-
   --==| Tiler_layout_all |==--
+
+  Tiler_setup_sections()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Tiler_layout_room(R)

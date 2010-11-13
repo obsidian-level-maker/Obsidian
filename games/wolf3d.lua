@@ -200,8 +200,7 @@ WOLF.PARAMETERS =
 {
   tiled  = true,
 
-  -- assumes each seed is 3x3 blocks
-  seed_limit = 21,
+  block_limit = 64,
 
   border_seeds = 1, 
   free_seeds   = 0,
