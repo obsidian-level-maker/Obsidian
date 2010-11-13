@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2009 Andrew Apted
+--  Copyright (C) 2006-2010 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -33,14 +33,6 @@ function Tiler_insert_entity(tx, ty, name, angle, skill, flags)
   end
 
   gui.wolf_block(tx, ty, 2, id)
-end
-
-
-function Tiler_add_entity(S, ...)
-  local tx = (S.sx - 1) * 3 + 1
-  local ty = (S.sy - 1) * 3 + 2
-
-  Tiler_insert_entity(tx, ty, ...)
 end
 
 
@@ -104,6 +96,57 @@ function Tiler_do_basic_room(R, wall, w_hue, floor)
 end
 
 
+function Tiler_fill_section(K, wall, w_hue, floor)
+ 
+  -- floor --
+
+  for x = K.bx1, K.bx2 do for y = K.by1, K.by2 do
+    gui.wolf_block(x, y, 1, floor)
+    gui.wolf_mini_map(x, y, "#777")
+  end end
+
+  -- corners --
+
+  for corner = 1,9,2 do if corner ~= 5 then
+    local x, y = geom.pick_corner(corner, K.bx1,K.by1, K.bx2,K.by2)
+
+    gui.wolf_block(x, y, 1, wall)
+    gui.wolf_mini_map(x, y, w_hue)
+  end end
+
+  -- edges --
+
+  for side = 2,8,2 do
+    local lx, ly = K.bx1, K.by1
+    local ax, ay = 1, 0
+
+    local long = K.bx2 - K.bx1 - 1
+    local deep = K.by2 - K.by1 - 1
+
+    if side == 6 then lx = K.bx2 end
+    if side == 8 then ly = K.by2 end
+
+    if geom.is_horiz(side) then
+      ly = ly + 1
+      long, deep = deep, long
+      ax, ay = ay, ax
+    else
+      lx = lx + 1
+    end
+
+    if not K:same_room(side) then
+      for n = 1,long do
+        local x = lx + ax * (n-1)
+        local y = ly + ay * (n-1)
+
+        gui.wolf_block(x, y, 1, wall)
+        gui.wolf_mini_map(x, y, w_hue)
+      end
+    end
+  end
+end
+
+
 function Tiler_layout_room(R)
   local mat = GAME.MATERIALS[R.main_tex]
 
@@ -114,13 +157,17 @@ function Tiler_layout_room(R)
 
   assert(mat.t)
 
----  Tiler_do_basic_room(R, mat.t, mat.hue, 108)
+  for _,K in ipairs(R.sections) do
+    Tiler_fill_section(K, mat.t, mat.hue, 108)
+  end
 
   if R.purpose == "START" then
-    local tx = (R.sx1 - 1) * 3 + 3
-    local ty = (R.sy1 - 1) * 3 + 3
+    local K = R.sections[1]    
 
----    Tiler_insert_entity(tx, ty, "player1")
+    local x = K.bx1 + int(K.bw / 2)
+    local y = K.by1 + int(K.bh / 2)
+
+    Tiler_insert_entity(x, y, "player1")
   end
 end
 
