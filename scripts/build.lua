@@ -31,6 +31,14 @@ GLOBAL_SKIN_DEFAULTS =
 }
 
 
+CSG_BRUSHES =
+{
+  solid = 1, detail = 1, clip = 1,
+  sky = 1, liquid = 1,
+  rail = 1, light = 1,
+}
+
+
 Trans = {}
 
 
@@ -1063,17 +1071,6 @@ end
 
 
 
-function Trans.brush_is_space(B)
-  if not B[1].m then return false end
-
-  return B[1].m == "used" or B[1].m == "walk" or
-         B[1].m == "air"  or B[1].m == "nosplit" or
-         B[1].m == "zone" or B[1].m == "spot"   or
-         B[1].m == "floor"
-end
-
-
-
 function Fab_create(name)
 
   local function mark_outliers(fab)
@@ -1089,6 +1086,12 @@ function Fab_create(name)
 
       if B[1].m == "spot" then
         fab.has_spots = true
+      end
+
+      -- mark infinite brushes
+      for _,C in ipairs(B) do
+        if C.x and math.abs(C.x) > (INF * 0.9) then B[1].infinite = true end
+        if C.y and math.abs(C.y) > (INF * 0.9) then B[1].infinite = true end
       end
     end
   end
@@ -1748,7 +1751,7 @@ function Fab_render(fab)
   fab.rendered = true
 
   for _,B in ipairs(fab.brushes) do
-    if not Trans.brush_is_space(B) then
+    if CSG_BRUSHES[B[1].m] then
       gui.add_brush(B)
     end
   end
