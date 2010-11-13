@@ -220,7 +220,7 @@ static void WF_WriteHead(void)
 
 //------------------------------------------------------------------------
 
-// LUA: wolf_block(x, y, plane, data)
+// LUA: wolf_block(x, y, plane, value)
 //
 int WF_wolf_block(lua_State *L)
 {
@@ -228,8 +228,7 @@ int WF_wolf_block(lua_State *L)
   int y = luaL_checkint(L, 2);
 
   int plane = luaL_checkint(L, 3);
-  int data  = luaL_checkint(L, 4);
-
+  int value = luaL_checkint(L, 4);
 
   // adjust and validate coords
   SYS_ASSERT(1 <= x && x <= 64);
@@ -240,11 +239,11 @@ int WF_wolf_block(lua_State *L)
   switch (plane)
   {
     case 1:
-      solid_plane[PL_START + y*64 + x] = data;
+      solid_plane[PL_START + y*64 + x] = value;
       break;
 
     case 2:
-      thing_plane[PL_START + y*64 + x] = data;
+      thing_plane[PL_START + y*64 + x] = value;
       break;
 
     default:
@@ -253,6 +252,43 @@ int WF_wolf_block(lua_State *L)
   }
 
   return 0;
+}
+
+
+// LUA: wolf_read(x, y, plane)
+//
+int WF_wolf_read(lua_State *L)
+{
+  int x = luaL_checkint(L, 1);
+  int y = luaL_checkint(L, 2);
+
+  int plane = luaL_checkint(L, 3);
+
+  // adjust and validate coords
+  SYS_ASSERT(1 <= x && x <= 64);
+  SYS_ASSERT(1 <= y && y <= 64);
+
+  x--;  y = 64-y;
+
+  int value = 0;
+
+  switch (plane)
+  {
+    case 1:
+      value = solid_plane[PL_START + y*64 + x];
+      break;
+
+    case 2:
+      value = thing_plane[PL_START + y*64 + x];
+      break;
+
+    default:
+      // other planes are silently ignored
+      break;
+  }
+
+  lua_pushinteger(L, value);
+  return 1;
 }
 
 
