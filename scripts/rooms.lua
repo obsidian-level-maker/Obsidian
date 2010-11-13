@@ -876,17 +876,17 @@ function Rooms_build_all()
 
   Rooms_setup_symmetry()
 
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Rooms_setup_bits(R)
+    Layout_monotonic_spaces(R)
+  end
+
   if PARAM.tiled then
     -- this is as far as we go for TILE based games
     Tiler_layout_all()
     return
   end
 
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Rooms_setup_bits(R)
-    Layout_monotonic_spaces(R)
-  end
 
   Layout_place_importants()
 
