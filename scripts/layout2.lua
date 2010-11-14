@@ -2248,6 +2248,20 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   end
 
 
+  local function copy_floor_brush(brush)
+    -- create a very minimal copy of the brush : 2D coords only
+    local newb = {}
+
+    for _,C in ipairs(brush) do
+      if C.x then
+        table.insert(newb, { x=C.x, y=C.y })
+      end
+    end
+
+    return newb
+  end
+
+
   local function do_intersection(list, info, FB, B)
     local x1,y1,x2,y2 = Trans.brush_bbox(FB)
     local x3,y3,x4,y4 = Trans.brush_bbox(B)
@@ -2264,7 +2278,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     -- FIXME !!!!
     assert(Trans.brush_is_quad(FB))
 
-    local B = Trans.copy_brush(B)
+    local B = copy_floor_brush(B)
 
     local function try_cut(px1, py1, px2, py2)
       if Trans.line_cuts_brush(B, px1, py1, px2, py2) then
@@ -2292,8 +2306,14 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
     for _,FB in ipairs(info.fab.brushes) do
       if FB[1].m == "floor" and FB[1].space == space then
-        for _,B in ipairs(brushes) do
-          do_intersection(list, info, FB, B)
+        if not FB[1].infinite then
+          -- normal sized brushes can simply be inserted as-is
+          table.insert(list, copy_floor_brush(FB))
+        else
+          -- perform intersection with previous floor
+          for _,B in ipairs(brushes) do
+            do_intersection(list, info, FB, B)
+          end
         end
       end
     end
