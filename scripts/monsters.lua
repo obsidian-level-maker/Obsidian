@@ -790,16 +790,19 @@ function Monsters_in_room(R)
     qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 4
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
-    if R.purpose then
-      qty = qty * rand.pick { 1.4, 1.6, 1.8 }
+    local is_small = (R.svolume <= 20)
 
-      if R.svolume <= 20 then qty = qty * 1.25 end
+    if R.purpose then
+      qty = qty * rand.pick { 1.6, 1.8, 2.1 }
+
+      if is_small then qty = qty * 1.25 end
     else
       -- random variation
-      qty = qty * rand.pick { 0.3, 0.5, 0.8, 1.0, 1.2 }
-
-      if rand.odds(5) then qty = qty / 5 end
-      if rand.odds(1) then qty = qty * 5 end
+          if rand.odds(10) then qty = qty * 0.3
+      elseif rand.odds(4)  then qty = qty * 1.9
+      else
+        qty = qty * rand.pick { 0.7, 1.0, 1.3 }
+      end
     end
 
     gui.debugf("Quantity = %1.1f\n", qty)
@@ -1548,7 +1551,6 @@ function Monsters_in_room(R)
 
     local want_total = tally_spots(R.mon_spots)
 
-stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
     want_total = int(want_total * qty / 100 + gui.random())
 
     -- determine how many of each kind of monster we want
