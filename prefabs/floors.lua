@@ -240,8 +240,8 @@ PREFAB.TRIPLE_A =
 
     {
       { m = "zone", space = 1 },
-      { x = -INF, y =   0 },
-      { x =  -64, y =   0 },
+      { x = -INF, y =  80 },
+      { x =  -64, y =  80 },
       { x =  -64, y = INF },
       { x = -INF, y = INF },
     },
@@ -256,13 +256,20 @@ PREFAB.TRIPLE_A =
       { t = 0 },
     },
 
-    -- FIXME steps
     {
       { x =   0, y = 128, mat = "?step" },
+      { x =  32, y =  96, mat = "?step" },
+      { x = 160, y = 224, mat = "?step" },
+      { x = 128, y = 256, mat = "?step" },
+      { t = 16, mat = "?step" },
+    },
+
+    {
+      { x =  32, y =  96, mat = "?step" },
       { x =  64, y =  64, mat = "?step" },
       { x = 192, y = 192, mat = "?step" },
-      { x = 128, y = 256, mat = "?step" },
-      { t = 24, mat = "?step" },
+      { x = 160, y = 224, mat = "?step" },
+      { t = 32, mat = "?step" },
     },
 
 
@@ -300,6 +307,14 @@ PREFAB.TRIPLE_A =
     },
 
     {
+      { m = "zone", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  -40 },
+      { x = -INF, y =  -40 },
+    },
+
+    {
       { m = "walk", space = 2 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
@@ -307,10 +322,91 @@ PREFAB.TRIPLE_A =
       { t = 48 },
     },
 
+    {
+      { m = "walk", space = 2 },
+      { x = 256, y = 256 },
+      { x = 384, y = 256 },
+      { x = 384, y = 384 },
+      { x = 256, y = 384 },
+      { t = 48 },
+    },
+
 
     ---| top right : highest |---
 
-    @@@
+    {
+      { m = "floor", space = 3 },
+      { x =   0, y = 512 },
+      { x = INF, y = 512 },
+      { x = INF, y = INF },
+      { x =   0, y = INF },
+    },
+
+    {
+      { m = "floor", space = 3 },
+      { x = 512, y = 256 },
+      { x = INF, y = 256 },
+      { x = INF, y = 512 },
+      { x = 512, y = 512 },
+    },
+
+    {
+      { m = "floor", space = 3 },
+      { x =   0, y = 512 },
+      { x = 128, y = 384 },
+      { x = 256, y = 384 },
+      { x = 256, y = 512 },
+    },
+
+    {
+      { m = "floor", space = 3 },
+      { x = 384, y = 512 },
+      { x = 384, y = 384 },
+      { x = 512, y = 256 },
+      { x = 512, y = 512 },
+    },
+
+    {
+      { m = "floor", space = 3 },
+      { x = 384, y = 448 },
+      { x = 384, y = 448 },
+      { x = 512, y = 512 },
+      { x = 512, y = 512 },
+    },
+
+    {
+      { m = "zone", space = 3 },
+      { x =  16, y = 528 },
+      { x = INF, y = 528 },
+      { x = INF, y = INF },
+      { x =  16, y = INF },
+    },
+
+    {
+      { m = "walk", space = 3 },
+      { x = 256, y = 384 },
+      { x = 384, y = 384 },
+      { x = 384, y = 512 },
+      { x = 256, y = 512 },
+      { t = 96 },
+    },
+
+    {
+      { x = 256, y = 384, mat = "?step" },
+      { x = 384, y = 384, mat = "?step" },
+      { x = 384, y = 416, mat = "?step" },
+      { x = 256, y = 416, mat = "?step" },
+      { t = 64, mat = "?step" },
+    },
+
+    {
+      { x = 256, y = 416, mat = "?step" },
+      { x = 384, y = 416, mat = "?step" },
+      { x = 384, y = 448, mat = "?step" },
+      { x = 256, y = 448, mat = "?step" },
+      { t = 80, mat = "?step" },
+    },
+
   },
 }
 
