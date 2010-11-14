@@ -195,6 +195,126 @@ PREFAB.H_STAIR_6 =
 }
 
 
+PREFAB.TRIPLE_A =
+{
+  placement = "fitted",
+
+  x_size = 512,
+  y_size = 512,
+
+  brushes =
+  {
+    ---| top left : lowest |---
+
+    {
+      { m = "floor", space = 1 },
+      { x = -INF, y =   0 },
+      { x =    0, y =   0 },
+      { x =    0, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    {
+      { m = "floor", space = 1 },
+      { x = 0,  y = 0 },
+      { x = 64, y = 64 },
+      { x = 0,  y = 128 },
+    },
+
+    {
+      { m = "floor", space = 1 },
+      { x = 128, y = 256 },
+      { x = 192, y = 192 },
+      { x = 256, y = 256 },
+      { x = 256, y = 384 },
+      { x = 128, y = 384 },
+    },
+
+    {
+      { m = "floor", space = 1 },
+      { x =   0, y = 128 },
+      { x = 128, y = 256 },
+      { x = 128, y = 384 },
+      { x =   0, y = 512 },
+    },
+
+    {
+      { m = "zone", space = 1 },
+      { x = -INF, y =   0 },
+      { x =  -64, y =   0 },
+      { x =  -64, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    {
+      { m = "walk", space = 1 },
+      { x = -64, y = 128 },
+      { x =   0, y = 128 },
+      { x = 128, y = 256 },
+      { x = 128, y = 384 },
+      { x = -64, y = 384 },
+      { t = 0 },
+    },
+
+    -- FIXME steps
+    {
+      { x =   0, y = 128, mat = "?step" },
+      { x =  64, y =  64, mat = "?step" },
+      { x = 192, y = 192, mat = "?step" },
+      { x = 128, y = 256, mat = "?step" },
+      { t = 24, mat = "?step" },
+    },
+
+
+    ---| south floor : middle |---
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =    0 },
+      { x = -INF, y =    0 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = 256, y =   0 },
+      { x = INF, y =   0 },
+      { x = INF, y = 256 },
+      { x = 256, y = 256 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = 256, y = 256 },
+      { x = 512, y = 256 },
+      { x = 384, y = 384 },
+      { x = 256, y = 384 },
+    },
+
+    {
+      { m = "walk", space = 2 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { t = 48 },
+    },
+
+
+    ---| top right : highest |---
+
+    @@@
+  },
+}
+
+
 --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- > > >
 
 PREFAB.H_DIAGONAL_A =
