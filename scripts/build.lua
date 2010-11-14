@@ -102,17 +102,14 @@ function Trans.apply_xy(x, y)
 end
 
 
-Trans.apply = Trans.apply_xy  -- TODO: fix names
-
-
 function Trans.apply_z(z, slope)
   local T = Trans.TRANSFORM
 
   if slope then
     slope = table.copy(slope)
 
-    slope.x1, slope.y1 = Trans.apply(slope.x1, slope.y1)
-    slope.x2, slope.y2 = Trans.apply(slope.x2, slope.y2)
+    slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
+    slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
 
     if T.mirror_z then slope.dz = - slope.dz end
   end
@@ -241,7 +238,7 @@ function Trans.brush(coords, clip_rects)
     if C.m then
       -- brush info : skip
     elseif C.x then
-      C.x, C.y = Trans.apply(C.x, C.y)
+      C.x, C.y = Trans.apply_xy(C.x, C.y)
     elseif C.b then
       C.b, C.s = Trans.apply_z(C.b, C.s)
     elseif C.t then
@@ -306,7 +303,7 @@ function Trans.entity(name, x, y, z, props)
   ent.id = assert(info.id)
 
   if x then
-    x, y = Trans.apply(x, y)
+    x, y = Trans.apply_xy(x, y)
 
     ent.x = x
     ent.y = y
@@ -469,7 +466,7 @@ end
 --]]
 
 
-function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)
+function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
   local T = Trans.TRANSFORM
 
   local x_size = (x2 - x1) * (T.scale_x or 1)
@@ -478,7 +475,7 @@ function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)
 
   local spot = {}
 
-  spot.x, spot.y = Trans.apply((x1+x2) / 2, (y1+y2) / 2)
+  spot.x, spot.y = Trans.apply_xy((x1+x2) / 2, (y1+y2) / 2)
 
   spot.z = Trans.apply_z(z1)
 
