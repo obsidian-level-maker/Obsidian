@@ -324,7 +324,7 @@ function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
-  LEVEL.global_palette = {}
+  LEVEL.global_pal = {}
 
   local max_level = LEVEL.mon_along or 0.5
 
@@ -342,7 +342,7 @@ function Monsters_global_palette()
     if info.prob  and info.prob > 0 and
        info.level and info.level <= max_level
     then
-      LEVEL.global_palette[name] = 1
+      LEVEL.global_pal[name] = 1
     end
   end
 
@@ -362,7 +362,7 @@ function Monsters_global_palette()
     local skip_total = 0
     local mon_total  = 0
 
-    for name,_ in pairs(LEVEL.global_palette) do
+    for name,_ in pairs(LEVEL.global_pal) do
       local M = GAME.MONSTERS[name]
       local prob = M.skip_prob or 50
 
@@ -397,7 +397,7 @@ function Monsters_global_palette()
       skip_list[name] = nil
 
       gui.printf("Skipping monster: %s\n", name)
-      LEVEL.global_palette[name] = nil
+      LEVEL.global_pal[name] = nil
     end
   end
 
@@ -830,8 +830,16 @@ function Monsters_in_room(R)
   end
 
 
-  local function prob_for_mon(name, info)
+  local function prob_for_mon(name, info, enviro)
     local prob = info.prob
+
+    if enviro == "cage" then
+      -- no flying monsters in cage (some cages don't have bars)
+      if info.float then return 0 end
+
+      -- monster needs a long distance attack
+      if info.attack == "melee" then return 0 end
+    end
 
     if THEME.force_mon_probs then
       prob = THEME.force_mon_probs[name] or
@@ -841,7 +849,7 @@ function Monsters_in_room(R)
 
     prob = prob or 0
 
-    if not LEVEL.global_palette[name] then
+    if not LEVEL.global_pal[name] then
       return 0
     end
 
@@ -1059,6 +1067,52 @@ function Monsters_in_room(R)
 
       gui.debugf("  #%d %s\n", i, mon)
       LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
+    end
+
+    return palette
+  end
+
+
+  local function trap_palette(enviro, room_pal)
+    -- Note: used for cages as well
+
+    local list = {}
+
+    for mon,info in pairs(GAME.MONSTERS) do
+      local prob = prob_for_mon(mon, info, enviro)
+
+      -- prefer monsters not in the room palette
+      if room_pal[mon] then prob = prob / 50 end
+
+      if prob > 0 then
+        list[mon] = prob
+      end
+    end
+
+    local num_kinds = sel(enviro == "trap", 2, 1)
+
+    -- TODO
+    -- if lots_of_spots(kind) then num_kinds = num_kinds + 1 end
+
+    local palette = {}
+
+    gui.debugf("%s palette: (%d kinds, %d actual)\n", kind, num_kinds, table.size(list))
+
+    for i = 1,num_kinds do
+      if table.empty(list) then break; end
+
+      local mon  = rand.key_by_probs(list)
+      local prob = list[mon]
+      list[mon] = nil
+
+      palette[mon] = prob
+
+      gui.debugf("  #%d %s\n", i, mon)
+      LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
+    end
+
+    if table.empty(palette) then
+      -- FIXME !!!! find weakest usable monster
     end
 
     return palette
@@ -1557,6 +1611,22 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
   end
 
 
+  local function fill_cages(room_pal)
+    if table.empty(R.cage_spots) then return end
+
+    local cage_pal = trap_palette("cage", room_pal)
+
+    if table.empty(R.cage_pal) then return end
+
+    for _,spot in ipairs(R.cage_spots) do
+      local mon = rand.key_by_probs(cage_pal)
+      cage_pal[mon] = cage_pal[mon] / 3
+
+      -- FIXME: place monsters in cage
+    end
+  end
+
+
   local function add_monsters()
     local palette
 
@@ -1585,6 +1655,8 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
     if not table.empty(palette) then
       fill_monster_map(palette, barrel_chance)
     end
+
+    fill_cages(palette)
   end
 
 
