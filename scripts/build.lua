@@ -199,20 +199,24 @@ Trans.DOOM_LINE_FLAGS =
   pass_thru   = 0x200,  -- Boom flag
 }
 
-function Trans.collect_flags(C)  -- FIXME: use game-specific code
-  local flags = C.flags or 0
+function Trans.collect_flags(C)
+  -- FIXME: make this work in a more general way
 
-  for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
-    if C[name] and C[name] ~= 0 then
-      flags = bit.bor(flags, value)
+  if GAME.format == "doom" then
+    local flags = C.flags or 0
+
+    for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
+      if C[name] and C[name] ~= 0 then
+        flags = bit.bor(flags, value)
+      end
     end
-  end
 
-  if flags ~= 0 then
-    C.flags = flags
+    if flags ~= 0 then
+      C.flags = flags
 
-    -- this makes sure the flags get applied
-    if not C.special then C.special = 0 end
+      -- this makes sure the flags get applied
+      if not C.special then C.special = 0 end
+    end
   end
 end
 
@@ -1298,6 +1302,10 @@ function Fab_apply_skins(fab, list)
       end
 
       B[1].fab = fab
+      
+      for _,C in ipairs(B) do
+        Trans.collect_flags(C)
+      end
     end
   end
 
