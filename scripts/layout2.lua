@@ -2103,7 +2103,7 @@ gui.debugf("|  nosplit con : %s\n", tostring(con))
   end
 
 
-  local function determine_1D_locs(low, high, size, scalable)
+  local function determine_1D_locs(low, high, size, scale_mode)
     -- make a set of good positions to try across a certain axis (X or Y)
 
     local list = {}
@@ -2114,12 +2114,14 @@ gui.debugf("|  nosplit con : %s\n", tostring(con))
     local s_half = int(size  / 2)
     local mx     = int((low + high) / 2)
 
-    if scalable then
+    if scale_mode then
       if extra > size / 2.1 then
         table.insert(list, { low=low, high=high })
       end
       -- TODO: more scaling positions (touch low, mid, touch high)
     end
+
+    if scale_mode == "whole" then return end
 
     table.insert(list, { low=mx-s_half, high=mx-s_half+size })
 
@@ -2171,8 +2173,8 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     if rotate == 180 then dir = 8 end
     if rotate == 270 then dir = 4 end
 
-    local xlocs = determine_1D_locs(zone.x1, zone.x2, x_size, raw_fab.scalable)
-    local ylocs = determine_1D_locs(zone.y1, zone.y2, y_size, raw_fab.scalable)
+    local xlocs = determine_1D_locs(zone.x1, zone.x2, x_size, raw_fab.scale_mode)
+    local ylocs = determine_1D_locs(zone.y1, zone.y2, y_size, raw_fab.scale_mode)
 
     for _,XL in ipairs(xlocs) do
       for _,YL in ipairs(ylocs) do
@@ -2576,12 +2578,34 @@ function Layout_spots_in_room(R)
   end
 
 
+  local function distribute_spots(list)
+    for _,spot in ipairs(list) do
+      if spot.kind == "cage" then
+        table.insert(R.cage_spots, spot)
+      elseif spot.kind == "trap" then
+        table.insert(R.trap_spots, spot)
+      end
+    end
+  end
+
+
+  local function cage_trap_spots()
+    for _,fab in ipairs(R.prefabs) do
+      if fab.has_spots then
+        distribute_spots(Fab_read_spots(fab))
+      end
+    end
+  end
+
+
   ---| Layout_spots_in_room |---
 
   -- collect spots for the monster code
   for _,F in ipairs(R.all_floors) do
     spots_for_floor(F)
   end
+
+  cage_trap_spots()
 end
 
 

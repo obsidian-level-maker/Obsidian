@@ -1268,7 +1268,7 @@ function Monsters_in_room(R)
 
 
   local function place_in_spot(mon, spot, all_skills)
-    -- tiled games like Wolf3D do things differently
+    -- tiled games like Wolf3D do their own thing
     if PARAM.tiled then
       Tiler_add_monster(mon, spot, calc_min_skill(all_skills))
       return
@@ -1611,18 +1611,32 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
   end
 
 
-  local function fill_cages(room_pal)
+  local function fill_cage_area(mon, spot)
+    local ent = assert(GAME.ENTITIES[mon])
+
+    local w, h = geom.box_size(spot.x1,spot.y1, spot.x2,spot.y2)
+
+    w = int(w / ent.r / 2.2)
+    h = int(h / ent.r / 2.2)
+
+    if w > 0 and h > 0 then
+      -- TODO
+    end
+  end
+
+
+  local function fill_cages(enviro, spot_list, room_pal)
     if table.empty(R.cage_spots) then return end
 
-    local cage_pal = trap_palette("cage", room_pal)
+    local palette = trap_palette(enviro, room_pal)
 
     if table.empty(R.cage_pal) then return end
 
-    for _,spot in ipairs(R.cage_spots) do
+    for _,spot in ipairs(spot_list) do
       local mon = rand.key_by_probs(cage_pal)
       cage_pal[mon] = cage_pal[mon] / 3
 
-      -- FIXME: place monsters in cage
+      place_in_spot(mon, spot, true)
     end
   end
 
@@ -1656,7 +1670,8 @@ stderrf("********* qty = %d  want_total = %d\n", qty, want_total)
       fill_monster_map(palette, barrel_chance)
     end
 
-    fill_cages(palette)
+    fill_cages("cage", R.cage_spots, palette)
+    fill_cages("trap", R.trap_spots, palette)
   end
 
 
