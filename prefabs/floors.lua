@@ -49,7 +49,8 @@ PREFAB.H_STAIR_6 =
 
   brushes =
   {
-    -- old floor : south
+    ---| south floor |---
+
     {
       { m = "floor", space = 1 },
       { x = -INF, y = -INF },
@@ -58,7 +59,25 @@ PREFAB.H_STAIR_6 =
       { x = -INF, y =    0 },
     },
 
-    -- new floor : north
+    {
+      { m = "zone", space = 1 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  -96 },
+      { x = -INF, y =  -96 },
+    },
+
+    {
+      { m = "walk", space = 1 },
+      { x =   0, y = -96 },
+      { x = 216, y = -96 },
+      { x = 216, y =   0 },
+      { x =   0, y =   0 },
+      { t = 0 },
+    },
+
+
+    ---| north floor |---
     {
       { m = "floor", space = 2 },
       { x = -INF, y = 144 },
@@ -83,49 +102,35 @@ PREFAB.H_STAIR_6 =
       { x = 216, y = 144 },
     },
 
-    -- safe zones
     {
-      { m = "zone", space = 1 },
-      { x = -INF, y = -INF },
-      { x =  INF, y = -INF },
-      { x =  INF, y =  -80 },
-      { x = -INF, y =  -80 },
+      { m = "floor", space = 2 },
+      { x =   0, y =   0 },
+      { x =  72, y = 144 },
+      { x =   0, y = 144 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = 144, y = 144 },
+      { x = 216, y =   0 },
+      { x = 216, y = 144 },
     },
 
     {
       { m = "zone", space = 2 },
-      { x = -INF, y =  80 },
-      { x =  INF, y =  80 },
+      { x = -INF, y = 192 },
+      { x =  INF, y = 192 },
       { x =  INF, y = INF },
       { x = -INF, y = INF },
     },
 
-    -- walk areas
-    {
-      { m = "walk", space = 1 },
-      { x = 152, y =  48 },
-      { x = 200, y =  48 },
-      { x = 200, y = 144 },
-      { x = 152, y = 144 },
-      { t = 0 },
-    },
-
     {
       { m = "walk", space = 2 },
-      { x =  56, y =  48 },
-      { x = 104, y =  48 },
-      { x = 104, y = 144 },
-      { x =  56, y = 144 },
-      { t = 72 },
-    },
-
-    -- no split area 
-    {
-      { m = "nosplit", space = 1 },
       { x =   0, y =   0 },
       { x = 216, y =   0 },
-      { x = 216, y = 144 },
-      { x =   0, y = 144 },
+      { x = 216, y = 192 },
+      { x =   0, y = 192 },
+      { t = 72 },
     },
 
     -- steps
@@ -177,20 +182,6 @@ PREFAB.H_STAIR_6 =
       { t = 60, mat = "?step" },
     },
 
-    -- diagonal pieces (OUCH, should've been floor brushes)
-    {
-      { x =   0, y =   0 },
-      { x =  72, y = 144 },
-      { x =   0, y = 144 },
-      { t = 72, mat = "?wall" },
-    },
-
-    {
-      { x = 144, y = 144 },
-      { x = 216, y =   0 },
-      { x = 216, y = 144 },
-      { t = 72, mat = "?wall" },
-    },
   },
 }
 
