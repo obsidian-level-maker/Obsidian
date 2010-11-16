@@ -1385,7 +1385,9 @@ HERETIC.SUB_THEME_DEFAULTS =
 
   exits = { exit_pillar=50 },
 
-  keys = { k_yellow=50, k_green=50, k_blue=20 },
+  -- according to Borsuk, locked doors always appear in the
+  -- following order: Yellow ==> Green ==> Blue.
+  keys = { k_yellow=9000, k_green=90, k_blue=1 },
 
 --FIXME TEMP STUFF
   cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,
