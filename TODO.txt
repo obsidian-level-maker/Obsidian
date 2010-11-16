@@ -8,14 +8,18 @@ Current Work
 LAYOUT : a less recursive algorithm, once we have decided the floor
          fab and where to place it, its heights are known and fixed.
 
+         i.e. do heights on-the-fly instead of at the end.
+
          It should be close to entry walk, to leave room in the rest
          of the room for further floor fabs.
 
 
--  item clusters
+DONE:  item clusters
 
 
 !!!  clipping solid brushes to floor space
+
+!!   "lava" brush kind
 
 
 3D floors : FLOOR.z_low and z_high values, also is_layer
@@ -23,10 +27,6 @@ LAYOUT : a less recursive algorithm, once we have decided the floor
 >>  forget the "pick minimal, make bigger later " idea
     use room size to get a minimum and maximum size
     
-???  sub-divide shaped/odd rooms into rectangles
-
->>>  check that NEW walk brushes don't intersect any solids
-
 allow walks to appear in _multiple_ spaces, assign them round robin
 (rand.shuffle walks earlier) ---> for 3D floors
 
@@ -37,11 +37,6 @@ CAGES:
    (allow ones in room_palette or outside global_palette if necessary)
 
 -  mark monster as caged for fight simulator
-
-
-?  allow floor prefabs with diagonal outlier shapes
-   in RECTANGLE rooms, or decompose non-rect rooms
-   into rect areas as per non-monotonic rooms.
 
 
 !!  skin lists, not skin1/sk2/yada
@@ -55,19 +50,9 @@ CAGES:
 
 -  fix inner/outer tex on door and window prefabs
 
->>>  straddler sizes affect TWO rooms at same time
-     (implications for edge and corner layouting)
-
--  consider if floor fabbing can do heights on-the-fly instead of
-   a separate pass at the end.
-
 +  in a large (multi-section) room, if any section has no "events"
    (a connection or switch or key or major item) then give it a
    nice pickup item (etc) or at least a walk space.
-
-+  implement "fence" rects in prefab neighborhoods.
-   make sure they (a) don't split walk/nosplit (b) update heights
-   (liquids too)
 
 +  implement "nosplit" areas, which are like "walk" areas in that
    they must not be split, but which aren't considered to be
@@ -86,22 +71,17 @@ CAGES:
 ///////////////////////
 
 -  support floor prefabs in non-monotonic rooms
+   
+   -  connect monotonic spaces with walk brushes
+   -  do space containing entry walk, then all ones connnected to that
 
 -  consider allowing "minor" wall prefabs to be decided during/after
    floor fabbing.  In particular to allow a floor prefab to supply
    a lift or staircase against the wall (in even in a corner),
    perhaps also for liquidy stuff.
 
--  floor prefabs (ETC) should be as small as possible
+   YES
 
-Note: allocated middlers (e.g. key pedestal) should not exist
-      inside the safe zone.  If their section is small, just inhibit
-      subdivision, if large then have upto 4 safe zones around it.
-
-?  remove R.wall_space, merely collect the polygons and test them
-
--  3D floor prefab is often a TRIPLE splitter
-   (left side, right bottom, right top)
 
 Idea: "flush depth" of walls
 
@@ -145,18 +125,19 @@ Layout:
        - a couple techy ones
 
 +  floor prefabs:
-      ????
+       - stairs
+       - lift
+       - L shape
+       - U shape
+       - bridge
 
 +  light brushes for DOOM, clipped to room:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
 
-?  get caves working again
+-  get caves working again
 
--  Cross-Overs
+?  Cross-Overs
 
--  small exits
-
--  proper system to match DOOR skins with SWITCH skins
-   (allow more than a single door or single switch per lock kind)
+?  small exits
 
