@@ -5,24 +5,43 @@ V4 TODO
 Current Work
 ------------
 
->>>>  Prefab Pipeline
+LAYOUT : a less recursive algorithm, once we have decided the floor
+         fab and where to place it, its heights are known and fixed.
 
--  collect_flags
+         It should be close to entry walk, to leave room in the rest
+         of the room for further floor fabs.
 
 
-CAGE / TRAP / GUARD PALETTE:
+-  item clusters
 
--  similar selection code _but_ prefer monsters not in room palette
--  apply damage/time factor to probability
--  cage palette: no more than two per room
+
+!!!  clipping solid brushes to floor space
+
+
+3D floors : FLOOR.z_low and z_high values, also is_layer
+
+>>  forget the "pick minimal, make bigger later " idea
+    use room size to get a minimum and maximum size
+    
+???  sub-divide shaped/odd rooms into rectangles
+
+>>>  check that NEW walk brushes don't intersect any solids
+
+allow walks to appear in _multiple_ spaces, assign them round robin
+(rand.shuffle walks earlier) ---> for 3D floors
+
+
+CAGES:
+
++  need to select monsters which CAN FIT in the spots
+   (allow ones in room_palette or outside global_palette if necessary)
+
+-  mark monster as caged for fight simulator
 
 
 ?  allow floor prefabs with diagonal outlier shapes
    in RECTANGLE rooms, or decompose non-rect rooms
    into rect areas as per non-monotonic rooms.
-
-IDEA: instead of prefab-in-prefab, have "brush macros" where
-      a group of brushes can be reused by different prefabs.
 
 
 !!  skin lists, not skin1/sk2/yada
@@ -30,9 +49,9 @@ IDEA: instead of prefab-in-prefab, have "brush macros" where
 !!  u1..v2 for texture coords on brushes
 
 !!  remove flavored brushes :-(
+    (at least from the CSG code, do "hole" brushes for floor spaces
+     and ceiling spaces)
 
-
-DONE  use "spot" brushes instead of explicit ones
 
 -  fix inner/outer tex on door and window prefabs
 
