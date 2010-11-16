@@ -2214,6 +2214,20 @@ DOOM.SKINS =
     step = "STEP1",
   },
 
+  Triple_A =
+  {
+    _prefab = "TRIPLE_A",
+
+    step = "STEP1",
+  },
+
+  Z_Copy =
+  {
+    _prefab = "Z_COPY_W_LIFT",
+
+    metal = "METAL2",
+  },
+
 } -- end of DOOM.SKINS
 
 
@@ -2475,7 +2489,7 @@ DOOM.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 },
 
-  floors = { H_Stair6 = 50 },
+  floors = { Triple_A = 50 },
 
   --------- OLD CRUD --------> > >
 
@@ -3826,7 +3840,7 @@ DOOM.PICKUPS =
 
   medikit =
   {
-    prob=100, cluster={ 1,3 },
+    prob=100,
     give={ {health=25} },
   },
 
@@ -3866,7 +3880,7 @@ DOOM.PICKUPS =
 
   bullet_box =
   {
-    prob=40, cluster={ 1,3 },
+    prob=40,
     give={ {ammo="bullet", count=50} },
   },
 
@@ -3878,7 +3892,7 @@ DOOM.PICKUPS =
 
   shell_box =
   {
-    prob=40, cluster={ 1,3 },
+    prob=40,
     give={ {ammo="shell",count=20} },
   },
 
@@ -3890,7 +3904,7 @@ DOOM.PICKUPS =
 
   rocket_box =
   {
-    prob=40, cluster={ 1,3 },
+    prob=40,
     give={ {ammo="rocket",count=5} },
   },
 
@@ -3902,7 +3916,7 @@ DOOM.PICKUPS =
 
   cell_pack =
   {
-    prob=40, cluster={ 1,2 },
+    prob=40,
     give={ {ammo="cell",count=100} },
   },
 
