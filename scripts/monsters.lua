@@ -405,6 +405,38 @@ function Monsters_global_palette()
 end
 
 
+
+function Monsters_dist_between_spots(A, B)
+  local dist_x = 0
+  local dist_y = 0
+
+  if PARAM.tiled then
+    dist_x = math.abs(A.block_x - B.block_x)
+    dist_y = math.abs(A.block_y - B.block_y)
+
+    return geom.dist(0, 0, dist_x, dist_y) * 32
+  end
+
+      if A.x1 > B.x2 then dist_x = A.x1 - B.x2
+  elseif A.x2 < B.x1 then dist_x = B.x1 - A.x2
+  end
+
+      if A.y1 > B.y2 then dist_y = A.y1 - B.y2
+  elseif A.y2 < B.y1 then dist_y = B.y1 - A.y2
+  end
+
+  local dist = math.max(dist_x, dist_y)
+
+  -- large penalty for height difference
+  if A.z1 ~= B.z1 then
+    dist = dist + 1000
+  end
+
+  return dist
+end
+
+
+
 function Monsters_do_pickups()
 
   local function distribute(R, qty, N)
@@ -588,6 +620,8 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
 
   local function place_big_item(spot, item)
+    -- FIXME : this is unused atm, need a tidy up!!
+
     local x, y = spot.x, spot.y
 
     -- assume big spots will sometimes run out (and be reused),
@@ -634,6 +668,49 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   end
 
 
+  local function find_cluster_spot(R, prev_spots, item_name)
+    if #prev_spots == 0 then
+      local spot = table.remove(R.item_spots, 1)
+      table.insert(prev_spots, spot)
+      return spot
+    end
+
+    local best_idx
+    local best_dist
+
+    -- FIXME: optimise this!
+    for index = 2,#R.item_spots do
+      local spot = R.item_spots[index]
+      local dist = 9e9
+
+      for _,prev in ipairs(prev_spots) do
+        local d = Monsters_dist_between_spots(prev, spot)
+        dist = math.min(dist, d)
+      end
+
+      -- avoid already used spots
+      if spot.used then dist = dist + 9000 end
+
+      if not best_idx or dist < best_dist then
+        best_idx  = index
+        best_dist = dist
+      end
+    end
+
+    assert(best_idx)
+
+    local spot = table.remove(R.item_spots, best_idx)
+
+    if #prev_spots >= 3 then
+      table.remove(prev_spots, 1)
+    end
+
+    table.insert(prev_spots, spot)
+
+    return spot
+  end
+
+
   local function place_item_list(R, item_list, CL)
     for _,pair in ipairs(item_list) do
       local item  = pair.item
@@ -648,23 +725,32 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
         spot.z = spot.z1
 
         place_big_item(spot, item.name, CL)
-      else
-        for i = 1,count do
-          if table.empty(R.item_spots) then
-            gui.printf("Unable to place items: %s x %d\n", item.name, count+1-i)
-            break;
-          end
 
-          spot = table.remove(R.item_spots, 1)
+        return
+      end
 
-          if PARAM.tiled then
-            Tiler_add_entity(item.name, spot.block_x, spot.block_y)
-          else
-            place_item(item.name, spot.x, spot.y, spot.z)
+      -- keep track of a limited number of previously chosen spots.
+      -- when making clusters, this is used to find the next spot.
+      local prev_spots = {}
 
-            -- reuse spots if they run out (except in Wolf3D)
-            table.insert(R.item_spots, spot)
-          end
+      for i = 1,count do
+        if table.empty(R.item_spots) then
+          gui.printf("Unable to place items: %s x %d\n", item.name, count+1-i)
+          break;
+        end
+
+        local spot = find_cluster_spot(R, prev_spots, item.name)
+
+        if PARAM.tiled then
+          Tiler_add_entity(item.name, spot.block_x, spot.block_y)
+        else
+          local x, y = geom.box_mid(spot.x1, spot.y1, spot.x2, spot.y2)
+
+          place_item(item.name, x, y, spot.z1)
+
+          -- reuse spots if they run out (except in Wolf3D)
+          spot.used = true
+          table.insert(R.item_spots, spot)
         end
       end
     end
@@ -1318,36 +1404,6 @@ function Monsters_in_room(R)
   end
 
 
-  local function dist_between_spots(A, B)
-    local dist_x = 0
-    local dist_y = 0
-
-    if PARAM.tiled then
-      dist_x = math.abs(A.block_x - B.block_x)
-      dist_y = math.abs(A.block_y - B.block_y)
-
-      return geom.dist(0, 0, dist_x, dist_y) * 32
-    end
-
-        if A.x1 > B.x2 then dist_x = A.x1 - B.x2
-    elseif A.x2 < B.x1 then dist_x = B.x1 - A.x2
-    end
-
-        if A.y1 > B.y2 then dist_y = A.y1 - B.y2
-    elseif A.y2 < B.y1 then dist_y = B.y1 - A.y2
-    end
-
-    local dist = math.min(dist_x, dist_y)
-
-    -- large penalty for height difference
-    if A.z1 ~= B.z1 then
-      dist = dist + 1000
-    end
-
-    return dist
-  end
-
-
   local function split_huge_spots(max_size)
     if PARAM.tiled then return end
 
@@ -1462,7 +1518,7 @@ function Monsters_in_room(R)
       if fit_num > 0 then
 
         if near_to then
-          spot.find_cost = dist_between_spots(spot, near_to)
+          spot.find_cost = Monsters_dist_between_spots(spot, near_to)
         else
           spot.find_cost = 0
         end 
