@@ -395,6 +395,153 @@ PREFAB.TRIPLE_A =
 }
 
 
+PREFAB.Z_COPY_W_LIFT =
+{
+  placement = "fitted",
+
+  three_d = true,
+
+  x_size = 256,
+  y_size = 256,
+
+  brushes =
+  {
+    ---| low floor |---
+
+    {
+      { m = "floor", space = 1 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "zone", space = 1 },
+      { x = -INF, y = -INF },
+      { x =    0, y = -INF },
+      { x =    0, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "zone", space = 1 },
+      { x =  256, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  INF },
+      { x =  256, y =  INF },
+    },
+
+    {
+      { m = "walk", space = 1 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { x =   0, y = 256 },
+      { t = 0 },
+    },
+
+
+    ---| high floor |---
+
+    -- FIXME: implement a "hole" brush
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =   64 },
+      { x = -INF, y =   64 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y =  192 },
+      { x =  INF, y =  192 },
+      { x =  INF, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y =   64 },
+      { x =   64, y =   64 },
+      { x =   64, y =  192 },
+      { x = -INF, y =  192 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x =  192, y =   64 },
+      { x =  INF, y =   64 },
+      { x =  INF, y =  192 },
+      { x =  192, y =  192 },
+    },
+
+    {
+      { m = "zone", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =    0 },
+      { x = -INF, y =    0 },
+    },
+
+    {
+      { m = "zone", space = 2 },
+      { x = -INF, y = 256 },
+      { x =  INF, y = 256 },
+      { x =  INF, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    {
+      { m = "walk", space = 2 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { x =   0, y = 256 },
+      { t = 160 },
+    },
+
+
+    ---| the lift |---
+
+    {
+      { x =  64, y =  64, mat = "?metal" },
+      { x =  80, y =  64, mat = "?metal" },
+      { x =  80, y =  80, mat = "?metal" },
+      { x =  64, y =  80, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x = 176, y =  64, mat = "?metal" },
+      { x = 192, y =  64, mat = "?metal" },
+      { x = 192, y =  80, mat = "?metal" },
+      { x = 176, y =  80, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x =  64, y = 176, mat = "?metal" },
+      { x =  80, y = 176, mat = "?metal" },
+      { x =  80, y = 192, mat = "?metal" },
+      { x =  64, y = 192, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x = 176, y = 176, mat = "?metal" },
+      { x = 192, y = 176, mat = "?metal" },
+      { x = 192, y = 192, mat = "?metal" },
+      { x = 176, y = 192, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+  }
+
+  -- FIXME: the lift model
+}
+
+
 --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- > > >
 
 PREFAB.H_DIAGONAL_A =
