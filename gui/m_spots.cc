@@ -851,31 +851,27 @@ int SPOT_fill_poly(lua_State *L)
 
 
 static void store_mon_or_item(lua_State *L, int stack_pos,
-                              unsigned int index, bool is_mon,
-                              int x, int y, int x2 = -1, int y2 = -1)
+                              unsigned int index,
+                              int x1, int y1, int x2, int y2)
 {
   lua_pushinteger(L, index);
 
   // build the coordinate table
-  //   items: { x=123, y=200 } 
-  //   mons:  { x1=50, y1=200, x2=150, y2=400 }
+  //   e.g. { x1=50, y1=200, x2=150, y2=400 }
 
   lua_newtable(L);
 
-  lua_pushinteger(L, x);
-  lua_setfield(L, -2, is_mon ? "x1" : "x");
+  lua_pushinteger(L, x1);
+  lua_setfield(L, -2, "x1");
 
-  lua_pushinteger(L, y);
-  lua_setfield(L, -2, is_mon ? "y1" : "y");
+  lua_pushinteger(L, y1);
+  lua_setfield(L, -2, "y1");
 
-  if (is_mon)
-  {
-    lua_pushinteger(L, x2);
-    lua_setfield(L, -2, "x2");
+  lua_pushinteger(L, x2);
+  lua_setfield(L, -2, "x2");
 
-    lua_pushinteger(L, y2);
-    lua_setfield(L, -2, "y2");
-  }
+  lua_pushinteger(L, y2);
+  lua_setfield(L, -2, "y2");
 
   // store coordinate table into user-provided list
   lua_settable(L, stack_pos);
@@ -907,8 +903,8 @@ int SPOT_get_mons(lua_State *L)
 
   for (unsigned int m = 0 ; m < mons.size() ; m += 2)
   {
-    store_mon_or_item(L, 1, 1+m/2, true, mons[m+0].x, mons[m+0].y,
-                                         mons[m+1].x, mons[m+1].y);
+    store_mon_or_item(L, 1, 1+m/2, mons[m+0].x, mons[m+0].y,
+                                   mons[m+1].x, mons[m+1].y);
   }
 
   return 0;
@@ -928,7 +924,8 @@ int SPOT_get_items(lua_State *L)
 
   for (unsigned int i = 0 ; i < items.size() ; i++)
   {
-    store_mon_or_item(L, 1, 1+i, false, items[i].x, items[i].y);
+    store_mon_or_item(L, 1, 1+i, items[i].x - 8, items[i].y - 8,
+                                 items[i].x + 8, items[i].y + 8);
   }
 
   return 0;
