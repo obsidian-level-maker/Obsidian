@@ -1162,52 +1162,6 @@ function Monsters_in_room(R)
   end
 
 
-  local function trap_palette(enviro, room_pal)
-    -- Note: used for cages as well
-
-    local list = {}
-
-    for mon,info in pairs(GAME.MONSTERS) do
-      local prob = prob_for_mon(mon, info, enviro)
-
-      -- prefer monsters not in the room palette
-      if room_pal[mon] then prob = prob / 50 end
-
-      if prob > 0 then
-        list[mon] = prob
-      end
-    end
-
-    local num_kinds = sel(enviro == "trap", 2, 1)
-
-    -- TODO
-    -- if lots_of_spots(kind) then num_kinds = num_kinds + 1 end
-
-    local palette = {}
-
-    gui.debugf("%s palette: (%d kinds, %d actual)\n", kind, num_kinds, table.size(list))
-
-    for i = 1,num_kinds do
-      if table.empty(list) then break; end
-
-      local mon  = rand.key_by_probs(list)
-      local prob = list[mon]
-      list[mon] = nil
-
-      palette[mon] = prob
-
-      gui.debugf("  #%d %s\n", i, mon)
-      LEVEL.mon_stats[mon] = (LEVEL.mon_stats[mon] or 0) + 1
-    end
-
-    if table.empty(palette) then
-      -- FIXME !!!! find weakest usable monster
-    end
-
-    return palette
-  end
-
-
   local function FIXME__monster_fits(S, mon, info)
     if S.usage or S.no_monster or not S.floor_h then
       return false
@@ -1669,6 +1623,30 @@ function Monsters_in_room(R)
   end
 
 
+  local function decide_cage_monster(enviro, spot, room_pal)
+    -- Note: used for traps as well
+    local list = {}
+
+    for mon,info in pairs(GAME.MONSTERS) do
+      local prob = prob_for_mon(mon, info, enviro)
+
+      if not mon_fits(mon, spot) then prob = 0 end
+
+      -- prefer monsters not in the room palette
+      if room_pal[mon] then prob = prob / 100 end
+
+      if prob > 0 then
+        list[mon] = prob
+      end
+    end
+
+    -- Ouch : cage will be empty
+    if table.empty(list) then return nil end
+
+    return rand.key_by_probs(list)
+  end
+
+
   local function fill_cage_area(mon, spot)
     local ent = assert(GAME.ENTITIES[mon])
 
@@ -1717,7 +1695,9 @@ function Monsters_in_room(R)
     for _,spot in ipairs(spot_list) do
       local mon = decide_cage_monster(enviro, spot, room_pal)
 
-      fill_cage_area(mon, spot)
+      if mon then
+        fill_cage_area(mon, spot)
+      end
     end
   end
 
