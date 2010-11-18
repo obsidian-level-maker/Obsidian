@@ -818,6 +818,8 @@ end
 
 function Monsters_in_room(R)
 
+  local CAGE_REUSE_FACTORS = { 5, 20, 60, 200 }
+
   local function is_big(mon)
     return GAME.ENTITIES[mon].r > 30
   end
@@ -1623,9 +1625,13 @@ function Monsters_in_room(R)
   end
 
 
-  local function decide_cage_monster(enviro, spot, room_pal)
-    -- Note: used for traps as well
+  local function decide_cage_monster(enviro, spot, room_pal, used_mons)
+    -- Note: this function is used for traps too
+
     local list = {}
+
+    local used_num = table.size(used_mons)
+    if used_num > 4 then used_num = 4 end
 
     for mon,info in pairs(GAME.MONSTERS) do
       local prob = prob_for_mon(mon, info, enviro)
@@ -1634,6 +1640,11 @@ function Monsters_in_room(R)
 
       -- prefer monsters not in the room palette
       if room_pal[mon] then prob = prob / 100 end
+
+      -- prefer previously used monsters
+      if used_mons[mon] then
+        prob = prob * CAGE_REUSE_FACTORS[used_num]
+      end
 
       if prob > 0 then
         list[mon] = prob
@@ -1692,11 +1703,15 @@ function Monsters_in_room(R)
   local function fill_cages(enviro, spot_list, room_pal)
     if table.empty(R.cage_spots) then return end
 
+    local used_mons = {}
+
     for _,spot in ipairs(spot_list) do
-      local mon = decide_cage_monster(enviro, spot, room_pal)
+      local mon = decide_cage_monster(enviro, spot, room_pal, used_mons)
 
       if mon then
         fill_cage_area(mon, spot)
+
+        used_mons[mon] = 1
       end
     end
   end
@@ -1730,6 +1745,11 @@ function Monsters_in_room(R)
     if not table.empty(palette) then
       fill_monster_map(palette, barrel_chance)
     end
+
+    -- this value keeps track of the number of "normal" monsters
+    -- (i.e. monsters not in cages or traps).  Later we use this
+    -- value to only give monster drops for accessible monsters.
+    R.normal_count = #R.monster_list
 
     fill_cages("cage", R.cage_spots, palette)
     fill_cages("trap", R.trap_spots, palette)
@@ -1765,8 +1785,10 @@ function Monsters_in_room(R)
   end
 
 
-  local function give_monster_drops(hmodel, mon_list)
-    for _,info in ipairs(mon_list) do
+  local function give_monster_drops(hmodel, mon_list, count)
+    for i = 1,count do
+      local info = mon_list[i]
+
       if info.give then
         Player_give_stuff(hmodel, info.give)
       end
@@ -1807,7 +1829,9 @@ function Monsters_in_room(R)
   end
 
 
-  local function battle_for_class(CL, hmodel, mon_list)
+  local function battle_for_class(CL, hmodel)
+    local mon_list = R.monster_list
+
     local weap_list = collect_weapons(hmodel)
 
     local stats = R.fight_stats[CL]
@@ -1828,7 +1852,7 @@ function Monsters_in_room(R)
     user_adjust_result(stats)
 --  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
-    give_monster_drops(hmodel, mon_list)
+    give_monster_drops(hmodel, mon_list, R.normal_count)
 
     subtract_stuff_we_have(stats, hmodel)
 
@@ -1841,7 +1865,7 @@ function Monsters_in_room(R)
 
     if #R.monster_list >= 1 then
       for CL,hmodel in pairs(LEVEL.hmodels) do
-        battle_for_class(CL, hmodel, R.monster_list)
+        battle_for_class(CL, hmodel)
       end
     end
   end
