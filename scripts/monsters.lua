@@ -1672,13 +1672,41 @@ function Monsters_in_room(R)
   local function fill_cage_area(mon, spot)
     local ent = assert(GAME.ENTITIES[mon])
 
+    -- determine maximum number that will fit
     local w, h = geom.box_size(spot.x1,spot.y1, spot.x2,spot.y2)
 
     w = int(w / ent.r / 2.2)
     h = int(h / ent.r / 2.2)
 
-    if w > 0 and h > 0 then
-      -- TODO
+    assert(w >= 1 and h >= 1)
+
+    local d = ent.cage_density or ent.density or 1
+    local f = gui.random()
+
+    local count = int(w * h * d + f * f)
+    count = math.clamp(1, count, w*h)
+
+    -- generate list of coordinates to use
+    local list = {}
+
+    for mx = 1,w do for my = 1,h do
+      local loc =
+      {
+        x = spot.x1 + ent.r * 2.2 * (mx-0.5),
+        y = spot.y1 + ent.r * 2.2 * (my-0.5),
+        z = spot.z1
+      }
+      table.insert(list, loc)
+    end end
+
+    rand.shuffle(list)
+
+    for i = 1,count do
+      -- ensure first monster in always present
+      local all_skills = (i == 1)
+      local loc = list[i]
+
+      place_monster(mon, loc.x, loc.y, loc.z, all_skills)
     end
   end
 
@@ -1686,15 +1714,10 @@ function Monsters_in_room(R)
   local function fill_cages(enviro, spot_list, room_pal)
     if table.empty(R.cage_spots) then return end
 
-    local palette = trap_palette(enviro, room_pal)
-
-    if table.empty(R.cage_pal) then return end
-
     for _,spot in ipairs(spot_list) do
-      local mon = rand.key_by_probs(cage_pal)
-      cage_pal[mon] = cage_pal[mon] / 3
+      local mon = decide_cage_monster(enviro, spot, room_pal)
 
-      place_in_spot(mon, spot, true)
+      fill_cage_area(mon, spot)
     end
   end
 
