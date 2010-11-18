@@ -1973,6 +1973,10 @@ Trans.dump_brush(W)
     for _,B in ipairs(F.brushes) do
       table.insert(B, { t=F.z, tex=f_tex })
 
+      if F.thick then
+        table.insert(B, { b=F.z - F.thick, tex=f_tex })
+      end
+
       Trans.brush(B)
 
       local x1,y1, x2,y2 = Trans.brush_bbox(B)
@@ -2011,25 +2015,18 @@ Trans.dump_brush(W)
   end
 
 
-  local function find_containing_space(fab, walk)
+  local function find_containing_spaces(fab, walk)
+    local list = {}
+
     for _,B in ipairs(fab.brushes) do
       if B[1].m == "floor" then
---!!!!!!!!!!!
-if R.id == 4 then
-gui.debugf("brush_contains_brush:\n")
-Trans.dump_brush(B)
-Trans.dump_brush(walk)
-end
         if Trans.brush_contains_brush(B, walk) then
-if R.id == 4 then
-gui.debugf("\nYES\n")
-end
-          return B
+          table.insert(list, B)
         end
       end
     end
 
-    return nil -- not found
+    return list
   end
 
 
@@ -2063,24 +2060,34 @@ end
     -- FIXME: this is too simple, allow a walk (etc) to span two or more
     --        floor brushes of the same space.
 
+    rand.shuffle(F.walks)
+
     -- #1 --
     for _,W in ipairs(F.walks) do
-      local con = find_containing_space(fab, W)
-gui.debugf("|  walk con %d/%d : %s\n", _, #F.walks, tostring(con))
-      if not con then return nil end
+      local con = find_containing_spaces(fab, W)
+      if con == "cut" then return nil end
+gui.debugf("|  walk con %d/%d : %d\n", _, #F.walks, #con)
+      if table.empty(con) then return nil end
 
-      W[1].con = con
+      if #con > 1 then
+        -- FIXME !!!! WRONG
+        if (_ % 2) == 0 then table.remove(con, 1) end
+      end
 
-      walk_counts[con[1].space] = 1
+      local brush = con[1]
+
+      W[1].con = brush
+
+      walk_counts[brush[1].space] = 1
     end
 
     -- #2 --
     for _,NS in ipairs(F.nosplits) do
       -- FIXME: is OK if nosplit ends up in no space (e.g. lava)
-      local con = find_containing_space(fab, NS)
-gui.debugf("|  nosplit con : %s\n", tostring(con))
-      if not con then return nil end
-      NS[1].con = con
+      local con = find_containing_spaces(fab, NS)
+      if con == "cut" then return nil end
+gui.debugf("|  nosplit cons : %d\n", #con)
+      if table.empty(con) then return nil end
     end
        
     -- #3 --
@@ -2215,7 +2222,7 @@ gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
     if #R.mono_list > 1 then return nil end
 
     -- FIXME: .....recursion limit for testing.....
-    if F.recursion >= 5 then return nil end
+    if F.recursion >= 1 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -2396,6 +2403,10 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
         if B[1].m == "walk"    then table.insert(floor.walks, B) end
         if B[1].m == "air"     then table.insert(floor.airs,  B) end
         if B[1].m == "nosplit" then table.insert(floor.nosplits, B) end
+
+        if B[1].m == "walk" and B[1].thick then
+          floor.thick = B[1].thick
+        end
       end
     end 
 
@@ -2569,6 +2580,7 @@ function Layout_spots_in_room(R)
 
 --  gui.spots_dump("Spot grid")
 
+    -- use local lists, since we will process multiple floors
     local mon_spots  = {}
     local item_spots = {}
 
@@ -2582,17 +2594,20 @@ function Layout_spots_in_room(R)
     for _,spot in ipairs(mon_spots) do
       spot.z1 = floor.z
       spot.z2 = floor.z2 or (spot.z1 + 200)  -- FIXME
+
       table.insert(R.mon_spots, spot)
     end
 
     for _,spot in ipairs(item_spots) do
-      spot.z = floor.z
+      spot.z1 = floor.z
+      spot.z2 = floor.z2 or (spot.z1 + 64)
+
       table.insert(R.item_spots, spot)
     end
 
 --[[  TEST
     for _,spot in ipairs(R.item_spots) do
-      Trans.entity("potion", spot.x, spot.y, 0)
+      Trans.entity("potion", spot.x1 + 8, spot.y1 + 8, 0)
     end
 --]]
   end
