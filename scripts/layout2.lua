@@ -188,16 +188,16 @@ function Layout_monotonic_spaces(R)
       return false
     end
 
-    local INFO =
+    local MONO =
     {
       sections = {},
       blocks = {},
     }
 
-    table.insert(R.mono_list, INFO)
+    table.insert(R.mono_list, MONO)
 
     repeat
-      table.insert(INFO.sections, K)
+      table.insert(MONO.sections, K)
 
       alloc(K)
 
@@ -317,12 +317,11 @@ end
 
 
 
-function Layout_initial_space(R)
+function Layout_initial_space(mono)
   local list = {}
 
-  -- FIXME: blocks
-  for _,B in ipairs(R.sections) do
-    local BRUSH = Trans.bare_quad(B.x1, B.y1, B.x2, B.y2)
+  for _,K in ipairs(mono.sections) do
+    local BRUSH = Trans.bare_quad(K.x1, K.y1, K.x2, K.y2)
 
     table.insert(list, BRUSH)
   end
@@ -1252,13 +1251,13 @@ function Layout_the_floor(R)
   end
 
 
-  local function initial_floor()
+  local function floor_from_mono(mono)
     local F =
     {
       recursion = 0,
     }
 
-    F.brushes = Layout_initial_space(R)
+    F.brushes = Layout_initial_space(mono)
 
     F.walks    = collect_spaces("walk")
     F.nosplits = collect_spaces("nosplit")
@@ -1266,7 +1265,7 @@ function Layout_the_floor(R)
 
     assert(#F.walks > 0)
 
-    F.zones = determine_safe_zones(R.mono_list[1], F.walks)
+    F.zones = determine_safe_zones(mono, F.walks)
 
     if R.entry_walk then
       F.entry = R.entry_walk
@@ -1288,15 +1287,21 @@ function Layout_the_floor(R)
 
 
   local function initial_floors()
+    R.all_floors = {}
+
+    for _,mono in ipairs(R.mono_list) do
+      local F = floor_from_mono(mono)
+      table.insert(R.all_floors, F)
+    end
   end
 
 
   local function render_floor(F)
+    F.rendered = true
+
     assert(F.entry)
 
     F.z = assert(Trans.brush_get_t(F.entry))
-
-    table.insert(R.all_floors, F)
 
     -- assign height to prefabs and out-going straddlers
     for _,W in ipairs(F.walks) do
@@ -1572,14 +1577,9 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
   end
 
 
-  local function find_usable_floor(F)
+  local function find_usable_floor_fab(F)
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
-    -- FIXME we only support subdividing single monotones right now
-    if #R.mono_list > 1 then return nil end
-
-    -- FIXME: .....recursion limit for testing.....
-    if F.recursion >= 1 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -1800,6 +1800,9 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
     for i = 1,info.fab.num_spaces do
       new_floors[i] = create_new_floor(F, info, i)
+
+      -- add new floor to room list as well
+      table.insert(R.all_floors, new_floors[i])
     end
 
     -- grab the new floor which contains the entry walk brush.  That
@@ -1817,29 +1820,43 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     --       were less walk brushes than spaces), then we need to
     --       ensure that the entry brush exists in a used space.
 
-    -- recursively handle it
-    try_subdivide_floor(first)
-
     -- recursively handle the remaining pieces
-    for _,F2 in ipairs(new_floors) do
-      F2.entry = find_new_entry_walk(F2, info)
-      F2.entry[1].walk_z = assert(Trans.brush_get_t(F2.entry))
 
-      try_subdivide_floor(F2)
-    end
+--!!!!    for _,F2 in ipairs(new_floors) do
+--!!!!      F2.entry = find_new_entry_walk(F2, info)
+--!!!!      F2.entry[1].walk_z = assert(Trans.brush_get_t(F2.entry))
+--!!!!    end
   end
 
 
-  function try_subdivide_floor(F)
-    local info = find_usable_floor(F)
+  local function floor_can_be_subdivided(F)
+    -- FIXME
+  end
 
-    if info then
-      subdivide(F, info)
-      return
+
+  function try_subdivide_a_floor()
+    for index,F in ipairs(R.all_floors) do
+      if not F.rendered and floor_can_be_subdivided(F) then
+
+        local info = find_usable_floor_fab(F)
+         
+        if info then
+          -- the subdivision will create new floors, so remove this one
+          -- from the list.
+          table.remove(R.all_floors, F)
+
+          subdivide(F, info)
+        else
+          -- unable to divide this floor any further
+          render_floor(F)
+        end
+
+        return true
+      end
     end
 
-    -- unable to divide further
-    render_floor(F)
+    -- all floors have been rendered
+    return false
   end
 
 
@@ -1866,11 +1883,8 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     R.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
 
-  R.all_floors = {}
-
   R.floor_min_h = R.entry_floor_h
   R.floor_max_h = R.entry_floor_h
-
 
   initial_floors()
 
