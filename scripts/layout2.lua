@@ -1245,7 +1245,15 @@ function Layout_the_floor(R)
 
     local walk_t = assert(Trans.brush_get_t(walk))
 
+gui.debugf("bump_and_build_fab @ %s : %s to z:%d walk_t:%d\n",
+           R:tostr(), fab.name, z, walk_t)
     Fab_transform_Z(fab, { add_z = z - walk_t })
+
+for _,B in ipairs(fab.brushes) do
+ if B[1].m == "walk" then
+  gui.debugf("  WALK-%s : t=%s\n", tostring(B), tostring(Trans.brush_get_t(B)))
+ end
+end
 
     Fab_render(fab)
   end
@@ -1294,6 +1302,8 @@ function Layout_the_floor(R)
       -- entry must be a teleporter or start pedestal
       -- pick any walk brush and build it's prefab
 
+      assert(R.purpose == "START" or R:has_teleporter())
+
       -- FIXME: some walks may not have a prefab (between monotonic spaces)
 
       F.entry = rand.pick(F.walks)
@@ -1311,6 +1321,7 @@ function Layout_the_floor(R)
     assert(F.entry)
 
     -- set height
+Trans.dump_brush(F.entry, "F.entry")
     F.z = assert(Trans.brush_get_t(F.entry))
 
     R.floor_min_h = math.min(R.floor_min_h, F.z)
@@ -1356,6 +1367,9 @@ Trans.dump_brush(W)
 
       geom.bbox_add_rect(F.bbox, Trans.brush_bbox(B))
     end
+
+gui.debugf("render_floor @ %s  z=%d  (%d %d)..(%d %d)\n", R:tostr(),
+           F.z, F.bbox.x1, F.bbox.y1, F.bbox.x2, F.bbox.y2) 
   end
 
 
@@ -1589,7 +1603,7 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
-    if F.recursion >= 0 then return nil end
+    if F.recursion >= 1 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -1767,6 +1781,8 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
         if B[1].m == "walk" and B[1].thick then
           floor.thick = B[1].thick
         end
+
+        if B[1].m == "walk" then floor.entry = B end
       end
     end 
 
@@ -1826,6 +1842,9 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     -- the floor/space on the entry side can now be rendered.
     -- this will also render the chosen prefab.
 
+    -- keep the same entry brush
+    entry_floor.entry = F.entry
+
     return entry_floor
   end
 
@@ -1833,7 +1852,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   local function floor_can_be_subdivided(F)
     assert(F.entry)
 
-    return not F.rendered and F.entry[1].bumped
+    return not F.rendered and F.entry[1].fab.bumped
   end
 
 
@@ -1892,6 +1911,8 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   if not R.entry_floor_h then
     R.entry_floor_h = rand.pick { 128, 192, 256, 320 }
   end
+
+gui.debugf("entry_walk = %s\n%s\n", tostring(R.entry_walk), table.tostr(R.entry_walk, 2))
 
   R.floor_min_h = R.entry_floor_h
   R.floor_max_h = R.entry_floor_h
