@@ -433,7 +433,7 @@ PREFAB.Z_COPY_W_LIFT =
     },
 
     {
-      { m = "walk", space = 1 },
+      { m = "walk", space = 1, dz_high = 144 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 256 },
@@ -494,7 +494,7 @@ PREFAB.Z_COPY_W_LIFT =
     },
 
     {
-      { m = "walk", space = 2, thick=16 },
+      { m = "walk", space = 2, dz_low = -16 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 256 },

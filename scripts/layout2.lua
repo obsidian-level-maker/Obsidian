@@ -1312,6 +1312,8 @@ end
 
       bump_and_build_fab(fab, F.entry, R.entry_floor_h)
     end
+
+    F.z = assert(Trans.brush_get_t(F.entry))
   end
 
 
@@ -1319,18 +1321,18 @@ end
     F.rendered = true
 
     assert(F.entry)
+    assert(F.z)
 
     -- set height
-Trans.dump_brush(F.entry, "F.entry")
-    F.z = assert(Trans.brush_get_t(F.entry))
+--Trans.dump_brush(F.entry, "F.entry")
 
     R.floor_min_h = math.min(R.floor_min_h, F.z)
     R.floor_max_h = math.max(R.floor_max_h, F.z)
 
     -- assign height to prefabs and out-going straddlers
     for _,W in ipairs(F.walks) do
-gui.debugf("WALK = \n")
-Trans.dump_brush(W)
+--- gui.debugf("WALK = \n")
+--- Trans.dump_brush(W)
       local fab = W[1].fab
 
       if not fab.rendered then
@@ -1359,8 +1361,9 @@ Trans.dump_brush(W)
     for _,B in ipairs(F.brushes) do
       table.insert(B, { t=F.z, tex=f_tex })
 
-      if F.thick then
-        table.insert(B, { b=F.z - F.thick, tex=f_tex })
+      if F.z_low then
+        assert(F.z_low < F.z)
+        table.insert(B, { b=F.z_low, tex=f_tex })
       end
 
       Trans.brush(B)   -- TODO: gui.add_brush() may be sufficient
@@ -1368,8 +1371,9 @@ Trans.dump_brush(W)
       geom.bbox_add_rect(F.bbox, Trans.brush_bbox(B))
     end
 
-gui.debugf("render_floor @ %s  z=%d  (%d %d)..(%d %d)\n", R:tostr(),
-           F.z, F.bbox.x1, F.bbox.y1, F.bbox.x2, F.bbox.y2) 
+gui.debugf("render_floor @ %s  z:%d low:%s high:%s  (%d %d)..(%d %d)\n",
+           R:tostr(), F.z, tostring(F.z_low), tostring(F.z_high),
+           F.bbox.x1, F.bbox.y1, F.bbox.x2, F.bbox.y2)
   end
 
 
@@ -1424,7 +1428,7 @@ gui.debugf("render_floor @ %s  z=%d  (%d %d)..(%d %d)\n", R:tostr(),
     --
     -- Requirements:
     --
-    --   1. each existing walk brush exists completely inside one of
+    --   1. each existing walk brush lies completely inside one of
     --      the new floor spaces.
     --
     --TODO 2. no existing nosplit brush straddles one of the new floor
@@ -1440,6 +1444,7 @@ gui.debugf("render_floor @ %s  z=%d  (%d %d)..(%d %d)\n", R:tostr(),
     --
 
     local walk_counts = {}
+    local entry_space
 
     -- FIXME: this is too simple, allow a walk (etc) to span two or more
     --        floor brushes of the same space.
@@ -1450,7 +1455,7 @@ gui.debugf("render_floor @ %s  z=%d  (%d %d)..(%d %d)\n", R:tostr(),
     for _,W in ipairs(F.walks) do
       local con = find_containing_spaces(fab, W)
       if con == "cut" then return nil end
-gui.debugf("|  walk con %d/%d : %d\n", _, #F.walks, #con)
+---gui.debugf("|  walk con %d/%d : %d\n", _, #F.walks, #con)
       if table.empty(con) then return nil end
 
       if #con > 1 then
@@ -1463,6 +1468,8 @@ gui.debugf("|  walk con %d/%d : %d\n", _, #F.walks, #con)
       W[1].con = brush
 
       walk_counts[brush[1].space] = 1
+
+      if W == F.entry then entry_space = brush[1].space end
     end
 
     -- #2 --
@@ -1470,7 +1477,7 @@ gui.debugf("|  walk con %d/%d : %d\n", _, #F.walks, #con)
       -- FIXME: is OK if nosplit ends up in no space (e.g. lava)
       local con = find_containing_spaces(fab, NS)
       if con == "cut" then return nil end
-gui.debugf("|  nosplit cons : %d\n", #con)
+---gui.debugf("|  nosplit cons : %d\n", #con)
       if table.empty(con) then return nil end
     end
        
@@ -1487,8 +1494,20 @@ gui.debugf("|  nosplit cons : %d\n", #con)
     -- #5 --
     -- TODO
 
+    -- find prefab walk brush in same space as the entry brush
+    assert(entry_space)
+    local ref_W
+    for _,W in ipairs(fab.brushes) do
+      if W[1].m == "walk" and W[1].space == entry_space then
+        ref_W = W ; break;
+      end
+    end
+
+    assert(ref_W)
+    local ref_walk_t = assert(Trans.brush_get_t(ref_W))
+
     -- SUCCESS --
-    local info = { fab=fab }
+    local info = { fab=fab, add_z=F.z - ref_walk_t }
 
     return info
   end
@@ -1579,7 +1598,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
     -- check each location...
 
     for _,T in ipairs(locs) do
-gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
+---gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
       -- create prefab to perform full check
       local fab = Fab_create(skin._prefab)
 
@@ -1603,7 +1622,7 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
-    if F.recursion >= 4 then return nil end
+    if F.recursion >= 1 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -1761,6 +1780,9 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     {
       recursion = F.recursion + 1,
       space = space,
+
+      z_low  = F.z_low,
+      z_high = F.z_high,
     }
 
     floor.brushes  = intersect_brushes(F.brushes, info, space)
@@ -1778,11 +1800,18 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
         if B[1].m == "air"     then table.insert(floor.airs,  B) end
         if B[1].m == "nosplit" then table.insert(floor.nosplits, B) end
 
-        if B[1].m == "walk" and B[1].thick then
-          floor.thick = B[1].thick
-        end
+        if B[1].m == "walk" then
+          -- this brush will serve as new floor's entry
+          -- Note: overridden later for the floor near entrance door
+          assert(not floor.entry)
+          floor.entry = B
 
-        if B[1].m == "walk" then floor.entry = B end
+          floor.z = assert(Trans.brush_get_t(B))
+
+          -- support for 3D floors
+          if B[1].dz_low  then floor.z_low  = floor.z + B[1].dz_low  end
+          if B[1].dz_high then floor.z_high = floor.z + B[1].dz_high end
+        end
       end
     end 
 
@@ -1812,7 +1841,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   end
 
 
-  local function find_new_entry_walk(F, info)
+  local function OLD_find_new_entry_walk(F, info)
     for _,B in ipairs(info.fab.brushes) do
       if B[1].m == "walk" and B[1].space == F.space then
         return B
@@ -1826,8 +1855,8 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   local function subdivide(F, info)
     local entry_floor
 
-    for i = 1,info.fab.num_spaces do
-      local F2 = create_new_floor(F, info, i)
+    for space = 1,info.fab.num_spaces do
+      local F2 = create_new_floor(F, info, space)
 
       -- add new floor to room list
       table.insert(R.all_floors, F2)
@@ -1839,9 +1868,6 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
     if not entry_floor then error("missing entry floor?") end
 
-    -- the floor/space on the entry side can now be rendered.
-    -- this will also render the chosen prefab.
-
     -- keep the same entry brush
     entry_floor.entry = F.entry
 
@@ -1852,35 +1878,47 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   local function floor_can_be_subdivided(F)
     assert(F.entry)
 
-    return not F.rendered and F.entry[1].fab.bumped
   end
 
 
   function try_subdivide_a_floor()
-    local unfinished
+    local has_unfinished
 
     for index,F in ipairs(R.all_floors) do
-      if not F.rendered then unfinished = true end
+      if not F.rendered then
+        -- floor can be subdivided when we know it's entry height
+        if F.z then
+          local info = find_usable_floor_fab(F)
+           
+          if info then
+            -- bump and build the chosen floor fab
+            -- (do it now to set the heights on walk brushes)
+gui.debugf("@@@@ add_z = %d\n", info.add_z)
+            Fab_transform_Z(info.fab, { add_z = info.add_z })
 
-      if floor_can_be_subdivided(F) then
-        local info = find_usable_floor_fab(F)
-         
-        if info then
-          -- the subdivision will create new floor objects, so remove
-          -- this one from the list.
-          table.remove(R.all_floors, index)
+            -- FIXME: clip infinite brushes to F.brushes
+            Fab_render(info.fab)
 
-          F = subdivide(F, info)
+            -- the subdivision will create new floor objects, so remove
+            -- this one from the list.
+            table.remove(R.all_floors, index)
+
+            -- create the new floors
+            F = subdivide(F, info)
+
+            -- the floor on the entry side can now be rendered...
+          end
+
+          render_floor(F)
+          return true
         end
 
-        render_floor(F)
-
-        return true
+        has_unfinished = true
       end
     end
 
     -- sanity check
-    if unfinished then
+    if has_unfinished then
       error("Floor subdivision failure : some floors not rendered")
     end
 
