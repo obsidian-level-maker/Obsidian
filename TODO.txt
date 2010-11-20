@@ -5,61 +5,52 @@ V4 TODO
 Current Work
 ------------
 
-LAYOUT : a less recursive algorithm, once we have decided the floor
-         fab and where to place it, its heights are known and fixed.
+FLOOR STUFF
 
-         i.e. do heights on-the-fly instead of at the end.
+>> a less recursive algorithm, once we have decided the floor
+   fab and where to place it, its heights are known and fixed.
 
-         It should be close to entry walk, to leave room in the rest
-         of the room for further floor fabs.
+   i.e. do heights on-the-fly instead of at the end.
+
+   It should be close to entry walk, to leave room in the rest
+   of the room for further floor fabs.
 
 
-DONE:  item clusters
+3D floors : FLOOR.z_low and z_high values
+
+allow walks to appear in _multiple_ spaces, assign them round robin
+(rand.shuffle walks earlier) ---> for 3D floors
 
 
 !!!  clipping solid brushes to floor space
 
 !!   "lava" brush kind
 
+!!   "hole" brush kind, allow straddlers to use them too
 
-3D floors : FLOOR.z_low and z_high values, also is_layer
-
->>  forget the "pick minimal, make bigger later " idea
-    use room size to get a minimum and maximum size
-    
-allow walks to appear in _multiple_ spaces, assign them round robin
-(rand.shuffle walks earlier) ---> for 3D floors
-
-
-CAGES:
-
-+  need to select monsters which CAN FIT in the spots
-   (allow ones in room_palette or outside global_palette if necessary)
-
--  mark monster as caged for fight simulator
-
-
-!!  skin lists, not skin1/sk2/yada
-
-!!  u1..v2 for texture coords on brushes
-
-!!  remove flavored brushes :-(
-    (at least from the CSG code, do "hole" brushes for floor spaces
-     and ceiling spaces)
-
-
--  fix inner/outer tex on door and window prefabs
-
-+  in a large (multi-section) room, if any section has no "events"
-   (a connection or switch or key or major item) then give it a
-   nice pickup item (etc) or at least a walk space.
 
 +  implement "nosplit" areas, which are like "walk" areas in that
    they must not be split, but which aren't considered to be
    player destinations.
 
-+  fix items and monsters on fences / staircases
+-  support floor prefabs in non-monotonic rooms
+   -  connect monotonic spaces with walk brushes
+      (make a fake straddler-like prefab)
 
+   
+
+WALL STUFF
+
+!!  forget the "pick minimal, make bigger later " idea
+    use room size to get a minimum and maximum size
+    
+-  fix inner/outer tex on door and window prefabs
+
+-  flesh out "minor" walls _AFTER_ floor layouting
+   split spans vertically
+
+-  "flush depth" for wall prefabs, encourage/force nearby walls
+   to line up with it.
 
 !!  EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
 
@@ -68,22 +59,22 @@ CAGES:
     For 4+ seed wide room, thickest door is 256 units + 64 walk
 
 
-///////////////////////
 
--  support floor prefabs in non-monotonic rooms
-   
-   -  connect monotonic spaces with walk brushes
-   -  do space containing entry walk, then all ones connnected to that
+OTHER STUFF
 
--  consider allowing "minor" wall prefabs to be decided during/after
-   floor fabbing.  In particular to allow a floor prefab to supply
-   a lift or staircase against the wall (in even in a corner),
-   perhaps also for liquidy stuff.
+!!  u1..v2 for texture coords on brushes
 
-   YES
+!!  remove flavored brushes :-(
+    (at least from the CSG code, do "hole" brushes for floor spaces
+     and ceiling spaces)
+
+-  in a large (multi-section) room, if any section has no "events"
+   (a connection or switch or key or major item) then give it a
+   nice pickup item (etc) or at least a walk space.
 
 
-Idea: "flush depth" of walls
+
+/////////////////////////////////////
 
 
 
@@ -119,7 +110,6 @@ Layout:
 +  middle prefabs:
        - cage
        - pillar
-       - item pedestal
        - crates
        - fountain (outdoor)
        - a couple techy ones
