@@ -1245,16 +1245,7 @@ function Layout_the_floor(R)
 
     local walk_t = assert(Trans.brush_get_t(walk))
 
-gui.debugf("bump_and_build_fab @ %s : %s to z:%d walk_t:%d\n",
-           R:tostr(), fab.name, z, walk_t)
     Fab_transform_Z(fab, { add_z = z - walk_t })
-
-for _,B in ipairs(fab.brushes) do
- if B[1].m == "walk" then
-  gui.debugf("  WALK-%s : t=%s\n", tostring(B), tostring(Trans.brush_get_t(B)))
- end
-end
-
     Fab_render(fab)
   end
 
@@ -1331,13 +1322,13 @@ end
 
     -- assign height to prefabs and out-going straddlers
     for _,W in ipairs(F.walks) do
---- gui.debugf("WALK = \n")
---- Trans.dump_brush(W)
       local fab = W[1].fab
 
       if not fab.rendered then
         bump_and_build_fab(fab, W, F.z)
       end
+
+      -- FIXME : collect "hole" brushes, apply to this floor
     end
 
     -- pick a floor texture
@@ -1362,7 +1353,8 @@ end
       table.insert(B, { t=F.z, tex=f_tex })
 
       if F.z_low then
-        assert(F.z_low < F.z)
+      --!!!! assert(F.z_low < F.z)
+if (F.z_low >= F.z) then F.z_low = F.z - 16 end
         table.insert(B, { b=F.z_low, tex=f_tex })
       end
 
@@ -1513,6 +1505,23 @@ gui.debugf("render_floor @ %s  z:%d low:%s high:%s  (%d %d)..(%d %d)\n",
   end
 
 
+  local function height_check_floor_fab(F, fab, add_z)
+    assert(fab.bbox.z1)
+    assert(fab.bbox.z2)
+
+    local z1 = add_z + math.min(0,  fab.bbox.z1)
+    local z2 = add_z + math.max(32, fab.bbox.z2)
+
+gui.debugf("height_check_floor_fab: F (%s %s)  z_range: (%d %d)\n",
+        tostring(F.z_low), tostring(F.z_high), z1, z2)
+
+    if F.z_low  and z1 < (F.z_low+12)  then return false end
+    if F.z_high and z2 > (F.z_high-96) then return false end
+
+    return true
+  end
+
+
   local function determine_1D_locs(low, high, size, scale_mode)
     -- make a set of good positions to try across a certain axis (X or Y)
 
@@ -1610,8 +1619,14 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 
       local info = full_test_floor_fab(F, fab)
 
-      -- success?
-      if info then return info end
+      if info then
+        Fab_transform_Z(info.fab, { add_z = info.add_z })
+
+        if height_check_floor_fab(F, fab, info.add_z) then
+          -- success!
+          return info
+        end
+      end
     end
 
     return nil  -- fail
@@ -1622,7 +1637,7 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
-    if F.recursion >= 1 then return nil end
+    if F.recursion >= 2 then return nil end
 
     local poss = possible_floor_prefabs()
 
@@ -1828,7 +1843,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
   end
 
 
-  local function find_prefab_walk_t(fab)
+  local function OLD_find_prefab_walk_t(fab)
     assert(fab.bumped)
 
     for _,B in ipairs(fab.brushes) do
@@ -1893,8 +1908,8 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
           if info then
             -- bump and build the chosen floor fab
             -- (do it now to set the heights on walk brushes)
-gui.debugf("@@@@ add_z = %d\n", info.add_z)
-            Fab_transform_Z(info.fab, { add_z = info.add_z })
+
+            Fab_bound_Z(info.fab, F.z_low, F.z_high)
 
             -- FIXME: clip infinite brushes to F.brushes
             Fab_render(info.fab)

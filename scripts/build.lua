@@ -1719,6 +1719,22 @@ end
 
 
 
+function Fab_bound_Z(fab, z1, z2)
+  if not (z1 or z2) then return end
+
+  for _,B in ipairs(fab.brushes) do
+    if CSG_BRUSHES[B[1].m] then
+      local b = Trans.brush_get_b(B)
+      local t = Trans.brush_get_t(B)
+
+      if z1 and not b then table.insert(B, { b = z1 }) end
+      if z2 and not t then table.insert(B, { t = z2 }) end
+    end
+  end
+end
+
+
+
 function Fab_render(fab)
 
   local function render_model(M)
