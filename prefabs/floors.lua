@@ -494,7 +494,7 @@ PREFAB.Z_COPY_W_LIFT =
     },
 
     {
-      { m = "walk", space = 2 },
+      { m = "walk", space = 2, thick=16 },
       { x =   0, y =   0 },
       { x = 256, y =   0 },
       { x = 256, y = 256 },
@@ -536,9 +536,21 @@ PREFAB.Z_COPY_W_LIFT =
       { x = 176, y = 192, mat = "?metal" },
       { t = 168, mat = "?metal" },
     },
-  }
+  },
 
-  -- FIXME: the lift model
+  models =
+  {
+    {
+      x1 = 128, x2 = 192, x_face = { mat="METAL1_2" },
+      y1 =  96, y2 = 192, y_face = { mat="METAL1_2" },
+      z1 = 160, z2 = 168, z_face = { mat="PLAT_TOP2" },
+
+      entity =
+      {
+        ent = "lift", height = "160", -- sounds = 2,
+      },
+    },
+  },
 }
 
 
