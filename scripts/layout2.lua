@@ -1603,7 +1603,7 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
-    if F.recursion >= 1 then return nil end
+    if F.recursion >= 4 then return nil end
 
     local poss = possible_floor_prefabs()
 
