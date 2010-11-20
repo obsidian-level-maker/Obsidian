@@ -152,7 +152,7 @@ function Layout_monotonic_spaces(R)
           if not P then break; end
 
           if P.room == R then
-            P.m_shadowed = pass
+--!!!!!!     P.m_shadowed = pass
           end
         end
       end
@@ -1267,20 +1267,6 @@ function Layout_the_floor(R)
 
     F.zones = determine_safe_zones(mono, F.walks)
 
-    if R.entry_walk then
-      F.entry = R.entry_walk
-      -- should be a door which has already been rendered
-      assert(F.entry[1].fab.rendered)
-    else
-      -- entry must be a teleporter.
-      -- pick any walk brush and build it's prefab
-
-      F.entry = rand.pick(F.walks)
-
-      local fab = assert(F.entry[1].fab)
-
-      bump_and_build_fab(fab, F.entry, R.entry_floor_h)
-    end
 
     return F
   end
@@ -1292,6 +1278,30 @@ function Layout_the_floor(R)
     for _,mono in ipairs(R.mono_list) do
       local F = floor_from_mono(mono)
       table.insert(R.all_floors, F)
+    end
+
+    -- FIXME
+    local F = R.all_floors[1]
+
+    if R.entry_walk then
+      -- should be a door which has already been rendered
+      assert(R.entry_walk[1].fab.rendered)
+
+      F.entry = R.entry_walk
+    else
+      -- FIXME : redo this section of code
+      error("No entry walk ?!?!?")
+
+      -- entry must be a teleporter.
+      -- pick any walk brush and build it's prefab
+
+      -- FIXME: some walks may not have a prefab (between monotonic spaces)
+
+      F.entry = rand.pick(F.walks)
+
+      local fab = assert(F.entry[1].fab)
+
+      bump_and_build_fab(fab, F.entry, R.entry_floor_h)
     end
   end
 
@@ -1581,6 +1591,8 @@ gui.debugf("|  trying loc:\n%s\n", table.tostr(T, 1))
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
+    if F.recursion >= 1 then return nil end
+
     local poss = possible_floor_prefabs()
 
     local ROTS = { 0, 90, 180, 270 }
@@ -1796,13 +1808,13 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
 
   local function subdivide(F, info)
-    local new_floors = {}
+    local spaces = {}
 
     for i = 1,info.fab.num_spaces do
-      new_floors[i] = create_new_floor(F, info, i)
+      spaces[i] = create_new_floor(F, info, i)
 
       -- add new floor to room list as well
-      table.insert(R.all_floors, new_floors[i])
+      table.insert(R.all_floors, spaces[i])
     end
 
     -- grab the new floor which contains the entry walk brush.  That
@@ -1812,7 +1824,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
     assert(F.entry_space)
 
-    local first = table.remove(new_floors, F.entry_space)
+    local first = table.remove(spaces, F.entry_space)
 
     first.entry = F.entry
 
@@ -1830,12 +1842,18 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
 
   local function floor_can_be_subdivided(F)
-    -- FIXME
+    assert(F.entry)
+
+    return F.entry[1].bumped
   end
 
 
   function try_subdivide_a_floor()
+    local unfinished
+
     for index,F in ipairs(R.all_floors) do
+      if not F.rendered then unfinished = true end
+
       if not F.rendered and floor_can_be_subdivided(F) then
 
         local info = find_usable_floor_fab(F)
@@ -1853,6 +1871,11 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
         return true
       end
+    end
+
+    -- sanity check
+    if unfinished then
+      error("Floor subdivision failure : some floors not rendered")
     end
 
     -- all floors have been rendered
