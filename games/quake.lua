@@ -113,6 +113,7 @@ QUAKE1.ENTITIES =
   trigger_multiple = { id="trigger_multiple", kind="other", r=1, h=1, pass=true },
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true },
+  lift = { id="func_plat",  kind="other", r=1, h=1, pass=true },
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true },
   button = { id="func_button", kind="other", r=1, h=1, pass=true },
 
@@ -919,6 +920,13 @@ QUAKE1.SKINS =
     step = "MET5_1",
   },
 
+  Z_Copy =
+  {
+    _prefab = "Z_COPY_W_LIFT",
+
+    metal = "MET5_1",
+  },
+
 
 
 } -- end of QUAKE1.SKINS
@@ -1019,7 +1027,7 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 },
 
-  floors = { H_Stair6 = 50 },
+  floors = { Z_Copy = 500 },
 
   --------- OLD CRUD --------> > >
 
