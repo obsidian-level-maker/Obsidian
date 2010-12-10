@@ -25,8 +25,8 @@
 #include "main.h"
 
 
-#ifdef RANDOMIZER
-# define TITLE_COLOR  FL_RED
+#if 1
+# define TITLE_COLOR  fl_color_cube(7,0,3)
 # define INFO_COLOR   fl_color_cube(6,0,2)
 #else
 # define TITLE_COLOR  FL_BLUE
@@ -120,7 +120,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   size_range(W, H, W, H);
   callback(callback_Quit, this);
 
-  int cy = 0;
+  int cy = 6;
 
   // nice big logo text
   const char *logo_text = randomizer ? RMZ_TITLE " " RMZ_VERSION :
@@ -133,7 +133,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   add(box);
 
 
-  cy += box->h() + 10;
+  cy += box->h() + 4;
   
   int pad = 12 + KF * 6;
 
