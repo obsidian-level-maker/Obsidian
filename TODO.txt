@@ -127,7 +127,5 @@ Layout:
 
 -  get caves working again
 
-?  Cross-Overs
-
 ?  small exits
 
