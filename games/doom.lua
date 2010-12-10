@@ -4330,7 +4330,7 @@ UNFINISHED["doom1"] =
 }
 
 
-OB_GAMES["ultdoom"] =
+UNFINISHED["ultdoom"] =
 {
   label = "Ultimate Doom",
 
