@@ -152,7 +152,7 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = "EDGE 1.34",
+  label = "EDGE 1.35",
   priority = 90,
 
   extends = "boom",
