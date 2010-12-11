@@ -875,7 +875,7 @@ function Monsters_in_room(R)
     end
 
     -- tend to have more monsters in later rooms and levels
-    qty = qty * (3 + R.lev_along + LEVEL.ep_along) / 4
+    qty = qty * (2 + R.lev_along + LEVEL.ep_along) / 4
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     local is_small = (R.svolume <= 20)
@@ -1519,7 +1519,7 @@ function Monsters_in_room(R)
   local function how_many_dudes(palette, want_total)
     -- the 'NONE' entry is a stabilizing element, in case we have a
     -- palette containing mostly undesirable monsters (Archviles etc).
-    local densities = { NONE=0.5 }
+    local densities = { NONE=1.0 }
 
     local total_density = densities.NONE
 
