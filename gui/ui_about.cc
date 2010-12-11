@@ -26,8 +26,8 @@
 
 
 #if 1
-# define TITLE_COLOR  fl_color_cube(7,0,3)
-# define INFO_COLOR   fl_color_cube(6,0,2)
+# define TITLE_COLOR  fl_color_cube(3,0,1)
+# define INFO_COLOR   fl_color_cube(3,6,0)
 #else
 # define TITLE_COLOR  FL_BLUE
 # define INFO_COLOR  fl_color_cube(0,6,4)
