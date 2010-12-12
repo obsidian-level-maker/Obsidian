@@ -87,25 +87,28 @@ end
 
 
 
-function Layout_initial_walls(R)
-  --
-  -- this picks the smallest prefab available for each usage on
-  -- each edge.  It is assumed that everything will fit, since the
-  -- minimum room size is 384x384 and there should be a prefab of
-  -- each kind (door, window, start, exit, etc) which is small
-  -- enough.
-  --
-  -- this also creates an initial "wall space" marking where those
-  -- minimal prefabs are.  Later functions will try to enlarge some
-  -- of the prefabs (and add new ones) and will verify placement
-  -- using the wall_space (previous prefabs can get updated in it).
-  --
+function Layout_used_walls(R)
 
   local function is_minimal_edge(skin)
     if not skin._long then return false end
     if not skin._deep then return false end
 
     return skin._long <= 192 and skin._deep <= 64
+  end
+
+
+  local function inner_outer_tex(skin, R, N)
+    assert(R)
+    if not N then return end
+
+    skin.wall  = R.skin.wall
+    skin.outer = N.skin.wall
+
+    if R.outdoor and not N.outdoor then
+      skin.wall  = skin.outer
+    elseif N.outdoor and not R.outdoor then
+      skin.outer = skin.inner
+    end
   end
 
 
@@ -194,10 +197,6 @@ function Layout_initial_walls(R)
 
 
   local function initial_edge(E)
-    if not E.usage then
-      return
-    end
-
     if E.usage.kind == "door" then
       possible_doors(E)
     elseif E.usage.kind == "window" then
@@ -262,9 +261,7 @@ table.insert(extra_skins, CRUD)
   end
 
 
-  ---| Layout_initial_walls |---
-
-  -- FIXME!!!!  do initial middles here too
+  ---| Layout_used_walls |---
 
   for pass = 1,2 do
     for _,K in ipairs(R.sections) do
@@ -272,7 +269,7 @@ table.insert(extra_skins, CRUD)
         -- do doors before everything else, since switched doors
         -- control what switches will be available.
         local is_door = sel(E.usage and E.usage.kind == "door", 1, 2)
-        if pass == is_door then
+        if E.usage and pass == is_door then
           initial_edge(E)
         end
       end
@@ -282,12 +279,12 @@ end
 
 
 
-function Layout_flesh_out_walls(R)
+function Layout_make_corners(R)
   --
-  -- the goal of this function is to fill in the gaps along walls
-  -- (including the corners) with interesting prefabs.  It can also
-  -- replace existing non-straddler prefabs with a bigger variation,
-  -- of course ensuring that everything fits and nothing overlaps.
+  -- this function decides what to place in every corner of the room,
+  -- including concave (270 degree) corners.  This is done before the
+  -- edges, determining the sides of each edge so that the edges will
+  -- merely need to fill in the gap(s).
   --
 
   local function adjust_corner(C, side, long, deep)
@@ -345,42 +342,51 @@ function Layout_flesh_out_walls(R)
   end
 
 
-  local function inner_outer_tex(skin, R, N)
-    assert(R)
-    if not N then return end
-
-    skin.wall  = R.skin.wall
-    skin.outer = N.skin.wall
-
-    if R.outdoor and not N.outdoor then
-      skin.wall  = skin.outer
-    elseif N.outdoor and not R.outdoor then
-      skin.outer = skin.inner
-    end
+  local function make_corner(C)
+    -- FIXME
   end
 
 
+  ---| Layout_make_corners |---
+
+  for _,K in ipairs(R.sections) do
+    for _,C in pairs(K.corners) do
+      make_corner(C)
+    end
+  end
+end
+
+
+
+function Layout_flesh_out_walls(R)
+  --
+  -- the goal of this function is to fill in the gaps along walls
+  -- with either prefabs or trapezoid-shaped brushes.
+  --
+
+  function flesh_out_edge(E)
+    -- FIXME
+  end
+
   ---| Layout_flesh_out_walls |---
 
-  -- FIXME !!!!
+  for _,K in ipairs(R.sections) do
+    for _,E in pairs(K.edges) do
+      flesh_out_edge(E)
+    end
+  end
 end
 
 
 
 function Layout_all_walls()
   for _,R in ipairs(LEVEL.all_rooms) do
-    Layout_initial_walls(R)
+    Layout_used_walls(R)
   end
 
-  -- do doors after windows, as doors may want to become really big
-  -- and hence would need to know about the windows.
-
---##    Layout_select_windows()
---##    Layout_select_doors()
-
   for _,R in ipairs(LEVEL.all_rooms) do
+   Layout_make_corners(R)
    Layout_flesh_out_walls(R)
---TODO    Layout_flesh_out_middles(R)
   end
 end
 
