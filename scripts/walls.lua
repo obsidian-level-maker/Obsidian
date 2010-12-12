@@ -379,6 +379,8 @@ function Layout_make_corners(R)
 
 
   local function corner_length(C, E)
+    if C.concave then return 64 end
+
     local SP = E.spans[1]
 
     if SP then
