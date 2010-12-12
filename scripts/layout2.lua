@@ -152,7 +152,7 @@ function Layout_monotonic_spaces(R)
           if not P then break; end
 
           if P.room == R then
---!!!!!!     P.m_shadowed = pass
+--FIXME FIXME !!!!!!     P.m_shadowed = pass
           end
         end
       end
@@ -505,51 +505,26 @@ function Layout_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-function Layout_possible_prefabs(kind, where, lock)
+function Layout_possible_prefab_from_list(tab, where, req_key)
 
-  -- kind : "START", "EXIT", "ITEM", "SWITCH"
+  assert(tab)
 
-  -- where : "edge", "corner", "middle"
+  -- FIXME: fix this rubbish somehow
+  if tab == "SWITCH" then
+    if where ~= "edge" then return nil end
+    return "SWITCH"
+  end
+
 
   local function match(skin)
     -- TODO: more sophisticated matches (prefab.environment)
 
     if skin._where ~= where then return false end
 
-    if kind == "LOCK_DOOR" and not skin._keys[lock.key] then return false end
+    if req_key and not skin._keys[req_key] then return false end
 
     return true
   end
-
-  local KIND_MAP =
-  {
-    START   = "starts",
-    EXIT    = "exits",
-    ITEM    = "pedestals",
-    KEY     = "pedestals",
-
-    ARCH    = "arches",
-    DOOR    = "doors",
-    LOCK_DOOR   = "lock_doors",
-    SWITCH_DOOR = "switch_doors",
-
-    WINDOW  = "windows",
-    FENCE   = "fences",
-    TELEPORTER = "teleporters",
-  }
-
-  local tab
-
-  if kind == "SWITCH" then
-    if where ~= "edge" then return nil end  -- FIXME !!!
-    return "SWITCH"
---- tab = assert(lock.switches)
-  else
-    local tab_name = assert(KIND_MAP[kind])
-    tab = THEME[tab_name]
-  end
-
-  if not tab then return nil end
 
   local result = {}
 
@@ -572,13 +547,13 @@ function Layout_possible_prefabs(kind, where, lock)
 end
 
 
-function Layout_possible_fab_group(usage, fab_kind, lock)
-  usage.edge_fabs   = Layout_possible_prefabs(fab_kind, "edge",   lock)
-  usage.corner_fabs = Layout_possible_prefabs(fab_kind, "corner", lock)
-  usage.middle_fabs = Layout_possible_prefabs(fab_kind, "middle", lock)
+function Layout_possible_fab_group(usage, list, req_key)
+  usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
+  usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
+  usage.middle_fabs = Layout_possible_prefab_from_list(list, "middle", req_key)
 
   if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
-    error("Theme is missing usable prefabs for: " .. tostring(fab_kind))
+    error("Theme is missing usable prefabs for: " .. tostring("XXX"))
   end
 end
 
@@ -617,7 +592,7 @@ function Layout_place_importants()
       local edge = table.remove(R.targets.edges, 1)
       edge.usage = usage
 
-stderrf("EDGE %s:%d ---> USAGE %s %s\n", edge.K:tostr(), edge.side, usage.kind, usage.sub or "-")
+--stderrf("EDGE %s:%d ---> USAGE %s %s\n", edge.K:tostr(), edge.side, usage.kind, usage.sub or "-")
 
       edge.K.num_busy = edge.K.num_busy + 1
 
@@ -653,26 +628,33 @@ stderrf("EDGE %s:%d ---> USAGE %s %s\n", edge.K:tostr(), edge.side, usage.kind, 
         lock = R.purpose_lock,
       }
 
-      local fab_kind = R.purpose
+      local list
 
-      if R.purpose == "SOLUTION" then
-        fab_kind = R.purpose_lock.kind
+      if R.purpose == "START" then
+        list = THEME.starts
+
+      elseif R.purpose == "EXIT" then
+        list = THEME.exits
+
+      elseif R.purpose == "SOLUTION" then
+
+        if R.purpose_lock.kind == "KEY" then
+          list = THEME.pedestals
+        elseif R.purpose_lock.kind == "SWITCH" then
+          -- Umm WTF ??
+          list = "SWITCH"
+        else
+          error("Unknown purpose_lock.kind: " .. tostring(R.purpose_lock.kind))
+        end
+
+      else
+        error("Unknown room purpose: " .. tostring(R.purpose))
       end
 
-      Layout_possible_fab_group(USAGE, fab_kind, R.purpose_lock)
+      Layout_possible_fab_group(USAGE, list)
 
       pick_target(R, USAGE)
---[[
-        if R.purpose_lock and R.purpose_lock.kind == "KEY" then
-          USAGE.middle_prefabs = 
-          {
-            { _prefab = "OCTO_PEDESTAL",
-              item = R.purpose.lock.key,
-              top = "CEIL1_2", base = "FLAT1"
-            }
-          }
-        end
---]]
+
       -- FIXME: cheap hack, should just remove the invalidated targets
       --        (a bit complicated since corners use the nearby edges
       --         and hence one can invalidate the other)
@@ -688,7 +670,7 @@ stderrf("EDGE %s:%d ---> USAGE %s %s\n", edge.K:tostr(), edge.side, usage.kind, 
         sub  = "teleporter",
       }
 
-      Layout_possible_fab_group(USAGE, "TELEPORTER")
+      Layout_possible_fab_group(USAGE, THEME.teleporters)
 
       pick_target(R, USAGE)
 
@@ -757,32 +739,35 @@ function Layout_initial_walls(R)
 
 
   local function possible_doors(E)
-    local kind = "ARCH"
-    local lock
+    local list, lock, key
+
     local C = E.usage.conn
 
     if C.lock and C.lock.kind == "KEY" then
-      kind = "LOCK_DOOR"
+      list = THEME.lock_doors
       lock = C.lock
+      key  = lock.key
     elseif C.lock and C.lock.kind == "SWITCH" then
-      kind = "SWITCH_DOOR"
+      list = THEME.switch_doors
       lock = C.lock
     elseif rand.odds(20) then
-      kind = "DOOR"
+      list = THEME.doors
+    else
+      list = THEME.arches
     end
 
-    E.usage.edge_fabs = Layout_possible_prefabs(kind, "edge", lock)
+    E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge", key)
   end
 
 
   local function possible_windows(E)
-    local kind = "WINDOW"
-
     if E.usage.K1.room.outdoor and E.usage.K2.room.outdoor then
-      kind = "FENCE"
+      list = THEME.fences
+    else
+      list = THEME.windows
     end
 
-    E.usage.edge_fabs = Layout_possible_prefabs(kind, "edge")
+    E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge")
   end
 
 
@@ -1036,7 +1021,7 @@ function Layout_build_walls(R)
 
       if not fab.bumped then
         --FIXME !!!!!!!! TEMP CRUD
-        local T = { add_z = rand.irange(128,384) }
+        local T = { add_z = R.entry_floor_h or 256 }
 
         Fab_transform_Z(fab, T)
       end
@@ -2089,9 +2074,6 @@ end
 
 function Layout_flesh_out_floors(R)
   -- use the safe zones to place scenery fabs in unused areas
-
-  -- HMMMMMMM!!!!  similar to normal floor "divide" mechanism
-  --               except that floor is not divided, lololol
 
   -- FIXME
 
