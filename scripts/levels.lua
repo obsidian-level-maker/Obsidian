@@ -54,6 +54,7 @@ require 'caves'
 
 require 'build'
 require 'layout2'
+require 'walls'
 require 'rooms'
 require 'tiler'
 require 'fight'
