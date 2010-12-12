@@ -338,63 +338,101 @@ function Layout_make_corners(R)
   -- merely need to fill in the gap(s).
   --
 
-  local function adjust_corner(C, side, long, deep)
-    if geom.is_vert(side) then
-      C.horiz = math.min(C.horiz, long)
---    C.vert  = math.min(C.vert,  deep)
+  local function find_edges(C)
+    local side_L = geom.LEFT_45 [C.side]
+    local side_R = geom.RIGHT_45[C.side]
+
+    local H  -- edge connecting Horizontally
+    local V  -- edge connecting Vertically
+
+    if C.concave then
+      local K1 = C.K:neighbor(side_L)
+      local K2 = C.K:neighbor(side_R)
+
+      H = K1.edges[side_R]
+      V = K2.edges[side_L]
     else
-      C.vert  = math.min(C.vert,  long)
---    C.horiz = math.min(C.horiz, deep)
+      H = C.K.edges[side_R]
+      V = C.K.edges[side_L]
     end
+
+    if C.side == 1 or C.side == 9 then
+      H, V = V, H
+    end
+
+    assert(H and V)
+
+    return H, V
   end
 
 
-  local function adjust_corner_sizes(E)
-    local long_L, deep_L
-    local long_R, deep_R
+  local function edge_max_depth(E)
+    -- NOTE: assumes no more than one span on any edge
+    local SP = E.spans[1]
 
-    if E.spans[1] then
-      long_L = E.spans[1].long1
-      deep_L = E.spans[1].deep1
-
-      long_R = E.real_len - E.spans[#E.spans].long2
-      deep_R = E.spans[#E.spans].deep2
-
-      if E.corn_L then
-        adjust_corner(E.corn_L, E.side, long_L, deep_L)
-      end
-
-      if E.corn_R then
-        adjust_corner(E.corn_R, E.side, long_R, deep_R)
-      end
+    if SP then
+      return math.max(SP.deep1, SP.deep2, 64)
     end
+
+    return 64
   end
 
 
-  local function decide_corner_sizes()
-    for _,R in ipairs(LEVEL.all_rooms) do
-      for _,K in ipairs(R.sections) do
-        for _,C in pairs(K.corners) do
-          if C.concave then
-            C.horiz = 64
-            C.vert  = 64
-          else
-            C.horiz = 72
-            C.vert  = 72
-          end
-        end
-      end
-      for _,K in ipairs(R.sections) do
-        for _,E in pairs(K.edges) do
----       adjust_corner_sizes(E)
-        end
-      end
+  local function corner_length(C, E)
+    local SP = E.spans[1]
+
+    if SP then
+      -- FIXME: assumes span is centered
+      local long = SP.long2 - SP.long1
+
+      return (E.real_len - long) / 2
     end
+
+    return E.real_len / 2 - 48
   end
 
 
   local function make_corner(C)
-    -- FIXME
+    local H, V = find_edges(C)
+
+    local long_H = corner_length(C, H)
+    local long_V = corner_length(C, V)
+
+    local deep_H = edge_max_depth(H)
+    local deep_V = edge_max_depth(V)
+
+    H.max_deep = deep_H
+    V.max_deep = deep_V
+
+    gui.debugf("Corner @ %s:%d : long_H:%d long_V:%d  deep_H:%d deep_V:%d\n",
+               C.K:tostr(), C.side, long_H, long_V, deep_H, deep_V)
+
+    -- long_H,V are the upper limit on the size of the corner
+
+    -- FIXME!!! look for a prefab that fits in that limit,
+    --          and test if it fits OK (no overlapping e.g. walk brushes)
+
+    C.horiz = long_H
+    C.vert  = long_V
+
+    H.max_deep = math.max(C.vert,  deep_H)
+    V.max_deep = math.max(C.horiz, deep_V)
+
+    -- !!!!! FIXME: EDGE.long_L,R and deep_L,R fields
+
+    -- build something
+
+    local T = Trans.corner_transform(C.K.x1, C.K.y1, C.K.x2, C.K.y2, nil,
+                                     C.side, C.horiz, C.vert)
+
+    local fab = Fab_create("CORNER")
+    
+    Fab_apply_skins(fab, { R.skin or {}, { wall="ZZWOLF1" } })
+
+    Fab_transform_XY(fab, T)
+
+    fab.room = R
+    table.insert(R.prefabs, fab)
   end
 
 
