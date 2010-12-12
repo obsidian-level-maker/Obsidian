@@ -1096,9 +1096,9 @@ function Plan_prepare_rooms()
         local EDGE = { K=K, side=side, spans={} }
 
         if geom.is_vert(side) then
-          EDGE.long = K.x2 - K.x1
+          EDGE.real_len = K.x2 - K.x1
         else
-          EDGE.long = K.y2 - K.y1
+          EDGE.real_len = K.y2 - K.y1
         end
 
         K.edges[side] = EDGE
@@ -1178,8 +1178,8 @@ function Plan_prepare_rooms()
   local function connect_corners(R)
     for _,K in ipairs(R.sections) do
       for _,E in pairs(K.edges) do
-        E.corn1 = corner_near_edge(E, true)
-        E.corn2 = corner_near_edge(E, false)
+        E.corn_L = corner_near_edge(E, true)
+        E.corn_R = corner_near_edge(E, false)
       end
     end
   end

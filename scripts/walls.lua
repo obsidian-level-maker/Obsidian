@@ -18,8 +18,59 @@
 --
 ----------------------------------------------------------------
 
+--[[ *** CLASS INFORMATION ***
+
+class EDGE
+{
+  K, side  -- identification
+
+  real_len  --  real length of edge
+
+  corn_L, corn_R : CORNER
+
+  long_L, long_R  -- length allocated to corners
+  deep_L, deep_R  -- depth (sticking out) at corners
+
+  usage : USAGE   -- primary usage (door, window, etc)
+
+  spans[] : SPAN  -- allocated stuff on this edge
+}
+
+
+class SPAN
+{
+  long1, long2  -- length range along edge
+  deep1, deep2  -- depth (sticking out)
+
+  FIXME: usage stuff
+}
+
+
+class CORNER
+{
+  K, side  -- identification
+
+  concave  -- true for 270 degree corners
+
+  horiz, vert  -- connecting sizes
+
+  usage : USAGE  -- primary usage
+}
+
+
+class MIDDLE
+{
+  K  -- section
+
+  usage : USAGE
+}
+
+
+----------------------------------------------------------------]]
+
 require 'defs'
 require 'util'
+
 
 ----
 ---  MINIMUM SIZES
@@ -51,11 +102,11 @@ function Layout_add_span(E, long1, long2, deep)
 
   -- check if valid
   assert(long1 >= 16)
-  assert(long2 <= E.long - 16)
+  assert(long2 <= E.real_len - 16)
 
   -- corner check
-  if E.L_long then assert(long1 >= E.L_long) end
-  if E.R_long then assert(long2 <= E.R_long) end
+  if E.long_L then assert(long1 >= E.long_L) end
+  if E.long_R then assert(long2 <= E.long_R) end
 
   for _,SP in ipairs(E.spans) do
     if (long2 <= SP.long1) or (long1 >= SP.long2) then
@@ -149,8 +200,8 @@ function Layout_used_walls(R)
     local long = assert(skin._long)
     local deep = assert(skin._deep)
 
-    local long1 = int(E.long - long) / 2
-    local long2 = int(E.long + long) / 2
+    local long1 = int(E.real_len - long) / 2
+    local long2 = int(E.real_len + long) / 2
 
     local SP = Layout_add_span(E, long1, long2, deep, prefab)
 
@@ -299,22 +350,22 @@ function Layout_make_corners(R)
 
 
   local function adjust_corner_sizes(E)
-    local L_long, L_deep
-    local R_long, R_deep
+    local long_L, deep_L
+    local long_R, deep_R
 
     if E.spans[1] then
-      L_long = E.spans[1].long1
-      L_deep = E.spans[1].deep1
+      long_L = E.spans[1].long1
+      deep_L = E.spans[1].deep1
 
-      R_long = E.long - E.spans[#E.spans].long2
-      R_deep = E.spans[#E.spans].deep2
+      long_R = E.real_len - E.spans[#E.spans].long2
+      deep_R = E.spans[#E.spans].deep2
 
-      if E.corn1 then
-        adjust_corner(E.corn1, E.side, L_long, L_deep)
+      if E.corn_L then
+        adjust_corner(E.corn_L, E.side, long_L, deep_L)
       end
 
-      if E.corn2 then
-        adjust_corner(E.corn2, E.side, L_long, L_deep)
+      if E.corn_R then
+        adjust_corner(E.corn_R, E.side, long_R, deep_R)
       end
     end
   end
