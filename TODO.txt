@@ -5,6 +5,9 @@ V4 TODO
 Current Work
 ------------
 
+>>>  flesh_out_walls : basic gap-filling with "WALL" fab
+
+
 FLOOR STUFF
 
 >> a less recursive algorithm, once we have decided the floor
@@ -88,14 +91,11 @@ DOOM and QUAKE only
 
 Layout:
 
-+  rooms with multiple layers
-
 +  corner prefabs
        - normal
        - curved
        - big diagonal
        - torch in niche
-       - jutting out torch 
        - picture
 
 +  wall prefabs:
@@ -125,7 +125,7 @@ Layout:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
 
--  get caves working again
+?  get caves working again
 
-?  small exits
+-  small exits
 
