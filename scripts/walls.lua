@@ -448,6 +448,11 @@ function Layout_make_corners(R)
 end
 
 
+-- FIXME: TEMP CRUD - REMOVE
+function geom.horiz_sel(A, B, C)
+  return geom.vert_sel(A, C, B)
+end
+
 
 function Layout_flesh_out_walls(R)
   --
@@ -460,16 +465,17 @@ function Layout_flesh_out_walls(R)
     E.deep_L = 64
 
     if E.corn_L and not E.corn_L.concave then
-      E.long_L = geom.vert_sel(E.side, E.corn_L.vert,  E.corn_L.horiz)
-      E.deep_L = geom.vert_sel(E.side, E.corn_L.horiz, E.corn_L.vert)
+      -- FIXME: SHOULD BE vert_sel : WHAT IS WRONG ???
+      E.long_L = geom.horiz_sel(E.side, E.corn_L.vert,  E.corn_L.horiz)
+      E.deep_L = geom.horiz_sel(E.side, E.corn_L.horiz, E.corn_L.vert)
     end
 
-    E.long_R = 0  -- temporarily = offset from right, fixed soon
+    E.long_R = 0  -- temporarily use offset from right, fixed soon
     E.deep_R = 64
 
     if E.corn_R and not E.corn_R.concave then
-      E.long_R = geom.vert_sel(E.side, E.corn_R.vert,  E.corn_R.horiz)
-      E.deep_R = geom.vert_sel(E.side, E.corn_R.horiz, E.corn_R.vert)
+      E.long_R = geom.horiz_sel(E.side, E.corn_R.vert,  E.corn_R.horiz)
+      E.deep_R = geom.horiz_sel(E.side, E.corn_R.horiz, E.corn_R.vert)
     end
 
     E.long_R = E.real_len - E.long_R
@@ -477,6 +483,12 @@ function Layout_flesh_out_walls(R)
 
 
   local function flesh_out_range(E, long1, deep1, long2, deep2)
+    if long1 >= long2 then
+      return
+    end
+
+    -- FIXME: handle small gaps
+
     local my = int((deep1 + deep2) / 2)
 
 ---    if (long2 - long1) >= 360 then
@@ -487,7 +499,21 @@ function Layout_flesh_out_walls(R)
     gui.debugf("flesh_out_range @ %s:%d : (%d %d) .. (%d %d)\n",
                E.K:tostr(), E.side, long1, deep1, long2, deep2)
 
-    -- FIXME !!!!
+    local deep = math.max(deep1, deep2) -- rand.pick { deep1, my, deep2 }
+
+    -- build something
+
+    local T = Trans.edge_transform(E.K.x1, E.K.y1, E.K.x2, E.K.y2, nil,
+                                   E.side, long1, long2, 0, deep)
+
+    local fab = Fab_create("WALL")
+
+    Fab_apply_skins(fab, { R.skin or {}, { wall="ZZWOLF11" } })
+
+    Fab_transform_XY(fab, T)
+
+    fab.room = R
+    table.insert(R.prefabs, fab)
   end
 
 
