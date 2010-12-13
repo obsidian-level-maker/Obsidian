@@ -417,10 +417,10 @@ function Layout_make_corners(R)
     C.horiz = long_H
     C.vert  = long_V
 
-    H.max_deep = math.max(C.vert,  deep_H)
-    V.max_deep = math.max(C.horiz, deep_V)
+    H.max_deep = math.max(long_V, deep_H)
+    V.max_deep = math.max(long_H, deep_V)
 
-    -- !!!!! FIXME: EDGE.long_L,R and deep_L,R fields
+    -- the EDGE long_L,R and deep_L,R fields are done in flesh_out_walls()
 
     -- build something
 
@@ -455,14 +455,65 @@ function Layout_flesh_out_walls(R)
   -- with either prefabs or trapezoid-shaped brushes.
   --
 
-  function flesh_out_edge(E)
-    -- FIXME
+  local function edge_extents(E)
+    E.long_L = 0
+    E.deep_L = 64
+
+    if E.corn_L and not E.corn_L.concave then
+      E.long_L = geom.vert_sel(E.side, E.corn_L.vert,  E.corn_L.horiz)
+      E.deep_L = geom.vert_sel(E.side, E.corn_L.horiz, E.corn_L.vert)
+    end
+
+    E.long_R = 0  -- temporarily = offset from right, fixed soon
+    E.deep_R = 64
+
+    if E.corn_R and not E.corn_R.concave then
+      E.long_R = geom.vert_sel(E.side, E.corn_R.vert,  E.corn_R.horiz)
+      E.deep_R = geom.vert_sel(E.side, E.corn_R.horiz, E.corn_R.vert)
+    end
+
+    E.long_R = E.real_len - E.long_R
   end
+
+
+  local function flesh_out_range(E, long1, deep1, long2, deep2)
+    local my = int((deep1 + deep2) / 2)
+
+---    if (long2 - long1) >= 360 then
+---      local mx = int((long1 + long2) / 2)
+---      RECURSIVE SUB-DIVISION
+---    end
+    
+    gui.debugf("flesh_out_range @ %s:%d : (%d %d) .. (%d %d)\n",
+               E.K:tostr(), E.side, long1, deep1, long2, deep2)
+
+    -- FIXME !!!!
+  end
+
+
+  local function flesh_out_edge(E)
+    -- NOTE: assumes no more than one span so far
+    local SP = E.spans[1]
+
+    if SP then
+      local span_L = SP.long1
+      local span_R = SP.long2
+
+      -- FIXME: key stuff / torches on either side of door
+
+      flesh_out_range(E, E.long_L, E.deep_L, span_L, SP.deep1)
+      flesh_out_range(E, span_R, SP.deep2, E.long_R, E.deep_R)
+    else
+      flesh_out_range(E, E.long_L, E.deep_L, E.long_R, E.deep_R)
+    end
+  end
+
 
   ---| Layout_flesh_out_walls |---
 
   for _,K in ipairs(R.sections) do
     for _,E in pairs(K.edges) do
+      edge_extents(E)
       flesh_out_edge(E)
     end
   end
