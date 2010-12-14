@@ -1027,7 +1027,7 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 },
 
-  floors = { Z_Copy = 500 },
+  floors = { H_Stair6 = 50 },
 
   --------- OLD CRUD --------> > >
 
