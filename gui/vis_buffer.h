@@ -120,6 +120,7 @@ public:
   bool TestWall(int x, int y, int side);
 
   void ReadMap(const char *filename);
+  void WriteMap(const char *filename);
 
   void ClearVis();
   void ProcessVis(int x, int y);

@@ -129,6 +129,23 @@ void Vis_Buffer::ReadMap(const char *filename)
 }
 
 
+void Vis_Buffer::WriteMap(const char *filename)
+{
+  FILE *fp = fopen(filename, "w");
+  if (! fp)
+    Main_FatalError("Cannot create file: %s\n", filename);
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    if (at(x, y) & V_BOTTOM) fprintf(fp, "%d %d %d\n", x, y, 2);
+    if (at(x, y) & V_LEFT)   fprintf(fp, "%d %d %d\n", x, y, 4);
+  }
+
+  fclose(fp);
+}
+
+
 //------------------------------------------------------------------------
 
 void Vis_Buffer::DoBasic(int dx, int dy, int side)
