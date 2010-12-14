@@ -94,6 +94,25 @@ require 'util'
   -- decided later in the normal layout code.
   --
 
+
+function Layout_inner_outer_tex(skin, K, KN)
+  assert(K)
+  if not KN then return end
+
+  local R = K.room
+  local N = KN.room
+
+  skin.wall  = R.skin.wall
+  skin.outer = N.skin.wall
+
+  if R.outdoor and not N.outdoor then
+    skin.wall  = skin.outer
+  elseif N.outdoor and not R.outdoor then
+    skin.outer = skin.inner
+  end
+end
+
+
 function Layout_add_span(E, long1, long2, deep)
 
 -- stderrf("********** add_span %s @ %s : %d\n", kind, E.K:tostr(), E.side)
@@ -145,21 +164,6 @@ function Layout_used_walls(R)
     if not skin._deep then return false end
 
     return skin._long <= 192 and skin._deep <= 64
-  end
-
-
-  local function inner_outer_tex(skin, R, N)
-    assert(R)
-    if not N then return end
-
-    skin.wall  = R.skin.wall
-    skin.outer = N.skin.wall
-
-    if R.outdoor and not N.outdoor then
-      skin.wall  = skin.outer
-    elseif N.outdoor and not R.outdoor then
-      skin.outer = skin.inner
-    end
   end
 
 
@@ -414,6 +418,11 @@ function Layout_make_corners(R)
     -- FIXME!!! look for a prefab that fits in that limit,
     --          and test if it fits OK (no overlapping e.g. walk brushes)
 
+if false then
+long_V = 32
+long_H = 32
+end
+
     C.horiz = long_H
     C.vert  = long_V
 
@@ -422,6 +431,10 @@ function Layout_make_corners(R)
 
     -- the EDGE long_L,R and deep_L,R fields are done in flesh_out_walls()
 
+    local skin = {}
+
+    Layout_inner_outer_tex(skin, C.K, C.K:neighbor(C.side))
+
     -- build something
 
     local T = Trans.corner_transform(C.K.x1, C.K.y1, C.K.x2, C.K.y2, nil,
@@ -429,7 +442,7 @@ function Layout_make_corners(R)
 
     local fab = Fab_create("CORNER")
     
-    Fab_apply_skins(fab, { R.skin or {}, { wall="ZZWOLF1" } })
+    Fab_apply_skins(fab, { R.skin or {}, skin })
 
     Fab_transform_XY(fab, T)
 
@@ -499,7 +512,17 @@ function Layout_flesh_out_walls(R)
     gui.debugf("flesh_out_range @ %s:%d : (%d %d) .. (%d %d)\n",
                E.K:tostr(), E.side, long1, deep1, long2, deep2)
 
-    local deep = math.max(deep1, deep2) -- rand.pick { deep1, my, deep2 }
+    local deep
+
+    if false then
+      deep = 16
+    else
+      deep = math.max(deep1, deep2)
+    end
+
+    local skin = {}
+
+    Layout_inner_outer_tex(skin, E.K, E.K:neighbor(E.side))
 
     -- build something
 
@@ -508,7 +531,7 @@ function Layout_flesh_out_walls(R)
 
     local fab = Fab_create("WALL")
 
-    Fab_apply_skins(fab, { R.skin or {}, { wall="ZZWOLF11" } })
+    Fab_apply_skins(fab, { R.skin or {}, skin })
 
     Fab_transform_XY(fab, T)
 
