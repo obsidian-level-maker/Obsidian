@@ -626,6 +626,8 @@ fprintf(stderr, "cluster: %2d %2d  blocked: %d = %1.2f%%   \n",
 
 static void Build_PVS()
 {
+  qk_visbuf->SimplifySolid();
+
   int done = 0;
 
   for (int cy = 0 ; cy < cluster_H ; cy++)

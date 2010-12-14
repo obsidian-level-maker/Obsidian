@@ -22,6 +22,9 @@
 #include "vis_buffer.h"
 
 
+#define MAX_RECURSION  4
+
+
 Vis_Buffer::Vis_Buffer(int width, int height) :
       W(width), H(height), quick_mode(false),
       flip_x(0), flip_y(0), saved_cells()
@@ -321,7 +324,7 @@ void Vis_Buffer::MarkSteps(const Stair_Steps& steps)
 }
 
 
-void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side)
+void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side, int recursion)
 {
   AddStep(steps, sx, sy, side);
 
@@ -336,12 +339,12 @@ void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side)
       bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
 
       // handle branches with recursion
-      if (go_right && go_down)
+      if (go_right && go_down && recursion < MAX_RECURSION)
       {
         Stair_Steps other;
         CopySteps(other, steps);
 
-        FollowStair(other, sx, sy, 2);
+        FollowStair(other, sx, sy, 2, recursion+1);
         go_right = false;
       }
 
@@ -367,13 +370,13 @@ void Vis_Buffer::FollowStair(Stair_Steps& steps, int sx, int sy, int side)
       bool go_down  = (sy-1 >= loc_y) && TestWall(sx, sy-1, 4);
 
       // handle branches with recursion
-      if (go_right && go_down)
+      if (go_right && go_down && recursion < MAX_RECURSION)
       {
         // recursive bit
         Stair_Steps other;
         CopySteps(other, steps);
 
-        FollowStair(other, sx, sy, 2);
+        FollowStair(other, sx, sy, 2, recursion+1);
         go_right = false;
       }
 
@@ -420,7 +423,7 @@ void Vis_Buffer::DoSteps(int quadrant)
         ! (dx > 0 && TestWall(sx, sy, 4)) )
     {
       Stair_Steps base;
-      FollowStair(base, sx, sy, 2);
+      FollowStair(base, sx, sy, 2, 0);
     }
 
     if (  (dx > 0 && TestWall(sx, sy, 4)) &&
@@ -428,7 +431,7 @@ void Vis_Buffer::DoSteps(int quadrant)
         ! (isValid(sx, sy+1) && TestWall(sx, sy+1, 4)) )
     {
       Stair_Steps base;
-      FollowStair(base, sx, sy, 4);
+      FollowStair(base, sx, sy, 4, 0);
     }
   }
 }
@@ -586,6 +589,44 @@ void Vis_Buffer::RestoreDiagonals()
   }
 
   saved_cells.clear();
+}
+
+
+void Vis_Buffer::SimplifySolid()
+{
+  // this removes walls which lie between two solid cells, in order
+  // to prevent the need for excessive recursion in FollowStair().
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    at(x, y) &= ~V_BASIC;
+
+    if (TestWall(x, y, 2) && TestWall(x, y, 4) &&
+        TestWall(x, y, 6) && TestWall(x, y, 8))
+    {
+      at(x, y) |= V_BASIC;
+    }
+  }
+
+  for (int y = 0 ; y < H ; y++)
+  for (int x = 0 ; x < W ; x++)
+  {
+    if (! (at(x, y) & V_BASIC))
+      continue;
+
+    if (x < (W-1) && (at(x+1, y) & V_LEFT) &&
+                     (at(x+1, y) & V_BASIC))
+    {
+      at(x+1, y) &= ~V_LEFT;
+    }
+
+    if (y < (H-1) && (at(x, y+1) & V_BOTTOM) &&
+                     (at(x, y+1) & V_BASIC))
+    {
+      at(x, y+1) &= ~V_BOTTOM;
+    }
+  }
 }
 
 

@@ -122,6 +122,8 @@ public:
   void ReadMap(const char *filename);
   void WriteMap(const char *filename);
 
+  void SimplifySolid();
+
   void ClearVis();
   void ProcessVis(int x, int y);
 
@@ -132,7 +134,7 @@ private:
   void AddStep(Stair_Steps& dest, int x, int y, int side);
   void CopySteps(Stair_Steps& dest, const Stair_Steps& src);
   void MarkSteps(const Stair_Steps& steps);
-  void FollowStair(Stair_Steps& steps, int sx, int sy, int side);
+  void FollowStair(Stair_Steps& steps, int sx, int sy, int side, int recursion);
 
   void ConvertDiagonals();
   void RestoreDiagonals();
