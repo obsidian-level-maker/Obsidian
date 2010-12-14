@@ -95,20 +95,20 @@ require 'util'
   --
 
 
-function Layout_inner_outer_tex(skin, K, KN)
+function Layout_inner_outer_tex(skin, K, K2)
   assert(K)
-  if not KN then return end
+  if not K2 then return end
 
   local R = K.room
-  local N = KN.room
+  local N = K2.room
 
   skin.wall  = R.skin.wall
   skin.outer = N.skin.wall
 
   if R.outdoor and not N.outdoor then
-    skin.wall  = skin.outer
+    skin.wall  = N.facade or skin.outer
   elseif N.outdoor and not R.outdoor then
-    skin.outer = skin.inner
+    skin.outer = R.facade or skin.wall
   end
 end
 
@@ -288,9 +288,15 @@ function Layout_used_walls(R)
 
     local extra_skins = {}
 
-local CRUD = { item="none", outer="_ERROR",track="_ERROR",frame="_ERROR",
+local CRUD = { item="none", outer="COMPBLUE",track="_ERROR",frame="_ERROR",
                rail="STEPTOP", metal="METAL", }
 table.insert(extra_skins, CRUD)
+
+
+    local in_out = {}
+    Layout_inner_outer_tex(in_out, E.K, E.K:neighbor(E.side))
+    table.insert(extra_skins, in_out)
+
 
     if E.usage.kind == "door" and E.usage.conn.lock then
       local lock = E.usage.conn.lock
@@ -311,6 +317,7 @@ table.insert(extra_skins, CRUD)
     if E.usage.sub == "EXIT" and GAME.format == "quake" then
       table.insert(extra_skins, { next_map = LEVEL.next_map })
     end
+
 
     create_span(E, E.minimal.skin, extra_skins)
   end
@@ -418,7 +425,7 @@ function Layout_make_corners(R)
     -- FIXME!!! look for a prefab that fits in that limit,
     --          and test if it fits OK (no overlapping e.g. walk brushes)
 
-if false then
+if true then
 long_V = 32
 long_H = 32
 end
@@ -514,7 +521,7 @@ function Layout_flesh_out_walls(R)
 
     local deep
 
-    if false then
+    if true then
       deep = 16
     else
       deep = math.max(deep1, deep2)
