@@ -978,9 +978,6 @@ function Plan_decide_outdoors()
     if R.outdoor == nil then
       R.outdoor = choose(R)
     end
-    if R.outdoor then
-      R.sky_h = SKY_H
-    end
   end
 end
 

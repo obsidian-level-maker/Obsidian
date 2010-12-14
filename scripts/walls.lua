@@ -425,7 +425,7 @@ function Layout_make_corners(R)
     -- FIXME!!! look for a prefab that fits in that limit,
     --          and test if it fits OK (no overlapping e.g. walk brushes)
 
-if true then
+if false then
 long_V = 32
 long_H = 32
 end
@@ -521,7 +521,7 @@ function Layout_flesh_out_walls(R)
 
     local deep
 
-    if true then
+    if false then
       deep = 16
     else
       deep = math.max(deep1, deep2)

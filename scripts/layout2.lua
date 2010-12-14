@@ -1222,7 +1222,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
 
 
   local function prepare_ceiling()
-    local h = ROOM.floor_max_h + rand.pick { 192, 256, 320, 384 }
+    local h = ROOM.floor_max_h + 192 -- rand.pick { 192, 256, 320, 384 }
 
     if R.outdoor then
       R.sky_h = h
@@ -1415,7 +1415,7 @@ function Layout_all_ceilings()
   local function build_ceiling(R)
     if R.sky_h then
       for _,K in ipairs(R.sections) do
-        Trans.quad(K.x1, K.y1, K.x2, K.y2, 384+R.sky_h, nil, Mat_normal("_SKY"))
+        Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
       end
 
       return
@@ -1429,7 +1429,7 @@ function Layout_all_ceilings()
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, 512+R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
+      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
     end
 
     if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
