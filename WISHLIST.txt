@@ -8,9 +8,8 @@ WISH-LIST
 
 *  add in more scenery: lamps, computers etc
 
-*  get cave code working again
 
-*  better monster selection
+*  get cave code working again
 
 *  escapable slime pits
 
@@ -249,6 +248,8 @@ Miscellaneous:
   +  double or triple switches: each one raises a 24 unit stair,
      but player can only traverse stairs when ALL are raised.
      Might work best if stairs are parallel to height diff.
+
+  -  ensure sky heights are higher than neighboring indoor rooms.
 
   -  prevent escapes over fences/windows near key pedestals (etc) by
      raising the height of the fences/windows there.

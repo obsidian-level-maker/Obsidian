@@ -5,7 +5,7 @@ V4 TODO
 Current Work
 ------------
 
->>>  flesh_out_walls : basic gap-filling with "WALL" fab
++  Walk and Air brushes use 'b' for floor height, 't' for ceiling height
 
 
 FLOOR STUFF
@@ -106,6 +106,8 @@ Layout:
        - picture
        - teleporter
        - item niche
+       - lift up doorway
+       - lift down doorway
  
 +  middle prefabs:
        - cage
