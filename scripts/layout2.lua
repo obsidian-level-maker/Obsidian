@@ -634,6 +634,8 @@ function Layout_the_floor(R)
     local f_tex = mat.f or mat.t
 
     for _,B in ipairs(F.brushes) do
+      Trans.set_tex(B, w_tex)
+
       table.insert(B, { t=F.z, tex=f_tex })
 
 ---##   if F.z_low then
