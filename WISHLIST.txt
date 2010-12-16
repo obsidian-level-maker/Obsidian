@@ -37,6 +37,42 @@ WISH-LIST
   LEVEL STUFF
 ----------------------------------------------------------------
 
+Miscellaneous:
+  +  when traversibility in a room is poor (exit near entrance),
+     make the exit into a switched door and put a switch at other
+     end of room.
+
+  -  in a large (multi-section) room, if any section has no "events"
+     (a connection or switch or key or major item) then give it a
+     nice pickup item (etc) or at least a walk space.
+
+  -  double or triple switches: each one raises a 24 unit stair,
+     but player can only traverse stairs when ALL are raised.
+     Might work best if stairs are parallel to height diff.
+
+  -  ensure sky heights are higher than neighboring indoor rooms.
+
+  -  prevent escapes over fences/windows near key pedestals (etc) by
+     raising the height of the fences/windows there.
+
+  -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
+
+  -  can disable the custom levels
+
+  -  more than one theme per episode.
+
+  -  rarity for bfg10k and railgun for Skulltag
+
+  -  properly count svolume
+
+  ?  PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
+
+  -  lifts often assume meshing up at 90 degree turns
+
+  -  log-print CSG stats (e.g. linedef count, plane count, etc)
+
+
+
 Monsters:
   -  give each monster a "class" field (e.g. class="undead")
      and have a strong tendency to use the same class of
@@ -238,37 +274,6 @@ Pictures:
 
 Nicety:
   - mark end of big tables with a comment (like D1_WALL_PREFABS)
-
-
-Miscellaneous:
-  +  when traversibility in a room is poor (exit near entrance),
-     make the exit into a switched door and put a switch at other
-     end of room.
-
-  +  double or triple switches: each one raises a 24 unit stair,
-     but player can only traverse stairs when ALL are raised.
-     Might work best if stairs are parallel to height diff.
-
-  -  ensure sky heights are higher than neighboring indoor rooms.
-
-  -  prevent escapes over fences/windows near key pedestals (etc) by
-     raising the height of the fences/windows there.
-
-  -  brush conditionals:  if_true="?doomy"  if_false="?foobie"
-
-  - Can disable the custom levels
-  - More than one theme per episode.
-
-  - rarity for bfg10k and railgun for Skulltag
-
-  - properly count svolume
-
-  - PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
-
-  - lifts often assume meshing up at 90 degree turns
-
-  - log-print CSG stats (e.g. linedef count, plane count, etc)
-
 
 
 Possible Options:
@@ -971,11 +976,6 @@ Room Fitting Out
 
 -  IDEA: junk a side with a connection, and the little "bridge"
          seed can become a stairway.
-
--  BUG: lowering bars can bypass-able
-
--  ability to use patterns with heights both HIGHER and LOWER
-   than the '.' entry connection.  (maybe: height=-1 in subs)
 
 - ceilings:
   - big room with no sky neighbours: have a huge sky hole

@@ -5,7 +5,12 @@ V4 TODO
 Current Work
 ------------
 
-+  Walk and Air brushes use 'b' for floor height, 't' for ceiling height
+!!  window/fence prefabs need "air" brushes  !!
+
+
+CEILING STUFF
+
+-  ceiling heights : check 't' in walk/air brushes 
 
 
 FLOOR STUFF
@@ -19,13 +24,7 @@ FLOOR STUFF
    of the room for further floor fabs.
 
 
-3D floors : FLOOR.z_low and z_high values
-
-allow walks to appear in _multiple_ spaces, assign them round robin
-(rand.shuffle walks earlier) ---> for 3D floors
-
-
-!!!  clipping solid brushes to floor space
+!!!  clipping all infinite brushes to floor space
 
 !!   "lava" brush kind
 
@@ -47,19 +46,21 @@ WALL STUFF
 !!  forget the "pick minimal, make bigger later " idea
     use room size to get a minimum and maximum size
     
--  fix inner/outer tex on door and window prefabs
++  determine formula for size of middle SPANs, basic on section size
+   it should guarantee minimal prefabs will fit.
 
--  flesh out "minor" walls _AFTER_ floor layouting
-   split spans vertically
+   The following is too simple, but may help:
 
--  "flush depth" for wall prefabs, encourage/force nearby walls
-   to line up with it.
-
-!!  EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
+    EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
 
     For 2  seed wide room, thickest door is  64 units + 64 walk
     For 3  seed wide room, thickest door is 160 units + 64 walk
     For 4+ seed wide room, thickest door is 256 units + 64 walk
+
+DONE:  fix inner/outer tex on door and window prefabs
+
+-  "flush depth" for wall prefabs, encourage/force nearby walls
+   to line up with it.
 
 
 
@@ -70,10 +71,6 @@ OTHER STUFF
 !!  remove flavored brushes :-(
     (at least from the CSG code, do "hole" brushes for floor spaces
      and ceiling spaces)
-
--  in a large (multi-section) room, if any section has no "events"
-   (a connection or switch or key or major item) then give it a
-   nice pickup item (etc) or at least a walk space.
 
 
 
@@ -86,7 +83,7 @@ Release Goals
 
 Games:
 
-DOOM and QUAKE only
+DOOM2 and QUAKE only
 
 
 Layout:
@@ -123,11 +120,13 @@ Layout:
        - U shape
        - bridge
 
++  ceiling prefabs:
+       - a couple sky-lites
+       ...
+
 +  light brushes for DOOM, clipped to room:
    (a) have group of rectangles to clip to
    (b) clip light brush to each rectangle
-
-?  get caves working again
 
 -  small exits
 
