@@ -2221,13 +2221,6 @@ DOOM.SKINS =
     step = "STEP1",
   },
 
-  Z_Copy =
-  {
-    _prefab = "Z_COPY_W_LIFT",
-
-    metal = "METAL2",
-  },
-
 } -- end of DOOM.SKINS
 
 

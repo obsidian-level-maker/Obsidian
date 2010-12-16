@@ -920,14 +920,6 @@ QUAKE1.SKINS =
     step = "MET5_1",
   },
 
-  Z_Copy =
-  {
-    _prefab = "Z_COPY_W_LIFT",
-
-    metal = "MET5_1",
-  },
-
-
 
 } -- end of QUAKE1.SKINS
 
