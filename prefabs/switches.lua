@@ -73,7 +73,8 @@ PREFAB.WALL_SWITCH =
       { x = 192, y = 16 },
       { x = 192, y = 80 },
       { x =   0, y = 80 },
-      { t = 0 },
+      { b = 0 },
+      { t = 96 },
     },
 
     -- switch itself
@@ -158,7 +159,8 @@ PREFAB.QUAKE_WALL_SWITCH =
       { x = 192, y = 16 },
       { x = 192, y = 80 },
       { x =   0, y = 80 },
-      { t = 0 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 

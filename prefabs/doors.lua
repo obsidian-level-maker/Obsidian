@@ -86,7 +86,8 @@ PREFAB.ARCH =
       { x = 152, y =  24 },
       { x = 152, y = 112 },
       { x =  40, y = 112 },
-      { t = 0 },
+      { b = 0 },
+      { t = 144 },
     },
 
     {
@@ -95,13 +96,14 @@ PREFAB.ARCH =
       { x = 152, y = -64 },
       { x = 152, y =  24 },
       { x =  40, y =  24 },
-      { t = 0 },
+      { b = 0 },
+      { t = 144 },
     },
   },
 }
 
 
-PREFAB.ARCH2 =
+PREFAB.ARCH2 =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted",
 
@@ -139,7 +141,7 @@ PREFAB.ARCH2 =
 }
 
 
-PREFAB.QUAKE_ARCH =
+PREFAB.QUAKE_ARCH =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted",
 
@@ -204,7 +206,8 @@ PREFAB.QUAKE_ARCH =
 
 
 
-PREFAB.ARCH_W_STAIR =
+PREFAB.ARCH_W_STAIR =  --  BORKED : Replace flavored brushes with "hole" brush,
+                       --           And needs "walk" brushes.
 {
   placement = "fitted",
 
@@ -371,7 +374,8 @@ PREFAB.DOOR =
       { x = 152, y =  24 },
       { x = 152, y = 112 },
       { x =  40, y = 112 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
 
     {
@@ -380,7 +384,8 @@ PREFAB.DOOR =
       { x = 152, y = -64 },
       { x = 152, y =  24 },
       { x =  40, y =  24 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
   },
 }
@@ -444,7 +449,8 @@ PREFAB.QUAKE_DOOR =
       { x = 152, y =  24 },
       { x = 152, y = 112 },
       { x =  40, y = 112 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
 
     {
@@ -453,7 +459,8 @@ PREFAB.QUAKE_DOOR =
       { x = 152, y = -64 },
       { x = 152, y =  24 },
       { x =  40, y =  24 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
   },
 
@@ -489,7 +496,7 @@ PREFAB.QUAKE_DOOR =
 }
 
 
-PREFAB.QUAKE_V_DOOR =
+PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted",
   team_models = true,
@@ -570,7 +577,7 @@ PREFAB.QUAKE_V_DOOR =
 }
 
 
-PREFAB.QUAKE_4_WAY =  -- FIXME: step
+PREFAB.QUAKE_4_WAY =  -- FIXME: step, WALK BRUSHES
 {
   placement = "fitted",
   team_models = true,
@@ -668,7 +675,7 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step
 }
 
 
-PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
+PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step, WALK BRUSHES
 {
   placement = "fitted",
   team_models = true,
@@ -756,7 +763,7 @@ PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step
 }
 
 
-PREFAB.BARS =
+PREFAB.BARS =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted",
 

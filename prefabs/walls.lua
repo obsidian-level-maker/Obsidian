@@ -164,7 +164,8 @@ PREFAB.WALL_SPIKE_SHOOTER =
       { x = 128, y =  16 },
       { x = 128, y = 112 },
       { x =   0, y = 112 },
-      { t = 0 },
+      { b = 0 },
+      { t = 96 },
     },
 
     -- the shooter

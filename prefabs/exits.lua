@@ -36,7 +36,8 @@ PREFAB.START_SPOT =
       { x =  80, y = -80 },
       { x =  80, y =  80 },
       { x = -80, y =  80 },
-      { t = 0 },
+      { b = 0 },
+      { t = 96 },
     },
 
   },
@@ -81,7 +82,8 @@ PREFAB.START_LEDGE =
       { x = 192, y =  80 },
       { x = 192, y = 128 },
       { x =   0, y = 128 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
   },
 
@@ -105,7 +107,8 @@ PREFAB.EXIT_PILLAR =
       { x =  96, y = -96 },
       { x =  96, y =  96 },
       { x = -96, y =  96 },
-      { t = 0 },
+      { b = 0 },
+      { t = 160 },
     },
 
     -- pillar itself
@@ -153,7 +156,7 @@ PREFAB.EXIT_PILLAR =
 }
 
 
-PREFAB.OUTDOOR_EXIT_SWITCH =
+PREFAB.OUTDOOR_EXIT_SWITCH =  -- BORKED : NEEDS WALK BRUSHES
 {
   brushes =
   {
@@ -224,7 +227,7 @@ PREFAB.OUTDOOR_EXIT_SWITCH =
 }
 
 
-PREFAB.SMALL_EXIT =
+PREFAB.SMALL_EXIT =  -- BORKED : NEED WALK BRUSHES (ETC?)
 {
   brushes =
   {
@@ -370,7 +373,7 @@ PREFAB.SMALL_EXIT =
 }
 
 
-PREFAB.QUAKE_EXIT_PAD =
+PREFAB.QUAKE_EXIT_PAD =  -- BORKED : NEEDS WALK BRUSHES
 {
   brushes =
   {
@@ -422,7 +425,8 @@ PREFAB.QUAKE_WALL_EXIT =
       { x = 192, y = 16 },
       { x = 192, y = 96 },
       { x =   0, y = 96 },
-      { t = 0 },
+      { b = 0 },
+      { t = 128 },
     },
 
     -- the pad itself
