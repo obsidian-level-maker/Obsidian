@@ -395,165 +395,6 @@ PREFAB.TRIPLE_A =
 }
 
 
-PREFAB.Z_COPY_W_LIFT =
-{
-  placement = "fitted",
-
-  three_d = true,
-
-  x_size = 256,
-  y_size = 256,
-
-  brushes =
-  {
-    ---| low floor |---
-
-    {
-      { m = "floor", space = 1 },
-      { x = -INF, y = -INF },
-      { x =  INF, y = -INF },
-      { x =  INF, y =  INF },
-      { x = -INF, y =  INF },
-    },
-
-    {
-      { m = "zone", space = 1 },
-      { x = -INF, y = -INF },
-      { x =    0, y = -INF },
-      { x =    0, y =  INF },
-      { x = -INF, y =  INF },
-    },
-
-    {
-      { m = "zone", space = 1 },
-      { x =  256, y = -INF },
-      { x =  INF, y = -INF },
-      { x =  INF, y =  INF },
-      { x =  256, y =  INF },
-    },
-
-    {
-      { m = "walk", space = 1, dz_high = 144 },
-      { x =   0, y =   0 },
-      { x = 256, y =   0 },
-      { x = 256, y = 256 },
-      { x =   0, y = 256 },
-      { t = 0 },
-    },
-
-
-    ---| high floor |---
-
-    -- FIXME: implement a "hole" brush
-    {
-      { m = "floor", space = 2 },
-      { x = -INF, y = -INF },
-      { x =  INF, y = -INF },
-      { x =  INF, y =   64 },
-      { x = -INF, y =   64 },
-    },
-
-    {
-      { m = "floor", space = 2 },
-      { x = -INF, y =  192 },
-      { x =  INF, y =  192 },
-      { x =  INF, y =  INF },
-      { x = -INF, y =  INF },
-    },
-
-    {
-      { m = "floor", space = 2 },
-      { x = -INF, y =   64 },
-      { x =   64, y =   64 },
-      { x =   64, y =  192 },
-      { x = -INF, y =  192 },
-    },
-
-    {
-      { m = "floor", space = 2 },
-      { x =  192, y =   64 },
-      { x =  INF, y =   64 },
-      { x =  INF, y =  192 },
-      { x =  192, y =  192 },
-    },
-
-    {
-      { m = "zone", space = 2 },
-      { x = -INF, y = -INF },
-      { x =  INF, y = -INF },
-      { x =  INF, y =    0 },
-      { x = -INF, y =    0 },
-    },
-
-    {
-      { m = "zone", space = 2 },
-      { x = -INF, y = 256 },
-      { x =  INF, y = 256 },
-      { x =  INF, y = INF },
-      { x = -INF, y = INF },
-    },
-
-    {
-      { m = "walk", space = 2, dz_low = -16 },
-      { x =   0, y =   0 },
-      { x = 256, y =   0 },
-      { x = 256, y = 256 },
-      { x =   0, y = 256 },
-      { t = 160 },
-    },
-
-
-    ---| the lift |---
-
-    {
-      { x =  64, y =  64, mat = "?metal" },
-      { x =  80, y =  64, mat = "?metal" },
-      { x =  80, y =  80, mat = "?metal" },
-      { x =  64, y =  80, mat = "?metal" },
-      { t = 168, mat = "?metal" },
-    },
-
-    {
-      { x = 176, y =  64, mat = "?metal" },
-      { x = 192, y =  64, mat = "?metal" },
-      { x = 192, y =  80, mat = "?metal" },
-      { x = 176, y =  80, mat = "?metal" },
-      { t = 168, mat = "?metal" },
-    },
-
-    {
-      { x =  64, y = 176, mat = "?metal" },
-      { x =  80, y = 176, mat = "?metal" },
-      { x =  80, y = 192, mat = "?metal" },
-      { x =  64, y = 192, mat = "?metal" },
-      { t = 168, mat = "?metal" },
-    },
-
-    {
-      { x = 176, y = 176, mat = "?metal" },
-      { x = 192, y = 176, mat = "?metal" },
-      { x = 192, y = 192, mat = "?metal" },
-      { x = 176, y = 192, mat = "?metal" },
-      { t = 168, mat = "?metal" },
-    },
-  },
-
-  models =
-  {
-    {
-      x1 = 128, x2 = 192, x_face = { mat="METAL1_2" },
-      y1 =  96, y2 = 192, y_face = { mat="METAL1_2" },
-      z1 = 160, z2 = 168, z_face = { mat="PLAT_TOP2" },
-
-      entity =
-      {
-        ent = "lift", height = "160", -- sounds = 2,
-      },
-    },
-  },
-}
-
-
 --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- OLD --- > > >
 
 PREFAB.H_DIAGONAL_A =
@@ -1516,6 +1357,165 @@ PREFAB.ZZ_LAVA_HOLE_W_GRATE =
       { x =   0, y = 256 },
       { t = 0 },
       { b = -32 },
+    },
+  },
+}
+
+
+PREFAB.BORKED__COPY_W_LIFT =
+{
+  placement = "fitted",
+
+  three_d = true,
+
+  x_size = 256,
+  y_size = 256,
+
+  brushes =
+  {
+    ---| low floor |---
+
+    {
+      { m = "floor", space = 1 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "zone", space = 1 },
+      { x = -INF, y = -INF },
+      { x =    0, y = -INF },
+      { x =    0, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "zone", space = 1 },
+      { x =  256, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =  INF },
+      { x =  256, y =  INF },
+    },
+
+    {
+      { m = "walk", space = 1, dz_high = 144 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { x =   0, y = 256 },
+      { t = 0 },
+    },
+
+
+    ---| high floor |---
+
+    -- FIXME: implement a "hole" brush
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =   64 },
+      { x = -INF, y =   64 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y =  192 },
+      { x =  INF, y =  192 },
+      { x =  INF, y =  INF },
+      { x = -INF, y =  INF },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x = -INF, y =   64 },
+      { x =   64, y =   64 },
+      { x =   64, y =  192 },
+      { x = -INF, y =  192 },
+    },
+
+    {
+      { m = "floor", space = 2 },
+      { x =  192, y =   64 },
+      { x =  INF, y =   64 },
+      { x =  INF, y =  192 },
+      { x =  192, y =  192 },
+    },
+
+    {
+      { m = "zone", space = 2 },
+      { x = -INF, y = -INF },
+      { x =  INF, y = -INF },
+      { x =  INF, y =    0 },
+      { x = -INF, y =    0 },
+    },
+
+    {
+      { m = "zone", space = 2 },
+      { x = -INF, y = 256 },
+      { x =  INF, y = 256 },
+      { x =  INF, y = INF },
+      { x = -INF, y = INF },
+    },
+
+    {
+      { m = "walk", space = 2, dz_low = -16 },
+      { x =   0, y =   0 },
+      { x = 256, y =   0 },
+      { x = 256, y = 256 },
+      { x =   0, y = 256 },
+      { t = 160 },
+    },
+
+
+    ---| the lift |---
+
+    {
+      { x =  64, y =  64, mat = "?metal" },
+      { x =  80, y =  64, mat = "?metal" },
+      { x =  80, y =  80, mat = "?metal" },
+      { x =  64, y =  80, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x = 176, y =  64, mat = "?metal" },
+      { x = 192, y =  64, mat = "?metal" },
+      { x = 192, y =  80, mat = "?metal" },
+      { x = 176, y =  80, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x =  64, y = 176, mat = "?metal" },
+      { x =  80, y = 176, mat = "?metal" },
+      { x =  80, y = 192, mat = "?metal" },
+      { x =  64, y = 192, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+
+    {
+      { x = 176, y = 176, mat = "?metal" },
+      { x = 192, y = 176, mat = "?metal" },
+      { x = 192, y = 192, mat = "?metal" },
+      { x = 176, y = 192, mat = "?metal" },
+      { t = 168, mat = "?metal" },
+    },
+  },
+
+  models =
+  {
+    {
+      x1 = 128, x2 = 192, x_face = { mat="METAL1_2" },
+      y1 =  96, y2 = 192, y_face = { mat="METAL1_2" },
+      z1 = 160, z2 = 168, z_face = { mat="PLAT_TOP2" },
+
+      entity =
+      {
+        ent = "lift", height = "160", -- sounds = 2,
+      },
     },
   },
 }
