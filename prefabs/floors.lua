@@ -60,6 +60,14 @@ PREFAB.H_STAIR_6 =
     },
 
     {
+      { m = "floor", space = 1 },
+      { x =   0, y =   0 },
+      { x = 216, y =   0 },
+      { x = 216, y =  24 },
+      { x =   0, y =  24 },
+    },
+
+    {
       { m = "zone", space = 1 },
       { x = -INF, y = -INF },
       { x =  INF, y = -INF },
@@ -136,14 +144,6 @@ PREFAB.H_STAIR_6 =
     },
 
     -- steps
-    {
-      { x =   0, y =   0, mat = "?step", peg=1, y_offset=0 },
-      { x = 216, y =   0, mat = "?step", peg=1, y_offset=0 },
-      { x = 216, y =  24, mat = "?step", peg=1, y_offset=0 },
-      { x =   0, y =  24, mat = "?step", peg=1, y_offset=0 },
-      { t =  0, mat = "?step" },
-    },
-
     {
       { x =   4, y =  24, mat = "?step", peg=1, y_offset=0 },
       { x = 212, y =  24, mat = "?step", peg=1, y_offset=0 },
