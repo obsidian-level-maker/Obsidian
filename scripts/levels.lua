@@ -53,7 +53,7 @@ require 'quests'
 require 'caves'
 
 require 'build'
-require 'layout2'
+require 'floors'
 require 'walls'
 require 'rooms'
 require 'tiler'
