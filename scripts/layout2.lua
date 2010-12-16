@@ -327,21 +327,26 @@ end
 
 
 
---------------------------------------------------------------------
+--[[  CLASS INFORMATION  ---------------------------------------
+
+class FLOOR
+{
+}
+
+----------------------------------]]
 
 
 function Layout_the_floor(R)
 
-  local function extract_t(brush)
-    local t = Trans.brush_get_t(brush)
+  local function handle_entry_walk(brush)
+    local b = Trans.brush_get_b(brush)
 
-    if t then
-      R.entry_floor_h = t
-      R.entry_walk = brush
-      return
+    if not b then
+      error("Missing height in straddler walk brush")
     end
 
-    error("Missing height in straddler walk brush")
+    R.entry_walk = brush
+    R.entry_floor_h = b
   end
 
 
@@ -351,7 +356,7 @@ function Layout_the_floor(R)
         for _,B in ipairs(fab.brushes) do
           if B[1].m == "walk" and B[1].room == 2 then
             -- found it
-            extract_t(B)
+            handle_entry_walk(B)
             return
           end
         end
@@ -522,9 +527,9 @@ function Layout_the_floor(R)
   local function bump_and_build_fab(fab, walk, z)
     assert(not fab.rendered)
 
-    local walk_t = assert(Trans.brush_get_t(walk))
+    local walk_z = assert(Trans.brush_get_b(walk))
 
-    Fab_transform_Z(fab, { add_z = z - walk_t })
+    Fab_transform_Z(fab, { add_z = z - walk_z })
     Fab_render(fab)
   end
 
@@ -583,7 +588,7 @@ function Layout_the_floor(R)
       bump_and_build_fab(fab, F.entry, R.entry_floor_h)
     end
 
-    F.z = assert(Trans.brush_get_t(F.entry))
+    F.z = assert(Trans.brush_get_b(F.entry))
   end
 
 
@@ -631,11 +636,11 @@ function Layout_the_floor(R)
     for _,B in ipairs(F.brushes) do
       table.insert(B, { t=F.z, tex=f_tex })
 
-      if F.z_low then
-      --!!!! assert(F.z_low < F.z)
-if (F.z_low >= F.z) then F.z_low = F.z - 16 end
-        table.insert(B, { b=F.z_low, tex=f_tex })
-      end
+---##   if F.z_low then
+---##   --!!!! assert(F.z_low < F.z)
+---##   if (F.z_low >= F.z) then F.z_low = F.z - 16 end
+---##     table.insert(B, { b=F.z_low, tex=f_tex })
+---##   end
 
       Trans.brush(B)   -- TODO: gui.add_brush() may be sufficient
 
@@ -775,10 +780,10 @@ gui.debugf("render_floor @ %s  z:%d low:%s high:%s  (%d %d)..(%d %d)\n",
     end
 
     assert(ref_W)
-    local ref_walk_t = assert(Trans.brush_get_t(ref_W))
+    local ref_walk_z = assert(Trans.brush_get_b(ref_W))
 
     -- SUCCESS --
-    local info = { fab=fab, add_z=F.z - ref_walk_t }
+    local info = { fab=fab, add_z=F.z - ref_walk_z }
 
     return info
   end
@@ -1100,11 +1105,11 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
           assert(not floor.entry)
           floor.entry = B
 
-          floor.z = assert(Trans.brush_get_t(B))
+          floor.z = assert(Trans.brush_get_b(B))
 
-          -- support for 3D floors
-          if B[1].dz_low  then floor.z_low  = floor.z + B[1].dz_low  end
-          if B[1].dz_high then floor.z_high = floor.z + B[1].dz_high end
+---???    -- support for 3D floors
+---???    if B[1].dz_low  then floor.z_low  = floor.z + B[1].dz_low  end
+---???    if B[1].dz_high then floor.z_high = floor.z + B[1].dz_high end
         end
       end
     end 
@@ -1119,30 +1124,6 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     end
 
     return false
-  end
-
-
-  local function OLD_find_prefab_walk_t(fab)
-    assert(fab.bumped)
-
-    for _,B in ipairs(fab.brushes) do
-      if B[1].m == "walk" and B[1].walk_z then
-        return assert(Trans.brush_get_t(B))
-      end
-    end
-
-    error("WTF")
-  end
-
-
-  local function OLD_find_new_entry_walk(F, info)
-    for _,B in ipairs(info.fab.brushes) do
-      if B[1].m == "walk" and B[1].space == F.space then
-        return B
-      end
-    end
-
-    error("unable to find new floor's entry walk")
   end
 
 
