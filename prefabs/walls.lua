@@ -67,6 +67,8 @@ PREFAB.PICTURE =
       { x = 192, y =  16 },
       { x = 192, y =  80 },
       { x =   0, y =  80 },
+      { b = 0 },
+      { t = 128 },
     },
 
     -- picture itself
@@ -75,6 +77,8 @@ PREFAB.PICTURE =
       { x = 128, y =  4 },
       { x = 128, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?line_kind" },
       { x =  64, y =  8 },
+      { b = 32 },
+      { t = 96 },
     },
 
     -- right side wall
@@ -113,7 +117,7 @@ PREFAB.PICTURE =
       { x = 128, y =  4, mat = "?wall" },
       { x = 128, y = 16, mat = "?wall", blocked=1 },
       { x =  64, y = 16, mat = "?wall" },
-      { t = 0, mat = "?floor" },
+      { t = 32, mat = "?floor" },
     },
 
     -- frame top
@@ -122,7 +126,7 @@ PREFAB.PICTURE =
       { x = 128, y =  4, mat = "?wall" },
       { x = 128, y = 16, mat = "?wall", blocked=1 },
       { x =  64, y = 16, mat = "?wall" },
-      { b = 64, mat = "?floor", light = "?light"  },
+      { b = 96, mat = "?floor", light = "?light"  },
     },
   },
 }

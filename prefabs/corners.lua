@@ -186,6 +186,8 @@ PREFAB.CORNER_JUTTING_TORCH =
       { x = 128, y =  80 },
       { x =  80, y = 128 },
       { x =  16, y =  64 },
+      { b = 0 },
+      { t = 96 },
     },
 
     -- jutty bit
@@ -213,7 +215,7 @@ PREFAB.CORNER_JUTTING_TORCH =
 
   entities =
   {
-    { x = 72, y = 72, z = 0, ent = "?torch", angle = 45 },
+    { x = 72, y = 72, z = 32, ent = "?torch", angle = 45 },
   },
 }
 
