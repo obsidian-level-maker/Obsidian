@@ -5,7 +5,13 @@ V4 TODO
 Current Work
 ------------
 
-!!  window/fence prefabs need "air" brushes  !!
+>>  safe zones : record where prefabs are (EDGE/corner/etc) and
+                 iterate through them to shrink the safe zones.
+
+            _OR_ create them first and update them whenever a
+                 prefab gets added
+
+DONE : window/fence prefabs need "air" brushes
 
 
 CEILING STUFF
@@ -29,6 +35,10 @@ FLOOR STUFF
 !!   "lava" brush kind
 
 !!   "hole" brush kind, allow straddlers to use them too
+
+!!  remove flavored brushes :-(
+    (at least from the CSG code, do "hole" brushes for floor spaces
+     and ceiling spaces)
 
 
 +  implement "nosplit" areas, which are like "walk" areas in that
@@ -68,10 +78,6 @@ OTHER STUFF
 
 !!  u1..v2 for texture coords on brushes
 
-!!  remove flavored brushes :-(
-    (at least from the CSG code, do "hole" brushes for floor spaces
-     and ceiling spaces)
-
 
 
 /////////////////////////////////////
@@ -88,30 +94,24 @@ DOOM2 and QUAKE only
 
 Layout:
 
++  wall prefabs:
+       - cage
+       - monster closet
+       - secret closet
+       - torch
+       - tech lights
+       - picture
+       - teleporter
+       # item niche
+       - lift up doorway
+       - lift down doorway
+ 
 +  corner prefabs
        - normal
        - curved
        - big diagonal
        - torch in niche
        - picture
-
-+  wall prefabs:
-       - cage
-       - monster closet
-       - secret closet
-       - torch
-       - picture
-       - teleporter
-       - item niche
-       - lift up doorway
-       - lift down doorway
- 
-+  middle prefabs:
-       - cage
-       - pillar
-       - crates
-       - fountain (outdoor)
-       - a couple techy ones
 
 +  floor prefabs:
        - stairs
@@ -121,8 +121,16 @@ Layout:
        - bridge
 
 +  ceiling prefabs:
-       - a couple sky-lites
+       - skylight
+       - tech light
        ...
+
++  middle prefabs:
+       - cage
+       - pillar
+       - crates
+       - fountain (outdoor)
+       - a couple techy ones
 
 +  light brushes for DOOM, clipped to room:
    (a) have group of rectangles to clip to
