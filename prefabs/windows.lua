@@ -76,7 +76,7 @@ PREFAB.WINDOW =
 
     -- air brushes
     {
-      { m = "air", room = 1 },
+      { m = "air", room = 2 },
       { x =  40, y = -48 },
       { x = 152, y = -48 },
       { x = 152, y = 0 },
@@ -86,7 +86,7 @@ PREFAB.WINDOW =
     },
 
     {
-      { m = "air", room = 2 },
+      { m = "air", room = 1 },
       { x =  40, y = 32 },
       { x = 152, y = 32 },
       { x = 152, y = 80 },
@@ -169,7 +169,7 @@ PREFAB.WINDOW_W_BARS =
 
     -- air brushes
     {
-      { m = "air", room = 1 },
+      { m = "air", room = 2 },
       { x =  40, y = -48 },
       { x = 152, y = -48 },
       { x = 152, y = 0 },
@@ -179,7 +179,7 @@ PREFAB.WINDOW_W_BARS =
     },
 
     {
-      { m = "air", room = 2 },
+      { m = "air", room = 1 },
       { x =  40, y = 32 },
       { x = 152, y = 32 },
       { x = 152, y = 80 },
@@ -258,7 +258,7 @@ PREFAB.WINDOW_W_CROSS =
 
     -- air brushes
     {
-      { m = "air", room = 1 },
+      { m = "air", room = 2 },
       { x =  40, y = -48 },
       { x = 152, y = -48 },
       { x = 152, y = 0 },
@@ -268,7 +268,7 @@ PREFAB.WINDOW_W_CROSS =
     },
 
     {
-      { m = "air", room = 2 },
+      { m = "air", room = 1 },
       { x =  40, y = 32 },
       { x = 152, y = 32 },
       { x = 152, y = 80 },
@@ -358,7 +358,7 @@ PREFAB.WINDOW_GOTHIC =
 
     -- air brushes
     {
-      { m = "air", room = 1 },
+      { m = "air", room = 2 },
       { x =  40, y = -48 },
       { x = 152, y = -48 },
       { x = 152, y = 0 },
@@ -368,7 +368,7 @@ PREFAB.WINDOW_GOTHIC =
     },
 
     {
-      { m = "air", room = 2 },
+      { m = "air", room = 1 },
       { x =  40, y = 32 },
       { x = 152, y = 32 },
       { x = 152, y = 80 },
@@ -469,7 +469,7 @@ PREFAB.QUAKE_WINDOW =
 
     -- air brushes
     {
-      { m = "air", room = 1 },
+      { m = "air", room = 2 },
       { x =  40, y = -48 },
       { x = 152, y = -48 },
       { x = 152, y = 0 },
@@ -479,7 +479,7 @@ PREFAB.QUAKE_WINDOW =
     },
 
     {
-      { m = "air", room = 2 },
+      { m = "air", room = 1 },
       { x =  40, y = 32 },
       { x = 152, y = 32 },
       { x = 152, y = 80 },
@@ -506,6 +506,27 @@ PREFAB.FENCE =
       { x = 192, y = 32, mat = "?fence" },
       { x =   0, y = 32, mat = "?fence" },
       { t = 32, mat = "?fence" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 }
@@ -544,6 +565,27 @@ PREFAB.FENCE_W_GAP =
       { x = 112, y = 32, mat = "?fence" },
       { t = 32, mat = "?fence" },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
+    },
   },
 }
 
@@ -581,6 +623,27 @@ PREFAB.FENCE_W_BOLLARD =
       { x = 128, y = 24, mat = "?fence" },
       { x =  72, y = 24, mat = "?fence" },
       { t = 32, mat = "?fence" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 }
@@ -628,6 +691,27 @@ PREFAB.FENCE_W_INSET =
       { x = 128, y = 32, mat = "?fence" },
       { x = 112, y = 32, mat = "?fence" },
       { t = 72, mat = "?fence" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 }
@@ -679,6 +763,27 @@ PREFAB.FENCE_W_RAIL =
       { b = 16 },
       { t = 144 },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 192 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 192 },
+    },
   },
 }
 
@@ -726,6 +831,27 @@ PREFAB.FENCE_W_RAIL_INSET =
       { x = 112, y = 32, mat = "?fence" },
       { t = 96, mat = "?fence" },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
+    },
   },
 }
 
@@ -762,6 +888,27 @@ PREFAB.FENCE_W_TORCHES =
       { x = 128, y = 32, mat = "?fence" },
       { x = 112, y = 32, mat = "?fence" },
       { t = 72, mat = "?fence" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 
@@ -809,6 +956,27 @@ PREFAB.FENCE_W_HIGH_TORCH =
       { x = 128, y = 40, mat = "?fence" },
       { x =  96, y = 40, mat = "?fence" },
       { t = 32, mat = "?fence" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y =  64 },
+      { x = 152, y =  64 },
+      { x = 152, y = 112 },
+      { x =  40, y = 112 },
+      { b = 0 },
+      { t = 128 },
     },
   },
 
@@ -869,6 +1037,27 @@ PREFAB.FENCE_W_WEIRD_BLOB =
       { x = 104, y = 40, mat = "?fence" },
       { t = 32, mat = "?fence" },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 192 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y =  64 },
+      { x = 152, y =  64 },
+      { x = 152, y = 112 },
+      { x =  40, y = 112 },
+      { b = 0 },
+      { t = 192 },
+    },
   },
 }
 
@@ -922,6 +1111,27 @@ PREFAB.FENCE_BULGY =
       { x = 144, y = 64, mat = "?fence" },
       { t = 48, mat = "?fence" },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y =  64 },
+      { x = 152, y =  64 },
+      { x = 152, y = 112 },
+      { x =  40, y = 112 },
+      { b = 0 },
+      { t = 128 },
+    },
   },
 }
 
@@ -972,6 +1182,27 @@ PREFAB.FENCE_STICKS_DOOM =
       { b = 56 },
       { t = 72 },
     },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
+    },
   },
 }
 
@@ -1020,6 +1251,27 @@ PREFAB.FENCE_STICKS_QUAKE =
       { x =  6, y = 20, mat = "?metal" },
       { b = 64, mat = "?metal" },
       { t = 72, mat = "?metal" },
+    },
+
+    -- air brushes
+    {
+      { m = "air", room = 2 },
+      { x =  40, y = -48 },
+      { x = 152, y = -48 },
+      { x = 152, y = 0 },
+      { x =  40, y = 0 },
+      { b = 0 },
+      { t = 128 },
+    },
+
+    {
+      { m = "air", room = 1 },
+      { x =  40, y = 32 },
+      { x = 152, y = 32 },
+      { x = 152, y = 80 },
+      { x =  40, y = 80 },
+      { b = 0 },
+      { t = 128 },
     },
 
     -- player clip
