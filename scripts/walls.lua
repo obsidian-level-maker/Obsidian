@@ -447,7 +447,7 @@ end
     local T = Trans.corner_transform(C.K.x1, C.K.y1, C.K.x2, C.K.y2, nil,
                                      C.side, C.horiz, C.vert)
 
-    local fab = Fab_create("CORNER")
+    local fab = Fab_create("CORNER_DIAGONAL")
     
     Fab_apply_skins(fab, { R.skin or {}, skin })
 
@@ -521,7 +521,7 @@ function Layout_flesh_out_walls(R)
 
     local deep
 
-    if false then
+    if true then
       deep = 16
     else
       deep = math.max(deep1, deep2)

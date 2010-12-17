@@ -48,10 +48,10 @@ PREFAB.CORNER_DIAGONAL =
   {
     {
       { x =  0, y =  0, mat = "?wall" },
-      { x = 32, y =  0, mat = "?wall" },
-      { x = 32, y = 16, mat = "?wall" },
-      { x = 16, y = 32, mat = "?wall" },
-      { x =  0, y = 32, mat = "?wall" },
+      { x = 64, y =  0, mat = "?wall" },
+      { x = 64, y = 16, mat = "?wall" },
+      { x = 16, y = 64, mat = "?wall" },
+      { x =  0, y = 64, mat = "?wall" },
     },
   },
 }
