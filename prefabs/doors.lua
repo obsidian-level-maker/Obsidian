@@ -312,59 +312,61 @@ PREFAB.DOOR =
   {
     -- frame
     {
-      { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?wall" },
-      { x =   0, y = 48, mat = "?outer" },
-      { x =   0, y =  0, mat = "?outer" },
+      { x =   4, y =  0, mat = "?outer" },
+      { x = 188, y =  0, mat = "?outer" },
+      { x = 188, y = 48, mat = "?wall" },
+      { x =   4, y = 48, mat = "?outer" },
       { b = 136, mat = "?frame" },
     },
 
     -- step
     {
-      { x = 192, y =  0, mat = "?step" },
-      { x = 192, y = 48, mat = "?step" },
-      { x =   0, y = 48, mat = "?step" },
-      { x =   0, y =  0, mat = "?step" },
+      { x =   4, y =  0, mat = "?step" },
+      { x = 188, y =  0, mat = "?step" },
+      { x = 188, y = 48, mat = "?step" },
+      { x =   4, y = 48, mat = "?step" },
       { t = 8, mat = "?step", light = 0.7 },
     },
 
     -- door itself
     {
+      { x =  32, y = 16, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 },
       { x = 160, y = 16, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 },
       { x = 160, y = 32, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 },
       { x =  32, y = 32, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 },
-      { x =  32, y = 16, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 },
       { b = 24, delta_z=-16, mat = "?door", light = 0.7, tag = "?tag" },
     },
 
     -- left side
     {
-      { x = 32, y = 16, mat = "?track", peg=1, x_offset=0, y_offset=0 },
-      { x = 32, y = 32, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
-      { x = 14, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
-      { x = 14, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
+      { x =  0, y =  0, mat = "?outer" },
+      { x = 14, y =  0, mat = "?outer" },
+      { x = 14, y = 48, mat = "?wall" },
+      { x =  0, y = 48, mat = "?wall" },
+      { x =  0, y = 24, mat = "?outer" },
     },
 
     {
-      { x = 14, y =  0, mat = "?outer" },
-      { x = 14, y = 48, mat = "?wall" },
-      { x =  0, y = 48, mat = "?outer" },
-      { x =  0, y =  0, mat = "?outer" },
+      { x = 14, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
+      { x = 32, y = 16, mat = "?track", peg=1, x_offset=0, y_offset=0 },
+      { x = 32, y = 32, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
+      { x = 14, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
     },
 
     -- right side
+    {
+      { x = 178, y =  0, mat = "?outer" },
+      { x = 192, y =  0, mat = "?outer" },
+      { x = 192, y = 24, mat = "?wall" },
+      { x = 192, y = 48, mat = "?wall" },
+      { x = 178, y = 48, mat = "?outer" },
+    },
+
     {
       { x = 160, y = 16, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
       { x = 178, y =  0, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
       { x = 178, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 },
       { x = 160, y = 32, mat = "?track", peg=1, x_offset=0, y_offset=0 },
-    },
-
-    {
-      { x = 178, y =  0, mat = "?outer" },
-      { x = 192, y =  0, mat = "?outer" },
-      { x = 192, y = 48, mat = "?wall" },
-      { x = 178, y = 48, mat = "?outer" },
     },
 
     -- walk areas
