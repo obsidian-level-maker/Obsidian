@@ -57,6 +57,39 @@ PREFAB.CORNER_DIAGONAL =
 }
 
 
+PREFAB.CORNER_DIAG_W_TORCH =
+{
+  placement = "fitted",
+
+  defaults =
+  {
+    light = 128,
+    radius = 320,
+    style = 0,
+  },
+
+  brushes =
+  {
+    {
+      { x =  0, y =  0, mat = "?wall" },
+      { x = 64, y =  0, mat = "?wall" },
+      { x = 64, y = 16, mat = "?wall" },
+      { x = 16, y = 64, mat = "?wall" },
+      { x =  0, y = 64, mat = "?wall" },
+    },
+  },
+
+  entities =
+  {
+    { x = 40.5, y = 40.5, z = 40, ent = "torch", light = 0, },
+
+    { x = 48, y = 48, z = 48, ent = "light",
+      light = "?light", _radius = "?radius", style = "?style",
+    },
+  },
+}
+
+
 PREFAB.CORNER_CURVED =
 {
   placement = "fitted",
