@@ -1382,8 +1382,15 @@ end
 
 function Layout_all_ceilings()
 
+  local function is_middle(K)
+    if K:same_room(2) and K:same_room(8) then return true end
+    if K:same_room(4) and K:same_room(6) then return true end
+    return false
+  end
+
   local function quake_temp_lights(R)
     for _,K in ipairs(R.sections) do
+     if is_middle(K) then
       local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
       local light = rand.pick { 50, 100, 150, 200 }
       local radius = ((K.x2 - K.x1) + (K.y2 - K.y1)) / 3
@@ -1391,6 +1398,7 @@ function Layout_all_ceilings()
       local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
       Trans.entity("light", mx, my, z, { light=light, _radius=radius })
+     end
     end
   end
 

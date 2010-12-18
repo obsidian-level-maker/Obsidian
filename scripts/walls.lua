@@ -442,13 +442,19 @@ end
 
     Layout_inner_outer_tex(skin, C.K, C.K:neighbor(C.side))
 
+    local fab_name = "CORNER_DIAGONAL"
+
+    if GAME.format == "quake" and not C.concave and not R.outdoor then
+      fab_name = "CORNER_DIAG_W_TORCH"
+    end
+
     -- build something
 
     local T = Trans.corner_transform(C.K.x1, C.K.y1, C.K.x2, C.K.y2, nil,
                                      C.side, C.horiz, C.vert)
 
-    local fab = Fab_create("CORNER_DIAGONAL")
-    
+    local fab = Fab_create(fab_name)
+
     Fab_apply_skins(fab, { R.skin or {}, skin })
 
     Fab_transform_XY(fab, T)
