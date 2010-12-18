@@ -27,7 +27,7 @@
 #include "main.h"
 
 
-#define GRID_SIZE  16
+#define GRID_SIZE  20
 
 
 #define NEAR_WALL  0x08
@@ -199,7 +199,7 @@ void SPOT_FloodOutside()
 
 static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
 {
-  bool near_wall = false;
+  int near_walls = 0;
 
   for (int dx = 0 ; dx < 2 ; dx++)
   for (int dy = 0 ; dy < 2 ; dy++)
@@ -210,11 +210,14 @@ static void test_item_spot(int x, int y, std::vector<grid_point_c> & spots)
       return; // no good, something in the way
 
     if (content & NEAR_WALL)
-      near_wall = true;
+      near_walls += 1;
   }
 
-  if (! near_wall)
+  if (near_walls == 0)
     return; // no good, not near a wall
+
+  if (near_walls == 4)
+    return; // no good, too close to walls
 
   // this would be (x + 1) if there was no padding
   int real_x = grid_min_x + (x + 0) * GRID_SIZE;
