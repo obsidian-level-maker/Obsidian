@@ -1208,7 +1208,7 @@ gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
     local h = ROOM.floor_max_h + 192 -- rand.pick { 192, 256, 320, 384 }
 
     if R.outdoor then
-      R.sky_h = h
+      R.sky_h = h + 128
     else
       R.ceil_h = h
     end
