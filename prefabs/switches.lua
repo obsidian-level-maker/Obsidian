@@ -168,9 +168,9 @@ PREFAB.QUAKE_WALL_SWITCH =
   {
     -- button
     {
-      x1 = 32, x2 = 96, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 = 32, y_face = { mat="BUTTON", u1=0, u2=48, v1=0, v2=48 },
-      z1 = 24, z2 = 88, z_face = { mat="METAL1_2" },
+      x1 = 64, x2 = 128, x_face = { mat="METAL1_2" },
+      y1 = 16, y2 = 32,  y_face = { mat="BUTTON", u1=0, u2=48, v1=0, v2=48 },
+      z1 = 24, z2 = 88,  z_face = { mat="METAL1_2" },
 
       entity =
       {
