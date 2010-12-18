@@ -77,6 +77,16 @@ PREFAB.CORNER_DIAG_W_TORCH =
       { x = 16, y = 64, mat = "?wall" },
       { x =  0, y = 64, mat = "?wall" },
     },
+
+    {
+      { m = "air" },
+      { x = 24, y = 56 },
+      { x = 56, y = 24 },
+      { x = 88, y = 56 },
+      { x = 56, y = 88 },
+      { b = 0 },
+      { t = 96 },
+    },
   },
 
   entities =
