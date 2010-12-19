@@ -498,7 +498,7 @@ PREFAB.QUAKE_DOOR =
 }
 
 
-PREFAB.QUAKE_DOOR_W_KEY_PIC =
+PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
 {
   placement = "fitted",
   team_models = true,
@@ -512,7 +512,7 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
       { x = 64, y =  0 },
       { x = 64, y = 48 },
       { x =  0, y = 48 },
-      { b = 0 },
+      { b = 32 },
     },
 
     -- door
@@ -532,7 +532,7 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =
       { x = 320, y =  0 },
       { x = 320, y = 48 },
       { x = 256, y = 48 },
-      { b = 0 },
+      { b = 32 },
     },
   },
 }

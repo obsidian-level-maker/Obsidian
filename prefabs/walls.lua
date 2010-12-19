@@ -48,6 +48,11 @@ PREFAB.PICTURE =
     height = 64,
 
     side = "?wall",
+
+    line_kind = 0,
+    x_offset = 0,
+    y_offset = 0,
+    peg = 0,
   },
 
   brushes =
