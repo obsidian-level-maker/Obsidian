@@ -4288,6 +4288,7 @@ function DOOM.all_done()
 
   gui.wad_merge_sections("doom_falls.wad");
   gui.wad_merge_sections("vine_dude.wad");
+  gui.wad_merge_sections("santa.wad");
 
   if OB_CONFIG.length == "full" then
     gui.wad_merge_sections("freedoom_face.wad");
