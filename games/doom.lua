@@ -2482,7 +2482,7 @@ DOOM.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 },
 
-  floors = { H_Stair6 = 50, Triple_A = 50 },
+  floors = { H_Stair6 = 50, Triple_A = 200 },
 
   --------- OLD CRUD --------> > >
 

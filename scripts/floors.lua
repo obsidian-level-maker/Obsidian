@@ -943,11 +943,13 @@ gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
 
       for _,rotate in ipairs(ROTS) do
         for _,zone in ipairs(F.zones) do
-gui.printf("|  TEST_FLOOR_FAB ::::::: %s\n", skinname)
           local info = test_floor_fab(F, skin, zone, rotate)
 
           -- found a usable prefab?
-          if info then return info end
+          if info then
+gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
+            return info
+          end
         end
       end
     end

@@ -920,6 +920,13 @@ QUAKE1.SKINS =
     step = "MET5_1",
   },
 
+  Triple_A =
+  {
+    _prefab = "TRIPLE_A",
+
+    step = "METAL5_5",
+  },
+
 
 } -- end of QUAKE1.SKINS
 
@@ -1019,7 +1026,7 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 },
 
-  floors = { H_Stair6 = 50 },
+  floors = { H_Stair6 = 50, Triple_A = 200 },
 
   --------- OLD CRUD --------> > >
 
