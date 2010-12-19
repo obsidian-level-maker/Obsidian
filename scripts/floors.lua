@@ -1268,7 +1268,7 @@ function Layout_spots_in_room(R)
     local x2 = dec.x + dec.info.r + 2
     local y2 = dec.y + dec.info.r + 2
 
-    gui.spots_fill_poly(Trans.bare_quad(x1,y1, x2,y2), 1)
+    gui.spots_fill_poly(Trans.bare_quad(x1,y1, x2,y2), 2)
   end
 
 
@@ -1281,7 +1281,7 @@ function Layout_spots_in_room(R)
     local bbox = assert(floor.bbox)
 
     -- begin with a completely solid area
-    gui.spots_begin(bbox.x1, bbox.y1, bbox.x2, bbox.y2, 1)
+    gui.spots_begin(bbox.x1, bbox.y1, bbox.x2, bbox.y2, 2)
 
     -- carve out the floor brushes (make them empty)
     for _,B in ipairs(floor.brushes) do
@@ -1373,22 +1373,55 @@ end
 
 
 function Layout_flesh_out_floors(R)
-  -- use the safe zones to place scenery fabs in unused areas
+  -- use the safe zones to place scenery in unused areas
 
   -- FIXME
 
---[[ TEST
+  if not THEME.outdoor_decor then return end
+  if not R.outdoor then return end
+
+  -- temp crud
+  if not R.decor_item then
+    R.decor_item = rand.key_by_probs(THEME.outdoor_decor)
+  end
+
+  local info = assert(GAME.ENTITIES[R.decor_item])
+
+  local function add_decor(F, zone)
+    local count = math.max(zone.x2 - zone.x1, zone.y1 - zone.y2)
+    count = 1 + int(count / rand.pick { 64, 128, 192 })
+
+    for i = 1,count do
+      local x = rand.range(zone.x1+16, zone.x2-16)
+      local y = rand.range(zone.y1+16, zone.y2-16)
+
+      local z = F.z
+
+      local DECOR =
+      {
+        x = x, y = y, z = z, info = info
+      }
+
+      table.insert(R.decor, DECOR)
+
+      Trans.entity(R.decor_item, x, y, z) 
+
+    end
+
+----##  QUAKE LAMP TEST
+----    local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
+----    Fabricate("QUAKE_TECHLAMP", T, {})
+  end
+
   for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
-        if Z.x2 >= Z.x1+16 and Z.y2 >= Z.y1+16 then
---        Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
+        if Z.x2 >= Z.x1+32 and Z.y2 >= Z.y1+32 then
+---       Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
           
-          local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
-          Fabricate("QUAKE_TECHLAMP", T, {})
+          add_decor(F, Z)
         end
       end
   end
---]]
 end
 
 
@@ -1401,6 +1434,8 @@ function Layout_all_floors()
   end
 end
 
+
+----------------------------------------------------------------
 
 
 function Layout_all_ceilings()
