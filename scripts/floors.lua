@@ -1247,12 +1247,28 @@ end
 function Layout_spots_in_room(R)
 
   local function remove_prefab(fab)
+    -- OPTIMISE: do a bbox check
+
     for _,B in ipairs(fab.brushes) do
       if B[1].m == "solid" then
         -- TODO: height check
         gui.spots_fill_poly(B, 1)
       end
     end
+  end
+
+
+  local function remove_decor(dec)
+    if dec.info.pass then return end
+
+    -- TODO: height check???
+
+    local x1 = dec.x - dec.info.r - 2
+    local y1 = dec.y - dec.info.r - 2
+    local x2 = dec.x + dec.info.r + 2
+    local y2 = dec.y + dec.info.r + 2
+
+    gui.spots_fill_poly(Trans.bare_quad(x1,y1, x2,y2), 1)
   end
 
 
@@ -1275,6 +1291,11 @@ function Layout_spots_in_room(R)
     -- solidify brushes from prefabs
     for _,fab in ipairs(R.prefabs) do
       remove_prefab(fab)
+    end
+
+    -- remove solid decor entities
+    for _,dec in ipairs(R.decor) do
+      remove_decor(dec)
     end
 
     -- mark edges with neighboring floors

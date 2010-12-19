@@ -1027,6 +1027,7 @@ function Rooms_setup_bits(R)
 
   R.prefabs = {}
   R.blocks  = {}
+  R.decor   = {}
 end
 
 
