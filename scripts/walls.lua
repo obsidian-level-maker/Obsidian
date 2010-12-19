@@ -440,7 +440,17 @@ end
 
     local skin = {}
 
-    Layout_inner_outer_tex(skin, C.K, C.K:neighbor(C.side))
+    local neighbor = C.K:neighbor(C.side)
+
+    if R.outdoor then
+      local A = C.K:neighbor(geom.RIGHT_45[C.side])
+      local B = C.K:neighbor(geom. LEFT_45[C.side])
+
+      if A and A.room and not A.room.outdoor then neighbor = A end
+      if B and B.room and not B.room.outdoor then neighbor = B end
+    end
+
+    Layout_inner_outer_tex(skin, C.K, neighbor)
 
     local fab_name = "CORNER_DIAGONAL"
 
