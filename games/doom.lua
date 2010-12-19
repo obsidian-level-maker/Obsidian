@@ -531,6 +531,8 @@ DOOM.MATERIALS =
   O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 },
   O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 },
 
+O_MISC   = { t="CEMENT5",  f="CEIL5_1",  sane=1 },
+
 
 MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 },
 MIDBARS3 = { t="MIDBARS3", h=64,  line_flags=1 },
@@ -2221,6 +2223,57 @@ DOOM.SKINS =
     step = "STEP1",
   },
 
+
+  ---| PICTURES |---
+
+  Pic_Chrissy1 =
+  {
+    _prefab = "PICTURE",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    pic = "O_MISC",
+    width  = 128,
+    height = 128,
+  },
+
+  Pic_Chrissy2 =
+  {
+    _prefab = "PICTURE",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    pic = "O_NEON",
+    width  = 128,
+    height = 128,
+  },
+
+  Pic_Logo1 =
+  {
+    _prefab = "PICTURE",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    pic = "O_PILL",
+    width  = 128,
+    height = 32,
+  },
+
+  Pic_Logo2 =
+  {
+    _prefab = "PICTURE",
+    _where  = "edge",
+    _long   = 192,
+    _deep   = 32,
+
+    pic = "O_CARVE",
+    width  = 64,
+    height = 64,
+  },
+
 } -- end of DOOM.SKINS
 
 
@@ -2483,6 +2536,11 @@ DOOM.SUB_THEME_DEFAULTS =
   fences = { Fence1 = 50 },
 
   floors = { H_Stair6 = 50, Triple_A = 200 },
+
+  outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 },
+
+  piccies = { Pic_Chrissy1=50, Pic_Chrissy2=10,
+              Pic_Logo1=20, Pic_Logo2=10 },
 
   --------- OLD CRUD --------> > >
 
