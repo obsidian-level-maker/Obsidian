@@ -498,6 +498,46 @@ PREFAB.QUAKE_DOOR =
 }
 
 
+PREFAB.QUAKE_DOOR_W_KEY_PIC =
+{
+  placement = "fitted",
+  team_models = true,
+
+  brushes =
+  {
+    -- left
+    {
+      { m = "prefab", skin = "?key_sub" },
+      { x =  0, y =  0 },
+      { x = 64, y =  0 },
+      { x = 64, y = 48 },
+      { x =  0, y = 48 },
+      { b = 0 },
+    },
+
+    -- door
+    {
+      { m = "prefab", skin = "?door_sub" },
+      { x =  64, y =  0 },
+      { x = 256, y =  0 },
+      { x = 256, y = 48 },
+      { x =  64, y = 48 },
+      { b = 0 },
+    },
+
+    -- right
+    {
+      { m = "prefab", skin = "?key_sub" },
+      { x = 256, y =  0 },
+      { x = 320, y =  0 },
+      { x = 320, y = 48 },
+      { x = 256, y = 48 },
+      { b = 0 },
+    },
+  },
+}
+
+
 PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted",
