@@ -1306,7 +1306,7 @@ function Fab_apply_skins(fab, list)
     end
   end
 
-  
+ 
   ---| Fab_apply_skins |---
 
   assert(not fab.skinned)
@@ -1337,12 +1337,16 @@ function Fab_apply_skins(fab, list)
   -- lookup entity names
   do_entities(fab)
 
+  local parent_skin = Trans.SKIN
   Trans.SKIN = nil
 
   -- find bounding box (in prefab space)
   determine_bbox(fab)
 
   brush_stuff()
+
+  -- handle "prefab" brushes.  NOTE: recursive
+  Fab_composition(fab, parent_skin)
 end
 
 
@@ -1715,6 +1719,67 @@ function Fab_transform_Z(fab, T)
   end
 
   Trans.clear()
+end
+
+
+
+function Fab_composition(fab, parent_skin)
+  -- handles "prefab" brushes, replacing them with the brushes of
+  -- the sub-prefab, and adding its entities and models.
+  --
+  -- This function must be called before the parent fab has been
+  -- transformed, as we merely transform the child fab to fit into
+  -- the untransformed brush.
+
+
+  local function insert_sub(brush)
+    local skin_name = assert(brush.skin)
+    local skin      = assert(GAME.SKINS[skin_name])
+    local fab_name  = assert(skin._prefab)
+
+    local sub = Fab_create(fab_name)
+
+    Fab_apply_skins(sub, { parent_skin, skin })
+
+    -- FIXME: support arbitrary rectangles (rotation etc)
+
+    local bbox = Trans.brush_bbox(brush)
+
+    local low_z  = Trans.brush_get_b(brush)
+    local high_z = Trans.brush_get_t(brush)  -- not used (Fixme?)
+
+    local T = Trans.box_transform(bbox.x1, bbox.y1, bbox.x2, bbox.y2, low_z, 2)
+     
+    Fab_transform_XY(sub, T)
+    Fab_transform_Z (sub, T)
+
+    for _,B in ipairs(sub.brushes) do
+      table.insert(fab.brushes, B)
+    end
+
+    for _,E in ipairs(sub.entities) do
+      table.insert(fab.entities, E)
+    end
+
+    for _,M in ipairs(sub.models) do
+      table.insert(fab.models, M)
+    end
+
+    sub = nil
+  end
+
+
+  ---| Fab_composition |---
+
+  for index = #fab.brushes,1,-1 do
+    local B = fab.brushes[index]
+
+    if B[1].m == "prefab" then
+      table.remove(fab.brushes, index)
+
+      insert_sub(B)
+    end
+  end
 end
 
 
