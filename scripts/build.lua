@@ -1340,13 +1340,13 @@ function Fab_apply_skins(fab, list)
   local parent_skin = Trans.SKIN
   Trans.SKIN = nil
 
+  -- handle "prefab" brushes.  NOTE: recursive
+  Fab_composition(fab, parent_skin)
+
   -- find bounding box (in prefab space)
   determine_bbox(fab)
 
   brush_stuff()
-
-  -- handle "prefab" brushes.  NOTE: recursive
-  Fab_composition(fab, parent_skin)
 end
 
 
@@ -1731,9 +1731,8 @@ function Fab_composition(fab, parent_skin)
   -- transformed, as we merely transform the child fab to fit into
   -- the untransformed brush.
 
-
   local function insert_sub(brush)
-    local skin_name = assert(brush.skin)
+    local skin_name = assert(brush[1].skin)
     local skin      = assert(GAME.SKINS[skin_name])
     local fab_name  = assert(skin._prefab)
 
@@ -1743,12 +1742,12 @@ function Fab_composition(fab, parent_skin)
 
     -- FIXME: support arbitrary rectangles (rotation etc)
 
-    local bbox = Trans.brush_bbox(brush)
+    local bx1, by1, bx2, by2 = Trans.brush_bbox(brush)
 
     local low_z  = Trans.brush_get_b(brush)
     local high_z = Trans.brush_get_t(brush)  -- not used (Fixme?)
 
-    local T = Trans.box_transform(bbox.x1, bbox.y1, bbox.x2, bbox.y2, low_z, 2)
+    local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, 2)
      
     Fab_transform_XY(sub, T)
     Fab_transform_Z (sub, T)
