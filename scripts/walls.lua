@@ -490,6 +490,59 @@ function geom.horiz_sel(A, B, C)
 end
 
 
+function Layout_picture_hack(R)
+  -- FIXME: TEMP HACK : add some picture prefabs
+
+  local function do_edge(E)
+    if E.spans[1] then return end
+    if not THEME.piccies then return end
+    if R.outdoor then return end
+    if not rand.odds(30) then return end
+
+    if not R.pic_name then
+      -- FIXME: use possible_prefabs ??
+      R.pic_name = rand.key_by_probs(THEME.piccies)
+    end
+
+    local skin = assert(GAME.SKINS[R.pic_name])
+
+    -- FIXME: similar code to create_span() -- check if can merge them
+
+    local long = skin._long
+    local deep = skin._deep
+
+    local long1 = int(E.real_len - long) / 2
+    local long2 = int(E.real_len + long) / 2
+
+    Layout_add_span(E, long1, long2, deep)
+
+    local skins = { }
+
+    if R.skin then table.insert(skins, R.skin) end
+    table.insert(skins, skin)
+
+    local fab = Fab_create(skin._prefab)
+
+    Fab_apply_skins(fab, skins)
+
+
+    fab.room = R
+    table.insert(R.prefabs, fab)
+
+    local T = Trans.edge_transform(E.K.x1, E.K.y1, E.K.x2, E.K.y2, 0, E.side,
+                                   long1, long2, 0, deep)
+
+    Fab_transform_XY(fab, T)
+  end
+
+  for _,K in ipairs(R.sections) do
+    for _,E in pairs(K.edges) do
+      do_edge(E)
+    end
+  end
+end
+
+
 function Layout_flesh_out_walls(R)
   --
   -- the goal of this function is to fill in the gaps along walls
@@ -599,6 +652,7 @@ function Layout_all_walls()
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
+   Layout_picture_hack(R)
    Layout_make_corners(R)
    Layout_flesh_out_walls(R)
   end
