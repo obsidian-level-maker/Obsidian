@@ -1032,7 +1032,27 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
   end
 
 
-  local function transfer_spaces(walks, info, space)
+  local function air_touches_space(new_brushes, B)
+    local x1,y1, x2,y2 = Trans.brush_bbox(B)
+
+    -- add some leeway (to handle case of merely touching)
+    x1 = x1 - 4 ; x2 = x2 + 4
+    y1 = y1 - 4 ; y2 = y2 + 4
+
+    for _,N in ipairs(new_brushes) do
+      local x3,y3, x4,y4 = Trans.brush_bbox(N)
+
+      -- TODO: proper intersection test
+      if geom.boxes_overlap(x1,y1,x2,y2, x3,y3,x4,y4) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  local function transfer_spaces(walks, info, space, new_brushes)
     local list = {}
 
     for _,B in ipairs(walks) do
@@ -1048,7 +1068,9 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
       else
         assert(B[1].m == "air")
 
-        -- FIXME: if air_touches_space(info.fab, space, B) then ... end
+        if air_touches_space(new_brushes, B) then
+          table.insert(list, B)
+        end
       end
     end
 
@@ -1092,7 +1114,7 @@ gui.printf("|  USING_FLOOR_FAB ::::::: %s\n", skinname)
 
     floor.walks    = transfer_spaces(F.walks,    info, space)
     floor.nosplits = transfer_spaces(F.nosplits, info, space)
-    floor.airs     = transfer_spaces(F.airs,     info, space)
+    floor.airs     = transfer_spaces(F.airs,     info, space, floor.brushes)
 
     floor.zones    = transfer_zones(F.zones, info, space)
 
