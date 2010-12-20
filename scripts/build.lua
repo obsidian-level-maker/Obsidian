@@ -1945,6 +1945,8 @@ stderrf("=========  FABRICATE %s\n", name)
   Fab_transform_Z (fab, T)
 
   Fab_render(fab)
+
+  return fab
 end
 
 

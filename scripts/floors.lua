@@ -1404,30 +1404,30 @@ function Layout_flesh_out_floors(R)
   end
 
 
-  local function fill_zone_with_fabs(F, zone, fab_name)
+  local function fill_zone_with_fabs(F, zone, skin)
     local fab_name = assert(skin._prefab)
     local info = assert(PREFAB[fab_name])
 
-    local fab_r = skin._long
+    local fab_r = assert(skin._radius)
 
     local w = zone.x2 - zone.x1 - 64
     local h = zone.y2 - zone.y1 - 64
 
-    w = int(w / fab_r)
-    h = int(h / fab_r)
+    w = int(w / fab_r / 2)
+    h = int(h / fab_r / 2)
 
     if w <= 0 or h <= 0 then return end
 
     -- the pattern is a list of direction numbers
     local pattern
 
-    if w >= 5 and h >= 5 and rand.odds(5) then
+    if w >= 5 and h >= 5 and rand.odds(10) then
       pattern = {1,2,3, 4,5,6, 7,8,9}
 
-    elseif w >= 4 and h >= 2 and rand.odds(15) then
+    elseif w >= 4 and h >= 2 and rand.odds(20) then
       pattern = {1,2,3, 7,8,9}
 
-    elseif h >= 4 and w >= 2 and rand.odds(15) then
+    elseif h >= 4 and w >= 2 and rand.odds(20) then
       pattern = {1,4,7, 3,6,9}
 
     elseif w >= 2 and h >= 2 then
@@ -1455,7 +1455,25 @@ function Layout_flesh_out_floors(R)
       pattern = {5}
     end
 
-    -- FIXME
+    local XS = { zone.x1 + fab_r, (zone.x1 + zone.x2) / 2, zone.x2 - fab_r }
+    local YS = { zone.y1 + fab_r, (zone.y1 + zone.y2) / 2, zone.y2 - fab_r }
+
+    local skins = { skin }
+
+    for dir in ipairs(pattern) do
+      local dx, dy = geom.delta(dir)
+
+      local x = XS[2 + dx]
+      local y = YS[2 + dx]
+      local z = F.z
+
+      local T = Trans.spot_transform(x, y, z, 0)
+
+      local fab = Fabricate(fab_name, T, skins)
+
+      fab.room = R
+      table.insert(R.prefabs, fab)
+    end
   end
 
 
@@ -1482,10 +1500,6 @@ function Layout_flesh_out_floors(R)
     local skin_name = rand.key_by_probs(tab)
     local skin = assert(GAME.SKINS[skin_name])
 
-----##  QUAKE LAMP TEST
-----    local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
-----    Fabricate("QUAKE_TECHLAMP", T, {})
-
     for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
         if rand.odds(prob) then
@@ -1499,11 +1513,11 @@ function Layout_flesh_out_floors(R)
   ---| Layout_flesh_out_floors |---
 
   if R.outdoor then
-    add_entities(THEME.outdoor_decor, 95)
+    add_entities(THEME.outdoor_decor, 99)
   elseif THEME.indoor_decor and rand.odds(50) then
-    add_entities(THEME.indoor_decor, 75)
+    add_entities(THEME.indoor_decor, 99)
   else
-    add_prefabs(THEME.indoor_fabs, 75)
+    add_prefabs(THEME.indoor_fabs, 99)
   end
 end
 
