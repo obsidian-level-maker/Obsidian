@@ -79,7 +79,7 @@ GLOBAL_STYLE_LIST =
   beams      = { few=25, some=50, heaps=5  },
   barrels    = { few=50, some=50, heaps=10 },
 
-  windows    = { few=20, some=50, heaps=99999 },
+  windows    = { few=20, some=50, heaps=200 },
   pictures   = { few=10, some=50, heaps=10 },
   cages      = { none=50, some=50, heaps=6 },
   crates     = { none=20, some=40, heaps=10 },

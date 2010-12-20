@@ -398,6 +398,9 @@ function Rooms_decide_windows()
 
     E1.usage = USAGE
     E2.usage = USAGE
+
+    K.room.num_windows = K.room.num_windows + 1
+    N.room.num_windows = N.room.num_windows + 1
   end
 
 
@@ -419,8 +422,8 @@ function Rooms_decide_windows()
 
 
   local function try_add_windows(R, side, prob)
-    if STYLE.windows == "few"  and #R.windows > 0 then return end
-    if STYLE.windows == "some" and #R.windows > 2 then return end
+    if STYLE.windows == "few"  and R.num_windows > 0 then return end
+    if STYLE.windows == "some" and R.num_windows > 2 then return end
 
     for _,K in ipairs(R.sections) do
       local N = K:neighbor(side)
@@ -437,6 +440,8 @@ function Rooms_decide_windows()
 
   
   local function do_windows(R)
+    R.num_windows = 0
+
     if STYLE.windows == "none" then return end
 
 ---    if R.outdoor or R.semi_outdoor then return end
@@ -1020,6 +1025,8 @@ end
 
 
 function Rooms_setup_bits(R)
+  R.num_windows = 0
+
   R.cage_spots = {}
   R.trap_spots = {}
   R.mon_spots  = {}
