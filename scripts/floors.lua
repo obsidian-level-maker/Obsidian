@@ -1375,21 +1375,16 @@ end
 function Layout_flesh_out_floors(R)
   -- use the safe zones to place scenery in unused areas
 
-  -- FIXME
+  local fill_zone_with_ents(F, zone, decor_item, info)
+    local w = zone.x2 - zone.x1
+    local h = zone.y2 - zone.y1
 
-  if not THEME.outdoor_decor then return end
-  if not R.outdoor then return end
+    w = int(w / info.r / 2)
+    h = int(h / info.r / 2)
 
-  -- temp crud
-  if not R.decor_item then
-    R.decor_item = rand.key_by_probs(THEME.outdoor_decor)
-  end
+    if w <= 0 or h <= 0 then return end
 
-  local info = assert(GAME.ENTITIES[R.decor_item])
-
-  local function add_decor(F, zone)
-    local count = math.max(zone.x2 - zone.x1, zone.y1 - zone.y2)
-    count = 1 + int(count / rand.pick { 64, 128, 192 })
+    local count = ....
 
     for i = 1,count do
       local x = rand.range(zone.x1+16, zone.x2-16)
@@ -1404,23 +1399,75 @@ function Layout_flesh_out_floors(R)
 
       table.insert(R.decor, DECOR)
 
-      Trans.entity(R.decor_item, x, y, z) 
-
+      Trans.entity(decor_item, x, y, z) 
     end
+  end
+
+
+  local function fill_zone_with_fabs(F, zone, fab_name)
+    local fab_name = assert(skin._prefab)
+    local info = assert(PREFAB[fab_name])
+
+    local fab_r = skin._long
+
+    local w = zone.x2 - zone.x1 - 64
+    local h = zone.y2 - zone.y1 - 64
+
+    w = int(w / fab_r)
+    h = int(h / fab_r)
+
+    if w <= 0 or h <= 0 then return end
+
+    -- PATTERNS
+    -- FIXME
+  end
+
+
+  local function add_entities(tab, prob)
+    if not tab then return end
+
+    local decor_item = rand.key_by_probs(tab)
+
+    local info = assert(GAME.ENTITIES[decor_item])
+
+    for _,F in ipairs(R.all_floors) do
+      for _,Z in ipairs(F.zones) do
+        if rand.odds(prob) then
+          fill_zone_with_ents(F, Z, decor_item, info)
+        end
+      end
+    end
+  end
+
+
+  local function add_prefabs(tab, prob)
+    if not tab then return end
+
+    local skin_name = rand.key_by_probs(tab)
+    local skin = assert(GAME.SKINS[skin_name])
 
 ----##  QUAKE LAMP TEST
 ----    local T = Trans.spot_transform(Z.x1 + 16, Z.y1 + 16, F.z)
 ----    Fabricate("QUAKE_TECHLAMP", T, {})
-  end
 
-  for _,F in ipairs(R.all_floors) do
+    for _,F in ipairs(R.all_floors) do
       for _,Z in ipairs(F.zones) do
-        if Z.x2 >= Z.x1+32 and Z.y2 >= Z.y1+32 then
----       Trans.quad(Z.x1, Z.y1, Z.x2, Z.y2, F.z - 2, F.z + 8, Mat_normal("ASHWALL"))
-          
-          add_decor(F, Z)
+        if rand.odds(prob) then
+          fill_zone_with_fabs(F, Z, skin)
         end
       end
+    end
+  end
+
+
+  ---| Layout_flesh_out_floors |---
+
+  if R.outdoor then
+    add_entities(THEME.outdoor_decor, 95)
+  elseif THEME.indoor_decor and rand.odds(50) then
+    add_entities(THEME.indoor_decor, 75)
+  else
+    add_prefabs(THEME.indoor_fabs, 75)
   end
 end
 
