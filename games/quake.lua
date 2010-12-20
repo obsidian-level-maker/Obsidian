@@ -929,6 +929,23 @@ QUAKE1.SKINS =
   },
 
 
+  ---| DECORATION |---
+
+  TechLamp =
+  {
+    _prefab = "QUAKE_TECHLAMP",
+    _radius = 24,
+  },
+
+  RoundPillar =
+  {
+    _prefab = "ROUND_PILLAR",
+    _radius = 32,
+
+    pillar = "TECH02_5",
+  },
+
+
 } -- end of QUAKE1.SKINS
 
 
@@ -1028,6 +1045,8 @@ QUAKE1.SUB_THEME_DEFAULTS =
   fences = { Fence1 = 50 },
 
   floors = { H_Stair6 = 50, Triple_A = 200 },
+
+  indoor_fabs = { TechLamp = 50, RoundPillar = 50 },
 
   --------- OLD CRUD --------> > >
 
