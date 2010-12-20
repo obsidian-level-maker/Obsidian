@@ -200,7 +200,9 @@ brush_vert_c * snag_c::FindOneSidedVert(double z)
   {
     brush_vert_c *V = sides[i];
 
-    if (! (V->parent->bkind == BKIND_Solid || V->parent->bkind == BKIND_Sky))
+    if (! (V->parent->bkind == BKIND_Solid  || 
+           V->parent->bkind == BKIND_Detail ||
+           V->parent->bkind == BKIND_Sky))
       continue;
 
     if (z > V->parent->b.z - Z_EPSILON &&
@@ -1316,7 +1318,9 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
   csg_brush_c *A = R->brushes[i];
   csg_brush_c *B = R->brushes[k];
 
-  if (A->bkind != BKIND_Solid && A->bkind != BKIND_Sky)
+  if (! (A->bkind == BKIND_Solid  ||
+         A->bkind == BKIND_Detail ||
+         A->bkind == BKIND_Sky))
     return false;
 
   return (B->b.z > A->b.z - Z_EPSILON) &&
