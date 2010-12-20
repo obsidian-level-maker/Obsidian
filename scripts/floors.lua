@@ -615,6 +615,12 @@ function Layout_the_floor(R)
       -- FIXME : collect "hole" brushes, apply to this floor
     end
 
+    -- update heights in air brushes
+    for _,A in ipairs(F.airs) do
+      local fab = A[1].fab
+      fab.air_z = math.max(fab.air_z or -9999, F.z)
+    end
+
     -- pick a floor texture
     if not F.mat then
       if R.outdoor then

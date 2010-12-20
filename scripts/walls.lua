@@ -671,10 +671,10 @@ function Layout_build_walls(R)
     if fab.room == R and not fab.rendered then
 
       if not fab.bumped then
-        --FIXME !!!!!!!! TEMP CRUD
-        local T = { add_z = R.entry_floor_h or 256 }
+        local z = fab.air_z or R.floor_max_h
+        assert(z)
 
-        Fab_transform_Z(fab, T)
+        Fab_transform_Z(fab, { add_z = z })
       end
 
       Fab_render(fab)
