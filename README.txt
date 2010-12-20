@@ -1,17 +1,26 @@
 
-OBLIGE 3.57 Read-Me
-===================
+OBLIGE 4.06-WIP "XMAS EDITION"
+==============================
 
-by Andrew Apted.   April 2010
+by Andrew Apted.   Decemnber 2010
+
+
+** PREFACE **
+
+This package is just a SNAPSHOT or "Work In Progress" of
+current Oblige development.  This it NOT a proper release and
+is only intended for testing or for curiosity.  The levels are
+quite poor, some are not even completable, and there are heaps
+of other problems.  So don't take it seriously, I haven't :-)
 
 
 INTRODUCTION
 
   OBLIGE is a random level generator for various classic FPS
-  games, such as DOOM and DOOM II (with more in development).
+  games, such as DOOM II and QUAKE (with more in development).
   The goal is to produce good levels which are fun to play.
 
-  The planned features are:
+  The _planned_ features are:
 
     * higher quality levels, e.g. outdoor areas!
     * easy to use GUI interface (no messing with command lines)
