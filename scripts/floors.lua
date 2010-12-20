@@ -1384,7 +1384,7 @@ function Layout_flesh_out_floors(R)
 
     if w <= 0 or h <= 0 then return end
 
-    local count = (w * h) ^ 0.7 / (1.8 + rand.skew())
+    local count = (w + h) / rand.pick { 2.5, 3.7, 5 }
     count = int(count + gui.random())
 
     for i = 1,count do
