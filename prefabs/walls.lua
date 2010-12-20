@@ -40,7 +40,7 @@ PREFAB.PICTURE =
 
   x_ranges = { {64,1}, {64,0,"?width"}, {64,1} },
   y_ranges = { {8,1}, {8,0} },
-  z_ranges = { {64,0,"?height"} },
+  z_ranges = { {32,0}, {64,0,"?height"} },
 
   defaults =
   {
@@ -63,6 +63,8 @@ PREFAB.PICTURE =
       { x = 192, y =  0, mat = "?wall" },
       { x = 192, y =  4, mat = "?wall" },
       { x =   0, y =  4, mat = "?wall" },
+
+      { b = 0 },  --<<  FIXME: hack
     },
 
     -- space in front of it
