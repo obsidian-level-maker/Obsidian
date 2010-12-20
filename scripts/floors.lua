@@ -1478,7 +1478,7 @@ function Layout_all_ceilings()
 
     for _,K in ipairs(R.sections) do
       local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
-      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid", flavor="ceil:1" }, w_face, p_face)
+      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid" }, w_face, p_face)
     end
 
     if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
