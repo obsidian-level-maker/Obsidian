@@ -20,7 +20,7 @@
 
 PREFAB.PILLAR =
 {
-  brushes=
+  brushes =
   {
     -- main stem
     {
@@ -70,6 +70,34 @@ PREFAB.PILLAR =
       { x = -56, y =  40, mat = "?trim1" },
       { x = -56, y = -40, mat = "?trim1" },
       { b = 122, mat = "?trim1" },
+    },
+  },
+}
+
+
+PREFAB.ROUND_PILLAR =
+{
+  brushes =
+  {
+    {
+      { m = "detail" },
+      { x = -32, y =   0, mat = "?pillar" },
+      { x = -22, y = -22, mat = "?pillar" },
+      { x =   0, y = -32, mat = "?pillar" },
+      { x =  22, y = -22, mat = "?pillar" },
+      { x =  32, y =   0, mat = "?pillar" },
+      { x =  22, y =  22, mat = "?pillar" },
+      { x =   0, y =  32, mat = "?pillar" },
+      { x = -22, y =  22, mat = "?pillar" },
+    },
+
+    -- clipping (for Quake)
+    {
+      { m = "clip" },
+      { x = -32, y = -32 },
+      { x =  32, y = -32 },
+      { x =  32, y =  32 },
+      { x = -32, y =  32 },
     },
   },
 }
