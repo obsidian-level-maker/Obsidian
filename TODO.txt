@@ -5,21 +5,16 @@ V4 TODO
 Current Work
 ------------
 
+
+FLOOR STUFF
+
+!!  fix "air" brush handling (get Z heights right)
+
 >>  safe zones : record where prefabs are (EDGE/corner/etc) and
                  iterate through them to shrink the safe zones.
 
             _OR_ create them first and update them whenever a
                  prefab gets added
-
-DONE : window/fence prefabs need "air" brushes
-
-
-CEILING STUFF
-
--  ceiling heights : check 't' in walk/air brushes 
-
-
-FLOOR STUFF
 
 >> a less recursive algorithm, once we have decided the floor
    fab and where to place it, its heights are known and fixed.
@@ -30,24 +25,28 @@ FLOOR STUFF
    of the room for further floor fabs.
 
 
-!!!  clipping all infinite brushes to floor space
+!!!  clipping infinite brushes to the floor space
 
-!!   "lava" brush kind
+!!  "lava" brush kind
 
-!!   "hole" brush kind, allow straddlers to use them too
+!!  "hole" brush kind, allow straddlers to use them too
 
-!!  remove flavored brushes :-(
-    (at least from the CSG code, do "hole" brushes for floor spaces
-     and ceiling spaces)
+!!  remove flavored brushes (use "hole" brushes instead)
 
+
++  support floor prefabs in non-monotonic rooms
+   -  connect monotonic spaces with walk brushes
+      (make a fake straddler-like prefab)
 
 +  implement "nosplit" areas, which are like "walk" areas in that
    they must not be split, but which aren't considered to be
    player destinations.
 
--  support floor prefabs in non-monotonic rooms
-   -  connect monotonic spaces with walk brushes
-      (make a fake straddler-like prefab)
+
+
+CEILING STUFF
+
+-  ceiling heights : check 't' in walk/air brushes 
 
    
 
@@ -67,8 +66,6 @@ WALL STUFF
     For 3  seed wide room, thickest door is 160 units + 64 walk
     For 4+ seed wide room, thickest door is 256 units + 64 walk
 
-DONE:  fix inner/outer tex on door and window prefabs
-
 -  "flush depth" for wall prefabs, encourage/force nearby walls
    to line up with it.
 
@@ -80,7 +77,7 @@ OTHER STUFF
 
 
 
-/////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
 
 
@@ -123,7 +120,7 @@ Layout:
 +  ceiling prefabs:
        - skylight
        - tech light
-       ...
+       - a gothic Quake one
 
 +  middle prefabs:
        - cage

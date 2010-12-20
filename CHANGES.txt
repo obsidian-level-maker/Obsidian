@@ -2,9 +2,9 @@
 CHANGES (since 3.57)
 ====================
 
-* began V4, a completely new way to layout rooms, as well as
-  reworked planning, connection, quest system and monster/item
-  placement.
+++ began V4, a completely new way to layout rooms, as well as
+   reworked planning, connection, quest system and monster/item
+   placement.
 
 + Prefab system!
 
