@@ -1375,7 +1375,7 @@ end
 function Layout_flesh_out_floors(R)
   -- use the safe zones to place scenery in unused areas
 
-  local fill_zone_with_ents(F, zone, decor_item, info)
+  local function fill_zone_with_ents(F, zone, decor_item, info)
     local w = zone.x2 - zone.x1
     local h = zone.y2 - zone.y1
 
@@ -1384,12 +1384,12 @@ function Layout_flesh_out_floors(R)
 
     if w <= 0 or h <= 0 then return end
 
-    local count = ....
+    local count = (w * h) ^ 0.7 / (1.8 + rand.skew())
+    count = int(count + gui.random())
 
     for i = 1,count do
-      local x = rand.range(zone.x1+16, zone.x2-16)
-      local y = rand.range(zone.y1+16, zone.y2-16)
-
+      local x = rand.range(zone.x1 + info.r, zone.x2 - info.r)
+      local y = rand.range(zone.y1 + info.r, zone.y2 - info.r)
       local z = F.z
 
       local DECOR =
@@ -1418,7 +1418,43 @@ function Layout_flesh_out_floors(R)
 
     if w <= 0 or h <= 0 then return end
 
-    -- PATTERNS
+    -- the pattern is a list of direction numbers
+    local pattern
+
+    if w >= 5 and h >= 5 and rand.odds(5) then
+      pattern = {1,2,3, 4,5,6, 7,8,9}
+
+    elseif w >= 4 and h >= 2 and rand.odds(15) then
+      pattern = {1,2,3, 7,8,9}
+
+    elseif h >= 4 and w >= 2 and rand.odds(15) then
+      pattern = {1,4,7, 3,6,9}
+
+    elseif w >= 2 and h >= 2 then
+      if math.max(w, h) >= 4 and rand.odds(60) then
+        pattern = rand.sel(50, {1,5,9}, {3,5,7})
+      elseif rand.odds(40) then
+        pattern = {1,3,7,9}
+      else
+        pattern = rand.sel(50, {1,9}, {3,7})
+      end
+
+    elseif w >= 3 and rand.odds(50) then
+      pattern = {4,5,6}
+
+    elseif h >= 3 and rand.odds(50) then
+      pattern = {2,5,8}
+
+    elseif w >= 2 and rand.odds(80) then
+      pattern = {4,6}
+
+    elseif h >= 2 and rand.odds(80) then
+      pattern = {2,8}
+  
+    else
+      pattern = {5}
+    end
+
     -- FIXME
   end
 
