@@ -2,7 +2,7 @@
 OBLIGE 4.06-WIP "XMAS EDITION"
 ==============================
 
-by Andrew Apted.   Decemnber 2010
+by Andrew Apted.   December 2010
 
 
 ** PREFACE **
@@ -10,8 +10,8 @@ by Andrew Apted.   Decemnber 2010
 This package is just a SNAPSHOT or "Work In Progress" of
 current Oblige development.  This it NOT a proper release and
 is only intended for testing or for curiosity.  The levels are
-quite poor, some are not even completable, and there are heaps
-of other problems.  So don't take it seriously, I haven't :-)
+quite poor, some are not even completable, and there are many
+other problems.  So don't take it seriously, I haven't :-)
 
 
 INTRODUCTION
