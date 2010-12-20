@@ -615,7 +615,7 @@ int CSG_add_brush(lua_State *L)
   Grab_CoordList(L, 1, B);
 
   if (B->props.getStr("flavor"))
-    B->bflags |= BRU_IF_Flavor;
+    Main_FatalError("Flavored brush used.\n");
 
   all_brushes.push_back(B);
 

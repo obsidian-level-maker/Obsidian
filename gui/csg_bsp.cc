@@ -1324,6 +1324,8 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
 }
 
 
+// TODO: REMOVE THIS FLAVOR STUFF
+
 static int FlavorCompare(const char *flavor1, const char *flavor2)
 {
   // format of a flavor string is "name:123"
