@@ -264,6 +264,8 @@ function Layout_used_walls(R)
       fabs = assert(E.usage.lock.switches)
     end
 
+    local fabs2 = table.copy(fabs)
+
     for name,_ in pairs(fabs) do
       local skin = GAME.SKINS[name]
       if not skin then
@@ -272,15 +274,18 @@ function Layout_used_walls(R)
 
       if is_minimal_edge(skin) then
         gui.printf("  minimal_fab @ %s:%d ---> %s\n", E.K:tostr(), E.side, name)
-        E.minimal = { skin=skin }
-        break;
+      else
+        fabs2[name] = nil
       end
     end
 
-    if not E.minimal then
+    if table.empty(fabs2) then
       gui.printf("E.usage =\n%s\n", table.tostr(E.usage, 2))
       error("Lacking minimal prefab for: " .. tostring(E.usage.kind))
     end
+
+    local name = rand.key_by_probs(fabs2)
+    E.minimal = { skin=GAME.SKINS[name] }
 
     if E.usage.kind == "door" and E.usage.conn.lock and E.usage.conn.lock.kind == "SWITCH" then
       E.usage.conn.lock.switches = assert(E.minimal.skin._switches)
@@ -288,6 +293,7 @@ function Layout_used_walls(R)
 
     local extra_skins = {}
 
+--!!!!!!
 local CRUD = { item="none", outer="COMPBLUE",track="_ERROR",frame="_ERROR",
                rail="STEPTOP", metal="METAL", }
 table.insert(extra_skins, CRUD)
