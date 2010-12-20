@@ -23,7 +23,7 @@
 
 #define OBLIGE_TITLE  "OBLIGE Level Maker"
 
-#define OBLIGE_VERSION  "4.06"
+#define OBLIGE_VERSION  "4.06-WIP"
 #define OBLIGE_HEX_VER  0x406
 
 
