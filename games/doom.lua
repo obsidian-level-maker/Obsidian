@@ -2594,7 +2594,7 @@ DOOM.SUB_THEME_DEFAULTS =
                   Crate1=10, Crate2=10, 
                   CrateICK=10, CrateWOOD=10 },
 
-  piccies = { Pic_Chrissy1=50, Pic_Chrissy2=10,
+  piccies = { Pic_Chrissy1=40, Pic_Chrissy2=5,
               Pic_Logo1=20, Pic_Logo2=10 },
 
   --------- OLD CRUD --------> > >
