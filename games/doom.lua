@@ -2274,6 +2274,50 @@ DOOM.SKINS =
     height = 64,
   },
 
+
+  ---| DECORATION |---
+
+  RoundPillar =
+  {
+    _prefab = "ROUND_PILLAR",
+    _radius = 32,
+
+    pillar = "TEKLITE",
+  },
+
+  Crate1 =
+  {
+    _prefab = "CRATE",
+    _radius = 32,
+
+    crate = "CRATE1",
+  },
+
+  Crate2 =
+  {
+    _prefab = "CRATE",
+    _radius = 32,
+
+    crate = "CRATE2",
+  },
+
+  CrateWOOD =
+  {
+    _prefab = "CRATE",
+    _radius = 32,
+
+    crate = "WOOD3",
+  },
+
+  CrateICK =
+  {
+    _prefab = "CRATE",
+    _radius = 32,
+
+    crate = "ICKWALL4",
+  },
+
+
 } -- end of DOOM.SKINS
 
 
@@ -2538,6 +2582,17 @@ DOOM.SUB_THEME_DEFAULTS =
   floors = { H_Stair6 = 50, Triple_A = 200 },
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 },
+
+  indoor_decor = { barrel=60, burning_barrel=20,
+                   dead_player=10, gibbed_player=10,
+                   tech_column=10,
+                   impaled_twitch=10, evil_eye=5,
+                   candelabra=10, red_torch=5,
+                   green_torch=5, blue_torch=5 },
+
+  indoor_fabs = { RoundPillar=70,
+                  Crate1=10, Crate2=10, 
+                  CrateICK=10, CrateWOOD=10 },
 
   piccies = { Pic_Chrissy1=50, Pic_Chrissy2=10,
               Pic_Logo1=20, Pic_Logo2=10 },

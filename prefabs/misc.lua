@@ -105,6 +105,12 @@ PREFAB.ROUND_PILLAR =
 
 PREFAB.CRATE =
 {
+  defaults =
+  {
+    x_offset = 0,
+    y_offset = 0,
+  },
+
   brushes =
   {
     {
@@ -112,7 +118,7 @@ PREFAB.CRATE =
       { x =  32, y = -32, mat = "?crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
       { x =  32, y =  32, mat = "?crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
       { x = -32, y =  32, mat = "?crate", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 64, mat = "?crate", light = "?light" },
+      { t = 64, mat = "?crate" },
     },
   },
 }
