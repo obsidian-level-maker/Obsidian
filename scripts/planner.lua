@@ -427,7 +427,7 @@ function Plan_add_small_rooms()
       -- sometimes become a 2x1 / 1x2 sized room
       local can_xy = can_make_double(K, x, y)
 
-      if can_xy and rand.odds(40) then
+      if can_xy and rand.odds(55) then
         if can_xy == "x" then
           K = SECTIONS[x+1][y]
         else
