@@ -1752,7 +1752,7 @@ DOOM.SKINS =
     _long   = 192,
     _deep   = 64,
 
-    wall = "CRACKLE2",
+    wall = "EXITSTON",
 
     switch="SW1HOT", line_kind=11, x_offset=0, y_offset=0,
   },
@@ -2198,12 +2198,14 @@ DOOM.SKINS =
 
   Fence1 =
   {
-    _prefab = "FENCE",
+    _prefab = "FENCE_W_RAIL",
     _where  = "edge",
     _long   = 192,
     _deep   = 32,
 
     fence = "ICKWALL7",
+    metal = "METAL",
+    rail  = "MIDBARS3",
   },
 
 
@@ -3853,7 +3855,7 @@ DOOM.WEAPONS =
 
   berserk =
   {
-    pref=10, add_prob=6, start_prob=10,
+    pref=10, add_prob=5, start_prob=2,
     rate=1.5, damage=90, attack="melee",
     give={ {health=70} },
   },
