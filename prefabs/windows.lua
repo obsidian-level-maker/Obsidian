@@ -1229,17 +1229,25 @@ PREFAB.FENCE_STICKS_QUAKE =
     -- post(s)
     {
       { x =  0, y = 12, mat = "?metal" },
-      { x =  6, y = 12, mat = "?metal" },
-      { x =  6, y = 20, mat = "?metal" },
+      { x =  4, y = 12, mat = "?metal" },
+      { x =  4, y = 20, mat = "?metal" },
       { x =  0, y = 20, mat = "?metal" },
       { t = 72, mat = "?metal" },
     },
 
     {
-      { x = 26, y = 12, mat = "?metal" },
+      { x = 28, y = 12, mat = "?metal" },
       { x = 32, y = 12, mat = "?metal" },
       { x = 32, y = 20, mat = "?metal" },
-      { x = 26, y = 20, mat = "?metal" },
+      { x = 28, y = 20, mat = "?metal" },
+      { t = 72, mat = "?metal" },
+    },
+
+    { -- FIXME : REMOVE WHEN repeat_width WORKS AGAIN
+      { x = 15, y = 12, mat = "?metal" },
+      { x = 17, y = 12, mat = "?metal" },
+      { x = 17, y = 20, mat = "?metal" },
+      { x = 15, y = 20, mat = "?metal" },
       { t = 72, mat = "?metal" },
     },
 

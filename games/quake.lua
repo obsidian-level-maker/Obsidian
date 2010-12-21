@@ -903,12 +903,13 @@ QUAKE1.SKINS =
 
   Fence1 =
   {
-    _prefab = "FENCE",
+    _prefab = "FENCE_STICKS_QUAKE",
     _where  = "edge",
     _long   = 192,
     _deep   = 32,
 
     fence = "WIZWOOD1_8",
+    metal = "METAL1_1",
   },
 
 
