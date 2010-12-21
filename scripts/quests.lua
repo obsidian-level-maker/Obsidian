@@ -302,7 +302,7 @@ function Quest_add_weapons()
       end
 
       if prob and prob > 0 then
-        name_tab[name] = info.add_prob
+        name_tab[name] = prob
       end
     end
 
@@ -326,10 +326,11 @@ function Quest_add_weapons()
     local info1 = assert(GAME.WEAPONS[early])
     local info2 = assert(GAME.WEAPONS[later])
 
-    -- tend to place non-melee weapons before normal ones
-    if info2.attack == "melee" and info1.attack ~= "melee" and rand.odds(65) then
-      return true
-    end
+---## -AJA- DISABLED, tends to make Berserk the first weapon, voilating 'start_prob'
+---##    -- tend to place non-melee weapons before normal ones
+---##    if info2.attack == "melee" and info1.attack ~= "melee" and rand.odds(65) then
+---##      return true
+---##    end
 
     -- otherwise only swap when the ammo is the same
     if info1.ammo == info2.ammo and
