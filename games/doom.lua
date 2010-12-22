@@ -214,6 +214,7 @@ DOOM.PARAMETERS =
   damage_factor = 1.0,
   ammo_factor   = 0.8,
   health_factor = 0.7,
+  monster_factor = 0.9,
 }
 
 DOOM2.PARAMETERS =
@@ -3734,7 +3735,7 @@ DOOM.MONSTERS =
 
   Cyberdemon =
   {
-    level=9, prob=10, crazy_prob=12, skip_prob=150,
+    level=9, prob=17, crazy_prob=12, skip_prob=150,
     health=4000, damage=150, attack="missile",
     density=0.1,
     weap_prefs={ bfg=5.0 },
@@ -3742,8 +3743,8 @@ DOOM.MONSTERS =
 
   Mastermind =
   {
-    level=9, prob=5, crazy_prob=18, skip_prob=150,
-    health=3000, damage=100, attack="hitscan",
+    level=9, prob=20, crazy_prob=18, skip_prob=150,
+    health=3000, damage=70, attack="hitscan",
     density=0.2,
     weap_prefs={ bfg=5.0 },
   },
@@ -3775,7 +3776,7 @@ DOOM2.MONSTERS =
 
   mancubus =
   {
-    level=6, prob=33,
+    level=6, prob=37,
     health=600, damage=70, attack="missile",
     density=0.6,
   },
@@ -3789,14 +3790,14 @@ DOOM2.MONSTERS =
 
   vile =
   {
-    level=7, prob=16, skip_prob=120,
+    level=7, prob=17, skip_prob=120,
     health=700, damage=40, attack="hitscan",
     density=0.2, never_promote=true,
   },
 
   pain =
   {
-    level=6, prob=7, crazy_prob=15, skip_prob=180,
+    level=6, prob=8, crazy_prob=15, skip_prob=180,
     health=700, damage=20, attack="missile",
     density=0.2, never_promote=true, float=true, 
     weap_prefs={ launch=0.2 },
