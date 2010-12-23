@@ -86,11 +86,13 @@ void qLightmap_c::AddStyle(byte style)
   if (num_styles > 4)
     return;
 
-  styles[num_styles++] = style;
+  styles[num_styles] = style;
 
   byte *new_samples = new byte[width * height * (num_styles+1)];
 
   memcpy(new_samples, samples, width * height * num_styles);
+
+  num_styles++;
 
   if (samples != data)
     delete[] samples;
