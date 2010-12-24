@@ -273,11 +273,14 @@ function Monsters_init()
 
   LEVEL.mon_stats = {}
 
-  local low  = MONSTER_QUANTITIES.scarce
-  local high = MONSTER_QUANTITIES.more
+  local low_q  = MONSTER_QUANTITIES.scarce
+  local high_q = MONSTER_QUANTITIES.more
 
-  LEVEL.prog_mons_qty    = low + LEVEL.ep_along * (high - low)
-  LEVEL.mixed_mons_qty   = rand.range(low, high)
+  local low_k  = MONSTER_KIND_TAB.scarce
+  local high_k = MONSTER_KIND_TAB.heaps
+
+  LEVEL.prog_mons_qty  = low_q + LEVEL.ep_along * (high_q - low_q)
+  LEVEL.prog_mons_kind = low_k + LEVEL.ep_along * (high_k - low_k)
 
   -- build replacement table --
 
@@ -855,16 +858,18 @@ function Monsters_in_room(R)
       qty = LEVEL.quantity
 
     elseif OB_CONFIG.mons == "mixed" then
-      qty = LEVEL.mixed_mons_qty
+      qty = rand.pick { 5,10,25,50 }
 
     elseif OB_CONFIG.mons == "prog" then
       qty = LEVEL.prog_mons_qty
 
     else
       qty = MONSTER_QUANTITIES[OB_CONFIG.mons]
-    end
+      assert(qty)
 
-    assert(qty)
+      -- tend to have more monsters in later rooms and levels
+      qty = qty * (2 + R.lev_along + LEVEL.ep_along) / 4
+    end
 
     -- game specific adjustment
     qty = qty * (PARAM.monster_factor or 1)
@@ -873,9 +878,6 @@ function Monsters_in_room(R)
     if OB_CONFIG.mode == "coop" then
       qty = qty * COOP_MON_FACTOR
     end
-
-    -- tend to have more monsters in later rooms and levels
-    qty = qty * (2 + R.lev_along + LEVEL.ep_along) / 4
 
     -- more in EXIT or KEY rooms (extra boost in small rooms)
     local is_small = (R.svolume <= 20)
@@ -1049,11 +1051,22 @@ function Monsters_in_room(R)
 
 
   local function number_of_kinds()
-    local size = math.sqrt(R.svolume)
-    local kind = MONSTER_KIND_TAB[OB_CONFIG.mons]
+    local kind
+    
+    if OB_CONFIG.mons == "mixed" then
+      kind = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
+
+    elseif OB_CONFIG.mons == "prog" then
+      kind = LEVEL.prog_mons_kind
+
+    else
+      kind = MONSTER_KIND_TAB[OB_CONFIG.mons]
+    end
+
     assert(kind)
 
-    local num = int(size * kind / 12 + 0.6 + gui.random())
+    local size = math.sqrt(R.svolume)
+    local num  = int(size * kind / 12 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end  -- FIXME: game specific --> PARAM.xxx
