@@ -384,17 +384,17 @@ function Connect_make_hallways()
       local H = hall_map[sx][sy]
       local K = sect_map[sx][sy]
       if H then
-        for side = 2,8,2 do
+        for dir = 2,8,2 do
 
-          local nx, ny = geom.nudge(sx, sy, 10-side)
+          local nx, ny = geom.nudge(sx, sy, 10-dir)
           local N = sect_map[nx][ny]
 
           if N and N.room ~= K.room and
-             neighbor(sx, sy, side, 1) and
-             (neighbor(sx, sy, side, 2) or rand.odds(10)) and
+             neighbor(sx, sy, dir, 1) and
+             (neighbor(sx, sy, dir, 2) or rand.odds(10)) and
 
-             geom.vert_sel(side, (nx > N.room.sx1 and nx < N.room.sx2),
-                                 (ny > N.room.sy1 and ny < N.room.sy2))
+             geom.vert_sel(dir, (nx > N.room.sx1 and nx < N.room.sx2),
+                                (ny > N.room.sy1 and ny < N.room.sy2))
 
              and N.room.shape == "rect"
           then
@@ -429,7 +429,7 @@ function Connect_make_hallways()
 
   local function mark(hx, hy, dir, dist)
     for d = 1,dist do
-      local nx, ny = geom.nudge(hx, hy, dir, d)
+      local nx, ny = geom.nudge(hx, hy, dir, d-1)
 
       assert(valid(nx, ny))
       local H = hall_map[nx][ny]
@@ -441,7 +441,20 @@ function Connect_make_hallways()
 
 
   local function test_junction(H, hx, hy, dir)
-    -- FIXME !!!!
+    -- usually require 3 seeds (start + two more), but sometimes
+    -- require just one.
+
+    for dist = 1,rand.sel(1, 1, 2) do
+      local nx, ny = geom.nudge(hx, hy, dir, dist)
+
+      if not valid(nx, ny) then return false end
+
+      local H = hall_map[nx][ny]
+
+      if not H or H.used or H.trace then return false end
+    end
+
+    return true
   end
 
 
@@ -485,13 +498,16 @@ function Connect_make_hallways()
 
       if not H or H.used or H.trace or H.bad then break; end
 
-      for dir in ipairs({ pos.dir, dir1, dir2 }) do
-        if dir ~= pos.dir and test_junction(H, nx, ny, dir) then
-          table.insert(juncs, { sx=nx, sy=ny, dir=dir, dist=dist })
-        end
+      -- don't branch too close
+      if dist >= 2 or rand.odds(1) then
+        for _,dir in ipairs({ pos.dir, dir1, dir2 }) do
+          if dir ~= pos.dir and test_junction(H, nx, ny, dir) then
+            table.insert(juncs, { sx=nx, sy=ny, dir=dir, dist=dist })
+          end
 
-        if test_terminator(H, nx, ny, dir) then
-          table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist })
+          if test_terminator(H, nx, ny, dir) then
+            table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist })
+          end
         end
       end
     end
@@ -500,7 +516,7 @@ function Connect_make_hallways()
   end
 
 
-  local function trace_hall(start)
+  local function try_trace_hall(start)
     clear()
 
     R1 = start.R1
@@ -510,6 +526,8 @@ function Connect_make_hallways()
     local pos = start
 
     while true do
+      table.insert(path, pos)
+
       local juncs, terms = find_junctions(pos)
 
       local J = rand.pick(juncs)
@@ -521,23 +539,31 @@ function Connect_make_hallways()
         return false  -- 
       end
 
-      if not J or (T and rand.odds(50)) then
-        -- FIXME: TERMINATE
-        mark(J.sx, J.sy, J.dir, J.dist)
+      if T and (not J or rand.odds(50)) then
+        table.insert(path, T)
+        mark(pos.sx, pos.sy, pos.dir, T.dist)
         use_it()
+        -- FIXME: ACTUALLY CONNECT R1 and R2
         return true
       end
 
+      assert(J)
+
       -- TURN
-      mark(J.sx, J.sy, J.dir, J.dist)
+      mark(pos.sx, pos.sy, pos.dir, J.dist)
 
       pos = J
     end
   end
 
 
-  local function try_make_hall(start)
-    -- TODO
+  local function make_hallway(start)
+    for loop = 1,15 do
+      if try_trace_hall(start) then
+        -- we're golden
+        return;
+      end
+    end
   end
 
 
@@ -548,7 +574,7 @@ function Connect_make_hallways()
   local start_spots = find_perpendiculars()
 
   for _,start in ipairs(start_spots) do
-    try_make_hall(start)
+    make_hallway(start)
   end
 
   dump_hall_map()
