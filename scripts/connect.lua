@@ -304,6 +304,19 @@ function Connect_make_hallways()
   -- sides of sections.
 
   local hall_map = table.array_2D(SEED_W, SEED_H)
+  local sect_map = table.array_2D(SEED_W, SEED_H)
+
+
+  local function neighbor(sx, sy, dir, dist)
+    local nx, ny = geom.nudge(sx, sy, dir, dist)
+
+    if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
+      return nil
+    end
+
+    return hall_map[nx][ny]
+  end
+
 
   local function dump_hall_map()
     gui.debugf("Hallway map:\n")
@@ -348,14 +361,64 @@ function Connect_make_hallways()
           end
         end
 
+        for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
+          sect_map[sx][sy] = K
+        end end
+
       end
     end end
+  end
+
+
+  local function find_perpendiculars()
+    -- these are hallway spots which come out of a room and can
+    -- travel for at least 3 seeds.
+
+    local list = {}
+
+    for sx = 2,SEED_W-1 do for sy = 2,SEED_H-1 do
+      local H = hall_map[sx][sy]
+      local K = sect_map[sx][sy]
+      if H then
+        for side = 2,8,2 do
+
+          local nx, ny = geom.nudge(sx, sy, 10-side)
+          local N = sect_map[nx][ny]
+
+          if N and N.room ~= K.room and
+             neighbor(sx, sy, side, 1) and
+             neighbor(sx, sy, side, 2) and
+
+             geom.vert_sel(side, (nx > N.room.sx1 and nx < N.room.sx2),
+                                 (ny > N.room.sy1 and ny < N.room.sy2))
+
+             and N.room.shape == "rect"
+          then
+            table.insert(list, { sx=sx, sy=sy, dir=dir, R=N.room })
+          end 
+
+        end
+      end
+    end end
+
+    return list
+  end
+
+
+  local function try_trace_hall(start)
+    -- TODO
   end
 
 
   ---| Connect_make_hallways |---
 
   build_hall_map()
+
+  local start_spots = find_perpendiculars()
+
+  for _,start in ipairs(start_spots) do
+    try_trace_hall(start)
+  end
 
   dump_hall_map()
 end
