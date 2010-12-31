@@ -297,6 +297,71 @@ function Connect_decide_start_room()
 end
 
 
+
+function Connect_make_hallways()
+
+  -- these hallways are a group of seeds which get cut-off from the
+  -- sides of sections.
+
+  local hall_map = table.array_2D(SEED_W, SEED_H)
+
+  local function dump_hall_map()
+    gui.debugf("Hallway map:\n")
+
+    for sy = SEED_H,1,-1 do
+      local line = ""
+      for sx = 1,SEED_W do
+        local H = hall_map[sx][sy]
+
+        local ch = "."
+        if H then
+          ch = sel(H.used, "#", "/")
+        end
+
+        line = line .. ch
+      end
+      gui.debugf("%s\n", line)
+    end
+  end
+
+
+  local function add_side_to_map(K, side)
+    local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
+
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      hall_map[sx][sy] = { K=K }
+    end end
+  end
+
+
+  local function build_hall_map()
+    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+      if K and K.room then
+        
+        for side = 2,8,2 do
+          local deep = geom.vert_sel(side, K.sh, K.sw)
+          if K:same_room(10-side) then deep = deep + 1 end
+          if deep >= 4 and not K:same_room(side)
+          then
+            add_side_to_map(K, side)
+          end
+        end
+
+      end
+    end end
+  end
+
+
+  ---| Connect_make_hallways |---
+
+  build_hall_map()
+
+  dump_hall_map()
+end
+
+
+
 function Connect_rooms()
 
   -- a "branch" is a room with 3 or more connections.
@@ -984,6 +1049,8 @@ function Connect_rooms()
 
   Levels_invoke_hook("connect_rooms")
 
+  Connect_make_hallways()
+
   decide_teleporters()
 
   branch_big_rooms()
@@ -991,6 +1058,7 @@ function Connect_rooms()
 
   while emergency_branch() do end
 
+  -- FIXME: this is a layout task, move to appropriate file
   place_teleporters()
 
   validate_connections()
