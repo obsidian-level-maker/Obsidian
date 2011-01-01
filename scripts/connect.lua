@@ -338,6 +338,18 @@ end
 
 
 
+function Connect_merge_groups(id1, id2)
+  if id1 > id2 then id1,id2 = id2,id1 end
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    if R.conn_group == id2 then
+      R.conn_group = id1
+    end
+  end
+end
+
+
+
 function Connect_make_hallways()
 
   -- these hallways are a group of seeds which get cut-off from the
@@ -501,6 +513,8 @@ function Connect_make_hallways()
   end
 
 
+local tt_R2  -- FIXME !!!!
+
   local function test_terminator(H, hx, hy, dir)
     local nx, ny = geom.nudge(hx, hy, dir)
 
@@ -516,6 +530,8 @@ function Connect_make_hallways()
 
     local K2 = sect_map[nx][ny]
     local R2 = K2.room
+
+    tt_R2 = R2
 
     return Connect_possibility(R1, R2) > 0
   end
@@ -545,13 +561,29 @@ function Connect_make_hallways()
           end
 
           if test_terminator(H, nx, ny, dir) then
-            table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist })
+            table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist, R2=tt_R2 })
           end
         end
       end
     end
 
     return juncs, terms
+  end
+
+
+  local function add_hallway(R1, R2, path)
+    gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    local C = CONN_CLASS.new_R(R1, R2, "hallway")
+
+    C.path = path
+
+    table.insert(LEVEL.all_conns, C)
+
+    table.insert(R1.conns, C)
+    table.insert(R2.conns, C)
   end
 
 
@@ -575,20 +607,21 @@ function Connect_make_hallways()
       if not J and not T then
         -- nowhere to go?  mark spot as bad
         hall_map[pos.sx][pos.sy].bad = true
-        return false  -- 
+
+        return false
       end
 
       -- TERMINATE ? --
 
       if T and (not J or rand.odds(50)) then
-
         table.insert(path, T)
 
         -- add one to dist to mark the very last seed too
         mark(pos.sx, pos.sy, pos.dir, T.dist + 1)
         use_it()
 
-        -- FIXME: ACTUALLY CONNECT R1 and R2
+        add_hallway(R1, assert(T.R2), path)
+
         return true
       end
 
@@ -643,6 +676,8 @@ function Connect_make_hallways()
   dump_hall_map()
 
   resize_sections()
+
+  Plan_dump_rooms("After Hallways")
 end
 
 
@@ -655,16 +690,6 @@ function Connect_rooms()
   local function initial_groups()
     for index,R in ipairs(LEVEL.all_rooms) do
       R.conn_group = index
-    end
-  end
-
-  local function merge_groups(id1, id2)
-    if id1 > id2 then id1,id2 = id2,id1 end
-
-    for _,R in ipairs(LEVEL.all_rooms) do
-      if R.conn_group == id2 then
-        R.conn_group = id1
-      end
     end
   end
 
@@ -706,7 +731,7 @@ function Connect_rooms()
     gui.printf("Connection from %s --> %s\n", K1:tostr(), K2:tostr())
     gui.debugf("Possibility value: %d\n", Connect_possibility(R, N))
 
-    merge_groups(R.conn_group, N.conn_group)
+    Connect_merge_groups(R.conn_group, N.conn_group)
 
     local C = CONN_CLASS.new_K(K1, K2, kind, dir)
 
@@ -737,7 +762,7 @@ function Connect_rooms()
   local function add_teleporter(R1, R2)
     gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
 
-    merge_groups(R1.conn_group, R2.conn_group)
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
 
     local C = CONN_CLASS.new_R(R1, R2, "teleporter")
 
