@@ -452,7 +452,7 @@ function Connect_make_hallways()
   local function clear()
     for sx = 1,SEED_W do for sy = 1,SEED_H do
       local H = hall_map[sx][sy]
-      if H then H.trace = nil end
+      if H then H.trace = nil ; H.bad = nil end
     end end
   end
 
@@ -462,6 +462,9 @@ function Connect_make_hallways()
       local H = hall_map[sx][sy]
       if H and H.trace then
         H.used = true
+
+        -- mark the section's side as used for a hallway
+        H.K.halls[H.side] = 1
       end
     end end
   end
@@ -575,17 +578,25 @@ function Connect_make_hallways()
         return false  -- 
       end
 
+      -- TERMINATE ? --
+
       if T and (not J or rand.odds(50)) then
+
         table.insert(path, T)
-        mark(pos.sx, pos.sy, pos.dir, T.dist)
+
+        -- add one to dist to mark the very last seed too
+        mark(pos.sx, pos.sy, pos.dir, T.dist + 1)
         use_it()
+
         -- FIXME: ACTUALLY CONNECT R1 and R2
         return true
       end
 
-      assert(J)
+      -- TURN LEFT / RIGHT --
 
-      -- TURN
+      table.insert(path, assert(J))
+
+      -- mark seeds including start but excluding the next position
       mark(pos.sx, pos.sy, pos.dir, J.dist)
 
       pos = J
@@ -658,8 +669,13 @@ function Connect_rooms()
     return Connect_possibility(K1.room, K2.room) >= 0
   end
 
-  local function good_connect(K1, K2)
-    if not (K1 and K2) then return false end
+  local function good_connect(K1, dir)
+    if not K1 then return false end
+    if K1.halls[dir] then return false end
+
+    local K2 = K1:neighbor(dir)
+    if not K2 then return false end
+
     return Connect_possibility(K1.room, K2.room) > 0
   end
 
@@ -725,7 +741,7 @@ function Connect_rooms()
 
         for dir = 2,8,2 do
           local N = K:neighbor(dir)
-          if good_connect(K, N) then
+          if good_connect(K, dir) then
             local LOC = { K=K, N=N, dir=dir }
             LOC.dist = R:dist_to_closest_conn(K, dir) or 9
             LOC.dist = LOC.dist + gui.random()
@@ -827,13 +843,13 @@ function Connect_rooms()
 
       if K.num_conn > 0 then
         -- OK
-      elseif good_connect(K, N) then
+      elseif good_connect(K, loc.dir) then
         add_connection(K, N, "normal", loc.dir)
       else
         -- try the other sides
         for dir = 2,8,2 do
           local N = loc.K:neighbor(dir)
-          if good_connect(K, N) then
+          if good_connect(K, dir) then
             add_connection(K, N, "normal", dir)
             break;
           end
@@ -903,6 +919,9 @@ function Connect_rooms()
 
       if already_connected(K, N) then
         num_matched = num_matched + 1
+
+      elseif K.halls[dir] then
+        return false
 
       elseif not can_connect(K, N) then
         return false
@@ -1007,7 +1026,7 @@ function Connect_rooms()
         for dir = 2,8,2 do
           local N = K:neighbor(dir)
 
-          if good_connect(K, N) and #N.room.conns < 2 then
+          if good_connect(K, dir) and #N.room.conns < 2 then
             table.insert(list, { K=K, N=N, dir=dir })
           end
         end
@@ -1045,11 +1064,13 @@ function Connect_rooms()
 
 
   local function emergency_score(K, N, dir)
+    if K.halls[dir] then return -1 end
+
     if not can_connect(K, N) then return -1 end
 
     local score = 0
 
-    if good_connect(K, N) then
+    if good_connect(K, dir) then
       score = score + 10
     end
 

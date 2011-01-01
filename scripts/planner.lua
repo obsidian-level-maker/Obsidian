@@ -35,6 +35,8 @@ class SECTION
   corners[DIR] : CORNER  -- each can be nil
 
   edges[DIR] : EDGE   -- each can be nil
+
+  halls[DIR]   -- non-NIL for sides that are being used for hallways
 }
 
 
@@ -57,7 +59,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
+  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={}, halls={} }
   table.set_class(K, SECTION_CLASS)
   return K
 end
