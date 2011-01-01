@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -298,6 +298,46 @@ end
 
 
 
+function Connect_possibility(R1, R2)
+  -- check if connecting two rooms is possible.
+  -- returns: -1 : not possible
+  --           0 : possible but not good
+  --          +1 : possible and good
+
+  if not (R1 and R2) then return -1 end
+
+  -- already connected?
+  if R1.conn_group == R2.conn_group then return -1 end
+
+  local is_good = true
+
+  for pass = 1,2 do
+    local R = sel(pass == 1, R1, R2)
+
+    if R.kind == "scenic" then return -1 end
+
+    -- only one way out of the starting room (unless large)
+    if R.purpose == "START" and #R.conns >= 1 then
+      if R.svolume < 9 then return -1 end
+      is_good = false
+    end
+
+    -- more than 4 connections is usually too many
+    if R.full or (#R.conns >= 4 and not R.natural) then
+      is_good = false
+    end
+
+    -- don't fill small rooms with lots of connections
+    if R.sw <= 4 and R.sh <= 4 and #R.conns >= 3 then
+      is_good = false
+    end
+  end
+
+  return sel(is_good, 1, 0)
+end
+
+
+
 function Connect_make_hallways()
 
   -- these hallways are a group of seeds which get cut-off from the
@@ -474,11 +514,7 @@ function Connect_make_hallways()
     local K2 = sect_map[nx][ny]
     local R2 = K2.room
 
-    -- FIXME: need to use can_connect or should_connect
-
-    if not R2 or R2 == R1 then return false end
-
-    return true  -- OK --
+    return Connect_possibility(R1, R2) > 0
   end
 
 
@@ -619,41 +655,12 @@ function Connect_rooms()
 
   local function can_connect(K1, K2)
     if not (K1 and K2) then return false end
-
-    local R = K1.room
-    local N = K2.room
-
-    if not (R and N) then return false end
-
-    if R.conn_group == N.conn_group then return false end
-
-    if R.kind == "scenic" then return false end
-    if N.kind == "scenic" then return false end
-
-    -- only one way out of the starting room
-    if R.purpose == "START" and #R.conns >= 1 then return false end
-    if N.purpose == "START" and #N.conns >= 1 then return false end
-
-    return true
+    return Connect_possibility(K1.room, K2.room) >= 0
   end
 
   local function good_connect(K1, K2)
-    if not can_connect(K1, K2) then
-      return false
-    end
-
-    local R = K1.room
-    local N = K2.room
-
-    -- more than 4 connections is usually too many
-    if R.full or (#R.conns >= 4 and not R.natural) then return false end
-    if N.full or (#N.conns >= 4 and not N.natural) then return false end
-
-    -- don't fill small rooms with lots of connections
-    if R.sw <= 4 and R.sh <= 4 and #R.conns >= 3 then return false end
-    if N.sw <= 4 and N.sh <= 4 and #N.conns >= 3 then return false end
-
-    return true
+    if not (K1 and K2) then return false end
+    return Connect_possibility(K1.room, K2.room) > 0
   end
 
 
@@ -661,7 +668,8 @@ function Connect_rooms()
     local R = assert(K1.room)
     local N = assert(K2.room)
 
-    gui.printf("Doorway from %s --> %s\n", K1:tostr(), K2:tostr())
+    gui.printf("Connection from %s --> %s\n", K1:tostr(), K2:tostr())
+    gui.debugf("Possibility value: %d\n", Connect_possibility(R, N))
 
     merge_groups(R.conn_group, N.conn_group)
 
