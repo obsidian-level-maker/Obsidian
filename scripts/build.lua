@@ -1936,6 +1936,7 @@ stderrf("=========  FABRICATE %s\n", name)
   local fab = Fab_create(name)
 
   -- FIXME: not here
+  skins = table.copy(skins)
   if  ROOM and  ROOM.skin then table.insert(skins, 1, ROOM.skin) end
   if THEME and THEME.skin then table.insert(skins, 1, THEME.skin) end
 
