@@ -517,6 +517,9 @@ function Rooms_dists_from_entrance()
 
     local K = R.entry_conn:section(R)
 
+--FIXME !!!!!! (broken after hallways)
+if not K then K = R.sections[1] end
+
     K.entry_dist = 0
 
     while count < total do

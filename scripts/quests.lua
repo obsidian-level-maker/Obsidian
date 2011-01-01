@@ -728,7 +728,7 @@ function Quest_make_quests()
 
   local QT = QUEST_CLASS.new(LEVEL.start_room)
 
-  if not THEME.switch_doors then
+  if true then --!!!!!!!!! not THEME.switch_doors then
     -- room list remains in the "natural flow" order
     no_quest_order(QT.start, QT)
   else

@@ -547,7 +547,7 @@ function Layout_the_floor(R)
     F.nosplits = collect_spaces("nosplit")
     F.airs     = collect_spaces("air")
 
-    assert(#F.walks > 0)
+--!!!!!!    assert(#F.walks > 0)
 
     F.zones = determine_safe_zones(mono, F.walks)
 
@@ -577,25 +577,28 @@ function Layout_the_floor(R)
       -- entry must be a teleporter or start pedestal
       -- pick any walk brush and build it's prefab
 
-      assert(R.purpose == "START" or R:has_teleporter())
+--!!!!!! HALLWAY TOO      assert(R.purpose == "START" or R:has_teleporter())
 
       -- FIXME: some walks may not have a prefab (between monotonic spaces)
 
+--!!!!!!!!
+--[[
       F.entry = rand.pick(F.walks)
 
       local fab = assert(F.entry[1].fab)
 
       bump_and_build_fab(fab, F.entry, R.entry_floor_h)
+--]]
     end
 
-    F.z = assert(Trans.brush_get_b(F.entry))
+    F.z = 64 --!!!!!! assert(Trans.brush_get_b(F.entry))
   end
 
 
   local function render_floor(F)
     F.rendered = true
 
-    assert(F.entry)
+--!!!!!!    assert(F.entry)
     assert(F.z)
 
     -- set height
@@ -1265,7 +1268,8 @@ gui.debugf("entry_walk = %s\n%s\n", tostring(R.entry_walk), table.tostr(R.entry_
   initial_floors()
 
   -- this will render floors as it goes
-  while try_subdivide_a_floor() do end
+--!!!!!!  while try_subdivide_a_floor() do end
+for _,F in ipairs(R.all_floors) do render_floor(F) end
 
   prepare_ceiling()
 end

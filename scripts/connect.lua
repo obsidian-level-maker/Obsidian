@@ -469,6 +469,41 @@ function Connect_make_hallways()
   end
 
 
+  -- FIXME FIXME VERY TEMP SHITE !!!  DO THIS ELSEWHERE !!!!
+  local function build_seed(sx, sy)
+    local sdx = sx - SECTIONS[1][1].sx1
+    local sdy = sy - SECTIONS[1][1].sy1
+
+    local x1 = SECTIONS[1][1].x1 + sdx * SEED_SIZE
+    local y1 = SECTIONS[1][1].y1 + sdy * SEED_SIZE
+
+    local x2 = x1 + SEED_SIZE
+    local y2 = y1 + SEED_SIZE
+
+    gui.add_brush(
+    {
+      { m="solid" },
+      { x=x1, y=y1, tex="SHAWN3" },
+      { x=x2, y=y1, tex="SHAWN3" },
+      { x=x2, y=y2, tex="SHAWN3" },
+      { x=x1, y=y2, tex="SHAWN3" },
+      { b=176, tex="FLAT20" },
+    })
+
+    gui.add_brush(
+    {
+      { m="solid" },
+      { x=x1, y=y1, tex="COMPBLUE" },
+      { x=x2, y=y1, tex="COMPBLUE" },
+      { x=x2, y=y2, tex="COMPBLUE" },
+      { x=x1, y=y2, tex="COMPBLUE" },
+      { t=48, tex="FLAT14" },
+    })
+
+    gui.add_entity({ id="2001", x=x1+96, y=y1+96, z=0 })
+  end
+
+
   local function use_it()
     for sx = 1,SEED_W do for sy = 1,SEED_H do
       local H = hall_map[sx][sy]
@@ -477,6 +512,8 @@ function Connect_make_hallways()
 
         -- mark the section's side as used for a hallway
         H.K.halls[H.side] = 1
+
+        build_seed(sx, sy)
       end
     end end
   end
