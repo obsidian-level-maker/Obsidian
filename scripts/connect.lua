@@ -675,6 +675,7 @@ function Connect_rooms()
 
     local K2 = K1:neighbor(dir)
     if not K2 then return false end
+    if K2.halls[10-dir] then return false end
 
     return Connect_possibility(K1.room, K2.room) > 0
   end
@@ -920,12 +921,12 @@ function Connect_rooms()
       if already_connected(K, N) then
         num_matched = num_matched + 1
 
-      elseif K.halls[dir] then
-        return false
-
       elseif not can_connect(K, N) then
         return false
       
+      elseif K.halls[dir] or N.halls[10-dir] then
+        return false
+
       elseif do_it then
         add_connection(K, N, "normal", dir)
       end
@@ -1064,9 +1065,9 @@ function Connect_rooms()
 
 
   local function emergency_score(K, N, dir)
-    if K.halls[dir] then return -1 end
-
     if not can_connect(K, N) then return -1 end
+
+    if K.halls[dir] or N.halls[10-dir] then return -1 end
 
     local score = 0
 
