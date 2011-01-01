@@ -72,6 +72,15 @@ function SECTION_CLASS.update_size(self)
   self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
 end
 
+function SECTION_CLASS.shrink(self, side)
+  if side == 2 then self.sy1 = self.sy1 + 1 ; self.y1 = self.y1 + SEED_SIZE end
+  if side == 8 then self.sy2 = self.sy2 - 1 ; self.y2 = self.y2 - SEED_SIZE end
+  if side == 4 then self.sx1 = self.sx1 + 1 ; self.x1 = self.x1 + SEED_SIZE end
+  if side == 6 then self.sx2 = self.sx2 - 1 ; self.x2 = self.x2 - SEED_SIZE end
+
+  self:update_size()
+end
+
 function SECTION_CLASS.neighbor(self, dir, dist)
   local nx, ny = geom.nudge(self.kx, self.ky, dir, dist)
   if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
@@ -686,7 +695,7 @@ function Plan_add_big_rooms()
   local function add_biggie(quota)
     -- returns size of room
 
-    local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
+    local shape_name = "rect" --!!!!!!!!! rand.key_by_probs(BIG_SHAPE_PROBS)
 
     local rw, rh = pick_rect_size()
     local rot    = rand.irange(0, 3) * 2
@@ -1199,6 +1208,8 @@ function Plan_prepare_rooms()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     prepare_room(R)
+
+    gui.printf("Final size of %s = %dx%d volume:%d\n", R:tostr(), R.sw, R.sh, R.svolume)
   end
 end
 
@@ -1236,7 +1247,7 @@ function Plan_create_rooms()
   Levels_invoke_hook("add_rooms")
 
   Plan_add_special_rooms()
-  Plan_add_natural_rooms()
+--!!!!!!  Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
@@ -1252,10 +1263,6 @@ function Plan_create_rooms()
   Plan_make_seeds()
   Plan_dump_rooms()
 
-  Plan_prepare_rooms()
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    gui.printf("Final size of %s = %dx%d volume:%d\n", R:tostr(), R.sw, R.sh, R.svolume)
-  end
+---??  Plan_prepare_rooms()   -- SEE NOTE IN Connect_Rooms() 
 end
 

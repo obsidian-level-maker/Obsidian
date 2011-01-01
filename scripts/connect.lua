@@ -614,6 +614,22 @@ function Connect_make_hallways()
   end
 
 
+  local function resize_sections()
+    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+      if K then
+
+        for side = 2,8,2 do
+          if K.halls[side] then
+            K:shrink(side, 1)
+          end
+        end
+
+      end
+    end end
+  end
+
+
   ---| Connect_make_hallways |---
 
   build_hall_map()
@@ -625,6 +641,8 @@ function Connect_make_hallways()
   end
 
   dump_hall_map()
+
+  resize_sections()
 end
 
 
@@ -1300,6 +1318,9 @@ function Connect_rooms()
   Levels_invoke_hook("connect_rooms")
 
   Connect_make_hallways()
+
+  -- NOTE: doing this here since hallways change the sizes of sections
+  Plan_prepare_rooms()
 
   decide_teleporters()
 
