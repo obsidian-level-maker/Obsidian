@@ -358,7 +358,7 @@ function Connect_make_hallways()
   local hall_map = table.array_2D(SEED_W, SEED_H)
   local sect_map = table.array_2D(SEED_W, SEED_H)
 
-  local R1  -- FIXME
+  local K1, R1  -- FIXME
 
 
   local function valid(sx, sy)
@@ -399,6 +399,15 @@ function Connect_make_hallways()
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
       hall_map[sx][sy] = { K=K, side=side }
+    end end
+  end
+
+
+  local function remove_side_from_map(K, side)
+    local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
+
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      hall_map[sx][sy] = nil
     end end
   end
 
@@ -519,16 +528,28 @@ function Connect_make_hallways()
   end
 
 
-  local function mark(hx, hy, dir, dist)
+  local function mark(path, hx, hy, dir, dist)
     for d = 1,dist do
-      local nx, ny = geom.nudge(hx, hy, dir, d-1)
+      local sx, sy = geom.nudge(hx, hy, dir, d-1)
 
-      assert(valid(nx, ny))
-      local H = hall_map[nx][ny]
+      assert(valid(sx, sy))
+      local H = hall_map[sx][sy]
       assert(H)
 
       H.trace = true
+
+      table.insert(path, { sx=sx, sy=sy, dir=dir })
     end
+  end
+
+
+  local function dump_path(path)
+    gui.debugf("Path:\n")
+    gui.debugf("{\n")
+    for _,P in ipairs(path) do
+      gui.debugf("  Seed @ (%d,%d) dir:%d\n", P.sx, P.sy, P.dir)
+    end
+    gui.debugf("}\n")
   end
 
 
@@ -561,12 +582,14 @@ local tt_R2  -- FIXME !!!!
 
     local H = hall_map[nx][ny]
 
-    if H and (H.trace or H.used) then
+    if H and (H.trace or H.used or H.K == K1) then
       return false
     end
 
     local K2 = sect_map[nx][ny]
     local R2 = K2.room
+
+    if K2.halls[10-dir] then return false end
 
     tt_R2 = R2
 
@@ -588,7 +611,7 @@ local tt_R2  -- FIXME !!!!
 
       local H = hall_map[nx][ny]
 
-      if not H or H.used or H.trace or H.bad then break; end
+      if not H or H.used or H.trace or H.bad or H.K == K1 then break; end
 
       -- don't branch too close
       if dist >= 2 or rand.odds(1) then
@@ -627,15 +650,21 @@ local tt_R2  -- FIXME !!!!
   local function try_trace_hall(start)
     clear()
 
+    -- side of section already in use?
+    if start.K1.halls[start.dir] then return false end
+
+    K1 = start.K1
     R1 = start.R1
 
     local path = {}
 
     local pos = start
 
-    while true do
-      table.insert(path, pos)
+    local H = hall_map[pos.sx][pos.sy]
 
+    if not H or H.used or H.bad then return false end
+
+    while true do
       local juncs, terms = find_junctions(pos)
 
       local J = rand.pick(juncs)
@@ -651,23 +680,25 @@ local tt_R2  -- FIXME !!!!
       -- TERMINATE ? --
 
       if T and (not J or rand.odds(50)) then
-        table.insert(path, T)
+        mark(path, pos.sx, pos.sy, pos.dir, T.dist)
 
-        -- add one to dist to mark the very last seed too
-        mark(pos.sx, pos.sy, pos.dir, T.dist + 1)
+        mark(path, T.sx, T.sy, T.dir, 1)
+
         use_it()
 
         add_hallway(R1, assert(T.R2), path)
+
+        dump_path(path)
+
+        remove_side_from_map(start.K1, start.dir)
 
         return true
       end
 
       -- TURN LEFT / RIGHT --
 
-      table.insert(path, assert(J))
-
       -- mark seeds including start but excluding the next position
-      mark(pos.sx, pos.sy, pos.dir, J.dist)
+      mark(path, pos.sx, pos.sy, pos.dir, J.dist)
 
       pos = J
     end
