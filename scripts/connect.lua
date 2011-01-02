@@ -479,7 +479,10 @@ function Connect_make_hallways()
 
 
   -- FIXME FIXME VERY TEMP SHITE !!!  DO THIS ELSEWHERE !!!!
-  local function build_seed(sx, sy)
+  local function build_seed(P)
+    local sx = P.sx
+    local sy = P.sy
+
     local sdx = sx - SECTIONS[1][1].sx1
     local sdy = sy - SECTIONS[1][1].sy1
 
@@ -492,11 +495,11 @@ function Connect_make_hallways()
     gui.add_brush(
     {
       { m="solid" },
-      { x=x1, y=y1, tex="SHAWN3" },
-      { x=x2, y=y1, tex="SHAWN3" },
-      { x=x2, y=y2, tex="SHAWN3" },
-      { x=x1, y=y2, tex="SHAWN3" },
-      { b=176, tex="FLAT20" },
+      { x=x1, y=y1, tex="SILVER1" },
+      { x=x2, y=y1, tex="SILVER1" },
+      { x=x2, y=y2, tex="SILVER1" },
+      { x=x1, y=y2, tex="SILVER1" },
+      { b=176, tex="FLAT22" },
     })
 
     gui.add_brush(
@@ -506,10 +509,47 @@ function Connect_make_hallways()
       { x=x2, y=y1, tex="COMPBLUE" },
       { x=x2, y=y2, tex="COMPBLUE" },
       { x=x1, y=y2, tex="COMPBLUE" },
-      { t=48, tex="FLAT14" },
+      { t=48, tex="FWATER1" },
     })
 
+    for side = 2,8,2 do
+      if not P.exits[side] then
+        local bx1, by1, bx2, by2 = x1,y1, x2,y2
+        if side == 2 then by2 = by1 + 16 end
+        if side == 8 then by1 = by2 - 16 end
+        if side == 4 then bx2 = bx1 + 16 end
+        if side == 6 then bx1 = bx2 - 16 end
+
+        gui.add_brush(
+        {
+          { m="solid" },
+          { x=bx1, y=by1, tex="COMPSPAN" },
+          { x=bx2, y=by1, tex="COMPSPAN" },
+          { x=bx2, y=by2, tex="COMPSPAN" },
+          { x=bx1, y=by2, tex="COMPSPAN" },
+        })
+      end
+    end
+
     gui.add_entity({ id="2001", x=x1+96, y=y1+96, z=0 })
+  end
+
+  local function build_hallway(info)
+    -- determine which sides of each seed are an exit
+    for index,P in ipairs(info.path) do
+      if not P.exits then P.exits = {} end
+      P.exits[P.dir] = 1
+
+      if index > 1 then
+        P.exits[10 - info.path[index-1].dir] = 1
+      else
+        P.exits[info.entrance_dir] = 1
+      end
+    end
+
+    for _,P in ipairs(info.path) do
+      build_seed(P)
+    end
   end
 
 
@@ -521,8 +561,6 @@ function Connect_make_hallways()
 
         -- mark the section's side as used for a hallway
         H.K.halls[H.side] = 1
-
-        build_seed(sx, sy)
       end
     end end
   end
@@ -571,7 +609,7 @@ function Connect_make_hallways()
   end
 
 
-local tt_R2  -- FIXME !!!!
+local tt_K2  -- FIXME !!!!
 
   local function test_terminator(H, hx, hy, dir)
     local nx, ny = geom.nudge(hx, hy, dir)
@@ -591,7 +629,7 @@ local tt_R2  -- FIXME !!!!
 
     if K2.halls[10-dir] then return false end
 
-    tt_R2 = R2
+    tt_K2 = K2
 
     return Connect_possibility(R1, R2) > 0
   end
@@ -621,7 +659,7 @@ local tt_R2  -- FIXME !!!!
           end
 
           if test_terminator(H, nx, ny, dir) then
-            table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist, R2=tt_R2 })
+            table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist, K2=tt_K2, R2=tt_K2.room })
           end
         end
       end
@@ -631,14 +669,14 @@ local tt_R2  -- FIXME !!!!
   end
 
 
-  local function add_hallway(R1, R2, path)
+  local function add_hallway(R1, R2, HALLWAY)
     gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
     local C = CONN_CLASS.new_R(R1, R2, "hallway")
 
-    C.path = path
+    C.hallway = HALLWAY
 
     table.insert(LEVEL.all_conns, C)
 
@@ -679,18 +717,28 @@ local tt_R2  -- FIXME !!!!
 
       -- TERMINATE ? --
 
-      if T and (not J or rand.odds(50)) then
+      if T and (not J or rand.odds(20)) then
         mark(path, pos.sx, pos.sy, pos.dir, T.dist)
 
         mark(path, T.sx, T.sy, T.dir, 1)
 
         use_it()
 
+        local HALLWAY =
+        {
+          entrance_dir = 10 - pos.dir,
+
+          path = path,
+        }
+
         add_hallway(R1, assert(T.R2), path)
+
+        build_hallway(HALLWAY)
 
         dump_path(path)
 
         remove_side_from_map(start.K1, start.dir)
+        remove_side_from_map(T.K2, 10 - T.dir)
 
         return true
       end
