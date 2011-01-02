@@ -1841,8 +1841,6 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
 
-  region_c *N = S->partner ? S->partner->region : NULL;
-
   int x1 = map_W/2 + I_ROUND(S->x1 + mini_add_x) / MINI_MAP_SCALE;
   int y1 = map_H/2 + I_ROUND(S->y1 + mini_add_y) / MINI_MAP_SCALE;
 
@@ -1853,8 +1851,14 @@ static void AddMiniMapLine(region_c *R, snag_c *S)
   u8_t g = 255;
   u8_t b = 255;
 
+  region_c *N = S->partner ? S->partner->region : NULL;
+
   if (N && N->gaps.size() > 0)  // two sided?
   {
+    // only draw partnered snags ONCE
+    if (S->partner && S->partner < S)
+      return;
+
     double f1 = R->gaps.front()->bottom->t.z;
     double f2 = N->gaps.front()->bottom->t.z;
 
@@ -1907,10 +1911,6 @@ void CSG_MakeMiniMap(void)
     for (unsigned int k = 0 ; k < R->snags.size() ; k++)
     {
       snag_c *S = R->snags[k];
-
-      // only handle partnered pairs ONCE
-      if (S->partner && S->partner < S)
-        continue;
 
       AddMiniMapLine(R, S);
     }
