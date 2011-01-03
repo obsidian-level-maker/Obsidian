@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
---  SEED MANAGEMENT / GROWING
+--  SEED MANAGEMENT
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2009 Andrew Apted
+--  Copyright (C) 2008-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -25,36 +25,18 @@ class SEED
   sx, sy  -- location in seed map
 
   room : ROOM
-
-  kind : keyword  -- main usage of seed:
-                  --   "walk", "void", "diagonal",
-                  --   "stair", "curve_stair", "tall_stair",
-                  --   "liquid"
-
-  usage : keyword  -- normally nil, but can be:
-                   --   "pillar"
-
-  border[DIR] : BORDER   -- can be nil
+  hall : HALLWAY
 
   x1, y1, x2, y2  -- 2D map coordinates
+
+  --- hallway stuff ---
+
+  border[DIR] : BORDER   -- can be nil
 
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
 }
 
-
-class BORDER
-{
-  kind  : nil (when not decided yet)
-          "nothing", "straddle",
-          "wall", "facade", "fence", "window",
-          "arch", "door", "locked_door",
-
-  thick : number  -- thickness of this border
-
-  other : SEED  -- seed we are connected to, or nil 
-
-}
 
 --------------------------------------------------------------]]
 
@@ -87,53 +69,8 @@ function SEED_CLASS.neighbor(self, dir, dist)
   return SEEDS[nx][ny]
 end
 
-function SEED_CLASS.has_conn(self, C)
-  assert(C)
-  for side = 2,8,2 do
-    local B = self.border[side]
-    if B and B.conn == C then return true end
-  end
-  return false
-end
-
-function SEED_CLASS.has_any_conn(self)
-  for side = 2,8,2 do
-    local B = self.border[side]
-    if B and B.conn then return true end
-  end
-  return false
-end
-
-function SEED_CLASS.add_border(S, side, kind, thick)
-  local BORDER = { kind=kind, thick=thick }
-
-  S.border[side] = BORDER
-
-  return BORDER
-end
-
 function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
-end
-
-function SEED_CLASS.x3(self)
-  if self.border[4] then return self.x1 + self.border[4].thick end
-  return self.x1
-end
-
-function SEED_CLASS.x4(self)
-  if self.border[6] then return self.x2 - self.border[6].thick end
-  return self.x2
-end
-
-function SEED_CLASS.y3(self)
-  if self.border[2] then return self.y1 + self.border[2].thick end
-  return self.y1
-end
-
-function SEED_CLASS.y4(self)
-  if self.border[8] then return self.y2 - self.border[8].thick end
-  return self.y2
 end
 
 
@@ -177,14 +114,10 @@ function Seed_init(map_W, map_H, free_W, free_H)
 end
 
 
+
 function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H)
-end
-
-
-function Seed_safe_get(x, y)
-  return Seed_valid(x, y) and SEEDS[x][y]
 end
 
 
@@ -204,7 +137,7 @@ function Seed_flood_fill_edges()
 
     for _,S in ipairs(active) do for side = 2,8,2 do
       local N = S:neighbor(side)
-      if N and not N.edge_of_map and not N.free and not N.room then
+      if N and not N.edge_of_map and not N.free and not N.room and not N.hall then
         N.edge_of_map = true
         table.insert(new_active, N)
       end

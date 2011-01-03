@@ -51,6 +51,7 @@ require 'connect'
 require 'naming'
 require 'quests'
 require 'caves'
+require 'seeds'
 
 require 'build'
 require 'floors'
