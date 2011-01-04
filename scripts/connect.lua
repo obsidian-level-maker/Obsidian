@@ -398,7 +398,7 @@ function Connect_make_hallways()
   -- 5. starts and destinations are never created directly next to an
   --    existing start or destination.
   --
-  -- 6. each segment of a hallway will consist of least 3 seeds
+  -- 6. each segment of a hallway should consist of least 3 seeds
   --    and no more than 7 or 8.  Sometimes allow 2 seeds to create
   --    more zig-zaggy paths.
   --
@@ -408,12 +408,6 @@ function Connect_make_hallways()
   --
 
   local K1, R1  -- FIXME
-
-
-  local function valid(sx, sy)
-    return sx >= 1 and sx <= SEED_W and
-           sy >= 1 and sy <= SEED_H
-  end
 
 
   local function neighbor(sx, sy, dir, dist)
@@ -490,36 +484,68 @@ function Connect_make_hallways()
   end
 
 
-  local function find_perpendiculars()
-    -- these are hallway spots which come out of a room and can
-    -- travel for at least 3 seeds.
+  local function evaluate_start(S, dir)
+    local score = 0
 
+    -- check seeds on either side
+    local A = S:neighbor(geom.RIGHT[dir])
+    local B = S:neighbor(geom.LEFT [dir])
+
+    if A and A.hall_dir then return -1 end
+    if B and B.hall_dir then return -1 end
+
+    if A and A.room == S.room and B and B.room == S.room then
+      score = score + 100
+    else
+      if rand.odds(90) then return -1 end
+    end
+
+    -- check length of hallway leaving the room
+    for i = 2,5 do
+      local N = S:neighbor(dir, i)
+
+      if not (N and N.hall) then break; end
+
+      score = score + 10
+    end
+
+    A = S:neighbor(dir, 2)
+    B = S:neighbor(dir, 3)
+
+    return score + (gui.random() ^ 3) * 25
+  end
+
+
+  local function find_starts()
     local list = {}
 
     for sx = 2,SEED_W-1 do for sy = 2,SEED_H-1 do
-      local H = SEEDS[sx][sy].hall
-      local K = SEEDS[sx][sy].K
-      if H then
+      local S = SEEDS[sx][sy]
+      if S.room then
+
         for dir = 2,8,2 do
+          local N = S:neighbor(dir)
+          if N and N.hall and N.room ~= S.room then
 
-          local nx, ny = geom.nudge(sx, sy, 10-dir)
-          local N = SEEDS[nx][ny].K
+            local score = evaluate_start(S, dir)
 
-          if N and (not K or N.room ~= K.room) and
-             neighbor(sx, sy, dir, 1) and
-             (neighbor(sx, sy, dir, 2) or rand.odds(10)) and
+            if score >= 0 then
+              local HALLWAY =
+              {
+                start = S,
+                start_dir = dir,
+                score = score,
+              }
+              table.insert(list, HALLWAY)
+            end
 
-             geom.vert_sel(dir, (nx > N.room.sx1 and nx < N.room.sx2),
-                                (ny > N.room.sy1 and ny < N.room.sy2))
-
-             and N.room.shape == "rect"
-          then
-            table.insert(list, { sx=sx, sy=sy, dir=dir, K1=N, R1=N.room })
           end 
+        end -- for dir
 
-        end
       end
-    end end
+    end end -- for sx, sy
+
+    table.sort(list, function(A, B) return A.score > B.score end)
 
     return list
   end
@@ -744,18 +770,19 @@ local tt_K2  -- FIXME !!!!
   end
 
 
-  local function try_trace_hall(start)
+  local function try_trace_hall(info)
     clear()
 
-    -- side of section already in use?
-    if start.K1.halls[start.dir] then return false end
+    K1 = info.start.K
+    R1 = info.start.room
 
-    K1 = start.K1
-    R1 = start.R1
+    -- side of section already in use?    FIXME for hallway branch-offs
+    if K1.halls[info.start_dir] then return false end
 
     local path = {}
 
-    local pos = start
+--FIXME: REMOVE
+    local pos = { sx=info.start.sx, sy=info.start.sy, dir=info.start_dir }
 
     local H = SEEDS[pos.sx][pos.sy].hall
 
@@ -796,7 +823,7 @@ local tt_K2  -- FIXME !!!!
 
         dump_path(path)
 
-        remove_side_from_map(start.K1, start.dir)
+        remove_side_from_map(K1, info.start_dir)
         remove_side_from_map(T.K2, 10 - T.dir)
 
         return true
@@ -812,9 +839,9 @@ local tt_K2  -- FIXME !!!!
   end
 
 
-  local function make_hallway(start)
+  local function make_hallway(info)
     for loop = 1,15 do
-      if try_trace_hall(start) then
+      if try_trace_hall(info) then
         -- we're golden
         return;
       end
@@ -844,10 +871,10 @@ local tt_K2  -- FIXME !!!!
 
   dump_hall_map()
 
-  local start_spots = find_perpendiculars()
+  local starts = find_starts()
 
-  for _,start in ipairs(start_spots) do
-    make_hallway(start)
+  for _,info in ipairs(starts) do
+    make_hallway(info)
   end
 
   dump_hall_map()
