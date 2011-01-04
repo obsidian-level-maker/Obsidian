@@ -385,13 +385,10 @@ function Connect_make_hallways()
   --    and no more than 7 or 8.  Sometimes allow 2 seeds to create
   --    more zig-zaggy paths.
   --
-  -- TODO: explore bility to start a hallway off an existing
-  --       hallway.  Probably prefer coming off the middle of a
-  --       segment rather than a junction.
+  -- 7: need ability to start a hallway off an existing hallway.
+  --    Probably prefer coming off the middle of a segment rather than
+  --    off a junction.
   --
-
-  local hall_map = table.array_2D(SEED_W, SEED_H)
-  local sect_map = table.array_2D(SEED_W, SEED_H)
 
   local K1, R1  -- FIXME
 
@@ -404,8 +401,10 @@ function Connect_make_hallways()
 
   local function neighbor(sx, sy, dir, dist)
     local nx, ny = geom.nudge(sx, sy, dir, dist)
-    if not valid(nx, ny) then return nil end
-    return hall_map[nx][ny]
+
+    if not Seed_valid(nx, ny) then return nil end
+
+    return SEEDS[nx][ny].hall
   end
 
 
@@ -415,7 +414,7 @@ function Connect_make_hallways()
     for sy = SEED_H,1,-1 do
       local line = ""
       for sx = 1,SEED_W do
-        local H = hall_map[sx][sy]
+        local H = SEEDS[sx][sy].hall
 
         local ch = "."
         if H then
@@ -433,7 +432,7 @@ function Connect_make_hallways()
     local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
-      hall_map[sx][sy] = { K=K, side=side }
+      SEEDS[sx][sy].hall = { K=K, side=side }
     end end
   end
 
@@ -442,12 +441,21 @@ function Connect_make_hallways()
     local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
-      hall_map[sx][sy] = nil
+      SEEDS[sx][sy].hall = nil
     end end
   end
 
 
   local function build_hall_map()
+    -- can use seeds around edge of map, or any unused seeds
+    for sx = 2,SEED_W-1 do for sy = 2,SEED_H-5 do
+      local S = SEEDS[sx][sy]
+      if not (S.room or S.hall) then
+        SEEDS[sx][sy].hall = {}
+      end
+    end end
+
+    -- find the "spare" sides of sections
     for kx = 1,SECTION_W do for ky = 1,SECTION_H do
       local K = SECTIONS[kx][ky]
       if K and K.room then
@@ -459,10 +467,6 @@ function Connect_make_hallways()
             add_side_to_map(K, side)
           end
         end
-
-        for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
-          sect_map[sx][sy] = K
-        end end
 
       end
     end end
@@ -476,15 +480,15 @@ function Connect_make_hallways()
     local list = {}
 
     for sx = 2,SEED_W-1 do for sy = 2,SEED_H-1 do
-      local H = hall_map[sx][sy]
-      local K = sect_map[sx][sy]
+      local H = SEEDS[sx][sy].hall
+      local K = SEEDS[sx][sy].K
       if H then
         for dir = 2,8,2 do
 
           local nx, ny = geom.nudge(sx, sy, 10-dir)
-          local N = sect_map[nx][ny]
+          local N = SEEDS[nx][ny].K
 
-          if N and N.room ~= K.room and
+          if N and (not K or N.room ~= K.room) and
              neighbor(sx, sy, dir, 1) and
              (neighbor(sx, sy, dir, 2) or rand.odds(10)) and
 
@@ -506,7 +510,7 @@ function Connect_make_hallways()
 
   local function clear()
     for sx = 1,SEED_W do for sy = 1,SEED_H do
-      local H = hall_map[sx][sy]
+      local H = SEEDS[sx][sy].hall
       if H then H.trace = nil ; H.bad = nil end
     end end
   end
@@ -589,12 +593,14 @@ function Connect_make_hallways()
 
   local function use_it()
     for sx = 1,SEED_W do for sy = 1,SEED_H do
-      local H = hall_map[sx][sy]
+      local H = SEEDS[sx][sy].hall
       if H and H.trace then
         H.used = true
 
         -- mark the section's side as used for a hallway
-        H.K.halls[H.side] = 1
+        if H.K then
+          H.K.halls[H.side] = 1
+        end
       end
     end end
   end
@@ -604,8 +610,8 @@ function Connect_make_hallways()
     for d = 1,dist do
       local sx, sy = geom.nudge(hx, hy, dir, d-1)
 
-      assert(valid(sx, sy))
-      local H = hall_map[sx][sy]
+      assert(Seed_valid(sx, sy))
+      local H = SEEDS[sx][sy].hall
       assert(H)
 
       H.trace = true
@@ -632,9 +638,9 @@ function Connect_make_hallways()
     for dist = 1,rand.sel(1, 1, 2) do
       local nx, ny = geom.nudge(hx, hy, dir, dist)
 
-      if not valid(nx, ny) then return false end
+      if not Seed_valid(nx, ny) then return false end
 
-      local H = hall_map[nx][ny]
+      local H = SEEDS[nx][ny].hall
 
       if not H or H.used or H.trace then return false end
     end
@@ -648,20 +654,20 @@ local tt_K2  -- FIXME !!!!
   local function test_terminator(H, hx, hy, dir)
     local nx, ny = geom.nudge(hx, hy, dir)
 
-    if not valid(nx, ny) then return false end
+    if not Seed_valid(nx, ny) then return false end
 
-    if not sect_map[nx][ny] then return false end
+    local K2 = SEEDS[nx][ny].K
+    if not K2 then return false end
 
-    local H = hall_map[nx][ny]
+    local H = SEEDS[nx][ny].hall
 
     if H and (H.trace or H.used or H.K == K1) then
       return false
     end
 
-    local K2 = sect_map[nx][ny]
     local R2 = K2.room
 
-    if K2 == sect_map[hx][hy] then return false end
+    if K2 == SEEDS[hx][hy].K then return false end
 
     if K2.halls[10-dir] then return false end
 
@@ -681,9 +687,9 @@ local tt_K2  -- FIXME !!!!
     for dist = 1,7 do
       local nx, ny = geom.nudge(pos.sx, pos.sy, pos.dir, dist)
 
-      if not valid(nx, ny) then break; end
+      if not Seed_valid(nx, ny) then break; end
 
-      local H = hall_map[nx][ny]
+      local H = SEEDS[nx][ny].hall
 
       if not H or H.used or H.trace or H.bad or H.K == K1 then break; end
 
@@ -734,7 +740,7 @@ local tt_K2  -- FIXME !!!!
 
     local pos = start
 
-    local H = hall_map[pos.sx][pos.sy]
+    local H = SEEDS[pos.sx][pos.sy].hall
 
     if not H or H.used or H.bad then return false end
 
@@ -746,7 +752,7 @@ local tt_K2  -- FIXME !!!!
 
       if not J and not T then
         -- nowhere to go?  mark spot as bad
-        hall_map[pos.sx][pos.sy].bad = true
+        SEEDS[pos.sx][pos.sy].hall.bad = true
 
         return false
       end
