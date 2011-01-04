@@ -431,9 +431,9 @@ function Layout_make_corners(R)
     -- FIXME!!! look for a prefab that fits in that limit,
     --          and test if it fits OK (no overlapping e.g. walk brushes)
 
-if false then
-long_V = 32
-long_H = 32
+if true then
+long_V = 64
+long_H = 64
 end
 
     C.horiz = long_H
@@ -458,7 +458,7 @@ end
 
     Layout_inner_outer_tex(skin, C.K, neighbor)
 
-    local fab_name = "CORNER_DIAGONAL"
+    local fab_name = "CORNER"
 
     if GAME.format == "quake" and not C.concave and not R.outdoor then
       fab_name = "CORNER_DIAG_W_TORCH"
