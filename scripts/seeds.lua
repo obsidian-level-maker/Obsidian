@@ -94,8 +94,9 @@ function Seed_init(map_W, map_H, free_W, free_H)
       S.x1 = (x-1) * SEED_SIZE
       S.y1 = (y-1) * SEED_SIZE
 
-      -- centre the map : needed for Quake, OK for other games
-      -- (this formula ensures that 'coord 0' is still a seed boundary)
+      -- centre the map : needed for Quake, OK for other games.
+      -- this formula ensures that 'coord 0' is still a seed boundary,
+      -- which is VITAL for the Quake visibility code.
       S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
       S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
 

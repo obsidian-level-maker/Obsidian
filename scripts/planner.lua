@@ -301,31 +301,13 @@ function Plan_create_sections(W, H)
   end end
 
 
-  --- create the SEED mapping ---
+  --- create the SEED map ---
 
   local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + border_seeds - 1
   local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
 
-  -- setup globals 
-  SEED_W = seed_W
-  SEED_H = seed_H + free_seeds
+  Seed_init(seed_W, seed_H, 0, free_seeds)
 
-  -- centre the map : needed for Quake, OK for other games.
-  -- this formula ensures that 'coord 0' is still a seed boundary,
-  -- which is VITAL for the Quake visibility code.
-
-  SEED_DX = int(SEED_W / 2) * SEED_SIZE
-  SEED_DY = int(SEED_H / 2) * SEED_SIZE
-
-  for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local K = SECTIONS[x][y]
-
-    K.x1 = (K.sx1 - 1) * SEED_SIZE - SEED_DX
-    K.y1 = (K.sy1 - 1) * SEED_SIZE - SEED_DY
-
-    K.x2 = K.sx2 * SEED_SIZE - SEED_DX
-    K.y2 = K.sy2 * SEED_SIZE - SEED_DY
-  end end
 end
 
 
@@ -763,7 +745,7 @@ function Plan_add_big_rooms()
     quota = quota - size
   end
 
-Plan_dump_sections("Sections with big rooms:")
+  Plan_dump_sections("Sections with big rooms:")
 end
 
 
@@ -1037,6 +1019,17 @@ function Plan_make_seeds()
 
     if not R then return end
 
+    for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
+      SEEDS[sx][sy].K    = K
+      SEEDS[sx][sy].room = K.room
+    end end
+
+    K.x1 = SEEDS[K.sx1][K.sy1].x1
+    K.y1 = SEEDS[K.sx1][K.sy1].y1
+
+    K.x2 = SEEDS[K.sx2][K.sy2].x2
+    K.y2 = SEEDS[K.sx2][K.sy2].y2
+
     if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
     if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
     if not R.sx2 or K.sx2 > R.sx2 then R.sx2 = K.sx2 end
@@ -1046,6 +1039,7 @@ function Plan_make_seeds()
 
     R.svolume = (R.svolume or 0) + (K.sw * K.sh)
   end
+
 
   ---| Plan_make_seeds |---
 
@@ -1058,26 +1052,22 @@ end
 function Plan_dump_rooms(title)
 
   local function seed_to_char(sx, sy)
-    -- find the section
-    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-      local K = SECTIONS[kx][ky]
+    local S = SEEDS[sx][sy]
+    local K = S.K
 
-      if geom.inside_box(sx,sy, K.sx1,K.sy1, K.sx2,K.sy2) then
-        local R = K.room
+    if not (K and K.room) then return "." end
 
-        if R.kind == "scenic" then return "=" end
+    local R = K.room
 
-        local n = 1 + ((R.id - 1) % 26)
+    if R.kind == "scenic" then return "=" end
 
-        if R.natural then
-          return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
-        else
-          return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
-        end
-      end
-    end end
+    local n = 1 + ((R.id - 1) % 26)
 
-    return "."
+    if R.natural then
+      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+    else
+      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    end
   end
 
   gui.printf("%s\n", title or "Seed Map:")
