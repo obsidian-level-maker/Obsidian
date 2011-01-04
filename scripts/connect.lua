@@ -352,8 +352,43 @@ end
 
 function Connect_make_hallways()
 
-  -- these hallways are a group of seeds which get cut-off from the
-  -- sides of sections.
+  -- Notes:
+  --
+  -- hallways are created using the "spare" sides of sections, e.g.
+  -- if a section is 4 or more seeds wide, then the left or right
+  -- side can potentially be used as part of a hallway.
+  -- 
+  -- Some rules for hallway generation:
+  -- 
+  -- 1. the "start" of a hallway is the seed on one side of a room
+  --    section, and heading outwards.  We have a strong preference
+  --    for the seeds left and right of the start (if vertical) to
+  --    belong to the same room.
+  --
+  -- 2. the "destination" of a hallway is also a seed on one side
+  --    of a room section, coming inwards.  Also have a strong
+  --    preferences for same room on the left or right (if vertical)
+  --    or above and below (if horizontal).
+  --
+  -- 3. the best starts and destinations have the longest number of
+  --    seeds which lead directly from/to the room.
+  --
+  -- 4. seeds belonging to the start section or destination section
+  --    cannot be used as part of the hallway path.  i.e. we require
+  --    the section side to be kept where it joins a hallway (never
+  --    allocated for hallway usage).
+  --
+  -- 5. starts and destinations are never created directly next to an
+  --    existing start or destination.
+  --
+  -- 6. each segment of a hallway will consist of least 3 seeds
+  --    and no more than 7 or 8.  Sometimes allow 2 seeds to create
+  --    more zig-zaggy paths.
+  --
+  -- TODO: explore bility to start a hallway off an existing
+  --       hallway.  Probably prefer coming off the middle of a
+  --       segment rather than a junction.
+  --
 
   local hall_map = table.array_2D(SEED_W, SEED_H)
   local sect_map = table.array_2D(SEED_W, SEED_H)
@@ -420,8 +455,7 @@ function Connect_make_hallways()
         for side = 2,8,2 do
           local deep = geom.vert_sel(side, K.sh, K.sw)
           if K:same_room(10-side) then deep = deep + 1 end
-          if deep >= 4 and not K:same_room(side)
-          then
+          if deep >= 4 and not K:same_room(side) then
             add_side_to_map(K, side)
           end
         end
@@ -627,6 +661,8 @@ local tt_K2  -- FIXME !!!!
     local K2 = sect_map[nx][ny]
     local R2 = K2.room
 
+    if K2 == sect_map[hx][hy] then return false end
+
     if K2.halls[10-dir] then return false end
 
     tt_K2 = K2
@@ -717,7 +753,7 @@ local tt_K2  -- FIXME !!!!
 
       -- TERMINATE ? --
 
-      if T and (not J or rand.odds(20)) then
+      if T and (not J or rand.odds(33)) then
         mark(path, pos.sx, pos.sy, pos.dir, T.dist)
 
         mark(path, T.sx, T.sy, T.dir, 1)
@@ -782,6 +818,8 @@ local tt_K2  -- FIXME !!!!
   ---| Connect_make_hallways |---
 
   build_hall_map()
+
+  dump_hall_map()
 
   local start_spots = find_perpendiculars()
 
