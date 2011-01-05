@@ -410,26 +410,17 @@ function Connect_make_hallways()
   local K1, R1  -- FIXME
 
 
-  local function neighbor(sx, sy, dir, dist)
-    local nx, ny = geom.nudge(sx, sy, dir, dist)
-
-    if not Seed_valid(nx, ny) then return nil end
-
-    return SEEDS[nx][ny].hall
-  end
-
-
   local function dump_hall_map()
     gui.debugf("Hallway map:\n")
 
     for sy = SEED_H,1,-1 do
       local line = ""
       for sx = 1,SEED_W do
-        local H = SEEDS[sx][sy].hall
+        local S = SEEDS[sx][sy]
 
         local ch = "."
-        if H then
-          ch = sel(H.used, "#", "/")
+        if S.hall then ch = "#"
+        elseif S.can_hall then ch = "/"
         end
 
         line = line .. ch
@@ -443,7 +434,7 @@ function Connect_make_hallways()
     local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
-      SEEDS[sx][sy].hall = { K=K, side=side }
+      SEEDS[sx][sy].can_hall = { K=K, side=side }
     end end
   end
 
@@ -452,7 +443,7 @@ function Connect_make_hallways()
     local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
-      SEEDS[sx][sy].hall = nil
+      SEEDS[sx][sy].can_hall = nil
     end end
   end
 
@@ -551,10 +542,10 @@ function Connect_make_hallways()
   end
 
 
-  local function clear()
+  local function clear(field)
     for sx = 1,SEED_W do for sy = 1,SEED_H do
-      local H = SEEDS[sx][sy].hall
-      if H then H.trace = nil ; H.bad = nil end
+      local S = SEEDS[sx][sy]
+      S[field] = nil
     end end
   end
 
@@ -634,32 +625,44 @@ function Connect_make_hallways()
   end
 
 
-  local function use_it()
+  local function add_hallway(R1, R2, HALLWAY)
+    gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    local C = CONN_CLASS.new_R(R1, R2, "hallway")
+
+    C.hall = HALLWAY
+
+    table.insert(LEVEL.all_conns, C)
+
+    table.insert(R1.conns, C)
+    table.insert(R2.conns, C)
+  end
+
+
+  local function use_it(HALLWAY)
     for sx = 1,SEED_W do for sy = 1,SEED_H do
-      local H = SEEDS[sx][sy].hall
-      if H and H.trace then
-        H.used = true
+      local S = SEEDS[sx][sy]
+      if S.trace_hall then
+        S.hall = HALLWAY
 
         -- mark the section's side as used for a hallway
-        if H.K then
-          H.K.halls[H.side] = 1
+        if S.K then
+          S.K.halls[S.can_hall.side] = 1
         end
       end
     end end
   end
 
 
-  local function mark(path, hx, hy, dir, dist)
+  local function mark(path, H, dir, dist)
     for d = 1,dist do
-      local sx, sy = geom.nudge(hx, hy, dir, d-1)
+      local S = H:neighbor(dir, d)
 
-      assert(Seed_valid(sx, sy))
-      local H = SEEDS[sx][sy].hall
-      assert(H)
+      table.insert(path, { S=S, dir=dir })
 
-      H.trace = true
-
-      table.insert(path, { sx=sx, sy=sy, dir=dir })
+      H.trace_hall = true
     end
   end
 
@@ -668,24 +671,17 @@ function Connect_make_hallways()
     gui.debugf("Path:\n")
     gui.debugf("{\n")
     for _,P in ipairs(path) do
-      gui.debugf("  Seed @ (%d,%d) dir:%d\n", P.sx, P.sy, P.dir)
+      gui.debugf("  Seed @ (%d,%d) dir:%d\n", P.S.sx, P.S.sy, P.dir)
     end
     gui.debugf("}\n")
   end
 
 
-  local function test_junction(H, hx, hy, dir)
-    -- usually require 3 seeds (start + two more), but sometimes
-    -- require just one.
+  local function test_junction(H, dir, dist)
+    for d = 1,dist do
+      local H = S:neighbor(dir, dist) 
 
-    for dist = 1,rand.sel(1, 1, 2) do
-      local nx, ny = geom.nudge(hx, hy, dir, dist)
-
-      if not Seed_valid(nx, ny) then return false end
-
-      local H = SEEDS[nx][ny].hall
-
-      if not H or H.used or H.trace then return false end
+      if not H or H.hall or H.trace_hall then return false end
     end
 
     return true
@@ -694,23 +690,15 @@ function Connect_make_hallways()
 
 local tt_K2  -- FIXME !!!!
 
-  local function test_terminator(H, hx, hy, dir)
-    local nx, ny = geom.nudge(hx, hy, dir)
+  local function test_terminator(H, dir)
+    local S = H:neighbor(dir)
 
-    if not Seed_valid(nx, ny) then return false end
+    if not (S and S.room) then return false end
 
-    local K2 = SEEDS[nx][ny].K
-    if not K2 then return false end
+    local K2 = S.K
+    local R2 = S.room
 
-    local H = SEEDS[nx][ny].hall
-
-    if H and (H.trace or H.used or H.K == K1) then
-      return false
-    end
-
-    local R2 = K2.room
-
-    if K2 == SEEDS[hx][hy].K then return false end
+    if H.K and H.K == K2 then return false end
 
     if K2.halls[10-dir] then return false end
 
@@ -739,7 +727,7 @@ local tt_K2  -- FIXME !!!!
       -- don't branch too close
       if dist >= 2 or rand.odds(1) then
         for _,dir in ipairs({ pos.dir, dir1, dir2 }) do
-          if dir ~= pos.dir and test_junction(H, nx, ny, dir) then
+          if dir ~= pos.dir and test_junction(H, nx, ny, dir, 3) then
             table.insert(juncs, { sx=nx, sy=ny, dir=dir, dist=dist })
           end
 
@@ -754,24 +742,8 @@ local tt_K2  -- FIXME !!!!
   end
 
 
-  local function add_hallway(R1, R2, HALLWAY)
-    gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
-
-    Connect_merge_groups(R1.conn_group, R2.conn_group)
-
-    local C = CONN_CLASS.new_R(R1, R2, "hallway")
-
-    C.hallway = HALLWAY
-
-    table.insert(LEVEL.all_conns, C)
-
-    table.insert(R1.conns, C)
-    table.insert(R2.conns, C)
-  end
-
-
   local function try_trace_hall(info)
-    clear()
+    clear("trace_hall")
 
     K1 = info.start.K
     R1 = info.start.room
@@ -779,14 +751,12 @@ local tt_K2  -- FIXME !!!!
     -- side of section already in use?    FIXME for hallway branch-offs
     if K1.halls[info.start_dir] then return false end
 
-    local path = {}
+    local dir = info.start_dir 
+    local H   = info.start:neighbor(dir)
 
---FIXME: REMOVE
-    local pos = { sx=info.start.sx, sy=info.start.sy, dir=info.start_dir }
+    if not H or H.hall or H.bad_hall then return false end
 
-    local H = SEEDS[pos.sx][pos.sy].hall
-
-    if not H or H.used or H.bad then return false end
+    info.path = {}
 
     while true do
       local juncs, terms = find_junctions(pos)
@@ -796,7 +766,7 @@ local tt_K2  -- FIXME !!!!
 
       if not J and not T then
         -- nowhere to go?  mark spot as bad
-        SEEDS[pos.sx][pos.sy].hall.bad = true
+        H.hall_bad = true
 
         return false
       end
@@ -804,22 +774,15 @@ local tt_K2  -- FIXME !!!!
       -- TERMINATE ? --
 
       if T and (not J or rand.odds(33)) then
-        mark(path, pos.sx, pos.sy, pos.dir, T.dist)
+        mark(info.path, H, dir, T.dist)
 
-        mark(path, T.sx, T.sy, T.dir, 1)
+        mark(info.path, T.S, T.dir, 1)
 
         use_it()
 
-        local HALLWAY =
-        {
-          entrance_dir = 10 - pos.dir,
-
-          path = path,
-        }
-
         add_hallway(R1, assert(T.R2), path)
 
-        build_hallway(HALLWAY)
+        build_hallway(info)
 
         dump_path(path)
 
@@ -832,14 +795,17 @@ local tt_K2  -- FIXME !!!!
       -- TURN LEFT / RIGHT --
 
       -- mark seeds including start but excluding the next position
-      mark(path, pos.sx, pos.sy, pos.dir, J.dist)
+      mark(info.path, H, dir, J.dist)
 
-      pos = J
+      pos = J.S
+      dir = J.dir
     end
   end
 
 
   local function make_hallway(info)
+    clear("bad_hall")
+
     for loop = 1,15 do
       if try_trace_hall(info) then
         -- we're golden
