@@ -57,8 +57,8 @@ function SEED_CLASS.new(x, y)
 end
 
 function SEED_CLASS.tostr(self)
-  return string.format("SEED [%d,%d,%s]",
-      self.sx, self.sy, self.kind or "-")
+  return string.format("SEED [%d,%d]",
+      self.sx, self.sy) --- , self.kind or "-")
 end
 
 function SEED_CLASS.neighbor(self, dir, dist)

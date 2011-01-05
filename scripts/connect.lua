@@ -407,14 +407,12 @@ function Connect_make_hallways()
   --    off a junction.
   --
 
-  local K1, R1  -- FIXME
-
-
   local function dump_hall_map()
     gui.debugf("Hallway map:\n")
 
     for sy = SEED_H,1,-1 do
       local line = ""
+      
       for sx = 1,SEED_W do
         local S = SEEDS[sx][sy]
 
@@ -425,6 +423,7 @@ function Connect_make_hallways()
 
         line = line .. ch
       end
+
       gui.debugf("%s\n", line)
     end
   end
@@ -456,7 +455,12 @@ function Connect_make_hallways()
     local sx1,sy1, sx2,sy2 = geom.side_coords(side, K.sx1,K.sy1, K.sx2,K.sy2)
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
-      SEEDS[sx][sy].can_hall = nil
+      local S = SEEDS[sx][sy]
+
+      -- seed is no longer part of the section or room
+      S.K = nil
+      S.room = nil
+      S.can_hall = nil
     end end
   end
 
@@ -466,7 +470,7 @@ function Connect_make_hallways()
     for sx = 2,SEED_W-1 do for sy = 2,SEED_H-5 do
       local S = SEEDS[sx][sy]
       if not (S.room or S.hall) then
-        SEEDS[sx][sy].hall = {}
+        SEEDS[sx][sy].can_hall = 5
       end
     end end
 
@@ -508,7 +512,7 @@ function Connect_make_hallways()
     for i = 2,5 do
       local N = S:neighbor(dir, i)
 
-      if not (N and N.hall) then break; end
+      if not (N and N.can_hall) then break; end
 
       score = score + 10
     end
@@ -529,7 +533,7 @@ function Connect_make_hallways()
 
         for dir = 2,8,2 do
           local N = S:neighbor(dir)
-          if N and N.hall and N.room ~= S.room then
+          if N and N.can_hall and N.room ~= S.room then
 
             local score = evaluate_start(S, dir)
 
@@ -563,7 +567,10 @@ function Connect_make_hallways()
   end
 
 
-  local function add_hallway(R1, R2, HALLWAY)
+  local function add_hallway(HALLWAY)
+    local R1 = HALLWAY.start.room
+    local R2 = HALLWAY.dest.room
+
     gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
@@ -573,6 +580,8 @@ function Connect_make_hallways()
     C.hall = HALLWAY
 
     table.insert(LEVEL.all_conns, C)
+
+    -- FIXME: section stuff too ???
 
     table.insert(R1.conns, C)
     table.insert(R2.conns, C)
@@ -600,6 +609,8 @@ function Connect_make_hallways()
         local L = shrink_sides[left_dir]
         local R = shrink_sides[right_dir]
 
+        -- TODO: pick side with largest depth
+
         if L or R then
           -- nothing needed
         elseif not K:same_room(left_dir) then
@@ -616,19 +627,26 @@ function Connect_make_hallways()
     for side = 2,8,2 do
       if shrink_sides[side] then
         K:shrink(side)
+
+        -- mark side as already shrunk
+        K.hall_parts[side] = 2
+
         remove_side_from_map(K, side)
       end
+    end
+
+    for corner = 1,9,2 do
+      K.hall_parts[corner] = nil
     end
   end
 
 
   -- FIXME FIXME VERY TEMP SHITE !!!  DO THIS ELSEWHERE !!!!
   local function build_seed(P)
-    local sx = P.sx
-    local sy = P.sy
+    local S = P.S
 
-    local sdx = sx - SECTIONS[1][1].sx1
-    local sdy = sy - SECTIONS[1][1].sy1
+    local sdx = S.sx - SECTIONS[1][1].sx1
+    local sdy = S.sy - SECTIONS[1][1].sy1
 
     local x1 = SECTIONS[1][1].x1 + sdx * SEED_SIZE
     local y1 = SECTIONS[1][1].y1 + sdy * SEED_SIZE
@@ -688,7 +706,7 @@ function Connect_make_hallways()
       if index > 1 then
         P.exits[10 - info.path[index-1].dir] = 1
       else
-        P.exits[info.entrance_dir] = 1
+        P.exits[10 - info.start_dir] = 1
       end
     end
 
@@ -698,9 +716,11 @@ function Connect_make_hallways()
   end
 
 
-  local function mark(path, H, dir, dist)
-    for d = 1,dist do
-      local S = H:neighbor(dir, d)
+  local function add_to_path(path, H, dir, count)
+    for d = 1,count do
+      local S = H:neighbor(dir, d-1)
+
+      assert(S.can_hall)
 
       table.insert(path, { S=S, dir=dir })
 
@@ -723,15 +743,20 @@ function Connect_make_hallways()
     local sections = {}
 
     for _,P in ipairs(info.path) do
-      S.hall = info
+      local S = P.S
 
-      S.trace_hall = nil
+      assert(S.can_hall)
 
       if S.K then
         S.K.hall_parts[S.can_hall] = 1
 
         sections[S.K] = true
       end
+
+      S.hall = info
+
+      S.can_hall   = nil
+      S.trace_hall = nil
     end
 
     for K,_ in pairs(sections) do
@@ -741,21 +766,19 @@ function Connect_make_hallways()
 
 
   local function test_junction(info, juncs, along, H, dir)
-    local dist = sel(info.twisty, 2, 3)
+    local test_num = sel(info.twisty or rand.odds(0), 2, 3)
 
-    for d = 1,dist do
-      local H = S:neighbor(dir, dist) 
+    for d = 1,test_num do
+      local S = H:neighbor(dir, d) 
 
-      if not H or H.hall or H.trace_hall then return false end
+      if not (S and S.can_hall) or S.trace_hall then return false end
     end
 
     -- OK --
 
-    table.insert(juncs, { sx=nx, sy=ny, dir=dir, dist=dist })
+    table.insert(juncs, { S=H, dir=dir, along=along })
   end
 
-
-local tt_K2  -- FIXME !!!!
 
   local function test_terminator(info, terms, along, H, dir, is_perp)
     local S = H:neighbor(dir)
@@ -766,46 +789,46 @@ local tt_K2  -- FIXME !!!!
     local R2 = S.room
 
     -- cannot enter a room while using the section side for the hallway
-    if H.K and H.K == K2 then return false end
+    if S.K == H.K then return false end
 
-    if K2.halls[10-dir] then return false end
+--FIXME ??????    if K2.hall_parts[10-dir] then return false end
 
-    tt_K2 = K2
+    local R1 = info.start.room
 
     if Connect_possibility(R1, R2) <= 0 then return false end
 
     -- OK --
 
-    table.insert(terms, { sx=nx, sy=ny, dir=dir, dist=dist, K2=tt_K2, R2=tt_K2.room })
+    table.insert(terms, { S=H, dir=dir, dest=S, along=along, K2=K2, R2=R2 })
   end
 
 
-  local function find_junctions(info, H, dir)
+  local function find_junctions(info, pos, dir)
     local juncs = {}  -- junctions
     local terms = {}  -- terminating places
 
     local left_dir  = geom.LEFT [dir]
     local right_dir = geom.RIGHT[dir]
 
-    for d = 1,7 do
-      local S = H:neighbor(dir, d)
+    for along = 1,7 do
+      local S = pos:neighbor(dir, along)
 
-      -- stop if we run out of usable seed
-      if not (S and S.can_hall) or H.trace_hall or H.bad_hall then
+      -- stop if we run out of usable seeds
+      if not (S and S.can_hall) or S.trace_hall or S.bad_hall then
         break;
       end
 
---??? if H.K == K1 then break; end
+--??? if pos.K == info.start.K then break; end
 
       -- segments normally must be 3 or more seeds wide
-      if d >= 2 or info.twisty or rand.odds(2) then
-        
-        test_junction(info, juncs, d, S, right_dir)
-        test_junction(info, juncs, d, S, left_dir)
+      if along >= 2 or info.twisty or rand.odds(0) then
 
-        test_terminator(info, terms, d, S, dir, true)
-        test_terminator(info, terms, d, S, right_dir)
-        test_terminator(info, terms, d, S, left_dir)
+        test_junction(info, juncs, along, S, left_dir)
+        test_junction(info, juncs, along, S, right_dir)
+
+        test_terminator(info, terms, along, S, dir, true)
+        test_terminator(info, terms, along, S, left_dir)
+        test_terminator(info, terms, along, S, right_dir)
       end
     end
 
@@ -816,29 +839,36 @@ local tt_K2  -- FIXME !!!!
   local function try_trace_hall(info)
     clear("trace_hall")
 
-    K1 = info.start.K
-    R1 = info.start.room
+    -- did start get removed by previous hallway?
+    if not info.start.K then return end
 
-    -- side of section already in use?    FIXME for hallway branch-offs
-    if K1.halls[info.start_dir] then return false end
+    local K1 = info.start.K
+    local R1 = info.start.room
+
+    assert(R1)
+
+--???????    -- side of section already in use?    FIXME for hallway branch-offs
+--???????    if K1.hall_parts[info.start_dir] then return false end
 
     local dir = info.start_dir 
-    local H   = info.start:neighbor(dir)
+    local pos = info.start:neighbor(dir)
 
-    if not (H and H.can_hall) or H.bad_hall then return false end
+    if not (pos and pos.can_hall) or pos.bad_hall then return false end
 
     info.path = {}
 
     while true do
-      local juncs, terms = find_junctions(info, H, dir)
+      local juncs, terms = find_junctions(info, pos, dir)
+stderrf("--> juncs:%d  terms:%d\n", #juncs, #terms)
 
       -- FIXME: score them and pick best
       local junc = rand.pick(juncs)
       local term = rand.pick(terms)
 
       if not junc and not term then
-        -- nowhere to go?  mark spot as bad
-        H.hall_bad = true
+        -- nowhere to go?
+        -- mark spot as bad for future attempts
+        pos.bad_hall = true
 
         return false
       end
@@ -855,21 +885,21 @@ local tt_K2  -- FIXME !!!!
       -- TERMINATE ? --
 
       if term then
-        assert(term.R2)
+        info.dest = term.dest
+        info.dest_dir = term.dir
 
-        mark(info.path, H, dir, term.dist)
-        mark(info.path, term.S, term.dir, 1)
+        add_to_path(info.path, pos, dir, term.along)
+        add_to_path(info.path, term.S, term.dir, 1)
 
-        add_hallway(R1, term.R2, info)
-
-        dump_path(path)
+        dump_path(info.path)
 
         render_path(info)
 
-        remove_side_from_map(K1, info.start_dir)
-        remove_side_from_map(term.K2, 10 - term.dir)
+        -- FIXME: remove adjacent seeds from hall_map
+---##        remove_side_from_map(info.K1, info.start_dir)
+---##        remove_side_from_map(term.K2, 10 - term.dir)
 
-        build_hallway(info)
+        add_hallway(info)
 
         return true
       end
@@ -877,7 +907,7 @@ local tt_K2  -- FIXME !!!!
       -- TURN LEFT / RIGHT --
 
       -- mark seeds including start but excluding the next position
-      mark(info.path, H, dir, junc.dist)
+      add_to_path(info.path, pos, dir, junc.along)
 
       pos = junc.S
       dir = junc.dir
@@ -888,12 +918,15 @@ local tt_K2  -- FIXME !!!!
   local function make_hallway(info)
     clear("bad_hall")
 
+stderrf("trying hallway @ %s dir:%d\n", info.start:tostr(), info.start_dir)
+
     -- occasionally allow short segments
     info.twisty = rand.odds(0)  --!!!! FIXME
 
     for loop = 1,15 do
       if try_trace_hall(info) then
         -- we're golden
+        build_hallway(info)
         return;
       end
     end
@@ -951,11 +984,11 @@ function Connect_rooms()
 
   local function good_connect(K1, dir)
     if not K1 then return false end
-    if K1.halls[dir] then return false end
+    if K1.hall_parts[dir] then return false end
 
     local K2 = K1:neighbor(dir)
     if not K2 then return false end
-    if K2.halls[10-dir] then return false end
+    if K2.hall_parts[10-dir] then return false end
 
     return Connect_possibility(K1.room, K2.room) > 0
   end
@@ -1204,7 +1237,7 @@ function Connect_rooms()
       elseif not can_connect(K, N) then
         return false
       
-      elseif K.halls[dir] or N.halls[10-dir] then
+      elseif K.hall_parts[dir] or N.hall_parts[10-dir] then
         return false
 
       elseif do_it then
@@ -1347,7 +1380,7 @@ function Connect_rooms()
   local function emergency_score(K, N, dir)
     if not can_connect(K, N) then return -1 end
 
-    if K.halls[dir] or N.halls[10-dir] then return -1 end
+    if K.hall_parts[dir] or N.hall_parts[10-dir] then return -1 end
 
     local score = 0
 
