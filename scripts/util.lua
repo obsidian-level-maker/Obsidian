@@ -571,6 +571,10 @@ function geom.is_vert(dir)
   return (dir == 2) or (dir == 8)
 end
 
+function geom.is_corner(dir)
+  return (dir == 1) or (dir == 3) or (dir == 7) or (dir == 9)
+end
+
 function geom.vert_sel(dir, V, H)
   if geom.is_vert(dir) then
     return V
