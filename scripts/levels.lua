@@ -69,8 +69,9 @@ GLOBAL_STYLE_LIST =
   liquids    = { few=30, some=50, heaps=20 },
   scenics    = { few=30, some=50, heaps=10 },
   naturals   = { none=10, few=30, some=60, heaps=4 },
+  big_rooms  = { none=3, few=40, some=40, heaps=20 },
   lakes      = { few=60, heaps=10 },
-  subrooms   = { none=40, some=80, heaps=5 },
+  sub_rooms  = { none=40, some=80, heaps=5 },
   islands    = { few=60, heaps=40 },
   teleporters ={ none=10, few=30, some=30, heaps=5 }, -- FIXME: none=50
 

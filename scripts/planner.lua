@@ -558,6 +558,12 @@ function Plan_add_big_rooms()
 
 
   local function adjust_shape_probs()
+    -- occasionally don't make any rectangles
+    if rand.odds(10) then
+      BIG_SHAPE_PROBS.rect = 1
+    end
+
+    -- promote a certain shape
     local shape = STYLE.room_shape
 
     if shape == "none" then return end
@@ -687,7 +693,7 @@ function Plan_add_big_rooms()
   local function add_biggie(quota)
     -- returns size of room
 
-    local shape_name = "rect" --!!!!!!!!! rand.key_by_probs(BIG_SHAPE_PROBS)
+    local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
 
     local rw, rh = pick_rect_size()
     local rot    = rand.irange(0, 3) * 2
@@ -740,13 +746,13 @@ function Plan_add_big_rooms()
 
   ---| Plan_add_big_rooms |---
 
-  if rand.odds(2) then return end  -- None!
-
   adjust_shape_probs()
 
-  local num_sec = Plan_count_free_sections()
+  local perc = style_sel("big_rooms", 0, 30, 50, 80)
 
-  local quota = num_sec * rand.pick { 0.4, 0.6, 0.8 }
+  local num_K = Plan_count_free_sections()
+
+  local quota = num_K * perc / 100
 
   gui.printf("Big Room Quota: %1.1f sections\n", quota)
 
@@ -847,11 +853,11 @@ function Plan_add_natural_rooms()
 
   ---| Plan_add_natural_rooms |---
 
-  if not THEME.cave_walls then return end
+---##  if not THEME.cave_walls then return end
 
   local num_sec = Plan_count_free_sections()
 
-  local perc = style_sel("naturals", 0, 20, 45, 90)
+  local perc = style_sel("naturals", 0, 20, 40, 90)
 
   local quota = int(num_sec * perc / 100)
   if quota > num_sec-3 then
@@ -1247,7 +1253,7 @@ function Plan_create_rooms()
   Levels_invoke_hook("add_rooms")
 
   Plan_add_special_rooms()
---!!!!!!  Plan_add_natural_rooms()
+  Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
