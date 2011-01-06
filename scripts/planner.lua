@@ -73,12 +73,22 @@ function SECTION_CLASS.update_size(self)
 end
 
 function SECTION_CLASS.shrink(self, side)
+  local ox1, oy1, ox2, oy2 = geom.side_coords(side, self.sx1, self.sy1, self.sx2, self.sy2)
+
   if side == 2 then self.sy1 = self.sy1 + 1 ; self.y1 = self.y1 + SEED_SIZE end
   if side == 8 then self.sy2 = self.sy2 - 1 ; self.y2 = self.y2 - SEED_SIZE end
   if side == 4 then self.sx1 = self.sx1 + 1 ; self.x1 = self.x1 + SEED_SIZE end
   if side == 6 then self.sx2 = self.sx2 - 1 ; self.x2 = self.x2 - SEED_SIZE end
 
   self:update_size()
+
+  -- update seed map
+  for x = ox1,ox2 do for y = oy1,oy2 do
+    local S = SEEDS[x][y]
+    if S.K == self then
+      S.K = nil ; S.room = nil
+    end
+  end end
 end
 
 function SECTION_CLASS.neighbor(self, dir, dist)
