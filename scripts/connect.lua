@@ -1620,14 +1620,102 @@ function Connect_rooms()
   end
 
 
-  local function validate_connections()
+  local function count_groups()
+    local groups = {}
+
+    for i = 1,999 do groups[i] = 0 end
+
+    local last_g = 0
+
     for _,R in ipairs(LEVEL.all_rooms) do
       if R.kind ~= "scenic" then
-        if R.conn_group ~= 1 then
-          error("Connecting rooms failed: separate groups exist")
-        end
+        local g = R.conn_group
+        groups[g] = groups[g] + 1
+        if g > last_g then last_g = g end
       end
     end
+
+    return groups, last_g
+  end
+
+
+  local function kill_room(R)
+    R.kind = "REMOVED"
+
+    for _,C in ipairs(R.conns) do
+      C.kind = "REMOVED"
+    end
+
+    for _,K in ipairs(R.sections) do
+      -- TODO ?!?
+    end
+
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R then
+        S.K = nil
+        S.room = nil
+      end
+    end end
+  end
+
+
+  local function remove_group(g)
+    -- process rooms
+    for i = #LEVEL.all_rooms,1,-1 do
+      local R = LEVEL.all_rooms[i]
+
+      if R.conn_group == g then
+        gui.printf("Removing dead room: %s\n", R:tostr())
+        
+        table.remove(LEVEL.all_rooms, i)
+
+        kill_room(R)
+      end
+    end
+
+    -- process connections
+    for i = #LEVEL.all_conns,1,-1 do
+      local C = LEVEL.all_conns[i]
+
+      if C.kind == "REMOVED" then
+        table.remove(LEVEL.all_conns, i)
+      end
+    end
+  end
+
+
+  local function remove_dead_rooms()
+    local groups, last_g = count_groups()
+
+    -- do separate groups exist?
+    if last_g == 1 then return; end
+
+    -- find group with most members, all others will die
+    local best
+
+    for g = 1,last_g do
+      local num = groups[g]
+      if num > 0 and (not best or num > groups[best]) then
+        best = g
+      end
+    end
+
+    assert(best)
+
+    -- hallways are the only reason for separate groups, hence at
+    -- least two rooms must have gotten connected.
+    assert(groups[best] >= 2)
+
+    for g = 1,last_g do
+      local num = groups[g]
+      if g ~= best and num > 0 then
+        remove_group(g)
+      end
+    end
+
+Plan_dump_rooms("Dead Room Map")
   end
 
 
@@ -1678,10 +1766,10 @@ function Connect_rooms()
 
   while emergency_branch() do end
 
+  remove_dead_rooms()
+
   -- FIXME: this is a layout task, move to appropriate file
   place_teleporters()
-
-  validate_connections()
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
