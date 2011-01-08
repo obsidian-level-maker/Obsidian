@@ -492,6 +492,9 @@ function Connect_make_hallways()
   local function evaluate_start(S, dir)
     local score = 0
 
+    -- prevent two hallways coming from a single seed
+    if S.hall_spot then return -1 end
+
     -- check seeds on either side
     local A = S:neighbor(geom.RIGHT[dir])
     local B = S:neighbor(geom.LEFT [dir])
@@ -582,7 +585,6 @@ end
     local R1 = S1.room
     local R2 = S2.room
 
-stderrf("start =\n%s\n", table.tostr(HALLWAY.start, 1))
     gui.debugf("Hallway connection %s -- >%s\n", R1:tostr(), R2:tostr())
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
@@ -687,7 +689,7 @@ stderrf("start =\n%s\n", table.tostr(HALLWAY.start, 1))
       { x=x2, y=y1, tex="SILVER1" },
       { x=x2, y=y2, tex="SILVER1" },
       { x=x1, y=y2, tex="SILVER1" },
-      { b=176, tex="FLAT22" },
+      { b=176, tex="FLAT22", special=9 },
     })
 
     gui.add_brush(
@@ -840,7 +842,7 @@ stderrf("start =\n%s\n", table.tostr(HALLWAY.start, 1))
     local left_dir  = geom.LEFT [dir]
     local right_dir = geom.RIGHT[dir]
 
-    for along = 1,7 do
+    for along = 1,6 do
       local S = pos:neighbor(dir, along)
 
       -- stop if we run out of usable seeds
