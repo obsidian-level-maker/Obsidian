@@ -995,6 +995,8 @@ gui.debugf("trying hallway @ %s dir:%d\n", info.start:tostr(), info.start_dir)
   for loop = 1,100 do
     local info = find_starts()
 
+    if not info then break; end
+
 --!!!  for _,info in ipairs(starts) do
     make_hallway(info)
   end

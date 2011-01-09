@@ -102,6 +102,8 @@ function Layout_inner_outer_tex(skin, K, K2)
   local R = K.room
   local N = K2.room
 
+  if N.kind == "REMOVED" then return end
+
   skin.wall  = R.skin.wall
   skin.outer = N.skin.wall
 
