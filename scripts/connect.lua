@@ -420,6 +420,7 @@ function Connect_make_hallways()
 
         local ch = "."
         if S.hall then ch = "#"
+        elseif S.trace_hall then ch = "*"
         elseif S.can_hall then ch = "/"
         end
 
@@ -507,7 +508,7 @@ function Connect_make_hallways()
     if A and A.room == S.room and B and B.room == S.room then
       score = score + 100
     else
-      if rand.odds(90/9) then return -1 end --!!!!!!!
+      if rand.odds(90) then return -1 end
     end
 
     -- check length of hallway leaving the room
@@ -758,7 +759,7 @@ end
         info.used_sections[S.K] = true
       end
 
-      H.trace_hall = true
+      S.trace_hall = true
     end
   end
 
