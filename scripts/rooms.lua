@@ -409,6 +409,7 @@ function Rooms_decide_windows()
 
     if not N then return false end
     if N.room == K.room then return false end
+    if N.room.kind == "REMOVED" then return false end
 
     local E1 = K.edges[side]
     local E2 = N.edges[10-side]
