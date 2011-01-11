@@ -286,6 +286,8 @@ function Connect_decide_start_room()
   local function eval_room(R)
     local cost = R.sw * R.sh
 
+    cost = cost + #R.conns * 40
+
     cost = cost + 10 * (gui.random() ^ 2)
 
     gui.debugf("Start cost @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, cost)
@@ -824,6 +826,11 @@ end
     if S.K == H.K then return false end
 
 --FIXME ??????    if K2.hall_parts[10-dir] then return false end
+
+    -- do not connect at a corner
+    if ((S.sx == K2.sx1 or S.sx == K2.sx2) and
+        (S.sy == K2.sy1 or S.sy == K2.sy2))
+    then return false end
 
     local R1 = info.start.room
 
@@ -1747,8 +1754,6 @@ Plan_dump_rooms("Dead Room Map")
 
   table.name_up(BIG_CONNECTIONS)
 
-  Connect_decide_start_room()
-
   -- give each room a 'conn_group' value, starting at one.
   -- connecting two rooms will merge the groups together.
   -- at the end, only a single group will remain (#1).
@@ -1769,6 +1774,8 @@ Plan_dump_rooms("Dead Room Map")
   while emergency_branch() do end
 
   remove_dead_rooms()
+
+  Connect_decide_start_room()
 
   -- FIXME: this is a layout task, move to appropriate file
   place_teleporters()
