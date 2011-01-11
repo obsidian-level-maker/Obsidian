@@ -6,6 +6,16 @@ Current Work
 ------------
 
 
+HALLWAY STUFF
+
++  clean up / optimise current code
+
+-  sometimes fork a hallway off another one
+
+-  build all hallways AFTER all rooms
+   (decide a height different first though).
+
+
 FLOOR STUFF
 
 !!  fix "air" brush handling (get Z heights right)
