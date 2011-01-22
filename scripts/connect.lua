@@ -976,7 +976,7 @@ gui.debugf("\n\n")
 gui.debugf("trying hallway @ %s dir:%d\n", info.start:tostr(), info.start_dir)
 
     -- occasionally allow short segments
-    info.twisty = rand.odds(100)  --!!!! FIXME
+    info.twisty = rand.odds(50)
 
     for loop = 1,15 do
       if try_trace_hall(info) then
