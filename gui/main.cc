@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2011 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -66,7 +66,7 @@ static void ShowInfo()
 {
   printf(
     "\n"
-    "** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n"
+    "** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2011 Andrew Apted **\n"
     "\n"
   );
 
@@ -543,7 +543,7 @@ int main(int argc, char **argv)
 
   LogPrintf("\n");
   LogPrintf("********************************************************\n");
-  LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2010 Andrew Apted **\n");
+  LogPrintf("** " OBLIGE_TITLE " " OBLIGE_VERSION " (C) 2006-2011 Andrew Apted **\n");
   LogPrintf("********************************************************\n");
   LogPrintf("\n");
 
