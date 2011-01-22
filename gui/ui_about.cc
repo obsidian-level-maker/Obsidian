@@ -325,6 +325,35 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
   cy += opt_debug->h() + y_step;
 
+  
+//----------------
+
+  cy += 8;
+
+  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Quake Options");
+  heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
+  heading->labeltype(FL_NORMAL_LABEL);
+  heading->labelfont(FL_HELVETICA_BOLD);
+  heading->labelsize(FL_NORMAL_SIZE + 2);
+
+  add(heading);
+
+  cy += heading->h() + y_step;
+
+
+  Fl_Check_Button *
+  opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "Smoother Lighting (much slower)");
+  opt_lighting->align(FL_ALIGN_RIGHT);
+  opt_lighting->value(false ? 1 : 0);
+//!!!!  opt_lighting->callback(callback_Backups, this);
+
+  add(opt_lighting);
+
+  cy += opt_lighting->h() + y_step;
+
+
+
+//----------------
 
   int dh = 50 + KF * 4;
 
