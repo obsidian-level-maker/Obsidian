@@ -49,11 +49,14 @@ extern const char *working_path;
 extern const char *data_path;
 
 extern bool batch_mode;
+
+extern const char *batch_output_file;
+
+// Misc Options
 extern bool create_backups;
 extern bool hide_module_panel;
 extern bool debug_messages;
-
-extern const char *batch_output_file;
+extern bool best_lighting;
 
 
 void Main_FatalError(const char *msg, ...);

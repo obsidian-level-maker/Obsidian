@@ -1118,7 +1118,7 @@ bool quake2_game_interface_c::Start()
 {
   qk_game = 2;
   qk_sub_format = 0;
-  qk_lighting_quality = +1;  // default is HIGH
+  qk_lighting_quality = best_lighting ? +1 : 0;
 
   filename = Select_Output_File("pak");
 

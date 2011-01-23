@@ -210,6 +210,7 @@ private:
   Fl_Check_Button *opt_modules;
   Fl_Check_Button *opt_backups;
   Fl_Check_Button *opt_debug;
+  Fl_Check_Button *opt_lighting;
 
 public:
   UI_OptionsWin(int W, int H, const char *label = NULL);
@@ -257,6 +258,13 @@ private:
 
     debug_messages = that->opt_debug->value() ? true : false;
     LogEnableDebug(debug_messages);
+  }
+
+  static void callback_Lighting(Fl_Widget *w, void *data)
+  {
+    UI_OptionsWin *that = (UI_OptionsWin *)data;
+
+    best_lighting = that->opt_lighting->value() ? true : false;
   }
 
 };
@@ -330,7 +338,7 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
 
   cy += 8;
 
-  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Quake Options");
+  heading = new Fl_Box(FL_NO_BOX, x()+6, cy, W-12, 24, "Quake 1/2 Options");
   heading->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   heading->labeltype(FL_NORMAL_LABEL);
   heading->labelfont(FL_HELVETICA_BOLD);
@@ -341,11 +349,10 @@ UI_OptionsWin::UI_OptionsWin(int W, int H, const char *label) :
   cy += heading->h() + y_step;
 
 
-  Fl_Check_Button *
-  opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "Smoother Lighting (much slower)");
+  opt_lighting = new Fl_Check_Button(cx, cy, 24, 24, "High Quality Lighting (much slower)");
   opt_lighting->align(FL_ALIGN_RIGHT);
-  opt_lighting->value(false ? 1 : 0);
-//!!!!  opt_lighting->callback(callback_Backups, this);
+  opt_lighting->value(best_lighting ? 1 : 0);
+  opt_lighting->callback(callback_Lighting, this);
 
   add(opt_lighting);
 
@@ -411,7 +418,7 @@ void DLG_OptionsEditor(void)
   if (option_window)  // already in use?
     return;
 
-  int opt_w = 340 + KF * 30;
+  int opt_w = 350 + KF * 30;
   int opt_h = 370 + KF * 40;
 
   option_window = new UI_OptionsWin(opt_w, opt_h, "Oblige Options");

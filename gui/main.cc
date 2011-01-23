@@ -50,11 +50,13 @@ int screen_w;
 int screen_h;
 
 bool batch_mode = false;
+
+const char *batch_output_file = NULL;
+
 bool create_backups = true;
 bool hide_module_panel = false;
 bool debug_messages = false;
-
-const char *batch_output_file = NULL;
+bool best_lighting = false;
 
 
 game_interface_c * game_object = NULL;
