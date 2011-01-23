@@ -76,7 +76,7 @@ function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
 end
 
-function SEED_CLASS.blocks(self)
+function SEED_CLASS.block_range(self)
   local bx = 1 + (self.sx - 1) * 3 
   local by = 1 + (self.sy - 1) * 3 
 
@@ -131,6 +131,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   BLOCKS = table.array_2D(BLOCK_W, BLOCK_H)
 
+--[[
   for x = 1,BLOCK_W do for y = 1,BLOCK_H do
     local B = {}
 
@@ -141,6 +142,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
     BLOCKS[x][y] = B
   end end -- x, y
+--]]
 end
 
 
