@@ -48,19 +48,21 @@ require 'util'
 
 require 'planner'
 require 'connect'
-require 'naming'
 require 'quests'
 require 'caves'
 require 'seeds'
 
 require 'build'
 require 'chunks'
+require 'hallway'
 require 'floors'
 require 'walls'
+
 require 'rooms'
 require 'tiler'
 require 'fight'
 require 'monsters'
+require 'naming'
 
 
 GLOBAL_STYLE_LIST =
