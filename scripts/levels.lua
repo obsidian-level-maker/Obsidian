@@ -54,6 +54,7 @@ require 'caves'
 require 'seeds'
 
 require 'build'
+require 'chunks'
 require 'floors'
 require 'walls'
 require 'rooms'
