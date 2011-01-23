@@ -336,6 +336,41 @@ class FLOOR
 ----------------------------------]]
 
 
+function Chunky_floor(R)
+
+  local function do_floor(K)
+    local h = R.floor_min_h + rand.irange(0,16)
+
+    local name = rand.pick { "FLAT1", "FLAT10", "FLAT14", "FLAT1_1",
+                             "FLAT20", "GRASS1", "FLAT5_1",
+                             "FLAT5_3", "FLAT5_5" }
+    local mat = Mat_lookup(name)
+
+    local w_tex = mat.t
+    local f_tex = mat.f or mat.t
+
+    for bx = K.bx1, K.bx2 do
+      for by = K.by1, K.by2 do
+        local x = K.x1 + (bx - K.bx1) * 64
+        local y = K.y1 + (by - K.by1) * 64
+
+        local brush = Trans.bare_quad(x, y, x+64, y+64)
+
+        Trans.set_tex(brush, w_tex)
+
+        table.insert(brush, { t=h, tex=f_tex })
+
+        gui.add_brush(brush)
+      end
+    end
+  end
+
+  for _,K in ipairs(R.chunks) do
+    do_floor(K)
+  end
+end
+
+
 function Layout_the_floor(R)
 
   local function handle_entry_walk(brush)
@@ -653,7 +688,7 @@ function Layout_the_floor(R)
 ---##     table.insert(B, { b=F.z_low, tex=f_tex })
 ---##   end
 
-      Trans.brush(B)   -- TODO: gui.add_brush() may be sufficient
+---!!!!      Trans.brush(B)   -- TODO: gui.add_brush() may be sufficient
 
       geom.bbox_add_rect(F.bbox, Trans.brush_bbox(B))
     end
@@ -931,6 +966,8 @@ gui.debugf("choose_division: zone too small: %dx%d < %dx%d\n", zone_dx, zone_dy,
   local function find_usable_floor_fab(F)
 gui.debugf("find_usable_floor in %s recursion:%d\n", R:tostr(), F.recursion)
 gui.debugf("zones = \n%s\n", table.tostr(F.zones, 2))
+
+do return nil end
 
     if F.recursion >= 2 then return nil end
 
@@ -1270,6 +1307,8 @@ gui.debugf("entry_walk = %s\n%s\n", tostring(R.entry_walk), table.tostr(R.entry_
   -- this will render floors as it goes
 --!!!!!!  while try_subdivide_a_floor() do end
 for _,F in ipairs(R.all_floors) do render_floor(F) end
+
+  Chunky_floor(R)
 
   prepare_ceiling()
 end

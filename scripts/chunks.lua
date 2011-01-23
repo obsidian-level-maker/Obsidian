@@ -184,6 +184,11 @@ gui.debugf("\n")
       K.room    = R
       K.section = sect
 
+      K.x1 = S.x1 + 64 * (locs_X[x].low  - bx)
+      K.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
+      K.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
+      K.y2 = S.y1 + 64 * (locs_Y[y].high - by + 1)
+
       K:install()
 
       table.insert(R.chunks, K)
