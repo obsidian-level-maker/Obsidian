@@ -53,6 +53,7 @@ end
 function CHUNK_CLASS.install(self)
   for x = self.bx1, self.bx2 do
     for y = self.by1, self.by2 do
+      assert(not BLOCKS[x][y])
       BLOCKS[x][y] = self
     end
   end
@@ -67,23 +68,65 @@ end
 
 
 function Chunk_divide_room(R)
-
+  --
   -- Subdivides the room into chunks.
   --
   -- Goals:
   --  + require odd number of chunks on each axis in each section
   --
-  --  + want straddler stuff (doors, windows) to align nicely
-  --
-  --  + prefer intra-room chunks to align nicely
-  -- 
   --  + prefer squarish chunks over long and thin ones
+  --
+  --  + want straddler stuff (doors, windows) to align nicely [TODO]
+  --
+  --  + prefer intra-room chunks to align nicely [TODO]
+  -- 
+
+  local function calc_block_sizes(W, bx, bw)
+    assert(W == 1 or W == 3 or W == 5)
+
+    -- begin with all chunks the same width (or height)
+    local sizes = {}
+
+    for x = 1,W do
+      sizes[x] = int(bw / W)
+    end
+
+    -- distribute extra blocks
+    local extra = bw - W * sizes[1]
+    assert(extra >= 0 and extra < W)
+
+    local dist = 0
+    local mid  = int((W+1) / 2)
+
+    while extra >= 2 do
+      sizes[1+dist] = sizes[1+dist] + 1
+      sizes[W-dist] = sizes[W-dist] + 1
+
+      extra = extra - 2
+    end
+
+    if extra >= 1 then
+      sizes[mid] = sizes[mid] + 1
+    end
+
+    -- convert to locations
+    local locs = {}
+
+    for x = 1,W do
+      local bx_next = bx + sizes[x]
+      locs[x] = { low=bx, high=bx_next-1 }
+      bx = bx_next
+    end
+
+    return locs
+  end
 
 
   local function subdivide_section(sect)
     local bw = sect.sw * 3
     local bh = sect.sh * 3
 
+    -- choose number of chunk columns and rows
     local W = 1
     local H = 1
 
@@ -93,6 +136,7 @@ function Chunk_divide_room(R)
     if bw >= 15 and rand.odds(50) then W = 5 end
     if bh >= 15 and rand.odds(50) then H = 5 end
 
+    -- if chunks would be long and thin, adjust how many
     local nw = bw / W
     local nh = bh / H
 
@@ -115,10 +159,37 @@ function Chunk_divide_room(R)
       end
     end
 
--- gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
+   gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
 
-    -- FIXME: BLOW CHUNKS
+    -- determine block sizes
+    nw = int(bw / W)
+    nh = int(bh / H)
+
+    assert(nw >= 2 and nh >= 2)
+
+    local S = SEEDS[sect.sx1][sect.sy1]
+    local bx, by = S:block_range()
+
+    local locs_X = calc_block_sizes(W, bx, bw)
+    local locs_Y = calc_block_sizes(H, by, bh)
+
+gui.debugf("locs_X :\n%s\n", table.tostr(locs_X, 2))
+gui.debugf("locs_Y :\n%s\n", table.tostr(locs_Y, 2))
+gui.debugf("\n")
+
+    -- create the chunks
+    for x = 1,W do for y = 1,H do
+      local K = CHUNK_CLASS.new(locs_X[x].low,  locs_Y[y].low,
+                                locs_X[x].high, locs_Y[y].high)
+      K.room    = R
+      K.section = sect
+
+      K:install()
+
+      table.insert(R.chunks, K)
+    end end -- x, y
   end
+
 
   ---| Chunk_divide_room |---
 
