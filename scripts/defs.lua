@@ -25,6 +25,8 @@ STYLE  = {}
 LEVEL  = {}
 THEME  = {}
 
+BLOCKS   = {}
+SEEDS    = {}
 SECTIONS = {}
 
 

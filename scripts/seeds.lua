@@ -47,6 +47,9 @@ require 'util'
 SEED_W = 0
 SEED_H = 0
 
+BLOCK_W = 0
+BLOCK_H = 0
+
 
 SEED_CLASS = {}
 
@@ -73,6 +76,13 @@ function SEED_CLASS.mid_point(self)
   return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
 end
 
+function SEED_CLASS.blocks(self)
+  local bx = 1 + (self.sx - 1) * 3 
+  local by = 1 + (self.sy - 1) * 3 
+
+  return bx, by, bx+2, by+2
+end
+
 
 
 function Seed_init(map_W, map_H, free_W, free_H)
@@ -81,13 +91,14 @@ function Seed_init(map_W, map_H, free_W, free_H)
   local W = map_W + free_W
   local H = map_H + free_H
 
-  -- setup globals 
+  --- setup seed array ---
+
   SEED_W = W
   SEED_H = H
 
-  SEEDS = table.array_2D(W, H)
+  SEEDS = table.array_2D(SEED_W, SEED_H)
 
-  for x = 1,W do for y = 1,H do
+  for x = 1,SEED_W do for y = 1,SEED_H do
 
       local S = SEED_CLASS.new(x, y)
 
@@ -111,7 +122,25 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
       SEEDS[x][y] = S
 
-  end end -- x,y
+  end end -- x, y
+
+  --- create block matrix ---
+
+  BLOCK_W = W * 3
+  BLOCK_H = H * 3
+
+  BLOCKS = table.array_2D(BLOCK_W, BLOCK_H)
+
+  for x = 1,BLOCK_W do for y = 1,BLOCK_H do
+    local B = {}
+
+    local sx = int((x+2) / 3)
+    local sy = int((y+2) / 3)
+
+    B.seed = SEEDS[sx][sy]
+
+    BLOCKS[x][y] = B
+  end end -- x, y
 end
 
 
@@ -119,6 +148,21 @@ end
 function Seed_valid(x, y)
   return (x >= 1 and x <= SEED_W) and
          (y >= 1 and y <= SEED_H)
+end
+
+
+function Block_valid(x, y)
+  return (x >= 1 and x <= BLOCK_W) and
+         (y >= 1 and y <= BLOCK_H)
+end
+
+
+
+function Seed_from_block(bx, by)
+  local sx = int((bx+2) / 3)
+  local sy = int((by+2) / 3)
+
+  return sx, sy
 end
 
 

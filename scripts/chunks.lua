@@ -53,7 +53,7 @@ end
 function CHUNK_CLASS.install(self)
   for x = self.bx1, self.bx2 do
     for y = self.by1, self.by2 do
-      BLOCKS[x][y] = self
+      BLOCKS[x][y].chunk = self
     end
   end
 end

@@ -97,10 +97,13 @@ GLOBAL_STYLE_LIST =
 
 function Levels_clean_up()
   GAME   = {}
+  THEME  = {}
   PARAM  = {}
+  STYLE  = {}
 
   LEVEL    = nil
-  STYLE    = nil
+  BLOCKS   = nil
+  SEEDS    = nil
   SECTIONS = nil
 
   collectgarbage("collect")
@@ -109,6 +112,8 @@ end
 
 function Levels_between_clean()
   LEVEL    = nil
+  BLOCKS   = nil
+  SEEDS    = nil
   SECTIONS = nil
 
   collectgarbage("collect")
