@@ -14,6 +14,7 @@ CHANGES (since 3.57)
 
 - improved progress bar and status messages
 - output file is deleted if an error occurs
+- backup files now use the .OLD extension
 
 + support for "shaped" rooms (L, T, plus, etc)
 + worked on teleporters (NOTE: currently disabled)

@@ -683,7 +683,7 @@ bool doom_game_interface_c::Start()
   }
 
   if (create_backups)
-    Main_BackupFile(filename, "bak");
+    Main_BackupFile(filename, "old");
 
   if (! DM_StartWAD(filename))
   {

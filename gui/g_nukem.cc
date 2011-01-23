@@ -496,7 +496,7 @@ bool nukem_game_interface_c::Start()
   }
 
   if (create_backups)
-    Main_BackupFile(filename, "bak");
+    Main_BackupFile(filename, "old");
 
   if (! NK_StartGRP(filename))
   {
