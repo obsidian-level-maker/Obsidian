@@ -20,6 +20,21 @@
 
 --[[ *** CLASS INFORMATION ***
 
+class HALLWAY
+{
+  start : SEED   -- the starting seed (in a room)
+  dest  : SEED   -- destination seed  (in a room)
+
+  start_dir  --  direction from start --> hallway
+  dest_dir   --  direction from hallway --> dest
+
+  path : list  -- the path between the start and the destination
+               -- (not including either start or dest).
+               -- each element holds the seed and direction.
+
+  sub_halls   -- number of hallways branching off this one
+              -- (normally zero)
+}
 
 
 --------------------------------------------------------------]]
