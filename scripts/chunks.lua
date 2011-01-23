@@ -62,3 +62,68 @@ function CHUNK_CLASS.tostr(self)
   return string.format("CHUNK [%d,%d]", self.bx1, self.by1)
 end
 
+
+----------------------------------------------------------------
+
+
+function Chunk_divide_room(R)
+
+  -- Subdivides the room into chunks.
+  --
+  -- Goals:
+  --  + require odd number of chunks on each axis in each section
+  --
+  --  + want straddler stuff (doors, windows) to align nicely
+  --
+  --  + prefer intra-room chunks to align nicely
+  -- 
+  --  + prefer squarish chunks over long and thin ones
+
+
+  local function subdivide_section(sect)
+    local bw = sect.sw * 3
+    local bh = sect.sh * 3
+
+    local W = 1
+    local H = 1
+
+    if bw >= 9 and rand.odds(80) then W = 3 end
+    if bh >= 9 and rand.odds(80) then H = 3 end
+
+    if bw >= 15 and rand.odds(50) then W = 5 end
+    if bh >= 15 and rand.odds(50) then H = 5 end
+
+    local nw = bw / W
+    local nh = bh / H
+
+    if nh > nw*2.2 then
+      if H >= 3 and rand.odds(20) then
+        W = W - 2
+      elseif H < 5 and (bh / (H+2)) >= 2 then
+        H = H + 2
+      elseif W >= 3 then
+        W = W - 2
+      end
+
+    elseif nw > nh*2.2 then
+      if H >= 3 and rand.odds(20) then
+        H = H - 2
+      elseif W < 5 and (bw / (W+2)) >= 2 then
+        W = W + 2
+      elseif H >= 3 then
+        H = H - 2
+      end
+    end
+
+-- gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
+
+    -- FIXME: BLOW CHUNKS
+  end
+
+  ---| Chunk_divide_room |---
+
+  for _,K in ipairs(R.sections) do
+    subdivide_section(K)
+  end
+end
+

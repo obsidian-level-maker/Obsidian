@@ -45,13 +45,16 @@ class ROOM
   symmetry : keyword   -- symmetry of room, or NIL
                        -- keywords are "x", "y", "xy"
 
+  sx1, sy1, sx2, sy2  -- \ Seed range
+  sw, sh, svolume     -- /
+
+  chunks   : list  -- all chunks in the room
+
   kx1, ky1, kx2, ky2  -- \ Section range
   kw, kh              -- /
 
-  sections   -- list of all sections of room
+  sections : list  -- all sections of room
 
-  sx1, sy1, sx2, sy2  -- \ Seed range
-  sw, sh, svolume     -- /
 
   quest : QUEST
 
@@ -61,8 +64,6 @@ class ROOM
 
 
   --- plan_sp code only:
-
-  lx1, ly1, lx2, ly2  -- coverage on the Land Map
 
   group_id : number  -- traversibility group
 
@@ -80,7 +81,7 @@ ROOM_CLASS = {}
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_id("room")
   local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
-              sections={}, middles={}, spaces={} }
+              chunks={}, sections={}, middles={}, spaces={} }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.all_rooms, R)
   return R
@@ -1162,10 +1163,14 @@ function Rooms_build_all()
   Rooms_choose_themes()
   Rooms_assign_facades()
 
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Rooms_setup_bits(R)
+    Chunk_divide_room(R)
+  end
+
   Rooms_setup_symmetry()
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    Rooms_setup_bits(R)
     Layout_monotonic_spaces(R)
   end
 
