@@ -42,3 +42,23 @@ require 'defs'
 require 'util'
 
 
+CHUNK_CLASS = {}
+
+function CHUNK_CLASS.new(bx1, by1, bx2, by2)
+  local K = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, edge={}, corner={} }
+  table.set_class(K, CHUNK_CLASS)
+  return K
+end
+
+function CHUNK_CLASS.install(self)
+  for x = self.bx1, self.bx2 do
+    for y = self.by1, self.by2 do
+      BLOCKS[x][y] = self
+    end
+  end
+end
+
+function CHUNK_CLASS.tostr(self)
+  return string.format("CHUNK [%d,%d]", self.bx1, self.by1)
+end
+
