@@ -537,9 +537,7 @@ int CSG_end_level(lua_State *L)
 
   CSG_Main_Free();
 
-#ifndef RANDOMIZER
   CSG_BSP_Free();
-#endif
 
   return 0;
 }

@@ -24,7 +24,7 @@
 typedef struct lua_State lua_State;
 
 void Script_Init(void);
-void Script_Load(void);
+void Script_Load(const char *root);
 void Script_Close(void);
 
 bool Script_RunString(const char *str, ...);

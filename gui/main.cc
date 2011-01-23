@@ -409,7 +409,6 @@ static void Batch_Defaults()
 
 //------------------------------------------------------------------------
 
-#ifndef RANDOMIZER
 
 bool Build_Cool_Shit()
 {
@@ -590,7 +589,7 @@ int main(int argc, char **argv)
 
   if (batch_mode)
   {
-    Script_Load();
+    Script_Load("oblige");
 
     Batch_Defaults();
 
@@ -617,7 +616,7 @@ int main(int argc, char **argv)
 
     main_win = new UI_MainWin(main_w, main_h, OBLIGE_TITLE " " OBLIGE_VERSION);
 
-    Script_Load();
+    Script_Load("oblige");
 
     // FIXME: main_win->Defaults();
     main_win->game_box ->Defaults();
@@ -699,7 +698,6 @@ int main(int argc, char **argv)
   return 0;
 }
 
-#endif /* RANDOMIZER */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab

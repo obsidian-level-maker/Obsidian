@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2011 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -214,10 +214,8 @@ int gui_add_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->AddPair(id, label);
 
-#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->AddPair(id, label);
-#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->AddModule(id, label);
@@ -292,10 +290,8 @@ int gui_show_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->ShowOrHide(id, shown);
 
-#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->ShowOrHide(id, shown);
-#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ShowOrHide(id, shown);
@@ -329,10 +325,8 @@ int gui_change_button(lua_State *L)
   else if (StringCaseCmp(what, "engine") == 0)
     main_win->game_box->engine->SetID(id);
 
-#ifndef RANDOMIZER
   else if (StringCaseCmp(what, "theme") == 0)
     main_win->level_box->theme->SetID(id);
-#endif
 
   else if (StringCaseCmp(what, "module") == 0)
     main_win->mod_box->ChangeValue(id, opt_val);
@@ -564,8 +558,6 @@ static const luaL_Reg gui_script_funcs[] =
   { "rand_seed",   gui_rand_seed },
   { "random",      gui_random },
 
-#ifndef RANDOMIZER
-
   // CSG functions
   { "begin_level", CSG_begin_level },
   { "end_level",   CSG_end_level },
@@ -610,12 +602,6 @@ static const luaL_Reg gui_script_funcs[] =
   { "spots_get_items", SPOT_get_items },
   { "spots_read_grid", SPOT_read_grid },
   { "spots_end",       SPOT_end },
-
-#else
-  // Randomizer functions
-
-  { "add_entity",  CSG_add_entity },
-#endif
 
   { NULL, NULL } // the end
 };
@@ -663,17 +649,10 @@ static int p_init_lua(lua_State *L)
 
 static void Script_SetScriptPath(lua_State *L)
 {
-#ifdef RANDOMIZER
-  if (StringCaseCmp(install_path, working_path) == 0)
-    script_path = StringPrintf("%s/r_script/?.lua", install_path);
-  else
-    script_path = StringPrintf("./r_script/?.lua;%s/r_script/?.lua", install_path);
-#else
   if (StringCaseCmp(install_path, working_path) == 0)
     script_path = StringPrintf("%s/scripts/?.lua", install_path);
   else
     script_path = StringPrintf("./scripts/?.lua;%s/scripts/?.lua", install_path);
-#endif
 
   LogPrintf("script_path: [%s]\n", script_path);
 
@@ -937,14 +916,8 @@ static void Script_LoadSubDir(const char *subdir)
 }
 
 
-void Script_Load(void)
+void Script_Load(const char *root)
 {
-#ifdef RANDOMIZER
-  const char *root = "main";
-#else
-  const char *root = "oblige";
-#endif
-
   LogPrintf("Loading main script: %s.lua\n", root);
 
   char require_text[128];
@@ -964,15 +937,10 @@ void Script_Load(void)
 
   LogPrintf("DONE.\n\n");
 
-#ifdef RANDOMIZER
-  Script_LoadSubDir("r_games");
-  Script_LoadSubDir("r_module");
-#else
   Script_LoadSubDir("games");
   Script_LoadSubDir("engines");
   Script_LoadSubDir("modules");
   Script_LoadSubDir("prefabs");
-#endif
 
   has_loaded = true;
  

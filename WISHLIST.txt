@@ -553,34 +553,6 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  RANDOMIZER
-----------------------------------------------------------------
-
-floor group = set of sectors (DOOM) or floor faces (QUAKE)
-              which connect and are at the same height
-
-need to:
-  -  create the floor groups
-  -  mark ones containing PLAYER, MONSTER, or PICKUP
-  -  determine reachability between groups
-
-Lua API:
-  -  gui.rmz_start(format, sub)  -- WAD_OpenRead(in_wad)
-                                 -- WAD_OpenWrite(out_wad)
-  -  gui.rmz_end()
-
-  -  gui.rmz_num_maps()
-  -  gui.rmz_map_info(index)
-
-  -  gui.rmz_load_map(name)
-  -  gui.rmz_save_map(name)
-
-  -  gui.num_entities()
-  -  gui.get_entity(index)
-  -  gui.set_entity(index, props)  -- id = "REMOVE"
-
-
-----------------------------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------------------------
 

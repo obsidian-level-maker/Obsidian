@@ -27,20 +27,7 @@
 #define OBLIGE_HEX_VER  0x408
 
 
-#define RMZ_TITLE   "OBLIGE Randomizer"
-
-#define RMZ_VERSION  "0.06"
-#define RMZ_HEX_VER  0x006
-
-
-#ifdef RANDOMIZER
-# define randomizer  true
-# define CONFIG_FILENAME  "SETTINGS.txt"
-#else
-# define randomizer  false
-# define CONFIG_FILENAME  "CONFIG.txt"
-#endif
-
+#define CONFIG_FILENAME  "CONFIG.txt"
 #define LOG_FILENAME     "LOGS.txt"
 
 

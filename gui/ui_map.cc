@@ -81,11 +81,7 @@ void UI_MiniMap::MapClear()
 
     if ((px % 10) == 5 || (py % 10) == 5)
     {
-#ifdef RANDOMIZER
-      pix[1] = 160;
-#else
       pix[2] = 176;
-#endif
     }
   }
 }

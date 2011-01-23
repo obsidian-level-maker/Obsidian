@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2011 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -49,34 +49,20 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
 
   int cy = y + 18 + KF * 4;
 
-#ifdef RANDOMIZER
-  int mini_w = 160;
-  int mini_h = 148;
-  int mini_x = x + (w-mini_w) / 2;
-#else
   int mini_w = 100 + KF * 12;
   int mini_h = 76 + KF *  6;
   int mini_x = x + 14 + KF*2;
-#endif
 
   mini_map = new UI_MiniMap(mini_x, cy, mini_w, mini_h);
 
   add(mini_map);
-
-#ifdef RANDOMIZER
-  cy += mini_map->h() + 20;
-#endif
 
 
   int button_w = 74 + KF * 16;
   int button_h = 30 + KF * 4;
   int button_x = x + w-14-KF*2 - button_w;
 
-#ifdef RANDOMIZER
-  int about_x = x + 20;
-#else
   int about_x = button_x;
-#endif
 
   about = new Fl_Button(about_x, cy, button_w, button_h, "About");
   about->labelsize(FL_NORMAL_SIZE + 0);
@@ -85,13 +71,9 @@ UI_Build::UI_Build(int x, int y, int w, int h, const char *label) :
   add(about);
 
 
-#ifdef RANDOMIZER
-  const char *build_text = "Start";
-#else
   const char *build_text = "Build";
 
   cy += about->h() + 14 + KF;
-#endif
 
   build = new Fl_Button(button_x, cy, button_w, button_h, build_text);
   build->labelfont(FL_HELVETICA_BOLD);

@@ -87,13 +87,8 @@ private:
 
 
 const char *UI_About::Text =
-#ifdef RANDOMIZER
-  "Randomizer is a tool to randomly replace\n"
-  "monsters and items in DOOM (etc) maps.\n"
-#else
   "OBLIGE is a random level generator for\n"
   "DOOM, DOOM II, Heretic and Quake\n"
-#endif
   "\n"
   "Copyright (C) 2006-2011 Andrew Apted\n"
   "\n"
@@ -123,8 +118,7 @@ UI_About::UI_About(int W, int H, const char *label) :
   int cy = 6;
 
   // nice big logo text
-  const char *logo_text = randomizer ? RMZ_TITLE " " RMZ_VERSION :
-                                       OBLIGE_TITLE " " OBLIGE_VERSION;
+  const char *logo_text = OBLIGE_TITLE " " OBLIGE_VERSION;
 
   Fl_Box *box = new Fl_Box(0, cy, W, 50, logo_text);
   box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);

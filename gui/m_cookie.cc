@@ -129,7 +129,6 @@ static void Cookie_SetValue(const char *name, const char *value)
   // need special handling for the 'seed' value
   if (StringCaseCmp(name, "seed") == 0)
   {
-#ifndef RANDOMIZER
     if (main_win)
     {
       int seed = atoi(value);
@@ -147,7 +146,6 @@ static void Cookie_SetValue(const char *name, const char *value)
       if (context == CCTX_Arguments || keep_seed)
         ob_set_config(name, value);
     }
-#endif
 
     return;
   }
@@ -159,7 +157,6 @@ static void Cookie_SetValue(const char *name, const char *value)
     if (main_win->game_box->ParseValue(name, value))
       return;
     
-#ifndef RANDOMIZER
     // -- Level Architecture --
     if (main_win->level_box->ParseValue(name, value))
       return;
@@ -167,7 +164,6 @@ static void Cookie_SetValue(const char *name, const char *value)
     // -- Playing Style --
     if (main_win->play_box->ParseValue(name, value))
       return;
-#endif
   }
 
 

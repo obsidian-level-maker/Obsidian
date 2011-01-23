@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2011 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -33,13 +33,8 @@
 #endif
 
 
-#ifdef RANDOMIZER
-# define MIN_WINDOW_W  200
-# define MIN_WINDOW_H  488
-#else
-# define MIN_WINDOW_W  428
-# define MIN_WINDOW_H  432
-#endif
+#define MIN_WINDOW_W  428
+#define MIN_WINDOW_H  432
 
 
 UI_MainWin *main_win;
@@ -72,27 +67,18 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   int PANEL_W = 212 + KF*32;
 
-#ifdef RANDOMIZER
-  int TOP_H  = 104 + KF*22;
-  int FIL_H  = 36;
-  int BOT_H  = H - TOP_H - FIL_H - 8;
-  int MOD_W  = W - PANEL_W - 4;
-#else
   int TOP_H  = 214 + KF*22;
   int BOT_H  = H - TOP_H - 4;
   int MOD_W  = W - PANEL_W*2 - 8;
-#endif
 
   game_box = new UI_Game(0, 0, PANEL_W, TOP_H);
   add(game_box);
 
-#ifndef RANDOMIZER
   level_box = new UI_Level(PANEL_W+4, 0, PANEL_W, TOP_H);
   add(level_box);
 
   play_box = new UI_Play(PANEL_W+4, TOP_H+4, PANEL_W, BOT_H);
   add(play_box);
-#endif
 
 
   build_box = new UI_Build(0, TOP_H+4, PANEL_W, BOT_H);
@@ -101,23 +87,6 @@ UI_MainWin::UI_MainWin(int W, int H, const char *title) :
 
   mod_box = new UI_CustomMods(W - MOD_W, 0, MOD_W, TOP_H+4 + BOT_H);
   add(mod_box);
-
-
-#ifdef RANDOMIZER
-  Fl_Group * infile_box = new Fl_Group(0, H - FIL_H, W, FIL_H);
-  infile_box->end();
-  infile_box->box(FL_THIN_UP_BOX);
-  infile_box->color(BUILD_BG, BUILD_BG);
-
-  Fl_Output * ff_name = new Fl_Output(114, H-FIL_H+7, W-118, FIL_H-14, "Current File: ");
-  ff_name->align(FL_ALIGN_LEFT);
-  ff_name->selection_color(FL_BLUE);
-  ff_name->value("C:\\foobie\\DOOM2.WAD");
-
-  infile_box->add(ff_name);
-
-  add(infile_box);
-#endif
 
 
   resizable(NULL);
@@ -144,10 +113,8 @@ void UI_MainWin::CalcWindowSize(bool hide_modules, int *W, int *H)
 void UI_MainWin::Locked(bool value)
 {
   game_box ->Locked(value);
-#ifndef RANDOMIZER
   level_box->Locked(value);
   play_box ->Locked(value);
-#endif
   build_box->Locked(value);
   mod_box  ->Locked(value);
 }
