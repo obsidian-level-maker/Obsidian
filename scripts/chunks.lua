@@ -141,7 +141,7 @@ function Chunk_divide_room(R)
     local nh = bh / H
 
     if nh > nw*2.2 then
-      if H >= 3 and rand.odds(20) then
+      if H >= 3 and rand.odds(10) then
         W = W - 2
       elseif H < 5 and (bh / (H+2)) >= 2 then
         H = H + 2
@@ -150,7 +150,7 @@ function Chunk_divide_room(R)
       end
 
     elseif nw > nh*2.2 then
-      if H >= 3 and rand.odds(20) then
+      if H >= 3 and rand.odds(10) then
         H = H - 2
       elseif W < 5 and (bw / (W+2)) >= 2 then
         W = W + 2
