@@ -130,52 +130,46 @@ function Chunk_divide_room(R)
     local W = 1
     local H = 1
 
-    if bw >= 9 and rand.odds(80) then W = 3 end
-    if bh >= 9 and rand.odds(80) then H = 3 end
+    local INC_PROB = 90
 
-    if bw >= 15 and rand.odds(50) then W = 5 end
-    if bh >= 15 and rand.odds(50) then H = 5 end
+    if bw >= 9 and rand.odds(INC_PROB) then W = 3 end
+    if bh >= 9 and rand.odds(INC_PROB) then H = 3 end
+
+    if bw >= 15 and rand.odds(INC_PROB) then W = 5 end
+    if bh >= 15 and rand.odds(INC_PROB) then H = 5 end
 
     -- if chunks would be long and thin, adjust how many
     local nw = bw / W
     local nh = bh / H
 
     if nh > nw*2.2 then
-      if H >= 3 and rand.odds(10) then
-        W = W - 2
-      elseif H < 5 and (bh / (H+2)) >= 2 then
+      if H < 5 and (bh / (H+2)) >= 3 then
         H = H + 2
       elseif W >= 3 then
         W = W - 2
       end
 
     elseif nw > nh*2.2 then
-      if H >= 3 and rand.odds(10) then
-        H = H - 2
-      elseif W < 5 and (bw / (W+2)) >= 2 then
+      if W < 5 and (bw / (W+2)) >= 3 then
         W = W + 2
       elseif H >= 3 then
         H = H - 2
       end
     end
 
-   gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
+--  gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
 
     -- determine block sizes
     nw = int(bw / W)
     nh = int(bh / H)
 
-    assert(nw >= 2 and nh >= 2)
+    assert(nw >= 3 and nh >= 3)
 
     local S = SEEDS[sect.sx1][sect.sy1]
     local bx, by = S:block_range()
 
     local locs_X = calc_block_sizes(W, bx, bw)
     local locs_Y = calc_block_sizes(H, by, bh)
-
-gui.debugf("locs_X :\n%s\n", table.tostr(locs_X, 2))
-gui.debugf("locs_Y :\n%s\n", table.tostr(locs_Y, 2))
-gui.debugf("\n")
 
     -- create the chunks
     for x = 1,W do for y = 1,H do
@@ -200,6 +194,43 @@ gui.debugf("\n")
 
   for _,K in ipairs(R.sections) do
     subdivide_section(K)
+  end
+end
+
+
+
+function Chunk_handle_connections()
+  
+  local function do_section_conn(C)
+
+  end
+
+
+  local function do_hallway_conn(C)
+    local R = C.R2
+
+    local S   = C.hall.start
+    local dir = C.hall.start_dir
+
+    if S.room ~= R then
+      S   = C.hall.dest
+      dir = C.hall.dest_dir
+
+      -- make dir face outward
+      dir = 10 - dir
+    end
+
+    assert(S.room == R)
+
+    merge_blocks(geom.side_coords(dir, S:block_range()))
+  end
+
+
+  ---| Chunk_handle_connections |---
+
+  for _,C in ipairs(LEVEL.all_conns) do
+    if C.kind == "section" then do_section_conn(C) end
+    if C.kind == "hallway" then do_hallway_conn(C) end
   end
 end
 
