@@ -338,12 +338,33 @@ class FLOOR
 
 function Chunky_floor(R)
 
+  local function touches_wall(K)
+    for bx = K.bx1-1, K.bx2+1 do
+      for by = K.by1-1, K.by2+1 do
+        if Block_valid(bx, by) then
+          local N = BLOCKS[bx][by]
+          if not N then return true end
+          if N.room ~= K.room then return true end
+        end
+      end
+    end
+
+    return false
+  end
+
+
   local function do_floor(K)
     local h = R.floor_min_h + rand.irange(0,16)
 
     local name = rand.pick { "FLAT1", "FLAT10", "FLAT14", "FLAT1_1",
                              "FLAT20", "GRASS1", "FLAT5_1",
                              "FLAT5_3", "FLAT5_5" }
+--[[
+    if not touches_wall(K) then
+      h = -32
+      name = "NUKAGE1"
+    end
+--]]
     local mat = Mat_lookup(name)
 
     local w_tex = mat.t
