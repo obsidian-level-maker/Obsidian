@@ -22,16 +22,19 @@
 
 class CONN
 {
-  kind   : keyword  -- "normal", "teleporter", "intrusion"
+  kind   : keyword  -- "section", "hallway", "teleporter"
   lock   : QUEST
 
-  K1, K2 : sections
-  R1, R2 : rooms
+  R1, R2 : ROOM
+  K1, K2 : SECTION
+  C1, C2 : CHUNK   -- decided later (at chunk creation)
 
-  dir    : direction 2/4/6/8 (from K1 to K2)
+  hall   : HALLWAY
+
+  dir   -- direction 2/4/6/8 (from K1 to K2 / C1 to C2)
            nil for teleporters.
 
-  conn_h : floor height for connection
+  conn_h  -- floor height for connection
 }
 
 

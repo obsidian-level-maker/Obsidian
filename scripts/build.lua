@@ -1931,7 +1931,7 @@ end
 
 function Fabricate(name, T, skins)
   
-stderrf("=========  FABRICATE %s\n", name)
+-- stderrf("=========  FABRICATE %s\n", name)
 
   local fab = Fab_create(name)
 
