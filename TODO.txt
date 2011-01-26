@@ -5,6 +5,18 @@ V4 TODO
 Current Work
 ------------
 
+!!  rework hallway generation to use the "hall channels"
+
+!!  after hallways, perform a section nudging pass (or two)
+
+!!  decide chunks after doing hallways
+
+!!  make section-to-section doors be chunk aware, merge chunks
+    if a door would touch two chunks
+    (in worst case, all chunks in a section become a single chunk)
+
++  create height diffs in each room from chunks
+
 
 HALLWAY STUFF
 
