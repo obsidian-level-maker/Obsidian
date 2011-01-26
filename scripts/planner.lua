@@ -188,7 +188,7 @@ end
 
 function Plan_create_sections(W, H)
 
-  local SIZE_TABLE = THEME.room_size_table or { 0,50,50,20,4 }
+  local SIZE_TABLE = THEME.room_size_table or { 0,40,60,20,4 }
 
   local border_seeds = PARAM.border_seeds or 2
   local free_seeds   = PARAM.free_seeds   or 4
@@ -484,7 +484,7 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 120,
+    rect = 180,
     plus = 15,
 
     T1 = 25, T2 = 6,
@@ -939,6 +939,40 @@ function Plan_contiguous_sections()
   -- make sure that multi-section rooms are contiguous, i.e. each section
   -- touches a nearby section of the same room (no hallway in between).
 
+  local function join(K, N, side)
+
+    -- two choices: move K or move N
+    --
+    -- for special shapes (L, T, plus) we pick the narrowest, otherwise
+    -- we always pick the left/bottom-most section.
+
+    local special_shape = not (K.room.shape == "rect" or K.room.shape == "odd")
+
+    if side == 6 then
+
+      if N.sh < K.sh and special_shape then
+        N.sx1 = K.sx2 + 1
+      else
+        K.sx2 = N.sx1 - 1
+      end
+
+    else assert(side == 8)
+
+      if N.sw < K.sw and special_shape then
+        N.sy1 = K.sy2 + 1
+      else
+        K.sy2 = N.sy1 - 1
+      end
+
+    end
+
+    K:update_size()
+    N:update_size()
+  end
+
+
+  ---| Plan_contiguous_sections |---
+
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
     if K.room then
@@ -947,8 +981,7 @@ function Plan_contiguous_sections()
         local N = K:neighbor(side)
 
         if N and N.room == K.room then
-          if side == 6 then K.sx2 = N.sx1 - 1 end
-          if side == 8 then K.sy2 = N.sy1 - 1 end
+          join(K, N, side)
         end
       end
 
