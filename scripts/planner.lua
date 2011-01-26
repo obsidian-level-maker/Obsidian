@@ -188,25 +188,30 @@ end
 
 function Plan_create_sections(W, H)
 
-  local SIZE_TABLE = THEME.room_size_table or { 0,30,70,70,40,4 }
+  local SIZE_TABLE = THEME.room_size_table or { 0,50,50,20,4 }
 
   local border_seeds = PARAM.border_seeds or 2
   local free_seeds   = PARAM.free_seeds   or 4
 
+
   local function pick_sizes(W, limit)
     local sizes = {}
+    local halls = {}
     local total
 
     -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
     -- block to every section row and column for centered doors (etc).
-    if PARAM.tiled then
+--[[
+    if PARAM.tiled then -- FIXME
       limit = PARAM.block_limit - W
       limit = int(limit / 2)
     end
+--]]
 
     -- take border seeds into account
     limit = limit - border_seeds*2
 
+    assert(W >= 2)
     assert(limit >= W * 2)
 
     for loop = 1,50 do
@@ -215,10 +220,14 @@ function Plan_create_sections(W, H)
       for x = 1,W do
         sizes[x] = rand.index_by_probs(SIZE_TABLE)
         total = total + sizes[x]
+        if x < W then
+          halls[x] = rand.index_by_probs({ 5, 80, 15 }) - 1
+          total = total + halls[x]
+        end
       end
 
       if total <= limit then
-        return sizes  -- OK!
+        return sizes, halls  -- OK!
       end
     end
 
@@ -235,22 +244,31 @@ function Plan_create_sections(W, H)
         sizes[x] = sizes[x] - 1
         total = total - 1
       end
+
+      -- reduce fat hallways too
+      if rand.odds(5) then
+        for x = 1,W-1 do
+          if halls[x] >= 2 then halls[x] = 1 end
+        end
+      end 
     end
 
-    return sizes
+    return sizes, halls
   end
 
-  local function get_positions(size_list)
+
+  local function get_positions(size_list, hall_list)
     local pos = {}
 
     pos[1] = 1 + border_seeds
 
-    for x = 2,#size_list do
-      pos[x] = pos[x-1] + size_list[x-1]
+    for x = 1,#size_list - 1 do
+      pos[x+1] = pos[x] + size_list[x] + hall_list[x]
     end
 
     return pos
   end
+
 
   local function dump_sizes(line, t, N)
     for i = 1,N do
@@ -267,8 +285,8 @@ function Plan_create_sections(W, H)
   -- reduce level size if rooms would become too small
   -- (2x2 seeds is the absolute minimum)
 
-  local max_W = int(limit / 2.5)
-  local max_H = int((limit - free_seeds) / 2.5)
+  local max_W = int(limit / 3.3)
+  local max_H = int((limit - free_seeds) / 3.3)
 
   if W > max_W then W = max_W end
   if H > max_H then H = max_H end
@@ -278,11 +296,11 @@ function Plan_create_sections(W, H)
   SECTION_W = W
   SECTION_H = H
 
-  local section_W = pick_sizes(W, limit)
-  local section_H = pick_sizes(H, limit - free_seeds)
+  local section_W, hall_W = pick_sizes(W, limit)
+  local section_H, hall_H = pick_sizes(H, limit - free_seeds)
 
-  local section_X = get_positions(section_W)
-  local section_Y = get_positions(section_H)
+  local section_X = get_positions(section_W, hall_W)
+  local section_Y = get_positions(section_H, hall_H)
 
   dump_sizes("Column widths: ", section_W, SECTION_W)
   dump_sizes("Row heights:   ", section_H, SECTION_H)
@@ -311,7 +329,6 @@ function Plan_create_sections(W, H)
   local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
-
 end
 
 
@@ -918,6 +935,28 @@ function Plan_add_special_rooms()
 end
 
 
+function Plan_contiguous_sections()
+  -- make sure that multi-section rooms are contiguous, i.e. each section
+  -- touches a nearby section of the same room (no hallway in between).
+
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+    if K.room then
+
+      for side = 6,8,2 do
+        local N = K:neighbor(side)
+
+        if N and N.room == K.room then
+          if side == 6 then K.sx2 = N.sx1 - 1 end
+          if side == 8 then K.sy2 = N.sy1 - 1 end
+        end
+      end
+
+    end
+  end end -- kx, ky
+end
+
+
 function Plan_collect_sections()
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
@@ -1253,6 +1292,7 @@ function Plan_create_rooms()
 
   Levels_invoke_hook("adjust_rooms")
 
+  Plan_contiguous_sections()
   Plan_collect_sections()
   Plan_dump_sections()
 
