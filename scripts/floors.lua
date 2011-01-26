@@ -344,7 +344,7 @@ function Chunky_floor(R)
         if Block_valid(bx, by) then
           local N = BLOCKS[bx][by]
           if not N then return true end
-          if N.room ~= K.room then return true end
+          if N.seed.room ~= K.room then return true end
         end
       end
     end

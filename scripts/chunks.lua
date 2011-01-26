@@ -53,8 +53,8 @@ end
 function CHUNK_CLASS.install(self)
   for x = self.bx1, self.bx2 do
     for y = self.by1, self.by2 do
-      assert(not BLOCKS[x][y])
-      BLOCKS[x][y] = self
+      assert(BLOCKS[x][y])
+      BLOCKS[x][y].chunk = self
     end
   end
 end

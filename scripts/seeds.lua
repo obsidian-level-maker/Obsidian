@@ -98,18 +98,23 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
+  SEED_DX = 0
+  SEED_DY = 0
+
+  -- Centre the map : needed for Quake, Hexen2 (etc).
+  -- This formula ensures that 'coord 0' is still a seed boundary,
+  -- which is VITAL for the Quake visibility code.
+  if PARAM.centre_map then
+    SEED_DX = int(SEED_W / 2) * SEED_SIZE
+    SEED_DY = int(SEED_H / 2) * SEED_SIZE
+  end
+
   for x = 1,SEED_W do for y = 1,SEED_H do
 
       local S = SEED_CLASS.new(x, y)
 
-      S.x1 = (x-1) * SEED_SIZE
-      S.y1 = (y-1) * SEED_SIZE
-
-      -- centre the map : needed for Quake, OK for other games.
-      -- this formula ensures that 'coord 0' is still a seed boundary,
-      -- which is VITAL for the Quake visibility code.
-      S.x1 = S.x1 - int(SEED_W / 2) * SEED_SIZE
-      S.y1 = S.y1 - int(SEED_H / 2) * SEED_SIZE
+      S.x1 = (x-1) * SEED_SIZE - SEED_DX
+      S.y1 = (y-1) * SEED_SIZE - SEED_DY
 
       S.x2 = S.x1 + SEED_SIZE
       S.y2 = S.y1 + SEED_SIZE
@@ -124,6 +129,7 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   end end -- x, y
 
+
   --- create block matrix ---
 
   BLOCK_W = W * 3
@@ -131,18 +137,15 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   BLOCKS = table.array_2D(BLOCK_W, BLOCK_H)
 
---[[
   for x = 1,BLOCK_W do for y = 1,BLOCK_H do
-    local B = {}
-
     local sx = int((x+2) / 3)
     local sy = int((y+2) / 3)
 
-    B.seed = SEEDS[sx][sy]
-
-    BLOCKS[x][y] = B
+    BLOCKS[x][y] =
+    {
+      bx = x, by = y, seed = SEEDS[sx][sy]
+    }
   end end -- x, y
---]]
 end
 
 
