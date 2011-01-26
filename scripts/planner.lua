@@ -46,12 +46,6 @@ require 'defs'
 require 'util'
 
 
-SEED_W = 0
-SEED_H = 0
-
-SEED_DX = 0
-SEED_DY = 0
-
 SECTION_W = 0
 SECTION_H = 0
 

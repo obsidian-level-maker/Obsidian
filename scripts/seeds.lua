@@ -50,6 +50,9 @@ SEED_H = 0
 BLOCK_W = 0
 BLOCK_H = 0
 
+MAP_BASE_X = 0
+MAP_BASE_Y = 0
+
 
 SEED_CLASS = {}
 
@@ -98,35 +101,33 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
-  SEED_DX = 0
-  SEED_DY = 0
+  MAP_BASE_X = 0
+  MAP_BASE_Y = 0
 
   -- Centre the map : needed for Quake, Hexen2 (etc).
   -- This formula ensures that 'coord 0' is still a seed boundary,
   -- which is VITAL for the Quake visibility code.
   if PARAM.centre_map then
-    SEED_DX = int(SEED_W / 2) * SEED_SIZE
-    SEED_DY = int(SEED_H / 2) * SEED_SIZE
+    MAP_BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
+    MAP_BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
   end
 
   for x = 1,SEED_W do for y = 1,SEED_H do
+    local S = SEED_CLASS.new(x, y)
 
-      local S = SEED_CLASS.new(x, y)
+    SEEDS[x][y] = S
 
-      S.x1 = (x-1) * SEED_SIZE - SEED_DX
-      S.y1 = (y-1) * SEED_SIZE - SEED_DY
+    S.x1 = MAP_BASE_X + (x-1) * SEED_SIZE
+    S.y1 = MAP_BASE_Y + (y-1) * SEED_SIZE
 
-      S.x2 = S.x1 + SEED_SIZE
-      S.y2 = S.y1 + SEED_SIZE
+    S.x2 = S.x1 + SEED_SIZE
+    S.y2 = S.y1 + SEED_SIZE
 
-      if x > map_W or y > map_H then
-        S.free = true
-      elseif x == 1 or x == map_W or y == 1 or y == map_H then
-        S.edge_of_map = true
-      end
-
-      SEEDS[x][y] = S
-
+    if x > map_W or y > map_H then
+      S.free = true
+    elseif x == 1 or x == map_W or y == 1 or y == map_H then
+      S.edge_of_map = true
+    end
   end end -- x, y
 
 
