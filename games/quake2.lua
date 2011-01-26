@@ -127,6 +127,8 @@ QUAKE2.PARAMETERS =
 
   seed_limit = 42,
 
+  centre_map = true,
+
   use_spawnflags = true,
   entity_delta_z = 24,
 

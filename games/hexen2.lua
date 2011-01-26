@@ -96,6 +96,8 @@ HEXEN2.PARAMETERS =
   -- Quake engine needs all coords to lie between -4000 and +4000.
   seed_limit = 42,
 
+  centre_map = true,
+
   use_spawnflags = true,
   entity_delta_z = 24,
 
