@@ -36,6 +36,27 @@ OBLIGE 3.57 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">28-Jan-2011:</div>
+<blockquote class="news">
+Quick note to say that I am still hacking
+away on OBLIGE :-)
+
+<p>
+Several months ago I started work on "V4",
+which was a completely new way of layouting rooms.
+
+However I was not satisfied with that new system,
+so I have been exploring what the best kind of
+layout algorithm might be.
+
+Once this been sorted out, development should
+pick up some pace again...
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">31-Aug-2010:</div>
 <blockquote class="news">
 Update on latest work:
