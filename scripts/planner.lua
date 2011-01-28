@@ -1054,19 +1054,28 @@ function Plan_expand_rooms()
 
     -- for shaped rooms require all stems to be nudged together
     -- (in order to keep the shape synchronised).
+    local keep_stems = true
+
+    if R.shape == "odd" or (R.shape == "rect" and R.kw <= 2 and R.kh <= 2) then
+      keep_stems = false
+    end
 
     local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
     
-    if R.shape ~= "odd" or not (R.shape == "rect" and rand.odds(75)) then
-      kx1,ky1, kx2,ky2 = geom.side_coords(dir, R.kx1, R.ky1, R.kx2, R.ky2)
+    if keep_stems then
+      if geom.is_vert(dir) then
+        kx1, kx2 = R.kx1, R.kx2
+      else
+        ky1, ky2 = R.ky1, R.ky2
+      end
     end
 
-    -- collect the sections (possibly none)
+    -- collect the growable sections (possibly none)
     local sections = {}
 
     for kx = kx1,kx2 do for ky = ky1,ky2 do
       local N = SECTIONS[kx][ky]
-      if N.room == K.room and not N:same_room(dir) then
+      if N.room == R and not N:same_room(dir) then
         table.insert(sections, N)
       end
     end end
