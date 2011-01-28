@@ -930,9 +930,11 @@ function Plan_add_natural_rooms()
 end
 
 
+
 function Plan_add_special_rooms()
   -- nothing here.... YET!
 end
+
 
 
 function Plan_contiguous_sections()
@@ -990,6 +992,108 @@ function Plan_contiguous_sections()
 end
 
 
+
+function Plan_expand_rooms()
+  -- this must be called after hallways are generated, and will
+  -- move the sides of room sections into unused hallway space.
+
+  local function can_nudge(K, dir)
+    local sx1, sy1, sx2, sy2
+
+    if geom.is_vert(dir) then
+      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1, K.sy1-1, K.sx2, K.sy2+1)
+    else
+      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1-1, K.sy1, K.sx2+1, K.sy2)
+    end
+
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      local S = SEEDS[sx][sy]
+      if S.room or S.hall or S.expanded then return false end
+    end end
+
+    return true -- OK --
+  end
+
+
+  local function do_nudge(K, dir)
+    -- mark seeds as occupied
+    local sx1, sy1, sx2, sy2
+
+    if geom.is_vert(dir) then
+      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1, K.sy1-1, K.sx2, K.sy2+1)
+    else
+      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1-1, K.sy1, K.sx2+1, K.sy2)
+    end
+    
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      local S = SEEDS[sx][sy]
+      S.expanded = true
+    end end
+
+    -- update seed bbox in the section
+
+        if dir == 4 then K.sx1 = K.sx1 - 1
+    elseif dir == 6 then K.sx2 = K.sx2 + 1
+    elseif dir == 2 then K.sy1 = K.sy1 - 1
+    else                 K.sy2 = K.sy2 + 1
+    end
+
+    -- NOTE: the seed themselves and the room bbox are only updated
+    --       at the very end, via the call to Plan_make_seeds().
+  end
+
+
+  local function try_nudge(K, dir)
+    local R = K.room
+
+    -- for shaped rooms require all stems to be nudged together
+    -- (in order to keep the shape synchronised).
+
+    local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
+    
+    if R.shape ~= "odd" or not (R.shape == "rect" and rand.odds(75)) then
+      kx1,ky1, kx2,ky2 = geom.side_coords(R.kx1, R.ky1, R.kx2, R.ky2, dir)
+    end
+
+    -- collect the sections (possibly none)
+    local sections = {}
+
+    for kx = kx1,kx2 do for ky = ky1,ky2 do
+      local N = SECTIONS[kx][ky]
+      if N.room == K.room and not N:same_room(dir) then
+        table.insert(sections, N)
+      end
+    end end
+
+    for _,N in ipairs(sections) do
+      if not can_nudge(N, dir) then return; end
+    end
+
+    for _,N in ipairs(sections) do
+      do_nudge(N, dir)
+    end
+  end
+
+  
+  ---| Plan_expand_rooms |---
+
+  local visits = Plan_get_visit_list()
+
+  for loop = 1,4 do
+    for _,V in ipairs(visits) do
+      local K = SECTIONS[V.x][V.y]
+
+      if K.room then
+        try_nudge(K, rand.dir())
+      end
+    end
+  end
+
+  Plan_make_seeds()
+end
+
+
+
 function Plan_collect_sections()
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
@@ -1012,6 +1116,7 @@ function Plan_collect_sections()
     R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
   end
 end
+
 
 
 function Plan_decide_outdoors()
@@ -1055,6 +1160,7 @@ function Plan_decide_outdoors()
     end
   end
 end
+
 
 
 function Plan_find_neighbors()
@@ -1102,8 +1208,12 @@ function Plan_make_seeds()
     if not R then return end
 
     for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
-      SEEDS[sx][sy].K    = K
-      SEEDS[sx][sy].room = K.room
+      local S = SEEDS[sx][sy]
+      assert(not S.hall)
+
+      S.K = K ; S.section = K
+      S.room = K.room
+      S.expanded = nil
     end end
 
     K.x1 = SEEDS[K.sx1][K.sy1].x1
