@@ -998,12 +998,18 @@ function Plan_expand_rooms()
   -- move the sides of room sections into unused hallway space.
 
   local function can_nudge(K, dir)
+    -- edge of map?
+    if dir == 4 and K.kx == 1         then return false end
+    if dir == 6 and K.kx == SECTION_W then return false end
+    if dir == 2 and K.ky == 1         then return false end
+    if dir == 8 and K.ky == SECTION_H then return false end
+
     local sx1, sy1, sx2, sy2
 
     if geom.is_vert(dir) then
-      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1, K.sy1-1, K.sx2, K.sy2+1)
+      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1, K.sy1-1, K.sx2, K.sy2+1)
     else
-      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1-1, K.sy1, K.sx2+1, K.sy2)
+      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1-1, K.sy1, K.sx2+1, K.sy2)
     end
 
     for sx = sx1,sx2 do for sy = sy1,sy2 do
@@ -1020,9 +1026,9 @@ function Plan_expand_rooms()
     local sx1, sy1, sx2, sy2
 
     if geom.is_vert(dir) then
-      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1, K.sy1-1, K.sx2, K.sy2+1)
+      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1, K.sy1-1, K.sx2, K.sy2+1)
     else
-      sx1,sy1, sx2,sy2 = geom.side_coords(K.sx1-1, K.sy1, K.sx2+1, K.sy2)
+      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1-1, K.sy1, K.sx2+1, K.sy2)
     end
     
     for sx = sx1,sx2 do for sy = sy1,sy2 do
@@ -1052,7 +1058,7 @@ function Plan_expand_rooms()
     local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
     
     if R.shape ~= "odd" or not (R.shape == "rect" and rand.odds(75)) then
-      kx1,ky1, kx2,ky2 = geom.side_coords(R.kx1, R.ky1, R.kx2, R.ky2, dir)
+      kx1,ky1, kx2,ky2 = geom.side_coords(dir, R.kx1, R.ky1, R.kx2, R.ky2)
     end
 
     -- collect the sections (possibly none)
@@ -1077,12 +1083,16 @@ function Plan_expand_rooms()
   
   ---| Plan_expand_rooms |---
 
-  local visits = Plan_get_visit_list()
+  local visits = {}
 
-  for loop = 1,4 do
-    for _,V in ipairs(visits) do
-      local K = SECTIONS[V.x][V.y]
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    table.insert(visits, SECTIONS[kx][ky])
+  end end
 
+  rand.shuffle(visits)
+
+  for loop = 1,6 do
+    for _,K in ipairs(visits) do
       if K.room then
         try_nudge(K, rand.dir())
       end
@@ -1447,5 +1457,9 @@ function Plan_create_rooms()
   Plan_dump_rooms()
 
 ---??  Plan_prepare_rooms()   -- SEE NOTE IN Connect_Rooms() 
+
+-- FIXME: do after hallways !!!!
+  Plan_expand_rooms()
+  Plan_dump_rooms("Expanded Map:")
 end
 
