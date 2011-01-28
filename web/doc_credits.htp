@@ -48,7 +48,6 @@ He also maintained his own fork of Oblige V2, called
 <i>Obhack</i>, which had some completely new features
 such as an ability to make CTF multiplayer maps.
 
-
 <p>
 <b>Enhas</b>
 started off with helpful feedback and
@@ -59,7 +58,6 @@ Stealth Monsters, and Level Control.
 He also wrote a bunch of funny Psychedelic level names,
 and is currently working on support for Chex Quest 3.
 
-
 <p>
 <b>Mr Chris (Chris Pisarczyk)</b>
 made some DOOM prefabs (though they haven't been used yet).
@@ -68,9 +66,8 @@ Skulltag Monsters module and the ZDoom Beastiary module.
 He has helped with DOOM themes, and created a bunch of
 boss areas maps (E1M8, E2M8, E3M8 and MAP07).
 
-
 <p>
-<b>JohnnyRancid</b> a.k.a. <b>40oz</b>
+<b>40oz (Jon Vail)</b>
 also made some prefabs for Oblige.
 He did a lot of work on the level name generator,
 and added more color themes for the sky generator.
@@ -82,14 +79,12 @@ sent me a whole swag of great looking Prefab structures,
 which kicked off some big improvements to the Oblige V2 code
 (a new prefab system and lots of different prefabs).
 
-
 <p>
 <b>Esselfortium</b>
 modded Oblige V2 with his own very nice and consistent Tech
 theme -- proving that decent theming was possible.
 He also gave very detailed and encouraging feedback
 during early Oblige V3 development.
-
 
 <p>
 <b>DoomJedi</b>
