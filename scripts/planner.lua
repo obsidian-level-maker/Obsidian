@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -79,8 +79,8 @@ function SECTION_CLASS.shrink(self, side)
   -- update seed map
   for x = ox1,ox2 do for y = oy1,oy2 do
     local S = SEEDS[x][y]
-    if S.K == self then
-      S.K = nil ; S.room = nil
+    if S.section == self then
+      S.section = nil ; S.room = nil
     end
   end end
 end
@@ -270,6 +270,30 @@ function Plan_create_sections(W, H)
   end
 
 
+  local function get_hallways(pos_list, size_list, hall_list)
+    local net = {}
+
+    if border_seeds >= 2 then
+      table.insert(net, { border_seeds, 1 })
+    end
+
+    for x = 1,#pos_list do
+      table.insert(net, { pos_list[x], size_list[x], true })
+
+      if x < #pos_list and hall_list[x] > 0 then
+        table.insert(net, { pos_list[x] + size_list[x], hall_list[x] })
+      end
+    end
+
+    if border_seeds >= 2 then
+      local x = #pos_list
+      table.insert(net, { pos_list[x] + size_list[x], 1 })
+    end
+
+    return net
+  end
+
+
   local function dump_sizes(line, t, N)
     for i = 1,N do
       line = line .. tostring(t[i]) .. " "
@@ -321,6 +345,12 @@ function Plan_create_sections(W, H)
     K.sx2 = K.sx1 + K.sw - 1
     K.sy2 = K.sy1 + K.sh - 1
   end end
+
+
+  --- remember hallway network ---
+
+  LEVEL.network_X = get_hallways(section_X, section_W, hall_W)
+  LEVEL.network_Y = get_hallways(section_Y, section_H, hall_H)
 
 
   --- create the SEED map ---
@@ -1230,8 +1260,8 @@ function Plan_make_seeds()
       local S = SEEDS[sx][sy]
       assert(not S.hall)
 
-      S.K = K ; S.section = K
       S.room = K.room
+      S.section = K
       S.expanded = nil
     end end
 
@@ -1264,11 +1294,9 @@ function Plan_dump_rooms(title)
 
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
-    local K = S.K
+    local R = S.room
 
-    if not (K and K.room) then return "." end
-
-    local R = K.room
+    if not R then return "." end
 
     if R.kind == "scenic" then return "=" end
 
@@ -1467,8 +1495,5 @@ function Plan_create_rooms()
 
 ---??  Plan_prepare_rooms()   -- SEE NOTE IN Connect_Rooms() 
 
--- FIXME: do after hallways !!!!
-  Plan_expand_rooms()
-  Plan_dump_rooms("Expanded Map:")
 end
 

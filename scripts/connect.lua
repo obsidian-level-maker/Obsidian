@@ -356,7 +356,7 @@ end
 
 
 
-function Connect_make_hallways()
+function OLD_OLD__Connect_make_hallways()
 
   -- NOTES:
   --
@@ -1576,8 +1576,8 @@ function Connect_rooms()
       local S = SEEDS[sx][sy]
 
       if S.room == R then
-        S.K = nil
         S.room = nil
+        S.section = nil
       end
     end end
   end
@@ -1674,7 +1674,10 @@ Plan_dump_rooms("Dead Room Map")
 
   Levels_invoke_hook("connect_rooms")
 
-  Connect_make_hallways()
+  Hallway_place_em()
+
+  Plan_expand_rooms()
+  Plan_dump_rooms("Expanded Map:")
 
   -- NOTE: doing this here since hallways change the sizes of sections
   Plan_prepare_rooms()
