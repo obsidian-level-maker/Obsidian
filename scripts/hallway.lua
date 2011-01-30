@@ -37,6 +37,22 @@ class HALLWAY
 }
 
 
+class SEGMENT
+{
+  nx, ny    -- place in network map
+
+  sx1, sy1, sx2, sy2  -- seed range
+
+  link[DIR] : SEGMENT     -- links to neighboring segments
+
+  section[DIR] : SECTION  -- bordering sections
+
+  vert, horiz, junction : BOOL   -- general shape
+
+  used : BOOL  -- has been used in a hallway (cannot use again)
+}
+
+
 --------------------------------------------------------------]]
 
 require 'defs'
@@ -193,13 +209,172 @@ function Hallway_place_em()
   end
 
 
+  local function collect_starts()
+    local starts = {}
+
+    for nx = 1,net_W do for ny = 1,net_H do
+      local G = network[nx][ny]
+      if G then
+        G.score = 0.5  -- FIXME
+
+        table.insert(starts, G)
+      end
+    end end
+
+    table.sort(starts, function(A,B) return A.score > B.score end)
+
+    return starts
+  end
+
+
+  local function dump_path(hall)
+    -- FIXME !!!
+  end
+
+
+  local function add_hall(hall)
+    -- FIXME !!!
+
+    for _,loc in ipairs(hall.path) do
+      local G = loc.G
+
+      -- mark segment as used
+      assert(not G.used)
+      G.used = true
+
+      -- store hallway in seed map
+      for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
+        local S = SEEDS[sx][sy]
+        assert(not S.room and not S.hall)
+        S.hall = hall
+      end end
+    end
+  end
+
+
+  local function seg_in_path(path, G)
+    for _,loc in ipairs(path) do
+      if loc.G == G then return true end
+    end
+
+    return false
+  end
+
+
+  local function possible_terms(hall, G)
+    return {} -- FIXME !!!
+  end
+
+
+  local function possible_juncs(hall, G)
+    return {} -- FIXME !!!
+  end
+
+
+  local function try_trace_hall(hall)
+    local G = hall.path[1]
+
+    -- choose starting room (off the starting seg)
+    local terms = possible_terms(G)
+
+    if #terms == 0 then return false end
+
+    local T = rand.pick(terms)
+
+    local K1 = T.K
+    local R1 = T.K.room
+
+
+    -- make a path
+
+    local TERMINATE_PROB = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9 }
+
+    while #hall.path < #TERMINATE_PROB do
+      local terms = possible_terms(hall, G)
+      local juncs = possible_juncs(hall, G)
+
+      -- require at least one additional segment
+      if #hall.path == 1 then terms = {} end
+
+      -- nowhere to go?
+      if #terms == 0 and #juncs == 0 then return false end
+
+      if #terms > 0 and #juncs > 0 then
+        if rand.odds(TERMINATE_PROB[#hall.path]) then
+          juncs = {}
+        else
+          terms = {}
+        end
+      end
+
+      if #terms > 0 then
+        local T = rand.pick(terms)
+
+        hall.dest = T.G
+
+        -- FIXME : TERMINATING STUFF 
+
+        return true
+      end
+
+      assert(#juncs > 0)
+
+      -- pick a junction and continue the hallway
+      local J = rand.picks(juncs)
+
+      table.insert(hall.path, { G=J.G, dir=J.dir })
+
+      G = J.G
+    end
+
+    -- too many segments
+    return false
+  end
+
+
+  local function trace_hall(G)
+    if G.used then return false end
+
+    for loop = 1,15 do
+      local hall =
+      {
+        path = { {G=G} }
+      }
+
+      if try_trace_hall(hall) then
+        add_hall(hall)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   ---| Hallway_place_em |---
 
   create_network()
   dump_network("Initial Hall Network:")
   join_network()
+
+  local starts  = collect_starts()
+
+  local count   = 0
+  local max_num = 7  -- FIXME
+
+  -- FIXME: try special stuff (half-surrounded, etc)
+
+  for _,G in ipairs(starts) do
+    if count >= max_num then break; end
+
+    if trace_hall(G) then
+      count = count + 1
+    end
+  end
 end
 
+
+--------------------------------------------------------------------
 
 
 function Hallway_construct(hall)
