@@ -49,8 +49,7 @@ function Hallway_place_em()
   -- Place hallways into the hallway channels.
   --
   -- First we setup a network of junctions and segments in the
-  -- free hallway areas.  This network also keeps track of what
-  -- rooms can be connected.
+  -- free hallway areas.
   --
   -- Then we choose a starting place for a hallway and try to
   -- trace a valid hallway, stepping from junction to junction.
@@ -59,6 +58,12 @@ function Hallway_place_em()
   local net_W
   local net_H
   local network
+
+
+  local function is_valid(nx, ny)
+    return (1 <= nx and nx <= net_W) and
+           (1 <= ny and ny <= net_H)
+  end
 
 
   local function is_free(sx1, sy1, sx2, sy2)
@@ -94,7 +99,7 @@ function Hallway_place_em()
         if is_free(sx1, sy1, sx2, sy2) then
           local SEG =
           {
-            nx = nx, ny = ny, border = {},
+            nx = nx, ny = ny, link = {},
             horiz = (not YN[3]),
             vert  = (not XN[3]),
           }
@@ -134,9 +139,26 @@ function Hallway_place_em()
   end
 
 
+  local function join_segments(G1, G2, dir)
+    G1.link[dir]    = G2
+    G2.link[10-dir] = G1
+  end
+
+
   local function join_network()
     for nx = 1,net_W do for ny = 1,net_H do
-      -- FIXME
+      local G1 = network[nx][ny]
+
+      for dir = 2,8,2 do
+        local ox, oy = geom.nudge(nx, ny, dir)
+        local G2
+
+        if is_valid(ox, oy) then G2 = network[ox][oy] end
+        
+        if G1 and G2 then
+          join_segments(G1, G2, dir)
+        end
+      end
     end end
   end
 
