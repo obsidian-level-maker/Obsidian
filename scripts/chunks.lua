@@ -24,9 +24,9 @@ class CHUNK
 {
   bx1, by1, bx2, by2  -- block coordinates
 
-  room : ROOM
-
   x1, y1, x2, y2  -- 2D map coordinates
+
+  room : ROOM
 
   edge[DIR]   : EDGE
   corner[DIR] : CORNER
@@ -194,6 +194,14 @@ function Chunk_divide_room(R)
 
   for _,K in ipairs(R.sections) do
     subdivide_section(K)
+  end
+end
+
+
+
+function Chunk_prepare_rooms()
+  for _,R in ipairs(LEVEL.all_rooms) do
+    Chunk_divide_room(R)
   end
 end
 

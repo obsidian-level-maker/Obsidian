@@ -1296,6 +1296,8 @@ function Plan_dump_rooms(title)
     local S = SEEDS[sx][sy]
     local R = S.room
 
+    if S.hall then return "#" end
+
     if not R then return "." end
 
     if R.kind == "scenic" then return "=" end
@@ -1430,6 +1432,17 @@ function Plan_prepare_rooms()
     end
 
     connect_corners(R)
+
+    R.num_windows = 0
+
+    R.cage_spots = {}
+    R.trap_spots = {}
+    R.mon_spots  = {}
+    R.item_spots = {}
+
+    R.prefabs = {}
+    R.blocks  = {}
+    R.decor   = {}
   end
 
 

@@ -1029,21 +1029,6 @@ end
 
 
 
-function Rooms_setup_bits(R)
-  R.num_windows = 0
-
-  R.cage_spots = {}
-  R.trap_spots = {}
-  R.mon_spots  = {}
-  R.item_spots = {}
-
-  R.prefabs = {}
-  R.blocks  = {}
-  R.decor   = {}
-end
-
-
-
 function Rooms_add_sun()
   if GAME.format == "doom" then
     return
@@ -1162,11 +1147,6 @@ function Rooms_build_all()
 
   Rooms_choose_themes()
   Rooms_assign_facades()
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    Rooms_setup_bits(R)
-    Chunk_divide_room(R)
-  end
 
   Rooms_setup_symmetry()
 
