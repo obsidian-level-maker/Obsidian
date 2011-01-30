@@ -165,6 +165,9 @@ function Hallway_place_em()
     -- check seeds
     local sx1, sy1, sx2, sy2 = geom.side_coords(dir, G.sx1, G.sy1, G.sx2, G.sy2)
 
+    sx1, sy1 = geom.nudge(sx1, sy1, dir)
+    sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
     for sx = sx1,sx2 do for sy = sy1,sy2 do
       local S = SEEDS[sx][sy]
 
@@ -215,7 +218,7 @@ function Hallway_place_em()
     for nx = 1,net_W do for ny = 1,net_H do
       local G = network[nx][ny]
       if G then
-        G.score = 0.5  -- FIXME
+        G.score = gui.random()  -- FIXME
 
         table.insert(starts, G)
       end
@@ -228,12 +231,20 @@ function Hallway_place_em()
 
 
   local function dump_path(hall)
-    -- FIXME !!!
+    gui.debugf("Path:\n")
+    gui.debugf("{\n")
+    for _,loc in ipairs(hall.path) do
+      gui.debugf("  Segment @ (%d,%d) dir:%d\n", loc.G.sx1, loc.G.sy1, loc.dir or -5)
+    end
+    gui.debugf("}\n")
   end
 
 
   local function add_hall(hall)
     -- FIXME !!!
+
+    gui.debugf("Adding hallway....\n")
+    dump_path(hall)
 
     for _,loc in ipairs(hall.path) do
       local G = loc.G
@@ -262,32 +273,56 @@ function Hallway_place_em()
 
 
   local function possible_terms(hall, G)
-    return {} -- FIXME !!!
+    local terms = {}
+
+    for dir = 2,8,2 do
+      local K = G.section[dir]
+      if K and K.room then
+        if not hall.R1 or Connect_possibility(hall.R1, K.room) >= 0 then
+          table.insert(terms, { K=K, dir=dir })
+        end
+      end
+    end
+
+    return terms
   end
 
 
   local function possible_juncs(hall, G)
-    return {} -- FIXME !!!
+    local juncs = {}
+
+    for dir = 2,8,2 do
+      local G2 = G.link[dir]
+
+      if G2 and not G2.used and not seg_in_path(hall.path, G2) then
+        table.insert(juncs, { G=G2, dir=dir })
+      end
+    end
+
+    return juncs
   end
 
 
   local function try_trace_hall(hall)
-    local G = hall.path[1]
+    local loc = hall.path[1]
+    assert(loc and loc.G)
 
-    -- choose starting room (off the starting seg)
-    local terms = possible_terms(G)
+    local G = loc.G
+
+    -- choose starting room off first segment
+    local terms = possible_terms(hall, G)
 
     if #terms == 0 then return false end
 
     local T = rand.pick(terms)
 
-    local K1 = T.K
-    local R1 = T.K.room
+    hall.K1 = T.K
+    hall.R1 = T.K.room
 
 
     -- make a path
 
-    local TERMINATE_PROB = { 1,1,2,2,3,3,4,4,5,5,6,6,7,7,8,8,9,9 }
+    local TERMINATE_PROB = { 10,30,50,60,70,80,90,90,90,90 }
 
     while #hall.path < #TERMINATE_PROB do
       local terms = possible_terms(hall, G)
@@ -307,20 +342,20 @@ function Hallway_place_em()
         end
       end
 
+      --- TERMINATE ? ---
+
       if #terms > 0 then
         local T = rand.pick(terms)
 
-        hall.dest = T.G
-
-        -- FIXME : TERMINATING STUFF 
+        hall.path[#hall.path-1] .dir = T.dir
 
         return true
       end
 
-      assert(#juncs > 0)
-
       -- pick a junction and continue the hallway
-      local J = rand.picks(juncs)
+
+      assert(#juncs > 0)
+      local J = rand.pick(juncs)
 
       table.insert(hall.path, { G=J.G, dir=J.dir })
 
@@ -371,6 +406,10 @@ function Hallway_place_em()
       count = count + 1
     end
   end
+
+  gui.printf("Added %d hallways\n", count)
+
+  dump_network("Final Hall Network:")
 end
 
 
