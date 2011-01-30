@@ -240,12 +240,7 @@ function Hallway_place_em()
   end
 
 
-  local function add_hall(hall)
-    -- FIXME !!!
-
-    gui.debugf("Adding hallway....\n")
-    dump_path(hall)
-
+  local function render_path(hall)
     for _,loc in ipairs(hall.path) do
       local G = loc.G
 
@@ -260,6 +255,30 @@ function Hallway_place_em()
         S.hall = hall
       end end
     end
+  end
+
+
+  local function add_hall(hall)
+    local R1 = hall.R1
+    local R2 = hall.R2
+
+    gui.debugf("Adding hallway %s --> %s\n", R1:tostr(), R2:tostr())
+
+    dump_path(hall)
+    render_path(hall)
+
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    local C = CONN_CLASS.new_R(R1, R2, "hallway")
+
+    C.hall = HALLWAY
+
+    table.insert(LEVEL.all_conns, C)
+
+    -- FIXME: section stuff too ???
+
+    table.insert(R1.conns, C)
+    table.insert(R2.conns, C)
   end
 
 
@@ -346,6 +365,9 @@ function Hallway_place_em()
 
       if #terms > 0 then
         local T = rand.pick(terms)
+
+        hall.K2 = T.K
+        hall.R2 = T.K.room
 
         hall.path[#hall.path-1] .dir = T.dir
 
