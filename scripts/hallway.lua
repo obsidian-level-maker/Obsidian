@@ -49,7 +49,8 @@ function Hallway_place_em()
   -- Place hallways into the hallway channels.
   --
   -- First we setup a network of junctions and segments in the
-  -- free hallway areas.
+  -- free hallway areas.  This includes what rooms / sections
+  -- are bordering each segment.
   --
   -- Then we choose a starting place for a hallway and try to
   -- trace a valid hallway, stepping from junction to junction.
@@ -99,7 +100,10 @@ function Hallway_place_em()
         if is_free(sx1, sy1, sx2, sy2) then
           local SEG =
           {
-            nx = nx, ny = ny, link = {},
+            nx = nx, ny = ny,
+            link = {}, section = {},
+            sx1 = sx1, sy1 = sy1,
+            sx2 = sx2, sy2 = sy2,
             horiz = (not YN[3]),
             vert  = (not XN[3]),
           }
@@ -139,6 +143,28 @@ function Hallway_place_em()
   end
 
 
+  local function section_neighbor(G, dir)
+    local K
+
+    -- check seeds
+    local sx1, sy1, sx2, sy2 = geom.side_coords(dir, G.sx1, G.sy1, G.sx2, G.sy2)
+
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      local S = SEEDS[sx][sy]
+
+      -- require no empty seeds
+      if not (S and S.section) then return nil end
+
+      -- require same section (this test is probably unnecessary)
+      if K and S.section ~= K then return nil end
+
+      K = S.section
+    end end
+
+    return K
+  end
+
+
   local function join_segments(G1, G2, dir)
     G1.link[dir]    = G2
     G2.link[10-dir] = G1
@@ -157,6 +183,10 @@ function Hallway_place_em()
         
         if G1 and G2 then
           join_segments(G1, G2, dir)
+        end
+
+        if G1 and not G2 then
+          G1.section[dir] = section_neighbor(G1, dir)
         end
       end
     end end
