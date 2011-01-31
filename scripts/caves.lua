@@ -950,3 +950,225 @@ function CAVE_CLASS.render(self, base_x, base_y, brush_func, data, square_caves)
   end end
 end
 
+
+---------------------------------------------------------------------
+
+
+function Cave_build_room(R)
+
+do return end --!!!!!!!!!  FIXME CAVES
+
+  local cave  = R.cave
+
+  local w_tex  = R.cave_tex
+  local w_info = get_mat(w_tex)
+  local high_z = EXTREME_H
+
+  local base_x = SECTIONS[R.kx1][R.ky1].x1
+  local base_y = SECTIONS[R.kx1][R.ky1].y1
+
+  local function WALL_brush(data, coords)
+    if data.shadow_info then
+      local sh_coords = shadowify_brush(coords, 40)
+--!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
+    end
+
+    if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.delta_f }) end
+    if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.delta_c }) end
+
+    Trans.set_mat(coords, data.wtex, data.ftex)
+
+    Trans.brush(coords)
+  end
+
+  local function FC_brush(data, coords)
+    if data.f_info then
+      local coord2 = table.deep_copy(coords)
+      table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
+
+      Trans.set_mat(coord2, data.wtex, data.ftex)
+      Trans.brush(coord2)
+    end
+
+    if data.c_info then
+      local coord2 = table.deep_copy(coords)
+      table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
+
+      Trans.set_mat(coords, data.wtex, data.ctex)
+      Trans.brush(coord2)
+    end
+  end
+
+  local function choose_tex(last, tab)
+    local tex = rand.key_by_probs(tab)
+
+    if last then
+      for loop = 1,5 do
+        if not Mat_similar(last, tex) then break; end
+        tex = rand.key_by_probs(tab)
+      end
+    end
+
+    return tex
+  end
+
+  -- DO WALLS --
+
+  local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
+
+  if R.is_lake then
+    data.info = Mat_liquid()
+    data.delta_f = rand.sel(70, -48, -72)
+    data.f_z = R.cave_floor_h + 8
+    data.ftex = data.info.t_face.tex -- TEMP CRUD
+  end
+
+  if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
+    data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
+  end
+
+  if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
+--!!!!!    data.shadow_info = get_light(-1)
+  end
+
+  -- grab walkway now (before main cave is modified)
+
+  local walkway = cave:copy_island(cave.empty_id)
+
+
+  -- handle islands first
+
+  for _,island in ipairs(cave.islands) do
+
+    -- FIXME
+    if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
+       rand.odds(50)
+    then
+
+      -- create a lava/nukage pit
+      local pit = Mat_liquid()
+
+      island:render(base_x, base_y, WALL_brush,
+                    { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
+                      delta_f=rand.sel(70, -52, -76) })
+
+      cave:subtract(island)
+    end
+  end
+
+
+  cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+
+
+  if R.is_lake then return end
+  if THEME.square_caves then return end
+  if PARAM.simple_caves then return end
+
+
+  local ceil_h = R.cave_floor_h + R.cave_h
+
+  -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
+
+  local last_ftex = R.cave_tex
+
+  for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
+    walkway:shrink(false)
+
+---???    if rand.odds(sel(i==1, 20, 50)) then
+---???      walkway:shrink(false)
+---???    end
+
+    walkway:remove_dots()
+
+    -- DO FLOOR and CEILING --
+
+    data = {}
+
+
+    if R.outdoor then
+      data.ftex = choose_tex(last_ftex, THEME.landscape_trims or THEME.landscape_walls)
+    else
+      data.ftex = choose_tex(last_ftex, THEME.cave_trims or THEME.cave_walls)
+    end
+
+    last_ftex = data.ftex
+
+    data.f_info = get_mat(data.ftex)
+
+    if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
+      data.f_info = get_liquid()
+
+      -- FIXME: this bugs up monster/pickup/key spots
+      if rand.odds(0) then
+        data.delta_f = -(i * 10 + 40)
+      end
+    end
+
+    if true then
+      data.delta_f = -(i * 10)
+    end
+
+    data.f_z = R.cave_floor_h + i
+    data.ftex = data.f_info.t_face.tex
+
+    data.c_info = nil
+
+    if not R.outdoor then
+      data.c_info = w_info
+
+      if i==2 and rand.odds(60) then
+        data.c_info = Mat_sky()
+      elseif rand.odds(50) then
+        data.c_info = get_mat(data.ftex)
+      elseif rand.odds(80) then
+        data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
+        data.c_info = get_mat(data.ctex)
+      end
+
+      data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)
+
+      data.c_z = ceil_h - i
+    end
+
+
+    walkway:render(base_x, base_y, FC_brush, data)
+  end
+end
+
+
+function Rooms_do_small_exit()
+  local C = R.conns[1]
+  local T = C:seed(C:neighbor(R))
+  local out_combo = T.room.main_tex
+  if T.room.outdoor then out_combo = R.main_tex end
+
+  -- FIXME: use single one over a whole episode
+  local skin_name = rand.key_by_probs(THEME.small_exits)
+  local skin = assert(GAME.EXITS[skin_name])
+
+  local skin2 =
+  {
+    wall = out_combo,
+    floor = T.f_tex or C.conn_ftex,
+    ceil = out_combo,
+  }
+
+  assert(THEME.exit.switches)
+  -- FIXME: hacky
+  skin.switch = rand.key_by_probs(THEME.exit.switches)
+
+--!!!!!!  Build.small_exit(R, THEME.exit, skin, skin2)
+
+  local skin = table.copy(assert(GAME.EXITS["tech_small"]))
+  skin.inner = w_tex
+  skin.outer = o_tex
+
+  local T = Trans.doorway_transform(S, z1, 8)
+  Trans.modify("scale_x", 192 / 256)
+  Trans.modify("scale_y", 192 / 256)
+
+  ttfn_fabricate("SMALL_EXIT", T, { skin })
+
+  return
+end
+
