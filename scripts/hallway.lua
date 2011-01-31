@@ -288,10 +288,11 @@ function Hallway_place_em()
 
     table.insert(LEVEL.all_conns, C)
 
-    -- FIXME: section stuff too ???
-
     table.insert(R1.conns, C)
     table.insert(R2.conns, C)
+
+    if hall.K1 then hall.K1.num_conn = hall.K1.num_conn + 1 end
+    if hall.K2 then hall.K2.num_conn = hall.K2.num_conn + 1 end
   end
 
 

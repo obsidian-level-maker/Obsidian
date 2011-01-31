@@ -381,18 +381,26 @@ function Connect_rooms()
   end
 
 
-  local function can_connect(K1, K2)
-    if not (K1 and K2) then return false end
-    return Connect_possibility(K1.room, K2.room) >= 0
-  end
-
-  local function good_connect(K1, dir)
+  local function can_connect(K1, dir)
     if not K1 then return false end
-    if K1.hall_parts[dir] then return false end
 
     local K2 = K1:neighbor(dir)
     if not K2 then return false end
-    if K2.hall_parts[10-dir] then return false end
+
+    -- sections must be touching
+    if K1.sx1 > K2.sx2 + 1 then return false end
+    if K2.sx1 > K1.sx2 + 1 then return false end
+    if K1.sy1 > K2.sy2 + 1 then return false end
+    if K2.sy1 > K1.sy2 + 1 then return false end
+
+    return Connect_possibility(K1.room, K2.room) >= 0
+  end
+
+
+  local function good_connect(K1, dir)
+    if not can_connect(K1, dir) then return false end
+
+    local K2 = K1:neighbor(dir)
 
     return Connect_possibility(K1.room, K2.room) > 0
   end
@@ -638,7 +646,7 @@ function Connect_rooms()
       if already_connected(K, N) then
         num_matched = num_matched + 1
 
-      elseif not can_connect(K, N) then
+      elseif not can_connect(K, dir) then
         return false
       
       elseif K.hall_parts[dir] or N.hall_parts[10-dir] then
@@ -782,7 +790,7 @@ function Connect_rooms()
 
 
   local function emergency_score(K, N, dir)
-    if not can_connect(K, N) then return -1 end
+    if not can_connect(K, dir) then return -1 end
 
     if K.hall_parts[dir] or N.hall_parts[10-dir] then return -1 end
 
@@ -887,10 +895,10 @@ function Connect_rooms()
   end
 
 
-  local function decide_teleporters(list)
+  local function decide_teleporters()
     LEVEL.teleporter_list = {}
 
-    do return end --!!!!!!
+    do return end --!!!!!! FIXME
 
     if not PARAM.teleporters then return end
 
