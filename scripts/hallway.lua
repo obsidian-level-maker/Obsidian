@@ -22,15 +22,12 @@
 
 class HALLWAY
 {
-  start : SEED   -- the starting seed (in a room)
-  dest  : SEED   -- destination seed  (in a room)
-
-  start_dir  --  direction from start --> hallway
-  dest_dir   --  direction from hallway --> dest
+  R1, K1  -- starting ROOM and SECTION
+  R2, K2  -- ending ROOM and SECTION
 
   path : list  -- the path between the start and the destination
                -- (not including either start or dest).
-               -- each element holds the seed and direction.
+               -- each element contains: G (segment), next_dir, prev_dir
 
   sub_halls   -- number of hallways branching off this one
               -- (normally zero)
@@ -234,9 +231,24 @@ function Hallway_place_em()
     gui.debugf("Path:\n")
     gui.debugf("{\n")
     for _,loc in ipairs(hall.path) do
-      gui.debugf("  Segment @ (%d,%d) dir:%d\n", loc.G.sx1, loc.G.sy1, loc.dir or -5)
+      gui.debugf("  Segment @ (%d,%d) prev:%d next:%d\n", loc.G.sx1, loc.G.sy1,
+                 loc.prev_dir or -1, loc.next_dir or -1)
     end
     gui.debugf("}\n")
+  end
+
+
+  local function fix_path_dirs(hall)
+    -- sets the 'next_dir' fields in the path elements
+
+    for idx = 1,#hall.path-1 do
+      local L1 = hall.path[idx]
+      local L2 = hall.path[idx+1]
+
+      assert(L2.prev_dir)
+
+      L1.next_dir = 10 - L2.prev_dir
+    end
   end
 
 
@@ -264,6 +276,7 @@ function Hallway_place_em()
 
     gui.debugf("Adding hallway %s --> %s\n", R1:tostr(), R2:tostr())
 
+    fix_path_dirs(hall)
     dump_path(hall)
     render_path(hall)
 
@@ -338,6 +351,8 @@ function Hallway_place_em()
     hall.K1 = T.K
     hall.R1 = T.K.room
 
+    loc.prev_dir = T.dir
+
 
     -- make a path
 
@@ -369,7 +384,8 @@ function Hallway_place_em()
         hall.K2 = T.K
         hall.R2 = T.K.room
 
-        hall.path[#hall.path-1] .dir = T.dir
+        local last_loc = table.last(hall.path)
+        last_loc.next_dir = T.dir
 
         return true
       end
@@ -379,7 +395,7 @@ function Hallway_place_em()
       assert(#juncs > 0)
       local J = rand.pick(juncs)
 
-      table.insert(hall.path, { G=J.G, dir=J.dir })
+      table.insert(hall.path, { G=J.G, prev_dir=J.dir })
 
       G = J.G
     end
