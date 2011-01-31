@@ -252,6 +252,33 @@ function Hallway_place_em()
   end
 
 
+  local function make_chunks(hall)
+    hall.chunks = {}
+
+    for _,loc in ipairs(hall.path) do
+      local G = loc.G
+
+      -- determine block range for segment
+      local S1 = SEEDS[G.sx1][G.sy1]
+      local S2 = SEEDS[G.sx2][G.sy2]
+
+      local bx1,by1, _x2,_y2 = S1:block_range()
+      local _x1,_y1, bx2,by2 = S2:block_range()
+
+      local H = CHUNK_CLASS.new(bx1,by1, bx2,by2)
+
+      H.hall = hall
+
+      H.x1, H.y1 = S1.x1, S1.y1
+      H.x2, H.y2 = S2.x2, S2.y2
+
+      H:install()
+
+      table.insert(hall.chunks, H)
+    end
+  end
+
+
   local function render_path(hall)
     for _,loc in ipairs(hall.path) do
       local G = loc.G
@@ -278,7 +305,6 @@ function Hallway_place_em()
 
     fix_path_dirs(hall)
     dump_path(hall)
-    render_path(hall)
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
@@ -293,6 +319,10 @@ function Hallway_place_em()
 
     if hall.K1 then hall.K1.num_conn = hall.K1.num_conn + 1 end
     if hall.K2 then hall.K2.num_conn = hall.K2.num_conn + 1 end
+
+    render_path(hall)
+
+    make_chunks(hall)
   end
 
 
