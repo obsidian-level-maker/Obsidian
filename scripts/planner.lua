@@ -221,7 +221,7 @@ function Plan_create_sections(W, H)
         sizes[x] = rand.index_by_probs(SIZE_TABLE)
         total = total + sizes[x]
         if x < W then
-          halls[x] = rand.index_by_probs({ 5, 80, 15 }) - 1
+          halls[x] = rand.index_by_probs({ 5, 80, 25 }) - 1
           total = total + halls[x]
         end
       end
