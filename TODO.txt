@@ -5,87 +5,33 @@ V4 TODO
 Current Work
 ------------
 
->>  rework hallway generation to use the "hall channels"
+1. hallway doorways are no wider than the hallway chunk,
+   hence hallways are responsible for their doorways.
+   if would touch two chunks of the room, merge them.
 
-    - fix 'dir' in path elements
+2. for section-to-section doorways, a chunk (e.g. middle) of
+   the SOURCE room is responsible for the doorway.
+   if touches two chunks in DEST room, merge them.
 
-DONE:  after hallways, perform a section nudging pass
+3. when merging chunks, if merge is not possible then the
+   whole section becomes a single chunk.
 
-DONE:  decide chunks after doing hallways
-
-!!  make section-to-section doors be chunk aware, merge chunks
-    if a door would touch two chunks
-    (in worst case, all chunks in a section become a single chunk)
 
 +  create height diffs in each room from chunks
 
-+  connections: must check if two sections are touching
+DONE  connections: must check if two sections are touching
 
 -  Special Hallway #1 : surround half the room, entrance either side
 -  Special Hallway #2 : surround a corner of large room, two entrances
 -  Special Hallway #3 : surround a room completely.
 -  Special Hallway #4 : diagonal from one to another (alloc '+' shape)
 
-
-HALLWAY STUFF
-
-+  clean up / optimise current code
-
--  sometimes fork a hallway off another one
+WISH:  sometimes fork a hallway off another one
 
 -  build all hallways AFTER all rooms
    (decide a height different first though).
 
 
-FLOOR STUFF
-
-!!  fix "air" brush handling (get Z heights right)
-
->>  safe zones : record where prefabs are (EDGE/corner/etc) and
-                 iterate through them to shrink the safe zones.
-
-            _OR_ create them first and update them whenever a
-                 prefab gets added
-
->> a less recursive algorithm, once we have decided the floor
-   fab and where to place it, its heights are known and fixed.
-
-   i.e. do heights on-the-fly instead of at the end.
-
-   It should be close to entry walk, to leave room in the rest
-   of the room for further floor fabs.
-
-
-!!!  clipping infinite brushes to the floor space
-
-!!  "lava" brush kind
-
-!!  "hole" brush kind, allow straddlers to use them too
-
-!!  remove flavored brushes (use "hole" brushes instead)
-
-
-+  support floor prefabs in non-monotonic rooms
-   -  connect monotonic spaces with walk brushes
-      (make a fake straddler-like prefab)
-
-+  implement "nosplit" areas, which are like "walk" areas in that
-   they must not be split, but which aren't considered to be
-   player destinations.
-
-
-
-CEILING STUFF
-
--  ceiling heights : check 't' in walk/air brushes 
-
-   
-
-WALL STUFF
-
-!!  forget the "pick minimal, make bigger later " idea
-    use room size to get a minimum and maximum size
-    
 +  determine formula for size of middle SPANs, basic on section size
    it should guarantee minimal prefabs will fit.
 
