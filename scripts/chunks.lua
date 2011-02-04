@@ -45,9 +45,9 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(bx1, by1, bx2, by2)
-  local K = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, edge={}, corner={} }
-  table.set_class(K, CHUNK_CLASS)
-  return K
+  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, edge={}, corner={} }
+  table.set_class(H, CHUNK_CLASS)
+  return H
 end
 
 function CHUNK_CLASS.install(self)
@@ -157,7 +157,7 @@ function Chunk_divide_room(R)
       end
     end
 
---  gui.debugf("Section chunks: S%dx%d --> K%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
+--  gui.debugf("Section chunks: S%dx%d --> H%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
 
     -- determine block sizes
     nw = int(bw / W)
@@ -239,6 +239,109 @@ function Chunk_handle_connections()
   for _,C in ipairs(LEVEL.all_conns) do
     if C.kind == "section" then do_section_conn(C) end
     if C.kind == "hallway" then do_hallway_conn(C) end
+  end
+end
+
+
+----------------------------------------------------------------
+
+
+function CHUNK_CLASS.similar_neighbor(H, side)
+  local bx, by
+
+  local mx = int((H.bx1 + H.bx2) / 2)
+  local my = int((H.by1 + H.by2) / 2)
+
+      if side == 2 then bx, by = H.bx1, H.by1 - 1
+  elseif side == 8 then bx, by = H.bx1, H.by1 + 1
+  elseif side == 4 then bx, by = H.bx1 - 1, H.by1
+  elseif side == 6 then bx, by = H.bx1 + 1, H.by1
+  end
+
+  if not Block_valid(bx, by) then
+    return false
+  end
+
+  local B = BLOCKS[bx][by]
+
+  if not (B and B.chunk) then
+    return false
+  end
+
+  local H2 = B.chunk
+
+  if H.hall then return (H.hall == H2.hall) end
+  if H.room then return (H.room == H2.room) end
+
+  return false
+end
+
+
+
+function CHUNK_CLASS.build(H)
+
+  -- TEMP TEMP CRUD CRUD
+
+  local f_h = 0
+  local c_h = 256
+
+  local f_mat = "FLOOR4_8"
+  local c_mat = "FLAT1"
+  local w_mat = "STARTAN3"
+
+  if H.hall then
+    c_h = 128
+    f_mat = "FWATER1"
+    w_mat = "COMPSPAN"
+  end
+
+  if H.room and H.room.outdoor then
+    c_mat = "F_SKY1"
+  end
+
+  local x1, y1 = H.x1, H.y1
+  local x2, y2 = H.x2, H.y2
+
+  -- floor
+  gui.add_brush(
+  {
+    { m="solid" },
+    { x=x1, y=y1, tex=f_mat },
+    { x=x2, y=y1, tex=f_mat },
+    { x=x2, y=y2, tex=f_mat },
+    { x=x1, y=y2, tex=f_mat },
+    { t=f_h, tex=f_mat },
+  })
+
+  -- ceiling
+  gui.add_brush(
+  {
+    { m="solid" },
+    { x=x1, y=y1, tex=c_mat },
+    { x=x2, y=y1, tex=c_mat },
+    { x=x2, y=y2, tex=c_mat },
+    { x=x1, y=y2, tex=c_mat },
+    { b=c_h, tex=c_mat },
+  })
+
+  for side = 2,8,2 do
+    if not H:similar_neighbor(side) then
+      local bx1, by1, bx2, by2 = x1,y1, x2,y2
+
+      if side == 2 then by2 = by1 + 36 end
+      if side == 8 then by1 = by2 - 36 end
+      if side == 4 then bx2 = bx1 + 36 end
+      if side == 6 then bx1 = bx2 - 36 end
+
+      gui.add_brush(
+      {
+        { m="solid" },
+        { x=bx1, y=by1, tex=w_mat },
+        { x=bx2, y=by1, tex=w_mat },
+        { x=bx2, y=by2, tex=w_mat },
+        { x=bx1, y=by2, tex=w_mat },
+      })
+    end
   end
 end
 

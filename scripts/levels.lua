@@ -592,7 +592,7 @@ function Levels_build_it()
 
   gui.prog_step("Mons");
 
-  Monsters_make_battles()
+---!!!!!!  Monsters_make_battles()
   if gui.abort() then return "abort" end
 
   return "ok"

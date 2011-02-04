@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -923,6 +923,41 @@ end
 
 
 
+function Rooms_blow_chunks()
+
+  -- TEMP TEMP CRUD CRUD
+
+
+  local function add_object(H, name)
+    local mx = (H.x1 + H.x2) / 2
+    local my = (H.y1 + H.y2) / 2
+
+    Trans.entity(name, mx, my, 32)
+  end
+
+
+  local seen_player 
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,H in ipairs(R.chunks) do
+      H:build()
+
+      add_object(H, sel(seen_player, "potion", "player1"))
+      seen_player = true
+    end
+  end
+
+  for _,C in ipairs(LEVEL.all_conns) do
+    if C.hall then
+      for _,H in ipairs(C.hall.chunks) do
+        H:build()
+      end
+    end
+  end
+end
+
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -944,12 +979,14 @@ function Rooms_build_all()
 
 
   Rooms_place_importants()
-  Rooms_decide_windows()
+---!!!  Rooms_decide_windows()
   Rooms_extra_room_stuff()
 
-  Layout_all_walls()
-  Layout_all_floors()
-  Layout_all_ceilings()
+---###  Layout_all_walls()
+---###  Layout_all_floors()
+---###  Layout_all_ceilings()
+
+  Rooms_blow_chunks()
 
   -- scenic rooms ??
 
