@@ -927,23 +927,9 @@ function Rooms_blow_chunks()
 
   -- TEMP TEMP CRUD CRUD
 
-
-  local function add_object(H, name)
-    local mx = (H.x1 + H.x2) / 2
-    local my = (H.y1 + H.y2) / 2
-
-    Trans.entity(name, mx, my, 32)
-  end
-
-
-  local seen_player 
-
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,H in ipairs(R.chunks) do
       H:build()
-
-      add_object(H, sel(seen_player, "potion", "player1"))
-      seen_player = true
     end
   end
 

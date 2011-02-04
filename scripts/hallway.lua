@@ -310,7 +310,7 @@ function Hallway_place_em()
 
     local C = CONN_CLASS.new_R(R1, R2, "hallway")
 
-    C.hall = HALLWAY
+    C.hall = hall
 
     table.insert(LEVEL.all_conns, C)
 

@@ -324,6 +324,7 @@ function CHUNK_CLASS.build(H)
     { b=c_h, tex=c_mat },
   })
 
+  -- walls
   for side = 2,8,2 do
     if not H:similar_neighbor(side) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
@@ -343,5 +344,17 @@ function CHUNK_CLASS.build(H)
       })
     end
   end
+
+  -- object
+  local ent = "potion"
+  if not LEVEL.seen_player then
+    LEVEL.seen_player = true
+    ent = "player1"
+  end
+
+  local mx = (H.x1 + H.x2) / 2
+  local my = (H.y1 + H.y2) / 2
+
+  Trans.entity(ent, mx, my, 32)
 end
 
