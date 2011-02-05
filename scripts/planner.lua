@@ -1074,6 +1074,8 @@ function Plan_expand_rooms()
     else                 K.sy2 = K.sy2 + 1
     end
 
+    K:update_size()
+
     -- NOTE: the seed themselves and the room bbox are only updated
     --       at the very end, via the call to Plan_make_seeds().
   end

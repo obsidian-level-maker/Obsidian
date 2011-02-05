@@ -246,16 +246,16 @@ end
 ----------------------------------------------------------------
 
 
-function CHUNK_CLASS.similar_neighbor(H, side)
+function CHUNK_CLASS.similar_neighbor(H, dir)
   local bx, by
 
   local mx = int((H.bx1 + H.bx2) / 2)
   local my = int((H.by1 + H.by2) / 2)
 
-      if side == 2 then bx, by = H.bx1, H.by1 - 1
-  elseif side == 8 then bx, by = H.bx1, H.by1 + 1
-  elseif side == 4 then bx, by = H.bx1 - 1, H.by1
-  elseif side == 6 then bx, by = H.bx1 + 1, H.by1
+      if dir == 2 then bx, by = mx, H.by1 - 1
+  elseif dir == 8 then bx, by = mx, H.by2 + 1
+  elseif dir == 4 then bx, by = H.bx1 - 1, my
+  elseif dir == 6 then bx, by = H.bx2 + 1, my
   end
 
   if not Block_valid(bx, by) then
@@ -282,10 +282,10 @@ function CHUNK_CLASS.build(H)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = 0
+  local f_h = rand.irange(0,16)
   local c_h = 256
 
-  local f_mat = "FLOOR4_8"
+  local f_mat = rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1"}
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
@@ -296,6 +296,7 @@ function CHUNK_CLASS.build(H)
   end
 
   if H.room and H.room.outdoor then
+    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16"}
     c_mat = "F_SKY1"
   end
 
