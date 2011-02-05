@@ -38,12 +38,21 @@ function stderrf(fmt, ...)
   end
 end
 
+
 function math.round(x)
   if x < 0 then
     return math.ceil(x - 0.5)
   else
     return math.floor(x + 0.5)
   end
+end
+
+function math.mid(x, y)
+  return (x + y) / 2.0
+end
+
+function math.imid(x, y)
+  return int((x + y) / 2.0)
 end
 
 function math.clamp(low, x, high)
@@ -56,6 +65,7 @@ function math.low_high(a, b)
   if b < a then return b, a end
   return a, b
 end
+
 
 function string.bool(n)
   if n == nil   then return "nil"   end
