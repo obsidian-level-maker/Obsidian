@@ -284,6 +284,8 @@ function CHUNK_CLASS.build(H)
 
   local f_h = rand.irange(0,16)
   local c_h = 256
+  local light = 0
+  local c_medium = "solid"
 
   local f_mat = rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1"}
   local c_mat = "FLAT1"
@@ -298,6 +300,12 @@ function CHUNK_CLASS.build(H)
   if H.room and H.room.outdoor then
     f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16"}
     c_mat = "F_SKY1"
+    c_medium = "sky"
+
+    if GAME.format == "quake" then c_mat = "sky1" end
+  else
+    light = rand.irange(40, 100)
+    if H.hall then light = light * 0.5 end
   end
 
   local x1, y1 = H.x1, H.y1
@@ -317,7 +325,7 @@ function CHUNK_CLASS.build(H)
   -- ceiling
   gui.add_brush(
   {
-    { m="solid" },
+    { m=c_medium },
     { x=x1, y=y1, tex=c_mat },
     { x=x2, y=y1, tex=c_mat },
     { x=x2, y=y2, tex=c_mat },
@@ -347,7 +355,7 @@ function CHUNK_CLASS.build(H)
   end
 
   -- object
-  local ent = "potion"
+  local ent = "dummy"
   if not LEVEL.seen_player then
     LEVEL.seen_player = true
     ent = "player1"
@@ -357,5 +365,11 @@ function CHUNK_CLASS.build(H)
   local my = (H.y1 + H.y2) / 2
 
   Trans.entity(ent, mx, my, 32)
+
+  -- lighting
+  if light > 0 and GAME.format ~= "doom" then
+    local z = rand.irange(64, c_h-32)
+    Trans.entity("light", mx, my, z, { light=light, _radius=400 })
+  end
 end
 

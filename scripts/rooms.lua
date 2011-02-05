@@ -977,6 +977,7 @@ function Rooms_build_all()
   -- scenic rooms ??
 
   Rooms_add_sun()
-  Rooms_intermission_camera()
+
+---!!!!  Rooms_intermission_camera()
 end
 
