@@ -105,6 +105,8 @@ QUAKE1.ENTITIES =
 
   -- special
 
+  dummy = { id="info_null",  kind="other", r=1, h=1, pass=true },
+
   light = { id="light",      kind="other", r=1, h=1, pass=true },
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true },
 

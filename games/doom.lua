@@ -184,6 +184,8 @@ DOOM.ENTITIES =
 
   -- SPECIAL STUFF --
 
+  dummy = { id=23, kind="other", r=16,h=16, pass=true },
+
   brain_boss    = { id=88, kind="other", r=16, h=16 },
   brain_shooter = { id=89, kind="other", r=20, h=32 },
   brain_target  = { id=87, kind="other", r=20, h=32, pass=true },
