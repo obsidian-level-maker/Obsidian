@@ -27,6 +27,7 @@ class CHUNK
   x1, y1, x2, y2  -- 2D map coordinates
 
   room : ROOM
+  hall : HALL
 
   parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
                      -- 2/4/6/8 directions are edges
@@ -252,7 +253,91 @@ end
 
 
 function Chunk_merge_list(list)
-  -- FIXME !!!
+
+  local function all_horiz_aligned(x1, x2)
+    for _,H2 in ipairs(list) do
+      if H2.x1 ~= x1 or H2.x2 ~= x2 then return false end
+    end
+  end
+
+  local function all_vert_aligned(y1, y2)
+    for _,H2 in ipairs(list) do
+      if H2.y1 ~= y1 or H2.y2 ~= y2 then return false end
+    end
+  end
+
+  local function do_merge(H, old_H, update_array)
+    if H == old_H then return; end
+
+    H.bx1 = math.min(H.bx1, old_H.bx1)
+    H.by1 = math.min(H.by1, old_H.by1)
+    H.bx2 = math.max(H.bx2, old_H.bx2)
+    H.by2 = math.max(H.by2, old_H.by2)
+
+    H.x1 = math.min(H.x1, old_H.x1)
+    H.y1 = math.min(H.y1, old_H.y1)
+    H.x2 = math.max(H.x2, old_H.x2)
+    H.y2 = math.max(H.y2, old_H.y2)
+
+    -- update the section's chunk array
+    if update_array and H.section then
+      local K = H.section
+
+      for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
+        if K.chunk[hx][hy] == old_H then
+          K.chunk[hx][hy] = H
+        end
+      end end
+    end
+
+    -- update the block map
+    for bx = old_H.bx1, old_H.bx2 do for by = old_H.by1, old_H.by2 do
+      local B = BLOCKS[bx][by]
+      B.chunk = H
+    end end
+  end
+
+
+  ---| Chunk_merge_list |---
+
+  if #list < 2 then return; end
+
+  local H1 = table.remove(list, 1)
+
+  local K = H1.section
+  local R =  K.room
+
+  -- make sure all chunks belong to same section
+  for _,H2 in ipairs(list) do
+    assert(H2.section == K)
+  end
+
+  -- make sure all chunks have either:
+  --   (1) same top and bottom coordinates, or
+  --   (2) same left and right side coordinates
+
+  
+  if all_horiz_aligned(H1.x1, H1.x2) or all_vert_aligned(H1.y1, H1.y2) then
+    -- chunks are alignment, can merge them  
+    for _,H2 in ipairs(list) do
+      do_merge(H1, H2, true)
+    end
+
+  else
+    -- bad alignment, need to merge all chunks into one big one
+
+    for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
+      do_merge(H1, K.chunk[hx][hy], false)
+    end end
+
+    -- setup new array
+    K.chunk_W = 1
+    K.chunk_H = 1
+
+    K.chunk = table.array_2D(1, 1)
+
+    K.chunk[1][1] = H1
+  end
 end
 
 
@@ -270,6 +355,7 @@ function Chunk_handle_connections()
   local function merge_stuff(H, dir, C, pass)
     local joins = H:joining_chunks(dir)
 
+stderrf("merge_stuff: pass=%d #joins=%d\n", pass, #joins)
     if pass < NUM_PASS then
       if #joins == 0 then
         error("Bad connection : no chunks on other side??")
@@ -282,7 +368,6 @@ function Chunk_handle_connections()
       return
     end
 
-stderrf("merge_stuff: pass=%d #joins=%d\n", pass, #joins)
     assert(#joins == 1)
 
     local H2 = joins[1]
@@ -400,7 +485,7 @@ function Chunk_make_parts()
 
   for _,C in ipairs(LEVEL.all_conns) do
     if C.hall then
-      for _,H in ipairs(hall.chunks) do
+      for _,H in ipairs(C.hall.chunks) do
         make_parts(H)
       end
     end
@@ -445,12 +530,12 @@ function CHUNK_CLASS.build(H)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = rand.irange(0,16)
+  local f_h = rand.irange(0,24)
   local c_h = 256
   local light = 0
   local c_medium = "solid"
 
-  local f_mat = rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1"}
+  local f_mat = rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
@@ -461,7 +546,7 @@ function CHUNK_CLASS.build(H)
   end
 
   if H.room and H.room.outdoor then
-    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16"}
+    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "FWATER1", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
 
