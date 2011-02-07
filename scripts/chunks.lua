@@ -89,7 +89,7 @@ function CHUNK_CLASS.joining_chunks(H, dir)
 
     local B = BLOCKS[bx][by]
 
-    if B and B.chunk and not table.contains(list, B.chunk) then
+    if B and B.chunk and not table.has_elem(list, B.chunk) then
       table.insert(list, B.chunk)
     end
   end end
@@ -258,12 +258,14 @@ function Chunk_merge_list(list)
     for _,H2 in ipairs(list) do
       if H2.x1 ~= x1 or H2.x2 ~= x2 then return false end
     end
+    return true
   end
 
   local function all_vert_aligned(y1, y2)
     for _,H2 in ipairs(list) do
       if H2.y1 ~= y1 or H2.y2 ~= y2 then return false end
     end
+    return true
   end
 
   local function do_merge(H, old_H, update_array)
@@ -295,6 +297,11 @@ function Chunk_merge_list(list)
       local B = BLOCKS[bx][by]
       B.chunk = H
     end end
+
+    -- update room list
+    if H.room then
+      table.kill_elem(H.room.chunks, old_H)
+    end
   end
 
 
@@ -355,7 +362,6 @@ function Chunk_handle_connections()
   local function merge_stuff(H, dir, C, pass)
     local joins = H:joining_chunks(dir)
 
-stderrf("merge_stuff: pass=%d #joins=%d\n", pass, #joins)
     if pass < NUM_PASS then
       if #joins == 0 then
         error("Bad connection : no chunks on other side??")
