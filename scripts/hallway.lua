@@ -267,6 +267,8 @@ function Hallway_place_em()
 
       local H = CHUNK_CLASS.new(bx1,by1, bx2,by2)
 
+      loc.chunk = H
+
       H.hall = hall
 
       H.x1, H.y1 = S1.x1, S1.y1

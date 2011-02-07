@@ -948,10 +948,13 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
+  Chunk_handle_connections()
+  Chunk_make_parts()
+
   Rooms_choose_themes()
   Rooms_assign_facades()
 
-  Rooms_setup_symmetry()
+---!!!  Rooms_setup_symmetry()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     Layout_monotonic_spaces(R)
@@ -964,8 +967,10 @@ function Rooms_build_all()
   end
 
 
-  Rooms_place_importants()
+---!!!  Rooms_place_importants()
+
 ---!!!  Rooms_decide_windows()
+
   Rooms_extra_room_stuff()
 
 ---###  Layout_all_walls()

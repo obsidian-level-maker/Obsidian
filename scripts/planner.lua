@@ -32,6 +32,11 @@ class SECTION
 
   num_conn  -- number of connections
 
+  chunk_W, chunk_H  -- number of chunks
+  
+  chunk[X][Y] : CHUNK  -- 2D array of chunks
+
+
   corners[DIR] : CORNER  -- each can be nil
 
   edges[DIR] : EDGE   -- each can be nil

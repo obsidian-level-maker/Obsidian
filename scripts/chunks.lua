@@ -28,8 +28,6 @@ class CHUNK
 
   room : ROOM
 
-  thick[DIR]  -- thickness of each side, can be zero
-
   parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
                      -- 2/4/6/8 directions are edges
                      -- 1/3/7/9 directions are corners
@@ -37,6 +35,7 @@ class CHUNK
                      -- edges may occupy whole side (no corner then)
 
   floor_h, ceil_h -- floor and ceiling heights
+
   f_tex,   c_tex  -- floor and ceiling textures
 }
 
@@ -51,7 +50,6 @@ class PART
 }
 
 
-
 --------------------------------------------------------------]]
 
 require 'defs'
@@ -61,22 +59,45 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(bx1, by1, bx2, by2)
-  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, thick={}, parts={} }
+  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, parts={} }
   table.set_class(H, CHUNK_CLASS)
   return H
 end
 
-function CHUNK_CLASS.install(self)
-  for x = self.bx1, self.bx2 do
-    for y = self.by1, self.by2 do
-      assert(BLOCKS[x][y])
-      BLOCKS[x][y].chunk = self
-    end
-  end
+function CHUNK_CLASS.install(H)
+  for x = H.bx1, H.bx2 do for y = H.by1, H.by2 do
+    assert(BLOCKS[x][y])
+    BLOCKS[x][y].chunk = H
+  end end
 end
 
-function CHUNK_CLASS.tostr(self)
-  return string.format("CHUNK [%d,%d]", self.bx1, self.by1)
+function CHUNK_CLASS.tostr(H)
+  return string.format("CHUNK [%d,%d]", H.bx1, H.by1)
+end
+
+function CHUNK_CLASS.joining_chunks(H, dir)
+  local list = {}
+
+  local bx1, by1, bx2, by2 = geom.side_coords(dir, H.bx1, H.by1, H.bx2, H.by2)
+
+  bx1, by1 = geom.nudge(bx1, by1, dir)
+  bx2, by2 = geom.nudge(bx2, by2, dir)
+
+  for bx = bx1,bx2 do for by = by1,by2 do
+    assert(Block_valid(bx, by))
+
+    local B = BLOCKS[bx][by]
+
+    if B and B.chunk and not table.contains(list, B.chunk) then
+      table.insert(list, B.chunk)
+    end
+  end end
+
+  return list
+end
+
+function CHUNK_CLASS.side_len(H, dir)
+  return geom.vert_sel(dir, H.x2 - H.x1, H.y2 - H.y1)
 end
 
 
@@ -138,9 +159,9 @@ function Chunk_divide_room(R)
   end
 
 
-  local function subdivide_section(sect)
-    local bw = sect.sw * 3
-    local bh = sect.sh * 3
+  local function subdivide_section(K)
+    local bw = K.sw * 3
+    local bh = K.sh * 3
 
     -- choose number of chunk columns and rows
     local W = 1
@@ -175,13 +196,18 @@ function Chunk_divide_room(R)
 
 --  gui.debugf("Section chunks: S%dx%d --> H%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
 
+    K.chunk_W = W
+    K.chunk_H = H
+
+    K.chunk = table.array_2D(W, H)
+
     -- determine block sizes
     nw = int(bw / W)
     nh = int(bh / H)
 
     assert(nw >= 3 and nh >= 3)
 
-    local S = SEEDS[sect.sx1][sect.sy1]
+    local S = SEEDS[K.sx1][K.sy1]
     local bx, by = S:block_range()
 
     local locs_X = calc_block_sizes(W, bx, bw)
@@ -189,19 +215,21 @@ function Chunk_divide_room(R)
 
     -- create the chunks
     for x = 1,W do for y = 1,H do
-      local K = CHUNK_CLASS.new(locs_X[x].low,  locs_Y[y].low,
+      local H = CHUNK_CLASS.new(locs_X[x].low,  locs_Y[y].low,
                                 locs_X[x].high, locs_Y[y].high)
-      K.room    = R
-      K.section = sect
+      K.chunk[x][y] = H
 
-      K.x1 = S.x1 + 64 * (locs_X[x].low  - bx)
-      K.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
-      K.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
-      K.y2 = S.y1 + 64 * (locs_Y[y].high - by + 1)
+      H.room    = R
+      H.section = K
 
-      K:install()
+      H.x1 = S.x1 + 64 * (locs_X[x].low  - bx)
+      H.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
+      H.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
+      H.y2 = S.y1 + 64 * (locs_Y[y].high - by + 1)
 
-      table.insert(R.chunks, K)
+      H:install()
+
+      table.insert(R.chunks, H)
     end end -- x, y
   end
 
@@ -223,43 +251,162 @@ end
 
 
 
+function Chunk_merge_list(list)
+  -- FIXME !!!
+end
+
+
+
 function Chunk_handle_connections()
   
-  local function do_section_conn(C)
+  local NUM_PASS = 4
 
+
+  local function link_chunks(H1, H2, dir)
+    -- !!!! FIXME: setup part for doorway
   end
 
 
-  local function do_hallway_conn(C)
-    local R = C.R2
+  local function merge_stuff(H, dir, C, pass)
+    local joins = H:joining_chunks(dir)
 
-    local S   = C.hall.start
-    local dir = C.hall.start_dir
+    if pass < NUM_PASS then
+      if #joins == 0 then
+        error("Bad connection : no chunks on other side??")
+      end
 
-    if S.room ~= R then
-      S   = C.hall.dest
-      dir = C.hall.dest_dir
+      if #joins >= 2 then
+        Chunk_merge_list(joins)
+      end
 
-      -- make dir face outward
-      dir = 10 - dir
+      return
     end
 
-    assert(S.room == R)
+stderrf("merge_stuff: pass=%d #joins=%d\n", pass, #joins)
+    assert(#joins == 1)
 
-    merge_blocks(geom.side_coords(dir, S:block_range()))
+    local H2 = joins[1]
+
+    link_chunks(H1, H2, dir)
+  end
+
+
+  local function mid_X(K)
+    return int((K.chunk_W + 1) / 2)
+  end
+
+  local function mid_Y(K)
+    return int((K.chunk_H + 1) / 2)
+  end
+
+
+  local function do_section_conn(C, pass)
+    local K1 = assert(C.K1)
+    local K2 = assert(C.K2)
+
+    local dir = assert(C.dir)
+
+    -- pick middle chunks
+    local H1, H2
+
+    if dir == 2 then
+      H1 = K1.chunk[mid_X(K1)][1]
+      H2 = K2.chunk[mid_X(K2)][K2.chunk_H]
+    elseif dir == 8 then
+      H1 = K1.chunk[mid_X(K1)][K1.chunk_H]
+      H2 = K2.chunk[mid_X(K2)][1]
+    elseif dir == 4 then
+      H1 = K1.chunk[1]         [mid_Y(K1)]
+      H2 = K2.chunk[K2.chunk_W][mid_Y(K2)]
+    else assert(dir == 6)
+      H1 = K1.chunk[K1.chunk_W][mid_Y(K1)]
+      H2 = K2.chunk[1]         [mid_Y(K2)]
+    end
+
+    -- check if chunks touch nicely
+    local good_conn = false
+
+    if geom.is_vert(dir) then
+      local y1 = math.max(H1.y1, H2.y1)
+      local y2 = math.min(H1.y2, H2.y2)
+
+      if y1 <= (y2 + 192) then good_conn = true end
+    else
+      local x1 = math.max(H1.x1, H2.x1)
+      local x2 = math.min(H1.x2, H2.x2)
+
+      if x1 <= (x2 + 192) then good_conn = true end
+    end
+
+    if good_conn then
+      if pass == NUM_PASS then
+        link_chunks(H1, H2, dir)
+      end
+    else
+      local H, dir = H1, dir
+
+      if H2:side_len(dir) < H1:side_len(dir) then
+        H, dir = H2, (10-dir)
+      end
+
+      merge_stuff(H, dir, C, pass)
+    end
+  end
+
+
+  local function do_hallway_conn(C, pass)
+    local hall = assert(C.hall)
+
+    local first_H = hall.path[1].chunk
+    local  last_H = hall.path[#hall.path].chunk
+
+    assert(first_H and last_H)
+
+    local first_dir = hall.path[1].prev_dir
+    local  last_dir = hall.path[#hall.path].next_dir
+
+    assert(first_dir and last_dir)
+
+    merge_stuff(first_H, first_dir, C, pass)
+    merge_stuff( last_H,  last_dir, C, pass)
   end
 
 
   ---| Chunk_handle_connections |---
 
-  for _,C in ipairs(LEVEL.all_conns) do
-    if C.kind == "section" then do_section_conn(C) end
-    if C.kind == "hallway" then do_hallway_conn(C) end
+  for pass = 1,NUM_PASS do
+    for _,C in ipairs(LEVEL.all_conns) do
+      if C.kind == "section" then do_section_conn(C, pass) end
+      if C.kind == "hallway" then do_hallway_conn(C, pass) end
+    end
   end
 end
 
 
 ----------------------------------------------------------------
+
+
+function Chunk_make_parts()
+
+  local function make_parts()
+  end
+
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    for _,H in ipairs(R.chunks) do
+      make_parts(H)
+    end
+  end
+
+  for _,C in ipairs(LEVEL.all_conns) do
+    if C.hall then
+      for _,H in ipairs(hall.chunks) do
+        make_parts(H)
+      end
+    end
+  end
+end
+
 
 
 function CHUNK_CLASS.similar_neighbor(H, dir)
