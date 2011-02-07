@@ -128,9 +128,18 @@ function table.last(t)
   return t[#t]
 end
 
-function table.contains(t, v)
+function table.has_elem(t, v)
   for _,value in ipairs(t) do
     if v == value then return true end
+  end
+  return false
+end
+
+function table.kill_elem(t, v)
+  for idx,value in ipairs(t) do
+    if v == value then
+      table.remove(t, idx) ; return true
+    end
   end
   return false
 end
