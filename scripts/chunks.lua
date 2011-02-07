@@ -28,12 +28,28 @@ class CHUNK
 
   room : ROOM
 
-  edge[DIR]   : EDGE
-  corner[DIR] : CORNER
+  thick[DIR]  -- thickness of each side, can be zero
+
+  parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
+                     -- 2/4/6/8 directions are edges
+                     -- 1/3/7/9 directions are corners
+                     -- each can be NIL if nothing is there
+                     -- edges may occupy whole side (no corner then)
 
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
 }
+
+
+class PART
+{
+  chunk, side   -- identification
+
+  x1, y1, x2, y2   -- coverage on 2D map
+
+  fab  -- a prefab which fills the whole 2d area
+}
+
 
 
 --------------------------------------------------------------]]
@@ -45,7 +61,7 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(bx1, by1, bx2, by2)
-  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, edge={}, corner={} }
+  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, thick={}, parts={} }
   table.set_class(H, CHUNK_CLASS)
   return H
 end
@@ -332,6 +348,12 @@ function CHUNK_CLASS.build(H)
     { x=x1, y=y2, tex=c_mat },
     { b=c_h, tex=c_mat },
   })
+
+  for dir = 1,9,2 do
+    local P = H.parts[dir]
+
+    if P then --[[ FIXME --]] end
+  end
 
   -- walls
   for side = 2,8,2 do
