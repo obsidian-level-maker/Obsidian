@@ -49,6 +49,8 @@ class LINK
 
   dir     -- direction from H1 to H2
 
+  conn : CONN
+
   x1, x2  |  y1, y2  -- coordinate range shared between chunks
 }
 
@@ -366,13 +368,14 @@ function Chunk_handle_connections()
   local NUM_PASS = 4
 
 
-  local function link_chunks(H1, H2, dir)
+  local function link_chunks(H1, H2, dir, conn)
 stderrf("LINKING CHUNKS...........\n")
     local LINK =
     {
       H1 = H1,
       H2 = H2,
       dir = dir,
+      conn = conn,
     }
 
     if geom.is_vert(dir) then
@@ -413,7 +416,7 @@ stderrf("LINKING CHUNKS...........\n")
 
     local H2 = joins[1]
 
-    link_chunks(H1, H2, dir)
+    link_chunks(H, H2, dir, C)
   end
 
 
@@ -421,15 +424,15 @@ stderrf("LINKING CHUNKS...........\n")
     -- check if chunks touch nicely
 
     if geom.is_vert(dir) then
-      local y1 = math.max(H1.y1, H2.y1)
-      local y2 = math.min(H1.y2, H2.y2)
-
-      if y1 <= (y2 + 192) then return true end
-    else
       local x1 = math.max(H1.x1, H2.x1)
       local x2 = math.min(H1.x2, H2.x2)
 
-      if x1 <= (x2 + 192) then return true end
+      if (x2 - x1) >= 192 then return true end
+    else
+      local y1 = math.max(H1.y1, H2.y1)
+      local y2 = math.min(H1.y2, H2.y2)
+
+      if (y2 - y1) >= 192 then return true end
     end
 
     return false
@@ -450,12 +453,13 @@ stderrf("LINKING CHUNKS...........\n")
 
     if good_linkage(H1, dir, H2) then
       if pass == NUM_PASS then
-        link_chunks(H1, H2, dir)
+        link_chunks(H1, H2, dir, C)
       end
 
       return;
     end
 
+    -- awkward link : merge chunks on one side
     local H, dir = H1, dir
 
     if H2:side_len(dir) < H1:side_len(dir) then
@@ -472,7 +476,7 @@ stderrf("LINKING CHUNKS...........\n")
 
       if good_linkage(H, dir, H2) then
         if pass == NUM_PASS then
-          link_chunks(H, H2, dir)
+          link_chunks(H, H2, dir, C)
         end
 
         return;
@@ -508,7 +512,7 @@ stderrf("LINKING CHUNKS...........\n")
 
   for pass = 1,NUM_PASS do
     for _,C in ipairs(LEVEL.all_conns) do
-      if C.kind == "section" then do_section_conn(C, pass) end
+      if C.kind == "normal"  then do_section_conn(C, pass) end
       if C.kind == "hallway" then do_hallway_conn(C, pass) end
     end
   end
@@ -593,7 +597,7 @@ function CHUNK_CLASS.build(H)
   end
 
   if H.room and H.room.outdoor then
-    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "FWATER1", "FLAT5_3"}
+    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
 
