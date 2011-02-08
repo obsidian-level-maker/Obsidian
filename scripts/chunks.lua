@@ -29,6 +29,8 @@ class CHUNK
   room : ROOM
   hall : HALL
 
+  link[DIR] : LINK
+
   parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
                      -- 2/4/6/8 directions are edges
                      -- 1/3/7/9 directions are corners
@@ -38,6 +40,16 @@ class CHUNK
   floor_h, ceil_h -- floor and ceiling heights
 
   f_tex,   c_tex  -- floor and ceiling textures
+}
+
+
+class LINK
+{
+  H1, H2  -- chunks which are linked
+
+  dir     -- direction from H1 to H2
+
+  x1, x2  |  y1, y2  -- coordinate range shared between chunks
 }
 
 
@@ -60,7 +72,7 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(bx1, by1, bx2, by2)
-  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, parts={} }
+  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, parts={}, link={} }
   table.set_class(H, CHUNK_CLASS)
   return H
 end
@@ -355,7 +367,29 @@ function Chunk_handle_connections()
 
 
   local function link_chunks(H1, H2, dir)
-    -- !!!! FIXME: setup part for doorway
+    local LINK =
+    {
+      H1 = H1,
+      H2 = H2,
+      dir = dir,
+    }
+
+    if geom.is_vert(dir) then
+      local y1 = math.max(H1.y1, H2.y1)
+      local y2 = math.min(H1.y2, H2.y2)
+
+      LINK.y1 = y1 + 16
+      LINK.y2 = y2 - 16
+    else
+      local x1 = math.max(H1.x1, H2.x1)
+      local x2 = math.min(H1.x2, H2.x2)
+
+      LINK.x1 = x1 + 16
+      LINK.x2 = x2 - 16
+    end
+
+    H1.link[dir]      = LINK
+    H2.link[10 - dir] = LINK
   end
 
 
