@@ -367,6 +367,7 @@ function Chunk_handle_connections()
 
 
   local function link_chunks(H1, H2, dir)
+stderrf("LINKING CHUNKS...........\n")
     local LINK =
     {
       H1 = H1,
@@ -375,17 +376,17 @@ function Chunk_handle_connections()
     }
 
     if geom.is_vert(dir) then
-      local y1 = math.max(H1.y1, H2.y1)
-      local y2 = math.min(H1.y2, H2.y2)
-
-      LINK.y1 = y1 + 16
-      LINK.y2 = y2 - 16
-    else
       local x1 = math.max(H1.x1, H2.x1)
       local x2 = math.min(H1.x2, H2.x2)
 
       LINK.x1 = x1 + 16
       LINK.x2 = x2 - 16
+    else
+      local y1 = math.max(H1.y1, H2.y1)
+      local y2 = math.min(H1.y2, H2.y2)
+
+      LINK.y1 = y1 + 16
+      LINK.y2 = y2 - 16
     end
 
     H1.link[dir]      = LINK
@@ -634,23 +635,62 @@ function CHUNK_CLASS.build(H)
   end
 
   -- walls
-  for side = 2,8,2 do
-    if not H:similar_neighbor(side) then
+  for dir = 2,8,2 do
+    if not H:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
 
-      if side == 2 then by2 = by1 + 36 end
-      if side == 8 then by1 = by2 - 36 end
-      if side == 4 then bx2 = bx1 + 36 end
-      if side == 6 then bx1 = bx2 - 36 end
+      if dir == 2 then by2 = by1 + 36 end
+      if dir == 8 then by1 = by2 - 36 end
+      if dir == 4 then bx2 = bx1 + 36 end
+      if dir == 6 then bx1 = bx2 - 36 end
 
-      gui.add_brush(
-      {
-        { m="solid" },
-        { x=bx1, y=by1, tex=w_mat },
-        { x=bx2, y=by1, tex=w_mat },
-        { x=bx2, y=by2, tex=w_mat },
-        { x=bx1, y=by2, tex=w_mat },
-      })
+      if H.link[dir] then
+stderrf("HAS LINKY @ %d!!!!!!!!!!!!!!!!!!!\n", dir)
+        local LINK = H.link[dir]
+
+        local cx1, cy1, cx2, cy2 = bx1, by1, bx2, by2
+
+stderrf("LINK =\n%s\n", table.tostr(LINK, 1))
+        if geom.is_vert(dir) then
+          bx2 = assert(LINK.x1)
+          cx1 = assert(LINK.x2)
+        else
+          by2 = assert(LINK.y1)
+          cy1 = assert(LINK.y2)
+        end
+
+        if bx2 > bx1 then
+          gui.add_brush(
+          {
+            { m="solid" },
+            { x=bx1, y=by1, tex=w_mat },
+            { x=bx2, y=by1, tex=w_mat },
+            { x=bx2, y=by2, tex=w_mat },
+            { x=bx1, y=by2, tex=w_mat },
+          })
+        end
+
+        if cx2 > cx1 then
+          gui.add_brush(
+          {
+            { m="solid" },
+            { x=cx1, y=cy1, tex=w_mat },
+            { x=cx2, y=cy1, tex=w_mat },
+            { x=cx2, y=cy2, tex=w_mat },
+            { x=cx1, y=cy2, tex=w_mat },
+          })
+        end
+
+      else
+        gui.add_brush(
+        {
+          { m="solid" },
+          { x=bx1, y=by1, tex=w_mat },
+          { x=bx2, y=by1, tex=w_mat },
+          { x=bx2, y=by2, tex=w_mat },
+          { x=bx1, y=by2, tex=w_mat },
+        })
+      end
     end
   end
 
