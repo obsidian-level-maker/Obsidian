@@ -369,7 +369,6 @@ function Chunk_handle_connections()
 
 
   local function link_chunks(H1, H2, dir, conn)
-stderrf("LINKING CHUNKS...........\n")
     local LINK =
     {
       H1 = H1,
@@ -483,7 +482,7 @@ stderrf("LINKING CHUNKS...........\n")
       end      
     end
 
-    merge_stuff(H, dir, pass)
+    merge_stuff(H, dir, C, pass)
   end
 
 
@@ -649,12 +648,10 @@ function CHUNK_CLASS.build(H)
       if dir == 6 then bx1 = bx2 - 36 end
 
       if H.link[dir] then
-stderrf("HAS LINKY @ %d!!!!!!!!!!!!!!!!!!!\n", dir)
         local LINK = H.link[dir]
 
         local cx1, cy1, cx2, cy2 = bx1, by1, bx2, by2
 
-stderrf("LINK =\n%s\n", table.tostr(LINK, 1))
         if geom.is_vert(dir) then
           bx2 = assert(LINK.x1)
           cx1 = assert(LINK.x2)
