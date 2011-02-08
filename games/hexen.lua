@@ -219,6 +219,7 @@ HEXEN.ENTITIES =
 
   -- miscellaneous
   teleport_smoke = { id=140, kind="scenery", r=20,h=80, pass=true },
+  dummy = { id=55, kind="other", r=16,h=20, pass=true },
 
   -- ambient sounds
   snd_stone  = { id=1400, kind="other", r=16,h=16, pass=true },
@@ -1496,8 +1497,20 @@ HEXEN.ROOMS =
   -- TODO: check in-game level names for ideas
 }
 
+
 HEXEN.SUB_THEMES =
 {
+  hexen_dungeon1 =
+  {
+    prob=50,
+
+    building_walls = { CASTLE01=50 },
+
+    building_floors = { F_001=50 },
+  },
+
+--[[ REALLY OLD CRUD
+
   CAVE =
   {
     room_probs=
@@ -1566,6 +1579,7 @@ HEXEN.SUB_THEMES =
       afrit=3.0, bishop=2.5
     },
   },
+--]]
 }
 
 
@@ -2391,6 +2405,51 @@ function HEXEN.setup()
 --  classes  = { "fighter", "cleric", "mage" },
 end
 
+
+function HEXEN.get_levels()
+
+  -- FIXME: temporary stuff (linear levels)
+
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 6)
+
+  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+
+--??  GAME.original_themes = {}
+
+  for episode = 1,EP_NUM do
+    local ep_info = HEXEN.EPISODES["episode" .. episode]
+    assert(ep_info)
+
+--??    GAME.original_themes[episode] = ep_info.orig_theme
+
+    for map = 1,MAP_NUM do
+      local ep_along = map / MAP_NUM
+
+      if MAP_NUM == 1 then
+        ep_along = rand.range(0.3, 0.7);
+      end
+
+      local LEV =
+      {
+        name  = string.format("MAP%02d", ep_info.maps[map]),
+--??    patch = string.format("WILV%d%d", episode-1, map-1),
+
+        map      = map,
+        episode  = episode,
+        ep_along = ep_along,
+        mon_along = ep_along + (episode-1) / 3,
+
+        sky_light   = ep_info.sky_light,
+      }
+
+      table.insert(GAME.all_levels, LEV)
+    end -- for map
+
+  end -- for episode
+end
+
+
 function HEXEN.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
@@ -2401,7 +2460,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["hexen"] =
+OB_GAMES["hexen"] =
 {
   label = "Hexen",
 
@@ -2423,17 +2482,22 @@ UNFINISHED["hexen"] =
 }
 
 
+OB_THEMES["hexen_dungeon"] =
+{
+  label = "Dungeon",
+
+  for_games = { hexen=1 },
+
+  name_theme = "GOTHIC",
+
+  mixed_prob = 50,
+}
+
+--[[
 OB_THEMES["xn_cave"] =
 {
   ref = "CAVE",
   label = "Cave",
-  for_games = { hexen=1 },
-}
-
-OB_THEMES["xn_dungeon"] =
-{
-  ref = "DUNGEON",
-  label = "Dungeon",
   for_games = { hexen=1 },
 }
 
@@ -2457,4 +2521,5 @@ OB_THEMES["xn_village"] =
   label = "Village",
   for_games = { hexen=1 },
 }
+--]]
 
