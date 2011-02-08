@@ -121,6 +121,25 @@ function SECTION_CLASS.side_has_conn(self, side)
   return false
 end
 
+function SECTION_CLASS.mid_HX(K)
+  return int((K.chunk_W + 1) / 2)
+end
+
+function SECTION_CLASS.mid_HY(K)
+  return int((K.chunk_H + 1) / 2)
+end
+
+function SECTION_CLASS.middle_chunk(K, dir)
+      if dir == 2 then return K.chunk[K:mid_HX()][1]
+  elseif dir == 8 then return K.chunk[K:mid_HX()][K.chunk_H]
+  elseif dir == 4 then return K.chunk[1][K:mid_HY()]
+  elseif dir == 6 then return K.chunk[K.chunk_W][K:mid_HY()]
+  else
+    -- central one
+    return K.chunk[K:mid_HX()][K:mid_HY()]
+  end
+end
+
 
 ------------------------------------------------------------------------
 

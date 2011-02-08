@@ -382,12 +382,22 @@ function Chunk_handle_connections()
   end
 
 
-  local function mid_X(K)
-    return int((K.chunk_W + 1) / 2)
-  end
+  local function good_linkage(H1, dir, H2)
+    -- check if chunks touch nicely
 
-  local function mid_Y(K)
-    return int((K.chunk_H + 1) / 2)
+    if geom.is_vert(dir) then
+      local y1 = math.max(H1.y1, H2.y1)
+      local y2 = math.min(H1.y2, H2.y2)
+
+      if y1 <= (y2 + 192) then return true end
+    else
+      local x1 = math.max(H1.x1, H2.x1)
+      local x2 = math.min(H1.x2, H2.x2)
+
+      if x1 <= (x2 + 192) then return true end
+    end
+
+    return false
   end
 
 
@@ -400,48 +410,41 @@ function Chunk_handle_connections()
     -- pick middle chunks
     local H1, H2
 
-    if dir == 2 then
-      H1 = K1.chunk[mid_X(K1)][1]
-      H2 = K2.chunk[mid_X(K2)][K2.chunk_H]
-    elseif dir == 8 then
-      H1 = K1.chunk[mid_X(K1)][K1.chunk_H]
-      H2 = K2.chunk[mid_X(K2)][1]
-    elseif dir == 4 then
-      H1 = K1.chunk[1]         [mid_Y(K1)]
-      H2 = K2.chunk[K2.chunk_W][mid_Y(K2)]
-    else assert(dir == 6)
-      H1 = K1.chunk[K1.chunk_W][mid_Y(K1)]
-      H2 = K2.chunk[1]         [mid_Y(K2)]
-    end
+    local H1 = K1:middle_chunk(dir)
+    local H2 = K2:middle_chunk(10 - dir)
 
-    -- check if chunks touch nicely
-    local good_conn = false
-
-    if geom.is_vert(dir) then
-      local y1 = math.max(H1.y1, H2.y1)
-      local y2 = math.min(H1.y2, H2.y2)
-
-      if y1 <= (y2 + 192) then good_conn = true end
-    else
-      local x1 = math.max(H1.x1, H2.x1)
-      local x2 = math.min(H1.x2, H2.x2)
-
-      if x1 <= (x2 + 192) then good_conn = true end
-    end
-
-    if good_conn then
+    if good_linkage(H1, dir, H2) then
       if pass == NUM_PASS then
         link_chunks(H1, H2, dir)
       end
-    else
-      local H, dir = H1, dir
 
-      if H2:side_len(dir) < H1:side_len(dir) then
-        H, dir = H2, (10-dir)
-      end
-
-      merge_stuff(H, dir, C, pass)
+      return;
     end
+
+    local H, dir = H1, dir
+
+    if H2:side_len(dir) < H1:side_len(dir) then
+      H, dir = H2, (10-dir)
+    end
+
+    merge_stuff(H, dir, C, pass)
+  end
+
+
+  local function do_hall_side(H, dir, K, C, pass)
+    if K then
+      local H2 = K:middle_chunk(10 - dir)
+
+      if good_linkage(H, dir, H2) then
+        if pass == NUM_PASS then
+          link_chunks(H, H2, dir)
+        end
+
+        return;
+      end      
+    end
+
+    merge_stuff(H, dir, pass)
   end
 
 
@@ -453,13 +456,16 @@ function Chunk_handle_connections()
 
     assert(first_H and last_H)
 
+    local first_K = hall.K1
+    local  last_K = hall.K2
+
     local first_dir = hall.path[1].prev_dir
     local  last_dir = hall.path[#hall.path].next_dir
 
     assert(first_dir and last_dir)
 
-    merge_stuff(first_H, first_dir, C, pass)
-    merge_stuff( last_H,  last_dir, C, pass)
+    do_hall_side(first_H, first_dir, first_K, C, pass)
+    do_hall_side( last_H,  last_dir,  last_K, C, pass)
   end
 
 
