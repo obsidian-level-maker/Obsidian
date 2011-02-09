@@ -1195,7 +1195,7 @@ end
 
 
 function Plan_decide_outdoors()
-  local OUTDOOR_PROBS = THEME.outdoor_probs or { 10, 25, 35, 60 }
+  local OUTDOOR_PROBS = THEME.outdoor_probs or { 10, 30, 50, 60 }
 
   if #OUTDOOR_PROBS ~= 4 then
     error("Theme has bad outdoor_probs table")

@@ -29,6 +29,9 @@ class CHUNK
   room : ROOM
   hall : HALL
 
+  section : SECTION
+  hx, hy  --  coordinates of chunk in section
+
   link[DIR] : LINK
 
   parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
@@ -237,6 +240,9 @@ function Chunk_divide_room(R)
       H.room    = R
       H.section = K
 
+      H.hx = x
+      H.hy = y 
+
       H.x1 = S.x1 + 64 * (locs_X[x].low  - bx)
       H.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
       H.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
@@ -358,6 +364,9 @@ function Chunk_merge_list(list)
     K.chunk = table.array_2D(1, 1)
 
     K.chunk[1][1] = H1
+
+    H1.hx = 1
+    H1.hy = 1
   end
 end
 
@@ -580,14 +589,23 @@ function CHUNK_CLASS.build(H)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = rand.irange(0,24)
+  local f_h = 24 -- rand.irange(0,24)
   local c_h = 256
   local light = 0
   local c_medium = "solid"
 
-  local f_mat = rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
+  local f_mat = "FLAT1" -- rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
+
+  if not H.hall and --- not (H.room and H.room.outdoor) and
+     H:similar_neighbor(2) and H:similar_neighbor(8) and
+     H:similar_neighbor(4) and H:similar_neighbor(6)
+  then
+    f_mat = "FLOOR4_8"
+    f_h   = 0
+    c_h   = 384
+  end
 
   if H.hall then
     c_h = 128
@@ -599,6 +617,7 @@ function CHUNK_CLASS.build(H)
     f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
+    c_h   = 384
 
     if GAME.format == "quake" then c_mat = "sky1" end
   else
@@ -711,6 +730,26 @@ function CHUNK_CLASS.build(H)
   if light > 0 and GAME.format ~= "doom" then
     local z = rand.irange(64, c_h-32)
     Trans.entity("light", mx, my, z, { light=light, _radius=400 })
+  end
+
+
+  -- TEST CRUD : pillars
+
+  if ent ~= "player1" and H.section then
+    local hx = H.section:mid_HX()
+    local hy = H.section:mid_HY()
+
+    if H.hx == hx and H.hy == hy then
+
+      local mx = math.imid(x1, x2)
+      local my = math.imid(y1, y2)
+      
+      local T = Trans.spot_transform(mx, my, f_h, 0)
+
+      local skin1 = { pillar="TEKWALL4" }
+
+      Fabricate("ROUND_PILLAR", T, { skin1 })
+    end
   end
 end
 
