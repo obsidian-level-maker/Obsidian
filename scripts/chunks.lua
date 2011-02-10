@@ -327,7 +327,20 @@ function Chunk_merge_list(list)
   end
 
 
+  local function dump_list()
+    gui.debugf("Chunk_merge_list: %d chunks...\n", #list)
+
+    for _,H in ipairs(list) do
+      gui.debugf("  %s in %s in %s\n", H:tostr(),
+                 (H.section and H.section:tostr()) or "HALL",
+                 (H.room and H.room:tostr()) or "-")
+    end
+  end
+
+
   ---| Chunk_merge_list |---
+
+dump_list()
 
   if #list < 2 then return; end
 
@@ -481,16 +494,26 @@ function Chunk_handle_connections()
 
 
   local function do_hall_side(H, dir, K, C, pass)
-    if K then
-      local H2 = K:middle_chunk(10 - dir)
+    -- hallways off a hallway are naturally aligned
+    if not K then
+      -- FIXME !!!!  local H2 = ....
 
-      if good_linkage(H, dir, H2) then
-        if pass == NUM_PASS then
-          link_chunks(H, H2, dir, C)
-        end
+      if pass == NUM_PASS then
+        link_chunks(H, H2, dir, C)
+      end
 
-        return;
-      end      
+      return;
+    end
+
+
+    local H2 = K:middle_chunk(10 - dir)
+
+    if good_linkage(H, dir, H2) then
+      if pass == NUM_PASS then
+        link_chunks(H, H2, dir, C)
+      end
+
+      return;
     end
 
     merge_stuff(H, dir, C, pass)
@@ -500,21 +523,21 @@ function Chunk_handle_connections()
   local function do_hallway_conn(C, pass)
     local hall = assert(C.hall)
 
-    local first_H = hall.path[1].chunk
-    local  last_H = hall.path[#hall.path].chunk
+    local start_H = hall.path[1].chunk
+    local   end_H = hall.path[#hall.path].chunk
 
-    assert(first_H and last_H)
+    assert(start_H and end_H)
 
-    local first_K = hall.K1
-    local  last_K = hall.K2
+    local start_K = hall.K1
+    local   end_K = hall.K2
 
-    local first_dir = hall.path[1].prev_dir
-    local  last_dir = hall.path[#hall.path].next_dir
+    local start_dir = hall.path[1].prev_dir
+    local   end_dir = hall.path[#hall.path].next_dir
 
-    assert(first_dir and last_dir)
+    assert(start_dir and end_dir)
 
-    do_hall_side(first_H, first_dir, first_K, C, pass)
-    do_hall_side( last_H,  last_dir,  last_K, C, pass)
+    do_hall_side(start_H, start_dir, start_K, C, pass)
+    do_hall_side(  end_H,   end_dir,   end_K, C, pass)
   end
 
 
