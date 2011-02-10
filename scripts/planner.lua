@@ -995,31 +995,40 @@ function Plan_contiguous_sections()
   -- make sure that multi-section rooms are contiguous, i.e. each section
   -- touches a nearby section of the same room (no hallway in between).
 
-  local function join(K, N, side)
+  local function nb_count(K, dir)
+    return sel(K:same_room(geom.RIGHT[dir]), 1, 0) +
+           sel(K:same_room(geom. LEFT[dir]), 1, 0)
+  end
+
+
+  local function try_join(K, dir)
+    assert(dir == 6 or dir == 8)
+
+    local N = K:neighbor(dir)
+
+    if not (N and N.room == K.room) then return; end
 
     -- two choices: move K or move N
     --
-    -- for special shapes (L, T, plus) we pick the narrowest, otherwise
-    -- we always pick the left/bottom-most section.
+    -- we only move N if it is isolated (the adjacent sides are not
+    -- part of same room) and K is not isolated.
 
-    local special_shape = not (K.room.shape == "rect" or K.room.shape == "odd")
+    local K_num = nb_count(K, dir)
+    local N_num = nb_count(N, dir)
 
-    if side == 6 then
-
-      if N.sh < K.sh and special_shape then
+    if dir == 6 then
+      if N_num == 0 and K_num > 0 then
         N.sx1 = K.sx2 + 1
       else
         K.sx2 = N.sx1 - 1
       end
 
-    else assert(side == 8)
-
-      if N.sw < K.sw and special_shape then
+    else
+      if N_num == 0 and K_num > 0 then
         N.sy1 = K.sy2 + 1
       else
         K.sy2 = N.sy1 - 1
       end
-
     end
 
     K:update_size()
@@ -1031,18 +1040,13 @@ function Plan_contiguous_sections()
 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
+
     if K.room then
-
-      for side = 6,8,2 do
-        local N = K:neighbor(side)
-
-        if N and N.room == K.room then
-          join(K, N, side)
-        end
-      end
-
+      try_join(K, 6)
+      try_join(K, 8)
     end
   end end -- kx, ky
+
 end
 
 
@@ -1051,12 +1055,38 @@ function Plan_expand_rooms()
   -- this must be called after hallways are generated, and will
   -- move the sides of room sections into unused hallway space.
 
-  local function can_nudge(K, dir)
+  local function can_nudge(K, dir, R)
     -- edge of map?
     if dir == 4 and K.kx == 1         then return false end
     if dir == 6 and K.kx == SECTION_W then return false end
     if dir == 2 and K.ky == 1         then return false end
     if dir == 8 and K.ky == SECTION_H then return false end
+
+    local N = K:neighbor(dir)
+
+    -- this logic prevents nudging a different section in the same row or
+    -- column which would cause the sections to go out of alignment.
+    if K.room ~= R then
+      return (N.room ~= R)
+    end
+
+    -- usually allow if neighbor section is same room
+    if K:same_room(dir) then
+
+      -- don't make neighbor too narrow
+      if geom.vert_sel(dir, N.sh, N.sw) <= 2 then
+        return false
+      end
+
+      -- check alignment
+      if geom.is_vert(dir) then
+        if N.sx1 ~= K.sx1 or N.sx2 ~= K.sx2 then return false end
+      else
+        if N.sy1 ~= K.sy1 or N.sy2 ~= K.sy2 then return false end
+      end
+
+      return true
+    end
 
     local sx1, sy1, sx2, sy2
 
@@ -1075,7 +1105,10 @@ function Plan_expand_rooms()
   end
 
 
-  local function do_nudge(K, dir)
+  local function do_nudge(K, dir, R)
+    if K.room ~= R then return; end
+
+gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
     -- mark seeds as occupied
     local sx1, sy1, sx2, sy2
 
@@ -1084,7 +1117,7 @@ function Plan_expand_rooms()
     else
       sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1-1, K.sy1, K.sx2+1, K.sy2)
     end
-    
+
     for sx = sx1,sx2 do for sy = sy1,sy2 do
       local S = SEEDS[sx][sy]
       S.expanded = true
@@ -1100,6 +1133,20 @@ function Plan_expand_rooms()
 
     K:update_size()
 
+    -- update neighbor if same room
+
+    if K:same_room(dir) then
+      local N = K:neighbor(dir)
+
+          if dir == 6 then N.sx1 = N.sx1 + 1
+      elseif dir == 4 then N.sx2 = N.sx2 - 1
+      elseif dir == 8 then N.sy1 = N.sy1 + 1
+      else                 N.sy2 = N.sy2 - 1
+      end
+
+      N:update_size()
+    end
+
     -- NOTE: the seed themselves and the room bbox are only updated
     --       at the very end, via the call to Plan_make_seeds().
   end
@@ -1112,9 +1159,9 @@ function Plan_expand_rooms()
     -- (in order to keep the shape synchronised).
     local keep_stems = true
 
-    if R.shape == "odd" or (R.shape == "rect" and R.kw <= 2 and R.kh <= 2) then
-      keep_stems = false
-    end
+---???    if R.shape == "odd" or (R.shape == "rect" and R.kw <= 2 and R.kh <= 2) then
+---???      keep_stems = false
+---???    end
 
     local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
     
@@ -1126,26 +1173,20 @@ function Plan_expand_rooms()
       end
     end
 
-    -- collect the growable sections (possibly none)
-    local sections = {}
-
+    -- test if all sections can be nudged
     for kx = kx1,kx2 do for ky = ky1,ky2 do
       local N = SECTIONS[kx][ky]
-      if N.room == R and not N:same_room(dir) then
-        table.insert(sections, N)
-      end
+      if not can_nudge(N, dir, K.room) then return; end
     end end
 
-    for _,N in ipairs(sections) do
-      if not can_nudge(N, dir) then return; end
-    end
-
-    for _,N in ipairs(sections) do
-      do_nudge(N, dir)
-    end
+    -- actually nudge them
+    for kx = kx1,kx2 do for ky = ky1,ky2 do
+      local N = SECTIONS[kx][ky]
+      do_nudge(N, dir, K.room)
+    end end
   end
 
-  
+
   ---| Plan_expand_rooms |---
 
   local visits = {}
@@ -1165,6 +1206,7 @@ function Plan_expand_rooms()
   end
 
   Plan_make_seeds()
+
 end
 
 
