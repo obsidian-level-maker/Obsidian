@@ -185,7 +185,7 @@ function Chunk_divide_room(R)
     local W = 1
     local H = 1
 
-    local INC_PROB = 90
+    local INC_PROB = 100
 
     if bw >= 9 and rand.odds(INC_PROB) then W = 3 end
     if bh >= 9 and rand.odds(INC_PROB) then H = 3 end
@@ -194,17 +194,19 @@ function Chunk_divide_room(R)
     if bh >= 15 and rand.odds(INC_PROB) then H = 5 end
 
     -- if chunks would be long and thin, adjust how many
+    local MAX_ASPECT = 3.2  --- 2.2
+
     local nw = bw / W
     local nh = bh / H
 
-    if nh > nw*2.2 then
+    if nh > nw*MAX_ASPECT then
       if H < 5 and (bh / (H+2)) >= 3 then
         H = H + 2
       elseif W >= 3 then
         W = W - 2
       end
 
-    elseif nw > nh*2.2 then
+    elseif nw > nh*MAX_ASPECT then
       if W < 5 and (bw / (W+2)) >= 3 then
         W = W + 2
       elseif H >= 3 then
@@ -589,18 +591,19 @@ function CHUNK_CLASS.build(H)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = 24 -- rand.irange(0,24)
+  local f_h = 24 - rand.irange(0,24)
   local c_h = 256
   local light = 0
   local c_medium = "solid"
 
-  local f_mat = "FLAT1" -- rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
+  local f_mat = "FLAT1" and rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
   if not H.hall and --- not (H.room and H.room.outdoor) and
      H:similar_neighbor(2) and H:similar_neighbor(8) and
      H:similar_neighbor(4) and H:similar_neighbor(6)
+     and false
   then
     f_mat = "FLOOR4_8"
     f_h   = 0
