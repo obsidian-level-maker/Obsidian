@@ -87,18 +87,33 @@ function ROOM_CLASS.new(shape)
   return R
 end
 
-function ROOM_CLASS.tostr(self)
-  return string.format("ROOM_%d", self.id)
+function ROOM_CLASS.tostr(R)
+  return string.format("ROOM_%d", R.id)
 end
 
-function ROOM_CLASS.longstr(self)
+function ROOM_CLASS.longstr(R)
   return string.format("%s_%s [%d,%d..%d,%d]",
-      sel(self.parent, "SUB_ROOM", "ROOM"),
-      self.id, self.kx1,self.ky1, self.kx2,self.ky2)
+      sel(R.parent, "SUB_ROOM", "ROOM"),
+      R.id, R.kx1, R.ky1, R.kx2, R.ky2)
 end
 
-function ROOM_CLASS.update_size(self)
-  self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
+function ROOM_CLASS.list_sections(R)
+  gui.debugf("SECTION LIST for %s:\n", R:tostr())
+  gui.debugf("{\n")
+  
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+    if K.room == R then
+      gui.debugf("  %s : S(%d %d) .. (%d %d)\n", K:tostr(),
+                 K.sx1, K.sy1, K.sx2, K.sy2)
+    end
+  end end
+
+  gui.debugf("}\n")
+end
+
+function ROOM_CLASS.update_size(R)
+  R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
 end
 
 function ROOM_CLASS.contains_seed(self, x, y)
