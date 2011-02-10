@@ -457,7 +457,18 @@ function Hallway_place_em()
   end
 
 
+  local function how_many()
+    local perc = style_sel("hallways", 0, 30, 65, 100)
+
+    local num = (SECTION_W + 2) * perc / 100
+
+    return int(num + gui.random())
+  end
+
+
   ---| Hallway_place_em |---
+
+  if STYLE.hallways == "none" then return; end
 
   create_network()
   dump_network("Initial Hall Network:")
@@ -466,7 +477,7 @@ function Hallway_place_em()
   local starts  = collect_starts()
 
   local count   = 0
-  local max_num = 7  -- FIXME
+  local max_num = how_many()
 
   -- FIXME: try special stuff (half-surrounded, etc)
 
