@@ -5,21 +5,12 @@ V4 TODO
 Current Work
 ------------
 
-1. hallway doorways are no wider than the hallway chunk,
-   hence hallways are responsible for their doorways.
-   if would touch two chunks of the room, merge them.
+>>>  create chunks from SEEDS, not BLOCKS
 
-2. for section-to-section doorways, a chunk (e.g. middle) of
-   the SOURCE room is responsible for the doorway.
-   if touches two chunks in DEST room, merge them.
-
-3. when merging chunks, if merge is not possible then the
-   whole section becomes a single chunk.
+>>>  remove BLOCKS
 
 
 +  create height diffs in each room from chunks
-
-DONE  connections: must check if two sections are touching
 
 -  Special Hallway #1 : surround half the room, entrance either side
 -  Special Hallway #2 : surround a corner of large room, two entrances
@@ -31,17 +22,6 @@ WISH:  sometimes fork a hallway off another one
 -  build all hallways AFTER all rooms
    (decide a height different first though).
 
-
-+  determine formula for size of middle SPANs, basic on section size
-   it should guarantee minimal prefabs will fit.
-
-   The following is too simple, but may help:
-
-    EDGE.max_deep = (width - 128) / 2   [Including any walk/air area]
-
-    For 2  seed wide room, thickest door is  64 units + 64 walk
-    For 3  seed wide room, thickest door is 160 units + 64 walk
-    For 4+ seed wide room, thickest door is 256 units + 64 walk
 
 -  "flush depth" for wall prefabs, encourage/force nearby walls
    to line up with it.
