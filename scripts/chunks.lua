@@ -177,7 +177,7 @@ function Chunk_divide_room(R)
   end
 
 
-  local function subdivide_section(K)
+  local function OLD_subdivide_section(K)
     local bw = K.sw * 3
     local bh = K.sh * 3
 
@@ -249,6 +249,44 @@ function Chunk_divide_room(R)
       H.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
       H.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
       H.y2 = S.y1 + 64 * (locs_Y[y].high - by + 1)
+
+      H:install()
+
+      table.insert(R.chunks, H)
+    end end -- x, y
+  end
+
+
+  local function subdivide_section(K)
+    -- begin initially with each seed becoming a chunk
+
+    K.chunk_W = K.sw
+    K.chunk_H = K.sh
+
+    K.chunk = table.array_2D(K.chunk_W, K.chunk_H)
+
+    -- create the chunks
+    for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
+
+      local S = SEEDS[sx][sy]
+
+      local H = CHUNK_CLASS.new(S:block_range())
+
+      local x = sx - K.sx1 + 1
+      local y = sy - K.sy1 + 1
+
+      K.chunk[x][y] = H
+
+      H.room    = R
+      H.section = K
+
+      H.hx = x
+      H.hy = y 
+
+      H.x1 = S.x1
+      H.y1 = S.y1
+      H.x2 = S.x2
+      H.y2 = S.y2
 
       H:install()
 
