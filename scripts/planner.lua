@@ -368,6 +368,10 @@ function Plan_create_sections(W, H)
     K.sy1 = section_Y[y]
     K.sx2 = K.sx1 + K.sw - 1
     K.sy2 = K.sy1 + K.sh - 1
+
+    -- remember original location
+    K.ox1, K.oy1 = K.sx1, K.sy1
+    K.ox2, K.oy2 = K.sx2, K.sy2
   end end
 
 

@@ -123,37 +123,37 @@ function ROOM_CLASS.contains_seed(self, x, y)
 end
 
 function ROOM_CLASS.has_lock(self, lock)
-  for _,C in ipairs(self.conns) do
-    if C.lock == lock then return true end
+  for _,D in ipairs(self.conns) do
+    if D.lock == lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_any_lock(self)
-  for _,C in ipairs(self.conns) do
-    if C.lock then return true end
+  for _,D in ipairs(self.conns) do
+    if D.lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_lock_kind(self, kind)
-  for _,C in ipairs(self.conns) do
-    if C.lock and C.lock.kind == kind then return true end
+  for _,D in ipairs(self.conns) do
+    if D.lock and D.lock.kind == kind then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_sky_neighbor(self)
-  for _,C in ipairs(self.conns) do
-    local N = C:neighbor(self)
+  for _,D in ipairs(self.conns) do
+    local N = D:neighbor(self)
     if N.outdoor then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_teleporter(self)
-  for _,C in ipairs(self.conns) do
-    if C.kind == "teleporter" then return true end
+  for _,D in ipairs(self.conns) do
+    if D.kind == "teleporter" then return true end
   end
   return false
 end
@@ -162,8 +162,8 @@ function ROOM_CLASS.dist_to_closest_conn(self, K, side)
   -- TODO: improve this by calculating side coordinates
   local best
 
-  for _,C in ipairs(self.conns) do 
-    local K2 = C:section(self)
+  for _,D in ipairs(self.conns) do 
+    local K2 = D:section(self)
     if K2 then
       local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
 
@@ -178,8 +178,8 @@ end
 
 function ROOM_CLASS.is_near_exit(self)
   if self.purpose == "EXIT" then return true end
-  for _,C in ipairs(self.conns) do
-    local N = C:neighbor(self)
+  for _,D in ipairs(self.conns) do
+    local N = D:neighbor(self)
     if N.purpose == "EXIT" then return true end
   end
   return false
@@ -948,9 +948,9 @@ function Rooms_blow_chunks()
     end
   end
 
-  for _,C in ipairs(LEVEL.all_conns) do
-    if C.hall then
-      for _,H in ipairs(C.hall.chunks) do
+  for _,D in ipairs(LEVEL.all_conns) do
+    if D.hall then
+      for _,H in ipairs(D.hall.chunks) do
         H:build()
       end
     end

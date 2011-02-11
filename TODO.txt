@@ -9,6 +9,8 @@ Current Work
 
 >>>  remove BLOCKS
 
+>>>  use 'C' for chunks, 'D' for connections (doorways)
+
 
 +  create height diffs in each room from chunks
 

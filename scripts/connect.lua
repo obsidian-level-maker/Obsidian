@@ -47,15 +47,15 @@ require 'util'
 CONN_CLASS = {}
 
 function CONN_CLASS.new_K(K1, K2, kind, dir)
-  local C = { K1=K1, K2=K2, R1=K1.room, R2=K2.room, kind=kind, dir=dir }
-  table.set_class(C, CONN_CLASS)
-  return C
+  local D = { K1=K1, K2=K2, R1=K1.room, R2=K2.room, kind=kind, dir=dir }
+  table.set_class(D, CONN_CLASS)
+  return D
 end
 
 function CONN_CLASS.new_R(R1, R2, kind, dir)
-  local C = { R1=R1, R2=R2, kind=kind, dir=dir }
-  table.set_class(C, CONN_CLASS)
-  return C
+  local D = { R1=R1, R2=R2, kind=kind, dir=dir }
+  table.set_class(D, CONN_CLASS)
+  return D
 end
 
 function CONN_CLASS.neighbor(self, R)
@@ -371,9 +371,9 @@ function Connect_rooms()
   local function already_connected(K1, K2)
     if not (K1 and K2 and K1.room) then return false end
     
-    for _,C in ipairs(K1.room.conns) do
-      if (C.K1 == K1 and C.K2 == K2) or
-         (C.K1 == K2 and C.K2 == K1)
+    for _,D in ipairs(K1.room.conns) do
+      if (D.K1 == K1 and D.K2 == K2) or
+         (D.K1 == K2 and D.K2 == K1)
       then
         return true
       end
@@ -415,12 +415,12 @@ function Connect_rooms()
 
     Connect_merge_groups(R.conn_group, N.conn_group)
 
-    local C = CONN_CLASS.new_K(K1, K2, kind, dir)
+    local D = CONN_CLASS.new_K(K1, K2, kind, dir)
 
-    table.insert(LEVEL.all_conns, C)
+    table.insert(LEVEL.all_conns, D)
 
-    table.insert(R.conns, C)
-    table.insert(N.conns, C)
+    table.insert(R.conns, D)
+    table.insert(N.conns, D)
 
     K1.num_conn = K1.num_conn + 1
     K2.num_conn = K2.num_conn + 1
@@ -431,7 +431,7 @@ function Connect_rooms()
     local USAGE =
     {
       kind = "door",
-      conn = C,
+      conn = D,
     }
 
     E1.usage = USAGE
@@ -446,15 +446,15 @@ function Connect_rooms()
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
-    local C = CONN_CLASS.new_R(R1, R2, "teleporter")
+    local D = CONN_CLASS.new_R(R1, R2, "teleporter")
 
-    table.insert(LEVEL.all_conns, C)
+    table.insert(LEVEL.all_conns, D)
 
-    table.insert(R1.conns, C)
-    table.insert(R2.conns, C)
+    table.insert(R1.conns, D)
+    table.insert(R2.conns, D)
 
-    C.tele_tag1 = Plan_alloc_id("tag")
-    C.tele_tag2 = Plan_alloc_id("tag")
+    D.tele_tag1 = Plan_alloc_id("tag")
+    D.tele_tag2 = Plan_alloc_id("tag")
   end
 
 
@@ -969,10 +969,10 @@ function Connect_rooms()
 
   local function place_teleporters()
     -- determine which section(s) of each room to use for teleporters
-    for _,C in ipairs(LEVEL.all_conns) do
-      if C.kind == "teleporter" then
-        if not C.K1 then C.K1 = place_one_tele(C.R1) end
-        if not C.K2 then C.K2 = place_one_tele(C.R2) end
+    for _,D in ipairs(LEVEL.all_conns) do
+      if D.kind == "teleporter" then
+        if not D.K1 then D.K1 = place_one_tele(D.R1) end
+        if not D.K2 then D.K2 = place_one_tele(D.R2) end
       end
     end
   end
@@ -1000,8 +1000,8 @@ function Connect_rooms()
   local function kill_room(R)
     R.kind = "REMOVED"
 
-    for _,C in ipairs(R.conns) do
-      C.kind = "REMOVED"
+    for _,D in ipairs(R.conns) do
+      D.kind = "REMOVED"
     end
 
     for _,K in ipairs(R.sections) do
@@ -1035,9 +1035,9 @@ function Connect_rooms()
 
     -- process connections
     for i = #LEVEL.all_conns,1,-1 do
-      local C = LEVEL.all_conns[i]
+      local D = LEVEL.all_conns[i]
 
-      if C.kind == "REMOVED" then
+      if D.kind == "REMOVED" then
         table.remove(LEVEL.all_conns, i)
       end
     end
@@ -1084,14 +1084,14 @@ Plan_dump_rooms("Dead Room Map")
 
     table.insert(LEVEL.all_rooms, R)
 
-    for _,C in ipairs(R.conns) do
-      if R == C.R2 and not visited[C.R1] then
-        C:swap()
+    for _,D in ipairs(R.conns) do
+      if R == D.R2 and not visited[D.R1] then
+        D:swap()
       end
-      if R == C.R1 and not visited[C.R2] then
+      if R == D.R1 and not visited[D.R2] then
         -- recursively handle adjacent room
-        natural_flow(C.R2, visited)
-        C.R2.entry_conn = C
+        natural_flow(D.R2, visited)
+        D.R2.entry_conn = D
       end
     end
   end

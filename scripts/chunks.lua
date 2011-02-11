@@ -272,6 +272,9 @@ function Chunk_divide_room(R)
 
       local H = CHUNK_CLASS.new(S:block_range())
 
+      H.sx1, H.sy1 = sx, sy
+      H.sx2, H.sy2 = sx, sy
+
       local x = sx - K.sx1 + 1
       local y = sy - K.sy1 + 1
 
@@ -458,7 +461,7 @@ function Chunk_handle_connections()
   end
 
 
-  local function merge_stuff(H, dir, C, pass)
+  local function merge_stuff(H, dir, D, pass)
     local joins = H:joining_chunks(dir)
 
     if pass < NUM_PASS then
@@ -477,7 +480,7 @@ function Chunk_handle_connections()
 
     local H2 = joins[1]
 
-    link_chunks(H, H2, dir, C)
+    link_chunks(H, H2, dir, D)
   end
 
 
@@ -500,11 +503,11 @@ function Chunk_handle_connections()
   end
 
 
-  local function do_section_conn(C, pass)
-    local K1 = assert(C.K1)
-    local K2 = assert(C.K2)
+  local function do_section_conn(D, pass)
+    local K1 = assert(D.K1)
+    local K2 = assert(D.K2)
 
-    local dir = assert(C.dir)
+    local dir = assert(D.dir)
 
     -- pick middle chunks
     local H1, H2
@@ -514,7 +517,7 @@ function Chunk_handle_connections()
 
     if good_linkage(H1, dir, H2) then
       if pass == NUM_PASS then
-        link_chunks(H1, H2, dir, C)
+        link_chunks(H1, H2, dir, D)
       end
 
       return;
@@ -527,17 +530,17 @@ function Chunk_handle_connections()
       H, dir = H2, (10-dir)
     end
 
-    merge_stuff(H, dir, C, pass)
+    merge_stuff(H, dir, D, pass)
   end
 
 
-  local function do_hall_side(H, dir, K, C, pass)
+  local function do_hall_side(H, dir, K, D, pass)
     -- hallways off a hallway are naturally aligned
     if not K then
       -- FIXME !!!!  local H2 = ....
 
       if pass == NUM_PASS then
-        link_chunks(H, H2, dir, C)
+        link_chunks(H, H2, dir, D)
       end
 
       return;
@@ -548,18 +551,18 @@ function Chunk_handle_connections()
 
     if good_linkage(H, dir, H2) then
       if pass == NUM_PASS then
-        link_chunks(H, H2, dir, C)
+        link_chunks(H, H2, dir, D)
       end
 
       return;
     end
 
-    merge_stuff(H, dir, C, pass)
+    merge_stuff(H, dir, D, pass)
   end
 
 
-  local function do_hallway_conn(C, pass)
-    local hall = assert(C.hall)
+  local function do_hallway_conn(D, pass)
+    local hall = assert(D.hall)
 
     local start_H = hall.path[1].chunk
     local   end_H = hall.path[#hall.path].chunk
@@ -574,17 +577,17 @@ function Chunk_handle_connections()
 
     assert(start_dir and end_dir)
 
-    do_hall_side(start_H, start_dir, start_K, C, pass)
-    do_hall_side(  end_H,   end_dir,   end_K, C, pass)
+    do_hall_side(start_H, start_dir, start_K, D, pass)
+    do_hall_side(  end_H,   end_dir,   end_K, D, pass)
   end
 
 
   ---| Chunk_handle_connections |---
 
   for pass = 1,NUM_PASS do
-    for _,C in ipairs(LEVEL.all_conns) do
-      if C.kind == "normal"  then do_section_conn(C, pass) end
-      if C.kind == "hallway" then do_hallway_conn(C, pass) end
+    for _,D in ipairs(LEVEL.all_conns) do
+      if D.kind == "normal"  then do_section_conn(D, pass) end
+      if D.kind == "hallway" then do_hallway_conn(D, pass) end
     end
   end
 end
@@ -605,9 +608,9 @@ function Chunk_make_parts()
     end
   end
 
-  for _,C in ipairs(LEVEL.all_conns) do
-    if C.hall then
-      for _,H in ipairs(C.hall.chunks) do
+  for _,D in ipairs(LEVEL.all_conns) do
+    if D.hall then
+      for _,H in ipairs(D.hall.chunks) do
         make_parts(H)
       end
     end

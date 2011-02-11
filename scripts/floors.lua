@@ -338,22 +338,14 @@ class FLOOR
 
 function Chunky_floor(R)
 
-  local function touches_wall(K)
-    for bx = K.bx1-1, K.bx2+1 do
-      for by = K.by1-1, K.by2+1 do
-        if Block_valid(bx, by) then
-          local N = BLOCKS[bx][by]
-          if not N then return true end
-          if N.seed.room ~= K.room then return true end
-        end
-      end
-    end
+  local function touches_wall(C)
+    -- Todo ??
 
     return false
   end
 
 
-  local function do_floor(K)
+  local function do_floor(C)
     local h = R.floor_min_h + rand.irange(0,16)
 
     local name = rand.pick { "FLAT1", "FLAT10", "FLAT14", "FLAT1_1",
@@ -361,7 +353,7 @@ function Chunky_floor(R)
                              "FLAT5_3", "FLAT5_5" }
 --[[
     if not touches_wall(K) then
-      h = -32
+      h = -3C
       name = "NUKAGE1"
     end
 --]]
@@ -370,24 +362,17 @@ function Chunky_floor(R)
     local w_tex = mat.t
     local f_tex = mat.f or mat.t
 
-    for bx = K.bx1, K.bx2 do
-      for by = K.by1, K.by2 do
-        local x = K.x1 + (bx - K.bx1) * 64
-        local y = K.y1 + (by - K.by1) * 64
+    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
-        local brush = Trans.bare_quad(x, y, x+64, y+64)
+    Trans.set_tex(brush, w_tex)
 
-        Trans.set_tex(brush, w_tex)
+    table.insert(brush, { t=h, tex=f_tex })
 
-        table.insert(brush, { t=h, tex=f_tex })
-
-        gui.add_brush(brush)
-      end
-    end
+    gui.add_brush(brush)
   end
 
-  for _,K in ipairs(R.chunks) do
-    do_floor(K)
+  for _,C in ipairs(R.chunks) do
+    do_floor(C)
   end
 end
 
