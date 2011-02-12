@@ -25,10 +25,9 @@ STYLE  = {}
 LEVEL  = {}
 THEME  = {}
 
-BLOCKS   = {}
 SEEDS    = {}
 SECTIONS = {}
-
+ROOMS    = {}
 
 -- all prefabs go here
 PREFAB = {}

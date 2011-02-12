@@ -94,21 +94,21 @@ function CHUNK_CLASS.tostr(C)
   return string.format("CHUNK [%d,%d]", C.sx1, C.sy1)
 end
 
-function CHUNK_CLASS.joining_chunks(H, dir)
+function CHUNK_CLASS.joining_chunks(C, dir)
   local list = {}
 
-  local bx1, by1, bx2, by2 = geom.side_coords(dir, H.bx1, H.by1, H.bx2, H.by2)
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
-  bx1, by1 = geom.nudge(bx1, by1, dir)
-  bx2, by2 = geom.nudge(bx2, by2, dir)
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
 
-  for bx = bx1,bx2 do for by = by1,by2 do
-    assert(Block_valid(bx, by))
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    assert(Seed_valid(sx, sy))
 
-    local B = BLOCKS[bx][by]
+    local S = SEEDS[sx][sy]
 
-    if B and B.chunk and not table.has_elem(list, B.chunk) then
-      table.insert(list, B.chunk)
+    if S and S.chunk and not table.has_elem(list, S.chunk) then
+      table.insert(list, S.chunk)
     end
   end end
 
@@ -175,86 +175,6 @@ function Chunk_divide_room(R)
     end
 
     return locs
-  end
-
-
-  local function OLD_subdivide_section(K)
-    local bw = K.sw * 3
-    local bh = K.sh * 3
-
-    -- choose number of chunk columns and rows
-    local W = 1
-    local H = 1
-
-    local INC_PROB = 100
-
-    if bw >= 9 and rand.odds(INC_PROB) then W = 3 end
-    if bh >= 9 and rand.odds(INC_PROB) then H = 3 end
-
-    if bw >= 15 and rand.odds(INC_PROB) then W = 5 end
-    if bh >= 15 and rand.odds(INC_PROB) then H = 5 end
-
-    -- if chunks would be long and thin, adjust how many
-    local MAX_ASPECT = 3.2  --- 2.2
-
-    local nw = bw / W
-    local nh = bh / H
-
-    if nh > nw*MAX_ASPECT then
-      if H < 5 and (bh / (H+2)) >= 3 then
-        H = H + 2
-      elseif W >= 3 then
-        W = W - 2
-      end
-
-    elseif nw > nh*MAX_ASPECT then
-      if W < 5 and (bw / (W+2)) >= 3 then
-        W = W + 2
-      elseif H >= 3 then
-        H = H - 2
-      end
-    end
-
---  gui.debugf("Section chunks: S%dx%d --> H%dx%d --> B%1.1fx%1.1f\n", sect.sw, sect.sh, W, H, bw / W, bh / H)
-
-    K.chunk_W = W
-    K.chunk_H = H
-
-    K.chunk = table.array_2D(W, H)
-
-    -- determine block sizes
-    nw = int(bw / W)
-    nh = int(bh / H)
-
-    assert(nw >= 3 and nh >= 3)
-
-    local S = SEEDS[K.sx1][K.sy1]
-    local bx, by = S:block_range()
-
-    local locs_X = calc_block_sizes(W, bx, bw)
-    local locs_Y = calc_block_sizes(H, by, bh)
-
-    -- create the chunks
-    for x = 1,W do for y = 1,H do
-      local H = CHUNK_CLASS.new(locs_X[x].low,  locs_Y[y].low,
-                                locs_X[x].high, locs_Y[y].high)
-      K.chunk[x][y] = H
-
-      H.room    = R
-      H.section = K
-
-      H.hx = x
-      H.hy = y 
-
-      H.x1 = S.x1 + 64 * (locs_X[x].low  - bx)
-      H.y1 = S.y1 + 64 * (locs_Y[y].low  - by)
-      H.x2 = S.x1 + 64 * (locs_X[x].high - bx + 1)
-      H.y2 = S.y1 + 64 * (locs_Y[y].high - by + 1)
-
-      H:install()
-
-      table.insert(R.chunks, H)
-    end end -- x, y
   end
 
 
@@ -326,39 +246,36 @@ function Chunk_merge_list(list)
     return true
   end
 
-  local function do_merge(H, old_H, update_array)
-    if H == old_H then return; end
+  local function do_merge(C, old_C, update_array)
+    if C == old_C then return; end
 
-    H.bx1 = math.min(H.bx1, old_H.bx1)
-    H.by1 = math.min(H.by1, old_H.by1)
-    H.bx2 = math.max(H.bx2, old_H.bx2)
-    H.by2 = math.max(H.by2, old_H.by2)
+    C.sx1 = math.min(C.sx1, old_C.sx1)
+    C.sy1 = math.min(C.sy1, old_C.sy1)
+    C.sx2 = math.max(C.sx2, old_C.sx2)
+    C.sy2 = math.max(C.sy2, old_C.sy2)
 
-    H.x1 = math.min(H.x1, old_H.x1)
-    H.y1 = math.min(H.y1, old_H.y1)
-    H.x2 = math.max(H.x2, old_H.x2)
-    H.y2 = math.max(H.y2, old_H.y2)
+    C.x1 = math.min(C.x1, old_C.x1)
+    C.y1 = math.min(C.y1, old_C.y1)
+    C.x2 = math.max(C.x2, old_C.x2)
+    C.y2 = math.max(C.y2, old_C.y2)
 
     -- update the section's chunk array
-    if update_array and H.section then
-      local K = H.section
+    if update_array and C.section then
+      local K = C.section
 
       for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
-        if K.chunk[hx][hy] == old_H then
-          K.chunk[hx][hy] = H
+        if K.chunk[hx][hy] == old_C then
+          K.chunk[hx][hy] = C
         end
       end end
     end
 
-    -- update the block map
-    for bx = old_H.bx1, old_H.bx2 do for by = old_H.by1, old_H.by2 do
-      local B = BLOCKS[bx][by]
-      B.chunk = H
-    end end
+    -- update the seed map
+    C:install()
 
     -- update room list
-    if H.room then
-      table.kill_elem(H.room.chunks, old_H)
+    if C.room then
+      table.kill_elem(C.room.chunks, old_C)
     end
   end
 
