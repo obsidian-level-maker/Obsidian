@@ -542,7 +542,7 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 180,
+    rect = 400,
     plus = 15,
 
     T1 = 25, T2 = 6,
@@ -628,7 +628,7 @@ function Plan_add_big_rooms()
 
   local function adjust_shape_probs()
     -- occasionally don't make any rectangles
-    if rand.odds(10) then
+    if rand.odds(6) then
       BIG_SHAPE_PROBS.rect = 1
     end
 
@@ -809,7 +809,7 @@ function Plan_add_big_rooms()
     -- FAILED
 
     -- use up some quota, to prevent an infinite loop
-    return 0.2
+    return 0.1
   end
 
 
