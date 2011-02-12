@@ -22,7 +22,7 @@
 
 class CHUNK
 {
-  bx1, by1, bx2, by2  -- block coordinates
+  sx1, sy1, sx2, sy2  -- seed range
 
   x1, y1, x2, y2  -- 2D map coordinates
 
@@ -76,21 +76,22 @@ require 'util'
 
 CHUNK_CLASS = {}
 
-function CHUNK_CLASS.new(bx1, by1, bx2, by2)
-  local H = { bx1=bx1, by1=by1, bx2=bx2, by2=by2, parts={}, link={} }
+function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
+  local H = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, parts={}, link={} }
   table.set_class(H, CHUNK_CLASS)
   return H
 end
 
-function CHUNK_CLASS.install(H)
-  for x = H.bx1, H.bx2 do for y = H.by1, H.by2 do
-    assert(BLOCKS[x][y])
-    BLOCKS[x][y].chunk = H
+function CHUNK_CLASS.install(C)
+  for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+    local S = SEEDS[sx][sy]
+    assert(S)
+    S.chunk = C
   end end
 end
 
-function CHUNK_CLASS.tostr(H)
-  return string.format("CHUNK [%d,%d]", H.bx1, H.by1)
+function CHUNK_CLASS.tostr(C)
+  return string.format("CHUNK [%d,%d]", C.sx1, C.sy1)
 end
 
 function CHUNK_CLASS.joining_chunks(H, dir)
@@ -267,33 +268,27 @@ function Chunk_divide_room(R)
 
     -- create the chunks
     for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
-
       local S = SEEDS[sx][sy]
 
-      local H = CHUNK_CLASS.new(S:block_range())
+      local C = CHUNK_CLASS.new(sx, sy, sx, sy)
 
-      H.sx1, H.sy1 = sx, sy
-      H.sx2, H.sy2 = sx, sy
+      C.x1, C.y1 = S.x1, S.y1
+      C.x2, C.y2 = S.x2, S.y2
 
       local x = sx - K.sx1 + 1
       local y = sy - K.sy1 + 1
 
-      K.chunk[x][y] = H
+      K.chunk[x][y] = C
 
-      H.room    = R
-      H.section = K
+      C.room    = R
+      C.section = K
 
-      H.hx = x
-      H.hy = y 
+      C.hx = x
+      C.hy = y 
 
-      H.x1 = S.x1
-      H.y1 = S.y1
-      H.x2 = S.x2
-      H.y2 = S.y2
+      C:install()
 
-      H:install()
-
-      table.insert(R.chunks, H)
+      table.insert(R.chunks, C)
     end end -- x, y
   end
 
@@ -584,6 +579,8 @@ function Chunk_handle_connections()
 
   ---| Chunk_handle_connections |---
 
+do return end --!!!!!
+
   for pass = 1,NUM_PASS do
     for _,D in ipairs(LEVEL.all_conns) do
       if D.kind == "normal"  then do_section_conn(D, pass) end
@@ -619,32 +616,26 @@ end
 
 
 
-function CHUNK_CLASS.similar_neighbor(H, dir)
-  local bx, by
+function CHUNK_CLASS.similar_neighbor(C, dir)
+  local sx, sy
 
-  local mx = int((H.bx1 + H.bx2) / 2)
-  local my = int((H.by1 + H.by2) / 2)
+  local mx = int((C.sx1 + C.sx2) / 2)
+  local my = int((C.sy1 + C.sy2) / 2)
 
-      if dir == 2 then bx, by = mx, H.by1 - 1
-  elseif dir == 8 then bx, by = mx, H.by2 + 1
-  elseif dir == 4 then bx, by = H.bx1 - 1, my
-  elseif dir == 6 then bx, by = H.bx2 + 1, my
+      if dir == 2 then sx, sy = mx, C.sy1 - 1
+  elseif dir == 8 then sx, sy = mx, C.sy2 + 1
+  elseif dir == 4 then sx, sy = C.sx1 - 1, my
+  elseif dir == 6 then sx, sy = C.sx2 + 1, my
   end
 
-  if not Block_valid(bx, by) then
+  if not Seed_valid(sx, sy) then
     return false
   end
 
-  local B = BLOCKS[bx][by]
+  local S = SEEDS[sx][sy]
 
-  if not (B and B.chunk) then
-    return false
-  end
-
-  local H2 = B.chunk
-
-  if H.hall then return (H.hall == H2.hall) end
-  if H.room then return (H.room == H2.room) end
+  if C.hall then return (S.hall == C.hall) end
+  if C.room then return (S.room == C.room) end
 
   return false
 end

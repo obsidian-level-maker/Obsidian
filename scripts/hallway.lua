@@ -262,24 +262,18 @@ function Hallway_place_em()
       local S1 = SEEDS[G.sx1][G.sy1]
       local S2 = SEEDS[G.sx2][G.sy2]
 
-      local bx1,by1, _x2,_y2 = S1:block_range()
-      local _x1,_y1, bx2,by2 = S2:block_range()
+      local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
 
-      local H = CHUNK_CLASS.new(bx1,by1, bx2,by2)
+      loc.chunk = C
 
-      H.sx1, H.sy1 = G.sx1, G.sy1
-      H.sx2, H.sy2 = G.sx2, G.sy2
+      C.hall = hall
 
-      loc.chunk = H
+      C.x1, C.y1 = S1.x1, S1.y1
+      C.x2, C.y2 = S2.x2, S2.y2
 
-      H.hall = hall
+      C:install()
 
-      H.x1, H.y1 = S1.x1, S1.y1
-      H.x2, H.y2 = S2.x2, S2.y2
-
-      H:install()
-
-      table.insert(hall.chunks, H)
+      table.insert(hall.chunks, C)
     end
   end
 
