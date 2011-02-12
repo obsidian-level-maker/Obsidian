@@ -307,14 +307,14 @@ function Hallway_place_em()
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
-    local C = CONN_CLASS.new_R(R1, R2, "hallway")
+    local D = CONN_CLASS.new_R(R1, R2, "hallway")
 
-    C.hall = hall
+    D.hall = hall
 
-    table.insert(LEVEL.all_conns, C)
+    table.insert(LEVEL.all_conns, D)
 
-    table.insert(R1.conns, C)
-    table.insert(R2.conns, C)
+    table.insert(R1.conns, D)
+    table.insert(R2.conns, D)
 
     if hall.K1 then hall.K1.num_conn = hall.K1.num_conn + 1 end
     if hall.K2 then hall.K2.num_conn = hall.K2.num_conn + 1 end

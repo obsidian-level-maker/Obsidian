@@ -27,7 +27,6 @@ THEME  = {}
 
 SEEDS    = {}
 SECTIONS = {}
-ROOMS    = {}
 
 -- all prefabs go here
 PREFAB = {}

@@ -1544,8 +1544,6 @@ function Plan_create_rooms()
 
   assert(LEVEL.ep_along)
 
-  ROOMS = {}
-
   LEVEL.all_rooms = {}
   LEVEL.all_conns = {}
 

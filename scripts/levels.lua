@@ -104,7 +104,6 @@ function Levels_clean_up()
   STYLE  = {}
 
   LEVEL    = nil
-  ROOMS    = nil
   SEEDS    = nil
   SECTIONS = nil
 
@@ -114,7 +113,6 @@ end
 
 function Levels_between_clean()
   LEVEL    = nil
-  ROOMS    = nil
   SEEDS    = nil
   SECTIONS = nil
 
