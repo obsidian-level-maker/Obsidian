@@ -323,6 +323,21 @@ SKY GENERATOR:
 
 
 ----------------------------------------------------------------
+  LUA EXTENSIONS
+----------------------------------------------------------------
+
++  simpler list traversal : each x in LIST
+
++  continue statement
+
++  ?: operator
+
+-  data tables: optional comma after }
+
+-  != is synonymous to ~=
+
+
+----------------------------------------------------------------
   DOOM and DOOM II
 ----------------------------------------------------------------
 
