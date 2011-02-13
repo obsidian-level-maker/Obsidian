@@ -63,60 +63,60 @@ function SECTION_CLASS.new(x, y)
   return K
 end
 
-function SECTION_CLASS.tostr(self)
-  return string.format("SECTION [%d,%d]", self.kx, self.ky)
+function SECTION_CLASS.tostr(K)
+  return string.format("SECTION [%d,%d]", K.kx, K.ky)
 end
 
-function SECTION_CLASS.update_size(self)
-  self.sw, self.sh = geom.group_size(self.sx1, self.sy1, self.sx2, self.sy2)
+function SECTION_CLASS.update_size(K)
+  K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
 end
 
-function SECTION_CLASS.shrink(self, side)
-  local ox1, oy1, ox2, oy2 = geom.side_coords(side, self.sx1, self.sy1, self.sx2, self.sy2)
+function SECTION_CLASS.shrink(K, side)
+  local ox1, oy1, ox2, oy2 = geom.side_coords(side, K.sx1, K.sy1, K.sx2, K.sy2)
 
-  if side == 2 then self.sy1 = self.sy1 + 1 ; self.y1 = self.y1 + SEED_SIZE end
-  if side == 8 then self.sy2 = self.sy2 - 1 ; self.y2 = self.y2 - SEED_SIZE end
-  if side == 4 then self.sx1 = self.sx1 + 1 ; self.x1 = self.x1 + SEED_SIZE end
-  if side == 6 then self.sx2 = self.sx2 - 1 ; self.x2 = self.x2 - SEED_SIZE end
+  if side == 2 then K.sy1 = K.sy1 + 1 ; K.y1 = K.y1 + SEED_SIZE end
+  if side == 8 then K.sy2 = K.sy2 - 1 ; K.y2 = K.y2 - SEED_SIZE end
+  if side == 4 then K.sx1 = K.sx1 + 1 ; K.x1 = K.x1 + SEED_SIZE end
+  if side == 6 then K.sx2 = K.sx2 - 1 ; K.x2 = K.x2 - SEED_SIZE end
 
-  self:update_size()
+  K:update_size()
 
   -- update seed map
   for x = ox1,ox2 do for y = oy1,oy2 do
     local S = SEEDS[x][y]
-    if S.section == self then
+    if S.section == K then
       S.section = nil ; S.room = nil
     end
   end end
 end
 
-function SECTION_CLASS.neighbor(self, dir, dist)
-  local nx, ny = geom.nudge(self.kx, self.ky, dir, dist)
+function SECTION_CLASS.neighbor(K, dir, dist)
+  local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
   if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
     return nil
   end
   return SECTIONS[nx][ny]
 end
 
-function SECTION_CLASS.same_room(self, dir)
-  local N = self:neighbor(dir)
-  return N and N.room == self.room
+function SECTION_CLASS.same_room(K, dir)
+  local N = K:neighbor(dir)
+  return N and N.room == K.room
 end
 
-function SECTION_CLASS.same_neighbors(self)
+function SECTION_CLASS.same_neighbors(K)
   local count = 0
   for side = 2,8,2 do
-    if self:same_room(side) then
+    if K:same_room(side) then
       count = count + 1
     end
   end
   return count
 end
 
-function SECTION_CLASS.side_has_conn(self, side)
-  for _,C in ipairs(self.room.conns) do
-    if C.K1 == self and C.dir == side    then return true end
-    if C.K2 == self and C.dir == 10-side then return true end
+function SECTION_CLASS.side_has_conn(K, side)
+  for _,C in ipairs(K.room.conns) do
+    if C.K1 == K and C.dir == side    then return true end
+    if C.K2 == K and C.dir == 10-side then return true end
   end
   return false
 end
@@ -542,7 +542,7 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 400,
+    rect = 350,
     plus = 15,
 
     T1 = 25, T2 = 6,

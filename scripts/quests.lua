@@ -64,14 +64,14 @@ QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
   local id = 1 + #LEVEL.all_quests
-  local QT = { id=id, start=start }
-  table.set_class(QT, QUEST_CLASS)
-  table.insert(LEVEL.all_quests, QT)
-  return QT
+  local Q = { id=id, start=start }
+  table.set_class(Q, QUEST_CLASS)
+  table.insert(LEVEL.all_quests, Q)
+  return Q
 end
 
-function QUEST_CLASS.tostr(self)
-  return string.format("QUEST_%d", self.id)
+function QUEST_CLASS.tostr(Q)
+  return string.format("QUEST_%d", Q.id)
 end
 
 
@@ -726,16 +726,16 @@ function Quest_make_quests()
   LEVEL.all_quests = {}
   LEVEL.all_locks  = {}
 
-  local QT = QUEST_CLASS.new(LEVEL.start_room)
+  local Q = QUEST_CLASS.new(LEVEL.start_room)
 
   if true then --!!!!!!!!! not THEME.switch_doors then
     -- room list remains in the "natural flow" order
-    no_quest_order(QT.start, QT)
+    no_quest_order(Q.start, Q)
   else
     -- room list will be rebuilt in visit order
     LEVEL.all_rooms = {}
 
-    visit_room(QT.start, QT)
+    visit_room(Q.start, Q)
   end
 
   setup_lev_alongs()

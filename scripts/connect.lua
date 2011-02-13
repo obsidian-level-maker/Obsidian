@@ -58,37 +58,36 @@ function CONN_CLASS.new_R(R1, R2, kind, dir)
   return D
 end
 
-function CONN_CLASS.neighbor(self, R)
-  return sel(R == self.R1, self.R2, self.R1)
+function CONN_CLASS.tostr(D)
+  return string.format("CONN [%d -> %d]",
+         D.R1.id, D.R2.id)
 end
 
-function CONN_CLASS.section(self, R)
-  return sel(R == self.R1, self.K1, self.K2)
+function CONN_CLASS.neighbor(D, R)
+  return sel(R == D.R1, D.R2, D.R1)
 end
 
-function CONN_CLASS.what_dir(self, R)
-  if self.dir then
-    return sel(R == self.R1, self.dir, 10 - self.dir)
+function CONN_CLASS.section(D, R)
+  return sel(R == D.R1, D.K1, D.K2)
+end
+
+function CONN_CLASS.what_dir(D, R)
+  if D.dir then
+    return sel(R == D.R1, D.dir, 10 - D.dir)
   end
   return nil
 end
 
-function CONN_CLASS.tostr(self)
-  return string.format("CONN [%d,%d -> %d,%d]",
-         self.K1.kx, self.K1.ky,
-         self.K2.kx, self.K2.ky)
+function CONN_CLASS.swap(D)
+  D.K1, D.K2 = D.K2, D.K1
+  D.R1, D.R2 = D.R2, D.R1
+
+  if D.dir then D.dir = 10 - D.dir end
 end
 
-function CONN_CLASS.swap(self)
-  self.K1, self.K2 = self.K2, self.K1
-  self.R1, self.R2 = self.R2, self.R1
-
-  if self.dir then self.dir = 10 - self.dir end
-end
-
-function CONN_CLASS.k_coord(self)
-  return (self.K1.kx + self.K2.kx) / 2,
-         (self.K1.ky + self.K2.ky) / 2
+function CONN_CLASS.k_coord(D)
+  return (D.K1.kx + D.K2.kx) / 2,
+         (D.K1.ky + D.K2.ky) / 2
 end
 
 

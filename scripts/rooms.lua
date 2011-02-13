@@ -116,54 +116,54 @@ function ROOM_CLASS.update_size(R)
   R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
 end
 
-function ROOM_CLASS.contains_seed(self, x, y)
-  if x < self.sx1 or x > self.sx2 then return false end
-  if y < self.sy1 or y > self.sy2 then return false end
+function ROOM_CLASS.contains_seed(R, x, y)
+  if x < R.sx1 or x > R.sx2 then return false end
+  if y < R.sy1 or y > R.sy2 then return false end
   return true
 end
 
-function ROOM_CLASS.has_lock(self, lock)
-  for _,D in ipairs(self.conns) do
+function ROOM_CLASS.has_lock(R, lock)
+  for _,D in ipairs(R.conns) do
     if D.lock == lock then return true end
   end
   return false
 end
 
-function ROOM_CLASS.has_any_lock(self)
-  for _,D in ipairs(self.conns) do
+function ROOM_CLASS.has_any_lock(R)
+  for _,D in ipairs(R.conns) do
     if D.lock then return true end
   end
   return false
 end
 
-function ROOM_CLASS.has_lock_kind(self, kind)
-  for _,D in ipairs(self.conns) do
+function ROOM_CLASS.has_lock_kind(R, kind)
+  for _,D in ipairs(R.conns) do
     if D.lock and D.lock.kind == kind then return true end
   end
   return false
 end
 
-function ROOM_CLASS.has_sky_neighbor(self)
-  for _,D in ipairs(self.conns) do
-    local N = D:neighbor(self)
+function ROOM_CLASS.has_sky_neighbor(R)
+  for _,D in ipairs(R.conns) do
+    local N = D:neighbor(R)
     if N.outdoor then return true end
   end
   return false
 end
 
-function ROOM_CLASS.has_teleporter(self)
-  for _,D in ipairs(self.conns) do
+function ROOM_CLASS.has_teleporter(R)
+  for _,D in ipairs(R.conns) do
     if D.kind == "teleporter" then return true end
   end
   return false
 end
 
-function ROOM_CLASS.dist_to_closest_conn(self, K, side)
+function ROOM_CLASS.dist_to_closest_conn(R, K, side)
   -- TODO: improve this by calculating side coordinates
   local best
 
-  for _,D in ipairs(self.conns) do 
-    local K2 = D:section(self)
+  for _,D in ipairs(R.conns) do 
+    local K2 = D:section(R)
     if K2 then
       local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
 
@@ -176,10 +176,10 @@ function ROOM_CLASS.dist_to_closest_conn(self, K, side)
   return best
 end
 
-function ROOM_CLASS.is_near_exit(self)
-  if self.purpose == "EXIT" then return true end
-  for _,D in ipairs(self.conns) do
-    local N = D:neighbor(self)
+function ROOM_CLASS.is_near_exit(R)
+  if R.purpose == "EXIT" then return true end
+  for _,D in ipairs(R.conns) do
+    local N = D:neighbor(R)
     if N.purpose == "EXIT" then return true end
   end
   return false

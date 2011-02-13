@@ -59,21 +59,20 @@ function SEED_CLASS.new(x, y)
   return S
 end
 
-function SEED_CLASS.tostr(self)
-  return string.format("SEED [%d,%d]",
-      self.sx, self.sy) --- , self.kind or "-")
+function SEED_CLASS.tostr(S)
+  return string.format("SEED [%d,%d]", S.sx, S.sy)
 end
 
-function SEED_CLASS.neighbor(self, dir, dist)
-  local nx, ny = geom.nudge(self.sx, self.sy, dir, dist)
+function SEED_CLASS.neighbor(S, dir, dist)
+  local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
   if nx < 1 or nx > SEED_W or ny < 1 or ny > SEED_H then
     return nil
   end
   return SEEDS[nx][ny]
 end
 
-function SEED_CLASS.mid_point(self)
-  return int((self.x1 + self.x2) / 2), int((self.y1 + self.y2) / 2)
+function SEED_CLASS.mid_point(S)
+  return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
 end
 
 
