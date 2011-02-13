@@ -48,9 +48,9 @@ class CHUNK
 
 class LINK
 {
-  H1, H2  -- chunks which are linked
+  C1, C2  -- chunks which are linked
 
-  dir     -- direction from H1 to H2
+  dir     -- direction from C1 to C2
 
   conn : CONN
 
@@ -77,9 +77,9 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-  local H = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, parts={}, link={} }
-  table.set_class(H, CHUNK_CLASS)
-  return H
+  local C = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, parts={}, link={} }
+  table.set_class(C, CHUNK_CLASS)
+  return C
 end
 
 function CHUNK_CLASS.install(C)
@@ -115,8 +115,8 @@ function CHUNK_CLASS.joining_chunks(C, dir)
   return list
 end
 
-function CHUNK_CLASS.side_len(H, dir)
-  return geom.vert_sel(dir, H.x2 - H.x1, H.y2 - H.y1)
+function CHUNK_CLASS.side_len(C, dir)
+  return geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 end
 
 
@@ -233,15 +233,15 @@ end
 function Chunk_merge_list(list)
 
   local function all_horiz_aligned(x1, x2)
-    for _,H2 in ipairs(list) do
-      if H2.x1 ~= x1 or H2.x2 ~= x2 then return false end
+    for _,C2 in ipairs(list) do
+      if C2.x1 ~= x1 or C2.x2 ~= x2 then return false end
     end
     return true
   end
 
   local function all_vert_aligned(y1, y2)
-    for _,H2 in ipairs(list) do
-      if H2.y1 ~= y1 or H2.y2 ~= y2 then return false end
+    for _,C2 in ipairs(list) do
+      if C2.y1 ~= y1 or C2.y2 ~= y2 then return false end
     end
     return true
   end
@@ -297,14 +297,14 @@ dump_list()
 
   if #list < 2 then return; end
 
-  local H1 = table.remove(list, 1)
+  local C1 = table.remove(list, 1)
 
-  local K = H1.section
+  local K = C1.section
   local R =  K.room
 
   -- make sure all chunks belong to same section
-  for _,H2 in ipairs(list) do
-    assert(H2.section == K)
+  for _,C2 in ipairs(list) do
+    assert(C2.section == K)
   end
 
   -- make sure all chunks have either:
@@ -312,17 +312,17 @@ dump_list()
   --   (2) same left and right side coordinates
 
   
-  if all_horiz_aligned(H1.x1, H1.x2) or all_vert_aligned(H1.y1, H1.y2) then
+  if all_horiz_aligned(C1.x1, C1.x2) or all_vert_aligned(C1.y1, C1.y2) then
     -- chunks are alignment, can merge them  
-    for _,H2 in ipairs(list) do
-      do_merge(H1, H2, true)
+    for _,C2 in ipairs(list) do
+      do_merge(C1, C2, true)
     end
 
   else
     -- bad alignment, need to merge all chunks into one big one
 
     for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
-      do_merge(H1, K.chunk[hx][hy], false)
+      do_merge(C1, K.chunk[hx][hy], false)
     end end
 
     -- setup new array
@@ -331,10 +331,10 @@ dump_list()
 
     K.chunk = table.array_2D(1, 1)
 
-    K.chunk[1][1] = H1
+    K.chunk[1][1] = C1
 
-    H1.hx = 1
-    H1.hy = 1
+    C1.hx = 1
+    C1.hy = 1
   end
 end
 
@@ -345,36 +345,36 @@ function Chunk_handle_connections()
   local NUM_PASS = 4
 
 
-  local function link_chunks(H1, H2, dir, conn)
+  local function link_chunks(C1, C2, dir, conn)
     local LINK =
     {
-      H1 = H1,
-      H2 = H2,
+      C1 = C1,
+      C2 = C2,
       dir = dir,
       conn = conn,
     }
 
     if geom.is_vert(dir) then
-      local x1 = math.max(H1.x1, H2.x1)
-      local x2 = math.min(H1.x2, H2.x2)
+      local x1 = math.max(C1.x1, C2.x1)
+      local x2 = math.min(C1.x2, C2.x2)
 
       LINK.x1 = x1 + 16
       LINK.x2 = x2 - 16
     else
-      local y1 = math.max(H1.y1, H2.y1)
-      local y2 = math.min(H1.y2, H2.y2)
+      local y1 = math.max(C1.y1, C2.y1)
+      local y2 = math.min(C1.y2, C2.y2)
 
       LINK.y1 = y1 + 16
       LINK.y2 = y2 - 16
     end
 
-    H1.link[dir]      = LINK
-    H2.link[10 - dir] = LINK
+    C1.link[dir]      = LINK
+    C2.link[10 - dir] = LINK
   end
 
 
-  local function merge_stuff(H, dir, D, pass)
-    local joins = H:joining_chunks(dir)
+  local function merge_stuff(C, dir, D, pass)
+    local joins = C:joining_chunks(dir)
 
     if pass < NUM_PASS then
       if #joins == 0 then
@@ -390,23 +390,23 @@ function Chunk_handle_connections()
 
     assert(#joins == 1)
 
-    local H2 = joins[1]
+    local C2 = joins[1]
 
-    link_chunks(H, H2, dir, D)
+    link_chunks(C, C2, dir, D)
   end
 
 
-  local function good_linkage(H1, dir, H2)
+  local function good_linkage(C1, dir, C2)
     -- check if chunks touch nicely
 
     if geom.is_vert(dir) then
-      local x1 = math.max(H1.x1, H2.x1)
-      local x2 = math.min(H1.x2, H2.x2)
+      local x1 = math.max(C1.x1, C2.x1)
+      local x2 = math.min(C1.x2, C2.x2)
 
       if (x2 - x1) >= 192 then return true end
     else
-      local y1 = math.max(H1.y1, H2.y1)
-      local y2 = math.min(H1.y2, H2.y2)
+      local y1 = math.max(C1.y1, C2.y1)
+      local y2 = math.min(C1.y2, C2.y2)
 
       if (y2 - y1) >= 192 then return true end
     end
@@ -422,64 +422,64 @@ function Chunk_handle_connections()
     local dir = assert(D.dir)
 
     -- pick middle chunks
-    local H1, H2
+    local C1, C2
 
-    local H1 = K1:middle_chunk(dir)
-    local H2 = K2:middle_chunk(10 - dir)
+    local C1 = K1:middle_chunk(dir)
+    local C2 = K2:middle_chunk(10 - dir)
 
-    if good_linkage(H1, dir, H2) then
+    if good_linkage(C1, dir, C2) then
       if pass == NUM_PASS then
-        link_chunks(H1, H2, dir, D)
+        link_chunks(C1, C2, dir, D)
       end
 
       return;
     end
 
     -- awkward link : merge chunks on one side
-    local H, dir = H1, dir
+    local C, dir = C1, dir
 
-    if H2:side_len(dir) < H1:side_len(dir) then
-      H, dir = H2, (10-dir)
+    if C2:side_len(dir) < C1:side_len(dir) then
+      C, dir = C2, (10-dir)
     end
 
-    merge_stuff(H, dir, D, pass)
+    merge_stuff(C, dir, D, pass)
   end
 
 
-  local function do_hall_side(H, dir, K, D, pass)
+  local function do_hall_side(C, dir, K, D, pass)
     -- hallways off a hallway are naturally aligned
     if not K then
-      -- FIXME !!!!  local H2 = ....
+      -- FIXME !!!!  local C2 = ....
 
       if pass == NUM_PASS then
-        link_chunks(H, H2, dir, D)
+        link_chunks(C, C2, dir, D)
       end
 
       return;
     end
 
 
-    local H2 = K:middle_chunk(10 - dir)
+    local C2 = K:middle_chunk(10 - dir)
 
-    if good_linkage(H, dir, H2) then
+    if good_linkage(C, dir, C2) then
       if pass == NUM_PASS then
-        link_chunks(H, H2, dir, D)
+        link_chunks(C, C2, dir, D)
       end
 
       return;
     end
 
-    merge_stuff(H, dir, D, pass)
+    merge_stuff(C, dir, D, pass)
   end
 
 
   local function do_hallway_conn(D, pass)
     local hall = assert(D.hall)
 
-    local start_H = hall.path[1].chunk
-    local   end_H = hall.path[#hall.path].chunk
+    local start_C = hall.path[1].chunk
+    local   end_C = hall.path[#hall.path].chunk
 
-    assert(start_H and end_H)
+    assert(start_C and end_C)
 
     local start_K = hall.K1
     local   end_K = hall.K2
@@ -489,8 +489,8 @@ function Chunk_handle_connections()
 
     assert(start_dir and end_dir)
 
-    do_hall_side(start_H, start_dir, start_K, D, pass)
-    do_hall_side(  end_H,   end_dir,   end_K, D, pass)
+    do_hall_side(start_C, start_dir, start_K, D, pass)
+    do_hall_side(  end_C,   end_dir,   end_K, D, pass)
   end
 
 
@@ -518,14 +518,14 @@ function Chunk_make_parts()
 
   for _,R in ipairs(LEVEL.all_rooms) do
     for _,H in ipairs(R.chunks) do
-      make_parts(H)
+      make_parts(C)
     end
   end
 
   for _,D in ipairs(LEVEL.all_conns) do
     if D.hall then
-      for _,H in ipairs(D.hall.chunks) do
-        make_parts(H)
+      for _,C in ipairs(D.hall.chunks) do
+        make_parts(C)
       end
     end
   end
@@ -559,7 +559,7 @@ end
 
 
 
-function CHUNK_CLASS.build(H)
+function CHUNK_CLASS.build(C)
 
   -- TEMP TEMP CRUD CRUD
 
@@ -572,9 +572,9 @@ function CHUNK_CLASS.build(H)
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
-  if not H.hall and --- not (H.room and H.room.outdoor) and
-     H:similar_neighbor(2) and H:similar_neighbor(8) and
-     H:similar_neighbor(4) and H:similar_neighbor(6)
+  if not C.hall and --- not (C.room and C.room.outdoor) and
+     C:similar_neighbor(2) and C:similar_neighbor(8) and
+     C:similar_neighbor(4) and C:similar_neighbor(6)
      and false
   then
     f_mat = "FLOOR4_8"
@@ -582,13 +582,13 @@ function CHUNK_CLASS.build(H)
     c_h   = 384
   end
 
-  if H.hall then
+  if C.hall then
     c_h = 128
     f_mat = "FWATER1"
     w_mat = "COMPSPAN"
   end
 
-  if H.room and H.room.outdoor then
+  if C.room and C.room.outdoor then
     f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
@@ -597,11 +597,11 @@ function CHUNK_CLASS.build(H)
     if GAME.format == "quake" then c_mat = "sky1" end
   else
     light = rand.irange(40, 100)
-    if H.hall then light = light * 0.5 end
+    if C.hall then light = light * 0.5 end
   end
 
-  local x1, y1 = H.x1, H.y1
-  local x2, y2 = H.x2, H.y2
+  local x1, y1 = C.x1, C.y1
+  local x2, y2 = C.x2, C.y2
 
   -- floor
   gui.add_brush(
@@ -626,14 +626,14 @@ function CHUNK_CLASS.build(H)
   })
 
   for dir = 1,9,2 do
-    local P = H.parts[dir]
+    local P = C.parts[dir]
 
     if P then --[[ FIXME --]] end
   end
 
   -- walls
   for dir = 2,8,2 do
-    if not H:similar_neighbor(dir) then
+    if not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
 
       if dir == 2 then by2 = by1 + 36 end
@@ -641,8 +641,8 @@ function CHUNK_CLASS.build(H)
       if dir == 4 then bx2 = bx1 + 36 end
       if dir == 6 then bx1 = bx2 - 36 end
 
-      if H.link[dir] then
-        local LINK = H.link[dir]
+      if C.link[dir] then
+        local LINK = C.link[dir]
 
         local cx1, cy1, cx2, cy2 = bx1, by1, bx2, by2
 
@@ -696,8 +696,8 @@ function CHUNK_CLASS.build(H)
     ent = "player1"
   end
 
-  local mx = (H.x1 + H.x2) / 2
-  local my = (H.y1 + H.y2) / 2
+  local mx = (C.x1 + C.x2) / 2
+  local my = (C.y1 + C.y2) / 2
 
   Trans.entity(ent, mx, my, 32)
 
@@ -710,11 +710,11 @@ function CHUNK_CLASS.build(H)
 
   -- TEST CRUD : pillars
 
-  if ent ~= "player1" and H.section then
-    local hx = H.section:mid_HX()
-    local hy = H.section:mid_HY()
+  if ent ~= "player1" and C.section then
+    local hx = C.section:mid_HX()
+    local hy = C.section:mid_HY()
 
-    if H.hx == hx and H.hy == hy then
+    if C.hx == hx and C.hy == hy then
 
       local mx = math.imid(x1, x2)
       local my = math.imid(y1, y2)
