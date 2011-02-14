@@ -74,7 +74,16 @@ function CAVE_CLASS.maze_generate(maze)
       len = len + 1
     end
 
-    return len - 1
+    -- don't touch the far wall
+    len = len -1
+
+    -- usually move two steps, occasionally more
+    if len >= 3 and rand.odds(75) then len = 2 end
+    if len >= 4 and rand.odds(95) then len = 3 end
+
+    assert(len <= 4)
+
+    return len
   end
 
 
@@ -103,13 +112,6 @@ function CAVE_CLASS.maze_generate(maze)
           local len = how_far_can_move(x, y, dir)
 
           if len >= 2 then
-            -- usually move two steps, occasionally more
-            if len >= 3 and rand.odds(90) then len = 2 end
-            if len >= 4 and rand.odds(97) then len = 3 end
-            if len >= 5                   then len = 4 end
-
-            len = 2 --!!!!!!!
-
             local SPOT = { x=x, y=y, dir=dir, len=len }
 
             if is_edge(x, y, dir) then
@@ -215,19 +217,21 @@ end
 
 
 function Maze_test()
+  local SIZE = 15
+
   for loop = 1,20 do
-    local maze = CAVE_CLASS.new(20, 20)
+    local maze = CAVE_CLASS.new(SIZE, SIZE)
 
     -- solid on outside, empty in middle
-    maze:fill( 1, 1,1, 20,20)
-    maze:fill( 0, 2,2, 19,19)
+    maze:fill( 1, 1,1, SIZE,SIZE)
+    maze:fill( 0, 2,2, SIZE-1,SIZE-1)
 
     -- doorways at top and bottom
-    local d1 = rand.irange(1,18)
-    local d2 = rand.irange(1,18)
+    local d1 = rand.irange(2,SIZE-3)
+    local d2 = rand.irange(2,SIZE-3)
 
-    maze:fill(-1, d1,1,  d1+2,3)
-    maze:fill(-1, d2,18, d2+2,20)
+    maze:fill(-1, d1,1,      d1+2,3)
+    maze:fill(-1, d2,SIZE-2, d2+2,SIZE)
 
     maze:maze_generate()
 
