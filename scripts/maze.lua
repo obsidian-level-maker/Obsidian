@@ -48,7 +48,7 @@ function CAVE_CLASS.maze_generate(maze)
   end
 
 
-  local function how_far_start_spot(x, y, dir)
+  local function how_far_can_move(x, y, dir)
     -- when start is in open space, require all neighbors to be open too
     if map[x][y] == 0 then
       for side = 1,9 do
@@ -70,9 +70,11 @@ function CAVE_CLASS.maze_generate(maze)
 
       if not valid_and_free(ax, ay) then break; end
       if not valid_and_free(bx, by) then break; end
+
+      len = len + 1
     end
 
-    return len
+    return len - 1
   end
 
 
@@ -86,18 +88,27 @@ function CAVE_CLASS.maze_generate(maze)
          (map[x][y] == 0 and (table.empty(list) or rand.odds(2)))
       then
         for dir = 2,8,2 do
-          local len = how_far_start_spot(x, y, dir)
+          local len = how_far_can_move(x, y, dir)
 
           if len >= 2 then
             -- usually move two steps, occasionally more
-            if len >= 4 and rand.odds(97) then len = len - 1 end
-            if len >= 3 and rand.odds(90) then len = len - 1 end
+            if len >= 3 and rand.odds(90) then len = 2 end
+            if len >= 4 and rand.odds(97) then len = 3 end
+            if len >= 5                   then len = 4 end
+
+            len = 2 --!!!!!!!
 
             local SPOT = { x=x, y=y, dir=dir, len=len }
 
             table.insert(list, SPOT)
 
-            -- FIXME: insert twice if on edge of room
+            -- make spots off edges of room more likely
+            local bx, by = geom.nudge(x, y, 10 - dir)
+
+            if not maze:valid_cell(bx, by) or map[bx][by] == nil then
+              table.insert(list, SPOT)
+              table.insert(list, SPOT)
+            end
           end
         end
       end
@@ -109,28 +120,58 @@ function CAVE_CLASS.maze_generate(maze)
   end
 
 
-  local function trace_next(x, y, dir, len)
-    for i = 1,len do
-      x, y = geom.nudge(x, y, dir)
+  local function trace_next(p)
+    map[p.x][p.y] = 1
 
-      map[x][y] = 1
+    for i = 1,p.len do
+      p.x, p.y = geom.nudge(p.x, p.y, p.dir)
+
+      map[p.x][p.y] = 1
     end
 
-    -- TODO
+    -- set how far we can move in each direction
+    local lens = {}
+
+    for dir = 2,8,2 do
+      if dir ~= p.dir then
+        local len = how_far_can_move(p.x, p.y, dir)
+
+        if len > 0 then
+          lens[dir] = len 
+        end
+      end
+    end
+
+    -- nowhere else to go?
+    if table.empty(lens) then return false end
+
+    for loop = 1,20 do
+      local dir = rand.dir()
+
+      if lens[dir] then
+        p.dir = dir
+        p.len = lens[dir]
+        return true
+      end
+    end
+
+    return false
   end
 
 
   ---| maze_generate |---
 
   while true do
-    local x, y, dir, len = pick_start()
+    local pos = pick_start()
 
     -- stop if nothing is possible
     if not x then break; end
 
-    repeat
-      x, y, dir, len = trace_next(x, y, dir, len)
-    until not x
+    local max_steps = rand.pick { 3, 6, 9, 12, 24, 48 }
+
+    for loop = 1,max_steps do
+      if not trace_next(pos) then break; end
+    end
   end
 end
 
