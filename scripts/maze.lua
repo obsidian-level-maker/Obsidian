@@ -44,7 +44,7 @@ function CAVE_CLASS.maze_generate(maze)
 
 
   local function valid_and_free(x, y)
-    return maze:valid(x, y) and map[x][y] == 0
+    return maze:valid_cell(x, y) and map[x][y] == 0
   end
 
 
@@ -78,14 +78,26 @@ function CAVE_CLASS.maze_generate(maze)
   end
 
 
+  local function is_edge(x, y, dir)
+    x, y = geom.nudge(x, y, 10-dir)
+
+    if not maze:valid_cell(x, y) then return true end
+
+    if not map[x][y] then return true end
+
+    return false
+  end
+
+
   local function pick_start()
     -- TODO: optimise this (how ?)
 
-    local list = {}
+    local middles = {}
+    local edges   = {}
 
     for x = 1,W do for y = 1,H do
-      if (map[x][y] and 0) > 0 or 
-         (map[x][y] == 0 and (table.empty(list) or rand.odds(2)))
+      if (map[x][y] or 0) > 0 or 
+         (map[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
       then
         for dir = 2,8,2 do
           local len = how_far_can_move(x, y, dir)
@@ -100,23 +112,26 @@ function CAVE_CLASS.maze_generate(maze)
 
             local SPOT = { x=x, y=y, dir=dir, len=len }
 
-            table.insert(list, SPOT)
-
-            -- make spots off edges of room more likely
-            local bx, by = geom.nudge(x, y, 10 - dir)
-
-            if not maze:valid_cell(bx, by) or map[bx][by] == nil then
-              table.insert(list, SPOT)
-              table.insert(list, SPOT)
+            if is_edge(x, y, dir) then
+              table.insert(edges, SPOT)
+            else
+              table.insert(middles, SPOT)
             end
           end
         end
       end
     end end
 
-    if table.empty(list) then return nil; end
-      
-    return rand.pick(list)
+    -- we much prefer starting at an edge
+    if #edges > 0 then
+      return rand.pick(edges)
+    end
+
+    if #middles > 0 then
+      return rand.pick(middles)
+    end
+
+    return nil
   end
 
 
@@ -148,6 +163,10 @@ function CAVE_CLASS.maze_generate(maze)
     for loop = 1,20 do
       local dir = rand.dir()
 
+      if dir == p.dir and rand.odds(60) then
+        dir = 5  -- i.e. continue
+      end
+
       if lens[dir] then
         p.dir = dir
         p.len = lens[dir]
@@ -159,25 +178,62 @@ function CAVE_CLASS.maze_generate(maze)
   end
 
 
+  local function tidy_up()
+    for x = 1,W do for y = 1,H do
+      if map[x][y] == 0 then
+         map[x][y] = -1
+      end
+    end end
+  end
+
+
   ---| maze_generate |---
 
   while true do
     local pos = pick_start()
 
     -- stop if nothing is possible
-    if not x then break; end
+    if not pos then break; end
 
-    local max_steps = rand.pick { 3, 6, 9, 12, 24, 48 }
+    -- sometimes stop short, but usually go until cannot continue
+    local max_steps = rand.irange(3, 40)
 
     for loop = 1,max_steps do
       if not trace_next(pos) then break; end
     end
   end
+
+  tidy_up()
 end
 
 
 
 function CAVE_CLASS.maze_render()
   -- TODO
+end
+
+
+
+function Maze_test()
+  for loop = 1,20 do
+    local maze = CAVE_CLASS.new(20, 20)
+
+    -- solid on outside, empty in middle
+    maze:fill( 1, 1,1, 20,20)
+    maze:fill( 0, 2,2, 19,19)
+
+    -- doorways at top and bottom
+    local d1 = rand.irange(1,18)
+    local d2 = rand.irange(1,18)
+
+    maze:fill(-1, d1,1,  d1+2,3)
+    maze:fill(-1, d2,18, d2+2,20)
+
+    maze:maze_generate()
+
+    gui.debugf("MAZE TEST %d\n\n", loop)
+
+    maze:dump()
+  end
 end
 

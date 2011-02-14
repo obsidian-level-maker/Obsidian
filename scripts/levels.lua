@@ -50,6 +50,7 @@ require 'planner'
 require 'connect'
 require 'quests'
 require 'caves'
+require 'maze'
 require 'seeds'
 
 require 'build'
@@ -705,6 +706,8 @@ function Levels_make_all()
   if #GAME.all_levels == 0 then
     error("Level list is empty!")
   end
+
+  Maze_test()
 
   Levels_choose_themes()
 
