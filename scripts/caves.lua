@@ -50,76 +50,76 @@ CAVE_CLASS = {}
 
 
 function CAVE_CLASS.new(w, h)
-  local C = { w=w, h=h, cells = table.array_2D(w, h) }
-  table.set_class(C, CAVE_CLASS)
-  return C
+  local cave = { w=w, h=h, cells = table.array_2D(w, h) }
+  table.set_class(cave, CAVE_CLASS)
+  return cave
 end
 
 
-function CAVE_CLASS.is_valid(self, x, y)
-  return (1 <= x and x <= self.w) and (1 <= y and y <= self.h)
+function CAVE_CLASS.valid_cell(cave, x, y)
+  return (1 <= x and x <= cave.w) and (1 <= y and y <= cave.h)
 end
 
 
-function CAVE_CLASS.get(self, x, y)
-  return self.cells[x][y]
+function CAVE_CLASS.get(cave, x, y)
+  return cave.cells[x][y]
 end
 
 
-function CAVE_CLASS.set(self, x, y, val)
-  self.cells[x][y] = val
+function CAVE_CLASS.set(cave, x, y, val)
+  cave.cells[x][y] = val
 end
 
 
-function CAVE_CLASS.fill(self, val, x1,y1, x2,y2)
+function CAVE_CLASS.fill(cave, val, x1,y1, x2,y2)
   if not x1 then
-    x1, x2 = 1,self.w
-    y1, y2 = 1,self.h
+    x1, x2 = 1,cave.w
+    y1, y2 = 1,cave.h
   end
 
   for x = x1,x2 do for y = y1,y2 do
-    self.cells[x][y] = val
+    cave.cells[x][y] = val
   end end
 end
 
 
-function CAVE_CLASS.negate(self, x1,y1, x2,y2)
+function CAVE_CLASS.negate(cave, x1,y1, x2,y2)
   if not x1 then
-    x1, x2 = 1,self.w
-    y1, y2 = 1,self.h
+    x1, x2 = 1,cave.w
+    y1, y2 = 1,cave.h
   end
 
   for x = x1,x2 do for y = y1,y2 do
-    if self.cells[x][y] then
-      self.cells[x][y] = - self.cells[x][y]
+    if cave.cells[x][y] then
+      cave.cells[x][y] = - cave.cells[x][y]
     end
   end end
 
-  return self
+  return cave
 end
 
 
-function CAVE_CLASS.copy(self)
+function CAVE_CLASS.copy(cave)
 
   -- only copies 'w', 'h' and 'cells' members
 
-  local newbie = CAVE_CLASS.new(self.w, self.h)
+  local newbie = CAVE_CLASS.new(cave.w, cave.h)
 
-  for x = 1,self.w do for y = 1,self.h do
-    newbie.cells[x][y] = self.cells[x][y]
+  for x = 1,cave.w do for y = 1,cave.h do
+    newbie.cells[x][y] = cave.cells[x][y]
   end end
 
   return newbie
 end
 
 
-function CAVE_CLASS.dump(self)
-  for y = self.h,1,-1 do
+function CAVE_CLASS.dump(cave)
+  for y = cave.h,1,-1 do
     local line = "@c| ";
     
-    for x = 1,self.w do
+    for x = 1,cave.w do
       local ch = " "
-      local cell = self.cells[x][y]
+      local cell = cave.cells[x][y]
       if  cell == 0      then ch = "?" end
       if (cell or 0) > 0 then ch = "#" end
       if (cell or 0) < 0 then ch = "." end
@@ -133,51 +133,51 @@ function CAVE_CLASS.dump(self)
 end
 
 
-function CAVE_CLASS.union(self, other)
-  local W = math.min(self.w, other.w)
-  local H = math.min(self.h, other.h)
+function CAVE_CLASS.union(cave, other)
+  local W = math.min(cave.w, other.w)
+  local H = math.min(cave.h, other.h)
 
   for x = 1,W do for y = 1,H do
-    if (self.cells[x][y] or 0) < 0 and
+    if (cave.cells[x][y] or 0) < 0 and
        (other.cells[x][y] or 0) > 0
     then
-      self.cells[x][y] = other.cells[x][y]
+      cave.cells[x][y] = other.cells[x][y]
     end
   end end
 end
 
 
-function CAVE_CLASS.intersection(self, other)
-  local W = math.min(self.w, other.w)
-  local H = math.min(self.h, other.h)
+function CAVE_CLASS.intersection(cave, other)
+  local W = math.min(cave.w, other.w)
+  local H = math.min(cave.h, other.h)
 
   for x = 1,W do for y = 1,H do
-    if (self.cells[x][y] or 0) > 0 and
+    if (cave.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) < 0
     then
-      self.cells[x][y] = other.cells[x][y]
+      cave.cells[x][y] = other.cells[x][y]
     end
   end end
 end
 
 
-function CAVE_CLASS.subtract(self, other)
-  local W = math.min(self.w, other.w)
-  local H = math.min(self.h, other.h)
+function CAVE_CLASS.subtract(cave, other)
+  local W = math.min(cave.w, other.w)
+  local H = math.min(cave.h, other.h)
 
-  local empty_id = self.empty_id or -1
+  local empty_id = cave.empty_id or -1
 
   for x = 1,W do for y = 1,H do
-    if (self.cells[x][y] or 0) > 0 and
+    if (cave.cells[x][y] or 0) > 0 and
        (other.cells[x][y] or 0) > 0
     then
-      self.cells[x][y] = empty_id
+      cave.cells[x][y] = empty_id
     end
   end end
 end
 
 
-function CAVE_CLASS.generate(self, solid_prob)
+function CAVE_CLASS.generate(cave, solid_prob)
 
   -- The initial contents of the cave form a map where the cave
   -- will be generated.  The following values can be used:
@@ -194,10 +194,10 @@ function CAVE_CLASS.generate(self, solid_prob)
 
   solid_prob = solid_prob or 40
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  local map  = self.cells
+  local map  = cave.cells
 
   -- these arrays only use 0 and 1 as values
   local work = table.array_2D(W, H)
@@ -267,18 +267,18 @@ function CAVE_CLASS.generate(self, solid_prob)
     end
   end end
 
-  self.cells = work
+  cave.cells = work
 end
 
 
-function CAVE_CLASS.gen_empty(self)
+function CAVE_CLASS.gen_empty(cave)
   
   -- this is akin to generate(), but making all target cells empty
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  local cells = self.cells
+  local cells = cave.cells
 
   for x = 1,W do for y = 1,H do
     if not cells[x][y] then
@@ -290,19 +290,19 @@ function CAVE_CLASS.gen_empty(self)
     end
   end end
 
-  return self
+  return cave
 end
 
 
-function CAVE_CLASS.flood_fill(self)
+function CAVE_CLASS.flood_fill(cave)
   -- generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, Solid areas use positive.
   -- Zero is invalid.  Nil cells remain nil.
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  local cells = self.cells
+  local cells = cave.cells
   local flood = table.array_2D(W, H)
 
   local solid_id =  1
@@ -425,27 +425,27 @@ function CAVE_CLASS.flood_fill(self)
   end
 --]]
 
-  self.flood = flood
+  cave.flood = flood
 end
 
 
-function CAVE_CLASS.validate_conns(self, point_list)
+function CAVE_CLASS.validate_conns(cave, point_list)
 
   -- checks that all connections can reach each other.
 
   local empty_id = nil
 
-  if not self.flood then
-    self:flood_fill()
+  if not cave.flood then
+    cave:flood_fill()
   end
 
   for _,P in ipairs(point_list) do
-    if (self.flood[P.x][P.y] or 0) >= 0 then
+    if (cave.flood[P.x][P.y] or 0) >= 0 then
       -- not valid : the cell is solid or absent
       return false
     end
 
-    local reg = self.flood[P.x][P.y]
+    local reg = cave.flood[P.x][P.y]
 
     if not empty_id then
       empty_id = reg
@@ -455,22 +455,22 @@ function CAVE_CLASS.validate_conns(self, point_list)
     end
   end -- P
 
-  self.empty_id = empty_id
+  cave.empty_id = empty_id
 
   return true
 end
 
 
----???  function CAVE_CLASS.solidify_other_empties(self)
+---???  function CAVE_CLASS.solidify_other_empties(cave)
 
 
-function CAVE_CLASS.copy_island(self, reg_id)
-  local W = self.w
-  local H = self.h
+function CAVE_CLASS.copy_island(cave, reg_id)
+  local W = cave.w
+  local H = cave.h
 
-  local flood = assert(self.flood)
+  local flood = assert(cave.flood)
 
-  local island = CAVE_CLASS.new(self.w, self.h)
+  local island = CAVE_CLASS.new(cave.w, cave.h)
 
   for x = 1,W do for y = 1,H do
     local val = flood[x][y]
@@ -487,20 +487,20 @@ island:dump("Island for " .. tostring(reg_id))
 end
 
 
-function CAVE_CLASS.find_islands(self)
+function CAVE_CLASS.find_islands(cave)
   
   -- an "island" is contiguous solid area which never touches NIL
 
   local islands = {}
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  if not self.flood then
-    self:flood_fill()
+  if not cave.flood then
+    cave:flood_fill()
   end
 
-  local flood = self.flood
+  local flood = cave.flood
 
   -- scan the cave, determine which regions are islands
 
@@ -523,7 +523,7 @@ function CAVE_CLASS.find_islands(self)
       if potentials[reg] ~= "no" then
         for side = 2,8,2 do
           local nx, ny = geom.nudge(x, y, side)
-          if self:is_valid(nx, ny) and flood[nx][ny] == nil then
+          if cave:valid_cell(nx, ny) and flood[nx][ny] == nil then
             potentials[reg] = "no"
             break;
           end
@@ -537,16 +537,16 @@ function CAVE_CLASS.find_islands(self)
 
   for reg,pot in pairs(potentials) do
     if pot == "maybe" then
-      table.insert(islands, self:copy_island(reg))
+      table.insert(islands, cave:copy_island(reg))
     end
   end
 
-  self.islands = islands
+  cave.islands = islands
 end
 
 
 --TODO
-function CAVE_CLASS.main_empty_region(self)
+function CAVE_CLASS.main_empty_region(cave)
 
   -- find the largest empty region
 
@@ -574,15 +574,15 @@ function CAVE_CLASS.main_empty_region(self)
 end
 
 
-function CAVE_CLASS.grow(self)
+function CAVE_CLASS.grow(cave)
   -- grow the cave : it will have more solids, less empties.
   -- nil cells are not affected.
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
   local work = table.array_2D(W, H)
-  local cells = self.cells
+  local cells = cave.cells
 
   local function handle_neighbor(x, y, side)
     local nx, ny = geom.nudge(x, y, side)
@@ -606,20 +606,20 @@ function CAVE_CLASS.grow(self)
     end
   end end
 
-  self.cells = work
+  cave.cells = work
 end
 
 
-function CAVE_CLASS.shrink(self, keep_edges)
+function CAVE_CLASS.shrink(cave, keep_edges)
   -- shrink the cave : it will have more empties, less solids.
   -- when 'keep_edges' is true, cells at edges are not touched.
   -- nil cells are not affected.
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
   local work = table.array_2D(W, H)
-  local cells = self.cells
+  local cells = cave.cells
 
   local SIDES = { 2,4,6,8 }
 
@@ -653,18 +653,18 @@ function CAVE_CLASS.shrink(self, keep_edges)
     end
   end end
 
-  self.cells = work
+  cave.cells = work
 end
 
 
-function CAVE_CLASS.remove_dots(self, keep_edges, callback)
+function CAVE_CLASS.remove_dots(cave, keep_edges, callback)
   -- removes isolated solid cells from the cave.
   -- diagonal cells are NOT checked.
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  local cells = self.cells
+  local cells = cave.cells
 
   local function is_isolated(x, y)
     local count = 0
@@ -687,19 +687,19 @@ function CAVE_CLASS.remove_dots(self, keep_edges, callback)
       local dx = sel(x > W/2, -1, 1)
       cells[x][y] = cells[x+dx][y]
       if callback then
-        callback(self, x, y)
+        callback(cave, x, y)
       end
     end
   end end
 end
 
 
-function CAVE_CLASS.is_land_locked(self, x, y)
-  if x <= 1 or x >= self.w or y <= 1 or y >= self.h then
+function CAVE_CLASS.is_land_locked(cave, x, y)
+  if x <= 1 or x >= cave.w or y <= 1 or y >= cave.h then
     return false
   end
 
-  local cells = self.cells
+  local cells = cave.cells
 
   for dx = -1,1 do for dy = -1,1 do
     if (cells[x+dx][y+dy] or 0) < 0 then
@@ -711,12 +711,12 @@ function CAVE_CLASS.is_land_locked(self, x, y)
 end
 
 
-function CAVE_CLASS.is_empty_locked(self, x, y)
-  if x <= 1 or x >= self.w or y <= 1 or y >= self.h then
+function CAVE_CLASS.is_empty_locked(cave, x, y)
+  if x <= 1 or x >= cave.w or y <= 1 or y >= cave.h then
     return false
   end
 
-  local cells = self.cells
+  local cells = cave.cells
 
   for dx = -1,1 do for dy = -1,1 do
     if (cells[x+dx][y+dy] or 0) >= 0 then
@@ -728,15 +728,15 @@ function CAVE_CLASS.is_empty_locked(self, x, y)
 end
 
 
-function CAVE_CLASS.distance_map(self, ref_points)
-  assert(self.flood)
-  assert(self.empty_id)
+function CAVE_CLASS.distance_map(cave, ref_points)
+  assert(cave.flood)
+  assert(cave.empty_id)
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
   local work = table.array_2D(W, H)
-  local flood = self.flood
+  local flood = cave.flood
 
   local next_points = {}
 
@@ -751,7 +751,7 @@ function CAVE_CLASS.distance_map(self, ref_points)
         local F = flood[nx][ny]
         local W =  work[nx][ny]
 
-        if F == self.empty_id and (not W or W > dist) then
+        if F == cave.empty_id and (not W or W > dist) then
           flood[nx][ny] = dist
           table.insert(next_points, { x=nx, y=ny })
         end
@@ -778,8 +778,8 @@ function CAVE_CLASS.distance_map(self, ref_points)
 end
 
 
-function CAVE_CLASS.furthest_point(self, ref_points)
-  local dist_map = self:distance_map(ref_points)
+function CAVE_CLASS.furthest_point(cave, ref_points)
+  local dist_map = cave:distance_map(ref_points)
 
   local best_x, best_y
   local best_dist = 9e9
@@ -793,7 +793,7 @@ function CAVE_CLASS.furthest_point(self, ref_points)
       if y == 1 or y == H then dist = dist + 0.2 end
 
       -- prefer a spot away from the wall
-      if self:is_empty_locked(x, y) then
+      if cave:is_empty_locked(x, y) then
         dist = dist - 2.4
       end
 
@@ -809,14 +809,14 @@ function CAVE_CLASS.furthest_point(self, ref_points)
 end
 
 
-function CAVE_CLASS.render(self, base_x, base_y, brush_func, data, square_caves)
+function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
 
   -- TODO: make base_x/y and square_caves a class field ??
 
-  local W = self.w
-  local H = self.h
+  local W = cave.w
+  local H = cave.h
 
-  local cells = self.cells
+  local cells = cave.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
 
