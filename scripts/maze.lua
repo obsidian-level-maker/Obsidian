@@ -40,17 +40,17 @@ function CAVE_CLASS.maze_generate(maze)
   local W = maze.w
   local H = maze.h
 
-  local map = maze.cells
+  local cells = maze.cells
 
 
   local function valid_and_free(x, y)
-    return maze:valid_cell(x, y) and map[x][y] == 0
+    return maze:valid_cell(x, y) and cells[x][y] == 0
   end
 
 
   local function how_far_can_move(x, y, dir)
     -- when start is in open space, require all neighbors to be open too
-    if map[x][y] == 0 then
+    if cells[x][y] == 0 then
       for side = 1,9 do
         local nx, ny = geom.nudge(x, y, side)
         if not valid_and_free(nx, ny) then return 0 end
@@ -92,7 +92,7 @@ function CAVE_CLASS.maze_generate(maze)
 
     if not maze:valid_cell(x, y) then return true end
 
-    if not map[x][y] then return true end
+    if not cells[x][y] then return true end
 
     return false
   end
@@ -105,8 +105,8 @@ function CAVE_CLASS.maze_generate(maze)
     local edges   = {}
 
     for x = 1,W do for y = 1,H do
-      if (map[x][y] or 0) > 0 or 
-         (map[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
+      if (cells[x][y] or 0) > 0 or 
+         (cells[x][y] == 0 and (table.empty(middles) or rand.odds(2)))
       then
         for dir = 2,8,2 do
           local len = how_far_can_move(x, y, dir)
@@ -138,12 +138,12 @@ function CAVE_CLASS.maze_generate(maze)
 
 
   local function trace_next(p)
-    map[p.x][p.y] = 1
+    cells[p.x][p.y] = 1
 
     for i = 1,p.len do
       p.x, p.y = geom.nudge(p.x, p.y, p.dir)
 
-      map[p.x][p.y] = 1
+      cells[p.x][p.y] = 1
     end
 
     -- set how far we can move in each direction
@@ -182,8 +182,8 @@ function CAVE_CLASS.maze_generate(maze)
 
   local function tidy_up()
     for x = 1,W do for y = 1,H do
-      if map[x][y] == 0 then
-         map[x][y] = -1
+      if cells[x][y] == 0 then
+         cells[x][y] = -1
       end
     end end
   end
@@ -192,12 +192,13 @@ function CAVE_CLASS.maze_generate(maze)
   ---| maze_generate |---
 
   while true do
+    -- choose starting spot for a wall run
     local pos = pick_start()
 
     -- stop if nothing is possible
     if not pos then break; end
 
-    -- sometimes stop short, but usually go until cannot continue
+    -- occasionally stop short, but usually go as far as possible
     local max_steps = rand.irange(3, 40)
 
     for loop = 1,max_steps do
@@ -210,8 +211,39 @@ end
 
 
 
-function CAVE_CLASS.maze_render()
-  -- TODO
+function CAVE_CLASS.maze_render(maze, base_x, base_y, brush_func, data)
+  local W = maze.w
+  local H = maze.h
+
+  local cells = maze.cells
+
+
+  local function visit_cell(x, y)
+    local bx = base_x + (x - 1) * 64
+    local by = base_y + (y - 1) * 64
+
+    -- most basic method (mostly for debugging)
+    if true then
+      brush_func(data,
+      {
+        { x=bx+64, y=by },
+        { x=bx+64, y=by+64 },
+        { x=bx,    y=by+64 },
+        { x=bx,    y=by },
+      })
+
+      return;
+    end
+
+    -- FIXME: better method, find "wall spans"
+  end
+
+
+  ---| maze_render |---
+
+  for x = 1,W do for y = 1,H do
+    visit_cell(x, y)    
+  end end
 end
 
 
