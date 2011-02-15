@@ -346,6 +346,10 @@ function Chunk_handle_connections()
 
 
   local function link_chunks(C1, C2, dir, conn)
+    assert(C1)
+    assert(C2)
+
+stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     local LINK =
     {
       C1 = C1,
@@ -396,7 +400,7 @@ function Chunk_handle_connections()
   end
 
 
-  local function good_linkage(C1, dir, C2)
+  local function OLD_good_linkage(C1, dir, C2)
     -- check if chunks touch nicely
 
     if geom.is_vert(dir) then
@@ -421,28 +425,39 @@ function Chunk_handle_connections()
 
     local dir = assert(D.dir)
 
-    -- pick middle chunks
     local C1, C2
 
-    local C1 = K1:middle_chunk(dir)
-    local C2 = K2:middle_chunk(10 - dir)
+    if geom.is_vert(dir) then
+      local sx1 = math.max(K1.sx1, K2.sx1)
+      local sx2 = math.min(K1.sx2, K2.sx2)
 
-    if good_linkage(C1, dir, C2) then
-      if pass == NUM_PASS then
-        link_chunks(C1, C2, dir, D)
-      end
+      assert(sx1 <= sx2)
 
-      return;
+      local sx = math.imid(sx1, sx2)
+
+      local sy1 = sel(dir == 2, K1.sy1, K1.sy2)
+      local sy2 = sel(dir == 2, K2.sy2, K2.sy1)
+
+      C1 = SEEDS[sx][sy1].chunk
+      C2 = SEEDS[sx][sy2].chunk
+    else
+      local sy1 = math.max(K1.sy1, K2.sy1)
+      local sy2 = math.min(K1.sy2, K2.sy2)
+
+      assert(sy1 <= sy2)
+
+      local sy = math.imid(sy1, sy2)
+
+      local sx1 = sel(dir == 4, K1.sx1, K1.sx2)
+      local sx2 = sel(dir == 4, K2.sx2, K2.sx1)
+
+      C1 = SEEDS[sx1][sy].chunk
+      C2 = SEEDS[sx2][sy].chunk
     end
 
-    -- awkward link : merge chunks on one side
-    local C, dir = C1, dir
-
-    if C2:side_len(dir) < C1:side_len(dir) then
-      C, dir = C2, (10-dir)
+    if pass == NUM_PASS then
+      link_chunks(C1, C2, dir, D)
     end
-
-    merge_stuff(C, dir, D, pass)
   end
 
 
@@ -458,18 +473,31 @@ function Chunk_handle_connections()
       return;
     end
 
+    local sx, sy
 
-    local C2 = K:middle_chunk(10 - dir)
+    if geom.is_vert(dir) then
+      local sx1 = math.max(C.sx1, K.sx1)
+      local sx2 = math.min(C.sx2, K.sx2)
 
-    if good_linkage(C, dir, C2) then
-      if pass == NUM_PASS then
-        link_chunks(C, C2, dir, D)
-      end
+      assert(sx1 <= sx2)
 
-      return;
+      sx = math.imid(sx1, sx2)
+      sy = sel(dir == 2, K.sy2, K.sy1)
+    else
+      local sy1 = math.max(C.sy1, K.sy1)
+      local sy2 = math.min(C.sy2, K.sy2)
+
+      assert(sy1 <= sy2)
+
+      sy = math.imid(sy1, sy2)
+      sx = sel(dir == 4, K.sx2, K.sx1)
     end
 
-    merge_stuff(C, dir, D, pass)
+    C2 = SEEDS[sx][sy].chunk
+
+    if pass == NUM_PASS then
+      link_chunks(C, C2, dir, D)
+    end
   end
 
 
@@ -495,8 +523,6 @@ function Chunk_handle_connections()
 
 
   ---| Chunk_handle_connections |---
-
-do return end --!!!!!
 
   for pass = 1,NUM_PASS do
     for _,D in ipairs(LEVEL.all_conns) do

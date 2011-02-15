@@ -705,8 +705,6 @@ function Levels_make_all()
     error("Level list is empty!")
   end
 
-  Maze_test()
-
   Levels_choose_themes()
 
   Levels_rarify(1, GAME.WEAPONS)
