@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2011 Andrew Apted
+--  Copyright (C) 2009-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 ----------------------------------------------------------------
 
 
-function Layout_do_natural(R)
+function Layout_simple_room(R)
 
   local map
 
@@ -199,85 +199,76 @@ function Layout_do_natural(R)
   end
 
 
-  ---| Layout_do_natural |---
+  local function initial_map()
+    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
+      local S = SEEDS[x][y]
+      if S.room == R then
+        local mx = (S.sx - R.sx1) * 3 + 1
+        local my = (S.sy - R.sy1) * 3 + 1
 
-  map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
+        if not S.floor_h then
+          setup_floor(S, R.cave_floor_h)
+        end
 
-  for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-    local S = SEEDS[x][y]
-    if S.room == R then
-      local mx = (S.sx - R.sx1) * 3 + 1
-      local my = (S.sy - R.sy1) * 3 + 1
+        for dx = 0,2 do for dy = 0,2 do
+          map:set(mx+dx, my+dy, 0)
+        end end
 
-      if not S.floor_h then
-        setup_floor(S, R.cave_floor_h)
+        for side = 2,8,2 do
+          handle_wall(S, side)
+        end
+
+        for side = 1,9,2 do if side ~= 5 then
+          handle_corner(S, side)
+        end end
       end
-
-      for dx = 0,2 do for dy = 0,2 do
-        map:set(mx+dx, my+dy, 0)
-      end end
-
-      for side = 2,8,2 do
-        handle_wall(S, side)
-      end
-
-      for side = 1,9,2 do if side ~= 5 then
-        handle_corner(S, side)
-      end end
-    end
-  end end -- for x, y
-
-  clear_conns()
-
-  gui.debugf("Empty Cave:\n")
-
-  map:dump()
-
-  local cave
-  local flood
-
-  for loop = 1,20 do
-    gui.debugf("Trying to make a cave: loop %d\n", loop)
-
-    cave = map:copy()
-
-    if loop >= 20 then
-      gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
-
-      -- emergency fallback
-      cave:gen_empty()
-      cave:flood_fill()
-      is_cave_good(cave)  -- set empty_id
-      break;
-    end
-
-    cave:generate(sel(R.is_lake,58,38))
-
-    cave:flood_fill()
-
-    if is_cave_good(cave) then
-      break;
-    end
-
-    --- cave:dump()
+    end end -- for x, y
   end
 
-  R.cave  = cave
---!!!!!!  R.flood = flood
 
-  gui.debugf("Filled Cave:\n")
+  local function generate_cave()
+    local cave
+    local flood
 
-  cave:dump()
+    for loop = 1,20 do
+      gui.debugf("Trying to make a cave: loop %d\n", loop)
 
-  cave:find_islands()
+      cave = map:copy()
 
-end
+      if loop >= 20 then
+        gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
+
+        -- emergency fallback
+        cave:gen_empty()
+        cave:flood_fill()
+        is_cave_good(cave)  -- set empty_id
+        break;
+      end
+
+      cave:generate(sel(R.is_lake,58,38))
+
+      cave:flood_fill()
+
+      if is_cave_good(cave) then
+        break;
+      end
+
+      --- cave:dump()
+    end
+
+    R.cave  = cave
+  --!!!!!!  R.flood = flood
+
+    gui.debugf("Filled Cave:\n")
+
+    cave:dump()
+
+    cave:find_islands()
+  end
 
 
+  ----------->
 
-function Cave_build_room(R)
-
-do return end --!!!!!!!!!  FIXME CAVES
 
   local cave  = R.cave
 
@@ -287,6 +278,7 @@ do return end --!!!!!!!!!  FIXME CAVES
 
   local base_x = SECTIONS[R.kx1][R.ky1].x1
   local base_y = SECTIONS[R.kx1][R.ky1].y1
+
 
   local function WALL_brush(data, coords)
     if data.shadow_info then
@@ -301,6 +293,7 @@ do return end --!!!!!!!!!  FIXME CAVES
 
     Trans.brush(coords)
   end
+
 
   local function FC_brush(data, coords)
     if data.f_info then
@@ -320,6 +313,7 @@ do return end --!!!!!!!!!  FIXME CAVES
     end
   end
 
+
   local function choose_tex(last, tab)
     local tex = rand.key_by_probs(tab)
 
@@ -333,125 +327,147 @@ do return end --!!!!!!!!!  FIXME CAVES
     return tex
   end
 
-  -- DO WALLS --
 
-  local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
+  local function render_cave()
 
-  if R.is_lake then
-    data.info = Mat_liquid()
-    data.delta_f = rand.sel(70, -48, -72)
-    data.f_z = R.cave_floor_h + 8
-    data.ftex = data.info.t_face.tex -- TEMP CRUD
-  end
+    --- DO WALLS ---
 
-  if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
-    data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
-  end
+    local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
 
-  if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
---!!!!!    data.shadow_info = get_light(-1)
-  end
-
-  -- grab walkway now (before main cave is modified)
-
-  local walkway = cave:copy_island(cave.empty_id)
-
-
-  -- handle islands first
-
-  for _,island in ipairs(cave.islands) do
-
-    -- FIXME
-    if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
-       rand.odds(50)
-    then
-
-      -- create a lava/nukage pit
-      local pit = Mat_liquid()
-
-      island:render(base_x, base_y, WALL_brush,
-                    { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
-                      delta_f=rand.sel(70, -52, -76) })
-
-      cave:subtract(island)
-    end
-  end
-
-
-  cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
-
-
-  if R.is_lake then return end
-  if THEME.square_caves then return end
-  if PARAM.simple_caves then return end
-
-
-  local ceil_h = R.cave_floor_h + R.cave_h
-
-  -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
-
-  local last_ftex = R.cave_tex
-
-  for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
-    walkway:shrink(false)
-
----???    if rand.odds(sel(i==1, 20, 50)) then
----???      walkway:shrink(false)
----???    end
-
-    walkway:remove_dots()
-
-    -- DO FLOOR and CEILING --
-
-    data = {}
-
-
-    if R.outdoor then
-      data.ftex = choose_tex(last_ftex, THEME.landscape_trims or THEME.landscape_walls)
-    else
-      data.ftex = choose_tex(last_ftex, THEME.cave_trims or THEME.cave_walls)
+    if R.is_lake then
+      data.info = Mat_liquid()
+      data.delta_f = rand.sel(70, -48, -72)
+      data.f_z = R.cave_floor_h + 8
+      data.ftex = data.info.t_face.tex -- TEMP CRUD
     end
 
-    last_ftex = data.ftex
+    if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
+      data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
+    end
 
-    data.f_info = get_mat(data.ftex)
+    if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
+  --!!!!!    data.shadow_info = get_light(-1)
+    end
 
-    if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
-      data.f_info = get_liquid()
+    -- grab walkway now (before main cave is modified)
 
-      -- FIXME: this bugs up monster/pickup/key spots
-      if rand.odds(0) then
-        data.delta_f = -(i * 10 + 40)
+    local walkway = cave:copy_island(cave.empty_id)
+
+
+    -- handle islands first
+
+    for _,island in ipairs(cave.islands) do
+
+      -- FIXME
+      if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
+         rand.odds(50)
+      then
+
+        -- create a lava/nukage pit
+        local pit = Mat_liquid()
+
+        island:render(base_x, base_y, WALL_brush,
+                      { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
+                        delta_f=rand.sel(70, -52, -76) })
+
+        cave:subtract(island)
       end
     end
 
-    if true then
-      data.delta_f = -(i * 10)
-    end
 
-    data.f_z = R.cave_floor_h + i
-    data.ftex = data.f_info.t_face.tex
+    cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
 
-    data.c_info = nil
 
-    if not R.outdoor then
-      data.c_info = w_info
+    if R.is_lake then return end
+    if THEME.square_caves then return end
+    if PARAM.simple_caves then return end
 
-      if i==2 and rand.odds(60) then
-        data.c_info = Mat_sky()
-      elseif rand.odds(50) then
-        data.c_info = get_mat(data.ftex)
-      elseif rand.odds(80) then
-        data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
-        data.c_info = get_mat(data.ctex)
+
+    local ceil_h = R.cave_floor_h + R.cave_h
+
+    -- TODO: @ pass 3, 4 : come back up (ESP with liquid)
+
+    local last_ftex = R.cave_tex
+
+    for i = 1,rand.index_by_probs({ 10,10,70 })-1 do
+      walkway:shrink(false)
+
+  ---???    if rand.odds(sel(i==1, 20, 50)) then
+  ---???      walkway:shrink(false)
+  ---???    end
+
+      walkway:remove_dots()
+
+      -- DO FLOOR and CEILING --
+
+      data = {}
+
+
+      if R.outdoor then
+        data.ftex = choose_tex(last_ftex, THEME.landscape_trims or THEME.landscape_walls)
+      else
+        data.ftex = choose_tex(last_ftex, THEME.cave_trims or THEME.cave_walls)
       end
 
-      data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)
+      last_ftex = data.ftex
 
-      data.c_z = ceil_h - i
+      data.f_info = get_mat(data.ftex)
+
+      if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
+        data.f_info = get_liquid()
+
+        -- FIXME: this bugs up monster/pickup/key spots
+        if rand.odds(0) then
+          data.delta_f = -(i * 10 + 40)
+        end
+      end
+
+      if true then
+        data.delta_f = -(i * 10)
+      end
+
+      data.f_z = R.cave_floor_h + i
+      data.ftex = data.f_info.t_face.tex
+
+      data.c_info = nil
+
+      if not R.outdoor then
+        data.c_info = w_info
+
+        if i==2 and rand.odds(60) then
+          data.c_info = Mat_sky()
+        elseif rand.odds(50) then
+          data.c_info = get_mat(data.ftex)
+        elseif rand.odds(80) then
+          data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
+          data.c_info = get_mat(data.ctex)
+        end
+
+        data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)
+
+        data.c_z = ceil_h - i
+      end
+
+
+      walkway:render(base_x, base_y, FC_brush, data)
     end
-
-
-    walkway:render(base_x, base_y, FC_brush, data)
   end
+
+
+  ---| Layout_do_natural |---
+
+  map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
+
+  initial_map()
+
+  clear_conns()
+
+  gui.debugf("Empty Cave:\n")
+
+  map:dump()
+
+  generate_cave()
+
+  render_cave()
 end
+
