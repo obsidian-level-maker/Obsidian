@@ -71,6 +71,18 @@ function SECTION_CLASS.update_size(K)
   K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
 end
 
+function SECTION_CLASS.raw_nudge(K, dir, delta)
+  if not delta then delta = 1 end
+
+      if dir == 4 then K.sx1 = K.sx1 - delta
+  elseif dir == 6 then K.sx2 = K.sx2 + delta
+  elseif dir == 2 then K.sy1 = K.sy1 - delta
+  else                 K.sy2 = K.sy2 + delta
+  end
+
+  K:update_size()
+end
+
 function SECTION_CLASS.shrink(K, side)
   local ox1, oy1, ox2, oy2 = geom.side_coords(side, K.sx1, K.sy1, K.sx2, K.sy2)
 
@@ -1071,27 +1083,15 @@ function Plan_expand_rooms()
     -- this logic prevents nudging a different section in the same row or
     -- column which would cause the sections to go out of alignment.
     if K.room ~= R then
-      return (N.room ~= R)
+      if K.room.shape == "odd" then return true end
+      if N.room ~= R then return true end
+      return false
     end
 
-    -- usually allow if neighbor section is same room
-    if K:same_room(dir) then
+    -- silently allow if neighbor section is same room
+    if N.room == R then return true end
 
-      -- don't make neighbor too narrow
-      if geom.vert_sel(dir, N.sh, N.sw) <= 2 then
-        return false
-      end
-
-      -- check alignment
-      if geom.is_vert(dir) then
-        if N.sx1 ~= K.sx1 or N.sx2 ~= K.sx2 then return false end
-      else
-        if N.sy1 ~= K.sy1 or N.sy2 ~= K.sy2 then return false end
-      end
-
-      return true
-    end
-
+    -- check that the space is unused
     local sx1, sy1, sx2, sy2
 
     if geom.is_vert(dir) then
@@ -1110,7 +1110,11 @@ function Plan_expand_rooms()
 
 
   local function do_nudge(K, dir, R)
+    -- ignore other rooms
     if K.room ~= R then return; end
+
+    -- silently allow between same room
+    if K:same_room(dir) then return; end
 
 gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
     -- mark seeds as occupied
@@ -1127,29 +1131,8 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
       S.expanded = true
     end end
 
-    -- update seed bbox in the section
-
-        if dir == 4 then K.sx1 = K.sx1 - 1
-    elseif dir == 6 then K.sx2 = K.sx2 + 1
-    elseif dir == 2 then K.sy1 = K.sy1 - 1
-    else                 K.sy2 = K.sy2 + 1
-    end
-
-    K:update_size()
-
-    -- update neighbor if same room
-
-    if K:same_room(dir) then
-      local N = K:neighbor(dir)
-
-          if dir == 6 then N.sx1 = N.sx1 + 1
-      elseif dir == 4 then N.sx2 = N.sx2 - 1
-      elseif dir == 8 then N.sy1 = N.sy1 + 1
-      else                 N.sy2 = N.sy2 - 1
-      end
-
-      N:update_size()
-    end
+    -- update coordinates in the section
+    K:raw_nudge(dir)
 
     -- NOTE: the seed themselves and the room bbox are only updated
     --       at the very end, via the call to Plan_make_seeds().
@@ -1163,9 +1146,9 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
     -- (in order to keep the shape synchronised).
     local keep_stems = true
 
----???    if R.shape == "odd" or (R.shape == "rect" and R.kw <= 2 and R.kh <= 2) then
----???      keep_stems = false
----???    end
+    if R.shape == "odd" then
+      keep_stems = false
+    end
 
     local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
     
@@ -1209,8 +1192,8 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
     end
   end
 
+  -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
-
 end
 
 
