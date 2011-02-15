@@ -5,11 +5,7 @@ V4 TODO
 Current Work
 ------------
 
->>>  create chunks from SEEDS, not BLOCKS
-
->>>  remove BLOCKS
-
->>>  use 'C' for chunks, 'D' for connections (doorways)
+>>>  Simple rooms (caves and mazes)
 
 
 +  create height diffs in each room from chunks
