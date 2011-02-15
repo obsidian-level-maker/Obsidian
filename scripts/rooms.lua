@@ -959,6 +959,335 @@ end
 
 
 
+function Layout_inner_outer_tex(skin, K, K2)
+  assert(K)
+  if not K2 then return end
+
+  local R = K.room
+  local N = K2.room
+
+  if N.kind == "REMOVED" then return end
+
+  skin.wall  = R.skin.wall
+  skin.outer = N.skin.wall
+
+  if R.outdoor and not N.outdoor then
+    skin.wall  = N.facade or skin.outer
+  elseif N.outdoor and not R.outdoor then
+    skin.outer = R.facade or skin.wall
+  end
+end
+
+
+
+function Layout_possible_prefab_from_list(tab, where, req_key)
+
+  assert(tab)
+
+  -- FIXME: fix this rubbish somehow
+  if tab == "SWITCH" then
+    if where ~= "edge" then return nil end
+    return "SWITCH"
+  end
+
+
+  local function match(skin)
+    -- TODO: more sophisticated matches (prefab.environment)
+
+    if skin._where ~= where then return false end
+
+    if req_key and not skin._keys[req_key] then return false end
+
+    return true
+  end
+
+  local result = {}
+
+  for name,prob in pairs(tab) do
+    local skin = GAME.SKINS[name]
+
+    if not skin then
+      -- FIXME: WARNING or ERROR ??
+      error("no such skin: " .. tostring(name))
+    else
+      if match(skin) then
+        result[name] = prob
+      end
+    end
+  end
+
+  if table.empty(result) then return nil end
+
+  return result
+end
+
+
+function Layout_possible_fab_group(usage, list, req_key)
+  usage.edge_fabs   = Layout_possible_prefab_from_list(list, "edge",   req_key)
+  usage.corner_fabs = Layout_possible_prefab_from_list(list, "corner", req_key)
+  usage.middle_fabs = Layout_possible_prefab_from_list(list, "middle", req_key)
+
+  if not usage.edge_fabs and not usage.corner_fabs and not usage.middle_fabs then
+    error("Theme is missing usable prefabs for: " .. tostring("XXX"))
+  end
+end
+
+
+function Layout_possible_doors(E)
+  local list, lock, key
+
+  local C = E.usage.conn
+
+  if C.lock and C.lock.kind == "KEY" then
+    list = THEME.lock_doors
+    lock = C.lock
+    key  = lock.key
+  elseif C.lock and C.lock.kind == "SWITCH" then
+    list = THEME.switch_doors
+    lock = C.lock
+  elseif rand.odds(20) then
+    list = THEME.doors
+  else
+    list = THEME.arches
+  end
+
+  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge", key)
+end
+
+function Layout_possible_windows(E)
+  if E.usage.K1.room.outdoor and E.usage.K2.room.outdoor then
+    list = THEME.fences
+  else
+    list = THEME.windows
+  end
+
+  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge")
+end
+
+
+
+function Layout_spots_in_room(R)
+
+  local function remove_prefab(fab)
+    -- OPTIMISE: do a bbox check
+
+    for _,B in ipairs(fab.brushes) do
+      if B[1].m == "solid" then
+        -- TODO: height check
+        gui.spots_fill_poly(B, 1)
+      end
+    end
+  end
+
+
+  local function remove_decor(dec)
+    if dec.info.pass then return end
+
+    -- TODO: height check???
+
+    local x1 = dec.x - dec.info.r - 2
+    local y1 = dec.y - dec.info.r - 2
+    local x2 = dec.x + dec.info.r + 2
+    local y2 = dec.y + dec.info.r + 2
+
+    gui.spots_fill_poly(Trans.bare_quad(x1,y1, x2,y2), 2)
+  end
+
+
+  local function remove_neighbor_floor(floor, N)
+    -- FIXME
+  end
+
+
+  local function spots_for_floor(floor)
+    local bbox = assert(floor.bbox)
+
+    -- begin with a completely solid area
+    gui.spots_begin(bbox.x1, bbox.y1, bbox.x2, bbox.y2, 2)
+
+    -- carve out the floor brushes (make them empty)
+    for _,B in ipairs(floor.brushes) do
+      gui.spots_fill_poly(B, 0)
+    end
+
+    -- solidify brushes from prefabs
+    for _,fab in ipairs(R.prefabs) do
+      remove_prefab(fab)
+    end
+
+    -- remove solid decor entities
+    for _,dec in ipairs(R.decor) do
+      remove_decor(dec)
+    end
+
+    -- mark edges with neighboring floors
+    for _,F in ipairs(R.all_floors) do
+      if F ~= floor then
+        remove_neighbor_floor(floor, F)
+      end
+    end
+
+--  gui.spots_dump("Spot grid")
+
+    -- use local lists, since we will process multiple floors
+    local mon_spots  = {}
+    local item_spots = {}
+
+    gui.spots_get_mons (mon_spots)
+    gui.spots_get_items(item_spots)
+
+    gui.spots_end()
+
+    -- set Z positions
+
+    for _,spot in ipairs(mon_spots) do
+      spot.z1 = floor.z
+      spot.z2 = floor.z2 or (spot.z1 + 200)  -- FIXME
+
+      table.insert(R.mon_spots, spot)
+    end
+
+    for _,spot in ipairs(item_spots) do
+      spot.z1 = floor.z
+      spot.z2 = floor.z2 or (spot.z1 + 64)
+
+      table.insert(R.item_spots, spot)
+    end
+
+--[[  TEST
+    for _,spot in ipairs(R.item_spots) do
+      Trans.entity("potion", spot.x1 + 8, spot.y1 + 8, 0)
+    end
+--]]
+  end
+
+
+  local function distribute_spots(list)
+    for _,spot in ipairs(list) do
+      if spot.kind == "cage" then
+        table.insert(R.cage_spots, spot)
+      elseif spot.kind == "trap" then
+        table.insert(R.trap_spots, spot)
+      end
+    end
+  end
+
+
+  local function cage_trap_spots()
+    for _,fab in ipairs(R.prefabs) do
+      if fab.has_spots then
+        distribute_spots(Fab_read_spots(fab))
+      end
+    end
+  end
+
+
+  ---| Layout_spots_in_room |---
+
+  -- collect spots for the monster code
+  for _,F in ipairs(R.all_floors) do
+    spots_for_floor(F)
+  end
+
+  cage_trap_spots()
+end
+
+
+function Layout_all_ceilings()
+
+  local function is_middle(K)
+    if K:same_room(2) and K:same_room(8) then return true end
+    if K:same_room(4) and K:same_room(6) then return true end
+    return false
+  end
+
+  local function quake_temp_lights(R)
+    for _,K in ipairs(R.sections) do
+     if is_middle(K) then
+      local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
+      local light = rand.pick { 50, 100, 150, 200 }
+      local radius = ((K.x2 - K.x1) + (K.y2 - K.y1)) / 3
+
+      local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
+
+      Trans.entity("light", mx, my, z, { light=light, _radius=radius })
+     end
+    end
+  end
+
+
+  local function build_ceiling(R)
+    if R.sky_h then
+      for _,K in ipairs(R.sections) do
+        Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
+      end
+
+      return
+    end
+
+    assert(R.ceil_h)
+
+    local mat = rand.key_by_probs(THEME.building_ceilings)
+
+    local props, w_face, p_face = Mat_normal(mat)
+
+    for _,K in ipairs(R.sections) do
+      local x1, y1, x2, y2 = Layout_shrunk_section_coords(K)
+      Trans.quad(x1, y1, x2, y2, R.ceil_h, nil, { m="solid" }, w_face, p_face)
+    end
+
+    if R.shape == "rect" and R.sw >= 3 and R.sh >= 3 then
+      local K1 = SECTIONS[R.kx1][R.ky1]
+      local K2 = SECTIONS[R.kx2][R.ky2]
+
+      local mx, my = geom.box_mid(K1.x1, K1.y1, K2.x2, K2.y2)
+
+      local T = Trans.spot_transform(mx, my, R.ceil_h)
+
+---???   Fabricate("SKYLITE_1", T, {{ trim="WIZWOOD1_5", metal="WIZMET1_2" }})
+    else
+      if GAME.format == "quake" then
+        quake_temp_lights(R)
+      end
+    end
+  end
+
+
+  local function ambient_lighting(R)
+    if not (GAME.format == "doom" or GAME.format == "nukem") then
+      return
+    end
+
+    local light = rand.pick { 128, 144, 160 }
+    if R.outdoor then light = 192 end
+
+    for _,K in ipairs(R.sections) do
+      gui.add_brush(
+      {
+        { m="light", ambient=light },
+        { x=K.x1, y=K.y1 },
+        { x=K.x2, y=K.y1 },
+        { x=K.x2, y=K.y2 },
+        { x=K.x1, y=K.y2 },
+      })
+    end
+  end
+
+
+  --| Layout_all_ceilings |--
+
+  Rooms_synchronise_skies()
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    build_ceiling(R)
+    ambient_lighting(R)
+
+    Layout_spots_in_room(R)
+  end
+end
+
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")

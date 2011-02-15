@@ -885,7 +885,7 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
         { x=bx,    y=by },
       })
 
-      return
+      return;
     end
 
     local coords = { }
@@ -1136,7 +1136,7 @@ do return end --!!!!!!!!!  FIXME CAVES
 end
 
 
-function Rooms_do_small_exit()
+function OLD__Rooms_do_small_exit()
   local C = R.conns[1]
   local T = C:seed(C:neighbor(R))
   local out_combo = T.room.main_tex

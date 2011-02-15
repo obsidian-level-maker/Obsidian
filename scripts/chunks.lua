@@ -728,3 +728,68 @@ function CHUNK_CLASS.build(C)
   end
 end
 
+
+function Chunky_floor(R)
+
+  local function touches_wall(C)
+    -- Todo ??
+
+    return false
+  end
+
+
+  local function do_floor(C)
+    local h = R.floor_min_h + rand.irange(0,16)
+
+    local name = rand.pick { "FLAT1", "FLAT10", "FLAT14", "FLAT1_1",
+                             "FLAT20", "GRASS1", "FLAT5_1",
+                             "FLAT5_3", "FLAT5_5" }
+--[[
+    if not touches_wall(K) then
+      h = -3C
+      name = "NUKAGE1"
+    end
+--]]
+    local mat = Mat_lookup(name)
+
+    local w_tex = mat.t
+    local f_tex = mat.f or mat.t
+
+    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+    Trans.set_tex(brush, w_tex)
+
+    table.insert(brush, { t=h, tex=f_tex })
+
+    gui.add_brush(brush)
+  end
+
+
+  local function prepare_ceiling()
+    local h = ROOM.floor_max_h + 192 -- rand.pick { 192, 256, 320, 384 }
+
+    if R.outdoor then
+      R.sky_h = h + 128
+    else
+      R.ceil_h = h
+    end
+  end
+
+  
+  ---| Chunky_floor |---
+
+  if not R.entry_floor_h then
+    R.entry_floor_h = rand.pick { 128, 192, 256, 320 }
+  end
+
+  R.floor_min_h = R.entry_floor_h
+  R.floor_max_h = R.entry_floor_h
+
+  for _,C in ipairs(R.chunks) do
+    do_floor(C)
+  end
+
+  prepare_ceiling()
+end
+
+
