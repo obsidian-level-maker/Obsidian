@@ -23,7 +23,7 @@ function Layout_simple_room(R)
 
   local map
 
-  R.cave_floor_h = R.entry_floor_h
+  R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
   R.cave_h = rand.pick { 128, 128, 192, 256 }
 
   if R.outdoor and THEME.landscape_walls then
@@ -162,6 +162,9 @@ function Layout_simple_room(R)
 
 
   local function is_cave_good(cave)
+
+do return true end ---!!!!!!!!!!!!1
+
     -- FIXME: size check
 
     --[[
@@ -199,7 +202,7 @@ function Layout_simple_room(R)
   end
 
 
-  local function initial_map()
+  local function FIXME_initial_map()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y]
       if S.room == R then
@@ -226,9 +229,35 @@ function Layout_simple_room(R)
   end
 
 
+  local function create_map()
+    map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
+
+    -- determine location of chunks inside this map
+    for _,C in ipairs(R.chunks) do
+      C.cave_x1 = (C.sx1 - R.sx1) * 3 + 1
+      C.cave_y1 = (C.sy1 - R.sy1) * 3 + 1
+
+      C.cave_x2 = (C.sx2 - R.sx1) * 3 + 3
+      C.cave_y2 = (C.sy2 - R.sy1) * 3 + 3
+    end
+  end
+
+
+  local function mark_boundaries()
+    for _,C in ipairs(R.chunks) do
+      map:fill(0, C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2)
+
+      -- FIXME: BOUNDARIES !!!!
+    end
+
+    gui.debugf("Empty Cave:\n")
+
+    map:dump()
+  end
+
+
   local function generate_cave()
     local cave
-    local flood
 
     for loop = 1,20 do
       gui.debugf("Trying to make a cave: loop %d\n", loop)
@@ -257,7 +286,6 @@ function Layout_simple_room(R)
     end
 
     R.cave  = cave
-  --!!!!!!  R.flood = flood
 
     gui.debugf("Filled Cave:\n")
 
@@ -270,14 +298,12 @@ function Layout_simple_room(R)
   ----------->
 
 
-  local cave  = R.cave
-
-  local w_tex  = R.cave_tex
-  local w_info = get_mat(w_tex)
+  local w_tex  = R.cave_tex or "ASHWALL4"
+--???  local w_info = get_mat(w_tex)
   local high_z = EXTREME_H
 
-  local base_x = SECTIONS[R.kx1][R.ky1].x1
-  local base_y = SECTIONS[R.kx1][R.ky1].y1
+  local base_x = SEEDS[R.sx1][R.sy1].x1
+  local base_y = SEEDS[R.sx1][R.sy1].y1
 
 
   local function WALL_brush(data, coords)
@@ -330,6 +356,8 @@ function Layout_simple_room(R)
 
   local function render_cave()
 
+    local cave = R.cave
+
     --- DO WALLS ---
 
     local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
@@ -367,7 +395,7 @@ function Layout_simple_room(R)
         local pit = Mat_liquid()
 
         island:render(base_x, base_y, WALL_brush,
-                      { f_z=R.cave_floor_h+8, ftex=pit.t_face.tex,
+                      { f_z=R.cave_floor_h+8, ftex="CEIL5_1", --!!! pit.t_face.tex,
                         delta_f=rand.sel(70, -52, -76) })
 
         cave:subtract(island)
@@ -376,6 +404,9 @@ function Layout_simple_room(R)
 
 
     cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+
+
+do return end ----!!!!!!!
 
 
     if R.is_lake then return end
@@ -397,6 +428,7 @@ function Layout_simple_room(R)
   ---???    end
 
       walkway:remove_dots()
+
 
       -- DO FLOOR and CEILING --
 
@@ -454,17 +486,16 @@ function Layout_simple_room(R)
   end
 
 
-  ---| Layout_do_natural |---
+  ---| Layout_simple_room |---
 
-  map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
+R.is_lake = false
 
-  initial_map()
+  -- create the cave object and make the boundaries solid
+  create_map()
 
-  clear_conns()
+  mark_boundaries()
 
-  gui.debugf("Empty Cave:\n")
-
-  map:dump()
+  --?? clear_conns()
 
   generate_cave()
 

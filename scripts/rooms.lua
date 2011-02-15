@@ -946,6 +946,9 @@ function Rooms_blow_chunks()
     for _,H in ipairs(R.chunks) do
       H:build()
     end
+
+    --!!!!!!!! TEST
+    Layout_simple_room(R)
   end
 
   for _,D in ipairs(LEVEL.all_conns) do

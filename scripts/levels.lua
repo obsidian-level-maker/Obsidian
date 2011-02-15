@@ -55,6 +55,7 @@ require 'seeds'
 require 'build'
 require 'chunks'
 require 'simple'
+require 'hallway'
 require 'rooms'
 
 require 'rooms'
