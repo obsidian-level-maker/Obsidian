@@ -50,7 +50,6 @@ require 'planner'
 require 'connect'
 require 'quests'
 require 'caves'
-require 'maze'
 
 require 'seeds'
 require 'build'
