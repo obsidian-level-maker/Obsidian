@@ -1156,6 +1156,8 @@ function CAVE_CLASS.maze_render(maze, base_x, base_y, brush_func, data)
 
 
   local function visit_cell(x, y)
+    if (cells[x][y] or 0) <= 0 then return; end
+
     local bx = base_x + (x - 1) * 64
     local by = base_y + (y - 1) * 64
 

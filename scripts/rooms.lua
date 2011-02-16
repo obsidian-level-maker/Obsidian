@@ -81,7 +81,8 @@ ROOM_CLASS = {}
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_id("room")
   local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
-              chunks={}, sections={}, middles={}, spaces={} }
+              chunks={}, sections={}, middles={}, spaces={},
+              floor_mats={} }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.all_rooms, R)
   return R
@@ -183,6 +184,20 @@ function ROOM_CLASS.is_near_exit(R)
     if N.purpose == "EXIT" then return true end
   end
   return false
+end
+
+function ROOM_CLASS.pick_floor_mat(R, h)
+  -- use same material for same height
+
+  if not R.floor_mats[h] then
+    if R.outdoor then
+      R.floor_mats[h] = rand.pick(LEVEL.building_floors)
+    else
+      R.floor_mats[h] = rand.pick(LEVEL.courtyard_floors)
+    end
+  end
+
+  return R.floor_mats[h]
 end
 
 
@@ -948,7 +963,9 @@ function Rooms_blow_chunks()
     end
 
     --!!!!!!!! TEST
-    Layout_simple_room(R)
+    if R.purpose ~= "START" then
+---    Layout_simple_room(R)
+    end
   end
 
   for _,D in ipairs(LEVEL.all_conns) do

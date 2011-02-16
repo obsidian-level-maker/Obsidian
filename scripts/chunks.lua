@@ -589,14 +589,19 @@ function CHUNK_CLASS.build(C)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = 24 - rand.irange(0,24)
+  local f_h = 0  ---  24 - rand.irange(0,24)
   local c_h = 256
   local light = 0
   local c_medium = "solid"
 
-  local f_mat = "FLAT1" and rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
+  local f_mat = "FLAT1" --- rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
+
+  if C.room then
+    f_mat = C.room:pick_floor_mat(f_h)
+    w_mat = assert(C.room.main_tex)
+  end
 
   if not C.hall and --- not (C.room and C.room.outdoor) and
      C:similar_neighbor(2) and C:similar_neighbor(8) and
@@ -658,14 +663,16 @@ function CHUNK_CLASS.build(C)
   end
 
   -- walls
+  local thick = 16
+
   for dir = 2,8,2 do
     if not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
 
-      if dir == 2 then by2 = by1 + 36 end
-      if dir == 8 then by1 = by2 - 36 end
-      if dir == 4 then bx2 = bx1 + 36 end
-      if dir == 6 then bx1 = bx2 - 36 end
+      if dir == 2 then by2 = by1 + thick end
+      if dir == 8 then by1 = by2 - thick end
+      if dir == 4 then bx2 = bx1 + thick end
+      if dir == 6 then bx1 = bx2 - thick end
 
       if C.link[dir] then
         local LINK = C.link[dir]
@@ -736,7 +743,7 @@ function CHUNK_CLASS.build(C)
 
   -- TEST CRUD : pillars
 
-  if ent ~= "player1" and C.section then
+  if ent ~= "player1" and C.section and false then
     local hx = C.section:mid_HX()
     local hy = C.section:mid_HY()
 

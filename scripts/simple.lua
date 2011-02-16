@@ -388,7 +388,7 @@ do return true end ---!!!!!!!!!!!!1
 
       -- FIXME
       if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
-         rand.odds(50)
+         rand.odds(1)
       then
 
         -- create a lava/nukage pit
