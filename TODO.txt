@@ -5,6 +5,43 @@ OBLIGE TODO
 Current Work
 ------------
 
+no 'chunks' array in sections, instead chunks are created when a
+block of seeds is allocated for a specific purpose.
+
+Doorways would be a special case, perhaps mark which seeds are
+needed and perform all the allocations at the very end.
+
+>>>  give chunks these files: z_low and z_high
+     (3D stuff : allow multiple chunks in the vertical range)
+
+
+Chunk Allocations:
+
+1. doorways
+
+2. big corner -- chunk is assumed not to be passable anymore,
+   can make the whole thing solid [c.f. the V3 corner seeds]
+   or make a curve or diagonal -- anything a prefab can do.
+   
+   need to make sure that room stays traversible
+
+3. big wall -- touches one (and only one) edge of room,
+   could make whole thing solid, or whatever a prefab can do.
+
+4. big middle prefab, e.g. nukage pit
+
+[HMMM : probably need traversibility and/or connectivity info in
+        allocated chunks [should not rely on seeds to allow
+        3D stuff]
+
+4. stair -- these are done last [probably], and split the remaining
+            traversible seeds into two areas.  One area should be
+            fairly small (e.g. svolume <= 10) and contain a known
+            walk spot, the rest can be divided further with more
+            stairs  [i.e. same basic m.o. as the nuked V4 code]
+
+
+
 >>>  Simple rooms (caves and mazes)
 
 
