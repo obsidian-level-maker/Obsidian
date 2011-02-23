@@ -455,9 +455,9 @@ function Hallway_place_em()
 
 
   local function how_many()
-    local perc = style_sel("hallways", 0, 30, 65, 100)
+    local perc = style_sel("hallways", 0, 25, 50, 100)
 
-    local num = (SECTION_W + 2) * perc / 100
+    local num = (SECTION_W + 1) * perc / 100
 
     return int(num + gui.random())
   end
