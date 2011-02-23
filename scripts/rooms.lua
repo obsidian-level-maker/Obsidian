@@ -191,9 +191,9 @@ function ROOM_CLASS.pick_floor_mat(R, h)
 
   if not R.floor_mats[h] then
     if R.outdoor then
-      R.floor_mats[h] = rand.pick(LEVEL.building_floors)
-    else
       R.floor_mats[h] = rand.pick(LEVEL.courtyard_floors)
+    else
+      R.floor_mats[h] = rand.pick(LEVEL.building_floors)
     end
   end
 
