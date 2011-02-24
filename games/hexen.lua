@@ -1507,6 +1507,8 @@ HEXEN.SUB_THEMES =
     building_walls = { CASTLE01=50 },
 
     building_floors = { F_001=50 },
+
+    building_ceilings = { F_002=50 },
   },
 
 --[[ REALLY OLD CRUD
