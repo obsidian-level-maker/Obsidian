@@ -200,6 +200,14 @@ function ROOM_CLASS.pick_floor_mat(R, h)
   return R.floor_mats[h]
 end
 
+function ROOM_CLASS.pick_ceil_mat(R)
+  if not R.ceil_mat then
+    R.ceil_mat = rand.key_by_probs(THEME.building_ceilings)
+  end
+
+  return R.ceil_mat
+end
+
 
 ----------------------------------------------------------------
 

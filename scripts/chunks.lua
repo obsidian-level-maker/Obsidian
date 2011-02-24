@@ -601,26 +601,25 @@ function CHUNK_CLASS.build(C)
   if C.room then
     f_mat = C.room:pick_floor_mat(f_h)
     w_mat = assert(C.room.main_tex)
-  end
-
-  if not C.hall and --- not (C.room and C.room.outdoor) and
-     C:similar_neighbor(2) and C:similar_neighbor(8) and
-     C:similar_neighbor(4) and C:similar_neighbor(6)
-     and false
-  then
-    f_mat = "FLOOR4_8"
-    f_h   = 0
-    c_h   = 384
+    c_mat = C.room:pick_ceil_mat()
   end
 
   if C.hall then
+    if not C.hall.f_mat then
+      C.hall.f_mat = rand.key_by_probs(THEME.hallway_floors or THEME.building_floors)
+      C.hall.c_mat = rand.key_by_probs(THEME.hallway_ceilings or THEME.building_ceilings)
+      C.hall.w_mat = rand.key_by_probs(THEME.hallway_walls or THEME.building_walls)
+    end
+
+    f_mat = assert(C.hall.f_mat)
+    w_mat = assert(C.hall.w_mat)
+    c_mat = assert(C.hall.c_mat)
+
     c_h = 128
-    f_mat = "FWATER1"
-    w_mat = "COMPSPAN"
   end
 
   if C.room and C.room.outdoor then
-    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
+---    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
     c_h   = 384
