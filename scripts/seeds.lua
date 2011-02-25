@@ -24,14 +24,16 @@ class SEED
 {
   sx, sy  -- location in seed map
 
+  x1, y1, x2, y2  -- 2D map coordinates
+
   room : ROOM
   hall : HALLWAY
 
-  x1, y1, x2, y2  -- 2D map coordinates
+  chunk : CHUNK
 
-  --- hallway stuff ---
-
-  border[DIR] : BORDER   -- can be nil
+  edge[DIR]  -- keyword can be "solid", "air", "walk"
+             -- can be nil (unallocated)
+             -- only 2 and 4 directions are used
 
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
@@ -59,9 +61,11 @@ function SEED_CLASS.new(x, y)
   return S
 end
 
+
 function SEED_CLASS.tostr(S)
   return string.format("SEED [%d,%d]", S.sx, S.sy)
 end
+
 
 function SEED_CLASS.neighbor(S, dir, dist)
   local nx, ny = geom.nudge(S.sx, S.sy, dir, dist)
@@ -71,9 +75,52 @@ function SEED_CLASS.neighbor(S, dir, dist)
   return SEEDS[nx][ny]
 end
 
+
 function SEED_CLASS.mid_point(S)
   return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
 end
+
+
+function SEED_CLASS.get_edge(S, dir)
+  -- far edges of map are always solid
+  if (dir == 2 and S.sy == 1) or
+     (dir == 4 and S.sx == 1) or
+     (dir == 6 and S.sx == SEED_W) or
+     (dir == 8 and S.sy == SEED_H)
+  then
+    return "solid"
+  end
+
+  if dir == 6 or dir == 8 then  
+    S, dir = S:neighbor(dir), (10 - dir)
+  end
+
+  return S.edge[dir]
+end
+
+
+function SEED_CLASS.set_edge(S, dir, value)
+  -- ignore edge of map
+  if (dir == 2 and S.sy == 1) or
+     (dir == 4 and S.sx == 1) or
+     (dir == 6 and S.sx == SEED_W) or
+     (dir == 8 and S.sy == SEED_H)
+  then
+    return
+  end
+
+  if dir == 6 or dir == 8 then  
+    S, dir = S:neighbor(dir), (10 - dir)
+  end
+
+  -- validate (can never set it twice)
+  if S.edge[dir] and value and S.edge[dir] ~= value then
+    error("Seed_set_edge : already set!")
+  end
+
+  S.edge[dir] = value
+end
+
 
 
 --------------------------------------------------------------------
