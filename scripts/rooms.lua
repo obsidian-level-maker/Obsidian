@@ -804,26 +804,6 @@ end
 
 
 
-function Rooms_extra_room_stuff()
-
-  -- this function is meant to ensure good traversibility in a room.
-  -- e.g. put a nice item in sections without any connections or
-  -- importants, or if the exit is close to the entrance then make
-  -- the exit door require a far-away switch to open it.
-
-  local function extra_stuff(R)
-    -- TODO
-  end
-
-
-  --| Rooms_extra_room_stuff |--
-
-  for _,R in ipairs(LEVEL.all_rooms) do
-    extra_stuff(R)
-  end
-end
-
-
 
 
 ------------------------------------------------------------------------
@@ -1316,6 +1296,76 @@ end
 
 
 
+----------------------------------------------------------------
+
+
+
+
+function Rooms_flesh_out()
+
+  local function init_room(R)
+    -- TODO
+  end
+
+
+  local function place_importants(R)
+    -- TODO
+  end
+
+
+  local function extra_stuff(R)
+
+    -- this function is meant to ensure good traversibility in a room.
+    -- e.g. put a nice item in sections without any connections or
+    -- importants, or if the exit is close to the entrance then make
+    -- the exit door require a far-away switch to open it.
+
+    -- TODO
+  end
+
+
+  local function decorative_chunks(R)
+    -- this does scenic stuff like cages, nukage pits, etc...
+
+    -- TODO
+  end
+
+
+  local function do_floors(R)
+    -- the seeds which are left over from the previous allocations
+    -- should form a contiguous area which ensures traversibility
+    -- between all walk spots (doorways, switches, etc).
+    --
+    -- the task here is to allocate these seeds into chunks,
+    -- sub-dividing them into a number of separate floor areas
+    -- (generally of different heights) and stairs between them.
+
+    -- TODO
+  end
+
+
+  local function flesh_out(R)
+    init_room(R)
+
+    place_importants(R)
+
+    extra_stuff(R)
+
+    decorative_chunks(R)
+
+    do_floors(R)
+  end
+
+
+  ---| Rooms_flesh_out |---
+
+  for _,R in ipairs(LEVEL.all_rooms) do
+    flesh_out(R)
+  end
+end
+
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -1335,15 +1385,9 @@ function Rooms_build_all()
   end
 
 
----!!!  Rooms_place_importants()
-
 ---!!!  Rooms_decide_windows()
 
-  Rooms_extra_room_stuff()
-
----###  Layout_all_walls()
----###  Layout_all_floors()
----###  Layout_all_ceilings()
+  Rooms_flesh_out()
 
   Rooms_blow_chunks()
 
