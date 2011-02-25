@@ -128,6 +128,9 @@ HERETIC.ENTITIES =
   hang_skull_4 = { id=26, kind="scenery", r=20,h=64, ceil=true, pass=true },
   hang_corpse  = { id=51, kind="scenery", r=12,h=104,ceil=true },
 
+  -- miscellaneous
+  dummy = { id=49, kind="other", r=16,h=20, pass=true },
+
   --- ambient sounds ---
   amb_scream = { id=1200, kind="other", r=20,h=16, pass=true },
   amb_squish = { id=1201, kind="other", r=20,h=16, pass=true },
@@ -2050,7 +2053,7 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["heretic"] =
+OB_GAMES["heretic"] =
 {
   label = "Heretic",
 
