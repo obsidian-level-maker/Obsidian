@@ -45,6 +45,7 @@ class LEVEL
 
 require 'defs'
 require 'util'
+require 'a_star'
 
 require 'planner'
 require 'connect'
