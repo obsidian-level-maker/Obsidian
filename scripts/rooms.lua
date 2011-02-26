@@ -159,6 +159,7 @@ function ROOM_CLASS.has_teleporter(R)
   return false
 end
 
+
 function ROOM_CLASS.dist_to_closest_conn(R, K, side)
   -- TODO: improve this by calculating side coordinates
   local best
@@ -177,6 +178,7 @@ function ROOM_CLASS.dist_to_closest_conn(R, K, side)
   return best
 end
 
+
 function ROOM_CLASS.is_near_exit(R)
   if R.purpose == "EXIT" then return true end
   for _,D in ipairs(R.conns) do
@@ -185,6 +187,7 @@ function ROOM_CLASS.is_near_exit(R)
   end
   return false
 end
+
 
 function ROOM_CLASS.pick_floor_mat(R, h)
   -- use same material for same height
@@ -200,12 +203,25 @@ function ROOM_CLASS.pick_floor_mat(R, h)
   return R.floor_mats[h]
 end
 
+
 function ROOM_CLASS.pick_ceil_mat(R)
   if not R.ceil_mat then
     R.ceil_mat = rand.key_by_probs(THEME.building_ceilings)
   end
 
   return R.ceil_mat
+end
+
+
+function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
+  assert(R.sx1 <= sx1 and sx1 <= sx2 and sx2 <= R.sx2)
+  assert(R.sy1 <= sy1 and sy1 <= sy2 and sy2 <= R.sy2)
+
+  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
+
+  C:install()
+
+  return C
 end
 
 
@@ -1303,8 +1319,25 @@ end
 
 function Rooms_flesh_out()
 
+  local function init_seed(R, S)
+    for dir = 2,8,2 do
+      local N = S:neighbor(dir)
+      local same_room = (N and N.room == R)
+      
+      if not same_room then
+        S:set_edge(dir, "solid")
+      end
+    end
+  end
+
+
   local function init_room(R)
-    -- TODO
+    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+      local S = SEEDS[sx][sy]
+      if S.room == R then
+        init_seed(R, S)
+      end
+    end end
   end
 
 

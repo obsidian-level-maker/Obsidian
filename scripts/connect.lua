@@ -1116,7 +1116,7 @@ Plan_dump_rooms("Dead Room Map")
 
   -- NOTE: doing this here since hallways change the sizes of sections
    Plan_prepare_rooms()
-  Chunk_prepare_rooms()
+--?!?!?  Chunk_prepare_rooms()
 
   decide_teleporters()
 

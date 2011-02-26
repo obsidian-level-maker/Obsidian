@@ -82,17 +82,33 @@ function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
   return C
 end
 
-function CHUNK_CLASS.install(C)
-  for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
-    local S = SEEDS[sx][sy]
-    assert(S)
-    S.chunk = C
-  end end
-end
 
 function CHUNK_CLASS.tostr(C)
   return string.format("CHUNK [%d,%d]", C.sx1, C.sy1)
 end
+
+
+function CHUNK_CLASS.install(C)
+  for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+    local S = SEEDS[sx][sy]
+    assert(S)
+
+    -- verify not already allocated
+    if S.chunk then
+      error("tried to allocate overlapping chunks!")
+    end
+
+    S.chunk = C
+  end end
+
+  -- set map coordinates
+  local S1 = SEEDS[C.sx1][C.sy1]
+  local S2 = SEEDS[C.sx2][C.sy2]
+
+  C.x1, C.y1 = S1.x1, S1.y1
+  C.x2, C.y2 = S2.x2, S2.y2
+end
+
 
 function CHUNK_CLASS.joining_chunks(C, dir)
   local list = {}
@@ -114,6 +130,7 @@ function CHUNK_CLASS.joining_chunks(C, dir)
 
   return list
 end
+
 
 function CHUNK_CLASS.side_len(C, dir)
   return geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)

@@ -259,17 +259,12 @@ function Hallway_place_em()
       local G = loc.G
 
       -- determine block range for segment
-      local S1 = SEEDS[G.sx1][G.sy1]
-      local S2 = SEEDS[G.sx2][G.sy2]
 
       local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
 
       loc.chunk = C
 
       C.hall = hall
-
-      C.x1, C.y1 = S1.x1, S1.y1
-      C.x2, C.y2 = S2.x2, S2.y2
 
       C:install()
 
