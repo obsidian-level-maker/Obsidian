@@ -24,24 +24,20 @@ class SECTION
 {
   kx, ky  -- location in section map 
 
-  room : ROOM
+  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
   x1, y1, x2, y2  -- map coordinates
 
-  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
+  room : ROOM
 
   num_conn  -- number of connections
 
-  chunk_W, chunk_H  -- number of chunks
-  
-  chunk[X][Y] : CHUNK  -- 2D array of chunks
 
-
-  corners[DIR] : CORNER  -- each can be nil
-
-  edges[DIR] : EDGE   -- each can be nil
-
-  hall_parts[DIR]  -- tracks sides/corners used for hallways
+---###  chunk_W, chunk_H  -- number of chunks
+---###  chunk[X][Y] : CHUNK  -- 2D array of chunks
+---###
+---###  corners[DIR] : CORNER  -- each can be nil
+---###  edges[DIR] : EDGE   -- each can be nil
 }
 
 
@@ -58,7 +54,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={}, hall_parts={} }
+  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
   table.set_class(K, SECTION_CLASS)
   return K
 end
