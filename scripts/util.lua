@@ -779,58 +779,57 @@ end
 
 ----====| A* PATHING ALGORITHM |====----
 
-astar = {}
+a_star = {}
 
 --
 -- Find path from start (sx,sy) to end (ex,ey)
 --
 -- Score function:
---   f(cx,cy, nx,ny, dir) -> distance, negative for impossible
+--   f(x, y, dir) -> distance, negative for impossible
 --
-function astar.find_path(w, h, sx, sy, ex, ey, scorer)
-  local open   = table.array_2D(w, h)
-  local closed = table.array_2D(w, h)
+function a_star.find_path(W, H, sx, sy, ex, ey, score_func)
+  local open   = table.array_2D(W, H)
+  local closed = table.array_2D(W, H)
+
+  -- current position
   local cx, cy
 
-  local function calc_H(x,y)
-    x = math.abs(x - ex)
-    y = math.abs(y - ey)
-    return math.sqrt(x * x + y * y) 
+  local function calc_H(x, y)
+    return geom.dist(x, y, ex, ey)
   end
 
   function lowest_F()  -- brute force search (SLOW!)
-    local rx = nil
-    local ry = nil
-    local best_F = 99999999
-    for x = 1,open.w do
-      for y = 1,open.h do
-        if open[x][y] then
-          local F = open[x][y].G + open[x][y].H
-          if F < best_F then
-            best_F = F
-          rx = x
-          ry = y
-          end
+    local rx, ry
+    local best_F = 9e20
+
+    for x = 1,W do for y = 1,H do
+      if open[x][y] then
+        local F = open[x][y].G + open[x][y].H
+        if F < best_F then
+          rx, ry = x, y
+          best_F = F
         end
       end
-    end
+    end end
+
     return rx, ry
   end
 
   local function try_dir(nx, ny, dir)
-    if nx < 1 or nx > w then return end
-    if ny < 1 or ny > h then return end
+    if nx < 1 or nx > W then return end
+    if ny < 1 or ny > H then return end
 
-    local G = scorer(cx,cy, nx,ny, dir)
+    local G = score_func(cx, cy, dir)
 
     if G < 0 then return false end
 
-    -- reached the target
+    -- reached the target?
     if nx == ex and ny == ey then return true end
 
     if closed[nx][ny] then return false end
 
-    G = G + closed[cx][cy].G  -- get total distance
+    -- get total distance
+    G = G + closed[cx][cy].G
 
     if not open[nx][ny] or G < open[nx][ny].G then
       open[nx][ny] = { G=G, H=calc_H(nx,ny), px=cx, py=cy }
@@ -841,10 +840,12 @@ function astar.find_path(w, h, sx, sy, ex, ey, scorer)
 
   local function collect_path()
     local p = {}
+    
     repeat
       table.insert(p, 1, { x=cx, y=cy })
       cx, cy = closed[cx][cy].px, closed[cx][cy].py
     until not cx
+
     return p
   end
 
