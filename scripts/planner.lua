@@ -305,8 +305,11 @@ function Plan_create_sections(W, H)
   local function get_hallways(pos_list, size_list, hall_list)
     local net = {}
 
-    if border_seeds >= 2 then
-      table.insert(net, { border_seeds, 1 })
+    -- seeds usable outside the map border
+    local bo_thick = math.min(border_seeds, 2)
+
+    if bo_thick > 0 then
+      table.insert(net, { 1 + border_seeds - bo_thick, bo_thick })
     end
 
     for x = 1,#pos_list do
@@ -317,9 +320,9 @@ function Plan_create_sections(W, H)
       end
     end
 
-    if border_seeds >= 2 then
+    if bo_thick > 0 then
       local x = #pos_list
-      table.insert(net, { pos_list[x] + size_list[x], 1 })
+      table.insert(net, { pos_list[x] + size_list[x], bo_thick })
     end
 
     return net

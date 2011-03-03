@@ -165,6 +165,9 @@ function Hallway_place_em()
     sx1, sy1 = geom.nudge(sx1, sy1, dir)
     sx2, sy2 = geom.nudge(sx2, sy2, dir)
 
+    if not Seed_valid(sx1, sy1) then return nil end
+    if not Seed_valid(sx2, sy2) then return nil end
+
     for sx = sx1,sx2 do for sy = sy1,sy2 do
       local S = SEEDS[sx][sy]
 
