@@ -56,7 +56,7 @@ MAP_BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, border={} }
+  local S = { sx=x, sy=y, edge={} }
   table.set_class(S, SEED_CLASS)
   return S
 end

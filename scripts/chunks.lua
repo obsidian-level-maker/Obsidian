@@ -144,17 +144,8 @@ function Chunk_divide_room(R)
   --
   -- Subdivides the room into chunks.
   --
-  -- Goals:
-  --  + require odd number of chunks on each axis in each section
-  --
-  --  + prefer squarish chunks over long and thin ones
-  --
-  --  + want straddler stuff (doors, windows) to align nicely [TODO]
-  --
-  --  + prefer intra-room chunks to align nicely [TODO]
-  -- 
 
-  local function calc_block_sizes(W, bx, bw)
+  local function OLD_calc_block_sizes(W, bx, bw)
     assert(W == 1 or W == 3 or W == 5)
 
     -- begin with all chunks the same width (or height)
@@ -593,6 +584,8 @@ function CHUNK_CLASS.similar_neighbor(C, dir)
   end
 
   local S = SEEDS[sx][sy]
+
+do return (S and (S.room or S.hall)) end --!!!!!!!1
 
   if C.hall then return (S.hall == C.hall) end
   if C.room then return (S.room == C.room) end
