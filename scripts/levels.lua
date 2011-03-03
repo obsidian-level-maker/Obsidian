@@ -56,7 +56,7 @@ require 'build'
 require 'chunks'
 require 'simple'
 require 'hallway'
-require 'rooms'
+require 'areas'
 
 require 'rooms'
 require 'tiler'
