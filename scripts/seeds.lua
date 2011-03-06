@@ -35,6 +35,8 @@ class SEED
              -- can be nil (unallocated)
              -- only 2 and 4 directions are used
 
+  cost[DIR]  -- used when marking paths
+
   floor_h, ceil_h -- floor and ceiling heights
   f_tex,   c_tex  -- floor and ceiling textures
 }
@@ -56,7 +58,7 @@ MAP_BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, edge={} }
+  local S = { sx=x, sy=y, edge={}, cost={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
