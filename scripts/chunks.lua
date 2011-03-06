@@ -232,7 +232,7 @@ end
 
 function Chunk_prepare_rooms()
   for _,R in ipairs(LEVEL.all_rooms) do
-    Chunk_divide_room(R)
+---###    Chunk_divide_room(R)
   end
 end
 
@@ -433,7 +433,8 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
     local dir = assert(D.dir)
 
-    local C1, C2
+    local cx1, cy1, C1
+    local cx2, cy2, C2
 
     if geom.is_vert(dir) then
       local sx1 = math.max(K1.sx1, K2.sx1)
@@ -441,26 +442,34 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
       assert(sx1 <= sx2)
 
-      local sx = math.imid(sx1, sx2)
+      cx1 = math.imid(sx1, sx2)
+      cx2 = cx1
 
-      local sy1 = sel(dir == 2, K1.sy1, K1.sy2)
-      local sy2 = sel(dir == 2, K2.sy2, K2.sy1)
-
-      C1 = SEEDS[sx][sy1].chunk
-      C2 = SEEDS[sx][sy2].chunk
+      cy1 = sel(dir == 2, K1.sy1, K1.sy2)
+      cy2 = sel(dir == 2, K2.sy2, K2.sy1)
     else
       local sy1 = math.max(K1.sy1, K2.sy1)
       local sy2 = math.min(K1.sy2, K2.sy2)
 
       assert(sy1 <= sy2)
 
-      local sy = math.imid(sy1, sy2)
+      cy1 = math.imid(sy1, sy2)
+      cy2 = cy1
 
-      local sx1 = sel(dir == 4, K1.sx1, K1.sx2)
-      local sx2 = sel(dir == 4, K2.sx2, K2.sx1)
+      cx1 = sel(dir == 4, K1.sx1, K1.sx2)
+      cx2 = sel(dir == 4, K2.sx2, K2.sx1)
+    end
 
-      C1 = SEEDS[sx1][sy].chunk
-      C2 = SEEDS[sx2][sy].chunk
+    C1 = SEEDS[cx1][cy1].chunk
+    if not C1 then
+      C1 = K1.room:alloc_chunk(cx1, cy1, cx1, cy1)
+      C1.foobage = "conn"
+    end
+
+    C2 = SEEDS[cx2][cy2].chunk
+    if not C2 then
+      C2 = K2.room:alloc_chunk(cx2, cy2, cx2, cy2)
+      C2.foobage = "conn"
     end
 
     if pass == NUM_PASS then
@@ -502,6 +511,11 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     end
 
     C2 = SEEDS[sx][sy].chunk
+
+    if not C2 then
+      C2 = K.room:alloc_chunk(sx, sy, sx, sy)
+      C2.foobage = "conn"
+    end
 
     if pass == NUM_PASS then
       link_chunks(C, C2, dir, D)
@@ -585,7 +599,7 @@ function CHUNK_CLASS.similar_neighbor(C, dir)
 
   local S = SEEDS[sx][sy]
 
-do return (S and (S.room or S.hall)) end --!!!!!!!1
+--do return (S and (S.room or S.hall)) end --!!!!!!!1
 
   if C.hall then return (S.hall == C.hall) end
   if C.room then return (S.room == C.room) end

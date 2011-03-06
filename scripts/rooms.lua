@@ -221,6 +221,8 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 
   C:install()
 
+  table.insert(R.chunks, C)
+
   return C
 end
 
@@ -1319,7 +1321,7 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
----???  Chunk_handle_connections()
+  Chunk_handle_connections()
 ---???  Chunk_make_parts()
 
   Rooms_choose_themes()
