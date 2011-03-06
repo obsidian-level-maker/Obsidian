@@ -510,7 +510,7 @@ Sam's suggestions:
 -  visibility: support diagonals, check if any sides in a cluster
                touch or cross a line between corners.
 
--  nail shooters FTW
+-  nail/spike shooters FTW : good in hallways
 
 -  create faces from stacked brushes behind a gap (cf. oa_dm7)
 
