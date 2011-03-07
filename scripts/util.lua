@@ -782,12 +782,14 @@ end
 a_star = {}
 
 --
--- Find path from start (sx,sy) to end (ex,ey)
+-- Find path from start (sx,sy) to end (ex,ey).
+-- The returned path includes the start but not the end.
+-- Returns NIL if no path can be found.
 --
 -- Score function:
---   f(x, y, dir) -> distance, negative for impossible
+--   f(x, y, dir, data) --> distance, negative for impossible
 --
-function a_star.find_path(W, H, sx, sy, ex, ey, score_func)
+function a_star.find_path(sx, sy, ex, ey, W, H, score_func, data)
   local open   = table.array_2D(W, H)
   local closed = table.array_2D(W, H)
 
@@ -819,7 +821,7 @@ function a_star.find_path(W, H, sx, sy, ex, ey, score_func)
     if nx < 1 or nx > W then return end
     if ny < 1 or ny > H then return end
 
-    local G = score_func(cx, cy, dir)
+    local G = score_func(cx, cy, dir, data)
 
     if G < 0 then return false end
 
@@ -845,6 +847,16 @@ function a_star.find_path(W, H, sx, sy, ex, ey, score_func)
       table.insert(p, 1, { x=cx, y=cy })
       cx, cy = closed[cx][cy].px, closed[cx][cy].py
     until not cx
+
+    -- reconstitute the direction at each spot
+    for idx = 1,#p do
+      local pos1 = p[idx]
+      local pos2 = p[idx+1]
+
+      if not pos2 then pos2 = { x=ex, y=ey } end
+
+      pos1.dir = geom.rough_dir(pos2.x - pos1.x, pos2.y - pos1.y)
+    end
 
     return p
   end

@@ -103,7 +103,7 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
     sx, sy = (sx - R.sx1) + 1, (sy - R.sy1) + 1
     ex, ey = (ex - R.sx1) + 1, (ey - R.sy1) + 1
 
-    local path = a_star.find_path(R.sw, R.sh, sx, sy, ex, ey, path_scorer, R)
+    local path = a_star.find_path(sx, sy, ex, ey, R.sw, R.sh, path_scorer, R)
 
     if not path then
       error("NO PATH INSIDE ROOM!\n")
