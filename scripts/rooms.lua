@@ -219,9 +219,14 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 
   local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
 
-  C:install()
+  C.room = R
+
+  C.x1, C.y1 = SEEDS[sx1][sy1].x1, SEEDS[sx1][sy1].y1
+  C.x2, C.y2 = SEEDS[sx2][sy2].x2, SEEDS[sx2][sy2].y2
 
   table.insert(R.chunks, C)
+
+  C:install()
 
   return C
 end

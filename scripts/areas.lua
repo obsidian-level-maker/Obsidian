@@ -26,14 +26,13 @@ function Rooms_flesh_out()
       local N = S:neighbor(dir)
       local same_room = (N and N.room == R)
       
----   if not same_room then
----     S:set_edge(dir, "solid")
----   end
       if same_room then
         local cost = 2 ^ rand.range(1, 5)
 
         S.cost[dir] = cost
         N.cost[10-dir] = cost
+      else
+        S:set_edge(dir, "solid")
       end
     end
   end
@@ -109,7 +108,23 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
       error("NO PATH INSIDE ROOM!\n")
     end
 
-    -- !!!!!! FIXME: use path
+    -- mark the seed edges as "walk"
+    for _,pos in ipairs(path) do
+      local sx = R.sx1 + (pos.x - 1)
+      local sy = R.sy1 + (pos.y - 1)
+
+      local S = SEEDS[sx][sy]
+      assert(S.room == R)
+
+      S:set_edge(pos.dir, "walk")
+
+      -- debugging stuff
+      S.debug_path = true
+      if true then
+        local mx, my = S:mid_point()
+        Trans.entity("potion", mx, my, 32)
+      end
+    end
   end
 
 
@@ -152,6 +167,17 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
   end
 
 
+  local function dummy_chunks(R)
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+      if S.room == R and not S.chunk then
+        local C = R:alloc_chunk(sx, sy, sx, sy)
+        C.foobage = "dummy"
+      end
+    end end
+  end
+
+
   local function flesh_out(R)
     init_room(R)
     place_importants(R)
@@ -159,6 +185,8 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
     make_paths(R)
     decorative_chunks(R)
     do_floors(R)
+
+dummy_chunks(R)
 
 stderrf("\n")
   end
