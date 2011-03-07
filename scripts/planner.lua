@@ -31,13 +31,6 @@ class SECTION
   room : ROOM
 
   num_conn  -- number of connections
-
-
----###  chunk_W, chunk_H  -- number of chunks
----###  chunk[X][Y] : CHUNK  -- 2D array of chunks
----###
----###  corners[DIR] : CORNER  -- each can be nil
----###  edges[DIR] : EDGE   -- each can be nil
 }
 
 
@@ -54,7 +47,7 @@ SECTION_H = 0
 SECTION_CLASS = {}
 
 function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0, corners={}, edges={} }
+  local K = { kx=x, ky=y, num_conn=0 }
   table.set_class(K, SECTION_CLASS)
   return K
 end
@@ -127,25 +120,6 @@ function SECTION_CLASS.side_has_conn(K, side)
     if C.K2 == K and C.dir == 10-side then return true end
   end
   return false
-end
-
-function SECTION_CLASS.mid_HX(K)
-  return int((K.chunk_W + 1) / 2)
-end
-
-function SECTION_CLASS.mid_HY(K)
-  return int((K.chunk_H + 1) / 2)
-end
-
-function SECTION_CLASS.middle_chunk(K, dir)
-      if dir == 2 then return K.chunk[K:mid_HX()][1]
-  elseif dir == 8 then return K.chunk[K:mid_HX()][K.chunk_H]
-  elseif dir == 4 then return K.chunk[1][K:mid_HY()]
-  elseif dir == 6 then return K.chunk[K.chunk_W][K:mid_HY()]
-  else
-    -- central one
-    return K.chunk[K:mid_HX()][K:mid_HY()]
-  end
 end
 
 
@@ -1381,6 +1355,8 @@ end
 
 function Plan_prepare_rooms()
 
+--[[ OLD STUFF
+
   local function add_edges(K)
     for side = 2,8,2 do
       local N = K:neighbor(side)
@@ -1476,16 +1452,17 @@ function Plan_prepare_rooms()
       end
     end
   end
+--]]
 
 
   local function prepare_room(R)
     for _,K in ipairs(R.sections) do
-      add_edges(K)
-      add_corners(K)
-      add_middle(R, K)
+--###      add_edges(K)
+--###      add_corners(K)
+--###      add_middle(R, K)
     end
 
-    connect_corners(R)
+--###    connect_corners(R)
 
     R.num_windows = 0
 

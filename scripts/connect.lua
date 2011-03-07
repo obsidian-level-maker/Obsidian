@@ -424,6 +424,8 @@ function Connect_rooms()
     K1.num_conn = K1.num_conn + 1
     K2.num_conn = K2.num_conn + 1
 
+--[[ OLD CRUD
+
     local E1 = K1.edges[dir]
     local E2 = K2.edges[10-dir]
 
@@ -435,6 +437,7 @@ function Connect_rooms()
 
     E1.usage = USAGE
     E2.usage = USAGE
+--]]
 
     return C
   end

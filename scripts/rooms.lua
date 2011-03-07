@@ -449,6 +449,9 @@ function Rooms_decide_windows()
   local function add_window(K, N, side)
     gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
 
+    -- FIXME
+
+    --[[ OLD OLD OLD
     local USAGE =
     {
       kind = "window",
@@ -460,6 +463,7 @@ function Rooms_decide_windows()
 
     E1.usage = USAGE
     E2.usage = USAGE
+    --]]
 
     K.room.num_windows = K.room.num_windows + 1
     N.room.num_windows = N.room.num_windows + 1

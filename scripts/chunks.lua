@@ -140,106 +140,14 @@ end
 ----------------------------------------------------------------
 
 
-function Chunk_divide_room(R)
-  --
-  -- Subdivides the room into chunks.
-  --
-
-  local function OLD_calc_block_sizes(W, bx, bw)
-    assert(W == 1 or W == 3 or W == 5)
-
-    -- begin with all chunks the same width (or height)
-    local sizes = {}
-
-    for x = 1,W do
-      sizes[x] = int(bw / W)
-    end
-
-    -- distribute extra blocks
-    local extra = bw - W * sizes[1]
-    assert(extra >= 0 and extra < W)
-
-    local dist = 0
-    local mid  = int((W+1) / 2)
-
-    while extra >= 2 do
-      sizes[1+dist] = sizes[1+dist] + 1
-      sizes[W-dist] = sizes[W-dist] + 1
-
-      extra = extra - 2
-    end
-
-    if extra >= 1 then
-      sizes[mid] = sizes[mid] + 1
-    end
-
-    -- convert to locations
-    local locs = {}
-
-    for x = 1,W do
-      local bx_next = bx + sizes[x]
-      locs[x] = { low=bx, high=bx_next-1 }
-      bx = bx_next
-    end
-
-    return locs
-  end
-
-
-  local function subdivide_section(K)
-    -- begin initially with each seed becoming a chunk
-
-    K.chunk_W = K.sw
-    K.chunk_H = K.sh
-
-    K.chunk = table.array_2D(K.chunk_W, K.chunk_H)
-
-    -- create the chunks
-    for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
-      local S = SEEDS[sx][sy]
-
-      local C = CHUNK_CLASS.new(sx, sy, sx, sy)
-
-      C.x1, C.y1 = S.x1, S.y1
-      C.x2, C.y2 = S.x2, S.y2
-
-      local x = sx - K.sx1 + 1
-      local y = sy - K.sy1 + 1
-
-      K.chunk[x][y] = C
-
-      C.room    = R
-      C.section = K
-
-      C.hx = x
-      C.hy = y 
-
-      C:install()
-
-      table.insert(R.chunks, C)
-    end end -- x, y
-  end
-
-
-  ---| Chunk_divide_room |---
-
-  for _,K in ipairs(R.sections) do
-    subdivide_section(K)
-  end
-end
-
-
-
 function Chunk_prepare_rooms()
   for _,R in ipairs(LEVEL.all_rooms) do
----###    Chunk_divide_room(R)
   end
 end
 
 
 
-function Chunk_merge_list(list)
-
+function OLD_Chunk_merge_list(list)
   local function all_horiz_aligned(x1, x2)
     for _,C2 in ipairs(list) do
       if C2.x1 ~= x1 or C2.x2 ~= x2 then return false end
@@ -385,7 +293,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
   end
 
 
-  local function merge_stuff(C, dir, D, pass)
+  local function OLD__merge_stuff(C, dir, D, pass)
     local joins = C:joining_chunks(dir)
 
     if pass < NUM_PASS then
@@ -408,7 +316,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
   end
 
 
-  local function OLD_good_linkage(C1, dir, C2)
+  local function OLD__good_linkage(C1, dir, C2)
     -- check if chunks touch nicely
 
     if geom.is_vert(dir) then
@@ -767,8 +675,8 @@ function CHUNK_CLASS.build(C)
   -- TEST CRUD : pillars
 
   if ent ~= "player1" and C.section and false then
-    local hx = C.section:mid_HX()
-    local hy = C.section:mid_HY()
+    local hx = 777 -- C.section:mid_HX()
+    local hy = 888 -- C.section:mid_HY()
 
     if C.hx == hx and C.hy == hy then
 

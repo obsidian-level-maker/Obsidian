@@ -125,6 +125,15 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
         Trans.entity("potion", mx, my, 32)
       end
     end
+
+    local last = table.last(path)
+    local lx, ly = geom.nudge(last.x, last.y, last.dir)
+    local sx = R.sx1 + lx - 1
+    local sy = R.sy1 + ly - 1
+    local S = SEEDS[sx][sy]
+    assert(S.room == R)
+
+    S.debug_path = true
   end
 
 
