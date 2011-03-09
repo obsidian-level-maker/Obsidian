@@ -604,6 +604,9 @@ function Quest_make_quests()
       end
     end
 
+    -- FIXME !!!!
+    do return rand.irange(1,#exits) end
+
     local scores = {}
 
     local entry_kx = R.kx1
@@ -728,14 +731,14 @@ function Quest_make_quests()
 
   local Q = QUEST_CLASS.new(LEVEL.start_room)
 
-  if true then --!!!!!!!!! not THEME.switch_doors then
-    -- room list remains in the "natural flow" order
-    no_quest_order(Q.start, Q)
-  else
+  if THEME.switch_doors then
     -- room list will be rebuilt in visit order
     LEVEL.all_rooms = {}
 
     visit_room(Q.start, Q)
+  else
+    -- room list remains in the "natural flow" order
+    no_quest_order(Q.start, Q)
   end
 
   setup_lev_alongs()

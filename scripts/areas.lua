@@ -48,8 +48,46 @@ function Rooms_flesh_out()
   end
 
 
+  local function spot_for_wotsit(R)
+    local spot
+
+    for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if S.room == R and not S.chunk then
+        if not spot or rand.odds(20) then spot = S end
+      end
+    end end
+
+    -- FIXME !!! use a connection chunk if nothing else free
+    if not spot then error("NO SPOT FOR WOTSIT") end
+
+    -- create chunk
+
+    local C = R:alloc_chunk(spot.sx, spot.sy, spot.sx, spot.sy)
+    C.foobage = "important"
+
+    return C
+  end
+
+
+  local function add_purpose(R)
+    local C = spot_for_wotsit(R)
+
+    C.purpose = true -- TEMP CRUD
+  end
+
+
+  local function add_weapon(R)
+    local C = spot_for_wotsit(R)
+
+    C.weapon = R.weapon
+  end
+
+
   local function place_importants(R)
-    -- TODO
+    if R.purpose then add_purpose(R) end
+    if R.weapon  then add_weapon(R)  end
   end
 
 

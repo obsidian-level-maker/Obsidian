@@ -562,6 +562,11 @@ function CHUNK_CLASS.build(C)
     if C.hall then light = light * 0.5 end
   end
 
+
+local S1 = SEEDS[C.sx1][C.sy1]
+
+  if not (C.hall or S1.debug_path) then f_h = 80 end
+
   local x1, y1 = C.x1, C.y1
   local x2, y2 = C.x2, C.y2
 
@@ -655,6 +660,9 @@ function CHUNK_CLASS.build(C)
 
   -- object
   local ent = "dummy"
+  if C.purpose then ent = "evil_eye" end
+  if C.weapon then ent = C.weapon end
+
   if not LEVEL.seen_player then
     LEVEL.seen_player = true
     ent = "player1"
