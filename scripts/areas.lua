@@ -74,7 +74,18 @@ function Rooms_flesh_out()
   local function add_purpose(R)
     local C = spot_for_wotsit(R)
 
-    C.purpose = R.purpose
+    if R.purpose == "SOLUTION" then
+      C.lock = assert(R.purpose_lock)
+
+      if C.lock.kind == "KEY" or C.lock.kind == "SWITCH" then
+        C.purpose = C.lock.kind
+      else
+        error("UNKNOWN LOCK KIND")
+      end
+
+    else
+      C.purpose = R.purpose
+    end
   end
 
 

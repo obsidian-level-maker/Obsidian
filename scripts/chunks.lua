@@ -549,16 +549,26 @@ end
 function CHUNK_CLASS.purpose_key(C)
   local R = C.room
 
-  local LOCK = assert(R.lock)
+  local LOCK = assert(C.lock)
+  assert(LOCK.key)
 
   local mx, my = C:mid_point()
 
-  Trans_entity(LOCK.item, mx, my, C.floor_h or 0)
+  Trans.entity(LOCK.key, mx, my, C.floor_h or 0)
 end
 
 
 function CHUNK_CLASS.purpose_switch(C)
   -- FIXME
+
+  local skin1 = assert(GAME.SKINS["Switch_blue1"])
+  local skin2 = { tag=0 }
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+
+  Fabricate("SMALL_SWITCH", T, { skin1, skin2 })
 end
 
 

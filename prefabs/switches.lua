@@ -20,6 +20,12 @@
 
 PREFAB.SMALL_SWITCH =
 {
+  defaults =
+  {
+    x_offset = 0,
+    y_offset = 0,
+  },
+
   brushes =
   {
     -- the base
@@ -41,7 +47,7 @@ PREFAB.SMALL_SWITCH =
       { x =  32, y = -8, mat = "?side" },
       { x =  32, y =  8, mat = "?side" },
       { x = -32, y =  8, mat = "?side" },
-      { t = 76, light = 0.66, mat = "?side" },
+      { t = 76, mat = "?side" },
     },
   },
 }
