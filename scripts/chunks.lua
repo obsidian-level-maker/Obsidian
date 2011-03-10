@@ -132,6 +132,11 @@ function CHUNK_CLASS.joining_chunks(C, dir)
 end
 
 
+function CHUNK_CLASS.mid_point(C)
+  return int((C.x1 + C.x2) / 2), int((C.y1 + C.y2) / 2)
+end
+
+
 function CHUNK_CLASS.side_len(C, dir)
   return geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 end
@@ -517,6 +522,63 @@ end
 
 
 
+function CHUNK_CLASS.purpose_start(C)
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+
+  local skin1 = { top="O_BOLT" }
+
+  Fabricate("START_SPOT", T, { skin1 })
+end
+
+
+function CHUNK_CLASS.purpose_exit(C)
+  -- FIXME QUAKE_EXIT_PAD
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+
+  local skin1 = { switch="SW1BLUE", line_kind=11, tag=0, exit="EXITSIGN", exitside="COMPSPAN" }
+
+  Fabricate("EXIT_PILLAR", T, { skin1 })
+end
+
+
+function CHUNK_CLASS.purpose_key(C)
+  local R = C.room
+
+  local LOCK = assert(R.lock)
+
+  local mx, my = C:mid_point()
+
+  Trans_entity(LOCK.item, mx, my, C.floor_h or 0)
+end
+
+
+function CHUNK_CLASS.purpose_switch(C)
+  -- FIXME
+end
+
+
+function CHUNK_CLASS.do_purpose(C)
+  if C.purpose == "START" then
+    C:purpose_start()
+
+  elseif C.purpose == "EXIT" then
+    C:purpose_exit()
+
+  elseif C.purpose == "KEY" then
+    C:purpose_key()
+
+  elseif C.purpose == "SWITCH" then
+    C:purpose_switch()
+  end
+end
+
+
+
 function CHUNK_CLASS.build(C)
 
   -- TEMP TEMP CRUD CRUD
@@ -660,16 +722,12 @@ local S1 = SEEDS[C.sx1][C.sy1]
 
   -- object
   local ent = "dummy"
-  if C.purpose then ent = "evil_eye" end
+
+  if C.purpose then C:do_purpose() end
+
   if C.weapon then ent = C.weapon end
 
-  if not LEVEL.seen_player then
-    LEVEL.seen_player = true
-    ent = "player1"
-  end
-
-  local mx = (C.x1 + C.x2) / 2
-  local my = (C.y1 + C.y2) / 2
+  local mx, my = C:mid_point()
 
   Trans.entity(ent, mx, my, 32)
 

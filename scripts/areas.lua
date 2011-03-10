@@ -74,7 +74,7 @@ function Rooms_flesh_out()
   local function add_purpose(R)
     local C = spot_for_wotsit(R)
 
-    C.purpose = true -- TEMP CRUD
+    C.purpose = R.purpose
   end
 
 

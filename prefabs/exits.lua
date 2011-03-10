@@ -20,6 +20,14 @@
 
 PREFAB.START_SPOT =
 {
+  defaults =
+  {
+    angle = 0,
+    x_offset = 0,
+    y_offset = 0,
+    peg = 0,
+  },
+
   brushes =
   {
     {
@@ -27,7 +35,7 @@ PREFAB.START_SPOT =
       { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
       { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 8, mat = "?top", light = "?light" },
+      { t = 8, mat = "?top" },
     },
 
     {
