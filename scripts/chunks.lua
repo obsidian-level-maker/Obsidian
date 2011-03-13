@@ -728,7 +728,31 @@ local S1 = SEEDS[C.sx1][C.sy1]
         })
       end
     end
+
+
+    -- keyed doors
+    if C.link[dir] then
+      local LINK = C.link[dir]
+
+      if LINK.conn and LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
+        local list = THEME.lock_doors
+
+        local edge_fabs = Layout_possible_prefab_from_list(list, "edge", LINK.conn.lock.key)
+
+        local name = rand.key_by_probs(edge_fabs)
+
+        local skin = assert(GAME.SKINS[name])
+
+        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, 0, dir,
+                                       0, 192, 32, 32)
+
+        local skin2 = { inner="CRACKLE2", outer="CRACKLE4", wall="COMPSPAN" }
+
+        Fabricate(skin._prefab, T, { skin, skin2 })
+      end
+    end
   end
+
 
   -- object
   local ent = "dummy"
