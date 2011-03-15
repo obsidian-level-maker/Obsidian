@@ -643,26 +643,33 @@ local S1 = SEEDS[C.sx1][C.sy1]
   local x2, y2 = C.x2, C.y2
 
   -- floor
-  gui.add_brush(
-  {
-    { m="solid" },
-    { x=x1, y=y1, tex=f_mat },
-    { x=x2, y=y1, tex=f_mat },
-    { x=x2, y=y2, tex=f_mat },
-    { x=x1, y=y2, tex=f_mat },
-    { t=f_h, tex=f_mat },
-  })
+
+  local f_mat = Mat_lookup(C.floor_tex or (C.room and C.room.main_tex))
+  local f_tex = f_mat.f or f_mat.t
+
+  local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+  Trans.set_tex(brush, f_mat.t)
+
+  table.insert(brush, { t=f_h, tex=f_tex })
+
+  gui.add_brush(brush)
 
   -- ceiling
-  gui.add_brush(
-  {
-    { m=c_medium },
-    { x=x1, y=y1, tex=c_mat },
-    { x=x2, y=y1, tex=c_mat },
-    { x=x2, y=y2, tex=c_mat },
-    { x=x1, y=y2, tex=c_mat },
-    { b=c_h, tex=c_mat },
-  })
+
+  local c_mat = Mat_lookup(C.ceil_tex or (C.room and C.room.main_tex))
+  local c_tex = c_mat.f or c_mat.t
+
+  brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+  Trans.set_tex(brush, c_mat.t)
+
+  table.insert(brush, { b=c_h, tex=c_tex })
+
+  gui.add_brush(brush)
+
+
+  -- parts
 
   for dir = 1,9,2 do
     local P = C.parts[dir]
