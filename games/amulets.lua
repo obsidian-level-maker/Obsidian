@@ -126,28 +126,18 @@ AMULETS.MATERIALS =
   -- FIXME this is all just temporary
 
   -- special materials --
-  _ERROR = { t="DGITEX14", f="DGITEX14" },
-  _SKY   = { t="GRAYTALL", f="F_SKY1" },
+  _ERROR = { t="DGITEX14", f="GRASS2" },
+  _SKY   = { t="DGITEX14", f="F_SKY1" },
 
   -- textures --
 
-  BROWNGRN = { t="BROWNGRN", f="FLAT1" },
-  FIREMAG1 = { t="FIREMAG1", f="NUKAGE1", sane=1 },
-  STARG3   = { t="STARG3",   f="FLAT1" },
+  WALL1 = { t="T39", f="T39" },
+
+  ROCK1 = { t="FART3", f="GRASS2" },
 
   -- flats --
 
-  FLAT1   = { t="BROWNGRN", f="FLAT1" },
-  FLAT5_6 = { t="BROWNGRN", f="FLAT5_6" },
-  LAVA1   = { t="BROWNGRN", f="LAVA1",   sane=1 },
-  NUKAGE1 = { t="BROWNGRN", f="NUKAGE1", sane=1 },
-}
-
-
-AMULETS.LIFTS =
-{
-  slow = { kind=62,  walk=88  },
-  fast = { kind=123, walk=120 },
+  GRASS2 = { t="DGITEX30", f="GRASS2" },
 }
 
 
@@ -228,22 +218,22 @@ AMULETS.SUB_THEMES =
 
     building_walls =
     {
-      BROWNGRN=25, STARG3=25,
+      WALL1=50,
     },
 
     building_floors =
     {
-      FLAT1=50,
+      WALL1=50,
     },
 
     building_ceilings =
     {
-      FLAT1=50,
+      WALL1=50,
     },
 
     courtyard_floors =
     {
-      FLAT5_6=50,
+      ROCK1=50,
     },
 
     starts = { Start_ledge = 50 },
@@ -256,6 +246,7 @@ AMULETS.SUB_THEMES =
 
   }, -- TECH
 }
+
 
 ------------------------------------------------------------
 
@@ -356,8 +347,7 @@ function AMULETS.get_levels()
 
       local LEV =
       {
-        name  = string.format("E%dM%d", episode, map),
-        patch = string.format("WILV%d%d", episode-1, map-1),
+        name  = string.format("MAP%d%d", episode, map),
 
         episode  = episode,
         ep_along = ep_along,
