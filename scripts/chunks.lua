@@ -678,6 +678,8 @@ local S1 = SEEDS[C.sx1][C.sy1]
   end
 
   -- walls
+  local w_mat = Mat_lookup(C.wall_tex or (C.room and C.room.main_tex))
+
   local thick = 16
 
   for dir = 2,8,2 do
@@ -703,36 +705,21 @@ local S1 = SEEDS[C.sx1][C.sy1]
         end
 
         if bx2 > bx1 then
-          gui.add_brush(
-          {
-            { m="solid" },
-            { x=bx1, y=by1, tex=w_mat },
-            { x=bx2, y=by1, tex=w_mat },
-            { x=bx2, y=by2, tex=w_mat },
-            { x=bx1, y=by2, tex=w_mat },
-          })
+          brush = Trans.bare_quad(bx1, by1, bx2, by2)
+          Trans.set_tex(brush, w_mat.t)
+          gui.add_brush(brush)
         end
 
         if cx2 > cx1 then
-          gui.add_brush(
-          {
-            { m="solid" },
-            { x=cx1, y=cy1, tex=w_mat },
-            { x=cx2, y=cy1, tex=w_mat },
-            { x=cx2, y=cy2, tex=w_mat },
-            { x=cx1, y=cy2, tex=w_mat },
-          })
+          brush = Trans.bare_quad(cx1, cy1, cx2, cy2)
+          Trans.set_tex(brush, w_mat.t)
+          gui.add_brush(brush)
         end
 
       else
-        gui.add_brush(
-        {
-          { m="solid" },
-          { x=bx1, y=by1, tex=w_mat },
-          { x=bx2, y=by1, tex=w_mat },
-          { x=bx2, y=by2, tex=w_mat },
-          { x=bx1, y=by2, tex=w_mat },
-        })
+          brush = Trans.bare_quad(bx1, by1, bx2, by2)
+          Trans.set_tex(brush, w_mat.t)
+          gui.add_brush(brush)
       end
     end
 
