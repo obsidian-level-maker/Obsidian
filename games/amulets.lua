@@ -306,49 +306,49 @@ AMULETS.EPISODES =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l10", "l12", "l151", "l152", "l153" },
+    maps = { "l30", "l301", "l531", "l31", "l22" },
   },
 
   episode2 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l20", "l22", "l25", "l231" },
+    maps = { "l25", "l20", "l60" },
   },
 
   episode3 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l30", "l31", "l32", "l34", "l301" },
+    maps = { "l64", "l65", "l34", "l151", "l152", "l153" },
   },
 
   episode4 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l40", "l41", "l42" },
+    maps = { "l231", "l75", "l10", "l12" },
   },
 
   episode5 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l50", "l51", "l531" },
+    maps = { "l51", "l52", "l41", "l44" },
   },
 
   episode6 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l60", "l61", "l64", "l65" },
+    maps = { "l74", "l73", "l72" },
   },
 
   episode7 =
   {
     theme = "CITY",
     sky_light = 0.75,
-    maps = { "l70", "l71", "l72", "l73", "l74", "l75" },
+    maps = { "l32", "l71", "l70", "l61", "l40" },
   },
 }
 
@@ -382,7 +382,7 @@ function AMULETS.get_levels()
 
       local LEV =
       {
-        name  = string.format("MAP%d%d", episode, map),
+        name  = string.format("E%dM%d", episode, map),
 
         wad_name = ep_info.maps[map],
 
