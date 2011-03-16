@@ -5,6 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2011 leilei
+--  Copyright (C) 2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -97,6 +98,8 @@ AMULETS.ENTITIES =
 
 AMULETS.PARAMETERS =
 {
+  -- FIXME THESE
+
   rails = true,
   switches = true,
   liquids = true,
@@ -206,13 +209,10 @@ AMULETS.LIQUIDS =
   lava   = { floor="LAVA1", wall="FIREMAG1", sec_kind=16, add_light=64 },
 }
 
-AMULETS.ROOMS =
-{
-}
 
 AMULETS.SUB_THEMES =
 {
-  amulets_tech1 =
+  amulets_city1 =
   {
     prob=50,
 
@@ -244,7 +244,7 @@ AMULETS.SUB_THEMES =
 
     floors = { H_Stair6 = 50 },
 
-  }, -- TECH
+  }, -- CITY
 }
 
 
@@ -295,46 +295,81 @@ AMULETS.PLAYER_MODEL =
   }
 }
 
+
 ------------------------------------------------------------
 
 AMULETS.EPISODES =
 {
+  -- these correspond to the seven quests
+
   episode1 =
   {
-    theme = "TECH",
+    theme = "CITY",
     sky_light = 0.75,
+    maps = { "l10", "l12", "l151", "l152", "l153" },
   },
-
--- E2M5 and E3M5 will exit when all bosses (Maximus, Flembomination 
--- and Snotfolus) are dead, so perhaps prevent an exit door or
--- switch from appearing if any of those appear in these levels?
 
   episode2 =
   {
-    theme = "TECH",  -- FIXME will be CITY later
+    theme = "CITY",
     sky_light = 0.75,
+    maps = { "l20", "l22", "l25", "l231" },
   },
 
   episode3 =
   {
-    theme = "TECH",
+    theme = "CITY",
     sky_light = 0.75,
+    maps = { "l30", "l31", "l32", "l34", "l301" },
+  },
+
+  episode4 =
+  {
+    theme = "CITY",
+    sky_light = 0.75,
+    maps = { "l40", "l41", "l42" },
+  },
+
+  episode5 =
+  {
+    theme = "CITY",
+    sky_light = 0.75,
+    maps = { "l50", "l51", "l531" },
+  },
+
+  episode6 =
+  {
+    theme = "CITY",
+    sky_light = 0.75,
+    maps = { "l60", "l61", "l64", "l65" },
+  },
+
+  episode7 =
+  {
+    theme = "CITY",
+    sky_light = 0.75,
+    maps = { "l70", "l71", "l72", "l73", "l74", "l75" },
   },
 }
+
 
 function AMULETS.setup()
  -- nothing needed
 end
 
-function AMULETS.get_levels()
-  local EP_NUM  = sel(OB_CONFIG.length == "full", 3, 1)
-  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 5)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 2 end
+function AMULETS.get_levels()
+  local EP_NUM  = sel(OB_CONFIG.length == "full", 7, 1)
+  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 5)
 
   for episode = 1,EP_NUM do
     local ep_info = AMULETS.EPISODES["episode" .. episode]
     assert(ep_info)
+
+    local MAP_NUM = #ep_info.maps
+
+    if OB_CONFIG.length == "single" then MAP_NUM = 1 end
+    if OB_CONFIG.length == "few"    then MAP_NUM = 2 end
 
     for map = 1,MAP_NUM do
       local ep_along = map / 6
@@ -349,6 +384,8 @@ function AMULETS.get_levels()
       {
         name  = string.format("MAP%d%d", episode, map),
 
+        wad_name = ep_info.maps[map],
+
         episode  = episode,
         ep_along = ep_along,
         ep_info  = ep_info,
@@ -360,13 +397,13 @@ function AMULETS.get_levels()
   end -- for episode
 end
 
+
 function AMULETS.begin_level()
   -- set the description here
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
 end
-
 
 
 ------------------------------------------------------------
@@ -390,21 +427,7 @@ OB_GAMES["amulets"] =
   },
 }
 
--- themes (TECH2 etc...): caves, spaceship (use flemkeys here)
-
-OB_THEMES["amulets_tech"] =
-{
-  label = "Tech",
-  for_games = { amulets=1 },
-
-  name_theme = "TECH",
-  mixed_prob = 50,
-}
-
--- themes (CITY2 etc...): sewers, lodge {lots of trees 
--- and grassy / rocky terrain outdoors, wooden buildings)
-
-UNFINISHED["amulets_city"] =
+OB_THEMES["amulets_city"] =
 {
   label = "City",
   for_games = { amulets=1 },
