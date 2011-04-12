@@ -59,7 +59,6 @@ require 'hallway'
 require 'areas'
 
 require 'rooms'
-require 'tiler'
 require 'fight'
 require 'monsters'
 require 'naming'
