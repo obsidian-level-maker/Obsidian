@@ -50,7 +50,7 @@ LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
 
 
-#----- Objects ----------------------------------------------------
+#----- OBLIGE Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_cookie.o  \
@@ -108,6 +108,44 @@ $(OBJ_DIR)/%.o: gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
+#----- LUA Objects --------------------------------------------------
+
+LUA_OBJS=\
+	$(OBJ_DIR)/lua/lapi.o     \
+	$(OBJ_DIR)/lua/lcode.o    \
+	$(OBJ_DIR)/lua/ldebug.o   \
+	$(OBJ_DIR)/lua/ldo.o      \
+	$(OBJ_DIR)/lua/ldump.o    \
+	$(OBJ_DIR)/lua/lfunc.o    \
+	$(OBJ_DIR)/lua/lgc.o      \
+	$(OBJ_DIR)/lua/llex.o     \
+	$(OBJ_DIR)/lua/lmem.o     \
+	$(OBJ_DIR)/lua/lobject.o  \
+	$(OBJ_DIR)/lua/lopcodes.o \
+	$(OBJ_DIR)/lua/lparser.o  \
+	$(OBJ_DIR)/lua/lstate.o   \
+	$(OBJ_DIR)/lua/lstring.o  \
+	$(OBJ_DIR)/lua/ltable.o   \
+	$(OBJ_DIR)/lua/ltm.o      \
+	$(OBJ_DIR)/lua/lundump.o  \
+	$(OBJ_DIR)/lua/lvm.o      \
+	$(OBJ_DIR)/lua/lzio.o     \
+	\
+	$(OBJ_DIR)/lua/lauxlib.o   \
+	$(OBJ_DIR)/lua/lbaselib.o  \
+	$(OBJ_DIR)/lua/ldblib.o    \
+	$(OBJ_DIR)/lua/liolib.o    \
+	$(OBJ_DIR)/lua/lmathlib.o  \
+	$(OBJ_DIR)/lua/loslib.o    \
+	$(OBJ_DIR)/lua/ltablib.o   \
+	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/loadlib.o   \
+	$(OBJ_DIR)/lua/linit.o
+
+$(OBJ_DIR)/lua/%.o: lua_src/%.cc
+	$(CXX) $(CXXFLAGS) -o $@ -c $<
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -115,8 +153,8 @@ all: $(PROGRAM)
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 
-$(PROGRAM): $(OBJS)
-	$(CXX) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS)
+	$(CXX) $(OBJS) $(LUA_OBJS) -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
