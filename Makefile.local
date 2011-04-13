@@ -22,7 +22,6 @@ LIB_LOC=lib_linux
 OBJ_DIR=obj_linux
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
-LUA_DIR=$(LIB_LOC)/lua-5.1.4
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O0 -g3
@@ -38,16 +37,13 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
           $(FLTK_DIR)/lib/libfltk.a \
           -lX11 -lXext -lpng -ljpeg
 
-LUA_FLAGS=-I$(LUA_DIR)/src
-LUA_LIBS=$(LUA_DIR)/src/liblua.a
-
 GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) \
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src \
          $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
-LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
 
 
 #----- OBLIGE Objects ----------------------------------------------
@@ -142,8 +138,10 @@ LUA_OBJS=\
 	$(OBJ_DIR)/lua/loadlib.o   \
 	$(OBJ_DIR)/lua/linit.o
 
+LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI
+
 $(OBJ_DIR)/lua/%.o: lua_src/%.cc
-	$(CXX) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
 #----- Targets ----------------------------------------------------
@@ -152,6 +150,7 @@ all: $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+	rm -f $(OBJ_DIR)/lua/*.o
 
 $(PROGRAM): $(OBJS) $(LUA_OBJS)
 	$(CXX) $(OBJS) $(LUA_OBJS) -o $@ $(LDFLAGS) $(LIBS)
