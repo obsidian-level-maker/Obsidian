@@ -344,13 +344,16 @@ SKY GENERATOR:
 
 +  simpler list traversal : each x in LIST
 
-+  continue statement
-
 +  ?: operator
 
 -  data tables: optional comma after }
 
--  != is synonymous to ~=
+-  supply a safe tmpnam() function
+
+DONE:  continue statement
+DONE:  != is synonymous to ~=
+
+-  document the Lua changes somewhere...
 
 
 ----------------------------------------------------------------
