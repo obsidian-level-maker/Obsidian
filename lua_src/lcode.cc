@@ -411,6 +411,13 @@ static void exp2reg (FuncState *fs, expdesc *e, int reg) {
 }
 
 
+void luaK_exp2reg (FuncState *fs, expdesc *e, int reg) {
+  luaK_dischargevars(fs, e);
+  freeexp(fs, e);
+  exp2reg(fs, e, reg);
+}
+
+
 void luaK_exp2nextreg (FuncState *fs, expdesc *e) {
   luaK_dischargevars(fs, e);
   freeexp(fs, e);

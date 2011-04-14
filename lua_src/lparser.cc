@@ -532,7 +532,7 @@ static void constructor (LexState *ls, expdesc *t) {
         break;
       }
     }
-    // -AJA- 2011/04/14: optional commas at end of a line
+    // -AJA- 2011/04/14: data tables: optional commas at end of a line
     if (! (testnext(ls, ',') || testnext(ls, ';')))
       if (ls->linenumber == itemline)
         break;
@@ -671,13 +671,19 @@ static void funcargs (LexState *ls, expdesc *f) {
 */
 
 
+static void ifexpr (LexState *ls, expdesc *v);
+
 static void prefixexp (LexState *ls, expdesc *v) {
-  /* prefixexp -> NAME | '(' expr ')' */
+  /* prefixexp -> NAME | '(' expr | ifexpr ')' */
   switch (ls->t.token) {
     case '(': {
       int line = ls->linenumber;
       luaX_next(ls);
-      expr(ls, v);
+      // -AJA- 2011/04/14:
+      // support a ternary operator in the form: (if X then Y else Z)
+      // based on Ryota Hirose's 2010/09/14 patch.
+      if (ls->t.token == TK_IF) ifexpr(ls, v);
+      else expr(ls, v);
       check_match(ls, ')', '(', line);
       luaK_dischargevars(ls->fs, v);
       return;
@@ -826,6 +832,28 @@ static const struct {
 };
 
 #define UNARY_PRIORITY	8  /* priority for unary operators */
+
+
+static int cond (LexState *ls);
+
+static void ifexpr (LexState *ls, expdesc *v) {
+  /* ifexpr -> IF cond THEN expr ELSE expr */
+  FuncState *fs = ls->fs;
+  int condexit;
+  int escapelist = NO_JUMP;
+  int reg;
+  luaX_next(ls);				/* skip IF */
+  condexit = cond(ls);
+  checknext(ls, TK_THEN);
+  expr(ls, v);					/* eval THEN part */
+  reg = luaK_exp2anyreg(fs, v);			/* set result to reg. */
+  luaK_concat(fs, &escapelist, luaK_jump(fs));
+  luaK_patchtohere(fs, condexit);
+  checknext(ls, TK_ELSE);
+  expr(ls, v);					/* eval ELSE part */
+  luaK_exp2reg(fs, v, reg);			/* set result to reg. */
+  luaK_patchtohere(fs, escapelist);
+}
 
 
 /*
