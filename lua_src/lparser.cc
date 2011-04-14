@@ -509,7 +509,8 @@ static void constructor (LexState *ls, expdesc *t) {
   init_exp(&cc.v, VVOID, 0);  /* no value (yet) */
   luaK_exp2nextreg(ls->fs, t);  /* fix it at stack top (for gc) */
   checknext(ls, '{');
-  do {
+  for (;;) {
+    int itemline = ls->linenumber;
     lua_assert(cc.v.k == VVOID || cc.tostore > 0);
     if (ls->t.token == '}') break;
     closelistfield(fs, &cc);
@@ -531,7 +532,11 @@ static void constructor (LexState *ls, expdesc *t) {
         break;
       }
     }
-  } while (testnext(ls, ',') || testnext(ls, ';'));
+    // -AJA- 2011/04/14: optional commas at end of a line
+    if (! (testnext(ls, ',') || testnext(ls, ';')))
+      if (ls->linenumber == itemline)
+        break;
+  }
   check_match(ls, '}', '{', line);
   lastlistfield(fs, &cc);
   SETARG_B(fs->f->code[pc], luaO_int2fb(cc.na)); /* set initial array size */
