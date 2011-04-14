@@ -40,8 +40,7 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
 GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src \
-         $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src $(FLTK_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
 LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
 
@@ -153,7 +152,7 @@ clean:
 	rm -f $(OBJ_DIR)/lua/*.o
 
 $(PROGRAM): $(OBJS) $(LUA_OBJS)
-	$(CXX) $(OBJS) $(LUA_OBJS) -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)

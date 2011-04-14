@@ -26,7 +26,6 @@ CXX=g++
 LIB_LOC=lib_linux
 OBJ_DIR=obj_linux
 
-LUA_DIR=$(LIB_LOC)/lua-5.1.4
 GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O2
@@ -41,19 +40,17 @@ OS=UNIX
 FLTK_FLAGS=
 FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
 
-LUA_FLAGS=-I$(LUA_DIR)/src
-LUA_LIBS=$(LUA_DIR)/src/liblua.a
-
 GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -DFHS_INSTALL -D$(OS) \
-         $(FLTK_FLAGS) $(LUA_FLAGS) $(GLBSP_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) $(FLTK_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
-LIBS=-lm -lz $(FLTK_LIBS) $(LUA_LIBS) $(GLBSP_LIBS)
+LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
+
+CXXFLAGS += -DFHS_INSTALL
 
 
-#----- Objects ----------------------------------------------------
+#----- OBLIGE Objects ----------------------------------------------
 
 OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/m_cookie.o  \
@@ -111,15 +108,56 @@ $(OBJ_DIR)/%.o: gui/%.cc
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
 
 
+#----- LUA Objects --------------------------------------------------
+
+LUA_OBJS=\
+	$(OBJ_DIR)/lua/lapi.o     \
+	$(OBJ_DIR)/lua/lcode.o    \
+	$(OBJ_DIR)/lua/ldebug.o   \
+	$(OBJ_DIR)/lua/ldo.o      \
+	$(OBJ_DIR)/lua/ldump.o    \
+	$(OBJ_DIR)/lua/lfunc.o    \
+	$(OBJ_DIR)/lua/lgc.o      \
+	$(OBJ_DIR)/lua/llex.o     \
+	$(OBJ_DIR)/lua/lmem.o     \
+	$(OBJ_DIR)/lua/lobject.o  \
+	$(OBJ_DIR)/lua/lopcodes.o \
+	$(OBJ_DIR)/lua/lparser.o  \
+	$(OBJ_DIR)/lua/lstate.o   \
+	$(OBJ_DIR)/lua/lstring.o  \
+	$(OBJ_DIR)/lua/ltable.o   \
+	$(OBJ_DIR)/lua/ltm.o      \
+	$(OBJ_DIR)/lua/lundump.o  \
+	$(OBJ_DIR)/lua/lvm.o      \
+	$(OBJ_DIR)/lua/lzio.o     \
+	\
+	$(OBJ_DIR)/lua/lauxlib.o   \
+	$(OBJ_DIR)/lua/lbaselib.o  \
+	$(OBJ_DIR)/lua/ldblib.o    \
+	$(OBJ_DIR)/lua/liolib.o    \
+	$(OBJ_DIR)/lua/lmathlib.o  \
+	$(OBJ_DIR)/lua/loslib.o    \
+	$(OBJ_DIR)/lua/ltablib.o   \
+	$(OBJ_DIR)/lua/lstrlib.o   \
+	$(OBJ_DIR)/lua/loadlib.o   \
+	$(OBJ_DIR)/lua/linit.o
+
+LUA_CXXFLAGS=$(OPTIMISE) -Wall -DLUA_ANSI
+
+$(OBJ_DIR)/lua/%.o: lua_src/%.cc
+	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
 
 clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
+	rm -f $(OBJ_DIR)/lua/*.o
 
-$(PROGRAM): $(OBJS)
-	$(CXX) $(CFLAGS) $(OBJS) -o $@ $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS)
+	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
