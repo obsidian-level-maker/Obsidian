@@ -344,13 +344,9 @@ SKY GENERATOR:
 
 +  simpler list traversal : each x in LIST
 
-+  ?: operator
-
--  data tables: optional comma after }
-
--  supply a safe tmpnam() function
-
+DONE:  data tables: comma is optional at end of lines
 DONE:  continue statement
+DONE:  ternary operator in form: (if X then Y else Z)
 DONE:  != is synonymous to ~=
 
 -  document the Lua changes somewhere...
