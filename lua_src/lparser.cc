@@ -1183,6 +1183,62 @@ static void forstat (LexState *ls, int line) {
 }
 
 
+static int eachexpr (LexState *ls, expdesc *v, int islist)
+{
+  // FIXME !!!!
+  expr(ls, v);
+  return 1;
+}
+
+
+// -AJA- 2011/04/16: implemented this syntactic sugar.
+//       Equivalent to normal for loop with 'ipairs' if one variable is
+//       present or 'pairs' if two variables are given.
+static void eachstat (LexState *ls, int line) {
+  /* eachstat -> EACH [ key, ] val IN expr DO */
+  FuncState *fs = ls->fs;
+  TString *indexname;
+  TString *valuename = NULL;
+  int islist = 1;
+  BlockCnt bl;
+
+  enterblock(fs, &bl, 1);  /* scope for loop and control variables */
+  luaX_next(ls);  /* skip `each' */
+  indexname = str_checkname(ls);  /* first variable name */
+  if (ls->t.token == ',') {
+    luaX_next(ls);
+    valuename = str_checkname(ls);  /* second variable name */
+  } else {
+    valuename = indexname;
+    indexname = luaX_newstring(ls, "_index", 6);
+    islist = 0;
+  }
+
+  {
+  FuncState *fs = ls->fs;
+  expdesc e;
+  int nvars = 0;
+  int line;
+  int base = fs->freereg;
+  /* create control variables */
+  new_localvarliteral(ls, "(for generator)", nvars++);
+  new_localvarliteral(ls, "(for state)", nvars++);
+  new_localvarliteral(ls, "(for control)", nvars++);
+  /* create declared variables */
+  new_localvar(ls, indexname, nvars++);
+  new_localvar(ls, valuename, nvars++);
+  checknext(ls, TK_IN);
+  line = ls->linenumber;
+  adjust_assign(ls, 3, eachexpr(ls, &e, islist), &e);
+  luaK_checkstack(fs, 3);  /* extra space to call generator */
+  forbody(ls, base, line, nvars - 3, 0);
+  }
+
+  check_match(ls, TK_END, TK_EACH, line);
+  leaveblock(fs);  /* loop scope (`break' jumps to this point) */
+}
+
+
 static int test_then_block (LexState *ls) {
   /* test_then_block -> [IF | ELSEIF] cond THEN block */
   int condexit;
@@ -1343,6 +1399,10 @@ static int statement (LexState *ls) {
     }
     case TK_FOR: {  /* stat -> forstat */
       forstat(ls, line);
+      return 0;
+    }
+    case TK_EACH: {  /* stat -> eachstat */
+      eachstat(ls, line);
       return 0;
     }
     case TK_REPEAT: {  /* stat -> repeatstat */
