@@ -671,7 +671,29 @@ static void funcargs (LexState *ls, expdesc *f) {
 */
 
 
-static void ifexpr (LexState *ls, expdesc *v);
+static void ifexpr (LexState *ls, expdesc *v) {
+  /* ifexpr -> cond ? expr , expr */
+  FuncState *fs = ls->fs;
+  int condexit;
+  int escapelist = NO_JUMP;
+  int reg;
+
+  luaX_next(ls);				/* skip '?' */
+  if (v->k == VNIL) v->k = VFALSE;  /* `falses' are all equal here */
+  luaK_goiftrue(ls->fs, v);
+  condexit = v->f;
+
+  expr(ls, v);					/* eval TRUE part */
+  reg = luaK_exp2anyreg(fs, v);			/* set result to reg. */
+  luaK_concat(fs, &escapelist, luaK_jump(fs));
+  luaK_patchtohere(fs, condexit);
+
+  checknext(ls, ',');
+  expr(ls, v);					/* eval FALSE part */
+  luaK_exp2reg(fs, v, reg);			/* set result to reg. */
+  luaK_patchtohere(fs, escapelist);
+}
+
 
 static void prefixexp (LexState *ls, expdesc *v) {
   /* prefixexp -> NAME | '(' expr | ifexpr ')' */
@@ -679,11 +701,12 @@ static void prefixexp (LexState *ls, expdesc *v) {
     case '(': {
       int line = ls->linenumber;
       luaX_next(ls);
-      // -AJA- 2011/04/14:
-      // support a ternary operator in the form: (if X then Y else Z)
+      // -AJA- 2011/04/16:
+      // support a ternary operator in the form: (X ? Y , Z)
       // based on Ryota Hirose's 2010/09/14 patch.
-      if (ls->t.token == TK_IF) ifexpr(ls, v);
-      else expr(ls, v);
+      expr(ls, v);
+      if (ls->t.token == '?')
+        ifexpr(ls, v);
       check_match(ls, ')', '(', line);
       luaK_dischargevars(ls->fs, v);
       return;
@@ -832,28 +855,6 @@ static const struct {
 };
 
 #define UNARY_PRIORITY	8  /* priority for unary operators */
-
-
-static int cond (LexState *ls);
-
-static void ifexpr (LexState *ls, expdesc *v) {
-  /* ifexpr -> IF cond THEN expr ELSE expr */
-  FuncState *fs = ls->fs;
-  int condexit;
-  int escapelist = NO_JUMP;
-  int reg;
-  luaX_next(ls);				/* skip IF */
-  condexit = cond(ls);
-  checknext(ls, TK_THEN);
-  expr(ls, v);					/* eval THEN part */
-  reg = luaK_exp2anyreg(fs, v);			/* set result to reg. */
-  luaK_concat(fs, &escapelist, luaK_jump(fs));
-  luaK_patchtohere(fs, condexit);
-  checknext(ls, TK_ELSE);
-  expr(ls, v);					/* eval ELSE part */
-  luaK_exp2reg(fs, v, reg);			/* set result to reg. */
-  luaK_patchtohere(fs, escapelist);
-}
 
 
 /*
