@@ -1185,8 +1185,40 @@ static void forstat (LexState *ls, int line) {
 
 static int eachexpr (LexState *ls, expdesc *v, int islist)
 {
-  // FIXME !!!!
-  expr(ls, v);
+  // -AJA- parse an expression and call 'ipairs' or 'pairs' with the
+  //       expression as its single argument.
+
+  const char *funcname = islist ? "ipairs" : "pairs";
+  TString *t_funcname = luaX_newstring(ls, funcname, islist ? 6 : 5);
+
+  FuncState *fs = ls->fs;
+  expdesc f;
+  expdesc args;
+  int base;
+  int nparams;
+  int line;
+
+  init_exp(&f, VGLOBAL, NO_REG);
+  f.u.s.info = luaK_stringK(fs, t_funcname);
+  luaK_exp2nextreg(fs, &f);
+
+///--- funcargs(ls, &f);
+///--- memcpy(v, &f, sizeof(*v));
+
+  line = ls->linenumber;
+  expr(ls, &args);
+  luaK_exp2nextreg(fs, &args);
+  luaK_setmultret(fs, &args);
+
+  lua_assert(f.k == VNONRELOC);
+  lua_assert(hasmultret(args.k));
+  base = f.u.s.info;  // base register for call
+  nparams = LUA_MULTRET;  // open call
+
+  init_exp(v, VCALL, luaK_codeABC(fs, OP_CALL, base, nparams+1, 2));
+  luaK_fixline(fs, line);
+  fs->freereg = base+1;
+
   return 1;
 }
 
@@ -1199,7 +1231,7 @@ static void eachstat (LexState *ls, int line) {
   FuncState *fs = ls->fs;
   TString *indexname;
   TString *valuename = NULL;
-  int islist = 1;
+  int islist;
   BlockCnt bl;
 
   enterblock(fs, &bl, 1);  /* scope for loop and control variables */
@@ -1208,10 +1240,11 @@ static void eachstat (LexState *ls, int line) {
   if (ls->t.token == ',') {
     luaX_next(ls);
     valuename = str_checkname(ls);  /* second variable name */
+    islist = 0;
   } else {
     valuename = indexname;
     indexname = luaX_newstring(ls, "_index", 6);
-    islist = 0;
+    islist = 1;
   }
 
   {
