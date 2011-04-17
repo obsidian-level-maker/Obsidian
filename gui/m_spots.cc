@@ -425,7 +425,7 @@ void SPOT_MonsterSpots(std::vector<grid_point_c> & spots)
   for (;;)
   {
     int x1, x2;
-    int y1, y2;
+    int y1=0, y2=0;
 
     x1 = biggest_gap(&y1, &y2);
   
