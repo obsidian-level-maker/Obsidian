@@ -43,7 +43,7 @@ FLTK_LIBS=-lfltk_images -lfltk -lX11 -lXext -lpng -ljpeg
 GLBSP_FLAGS=-I$(GLBSP_DIR)/src
 GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
 
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) $(FLTK_FLAGS) $(GLBSP_FLAGS)
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src $(FLTK_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=-L/usr/X11R6/lib 
 LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
 

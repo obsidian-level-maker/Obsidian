@@ -38,7 +38,7 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -Wno-strict-aliasing -D$(OS) \
-         $(FLTK_FLAGS) $(GLBSP_FLAGS)
+         -Ilua_src $(FLTK_FLAGS) $(GLBSP_FLAGS)
 LDFLAGS=
 LIBS=-lm $(FLTK_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
