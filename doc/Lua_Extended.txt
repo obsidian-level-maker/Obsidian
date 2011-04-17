@@ -12,5 +12,30 @@ I decided to fork the Lua 5.1.4 code into a custom version.
 CHANGES
 -------
 
-1. 
+1. Simpler traversal of lists and tables.  I have introduced a new
+   keyword 'each' which is similar to 'for' but does not require
+   the ipairs() or pairs() functions -- one is called automatically
+   (ipairs for a single variable, pairs for two).
+
+   Example (i):  each A in array do ... end
+
+   Example (ii): each K,V in table do ... end
+
+   For list traversal, a local variable called '_index' will contain
+   the current index value.
+
+
+2. Data tables don't require a separator (colon or semicolon) at
+   the end of a line to separate the next item.  In the middle of
+   a line they are still needed though.  This is analogous to
+   statements where semicolons are optional at the end of a line.
+
+   Example:
+
+   x = {
+     { 123, 234, 345 }
+     { 456, 567, 678 }
+     { 789, 891, 912 }
+   }
+
 
