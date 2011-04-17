@@ -49,7 +49,7 @@ CHANGES
    Note that the parentheses are required, which made the parsing
    code easier but also prevents any ambiguity with the comma.
    The colon used in the C / C++ operator could not be used here
-   since Lua already uses it as an operator (for method calls).
+   since Lua already uses it for method calls.
 
 
 4. Continue statement.  This is something I missed a lot from C
@@ -67,4 +67,9 @@ CHANGES
 
         ... do something ...
       end
+
+
+5. Added != operator with the same meaning as '~=' (not equals)
+   since I find it more readable -- the exclamation mark just
+   stands out more.
 
