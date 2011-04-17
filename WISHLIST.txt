@@ -342,14 +342,8 @@ SKY GENERATOR:
   LUA EXTENSIONS
 ----------------------------------------------------------------
 
-+  simpler list traversal : each x in LIST
-
-DONE:  data tables: comma is optional at end of lines
-DONE:  continue statement
-DONE:  ternary operator in form: (if X then Y else Z)
-DONE:  != is synonymous to ~=
-
--  document the Lua changes somewhere...
+-  transfer Lua_Extended.txt document to the website
+   (part of modding guide).
 
 
 ----------------------------------------------------------------

@@ -5,10 +5,7 @@ OBLIGE TODO
 Current Work
 ------------
 
-A* code:
-   (1) pass a 'data' parameter for the scorer function
-   (2) make scorer function parameters: x, y, dir, data
-   (3) include 'dir' value in each segment of path result
+!!!  get SWITCHES and SWITCHED-DOORS working again
 
 >>> areas.lua : all room fleshing out stuff
 
