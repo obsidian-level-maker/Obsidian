@@ -21,11 +21,11 @@ CHANGES
 
    Example (ii): each K,V in table do ... end
 
-   For list traversal, a local variable called '_index' will contain
+   For list traversal, a local variable called '_index' contains
    the current index value.
 
 
-2. Data tables don't require a separator (colon or semicolon) at
+2. Data tables don't require a separator (comma or semicolon) at
    the end of a line to separate the next item.  In the middle of
    a line they are still needed though.  This is analogous to
    statements where semicolons are optional at the end of a line.
@@ -38,4 +38,33 @@ CHANGES
      { 789, 891, 912 }
    }
 
+
+3. Ternary operator similar to ?: which is well known in C / C++.
+   Initially I tried a patch which used if/then/else syntax, but
+   this was too clusmy for my taste and I modified it to use the
+   following syntax:
+
+   Example: x = (game == "doom" ? 1 , 2)
+
+   Note that the parentheses are required, which made the parsing
+   code easier but also prevents any ambiguity with the comma.
+   The colon used in the C / C++ operator could not be used here
+   since Lua already uses it as an operator (for method calls).
+
+
+4. Continue statement.  This is something I missed a lot from C
+   and C++, since I prefer to keep indentation to a minimum and
+   tend to write loops with "filters" near the beginning.
+
+   Example:
+
+      each R in LEVEL.rooms do
+        -- ignore outside rooms
+        if R.outdoor then continue end
+
+        -- ignore cavey rooms
+        if R.natural then continue end
+
+        ... do something ...
+      end
 
