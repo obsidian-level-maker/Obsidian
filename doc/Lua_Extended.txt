@@ -1,0 +1,16 @@
+
+LUA EXTENSIONS
+==============
+
+The version of Lua used in OBLIGE has been extended to enhance code
+readability and to suit my programming style.  Lua 5.1.4 was the
+base for this, it had worked well for a long time and the changes
+coming in the 5.2 series did not provide anything I wanted.  Hence
+I decided to fork the Lua 5.1.4 code into a custom version.
+
+
+CHANGES
+-------
+
+1. 
+
