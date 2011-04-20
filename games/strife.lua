@@ -23,46 +23,46 @@ STRIFE = { }
 STRIFE.ENTITIES =
 {
   --- special stuff ---
-  player1 = { id=1, kind="other", r=16,h=56 },
-  player2 = { id=2, kind="other", r=16,h=56 },
-  player3 = { id=3, kind="other", r=16,h=56 },
-  player4 = { id=4, kind="other", r=16,h=56 },
+  player1 = { id=1, kind="other", r=16,h=56 }
+  player2 = { id=2, kind="other", r=16,h=56 }
+  player3 = { id=3, kind="other", r=16,h=56 }
+  player4 = { id=4, kind="other", r=16,h=56 }
 
-  dm_player     = { id=11, kind="other", r=16,h=56 },
-  teleport_spot = { id=14, kind="other", r=16,h=56 },
+  dm_player     = { id=11, kind="other", r=16,h=56 }
+  teleport_spot = { id=14, kind="other", r=16,h=56 }
 
   --- monsters ---
-  acolyte = { id=1234, kind="monster", r=16,h=56 },
+  acolyte = { id=1234, kind="monster", r=16,h=56 }
 
-  -- bosses
+  --- bosses ---
 
   --- pickups ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true },
+  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
 
   --- scenery ---
-  wall_torch  = { id=50, kind="scenery", r=10,h=64, light=255 },
+  wall_torch  = { id=50, kind="scenery", r=10,h=64, light=255 }
 
 }
 
 
 STRIFE.PARAMETERS =
 {
-  sub_format = "strife",
+  sub_format = "strife"
 
-  rails = true,
-  switches = true,
-  liquids = true,
-  teleporters = true,
-  light_brushes = true,
+  rails = true
+  switches = true
+  liquids = true
+  teleporters = true
+  light_brushes = true
 
-  max_name_length = 28,
+  max_name_length = 28
 
-  skip_monsters = { 20,30 },
+  skip_monsters = { 20,30 }
 
-  time_factor   = 1.0,
-  damage_factor = 1.0,
-  ammo_factor   = 0.8,
-  health_factor = 0.7,
+  time_factor   = 1.0
+  damage_factor = 1.0
+  ammo_factor   = 0.8
+  health_factor = 0.7
 }
 
 
@@ -71,19 +71,19 @@ STRIFE.PARAMETERS =
 STRIFE.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="BIGSTN02", f="P_SPLATR" },
-  _SKY   = { t="BIGSTN01", f="F_SKY001"  },
+  _ERROR = { t="BIGSTN02", f="P_SPLATR" }
+  _SKY   = { t="BIGSTN01", f="F_SKY001" }
 
   -- textures --
 
-  BRKGRY01 = { t="BRKGRY01", f="F_BRKTOP" },
-  BRKGRY17 = { t="BRKGRY17", f="F_BRKTOP" },
-  WALCAV01 = { t="WALCAV01", f="F_CAVE01" },
+  BRKGRY01 = { t="BRKGRY01", f="F_BRKTOP" }
+  BRKGRY17 = { t="BRKGRY17", f="F_BRKTOP" }
+  WALCAV01 = { t="WALCAV01", f="F_CAVE01" }
 
   -- flats --
 
-  F_BRKTOP = { t="BRKGRY01", f="F_BRKTOP" },
-  F_CAVE01 = { t="WALCAV01", f="F_CAVE01" },
+  F_BRKTOP = { t="BRKGRY01", f="F_BRKTOP" }
+  F_CAVE01 = { t="WALCAV01", f="F_CAVE01" }
 
 }
 
@@ -95,7 +95,7 @@ STRIFE.COMBOS =
   BRICK1 =
   {
     wall = "BRKGRY01"
-  },
+  }
 
   CAVE1 =
   {
@@ -115,22 +115,22 @@ STRIFE.SUB_THEMES =
     building_walls =
     {
       BRICK1=50,
-    },
+    }
 
     building_floors =
     {
       F_BRKTOP=50,
-    },
+    }
 
     building_ceilings =
     {
       F_BRKTOP=50,
-    },
+    }
 
     courtyard_floors =
     {
       CAVE1=20,
-    },
+    }
   }, -- TECH
 }
 
@@ -147,8 +147,10 @@ STRIFE.WEAPONS =
 {
   dagger =
   {
-    rate=1.5, damage=10, attack="melee",
-  },
+    attack = "melee"
+    rate = 1.5
+    damage = 10
+  }
 
   -- FIXME : STRIFE.WEAPONS
 }
@@ -164,8 +166,8 @@ STRIFE.PLAYER_MODEL =
 {
   strifeguy =
   {
-    stats   = { health=0 },
-    weapons = { dagger=1 },
+    stats   = { health=0 }
+    weapons = { dagger=1 }
   }
 }
 
@@ -191,11 +193,10 @@ function STRIFE.get_levels()
 
       local LEV =
       {
-        name = string.format("MAP%d%d", episode-1, map),
-
-        episode  = episode,
-        ep_along = map / MAP_NUM,
-        ep_info  = { },
+        name = string.format("MAP%d%d", episode-1, map)
+        episode  = episode
+        ep_along = map / MAP_NUM
+        ep_info  = { }
       }
 
       table.insert(GAME.all_levels, LEV)
@@ -210,20 +211,20 @@ end
 
 UNFINISHED["strife"] =
 {
-  label = "Strife",
+  label = "Strife"
 
-  format = "doom",
+  format = "doom"
 
   tables =
   {
     STRIFE
-  },
+  }
 
   hooks =
   {
-    setup      = STRIFE.setup,
-    get_levels = STRIFE.get_levels,
-  },
+    setup      = STRIFE.setup
+    get_levels = STRIFE.get_levels
+  }
 }
 
 

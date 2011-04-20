@@ -24,53 +24,53 @@ FREEDOOM.MONSTER_LIST =
 {
   ---| fairly good |---
 
-  zombie  = 2,
-  shooter = 2,
-  imp     = 2,
-  demon   = 2,
-  spectre = 2,
-  caco    = 2,
-  arach   = 2,
+  zombie  = 2
+  shooter = 2
+  imp     = 2
+  demon   = 2
+  spectre = 2
+  caco    = 2
+  arach   = 2
 
-  revenant = 2,
-  mancubus = 2,
+  revenant = 2
+  mancubus = 2
 
   ---| crappy but playable |---
 
-  skull   = 1,  -- missing death frames
-  baron   = 1,  -- not yet coloured
-  gunner  = 1,
-  ss_dude = 1,
+  skull   = 1  -- missing death frames
+  baron   = 1  -- not yet coloured
+  gunner  = 1
+  ss_dude = 1
 
   ---| missing sprites |---
   
-  knight = 0,
-  pain   = 0,
-  vile   = 0,
-  cyber  = 0,
-  spider = 0,
+  knight = 0
+  pain   = 0
+  vile   = 0
+  cyber  = 0
+  spider = 0
 }
 
 FREEDOOM.SCENERY_LIST =
 {
   ---| missing sprites |---
 
-  hang_arm_pair = 0,
-  hang_leg_pair = 0,
-  hang_leg_gone = 0,
-  hang_leg      = 0,
+  hang_arm_pair = 0
+  hang_leg_pair = 0
+  hang_leg_gone = 0
+  hang_leg      = 0
 }
 
 FREEDOOM.LIQUID_LIST = --FIXME
 {
-  water = { floor="FWATER1", wall="WFALL1" },
+  water = { floor="FWATER1", wall="WFALL1" }
 }
 
 FREEDOOM.SKY_INFO =
 {
-  { color="brown",  light=192 },
-  { color="black",  light=160 },
-  { color="red",    light=192 },
+  { color="brown",  light=192 }
+  { color="black",  light=160 }
+  { color="red",    light=192 }
 }
 
 
@@ -101,19 +101,19 @@ end
 
 UNFINISHED["freedoom"] =
 {
-  label = "FreeDoom 0.6",
+  label = "FreeDoom 0.6"
 
-  extends = "doom2",
+  extends = "doom2"
 
   tables =
   {
-    -- TODO
-  },
+    FREEDOOM
+  }
 
   hooks =
   {
-    setup = FREEDOOM.setup,
-  },
+    setup = FREEDOOM.setup
+  }
 
   -- no additional parameters
 }
