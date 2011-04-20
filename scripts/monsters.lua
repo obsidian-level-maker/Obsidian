@@ -1433,7 +1433,7 @@ function Monsters_in_room(R)
       if near_to then
         local d1 = math.abs(near_to.x1 - spot.x1)
         local d2 = math.abs(near_to.x2 - spot.x2)
-        side = sel(d1 < d2, 4, 6)
+        side = (d1 < d2 ? 4, 6)
       end
 
       if side == 4 then
@@ -1455,7 +1455,7 @@ function Monsters_in_room(R)
       if near_to then
         local d1 = math.abs(near_to.y1 - spot.y1)
         local d2 = math.abs(near_to.y2 - spot.y2)
-        side = sel(d1 < d2, 2, 8)
+        side = (d1 < d2 ? 2, 8)
       end
 
       if side == 2 then

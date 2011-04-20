@@ -509,20 +509,20 @@ function Plan_add_big_rooms()
 
   local BIG_ROOM_SHAPES =
   {
-    plus = { name="plus", size=5, dirs={ 5,2,4,6,8 }},
+    plus = { name="plus", size=5, dirs={ 5,2,4,6,8 } }
 
-    T1 = { name="T", size=4, dirs={ 5,4,6,2 }},
-    T2 = { name="T", size=5, dirs={ 5,4,6,2,12 }},
+    T1 = { name="T", size=4, dirs={ 5,4,6,2 } }
+    T2 = { name="T", size=5, dirs={ 5,4,6,2,12 } }
 
-    L1 = { name="L", size=3, dirs={ 5,8,6 }},
-    L2 = { name="L", size=4, dirs={ 5,8,18,6 }},
-    L3 = { name="L", size=4, dirs={ 5,8,6,16 }},
-    L4 = { name="L", size=5, dirs={ 5,8,18,6,16 }},
+    L1 = { name="L", size=3, dirs={ 5,8,6 } }
+    L2 = { name="L", size=4, dirs={ 5,8,18,6 } }
+    L3 = { name="L", size=4, dirs={ 5,8,6,16 } }
+    L4 = { name="L", size=5, dirs={ 5,8,18,6,16 } }
 
-    U1 = { name="U", size=5, dirs={ 5,4,6,402,602 }},
-    U2 = { name="U", size=7, dirs={ 5,4,6,402,602,412,612 }},
+    U1 = { name="U", size=5, dirs={ 5,4,6,402,602 } }
+    U2 = { name="U", size=7, dirs={ 5,4,6,402,602,412,612 } }
 
-    HH = { name="odd", size=7, dirs={ 5,4,6,402,602,408,608 }},
+    HH = { name="odd", size=7, dirs={ 5,4,6,402,602,408,608 } }
   }
 
   local BIG_SHAPE_PROBS =

@@ -352,10 +352,10 @@ function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
 
   local coords =
   {
-    { x=x1, y=y1 },
-    { x=x2, y=y1 },
-    { x=x2, y=y2 },
-    { x=x1, y=y2 },
+    { x=x1, y=y1 }
+    { x=x2, y=y1 }
+    { x=x2, y=y2 }
+    { x=x1, y=y2 }
   }
 
   for _,C in ipairs(coords) do
@@ -386,10 +386,10 @@ end
 function Trans.bare_quad(x1,y1, x2,y2, b,t)
   local coords =
   {
-    { x=x1, y=y1 },
-    { x=x2, y=y1 },
-    { x=x2, y=y2 },
-    { x=x1, y=y2 },
+    { x=x1, y=y1 }
+    { x=x2, y=y1 }
+    { x=x2, y=y2 }
+    { x=x1, y=y2 }
   }
 
   if b then table.insert(coords, { b=b }) end
@@ -402,9 +402,9 @@ end
 function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
   return
   {
-    { x=x1, y=y1 },
-    { x=x2, y=y2 },
-    { x=x3, y=y3 },
+    { x=x1, y=y1 }
+    { x=x2, y=y2 }
+    { x=x3, y=y3 }
   }
 end
 
@@ -421,10 +421,10 @@ end
 function Trans.box_coords(x, y, w, h)
   return
   {
-    { x=x,   y=y },
-    { x=x+w, y=y },
-    { x=x+w, y=y+h },
-    { x=x,   y=y+h },
+    { x=x,   y=y }
+    { x=x+w, y=y }
+    { x=x+w, y=y+h }
+    { x=x,   y=y+h }
   }
 end
 
@@ -455,10 +455,10 @@ function Trans.strip(info, strip, z1, z2)
 
     Trans.old_brush(info,
     {
-      { x = a[1], y = a[2] },
-      { x = a[3], y = a[4] },
-      { x = b[3], y = b[4] },
-      { x = b[1], y = b[2] },
+      { x = a[1], y = a[2] }
+      { x = a[3], y = a[4] }
+      { x = b[3], y = b[4] }
+      { x = b[1], y = b[2] }
     },
     z1, z2)
   end
@@ -2046,10 +2046,10 @@ function Build_shadow(S, side, dist, z2)
     -- FIXME: update for new brush system
     Trans.old_brush(get_light(-1),
     {
-      { x=x2, y=y2 },
-      { x=x1, y=y2 },
-      { x=x1+dist, y=y2-dist },
-      { x=x2+sel(clip,0,dist), y=y2-dist },
+      { x=x2, y=y2 }
+      { x=x1, y=y2 }
+      { x=x1+dist, y=y2-dist }
+      { x=x2+sel(clip,0,dist), y=y2-dist }
     },
     -EXTREME_H, z2 or EXTREME_H)
   end
@@ -2060,10 +2060,10 @@ function Build_shadow(S, side, dist, z2)
 
     Trans.old_brush(get_light(-1),
     {
-      { x=x1, y=y2 },
-      { x=x1, y=y1 },
-      { x=x1+dist, y=y1-sel(clip,0,dist) },
-      { x=x1+dist, y=y2-dist },
+      { x=x1, y=y2 }
+      { x=x1, y=y1 }
+      { x=x1+dist, y=y1-sel(clip,0,dist) }
+      { x=x1+dist, y=y2-dist }
     },
     -EXTREME_H, z2 or EXTREME_H)
   end

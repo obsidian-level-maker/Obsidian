@@ -66,33 +66,33 @@ require 'naming'
 
 GLOBAL_STYLE_LIST =
 {
-  skies      = { few=20, some=60, heaps=40 },
-  hallways   = { few=10, some=90, heaps=30 },
-  liquids    = { few=30, some=50, heaps=20 },
-  scenics    = { few=30, some=50, heaps=10 },
-  naturals   = { none=10, few=30, some=60, heaps=4 },
-  big_rooms  = { none=3, few=40, some=40, heaps=20 },
-  lakes      = { few=60, heaps=10 },
-  sub_rooms  = { none=40, some=80, heaps=5 },
-  islands    = { few=60, heaps=40 },
-  teleporters ={ none=10, few=30, some=30, heaps=5 }, -- FIXME: none=50
+  skies      = { few=20, some=60, heaps=40 }
+  hallways   = { few=10, some=90, heaps=30 }
+  liquids    = { few=30, some=50, heaps=20 }
+  scenics    = { few=30, some=50, heaps=10 }
+  naturals   = { none=10, few=30, some=60, heaps=4 }
+  big_rooms  = { none=3, few=40, some=40, heaps=20 }
+  lakes      = { few=60, heaps=10 }
+  sub_rooms  = { none=40, some=80, heaps=5 }
+  islands    = { few=60, heaps=40 }
+  teleporters ={ none=10, few=30, some=30, heaps=5 }  -- FIXME: none=50
 
-  junk       = { few=10, some=60, heaps=20 },
-  symmetry   = { few=20, some=60, heaps=20 },
-  pillars    = { few=30, some=60, heaps=20 },
-  beams      = { few=25, some=50, heaps=5  },
-  barrels    = { few=50, some=50, heaps=10 },
+  junk       = { few=10, some=60, heaps=20 }
+  symmetry   = { few=20, some=60, heaps=20 }
+  pillars    = { few=30, some=60, heaps=20 }
+  beams      = { few=25, some=50, heaps=5  }
+  barrels    = { few=50, some=50, heaps=10 }
 
-  windows    = { few=20, some=50, heaps=200 },
-  pictures   = { few=10, some=50, heaps=10 },
-  cages      = { none=50, some=50, heaps=6 },
-  crates     = { none=20, some=40, heaps=10 },
+  windows    = { few=20, some=50, heaps=200 }
+  pictures   = { few=10, some=50, heaps=10 }
+  cages      = { none=50, some=50, heaps=6 }
+  crates     = { none=20, some=40, heaps=10 }
 
-  lt_trim    = { none=40, some=20, heaps=10 },
-  lt_spokes  = { none=90, some=20, heaps=5 },
-  lt_swapped = { none=90, heaps=20 },
+  lt_trim    = { none=40, some=20, heaps=10 }
+  lt_spokes  = { none=90, some=20, heaps=5 }
+  lt_swapped = { none=90, heaps=20 }
 
-  room_shape = { none=30, L=5, T=5, U=10, H=10 },
+  room_shape = { none=30, L=5, T=5, U=10, H=10 }
 }
 
 
