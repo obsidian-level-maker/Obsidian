@@ -26,22 +26,22 @@ PREFAB.CEIL_LIGHT =
   {
     -- trim around light
     {
-      { x = -40, y = -40, mat = "?trim" },
-      { x =  40, y = -40, mat = "?trim" },
-      { x =  40, y =  40, mat = "?trim" },
-      { x = -40, y =  40, mat = "?trim" },
-      { b = -16, mat = "?trim" },
-    },
+      { x = -40, y = -40, mat = "?trim" }
+      { x =  40, y = -40, mat = "?trim" }
+      { x =  40, y =  40, mat = "?trim" }
+      { x = -40, y =  40, mat = "?trim" }
+      { b = -16, mat = "?trim" }
+    }
 
     -- light itself
     {
-      { x = -32, y = -32, mat = "?glow" },
-      { x =  32, y = -32, mat = "?glow" },
-      { x =  32, y =  32, mat = "?glow" },
-      { x = -32, y =  32, mat = "?glow" },
-      { b = -18, delta_z = 10, light = 0.9, mat = "?glow" },
-    },
-  },
+      { x = -32, y = -32, mat = "?glow" }
+      { x =  32, y = -32, mat = "?glow" }
+      { x =  32, y =  32, mat = "?glow" }
+      { x = -32, y =  32, mat = "?glow" }
+      { b = -18, delta_z = 10, light = 0.9, mat = "?glow" }
+    }
+  }
 }
 
 
@@ -53,40 +53,40 @@ PREFAB.SKYLITE_1 =
   {
     -- sky part
     {
-      { m = "sky", flavor = "ceil:3" },
-      { x = -128, y = -128, mat = "_SKY" },
-      { x =  128, y = -128, mat = "_SKY" },
-      { x =  128, y =  128, mat = "_SKY" },
-      { x = -128, y =  128, mat = "_SKY" },
-      { b = 16, mat = "_SKY" },
-    },
+      { m = "sky", flavor = "ceil:3" }
+      { x = -128, y = -128, mat = "_SKY" }
+      { x =  128, y = -128, mat = "_SKY" }
+      { x =  128, y =  128, mat = "_SKY" }
+      { x = -128, y =  128, mat = "_SKY" }
+      { b = 16, mat = "_SKY" }
+    }
 
     -- trim around sky
     {
-      { m = "solid", flavor = "ceil:2" },
-      { x = -160, y = -160, mat = "?trim" },
-      { x =  160, y = -160, mat = "?trim" },
-      { x =  160, y =  160, mat = "?trim" },
-      { x = -160, y =  160, mat = "?trim" },
-      { b = -16, mat = "?trim" },
-    },
+      { m = "solid", flavor = "ceil:2" }
+      { x = -160, y = -160, mat = "?trim" }
+      { x =  160, y = -160, mat = "?trim" }
+      { x =  160, y =  160, mat = "?trim" }
+      { x = -160, y =  160, mat = "?trim" }
+      { b = -16, mat = "?trim" }
+    }
 
     -- spokes
     {
-      { x = -192, y = -12, mat = "?metal" },
-      { x = -112, y = -12, mat = "?metal" },
-      { x = -112, y =  12, mat = "?metal" },
-      { x = -192, y =  12, mat = "?metal" },
-      { b = -32, mat = "?metal" },
-    },
+      { x = -192, y = -12, mat = "?metal" }
+      { x = -112, y = -12, mat = "?metal" }
+      { x = -112, y =  12, mat = "?metal" }
+      { x = -192, y =  12, mat = "?metal" }
+      { b = -32, mat = "?metal" }
+    }
 
     {
-      { x =  112, y = -12, mat = "?metal" },
-      { x =  192, y = -12, mat = "?metal" },
-      { x =  192, y =  12, mat = "?metal" },
-      { x =  112, y =  12, mat = "?metal" },
-      { b = -32, mat = "?metal" },
-    },
-  },
+      { x =  112, y = -12, mat = "?metal" }
+      { x =  192, y = -12, mat = "?metal" }
+      { x =  192, y =  12, mat = "?metal" }
+      { x =  112, y =  12, mat = "?metal" }
+      { b = -32, mat = "?metal" }
+    }
+  }
 }
 

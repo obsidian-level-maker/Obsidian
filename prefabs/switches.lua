@@ -22,169 +22,169 @@ PREFAB.SMALL_SWITCH =
 {
   defaults =
   {
-    x_offset = 0,
-    y_offset = 0,
-  },
+    x_offset = 0
+    y_offset = 0
+  }
 
   brushes =
   {
     -- the base
     {
-      { x = -40, y = -40, mat = "?base" },
-      { x =  40, y = -40, mat = "?base" },
-      { x =  56, y = -24, mat = "?base" },
-      { x =  56, y =  24, mat = "?base" },
-      { x =  40, y =  40, mat = "?base" },
-      { x = -40, y =  40, mat = "?base" },
-      { x = -56, y =  24, mat = "?base" },
-      { x = -56, y = -24, mat = "?base" },
-      { t = 12, light = 0.66, mat = "?base" },
-    },
+      { x = -40, y = -40, mat = "?base" }
+      { x =  40, y = -40, mat = "?base" }
+      { x =  56, y = -24, mat = "?base" }
+      { x =  56, y =  24, mat = "?base" }
+      { x =  40, y =  40, mat = "?base" }
+      { x = -40, y =  40, mat = "?base" }
+      { x = -56, y =  24, mat = "?base" }
+      { x = -56, y = -24, mat = "?base" }
+      { t = 12, light = 0.66, mat = "?base" }
+    }
 
     -- switch itself
     {
-      { x = -32, y = -8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -8, mat = "?side" },
-      { x =  32, y =  8, mat = "?side" },
-      { x = -32, y =  8, mat = "?side" },
-      { t = 76, mat = "?side" },
-    },
-  },
+      { x = -32, y = -8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -8, mat = "?side" }
+      { x =  32, y =  8, mat = "?side" }
+      { x = -32, y =  8, mat = "?side" }
+      { t = 76, mat = "?side" }
+    }
+  }
 }
 
 
 PREFAB.WALL_SWITCH =
 {
-  placement = "fitted",
+  placement = "fitted"
 
   defaults =
   {
-    side = "?wall",
-  },
+    side = "?wall"
+  }
 
   brushes =
   {
     -- wall behind it
     {
-      { x =   0, y =  0, mat = "?wall" },
-      { x = 192, y =  0, mat = "?wall" },
-      { x = 192, y =  4, mat = "?wall" },
-      { x =   0, y =  4, mat = "?wall" },
-    },
+      { x =   0, y =  0, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
+      { x = 192, y =  4, mat = "?wall" }
+      { x =   0, y =  4, mat = "?wall" }
+    }
 
     -- area in front of it
     {
-      { m = "walk" },
-      { x =   0, y = 16 },
-      { x = 192, y = 16 },
-      { x = 192, y = 80 },
-      { x =   0, y = 80 },
-      { b = 0 },
-      { t = 96 },
-    },
+      { m = "walk" }
+      { x =   0, y = 16 }
+      { x = 192, y = 16 }
+      { x = 192, y = 80 }
+      { x =   0, y = 80 }
+      { b = 0 }
+      { t = 96 }
+    }
 
     -- switch itself
     {
-      { x =  64, y =  4 },
-      { x = 128, y =  4 },
-      { x = 128, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  64, y =  8 },
-    },
+      { x =  64, y =  4 }
+      { x = 128, y =  4 }
+      { x = 128, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  64, y =  8 }
+    }
 
     -- right side wall
     {
-      { x = 0, y =  4, mat = "?wall" },
-      { x = 8, y =  4, mat = "?wall" },
-      { x = 8, y = 16, mat = "?wall" },
-      { x = 0, y = 16, mat = "?wall" },
-    },
+      { x = 0, y =  4, mat = "?wall" }
+      { x = 8, y =  4, mat = "?wall" }
+      { x = 8, y = 16, mat = "?wall" }
+      { x = 0, y = 16, mat = "?wall" }
+    }
 
     {
-      { x =  8, y =  4, mat = "?wall" },
-      { x = 64, y =  4, mat = "?side" },
-      { x = 64, y = 16, mat = "?wall" },
-      { x =  8, y = 16, mat = "?side" },
-    },
+      { x =  8, y =  4, mat = "?wall" }
+      { x = 64, y =  4, mat = "?side" }
+      { x = 64, y = 16, mat = "?wall" }
+      { x =  8, y = 16, mat = "?side" }
+    }
 
     -- left side wall
     {
-      { x = 184, y =  4, mat = "?wall" },
-      { x = 192, y =  4, mat = "?wall" },
-      { x = 192, y = 16, mat = "?wall" },
-      { x = 184, y = 16, mat = "?wall" },
-    },
+      { x = 184, y =  4, mat = "?wall" }
+      { x = 192, y =  4, mat = "?wall" }
+      { x = 192, y = 16, mat = "?wall" }
+      { x = 184, y = 16, mat = "?wall" }
+    }
 
     {
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 184, y =  4, mat = "?side" },
-      { x = 184, y = 16, mat = "?wall" },
-      { x = 128, y = 16, mat = "?side" },
-    },
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 184, y =  4, mat = "?side" }
+      { x = 184, y = 16, mat = "?wall" }
+      { x = 128, y = 16, mat = "?side" }
+    }
 
     -- frame top
     {
-      { x =  64, y =  4, mat = "?wall" },
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 128, y = 16, mat = "?wall", blocked=1 },
-      { x =  64, y = 16, mat = "?wall" },
-      { b = 64, mat = "?ceil", light = "?light", special = "?special" },
-    },
+      { x =  64, y =  4, mat = "?wall" }
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 128, y = 16, mat = "?wall", blocked=1 }
+      { x =  64, y = 16, mat = "?wall" }
+      { b = 64, mat = "?ceil", light = "?light", special = "?special" }
+    }
 
     -- frame bottom
     --[[
     {
-      { x =  64, y =  4, mat = "?wall" },
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 128, y = 16, mat = "?wall", blocked=1 },
-      { x =  64, y = 16, mat = "?wall" },
-      { t = 0, mat = "?floor" },
-    },
+      { x =  64, y =  4, mat = "?wall" }
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 128, y = 16, mat = "?wall", blocked=1 }
+      { x =  64, y = 16, mat = "?wall" }
+      { t = 0, mat = "?floor" }
+    }
     --]]
-  },
+  }
 }
 
 
 PREFAB.QUAKE_WALL_SWITCH =
 {
-  placement = "fitted",
+  placement = "fitted"
 
   brushes =
   {
     -- wall behind it
     {
-      { x =   0, y =  0, mat = "?wall" },
-      { x = 192, y =  0, mat = "?wall" },
-      { x = 192, y = 16, mat = "?wall" },
-      { x =   0, y = 16, mat = "?wall" },
-    },
+      { x =   0, y =  0, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
+      { x = 192, y = 16, mat = "?wall" }
+      { x =   0, y = 16, mat = "?wall" }
+    }
 
     -- area in front of it
     {
-      { m = "walk" },
-      { x =   0, y = 16 },
-      { x = 192, y = 16 },
-      { x = 192, y = 80 },
-      { x =   0, y = 80 },
-      { b = 0 },
-      { t = 128 },
-    },
-  },
+      { m = "walk" }
+      { x =   0, y = 16 }
+      { x = 192, y = 16 }
+      { x = 192, y = 80 }
+      { x =   0, y = 80 }
+      { b = 0 }
+      { t = 128 }
+    }
+  }
 
   models =
   {
     -- button
     {
-      x1 = 64, x2 = 128, x_face = { mat="METAL1_2" },
-      y1 = 16, y2 = 32,  y_face = { mat="BUTTON", u1=0, u2=48, v1=0, v2=48 },
-      z1 = 24, z2 = 88,  z_face = { mat="METAL1_2" },
+      x1 = 64, x2 = 128, x_face = { mat="METAL1_2" }
+      y1 = 16, y2 = 32,  y_face = { mat="BUTTON", u1=0, u2=48, v1=0, v2=48 }
+      z1 = 24, z2 = 88,  z_face = { mat="METAL1_2" }
 
       entity =
       {
         ent = "button", angle = 270, sounds = 2,
         target = "?targetname", wait ="?wait", lip = 8,
-      },
-    },
-  },
+      }
+    }
+  }
 }
 
 

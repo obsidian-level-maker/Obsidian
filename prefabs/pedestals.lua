@@ -23,18 +23,18 @@ PREFAB.PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 8, mat = "?top", light = "?light" },
-    },
-  },
+      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { t = 8, mat = "?top", light = "?light" }
+    }
+  }
 
   entities =
   {
-    { x = 0, y = 0, z = 8, ent = "?item", angle = "?angle" },
-  },
+    { x = 0, y = 0, z = 8, ent = "?item", angle = "?angle" }
+  }
 }
 
 
@@ -44,84 +44,84 @@ PREFAB.OCTO_PEDESTAL =
   {
     -- pedestal
     {
-      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 16, mat = "?top" },
-    },
+      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { t = 16, mat = "?top" }
+    }
 
     -- octogon base
     {
-      { x = -40, y = -56, mat = "?base" },
-      { x =  40, y = -56, mat = "?base" },
-      { x =  56, y = -40, mat = "?base" },
-      { x =  56, y =  40, mat = "?base" },
-      { x =  40, y =  56, mat = "?base" },
-      { x = -40, y =  56, mat = "?base" },
-      { x = -56, y =  40, mat = "?base" },
-      { x = -56, y = -40, mat = "?base" },
-      { t = 8, mat = "?base" },
-    },
+      { x = -40, y = -56, mat = "?base" }
+      { x =  40, y = -56, mat = "?base" }
+      { x =  56, y = -40, mat = "?base" }
+      { x =  56, y =  40, mat = "?base" }
+      { x =  40, y =  56, mat = "?base" }
+      { x = -40, y =  56, mat = "?base" }
+      { x = -56, y =  40, mat = "?base" }
+      { x = -56, y = -40, mat = "?base" }
+      { t = 8, mat = "?base" }
+    }
 
     -- lighting
     {
-      { m = "light", add = 48 },
-      { x = -32, y = -56 },
-      { x =  32, y = -56 },
-      { x =  56, y = -32 },
-      { x =  56, y =  32 },
-      { x =  32, y =  56 },
-      { x = -32, y =  56 },
-      { x = -56, y =  32 },
-      { x = -56, y = -32 },
-    },
+      { m = "light", add = 48 }
+      { x = -32, y = -56 }
+      { x =  32, y = -56 }
+      { x =  56, y = -32 }
+      { x =  56, y =  32 }
+      { x =  32, y =  56 }
+      { x = -32, y =  56 }
+      { x = -56, y =  32 }
+      { x = -56, y = -32 }
+    }
 
     {
-      { m = "light", add = 32 },
-      { x = -40, y = -80 },
-      { x =  40, y = -80 },
-      { x =  80, y = -40 },
-      { x =  80, y =  40 },
-      { x =  40, y =  80 },
-      { x = -40, y =  80 },
-      { x = -80, y =  40 },
-      { x = -80, y = -40 },
-    },
+      { m = "light", add = 32 }
+      { x = -40, y = -80 }
+      { x =  40, y = -80 }
+      { x =  80, y = -40 }
+      { x =  80, y =  40 }
+      { x =  40, y =  80 }
+      { x = -40, y =  80 }
+      { x = -80, y =  40 }
+      { x = -80, y = -40 }
+    }
 
     {
-      { m = "light", add = 16 },
-      { x =  -48, y = -112 },
-      { x =   48, y = -112 },
-      { x =  112, y =  -48 },
-      { x =  112, y =   48 },
-      { x =   48, y =  112 },
-      { x =  -48, y =  112 },
-      { x = -112, y =   48 },
-      { x = -112, y =  -48 },
-    },
+      { m = "light", add = 16 }
+      { x =  -48, y = -112 }
+      { x =   48, y = -112 }
+      { x =  112, y =  -48 }
+      { x =  112, y =   48 }
+      { x =   48, y =  112 }
+      { x =  -48, y =  112 }
+      { x = -112, y =   48 }
+      { x = -112, y =  -48 }
+    }
 
     -- reachability
     {
-      { m = "walk" },
-      { x =  -48, y = -112 },
-      { x =   48, y = -112 },
-      { x =  112, y =  -48 },
-      { x =  112, y =   48 },
-      { x =   48, y =  112 },
-      { x =  -48, y =  112 },
-      { x = -112, y =   48 },
-      { x = -112, y =  -48 },
-      { b = 0 },
-      { t = 96 },
-    },
+      { m = "walk" }
+      { x =  -48, y = -112 }
+      { x =   48, y = -112 }
+      { x =  112, y =  -48 }
+      { x =  112, y =   48 }
+      { x =   48, y =  112 }
+      { x =  -48, y =  112 }
+      { x = -112, y =   48 }
+      { x = -112, y =  -48 }
+      { b = 0 }
+      { t = 96 }
+    }
 
-  },
+  }
 
   entities =
   {
-    { x = 0, y = 0, z = 16, ent = "?item", angle = "?angle" },
-  },
+    { x = 0, y = 0, z = 16, ent = "?item", angle = "?angle" }
+  }
 }
 
 
@@ -130,96 +130,96 @@ PREFAB.LOWERING_PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x =  32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" },
-      { t = 128, mat = "?top", light = "?light", special="?sec_kind", tag="?tag" },
-    },
-  },
+      { x = -32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { t = 128, mat = "?top", light = "?light", special="?sec_kind", tag="?tag" }
+    }
+  }
 
   entities =
   {
-    { x = 0, y = 0, z = 128, ent = "?item" },
-  },
+    { x = 0, y = 0, z = 128, ent = "?item" }
+  }
 }
 
 
 PREFAB.ITEM_NICHE =
 {
-  placement = "fitted",
+  placement = "fitted"
 
   defaults =
   {
-    key = "?wall",
-  },
+    key = "?wall"
+  }
 
   brushes =
   {
     -- wall behind it
     {
-      { x =   0, y =  0, mat = "?wall" },
-      { x = 192, y =  0, mat = "?wall" },
-      { x = 192, y =  4, mat = "?wall" },
-      { x =   0, y =  4, mat = "?wall" },
-    },
+      { x =   0, y =  0, mat = "?wall" }
+      { x = 192, y =  0, mat = "?wall" }
+      { x = 192, y =  4, mat = "?wall" }
+      { x =   0, y =  4, mat = "?wall" }
+    }
 
     -- right side
 
     {
-      { x =  0, y =  4, mat = "?wall" },
-      { x = 64, y =  4, mat = "?key" },
-      { x = 32, y = 64, mat = "?wall" },
-      { x =  0, y = 64, mat = "?wall" },
-    },
+      { x =  0, y =  4, mat = "?wall" }
+      { x = 64, y =  4, mat = "?key" }
+      { x = 32, y = 64, mat = "?wall" }
+      { x =  0, y = 64, mat = "?wall" }
+    }
 
     -- left side
     {
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 192, y =  4, mat = "?wall" },
-      { x = 192, y = 64, mat = "?wall" },
-      { x = 160, y = 64, mat = "?key" },
-    },
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 192, y =  4, mat = "?wall" }
+      { x = 192, y = 64, mat = "?wall" }
+      { x = 160, y = 64, mat = "?key" }
+    }
 
     -- frame bottom
     {
-      { x =  64, y =  4, mat = "?wall" },
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 160, y = 64, mat = "?wall", blocked=1 },
-      { x =  32, y = 64, mat = "?wall" },
-      { t = 32, mat = "?floor" },
-    },
+      { x =  64, y =  4, mat = "?wall" }
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 160, y = 64, mat = "?wall", blocked=1 }
+      { x =  32, y = 64, mat = "?wall" }
+      { t = 32, mat = "?floor" }
+    }
 
     -- frame top
     {
-      { x =  64, y =  4, mat = "?wall" },
-      { x = 128, y =  4, mat = "?wall" },
-      { x = 160, y = 64, mat = "?wall", blocked=1 },
-      { x =  32, y = 64, mat = "?wall" },
-      { b = 128, mat = "?wall", light = "?light", special = "?special"  },
-    },
+      { x =  64, y =  4, mat = "?wall" }
+      { x = 128, y =  4, mat = "?wall" }
+      { x = 160, y = 64, mat = "?wall", blocked=1 }
+      { x =  32, y = 64, mat = "?wall" }
+      { b = 128, mat = "?wall", light = "?light", special = "?special"  }
+    }
 
     -- space in front of it
     {
-      { m = "walk" },
-      { x =   0, y =  64 },
-      { x = 192, y =  64 },
-      { x = 192, y = 128 },
-      { x =   0, y = 128 },
-      { b = 0 },
-      { t = 160 },
-    },
+      { m = "walk" }
+      { x =   0, y =  64 }
+      { x = 192, y =  64 }
+      { x = 192, y = 128 }
+      { x =   0, y = 128 }
+      { b = 0 }
+      { t = 160 }
+    }
 
-  },
+  }
 
   entities =
   {
-    { x = 96, y = 48, z = 32, ent = "?item", angle = 90 },
+    { x = 96, y = 48, z = 32, ent = "?item", angle = 90 }
 
     { x = 96, y = 48, z = 32, ent = "light",
       light = "?light", style = "?style",
-    },
-  },
+    }
+  }
 }
 
 
