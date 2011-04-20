@@ -23,51 +23,51 @@ NUKEM = { }
 NUKEM.ENTITIES =
 {
   --- special stuff ---
-  player1 = { id=1405, kind="other", r=20,h=56 },
-  player2 = { id=1405, kind="other", r=20,h=56 },
-  player3 = { id=1405, kind="other", r=20,h=56 },
-  player4 = { id=1405, kind="other", r=20,h=56 },
+  player1 = { id=1405, kind="other", r=20,h=56 }
+  player2 = { id=1405, kind="other", r=20,h=56 }
+  player3 = { id=1405, kind="other", r=20,h=56 }
+  player4 = { id=1405, kind="other", r=20,h=56 }
 
-  dm_player = { id=1405, kind="other", r=20,h=56 },
+  dm_player = { id=1405, kind="other", r=20,h=56 }
 
   --- monsters ---
-  pig_cop = { id=2000, kind="monster", r=16,h=56 },
+  pig_cop = { id=2000, kind="monster", r=16,h=56 }
 
   -- bosses
 
   --- pickups ---
-  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true },
+  k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
 
   --- scenery ---
 
   --- buttons ---
-  nuke_button   = { id=142, kind="other", r=32,h=64, pass=true },
-  red_button    = { id=162, kind="other", r=32,h=64, pass=true },
-  square_button = { id=164, kind="other", r=32,h=64, pass=true },
-  access_panel  = { id=130, kind="other", r=32,h=64, pass=true },
+  nuke_button   = { id=142, kind="other", r=32,h=64, pass=true }
+  red_button    = { id=162, kind="other", r=32,h=64, pass=true }
+  square_button = { id=164, kind="other", r=32,h=64, pass=true }
+  access_panel  = { id=130, kind="other", r=32,h=64, pass=true }
 
-  turn_switch   = { id=136, kind="other", r=32,h=64, pass=true },
-  handle_switch = { id=140, kind="other", r=32,h=64, pass=true },
-  light_switch  = { id=712, kind="other", r=32,h=64, pass=true },
-  lever_switch  = { id=862, kind="other", r=32,h=64, pass=true },
+  turn_switch   = { id=136, kind="other", r=32,h=64, pass=true }
+  handle_switch = { id=140, kind="other", r=32,h=64, pass=true }
+  light_switch  = { id=712, kind="other", r=32,h=64, pass=true }
+  lever_switch  = { id=862, kind="other", r=32,h=64, pass=true }
 }
 
 
 NUKEM.PARAMETERS =
 {
-  rails = true,
-  switches = true,
-  liquids = true,
-  light_brushes = true,
+  rails = true
+  switches = true
+  liquids = true
+  light_brushes = true
 
-  max_name_length = 28,
+  max_name_length = 28
 
-  skip_monsters = { 20,30 },
+  skip_monsters = { 20,30 }
 
-  time_factor   = 1.0,
-  damage_factor = 1.0,
-  ammo_factor   = 0.8,
-  health_factor = 0.7,
+  time_factor   = 1.0
+  damage_factor = 1.0
+  ammo_factor   = 0.8
+  health_factor = 0.7
 }
 
 
@@ -76,122 +76,122 @@ NUKEM.PARAMETERS =
 NUKEM.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t=1 },
-  _SKY   = { t=89 },
+  _ERROR = { t=1 }
+  _SKY   = { t=89 }
 
 
-  WATER  = { t=336 },
-  SLIME  = { t=200 },
-  PLASMA = { t=1082 },
+  WATER  = { t=336 }
+  SLIME  = { t=200 }
+  PLASMA = { t=1082 }
 
 
-  BRN_BRICK = { t=0 },
+  BRN_BRICK = { t=0 }
 
-  SCREEN_BREAK1 = { t=263 },
-  SCREEN_BREAK2 = { t=264 },
-  SCREEN_BREAK3 = { t=265 },
-  SCREEN_BREAK4 = { t=266 },
-  SCREEN_BREAK5 = { t=267 },
+  SCREEN_BREAK1 = { t=263 }
+  SCREEN_BREAK2 = { t=264 }
+  SCREEN_BREAK3 = { t=265 }
+  SCREEN_BREAK4 = { t=266 }
+  SCREEN_BREAK5 = { t=267 }
 
-  SCREEN_BREAK13 = { t=275 },
-  SCREEN_BREAK15 = { t=4123 },
-  SCREEN_BREAK17 = { t=4128 },
-  SCREEN_BREAK18 = { t=4129 },
-  SCREEN_BREAK19 = { t=4125 },
-
-
-  GLASS1 = { t=198 },
-  GLASS2 = { t=758 },
+  SCREEN_BREAK13 = { t=275 }
+  SCREEN_BREAK15 = { t=4123 }
+  SCREEN_BREAK17 = { t=4128 }
+  SCREEN_BREAK18 = { t=4129 }
+  SCREEN_BREAK19 = { t=4125 }
 
 
-
-  GRAYCIRCLE = { t=181 },
-  GRAYFLAT = { t=182 },
-  GRATE1 = { t=183 },
-
-  CRETE1 = { t=300 },
-  CRETE2 = { t=302 },
-  CONC1 = { t=740 },
-  CONC2 = { t=741 },
-  CONC3 = { t=802 },
-
-  ROCK1 = { t=239 },
-  ROCK2 = { t=240 },
-  ROCK3 = { t=241 },
-
-  PIPES = { t=243 },
-  DOOR1 = { t=242 },
-  VAULTDOOR = { t=470 },
-
-  REDCARPET = { t=331 },
-  REDSLATS  = { t=332 },
-  ROOF1 = { t=342 },
-  ROOF2 = { t=343 },
-
-  WARNING = { t=355 },
-  BOULEVARD = { t=823 },
-
-  GRAYBRICK  = { t=461 },
-  BRICK2 = { t=750 },
-  CLANG1 = { t=755 },
-  GRNBRICK = { t=748 },
-
-  ROCK4 = { t=772 },
-  ROCK5 = { t=782 },
-  ROCK6 = { t=780 },
-  SMROCK1 = { t=771 },
-  SMROCK2 = { t=775 },
-  SMROCK3 = { t=773 },
-
-  ROCK7 = { t=801 },
-  ZROCK1 = { t=805 },
-  ZROCK2 = { t=796 },
-  TETROCK = { t=876 },
-
-  GRASS = { t=803 },
-  STONES = { t=819 },
-  MUD = { t=1218 },
-  BLOCKS1 = { t=1205 },
-  FLAT18 = { t=1204 },
-
-  CABLES = { t=243 },
-  BLOCKS2 = { t=1191 },
-  WINDOW1 = { t=763 },
-  WINDOW2 = { t=764 },
-  IRON  = { t=757 },
+  GLASS1 = { t=198 }
+  GLASS2 = { t=758 }
 
 
-  SUPPORT2 = { t=739 },
-  SUPPORT3 = { t=349 },
-  METAL  = { t=437 },
-  METAL2 = { t=368 },
+
+  GRAYCIRCLE = { t=181 }
+  GRAYFLAT = { t=182 }
+  GRATE1 = { t=183 }
+
+  CRETE1 = { t=300 }
+  CRETE2 = { t=302 }
+  CONC1 = { t=740 }
+  CONC2 = { t=741 }
+  CONC3 = { t=802 }
+
+  ROCK1 = { t=239 }
+  ROCK2 = { t=240 }
+  ROCK3 = { t=241 }
+
+  PIPES = { t=243 }
+  DOOR1 = { t=242 }
+  VAULTDOOR = { t=470 }
+
+  REDCARPET = { t=331 }
+  REDSLATS  = { t=332 }
+  ROOF1 = { t=342 }
+  ROOF2 = { t=343 }
+
+  WARNING = { t=355 }
+  BOULEVARD = { t=823 }
+
+  GRAYBRICK  = { t=461 }
+  BRICK2 = { t=750 }
+  CLANG1 = { t=755 }
+  GRNBRICK = { t=748 }
+
+  ROCK4 = { t=772 }
+  ROCK5 = { t=782 }
+  ROCK6 = { t=780 }
+  SMROCK1 = { t=771 }
+  SMROCK2 = { t=775 }
+  SMROCK3 = { t=773 }
+
+  ROCK7 = { t=801 }
+  ZROCK1 = { t=805 }
+  ZROCK2 = { t=796 }
+  TETROCK = { t=876 }
+
+  GRASS = { t=803 }
+  STONES = { t=819 }
+  MUD = { t=1218 }
+  BLOCKS1 = { t=1205 }
+  FLAT18 = { t=1204 }
+
+  CABLES = { t=243 }
+  BLOCKS2 = { t=1191 }
+  WINDOW1 = { t=763 }
+  WINDOW2 = { t=764 }
+  IRON  = { t=757 }
 
 
-  BSTONES = { t=781 },
-  WOOD1 = { t=884 },
-  WOOD2 = { t=880 },
-  WOOD3 = { t=1188 },
-  WOOD4 = { t=1181 },
+  SUPPORT2 = { t=739 }
+  SUPPORT3 = { t=349 }
+  METAL  = { t=437 }
+  METAL2 = { t=368 }
 
-  CANYON1 = { t=1169 },
-  CANYON2 = { t=1170 },
-  OCTAFLOOR = { t=417 },
-  BLOCKS4 = { t=827 },
-  RUST = { t=767 },
+
+  BSTONES = { t=781 }
+  WOOD1 = { t=884 }
+  WOOD2 = { t=880 }
+  WOOD3 = { t=1188 }
+  WOOD4 = { t=1181 }
+
+  CANYON1 = { t=1169 }
+  CANYON2 = { t=1170 }
+  OCTAFLOOR = { t=417 }
+  BLOCKS4 = { t=827 }
+  RUST = { t=767 }
   
-  COMPUTER1 = { t=875 },
-  COMPUTER2 = { t=294 },
-  COMPUTER3 = { t=297 },
-  COMPUTER4 = { t=298 },
-  COMPUTER5 = { t=299 },
+  COMPUTER1 = { t=875 }
+  COMPUTER2 = { t=294 }
+  COMPUTER3 = { t=297 }
+  COMPUTER4 = { t=298 }
+  COMPUTER5 = { t=299 }
 }
 
 
 NUKEM.LIQUIDS =
 {
-  water  = { mat="WATER", },
-  slime  = { mat="SLIME",  },
-  plasma = { mat="PLASMA", },
+  water  = { mat="WATER", }
+  slime  = { mat="SLIME",  }
+  plasma = { mat="PLASMA", }
 }
 
 
@@ -199,7 +199,7 @@ NUKEM.LIQUIDS =
 
 NUKEM.STEPS =
 {
-  step1 = { step_w="RUST", side_w="RUST", top_f="RUST" },
+  step1 = { step_w="RUST", side_w="RUST", top_f="RUST" }
 }
 
 
@@ -212,7 +212,7 @@ NUKEM.PICTURES =
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
-  },
+  }
 
   pill =
   {
@@ -221,7 +221,7 @@ NUKEM.PICTURES =
     x_offset=0, y_offset=0,
     -- side_t="METAL", floor="CEIL5_2",
     depth=8, 
-  },
+  }
 }
 
 
@@ -231,16 +231,16 @@ NUKEM.SUB_THEMES =
   {
     prob=50,
 
-    liquids = { water=50, slime=20, lava=7 },
+    liquids = { water=50, slime=20, lava=7 }
 
     building_walls = { BRN_BRICK=50, WINDOW1=30, WINDOW2=30,
                 BRICK2=50, GRNBRICK=30, GRAYBRICK=50,
                 REDSLATS=20, IRON=20,
-               },
+               }
 
-    building_floors = { GRAYCIRCLE=30, CLANG1=90, GRAYFLAT=10, REDCARPET=10 },
+    building_floors = { GRAYCIRCLE=30, CLANG1=90, GRAYFLAT=10, REDCARPET=10 }
 
-    building_ceilings = { IRON=5, GRAYCIRCLE=50, ROOF1=20, ROOF2=20, },
+    building_ceilings = { IRON=5, GRAYCIRCLE=50, ROOF1=20, ROOF2=20, }
 
     courtyard_floors =
     {
@@ -250,15 +250,15 @@ NUKEM.SUB_THEMES =
       ROCK1=15, ROCK2=15, ROCK3=15, ROCK4=15,
       ROCK5=15, ROCK6=15, ROCK7=15,
       SMROCK1=20, SMROCK2=20, SMROCK3=20,
-    },
+    }
 
-    logos = { carve=50, pill=50 },
+    logos = { carve=50, pill=50 }
 
-    steps = { step1=50 },
+    steps = { step1=50 }
 
-    outer_fences = { STONES=50, BSTONES=50, WOOD3=50 },
+    outer_fences = { STONES=50, BSTONES=50, WOOD3=50 }
 
-  }, -- CITY
+  }  -- CITY
 }
 
 
@@ -274,8 +274,10 @@ NUKEM.WEAPONS =
 {
   foot =
   {
-    rate=1.5, damage=10, attack="melee",
-  },
+    rate = 1.5
+    damage = 10
+    attack = "melee"
+  }
 
   -- FIXME : NUKEM.WEAPONS
 }
@@ -291,8 +293,8 @@ NUKEM.PLAYER_MODEL =
 {
   duke =
   {
-    stats = { health=0 },
-    weapons = { foot=1 },
+    stats = { health=0 }
+    weapons = { foot=1 }
   }
 }
 
@@ -322,7 +324,7 @@ function NUKEM.get_levels()
 
         episode  = episode,
         ep_along = map / MAP_NUM,
-        ep_info  = { },
+        ep_info  = { }
       }
 
       table.insert(GAME.all_levels, LEV)
@@ -337,30 +339,28 @@ end
 
 UNFINISHED["nukem"] =
 {
-  label = "Duke Nukem",
+  label = "Duke Nukem"
 
-  format = "nukem",
+  format = "nukem"
 
   tables =
   {
     NUKEM
-  },
+  }
 
   hooks =
   {
-    setup       = NUKEM.setup,
-    get_levels  = NUKEM.get_levels,
-  },
+    setup       = NUKEM.setup
+    get_levels  = NUKEM.get_levels
+  }
 }
 
 
 OB_THEMES["nukem_city"] =
 {
-  label = "City",
-  for_games = { nukem=1 },
-
-  name_theme = "URBAN",
-
-  mixed_prob = 50,
+  label = "City"
+  for_games = { nukem=1 }
+  name_theme = "URBAN"
+  mixed_prob = 50
 }
 

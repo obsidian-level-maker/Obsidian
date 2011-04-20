@@ -26,7 +26,7 @@ PL_COMBOS =
 
   D_ROCK =
   {
-    theme_probs = { CAVE=100 },
+    theme_probs = { CAVE=100 }
     mat_pri = 7,
 
     wall = "A-DROCK2",
@@ -38,13 +38,13 @@ PL_COMBOS =
     ceil  = "FLAT10",
 
     bad_liquid = "slime",
-  },
+  }
 
   ---- URBAN -----------
 
   B_ROCK =
   {
-    theme_probs = { URBAN=120 },
+    theme_probs = { URBAN=120 }
     outdoor = true,
     mat_pri = 4,
 
@@ -56,11 +56,11 @@ PL_COMBOS =
     pillar = "A-MOSBRI",
 
     bad_liquid = "slime",
-  },
+  }
 
   A_ROCK =
   {
-    theme_probs = { URBAN=50 },
+    theme_probs = { URBAN=50 }
     outdoor = true,
     mat_pri = 3,
 
@@ -73,7 +73,7 @@ PL_COMBOS =
     pillar = "A-MOSRK2",
 
     good_liquid = "water",
-  },
+  }
 
 }
 
@@ -92,22 +92,22 @@ PL_HALLWAYS =
     pillar = "A-BROWN5",
 
     bad_liquid = "slime",
-  },
+  }
 }
 
 PL_RAILS =
 {
-  r_4 = { wall="MIDSPACE", w=128, h=128 },
-  r_5 = { wall="A-GRATE",  w=128, h=128 },
-  r_6 = { wall="A-RAIL1",  w=64,  h=32  },
+  r_4 = { wall="MIDSPACE", w=128, h=128 }
+  r_5 = { wall="A-GRATE",  w=128, h=128 }
+  r_6 = { wall="A-RAIL1",  w=64,  h=32  }
 }
 
 PL_DOORS =
 {
 
 --[[ !!!! FIXME
-  d_metal  = { wall="A-BROWN4", w=128, h=128 },
-  d_poison = { wall="SLIME3",   w=128, h=128 },
+  d_metal  = { wall="A-BROWN4", w=128, h=128 }
+  d_poison = { wall="SLIME3",   w=128, h=128 }
 --]]
 }
 
@@ -117,14 +117,14 @@ PL_WALL_PREFABS =
 
 PL_LIQUIDS =
 {
-  water = { floor="FWATER1", wall="WFALL1" },
+  water = { floor="FWATER1", wall="WFALL1" }
 }
 
 PL_SKY_INFO =
 {
-  { color="white",  light=208 },
-  { color="red",    light=192 },
-  { color="red",    light=192 },
+  { color="white",  light=208 }
+  { color="red",    light=192 }
+  { color="red",    light=192 }
 }
 
 PL_MISC_PREFABS =
@@ -142,7 +142,7 @@ PL_MISC_PREFABS =
       light  = 80, light2 = 255,
       kind   = 8, -- glowing
     }
-  },
+  }
 }
 
 ----------------------------------------------------------------
@@ -174,9 +174,9 @@ end
 
 UNFINISHED["plutonia"] =
 {
-  label = "Plutonia",
+  label = "Plutonia"
 
-  extends = "doom2",
+  extends = "doom2"
 
 }
 

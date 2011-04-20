@@ -24,7 +24,7 @@ TN_COMBOS =
 {
   URBAN_EGYPT =
   {
-    theme_probs = { EGYPT=90,URBAN=1 },
+    theme_probs = { EGYPT=90,URBAN=1 }
     mat_pri = 8,
 
     wall  = "BIGWALL",
@@ -34,21 +34,21 @@ TN_COMBOS =
 
     scenery = "green_torch",
 
-    sc_fabs = { pillar_rnd_DRSIDE1=50, pillar_rnd_DRSIDE2=50, other=3 },
+    sc_fabs = { pillar_rnd_DRSIDE1=50, pillar_rnd_DRSIDE2=50, other=3 }
 
-    wall_fabs = { wall_pic_MURAL1=50, wall_pic_MURAL2=50, wall_pic_LONGWALL=10, other=5 },
-  },
+    wall_fabs = { wall_pic_MURAL1=50, wall_pic_MURAL2=50, wall_pic_LONGWALL=10, other=5 }
+  }
 
   URBAN_STONEW1 =
   {
-    theme_probs = { URBAN=15 },
+    theme_probs = { URBAN=15 }
     mat_pri = 5,
 
     wall  = "STONEW1",
     floor = "RROCK11",
     ceil  = "FLAT10",
     step  = "STEP6",
-  },
+  }
 }
 
 TN_SCENERY_PREFABS =
@@ -58,62 +58,62 @@ TN_SCENERY_PREFABS =
     prefab = "PILLAR_ROUND_SMALL",
     add_mode = "island",
     environment = "indoor",
-    skin = { wall="DRSIDE1" },
-  },
+    skin = { wall="DRSIDE1" }
+  }
 
   pillar_rnd_DRSIDE2 =
   {
     prefab = "PILLAR_ROUND_SMALL",
     add_mode = "island",
     environment = "indoor",
-    skin = { wall="DRSIDE2" },
-  },
+    skin = { wall="DRSIDE2" }
+  }
 
   crate_WOOD_L6 =
   {
     prefab = "CRATE",
     skin = { crate_h=64, crate_w="CRLWDL6", crate_f="FLOOR4_1" }
-  },
+  }
 
   crate_big_WOOD_L12 =
   {
     prefab = "CRATE_BIG",
     min_height = 144,
     skin = { crate_h=128, crate_w="CRLWDL12", crate_f="FLOOR4_1" }
-  },
+  }
 
   crate_rot_WOOD_L6C =
   {
     prefab = "CRATE_ROTATE",
     skin = { crate_w="CRLWDL6C", crate_h=64, crate_f="FLAT5_5" }
-  },
+  }
   
   crate_WOOD_H =
   {
     prefab = "CRATE",
     min_height = 144,
     skin = { crate_w="CRWDH64", crate_h=128, crate_f="FLAT5_2" }
-  },
+  }
 
   crate_rot_WOOD2_H =
   {
     prefab = "CRATE_ROTATE",
     min_height = 144,
     skin = { crate_w="CRWDH64B", crate_h=128, crate_f="FLOOR7_1" }
-  },
+  }
 
   crate_WOOD_LA =
   {
     prefab = "CRATE",
     skin = { crate_w="CRWDL64A", crate_h=64, crate_f="FLOOR7_1" }
-  },
+  }
 
   crate_rot_WOOD_BH =
   {
     prefab = "CRATE_ROTATE",
     min_height = 144,
     skin = { crate_w="CRBLWDH6", crate_h=128, crate_f="FLAT5_5" }
-  },
+  }
 
 }
 
@@ -123,92 +123,92 @@ TN_WALL_PREFABS =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="DISASTER", pic_h=128 },
+    skin = { pic_w="DISASTER", pic_h=128 }
     prob = 10,
-  },
+  }
 
   wall_pic_TNTDOOR =
   {
     prefab = "WALL_PIC",
     min_height = 160,
-    skin = { pic_w="TNTDOOR", pic_h=128 },
-    theme_probs = { TECH=5, INDUSTRIAL=20 },
-  },
+    skin = { pic_w="TNTDOOR", pic_h=128 }
+    theme_probs = { TECH=5, INDUSTRIAL=20 }
+  }
 
   wall_pic_MURAL1 =
   {
     prefab = "WALL_PIC_SHALLOW",
     min_height = 144,
-    skin = { pic_w="MURAL1", pic_h=128 },
+    skin = { pic_w="MURAL1", pic_h=128 }
     prob = 0.5,
-    theme_probs = { URBAN=5, NATURE=3 },
-  },
+    theme_probs = { URBAN=5, NATURE=3 }
+  }
 
   wall_pic_MURAL2 =
   {
     prefab = "WALL_PIC_SHALLOW",
     min_height = 144,
-    skin = { pic_w="MURAL2", pic_h=128 },
-    theme_probs = { URBAN=5, NATURE=3 },
-  },
+    skin = { pic_w="MURAL2", pic_h=128 }
+    theme_probs = { URBAN=5, NATURE=3 }
+  }
 
   wall_pic_LONGWALL =
   {
     prefab = "WALL_PIC_SCROLLER",
     min_height = 160,
-    skin = { pic_w="LONGWALL", pic_h=128, kind=48 },
-  },
+    skin = { pic_w="LONGWALL", pic_h=128, kind=48 }
+  }
 
   lights_wide_LITEGRN1 =
   {
     prefab = "WALL_LIGHTS_WIDE",
     min_height = 128,
-    theme_probs = { INDUSTRIAL=50 },
+    theme_probs = { INDUSTRIAL=50 }
     skin =
     {
       lite_w="LITEGRN1", lite_side="LITEGRN1",
       frame_f="FLAT3",
       wall_lt=255, kind=8,
-    },
-  },
+    }
+  }
 
   lights_wide_LITERED1 =
   {
     prefab = "WALL_LIGHTS_WIDE",
     min_height = 128,
-    theme_probs = { TECH=45 },
+    theme_probs = { TECH=45 }
     skin =
     {
       lite_w="LITERED1", lite_side="LITERED1",
       frame_f="FLAT3",
       wall_lt=255, kind=8,
-    },
-  },
+    }
+  }
 
   lights_wide_LITEYEL1 =
   {
     prefab = "WALL_LIGHTS_WIDE",
     min_height = 128,
-    theme_probs = { TECH=15 },
+    theme_probs = { TECH=15 }
     skin =
     {
       lite_w="LITEYEL1", lite_side="LITEYEL1",
       frame_f="FLAT3",
       wall_lt=255, kind=8,
-    },
-  },
+    }
+  }
 }
 
 TN_RAILS =
 {
-  r_3 = { wall="TYIRONSM", w=64,  h=72  },
-  r_4 = { wall="TYIRONLG", w=128, h=128 },
+  r_3 = { wall="TYIRONSM", w=64,  h=72  }
+  r_4 = { wall="TYIRONLG", w=128, h=128 }
 }
 
 TN_DOORS =
 {
 --[[ !!!! FIXME
-  d_metal = { wall="METALDR", w=128, h=128 },
+  d_metal = { wall="METALDR", w=128, h=128 }
 --]]
 }
 
@@ -216,9 +216,9 @@ TN_ROOMS =
 {
   WAREHOUSE2 =
   {
-    space_range = { 80, 99 },
+    space_range = { 80, 99 }
 
-    pf_count = { 5,10 },
+    pf_count = { 5,10 }
 
     sc_fabs =
     {
@@ -233,15 +233,15 @@ TN_ROOMS =
       crate_rot_WOOD_BH = 30,
 
       other = 10
-    },
-  },
+    }
+  }
 }
 
 TN_SKY_INFO =
 {
-  { color="brown",  light=192 },
-  { color="black",  light=160 },
-  { color="red",    light=192 },
+  { color="brown",  light=192 }
+  { color="black",  light=160 }
+  { color="red",    light=192 }
 }
 
 
@@ -271,16 +271,16 @@ end
 
 UNFINISHED["tnt"] =
 {
-  label = "TNT Evilution",
+  label = "TNT Evilution"
 
-  extends = "doom2",
-
+  extends = "doom2"
 }
+
 
 OB_THEMES["tnt_egypt"] =
 {
-  ref = "EGYPT",
-  label = "Egypt",
-  for_modules = { tnt=1 },
+  ref = "EGYPT"
+  label = "Egypt"
+  for_modules = { tnt=1 }
 }
 
