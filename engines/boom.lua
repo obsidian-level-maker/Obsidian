@@ -22,23 +22,24 @@ BOOM = { }
 
 BOOM.ENTITIES =
 {
-  point_push = { id=5001, kind="scenery", r=16,h=16, pass=true },
-  point_pull = { id=5002, kind="scenery", r=16,h=16, pass=true },
+  point_push = { id=5001, kind="scenery", r=16,h=16, pass=true }
+  point_pull = { id=5002, kind="scenery", r=16,h=16, pass=true }
 }
 
 BOOM.PARAMETERS =
 {
-  boom_lines = true,
-  boom_sectors = true,
+  boom_lines = true
+  boom_sectors = true
 }
+
 
 function BOOM.create_dehacked()
 
   local data =
   {
-    "#\n",
-    "# BEX LUMP created by OBLIGE\n",
-    "#\n\n",
+    "#\n"
+    "# BEX LUMP created by OBLIGE\n"
+    "#\n\n"
   }
 
   -- Level names...
@@ -84,22 +85,24 @@ end
 ----------------------------------------------------------------
 
 function BOOM.all_done()
-  BOOM.create_dehacked();
+  BOOM.create_dehacked()
 end
 
 
 OB_ENGINES["boom"] =
 {
-  label = "BOOM Compat",
-  priority = 92,
+  label = "BOOM Compat"
+  priority = 92
+  for_games = { doom1=1, doom2=1 }
 
-  for_games = { doom1=1, doom2=1 },
-
-  tables = { BOOM },
+  tables =
+  {
+    BOOM
+  }
 
   hooks =
   {
-    all_done = BOOM.all_done,
-  },
+    all_done = BOOM.all_done
+  }
 }
 

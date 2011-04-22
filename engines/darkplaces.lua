@@ -22,8 +22,8 @@ DARKPLACES = { }
 
 DARKPLACES.PARAMETERS =
 {
-  colored_lighting = true,
-  sky_box = true,
+  colored_lighting = true
+  sky_box = true
 }
 
 
@@ -33,15 +33,17 @@ end
 
 OB_ENGINES["darkplaces"] =
 {
-  label = "DarkPlaces",
+  label = "DarkPlaces"
+  for_games = { quake=1 }
 
-  for_games = { quake=1 },
-
-  tables = { DARKPLACES },
+  tables =
+  {
+    DARKPLACES
+  }
 
   hooks =
   {
-    setup = DARKPLACES.setup,
-  },
+    setup = DARKPLACES.setup
+  }
 }
 

@@ -20,11 +20,11 @@
 
 OB_ENGINES["doomsday"] =
 {
-  label = "Doomsday 1.8.6",
+  label = "Doomsday 1.8.6"
 
   -- not yet BOOM compatible
 
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 }
 
   -- TODO
 }

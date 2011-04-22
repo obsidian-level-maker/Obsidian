@@ -23,8 +23,8 @@ LEGACY = { }
 
 LEGACY.PARAMETERS =
 {
-  extra_floors = true,
-  liquid_floors = true,
+  extra_floors = true
+  liquid_floors = true
 }
 
 
@@ -36,17 +36,18 @@ end
 
 OB_ENGINES["legacy"] =
 {
-  label = "Legacy 1.42",
+  label = "Legacy 1.42"
+  extends = "boom"
+  for_games = { doom1=1, doom2=1 }
 
-  extends = "boom",
-
-  for_games = { doom1=1, doom2=1 },
-
-  tables = { LEGACY },
+  tables =
+  {
+    LEGACY
+  }
 
   hooks =
   {
-    setup = LEGACY.setup,
-  },
+    setup = LEGACY.setup
+  }
 }
 

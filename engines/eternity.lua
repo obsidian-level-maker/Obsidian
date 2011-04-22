@@ -22,12 +22,13 @@ ETERNITY = { }
 
 OB_ENGINES["eternity"] =
 {
-  label = "Eternity 3.33",
+  label = "Eternity 3.33"
+  extends = "boom"
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 }
 
-  extends = "boom",
-
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1 },
-
-  tables = { ETERNITY },
+  tables =
+  {
+    ETERNITY
+  }
 }
 

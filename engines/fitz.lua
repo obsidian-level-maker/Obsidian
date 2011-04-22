@@ -22,9 +22,9 @@ FITZ = { }
 
 FITZ.PARAMETERS =
 {
-  colored_lighting = true,
-  global_fog = true,
-  sky_box = true,
+  colored_lighting = true
+  global_fog = true
+  sky_box = true
 }
 
 
@@ -34,15 +34,17 @@ end
 
 OB_ENGINES["fitz"] =
 {
-  label = "FitzQuake",
+  label = "FitzQuake"
+  for_games = { quake=1 }
 
-  for_games = { quake=1 },
-
-  tables = { FITZ },
+  tables =
+  {
+    FITZ
+  }
 
   hooks =
   {
-    setup = FITZ.setup,
-  },
+    setup = FITZ.setup
+  }
 }
 

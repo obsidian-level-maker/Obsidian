@@ -22,12 +22,15 @@ VAVOOM = { }
 
 OB_ENGINES["vavoom"] =
 {
-  label = "Vavoom 1.30",
+  label = "Vavoom 1.30"
 
   -- FIXME: boom compatible ??
 
-  for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 },
+  for_games = { doom1=1, doom2=1, heretic=1, hexen=1, strife=1 }
 
-  tables = { VAVOOM },
+  tables =
+  {
+    VAVOOM
+  }
 }
 
