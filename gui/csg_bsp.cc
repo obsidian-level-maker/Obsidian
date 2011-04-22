@@ -39,6 +39,10 @@ double QUANTIZE_GRID;
 
 static bool csg_is_clip_hull;
 
+static double mini_centre_x;
+static double mini_centre_y;
+
+
 
 class partition_c
 {
@@ -1248,6 +1252,10 @@ static void AddBoundingRegion(group_c & group)
   SYS_ASSERT(map_x1 < map_x2);
   SYS_ASSERT(map_y1 < map_y2);
 
+  // compute middle for the mini map
+  mini_centre_x = (map_x1 + map_x2) / 2.0;
+  mini_centre_y = (map_y1 + map_y2) / 2.0;
+
   // make the coords integers
   map_x1 = floor(map_x1); map_x2 = ceil(map_x2);
   map_y1 = floor(map_y1); map_y2 = ceil(map_y2);
@@ -1832,20 +1840,19 @@ void CSG_BSP_Free()
 
 #define MINI_MAP_SCALE  64.0
 
-static double mini_add_x;
-static double mini_add_y;
-
 
 static void AddMiniMapLine(region_c *R, snag_c *S)
 {
   int map_W = main_win->build_box->mini_map->GetWidth();
   int map_H = main_win->build_box->mini_map->GetHeight();
 
-  int x1 = map_W/2 + I_ROUND(S->x1 + mini_add_x) / MINI_MAP_SCALE;
-  int y1 = map_H/2 + I_ROUND(S->y1 + mini_add_y) / MINI_MAP_SCALE;
+  // the map centre is computed within CSG_BSP()
 
-  int x2 = map_W/2 + I_ROUND(S->x2 + mini_add_x) / MINI_MAP_SCALE;
-  int y2 = map_H/2 + I_ROUND(S->y2 + mini_add_y) / MINI_MAP_SCALE;
+  int x1 = map_W/2 + I_ROUND(S->x1 - mini_centre_x) / MINI_MAP_SCALE;
+  int y1 = map_H/2 + I_ROUND(S->y1 - mini_centre_y) / MINI_MAP_SCALE;
+
+  int x2 = map_W/2 + I_ROUND(S->x2 - mini_centre_x) / MINI_MAP_SCALE;
+  int y2 = map_H/2 + I_ROUND(S->y2 - mini_centre_y) / MINI_MAP_SCALE;
 
   u8_t r = 255;
   u8_t g = 255;
@@ -1894,10 +1901,6 @@ void CSG_MakeMiniMap(void)
 {
   if (! main_win)
     return;
-
-  // this assumes the map is centered around (0,0)
-  mini_add_x = 0;
-  mini_add_y = 0;
 
   main_win->build_box->mini_map->MapBegin();
 
