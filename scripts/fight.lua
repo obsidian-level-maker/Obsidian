@@ -165,7 +165,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
     -- update ammo counter
     if W.ammo then
-      stats[W.ammo] = (stats[W.ammo] or 0) + W.per
+      stats[W.ammo] = (stats[W.ammo] or 0) + (W.per or 1)
     end
 
     return 1 / W.rate
