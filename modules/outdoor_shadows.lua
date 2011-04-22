@@ -16,19 +16,18 @@
 --
 ----------------------------------------------------------------
 
-
-OB_MODULES["outdoor_shadows"] =
+UNFINISHED["outdoor_shadows"] =
 {
-  label = "Outdoor Shadows",
+  label = "Outdoor Shadows"
 
   -- should work on any "doomish" format
   for_games = { doom1=1, doom2=1, heretic=1, hexen=1,
                 strife=1,
-              },
+              }
 
   hooks =
   {
     setup = function() PARAM.outdoor_shadows = true end
-  },
+  }
 }
 

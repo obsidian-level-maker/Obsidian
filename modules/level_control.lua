@@ -50,33 +50,33 @@ end
 
 OB_MODULES["level_control"] =
 {
-  label = "Level Control",
+  label = "Level Control"
 
   hooks =
   {
-    begin_level = Level_Control_begin_level,
-  },
+    begin_level = Level_Control_begin_level
+  }
 
   options =
   {
-    barrels    = { label="Barrels",        choices=LEVEL_CONTROL_CHOICES },
-    beams      = { label="Beams",          choices=LEVEL_CONTROL_CHOICES },
-    big_rooms  = { label="Big Rooms",      choices=LEVEL_CONTROL_CHOICES },
-    cages      = { label="Cages",          choices=LEVEL_CONTROL_CHOICES },
-    crates     = { label="Crates",         choices=LEVEL_CONTROL_CHOICES },
-    hallways   = { label="Hallways",       choices=LEVEL_CONTROL_CHOICES },
-    lakes      = { label="Lakes",          choices=LEVEL_CONTROL_CHOICES },
-    liquids    = { label="Liquids",        choices=LEVEL_CONTROL_CHOICES },
-    naturals   = { label="Natural Areas",  choices=LEVEL_CONTROL_CHOICES },
-    pictures   = { label="Pictures",       choices=LEVEL_CONTROL_CHOICES },
-    pillars    = { label="Pillars",        choices=LEVEL_CONTROL_CHOICES },
-    scenics    = { label="Scenics",        choices=LEVEL_CONTROL_CHOICES },
---  sub_rooms  = { label="Sub-Rooms",      choices=LEVEL_CONTROL_CHOICES },
-    symmetry   = { label="Symmetry",       choices=LEVEL_CONTROL_CHOICES },
-    teleporters ={ label="Teleporters",    choices=LEVEL_CONTROL_CHOICES },
-    windows    = { label="Windows",        choices=LEVEL_CONTROL_CHOICES },
+    barrels    = { label="Barrels",        choices=LEVEL_CONTROL_CHOICES }
+    beams      = { label="Beams",          choices=LEVEL_CONTROL_CHOICES }
+    big_rooms  = { label="Big Rooms",      choices=LEVEL_CONTROL_CHOICES }
+    cages      = { label="Cages",          choices=LEVEL_CONTROL_CHOICES }
+    crates     = { label="Crates",         choices=LEVEL_CONTROL_CHOICES }
+    hallways   = { label="Hallways",       choices=LEVEL_CONTROL_CHOICES }
+    lakes      = { label="Lakes",          choices=LEVEL_CONTROL_CHOICES }
+    liquids    = { label="Liquids",        choices=LEVEL_CONTROL_CHOICES }
+    naturals   = { label="Natural Areas",  choices=LEVEL_CONTROL_CHOICES }
+    pictures   = { label="Pictures",       choices=LEVEL_CONTROL_CHOICES }
+    pillars    = { label="Pillars",        choices=LEVEL_CONTROL_CHOICES }
+    scenics    = { label="Scenics",        choices=LEVEL_CONTROL_CHOICES }
+--  sub_rooms  = { label="Sub-Rooms",      choices=LEVEL_CONTROL_CHOICES }
+    symmetry   = { label="Symmetry",       choices=LEVEL_CONTROL_CHOICES }
+    teleporters ={ label="Teleporters",    choices=LEVEL_CONTROL_CHOICES }
+    windows    = { label="Windows",        choices=LEVEL_CONTROL_CHOICES }
 
-    room_shape = { label ="Room Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES },
-  }, 
+    room_shape = { label ="Room Shape", priority = 1, choices=LEVEL_CONTROL_SHAPES }
+  }
 }
 

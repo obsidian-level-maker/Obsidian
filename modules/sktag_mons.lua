@@ -179,34 +179,34 @@ end
 
 OB_MODULES["sktag_mons"] =
 {
-  label = "Skulltag : Monsters and Items",
+  label = "Skulltag : Monsters and Items"
 
-  for_games = { doom1=1, doom2=1 },
-  for_modes = { sp=1, coop=1 },
-  for_engines = { skulltag=1 },
+  for_games = { doom1=1, doom2=1 }
+  for_modes = { sp=1, coop=1 }
+  for_engines = { skulltag=1 }
 
   tables =
   {
     SKULLTAG
-  },
+  }
 
   hooks =
   {
-    setup = SKTAG_MONS.setup,
-  },
+    setup = SKTAG_MONS.setup
+  }
 
   options =
   {
     def_mon =
     {
-      label = "Default Monsters", choices = SKTAG_MONS.CHOICES,
-    },
+      label = "Default Monsters", choices = SKTAG_MONS.CHOICES
+    }
 
     def_weap =
     {
-      label = "Default Weapons", choices = SKTAG_MONS.CHOICES,
-    },
-  },
+      label = "Default Weapons", choices = SKTAG_MONS.CHOICES
+    }
+  }
 }
 
 
@@ -256,27 +256,26 @@ end
 
 OB_MODULES["sktag_mon_control"] =
 {
-  label = "Skulltag Monsters : Fine Control",
+  label = "Skulltag Monsters : Fine Control"
 
-  for_modules = { sktag_mons=1 },
+  for_modules = { sktag_mons=1 }
 
   hooks =
   {
-    setup = SKTAG_MONS.mon_control_setup,
-  },
+    setup = SKTAG_MONS.mon_control_setup
+  }
 
   options =
   {
-    darkimp   = { label="Dark Imp",          choices=SKTAG_MONS.CONTROL_CHOICES },
-    bldemon   = { label="Blood Demon",       choices=SKTAG_MONS.CONTROL_CHOICES },
-    cacolant  = { label="Cacolantern",       choices=SKTAG_MONS.CONTROL_CHOICES },
-    hectebus  = { label="Hectebus",          choices=SKTAG_MONS.CONTROL_CHOICES },
-    abaddon   = { label="Abaddon",           choices=SKTAG_MONS.CONTROL_CHOICES },
+    darkimp   = { label="Dark Imp",          choices=SKTAG_MONS.CONTROL_CHOICES }
+    bldemon   = { label="Blood Demon",       choices=SKTAG_MONS.CONTROL_CHOICES }
+    cacolant  = { label="Cacolantern",       choices=SKTAG_MONS.CONTROL_CHOICES }
+    hectebus  = { label="Hectebus",          choices=SKTAG_MONS.CONTROL_CHOICES }
+    abaddon   = { label="Abaddon",           choices=SKTAG_MONS.CONTROL_CHOICES }
 
-    superguy  = { label="Super Shotgun Guy", choices=SKTAG_MONS.CONTROL_CHOICES },
-    belphegor = { label="Belphegor",         choices=SKTAG_MONS.CONTROL_CHOICES },
-  },
-
+    superguy  = { label="Super Shotgun Guy", choices=SKTAG_MONS.CONTROL_CHOICES }
+    belphegor = { label="Belphegor",         choices=SKTAG_MONS.CONTROL_CHOICES }
+  }
 }
 
 
@@ -307,21 +306,21 @@ end
 
 OB_MODULES["sktag_weap_control"] =
 {
-  label = "Skulltag Weapons : Fine Control",
+  label = "Skulltag Weapons : Fine Control"
 
-  for_modules = { sktag_mons=1 },
+  for_modules = { sktag_mons=1 }
 
   hooks =
   {
-    setup = SKTAG_MONS.weap_control_setup,
-  },
+    setup = SKTAG_MONS.weap_control_setup
+  }
 
   options =
   {
-    minigun  = { label="Minigun",          choices=SKTAG_MONS.CONTROL_CHOICES },
-    glaunch  = { label="Grenade Launcher", choices=SKTAG_MONS.CONTROL_CHOICES },
-    railgun  = { label="Railgun",          choices=SKTAG_MONS.CONTROL_CHOICES },
-    bfg10k   = { label="BFG10K",           choices=SKTAG_MONS.CONTROL_CHOICES },
-  },
+    minigun  = { label="Minigun",          choices=SKTAG_MONS.CONTROL_CHOICES }
+    glaunch  = { label="Grenade Launcher", choices=SKTAG_MONS.CONTROL_CHOICES }
+    railgun  = { label="Railgun",          choices=SKTAG_MONS.CONTROL_CHOICES }
+    bfg10k   = { label="BFG10K",           choices=SKTAG_MONS.CONTROL_CHOICES }
+  }
 }
 

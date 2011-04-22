@@ -32,13 +32,13 @@ CTL_QUAKE2.MON_CHOICES =
 
 CTL_QUAKE2.MON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  insane = 2000
 }
 
 
@@ -61,45 +61,45 @@ end
 
 OB_MODULES["quake2_mon_control"] =
 {
-  label = "Quake2 Monster Control",
+  label = "Quake2 Monster Control"
 
-  for_games = { quake2=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { quake2=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_QUAKE2.monster_setup,
-  },
+    setup = CTL_QUAKE2.monster_setup
+  }
 
   options =
   {
-    guard      = { label="Guard",       choices=CTL_QUAKE2.MON_CHOICES },
-    guard_sg   = { label="Guard w/ SG", choices=CTL_QUAKE2.MON_CHOICES },
-    guard_mg   = { label="Guard w/ MG", choices=CTL_QUAKE2.MON_CHOICES },
-    enforcer   = { label="Enforcer",    choices=CTL_QUAKE2.MON_CHOICES },
-    flyer      = { label="Flyer",       choices=CTL_QUAKE2.MON_CHOICES },
+    guard      = { label="Guard",       choices=CTL_QUAKE2.MON_CHOICES }
+    guard_sg   = { label="Guard w/ SG", choices=CTL_QUAKE2.MON_CHOICES }
+    guard_mg   = { label="Guard w/ MG", choices=CTL_QUAKE2.MON_CHOICES }
+    enforcer   = { label="Enforcer",    choices=CTL_QUAKE2.MON_CHOICES }
+    flyer      = { label="Flyer",       choices=CTL_QUAKE2.MON_CHOICES }
 
-    shark      = { label="Shark",       choices=CTL_QUAKE2.MON_CHOICES },
-    parasite   = { label="Parasite",    choices=CTL_QUAKE2.MON_CHOICES },
-    maiden     = { label="Maiden",      choices=CTL_QUAKE2.MON_CHOICES },
-    technician = { label="Technician",  choices=CTL_QUAKE2.MON_CHOICES },
-    beserker   = { label="Beserker",    choices=CTL_QUAKE2.MON_CHOICES },
-    icarus     = { label="Icarus",      choices=CTL_QUAKE2.MON_CHOICES },
+    shark      = { label="Shark",       choices=CTL_QUAKE2.MON_CHOICES }
+    parasite   = { label="Parasite",    choices=CTL_QUAKE2.MON_CHOICES }
+    maiden     = { label="Maiden",      choices=CTL_QUAKE2.MON_CHOICES }
+    technician = { label="Technician",  choices=CTL_QUAKE2.MON_CHOICES }
+    beserker   = { label="Beserker",    choices=CTL_QUAKE2.MON_CHOICES }
+    icarus     = { label="Icarus",      choices=CTL_QUAKE2.MON_CHOICES }
 
-    medic      = { label="Medic",     choices=CTL_QUAKE2.MON_CHOICES },
-    mutant     = { label="Mutant",    choices=CTL_QUAKE2.MON_CHOICES },
-    brain      = { label="Brain",     choices=CTL_QUAKE2.MON_CHOICES },
-    grenader   = { label="Grenader",  choices=CTL_QUAKE2.MON_CHOICES },
-    gladiator  = { label="Gladiator", choices=CTL_QUAKE2.MON_CHOICES },
+    medic      = { label="Medic",     choices=CTL_QUAKE2.MON_CHOICES }
+    mutant     = { label="Mutant",    choices=CTL_QUAKE2.MON_CHOICES }
+    brain      = { label="Brain",     choices=CTL_QUAKE2.MON_CHOICES }
+    grenader   = { label="Grenader",  choices=CTL_QUAKE2.MON_CHOICES }
+    gladiator  = { label="Gladiator", choices=CTL_QUAKE2.MON_CHOICES }
 
-    tank       = { label="Tank",            choices=CTL_QUAKE2.MON_CHOICES },
-    tank_cmdr  = { label="Tank Commander",  choices=CTL_QUAKE2.MON_CHOICES },
-    Super_tank = { label="Super Tank",      choices=CTL_QUAKE2.MON_CHOICES },
-    Huge_flyer = { label="Super Flyer",     choices=CTL_QUAKE2.MON_CHOICES },
+    tank       = { label="Tank",            choices=CTL_QUAKE2.MON_CHOICES }
+    tank_cmdr  = { label="Tank Commander",  choices=CTL_QUAKE2.MON_CHOICES }
+    Super_tank = { label="Super Tank",      choices=CTL_QUAKE2.MON_CHOICES }
+    Huge_flyer = { label="Super Flyer",     choices=CTL_QUAKE2.MON_CHOICES }
 
     -- Jorg ?
     -- Makron ?
-  },
+  }
 }
 
 
@@ -120,13 +120,13 @@ CTL_QUAKE2.WEAPON_CHOICES =
 
 CTL_QUAKE2.WEAPON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  loveit = 1000
 }
 
 
@@ -154,27 +154,27 @@ end
 
 OB_MODULES["quake2_weapon_control"] =
 {
-  label = "Quake2 Weapon Control",
+  label = "Quake2 Weapon Control"
 
-  for_games = { quake2=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { quake2=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_QUAKE2.weapon_setup,
-  },
+    setup = CTL_QUAKE2.weapon_setup
+  }
 
   options =
   {
-    shotty   = { label="Shotgun",          choices=CTL_QUAKE2.WEAPON_CHOICES },
-    ssg      = { label="Super Shotty",     choices=CTL_QUAKE2.WEAPON_CHOICES },
-    machine  = { label="Machinegun",       choices=CTL_QUAKE2.WEAPON_CHOICES },
-    chain    = { label="Chaingun",         choices=CTL_QUAKE2.WEAPON_CHOICES },
-    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE2.WEAPON_CHOICES },
-    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE2.WEAPON_CHOICES },
-    rail     = { label="Railgun",          choices=CTL_QUAKE2.WEAPON_CHOICES },
-    hyper    = { label="Hyper-Blaster",    choices=CTL_QUAKE2.WEAPON_CHOICES },
-    bfg      = { label="BFG 10K",          choices=CTL_QUAKE2.WEAPON_CHOICES },
-  },
+    shotty   = { label="Shotgun",          choices=CTL_QUAKE2.WEAPON_CHOICES }
+    ssg      = { label="Super Shotty",     choices=CTL_QUAKE2.WEAPON_CHOICES }
+    machine  = { label="Machinegun",       choices=CTL_QUAKE2.WEAPON_CHOICES }
+    chain    = { label="Chaingun",         choices=CTL_QUAKE2.WEAPON_CHOICES }
+    grenade  = { label="Grenade Launcher", choices=CTL_QUAKE2.WEAPON_CHOICES }
+    rocket   = { label="Rocket Launcher",  choices=CTL_QUAKE2.WEAPON_CHOICES }
+    rail     = { label="Railgun",          choices=CTL_QUAKE2.WEAPON_CHOICES }
+    hyper    = { label="Hyper-Blaster",    choices=CTL_QUAKE2.WEAPON_CHOICES }
+    bfg      = { label="BFG 10K",          choices=CTL_QUAKE2.WEAPON_CHOICES }
+  }
 }
 

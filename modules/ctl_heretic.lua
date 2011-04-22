@@ -32,13 +32,13 @@ CTL_HERETIC.MON_CHOICES =
 
 CTL_HERETIC.MON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  insane = 2000
 }
 
 
@@ -61,37 +61,37 @@ end
 
 OB_MODULES["heretic_mon_control"] =
 {
-  label = "Heretic Monster Control",
+  label = "Heretic Monster Control"
 
-  for_games = { heretic=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { heretic=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_HERETIC.monster_setup,
-  },
+    setup = CTL_HERETIC.monster_setup
+  }
 
   options =
   {
-    gargoyle   = { label="Gargoyle",        choices=CTL_HERETIC.MON_CHOICES },
-    fire_garg  = { label="Gargoyle Leader", choices=CTL_HERETIC.MON_CHOICES },
-    sabreclaw  = { label="Sabreclaw",  choices=CTL_HERETIC.MON_CHOICES },
+    gargoyle   = { label="Gargoyle",        choices=CTL_HERETIC.MON_CHOICES }
+    fire_garg  = { label="Gargoyle Leader", choices=CTL_HERETIC.MON_CHOICES }
+    sabreclaw  = { label="Sabreclaw",  choices=CTL_HERETIC.MON_CHOICES }
 
-    knight     = { label="Warrior",         choices=CTL_HERETIC.MON_CHOICES },
---  knight_inv = { label="Warrior Ghost",   choices=CTL_HERETIC.MON_CHOICES },
-    mummy      = { label="Golem",           choices=CTL_HERETIC.MON_CHOICES },
---  mummy_inv  = { label="Golem Ghost",     choices=CTL_HERETIC.MON_CHOICES },
-    leader     = { label="Golem Leader",    choices=CTL_HERETIC.MON_CHOICES },
---  leader_inv = { label="Golem Leader Ghost", choices=CTL_HERETIC.MON_CHOICES },
+    knight     = { label="Warrior",         choices=CTL_HERETIC.MON_CHOICES }
+--  knight_inv = { label="Warrior Ghost",   choices=CTL_HERETIC.MON_CHOICES }
+    mummy      = { label="Golem",           choices=CTL_HERETIC.MON_CHOICES }
+--  mummy_inv  = { label="Golem Ghost",     choices=CTL_HERETIC.MON_CHOICES }
+    leader     = { label="Golem Leader",    choices=CTL_HERETIC.MON_CHOICES }
+--  leader_inv = { label="Golem Leader Ghost", choices=CTL_HERETIC.MON_CHOICES }
 
-    disciple   = { label="Disciple",   choices=CTL_HERETIC.MON_CHOICES },
-    weredragon = { label="Weredragon", choices=CTL_HERETIC.MON_CHOICES },
-    ohpibian   = { label="Mancubus",   choices=CTL_HERETIC.MON_CHOICES },
+    disciple   = { label="Disciple",   choices=CTL_HERETIC.MON_CHOICES }
+    weredragon = { label="Weredragon", choices=CTL_HERETIC.MON_CHOICES }
+    ohpibian   = { label="Mancubus",   choices=CTL_HERETIC.MON_CHOICES }
 
-    Ironlich  = { label="Ironlich",    choices=CTL_HERETIC.MON_CHOICES },
-    Maulotaur = { label="Maulotaur",   choices=CTL_HERETIC.MON_CHOICES },
-    D_Sparil  = { label="D'Sparil",    choices=CTL_HERETIC.MON_CHOICES },
-  },
+    Ironlich  = { label="Ironlich",    choices=CTL_HERETIC.MON_CHOICES }
+    Maulotaur = { label="Maulotaur",   choices=CTL_HERETIC.MON_CHOICES }
+    D_Sparil  = { label="D'Sparil",    choices=CTL_HERETIC.MON_CHOICES }
+  }
 }
 
 
@@ -112,13 +112,13 @@ CTL_HERETIC.WEAPON_CHOICES =
 
 CTL_HERETIC.WEAPON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  loveit = 1000
 }
 
 
@@ -146,24 +146,24 @@ end
 
 OB_MODULES["heretic_weapon_control"] =
 {
-  label = "Heretic Weapon Control",
+  label = "Heretic Weapon Control"
 
-  for_games = { heretic=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { heretic=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_HERETIC.weapon_setup,
-  },
+    setup = CTL_HERETIC.weapon_setup
+  }
 
   options =
   {
-    gauntlets  = { label="Gauntlets",    choices=CTL_HERETIC.WEAPON_CHOICES },
-    crossbow   = { label="Crossbow",     choices=CTL_HERETIC.WEAPON_CHOICES },
-    claw       = { label="Dragon Claw",  choices=CTL_HERETIC.WEAPON_CHOICES },
-    hellstaff  = { label="Hellstaff",    choices=CTL_HERETIC.WEAPON_CHOICES },
-    phoenix    = { label="Phoenix Rod",  choices=CTL_HERETIC.WEAPON_CHOICES },
-    firemace   = { label="Fire Mace",    choices=CTL_HERETIC.WEAPON_CHOICES },
-  },
+    gauntlets  = { label="Gauntlets",    choices=CTL_HERETIC.WEAPON_CHOICES }
+    crossbow   = { label="Crossbow",     choices=CTL_HERETIC.WEAPON_CHOICES }
+    claw       = { label="Dragon Claw",  choices=CTL_HERETIC.WEAPON_CHOICES }
+    hellstaff  = { label="Hellstaff",    choices=CTL_HERETIC.WEAPON_CHOICES }
+    phoenix    = { label="Phoenix Rod",  choices=CTL_HERETIC.WEAPON_CHOICES }
+    firemace   = { label="Fire Mace",    choices=CTL_HERETIC.WEAPON_CHOICES }
+  }
 }
 

@@ -32,13 +32,13 @@ CTL_DOOM.MON_CHOICES =
 
 CTL_DOOM.MON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  insane = 2000
 }
 
 
@@ -64,40 +64,40 @@ end
 
 OB_MODULES["doom_mon_control"] =
 {
-  label = "Doom Monster Control",
+  label = "Doom Monster Control"
 
-  for_games = { doom1=1, doom2=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { doom1=1, doom2=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_DOOM.monster_setup,
-  },
+    setup = CTL_DOOM.monster_setup
+  }
 
   options =
   {
-    zombie   = { label="Zombieman",      choices=CTL_DOOM.MON_CHOICES },
-    shooter  = { label="Shotgun Guy",    choices=CTL_DOOM.MON_CHOICES },
-    gunner   = { label="Chaingunner",    choices=CTL_DOOM.MON_CHOICES },
-    ss_dude  = { label="SS Nazi",        choices=CTL_DOOM.MON_CHOICES },
-    imp      = { label="Imp",            choices=CTL_DOOM.MON_CHOICES },
+    zombie   = { label="Zombieman",      choices=CTL_DOOM.MON_CHOICES }
+    shooter  = { label="Shotgun Guy",    choices=CTL_DOOM.MON_CHOICES }
+    gunner   = { label="Chaingunner",    choices=CTL_DOOM.MON_CHOICES }
+    ss_dude  = { label="SS Nazi",        choices=CTL_DOOM.MON_CHOICES }
+    imp      = { label="Imp",            choices=CTL_DOOM.MON_CHOICES }
 
-    skull    = { label="Lost Soul",      choices=CTL_DOOM.MON_CHOICES },
-    demon    = { label="Demon",          choices=CTL_DOOM.MON_CHOICES },
-    spectre  = { label="Spectre",        choices=CTL_DOOM.MON_CHOICES },
-    pain     = { label="Pain Elemental", choices=CTL_DOOM.MON_CHOICES },
-    caco     = { label="Cacodemon",      choices=CTL_DOOM.MON_CHOICES },
-    knight   = { label="Hell Knight",    choices=CTL_DOOM.MON_CHOICES },
+    skull    = { label="Lost Soul",      choices=CTL_DOOM.MON_CHOICES }
+    demon    = { label="Demon",          choices=CTL_DOOM.MON_CHOICES }
+    spectre  = { label="Spectre",        choices=CTL_DOOM.MON_CHOICES }
+    pain     = { label="Pain Elemental", choices=CTL_DOOM.MON_CHOICES }
+    caco     = { label="Cacodemon",      choices=CTL_DOOM.MON_CHOICES }
+    knight   = { label="Hell Knight",    choices=CTL_DOOM.MON_CHOICES }
 
-    revenant = { label="Revenant",       choices=CTL_DOOM.MON_CHOICES },
-    mancubus = { label="Mancubus",       choices=CTL_DOOM.MON_CHOICES },
-    arach    = { label="Arachnotron",    choices=CTL_DOOM.MON_CHOICES },
-    vile     = { label="Archvile",       choices=CTL_DOOM.MON_CHOICES },
-    baron    = { label="Baron of Hell",  choices=CTL_DOOM.MON_CHOICES },
+    revenant = { label="Revenant",       choices=CTL_DOOM.MON_CHOICES }
+    mancubus = { label="Mancubus",       choices=CTL_DOOM.MON_CHOICES }
+    arach    = { label="Arachnotron",    choices=CTL_DOOM.MON_CHOICES }
+    vile     = { label="Archvile",       choices=CTL_DOOM.MON_CHOICES }
+    baron    = { label="Baron of Hell",  choices=CTL_DOOM.MON_CHOICES }
 
-    Cyberdemon = { label="Cyberdemon",   choices=CTL_DOOM.MON_CHOICES },
-    Mastermind = { label="Mastermind",   choices=CTL_DOOM.MON_CHOICES },
-  },
+    Cyberdemon = { label="Cyberdemon",   choices=CTL_DOOM.MON_CHOICES }
+    Mastermind = { label="Mastermind",   choices=CTL_DOOM.MON_CHOICES }
+  }
 }
 
 
@@ -118,13 +118,13 @@ CTL_DOOM.WEAPON_CHOICES =
 
 CTL_DOOM.WEAPON_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  loveit = 1000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  loveit = 1000
 }
 
 
@@ -152,26 +152,26 @@ end
 
 OB_MODULES["doom_weapon_control"] =
 {
-  label = "Doom Weapon Control",
+  label = "Doom Weapon Control"
 
-  for_games = { doom1=1, doom2=1 },
-  for_modes = { sp=1, coop=1 },
+  for_games = { doom1=1, doom2=1 }
+  for_modes = { sp=1, coop=1 }
 
   hooks =
   {
-    setup = CTL_DOOM.weapon_setup,
-  },
+    setup = CTL_DOOM.weapon_setup
+  }
 
   options =
   {
-    berserk  = { label="Berserk",          choices=CTL_DOOM.WEAPON_CHOICES },
-    saw      = { label="Saw",              choices=CTL_DOOM.WEAPON_CHOICES },
-    shotty   = { label="Shotgun",          choices=CTL_DOOM.WEAPON_CHOICES },
-    super    = { label="Super Shotty",     choices=CTL_DOOM.WEAPON_CHOICES },
-    chain    = { label="Chaingun",         choices=CTL_DOOM.WEAPON_CHOICES },
-    launch   = { label="Rocket Launcher",  choices=CTL_DOOM.WEAPON_CHOICES },
-    plasma   = { label="Plasma Rifle",     choices=CTL_DOOM.WEAPON_CHOICES },
-    bfg      = { label="B.F.G",            choices=CTL_DOOM.WEAPON_CHOICES },
-  },
+    berserk  = { label="Berserk",          choices=CTL_DOOM.WEAPON_CHOICES }
+    saw      = { label="Saw",              choices=CTL_DOOM.WEAPON_CHOICES }
+    shotty   = { label="Shotgun",          choices=CTL_DOOM.WEAPON_CHOICES }
+    super    = { label="Super Shotty",     choices=CTL_DOOM.WEAPON_CHOICES }
+    chain    = { label="Chaingun",         choices=CTL_DOOM.WEAPON_CHOICES }
+    launch   = { label="Rocket Launcher",  choices=CTL_DOOM.WEAPON_CHOICES }
+    plasma   = { label="Plasma Rifle",     choices=CTL_DOOM.WEAPON_CHOICES }
+    bfg      = { label="B.F.G",            choices=CTL_DOOM.WEAPON_CHOICES }
+  }
 }
 
