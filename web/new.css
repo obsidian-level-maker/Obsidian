@@ -2,14 +2,18 @@
 body {
     background-color: black;
     color: white;
-    padding: 14px;
+    padding: 16px;
+    padding-left: 24px;
+    padding-right: 24px;
+    font-size: larger;
 }
 
 .rest {
     background-color: white;
     color: black;
     padding: 0.5em;
-    padding-left: 1em;
+    padding-left: 1.5em;
+    padding-right: 1.5em;
     padding-top: 1px;
 }
 
@@ -36,8 +40,8 @@ h3 { color: #c44; padding-top: 1em; }
 .menu {
     background-color: #776655;
     color: #ddd;
-    min-height: 24px;
-    line-height: 1.8em;
+    min-height: 28px;
+    line-height: 2.0em;
     font-size: large;
 }
 
@@ -52,7 +56,7 @@ h3 { color: #c44; padding-top: 1em; }
     background-color: #ddccbb;
     color: #006;
     /* height: 32px; */
-    line-height: 1.8em;
+    line-height: 2.0em;
     font-size: small;
 }
 
@@ -107,6 +111,11 @@ PRE { font-size: larger; }
     margin-left: 1.6em;
     margin-right: 3em;
     margin-bottom: 1em;
+}
+
+.spacey_list li {
+    margin-left: 1.2em;
+    margin-bottom: 0.7em;
 }
 
 .faq_Q {
