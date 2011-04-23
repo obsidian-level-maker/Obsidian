@@ -26,7 +26,7 @@ DOOM2 = { }  --
 
 DOOM.ENTITIES =
 {
-  --- PLAYERS ---
+  --- Players ---
 
   player1 = { id=1, kind="other", r=16,h=56 }
   player2 = { id=2, kind="other", r=16,h=56 }
@@ -36,7 +36,7 @@ DOOM.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
 
-  --- MONSTERS ---
+  --- Monsters ---
 
   zombie    = { id=3004,kind="monster", r=20,h=56 }
   shooter   = { id=9,   kind="monster", r=20,h=56 }
@@ -63,7 +63,7 @@ DOOM.ENTITIES =
   Mastermind = { id=7,  kind="monster", r=128,h=100 }
   Cyberdemon = { id=16, kind="monster", r=40, h=110 }
 
-  --- PICKUPS ---
+  --- Pickups ---
 
   kc_red     = { id=13, kind="pickup", r=20,h=16, pass=true }
   kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
@@ -109,7 +109,7 @@ DOOM.ENTITIES =
   cell_pack  = { id=  17, kind="pickup", r=20,h=16, pass=true }
 
 
-  --- SCENERY ---
+  --- Scenery ---
 
   -- lights --
   lamp         = { id=2028,kind="scenery", r=16,h=48, light=255 }
@@ -182,8 +182,7 @@ DOOM.ENTITIES =
   dead_caco    = { id=22, kind="scenery", r=16,h=16, pass=true }
   dead_skull   = { id=23, kind="scenery", r=16,h=16, pass=true }
 
-  -- SPECIAL STUFF --
-
+  -- special stuff --
   dummy = { id=23, kind="other", r=16,h=16, pass=true }
 
   brain_boss    = { id=88, kind="other", r=16, h=16 }
