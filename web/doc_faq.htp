@@ -138,7 +138,7 @@ Q/ Water should not hurt the player!
 
 <div class="faq_A">
 I agree!&nbsp;
-However, since there is no way to get out of deep pits (yet),
+However, since there is no way to get out of deep pits yet,
 and since I like to see water being used in levels,
 this is the only option right now.
 </div>
@@ -214,16 +214,33 @@ FitzQuake or Darkplaces is recommended.
 </div>
 
 
-<!---
-[div id="quake_MAP" class="faq_Q"]
+<div id="quake_MAP" class="faq_Q">
 Q/ Why don't you export Quake levels as .MAP files, and let people
    run the normal BSP compiling tools on them?
-[/div]
+</div>
 
-[div class="faq_A"]
-A/
-[/div]
---->
+<div class="faq_A">
+There are a number of reasons:
+
+<ol class="spacey_list">
+  <li> Convenience to users.
+       Most people wouldn't know how to use the compiling tools.
+
+  <li> Robustness.  The normal quake compiling tools can suffer
+       "leaks" and the map fails to build.
+       This can never happen with the way OBLIGE's internal CSG works.
+
+  <li> Speed.  Especially for the visibility step,
+       I can take advantage of OBLIGE's grid system to
+       generate adequate (but not optimal) vis data
+       much much faster than it would normally take.
+
+  <li> Flexibility.  I am not limited by what the tools can do,
+       I could (for example) implement my own lighting algorithms.
+
+</ol>
+
+</div>
 
 
 <div id="compile" class="faq_Q">
@@ -255,18 +272,19 @@ Q/ You must do such and such, I demand it!
 </div>
 
 <div class="faq_A">
-Dude, you got this program for free and nobody is
+Hey, you got this program for free and nobody is
 getting paid to work on it.
 That means you have NO RIGHT to demand anything from me.
 However if you have a request and ask nicely, it will be
 considered.
 
-<p>
+<!---
 People who behave in an insulting, threatening, harrassing
 or otherwise being unpleasant manner will be BANNED from the
 forum and my email.
 This is just a hobby and I don't need any grief like that.
 Be polite and respectful and we'll get along fine.
+--->
 </div>
 
 
