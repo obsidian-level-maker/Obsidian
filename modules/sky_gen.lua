@@ -22,18 +22,18 @@ function Skygen_generate_doom()
   -- FIXME: supply full information, e.g. via GAME.skies table
   local sky_list =
   {
-    { patch="SKY1" },
-    { patch="SKY2" },
-    { patch="SKY3" },
-    { patch="SKY4" },
+    { patch="SKY1" }
+    { patch="SKY2" }
+    { patch="SKY3" }
+    { patch="SKY4" }
   }
 
   if PARAM.doom2_skies then
     sky_list =
     {
-      { patch="RSKY1" },
-      { patch="RSKY2" },
-      { patch="RSKY3" },
+      { patch="RSKY1" }
+      { patch="RSKY2" }
+      { patch="RSKY3" }
     }
   end
 
@@ -255,13 +255,13 @@ end
 
 OB_MODULES["sky_gen_doom"] =
 {
-  label = "Sky Generator (DOOM)",
+  label = "Sky Generator (DOOM)"
 
-  for_games = { doom1=1, doom2=1 },
+  for_games = { doom1=1, doom2=1 }
 
   hooks =
   {
-    get_levels = Skygen_generate_doom,
-  },
+    get_levels = Skygen_generate_doom
+  }
 }
 

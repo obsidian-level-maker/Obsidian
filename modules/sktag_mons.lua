@@ -24,53 +24,79 @@ SKTAG_MONS.MONSTERS =
 {
   darkimp =
   {
-    level=1, prob=55,
-    health=120, damage=30, attack="missile",
-    density=0.7,
-  },
+    level = 1
+    prob = 55
+    health = 120
+    damage = 30
+    attack = "missile"
+    density = 0.7
+  }
 
   superguy =
   {
-    level=3, prob=33,
-    health=120, damage=65, attack="hitscan",
-    give={ {weapon="super"}, {ammo="shell",count=4} },
-    density=0.5,
-  },
+    level = 3
+    prob = 33
+    health = 120
+    damage = 65
+    attack = "hitscan"
+    give = { {weapon="super"}, {ammo="shell",count=4} }
+    density = 0.5
+  }
 
   bldemon =
   {
-    level=3, prob=20,
-    health=300, damage=25, attack="melee",
-    density=0.5,
-  },
+    level = 3
+    prob = 20
+    health = 300
+    damage = 25
+    attack = "melee"
+    density = 0.5
+  }
 
   cacolant =
   {
-    level=5, prob=25, crazy_prob=10,
-    health=800, damage=55, attack="missile",
-    density=0.4, float=true,
-  },
+    level = 5
+    prob = 25
+    crazy_prob = 10
+    health = 800
+    damage = 55
+    attack = "missile"
+    density = 0.4
+    float = true
+  }
 
   hectebus =
   {
-    level=7, prob=10, skip_prob=100,
-    health=1200, damage=120, attack="missile",
-    density=0.2, never_promote=true,
-  },
+    level = 7
+    prob = 10
+    skip_prob = 100
+    health = 1200
+    damage = 120
+    attack = "missile"
+    density = 0.2
+    never_promote = true
+  }
 
   abaddon =
   {
-    level=7, prob=15,
-    health=1200, damage=65, attack="missile",
-    density=0.2, float=true,
-  },
+    level = 7
+    prob = 15
+    health = 1200
+    damage = 65
+    attack = "missile"
+    density = 0.2
+    float = true
+  }
 
   belphegor =
   {
-    level=8, prob=10,
-    health=1500, damage=80, attack="missile",
-    density=0.2,
-  },
+    level = 8
+    prob = 10
+    health = 1500
+    damage = 80
+    attack = "missile"
+    density = 0.2
+  }
 }
 
 
@@ -78,35 +104,59 @@ SKTAG_MONS.WEAPONS =
 {
   minigun =
   {
-    pref=85, add_prob=20, start_prob=10,
-    rate=15, damage=10, attack="hitscan",
-    ammo="bullet", per=1,
-    give={ {ammo="bullet",count=20} },
-  },
+    pref = 85
+    add_prob = 20
+    start_prob = 10
+    rate = 15
+    damage = 10
+    attack = "hitscan"
+    ammo = "bullet"
+    per = 1
+    give = { {ammo="bullet",count=20} }
+  }
 
   glaunch =
   {
-    pref=50, add_prob=15, start_prob=8,
-    rate=1.7, damage=80, attack="missile", splash={ 50,20,5 },
-    ammo="rocket", per=1,
-    give={ {ammo="rocket",count=2} },
-  },
+    pref = 50
+    add_prob = 15
+    start_prob = 8
+    rate = 1.7
+    damage = 80
+    attack = "missile"
+    splash = { 50,20,5 }
+    ammo = "rocket"
+    per = 1
+    give = { {ammo="rocket",count=2} }
+  }
 
   railgun =
   {
-    pref=20, add_prob=10, start_prob=5, rarity=3,
-    rate=3.0, damage=200, attack="hitscan",
-    ammo="cell", per=10,
-    give={ {ammo="cell",count=40} },
-  },
+    pref = 20
+    add_prob = 10
+    start_prob = 5
+    rarity = 3
+    rate = 3.0
+    damage = 200
+    attack = "hitscan"
+    ammo = "cell"
+    per = 10
+    give = { {ammo="cell",count=40} }
+  }
 
   bfg10k =
   {
-    pref=15, add_prob=5, start_prob=1, rarity=4,
-    rate=6.0, damage=160, attack="missile", splash={60,45,30,30,20,10},
-    ammo="cell", per=5,
-    give={ {ammo="cell",count=40} },
-  },
+    pref = 15
+    add_prob = 5
+    start_prob = 1
+    rarity = 4
+    rate = 6.0
+    damage = 160
+    attack = "missile"
+    splash = {60,45,30,30,20,10}
+    ammo = "cell"
+    per = 5
+    give = { {ammo="cell",count=40} }
+  }
 }
 
 
@@ -114,21 +164,26 @@ SKTAG_MONS.PICKUPS =
 {
   max_potion =
   {
-    prob=1, cluster={ 1,2 },
-    give={ {health=1} },
-  },
+    prob = 1
+    cluster = { 1,2 }
+    give = { {health=1} }
+  }
 
   max_helmet =
   {
-    prob=1, armor=true, cluster={ 1,2 },
-    give={ {health=1} },
-  },
+    prob = 1
+    armor = true
+    cluster = { 1,2 }
+    give = { {health=1} }
+  }
 
   red_armor =
   {
-    prob=2, armor=true, big_item=true,
-    give={ {health=90} },
-  },
+    prob = 2
+    armor = true
+    big_item = true
+    give = { {health=90} }
+  }
 }
 
 
@@ -141,9 +196,9 @@ SKTAG_MONS.CHOICES =
 
 SKTAG_MONS.FACTORS =
 {
-  few   = 0.2,
-  some  = 1.0,
-  heaps = 5.0,
+  few   = 0.2
+  some  = 1.0
+  heaps = 5.0
 }
 
 
@@ -227,13 +282,13 @@ SKTAG_MONS.CONTROL_CHOICES =
 
 SKTAG_MONS.CONTROL_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 10,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 1200,
+  none   = 0
+  scarce = 2
+  less   = 10
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  insane = 1200
 }
 
 

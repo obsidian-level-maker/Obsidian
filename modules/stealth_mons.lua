@@ -26,91 +26,151 @@ STEALTH.MONSTERS =
 
   stealth_zombie =
   {
-    replaces="zombie", replace_prob=30, crazy_prob=5,
-    health=20, damage=4, attack="hitscan",
-    give={ {ammo="bullet",count=5} },
-    invis=true, density=1.5,
-  },
+    replaces = "zombie"
+    replace_prob = 30
+    crazy_prob = 5
+    health = 20
+    damage = 4
+    attack = "hitscan"
+    give = { {ammo="bullet",count=5} }
+    invis = true
+    density = 1.5
+  }
 
   stealth_shooter =
   {
-    replaces="shooter", replace_prob=20, crazy_prob=11,
-    health=30, damage=10, attack="hitscan",
-    give={ {weapon="shotty"}, {ammo="shell",count=4} },
-    invis=true,
-  },
+    replaces = "shooter"
+    replace_prob = 20
+    crazy_prob = 11
+    health = 30
+    damage = 10
+    attack = "hitscan"
+    give = { {weapon="shotty"}, {ammo="shell",count=4} }
+    invis = true
+  }
 
   stealth_imp =
   {
-    replaces="imp", replace_prob=40, crazy_prob=25,
-    health=60, damage=20, attack="missile",
-    invis=true,
-  },
+    replaces = "imp"
+    replace_prob = 40
+    crazy_prob = 25
+    health = 60
+    damage = 20
+    attack = "missile"
+    invis = true
+  }
 
   stealth_demon =
   {
-    replaces="demon", replace_prob=40, crazy_prob=30,
-    health=150, damage=25, attack="melee",
-    invis=true,
-  },
+    replaces = "demon"
+    replace_prob = 40
+    crazy_prob = 30
+    health = 150
+    damage = 25
+    attack = "melee"
+    invis = true
+  }
 
   stealth_caco =
   {
-    replaces="caco", replace_prob=25, crazy_prob=41,
-    health=400, damage=35, attack="missile",
-    invis=true, float=true, density=0.5,
-  },
+    replaces = "caco"
+    replace_prob = 25
+    crazy_prob = 41
+    health = 400
+    damage = 35
+    attack = "missile"
+    invis = true
+    float = true
+    density = 0.5
+  }
 
   stealth_baron =
   {
-    replaces="baron", replace_prob=20, crazy_prob=10,
-    health=1000, damage=45, attack="missile",
-    invis=true, density=0.5,
-  },
+    replaces = "baron"
+    replace_prob = 20
+    crazy_prob = 10
+    health = 1000
+    damage = 45
+    attack = "missile"
+    invis = true
+    density = 0.5
+  }
   
   stealth_gunner =
   {
-    replaces="gunner", replace_prob=20, crazy_prob=21,
-    health=70, damage=50, attack="hitscan",
-    give={ {weapon="chain"}, {ammo="bullet",count=10} },
-    invis=true,
-  },
+    replaces = "gunner"
+    replace_prob = 20
+    crazy_prob = 21
+    health = 70
+    damage = 50
+    attack = "hitscan"
+    give = { {weapon="chain"}, {ammo="bullet",count=10} }
+    invis = true
+  }
 
   stealth_revenant =
   {
-    replaces="revenant", replace_prob=30, crazy_prob=40, skip_prob=90,
-    health=300, damage=70, attack="missile",
-    invis=true, density=0.6,
-  },
+    replaces = "revenant"
+    replace_prob = 30
+    crazy_prob = 40
+    skip_prob = 90
+    health = 300
+    damage = 70
+    attack = "missile"
+    invis = true
+    density = 0.6
+  }
 
   stealth_knight =
   {
-    replaces="knight", replace_prob=25, crazy_prob=11, skip_prob=75,
-    health=500, damage=45, attack="missile",
-    invis=true, density=0.7,
-  },
+    replaces = "knight"
+    replace_prob = 25
+    crazy_prob = 11
+    skip_prob = 75
+    health = 500
+    damage = 45
+    attack = "missile"
+    invis = true
+    density = 0.7
+  }
 
   stealth_mancubus =
   {
-    replaces="mancubus", replace_prob=25, crazy_prob=31,
-    health=600, damage=70, attack="missile",
-    invis=true, density=0.6,
-  },
+    replaces = "mancubus"
+    replace_prob = 25
+    crazy_prob = 31
+    health = 600
+    damage = 70
+    attack = "missile"
+    invis = true
+    density = 0.6
+  }
 
   stealth_arach =
   {
-    replaces="arach", replace_prob=25, crazy_prob=11,
-    health=500, damage=70, attack="missile",
-    invis=true, density=0.8,
-  },
+    replaces = "arach"
+    replace_prob = 25
+    crazy_prob = 11
+    health = 500
+    damage = 70
+    attack = "missile"
+    invis = true
+    density = 0.8
+  }
 
   stealth_vile =
   {
-    replaces="vile", replace_prob=10, crazy_prob=5, skip_prob=100,
-    health=700, damage=40, attack="hitscan",
-    density=0.2, never_promote=true,
-    invis=true,
-  },
+    replaces = "vile"
+    replace_prob = 10
+    crazy_prob = 5
+    skip_prob = 100
+    health = 700
+    damage = 40
+    attack = "hitscan"
+    density = 0.2
+    never_promote = true
+    invis = true
+  }
 }
 
 
@@ -142,29 +202,30 @@ end
 
 OB_MODULES["stealth_mons"] =
 {
-  label = "Stealth Monsters",
+  label = "Stealth Monsters"
 
-  for_games   = { doom1=1, doom2=1 },
-  for_modes   = { sp=1, coop=1 },
-  for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 },
+  for_games   = { doom1=1, doom2=1 }
+  for_modes   = { sp=1, coop=1 }
+  for_engines = { edge=1, zdoom=1, gzdoom=1, skulltag=1 }
 
   tables =
   {
     STEALTH
-  },
+  }
 
   hooks =
   {
-    setup = STEALTH.setup,
-  },
+    setup = STEALTH.setup
+  }
 
   options =
   {
     qty =
     {
-      label = "Default Quantity", choices = STEALTH.CHOICES,
-    },
-  },
+      label = "Default Quantity"
+      choices = STEALTH.CHOICES
+    }
+  }
 }
 
 
@@ -185,13 +246,13 @@ STEALTH.CONTROL_CHOICES =
 
 STEALTH.CONTROL_PROBS =
 {
-  none   = 0,
-  scarce = 2,
-  less   = 15,
-  plenty = 50,
-  more   = 120,
-  heaps  = 300,
-  insane = 2000,
+  none   = 0
+  scarce = 2
+  less   = 15
+  plenty = 50
+  more   = 120
+  heaps  = 300
+  insane = 2000
 }
 
 
@@ -215,30 +276,30 @@ end
 
 OB_MODULES["stealth_mon_control"] =
 {
-  label = "Stealth Monsters : Fine Control",
+  label = "Stealth Monsters : Fine Control"
 
-  for_modules = { stealth_mons=1 },
+  for_modules = { stealth_mons=1 }
 
   hooks =
   {
-    setup = STEALTH.control_setup,
-  },
+    setup = STEALTH.control_setup
+  }
 
   options =
   {
-    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH.CONTROL_CHOICES },
-    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH.CONTROL_CHOICES },
-    stealth_imp      = { label="Stealth Imp",           choices=STEALTH.CONTROL_CHOICES },
-    stealth_demon    = { label="Stealth Demon",         choices=STEALTH.CONTROL_CHOICES },
-    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH.CONTROL_CHOICES },
-    stealth_baron    = { label="Stealth Baron",         choices=STEALTH.CONTROL_CHOICES },
+    stealth_zombie   = { label="Stealth Zombieman",     choices=STEALTH.CONTROL_CHOICES }
+    stealth_shooter  = { label="Stealth Shotgunner",    choices=STEALTH.CONTROL_CHOICES }
+    stealth_imp      = { label="Stealth Imp",           choices=STEALTH.CONTROL_CHOICES }
+    stealth_demon    = { label="Stealth Demon",         choices=STEALTH.CONTROL_CHOICES }
+    stealth_caco     = { label="Stealth Cacodemon",     choices=STEALTH.CONTROL_CHOICES }
+    stealth_baron    = { label="Stealth Baron",         choices=STEALTH.CONTROL_CHOICES }
 
-    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH.CONTROL_CHOICES },
-    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH.CONTROL_CHOICES },
-    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH.CONTROL_CHOICES },
-    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH.CONTROL_CHOICES },
-    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH.CONTROL_CHOICES },
-    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH.CONTROL_CHOICES },
+    stealth_gunner   = { label="Stealth Chaingunner",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_knight   = { label="Stealth Hell Knight",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_revenant = { label="Stealth Revenant",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_mancubus = { label="Stealth Mancubus",      choices=STEALTH.CONTROL_CHOICES }
+    stealth_arach    = { label="Stealth Arachnotron",   choices=STEALTH.CONTROL_CHOICES }
+    stealth_vile     = { label="Stealth Archvile",      choices=STEALTH.CONTROL_CHOICES }
   }
 }
 
