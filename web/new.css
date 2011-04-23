@@ -85,7 +85,7 @@ B { color: #742; }
 .newsdate { font-weight: bold; color: #742; }
 .news { margin-bottom: 2em; }
 
-PRE { font-size: larger; }
+PRE { /* font-size: larger; */ }
 
 .legal {
     background-color: #ccc;

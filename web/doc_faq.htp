@@ -227,16 +227,16 @@ There are a number of reasons:
        Most people wouldn't know how to use the compiling tools.
 
   <li> Robustness.  The normal quake compiling tools can suffer
-       "leaks" and the map fails to build.
-       This can never happen with the way OBLIGE's internal CSG works.
+       "leaks" causing the build process to fail.
+       This can never happen with OBLIGE's internal CSG method.
 
   <li> Speed.  Especially for the visibility step,
        I can take advantage of OBLIGE's grid system to
        generate adequate (but not optimal) vis data
        much much faster than it would normally take.
 
-  <li> Flexibility.  I am not limited by what the tools can do,
-       I could (for example) implement my own lighting algorithms.
+  <li> Flexibility.  I am not limited by what the tools can do.
+       For example, I could implement my own lighting algorithms.
 
 </ol>
 
