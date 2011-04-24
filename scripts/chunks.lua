@@ -369,8 +369,8 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
       cy1 = math.imid(sy1, sy2)
       cy2 = cy1
 
-      cx1 = sel(dir == 4, K1.sx1, K1.sx2)
-      cx2 = sel(dir == 4, K2.sx2, K2.sx1)
+      cx1 = (dir == 4 ? K1.sx1, K1.sx2)
+      cx2 = (dir == 4 ? K2.sx2, K2.sx1)
     end
 
     C1 = SEEDS[cx1][cy1].chunk
@@ -412,7 +412,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
       assert(sx1 <= sx2)
 
       sx = math.imid(sx1, sx2)
-      sy = sel(dir == 2, K.sy2, K.sy1)
+      sy = (dir == 2 ? K.sy2, K.sy1)
     else
       local sy1 = math.max(C.sy1, K.sy1)
       local sy2 = math.min(C.sy2, K.sy2)
@@ -420,7 +420,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
       assert(sy1 <= sy2)
 
       sy = math.imid(sy1, sy2)
-      sx = sel(dir == 4, K.sx2, K.sx1)
+      sx = (dir == 4 ? K.sx2, K.sx1)
     end
 
     C2 = SEEDS[sx][sy].chunk

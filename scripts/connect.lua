@@ -64,16 +64,16 @@ function CONN_CLASS.tostr(D)
 end
 
 function CONN_CLASS.neighbor(D, R)
-  return sel(R == D.R1, D.R2, D.R1)
+  return (R == D.R1 ? D.R2, D.R1)
 end
 
 function CONN_CLASS.section(D, R)
-  return sel(R == D.R1, D.K1, D.K2)
+  return (R == D.R1 ? D.K1, D.K2)
 end
 
 function CONN_CLASS.what_dir(D, R)
   if D.dir then
-    return sel(R == D.R1, D.dir, 10 - D.dir)
+    return (R == D.R1 ? D.dir, 10 - D.dir)
   end
   return nil
 end
@@ -203,7 +203,7 @@ function Connect_test_big_conns()
     local P = table.array_2D(W+2, H+2)
 
     for y = 0,H+1 do for x = 0,W+1 do
-      P[x+1][y+1] = sel(geom.inside_box(x,y, 1,1, W,H), "#", " ")
+      P[x+1][y+1] = (geom.inside_box(x,y, 1,1, W,H) ? "#", " ")
     end end
 
     for _,exit in ipairs(info.exits) do
@@ -317,7 +317,7 @@ function Connect_possibility(R1, R2)
   local is_good = true
 
   for pass = 1,2 do
-    local R = sel(pass == 1, R1, R2)
+    local R = (pass == 1 ? R1, R2)
 
     if R.kind == "scenic" then return -1 end
 
@@ -338,7 +338,7 @@ function Connect_possibility(R1, R2)
     end
   end
 
-  return sel(is_good, 1, 0)
+  return (is_good ? 1, 0)
 end
 
 
@@ -590,7 +590,7 @@ function Connect_rooms()
     -- mark room as full (prevent further connections) if all the
     -- optimal locations worked.  For "plus" shaped rooms, three out
     -- of four ain't bad.
-    if #R.conns >= sel(R.shape == "L" or R.shape == "U", 2, 3) then
+    if #R.conns >= (R.shape == "L" or R.shape == "U" ? 2, 3) then
       R.full = true
     end
   end
@@ -602,8 +602,8 @@ function Connect_rooms()
     local mirror_y  = bit.btest(MORPH, 4)
 
     -- size check
-    if R.kw != sel(transpose, info.h, info.w) or
-       R.kh != sel(transpose, info.w, info.h)
+    if R.kw != (transpose ? info.h, info.w) or
+       R.kh != (transpose ? info.w, info.h)
     then
       return false
     end

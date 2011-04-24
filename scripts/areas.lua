@@ -141,11 +141,11 @@ function Rooms_flesh_out()
 stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
 
     -- pick start and ending seeds
-    local sx = sel(C2.sx1 > C1.sx1, C1.sx2, C1.sx1)
-    local sy = sel(C2.sy1 > C1.sy1, C1.sy2, C1.sy1)
+    local sx = (C2.sx1 > C1.sx1 ? C1.sx2, C1.sx1)
+    local sy = (C2.sy1 > C1.sy1 ? C1.sy2, C1.sy1)
 
-    local ex = sel(C1.sx1 > C2.sx1, C2.sx2, C2.sx1)
-    local ey = sel(C1.sy1 > C2.sy1, C2.sy2, C2.sy1)
+    local ex = (C1.sx1 > C2.sx1 ? C2.sx2, C2.sx1)
+    local ey = (C1.sy1 > C2.sy1 ? C2.sy2, C2.sy1)
 
     -- coordinates must be relative for A* algorithm
     sx, sy = (sx - R.sx1) + 1, (sy - R.sy1) + 1

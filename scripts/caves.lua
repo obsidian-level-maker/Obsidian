@@ -261,7 +261,7 @@ function CAVE_CLASS.generate(cave, solid_prob)
   -- convert values for the result
   for x = 1,W do for y = 1,H do
     if map[x][y] == 0 then
-      work[x][y] = sel(work[x][y] > 0, 1, -1)
+      work[x][y] = (work[x][y] > 0 ? 1, -1)
     else
       work[x][y] = map[x][y]
     end
@@ -477,7 +477,7 @@ function CAVE_CLASS.copy_island(cave, reg_id)
     if val == nil then
       -- nothing to copy
     else
-      island.cells[x][y] = sel(val == reg_id, 1, -1)
+      island.cells[x][y] = (val == reg_id ? 1, -1)
     end
   end end
 
@@ -684,7 +684,7 @@ function CAVE_CLASS.remove_dots(cave, keep_edges, callback)
 
   for x = 1,W do for y = 1,H do
     if is_isolated(x, y) then
-      local dx = sel(x > W/2, -1, 1)
+      local dx = (x > W/2 ? -1, 1)
       cells[x][y] = cells[x+dx][y]
       if callback then
         callback(cave, x, y)
@@ -823,8 +823,8 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
   local function analyse_corner(corner_map, x, y, side)
     local dx, dy = geom.delta(side)
 
-    local cx = x + sel(dx < 0, 0, 1)
-    local cy = y + sel(dy < 0, 0, 1)
+    local cx = x + (dx < 0 ? 0, 1)
+    local cy = y + (dy < 0 ? 0, 1)
 
     if corner_map[cx][cy] then return end  -- already decided
 
@@ -894,11 +894,11 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
     for _,side in ipairs(SIDES) do
       local dx, dy = geom.delta(side)
 
-      local cx = x + sel(dx < 0, 0, 1)
-      local cy = y + sel(dy < 0, 0, 1)
+      local cx = x + (dx < 0 ? 0, 1)
+      local cy = y + (dy < 0 ? 0, 1)
 
-      local fx = bx + sel(dx < 0, 0, 64)
-      local fy = by + sel(dy < 0, 0, 64)
+      local fx = bx + (dx < 0 ? 0, 64)
+      local fy = by + (dy < 0 ? 0, 64)
 
       local what = corner_map[cx][cy]
 

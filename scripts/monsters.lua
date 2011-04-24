@@ -575,7 +575,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
 
     if stat == R.weapon_ammo then
       if qty > 0 then
-        excess = sel(OB_CONFIG.strength == "crazy", 1.2, 0.6) * qty
+        excess = (OB_CONFIG.strength == "crazy" ? 1.2, 0.6) * qty
       end
 
       if GAME.AMMOS and GAME.AMMOS[stat] then
@@ -645,7 +645,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       return
     end
 
-    local away = sel(count == 2, 20, 40)
+    local away = (count == 2 ? 20, 40)
     local dir  = spot.dir
 
     if geom.is_vert(dir) then
@@ -1568,7 +1568,7 @@ function Monsters_in_room(R)
 
     -- break up really large monster spots, so that we get a better
     -- distribution of monsters.
-    split_huge_spots(sel(has_huge, 288, 144))
+    split_huge_spots((has_huge ? 288, 144))
 
 
     -- total number of monsters wanted
@@ -1739,7 +1739,7 @@ function Monsters_in_room(R)
       palette = room_palette()
     end
 
-    local barrel_chance = sel(R.outdoor, 2, 15)
+    local barrel_chance = (R.outdoor ? 2, 15)
     if R.natural then barrel_chance = 3 end
     if R.hallway then barrel_chance = 5 end
 
@@ -1824,7 +1824,7 @@ function Monsters_in_room(R)
     end
 
     for name,qty in pairs(stats) do
-      stats[name] = qty * sel(name == "health", heal_mul, ammo_mul)
+      stats[name] = qty * (name == "health" ? heal_mul, ammo_mul)
     end
   end
 

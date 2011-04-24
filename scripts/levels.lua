@@ -490,7 +490,7 @@ function Levels_rarify(seed_idx, tab)
         local L = GAME.all_levels[group + offset]
         if not L then break; end
 
-        L.allowances[name] = sel(offset == which, 1, 0)
+        L.allowances[name] = (offset == which ? 1, 0)
 
         -- spice it up a bit more
         if rand.odds(10) then

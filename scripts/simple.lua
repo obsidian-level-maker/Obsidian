@@ -115,16 +115,16 @@ function Layout_simple_room(R)
     local N = S:neighbor(side)
 
     if not N or not N.room then
-      return set_side(S, side, sel(R.is_lake,-1,1))
+      return set_side(S, side, (R.is_lake ? -1, 1))
     end
 
     if N.room == S.room then return end
 
     if N.room.natural then
-      return set_side(S, side, sel(R.is_lake,-1,1))
+      return set_side(S, side, (R.is_lake ? -1, 1))
     end
 
-    set_side(S, side, sel(R.is_lake,-1,1))
+    set_side(S, side, (R.is_lake ? -1, 1))
   end
 
 
@@ -274,7 +274,7 @@ do return true end ---!!!!!!!!!!!!1
         break;
       end
 
-      cave:generate(sel(R.is_lake,58,38))
+      cave:generate((R.is_lake ? 58, 38))
 
       cave:flood_fill()
 

@@ -2037,8 +2037,8 @@ end
 
 
 function HERETIC.get_levels()
-  local EP_NUM  = sel(OB_CONFIG.length == "full", 5, 1)
-  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
+  local EP_NUM  = (OB_CONFIG.length == "full"   ? 5, 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1, 9)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 

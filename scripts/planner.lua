@@ -985,8 +985,8 @@ function Plan_contiguous_sections()
   -- touches a nearby section of the same room (no hallway in between).
 
   local function nb_count(K, dir)
-    return sel(K:same_room(geom.RIGHT[dir]), 1, 0) +
-           sel(K:same_room(geom. LEFT[dir]), 1, 0)
+    return (K:same_room(geom.RIGHT[dir]) ? 1, 0) +
+           (K:same_room(geom. LEFT[dir]) ? 1, 0)
   end
 
 

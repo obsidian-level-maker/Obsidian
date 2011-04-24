@@ -4326,9 +4326,9 @@ end
 
 
 function DOOM1.get_levels()
-  local EP_MAX  = sel(OB_CONFIG.game   == "ultdoom", 4, 3)
-  local EP_NUM  = sel(OB_CONFIG.length == "full", EP_MAX, 1)
-  local MAP_NUM = sel(OB_CONFIG.length == "single", 1, 9)
+  local EP_MAX  = (OB_CONFIG.game   == "ultdoom" ? 4, 3)
+  local EP_NUM  = (OB_CONFIG.length == "full"    ? EP_MAX, 1)
+  local MAP_NUM = (OB_CONFIG.length == "single"  ? 1, 9)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
