@@ -260,7 +260,7 @@ function STEALTH.control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
+    if M and opt.value != "default" then
       local prob = STEALTH.CONTROL_PROBS[opt.value]
 
       M.replaces = nil

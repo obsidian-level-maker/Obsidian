@@ -62,7 +62,7 @@ function ob_traceback(msg)
 
       local func_name = "???"
 
-      if info.namewhat and info.namewhat ~= "" then
+      if info.namewhat and info.namewhat != "" then
         func_name = info.name or "???"
       else
         -- perform our own search of the global namespace,
@@ -88,7 +88,7 @@ function ob_traceback(msg)
 
     elseif info.what == "C" then
 
-      if info.namewhat and info.namewhat ~= "" then
+      if info.namewhat and info.namewhat != "" then
         gui.printf("  %d: c-function %s()\n", i, info.name or "???")
       end
     end
@@ -351,7 +351,7 @@ function ob_update_modules()
     for name,def in pairs(OB_MODULES) do
       local shown = ob_match_conf(def)
 
-      if shown ~= def.shown then
+      if shown != def.shown then
         changed = true
       end
 
@@ -405,7 +405,7 @@ function ob_set_mod_option(name, option, value)
     -- handle conflicting modules (like Radio buttons)
     if value then
       for other,odef in pairs(OB_MODULES) do
-        if odef ~= mod and ob_defs_conflict(mod, odef) then
+        if odef != mod and ob_defs_conflict(mod, odef) then
           odef.enabled = false
           gui.change_button("module", other, odef.enabled)
         end

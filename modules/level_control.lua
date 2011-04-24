@@ -43,7 +43,7 @@ function LEVEL_CONTROL.begin_level(self)
   for name,opt in pairs(self.options) do
     local factor = self.options[name].value
 
-    if factor ~= "mixed" then
+    if factor != "mixed" then
       STYLE[name] = factor
     end
   end

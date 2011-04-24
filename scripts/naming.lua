@@ -1598,7 +1598,7 @@ function namelib.one_from_pattern(DEF)
     local c = string.sub(pattern, pos, pos)
     pos = pos + 1
 
-    if c ~= "%" then
+    if c != "%" then
       name = name .. c
     else
       assert(pos <= #pattern)

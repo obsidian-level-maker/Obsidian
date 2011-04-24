@@ -257,7 +257,7 @@ function ZDOOM_MARINE.control_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
+    if M and opt.value != "default" then
       local prob = ZDOOM_MARINE.CTL_PROBS[opt.value]
 
       M.prob = prob

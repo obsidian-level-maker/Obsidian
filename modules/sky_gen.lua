@@ -243,7 +243,7 @@ function Skygen_generate_doom()
       gui.fsky_add_clouds { seed=num+1, colmap=1, squish=squish }
     end
 
-    if fore_gs[num] ~= "none" then
+    if fore_gs[num] != "none" then
       gui.set_colormap(2, fore_gs[num])
       gui.fsky_add_hills  { seed=num+5, colmap=2, max_h=0.6 }
     end

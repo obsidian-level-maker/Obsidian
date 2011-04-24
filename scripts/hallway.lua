@@ -175,7 +175,7 @@ function Hallway_place_em()
       if not (S and S.section) then return nil end
 
       -- require same section (this test is probably unnecessary)
-      if K and S.section ~= K then return nil end
+      if K and S.section != K then return nil end
 
       K = S.section
     end end

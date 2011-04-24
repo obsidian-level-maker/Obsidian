@@ -134,7 +134,7 @@ end
 
 
 function Plan_choose_liquid()
-  if not LEVEL.liquid and THEME.liquids and STYLE.liquids ~= "none" then
+  if not LEVEL.liquid and THEME.liquids and STYLE.liquids != "none" then
     local name = rand.key_by_probs(THEME.liquids)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
     gui.printf("Liquid: %s\n\n", name)
@@ -1055,9 +1055,9 @@ function Plan_expand_rooms()
 
     -- this logic prevents nudging a different section in the same row or
     -- column which would cause the sections to go out of alignment.
-    if K.room ~= R then
+    if K.room != R then
       if K.room.shape == "odd" then return true end
-      if N.room ~= R then return true end
+      if N.room != R then return true end
       return false
     end
 
@@ -1084,7 +1084,7 @@ function Plan_expand_rooms()
 
   local function do_nudge(K, dir, R)
     -- ignore other rooms
-    if K.room ~= R then return; end
+    if K.room != R then return; end
 
     -- silently allow between same room
     if K:same_room(dir) then return; end
@@ -1199,7 +1199,7 @@ end
 function Plan_decide_outdoors()
   local OUTDOOR_PROBS = THEME.outdoor_probs or { 10, 30, 50, 60 }
 
-  if #OUTDOOR_PROBS ~= 4 then
+  if #OUTDOOR_PROBS != 4 then
     error("Theme has bad outdoor_probs table")
   end
 
@@ -1262,9 +1262,9 @@ function Plan_find_neighbors()
       R.neighbors = {}
     end
 
-    for side = 1,9 do if side ~= 5 then
+    for side = 1,9 do if side != 5 then
       local NK = K:neighbor(side)
-      if NK and NK.room ~= R then
+      if NK and NK.room != R then
         add_neighbor(R, NK.room)
       end
     end end -- side
@@ -1377,7 +1377,7 @@ function Plan_prepare_rooms()
 
 
   local function add_corners(K)
-    for side = 1,9,2 do if side ~= 5 then
+    for side = 1,9,2 do if side != 5 then
       local R_dir = geom.RIGHT_45[side]
       local L_dir = geom. LEFT_45[side]
 

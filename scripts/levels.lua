@@ -127,7 +127,7 @@ function Levels_merge_tab(name, tab)
     return
   end
 
-  if name ~= "SUB_THEMES" then
+  if name != "SUB_THEMES" then
     table.merge_w_copy(GAME[name], tab)
     return
   end
@@ -152,7 +152,7 @@ function Levels_merge_table_list(tab_list)
     for name,tab in pairs(GT) do
       -- upper-case names should always be tables to copy
       if string.match(name, "^[A-Z]") then
-        if type(tab) ~= "table" then
+        if type(tab) != "table" then
           error("Game field not a table: " .. tostring(name))
         end
         Levels_merge_tab(name, tab)
@@ -346,8 +346,8 @@ function Levels_choose_themes()
   gui.printf("\n")
 
   -- the user can specify the main theme
-  if OB_CONFIG.theme ~= "mixed" and OB_CONFIG.theme ~= "original" and
-     OB_CONFIG.theme ~= "psycho"
+  if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "original" and
+     OB_CONFIG.theme != "psycho"
   then
     for _,L in ipairs(GAME.all_levels) do
       set_sub_theme(L, OB_CONFIG.theme)
@@ -547,7 +547,7 @@ function Levels_do_styles()
   end
 
   -- GUI overrides...
-  if OB_CONFIG.outdoors and OB_CONFIG.outdoors ~= "mixed" then
+  if OB_CONFIG.outdoors and OB_CONFIG.outdoors != "mixed" then
     STYLE.skies = OB_CONFIG.outdoors
   end
 

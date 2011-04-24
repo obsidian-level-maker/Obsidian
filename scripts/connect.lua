@@ -192,7 +192,7 @@ function Connect_test_big_conns()
     local H = assert(info.h)
 
     -- option to only show rooms of a certain size
-    if require_volume and (W*H) ~= require_volume then
+    if require_volume and (W*H) != require_volume then
       return
     end
 
@@ -219,7 +219,7 @@ function Connect_test_big_conns()
       local nx, ny = geom.nudge(x, y, dir)
       assert(nx==0 or nx==W+1 or ny==0 or ny==H+1)
 
-      if P[nx+1][ny+1] ~= " " then
+      if P[nx+1][ny+1] != " " then
         gui.printf("spot: (%d,%d):%d to (%d,%d)\n", x,y,dir, nx,ny)
         error("Bad branch!")
       end
@@ -553,7 +553,7 @@ function Connect_rooms()
     if (R.shape == "T" or R.shape == "U") and rand.odds(25) then
       for dir = 2,8,2 do
         local N = mid_K:neighbor(dir)
-        if N and N.room ~= R then
+        if N and N.room != R then
           table.insert(optimal_locs, { K=mid_K, dir=dir })
           break;
         end
@@ -602,8 +602,8 @@ function Connect_rooms()
     local mirror_y  = bit.btest(MORPH, 4)
 
     -- size check
-    if R.kw ~= sel(transpose, info.h, info.w) or
-       R.kh ~= sel(transpose, info.w, info.h)
+    if R.kw != sel(transpose, info.h, info.w) or
+       R.kh != sel(transpose, info.w, info.h)
     then
       return false
     end
@@ -691,7 +691,7 @@ function Connect_rooms()
       return
     end
 
-    if R.shape ~= "rect" then
+    if R.shape != "rect" then
       handle_shaped_room(R)
       return
     end
@@ -878,7 +878,7 @@ function Connect_rooms()
     for index,loc in ipairs(loc_list) do
       local N = loc.R
 
-      if R.conn_group ~= N.conn_group and
+      if R.conn_group != N.conn_group and
          teleporter_score(N) >= 0
       then
         add_teleporter(R, N)
@@ -933,7 +933,7 @@ function Connect_rooms()
           score = R:dist_to_closest_conn(K) or 9
         end
 
-        if K.num_conn == 0 and K ~= other_K then
+        if K.num_conn == 0 and K != other_K then
           score = score + 11
         end
 
@@ -983,7 +983,7 @@ function Connect_rooms()
     local last_g = 0
 
     for _,R in ipairs(LEVEL.all_rooms) do
-      if R.kind ~= "scenic" then
+      if R.kind != "scenic" then
         local g = R.conn_group
         groups[g] = groups[g] + 1
         if g > last_g then last_g = g end
@@ -1065,7 +1065,7 @@ function Connect_rooms()
 
     for g = 1,last_g do
       local num = groups[g]
-      if g ~= best and num > 0 then
+      if g != best and num > 0 then
         remove_group(g)
       end
     end
@@ -1075,7 +1075,7 @@ Plan_dump_rooms("Dead Room Map")
 
 
   local function natural_flow(R, visited)
-    assert(R.kind ~= "scenic")
+    assert(R.kind != "scenic")
 
     visited[R] = true
 

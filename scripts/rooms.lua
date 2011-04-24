@@ -428,8 +428,8 @@ function Rooms_synchronise_skies()
       if K and K.room and K.room.sky_h then
         for side = 2,8,2 do
           local N = K:neighbor(side)
-          if N and N.room and N.room ~= K.room and N.room.sky_h and
-             K.room.sky_h ~= N.room.sky_h
+          if N and N.room and N.room != K.room and N.room.sky_h and
+             K.room.sky_h != N.room.sky_h
           then
             K.room.sky_h = math.max(K.room.sky_h, N.room.sky_h)
             N.room.sky_h = K.room.sky_h
@@ -884,13 +884,13 @@ end
 
 
 function Rooms_intermission_camera()
-  if GAME.format ~= "quake" then return end
+  if GAME.format != "quake" then return end
 
   -- determine the room (biggest one, excluding starts and exits)
   local room
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.purpose ~= "START" and R.purpose ~= "EXIT" then
+    if R.purpose != "START" and R.purpose != "EXIT" then
       if not room or (R.kvolume > room.kvolume) then
         room = R
       end
@@ -978,7 +978,7 @@ function Rooms_blow_chunks()
     end
 
     --!!!!!!!! TEST
-    if R.purpose ~= "START" then
+    if R.purpose != "START" then
 ---    Layout_simple_room(R)
     end
   end
@@ -1021,7 +1021,7 @@ function Layout_possible_prefab_from_list(tab, where, req_key)
 
   -- FIXME: fix this rubbish somehow
   if tab == "SWITCH" then
-    if where ~= "edge" then return nil end
+    if where != "edge" then return nil end
     return "SWITCH"
   end
 
@@ -1029,7 +1029,7 @@ function Layout_possible_prefab_from_list(tab, where, req_key)
   local function match(skin)
     -- TODO: more sophisticated matches (prefab.environment)
 
-    if skin._where ~= where then return false end
+    if skin._where != where then return false end
 
     if req_key and not skin._keys[req_key] then return false end
 
@@ -1157,7 +1157,7 @@ function Layout_spots_in_room(R)
 
     -- mark edges with neighboring floors
     for _,F in ipairs(R.all_floors) do
-      if F ~= floor then
+      if F != floor then
         remove_neighbor_floor(floor, F)
       end
     end

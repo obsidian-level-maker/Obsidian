@@ -46,7 +46,7 @@ function CTL_HERETIC.monster_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
+    if M and opt.value != "default" then
       local prob = CTL_HERETIC.MON_PROBS[opt.value]
 
       M.prob = prob
@@ -126,7 +126,7 @@ function CTL_HERETIC.weapon_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.WEAPONS[name]
 
-    if W and opt.value ~= "default" then
+    if W and opt.value != "default" then
       local prob = CTL_HERETIC.WEAPON_PROBS[opt.value]
 
       W.start_prob = prob

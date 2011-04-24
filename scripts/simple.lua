@@ -221,7 +221,7 @@ do return true end ---!!!!!!!!!!!!1
           handle_wall(S, side)
         end
 
-        for side = 1,9,2 do if side ~= 5 then
+        for side = 1,9,2 do if side != 5 then
           handle_corner(S, side)
         end end
       end

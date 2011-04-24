@@ -2312,7 +2312,7 @@ function hexen_do_get_levels(episode)
       want_len = 1 + rand.index_by_probs(len_probs)
     }
 
-    if mode ~= "sub" then
+    if mode != "sub" then
       if map >= 3 then add_assumed_weaps(Quest, 2) end
       if map == 4 then add_assumed_weaps(Quest, 3) end
       if map == 6 then add_assumed_weaps(Quest, 3) end
@@ -2436,11 +2436,11 @@ function hexen_do_get_levels(episode)
       Q.is_secret = true
     end
 
-    if i <= 4 and OB_CONFIG.size ~= "small" then
+    if i <= 4 and OB_CONFIG.size != "small" then
       local where2
       repeat
         where2 = rand.pick(item_where)
-      until where2 ~= where
+      until where2 != where
 
       add_quest(where2, "item", item, "sub")
     end

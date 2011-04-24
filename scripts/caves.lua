@@ -449,7 +449,7 @@ function CAVE_CLASS.validate_conns(cave, point_list)
 
     if not empty_id then
       empty_id = reg
-    elseif empty_id ~= reg then
+    elseif empty_id != reg then
       -- not valid : the empty areas are disjoint
       return false
     end
@@ -520,7 +520,7 @@ function CAVE_CLASS.find_islands(cave)
         potentials[reg] = "no"
       end
 
-      if potentials[reg] ~= "no" then
+      if potentials[reg] != "no" then
         for side = 2,8,2 do
           local nx, ny = geom.nudge(x, y, side)
           if cave:valid_cell(nx, ny) and flood[nx][ny] == nil then
@@ -937,7 +937,7 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
 
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
-      for side = 1,9,2 do if side ~= 5 then
+      for side = 1,9,2 do if side != 5 then
         analyse_corner(corner_map, x, y, side)
       end end
     end
@@ -1087,7 +1087,7 @@ function CAVE_CLASS.maze_generate(maze)
     local lens = {}
 
     for dir = 2,8,2 do
-      if dir ~= p.dir then
+      if dir != p.dir then
         local len = how_far_can_move(p.x, p.y, dir)
 
         if len > 0 then

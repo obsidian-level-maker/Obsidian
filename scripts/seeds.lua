@@ -116,7 +116,7 @@ function SEED_CLASS.set_edge(S, dir, value)
   end
 
   -- validate (can never set it twice)
-  if S.edge[dir] and value and S.edge[dir] ~= value then
+  if S.edge[dir] and value and S.edge[dir] != value then
     error("Seed_set_edge : already set!")
   end
 

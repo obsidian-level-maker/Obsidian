@@ -203,12 +203,12 @@ function Trans.collect_flags(C)
     local flags = C.flags or 0
 
     for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
-      if C[name] and C[name] ~= 0 then
+      if C[name] and C[name] != 0 then
         flags = bit.bor(flags, value)
       end
     end
 
-    if flags ~= 0 then
+    if flags != 0 then
       C.flags = flags
 
       -- this makes sure the flags get applied
@@ -727,7 +727,7 @@ function Trans.cut_brush(brush, px1, py1, px2, py2)
     if a_side >= 0 then table.insert(brush, C) end
     if a_side <= 0 then table.insert(newb,  table.copy(C)) end
 
-    if a_side ~= 0 and b_side ~= 0 and a_side ~= b_side then
+    if a_side != 0 and b_side != 0 and a_side != b_side then
       -- this edge crosses the cutting line --
 
       -- calc the intersection point

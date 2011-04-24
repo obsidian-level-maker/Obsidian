@@ -46,7 +46,7 @@ function CTL_DOOM.monster_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
-    if M and opt.value ~= "default" then
+    if M and opt.value != "default" then
       local prob = CTL_DOOM.MON_PROBS[opt.value]
 
       -- allow Spectres to be controlled individually
@@ -132,7 +132,7 @@ function CTL_DOOM.weapon_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.WEAPONS[name]
 
-    if W and opt.value ~= "default" then
+    if W and opt.value != "default" then
       local prob = CTL_DOOM.WEAPON_PROBS[opt.value]
 
       W.start_prob = prob

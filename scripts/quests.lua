@@ -328,7 +328,7 @@ function Quest_add_weapons()
 
 ---## -AJA- DISABLED, tends to make Berserk the first weapon, voilating 'start_prob'
 ---##    -- tend to place non-melee weapons before normal ones
----##    if info2.attack == "melee" and info1.attack ~= "melee" and rand.odds(65) then
+---##    if info2.attack == "melee" and info1.attack != "melee" and rand.odds(65) then
 ---##      return true
 ---##    end
 
@@ -400,7 +400,7 @@ function Quest_find_storage_rooms()  -- NOT USED ATM
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind ~= "scenic" and #R.conns == 1 and
+    if R.kind != "scenic" and #R.conns == 1 and
        not R.purpose and not R.weapon
     then
       R.is_storage = true
@@ -621,7 +621,7 @@ function Quest_make_quests()
       -- TODO: better distance calc
       scores[idx] = geom.dist(entry_kx, entry_ky, C.K2.kx, C.K2.ky)
 
-      if R.entry_conn and R.entry_conn.dir and C.dir ~= (10 - R.entry_conn.dir) then
+      if R.entry_conn and R.entry_conn.dir and C.dir != (10 - R.entry_conn.dir) then
         -- strong preference to avoid 180 degree turns
         scores[idx] = scores[idx] + 4
       end
@@ -669,7 +669,7 @@ function Quest_make_quests()
         for idx = 1,#exits do
           local C = exits[idx]
 
-          if idx ~= free_idx then
+          if idx != free_idx then
 -- stderrf("   Locking conn to room %s\n", C.R2:tostr())
             add_lock(C)
           end
@@ -686,7 +686,7 @@ function Quest_make_quests()
     for _,R in ipairs(LEVEL.all_rooms) do
       R.quest = quest
     
-      if not LEVEL.exit_room and R ~= start and #R.conns <= 1 then
+      if not LEVEL.exit_room and R != start and #R.conns <= 1 then
         LEVEL.exit_room = R
         R.purpose = "EXIT"
       end

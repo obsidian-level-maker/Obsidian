@@ -431,7 +431,7 @@ function Monsters_dist_between_spots(A, B)
   local dist = math.max(dist_x, dist_y)
 
   -- large penalty for height difference
-  if A.z1 ~= B.z1 then
+  if A.z1 != B.z1 then
     dist = dist + 1000
   end
 
@@ -806,13 +806,13 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
   ---| Monsters_do_pickups |---
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
+    if R.kind != "stairwell" and R.kind != "smallexit" then
       distribute_fight_stats(R)
     end
   end
 
   for _,R in ipairs(LEVEL.all_rooms) do
-    if R.kind ~= "stairwell" and R.kind ~= "smallexit" then
+    if R.kind != "stairwell" and R.kind != "smallexit" then
       pickups_in_room(R)
     end
   end
@@ -1286,7 +1286,7 @@ function Monsters_in_room(R)
       props.spawnflags = 0
 
       -- UGH, special check needed for Quake zombie
-      if ambush and mon ~= "zombie" then
+      if ambush and mon != "zombie" then
         props.spawnflags = props.spawnflags + QUAKE_FLAGS.AMBUSH
       end
 
@@ -1548,7 +1548,7 @@ function Monsters_in_room(R)
     local wants = {}
 
     for mon,d in pairs(densities) do
-      if mon ~= "NONE" then
+      if mon != "NONE" then
         local num = want_total * d / total_density
 
         wants[mon] = int(num + gui.random())
@@ -1892,7 +1892,7 @@ function Monsters_in_room(R)
     if R.kind == "stairwell" then return false end
     if R.kind == "smallexit" then return false end
 
-    assert(R.kind ~= "scenic")
+    assert(R.kind != "scenic")
 
     if R.purpose == "START" and not R.has_raising_start then
       return false

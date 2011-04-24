@@ -155,14 +155,14 @@ end
 function OLD_Chunk_merge_list(list)
   local function all_horiz_aligned(x1, x2)
     for _,C2 in ipairs(list) do
-      if C2.x1 ~= x1 or C2.x2 ~= x2 then return false end
+      if C2.x1 != x1 or C2.x2 != x2 then return false end
     end
     return true
   end
 
   local function all_vert_aligned(y1, y2)
     for _,C2 in ipairs(list) do
-      if C2.y1 ~= y1 or C2.y2 ~= y2 then return false end
+      if C2.y1 != y1 or C2.y2 != y2 then return false end
     end
     return true
   end
@@ -760,7 +760,7 @@ local S1 = SEEDS[C.sx1][C.sy1]
   Trans.entity(ent, mx, my, 32)
 
   -- lighting
-  if light > 0 and GAME.format ~= "doom" then
+  if light > 0 and GAME.format != "doom" then
     local z = rand.irange(64, c_h-32)
     Trans.entity("light", mx, my, z, { light=light, _radius=400 })
   end
@@ -768,7 +768,7 @@ local S1 = SEEDS[C.sx1][C.sy1]
 
   -- TEST CRUD : pillars
 
-  if ent ~= "player1" and C.section and false then
+  if ent != "player1" and C.section and false then
     local hx = 777 -- C.section:mid_HX()
     local hy = 888 -- C.section:mid_HY()
 
