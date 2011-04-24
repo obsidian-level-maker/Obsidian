@@ -12,20 +12,7 @@ I decided to fork the Lua 5.1.4 code into a custom version.
 CHANGES
 -------
 
-1. Simpler traversal of lists and tables.  I have introduced a new
-   keyword 'each' which is similar to 'for' but does not require
-   the ipairs() or pairs() functions -- one is called automatically
-   (ipairs for a single variable, pairs for two).
-
-   Example (i):  each A in array do ... end
-
-   Example (ii): each K,V in table do ... end
-
-   For list traversal, a local variable called '_index' contains
-   the current index value.
-
-
-2. Data tables don't require a separator (comma or semicolon) at
+1. Data tables don't require a separator (comma or semicolon) at
    the end of a line to separate the next item.  In the middle of
    a line they are still needed though.  This is analogous to
    statements where semicolons are optional at the end of a line.
@@ -39,9 +26,22 @@ CHANGES
    }
 
 
+2. Simpler traversal of lists and tables.  I have introduced a new
+   keyword 'each' which is similar to 'for' but does not require
+   the ipairs() or pairs() functions -- one is called automatically
+   (ipairs for a single variable, pairs for two).
+
+   Example (i):  each A in array do ... end
+
+   Example (ii): each K,V in table do ... end
+
+   For list traversal, a local variable called '_index' contains
+   the current index value.
+
+
 3. Ternary operator similar to ?: which is well known in C / C++.
    Initially I tried a patch which used if/then/else syntax, but
-   this was too clusmy for my taste and I modified it to use the
+   this was too clumsy for my taste and I modified it to use the
    following syntax:
 
    Example: x = (game == "doom" ? 1 , 2)
