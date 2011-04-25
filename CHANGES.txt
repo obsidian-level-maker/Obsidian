@@ -2,6 +2,8 @@
 CHANGES (since 3.57)
 ====================
 
+BLURB ABOUT V4 HERE....
+
 ++ began V4, a completely new way to layout rooms, as well as
    reworked planning, connection, quest system and monster/item
    placement.
@@ -28,4 +30,13 @@ CHANGES (since 3.57)
 - new more reliable CSG code
 - monster control modules for Heretic, Quake, Quake II
 - support for liquids in Quake and Quake II
+
+- support FreeDoom 0.7
+
++ customised Lua language:
+  - optional commas at end of line in data tables
+  - simpler table traversal with new 'each' syntax
+  - ternary operator of the form: (X ? Y , Z)
+  - continue statement
+  - alternative inequality operator: !=
 
