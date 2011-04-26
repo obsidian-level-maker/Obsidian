@@ -36,6 +36,8 @@ class QUEST
   target : ROOM  -- room containing the goal of this quest (key or switch).
                  -- the room object will contain more information.
                  -- Never nil.
+
+  -- FIXME
 }
 
 
@@ -63,10 +65,10 @@ require 'util'
 QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
-  local id = 1 + #LEVEL.all_quests
+  local id = 1 + #LEVEL.quests
   local Q = { id=id, start=start }
   table.set_class(Q, QUEST_CLASS)
-  table.insert(LEVEL.all_quests, Q)
+  table.insert(LEVEL.quests, Q)
   return Q
 end
 
@@ -176,7 +178,7 @@ function Quest_key_distances()
 
   gui.debugf("Key Distances:\n")
 
-  for _,lock in ipairs(LEVEL.all_locks) do
+  each lock in LEVEL.locks do
     want_lock = lock
 
     lock.distance = dist_to_door(lock.target, nil, {})
@@ -189,7 +191,7 @@ end
 
 
 function Quest_choose_keys()
-  local num_locks = #LEVEL.all_locks
+  local num_locks = #LEVEL.locks
 
   if num_locks <= 0 then
     gui.printf("Locks: NONE\n\n")
@@ -217,9 +219,9 @@ function Quest_choose_keys()
 
   --- STEP 1 : assign keys (distance based) ---
 
-  local lock_list = table.copy(LEVEL.all_locks)
+  local lock_list = table.copy(LEVEL.locks)
 
-  for _,LOCK in ipairs(lock_list) do
+  each LOCK in lock_list do
     -- when the distance gets large, keys are better than switches
     LOCK.key_score = LOCK.distance or 0
 
@@ -233,7 +235,7 @@ function Quest_choose_keys()
 
   table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
 
-  for _,LOCK in ipairs(lock_list) do
+  each LOCK in lock_list do
     if table.empty(key_probs) or want_keys <= 0 then
       break;
     end
@@ -260,8 +262,8 @@ function Quest_choose_keys()
 
   gui.printf("Lock list:\n")
 
-  for idx,LOCK in ipairs(LEVEL.all_locks) do
-    gui.printf("  %d = %s %s\n", idx, LOCK.kind, LOCK.key or "")
+  each LOCK in LEVEL.locks do
+    gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or "")
   end
 
   gui.printf("\n")
@@ -395,8 +397,8 @@ function Quest_find_storage_rooms()  -- NOT USED ATM
   -- these rooms to encourage exploration (i.e. to make these
   -- rooms not totally useless).
 
-  for _,A in ipairs(LEVEL.all_arenas) do
-    A.storage_rooms = {}
+  each Q in LEVEL.quests do
+    Q.storage_rooms = {}
   end
 
   each R in LEVEL.rooms do
@@ -544,7 +546,7 @@ function Quest_make_quests()
     -- keep newest locks at the front of the active list
     table.insert(active_locks, 1, LOCK)
 
-    table.insert(LEVEL.all_locks, LOCK)
+    table.insert(LEVEL.locks, LOCK)
   end
 
 
@@ -726,8 +728,8 @@ function Quest_make_quests()
     error("Level only has one room! (2 or more are needed)")
   end
 
-  LEVEL.all_quests = {}
-  LEVEL.all_locks  = {}
+  LEVEL.quests = {}
+  LEVEL.locks  = {}
 
   local Q = QUEST_CLASS.new(LEVEL.start_room)
 
