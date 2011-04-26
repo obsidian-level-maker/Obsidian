@@ -453,7 +453,7 @@ function Hallway_place_em()
 
 
   local function how_many()
-    local perc = style_sel("hallways", 0, 25, 50, 100)
+    local perc = style_sel("hallways", 0, 15, 35, 100)
 
     local num = (SECTION_W + 1) * perc / 100
 
