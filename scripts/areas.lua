@@ -252,7 +252,7 @@ stderrf("\n")
 
   ---| Rooms_flesh_out |---
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     flesh_out(R)
   end
 end

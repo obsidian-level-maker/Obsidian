@@ -80,11 +80,21 @@ ROOM_CLASS = {}
 
 function ROOM_CLASS.new(shape)
   local id = Plan_alloc_id("room")
-  local R = { id=id, kind="normal", shape=shape, conns={}, neighbors={},
-              chunks={}, sections={}, middles={}, spaces={},
-              floor_mats={} }
+  local R =
+  {
+    id = id
+    kind = "normal"
+    shape = shape
+    conns = {}
+    neighbors = {}
+    chunks = {}
+    sections = {}
+    middles = {}
+    spaces = {}
+    floor_mats = {}
+  }
   table.set_class(R, ROOM_CLASS)
-  table.insert(LEVEL.all_rooms, R)
+  table.insert(LEVEL.rooms, R)
   return R
 end
 
@@ -265,21 +275,21 @@ end
 
 
 function Rooms_assign_facades()
-  for i = 1,#LEVEL.all_rooms,4 do
-    local R = LEVEL.all_rooms[i]
+  for i = 1,#LEVEL.rooms,4 do
+    local R = LEVEL.rooms[i]
     R.facade = rand.pick(LEVEL.building_facades)
   end
 
-  local visits = table.copy(LEVEL.all_rooms)
+  local visits = table.copy(LEVEL.rooms)
 
   for loop = 1,10 do
     local changes = false
 
     rand.shuffle(visits);
 
-    for _,R in ipairs(visits) do
+    each R in visits do
       if R.facade then
-        for _,N in ipairs(R.neighbors) do
+        each N in R.neighbors do
           if not N.facade then 
             N.facade = R.facade
             changes = true
@@ -291,11 +301,11 @@ function Rooms_assign_facades()
     end -- for R
   end -- for loop
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     assert(R.facade)
   end
 
-  for _,R in ipairs(LEVEL.scenic_rooms) do
+  each R in LEVEL.scenic_rooms do
     if not R.facade then
       R.facade = rand.pick(LEVEL.building_facades)
     end
@@ -304,11 +314,11 @@ end
 
 
 function Rooms_choose_themes()
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     Rooms_setup_theme(R)
   end
 
-  for _,R in ipairs(LEVEL.scenic_rooms) do
+  each R in LEVEL.scenic_rooms do
     Rooms_setup_theme_Scenic(R)
   end
 end
@@ -399,7 +409,7 @@ function Rooms_setup_symmetry()
 
   --| Rooms_setup_symmetry |--
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     decide_layout_symmetry(R)
 
     gui.debugf("Final symmetry @ %s : %s --> %s\n", R:tostr(),
@@ -531,7 +541,7 @@ function Rooms_decide_windows()
 
   if STYLE.windows == "none" then return end
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     do_windows(R)
   end
 end
@@ -611,11 +621,11 @@ if not K then K = R.sections[1] end
 
   --| Rooms_dists_from_entrance |--
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.entry_conn then
       spread_entry_dist(R)
     else
-      for _,K in ipairs(R.sections) do
+      each K in R.sections do
         K.entry_dist = 0
       end
     end
@@ -823,7 +833,7 @@ function Rooms_place_importants()
 
   Rooms_dists_from_entrance()
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     clear_busyness(R)
     place_importants(R)
   end
@@ -889,7 +899,7 @@ function Rooms_intermission_camera()
   -- determine the room (biggest one, excluding starts and exits)
   local room
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.purpose != "START" and R.purpose != "EXIT" then
       if not room or (R.kvolume > room.kvolume) then
         room = R
@@ -972,8 +982,8 @@ function Rooms_blow_chunks()
 
   -- TEMP TEMP CRUD CRUD
 
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,H in ipairs(R.chunks) do
+  each R in LEVEL.rooms do
+    each H in R.chunks do
       H:build()
     end
 
@@ -983,9 +993,9 @@ function Rooms_blow_chunks()
     end
   end
 
-  for _,D in ipairs(LEVEL.all_conns) do
+  each D in LEVEL.conns do
     if D.hall then
-      for _,H in ipairs(D.hall.chunks) do
+      each H in D.hall.chunks do
         H:build()
       end
     end
@@ -1313,7 +1323,7 @@ function Layout_all_ceilings()
 
   Rooms_synchronise_skies()
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     build_ceiling(R)
     ambient_lighting(R)
 

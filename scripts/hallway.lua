@@ -309,7 +309,7 @@ function Hallway_place_em()
 
     D.hall = hall
 
-    table.insert(LEVEL.all_conns, D)
+    table.insert(LEVEL.conns, D)
 
     table.insert(R1.conns, D)
     table.insert(R2.conns, D)

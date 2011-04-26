@@ -283,18 +283,18 @@ function Connect_decide_start_room()
 
   ---| Connect_decide_start_room |---
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     R.start_cost = eval_room(R)
   end
 
-  local start, index = table.pick_best(LEVEL.all_rooms,
+  local start, index = table.pick_best(LEVEL.rooms,
     function(A, B) return A.start_cost < B.start_cost end)
 
   gui.printf("Start room: %s\n", start:tostr())
 
   -- move it to the front of the list
-  table.remove(LEVEL.all_rooms, index)
-  table.insert(LEVEL.all_rooms, 1, start)
+  table.remove(LEVEL.rooms, index)
+  table.insert(LEVEL.rooms, 1, start)
 
   LEVEL.start_room = start
 
@@ -346,7 +346,7 @@ end
 function Connect_merge_groups(id1, id2)
   if id1 > id2 then id1,id2 = id2,id1 end
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.conn_group == id2 then
       R.conn_group = id1
     end
@@ -361,8 +361,8 @@ function Connect_rooms()
   -- a "stalk"  is a room with two connections.
 
   local function initial_groups()
-    for index,R in ipairs(LEVEL.all_rooms) do
-      R.conn_group = index
+    each R in LEVEL.rooms do
+      R.conn_group = _index
     end
   end
 
@@ -416,7 +416,7 @@ function Connect_rooms()
 
     local D = CONN_CLASS.new_K(K1, K2, kind, dir)
 
-    table.insert(LEVEL.all_conns, D)
+    table.insert(LEVEL.conns, D)
 
     table.insert(R.conns, D)
     table.insert(N.conns, D)
@@ -450,7 +450,7 @@ function Connect_rooms()
 
     local D = CONN_CLASS.new_R(R1, R2, "teleporter")
 
-    table.insert(LEVEL.all_conns, D)
+    table.insert(LEVEL.conns, D)
 
     table.insert(R1.conns, D)
     table.insert(R2.conns, D)
@@ -723,15 +723,15 @@ function Connect_rooms()
 
 
   local function branch_big_rooms()
-    local visits = table.copy(LEVEL.all_rooms)
+    local visits = table.copy(LEVEL.rooms)
 
-    for _,R in ipairs(visits) do
+    each R in visits do
       R.big_score = R.kvolume + 2.5 * gui.random() ^ 2
     end
 
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
-    for _,R in ipairs(visits) do
+    each R in visits do
       if R.kvolume >= 2 then
         visit_big_room(R)
       end
@@ -772,15 +772,15 @@ function Connect_rooms()
     --
     -- Goal here is to make stalks
     --
-    local visits = table.copy(LEVEL.all_rooms)
+    local visits = table.copy(LEVEL.rooms)
 
-    for _,R in ipairs(visits) do
+    each R in visits do
       R.small_score = R.svolume + 5.0 * gui.random()
     end
 
     table.sort(visits, function(A, B) return A.small_score < B.small_score end)
 
-    for _,R in ipairs(visits) do
+    each R in visits do
       if R.kvolume <= 2 then
         visit_small_room(R)
       end
@@ -855,7 +855,7 @@ function Connect_rooms()
   local function collect_teleporter_locs()
     local loc_list = {}
 
-    for _,R in ipairs(LEVEL.all_rooms) do
+    each R in LEVEL.rooms do
       local score = teleporter_score(R)
       if score > 0 then
         table.insert(loc_list, { R=R, score=score })
@@ -966,7 +966,7 @@ function Connect_rooms()
 
   local function place_teleporters()
     -- determine which section(s) of each room to use for teleporters
-    for _,D in ipairs(LEVEL.all_conns) do
+    each D in LEVEL.conns do
       if D.kind == "teleporter" then
         if not D.K1 then D.K1 = place_one_tele(D.R1) end
         if not D.K2 then D.K2 = place_one_tele(D.R2) end
@@ -982,7 +982,7 @@ function Connect_rooms()
 
     local last_g = 0
 
-    for _,R in ipairs(LEVEL.all_rooms) do
+    each R in LEVEL.rooms do
       if R.kind != "scenic" then
         local g = R.conn_group
         groups[g] = groups[g] + 1
@@ -1018,24 +1018,24 @@ function Connect_rooms()
 
   local function remove_group(g)
     -- process rooms
-    for i = #LEVEL.all_rooms,1,-1 do
-      local R = LEVEL.all_rooms[i]
+    for i = #LEVEL.rooms,1,-1 do
+      local R = LEVEL.rooms[i]
 
       if R.conn_group == g then
         gui.printf("Removing dead room: %s\n", R:tostr())
         
-        table.remove(LEVEL.all_rooms, i)
+        table.remove(LEVEL.rooms, i)
 
         kill_room(R)
       end
     end
 
     -- process connections
-    for i = #LEVEL.all_conns,1,-1 do
-      local D = LEVEL.all_conns[i]
+    for i = #LEVEL.conns,1,-1 do
+      local D = LEVEL.conns[i]
 
       if D.kind == "REMOVED" then
-        table.remove(LEVEL.all_conns, i)
+        table.remove(LEVEL.conns, i)
       end
     end
   end
@@ -1079,7 +1079,7 @@ Plan_dump_rooms("Dead Room Map")
 
     visited[R] = true
 
-    table.insert(LEVEL.all_rooms, R)
+    table.insert(LEVEL.rooms, R)
 
     for _,D in ipairs(R.conns) do
       if R == D.R2 and not visited[D.R1] then
@@ -1134,7 +1134,7 @@ Plan_dump_rooms("Dead Room Map")
   -- flow of the level, i.e. player always walks src -> dest (except
   -- when backtracking).  Room order is updated too, though quests
   -- will normally change it again.
-  LEVEL.all_rooms = {}
+  LEVEL.rooms = {}
 
   natural_flow(LEVEL.start_room, {})
 end

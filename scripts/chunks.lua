@@ -146,7 +146,7 @@ end
 
 
 function Chunk_prepare_rooms()
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
   end
 end
 
@@ -460,7 +460,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
   ---| Chunk_handle_connections |---
 
   for pass = 1,NUM_PASS do
-    for _,D in ipairs(LEVEL.all_conns) do
+    each D in LEVEL.conns do
       if D.kind == "normal"  then do_section_conn(D, pass) end
       if D.kind == "hallway" then do_hallway_conn(D, pass) end
     end
@@ -477,15 +477,15 @@ function Chunk_make_parts()
   end
 
 
-  for _,R in ipairs(LEVEL.all_rooms) do
-    for _,H in ipairs(R.chunks) do
+  each R in LEVEL.rooms do
+    each H in R.chunks do
       make_parts(C)
     end
   end
 
-  for _,D in ipairs(LEVEL.all_conns) do
+  each D in LEVEL.conns do
     if D.hall then
-      for _,C in ipairs(D.hall.chunks) do
+      each C in D.hall.chunks do
         make_parts(C)
       end
     end

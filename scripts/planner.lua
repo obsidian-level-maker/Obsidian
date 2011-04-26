@@ -1188,7 +1188,7 @@ function Plan_collect_sections()
   end end
 
   -- determine sizes
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     assert(R.kx1 and R.ky2 and R.kvolume)
     R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
   end
@@ -1231,7 +1231,7 @@ function Plan_decide_outdoors()
 
   ---| Plan_decide_outdoors |---
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.outdoor == nil then
       R.outdoor = choose(R)
     end
@@ -1479,7 +1479,7 @@ function Plan_prepare_rooms()
 
   ---| Plan_prepare_rooms |---
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     prepare_room(R)
 
     gui.printf("Final size of %s = %dx%d volume:%d\n", R:tostr(), R.sw, R.sh, R.svolume)
@@ -1503,8 +1503,8 @@ function Plan_create_rooms()
 
   assert(LEVEL.ep_along)
 
-  LEVEL.all_rooms = {}
-  LEVEL.all_conns = {}
+  LEVEL.rooms = {}
+  LEVEL.conns = {}
 
   LEVEL.scenic_rooms = {}
   LEVEL.scenic_conns = {}

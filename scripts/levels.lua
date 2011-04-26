@@ -28,10 +28,10 @@ class LEVEL
 
   epi_along : float  -- how far along the episode, 0.0 -> 1.0
 
-  all_rooms  : array(ROOM) 
-  all_conns  : array(CONN)
-  all_quests : array(QUEST)
-  all_locks  : array(LOCK)
+  rooms  : array(ROOM) 
+  conns  : array(CONN)
+  quests : array(QUEST)
+  locks  : array(LOCK)
 
   last_tag  : number
   last_mark : number

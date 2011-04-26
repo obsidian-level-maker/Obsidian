@@ -805,13 +805,13 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
   ---| Monsters_do_pickups |---
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.kind != "stairwell" and R.kind != "smallexit" then
       distribute_fight_stats(R)
     end
   end
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.kind != "stairwell" and R.kind != "smallexit" then
       pickups_in_room(R)
     end
@@ -1963,7 +1963,7 @@ function Monsters_make_battles()
   -- simply visit them one-by-one and insert some monsters
   -- and simulate each battle.
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     Player_give_room_stuff(R)
 
     Monsters_in_room(R)

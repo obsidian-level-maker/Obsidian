@@ -343,9 +343,9 @@ function Quest_add_weapons()
   end
 
 
-  local function swap_weapons(index, R)
-    for i = index+1, #LEVEL.all_rooms do
-      local N = LEVEL.all_rooms[i]
+  local function swap_weapons(R, index)
+    for i = index+1, #LEVEL.rooms do
+      local N = LEVEL.rooms[i]
 
       if should_swap(R.weapon, N.weapon) then
         R.weapon, N.weapon = N.weapon, R.weapon
@@ -359,11 +359,11 @@ function Quest_add_weapons()
 
   LEVEL.added_weapons = {}
 
-  add_weapon(LEVEL.all_rooms[1])
+  add_weapon(LEVEL.rooms[1])
 
   local next_weap_at = 1.0
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.weap_along >= next_weap_at then
       add_weapon(R)
       next_weap_at = next_weap_at + 1
@@ -375,8 +375,8 @@ function Quest_add_weapons()
   -- make sure weapon order is reasonable, e.g. the shotgun should
   -- appear before the super shotgun, plasma rifle before BFG, etc...
 
-  for index,R in ipairs(LEVEL.all_rooms) do
-    swap_weapons(index, R)
+  each R in LEVEL.rooms do
+    swap_weapons(R, _index)
 
     if R.weapon then
       gui.printf("  %s: %s\n", R:tostr(), R.weapon)
@@ -399,7 +399,7 @@ function Quest_find_storage_rooms()  -- NOT USED ATM
     A.storage_rooms = {}
   end
 
-  for _,R in ipairs(LEVEL.all_rooms) do
+  each R in LEVEL.rooms do
     if R.kind != "scenic" and #R.conns == 1 and
        not R.purpose and not R.weapon
     then
@@ -644,7 +644,7 @@ function Quest_make_quests()
     while true do
       R.quest = quest
 
-      table.insert(LEVEL.all_rooms, R)
+      table.insert(LEVEL.rooms, R)
 
       local exits = get_exits(R)
 
@@ -683,7 +683,7 @@ function Quest_make_quests()
 
 
   local function no_quest_order(start, quest)
-    for _,R in ipairs(LEVEL.all_rooms) do
+    each R in LEVEL.rooms do
       R.quest = quest
     
       if not LEVEL.exit_room and R != start and #R.conns <= 1 then
@@ -697,9 +697,9 @@ function Quest_make_quests()
   local function setup_lev_alongs()
     local w_along = 0
 
-    for index,R in ipairs(LEVEL.all_rooms) do
-      R.lev_along  = index / #LEVEL.all_rooms
-      
+    each R in LEVEL.rooms do
+      R.lev_along  = _index / #LEVEL.rooms
+ 
       R.weap_along = (w_along + R.kvolume / 3) / SECTION_W
       R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
 
@@ -710,7 +710,7 @@ function Quest_make_quests()
 
   local function dump_visit_order()
     gui.debugf("Room Visit Order:\n")
-    for _,R in ipairs(LEVEL.all_rooms) do
+    each R in LEVEL.rooms do
       gui.debugf("%s : %1.2f : quest %d : purpose %s\n", R:tostr(),
                  R.lev_along, R.quest.id, R.purpose or "-")
     end
@@ -722,7 +722,7 @@ function Quest_make_quests()
   gui.printf("\n--==| Make Quests |==--\n\n")
 
   -- need at least a START room and an EXIT room
-  if #LEVEL.all_rooms < 2 then
+  if #LEVEL.rooms < 2 then
     error("Level only has one room! (2 or more are needed)")
   end
 
@@ -733,7 +733,7 @@ function Quest_make_quests()
 
   if THEME.switch_doors then
     -- room list will be rebuilt in visit order
-    LEVEL.all_rooms = {}
+    LEVEL.rooms = {}
 
     visit_room(Q.start, Q)
   else
