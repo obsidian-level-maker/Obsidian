@@ -510,7 +510,7 @@ function CHEX.get_levels()
         bar_list = { "foo" },
       }
 
-      table.insert(GAME.all_levels, LEV)
+      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode

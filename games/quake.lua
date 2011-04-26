@@ -1559,7 +1559,7 @@ function QUAKE1.get_levels()
       }
 
       if not SKIP_MAPS[name] then
-        table.insert(GAME.all_levels, LEV)
+        table.insert(GAME.levels, LEV)
       end
 
     end -- for map

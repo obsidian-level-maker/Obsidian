@@ -192,7 +192,7 @@ function Levels_add_game()
     return def
   end
 
-  table.insert(GAME.all_modules, 1, recurse(OB_CONFIG.game))
+  table.insert(GAME.modules, 1, recurse(OB_CONFIG.game))
 end
 
 
@@ -219,18 +219,18 @@ function Levels_add_engine()
     return def
   end
 
-  table.insert(GAME.all_modules, 2, recurse(OB_CONFIG.engine))
+  table.insert(GAME.modules, 2, recurse(OB_CONFIG.engine))
 end
 
 
-function Levels_sort_modules()
-  GAME.all_modules = {}
+function Levels_collect_modules()
+  GAME.modules = {}
 
   -- find all the visible & enabled modules
 
   for _,mod in pairs(OB_MODULES) do
     if mod.enabled and mod.shown then
-      table.insert(GAME.all_modules, mod)
+      table.insert(GAME.modules, mod)
     end
   end
 
@@ -245,8 +245,8 @@ function Levels_sort_modules()
     return A.label < B.label
   end
 
-  if #GAME.all_modules > 1 then
-    table.sort(GAME.all_modules, module_sorter)
+  if #GAME.modules > 1 then
+    table.sort(GAME.modules, module_sorter)
   end
 end
 
@@ -254,7 +254,7 @@ end
 function Levels_invoke_hook(name, rseed, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
-    for index,mod in ipairs(GAME.all_modules) do
+    each mod in GAME.modules do
       local func = mod.hooks and mod.hooks[name]
       if func then
         if rseed then gui.rand_seed(rseed) end
@@ -269,7 +269,7 @@ end
 function Levels_setup()
   Levels_clean_up()
 
-  Levels_sort_modules()
+  Levels_collect_modules()
 
   -- first entry must be the game def, and second entry must be
   -- the engine def.  NOTE: neither of these are real modules.
@@ -278,7 +278,7 @@ function Levels_setup()
 
   -- merge tables from each module
 
-  for index,mod in ipairs(GAME.all_modules) do
+  each mod in GAME.modules do
     if mod.tables then
       Levels_merge_table_list(mod.tables)
     end
@@ -349,7 +349,7 @@ function Levels_choose_themes()
   if OB_CONFIG.theme != "mixed" and OB_CONFIG.theme != "original" and
      OB_CONFIG.theme != "psycho"
   then
-    for _,L in ipairs(GAME.all_levels) do
+    each L in GAME.levels do
       set_sub_theme(L, OB_CONFIG.theme)
     end
 
@@ -367,11 +367,11 @@ function Levels_choose_themes()
 
     assert(not table.empty(prob_tab))
 
-    for idx,L in ipairs(GAME.all_levels) do
+    each L in GAME.levels do
       if not L.sub_theme then
         local name = rand.key_by_probs(prob_tab)
 
-        if not L.name_theme and ((idx % 2) == 1) then
+        if not L.name_theme and ((_index % 2) == 1) then
           L.name_theme = "PSYCHO"
         end
 
@@ -457,7 +457,7 @@ function Levels_choose_themes()
     local pos = 1
     local count = 0
 
-    for _,L in ipairs(GAME.all_levels) do
+    each L in GAME.levels do
       if count >= 2 and (rand.odds(50) or count >= 5) then
         pos = pos + 1
         count = 0
@@ -470,7 +470,7 @@ function Levels_choose_themes()
     return;
   end
 
-  for _,L in ipairs(GAME.all_levels) do
+  each L in GAME.levels do
     set_sub_theme(L, episode_list[L.episode])
   end
 end
@@ -480,14 +480,14 @@ function Levels_rarify(seed_idx, tab)
   gui.rand_seed(OB_CONFIG.seed * 200 + seed_idx)
 
   local function Rarify(name, rarity)
-    for group = 1, #GAME.all_levels, rarity do
+    for group = 1, #GAME.levels, rarity do
       
       -- this level in the group will allow the item, every other
       -- level will forbid it (by setting the allowance to 0).
       local which = rand.irange(0, rarity-1)
 
       for offset = 0, rarity-1 do
-        local L = GAME.all_levels[group + offset]
+        local L = GAME.levels[group + offset]
         if not L then break; end
 
         L.allowances[name] = (offset == which ? 1, 0)
@@ -502,7 +502,7 @@ function Levels_rarify(seed_idx, tab)
 
   --| Levels_rarify |--
 
-  for _,L in ipairs(GAME.all_levels) do
+  each L in GAME.levels do
     if not L.allowances then
       L.allowances = {}
     end
@@ -514,7 +514,7 @@ function Levels_rarify(seed_idx, tab)
     end
   end
 
-  for _,L in ipairs(GAME.all_levels) do
+  each L in GAME.levels do
     if not table.empty(L.allowances) then
       gui.debugf("Allowances in level %s =\n", L.name)
       gui.debugf("%s\n", table.tostr(L.allowances, 1))
@@ -696,12 +696,11 @@ end
 
 
 function Levels_make_all()
-
-  GAME.all_levels = {}
+  GAME.levels = {}
 
   Levels_invoke_hook("get_levels",  OB_CONFIG.seed)
 
-  if #GAME.all_levels == 0 then
+  if #GAME.levels == 0 then
     error("Level list is empty!")
   end
 
@@ -711,8 +710,8 @@ function Levels_make_all()
 --Levels_rarify(2, GAME.MONSTERS)
 --Levels_rarify(3, GAME.POWERUPS)
 
-  for index,L in ipairs(GAME.all_levels) do
-    if Levels_make_level(L, index, #GAME.all_levels) == "abort" then
+  each L in GAME.levels do
+    if Levels_make_level(L, _index, #GAME.levels) == "abort" then
       return "abort"
     end
   end

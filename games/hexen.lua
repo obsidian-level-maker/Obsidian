@@ -2523,7 +2523,7 @@ function HEXEN.get_levels()
         sky_light = ep_info.sky_light
       }
 
-      table.insert(GAME.all_levels, LEV)
+      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode

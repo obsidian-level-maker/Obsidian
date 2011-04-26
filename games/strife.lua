@@ -199,7 +199,7 @@ function STRIFE.get_levels()
         ep_info  = { }
       }
 
-      table.insert(GAME.all_levels, LEV)
+      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode

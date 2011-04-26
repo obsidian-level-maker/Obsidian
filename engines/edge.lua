@@ -122,7 +122,7 @@ function EDGE.create_language()
     "[ENGLISH]\n"
   }
 
-  for _,L in ipairs(GAME.all_levels) do
+  each L in GAME.levels do
     if L.description then
       local id = string.format("%sDesc", L.name)
       local text = L.name .. ": " .. L.description;

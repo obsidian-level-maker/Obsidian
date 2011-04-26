@@ -979,7 +979,7 @@ function WOLF.get_levels()
 --        Level.secret_exit = true
 --      end
 
-      table.insert(GAME.all_levels, Level)
+      table.insert(GAME.levels, Level)
     end -- for map
 
   end -- for episode

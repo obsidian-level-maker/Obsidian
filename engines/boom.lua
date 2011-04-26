@@ -45,7 +45,7 @@ function BOOM.create_dehacked()
   -- Level names...
   local strings_marker = false;
 
-  for _,L in ipairs(GAME.all_levels) do
+  each L in GAME.levels do
     if L.description then
       local id
 

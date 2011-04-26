@@ -2099,7 +2099,7 @@ function QUAKE2.get_levels()
         theme_ref = "BASE"
       }
 
-      table.insert(GAME.all_levels, LEV)
+      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode

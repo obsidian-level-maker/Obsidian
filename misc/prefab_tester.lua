@@ -170,7 +170,7 @@ MIRROR_CHOICES =
 
 
 function Test_Prefab(self)
-  local LEV = GAME.all_levels[1]
+  local LEV = GAME.levels[1]
 
   LEV.build_func = Build_Prefab
 

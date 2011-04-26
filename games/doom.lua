@@ -4389,7 +4389,7 @@ function DOOM1.get_levels()
         LEV.demo_lump = string.format("DEMO%d", episode)
       end
 
-      table.insert(GAME.all_levels, LEV)
+      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode
@@ -4489,7 +4489,7 @@ function DOOM2.get_levels()
       LEV.demo_lump = string.format("DEMO%d", episode)
     end
 
-    table.insert(GAME.all_levels, LEV)
+    table.insert(GAME.levels, LEV)
   end
 end
 
