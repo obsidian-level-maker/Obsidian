@@ -411,7 +411,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["amulets"] =
+UNFINISHED["amulets"] =
 {
   label = "Amulets & Armor"
 
