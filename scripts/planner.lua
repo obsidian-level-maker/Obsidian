@@ -1158,7 +1158,7 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
   rand.shuffle(visits)
 
   for loop = 1,6 do
-    for _,K in ipairs(visits) do
+    each K in visits do
       if K.room then
         try_nudge(K, rand.dir())
       end
@@ -1445,7 +1445,7 @@ function Plan_prepare_rooms()
 
 
   local function connect_corners(R)
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       for _,E in pairs(K.edges) do
         E.corn_L = corner_near_edge(E, true)
         E.corn_R = corner_near_edge(E, false)
@@ -1456,7 +1456,7 @@ function Plan_prepare_rooms()
 
 
   local function prepare_room(R)
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
 --###      add_edges(K)
 --###      add_corners(K)
 --###      add_middle(R, K)

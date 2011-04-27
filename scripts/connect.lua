@@ -370,7 +370,7 @@ function Connect_rooms()
   local function already_connected(K1, K2)
     if not (K1 and K2 and K1.room) then return false end
     
-    for _,D in ipairs(K1.room.conns) do
+    each D in K1.room.conns do
       if (D.K1 == K1 and D.K2 == K2) or
          (D.K1 == K2 and D.K2 == K1)
       then
@@ -997,11 +997,11 @@ function Connect_rooms()
   local function kill_room(R)
     R.kind = "REMOVED"
 
-    for _,D in ipairs(R.conns) do
+    each D in R.conns do
       D.kind = "REMOVED"
     end
 
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       -- TODO ?!?
     end
 
@@ -1081,7 +1081,7 @@ Plan_dump_rooms("Dead Room Map")
 
     table.insert(LEVEL.rooms, R)
 
-    for _,D in ipairs(R.conns) do
+    each D in R.conns do
       if R == D.R2 and not visited[D.R1] then
         D:swap()
       end

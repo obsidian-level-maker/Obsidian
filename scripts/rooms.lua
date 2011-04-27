@@ -134,28 +134,28 @@ function ROOM_CLASS.contains_seed(R, x, y)
 end
 
 function ROOM_CLASS.has_lock(R, lock)
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     if D.lock == lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_any_lock(R)
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     if D.lock then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_lock_kind(R, kind)
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     if D.lock and D.lock.kind == kind then return true end
   end
   return false
 end
 
 function ROOM_CLASS.has_sky_neighbor(R)
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     local N = D:neighbor(R)
     if N.outdoor then return true end
   end
@@ -163,7 +163,7 @@ function ROOM_CLASS.has_sky_neighbor(R)
 end
 
 function ROOM_CLASS.has_teleporter(R)
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     if D.kind == "teleporter" then return true end
   end
   return false
@@ -174,7 +174,7 @@ function ROOM_CLASS.dist_to_closest_conn(R, K, side)
   -- TODO: improve this by calculating side coordinates
   local best
 
-  for _,D in ipairs(R.conns) do 
+  each D in R.conns do
     local K2 = D:section(R)
     if K2 then
       local dist = geom.dist(K.kx, K.ky, K2.kx, K2.ky)
@@ -191,7 +191,7 @@ end
 
 function ROOM_CLASS.is_near_exit(R)
   if R.purpose == "EXIT" then return true end
-  for _,D in ipairs(R.conns) do
+  each D in R.conns do
     local N = D:neighbor(R)
     if N.purpose == "EXIT" then return true end
   end
@@ -502,7 +502,7 @@ function Rooms_decide_windows()
     if STYLE.windows == "few"  and R.num_windows > 0 then return end
     if STYLE.windows == "some" and R.num_windows > 2 then return end
 
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       local N = K:neighbor(side)
 
       -- FIXME: sometimes make windows from indoor to indoor
@@ -600,7 +600,7 @@ if not K then K = R.sections[1] end
     K.entry_dist = 0
 
     while count < total do
-      for _,K in ipairs(R.sections) do
+      each K in R.sections do
         for side = 2,8,2 do
           local N = K:neighbor(side)
           if N and N.room == R and N.entry_dist then
@@ -652,7 +652,7 @@ function Rooms_collect_targets(R)
 
     -- check if the edges touching the corner are also free
 
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       for _,E in pairs(K.edges) do
         if E.corn1 == C and E.usage then return false end
         if E.corn2 == C and E.usage then return false end
@@ -708,7 +708,7 @@ end
 function Rooms_place_importants()
 
   local function clear_busyness(R)
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       K.num_busy = 0
     end
   end
@@ -1247,7 +1247,7 @@ function Layout_all_ceilings()
   end
 
   local function quake_temp_lights(R)
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
      if is_middle(K) then
       local z = R.ceil_h - rand.pick { 50, 80, 110, 140 }
       local light = rand.pick { 50, 100, 150, 200 }
@@ -1263,7 +1263,7 @@ function Layout_all_ceilings()
 
   local function build_ceiling(R)
     if R.sky_h then
-      for _,K in ipairs(R.sections) do
+      each K in R.sections do
         Trans.quad(K.x1, K.y1, K.x2, K.y2, R.sky_h, nil, Mat_normal("_SKY"))
       end
 
@@ -1306,7 +1306,7 @@ function Layout_all_ceilings()
     local light = rand.pick { 128, 144, 160 }
     if R.outdoor then light = 192 end
 
-    for _,K in ipairs(R.sections) do
+    each K in R.sections do
       gui.add_brush(
       {
         { m="light", ambient=light },
