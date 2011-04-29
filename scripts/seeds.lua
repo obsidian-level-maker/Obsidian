@@ -78,6 +78,12 @@ function SEED_CLASS.neighbor(S, dir, dist)
 end
 
 
+function SEED_CLASS.same_room(S, dir)
+  local N = S:neighbor(dir)
+  return N and N.room == S.room
+end
+
+
 function SEED_CLASS.mid_point(S)
   return int((S.x1 + S.x2) / 2), int((S.y1 + S.y2) / 2)
 end

@@ -24,15 +24,21 @@ function Rooms_flesh_out()
   local function init_seed(R, S)
     for dir = 2,4,2 do
       local N = S:neighbor(dir)
-      local same_room = (N and N.room == R)
       
-      if same_room then
+      if S:same_room(dir) then
         local cost = 2 ^ rand.range(1, 5)
 
         S.cost[dir] = cost
         N.cost[10-dir] = cost
       else
         S:set_edge(dir, "solid")
+      end
+    end
+
+    -- mark seeds which are near a wall
+    for dir = 2,8,2 do
+      if not S:same_room(dir) then
+        S.near_wall = (S.near_wall or 0) + 1
       end
     end
   end
@@ -48,14 +54,82 @@ function Rooms_flesh_out()
   end
 
 
+  local function update_distances(R)
+    -- in each unallocated seed in a room, compute the distance to
+    -- the nearest allocated seed, and distance from a wall.
+    
+    local function init_dists()
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        local S = SEEDS[sx][sy]
+        if S.room == R then
+          
+          if S.chunk then
+            S.chunk_dist = 0
+          else
+            S.chunk_dist = nil
+          end
+
+          if S.near_wall then
+            S.wall_dist = 0
+          else
+            S.wall_dist = nil
+          end
+        
+          S.dist_random = gui.random()
+        end
+      end end
+    end
+
+    local function spread_dists()
+      local changed = false
+
+      for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
+        local S = SEEDS[sx][sy]
+        if S.room == R then
+
+          for dir = 2,8,2 do
+            if S:same_room(dir) then
+              local N = S:neighbor(dir)
+
+              if S.chunk_dist and (N.chunk_dist or 999) > S.chunk_dist + 1 then
+                N.chunk_dist = S.chunk_dist + 1
+                changed  = true
+              end
+
+              if S.wall_dist and (N.wall_dist or 999) > S.wall_dist + 1 then
+                N.wall_dist = S.wall_dist + 1
+                changed  = true
+              end
+            end
+          end
+        end
+      end end
+
+      return changed
+    end
+
+    init_dists()
+
+    while spread_dists() do end
+  end
+
+
   local function spot_for_wotsit(R)
+    update_distances(R)
+
     local spot
+    local best_dist = -9e9
 
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
       if S.room == R and not S.chunk then
-        if not spot or rand.odds(20) then spot = S end
+        local dist = S.chunk_dist * 7 + S.wall_dist * 2.15 + S.dist_random
+
+        if dist > best_dist then
+          spot = S
+          best_dist = dist
+        end
       end
     end end
 
