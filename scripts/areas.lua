@@ -406,7 +406,7 @@ function Areas_flesh_out()
     -- (generally of different heights) and stairs between them.
 
     -- FIXME
-    dummy_chunks()
+    dummy_chunks(R)
 stderrf("\n")
   end
 

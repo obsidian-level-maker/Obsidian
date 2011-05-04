@@ -735,6 +735,10 @@ local S1 = SEEDS[C.sx1][C.sy1]
 
   -- ceiling
 
+  if C.room and C.room.outdoor then
+    C.ceil_tex = "_SKY"
+  end
+
   local c_mat = Mat_lookup(C.ceil_tex or (C.room and C.room.main_tex))
   local c_tex = c_mat.f or c_mat.t
 
