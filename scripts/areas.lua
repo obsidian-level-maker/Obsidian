@@ -176,6 +176,62 @@ function Rooms_flesh_out()
   end
 
 
+  local function pick_tele_spot(R, other_K)
+    local loc_list = {}
+
+    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
+      local K = SECTIONS[x][y]
+      if K.room == R then
+        local score
+        
+        if other_K then
+          score = geom.dist(x, y, other_K.kx, other_K.ky)
+        else
+          score = R:dist_to_closest_conn(K) or 9
+        end
+
+        if K.num_conn == 0 and K != other_K then
+          score = score + 11
+        end
+
+        score = score + gui.random() / 5
+
+        table.insert(loc_list, { K=K, score=score })
+      end
+    end end -- x, y
+
+    local loc = table.pick_best(loc_list,
+        function(A, B) return A.score > B.score end)
+
+    return loc.K  
+  end
+
+
+  local function place_one_tele(R)
+    -- we choose two sections, one for outgoing teleporter and one
+    -- for the returning spot.
+
+    local out_K = pick_tele_spot(R)
+    local in_K  = pick_tele_spot(R, out_K)
+
+    out_K.teleport_out = true
+     in_K.teleport_in  = true
+
+    return out_K
+  end
+
+
+  local function place_teleporters()
+    -- determine which section(s) of each room to use for teleporters
+    each D in LEVEL.conns do
+      if D.kind == "teleporter" then
+        if not D.K1 then D.K1 = place_one_tele(D.R1) end
+        if not D.K2 then D.K2 = place_one_tele(D.R2) end
+      end
+    end
+  end
+
+
   local function extra_stuff(R)
 
     -- this function is meant to ensure good traversibility in a room.
@@ -326,7 +382,10 @@ stderrf("\n")
 
   ---| Rooms_flesh_out |---
 
+  place_teleporters()
+
   each R in LEVEL.rooms do
     flesh_out(R)
   end
 end
+
