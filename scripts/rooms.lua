@@ -35,7 +35,7 @@ class ROOM
   natural : bool  -- true for cave/landscape areas
   scenic  : bool  -- true for scenic (unvisitable) areas
 
-  conns : array(CONN)  -- connections with neighbor rooms
+  conns : list(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
 
   branch_kind : keyword
