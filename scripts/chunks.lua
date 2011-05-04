@@ -566,6 +566,107 @@ end
 
 
 
+function CHUNK_CLASS.unpack_parts(C, filter_field)
+  -- returns a list of rectangles which represent the area of the
+  -- chunk _minus_ the areas of the parts.
+
+  local spaces =
+  {
+    { x1=C.x1, y1=C.y1, x2=C.x2, y2=C.y2 }
+  }
+
+  local function split_space_X(S, N)
+    if N.x1 > S.x1 then
+      local T = table.copy(S)
+      S.x1 = N.x1 ; T.x2 = N.x1
+      table.insert(spaces, T)
+    end
+
+    if N.x2 < S.x2 then
+      local T = table.copy(S)
+      S.x2 = N.x2 ; T.x1 = N.x2
+      table.insert(spaces, T)
+    end
+
+    if N.y1 > S.y1 then
+      local T = table.copy(S)
+      S.y1 = N.y1 ; T.y2 = N.y1
+      table.insert(spaces, T)
+    end
+
+    if N.y2 < S.y2 then
+      local T = table.copy(S)
+      S.y2 = N.y2 ; T.y1 = N.y2
+      table.insert(spaces, T)
+    end
+  end
+
+  local function split_space_Y(S, N)
+    -- same code as above, but do Y first
+
+    if N.y1 > S.y1 then
+      local T = table.copy(S)
+      S.y1 = N.y1 ; T.y2 = N.y1
+      table.insert(spaces, T)
+    end
+
+    if N.y2 < S.y2 then
+      local T = table.copy(S)
+      S.y2 = N.y2 ; T.y1 = N.y2
+      table.insert(spaces, T)
+    end
+     
+    if N.x1 > S.x1 then
+      local T = table.copy(S)
+      S.x1 = N.x1 ; T.x2 = N.x1
+      table.insert(spaces, T)
+    end
+
+    if N.x2 < S.x2 then
+      local T = table.copy(S)
+      S.x2 = N.x2 ; T.x1 = N.x2
+      table.insert(spaces, T)
+    end
+  end
+
+  local function split_space(S, N)
+    local x_dist = math.min(
+      math.abs(S.x1 - N.x1), math.abs(S.x1 - N.x2),
+      math.abs(S.x2 - N.x1), math.abs(S.x2 - N.x2))
+
+    local y_dist = math.min(
+      math.abs(S.y1 - N.y1), math.abs(S.y1 - N.y2),
+      math.abs(S.y2 - N.y1), math.abs(S.y2 - N.y2))
+
+    if x_dist < y_dist then
+      split_space_X(S, N)
+    else
+      split_space_Y(S, N)
+    end
+  end
+
+  local function remove_rect(N)
+    -- rebuild the list
+    local old_spaces = spaces
+    spaces = {}
+
+    each S in old_spaces do
+      if geom.boxes_overlap(S.x1,S.y1,S.x2,S.y2, N.x1,N.y1,N.x2,N.y2) then
+        split_space(S, N)
+      end
+    end
+  end
+
+  each P in C.parts do
+    if filter_field and P[filter_field] then continue end
+    remove_rect(P)
+  end
+
+  return spaces
+end
+
+
+
 function CHUNK_CLASS.build(C)
 
   -- TEMP TEMP CRUD CRUD

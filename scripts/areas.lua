@@ -348,7 +348,7 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
     -- between all walk spots (doorways, switches, etc).
     --
     -- the task here is to allocate these seeds into chunks,
-    -- sub-dividing them into a number of separate floor areas
+    -- organizing them into a number of separate floor areas
     -- (generally of different heights) and stairs between them.
 
     -- TODO
