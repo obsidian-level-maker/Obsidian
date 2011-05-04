@@ -19,7 +19,7 @@
 ----------------------------------------------------------------
 
 
-function Rooms_flesh_out()
+function Areas_flesh_out()
 
   local function init_seed(R, S)
     for dir = 2,4,2 do
@@ -380,7 +380,7 @@ stderrf("\n")
   end
 
 
-  ---| Rooms_flesh_out |---
+  ---| Areas_flesh_out |---
 
   place_teleporters()
 

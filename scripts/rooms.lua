@@ -1341,7 +1341,6 @@ function Rooms_build_all()
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   Chunk_handle_connections()
----???  Chunk_make_parts()
 
   Rooms_choose_themes()
   Rooms_assign_facades()
@@ -1349,7 +1348,7 @@ function Rooms_build_all()
 ---!!!  Rooms_setup_symmetry()
 ---!!!  Rooms_decide_windows()
 
-  Rooms_flesh_out()
+  Areas_flesh_out()
 
   if PARAM.tiled then
     -- this is as far as we go for TILE based games

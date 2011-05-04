@@ -471,29 +471,6 @@ end
 ----------------------------------------------------------------
 
 
-function Chunk_make_parts()
-
-  local function make_parts()
-  end
-
-
-  each R in LEVEL.rooms do
-    each H in R.chunks do
-      make_parts(C)
-    end
-  end
-
-  each D in LEVEL.conns do
-    if D.hall then
-      each C in D.hall.chunks do
-        make_parts(C)
-      end
-    end
-  end
-end
-
-
-
 function CHUNK_CLASS.similar_neighbor(C, dir)
   local sx, sy
 
