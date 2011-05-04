@@ -1348,6 +1348,7 @@ function Rooms_build_all()
 ---!!!  Rooms_setup_symmetry()
 ---!!!  Rooms_decide_windows()
 
+  Areas_important_stuff()
   Areas_flesh_out()
 
   if PARAM.tiled then

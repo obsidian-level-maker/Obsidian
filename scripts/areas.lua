@@ -31,7 +31,7 @@ class AREA
 --------------------------------------------------------------]]
 
 
-function Areas_flesh_out()
+function Areas_important_stuff()
 
   local function init_seed(R, S)
     for dir = 2,4,2 do
@@ -145,7 +145,7 @@ function Areas_flesh_out()
       end
     end end
 
-    -- FIXME !!! use a connection chunk if nothing else free
+    -- FIXME !!!! try to use an existing chunk
     if not spot then error("NO SPOT FOR WOTSIT") end
 
     -- create chunk
@@ -255,13 +255,6 @@ function Areas_flesh_out()
   end
 
 
-  local function decorative_chunks(R)
-    -- this does scenic stuff like cages, nukage pits, etc...
-
-    -- TODO
-  end
-
-
   local function path_scorer(x, y, dir, data)
     local R = data
 
@@ -354,14 +347,39 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
   end
 
 
-  local function do_floors(R)
-    -- the seeds which are left over from the previous allocations
-    -- should form a contiguous area which ensures traversibility
-    -- between all walk spots (doorways, switches, etc).
-    --
-    -- the task here is to allocate these seeds into chunks,
-    -- organizing them into a number of separate floor areas
-    -- (generally of different heights) and stairs between them.
+  local function visit_room(R)
+    init_room(R)
+    place_importants(R)
+    extra_stuff(R)
+    make_paths(R)
+  end
+
+
+  ---| Areas_important_stuff |---
+
+  place_teleporters()
+
+  each R in LEVEL.rooms do
+    visit_room(R)
+  end
+end
+
+
+
+function Areas_flesh_out()
+
+  local function expand_chunks(R)
+    -- so far all chunks are only a single seed in size.
+    -- this function can make them bigger, for reasons like:
+    --   (a) to make a centered doorway
+    --   (b) use a complex pedestal for a key or switch
+
+    -- TODO
+  end
+
+
+  local function decorative_chunks(R)
+    -- this does scenic stuff like cages, nukage pits, etc...
 
     -- TODO
   end
@@ -378,23 +396,28 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
   end
 
 
-  local function flesh_out(R)
-    init_room(R)
-    place_importants(R)
-    extra_stuff(R)
-    make_paths(R)
-    decorative_chunks(R)
-    do_floors(R)
+  local function do_floors(R)
+    -- the seeds which are left over from the previous allocations
+    -- should form a contiguous area which ensures traversibility
+    -- between all walk spots (doorways, switches, etc).
+    --
+    -- the task here is to allocate these seeds into chunks,
+    -- organizing them into a number of separate floor areas
+    -- (generally of different heights) and stairs between them.
 
-dummy_chunks(R)
-
+    -- FIXME
+    dummy_chunks()
 stderrf("\n")
   end
 
 
-  ---| Areas_flesh_out |---
+  local function flesh_out(R)
+    expand_chunks(R)
+    decorative_chunks(R)
+    do_floors(R)
+  end
 
-  place_teleporters()
+  ---| Areas_flesh_out |---
 
   each R in LEVEL.rooms do
     flesh_out(R)
