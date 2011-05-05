@@ -223,6 +223,20 @@ function ROOM_CLASS.pick_ceil_mat(R)
 end
 
 
+function ROOM_CLASS.can_alloc_chunk(R, sx1, sy1, sx2, sy2)
+  if sx1 < R.sx1 or sx2 > R.sx2 then return false end
+  if sy1 < R.sy1 or sy2 > R.sy2 then return false end
+ 
+  for sx = sx1, sx2 do for sy = sy1, sy2 do
+    local S = SEEDS[sx][sy]
+    if S.room != R then return false end
+    if S.chunk then return false end
+  end end
+
+  return true
+end
+
+
 function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
   assert(R.sx1 <= sx1 and sx1 <= sx2 and sx2 <= R.sx2)
   assert(R.sy1 <= sy1 and sy1 <= sy2 and sy2 <= R.sy2)

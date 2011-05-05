@@ -506,14 +506,23 @@ function CHUNK_CLASS.build(C)
   end
 
 
-local S1 = SEEDS[C.sx1][C.sy1]
+local is_walk
+for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
+ if SEEDS[sx][sy].is_walk then is_walk = true end
+end end
 
-  if not (C.hall or S1.debug_path) then f_h = 80 end
+  if not (C.hall or is_walk) then f_h = 26 end
 
   local x1, y1 = C.x1, C.y1
   local x2, y2 = C.x2, C.y2
 
   -- floor
+
+C.floor_tex = rand.pick { "FLAT1", "FLAT10", "FLAT4", "FLAT5_1", "FLAT5_3",
+                          "FLAT5_8", "FLAT14", "NUKAGE1", "LAVA1", "GRASS1",
+                          "TLITE6_5", "CEIL1_2", "CEIL3_4", "CEIL3_6", "CONS1_1",
+                          "DEM1_6", "STEP2", "SLIME15", "SLIME09", "SFLR6_1"
+                          }
 
   local f_mat = Mat_lookup(C.floor_tex or (C.room and C.room.main_tex))
   local f_tex = f_mat.f or f_mat.t

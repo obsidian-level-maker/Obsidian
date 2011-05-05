@@ -513,6 +513,8 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
       local S = SEEDS[sx][sy]
       assert(S.room == R)
 
+      S.is_walk = true
+
       S:set_edge(pos.dir, "walk")
 
       -- debugging stuff
@@ -530,6 +532,7 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     local S = SEEDS[sx][sy]
     assert(S.room == R)
 
+    S.is_walk = true
     S.debug_path = true
   end
 
@@ -541,6 +544,11 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     for index,C in ipairs(R.chunks) do
       if C.foobage == "conn" or C.foobage == "important" then
         table.insert(list, C)
+
+        -- mark this chunk as walk
+        for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+          SEEDS[sx][sy].is_walk = true
+        end end
       end
     end
 
@@ -608,7 +616,26 @@ function Areas_flesh_out()
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
       if S.room == R and not S.chunk then
-        local C = R:alloc_chunk(sx, sy, sx, sy)
+        
+        local W, H = 1, 1
+        local do_x_match = rand.sel(50, 0, 1)
+
+        local EXPAND_PROBS = { 50, 18, 5 }
+
+        for pass = 1,6 do
+          local do_x = ((pass % 2) == do_x_match)
+          local expand_prob = EXPAND_PROBS[int((pass + 1) / 2)]
+
+          if not rand.odds(expand_prob) then continue end
+
+          if do_x and R:can_alloc_chunk(sx, sy, sx+W, sy+H-1) then
+            W = W + 1
+          elseif not do_x and R:can_alloc_chunk(sx, sy, sx+W-1, sy+H) then
+            H = H + 1
+          end
+        end
+
+        local C = R:alloc_chunk(sx, sy, sx+W-1, sy+H-1)
         C.foobage = "dummy"
       end
     end end
