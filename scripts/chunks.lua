@@ -137,6 +137,11 @@ function CHUNK_CLASS.mid_point(C)
 end
 
 
+function CHUNK_CLASS.seed_volume(C)
+  return (C.sx2 - C.sx1 + 1) * (C.sy2 - C.sy1 + 1)
+end
+
+
 function CHUNK_CLASS.side_len(C, dir)
   return geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 end
@@ -511,18 +516,23 @@ for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
  if SEEDS[sx][sy].is_walk then is_walk = true end
 end end
 
-  if not (C.hall or is_walk) then f_h = 26 end
+  if not (C.hall or is_walk) then f_h = 6 end
 
   local x1, y1 = C.x1, C.y1
   local x2, y2 = C.x2, C.y2
 
   -- floor
 
-C.floor_tex = rand.pick { "FLAT1", "FLAT10", "FLAT4", "FLAT5_1", "FLAT5_3",
-                          "FLAT5_8", "FLAT14", "NUKAGE1", "LAVA1", "GRASS1",
-                          "TLITE6_5", "CEIL1_2", "CEIL3_4", "CEIL3_6", "CONS1_1",
-                          "DEM1_6", "STEP2", "SLIME15", "SLIME09", "SFLR6_1"
-                          }
+  FL_LIST = { "FLAT1", "FLAT10", "FLAT4", "FLAT5_1", "FLAT5_3",
+              "FLAT5_8", "FLAT14", "NUKAGE1", "LAVA1", "GRASS1",
+              "TLITE6_5", "CEIL1_2", "CEIL3_4", "CEIL3_6", "CONS1_1",
+              "DEM1_6", "STEP2", "SLIME15", "SLIME09", "SFLR6_1"
+            }
+C.floor_tex = rand.pick(FL_LIST)
+if C.area then
+  local id = C.area.debug_id
+  C.floor_tex = FL_LIST[1 + (id - 1) % #FL_LIST]
+end
 
   local f_mat = Mat_lookup(C.floor_tex or (C.room and C.room.main_tex))
   local f_tex = f_mat.f or f_mat.t

@@ -612,7 +612,7 @@ function Areas_flesh_out()
   end
 
 
-  local function dummy_chunks(R)
+  local function filler_chunks(R)
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
       if S.room == R and not S.chunk then
@@ -636,9 +636,81 @@ function Areas_flesh_out()
         end
 
         local C = R:alloc_chunk(sx, sy, sx+W-1, sy+H-1)
-        C.foobage = "dummy"
+        C.foobage = "filler"
       end
     end end
+  end
+
+
+  local function merge_areas(C, N, area_tab)
+    assert(C.area != N.area)
+
+    if C.area.id > N.area.id then
+      C, N = N, C
+    end
+
+stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
+
+    C.area.size = C.area.size + N.area.size
+    N.area.size = 0
+
+    -- remove 2nd area from the area table
+    local N_area = N.area
+
+    area_tab[N_area.id] = nil
+
+    -- update all chunks
+    each C2 in C.room.chunks do
+      if C2.area == N_area then C2.area = C.area end
+    end
+
+    assert(N.area == C.area)
+
+    assert(N.room == C.room)
+
+          each C2 in C.room.chunks do
+            if C2.area then
+              assert(C2.area.size > 0)
+              assert(area_tab[C2.area.id])
+            end
+          end
+  end
+
+
+  local function collect_neighbors(list, C, sx1, sy1, sx2, sy2)
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      if geom.inside_box(sx, sy, C.room.sx1, C.room.sy1, C.room.sx2, C.room.sy2) then
+        local S = SEEDS[sx][sy]
+        if S and S.room == C.room and S.chunk then
+          local N = S.chunk
+
+          if N.area and N.area != C.area and not table.has_elem(list, N) then
+            table.insert(list, N)
+          end
+        end
+      end
+    end end
+  end
+
+
+  local function try_expand_area(C, area_tab)
+    local neighbors = {}
+
+    -- FIXME: have a C.neighbors field
+    --        (will still need to filter it for different 'area')
+    collect_neighbors(neighbors, C, C.sx1, C.sy1-1, C.sx2, C.sy1-1)
+    collect_neighbors(neighbors, C, C.sx1, C.sy2+1, C.sx2, C.sy2+1)
+    collect_neighbors(neighbors, C, C.sx1-1, C.sy1, C.sx1-1, C.sy2)
+    collect_neighbors(neighbors, C, C.sx2+1, C.sy1, C.sx2+1, C.sy2)
+    
+    -- nothing possible?
+    if table.empty(neighbors) then return end
+
+    -- FIXME: better logic to decide
+    --        ESPECIALLY: not make too big
+    local N = rand.pick(neighbors)
+
+    merge_areas(C, N, area_tab)
   end
 
 
@@ -651,9 +723,49 @@ function Areas_flesh_out()
     -- organizing them into a number of separate floor areas
     -- (generally of different heights) and stairs between them.
 
-    -- FIXME
-    dummy_chunks(R)
-stderrf("\n")
+    -- 1. create chunks for remaining seeds
+    filler_chunks(R)
+
+    -- 2. group chunks into areas
+    local area_tab = {}
+
+    -- FIXME: filter out "scenic" chunks (cages etc)
+    local fl_chunks = table.copy(R.chunks)
+
+    each C in fl_chunks do
+      local AREA = { id=_index, size=C:seed_volume(), rand=gui.random() }
+      area_tab[AREA.id] = AREA
+      C.area = AREA
+      AREA.min_size = rand.sel(50, 3, 4)
+    end
+
+    for loop = 1,12 do
+      rand.shuffle(fl_chunks)
+
+      each C in fl_chunks do
+        if C.area.size < C.area.min_size or rand.odds(1) then
+          try_expand_area(C, area_tab)
+        end
+      end
+    end
+
+    each C in R.chunks do
+      assert(C.room == R)
+      if C.area then
+        assert(C.area.size > 0)
+        assert(area_tab[C.area.id])
+      end
+    end
+
+    local debug_id = 1
+    each _,AR in area_tab do
+      AR.debug_id = debug_id ; debug_id = debug_id + 1
+      stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
+    end
+
+    each C in R.chunks do
+      if C.area then assert(C.area.debug_id) end
+    end
   end
 
 
