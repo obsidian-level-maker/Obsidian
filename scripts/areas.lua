@@ -31,6 +31,216 @@ class AREA
 --------------------------------------------------------------]]
 
 
+function Areas_handle_connections()
+  
+  local NUM_PASS = 4
+
+
+  local function link_chunks(C1, C2, dir, conn)
+    assert(C1)
+    assert(C2)
+
+stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
+    local LINK =
+    {
+      C1 = C1,
+      C2 = C2,
+      dir = dir,
+      conn = conn,
+    }
+
+    if geom.is_vert(dir) then
+      local x1 = math.max(C1.x1, C2.x1)
+      local x2 = math.min(C1.x2, C2.x2)
+
+      LINK.x1 = x1 + 16
+      LINK.x2 = x2 - 16
+    else
+      local y1 = math.max(C1.y1, C2.y1)
+      local y2 = math.min(C1.y2, C2.y2)
+
+      LINK.y1 = y1 + 16
+      LINK.y2 = y2 - 16
+    end
+
+    C1.link[dir]      = LINK
+    C2.link[10 - dir] = LINK
+  end
+
+
+  local function OLD__merge_stuff(C, dir, D, pass)
+    local joins = C:joining_chunks(dir)
+
+    if pass < NUM_PASS then
+      if #joins == 0 then
+        error("Bad connection : no chunks on other side??")
+      end
+
+      if #joins >= 2 then
+        Chunk_merge_list(joins)
+      end
+
+      return
+    end
+
+    assert(#joins == 1)
+
+    local C2 = joins[1]
+
+    link_chunks(C, C2, dir, D)
+  end
+
+
+  local function OLD__good_linkage(C1, dir, C2)
+    -- check if chunks touch nicely
+
+    if geom.is_vert(dir) then
+      local x1 = math.max(C1.x1, C2.x1)
+      local x2 = math.min(C1.x2, C2.x2)
+
+      if (x2 - x1) >= 192 then return true end
+    else
+      local y1 = math.max(C1.y1, C2.y1)
+      local y2 = math.min(C1.y2, C2.y2)
+
+      if (y2 - y1) >= 192 then return true end
+    end
+
+    return false
+  end
+
+
+  local function do_section_conn(D, pass)
+    local K1 = assert(D.K1)
+    local K2 = assert(D.K2)
+
+    local dir = assert(D.dir)
+
+    local cx1, cy1, C1
+    local cx2, cy2, C2
+
+    if geom.is_vert(dir) then
+      local sx1 = math.max(K1.sx1, K2.sx1)
+      local sx2 = math.min(K1.sx2, K2.sx2)
+
+      assert(sx1 <= sx2)
+
+      cx1 = math.imid(sx1, sx2)
+      cx2 = cx1
+
+      cy1 = sel(dir == 2, K1.sy1, K1.sy2)
+      cy2 = sel(dir == 2, K2.sy2, K2.sy1)
+    else
+      local sy1 = math.max(K1.sy1, K2.sy1)
+      local sy2 = math.min(K1.sy2, K2.sy2)
+
+      assert(sy1 <= sy2)
+
+      cy1 = math.imid(sy1, sy2)
+      cy2 = cy1
+
+      cx1 = (dir == 4 ? K1.sx1, K1.sx2)
+      cx2 = (dir == 4 ? K2.sx2, K2.sx1)
+    end
+
+    C1 = SEEDS[cx1][cy1].chunk
+    if not C1 then
+      C1 = K1.room:alloc_chunk(cx1, cy1, cx1, cy1)
+      C1.foobage = "conn"
+    end
+
+    C2 = SEEDS[cx2][cy2].chunk
+    if not C2 then
+      C2 = K2.room:alloc_chunk(cx2, cy2, cx2, cy2)
+      C2.foobage = "conn"
+    end
+
+    if pass == NUM_PASS then
+      link_chunks(C1, C2, dir, D)
+    end
+  end
+
+
+  local function do_hall_side(C, dir, K, D, pass)
+    -- hallways off a hallway are naturally aligned
+    if not K then
+      -- FIXME !!!!  local C2 = ....
+
+      if pass == NUM_PASS then
+        link_chunks(C, C2, dir, D)
+      end
+
+      return;
+    end
+
+    local sx, sy
+
+    if geom.is_vert(dir) then
+      local sx1 = math.max(C.sx1, K.sx1)
+      local sx2 = math.min(C.sx2, K.sx2)
+
+      assert(sx1 <= sx2)
+
+      sx = math.imid(sx1, sx2)
+      sy = (dir == 2 ? K.sy2, K.sy1)
+    else
+      local sy1 = math.max(C.sy1, K.sy1)
+      local sy2 = math.min(C.sy2, K.sy2)
+
+      assert(sy1 <= sy2)
+
+      sy = math.imid(sy1, sy2)
+      sx = (dir == 4 ? K.sx2, K.sx1)
+    end
+
+    C2 = SEEDS[sx][sy].chunk
+
+    if not C2 then
+      C2 = K.room:alloc_chunk(sx, sy, sx, sy)
+      C2.foobage = "conn"
+    end
+
+    if pass == NUM_PASS then
+      link_chunks(C, C2, dir, D)
+    end
+  end
+
+
+  local function do_hallway_conn(D, pass)
+    local hall = assert(D.hall)
+
+    local start_C = hall.path[1].chunk
+    local   end_C = hall.path[#hall.path].chunk
+
+    assert(start_C and end_C)
+
+    local start_K = hall.K1
+    local   end_K = hall.K2
+
+    local start_dir = hall.path[1].prev_dir
+    local   end_dir = hall.path[#hall.path].next_dir
+
+    assert(start_dir and end_dir)
+
+    do_hall_side(start_C, start_dir, start_K, D, pass)
+    do_hall_side(  end_C,   end_dir,   end_K, D, pass)
+  end
+
+
+  ---| Areas_handle_connections |---
+
+  for pass = 1,NUM_PASS do
+    each D in LEVEL.conns do
+      if D.kind == "normal"  then do_section_conn(D, pass) end
+      if D.kind == "hallway" then do_hallway_conn(D, pass) end
+    end
+  end
+end
+
+
+----------------------------------------------------------------
+
+
 function Areas_important_stuff()
 
   local function init_seed(R, S)
@@ -183,6 +393,8 @@ function Areas_important_stuff()
 
 
   local function place_importants(R)
+    -- FIXME: do teleporter here !!!!
+
     if R.purpose then add_purpose(R) end
     if R.weapon  then add_weapon(R)  end
   end
@@ -273,7 +485,7 @@ function Areas_important_stuff()
 
 
   local function create_a_path(R, C1, C2)
-stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
+gui.debugf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
 
     -- pick start and ending seeds
     local sx = (C2.sx1 > C1.sx1 ? C1.sx2, C1.sx1)
@@ -286,6 +498,7 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
     sx, sy = (sx - R.sx1) + 1, (sy - R.sy1) + 1
     ex, ey = (ex - R.sx1) + 1, (ey - R.sy1) + 1
 
+gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     local path = a_star.find_path(sx, sy, ex, ey, R.sw, R.sh, path_scorer, R)
 
     if not path then
@@ -357,8 +570,6 @@ stderrf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
 
   ---| Areas_important_stuff |---
 
-  place_teleporters()
-
   each R in LEVEL.rooms do
     visit_room(R)
   end
@@ -367,6 +578,14 @@ end
 
 
 function Areas_flesh_out()
+
+  local function decide_windows(R)
+    -- allocate chunks on side of room
+    -- [TODO: allow windows in existing chunks]
+
+    -- TODO !!!
+  end
+
 
   local function expand_chunks(R)
     -- so far all chunks are only a single seed in size.
@@ -412,15 +631,16 @@ stderrf("\n")
 
 
   local function flesh_out(R)
-    expand_chunks(R)
     decorative_chunks(R)
     do_floors(R)
   end
 
   ---| Areas_flesh_out |---
 
-  each R in LEVEL.rooms do
-    flesh_out(R)
-  end
+  each R in LEVEL.rooms do decide_windows(R) end
+
+  each R in LEVEL.rooms do expand_chunks(R) end
+
+  each R in LEVEL.rooms do flesh_out(R) end
 end
 

@@ -454,7 +454,7 @@ function Rooms_synchronise_skies()
 end
 
 
-function Rooms_decide_windows()
+function OLD_Rooms_decide_windows()
 
   local function add_window(K, N, side)
     gui.printf("Window from %s --> %s\n", K:tostr(), N:tostr())
@@ -1340,14 +1340,12 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
-  Chunk_handle_connections()
-
   Rooms_choose_themes()
   Rooms_assign_facades()
 
 ---!!!  Rooms_setup_symmetry()
----!!!  Rooms_decide_windows()
 
+  Areas_handle_connections()
   Areas_important_stuff()
   Areas_flesh_out()
 
