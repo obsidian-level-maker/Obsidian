@@ -478,6 +478,8 @@ function CHUNK_CLASS.build(C)
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
+if C.area then f_h = assert(C.area.floor_h) end
+
   if C.room then
     f_mat = C.room:pick_floor_mat(f_h)
     w_mat = assert(C.room.main_tex)
@@ -516,7 +518,7 @@ for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
  if SEEDS[sx][sy].is_walk then is_walk = true end
 end end
 
-  if not (C.hall or is_walk) then f_h = 6 end
+---###  if not (C.hall or is_walk) then f_h = 0 end
 
   local x1, y1 = C.x1, C.y1
   local x2, y2 = C.x2, C.y2

@@ -684,9 +684,18 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
         if S and S.room == C.room and S.chunk then
           local N = S.chunk
 
-          if N.area and N.area != C.area and not table.has_elem(list, N) then
-            table.insert(list, N)
-          end
+          if not N.area or N.area == C.area then continue end
+
+          -- already have it?
+          if table.has_elem(list, N) then continue end
+
+          -- maximum size check
+          local new_size = C.area.size + N.area.size
+
+          if new_size > C.area.max_size then continue end
+          if new_size > N.area.max_size then continue end
+
+          table.insert(list, N)
         end
       end
     end end
@@ -737,13 +746,14 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       area_tab[AREA.id] = AREA
       C.area = AREA
       AREA.min_size = rand.sel(50, 3, 4)
+      AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
     end
 
-    for loop = 1,12 do
+    for loop = 1,10 do
       rand.shuffle(fl_chunks)
 
       each C in fl_chunks do
-        if C.area.size < C.area.min_size or rand.odds(1) then
+        if C.area.size < C.area.min_size or rand.odds(3) then
           try_expand_area(C, area_tab)
         end
       end
@@ -760,7 +770,8 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     local debug_id = 1
     each _,AR in area_tab do
       AR.debug_id = debug_id ; debug_id = debug_id + 1
-      stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
+      AR.floor_h = rand.pick { 0,16,16,32,32,48,48,64,64,80 }
+      stderrf("In %s : AREA %d size %d (>= %d) f_h:%1.0f\n", R:tostr(), AR.id, AR.size, AR.min_size, AR.floor_h)
     end
 
     each C in R.chunks do
