@@ -747,6 +747,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       C.area = AREA
       AREA.min_size = rand.sel(50, 3, 4)
       AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
+      AREA.chunks = {}
     end
 
     for loop = 1,10 do
@@ -773,14 +774,21 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     local debug_id = 1
     each _,AR in area_tab do
       AR.debug_id = debug_id ; debug_id = debug_id + 1
-      AR.floor_h = rand.pick { 0,16,16,32,32,48,48,64,64,80 }
-      stderrf("In %s : AREA %d size %d (>= %d) f_h:%1.0f\n", R:tostr(), AR.id, AR.size, AR.min_size, AR.floor_h)
-
+      stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
       table.insert(R.areas, AR)
     end
 
     each C in R.chunks do
-      if C.area then assert(C.area.debug_id) end
+      if C.area then
+        table.insert(C.area.chunks, C)
+        assert(C.area.debug_id)
+      end
+    end
+
+    each A in R.areas do
+      local C = A.chunks[1]
+      assert(C)
+      gui.debugf("%s, Area %d, %s\n", R:tostr(), A.id, C:tostr())
     end
   end
 
@@ -852,6 +860,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       end
     end
 
+    -- recursively handle the neighboring areas
     rand.shuffle(touching)
 
     each N in touching do
