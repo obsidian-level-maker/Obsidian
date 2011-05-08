@@ -145,6 +145,12 @@ function table.kill_elem(t, v)
   return false
 end
 
+function table.add_unique(t, v)
+  if not table.has_elem(t, v) then
+    table.insert(t, v)
+  end
+end
+
 function table.numbers(count)
   local t = {}
   for i = 1,count do t[i] = i end
