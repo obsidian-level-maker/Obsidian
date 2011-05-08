@@ -147,6 +147,22 @@ function CHUNK_CLASS.side_len(C, dir)
 end
 
 
+function CHUNK_CLASS.is_adjacent(C1, C2)
+  if C1.x1 > (C2.x2 + 1) then return false end
+  if C1.x2 < (C2.x1 - 1) then return false end
+
+  if C1.y1 > (C2.y2 + 1) then return false end
+  if C1.y2 < (C2.y1 - 1) then return false end
+
+  -- only touches at a corner?
+  if (C1.x1 > C2.x2 or C1.x2 < C2.x1) and
+     (C1.y1 > C2.y2 or C1.y2 < C2.y1)
+  then return false end 
+
+  return true
+end
+
+
 ----------------------------------------------------------------
 
 

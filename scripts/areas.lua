@@ -767,11 +767,16 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       end
     end
 
+    -- collect the final areas
+    R.areas = {}
+
     local debug_id = 1
     each _,AR in area_tab do
       AR.debug_id = debug_id ; debug_id = debug_id + 1
       AR.floor_h = rand.pick { 0,16,16,32,32,48,48,64,64,80 }
       stderrf("In %s : AREA %d size %d (>= %d) f_h:%1.0f\n", R:tostr(), AR.id, AR.size, AR.min_size, AR.floor_h)
+
+      table.insert(R.areas, AR)
     end
 
     each C in R.chunks do
@@ -780,9 +785,111 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
   end
 
 
+  local function areas_touching_chunk(R, C, list)
+    each C2 in R.chunks do
+      if C2.area and C:is_adjacent(C2) then
+        table.add_unique(list, C2.area)
+      end
+    end
+  end
+
+
+  local function areas_touching_area(R, AR)
+    local list = {}
+
+    each C in R.chunks do
+      if C.area == AR then
+        areas_touching_chunk(R, C, list)
+      end
+    end
+
+    return list
+  end
+
+
+  local function height_is_unique(h, touching)
+    each AR in touching do
+      if h == AR.floor_h then return false end
+    end
+
+    return true
+  end
+
+
+  local function pick_area_height(R, N, base_h)
+    -- !!!! FIXME: EXPENSIVE : collect only once
+    local touching = areas_touching_area(R, N)
+
+    local poss_h = {}
+    each dh in { 16,16,32,32,48,48,64,80 } do
+      if height_is_unique(base_h + dh, touching) then
+        table.insert(poss_h, base_h + dh)
+      end
+      if height_is_unique(base_h - dh, touching) then
+        table.insert(poss_h, base_h - dh)
+      end
+    end
+
+    -- this should be very rare
+    if table.empty(poss_h) then return base_h end
+
+    return rand.pick(poss_h)
+  end
+
+
+  local function connect_all_areas(R, start)
+    start.done_connected = true
+
+    local start_h = start.floor_h
+
+    local touching = areas_touching_area(R, start)
+
+    rand.shuffle(touching)
+
+    each N in touching do
+      if not N.floor_h then
+        N.floor_h = pick_area_height(R, N, start.floor_h)
+      end
+    end
+
+    rand.shuffle(touching)
+
+    each N in touching do
+      if not N.done_connected then
+        connect_all_areas(R, N)
+      end
+    end
+  end
+
+
+  local function area_heights(R)
+    local entry_h = 0  -- FIXME !!!!
+
+    -- determine entry area
+    --   1. for start room : starting chunk
+    --   2. for teleport entries : teleporter chunk
+    --   3. for everything else : connection chunk
+    local entry_area
+
+    -- FIXME
+
+    if not entry_area then entry_area = rand.pick(R.areas) end
+
+    assert(entry_area)
+
+    entry_area.floor_h = entry_h
+
+    connect_all_areas(R, entry_area)
+
+    -- validate : all areas got a height
+    each AR in R.areas do assert(AR.floor_h) end
+  end
+
+
   local function flesh_out(R)
     decorative_chunks(R)
     do_floors(R)
+    area_heights(R)
   end
 
   ---| Areas_flesh_out |---
