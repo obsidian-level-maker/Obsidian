@@ -696,6 +696,9 @@ Monsters:
 
 -  a module or style for Claustrophic levels
 
+-  PDAs or checkpoints, where the game is automatically saved
+   (and the player will return to that spot when they die).
+
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
 
 -  a mod for Eternal III
