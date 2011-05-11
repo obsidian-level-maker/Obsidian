@@ -787,10 +787,10 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     -- place large clusters before small ones
     table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
 
-    -- FIXME: place weapon in layout code
-    if R.weapon then
-      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1 })
-    end
+---##    -- FIXME: place weapon in layout code
+---##    if R.weapon then
+---##      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1 })
+---##    end
 
     place_item_list(R, item_list, CL)
   end

@@ -574,6 +574,10 @@ end
 
   brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
+  if C.ceil_tex == "_SKY" then
+    table.insert(brush, 1, { m="sky" })
+  end
+
   Trans.set_tex(brush, c_mat.t)
 
   table.insert(brush, { b=c_h, tex=c_tex })
@@ -675,6 +679,76 @@ end
   if light > 0 and GAME.format != "doom" then
     local z = rand.irange(64, c_h-32)
     Trans.entity("light", mx, my, z, { light=light, _radius=400 })
+  end
+
+
+  -- spots [FIXME : do it properly]
+  if C.room and not C.purpose then
+    local R = C.room
+
+    -- begin with a completely solid area
+    gui.spots_begin(C.x1, C.y1, C.x2, C.y2, 2)
+
+    -- carve out the floor brushes (make them empty)
+    local B = Trans.bare_quad(C.x1 + 40, C.y1 + 40, C.x2 - 40, C.y2 - 40)
+
+    gui.spots_fill_poly(B, 0)
+
+--[[
+    -- solidify brushes from prefabs
+    for _,fab in ipairs(R.prefabs) do
+      remove_prefab(fab)
+    end
+
+    -- remove solid decor entities
+    for _,dec in ipairs(R.decor) do
+      remove_decor(dec)
+    end
+
+    -- mark edges with neighboring floors
+    for _,F in ipairs(R.all_floors) do
+      if F != floor then
+        remove_neighbor_floor(floor, F)
+      end
+    end
+--]]
+
+--  gui.spots_dump("Spot grid")
+
+    -- use local lists, since we will process multiple floors
+    local mon_spots  = {}
+    local item_spots = {}
+
+    gui.spots_get_mons (mon_spots)
+    gui.spots_get_items(item_spots)
+
+    gui.spots_end()
+
+    if table.empty(item_spots) and mon_spots[1] then
+      table.insert(item_spots, mon_spots[1])
+    end
+
+    -- set Z positions
+
+    each spot in mon_spots do
+      spot.z1 = f_h
+      spot.z2 = f_h2 or (spot.z1 + 200)  -- FIXME
+
+      table.insert(R.mon_spots, spot)
+    end
+
+    each spot in item_spots do
+      spot.z1 = f_h
+      spot.z2 = f_h2 or (spot.z1 + 64)
+
+      table.insert(R.item_spots, spot)
+    end
+
+--[[ TEST
+    each spot in R.item_spots do
+      Trans.entity("potion", spot.x1 + 8, spot.y1 + 8, 0)
+    end
+--]]
   end
 
 
