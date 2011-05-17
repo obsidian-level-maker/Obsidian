@@ -39,6 +39,10 @@ function Areas_handle_connections()
   local function link_chunks(C1, C2, dir, conn)
     assert(C1)
     assert(C2)
+    assert(conn)
+
+    conn.C1 = C1
+    conn.C2 = C2
 
 stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     local LINK =
@@ -851,7 +855,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
   local function height_is_unique(h, touching)
     each AR in touching do
-      if h == AR.floor_h then return false end
+      if h == AR.chunks[1].floor_h then return false end
     end
 
     return true
@@ -879,6 +883,13 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
   end
 
 
+  local function set_area_floor(AR, floor_h)
+    each C in AR.chunks do
+      C.floor_h = floor_h
+    end
+  end
+
+
   local function connect_all_areas(R, start)
     start.done_connected = true
 
@@ -889,8 +900,8 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     rand.shuffle(touching)
 
     each N in touching do
-      if not N.floor_h then
-        N.floor_h = pick_area_height(R, N, start.floor_h)
+      if not N.chunks[1].floor_h then
+        set_area_floor(N, pick_area_height(R, N, start.chunks[1].floor_h))
       end
     end
 
@@ -906,26 +917,71 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
 
   local function area_heights(R)
-    local entry_h = 0  -- FIXME !!!!
-
     -- determine entry area
     --   1. for start room : starting chunk
     --   2. for teleport entries : teleporter chunk
     --   3. for everything else : connection chunk
     local entry_area
+    local entry_h
 
-    -- FIXME
+stderrf("area_heights in %s\n", R:tostr())
 
-    if not entry_area then entry_area = rand.pick(R.areas) end
+    if R.entry_conn then
+      local C = assert(R.entry_conn.C2)
+      assert(C.room == R)
+      entry_area = assert(C.area)
+stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-    assert(entry_area)
+      local NC = assert(R.entry_conn.C1)
+if NC.room then
+  stderrf("  neighbor room = %s\n", NC.room:tostr())
+else
+  stderrf("  neighbor hall = %s -> %s\n", NC.hall.R1:tostr(), NC.hall.R2:tostr())
+end
+      entry_h  = assert(NC.floor_h)
+    else
+      entry_area = rand.pick(R.areas)
+      assert(entry_area)
+      entry_h = rand.pick { 0,128,192,256,384 }
+    end
 
-    entry_area.floor_h = entry_h
+    R.entry_h = entry_h
+    R.entry_area = entry_area
+
+    set_area_floor(entry_area, entry_h)
 
     connect_all_areas(R, entry_area)
 
     -- validate : all areas got a height
-    each AR in R.areas do assert(AR.floor_h) end
+    each AR in R.areas do
+      each C in AR.chunks do assert(C.floor_h) end
+    end
+  end
+
+
+  -- TODO: move into hallway.lua ???
+  local function do_hallway_floor(hall, conn)
+stderrf("doing hallway floor: %s -> %s\n", hall.R1:tostr(), hall.R2:tostr())
+    assert(conn.C1)
+    -- start height
+    local h = assert(conn.C1.floor_h)
+
+    -- FIXME: this is rubbish
+    local delta_h = rand.pick { -16, -8, 0, 0, 8, 16 }
+
+    each C in hall.chunks do
+      C.floor_h = h
+      h = h + delta_h
+    end
+  end
+
+
+  local function hallway_heights(R)
+    each D in R.conns do
+      if D.R1 == R and D.hall then
+        do_hallway_floor(D.hall, D)
+      end
+    end
   end
 
 
@@ -933,7 +989,9 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     decorative_chunks(R)
     do_floors(R)
     area_heights(R)
+    hallway_heights(R)
   end
+
 
   ---| Areas_flesh_out |---
 

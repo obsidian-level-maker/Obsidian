@@ -48,7 +48,8 @@ class ROOM
   sx1, sy1, sx2, sy2  -- \ Seed range
   sw, sh, svolume     -- /
 
-  chunks   : list  -- all chunks in the room
+  chunks : list(CHUNK)  -- all chunks in the room
+###  entry_chunk : CHUNK
 
   kx1, ky1, kx2, ky2  -- \ Section range
   kw, kh              -- /
