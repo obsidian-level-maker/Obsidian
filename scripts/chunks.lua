@@ -496,7 +496,8 @@ function CHUNK_CLASS.build(C)
   local c_mat = "FLAT1"
   local w_mat = "STARTAN3"
 
-if C.area then f_h = assert(C.area.floor_h) end
+if C.floor_h then f_h = C.floor_h end
+c_h = f_h + 256;
 
   if C.room then
     f_mat = C.room:pick_floor_mat(f_h)
@@ -515,14 +516,14 @@ if C.area then f_h = assert(C.area.floor_h) end
     w_mat = assert(C.hall.w_mat)
     c_mat = assert(C.hall.c_mat)
 
-    c_h = 128
+    c_h = f_h + 128
   end
 
   if C.room and C.room.outdoor then
 ---    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
     c_mat = "F_SKY1"
     c_medium = "sky"
-    c_h   = 384
+    c_h   = 1024
 
     if GAME.format == "quake" then c_mat = "sky1" end
   else

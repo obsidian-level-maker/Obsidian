@@ -41,10 +41,10 @@ function Areas_handle_connections()
     assert(C2)
     assert(conn)
 
-    conn.C1 = C1
-    conn.C2 = C2
+    if C1.room then conn.C1 = C1 end
+    if C2.room then conn.C2 = C2 end
 
-stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
+---## stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     local LINK =
     {
       C1 = C1,
@@ -165,7 +165,7 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
   end
 
 
-  local function do_hall_side(C, dir, K, D, pass)
+  local function do_hall_side(C, dir, K, D, pass, is_start)
     -- hallways off a hallway are naturally aligned
     if not K then
       -- FIXME !!!!  local C2 = ....
@@ -176,6 +176,9 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
       return;
     end
+
+    -- the 'C' chunk is part of the hallway
+    -- find 'C2' chunk which is part of the connected room
 
     local sx, sy
 
@@ -205,6 +208,11 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     end
 
     if pass == NUM_PASS then
+      if is_start then
+        C, C2 = C2, C
+        dir = 10 - dir
+      end
+
       link_chunks(C, C2, dir, D)
     end
   end
@@ -226,8 +234,8 @@ stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
     assert(start_dir and end_dir)
 
-    do_hall_side(start_C, start_dir, start_K, D, pass)
-    do_hall_side(  end_C,   end_dir,   end_K, D, pass)
+    do_hall_side(start_C, start_dir, start_K, D, pass, true)
+    do_hall_side(  end_C,   end_dir,   end_K, D, pass, false)
   end
 
 
@@ -964,14 +972,20 @@ end
 stderrf("doing hallway floor: %s -> %s\n", hall.R1:tostr(), hall.R2:tostr())
     assert(conn.C1)
     -- start height
+stderrf("conn : %s -> %s\n", conn.R1:tostr(), conn.R2:tostr())
+stderrf("conn.C1 : room:%d hall:%d\n",
+  (conn.C1.room ? conn.C1.room.id, -1), 
+  (conn.C1.hall ? 1, -1))
+stderrf("conn.C2 : room:%d hall:%d\n",
+  (conn.C2.room ? conn.C2.room.id, -1), 
+  (conn.C2.hall ? 1, -1))
     local h = assert(conn.C1.floor_h)
 
     -- FIXME: this is rubbish
     local delta_h = rand.pick { -16, -8, 0, 0, 8, 16 }
 
     each C in hall.chunks do
-      C.floor_h = h
-      h = h + delta_h
+      C.floor_h = h ; h = h + delta_h
     end
   end
 

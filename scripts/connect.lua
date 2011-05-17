@@ -83,6 +83,8 @@ function CONN_CLASS.swap(D)
   D.R1, D.R2 = D.R2, D.R1
 
   if D.dir then D.dir = 10 - D.dir end
+
+  if D.hall then Hallway_swap(D) end
 end
 
 function CONN_CLASS.k_coord(D)

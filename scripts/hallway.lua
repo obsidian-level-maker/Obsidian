@@ -59,6 +59,25 @@ require 'util'
 
 
 
+function Hallway_swap(H)
+  H.R1, H.R2 = H.R2, H.R1
+  H.K1, H.K2 = H.K2, H.K1
+
+  if H.path then
+    table.reverse(H.path)
+
+    each P in H.path do
+      if P.next_dir then P.next_dir = 10 - P.next_dir end
+      if P.prev_dir then P.prev_dir = 10 - P.prev_dir end
+    end
+  end
+
+  if H.chunks then
+    table.reverse(H.chunks)
+  end
+end
+
+
 function Hallway_place_em()
 
   -- Place hallways into the hallway channels.
