@@ -2119,7 +2119,7 @@ DOOM.SKINS =
     side = "COMPBLUE"
     base = "COMPBLUE"
     x_offset = 0
-    y_offset = 0
+    y_offset = 50
     line_kind = 103
   }
 
