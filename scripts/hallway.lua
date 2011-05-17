@@ -31,6 +31,8 @@ class HALLWAY
 
   sub_halls   -- number of hallways branching off this one
               -- (normally zero)
+
+  wall_tex, floor_tex, ceil_tex 
 }
 
 

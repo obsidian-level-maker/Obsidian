@@ -788,7 +788,7 @@ end
 end
 
 
-function Chunky_floor(R)
+function OLD__Chunky_floor(R)
 
   local function touches_wall(C)
     -- Todo ??

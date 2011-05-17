@@ -612,6 +612,36 @@ function Areas_flesh_out()
   end
 
 
+  local function crosses_corner(sx, sy, ex, ey)
+    -- check if potential chunk would cross an interior corner
+    -- (i.e. have both room border and non-border on a single side)
+
+    local B1 = SEEDS[sx][sy]
+    local T1 = SEEDS[sx][ey]
+
+    for x = sx+1, ex do
+      local B2 = SEEDS[x][sy]
+      local T2 = SEEDS[x][ey]
+
+      if (not B1:same_room(2)) != (not B2:same_room(2)) then return true end
+      if (not T1:same_room(8)) != (not T2:same_room(8)) then return true end
+    end
+
+    local L1 = SEEDS[sx][sy]
+    local R1 = SEEDS[ex][sy]
+
+    for y = sy+1, ey do
+      local L2 = SEEDS[sx][y]
+      local R2 = SEEDS[ex][y]
+
+      if (not L1:same_room(4)) != (not L2:same_room(4)) then return true end
+      if (not R1:same_room(6)) != (not R2:same_room(6)) then return true end
+    end
+
+    return false
+  end
+
+
   local function filler_chunks(R)
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
@@ -628,9 +658,13 @@ function Areas_flesh_out()
 
           if not rand.odds(expand_prob) then continue end
 
-          if do_x and R:can_alloc_chunk(sx, sy, sx+W, sy+H-1) then
+          if do_x and R:can_alloc_chunk(sx, sy, sx+W, sy+H-1) and
+                  not crosses_corner(sx, sy, sx+W, sy+H-1)
+          then
             W = W + 1
-          elseif not do_x and R:can_alloc_chunk(sx, sy, sx+W-1, sy+H) then
+          elseif not do_x and R:can_alloc_chunk(sx, sy, sx+W-1, sy+H) and
+                          not crosses_corner(sx, sy, sx+W-1, sy+H)
+          then
             H = H + 1
           end
         end
