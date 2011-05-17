@@ -5,15 +5,44 @@ OBLIGE TODO
 Current Work
 ------------
 
+DONE: do not allow chunks to straddle wall/non-wall border (esp. at a 270deg corner)
+
+
+HEIGHT ALGO
+-----------
+
+1. current room R = start
+2. do room areas in R
+3. spread heights to nb_room/hallway chunks via connections
+4. decide hallway chunk heights connected to R
+5. R = next room, goto 2
+
+POSSIBLE PROBLEMS
+-----------------
+
+(a) Windows : are already decided?  (NO)
+    MUST decide them after all heights are done
+
+(b) Cross-overs : need room heights of intruded room to decide
+                  height of the hallway, but hallway is visited first.
+
+                  WHAT TO DO??
+                  --> if hallway is first, pick a height and if that
+                      height is no good, then change it afterwards
+                      [need ability to change it via stairs or lifts]
+
+
 !!!  get SWITCHES and SWITCHED-DOORS working again
+
+Area merging: prefer not to merge between different "contents"
+              (especially the purpose)
+
+              slight tendency not to merge into a connection chunk
+              [since the connnection will have same height on both sides]
+
 
 >>> areas.lua : all room fleshing out stuff
 
-DONE: planner: wider hallways at edges
-
-
-no 'chunks' array in sections, instead chunks are created when a
-block of seeds is allocated for a specific purpose.
 
 Doorways would be a special case, perhaps mark which seeds are
 needed and perform all the allocations at the very end.
