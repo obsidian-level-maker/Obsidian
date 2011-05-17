@@ -711,11 +711,14 @@ function Quest_make_quests()
 
 
   local function dump_visit_order()
-    gui.debugf("Room Visit Order:\n")
+    gui.printf("Room Visit Order:\n")
+
     each R in LEVEL.rooms do
-      gui.debugf("%s : %1.2f : quest %d : purpose %s\n", R:tostr(),
+      gui.printf("%s : %1.2f : quest %d : purpose %s\n", R:tostr(),
                  R.lev_along, R.quest.id, R.purpose or "-")
     end
+
+    gui.printf("\n")
   end
 
 
