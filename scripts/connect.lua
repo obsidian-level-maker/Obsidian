@@ -84,9 +84,7 @@ function CONN_CLASS.swap(D)
 
   if D.dir then D.dir = 10 - D.dir end
 
-  if D.hall and D.hall.R1 != D.R1 then
-    Hallway_reverse(D.hall)
-  end
+  if D.hall and D.hall.R1 != D.R1 then D.hall:reverse() end
 end
 
 function CONN_CLASS.k_coord(D)

@@ -24,7 +24,11 @@ class AREA
 {
   kind : keyword
 
+  id : number   -- identifier (for debugging)
+
   chunks : list(CHUNK)
+
+  size : number of seeds occupied
 }
 
 

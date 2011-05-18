@@ -25,6 +25,8 @@ class HALLWAY
   R1, K1  -- starting ROOM and SECTION
   R2, K2  -- ending ROOM and SECTION
 
+  id : number (for debugging)
+
   path : list  -- the path between the start and the destination
                -- (not including either start or dest).
                -- each element contains: G (segment), next_dir, prev_dir
@@ -58,7 +60,16 @@ require 'defs'
 require 'util'
 
 
-function Hallway_reverse(H)
+HALLWAY_CLASS = {}
+
+function HALLWAY_CLASS.new()
+  local H = { id=Plan_alloc_id("hall"), path={}, chunks={}, sub_halls=0 }
+  table.set_class(H, HALLWAY_CLASS)
+  return H
+end
+
+
+function HALLWAY_CLASS.reverse(H)
   H.R1, H.R2 = H.R2, H.R1
   H.K1, H.K2 = H.K2, H.K1
 
@@ -74,6 +85,9 @@ function Hallway_reverse(H)
     table.reverse(H.chunks)
   end
 end
+
+
+----------------------------------------------------------------
 
 
 function Hallway_place_em()
@@ -456,10 +470,9 @@ function Hallway_place_em()
     if G.used then return false end
 
     for loop = 1,15 do
-      local hall =
-      {
-        path = { {G=G} }
-      }
+      local hall = HALLWAY_CLASS.new()
+
+      table.insert(hall.path, {G=G})
 
       if try_trace_hall(hall) then
         add_hall(hall)
