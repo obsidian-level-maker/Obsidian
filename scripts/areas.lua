@@ -31,6 +31,18 @@ class AREA
 --------------------------------------------------------------]]
 
 
+AREA_CLASS = {}
+
+function AREA_CLASS.new(kind)
+  local AR = { kind=kind, id=Plan_alloc_id("area"), chunks={} }
+  table.set_class(AR, AREA_CLASS)
+  return AR
+end
+
+
+----------------------------------------------------------------
+
+
 function Areas_handle_connections()
   
   local NUM_PASS = 4
@@ -788,12 +800,16 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     local fl_chunks = table.copy(R.chunks)
 
     each C in fl_chunks do
-      local AREA = { id=_index, size=C:seed_volume(), rand=gui.random() }
-      area_tab[AREA.id] = AREA
-      C.area = AREA
-      AREA.min_size = rand.sel(50, 3, 4)
-      AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
-      AREA.chunks = {}
+      local AR = AREA_CLASS.new("floor")
+
+      area_tab[AR.id] = AR
+      
+      C.area = AR
+      
+      AR.size = C:seed_volume()
+      AR.rand = gui.random()
+      AR.min_size = rand.sel(50, 3, 4)
+      AR.max_size = 20 --!!! math.min(R.svolume * X, Y)
     end
 
     for loop = 1,10 do
