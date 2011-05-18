@@ -656,7 +656,7 @@ end
 
         local skin = assert(GAME.SKINS[name])
 
-        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, 0, dir,
+        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
         local skin2 = { inner="CRACKLE2", outer="CRACKLE4", wall="COMPSPAN" }
@@ -669,7 +669,7 @@ end
 
         local skin = assert(GAME.SKINS[name])
 
-        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, 0, dir,
+        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
         local skin2 = { tag=LINK.conn.lock.tag, inner="CRACKLE2", outer="CRACKLE4", wall="TEKWALL4" }

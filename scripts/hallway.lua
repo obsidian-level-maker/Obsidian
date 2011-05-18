@@ -58,8 +58,7 @@ require 'defs'
 require 'util'
 
 
-
-function Hallway_swap(H)
+function Hallway_reverse(H)
   H.R1, H.R2 = H.R2, H.R1
   H.K1, H.K2 = H.K2, H.K1
 
@@ -67,8 +66,7 @@ function Hallway_swap(H)
     table.reverse(H.path)
 
     each P in H.path do
-      if P.next_dir then P.next_dir = 10 - P.next_dir end
-      if P.prev_dir then P.prev_dir = 10 - P.prev_dir end
+      P.next_dir, P.prev_dir = P.prev_dir, P.next_dir
     end
   end
 

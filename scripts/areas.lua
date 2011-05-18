@@ -940,13 +940,14 @@ stderrf("area_heights in %s\n", R:tostr())
       entry_area = assert(C.area)
 stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-      local NC = assert(R.entry_conn.C1)
-if NC.room then
-  stderrf("  neighbor room = %s\n", NC.room:tostr())
-else
-  stderrf("  neighbor hall = %s -> %s\n", NC.hall.R1:tostr(), NC.hall.R2:tostr())
-end
-      entry_h  = assert(NC.floor_h)
+      if R.entry_conn.hall then
+        local hall = R.entry_conn.hall
+        entry_h = assert(hall.chunks[#hall.chunks].floor_h)
+      else
+        local NC = assert(R.entry_conn.C1)
+        entry_h  = assert(NC.floor_h)
+      end
+
     else
       entry_area = rand.pick(R.areas)
       assert(entry_area)
