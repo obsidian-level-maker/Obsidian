@@ -26,6 +26,8 @@ class AREA
 
   id : number   -- identifier (for debugging)
 
+  room : ROOM
+
   chunks : list(CHUNK)
 
   size : number of seeds occupied
@@ -37,10 +39,15 @@ class AREA
 
 AREA_CLASS = {}
 
-function AREA_CLASS.new(kind)
-  local AR = { kind=kind, id=Plan_alloc_id("area"), chunks={} }
+function AREA_CLASS.new(kind, room)
+  local AR = { kind=kind, id=Plan_alloc_id("area"), room=room, chunks={} }
   table.set_class(AR, AREA_CLASS)
   return AR
+end
+
+
+function AREA_CLASS.tostr(A)
+  return string.format("AREA_%d", A.id)
 end
 
 
@@ -804,7 +811,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     local fl_chunks = table.copy(R.chunks)
 
     each C in fl_chunks do
-      local AR = AREA_CLASS.new("floor")
+      local AR = AREA_CLASS.new("floor", R)
 
       area_tab[AR.id] = AR
       
@@ -981,9 +988,18 @@ stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tos
 
     connect_all_areas(R, entry_area)
 
-    -- validate : all areas got a height
+    -- find minimum and maximum heights
+    R.floor_min_h = R.entry_floor_h
+    R.floor_max_h = R.entry_floor_h
+
     each AR in R.areas do
-      each C in AR.chunks do assert(C.floor_h) end
+      each C in AR.chunks do
+        -- validate : all areas got a height
+        local h = assert(C.floor_h)
+
+        R.floor_min_h = math.min(R.floor_min_h, h)
+        R.floor_max_h = math.max(R.floor_max_h, h)
+      end
     end
   end
 
@@ -1020,11 +1036,23 @@ stderrf("conn.C2 : room:%d hall:%d\n",
   end
 
 
+  local function prepare_ceiling(R)
+    local h = ROOM.floor_max_h + rand.pick { 128, 192, 256, 320, 384 }
+
+    if R.outdoor then
+      R.sky_h = h + 128
+    else
+      R.ceil_h = h
+    end
+  end
+
+
   local function flesh_out(R)
     decorative_chunks(R)
     do_floors(R)
     area_heights(R)
     hallway_heights(R)
+    prepare_ceiling(R)
   end
 
 
