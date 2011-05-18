@@ -989,8 +989,8 @@ stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tos
     connect_all_areas(R, entry_area)
 
     -- find minimum and maximum heights
-    R.floor_min_h = R.entry_floor_h
-    R.floor_max_h = R.entry_floor_h
+    R.floor_min_h = R.entry_h
+    R.floor_max_h = R.entry_h
 
     each AR in R.areas do
       each C in AR.chunks do
@@ -1037,7 +1037,7 @@ stderrf("conn.C2 : room:%d hall:%d\n",
 
 
   local function prepare_ceiling(R)
-    local h = ROOM.floor_max_h + rand.pick { 128, 192, 256, 320, 384 }
+    local h = R.floor_max_h + rand.pick { 128, 192, 256, 320, 384 }
 
     if R.outdoor then
       R.sky_h = h + 128
