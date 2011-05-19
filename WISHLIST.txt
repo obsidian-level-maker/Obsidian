@@ -551,6 +551,21 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
+  QUAKE III
+----------------------------------------------------------------
+
+-  surfaceType = MST_PLANAR
+
+-  LUMP_DRAWINDEXES contains offsets from the base drawvert
+   of a surface.  Probably only need to create fans, i.e.
+   0 1 2  0 2 3  0 3 4  0 4 5  ...  0 63 64
+
+-  can leave LUMP_LIGHTMAPS and LUMP_LIGHTGRID empty
+
+-  can leave LUMP_VISIBILITY empty, LUMP_FOGS too
+
+
+----------------------------------------------------------------
   WOLF 3D
 ----------------------------------------------------------------
 
