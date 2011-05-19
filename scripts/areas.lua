@@ -1004,33 +1004,10 @@ stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tos
   end
 
 
-  -- TODO: move into hallway.lua ???
-  local function do_hallway_floor(hall, conn)
-stderrf("doing hallway floor: %s -> %s\n", hall.R1:tostr(), hall.R2:tostr())
-    assert(conn.C1)
-    -- start height
-stderrf("conn : %s -> %s\n", conn.R1:tostr(), conn.R2:tostr())
-stderrf("conn.C1 : room:%d hall:%d\n",
-  (conn.C1.room ? conn.C1.room.id, -1), 
-  (conn.C1.hall ? 1, -1))
-stderrf("conn.C2 : room:%d hall:%d\n",
-  (conn.C2.room ? conn.C2.room.id, -1), 
-  (conn.C2.hall ? 1, -1))
-    local h = assert(conn.C1.floor_h)
-
-    -- FIXME: this is rubbish
-    local delta_h = rand.pick { -16, -8, 0, 0, 8, 16 }
-
-    each C in hall.chunks do
-      C.floor_h = h ; h = h + delta_h
-    end
-  end
-
-
   local function hallway_heights(R)
     each D in R.conns do
       if D.R1 == R and D.hall then
-        do_hallway_floor(D.hall, D)
+        D.hall:do_floor(D)
       end
     end
   end

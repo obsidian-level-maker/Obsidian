@@ -530,5 +530,33 @@ end
 --------------------------------------------------------------------
 
 
--- TODO: hallway construction/layout stuff
+function HALLWAY_CLASS.choose_textures(H)
+  H.wall_tex  = rand.key_by_probs(THEME.hallway_walls    or THEME.building_walls)
+  H.floor_tex = rand.key_by_probs(THEME.hallway_floors   or THEME.building_floors)
+  H.ceil_tex  = rand.key_by_probs(THEME.hallway_ceilings or THEME.building_ceilings or THEME.building_floors)
+
+  H.trimmed = rand.sel(50)
+end
+
+
+function HALLWAY_CLASS.do_floor(H, conn)
+  -- get start height
+  assert(conn.C1)
+  local h = assert(conn.C1.floor_h)
+
+  -- FIXME: this is rubbish
+  local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
+
+  each C in H.chunks do
+    C.floor_h = h ; h = h + delta_h
+  end
+
+  if math.abs(delta_h) < 12 and rand.odds(10) then
+    H.height = 80
+  else
+    H.height = rand.sel(50, 128, 176)
+  end
+
+  H:choose_textures()
+end
 

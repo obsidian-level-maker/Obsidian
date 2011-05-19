@@ -487,76 +487,49 @@ function CHUNK_CLASS.build(C)
 
   -- TEMP TEMP CRUD CRUD
 
-  local f_h = 0  ---  24 - rand.irange(0,24)
-  local c_h = 256
-  local light = 0
+  local f_h = assert(C.floor_h)
+  local c_h = f_h + 256
   local c_medium = "solid"
+  local light = 0
 
-  local f_mat = "FLAT1" --- rand.pick {"FLAT1", "FLOOR4_8", "FLOOR0_1", "CEIL1_1", "FLAT14", "FLOOR5_2"}
-  local c_mat = "FLAT1"
-  local w_mat = "STARTAN3"
+  local w_mat, w_tex
+  local f_mat, f_tex
+  local c_mat, c_tex
 
-if C.floor_h then f_h = C.floor_h end
-c_h = f_h + 256;
+  local x1, y1 = C.x1, C.y1
+  local x2, y2 = C.x2, C.y2
+
 
   if C.room then
-    f_mat = C.room:pick_floor_mat(f_h)
     w_mat = assert(C.room.main_tex)
+    f_mat = C.room:pick_floor_mat(f_h)
     c_mat = C.room:pick_ceil_mat()
-  end
 
-  if C.hall then
-    if not C.hall.f_mat then
-      C.hall.f_mat = rand.key_by_probs(THEME.hallway_floors or THEME.building_floors)
-      C.hall.c_mat = rand.key_by_probs(THEME.hallway_ceilings or THEME.building_ceilings)
-      C.hall.w_mat = rand.key_by_probs(THEME.hallway_walls or THEME.building_walls)
-    end
+  elseif C.hall then
+    w_mat = assert(C.hall.wall_tex)
+    f_mat = assert(C.hall.floor_tex)
+    c_mat = assert(C.hall.ceil_tex)
 
-    f_mat = assert(C.hall.f_mat)
-    w_mat = assert(C.hall.w_mat)
-    c_mat = assert(C.hall.c_mat)
-
-    c_h = f_h + 128
+    c_h = f_h + C.hall.height
+  else
+    error("Chunk not in room or hall??")
   end
 
   if C.room and C.room.outdoor then
----    f_mat = rand.pick {"GRASS1", "FLAT10", "RROCK16", "RROCK03", "RROCK01", "FLAT5_3"}
-    c_mat = "F_SKY1"
+    c_mat = "_SKY"
     c_medium = "sky"
     c_h = assert(C.room.sky_h)
 
-    if GAME.format == "quake" then c_mat = "sky1" end
   else
     light = rand.irange(40, 100)
     if C.hall then light = light * 0.5 end
   end
 
 
-local is_walk
-for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
- if SEEDS[sx][sy].is_walk then is_walk = true end
-end end
-
----###  if not (C.hall or is_walk) then f_h = 0 end
-
-  local x1, y1 = C.x1, C.y1
-  local x2, y2 = C.x2, C.y2
-
   -- floor
 
-  FL_LIST = { "FLAT1", "FLAT10", "FLAT4", "FLAT5_1", "FLAT5_3",
-              "FLAT5_8", "FLAT14", "NUKAGE1", "LAVA1", "GRASS1",
-              "TLITE6_5", "CEIL1_2", "CEIL3_4", "CEIL3_6", "CONS1_1",
-              "DEM1_6", "STEP2", "SLIME15", "SLIME09", "SFLR6_1"
-            }
-C.floor_tex = rand.pick(FL_LIST)
-if C.area then
-  local id = C.area.debug_id
-  C.floor_tex = FL_LIST[1 + (id - 1) % #FL_LIST]
-end
-
-  local f_mat = Mat_lookup(C.floor_tex or (C.room and C.room.main_tex))
-  local f_tex = f_mat.f or f_mat.t
+  f_mat = Mat_lookup(f_mat)
+  f_tex = f_mat.f or f_mat.t
 
   local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
@@ -566,18 +539,15 @@ end
 
   gui.add_brush(brush)
 
+
   -- ceiling
 
-  if C.room and C.room.outdoor then
-    C.ceil_tex = "_SKY"
-  end
-
-  local c_mat = Mat_lookup(C.ceil_tex or (C.room and C.room.main_tex))
-  local c_tex = c_mat.f or c_mat.t
+  c_mat = Mat_lookup(c_mat)
+  c_tex = c_mat.f or f_mat.t
 
   brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
-  if C.ceil_tex == "_SKY" then
+  if c_medium == "sky" then
     table.insert(brush, 1, { m="sky" })
   end
 
@@ -596,8 +566,11 @@ end
     if P then --[[ FIXME --]] end
   end
 
+
   -- walls
-  local w_mat = Mat_lookup(C.wall_tex or (C.room and C.room.main_tex))
+
+  w_mat = Mat_lookup(w_mat)
+  w_tex = w_mat.t
 
   local thick = 16
 
@@ -681,6 +654,7 @@ end
 
 
   -- object
+
   local ent = "dummy"
 
   if C.purpose then C:do_purpose() end
@@ -691,7 +665,9 @@ end
 
   Trans.entity(ent, mx, my, 32)
 
+
   -- lighting
+
   if light > 0 and GAME.format != "doom" then
     local z = rand.irange(64, c_h-32)
     Trans.entity("light", mx, my, z, { light=light, _radius=400 })
