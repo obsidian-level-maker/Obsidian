@@ -897,12 +897,26 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
   end
 
 
-  local function pick_area_height(R, N, base_h)
+  local function pick_area_height(N, base_h, stair)
+    local R = N.room
+
     -- !!!! FIXME: EXPENSIVE : collect only once
     local touching = areas_touching_area(R, N)
 
+    -- FIXME: probability distribution
+    local DIFFS = { 16,32,32,48,48,64,80,96 }
+
+    local step_height = PARAM.step_height or 16
+
+    if not stair then
+      DIFFS = { int(step_height / 2), step_height,
+                --[[ int(step_height / 2) * 3, --]]
+                --[[ step_height * 2 --]]
+              }
+    end
+
     local poss_h = {}
-    each dh in { 16,16,32,32,48,48,64,80 } do
+    each dh in DIFFS do
       if height_is_unique(base_h + dh, touching) then
         table.insert(poss_h, base_h + dh)
       end
@@ -918,9 +932,70 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
   end
 
 
-  local function set_area_floor(AR, floor_h)
-    each C in AR.chunks do
+  local function set_area_floor(A, floor_h)
+    each C in A.chunks do
       C.floor_h = floor_h
+    end
+  end
+
+
+  local function eval_stair_pair(C1, C2, dir)
+    -- never use purpose chunks
+    if C1.purpose or C2.purpose then return -1 end
+
+    if C1.stair or C2.stair then return -1 end
+
+    -- FIXME: skip doorway chunks too
+
+    local long = geom.vert_sel(dir, C1.x2 - C1.x1, C1.y2 - C1.y1)
+
+    local score = long + (gui.random() ^ 2) * 220
+
+    return score
+  end
+
+
+  local function find_stair_spot(A1, A2)
+    local best
+
+    each C1 in A1.chunks do
+      for dir = 2,8,2 do
+        local C2 = C1:good_neighbor(dir)
+
+        if not (C2 and C2.area == A2) then continue end
+
+        local score = eval_stair_pair(C1, C2, dir)
+
+        if score > 0 and (not best or score > best.score) then
+          best = { C1=C1, C2=C2, dir=dir, score=score }
+        end
+      end
+    end
+
+    return best
+  end
+
+
+  local function connect_areas(A1, A2)
+    -- find a place for a stair (try both areas)
+    local stair1 = find_stair_spot(A1, A2)
+    local stair2 = find_stair_spot(A2, A1)
+
+    if (stair2 and not stair1) or
+       (stair1 and stair2 and stair1.score < stair2.score)
+    then
+      stair1 = stair2 ; stair2 = nil
+    end
+
+    local old_h = assert(A1.chunks[1].floor_h)
+
+    local new_h = pick_area_height(A2, old_h, stair1)
+
+    set_area_floor(A2, new_h)
+
+    -- store stair info in the chunk
+    if stair1 then
+      stair1.C1.stair = stair1
     end
   end
 
@@ -936,7 +1011,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
     each N in touching do
       if not N.chunks[1].floor_h then
-        set_area_floor(N, pick_area_height(R, N, start.chunks[1].floor_h))
+        connect_areas(start, N)
       end
     end
 
@@ -986,6 +1061,7 @@ stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tos
 
     set_area_floor(entry_area, entry_h)
 
+    -- recursively "travel" to other areas, choose stair spots
     connect_all_areas(R, entry_area)
 
     -- find minimum and maximum heights
