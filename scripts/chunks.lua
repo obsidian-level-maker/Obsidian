@@ -163,123 +163,32 @@ function CHUNK_CLASS.is_adjacent(C1, C2)
 end
 
 
-----------------------------------------------------------------
+function CHUNK_CLASS.good_neighbor(C1, dir)
+  -- a 'good' neighbor is one which is at least the same size as
+  -- the current chunk (can be bigger, but not smaller).
+  -- If such a chunk exists, return it, otherwise NIL.
 
+  local nx, ny = C1.sx1, C1.sy1
 
-function Chunk_prepare_rooms()
-  each R in LEVEL.rooms do
-  end
-end
+  if dir == 2 then ny = C1.sy1 - 1 end
+  if dir == 8 then ny = C1.sy2 + 1 end
+  if dir == 4 then nx = C1.sx1 - 1 end
+  if dir == 6 then nx = C1.sx2 + 1 end
 
+  if not Seed_valid(nx, ny) then return nil end
 
+  local C2 = SEEDS[nx][ny].chunk
 
-function OLD_Chunk_merge_list(list)
-  local function all_horiz_aligned(x1, x2)
-    for _,C2 in ipairs(list) do
-      if C2.x1 != x1 or C2.x2 != x2 then return false end
-    end
-    return true
-  end
+  if not C2 then return nil end
 
-  local function all_vert_aligned(y1, y2)
-    for _,C2 in ipairs(list) do
-      if C2.y1 != y1 or C2.y2 != y2 then return false end
-    end
-    return true
-  end
-
-  local function do_merge(C, old_C, update_array)
-    if C == old_C then return; end
-
-    C.sx1 = math.min(C.sx1, old_C.sx1)
-    C.sy1 = math.min(C.sy1, old_C.sy1)
-    C.sx2 = math.max(C.sx2, old_C.sx2)
-    C.sy2 = math.max(C.sy2, old_C.sy2)
-
-    C.x1 = math.min(C.x1, old_C.x1)
-    C.y1 = math.min(C.y1, old_C.y1)
-    C.x2 = math.max(C.x2, old_C.x2)
-    C.y2 = math.max(C.y2, old_C.y2)
-
-    -- update the section's chunk array
-    if update_array and C.section then
-      local K = C.section
-
-      for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
-        if K.chunk[hx][hy] == old_C then
-          K.chunk[hx][hy] = C
-        end
-      end end
-    end
-
-    -- update the seed map
-    C:install()
-
-    -- update room list
-    if C.room then
-      table.kill_elem(C.room.chunks, old_C)
-    end
-  end
-
-
-  local function dump_list()
-    gui.debugf("Chunk_merge_list: %d chunks...\n", #list)
-
-    for _,H in ipairs(list) do
-      gui.debugf("  %s in %s in %s\n", H:tostr(),
-                 (H.section and H.section:tostr()) or "HALL",
-                 (H.room and H.room:tostr()) or "-")
-    end
-  end
-
-
-  ---| Chunk_merge_list |---
-
-dump_list()
-
-  if #list < 2 then return; end
-
-  local C1 = table.remove(list, 1)
-
-  local K = C1.section
-  local R =  K.room
-
-  -- make sure all chunks belong to same section
-  for _,C2 in ipairs(list) do
-    assert(C2.section == K)
-  end
-
-  -- make sure all chunks have either:
-  --   (1) same top and bottom coordinates, or
-  --   (2) same left and right side coordinates
-
-  
-  if all_horiz_aligned(C1.x1, C1.x2) or all_vert_aligned(C1.y1, C1.y2) then
-    -- chunks are alignment, can merge them  
-    for _,C2 in ipairs(list) do
-      do_merge(C1, C2, true)
-    end
-
+  if geom.is_vert(dir) then
+    if (C2.x1 > C1.x1) or (C2.x2 < C2.x2) then return nil end
   else
-    -- bad alignment, need to merge all chunks into one big one
-
-    for hx = 1,K.chunk_W do for hy = 1,K.chunk_H do
-      do_merge(C1, K.chunk[hx][hy], false)
-    end end
-
-    -- setup new array
-    K.chunk_W = 1
-    K.chunk_H = 1
-
-    K.chunk = table.array_2D(1, 1)
-
-    K.chunk[1][1] = C1
-
-    C1.hx = 1
-    C1.hy = 1
+    if (C2.y1 > C1.y1) or (C2.y2 < C2.y2) then return nil end
   end
-end
 
+  return C2  -- OK --
+end
 
 
 ----------------------------------------------------------------
