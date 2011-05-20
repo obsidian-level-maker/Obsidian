@@ -957,12 +957,15 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
   local function find_stair_spot(A1, A2)
     local best
+    local best_mini
 
     each C1 in A1.chunks do
       for dir = 2,8,2 do
         local C2 = C1:good_neighbor(dir)
 
         if not (C2 and C2.area == A2) then continue end
+
+        best_mini = { C1=C1, C2=C2, dir=dir, score=-99 }
 
         local score = eval_stair_pair(C1, C2, dir)
 
@@ -972,14 +975,14 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       end
     end
 
-    return best
+    return best, best_mini
   end
 
 
   local function connect_areas(A1, A2)
     -- find a place for a stair (try both areas)
-    local stair1 = find_stair_spot(A1, A2)
-    local stair2 = find_stair_spot(A2, A1)
+    local stair1, mini_stair1 = find_stair_spot(A1, A2)
+    local stair2, mini_stair2 = find_stair_spot(A2, A1)
 
     if (stair2 and not stair1) or
        (stair1 and stair2 and stair1.score < stair2.score)
@@ -987,15 +990,22 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
       stair1 = stair2 ; stair2 = nil
     end
 
+    if mini_stair2 and not mini_stair1 then
+      mini_stair1 = mini_stair2 ; mini_stair2 = nil
+    end
+
     local old_h = assert(A1.chunks[1].floor_h)
 
-    local new_h = pick_area_height(A2, old_h, stair1)
+    local new_h = pick_area_height(A2, old_h, stair1, mini_stair1)
 
     set_area_floor(A2, new_h)
 
     -- store stair info in the chunk
     if stair1 then
       stair1.C1.stair = stair1
+    
+    elseif mini_stair1 and new_h > old_h + (PARAM.step_height or 16) then
+      mini_stair1.C1.mini_stair = mini_stair1
     end
   end
 
