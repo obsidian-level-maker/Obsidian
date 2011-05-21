@@ -453,12 +453,24 @@ function CHUNK_CLASS.build(C)
 
     if not skin then error("No usable stair found!") end
 
-    -- FIXME
-    local skin2 = { side="FOO", step="FOO", top="FOO", floor=f_mat, wall=f_mat }
+    local skin0 = { side=f_mat, step=f_mat, top=f_mat, floor=f_mat, wall=f_mat }
 
-    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, f_h, C.stair.dir)
+    local low_h = math.min(C.stair.C1.floor_h, C.stair.C2.floor_h)
+    local dir   = C.stair.dir
 
-    Fabricate(skin._prefab, T, { skin, skin2 })
+    -- FIXME: IS THIS NECESSARY ????
+    if delta_h < 0 then dir = 10 - dir end
+
+    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, low_h, dir)
+
+    -- stair prefabs use the Z range from 0 to 128.
+    -- calculate the correct scaling (to fit the actual height diff)
+    T.scale_z = math.abs(delta_h) / 128
+
+---## stderrf("STAIR STUFF: dir:%d h1:%d h2:%d delta:%d scale_z:%1.4f\n",
+---##   C.stair.dir, C.stair.C1.floor_h, C.stair.C2.floor_h, delta_h, T.scale_z)
+
+    Fabricate(skin._prefab, T, { skin0, skin })
 
   else
     f_mat = Mat_lookup(f_mat)

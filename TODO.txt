@@ -5,14 +5,21 @@ OBLIGE TODO
 Current Work
 ------------
 
-DONE: do not allow chunks to straddle wall/non-wall border (esp. at a 270deg corner)
+!!!  the "apply twice" problem in prefab build code
 
-AREA class, HALLWAY class
+???  the '10 - dir' thing : WHY ?
+
+!!  seems 'good_neighbor' does not work
 
 
-FIX: areas may be separated by "scenic" chunks, EITHER
-     (a) prevent that, c.f. sub-room logic in V3, OR
-     (b) allow it, mark those areas as "scenic" too (no items or mons)
+>> stairs....
+
+
+FIX: areas may be separated by "scenic" chunks
+     --> prevent that, c.f. sub-room logic in V3
+
+
+"blend" chunks ? 
 
 
 HEIGHT ALGO

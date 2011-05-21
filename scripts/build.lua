@@ -1706,6 +1706,8 @@ function Fab_transform_Z(fab, T)
 
   Trans.set(T)
 
+  Trans.TRANSFORM.scale_z = nil  -- ATTEMPT FIX FOR scale_z applied TWICE
+
   for _,B in ipairs(fab.brushes) do
     brush_z(B)
   end
