@@ -1763,6 +1763,23 @@ DOOM.SKINS =
   }
 
 
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+
+
   ----| ARCHES |----
 
   Arch1 =
@@ -2617,6 +2634,8 @@ DOOM.SUB_THEME_DEFAULTS =
   exits = { Exit_switch = 50 }
 
   pedestals = { Item_niche = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
