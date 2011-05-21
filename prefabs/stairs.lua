@@ -51,7 +51,7 @@ PREFAB.STAIR_6 =
   brushes =
   {
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y =  0, mat = "?side" }
       { x = 128, y =  0, mat = "?side" }
       { x = 128, y = 12, mat = "?step", peg=1, x_offset=0, y_offset=0 }
@@ -60,7 +60,7 @@ PREFAB.STAIR_6 =
     }
 
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y = 12, mat = "?side" }
       { x = 128, y = 12, mat = "?side" }
       { x = 128, y = 24, mat = "?step", peg=1, x_offset=0, y_offset=0 }
@@ -69,7 +69,7 @@ PREFAB.STAIR_6 =
     }
 
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y = 24, mat = "?side" }
       { x = 128, y = 24, mat = "?side" }
       { x = 128, y = 36, mat = "?step", peg=1, x_offset=0, y_offset=0 }
@@ -78,7 +78,7 @@ PREFAB.STAIR_6 =
     }
 
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y = 36, mat = "?side" }
       { x = 128, y = 36, mat = "?side" }
       { x = 128, y = 48, mat = "?step", peg=1, x_offset=0, y_offset=0 }
@@ -87,7 +87,7 @@ PREFAB.STAIR_6 =
     }
 
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y = 48, mat = "?side" }
       { x = 128, y = 48, mat = "?side" }
       { x = 128, y = 60, mat = "?step", peg=1, x_offset=0, y_offset=0 }
@@ -96,7 +96,7 @@ PREFAB.STAIR_6 =
     }
 
     {
-      { m = "solid", flavor = "floor:2" }
+      { m = "solid" }
       { x =   0, y = 60, mat = "?side" }
       { x = 128, y = 60, mat = "?side" }
       { x = 128, y = 72, mat = "?step", peg=1, x_offset=0, y_offset=0 }
