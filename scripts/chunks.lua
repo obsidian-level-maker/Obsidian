@@ -394,8 +394,6 @@ end
 
 function CHUNK_CLASS.build(C)
 
-  -- TEMP TEMP CRUD CRUD
-
   local f_h = assert(C.floor_h)
   local c_h = f_h + 256
   local c_medium = "solid"
@@ -437,16 +435,43 @@ function CHUNK_CLASS.build(C)
 
   -- floor
 
-  f_mat = Mat_lookup(f_mat)
-  f_tex = f_mat.f or f_mat.t
+  if C.stair then
+    assert(THEME.stairs)
 
-  local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+    local delta_h = C.stair.C2.floor_h - C.stair.C1.floor_h
 
-  Trans.set_tex(brush, f_mat.t)
+    local skin
 
-  table.insert(brush, { t=f_h, tex=f_tex })
+    -- TODO: honor random probs
+    each name,prob in THEME.stairs do
+      local SK = GAME.SKINS[name]
+      if not SK then error("Stair does not exist: " .. tostring(name)) end
 
-  gui.add_brush(brush)
+      if delta_h > 0 and SK._stairs.up   then skin = SK ; break; end
+      if delta_h < 0 and SK._stairs.down then skin = SK ; break; end
+    end
+
+    if not skin then error("No usable stair found!") end
+
+    -- FIXME
+    local skin2 = { side="FOO", step="FOO", top="FOO", floor=f_mat, wall=f_mat }
+
+    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, f_h, C.stair.dir)
+
+    Fabricate(skin._prefab, T, { skin, skin2 })
+
+  else
+    f_mat = Mat_lookup(f_mat)
+    f_tex = f_mat.f or f_mat.t
+
+    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+    Trans.set_tex(brush, f_mat.t)
+
+    table.insert(brush, { t=f_h, tex=f_tex })
+
+    gui.add_brush(brush)
+  end
 
 
   -- ceiling
@@ -584,7 +609,7 @@ function CHUNK_CLASS.build(C)
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.purpose then
+  if C.room and not C.purpose and not C.stair then
     local R = C.room
 
     -- begin with a completely solid area

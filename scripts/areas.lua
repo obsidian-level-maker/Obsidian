@@ -956,6 +956,11 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
 
   local function find_stair_spot(A1, A2)
+    -- allow theme to not have any stairs
+    if not THEME.stairs then
+      return nil, nil
+    end
+
     local best
     local best_mini
 
@@ -1001,11 +1006,16 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
     set_area_floor(A2, new_h)
 
     -- store stair info in the chunk
-    if stair1 then
-      stair1.C1.stair = stair1
-    
-    elseif mini_stair1 and new_h > old_h + (PARAM.step_height or 16) then
-      mini_stair1.C1.mini_stair = mini_stair1
+    if math.abs(new_h - old_h) > (PARAM.step_height or 16) then
+      if stair1 then
+        stair1.C1.stair = stair1
+
+      elseif mini_stair1 then
+        mini_stair1.C1.mini_stair = mini_stair1
+
+      else
+        error("buggered stair logic")
+      end
     end
   end
 
