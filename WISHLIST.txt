@@ -46,6 +46,8 @@ Miscellaneous:
      (a connection or switch or key or major item) then give it a
      nice pickup item (etc) or at least a walk space.
 
+  -  3D chunk stuff : use z_low and z_high fields
+
   -  double or triple switches: each one raises a 24 unit stair,
      but player can only traverse stairs when ALL are raised.
      Might work best if stairs are parallel to height diff.

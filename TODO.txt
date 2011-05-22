@@ -12,7 +12,9 @@ Current Work
 !!  seems 'good_neighbor' does not work
 
 
->> stairs....
+>>> stairs....
+
+>>> areas.lua : all room fleshing out stuff
 
 
 FIX: areas may be separated by "scenic" chunks
@@ -54,15 +56,6 @@ Area merging: prefer not to merge between different "contents"
               slight tendency not to merge into a connection chunk
               [since the connnection will have same height on both sides]
 
-
->>> areas.lua : all room fleshing out stuff
-
-
-Doorways would be a special case, perhaps mark which seeds are
-needed and perform all the allocations at the very end.
-
->>>  give chunks these files: z_low and z_high
-     (3D stuff : allow multiple chunks in the vertical range)
 
 
 Chunk/Area Allocations:

@@ -43,6 +43,9 @@ class CHUNK
   floor_h, ceil_h -- floor and ceiling heights
 
   f_tex,   c_tex  -- floor and ceiling textures
+
+  z_low, z_high   -- vertical range of chunk
+                  -- if absent, assume chunk requires whole Z range
 }
 
 
