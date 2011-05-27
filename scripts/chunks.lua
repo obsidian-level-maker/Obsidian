@@ -403,12 +403,30 @@ function CHUNK_CLASS.build(C)
   local c_medium = "solid"
   local light = 0
 
+  local brush
   local w_mat, w_tex
   local f_mat, f_tex
   local c_mat, c_tex
 
   local x1, y1 = C.x1, C.y1
   local x2, y2 = C.x2, C.y2
+
+
+  do
+    -- Spot stuff : begin with "unknown" rectangle, clear out middle
+    --              (need to do this way because initial rectangle gets
+    --               enlarged due to grid snapping)
+
+    -- little bit of padding for extra safety
+    local PAD = 4
+    gui.spots_begin(x1+PAD, y1+PAD, x2-PAD, y2-PAD, 2)
+
+    -- hack : prevent spots overlapping right/top sides
+    -- FIXME: clip spot results in spots access API
+    local SPOT_GRID = 20
+    brush = Trans.bare_quad(x1+PAD, y1+PAD, x2-PAD-SPOT_GRID-1, y2-PAD-SPOT_GRID-1)
+    gui.spots_fill_poly(brush, 0);
+  end
 
 
   if C.room then
@@ -480,7 +498,7 @@ function CHUNK_CLASS.build(C)
     f_mat = Mat_lookup(f_mat)
     f_tex = f_mat.f or f_mat.t
 
-    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+    brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
     Trans.set_tex(brush, f_mat.t)
 
@@ -569,6 +587,17 @@ end
 --]]
           gui.add_brush(brush)
       end
+
+      -- spot stuff  [FIXME: TEMP HACK]
+      bx1, by1, bx2, by2 = x1,y1, x2,y2
+
+      if dir == 2 then by2 = by1 + 64 end
+      if dir == 8 then by1 = by2 - 64 end
+      if dir == 4 then bx2 = bx1 + 64 end
+      if dir == 6 then bx1 = bx2 - 64 end
+
+      brush = Trans.bare_quad(bx1, by1, bx2, by2)
+      gui.spots_fill_poly(brush, (C.link[dir] ? 1, 2));
     end
 
 
@@ -634,14 +663,6 @@ end
   if C.room and not C.purpose and not C.stair then
     local R = C.room
 
-    -- begin with a completely solid area
-    gui.spots_begin(C.x1, C.y1, C.x2, C.y2, 2)
-
-    -- carve out the floor brushes (make them empty)
-    local B = Trans.bare_quad(C.x1 + 40, C.y1 + 40, C.x2 - 40, C.y2 - 40)
-
-    gui.spots_fill_poly(B, 0)
-
 --[[
     -- solidify brushes from prefabs
     for _,fab in ipairs(R.prefabs) do
@@ -670,8 +691,6 @@ end
     gui.spots_get_mons (mon_spots)
     gui.spots_get_items(item_spots)
 
-    gui.spots_end()
-
     if table.empty(item_spots) and mon_spots[1] then
       table.insert(item_spots, mon_spots[1])
     end
@@ -698,6 +717,9 @@ end
     end
 --]]
   end
+
+
+  gui.spots_end()
 
 
   -- TEST CRUD : pillars
