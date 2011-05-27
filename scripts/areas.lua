@@ -868,7 +868,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
   local function areas_touching_chunk(R, C, list)
     each C2 in R.chunks do
-      if C2.area and C:is_adjacent(C2) then
+      if C2.area and C2.area != C.area and C:is_adjacent(C2) then
         table.add_unique(list, C2.area)
       end
     end

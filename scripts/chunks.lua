@@ -151,15 +151,15 @@ end
 
 
 function CHUNK_CLASS.is_adjacent(C1, C2)
-  if C1.x1 > (C2.x2 + 1) then return false end
-  if C1.x2 < (C2.x1 - 1) then return false end
+  if C1.sx1 > (C2.sx2 + 1) then return false end
+  if C1.sx2 < (C2.sx1 - 1) then return false end
 
-  if C1.y1 > (C2.y2 + 1) then return false end
-  if C1.y2 < (C2.y1 - 1) then return false end
+  if C1.sy1 > (C2.sy2 + 1) then return false end
+  if C1.sy2 < (C2.sy1 - 1) then return false end
 
   -- only touches at a corner?
-  if (C1.x1 > C2.x2 or C1.x2 < C2.x1) and
-     (C1.y1 > C2.y2 or C1.y2 < C2.y1)
+  if (C1.sx1 > C2.sx2 or C1.sx2 < C2.sx1) and
+     (C1.sy1 > C2.sy2 or C1.sy2 < C2.sy1)
   then return false end 
 
   return true
@@ -561,6 +561,12 @@ function CHUNK_CLASS.build(C)
       else
           brush = Trans.bare_quad(bx1, by1, bx2, by2)
           Trans.set_tex(brush, w_mat.t)
+--[[ HALLWAY WINDOW TEST
+local C2 = C:good_neighbor(dir)
+if C2 and (C.hall or C2.hall) then
+table.insert(brush, { t=f_h+48, tex=w_mat.f or w_mat.t })
+end
+--]]
           gui.add_brush(brush)
       end
     end
