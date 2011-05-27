@@ -169,7 +169,8 @@ end
 function CHUNK_CLASS.good_neighbor(C1, dir)
   -- a 'good' neighbor is one which is at least the same size as
   -- the current chunk (can be bigger, but not smaller).
-  -- If such a chunk exists, return it, otherwise NIL.
+  -- If such a chunk exists on the given side, return it,
+  -- otherwise returns NIL.
 
   local nx, ny = C1.sx1, C1.sy1
 
@@ -185,12 +186,12 @@ function CHUNK_CLASS.good_neighbor(C1, dir)
   if not C2 then return nil end
 
   if geom.is_vert(dir) then
-    if (C2.x1 > C1.x1) or (C2.x2 < C2.x2) then return nil end
+    if C2.x1 <= C1.x1 and C2.x2 >= C1.x2 then return C2 end
   else
-    if (C2.y1 > C1.y1) or (C2.y2 < C2.y2) then return nil end
+    if C2.y1 <= C1.y1 and C2.y2 >= C1.y2 then return C2 end
   end
 
-  return C2  -- OK --
+  return nil
 end
 
 
