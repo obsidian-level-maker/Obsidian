@@ -940,12 +940,12 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
 
   local function eval_stair_pair(C1, C2, dir)
-    -- never use purpose chunks
-    if C1.purpose or C2.purpose then return -1 end
+    -- never use purpose or conn chunks
+    if C1.purpose then return -1 end
+
+    if C1.foobage == "conn" then return -1 end
 
     if C1.stair or C2.stair then return -1 end
-
-    -- FIXME: skip doorway chunks too
 
     local long = geom.vert_sel(dir, C1.x2 - C1.x1, C1.y2 - C1.y1)
 
