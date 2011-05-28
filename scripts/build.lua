@@ -168,15 +168,15 @@ end
 
 
 -- handle three-part angle strings (Quake)
-function Trans.apply_angles_xy(ang)
-  local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
+function Trans.apply_angles_xy(ang_str)
+  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
   angle = Trans.apply_angle(0 + angle)
   return string.format("%d %d %d", mlook, angle, roll)
 end
 
 
-function Trans.apply_angles_z(ang)
-  local mlook, angle, roll = string.match(ent.angles, "(%d+) +(%d+) +(%d+)")
+function Trans.apply_angles_z(ang_str)
+  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
   mlook = Trans.apply_mlook(0 + mlook)
   return string.format("%d %d %d", mlook, angle, roll)
 end

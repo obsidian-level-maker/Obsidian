@@ -263,18 +263,25 @@ end
 
 
 function CHUNK_CLASS.purpose_switch(C)
-  -- FIXME: determine skin1 properly
-
   assert(C.lock)
 
-  local skin1 = assert(GAME.SKINS["Switch_blue1"])
+  local skin1
   local skin2 = { tag=C.lock.tag }
+  
+  -- FIXME: determine skin1 properly
+  if GAME.format == "doom" then
+    skin1 = assert(GAME.SKINS["Switch_blue1"])
+  else
+    skin1 = assert(GAME.SKINS["Switch_floor1"])
+
+    skin2.target = string.format("switch%d", skin2.tag)
+  end
 
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
 
-  Fabricate("SMALL_SWITCH", T, { skin1, skin2 })
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
 
 
@@ -614,7 +621,9 @@ end
       end
 
       if LINK.conn and LINK.conn.lock and LINK.conn.lock.kind == "SWITCH" then
-        local name = "Door_SW_blue"  -- FIXME: determine properly
+        local list = THEME.switch_doors
+
+        local name = rand.key_by_probs(list)
 
         local skin = assert(GAME.SKINS[name])
 
@@ -622,6 +631,8 @@ end
                                        0, 192, 32, 32)
 
         local skin2 = { tag=LINK.conn.lock.tag, inner=w_mat.t, outer=w_mat.t, wall=w_mat.t }
+
+        skin2.targetname = string.format("switch%d", skin2.tag)
 
         Fabricate(skin._prefab, T, { skin, skin2 })
       end

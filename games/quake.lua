@@ -655,6 +655,8 @@ QUAKE1.MATERIALS =
 
   BUTTON = { t="+0button" }
 
+  BUTNN  = { t="+0butnn" }
+
 ---  +0basebtn
 ---  +0butn
 ---  +0butnn
@@ -872,7 +874,7 @@ QUAKE1.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _switches = { Switch_1=50 }
+    _switches = { Switch_1=50 }  -- FIXME
     _long = 192
     _deep = 32
 
@@ -881,13 +883,22 @@ QUAKE1.SKINS =
     wait = -1
   }
 
-  Switch_1 =
+  Switch_1_Edge =
   {
     _prefab = "QUAKE_WALL_SWITCH"
     _where  = "edge"
     _long   = 192
     _deep   = 48
 
+  }
+
+  Switch_floor1 =
+  {
+    _prefab = "QUAKE_FLOOR_SWITCH"
+    _where  = "middle"
+
+    switch = "BUTNN"
+    side   = "MET5_1"
   }
 
 
