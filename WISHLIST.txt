@@ -522,6 +522,8 @@ Sam's suggestions:
 ?  create dummy .lit files for FitzQuake & DarkPlaces
    -  gui.pak_add_binary_lump
 
+?  keys are removed after use : re-use them ??
+
 
 ----------------------------------------------------------------
   QUAKE II
