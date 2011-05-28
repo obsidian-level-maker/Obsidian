@@ -412,21 +412,12 @@ function CHUNK_CLASS.build(C)
   local x2, y2 = C.x2, C.y2
 
 
-  do
-    -- Spot stuff : begin with "unknown" rectangle, clear out middle
-    --              (need to do this way because initial rectangle gets
-    --               enlarged due to grid snapping)
+  -- Spot stuff : begin with "clear" rectangle (contents = 0).
+  --              walls and high barriers get removed (contents = 1)
+  --              as well as other unusable places (contents = 2).
 
-    -- little bit of padding for extra safety
-    local PAD = 4
-    gui.spots_begin(x1+PAD, y1+PAD, x2-PAD, y2-PAD, 2)
-
-    -- hack : prevent spots overlapping right/top sides
-    -- FIXME: clip spot results in spots access API
-    local SPOT_GRID = 20
-    brush = Trans.bare_quad(x1+PAD, y1+PAD, x2-PAD-SPOT_GRID-1, y2-PAD-SPOT_GRID-1)
-    gui.spots_fill_poly(brush, 0);
-  end
+  -- little bit of padding for extra safety
+  gui.spots_begin(x1+4, y1+4, x2-4, y2-4, 0)
 
 
   if C.room then
