@@ -502,7 +502,7 @@ function CHUNK_CLASS.build(C)
   -- ceiling
 
   c_mat = Mat_lookup(c_mat)
-  c_tex = c_mat.f or f_mat.t
+  c_tex = c_mat.f or c_mat.t
 
   brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
 
