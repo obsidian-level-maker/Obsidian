@@ -53,6 +53,44 @@ PREFAB.SMALL_SWITCH =
 }
 
 
+PREFAB.QUAKE_FLOOR_SWITCH =
+{
+  defaults =
+  {
+    wait = -1
+  }
+
+  brushes =
+  {
+    -- dummy brush  [FIXME]
+    {
+      { x = -32, y = -32, mat="?side" }
+      { x =  32, y = -32, mat="?side" }
+      { x =  32, y =  32, mat="?side" }
+      { x = -32, y =  32, mat="?side" }
+      { t = 0, mat="?switch" }
+    }
+  }
+
+  models =
+  {
+    -- button itself
+    {
+      x1 = -32, x2 = 32, x_face = { mat="?side" }
+      y1 = -32, y2 = 32, y_face = { mat="?side" }
+      z1 =   0, z2 = 16, z_face = { mat="?switch", u1=0, u2=64, v1=0, v2=64 }
+
+      entity =
+      {
+        ent = "button", angles = "90 0 0", sounds = 2,
+        target = "?target", wait ="?wait", lip = 8,
+      }
+    }
+  }
+}
+
+
+
 PREFAB.WALL_SWITCH =
 {
   placement = "fitted"
@@ -148,6 +186,11 @@ PREFAB.QUAKE_WALL_SWITCH =
 {
   placement = "fitted"
 
+  defaults =
+  {
+    wait = -1
+  }
+
   brushes =
   {
     -- wall behind it
@@ -181,7 +224,7 @@ PREFAB.QUAKE_WALL_SWITCH =
       entity =
       {
         ent = "button", angle = 270, sounds = 2,
-        target = "?targetname", wait ="?wait", lip = 8,
+        target = "?target", wait ="?wait", lip = 8,
       }
     }
   }
