@@ -639,7 +639,9 @@ end
 
   local mx, my = C:mid_point()
 
-  Trans.entity(ent, mx, my, 32)
+  if ent != "dummy" then
+    Trans.entity(ent, mx, my, 32)
+  end
 
 
   -- lighting

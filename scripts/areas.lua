@@ -554,7 +554,7 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
 
       -- debugging stuff
       S.debug_path = true
-      if true then
+      if false then
         local mx, my = S:mid_point()
         Trans.entity("potion", mx, my, 32)
       end
@@ -941,7 +941,7 @@ stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
 
   local function eval_stair_pair(C1, C2, dir)
     -- never use purpose or conn chunks
-    if C1.purpose then return -1 end
+    if C1.purpose or C1.weapon then return -1 end
 
     if C1.foobage == "conn" then return -1 end
 
