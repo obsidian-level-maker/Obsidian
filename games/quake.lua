@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -918,23 +918,6 @@ QUAKE1.SKINS =
   }
 
 
-  ---| FLOORS |---
-
-  H_Stair6 =
-  {
-    _prefab = "H_STAIR_6"
-
-    step = "MET5_1"
-  }
-
-  Triple_A =
-  {
-    _prefab = "TRIPLE_A"
-
-    step = "METAL5_5"
-  }
-
-
   ---| DECORATION |---
 
   TechLamp =
@@ -989,8 +972,6 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   fences = { Fence1 = 50 }
 
-  floors = { H_Stair6 = 50, Triple_A = 200 }
-
   indoor_fabs = { TechLamp = 50, RoundPillar = 50 }
 
   --------- OLD CRUD --------> > >
@@ -1014,23 +995,23 @@ QUAKE1.SUB_THEMES =
     skies = { sky1=20, sky4=80 }
 
     building_walls =
-      {
-        TECH06_1=50, TECH08_2=50, TECH09_3=50,
-        TECH13_2=50, TECH14_1=50, TWALL1_4=50,
-        TWALL2_3=50,
-      }
+    {
+      TECH06_1=50, TECH08_2=50, TECH09_3=50,
+      TECH13_2=50, TECH14_1=50, TWALL1_4=50,
+      TWALL2_3=50,
+    }
 
     building_floors =
-      {
-        FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
-        SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
-      }
+    {
+      FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
+      SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
+    }
 
     building_ceilings =
-      {
-        FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
-        SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
-      }
+    {
+      FLOOR01_5=50, METAL2_4=50, METFLOR2_1=50, MMETAL1_1=50,
+      SFLOOR4_1=50, SFLOOR4_5=50, SFLOOR4_6=50, SFLOOR4_7=50,
+    }
 
     courtyard_floors =
     {

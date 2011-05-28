@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2278,23 +2278,6 @@ DOOM.SKINS =
   }
 
 
-  ---| FLOORS |---
-
-  H_Stair6 =
-  {
-    _prefab = "H_STAIR_6"
-
-    step = "STEP1"
-  }
-
-  Triple_A =
-  {
-    _prefab = "TRIPLE_A"
-
-    step = "STEP1"
-  }
-
-
   ---| PICTURES |---
 
   Pic_Chrissy1 =
@@ -2651,8 +2634,6 @@ DOOM.SUB_THEME_DEFAULTS =
   windows = { Window1 = 50 }
 
   fences = { Fence1 = 50 }
-
-  floors = { H_Stair6 = 50, Triple_A = 200 }
 
   outdoor_decor = { big_tree=50, burnt_tree=10, brown_stub=10 }
 
