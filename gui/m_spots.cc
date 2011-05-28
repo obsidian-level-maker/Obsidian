@@ -857,6 +857,15 @@ static void store_mon_or_item(lua_State *L, int stack_pos,
                               unsigned int index,
                               int x1, int y1, int x2, int y2)
 {
+  // clip rectangle to the original room/chunk boundaries
+  x1 = MAX(x1, grid_min_x);
+  y1 = MAX(y1, grid_min_y);
+  x2 = MIN(x2, grid_max_x);
+  y2 = MIN(y2, grid_max_y);
+
+  if ((x2 - x1) < 8 || (y2 - y1) < 8)
+    return;
+
   lua_pushinteger(L, index);
 
   // build the coordinate table
