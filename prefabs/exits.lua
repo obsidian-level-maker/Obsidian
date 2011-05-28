@@ -381,17 +381,17 @@ PREFAB.SMALL_EXIT =  -- BORKED : NEED WALK BRUSHES (ETC?)
 }
 
 
-PREFAB.QUAKE_EXIT_PAD =  -- BORKED : NEEDS WALK BRUSHES
+PREFAB.QUAKE_EXIT_PAD =
 {
   brushes =
   {
     -- the pad itself
     {
-      { x = -32, y = -32, mat = "?wall", x_offset=0, y_offset=0 }
-      { x =  32, y = -32, mat = "?wall", x_offset=0, y_offset=0 }
-      { x =  32, y =  32, mat = "?wall", x_offset=0, y_offset=0 }
-      { x = -32, y =  32, mat = "?wall", x_offset=0, y_offset=0 }
-      { t = 16, mat = "?floor" }
+      { x = -32, y = -32, mat = "?side", x_offset=0, y_offset=0 }
+      { x =  32, y = -32, mat = "?side", x_offset=0, y_offset=0 }
+      { x =  32, y =  32, mat = "?side", x_offset=0, y_offset=0 }
+      { x = -32, y =  32, mat = "?side", x_offset=0, y_offset=0 }
+      { t = 16, mat = "?pad" }
     }
   }
 
@@ -408,6 +408,11 @@ PREFAB.QUAKE_EXIT_PAD =  -- BORKED : NEEDS WALK BRUSHES
         ent = "change_lev", map = "?next_map",      
       }
     }
+  }
+
+  entities =
+  {
+    { x = 0, y = 0, z = 20, ent = "light", light = 128, style = 10 }
   }
 }
 
