@@ -862,16 +862,15 @@ end
 
 
 
-
-function Rooms_player_angle(S)
+function Rooms_player_angle(R, C)
   if R.sh > R.sw then
-    if S.sy > (R.sy1 + R.sy2) / 2 then 
+    if (C.sy1 + C.sy2) / 2 > (R.sy1 + R.sy2) / 2 then 
       return 270
     else
       return 90
     end
   else
-    if S.sx > (R.sx1 + R.sx2) / 2 then 
+    if (C.sx1 + C.sx2) / 2 > (R.sx1 + R.sx2) / 2 then 
       return 180
     else
       return 0

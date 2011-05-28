@@ -231,7 +231,7 @@ function CHUNK_CLASS.purpose_start(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
 
-  local skin1 = { top="O_BOLT" }
+  local skin1 = { top="O_BOLT", angle=Rooms_player_angle(C.room, C) }
 
   Fabricate("START_SPOT", T, { skin1 })
 end
