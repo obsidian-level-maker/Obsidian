@@ -1734,6 +1734,13 @@ DOOM.SKINS =
 {
   ----| STARTS |----
 
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
   Start_ledge =
   {
     _prefab = "START_LEDGE"
@@ -1760,6 +1767,17 @@ DOOM.SKINS =
     line_kind=11
     x_offset=0
     y_offset=0
+  }
+
+  Exit_switch2 =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "SW1BLUE"
+    exit = "EXITSIGN"
+    exitside = "COMPSPAN"
+    line_kind = 11
+    tag = 0
   }
 
 
@@ -2126,7 +2144,7 @@ DOOM.SKINS =
 
   Switch_blue1 =
   {
-    _prefab = "WALL_SWITCH"
+    _prefab = "SMALL_SWITCH"
     _where  = "edge"
     _long   = 192
     _deep   = 48
@@ -2164,7 +2182,7 @@ DOOM.SKINS =
 
   Switch_red1 =
   {
-    _prefab = "WALL_SWITCH"
+    _prefab = "SMALL_SWITCH"
     _where  = "edge"
     _long   = 192
     _deep   = 48
@@ -2612,9 +2630,9 @@ DOOM.SKIN_DEFAULTS =
 
 DOOM.SUB_THEME_DEFAULTS =
 {
-  starts = { Start_ledge = 50 }
+  starts = { Start_basic = 50 }
 
-  exits = { Exit_switch = 50 }
+  exits = { Exit_switch2 = 50 }
 
   pedestals = { Item_niche = 50 }
 

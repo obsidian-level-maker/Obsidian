@@ -227,26 +227,30 @@ end
 
 
 function CHUNK_CLASS.purpose_start(C)
+  local name  = rand.key_by_probs(THEME.starts)
+  local skin1 = assert(GAME.SKINS[name])
+
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
 
-  local skin1 = { top="O_BOLT", angle=Rooms_player_angle(C.room, C) }
+  local skin2 = { angle = Rooms_player_angle(C.room, C) }
 
-  Fabricate("START_SPOT", T, { skin1 })
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
 
 
 function CHUNK_CLASS.purpose_exit(C)
-  -- FIXME QUAKE_EXIT_PAD
+  local name  = rand.key_by_probs(THEME.exits)
+  local skin1 = assert(GAME.SKINS[name])
 
   local mx, my = C:mid_point()
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
 
-  local skin1 = { switch="SW1BLUE", line_kind=11, tag=0, exit="EXITSIGN", exitside="COMPSPAN" }
+  local skin2 = { next_map = LEVEL.next_map }
 
-  Fabricate("EXIT_PILLAR", T, { skin1 })
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
 
 

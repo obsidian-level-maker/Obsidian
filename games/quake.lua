@@ -779,6 +779,13 @@ QUAKE1.SKINS =
 {
   ----| STARTS |----
 
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
   START_LEDGE =
   {
     _prefab = "START_LEDGE"
@@ -789,6 +796,14 @@ QUAKE1.SKINS =
 
 
   ----| EXITS |----
+
+  Exit_basic =
+  {
+    _prefab = "QUAKE_EXIT_PAD"
+
+    pad  = "TELE_TOP"
+    side = "METAL1_1"
+  }
 
   WALL_EXIT =
   {
@@ -963,9 +978,9 @@ QUAKE1.SKIN_DEFAULTS =
 
 QUAKE1.SUB_THEME_DEFAULTS =
 {
-  starts = { START_LEDGE = 50 }
+  starts = { Start_basic = 50 }
 
-  exits = { WALL_EXIT = 50 }
+  exits = { Exit_basic = 50 }
 
   pedestals = { Item_niche = 50 }
 
