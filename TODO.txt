@@ -5,11 +5,22 @@ OBLIGE TODO
 Current Work
 ------------
 
+(a) LOGOS
+
+DONE:  QUAKE: switched doors
+
+(c) QUAKE: stairs
+
+(d) QUAKE: exit
+
+(e) QUAKE: missing weapons (and pickups?)
+
+
+
+
 !!!  the "apply twice" problem in prefab build code
 
 ???  the '10 - dir' thing : WHY ?
-
-!!  seems 'good_neighbor' does not work
 
 
 >>> stairs....
