@@ -582,10 +582,10 @@ end
       -- spot stuff  [FIXME: TEMP HACK]
       bx1, by1, bx2, by2 = x1,y1, x2,y2
 
-      if dir == 2 then by2 = by1 + 64 end
-      if dir == 8 then by1 = by2 - 64 end
-      if dir == 4 then bx2 = bx1 + 64 end
-      if dir == 6 then bx1 = bx2 - 64 end
+      if dir == 2 then by2 = by1 + 40 end
+      if dir == 8 then by1 = by2 - 40 end
+      if dir == 4 then bx2 = bx1 + 40 end
+      if dir == 6 then bx1 = bx2 - 40 end
 
       brush = Trans.bare_quad(bx1, by1, bx2, by2)
       gui.spots_fill_poly(brush, (C.link[dir] ? 2, 1));
@@ -593,7 +593,7 @@ end
 
 
     -- locked doors
-    if C.link[dir] then
+    if C.link[dir] and not C.hall then
       local LINK = C.link[dir]
 
       if LINK.conn and LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
@@ -608,7 +608,7 @@ end
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
-        local skin2 = { inner="CRACKLE2", outer="CRACKLE4", wall="COMPSPAN" }
+        local skin2 = { inner=w_mat.t, outer=w_mat.t, wall=w_mat.t }
 
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
@@ -621,7 +621,7 @@ end
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
-        local skin2 = { tag=LINK.conn.lock.tag, inner="CRACKLE2", outer="CRACKLE4", wall="TEKWALL4" }
+        local skin2 = { tag=LINK.conn.lock.tag, inner=w_mat.t, outer=w_mat.t, wall=w_mat.t }
 
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
