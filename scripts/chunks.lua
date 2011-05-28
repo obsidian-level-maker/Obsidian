@@ -600,10 +600,11 @@ end
 
 
     -- locked doors
-    if C.link[dir] and not C.hall then
-      local LINK = C.link[dir]
+    local LINK = C.link[dir]
 
-      if LINK.conn and LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
+    if LINK and LINK.conn and not C.hall and LINK.conn.C1 == C then
+
+      if LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
         local list = THEME.lock_doors
 
         local edge_fabs = Layout_possible_prefab_from_list(list, "edge", LINK.conn.lock.key)
@@ -620,7 +621,7 @@ end
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
 
-      if LINK.conn and LINK.conn.lock and LINK.conn.lock.kind == "SWITCH" then
+      if LINK.conn.lock and LINK.conn.lock.kind == "SWITCH" then
         local list = THEME.switch_doors
 
         local name = rand.key_by_probs(list)
