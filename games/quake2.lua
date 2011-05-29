@@ -116,6 +116,7 @@ QUAKE2.ENTITIES =
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true }
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
+  button = { id="func_button", kind="other", r=1, h=1, pass=true }
 
   trigger  = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
   trig_key = { id="trigger_key", kind="other", r=1, h=1, pass=true }
@@ -1476,7 +1477,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE2_EXIT_PAD"
 
-    pad  = "FLOORSW2"
+    pad  = "DOORSWT2"
     side = "RED1_2"
   }
 
@@ -1584,8 +1585,8 @@ QUAKE2.SKINS =
     _prefab = "QUAKE_FLOOR_SWITCH"
     _where  = "middle"
 
-    switch = "BUTNN"
-    side   = "MET5_1"
+    switch = "FLOORSW0"
+    side   = "METAL1_1"
   }
 
 

@@ -712,7 +712,7 @@ PREFAB.QUAKE2_KEY_DOOR =
   entities =
   {
     -- key target
-    { x = 0, y = 4, z = 20, ent = "trig_key", item = "?item",
+    { x = 128, y = 16, z = 32, ent = "trig_key", item = "?item",
       targetname = "?keyname", target = "?targetname",
       spawnflags = 16
     }
