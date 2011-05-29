@@ -619,6 +619,104 @@ PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 }
 
 
+PREFAB.QUAKE2_KEY_DOOR =
+{
+  placement = "fitted"
+
+  defaults =
+  {
+    step  = "?wall"
+    outer = "?wall"
+    track = "?wall"
+    metal = "METAL1_2"
+
+    door_flags = 16  -- NO_MONSTER
+    trig_flags = 0
+    wait = -1
+  }
+
+  brushes =
+  {
+    -- step
+    {
+      { x = 192, y =  0, mat = "?step" }
+      { x = 192, y = 48, mat = "?step" }
+      { x =   0, y = 48, mat = "?step" }
+      { x =   0, y =  0, mat = "?step" }
+      { t = 8, mat = "?step" }
+    }
+
+    -- door frame
+    {
+      { x = 192, y =  0, mat = "?outer" }
+      { x = 192, y = 48, mat = "?wall" }
+      { x = 0,   y = 48, mat = "?outer" }
+      { x = 0,   y =  0, mat = "?outer" }
+      { b = 136, mat = "?outer" }
+    }
+
+    {
+      { x = 0,  y =  0, mat = "?outer" }
+      { x = 32, y =  0, mat = "?outer" }
+      { x = 32, y = 16, mat = "?track" }
+      { x = 32, y = 32, mat = "?wall" }
+      { x = 32, y = 48, mat = "?wall" }
+      { x = 0,  y = 48, mat = "?wall" }
+    }
+
+    {
+      { x = 192, y = 48, mat = "?wall" }
+      { x = 160, y = 48, mat = "?wall" }
+      { x = 160, y = 32, mat = "?track" }
+      { x = 160, y = 16, mat = "?outer" }
+      { x = 160, y =  0, mat = "?outer" }
+      { x = 192, y =  0, mat = "?wall" }
+    }
+  }
+
+  models =
+  {
+    -- door itself
+    {
+      x1 = 32, x2 = 160, x_face = { mat="?metal" }
+      y1 = 16, y2 =  32, y_face = { mat="?door" }
+      z1 =  8, z2 = 136, z_face = { mat="?metal" }
+
+      entity =
+      {
+        ent = "door", angles = "270 0 0", sounds = 2,
+        targetname = "?targetname", wait ="?wait",
+        spawnflags = "?door_flags"
+      }
+    }
+
+    -- trigger
+    {
+      x1 =  32, x2 = 160, x_face = { mat="TRIGGER" }
+      y1 = -16, y2 =  64, y_face = { mat="TRIGGER" }
+      z1 =   8, z2 = 136, z_face = { mat="TRIGGER" }
+
+      entity =
+      {
+        ent = "trigger",
+        target = "?keyname",
+        spawnflags = "?trig_flags"
+      }
+    }
+  }
+
+  entities =
+  {
+    -- key target
+    { x = 0, y = 4, z = 20, ent = "trig_key", item = "?item",
+      targetname = "?keyname", target = "?targetname",
+      spawnflags = 16
+    }
+  }
+}
+
+
+
 PREFAB.QUAKE_4_WAY =  -- FIXME: step, WALK BRUSHES
 {
   placement = "fitted"
