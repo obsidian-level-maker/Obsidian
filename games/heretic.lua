@@ -374,6 +374,52 @@ HERETIC.PICTURES =
 
 ----------------------------------------------------------------
 
+HERETIC.SKINS =
+{
+  ----| STARTS |----
+
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_switch =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "SW2OFF"
+    exit = "MOSAIC1"
+    exitside = "MOSAIC1"
+    line_kind = 11
+    tag = 0
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+}
+
+
+----------------------------------------------------------------
+
 HERETIC.COMBOS =
 {
   ---- INDOOR ------------
@@ -871,6 +917,8 @@ HERETIC.COMBOS =
   
 }
 
+
+----------------------------------------------------------------
 
 HERETIC.EXITS =
 {
@@ -1380,13 +1428,18 @@ HERETIC.ROOMS =
 
 HERETIC.SUB_THEME_DEFAULTS =
 {
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_switch = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
+
+
   steps = { step1=50 }
 
   doors = { d_wood=50, d_demon=15 }
 
   logos = { carve=50, pill=50 }
-
-  exits = { exit_pillar=50 }
 
   -- according to Borsuk, locked doors always appear in the
   -- following order: Yellow ==> Green ==> Blue.

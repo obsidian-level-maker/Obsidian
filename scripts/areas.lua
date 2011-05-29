@@ -718,8 +718,6 @@ function Areas_flesh_out()
       C, N = N, C
     end
 
-stderrf("Merging AREA %d ---> %d\n", N.area.id, C.area.id)
-
     C.area.size = C.area.size + N.area.size
     N.area.size = 0
 
