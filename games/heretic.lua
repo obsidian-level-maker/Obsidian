@@ -415,6 +415,96 @@ HERETIC.SKINS =
     _where  = "chunk"
     _stairs = { down=1 }
   }
+
+
+  --- LOCKED DOORS ---
+
+  Locked_yellow =
+  {
+    _prefab = "DOOR"   -- FIXME: heretic prefab with key statue
+    _where  = "edge"
+    _keys = { k_yellow=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "DOORSTON"
+    track = "METL2"
+    special = 34
+    tag = 0  -- kind_mult=26
+  }
+
+  Locked_green =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_green=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "DOORSTON"
+    track = "METL2"
+    special = 33
+    tag = 0  -- kind_mult=26
+  }
+
+  Locked_blue =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_blue=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "DOORSTON"
+    track = "METL2"
+    special = 32
+    tag = 0  -- kind_mult=26
+  }
+
+
+  ----| SWITCHED DOORS |---- 
+
+  Door_SW_1 =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _switches = { Switch_1=50 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door = "DMNMSK"
+    track = "METL2"
+    door_h = 112
+    special = 0
+  }
+
+  Switch_1 =
+  {
+    _prefab = "SMALL_SWITCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+    switch_h = 64
+    switch = "SW1OFF"
+    side = "METL2"
+    base = "METL2"
+    x_offset = 0
+    y_offset = 50
+    special = 103
+  }
+
 }
 
 
@@ -1434,6 +1524,14 @@ HERETIC.SUB_THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
+  -- according to Borsuk, locked doors should always appear in the
+  -- following order: Yellow ==> Green ==> Blue.
+  keys = { k_yellow=9000, k_green=90, k_blue=1 }
+
+  lock_doors = { Locked_yellow = 50, Locked_green = 50, Locked_blue = 50 }
+
+  switch_doors = { Door_SW_1 = 50 }
+
 
   steps = { step1=50 }
 
@@ -1441,9 +1539,6 @@ HERETIC.SUB_THEME_DEFAULTS =
 
   logos = { carve=50, pill=50 }
 
-  -- according to Borsuk, locked doors always appear in the
-  -- following order: Yellow ==> Green ==> Blue.
-  keys = { k_yellow=9000, k_green=90, k_blue=1 }
 
 --FIXME TEMP STUFF
   cave_walls = { BRWNRCKS=10, LAVA1=20, LOOSERCK=20,

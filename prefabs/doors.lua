@@ -303,9 +303,9 @@ PREFAB.DOOR =
     height = 128
 
     outer = "?wall"
-
-    key  = "?wall"
-    step = "?wall"
+    frame = "?wall"
+    key   = "?wall"
+    step  = "?wall"
   }
 
   brushes =
