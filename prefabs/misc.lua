@@ -160,10 +160,10 @@ PREFAB.TELEPORT_PAD =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y = -32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y =  32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y = -32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { t = 16, mat = "?top", light = "?light", special="?sec_kind", tag="?in_tag" }
     }
   }

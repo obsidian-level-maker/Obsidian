@@ -330,10 +330,10 @@ PREFAB.DOOR =
 
     -- door itself
     {
-      { x =  32, y = 16, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 16, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 32, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = 32, mat = "?door", special="?line_kind", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 16, mat = "?door", special="?special", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 16, mat = "?door", special="?special", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 32, mat = "?door", special="?special", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 32, mat = "?door", special="?special", peg=1, x_offset=0, y_offset=0 }
       { b = 24, delta_z=-16, mat = "?door", light = 0.7, tag = "?tag" }
     }
 

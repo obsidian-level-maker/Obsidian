@@ -43,7 +43,7 @@ PREFAB.SMALL_SWITCH =
 
     -- switch itself
     {
-      { x = -32, y = -8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y = -8, mat = "?switch", special="?special", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y = -8, mat = "?side" }
       { x =  32, y =  8, mat = "?side" }
       { x = -32, y =  8, mat = "?side" }
@@ -125,7 +125,7 @@ PREFAB.WALL_SWITCH =
     {
       { x =  64, y =  4 }
       { x = 128, y =  4 }
-      { x = 128, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
+      { x = 128, y =  8, mat = "?switch", special="?special", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
       { x =  64, y =  8 }
     }
 

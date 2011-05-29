@@ -1106,7 +1106,7 @@ DOOM.PICTURES =
     pic="TEKWALL1", width=160, height=80,
     x_offset=0, y_offset=24,
     side="METAL", floor="CEIL5_2", depth=8, 
-    line_kind=48, -- scroll left
+    special=48, -- scroll left
     light=0.7,
   }
 
@@ -1116,7 +1116,7 @@ DOOM.PICTURES =
     pic="TEKWALL4", width=128, height=80,
     x_offset=0, y_offset=24,
     side="METAL", floor="CEIL5_2", depth=8, 
-    line_kind=48, -- scroll left
+    special=48, -- scroll left
     light=0.7,
   }
 
@@ -1190,7 +1190,7 @@ DOOM.PICTURES =
     x_offset=0, y_offset=24,
     -- side="METAL", floor="CEIL5_2",
     depth=8, 
-    line_kind=48, -- scroll left
+    special=48, -- scroll left
     light=0.7,
   }
 
@@ -1201,7 +1201,7 @@ DOOM.PICTURES =
     x_offset=0, y_offset=0,
     -- side="METAL", floor="CEIL5_2",
     depth=8, 
-    line_kind=48, -- scroll left
+    special=48, -- scroll left
     light=0.7,
   }
 
@@ -1358,7 +1358,7 @@ DOOM.PICTURES =
     x_offset=0, y_offset=24,
     -- side="METAL", floor="CEIL5_2",
     depth=8, 
-    line_kind=48, -- scroll left
+    special=48, -- scroll left
     light=0.7,
   }
 
@@ -1412,7 +1412,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   silver_fast =
@@ -1423,7 +1423,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=117, tag=0,
+    special=117, tag=0,
   }
 
   silver_once =
@@ -1434,7 +1434,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=31, tag=0,
+    special=31, tag=0,
   }
 
   wooden =
@@ -1445,7 +1445,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   wooden2 =
@@ -1456,7 +1456,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   wooden_fast =
@@ -1467,7 +1467,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=117, tag=0,
+    special=117, tag=0,
   }
 
   wooden2_fast =
@@ -1478,7 +1478,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=117, tag=0,
+    special=117, tag=0,
   }
 
   wooden_once =
@@ -1489,7 +1489,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=31, tag=0,
+    special=31, tag=0,
   }
 
   wooden2_once =
@@ -1500,7 +1500,7 @@ DOOM.DOORS =
     frame="FLAT1",
     track="DOORTRAK",
     key="BRICKLIT", key_ox=20, key_oy=-16,
-    line_kind=31, tag=0,
+    special=31, tag=0,
   }
 
   bigdoor2 =
@@ -1511,7 +1511,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   bigdoor2_fast =
@@ -1522,7 +1522,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=117, tag=0,
+    special=117, tag=0,
   }
 
   bigdoor2_once =
@@ -1533,7 +1533,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=31, tag=0,
+    special=31, tag=0,
   }
 
   bigdoor4 =
@@ -1544,7 +1544,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   bigdoor4_fast =
@@ -1555,7 +1555,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=117, tag=0,
+    special=117, tag=0,
   }
 
   bigdoor4_once =
@@ -1566,7 +1566,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=31, tag=0,
+    special=31, tag=0,
   }
 
   bigdoor3 =
@@ -1577,7 +1577,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   wolf_door =
@@ -1588,7 +1588,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   wolf_elev_door =
@@ -1599,7 +1599,7 @@ DOOM.DOORS =
     step="STEP4",
     frame="FLAT18",
     track="DOORTRAK",
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
 
@@ -1615,7 +1615,7 @@ DOOM.DOORS =
     track="DOORTRAK",
     frame="FLAT5_2",
     door_h=112,
-    line_kind=0,
+    special=0,
   }
 
   sw_marble =
@@ -1628,7 +1628,7 @@ DOOM.DOORS =
     track="DOORTRAK",
     frame="FLOOR7_2",
     door_h=112,
-    line_kind=0,
+    special=0,
   }
 
   bar_wood =
@@ -1661,7 +1661,7 @@ DOOM.EXITS =
     switch="SW1SKULL",
     exit="EXITSIGN",
     exitside="COMPSPAN",
-    line_kind=11,
+    special=11,
   }
 
   demon_pillar2 =
@@ -1670,7 +1670,7 @@ DOOM.EXITS =
     switch="SW1SATYR",
     exit="EXITSIGN",
     exitside="COMPSPAN",
-    line_kind=11,
+    special=11,
   }
 
   demon_pillar3 =
@@ -1679,7 +1679,7 @@ DOOM.EXITS =
     switch="SW1LION",
     exit="EXITSIGN",
     exitside="COMPSPAN",
-    line_kind=11,
+    special=11,
   }
 
   skin_pillar =
@@ -1688,7 +1688,7 @@ DOOM.EXITS =
     switch="SW1SKIN",
     exit="EXITSIGN",
     exitside="COMPSPAN",
-    line_kind=11,
+    special=11,
   }
 
   stone_pillar =
@@ -1697,21 +1697,21 @@ DOOM.EXITS =
     switch="SW1STON1",
     exit="EXITSIGN",
     exitside="COMPSPAN",
-    line_kind=11,
+    special=11,
   }
 
   tech_outdoor =
   {
     podium="CEIL5_1", base="SHAWN2",
     switch="SW1COMM", exit="EXITSIGN",
-    line_kind=11,
+    special=11,
   }
 
   tech_outdoor2 =
   {
     podium="STARTAN2", base="SHAWN2",
     switch="SW2COMM", exit="EXITSIGN",
-    line_kind=11,
+    special=11,
   }
 
   tech_small =
@@ -1721,7 +1721,7 @@ DOOM.EXITS =
     key = "LITE5",
     track = "DOORSTOP", trim = "DOORSTOP",
     items = { "medikit" }
-    door_kind=1, line_kind=11,
+    door_kind=1, special=11,
 
     switch = "SW1BRN2",
     floor = "FLOOR0_3", ceil="TLITE6_6",
@@ -1764,7 +1764,7 @@ DOOM.SKINS =
     wall = "EXITSTON"
 
     switch="SW1HOT"
-    line_kind=11
+    special=11
     x_offset=0
     y_offset=0
   }
@@ -1776,7 +1776,7 @@ DOOM.SKINS =
     switch = "SW1BLUE"
     exit = "EXITSIGN"
     exitside = "COMPSPAN"
-    line_kind = 11
+    special = 11
     tag = 0
   }
 
@@ -1828,7 +1828,7 @@ DOOM.SKINS =
 
     x_offset=0
     y_offset=0
-    line_kind=1
+    special=1
     tag=0
   }
 
@@ -1856,7 +1856,7 @@ DOOM.SKINS =
       beam_w="WOOD1", beam_f="FLAT5_2",
 
       x_offset=0, y_offset=56,
-      line_kind=103,
+      special=103,
     }
   }
 
@@ -1868,7 +1868,7 @@ DOOM.SKINS =
       switch_h=64,
       switch="SW1HOT", side="SP_HOT1", base="FLAT5_3",
       x_offset=0, y_offset=52,
-      line_kind=103,
+      special=103,
     }
 
   }
@@ -1881,7 +1881,7 @@ DOOM.SKINS =
       switch_h=64,
       switch="SW1SKIN", side="SKSNAKE2", base="SFLR6_4",
       x_offset=0, y_offset=52,
-      line_kind=103,
+      special=103,
     }
   }
 
@@ -1893,7 +1893,7 @@ DOOM.SKINS =
       switch_h=64,
       switch="SW1VINE", side="GRAYVINE", base="FLAT1",
       x_offset=0, y_offset=64,
-      line_kind=103,
+      special=103,
     }
   }
 
@@ -1910,7 +1910,7 @@ DOOM.SKINS =
       beam_w="SUPPORT3", beam_c="CEIL5_2",
 
       x_offset=0, y_offset=64,
-      line_kind=23,
+      special=23,
     }
   }
 
@@ -1922,7 +1922,7 @@ DOOM.SKINS =
       switch_h=64,
       switch="SW1WOOD", side="WOOD1", base="FLAT5_2",
       x_offset=0, y_offset=56,
-      line_kind=103,
+      special=103,
     }
   }
 
@@ -1933,7 +1933,7 @@ DOOM.SKINS =
     {
       switch="SW1GSTON", side="GSTONE1", base="FLOOR7_2",
       x_offset=0, y_offset=56,
-      line_kind=103,
+      special=103,
     }
   }
 
@@ -1944,7 +1944,7 @@ DOOM.SKINS =
     {
       switch="SW1WOOD", side="WOOD9", base="FLAT5_2",
       x_offset=0, y_offset=56,
-      line_kind=23,
+      special=23,
     }
   }
 
@@ -1955,7 +1955,7 @@ DOOM.SKINS =
     {
       switch="SW1COMM", side="SHAWN2", base="FLAT23",
       x_offset=0, y_offset=0,
-      line_kind=23,
+      special=23,
     }
   }
 
@@ -1966,7 +1966,7 @@ DOOM.SKINS =
     {
       switch="SW1MET2", side="METAL2", base="CEIL5_2",
       x_offset=0, y_offset=0,
-      line_kind=23,
+      special=23,
     }
   }
 
@@ -1977,7 +1977,7 @@ DOOM.SKINS =
     {
       switch="SW1GRAY1", side="GRAY1", base="FLAT1",
       x_offset=0, y_offset=64,
-      line_kind=23,
+      special=23,
     }
   }
 --]]
@@ -2002,7 +2002,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT18"
-    line_kind = 32
+    special = 32
     tag = 0  -- kind_mult=26
   }
 
@@ -2023,7 +2023,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT4"
-    line_kind = 34
+    special = 34
     tag = 0  -- kind_mult=27
   }
 
@@ -2045,7 +2045,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT18"
-    line_kind = 33
+    special = 33
     tag = 0  -- kind_mult=28
   }
 
@@ -2068,7 +2068,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT18"
-    line_kind = 32
+    special = 32
     tag = 0  -- kind_mult=26
   }
 
@@ -2091,7 +2091,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT4"
-    line_kind = 34
+    special = 34
     tag = 0  -- kind_mult=27
   }
 
@@ -2114,7 +2114,7 @@ DOOM.SKINS =
     step = "STEP4"
     track = "DOORTRAK"
     frame = "FLAT18"
-    line_kind = 33
+    special = 33
     tag = 0  -- kind_mult=28
   }
 
@@ -2139,7 +2139,7 @@ DOOM.SKINS =
     track = "DOORTRAK"
     frame = "FLAT14"
     door_h = 112
-    line_kind = 0
+    special = 0
   }
 
   Switch_blue1 =
@@ -2155,7 +2155,7 @@ DOOM.SKINS =
     base = "COMPBLUE"
     x_offset = 0
     y_offset = 50
-    line_kind = 103
+    special = 103
   }
 
 
@@ -2177,7 +2177,7 @@ DOOM.SKINS =
     track = "DOORTRAK"
     frame = "FLAT5_3"
     door_h = 112
-    line_kind = 0
+    special = 0
   }
 
   Switch_red1 =
@@ -2191,7 +2191,7 @@ DOOM.SKINS =
     switch = "SW1HOT"
     x_offset = 0
     y_offset = 0
-    line_kind = 103
+    special = 103
   }
 
 
@@ -2213,7 +2213,7 @@ DOOM.SKINS =
     track = "DOORTRAK"
     frame = "SKINFACE"
     door_h = 112
-    line_kind = 0
+    special = 0
   }
 
   Switch_pink1 =
@@ -2227,7 +2227,7 @@ DOOM.SKINS =
     switch = "SW1SKIN"
     x_offset = 0
     y_offset = 0
-    line_kind = 103
+    special = 103
   }
 
 
@@ -2250,7 +2250,7 @@ DOOM.SKINS =
     track = "DOORTRAK"
     frame = "FLAT1"
     door_h = 112
-    line_kind = 0
+    special = 0
   }
 
   Switch_vine1 =
@@ -2264,7 +2264,7 @@ DOOM.SKINS =
     switch = "SW1VINE"
     x_offset = 0
     y_offset = 0
-    line_kind = 103
+    special = 103
   }
 
 
@@ -2720,21 +2720,21 @@ DOOM.SUB_THEME_DEFAULTS =
   {
     side="WOOD3", top="CEIL1_3",
     x_offset=0, y_offset=0, peg=1,
-    line_kind=23,
+    special=23,
   }
 
   lowering_pedestal_skin2 =
   {
     side="PIPEWAL1", top="CEIL1_2",
     x_offset=0, y_offset=0, peg=1,
-    line_kind=23,
+    special=23,
   }
 
   teleporter_skin =
   {
     side="METAL", top="GATE1",
     x_offset=0, y_offset=0, peg=1,
-    line_kind=97, sec_kind=8, light=0.9,
+    special=97, sec_kind=8, light=0.9,
     tele_obj="teleport_spot",
   }
 }

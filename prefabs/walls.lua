@@ -49,7 +49,7 @@ PREFAB.PICTURE =
 
     side = "?wall"
 
-    line_kind = 0
+    special = 0
     x_offset = 0
     y_offset = 0
     peg = 0
@@ -82,7 +82,7 @@ PREFAB.PICTURE =
     {
       { x =  64, y =  4 }
       { x = 128, y =  4 }
-      { x = 128, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?line_kind" }
+      { x = 128, y =  8, mat = "?pic", peg="?peg", x_offset="?x_offset", y_offset="?y_offset", special="?special" }
       { x =  64, y =  8 }
       { b = 32 }
       { t = 96 }

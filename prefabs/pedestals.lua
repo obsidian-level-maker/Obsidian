@@ -130,10 +130,10 @@ PREFAB.LOWERING_PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y = -32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x = -32, y =  32, mat = "?side", special="?line_kind", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y = -32, mat = "?side", special="?special", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?side", special="?special", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?side", special="?special", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?side", special="?special", tag="?tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { t = 128, mat = "?top", light = "?light", special="?sec_kind", tag="?tag" }
     }
   }

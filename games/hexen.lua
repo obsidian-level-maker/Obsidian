@@ -685,7 +685,9 @@ HEXEN.SKINS =
     switch = "SEWER06"
     exit = "PLAT01"
     exitside = "PLAT01"
-    line_kind = 75
+
+    special = 74
+    flags = 0x800  -- SPAC_USE
     tag = 0
   }
 
@@ -2572,6 +2574,8 @@ function HEXEN.get_levels()
       {
         name  = string.format("MAP%02d", ep_info.maps[map])
 --??    patch = string.format("WILV%d%d", episode-1, map-1)
+
+        next_map = (map < MAP_NUM ? ep_info.maps[map+1] , 0)
 
         map      = map
         episode  = episode

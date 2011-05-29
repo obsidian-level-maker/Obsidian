@@ -107,6 +107,11 @@ PREFAB.START_LEDGE =
 
 PREFAB.EXIT_PILLAR =
 {
+  defaults =
+  {
+    next_map = 0
+  }
+
   brushes =
   {
     {
@@ -121,10 +126,10 @@ PREFAB.EXIT_PILLAR =
 
     -- pillar itself
     {
-      { x = -32, y = -32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = -32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y =  32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x = -32, y =  32, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x = -32, y = -32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?arg1", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = -32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?arg1", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y =  32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?arg1", peg=1, x_offset=0, y_offset=0 }
+      { x = -32, y =  32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?arg1", peg=1, x_offset=0, y_offset=0 }
       { t = 128, mat = "?switch" }
     }
 
@@ -194,9 +199,9 @@ PREFAB.OUTDOOR_EXIT_SWITCH =  -- BORKED : NEEDS WALK BRUSHES
     -- switch itself
     {
       { x =  32, y = -8, mat = "?base" }
-      { x =  32, y =  8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y =  8, mat = "?switch", special="?special", tag="?tag", peg=1, x_offset=0, y_offset=0 }
       { x = -32, y =  8, mat = "?base" }
-      { x = -32, y = -8, mat = "?switch", special="?line_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x = -32, y = -8, mat = "?switch", special="?special", tag="?tag", peg=1, x_offset=0, y_offset=0 }
       { t = 86, mat = "?base" }
     }
 
@@ -313,7 +318,7 @@ PREFAB.SMALL_EXIT =  -- BORKED : NEED WALK BRUSHES (ETC?)
     {
       { x =  16, y = 240, mat = "?inner" }
       { x =  88, y = 240, mat = "?trim",  peg=1, x_offset=0, y_offset=0 }
-      { x =  96, y = 240, mat = "?switch", special="?line_kind", peg=0, x_offset=0, y_offset=0 }
+      { x =  96, y = 240, mat = "?switch", special="?special", peg=0, x_offset=0, y_offset=0 }
       { x = 160, y = 240, mat = "?trim",  peg=1, x_offset=0, y_offset=0 }
       { x = 168, y = 240, mat = "?inner" }
       { x = 240, y = 240, mat = "?inner" }

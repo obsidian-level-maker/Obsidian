@@ -395,7 +395,7 @@ HERETIC.SKINS =
     switch = "SW2OFF"
     exit = "MOSAIC1"
     exitside = "MOSAIC1"
-    line_kind = 11
+    special = 11
     tag = 0
   }
 
@@ -1211,7 +1211,7 @@ HERETIC.DOORS =
     door_w="DMNMSK", door_c="FLOOR10",
     step_w="METL2", track="METL2",
     key_ox=20, key_oy=-16,
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
   d_wood =
@@ -1220,7 +1220,7 @@ HERETIC.DOORS =
     door_w="DOORWOOD", door_c="FLOOR01",
     step_w="METL2", track="METL2",
     key_ox=20, key_oy=-16,
-    line_kind=1, tag=0,
+    special=1, tag=0,
   }
 
 
@@ -1253,7 +1253,7 @@ HERETIC.DOORS =
     door_w="DOORSTON", door_c="FLOOR28",
     track="METL2",
     frame_f="FLOOR04",
-    line_kind=32, tag=0,  -- kind_rep=26
+    special=32, tag=0,  -- kind_rep=26
 
     statue = "blue_statue",
   }
@@ -1265,7 +1265,7 @@ HERETIC.DOORS =
     door_w="DOORSTON", door_c="FLOOR28",
     track="METL2",
     frame_f="FLOOR04",
-    line_kind=33, tag=0, -- kind_rep=28,
+    special=33, tag=0, -- kind_rep=28,
 
     statue = "green_statue",
   }
@@ -1277,7 +1277,7 @@ HERETIC.DOORS =
     door_w="DOORSTON", door_c="FLOOR28",
     track="METL2",
     frame_f="FLOOR04",
-    line_kind=34, tag=0, -- kind_rep=27,
+    special=34, tag=0, -- kind_rep=27,
 
     statue = "yellow_statue",
   }
@@ -1301,7 +1301,7 @@ HERETIC.DOOR_PREFABS =  -- NB: OBSOLETE
       track="METL2", frame_f="FLOOR04",
       step_w="CHAINSD", key_w="CHAINSD",
       door_h=128,
-      line_kind=1, tag=0,
+      special=1, tag=0,
     }
 
   theme_probs = { CITY=20 }
