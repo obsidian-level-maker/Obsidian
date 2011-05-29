@@ -117,12 +117,12 @@ QUAKE2.ENTITIES =
   door = { id="func_door",  kind="other", r=1, h=1, pass=true }
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
 
-  -- TODO
-
-
-  trigger = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
+  trigger  = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
+  trig_key = { id="trigger_key", kind="other", r=1, h=1, pass=true }
    
   change_lev = { id="target_changelevel", kind="other", r=1, h=1, pass=true }
+
+  -- TODO
 }
 
 
@@ -1535,32 +1535,32 @@ QUAKE2.SKINS =
     light = 128
     style = 11
   }
-
+--]]
 
   --- LOCKED DOORS ---
 
-  Locked_silver =
+  Locked_red =
   {
-    _prefab = "QUAKE_DOOR"
+    _prefab = "QUAKE2_KEY_DOOR"
     _where  = "edge"
-    _keys = { k_silver=1 }
+    _keys = { k_red=1 }
     _long = 192
     _deep = 32
 
-    door = "DOOR01_2"
-    door_flags = 16  -- 16 = DOOR_SILVER_KEY
+    door = "ELEVDOOR"
+    item = "key_red_key"
   }
 
-  Locked_gold =
+  Locked_blue =
   {
-    _prefab = "QUAKE_DOOR"
+    _prefab = "QUAKE2_KEY_DOOR"
     _where  = "edge"
-    _keys = { k_gold=1 }
+    _keys = { k_blue=1 }
     _long = 192
     _deep = 32
 
-    door = "DOOR01_2"
-    door_flags = 8,  -- 8 = DOOR_GOLD_KEY
+    door = "ELEVDOOR"
+    item = "key_blue_key"
   }
 
 
@@ -1574,18 +1574,9 @@ QUAKE2.SKINS =
     _long = 192
     _deep = 32
 
-    door = "ADOOR09_1"
+    door = "GRNDOOR1"
     message = "Find the button dude!"
     wait = -1
-  }
-
-  Switch_1_Edge =
-  {
-    _prefab = "QUAKE_WALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
-
   }
 
   Switch_floor1 =
@@ -1598,6 +1589,7 @@ QUAKE2.SKINS =
   }
 
 
+--[[
   ---| WINDOWS |---
 
   Window1 =
@@ -1713,7 +1705,13 @@ QUAKE2.SUB_THEME_DEFAULTS =
 
   exits = { Exit_basic = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  keys = { k_red=60, k_blue=40 }
+
+  lock_doors = { Locked_red = 50, Locked_blue = 50 }
+
+  switch_doors = { Door_SW_1 = 50 }
 }
 
 

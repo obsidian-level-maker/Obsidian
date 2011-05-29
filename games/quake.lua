@@ -981,7 +981,7 @@ QUAKE1.SUB_THEME_DEFAULTS =
 
   exits = { Exit_basic = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
   pedestals = { Item_niche = 50 }
 

@@ -626,6 +626,10 @@ end
 
         local skin2 = { inner=w_matname, outer=w_matname, wall=w_matname }
 
+        -- Quake II bits
+        skin2.keyname = LINK.conn.lock.key
+        skin2.targetname = "door" .. tostring(Plan_alloc_id("tag"))
+
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
 
