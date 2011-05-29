@@ -688,7 +688,7 @@ HEXEN.SKINS =
     exitside = "PLAT01"
 
     special = 74
-    flags = 0x800  -- SPAC_USE
+    flags = 0x400  -- SPAC_USE
     tag = 0
   }
 
@@ -1840,6 +1840,7 @@ HEXEN.MONSTERS =
 {
   ettin =
   {
+    level = 1
     prob = 60
     health = 170
     damage =  6
@@ -1848,6 +1849,7 @@ HEXEN.MONSTERS =
 
   afrit =
   {
+    level = 1
     prob = 40
     health = 80
     damage = 20
@@ -1857,6 +1859,7 @@ HEXEN.MONSTERS =
 
   centaur1 =
   {
+    level = 2
     prob = 40
     health = 200
     damage = 12
@@ -1866,6 +1869,7 @@ HEXEN.MONSTERS =
   centaur2 =
   {
     -- not using 'replaces' here, centaur2 is much tougher
+    level = 4
     prob = 20
     health = 250
     damage = 20
@@ -1874,6 +1878,7 @@ HEXEN.MONSTERS =
 
   serpent1 =
   {
+    level = 3
     health = 90
     damage = 10
     attack = "melee"
@@ -1890,6 +1895,7 @@ HEXEN.MONSTERS =
 
   iceguy =
   {
+    level = 1
     prob = 3
     health = 120
     damage = 16
@@ -1898,6 +1904,7 @@ HEXEN.MONSTERS =
 
   demon1 =
   {
+    level = 3
     prob = 30
     health = 250
     damage = 35
@@ -1915,6 +1922,7 @@ HEXEN.MONSTERS =
 
   bishop =
   {
+    level = 6
     prob = 20
     health = 130
     damage = 24
@@ -1924,6 +1932,7 @@ HEXEN.MONSTERS =
 
   reiver =
   {
+    level = 7
     prob = 5
     health = 150
     damage = 50
