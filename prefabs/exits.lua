@@ -110,6 +110,7 @@ PREFAB.EXIT_PILLAR =
   defaults =
   {
     next_map = 0
+    flags = 0
   }
 
   brushes =
