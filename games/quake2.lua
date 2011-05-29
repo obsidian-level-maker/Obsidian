@@ -1699,20 +1699,6 @@ QUAKE2.PICTURES =
 
 
 
-
--- QUAKE2.KEY_DOORS =
--- {
---   k_silver = { door_kind="door_silver", door_side=14 }
---   k_gold   = { door_kind="door_gold",   door_side=14 }
--- }
-
-
-QUAKE2.MISC_PREFABS =
-{
-}
-
-
-
 QUAKE2.ROOMS =
 {
   PLAIN =

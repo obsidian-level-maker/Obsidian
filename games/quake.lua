@@ -757,24 +757,6 @@ QUAKE1.PICTURES =
 }
 
 
-QUAKE1.KEY_DOORS =
-{
-  k_silver = { door_kind="door_silver", door_side=14 }
-  k_gold   = { door_kind="door_gold",   door_side=14 }
-}
-
-QUAKE1.MISC_PREFABS =
-{
-  elevator =
-  {
-    prefab = "WOLF_ELEVATOR",
-    add_mode = "extend",
-
-    skin = { elevator=21, front=14, }
-  }
-}
-
-
 QUAKE1.SKINS =
 {
   ----| STARTS |----

@@ -155,13 +155,6 @@ HALFLIFE.PICTURES =
 }
 
 
--- HALFLIFE.KEY_DOORS =
--- {
---   k_silver = { door_kind="door_silver", door_side=14 }
---   k_gold   = { door_kind="door_gold",   door_side=14 }
--- }
-
-
 HALFLIFE.SUB_THEME_DEFAULTS =
 {
   teleporter_mat = "TELE_TOP"

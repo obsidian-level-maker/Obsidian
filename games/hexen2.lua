@@ -161,13 +161,6 @@ HEXEN2.PICTURES =
 }
 
 
--- HEXEN2.KEY_DOORS =
--- {
---   k_silver = { door_kind="door_silver", door_side=14 }
---   k_gold   = { door_kind="door_gold",   door_side=14 }
--- }
-
-
 HEXEN2.SUB_THEME_DEFAULTS =
 {
   teleporter_mat = "TELE_TOP"
