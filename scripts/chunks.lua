@@ -459,6 +459,8 @@ function CHUNK_CLASS.build(C)
 
   -- floor
 
+  local f_matname = f_mat
+
   if C.stair then
     assert(THEME.stairs)
 
@@ -477,7 +479,7 @@ function CHUNK_CLASS.build(C)
 
     if not skin then error("No usable stair found!") end
 
-    local skin0 = { side=f_mat, step=f_mat, top=f_mat, floor=f_mat, wall=f_mat }
+    local skin0 = { side=f_matname, step=f_matname, top=f_matname, floor=f_matname, wall=f_matname }
 
     local low_h = math.min(C.stair.C1.floor_h, C.stair.C2.floor_h)
     local dir   = C.stair.dir
@@ -497,7 +499,7 @@ function CHUNK_CLASS.build(C)
     Fabricate(skin._prefab, T, { skin0, skin })
 
   else
-    f_mat = Mat_lookup(f_mat)
+    f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
     brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
@@ -512,7 +514,8 @@ function CHUNK_CLASS.build(C)
 
   -- ceiling
 
-  c_mat = Mat_lookup(c_mat)
+  local c_matname = c_mat
+  c_mat = Mat_lookup(c_matname)
   c_tex = c_mat.f or c_mat.t
 
   brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
@@ -539,7 +542,8 @@ function CHUNK_CLASS.build(C)
 
   -- walls
 
-  w_mat = Mat_lookup(w_mat)
+  local w_matname = w_mat
+  w_mat = Mat_lookup(w_matname)
   w_tex = w_mat.t
 
   local thick = 16
@@ -620,7 +624,7 @@ end
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
-        local skin2 = { inner=w_mat.t, outer=w_mat.t, wall=w_mat.t }
+        local skin2 = { inner=w_matname, outer=w_matname, wall=w_matname }
 
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
@@ -635,7 +639,7 @@ end
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, 192, 32, 32)
 
-        local skin2 = { tag=LINK.conn.lock.tag, inner=w_mat.t, outer=w_mat.t, wall=w_mat.t }
+        local skin2 = { tag=LINK.conn.lock.tag, inner=w_matname, outer=w_matname, wall=w_matname }
 
         skin2.targetname = string.format("switch%d", skin2.tag)
 
