@@ -396,6 +396,7 @@ PREFAB.DOOR =
 PREFAB.QUAKE_DOOR =
 {
   placement = "fitted"
+
   team_models = true
 
   defaults =
@@ -479,6 +480,7 @@ PREFAB.QUAKE_DOOR =
         ent = "door", angle = 180, sounds = 2,
         targetname = "?targetname", wait ="?wait",
         spawnflags = "?door_flags", message = "?message",
+        team = "?team"
       }
     }
 
@@ -491,7 +493,7 @@ PREFAB.QUAKE_DOOR =
       entity =
       {
         ent = "door", angle = 0, spawnflags = "?door_flags",
-        wait ="?wait",
+        wait ="?wait", team = "?team"
       }
     }
   }
@@ -541,6 +543,7 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
 PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 {
   placement = "fitted"
+
   team_models = true
 
   defaults =
@@ -600,6 +603,7 @@ PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
         ent = "door", angles = "90 0 0", sounds = 2,
         targetname = "?targetname", wait ="?wait",
         spawnflags = "?door_flags", message = "?message",
+        team = "?team"
       }
     }
 
@@ -612,7 +616,7 @@ PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
       entity =
       {
         ent = "door", angles = "270 0 0", spawnflags = "?door_flags",
-        wait ="?wait",
+        wait ="?wait", team = "?team"
       }
     }
   }
