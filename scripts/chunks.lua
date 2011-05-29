@@ -248,7 +248,7 @@ function CHUNK_CLASS.purpose_exit(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
 
-  local skin2 = { next_map = LEVEL.next_map }
+  local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
 end

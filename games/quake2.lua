@@ -118,6 +118,11 @@ QUAKE2.ENTITIES =
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
 
   -- TODO
+
+
+  trigger = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
+   
+  change_lev = { id="target_changelevel", kind="other", r=1, h=1, pass=true }
 }
 
 
@@ -142,6 +147,7 @@ QUAKE2.PARAMETERS =
   damage_factor = 1.0
   ammo_factor   = 0.8
   health_factor = 0.7
+  monster_factor = 0.6
 }
 
 
@@ -1452,6 +1458,202 @@ QUAKE2.RAILS =
 
 ----------------------------------------------------------------
 
+QUAKE2.SKINS =
+{
+  ----| STARTS |----
+
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_basic =
+  {
+    _prefab = "QUAKE2_EXIT_PAD"
+
+    pad  = "FLOORSW2"
+    side = "RED1_2"
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+
+
+  ----| ARCHES |----
+
+--[[
+  Arch1 =
+  {
+    _prefab = "ARCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 64
+  }
+
+
+  ----| DOORS |----
+
+  Door_plain =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 32
+
+    door = "ADOOR02_2"
+  }
+
+
+  ----| KEY |----
+
+  Item_niche =
+  {
+    _prefab = "ITEM_NICHE"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 64
+
+    light = 128
+    style = 11
+  }
+
+
+  --- LOCKED DOORS ---
+
+  Locked_silver =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _keys = { k_silver=1 }
+    _long = 192
+    _deep = 32
+
+    door = "DOOR01_2"
+    door_flags = 16  -- 16 = DOOR_SILVER_KEY
+  }
+
+  Locked_gold =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _keys = { k_gold=1 }
+    _long = 192
+    _deep = 32
+
+    door = "DOOR01_2"
+    door_flags = 8,  -- 8 = DOOR_GOLD_KEY
+  }
+
+
+  ----| SWITCHED DOORS |---- 
+
+  Door_SW_1 =
+  {
+    _prefab = "QUAKE_DOOR"
+    _where  = "edge"
+    _switches = { Switch_1=50 }  -- FIXME
+    _long = 192
+    _deep = 32
+
+    door = "ADOOR09_1"
+    message = "Find the button dude!"
+    wait = -1
+  }
+
+  Switch_1_Edge =
+  {
+    _prefab = "QUAKE_WALL_SWITCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+  }
+
+  Switch_floor1 =
+  {
+    _prefab = "QUAKE_FLOOR_SWITCH"
+    _where  = "middle"
+
+    switch = "BUTNN"
+    side   = "MET5_1"
+  }
+
+
+  ---| WINDOWS |---
+
+  Window1 =
+  {
+    _prefab = "WINDOW"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 32
+
+    track = "RUNE2_2"
+  }
+
+
+  ---| FENCES |---
+
+  Fence1 =
+  {
+    _prefab = "FENCE_STICKS_QUAKE"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 32
+
+    fence = "WIZWOOD1_8"
+    metal = "METAL1_1"
+  }
+
+
+  ---| DECORATION |---
+
+  TechLamp =
+  {
+    _prefab = "QUAKE_TECHLAMP"
+    _radius = 24
+  }
+
+  RoundPillar =
+  {
+    _prefab = "ROUND_PILLAR"
+    _radius = 32
+
+    pillar = "TECH02_5"
+  }
+--]]
+
+} -- end of QUAKE1.SKINS
+
+
+QUAKE1.ROOMS =
+{
+  PLAIN =
+  {
+  }
+}
+
+----------------------------------------------------------------
+
 QUAKE2.COMBOS =
 {
   TECH_BASE =
@@ -1521,7 +1723,11 @@ QUAKE2.ROOMS =
 
 QUAKE2.SUB_THEME_DEFAULTS =
 {
-  periph_pillar_mat = "METAL2_4",
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_basic = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
 }
 
 
@@ -2090,7 +2296,7 @@ function QUAKE2.get_levels()
       local LEV =
       {
         name = string.format("e%dm%d", episode, map)
---??    next_map = "base1", --!!!! string.format("e%dm%d", episode, map+1),
+        next_map = string.format("e%dm%d", episode, map+1),
 
         episode  = episode
         ep_along = map / MAP_NUM
