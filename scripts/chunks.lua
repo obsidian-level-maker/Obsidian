@@ -272,14 +272,19 @@ function CHUNK_CLASS.purpose_switch(C)
   local skin1
   local skin2 = { tag=C.lock.tag }
   
-  -- FIXME: determine skin1 properly
-  if GAME.format == "doom" then
-    skin1 = assert(GAME.SKINS["Switch_blue1"])
-  else
-    skin1 = assert(GAME.SKINS["Switch_floor1"])
-
-    skin2.target = string.format("switch%d", skin2.tag)
+  -- !!! FIXME: determine skin1 properly (from door skin)
+  each name,SK in GAME.SKINS do
+    if SK._switches then
+      local sw_name = rand.key_by_probs(SK._switches)
+      skin1 = assert(GAME.SKINS[sw_name])
+      break;
+    end
   end
+
+  if not skin1 then error("Cannot find a usable switch") end
+
+
+  skin2.target = string.format("switch%d", skin2.tag)
 
   local mx, my = C:mid_point()
 
