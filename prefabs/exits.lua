@@ -417,6 +417,44 @@ PREFAB.QUAKE_EXIT_PAD =
 }
 
 
+PREFAB.QUAKE2_EXIT_PAD =
+{
+  brushes =
+  {
+    -- the pad itself
+    {
+      { x = -32, y = -32, mat = "?side", x_offset=0, y_offset=0 }
+      { x =  32, y = -32, mat = "?side", x_offset=0, y_offset=0 }
+      { x =  32, y =  32, mat = "?side", x_offset=0, y_offset=0 }
+      { x = -32, y =  32, mat = "?side", x_offset=0, y_offset=0 }
+      { t = 16, mat = "?pad" }
+    }
+  }
+
+  models =
+  {
+    -- the trigger
+    {
+      x1 = -20, x2 = 20,  x_face = { mat="TRIGGER" }
+      y1 = -20, y2 = 20,  y_face = { mat="TRIGGER" }
+      z1 =  16, z2 = 240, z_face = { mat="TRIGGER" }
+
+      entity =
+      {
+        ent = "trigger", target = "?targetname"
+      }
+    }
+  }
+
+  entities =
+  {
+    { x = 0, y = 0, z = 20, ent = "change_lev", map = "?next_map", targetname = "?targetname" }
+
+    { x = 0, y = 0, z = 20, ent = "light", light = 128, style = 10 }
+  }
+}
+
+
 PREFAB.QUAKE_WALL_EXIT =
 {
   placement = "fitted"
