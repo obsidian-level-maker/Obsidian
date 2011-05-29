@@ -1432,7 +1432,7 @@ HERETIC.SUB_THEME_DEFAULTS =
 
   exits = { Exit_switch = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
 
   steps = { step1=50 }

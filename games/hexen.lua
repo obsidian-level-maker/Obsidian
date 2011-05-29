@@ -664,6 +664,52 @@ HEXEN.RAILS =
 
 ----------------------------------------------------------------
 
+HEXEN.SKINS =
+{
+  ----| STARTS |----
+
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_switch =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "SEWER06"
+    exit = "PLAT01"
+    exitside = "PLAT01"
+    line_kind = 75
+    tag = 0
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+}
+
+
+----------------------------------------------------------------
+
 HEXEN.COMBOS =
 {
   ---- CAVE ------------
@@ -1495,6 +1541,18 @@ HEXEN.ROOMS =
   }
 
   -- TODO: check in-game level names for ideas
+}
+
+
+HEXEN.SUB_THEME_DEFAULTS =
+{
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_switch = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  -- TODO everything else
 }
 
 

@@ -2636,7 +2636,7 @@ DOOM.SUB_THEME_DEFAULTS =
 
   pedestals = { Item_niche = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
