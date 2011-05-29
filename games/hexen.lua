@@ -512,22 +512,22 @@ HEXEN.MATERIALS =
   WOOD03   = { t="WOOD03",   f="F_092" }
   WOOD04   = { t="WOOD04",   f="F_054" }
 
-  X_FAC01  = { t="X_FAC01",  f="X_001" }
-  X_FIRE01 = { t="X_FIRE01", f="X_001" }
-  X_SWMP1  = { t="X_SWMP1",  f="X_009" }
-  X_SWR1   = { t="X_SWR1",   f="F_018" }
-  X_WATER1 = { t="X_WATER1", f="X_005" }
+  X_FAC01  = { t="X_FAC01",  f="X_001", sane=1 }
+  X_FIRE01 = { t="X_FIRE01", f="X_001", sane=1 }
+  X_SWMP1  = { t="X_SWMP1",  f="X_009", sane=1 }
+  X_SWR1   = { t="X_SWR1",   f="F_018", sane=1 }
+  X_WATER1 = { t="X_WATER1", f="X_005", sane=1 }
 
   -- switches
-  BOSSK1   = { t="BOSSK1",   f="F_071" }
-  GEAR01   = { t="GEAR01",   f="F_091" }
-  SW51_OFF = { t="SW51_OFF", f="F_082" }
-  SW52_OFF = { t="SW52_OFF", f="F_082" }
-  SW53_UP  = { t="SW53_UP",  f="F_025" }
-  SW_1_UP  = { t="SW_1_UP",  f="F_048" }
-  SW_2_UP  = { t="SW_2_UP",  f="F_048" }
-  SW_EL1   = { t="SW_EL1",   f="F_082" }
-  SW_OL1   = { t="SW_OL1",   f="F_073" }
+  BOSSK1   = { t="BOSSK1",   f="F_071", sane=1 }
+  GEAR01   = { t="GEAR01",   f="F_091", sane=1 }
+  SW51_OFF = { t="SW51_OFF", f="F_082", sane=1 }
+  SW52_OFF = { t="SW52_OFF", f="F_082", sane=1 }
+  SW53_UP  = { t="SW53_UP",  f="F_025", sane=1 }
+  SW_1_UP  = { t="SW_1_UP",  f="F_048", sane=1 }
+  SW_2_UP  = { t="SW_2_UP",  f="F_048", sane=1 }
+  SW_EL1   = { t="SW_EL1",   f="F_082", sane=1 }
+  SW_OL1   = { t="SW_OL1",   f="F_073", sane=1 }
 
 
   -- flats --
@@ -608,16 +608,17 @@ HEXEN.MATERIALS =
   F_081 = { t="GLASS05",  f="F_081" }
   F_082 = { t="CASTLE01", f="F_082" }
   F_083 = { t="CASTLE01", f="F_083" }
+  F_084 = { t="CASTLE01", f="F_084" }
   F_089 = { t="CASTLE01", f="F_089" }
   F_091 = { t="CASTLE01", f="F_091" }
   F_092 = { t="WOOD01",   f="F_092" }
 
-  F_084 = { t="CASTLE01", f="F_084" }
-  X_001 = { t="X_FIRE01", f="X_001" }
-  X_005 = { t="X_WATER1", f="X_005" }
-  X_009 = { t="X_SWMP1",  f="X_009" }
-  X_012 = { t="CASTLE01", f="X_012" }
+  X_001 = { t="X_FIRE01", f="X_001", sane=1  }
+  X_005 = { t="X_WATER1", f="X_005", sane=1  }
+  X_009 = { t="X_SWMP1",  f="X_009", sane=1  }
+  X_012 = { t="CASTLE01", f="X_012", sane=1  }
 }
+
 
 HEXEN.RAILS =
 {
