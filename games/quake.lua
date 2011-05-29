@@ -818,6 +818,23 @@ QUAKE1.SKINS =
   }
 
 
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+
+
   ----| ARCHES |----
 
   Arch1 =
@@ -981,6 +998,8 @@ QUAKE1.SUB_THEME_DEFAULTS =
   starts = { Start_basic = 50 }
 
   exits = { Exit_basic = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 },
 
   pedestals = { Item_niche = 50 }
 
