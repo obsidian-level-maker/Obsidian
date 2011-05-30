@@ -251,7 +251,7 @@ function CHUNK_CLASS.purpose_exit(C)
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
 
   -- Hexen: on last map, exit will end the game
-  if OB_CONFIG.game == "hexen" and not skin2.next_map then
+  if OB_CONFIG.game == "hexen" and not LEVEL.next_map then
     skin2.special = 75
   end
 

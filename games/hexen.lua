@@ -5,6 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C)      2011 Jared Blackburn
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1688,11 +1689,43 @@ HEXEN.SUB_THEMES =
   {
     prob = 50
 
-    building_walls = { CASTLE01=50 }
+    building_walls =
+    {
+      MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
+      MONK14=15, MONK15=15, MONK16=15, TOMB05=15, 
+      MONK17=2, MONK18=2, MONK19=2, MONK21=1, 
+      MONK22=1, WASTE04=5, FOREST01=12, FOREST05=8, 
+      WINN01=12, PRTL02=12, PRTL04=12, PRTL05=10, 
+      VILL01=7,
+    }
 
-    building_floors = { F_001=50 }
+    building_floors =
+    {
+      F_010=10, F_011=20, F_012=8, F_014=8, 
+      F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
+      F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,   
+      F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
+      F_073=3, F_077=10, F_089=12, F_092=2,
+    }
 
-    building_ceilings = { F_002=50 }
+    building_ceilings =
+    {
+      F_010=10, F_011=20, F_012=8, F_014=8, 
+      F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
+      F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,   
+      F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
+      F_073=3, F_077=2, F_089=2, F_081=4, F_092=2,
+    }
+
+    courtyard_floors =
+    {
+      F_024=25, F_034=50, F_001=10, F_002=10,
+      F_004=15, F_005=15, F_010=2, F_011=4, 
+      F_025=3, F_028=2, F_029=2, F_030=2, F_031=2,
+      F_046=2, F_047=2, F_048=2, F_057=1, F_059=2,    
+      F_077=2, F_089=2, F_012=2, F_014=2
+    }
+
   }
 
 --[[ REALLY OLD CRUD
@@ -2698,7 +2731,6 @@ function HEXEN.get_levels()
 
     for map = 1,MAP_NUM do
       local map_id = (episode - 1) * MAP_NUM + map
-      local is_last = (episode == EP_NUM) and (map == MAP_NUM)
 
       local ep_along = map / MAP_NUM
 
@@ -2712,10 +2744,10 @@ function HEXEN.get_levels()
 --??    patch = string.format("WILV%d%d", episode-1, map-1)
 
         map      = map_id
-        next_map = is_last and (map_id + 1)
+        next_map = map_id + 1
 
         -- TODO: proper clusters!
-        cluster  = map_id
+        cluster  = map_id + 10
 
         episode  = episode
         ep_along = ep_along
@@ -2723,6 +2755,13 @@ function HEXEN.get_levels()
 
         sky_light = ep_info.sky_light
       }
+
+      -- the very last map?
+      if episode == 5 and map == MAP_NUM then
+        LEV.next_map = nil
+      elseif EP_NUM == 1 and map == 6 then
+        LEV.next_map = 13
+      end
 
       table.insert(GAME.levels, LEV)
     end -- for map
@@ -2750,7 +2789,7 @@ function HEXEN.make_mapinfo()
     add("map %d \"%s\"", L.map, string.upper(L.description))
     add("warptrans %d", L.map)
     add("next %d", L.next_map or 1)
-    add("cluster %d", L.map)
+    add("cluster %d", L.cluster)
     add("sky1 SKY2 0")
     add("sky2 SKY3 0")
     add("")
