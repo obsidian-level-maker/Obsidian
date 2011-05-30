@@ -712,6 +712,23 @@ HEXEN.SKINS =
 
   --- LOCKED DOORS ---
 
+  Locked_axe =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_axe=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_AXE"
+    track = "STEEL08"
+    special = 13
+    tag = 0
+  }
+
   Locked_fire =
   {
     _prefab = "DOOR"
@@ -746,6 +763,23 @@ HEXEN.SKINS =
     tag = 0
   }
 
+  Locked_silver =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_silver=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_SLV1"
+    track = "STEEL08"
+    special = 13
+    tag = 0
+  }
+
 
   ----| SWITCHED DOORS |---- 
 
@@ -760,7 +794,7 @@ HEXEN.SKINS =
     w = 128
     h = 112
     door_h = 112
-    door = "D_WD07"
+    door = "BRASS3"
     track = "STEEL08"
     special = 0
   }
@@ -1627,9 +1661,10 @@ HEXEN.SUB_THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
-  keys = { k_fire = 40, k_emerald = 60 }
+  keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
 
-  lock_doors = { Locked_fire = 50, Locked_emerald = 50 }
+  lock_doors = { Locked_axe = 50, Locked_fire = 50,
+                 Locked_emerald = 50, Locked_silver = 50 }
 
   switch_doors = { Door_SW_1 = 50 }
 
