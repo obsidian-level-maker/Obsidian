@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -58,17 +58,17 @@ HEXEN.ENTITIES =
   --- PICKUPS ---
 
   -- keys
-  k_steel   = { id=8030, kind="pickup", r=8,h=16 }
-  k_cave    = { id=8031, kind="pickup", r=8,h=16 }
-  k_axe     = { id=8032, kind="pickup", r=8,h=16 }
-  k_fire    = { id=8033, kind="pickup", r=8,h=16 }
-  k_emerald = { id=8034, kind="pickup", r=8,h=16 }
-  k_dungeon = { id=8035, kind="pickup", r=8,h=16 }
-  k_silver  = { id=8036, kind="pickup", r=8,h=16 }
-  k_rusty   = { id=8037, kind="pickup", r=8,h=16 }
-  k_horn    = { id=8038, kind="pickup", r=8,h=16 }
-  k_swamp   = { id=8039, kind="pickup", r=8,h=16 }
-  k_castle  = { id=8200, kind="pickup", r=8,h=16 }
+  k_steel   = { id=8030, kind="pickup", r=8,h=16 }  -- KEY1 sprite
+  k_cave    = { id=8031, kind="pickup", r=8,h=16 }  -- KEY2
+  k_axe     = { id=8032, kind="pickup", r=8,h=16 }  -- KEY3
+  k_fire    = { id=8033, kind="pickup", r=8,h=16 }  -- KEY4
+  k_emerald = { id=8034, kind="pickup", r=8,h=16 }  -- KEY5
+  k_dungeon = { id=8035, kind="pickup", r=8,h=16 }  -- KEY6
+  k_silver  = { id=8036, kind="pickup", r=8,h=16 }  -- KEY7
+  k_rusty   = { id=8037, kind="pickup", r=8,h=16 }  -- KEY8
+  k_horn    = { id=8038, kind="pickup", r=8,h=16 }  -- KEY9
+  k_swamp   = { id=8039, kind="pickup", r=8,h=16 }  -- KEYA
+  k_castle  = { id=8200, kind="pickup", r=8,h=16 }  -- KEYB
  
   -- weapons
   c_staff   = { id=10,  kind="pickup", r=20,h=16 }
@@ -707,6 +707,78 @@ HEXEN.SKINS =
     _prefab = "NICHE_STAIR_8"
     _where  = "chunk"
     _stairs = { down=1 }
+  }
+
+
+  --- LOCKED DOORS ---
+
+  Locked_fire =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_fire=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_FIRE"
+    track = "STEEL08"
+    special = 13
+    tag = 0
+  }
+
+  Locked_emerald =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_emerald=1 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_CAST"
+    track = "STEEL08"
+    special = 13
+    tag = 0
+  }
+
+
+  ----| SWITCHED DOORS |---- 
+
+  Door_SW_1 =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _switches = { Switch_1=50 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_WD07"
+    track = "STEEL08"
+    special = 0
+  }
+
+  Switch_1 =
+  {
+    _prefab = "SMALL_SWITCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+    switch_h = 64
+    switch = "SW51_OFF"
+    side = "STEEL07"
+    base = "STEEL07"
+    x_offset = 0
+    y_offset = 50
+    special = 103
   }
 }
 
@@ -1554,6 +1626,12 @@ HEXEN.SUB_THEME_DEFAULTS =
   exits = { Exit_switch = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  keys = { k_fire = 40, k_emerald = 60 }
+
+  lock_doors = { Locked_fire = 50, Locked_emerald = 50 }
+
+  switch_doors = { Door_SW_1 = 50 }
 
   -- TODO everything else
 }
