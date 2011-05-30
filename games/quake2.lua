@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1770,6 +1770,7 @@ QUAKE2.MONSTERS =
 {
   guard =
   {
+    level = 1
     prob = 20
     health = 20
     damage = 4
@@ -1778,6 +1779,7 @@ QUAKE2.MONSTERS =
 
   guard_sg =
   {
+    level = 1
     prob = 70
     health = 30
     damage = 10
@@ -1795,6 +1797,7 @@ QUAKE2.MONSTERS =
 
   enforcer =
   {
+    level = 3
     prob = 50
     health = 100
     damage = 10
@@ -1803,6 +1806,7 @@ QUAKE2.MONSTERS =
 
   flyer =
   {
+    level = 2
     prob = 90
     health = 50
     damage = 5
@@ -1822,6 +1826,7 @@ QUAKE2.MONSTERS =
 
   parasite =
   {
+    level = 2
     prob = 10
     health = 175
     damage = 10
@@ -1830,6 +1835,7 @@ QUAKE2.MONSTERS =
 
   maiden =
   {
+    level = 7
     prob = 50
     health = 175
     damage = 30
@@ -1838,6 +1844,7 @@ QUAKE2.MONSTERS =
 
   technician =
   {
+    level = 5
     prob = 50
     health = 200
     damage = 8
@@ -1856,6 +1863,7 @@ QUAKE2.MONSTERS =
 
   icarus =
   {
+    level = 4
     prob = 70
     health = 240
     damage = 5
@@ -1866,6 +1874,7 @@ QUAKE2.MONSTERS =
 
   medic =
   {
+    level = 5
     prob = 30
     health = 300
     damage = 21
@@ -1882,6 +1891,7 @@ QUAKE2.MONSTERS =
 
   brain =
   {
+    level = 5
     prob = 20
     health = 300
     damage = 17
@@ -1890,6 +1900,7 @@ QUAKE2.MONSTERS =
 
   grenader =
   {
+    level = 5
     prob = 10
     health = 400
     damage = 30
@@ -1898,6 +1909,7 @@ QUAKE2.MONSTERS =
 
   gladiator =
   {
+    level = 7
     prob = 10
     health = 400
     damage = 40
@@ -1906,6 +1918,7 @@ QUAKE2.MONSTERS =
 
   tank =
   {
+    level = 8
     prob = 2
     health = 750
     damage = 160
@@ -1914,6 +1927,7 @@ QUAKE2.MONSTERS =
 
   tank_cmdr =
   {
+    level = 9
     health = 1000
     damage = 160
     attack = "missile"
