@@ -2697,6 +2697,9 @@ function HEXEN.get_levels()
 --??    GAME.original_themes[episode] = ep_info.orig_theme
 
     for map = 1,MAP_NUM do
+      local map_id = (episode - 1) * MAP_NUM + map
+      local is_last = (episode == EP_NUM) and (map == MAP_NUM)
+
       local ep_along = map / MAP_NUM
 
       if MAP_NUM == 1 then
@@ -2708,9 +2711,12 @@ function HEXEN.get_levels()
         name  = string.format("MAP%02d", ep_info.maps[map])
 --??    patch = string.format("WILV%d%d", episode-1, map-1)
 
-        next_map = (map < MAP_NUM ? ep_info.maps[map+1] , 0)
+        map      = map_id
+        next_map = is_last and (map_id + 1)
 
-        map      = map
+        -- TODO: proper clusters!
+        cluster  = map_id
+
         episode  = episode
         ep_along = ep_along
         mon_along = ep_along + (episode-1) / 3
@@ -2730,6 +2736,34 @@ function HEXEN.begin_level()
   if not LEVEL.description and LEVEL.name_theme then
     LEVEL.description = Naming_grab_one(LEVEL.name_theme)
   end
+end
+
+
+function HEXEN.make_mapinfo()
+  local mapinfo = {}
+
+  local function add(...)
+    table.insert(mapinfo, string.format(...) .. "\n")
+  end
+
+  each L in GAME.levels do
+    add("map %d \"%s\"", L.map, string.upper(L.description))
+    add("warptrans %d", L.map)
+    add("next %d", L.next_map or 1)
+    add("cluster %d", L.map)
+    add("sky1 SKY2 0")
+    add("sky2 SKY3 0")
+    add("")
+  end
+
+  gui.wad_add_text_lump("MAPINFO", mapinfo)
+end
+
+
+function HEXEN.all_done()
+  HEXEN.make_mapinfo()
+
+  -- FIXME: cool gfx!
 end
 
 
@@ -2753,6 +2787,7 @@ OB_GAMES["hexen"] =
     setup        = HEXEN.setup
     get_levels   = HEXEN.get_levels
     begin_level  = HEXEN.begin_level
+    all_done     = HEXEN.all_done
   }
 }
 
