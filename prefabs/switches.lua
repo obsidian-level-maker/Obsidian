@@ -24,6 +24,9 @@ PREFAB.SMALL_SWITCH =
   {
     x_offset = 0
     y_offset = 0
+
+    speed = 16
+    flags = ""
   }
 
   brushes =
@@ -43,7 +46,7 @@ PREFAB.SMALL_SWITCH =
 
     -- switch itself
     {
-      { x = -32, y = -8, mat = "?switch", special="?special", tag="?tag", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y = -8, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?tag", arg2="?speed", peg=1, x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y = -8, mat = "?side" }
       { x =  32, y =  8, mat = "?side" }
       { x = -32, y =  8, mat = "?side" }

@@ -635,6 +635,10 @@ end
         skin2.keyname = LINK.conn.lock.key
         skin2.targetname = "door" .. tostring(Plan_alloc_id("tag"))
 
+        if skin._tagged then
+          skin2.tag = Plan_alloc_id("tag")
+        end
+
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
 

@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --  Copyright (C)      2008 Sam Trenholme
 --
 --  This program is free software; you can redistribute it and/or

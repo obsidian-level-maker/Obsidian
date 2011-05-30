@@ -445,8 +445,12 @@ Sam's suggestions:
 
 !! get it working again (different WAD formats, args[], etc)
 
+!! support act="SR" or act="W1" etc... (in csg_doom code)
+
 +  IDEA: have a DEFAULT_ARGS table for each line special,
          so that prefabs (etc) aren't cluttered with arguments.
+
++  separate prefab for switched vs locked doors
 
 -  need arg1 .. arg5 in faces, Lua code to assign tag number
 

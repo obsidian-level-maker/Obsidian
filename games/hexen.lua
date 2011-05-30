@@ -717,6 +717,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_axe=1 }
+    _tagged = 1
     _long = 192
     _deep = 32
 
@@ -726,7 +727,8 @@ HEXEN.SKINS =
     door = "D_AXE"
     track = "STEEL08"
     special = 13
-    tag = 0
+    flags = 0x400  -- SPAC_USE
+    keynum = 3
   }
 
   Locked_fire =
@@ -734,6 +736,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_fire=1 }
+    _tagged = 1
     _long = 192
     _deep = 32
 
@@ -743,7 +746,8 @@ HEXEN.SKINS =
     door = "D_FIRE"
     track = "STEEL08"
     special = 13
-    tag = 0
+    flags = 0x400  -- SPAC_USE
+    keynum = 4
   }
 
   Locked_emerald =
@@ -751,6 +755,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_emerald=1 }
+    _tagged = 1
     _long = 192
     _deep = 32
 
@@ -760,7 +765,8 @@ HEXEN.SKINS =
     door = "D_CAST"
     track = "STEEL08"
     special = 13
-    tag = 0
+    flags = 0x400  -- SPAC_USE
+    keynum = 5
   }
 
   Locked_silver =
@@ -768,6 +774,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_silver=1 }
+    _tagged = 1
     _long = 192
     _deep = 32
 
@@ -777,7 +784,8 @@ HEXEN.SKINS =
     door = "D_SLV1"
     track = "STEEL08"
     special = 13
-    tag = 0
+    flags = 0x400  -- SPAC_USE
+    keynum = 7
   }
 
 
@@ -806,20 +814,21 @@ HEXEN.SKINS =
     _long   = 192
     _deep   = 48
 
-    switch_h = 64
+    switch_h = 32
     switch = "SW51_OFF"
     side = "STEEL07"
     base = "STEEL07"
     x_offset = 0
-    y_offset = 50
-    special = 103
+    y_offset = 0
+    special = 11
+    flags = 0x400  -- SPAC_USE
   }
 }
 
 
 ----------------------------------------------------------------
 
-HEXEN.COMBOS =
+HEXEN.COMBOS =  -- NOTE: THIS IS OLD STUFF, TO BE REMOVED...
 {
   ---- CAVE ------------
 
@@ -1168,7 +1177,7 @@ HEXEN.HALLWAYS =
 
 ---- PEDESTALS ------------
 
-HEXEN.PEDESTALS =
+HEXEN.PEDESTALS =  -- NOTE: THIS IS OLD STUFF, TO BE REMOVED...
 {
   PLAYER =
   {
@@ -1216,7 +1225,7 @@ HEXEN.LIQUIDS =
 --- slime = { floor="X_009", wall="X_SWMP1" }
 }
 
-HEXEN.SWITCHES =
+HEXEN.SWITCHES =  -- NOTE: THIS IS OLD STUFF, TO BE REMOVED...
 {
   sw_cow =
   {
@@ -1432,7 +1441,7 @@ HEXEN.DOORS =
   d_wood3  = { wall="D_WD10",   w=64,  h=128 }
 }
 
-HEXEN.KEY_DOORS =
+HEXEN.KEY_DOORS =  -- NOTE: THIS IS OLD STUFF, TO BE REMOVED...
 {
   k_emerald =
   {
