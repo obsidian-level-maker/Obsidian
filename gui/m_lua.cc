@@ -607,7 +607,6 @@ static const luaL_Reg gui_script_funcs[] =
 };
 
 
-// partial Lua 5.2.0 compability
 static const luaL_Reg bit_functions[] =
 {
   { "band",    gui_bit_and },
