@@ -182,25 +182,41 @@ function Trans.apply_angles_z(ang_str)
 end
 
 
-
 Trans.DOOM_LINE_FLAGS =
 {
-  blocked     = 0x01,
-  block_mon   = 0x02,
-  sound_block = 0x40,
+  blocked     = 0x01
+  block_mon   = 0x02
+  sound_block = 0x40
 
-  draw_secret = 0x20,
-  draw_never  = 0x80,
-  draw_always = 0x100,
+  draw_secret = 0x20
+  draw_never  = 0x80
+  draw_always = 0x100
 
-  pass_thru   = 0x200,  -- Boom flag
+-- BOOM:  pass_thru = 0x200
 }
 
-function Trans.collect_flags(C)
-  -- FIXME: make this work in a more general way
+Trans.HEXEN_ACTIONS =
+{
+  W1 = 0x0000, WR = 0x0200,  -- walk
+  S1 = 0x0400, SR = 0x0600,  -- switch
+  M1 = 0x0800, MR = 0x0A00,  -- monster
+  G1 = 0x0c00, GR = 0x0E00,  -- gun / projectile
+  B1 = 0x1000, BR = 0x1200,  -- bump
+}
 
+
+
+function Trans.collect_flags(C)
   if GAME.format == "doom" then
     local flags = C.flags or 0
+
+    if C.act then
+      local spac = Trans.HEXEN_ACTIONS[C.act]
+      if not spac then
+        error("Unknown act value: " .. tostring(C.act))
+      end
+      flags = bit.bor(flags, spac)
+    end
 
     for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
       if C[name] and C[name] != 0 then

@@ -109,8 +109,8 @@ PREFAB.EXIT_PILLAR =
 {
   defaults =
   {
-    next_map = 0
-    flags = 0
+    act = ""
+    next_map = ""
   }
 
   brushes =
@@ -127,10 +127,10 @@ PREFAB.EXIT_PILLAR =
 
     -- pillar itself
     {
-      { x = -32, y = -32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = -32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y =  32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
-      { x = -32, y =  32, mat = "?switch", special="?special", flags="?flags", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
+      { x = -32, y = -32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = -32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
+      { x = -32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
       { t = 128, mat = "?switch" }
     }
 

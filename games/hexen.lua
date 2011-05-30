@@ -688,7 +688,7 @@ HEXEN.SKINS =
     exitside = "PLAT01"
 
     special = 74
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
     tag = 0
   }
 
@@ -727,7 +727,7 @@ HEXEN.SKINS =
     door = "D_AXE"
     track = "STEEL08"
     special = 13
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
     keynum = 3
   }
 
@@ -746,7 +746,7 @@ HEXEN.SKINS =
     door = "D_FIRE"
     track = "STEEL08"
     special = 13
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
     keynum = 4
   }
 
@@ -765,7 +765,7 @@ HEXEN.SKINS =
     door = "D_CAST"
     track = "STEEL08"
     special = 13
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
     keynum = 5
   }
 
@@ -784,7 +784,7 @@ HEXEN.SKINS =
     door = "D_SLV1"
     track = "STEEL08"
     special = 13
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
     keynum = 7
   }
 
@@ -820,8 +820,9 @@ HEXEN.SKINS =
     base = "STEEL07"
     x_offset = 0
     y_offset = 0
+
     special = 11
-    flags = 0x400  -- SPAC_USE
+    act = "S1"
   }
 }
 
