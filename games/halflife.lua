@@ -76,7 +76,9 @@ HALFLIFE.ENTITIES =
 
   -- special
 
+  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
   change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
+  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
 
   light = { id="light",      kind="other", r=1, h=1, pass=true }
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }

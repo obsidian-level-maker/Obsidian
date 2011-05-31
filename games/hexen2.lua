@@ -81,9 +81,12 @@ HEXEN2.ENTITIES =
 
   -- special
 
+  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
+  change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
+  teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
+
   light = { id="light",      kind="other", r=1, h=1, pass=true }
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
-
 }
 
 
@@ -129,40 +132,58 @@ HEXEN2.MATERIALS =
 
 ----------------------------------------------------------------
 
-HEXEN2.EXITS =
+HEXEN2.SKINS =
 {
-  exit_pad =
+  ----| STARTS |----
+
+  Start_basic =
   {
-    h=128
-    switch_w="SW1SKULL"
-    exit_w="EXITSIGN", exit_h=16
-    exitside="COMPSPAN"
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_basic =
+  {
+    _prefab = "QUAKE_EXIT_PAD"
+
+    pad  = "DOORSWT2"
+    side = "RED1_2"
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
   }
 }
 
 
-HEXEN2.STEPS =
-{
-  step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" }
-  step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" }
-}
-
-
-HEXEN2.PICTURES =
-{
-  carve =
-  {
-    count=1,
-    pic_w="O_CARVE", width=64, height=64, raise=64,
-    x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
-    light=0.7,
-  }
-}
-
+----------------------------------------------------------------
 
 HEXEN2.SUB_THEME_DEFAULTS =
 {
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_basic = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  -- OLD CRUD
   teleporter_mat = "TELE_TOP"
   tele_dest_mat = "COP3_4"
   pedestal_mat = "LIGHT1_1"
@@ -196,12 +217,6 @@ HEXEN2.SUB_THEMES =
     {
       FLOOR=50,
     }
-
-    logos = { carve=50 }
-
-    steps = { step1=50, step2=50 }
-
-    exits = { exit_pad=50 }
 
     scenery =
     {
@@ -481,7 +496,7 @@ end
 
 ----------------------------------------------------------------
 
-UNFINISHED["hexen2"] =
+OB_GAMES["hexen2"] =
 {
   label = "Hexen 2"
 
