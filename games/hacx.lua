@@ -139,6 +139,11 @@ HACX.MATERIALS =
   GRASS1 = { t="MARBGRAY", f="TLITE6_1" }
   GRASS2 = { t="MARBGRAY", f="CONS1_7" }
 
+  -- Oblige stuff
+  O_PILL   = { t="HW313", f="O_PILL",   sane=1 }
+  O_BOLT   = { t="HW316", f="O_BOLT",   sane=1 }
+  O_RELIEF = { t="HW329", f="O_RELIEF", sane=1 }
+  O_CARVE  = { t="HW309", f="O_CARVE",  sane=1 }
 }
 
 
@@ -773,6 +778,61 @@ function HACX.get_levels()
 end
 
 
+function HACX.make_cool_gfx()
+  local GREEN =
+  {
+    0, 7, 127, 126, 125, 124, 123,
+    122, 120, 118, 116, 113
+  }
+
+  local BRONZE_2 =
+  {
+    0, 2, 191, 189, 187, 235, 233,
+    223, 221, 219, 216, 213, 210
+  }
+
+  local RED =
+  {
+    0, 2, 188,185,184,183,182,181,
+    180,179,178,177,176,175,174,173
+  }
+
+  local GOLD = { 0,47,44, 167,166,165,164,163,162,161,160, 225 }
+
+  local SILVER = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 }
+
+
+  local colmaps =
+  {
+    BRONZE_2, GREEN, RED, GOLD, SILVER
+  }
+
+  rand.shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, colmaps[4])
+
+  -- patches : HW313, HW316, HW329, HW309
+  gui.wad_logo_gfx("RW23_1", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("RW25_3", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("RW33_2", "p", "RELIEF", 128,128, 3)
+  gui.wad_logo_gfx("RW24_1", "p", "CARVE",  128,128, 4)
+
+  -- flats
+  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
+  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
+  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
+  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+end
+
+
+function HACX.all_done()
+  HACX.make_cool_gfx()
+end
+
+
 ------------------------------------------------------------
 
 OB_GAMES["hacx"] =
@@ -787,6 +847,7 @@ OB_GAMES["hacx"] =
   {
     setup      = HACX.setup
     get_levels = HACX.get_levels
+    all_done   = HACX.all_done
   }
 }
 
