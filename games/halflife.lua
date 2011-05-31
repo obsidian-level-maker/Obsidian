@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2010 Andrew Apted
+--  Copyright (C) 2010-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -25,9 +25,10 @@ HALFLIFE.ENTITIES =
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 }
 
---??  player2 = { id="info_player_coop",  kind="other", r=16,h=56 }
---??  player3 = { id="info_player_coop",  kind="other", r=16,h=56 }
---??  player4 = { id="info_player_coop",  kind="other", r=16,h=56 }
+  -- FIXME !!!
+  player2 = { id="item_healthkit",  kind="other", r=16,h=56 }
+  player3 = { id="item_healthkit",  kind="other", r=16,h=56 }
+  player4 = { id="item_healthkit",  kind="other", r=16,h=56 }
 
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
 
@@ -75,6 +76,8 @@ HALFLIFE.ENTITIES =
 
   -- special
 
+  change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
+
   light = { id="light",      kind="other", r=1, h=1, pass=true }
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
 
@@ -103,6 +106,7 @@ HALFLIFE.PARAMETERS =
   damage_factor = 1.0
   ammo_factor   = 0.8
   health_factor = 0.7
+  monster_factor = 0.6
 }
 
 
@@ -122,41 +126,59 @@ HALFLIFE.MATERIALS =
 
 ----------------------------------------------------------------
 
-
-HALFLIFE.EXITS =
+HALFLIFE.SKINS =
 {
-  exit_pad =
+
+  ----| STARTS |----
+
+  Start_basic =
   {
-    h=128,
-    switch_w="SW1SKULL",
-    exit_w="EXITSIGN", exit_h=16,
-    exitside="COMPSPAN",
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_basic =
+  {
+    _prefab = "QUAKE_EXIT_PAD"
+
+    pad  = "DOORSWT2"
+    side = "RED1_2"
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
   }
 }
 
 
-HALFLIFE.STEPS =
-{
-  step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" }
-  step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" }
-}
-
-
-HALFLIFE.PICTURES =
-{
-  carve =
-  {
-    count=1,
-    pic_w="O_CARVE", width=64, height=64, raise=64,
-    x_offset=0, y_offset=0,
-    side_t="METAL", floor="CEIL5_2", depth=8, 
-    light=0.7,
-  }
-}
-
+----------------------------------------------------------------
 
 HALFLIFE.SUB_THEME_DEFAULTS =
 {
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_basic = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  -- OLD CRUD
   teleporter_mat = "TELE_TOP"
   tele_dest_mat = "COP3_4"
   pedestal_mat = "LIGHT1_1"
@@ -190,12 +212,6 @@ HALFLIFE.SUB_THEMES =
     {
       FLOOR=50,
     }
-
-    logos = { carve=50 }
-
-    steps = { step1=50, step2=50 }
-
-    exits = { exit_pad=50 }
 
     scenery =
     {
@@ -449,7 +465,7 @@ end
 
 ----------------------------------------------------------------
 
-UNFINISHED["halflife"] =
+OB_GAMES["halflife"] =
 {
   label = "Half-Life"
 
