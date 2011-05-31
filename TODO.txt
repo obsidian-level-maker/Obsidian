@@ -5,22 +5,28 @@ OBLIGE TODO
 Current Work
 ------------
 
-(a) LOGOS
+DONE: HERETIC: keys and switch doors
 
-DONE:  QUAKE: switched doors
+DONE: HEXEN: keys and switch doors
 
-(c) QUAKE: stairs
+DONE: Hexen II basics
 
-(d) QUAKE: exit
+(d) QUAKE2: bit better theme
 
-(e) QUAKE: missing weapons (and pickups?)
-
-
+(e) HacX 1.2
 
 
-!!!  the "apply twice" problem in prefab build code
+++  LOGO pictures on indoor walls (DOOM at least)
+
+
++  update INSTALL.txt about Lua library
+
+-  incorporate glBSP code for easier building
+
 
 ???  the '10 - dir' thing : WHY ?
+
+!!!  the "apply twice" problem in prefab build code
 
 
 >>> stairs....
