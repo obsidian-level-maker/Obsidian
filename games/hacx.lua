@@ -1,10 +1,10 @@
 ----------------------------------------------------------------
---  GAME DEFINITION : HacX
+--  GAME DEF : HacX 1.2
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2009-2010 Andrew Apted
+--  Copyright (C) 2009-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -121,7 +121,7 @@ HACX.MATERIALS =
   -- flats --
 
   GRASS1 = { t="MARBGRAY", f="TLITE6_1" }
-  GRASS2 = { t="MARBGRAY",  f="CONS1_7" }
+  GRASS2 = { t="MARBGRAY", f="CONS1_7" }
 
 }
 
@@ -163,6 +163,7 @@ HACX.MONSTERS =
 {
   thug =
   {
+    level = 1
     prob = 60
     health = 60
     damage = 5
@@ -171,6 +172,7 @@ HACX.MONSTERS =
 
   android =
   {
+    level = 1
     prob = 50
     health = 75
     damage = 10
@@ -179,6 +181,7 @@ HACX.MONSTERS =
 
   stealth =
   {
+    level = 1
     prob = 7
     health = 30
     damage = 25
@@ -190,6 +193,7 @@ HACX.MONSTERS =
   -- this thing just blows up on contact
   roam_mine =
   {
+    level = 1
     prob = 15
     health = 50
     damage = 5
@@ -199,6 +203,7 @@ HACX.MONSTERS =
 
   phage =
   {
+    level = 3
     prob = 40
     health = 150
     damage = 70
@@ -207,6 +212,7 @@ HACX.MONSTERS =
 
   buzzer =
   {
+    level = 3
     prob = 40
     health = 175
     damage = 25
@@ -216,6 +222,7 @@ HACX.MONSTERS =
 
   i_c_e =
   {
+    level = 4
     prob = 10
     health = 225
     damage = 7
@@ -224,6 +231,7 @@ HACX.MONSTERS =
 
   d_man =
   {
+    level = 4
     prob = 10
     health = 250
     damage = 7
@@ -233,6 +241,7 @@ HACX.MONSTERS =
 
   monstruct =
   {
+    level = 5
     prob = 50
     health = 400
     damage = 80
@@ -241,6 +250,7 @@ HACX.MONSTERS =
 
   majong7 =
   {
+    level = 5
     prob = 10
     health = 400
     damage = 20
@@ -251,6 +261,7 @@ HACX.MONSTERS =
 
   terminatrix =
   {
+    level = 6
     prob = 25
     health = 450
     damage = 40
@@ -260,6 +271,7 @@ HACX.MONSTERS =
 
   thorn =
   {
+    level = 7
     prob = 25
     health = 600
     damage = 70
@@ -268,6 +280,7 @@ HACX.MONSTERS =
 
   mecha =
   {
+    level = 8
     prob = 10
     health = 800
     damage = 150
@@ -526,37 +539,63 @@ end
 
 
 function HACX.get_levels()
-  local EP_NUM  = 1
-  local MAP_NUM = 1
+  local MAP_NUM = 11
 
-  -- FIXME: copy n paste DOOM2 logic
-  if OB_CONFIG.length == "few"     then MAP_NUM = 4 end
-  if OB_CONFIG.length == "episode" then MAP_NUM = 9 end
-  if OB_CONFIG.length == "full"    then MAP_NUM = 9 ; EP_NUM = 3 end
+  if OB_CONFIG.length == "single" then MAP_NUM = 1  end
+  if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
+  if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
-  for episode = 1,EP_NUM do
-    for map = 1,MAP_NUM do
+  for map = 1,MAP_NUM do
+    -- determine episode from map number
+    local episode
+    local ep_along
 
-      local LEV =
-      {
-        name = string.format("MAP%d%d", episode-1, map)
+    if map >= 31 then
+      episode = 2 ; ep_along = 0.35
+    elseif map >= 21 then
+      episode = 3 ; ep_along = (map - 20) / 10
+    elseif map >= 12 then
+      episode = 2 ; ep_along = (map - 11) / 9
+    else
+      episode = 1 ; ep_along = map / 11
+    end
 
-        episode  = episode
-        ep_along = map / MAP_NUM
-        ep_info  = { }
-      }
+    if OB_CONFIG.length == "single" then
+      ep_along = rand.pick{ 0.2, 0.3, 0.4, 0.6, 0.8 }
+    elseif OB_CONFIG.length == "few" then
+      ep_along = map / MAP_NUM
+    end
 
-      table.insert(GAME.levels, LEV)
-    end -- for map
 
-  end -- for episode
+    local LEV =
+    {
+      name  = string.format("MAP%02d", map)
+      patch = string.format("CWILV%02d", map-1)
+
+      map      = map
+      episode  = episode
+      ep_along = ep_along
+    }
+
+    LEV.mon_along = LEV.ep_along
+
+    if OB_CONFIG.length == "episode" then
+      LEV.mon_along = map / 9
+    elseif OB_CONFIG.length == "full" then
+      LEV.mon_along = map / 16
+    end
+
+    -- secret levels
+    if map == 31 or map == 32 then
+      -- FIXME
+    end
+  end
 end
-
 
 
 ------------------------------------------------------------
 
-UNFINISHED["hacx"] =
+OB_GAMES["hacx"] =
 {
   label = "HacX 1.2"
 
