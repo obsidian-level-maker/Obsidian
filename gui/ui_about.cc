@@ -87,8 +87,8 @@ private:
 
 
 const char *UI_About::Text =
-  "OBLIGE is a random level generator for\n"
-  "DOOM, DOOM II, Heretic and Quake\n"
+  "OBLIGE is a random level generator for some\n"
+  "classic FPS games (like DOOM and Quake)\n"
   "\n"
   "Copyright (C) 2006-2011 Andrew Apted\n"
   "\n"
@@ -175,7 +175,7 @@ void DLG_AboutText(void)
   if (about_window)  // already up?
     return;
 
-  int about_w = 350 + KF * 30;
+  int about_w = 370 + KF * 30;
   int about_h = 370 + KF * 40;
 
   about_window = new UI_About(about_w, about_h, "About Box");
