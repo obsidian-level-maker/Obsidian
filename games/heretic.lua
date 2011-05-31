@@ -315,9 +315,9 @@ HERETIC.MATERIALS =
 
 
   -- Oblige stuff
-  O_PILL   = { t="SKULLSB2", f="O_PILL" }
-  O_BOLT   = { t="DOORWOOD", f="O_BOLT" }
-  O_CARVE  = { t="CHAINSD",  f="O_CARVE" }
+  O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
+  O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
+  O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
 }
 
 

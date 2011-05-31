@@ -279,8 +279,6 @@ HEXEN.MATERIALS =
   BOOKS03  = { t="BOOKS03",  f="F_092" }
   BOOKS04  = { t="BOOKS04",  f="F_092" }
   BRASS1   = { t="BRASS1",   f="F_037" }
-  BRASS3   = { t="BRASS3",   f="F_037" }
-  BRASS4   = { t="BRASS4",   f="F_037" }
   CASTLE01 = { t="CASTLE01", f="F_012" }
   CASTLE02 = { t="CASTLE02", f="F_012" }
   CASTLE03 = { t="CASTLE03", f="F_012" }
@@ -461,7 +459,6 @@ HEXEN.MATERIALS =
   SEWER05  = { t="SEWER05",  f="F_018" }
   SEWER06  = { t="SEWER06",  f="F_018" }
   SEWER07  = { t="SEWER07",  f="F_017" }
-  SEWER08  = { t="SEWER08",  f="F_017" }
   SEWER09  = { t="SEWER09",  f="F_017" }
   SEWER10  = { t="SEWER10",  f="F_017" }
   SEWER11  = { t="SEWER11",  f="F_017" }
@@ -555,7 +552,7 @@ HEXEN.MATERIALS =
   F_021 = { t="FIRE06",   f="F_021" }
   F_022 = { t="FIRE06",   f="F_022" }
   F_023 = { t="SEWER01",  f="F_023" }
-  F_024 = { t="SEWER08",  f="F_024" }
+  F_024 = { t="SEWER07",  f="F_024" }
   F_025 = { t="MONK02",   f="F_025" }
   F_027 = { t="MONK01",   f="F_027" }
   F_028 = { t="MONK16",   f="F_028" }
@@ -618,6 +615,12 @@ HEXEN.MATERIALS =
   X_005 = { t="X_WATER1", f="X_005", sane=1  }
   X_009 = { t="X_SWMP1",  f="X_009", sane=1  }
   X_012 = { t="CASTLE01", f="X_012", sane=1  }
+
+
+  -- Oblige stuff
+  O_BOLT   = { t="SEWER08", f="O_BOLT",  sane=1 }
+  O_PILL   = { t="BRASS3",  f="O_PILL",  sane=1 }
+  O_CARVE  = { t="BRASS4",  f="O_CARVE", sane=1 }
 }
 
 
@@ -803,7 +806,7 @@ HEXEN.SKINS =
     w = 128
     h = 112
     door_h = 112
-    door = "BRASS3"
+    door = "BRASS1"
     track = "STEEL08"
     special = 0
   }
@@ -1034,7 +1037,7 @@ HEXEN.COMBOS =  -- NOTE: THIS IS OLD STUFF, TO BE REMOVED...
     theme_probs = { SWAMP=50 }
     mat_pri = 2,
 
-    wall = "SEWER08",
+    wall = "SEWER07",
     floor = "X_009",
     ceil  = "F_013",
 
@@ -2799,10 +2802,73 @@ function HEXEN.make_mapinfo()
 end
 
 
+function HEXEN.make_cool_gfx()
+  local PURPLE =
+  {
+    0, 231, 232, 233, 234, 235, 236, 237, 238, 239
+  }
+
+  local GREEN =
+  {
+    0, 186, 188, 190, 192, 194, 196, 198, 200, 202
+  }
+
+  local BROWN =
+  {
+    0, 97, 99, 101, 103, 105, 107, 109, 111, 113, 115, 117, 119, 121
+  }
+
+  local RED =
+  {
+    0, 164, 166, 168, 170, 172, 174, 176, 178, 180, 183
+  }
+
+  local WHITE =
+  {
+    0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30
+  }
+
+  local BLUE =
+  {
+    0, 146, 148, 150, 152, 154, 156, 217, 219, 221, 223
+  }
+
+
+  local colmaps =
+  {
+    PURPLE, GREEN, BROWN, RED, BLUE
+  }
+
+  rand.shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, WHITE)
+
+  local carve = "RELIEF"
+  local c_map = 3
+
+  if rand.odds(33) then
+    carve = "CARVE"
+    c_map = 4
+  end
+
+  -- patches : SEWER08, BRASS3, BRASS4
+  gui.wad_logo_gfx("W_121", "p", "BOLT",  64,128, 1)
+  gui.wad_logo_gfx("W_320", "p", "PILL", 128,128, 2)
+  gui.wad_logo_gfx("W_321", "p", carve,  128,128, c_map)
+
+  -- flats
+  gui.wad_logo_gfx("O_BOLT",  "f", "BOLT",  64,64, 1)
+  gui.wad_logo_gfx("O_PILL",  "f", "PILL",  64,64, 2)
+  gui.wad_logo_gfx("O_CARVE", "f", carve,   64,64, c_map)
+end
+
+
 function HEXEN.all_done()
   HEXEN.make_mapinfo()
-
-  -- FIXME: cool gfx!
+  HEXEN.make_cool_gfx()
 end
 
 
