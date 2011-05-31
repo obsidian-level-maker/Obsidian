@@ -350,7 +350,7 @@ HACX.MONSTERS =
 
   android =
   {
-    level = 1
+    level = 2
     prob = 50
     health = 75
     damage = 10
@@ -360,7 +360,7 @@ HACX.MONSTERS =
   stealth =
   {
     level = 1
-    prob = 7
+    prob = 5
     health = 30
     damage = 25
     attack = "melee"
@@ -372,7 +372,7 @@ HACX.MONSTERS =
   roam_mine =
   {
     level = 1
-    prob = 15
+    prob = 12
     health = 50
     damage = 5
     attack = "hitscan"
@@ -391,7 +391,7 @@ HACX.MONSTERS =
   buzzer =
   {
     level = 3
-    prob = 40
+    prob = 25
     health = 175
     damage = 25
     attack = "melee"
