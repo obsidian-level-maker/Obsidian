@@ -221,7 +221,7 @@ PREFAB.WALL_SPIKE_SHOOTER =
 
       entity =
       {
-        ent = "trigger_multiple", target = "?spike_group",
+        ent = "trigger", target = "?spike_group",
       }
     }
   }

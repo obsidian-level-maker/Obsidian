@@ -110,9 +110,9 @@ QUAKE1.ENTITIES =
   light = { id="light",      kind="other", r=1, h=1, pass=true }
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
 
+  trigger    = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
   change_lev = { id="trigger_changelevel", kind="other", r=1, h=1, pass=true }
   teleport   = { id="trigger_teleport", kind="other", r=1, h=1, pass=true }
-  trigger_multiple = { id="trigger_multiple", kind="other", r=1, h=1, pass=true }
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true }
   lift = { id="func_plat",  kind="other", r=1, h=1, pass=true }
