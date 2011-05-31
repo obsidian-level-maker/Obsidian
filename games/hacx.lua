@@ -50,6 +50,7 @@ HACX.ENTITIES =
   --- pickups ---
   k_password = { id=5,  kind="pickup", r=20,h=16, pass=true }
   k_ckey     = { id=6,  kind="pickup", r=20,h=16, pass=true }
+  k_keycard  = { id=13, kind="pickup", r=20,h=16, pass=true }
 
   kz_red     = { id=38, kind="pickup", r=20,h=16, pass=true }
   kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
@@ -110,13 +111,28 @@ HACX.PARAMETERS =
 
 HACX.MATERIALS =
 {
+  -- FIXME!!! very incomplete
+
   -- special materials --
   _ERROR = { t="HW171", f="DEM1_2" }
   _SKY   = { t="HW171", f="F_SKY1" }
 
   -- textures --
 
-  BRICK1  = { t="MODWALL3", f="CEIL3_3" }
+  BROWNHUG = { t="BROWNHUG", f="BLOOD1" }
+  DOORTRAK = { t="DOORTRAK", f="CEIL3_3" }
+
+  HD6   = { t="HD6",   f="CEIL3_3" }
+  HW510 = { t="HW510", f="CEIL3_3" }
+  HW511 = { t="HW511", f="CEIL3_3" }
+  HW512 = { t="HW512", f="CEIL3_3" }
+  HW513 = { t="HW513", f="CEIL3_3" }
+
+  LITE2 = { t="LITE2", f="CEIL3_3" }
+
+  MODWALL3 = { t="MODWALL3", f="CEIL3_3" }
+
+  SW1CMT = { t="SW1CMT", f="CEIL3_3" }
 
   -- flats --
 
@@ -128,6 +144,168 @@ HACX.MATERIALS =
 
 ----------------------------------------------------------------
 
+HACX.SKINS =
+{
+  ----| STARTS |----
+
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_switch =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "BROWNHUG"
+    exit = "MOSAIC1"
+    exitside = "MOSAIC1"
+    special = 11
+    tag = 0
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+
+
+  ---| LOCKED DOORS |---
+
+  Locked_kz_blue =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { kz_blue=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "HD6"
+    key = "HW512"
+    track = "DOORTRAK"
+
+    special = 32
+    tag = 0  -- kind_mult=26
+  }
+
+  Locked_kz_yellow =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { kz_yellow=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+
+    door_h = 112
+    door = "HD6"
+    key = "HW511"
+    track = "DOORTRAK"
+
+    special = 34
+    tag = 0  -- kind_mult=27
+  }
+
+  Locked_kz_red =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { kz_red=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+
+    door_h = 112
+    door = "HD6"
+    key = "HW510"
+    track = "DOORTRAK"
+
+    special = 33
+    tag = 0  -- kind_mult=28
+  }
+
+
+  ---| SWITCHED DOORS |---
+
+  Door_SW_blue =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _switches = { Switch_blue1=50 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+
+    door = "LITE2"
+    track = "DOORTRAK"
+
+    door_h = 112
+    special = 0
+  }
+
+  Switch_blue1 =
+  {
+    _prefab = "SMALL_SWITCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+    switch_h = 64
+    switch = "SW1CMT"
+    side = "LITE2"
+    base = "LITE2"
+    x_offset = 0
+    y_offset = 50
+    special = 103
+  }
+
+}
+
+
+----------------------------------------------------------------
+
+HACX.SUB_THEME_DEFAULTS =
+{
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_switch = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  keys = { kz_red=50, kz_blue=50, kz_yellow=50 }
+
+  switch_doors = { Door_SW_blue = 50 }
+
+  lock_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50 }
+}
+
+
 HACX.SUB_THEMES =
 {
   hacx_tech1 =
@@ -136,17 +314,17 @@ HACX.SUB_THEMES =
 
     building_walls =
     {
-      BRICK1=50,
+      MODWALL3=50,
     }
 
     building_floors =
     {
-      BRICK1=50,
+      MODWALL3=50,
     }
 
     building_ceilings =
     {
-      BRICK1=50,
+      MODWALL3=50,
     }
 
     courtyard_floors =
@@ -589,6 +767,8 @@ function HACX.get_levels()
     if map == 31 or map == 32 then
       -- FIXME
     end
+
+    table.insert(GAME.levels, LEV)
   end
 end
 
