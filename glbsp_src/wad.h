@@ -150,12 +150,12 @@ lump_t;
 // check if the filename has the given extension.  Returns 1 if yes,
 // otherwise zero.
 //
-int CheckExtension(const char *filename, const char *ext);
+int UtilCheckExtension(const char *filename, const char *ext);
 
 // remove any extension from the given filename, and add the given
 // extension, and return the newly creating filename.
 //
-char *ReplaceExtension(const char *filename, const char *ext);
+char *UtilReplaceExtension(const char *filename, const char *ext);
 
 // open the input wad file and read the contents into memory.  When
 // 'load_all' is false, lumps other than level info will be marked as

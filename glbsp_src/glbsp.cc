@@ -158,7 +158,7 @@ glbsp_ret_e GlbspParseArgs(nodebuildinfo_t *info,
         return GLBSP_E_BadArgs;
       }
 
-      if (CheckExtension(argv[0], "gwa"))
+      if (UtilCheckExtension(argv[0], "gwa"))
       {
         SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
         cur_comms = NULL;
@@ -324,7 +324,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
     return GLBSP_E_BadArgs;
   }
 
-  if (CheckExtension(info->input_file, "gwa"))
+  if (UtilCheckExtension(info->input_file, "gwa"))
   {
     SetErrorMsg("Input file cannot be GWA (contains nothing to build)");
     return GLBSP_E_BadArgs;
@@ -333,7 +333,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
   if (!info->output_file || info->output_file[0] == 0)
   {
     GlbspFree(info->output_file);
-    info->output_file = GlbspStrDup(ReplaceExtension(
+    info->output_file = GlbspStrDup(UtilReplaceExtension(
           info->input_file, "gwa"));
 
     info->gwa_mode = TRUE;
@@ -341,7 +341,7 @@ glbsp_ret_e GlbspCheckInfo(nodebuildinfo_t *info,
   }
   else  /* has output filename */
   {
-    if (CheckExtension(info->output_file, "gwa"))
+    if (UtilCheckExtension(info->output_file, "gwa"))
       info->gwa_mode = TRUE;
   }
 

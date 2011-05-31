@@ -982,9 +982,9 @@ static int WriteDirectory(void)
 
 
 //
-// CheckExtension
+// UtilCheckExtension
 //
-int CheckExtension(const char *filename, const char *ext)
+int UtilCheckExtension(const char *filename, const char *ext)
 {
   int A = (int)strlen(filename) - 1;
   int B = (int)strlen(ext) - 1;
@@ -1002,9 +1002,9 @@ int CheckExtension(const char *filename, const char *ext)
 }
 
 //
-// ReplaceExtension
+// UtilReplaceExtension
 //
-char *ReplaceExtension(const char *filename, const char *ext)
+char *UtilReplaceExtension(const char *filename, const char *ext)
 {
   char *dot_pos;
   char buffer[512];
@@ -1383,7 +1383,7 @@ glbsp_ret_e WriteWadFile(const char *filename)
 //
 void DeleteGwaFile(const char *base_wad_name)
 {
-  char *gwa_file = ReplaceExtension(base_wad_name, "gwa");
+  char *gwa_file = UtilReplaceExtension(base_wad_name, "gwa");
 
   if (remove(gwa_file) == 0)
     PrintMsg("Deleted GWA file: %s\n", gwa_file);
