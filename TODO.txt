@@ -13,15 +13,14 @@ DONE: Hexen II basics
 
 (d) QUAKE2: bit better theme
 
-(e) HacX 1.2
+(e) HacX 1.2: bit better theme
 
 
-++  LOGO pictures on indoor walls (DOOM at least)
+++  some VOID and LIQUID areas
 
+++  LOGO pictures on indoor walls (DOOM format games)
 
-+  update INSTALL.txt about Lua library
-
--  incorporate glBSP code for easier building
++  update INSTALL.txt about Lua and glBSP libs
 
 
 ???  the '10 - dir' thing : WHY ?
