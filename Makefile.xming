@@ -16,7 +16,6 @@ OBJ_DIR=obj_win32
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O2
 
@@ -31,16 +30,13 @@ FLTK_FLAGS=-I$(FLTK_DIR)
 ##           $(FLTK_DIR)/lib/libfltk.a
 FLTK_LIBS=$(FLTK_DIR)/lib/libfltk.a
 
-GLBSP_FLAGS=-I$(GLBSP_DIR)/src
-GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
-
 ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -Wno-strict-aliasing -D$(OS) \
-         -Ilua_src $(FLTK_FLAGS) $(GLBSP_FLAGS)
+         -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
 LDFLAGS=
-LIBS=-lm $(FLTK_LIBS) $(GLBSP_LIBS) $(ZLIB_LIBS) \
+LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
      -lcomctl32 -lwsock32 -lsupc++
 
@@ -144,6 +140,26 @@ $(OBJ_DIR)/lua/%.o: lua_src/%.cc
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
+#----- glBSP Objects ------------------------------------------------
+
+GLBSP_OBJS= \
+	$(OBJ_DIR)/glbsp/analyze.o  \
+	$(OBJ_DIR)/glbsp/blockmap.o \
+	$(OBJ_DIR)/glbsp/glbsp.o    \
+	$(OBJ_DIR)/glbsp/level.o    \
+	$(OBJ_DIR)/glbsp/node.o     \
+	$(OBJ_DIR)/glbsp/reject.o   \
+	$(OBJ_DIR)/glbsp/seg.o      \
+	$(OBJ_DIR)/glbsp/system.o   \
+	$(OBJ_DIR)/glbsp/util.o     \
+	$(OBJ_DIR)/glbsp/wad.o
+
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -152,7 +168,7 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS)
 	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)

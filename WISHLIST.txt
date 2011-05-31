@@ -314,6 +314,9 @@ Mazes:
   GUI and C++ CODE
 ----------------------------------------------------------------
 
+glBSP: use a namespace
+
+
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
   - C++ can queue commands to perform, fetched by the Lua loop
@@ -346,6 +349,8 @@ SKY GENERATOR:
 
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
+
+-  use semicolon for ternary operator?
 
 
 ----------------------------------------------------------------

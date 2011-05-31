@@ -22,7 +22,6 @@ LIB_LOC=lib_linux
 OBJ_DIR=obj_linux
 
 FLTK_DIR=$(LIB_LOC)/fltk-1.1.10
-GLBSP_DIR=$(LIB_LOC)/glbsp-2.27-source
 
 OPTIMISE=-O0 -g3
 
@@ -37,11 +36,8 @@ FLTK_LIBS=$(FLTK_DIR)/lib/libfltk_images.a \
           $(FLTK_DIR)/lib/libfltk.a \
           -lX11 -lXext -lpng -ljpeg
 
-GLBSP_FLAGS=-I$(GLBSP_DIR)/src
-GLBSP_LIBS=$(GLBSP_DIR)/libglbsp.a
-
-CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src $(FLTK_FLAGS) $(GLBSP_FLAGS)
-LDFLAGS=-L/usr/X11R6/lib 
+CXXFLAGS=$(OPTIMISE) -Wall -D$(OS) -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
+LDFLAGS=-L/usr/X11R6/lib
 LIBS=-lm -lz $(FLTK_LIBS) $(GLBSP_LIBS)
 
 
@@ -143,6 +139,26 @@ $(OBJ_DIR)/lua/%.o: lua_src/%.cc
 	$(CXX) $(LUA_CXXFLAGS) -o $@ -c $<
 
 
+#----- glBSP Objects ------------------------------------------------
+
+GLBSP_OBJS= \
+	$(OBJ_DIR)/glbsp/analyze.o  \
+	$(OBJ_DIR)/glbsp/blockmap.o \
+	$(OBJ_DIR)/glbsp/glbsp.o    \
+	$(OBJ_DIR)/glbsp/level.o    \
+	$(OBJ_DIR)/glbsp/node.o     \
+	$(OBJ_DIR)/glbsp/reject.o   \
+	$(OBJ_DIR)/glbsp/seg.o      \
+	$(OBJ_DIR)/glbsp/system.o   \
+	$(OBJ_DIR)/glbsp/util.o     \
+	$(OBJ_DIR)/glbsp/wad.o
+
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+
+$(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
+	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
+
+
 #----- Targets ----------------------------------------------------
 
 all: $(PROGRAM)
@@ -151,8 +167,8 @@ clean:
 	rm -f $(PROGRAM) $(OBJ_DIR)/*.o ERRS
 	rm -f $(OBJ_DIR)/lua/*.o
 
-$(PROGRAM): $(OBJS) $(LUA_OBJS)
-	$(CXX) $^ -o $@ $(LDFLAGS) $(LIBS)
+$(PROGRAM): $(OBJS) $(LUA_OBJS) $(GLBSP_OBJS)
+	$(CXX) -Wl,--warn-common $^ -o $@ $(LDFLAGS) $(LIBS)
 
 stripped: $(PROGRAM)
 	strip --strip-unneeded $(PROGRAM)
