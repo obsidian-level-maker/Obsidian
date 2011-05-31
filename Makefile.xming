@@ -34,7 +34,7 @@ ZLIB_FLAGS=-I$(ZLIB_DIR)
 ZLIB_LIBS=$(ZLIB_DIR)/libz.a
 
 CXXFLAGS=$(OPTIMISE) -Wall -Wno-strict-aliasing -D$(OS) \
-         -Ilua_src -Iglbsp_src $(FLTK_FLAGS)
+         -Ilua_src -Iglbsp_src $(FLTK_FLAGS) $(ZLIB_FLAGS)
 LDFLAGS=
 LIBS=-lm $(FLTK_LIBS) $(ZLIB_LIBS) \
      -mwindows -lcomdlg32 -lole32 -luuid -lgdi32 \
@@ -154,7 +154,7 @@ GLBSP_OBJS= \
 	$(OBJ_DIR)/glbsp/util.o     \
 	$(OBJ_DIR)/glbsp/wad.o
 
-GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline
+GLBSP_CXXFLAGS=$(OPTIMISE) -Wall -DINLINE_G=inline $(ZLIB_FLAGS)
 
 $(OBJ_DIR)/glbsp/%.o: glbsp_src/%.cc
 	$(CXX) $(GLBSP_CXXFLAGS) -o $@ -c $< 
