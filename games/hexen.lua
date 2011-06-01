@@ -3534,6 +3534,7 @@ HEXEN.WEAPONS =
     rate = 1.6
     damage = 32
     class = "cleric"
+    slot = 1
   }
 
   c_staff =
@@ -3547,6 +3548,7 @@ HEXEN.WEAPONS =
     per = 1
     give = { {ammo="blue_mana",count=25} }
     class = "cleric"
+    slot = 2
   }
 
   c_fire =
@@ -3560,6 +3562,7 @@ HEXEN.WEAPONS =
     per = 4
     give = { {ammo="green_mana",count=25} }
     class = "cleric"
+    slot = 3
   }
 
   c_wraith =
@@ -3572,6 +3575,7 @@ HEXEN.WEAPONS =
     ammo = "dual_mana"
     per = 18
     class = "cleric"
+    slot = 4
   }
 
   -- FIGHTER --
@@ -3583,6 +3587,7 @@ HEXEN.WEAPONS =
     rate = 2.0
     damage = 47
     class = "fighter"
+    slot = 1
   }
 
   f_axe =
@@ -3596,6 +3601,7 @@ HEXEN.WEAPONS =
     per = 2
     give = { {ammo="blue_mana",count=25} }
     class = "fighter"
+    slot = 2
   }
 
   f_hammer =
@@ -3609,6 +3615,7 @@ HEXEN.WEAPONS =
     per = 3
     give = { {ammo="green_mana",count=25} }
     class = "fighter"
+    slot = 3
   }
 
   f_quietus =
@@ -3621,6 +3628,7 @@ HEXEN.WEAPONS =
     ammo = "dual_mana"
     per = 14
     class = "fighter"
+    slot = 4
   }
 
   -- MAGE --
@@ -3633,6 +3641,7 @@ HEXEN.WEAPONS =
     attack = "missile"
     penetrates = true
     class = "mage"
+    slot = 1
   }
 
   m_cone =
@@ -3646,6 +3655,7 @@ HEXEN.WEAPONS =
     per = 3
     give = { {ammo="blue_mana",count=25} }
     class = "mage"
+    slot = 2
   }
 
   m_blitz =
@@ -3659,6 +3669,7 @@ HEXEN.WEAPONS =
     per = 5
     give = { {ammo="green_mana",count=25} }
     class = "mage"
+    slot = 3
   }
 
   m_scourge =
@@ -3671,6 +3682,7 @@ HEXEN.WEAPONS =
     ammo = "dual_mana"
     per = 15
     class = "mage"
+    slot = 4
   }
 
 
