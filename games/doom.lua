@@ -2403,7 +2403,7 @@ DOOM.SKINS =
 
 DOOM.LIQUIDS =
 {
-  water  = { mat="FWATER1", light=0.65, special=16 }
+  water  = { mat="FWATER1", light=0.65, special=0 }
   blood  = { mat="BLOOD1",  light=0.65, special=16 }
   nukage = { mat="NUKAGE1", light=0.65, special=16 }
   lava   = { mat="LAVA1",   light=0.75, special=16 }

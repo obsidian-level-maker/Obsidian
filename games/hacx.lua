@@ -131,7 +131,7 @@ HACX.MATERIALS =
   HW513 = { t="HW513", f="SLIME16" }
 
   TECHY1 = { t="HW172", f="FLAT5_1" }
-  WOODY1 = { t="HW200", f="RROCK14" }
+  WOODY1 = { t="COMPTALL", f="RROCK14" }
   BLOCKY1 = { t="HW219", f="RROCK11" }
   BLOCKY2 = { t="MIDBRONZ", f="CONS1_1" }
 
@@ -157,11 +157,31 @@ HACX.MATERIALS =
   FLAT9    = { t="HW306", f="FLAT9" }
   MIDBARS1 = { t="MIDBARS1", f="CEIL5_2" }
 
+
+  L_ELEC   = { t="HW177", f="NUKAGE1" }
+  L_GOO    = { t="HW325", f="LAVA1" }
+  L_WATER  = { t="BLODRIP1", f="FWATER1" }
+  L_WATER2 = { t="WFALL1", f="SLIME05" }
+  L_LAVA   = { t="SFALL1", f="SLIME09" }
+  L_SLIME  = { t="BRICK6", f="SLIME01" }
+
+
   -- Oblige stuff
   O_PILL   = { t="HW313", f="O_PILL",   sane=1 }
   O_BOLT   = { t="HW316", f="O_BOLT",   sane=1 }
   O_RELIEF = { t="HW329", f="O_RELIEF", sane=1 }
   O_CARVE  = { t="HW309", f="O_CARVE",  sane=1 }
+}
+
+
+HACX.LIQUIDS =
+{
+  water  = { mat="L_WATER",  light=0.65, special=0 }
+  water2 = { mat="L_WATER2", light=0.65, special=0 }
+  slime  = { mat="L_SLIME",  light=0.65, special=16 }
+  goo    = { mat="L_GOO",    light=0.65, special=16 }
+  lava   = { mat="L_LAVA",   light=0.75, special=16 }
+  elec   = { mat="L_ELEC",   light=0.75, special=16 }
 }
 
 
@@ -326,6 +346,8 @@ HACX.THEME_DEFAULTS =
   switch_doors = { Door_SW_blue = 50 }
 
   lock_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50 }
+
+  liquids = { water=90, water2=50, elec=90, lava=50, slime=20, goo=10 }
 }
 
 
