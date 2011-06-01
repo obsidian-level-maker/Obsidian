@@ -119,6 +119,19 @@ function Levels_between_clean()
 end
 
 
+function Levels_merge_themes(theme_tab, tab)
+  each name,sub_t in tab do
+    if sub_t == REMOVE_ME then
+      theme_tab[name] = nil
+    elseif not theme_tab[name] then
+      theme_tab[name] = table.deep_copy(sub_t)
+    else
+      table.merge_w_copy(theme_tab[name], sub_t)
+    end
+  end
+end
+
+
 function Levels_merge_tab(name, tab)
   assert(name and tab)
 
@@ -127,29 +140,20 @@ function Levels_merge_tab(name, tab)
     return
   end
 
-  if name != "SUB_THEMES" then
-    table.merge_w_copy(GAME[name], tab)
+  -- special handling for theme tables
+  if name == "LEVEL_THEMES" or name == "ROOM_THEMES" or name == "AREA_THEMES" then
+    Levels_merge_themes(GAME[name], tab)
     return
   end
 
-  -- special handling for sub_themes
-
-  for k,sub_t in pairs(tab) do
-    if sub_t == REMOVE_ME then
-      GAME.SUB_THEMES[k] = nil
-    elseif not GAME.SUB_THEMES[k] then
-      GAME.SUB_THEMES[k] = table.deep_copy(sub_t)
-    else
-      table.merge_w_copy(GAME.SUB_THEMES[k], sub_t)
-    end
-  end
+  table.merge_w_copy(GAME[name], tab)
 end
 
 
 function Levels_merge_table_list(tab_list)
-  for _,GT in ipairs(tab_list) do
+  each GT in tab_list do
     assert(GT)
-    for name,tab in pairs(GT) do
+    each name,tab in GT do
       -- upper-case names should always be tables to copy
       if string.match(name, "^[A-Z]") then
         if type(tab) != "table" then
@@ -308,7 +312,7 @@ end
 function Levels_choose_themes()
   gui.rand_seed(OB_CONFIG.seed * 200)
 
-  local function set_sub_theme(L, name)
+  local function set_level_theme(L, name)
     local info = assert(OB_THEMES[name])
 
     L.super_theme = info
@@ -318,12 +322,12 @@ function Levels_choose_themes()
     end
 
     -- don't overwrite theme of special levels
-    if L.sub_theme then return end
+    if L.theme then return end
 
     local sub_tab = {}
     local sub_pattern = "^" .. name
 
-    for which,theme in pairs(GAME.SUB_THEMES) do
+    for which,theme in pairs(GAME.LEVEL_THEMES) do
       local prob = theme.prob or 50
       if prob > 0 and string.find(which, sub_pattern) then
         sub_tab[which] = prob
@@ -334,10 +338,10 @@ function Levels_choose_themes()
       error("No sub-themes for " .. name)
     end
 
-    local which = rand.key_by_probs(sub_tab)
-    L.sub_theme = assert(GAME.SUB_THEMES[which])
+    L.theme_name = rand.key_by_probs(sub_tab)
+    L.theme = assert(GAME.LEVEL_THEMES[L.theme_name])
 
-    gui.printf("Theme for level %s = %s\n", L.name, which)
+    gui.printf("Theme for level %s = %s\n", L.name, L.theme_name)
   end
 
 
@@ -350,7 +354,7 @@ function Levels_choose_themes()
      OB_CONFIG.theme != "psycho"
   then
     each L in GAME.levels do
-      set_sub_theme(L, OB_CONFIG.theme)
+      set_level_theme(L, OB_CONFIG.theme)
     end
 
     return;
@@ -368,14 +372,14 @@ function Levels_choose_themes()
     assert(not table.empty(prob_tab))
 
     each L in GAME.levels do
-      if not L.sub_theme then
+      if not L.theme then
         local name = rand.key_by_probs(prob_tab)
 
         if not L.name_theme and ((_index % 2) == 1) then
           L.name_theme = "PSYCHO"
         end
 
-        set_sub_theme(L, name)
+        set_level_theme(L, name)
       end
     end
 
@@ -463,7 +467,7 @@ function Levels_choose_themes()
         count = 0
       end
 
-      set_sub_theme(L, episode_list[pos])
+      set_level_theme(L, episode_list[pos])
       count = count + 1
     end
 
@@ -471,7 +475,7 @@ function Levels_choose_themes()
   end
 
   each L in GAME.levels do
-    set_sub_theme(L, episode_list[L.episode])
+    set_level_theme(L, episode_list[L.episode])
   end
 end
 
@@ -634,10 +638,10 @@ function Levels_make_level(L, index, NUM)
   LEVEL.seed = OB_CONFIG.seed * 100 + index
   LEVEL.ids  = {}
 
-  THEME = table.copy(assert(LEVEL.sub_theme))
+  THEME = table.copy(assert(LEVEL.theme))
 
-  if GAME.SUB_THEME_DEFAULTS then
-    table.merge_missing(THEME, GAME.SUB_THEME_DEFAULTS)
+  if GAME.THEME_DEFAULTS then
+    table.merge_missing(THEME, GAME.THEME_DEFAULTS)
   end
 
 
