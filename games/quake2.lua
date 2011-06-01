@@ -2306,6 +2306,10 @@ function QUAKE2.get_levels()
 
         theme_ref = "BASE"
       }
+      
+      if map == MAP_NUM then
+        LEV.next_map = string.format("e%dm%d", episode+1, 1)
+      end
 
       table.insert(GAME.levels, LEV)
     end -- for map
