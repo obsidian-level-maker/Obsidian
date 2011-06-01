@@ -1635,15 +1635,9 @@ QUAKE2.SKINS =
   }
 --]]
 
-} -- end of QUAKE1.SKINS
+} -- end of QUAKE2.SKINS
 
 
-QUAKE1.ROOMS =
-{
-  PLAIN =
-  {
-  }
-}
 
 ----------------------------------------------------------------
 
@@ -1691,14 +1685,7 @@ QUAKE2.PICTURES =
 }
 
 
-
-QUAKE2.ROOMS =
-{
-  PLAIN =
-  {
-  }
-}
-
+----------------------------------------------------------------
 
 QUAKE2.THEME_DEFAULTS =
 {
@@ -1716,6 +1703,19 @@ QUAKE2.THEME_DEFAULTS =
 }
 
 
+QUAKE2.AREA_THEMES =
+{
+}
+
+
+QUAKE2.ROOM_THEMES =
+{
+  PLAIN =
+  {
+  }
+}
+
+
 QUAKE2.LEVEL_THEMES =
 {
   quake2_base1 =
@@ -1724,32 +1724,35 @@ QUAKE2.LEVEL_THEMES =
 
     building_walls =
     {
-      WSLT1_1=50,
+      METAL2_1=10, METAL14_1=40,
+      WSLT1_1=40, WATRT1_1=10,
+      MINE05_1=20, MINE06_3=10, TWALL5_1=10,
+      BLUM12_2=10,
     }
 
     building_floors =
     {
-      FLOOR3_3=50,
+      FLAT1_2=30, FLOOR3_3=10, METAL1_8=20,
+      METAL3_3=20, WTROOF4_2=30,
+      WTROOF1_5=20, FLORR1_1=10,
     }
 
     building_ceilings =
     {
-      FLOOR3_3=50,
+      WGRATE1_4=50, GRATE1_4=30, BASIC1_7=30,
+      GRNX2_5=30, GRNX2_1=30,
     }
 
     courtyard_floors =
     {
-      GRASS1_4=50,
+      GRASS1_4=50, ROCKS19_1=50,
+      FLOOR3_1=30, FLOOR3_2=5,
+      ROCK1_1=20, ROCKS24_2=20,
     }
 
-    logos = { carve=50 }
+    __logos = { carve=50 }
 
-    steps = { step1=50, step2=50 }
-
-    hallway =
-    {
-      -- FIXME
-    }
+    __steps = { step1=50, step2=50 }
 
     __exit =
     {
