@@ -845,7 +845,7 @@ function Areas_flesh_out()
     local debug_id = 1
     each _,AR in area_tab do
       AR.debug_id = debug_id ; debug_id = debug_id + 1
-      stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
+---   stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
       table.insert(R.areas, AR)
     end
 
@@ -1052,13 +1052,13 @@ function Areas_flesh_out()
     local entry_area
     local entry_h
 
-stderrf("area_heights in %s\n", R:tostr())
+--- stderrf("area_heights in %s\n", R:tostr())
 
     if R.entry_conn then
       local C = assert(R.entry_conn.C2)
       assert(C.room == R)
       entry_area = assert(C.area)
-stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
+--- stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
       if R.entry_conn.hall then
         local hall = R.entry_conn.hall
