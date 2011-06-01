@@ -114,8 +114,10 @@ HACX.MATERIALS =
   -- FIXME!!! very incomplete
 
   -- special materials --
-  _ERROR = { t="HW171", f="DEM1_2" }
-  _SKY   = { t="HW171", f="F_SKY1" }
+  _ERROR = { t="HW209", f="RROCK03" }
+  _SKY   = { t="HW209", f="F_SKY1" }
+
+  METAL  = { t="HW209", f="RROCK03" }
 
   -- textures --
 
@@ -128,6 +130,17 @@ HACX.MATERIALS =
   HW512 = { t="HW512", f="CEIL3_3" }
   HW513 = { t="HW513", f="CEIL3_3" }
 
+  TECHY1 = { t="HW172", f="FLAT5_1" }
+  WOODY1 = { t="HW200", f="RROCK14" }
+  BLOCKY1 = { t="HW219", f="RROCK11" }
+  BLOCKY2 = { t="MIDBRONZ", f="CONS1_1" }
+
+  CAVEY1 = { t="MARBFAC4", f="RROCK12" }
+  DIRTY1 = { t="PANCASE1", f="RROCK15" }
+  DIRTY2 = { t="PANEL2",   f="RROCK15" }
+  STONY1 = { t="PLANET1",  f="GRNROCK" }
+
+
   LITE2 = { t="LITE2", f="CEIL3_3" }
 
   MODWALL3 = { t="MODWALL3", f="CEIL3_3" }
@@ -138,6 +151,11 @@ HACX.MATERIALS =
 
   GRASS1 = { t="MARBGRAY", f="TLITE6_1" }
   GRASS2 = { t="MARBGRAY", f="CONS1_7" }
+
+  STARTAN3 = { t="STARTAN3", f="GRASS2" }
+--FLAT14   = { t="STARTAN3", f="FLAT14" }
+  FLAT9    = { t="HW306", f="FLAT9" }
+  MIDBARS1 = { t="MIDBARS1", f="CEIL5_2" }
 
   -- Oblige stuff
   O_PILL   = { t="HW313", f="O_PILL",   sane=1 }
@@ -319,22 +337,23 @@ HACX.LEVEL_THEMES =
 
     building_walls =
     {
-      MODWALL3=50,
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, BLOCKY2=50
     }
 
     building_floors =
     {
-      MODWALL3=50,
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
     }
 
     building_ceilings =
     {
-      MODWALL3=50,
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
     }
 
     courtyard_floors =
     {
-      GRASS1=20,
+      GRASS1=50, STARTAN3=50, FLAT9=50, MIDBARS1=50,
+      DIRTY1=50, DIRTY2=50,
     }
   }  -- TECH
 }
