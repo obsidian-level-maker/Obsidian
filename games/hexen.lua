@@ -4141,7 +4141,7 @@ function HEXEN.get_levels()
 
       local LEV =
       {
-        name  = string.format("MAP%02d", ep_info.maps[map])
+        name  = string.format("MAP%02d", map_id)
 --??    patch = string.format("WILV%d%d", episode-1, map-1)
 
         map      = map_id
