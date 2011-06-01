@@ -1809,8 +1809,8 @@ QUAKE2.MONSTERS =
 
   flyer =
   {
-    level = 2
-    prob = 90
+    level = 1
+    prob = 70
     health = 50
     damage = 5
     attack = "missile"
@@ -1830,10 +1830,11 @@ QUAKE2.MONSTERS =
   parasite =
   {
     level = 2
-    prob = 10
+    prob = 5
     health = 175
     damage = 10
     attack = "missile"
+    density = 0.25
   }
 
   maiden =
@@ -1858,6 +1859,7 @@ QUAKE2.MONSTERS =
 
   beserker =
   {
+    level = 5
     prob = 50
     health = 240
     damage = 18
@@ -1886,6 +1888,7 @@ QUAKE2.MONSTERS =
 
   mutant =
   {
+    level = 3
     prob = 30
     health = 300
     damage = 24
@@ -2303,8 +2306,7 @@ function QUAKE2.get_levels()
         episode  = episode
         ep_along = map / MAP_NUM
         ep_info  = ep_info
-
-        theme_ref = "BASE"
+        mon_along = (map + episode - 1) / MAP_NUM
       }
       
       if map == MAP_NUM then

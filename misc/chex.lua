@@ -502,7 +502,6 @@ function CHEX.get_levels()
         ep_along = map / MAP_NUM,
         ep_info  = { },
 
-        theme_ref = "TECH",
         name_theme = "TECH",
 
         key_list = { "foo" },

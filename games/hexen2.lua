@@ -471,6 +471,7 @@ function HEXEN2.get_levels()
         episode  = episode
         map      = map
         ep_along = map / MAP_NUM
+        mon_along = (map + episode - 1) / MAP_NUM
       }
 
       table.insert(GAME.levels, LEV)

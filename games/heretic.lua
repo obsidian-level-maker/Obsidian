@@ -2202,6 +2202,7 @@ function HERETIC.get_levels()
         episode  = episode
         ep_along = map / MAP_NUM
         ep_info  = ep_info
+        mon_along = (map + episode - 1) / MAP_NUM
       }
 
       table.insert(GAME.levels, LEV)
