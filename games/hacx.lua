@@ -295,7 +295,7 @@ HACX.SKINS =
 
 ----------------------------------------------------------------
 
-HACX.SUB_THEME_DEFAULTS =
+HACX.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -311,7 +311,7 @@ HACX.SUB_THEME_DEFAULTS =
 }
 
 
-HACX.SUB_THEMES =
+HACX.LEVEL_THEMES =
 {
   hacx_tech1 =
   {

@@ -757,6 +757,13 @@ QUAKE1.PICTURES =
 }
 
 
+----------------------------------------------------------------
+
+QUAKE1.SKIN_DEFAULTS =
+{
+}
+
+
 QUAKE1.SKINS =
 {
   ----| STARTS |----
@@ -888,7 +895,7 @@ QUAKE1.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _switches = { Switch_1=50 }  -- FIXME
+    _switches = { Switch_floor1=50 }
     _long = 192
     _deep = 32
 
@@ -962,20 +969,9 @@ QUAKE1.SKINS =
 } -- end of QUAKE1.SKINS
 
 
-QUAKE1.ROOMS =
-{
-  PLAIN =
-  {
-  }
-}
+----------------------------------------------------------------
 
-
-QUAKE1.SKIN_DEFAULTS =
-{
-}
-
-
-QUAKE1.SUB_THEME_DEFAULTS =
+QUAKE1.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -1011,7 +1007,15 @@ QUAKE1.SUB_THEME_DEFAULTS =
 }
 
 
-QUAKE1.SUB_THEMES =
+QUAKE1.ROOM_THEMES =
+{
+  PLAIN =
+  {
+  }
+}
+
+
+QUAKE1.LEVEL_THEMES =
 {
   quake_base1 =
   {
@@ -1594,11 +1598,11 @@ function QUAKE1.begin_level()
   end
 
   -- set worldtype (controls the way keys look, doors sound, etc)
-  gui.property("worldtype", LEVEL.sub_theme.worldtype)
+  gui.property("worldtype", LEVEL.theme.worldtype)
 
   -- select the sky to use
-  assert(LEVEL.sub_theme.skies)
-  GAME.MATERIALS["_SKY"].t = rand.key_by_probs(LEVEL.sub_theme.skies)
+  assert(LEVEL.theme.skies)
+  GAME.MATERIALS["_SKY"].t = rand.key_by_probs(LEVEL.theme.skies)
 end
 
 

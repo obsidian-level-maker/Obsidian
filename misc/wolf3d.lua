@@ -457,7 +457,7 @@ WOLF.MISC_PREFABS =
 
 
 
-WOLF.ROOMS =
+WOLF.ROOM_THEMES =
 {
   PLAIN =
   {
@@ -524,7 +524,7 @@ WOLF.ROOMS =
   },
 }
 
-WOLF.SUB_THEMES =
+WOLF.LEVEL_THEMES =
 {
   -- Main Themes:
   --

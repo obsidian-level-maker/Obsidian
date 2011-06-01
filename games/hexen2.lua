@@ -126,6 +126,11 @@ HEXEN2.MATERIALS =
   FLOOR  = { t="rtex001" }
   WALL   = { t="rtex238" }
 
+  -- special stuff
+  TRIGGER    = { t="trigger" }
+
+  TELEPORT   = { t="*teleport" }
+
   -- FIXME
 }
 
@@ -175,7 +180,7 @@ HEXEN2.SKINS =
 
 ----------------------------------------------------------------
 
-HEXEN2.SUB_THEME_DEFAULTS =
+HEXEN2.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -192,7 +197,7 @@ HEXEN2.SUB_THEME_DEFAULTS =
 }
 
 
-HEXEN2.SUB_THEMES =
+HEXEN2.LEVEL_THEMES =
 {
   hexen2_gothic1 =
   {

@@ -241,7 +241,7 @@ CHEX3.ROOMS =
 }
 
 
-CHEX3.SUB_THEMES =
+CHEX3.LEVEL_THEMES =
 {
   chex3_tech1 =
   {

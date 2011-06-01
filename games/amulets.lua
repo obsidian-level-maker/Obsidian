@@ -208,7 +208,7 @@ AMULETS.LIQUIDS =
 }
 
 
-AMULETS.SUB_THEMES =
+AMULETS.LEVEL_THEMES =
 {
   amulets_city1 =
   {

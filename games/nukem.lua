@@ -225,7 +225,7 @@ NUKEM.PICTURES =
 }
 
 
-NUKEM.SUB_THEMES =
+NUKEM.LEVEL_THEMES =
 {
   nukem_city1 =
   {

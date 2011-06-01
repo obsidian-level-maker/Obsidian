@@ -123,6 +123,10 @@ HALFLIFE.MATERIALS =
   FLOOR  = { t="crete3_flr04" }
   WALL   = { t="fifties_wall14t" }
 
+  -- special stuff
+  TRIGGER    = { t="trigger" }
+
+  TELEPORT   = { t="*teleport" }
 }
 
 
@@ -172,7 +176,7 @@ HALFLIFE.SKINS =
 
 ----------------------------------------------------------------
 
-HALFLIFE.SUB_THEME_DEFAULTS =
+HALFLIFE.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -189,7 +193,7 @@ HALFLIFE.SUB_THEME_DEFAULTS =
 }
 
 
-HALFLIFE.SUB_THEMES =
+HALFLIFE.LEVEL_THEMES =
 {
   halflife_lab1 =
   {

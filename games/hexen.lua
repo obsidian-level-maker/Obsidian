@@ -1667,7 +1667,7 @@ HEXEN.ROOMS =
 }
 
 
-HEXEN.SUB_THEME_DEFAULTS =
+HEXEN.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -1686,7 +1686,7 @@ HEXEN.SUB_THEME_DEFAULTS =
 }
 
 
-HEXEN.SUB_THEMES =
+HEXEN.LEVEL_THEMES =
 {
   hexen_dungeon1 =
   {

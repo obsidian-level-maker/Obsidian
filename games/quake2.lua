@@ -1571,7 +1571,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _switches = { Switch_1=50 }  -- FIXME
+    _switches = { Switch_floor1=50 }
     _long = 192
     _deep = 32
 
@@ -1700,7 +1700,7 @@ QUAKE2.ROOMS =
 }
 
 
-QUAKE2.SUB_THEME_DEFAULTS =
+QUAKE2.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -1716,7 +1716,7 @@ QUAKE2.SUB_THEME_DEFAULTS =
 }
 
 
-QUAKE2.SUB_THEMES =
+QUAKE2.LEVEL_THEMES =
 {
   quake2_base1 =
   {
