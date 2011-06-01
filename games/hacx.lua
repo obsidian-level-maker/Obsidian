@@ -117,18 +117,18 @@ HACX.MATERIALS =
   _ERROR = { t="HW209", f="RROCK03" }
   _SKY   = { t="HW209", f="F_SKY1" }
 
-  METAL  = { t="HW209", f="RROCK03" }
+  METAL    = { t="HW209", f="RROCK03" }
+  DOORTRAK = { t="HW209", f="RROCK03" }
 
   -- textures --
 
   BROWNHUG = { t="BROWNHUG", f="BLOOD1" }
-  DOORTRAK = { t="DOORTRAK", f="CEIL3_3" }
 
-  HD6   = { t="HD6",   f="CEIL3_3" }
-  HW510 = { t="HW510", f="CEIL3_3" }
-  HW511 = { t="HW511", f="CEIL3_3" }
-  HW512 = { t="HW512", f="CEIL3_3" }
-  HW513 = { t="HW513", f="CEIL3_3" }
+  HD6   = { t="HD6",   f="RROCK03" }
+  HW510 = { t="HW510", f="SLIME15" }
+  HW511 = { t="HW511", f="SLIME14" }
+  HW512 = { t="HW512", f="SLIME13" }
+  HW513 = { t="HW513", f="SLIME16" }
 
   TECHY1 = { t="HW172", f="FLAT5_1" }
   WOODY1 = { t="HW200", f="RROCK14" }
@@ -186,8 +186,8 @@ HACX.SKINS =
     _prefab = "EXIT_PILLAR",
 
     switch = "BROWNHUG"
-    exit = "MOSAIC1"
-    exitside = "MOSAIC1"
+    exit = "METAL"
+    exitside = "METAL"
     special = 11
     tag = 0
   }
