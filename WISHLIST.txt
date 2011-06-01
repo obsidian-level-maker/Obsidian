@@ -450,11 +450,9 @@ Sam's suggestions:
   HEXEN
 ----------------------------------------------------------------
 
-!! get it working again (different WAD formats, args[], etc)
+!! fix weapons, which should be spawned for each class 
 
-!! support act="SR" or act="W1" etc... (in csg_doom code)
-
-+  IDEA: have a DEFAULT_ARGS table for each line special,
+-  IDEA: have a DEFAULT_ARGS table for each line special,
          so that prefabs (etc) aren't cluttered with arguments.
 
 +  separate prefab for switched vs locked doors
@@ -465,7 +463,7 @@ Sam's suggestions:
 
 -  need exit teleporter in final Hub.
 
-+  make teleporter gates bi-directional.
+-  make teleporter gates bi-directional.
 
 
 ----------------------------------------------------------------
