@@ -412,6 +412,7 @@ HACX.MONSTERS =
     attack = "melee"
     float = true
     invis = true
+    density = 0.25
   }
 
   -- this thing just blows up on contact
@@ -423,6 +424,7 @@ HACX.MONSTERS =
     damage = 5
     attack = "hitscan"
     float = true
+    density = 0.5
   }
 
   phage =
