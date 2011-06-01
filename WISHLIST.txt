@@ -38,6 +38,8 @@ OBLIGE WISH-LIST
 ----------------------------------------------------------------
 
 Miscellaneous:
+  +  special logic to merge THEME_DEFAULTS tables??
+
   +  when traversibility in a room is poor (exit near entrance),
      make the exit into a switched door and put a switch at other
      end of room.
@@ -579,34 +581,11 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
-  WOLF 3D
-----------------------------------------------------------------
-
-!  get it working (tiler.lua)
-
-+  push-walls for secret quests!
-+  secret elevators
-+  bosses!
-
--  decide_monster : skills are "tiered"
--  health/ammo : no skills! -- use medium one
--  place_items : never where monsters are!
--  create rooms with 'endgame' object.
-
-+  ensure limits are enforced:
-   - MAXACTORS = 150  (remove actors at random)
-   - MAXSTATS  = 400  (remove statics at random)
-   - MAXDOORS  = 64   (remove unneeded doors at random)
-
--  patrolling monsters (need to create path with arrows).
--  secret levels (full of treasure)
--  something interesting in middle of big rooms.
--  elevator "entry" in first room.
-
-
-----------------------------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------------------------
+
++  in batch mode, detect invalid game=XXX names
+
 
 Secrets:
 

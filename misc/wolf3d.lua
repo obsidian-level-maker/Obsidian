@@ -17,6 +17,32 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+-- WISHLIST
+-- ========
+--
+--   !  get it working (see tiler.lua)
+--   
+--   +  push-walls for secret areas!
+--   +  secret elevators
+--   +  bosses!
+-- 
+--   -  decide_monster : skills are "tiered"
+--   -  health/ammo : no skills! -- use medium one
+--   -  place_items : never where monsters are!
+--   -  create rooms with 'endgame' object
+--   
+--   +  ensure limits are enforced:
+--      - MAXACTORS = 150  (remove actors at random)
+--      - MAXSTATS  = 400  (remove statics at random)
+--      - MAXDOORS  = 64   (remove unneeded doors at random)
+--   
+--   -  patrolling monsters (need to create path with arrows)
+--   -  secret levels (full of treasure)
+--   -  something interesting in middle of big rooms
+--   -  elevator "entry" in first room
+--
+----------------------------------------------------------------
 
 -- constants
 WF_NO_TILE = 48
