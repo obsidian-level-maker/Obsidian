@@ -2196,8 +2196,10 @@ DOOM.SKINS =
 
     switch_h = 64
     switch = "SW1HOT"
+    side = "SP_HOT1"
+    base = "SP_HOT1"
     x_offset = 0
-    y_offset = 0
+    y_offset = 50
     special = 103
   }
 
