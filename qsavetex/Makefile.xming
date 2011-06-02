@@ -11,7 +11,7 @@ STRIP=i586-mingw32msvc-strip
 
 OPTIM=-O2
 
-LIB_LOC=/home/aapted/doom/e/trunk/edge/win32_lib
+LIB_LOC=/home/aapted/doom/e/trunk/edge/lib_win32
 
 ZLIB_DIR=$(LIB_LOC)/zlib-1.2.3
 ZLIB_FLAGS=-I$(ZLIB_DIR)
