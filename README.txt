@@ -1,8 +1,8 @@
 
-OBLIGE 4.06-WIP "XMAS EDITION"
-==============================
+OBLIGE 4.15-WIP
+===============
 
-by Andrew Apted.   December 2010
+by Andrew Apted.  June 2011
 
 
 ** PREFACE **
@@ -10,8 +10,7 @@ by Andrew Apted.   December 2010
 This package is just a SNAPSHOT or "Work In Progress" of
 current Oblige development.  This it NOT a proper release and
 is only intended for testing or for curiosity.  The levels are
-quite poor, some are not even completable, and there are many
-other problems.  So don't take it seriously, I haven't :-)
+quite poor, and some games which can be selected may not work.
 
 
 INTRODUCTION
@@ -65,7 +64,7 @@ COPYRIGHT and LICENSE
 
   OBLIGE Level Maker
 
-  Copyright (C) 2006-2010 Andrew Apted
+  Copyright (C) 2006-2011 Andrew Apted
 
   OBLIGE is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published
