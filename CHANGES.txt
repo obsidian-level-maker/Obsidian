@@ -33,11 +33,11 @@ CHANGES (since 3.57)
 - monster control modules for Heretic, Quake, Quake II
 - support for liquids in Quake and Quake II
 
-- support FreeDoom 0.7
-- basic support for HacX 1.2
-
 + Hexen works!
 + much improved Hexen themes, thanks to blackjar
+
+- support FreeDoom 0.7
+- basic support for HacX 1.2
 
 + customised Lua language:
   - optional commas at end of line in data tables
