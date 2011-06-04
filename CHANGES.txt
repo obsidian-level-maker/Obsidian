@@ -2,11 +2,13 @@
 CHANGES (since 3.57)
 ====================
 
-BLURB ABOUT V4 HERE....
-
-++ began V4, a completely new way to layout rooms, as well as
-   reworked planning, connection, quest system and monster/item
-   placement.
+* V4 began as an experiment into a completely new way to layout rooms
+  using prefabs for everything including floors and ceilings.  However
+  this system proved to be unsatisfactory (not flexible enough), so I
+  scrapped it and went back to the drawing board.  Since then, nearly
+  all parts of the Lua code have been reworked or rewritten, and work
+  continues to bring OBLIGE upto the standard of earlier releases and
+  eventually to create even better levels.
 
 + Prefab system!
 
@@ -32,6 +34,10 @@ BLURB ABOUT V4 HERE....
 - support for liquids in Quake and Quake II
 
 - support FreeDoom 0.7
+- basic support for HacX 1.2
+
++ Hexen works!
++ much improved Hexen themes, thanks to blackjar
 
 + customised Lua language:
   - optional commas at end of line in data tables
@@ -39,4 +45,6 @@ BLURB ABOUT V4 HERE....
   - ternary operator of the form: (X ? Y , Z)
   - continue statement
   - alternative inequality operator: !=
+
+- incorporated glBSP source for easier building
 
