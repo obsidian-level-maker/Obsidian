@@ -4653,9 +4653,9 @@ end
 
 ------------------------------------------------------------
 
-UNFINISHED["doom1"] =
+OB_GAMES["doom1"] =
 {
-  label = "Doom 1"
+  label = "Doom"
 
   priority = 98  -- keep at second spot
 
@@ -4678,7 +4678,7 @@ UNFINISHED["doom1"] =
 }
 
 
-UNFINISHED["ultdoom"] =
+OB_GAMES["ultdoom"] =
 {
   label = "Ultimate Doom"
 
