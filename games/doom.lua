@@ -5,6 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2006-2011 Andrew Apted
+--  Copyright (C)      2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -2760,6 +2761,7 @@ DOOM2.ROOM_THEMES =
    (h) hell    (indoor+outdoor, fire/lava, bodies, blood)
 --]]
 
+
 DOOM1.LEVEL_THEMES =
 {
   doom_tech1 =
@@ -3104,66 +3106,69 @@ DOOM2.LEVEL_THEMES =
 
     building_facades =
     {
-      STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=11,
+      STARTAN3=35, STARG2=30, STARTAN2=25, STARG3=18,
       STARBR2=5, STARGR2=10, STARG1=5, STARG2=5,
-      BROWN1=5,
-      BROWNGRN=10, BROWN96=8, GRAY5=1,
+      BROWN1=15, STONE=15, BLAKWAL1=5, BLAKWAL2=5,
+      BROWNGRN=10, BROWN96=8, GRAY5=1, GRAY7=3,
 
       BRONZE1=5, BRONZE3=10,
-      METAL2=25,
+      METAL2=25, STONE2=10, STONE3=10,
     }
 
     building_walls =
     {
-      STARTAN3=25, STARG2=20, STARTAN2=18, STARG3=11,
+      STARTAN3=35, STARG2=30, STARTAN2=18, STARG3=15,
       STARBR2=5, STARGR2=10, STARG1=5, STARG2=5,
-      SLADWALL=20, GRAY7=12, BROWN1=5,
+      SLADWALL=20, GRAY7=12, BROWN1=8, GRAY1=5,
       BROWNGRN=10, BROWN96=8, METAL1=2, GRAY5=3,
+      BROVINE2=3, BLAKWAL1=5, BLAKWAL2=5,
 
-      BRONZE1=5, BRONZE3=10, TEKGREN2=20,
-      METAL2=5, PIPE2=10, PIPE4=5,
+      BRONZE1=5, BRONZE3=10, TEKGREN2=30, ICKWALL3=8,
+      METAL2=10, PIPE2=10, PIPE4=5, STONE2=10, STONE3=10,
     }
 
     building_floors =
     {
       FLOOR0_1=50, FLOOR0_2=20, FLOOR0_3=50,
-      FLOOR0_7=50, FLOOR3_3=50, FLOOR7_1=10,
+      FLOOR0_7=50, FLOOR3_3=50, FLOOR7_1=10, FLAT3=10,
       FLOOR4_5=50, FLOOR4_6=50, FLOOR4_8=50, FLOOR5_2=50,
-      FLAT1=20, FLAT5=20, FLAT9=50, FLAT14=50,
-      CEIL3_2=50,
+      FLAT1=20, FLAT5=20, FLAT14=50, FLOOR5_1=30,
+      CEIL3_2=50, CEIL4_1=5, CEIL4_2=5, FLOOR0_5=15, FLOOR1_6=3,
 
       SLIME14=25, SLIME15=30, SLIME16=50,
     }
 
     building_ceilings =
     {
-      CEIL5_1=50, CEIL5_2=50, CEIL3_3=50, CEIL3_5=50,
-      FLAT1=50, FLAT4=50, FLAT18=50,
-      FLOOR0_2=50, FLOOR4_1=50, FLOOR5_1=50, FLOOR5_4=20,
-      TLITE6_5=2, TLITE6_6=2, CEIL1_2=2,
+      CEIL5_1=50, CEIL3_3=50, CEIL3_5=50, MFLR8_1=10,
+      FLAT5_4=50, FLAT4=50, FLAT18=50, FLAT19=10, FLOOR7_1=10,
+      FLOOR0_2=30, FLOOR4_1=50, FLOOR5_1=50, FLOOR5_4=20,
+      FLAT5_4=15, FLOOR4_8=20,
 
-      GRNLITE1=2,
+      GRNLITE1=2, SLIME14=10, SLIME15=10, SLIME16=10,
     }
 
     building_corners =
     {
-      STARGR1=40, METAL1=20, ICKWALL3=6,
-      TEKWALL4=6, COMPTALL=3, COMPBLUE=3,
+      STARGR1=40, METAL1=20, ICKWALL3=6, SILVER2=5,
+      TEKWALL4=6, COMPTALL=3, COMPBLUE=3, SILVER1=10,
 
-      METAL7=40, METAL2=10, METAL4=10,
-      TEKWALL6=10, TEKBRON1=3,
+      METAL7=40, METAL2=10, METAL4=10, PIPEWAL2=10,
+      TEKWALL6=10, TEKBRON1=3, PIPES=5, SHAWN2=15,
+      COMPSPAN=5, MODWALL3=5, SPACEW4=5, TEKLITE=5,
+      TEKLITE2=5,
     }
 
     courtyard_floors =
     {
       BROWN144=30, BROWN1=20, STONE=20,
-      ASHWALL=5, FLAT10=5,
+      ASHWALL=5, FLAT10=5, RROCK03=5,
 
-      TANROCK5=10, GRASS2=5, GRASS1=3,
-      BRICK10=5,
-      RROCK14=5, RROCK19=5, RROCK20=5,
-      STONE4=5, STONE6=5,
-      ZIMMER5=3, ZIMMER8=1,
+      TANROCK5=10, GRASS2=5, GRASS1=3, FLAT5_8=5,
+      BRICK10=5, RROCK11=5, FLAT5_7=5, ZIMMER1=7,
+      RROCK14=5, RROCK19=5, RROCK20=5, ZIMMER2=7,
+      STONE4=5, STONE6=5, RROCK16=5, ZIMMER3=7,
+      ZIMMER5=3, ZIMMER8=1, RROCK17=5, ZIMMER4=5, ZIMMER7=5,
     }
 
     cave_walls =
@@ -3175,12 +3180,13 @@ DOOM2.LEVEL_THEMES =
 
       ASHWALL4=50, ASHWALL7=50,
       BSTONE1=50, MODWALL1=50,
-      ROCK5=50, RROCK03=50,
-      STONE4=50, STONE7=60,
+      ROCK5=50, RROCK03=50, ROCK3=30,
+      STONE4=50, STONE7=20, STONE6=50,
 
       TANROCK4=50, TANROCK5=50,
-      TANROCK7=50, TANROCK8=50,
-      ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
+      TANROCK7=50, TANROCK8=50, ASHWALL3=50,
+      ZIMMER3=50, ZIMMER5=50, ZIMMER8=50, ZIMMER7=50,
+      ASHWALL6=50, ZIMMER1=50, ZIMMER2=50, ZIMMER4=50,
     }
 
     landscape_walls =
@@ -3190,14 +3196,15 @@ DOOM2.LEVEL_THEMES =
       GRAYVINE=50,
       STONE=50,
 
-      ASHWALL4=50, ASHWALL7=50,
-      BSTONE1=50, ROCK5=50,
+      ASHWALL3=50, ASHWALL4=50, ASHWALL7=50,
+      BSTONE1=50, ROCK5=50, BSTONE2=50,
       MODWALL1=50, STONE4=50, STONE7=60,
+      STONE6=40,
 
       TANROCK4=50, TANROCK5=50,
       TANROCK7=50, TANROCK8=50,
 
-      ZIMMER2=50, ZIMMER3=50,
+      ZIMMER2=50, ZIMMER3=50, ZIMMER1=50,
       ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
     }
 
@@ -3226,13 +3233,13 @@ DOOM2.LEVEL_THEMES =
       FLAT1=50, FLOOR7_1=50,
     }
 
-    __exit =  -- FIXME : move this stuff into a skin
+    __exit = -- FIXME : move this stuff into a skin
     {
       walls =
       {
-        METAL2=50,   STARTAN2=50, STARG1=50,
+        METAL2=50, STARTAN2=50, STARG1=50,
         TEKWALL4=50, PIPEWAL2=50,
-        TEKGREN1=50, SPACEW2=50,  STARBR2=50,
+        TEKGREN1=50, SPACEW2=50, STARBR2=50,
 
         METAL2=50, PIPEWAL2=50, TEKGREN1=50, SPACEW2=50,
       }
@@ -3250,8 +3257,8 @@ DOOM2.LEVEL_THEMES =
       switches =
       {
         SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
-        SW1GRAY=50,  SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
-        SW1TEK=50,   SW1STON1=50
+        SW1GRAY=50, SW1MOD1=50, SW1SLAD=50, SW1STRTN=50,
+        SW1TEK=50, SW1STON1=50
       }
     }
 
@@ -3271,8 +3278,8 @@ DOOM2.LEVEL_THEMES =
     ceil_lights =
     {
       TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30,
-      FLAT2=20,    CEIL3_4=10,  FLAT22=10,
-      
+      FLAT2=20,  CEIL3_4=10, FLAT22=10,
+
       GRNLITE1=10,
     }
 
@@ -3283,8 +3290,11 @@ DOOM2.LEVEL_THEMES =
       GRNLITE1=20
     }
 
-    pillars = { metal1=70, tekwall4=20,
-                teklite=50, silver2=10, shawn2=10, metal1=15 }
+    pillars =
+    {
+      metal1=70, tekwall4=20,
+      teklite=50, silver2=10, shawn2=10, metal1=15
+    }
 
     big_pillars = { big_red=50, big_blue=50 }
 
@@ -3298,12 +3308,12 @@ DOOM2.LEVEL_THEMES =
       compsta1=40, compsta1_blink=4,
       compsta2=40, compsta2_blink=4,
       redwall=5,
-    
+
       silver3=20, spacewall=20,
     }
 
     crates = { crate1=50, crate2=50, comp=70, lite5=20,
-               space=90, mod=15 }
+      space=90, mod=15 }
 
     OLD__exits = { skull_pillar=50, stone_pillar=5 }
 
@@ -3326,36 +3336,38 @@ DOOM2.LEVEL_THEMES =
 
     building_walls =
     {
-      MARBLE1=25, MARBLE2=10, MARBLE3=20,
-      GSTVINE2=20, SLADWALL=10,
-      SKINMET1=3, SKINMET2=3,
+      MARBLE1=25, MARBLE2=10, MARBLE3=20, STUCCO3=5,
+      GSTVINE2=20, SLADWALL=10, GSTVINE1=20, STUCCO1=5,
+      SKINMET1=3, SKINMET2=3, GSTONE1=25, STUCCO=5,
+      WOOD1=12, WOOD3=8, WOOD5=8, WOODVERT=5,
 
       MARBGRAY=35,
     }
 
     building_floors =
     {
-      DEM1_5=15, DEM1_6=15, FLAT5_7=10, FLAT10=10,
-      FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
+      DEM1_5=15, DEM1_6=15, FLAT5_7=10, FLAT10=10, FLAT5_4=8, FLAT5_1=5,
+      FLOOR7_1=10, FLAT1=10, FLOOR5_2=10, FLOOR7_2=15, FLAT5=7, FLAT5_2=5,
     }
 
     building_ceilings =
     {
-      FLAT1=10, FLAT10=10, FLAT5_5=10, FLOOR7_2=10,
+      FLAT1=10, FLAT10=10, FLAT5_5=10, FLOOR7_2=15, DEM1_5=10, FLAT5_4=5, CEIL1_1=5,
     }
 
     courtyard_floors =
     {
-      ASHWALL=20,
-      FLAT5_6=10, FLAT10=20,
-      SFLR6_1=10, MFLR8_2=20,
+      ASHWALL=20, MFLR8_3=10, MFLR8_4=5,
+      FLAT5_6=10, FLAT10=20, FLAT1_1=5, FLAT5_8=10,
+      SFLR6_1=10, MFLR8_2=20, FLAT5_7=10,
     }
 
     cave_walls =
     {
       ROCKRED1=90,
       SKIN2=50, SKINFACE=50, SKSNAKE1=35, SKSNAKE2=35,
-      FIREBLU1=50, FIRELAVA=50, 
+      FIREBLU1=50, FIRELAVA=50, ROCK1=10, ROCK2=10, ROCK3=10,
+      ROCK4=10, ROCK5=10,
 
       RROCK04=70,
       CRACKLE2=7, CRACKLE4=7,
@@ -3364,9 +3376,10 @@ DOOM2.LEVEL_THEMES =
 
     landscape_walls =
     {
-      ASHWALL=50, GRAYVINE=50,
-      SP_ROCK1=50, ROCKRED1=90,
-      SKSNAKE1=10, SKSNAKE2=10,
+      ASHWALL=50, GRAYVINE=50, ASHWALL3=15, ASHWALL4=15,
+      SP_ROCK1=50, ROCKRED1=90, ASHWALL6=15, ASHWALL7=10,
+      SKSNAKE1=10, SKSNAKE2=10, ROCK1=10, ROCK2=10, ROCK3=10,
+      ROCK4=10, ROCK5=10,
 
       RROCK04=70,
     }
@@ -3374,7 +3387,7 @@ DOOM2.LEVEL_THEMES =
     switch_doors = { Door_pink = 50, Door_vine = 50 }
 
     OLD__exits = { skin_pillar=40, skull_pillar=20,
-             demon_pillar2=10, demon_pillar3=10 }
+      demon_pillar2=10, demon_pillar3=10 }
 
     logos = { carve=90, pill=50, neon=5 }
 
@@ -3409,25 +3422,29 @@ DOOM2.LEVEL_THEMES =
 
     building_walls =
     {
-      SP_HOT1=25, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
-      SKINCUT=2,
+      SP_HOT1=45, GSTVINE1=17, STONE=10, SKINMET2=5, BROWN1=2,
+      SKINCUT=2, GSTVINE2=17, WOOD1=10, WOOD3=10, WOOD5=10,
+      WOODVERT=5, STUCCO=5, STUCCO1=5, STUCCO3=5,
     }
 
     building_floors =
     {
-      FLAT5_7=10, FLAT10=10, FLAT5_3=10,
-      FLOOR7_1=10, FLAT1=10, FLOOR5_2=10,
+      FLAT5_7=10, FLAT10=10, FLAT5_3=20, FLOOR7_2=10, DEM1_6=6, FLOOR5_4=5, RROCK11=5,
+      FLOOR7_1=10, FLAT1=10, FLOOR5_2=10, FLAT5_4=10, DEM1_5=5, FLAT5=5, RROCK03=5,
+      RROCK12=5, RROCK13=5, RROCK15=5,
     }
 
     building_ceilings =
     {
-      FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10,
+      FLAT1=10, FLOOR6_1=10, FLAT10=10, FLAT8=10, FLAT5_4=5, DEM1_5=5,
+      DEM1_6=5, FLOOR6_2=6,
     }
 
     courtyard_floors =
     {
-      FLAT5_6=10, ASHWALL=5, FLAT10=5,
-      SFLR6_4=10, MFLR8_2=10,
+      FLAT5_6=10, ASHWALL=5, FLAT10=5, RROCK16=5,
+      SFLR6_4=10, MFLR8_2=10, DEM1_5=5, DEM1_6=5,
+      RROCK17=5, RROCK18=5, RROCK19=5,
 
       CRACKLE2=15, CRACKLE4=20,
     }
@@ -3455,10 +3472,10 @@ DOOM2.LEVEL_THEMES =
     switch_doors = { Door_pink = 50, Door_vine = 50 }
 
     OLD__exits = { skin_pillar=40, skull_pillar=20,
-             demon_pillar2=10, demon_pillar3=10 }
+      demon_pillar2=10, demon_pillar3=10 }
 
     big_pillars = { big_red=50, sloppy=20, sloppy2=20, }
-    
+
     logos = { carve=90, pill=50, neon=5 }
 
     pictures =
@@ -3491,33 +3508,40 @@ DOOM2.LEVEL_THEMES =
 
     building_facades =
     {
-      BIGBRIK1=20, BIGBRIK2=10,
-      BLAKWAL1=10, BRWINDOW=15,
-      BRICK5=10, BRICK7=35, BRICK8=5,
-      BRICK10=3, BRICK11=8, BRICK12=8,
-      STONE3=10, STONE2=6,
+      BIGBRIK1=35, BIGBRIK2=35, BRICK1=15, BROVINE2=5,
+      BLAKWAL1=25, BLAKWAL2=25, BRWINDOW=10, BROWNGRN=4,
+      BRICK5=10, BRICK7=35, BRICK8=5, BRICK2=10, GRAY7=3,
+      BRICK10=5, BRICK11=8, BRICK12=8, BRICK4=10, METAL2=3,
+      STONE3=15, STONE2=15, STUCCO=5, BRONZE1=5, BRONZE3=5,
+      BRICK6=10, BRICK9=10,
     }
 
     building_walls =
     {
-      WOOD1=15,
-      BIGBRIK1=20, BIGBRIK2=10,
-      BRICK5=10, BRICK7=35, BRICK8=5,
-      BRICK10=3, BRICK11=8, BRICK12=8,
-      PANEL7=15, PANCASE2=25, STUCCO3=15,
-      STONE3=10, STONE2=6,
+      WOOD1=15, BRICK6=7, BRICK9=7,
+      BIGBRIK1=20, BIGBRIK2=10, WOOD12=6, WOODVERT=5,
+      BRICK5=10, BRICK7=35, BRICK8=5, BRICK1=5, ICKWALL1=3,
+      BRICK10=3, BRICK11=8, BRICK12=8, BRICK2=7, ICKWALL2=3,
+      PANEL7=15, PANCASE2=25, STUCCO3=15, PANEL9=5, ICKWALL3=3,
+      STONE3=10, STONE2=10, STUCCO=5, PANEL8=5, BRONZE1=3, BRONZE3=3,
     }
 
     building_floors =
     {
       FLAT1=20, FLAT1_1=20, FLOOR4_6=10, FLOOR5_4=20,
-      FLOOR7_1=10, FLOOR0_2=15,
+      FLOOR7_1=10, FLOOR0_2=15, FLAT8=10, FLOOR3_3=10,
+      FLOOR5_3=10, FLOOR4_8=10, FLOOR5_1=10, FLAT5=10,
+      FLAT5_4=10, FLAT5_5=5, FLAT1_2=15, FLAT5_1=10,
+      FLAT5_2=10, FLOOR0_1=5, FLOOR0_3=5, FLOOR5_2=10,
     }
 
     building_ceilings =
     {
       CEIL1_1=20, FLAT1=10, FLOOR7_1=5, RROCK14=10,
-      FLAT5_1=5,
+      FLAT5_1=5, CEIL3_5=10, FLAT5_4=10, CEIL3_3=5,
+      FLAT19=5, FLAT8=5, RROCK10=5, SLIME14=3, SLIME15=3,
+      SLIME16=3, MFLR8_1=10, CEIL3_2=5, CEIL3_1=5, FLAT5_2=7,
+      FLAT5_5=5, CEIL5_1=3, FLAT19=5, FLOOR5_4=5,
     }
 
     courtyard_floors =
@@ -3525,48 +3549,53 @@ DOOM2.LEVEL_THEMES =
       STONE=40, BROWN1=20, ASHWALL6=5,
       RROCK19=10, ROCK2=15, STONE7=8,
       ASHWALL=5, ASHWALL4=5, ASHWALL7=5,
-      BSTONE1=5, BSTONE2=5,
-      ROCK3=10, ROCK5=10,
-      GRASS1=15, GRASS2=10,
+      BSTONE1=5, BSTONE2=5, ASHWALL3=5,
+      ROCK3=10, ROCK5=10, RROCK20=7,
+      GRASS1=15, GRASS2=10, ROCK1=10, FLAT5=3,
+      BROWNHUG=5, MFLR8_3=20, FLAT1=7, FLOOR7_1=5,
+      MFLR8_4=15, RROCK03=7, 
+      RROCK09=7, RROCK15=5, RROCK16=7,
+      RROCK11=7, RROCK12=7, FLOOR5_4=5,
+      RROCK17=7, RROCK18=7, SLIME13=4,
     }
 
     cave_walls =
     {
-      ASHWALL=50,
+      ASHWALL=50, BSTONE2=50,
       ASHWALL4=50, ASHWALL7=50,
-      ROCK5=50, RROCK03=50,
+      ROCK5=50, RROCK03=50, ROCK4=50,
       BSTONE1=50, SP_ROCK1=50,
 
-      GRAYVINE=50, MODWALL1=50,
-      STONE4=50, STONE7=60,
-      TANROCK4=50, TANROCK5=50,
+      GRAYVINE=50, MODWALL1=50, ASHWALL3=50,
+      STONE4=50, STONE7=60, ASHWALL6=50,
+      TANROCK4=50, TANROCK5=50, STONE6=50,
       TANROCK7=50, TANROCK8=50,
 
+      ZIMMER1=50, ZIMMER2=50, ZIMMER4=50,
       ZIMMER3=50, ZIMMER5=50, ZIMMER8=50,
+      ZIMMER7=50, BROWNHUG=50,
     }
 
     landscape_walls =
     {
       ASHWALL=50, ASHWALL4=50, ASHWALL7=50,
-      BSTONE1=50, ROCK5=50,
+      BSTONE1=50, ROCK5=50, BSTONE2=50,
 
-      GRAYVINE=50, MODWALL1=50,
-      STONE4=50, STONE7=60,
+      GRAYVINE=50, MODWALL1=50, ASHWALL3=50,
+      STONE4=50, STONE7=60, STONE6=50,
       TANROCK4=50, TANROCK5=50,
       TANROCK7=50, TANROCK8=50,
 
-      ZIMMER2=50, ZIMMER3=50,
-      ZIMMER5=50, ZIMMER7=50, ZIMMER8=10,
-
-      WOOD9=90,
+      ZIMMER1=50, ZIMMER2=50, ZIMMER3=50, ZIMMER4=10,
+      ZIMMER5=50, ZIMMER7=50, ZIMMER8=15,
     }
 
     outer_fences =
     {
-      STONE2=20, CEMENT9=30, WOOD9=30,
-      STONE3=30, WOOD8=20, GRAY1=20, ICKWALL3=10,
-      STONE4=30, STONE6=30, STUCCO=10,
-      WOODMET1=10,
+      STONE2=20, CEMENT9=30, WOOD9=30, SLADWALL=10, WOOD5=5,
+      STONE3=30, WOOD8=20, GRAY1=20, ICKWALL3=10, TANROCK2=5,
+      STONE4=30, STONE6=30, STUCCO=10, METAL2=5, TANROCK5=10, BROVINE2=10,
+      WOODMET1=10, GRAY5=20, ICKWALL2=15, MODWALL1=15, WOOD6=5, WOOD9=20,
     }
 
     logos = { carve=40, pill=25, neon=50 }
@@ -3589,12 +3618,12 @@ DOOM2.LEVEL_THEMES =
 
     room_types =
     {
-      -- FIXME  PRISON  WAREHOUSE
+      -- FIXME PRISON WAREHOUSE
     }
 
     monster_prefs =
     {
-      caco=2.0, revenant=1.5, knight=1.5, demon=1.2,
+      caco=1.3, revenant=1.2, knight=1.5, demon=1.2, gunner=1.5,
     }
 
     -- FIXME: hallway = ...
@@ -3649,7 +3678,7 @@ DOOM2.LEVEL_THEMES =
 
     force_mon_probs = { ss_dude=70, demon=20, shooter=20, zombie=20, _else=0 }
 
----???  weap_prefs = { chain=3, shotty=3, super=3 }
+    ---??? weap_prefs = { chain=3, shotty=3, super=3 }
 
     style_list =
     {
