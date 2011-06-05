@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -400,8 +400,8 @@ function Levels_choose_themes()
 
   assert(total > 0)
 
-  if OB_CONFIG.theme == "original" and GAME.original_themes then
-    total = math.max(total, # GAME.original_themes)
+  if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+    total = math.max(total, # GAME.ORIGINAL_THEMES)
   end
 
   while not table.empty(prob_tab) do
@@ -411,8 +411,8 @@ function Levels_choose_themes()
     local info = OB_THEMES[name]
     local pos = rand.irange(1, total)
 
-    if OB_CONFIG.theme == "original" and GAME.original_themes then
-      for i,orig_theme in ipairs(GAME.original_themes) do
+    if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+      for i,orig_theme in ipairs(GAME.ORIGINAL_THEMES) do
         if name == orig_theme and not episode_list[i] then
           -- this can leave gaps, but they are filled later
           pos = i ; break
@@ -430,10 +430,8 @@ function Levels_choose_themes()
   gui.debugf("Initial theme list = \n%s\n", table.tostr(episode_list))
 
   -- fill any gaps when in "As Original" mode
-  if OB_CONFIG.theme == "original" and GAME.original_themes then
-    gui.debugf("original_themes =\n%s\n", table.tostr(GAME.original_themes))
-
-    for i,orig_theme in ipairs(GAME.original_themes) do
+  if OB_CONFIG.theme == "original" and GAME.ORIGINAL_THEMES then
+    for i,orig_theme in ipairs(GAME.ORIGINAL_THEMES) do
       if not episode_list[i] then
         episode_list[i] = orig_theme
       end

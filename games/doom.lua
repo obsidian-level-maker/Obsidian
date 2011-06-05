@@ -4300,28 +4300,24 @@ DOOM1.EPISODES =
 {
   episode1 =
   {
-    orig_theme = "doom_tech"
     sky_light = 0.85
     secret_exits = { "E1M3" }
   }
 
   episode2 =
   {
-    orig_theme = "doom_tech"
     sky_light = 0.65
     secret_exits = { "E2M5" }
   }
 
   episode3 =
   {
-    orig_theme = "doom_hell"
     sky_light = 0.75
     secret_exits = { "E3M6" }
   }
 
   episode4 =
   {
-    orig_theme = "doom_hell"
     sky_light = 0.75
     secret_exits = { "E4M2" }
   }
@@ -4331,24 +4327,36 @@ DOOM2.EPISODES =
 {
   episode1 =
   {
-    orig_theme = "doom_tech"
     sky_light = 0.75
   }
 
   episode2 =
   {
-    orig_theme = "doom_urban"
     sky_light = 0.50
     secret_exits = { "MAP16", "MAP31" }
   }
 
   episode3 =
   {
-    orig_theme = "doom_hell"
     sky_light = 0.75
   }
 }
 
+
+DOOM1.ORIGINAL_THEMES =
+{
+  "doom_tech"
+  "doom_tech"
+  "doom_hell"
+  "doom_hell"
+}
+
+DOOM2.ORIGINAL_THEMES =
+{
+  "doom_tech"
+  "doom_urban"
+  "doom_hell"
+}
 
 
 ------------------------------------------------------------
@@ -4377,8 +4385,6 @@ function DOOM1.get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  GAME.original_themes = {}
-
   local few_episodes = { 1, 1, 2, 2 }
 
   -- this accounts for last two levels are BOSS and SECRET level
@@ -4388,8 +4394,6 @@ function DOOM1.get_levels()
   for episode = 1,EP_NUM do
     local ep_info = DOOM1.EPISODES["episode" .. episode]
     assert(ep_info)
-
-    GAME.original_themes[episode] = ep_info.orig_theme
 
     for map = 1,MAP_NUM do
       local ep_along = map / LEV_MAX
@@ -4451,8 +4455,6 @@ function DOOM2.get_levels()
   gotcha_map = rand.pick{17,18,19}
   gallow_map = rand.pick{24,25,26}
 
-  GAME.original_themes = {}
-
   local few_episodes = { 1, rand.sel(70,1,2), rand.sel(70,2,3), 3 }
 
   for map = 1,MAP_NUM do
@@ -4479,10 +4481,6 @@ function DOOM2.get_levels()
     local ep_info = DOOM2.EPISODES["episode" .. episode]
     assert(ep_info)
     assert(ep_along <= 1)
-
-    if not GAME.original_themes[episode] then
-      GAME.original_themes[episode] = ep_info.orig_theme
-    end
 
     local LEV =
     {
