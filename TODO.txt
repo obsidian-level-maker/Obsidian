@@ -2,25 +2,16 @@
 OBLIGE TODO
 ===========
 
++  fix font on website
+
+
 Current Work
 ------------
-
-DONE: HERETIC: keys and switch doors
-
-DONE: HEXEN: keys and switch doors
-
-DONE: Hexen II basics
-
-(d) QUAKE2: bit better theme
-
-(e) HacX 1.2: bit better theme
-
 
 ++  some VOID and LIQUID areas
 
 ++  LOGO pictures on indoor walls (DOOM format games)
 
-+  update INSTALL.txt about Lua and glBSP libs
 
 
 ???  the '10 - dir' thing : WHY ?
