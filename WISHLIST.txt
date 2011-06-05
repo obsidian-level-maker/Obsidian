@@ -359,6 +359,8 @@ SKY GENERATOR:
   DOOM and DOOM II
 ----------------------------------------------------------------
 
++  for DOOM 1, have a separate theme for Episode 2
+
 !!  rethink way lighting is done, probably use light brushes for
     every situation (regions without a primary light brush get
     flood filled with a value less than nearest light).
