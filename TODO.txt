@@ -4,6 +4,10 @@ OBLIGE TODO
 
 +  fix font on website
 
+-  not enough outdoor rooms
+
+-  too many hallways, and often too long
+
 
 Current Work
 ------------
