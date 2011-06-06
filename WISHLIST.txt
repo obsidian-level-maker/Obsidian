@@ -20,16 +20,16 @@ OBLIGE WISH-LIST
   OTHER GAMES
 ----------------------------------------------------------------
 
++  Duke Nukem 3D
+
 -  Chex Quest 1, 2, 3
 
-+  Duke Nukem 3D
+-  Doom64 TC
 
 ?  Blood
 ?  Shadow Warrior
 
 ?  Dark Forces
-
-??  Unreal
 
 
 ----------------------------------------------------------------
@@ -282,7 +282,6 @@ Nicety:
 Possible Options:
 -  glBSP section:
    -  more accurate nodes (slower)
-   -  verbose log messages
    -  pack sidedefs
 
 
@@ -314,9 +313,6 @@ Mazes:
 ----------------------------------------------------------------
   GUI and C++ CODE
 ----------------------------------------------------------------
-
-?  glBSP: use a namespace
-
 
 IDEA:
   - move main loop of OBLIGE into Lua (e.g. ob_main_loop)
@@ -705,9 +701,7 @@ Monsters:
   PIPE DREAMS
 ----------------------------------------------------------------
 
-+  better global architecture
-
-+  teleporters!   (RED is two-way, WHITE is one-way)
+>>  teleporters!   (RED is two-way, WHITE is one-way)
 
 +  make Oblige easier to mod.
 
@@ -857,8 +851,6 @@ Cycles:
 
 
 +  Composition of prefabs
-
--  prefab "families" -- they can use the same skin info
 
 -  module help / explanations ?? (appear above the options)
 
@@ -1036,31 +1028,13 @@ LEGACY: gui.property("solid_exfloor", 281)
         gui.property("liquid_exfloor", 280)  -- 301
 
 
-
-DOOM ENTITY PROPS:
-  angle
-  options
-  tid
-  special
-  args
-
-
-QUAKE1 ENTITY PROPS:
-  light
-  spawnflags
-  target
-  targetname
-  speed
-  next stop
-
-
-
- ____________________
-|KEY:                |
-|    #  completed    |
-|    -  plain item   |
-|    +  important    |
-|    >> in progress  |
-|    ?? not sure     |
-|____________________|
+ _____________________
+|                     |
+|KEY:                 |
+|    !!  critical     |
+|    +   important    |
+|    -   plain item   |
+|    >>  in progress  |
+|    ??  not sure     |
+|_____________________|
 
