@@ -138,6 +138,9 @@ QUAKE2.PARAMETERS =
   use_spawnflags = true
   entity_delta_z = 24
 
+  -- keys are lost when you open a locked door
+  lose_keys = true
+
   -- the name buffer in Quake II is huge, but this value
   -- reflects the on-screen space (in the computer panel)
   max_name_length = 24

@@ -136,6 +136,9 @@ QUAKE1.PARAMETERS =
   use_spawnflags = true
   entity_delta_z = 24
 
+  -- keys are lost when you open a locked door
+  lose_keys = true
+
   -- the name buffer in Quake can fit 39 characters, however
   -- the on-screen space for the name is much less.
   max_name_length = 20
