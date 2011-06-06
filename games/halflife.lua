@@ -472,7 +472,7 @@ end
 
 ----------------------------------------------------------------
 
-OB_GAMES["halflife"] =
+UNFINISHED["halflife"] =
 {
   label = "Half-Life"
 
