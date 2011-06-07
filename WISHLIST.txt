@@ -31,9 +31,6 @@ OBLIGE WISH-LIST
 
 ?  Dark Forces
 
-??  Heretic 2
-??  Daikatana
-
 
 ----------------------------------------------------------------
   LEVEL STUFF
@@ -87,6 +84,16 @@ Hallways:
 -  Special Hallway #2 : surround a corner of large room, two entrances
 -  Special Hallway #3 : surround a room completely.
 -  Special Hallway #4 : diagonal from one to another (alloc '+' shape)
+
+
+Hallway Theming:
+  Wood# (Namely Wood1, Wood3 and Wood5...Wood4 is the one with skulls on it
+  and might look silly), Woodmet1, Skin2, GSTONE1/SP_HOT1 and Skinmet#
+  textures would fit well in the HELL theme (Note Woodmet# textures are Doom2
+  only, everything else works in both games)
+
+  PANCASE2 would fit well for Doom2 Urban hallways.
+
 
 
 Monsters:
@@ -153,6 +160,10 @@ Quests:
 Idea: "single minis" : a single room (not too big, kvolume <= 2)
       which contains something nice to get (weapon, powerup, etc).
 
+-  sometimes lock another connection (ESP: symmetry)
+   with the same lock as one we just added
+   [ESP: when new lock goes to leaf or semi-leaf]
+
 
 Caves:
 
@@ -170,62 +181,6 @@ Caves:
 +  fix pickup spots
 
 
-Connections:
-
-TERMINOLOGY
-  Leaf   : only one exit
-  Stalk  : two exits
-  Branch : three or more exits
-
-+  plan them using sections first
-   i.e. CONN = { sect1, dir, sect2 }
-
--  The "connect map" is the conns[] list in each room.
-
-   -  need to allow teleporters and intrusions
-   -  intrusions can be locked, teleporters cannot be
-
--  what makes a good set of connections?
-
-   (1) don't exit a room on same wall as entering it
-       (which has no need to traverse through the room)
-
-   (2) T shape rooms have 3 connections in the three outer
-       sections (ideally same direction as T shape)
-       L shape rooms have at least 2 connects in outer tips
-       plus shape rooms have 3 or 4 connections in outer tips
-       Big rect rooms have 3 or 4 connections on 3/4 diff sides
-       
-       (same basic criterion: need to traverse the whole room)
-       This trumps #1.
-
-   (3) in small room, 3 connections is becoming too many.
-       If only two, then prefer to turn 90 degrees.
-
-   (4) need a good number of "hubs" (3 or more connections).
-       
-       too few  --> no locked doors are possible
-       too many --> creates a lot of dead-end paths
-
-       natural areas are most flexible
-
-       limit on 4-exit rooms ("mega-hub") is probably: int(LEVEL.H / 2)
-
-       for each room, count how many other rooms it touches.
-       big rects or plus with >= 4 are candidates for mega-hub
-
-   (5) the connection patterns (T, L, etc) are still a good idea for
-       large rectangular rooms.  But do it using sections instead
-       of seeds.
-
-   (6) large rooms may be best as leafs (can have a big battle
-       to get to the key or switch).
-
-   (7) tiny rooms may be best as in/out (2 exit) rooms, and
-       also OK for start room, and ideal for exit room when
-       using a "small exit" prefab.
-
-
 Natural areas:
   -  height changes?
 
@@ -240,21 +195,11 @@ Natural areas:
      (probably need a new prefab for this)
 
 
+
 Lighting:
   -  support w_face.light (maybe even have 'light' in MATERIALS ?)
 
   FIX: shadows on outdoor crates: CRATE_W_SHADOW prefab?
-
-
-Ceilings:
-  - put several small light fittings/sky holes with
-    simple patterns (e.g. inner 2x2 seeds, or outer corners)
-
-
-Pickups:
-  -  add some powerups
-
-  -  don't require "bullet=0" etc in the PLAYER_MODEL
 
 
 Planner:
@@ -273,6 +218,11 @@ Ceilings:
   + or a criss-cross of beams, especially with pillars or
     low opposite sides.  [NOTE: can mess up lifts!]
 
+  - put several small light fittings/sky holes with
+    simple patterns (e.g. inner 2x2 seeds, or outer corners)
+
+  - big room with no sky neighbours: have a huge sky hole
+
   - mega sky holes (two in one, esp. outer has F_SKY1)
 
 
@@ -281,23 +231,10 @@ Pictures:
     ceiling (above doors and low periphs).
 
 
-Nicety:
-  - mark end of big tables with a comment (like D1_WALL_PREFABS)
-
-
 Possible Options:
 -  glBSP section:
    -  more accurate nodes (slower)
    -  pack sidedefs
-
-
-Hallway Theming:
-  Wood# (Namely Wood1, Wood3 and Wood5...Wood4 is the one with skulls on it
-  and might look silly), Woodmet1, Skin2, GSTONE1/SP_HOT1 and Skinmet#
-  textures would fit well in the HELL theme (Note Woodmet# textures are Doom2
-  only, everything else works in both games)
-
-  PANCASE2 would fit well for Doom2 Urban hallways.
 
 
 Mazes:
@@ -320,20 +257,6 @@ IDEA:
 
 Console:
   +  display lists better
-
-
-SKY GENERATOR:
-
--  background part: GRADIENT or CLOUDS or STARS
-
-   GRADIENT params: colors
-   CLOUD param: fracdim, powscale, squish, colors
-   STARS param: powscale, cutoff, colors
-
--  foreground part: NONE or MOUNTAINS or BUILDINGS
-
-   MOUNTAINS params: min_h, max_h, fracdim, powscale, colors
-   BUILDINGS params: min_h, max_h, gap_size, colors, light_cols
 
 
 ----------------------------------------------------------------
@@ -457,14 +380,18 @@ Sam's suggestions:
 
 !! fix weapons, which should be spawned for each class 
 
--  IDEA: have a DEFAULT_ARGS table for each line special,
-         so that prefabs (etc) aren't cluttered with arguments.
+!! proper hub system
 
 +  separate prefab for switched vs locked doors
 
--  need arg1 .. arg5 in faces, Lua code to assign tag number
++  support more skies
 
--  put 'fighter only' bit on fighter's weapons, etc..
++  put 'fighter only' bit on fighter's weapons, etc..
+
+-  IDEA: have a DEFAULT_ARGS table for each line special,
+         so that prefabs (etc) aren't cluttered with arguments.
+
+-  need arg1 .. arg5 in faces, Lua code to assign tag number
 
 -  need exit teleporter in final Hub.
 
@@ -550,12 +477,16 @@ Sam's suggestions:
   QUAKE II
 ----------------------------------------------------------------
 
++  proper hub system
+
 -  create oblige logos (.wal entries)
 
 
 ----------------------------------------------------------------
   HEXEN II
 ----------------------------------------------------------------
+
++  proper 'level', 'prob' and 'density' fields for MONSTERS
 
 -  IDEA: faster clipping hulls:
    -  re-use #2 for #5 (adjust for floor Z diff)
@@ -619,65 +550,6 @@ Name generator:
    or whatever.  Use them multiple times over an episode or game
    to make it seem like there is a actual story to the maps.
 
-
-Theme system:
-
--  Room types:
-
-   (a) storage   (crates, barrels)
-   (b) quarters  (tables, chairs, beds)
-   (c) bathroom
-   (d) computer
-   (e) library
-
-   (f) armoury | supplies
-   (g) processing plant (machines)
-   (h) torture  (wolf3d/SOD)
-
-
-Monsters:
-  +  add guard monsters first, seeds around the purpose
-     (or the weapon).
-
-  +  "monster map" :
-     (1) select 1-4 types of monster to use in room (palette)
-         (and a pref for each one)
-
-         (a) palette might not include guard monster
-             (bump chance way down)
-
-         (b) from player's current weapons determine a 'firepower'
-             value (average of classes in Hexen).
-             This is roughly how much damage can be done per sec.
-
-             Hence we know how long each kind of monster would
-             take to kill.  TOO LONG = skip monster,
-             TOO SHORT = skip or bump chance way down.
-
-  +  once we have the monster map, all we need then is some
-     idea of QUANTITIES.
-
-     +  the skill level controls how many monsters to add.
-        Each monster is always present in "hard" and may be
-        omitted for lower skills.  Maybe: medium keep 66%,
-        easy keep 33%.  (always keep at least one).
-
-     +  the GUI 'Monsters' setting not only controls how many
-        monsters, but also affects difficulty, though quantity
-        is more significant than the difficulty adjustment.
-
-  #  decide level-wide monster palette (no monsters are used
-     which are not in this palette).  Could save big monsters
-     (arach, mancubus) for later levels and omit small ones
-     (esp. pistol zombie).  Perhaps have a palette for each
-     usage kind (free-range, guard, trap, cage) ??
-
-  #  add some monsters
-  -  cages & ledges
-  -  monster closets
-  -  pop-ups 
-  -  teleport-in
-  -  facing entry door [blaze D1]
 
 ++  put in some Cyberdemons or Spider Masterminds
 
@@ -771,81 +643,6 @@ Monsters:
   IDEAS AND BRAINSTORMS
 ----------------------------------------------------------------
 
-One-way routes
-
-  -  TRUE one-way routes mean you never get back.
-
-      These should be rare (max once per episode).
-      It should be a large fall-off (or 3D hole in Quake).
-      Few rooms near start are "high hub", rest of map is "low hub".
-      High hub has only one quest (the hole / fall-off).
-
-      Health/Ammo placement needs to NOT "go back" past a true
-      one-way connection.  Limit placement to rooms in each hub.
-
-  -  Kinds of one way connections:
-
-     (a) fall-offs
-     (b) teleporters
-     (c) lifts that go up (or down) into a hole
-         (activated by a switch only on one side).
-     (d) doors that only open from one side (esp. via a switch)
-
-  -  returnable one-way routes require a way back.
-     
-     The return can occur anywhere where the two arenas touch
-     (for physical connection).  A teleporter back is always
-     possible (desirable when entry was also via teleporter).
-
-     The return MUST be one-way as well.
-
-     QUESTION: how do one-way routes and locked doos interact??
-
-     ANSWER: they don't interact, one-way route splits a quest
-             into two (drop-off is goal of first quest).
-
-             The target key of the 2nd quest makes a good return
-             door (c.f. MAP02 drop-off, MAP05 drop-off).
-
-             Alternatively, a switch (near key or another room)
-             activates some stairs to get back up.
-
-
-Cycles:
-
-  -  Cycles are equivalent to considering the rooms in the cycle
-     as though they were one big room.  So when creating the
-     connection map, there would only be a single node for the
-     group of rooms in a cycle.
-
-  -  I really doubt cycles would add much to a level.
-     However some people may like the non-linearity which it
-     introduces.
-
-  -  Adding extra locked doors between two arenas (especially
-     using different rooms that the main locked door) is another
-     way to create a cycle (these are probably more interesting).
-     An example is the blue keyed door in E1M2 of Quake.
-
-     Extra locked doors can even be placed between two disjoint
-     arenas (like the first and the last), giving the player a
-     shortcut to earlier parts of the level.
-
-  -  a cycle consisting of three rooms, each connected by one-way
-     routes (e.g. fall / fall / one-way lift) could be intersting.
-
-  -  when a cycle (treated as a single node) would have two or more
-     locks coming off it, then it should try hard to ensure that
-     different rooms in the cycle are used for each lock.
-
-     This suggests that the ideal cycles are a group of three or
-     four SMALL rooms, each of which touches 3+ rooms.
-
-  +  TO CREATE CYCLES: first create normal non-cyclical connections
-                       and quest structure.  Then look at where the
-                       rooms in each quest can re-connect.
-
-
 +  Composition of prefabs
 
 -  module help / explanations ?? (appear above the options)
@@ -857,33 +654,6 @@ Cycles:
 -  have a table listing a quantized HSV for each texture/flat
    and make aesthetic decisions using it.
 
-
-
-SKIN TABLE FIELDS
-
-1) use a plain word for the main part of something.
-
-   Examples: 'wall', 'floor', 'side', 'switch',
-             'beam', 'trim',  'base', 'door'.
-
-2) the '_f' suffix on the main word can be used to provide
-   a different floor or ceiling material (when the main word
-   refers to the side texture).
-
-3) the '_t' suffix can provide a different side texture
-   when the main word refers to a floor or ceiling.
-
-4) the '_c' suffix should NOT be used for normal DOOM,
-   it is reserved for setting the ceiling material for
-   rare cases when it could be different from the floor
-   material -- e.g. in a QUAKE prefab.
-
-5) the '_ox' '_oy' '_peg' suffixes provide x_offset,
-   y_offset and pegging values.  When pegging is true,
-   an absent y_offset value will be set to 0.
-
-6) the '_w' '_h' '_d' suffixes are reserved for setting
-   width / height (vertical) / depth values.
 
 
 NAME GENERATOR
@@ -945,58 +715,6 @@ MUSIC RE-ORDERING
           MUSICINFO=MUS:LUMP:"D_RUNNIN";
 
    -  ZDoom : via MAPINFO: music D_RUNNING
-
-
-THEME SELECTION
-
-(a) Each level has a THEME, e.g. "Tech"
-
-(b) User can select what theme to use ---> case closed
-
-(c) For "mixed" select a random theme, bearing in mind:
-    (i) secret levels can choose something whacky
-    (ii) One-Episode: use 'epi_prob', group same themes together
-    (iii) Full-Game: prefer episodes to have whole theme
-                     and prefer theme to match sky
-
-
-EXTRA GRAPHICS
-
-   { "WALL52_X", "WALL53_1" },  // Doom    : CEMENT1,  CEMENT2
-   { "WALL00",   "WALL42"   },  // Heretic : GRSKULL2, CHAINSD
-   { "W_320",    "W_321"    }   // Hexen   : BRASS3,   BRASS4
-
-   static const char *ext_patches[] =
-   {
-     "W74A_1",   "W74A_2", "W74B_1",         // FIREMAGx (water)
-     "WALL64_2", "W64B_1", "W64B_2",         // ROCKREDx (lava)
-     "RP2_1",    "RP2_2",  "RP2_3", "RP2_4", // BLODRIPx (blood)
-     "TP5_1",    "TP5_2",  "TP5_3", "TP5_4", // BLODGRx  (nukage)
-
-     NULL // end marker
-   }
-
-
-
-Room Fitting Out
-----------------
-
--  can_fab_list: do preliminary size check (e.g. min/max)
-
--  Junk sides
-   (f) sometimes allow one gap for a connection
-   (g) ensure floor_fill works OK
-   (h) use in rooms with children (no touching them)
-
-- ceilings:
-  - big room with no sky neighbours: have a huge sky hole
-
-
-
-Quests
-  - sometimes lock another connection (ESP: symmetry)
-    with the same lock as one we just added
-    [ESP: when new lock goes to leaf or semi-leaf]
 
 
 
