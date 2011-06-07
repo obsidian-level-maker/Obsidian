@@ -248,6 +248,41 @@ THEME SELECTION
 
 
 
+NAME GENERATOR
+--------------
+
+-  GUI SIDE:
+   -  BOOM: DEHACKED lump   -- comments use '#'
+            [STRINGS] section
+            
+            gui.property("bex_string", "HUSTR_%d = %s")
+
+            (also: HUSTR_ExMy, PHUSTR_%d, THUSTR_%d)
+
+   -  EDGE: DDFLANG lump    -- comments use '//'
+            [ENGLISH] section
+
+            gui.property("ddf_string", "Map01Desc=\"%s\";")
+
+            (also: ExMyDesc="%s")
+
+   -  ZDOOM / HEXEN: MAPINFO lump   -- comments use ';' 
+
+             gui.mapinfo_map(lump, description)
+             gui.mapinfo_property("cluster", "1")
+
+             LIMIT = 31 letters
+
+   -  QUAKE 1/2: stored in 'worldspawn' entity
+
+             gui.property("level_desc", "%s") --> 'message' field
+
+             LIMIT = 39 letters
+
+-  WILVxx and CWILVxx creation: need an API!
+
+
+
 SKY GENERATOR
 -------------
 
