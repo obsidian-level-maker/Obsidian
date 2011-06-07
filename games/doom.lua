@@ -2930,6 +2930,182 @@ DOOM1.LEVEL_THEMES =
   }
 
 
+  -- Deimos theme by Mr. Chris (chrisdragon425@yahoo.com)
+
+  doom_deimos1 =
+  {
+    prob = 50
+
+    liquids = { nukage=60, water=10, blood=20 }
+
+    -- Best facades would be STONE/2/3, BROVINE/2, BROWN1 and maybe a few others as I have not seen many
+    -- other textures on the episode 2 exterior.
+
+    building_facades =
+    {
+      STONE2=50, STONE3=50, BROVINE=30, BROVINE2=30,
+      BROWN1=50,  -- etc...
+    }
+
+    building_walls =
+    {
+      STARTAN3=10, STARG2=15, BROVINE=20, ICKWALL1=15,
+      STARBR2=15, STARGR2=10, STARG1=5, STARG2=3, ICKWALL3=30,
+      SLADWALL=25, GRAY7=20, BROWN1=5, GRAY1=15, BROVINE2=15,
+      BROWNGRN=10, BROWN96=5, METAL1=15, GRAY5=15, STONE=10,
+
+      STONE2=30, STARTAN1=5, STONE3=20,
+    }
+
+    building_floors =
+    {
+      FLOOR0_1=30, FLOOR0_2=40, FLOOR0_3=30, CEIL4_1=5,
+      FLOOR0_7=10, FLOOR3_3=20, FLOOR7_1=20, CEIL_4_2=10,
+      FLOOR4_1=30, FLOOR4_6=20, FLOOR4_8=50, FLOOR5_2=35,
+      FLAT1=40, FLAT5=30, FLAT14=10, FLAT1_1=30, FLOOR1_6=3,
+      FLAT1_2=30, FLOOR5_1=50, FLAT3=15, FLAT5_4=15,
+    }
+
+    building_ceilings =
+    {
+      CEIL5_1=30, CEIL5_2=10, CEIL3_3=70, CEIL3_5=50, CEIL4_1=10,
+      FLAT1=30, FLAT4=20, FLAT19=30, FLAT8=15, FLAT5_4=20,
+      FLOOR0_2=20, FLOOR4_1=50, FLOOR5_1=50, FLOOR5_4=10,
+    }
+
+    building_corners =
+    {
+      STARGR1=40, METAL1=20, ICKWALL3=6, TEKWALL1=20,
+      TEKWALL4=6, COMPTALL=3, COMPBLUE=3, STARTAN1=7,
+
+      COMPTILE=10,
+    }
+
+--Makes sense for high prob for SP_ROCK1 because the intermission screen shows
+--Deimos has a desolate, gray ground.
+    courtyard_floors =
+    {
+      BROWN144=20, BROWN1=10, STONE=10,
+      ASHWALL=2, FLAT10=3, SP_ROCK1=90,
+    }
+
+    cave_walls =
+    {
+      ASHWALL=20, BROWNHUG=15,
+      SP_ROCK1=90,
+      GRAYVINE=15,
+    }
+
+    landscape_walls =
+    {
+      ASHWALL=20, BROWNHUG=10,
+      SP_ROCK1=90,
+      GRAYVINE=20,
+      STONE=30,
+   }
+
+    hallway_walls =
+    {
+      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
+    }
+
+    hallway_floors =
+    {
+      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+    }
+
+    hallway_ceilings =
+    {
+      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+    }
+
+    stairwell_walls =
+    {
+      BROWN1=50, GRAY1=50, STARGR1=50, METAL1=20
+    }
+
+    stairwell_floors =
+    {
+      FLAT1=50, FLOOR7_1=50,
+    }
+
+    logos = { carve=5, pill=50, neon=50 }
+
+    pictures =
+    {
+      shawn1=10, tekwall1=4, tekwall4=2,
+      lite5=20, lite5_05blink=10, lite5_10blink=10,
+      liteblu4=30, liteblu4_05sync=10, liteblu4_10sync=10,
+      compsta1=30, compsta1_blink=15,
+      compsta2=30, compsta2_blink=15,
+
+---!!!   planet1=20,  planet1_blink=8,
+      compute1=20, compute1_blink=15,
+---!!!   compute2=15, compute2_blink=2,
+      litered=10,
+    }
+
+    OLD__exits = { stone_pillar=50 }
+
+    OLD__switches = { sw_blue=50, sw_hot=50 }
+
+    bars = { bar_silver=50, bar_gray=50 }
+
+    __exit =  -- FIXME
+    {
+      walls =
+      {
+        STARTAN2=50, STARG1=50,
+        TEKWALL4=50, STARBR2=50
+      }
+      floors =
+      {
+        FLOOR0_3=50, FLOOR5_2=50
+      }
+      ceilings =
+      {
+        TLITE6_6=50, TLITE6_5=50, FLAT17=50,
+        FLOOR1_7=50, CEIL4_3=50
+      }
+      switches =
+      {
+        SW1METAL=50, SW1LION=50, SW1BRN2=50, SW1BRNGN=50,
+        SW1GRAY=50,  SW1SLAD=50, SW1STRTN=50,
+        SW1STON1=50
+      }
+    }
+
+    OLD__doors =
+    {
+      silver=20, silver_fast=33, silver_once=2,
+      bigdoor2=5, bigdoor2_fast=8, bigdoor2_once=5,
+      bigdoor4=5, bigdoor4_fast=8, bigdoor4_once=5,
+      bigdoor3=5,
+    }
+
+    steps = { step1=50, step3=50, step4=50 }
+    lifts = { shiny=20, platform=40, rusty=10 }
+
+    ceil_lights =
+    {
+      TLITE6_5=50, TLITE6_6=30, TLITE6_1=30, FLOOR1_7=30, CEIL1_3=5,
+      FLAT2=20, CEIL3_4=10, FLAT22=10, FLAT17=20, CEIL1_2=7,
+    }
+
+    big_lights = { TLITE6_5=30, TLITE6_6=30, FLAT17=30, CEIL3_4=30 }
+
+    pillars = { metal1=70, tekwall4=20 }
+    big_pillars = { big_red=50, big_blue=50 }
+
+    crates = { crate1=50, crate2=50, comp=70, lite5=20 }
+
+    style_list =
+    {
+      naturals = { none=40, few=70, some=20, heaps=2 }
+    }
+  }
+
+
   -- this is the greeny/browny/marbley Hell
 
   doom_hell1 =
@@ -4375,7 +4551,7 @@ DOOM2.EPISODES =
 DOOM1.ORIGINAL_THEMES =
 {
   "doom_tech"
-  "doom_tech"
+  "doom_deimos"
   "doom_hell"
   "doom_hell"
 }
@@ -4752,6 +4928,14 @@ OB_THEMES["doom_tech"] =
   for_games = { doom1=1, doom2=1 }
   name_theme = "TECH"
   mixed_prob = 50
+}
+
+OB_THEMES["doom_deimos"] =
+{
+  label = "Deimos"
+  for_games = { doom1=1 }
+  name_theme = "TECH"
+  mixed_prob = 30
 }
 
 OB_THEMES["doom_urban"] =
