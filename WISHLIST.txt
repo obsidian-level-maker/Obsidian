@@ -31,6 +31,9 @@ OBLIGE WISH-LIST
 
 ?  Dark Forces
 
+??  Heretic 2
+??  Daikatana
+
 
 ----------------------------------------------------------------
   LEVEL STUFF
@@ -74,6 +77,16 @@ Miscellaneous:
 
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
+
+
+Hallways:
+
++  sometimes fork a hallway off another one
+
+-  Special Hallway #1 : surround half the room, entrance either side
+-  Special Hallway #2 : surround a corner of large room, two entrances
+-  Special Hallway #3 : surround a room completely.
+-  Special Hallway #4 : diagonal from one to another (alloc '+' shape)
 
 
 Monsters:
@@ -128,6 +141,7 @@ Facades:
   -  would be nice to "smooth" any odd-one-outs
 
   -  ability to ensure both inner/outer are the same
+     [perhaps a room_theme setting]
 
 
 Quests:
@@ -247,20 +261,12 @@ Planner:
 -  review / improve 'emergency' connections
 
 
-Buldings:
-  - can have separate textures for 'interior' and 'exterior' walls.
-
-
 Windows:
   - better patterns:
     (1) flank door mode
     (2) every second seed mode
 
   - put in indoor children rooms which don't connect to parent
-
-
-Hallways:
-  - rarely and big room (3+ conn) : make a maze
 
 
 Ceilings:
@@ -292,16 +298,6 @@ Hallway Theming:
   only, everything else works in both games)
 
   PANCASE2 would fit well for Doom2 Urban hallways.
-
-
-Hallways:
-
-+  sometimes fork a hallway off another one
-
--  Special Hallway #1 : surround half the room, entrance either side
--  Special Hallway #2 : surround a corner of large room, two entrances
--  Special Hallway #3 : surround a room completely.
--  Special Hallway #4 : diagonal from one to another (alloc '+' shape)
 
 
 Mazes:
@@ -354,7 +350,7 @@ SKY GENERATOR:
   DOOM and DOOM II
 ----------------------------------------------------------------
 
-+  for DOOM 1, have a separate theme for Episode 2
+>> for DOOM 1, have a separate theme for Episode 2
 
 !!  rethink way lighting is done, probably use light brushes for
     every situation (regions without a primary light brush get
@@ -992,33 +988,17 @@ Room Fitting Out
    (g) ensure floor_fill works OK
    (h) use in rooms with children (no touching them)
 
--  IDEA: junk a side with a connection, and the little "bridge"
-         seed can become a stairway.
-
 - ceilings:
   - big room with no sky neighbours: have a huge sky hole
 
 
-
-Stairwells: more steps to ensure wall lengths <= 128 units
-            --> SEED_SIZE * max(sx_span, sy_span) / 128
 
 Quests
   - sometimes lock another connection (ESP: symmetry)
     with the same lock as one we just added
     [ESP: when new lock goes to leaf or semi-leaf]
 
-CONNECT:  for TC (etc) patterns, make the ones that branch at
-          room corners less likely (i.e. prefer 1 or 2 seeds
-          away from corner, though it depends on room size).
 
-HEIGHTS: prevent any room from having more than 4 heights
-         [tiny rooms: no more than 2]
-
-
-HEXEN lua: gui.property("hexen_format", "true")
-
-SPEAR lua: gui.property("file_ext", "SOD")
 
 EDGE: gui.property("solid_exfloor", 400)
       gui.property("liquid_exfloor", 406)
