@@ -155,10 +155,12 @@ CHEX1.MATERIALS =
 STARG3   = { t="STARG3",  f="FLOOR0_5" }
 STARTAN1 = { t="STARTAN1", f="FLOOR0_5" }
 
+  CUPBOARD = { t="BRNBIGC", f="##" }
+
 
   -- floors --
 
-  LIFT     = { f="STEP", t="COMPBLUE" }
+  LIFT     = { f="STEP1", t="COMPBLUE" }
 
   VENT     = { f="FLOOR0_3", t="ASHWALL" }
 
@@ -176,9 +178,10 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   DOOR_RED    = { t="BRNBIGL",  f="##" }
   DOOR_YELLOW = { t="BRNSMAL2", f="##" }
 
-  DOOR_HANGER = { t="STARTAN3", f="##" }
+  DOOR_HANGER1 = { t="STARTAN3", f="##" }
+  DOOR_HANGER2 = { t="SKINFACE", f="##" }
 
-  TRACK = { t="COMPSTA1", f="##" }
+  TRACK = { t="COMPSTA1", f="STEP1" }
 
   LITE_RED    = { t="DOORRED", f="##" }
   LITE_BLUE   = { t="DOORBLU", f="##" }
@@ -192,7 +195,7 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 
   -- switches --
 
-  SW_METAL   = { t="SW2BLUE",  f="STEP" }
+  SW_METAL   = { t="SW2BLUE",  f="STEP1" }
   SW_ROCK    = { t="SW1BRCOM", f="##"  }
   SW_BROWN2  = { t="SW1BRN2",  f="##"  }
   SW_CONC    = { t="SW1BROWN", f="##"  }
@@ -209,11 +212,13 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   SLIME2 = { t="FIREMAG1", f="LAVA1",   sane=1 }
 
 
-  -- Oblige stuff --
+  -- special stuff --
 
-  -- FIXME
-
----!!  O_BOLT   = { t="CEMENT2",  f="O_BOLT", sane=1 }
+  O_PILL   = { t="SP_ROCK1", f="O_PILL",   sane=1 }
+  O_BOLT   = { t="SP_ROCK2", f="O_BOLT",   sane=1 }
+  O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 }
+  O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 }
+  O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 }
 }
 
 
@@ -776,6 +781,57 @@ function CHEX1.begin_level()
 end
 
 
+function CHEX1.make_cool_gfx()
+  local GREEN =
+  {
+    0, 7, 127, 126, 125, 124, 123, 122, 120, 118, 116, 113
+  }
+
+  local BRONZE_2 =
+  {
+    0, 2, 191, 189, 187, 235, 233, 223, 221, 219, 216, 213, 210
+  }
+
+  local RED =
+  {
+    0, 2, 188,185,184,183,182,181, 180,179,178,177,176,175,174,173
+  }
+
+  local GOLD = { 0,47,44, 167,166,165,164,163,162,161,160, 225 }
+
+  local SILVER = { 0,246,243,240, 205,202,200,198, 196,195,194,193,192, 4 }
+
+
+  local colmaps =
+  {
+    BRONZE_2, GREEN, RED, GOLD, SILVER
+  }
+
+  rand.shuffle(colmaps)
+
+  gui.set_colormap(1, colmaps[1])
+  gui.set_colormap(2, colmaps[2])
+  gui.set_colormap(3, colmaps[3])
+  gui.set_colormap(4, colmaps[4])
+
+  -- patches : SP_ROCK1, SP_ROCK2, MIDBRN1, NUKESLAD
+  gui.wad_logo_gfx("WALL63_1", "p", "PILL",   128,128, 1)
+  gui.wad_logo_gfx("WALL63_2", "p", "BOLT",   128,128, 2)
+  gui.wad_logo_gfx("DOOR12_1", "p", "RELIEF",  64,128, 3)
+  gui.wad_logo_gfx("WALL57_1", "p", "CARVE",   64,128, 4)
+
+  -- flats
+  gui.wad_logo_gfx("O_PILL",   "f", "PILL",   64,64, 1)
+  gui.wad_logo_gfx("O_BOLT",   "f", "BOLT",   64,64, 2)
+  gui.wad_logo_gfx("O_RELIEF", "f", "RELIEF", 64,64, 3)
+  gui.wad_logo_gfx("O_CARVE",  "f", "CARVE",  64,64, 4)
+end
+
+
+function CHEX1.all_done()
+  CHEX1.make_cool_gfx()
+end
+
 
 ------------------------------------------------------------
 
@@ -792,9 +848,10 @@ OB_GAMES["chex1"] =
 
   hooks =
   {
-    setup        = CHEX1.setup,
-    get_levels   = CHEX1.get_levels,
-    begin_level  = CHEX1.begin_level,
+    setup        = CHEX1.setup
+    get_levels   = CHEX1.get_levels
+    begin_level  = CHEX1.begin_level
+    all_done     = CHEX1.all_done
   }
 }
 
