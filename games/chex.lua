@@ -160,7 +160,7 @@ STARTAN1 = { t="STARTAN1", f="FLOOR0_5" }
 
   LIFT     = { f="STEP", t="COMPBLUE" }
 
-  VENT     = { f="", t="ASHWALL" }
+  VENT     = { f="FLOOR0_3", t="ASHWALL" }
 
 CEIL4_1  = { t="STARG3", f="CEIL4_1" }
 FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
@@ -180,9 +180,9 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 
   TRACK = { t="COMPSTA1", f="##" }
 
-  LIGHT_RED    = { t="DOORRED", f="##" }
-  LIGHT_BLUE   = { t="DOORBLU", f="##" }
-  LIGHT_YELLOW = { t="DOORYEL", f="##" }
+  LITE_RED    = { t="DOORRED", f="##" }
+  LITE_BLUE   = { t="DOORBLU", f="##" }
+  LITE_YELLOW = { t="DOORYEL", f="##" }
 
 
   GRAY7    = { t="GRAY7",    f="##" }
@@ -213,7 +213,7 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 
   -- FIXME
 
-  O_BOLT   = { t="CEMENT2",  f="O_BOLT", sane=1 }
+---!!  O_BOLT   = { t="CEMENT2",  f="O_BOLT", sane=1 }
 }
 
 
@@ -235,9 +235,167 @@ CHEX1.LIQUIDS =
 
 ----------------------------------------------------------------
 
+CHEX1.SKINS =
+{
+  ----| STARTS |----
+
+  Start_basic =
+  {
+    _prefab = "START_SPOT"
+
+    top = "O_BOLT"
+  }
+
+
+  ----| EXITS |----
+
+  Exit_switch =
+  {
+    _prefab = "EXIT_PILLAR",
+
+    switch = "SW_COMPUTE"
+    exit = "METAL"
+    exitside = "METAL"
+    special = 11
+    tag = 0
+  }
+
+
+  ----| STAIRS |----
+
+  Stair_Up1 =
+  {
+    _prefab = "STAIR_6"
+    _where  = "chunk"
+    _stairs = { up=1 }
+  }
+
+  Stair_Down1 =
+  {
+    _prefab = "NICHE_STAIR_8"
+    _where  = "chunk"
+    _stairs = { down=1 }
+  }
+
+
+  ---| LOCKED DOORS |---
+
+  Locked_blue =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_blue=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "DOOR_BLUE"
+    key = "LITE_BLUE"
+    track = "DOORTRAK"
+
+    special = 32
+    tag = 0
+  }
+
+  Locked_yellow =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_yellow=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+
+    door_h = 112
+    door = "DOOR_YELLOW"
+    key = "LITE_YELLOW"
+    track = "DOORTRAK"
+
+    special = 34
+    tag = 0
+  }
+
+  Locked_red =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_red=1 }
+    _long   = 192
+    _deep   = 32
+
+    w = 128
+    h = 112
+
+    door_h = 112
+    door = "DOOR_RED"
+    key = "LITE_RED"
+    track = "DOORTRAK"
+
+    special = 33
+    tag = 0
+  }
+
+
+  ---| SWITCHED DOORS |---
+
+  Door_SW_alum =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _switches = { Switch_alum=50 }
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+
+    door = "DOOR_ALUM"
+    track = "DOORTRAK"
+
+    door_h = 112
+    special = 0
+  }
+
+  Switch_alum =
+  {
+    _prefab = "SMALL_SWITCH"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 48
+
+    switch_h = 64
+    switch = "SW_METAL"
+    side = "LITE2"
+    base = "LITE2"
+    x_offset = 0
+    y_offset = 50
+    special = 103
+  }
+
+}
+
+
+----------------------------------------------------------------
 
 CHEX1.THEME_DEFAULTS =
 {
+  starts = { Start_basic = 50 }
+
+  exits = { Exit_switch = 50 }
+
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  keys = { k_red=50, k_blue=50, k_yellow=50 }
+
+  switch_doors = { Door_SW_alum = 50 }
+
+  lock_doors = { Locked_blue=50, Locked_red=50, Locked_yellow=50 }
+
+  liquids = { water=50, slime1=50, slime2=50 }
 }
 
 
@@ -629,7 +787,7 @@ OB_GAMES["chex1"] =
 
   tables =
   {
-    CHEX
+    CHEX1
   }
 
   hooks =
@@ -646,7 +804,7 @@ OB_GAMES["chex1"] =
 OB_THEMES["chex_tech"] =
 {
   label = "Tech"
-  for_games = { chex=1 }
+  for_games = { chex1=1 }
   name_theme = "TECH"
   mixed_prob = 60
 }
@@ -654,7 +812,7 @@ OB_THEMES["chex_tech"] =
 UNFINISHED["chex_arboretum"] =
 {
   label = "Arboretum"
-  for_games = { chex=1 }
+  for_games = { chex1=1 }
   name_theme = "URBAN"
   mixed_prob = 30
 }
@@ -662,7 +820,7 @@ UNFINISHED["chex_arboretum"] =
 UNFINISHED["chex_cave"] =
 {
   label = "Cave"
-  for_games = { chex=1 }
+  for_games = { chex1=1 }
   name_theme = "GOTHIC"
   mixed_prob = 30
 }
