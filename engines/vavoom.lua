@@ -22,7 +22,7 @@ VAVOOM = { }
 
 OB_ENGINES["vavoom"] =
 {
-  label = "Vavoom 1.30"
+  label = "Vavoom"
 
   -- FIXME: boom compatible ??
 

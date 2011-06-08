@@ -107,7 +107,8 @@ end
 
 OB_ENGINES["skulltag"] =
 {
-  label = "Skulltag 98c"
+  label = "Skulltag"
+
   extends = "zdoom"
 
   for_games =

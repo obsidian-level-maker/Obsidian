@@ -151,9 +151,11 @@ end
 
 OB_ENGINES["edge"] =
 {
-  label = "EDGE 1.35"
+  label = "EDGE"
   priority = 90
+
   extends = "boom"
+
   for_games = { doom1=1, doom2=1 }
 
   tables =

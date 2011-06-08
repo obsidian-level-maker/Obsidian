@@ -78,7 +78,8 @@ ZDOOM.PARAMETERS =
 
 OB_ENGINES["zdoom"] =
 {
-  label = "ZDoom 2.31"
+  label = "ZDoom"
+
   extends = "boom"
 
   for_games =
@@ -105,7 +106,7 @@ GZDOOM.PARAMETERS =
 
 
 function GZDOOM.setup()
-  -- extrafloors : use EDGE types
+  -- extrafloors : use EDGE types  [FIXME: use Legacy types]
   gui.property("ef_solid_type",  400)
   gui.property("ef_liquid_type", 405)
 end
@@ -113,7 +114,7 @@ end
 
 OB_ENGINES["gzdoom"] =
 {
-  label = "GZDoom 1.2"
+  label = "GZDoom"
   priority = -1  -- keep at bottom with ZDoom
 
   extends = "zdoom"
