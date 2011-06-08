@@ -594,6 +594,8 @@ function Levels_build_it()
   Monsters_make_battles()
   if gui.abort() then return "abort" end
 
+  gui.printf("\n")
+
   return "ok"
 end
 
