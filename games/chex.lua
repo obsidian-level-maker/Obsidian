@@ -46,9 +46,9 @@ CHEX1.ENTITIES =
 
   --- PICKUPS ---
 
-  redcard    = { id=13, kind="pickup", r=20,h=16, pass=true }
-  yellowcard = { id=6,  kind="pickup", r=20,h=16, pass=true }
-  bluecard   = { id=5,  kind="pickup", r=20,h=16, pass=true }
+  k_red    = { id=13, kind="pickup", r=20,h=16, pass=true }
+  k_yellow = { id=6,  kind="pickup", r=20,h=16, pass=true }
+  k_blue   = { id=5,  kind="pickup", r=20,h=16, pass=true }
 
   large_zorcher   = { id=2001, kind="pickup", r=20,h=16, pass=true }
   rapid_zorcher   = { id=2002, kind="pickup", r=20,h=16, pass=true }
@@ -57,8 +57,8 @@ CHEX1.ENTITIES =
   super_bootspork = { id=2005, kind="pickup", r=20,h=16, pass=true }
   laz_device      = { id=2006, kind="pickup", r=20,h=16, pass=true }
 
-  z_pack      = { id=   8, kind="pickup", r=20,h=16, pass=true }
-  slimeproofsuit = { id=2025, kind="pickup", r=20,h=60, pass=true }
+  back_pack      = { id=   8, kind="pickup", r=20,h=16, pass=true }
+  slime_suit     = { id=2025, kind="pickup", r=20,h=60, pass=true }
   allmap         = { id=2026, kind="pickup", r=20,h=16, pass=true }
 
   water       = { id=2014, kind="pickup", r=20,h=16, pass=true }
@@ -86,9 +86,9 @@ CHEX1.ENTITIES =
   landinglight = { id=2028,kind="scenery", r=16,h=35, light=255 }
   lightcolumn  = { id=55,  kind="scenery", r=16,h=86, light=255 }
 
-  flagpole  = { id=37, kind="scenery", r=16,h=128 }
-  gastank   = { id=35, kind="scenery", r=16,h=36 }
-  spaceship = { id=48, kind="scenery", r=16,h=52 }
+  flag_pole  = { id=37, kind="scenery", r=16,h=128 }
+  gas_tank   = { id=35, kind="scenery", r=16,h=36 }
+  spaceship  = { id=48, kind="scenery", r=16,h=52 }
 
   chemical_burner = { id=41, kind="scenery", r=16,h=25 }
   chemical_flask  = { id=34, kind="scenery", r=16,h=16, pass=true }
@@ -146,30 +146,90 @@ CHEX1.MATERIALS =
   _ERROR = { t="SHAWN2", f="FLOOR0_5" }
   _SKY   = { t="SHAWN2", f="F_SKY1" }
 
-  -- textures --
 
-  FIREMAG1 = { t="FIREMAG1", f="NUKAGE1", sane=1 }
-  STARG3   = { t="STARG3",  f="FLOOR0_5" }
-  STARTAN1 = { t="STARTAN1", f="FLOOR0_5" }
+  -- walls --
 
-  -- flats --
+  PIPEY    = { t="STONE",  f="##" }
+  PANELS   = { t="STONE3", f="##" }
 
-  CEIL4_1  = { t="STARG3", f="CEIL4_1" }
-  FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
+STARG3   = { t="STARG3",  f="FLOOR0_5" }
+STARTAN1 = { t="STARTAN1", f="FLOOR0_5" }
 
-  NUKAGE1  = { t="STARTAN1", f="NUKAGE1", sane=1 }
-  LAVA1    = { t="STARTAN1", f="LAVA1",   sane=1 }
 
+  -- floors --
+
+  LIFT     = { f="STEP", t="COMPBLUE" }
+
+  VENT     = { f="", t="ASHWALL" }
+
+CEIL4_1  = { t="STARG3", f="CEIL4_1" }
+FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
+
+
+  -- doors --
+
+  DOOR_GRATE = { t="BIGDOOR1", f="##" }
+  DOOR_ALUM  = { t="DOOR1",    f="##" }
+  DOOR_METER = { t="DOORBLU2", f="##" }
+
+  DOOR_BLUE   = { t="BRNBIGR",  f="##" }
+  DOOR_RED    = { t="BRNBIGL",  f="##" }
+  DOOR_YELLOW = { t="BRNSMAL2", f="##" }
+
+  DOOR_HANGER = { t="STARTAN3", f="##" }
+
+  TRACK = { t="COMPSTA1", f="##" }
+
+  LIGHT_RED    = { t="DOORRED", f="##" }
+  LIGHT_BLUE   = { t="DOORBLU", f="##" }
+  LIGHT_YELLOW = { t="DOORYEL", f="##" }
+
+
+  GRAY7    = { t="GRAY7",    f="##" }
+
+  GRATE    = { t="REDWALL1", f="##" }
+
+
+  -- switches --
+
+  SW_METAL   = { t="SW2BLUE",  f="STEP" }
+  SW_ROCK    = { t="SW1BRCOM", f="##"  }
+  SW_BROWN2  = { t="SW1BRN2",  f="##"  }
+  SW_CONC    = { t="SW1BROWN", f="##"  }
+  SW_GRAY    = { t="SW1COMM",  f="##"  }
+  SW_COMPUTE = { t="SW1COMP",  f="##"  }
+  SW_STARTAN = { t="SW1METAL", f="##"  }
+  SW_PIPEY   = { t="SW1STONE", f="##"  }
+
+
+  -- liquids --
+
+  WATER  = { t="GSTFONT1", f="FWATER1", sane=1 }
+  SLIME1 = { t="FIREMAG1", f="NUKAGE1", sane=1 }
+  SLIME2 = { t="FIREMAG1", f="LAVA1",   sane=1 }
+
+
+  -- Oblige stuff --
+
+  -- FIXME
+
+  O_BOLT   = { t="CEMENT2",  f="O_BOLT", sane=1 }
+}
+
+
+CHEX1.RAILS =
+{
+  VINE1 = { t="MIDVINE1" }
 }
 
 
 CHEX1.LIQUIDS =
 {
-  -- "blood", "nukage" and "lava" all look similar (like green slime) but do different damage
-  --water  = { floor="FWATER1", wall="GSTFONT1" },
-  --blood  = { floor="BLOOD1", wall="FIREMAG1", sec_kind=7 },
-  nukage = { floor="NUKAGE1", wall="FIREMAG1", sec_kind=5 },
-  lava   = { floor="LAVA1", wall="FIREMAG1", sec_kind=16, add_light=64 },
+  water  = { mat="WATER", light=0.65 }
+
+  -- these look very similar
+  slime1 = { mat="SLIME1", light=0.65, special=5 }
+  slime2 = { mat="SLIME2", light=0.65, special=5 }
 }
 
 
