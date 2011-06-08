@@ -17,6 +17,13 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  STAIRS ALWAYS GO UP!
+--
+--  Hence the south side (dir = 2) is always the highest side
+--  in the raw (unrotated) prefab.  
+--
+----------------------------------------------------------------
 
 
 PREFAB.LIFT =
