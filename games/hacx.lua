@@ -174,6 +174,12 @@ HACX.MATERIALS =
 }
 
 
+HACX.RAILS =
+{
+  -- TODO
+}
+
+
 HACX.LIQUIDS =
 {
   water  = { mat="L_WATER",  light=0.65, special=0 }
