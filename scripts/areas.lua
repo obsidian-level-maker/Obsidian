@@ -705,7 +705,7 @@ function Areas_flesh_out()
         end
 
         local C = R:alloc_chunk(sx, sy, sx+W-1, sy+H-1)
-        C.foobage = "filler"
+---???  C.foobage = "filler"
       end
     end end
   end
@@ -720,6 +720,8 @@ function Areas_flesh_out()
 
     C.area.size = C.area.size + N.area.size
     N.area.size = 0
+
+    C.foobage = C.foobage or N.foobage
 
     -- remove 2nd area from the area table
     local N_area = N.area
@@ -761,6 +763,10 @@ function Areas_flesh_out()
 
           if new_size > C.area.max_size then continue end
           if new_size > N.area.max_size then continue end
+
+          -- prevent merging connections 
+          -- FIXME !!!!!  TOO STRICT -- should only be tendency
+          if C.area.foobage and N.area.foobage then continue end
 
           table.insert(list, N)
         end
@@ -819,6 +825,8 @@ function Areas_flesh_out()
       AR.rand = gui.random()
       AR.min_size = rand.sel(50, 3, 4)
       AR.max_size = 20 --!!! math.min(R.svolume * X, Y)
+
+      AR.foobage = C.foobage
     end
 
     for loop = 1,10 do
