@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Chex Quest 1 and 2
+-- GAME DEF : Chex Quest 1, 2 and 3
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -25,6 +25,9 @@
 --     the original Chex Quest (which reflects how it actually
 --     runs, because you need both WADs to play it).
 --
+--  *  Chex Quest 3 is NOT considered an extension, since it
+--     requires a ZDoom-based port to run.
+--
 --  *  Chex Quest 2 has new sprites for two of the enemies of
 --     the original as well as the final boss.  However their
 --     'id' numbers and in-game behavior are exactly the same,
@@ -32,12 +35,14 @@
 --
 ----------------------------------------------------------------
 
--- FIXME !!!!   CHEX = { }  for all common stuff
+CHEX  = { }  -- common stuff
 
-CHEX1 = { }
-CHEX2 = { }
+CHEX1 = { }  --\
+CHEX2 = { }  -- stuff specific to each game
+CHEX3 = { }  --/
 
-CHEX1.ENTITIES =
+
+CHEX.ENTITIES =
 {
   --- PLAYERS ---
 
@@ -171,7 +176,7 @@ CHEX2.ENTITIES =
 }
 
 
-CHEX1.PARAMETERS =
+CHEX.PARAMETERS =
 {
   rails = true
   switches = true
@@ -189,6 +194,7 @@ CHEX1.PARAMETERS =
   damage_factor = 1.0
   ammo_factor   = 0.8
   health_factor = 0.7
+  monster_factor = 0.8
 }
 
 
@@ -465,7 +471,7 @@ CHEX1.RAILS =
 }
 
 
-CHEX1.LIQUIDS =
+CHEX.LIQUIDS =
 {
   water  = { mat="WATER", light=0.65 }
 
@@ -477,7 +483,7 @@ CHEX1.LIQUIDS =
 
 ----------------------------------------------------------------
 
-CHEX1.SKINS =
+CHEX.SKINS =
 {
   ----| STARTS |----
 
@@ -623,7 +629,7 @@ CHEX1.SKINS =
 
 ----------------------------------------------------------------
 
-CHEX1.THEME_DEFAULTS =
+CHEX.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -641,7 +647,7 @@ CHEX1.THEME_DEFAULTS =
 }
 
 
-CHEX1.ROOM_THEMES =
+CHEX.ROOM_THEMES =
 {
   PLAIN = { }
 }
@@ -683,154 +689,179 @@ CHEX1.LEVEL_THEMES =
 -- nearly all the settings below for monsters, weapons and items
 -- are the same as doom.lua, except the probs for monsters
 
-CHEX1.MONSTERS =
+CHEX3.MONSTERS =
 {
   commonus =
   {
-    prob=60,
-    health=20
-    damage=4
-    attack="melee"
+    prob = 60
+    health = 20
+    attack = "melee"
+    damage = 4
   }
 
   bipedicus =
   {
-    prob=45
-    health=30
-    damage=10
-    attack="melee"
+    prob = 45
+    health = 30
+    attack = "melee"
+    damage = 10
   }
 
   armored_biped =
   {
-    prob=35
-    crazy_prob=65
-    health=60
-    damage=20
-    attack="missile"
+    prob = 35
+    crazy_prob = 65
+    health = 60
+    attack = "missile"
+    damage = 20
   }
 
   cycloptis =
   {
-    prob=30
-    health=150
-    damage=25
-    attack="melee"
-    weap_prefs={ zorch_propulsor=0.5 }
+    prob = 30
+    health = 150
+    attack = "melee"
+    damage = 25
+    weap_prefs = { zorch_propulsor=0.5 }
   }
+
+  --- BOSSES ---
 
   -- only used in E1M5, and is stationary (wall monster, with level exit behind it)
 
   Flembrane =
   {
-    health=1000
-    damage=45
-    attack="missile"
-    weap_prefs={ laz_device=3.0 }
+    health = 1000
+    damage = 45
+    attack = "missile"
+    weap_prefs = { laz_device=3.0 }
   }
+}
+
+
+CHEX1.MONSTERS =
+{
+  commonus      = CHEX3.commonus
+  bipedicus     = CHEX3.bipedicus
+  cycloptis     = CHEX3.cycloptis
+  armored_biped = CHEX3.armored_biped
+
+  Flembrane     = CHEX3.Flembrane
+}
+
+
+CHEX2.MONSTERS =
+{
+  commonus      = CHEX3.commonus
+  quadrumpus    = CHEX3.quadrumpus
+  larva         = CHEX3.larva
+  armored_biped = CHEX3.armored_biped
+
+  Maximus       = CHEX3.Maximus
 }
 
 
 -- Weapon list
 -- ===========
 
-CHEX1.WEAPONS =
+CHEX.WEAPONS =
 {
   spoon =
   {
-    rate=1.5
-    damage=10
-    attack="melee"
+    attack = "melee"
+    rate = 1.5
+    damage = 10
   }
 
   super_bootspork =
   {
-    pref=3
-    add_prob=2
-    start_prob=1
-    rate=8.7
-    damage=10
-    attack="melee"
+    pref = 3
+    add_prob = 2
+    start_prob = 1
+    attack = "melee"
+    rate = 8.7
+    damage = 10
   }
 
   mini_zorcher =
   {
-    pref=5
-    rate=1.8
-    damage=10
-    attack="hitscan"
-    ammo="mzorch"
-    per=1
+    pref = 5
+    attack = "hitscan"
+    rate = 1.8
+    damage = 10
+    ammo = "mzorch"
+    per = 1
   }
 
   rapid_zorcher =
   {
-    pref=70
-    add_prob=35
-    start_prob=40
-    rate=8.5
-    damage=10
-    attack="hitscan"
-    ammo="mzorch"
-    per=1
-    give={ {ammo="mzorch",count=20} }
+    pref = 70
+    add_prob = 35
+    start_prob = 40
+    attack = "hitscan"
+    rate = 8.5
+    damage = 10
+    ammo = "mzorch"
+    per = 1
+    give = { {ammo="mzorch",count=20} }
   }
 
   large_zorcher =
   {
-    pref=70
-    add_prob=10
-    start_prob=60
-    rate=0.9
-    damage=70
-    attack="hitscan"
-    splash={ 0
-    0 }
-    ammo="lzorch"
-    per=1
-    give={ {ammo="lzorch",count=8} }
+    pref = 70
+    add_prob = 10
+    start_prob = 60
+    attack = "hitscan"
+    rate = 0.9
+    damage = 70
+    splash = { 0,10 }
+    ammo = "lzorch"
+    per = 1
+    give = { {ammo="lzorch",count=8} }
   }
 
   zorch_propulsor =
   {
-    pref=50
-    add_prob=25
-    start_prob=10
-    rate=1.7
-    damage=80
-    attack="missile"
-    splash={ 50,20,5 }
-    ammo="propulsor"
-    per=1
-    give={ {ammo="propulsor",count=2} }
+    pref = 50
+    add_prob = 25
+    start_prob = 10
+    rarity = 2
+    attack = "missile"
+    rate = 1.7
+    damage = 80
+    splash = { 50,20,5 }
+    ammo = "propulsor"
+    per = 1
+    give = { {ammo="propulsor",count=2} }
   }
 
   phasing_zorcher =
   {
-    pref=90
-    add_prob=13
-    start_prob=5
-    rate=11
-    damage=20
-    attack="missile"
-    ammo="phase"
-    per=1
-    give={ {ammo="phase",count=40} }
+    pref = 90
+    add_prob = 13
+    start_prob = 5
+    rarity = 2
+    attack = "missile"
+    rate = 11
+    damage = 20
+    ammo = "phase"
+    per = 1
+    give = { {ammo="phase",count=40} }
   }
 
   laz_device =
   {
-    pref=30
-    add_prob=30
-    start_prob=0.2
-    rarity=4
-    rate=0.8
-    damage=300
-    attack="missile"
-    splash={60,45,30,30,20,10}
-    ammo="phase"
-    per=40
-    give={ {ammo="phase",count=40} }
+    pref = 30
+    add_prob = 30
+    start_prob = 0.2
+    rarity = 5
+    attack = "missile"
+    rate = 0.8
+    damage = 300
+    splash = {60,45,30,30,20,10}
+    ammo = "phase"
+    per = 40
+    give = { {ammo="phase",count=40} }
   }
 }
 
@@ -838,7 +869,7 @@ CHEX1.WEAPONS =
 -- Pickup List
 -- ===========
 
-CHEX1.PICKUPS =
+CHEX.PICKUPS =
 {
   -- HEALTH --
 
@@ -1080,7 +1111,7 @@ OB_GAMES["chex1"] =
 
   tables =
   {
-    CHEX1
+    CHEX, CHEX1
   }
 
   hooks =
@@ -1103,7 +1134,30 @@ OB_GAMES["chex2"] =
 
   tables =
   {
-    CHEX1, CHEX2
+    CHEX, CHEX2
+  }
+
+  hooks =
+  {
+    setup        = CHEX1.setup
+    get_levels   = CHEX1.get_levels
+    begin_level  = CHEX1.begin_level
+    all_done     = CHEX1.all_done
+  }
+}
+
+
+OB_GAMES["chex3"] =
+{
+  label = "Chex Quest 3"
+
+  -- Note: NOT an extension of the original game, as it requires ZDoom
+
+  format = "doom"
+
+  tables =
+  {
+    CHEX, CHEX3
   }
 
   hooks =
@@ -1121,7 +1175,7 @@ OB_GAMES["chex2"] =
 OB_THEMES["chex_tech"] =
 {
   label = "Tech"
-  for_games = { chex1=1 }
+  for_games = { chex1=1, chex3=1 }
   name_theme = "TECH"
   mixed_prob = 60
 }
