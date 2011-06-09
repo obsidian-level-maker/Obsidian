@@ -222,12 +222,18 @@ CHEX1.MATERIALS =
   ORANGE_CUPBD  = { t="DOOR3", f="##" }
   ORANGE_CABNET = { t="CEMENT4", f="##" }
   ORANGE_LOCKER = { t="CEMENT6", f="##" }
+
   ORANGE_MATH   = { t="CEMPOIS", f="##" }
+  ORANGE_BOOKS : "BRNSMALL"
+  ORANGE_DIAG  : "BRNSMALR"
+  ORANGE_MAP   : "BROWN96"
+
 
   TAN1      = { t="TEKWALL5", f="##" }
   TAN2      = { t="BROWN1",   f="##" }
   TAN_LITE  = { t="LITE2",    f="##" }
   TAN_GRATE = { t="BRNSMAL1", f="##" }
+  TAN_VINE  = { t="BROVINE",  f="##" }
 
   TAN_EXPM1 = { t="SKY2", f="##" }
   TAN_EXPM2 = { t="SKY3", f="##" }
@@ -359,9 +365,76 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 
 CHEX2.MATERIALS =
 {
+  -- walls --
+
+  GREEN_BRICK  : "STARG1"
+  GREEN_SIGN   : "DOOR1"
+  GREEN_BORDER : "STARGR1"
+  GREEN_GRATE  : "STARTAN2"
+
+  BIG_GRATE : "SW1EXIT"
+
+  HEDGE : "BIGDOOR2"
+
+  MARB_GREEN  : "BROWN144"
+  MARB_RED    : "COMPSTA2"
+  MARB_BEIGE  : "EXITSIGN"
+
+
+  RED_CURTAIN : "SLADPOIS"
+
+  MOVIE_PRAM    : "BLODGR1"
+  MOVIE_MOUSE   : "BLODRIP1"
+  MOVIE_CHARLES : "FIREMAG1"
+
+  PIC_EAT_EM : "BRNPOIS"
+  PIC_LUV_EM : "BRNPOIS2"
+  PIC_HUNGRY : "PIPE4"
+
+  PIC_MONA    : "MARBFACE"
+  PIC_VENUS   : "MARBFAC3"
+  PIC_VINCENT : "MARBLE2"
+  PIC_SCREAM  : "MARBLE3"
+  PIC_NUN     : "MARBLOD1"
+  PIC_LAME    : "MIDGRATE"
+
+  SIGN_ENTER    : "LITE5"
+  SIGN_WELCOME1 : "COMPTALL"
+  SIGN_WELCOME2 : "COMPUTE1"
+  SIGN_GALACTIC : "NUKE24"
+
+  SIGN_DINER    : "NUKEDG1"
+  SIGN_MUSEUM   : "SW2GRAY"
+  SIGN_SEWER    : "SW2GRAY1"
+  SIGN_CINEMA   : "SW2SLAD"
+
+
+  BLUE_POSTER1 : "GRAY2"
+  BLUE_POSTER2 : "GSTLION"
+  BLUE_POSTER3 : "GSTSATYR"
+  BLUE_CUPBD   : "GRAYPOIS"
+
+  TAN_THEATRE1 : "TEKWALL4"
+  TAN_THEATRE2 : "GSTONE1"
+  TAN_THEATRE3 : "GSTONE2"
+  TAN_MENU     : "LITE3"
+
+  BENCH_DRINKS  : "GRAYBIG"
+  BENCH_POPCORN : "GRAYDANG"
+
+
+  -- switches --
+
+  SW_GREEN : "SW1BROWN"
+
+
+  -- liquids --
+
   -- Chex Quest 2 has no animated slime texture
   SLIME1 = { t="GSTVINE2", f="NUKAGE1", sane=1 }
   SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
+
+
 }
 
 
