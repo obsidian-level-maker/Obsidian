@@ -2,15 +2,10 @@
 OBLIGE TODO
 ===========
 
-DONE:  fix font on website
-
--  not enough outdoor rooms
-
--  too many hallways, and often too long
-
-
 Current Work
 ------------
+
+>>  CHEX1 : fix ## materials
 
 ++  some VOID and LIQUID areas
 
@@ -61,11 +56,8 @@ POSSIBLE PROBLEMS
 
 
 
-Area merging: prefer not to merge between different "contents"
-              (especially the purpose)
-
-              slight tendency not to merge into a connection chunk
-              [since the connnection will have same height on both sides]
+DONE: Area merging: prefer not to merge between different "contents"
+      (especially the purpose)
 
 
 
@@ -98,6 +90,9 @@ Area merging: prefer not to merge between different "contents"
 OTHER STUFF
 
 !!  u1..v2 for texture coords on brushes
+
+    x_offset is alternate term for u1  [u2 can be absent]
+    y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
 
 

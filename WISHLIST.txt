@@ -352,6 +352,8 @@ NO:  CSG DOOM: support entity.light
 
 !!  get them working
 
+-  make a decent SLIME texture (especially for CQ2)
+
 
 ----------------------------------------------------------------
   HERETIC
