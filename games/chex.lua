@@ -32,6 +32,8 @@
 --
 ----------------------------------------------------------------
 
+-- FIXME !!!!   CHEX = { }  for all common stuff
+
 CHEX1 = { }
 CHEX2 = { }
 
@@ -211,10 +213,12 @@ CHEX1.MATERIALS =
   BLUE_SLIMED  = { t="SKINMET1", f="##" }
   BLUE_SFALL   = { t="BLODGR1",  f="##" }
 
-  GRAY_PIPES  = { t="STONE",  f="##" }
-  GRAY_PANELS = { t="STONE3", f="##" }
-  GRAY_LITE   = { t="LITESTON", f="##" }
-  GRAY_STRIPE = { t="GRAY7",    f="##" }
+  GRAY_PIPES   = { t="STONE",  f="##" }
+  GRAY_PANELS  = { t="STONE3", f="##" }
+  GRAY_LITE    = { t="LITESTON", f="##" }
+  GRAY_STRIPE  = { t="GRAY7",    f="##" }
+  GRAY_FLOWER1 = { t="GRAY2",    f="##" }
+  GRAY_FLOWER2 = { t="GRAYDANG", f="##" }
 
   ORANGE_TILE   = { t="STARG3",  f="##" }
   ORANGE_LAB    = { t="COMPUTE3",  f="##" }
@@ -274,8 +278,6 @@ CHEX1.MATERIALS =
   CAVE_CRACK = { t="STARTAN2", f="##" }
 
 
-  PIC_FLOWER1 = { t="GRAY2",    f="##" }
-  PIC_FLOWER2 = { t="GRAYDANG", f="##" }
   PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
   PIC_STORAGE = { t="MARBFAC3", f="##" }
 
@@ -331,7 +333,6 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   LITE_RED    = { t="DOORRED", f="##" }
   LITE_BLUE   = { t="DOORBLU", f="##" }
   LITE_YELLOW = { t="DOORYEL", f="##" }
-
 
 
   -- switches --
@@ -403,7 +404,7 @@ CHEX2.MATERIALS =
   SIGN_WELCOME2 : "COMPUTE1"
   SIGN_GALACTIC : "NUKE24"
 
-  SIGN_DINER    : "NUKEDG1"
+  SIGN_DINER    : "NUKEDGE1"
   SIGN_MUSEUM   : "SW2GRAY"
   SIGN_SEWER    : "SW2GRAY1"
   SIGN_CINEMA   : "SW2SLAD"
@@ -435,6 +436,26 @@ CHEX2.MATERIALS =
   SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
 
 
+  -- these materials are not usable in CQ2 since their textures or flats
+  -- got re-used for new textures and flats.
+
+  BLUE_SFALL  = REMOVE_ME
+
+  CAVE_SLIMY1 = REMOVE_ME
+  CAVE_SLIMY2 = REMOVE_ME
+  CAVE_SLIMY3 = REMOVE_ME
+  CAVE_EDGER  = REMOVE_ME
+  CAVE_SPLAT  = REMOVE_ME
+
+  COMPUTE_1 = REMOVE_ME
+
+  GRAY_FLOWER1 = REMOVE_ME
+  GRAY_FLOWER2 = REMOVE_ME
+
+  PIC_SLIMED  = REMOVE_ME
+  PIC_STORAGE = REMOVE_ME
+
+  SW_CONC     = REMOVE_ME
 }
 
 
