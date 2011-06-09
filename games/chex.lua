@@ -754,9 +754,39 @@ CHEX3.MONSTERS =
     weap_prefs = { zorch_propulsor=0.5 }
   }
 
+  flemmine =
+  {
+    prob = 20
+    health = 100
+    attack = "melee"
+    damage = 7
+    density = 0.7
+    float = true
+  }
+
+  stridicus =
+  {
+    prob = 20
+    health = 225
+    attack = "melee"
+    damage = 25
+    density = 0.7
+  }
+
+  super_cycloptis =
+  {
+    prob = 30
+    health = 400
+    attack = "missile"
+    damage = 35
+    density = 0.5
+    float = true
+  }
+
   --- BOSSES ---
 
-  -- only used in E1M5, and is stationary (wall monster, with level exit behind it)
+  -- Flembrane is a special case (stationary wall monster, with
+  -- level exit behind it), and is not used in normal levels.
 
   Flembrane =
   {
@@ -768,11 +798,36 @@ CHEX3.MONSTERS =
 
   Maximus =
   {
+    prob = 2
     health = 1000
     attack = "missile"
     damage = 45
     density = 0.3
     weap_prefs = { laz_device=3.0 }
+  }
+
+  Snotfolus =
+  {
+    prob = 1
+    crazy_prob = 10
+    skip_prob = 300
+    health = 4000
+    damage = 135
+    attack = "missile"
+    density = 0.1
+    weap_prefs = { lazdevice=5.0 }
+  }
+
+  Flembomination =
+  {
+    prob = 1
+    crazy_prob = 12
+    skip_prob = 200
+    health = 3000
+    damage = 70
+    attack = "missile"
+    density = 0.2
+    weap_prefs = { lazdevice=5.0 }
   }
 }
 
