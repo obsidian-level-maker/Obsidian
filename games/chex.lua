@@ -759,7 +759,7 @@ CHEX1.WEAPONS =
     rate=1.8
     damage=10
     attack="hitscan"
-    ammo="bullet"
+    ammo="mzorch"
     per=1
   }
 
@@ -771,9 +771,9 @@ CHEX1.WEAPONS =
     rate=8.5
     damage=10
     attack="hitscan"
-    ammo="bullet"
+    ammo="mzorch"
     per=1
-    give={ {ammo="bullet",count=20} }
+    give={ {ammo="mzorch",count=20} }
   }
 
   large_zorcher =
@@ -786,9 +786,9 @@ CHEX1.WEAPONS =
     attack="hitscan"
     splash={ 0
     0 }
-    ammo="shell"
+    ammo="lzorch"
     per=1
-    give={ {ammo="shell",count=8} }
+    give={ {ammo="lzorch",count=8} }
   }
 
   zorch_propulsor =
@@ -800,9 +800,9 @@ CHEX1.WEAPONS =
     damage=80
     attack="missile"
     splash={ 50,20,5 }
-    ammo="rocket"
+    ammo="propulsor"
     per=1
-    give={ {ammo="rocket",count=2} }
+    give={ {ammo="propulsor",count=2} }
   }
 
   phasing_zorcher =
@@ -813,9 +813,9 @@ CHEX1.WEAPONS =
     rate=11
     damage=20
     attack="missile"
-    ammo="cell"
+    ammo="phase"
     per=1
-    give={ {ammo="cell",count=40} }
+    give={ {ammo="phase",count=40} }
   }
 
   laz_device =
@@ -828,9 +828,9 @@ CHEX1.WEAPONS =
     damage=300
     attack="missile"
     splash={60,45,30,30,20,10}
-    ammo="cell"
+    ammo="phase"
     per=40
-    give={ {ammo="cell",count=40} }
+    give={ {ammo="phase",count=40} }
   }
 }
 
@@ -902,56 +902,56 @@ CHEX1.PICKUPS =
   {
     prob = 10
     cluster = { 2,5 }
-    give = { {ammo="bullet",count=10} }
+    give = { {ammo="mzorch",count=10} }
   }
 
   mini_pack =
   {
     prob = 40
     cluster = { 1,3 }
-    give = { {ammo="bullet", count=50} }
+    give = { {ammo="mzorch", count=50} }
   }
 
   large_zorch =
   {
     prob = 20
     cluster = { 2,5 }
-    give = { {ammo="shell",count=4} }
+    give = { {ammo="lzorch",count=4} }
   }
 
   large_pack =
   {
     prob = 40
     cluster = { 1,3 }
-    give = { {ammo="shell",count=20} }
+    give = { {ammo="lzorch",count=20} }
   }
 
   propulsor_zorch =
   {
     prob = 10
     cluster = { 4,7 }
-    give = { {ammo="rocket",count=1} }
+    give = { {ammo="propulsor",count=1} }
   }
 
   propulsor_pack =
   {
     prob = 40
     cluster = { 1,3 }
-    give = { {ammo="rocket",count=5} }
+    give = { {ammo="propulsor",count=5} }
   }
 
   phasing_zorch =
   {
     prob = 20
     cluster = { 2,5 }
-    give = { {ammo="cell",count=20} }
+    give = { {ammo="phase",count=20} }
   }
 
   phasing_pack =
   {
     prob = 40
     cluster = { 1,2 }
-    give = { {ammo="cell",count=100} }
+    give = { {ammo="phase",count=100} }
   }
 }
 
