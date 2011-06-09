@@ -199,35 +199,59 @@ CHEX1.MATERIALS =
   _SKY   = { t="SHAWN2", f="F_SKY1" }
 
 
+  METAL  = { t="COMPBLUE", f="STEP1" }
+
+  WHITE  = { t="WOOD3", f="##" }
+
+
   -- walls --
 
-  PIPEY    = { t="STONE",  f="##" }
-  PANELS   = { t="STONE3", f="##" }
+  BLUE_WALL    = { t="SP_DUDE2", f="##" }
+  BLUE_OBSDECK = { t="SLADSKUL", f="##" }
+  BLUE_SLIMED  = { t="SKINMET1", f="##" }
+  BLUE_SFALL   = { t="BLODGR1",  f="##" }
 
-  ORANGE   = { t="STARG3",  f="##" }
-  ORANGE_LAB = { t="COMPUTE3",  f="##" }
-  ORANGE_SLIME = { t="SKINMET2", f="##" }
-  ORANGE_CUPBD = { t="DOOR3", f="##" }
+  GRAY_PIPES  = { t="STONE",  f="##" }
+  GRAY_PANELS = { t="STONE3", f="##" }
+  GRAY_LITE   = { t="LITESTON", f="##" }
+  GRAY_STRIPE = { t="GRAY7",    f="##" }
 
-  TAN1 = { t="TEKWALL5", f="##" }
-  TAN2 = { t="BROWN1",   f="##" }
+  ORANGE_TILE   = { t="STARG3",  f="##" }
+  ORANGE_LAB    = { t="COMPUTE3",  f="##" }
+  ORANGE_SLIMED = { t="SKINMET2", f="##" }
+  ORANGE_CUPBD  = { t="DOOR3", f="##" }
+  ORANGE_CABNET = { t="CEMENT4", f="##" }
+  ORANGE_LOCKER = { t="CEMENT6", f="##" }
+  ORANGE_MATH   = { t="CEMPOIS", f="##" }
 
-  GRAY7    = { t="GRAY7",    f="##" }
+  TAN1      = { t="TEKWALL5", f="##" }
+  TAN2      = { t="BROWN1",   f="##" }
+  TAN_LITE  = { t="LITE2",    f="##" }
+  TAN_GRATE = { t="BRNSMAL1", f="##" }
 
-  CUPBOARD = { t="BRNBIGC",  f="##" }
+  TAN_EXPM1 = { t="SKY2", f="##" }
+  TAN_EXPM2 = { t="SKY3", f="##" }
+  TAN_EXPM3 = { t="SKY4", f="##" }
+
+  CEMENT1      = { t="CEMENT1", f="##" }
+  CEMENT5      = { t="CEMENT5", f="##" }
+  CEMENT_LITE  = { t="LITE96", f="##" }
+  CEMENT_GRATE = { t="REDWALL1", f="##" }
+
+  STARPORT  = { t="CEMENT2", f="##" }
 
   COMP_BOX  = { t="COMPWERD", f="##" }
   COMPUTE_1 = { t="COMPTALL", f="##" }
   COMPUTE_2 = { t="COMP2", f="##" }
   COMPUTE_3 = { t="COMPUTE2", f="##" }
 
-  GRATE    = { t="REDWALL1", f="##" }
-
 
   CRATE1   = { t="CRATE1",   f="FLAT1" }
   CRATE2   = { t="CRATE2",   f="FLAT2" }
   CRATEMIX = { t="CRATELIT", f="FLAT2" }
   CRATWIDE = { t="CRATWIDE", f="FLAT2" }
+
+  CUPBOARD = { t="BRNBIGC",  f="##" }
 
 
   CAVE      = { t="SKSNAKE2", f="##" }
@@ -237,21 +261,37 @@ CHEX1.MATERIALS =
   CAVE_SLIMY2 = { t="MARBLE2", f="##" }
   CAVE_SLIMY3 = { t="STARGR1", f="##" }
 
-  CAVE_STEP  = { t="STEPLAD1", f="##" }
-  CAVE_LIGHT = { t="SKULWAL3", f="##" }
+  CAVE_LITE  = { t="SKULWAL3", f="##" }
   CAVE_EDGER = { t="NUKEDGE1", f="##" }
   CAVE_SPLAT = { t="NUKEPOIS", f="##" }
+
+  CAVE_CRACK = { t="STARTAN2", f="##" }
 
 
   PIC_FLOWER1 = { t="GRAY2",    f="##" }
   PIC_FLOWER2 = { t="GRAYDANG", f="##" }
   PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
-  PIC_CERTIF  = { t="EXITDOOR", f="##" }
+  PIC_STORAGE = { t="MARBFAC3", f="##" }
+
+  PIC_DIPLOMA = { t="EXITDOOR", f="##" }
+  PIC_PHOTO1  = { t="TEKWALL3", f="##" }
+  PIC_PHOTO2  = { t="SLADWALL", f="##" }
+  PIC_SLIMED  = { t="SLADPOIS", f="##" }
+
+
+  TELE_CHAMBER = { t="SLADRIP1", f="##" }
+
+  MET_SLADS = { t="SP_DUDE4", f="##" }
+
+  STEP_ORANGE = { t="STEP1",    f="##" }
+  STEP_GRAY   = { t="STEP2",    f="##" }
+  STEP_WHITE  = { t="STEPTOP",  f="##" }
+  STEP_CAVE   = { t="STEPLAD1", f="##" }
 
 
   -- floors --
 
-  LIFT     = { f="STEP1", t="COMPBLUE" }
+  LIFT_2  = { f="SKSNAKE1", t="COMPBLUE" }
 
   VENT     = { f="FLOOR0_3", t="ASHWALL" }
 
