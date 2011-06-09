@@ -218,7 +218,7 @@ CHEX.PARAMETERS =
 
 ----------------------------------------------------------------
 
-CHEX1.MATERIALS =
+CHEX.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="SHAWN2", f="FLOOR0_5" }
@@ -235,14 +235,11 @@ CHEX1.MATERIALS =
   BLUE_WALL    = { t="SP_DUDE2", f="##" }
   BLUE_OBSDECK = { t="SLADSKUL", f="##" }
   BLUE_SLIMED  = { t="SKINMET1", f="##" }
-  BLUE_SFALL   = { t="BLODGR1",  f="##" }
 
   GRAY_PIPES   = { t="STONE",  f="##" }
   GRAY_PANELS  = { t="STONE3", f="##" }
   GRAY_LITE    = { t="LITESTON", f="##" }
   GRAY_STRIPE  = { t="GRAY7",    f="##" }
-  GRAY_FLOWER1 = { t="GRAY2",    f="##" }
-  GRAY_FLOWER2 = { t="GRAYDANG", f="##" }
 
   ORANGE_TILE   = { t="STARG3",  f="##" }
   ORANGE_LAB    = { t="COMPUTE3",  f="##" }
@@ -252,9 +249,9 @@ CHEX1.MATERIALS =
   ORANGE_LOCKER = { t="CEMENT6", f="##" }
 
   ORANGE_MATH   = { t="CEMPOIS", f="##" }
-  ORANGE_BOOKS : "BRNSMALL"
-  ORANGE_DIAG  : "BRNSMALR"
-  ORANGE_MAP   : "BROWN96"
+  ORANGE_BOOKS = { t="BRNSMALL", f="##" }
+  ORANGE_DIAG  = { t="BRNSMALR", f="##" }
+  ORANGE_MAP   = { t="BROWN96", f="##" }
 
 
   TAN1      = { t="TEKWALL5", f="##" }
@@ -274,10 +271,9 @@ CHEX1.MATERIALS =
 
   STARPORT  = { t="CEMENT2", f="##" }
 
+  COMPUTE_1 = { t="COMP2", f="##" }
+  COMPUTE_2 = { t="COMPUTE2", f="##" }
   COMP_BOX  = { t="COMPWERD", f="##" }
-  COMPUTE_1 = { t="COMPTALL", f="##" }
-  COMPUTE_2 = { t="COMP2", f="##" }
-  COMPUTE_3 = { t="COMPUTE2", f="##" }
 
 
   CRATE1   = { t="CRATE1",   f="FLAT1" }
@@ -290,25 +286,16 @@ CHEX1.MATERIALS =
 
   CAVE      = { t="SKSNAKE2", f="##" }
   CAVE_GLOW = { t="BLODRIP2", f="##" }
-
-  CAVE_SLIMY1 = { t="PIPE4",   f="##" }
-  CAVE_SLIMY2 = { t="MARBLE2", f="##" }
-  CAVE_SLIMY3 = { t="STARGR1", f="##" }
-
-  CAVE_LITE  = { t="SKULWAL3", f="##" }
-  CAVE_EDGER = { t="NUKEDGE1", f="##" }
-  CAVE_SPLAT = { t="NUKEPOIS", f="##" }
+  CAVE_LITE = { t="SKULWAL3", f="##" }
 
   CAVE_CRACK = { t="STARTAN2", f="##" }
 
 
   PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
-  PIC_STORAGE = { t="MARBFAC3", f="##" }
 
   PIC_DIPLOMA = { t="EXITDOOR", f="##" }
   PIC_PHOTO1  = { t="TEKWALL3", f="##" }
   PIC_PHOTO2  = { t="SLADWALL", f="##" }
-  PIC_SLIMED  = { t="SLADPOIS", f="##" }
 
 
   TELE_CHAMBER = { t="SLADRIP1", f="##" }
@@ -364,7 +351,7 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   SW_METAL   = { t="SW2BLUE",  f="STEP1" }
   SW_ROCK    = { t="SW1BRCOM", f="##"  }
   SW_BROWN2  = { t="SW1BRN2",  f="##"  }
-  SW_CONC    = { t="SW1BROWN", f="##"  }
+
   SW_GRAY    = { t="SW1COMM",  f="##"  }
   SW_COMPUTE = { t="SW1COMP",  f="##"  }
   SW_TAN     = { t="SW1METAL", f="##"  }
@@ -388,69 +375,92 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 }
 
 
+CHEX1.MATERIALS =
+{
+  BLUE_SFALL  = { t="BLODGR1",  f="##" }
+
+  CAVE_SLIMY1 = { t="PIPE4",   f="##" }
+  CAVE_SLIMY2 = { t="MARBLE2", f="##" }
+  CAVE_SLIMY3 = { t="STARGR1", f="##" }
+
+  CAVE_EDGER  = { t="NUKEDGE1", f="##" }
+  CAVE_SPLAT  = { t="NUKEPOIS", f="##" }
+
+  COMPUTE_3   = { t="COMPTALL", f="##" }
+
+  GRAY_FLOWER1 = { t="GRAY2",    f="##" }
+  GRAY_FLOWER2 = { t="GRAYDANG", f="##" }
+
+  PIC_SLIMED  = { t="SLADPOIS", f="##" }
+  PIC_STORAGE = { t="MARBFAC3", f="##" }
+
+  SW_CEMENT   = { t="SW1BROWN", f="##"  }
+}
+
+
 CHEX2.MATERIALS =
 {
   -- walls --
 
-  GREEN_BRICK  : "STARG1"
-  GREEN_SIGN   : "DOOR1"
-  GREEN_BORDER : "STARGR1"
-  GREEN_GRATE  : "STARTAN2"
+  GREEN_BRICK  = { t="STARG1", f="##" }
+  GREEN_SIGN   = { t="DOOR1", f="##" }
+  GREEN_BORDER = { t="STARGR1", f="##" }
+  GREEN_GRATE  = { t="STARTAN2", f="##" }
 
-  BIG_GRATE : "SW1EXIT"
+  BIG_GRATE = { t="SW1EXIT", f="##" }
 
-  HEDGE : "BIGDOOR2"
+  HEDGE = { t="BIGDOOR2", f="##" }
 
-  MARB_GREEN  : "BROWN144"
-  MARB_RED    : "COMPSTA2"
-  MARB_BEIGE  : "EXITSIGN"
-
-
-  RED_CURTAIN : "SLADPOIS"
-
-  MOVIE_PRAM    : "BLODGR1"
-  MOVIE_MOUSE   : "BLODRIP1"
-  MOVIE_CHARLES : "FIREMAG1"
-
-  PIC_EAT_EM : "BRNPOIS"
-  PIC_LUV_EM : "BRNPOIS2"
-  PIC_HUNGRY : "PIPE4"
-
-  PIC_MONA    : "MARBFACE"
-  PIC_VENUS   : "MARBFAC3"
-  PIC_VINCENT : "MARBLE2"
-  PIC_SCREAM  : "MARBLE3"
-  PIC_NUN     : "MARBLOD1"
-  PIC_LAME    : "MIDGRATE"
-
-  SIGN_ENTER    : "LITE5"
-  SIGN_WELCOME1 : "COMPTALL"
-  SIGN_WELCOME2 : "COMPUTE1"
-  SIGN_GALACTIC : "NUKE24"
-
-  SIGN_DINER    : "NUKEDGE1"
-  SIGN_MUSEUM   : "SW2GRAY"
-  SIGN_SEWER    : "SW2GRAY1"
-  SIGN_CINEMA   : "SW2SLAD"
+  MARB_GREEN  = { t="BROWN144", f="##" }
+  MARB_RED    = { t="COMPSTA2", f="##" }
+  MARB_BEIGE  = { t="EXITSIGN", f="##" }
 
 
-  BLUE_POSTER1 : "GRAY2"
-  BLUE_POSTER2 : "GSTLION"
-  BLUE_POSTER3 : "GSTSATYR"
-  BLUE_CUPBD   : "GRAYPOIS"
+  RED_CURTAIN = { t="SLADPOIS", f="##" }
 
-  TAN_THEATRE1 : "TEKWALL4"
-  TAN_THEATRE2 : "GSTONE1"
-  TAN_THEATRE3 : "GSTONE2"
-  TAN_MENU     : "LITE3"
+  MOVIE_PRAM    = { t="BLODGR1", f="##" }
+  MOVIE_MOUSE   = { t="BLODRIP1", f="##" }
+  MOVIE_CHARLES = { t="FIREMAG1", f="##" }
 
-  BENCH_DRINKS  : "GRAYBIG"
-  BENCH_POPCORN : "GRAYDANG"
+  PIC_EAT_EM = { t="BRNPOIS", f="##" }
+  PIC_LUV_EM = { t="BRNPOIS2", f="##" }
+  PIC_HUNGRY = { t="PIPE4", f="##" }
+
+  PIC_MONA    = { t="MARBFACE", f="##" }
+  PIC_VENUS   = { t="MARBFAC3", f="##" }
+  PIC_VINCENT = { t="MARBLE2", f="##" }
+  PIC_SCREAM  = { t="MARBLE3", f="##" }
+  PIC_NUN     = { t="MARBLOD1", f="##" }
+  PIC_LAME    = { t="MIDGRATE", f="##" }
+
+  SIGN_ENTER    = { t="LITE5", f="##" }
+  SIGN_WELCOME1 = { t="COMPTALL", f="##" }
+  SIGN_WELCOME2 = { t="COMPUTE1", f="##" }
+  SIGN_GALACTIC = { t="NUKE24", f="##" }
+
+  SIGN_DINER    = { t="NUKEDGE1", f="##" }
+  SIGN_MUSEUM   = { t="SW2GRAY", f="##" }
+  SIGN_SEWER    = { t="SW2GRAY1", f="##" }
+  SIGN_CINEMA   = { t="SW2SLAD", f="##" }
+
+
+  BLUE_POSTER1 = { t="GRAY2", f="##" }
+  BLUE_POSTER2 = { t="GSTLION", f="##" }
+  BLUE_POSTER3 = { t="GSTSATYR", f="##" }
+  BLUE_CUPBD   = { t="GRAYPOIS", f="##" }
+
+  TAN_THEATRE1 = { t="TEKWALL4", f="##" }
+  TAN_THEATRE2 = { t="GSTONE1", f="##" }
+  TAN_THEATRE3 = { t="GSTONE2", f="##" }
+  TAN_MENU     = { t="LITE3", f="##" }
+
+  BENCH_DRINKS  = { t="GRAYBIG", f="##" }
+  BENCH_POPCORN = { t="GRAYDANG", f="##" }
 
 
   -- switches --
 
-  SW_GREEN : "SW1BROWN"
+  SW_GREEN = { t="SW1BROWN", f="##" }
 
 
   -- liquids --
@@ -458,28 +468,6 @@ CHEX2.MATERIALS =
   -- Chex Quest 2 has no animated slime texture
   SLIME1 = { t="GSTVINE2", f="NUKAGE1", sane=1 }
   SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
-
-
-  -- these materials are not usable in CQ2 since their textures or flats
-  -- got re-used for new textures and flats.
-
-  BLUE_SFALL  = REMOVE_ME
-
-  CAVE_SLIMY1 = REMOVE_ME
-  CAVE_SLIMY2 = REMOVE_ME
-  CAVE_SLIMY3 = REMOVE_ME
-  CAVE_EDGER  = REMOVE_ME
-  CAVE_SPLAT  = REMOVE_ME
-
-  COMPUTE_1 = REMOVE_ME
-
-  GRAY_FLOWER1 = REMOVE_ME
-  GRAY_FLOWER2 = REMOVE_ME
-
-  PIC_SLIMED  = REMOVE_ME
-  PIC_STORAGE = REMOVE_ME
-
-  SW_CONC     = REMOVE_ME
 }
 
 
