@@ -102,7 +102,7 @@ CHEX.ENTITIES =
 
   --- SCENERY ---
 
-  -- TECH --
+  -- tech --
 
   landinglight = { id=2028,kind="scenery", r=16,h=35, light=255 }
   lightcolumn  = { id=55,  kind="scenery", r=16,h=86, light=255 }
@@ -112,38 +112,46 @@ CHEX.ENTITIES =
   spaceship  = { id=48, kind="scenery", r=16,h=52 }
 
   chemical_burner = { id=41, kind="scenery", r=16,h=25 }
-  chemical_flask  = { id=34, kind="scenery", r=16,h=16, pass=true }
-  submerged_plant = { id=31, kind="scenery", r=16,h=42 }
 
-  -- ARBORETUM --
+  -- arboretum --
 
   apple_tree   = { id=47, kind="scenery", r=16,h=92,  add_mode="island" }
-  banana_tree  = { id=54, kind="scenery", r=31,h=108, add_mode="island" }
   orange_tree  = { id=43, kind="scenery", r=16,h=92,  add_mode="island" }
   tall_flower  = { id=28, kind="scenery", r=20,h=25,  add_mode="island" }
   tall_flower2 = { id=25, kind="scenery", r=20,h=25,  add_mode="island" }
 
-  -- CAVE --
+  -- other --
 
-  column         = { id=32, kind="scenery", r=16,h=128 }
-  stalactite     = { id=53, kind="scenery", r=16,h=50 }
-  stalagmite     = { id=30, kind="scenery", r=16,h=60 }
-  mine_cart      = { id=33, kind="scenery", r=16,h=30 }
   slime_fountain = { id=44, kind="scenery", r=16,h=48 }
 
-  -- MISC --
- 
   civilian1 = { id=45, kind="scenery", r=16,h=54 }
-  civilian2 = { id=56, kind="scenery", r=16,h=54 }
-  civilian3 = { id=57, kind="scenery", r=16,h=48 }
+}
+
+
+CHEX1.ENTITIES =
+{
+  -- scenery --
+
+  banana_tree  = { id=54, kind="scenery", r=31,h=108, add_mode="island" }
+
+  chemical_flask  = { id=34, kind="scenery", r=16,h=16, pass=true }
+  submerged_plant = { id=31, kind="scenery", r=16,h=42 }
+
+  column     = { id=32, kind="scenery", r=16,h=128 }
+  stalactite = { id=53, kind="scenery", r=16,h=50 }
+  stalagmite = { id=30, kind="scenery", r=16,h=60 }
+  mine_cart  = { id=33, kind="scenery", r=16,h=30 }
+
+  civilian2  = { id=56, kind="scenery", r=16,h=54 }
+  civilian3  = { id=57, kind="scenery", r=16,h=48 }
 }
 
 
 CHEX2.ENTITIES =
 {
-  quadrumpus = { id=9,   kind="monster", r=20,h=56 }
-  larva      = { id=3002,kind="monster", r=30,h=56 }
-  Maximus    = { id=3003,kind="monster", r=44,h=100 }
+  quadrumpus = { id=9,    kind="monster", r=20,h=56 }
+  larva      = { id=3002, kind="monster", r=30,h=56 }
+  Maximus    = { id=3003, kind="monster", r=44,h=100 }
 
   -- scenery --
 
@@ -158,27 +166,31 @@ CHEX2.ENTITIES =
   mummy     = { id=52, kind="scenery", r=16, h=80 }  -- ONCEILING?
   pharaoh   = { id=53, kind="scenery", r=32, h=80 }  -- ONCEILING?
 
-  thinker_statue = { id=30, kind="scenery", r=32, h=80 }
-  david_statue   = { id=31, kind="scenery", r=32, h=80 }
-  warrior_statue = { id=36, kind="scenery", r=32, h=80 }
+  statue_thinker = { id=30, kind="scenery", r=32, h=80 }
+  statue_david   = { id=31, kind="scenery", r=32, h=80 }
+  statue_warrior = { id=36, kind="scenery", r=32, h=80 }
 
   waiter      = { id=32, kind="scenery", r=32, h=80 }
   giant_spoon = { id=33, kind="scenery", r=64, h=60 }
+}
 
-  -- these entities are not available in Chex Quest 2 since their
-  -- sprites were changed to something else.
 
-  banana_tree     = REMOVE_ME  -- replaced by: dinosaur1
-  chemical_flask  = REMOVE_ME  -- replaced by: lamp
-  submerged_plant = REMOVE_ME  -- replaced by: david_statue
+CHEX3.ENTITIES =
+{
+  -- monsters --
 
-  column      = REMOVE_ME  -- replaced by: waiter
-  stalactite  = REMOVE_ME  -- replaced by: pharaoh
-  stalagmite  = REMOVE_ME  -- replaced by: thinker_statue
-  mine_cart   = REMOVE_ME  -- replaced by: giant_spoon
+  larva        = { id=9050, kind="monster", r=30,h=56 }
+  quadrumpus   = { id=9057, kind="monster", r=20,h=56 }
+  stridicus    = { id=3002, kind="monster", r=30,h=56 }
+  flemmine     = { id=3006, kind="monster", r=16,h=56 }
+  super_cyclop = { id=3005, kind="monster", r=31,h=56 }
 
-  civilian2   = REMOVE_ME  -- replaced by: blockade
-  civilian3   = REMOVE_ME  -- replaced by: dinosaur2
+  --- bosses ---
+
+  Flembrane      = { id=69, kind="monster", r=64,h=64 }
+  Maximus        = { id=3003, kind="monster", r=24,h=64 }
+  Snotfolus      = { id=16, kind="monster", r=40,h=110 }
+  Flembomination = { id=7,  kind="monster", r=100,h=100 }
 }
 
 
@@ -468,6 +480,11 @@ CHEX2.MATERIALS =
   PIC_STORAGE = REMOVE_ME
 
   SW_CONC     = REMOVE_ME
+}
+
+
+CHEX3.MATERIALS =
+{
 }
 
 
@@ -773,7 +790,7 @@ CHEX3.MONSTERS =
     density = 0.7
   }
 
-  super_cycloptis =
+  super_cyclop =
   {
     prob = 30
     health = 400
