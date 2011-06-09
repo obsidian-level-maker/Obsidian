@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
--- GAME DEF : Chex Quest 1
+-- GAME DEF : Chex Quest 1 and 2
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -18,8 +18,22 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
+--
+--  NOTES:
+--
+--  *  Chex Quest 2 is considered here as an "extension" to
+--     the original Chex Quest (which reflects how it actually
+--     runs, because you need both WADs to play it).
+--
+--  *  Chex Quest 2 has new sprites for two of the enemies of
+--     the original as well as the final boss.  However their
+--     'id' numbers and in-game behavior are exactly the same,
+--     hence there is no additional logic here for them.
+--
+----------------------------------------------------------------
 
 CHEX1 = { }
+CHEX2 = { }
 
 CHEX1.ENTITIES =
 {
@@ -36,13 +50,13 @@ CHEX1.ENTITIES =
   --- MONSTERS ---
 
   commonus      = { id=3004,kind="monster", r=20,h=56 }
-  bipedicus     = { id=9,   kind="monster", r=20,h=56 }
+  bipedicus     = { id=9,   kind="monster", r=20,h=56 } -- Quadrumpus in CQ2
   armored_biped = { id=3001,kind="monster", r=20,h=56 }
-  cycloptis     = { id=3002,kind="monster", r=30,h=56 }
+  cycloptis     = { id=3002,kind="monster", r=30,h=56 } -- Larva in CQ2
 
   --- BOSSES ---
 
-  Flembrane = { id=3003,kind="monster", r=44,h=100 }
+  Flembrane = { id=3003,kind="monster", r=44,h=100 } -- Maximus in CQ2
 
   --- PICKUPS ---
 
@@ -114,6 +128,12 @@ CHEX1.ENTITIES =
   civilian1 = { id=45, kind="scenery", r=16,h=54 }
   civilian2 = { id=56, kind="scenery", r=16,h=54 }
   civilian3 = { id=57, kind="scenery", r=16,h=48 }
+
+}
+
+
+CHEX2.ENTITIES =
+{
 }
 
 
@@ -219,6 +239,14 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   O_RELIEF = { t="MIDBRN1",  f="O_RELIEF", sane=1 }
   O_CARVE  = { t="NUKESLAD", f="O_CARVE",  sane=1 }
   O_NEON   = { t="TEKWALL2", f="CEIL4_1",  sane=1 }
+}
+
+
+CHEX2.MATERIALS =
+{
+  -- there is no animated slime texture in CQ2
+  SLIME1 = { t="GSTVINE2", f="NUKAGE1", sane=1 }
+  SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
 }
 
 
@@ -844,6 +872,29 @@ OB_GAMES["chex1"] =
   tables =
   {
     CHEX1
+  }
+
+  hooks =
+  {
+    setup        = CHEX1.setup
+    get_levels   = CHEX1.get_levels
+    begin_level  = CHEX1.begin_level
+    all_done     = CHEX1.all_done
+  }
+}
+
+
+OB_GAMES["chex2"] =
+{
+  label = "Chex Quest 2"
+
+  extends = "chex1"
+
+  format = "doom"
+
+  tables =
+  {
+    CHEX1, CHEX2
   }
 
   hooks =
