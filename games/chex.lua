@@ -119,6 +119,7 @@ CHEX1.ENTITIES =
   -- CAVE --
 
   column         = { id=32, kind="scenery", r=16,h=128 }
+  stalactite     = { id=53, kind="scenery", r=16,h=50 }
   stalagmite     = { id=30, kind="scenery", r=16,h=60 }
   mine_cart      = { id=33, kind="scenery", r=16,h=30 }
   slime_fountain = { id=44, kind="scenery", r=16,h=48 }
@@ -128,12 +129,43 @@ CHEX1.ENTITIES =
   civilian1 = { id=45, kind="scenery", r=16,h=54 }
   civilian2 = { id=56, kind="scenery", r=16,h=54 }
   civilian3 = { id=57, kind="scenery", r=16,h=48 }
-
 }
 
 
 CHEX2.ENTITIES =
 {
+  lamp = { id=34, kind="scenery", r=16, h=80 }
+
+  blockade = { id=45, kind="scenery", r=24, h=50 }
+
+  dinosaur1 = { id=54,   kind="scenery", r=64, h=80 }
+  dinosaur2 = { id=57,   kind="scenery", r=64, h=80 }
+  dinosaur3 = { id=2023, kind="scenery", r=64, h=80 }  -- PICKUP?
+
+  mummy     = { id=52, kind="scenery", r=16, h=80 }  -- ONCEILING?
+  pharaoh   = { id=53, kind="scenery", r=32, h=80 }  -- ONCEILING?
+
+  thinker_statue = { id=30, kind="scenery", r=32, h=80 }
+  david_statue   = { id=31, kind="scenery", r=32, h=80 }
+  warrior_statue = { id=36, kind="scenery", r=32, h=80 }
+
+  waiter      = { id=32, kind="scenery", r=32, h=80 }
+  giant_spoon = { id=33, kind="scenery", r=64, h=60 }
+
+  -- these entities are not available in Chex Quest 2 since their
+  -- sprites were changed to something else.
+
+  banana_tree     = REMOVE_ME  -- replaced by: dinosaur1
+  chemical_flask  = REMOVE_ME  -- replaced by: lamp
+  submerged_plant = REMOVE_ME  -- replaced by: david_statue
+
+  column      = REMOVE_ME  -- replaced by: waiter
+  stalactite  = REMOVE_ME  -- replaced by: pharaoh
+  stalagmite  = REMOVE_ME  -- replaced by: thinker_statue
+  mine_cart   = REMOVE_ME  -- replaced by: giant_spoon
+
+  civilian2   = REMOVE_ME  -- replaced by: blockade
+  civilian3   = REMOVE_ME  -- replaced by: dinosaur2
 }
 
 
@@ -244,7 +276,7 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
 
 CHEX2.MATERIALS =
 {
-  -- there is no animated slime texture in CQ2
+  -- Chex Quest 2 has no animated slime texture
   SLIME1 = { t="GSTVINE2", f="NUKAGE1", sane=1 }
   SLIME2 = { t="GSTVINE2", f="LAVA1",   sane=1 }
 }
