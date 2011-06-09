@@ -28,11 +28,6 @@
 --  *  Chex Quest 3 is NOT considered an extension, since it
 --     requires a ZDoom-based port to run.
 --
---  *  Chex Quest 2 has new sprites for two of the enemies of
---     the original as well as the final boss.  However their
---     'id' numbers and in-game behavior are exactly the same,
---     hence there is no additional logic here for them.
---
 ----------------------------------------------------------------
 
 CHEX  = { }  -- common stuff
@@ -552,7 +547,7 @@ CHEX.SKINS =
     door_h = 112
     door = "DOOR_BLUE"
     key = "LITE_BLUE"
-    track = "DOORTRAK"
+    track = "TRACK"
 
     special = 32
     tag = 0
@@ -572,7 +567,7 @@ CHEX.SKINS =
     door_h = 112
     door = "DOOR_YELLOW"
     key = "LITE_YELLOW"
-    track = "DOORTRAK"
+    track = "TRACK"
 
     special = 34
     tag = 0
@@ -592,7 +587,7 @@ CHEX.SKINS =
     door_h = 112
     door = "DOOR_RED"
     key = "LITE_RED"
-    track = "DOORTRAK"
+    track = "TRACK"
 
     special = 33
     tag = 0
@@ -613,7 +608,7 @@ CHEX.SKINS =
     h = 112
 
     door = "DOOR_ALUM"
-    track = "DOORTRAK"
+    track = "TRACK"
 
     door_h = 112
     special = 0
@@ -671,7 +666,10 @@ CHEX1.LEVEL_THEMES =
   {
     building_walls =
     {
-      BROWN=50,
+      BLUE_WALL=30,
+      GRAY_PANELS=10, GRAY_PIPES=20, GRAY_STRIPE=10,
+      ORANGE_TILE=30, 
+      TAN1=10, TAN2=10
     }
 
     building_floors =
@@ -839,23 +837,23 @@ CHEX3.MONSTERS =
 
 CHEX1.MONSTERS =
 {
-  commonus      = CHEX3.commonus
-  bipedicus     = CHEX3.bipedicus
-  cycloptis     = CHEX3.cycloptis
-  armored_biped = CHEX3.armored_biped
+  commonus      = CHEX3.MONSTERS.commonus
+  bipedicus     = CHEX3.MONSTERS.bipedicus
+  cycloptis     = CHEX3.MONSTERS.cycloptis
+  armored_biped = CHEX3.MONSTERS.armored_biped
 
-  Flembrane     = CHEX3.Flembrane
+  Flembrane     = CHEX3.MONSTERS.Flembrane
 }
 
 
 CHEX2.MONSTERS =
 {
-  commonus      = CHEX3.commonus
-  quadrumpus    = CHEX3.quadrumpus
-  larva         = CHEX3.larva
-  armored_biped = CHEX3.armored_biped
+  commonus      = CHEX3.MONSTERS.commonus
+  quadrumpus    = CHEX3.MONSTERS.quadrumpus
+  larva         = CHEX3.MONSTERS.larva
+  armored_biped = CHEX3.MONSTERS.armored_biped
 
-  Maximus       = CHEX3.Maximus
+  Maximus       = CHEX3.MONSTERS.Maximus
 }
 
 
@@ -1104,7 +1102,10 @@ CHEX1.EPISODES =
 
 
 function CHEX1.setup()
- -- TODO
+  -- FIXME: TEMP RUBBISH : REMOVE !!
+  each name,mat in GAME.MATERIALS do
+    if mat.f == "##" then mat.f = "FLOOR0_3" end
+  end
 end
 
 
@@ -1112,7 +1113,7 @@ function CHEX1.get_levels()
   local EP_NUM  = 1
   local MAP_NUM = 1
 
-  if OB_CONFIG.length == "few"     then MAP_NUM = 2 end
+  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
   if OB_CONFIG.length == "episode" then MAP_NUM = 5 end
   if OB_CONFIG.length == "full"    then MAP_NUM = 5 ; EP_NUM = 1 end
 
@@ -1179,6 +1180,8 @@ function CHEX1.make_cool_gfx()
   gui.set_colormap(2, colmaps[2])
   gui.set_colormap(3, colmaps[3])
   gui.set_colormap(4, colmaps[4])
+
+  -- FIXME !!!!  make sure this works with all three games
 
   -- patches : SP_ROCK1, SP_ROCK2, MIDBRN1, NUKESLAD
   gui.wad_logo_gfx("WALL63_1", "p", "PILL",   128,128, 1)
