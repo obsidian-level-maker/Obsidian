@@ -141,6 +141,12 @@ CHEX.ENTITIES =
 
 CHEX2.ENTITIES =
 {
+  quadrumpus = { id=9,   kind="monster", r=20,h=56 }
+  larva      = { id=3002,kind="monster", r=30,h=56 }
+  Maximus    = { id=3003,kind="monster", r=44,h=100 }
+
+  -- scenery --
+
   lamp = { id=34, kind="scenery", r=16, h=80 }
 
   blockade = { id=45, kind="scenery", r=24, h=50 }
@@ -716,10 +722,33 @@ CHEX3.MONSTERS =
     damage = 20
   }
 
+  quadrumpus =
+  {
+    -- replaces = "armored_biped"
+    -- replace_prob = 30
+    prob = 35
+    crazy_prob = 25
+    health = 60
+    attack = "missile"
+    damage = 20
+  }
+
   cycloptis =
   {
     prob = 30
     health = 150
+    attack = "melee"
+    damage = 25
+    weap_prefs = { zorch_propulsor=0.5 }
+  }
+
+  larva =
+  {
+    --- replaces = "cycloptis"
+    --- replace_prob = 25
+    prob = 30
+    crazy_prob = 25
+    health = 125
     attack = "melee"
     damage = 25
     weap_prefs = { zorch_propulsor=0.5 }
@@ -732,8 +761,17 @@ CHEX3.MONSTERS =
   Flembrane =
   {
     health = 1000
-    damage = 45
     attack = "missile"
+    damage = 45
+    weap_prefs = { laz_device=3.0 }
+  }
+
+  Maximus =
+  {
+    health = 1000
+    attack = "missile"
+    damage = 45
+    density = 0.3
     weap_prefs = { laz_device=3.0 }
   }
 }
@@ -987,7 +1025,7 @@ CHEX.PICKUPS =
 }
 
 
-CHEX1.PLAYER_MODEL =
+CHEX.PLAYER_MODEL =
 {
   chexguy =
   {
@@ -1106,7 +1144,6 @@ end
 OB_GAMES["chex1"] =
 {
   label = "Chex Quest"
-
   format = "doom"
 
   tables =
@@ -1127,9 +1164,7 @@ OB_GAMES["chex1"] =
 OB_GAMES["chex2"] =
 {
   label = "Chex Quest 2"
-
   extends = "chex1"
-
   format = "doom"
 
   tables =
@@ -1150,9 +1185,6 @@ OB_GAMES["chex2"] =
 OB_GAMES["chex3"] =
 {
   label = "Chex Quest 3"
-
-  -- Note: NOT an extension of the original game, as it requires ZDoom
-
   format = "doom"
 
   tables =
