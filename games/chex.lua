@@ -204,10 +204,49 @@ CHEX1.MATERIALS =
   PIPEY    = { t="STONE",  f="##" }
   PANELS   = { t="STONE3", f="##" }
 
-STARG3   = { t="STARG3",  f="FLOOR0_5" }
-STARTAN1 = { t="STARTAN1", f="FLOOR0_5" }
+  ORANGE   = { t="STARG3",  f="##" }
+  ORANGE_LAB = { t="COMPUTE3",  f="##" }
+  ORANGE_SLIME = { t="SKINMET2", f="##" }
+  ORANGE_CUPBD = { t="DOOR3", f="##" }
 
-  CUPBOARD = { t="BRNBIGC", f="##" }
+  TAN1 = { t="TEKWALL5", f="##" }
+  TAN2 = { t="BROWN1",   f="##" }
+
+  GRAY7    = { t="GRAY7",    f="##" }
+
+  CUPBOARD = { t="BRNBIGC",  f="##" }
+
+  COMP_BOX  = { t="COMPWERD", f="##" }
+  COMPUTE_1 = { t="COMPTALL", f="##" }
+  COMPUTE_2 = { t="COMP2", f="##" }
+  COMPUTE_3 = { t="COMPUTE2", f="##" }
+
+  GRATE    = { t="REDWALL1", f="##" }
+
+
+  CRATE1   = { t="CRATE1",   f="FLAT1" }
+  CRATE2   = { t="CRATE2",   f="FLAT2" }
+  CRATEMIX = { t="CRATELIT", f="FLAT2" }
+  CRATWIDE = { t="CRATWIDE", f="FLAT2" }
+
+
+  CAVE      = { t="SKSNAKE2", f="##" }
+  CAVE_GLOW = { t="BLODRIP2", f="##" }
+
+  CAVE_SLIMY1 = { t="PIPE4",   f="##" }
+  CAVE_SLIMY2 = { t="MARBLE2", f="##" }
+  CAVE_SLIMY3 = { t="STARGR1", f="##" }
+
+  CAVE_STEP  = { t="STEPLAD1", f="##" }
+  CAVE_LIGHT = { t="SKULWAL3", f="##" }
+  CAVE_EDGER = { t="NUKEDGE1", f="##" }
+  CAVE_SPLAT = { t="NUKEPOIS", f="##" }
+
+
+  PIC_FLOWER1 = { t="GRAY2",    f="##" }
+  PIC_FLOWER2 = { t="GRAYDANG", f="##" }
+  PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
+  PIC_CERTIF  = { t="EXITDOOR", f="##" }
 
 
   -- floors --
@@ -230,8 +269,16 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   DOOR_RED    = { t="BRNBIGL",  f="##" }
   DOOR_YELLOW = { t="BRNSMAL2", f="##" }
 
-  DOOR_HANGER1 = { t="STARTAN3", f="##" }
-  DOOR_HANGER2 = { t="SKINFACE", f="##" }
+  DOOR_LAB   = { t="BIGDOOR4", f="##" }
+  DOOR_ARBOR = { t="BIGDOOR5", f="##" }
+  DOOR_HYDRO = { t="BIGDOOR6", f="##" }
+
+  WDOOR_HANGER1 = { t="STARTAN3", f="##" }  -- 512 units wide
+  WDOOR_HANGER2 = { t="SKINFACE", f="##" }
+
+  WDOOR_ARBOR = { t="SKINSCAB", f="##" }
+  WDOOR_MINES = { t="SKINSYMB", f="##" }
+  WDOOR_FRIDGE = { t="SKINTEK1", f="##" }
 
   TRACK = { t="COMPSTA1", f="STEP1" }
 
@@ -239,10 +286,6 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   LITE_BLUE   = { t="DOORBLU", f="##" }
   LITE_YELLOW = { t="DOORYEL", f="##" }
 
-
-  GRAY7    = { t="GRAY7",    f="##" }
-
-  GRATE    = { t="REDWALL1", f="##" }
 
 
   -- switches --
@@ -253,7 +296,7 @@ FLOOR0_5 = { t="STARG3", f="FLOOR0_5" }
   SW_CONC    = { t="SW1BROWN", f="##"  }
   SW_GRAY    = { t="SW1COMM",  f="##"  }
   SW_COMPUTE = { t="SW1COMP",  f="##"  }
-  SW_STARTAN = { t="SW1METAL", f="##"  }
+  SW_TAN     = { t="SW1METAL", f="##"  }
   SW_PIPEY   = { t="SW1STONE", f="##"  }
 
 
