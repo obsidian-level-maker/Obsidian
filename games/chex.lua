@@ -99,9 +99,9 @@ CHEX.ENTITIES =
 
   -- tech --
 
-  landinglight = { id=2028,kind="scenery", r=16,h=35, light=255 }
-  lightcolumn  = { id=55,  kind="scenery", r=16,h=86, light=255 }
+  landing_light = { id=2028,kind="scenery", r=16,h=35, light=255 }
 
+  lab_coil   = { id=55,  kind="scenery", r=16,h=86, light=255 }
   flag_pole  = { id=37, kind="scenery", r=16,h=128 }
   gas_tank   = { id=35, kind="scenery", r=16,h=36 }
   spaceship  = { id=48, kind="scenery", r=16,h=52 }
@@ -110,16 +110,21 @@ CHEX.ENTITIES =
 
   -- arboretum --
 
-  apple_tree   = { id=47, kind="scenery", r=16,h=92,  add_mode="island" }
-  orange_tree  = { id=43, kind="scenery", r=16,h=92,  add_mode="island" }
-  tall_flower  = { id=28, kind="scenery", r=20,h=25,  add_mode="island" }
-  tall_flower2 = { id=25, kind="scenery", r=20,h=25,  add_mode="island" }
+  apple_tree   = { id=47, kind="scenery", r=16,h=92 }
+  orange_tree  = { id=43, kind="scenery", r=16,h=92 }
+
+  flower1  = { id=28, kind="scenery", r=20,h=25 }
+  flower2  = { id=25, kind="scenery", r=20,h=25 }
+
+  cave_bat    = { id=63, kind="scenery", r=16,h=64, ceil=true } -- SOLID?
+  hang_plant1 = { id=50, kind="scenery", r=20,h=64, ceil=true } -- SOLID?
+  hang_plant2 = { id=51, kind="scenery", r=20,h=64, ceil=true } -- SOLID?
 
   -- other --
 
   slime_fountain = { id=44, kind="scenery", r=16,h=48 }
 
-  civilian1 = { id=45, kind="scenery", r=16,h=54 }
+  captive1 = { id=45, kind="scenery", r=16,h=54 }
 }
 
 
@@ -127,18 +132,18 @@ CHEX1.ENTITIES =
 {
   -- scenery --
 
-  banana_tree  = { id=54, kind="scenery", r=31,h=108, add_mode="island" }
+  banana_tree  = { id=54, kind="scenery", r=31,h=108 }
 
-  chemical_flask  = { id=34, kind="scenery", r=16,h=16, pass=true }
+  beaker  = { id=34, kind="scenery", r=16,h=16, pass=true }
   submerged_plant = { id=31, kind="scenery", r=16,h=42 }
 
-  column     = { id=32, kind="scenery", r=16,h=128 }
+  cave_pillar     = { id=32, kind="scenery", r=16,h=128 }
   stalactite = { id=53, kind="scenery", r=16,h=50 }
   stalagmite = { id=30, kind="scenery", r=16,h=60 }
   mine_cart  = { id=33, kind="scenery", r=16,h=30 }
 
-  civilian2  = { id=56, kind="scenery", r=16,h=54 }
-  civilian3  = { id=57, kind="scenery", r=16,h=48 }
+  captive2  = { id=56, kind="scenery", r=16,h=54 }
+  captive3  = { id=57, kind="scenery", r=16,h=48 }
 }
 
 
@@ -152,20 +157,18 @@ CHEX2.ENTITIES =
 
   lamp = { id=34, kind="scenery", r=16, h=80 }
 
-  blockade = { id=45, kind="scenery", r=24, h=50 }
-
   dinosaur1 = { id=54,   kind="scenery", r=64, h=80 }
   dinosaur2 = { id=57,   kind="scenery", r=64, h=80 }
   dinosaur3 = { id=2023, kind="scenery", r=64, h=80 }  -- PICKUP?
 
-  mummy     = { id=52, kind="scenery", r=16, h=80 }  -- ONCEILING?
-  pharaoh   = { id=53, kind="scenery", r=32, h=80 }  -- ONCEILING?
-
+  statue_tut     = { id=52, kind="scenery", r=16, h=80 }  -- ONCEILING?
+  statue_ramses  = { id=53, kind="scenery", r=32, h=80 }  -- ONCEILING?
   statue_thinker = { id=30, kind="scenery", r=32, h=80 }
   statue_david   = { id=31, kind="scenery", r=32, h=80 }
   statue_warrior = { id=36, kind="scenery", r=32, h=80 }
 
-  waiter      = { id=32, kind="scenery", r=32, h=80 }
+  diner_chef  = { id=32, kind="scenery", r=32, h=80 }
+  diner_table = { id=45, kind="scenery", r=24, h=50 }
   giant_spoon = { id=33, kind="scenery", r=64, h=60 }
 }
 
@@ -173,6 +176,8 @@ CHEX2.ENTITIES =
 CHEX3.ENTITIES =
 {
   -- monsters --
+
+  cycloptis    = { id=58  , kind="monster", r=30,h=56 }  -- new id
 
   larva        = { id=9050, kind="monster", r=30,h=56 }
   quadrumpus   = { id=9057, kind="monster", r=20,h=56 }
@@ -182,10 +187,91 @@ CHEX3.ENTITIES =
 
   --- bosses ---
 
-  Flembrane      = { id=69, kind="monster", r=64,h=64 }
+  Flembrane      = { id=69, kind="monster", r=64,h=64 }  -- new id
   Maximus        = { id=3003, kind="monster", r=24,h=64 }
   Snotfolus      = { id=16, kind="monster", r=40,h=110 }
   Flembomination = { id=7,  kind="monster", r=100,h=100 }
+
+  -- pickups --
+
+  kf_red    = { id=38, kind="pickup", r=20,h=16, pass=true }
+  kf_yellow = { id=39, kind="pickup", r=20,h=16, pass=true }
+  kf_blue   = { id=40, kind="pickup", r=20,h=16, pass=true }
+
+  goggles   = { id=2045, kind="pickup", r=20,h=16, pass=true }
+
+  -- scenery --
+
+  apple_tree  = { id=9060, kind="scenery", r=20,h=64 }  -- new id
+  banana_tree = { id=9058, kind="scenery", r=20,h=64 }  -- new id
+  beech_tree  = { id=9059, kind="scenery", r=20,h=64 }
+  orange_tree = { id=9061, kind="scenery", r=20,h=64 }
+  pine_tree   = { id=30,   kind="scenery", r=16,h=130 }
+  torch_tree  = { id=43,   kind="scenery", r=16,h=128 }
+
+  flower1 = { id=78, kind="scenery", r=20,h=25 }  -- new id
+  flower2 = { id=79, kind="scenery", r=20,h=25 }  -- new id
+
+  cave_pillar = { id=73, kind="scenery", r=16,h=128 }  -- new id
+  stalactite  = { id=47, kind="scenery", r=16,h=50 }   -- new id
+  stalagmite  = { id=74, kind="scenery", r=16,h=64 }   -- new id
+  mine_cart   = { id=53, kind="scenery", r=16,h=30 }   -- new id
+
+  smallbush   = { id=81,   kind="scenery", r=20,h=4, pass=true }
+
+  dinosaur1   = { id=76, kind="scenery", r=60,h=120 }
+  dinosaur2   = { id=77, kind="scenery", r=60,h=120 }
+
+  statue_david  = { id=9051, kind="scenery", r=20,h=64 }
+  statue_think  = { id=9052, kind="scenery", r=20,h=64 }
+  statue_ramses = { id=9053, kind="scenery", r=20,h=64 }
+  statue_tut    = { id=9054, kind="scenery", r=20,h=64 }
+  statue_chex   = { id=9055, kind="scenery", r=20,h=64 }
+  giant_spoon   = { id=9056, kind="scenery", r=60,h=64 }
+
+  slimey_meteor = { id=27, kind="scenery", r=16,h=30 }
+
+  -- Doom barrel, named the same for compatibility
+  barrel = { id=2035, kind="scenery", r=15,h=60 }
+
+  candle_stick   = { id=34,  kind="scenery", r=20,h=18,  light=255 }
+  street_light   = { id=35,  kind="scenery", r=16,h=128, light=255 }
+  green_torch    = { id=45,  kind="scenery", r=16,h=68,  light=255 }
+  green_torch_sm = { id=56,  kind="scenery", r=16,h=55,  light=255 }
+  red_torch      = { id=46,  kind="scenery", r=16,h=68,  light=255 }
+  red_torch_sm   = { id=57,  kind="scenery", r=16,h=26,  light=255 }
+
+  beaker     = { id=80, kind="scenery", r=20,h=64, pass=true }  -- new id
+  gas_tank   = { id=36, kind="scenery", r=16,h=40 }  -- new id
+  spaceship  = { id=54, kind="scenery", r=32,h=58 }  -- new id
+
+  chemical_burner = { id=41, kind="scenery", r=16,h=25 }
+  globe_stand    = { id=25, kind="scenery", r=16,h=64 }
+  lab_coil       = { id=42, kind="scenery", r=16,h=90 }
+  mappoint_light = { id=85, kind="scenery", r=16,h=75 }
+  model_rocket   = { id=18, kind="scenery", r=20,h=106 }
+  monitor        = { id=29, kind="scenery", r=16,h=51 }
+  prop_barrel    = { id=32, kind="scenery", r=16,h=36 }
+  radar_dish     = { id=19, kind="scenery", r=20,h=121 }
+  stool          = { id=49, kind="scenery", r=16,h=41 }
+  tech_pillar    = { id=48, kind="scenery", r=16,h=83 }
+  telephone      = { id=28, kind="scenery", r=16,h=26, pass=true }
+
+  captive1    = { id=70, kind="scenery", r=16,h=65 }  -- new id
+  captive2    = { id=26, kind="scenery", r=16,h=65 }
+  captive3    = { id=52, kind="scenery", r=16,h=65 }
+  diner_chef  = { id=23, kind="scenery", r=20,h=64 }
+  diner_table = { id=22, kind="scenery", r=20,h=64 }
+
+  big_bowl    = { id=51, kind="scenery", r=40,h=64 }
+  grey_rock   = { id=31, kind="scenery", r=16,h=36 }
+  hydro_plant = { id=50, kind="scenery", r=16,h=45 }
+  slimey_urn  = { id=86, kind="scenery", r=16,h=83 }
+
+  ceiling_slime = { id=60, kind="scenery", r=16,h=68, pass=true, ceil=true }
+  hang_plant1   = { id=59, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
+  hang_plant2   = { id=61, kind="scenery", r=20,h=64, pass=true, ceil=true } -- new id
+  hang_pots     = { id=62, kind="scenery", r=20,h=64, pass=true, ceil=true }
 }
 
 
