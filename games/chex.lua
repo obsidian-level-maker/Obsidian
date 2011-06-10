@@ -1262,13 +1262,12 @@ function CHEX1.get_levels()
 
         episode  = episode
         map      = map
-
         ep_along = map / MAP_NUM
-        mon_along = ep_along + (episode-1) / 5
 
         name_theme = "TECH"
-
       }
+
+      LEV.mon_along = LEV.ep_along + (episode-1) / 5
 
       table.insert(GAME.levels, LEV)
     end -- for map
