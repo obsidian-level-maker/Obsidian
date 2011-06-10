@@ -347,6 +347,12 @@ CHEX.MATERIALS =
   ORANGE_DIAG   = { t="BRNSMALR", f="FLAT2" }
   ORANGE_MAP    = { t="BROWN96",  f="FLAT2" }
 
+  STEEL1      = { t="CEMENT1",  f="CEIL3_2" }
+  STEEL2      = { t="CEMENT5",  f="CEIL3_2" }
+  STEEL_LITE  = { t="LITE96",   f="CEIL3_2" }
+  STEEL_GRATE = { t="REDWALL1", f="CEIL3_2" }
+
+  STARPORT  = { t="CEMENT2", f="FLAT20" }
 
   TAN1      = { t="TEKWALL5", f="FLAT1" }
   TAN2      = { t="BROWN1",   f="FLAT1" }
@@ -358,18 +364,10 @@ CHEX.MATERIALS =
   TAN_SCIENCE2 = { t="SKY3", f="FLAT1" }
   TAN_SCIENCE3 = { t="SKY4", f="FLAT1" }
 
-  CEMENT       = { t="CEMENT1",  f="CEIL3_2" }
-  CEMENT5      = { t="CEMENT5",  f="CEIL3_2" }
-  CEMENT_LITE  = { t="LITE96",   f="CEIL3_2" }
-  CEMENT_GRATE = { t="REDWALL1", f="CEIL3_2" }
-
-  STARPORT  = { t="CEMENT2", f="XX" }
-
   COMPUTE_1 = { t="COMP2",    f="FLAT20" }
   COMPUTE_2 = { t="COMPUTE2", f="FLAT20" }
   COMP_BOX  = { t="COMPWERD", f="FLAT20" }
   COMP_SPAN = { t="COMPSPAN", f="FLAT20" }
-
 
   CRATE1   = { t="CRATE1",   f="FLAT1" }
   CRATE2   = { t="CRATE2",   f="FLAT2" }
@@ -384,21 +382,24 @@ CHEX.MATERIALS =
   CAVE_SUPPORT = { t="PIPE6",    f="CEIL3_2" }
 
   PIC_PLANET  = { t="SKINCUT",  f="CEIL4_1" }
-  PIC_DIPLOMA = { t="EXITDOOR", f="XX" }
-  PIC_PHOTO1  = { t="TEKWALL3", f="XX" }
-  PIC_PHOTO2  = { t="SLADWALL", f="XX" }
+  PIC_DIPLOMA = { t="EXITDOOR", f="CEIL4_1" }
+  PIC_PHOTO1  = { t="TEKWALL3", f="CEIL4_1" }
+  PIC_PHOTO2  = { t="SLADWALL", f="CEIL4_1" }
 
-  TELE_CHAMBER = { t="SLADRIP1", f="XX" }
+  TELE_CHAMBER = { t="SLADRIP1", f="FLAT20" }
 
-  MET_SLADS = { t="SP_DUDE4", f="XX" }
+  MET_SLADS = { t="SP_DUDE4", f="STEP1" }
 
-  STEP_ORANGE = { t="STEP1",    f="XX" }
-  STEP_GRAY   = { t="STEP2",    f="XX" }
-  STEP_WHITE  = { t="STEPTOP",  f="XX" }
-  STEP_CAVE   = { t="STEPLAD1", f="XX" }
+  STEP_ORANGE = { t="STEP1",    f="FLAT2" }
+  STEP_GRAY   = { t="STEP2",    f="FLAT20" }
+  STEP_WHITE  = { t="STEPTOP",  f="FLAT23" }
+  STEP_CAVE   = { t="STEPLAD1", f="CEIL3_1" }
 
 
   -- floors --
+
+  CEIL_LITE = { f="CEIL3_5",  t="WOOD3" }
+  CRUD_LITE = { f="TLITE6_6", t="COMPSPAN" }
 
   VERYDARK_BLUE = { f="CEIL4_1",  t="SP_DUDE2" }
   ANOTHER_BLUE  = { f="FLOOR1_1", t="SP_DUDE2" }
@@ -434,16 +435,16 @@ CHEX.MATERIALS =
   DOOR_RED    = { t="BRNBIGL",  f="FLAT23" }
   DOOR_YELLOW = { t="BRNSMAL2", f="FLAT23" }
 
-  DOOR_LAB   = { t="BIGDOOR4", f="XX" }
-  DOOR_ARBOR = { t="BIGDOOR5", f="XX" }
-  DOOR_HYDRO = { t="BIGDOOR6", f="XX" }
+  DOOR_LAB   = { t="BIGDOOR4", f="FLAT23" }
+  DOOR_ARBOR = { t="BIGDOOR5", f="FLAT2" }
+  DOOR_HYDRO = { t="BIGDOOR6", f="FLAT2" }
 
-  WDOOR_HANGER1 = { t="STARTAN3", f="XX" }  -- 512 units wide
-  WDOOR_HANGER2 = { t="SKINFACE", f="XX" }
+  WDOOR_HANGER1 = { t="STARTAN3", f="FLAT1" }  -- 512 units wide
+  WDOOR_HANGER2 = { t="SKINFACE", f="FLAT1" }
 
-  WDOOR_ARBOR = { t="SKINSCAB", f="XX" }
-  WDOOR_MINES = { t="SKINSYMB", f="XX" }
-  WDOOR_FRIDGE = { t="SKINTEK1", f="XX" }
+  WDOOR_ARBOR = { t="SKINSCAB", f="CEIL5_1" }
+  WDOOR_MINES = { t="SKINSYMB", f="FLAT23" }
+  WDOOR_FRIDGE = { t="SKINTEK1", f="FLAT20" }
 
   LITE_RED    = { t="DOORRED", f="CEIL4_1" }
   LITE_BLUE   = { t="DOORBLU", f="CEIL4_1" }
@@ -481,90 +482,100 @@ CHEX.MATERIALS =
 
 CHEX1.MATERIALS =
 {
-  BLUE_SFALL  = { t="BLODGR1",  f="XX" }
+  BLUE_SFALL  = { t="BLODGR1",  f="CEIL4_1" }
 
-  CAVE_SLIMY1 = { t="PIPE4",   f="XX" }
-  CAVE_SLIMY2 = { t="MARBLE2", f="XX" }
-  CAVE_SLIMY3 = { t="STARGR1", f="XX" }
+  CAVE_SLIMY1 = { t="PIPE4",    f="CEIL3_1" }
+  CAVE_SLIMY2 = { t="MARBLE2",  f="CEIL3_1" }
+  CAVE_SLIMY3 = { t="STARGR1",  f="CEIL3_1" }
+  CAVE_EDGER  = { t="NUKEDGE1", f="CEIL3_1" }
+  CAVE_SPLAT  = { t="NUKEPOIS", f="CEIL3_1" }
 
-  CAVE_EDGER  = { t="NUKEDGE1", f="XX" }
-  CAVE_SPLAT  = { t="NUKEPOIS", f="XX" }
+  COMPUTE_3   = { t="COMPTALL", f="FLAT20" }
 
-  COMPUTE_3   = { t="COMPTALL", f="XX" }
+  GRAY_FLOWER1 = { t="GRAY2",    f="FLAT20" }
+  GRAY_FLOWER2 = { t="GRAYDANG", f="FLAT20" }
 
-  GRAY_FLOWER1 = { t="GRAY2",    f="XX" }
-  GRAY_FLOWER2 = { t="GRAYDANG", f="XX" }
+  PIC_SLIMED  = { t="SLADPOIS", f="CEIL4_1" }
+  PIC_STORAGE = { t="MARBFAC3", f="FLAT2" }
 
-  PIC_SLIMED  = { t="SLADPOIS", f="XX" }
-  PIC_STORAGE = { t="MARBFAC3", f="XX" }
-
-  SW_CEMENT   = { t="SW1BROWN", f="XX"  }
+  SW_STEEL    = { t="SW1BROWN", f="CEIL3_2" }
 }
 
 
 CHEX2.MATERIALS =
 {
+  -- general --
+
+  HEDGE  = { t="BIGDOOR2", f="FLOOR0_6" }
+  BEIGE  = { t="EXITSIGN", f="FLOOR3_3" }
+
+
   -- walls --
 
-  GREEN_BRICK  = { t="STARG1", f="XX" }
-  GREEN_SIGN   = { t="DOOR1", f="XX" }
-  GREEN_BORDER = { t="STARGR1", f="XX" }
-  GREEN_GRATE  = { t="STARTAN2", f="XX" }
+  GREEN_BRICK  = { t="STARG1",   f="FLOOR4_8" }
+  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
+  GREEN_BORDER = { t="STARGR1",  f="FLOOR4_8" }
+  GREEN_GRATE  = { t="STARTAN2", f="FLOOR4_8" }
 
-  BIG_GRATE = { t="SW1EXIT", f="XX" }
+  HUGE_GRATE   = { t="SW1EXIT", f="FLOOR4_1" }
 
-  HEDGE = { t="BIGDOOR2", f="XX" }
+  MARB_GREEN  = { t="BROWN144", f="FLOOR0_6" }
+  MARB_RED    = { t="COMPSTA2", f="FLAT1" }
 
-  MARB_GREEN  = { t="BROWN144", f="XX" }
-  MARB_RED    = { t="COMPSTA2", f="XX" }
-  MARB_BEIGE  = { t="EXITSIGN", f="XX" }
+  RED_CURTAIN = { t="SLADPOIS", f="FLOOR5_3" }
+
+  MOVIE_PRAM    = { t="BLODGR1",  f="COMPSPAN" }
+  MOVIE_MOUSE   = { t="BLODRIP1", f="COMPSPAN" }
+  MOVIE_CHARLES = { t="FIREMAG1", f="COMPSPAN" }
+
+  PIC_EAT_EM = { t="BRNPOIS",  f="FLAT20" }
+  PIC_LUV_EM = { t="BRNPOIS2", f="FLAT20" }
+  PIC_HUNGRY = { t="PIPE4",    f="FLAT20" }
+
+  PIC_MONA    = { t="MARBFACE", f="FLAT20" }
+  PIC_VENUS   = { t="MARBFAC3", f="FLAT20" }
+  PIC_VINCENT = { t="MARBLE2",  f="FLAT20" }
+  PIC_SCREAM  = { t="MARBLE3",  f="FLAT20" }
+  PIC_NUN     = { t="MARBLOD1", f="FLAT20" }
+  PIC_BORING  = { t="MIDGRATE", f="FLAT20" }
+
+  SIGN_ENTER    = { t="LITE5",    f="FLAT20" }
+  SIGN_WELCOME1 = { t="COMPTALL", f="FLAT20" }
+  SIGN_WELCOME2 = { t="COMPUTE1", f="FLAT20" }
+  SIGN_GALACTIC = { t="NUKE24",   f="FLAT20" }
+
+  SIGN_DINER    = { t="NUKEDGE1", f="FLAT20" }
+  SIGN_MUSEUM   = { t="SW2GRAY",  f="FLAT20" }
+  SIGN_SEWER    = { t="SW2GRAY1", f="FLAT20" }
+  SIGN_CINEMA   = { t="SW2SLAD",  f="FLAT20" }
+
+  BLUE_POSTER1 = { t="GRAY2",    f="FLOOR1_1" }
+  BLUE_POSTER2 = { t="GSTLION",  f="FLOOR1_1" }
+  BLUE_POSTER3 = { t="GSTSATYR", f="FLOOR1_1" }
+  BLUE_CUPBD   = { t="GRAYPOIS", f="FLOOR1_1" }
+
+  TAN_THEATRE1 = { t="TEKWALL4", f="FLAT2" }
+  TAN_THEATRE2 = { t="GSTONE1",  f="FLAT2" }
+  TAN_THEATRE3 = { t="GSTONE2",  f="FLAT2" }
+  TAN_MENU     = { t="LITE3",    f="FLAT2" }
+
+  BENCH_DRINKS  = { t="GRAYBIG",  f="FLAT1" }
+  BENCH_POPCORN = { t="GRAYDANG", f="FLAT1" }
 
 
-  RED_CURTAIN = { t="SLADPOIS", f="XX" }
+  -- floors --
 
-  MOVIE_PRAM    = { t="BLODGR1", f="XX" }
-  MOVIE_MOUSE   = { t="BLODRIP1", f="XX" }
-  MOVIE_CHARLES = { t="FIREMAG1", f="XX" }
+  DGRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
 
-  PIC_EAT_EM = { t="BRNPOIS", f="XX" }
-  PIC_LUV_EM = { t="BRNPOIS2", f="XX" }
-  PIC_HUNGRY = { t="PIPE4", f="XX" }
-
-  PIC_MONA    = { t="MARBFACE", f="XX" }
-  PIC_VENUS   = { t="MARBFAC3", f="XX" }
-  PIC_VINCENT = { t="MARBLE2", f="XX" }
-  PIC_SCREAM  = { t="MARBLE3", f="XX" }
-  PIC_NUN     = { t="MARBLOD1", f="XX" }
-  PIC_LAME    = { t="MIDGRATE", f="XX" }
-
-  SIGN_ENTER    = { t="LITE5", f="XX" }
-  SIGN_WELCOME1 = { t="COMPTALL", f="XX" }
-  SIGN_WELCOME2 = { t="COMPUTE1", f="XX" }
-  SIGN_GALACTIC = { t="NUKE24", f="XX" }
-
-  SIGN_DINER    = { t="NUKEDGE1", f="XX" }
-  SIGN_MUSEUM   = { t="SW2GRAY", f="XX" }
-  SIGN_SEWER    = { t="SW2GRAY1", f="XX" }
-  SIGN_CINEMA   = { t="SW2SLAD", f="XX" }
-
-
-  BLUE_POSTER1 = { t="GRAY2", f="XX" }
-  BLUE_POSTER2 = { t="GSTLION", f="XX" }
-  BLUE_POSTER3 = { t="GSTSATYR", f="XX" }
-  BLUE_CUPBD   = { t="GRAYPOIS", f="XX" }
-
-  TAN_THEATRE1 = { t="TEKWALL4", f="XX" }
-  TAN_THEATRE2 = { t="GSTONE1", f="XX" }
-  TAN_THEATRE3 = { t="GSTONE2", f="XX" }
-  TAN_MENU     = { t="LITE3", f="XX" }
-
-  BENCH_DRINKS  = { t="GRAYBIG", f="XX" }
-  BENCH_POPCORN = { t="GRAYDANG", f="XX" }
+  BROWN_TILE = { f="FLOOR4_5", t="EXITSIGN" }
+  WHITE_TILE = { f="FLOOR4_6", t="WOOD3" }
+  GREEN_TILE = { f="FLOOR4_8", t="STARG1" }
+  RED_TILE   = { f="STEP2",    t="STONE3" }
 
 
   -- switches --
 
-  SW_GREEN = { t="SW1BROWN", f="XX" }
+  SW_GREEN = { t="SW1BROWN", f="FLOOR4_8" }
 
 
   -- liquids --
@@ -1240,6 +1251,7 @@ function CHEX1.setup()
   -- FIXME: TEMP RUBBISH : REMOVE !!
   each name,mat in GAME.MATERIALS do
     if mat.f == "XX" then mat.f = "FLOOR0_3" end
+    if mat.t == "XX" then mat.t = "ASHWALL" end
   end
 end
 
