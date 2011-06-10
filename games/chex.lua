@@ -281,6 +281,7 @@ CHEX.PARAMETERS =
   switches = true
   liquids = true
   teleporters = true
+  light_brushes = true
   infighting = true
 
   custom_flats = true
@@ -294,6 +295,13 @@ CHEX.PARAMETERS =
   ammo_factor   = 0.8
   health_factor = 0.7
   monster_factor = 0.8
+}
+
+
+CHEX3.PARAMETERS =
+{
+  -- NOTE: no infighting at all
+  infighting = false
 }
 
 
@@ -1202,6 +1210,32 @@ CHEX1.EPISODES =
 }
 
 
+CHEX3.EPISODES =
+{
+  episode1 =
+  {
+    theme = "TECH"
+    sky_light = 0.75
+  }
+
+-- E2M5 and E3M5 will exit when all bosses (Maximus, Flembomination 
+-- and Snotfolus) are dead, so perhaps prevent an exit door or
+-- switch from appearing if any of those appear in these levels?
+
+  episode2 =
+  {
+    theme = "TECH"  -- FIXME will be CITY later
+    sky_light = 0.75
+  }
+
+  episode3 =
+  {
+    theme = "TECH"
+    sky_light = 0.75
+  }
+}
+
+
 function CHEX1.setup()
   -- FIXME: TEMP RUBBISH : REMOVE !!
   each name,mat in GAME.MATERIALS do
@@ -1227,11 +1261,51 @@ function CHEX1.get_levels()
         patch = string.format("WILV%d%d", episode-1, map-1)
 
         episode  = episode
+        map      = map
+
         ep_along = map / MAP_NUM
-        ep_info  = { }
+        mon_along = ep_along + (episode-1) / 5
 
         name_theme = "TECH"
 
+      }
+
+      table.insert(GAME.levels, LEV)
+    end -- for map
+
+  end -- for episode
+end
+
+
+function CHEX3.get_levels()
+  local EP_NUM  = (OB_CONFIG.length == "full"   ? 3, 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1, 5)
+
+  if OB_CONFIG.length == "few" then MAP_NUM = 2 end
+
+  for episode = 1,EP_NUM do
+    local ep_info = CHEX3.EPISODES["episode" .. episode]
+    assert(ep_info)
+
+    for map = 1,MAP_NUM do
+      local ep_along = map / 6
+
+      if OB_CONFIG.length == "single" then
+        ep_along = 0.5
+      elseif OB_CONFIG.length == "few" then
+        ep_along = map / 4
+      end
+
+      local LEV =
+      {
+        name  = string.format("E%dM%d", episode, map)
+        patch = string.format("WILV%d%d", episode-1, map-1)
+
+        episode  = episode
+        map      = map
+
+        ep_along  = ep_along
+        mon_along = ep_along + (episode-1) / 5
       }
 
       table.insert(GAME.levels, LEV)
@@ -1359,14 +1433,16 @@ OB_GAMES["chex3"] =
   hooks =
   {
     setup        = CHEX1.setup
-    get_levels   = CHEX1.get_levels
+    get_levels   = CHEX3.get_levels
     begin_level  = CHEX1.begin_level
-    all_done     = CHEX1.all_done
+--FIXME !!!   all_done     = CHEX1.all_done
   }
 }
 
 
 ------------------------------------------------------------
+
+-- themes (TECH2 etc...): caves, spaceship (use flemkeys here)
 
 OB_THEMES["chex_tech"] =
 {
@@ -1376,7 +1452,7 @@ OB_THEMES["chex_tech"] =
   mixed_prob = 60
 }
 
-UNFINISHED["chex_arboretum"] =
+UNFINISHED["chex_arboretum"] =  -- AJA: keep as separate theme??
 {
   label = "Arboretum"
   for_games = { chex1=1 }
@@ -1384,11 +1460,22 @@ UNFINISHED["chex_arboretum"] =
   mixed_prob = 30
 }
 
-UNFINISHED["chex_cave"] =
+UNFINISHED["chex_cave"] =  -- AJA: keep as separate theme??
 {
   label = "Cave"
   for_games = { chex1=1 }
   name_theme = "GOTHIC"
   mixed_prob = 30
+}
+
+-- themes (CITY2 etc...): sewers, lodge, lots of trees 
+-- and grassy / rocky terrain outdoors, wooden buildings
+
+UNFINISHED["chex3_city"] =
+{
+  label = "City"
+  for_games = { chex3=1 }
+  name_theme = "URBAN"
+  mixed_prob = 50
 }
 
