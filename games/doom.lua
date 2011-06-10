@@ -2986,7 +2986,7 @@ DOOM1.LEVEL_THEMES =
     courtyard_floors =
     {
       BROWN144=20, BROWN1=10, STONE=10,
-      ASHWALL=2, FLAT10=3, SP_ROCK1=90,
+      ASHWALL=2, FLAT10=3, SP_ROCK1=60,
     }
 
     cave_walls =
@@ -3002,31 +3002,35 @@ DOOM1.LEVEL_THEMES =
       SP_ROCK1=90,
       GRAYVINE=20,
       STONE=30,
-   }
+    }
 
     hallway_walls =
     {
-      BROWN1=33, BROWNGRN=50, GRAY1=50, STARBR2=33
+      BROWN1=33, BROWNGRN=50, BROVINE=20,
+      GRAY1=50, GRAY5=33, ICKWALL1=30, ICKWALL3=30,
+      STONE2=40, STONE3=50, METAL1=30
     }
 
     hallway_floors =
     {
-      FLAT4=50, CEIL5_1=50, FLOOR1_1=50, FLOOR3_3=50
+      FLAT4=30, CEIL5_1=30, FLAT14=20, FLAT5_4=20
+      FLOOR3_3=30, FLOOR4_8=40, FLOOR5_1=25,
     }
 
     hallway_ceilings =
     {
-      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50
+      FLAT4=50, CEIL5_1=50, CEIL3_5=50, CEIL3_3=50, FLAT19=20
     }
 
     stairwell_walls =
     {
-      BROWN1=50, GRAY1=50, STARGR1=50, METAL1=20
+      BROWN1=50, GRAY1=50, STARGR1=50, METAL1=20,
+      ICKWALL3=30, BROVINE=30, BROVINE2=30, BROWN96=15
     }
 
     stairwell_floors =
     {
-      FLAT1=50, FLOOR7_1=50,
+      FLAT1=50, FLOOR7_1=30, FLAT5_4=30, FLOOR4_8=20, FLOOR5_1=20
     }
 
     logos = { carve=5, pill=50, neon=50 }
