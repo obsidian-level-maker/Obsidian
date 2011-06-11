@@ -521,8 +521,8 @@ CHEX2.MATERIALS =
   -- walls --
 
   GREEN_BRICK  = { t="STARG1",   f="FLOOR4_8" }
-  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
   GREEN_BORDER = { t="STARGR1",  f="FLOOR4_8" }
+  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
   GREEN_GRATE  = { t="STARTAN2", f="FLOOR4_8" }
 
   BIG_GRATE   = { t="SW1EXIT", f="FLOOR4_1" }
@@ -573,7 +573,7 @@ CHEX2.MATERIALS =
 
   -- floors --
 
-  DGRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
+  GRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
 
   BROWN_TILE = { f="FLOOR4_5", t="EXITSIGN" }
   WHITE_TILE = { f="FLOOR4_6", t="SW2SATYR" }
@@ -598,8 +598,20 @@ CHEX3.MATERIALS =
 {
   -- Chex 1 compatibility --
 
-  GRAY_FLOWER1 = REMOVE_ME
-  GRAY_FLOWER2 = REMOVE_ME
+  BLUE_SFALL  = { t="BLODGR1",  f="CEIL4_1" }
+
+  CAVE_SLIMY1 = { t="PIPE4",    f="CEIL3_1" }
+  CAVE_SLIMY2 = { t="MARBLE2",  f="CEIL3_1" }
+  CAVE_SLIMY3 = { t="STARGR1",  f="CEIL3_1" }
+  CAVE_EDGER  = { t="NUKEDGE1", f="CEIL3_1" }
+  CAVE_SPLAT  = { t="NUKEPOIS", f="CEIL3_1" }
+
+  COMPUTE_3   = { t="COMPTALL", f="FLAT5_6" }
+
+  PIC_SLIMED  = { t="SLADPOIS", f="CEIL4_1" }
+  PIC_STORAGE = { t="MARBFAC3", f="FLAT2" }
+
+  SW_STEEL    = { t="SW2WOOD", f="CEIL3_2" }  -- Note: different size!
 
   HYDROPON_1 = { t="HYDROPO1", f="FLAT1" }
   HYDROPON_2 = { t="HYDROPO2", f="FLAT1" }
@@ -617,69 +629,81 @@ CHEX3.MATERIALS =
   CRATEMIX = { t="CRATELIT", f="CRATOP1" }
   CRATWIDE = { t="CRATWIDE", f="CRATOP1" }
 
+  -- these two textures are not present in Chex 3
+  GRAY_FLOWER1 = { t="STONE3", f="FLAT5_6" }
+  GRAY_FLOWER2 = { t="STONE3", f="FLAT5_6" }
+
 
   -- Chex 2 compatibility --
 
-  HEDGE  = { t="BIGDOOR2", f="FLOOR0_6" }
-. BEIGE  = { t="MUSEUM",   f="BROWN" }
+  HEDGE  = { t="HEDGE",  f="HEDGEF" }
+  BEIGE  = { t="MUSEUM", f="BROWN" }
 
-  GREEN_BRICK  = { t="STARG1",   f="FLOOR4_8" }
-  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
-  GREEN_BORDER = { t="STARGR1",  f="FLOOR4_8" }
-  GREEN_GRATE  = { t="STARTAN2", f="FLOOR4_8" }
+  GREEN_BRICK  = { t="SEWER1",   f="ENDFLAT2" }
+  GREEN_BORDER = { t="SEWER2",   f="ENDFLAT2" }
+  GREEN_SIGN   = { t="SEWER4",   f="ENDFLAT2" }
+  GREEN_GRATE  = { t="WORMHOL3", f="ENDFLAT2" }
 
-. MARB_GREEN  = { t="BROWN144" } -- no good flat, use texture on floor
-. MARB_RED    = { t="PLUSH", f="CFLAT2" }  -- original texture not in Chex 3
+  MARB_GREEN  = { t="BROWN144", f="CEIL5_1" } -- no good flat!
+  MARB_RED    = { t="PLUSH", f="CFLAT2" }  -- texture not present in Chex 3
 
-. RED_CURTAIN = { t="THEAWALL", f="CFLAT2" }
+  RED_CURTAIN = { t="THEAWALL", f="CFLAT2" }
 
-. MOVIE_PRAM    = { t="MOVIE2A", f="CEIL5_1" }
-. MOVIE_MOUSE   = { t="MOVIE1A", f="CEIL5_1" }
-. MOVIE_CHARLES = { t="MOVIE3A", f="CEIL5_1" }
+  MOVIE_PRAM    = { t="MOVIE2A", f="CEIL5_1" }
+  MOVIE_MOUSE   = { t="MOVIE1A", f="CEIL5_1" }
+  MOVIE_CHARLES = { t="MOVIE3A", f="CEIL5_1" }
 
-. PIC_EAT_EM = { t="CHEXAD1", f="CEIL5_1" }
-. PIC_LUV_EM = { t="CHEXAD2", f="CEIL5_1" }
-. PIC_HUNGRY = { t="HUNGRY",  f="FLAT1" }
+  PIC_EAT_EM = { t="CHEXAD1", f="CEIL5_1" }
+  PIC_LUV_EM = { t="CHEXAD2", f="CEIL5_1" }
+  PIC_HUNGRY = { t="HUNGRY",  f="FLAT1" }
 
-. PIC_MONA    = { t="MONA",     f="CEIL5_1" }
-. PIC_VENUS   = { t="VENUSHS",  f="CEIL5_1" }
-. PIC_VINCENT = { t="VINCENT",  f="CEIL5_1" }
-. PIC_SCREAM  = { t="MUNCH",    f="CEIL5_1" }
-. PIC_NUN     = { t="SW1STRTN", f="CEIL5_1" }
-. PIC_BORING  = { t="ART2",     f="CEIL5_1" }
+  PIC_MONA    = { t="MONA",     f="CEIL5_1" }
+  PIC_VENUS   = { t="VENUSHS",  f="CEIL5_1" }
+  PIC_VINCENT = { t="VINCENT",  f="CEIL5_1" }
+  PIC_SCREAM  = { t="MUNCH",    f="CEIL5_1" }
+  PIC_NUN     = { t="SW1STRTN", f="CEIL5_1" }
+  PIC_BORING  = { t="ART2",     f="CEIL5_1" }
 
-  SIGN_ENTER    = { t="LITE5",    f="CEIL5_1" }
-  SIGN_WELCOME1 = { t="COMPTALL", f="CEIL5_1" }
-  SIGN_WELCOME2 = { t="COMPUTE1", f="CEIL5_1" }
+  SIGN_ENTER    = { t="CHEXCITY", f="CEIL5_1" }  -- Note: now has windows on top
+  SIGN_WELCOME1 = { t="SPDOOR",   f="CEIL5_1" }
+  SIGN_WELCOME2 = { t="SPACPORT", f="CEIL5_1" }  -- Note: now has windows on top
   SIGN_GALACTIC = { t="NUKE24",   f="CEIL5_1" }
 
-  SIGN_DINER    = { t="NUKEDGE1", f="CEIL5_1" }
-  SIGN_MUSEUM   = { t="SW2GRAY",  f="CEIL5_1" }
-  SIGN_SEWER    = { t="SW2GRAY1", f="CEIL5_1" }
+  SIGN_DINER    = { t="DINESIGN", f="CEIL5_1" }  -- Note: now has windows on top
+  SIGN_MUSEUM   = { t="MUSEUM2",  f="CEIL5_1" }
+  SIGN_SEWER    = { t="SEWER3",   f="ENDFLAT2" }
   SIGN_CINEMA   = { t="CINEMA",   f="CEIL5_1" }
 
-. BLUE_POSTER1 = { t="POSTER1", f="FLOOR1_1" }
-. BLUE_POSTER2 = { t="POSTER2", f="FLOOR1_1" }
-. BLUE_POSTER3 = { t="POSTER3", f="FLOOR1_1" }
-  BLUE_CUPBD   = { t="GRAYPOIS", f="FLOOR1_1" }
+  BLUE_POSTER1 = { t="POSTER1", f="FLOOR1_1" }
+  BLUE_POSTER2 = { t="POSTER2", f="FLOOR1_1" }
+  BLUE_POSTER3 = { t="POSTER3", f="FLOOR1_1" }
+  BLUE_CUPBD   = { t="CARPET_A", f="FLOOR1_1" }  -- texture not present
 
-. TAN_THEATRE1 = { t="THEATRE1", f="FLOOR1_1" }  --
-. TAN_THEATRE2 = { t="THEATRE2", f="FLOOR1_1" }  -- Note: on blue walls now
-. TAN_THEATRE3 = { t="THEATRE3", f="FLOOR1_1" }  --
-. TAN_MENU     = { t="FOODMENU", f="FLAT2" }
+  TAN_THEATRE1 = { t="THEATRE1", f="FLOOR1_1" }  --\
+  TAN_THEATRE2 = { t="THEATRE2", f="FLOOR1_1" }  -- Note: on blue walls now
+  TAN_THEATRE3 = { t="THEATRE3", f="FLOOR1_1" }  --/
+  TAN_MENU     = { t="FOODMENU", f="FLAT2" }
 
-. BENCH_CANDY   = { t="CANDY",   f="CEIL5_1" }
-. BENCH_POPCORN = { t="POPCORN", f="CEIL5_1" }
+  BENCH_CANDY   = { t="CANDY",   f="CEIL5_1" }
+  BENCH_POPCORN = { t="POPCORN", f="CEIL5_1" }
 
-  DGRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
+  GRAY_FLOOR = { f="CJFCOMM3", t="COMPSPAN" }
 
-  BROWN_TILE = { f="FLOOR4_5", t="EXITSIGN" }
-  WHITE_TILE = { f="FLOOR4_6", t="SW2SATYR" }
-  GREEN_TILE = { f="FLOOR4_8", t="STARG1" }
-  RED_TILE   = { f="STEP2",    t="STONE3" }
+  BROWN_TILE = { f="MUFLOOR2", t="COMPSPAN" }
+  WHITE_TILE = { f="CEIL3_2",  t="SW2SATYR" }  -- flat not present
+  GREEN_TILE = { f="SLUGBRIK", t="SEWER1" }
+  RED_TILE   = { f="CJFLOD06", t="STONE3" }  -- flat not present, grrr!
 
 
-  ---- NEW STUFF ----
+  --- new Chex 1 / 2 stuff ---
+
+  CINEMA_FLASHY = { t="ROCKRED1", f="CEIL5_1" }
+
+  GREEN_PIPE1 = { t="SEWER_A", f="ENDFLAT2" }
+  GREEN_PIPE2 = { t="SEWER_B", f="ENDFLAT2" }
+
+
+  ---- TOTALLY NEW STUFF ----
 
   -- TODO
 }
