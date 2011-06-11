@@ -25,8 +25,8 @@
 --     the original Chex Quest (which reflects how it actually
 --     runs, because you need both WADs to play it).
 --
---  *  Chex Quest 3 is NOT considered an extension, since it
---     requires a ZDoom-based port to run.
+--  *  Chex Quest 3 is NOT considered an extension, since it's
+--     complete and it requires a ZDoom-based port to run.
 --
 ----------------------------------------------------------------
 
@@ -418,7 +418,8 @@ CHEX.MATERIALS =
   DARK_GRAY = { f="CEIL5_1", t="TEKWALL5" }
   RED_FLOOR = { f="FLAT1",   t="SP_DUDE6" }
 
-  -- NOTE: these two floor logos don't exist in Chex 3  (OR DO THEY??)
+  -- NOTE: these two floor logos don't exist as flats in Chex 3,
+  --       but they _do_ exist as single textures.
   IGC_LOGO_TL = { f="DEM1_1", t="SP_DUDE2" }
   IGC_LOGO_TR = { f="DEM1_2", t="SP_DUDE2" }
   IGC_LOGO_BL = { f="DEM1_3", t="SP_DUDE2" }
@@ -531,13 +532,13 @@ CHEX2.MATERIALS =
 
   RED_CURTAIN = { t="SLADPOIS", f="FLOOR5_3" }
 
-  MOVIE_PRAM    = { t="BLODGR1",  f="COMPSPAN" }
-  MOVIE_MOUSE   = { t="BLODRIP1", f="COMPSPAN" }
-  MOVIE_CHARLES = { t="FIREMAG1", f="COMPSPAN" }
+  MOVIE_PRAM    = { t="BLODGR1",  f="CEIL5_1" }
+  MOVIE_MOUSE   = { t="BLODRIP1", f="CEIL5_1" }
+  MOVIE_CHARLES = { t="FIREMAG1", f="CEIL5_1" }
 
   PIC_EAT_EM = { t="BRNPOIS",  f="CEIL5_1" }
   PIC_LUV_EM = { t="BRNPOIS2", f="CEIL5_1" }
-  PIC_HUNGRY = { t="PIPE4",    f="CEIL5_1" }
+  PIC_HUNGRY = { t="PIPE4",    f="FLAT1" }
 
   PIC_MONA    = { t="MARBFACE", f="CEIL5_1" }
   PIC_VENUS   = { t="MARBFAC3", f="CEIL5_1" }
@@ -566,8 +567,8 @@ CHEX2.MATERIALS =
   TAN_THEATRE3 = { t="GSTONE2",  f="FLAT2" }
   TAN_MENU     = { t="LITE3",    f="FLAT2" }
 
-  BENCH_DRINKS  = { t="GRAYBIG",  f="FLAT1" }
-  BENCH_POPCORN = { t="GRAYDANG", f="FLAT1" }
+  BENCH_CANDY   = { t="GRAYBIG",  f="CEIL5_1" }
+  BENCH_POPCORN = { t="GRAYDANG", f="CEIL5_1" }
 
 
   -- floors --
@@ -610,10 +611,72 @@ CHEX3.MATERIALS =
 
   CRUD_LITE = { f="STOOREST", t="COMPSPAN" }
 
+  -- better tops on these
+  CRATE1   = { t="CRATE1",   f="CRATOP2" }
+  CRATE2   = { t="CRATE2",   f="CRATOP1" }
+  CRATEMIX = { t="CRATELIT", f="CRATOP1" }
+  CRATWIDE = { t="CRATWIDE", f="CRATOP1" }
+
 
   -- Chex 2 compatibility --
 
-  -- TODO
+  HEDGE  = { t="BIGDOOR2", f="FLOOR0_6" }
+. BEIGE  = { t="MUSEUM",   f="BROWN" }
+
+  GREEN_BRICK  = { t="STARG1",   f="FLOOR4_8" }
+  GREEN_SIGN   = { t="DOOR1",    f="FLOOR4_8" }
+  GREEN_BORDER = { t="STARGR1",  f="FLOOR4_8" }
+  GREEN_GRATE  = { t="STARTAN2", f="FLOOR4_8" }
+
+. MARB_GREEN  = { t="BROWN144" } -- no good flat, use texture on floor
+. MARB_RED    = { t="PLUSH", f="CFLAT2" }  -- original texture not in Chex 3
+
+. RED_CURTAIN = { t="THEAWALL", f="CFLAT2" }
+
+. MOVIE_PRAM    = { t="MOVIE2A", f="CEIL5_1" }
+. MOVIE_MOUSE   = { t="MOVIE1A", f="CEIL5_1" }
+. MOVIE_CHARLES = { t="MOVIE3A", f="CEIL5_1" }
+
+. PIC_EAT_EM = { t="CHEXAD1", f="CEIL5_1" }
+. PIC_LUV_EM = { t="CHEXAD2", f="CEIL5_1" }
+. PIC_HUNGRY = { t="HUNGRY",  f="FLAT1" }
+
+. PIC_MONA    = { t="MONA",     f="CEIL5_1" }
+. PIC_VENUS   = { t="VENUSHS",  f="CEIL5_1" }
+. PIC_VINCENT = { t="VINCENT",  f="CEIL5_1" }
+. PIC_SCREAM  = { t="MUNCH",    f="CEIL5_1" }
+. PIC_NUN     = { t="SW1STRTN", f="CEIL5_1" }
+. PIC_BORING  = { t="ART2",     f="CEIL5_1" }
+
+  SIGN_ENTER    = { t="LITE5",    f="CEIL5_1" }
+  SIGN_WELCOME1 = { t="COMPTALL", f="CEIL5_1" }
+  SIGN_WELCOME2 = { t="COMPUTE1", f="CEIL5_1" }
+  SIGN_GALACTIC = { t="NUKE24",   f="CEIL5_1" }
+
+  SIGN_DINER    = { t="NUKEDGE1", f="CEIL5_1" }
+  SIGN_MUSEUM   = { t="SW2GRAY",  f="CEIL5_1" }
+  SIGN_SEWER    = { t="SW2GRAY1", f="CEIL5_1" }
+  SIGN_CINEMA   = { t="CINEMA",   f="CEIL5_1" }
+
+. BLUE_POSTER1 = { t="POSTER1", f="FLOOR1_1" }
+. BLUE_POSTER2 = { t="POSTER2", f="FLOOR1_1" }
+. BLUE_POSTER3 = { t="POSTER3", f="FLOOR1_1" }
+  BLUE_CUPBD   = { t="GRAYPOIS", f="FLOOR1_1" }
+
+. TAN_THEATRE1 = { t="THEATRE1", f="FLOOR1_1" }  --
+. TAN_THEATRE2 = { t="THEATRE2", f="FLOOR1_1" }  -- Note: on blue walls now
+. TAN_THEATRE3 = { t="THEATRE3", f="FLOOR1_1" }  --
+. TAN_MENU     = { t="FOODMENU", f="FLAT2" }
+
+. BENCH_CANDY   = { t="CANDY",   f="CEIL5_1" }
+. BENCH_POPCORN = { t="POPCORN", f="CEIL5_1" }
+
+  DGRAY_FLOOR = { f="FLOOR4_1", t="COMPSPAN" }
+
+  BROWN_TILE = { f="FLOOR4_5", t="EXITSIGN" }
+  WHITE_TILE = { f="FLOOR4_6", t="SW2SATYR" }
+  GREEN_TILE = { f="FLOOR4_8", t="STARG1" }
+  RED_TILE   = { f="STEP2",    t="STONE3" }
 
 
   ---- NEW STUFF ----
