@@ -697,15 +697,205 @@ CHEX3.MATERIALS =
 
   --- new Chex 1 / 2 stuff ---
 
+  PLUSH = { t="PLUSH", f="CFLAT2" }
+
   CINEMA_FLASHY = { t="ROCKRED1", f="CEIL5_1" }
+
+  CAVE_ROCKY = { t="BAZOIK", f="CEIL3_1" }
 
   GREEN_PIPE1 = { t="SEWER_A", f="ENDFLAT2" }
   GREEN_PIPE2 = { t="SEWER_B", f="ENDFLAT2" }
 
+  PIC_PAINTING  = { t="ART1",  f="CEIL5_1" }
+
+  BLUE_SLOPE_DN = { t="STONPOIS", f="FLAT5_6" }  -- NB: 256 units tall
+  BLUE_SLOPE_UP = { t="SUPPORT2", f="FLAT5_6" }  -- 
+
+  TAN_STORAGE  = { t="STORAGE",  f="FLAT1" }
+  STEEL_GRATE2 = { t="WORMHOL1", f="CEIL3_2" }
+
+  STARPORT_METER  = { t="GSTONE2", f="FLAT5_6" }
+
+  WDOOR_HYDRO1 = { t="CJHYDRO1", f="FLAT5_6" }
+
 
   ---- TOTALLY NEW STUFF ----
 
-  -- TODO
+  -- walls --
+
+  CHEX_METRO = { t="PLAT2", f="FLOOR1_1" }
+
+  PIPE_TALL = { t="PIPE2", f="FLAT2" }
+
+  GRAY_BRICKS  = { t="BROWNHUG", f="FLAT5_6" }
+  BRICK_WALL   = { t="SP_DUDE1", f="BROWN" }
+  BRICK_W_ARCH = { t="ICKDOOR1", f="BROWN" }
+  BRICK_W_COL  = { t="WOOD1",    f="BROWN" }
+
+  ANIM_TRAJECT = { t="FIREBLU1", f="CEIL5_1" }
+  ANIM_FLOURO  = { t="FIREWALB", f="LABFLAT" }
+  ANIM_PLASMA  = { t="FIRELAV3", f="FLOOR0_3" }
+
+  SHIP_WINDOW1 = { t="ICKWALL3", f="XX" }
+  SHIP_WINDOW2 = { t="ICKWALL4", f="XX" }
+
+  CJBLUDR0 = { t="CJBLUDR0", f="XX" }
+  CJCELR01 = { t="CJCELR01", f="XX" }
+  CJCLIF01 = { t="CJCLIF01", f="XX" }
+  CJCLIF02 = { t="CJCLIF02", f="XX" }
+  CJCRAT01 = { t="CJCRAT01", f="XX" }
+  CJCRAT02 = { t="CJCRAT02", f="XX" }
+  CJCRAT03 = { t="CJCRAT03", f="XX" }
+  CJCRAT04 = { t="CJCRAT04", f="XX" }
+  CJCRAT05 = { t="CJCRAT05", f="XX" }
+
+  CJCOMM01 = { t="CJCOMM01", f="XX" }
+  CJCOMM02 = { t="CJCOMM02", f="XX" }
+  CJCOMM03 = { t="CJCOMM03", f="XX" }
+  CJCOMM04 = { t="CJCOMM04", f="XX" }
+  CJCOMM05 = { t="CJCOMM05", f="XX" }
+  CJCOMM06 = { t="CJCOMM06", f="XX" }
+  CJCOMM07 = { t="CJCOMM07", f="XX" }
+  CJCOMM08 = { t="CJCOMM08", f="XX" }
+  CJCOMM09 = { t="CJCOMM09", f="XX" }
+  CJCOMM10 = { t="CJCOMM10", f="XX" }
+
+  CJCOMM11 = { t="CJCOMM11", f="XX" }
+  CJCOMM12 = { t="CJCOMM12", f="XX" }
+  CJCOMM13 = { t="CJCOMM13", f="XX" }
+  CJCOMM14 = { t="CJCOMM14", f="XX" }
+  CJCOMM15 = { t="CJCOMM15", f="XX" }
+  CJCOMM16 = { t="CJCOMM16", f="XX" }
+  CJCOMM17 = { t="CJCOMM17", f="XX" }
+  CJCOMM18 = { t="CJCOMM18", f="XX" }
+  CJCOMM19 = { t="CJCOMM19", f="XX" }
+  CJCOMM20 = { t="CJCOMM20", f="XX" }
+  CJCOMM21 = { t="CJCOMM21", f="XX" }
+  CJCOMM22 = { t="CJCOMM22", f="XX" }
+  CJCOMM23 = { t="CJCOMM23", f="XX" }
+
+  CJDOOR01 = { t="CJDOOR01", f="XX" }
+  CJDOOR02 = { t="CJDOOR02", f="XX" }
+  CJDOOR03 = { t="CJDOOR03", f="XX" }
+  CJDOOR04 = { t="CJDOOR04", f="XX" }
+  CJFLDR01 = { t="CJFLDR01", f="XX" }
+  CJFLDR02 = { t="CJFLDR02", f="XX" }
+  CJFLDR03 = { t="CJFLDR03", f="XX" }
+  CJFLDR04 = { t="CJFLDR04", f="XX" }
+  CJFLDR05 = { t="CJFLDR05", f="XX" }
+
+  CJLODG01 = { t="CJLODG01", f="XX" }
+  CJLODG02 = { t="CJLODG02", f="XX" }
+  CJLODG03 = { t="CJLODG03", f="XX" }
+  CJLODG04 = { t="CJLODG04", f="XX" }
+  CJLODG05 = { t="CJLODG05", f="XX" }
+  CJLODG06 = { t="CJLODG06", f="XX" }
+  CJLODG07 = { t="CJLODG07", f="XX" }
+  CJLODG08 = { t="CJLODG08", f="XX" }
+  CJLODG09 = { t="CJLODG09", f="XX" }
+  CJLODG10 = { t="CJLODG10", f="XX" }
+  CJLODG11 = { t="CJLODG11", f="XX" }
+  CJLODG12 = { t="CJLODG12", f="XX" }
+  CJLODG13 = { t="CJLODG13", f="XX" }
+  CJLODG14 = { t="CJLODG14", f="XX" }
+  CJLODG15 = { t="CJLODG15", f="XX" }
+  CJLODG16 = { t="CJLODG16", f="XX" }
+  CJLODG17 = { t="CJLODG17", f="XX" }
+
+  CJMETE01 = { t="CJMETE01", f="XX" }
+  CJMINE01 = { t="CJMINE01", f="XX" }
+  CJMINE02 = { t="CJMINE02", f="XX" }
+  CJREDDR0 = { t="CJREDDR0", f="XX" }
+  CJSHIP01 = { t="CJSHIP01", f="XX" }
+  CJSHIP02 = { t="CJSHIP02", f="XX" }
+  CJSHIP03 = { t="CJSHIP03", f="XX" }
+  CJSHIP04 = { t="CJSHIP04", f="XX" }
+  CJSHIP05 = { t="CJSHIP05", f="XX" }
+
+  CJSPLAT1 = { t="CJSPLAT1", f="XX" }
+  CJSW1_1  = { t="CJSW1_1",  f="XX" }
+  CJSW1_2  = { t="CJSW1_2",  f="XX" }
+  CJTRAI01 = { t="CJTRAI01", f="XX" }
+  CJTRAI02 = { t="CJTRAI02", f="XX" }
+  CJTRAI03 = { t="CJTRAI03", f="XX" }
+  CJTRAI04 = { t="CJTRAI04", f="XX" }
+  CJYELDR0 = { t="CJYELDR0", f="XX" }
+
+  CJVILL01 = { t="CJVILL01", f="XX" }
+  CJVILL02 = { t="CJVILL02", f="XX" }
+  CJVILL03 = { t="CJVILL03", f="XX" }
+  CJVILL04 = { t="CJVILL04", f="XX" }
+  CJVILL05 = { t="CJVILL05", f="XX" }
+  CJVILL06 = { t="CJVILL06", f="XX" }
+  CJVILL07 = { t="CJVILL07", f="XX" }
+  CJVILL08 = { t="CJVILL08", f="XX" }
+  CJVILL09 = { t="CJVILL09", f="XX" }
+  CJVILL10 = { t="CJVILL10", f="XX" }
+  CJVILL11 = { t="CJVILL11", f="XX" }
+
+  CJCOMM24 = { t="CJCOMM24", f="XX" }
+  CJCITY01 = { t="CJCITY01", f="XX" }
+  CJLOGO1  = { t="CJLOGO1",  f="XX" }
+  CJLOGO2  = { t="CJLOGO2",  f="XX" }
+  CJSHIPBG = { t="CJSHIPBG", f="XX" }
+
+  -- floors --
+
+  BOOTHF1 = { f="BOOTHF1", t="XX" }
+  BOOTHF2 = { f="BOOTHF2", t="XX" }
+  BOOTHF3 = { f="BOOTHF3", t="XX" }
+  BOOTHF4 = { f="BOOTHF4", t="XX" }
+
+  CJFCOMM1 = { f="CJFCOMM1", t="XX" }
+  CJFCOMM2 = { f="CJFCOMM2", t="XX" }
+  CJFCOMM3 = { f="CJFCOMM3", t="XX" }
+  CJFCOMM4 = { f="CJFCOMM4", t="XX" }
+  CJFCOMM5 = { f="CJFCOMM5", t="XX" }
+  CJFCOMM6 = { f="CJFCOMM6", t="XX" }
+  CJFCOMM7 = { f="CJFCOMM7", t="XX" }
+
+  CJFCRA01 = { f="CJFCRA01", t="XX" }
+  CJFCRA02 = { f="CJFCRA02", t="XX" }
+  CJFCRA03 = { f="CJFCRA03", t="XX" }
+  CJFFLEM1 = { f="CJFFLEM1", t="XX" }
+  CJFFLEM2 = { f="CJFFLEM2", t="XX" }
+  CJFFLEM3 = { f="CJFFLEM3", t="XX" }
+  CJFGRAS1 = { f="CJFGRAS1", t="XX" }
+
+  CJFLOD01 = { f="CJFLOD01", t="XX" }
+  CJFLOD02 = { f="CJFLOD02", t="XX" }
+  CJFLOD03 = { f="CJFLOD03", t="XX" }
+  CJFLOD04 = { f="CJFLOD04", t="XX" }
+  CJFLOD05 = { f="CJFLOD05", t="XX" }
+  CJFLOD06 = { f="CJFLOD06", t="XX" }
+  CJFLOD07 = { f="CJFLOD07", t="XX" }
+  CJFLOD08 = { f="CJFLOD08", t="XX" }
+  CJFMINE1 = { f="CJFMINE1", t="XX" }
+  CJFSHIP1 = { f="CJFSHIP1", t="XX" }
+  CJFSHIP2 = { f="CJFSHIP2", t="XX" }
+  CJFSHIP3 = { f="CJFSHIP3", t="XX" }
+
+  CJFTRA01 = { f="CJFTRA01", t="XX" }
+  CJFTRA02 = { f="CJFTRA02", t="XX" }
+  CJFTRA03 = { f="CJFTRA03", t="XX" }
+  CJFTRA04 = { f="CJFTRA04", t="XX" }
+  CJFVIL01 = { f="CJFVIL01", t="XX" }
+  CJFVIL02 = { f="CJFVIL02", t="XX" }
+  CJFVIL03 = { f="CJFVIL03", t="XX" }
+  CJFVIL04 = { f="CJFVIL04", t="XX" }
+  CJFVIL05 = { f="CJFVIL05", t="XX" }
+  CJFVIL06 = { f="CJFVIL06", t="XX" }
+
+  MARS_GROUND = { f="ENDFLAT3", t="XX" }
+
+  SIMPLE_TILE = { f="FLAT1_1", t="XX" }
+  WOOD_CRATOP = { f="FLAT5_7", t="XX" }
+  YELLOWISH   = { f="FLAT5_8", t="XX" }
+
+  FLOURO_LITE = { f="LABFLAT", t="XX" }
+
+  STEEL32 = { f="STEEL32", t="XX" }
+  STEEL64 = { f="STEEL64", t="XX" }
 }
 
 
