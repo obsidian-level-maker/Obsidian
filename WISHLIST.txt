@@ -352,7 +352,10 @@ NO:  CSG DOOM: support entity.light
 
 !!  get them working
 
--  make a decent SLIME texture (especially for CQ2)
+-  finish Chex 3 MATERIALS table (the "XX" stuff)
+
+?  a pwad with textures/flats to smooth out compat issues
+   and make certain materials more usable.
 
 
 ----------------------------------------------------------------
@@ -570,6 +573,8 @@ Name generator:
 ----------------------------------------------------------------
   PIPE DREAMS
 ----------------------------------------------------------------
+
+*  diagonal chunks
 
 >>  teleporters!   (RED is two-way, WHITE is one-way)
 
