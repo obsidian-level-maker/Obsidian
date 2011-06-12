@@ -39,6 +39,7 @@ CHANGES (since 3.57)
 - support FreeDoom 0.7
 - basic support for HacX 1.2
 - basic support for Chex Quest 1 and 2
+- Doom themes for Episodes 2 and 4, courtesy Mr Chris
 
 + customised Lua language:
   - optional commas at end of line in data tables
