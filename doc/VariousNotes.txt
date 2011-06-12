@@ -71,12 +71,27 @@ Cycles
      connection map, there would only be a single node for the
      group of rooms in a cycle.
 
+  +  each room in a cycle needs at least two connections to
+     other rooms (possibly the same one) in the cycle.
+
+     Two rooms in cycle: AB AB
+
+     Three rooms: AB BC CA / AB AB CB CB / etc..
+
+     Four rooms: AB BC CD DA / etc..
+
+  +  so total number of connections: min = #rooms
+                                     max = (#rooms - 1) * 2
+
+  +  never use teleporters (or as a gimmick use them for all
+     cycle conns and not for normal connections).
+
   -  I really doubt cycles would add much to a level.
      However some people may like the non-linearity which it
      introduces.
 
   -  Adding extra locked doors between two arenas (especially
-     using different rooms that the main locked door) is another
+     using different rooms than the main locked door) is another
      way to create a cycle (these are probably more interesting).
      An example is the blue keyed door in E1M2 of Quake.
 
@@ -85,7 +100,7 @@ Cycles
      shortcut to earlier parts of the level.
 
   -  a cycle consisting of three rooms, each connected by one-way
-     routes (e.g. fall / fall / one-way lift) could be intersting.
+     routes (e.g. fall / fall / one-way lift) could be interesting.
 
   -  when a cycle (treated as a single node) would have two or more
      locks coming off it, then it should try hard to ensure that
