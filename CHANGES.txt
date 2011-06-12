@@ -44,7 +44,7 @@ CHANGES (since 3.57)
 + customised Lua language:
   - optional commas at end of line in data tables
   - simpler table traversal with new 'each' syntax
-  - ternary operator of the form: (X ? Y , Z)
+  - ternary operator of the form: (X ? Y ; Z)
   - continue statement
   - alternative inequality operator: !=
 

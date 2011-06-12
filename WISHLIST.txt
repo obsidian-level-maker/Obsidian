@@ -266,8 +266,6 @@ Console:
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 
--  use semicolon for ternary operator?
-
 
 ----------------------------------------------------------------
   DOOM and DOOM II

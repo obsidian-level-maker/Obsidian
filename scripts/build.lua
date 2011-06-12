@@ -1989,7 +1989,7 @@ function shadowify_brush(coords, dist)
 
   for i = 1,#coords do
     local v1 = coords[i]
-    local v2 = coords[(i < #coords ? i+1, 1)]
+    local v2 = coords[(i < #coords ? i+1 ; 1)]
 
     local dx = v2.x - v1.x
     local dy = v2.y - v1.y
@@ -2009,7 +2009,7 @@ function shadowify_brush(coords, dist)
   local new_coords = {}
 
   for i = 1,#coords do
-    local P = coords[(i > 1 ? i-1, #coords)]
+    local P = coords[(i > 1 ? i-1 ; #coords)]
     local N = coords[i]
 
     if not (P.dark or N.dark) then

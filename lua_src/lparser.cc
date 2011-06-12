@@ -688,7 +688,7 @@ static void ifexpr (LexState *ls, expdesc *v) {
   luaK_concat(fs, &escapelist, luaK_jump(fs));
   luaK_patchtohere(fs, condexit);
 
-  checknext(ls, ',');
+  checknext(ls, ';');
   expr(ls, v);					/* eval FALSE part */
   luaK_exp2reg(fs, v, reg);			/* set result to reg. */
   luaK_patchtohere(fs, escapelist);
@@ -702,7 +702,7 @@ static void prefixexp (LexState *ls, expdesc *v) {
       int line = ls->linenumber;
       luaX_next(ls);
       // -AJA- 2011/04/16:
-      // support a ternary operator in the form: (X ? Y , Z)
+      // support a ternary operator in the form: (X ? Y ; Z)
       // based on Ryota Hirose's 2010/09/14 patch.
       expr(ls, v);
       if (ls->t.token == '?')

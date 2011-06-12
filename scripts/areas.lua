@@ -166,8 +166,8 @@ function Areas_handle_connections()
       cy1 = math.imid(sy1, sy2)
       cy2 = cy1
 
-      cx1 = (dir == 4 ? K1.sx1, K1.sx2)
-      cx2 = (dir == 4 ? K2.sx2, K2.sx1)
+      cx1 = (dir == 4 ? K1.sx1 ; K1.sx2)
+      cx2 = (dir == 4 ? K2.sx2 ; K2.sx1)
     end
 
     C1 = SEEDS[cx1][cy1].chunk
@@ -212,7 +212,7 @@ function Areas_handle_connections()
       assert(sx1 <= sx2)
 
       sx = math.imid(sx1, sx2)
-      sy = (dir == 2 ? K.sy2, K.sy1)
+      sy = (dir == 2 ? K.sy2 ; K.sy1)
     else
       local sy1 = math.max(C.sy1, K.sy1)
       local sy2 = math.min(C.sy2, K.sy2)
@@ -220,7 +220,7 @@ function Areas_handle_connections()
       assert(sy1 <= sy2)
 
       sy = math.imid(sy1, sy2)
-      sx = (dir == 4 ? K.sx2, K.sx1)
+      sx = (dir == 4 ? K.sx2 ; K.sx1)
     end
 
     C2 = SEEDS[sx][sy].chunk
@@ -523,11 +523,11 @@ function Areas_important_stuff()
 gui.debugf("create_a_path: %s : %s --> %s\n", R:tostr(), C1:tostr(), C2:tostr())
 
     -- pick start and ending seeds
-    local sx = (C2.sx1 > C1.sx1 ? C1.sx2, C1.sx1)
-    local sy = (C2.sy1 > C1.sy1 ? C1.sy2, C1.sy1)
+    local sx = (C2.sx1 > C1.sx1 ? C1.sx2 ; C1.sx1)
+    local sy = (C2.sy1 > C1.sy1 ? C1.sy2 ; C1.sy1)
 
-    local ex = (C1.sx1 > C2.sx1 ? C2.sx2, C2.sx1)
-    local ey = (C1.sy1 > C2.sy1 ? C2.sy2, C2.sy1)
+    local ex = (C1.sx1 > C2.sx1 ? C2.sx2 ; C2.sx1)
+    local ey = (C1.sy1 > C2.sy1 ? C2.sy2 ; C2.sy1)
 
     -- coordinates must be relative for A* algorithm
     sx, sy = (sx - R.sx1) + 1, (sy - R.sy1) + 1

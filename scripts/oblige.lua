@@ -538,7 +538,7 @@ function ob_read_all_config(print_to_log)
   for _,name in ipairs(table.keys_sorted(OB_MODULES)) do
     local def = OB_MODULES[name]
 
-    do_line("@%s = %s", name, (def.enabled ? "1", "0"))
+    do_line("@%s = %s", name, (def.enabled ? "1" ; "0"))
 
     -- module options
     if def.options then

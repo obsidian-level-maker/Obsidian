@@ -1597,8 +1597,8 @@ end
 
 
 function CHEX3.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 3, 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1, 5)
+  local EP_NUM  = (OB_CONFIG.length == "full"   ? 3 ; 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 2 end
 

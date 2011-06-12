@@ -121,8 +121,8 @@ end
 
 
 function SECTION_CLASS.seg_neighbor(K, dir)
-  local sx = (dir == 6 ? K.sx2 , K.x1)
-  local sy = (dir == 8 ? K.sy2 , K.y1)
+  local sx = (dir == 6 ? K.sx2 ; K.x1)
+  local sy = (dir == 8 ? K.sy2 ; K.y1)
 
   local nx, ny = geom.nudge(sx, sy, dir)
 
@@ -172,8 +172,8 @@ end
 
 
 function SEGMENT_CLASS.neighbor(G, dir)
-  local sx = (dir == 6 ? G.sx2 , G.x1)
-  local sy = (dir == 8 ? G.sy2 , G.y1)
+  local sx = (dir == 6 ? G.sx2 ; G.x1)
+  local sy = (dir == 8 ? G.sy2 ; G.y1)
 
   local nx, ny = geom.nudge(sx, sy, dir)
 
@@ -186,8 +186,8 @@ end
 
 
 function SEGMENT_CLASS.section_nb(G, dir)
-  local sx = (dir == 6 ? G.sx2 , G.x1)
-  local sy = (dir == 8 ? G.sy2 , G.y1)
+  local sx = (dir == 6 ? G.sx2 ; G.x1)
+  local sy = (dir == 8 ? G.sy2 ; G.y1)
 
   local nx, ny = geom.nudge(sx, sy, dir)
 
@@ -1060,8 +1060,8 @@ function Plan_contiguous_sections()
   -- touches a nearby section of the same room (no hallway in between).
 
   local function nb_count(K, dir)
-    return (K:same_room(geom.RIGHT[dir]) ? 1 , 0) +
-           (K:same_room(geom. LEFT[dir]) ? 1 , 0)
+    return (K:same_room(geom.RIGHT[dir]) ? 1 ; 0) +
+           (K:same_room(geom. LEFT[dir]) ? 1 ; 0)
   end
 
 

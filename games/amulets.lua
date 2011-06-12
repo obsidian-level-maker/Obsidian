@@ -363,8 +363,8 @@ end
 
 
 function AMULETS.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 7, 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1, 5)
+  local EP_NUM  = (OB_CONFIG.length == "full"   ? 7 ; 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
   for episode = 1,EP_NUM do
     local ep_info = AMULETS.EPISODES["episode" .. episode]

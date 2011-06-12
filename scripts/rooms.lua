@@ -105,7 +105,7 @@ end
 
 function ROOM_CLASS.longstr(R)
   return string.format("%s_%s [%d,%d..%d,%d]",
-      (R.parent ? "SUB_ROOM", "ROOM"),
+      (R.parent ? "SUB_ROOM" ; "ROOM"),
       R.id, R.kx1, R.ky1, R.kx2, R.ky2)
 end
 
@@ -349,18 +349,18 @@ function Rooms_setup_symmetry()
 
   local function prob_for_match(old_sym, new_sym)
     if old_sym == new_sym then
-      return (old_sym == "xy" ? 8000, 400)
+      return (old_sym == "xy" ? 8000 ; 400)
 
     elseif new_sym == "xy" then
       -- rarely upgrade from NONE --> XY symmetry
-      return (old_sym ? 30, 3)
+      return (old_sym ? 30 ; 3)
 
     elseif old_sym == "xy" then
       return 150
 
     else
       -- rarely change from X --> Y or vice versa
-      return (old_sym ? 6, 60)
+      return (old_sym ? 6 ; 60)
     end
   end
 
@@ -418,7 +418,7 @@ function Rooms_setup_symmetry()
 
     local index = rand.index_by_probs(probs)
 
-    R.symmetry = (index > 1 ? syms[index], nil)
+    R.symmetry = (index > 1 ? syms[index] ; nil)
   end
 
 
@@ -567,7 +567,7 @@ function Room_select_picture(R, v_space, index)
   v_space = v_space - 16
   -- FIXME: needs more v_space checking
 
-  if THEME.logos and rand.odds((LEVEL.has_logo ? 7,40)) then
+  if THEME.logos and rand.odds((LEVEL.has_logo ? 7 ; 40)) then
     LEVEL.has_logo = true
     return rand.key_by_probs(THEME.logos)
   end
@@ -897,7 +897,7 @@ function Rooms_add_sun()
     local x = math.sin(angle * math.pi / 180.0) * sun_r
     local y = math.cos(angle * math.pi / 180.0) * sun_r
 
-    local level = (i == 1 ? 32, 6)
+    local level = (i == 1 ? 32 ; 6)
 
     Trans.entity("sun", x, y, sun_h, { light=level })
   end
@@ -933,8 +933,8 @@ function Rooms_intermission_camera()
   rand.shuffle(SIDES)
 
   for _,side in pairs(SIDES) do
-    local kx = (side == 1 or side == 7 ? room.kx1, room.kx2)
-    local ky = (side == 1 or side == 3 ? room.ky1, room.ky2)
+    local kx = (side == 1 or side == 7 ? room.kx1 ; room.kx2)
+    local ky = (side == 1 or side == 3 ? room.ky1 ; room.ky2)
 
     if SECTIONS[kx][ky].room == room then
       K = SECTIONS[kx][ky]

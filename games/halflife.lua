@@ -433,8 +433,8 @@ end
 
 
 function HALFLIFE.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 4, 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1, 7)
+  local EP_NUM  = (OB_CONFIG.length == "full"   ? 4 ; 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 

@@ -613,7 +613,7 @@ end
       if dir == 6 then bx1 = bx2 - 40 end
 
       brush = Trans.bare_quad(bx1, by1, bx2, by2)
-      gui.spots_fill_poly(brush, (C.link[dir] ? 2, 1));
+      gui.spots_fill_poly(brush, (C.link[dir] ? 2 ; 1));
     end
 
 
