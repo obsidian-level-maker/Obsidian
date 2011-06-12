@@ -343,14 +343,22 @@ NO:  CSG DOOM: support entity.light
   HACX
 ----------------------------------------------------------------
 
++  complete the MATERIALS table
+
+-  finish the ENTITIES table (trees etc)
+
 
 ----------------------------------------------------------------
   CHEX QUEST
 ----------------------------------------------------------------
 
-!!  get them working
++  finish Chex 3 MATERIALS table (the "XX" stuff)
 
--  finish Chex 3 MATERIALS table (the "XX" stuff)
++  implement basic theme for Chex 2 and Chex 3
+
+-  make some good themes :)
+
+-  ensure that Oblige logos work in all games
 
 ?  a pwad with textures/flats to smooth out compat issues
    and make certain materials more usable.
@@ -411,6 +419,8 @@ Sam's suggestions:
 ----------------------------------------------------------------
   DUKE NUKEM 3D
 ----------------------------------------------------------------
+
+!!  get it working again (in case it broke)
 
 !  exit buttons
 
