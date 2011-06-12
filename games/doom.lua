@@ -3273,6 +3273,100 @@ DOOM1.LEVEL_THEMES =
 
     monster_prefs = { zombie=0.3, shooter=0.6, skull=2.0 }
   }
+
+
+  -- Thy Flesh Consumed by Mr. Chris (chrisdragon425@yahoo.com)
+  -- Basically a modified version of doom_hell1 to match id's E4 better
+
+  doom_flesh1 =
+  {
+    prob = 40,
+
+    liquids = { lava=30, blood=50, nukage=10, water=20 }
+
+    building_walls =
+    {
+      MARBLE1=10, MARBLE2=10, MARBLE3=10, WOOD1=30,
+      GSTVINE2=12, SLADWALL=10, GSTONE1=15, WOOD5=20,
+      SKINMET1=3, SKINMET2=3, GSTVINE1=12, WOOD3=15, STONE2=3,
+
+      SKINTEK1=10, SKINTEK2=10, BROWNGRN=7, BROVINE2=5, STONE3=3,
+    }
+
+    building_floors =
+    {
+      DEM1_5=10, DEM1_6=10, FLAT5_7=12, FLAT10=12,
+      FLOOR7_1=10, FLAT1=12, FLOOR5_2=10, FLAT5_8=10,
+      FLOOR5_4=10, FLOOR5_3=10, FLAT5=10, FLAT5_4=15,
+      FLOOR7_2=10, FLAT5_1=15, FLAT5_2=15, FLAT8=10,
+    }
+
+    building_ceilings =
+    {
+      FLAT1=10, FLAT10=10, FLAT5_5=10, FLOOR7_2=6, DEM1_6=10,
+      FLOOR6_1=10, FLOOR6_2=10, MFLR8_1=12, FLAT5_4=10, SFLR6_1=5,
+      SFLR6_2=5, CEIL1_1=5, FLAT5_1=12, FLAT5_2=12, FLAT8=8,
+    }
+
+    building_corners =
+    {
+      SKULWALL=8, SKULWAL3=7, SKSNAKE1=5, SKSNAKE2=5, ASHWALL=5, METAL=15
+    }
+
+    courtyard_floors =
+    {
+      ASHWALL=12, FLAT5_7=10, FLAT1_1=15, FLAT5_4=10,
+      FLAT10=20, FLAT5_8=10, MFLR8_4=10, FLOOR7_1=15,
+      SFLR6_1=8, MFLR8_2=5, FLAT1_2=10, MFLR8_3=10,
+    }
+
+    cave_walls =
+    {
+      ROCKRED1=70, SP_ROCK1=50, BROWNHUG=15,
+      SKIN2=10, SKINFACE=20, SKSNAKE1=5, SKSNAKE2=5,
+      FIREBLU1=10, FIRELAVA=10, 
+    }
+
+    landscape_walls =
+    {
+      ASHWALL=30, GRAYVINE=30, SP_ROCK2=15,
+      SP_ROCK1=50, ROCKRED1=50, BROWNHUG=10,
+      SKSNAKE1=10, SKSNAKE2=10,
+    }
+
+    __logos = { carve=90, pill=50, neon=5 }
+
+    __pictures =
+    {
+      marbface=10, skinface=10, firewall=10,
+      spdude1=5, spdude2=5, spdude5=5, spine=2,
+
+      skulls1=8, skulls2=8, spdude3=3, spdude6=3,
+    }
+
+    __steps = { step1=50, step3=50, step4=50 }
+
+    __lifts = { platform=10, rusty=70, spine=15 }
+
+    keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
+
+    __exits = { skin_pillar=30, demon_pillar2=10 }
+
+    __switches = { sw_marble=50, sw_vine=50, sw_wood=50 }
+
+    __bars = { bar_wood=50, bar_metal=50 }
+
+    outer_fences = { ROCKRED1=25, SP_ROCK1=20, BROVINE2=10, GRAYVINE=10, MARBLE3=10, BROWNHUG=20 }
+
+    __crates = { crate1=0, crate2=0, comp=0, lite5=0, wood=50, ick=15, }
+
+    monster_prefs =
+    {
+      zombie=0.6, shooter=0.8, skull=1.2,
+      demon=2.0, spectre=1.2,
+      imp=2.0, baron=1.5, caco=0.8
+    }
+  }
 }
 
 
@@ -4557,7 +4651,7 @@ DOOM1.ORIGINAL_THEMES =
   "doom_tech"
   "doom_deimos"
   "doom_hell"
-  "doom_hell"
+  "doom_flesh"
 }
 
 DOOM2.ORIGINAL_THEMES =
@@ -4929,38 +5023,53 @@ OB_GAMES["doom2"] =
 OB_THEMES["doom_tech"] =
 {
   label = "Tech"
+  priority = 8
   for_games = { doom1=1, doom2=1 }
   name_theme = "TECH"
-  mixed_prob = 50
+  mixed_prob = 60
 }
 
 OB_THEMES["doom_deimos"] =
 {
   label = "Deimos"
+  priority = 6
   for_games = { doom1=1 }
   name_theme = "TECH"
   mixed_prob = 30
 }
 
-OB_THEMES["doom_urban"] =
-{
-  label = "Urban"
-  for_games = { doom2=1 }
-  name_theme = "URBAN"
-  mixed_prob = 50
-}
-
 OB_THEMES["doom_hell"] =
 {
   label = "Hell"
+  priority = 4
   for_games = { doom1=1, doom2=1 }
   name_theme = "GOTHIC"
+  mixed_prob = 50
+}
+
+OB_THEMES["doom_flesh"] =
+{
+  label = "Thy Flesh"
+  priority = 2
+  for_games = { ultdoom=1 }
+  name_theme = "GOTHIC"
+  mixed_prob = 20
+}
+
+
+OB_THEMES["doom_urban"] =
+{
+  label = "Urban"
+  priority = 6
+  for_games = { doom2=1 }
+  name_theme = "URBAN"
   mixed_prob = 50
 }
 
 OB_THEMES["doom_wolf"] =
 {
   label = "Wolfenstein",
+  priority = 2
   for_games = { doom2=1 }
   name_theme = "URBAN"
 
