@@ -5,7 +5,7 @@
 --  Oblige Level Maker
 --
 --  Copyright (C) 2008-2011 Andrew Apted
---  Copyright (C) 2008-2009 JohnnyRancid
+--  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
 --  Copyright (C)      2010 Chris Pisarczyk
 --
@@ -21,8 +21,8 @@
 --
 ----------------------------------------------------------------
 --
---  Thanks to JohnnyRancid who contributed many of the
---  complete level names and a lot of cool words.
+--  Thanks to Jon Vail (a.k.a JohnnyRancid) who contributed
+--  many of the complete level names and lots of cool words.
 --
 --  Thanks to Enhas and Chris for their additions.
 --
