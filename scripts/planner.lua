@@ -26,11 +26,19 @@ class SECTION
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
-  x1, y1, x2, y2  -- map coordinates
-
   room : ROOM
 
   num_conn  -- number of connections
+}
+
+
+class SEGMENT 
+{
+  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
+
+  hall : HALL  -- NIL when unused
+
+  general_dir : keyword  -- "junction", "vert", "horiz"
 }
 
 
@@ -44,7 +52,8 @@ SECTION_W = 0
 SECTION_H = 0
 
 
-SECTION_CLASS = {}
+SECTION_CLASS = { }
+
 
 function SECTION_CLASS.new(x, y)
   local K = { kx=x, ky=y, num_conn=0 }
@@ -52,13 +61,16 @@ function SECTION_CLASS.new(x, y)
   return K
 end
 
+
 function SECTION_CLASS.tostr(K)
   return string.format("SECTION [%d,%d]", K.kx, K.ky)
 end
 
+
 function SECTION_CLASS.update_size(K)
   K.sw, K.sh = geom.group_size(K.sx1, K.sy1, K.sx2, K.sy2)
 end
+
 
 function SECTION_CLASS.raw_nudge(K, dir, delta)
   if not delta then delta = 1 end
@@ -72,13 +84,14 @@ function SECTION_CLASS.raw_nudge(K, dir, delta)
   K:update_size()
 end
 
+
 function SECTION_CLASS.shrink(K, side)
   local ox1, oy1, ox2, oy2 = geom.side_coords(side, K.sx1, K.sy1, K.sx2, K.sy2)
 
-  if side == 2 then K.sy1 = K.sy1 + 1 ; K.y1 = K.y1 + SEED_SIZE end
-  if side == 8 then K.sy2 = K.sy2 - 1 ; K.y2 = K.y2 - SEED_SIZE end
-  if side == 4 then K.sx1 = K.sx1 + 1 ; K.x1 = K.x1 + SEED_SIZE end
-  if side == 6 then K.sx2 = K.sx2 - 1 ; K.x2 = K.x2 - SEED_SIZE end
+  if side == 2 then K.sy1 = K.sy1 + 1 end
+  if side == 8 then K.sy2 = K.sy2 - 1 end
+  if side == 4 then K.sx1 = K.sx1 + 1 end
+  if side == 6 then K.sx2 = K.sx2 - 1 end
 
   K:update_size()
 
@@ -91,6 +104,7 @@ function SECTION_CLASS.shrink(K, side)
   end end
 end
 
+
 function SECTION_CLASS.neighbor(K, dir, dist)
   local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
   if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
@@ -99,10 +113,26 @@ function SECTION_CLASS.neighbor(K, dir, dist)
   return SECTIONS[nx][ny]
 end
 
+
 function SECTION_CLASS.same_room(K, dir)
   local N = K:neighbor(dir)
   return N and N.room == K.room
 end
+
+
+function SECTION_CLASS.seg_neighbor(K, dir)
+  local sx = (dir == 6 ? K.sx2 , K.x1)
+  local sy = (dir == 8 ? K.sy2 , K.y1)
+
+  local nx, ny = geom.nudge(sx, sy, dir)
+
+  if not Seed_valid(nx, ny) then return nil end
+
+  local S = SEEDS[nx][ny]
+
+  return S.segment
+end
+
 
 function SECTION_CLASS.same_neighbors(K)
   local count = 0
@@ -113,6 +143,7 @@ function SECTION_CLASS.same_neighbors(K)
   end
   return count
 end
+
 
 function SECTION_CLASS.side_has_conn(K, side)
   for _,C in ipairs(K.room.conns) do
@@ -125,6 +156,50 @@ end
 
 ------------------------------------------------------------------------
 
+SEGMENT_CLASS = { }
+
+
+function SEGMENT_CLASS.new(x, y)
+  local K = { kx=x, ky=y, num_conn=0 }
+  table.set_class(K, SEGMENT_CLASS)
+  return K
+end
+
+
+function SEGMENT_CLASS.tostr(G)
+  return string.format("SEGMENT [%d,%d]", G.sx1, G.sy1)
+end
+
+
+function SEGMENT_CLASS.neighbor(G, dir)
+  local sx = (dir == 6 ? G.sx2 , G.x1)
+  local sy = (dir == 8 ? G.sy2 , G.y1)
+
+  local nx, ny = geom.nudge(sx, sy, dir)
+
+  if not Seed_valid(nx, ny) then return nil end
+
+  local S = SEEDS[nx][ny]
+
+  return S.segment
+end
+
+
+function SEGMENT_CLASS.section_nb(G, dir)
+  local sx = (dir == 6 ? G.sx2 , G.x1)
+  local sy = (dir == 8 ? G.sy2 , G.y1)
+
+  local nx, ny = geom.nudge(sx, sy, dir)
+
+  if not Seed_valid(nx, ny) then return nil end
+
+  local S = SEEDS[nx][ny]
+
+  return S.section
+end
+
+
+------------------------------------------------------------------------
 
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
@@ -985,8 +1060,8 @@ function Plan_contiguous_sections()
   -- touches a nearby section of the same room (no hallway in between).
 
   local function nb_count(K, dir)
-    return (K:same_room(geom.RIGHT[dir]) ? 1, 0) +
-           (K:same_room(geom. LEFT[dir]) ? 1, 0)
+    return (K:same_room(geom.RIGHT[dir]) ? 1 , 0) +
+           (K:same_room(geom. LEFT[dir]) ? 1 , 0)
   end
 
 
@@ -1293,11 +1368,11 @@ function Plan_make_seeds()
       S.expanded = nil
     end end
 
-    K.x1 = SEEDS[K.sx1][K.sy1].x1
-    K.y1 = SEEDS[K.sx1][K.sy1].y1
-
-    K.x2 = SEEDS[K.sx2][K.sy2].x2
-    K.y2 = SEEDS[K.sx2][K.sy2].y2
+---##    K.x1 = SEEDS[K.sx1][K.sy1].x1
+---##    K.y1 = SEEDS[K.sx1][K.sy1].y1
+---##
+---##    K.x2 = SEEDS[K.sx2][K.sy2].x2
+---##    K.y2 = SEEDS[K.sx2][K.sy2].y2
 
     if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
     if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end

@@ -38,7 +38,7 @@ class HALLWAY
 }
 
 
-class SEGMENT
+class SEGMENT     FIXME FIXME : moved def into planner.lua
 {
   nx, ny    -- place in network map
 
@@ -170,10 +170,10 @@ function Hallway_place_em()
 
   local function seg_to_char(SEG)
     if not SEG then return " " end
-    if SEG.used then return "#" end
-    if SEG.junction then return "+" end
-    if SEG.vert then return "|" end
-    if SEG.horiz then return "-" end
+    if SEG.hall then return "#" end
+    if SEG.general_dir == "junction" then return "+" end
+    if SEG.general_dir == "vert" then return "|" end
+    if SEG.general_dir == "horiz" then return "-" end
     return "?"
   end
 
@@ -319,8 +319,8 @@ function Hallway_place_em()
       local G = loc.G
 
       -- mark segment as used
-      assert(not G.used)
-      G.used = true
+      assert(not G.hall)
+      G.hall = hall
 
       -- store hallway in seed map
       for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
@@ -392,7 +392,7 @@ function Hallway_place_em()
     for dir = 2,8,2 do
       local G2 = G.link[dir]
 
-      if G2 and not G2.used and not seg_in_path(hall.path, G2) then
+      if G2 and not G2.hall and not seg_in_path(hall.path, G2) then
         table.insert(juncs, { G=G2, dir=dir })
       end
     end
@@ -472,7 +472,7 @@ function Hallway_place_em()
 
 
   local function trace_hall(G)
-    if G.used then return false end
+    if G.hall then return false end
 
     for loop = 1,15 do
       local hall = HALLWAY_CLASS.new()

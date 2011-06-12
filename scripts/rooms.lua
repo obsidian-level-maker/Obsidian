@@ -910,6 +910,8 @@ end
 function Rooms_intermission_camera()
   if GAME.format != "quake" then return end
 
+  -- !!!! FIXME: find location using chunks, not sections
+
   -- determine the room (biggest one, excluding starts and exits)
   local room
 
@@ -1125,7 +1127,7 @@ end
 
 
 
-function Layout_spots_in_room(R)
+function OLD__Layout_spots_in_room(R)
 
   local function remove_prefab(fab)
     -- OPTIMISE: do a bbox check
@@ -1252,7 +1254,7 @@ function Layout_spots_in_room(R)
 end
 
 
-function Layout_all_ceilings()
+function OLD__Layout_all_ceilings()
 
   local function is_middle(K)
     if K:same_room(2) and K:same_room(8) then return true end
