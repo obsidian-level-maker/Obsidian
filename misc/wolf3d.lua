@@ -560,7 +560,7 @@ WOLF.LEVEL_THEMES =
 
   wolf_bunker1 =
   {
-    room_size_table = { 0,20,60,20,3 },
+    room_size_table = { 20,60,20,3 }
 
     building_walls =
     {

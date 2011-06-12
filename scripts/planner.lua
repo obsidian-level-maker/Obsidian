@@ -146,9 +146,9 @@ end
 
 
 function SECTION_CLASS.side_has_conn(K, side)
-  for _,C in ipairs(K.room.conns) do
-    if C.K1 == K and C.dir == side    then return true end
-    if C.K2 == K and C.dir == 10-side then return true end
+  for _,D in ipairs(K.room.conns) do
+    if D.K1 == K and D.dir == side    then return true end
+    if D.K2 == K and D.dir == 10-side then return true end
   end
   return false
 end
@@ -159,15 +159,21 @@ end
 SEGMENT_CLASS = { }
 
 
-function SEGMENT_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0 }
+function SEGMENT_CLASS.new(sx1, sy1, sx2, sy2)
+  local K = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2 }
   table.set_class(K, SEGMENT_CLASS)
+  K:update_size()
   return K
 end
 
 
 function SEGMENT_CLASS.tostr(G)
   return string.format("SEGMENT [%d,%d]", G.sx1, G.sy1)
+end
+
+
+function SEGMENT_CLASS.update_size(G)
+  G.sw, G.sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
 end
 
 
@@ -269,17 +275,15 @@ end
 
 function Plan_create_sections(W, H)
 
-  local SIZE_TABLE = THEME.room_size_table or { 0,40,60,20,4 }
+  local SIZE_TABLE = THEME.room_size_table or { 40,60,20,4 }
 
   local border_seeds = PARAM.border_seeds or 2
   local free_seeds   = PARAM.free_seeds   or 4
 
+  assert(border_seeds >= 1)
+
 
   local function pick_sizes(W, limit)
-    local sizes = {}
-    local halls = {}
-    local total
-
     -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
     -- block to every section row and column for centered doors (etc).
 --[[
@@ -289,33 +293,44 @@ function Plan_create_sections(W, H)
     end
 --]]
 
-    -- take border seeds into account
-    limit = limit - border_seeds*2
-
     assert(W >= 2)
-    assert(limit >= W * 2)
+    assert(limit >= W * 3 + border_seeds * 2)
 
+    -- these two lists hold the result sizes
+    local halls = {}
+    local sizes = {}
+
+    halls[1]   = border_seeds
+    halls[1+W] = border_seeds
+
+    local total
+
+    -- try many times to find a usable set of sizes
     for loop = 1,50 do
-      total = 0
+      total = border_seeds * 2
 
       for x = 1,W do
-        sizes[x] = rand.index_by_probs(SIZE_TABLE)
+        sizes[x] = 1 + rand.index_by_probs(SIZE_TABLE)
         total = total + sizes[x]
+
         if x < W then
-          halls[x] = rand.index_by_probs({ 5, 80, 35 }) - 1
+          halls[1+x] = rand.sel(50, 1, 2)
           total = total + halls[x]
         end
       end
 
       if total <= limit then
-        return sizes, halls  -- OK!
+        return halls, sizes  -- OK!
       end
     end
 
-    gui.printf("Adjusting column sizes to fit...\n")
+    -- the above failed, so adjust the last set of sizes it made
+
+    gui.printf("Adjusting column/row sizes....\n")
 
     while total > limit do
-      local x = rand.irange(1,W)
+      -- find a section size to shrink
+      local x = rand.irange(1, W)
 
       while x < W and sizes[x] <= 2 do
         x = x + 1
@@ -327,31 +342,39 @@ function Plan_create_sections(W, H)
       end
 
       -- reduce fat hallways too
-      if rand.odds(5) then
-        for x = 1,W-1 do
-          if halls[x] >= 2 then halls[x] = 1 end
+      if total > limit and rand.odds(25) then
+        x = rand.irange(1, W-1)
+
+        while x < W-1 and halls[1+x] <= 1 do
+          x = x + 1
+        end
+
+        if x < W-1 then
+          halls[1+x] = halls[1+x] - 1
+          total = total - 1
         end
       end 
     end
 
-    return sizes, halls
+    return halls, sizes
   end
 
 
-  local function get_positions(size_list, hall_list)
-    local pos = {}
+  local function get_positions(W, hall_list, size_list)
+    local hall_pos = { 1 }
+    local sec_pos  = {}
 
-    pos[1] = 1 + border_seeds
-
-    for x = 1,#size_list - 1 do
-      pos[x+1] = pos[x] + size_list[x] + hall_list[x]
+    for x = 1,W do
+      sec_pos[x]    = hall_pos[x] + hall_list[x]
+      hall_pos[x+1] = sec_pos[x]  + size_list[x]
     end
 
-    return pos
+    return hall_pos, sec_pos
   end
 
 
-  local function get_hallways(pos_list, size_list, hall_list)
+  -- FIXME: REMOVE THIS
+  local function OLD__get_hallways(pos_list, size_list, hall_list)
     local net = {}
 
     -- seeds usable outside the map border
@@ -388,7 +411,7 @@ function Plan_create_sections(W, H)
 
   ---| Plan_create_sections |---
 
-  local limit = PARAM.seed_limit or 56
+  local limit = PARAM.seed_limit or 52
 
   -- reduce level size if rooms would become too small
   -- (2x2 seeds is the absolute minimum)
@@ -404,14 +427,17 @@ function Plan_create_sections(W, H)
   SECTION_W = W
   SECTION_H = H
 
-  local section_W, hall_W = pick_sizes(W, limit)
-  local section_H, hall_H = pick_sizes(H, limit - free_seeds)
+  local hall_W, section_W = pick_sizes(W, limit)
+  local hall_H, section_H = pick_sizes(H, limit - free_seeds)
 
-  local section_X = get_positions(section_W, hall_W)
-  local section_Y = get_positions(section_H, hall_H)
+  local hall_X, section_X = get_positions(W, hall_W, section_W)
+  local hall_Y, section_Y = get_positions(H, hall_H, section_H)
 
-  dump_sizes("Column widths: ", section_W, SECTION_W)
-  dump_sizes("Row heights:   ", section_H, SECTION_H)
+  dump_sizes("Section widths:  ", section_W, SECTION_W)
+  dump_sizes("Section heights: ", section_H, SECTION_H)
+
+  dump_sizes("Hall widths:  ", hall_W, SECTION_W+1)
+  dump_sizes("Hall heights: ", hall_H, SECTION_H+1)
 
 
   SECTIONS = table.array_2D(SECTION_W, SECTION_H)
@@ -437,6 +463,7 @@ function Plan_create_sections(W, H)
 
   --- remember hallway network ---
 
+  -- FIXME
   LEVEL.network_X = get_hallways(section_X, section_W, hall_W)
   LEVEL.network_Y = get_hallways(section_Y, section_H, hall_H)
 
