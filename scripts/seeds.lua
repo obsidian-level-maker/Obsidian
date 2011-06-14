@@ -51,8 +51,8 @@ require 'util'
 SEED_W = 0
 SEED_H = 0
 
-MAP_BASE_X = 0
-MAP_BASE_Y = 0
+BASE_X = 0
+BASE_Y = 0
 
 
 SEED_CLASS = {}
@@ -147,15 +147,15 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
-  MAP_BASE_X = -SEED_SIZE
-  MAP_BASE_Y = -SEED_SIZE
+  BASE_X = -SEED_SIZE
+  BASE_Y = -SEED_SIZE
 
   -- Centre the map : needed for Quake, Hexen2 (etc).
   -- This formula ensures that 'coord 0' is still a seed boundary,
   -- which is VITAL for the Quake visibility code.
   if PARAM.centre_map then
-    MAP_BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
-    MAP_BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
+    BASE_X = 0 - int(SEED_W / 2) * SEED_SIZE
+    BASE_Y = 0 - int(SEED_H / 2) * SEED_SIZE
   end
 
   for x = 1,SEED_W do for y = 1,SEED_H do
@@ -163,8 +163,8 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
     SEEDS[x][y] = S
 
-    S.x1 = MAP_BASE_X + (x-1) * SEED_SIZE
-    S.y1 = MAP_BASE_Y + (y-1) * SEED_SIZE
+    S.x1 = BASE_X + (x-1) * SEED_SIZE
+    S.y1 = BASE_Y + (y-1) * SEED_SIZE
 
     S.x2 = S.x1 + SEED_SIZE
     S.y2 = S.y1 + SEED_SIZE
