@@ -23,6 +23,8 @@
 
 #include <zlib.h>
 
+/* ZIP reading */
+
 bool ZIPF_OpenRead(const char *filename);
 void ZIPF_CloseRead(void);
 
@@ -36,6 +38,16 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer);
 void ZIPF_ListEntries(void);
 
 
+/* ZIP writing */
+
+bool ZIPF_OpenWrite(const char *filename);
+void ZIPF_CloseWrite(void);
+
+void ZIPF_NewLump(const char *name);
+bool ZIPF_AppendData(const void *data, int length);
+void ZIPF_FinishLump(void);
+
+
 /* ----- ZIP file structures ---------------------- */
 
 typedef struct
@@ -43,19 +55,20 @@ typedef struct
   char magic[4];
 
   u16_t req_version;
+
   u16_t flags;
   u16_t comp_method;
-
   u16_t file_time;  // MS-DOS format
-  u16_t file_data;  //
+  u16_t file_date;  //
 
-  u32_t crc;
-  u32_t compress_size;
-  u32_t real_size;
+  u32_t crc;            //
+  u32_t compress_size;  // these are zero when there is a trailer
+  u32_t real_size;      //
 
   u16_t name_length;
+  u16_t extra_length;
 
-  byte filename[1];  // variable size
+/* byte filename[]; */
 }
 raw_zip_local_header_t;
 
@@ -64,32 +77,42 @@ typedef struct
 {
   char magic[4];
 
+  u32_t crc;
+  u32_t compress_size;
+  u32_t real_size;
+}
+raw_zip_local_trailer_t;
+
+
+typedef struct
+{
+  char magic[4];
+
   u16_t made_version;
   u16_t req_version;
+
   u16_t flags;
   u16_t comp_method;
-
   u16_t file_time;  // MS-DOS format
-  u16_t file_data;  //
+  u16_t file_date;  //
 
   u32_t crc;
   u32_t compress_size;
   u32_t real_size;
 
   u16_t name_length;
-
   u16_t extra_length;
   u16_t comment_length;
 
-  u16_t disk_num;
+  u16_t start_disk;
 
   u16_t internal_attrib;
   u32_t external_attrib;
 
   // offset to the local header for this file
-  u32_t offset;
+  u32_t local_offset;
 
-  byte filename[1];  // variable size
+/* byte filename[]; */
 }
 raw_zip_central_header_t;
 
@@ -98,24 +121,11 @@ typedef struct
 {
   char magic[4];
 
-  u32_t crc;
-  u32_t compress_size;
-  u32_t real_size;
-}
-raw_zip_trailer_info_t;
+  u16_t this_disk;
+  u16_t central_dir_disk;
 
-
-typedef struct
-{
-  char magic[4];
-
-  this_disk;
-
-  start_disk
-
-  num_entries_on_disk
-
-  total_entries
+  u16_t disk_entries;
+  u16_t total_entries;
 
   u32_t dir_size;
   u32_t dir_offset;
