@@ -73,6 +73,8 @@ static int zipf_local_length;
 static int zipf_date;
 static int zipf_time;
 
+#define LOCAL_CRC_OFFSET  (7*2)
+
 
 bool ZIPF_OpenWrite(const char *filename)
 {
@@ -87,7 +89,9 @@ bool ZIPF_OpenWrite(const char *filename)
   LogPrintf("Created ZIP file: %s\n", filename);
 
   // grab the current date and time
-  struct tm *t = localtime(time());
+  time_t cur_time = time(NULL);
+
+  struct tm *t = localtime(&cur_time);
 
   if (false)  // FIXME !!!!
   {
@@ -125,7 +129,7 @@ void ZIPF_CloseWrite(void)
 
   memcpy(end_part.magic, ZIPF_END_MAGIC, 4);
 
-  std::list<raw_wad_lump_t>::iterator ZDI;
+  std::list<zip_central_entry_t>::iterator ZDI;
 
   for (ZDI = zipf_W_directory.begin(); ZDI != zipf_W_directory.end(); ZDI++)
   {
@@ -161,7 +165,7 @@ void ZIPF_CloseWrite(void)
 void ZIPF_NewLump(const char *name)
 {
   if (strlen(name)+1 >= ZIPF_MAX_PATH)
-    Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_W_PATH);
+    Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_PATH);
 
   // remember position
   zipf_local_start  = (int)ftell(zipf_write_fp);
@@ -220,16 +224,16 @@ void ZIPF_FinishLump(void)
   // determine length
   int length = (int)ftell(zipf_write_fp) - zipf_local_start;
 
-  zipf_W_local.real_size     = LE_U32(length);
-  zipf_W_local.compress_size = LE_U32(length);
+  zipf_W_local.hdr.real_size     = LE_U32(length);
+  zipf_W_local.hdr.compress_size = LE_U32(length);
 
   // seek back and fix up the CRC and size fields
   // FIXME: check if worked
   fseek(zipf_write_fp, zipf_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
 
-  fwrite(&zipf_W_local.crc,           4, 1, zipf_write_fp);
-  fwrite(&zipf_W_local.compress_size, 4, 1, zipf_write_fp);
-  fwrite(&zipf_W_local.real_size,     4, 1, zipf_write_fp);
+  fwrite(&zipf_W_local.hdr.crc,           4, 1, zipf_write_fp);
+  fwrite(&zipf_W_local.hdr.compress_size, 4, 1, zipf_write_fp);
+  fwrite(&zipf_W_local.hdr.real_size,     4, 1, zipf_write_fp);
 
   fflush(zipf_write_fp);
 
@@ -257,13 +261,13 @@ void ZIPF_FinishLump(void)
   central.hdr.extra_length   = 0;
   central.hdr.comment_length = 0;
 
-  central.hdr.start_disk  = 0;
-  central.internal_attrib = 0;
-  central.external_attrib = 0;
+  central.hdr.start_disk      = 0;
+  central.hdr.internal_attrib = 0;
+  central.hdr.external_attrib = 0;
 
-  central.local_offset = LE_U32(zipf_local_start);
+  central.hdr.local_offset = LE_U32(zipf_local_start);
 
-  strcpy(central.name, zipf_W_lump.name);
+  strcpy(central.name, zipf_W_local.name);
 
   zipf_W_directory.push_back(central);
 }
