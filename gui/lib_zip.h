@@ -70,7 +70,7 @@ typedef struct
 
 /* byte filename[]; */
 }
-__attribute__((packed))
+PACKEDATTR
 raw_zip_local_header_t;
 
 
@@ -82,6 +82,7 @@ typedef struct
   u32_t compress_size;
   u32_t real_size;
 }
+PACKEDATTR
 raw_zip_local_trailer_t;
 
 
@@ -115,7 +116,7 @@ typedef struct
 
 /* byte filename[]; */
 }
-__attribute__((packed))
+PACKEDATTR
 raw_zip_central_header_t;
 
 
@@ -134,7 +135,7 @@ typedef struct
 
   u16_t comment_length;
 }
-__attribute__((packed))
+PACKEDATTR
 raw_zip_end_of_directory_t;
 
 
