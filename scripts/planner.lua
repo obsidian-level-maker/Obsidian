@@ -20,25 +20,20 @@
 
 --[[ *** CLASS INFORMATION ***
 
+@@@
+
 class SECTION
 {
   kx, ky  -- location in section map 
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
+  kind : keyword   -- "section", "annex", "junction", "vert", "horiz"
+
   room : ROOM
+  hall : HALL
 
   num_conn  -- number of connections
-}
-
-
-class SEGMENT 
-{
-  sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
-
-  hall : HALL  -- NIL when unused
-
-  general_dir : keyword  -- "junction", "vert", "horiz"
 }
 
 
@@ -48,6 +43,9 @@ require 'defs'
 require 'util'
 
 
+MAP_W = 0  -- number of non-hallway sections
+MAP_H = 0  --
+
 SECTION_W = 0
 SECTION_H = 0
 
@@ -55,15 +53,15 @@ SECTION_H = 0
 SECTION_CLASS = { }
 
 
-function SECTION_CLASS.new(x, y)
-  local K = { kx=x, ky=y, num_conn=0 }
+function SECTION_CLASS.new(kind, kx, ky)
+  local K = { kind=kind, kx=kx, ky=ky, num_conn=0 }
   table.set_class(K, SECTION_CLASS)
   return K
 end
 
 
 function SECTION_CLASS.tostr(K)
-  return string.format("SECTION [%d,%d]", K.kx, K.ky)
+  return string.format("%s [%d,%d]", string.upper(K.kind), K.kx, K.ky)
 end
 
 
@@ -105,32 +103,27 @@ function SECTION_CLASS.shrink(K, side)
 end
 
 
-function SECTION_CLASS.neighbor(K, dir, dist)
-  local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
-  if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
-    return nil
+function SECTION_CLASS.neighbor(K, dir)
+  -- make sure the neighbor is not the same section
+  for dist = 1,3 do
+    local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
+
+    if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
+      break;
+    end
+
+    local N = SECTIONS[nx][ny]
+
+    if N != K then return N end
   end
-  return SECTIONS[nx][ny]
+
+  return nil
 end
 
 
 function SECTION_CLASS.same_room(K, dir)
   local N = K:neighbor(dir)
   return N and N.room == K.room
-end
-
-
-function SECTION_CLASS.seg_neighbor(K, dir)
-  local sx = (dir == 6 ? K.sx2 ; K.x1)
-  local sy = (dir == 8 ? K.sy2 ; K.y1)
-
-  local nx, ny = geom.nudge(sx, sy, dir)
-
-  if not Seed_valid(nx, ny) then return nil end
-
-  local S = SEEDS[nx][ny]
-
-  return S.segment
 end
 
 
@@ -156,57 +149,6 @@ end
 
 ------------------------------------------------------------------------
 
-SEGMENT_CLASS = { }
-
-
-function SEGMENT_CLASS.new(sx1, sy1, sx2, sy2)
-  local K = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2 }
-  table.set_class(K, SEGMENT_CLASS)
-  K:update_size()
-  return K
-end
-
-
-function SEGMENT_CLASS.tostr(G)
-  return string.format("SEGMENT [%d,%d]", G.sx1, G.sy1)
-end
-
-
-function SEGMENT_CLASS.update_size(G)
-  G.sw, G.sh = geom.group_size(G.sx1, G.sy1, G.sx2, G.sy2)
-end
-
-
-function SEGMENT_CLASS.neighbor(G, dir)
-  local sx = (dir == 6 ? G.sx2 ; G.x1)
-  local sy = (dir == 8 ? G.sy2 ; G.y1)
-
-  local nx, ny = geom.nudge(sx, sy, dir)
-
-  if not Seed_valid(nx, ny) then return nil end
-
-  local S = SEEDS[nx][ny]
-
-  return S.segment
-end
-
-
-function SEGMENT_CLASS.section_nb(G, dir)
-  local sx = (dir == 6 ? G.sx2 ; G.x1)
-  local sy = (dir == 8 ? G.sy2 ; G.y1)
-
-  local nx, ny = geom.nudge(sx, sy, dir)
-
-  if not Seed_valid(nx, ny) then return nil end
-
-  local S = SEEDS[nx][ny]
-
-  return S.section
-end
-
-
-------------------------------------------------------------------------
-
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
@@ -226,9 +168,9 @@ end
 
 
 function Plan_decide_map_size()
-  local W, H  -- number of rooms
-
   local ob_size = OB_CONFIG.size
+
+  local W, H
 
   -- there is no real "progression" when making a single level
   -- hence use mixed mode instead.
@@ -269,12 +211,15 @@ function Plan_decide_map_size()
     if rand.odds(30) then W = W - 1 end
   end
 
-  return W, H
+
+  MAP_W = W
+  MAP_H = H
+
+  
 end
 
 
-function Plan_create_sections(W, H)
-
+function Plan_create_sections()
   local SIZE_TABLE = THEME.room_size_table or { 40,60,20,4 }
 
   local border_seeds = PARAM.border_seeds or 2
@@ -284,24 +229,22 @@ function Plan_create_sections(W, H)
 
 
   local function pick_sizes(W, limit)
-    -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
-    -- block to every section row and column for centered doors (etc).
---[[
-    if PARAM.tiled then -- FIXME
-      limit = PARAM.block_limit - W
-      limit = int(limit / 2)
-    end
---]]
+--??  -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
+--??  -- block to every section row and column for centered doors (etc).
+--??  if PARAM.tiled then
+--??    limit = PARAM.block_limit - W
+--??    limit = int(limit / 2)
+--??  end
 
     assert(W >= 2)
     assert(limit >= W * 3 + border_seeds * 2)
 
-    -- these two lists hold the result sizes
-    local halls = {}
+    -- this lists holds the result sizes
     local sizes = {}
 
-    halls[1]   = border_seeds
-    halls[1+W] = border_seeds
+    -- set very left and right (or top and bottom) hallway channels
+    sizes[1]     = border_seeds
+    sizes[W*2+1] = border_seeds
 
     local total
 
@@ -310,17 +253,17 @@ function Plan_create_sections(W, H)
       total = border_seeds * 2
 
       for x = 1,W do
-        sizes[x] = 1 + rand.index_by_probs(SIZE_TABLE)
-        total = total + sizes[x]
+        sizes[x*2] = 1 + rand.index_by_probs(SIZE_TABLE)
+        total = total + sizes[x*2]
 
         if x < W then
-          halls[1+x] = rand.sel(50, 1, 2)
-          total = total + halls[x]
+          sizes[x*2+1] = rand.sel(50, 1, 2)
+          total = total + sizes[x*2+1]
         end
       end
 
       if total <= limit then
-        return halls, sizes  -- OK!
+        return sizes  -- OK!
       end
     end
 
@@ -332,12 +275,12 @@ function Plan_create_sections(W, H)
       -- find a section size to shrink
       local x = rand.irange(1, W)
 
-      while x < W and sizes[x] <= 2 do
+      while x < W and sizes[x*2] <= 2 do
         x = x + 1
       end
 
       if x < W then
-        sizes[x] = sizes[x] - 1
+        sizes[x*2] = sizes[x*2] - 1
         total = total - 1
       end
 
@@ -345,59 +288,29 @@ function Plan_create_sections(W, H)
       if total > limit and rand.odds(25) then
         x = rand.irange(1, W-1)
 
-        while x < W-1 and halls[1+x] <= 1 do
+        while x < W-1 and sizes[x*2+1] <= 1 do
           x = x + 1
         end
 
         if x < W-1 then
-          halls[1+x] = halls[1+x] - 1
+          sizes[x*2+1] = sizes[x*2+1] - 1
           total = total - 1
         end
       end 
     end
 
-    return halls, sizes
+    return sizes
   end
 
 
-  local function get_positions(W, hall_list, size_list)
-    local hall_pos = { 1 }
-    local sec_pos  = {}
+  local function get_positions(W, sizes)
+    local pos = { 1 }
 
-    for x = 1,W do
-      sec_pos[x]    = hall_pos[x] + hall_list[x]
-      hall_pos[x+1] = sec_pos[x]  + size_list[x]
+    for x = 1, W*2 do
+      pos[x+1] = pos[x] + sizes[x]
     end
 
-    return hall_pos, sec_pos
-  end
-
-
-  -- FIXME: REMOVE THIS
-  local function OLD__get_hallways(pos_list, size_list, hall_list)
-    local net = {}
-
-    -- seeds usable outside the map border
-    local bo_thick = math.min(border_seeds, 2)
-
-    if bo_thick > 0 then
-      table.insert(net, { 1 + border_seeds - bo_thick, bo_thick })
-    end
-
-    for x = 1,#pos_list do
-      table.insert(net, { pos_list[x], size_list[x], true })
-
-      if x < #pos_list and hall_list[x] > 0 then
-        table.insert(net, { pos_list[x] + size_list[x], hall_list[x] })
-      end
-    end
-
-    if bo_thick > 0 then
-      local x = #pos_list
-      table.insert(net, { pos_list[x] + size_list[x], bo_thick })
-    end
-
-    return net
+    return pos
   end
 
 
@@ -414,36 +327,46 @@ function Plan_create_sections(W, H)
   local limit = PARAM.seed_limit or 52
 
   -- reduce level size if rooms would become too small
-  -- (2x2 seeds is the absolute minimum)
+  -- (2 seeds + 1 hallway seeds per room the absolute minimum)
 
-  local max_W = int(limit / 3.3)
-  local max_H = int((limit - free_seeds) / 3.3)
+  local max_W = int(limit / 3.5)
+  local max_H = int((limit - free_seeds) / 3.5)
 
-  if W > max_W then W = max_W end
-  if H > max_H then H = max_H end
+  if MAP_W > max_W then MAP_W = max_W end
+  if MAP_H > max_H then MAP_H = max_H end
 
-  gui.printf("Map Size: %dx%d sections\n", W, H)
+  SECTION_W = MAP_W * 2 + 1
+  SECTION_H = MAP_H * 2 + 1
 
-  SECTION_W = W
-  SECTION_H = H
+  gui.printf("Map Size: %dx%d / %dx%d\n", MAP_W, MAP_H, SECTION_W, SECTION_H)
 
-  local hall_W, section_W = pick_sizes(W, limit)
-  local hall_H, section_H = pick_sizes(H, limit - free_seeds)
 
-  local hall_X, section_X = get_positions(W, hall_W, section_W)
-  local hall_Y, section_Y = get_positions(H, hall_H, section_H)
+  local section_W = pick_sizes(MAP_W, limit)
+  local section_H = pick_sizes(MAP_H, limit - free_seeds)
+
+  local section_X = get_positions(MAP_W, section_W)
+  local section_Y = get_positions(MAP_H, section_H)
 
   dump_sizes("Section widths:  ", section_W, SECTION_W)
   dump_sizes("Section heights: ", section_H, SECTION_H)
-
-  dump_sizes("Hall widths:  ", hall_W, SECTION_W+1)
-  dump_sizes("Hall heights: ", hall_H, SECTION_H+1)
 
 
   SECTIONS = table.array_2D(SECTION_W, SECTION_H)
 
   for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local K = SECTION_CLASS.new(x, y)
+    local kind
+
+    if (x % 2) == 0 and (y % 2) == 0 then
+      kind = "section"
+    elseif (x % 2) == 0 then
+      kind = "horiz"
+    elseif (y % 2) == 0 then
+      kind = "vert"
+    else
+      kind = "junction"
+    end
+
+    local K = SECTION_CLASS.new(kind, x, y)
 
     SECTIONS[x][y] = K
 
@@ -452,6 +375,7 @@ function Plan_create_sections(W, H)
 
     K.sx1 = section_X[x]
     K.sy1 = section_Y[y]
+
     K.sx2 = K.sx1 + K.sw - 1
     K.sy2 = K.sy1 + K.sh - 1
 
@@ -461,30 +385,26 @@ function Plan_create_sections(W, H)
   end end
 
 
-  --- remember hallway network ---
-
-  -- FIXME
-  LEVEL.network_X = get_hallways(section_X, section_W, hall_W)
-  LEVEL.network_Y = get_hallways(section_Y, section_H, hall_H)
-
-
   --- create the SEED map ---
 
-  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] + border_seeds - 1
-  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] + border_seeds - 1
+  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] - 1
+  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] - 1
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
 
 
-function Plan_is_section_valid(x, y)
+function Section_is_valid(x, y)
   return 1 <= x and x <= SECTION_W and
          1 <= y and y <= SECTION_H
 end
 
+-- FIXME :REMOVE
+Plan_is_section_valid = Section_is_valid
 
-function Plan_has_section(x, y)
-  if SECTIONS[x][y].room then
+
+function Plan_has_section(mx, my)  -- FIXME: RENAME THIS FUNCTION
+  if SECTIONS[mx*2][my*2].room then
     return true
   else
     return false
@@ -492,11 +412,11 @@ function Plan_has_section(x, y)
 end
 
 
-function Plan_count_free_sections(x, y)
+function Plan_count_free_sections()
   local count = 0
 
-  for x = 1,SECTION_W do for y = 1,SECTION_H do
-    if not Plan_has_section(x, y) then
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    if not Plan_has_section(mx, my) then
       count = count + 1
     end
   end end
@@ -505,17 +425,12 @@ function Plan_count_free_sections(x, y)
 end
 
 
-function Plan_get_visit_list(x1, y1, x2, y2)
+function Plan_get_visit_list()
   local visits = {}
 
-  if not x1 then
-    x1, x2 = 1, SECTION_W
-    y1, y2 = 1, SECTION_H
-  end
-
-  for x = x1,x2 do for y = y1,y2 do
-    if not Plan_has_section(x, y) then
-      table.insert(visits, { x=x, y=y })
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    if not Plan_has_section(mx, my) then
+      table.insert(visits, { mx=mx, my=my })
     end
   end end
 
@@ -529,10 +444,17 @@ function Plan_dump_sections(title)
 
   local function section_char(x, y)
     local K = SECTIONS[x][y]
+    if not K then return ' ' end
+
+    if K.hall then return '#' end
+    if K.kind == "junction" then return '+' end
+    if K.kind == "vert"     then return '|' end
+    if K.kind == "horiz"    then return '-' end
+
     local R = K.room
     if not R then return '.' end
-    if R.kind == "scenic" then return '=' end
-    local n = 1 + ((R.id-1) % 26)
+    if R.kind == "scenic" then return '%' end
+    local n = 1 + ((R.id - 1) % 26)
     if R.natural then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     else
@@ -543,29 +465,32 @@ function Plan_dump_sections(title)
   gui.printf("\n")
   gui.printf("%s\n", title or "Section Map:")
 
-  for y = SECTION_H,1,-1 do
-    local line = "@c  "
-    for x = 1,SECTION_W do
+  for y = SECTIONS.h, 1, -1 do
+    local line = "  "
+
+    for x = 1, SECTIONS.w do
       line = line .. section_char(x, y)
     end
+
     gui.printf("%s\n", line)
   end
+
   gui.printf("\n")
 end
 
 
 function Plan_add_small_rooms()
 
-  local function can_make_double(K, x, y)
-    local can_x = (x < SECTION_W and not Plan_has_section(x+1, y))
-    local can_y = (y < SECTION_H and not Plan_has_section(x, y+1))
+  local function can_make_double(K, mx, my)
+    local can_x = (mx < MAP_W and not Plan_has_section(mx+1, my))
+    local can_y = (my < MAP_H and not Plan_has_section(mx, my+1))
 
     if can_x and can_y then
       -- prefer making the room "squarer"
       if K.sh > K.sw+1 and rand.odds(90) then return "x" end
       if K.sw > K.sh+1 and rand.odds(90) then return "y" end
 
-      return rand.sel(33, "x", "y")
+      return rand.sel(40, "x", "y")
     end
 
     if can_x then return "x" end
@@ -574,57 +499,54 @@ function Plan_add_small_rooms()
     return nil
   end
 
+
   ---| Plan_add_small_rooms |---
 
-  for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local K = SECTIONS[x][y]
-    if not K.room then
-      local R = ROOM_CLASS.new("rect")
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    local K = SECTIONS[mx*2][my*2]
+
+    if K.room then continue; end
+
+    local R = ROOM_CLASS.new("rect")
+
+    K.room = R
+
+    -- sometimes become a 2x1 / 1x2 sized room
+    local can_xy = can_make_double(K, mx, my)
+
+    if can_xy and rand.odds(55) then
+      if can_xy == "x" then
+        K = SECTIONS[mx*2 + 2][my*2]
+      else
+        K = SECTIONS[mx*2][my*2 + 2]
+      end
+
+      assert(not K.room)
 
       K.room = R
-
-      -- sometimes become a 2x1 / 1x2 sized room
-      local can_xy = can_make_double(K, x, y)
-
-      if can_xy and rand.odds(55) then
-        if can_xy == "x" then
-          K = SECTIONS[x+1][y]
-        else
-          K = SECTIONS[x][y+1]
-        end
-
-        assert(not K.room)
-
-        K.room = R
-      end
     end
   end end
 end
 
 
 function Plan_add_big_rooms()
-
-  -- shapes are defined by a list of neighbors to set.
-  -- numbers over 10 are two seeds away instead of one.
-  -- numbers 4xx are moved left, 6xx are moved right.
-  -- TODO: use a better system
-
   local BIG_ROOM_SHAPES =
   {
-    plus = { name="plus", size=5, dirs={ 5,2,4,6,8 } }
+    plus = { name="plus", locs={ 0,0, 0,-1, -1,0, 1,0, 0,1 } }
 
-    T1 = { name="T", size=4, dirs={ 5,4,6,2 } }
-    T2 = { name="T", size=5, dirs={ 5,4,6,2,12 } }
+    T1 = { name="T",   locs={ 0,0, -1,0, 1,0, 0,1 } }
+    T2 = { name="T",   locs={ 0,0, -1,0, 1,0, 0,1, 0,2 } }
 
-    L1 = { name="L", size=3, dirs={ 5,8,6 } }
-    L2 = { name="L", size=4, dirs={ 5,8,18,6 } }
-    L3 = { name="L", size=4, dirs={ 5,8,6,16 } }
-    L4 = { name="L", size=5, dirs={ 5,8,18,6,16 } }
+    L1 = { name="L",   locs={ 0,0, 0,1, 1,0 } }
+    L2 = { name="L",   locs={ 0,0, 0,1, 0,2, 1,0 } }
+    L3 = { name="L",   locs={ 0,0, 0,1, 1,0, 2,0 } }
+    L4 = { name="L",   locs={ 0,0, 0,1, 0,2, 1,0, 2,0 } }
 
-    U1 = { name="U", size=5, dirs={ 5,4,6,402,602 } }
-    U2 = { name="U", size=7, dirs={ 5,4,6,402,602,412,612 } }
+    U1 = { name="U",   locs={ 0,0, -1,0, 1,0, -1,1, 1,1 } }
+    U2 = { name="U",   locs={ 0,0, -1,0, 1,0, -1,1, 1,1, -1,2, 1,2 } }
 
-    HH = { name="odd", size=7, dirs={ 5,4,6,402,602,408,608 } }
+    SS = { name="odd", locs={ 0,0, -1,0, 1,0, -1,-1, 1,1 } }
+    HH = { name="odd", locs={ 0,0, -1,0, 1,0, -1,-1, 1,-1, -1,1, 1,1 } }
   }
 
   local BIG_SHAPE_PROBS =
@@ -634,88 +556,19 @@ function Plan_add_big_rooms()
 
     T1 = 25, T2 = 6,
     L1 = 40, L2 = 10, L3 = 10, L4=5,
-    U1 = 15, U2 = 4,  HH = 4,
+    U1 = 15, U2 = 2,
+    SS = 10, HH = 7,
   }
 
   local BIG_RECT_PROBS =
   {
-    [22] = 80, [33] = 40, [32] = 20, [31] = 4,
+    [22] = 80, [33] = 40, [32] = 20  --- [31] = 4,
   }
-
-  local function test_or_set_rect(kx, ky, rot, w, h, ROOM)
-    if w >= SECTION_W or h >= SECTION_H then
-      return false  -- would span the whole map
-    end
-
-    if bit.btest(rot, 2) then kx = kx - w + 1 end
-    if bit.btest(rot, 4) then ky = ky - h + 1 end
-
-    local kx2 = kx + w - 1
-    local ky2 = ky + h - 1
-
-    if kx < 1 or kx2 > SECTION_W or
-       ky < 1 or ky2 > SECTION_H
-    then
-      return false
-    end
-
-    for x = kx,kx2 do for y = ky,ky2 do
-      if ROOM then
-        SECTIONS[x][y].room = ROOM
-      elseif Plan_has_section(x, y) then
-        return false -- would overlap a room
-      end
-    end end
-
-    return true
-  end
-
-  local function test_or_set_shape(kx, ky, rot, dir_list, ROOM)
-    local touch_bottom, touch_top
-    local touch_left, touch_right
-
-    for _,orig_dir in ipairs(dir_list) do
-      local perp = int(orig_dir / 100)
-
-      local dist = 1 + int(orig_dir / 10) % 10
-      orig_dir = orig_dir % 10
-
-      local dir  = geom.ROTATE[rot][orig_dir]
-      local x, y = geom.nudge(kx, ky, dir, dist)
-
-      if perp > 0 then
-        x, y = geom.nudge(x, y, geom.ROTATE[rot][perp])
-      end
-
-      if not Plan_is_section_valid(x, y) then
-        return false
-      end
-
-      if x == 1 then touch_left = true end
-      if y == 1 then touch_bottom = true end
-
-      if x == SECTION_W then touch_right = true end
-      if y == SECTION_H then touch_top = true end
-
-      if ROOM then
-        SECTIONS[x][y].room = ROOM
-      elseif Plan_has_section(x, y) then
-        return false -- would overlap a room
-      end
-    end -- orig_dir
-
-    -- would span the whole map? (horizontally)
-    if (touch_left and touch_right) then ---??? or (touch_bottom and touch_top) then
-      return false
-    end
-
-    return true
-  end
 
 
   local function adjust_shape_probs()
     -- occasionally don't make any rectangles
-    if rand.odds(6) then
+    if rand.odds(5) then
       BIG_SHAPE_PROBS.rect = 1
     end
 
@@ -736,6 +589,76 @@ function Plan_add_big_rooms()
   end
 
 
+  local function test_or_set_rect(mx1, my1, rot, w, h, set_R)
+    if w >= MAP_W or h >= MAP_H then
+      return false  -- would span the whole map
+    end
+
+    if bit.btest(rot, 2) then mx1 = mx1 - w + 1 end
+    if bit.btest(rot, 4) then my1 = my1 - h + 1 end
+
+    local mx2 = mx1 + w - 1
+    local my2 = my1 + h - 1
+
+    if mx1 < 1 or my1 < 1 or mx2 > MAP_W or my2 > MAP_H then
+      return false
+    end
+
+    for mx = mx1,mx2 do for my = my1,my2 do
+      if set_R then
+        SECTIONS[mx*2][my*2].room = set_R
+      elseif Plan_has_section(mx, my) then
+        return false -- would overlap a room
+      end
+    end end
+
+    return true
+  end
+
+
+  local function test_or_set_shape(mx1, my1, rot, locs, set_R)
+    local touch_left, touch_right
+    local touch_bottom, touch_top
+
+    for index = 1, #locs-1, 2 do
+      local dx = locs[index]
+      local dy = locs[index+1]
+      
+      local mx, my
+
+          if rot == 0 then mx, my = mx1 + dx, my1 + dy
+      elseif rot == 4 then mx, my = mx1 - dx, my1 - dy
+      elseif rot == 2 then mx, my = mx1 + dy, my1 - dx
+      elseif rot == 6 then mx, my = mx1 - dy, my1 + dx
+      else error("Bad rot in test_or_set_shape: " .. tostring(rot))
+      end
+
+      if not Section_is_valid(mx*2, my*2) then
+        return false
+      end
+
+      if mx == 1 then touch_left = true end
+      if my == 1 then touch_bottom = true end
+
+      if mx == MAP_W then touch_right = true end
+      if my == MAP_H then touch_top = true end
+
+      if set_R then
+        SECTIONS[mx*2][my*2].room = set_R
+      elseif Plan_has_section(mx, my) then
+        return false -- would overlap a room
+      end
+    end -- index
+
+    -- would span the whole map? (horizontally)
+    if touch_left and touch_right then
+      return false
+    end
+
+    return true
+  end
+
+
   local function pick_rect_size()
     local raw = rand.key_by_probs(BIG_RECT_PROBS)
 
@@ -748,40 +671,38 @@ function Plan_add_big_rooms()
     end
 
     -- never span the whole map (horizontally)
-    if rw >= SECTION_W then rw = SECTION_W - 1 end
-    if rh >= SECTION_H then rh = SECTION_H     end
+    if rw >= MAP_W then rw = MAP_W - 1 end
+    if rh >= MAP_H then rh = MAP_H     end
 
     return rw, rh
   end
 
 
-  local function try_add_biggie(shape_name, kx, ky, rot, rw, rh)
-
+  local function try_add_biggie(shape_name, mx, my, rot, rw, rh)
     if shape_name == "rect" then
 
-      if test_or_set_rect(kx, ky, rot, rw, rh) then
+      if test_or_set_rect(mx, my, rot, rw, rh) then
         local R = ROOM_CLASS.new("rect")
 
-        test_or_set_rect(kx, ky, rot, rw, rh, R)
+        test_or_set_rect(mx, my, rot, rw, rh, R)
 
         return rw * rh
       end
 
     else  -- shaped
-
       local shape = BIG_ROOM_SHAPES[shape_name]
       assert(shape)
 
-      if test_or_set_shape(kx, ky, rot, shape.dirs) then
+      if test_or_set_shape(mx, my, rot, shape.locs) then
         local R = ROOM_CLASS.new(shape.name)
 
-        R.shape_kx  = kx
-        R.shape_ky  = ky
+        R.shape_kx  = mx*2
+        R.shape_ky  = my*2
         R.shape_rot = rot
 
-        test_or_set_shape(kx, ky, rot, shape.dirs, R)
+        test_or_set_shape(mx, my, rot, shape.locs, R)
 
-        return assert(shape.size)
+        return #shape.locs / 2
       end
     end
   end
@@ -790,44 +711,50 @@ function Plan_add_big_rooms()
   local function ideal_L_spots(visits)
     local CORNERS = rand.shuffle { 1,3,7,9 }
     
-    for _,side in ipairs(CORNERS) do
-      if rand.odds(60) then
-        local x, y = geom.pick_corner(side, 1,1, SECTION_W, SECTION_H)
-        table.insert(visits, 1, { x=x, y=y })
+    each side in CORNERS do
+      if rand.odds(75) then
+        local mx, my = geom.pick_corner(side, 1,1, MAP_W, MAP_H)
+        table.insert(visits, 1, { mx=mx, my=my })
       end
     end
   end
 
+
   local function ideal_T_spots(visits)
-    local mx = int((SECTION_W+1) / 2)
-    local my = int((SECTION_H+1) / 2)
+    local mid_x = int((MAP_W+1) / 2)
+    local mid_y = int((MAP_H+1) / 2)
 
     local SPOTS =
     {
-      { x=mx, y=1 },
-      { x=mx, y=SECTION_H },
-      { y=my, x=1 },
-      { y=my, x=SECTION_W },
+      { mx=mid_x, my=1 }
+      { mx=mid_x, my=MAP_H }
+      { my=mid_y, mx=1 }
+      { my=mid_y, mx=MAP_W }
     }
 
-    for _,spot in ipairs(SPOTS) do
-      if rand.odds(60) then
+    rand.shuffle(SPOTS)
+
+    each spot in SPOTS do
+      if rand.odds(75) then
         table.insert(visits, 1, spot)
       end
     end
   end
 
+
   local function ideal_PLUS_spots(visits)
-    if SECTION_W < 5 or SECTION_H < 5 then return end
+    if MAP_W < 5 or MAP_H < 5 then return end
 
-    local mx = int((SECTION_W+1) / 2)
-    local my = int((SECTION_H+1) / 2)
+    local mid_x = int((MAP_W+1) / 2)
+    local mid_y = int((MAP_H+1) / 2)
 
-    if rand.odds(85) then
-      table.insert(visits, 1, {x=mx, y=my})
+    if rand.odds(90) then
+      table.insert(visits, 1, {mx=mid_x, my=mid_y})
     end
   end
 
+
+--[[
   local function ideal_RECT_spots(visits, rw, rh)
     local x2 = SECTION_W - rw
     local y2 = SECTION_H - rh
@@ -837,13 +764,14 @@ function Plan_add_big_rooms()
     local CORNERS = { 1,3,7,9 }
     rand.shuffle(CORNERS)
 
-    for _,side in ipairs(CORNERS) do
+    each side in CORNERS do
       if rand.odds(50) then
         local mx, my = geom.pick_corner(side, 2,2, x2,y2)
-        table.insert(visits, 1, {x=mx, y=my})
+        table.insert(visits, 1, {mx=mx, my=my})
       end
     end
   end
+--]]
 
 
   local function add_biggie(quota)
@@ -852,14 +780,13 @@ function Plan_add_big_rooms()
     local shape_name = rand.key_by_probs(BIG_SHAPE_PROBS)
 
     local rw, rh = pick_rect_size()
-    local rot    = rand.irange(0, 3) * 2
 
     while shape_name == "rect" and (rw * rh) > quota do
       if rw > rh then rw = rw - 1 else rh = rh - 1 end
       assert(rw > 0 and rh > 0)
     end
 
-    local visits = Plan_get_visit_list(1,1, SECTION_W-1, SECTION_H-1)
+    local visits = Plan_get_visit_list()
 
     -- some shapes fit very well at certain spots.
     -- here we add those spots to the front of the visit list.
@@ -874,8 +801,8 @@ function Plan_add_big_rooms()
     elseif shape_name == "plus" then
       ideal_PLUS_spots(visits)
 
-    elseif shape_name == "rect" and (rw >= 3 or rh >= 3) then
-      ideal_RECT_spots(visits, rw, rh)
+---???    elseif shape_name == "rect" and (rw >= 3 or rh >= 3) then
+---???      ideal_RECT_spots(visits, rw, rh)
     end
 
     local ROTS
@@ -885,9 +812,9 @@ function Plan_add_big_rooms()
       ROTS = rand.shuffle { 0,2,4,6 }
     end
 
-    for _,V in ipairs(visits) do
-      for _,rot in ipairs(ROTS) do
-        local size = try_add_biggie(shape_name, V.x, V.y, rot, rw, rh)
+    each V in visits do
+      each rot in ROTS do
+        local size = try_add_biggie(shape_name, V.mx, V.my, rot, rw, rh)
 
         if size then return size end  -- SUCCESS !
       end
@@ -906,9 +833,9 @@ function Plan_add_big_rooms()
 
   local perc = style_sel("big_rooms", 0, 30, 50, 80)
 
-  local num_K = Plan_count_free_sections()
+  local num_free = Plan_count_free_sections()
 
-  local quota = num_K * perc / 100
+  local quota = num_free * perc / 100
 
   gui.printf("Big Room Quota: %1.1f sections\n", quota)
 
@@ -923,9 +850,9 @@ end
 
 function Plan_add_natural_rooms()
 
-  local function find_free_spot(x, y)
-    if not Plan_has_section(x, y) then
-      return x, y
+  local function find_free_spot(mx, my)
+    if not Plan_has_section(mx, my) then
+      return mx, my
     end
 
     -- try a neighbor : diagonals after straights
@@ -941,9 +868,9 @@ function Plan_add_natural_rooms()
 
       rand.shuffle(SIDES)
 
-      for _,side in ipairs(SIDES) do
-        local nx, ny = geom.nudge(x, y, side)
-        if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
+      each side in SIDES do
+        local nx, ny = geom.nudge(mx, my, side)
+        if Section_is_valid(nx*2, ny*2) and not Plan_has_section(nx, ny) then
           return nx, ny
         end
       end
@@ -952,36 +879,39 @@ function Plan_add_natural_rooms()
     return nil -- not found
   end
 
+
   local function side_to_coordinate(side)
-    local x, y = geom.delta(side)
+    local mx, my = geom.delta(side)
 
-    x = 1 + int((SECTION_W - 0.7) * (x+1) / 2)
-    y = 1 + int((SECTION_H - 0.7) * (y+1) / 2)
+    mx = 1 + int((MAP_W - 0.7) * (mx+1) / 2)
+    my = 1 + int((MAP_H - 0.7) * (my+1) / 2)
 
-    if SECTION_W > 5 then x = x + rand.pick { -1, 0, 1 } end
-    if SECTION_H > 5 then y = y + rand.pick { -1, 0, 1 } end
+    if MAP_W > 5 then mx = mx + rand.pick { -1, 0, 1 } end
+    if MAP_H > 5 then my = my + rand.pick { -1, 0, 1 } end
 
-    x = math.clamp(1, x, SECTION_W)
-    y = math.clamp(1, y, SECTION_H)
+    mx = math.clamp(1, mx, MAP_W)
+    my = math.clamp(1, my, MAP_H)
 
-    return x, y
+    return mx, my
   end
 
-  local function new_area(x, y)
+
+  local function new_area(mx, my)
     local R = ROOM_CLASS.new("odd")
 
     R.natural = true
 
-    SECTIONS[x][y].room = R
+    SECTIONS[mx*2][my*2].room = R
 
     local AREA =
     {
       room = R,
-      active = { {x=x, y=y} },
+      active = { {mx=mx, my=my} },
     }
 
     return AREA
   end
+
 
   local function grow_area(area)
     if area.dead then return false end
@@ -989,17 +919,20 @@ function Plan_add_natural_rooms()
     -- try all possibilities
     rand.shuffle(area.active)
 
-    for _,A in ipairs(area.active) do
-      for _,dir in ipairs(rand.dir_list()) do
-        local nx, ny = geom.nudge(A.x, A.y, dir)
+    each A in area.active do
+      each dir in rand.dir_list() do
+        
+        local nx, ny = geom.nudge(A.mx, A.my, dir)
 
-        if Plan_is_section_valid(nx, ny) and not Plan_has_section(nx, ny) then
-          SECTIONS[nx][ny].room = area.room
-          table.insert(area.active, { x=nx, y=ny })
-          return true -- OK
+        if Section_is_valid(nx*2, ny*2) and not Plan_has_section(nx, ny) then
+          -- OK --
+          SECTIONS[nx*2][ny*2].room = area.room
+          table.insert(area.active, { mx=nx, my=ny })
+          return true
         end
-      end -- dir
-    end -- A
+
+      end
+    end
 
     area.dead = true
 
@@ -1007,67 +940,100 @@ function Plan_add_natural_rooms()
   end
 
 
+  local function surround_map()
+    -- NOTE: this won't work very well if other rooms already exist
+    
+    local area
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      if (mx > 1 and mx < MAP_W) and (my > 1 and my < MAP_H) then
+        continue;
+      end
+
+      local K = SECTIONS[mx*2][my*2]
+      if K.room then return end
+
+      if not area then
+        area = new_area(mx, my)
+        area.room.surrounder = true
+      end
+
+      K.room = area.room
+    end end
+  end
+
+
   ---| Plan_add_natural_rooms |---
 
----##  if not THEME.cave_walls then return end
+-- FIXME: not necessarily "natural" -- just odd shaped
 
-  local num_sec = Plan_count_free_sections()
+---??  if not THEME.cave_walls then return end
+
+  local num_free = Plan_count_free_sections()
 
   local perc = style_sel("naturals", 0, 20, 40, 90)
 
-  local quota = int(num_sec * perc / 100)
-  if quota > num_sec-3 then
-     quota = num_sec-3
-  end
+  local quota = num_free * perc / 100
+
+---???  -- don't fill the levels up with natural stuff
+---???  if quota > num_free-3 then
+---???     quota = num_free-3
+---???  end
 
   gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
 
   if quota < 2 then return end
 
+  -- occasionally surround the whole map
+  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(perc + 90) then  -- FIXME / 20
+    surround_map()
+
+    Plan_dump_sections("Sections with natural areas:")
+    return;
+  end
+
+
+  -- add starting spots (one for each area)
 
   -- best starting spots are in a corner
   -- worst starting spot is in the middle of the map
   local locations = { [1]=50, [3]=50, [7]=50, [9]=50,
                       [2]=20, [4]=20, [6]=20, [8]=20,
-                      [5]=5
+                      [5]=7
                     }
 
   local areas = { }
 
-  while quota / #areas > rand.irange(6,12) and #areas < 7 do
-    if table.empty(locations) then
-      break;
-    end
-
+  while not table.empty(locations) and #areas < 7 and
+       (#areas == 0 or quota / #areas > rand.irange(6,12))
+  do
     -- pick a location
     local side = rand.key_by_probs(locations)
     locations[side] = nil
 
-    local x, y = find_free_spot(side_to_coordinate(side))
+    local mx, my = find_free_spot(side_to_coordinate(side))
 
-    if x then
-      table.insert(areas, new_area(x, y))
+    if mx then
+      table.insert(areas, new_area(mx, my))
+      quota = quota - 1
     end
   end
 
   assert(#areas > 0)
 
-  quota = quota - #areas
 
-  -- round-robin grow the areas, using up the quota.
+  -- grow the areas (round-robin style) until quota is used up
 
-  local loop = 0
-
-  for loop = 0,200 do
+  for loop = 1,200 do
     if quota <= 0 then break; end
 
     -- sometimes skip an area
-    if rand.odds(70) then
-      local index = 1 + (loop % #areas)
+    if rand.odds(35) then continue; end
 
-      if grow_area(areas[index]) then
-        quota = quota - 1
-      end
+    local index = 1 + (loop % #areas)
+
+    if grow_area(areas[index]) then
+      quota = quota - 1
     end
   end
 
@@ -1092,7 +1058,7 @@ function Plan_contiguous_sections()
   end
 
 
-  local function try_join(K, dir)
+  local function OLD__try_join(K, dir)
     assert(dir == 6 or dir == 8)
 
     local N = K:neighbor(dir)
@@ -1127,17 +1093,39 @@ function Plan_contiguous_sections()
   end
 
 
+  local function try_join(K, kx, ky, dir)
+    -- get proper section neighbor (not hallway part)
+    local nx, ny = geom.nudge(kx, ky, dir, 2)
+
+    if not Section_is_valid(nx, ny) then return; end
+
+    local N = SECTIONS[nx][ny]
+
+    if not (N and N.room == K.room) then return; end
+
+    -- get hallway part
+    nx, ny = geom.nudge(kx, ky, dir)
+
+    N = SECTIONS[nx][ny]
+
+    N.kind = "annex"
+    N.room = K.room
+  end
+
+
   ---| Plan_contiguous_sections |---
 
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    local kx, ky = mx*2, my*2
+
     local K = SECTIONS[kx][ky]
 
     if K.room then
-      try_join(K, 6)
-      try_join(K, 8)
+      try_join(K, kx, ky, 6)
+      try_join(K, kx, ky, 8)
+      try_join(K, kx, ky, 9)  -- FIXME : won't do what we want
     end
   end end -- kx, ky
-
 end
 
 
@@ -1278,15 +1266,17 @@ function Plan_collect_sections()
     local K = SECTIONS[kx][ky]
     local R = K.room
 
-    table.insert(R.sections, K)
+    if R then
+      table.insert(R.sections, K)
 
-    R.kx1 = math.min(kx, R.kx1 or 99)
-    R.ky1 = math.min(ky, R.ky1 or 99)
+      R.kx1 = math.min(kx, R.kx1 or 99)
+      R.ky1 = math.min(ky, R.ky1 or 99)
 
-    R.kx2 = math.max(kx, R.kx2 or -1)
-    R.ky2 = math.max(ky, R.ky2 or -1)
+      R.kx2 = math.max(kx, R.kx2 or -1)
+      R.ky2 = math.max(ky, R.ky2 or -1)
 
-    R.kvolume = (R.kvolume or 0) + 1
+      R.kvolume = (R.kvolume or 0) + 1
+    end
   end end
 
   -- determine sizes
@@ -1394,12 +1384,6 @@ function Plan_make_seeds()
       S.section = K
       S.expanded = nil
     end end
-
----##    K.x1 = SEEDS[K.sx1][K.sy1].x1
----##    K.y1 = SEEDS[K.sx1][K.sy1].y1
----##
----##    K.x2 = SEEDS[K.sx2][K.sy2].x2
----##    K.y2 = SEEDS[K.sx2][K.sy2].y2
 
     if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
     if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
@@ -1599,7 +1583,7 @@ function Plan_create_rooms()
   --   3. add big rooms (rect / shaped / natural)
   --   4. add small rooms
   --   5. decide indoor/outdoor
-  --   6. create edge and corner lists
+  --  ??? create edge and corner lists
   --
   gui.printf("\n--==| Planning Rooms |==--\n\n")
 
@@ -1615,9 +1599,8 @@ function Plan_create_rooms()
 
   Plan_choose_liquid()
 
-  local W, H = Plan_decide_map_size()
-
-  Plan_create_sections(W, H)
+  Plan_decide_map_size()
+  Plan_create_sections()
 
   Levels_invoke_hook("add_rooms")
 
@@ -1626,13 +1609,11 @@ function Plan_create_rooms()
   Plan_add_big_rooms()
   Plan_add_small_rooms()
 
-  Levels_invoke_hook("adjust_rooms")
-
   Plan_contiguous_sections()
   Plan_collect_sections()
   Plan_dump_sections()
 
-  Plan_find_neighbors()
+--!!!!!!  Plan_find_neighbors()
 
   Plan_decide_outdoors()
 

@@ -436,6 +436,8 @@ function Areas_important_stuff()
 
 
   local function pick_tele_spot(R, other_K)
+    -- FIXME: broken???
+
     local loc_list = {}
 
     for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
