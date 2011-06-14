@@ -73,3 +73,7 @@ CHANGES
    since I find it more readable -- the exclamation mark just
    stands out more.
 
+
+6. Allow numbers to begin with a plus sign, example: +3
+   Just another little thing I missed from C.
+

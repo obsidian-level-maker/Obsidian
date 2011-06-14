@@ -47,6 +47,7 @@ CHANGES (since 3.57)
   - ternary operator of the form: (X ? Y ; Z)
   - continue statement
   - alternative inequality operator: !=
+  - allow numbers to begin with plus, like: +3
 
 - incorporated glBSP source for easier building
 
