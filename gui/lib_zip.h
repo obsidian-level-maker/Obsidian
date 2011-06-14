@@ -130,7 +130,7 @@ typedef struct
   u32_t dir_size;
   u32_t dir_offset;
 
-  u16_t comment_len;
+  u16_t comment_length;
 }
 raw_zip_end_of_directory_t;
 

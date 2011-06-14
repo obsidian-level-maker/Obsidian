@@ -31,7 +31,7 @@
 
 typedef struct
 {
-  raw_zip_central_header_t hdr;
+  raw_zip_central_header_t  hdr;
 
   char name[ZIPF_MAX_PATH];
 }
@@ -40,7 +40,7 @@ zip_central_entry_t;
 
 typedef struct
 {
-  raw_zip_local_header_t hdr;
+  raw_zip_local_header_t  hdr;
 
   char name[ZIPF_MAX_PATH];
 }
@@ -64,7 +64,10 @@ static FILE *zipf_write_fp;
 
 static std::list<zip_central_entry_t> zipf_W_directory;
 
-static zip_local_entry_t zipf_W_lump;
+static zip_local_entry_t zipf_W_local;
+
+static int zipf_local_start;
+static int zipf_local_length;
 
 // common date and time (not swapped)
 static int zipf_date;
@@ -115,12 +118,12 @@ void ZIPF_CloseWrite(void)
 
   LogPrintf("Writing ZIP directory\n");
 
+  int dir_offset = (int)ftell(zipf_write_fp);
+  int dir_size   = 0;
+
   raw_zip_end_of_directory_t  end_part;
 
-  memcpy(end_part.magic, ZIPF_CENTRAL_MAGIC, 4);
-
-  end_part.dir_offset = (u32_t)ftell(zipf_write_fp);
-  end_part.dir_size   = 0;
+  memcpy(end_part.magic, ZIPF_END_MAGIC, 4);
 
   std::list<raw_wad_lump_t>::iterator ZDI;
 
@@ -128,10 +131,20 @@ void ZIPF_CloseWrite(void)
   {
     zip_central_entry_t *L = & (*ZDI);
 
-    fwrite(L, sizeof(zip_central_entry_t), 1, zipf_write_fp);
+    fwrite(&L->hdr, sizeof(raw_zip_central_header_t), 1, zipf_write_fp);
+    fwrite(&L->name, strlen(L->name), 1, zipf_write_fp);
 
-    header.num_lumps++;
+    dir_size += (int)sizeof(raw_zip_central_header_t);
+    dir_size += strlen(L->name);
+
+    end_part.total_entries++;
   }
+
+  end_part.dir_offset = LE_U32(dir_offset);
+  end_part.dir_size   = LE_U32(dir_size);
+
+  end_part.disk_entries  = LE_U16(end_part.total_entries);
+  end_part.total_entries = LE_U16(end_part.total_entries);
 
   fwrite(&end_part, sizeof(end_part), 1, zipf_write_fp);
 
@@ -150,28 +163,35 @@ void ZIPF_NewLump(const char *name)
   if (strlen(name)+1 >= ZIPF_MAX_PATH)
     Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_W_PATH);
 
+  // remember position
+  zipf_local_start  = (int)ftell(zipf_write_fp);
+  zipf_local_length = 0;
+
   // setup the zip_local_entry_t fields
-  memset(&zipf_W_lump, 0, sizeof(zipf_W_lump));
+  memset(&zipf_W_local, 0, sizeof(zipf_W_local));
 
-  memcpy(zipf_W_lump.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
+  memcpy(zipf_W_local.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
 
-  zipf_W_lump.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
-  zipf_W_lump.hdr.flags = 0;
+  zipf_W_local.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
+  zipf_W_local.hdr.flags = 0;
 
   // no compression... yet...
-  zipf_W_lump.hdr.comp_method = LE_U16(ZIPF_COMP_STORE);
+  zipf_W_local.hdr.comp_method = LE_U16(ZIPF_COMP_STORE);
 
-  zipf_W_lump.hdr.file_date = zipf_date;
-  zipf_W_lump.hdr.file_time = zipf_time;
+  zipf_W_local.hdr.file_date = LE_U16(zipf_date);
+  zipf_W_local.hdr.file_time = LE_U16(zipf_time);
 
-  /* size stuff done in ZIPF_FinishLump */
+  /* CRC and sizes are fixed up in ZIPF_FinishLump */
 
-  zipf_W_lump.hdr.name_length  = strlen(name);
-  zipf_W_lump.hdr.extra_length = 0;
+  int name_length = strlen(name);
 
-  strcpy(zipf_W_lump.name, name);
+  zipf_W_local.hdr.name_length  = LE_U16(name_length);
+  zipf_W_local.hdr.extra_length = 0;
 
-  wad_W_lump.start = (u32_t)ftell(wad_write_fp);
+  strcpy(zipf_W_local.name, name);
+
+  fwrite(&zipf_W_local.hdr, sizeof(zipf_W_local.hdr), 1, zipf_write_fp);
+  fwrite(&zipf_W_local.name, name_length, 1, zipf_write_fp);
 }
 
 
@@ -187,27 +207,65 @@ bool ZIPF_AppendData(const void *data, int length)
 
   // FIXME: CRC
 
+  zipf_local_length += length;
+
   return true;
 }
 
 
 void ZIPF_FinishLump(void)
 {
-  int len = (int)ftell(zipf_write_fp) - (int)zipf_W_lump.start;
+  fflush(zipf_write_fp);
 
-  // create the central from the local entry
+  // determine length
+  int length = (int)ftell(zipf_write_fp) - zipf_local_start;
 
+  zipf_W_local.real_size     = LE_U32(length);
+  zipf_W_local.compress_size = LE_U32(length);
+
+  // seek back and fix up the CRC and size fields
+  // FIXME: check if worked
+  fseek(zipf_write_fp, zipf_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
+
+  fwrite(&zipf_W_local.crc,           4, 1, zipf_write_fp);
+  fwrite(&zipf_W_local.compress_size, 4, 1, zipf_write_fp);
+  fwrite(&zipf_W_local.real_size,     4, 1, zipf_write_fp);
+
+  fflush(zipf_write_fp);
+
+  // seek back to end of file
+  fseek(zipf_write_fp, 0, SEEK_END);
+
+  // create the central entry from the local entry
   zip_central_entry_t  central;
+
+  memcpy(central.hdr.magic, ZIPF_CENTRAL_MAGIC, 4);
+
+  central.hdr.made_version = LE_U16(ZIPF_MADE_VERSION);
+  central.hdr.req_version  = zipf_W_local.hdr.req_version;
+
+  central.hdr.flags       = zipf_W_local.hdr.flags;
+  central.hdr.comp_method = zipf_W_local.hdr.comp_method;
+  central.hdr.file_time   = zipf_W_local.hdr.file_time;
+  central.hdr.file_date   = zipf_W_local.hdr.file_date;
+
+  central.hdr.crc           = zipf_W_local.hdr.crc;
+  central.hdr.compress_size = zipf_W_local.hdr.compress_size;
+  central.hdr.real_size     = zipf_W_local.hdr.real_size;
+
+  central.hdr.name_length    = zipf_W_local.hdr.name_length;
+  central.hdr.extra_length   = 0;
+  central.hdr.comment_length = 0;
+
+  central.hdr.start_disk  = 0;
+  central.internal_attrib = 0;
+  central.external_attrib = 0;
+
+  central.local_offset = LE_U32(zipf_local_start);
 
   strcpy(central.name, zipf_W_lump.name);
 
-  // FIXME !!!
-
-  zipf_W_lump.start  = LE_U32(wad_W_lump.start);
-  zipf_W_lump.length = LE_U32(len);
-
-  zipf_W_directory.push_back(wad_W_lump);
-  
+  zipf_W_directory.push_back(central);
 }
 
 
