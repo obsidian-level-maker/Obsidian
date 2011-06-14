@@ -156,6 +156,9 @@ raw_zip_end_of_directory_t;
 #define ZIPF_REQ_VERSION   0x00a
 #define ZIPF_MADE_VERSION  0x314
 
+// external attributes:
+#define ZIPF_ATTRIB_NORMAL  (0x81A4 << 16)  // mode "644"
+
 
 #endif /* __OBLIGE_LIB_ZIP_H__ */
 

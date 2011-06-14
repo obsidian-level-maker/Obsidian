@@ -269,7 +269,7 @@ void ZIPF_FinishLump(void)
 
   central.hdr.start_disk      = 0;
   central.hdr.internal_attrib = 0;
-  central.hdr.external_attrib = 0;
+  central.hdr.external_attrib = LE_U32(ZIPF_ATTRIB_NORMAL);
 
   central.hdr.local_offset = LE_U32(zipf_local_start);
 
