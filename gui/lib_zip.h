@@ -149,6 +149,10 @@ raw_zip_end_of_directory_t;
 #define ZIPF_COMP_STORE    0
 #define ZIPF_COMP_DEFLATE  8
 
+// version numbers:
+#define ZIPF_REQ_VERSION   0x014
+#define ZIPF_MADE_VERSION  0x314
+
 
 #endif /* __OBLIGE_LIB_ZIP_H__ */
 

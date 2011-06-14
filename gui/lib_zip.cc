@@ -27,6 +27,27 @@
 #include "lib_zip.h"
 
 
+#define ZIPF_MAX_PATH  256
+
+typedef struct
+{
+  raw_zip_central_header_t hdr;
+
+  char name[ZIPF_MAX_PATH];
+}
+zip_central_entry_t;
+
+
+typedef struct
+{
+  raw_zip_local_header_t hdr;
+
+  char name[ZIPF_MAX_PATH];
+}
+zip_local_entry_t;
+
+
+
 //------------------------------------------------------------------------
 //  ZIP READING
 //------------------------------------------------------------------------
@@ -39,18 +60,22 @@
 //  ZIP WRITING
 //------------------------------------------------------------------------
 
-static FILE *zipf_W_fp;
+static FILE *zipf_write_fp;
 
-static std::list<raw_zip_central_header_t> zipf_W_directory;
+static std::list<zip_central_entry_t> zipf_W_directory;
 
-//!! static raw_wad_lump_t wad_W_lump;
+static zip_local_entry_t zipf_W_lump;
+
+// common date and time (not swapped)
+static int zipf_date;
+static int zipf_time;
 
 
 bool ZIPF_OpenWrite(const char *filename)
 {
-  zipf_W_fp = fopen(filename, "wb");
+  zipf_write_fp = fopen(filename, "wb");
 
-  if (! zipf_W_fp)
+  if (! zipf_write_fp)
   {
     LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename);
     return false;
@@ -58,13 +83,33 @@ bool ZIPF_OpenWrite(const char *filename)
 
   LogPrintf("Created ZIP file: %s\n", filename);
 
+  // grab the current date and time
+  struct tm *t = localtime(time());
+
+  if (false)  // FIXME !!!!
+  {
+    zipf_date = (((t->tm_year - 80) & 0x7f) << 9) |
+                (((t->tm_mon  +  1) & 0x0f) << 5) |
+                (  t->tm_mday       & 0x1f);
+
+    zipf_time = ((t->tm_hour & 0x1f) << 11) |
+                ((t->tm_min  & 0x3f) <<  5) |
+                ((t->tm_sec  & 0x3e) >>  1);
+  }
+  else
+  {
+    // fallback
+    zipf_date = ((2011 - 1980) << 9) | (7 << 5) | 1;
+    zipf_time = (12 << 11) | (34 << 5) | (56 >> 1);
+  }
+
   return true;
 }
 
 
 void ZIPF_CloseWrite(void)
 {
-  fflush(zipf_W_fp);
+  fflush(zipf_write_fp);
 
   // write the directory
 
@@ -72,83 +117,98 @@ void ZIPF_CloseWrite(void)
 
   raw_zip_end_of_directory_t  end_part;
 
-  memcpy(end_part.magic, ZIPF_CENTRAL_MAGIC, sizeof(end_part.magic));
+  memcpy(end_part.magic, ZIPF_CENTRAL_MAGIC, 4);
 
-  end_part.dir_offset = (u32_t)ftell(zipf_W_fp);
+  end_part.dir_offset = (u32_t)ftell(zipf_write_fp);
   end_part.dir_size   = 0;
 
   std::list<raw_wad_lump_t>::iterator ZDI;
 
   for (ZDI = zipf_W_directory.begin(); ZDI != zipf_W_directory.end(); ZDI++)
   {
-    raw_zip_central_header_t *L = & (*ZDI);
+    zip_central_entry_t *L = & (*ZDI);
 
-    fwrite(L, sizeof(raw_zip_central_header_t), 1, zipf_W_fp);
-
-    // FIXME: write filename
+    fwrite(L, sizeof(zip_central_entry_t), 1, zipf_write_fp);
 
     header.num_lumps++;
   }
 
-  fwrite(&end_part, sizeof(end_part), 1, zipf_W_fp);
+  fwrite(&end_part, sizeof(end_part), 1, zipf_write_fp);
 
-  fflush(zipf_W_fp);
-  fclose(zipf_W_fp);
+  fflush(zipf_write_fp);
+  fclose(zipf_write_fp);
 
   LogPrintf("Closed ZIP file\n");
 
-  zipf_W_fp = NULL;
+  zipf_write_fp = NULL;
   zipf_W_directory.clear();
 }
 
 
-#if 0
-
-void WAD_NewLump(const char *name)
+void ZIPF_NewLump(const char *name)
 {
-  SYS_ASSERT(strlen(name) <= 8);  // FIXME: error
+  if (strlen(name)+1 >= ZIPF_MAX_PATH)
+    Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_W_PATH);
 
-  memset(&wad_W_lump, 0, sizeof(wad_W_lump));
+  // setup the zip_local_entry_t fields
+  memset(&zipf_W_lump, 0, sizeof(zipf_W_lump));
 
-  strncpy(wad_W_lump.name, name, 8);
+  memcpy(zipf_W_lump.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
 
-  wad_W_lump.start = (u32_t)ftell(wad_W_fp);
+  zipf_W_lump.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
+  zipf_W_lump.hdr.flags = 0;
+
+  // no compression... yet...
+  zipf_W_lump.hdr.comp_method = LE_U16(ZIPF_COMP_STORE);
+
+  zipf_W_lump.hdr.file_date = zipf_date;
+  zipf_W_lump.hdr.file_time = zipf_time;
+
+  /* size stuff done in ZIPF_FinishLump */
+
+  zipf_W_lump.hdr.name_length  = strlen(name);
+  zipf_W_lump.hdr.extra_length = 0;
+
+  strcpy(zipf_W_lump.name, name);
+
+  wad_W_lump.start = (u32_t)ftell(wad_write_fp);
 }
 
 
-bool WAD_AppendData(const void *data, int length)
+bool ZIPF_AppendData(const void *data, int length)
 {
   if (length == 0)
     return true;
 
   SYS_ASSERT(length > 0);
 
-  return (fwrite(data, length, 1, wad_W_fp) == 1);
+  if (fwrite(data, length, 1, zipf_write_fp) != 1)
+    return false;
+
+  // FIXME: CRC
+
+  return true;
 }
 
 
-void WAD_FinishLump(void)
+void ZIPF_FinishLump(void)
 {
-  int len = (int)ftell(wad_W_fp) - (int)wad_W_lump.start;
+  int len = (int)ftell(zipf_write_fp) - (int)zipf_W_lump.start;
 
-  // pad lumps to a multiple of four bytes
-  int padding = ALIGN_LEN(len) - len;
+  // create the central from the local entry
 
-  if (padding > 0)
-  {
-    static u8_t zeros[4] = { 0,0,0,0 };
+  zip_central_entry_t  central;
 
-    fwrite(zeros, padding, 1, wad_W_fp);
-  }
+  strcpy(central.name, zipf_W_lump.name);
 
-  // fix endianness
-  wad_W_lump.start  = LE_U32(wad_W_lump.start);
-  wad_W_lump.length = LE_U32(len);
+  // FIXME !!!
 
-  wad_W_directory.push_back(wad_W_lump);
+  zipf_W_lump.start  = LE_U32(wad_W_lump.start);
+  zipf_W_lump.length = LE_U32(len);
+
+  zipf_W_directory.push_back(wad_W_lump);
+  
 }
-
-#endif
 
 
 //--- editor settings ---
