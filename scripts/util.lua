@@ -393,6 +393,12 @@ function table.array_2D(w, h)
   return array
 end
 
+function table.valid_pos(array, x, y)
+  return 1 <= x and x <= array.w and
+         1 <= y and y <= array.h
+end
+
+
 table.INHERIT_META =
 {
   __index = function(t, k)
