@@ -70,6 +70,7 @@ typedef struct
 
 /* byte filename[]; */
 }
+__attribute__((packed))
 raw_zip_local_header_t;
 
 
@@ -114,6 +115,7 @@ typedef struct
 
 /* byte filename[]; */
 }
+__attribute__((packed))
 raw_zip_central_header_t;
 
 
@@ -132,6 +134,7 @@ typedef struct
 
   u16_t comment_length;
 }
+__attribute__((packed))
 raw_zip_end_of_directory_t;
 
 
@@ -150,7 +153,7 @@ raw_zip_end_of_directory_t;
 #define ZIPF_COMP_DEFLATE  8
 
 // version numbers:
-#define ZIPF_REQ_VERSION   0x014
+#define ZIPF_REQ_VERSION   0x00a
 #define ZIPF_MADE_VERSION  0x314
 
 

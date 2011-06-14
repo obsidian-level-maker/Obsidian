@@ -93,7 +93,7 @@ bool ZIPF_OpenWrite(const char *filename)
 
   struct tm *t = localtime(&cur_time);
 
-  if (false)  // FIXME !!!!
+  if (t)
   {
     zipf_date = (((t->tm_year - 80) & 0x7f) << 9) |
                 (((t->tm_mon  +  1) & 0x0f) << 5) |
@@ -125,9 +125,7 @@ void ZIPF_CloseWrite(void)
   int dir_offset = (int)ftell(zipf_write_fp);
   int dir_size   = 0;
 
-  raw_zip_end_of_directory_t  end_part;
-
-  memcpy(end_part.magic, ZIPF_END_MAGIC, 4);
+  int total_entries = 0;
 
   std::list<zip_central_entry_t>::iterator ZDI;
 
@@ -141,14 +139,24 @@ void ZIPF_CloseWrite(void)
     dir_size += (int)sizeof(raw_zip_central_header_t);
     dir_size += strlen(L->name);
 
-    end_part.total_entries++;
+    total_entries++;
   }
+
+  // write the end-of-directory info
+
+  raw_zip_end_of_directory_t  end_part;
+
+  memcpy(end_part.magic, ZIPF_END_MAGIC, 4);
+
+  end_part.this_disk        = 0;
+  end_part.central_dir_disk = 0;
+  end_part.comment_length   = 0;
+
+  end_part.disk_entries  = LE_U16(total_entries);
+  end_part.total_entries = LE_U16(total_entries);
 
   end_part.dir_offset = LE_U32(dir_offset);
   end_part.dir_size   = LE_U32(dir_size);
-
-  end_part.disk_entries  = LE_U16(end_part.total_entries);
-  end_part.total_entries = LE_U16(end_part.total_entries);
 
   fwrite(&end_part, sizeof(end_part), 1, zipf_write_fp);
 
@@ -172,8 +180,6 @@ void ZIPF_NewLump(const char *name)
   zipf_local_length = 0;
 
   // setup the zip_local_entry_t fields
-  memset(&zipf_W_local, 0, sizeof(zipf_W_local));
-
   memcpy(zipf_W_local.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
 
   zipf_W_local.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
@@ -186,6 +192,9 @@ void ZIPF_NewLump(const char *name)
   zipf_W_local.hdr.file_time = LE_U16(zipf_time);
 
   /* CRC and sizes are fixed up in ZIPF_FinishLump */
+  zipf_W_local.hdr.crc           = 0;
+  zipf_W_local.hdr.compress_size = 0;
+  zipf_W_local.hdr.real_size     = 0;
 
   int name_length = strlen(name);
 
@@ -221,11 +230,8 @@ void ZIPF_FinishLump(void)
 {
   fflush(zipf_write_fp);
 
-  // determine length
-  int length = (int)ftell(zipf_write_fp) - zipf_local_start;
-
-  zipf_W_local.hdr.real_size     = LE_U32(length);
-  zipf_W_local.hdr.compress_size = LE_U32(length);
+  zipf_W_local.hdr.real_size     = LE_U32(zipf_local_length);
+  zipf_W_local.hdr.compress_size = LE_U32(zipf_local_length);
 
   // seek back and fix up the CRC and size fields
   // FIXME: check if worked
