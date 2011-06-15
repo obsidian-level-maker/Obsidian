@@ -59,10 +59,73 @@ static FILE *r_zip_fp;
 static raw_zip_end_of_directory_t  r_end_part;
 static zip_central_entry_t * r_directory;
 
+#define SCAN_LENGTH  4096
+
+
+static bool find_end_part()
+{
+  char buffer[SCAN_LENGTH];
+
+  // find the end-of-directory structure, search backwards from the
+  // end of the file.
+
+  fseek(r_zip_fp, 0, SEEK_END);
+
+  int position = (int)ftell(r_zip_fp);
+
+  while (position > 0)
+  {
+    // move back through file
+    if (position > SCAN_LENGTH-12)
+      position -= (SCAN_LENGTH-12);
+    else
+      position = 0;
+
+    if (fseek(r_zip_fp, position, SEEK_SET) != 0)
+      break;
+
+    int length = fread(buffer, 1, SCAN_LENGTH, r_zip_fp);
+
+    // stop on read error
+    if (length <= 0 || ferror(r_zip_fp))
+      break;
+
+    for (int offset = length-4 ; offset >= 0 ; offset--)
+    {
+      if (buffer[offset  ] == ZIPF_END_MAGIC[0] &&
+          buffer[offset+1] == ZIPF_END_MAGIC[1] &&
+          buffer[offset+2] == ZIPF_END_MAGIC[2] &&
+          buffer[offset+3] == ZIPF_END_MAGIC[3])
+      {
+        return position + offset;
+      }
+    }
+  }
+
+  return -1;  // not found
+}
+
 
 static bool load_end_part()
 {
-  // FIXME !!!!!
+  int position = find_end_part();
+
+  if (position <= 0)
+  {
+    LogPrintf("ZIPF_OpenRead: not a ZIP file (cannot find EOD)\n");
+    return false;
+  }
+
+  DebugPrintf("ZIP end-of-directory found at: 0x%08x\n", position);
+
+  fseek(r_zip_fp, position, SEEK_SET);
+
+  if (fread(&r_end_part, sizeof(r_end_part), 1, r_zip_fp) != 1 ||
+      memcpy(r_end_part.magic, ZIPF_END_MAGIC, 4) != 0)
+  {
+    LogPrintf("ZIPF_OpenRead: bad ZIP file? (failed to load EOD)\n");
+    return false;
+  }
 
   // fix endianness
   r_end_part.this_disk        = LE_U16(r_end_part.this_disk);
@@ -90,16 +153,17 @@ bool ZIPF_OpenRead(const char *filename)
 
   if (! load_end_part())
   {
-    LogPrintf("ZIPF_OpenRead: not a ZIP file (cannot find EOD)\n");
     fclose(r_zip_fp);
     return false;
   }
 
   /* read directory */
 
+  DebugPrintf("ZIP central directory at offset: 0x%08x\n", r_end_part.dir_offset);
+
   if (fseek(r_zip_fp, r_end_part.dir_offset, SEEK_SET) != 0)
   {
-    LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n", r_header.dir_start);
+    LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n", r_end_part.dir_offset);
     fclose(r_zip_fp);
     return false;
   }
@@ -111,6 +175,8 @@ bool ZIPF_OpenRead(const char *filename)
     zip_central_entry_t *E = &r_directory[i];
 
     int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
+
+    // FIXME !!  check magic
 
     if (res == EOF || res != 1 || ferror(r_pak_fp))
     {
