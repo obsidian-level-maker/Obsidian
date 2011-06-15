@@ -64,15 +64,32 @@ public:
 
   zip_central_entry_t *E;
 
-  // COMPRESSION SHIT HERE....
+  zstream Z;
+
+  // current offset (in uncompressed bytes)
+  // i.e. the place the last ReadData() call got to.
+  // NOTE: only used when uncompressing
+  int cur_offset;
 
 public:
   zip_read_state_c(int _entry, zip_central_entry_t *_E) :
-      entry(_entry), E(_E)
-  { }
+      entry(_entry), E(_E), cur_offset(0)
+  {
+    // use Zlib's default allocator
+    Z.zalloc = Z_NULL;
+    Z.zfree  = Z_MULL;
+
+    // no data yet
+    Z.next_in  = Z_NULL;
+    Z.avail_in = 0;
+
+    inflateInit(&Z);
+  }
 
   ~zip_read_state_c()
-  { }
+  {
+    inflateEnd(&Z);
+  }
 };
 
 
@@ -396,6 +413,7 @@ static void create_read_state(int entry)
   // determine data_offset [FIXME: is this correct?]
   E->data_offset = (int)(E->hdr.local_offset + LOCAL_NAME_OFFSET +
                          E->hdr.name_length  + E->hdr.extra_length);
+
 }
 
 
@@ -408,22 +426,63 @@ static void destroy_read_state()
 }
 
 
-static int seek_read_state(int offset)
+static bool seek_read_state(int offset)
 {
   zip_central_entry_t *E = r_read_state->E;
 
-  if (fseek(r_zip_fp, E->data_offset + offset, SEEK_SET) != 0)
-    return false;
+  if (E->hdr.comp_method == ZIPF_COMP_STORE)
+  {
+    int res = fseek(r_zip_fp, E->data_offset + offset, SEEK_SET);
 
-  return true;
+    return (res == 0);
+  }
+
+  byte scan_buf[SCAN_LENGTH];
+
+  // FIXME: UNCOMPRESS STUFF
+
+  if (offset != E->cur_offset)
+  {
+    if (offset < E->cur_offset)
+    {
+      RESET, i.e. GO BACK TO START
+
+      E->cur_offset = 0;
+    }
+
+    // how many bytes do we need?
+    offset -= E->cur_offset;
+
+    UNCOMPRESS (but dont use) 'offset' bytes
+  }
+
+  DO something here ?:?:?:
 }
 
 
 static bool read_from_entry(int length, void *buffer)
 {
-  int res = fread(buffer, length, 1, r_zip_fp);
+  zip_central_entry_t *E = r_read_state->E;
 
-  return (res == 1);
+  if (E->hdr.comp_method == ZIPF_COMP_STORE)
+  {
+    int res = fread(buffer, length, 1, r_zip_fp);
+
+    return (res == 1);
+  }
+
+
+  // FIXME: UNCOMPRESS STUFF
+
+
+  r_read_state->Z.next_out  = buffer;
+  r_read_state->Z.avail_out = length;
+
+
+  // OK
+  r_read_state->cur_offset = offset + length;
+
+  return true;
 }
 
 
