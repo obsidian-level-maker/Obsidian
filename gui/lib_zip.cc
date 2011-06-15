@@ -198,7 +198,7 @@ void ZIPF_NewLump(const char *name)
   w_local.hdr.file_time = LE_U16(zipf_time);
 
   /* CRC and sizes are fixed up in ZIPF_FinishLump */
-  w_local.hdr.crc           = 0;
+  w_local.hdr.crc           = crc32(0, NULL, 0);
   w_local.hdr.compress_size = 0;
   w_local.hdr.real_size     = 0;
 
@@ -224,7 +224,8 @@ bool ZIPF_AppendData(const void *data, int length)
   if (fwrite(data, length, 1, w_zip_fp) != 1)
     return false;
 
-  // FIXME: CRC
+  // compute the CRC -- use function from zlib
+  w_local.hdr.crc = crc32(w_local.hdr.crc, (const Bytef *)data, (uInt)length);
 
   w_local_length += length;
 
