@@ -29,6 +29,10 @@
 #include "lib_zip.h"
 
 
+#define LOCAL_CRC_OFFSET   (7*2)
+#define LOCAL_NAME_OFFSET  (15*2)
+
+
 #define ZIPF_MAX_PATH  200
 
 typedef struct
@@ -37,6 +41,8 @@ typedef struct
 
   // TODO: use a string pointer instead
   char name[ZIPF_MAX_PATH];
+
+  int data_offset;  // where the data actually begins
 }
 zip_central_entry_t;
 
@@ -51,6 +57,24 @@ typedef struct
 zip_local_entry_t;
 
 
+class zip_read_state_c
+{
+public:
+  int entry;
+
+  zip_central_entry_t *E;
+
+  // COMPRESSION SHIT HERE....
+
+public:
+  zip_read_state_c(int _entry, zip_central_entry_t *_E) :
+      entry(_entry), E(_E)
+  { }
+
+  ~zip_read_state_c()
+  { }
+};
+
 
 //------------------------------------------------------------------------
 //  ZIP READING
@@ -61,7 +85,13 @@ static FILE *r_zip_fp;
 static raw_zip_end_of_directory_t  r_end_part;
 static zip_central_entry_t * r_directory;
 
+// TODO: have a read_state per entry (E->read_state)
+static zip_read_state_c *r_read_state;
+
 #define SCAN_LENGTH  4096
+
+
+static void destroy_read_state();
 
 
 static int find_end_part()
@@ -270,6 +300,9 @@ bool ZIPF_OpenRead(const char *filename)
       return false;
     }
 
+    // the real start of data is determined at read time
+    E->data_offset = -1;
+
     DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.real_size, E->name);
   }
 
@@ -285,6 +318,9 @@ void ZIPF_CloseRead(void)
 
   delete[] r_directory;
   r_directory = NULL;
+
+  if (r_read_state)
+    destroy_read_state();
 }
 
 
@@ -332,7 +368,7 @@ void ZIPF_ListEntries(void)
   }
   else
   {
-    for (int i = 0; i < (int)r_end_part.total_entries; i++)
+    for (int i = 0 ; i < (int)r_end_part.total_entries ; i++)
     {
       zip_central_entry_t *E = &r_directory[i];
 
@@ -344,7 +380,80 @@ void ZIPF_ListEntries(void)
 }
 
 
-// !!!! TODO :  ZIPF_ReadData
+///////// READING STUFF ///////////////////////////////////////
+
+
+// !!! FIXME: SUPPORT COMPRESSION !!!
+
+static void create_read_state(int entry)
+{
+  zip_central_entry_t *E = &r_directory[entry];
+
+  r_read_state = new zip_read_state_c(entry, E);
+
+  // FIXME: verify magic in local header
+
+  // determine data_offset [FIXME: is this correct?]
+  E->data_offset = (int)(E->hdr.local_offset + LOCAL_NAME_OFFSET +
+                         E->hdr.name_length  + E->hdr.extra_length);
+}
+
+
+static void destroy_read_state()
+{
+  SYS_ASSERT(r_read_state);
+
+  delete r_read_state;
+  r_read_state = NULL;
+}
+
+
+static int seek_read_state(int offset)
+{
+  zip_central_entry_t *E = r_read_state->E;
+
+  if (fseek(r_zip_fp, E->data_offset + offset, SEEK_SET) != 0)
+    return false;
+
+  return true;
+}
+
+
+static bool read_from_entry(int length, void *buffer)
+{
+  int res = fread(buffer, length, 1, r_zip_fp);
+
+  return (res == 1);
+}
+
+
+bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
+{
+  SYS_ASSERT(entry >= 0 && entry < (int)r_end_part.total_entries);
+  SYS_ASSERT(offset >= 0);
+  SYS_ASSERT(length > 0);
+
+  zip_central_entry_t *E = &r_directory[entry];
+
+  // need a new read_state for a new entry
+  if (! (r_read_state && r_read_state->entry == entry))
+  {
+    if (r_read_state)
+      destroy_read_state();
+
+    create_read_state(entry);
+  }
+
+  // check if enough data left (i.e. EOF)
+  if ((u32_t)offset + (u32_t)length > E->hdr.real_size)
+    return false;
+
+  // move to where we want to read from
+  if (! seek_read_state(offset))
+    return false;
+
+  return read_from_entry(length, buffer);
+}
 
 
 //------------------------------------------------------------------------
@@ -363,8 +472,6 @@ static int w_local_length;
 // common date and time (not swapped)
 static int zipf_date;
 static int zipf_time;
-
-#define LOCAL_CRC_OFFSET  (7*2)
 
 
 bool ZIPF_OpenWrite(const char *filename)
