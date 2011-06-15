@@ -57,9 +57,143 @@ zip_local_entry_t;
 static FILE *r_zip_fp;
 
 static raw_zip_end_of_directory_t  r_end_part;
-static raw_zip_central_header_t  * r_directory;
+static zip_central_entry_t * r_directory;
 
-// !!! TODO TODO !!!
+
+static bool load_end_part()
+{
+  // FIXME !!!!!
+
+  // fix endianness
+  r_end_part.this_disk        = LE_U16(r_end_part.this_disk);
+  r_end_part.central_dir_disk = LE_U16(r_end_part.central_dir_disk);
+  r_end_part.disk_entries     = LE_U16(r_end_part.disk_entries);
+  r_end_part.total_entries    = LE_U16(r_end_part.total_entries);
+  r_end_part.comment_length   = LE_U16(r_end_part.comment_length);
+
+  r_end_part.dir_size   = LE_U32(r_end_part.dir_size);
+  r_end_part.dir_offset = LE_U32(r_end_part.dir_offset);
+}
+
+
+bool ZIPF_OpenRead(const char *filename)
+{
+  r_zip_fp = fopen(filename, "rb");
+
+  if (! r_zip_fp)
+  {
+    LogPrintf("ZIPF_OpenRead: no such file: %s\n", filename);
+    return false;
+  }
+
+  LogPrintf("Opened ZIP file: %s\n", filename);
+
+  if (! load_end_part())
+  {
+    LogPrintf("ZIPF_OpenRead: not a ZIP file (cannot find EOD)\n");
+    fclose(r_zip_fp);
+    return false;
+  }
+
+  /* read directory */
+
+  if (fseek(r_zip_fp, r_end_part.dir_offset, SEEK_SET) != 0)
+  {
+    LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n", r_header.dir_start);
+    fclose(r_zip_fp);
+    return false;
+  }
+
+  r_directory = new zip_central_entry_t[r_end_part.total_entries + 1];
+
+  for (int i = 0 ; i < (int)r_end_part.total_entries ; i++)
+  {
+    zip_central_entry_t *E = &r_directory[i];
+
+    int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
+
+    if (res == EOF || res != 1 || ferror(r_pak_fp))
+    {
+      if (i == 0)
+      {
+        LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
+
+        delete[] r_directory;
+        r_directory = NULL;
+
+        fclose(r_pak_fp);
+        return false;
+      }
+
+      LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
+
+      // truncate directory
+      r_header.entry_num = i;
+      break;
+    }
+
+    // make sure name is NUL terminated.
+    E->name[55] = 0;
+
+    E->offset = LE_U32(E->offset);
+    E->length = LE_U32(E->length);
+
+//  DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length, E->name);
+  }
+
+  return true; // OK
+}
+
+
+void ZIPF_CloseRead(void)
+{
+  fclose(r_zip_fp);
+
+  LogPrintf("Closed ZIP file\n");
+
+  delete[] r_directory;
+  r_directory = NULL;
+}
+
+
+int ZIPF_NumEntries(void)
+{
+  return (int)r_end_part.total_entries;
+}
+
+
+int ZIPF_FindEntry(const char *name)
+{
+  for (unsigned int i = 0 ; i < r_end_part.total_entries ; i++)
+  {
+    if (StringCaseCmp(name, r_directory[i].name) == 0)
+      return i;
+  }
+
+  return -1; // not found
+}
+
+
+int ZIPF_EntryLen(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < ZIPF_NumEntries());
+
+  return (int)r_directory[entry].real_size;
+}
+
+
+const char * ZIPF_EntryName(int entry)
+{
+  SYS_ASSERT(entry >= 0 && entry < ZIPF_NumEntries());
+
+  return r_directory[entry].name;
+}
+
+
+// !!!! TODO :  ZIPF_ReadData
+
+
+// !!!! TODO :  ZIPF_ListEntries
 
 
 //------------------------------------------------------------------------
@@ -135,7 +269,7 @@ void ZIPF_CloseWrite(void)
 
   std::list<zip_central_entry_t>::iterator ZDI;
 
-  for (ZDI = w_directory.begin(); ZDI != w_directory.end(); ZDI++)
+  for (ZDI = w_directory.begin() ; ZDI != w_directory.end() ; ZDI++)
   {
     zip_central_entry_t *L = & (*ZDI);
 
