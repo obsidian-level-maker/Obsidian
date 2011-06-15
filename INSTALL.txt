@@ -31,7 +31,7 @@ REQUIRED LIBRARIES
 ==================
 
 Zlib (v1.2.3 or later)
-  http://www.gzip.org/zlib
+  http://www.zlib.net/
 
 FLTK (Fast Light Tool Kit) : v1.1.10
   http://www.fltk.org/
