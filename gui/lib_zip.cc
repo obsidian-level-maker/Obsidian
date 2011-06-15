@@ -29,12 +29,13 @@
 #include "lib_zip.h"
 
 
-#define ZIPF_MAX_PATH  256
+#define ZIPF_MAX_PATH  200
 
 typedef struct
 {
   raw_zip_central_header_t  hdr;
 
+  // TODO: use a string pointer instead
   char name[ZIPF_MAX_PATH];
 }
 zip_central_entry_t;
@@ -44,6 +45,7 @@ typedef struct
 {
   raw_zip_local_header_t  hdr;
 
+  // TODO: use a string pointer instead
   char name[ZIPF_MAX_PATH];
 }
 zip_local_entry_t;
@@ -136,6 +138,8 @@ static bool load_end_part()
 
   r_end_part.dir_size   = LE_U32(r_end_part.dir_size);
   r_end_part.dir_offset = LE_U32(r_end_part.dir_offset);
+
+  return true; // OK
 }
 
 
@@ -177,7 +181,7 @@ static bool read_directory_entry(zip_central_entry_t *E)
 
 
   // read filename
-  int name_length = E.hdr.name_length;
+  int name_length = E->hdr.name_length;
 
   if (name_length > ZIPF_MAX_PATH-2)
   {
@@ -189,6 +193,10 @@ static bool read_directory_entry(zip_central_entry_t *E)
 
   // ensure name is NUL terminated
   E->name[name_length] = 0;
+
+
+  /// TODO: sanitize the name
+  /// for (char * p = E->name ; *p ; p++) { }
 
 
   // seek to next entry
@@ -227,6 +235,13 @@ bool ZIPF_OpenRead(const char *filename)
 
   DebugPrintf("ZIP central directory at offset: 0x%08x\n", r_end_part.dir_offset);
 
+  if (r_end_part.total_entries >= 5000)  // sanity check
+  {
+    LogPrintf("ZIPF_OpenRead: bad ZIP file? (%d entries!)\n", r_end_part.total_entries);
+    fclose(r_zip_fp);
+    return false;
+  }
+
   if (fseek(r_zip_fp, r_end_part.dir_offset, SEEK_SET) != 0)
   {
     LogPrintf("ZIPF_OpenRead: cannot seek to directory (at 0x%08x)\n", r_end_part.dir_offset);
@@ -251,7 +266,7 @@ bool ZIPF_OpenRead(const char *filename)
       return false;
     }
 
-    DebugPrintf(" %4d: %08x %08x : %s\n", i, E->hdr.local_offset, E->hdr.real_size, E->name);
+    DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.real_size, E->name);
   }
 
   return true; // OK
@@ -291,7 +306,7 @@ int ZIPF_EntryLen(int entry)
 {
   SYS_ASSERT(entry >= 0 && entry < ZIPF_NumEntries());
 
-  return (int)r_directory[entry].real_size;
+  return (int)r_directory[entry].hdr.real_size;
 }
 
 
@@ -303,10 +318,29 @@ const char * ZIPF_EntryName(int entry)
 }
 
 
+void ZIPF_ListEntries(void)
+{
+  printf("--------------------------------------------------\n");
+
+  if (r_end_part.total_entries == 0)
+  {
+    printf("ZIP file is empty\n");
+  }
+  else
+  {
+    for (int i = 0; i < (int)r_end_part.total_entries; i++)
+    {
+      zip_central_entry_t *E = &r_directory[i];
+
+      printf("%4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.real_size, E->name);
+    }
+  }
+
+  printf("--------------------------------------------------\n");
+}
+
+
 // !!!! TODO :  ZIPF_ReadData
-
-
-// !!!! TODO :  ZIPF_ListEntries
 
 
 //------------------------------------------------------------------------
