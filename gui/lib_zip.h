@@ -21,7 +21,6 @@
 #ifndef __OBLIGE_LIB_ZIP_H__
 #define __OBLIGE_LIB_ZIP_H__
 
-#include <zlib.h>
 
 /* ZIP reading */
 

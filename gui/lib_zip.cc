@@ -21,6 +21,8 @@
 #include "headers.h"
 #include "main.h"
 
+#include <zlib.h>
+
 #include <list>
 
 #include "lib_util.h"
@@ -52,6 +54,10 @@ zip_local_entry_t;
 //  ZIP READING
 //------------------------------------------------------------------------
 
+static FILE *r_zip_fp;
+
+static raw_zip_end_of_directory_t  r_end_part;
+static raw_zip_central_header_t  * r_directory;
 
 // !!! TODO TODO !!!
 
@@ -60,14 +66,14 @@ zip_local_entry_t;
 //  ZIP WRITING
 //------------------------------------------------------------------------
 
-static FILE *zipf_write_fp;
+static FILE *w_zip_fp;
 
-static std::list<zip_central_entry_t> zipf_W_directory;
+static std::list<zip_central_entry_t> w_directory;
 
-static zip_local_entry_t zipf_W_local;
+static zip_local_entry_t w_local;
 
-static int zipf_local_start;
-static int zipf_local_length;
+static int w_local_start;
+static int w_local_length;
 
 // common date and time (not swapped)
 static int zipf_date;
@@ -78,9 +84,9 @@ static int zipf_time;
 
 bool ZIPF_OpenWrite(const char *filename)
 {
-  zipf_write_fp = fopen(filename, "wb");
+  w_zip_fp = fopen(filename, "wb");
 
-  if (! zipf_write_fp)
+  if (! w_zip_fp)
   {
     LogPrintf("ZIPF_OpenWrite: cannot create file: %s\n", filename);
     return false;
@@ -116,25 +122,25 @@ bool ZIPF_OpenWrite(const char *filename)
 
 void ZIPF_CloseWrite(void)
 {
-  fflush(zipf_write_fp);
+  fflush(w_zip_fp);
 
   // write the directory
 
   LogPrintf("Writing ZIP directory\n");
 
-  int dir_offset = (int)ftell(zipf_write_fp);
+  int dir_offset = (int)ftell(w_zip_fp);
   int dir_size   = 0;
 
   int total_entries = 0;
 
   std::list<zip_central_entry_t>::iterator ZDI;
 
-  for (ZDI = zipf_W_directory.begin(); ZDI != zipf_W_directory.end(); ZDI++)
+  for (ZDI = w_directory.begin(); ZDI != w_directory.end(); ZDI++)
   {
     zip_central_entry_t *L = & (*ZDI);
 
-    fwrite(&L->hdr, sizeof(raw_zip_central_header_t), 1, zipf_write_fp);
-    fwrite(&L->name, strlen(L->name), 1, zipf_write_fp);
+    fwrite(&L->hdr, sizeof(raw_zip_central_header_t), 1, w_zip_fp);
+    fwrite(&L->name, strlen(L->name), 1, w_zip_fp);
 
     dir_size += (int)sizeof(raw_zip_central_header_t);
     dir_size += strlen(L->name);
@@ -158,15 +164,15 @@ void ZIPF_CloseWrite(void)
   end_part.dir_offset = LE_U32(dir_offset);
   end_part.dir_size   = LE_U32(dir_size);
 
-  fwrite(&end_part, sizeof(end_part), 1, zipf_write_fp);
+  fwrite(&end_part, sizeof(end_part), 1, w_zip_fp);
 
-  fflush(zipf_write_fp);
-  fclose(zipf_write_fp);
+  fflush(w_zip_fp);
+  fclose(w_zip_fp);
 
   LogPrintf("Closed ZIP file\n");
 
-  zipf_write_fp = NULL;
-  zipf_W_directory.clear();
+  w_zip_fp = NULL;
+  w_directory.clear();
 }
 
 
@@ -176,35 +182,35 @@ void ZIPF_NewLump(const char *name)
     Main_FatalError("ZIPF_NewLump: name too long (>= %d)\n", ZIPF_MAX_PATH);
 
   // remember position
-  zipf_local_start  = (int)ftell(zipf_write_fp);
-  zipf_local_length = 0;
+  w_local_start  = (int)ftell(w_zip_fp);
+  w_local_length = 0;
 
   // setup the zip_local_entry_t fields
-  memcpy(zipf_W_local.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
+  memcpy(w_local.hdr.magic, ZIPF_LOCAL_MAGIC, 4);
 
-  zipf_W_local.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
-  zipf_W_local.hdr.flags = 0;
+  w_local.hdr.req_version = LE_U16(ZIPF_REQ_VERSION);
+  w_local.hdr.flags = 0;
 
   // no compression... yet...
-  zipf_W_local.hdr.comp_method = LE_U16(ZIPF_COMP_STORE);
+  w_local.hdr.comp_method = LE_U16(ZIPF_COMP_STORE);
 
-  zipf_W_local.hdr.file_date = LE_U16(zipf_date);
-  zipf_W_local.hdr.file_time = LE_U16(zipf_time);
+  w_local.hdr.file_date = LE_U16(zipf_date);
+  w_local.hdr.file_time = LE_U16(zipf_time);
 
   /* CRC and sizes are fixed up in ZIPF_FinishLump */
-  zipf_W_local.hdr.crc           = 0;
-  zipf_W_local.hdr.compress_size = 0;
-  zipf_W_local.hdr.real_size     = 0;
+  w_local.hdr.crc           = 0;
+  w_local.hdr.compress_size = 0;
+  w_local.hdr.real_size     = 0;
 
   int name_length = strlen(name);
 
-  zipf_W_local.hdr.name_length  = LE_U16(name_length);
-  zipf_W_local.hdr.extra_length = 0;
+  w_local.hdr.name_length  = LE_U16(name_length);
+  w_local.hdr.extra_length = 0;
 
-  strcpy(zipf_W_local.name, name);
+  strcpy(w_local.name, name);
 
-  fwrite(&zipf_W_local.hdr, sizeof(zipf_W_local.hdr), 1, zipf_write_fp);
-  fwrite(&zipf_W_local.name, name_length, 1, zipf_write_fp);
+  fwrite(&w_local.hdr, sizeof(w_local.hdr), 1, w_zip_fp);
+  fwrite(&w_local.name, name_length, 1, w_zip_fp);
 }
 
 
@@ -215,12 +221,12 @@ bool ZIPF_AppendData(const void *data, int length)
 
   SYS_ASSERT(length > 0);
 
-  if (fwrite(data, length, 1, zipf_write_fp) != 1)
+  if (fwrite(data, length, 1, w_zip_fp) != 1)
     return false;
 
   // FIXME: CRC
 
-  zipf_local_length += length;
+  w_local_length += length;
 
   return true;
 }
@@ -228,23 +234,23 @@ bool ZIPF_AppendData(const void *data, int length)
 
 void ZIPF_FinishLump(void)
 {
-  fflush(zipf_write_fp);
+  fflush(w_zip_fp);
 
-  zipf_W_local.hdr.real_size     = LE_U32(zipf_local_length);
-  zipf_W_local.hdr.compress_size = LE_U32(zipf_local_length);
+  w_local.hdr.real_size     = LE_U32(w_local_length);
+  w_local.hdr.compress_size = LE_U32(w_local_length);
 
   // seek back and fix up the CRC and size fields
   // FIXME: check if worked
-  fseek(zipf_write_fp, zipf_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
+  fseek(w_zip_fp, w_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
 
-  fwrite(&zipf_W_local.hdr.crc,           4, 1, zipf_write_fp);
-  fwrite(&zipf_W_local.hdr.compress_size, 4, 1, zipf_write_fp);
-  fwrite(&zipf_W_local.hdr.real_size,     4, 1, zipf_write_fp);
+  fwrite(&w_local.hdr.crc,           4, 1, w_zip_fp);
+  fwrite(&w_local.hdr.compress_size, 4, 1, w_zip_fp);
+  fwrite(&w_local.hdr.real_size,     4, 1, w_zip_fp);
 
-  fflush(zipf_write_fp);
+  fflush(w_zip_fp);
 
   // seek back to end of file
-  fseek(zipf_write_fp, 0, SEEK_END);
+  fseek(w_zip_fp, 0, SEEK_END);
 
   // create the central entry from the local entry
   zip_central_entry_t  central;
@@ -252,18 +258,18 @@ void ZIPF_FinishLump(void)
   memcpy(central.hdr.magic, ZIPF_CENTRAL_MAGIC, 4);
 
   central.hdr.made_version = LE_U16(ZIPF_MADE_VERSION);
-  central.hdr.req_version  = zipf_W_local.hdr.req_version;
+  central.hdr.req_version  = w_local.hdr.req_version;
 
-  central.hdr.flags       = zipf_W_local.hdr.flags;
-  central.hdr.comp_method = zipf_W_local.hdr.comp_method;
-  central.hdr.file_time   = zipf_W_local.hdr.file_time;
-  central.hdr.file_date   = zipf_W_local.hdr.file_date;
+  central.hdr.flags       = w_local.hdr.flags;
+  central.hdr.comp_method = w_local.hdr.comp_method;
+  central.hdr.file_time   = w_local.hdr.file_time;
+  central.hdr.file_date   = w_local.hdr.file_date;
 
-  central.hdr.crc           = zipf_W_local.hdr.crc;
-  central.hdr.compress_size = zipf_W_local.hdr.compress_size;
-  central.hdr.real_size     = zipf_W_local.hdr.real_size;
+  central.hdr.crc           = w_local.hdr.crc;
+  central.hdr.compress_size = w_local.hdr.compress_size;
+  central.hdr.real_size     = w_local.hdr.real_size;
 
-  central.hdr.name_length    = zipf_W_local.hdr.name_length;
+  central.hdr.name_length    = w_local.hdr.name_length;
   central.hdr.extra_length   = 0;
   central.hdr.comment_length = 0;
 
@@ -271,11 +277,11 @@ void ZIPF_FinishLump(void)
   central.hdr.internal_attrib = 0;
   central.hdr.external_attrib = LE_U32(ZIPF_ATTRIB_NORMAL);
 
-  central.hdr.local_offset = LE_U32(zipf_local_start);
+  central.hdr.local_offset = LE_U32(w_local_start);
 
-  strcpy(central.name, zipf_W_local.name);
+  strcpy(central.name, w_local.name);
 
-  zipf_W_directory.push_back(central);
+  w_directory.push_back(central);
 }
 
 
