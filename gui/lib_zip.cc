@@ -64,8 +64,10 @@ static zip_central_entry_t * r_directory;
 #define SCAN_LENGTH  4096
 
 
-static bool find_end_part()
+static int find_end_part()
 {
+  // returns the file offset if found, -1 if not found
+
   char buffer[SCAN_LENGTH];
 
   // find the end-of-directory structure, search backwards from the
@@ -123,7 +125,7 @@ static bool load_end_part()
   fseek(r_zip_fp, position, SEEK_SET);
 
   if (fread(&r_end_part, sizeof(r_end_part), 1, r_zip_fp) != 1 ||
-      memcpy(r_end_part.magic, ZIPF_END_MAGIC, 4) != 0)
+      memcmp(r_end_part.magic, ZIPF_END_MAGIC, 4) != 0)
   {
     LogPrintf("ZIPF_OpenRead: bad ZIP file? (failed to load EOD)\n");
     return false;
@@ -153,8 +155,11 @@ static bool read_directory_entry(zip_central_entry_t *E)
     return false;
 
   // check signature
-  if (! memcpy(E->hdr.magic, ZIPF_CENTRAL_MAGIC, 4) != 0)
+  if (memcmp(E->hdr.magic, ZIPF_CENTRAL_MAGIC, 4) != 0)
+  {
+    LogPrintf("ZIP: signature check failed\n");
     return false;
+  }
 
   // fix endianness
   E->hdr.made_version    = LE_U16(E->hdr.made_version);
@@ -206,8 +211,7 @@ static bool read_directory_entry(zip_central_entry_t *E)
   position += E->hdr.extra_length;
   position += E->hdr.comment_length;
 
-  if (fseek(r_zip_fp, position, SEEK_SET) != 0)
-    return false;
+  fseek(r_zip_fp, position, SEEK_SET);
 
   return true; // OK
 }
@@ -257,7 +261,7 @@ bool ZIPF_OpenRead(const char *filename)
 
     if (! read_directory_entry(E))
     {
-      LogPrintf("ZIPF_OpenRead: bad central directory (entry %d)\n", i);
+      LogPrintf("ZIPF_OpenRead: bad central directory (entry %d)\n", i+1);
 
       delete[] r_directory;
       r_directory = NULL;
