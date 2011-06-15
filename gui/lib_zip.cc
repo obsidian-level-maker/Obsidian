@@ -67,7 +67,7 @@ static bool find_end_part()
   char buffer[SCAN_LENGTH];
 
   // find the end-of-directory structure, search backwards from the
-  // end of the file.
+  // end of the file looking for its signature.
 
   fseek(r_zip_fp, 0, SEEK_END);
 
@@ -139,6 +139,72 @@ static bool load_end_part()
 }
 
 
+static bool read_directory_entry(zip_central_entry_t *E)
+{
+  int position = (int)ftell(r_zip_fp);
+
+  int res = fread(&E->hdr, sizeof(raw_zip_central_header_t), 1, r_zip_fp);
+
+  if (res != 1 || ferror(r_zip_fp))
+    return false;
+
+  // check signature
+  if (! memcpy(E->hdr.magic, ZIPF_CENTRAL_MAGIC, 4) != 0)
+    return false;
+
+  // fix endianness
+  E->hdr.made_version    = LE_U16(E->hdr.made_version);
+  E->hdr.req_version     = LE_U16(E->hdr.req_version);
+
+  E->hdr.flags           = LE_U16(E->hdr.flags);
+  E->hdr.comp_method     = LE_U16(E->hdr.comp_method);
+  E->hdr.file_time       = LE_U16(E->hdr.file_time);
+  E->hdr.file_date       = LE_U16(E->hdr.file_date);
+
+  E->hdr.crc             = LE_U32(E->hdr.crc);
+  E->hdr.compress_size   = LE_U32(E->hdr.compress_size);
+  E->hdr.real_size       = LE_U32(E->hdr.real_size);
+
+  E->hdr.name_length     = LE_U16(E->hdr.name_length);
+  E->hdr.extra_length    = LE_U16(E->hdr.extra_length);
+  E->hdr.comment_length  = LE_U16(E->hdr.comment_length);
+  E->hdr.start_disk      = LE_U16(E->hdr.start_disk);
+
+  E->hdr.internal_attrib = LE_U16(E->hdr.internal_attrib);
+  E->hdr.external_attrib = LE_U32(E->hdr.external_attrib);
+
+  E->hdr.local_offset    = LE_U32(E->hdr.local_offset);
+
+
+  // read filename
+  int name_length = E.hdr.name_length;
+
+  if (name_length > ZIPF_MAX_PATH-2)
+  {
+    LogPrintf("ZIP: truncating long filename (%d chars)\n", name_length);
+    name_length = ZIPF_MAX_PATH-2;
+  }
+
+  fread(E->name, name_length, 1, r_zip_fp);  // ??? CHECK ERROR
+
+  // ensure name is NUL terminated
+  E->name[name_length] = 0;
+
+
+  // seek to next entry
+  position += (int)sizeof(raw_zip_central_header_t);
+
+  position += E->hdr.name_length;
+  position += E->hdr.extra_length;
+  position += E->hdr.comment_length;
+
+  if (fseek(r_zip_fp, position, SEEK_SET) != 0)
+    return false;
+
+  return true; // OK
+}
+
+
 bool ZIPF_OpenRead(const char *filename)
 {
   r_zip_fp = fopen(filename, "rb");
@@ -174,37 +240,18 @@ bool ZIPF_OpenRead(const char *filename)
   {
     zip_central_entry_t *E = &r_directory[i];
 
-    int res = fread(E, sizeof(raw_pak_entry_t), 1, r_pak_fp);
-
-    // FIXME !!  check magic
-
-    if (res == EOF || res != 1 || ferror(r_pak_fp))
+    if (! read_directory_entry(E))
     {
-      if (i == 0)
-      {
-        LogPrintf("PAK_OpenRead: could not read any dir-entries!\n");
+      LogPrintf("ZIPF_OpenRead: bad central directory (entry %d)\n", i);
 
-        delete[] r_directory;
-        r_directory = NULL;
+      delete[] r_directory;
+      r_directory = NULL;
 
-        fclose(r_pak_fp);
-        return false;
-      }
-
-      LogPrintf("PAK_OpenRead: hit EOF reading dir-entry %d\n", i);
-
-      // truncate directory
-      r_header.entry_num = i;
-      break;
+      fclose(r_zip_fp);
+      return false;
     }
 
-    // make sure name is NUL terminated.
-    E->name[55] = 0;
-
-    E->offset = LE_U32(E->offset);
-    E->length = LE_U32(E->length);
-
-//  DebugPrintf(" %4d: %08x %08x : %s\n", i, E->offset, E->length, E->name);
+    DebugPrintf(" %4d: %08x %08x : %s\n", i, E->hdr.local_offset, E->hdr.real_size, E->name);
   }
 
   return true; // OK
