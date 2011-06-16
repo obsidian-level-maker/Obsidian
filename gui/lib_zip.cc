@@ -71,23 +71,28 @@ public:
 
   byte in_buffer[ZIPF_BUFFER];
 
-  // current offset (in uncompressed bytes)
-  // i.e. the place the last ReadData() call got to.
+  // the chunk of the file currently in 'in_buffer'
+  int in_position;
+  int in_length;
+
+  // current offset : the place the last ReadData() reached
   // NOTE: only used when uncompressing
-  int uncomp_offset;
+  int cur_offset;
 
 public:
   zip_read_state_c(int _entry, zip_central_entry_t *_E) :
-      entry(_entry), E(_E), uncomp_offset(0)
+      entry(_entry), E(_E), in_length(0), cur_offset(0)
   {
-    /* setup zlib stuff, even when we don't use it */
+    in_position = E->data_offset;
+
+    /* setup zlib stuff, even if we don't use it */
 
     // use Zlib's default allocator
     Z.zalloc = Z_NULL;
     Z.zfree  = Z_NULL;
 
     // no data yet
-    Z.next_in  = Z_NULL;
+    Z.next_in  = in_buffer;
     Z.avail_in = 0;
 
     inflateInit(&Z);
@@ -96,6 +101,11 @@ public:
   ~zip_read_state_c()
   {
     inflateEnd(&Z);
+  }
+
+  int in_Remaining() const
+  {
+    return E->data_offset + E->hdr.compress_size - in_position;
   }
 };
 
@@ -409,14 +419,13 @@ static void create_read_state(int entry)
 {
   zip_central_entry_t *E = &r_directory[entry];
 
-  r_read_state = new zip_read_state_c(entry, E);
-
   // FIXME: verify magic in local header
 
   // determine data_offset [FIXME: is this correct?]
   E->data_offset = (int)(E->hdr.local_offset + LOCAL_NAME_OFFSET +
                          E->hdr.name_length  + E->hdr.extra_length);
 
+  r_read_state = new zip_read_state_c(entry, E);
 }
 
 
@@ -429,8 +438,58 @@ static void destroy_read_state()
 }
 
 
-static bool uncompressing_read(int length, byte *buffer)
+static void buffer_consume(int length)
 {
+  SYS_ASSERT(1 <= length && length <= r_read_state->in_length);
+
+  int keep_len = r_read_state->in_length - length;
+
+  // move the remaining portion to front of buffer
+  if (keep_len > 0)
+  {
+    memmove(r_read_state->in_buffer, r_read_state->in_buffer + length, keep_len);
+  }
+
+  r_read_state->in_length    = keep_len;
+  r_read_state->in_position += length;
+}
+
+
+static bool buffer_from_file(bool need_seek)
+{
+  int remaining = r_read_state->in_Remaining();
+
+  SYS_ASSERT(remaining > 0);
+
+  int want_len = MIN(ZIPF_BUFFER - r_read_state->in_length, remaining);
+
+  SYS_ASSERT(want_len > 0);
+
+  int in_length = r_read_state->in_length;
+
+  if (need_seek)
+  {
+    if (fseek(r_zip_fp, r_read_state->in_position + in_length, SEEK_SET) != 0)
+      return false;
+  }
+
+  if (fread(r_read_state->in_buffer + in_length, want_len, 1, r_zip_fp) != 1)
+    return false;
+
+  r_read_state->in_length  += want_len;
+  r_read_state->Z.avail_in += want_len;
+
+  return true;
+}
+
+
+static bool decompressing_read(int length, byte *buffer)
+{
+  if (r_read_state->in_length == 0)
+  {
+//    r_read_state->Z.next_out
+  }
+
   // !!!!  FIXME: UNCOMPRESS STUFF
 
   r_read_state->Z.next_out  = buffer;
@@ -438,7 +497,7 @@ static bool uncompressing_read(int length, byte *buffer)
 
 
   // OK
-  r_read_state->uncomp_offset += length;
+  r_read_state->cur_offset += length;
 
   return true;
 }
@@ -455,18 +514,18 @@ static bool seek_read_state(int offset)
   }
 
   // for compressed stream, only need to handle an unexpected offset
-  if (offset == r_read_state->uncomp_offset)
+  if (offset == r_read_state->cur_offset)
     return true;
 
-  if (offset < r_read_state->uncomp_offset)
+  if (offset < r_read_state->cur_offset)
   {
     // RESET, i.e. GO BACK TO START
 
-    r_read_state->uncomp_offset = 0;
+    r_read_state->cur_offset = 0;
   }
 
   // how many bytes do we need to skip?
-  int count = offset - r_read_state->uncomp_offset;
+  int count = offset - r_read_state->cur_offset;
   SYS_ASSERT(count >= 0);
 
   static byte buffer[ZIPF_BUFFER];
@@ -475,7 +534,7 @@ static bool seek_read_state(int offset)
   {
     int skip_len = MIN(count, ZIPF_BUFFER);
 
-    if (! uncompressing_read(skip_len, buffer))
+    if (! decompressing_read(skip_len, buffer))
       return false;
 
     count -= skip_len;
@@ -517,7 +576,7 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
     return (res == 1);
   }
 
-  return uncompressing_read(length, (byte*) buffer);
+  return decompressing_read(length, (byte*) buffer);
 }
 
 
