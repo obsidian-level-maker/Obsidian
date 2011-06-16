@@ -93,14 +93,28 @@ public:
 
     // no data yet
     Z.next_in  = in_buffer;
-    Z.avail_in = 0;
+    Z.avail_in = in_length;
 
-    inflateInit(&Z);
+    inflateInit2(&Z, -15);  // window bits + no header
   }
 
   ~zip_read_state_c()
   {
     inflateEnd(&Z);
+  }
+
+  void Reset()
+  {
+    in_position = E->data_offset;
+    in_length   = 0;
+
+    cur_offset  = 0;
+
+    // no data yet
+    Z.next_in  = in_buffer;
+    Z.avail_in = in_length;
+
+    inflateReset(&Z);
   }
 
   int in_Remaining() const
@@ -335,7 +349,7 @@ bool ZIPF_OpenRead(const char *filename)
     // the real start of data is determined at read time
     E->data_offset = -1;
 
-    DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.full_size, E->name);
+//  DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.full_size, E->name);
   }
 
   return true; // OK
@@ -485,16 +499,57 @@ static bool buffer_from_file(bool need_seek)
 
 static bool decompressing_read(int length, byte *buffer)
 {
-  if (r_read_state->in_length == 0)
-  {
-//    r_read_state->Z.next_out
-  }
-
-  // !!!!  FIXME: UNCOMPRESS STUFF
-
+LogPrintf("decompressing_read: %d\n", length);
   r_read_state->Z.next_out  = buffer;
   r_read_state->Z.avail_out = length;
 
+  while (r_read_state->Z.avail_out > 0)
+  {
+    if (r_read_state->in_length == 0)
+    {
+      // ASSERT(! EOF) 
+
+LogPrintf("  buffer_from_file...\n");
+      if (! buffer_from_file(true))
+        return false;
+    }
+
+LogPrintf("  in_position: 0x%08x  in_length: %d\n", r_read_state->in_position, r_read_state->in_length);
+LogPrintf("  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
+LogPrintf("  avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
+
+LogPrintf("  data sample: %02x %02x %02x %02x %02x %02x\n",
+          r_read_state->Z.next_in[0], r_read_state->Z.next_in[1],
+          r_read_state->Z.next_in[2], r_read_state->Z.next_in[3],
+          r_read_state->Z.next_in[4], r_read_state->Z.next_in[5]);
+
+    int res = inflate(&r_read_state->Z, Z_NO_FLUSH);
+
+LogPrintf("  --> res: %d\n", res);
+LogPrintf("  --> avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
+LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
+
+    // all done?
+    if (res == Z_STREAM_END)
+      break;
+
+    if (res == Z_BUF_ERROR)
+    {
+      int used = r_read_state->Z.next_in - r_read_state->in_buffer;
+      SYS_ASSERT(0 <= used && used <= ZIPF_BUFFER);
+
+      buffer_consume(used);
+
+      buffer_from_file(true);
+      continue;
+    }
+
+    if (res != Z_OK)
+    {
+      LogPrintf("ZIP: error occurred during decompression (%d)\n", res);
+      return false;
+    }
+  }
 
   // OK
   r_read_state->cur_offset += length;
@@ -519,9 +574,8 @@ static bool seek_read_state(int offset)
 
   if (offset < r_read_state->cur_offset)
   {
-    // RESET, i.e. GO BACK TO START
-
-    r_read_state->cur_offset = 0;
+    // RESET i.e. GO BACK TO START
+    r_read_state->Reset();
   }
 
   // how many bytes do we need to skip?
@@ -757,7 +811,7 @@ void ZIPF_FinishLump(void)
   w_local.hdr.compress_size = LE_U32(w_local_length);
 
   // seek back and fix up the CRC and size fields
-  // FIXME: check if worked
+  // TODO: check if worked
   fseek(w_zip_fp, w_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
 
   fwrite(&w_local.hdr.crc,           4, 1, w_zip_fp);
