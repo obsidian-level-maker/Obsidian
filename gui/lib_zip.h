@@ -62,7 +62,7 @@ typedef struct
 
   u32_t crc;            //
   u32_t compress_size;  // these are zero when there is a trailer
-  u32_t real_size;      //
+  u32_t full_size;      //
 
   u16_t name_length;
   u16_t extra_length;
@@ -79,7 +79,7 @@ typedef struct
 
   u32_t crc;
   u32_t compress_size;
-  u32_t real_size;
+  u32_t full_size;
 }
 PACKEDATTR
 raw_zip_local_trailer_t;
@@ -99,7 +99,7 @@ typedef struct
 
   u32_t crc;
   u32_t compress_size;
-  u32_t real_size;
+  u32_t full_size;
 
   u16_t name_length;
   u16_t extra_length;

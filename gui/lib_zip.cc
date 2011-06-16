@@ -224,7 +224,7 @@ static bool read_directory_entry(zip_central_entry_t *E)
 
   E->hdr.crc             = LE_U32(E->hdr.crc);
   E->hdr.compress_size   = LE_U32(E->hdr.compress_size);
-  E->hdr.real_size       = LE_U32(E->hdr.real_size);
+  E->hdr.full_size       = LE_U32(E->hdr.full_size);
 
   E->hdr.name_length     = LE_U16(E->hdr.name_length);
   E->hdr.extra_length    = LE_U16(E->hdr.extra_length);
@@ -325,7 +325,7 @@ bool ZIPF_OpenRead(const char *filename)
     // the real start of data is determined at read time
     E->data_offset = -1;
 
-    DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.real_size, E->name);
+    DebugPrintf(" %4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.full_size, E->name);
   }
 
   return true; // OK
@@ -368,7 +368,7 @@ int ZIPF_EntryLen(int entry)
 {
   SYS_ASSERT(entry >= 0 && entry < ZIPF_NumEntries());
 
-  return (int)r_directory[entry].hdr.real_size;
+  return (int)r_directory[entry].hdr.full_size;
 }
 
 
@@ -394,7 +394,7 @@ void ZIPF_ListEntries(void)
     {
       zip_central_entry_t *E = &r_directory[i];
 
-      printf("%4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.real_size, E->name);
+      printf("%4d: +%08x %08x : %s\n", i+1, E->hdr.local_offset, E->hdr.full_size, E->name);
     }
   }
 
@@ -503,7 +503,7 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
   }
 
   // check if enough data left (i.e. EOF)
-  if ((u32_t)offset + (u32_t)length > E->hdr.real_size)
+  if ((u32_t)offset + (u32_t)length > E->hdr.full_size)
     return false;
 
   // move to where we want to read from
@@ -657,7 +657,7 @@ void ZIPF_NewLump(const char *name)
   /* CRC and sizes are fixed up in ZIPF_FinishLump */
   w_local.hdr.crc           = crc32(0, NULL, 0);
   w_local.hdr.compress_size = 0;
-  w_local.hdr.real_size     = 0;
+  w_local.hdr.full_size     = 0;
 
   int name_length = strlen(name);
 
@@ -694,7 +694,7 @@ void ZIPF_FinishLump(void)
 {
   fflush(w_zip_fp);
 
-  w_local.hdr.real_size     = LE_U32(w_local_length);
+  w_local.hdr.full_size     = LE_U32(w_local_length);
   w_local.hdr.compress_size = LE_U32(w_local_length);
 
   // seek back and fix up the CRC and size fields
@@ -703,7 +703,7 @@ void ZIPF_FinishLump(void)
 
   fwrite(&w_local.hdr.crc,           4, 1, w_zip_fp);
   fwrite(&w_local.hdr.compress_size, 4, 1, w_zip_fp);
-  fwrite(&w_local.hdr.real_size,     4, 1, w_zip_fp);
+  fwrite(&w_local.hdr.full_size,     4, 1, w_zip_fp);
 
   fflush(w_zip_fp);
 
@@ -725,7 +725,7 @@ void ZIPF_FinishLump(void)
 
   central.hdr.crc           = w_local.hdr.crc;
   central.hdr.compress_size = w_local.hdr.compress_size;
-  central.hdr.real_size     = w_local.hdr.real_size;
+  central.hdr.full_size     = w_local.hdr.full_size;
 
   central.hdr.name_length    = w_local.hdr.name_length;
   central.hdr.extra_length   = 0;
