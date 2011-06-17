@@ -32,6 +32,7 @@ CHANGES (since 3.57)
 - new more reliable CSG code
 - monster control modules for Heretic, Quake, Quake II
 - support for liquids in Quake and Quake II
+- support reading and writing PK3 files
 
 + Hexen works!
 + much improved Hexen themes, thanks to blackjar
