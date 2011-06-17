@@ -338,8 +338,8 @@ static bool read_directory_entry(zip_central_entry_t *E)
   E->name[name_length] = 0;
 
 
-  /// TODO: sanitize the name
-  /// for (char * p = E->name ; *p ; p++) { }
+  /// TODO: sanitize the name?
+  /// for (char * p = E->name ; *p ; p++) { ... }
 
 
   // seek to next entry
@@ -495,7 +495,7 @@ static void create_read_state(int entry)
 {
   zip_central_entry_t *E = &r_directory[entry];
 
-  // TODO: verify the local_offset (check for signature)
+  // TODO: verify the local_offset (check for ZIPF_LOCAL_MAGIC)
   //       could also verify that local fields match the central ones
 
   // determine offset to the data
@@ -832,7 +832,6 @@ void ZIPF_FinishLump(void)
   w_local.hdr.compress_size = LE_U32(w_local_length);
 
   // seek back and fix up the CRC and size fields
-  // TODO: check if worked
   fseek(w_zip_fp, w_local_start + LOCAL_CRC_OFFSET, SEEK_SET);
 
   fwrite(&w_local.hdr.crc,           4, 1, w_zip_fp);
