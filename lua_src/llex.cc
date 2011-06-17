@@ -25,8 +25,7 @@
 
 
 
-/* -AJA- 2011/06/14: remember the last character */
-#define next(ls) (ls->previous = ls->current, ls->current = zgetc(ls->z))
+#define next(ls) (ls->current = zgetc(ls->z))
 
 
 
@@ -146,7 +145,6 @@ void luaX_setinput (lua_State *L, LexState *ls, ZIO *z, TString *source) {
   ls->lastline = 1;
   ls->source = source;
   luaZ_resizebuffer(ls->L, ls->buff, LUA_MINBUFFER);  /* initialize buffer */
-  ls->current = 0;  /* --AJA-- */
   next(ls);  /* read first char */
 }
 
@@ -358,22 +356,6 @@ static int llex (LexState *ls, SemInfo *seminfo) {
         while (!currIsNewline(ls) && ls->current != EOZ)
           next(ls);
         continue;
-      }
-      /* -AJA- 2011/06/14: hacky support for numbers like +3 */
-      case '+': {
-        if (! (ls->previous == 0   || isspace(ls->previous) ||
-               ls->previous == ',' || ls->previous == '(' ||
-               ls->previous == '[' || ls->previous == '{'))
-        {
-          next(ls); return '+';
-        }
-        next(ls);
-        if (isdigit(ls->current))
-        {
-          read_numeral(ls, seminfo);
-          return TK_NUMBER;
-        }
-        return '+';
       }
       case '[': {
         int sep = skip_sep(ls);

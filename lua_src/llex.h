@@ -54,7 +54,6 @@ typedef struct Token {
 
 typedef struct LexState {
   int current;  /* current character (charint) */
-  int previous; /* previous character --AJA-- */
   int linenumber;  /* input line counter */
   int lastline;  /* line of last token `consumed' */
   Token t;  /* current token */
