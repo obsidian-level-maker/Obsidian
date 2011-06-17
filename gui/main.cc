@@ -498,12 +498,8 @@ bool Build_Cool_Shit()
 
 /* ----- main program ----------------------------- */
 
-// extern int TEST_Zip(int argc, char **argv);
-
 int main(int argc, char **argv)
 {
-///  return TEST_Zip(argc, argv);
-
   // initialise argument parser (skipping program name)
   ArgvInit(argc-1, (const char **)(argv+1));
 
