@@ -37,6 +37,9 @@
 
 #define ZIPF_BUFFER  4096
 
+static FILE *r_zip_fp;
+static FILE *w_zip_fp;
+
 
 typedef struct
 {
@@ -98,10 +101,12 @@ public:
     inflateInit2(&Z, -15);  // window bits + no header
   }
 
+
   ~zip_read_state_c()
   {
     inflateEnd(&Z);
   }
+
 
   void Reset()
   {
@@ -121,14 +126,59 @@ public:
   {
     return E->data_offset + E->hdr.compress_size - in_position;
   }
+
+  bool Fill(bool need_seek)
+  {
+    int remaining = in_Remaining();
+
+    SYS_ASSERT(remaining > 0);
+
+    int want = MIN(remaining, ZIPF_BUFFER - in_length);
+
+    SYS_ASSERT(want > 0);
+
+    if (need_seek)
+    {
+      if (fseek(r_zip_fp, in_position + in_length, SEEK_SET) != 0)
+        return false;
+    }
+
+    if (fread(in_buffer + in_length, want, 1, r_zip_fp) != 1)
+      return false;
+
+    in_length  += want;
+    Z.avail_in += want;
+
+    return true;
+  }
+
+  void Consume()
+  {
+    int used = Z.next_in - in_buffer;
+
+    SYS_ASSERT(1 <= used && used <= in_length);
+
+    int keep = in_length - used;
+
+    // move the remaining portion to front of buffer
+    if (keep > 0)
+    {
+      memmove(in_buffer, in_buffer + used, keep);
+    }
+
+    in_length   -= used;
+    in_position += used;
+
+    Z.next_in  = in_buffer;
+    Z.avail_in = in_length;
+  }
+
 };
 
 
 //------------------------------------------------------------------------
 //  ZIP READING
 //------------------------------------------------------------------------
-
-static FILE *r_zip_fp;
 
 static raw_zip_end_of_directory_t  r_end_part;
 static zip_central_entry_t * r_directory;
@@ -440,8 +490,6 @@ static void create_read_state(int entry)
                          E->hdr.name_length  + E->hdr.extra_length);
 
   r_read_state = new zip_read_state_c(entry, E);
-
-
 }
 
 
@@ -453,55 +501,6 @@ static void destroy_read_state()
   r_read_state = NULL;
 }
 
-
-static void buffer_consume()
-{
-  int used = r_read_state->Z.next_in - r_read_state->in_buffer;
-
-  SYS_ASSERT(1 <= used && used <= r_read_state->in_length);
-
-  int keep = r_read_state->in_length - used;
-
-  // move the remaining portion to front of buffer
-  if (keep > 0)
-  {
-    memmove(r_read_state->in_buffer, r_read_state->in_buffer + used, keep);
-  }
-
-  r_read_state->in_length   -= used;
-  r_read_state->in_position += used;
-
-  r_read_state->Z.next_in  = r_read_state->in_buffer;
-  r_read_state->Z.avail_in = r_read_state->in_length;
-}
-
-
-static bool buffer_fill(bool need_seek)
-{
-  int remaining = r_read_state->in_Remaining();
-
-  SYS_ASSERT(remaining > 0);
-
-  int want_len = MIN(remaining, ZIPF_BUFFER - r_read_state->in_length);
-
-  SYS_ASSERT(want_len > 0);
-
-  int in_length = r_read_state->in_length;
-
-  if (need_seek)
-  {
-    if (fseek(r_zip_fp, r_read_state->in_position + in_length, SEEK_SET) != 0)
-      return false;
-  }
-
-  if (fread(r_read_state->in_buffer + in_length, want_len, 1, r_zip_fp) != 1)
-    return false;
-
-  r_read_state->in_length  += want_len;
-  r_read_state->Z.avail_in += want_len;
-
-  return true;
-}
 
 
 static bool decompressing_read(int length, byte *buffer)
@@ -517,7 +516,7 @@ LogPrintf("decompressing_read: %d\n", length);
       // ASSERT(! EOF) 
 
 LogPrintf("  buffer_fill...\n");
-      if (! buffer_fill(true))
+      if (! r_read_state->Fill(true))
         return false;
     }
 
@@ -544,8 +543,8 @@ LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_r
 
     if (res == Z_BUF_ERROR)
     {
-      buffer_consume();
-      buffer_fill(true);
+      r_read_state->Consume();
+      r_read_state->Fill(true);
       continue;
     }
 
@@ -651,8 +650,6 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
 //------------------------------------------------------------------------
 //  ZIP WRITING
 //------------------------------------------------------------------------
-
-static FILE *w_zip_fp;
 
 static std::list<zip_central_entry_t> w_directory;
 
