@@ -79,12 +79,16 @@ public:
   int in_length;
 
   // current offset : the place the last ReadData() reached
-  // NOTE: only used when uncompressing
+  // NOTE: only used when decompressing
   int cur_offset;
+
+  // prevent some needless fseeks while decompressing
+  bool have_seeked;
 
 public:
   zip_read_state_c(int _entry, zip_central_entry_t *_E) :
-      entry(_entry), E(_E), in_length(0), cur_offset(0)
+      entry(_entry), E(_E), in_length(0), cur_offset(0),
+      have_seeked(false)
   {
     in_position = E->data_offset;
 
@@ -127,7 +131,7 @@ public:
     return E->data_offset + E->hdr.compress_size - in_position;
   }
 
-  bool Fill(bool need_seek)
+  bool Fill()
   {
     int remaining = in_Remaining();
 
@@ -137,10 +141,12 @@ public:
 
     SYS_ASSERT(want > 0);
 
-    if (need_seek)
+    if (! have_seeked)
     {
       if (fseek(r_zip_fp, in_position + in_length, SEEK_SET) != 0)
         return false;
+
+      have_seeked = true;
     }
 
     if (fread(in_buffer + in_length, want, 1, r_zip_fp) != 1)
@@ -183,7 +189,7 @@ public:
 static raw_zip_end_of_directory_t  r_end_part;
 static zip_central_entry_t * r_directory;
 
-// TODO: have a read_state per entry (E->read_state)
+// IDEA: have a read_state per entry (E->read_state)
 static zip_read_state_c *r_read_state;
 
 
@@ -483,9 +489,10 @@ static void create_read_state(int entry)
 {
   zip_central_entry_t *E = &r_directory[entry];
 
-  // FIXME: verify magic in local header
+  // TODO: verify the local_offset (check for signature)
+  //       could also verify that local fields match the central ones
 
-  // determine data_offset [FIXME: is this correct?]
+  // determine offset to the data
   E->data_offset = (int)(E->hdr.local_offset + LOCAL_NAME_OFFSET +
                          E->hdr.name_length  + E->hdr.extra_length);
 
@@ -505,7 +512,8 @@ static void destroy_read_state()
 
 static bool decompressing_read(int length, byte *buffer)
 {
-LogPrintf("decompressing_read: %d\n", length);
+//DebugPrintf("decompressing_read: %d\n", length);
+
   r_read_state->Z.next_out  = buffer;
   r_read_state->Z.avail_out = length;
 
@@ -513,29 +521,23 @@ LogPrintf("decompressing_read: %d\n", length);
   {
     if (r_read_state->in_length == 0)
     {
+//    DebugPrintf("  fill buffer...\n");
+
       // ASSERT(! EOF) 
 
-LogPrintf("  buffer_fill...\n");
-      if (! r_read_state->Fill(true))
+      if (! r_read_state->Fill())
         return false;
     }
 
-LogPrintf("  in_position: 0x%08x  in_length: %d\n", r_read_state->in_position, r_read_state->in_length);
-LogPrintf("  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
-LogPrintf("  avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
-
-/* 
-LogPrintf("  data sample: %02x %02x %02x %02x %02x %02x\n",
-          r_read_state->Z.next_in[0], r_read_state->Z.next_in[1],
-          r_read_state->Z.next_in[2], r_read_state->Z.next_in[3],
-          r_read_state->Z.next_in[4], r_read_state->Z.next_in[5]);
-*/
+//  DebugPrintf("  in_position: 0x%08x  in_length: %d\n", r_read_state->in_position, r_read_state->in_length);
+//  DebugPrintf("  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
+//  DebugPrintf("  avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
 
     int res = inflate(&r_read_state->Z, Z_NO_FLUSH);
 
-LogPrintf("  --> res: %d\n", res);
-LogPrintf("  --> avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
-LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
+//  DebugPrintf("  --> res: %d\n", res);
+//  DebugPrintf("  --> avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
+//  DebugPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
 
     // all done?
     if (res == Z_STREAM_END)
@@ -543,8 +545,9 @@ LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_r
 
     if (res == Z_BUF_ERROR)
     {
+//    DebugPrintf("  refill buffer...\n");
       r_read_state->Consume();
-      r_read_state->Fill(true);
+      r_read_state->Fill();
       continue;
     }
 
@@ -555,10 +558,11 @@ LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_r
     }
   }
 
-  // OK
+//DebugPrintf("  OK\n");
+
   r_read_state->cur_offset += length;
 
-  return true;
+  return true; // OK
 }
 
 
@@ -566,7 +570,8 @@ static bool seek_read_state(int offset)
 {
   zip_central_entry_t *E = r_read_state->E;
 
-  if (E->hdr.comp_method != ZIPF_COMP_DEFLATE)
+  // plain fseek for non-compressed files
+  if (E->hdr.comp_method == ZIPF_COMP_STORE)
   {
     int res = fseek(r_zip_fp, E->data_offset + offset, SEEK_SET);
     return (res == 0);
@@ -578,7 +583,7 @@ static bool seek_read_state(int offset)
 
   if (offset < r_read_state->cur_offset)
   {
-    // RESET i.e. GO BACK TO START
+    // GO BACK TO START
     r_read_state->Reset();
   }
 
@@ -628,6 +633,8 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
     create_read_state(entry);
   }
 
+  r_read_state->have_seeked = false;
+
   // check if enough data left (i.e. EOF)
   if ((u32_t)offset + (u32_t)length > E->hdr.full_size)
     return false;
@@ -636,7 +643,7 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
   if (! seek_read_state(offset))
     return false;
 
-  if (E->hdr.comp_method != ZIPF_COMP_DEFLATE)
+  if (E->hdr.comp_method == ZIPF_COMP_STORE)
   {
     // direct read
     int res = fread(buffer, length, 1, r_zip_fp);
