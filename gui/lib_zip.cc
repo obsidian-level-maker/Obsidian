@@ -440,6 +440,8 @@ static void create_read_state(int entry)
                          E->hdr.name_length  + E->hdr.extra_length);
 
   r_read_state = new zip_read_state_c(entry, E);
+
+
 }
 
 
@@ -452,30 +454,35 @@ static void destroy_read_state()
 }
 
 
-static void buffer_consume(int length)
+static void buffer_consume()
 {
-  SYS_ASSERT(1 <= length && length <= r_read_state->in_length);
+  int used = r_read_state->Z.next_in - r_read_state->in_buffer;
 
-  int keep_len = r_read_state->in_length - length;
+  SYS_ASSERT(1 <= used && used <= r_read_state->in_length);
+
+  int keep = r_read_state->in_length - used;
 
   // move the remaining portion to front of buffer
-  if (keep_len > 0)
+  if (keep > 0)
   {
-    memmove(r_read_state->in_buffer, r_read_state->in_buffer + length, keep_len);
+    memmove(r_read_state->in_buffer, r_read_state->in_buffer + used, keep);
   }
 
-  r_read_state->in_length    = keep_len;
-  r_read_state->in_position += length;
+  r_read_state->in_length   -= used;
+  r_read_state->in_position += used;
+
+  r_read_state->Z.next_in  = r_read_state->in_buffer;
+  r_read_state->Z.avail_in = r_read_state->in_length;
 }
 
 
-static bool buffer_from_file(bool need_seek)
+static bool buffer_fill(bool need_seek)
 {
   int remaining = r_read_state->in_Remaining();
 
   SYS_ASSERT(remaining > 0);
 
-  int want_len = MIN(ZIPF_BUFFER - r_read_state->in_length, remaining);
+  int want_len = MIN(remaining, ZIPF_BUFFER - r_read_state->in_length);
 
   SYS_ASSERT(want_len > 0);
 
@@ -509,8 +516,8 @@ LogPrintf("decompressing_read: %d\n", length);
     {
       // ASSERT(! EOF) 
 
-LogPrintf("  buffer_from_file...\n");
-      if (! buffer_from_file(true))
+LogPrintf("  buffer_fill...\n");
+      if (! buffer_fill(true))
         return false;
     }
 
@@ -518,10 +525,12 @@ LogPrintf("  in_position: 0x%08x  in_length: %d\n", r_read_state->in_position, r
 LogPrintf("  avail_in: %u   next_in: +%u\n", r_read_state->Z.avail_in, r_read_state->Z.next_in - r_read_state->in_buffer);
 LogPrintf("  avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_read_state->Z.next_out - buffer);
 
+/* 
 LogPrintf("  data sample: %02x %02x %02x %02x %02x %02x\n",
           r_read_state->Z.next_in[0], r_read_state->Z.next_in[1],
           r_read_state->Z.next_in[2], r_read_state->Z.next_in[3],
           r_read_state->Z.next_in[4], r_read_state->Z.next_in[5]);
+*/
 
     int res = inflate(&r_read_state->Z, Z_NO_FLUSH);
 
@@ -535,12 +544,8 @@ LogPrintf("  --> avail_out: %u  next_out: +%u\n", r_read_state->Z.avail_out, r_r
 
     if (res == Z_BUF_ERROR)
     {
-      int used = r_read_state->Z.next_in - r_read_state->in_buffer;
-      SYS_ASSERT(0 <= used && used <= ZIPF_BUFFER);
-
-      buffer_consume(used);
-
-      buffer_from_file(true);
+      buffer_consume();
+      buffer_fill(true);
       continue;
     }
 
@@ -605,6 +610,15 @@ bool ZIPF_ReadData(int entry, int offset, int length, void *buffer)
   SYS_ASSERT(length > 0);
 
   zip_central_entry_t *E = &r_directory[entry];
+
+  if (E->hdr.comp_method != ZIPF_COMP_STORE &&
+      E->hdr.comp_method != ZIPF_COMP_DEFLATE)
+  {
+    LogPrintf("ZIP: unknown compression method: %d\n", E->hdr.comp_method);
+    LogPrintf("ZIP: used in entry: %s\n", E->name);
+
+    return false;
+  }
 
   // need a new read_state for a new entry
   if (! (r_read_state && r_read_state->entry == entry))
