@@ -54,6 +54,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/lib_util.o  \
 	$(OBJ_DIR)/lib_pak.o   \
 	$(OBJ_DIR)/lib_wad.o   \
+	$(OBJ_DIR)/lib_zip.o   \
 	$(OBJ_DIR)/sys_assert.o \
 	$(OBJ_DIR)/sys_debug.o \
 	$(OBJ_DIR)/img_bolt.o  \
