@@ -266,8 +266,11 @@ Console:
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 
-?  implement 2D array access: [x, y] --> [x][y]
-   --> there's a power patch for that
+No: allow numbers to begin with plus, like: +3
+    --> see misc/plus_number.diff
+
+No: implement 2D array access: [x, y] --> [x][y]
+    --> there's a power patch for that
 
 
 ----------------------------------------------------------------
