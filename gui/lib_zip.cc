@@ -118,6 +118,7 @@ public:
     in_length   = 0;
 
     cur_offset  = 0;
+    have_seeked = false;
 
     // no data yet
     Z.next_in  = in_buffer;
@@ -133,13 +134,15 @@ public:
 
   bool Fill()
   {
+    // buffer should not be full already
+    SYS_ASSERT(in_length < ZIPF_BUFFER);
+
     int remaining = in_Remaining();
 
+    // this is assured by EOF check in ZIPF_ReadData() body
     SYS_ASSERT(remaining > 0);
 
     int want = MIN(remaining, ZIPF_BUFFER - in_length);
-
-    SYS_ASSERT(want > 0);
 
     if (! have_seeked)
     {
@@ -161,6 +164,9 @@ public:
   void Consume()
   {
     int used = Z.next_in - in_buffer;
+
+    if (used == 0)
+      return;
 
     SYS_ASSERT(1 <= used && used <= in_length);
 
@@ -509,7 +515,6 @@ static void destroy_read_state()
 }
 
 
-
 static bool decompressing_read(int length, byte *buffer)
 {
 //DebugPrintf("decompressing_read: %d\n", length);
@@ -522,8 +527,6 @@ static bool decompressing_read(int length, byte *buffer)
     if (r_read_state->in_length == 0)
     {
 //    DebugPrintf("  fill buffer...\n");
-
-      // ASSERT(! EOF) 
 
       if (! r_read_state->Fill())
         return false;
