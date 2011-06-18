@@ -500,6 +500,8 @@ function Hallway_place_em()
 
   ---| Hallway_place_em |---
 
+do return end --!!!!!!!1
+
   if STYLE.hallways == "none" then return; end
 
   create_network()
