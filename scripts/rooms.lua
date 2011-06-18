@@ -99,15 +99,18 @@ function ROOM_CLASS.new(shape)
   return R
 end
 
+
 function ROOM_CLASS.tostr(R)
   return string.format("ROOM_%d", R.id)
 end
+
 
 function ROOM_CLASS.longstr(R)
   return string.format("%s_%s [%d,%d..%d,%d]",
       (R.parent ? "SUB_ROOM" ; "ROOM"),
       R.id, R.kx1, R.ky1, R.kx2, R.ky2)
 end
+
 
 function ROOM_CLASS.list_sections(R)
   gui.debugf("SECTION LIST for %s:\n", R:tostr())
@@ -124,9 +127,11 @@ function ROOM_CLASS.list_sections(R)
   gui.debugf("}\n")
 end
 
+
 function ROOM_CLASS.update_size(R)
   R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
 end
+
 
 function ROOM_CLASS.add_section(R, K)
   table.insert(R.sections, K)
@@ -142,11 +147,13 @@ function ROOM_CLASS.add_section(R, K)
   R.kvolume = (R.kvolume or 0) + 1
 end
 
+
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end
   return true
 end
+
 
 function ROOM_CLASS.has_lock(R, lock)
   each D in R.conns do
@@ -155,12 +162,14 @@ function ROOM_CLASS.has_lock(R, lock)
   return false
 end
 
+
 function ROOM_CLASS.has_any_lock(R)
   each D in R.conns do
     if D.lock then return true end
   end
   return false
 end
+
 
 function ROOM_CLASS.has_lock_kind(R, kind)
   each D in R.conns do
@@ -169,6 +178,7 @@ function ROOM_CLASS.has_lock_kind(R, kind)
   return false
 end
 
+
 function ROOM_CLASS.has_sky_neighbor(R)
   each D in R.conns do
     local N = D:neighbor(R)
@@ -176,6 +186,7 @@ function ROOM_CLASS.has_sky_neighbor(R)
   end
   return false
 end
+
 
 function ROOM_CLASS.has_teleporter(R)
   each D in R.conns do

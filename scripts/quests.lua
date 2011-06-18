@@ -72,6 +72,7 @@ function QUEST_CLASS.new(start)
   return Q
 end
 
+
 function QUEST_CLASS.tostr(Q)
   return string.format("QUEST_%d", Q.id)
 end
