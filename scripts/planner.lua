@@ -103,18 +103,17 @@ function SECTION_CLASS.shrink(K, side)
 end
 
 
+function Section_is_valid(x, y)
+  return 1 <= x and x <= SECTION_W and
+         1 <= y and y <= SECTION_H
+end
+
+
 function SECTION_CLASS.neighbor(K, dir)
-  -- make sure the neighbor is not the same section
-  for dist = 1,3 do
-    local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
+  local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
 
-    if nx < 1 or nx > SECTION_W or ny < 1 or ny > SECTION_H then
-      break;
-    end
-
-    local N = SECTIONS[nx][ny]
-
-    if N != K then return N end
+  if Section_is_valid(nx, ny) then
+    return SECTIONS[nx][ny]
   end
 
   return nil
@@ -393,11 +392,6 @@ function Plan_create_sections()
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
 
-
-function Section_is_valid(x, y)
-  return 1 <= x and x <= SECTION_W and
-         1 <= y and y <= SECTION_H
-end
 
 -- FIXME :REMOVE
 Plan_is_section_valid = Section_is_valid
@@ -1132,9 +1126,9 @@ end
 
 function Plan_expand_rooms()
   -- this must be called after hallways are generated, and will
-  -- move the sides of room sections into unused hallway space.
+  -- assign unused sections to belong to a neighboring room.
 
-  local function can_nudge(K, dir, R)
+  local function OLD__can_nudge(K, dir, R)
     -- edge of map?
     if dir == 4 and K.kx == 1         then return false end
     if dir == 6 and K.kx == SECTION_W then return false end
@@ -1172,7 +1166,7 @@ function Plan_expand_rooms()
   end
 
 
-  local function do_nudge(K, dir, R)
+  local function OLD__do_nudge(K, dir, R)
     -- ignore other rooms
     if K.room != R then return; end
 
@@ -1202,7 +1196,7 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
   end
 
 
-  local function try_nudge(K, dir)
+  local function OLD__try_nudge(K, dir)
     local R = K.room
 
     -- for shaped rooms require all stems to be nudged together
@@ -1237,26 +1231,61 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
   end
 
 
+  local function assign_section(K, room)
+stderrf("  assigned %s to %s\n", K:tostr(), room:tostr())
+    K.room = room
+    K.expanded = true
+
+    room:add_section(K)
+  end
+
+
+  local function try_reassign_section(K)
+    local SIDES
+
+    if K.kind == "vert" then
+      SIDES = { 4,6 }
+    elseif K.kind == "horiz" then
+      SIDES = { 2,8 }
+    else
+      SIDES = { 2,4,6,8 }
+--??  return  -- ignore junctions (etc)
+    end
+
+    rand.shuffle(SIDES)
+
+    each side in SIDES do
+      local N = K:neighbor(side)  -- FIXME !!!! raw neighbor (no skipping)
+      if N and N.room and not N.expanded and not (N.room.shape == "rect") then
+        --- if rand.odds(99) then
+        assign_section(K, N.room)      
+      end
+    end
+  end
+
+
   ---| Plan_expand_rooms |---
 
+stderrf("EXPAND ROOMS........................\n")
   local visits = {}
 
+  -- skip sections on the edge [will be best for 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     table.insert(visits, SECTIONS[kx][ky])
   end end
 
   rand.shuffle(visits)
 
-  for loop = 1,6 do
-    each K in visits do
-      if K.room then
-        try_nudge(K, rand.dir())
-      end
+  each K in visits do
+    if not K.room and not K.hall then
+      try_reassign_section(K)
     end
   end
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
+
+  Plan_dump_sections("Sections after expanded:")
 end
 
 
@@ -1267,15 +1296,7 @@ function Plan_collect_sections()
     local R = K.room
 
     if R then
-      table.insert(R.sections, K)
-
-      R.kx1 = math.min(kx, R.kx1 or 99)
-      R.ky1 = math.min(ky, R.ky1 or 99)
-
-      R.kx2 = math.max(kx, R.kx2 or -1)
-      R.ky2 = math.max(ky, R.ky2 or -1)
-
-      R.kvolume = (R.kvolume or 0) + 1
+      R:add_section(K)
     end
   end end
 

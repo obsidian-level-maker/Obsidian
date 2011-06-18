@@ -128,6 +128,20 @@ function ROOM_CLASS.update_size(R)
   R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
 end
 
+function ROOM_CLASS.add_section(R, K)
+  table.insert(R.sections, K)
+
+  R.kx1 = math.min(K.kx, R.kx1 or 99)
+  R.ky1 = math.min(K.ky, R.ky1 or 99)
+
+  R.kx2 = math.max(K.kx, R.kx2 or -1)
+  R.ky2 = math.max(K.ky, R.ky2 or -1)
+
+  R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
+
+  R.kvolume = (R.kvolume or 0) + 1
+end
+
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end
