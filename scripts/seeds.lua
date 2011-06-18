@@ -147,8 +147,8 @@ function Seed_init(map_W, map_H, free_W, free_H)
 
   SEEDS = table.array_2D(SEED_W, SEED_H)
 
-  BASE_X = -SEED_SIZE
-  BASE_Y = -SEED_SIZE
+  BASE_X = 0
+  BASE_Y = 0
 
   -- Centre the map : needed for Quake, Hexen2 (etc).
   -- This formula ensures that 'coord 0' is still a seed boundary,
