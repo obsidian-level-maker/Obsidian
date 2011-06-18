@@ -95,48 +95,6 @@ function Areas_handle_connections()
   end
 
 
-  local function OLD__merge_stuff(C, dir, D, pass)
-    local joins = C:joining_chunks(dir)
-
-    if pass < NUM_PASS then
-      if #joins == 0 then
-        error("Bad connection : no chunks on other side??")
-      end
-
-      if #joins >= 2 then
-        Chunk_merge_list(joins)
-      end
-
-      return
-    end
-
-    assert(#joins == 1)
-
-    local C2 = joins[1]
-
-    link_chunks(C, C2, dir, D)
-  end
-
-
-  local function OLD__good_linkage(C1, dir, C2)
-    -- check if chunks touch nicely
-
-    if geom.is_vert(dir) then
-      local x1 = math.max(C1.x1, C2.x1)
-      local x2 = math.min(C1.x2, C2.x2)
-
-      if (x2 - x1) >= 192 then return true end
-    else
-      local y1 = math.max(C1.y1, C2.y1)
-      local y2 = math.min(C1.y2, C2.y2)
-
-      if (y2 - y1) >= 192 then return true end
-    end
-
-    return false
-  end
-
-
   local function do_section_conn(D, pass)
     local K1 = assert(D.K1)
     local K2 = assert(D.K2)
@@ -637,6 +595,7 @@ function Areas_flesh_out()
     -- this function can make them bigger, for reasons like:
     --   (a) to make a centered doorway
     --   (b) use a complex pedestal for a key or switch
+    --   etc...
 
     -- TODO
   end

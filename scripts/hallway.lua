@@ -41,7 +41,7 @@ class HALLWAY
 }
 
 
-class SEGMENT     FIXME FIXME : moved def into planner.lua
+class SEGMENT     FIXME !!!!! remove this : now same as a SECTION
 {
   nx, ny    -- place in network map
 
@@ -95,7 +95,64 @@ function HALLWAY_CLASS.reverse(H)
 end
 
 
+function HALLWAY_CLASS.render_path(H)
+  for _,loc in ipairs(H.path) do
+    local G = loc.G
+
+    -- mark segment as used
+    assert(not G.hall)
+    G.hall = H
+
+    -- store hallway in seed map
+    for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
+      local S = SEEDS[sx][sy]
+      assert(not S.room and not S.hall)
+      S.hall = H
+    end end
+  end
+end
+
+
+function HALLWAY_CLASS.make_chunks(H)
+  H.chunks = {}
+
+  for _,loc in ipairs(H.path) do
+    local G = loc.G
+
+    -- determine block range for segment
+
+    local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
+
+    loc.chunk = C
+
+    C.hall = H
+
+    C:install()
+
+    table.insert(H.chunks, C)
+  end
+end
+
+
 ----------------------------------------------------------------
+
+
+function Hallway_simple(K1, MID, K2, conn, dir)
+  --- creates a simple one-section hallway between two rooms
+
+  local H = HALLWAY_CLASS.new()
+
+  conn.kind = "hallway"
+  conn.hall = H
+
+  H.K1 = K1 ; H.R1 = assert(K1.room)
+  H.K2 = K2 ; H.R2 = assert(K2.room)
+
+  table.insert(H.path, { G=MID, next_dir=dir, prev_dir=10-dir })
+
+  H:render_path()
+  H:make_chunks()
+end
 
 
 function Hallway_place_em()
@@ -296,45 +353,6 @@ function Hallway_place_em()
   end
 
 
-  local function make_chunks(hall)
-    hall.chunks = {}
-
-    for _,loc in ipairs(hall.path) do
-      local G = loc.G
-
-      -- determine block range for segment
-
-      local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
-
-      loc.chunk = C
-
-      C.hall = hall
-
-      C:install()
-
-      table.insert(hall.chunks, C)
-    end
-  end
-
-
-  local function render_path(hall)
-    for _,loc in ipairs(hall.path) do
-      local G = loc.G
-
-      -- mark segment as used
-      assert(not G.hall)
-      G.hall = hall
-
-      -- store hallway in seed map
-      for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
-        local S = SEEDS[sx][sy]
-        assert(not S.room and not S.hall)
-        S.hall = hall
-      end end
-    end
-  end
-
-
   local function add_hall(hall)
     local R1 = hall.R1
     local R2 = hall.R2
@@ -358,9 +376,8 @@ function Hallway_place_em()
     if hall.K1 then hall.K1.num_conn = hall.K1.num_conn + 1 end
     if hall.K2 then hall.K2.num_conn = hall.K2.num_conn + 1 end
 
-    render_path(hall)
-
-    make_chunks(hall)
+    hall:render_path()
+    hall:make_chunks()
   end
 
 

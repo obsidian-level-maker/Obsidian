@@ -443,9 +443,11 @@ function Connect_rooms()
     local MID
     if kind == "normal" then
       MID = assert(K1:neighbor(dir))
-    end
 
-    MID.conn = D ; D.middle = MID 
+      MID.conn = D ; D.middle = MID 
+
+      Hallway_simple(K1, MID, K2, D, dir)
+    end
 
     return D
   end
