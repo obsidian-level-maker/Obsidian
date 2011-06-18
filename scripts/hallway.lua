@@ -31,6 +31,9 @@ class HALLWAY
                -- (not including either start or dest).
                -- each element contains: G (segment), next_dir, prev_dir
 
+  belong_room : ROOM  -- the room that this hallway connects to
+                      -- without any locked door in-between.
+
   sub_halls   -- number of hallways branching off this one
               -- (normally zero)
 

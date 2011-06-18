@@ -52,24 +52,29 @@ function CONN_CLASS.new_K(K1, K2, kind, dir)
   return D
 end
 
+
 function CONN_CLASS.new_R(R1, R2, kind, dir)
   local D = { R1=R1, R2=R2, kind=kind, dir=dir }
   table.set_class(D, CONN_CLASS)
   return D
 end
 
+
 function CONN_CLASS.tostr(D)
   return string.format("CONN [%d -> %d]",
          D.R1.id, D.R2.id)
 end
 
+
 function CONN_CLASS.neighbor(D, R)
   return (R == D.R1 ? D.R2 ; D.R1)
 end
 
+
 function CONN_CLASS.section(D, R)
   return (R == D.R1 ? D.K1 ; D.K2)
 end
+
 
 function CONN_CLASS.what_dir(D, R)
   if D.dir then
@@ -77,6 +82,7 @@ function CONN_CLASS.what_dir(D, R)
   end
   return nil
 end
+
 
 function CONN_CLASS.swap(D)
   D.K1, D.K2 = D.K2, D.K1
@@ -87,11 +93,14 @@ function CONN_CLASS.swap(D)
   if D.hall and D.hall.R1 != D.R1 then D.hall:reverse() end
 end
 
+
 function CONN_CLASS.k_coord(D)
   return (D.K1.kx + D.K2.kx) / 2,
          (D.K1.ky + D.K2.ky) / 2
 end
 
+
+------------------------------------------------------------------------
 
 
 BIG_CONNECTIONS =
@@ -385,15 +394,19 @@ function Connect_rooms()
   local function can_connect(K1, dir)
     if not K1 then return false end
 
-    local K2 = K1:neighbor(dir)
+    local MID = K1:neighbor(dir)
+    if not MID or MID:in_use() then return false end
+
+    local K2 = K1:neighbor(dir, 2)
     if not K2 then return false end
 
     -- sections must be touching
+--[[  -- NOTE: sections don't move in new logic  (JUNE 2011)
     if K1.sx1 > K2.sx2 + 1 then return false end
     if K2.sx1 > K1.sx2 + 1 then return false end
     if K1.sy1 > K2.sy2 + 1 then return false end
     if K2.sy1 > K1.sy2 + 1 then return false end
-
+--]]
     return Connect_possibility(K1.room, K2.room) >= 0
   end
 
@@ -401,7 +414,7 @@ function Connect_rooms()
   local function good_connect(K1, dir)
     if not can_connect(K1, dir) then return false end
 
-    local K2 = K1:neighbor(dir)
+    local K2 = K1:neighbor(dir, 2)
 
     return Connect_possibility(K1.room, K2.room) > 0
   end
@@ -426,22 +439,15 @@ function Connect_rooms()
     K1.num_conn = K1.num_conn + 1
     K2.num_conn = K2.num_conn + 1
 
---[[ OLD CRUD
+    -- setup the section in the middle
+    local MID
+    if kind == "normal" then
+      MID = assert(K1:neighbor(dir))
+    end
 
-    local E1 = K1.edges[dir]
-    local E2 = K2.edges[10-dir]
+    MID.conn = D ; D.middle = MID 
 
-    local USAGE =
-    {
-      kind = "door",
-      conn = D,
-    }
-
-    E1.usage = USAGE
-    E2.usage = USAGE
---]]
-
-    return C
+    return D
   end
 
 
@@ -790,7 +796,7 @@ function Connect_rooms()
   end
 
 
-  local function emergency_score(K, N, dir)
+  local function emergency_score(K, dir)
     if not can_connect(K, dir) then return -1 end
 
     local score = 0
@@ -799,29 +805,38 @@ function Connect_rooms()
       score = score + 10
     end
 
+    local N = K:neighbor(dir, 2)
+    assert(N and N.room)
+
     local total_conn = K.num_conn + N.num_conn
 
     if total_conn == 0 then
       score = score + 5 - math.min(total_conn, 5)
     end
 
-    return score + gui.random()
+    return score + gui.random() , N
   end
 
 
   local function emergency_branch()
     local loc
 
-    for x = 1,SECTION_W do for y = 1,SECTION_H do
-      local K = SECTIONS[x][y]
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local K = SECTIONS[mx*2][my*2]
+      local count = 0
+
+      if not K.room then continue; end
+
       for dir = 2,8,2 do
-        local N = K:neighbor(dir)
-        local score = emergency_score(K, N, dir)
+        local score, N = emergency_score(K, dir)
+
+        if score >= 0 then count = count + 1 end
+
         if score >= 0 and (not loc or score > loc.score) then
           loc = { K=K, N=N, dir=dir, score=score }
         end
       end
-    end end -- x, y
+    end end -- mx, my
 
     -- nothing possible? hence we are done
     if not loc then return false end
@@ -897,7 +912,7 @@ function Connect_rooms()
   local function decide_teleporters()
     LEVEL.teleporter_list = {}
 
-    do return end --!!!!!! FIXME
+do return end --!!!!!! FIXME
 
     if not PARAM.teleporters then return end
 
@@ -921,9 +936,20 @@ function Connect_rooms()
   end
 
 
-
-
   local function count_groups()
+    local groups = {}
+
+    each R in LEVEL.rooms do
+      if R.conn_group then
+        groups[R.conn_group] = 1
+      end
+    end
+
+    return table.size(groups)
+  end
+
+
+  local function get_group_counts()
     local groups = {}
 
     for i = 1,999 do groups[i] = 0 end
@@ -942,7 +968,7 @@ function Connect_rooms()
   end
 
 
-  local function kill_room(R)
+  local function OLD__kill_room(R)
     R.kind = "REMOVED"
 
     each D in R.conns do
@@ -989,8 +1015,8 @@ function Connect_rooms()
   end
 
 
-  local function remove_dead_rooms()
-    local groups, last_g = count_groups()
+  local function OLD__remove_dead_rooms()
+    local groups, last_g = get_group_counts()
 
     -- do separate groups exist?
     if last_g == 1 then return; end
@@ -1027,6 +1053,7 @@ Plan_dump_rooms("Dead Room Map")
 
     visited[R] = true
 
+stderrf("natural_flow --> %s\n", R:tostr())
     table.insert(LEVEL.rooms, R)
 
     each D in R.conns do
@@ -1055,22 +1082,29 @@ Plan_dump_rooms("Dead Room Map")
 
   Levels_invoke_hook("connect_rooms")
 
-  Hallway_place_em()
-
-  Plan_expand_rooms()
-  Plan_dump_rooms("Expanded Map:")
+---###  NOTE: want to do hallways in more natural way
+---###        i.e. as attempt to connect outward from K+dir
+---###  Hallway_place_em()
 
   -- NOTE: doing this here since hallways change the sizes of sections
   Plan_prepare_rooms()
 
   decide_teleporters()
 
-  branch_big_rooms()
-  branch_small_rooms()
+--!!!!!! FIXME  branch_big_rooms()
+
+--!!!  branch_small_rooms()
 
   while emergency_branch() do end
 
-  remove_dead_rooms()
+  if count_groups() >= 2 then
+    error("Connection failure: separate groups exist")
+  end
+
+---###  remove_dead_rooms()
+
+  Plan_expand_rooms()
+  Plan_dump_rooms("Expanded Map:")
 
   Connect_decide_start_room()
 

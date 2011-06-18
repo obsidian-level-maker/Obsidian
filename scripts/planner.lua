@@ -28,10 +28,13 @@ class SECTION
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
-  kind : keyword   -- "section", "annex", "junction", "vert", "horiz"
+  kind : keyword   -- "section", "section2", "annex"
+                   -- "junction", "vert", "horiz"
+                   -- "conn"
 
   room : ROOM
   hall : HALL
+  conn : CONN
 
   num_conn  -- number of connections
 }
@@ -62,6 +65,11 @@ end
 
 function SECTION_CLASS.tostr(K)
   return string.format("%s [%d,%d]", string.upper(K.kind), K.kx, K.ky)
+end
+
+
+function SECTION_CLASS.in_use(K)
+  return K.room or K.hall or K.conn
 end
 
 
@@ -109,7 +117,7 @@ function Section_is_valid(x, y)
 end
 
 
-function SECTION_CLASS.neighbor(K, dir)
+function SECTION_CLASS.neighbor(K, dir, dist)
   local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
 
   if Section_is_valid(nx, ny) then
@@ -439,6 +447,11 @@ function Plan_dump_sections(title)
   local function section_char(x, y)
     local K = SECTIONS[x][y]
     if not K then return ' ' end
+
+    if K.conn then
+      local CONN_SYMS = { [2]="v", [8]="^", [4]="<", [6]=">" }
+      return CONN_SYMS[K.conn.dir] or "*"
+    end
 
     if K.hall then return '#' end
     if K.kind == "junction" then return '+' end
@@ -979,7 +992,7 @@ function Plan_add_natural_rooms()
   if quota < 2 then return end
 
   -- occasionally surround the whole map
-  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(perc + 90) then  -- FIXME / 20
+  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
     surround_map()
 
     Plan_dump_sections("Sections with natural areas:")
@@ -1102,7 +1115,7 @@ function Plan_contiguous_sections()
 
     N = SECTIONS[nx][ny]
 
-    N.kind = "annex"
+    N.kind = "section2"
     N.room = K.room
   end
 
@@ -1235,6 +1248,7 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
 stderrf("  assigned %s to %s\n", K:tostr(), room:tostr())
     K.room = room
     K.expanded = true
+    K.kind = "annex"
 
     room:add_section(K)
   end
@@ -1277,7 +1291,7 @@ stderrf("EXPAND ROOMS........................\n")
   rand.shuffle(visits)
 
   each K in visits do
-    if not K.room and not K.hall then
+    if not K:in_use() then
       try_reassign_section(K)
     end
   end
