@@ -31,6 +31,8 @@ class AREA
   chunks : list(CHUNK)
 
   size : number of seeds occupied
+
+  touching : list(AREA)
 }
 
 
@@ -855,6 +857,13 @@ function Areas_flesh_out()
   end
 
 
+  local function set_all_touching(R)
+    each A in R.areas do
+      A.touching = areas_touching_area(R, A)
+    end
+  end
+
+
   local function height_is_unique(h, touching)
     each AR in touching do
       if h == AR.chunks[1].floor_h then return false end
@@ -975,9 +984,11 @@ function Areas_flesh_out()
 
 
   local function connect_areas(A1, A2)
+    local base_h = assert(A1.chunks[1].floor_h)
+
     -- find a place for a stair (try both areas)
     local stair1, mini_stair1 = find_stair_spot(A1, A2)
-    local stair2, mini_stair2 = find_stair_spot(A2, A1)
+    local stair2, mini_stair2 = nil, nil ---!!! find_stair_spot(A2, A1)
 
     if (stair2 and not stair1) or
        (stair1 and stair2 and stair1.score < stair2.score)
@@ -985,15 +996,13 @@ function Areas_flesh_out()
       stair1 = stair2 ; stair2 = nil
     end
 
-    if mini_stair2 and not mini_stair1 then
-      mini_stair1 = mini_stair2 ; mini_stair2 = nil
-    end
-
-    local old_h = assert(A1.chunks[1].floor_h)
+---??    if mini_stair2 and not mini_stair1 then
+---??      mini_stair1 = mini_stair2 ; mini_stair2 = nil
+---??    end
 
     local skin = pick_stair_skin(stair1)
 
-    local new_h = pick_area_height(A2, old_h, skin)
+    local new_h = pick_area_height(A2, base_h, skin)
 
     set_area_floor(A2, new_h)
 
@@ -1008,33 +1017,47 @@ function Areas_flesh_out()
   end
 
 
-  local function connect_all_areas(R, start)
-    start.done_connected = true
+  local function find_known_neighbor(A)
+    rand.shuffle(A.touching)
 
-    local start_h = start.floor_h
-
-    local touching = areas_touching_area(R, start)
-
-    rand.shuffle(touching)
-
-    each N in touching do
-      if not N.chunks[1].floor_h then
-        connect_areas(start, N)
-      end
-    end
-
-    -- recursively handle the neighboring areas
-    rand.shuffle(touching)
-
-    each N in touching do
-      if not N.done_connected then
-        connect_all_areas(R, N)
+    each N in A.touching do
+      if N.chunks[1].floor_h then
+        return N
       end
     end
   end
 
 
+  local function find_next_areas(R)
+    each A in R.areas do
+      if not A.chunks[1].floor_h then
+        local N = find_known_neighbor(A)
+        
+        if N then
+          return N, A
+        end
+      end
+    end
+  end
+
+
+  local function connect_all_areas(R)
+    while true do
+      -- find an area which is not connected, but touches one which is.
+      -- then connect those two.
+
+      local A1, A2 = find_next_areas(R)
+
+      if not A1 then return end
+
+      connect_areas(A1, A2)
+    end
+  end
+
+
   local function area_heights(R)
+    set_all_touching(R)
+
     -- determine entry area
     --   1. for start room : starting chunk
     --   2. for teleport entries : teleporter chunk
@@ -1069,8 +1092,7 @@ function Areas_flesh_out()
 
     set_area_floor(entry_area, entry_h)
 
-    -- recursively "travel" to other areas, choose stair spots
-    connect_all_areas(R, entry_area)
+    connect_all_areas(R)
 
     -- find minimum and maximum heights
     R.floor_min_h = R.entry_h
