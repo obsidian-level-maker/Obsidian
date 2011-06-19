@@ -864,38 +864,59 @@ function Areas_flesh_out()
   end
 
 
-  local function pick_area_height(N, base_h, stair)
+  local function pick_stair_skin(stair)
+    if not stair then return nil end
+
+    local tab = {}
+
+    each name,prob in THEME.stairs do
+      local skin = GAME.SKINS[name]
+      if not skin then error("Stair does not exist: " .. name) end
+      tab[name] = prob
+    end
+
+    if table.empty(tab) then
+      error("could not find usable stair!")
+    end
+
+    local name = rand.key_by_probs(tab)
+
+    return GAME.SKINS[name]
+  end
+
+
+  local function pick_area_height(N, base_h, stair_skin)
     local R = N.room
 
     -- !!!! FIXME: EXPENSIVE : collect only once
     local touching = areas_touching_area(R, N)
 
-    -- FIXME: probability distribution
-    local DIFFS = { 16,32,32,48,48,64,80,96 }
-
     local step_height = PARAM.step_height or 16
+    local half_height = int(step_height / 2)
 
-    if not stair then
-      DIFFS = { int(step_height / 2), step_height,
-                --[[ int(step_height / 2) * 3, --]]
-                --[[ step_height * 2 --]]
-              }
+--?? local GOOD_DIFFS = { 16,32,32,48,48,64,80,96 } -- FIXME: probability distribution
+
+    local deltas
+
+    if stair_skin then
+      deltas = assert(stair_skin._deltas)
+    else
+      deltas = { step_height, -step_height,
+                 half_height, -half_height }
     end
 
-    local poss_h = {}
-    each dh in DIFFS do
-      if height_is_unique(base_h + dh, touching) then
-        table.insert(poss_h, base_h + dh)
-      end
-      if height_is_unique(base_h - dh, touching) then
-        table.insert(poss_h, base_h - dh)
-      end
+      -- TODO: MINI STAIR POSSIBILITIES:
+          --[[ int(step_height / 2) * 3, --]]
+          --[[ step_height * 2 --]]
+
+    local h_probs = {}
+
+    each dh in deltas do
+      local h = base_h + dh
+      h_probs[h] = (height_is_unique(h, touching) ? 100 ; 1)
     end
 
-    -- this should be very rare
-    if table.empty(poss_h) then return base_h end
-
-    return rand.pick(poss_h)
+    return rand.key_by_probs(h_probs)
   end
 
 
@@ -909,10 +930,11 @@ function Areas_flesh_out()
   local function eval_stair_pair(C1, C2, dir)
     -- never use purpose or conn chunks
     if C1.purpose or C1.weapon then return -1 end
-
     if C1.foobage == "conn" then return -1 end
 
-    if C1.stair or C2.stair then return -1 end
+    -- already has stair?
+    if C1.stair then return -1 end
+    if C2.stair then return -1 end
 
     local long = geom.vert_sel(dir, C1.x2 - C1.x1, C1.y2 - C1.y1)
 
@@ -924,9 +946,10 @@ function Areas_flesh_out()
 
   local function find_stair_spot(A1, A2)
     -- allow theme to not have any stairs
-    if not THEME.stairs then
-      return nil, nil
-    end
+    if not THEME.stairs then return nil, nil end
+
+    -- area must have more than one chunk
+    if #A1.chunks <= 1 then return nil, nil end
 
     local best
     local best_mini
@@ -968,21 +991,19 @@ function Areas_flesh_out()
 
     local old_h = assert(A1.chunks[1].floor_h)
 
-    local new_h = pick_area_height(A2, old_h, stair1, mini_stair1)
+    local skin = pick_stair_skin(stair1)
+
+    local new_h = pick_area_height(A2, old_h, skin)
 
     set_area_floor(A2, new_h)
 
     -- store stair info in the chunk
-    if math.abs(new_h - old_h) > (PARAM.step_height or 16) then
-      if stair1 then
-        stair1.C1.stair = stair1
+    if stair1 then
+      stair1.C1.stair = stair1
+      stair1.C1.stair.skin = skin
 
-      elseif mini_stair1 then
-        mini_stair1.C1.mini_stair = mini_stair1
-
-      else
-        error("buggered stair logic")
-      end
+---??? elseif mini_stair1 then
+---???   mini_stair1.C1.mini_stair = mini_stair1
     end
   end
 

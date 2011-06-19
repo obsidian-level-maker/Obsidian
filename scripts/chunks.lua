@@ -472,29 +472,16 @@ function CHUNK_CLASS.build(C)
   local f_matname = f_mat
 
   if C.stair then
-    assert(THEME.stairs)
+    local skin = C.stair.skin
 
     local delta_h = C.stair.C2.floor_h - C.stair.C1.floor_h
-
-    local skin
-
-    -- TODO: honor random probs
-    each name,prob in THEME.stairs do
-      local SK = GAME.SKINS[name]
-      if not SK then error("Stair does not exist: " .. tostring(name)) end
-
-      if delta_h > 0 and SK._stairs.up   then skin = SK ; break; end
-      if delta_h < 0 and SK._stairs.down then skin = SK ; break; end
-    end
-
-    if not skin then error("No usable stair found!") end
 
     local skin0 = { side=f_matname, step=f_matname, top=f_matname, floor=f_matname, wall=f_matname }
 
     local low_h = math.min(C.stair.C1.floor_h, C.stair.C2.floor_h)
     local dir   = C.stair.dir
 
-    -- FIXME: IS THIS NECESSARY ????
+    -- stair prefabs always go upwards, rotate 180 when going down
     if delta_h < 0 then dir = 10 - dir end
 
     local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, low_h, dir)
