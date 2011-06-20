@@ -213,6 +213,21 @@ function CHUNK_CLASS.good_neighbor(C1, dir)
 end
 
 
+function CHUNK_CLASS.bridge_pos(C, dir)
+  local sx, sy
+
+  if geom.is_vert(dir) then
+    sx = rand.irange(C.sx1, C.sx2)
+    sy = (dir == 2 ? C.sy1 - 1 ; C.sy2 + 1)
+  else
+    sx = (dir == 4 ? C.sx1 - 1 ; C.sx2 + 1)
+    sy = rand.irange(C.sy1, C.sy2)
+  end
+
+  return sx, sy
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -334,19 +349,6 @@ end
 
 
 
-function CHUNK_CLASS.make_bridge(C, floor_h)
-  local f_mat = Mat_lookup(C.room.main_tex)
-  local f_tex = f_mat.f or f_mat.t
-
-  local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
-
-  Trans.set_tex(brush, f_mat.t)
-
-  table.insert(brush, { t=floor_h,    tex=f_tex })
-  table.insert(brush, { b=floor_h-12, tex=f_tex })
-
-  gui.add_brush(brush)
-end
 
 
 

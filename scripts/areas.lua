@@ -996,7 +996,14 @@ function Areas_flesh_out()
   end
 
 
-  local function try_3D_bridge(A2)
+  local function bridge_target_possible(C, N)
+  end
+
+
+  local function bridge_passer_possible(C, N)
+  end
+
+--[[
     rand.shuffle(A2.chunks)
 
     each C in A2.chunks do
@@ -1023,17 +1030,73 @@ function Areas_flesh_out()
 
         if A2:touches(A1) then continue end
 
-        -- OK !
-        set_area_floor(A2, A1.floor_h) 
 
         N.has_bridge = true
 
         -- build the bridge
         N:make_bridge(A1.floor_h, dir)
 
-stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:tostr())
         return true
 
+      end
+    end
+
+    return false
+--]]
+
+  -- FIXME: do this somewhere else, and use a PREFAB !!
+  local function make_the_bridge(sx1, sy1, sx2, sy2, dir, floor_h, f_mat)
+    local f_mat = Mat_lookup(f_mat)
+    local f_tex = f_mat.f or f_mat.t
+
+    local S1 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx1][sy1]
+
+    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+    Trans.set_tex(brush, f_mat.t)
+
+    table.insert(brush, { t=floor_h,    tex=f_tex })
+    table.insert(brush, { b=floor_h-12, tex=f_tex })
+
+    gui.add_brush(brush)
+  end
+
+
+  local function try_bridge_at_chunk(C, dir)
+    -- start at a known floor height
+    if not C.floor_h then return end
+
+    -- use seeds for this logic (good idea??)
+
+    local start_x, start_y = C:bridge_pos(dir)
+
+    for dist = 1, 4 do
+      local sx, sy = geom.nudge(start_x, start_y, dir, dist-1)
+      if not Seed_valid(sx, sy) then return false end
+
+      local S = SEEDS[sx][sy]
+      if S.room != C.room then return false end
+
+      if not (S.chunk or S.chunk.area) then return false end
+
+      local N = S.chunk
+
+      if N == C then return false end
+
+      if dist >= 2 and bridge_target_possible(C, N) then
+        -- SUCCESS !
+stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:tostr())
+
+        set_area_floor(N.area, C.floor_h) 
+
+        make_the_bridge(xxx, C.floor_h, C.room.main_tex)
+
+        return true
+      end
+
+      if dist < 4 and not bridge_passer_possible(C, N) then
+        return false
       end
     end
 
@@ -1041,10 +1104,28 @@ stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:
   end
 
 
-  local function connect_areas(A1, A2)
-    -- FIXME: do this separately (don't require A1 at all)
-    if try_3D_bridge(A2) then return end
+  local function try_3D_bridge(R)
+    -- TODO: STYLE.bridges
 
+    if not PARAM.bridges then return end
+
+    rand.shuffle(R.chunks)
+
+    local DIR_LIST = { 2,4,6,8 }
+
+    each C in R.chunks do
+      rand.shuffle(DIR_LIST)
+
+      each dir in DIR_LIST do
+        if try_bridge_at_chunk(C, dir) then
+          return -- SUCCESS
+        end
+      end
+    end
+  end
+
+
+  local function connect_areas(A1, A2)
     local base_h = assert(A1.floor_h)
 
     -- find a place for a stair (try both areas)
@@ -1106,6 +1187,8 @@ stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:
     while true do
       -- find an area which is not connected, but touches one which is,
       -- then connect those two.
+
+      try_3D_bridge(R)
 
       local A1, A2 = find_next_areas(R)
 
