@@ -263,6 +263,8 @@ Console:
   LUA EXTENSIONS
 ----------------------------------------------------------------
 
++  bug where errors show the wrong line number
+
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 

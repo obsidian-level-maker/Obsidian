@@ -5,15 +5,23 @@ OBLIGE TODO
 Current Work
 ------------
 
->>  CHEX1 : fix ## materials
+>>>>>  SECTIONS rework
+
+>>>  Stairs: fix ability to go from A2 --> A1
+
+
++  _deltas for each stairs in each game
+
++  step_height : required parameter for each game
+-  jump_height : optional parameter (not present --> cannot jump)
+
+
 
 ++  some VOID and LIQUID areas
 
 ++  LOGO pictures on indoor walls (DOOM format games)
 
 
-
-???  the '10 - dir' thing : WHY ?
 
 !!!  the "apply twice" problem in prefab build code
 
@@ -114,7 +122,7 @@ Release Goals
 
 -  cages
 
--  diagonal corners
+?  diagonal corners
 
 -  some ceiling lights
 
