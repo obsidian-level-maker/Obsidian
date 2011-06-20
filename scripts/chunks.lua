@@ -122,8 +122,6 @@ function CHUNK_CLASS.joining_chunks(C, dir)
   sx2, sy2 = geom.nudge(sx2, sy2, dir)
 
   for sx = sx1,sx2 do for sy = sy1,sy2 do
-    assert(Seed_valid(sx, sy))
-
     local S = SEEDS[sx][sy]
 
     if S and S.chunk and not table.has_elem(list, S.chunk) then
@@ -132,6 +130,26 @@ function CHUNK_CLASS.joining_chunks(C, dir)
   end end
 
   return list
+end
+
+
+function CHUNK_CLASS.same_area(C, dir)
+  assert(C.area)
+
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+
+    if not (S and S.chunk) then return false end
+
+    if S.chunk.area != C.area then return false end
+  end end
+
+  return true
 end
 
 

@@ -33,6 +33,8 @@ class AREA
   size : number of seeds occupied
 
   touching : list(AREA)
+
+  floor_h  -- floor height
 }
 
 
@@ -42,8 +44,8 @@ class AREA
 AREA_CLASS = {}
 
 function AREA_CLASS.new(kind, room)
-  local AR = { kind=kind, id=Plan_alloc_id("area"), room=room, chunks={} }
-  table.set_class(AR, AREA_CLASS)
+  local A = { kind=kind, id=Plan_alloc_id("area"), room=room, chunks={} }
+  table.set_class(A, AREA_CLASS)
   return AR
 end
 
@@ -778,18 +780,18 @@ function Areas_flesh_out()
     local fl_chunks = table.copy(R.chunks)
 
     each C in fl_chunks do
-      local AR = AREA_CLASS.new("floor", R)
+      local AREA = AREA_CLASS.new("floor", R)
 
-      area_tab[AR.id] = AR
+      area_tab[AREA.id] = AREA
       
-      C.area = AR
+      C.area = AREA
       
-      AR.size = C:seed_volume()
-      AR.rand = gui.random()
-      AR.min_size = rand.sel(50, 3, 4)
-      AR.max_size = 20 --!!! math.min(R.svolume * X, Y)
+      AREA.size = C:seed_volume()
+      AREA.rand = gui.random()
+      AREA.min_size = rand.sel(50, 3, 4)
+      AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
 
-      AR.foobage = C.foobage
+      AREA.foobage = C.foobage
     end
 
     for loop = 1,10 do
@@ -814,10 +816,10 @@ function Areas_flesh_out()
     R.areas = {}
 
     local debug_id = 1
-    each _,AR in area_tab do
-      AR.debug_id = debug_id ; debug_id = debug_id + 1
----   stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), AR.id, AR.size, AR.min_size)
-      table.insert(R.areas, AR)
+    each _,A in area_tab do
+      A.debug_id = debug_id ; debug_id = debug_id + 1
+---   stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), A.id, A.size, A.min_size)
+      table.insert(R.areas, A)
     end
 
     each C in R.chunks do
@@ -844,11 +846,11 @@ function Areas_flesh_out()
   end
 
 
-  local function areas_touching_area(R, AR)
+  local function areas_touching_area(R, A)
     local list = {}
 
     each C in R.chunks do
-      if C.area == AR then
+      if C.area == A then
         areas_touching_chunk(R, C, list)
       end
     end
@@ -865,8 +867,8 @@ function Areas_flesh_out()
 
 
   local function height_is_unique(h, touching)
-    each AR in touching do
-      if h == AR.chunks[1].floor_h then return false end
+    each A in touching do
+      if h == A.floor_h then return false end
     end
 
     return true
@@ -930,6 +932,8 @@ function Areas_flesh_out()
 
 
   local function set_area_floor(A, floor_h)
+    A.floor_h = floor_h
+
     each C in A.chunks do
       C.floor_h = floor_h
     end
@@ -984,7 +988,7 @@ function Areas_flesh_out()
 
 
   local function connect_areas(A1, A2)
-    local base_h = assert(A1.chunks[1].floor_h)
+    local base_h = assert(A1.floor_h)
 
     -- find a place for a stair (try both areas)
     local stair1, mini_stair1 = find_stair_spot(A1, A2)
@@ -1021,7 +1025,7 @@ function Areas_flesh_out()
     rand.shuffle(A.touching)
 
     each N in A.touching do
-      if N.chunks[1].floor_h then
+      if N.floor_h then
         return N
       end
     end
@@ -1030,7 +1034,7 @@ function Areas_flesh_out()
 
   local function find_next_areas(R)
     each A in R.areas do
-      if not A.chunks[1].floor_h then
+      if not A.floor_h then
         local N = find_known_neighbor(A)
         
         if N then
@@ -1043,7 +1047,7 @@ function Areas_flesh_out()
 
   local function connect_all_areas(R)
     while true do
-      -- find an area which is not connected, but touches one which is.
+      -- find an area which is not connected, but touches one which is,
       -- then connect those two.
 
       local A1, A2 = find_next_areas(R)
@@ -1098,8 +1102,8 @@ function Areas_flesh_out()
     R.floor_min_h = R.entry_h
     R.floor_max_h = R.entry_h
 
-    each AR in R.areas do
-      each C in AR.chunks do
+    each A in R.areas do
+      each C in A.chunks do
         -- validate : all areas got a height
         local h = assert(C.floor_h)
 
