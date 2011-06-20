@@ -46,12 +46,21 @@ AREA_CLASS = {}
 function AREA_CLASS.new(kind, room)
   local A = { kind=kind, id=Plan_alloc_id("area"), room=room, chunks={} }
   table.set_class(A, AREA_CLASS)
-  return AR
+  return A
 end
 
 
 function AREA_CLASS.tostr(A)
   return string.format("AREA_%d", A.id)
+end
+
+
+function AREA_CLASS.touches(A, A2)
+  each N in A.touching do
+    if A2 == N then return true end
+  end
+
+  return false
 end
 
 
@@ -987,7 +996,55 @@ function Areas_flesh_out()
   end
 
 
+  local function try_3D_bridge(A2)
+    rand.shuffle(A2.chunks)
+
+    each C in A2.chunks do
+      each dir in rand.dir_list() do
+
+        local N = C:good_neighbor(dir)
+        
+        if not (N and N.area and N.room == C.room and N.area != C.area) then continue end
+        if not N.floor_h then continue end
+
+        -- don't place bridge over certain stuff
+        if N.stair or N.purpose or N.foobage == "conn" then continue end
+        if N.has_bridge then continue end
+
+        local N2 = N:good_neighbor(dir)
+
+        if not (N2 and N2.area and N2.room == C.room and N2.area != C.area and N2.area != N.area) then continue end
+        if not N2.floor_h then continue end
+
+        -- height check
+        if N2.floor_h < N.floor_h + 96 then continue end
+
+        local A1 = N2.area
+
+        if A2:touches(A1) then continue end
+
+        -- OK !
+        set_area_floor(A2, A1.floor_h) 
+
+        N.has_bridge = true
+
+        -- build the bridge
+        N:make_bridge(A1.floor_h, dir)
+
+stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:tostr())
+        return true
+
+      end
+    end
+
+    return false
+  end
+
+
   local function connect_areas(A1, A2)
+    -- FIXME: do this separately (don't require A1 at all)
+    if try_3D_bridge(A2) then return end
+
     local base_h = assert(A1.floor_h)
 
     -- find a place for a stair (try both areas)

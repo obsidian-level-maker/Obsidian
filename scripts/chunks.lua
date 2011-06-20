@@ -334,6 +334,22 @@ end
 
 
 
+function CHUNK_CLASS.make_bridge(C, floor_h)
+  local f_mat = Mat_lookup(C.room.main_tex)
+  local f_tex = f_mat.f or f_mat.t
+
+  local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+  Trans.set_tex(brush, f_mat.t)
+
+  table.insert(brush, { t=floor_h,    tex=f_tex })
+  table.insert(brush, { b=floor_h-12, tex=f_tex })
+
+  gui.add_brush(brush)
+end
+
+
+
 function CHUNK_CLASS.unpack_parts(C, filter_field)
   -- returns a list of rectangles which represent the area of the
   -- chunk _minus_ the areas of the parts.
