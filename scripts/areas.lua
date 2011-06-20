@@ -997,69 +997,68 @@ function Areas_flesh_out()
 
 
   local function bridge_target_possible(C, N)
+    if N.area.floor_h then return false end
+
+    return true
   end
 
 
-  local function bridge_passer_possible(C, N)
-  end
-
---[[
-    rand.shuffle(A2.chunks)
-
-    each C in A2.chunks do
-      each dir in rand.dir_list() do
-
-        local N = C:good_neighbor(dir)
-        
-        if not (N and N.area and N.room == C.room and N.area != C.area) then continue end
-        if not N.floor_h then continue end
-
-        -- don't place bridge over certain stuff
-        if N.stair or N.purpose or N.foobage == "conn" then continue end
-        if N.has_bridge then continue end
-
-        local N2 = N:good_neighbor(dir)
-
-        if not (N2 and N2.area and N2.room == C.room and N2.area != C.area and N2.area != N.area) then continue end
-        if not N2.floor_h then continue end
-
-        -- height check
-        if N2.floor_h < N.floor_h + 96 then continue end
-
-        local A1 = N2.area
-
-        if A2:touches(A1) then continue end
-
-
-        N.has_bridge = true
-
-        -- build the bridge
-        N:make_bridge(A1.floor_h, dir)
-
-        return true
-
-      end
+  local function bridge_passer_possible(C, N, dir)
+    -- don't place bridge over certain stuff
+    if N.stair or N.purpose or N.foobage == "conn" then
+      return false
     end
 
-    return false
---]]
+    -- only allow two bridges to cross at right angles
+    if N.bridge_dir and geom.is_parallel(dir, N.bridge_dir) then
+      return false
+    end
 
-  -- FIXME: do this somewhere else, and use a PREFAB !!
-  local function make_the_bridge(sx1, sy1, sx2, sy2, dir, floor_h, f_mat)
+    -- check the floor height underneath
+    -- [it is required since the normal area assignment code does not
+    --  know about bridges]
+    if not N.floor_h then return false end
+
+    local pass_h = 64  -- FIXME: configurable via THEME or PARAM
+
+    local h = N.bridge_h or N.floor_h
+
+    if h > C.floor_h - pass_h - 16 then return false end
+
+    return true
+  end
+
+
+  local function make_3D_bridge(sx1, sy1, sx2, sy2, dir, floor_h, f_mat)
+    -- mark the bridge
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      local S = SEEDS[sx][sy]
+      local C = assert(S.chunk)
+      C.bridge_dir = dir
+      C.bridge_h   = floor_h
+    end end
+
+    -- FIXME: do this somewhere else, and use a PREFAB !!
+
     local f_mat = Mat_lookup(f_mat)
     local f_tex = f_mat.f or f_mat.t
 
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx1][sy1]
 
-    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+    local brush = Trans.bare_quad(S1.x1, S1.y1, s2.x2, S2.y2)
 
     Trans.set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=floor_h,    tex=f_tex })
-    table.insert(brush, { b=floor_h-12, tex=f_tex })
+    table.insert(brush, { b=floor_h-16, tex=f_tex })
 
     gui.add_brush(brush)
+  end
+
+
+  local function seed_has_parallel_bridge(C, S, dir)
+    -- FIXME
   end
 
 
@@ -1075,13 +1074,16 @@ function Areas_flesh_out()
       local sx, sy = geom.nudge(start_x, start_y, dir, dist-1)
       if not Seed_valid(sx, sy) then return false end
 
+      -- automatically stop at edge of room
       local S = SEEDS[sx][sy]
       if S.room != C.room then return false end
 
+      -- stop if hit a non-traversing chunk (cages, void etc)
       if not (S.chunk or S.chunk.area) then return false end
 
       local N = S.chunk
 
+      -- can only go off the edge of an area
       if N == C then return false end
 
       if dist >= 2 and bridge_target_possible(C, N) then
@@ -1090,9 +1092,19 @@ stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:
 
         set_area_floor(N.area, C.floor_h) 
 
-        make_the_bridge(xxx, C.floor_h, C.room.main_tex)
+        make_3D_bridge(xxx, C.floor_h, C.room.main_tex)
 
         return true
+      end
+
+      -- nearby bridge only allowed if perpendicular or different height
+      local SL = S:neighbor(geom. LEFT[dir])
+      local SR = S:neighbor(geom.RIGHT[dir])
+
+      if seed_has_parallel_bridge(C, SL, dir) or
+         seed_has_parallel_bridge(C, SR, dir)
+      then
+        return false
       end
 
       if dist < 4 and not bridge_passer_possible(C, N) then
