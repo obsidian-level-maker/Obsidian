@@ -996,8 +996,10 @@ function Areas_flesh_out()
   end
 
 
-  local function bridge_target_possible(C, N)
+  local function bridge_target_possible(C, N, dir)
     if N.area.floor_h then return false end
+
+    if C:has_parallel_stair(dir) then return false end
 
     return true
   end
@@ -1030,6 +1032,9 @@ function Areas_flesh_out()
 
 
   local function make_3D_bridge(sx1, sy1, sx2, sy2, dir, floor_h, f_mat)
+    if sx1 > sx2 then sx1, sx2 = sx2, sx1 end
+    if sy1 > sy2 then sy1, sy2 = sy2, sy1 end
+
     -- mark the bridge
     for sx = sx1,sx2 do for sy = sy1,sy2 do
       local S = SEEDS[sx][sy]
@@ -1044,9 +1049,9 @@ function Areas_flesh_out()
     local f_tex = f_mat.f or f_mat.t
 
     local S1 = SEEDS[sx1][sy1]
-    local S2 = SEEDS[sx1][sy1]
+    local S2 = SEEDS[sx2][sy2]
 
-    local brush = Trans.bare_quad(S1.x1, S1.y1, s2.x2, S2.y2)
+    local brush = Trans.bare_quad(S1.x1, S1.y1, S2.x2, S2.y2)
 
     Trans.set_tex(brush, f_mat.t)
 
@@ -1058,13 +1063,19 @@ function Areas_flesh_out()
 
 
   local function seed_has_parallel_bridge(C, S, dir)
-    -- FIXME
+    if S and S.room == C.room and S.chunk and S.chunk.bridge_dir then
+      return geom.is_parallel(S.chunk.bridge_dir, dir)
+    end
+
+    return false
   end
 
 
   local function try_bridge_at_chunk(C, dir)
     -- start at a known floor height
-    if not C.floor_h then return end
+    if not C.floor_h then return false end
+
+    if C:has_parallel_stair(dir) then return false end
 
     -- use seeds for this logic (good idea??)
 
@@ -1086,14 +1097,16 @@ function Areas_flesh_out()
       -- can only go off the edge of an area
       if N == C then return false end
 
-      if dist >= 2 and bridge_target_possible(C, N) then
+      if dist >= 2 and bridge_target_possible(C, N, dir) then
         -- SUCCESS !
-stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:tostr())
+stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start_y, sx, sy)
 
         set_area_floor(N.area, C.floor_h) 
 
-        make_3D_bridge(xxx, C.floor_h, C.room.main_tex)
+        local end_x, end_y = geom.nudge(start_x, start_y, dir, dist-2)
 
+        make_3D_bridge(start_x, start_y, end_x, end_y, dir,
+                       C.floor_h, C.room.main_tex)
         return true
       end
 
@@ -1107,7 +1120,7 @@ stderrf("!!!!!!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %s --> %s\n", A2:tostr(), A1:
         return false
       end
 
-      if dist < 4 and not bridge_passer_possible(C, N) then
+      if dist < 4 and not bridge_passer_possible(C, N, dir) then
         return false
       end
     end

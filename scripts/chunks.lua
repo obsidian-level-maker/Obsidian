@@ -228,6 +228,15 @@ function CHUNK_CLASS.bridge_pos(C, dir)
 end
 
 
+function CHUNK_CLASS.has_parallel_stair(C, dir)
+  if C.stair and geom.is_parallel(C.stair.dir, dir) then
+    return true
+  end
+
+  return false
+end
+
+
 ----------------------------------------------------------------
 
 
