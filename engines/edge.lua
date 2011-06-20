@@ -70,6 +70,7 @@ EDGE.ENTITIES =
 
 EDGE.PARAMETERS =
 {
+  bridges = true
   extra_floors = true
   liquid_floors = true
   mirrors = true

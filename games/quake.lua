@@ -126,8 +126,6 @@ QUAKE1.ENTITIES =
 
 QUAKE1.PARAMETERS =
 {
-  -- TODO
-
   -- Quake engine needs all coords to lie between -4000 and +4000.
   seed_limit = 42
 
@@ -138,6 +136,9 @@ QUAKE1.PARAMETERS =
 
   -- keys are lost when you open a locked door
   lose_keys = true
+
+  bridges = true
+  extra_floors = true
 
   -- the name buffer in Quake can fit 39 characters, however
   -- the on-screen space for the name is much less.

@@ -129,8 +129,6 @@ QUAKE2.ENTITIES =
 
 QUAKE2.PARAMETERS =
 {
-  -- TODO
-
   seed_limit = 42
 
   centre_map = true
@@ -140,6 +138,9 @@ QUAKE2.PARAMETERS =
 
   -- keys are lost when you open a locked door
   lose_keys = true
+
+  bridges = true
+  extra_floors = true
 
   -- the name buffer in Quake II is huge, but this value
   -- reflects the on-screen space (in the computer panel)

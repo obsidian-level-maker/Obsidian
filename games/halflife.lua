@@ -100,6 +100,9 @@ HALFLIFE.PARAMETERS =
   use_spawnflags = true
   entity_delta_z = 24
 
+  bridges = true
+  extra_floors = true
+
   max_name_length = 20
 
   skip_monsters = { 10,30 }
