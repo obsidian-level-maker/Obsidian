@@ -131,6 +131,7 @@ HARMONY.PARAMETERS =
   damage_factor = 1.0
   ammo_factor   = 0.8
   health_factor = 0.7
+  monster_factor = 0.75
 }
 
 
@@ -409,134 +410,93 @@ HARMONY.LEVEL_THEMES =
 
 ------------------------------------------------------------
 
-HARMONY.MONSTERS =  --- FIXME !!!! these are HacX
+HARMONY.MONSTERS =
 {
-  thug =
+  -- FIXME: heaps of guesswork here
+
+  -- FIXME: need entry for 'falling'
+
+  beastling =
   {
     level = 1
-    prob = 60
-    health = 60
-    damage = 5
-    attack = "hitscan"
+    prob = 35
+    health = 150
+    attack = "melee"
+    damage = 25
   }
 
-  android =
+  critter =
+  {
+    level = 4
+    prob = 15
+    health = 100
+    attack = "melee"
+    damage = 15
+  }
+
+  follower =
+  {
+    level = 1
+    prob = 50
+    health = 30
+    attack = "hitscan"
+    damage = 10
+--??  give = { {weapon="shotgun"}, {ammo="shell",count=4} }
+  }
+
+  predator =
   {
     level = 2
-    prob = 50
-    health = 75
-    damage = 10
-    attack = "hitscan"
+    prob = 60
+    health = 60
+    attack = "missile"
+    damage = 20
   }
 
-  stealth =
+  centaur =
   {
-    level = 1
-    prob = 5
-    health = 30
-    damage = 25
-    attack = "melee"
-    float = true
-    invis = true
-    density = 0.25
+    level = 5
+    prob = 60
+    skip_prob = 90
+    crazy_prob = 40
+    health = 500
+    attack = "missile"
+    damage = 45
+    density = 0.7
   }
 
-  -- this thing just blows up on contact
-  roam_mine =
+  mutant =
   {
-    level = 1
-    prob = 12
-    health = 50
-    damage = 5
+    level = 3
+    prob = 20
+    health = 70
     attack = "hitscan"
-    float = true
-    density = 0.5
+    damage = 50
+--??  give = { {weapon="minigun"}, {ammo="bullet",count=10} }
   }
 
   phage =
   {
-    level = 3
-    prob = 40
-    health = 150
-    damage = 70
-    attack = "missile"
-  }
-
-  buzzer =
-  {
-    level = 3
-    prob = 25
-    health = 175
-    damage = 25
-    attack = "melee"
-    float = true
-  }
-
-  i_c_e =
-  {
-    level = 4
-    prob = 10
-    health = 225
-    damage = 7
-    attack = "melee"
-  }
-
-  d_man =
-  {
-    level = 4
-    prob = 10
-    health = 250
-    damage = 7
-    attack = "melee"
-    float = true
-  }
-
-  monstruct =
-  {
-    level = 5
-    prob = 50
-    health = 400
-    damage = 80
-    attack = "missile"
-  }
-
-  majong7 =
-  {
-    level = 5
-    prob = 10
-    health = 400
-    damage = 20
-    attack = "missile"
-    density = 0.5
-    weap_prefs = { launch=0.2 }
-  }
-
-  terminatrix =
-  {
     level = 6
     prob = 25
-    health = 450
-    damage = 40
-    attack = "hitscan"
+    health = 500
+    attack = "missile"
+    damage = 70
     density = 0.8
   }
 
-  thorn =
-  {
-    level = 7
-    prob = 25
-    health = 600
-    damage = 70
-    attack = "missile"
-  }
 
-  mecha =
+  --- BOSS ---
+
+  echidna =
   {
-    level = 8
-    prob = 10
-    health = 800
-    damage = 150
-    attack = "missile"
+    level = 9
+    prob = 20
+    crazy_prob = 18
+    skip_prob = 150
+    health = 3000
+    attack = "hitscan"
+    damage = 70
     density = 0.2
   }
 }
