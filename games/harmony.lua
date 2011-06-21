@@ -31,61 +31,54 @@ HARMONY.ENTITIES =
   dm_player     = { id=11, kind="other", r=16,h=56 }
   teleport_spot = { id=14, kind="other", r=16,h=56 }
   
-  --- FIXME !!!! all these are HacX
-
   --- monsters ---
-  thug        = { id=3004, kind="monster", r=21,h=72 }
-  android     = { id=   9, kind="monster", r=21,h=70 }
-  i_c_e       = { id=3001, kind="monster", r=32,h=56 }
-  buzzer      = { id=3002, kind="monster", r=25,h=68 }
-  terminatrix = { id=3003, kind="monster", r=32,h=80 }
-  d_man       = { id=3006, kind="monster", r=48,h=78 }
+  beastling   = { id=3004, kind="monster", r=20,h=56 }
+  follower    = { id=9,    kind="monster", r=20,h=56 }
+  critter     = { id=3003, kind="monster", r=24,h=24 }
+  centaur     = { id=16,   kind="monster", r=40,h=112 }
 
-  stealth     = { id=58,  kind="monster", r=32,h=68 }
-  monstruct   = { id=65,  kind="monster", r=35,h=88 }
-  phage       = { id=67,  kind="monster", r=25,h=96 }
-  thorn       = { id=68,  kind="monster", r=66,h=96 }
-  mecha       = { id=69,  kind="monster", r=24,h=96 }
-  majong7     = { id=71,  kind="monster", r=31,h=56 }
-  roam_mine   = { id=84,  kind="monster", r=5, h=32 }
+  mutant    = { id=65,  kind="monster", r=20,h=56 }
+  phage     = { id=68,  kind="monster", r=48,h=64 }
+  predator  = { id=66,  kind="monster", r=20,h=56 }
+  falling   = { id=64,  kind="monster", r=20,h=56 }
+  echidna   = { id=7,   kind="monster", r=128,h=112 }
 
-  --- pickups ---
-  k_password = { id=5,  kind="pickup", r=20,h=16, pass=true }
-  k_ckey     = { id=6,  kind="pickup", r=20,h=16, pass=true }
-  k_keycard  = { id=13, kind="pickup", r=20,h=16, pass=true }
+  --- keys ---
+  kc_green   = { id=5,  kind="pickup", r=20,h=16, pass=true }
+  kc_yellow  = { id=6,  kind="pickup", r=20,h=16, pass=true }
+  kc_purple  = { id=13, kind="pickup", r=20,h=16, pass=true }
 
-  kz_red     = { id=38, kind="pickup", r=20,h=16, pass=true }
-  kz_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
-  kz_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
+  kn_purple  = { id=38, kind="pickup", r=20,h=16, pass=true }
+  kn_yellow  = { id=39, kind="pickup", r=20,h=16, pass=true }
+  kn_blue    = { id=40, kind="pickup", r=20,h=16, pass=true }
 
-  tazer    = { id=2001, kind="pickup", r=20,h=16, pass=true }
-  cyrogun  = { id=  82, kind="pickup", r=20,h=16, pass=true }
-  fu2      = { id=2002, kind="pickup", r=20,h=16, pass=true }
-  zooka    = { id=2003, kind="pickup", r=20,h=16, pass=true }
-  antigun  = { id=2004, kind="pickup", r=20,h=16, pass=true }
-  reznator = { id=2005, kind="pickup", r=20,h=16, pass=true }
-  nuker    = { id=2006, kind="pickup", r=20,h=16, pass=true }
+  --- weapons ---
+  shotgun    = { id=2001, kind="pickup", r=20,h=16, pass=true }
+  minigun    = { id=2002, kind="pickup", r=20,h=16, pass=true }
+  launcher   = { id=2003, kind="pickup", r=20,h=16, pass=true }
+  entropy    = { id=2004, kind="pickup", r=20,h=16, pass=true }
+  h_grenade  = { id=2006, kind="pickup", r=20,h=30, pass=true }
 
-  dampener   = { id=2014, kind="pickup", r=20,h=16, pass=true }
-  microkit   = { id=2011, kind="pickup", r=20,h=16, pass=true }
-  hypo       = { id=2012, kind="pickup", r=20,h=16, pass=true }
-  smart_drug = { id=2013, kind="pickup", r=20,h=16, pass=true }
+  --- ammo ---
+  mini_box   = { id=2048, kind="pickup", r=20,h=16, pass=true }
+  shell_box  = { id=2049, kind="pickup", r=20,h=16, pass=true }
+  cell_pack  = { id=  17, kind="pickup", r=20,h=16, pass=true }
+  grenade    = { id=2010, kind="pickup", r=20,h=16, pass=true }
+  nade_belt  = { id=2046, kind="pickup", r=20,h=16, pass=true }
 
-  inhaler      = { id=2015, kind="pickup", r=20,h=16, pass=true }
-  kevlar_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
-  super_armor  = { id=2019, kind="pickup", r=20,h=16, pass=true }
+  --- health ---
+  mushroom     = { id=2011, kind="pickup", r=20,h=16, pass=true }
+  first_aid    = { id=2012, kind="pickup", r=20,h=16, pass=true }
+  amazon_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
+  ndf_armor    = { id=2019, kind="pickup", r=20,h=16, pass=true }
 
-  bullets     = { id=2007, kind="pickup", r=20,h=16, pass=true }
-  bullet_box  = { id=2048, kind="pickup", r=20,h=16, pass=true }
-  shells      = { id=2008, kind="pickup", r=20,h=16, pass=true }
-  shell_box   = { id=2049, kind="pickup", r=20,h=16, pass=true }
-  torpedos    = { id=2010, kind="pickup", r=20,h=16, pass=true }
-  torpedo_box = { id=2046, kind="pickup", r=20,h=16, pass=true }
-  molecules   = { id=2047, kind="pickup", r=20,h=16, pass=true }
-  mol_tank    = { id=  17, kind="pickup", r=20,h=16, pass=true }
+  --- powerup ---
+  big_mushroom = { id=2013, kind="pickup", r=20,h=16, pass=true }
+  computer_map = { id=2026, kind="pickup", r=20,h=16, pass=true }
 
   --- scenery ---
-  chair      = { id=35,   kind="scenery", r=24,h=40 }
+
+  -- FIXME
 
 }
 
