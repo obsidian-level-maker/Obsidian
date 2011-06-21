@@ -73,13 +73,45 @@ HARMONY.ENTITIES =
   ndf_armor    = { id=2019, kind="pickup", r=20,h=16, pass=true }
 
   --- powerup ---
-  big_mushroom = { id=2013, kind="pickup", r=20,h=16, pass=true }
+  mushroom_wow = { id=2013, kind="pickup", r=20,h=16, pass=true }
   computer_map = { id=2026, kind="pickup", r=20,h=16, pass=true }
 
   --- scenery ---
 
-  -- FIXME
+  -- TODO: SIZES and PASSIBILITY
 
+  bridge = { id=118, kind="scenery",  r=20,h=16 }
+  barrel = { id=2035, kind="scenery", r=20,h=56 }
+  flames = { id=36, kind="scenery",   r=20,h=56 }
+  amira  = { id=32, kind="scenery",   r=20,h=56 }
+
+  solid_shroom = { id=30, kind="scenery", r=20,h=56 }
+  truck_pipe   = { id=31, kind="scenery", r=20,h=56 }
+  sculpture    = { id=33, kind="scenery", r=20,h=56 }
+  dead_tree    = { id=54, kind="scenery", r=20,h=56 }
+  water_drip   = { id=42, kind="scenery", r=20,h=56 }
+  dope_fish    = { id=45, kind="scenery", r=20,h=56 }
+
+  tall_lamp  = { id=48, kind="scenery", r=20,h=56 }
+  laser_lamp = { id=2028, kind="scenery", r=20,h=56 }
+  candle     = { id=34, kind="scenery", r=20,h=56 }
+  fire       = { id=55, kind="scenery", r=20,h=56 }
+  fire_box   = { id=57, kind="scenery", r=20,h=56 }
+
+  flies       = { id=2007, kind="scenery", r=20,h=56, pass=true }
+  nuke_splash = { id=46, kind="scenery", r=20,h=56 }
+  ceil_sparks = { id=56, kind="scenery", r=20,h=56 }
+  brazier     = { id=63, kind="scenery", r=20,h=56, ceil=true }
+  missile     = { id=27, kind="scenery", r=20,h=56 }
+
+  vine_thang   = { id=28, kind="scenery", r=20,h=56 }
+  skeleton     = { id=19, kind="scenery", r=20,h=56 }
+  hang_chains  = { id=73, kind="scenery", r=20,h=56 }
+  minigun_rack = { id=74, kind="scenery", r=20,h=88 }
+  shotgun_rack = { id=75, kind="scenery", r=20,h=64 }
+
+  dead_amazon = { id=15, kind="scenery", r=20,h=16, pass=true }
+  dead_beast  = { id=21, kind="scenery", r=20,h=16, pass=true }
 }
 
 
