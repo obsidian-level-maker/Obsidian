@@ -4395,7 +4395,7 @@ DOOM.WEAPONS =
 
   plasma =
   {
-    pref = 90
+    pref = 30
     add_prob = 13
     start_prob = 7
     rate = 11
@@ -4408,7 +4408,7 @@ DOOM.WEAPONS =
 
   bfg =
   {
-    pref = 30
+    pref = 15
     add_prob = 20
     start_prob = 1
     rarity = 4
@@ -4424,7 +4424,7 @@ DOOM.WEAPONS =
   -- this is Doom II only --
   super =
   {
-    pref = 70
+    pref = 50
     add_prob = 20
     start_prob = 15
     rate = 0.6
