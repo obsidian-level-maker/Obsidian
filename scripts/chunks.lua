@@ -465,7 +465,7 @@ end
 function CHUNK_CLASS.build(C)
 
   local f_h = assert(C.floor_h)
-  local c_h = f_h + 256
+  local c_h = (C.bridge_h or f_h) + 256
   local c_medium = "solid"
   local light = 0
 

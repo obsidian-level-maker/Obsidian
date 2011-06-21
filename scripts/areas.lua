@@ -595,6 +595,9 @@ end
 
 function Areas_flesh_out()
 
+  local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
+
+
   local function decide_windows(R)
     -- allocate chunks on side of room
     -- [TODO: allow windows in existing chunks]
@@ -1001,6 +1004,7 @@ function Areas_flesh_out()
 
     if C:has_parallel_stair(dir) then return false end
 
+-- if STYLE.bridges == "few" and rand.odds(40) then return false end
     return true
   end
 
@@ -1020,8 +1024,6 @@ function Areas_flesh_out()
     -- [it is required since the normal area assignment code does not
     --  know about bridges]
     if not N.floor_h then return false end
-
-    local pass_h = 64  -- FIXME: configurable via THEME or PARAM
 
     local h = N.bridge_h or N.floor_h
 
