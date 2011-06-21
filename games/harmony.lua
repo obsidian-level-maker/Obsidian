@@ -70,7 +70,7 @@ HARMONY.ENTITIES =
   mushroom     = { id=2011, kind="pickup", r=20,h=16, pass=true }
   first_aid    = { id=2012, kind="pickup", r=20,h=16, pass=true }
   amazon_armor = { id=2018, kind="pickup", r=20,h=16, pass=true }
-  ndf_armor    = { id=2019, kind="pickup", r=20,h=16, pass=true }
+  NDF_armor    = { id=2019, kind="pickup", r=20,h=16, pass=true }
 
   --- powerup ---
   mushroom_wow = { id=2013, kind="pickup", r=20,h=16, pass=true }
@@ -363,7 +363,7 @@ HARMONY.THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
---!!  keys = { kz_red=50, kz_blue=50, kz_yellow=50 }
+--!!  keys = { kn_blue=50, kn_purple=50, kn_yellow=50 }
 
 --!!  switch_doors = { Door_SW_blue = 50 }
 
@@ -542,145 +542,102 @@ HARMONY.MONSTERS =  --- FIXME !!!! these are HacX
 }
 
 
-HARMONY.WEAPONS =  --- FIXME !!!! these are HacX
+HARMONY.WEAPONS =
 {
-  boot =
+  -- FIXME: most of these need to be checked, get new firing rates (etc etc)
+
+  blow_uppa_ya_face =
   {
-    rate = 2.5
-    damage = 5
-    attack = "melee"
+    attack = "missile"
+    rate = 0.7
+    damage = 20
   }
 
   pistol =
   {
     pref = 5
+    attack = "missile"
     rate = 2.0
     damage = 20
-    attack = "hitscan"
-    ammo = "bullet"
+    ammo = "cell"
     per = 1
   }
 
-  reznator =
+  minigun =
   {
-    pref = 2
-    add_prob = 2
-    start_prob = 2
-    attack = "melee"
-    rate = 8.6
-    damage = 10
-  }
-
-  tazer =
-  {
-    pref = 20
-    add_prob = 10
-    start_prob = 60
-    attack = "hitscan"
-    rate = 1.2
-    damage = 70
-    ammo = "shell"
-    per = 1
-    give = { {ammo="shell",count=8} }
-  }
-
-  cyrogun =
-  {
-    pref = 40
-    add_prob = 20
-    start_prob = 10
-    attack = "hitscan"
-    rate = 0.9
-    damage = 170
-    splash = { 0,30 }
-    ammo = "shell"
-    per = 2
-    give = { {ammo="shell",count=8} }
-  }
-
-  fu2 =
-  {
-    pref = 40
+    pref = 70
     add_prob = 35
     start_prob = 40
     attack = "hitscan"
-    rate = 8.6
+    rate = 8.5
     damage = 10
     ammo = "bullet"
     per = 1
     give = { {ammo="bullet",count=20} }
   }
 
-  zooka =
+  shotgun =
   {
-    pref = 20
+    pref = 70
+    add_prob = 10
+    start_prob = 60
+    attack = "hitscan"
+    rate = 0.9
+    damage = 70
+    splash = { 0,10 }
+    ammo = "shell"
+    per = 1
+    give = { {ammo="shell",count=8} }
+  }
+
+  launcher =
+  {
+    pref = 40
     add_prob = 25
-    start_prob = 10
+    start_prob = 15
     attack = "missile"
     rate = 1.7
     damage = 80
     splash = { 50,20,5 }
-    ammo = "torpedo"
+    ammo = "grenade"
     per = 1
-    give = { {ammo="torpedo",count=2} }
+    give = { {ammo="grenade",count=2} }
   }
 
-  antigun =
+  entropy =
   {
-    pref = 50
+    pref = 25
     add_prob = 13
-    start_prob = 5
-    attack = "missile"
-    rate = 16
+    start_prob = 7
+    rate = 11
     damage = 20
-    ammo = "molecule"
-    per = 1
-    give = { {ammo="molecule",count=40} }
-  }
-
-  nuker =
-  {
-    pref = 20
-    add_prob = 30
-    start_prob = 0.2
-    rarity = 3
     attack = "missile"
-    rate = 1.4
-    damage = 300
-    splash = {60,45,30,30,20,10}
-    ammo = "molecule"
-    per = 40
-    give = { {ammo="molecule",count=40} }
+    ammo = "cell"
+    per = 1
+    give = { {ammo="cell",count=40} }
   }
 }
 
 
-HARMONY.PICKUPS =  --- FIXME !!!! these are HacX
+HARMONY.PICKUPS =
 {
   -- HEALTH --
 
-  dampener =
-  {
-    prob = 20
-    cluster = { 4,7 }
-    give = { {health=1} }
-  }
-
-  microkit =
+  mushroom_wow =
   {
     prob = 60
     cluster = { 2,5 }
     give = { {health=10} }
   }
 
-  hypo =
+  first_aid =
   {
     prob = 100
     cluster = { 1,3 }
     give = { {health=25} }
   }
 
-  smart_drug =
+  mushroom_wow =
   {
     prob = 3
     big_item = true
@@ -689,15 +646,7 @@ HARMONY.PICKUPS =  --- FIXME !!!! these are HacX
 
   -- ARMOR --
 
-  inhaler =
-  {
-    prob = 10
-    armor = true
-    cluster = { 4,7 }
-    give = { {health=1} }
-  }
-
-  kevlar_armor =
+  amazon_armor =
   {
     prob = 5
     armor = true
@@ -705,7 +654,7 @@ HARMONY.PICKUPS =  --- FIXME !!!! these are HacX
     give = { {health=30} }
   }
 
-  super_armor =
+  NDF_armor =
   {
     prob = 2
     armor = true
@@ -715,60 +664,38 @@ HARMONY.PICKUPS =  --- FIXME !!!! these are HacX
 
   -- AMMO --
 
-  bullets =
-  {
-    prob = 10
-    cluster = { 2,5 }
-    give = { {ammo="bullet",count=10} }
-  }
-
-  bullet_box =
+  mini_box =
   {
     prob = 40
     cluster = { 1,3 }
-    give = { {ammo="bullet", count=50} }
-  }
-
-  shells =
-  {
-    prob = 20
-    cluster = { 2,5 }
-    give = { {ammo="shell",count=4} }
+    give = { {ammo="bullet", count=40} }
   }
 
   shell_box =
   {
     prob = 40
-    cluster = { 1,3 }
-    give = { {ammo="shell",count=20} }
+    cluster = { 1,4 }
+    give = { {ammo="shell",count=10} }
   }
 
-  torpedos =
-  {
-    prob = 10
-    cluster = { 4,7 }
-    give = { {ammo="torpedo",count=1} }
-  }
-
-  torpedo_box =
+  cell_pack =
   {
     prob = 40
-    cluster = { 1,3 }
-    give = { {ammo="torpedo",count=5} }
+    give = { {ammo="cell",count=100} }
   }
 
-  molecules =
+  grenade =
   {
     prob = 20
     cluster = { 2,5 }
-    give = { {ammo="molecule",count=20} }
+    give = { {ammo="grenade",count=1} }
   }
 
-  mol_tank =
+  nade_belt =
   {
     prob = 40
     cluster = { 1,2 }
-    give = { {ammo="molecule",count=100} }
+    give = { {ammo="grenade",count=5} }
   }
 }
 
@@ -778,7 +705,7 @@ HARMONY.PLAYER_MODEL =
   harmony =
   {
     stats   = { health=0 }
-    weapons = { pistol=1 }
+    weapons = { pistol=1, blow_uppa_ya_face=1 }
   }
 }
 
