@@ -117,12 +117,17 @@ HACX.MATERIALS =
   _ERROR = { t="HW209", f="RROCK03" }
   _SKY   = { t="HW209", f="F_SKY1" }
 
-  METAL    = { t="HW209", f="RROCK03" }
-  DOORTRAK = { t="HW209", f="RROCK03" }
 
-  -- textures --
+  -- general purpose --
+
+  METAL  = { t="HW209", f="RROCK03" }
+
+
+  -- walls --
 
   BROWNHUG = { t="BROWNHUG", f="BLOOD1" }
+
+  DOORTRAK = { t="HW209", f="RROCK03" }
 
   HD6   = { t="HD6",   f="RROCK03" }
   HW510 = { t="HW510", f="SLIME15" }
@@ -140,14 +145,22 @@ HACX.MATERIALS =
   DIRTY2 = { t="PANEL2",   f="RROCK15" }
   STONY1 = { t="PLANET1",  f="GRNROCK" }
 
+  GRAY_ROCK = { t="HW185", f="FLOOR0_1" }
+
+  DARK_CONC = { t="HW205", f="CONS1_5" }
+
 
   LITE2 = { t="LITE2", f="CEIL3_3" }
 
   MODWALL3 = { t="MODWALL3", f="CEIL3_3" }
 
+
+  -- switches --
+
   SW1CMT = { t="SW1CMT", f="CEIL3_3" }
 
-  -- flats --
+
+  -- floors --
 
   GRASS1 = { t="MARBGRAY", f="TLITE6_1" }
   GRASS2 = { t="MARBGRAY", f="CONS1_7" }
@@ -158,6 +171,31 @@ HACX.MATERIALS =
   MIDBARS1 = { t="MIDBARS1", f="CEIL5_2" }
 
 
+  -- rails --
+
+  CABLE   = { t="HW167",    rail_h=48 }
+  SHARKS  = { t="FIREWALB", rail_h=128 }
+  SHELVES = { t="TEKGREN1", rail_h=128 }
+  GRILL   = { t="TEKGREN2", rail_h=128 }
+  WEB     = { t="HW213",    rail_h=34 }
+
+  CAGE3     = { t="SPACEW3", rail_h=128 }
+  CAGE4     = { t="SPACEW4", rail_h=128 }
+  CAGE_BUST = { t="HW181",   rail_h=128 }
+
+  FORCE_FIELD = { t="SLADRIP1", rail_h=128 }
+  HIGH_BARS   = { t="HW203",    rail_h=128 }
+  BRIDGE_RAIL = { t="HW211",    rail_h=128 }
+  SUPT_BEAM   = { t="SHAWN2",   rail_h=128 }
+  BARRACADE   = { t="HW225",    rail_h=128 }
+
+  DARK_CONC_HOLE = { t="HW204", rail_h=128 }
+  GRAY_ROCK_HOLE = { t="HW183", rail_h=128 }
+  WASHGTON_HOLE  = { t="HW353", rail_h=128 }
+
+
+  -- liquids / animated --
+
   L_ELEC   = { t="HW177", f="NUKAGE1" }
   L_GOO    = { t="HW325", f="LAVA1" }
   L_WATER  = { t="BLODRIP1", f="FWATER1" }
@@ -166,17 +204,12 @@ HACX.MATERIALS =
   L_SLIME  = { t="BRICK6", f="SLIME01" }
 
 
-  -- Oblige stuff
+  -- other --
+
   O_PILL   = { t="HW313", f="O_PILL",   sane=1 }
   O_BOLT   = { t="HW316", f="O_BOLT",   sane=1 }
   O_RELIEF = { t="HW329", f="O_RELIEF", sane=1 }
   O_CARVE  = { t="HW309", f="O_CARVE",  sane=1 }
-}
-
-
-HACX.RAILS =
-{
-  -- TODO
 }
 
 
@@ -1050,6 +1083,12 @@ HACX.LEVEL_THEMES =
       GRASS1=50, STARTAN3=50, FLAT9=50, MIDBARS1=50,
       DIRTY1=50, DIRTY2=50,
     }
+
+    landscape_walls =
+    {
+      GRAY_ROCK=50,
+    }
+
   }  -- TECH
 }
 
