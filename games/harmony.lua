@@ -170,6 +170,54 @@ HARMONY.MATERIALS =
   -- switches --
 
 
+  -- rails --
+
+  LADDER       = { t="0LADDER",  rail_h=128 }
+  LASER_BEAM   = { t="0LASER4",  rail_h=8 }
+  ELECTRICITY  = { t="ROCKRED1", rail_h=48 }
+
+  RED_WIRING   = { t="MODWALL1", rail_h=128 }
+  BLUE_WIRING  = { t="CEMENT7",  rail_h=128 }
+  FANCY_WINDOW = { t="ZELDOOR", rail_h=128 }
+
+  GRATE_HOLE   = { t="STUCCO3", rail_h=64 }
+  RUSTY_GRATE  = { t="MIDGRATE", rail_h=128 }
+  METAL_BAR1   = { t="0MBAR1",  rail_h=16 }
+  METAL_BAR2   = { t="0MBAR2",  rail_h=64 }
+
+  R_LIFT1   = { t="1LIFT1", rail_h=128 }
+  R_LIFT3   = { t="1LIFT3", rail_h=128 }
+  R_LIFT4   = { t="1LIFT4", rail_h=128 }
+  R_PRED    = { t="0PRED",  rail_h=128 }
+
+  BAR_MUSIC = { t="SP_DUDE7", rail_h=128 }
+  NO_WAR    = { t="0GRAFFI",  rail_h=128 }
+  LAST_DOPE = { t="0DOPE",    rail_h=64  }
+  THE_END   = { t="0END2",    rail_h=128 }
+
+  BIG_BRIDGE_L = { t="SKINMET2", rail_h=128 }
+  BIG_BRIDGE_R = { t="SKINSCAB", rail_h=128 }
+
+  GLASS       = { t="SLOPPY1", rail_h=128 }
+  GLASS_SMASH = { t="SLOPPY2", rail_h=128 }
+  GLASS_BLUE  = { t="0BLUEGL", rail_h=128 }
+
+  BLUE_PEAK   = { t="0ARK1", rail_h=128 }
+  METAL_ARCH  = { t="0ARCH", rail_h=128 }
+
+  STONE_ARCH   = { t="ZZWOLF3",  rail_h=64 }
+  STONE_PEAK   = { t="0DRIEHK1", rail_h=32 }
+  STONE_CURVE1 = { t="0CURVE1",  rail_h=128 }
+  STONE_CURVE2 = { t="0CURVE2",  rail_h=128 }
+
+  IRIS_DOOR1  = { t="0IRIS1", rail_h=128 }
+  IRIS_DOOR2  = { t="0IRIS2", rail_h=128 }
+  IRIS_DOOR3  = { t="0IRIS3", rail_h=128 }
+  IRIS_DOOR4  = { t="0IRIS4", rail_h=128 }
+  IRIS_FRAME1 = { t="0IRIS5", rail_h=128 }
+  IRIS_FRAME2 = { t="0IRIS7", rail_h=128 }
+
+
   -- liquids --
 
   WATER   = { t="SFALL1",   f="FWATER1" }
