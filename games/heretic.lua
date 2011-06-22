@@ -179,7 +179,7 @@ HERETIC.MATERIALS =
   _ERROR = { t="WOODWL",  f="FLOOR10" }
   _SKY   = { t="CHAINSD", f="F_SKY1"  }
 
-  -- textures with best-matching flat
+  -- textures --
 
   BANNER1  = { t="BANNER1",  f="FLOOR03" }
   BANNER2  = { t="BANNER2",  f="FLOOR03" }
@@ -258,7 +258,7 @@ HERETIC.MATERIALS =
   WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" }
   WOODWL   = { t="WOODWL",   f="FLOOR10" }
 
-  -- flats with best-matching texture
+  -- flats --
 
   FLAT500  = { t="SQPEB1",   f="FLAT500"  }
   FLAT502  = { t="BLUEFRAG", f="FLAT502"  }
@@ -314,7 +314,8 @@ HERETIC.MATERIALS =
   FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" }
 
 
-  -- Oblige stuff
+  -- other --
+
   O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
   O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
   O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
@@ -339,13 +340,182 @@ HERETIC.RAILS =
 }
 
 
-HERETIC.STEPS =
+--[[ FIXME: incorporate these color values
+BANNER1 , color=0x3a2b3c
+BANNER2 , color=0x3c213b
+BANNER3 , color=0x4f2318
+BANNER4 , color=0x222039
+BANNER5 , color=0x662c0f
+BANNER6 , color=0x392831
+BANNER7 , color=0x3d2d3e
+BANNER8 , color=0x3f243e
+BLUEFRAG , color=0x00043b
+BRWNRCKS , color=0x40200f
+CELTIC , color=0x694429
+CHAINMAN , color=0x39332e
+CHAINSD , color=0x313131
+CSTLMOSS , color=0x2e302d
+CSTLRCK , color=0x313131
+CTYSTCI1 , color=0x3f3527
+CTYSTCI2 , color=0x40372a
+CTYSTCI4 , color=0x41392f
+CTYSTUC1 , color=0x322b25
+CTYSTUC2 , color=0x37322d
+CTYSTUC3 , color=0x312a24
+CTYSTUC4 , color=0x393530
+CTYSTUC5 , color=0x302823
+DMNMSK , color=0x5c5d5c
+DOOREXIT , color=0x3a3b43
+DOORSTON , color=0x2b2b29
+DOORWOOD , color=0x302119
+DRIPWALL , color=0x664c2a
+GATMETL , color=0x444444
+GATMETL2 , color=0x373932
+GATMETL3 , color=0x403931
+GATMETL4 , color=0x403a31
+GATMETL5 , color=0x3c3931
+GRNBLOK1 , color=0x2c392b
+GRNBLOK2 , color=0x2a372a
+GRNBLOK3 , color=0x2c392b
+GRNBLOK4 , color=0x2b3729
+GRSKULL1 , color=0x62605e
+GRSKULL2 , color=0x686765
+GRSKULL3 , color=0x716f6e
+GRSTNPB , color=0x2c2926
+GRSTNPBV , color=0x302e2b
+GRSTNPBW , color=0x2f2c28
+HORSES1 , color=0x343833
+LAVA1 , color=0x30261f
+LAVAFL1 , color=0xd24100
+LAVAFL2 , color=0xd24100
+LAVAFL3 , color=0xd24100
+LOOSERCK , color=0x2b2b29
+METL1 , color=0x171717
+METL2 , color=0x191919
+MOSAIC1 , color=0x3a5dc9
+MOSAIC2 , color=0x4062c1
+MOSAIC3 , color=0x3c63c0
+MOSAIC4 , color=0x3c5ec6
+MOSAIC5 , color=0x3e60c4
+MOSSRCK1 , color=0x2c3a29
+OLDSKY2 , color=0x555655
+OLDSKY3 , color=0x555655
+ORNGRAY , color=0x3e3e3e
+RCKSNMUD , color=0x49321a
+REDWALL , color=0x5f0000
+ROOTWALL , color=0x4b311f
+SAINT1 , color=0x2a2a2a
+SANDSQ2 , color=0x6f4f2a
+SKULLSB1 , color=0x202020
+SKULLSB2 , color=0x282625
+SKY1 , color=0x555655
+SKY2 , color=0x650404
+SKY3 , color=0x05087a
+SKY5 , color=0x555655
+SNDBLCKS , color=0x4e3515
+SNDCHNKS , color=0x6b3c1e
+SNDPLAIN , color=0x4b3114
+SPINE1 , color=0x4b3214
+SPINE2 , color=0x513616
+SQPEB1 , color=0x474846
+SQPEB2 , color=0x4a2610
+STNGLS1 , color=0x4b2745
+STNGLS2 , color=0x3c1d3f
+STNGLS3 , color=0x31202d
+SW1OFF , color=0x1b1b1b
+SW1ON , color=0x1c1c1c
+SW2OFF , color=0x1c1c1d
+SW2ON , color=0x1c1c1d
+TMBSTON1 , color=0x40413f
+TMBSTON2 , color=0x3d3f3d
+TRISTON1 , color=0x343434
+TRISTON2 , color=0x4f2b15
+WATRWAL1 , color=0x282fcc
+WATRWAL2 , color=0x282fcb
+WATRWAL3 , color=0x282fcb
+WDGAT64 , color=0x402b13
+WEB1_B , color=0x4f4f4f
+WEB1_F , color=0x4f4f4f
+WEB2_B , color=0x515151
+WEB2_F , color=0x515151
+WEB3_M , color=0x565656
+WOODWL , color=0x42210f
+
+FLAT500 , color=0x574f49
+FLAT502 , color=0x030793
+FLAT503 , color=0x4b4b4a
+FLAT504 , color=0x555754
+FLAT506 , color=0x3d2b1f
+FLAT507 , color=0x292524
+FLAT508 , color=0x3a2215
+FLAT509 , color=0x494949
+FLAT510 , color=0x4b2c0b
+FLAT512 , color=0x1c241b
+FLAT513 , color=0x2d362c
+FLAT516 , color=0x2f2419
+FLAT517 , color=0x1f25c4
+FLAT520 , color=0x373837
+FLAT521 , color=0x505050
+FLAT522 , color=0x7c4b28
+FLAT523 , color=0x262626
+FLATHUH1 , color=0x881a00
+FLATHUH2 , color=0x811e00
+FLATHUH3 , color=0x871b00
+FLATHUH4 , color=0x811e00
+FLOOR00 , color=0x303030
+FLOOR01 , color=0x1b110b
+FLOOR03 , color=0x343434
+FLOOR04 , color=0x393a39
+FLOOR05 , color=0x283e23
+FLOOR06 , color=0x956139
+FLOOR07 , color=0x676679
+FLOOR08 , color=0x2f2d2b
+FLOOR09 , color=0x6d0000
+FLOOR10 , color=0x442b0e
+FLOOR11 , color=0x3c3428
+FLOOR12 , color=0x372f26
+FLOOR16 , color=0x00043b
+FLOOR17 , color=0x3e200e
+FLOOR18 , color=0x293828
+FLOOR19 , color=0x334531
+FLOOR20 , color=0x4a2a17
+FLOOR21 , color=0x33343e
+FLOOR22 , color=0x33343e
+FLOOR23 , color=0x33343e
+FLOOR24 , color=0x33343e
+FLOOR25 , color=0x513616
+FLOOR26 , color=0x282a44
+FLOOR27 , color=0x644623
+FLOOR28 , color=0x191919
+FLOOR29 , color=0x171717
+FLOOR30 , color=0x181818
+FLTFLWW1 , color=0x282fcc
+FLTFLWW2 , color=0x282fcb
+FLTFLWW3 , color=0x282fcb
+FLTLAVA1 , color=0x3b2b2b
+FLTLAVA2 , color=0x442b2b
+FLTLAVA3 , color=0x492b2b
+FLTLAVA4 , color=0x442b2b
+FLTSLUD1 , color=0x3d453c
+FLTSLUD2 , color=0x3e463d
+FLTSLUD3 , color=0x3e453d
+FLTTELE1 , color=0x592423
+FLTTELE2 , color=0x5b2120
+FLTTELE3 , color=0x5c1f1e
+FLTTELE4 , color=0x5b2120
+FLTWAWA1 , color=0x04087e
+FLTWAWA2 , color=0x04087f
+FLTWAWA3 , color=0x050883
+--]]
+
+
+HERETIC.STEPS =  -- OLD STUFF
 {
   step1 = { step_w="STEP1", side_w="BROWNHUG", top_f="FLOOR7_1" }
 }
 
 
-HERETIC.PICTURES =
+HERETIC.PICTURES =  -- OLD STUFF
 {
   -- Note: this includes pictures that only work on DOOM1 or DOOM2.
   -- It is not a problem, because the game-specific sub-themes will
