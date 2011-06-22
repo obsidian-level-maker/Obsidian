@@ -471,6 +471,12 @@ CHEX.MATERIALS =
   SW_PIPEY   = { t="SW1STON1", f="FLAT5_6"  }
 
 
+  -- rails --
+
+  VINE1  = { t="MIDVINE1", rail_h=128 }
+  VINE2  = { t="MIDVINE2", rail_h=128 }
+
+
   -- liquids --
 
   WATER  = { t="GSTFONT1", f="FWATER1", sane=1 }
@@ -478,7 +484,7 @@ CHEX.MATERIALS =
   SLIME2 = { t="FIREMAG1", f="LAVA1",   sane=1 }
 
 
-  -- special stuff --
+  -- other --
 
   O_PILL   = { t="SP_ROCK1", f="O_PILL",   sane=1 }
   O_BOLT   = { t="SP_ROCK2", f="O_BOLT",   sane=1 }
@@ -506,7 +512,7 @@ CHEX1.MATERIALS =
   PIC_SLIMED  = { t="SLADPOIS", f="CEIL4_1" }
   PIC_STORAGE = { t="MARBFAC3", f="FLAT2" }
 
-  SW_STEEL    = { t="SW1BROWN", f="CEIL3_2" }
+  SW_STEEL = { t="SW1BROWN", f="CEIL3_2" }
 }
 
 
@@ -828,7 +834,6 @@ CHEX3.MATERIALS =
   CJVILL05 = { t="CJVILL05", f="XX" }
   CJVILL06 = { t="CJVILL06", f="XX" }
   CJVILL07 = { t="CJVILL07", f="XX" }
-  CJVILL08 = { t="CJVILL08", f="XX" }
   CJVILL09 = { t="CJVILL09", f="XX" }
   CJVILL10 = { t="CJVILL10", f="XX" }
   CJVILL11 = { t="CJVILL11", f="XX" }
@@ -896,12 +901,16 @@ CHEX3.MATERIALS =
 
   STEEL32 = { f="STEEL32", t="XX" }
   STEEL64 = { f="STEEL64", t="XX" }
-}
 
 
-CHEX1.RAILS =
-{
-  VINE1 = { t="MIDVINE1" }
+  -- rails --
+
+  VILL_BARS   = { t="CJVILL08", rail_h=128, line_flags=1 }
+  TI_GRATE    = { t="TI_GRATE", rail_h=64  }
+  BRIDGE_RAIL = { t="LITEMET",  rail_h=128 }
+
+  CAVE_COLUMN = { t="SKSPINE1", rail_h=128 }
+  ORANGE_HOLE = { t="STARG1",   rail_h=128 }
 }
 
 
