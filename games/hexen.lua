@@ -272,7 +272,7 @@ HEXEN.MATERIALS =
   _ERROR = { t="WASTE01", f="F_033" }
   _SKY   = { t="WASTE01", f="F_SKY" }
 
-  -- textures --
+  -- walls --
 
   BOOKS01  = { t="BOOKS01",  f="F_092" }
   BOOKS02  = { t="BOOKS02",  f="F_092" }
@@ -441,19 +441,6 @@ HEXEN.MATERIALS =
   PUZZLE8  = { t="PUZZLE8",  f="F_091" }
   PUZZLE9  = { t="PUZZLE9",  f="F_091" }
 
-  -- steps
-  S_01     = { t="S_01",     f="F_047" }
-  S_02     = { t="S_02",     f="F_009" }
-  S_04     = { t="S_04",     f="F_030" }
-  S_05     = { t="S_05",     f="F_057" }
-  S_06     = { t="S_06",     f="F_009" }
-  S_07     = { t="S_07",     f="F_009" }
-  S_09     = { t="S_09",     f="F_047" }
-  S_11     = { t="S_11",     f="F_034" }
-  S_12     = { t="S_12",     f="F_053" }
-  S_13     = { t="S_13",     f="F_057" }
-  T2_STEP  = { t="T2_STEP",  f="F_057" }
-
   SEWER01  = { t="SEWER01",  f="F_018" }
   SEWER02  = { t="SEWER02",  f="F_018" }
   SEWER05  = { t="SEWER05",  f="F_018" }
@@ -516,6 +503,22 @@ HEXEN.MATERIALS =
   X_SWR1   = { t="X_SWR1",   f="F_018", sane=1 }
   X_WATER1 = { t="X_WATER1", f="X_005", sane=1 }
 
+
+  -- steps --
+
+  S_01     = { t="S_01",     f="F_047" }
+  S_02     = { t="S_02",     f="F_009" }
+  S_04     = { t="S_04",     f="F_030" }
+  S_05     = { t="S_05",     f="F_057" }
+  S_06     = { t="S_06",     f="F_009" }
+  S_07     = { t="S_07",     f="F_009" }
+  S_09     = { t="S_09",     f="F_047" }
+  S_11     = { t="S_11",     f="F_034" }
+  S_12     = { t="S_12",     f="F_053" }
+  S_13     = { t="S_13",     f="F_057" }
+  T2_STEP  = { t="T2_STEP",  f="F_057" }
+
+
   -- switches --
 
   BOSSK1   = { t="BOSSK1",   f="F_071", sane=1 }
@@ -529,7 +532,7 @@ HEXEN.MATERIALS =
   SW_OL1   = { t="SW_OL1",   f="F_073", sane=1 }
 
 
-  -- flats --
+  -- floors --
 
   F_001 = { t="WASTE01",  f="F_001" }
   F_002 = { t="WASTE01",  f="F_002" }
@@ -612,10 +615,56 @@ HEXEN.MATERIALS =
   F_091 = { t="CASTLE01", f="F_091" }
   F_092 = { t="WOOD01",   f="F_092" }
 
+
+  -- liquids --
+
   X_001 = { t="X_FIRE01", f="X_001", sane=1  }
   X_005 = { t="X_WATER1", f="X_005", sane=1  }
   X_009 = { t="X_SWMP1",  f="X_009", sane=1  }
   X_012 = { t="CASTLE01", f="X_012", sane=1  }
+
+
+  -- rails --
+
+  GATE01  = { t="GATE01", rail_h=72 }
+  GATE02  = { t="GATE02", rail_h=128 }
+  GATE03  = { t="GATE03", rail_h=64 }
+  GATE04  = { t="GATE04", rail_h=32 }
+  GATE51  = { t="GATE51", rail_h=128 }
+  GATE52  = { t="GATE52", rail_h=64 }
+  GATE53  = { t="GATE53", rail_h=32 }
+
+  BAMBOO_6 = { t="VILL06", rail_h=128 }
+  BAMBOO_7 = { t="VILL07", rail_h=64 }
+  BAMBOO_8 = { t="VILL08", rail_h=96 }
+
+  VINES     = { t="FOREST06", rail_h=128 }
+  BRK_GLASS = { t="GLASS07",  rail_h=128 }
+  BRK_TOMB  = { t="TOMB18",   rail_h=128 }
+
+  H_CASTLE  = { t="CASTLE09", rail_h=128 }
+  H_CAVE    = { t="CAVE11",   rail_h=128 }
+  H_FIRE    = { t="FIRE16",   rail_h=128 }
+  H_FORSET  = { t="FOREST12", rail_h=128 }
+  H_MONK    = { t="MONK24",   rail_h=128 }
+  H_PRTL    = { t="PRTL07",   rail_h=128 }
+  H_SEWER   = { t="SEWER14",  rail_h=128 }
+  H_SWAMP   = { t="SWAMP07",  rail_h=128 }
+  H_TOMB    = { t="TOMB13",   rail_h=128 }
+
+  R_TPORT1  = { t="TPORT1",  rail_h=128 }
+  R_TPORTX  = { t="TPORTX",  rail_h=128 }
+  R_VALVE01 = { t="VALVE01", rail_h=32 }
+  R_VALVE02 = { t="VALVE02", rail_h=32 }
+
+  SEWER_BAR3 = { t="SEWER03", rail_h=64 }
+  SEWER_BAR4 = { t="SEWER04", rail_h=32 }
+
+  WEB1_L   = { t="WEB1_L", rail_h=32 }
+  WEB1_R   = { t="WEB1_R", rail_h=32 }
+  WEB2_L   = { t="WEB2_L", rail_h=32 }
+  WEB2_R   = { t="WEB2_R", rail_h=32 }
+  WEB3     = { t="WEB3",   rail_h=32 }
 
 
   -- other --
@@ -623,49 +672,6 @@ HEXEN.MATERIALS =
   O_BOLT   = { t="SEWER08", f="O_BOLT",  sane=1 }
   O_PILL   = { t="BRASS3",  f="O_PILL",  sane=1 }
   O_CARVE  = { t="BRASS4",  f="O_CARVE", sane=1 }
-}
-
-
-HEXEN.RAILS =
-{
--- GATE01
--- GATE02
--- GATE03
--- GATE04
--- GATE51
--- GATE52
--- GATE53
-
--- VILL06
--- VILL07
--- VILL08
-
--- CASTLE09
--- CAVE11
--- FIRE16
--- FOREST06
--- FOREST12
--- GLASS07
--- MONK24
--- PRTL07
-
--- SEWER03
--- SEWER04
--- SEWER14
--- SWAMP07
-
--- TOMB13
--- TOMB18
--- TPORT1
--- TPORTX
--- VALVE01
--- VALVE02
-
--- WEB1_L
--- WEB1_R
--- WEB2_L
--- WEB2_R
--- WEB3
 }
 
 
