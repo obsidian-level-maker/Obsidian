@@ -237,7 +237,7 @@ DOOM.MATERIALS =
   _ERROR = { t="METAL",    f="CEIL5_2" }
   _SKY   = { t="CEMENT3",  f="F_SKY1" }
 
-  -- textures with best-matching flat
+  -- walls --
 
   BIGDOOR1 = { t="BIGDOOR1", f="FLAT23"  , color=0x5e5850 }
   BIGDOOR2 = { t="BIGDOOR2", f="FLAT1"   , color=0x595654 }
@@ -398,6 +398,9 @@ DOOM.MATERIALS =
   WOOD5    = { t="WOOD5",     f="CEIL5_2" }
   WOODGARG = { t="WOODGARG",  f="FLAT5_2" }
 
+
+  -- switches --
+
   SW1BLUE  = { t="SW1BLUE",  f="FLAT14" }
   SW1BRCOM = { t="SW1BRCOM", f="FLOOR7_1" }
   SW1BRN2  = { t="SW1BRN2",  f="FLOOR0_1" }
@@ -425,7 +428,7 @@ DOOM.MATERIALS =
   SW1WOOD  = { t="SW1WOOD",  f="FLAT5_2" }
   
 
-  -- flats with closest texture
+  -- floors --
 
   CEIL1_1  = { t="WOOD1",    f="CEIL1_1" }
   CEIL1_3  = { t="WOOD1",    f="CEIL1_3" }
@@ -519,6 +522,16 @@ DOOM.MATERIALS =
   TLITE6_6 = { t="METAL",    f="TLITE6_6" }
 
 
+  -- rails --
+
+  BRNSMAL1 = { t="BRNSMAL1", rail_h=64,  line_flags=1 }
+  BRNSMAL2 = { t="BRNSMAL2", rail_h=64,  line_flags=1 }
+  BRNSMALC = { t="BRNSMALC", rail_h=64,  line_flags=1 }
+
+  MIDBRN1  = { t="MIDBRN1",  rail_h=128, line_flags=1 }
+  MIDGRATE = { t="MIDGRATE", rail_h=128, line_flags=1 }
+
+
   -- liquid stuff (using new patches)
   WFALL1   = { t="GSTFONT1", f="FWATER1", sane=1 }
   FWATER1  = { t="GSTFONT1", f="FWATER1", sane=1 }
@@ -527,26 +540,20 @@ DOOM.MATERIALS =
   LAVA1    = { t="FIREMAG1", f="LAVA1", sane=1 }
 
 
-  -- Oblige stuff
+  -- other --
+
   O_PILL   = { t="CEMENT1",  f="O_PILL",   sane=1 }
   O_BOLT   = { t="CEMENT2",  f="O_BOLT",   sane=1 }
   O_RELIEF = { t="CEMENT3",  f="O_RELIEF", sane=1 }
   O_CARVE  = { t="CEMENT4",  f="O_CARVE",  sane=1 }
   O_NEON   = { t="CEMENT6",  f="CEIL5_1",  sane=1 }
-
-O_MISC   = { t="CEMENT5",  f="CEIL5_1",  sane=1 }
-
-
-MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 }
-MIDBARS3 = { t="MIDBARS3", h=64,  line_flags=1 }
+  O_MISC   = { t="CEMENT5",  f="CEIL5_1",  sane=1 }
 
 
   -- Missing stuff:
   --   CEMENT#  : used by OBLIGE for various logos
   --   SKY1/2/3 : not very useful
   --   ZZZFACE# : not generally useful
-  --
-  -- Mid-masked (railing) textures are in separate tables.
   --
   -- Note too that STEP1/2 are ambiguous, the flats are quite
   -- different to the textures, hence renamed the flats as
@@ -558,7 +565,7 @@ MIDBARS3 = { t="MIDBARS3", h=64,  line_flags=1 }
 
 DOOM1.MATERIALS =
 {
-  -- textures with best-matching flat
+  -- walls --
 
   ASHWALL  = { t="ASHWALL",  f="FLOOR6_2", color=0x242424 }
   BROVINE  = { t="BROVINE",  f="FLOOR0_1" }
@@ -605,12 +612,16 @@ DOOM1.MATERIALS =
   TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" }
   WOODSKUL = { t="WOODSKUL", f="FLAT5_2" }
 
+  
+  -- switches --
+
   SW1BRN1  = { t="SW1BRN1",  f="FLOOR0_1" }
   SW1STARG = { t="SW1STARG", f="FLAT23" }
   SW1STONE = { t="SW1STONE", f="FLAT1" }
   SW1STON2 = { t="SW1STON2", f="MFLR8_1" }
 
-  -- flats with closest texture
+
+  -- floors --
 
   FLAT5_6  = { t="SKULWALL", f="FLAT5_6" }
   FLAT5_7  = { t="ASHWALL",  f="FLAT5_7" }
@@ -619,9 +630,12 @@ DOOM1.MATERIALS =
   MFLR8_4  = { t="ASHWALL",  f="MFLR8_4" }
 
 
-  -- FIXME: HACK HACK HACK
-  BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
-  PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
+  -- rails --
+
+  BRNBIGC  = { t="BRNBIGC",  rail_h=128, line_flags=1 }
+
+  MIDVINE1 = { t="MIDVINE1", rail_h=128 }
+  MIDVINE2 = { t="MIDVINE2", rail_h=128 }
 
 
   -- liquid stuff (using new patches)
@@ -631,13 +645,16 @@ DOOM1.MATERIALS =
   SFALL1   = { t="SLADRIP1", f="NUKAGE1", sane=1 }
   NUKAGE1  = { t="SLADRIP1", f="NUKAGE1", sane=1 }
 
-}
 
+  -- FIXME: HACK HACK HACK
+  BRICKLIT = { t="LITEMET",  f="CEIL5_1" }
+  PIPEWAL1 = { t="COMPWERD", f="CEIL5_1" }
+}
 
 
 DOOM2.MATERIALS =
 {
-  -- textures with best-matching flat
+  -- walls --
 
   ASHWALL  = { t="ASHWALL2", f="MFLR8_4" }  -- compatibility name
   ASHWALL3 = { t="ASHWALL3", f="FLAT10" }
@@ -797,6 +814,9 @@ DOOM2.MATERIALS =
   ZZWOLF12 = { t="ZZWOLF12", f="FLAT5_3" }
   ZZWOLF13 = { t="ZZWOLF13", f="FLAT5_3" }
 
+
+  -- switches --
+
   SW1BRIK  = { t="SW1BRIK",  f="MFLR8_1" }
   SW1MARB  = { t="SW1MARB",  f="DEM1_5" }
   SW1MET2  = { t="SW1MET2",  f="CEIL5_2" }
@@ -810,7 +830,7 @@ DOOM2.MATERIALS =
   SW1ZIM   = { t="SW1ZIM",   f="RROCK20" }
 
 
-  -- flats with closest texture
+  -- floors --
 
   CONS1_1  = { t="GRAY5",    f="CONS1_1" }
   CONS1_5  = { t="GRAY5",    f="CONS1_5" }
@@ -856,6 +876,17 @@ DOOM2.MATERIALS =
   SLIME16  = { t="SPACEW4",  f="SLIME16" }
 
 
+  -- rails --
+
+  MIDBARS1 = { t="MIDBARS1", rail_h=128, line_flags=1 }
+  MIDBARS3 = { t="MIDBARS3", rail_h=72,  line_flags=1 }
+  MIDBRONZ = { t="MIDBRONZ", rail_h=128, line_flags=1 }
+  MIDSPACE = { t="MIDSPACE", rail_h=128, line_flags=1 }
+
+  -- scaled MIDVINE2 from FreeDoom
+  FMIDVINE = { t="SP_DUDE8", rail_h=128 }
+
+
   -- liquid stuff (keep them recognisable)
   BFALL1   = { t="BFALL1",  f="BLOOD1", sane=1 }
   BLOOD1   = { t="BFALL1",  f="BLOOD1", sane=1 }
@@ -867,36 +898,6 @@ DOOM2.MATERIALS =
   KFALL5   = { t="BLODRIP1", f="SLIME05", sane=1 }
   SLIME01  = { t="BLODRIP1", f="SLIME01", sane=1 }
   SLIME05  = { t="BLODRIP1", f="SLIME05", sane=1 }
-}
-
-
-DOOM.RAILS =
-{
-  -- common --
-
-  BRNSMAL1 = { t="BRNSMAL1", h=64,  line_flags=1 }
-  BRNSMAL2 = { t="BRNSMAL2", h=64,  line_flags=1 }
-  BRNSMALC = { t="BRNSMALC", h=64,  line_flags=1 }
-
-  MIDBRN1  = { t="MIDBRN1",  h=128, line_flags=1 }
-  MIDGRATE = { t="MIDGRATE", h=128, line_flags=1 }
-
-  -- Doom I only --
-
-  BRNBIGC  = { t="BRNBIGC",  h=128, line_flags=1 }
-
-  MIDVINE1 = { t="MIDVINE1", h=128 }
-  MIDVINE2 = { t="MIDVINE2", h=128 }
-
-  -- Doom II only --
-
-  MIDBARS1 = { t="MIDBARS1", h=128, line_flags=1 }
-  MIDBARS3 = { t="MIDBARS3", h=72,  line_flags=1 }
-  MIDBRONZ = { t="MIDBRONZ", h=128, line_flags=1 }
-  MIDSPACE = { t="MIDSPACE", h=128, line_flags=1 }
-
-  -- scaled MIDVINE2 from FreeDoom
-  FMIDVINE = { t="SP_DUDE8", h=128 }
 }
 
 
