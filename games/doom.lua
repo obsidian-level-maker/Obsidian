@@ -683,83 +683,86 @@ DOOM2.MATERIALS =
 {
   -- walls --
 
-  ASHWALL  = { t="ASHWALL2", f="MFLR8_4" }  -- compatibility name
-  ASHWALL3 = { t="ASHWALL3", f="FLAT10" }
-  ASHWALL4 = { t="ASHWALL4", f="FLAT10" }
-  ASHWALL6 = { t="ASHWALL6", f="RROCK20" }
-  ASHWALL7 = { t="ASHWALL7", f="RROCK18" }
-  BIGBRIK1 = { t="BIGBRIK1", f="RROCK14" }
-  BIGBRIK3 = { t="BIGBRIK3", f="RROCK14" }
-  BIGBRIK2 = { t="BIGBRIK2", f="MFLR8_1" }
-  BLAKWAL1 = { t="BLAKWAL1", f="CEIL5_1" }
-  BLAKWAL2 = { t="BLAKWAL2", f="CEIL5_1" }
+  ASHWALL  = { t="ASHWALL2", f="MFLR8_4", color=0x1d1d1d }  -- compatibility name
+  ASHWALL3 = { t="ASHWALL3", f="FLAT10",  color=0x1b1208 }
+  ASHWALL4 = { t="ASHWALL4", f="FLAT10",  color=0x1b1208 }
+  ASHWALL6 = { t="ASHWALL6", f="RROCK20", color=0x3d402d }
+  ASHWALL7 = { t="ASHWALL7", f="RROCK18", color=0x433526 }
+  BIGBRIK1 = { t="BIGBRIK1", f="RROCK14", color=0x302110 }
+  BIGBRIK2 = { t="BIGBRIK2", f="MFLR8_1", color=0x313131 }
+  BIGBRIK3 = { t="BIGBRIK3", f="RROCK14", color=0x362714 }
+  BLAKWAL1 = { t="BLAKWAL1", f="CEIL5_1", color=0x020202  }
+  BLAKWAL2 = { t="BLAKWAL2", f="CEIL5_1", color=0x040404  }
 
-  BRICK1   = { t="BRICK1",   f="RROCK10" }
-  BRICK2   = { t="BRICK2",   f="RROCK10" }
-  BRICK3   = { t="BRICK3",   f="FLAT5_5" }
-  BRICK4   = { t="BRICK4",   f="FLAT5_5" }
-  BRICK5   = { t="BRICK5",   f="RROCK10" }
-  BRICK6   = { t="BRICK6",   f="FLOOR5_4" }
-  BRICK7   = { t="BRICK7",   f="FLOOR5_4" }
-  BRICK8   = { t="BRICK8",   f="FLOOR5_4" }
-  BRICK9   = { t="BRICK9",   f="FLOOR5_4" }
-  BRICK10  = { t="BRICK10",  f="SLIME13" }
-  BRICK11  = { t="BRICK11",  f="FLAT5_3" }
-  BRICK12  = { t="BRICK12",  f="FLOOR0_1" }
-  BRONZE1  = { t="BRONZE1",  f="FLOOR7_1" }
-  BRONZE2  = { t="BRONZE2",  f="FLOOR7_1" }
-  BRONZE3  = { t="BRONZE3",  f="FLOOR7_1" }
-  BRONZE4  = { t="BRONZE4",  f="FLOOR7_1" }
-  BRICKLIT = { t="BRICKLIT", f="RROCK10" }
-  BRWINDOW = { t="BRWINDOW", f="RROCK10" }
-  BSTONE1  = { t="BSTONE1",  f="RROCK11" }
-  BSTONE2  = { t="BSTONE2",  f="RROCK12" }
-  BSTONE3  = { t="BSTONE3",  f="RROCK12" }
+  BRICK1   = { t="BRICK1",   f="RROCK10",  color=0x503b21 }
+  BRICK2   = { t="BRICK2",   f="RROCK10",  color=0x473322 }
+  BRICK3   = { t="BRICK3",   f="FLAT5_5",  color=0x54412e }
+  BRICK4   = { t="BRICK4",   f="FLAT5_5",  color=0x594533 }
+  BRICK5   = { t="BRICK5",   f="RROCK10",  color=0x4c381f }
+  BRICK6   = { t="BRICK6",   f="FLOOR5_4", color=0x584128 }
+  BRICK7   = { t="BRICK7",   f="FLOOR5_4", color=0x553f26 }
+  BRICK8   = { t="BRICK8",   f="FLOOR5_4", color=0x55402b }
+  BRICK9   = { t="BRICK9",   f="FLOOR5_4", color=0x523e29 }
+  BRICK10  = { t="BRICK10",  f="SLIME13",  color=0x423f28 }
+  BRICK11  = { t="BRICK11",  f="FLAT5_3",  color=0x4f0c08 }
+  BRICK12  = { t="BRICK12",  f="FLOOR0_1", color=0x69523f }
+  BRICKLIT = { t="BRICKLIT", f="RROCK10",  color=0x594024 }
 
-  CEMENT9  = { t="CEMENT9",  f="FLAT19" }
-  CRACKLE2 = { t="CRACKLE2", f="RROCK01" }
-  CRACKLE4 = { t="CRACKLE4", f="RROCK02" }
-  CRATE3   = { t="CRATE3",   f="CRATOP1" }
-  DBRAIN1  = { t="DBRAIN1",  f="LAVA1" }
+  BRONZE1  = { t="BRONZE1",  f="FLOOR7_1", color=0x3a2e1b }
+  BRONZE2  = { t="BRONZE2",  f="FLOOR7_1", color=0x352b19 }
+  BRONZE3  = { t="BRONZE3",  f="FLOOR7_1", color=0x362b19 }
+  BRONZE4  = { t="BRONZE4",  f="FLOOR7_1", color=0x3f331e }
+  BRWINDOW = { t="BRWINDOW", f="RROCK10",  color=0x47351f }
+  BSTONE1  = { t="BSTONE1",  f="RROCK11",  color=0x533f28 }
+  BSTONE2  = { t="BSTONE2",  f="RROCK12",  color=0x48351d }
+  BSTONE3  = { t="BSTONE3",  f="RROCK12",  color=0x4d371f }
+
+  CEMENT9  = { t="CEMENT9",  f="FLAT19",  color=0x746f59 }
+  CRACKLE2 = { t="CRACKLE2", f="RROCK01", color=0x74240b }
+  CRACKLE4 = { t="CRACKLE4", f="RROCK02", color=0x55472a }
+  CRATE3   = { t="CRATE3",   f="CRATOP1", color=0x585044 }
   MARBFAC4 = { t="MARBFAC4", f="DEM1_5" }
   MARBGRAY = { t="MARBGRAY", f="DEM1_5" }
-  METAL2   = { t="METAL2",   f="CEIL5_2" }
-  METAL3   = { t="METAL3",   f="CEIL5_2" }
-  METAL4   = { t="METAL4",   f="CEIL5_2" }
-  METAL5   = { t="METAL5",   f="CEIL5_2" }
-  METAL6   = { t="METAL6",   f="CEIL5_2" }
-  METAL7   = { t="METAL7",   f="CEIL5_2" }
 
-  MODWALL1 = { t="MODWALL1", f="MFLR8_4" }
-  MODWALL2 = { t="MODWALL2", f="MFLR8_4" }
-  MODWALL3 = { t="MODWALL3", f="FLAT19" }
-  MODWALL4 = { t="MODWALL4", f="FLAT18" }
+  METAL2   = { t="METAL2",   f="CEIL5_2", color=0x221f18 }
+  METAL3   = { t="METAL3",   f="CEIL5_2", color=0x242017 }
+  METAL4   = { t="METAL4",   f="CEIL5_2", color=0x1e1b14 }
+  METAL5   = { t="METAL5",   f="CEIL5_2", color=0x232019 }
+  METAL6   = { t="METAL6",   f="CEIL5_2", color=0x2f2c1e }
+  METAL7   = { t="METAL7",   f="CEIL5_2", color=0x2f2c1e }
 
-  PANBLACK = { t="PANBLACK", f="RROCK09" }
-  PANBLUE  = { t="PANBLUE",  f="RROCK09" }
-  PANBOOK  = { t="PANBOOK",  f="RROCK09" }
-  PANRED   = { t="PANRED",   f="RROCK09" }
-  PANBORD1 = { t="PANBORD1", f="RROCK09" }
-  PANBORD2 = { t="PANBORD2", f="RROCK09" }
-  PANCASE1 = { t="PANCASE1", f="RROCK09" }
-  PANCASE2 = { t="PANCASE2", f="RROCK09" }
-  PANEL1   = { t="PANEL1",   f="RROCK09" }
-  PANEL2   = { t="PANEL2",   f="RROCK09" }
-  PANEL3   = { t="PANEL3",   f="RROCK09" }
-  PANEL4   = { t="PANEL4",   f="RROCK09" }
-  PANEL5   = { t="PANEL5",   f="RROCK09" }
-  PANEL6   = { t="PANEL6",   f="RROCK09" }
-  PANEL7   = { t="PANEL7",   f="RROCK09" }
-  PANEL8   = { t="PANEL8",   f="RROCK09" }
-  PANEL9   = { t="PANEL9",   f="RROCK09" }
-  PIPES    = { t="PIPES",    f="FLOOR3_3" }
-  PIPEWAL1 = { t="PIPEWAL1", f="RROCK03" }
-  PIPEWAL2 = { t="PIPEWAL2", f="RROCK03" }
-  ROCK1    = { t="ROCK1",    f="RROCK13" }
-  ROCK2    = { t="ROCK2",    f="GRNROCK" }
-  ROCK3    = { t="ROCK3",    f="RROCK13" }
-  ROCK4    = { t="ROCK4",    f="FLOOR0_2" }
-  ROCK5    = { t="ROCK5",    f="RROCK09" }
+  MODWALL1 = { t="MODWALL1", f="MFLR8_4", color=0x261e13 }
+  MODWALL2 = { t="MODWALL2", f="MFLR8_4", color=0x100e0c }
+  MODWALL3 = { t="MODWALL3", f="FLAT19",  color=0x2d2d2d }
+  MODWALL4 = { t="MODWALL4", f="FLAT18",  color=0x404040 }
+
+  PANBLACK = { t="PANBLACK", f="RROCK09", color=0x46321a }
+  PANBLUE  = { t="PANBLUE",  f="RROCK09", color=0x443127 }
+  PANBOOK  = { t="PANBOOK",  f="RROCK09", color=0x3b2c1a }
+  PANRED   = { t="PANRED",   f="RROCK09", color=0x543118 }
+  PANBORD1 = { t="PANBORD1", f="RROCK09", color=0x493620 }
+  PANBORD2 = { t="PANBORD2", f="RROCK09", color=0x49361f }
+  PANCASE1 = { t="PANCASE1", f="RROCK09", color=0x513c22 }
+  PANCASE2 = { t="PANCASE2", f="RROCK09", color=0x574026 }
+
+  PANEL1   = { t="PANEL1",   f="RROCK09", color=0x42361e }
+  PANEL2   = { t="PANEL2",   f="RROCK09", color=0x4d3822 }
+  PANEL3   = { t="PANEL3",   f="RROCK09", color=0x433a21 }
+  PANEL4   = { t="PANEL4",   f="RROCK09", color=0x533d23 }
+  PANEL5   = { t="PANEL5",   f="RROCK09", color=0x493720 }
+  PANEL6   = { t="PANEL6",   f="RROCK09", color=0x5c4631 }
+  PANEL7   = { t="PANEL7",   f="RROCK09", color=0x5c4630 }
+  PANEL8   = { t="PANEL8",   f="RROCK09", color=0x55402b }
+  PANEL9   = { t="PANEL9",   f="RROCK09", color=0x513d28 }
+
+  PIPES    = { t="PIPES",    f="FLOOR3_3", color=0x7e7359 }
+  PIPEWAL1 = { t="PIPEWAL1", f="RROCK03",  color=0x3b2f1e }
+  PIPEWAL2 = { t="PIPEWAL2", f="RROCK03",  color=0x362d1e }
+  ROCK1    = { t="ROCK1",    f="RROCK13",  color=0x262822 }
+  ROCK2    = { t="ROCK2",    f="GRNROCK",  color=0x26281e }
+  ROCK3    = { t="ROCK3",    f="RROCK13",  color=0x252524 }
+  ROCK4    = { t="ROCK4",    f="FLOOR0_2", color=0x855630 }
+  ROCK5    = { t="ROCK5",    f="RROCK09",  color=0x644b31 }
 
   SILVER1  = { t="SILVER1",  f="FLAT23" }
   SILVER2  = { t="SILVER2",  f="FLAT22" }
@@ -778,68 +781,70 @@ DOOM2.MATERIALS =
   SPCDOOR2 = { t="SPCDOOR2", f="FLAT19" }
   SPCDOOR3 = { t="SPCDOOR3", f="FLAT19" }
   SPCDOOR4 = { t="SPCDOOR4", f="FLOOR0_1" }
-  STONE4   = { t="STONE4",   f="FLAT5_4" }
-  STONE5   = { t="STONE5",   f="FLAT5_4" }
-  STONE6   = { t="STONE6",   f="RROCK11" }
-  STONE7   = { t="STONE7",   f="RROCK11" }
-  STUCCO   = { t="STUCCO",   f="FLAT5_5" }
-  STUCCO1  = { t="STUCCO1",  f="FLAT5_5" }
-  STUCCO2  = { t="STUCCO2",  f="FLAT5_5" }
-  STUCCO3  = { t="STUCCO3",  f="FLAT5_5" }
 
-  TANROCK2 = { t="TANROCK2", f="FLOOR3_3" }
-  TANROCK3 = { t="TANROCK3", f="RROCK11" }
-  TANROCK4 = { t="TANROCK4", f="RROCK09" }
-  TANROCK5 = { t="TANROCK5", f="RROCK18" }
-  TANROCK7 = { t="TANROCK7", f="RROCK15" }
-  TANROCK8 = { t="TANROCK8", f="RROCK09" }
-  TEKBRON1 = { t="TEKBRON1", f="FLOOR0_1" }
-  TEKBRON2 = { t="TEKBRON2", f="FLOOR0_1" }
-  TEKLITE  = { t="TEKLITE",  f="FLOOR5_2" }
-  TEKLITE2 = { t="TEKLITE2", f="FLOOR5_2" }
-  TEKWALL6 = { t="TEKWALL6", f="CEIL5_1" }
+  STONE4   = { t="STONE4",   f="FLAT5_4", color=0x505050 }
+  STONE5   = { t="STONE5",   f="FLAT5_4", color=0x4b4b4b }
+  STONE6   = { t="STONE6",   f="RROCK11", color=0x4f3a24 }
+  STONE7   = { t="STONE7",   f="RROCK11", color=0x4a3722 }
+  STUCCO   = { t="STUCCO",   f="FLAT5_5", color=0x584430 }
+  STUCCO1  = { t="STUCCO1",  f="FLAT5_5", color=0x54412f }
+  STUCCO2  = { t="STUCCO2",  f="FLAT5_5", color=0x4b3a2a }
+  STUCCO3  = { t="STUCCO3",  f="FLAT5_5", color=0x523f2d }
 
-  TEKGREN1 = { t="TEKGREN1", f="RROCK20" }
-  TEKGREN2 = { t="TEKGREN2", f="RROCK20" }
-  TEKGREN3 = { t="TEKGREN3", f="RROCK20" }
-  TEKGREN4 = { t="TEKGREN4", f="RROCK20" }
-  TEKGREN5 = { t="TEKGREN5", f="RROCK20" }
+  TANROCK2 = { t="TANROCK2", f="FLOOR3_3", color=0x876f59 }
+  TANROCK3 = { t="TANROCK3", f="RROCK11",  color=0x5a4227 }
+  TANROCK4 = { t="TANROCK4", f="RROCK09",  color=0x513d28 }
+  TANROCK5 = { t="TANROCK5", f="RROCK18",  color=0x3d2b16 }
+  TANROCK7 = { t="TANROCK7", f="RROCK15",  color=0x543d26 }
+  TANROCK8 = { t="TANROCK8", f="RROCK09",  color=0x6d4826 }
 
-  WOOD6    = { t="WOOD6",    f="FLAT5_2" }
-  WOOD7    = { t="WOOD7",    f="FLAT5_2" }
-  WOOD8    = { t="WOOD8",    f="FLAT5_2" }
-  WOOD9    = { t="WOOD9",    f="FLAT5_2" }
-  WOOD10   = { t="WOOD10",   f="FLAT5_1" }
-  WOOD12   = { t="WOOD12",   f="FLAT5_2" }
-  WOODVERT = { t="WOODVERT", f="FLAT5_2" }
-  WOODMET1 = { t="WOODMET1", f="CEIL5_2" }
-  WOODMET2 = { t="WOODMET2", f="CEIL5_2" }
-  WOODMET3 = { t="WOODMET3", f="CEIL5_2" }
-  WOODMET4 = { t="WOODMET4", f="CEIL5_2" }
+  TEKBRON1 = { t="TEKBRON1", f="FLOOR0_1", color=0x59442f }
+  TEKBRON2 = { t="TEKBRON2", f="FLOOR0_1", color=0x5c4631 }
+  TEKGREN1 = { t="TEKGREN1", f="RROCK20",  color=0x3b3b2c }
+  TEKGREN2 = { t="TEKGREN2", f="RROCK20",  color=0x424636 }
+  TEKGREN3 = { t="TEKGREN3", f="RROCK20",  color=0x3f4337 }
+  TEKGREN4 = { t="TEKGREN4", f="RROCK20",  color=0x2e3123 }
+  TEKGREN5 = { t="TEKGREN5", f="RROCK20",  color=0x4d513b }
+  TEKLITE  = { t="TEKLITE",  f="FLOOR5_2", color=0x45341c }
+  TEKLITE2 = { t="TEKLITE2", f="FLOOR5_2", color=0x44321b }
+  TEKWALL6 = { t="TEKWALL6", f="CEIL5_1",  color=0x393228 }
 
-  ZIMMER1  = { t="ZIMMER1",  f="RROCK20" }
-  ZIMMER2  = { t="ZIMMER2",  f="RROCK20" }
-  ZIMMER3  = { t="ZIMMER3",  f="RROCK18" }
-  ZIMMER4  = { t="ZIMMER4",  f="RROCK18" }
-  ZIMMER5  = { t="ZIMMER5",  f="RROCK16" }
-  ZIMMER7  = { t="ZIMMER7",  f="RROCK20" }
-  ZIMMER8  = { t="ZIMMER8",  f="MFLR8_3" }
+  WOOD6    = { t="WOOD6",    f="FLAT5_2", color=0x3e2d1c }
+  WOOD7    = { t="WOOD7",    f="FLAT5_2", color=0x3b2a1a }
+  WOOD8    = { t="WOOD8",    f="FLAT5_2", color=0x3f2d1c }
+  WOOD9    = { t="WOOD9",    f="FLAT5_2", color=0x3d2b1a }
+  WOOD10   = { t="WOOD10",   f="FLAT5_1", color=0x3f2d1c }
+  WOOD12   = { t="WOOD12",   f="FLAT5_2", color=0x513d24 }
+  WOODVERT = { t="WOODVERT", f="FLAT5_2", color=0x3b2c14 }
+  WOODMET1 = { t="WOODMET1", f="CEIL5_2", color=0x302518 }
+  WOODMET2 = { t="WOODMET2", f="CEIL5_2", color=0x2f2518 }
+  WOODMET3 = { t="WOODMET3", f="CEIL5_2", color=0x332215 }
+  WOODMET4 = { t="WOODMET4", f="CEIL5_2", color=0x3c1d13 }
+
+  ZIMMER1  = { t="ZIMMER1",  f="RROCK20", color=0x343922 }
+  ZIMMER2  = { t="ZIMMER2",  f="RROCK20", color=0x343922 }
+  ZIMMER3  = { t="ZIMMER3",  f="RROCK18", color=0x2f230e }
+  ZIMMER4  = { t="ZIMMER4",  f="RROCK18", color=0x2f230e }
+  ZIMMER5  = { t="ZIMMER5",  f="RROCK16", color=0x453420 }
+  ZIMMER7  = { t="ZIMMER7",  f="RROCK20", color=0x3d4328 }
+  ZIMMER8  = { t="ZIMMER8",  f="MFLR8_3", color=0x5d5a4f }
                           
   ZDOORB1  = { t="ZDOORB1",  f="FLAT23" }
   ZDOORF1  = { t="ZDOORF1",  f="FLAT23" }
   ZELDOOR  = { t="ZELDOOR",  f="FLAT23" }
-  ZZWOLF1  = { t="ZZWOLF1",  f="FLAT18" }
-  ZZWOLF2  = { t="ZZWOLF2",  f="FLAT18" }
-  ZZWOLF3  = { t="ZZWOLF3",  f="FLAT18" }
-  ZZWOLF4  = { t="ZZWOLF4",  f="FLAT18" }
-  ZZWOLF5  = { t="ZZWOLF5",  f="FLAT5_1" }
-  ZZWOLF6  = { t="ZZWOLF6",  f="FLAT5_1" }
-  ZZWOLF7  = { t="ZZWOLF7",  f="FLAT5_1" }
-  ZZWOLF9  = { t="ZZWOLF9",  f="FLAT14" }
-  ZZWOLF10 = { t="ZZWOLF10", f="FLAT23" }
-  ZZWOLF11 = { t="ZZWOLF11", f="FLAT5_3" }
-  ZZWOLF12 = { t="ZZWOLF12", f="FLAT5_3" }
-  ZZWOLF13 = { t="ZZWOLF13", f="FLAT5_3" }
+
+  ZZWOLF1  = { t="ZZWOLF1",  f="FLAT18",  color=0x717171 }
+  ZZWOLF2  = { t="ZZWOLF2",  f="FLAT18",  color=0x665c50 }
+  ZZWOLF3  = { t="ZZWOLF3",  f="FLAT18",  color=0x89504b }
+  ZZWOLF4  = { t="ZZWOLF4",  f="FLAT18",  color=0x7a6657 }
+  ZZWOLF5  = { t="ZZWOLF5",  f="FLAT5_1", color=0x5d4020 }
+  ZZWOLF6  = { t="ZZWOLF6",  f="FLAT5_1", color=0x875636 }
+  ZZWOLF7  = { t="ZZWOLF7",  f="FLAT5_1", color=0x795e3f }
+  ZZWOLF9  = { t="ZZWOLF9",  f="FLAT14",  color=0x00006a }
+  ZZWOLF10 = { t="ZZWOLF10", f="FLAT23",  color=0x8c8c8c }
+  ZZWOLF11 = { t="ZZWOLF11", f="FLAT5_3", color=0x4c1212 }
+  ZZWOLF12 = { t="ZZWOLF12", f="FLAT5_3", color=0x6f4543 }
+  ZZWOLF13 = { t="ZZWOLF13", f="FLAT5_3", color=0x673718 }
 
 
   -- switches --
@@ -907,6 +912,8 @@ DOOM2.MATERIALS =
 
   -- rails --
 
+  DBRAIN1  = { t="DBRAIN1",  rail_h=32 }
+
   MIDBARS1 = { t="MIDBARS1", rail_h=128, line_flags=1 }
   MIDBARS3 = { t="MIDBARS3", rail_h=72,  line_flags=1 }
   MIDBRONZ = { t="MIDBRONZ", rail_h=128, line_flags=1 }
@@ -946,94 +953,21 @@ DOOM.STEPS =
 -- FIXME: incorporate these colors !!!!
 
 --[[ DOOM2 specific
-ASHWALL3 , color=0x1b1208 
-ASHWALL4 , color=0x1b1208 
-ASHWALL6 , color=0x3d402d 
-ASHWALL7 , color=0x433526 
-BFALL1 , color=0x5c0404 
-BFALL2 , color=0x5c0404 
-BFALL3 , color=0x5c0505 
-BFALL4 , color=0x5c0505 
-BIGBRIK1 , color=0x302110 
-BIGBRIK2 , color=0x313131 
-BIGBRIK3 , color=0x362714 
-BLAKWAL1 , color=0x020202 
-BLAKWAL2 , color=0x040404 
-BRICK10 , color=0x423f28 
-BRICK11 , color=0x4f0c08 
-BRICK12 , color=0x69523f 
-BRICK1 , color=0x503b21 
-BRICK2 , color=0x473322 
-BRICK3 , color=0x54412e 
-BRICK4 , color=0x594533 
-BRICK5 , color=0x4c381f 
-BRICK6 , color=0x584128 
-BRICK7 , color=0x553f26 
-BRICK8 , color=0x55402b 
-BRICK9 , color=0x523e29 
-BRICKLIT , color=0x594024 
 BRNPOIS , color=0x242718 
-BRONZE1 , color=0x3a2e1b 
-BRONZE2 , color=0x352b19 
-BRONZE3 , color=0x362b19 
-BRONZE4 , color=0x3f331e 
-BRWINDOW , color=0x47351f 
-BSTONE1 , color=0x533f28 
-BSTONE2 , color=0x48351d 
-BSTONE3 , color=0x4d371f 
 CEMENT7 , color=0x8d816f 
 CEMENT8 , color=0x685e4a 
-CEMENT9 , color=0x746f59 
-CRACKLE2 , color=0x74240b 
-CRACKLE4 , color=0x55472a 
-CRATE3 , color=0x585044 
 DBRAIN1 , color=0x661c05 
 DBRAIN2 , color=0x651d05 
 DBRAIN3 , color=0x641b04 
 DBRAIN4 , color=0x672006 
 MARBFAC4 , color=0x4f5147 
 MARBGRAY , color=0x51524e 
-METAL2 , color=0x221f18 
-METAL3 , color=0x242017 
-METAL4 , color=0x1e1b14 
-METAL5 , color=0x232019 
-METAL6 , color=0x2f2c1e 
-METAL7 , color=0x2f2c1e 
 METAL , color=0x292418 
 MIDBARS1 , color=0x3b3122 
 MIDBARS3 , color=0x3b3223 
 MIDBRONZ , color=0x382d1a 
 MIDSPACE , color=0x434343 
-MODWALL1 , color=0x261e13 
-MODWALL2 , color=0x100e0c 
-MODWALL3 , color=0x2d2d2d 
-MODWALL4 , color=0x404040 
-PANBLACK , color=0x46321a 
-PANBLUE , color=0x443127 
-PANBOOK , color=0x3b2c1a 
-PANBORD1 , color=0x493620 
-PANBORD2 , color=0x49361f 
-PANCASE1 , color=0x513c22 
-PANCASE2 , color=0x574026 
-PANEL1 , color=0x42361e 
-PANEL2 , color=0x4d3822 
-PANEL3 , color=0x433a21 
-PANEL4 , color=0x533d23 
-PANEL5 , color=0x493720 
-PANEL6 , color=0x5c4631 
-PANEL7 , color=0x5c4630 
-PANEL8 , color=0x55402b 
-PANEL9 , color=0x513d28 
-PANRED , color=0x543118 
-PIPES , color=0x7e7359 
-PIPEWAL1 , color=0x3b2f1e 
-PIPEWAL2 , color=0x362d1e 
 REDWALL , color=0x6b0e0e 
-ROCK1 , color=0x262822 
-ROCK2 , color=0x26281e 
-ROCK3 , color=0x252524 
-ROCK4 , color=0x855630 
-ROCK5 , color=0x644b31 
 SFALL1 , color=0x1d3710 
 SFALL2 , color=0x1d3710 
 SFALL3 , color=0x1d3710 
@@ -1055,15 +989,6 @@ SPCDOOR4 , color=0x66513c
 SP_DUDE7 , color=0x513322 
 SP_DUDE8 , color=0x523120 
 SP_FACE2 , color=0x81271d 
-STONE4 , color=0x505050 
-STONE5 , color=0x4b4b4b 
-STONE6 , color=0x4f3a24 
-STONE7 , color=0x4a3722 
-STONE , color=0x545454 
-STUCCO1 , color=0x54412f 
-STUCCO2 , color=0x4b3a2a 
-STUCCO3 , color=0x523f2d 
-STUCCO , color=0x584430 
 SW1BRIK , color=0x383636 
 SW1MARB , color=0x4f5036 
 SW1MET2 , color=0x2b2720 
@@ -1086,56 +1011,9 @@ SW2STON6 , color=0x533d2a
 SW2TEK , color=0x444939 
 SW2WDMET , color=0x34271a 
 SW2ZIM , color=0x343620 
-TANROCK2 , color=0x876f59 
-TANROCK3 , color=0x5a4227 
-TANROCK4 , color=0x513d28 
-TANROCK5 , color=0x3d2b16 
-TANROCK7 , color=0x543d26 
-TANROCK8 , color=0x6d4826 
-TEKBRON1 , color=0x59442f 
-TEKBRON2 , color=0x5c4631 
-TEKGREN1 , color=0x3b3b2c 
-TEKGREN2 , color=0x424636 
-TEKGREN3 , color=0x3f4337 
-TEKGREN4 , color=0x2e3123 
-TEKGREN5 , color=0x4d513b 
-TEKLITE2 , color=0x45341c 
-TEKLITE , color=0x44321b 
-TEKWALL6 , color=0x393228 
-WOOD10 , color=0x3f2d1c 
-WOOD12 , color=0x513d24 
-WOOD1 , color=0x4f3c26 
-WOOD6 , color=0x3e2d1c 
-WOOD7 , color=0x3b2a1a 
-WOOD8 , color=0x3f2d1c 
-WOOD9 , color=0x3d2b1a 
-WOODMET1 , color=0x302518 
-WOODMET2 , color=0x2f2518 
-WOODMET3 , color=0x332215 
-WOODMET4 , color=0x3c1d13 
-WOODVERT , color=0x3b2c14 
 ZDOORB1 , color=0xa2a2a0 
 ZDOORF1 , color=0xa2a2a0 
 ZELDOOR , color=0x898686 
-ZIMMER1 , color=0x343922 
-ZIMMER2 , color=0x343922 
-ZIMMER3 , color=0x2f230e 
-ZIMMER4 , color=0x2f230e 
-ZIMMER5 , color=0x453420 
-ZIMMER7 , color=0x3d4328 
-ZIMMER8 , color=0x5d5a4f 
-ZZWOLF10 , color=0x8c8c8c 
-ZZWOLF11 , color=0x4c1212 
-ZZWOLF12 , color=0x6f4543 
-ZZWOLF13 , color=0x673718 
-ZZWOLF1 , color=0x717171 
-ZZWOLF2 , color=0x665c50 
-ZZWOLF3 , color=0x89504b 
-ZZWOLF4 , color=0x7a6657 
-ZZWOLF5 , color=0x5d4020 
-ZZWOLF6 , color=0x875636 
-ZZWOLF7 , color=0x795e3f 
-ZZWOLF9 , color=0x00006a 
 ZZZFACE1 , color=0x2d2616 
 ZZZFACE2 , color=0x302716 
 ZZZFACE3 , color=0x614232 
