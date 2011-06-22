@@ -593,19 +593,20 @@ DOOM1.MATERIALS =
   -- walls --
 
   ASHWALL  = { t="ASHWALL",  f="FLOOR6_2", color=0x242424 }
-  BROVINE  = { t="BROVINE",  f="FLOOR0_1" }
-  BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1" }
-  BROWNWEL = { t="BROWNWEL", f="FLOOR7_1" }
+  BROVINE  = { t="BROVINE",  f="FLOOR0_1", color=0x434824 }
+  BRNPOIS2 = { t="BRNPOIS2", f="FLOOR7_1", color=0x3d3119 }
+  BROWNWEL = { t="BROWNWEL", f="FLOOR7_1", color=0x3b2d15 }
 
-  COMP2    = { t="COMP2",    f="CEIL5_1" }
-  COMPOHSO = { t="COMPOHSO", f="FLOOR7_1" }
-  COMPTILE = { t="COMPTILE", f="CEIL5_1" }
-  COMPUTE1 = { t="COMPUTE1", f="FLAT19" }
-  COMPUTE2 = { t="COMPUTE2", f="CEIL5_1" }
-  COMPUTE3 = { t="COMPUTE3", f="CEIL5_1" }
-  DOORHI   = { t="DOORHI",   f="FLAT19" }
-  GRAYDANG = { t="GRAYDANG", f="FLAT19" }
-  ICKDOOR1 = { t="ICKDOOR1", f="FLAT19" }
+  COMP2    = { t="COMP2",    f="CEIL5_1",  color=0x21201c }
+  COMPOHSO = { t="COMPOHSO", f="FLOOR7_1", color=0x1e1821 }
+  COMPTILE = { t="COMPTILE", f="CEIL5_1",  color=0x101034 }
+  COMPUTE1 = { t="COMPUTE1", f="FLAT19",   color=0x605f60 }
+  COMPUTE2 = { t="COMPUTE2", f="CEIL5_1",  color=0x20201c }
+  COMPUTE3 = { t="COMPUTE3", f="CEIL5_1",  color=0x493521 }
+
+  DOORHI   = { t="DOORHI",   f="FLAT19", color=0x7c7066 }
+  GRAYDANG = { t="GRAYDANG", f="FLAT19", color=0x6f6666 }
+  ICKDOOR1 = { t="ICKDOOR1", f="FLAT19", color=0x6d6f63 }
   ICKWALL6 = { t="ICKWALL6", f="FLAT18", color=0x60615b }
 
   LITE2    = { t="LITE2",    f="FLOOR0_1" }
@@ -617,27 +618,28 @@ DOOM1.MATERIALS =
   LITERED  = { t="LITERED",  f="FLOOR1_6" }
   LITESTON = { t="LITESTON", f="MFLR8_1" }
 
-  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1" }
-  PLANET1  = { t="PLANET1",  f="FLAT23" }
-  REDWALL1 = { t="REDWALL1", f="FLOOR1_6" }
-  SKINBORD = { t="SKINBORD", f="FLAT5_5" }
-  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5" }
-  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5" }
-  SKULWAL3 = { t="SKULWAL3", f="FLAT5_6" }
-  SKULWALL = { t="SKULWALL", f="FLAT5_6" }
+  NUKESLAD = { t="NUKESLAD", f="FLOOR7_1", color=0x2a2e22 }
+  PLANET1  = { t="PLANET1",  f="FLAT23",   color=0x423b38 }
+  REDWALL1 = { t="REDWALL1", f="FLOOR1_6", color=0xc50000 }
+  SKINBORD = { t="SKINBORD", f="FLAT5_5",  color=0x8f5c4d }
+  SKINTEK1 = { t="SKINTEK1", f="FLAT5_5",  color=0x604937 }
+  SKINTEK2 = { t="SKINTEK2", f="FLAT5_5",  color=0x514130 }
+  SKULWAL3 = { t="SKULWAL3", f="FLAT5_6",  color=0x4e311d }
+  SKULWALL = { t="SKULWALL", f="FLAT5_6",  color=0x4e3d2b }
   SLADRIP1 = { t="SLADRIP1", f="FLOOR7_1" }
-  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5" }
-  SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5" }
-  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3" }
-  STARTAN1 = { t="STARTAN1", f="FLOOR4_1" }
-  STONGARG = { t="STONGARG", f="MFLR8_1" }
-  STONPOIS = { t="STONPOIS", f="FLAT5_4" }
-  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1" }
-  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1" }
-  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1" }
-  WOODSKUL = { t="WOODSKUL", f="FLAT5_2" }
 
-  
+  SP_DUDE3 = { t="SP_DUDE3", f="DEM1_5",   color=0x464631 }
+  SP_DUDE6 = { t="SP_DUDE6", f="DEM1_5",   color=0x4b4731 }
+  SP_ROCK1 = { t="SP_ROCK1", f="MFLR8_3",  color=0x4c4b42 }
+  STARTAN1 = { t="STARTAN1", f="FLOOR4_1", color=0x6a543f }
+  STONGARG = { t="STONGARG", f="MFLR8_1",  color=0x33352d }
+  STONPOIS = { t="STONPOIS", f="FLAT5_4",  color=0x59554d }
+  TEKWALL2 = { t="TEKWALL2", f="CEIL5_1",  color=0x37342a }
+  TEKWALL3 = { t="TEKWALL3", f="CEIL5_1",  color=0x323128 }
+  TEKWALL5 = { t="TEKWALL5", f="CEIL5_1",  color=0x35322a }
+  WOODSKUL = { t="WOODSKUL", f="FLAT5_2",  color=0x4f3b25 }
+
+
   -- switches --
 
   SW1BRN1  = { t="SW1BRN1",  f="FLOOR0_1" }
@@ -941,66 +943,6 @@ DOOM.STEPS =
 
 
 -- FIXME: incorporate these colors !!!!
-
---[[ DOOM1 specific
-BLODGR1 , color=0x605639 
-BLODGR2 , color=0x5f5639 
-BLODGR3 , color=0x605639 
-BLODGR4 , color=0x60563a 
-BRNBIGC , color=0x332b1c 
-BRNBIGL , color=0x312919 
-BRNBIGR , color=0x332a1a 
-BRNPOIS2 , color=0x3d3119 
-BRNPOIS , color=0x2a2b18 
-BROVINE , color=0x434824 
-BROWNWEL , color=0x3b2d15 
-CEMPOIS , color=0x7b715d 
-COMP2 , color=0x21201c 
-COMPOHSO , color=0x1e1821 
-COMPTILE , color=0x101034 
-COMPUTE1 , color=0x605f60 
-COMPUTE2 , color=0x20201c 
-COMPUTE3 , color=0x493521 
-DOORHI , color=0x7c7066 
-GRAYDANG , color=0x6f6666 
-ICKDOOR1 , color=0x6d6f63 
-LITE2 , color=0x726455 
-LITE4 , color=0x8f8f8f 
-LITE96 , color=0x4f4a3e 
-LITEBLU2 , color=0x38385f 
-LITEBLU3 , color=0x3d3568 
-LITEMET , color=0x3a3a39 
-LITERED , color=0xb10101 
-LITESTON , color=0x525252 
-METAL , color=0x292418 
-MIDVINE1 , color=0x493723 
-MIDVINE2 , color=0x2f451b 
-NUKESLAD , color=0x2a2e22 
-PLANET1 , color=0x423b38 
-REDWALL1 , color=0xc50000 
-REDWALL , color=0x6b0e0e 
-SKINBORD , color=0x8f5c4d 
-SKINTEK1 , color=0x604937 
-SKINTEK2 , color=0x514130 
-SKULWAL3 , color=0x4e311d 
-SKULWALL , color=0x4e3d2b 
-SKY4 , color=0xb04202 
-SLADRIP1 , color=0x293421 
-SLADRIP2 , color=0x283420 
-SLADRIP3 , color=0x293521 
-SP_DUDE3 , color=0x464631 
-SP_DUDE6 , color=0x4b4731 
-SP_ROCK2 , color=0x4c473e 
-STARTAN1 , color=0x6a543f 
-STONE , color=0x545454 
-STONGARG , color=0x33352d 
-STONPOIS , color=0x59554d 
-TEKWALL2 , color=0x37342a 
-TEKWALL3 , color=0x323128 
-TEKWALL5 , color=0x35322a 
-WOOD1 , color=0x4f3c26 
-WOODSKUL , color=0x4f3b25 
---]]
 
 --[[ DOOM2 specific
 ASHWALL3 , color=0x1b1208 
