@@ -249,14 +249,17 @@ HERETIC.MATERIALS =
   STNGLS1  = { t="STNGLS1",  f="FLOOR30" }
   STNGLS2  = { t="STNGLS2",  f="FLOOR30" }
   STNGLS3  = { t="STNGLS3",  f="FLOOR30" }
-  SW1OFF   = { t="SW1OFF",   f="FLOOR28" }
-  SW1ON    = { t="SW1ON",    f="FLOOR28" }
   TMBSTON1 = { t="TMBSTON1", f="FLAT521" }
   TMBSTON2 = { t="TMBSTON2", f="FLAT521" }
   TRISTON1 = { t="TRISTON1", f="FLOOR00" }
   TRISTON2 = { t="TRISTON2", f="FLOOR17" }
   WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" }
   WOODWL   = { t="WOODWL",   f="FLOOR10" }
+
+  -- switches --
+
+  SW1OFF   = { t="SW1OFF",   f="FLOOR28" }
+  SW1ON    = { t="SW1ON",    f="FLOOR28" }
 
   -- flats --
 
@@ -307,36 +310,35 @@ HERETIC.MATERIALS =
   FLOOR29  = { t="METL1",    f="FLOOR29"  }
   FLOOR30  = { t="METL1",    f="FLOOR30"  }
 
+  -- rails --
+
+  WOODGATE = { t="WDGAT64", rail_h=64 }
+
+  GATE_BIG = { t="GATMETL",  rail_h=128 }
+  GATMETL2 = { t="GATMETL2", rail_h=32 }
+  GATMETL3 = { t="GATMETL3", rail_h=32 }
+  GATMETL4 = { t="GATMETL4", rail_h=64 }
+  GATMETL5 = { t="GATMETL5", rail_h=128 }
+
+  WEB1_B = { t="WEB1_B", rail_h=32 }
+  WEB1_F = { t="WEB1_F", rail_h=32 }
+  WEB2_B = { t="WEB2_B", rail_h=32 }
+  WEB2_F = { t="WEB2_F", rail_h=32 }
+  WEB3_M = { t="WEB3_M", rail_h=32 }
+
+  -- liquids / animated --
+
   FLTFLWW1 = { t="WATRWAL1", f="FLTFLWW1" }
   FLTLAVA1 = { t="LAVA1",    f="FLTLAVA1" }
   FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" }
   FLTTELE1 = { t="CHAINSD",  f="FLTTELE1" }
   FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" }
 
-
   -- other --
 
   O_PILL   = { t="SKULLSB2", f="O_PILL",  sane=1 }
   O_BOLT   = { t="DOORWOOD", f="O_BOLT",  sane=1 }
   O_CARVE  = { t="CHAINSD",  f="O_CARVE", sane=1 }
-}
-
-
-HERETIC.RAILS =
-{
-  wdgate = { wall="WDGAT64", w=64, h=64  }
-
-  --!!! TODO
---GATMETL
---GATMETL2
---GATMETL3
---GATMETL4
---GATMETL5
---WEB1_B
---WEB1_F
---WEB2_B
---WEB2_F
---WEB3_M
 }
 
 
