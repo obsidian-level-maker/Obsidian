@@ -462,10 +462,10 @@ DOOM.MATERIALS =
   CEIL5_1  = { f="CEIL5_1", t="COMPSPAN", color=0x151515 }
   CEIL5_2  = { f="CEIL5_2", t="METAL",    color=0x2e2713 }
 
-  COMP01   = { t="GRAY1",    f="COMP01",  color=0x7f7f7f }
-  CONS1_1  = { t="COMPWERD", f="CONS1_1", color=0x49494a }
-  CONS1_5  = { t="COMPWERD", f="CONS1_5", color=0x49494a }
-  CONS1_7  = { t="COMPWERD", f="CONS1_7", color=0x49494a }
+  COMP01   = { f="COMP01",  t="GRAY1",    color=0x7f7f7f }
+  CONS1_1  = { f="CONS1_1", t="COMPWERD", color=0x49494a }
+  CONS1_5  = { f="CONS1_5", t="COMPWERD", color=0x49494a }
+  CONS1_7  = { f="CONS1_7", t="COMPWERD", color=0x49494a }
 
   DEM1_1   = { f="DEM1_1", t="MARBLE1",  color=0x4f4e36 }
   DEM1_2   = { f="DEM1_2", t="MARBLE1",  color=0x4d4c35 }
@@ -859,49 +859,50 @@ DOOM2.MATERIALS =
 
   -- floors --
 
-  CONS1_1  = { t="GRAY5",    f="CONS1_1" }
-  CONS1_5  = { t="GRAY5",    f="CONS1_5" }
-  CONS1_7  = { t="GRAY5",    f="CONS1_7" }
+  CONS1_1  = { f="CONS1_1", t="GRAY5", color=0x49494a }
+  CONS1_5  = { f="CONS1_5", t="GRAY5", color=0x49494a }
+  CONS1_7  = { f="CONS1_7", t="GRAY5", color=0x49494a }
 
-  FLAT1_1  = { t="BSTONE2",  f="FLAT1_1" }
-  FLAT1_2  = { t="BSTONE2",  f="FLAT1_2" }
-  FLAT1_3  = { t="BSTONE2",  f="FLAT1_3" }
-  FLAT10   = { t="ASHWALL4", f="FLAT10" }
-  FLAT22   = { t="SILVER2",  f="FLAT22" }
-  FLAT5_5  = { t="STUCCO",   f="FLAT5_5"  }
-
+  FLAT1_1  = { f="FLAT1_1",  t="BSTONE2",  color=0x533a1c }
+  FLAT1_2  = { f="FLAT1_2",  t="BSTONE2",  color=0x51391c }
+  FLAT1_3  = { f="FLAT1_3",  t="BSTONE2",  color=0x3a2b15 }
+  FLAT10   = { f="FLAT10",   t="ASHWALL4", color=0x251b0b }
+  FLAT22   = { f="FLAT22",   t="SILVER2",  color=0x202071 }
+  FLAT5_5  = { f="FLAT5_5",  t="STUCCO",   color=0x5e4934 }
   FLAT5_7  = { f="FLAT5_7",  t="ASHWALL2", color=0x353535 }
   FLAT5_8  = { f="FLAT5_8",  t="ASHWALL2", color=0x2c2c2c }
   FLOOR6_2 = { f="FLOOR6_2", t="ASHWALL2", color=0x292929 }
-  GRASS1   = { t="ZIMMER2",  f="GRASS1"   }
-  GRASS2   = { t="ZIMMER2",  f="GRASS2"   }
-  GRNROCK  = { t="ROCK2",    f="GRNROCK" }
-  GRNLITE1 = { t="TEKGREN2", f="GRNLITE1" }
-  MFLR8_4  = { f="MFLR8_4", t="ASHWALL2", color=0x292929  }
 
-  RROCK01  = { t="CRACKLE2", f="RROCK01" }
-  RROCK02  = { t="CRACKLE4", f="RROCK02" }
-  RROCK03  = { t="ASHWALL3", f="RROCK03" }
-  RROCK04  = { t="ASHWALL3", f="RROCK04" }
-  RROCK05  = { t="ROCKRED1", f="RROCK05" }
-  RROCK09  = { t="TANROCK4", f="RROCK09" }
-  RROCK10  = { t="BRICK1",   f="RROCK10" }
-  RROCK11  = { t="BSTONE1",  f="RROCK11" }
-  RROCK12  = { t="BSTONE2",  f="RROCK12" }
-  RROCK13  = { t="ROCK3",    f="RROCK13" }
-  RROCK14  = { t="BIGBRIK1", f="RROCK14" }
-  RROCK15  = { t="TANROCK7", f="RROCK15" }
-  RROCK16  = { t="ZIMMER5",  f="RROCK16" }
-  RROCK17  = { t="ZIMMER3",  f="RROCK17" }
-  RROCK18  = { t="ZIMMER3",  f="RROCK18" }
-  RROCK19  = { t="ZIMMER2",  f="RROCK19" }
-  RROCK20  = { t="ZIMMER7",  f="RROCK20" }
+  GRASS1   = { f="GRASS1",   t="ZIMMER2",  color=0x2a3219 }
+  GRASS2   = { f="GRASS2",   t="ZIMMER2",  color=0x2b3319 }
+  GRNROCK  = { f="GRNROCK",  t="ROCK2",    color=0x26291e }
+  GRNLITE1 = { f="GRNLITE1", t="TEKGREN2", color=0x6d725b }
+  MFLR8_4  = { f="MFLR8_4",  t="ASHWALL2", color=0x292929 }
 
-  SLIME09  = { t="ROCKRED1", f="SLIME09" }
-  SLIME13  = { t="BRICK10",  f="SLIME13" }
-  SLIME14  = { t="METAL2",   f="SLIME14" }
-  SLIME15  = { t="COMPSPAN", f="SLIME15" }
-  SLIME16  = { t="SPACEW4",  f="SLIME16" }
+  RROCK01  = { f="RROCK01", t="CRACKLE2", color=0x740000 }
+  RROCK02  = { f="RROCK02", t="CRACKLE4", color=0x765a2e }
+  RROCK03  = { f="RROCK03", t="ASHWALL3", color=0x201c17 }
+  RROCK04  = { f="RROCK04", t="ASHWALL3", color=0x282016 }
+  RROCK05  = { f="RROCK05", t="ROCKRED1", color=0x4c2117 }  -- animated
+  RROCK09  = { f="RROCK09", t="TANROCK4", color=0x533f2a }
+  RROCK10  = { f="RROCK10", t="BRICK1",   color=0x503b21 }
+  RROCK11  = { f="RROCK11", t="BSTONE1",  color=0x543f28 }
+  RROCK12  = { f="RROCK12", t="BSTONE2",  color=0x48351d }
+
+  RROCK13  = { f="RROCK13", t="ROCK3",    color=0x252524 }
+  RROCK14  = { f="RROCK14", t="BIGBRIK1", color=0x302110 }
+  RROCK15  = { f="RROCK15", t="TANROCK7", color=0x543d26 }
+  RROCK16  = { f="RROCK16", t="ZIMMER5",  color=0x4a3723 }
+  RROCK17  = { f="RROCK17", t="ZIMMER3",  color=0x322918 }
+  RROCK18  = { f="RROCK18", t="ZIMMER3",  color=0x302818 }
+  RROCK19  = { f="RROCK19", t="ZIMMER2",  color=0x2a2c19 }
+  RROCK20  = { f="RROCK20", t="ZIMMER7",  color=0x42482d }
+
+  SLIME09  = { f="SLIME09", t="ROCKRED1", color=0x4c2117 } -- animated
+  SLIME13  = { f="SLIME13", t="BRICK10",  color=0x423f28 }
+  SLIME14  = { f="SLIME14", t="METAL2",   color=0x413c36 }
+  SLIME15  = { f="SLIME15", t="COMPSPAN", color=0x3e3a37 }
+  SLIME16  = { f="SLIME16", t="SPACEW4",  color=0x6d5b44 }
 
 
   -- rails --
@@ -1145,46 +1146,6 @@ ZZZFACE7 , color=0x2c2214
 ZZZFACE8 , color=0x312314 
 ZZZFACE9 , color=0x302617 
 
-GRASS1 , color=0x2a3219 
-GRASS2 , color=0x2b3319 
-GRNLITE1 , color=0x6d725b 
-GRNROCK , color=0x26291e 
-RROCK01 , color=0x740000 
-RROCK02 , color=0x765a2e 
-RROCK03 , color=0x201c17 
-RROCK04 , color=0x282016 
-RROCK05 , color=0x542117 
-RROCK06 , color=0x4c2117 
-RROCK07 , color=0x3f2117 
-RROCK08 , color=0x372117 
-RROCK09 , color=0x533f2a 
-RROCK10 , color=0x503b21 
-RROCK11 , color=0x543f28 
-RROCK12 , color=0x48351d 
-RROCK13 , color=0x252524 
-RROCK14 , color=0x302110 
-RROCK15 , color=0x543d26 
-RROCK16 , color=0x4a3723 
-RROCK17 , color=0x322918 
-RROCK18 , color=0x302818 
-RROCK19 , color=0x2a2c19 
-RROCK20 , color=0x42482d 
-SLIME01 , color=0x2b1e0c 
-SLIME02 , color=0x2b1e0c 
-SLIME03 , color=0x2b1e0c 
-SLIME04 , color=0x2b1e0c 
-SLIME05 , color=0x2c220e 
-SLIME06 , color=0x241c0b 
-SLIME07 , color=0x1e1608 
-SLIME08 , color=0x1a1206 
-SLIME09 , color=0x542117 
-SLIME10 , color=0x4c2117 
-SLIME11 , color=0x3f2117 
-SLIME12 , color=0x372017 
-SLIME13 , color=0x423f28 
-SLIME14 , color=0x413c36 
-SLIME15 , color=0x3e3a37 
-SLIME16 , color=0x6d5b44 
 --]]
 
 
