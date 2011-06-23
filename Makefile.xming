@@ -52,6 +52,7 @@ OBJS=	$(OBJ_DIR)/main.o      \
 	$(OBJ_DIR)/lib_file.o  \
 	$(OBJ_DIR)/lib_signal.o \
 	$(OBJ_DIR)/lib_util.o  \
+	$(OBJ_DIR)/lib_grp.o   \
 	$(OBJ_DIR)/lib_pak.o   \
 	$(OBJ_DIR)/lib_wad.o   \
 	$(OBJ_DIR)/lib_zip.o   \

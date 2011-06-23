@@ -35,7 +35,7 @@
 #include "ui_chooser.h"
 
 #include "csg_main.h"
-#include "lib_wad.h"
+#include "lib_grp.h"
 #include "q_common.h"  // qLump_c
 
 #include "g_nukem.h"

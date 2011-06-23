@@ -1,5 +1,5 @@
 //------------------------------------------------------------------------
-//  ARCHIVE Handling - WAD and GRP files
+//  ARCHIVE Handling - GRP files
 //------------------------------------------------------------------------
 //
 //  Oblige Level Maker
@@ -18,33 +18,8 @@
 //
 //------------------------------------------------------------------------
 
-#ifndef __OBLIGE_LIB_WAD_H__
-#define __OBLIGE_LIB_WAD_H__
-
-
-/* WAD reading */
-
-bool WAD_OpenRead(const char *filename);
-void WAD_CloseRead(void);
-
-int  WAD_NumEntries(void);
-int  WAD_FindEntry(const char *name);
-int  WAD_EntryLen(int entry);
-const char * WAD_EntryName(int entry);
-
-bool WAD_ReadData(int entry, int offset, int length, void *buffer);
-
-void WAD_ListEntries(void);
-
-
-/* WAD writing */
-
-bool WAD_OpenWrite(const char *filename);
-void WAD_CloseWrite(void);
-
-void WAD_NewLump(const char *name);
-bool WAD_AppendData(const void *data, int length);
-void WAD_FinishLump(void);
+#ifndef __OBLIGE_LIB_GRP_H__
+#define __OBLIGE_LIB_GRP_H__
 
 
 /* GRP reading */
@@ -73,28 +48,6 @@ void GRP_FinishLump(void);
 
 
 
-/* ----- WAD structure ---------------------- */
-
-typedef struct
-{
-  char magic[4];
-
-  u32_t num_lumps;
-  u32_t dir_start;
-}
-raw_wad_header_t;
-
-
-typedef struct
-{
-  u32_t start;
-  u32_t length;
-
-  char name[8];
-}
-raw_wad_lump_t;
-
-
 /* ----- GRP structure ---------------------- */
 
 typedef struct
@@ -113,7 +66,7 @@ typedef struct
 raw_grp_lump_t;
 
 
-#endif /* __OBLIGE_LIB_WAD_H__ */
+#endif /* __OBLIGE_LIB_GRP_H__ */
 
 //--- editor settings ---
 // vi:ts=2:sw=2:expandtab
