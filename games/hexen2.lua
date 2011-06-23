@@ -169,14 +169,14 @@ HEXEN2.SKINS =
   {
     _prefab = "STAIR_6"
     _where  = "chunk"
-    _stairs = { up=1 }
+    _deltas = { 32,48,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
     _where  = "chunk"
-    _stairs = { down=1 }
+    _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 }
 
