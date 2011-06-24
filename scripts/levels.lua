@@ -96,6 +96,12 @@ GLOBAL_STYLE_LIST =
 }
 
 
+GLOBAL_PARAMETERS =
+{
+  step_height = 16
+}
+
+
 function Levels_clean_up()
   GAME   = {}
   THEME  = {}
@@ -304,6 +310,8 @@ function Levels_setup()
   if PARAM.sub_format then
     gui.property("sub_format", PARAM.sub_format)
   end
+
+  table.merge_missing(PARAM, GLOBAL_PARAMETERS)
 
   table.name_up(PREFAB)
 end
