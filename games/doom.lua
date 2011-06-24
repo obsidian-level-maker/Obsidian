@@ -945,13 +945,13 @@ DOOM2.MATERIALS =
 
 DOOM.LIQUIDS =
 {
-  water  = { mat="FWATER1", light=0.65, special=0 }
-  blood  = { mat="BLOOD1",  light=0.65, special=0 }
-  nukage = { mat="NUKAGE1", light=0.65, special=16, damage=20 }
-  lava   = { mat="LAVA1",   light=0.75, special=16, damage=20 }
+  water  = { mat="FWATER1", color=0x00002a, light=0.65, special=0 }
+  blood  = { mat="BLOOD1",  color=0x580000, light=0.65, special=0 }
+  nukage = { mat="NUKAGE1", color=0x152e0d, light=0.65, special=16, damage=20 }
+  lava   = { mat="LAVA1",   color=0x641c05, light=0.75, special=16, damage=20 }
 
   -- Doom II only --
-  slime = { mat="SLIME01", light=0.65, special=16, damage=20 }
+  slime  = { mat="SLIME01", color=0x2b1e0c, light=0.65, special=16, damage=20 }
 }
 
 
