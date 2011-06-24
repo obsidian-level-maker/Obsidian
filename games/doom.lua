@@ -234,15 +234,17 @@ DOOM2.PARAMETERS =
 DOOM.MATERIALS =
 {
   -- special materials --
+
   _ERROR = { t="METAL",    f="CEIL5_2" }
   _SKY   = { t="CEMENT3",  f="F_SKY1" }
+
 
   -- general purpose --
 
   METAL  = { t="METAL",    f="CEIL5_2", color=0x292418 }
 
-  SUPPORT2 = { t="SUPPORT2", f="FLAT23"  }
-  SUPPORT3 = { t="SUPPORT3", f="CEIL5_2" }
+  SUPPORT2 = { t="SUPPORT2", f="FLAT23",  color=0x5e5e5e }
+  SUPPORT3 = { t="SUPPORT3", f="CEIL5_2", color=0x282418 }
 
 
   -- walls --
@@ -253,7 +255,7 @@ DOOM.MATERIALS =
   BIGDOOR4 = { t="BIGDOOR4", f="FLOOR3_3", color=0x58422d }
   BIGDOOR5 = { t="BIGDOOR5", f="FLAT5_2",  color=0x3b301e }
   BIGDOOR6 = { t="BIGDOOR6", f="CEIL5_2",  color=0x433522 }
-  BIGDOOR7 = { t="BIGDOOR7", f="CEIL5_2" }
+  BIGDOOR7 = { t="BIGDOOR7", f="CEIL5_2",  color=0x41321f }
 
   BROWN1   = { t="BROWN1",   f="FLOOR0_1", color=0x695035 }
   BROWN144 = { t="BROWN144", f="FLOOR7_1", color=0x2d2719 }
@@ -285,14 +287,16 @@ DOOM.MATERIALS =
   DOORRED2 = { t="DOORRED2", f="CRATOP2", sane=1 }
   DOORYEL2 = { t="DOORYEL2", f="CRATOP2", sane=1 }
 
-  DOOR1    = { t="DOOR1",    f="FLAT23" }
-  DOOR3    = { t="DOOR3",    f="FLAT23" }
-  DOORSTOP = { t="DOORSTOP", f="FLAT23" }
-  DOORTRAK = { t="DOORTRAK", f="FLAT23" }
+  DOOR1    = { t="DOOR1",    f="FLAT23", color=0x817265 }
+  DOOR3    = { t="DOOR3",    f="FLAT23", color=0x626262 }
+  DOORSTOP = { t="DOORSTOP", f="FLAT23", color=0x545454 }
+  DOORTRAK = { t="DOORTRAK", f="FLAT23", color=0x282828 }
+
   EXITDOOR = { t="EXITDOOR", f="FLAT5_5" }
   EXITSIGN = { t="EXITSIGN", f="CEIL5_1" }
   EXITSTON = { t="EXITSTON", f="MFLR8_1" }
 
+  -- these three are animated
   FIREBLU1 = { t="FIREBLU1", f="FLOOR6_1" }
   FIRELAVA = { t="FIRELAVA", f="FLOOR6_1" }
   FIREWALL = { t="FIREWALL", f="FLAT5_3" }
@@ -336,9 +340,9 @@ DOOM.MATERIALS =
   MARBFAC3 = { t="MARBFAC3", f="FLOOR7_2", color=0x4c5136 }
   MARBLOD1 = { t="MARBLOD1", f="FLOOR7_2", color=0x4d4e35 }
 
-  METAL1   = { t="METAL1",   f="FLOOR4_8", color=0x2a2a29  }
-  NUKE24   = { t="NUKE24",   f="FLOOR7_1", color=0x37491e  }
-  NUKEDGE1 = { t="NUKEDGE1", f="FLOOR7_1", color=0x3b3316  }
+  METAL1   = { t="METAL1",   f="FLOOR4_8", color=0x2a2a29 }
+  NUKE24   = { t="NUKE24",   f="FLOOR7_1", color=0x37491e }
+  NUKEDGE1 = { t="NUKEDGE1", f="FLOOR7_1", color=0x3b3316 }
   NUKEPOIS = { t="NUKEPOIS", f="FLOOR7_1" }
 
   PIPE1    = { t="PIPE1",    f="FLOOR4_5", color=0x614831 }
@@ -501,16 +505,16 @@ DOOM.MATERIALS =
   FLAT22   = { f="FLAT22", t="SHAWN2",   color=0x202071 }
   FLAT23   = { f="FLAT23", t="SHAWN2",   color=0x666666 }
 
-  FLOOR0_1 = { f="FLOOR0_1", t="STARTAN2", color=0x6b543f  }
-  FLOOR0_2 = { f="FLOOR0_2", t="STARBR2",  color=0x714a27  }
-  FLOOR0_3 = { f="FLOOR0_3", t="GRAY1",    color=0x5b5b5b  }
-  FLOOR0_5 = { f="FLOOR0_5", t="GRAY1",    color=0x555555  }
-  FLOOR0_6 = { f="FLOOR0_6", t="GRAY1",    color=0x555555  }
-  FLOOR0_7 = { f="FLOOR0_7", t="GRAY1",    color=0x565656  }
-  FLOOR1_1 = { f="FLOOR1_1", t="COMPBLUE", color=0x00005a  }
-  FLOOR1_6 = { f="FLOOR1_6", t="REDWALL",  color=0x750000  }
-  FLOOR1_7 = { f="FLOOR1_7", t="REDWALL",  color=0x9e2828  }
-  FLOOR3_3 = { f="FLOOR3_3", t="BROWN1",   color=0x71634c  }
+  FLOOR0_1 = { f="FLOOR0_1", t="STARTAN2", color=0x6b543f }
+  FLOOR0_2 = { f="FLOOR0_2", t="STARBR2",  color=0x714a27 }
+  FLOOR0_3 = { f="FLOOR0_3", t="GRAY1",    color=0x5b5b5b }
+  FLOOR0_5 = { f="FLOOR0_5", t="GRAY1",    color=0x555555 }
+  FLOOR0_6 = { f="FLOOR0_6", t="GRAY1",    color=0x555555 }
+  FLOOR0_7 = { f="FLOOR0_7", t="GRAY1",    color=0x565656 }
+  FLOOR1_1 = { f="FLOOR1_1", t="COMPBLUE", color=0x00005a }
+  FLOOR1_6 = { f="FLOOR1_6", t="REDWALL",  color=0x750000 }
+  FLOOR1_7 = { f="FLOOR1_7", t="REDWALL",  color=0x9e2828 }
+  FLOOR3_3 = { f="FLOOR3_3", t="BROWN1",   color=0x71634c }
 
   FLOOR4_1 = { f="FLOOR4_1", t="STARTAN2", color=0x69523a }
   FLOOR4_5 = { f="FLOOR4_5", t="STARTAN2", color=0x695339 }
@@ -518,20 +522,20 @@ DOOM.MATERIALS =
   FLOOR4_8 = { f="FLOOR4_8", t="METAL1",   color=0x30302f }
   FLOOR5_1 = { f="FLOOR5_1", t="METAL1",   color=0x343028 }
   FLOOR5_2 = { f="FLOOR5_2", t="BROWNHUG", color=0x573e1e }
-  FLOOR5_3 = { f="FLOOR5_3", t="BROWNHUG", color=0x563e1e  }
-  FLOOR5_4 = { f="FLOOR5_4", t="BROWNHUG", color=0x583e1e  }
-  FLOOR6_1 = { f="FLOOR6_1", t="REDWALL",  color=0x610000  }
-  FLOOR7_1 = { f="FLOOR7_1", t="BROWNHUG", color=0x3f2f16  }
-  FLOOR7_2 = { f="FLOOR7_2", t="MARBLE1",  color=0x353b22  }
+  FLOOR5_3 = { f="FLOOR5_3", t="BROWNHUG", color=0x563e1e }
+  FLOOR5_4 = { f="FLOOR5_4", t="BROWNHUG", color=0x583e1e }
+  FLOOR6_1 = { f="FLOOR6_1", t="REDWALL",  color=0x610000 }
+  FLOOR7_1 = { f="FLOOR7_1", t="BROWNHUG", color=0x3f2f16 }
+  FLOOR7_2 = { f="FLOOR7_2", t="MARBLE1",  color=0x353b22 }
 
   GATE1    = { f="GATE1", t="METAL", color=0x5d0905 }
   GATE2    = { f="GATE2", t="METAL", color=0x620a06 }
   GATE3    = { f="GATE3", t="METAL", color=0x5e0905 }
   GATE4    = { f="GATE4", t="METAL", color=0x55534f }
   
-  MFLR8_1  = { f="MFLR8_1", t="STONE2",   color=0x343434  }
-  MFLR8_2  = { f="MFLR8_2", t="BROWNHUG", color=0x332b23  }
-  MFLR8_3  = { f="MFLR8_3", t="SP_ROCK1", color=0x888786  }
+  MFLR8_1  = { f="MFLR8_1", t="STONE2",   color=0x343434 }
+  MFLR8_2  = { f="MFLR8_2", t="BROWNHUG", color=0x332b23 }
+  MFLR8_3  = { f="MFLR8_3", t="SP_ROCK1", color=0x888786 }
 
   SFLR6_1  = { f="SFLR6_1", t="SKSNAKE1", color=0x96633b }
   SFLR6_4  = { f="SFLR6_4", t="SKSNAKE2", color=0x822323 }
@@ -691,8 +695,8 @@ DOOM2.MATERIALS =
   BIGBRIK1 = { t="BIGBRIK1", f="RROCK14", color=0x302110 }
   BIGBRIK2 = { t="BIGBRIK2", f="MFLR8_1", color=0x313131 }
   BIGBRIK3 = { t="BIGBRIK3", f="RROCK14", color=0x362714 }
-  BLAKWAL1 = { t="BLAKWAL1", f="CEIL5_1", color=0x020202  }
-  BLAKWAL2 = { t="BLAKWAL2", f="CEIL5_1", color=0x040404  }
+  BLAKWAL1 = { t="BLAKWAL1", f="CEIL5_1", color=0x020202 }
+  BLAKWAL2 = { t="BLAKWAL2", f="CEIL5_1", color=0x040404 }
 
   BRICK1   = { t="BRICK1",   f="RROCK10",  color=0x503b21 }
   BRICK2   = { t="BRICK2",   f="RROCK10",  color=0x473322 }
@@ -721,8 +725,8 @@ DOOM2.MATERIALS =
   CRACKLE2 = { t="CRACKLE2", f="RROCK01", color=0x74240b }
   CRACKLE4 = { t="CRACKLE4", f="RROCK02", color=0x55472a }
   CRATE3   = { t="CRATE3",   f="CRATOP1", color=0x585044 }
-  MARBFAC4 = { t="MARBFAC4", f="DEM1_5" }
-  MARBGRAY = { t="MARBGRAY", f="DEM1_5" }
+  MARBFAC4 = { t="MARBFAC4", f="DEM1_5",  color=0x4f5147 }
+  MARBGRAY = { t="MARBGRAY", f="DEM1_5",  color=0x51524e }
 
   METAL2   = { t="METAL2",   f="CEIL5_2", color=0x221f18 }
   METAL3   = { t="METAL3",   f="CEIL5_2", color=0x242017 }
@@ -764,19 +768,20 @@ DOOM2.MATERIALS =
   ROCK4    = { t="ROCK4",    f="FLOOR0_2", color=0x855630 }
   ROCK5    = { t="ROCK5",    f="RROCK09",  color=0x644b31 }
 
-  SILVER1  = { t="SILVER1",  f="FLAT23" }
-  SILVER2  = { t="SILVER2",  f="FLAT22" }
-  SILVER3  = { t="SILVER3",  f="FLAT23" }
-  SK_LEFT  = { t="SK_LEFT",  f="FLAT5_6" }
-  SK_RIGHT = { t="SK_RIGHT", f="FLAT5_6" }
-  SLOPPY1  = { t="SLOPPY1",  f="FLAT5_6" }
-  SLOPPY2  = { t="SLOPPY2",  f="FLAT5_6" }
-  SP_DUDE7 = { t="SP_DUDE7", f="FLOOR5_4" }
-  SP_FACE2 = { t="SP_FACE2", f="FLAT5_6" }
+  SILVER1  = { t="SILVER1",  f="FLAT23",  color=0x6e6e6e }
+  SILVER2  = { t="SILVER2",  f="FLAT22",  color=0x4e4e65 }
+  SILVER3  = { t="SILVER3",  f="FLAT23",  color=0x585754 }
+  SK_LEFT  = { t="SK_LEFT",  f="FLAT5_6", color=0x69301f }
+  SK_RIGHT = { t="SK_RIGHT", f="FLAT5_6", color=0x682f1e }
+  SLOPPY1  = { t="SLOPPY1",  f="FLAT5_6", color=0x682e1d }
+  SLOPPY2  = { t="SLOPPY2",  f="FLAT5_6", color=0x602e1c }
+  SP_DUDE7 = { t="SP_DUDE7", f="FLOOR5_4", color=0x513322 }
+  SP_FACE2 = { t="SP_FACE2", f="FLAT5_6", color=0x81271d }
 
-  SPACEW2  = { t="SPACEW2",  f="CEIL3_3" }
-  SPACEW3  = { t="SPACEW3",  f="CEIL5_1" }
-  SPACEW4  = { t="SPACEW4",  f="SLIME16" }
+  SPACEW2  = { t="SPACEW2",  f="CEIL3_3", color=0x58442e }
+  SPACEW3  = { t="SPACEW3",  f="CEIL5_1", color=0x1b1b19 }
+  SPACEW4  = { t="SPACEW4",  f="SLIME16", color=0x6d5b44 }
+
   SPCDOOR1 = { t="SPCDOOR1", f="FLOOR0_1" }
   SPCDOOR2 = { t="SPCDOOR2", f="FLAT19" }
   SPCDOOR3 = { t="SPCDOOR3", f="FLAT19" }
@@ -937,7 +942,20 @@ DOOM2.MATERIALS =
 }
 
 
-DOOM.STEPS =
+
+DOOM.LIQUIDS =
+{
+  water  = { mat="FWATER1", light=0.65, special=0 }
+  blood  = { mat="BLOOD1",  light=0.65, special=0 }
+  nukage = { mat="NUKAGE1", light=0.65, special=16, damage=20 }
+  lava   = { mat="LAVA1",   light=0.75, special=16, damage=20 }
+
+  -- Doom II only --
+  slime = { mat="SLIME01", light=0.65, special=16, damage=20 }
+}
+
+
+DOOM.STEPS =  -- OLD ??
 {
   step1 = { step="STEP1", side="BROWNHUG", top="FLOOR7_1" }
   step2 = { step="STEP2", side="BROWN1",   top="FLAT5" }
@@ -948,83 +966,6 @@ DOOM.STEPS =
   step4b = { step="STEP4", side="STONE4",   top="FLAT1" }
   step6  = { step="STEP6", side="STUCCO",   top="FLAT5" }
 }
-
-
--- FIXME: incorporate these colors !!!!
-
---[[ DOOM2 specific
-BRNPOIS , color=0x242718 
-CEMENT7 , color=0x8d816f 
-CEMENT8 , color=0x685e4a 
-DBRAIN1 , color=0x661c05 
-DBRAIN2 , color=0x651d05 
-DBRAIN3 , color=0x641b04 
-DBRAIN4 , color=0x672006 
-MARBFAC4 , color=0x4f5147 
-MARBGRAY , color=0x51524e 
-METAL , color=0x292418 
-MIDBARS1 , color=0x3b3122 
-MIDBARS3 , color=0x3b3223 
-MIDBRONZ , color=0x382d1a 
-MIDSPACE , color=0x434343 
-REDWALL , color=0x6b0e0e 
-SFALL1 , color=0x1d3710 
-SFALL2 , color=0x1d3710 
-SFALL3 , color=0x1d3710 
-SFALL4 , color=0x1d3710 
-SILVER1 , color=0x6e6e6e 
-SILVER2 , color=0x4e4e65 
-SILVER3 , color=0x585754 
-SK_LEFT , color=0x69301f 
-SK_RIGHT , color=0x682f1e 
-SLOPPY1 , color=0x682e1d 
-SLOPPY2 , color=0x602e1c 
-SPACEW2 , color=0x58442e 
-SPACEW3 , color=0x1b1b19 
-SPACEW4 , color=0x6d5b44 
-SPCDOOR1 , color=0x57422b 
-SPCDOOR2 , color=0x595655 
-SPCDOOR3 , color=0x5c5d5c 
-SPCDOOR4 , color=0x66513c 
-SP_DUDE7 , color=0x513322 
-SP_DUDE8 , color=0x523120 
-SP_FACE2 , color=0x81271d 
-SW1BRIK , color=0x383636 
-SW1MARB , color=0x4f5036 
-SW1MET2 , color=0x2b2720 
-SW1MOD1 , color=0x292318 
-SW1PANEL , color=0x543e25 
-SW1ROCK , color=0x2c2a22 
-SW1SKULL , color=0x604936 
-SW1STON6 , color=0x513d2a 
-SW1TEK , color=0x444839 
-SW1WDMET , color=0x31261d 
-SW1ZIM , color=0x373922 
-SW2BRIK , color=0x383736 
-SW2MARB , color=0x4b4d35 
-SW2MET2 , color=0x2b2820 
-SW2MOD1 , color=0x292318 
-SW2PANEL , color=0x513c23 
-SW2ROCK , color=0x282721 
-SW2SKULL , color=0x604936 
-SW2STON6 , color=0x533d2a 
-SW2TEK , color=0x444939 
-SW2WDMET , color=0x34271a 
-SW2ZIM , color=0x343620 
-ZDOORB1 , color=0xa2a2a0 
-ZDOORF1 , color=0xa2a2a0 
-ZELDOOR , color=0x898686 
-ZZZFACE1 , color=0x2d2616 
-ZZZFACE2 , color=0x302716 
-ZZZFACE3 , color=0x614232 
-ZZZFACE4 , color=0x4d3e2f 
-ZZZFACE5 , color=0x3e301c 
-ZZZFACE6 , color=0x2f2413 
-ZZZFACE7 , color=0x2c2214 
-ZZZFACE8 , color=0x312314 
-ZZZFACE9 , color=0x302617 
-
---]]
 
 
 DOOM.LIFTS =  -- OLD CRUD
@@ -2516,18 +2457,6 @@ DOOM.SKINS =
 
 } -- end of DOOM.SKINS
 
-
-
-DOOM.LIQUIDS =
-{
-  water  = { mat="FWATER1", light=0.65, special=0 }
-  blood  = { mat="BLOOD1",  light=0.65, special=16 }
-  nukage = { mat="NUKAGE1", light=0.65, special=16 }
-  lava   = { mat="LAVA1",   light=0.75, special=16 }
-
-  -- Doom II only --
-  slime = { mat="SLIME01", light=0.65, special=16 }
-}
 
 
 ----------------------------------------------------------------
