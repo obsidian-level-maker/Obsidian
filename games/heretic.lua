@@ -23,7 +23,7 @@ HERETIC = { }
 
 HERETIC.ENTITIES =
 {
-  --- special stuff ---
+  --- player stuff ---
   player1 = { id=1, kind="other", r=16,h=56 }
   player2 = { id=2, kind="other", r=16,h=56 }
   player3 = { id=3, kind="other", r=16,h=56 }
@@ -48,16 +48,17 @@ HERETIC.ENTITIES =
   weredragon = { id=70, kind="monster", r=34,h=80 }
   ophidian   = { id=92, kind="monster", r=22,h=72 }
 
-  -- bosses
+  --- bosses ---
   Ironlich   = { id=6,  kind="monster", r=40,h=72 }
   Maulotaur  = { id=9,  kind="monster", r=28,h=104 }
   D_Sparil   = { id=7,  kind="monster", r=28,h=104 }
 
-  --- pickups ---
+  --- keys ---
   k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
   k_green    = { id=73, kind="pickup", r=20,h=16, pass=true }
   k_blue     = { id=79, kind="pickup", r=20,h=16, pass=true }
 
+  --- weapons ---
   gauntlets  = { id=2005, kind="pickup", r=20,h=16, pass=true }
   crossbow   = { id=2001, kind="pickup", r=20,h=16, pass=true }
   claw       = { id=53,   kind="pickup", r=20,h=16, pass=true }
@@ -65,6 +66,7 @@ HERETIC.ENTITIES =
   phoenix    = { id=2003, kind="pickup", r=20,h=16, pass=true }
   firemace   = { id=2002, kind="pickup", r=20,h=16, pass=true }
 
+  --- ammo ---
   crystal    = { id=10, kind="pickup", r=20,h=16, pass=true }
   geode      = { id=12, kind="pickup", r=20,h=16, pass=true }
   arrow      = { id=18, kind="pickup", r=20,h=16, pass=true }
@@ -78,12 +80,14 @@ HERETIC.ENTITIES =
   mace_orb1  = { id=13, kind="pickup", r=20,h=16, pass=true }
   mace_orb2  = { id=16, kind="pickup", r=20,h=16, pass=true }
 
+  --- health ---
   h_vial  = { id=81, kind="pickup", r=20,h=16, pass=true }
   h_flask = { id=82, kind="pickup", r=20,h=16, pass=true }
   h_urn   = { id=32, kind="pickup", r=20,h=16, pass=true }
   shield1 = { id=85, kind="pickup", r=20,h=16, pass=true }
   shield2 = { id=31, kind="pickup", r=20,h=16, pass=true }
 
+  --- powerups ---
   bag     = { id=8,  kind="pickup", r=20,h=16, pass=true }
   wings   = { id=23, kind="pickup", r=20,h=16, pass=true }
   ovum    = { id=30, kind="pickup", r=20,h=16, pass=true }
@@ -128,7 +132,7 @@ HERETIC.ENTITIES =
   hang_skull_4 = { id=26, kind="scenery", r=20,h=64, ceil=true, pass=true }
   hang_corpse  = { id=51, kind="scenery", r=12,h=104,ceil=true }
 
-  -- miscellaneous
+  --- miscellaneous ---
   dummy = { id=49, kind="other", r=16,h=20, pass=true }
 
   --- ambient sounds ---
@@ -176,62 +180,69 @@ HERETIC.PARAMETERS =
 HERETIC.MATERIALS =
 {
   -- special materials --
+
   _ERROR = { t="WOODWL",  f="FLOOR10" }
   _SKY   = { t="CHAINSD", f="F_SKY1"  }
 
-  -- textures --
+  -- general purpose --
 
-  BANNER1  = { t="BANNER1",  f="FLOOR03" }
-  BANNER2  = { t="BANNER2",  f="FLOOR03" }
-  BANNER3  = { t="BANNER3",  f="FLAT520" }
-  BANNER4  = { t="BANNER4",  f="FLAT520" }
-  BANNER5  = { t="BANNER5",  f="FLOOR25" }
-  BANNER6  = { t="BANNER6",  f="FLOOR25" }
-  BANNER7  = { t="BANNER7",  f="FLOOR00" }
-  BANNER8  = { t="BANNER8",  f="FLOOR00" }
-  BLUEFRAG = { t="BLUEFRAG", f="FLOOR16" }
-  BRWNRCKS = { t="BRWNRCKS", f="FLOOR17" }
-  CELTIC   = { t="CELTIC",   f="FLOOR06" }
-  CHAINMAN = { t="CHAINMAN", f="FLAT520" }
-  CSTLMOSS = { t="CSTLMOSS", f="FLOOR03" }
-  CSTLRCK  = { t="CSTLRCK",  f="FLOOR03" }
-  CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11" }
-  CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11" }
-  CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11" }
-  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11" }
-  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11" }
-  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11" }
-  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11" }
-  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11" }
-  DMNMSK   = { t="DMNMSK",   f="FLAT521" }
-  DOOREXIT = { t="DOOREXIT", f="FLAT520" }
-  DOORSTON = { t="DOORSTON", f="FLOOR30" }
-  DOORWOOD = { t="DOORWOOD", f="FLAT507" }
-  DRIPWALL = { t="DRIPWALL", f="FLOOR27" }
+  -- walls --
 
-  GRNBLOK1 = { t="GRNBLOK1", f="FLOOR19" }
-  GRNBLOK2 = { t="GRNBLOK2", f="FLOOR19" }
-  GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19" }
-  GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19" }
-  GRSKULL1 = { t="GRSKULL1", f="FLAT521" }
-  GRSKULL2 = { t="GRSKULL2", f="FLAT521" }
-  GRSKULL3 = { t="GRSKULL3", f="FLAT521" }
-  GRSTNPB  = { t="GRSTNPB",  f="FLAT520" }
-  GRSTNPBV = { t="GRSTNPBV", f="FLAT520" }
-  GRSTNPBW = { t="GRSTNPBW", f="FLAT520" }
-  HORSES1  = { t="HORSES1",  f="FLAT520" }
+  BANNER1  = { t="BANNER1",  f="FLOOR03", color=0x3a2b3c }
+  BANNER2  = { t="BANNER2",  f="FLOOR03", color=0x3c213b }
+  BANNER3  = { t="BANNER3",  f="FLAT520", color=0x4f2318 }
+  BANNER4  = { t="BANNER4",  f="FLAT520", color=0x222039 }
+  BANNER5  = { t="BANNER5",  f="FLOOR25", color=0x662c0f }
+  BANNER6  = { t="BANNER6",  f="FLOOR25", color=0x392831 }
+  BANNER7  = { t="BANNER7",  f="FLOOR00", color=0x3d2d3e }
+  BANNER8  = { t="BANNER8",  f="FLOOR00", color=0x3f243e }
+  BLUEFRAG = { t="BLUEFRAG", f="FLOOR16", color=0x00043b }
+  BRWNRCKS = { t="BRWNRCKS", f="FLOOR17", color=0x40200f }
+
+  CELTIC   = { t="CELTIC",   f="FLOOR06", color=0x694429 }
+  CHAINMAN = { t="CHAINMAN", f="FLAT520", color=0x39332e }
+  CSTLMOSS = { t="CSTLMOSS", f="FLOOR03", color=0x2e302d }
+  CSTLRCK  = { t="CSTLRCK",  f="FLOOR03", color=0x313131 }
+  CTYSTCI1 = { t="CTYSTCI1", f="FLOOR11", color=0x3f3527 }
+  CTYSTCI2 = { t="CTYSTCI2", f="FLOOR11", color=0x40372a }
+  CTYSTCI4 = { t="CTYSTCI4", f="FLOOR11", color=0x41392f }
+  CTYSTUC1 = { t="CTYSTUC1", f="FLOOR11", color=0x322b25 }
+  CTYSTUC2 = { t="CTYSTUC2", f="FLOOR11", color=0x37322d }
+  CTYSTUC3 = { t="CTYSTUC3", f="FLOOR11", color=0x312a24 }
+  CTYSTUC4 = { t="CTYSTUC4", f="FLOOR11", color=0x393530 }
+  CTYSTUC5 = { t="CTYSTUC5", f="FLOOR11", color=0x302823 }
+
+  DMNMSK   = { t="DMNMSK",   f="FLAT521", color=0x5c5d5c }
+  DOOREXIT = { t="DOOREXIT", f="FLAT520", color=0x3a3b43 }
+  DOORSTON = { t="DOORSTON", f="FLOOR30", color=0x2b2b29 }
+  DOORWOOD = { t="DOORWOOD", f="FLAT507", color=0x302119 }
+  DRIPWALL = { t="DRIPWALL", f="FLOOR27", color=0x664c2a }
+
+  GRNBLOK1 = { t="GRNBLOK1", f="FLOOR19", color=0x2c392b }
+  GRNBLOK2 = { t="GRNBLOK2", f="FLOOR19", color=0x2a372a }
+  GRNBLOK3 = { t="GRNBLOK3", f="FLOOR19", color=0x2c392b }
+  GRNBLOK4 = { t="GRNBLOK4", f="FLOOR19", color=0x2b3729 }
+  GRSKULL1 = { t="GRSKULL1", f="FLAT521", color=0x62605e }
+  GRSKULL2 = { t="GRSKULL2", f="FLAT521", color=0x686765 }
+  GRSKULL3 = { t="GRSKULL3", f="FLAT521", color=0x716f6e }
+  GRSTNPB  = { t="GRSTNPB",  f="FLAT520", color=0x2c2926 }
+  GRSTNPBV = { t="GRSTNPBV", f="FLAT520", color=0x302e2b }
+  GRSTNPBW = { t="GRSTNPBW", f="FLAT520", color=0x2f2c28 }
+  HORSES1  = { t="HORSES1",  f="FLAT520", color=0x343833 }
+
   LAVA1    = { t="LAVA1",    f="FLAT506" }
   LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" }
-  LOOSERCK = { t="LOOSERCK", f="FLOOR04" }
-  METL1    = { t="METL1",    f="FLOOR29" }
-  METL2    = { t="METL2",    f="FLOOR28" }
-  MOSAIC1  = { t="MOSAIC1",  f="FLAT502" }
-  MOSAIC2  = { t="MOSAIC2",  f="FLAT502" }
-  MOSAIC3  = { t="MOSAIC3",  f="FLAT502" }
-  MOSAIC4  = { t="MOSAIC4",  f="FLAT502" }
-  MOSAIC5  = { t="MOSAIC5",  f="FLAT502" }
-  MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05" }
-  ORNGRAY  = { t="ORNGRAY",  f="FLAT504" }
+
+  LOOSERCK = { t="LOOSERCK", f="FLOOR04", color=0x2b2b29 }
+  METL1    = { t="METL1",    f="FLOOR29", color=0x171717 }
+  METL2    = { t="METL2",    f="FLOOR28", color=0x191919 }
+  MOSAIC1  = { t="MOSAIC1",  f="FLAT502", color=0x3a5dc9 }
+  MOSAIC2  = { t="MOSAIC2",  f="FLAT502", color=0x4062c1 }
+  MOSAIC3  = { t="MOSAIC3",  f="FLAT502", color=0x3c63c0 }
+  MOSAIC4  = { t="MOSAIC4",  f="FLAT502", color=0x3c5ec6 }
+  MOSAIC5  = { t="MOSAIC5",  f="FLAT502", color=0x3e60c4 }
+  MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05", color=0x2c3a29 }
+  ORNGRAY  = { t="ORNGRAY",  f="FLAT504", color=0x3e3e3e }
 
   RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" }
   REDWALL  = { t="REDWALL",  f="FLOOR09" }
@@ -244,6 +255,7 @@ HERETIC.MATERIALS =
   SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" }
   SPINE1   = { t="SPINE1",   f="FLOOR25" }
   SPINE2   = { t="SPINE2",   f="FLOOR25" }
+
   SQPEB1   = { t="SQPEB1",   f="FLAT504" }
   SQPEB2   = { t="SQPEB2",   f="FLOOR27" }
   STNGLS1  = { t="STNGLS1",  f="FLOOR30" }
@@ -261,7 +273,7 @@ HERETIC.MATERIALS =
   SW1OFF   = { t="SW1OFF",   f="FLOOR28" }
   SW1ON    = { t="SW1ON",    f="FLOOR28" }
 
-  -- flats --
+  -- floors --
 
   FLAT500  = { t="SQPEB1",   f="FLAT500"  }
   FLAT502  = { t="BLUEFRAG", f="FLAT502"  }
@@ -272,6 +284,7 @@ HERETIC.MATERIALS =
   FLAT508  = { t="DOORWOOD", f="FLAT508"  }
   FLAT509  = { t="LOOSERCK", f="FLAT509"  }
   FLAT510  = { t="BRWNRCKS", f="FLAT510"  }
+
   FLAT512  = { t="GRNBLOK1", f="FLAT512"  }
   FLAT513  = { t="GRNBLOK1", f="FLAT513"  }
   FLAT516  = { t="LOOSERCK", f="FLAT516"  }
@@ -280,7 +293,6 @@ HERETIC.MATERIALS =
   FLAT521  = { t="SQPEB1",   f="FLAT521"  }
   FLAT522  = { t="SNDCHNKS", f="FLAT522"  }
   FLAT523  = { t="GRSTNPB",  f="FLAT523"  }
-  FLATHUH1 = { t="LAVAFL1",  f="FLATHUH1" }
 
   FLOOR00  = { t="TRISTON1", f="FLOOR00"  }
   FLOOR01  = { t="LOOSERCK", f="FLOOR01"  }
@@ -298,6 +310,7 @@ HERETIC.MATERIALS =
   FLOOR17  = { t="BRWNRCKS", f="FLOOR17"  }
   FLOOR18  = { t="GRNBLOK1", f="FLOOR18"  }
   FLOOR19  = { t="GRNBLOK1", f="FLOOR19"  }
+
   FLOOR20  = { t="SQPEB2",   f="FLOOR20"  }
   FLOOR21  = { t="CHAINSD",  f="FLOOR21"  }
   FLOOR22  = { t="CHAINSD",  f="FLOOR22"  }
@@ -328,11 +341,12 @@ HERETIC.MATERIALS =
 
   -- liquids / animated --
 
-  FLTFLWW1 = { t="WATRWAL1", f="FLTFLWW1" }
-  FLTLAVA1 = { t="LAVA1",    f="FLTLAVA1" }
-  FLTSLUD1 = { t="LAVA1",    f="FLTSLUD1" }
-  FLTTELE1 = { t="CHAINSD",  f="FLTTELE1" }
-  FLTWAWA1 = { t="WATRWAL1", f="FLTWAWA1" }
+  FLATHUH1 = { f="FLATHUH1", t="LAVAFL1"  }
+  FLTFLWW1 = { f="FLTFLWW1", t="WATRWAL1" }
+  FLTLAVA1 = { f="FLTLAVA1", t="LAVA1"    }
+  FLTSLUD1 = { f="FLTSLUD1", t="LAVA1"    }
+  FLTTELE1 = { f="FLTTELE1", t="CHAINSD"  }
+  FLTWAWA1 = { f="FLTWAWA1", t="WATRWAL1" }
 
   -- other --
 
@@ -342,67 +356,76 @@ HERETIC.MATERIALS =
 }
 
 
+HERETIC.LIQUIDS =
+{
+  water  = { mat="FLTFLWW1", color=0x282fcc, light=0.65, special=0 }
+  water2 = { mat="FLTWAWA1", color=0x282fcc, light=0.65, special=0 }
+  sludge = { mat="FLTSLUD1", color=0x3e453d, light=0.65, special=16, damage=20 }
+  lava   = { mat="FLATHUH1", color=0x851b00, light=0.75, special=16, damage=20 }
+  magma  = { mat="FLTLAVA1", color=0x442b2b, light=0.65, special=16, damage=20 }
+}
+
+
 --[[ FIXME: incorporate these color values
-BANNER1 , color=0x3a2b3c
-BANNER2 , color=0x3c213b
-BANNER3 , color=0x4f2318
-BANNER4 , color=0x222039
-BANNER5 , color=0x662c0f
-BANNER6 , color=0x392831
-BANNER7 , color=0x3d2d3e
-BANNER8 , color=0x3f243e
-BLUEFRAG , color=0x00043b
-BRWNRCKS , color=0x40200f
-CELTIC , color=0x694429
-CHAINMAN , color=0x39332e
-CHAINSD , color=0x313131
-CSTLMOSS , color=0x2e302d
-CSTLRCK , color=0x313131
-CTYSTCI1 , color=0x3f3527
-CTYSTCI2 , color=0x40372a
-CTYSTCI4 , color=0x41392f
-CTYSTUC1 , color=0x322b25
-CTYSTUC2 , color=0x37322d
-CTYSTUC3 , color=0x312a24
-CTYSTUC4 , color=0x393530
-CTYSTUC5 , color=0x302823
-DMNMSK , color=0x5c5d5c
-DOOREXIT , color=0x3a3b43
-DOORSTON , color=0x2b2b29
-DOORWOOD , color=0x302119
-DRIPWALL , color=0x664c2a
+BANNER1 
+BANNER2 
+BANNER3 
+BANNER4 
+BANNER5 
+BANNER6 
+BANNER7 
+BANNER8 
+BLUEFRAG 
+BRWNRCKS 
+CELTIC 
+CHAINMAN 
+CSTLMOSS 
+CSTLRCK  
+CTYSTCI1 
+CTYSTCI2 
+CTYSTCI4 
+CTYSTUC1 
+CTYSTUC2 
+CTYSTUC3 
+CTYSTUC4 
+CTYSTUC5 
+DMNMSK   
+DOOREXIT 
+DOORSTON 
+DOORWOOD 
+DRIPWALL 
 GATMETL , color=0x444444
 GATMETL2 , color=0x373932
 GATMETL3 , color=0x403931
 GATMETL4 , color=0x403a31
 GATMETL5 , color=0x3c3931
-GRNBLOK1 , color=0x2c392b
-GRNBLOK2 , color=0x2a372a
-GRNBLOK3 , color=0x2c392b
-GRNBLOK4 , color=0x2b3729
-GRSKULL1 , color=0x62605e
-GRSKULL2 , color=0x686765
-GRSKULL3 , color=0x716f6e
-GRSTNPB , color=0x2c2926
-GRSTNPBV , color=0x302e2b
-GRSTNPBW , color=0x2f2c28
-HORSES1 , color=0x343833
+GRNBLOK1 
+GRNBLOK2 
+GRNBLOK3 
+GRNBLOK4 
+GRSKULL1 
+GRSKULL2 
+GRSKULL3 
+GRSTNPB  
+GRSTNPBV 
+GRSTNPBW 
+HORSES1 
 LAVA1 , color=0x30261f
 LAVAFL1 , color=0xd24100
 LAVAFL2 , color=0xd24100
 LAVAFL3 , color=0xd24100
-LOOSERCK , color=0x2b2b29
-METL1 , color=0x171717
-METL2 , color=0x191919
-MOSAIC1 , color=0x3a5dc9
-MOSAIC2 , color=0x4062c1
-MOSAIC3 , color=0x3c63c0
-MOSAIC4 , color=0x3c5ec6
-MOSAIC5 , color=0x3e60c4
-MOSSRCK1 , color=0x2c3a29
+LOOSERCK 
+METL1 
+METL2 
+MOSAIC1 
+MOSAIC2 
+MOSAIC3 
+MOSAIC4 
+MOSAIC5 
+MOSSRCK1 
 OLDSKY2 , color=0x555655
 OLDSKY3 , color=0x555655
-ORNGRAY , color=0x3e3e3e
+ORNGRAY 
 RCKSNMUD , color=0x49321a
 REDWALL , color=0x5f0000
 ROOTWALL , color=0x4b311f
@@ -462,7 +485,7 @@ FLAT522 , color=0x7c4b28
 FLAT523 , color=0x262626
 FLATHUH1 , color=0x881a00
 FLATHUH2 , color=0x811e00
-FLATHUH3 , color=0x871b00
+FLATHUH3 
 FLATHUH4 , color=0x811e00
 FLOOR00 , color=0x303030
 FLOOR01 , color=0x1b110b
@@ -491,16 +514,16 @@ FLOOR27 , color=0x644623
 FLOOR28 , color=0x191919
 FLOOR29 , color=0x171717
 FLOOR30 , color=0x181818
-FLTFLWW1 , color=0x282fcc
+FLTFLWW1 
 FLTFLWW2 , color=0x282fcb
 FLTFLWW3 , color=0x282fcb
 FLTLAVA1 , color=0x3b2b2b
-FLTLAVA2 , color=0x442b2b
+FLTLAVA2 
 FLTLAVA3 , color=0x492b2b
 FLTLAVA4 , color=0x442b2b
 FLTSLUD1 , color=0x3d453c
 FLTSLUD2 , color=0x3e463d
-FLTSLUD3 , color=0x3e453d
+FLTSLUD3 
 FLTTELE1 , color=0x592423
 FLTTELE2 , color=0x5b2120
 FLTTELE3 , color=0x5c1f1e
@@ -1368,14 +1391,6 @@ HERETIC.OVERHANGS =
 }
 
 ---- MISC STUFF ------------
-
-HERETIC.LIQUIDS =
-{
-  water  = { mat="FLTFLWW1", light=0.65, sec_kind=16 }
-  lava   = { mat="FLATHUH1", light=0.75, sec_kind=16 }
-  magma  = { mat="FLTLAVA1", light=0.65, sec_kind=16 }
-  sludge = { mat="FLTSLUD1", light=0.65, sec_kind=16 }
-}
 
 HERETIC.SWITCHES =
 {
