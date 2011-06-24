@@ -26,6 +26,7 @@
 #include "lib_file.h"
 #include "lib_util.h"
 #include "lib_pak.h"
+#include "lib_wad.h"
 #include "main.h"
 
 #include "q_common.h"
