@@ -230,9 +230,6 @@ HERETIC.MATERIALS =
   GRSTNPBW = { t="GRSTNPBW", f="FLAT520", color=0x2f2c28 }
   HORSES1  = { t="HORSES1",  f="FLAT520", color=0x343833 }
 
-  LAVA1    = { t="LAVA1",    f="FLAT506" }
-  LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" }
-
   LOOSERCK = { t="LOOSERCK", f="FLOOR04", color=0x2b2b29 }
   METL1    = { t="METL1",    f="FLOOR29", color=0x171717 }
   METL2    = { t="METL2",    f="FLOOR28", color=0x191919 }
@@ -242,31 +239,32 @@ HERETIC.MATERIALS =
   MOSAIC4  = { t="MOSAIC4",  f="FLAT502", color=0x3c5ec6 }
   MOSAIC5  = { t="MOSAIC5",  f="FLAT502", color=0x3e60c4 }
   MOSSRCK1 = { t="MOSSRCK1", f="FLOOR05", color=0x2c3a29 }
+
   ORNGRAY  = { t="ORNGRAY",  f="FLAT504", color=0x3e3e3e }
+  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01", color=0x49321a }
+  REDWALL  = { t="REDWALL",  f="FLOOR09", color=0x5f0000 }
+  ROOTWALL = { t="ROOTWALL", f="FLAT506", color=0x4b311f }
 
-  RCKSNMUD = { t="RCKSNMUD", f="FLOOR01" }
-  REDWALL  = { t="REDWALL",  f="FLOOR09" }
-  ROOTWALL = { t="ROOTWALL", f="FLAT506" }
-  SAINT1   = { t="SAINT1",   f="FLAT523" }
-  SANDSQ2  = { t="SANDSQ2",  f="FLOOR06" }
-  SKULLSB1 = { t="SKULLSB1", f="FLOOR30" }
-  SNDBLCKS = { t="SNDBLCKS", f="FLOOR06" }
-  SNDCHNKS = { t="SNDCHNKS", f="FLAT522" }
-  SNDPLAIN = { t="SNDPLAIN", f="FLOOR25" }
-  SPINE1   = { t="SPINE1",   f="FLOOR25" }
-  SPINE2   = { t="SPINE2",   f="FLOOR25" }
+  SAINT1   = { t="SAINT1",   f="FLAT523", color=0x2a2a2a }
+  SANDSQ2  = { t="SANDSQ2",  f="FLOOR06", color=0x6f4f2a }
+  SKULLSB1 = { t="SKULLSB1", f="FLOOR30", color=0x202020 }
+  SNDBLCKS = { t="SNDBLCKS", f="FLOOR06", color=0x4e3515 }
+  SNDCHNKS = { t="SNDCHNKS", f="FLAT522", color=0x6b3c1e }
+  SNDPLAIN = { t="SNDPLAIN", f="FLOOR25", color=0x4b3114 }
+  SPINE1   = { t="SPINE1",   f="FLOOR25", color=0x4b3214 }
+  SPINE2   = { t="SPINE2",   f="FLOOR25", color=0x513616 }
 
-  SQPEB1   = { t="SQPEB1",   f="FLAT504" }
-  SQPEB2   = { t="SQPEB2",   f="FLOOR27" }
-  STNGLS1  = { t="STNGLS1",  f="FLOOR30" }
-  STNGLS2  = { t="STNGLS2",  f="FLOOR30" }
-  STNGLS3  = { t="STNGLS3",  f="FLOOR30" }
-  TMBSTON1 = { t="TMBSTON1", f="FLAT521" }
-  TMBSTON2 = { t="TMBSTON2", f="FLAT521" }
-  TRISTON1 = { t="TRISTON1", f="FLOOR00" }
-  TRISTON2 = { t="TRISTON2", f="FLOOR17" }
-  WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" }
-  WOODWL   = { t="WOODWL",   f="FLOOR10" }
+  SQPEB1   = { t="SQPEB1",   f="FLAT504", color=0x474846 }
+  SQPEB2   = { t="SQPEB2",   f="FLOOR27", color=0x4a2610 }
+  STNGLS1  = { t="STNGLS1",  f="FLOOR30", color=0x4b2745 }
+  STNGLS2  = { t="STNGLS2",  f="FLOOR30", color=0x3c1d3f }
+  STNGLS3  = { t="STNGLS3",  f="FLOOR30", color=0x31202d }
+
+  TMBSTON1 = { t="TMBSTON1", f="FLAT521", color=0x40413f }
+  TMBSTON2 = { t="TMBSTON2", f="FLAT521", color=0x3d3f3d }
+  TRISTON1 = { t="TRISTON1", f="FLOOR00", color=0x343434 }
+  TRISTON2 = { t="TRISTON2", f="FLOOR17", color=0x4f2b15 }
+  WOODWL   = { t="WOODWL",   f="FLOOR10", color=0x42210f }
 
   -- switches --
 
@@ -275,53 +273,53 @@ HERETIC.MATERIALS =
 
   -- floors --
 
-  FLAT500  = { t="SQPEB1",   f="FLAT500"  }
-  FLAT502  = { t="BLUEFRAG", f="FLAT502"  }
-  FLAT503  = { t="SQPEB1",   f="FLAT503"  }
-  FLAT504  = { t="SQPEB1",   f="FLAT504"  }
-  FLAT506  = { t="ROOTWALL", f="FLAT506"  }
-  FLAT507  = { t="DOORWOOD", f="FLAT507"  }
-  FLAT508  = { t="DOORWOOD", f="FLAT508"  }
-  FLAT509  = { t="LOOSERCK", f="FLAT509"  }
-  FLAT510  = { t="BRWNRCKS", f="FLAT510"  }
+  FLAT500  = { f="FLAT500", t="SQPEB1",   color=0x574f49 }
+  FLAT502  = { f="FLAT502", t="BLUEFRAG", color=0x030793 }
+  FLAT503  = { f="FLAT503", t="SQPEB1",   color=0x4b4b4a }
+  FLAT504  = { f="FLAT504", t="SQPEB1",   color=0x555754 }
+  FLAT506  = { f="FLAT506", t="ROOTWALL", color=0x3d2b1f }
+  FLAT507  = { f="FLAT507", t="DOORWOOD", color=0x292524 }
+  FLAT508  = { f="FLAT508", t="DOORWOOD", color=0x3a2215 }
+  FLAT509  = { f="FLAT509", t="LOOSERCK", color=0x494949 }
+  FLAT510  = { f="FLAT510", t="BRWNRCKS", color=0x4b2c0b }
 
-  FLAT512  = { t="GRNBLOK1", f="FLAT512"  }
-  FLAT513  = { t="GRNBLOK1", f="FLAT513"  }
-  FLAT516  = { t="LOOSERCK", f="FLAT516"  }
-  FLAT517  = { t="BLUEFRAG", f="FLAT517"  }
-  FLAT520  = { t="CSTLRCK",  f="FLAT520"  }
-  FLAT521  = { t="SQPEB1",   f="FLAT521"  }
-  FLAT522  = { t="SNDCHNKS", f="FLAT522"  }
-  FLAT523  = { t="GRSTNPB",  f="FLAT523"  }
+  FLAT512  = { f="FLAT512", t="GRNBLOK1", color=0x1c241b }
+  FLAT513  = { f="FLAT513", t="GRNBLOK1", color=0x2d362c }
+  FLAT516  = { f="FLAT516", t="LOOSERCK", color=0x2f2419 }
+  FLAT517  = { f="FLAT517", t="BLUEFRAG", color=0x1f25c4 }
+  FLAT520  = { f="FLAT520", t="CSTLRCK",  color=0x373837 }
+  FLAT521  = { f="FLAT521", t="SQPEB1",   color=0x505050 }
+  FLAT522  = { f="FLAT522", t="SNDCHNKS", color=0x7c4b28 }
+  FLAT523  = { f="FLAT523", t="GRSTNPB",  color=0x262626 }
 
-  FLOOR00  = { t="TRISTON1", f="FLOOR00"  }
-  FLOOR01  = { t="LOOSERCK", f="FLOOR01"  }
-  FLOOR03  = { t="CSTLRCK",  f="FLOOR03"  }
-  FLOOR04  = { t="CSTLRCK",  f="FLOOR04"  }
-  FLOOR05  = { t="MOSSROCK", f="FLOOR05"  }
-  FLOOR06  = { t="SANDSQ2",  f="FLOOR06"  }
-  FLOOR07  = { t="MOSAIC1",  f="FLOOR07"  }
-  FLOOR08  = { t="CHAINSD",  f="FLOOR08"  }
-  FLOOR09  = { t="REDWALL",  f="FLOOR09"  }
-  FLOOR10  = { t="WOODWL",   f="FLOOR10"  }
-  FLOOR11  = { t="WOODWL",   f="FLOOR11"  }
-  FLOOR12  = { t="WOODWL",   f="FLOOR12"  }
-  FLOOR16  = { t="BLUEFRAG", f="FLOOR16"  }
-  FLOOR17  = { t="BRWNRCKS", f="FLOOR17"  }
-  FLOOR18  = { t="GRNBLOK1", f="FLOOR18"  }
-  FLOOR19  = { t="GRNBLOK1", f="FLOOR19"  }
+  FLOOR00  = { f="FLOOR00", t="TRISTON1", color=0x303030 }
+  FLOOR01  = { f="FLOOR01", t="LOOSERCK", color=0x1b110b }
+  FLOOR03  = { f="FLOOR03", t="CSTLRCK",  color=0x343434 }
+  FLOOR04  = { f="FLOOR04", t="CSTLRCK",  color=0x393a39 }
+  FLOOR05  = { f="FLOOR05", t="MOSSROCK", color=0x283e23 }
+  FLOOR06  = { f="FLOOR06", t="SANDSQ2",  color=0x956139 }
+  FLOOR07  = { f="FLOOR07", t="MOSAIC1",  color=0x676679 }
+  FLOOR08  = { f="FLOOR08", t="CHAINSD",  color=0x2f2d2b }
+  FLOOR09  = { f="FLOOR09", t="REDWALL",  color=0x6d0000 }
+  FLOOR10  = { f="FLOOR10", t="WOODWL",   color=0x442b0e }
+  FLOOR11  = { f="FLOOR11", t="WOODWL",   color=0x3c3428 }
+  FLOOR12  = { f="FLOOR12", t="WOODWL",   color=0x372f26 }
+  FLOOR16  = { f="FLOOR16", t="BLUEFRAG", color=0x00043b }
+  FLOOR17  = { f="FLOOR17", t="BRWNRCKS", color=0x3e200e }
+  FLOOR18  = { f="FLOOR18", t="GRNBLOK1", color=0x293828 }
+  FLOOR19  = { f="FLOOR19", t="GRNBLOK1", color=0x334531 }
 
-  FLOOR20  = { t="SQPEB2",   f="FLOOR20"  }
-  FLOOR21  = { t="CHAINSD",  f="FLOOR21"  }
-  FLOOR22  = { t="CHAINSD",  f="FLOOR22"  }
-  FLOOR23  = { t="CHAINSD",  f="FLOOR23"  }
-  FLOOR24  = { t="CHAINSD",  f="FLOOR24"  }
-  FLOOR25  = { t="SPINE2",   f="FLOOR25"  }
-  FLOOR26  = { t="CHAINSD",  f="FLOOR26"  }
-  FLOOR27  = { t="SANDSQ2",  f="FLOOR27"  }
-  FLOOR28  = { t="METL2",    f="FLOOR28"  }
-  FLOOR29  = { t="METL1",    f="FLOOR29"  }
-  FLOOR30  = { t="METL1",    f="FLOOR30"  }
+  FLOOR20  = { f="FLOOR20", t="SQPEB2",   color=0x4a2a17 }
+  FLOOR21  = { f="FLOOR21", t="CHAINSD",  color=0x33343e }
+  FLOOR22  = { f="FLOOR22", t="CHAINSD",  color=0x33343e }
+  FLOOR23  = { f="FLOOR23", t="CHAINSD",  color=0x33343e }
+  FLOOR24  = { f="FLOOR24", t="CHAINSD",  color=0x33343e }
+  FLOOR25  = { f="FLOOR25", t="SPINE2",   color=0x513616 }
+  FLOOR26  = { f="FLOOR26", t="CHAINSD",  color=0x282a44 }
+  FLOOR27  = { f="FLOOR27", t="SANDSQ2",  color=0x644623 }
+  FLOOR28  = { f="FLOOR28", t="METL2",    color=0x191919 }
+  FLOOR29  = { f="FLOOR29", t="METL1",    color=0x171717 }
+  FLOOR30  = { f="FLOOR30", t="METL1",    color=0x181818 }
 
   -- rails --
 
@@ -340,6 +338,11 @@ HERETIC.MATERIALS =
   WEB3_M = { t="WEB3_M", rail_h=32 }
 
   -- liquids / animated --
+
+  -- TODO: simplify this
+  LAVA1    = { t="LAVA1",    f="FLAT506" }
+  LAVAFL1  = { t="LAVAFL1",  f="FLATHUH1" }
+  WATRWAL1 = { t="WATRWAL1", f="FLTFLWW1" }
 
   FLATHUH1 = { f="FLATHUH1", t="LAVAFL1"  }
   FLTFLWW1 = { f="FLTFLWW1", t="WATRWAL1" }
@@ -365,173 +368,6 @@ HERETIC.LIQUIDS =
   magma  = { mat="FLTLAVA1", color=0x442b2b, light=0.65, special=16, damage=20 }
 }
 
-
---[[ FIXME: incorporate these color values
-BANNER1 
-BANNER2 
-BANNER3 
-BANNER4 
-BANNER5 
-BANNER6 
-BANNER7 
-BANNER8 
-BLUEFRAG 
-BRWNRCKS 
-CELTIC 
-CHAINMAN 
-CSTLMOSS 
-CSTLRCK  
-CTYSTCI1 
-CTYSTCI2 
-CTYSTCI4 
-CTYSTUC1 
-CTYSTUC2 
-CTYSTUC3 
-CTYSTUC4 
-CTYSTUC5 
-DMNMSK   
-DOOREXIT 
-DOORSTON 
-DOORWOOD 
-DRIPWALL 
-GATMETL , color=0x444444
-GATMETL2 , color=0x373932
-GATMETL3 , color=0x403931
-GATMETL4 , color=0x403a31
-GATMETL5 , color=0x3c3931
-GRNBLOK1 
-GRNBLOK2 
-GRNBLOK3 
-GRNBLOK4 
-GRSKULL1 
-GRSKULL2 
-GRSKULL3 
-GRSTNPB  
-GRSTNPBV 
-GRSTNPBW 
-HORSES1 
-LAVA1 , color=0x30261f
-LAVAFL1 , color=0xd24100
-LAVAFL2 , color=0xd24100
-LAVAFL3 , color=0xd24100
-LOOSERCK 
-METL1 
-METL2 
-MOSAIC1 
-MOSAIC2 
-MOSAIC3 
-MOSAIC4 
-MOSAIC5 
-MOSSRCK1 
-OLDSKY2 , color=0x555655
-OLDSKY3 , color=0x555655
-ORNGRAY 
-RCKSNMUD , color=0x49321a
-REDWALL , color=0x5f0000
-ROOTWALL , color=0x4b311f
-SAINT1 , color=0x2a2a2a
-SANDSQ2 , color=0x6f4f2a
-SKULLSB1 , color=0x202020
-SKULLSB2 , color=0x282625
-SKY1 , color=0x555655
-SKY2 , color=0x650404
-SKY3 , color=0x05087a
-SKY5 , color=0x555655
-SNDBLCKS , color=0x4e3515
-SNDCHNKS , color=0x6b3c1e
-SNDPLAIN , color=0x4b3114
-SPINE1 , color=0x4b3214
-SPINE2 , color=0x513616
-SQPEB1 , color=0x474846
-SQPEB2 , color=0x4a2610
-STNGLS1 , color=0x4b2745
-STNGLS2 , color=0x3c1d3f
-STNGLS3 , color=0x31202d
-SW1OFF , color=0x1b1b1b
-SW1ON , color=0x1c1c1c
-SW2OFF , color=0x1c1c1d
-SW2ON , color=0x1c1c1d
-TMBSTON1 , color=0x40413f
-TMBSTON2 , color=0x3d3f3d
-TRISTON1 , color=0x343434
-TRISTON2 , color=0x4f2b15
-WATRWAL1 , color=0x282fcc
-WATRWAL2 , color=0x282fcb
-WATRWAL3 , color=0x282fcb
-WDGAT64 , color=0x402b13
-WEB1_B , color=0x4f4f4f
-WEB1_F , color=0x4f4f4f
-WEB2_B , color=0x515151
-WEB2_F , color=0x515151
-WEB3_M , color=0x565656
-WOODWL , color=0x42210f
-
-FLAT500 , color=0x574f49
-FLAT502 , color=0x030793
-FLAT503 , color=0x4b4b4a
-FLAT504 , color=0x555754
-FLAT506 , color=0x3d2b1f
-FLAT507 , color=0x292524
-FLAT508 , color=0x3a2215
-FLAT509 , color=0x494949
-FLAT510 , color=0x4b2c0b
-FLAT512 , color=0x1c241b
-FLAT513 , color=0x2d362c
-FLAT516 , color=0x2f2419
-FLAT517 , color=0x1f25c4
-FLAT520 , color=0x373837
-FLAT521 , color=0x505050
-FLAT522 , color=0x7c4b28
-FLAT523 , color=0x262626
-FLATHUH1 , color=0x881a00
-FLATHUH2 , color=0x811e00
-FLATHUH3 
-FLATHUH4 , color=0x811e00
-FLOOR00 , color=0x303030
-FLOOR01 , color=0x1b110b
-FLOOR03 , color=0x343434
-FLOOR04 , color=0x393a39
-FLOOR05 , color=0x283e23
-FLOOR06 , color=0x956139
-FLOOR07 , color=0x676679
-FLOOR08 , color=0x2f2d2b
-FLOOR09 , color=0x6d0000
-FLOOR10 , color=0x442b0e
-FLOOR11 , color=0x3c3428
-FLOOR12 , color=0x372f26
-FLOOR16 , color=0x00043b
-FLOOR17 , color=0x3e200e
-FLOOR18 , color=0x293828
-FLOOR19 , color=0x334531
-FLOOR20 , color=0x4a2a17
-FLOOR21 , color=0x33343e
-FLOOR22 , color=0x33343e
-FLOOR23 , color=0x33343e
-FLOOR24 , color=0x33343e
-FLOOR25 , color=0x513616
-FLOOR26 , color=0x282a44
-FLOOR27 , color=0x644623
-FLOOR28 , color=0x191919
-FLOOR29 , color=0x171717
-FLOOR30 , color=0x181818
-FLTFLWW1 
-FLTFLWW2 , color=0x282fcb
-FLTFLWW3 , color=0x282fcb
-FLTLAVA1 , color=0x3b2b2b
-FLTLAVA2 
-FLTLAVA3 , color=0x492b2b
-FLTLAVA4 , color=0x442b2b
-FLTSLUD1 , color=0x3d453c
-FLTSLUD2 , color=0x3e463d
-FLTSLUD3 
-FLTTELE1 , color=0x592423
-FLTTELE2 , color=0x5b2120
-FLTTELE3 , color=0x5c1f1e
-FLTTELE4 , color=0x5b2120
-FLTWAWA1 , color=0x04087e
-FLTWAWA2 , color=0x04087f
-FLTWAWA3 , color=0x050883
---]]
 
 
 HERETIC.STEPS =  -- OLD STUFF
