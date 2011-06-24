@@ -203,7 +203,7 @@ DOOM.PARAMETERS =
   raising_start = true
   light_brushes = true
 
-  custom_flats = true
+  jump_height = 24
 
   -- this is roughly how many characters can fit on the
   -- intermission screens (the CWILVxx patches).  It does not

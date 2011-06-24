@@ -158,7 +158,7 @@ HERETIC.PARAMETERS =
   prefer_stairs = true
   light_brushes = true
 
-  custom_flats = true
+  jump_height = 24
 
   max_name_length = 28
 

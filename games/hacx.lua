@@ -96,6 +96,8 @@ HACX.PARAMETERS =
   teleporters = true
   light_brushes = true
 
+  jump_height = 24
+
   max_name_length = 28
 
   skip_monsters = { 10,30 }

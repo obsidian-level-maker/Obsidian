@@ -253,6 +253,8 @@ HEXEN.PARAMETERS =
   three_part_weapons = true
   ACS_script = true
 
+  jump_height = 66
+
   max_name_length = 28
 
   skip_monsters = { 20,30 }

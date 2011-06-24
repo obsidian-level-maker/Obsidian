@@ -289,7 +289,7 @@ CHEX.PARAMETERS =
   light_brushes = true
   infighting = true
 
-  custom_flats = true
+  jump_height = 24
 
   max_name_length = 28
 

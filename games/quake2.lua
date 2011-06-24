@@ -142,6 +142,8 @@ QUAKE2.PARAMETERS =
   bridges = true
   extra_floors = true
 
+  jump_height = 58
+
   -- the name buffer in Quake II is huge, but this value
   -- reflects the on-screen space (in the computer panel)
   max_name_length = 24
@@ -1492,14 +1494,14 @@ QUAKE2.SKINS =
   {
     _prefab = "STAIR_6"
     _where  = "chunk"
-    _deltas = { 32,48,48,64,64,80 }
+    _deltas = { 32,48,64,64,80 }
   }
 
   Stair_Down1 =
   {
     _prefab = "NICHE_STAIR_8"
     _where  = "chunk"
-    _deltas = { -32,-48,-64,-64,-80,-96 }
+    _deltas = { -32,-48,-64,-80,-96 }
   }
 
 

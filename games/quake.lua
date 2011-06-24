@@ -140,6 +140,8 @@ QUAKE1.PARAMETERS =
   bridges = true
   extra_floors = true
 
+  jump_height = 42
+
   -- the name buffer in Quake can fit 39 characters, however
   -- the on-screen space for the name is much less.
   max_name_length = 20

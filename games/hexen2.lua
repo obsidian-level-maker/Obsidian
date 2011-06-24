@@ -107,6 +107,9 @@ HEXEN2.PARAMETERS =
   bridges = true
   extra_floors = true
 
+  -- FIXME: check this
+  jump_height = 42
+
   max_name_length = 20
 
   skip_monsters = { 10,30 }
