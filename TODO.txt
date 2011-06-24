@@ -5,12 +5,14 @@ OBLIGE TODO
 Current Work
 ------------
 
+move WAD2 code --> lib_wad.c
+
+
 >>>>>  SECTIONS rework
 
 >>>  Stairs: fix ability to go from A2 --> A1
+     (in other words: ability for stair chunk to be in unset floor)
 
-
-+  _deltas for each stairs in each game
 
 +  step_height : required parameter for each game
 -  jump_height : optional parameter (not present --> cannot jump)
@@ -104,25 +106,45 @@ OTHER STUFF
 
 
 
-Release Goals
--------------
+Goals for next WIP
+==================
+
+FOCUS WILL BE: room connection logic
+
++  decent hallways
+
++  cycles
+
++  intrusions
+
+-  crossovers
 
 +  liquid areas
 
-+  teleporters
+-  system for texture coordinates
+
+
+
+Release Goals
+=============
 
 +  working pictures
 
 +  caves working again
 
++  better ceilings, some ceiling lights
 
--  better exits
+
+-  windows
 
 -  normal doors
 
 -  cages
 
+
+?  better exits
+
 ?  diagonal corners
 
--  some ceiling lights
+?  teleporters
 
