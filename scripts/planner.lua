@@ -28,9 +28,11 @@ class SECTION
 
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
-  kind : keyword   -- "section", "section2", "annex"
+  kind : keyword   -- "section", "section2", "annex", "intrusion"
                    -- "junction", "big_junc", "vert", "horiz"
-                   -- "conn"
+                   -- "intrusion"
+
+  used : boolean
 
   room : ROOM
   hall : HALL
@@ -68,8 +70,19 @@ function SECTION_CLASS.tostr(K)
 end
 
 
-function SECTION_CLASS.in_use(K)
-  return K.room or K.hall or K.conn
+function SECTION_CLASS.set_room(K, R)
+  assert(not K.used)
+  K.room = R ; K.used = true
+end
+
+function SECTION_CLASS.set_hall(K, H)
+  assert(not K.used)
+  K.hall = H ; K.used = true
+end
+
+function SECTION_CLASS.set_junc(K)
+  assert(not K.used)
+  K.kind = "big_junc" ; K.used = true
 end
 
 
@@ -401,22 +414,11 @@ function Plan_create_sections()
 end
 
 
-function Map_part_in_use(mx, my)
-  if SECTIONS[mx*2][my*2].room then
-    return true
-  elseif SECTIONS[mx*2][my*2].kind == "big_junc" then
-    return true
-  end
-
-  return false
-end
-
-
 function Plan_count_free_sections()
   local count = 0
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not Map_part_in_use(mx, my) then
+    if not SECTIONS[mx*2][my*2].used then
       count = count + 1
     end
   end end
@@ -429,7 +431,7 @@ function Plan_get_visit_list()
   local visits = {}
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not Map_part_in_use(mx, my) then
+    if not SECTIONS[mx*2][my*2].used then
       table.insert(visits, { mx=mx, my=my })
     end
   end end
@@ -448,7 +450,7 @@ function Plan_dump_sections(title)
 
     if K.conn then
       local CONN_SYMS = { [2]="v", [8]="^", [4]="<", [6]=">" }
-      return CONN_SYMS[K.conn.dir] or "*"
+      return CONN_SYMS[K.conn.dir] or "?"
     end
 
     if K.hall then return '#' end
@@ -457,8 +459,11 @@ function Plan_dump_sections(title)
     if K.kind == "vert"     then return '|' end
     if K.kind == "horiz"    then return '-' end
 
-    local R = K.room
-    if not R then return '.' end
+    if not K.used then return '.' end
+    if not K.room then return '?' end
+    
+    local R = assert(K.room)
+
     if R.kind == "scenic" then return '%' end
     local n = 1 + ((R.id - 1) % 26)
     if R.natural then
@@ -517,7 +522,7 @@ function Plan_add_big_junctions()
   local function make_big_junc(mx, my)
     local K = SECTIONS[mx*2][my*2]
 
-    K.kind = "big_junc"
+    K:set_junc()
   end
 
 
@@ -550,8 +555,8 @@ end
 function Plan_add_small_rooms()
 
   local function can_make_double(K, mx, my)
-    local can_x = (mx < MAP_W and not Map_part_in_use(mx+1, my))
-    local can_y = (my < MAP_H and not Map_part_in_use(mx, my+1))
+    local can_x = (mx < MAP_W) and not SECTIONS[(mx+1)*2][my*2].used
+    local can_y = (my < MAP_H) and not SECTIONS[mx*2][(my+1)*2].used
 
     if can_x and can_y then
       -- prefer making the room "squarer"
@@ -573,19 +578,19 @@ function Plan_add_small_rooms()
 
     local R = ROOM_CLASS.new(kind)
 
-    K.room = R
+    K:set_room(R)
 
     -- sometimes become a 2x1 / 1x2 sized room
     local can_xy = can_make_double(K, mx, my)
 
     if can_xy and rand.odds(55) then
       if can_xy == "x" then
-        K = SECTIONS[mx*2 + 2][my*2]
+        K = SECTIONS[(mx+1)*2][my*2]
       else
-        K = SECTIONS[mx*2][my*2 + 2]
+        K = SECTIONS[mx*2][(my+1)*2]
       end
 
-      K.room = R
+      K:set_room(R)
     end
   end
 
@@ -595,7 +600,7 @@ function Plan_add_small_rooms()
   for mx = 1,MAP_W do for my = 1,MAP_H do
     local K = SECTIONS[mx*2][my*2]
 
-    if not Map_part_in_use(mx, my) then
+    if not K.used then
       make_small_room(K, mx, my)
     end
   end end
@@ -678,9 +683,11 @@ function Plan_add_big_rooms()
     end
 
     for mx = mx1,mx2 do for my = my1,my2 do
+      local K = SECTIONS[mx*2][my*2]
+
       if set_R then
-        SECTIONS[mx*2][my*2].room = set_R
-      elseif Map_part_in_use(mx, my) then
+        K:set_room(set_R) 
+      elseif K.used then
         return false -- would overlap a room
       end
     end end
@@ -716,9 +723,11 @@ function Plan_add_big_rooms()
       if mx == MAP_W then touch_right = true end
       if my == MAP_H then touch_top = true end
 
+      local K = SECTIONS[mx*2][my*2]
+
       if set_R then
-        SECTIONS[mx*2][my*2].room = set_R
-      elseif Map_part_in_use(mx, my) then
+        K:set_room(set_R)
+      elseif K.used then
         return false -- would overlap a room
       end
     end -- index
@@ -924,7 +933,7 @@ end
 function Plan_add_natural_rooms()
 
   local function find_free_spot(mx, my)
-    if not Map_part_in_use(mx, my) then
+    if not SECTIONS[mx*2][my*2].used then
       return mx, my
     end
 
@@ -943,7 +952,7 @@ function Plan_add_natural_rooms()
 
       each side in SIDES do
         local nx, ny = geom.nudge(mx, my, side)
-        if Section_is_valid(nx*2, ny*2) and not Map_part_in_use(nx, ny) then
+        if Section_is_valid(nx*2, ny*2) and not SECTIONS[nx*2][ny*2].used then
           return nx, ny
         end
       end
@@ -974,7 +983,9 @@ function Plan_add_natural_rooms()
 
     R.natural = true
 
-    SECTIONS[mx*2][my*2].room = R
+    local K = SECTIONS[mx*2][my*2]
+
+    K:set_room(R)
 
     local AREA =
     {
@@ -997,9 +1008,11 @@ function Plan_add_natural_rooms()
         
         local nx, ny = geom.nudge(A.mx, A.my, dir)
 
-        if Section_is_valid(nx*2, ny*2) and not Map_part_in_use(nx, ny) then
+        if Section_is_valid(nx*2, ny*2) and not SECTIONS[nx*2][ny*2].used then
           -- OK --
-          SECTIONS[nx*2][ny*2].room = area.room
+          local K = SECTIONS[nx*2][ny*2]
+          K:set_room(area.room)
+
           table.insert(area.active, { mx=nx, my=ny })
           return true
         end
@@ -1031,7 +1044,7 @@ function Plan_add_natural_rooms()
         area.room.surrounder = true
       end
 
-      K.room = area.room
+      K:set_room(area.room)
     end end
   end
 
@@ -1182,7 +1195,7 @@ function Plan_contiguous_sections()
     N = SECTIONS[nx][ny]
 
     N.kind = "section2"
-    N.room = K.room
+    N:set_room(K.room)
   end
 
 
@@ -1311,9 +1324,10 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
 
 
   local function assign_section(K, room)
-    K.room = room
-    K.expanded = true
+    K:set_room(room)
+
     K.kind = "annex"
+    K.expanded = true
 
     room:add_section(K)
   end
@@ -1338,17 +1352,18 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
       if N and N.room and not N.expanded and not (N.room.shape == "rect") then
         --- if rand.odds(99) then
         assign_section(K, N.room)      
+        return true
       end
     end
+
+    return false
   end
 
 
   ---| Plan_expand_rooms |---
 
-stderrf("EXPAND ROOMS........................\n")
   local visits = {}
 
-  -- skip sections on the edge [will be best for 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     table.insert(visits, SECTIONS[kx][ky])
   end end
@@ -1356,7 +1371,7 @@ stderrf("EXPAND ROOMS........................\n")
   rand.shuffle(visits)
 
   each K in visits do
-    if not K:in_use() then
+    if not K.used then
       try_reassign_section(K)
     end
   end
@@ -1708,7 +1723,9 @@ function Plan_create_rooms()
   Plan_add_natural_rooms()
   Plan_add_big_rooms()
   Plan_add_big_junctions()
+Plan_dump_sections()
   Plan_add_small_rooms()
+Plan_dump_sections()
 
   Plan_contiguous_sections()
   Plan_collect_sections()

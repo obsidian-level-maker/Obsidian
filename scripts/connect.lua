@@ -395,7 +395,7 @@ function Connect_rooms()
     if not K1 then return false end
 
     local MID = K1:neighbor(dir)
-    if not MID or MID:in_use() then return false end
+    if not MID or MID.used then return false end
 
     local K2 = K1:neighbor(dir, 2)
     if not K2 then return false end

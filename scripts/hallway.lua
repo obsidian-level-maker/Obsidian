@@ -100,8 +100,7 @@ function HALLWAY_CLASS.render_path(H)
     local G = loc.G
 
     -- mark segment as used
-    assert(not G.hall)
-    G.hall = H
+    G:set_hall(H)
 
     -- store hallway in seed map
     for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
