@@ -1055,7 +1055,6 @@ Plan_dump_rooms("Dead Room Map")
 
     visited[R] = true
 
-stderrf("natural_flow --> %s\n", R:tostr())
     table.insert(LEVEL.rooms, R)
 
     each D in R.conns do

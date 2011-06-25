@@ -1244,6 +1244,26 @@ function Plan_expand_rooms()
   end
 
 
+  local function nudge_rooms()
+    local visits = {}
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      local K = SECTIONS[mx*2][my*2]
+      if K.room then
+        table.insert(visits, K)
+      end
+    end end
+
+    for loop = 1,MAP_W do
+      rand.shuffle(visits)
+
+      each K in visits do
+        try_nudge_section(K, rand.dir())
+      end
+    end
+  end
+
+
   local function try_reassign_section__OLD(K)
     if K.room.shape != "odd" then
       return
@@ -1274,29 +1294,54 @@ function Plan_expand_rooms()
   end
 
 
-  ---| Plan_expand_rooms |---
+  local function try_fill_junc(K)
+    local rooms = {}
 
-  local visits = {}
-
-  for mx = 1,MAP_W do for my = 1,MAP_H do
-    local K = SECTIONS[mx*2][my*2]
-    if K.room then
-      table.insert(visits, K)
+    for dir = 2,8,2 do
+      local N = K:neighbor(dir)
+      if N and N.room then rooms[dir] = N.room end
     end
-  end end
 
-  for loop = 1,6 do
-    rand.shuffle(visits)
+    local DIR_LIST = { 4,6 }
+    rand.shuffle(DIR_LIST)
 
-    each K in visits do
-      try_nudge_section(K, rand.dir())
+    each dir in DIR_LIST do
+      local R = rooms[dir]
+
+      if not R then continue end
+      if R.shape != "odd" then continue end
+
+      if rooms[2] == R or rooms[8] == R then
+        assign_section(K, R)
+        return true
+      end
     end
+
+    return false
   end
 
-  -- TODO: fill unused junctions that border a rooms on two sides
+
+  local function fill_junctions()
+    for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+      local K = SECTIONS[kx][ky]
+
+      if not K.used and K.kind == "junction" then
+        try_fill_junc(K)
+      end
+    end end
+  end
+
+
+  ---| Plan_expand_rooms |---
+
+  -- main stuff : expand rooms on sides
+  nudge_rooms()
 
   -- fill in gaps
   Plan_contiguous_sections()
+
+  -- fill unused junctions that border a rooms on two sides
+  fill_junctions()
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
