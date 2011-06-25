@@ -1194,11 +1194,13 @@ function Plan_expand_rooms()
     if not N or N.used then return false end
 
     -- edge of map?
-    -- FIXME: relax this sometimes
-    if N.kx == 1 or N.kx == SECTION_W then return false end
-    if N.ky == 1 or N.ky == SECTION_H then return false end
+    -- NOTE: outdoor rooms have special logic to make sky borders
+    if K.room.outdoor then
+      if N.kx == 1 or N.kx == SECTION_W then return false end
+      if N.ky == 1 or N.ky == SECTION_H then return false end
+    end
 
-    return true -- Ok
+    return true -- OK
   end
 
 
