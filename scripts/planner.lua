@@ -29,7 +29,7 @@ class SECTION
   sx1, sy1, sx2, sy2, sw, sh  -- location in seed map
 
   kind : keyword   -- "section", "section2", "annex"
-                   -- "junction", "vert", "horiz"
+                   -- "junction", "big_junc", "vert", "horiz"
                    -- "conn"
 
   room : ROOM
@@ -408,6 +408,8 @@ Plan_is_section_valid = Section_is_valid
 function Plan_has_section(mx, my)  -- FIXME: RENAME THIS FUNCTION
   if SECTIONS[mx*2][my*2].room then
     return true
+  elseif SECTIONS[mx*2][my*2].kind == "big_junc" then
+    return true
   else
     return false
   end
@@ -455,6 +457,7 @@ function Plan_dump_sections(title)
 
     if K.hall then return '#' end
     if K.kind == "junction" then return '+' end
+    if K.kind == "big_junc" then return '+' end
     if K.kind == "vert"     then return '|' end
     if K.kind == "horiz"    then return '-' end
 
@@ -486,6 +489,68 @@ function Plan_dump_sections(title)
 end
 
 
+
+function Plan_add_big_junctions()
+
+  local function can_make_big_junc(mx, my)
+    local K = SECTIONS[mx][my]
+
+    -- never place in corners
+    if (mx == 1 or mx == MAP_W) and (my == 1 or my == MAP_H) then
+      return false
+    end
+
+    -- less chance at edges
+    if mx == 1 or mx == MAP_W or my == 1 or my == MAP_H then
+      if rand.odds(70) then return false end
+    end
+
+    -- don't want anyone touching our junc!
+    for side = 2,8,2 do
+      local nx, ny = geom.nudge(mx, my, side)
+      if Section_is_valid(nx*2, ny*2) then
+        local N = SECTIONS[nx*2][ny*2]
+        if N and N.kind == "big_junc" then return false end
+      end
+    end
+
+    return true
+  end
+
+
+  local function make_big_junc(mx, my)
+    local K = SECTIONS[mx*2][my*2]
+
+    K.kind = "big_junc"
+  end
+
+
+  local function try_add_big_junc()
+    local visits = Plan_get_visit_list()
+
+    each V in visits do
+      if can_make_big_junc(V.mx, V.my) then
+        make_big_junc(V.mx, V.my)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  ---| Plan_add_big_junctions |---
+
+  -- decide how many big hallway junctions to make
+
+  local quota = 2 -- FIXME
+
+  for i = 1,quota do
+    try_add_big_junc()
+  end
+end
+
+
 function Plan_add_small_rooms()
 
   local function can_make_double(K, mx, my)
@@ -507,13 +572,7 @@ function Plan_add_small_rooms()
   end
 
 
-  ---| Plan_add_small_rooms |---
-
-  for mx = 1,MAP_W do for my = 1,MAP_H do
-    local K = SECTIONS[mx*2][my*2]
-
-    if K.room then continue; end
-
+  local function make_small_room(K, mx, my)
     local R = ROOM_CLASS.new("rect")
 
     K.room = R
@@ -528,9 +587,18 @@ function Plan_add_small_rooms()
         K = SECTIONS[mx*2][my*2 + 2]
       end
 
-      assert(not K.room)
-
       K.room = R
+    end
+  end
+
+
+  ---| Plan_add_small_rooms |---
+
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    local K = SECTIONS[mx*2][my*2]
+
+    if not Plan_has_section(mx, my) then
+      make_small_room(K, mx, my)
     end
   end end
 end
@@ -1245,7 +1313,6 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
 
 
   local function assign_section(K, room)
-stderrf("  assigned %s to %s\n", K:tostr(), room:tostr())
     K.room = room
     K.expanded = true
     K.kind = "annex"
@@ -1642,6 +1709,7 @@ function Plan_create_rooms()
   Plan_add_special_rooms()
   Plan_add_natural_rooms()
   Plan_add_big_rooms()
+  Plan_add_big_junctions()
   Plan_add_small_rooms()
 
   Plan_contiguous_sections()
