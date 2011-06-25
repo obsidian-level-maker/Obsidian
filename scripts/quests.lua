@@ -37,7 +37,7 @@ class QUEST
                  -- the room object will contain more information.
                  -- Never nil.
 
-  -- FIXME
+  rooms : list(ROOM)  -- all the rooms in the quest
 }
 
 
@@ -66,7 +66,7 @@ QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
   local id = 1 + #LEVEL.quests
-  local Q = { id=id, start=start }
+  local Q = { id=id, start=start, rooms={} }
   table.set_class(Q, QUEST_CLASS)
   table.insert(LEVEL.quests, Q)
   return Q
@@ -648,6 +648,7 @@ function Quest_make_quests()
       R.quest = quest
 
       table.insert(LEVEL.rooms, R)
+      table.insert(quest.rooms, R)
 
       local exits = get_exits(R)
 
@@ -688,7 +689,9 @@ function Quest_make_quests()
   local function no_quest_order(start, quest)
     each R in LEVEL.rooms do
       R.quest = quest
-    
+
+      table.insert(quest.rooms, R)
+
       if not LEVEL.exit_room and R != start and #R.conns <= 1 then
         LEVEL.exit_room = R
         R.purpose = "EXIT"
