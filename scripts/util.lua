@@ -167,6 +167,14 @@ function table.find_unused(t, start)
   return start
 end
 
+function table.append(t1, t2)
+  for _,value in ipairs(t2) do
+    table.insert(t1, value)
+  end
+
+  return t1
+end
+
 function table.reverse(t)
   if not t then return nil end
 
