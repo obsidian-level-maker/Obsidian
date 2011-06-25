@@ -1176,75 +1176,33 @@ function Plan_expand_rooms()
   -- this must be called after hallways are generated, and will
   -- assign unused sections to belong to a neighboring room.
 
-  local function OLD__can_nudge(K, dir, R)
-    -- edge of map?
-    if dir == 4 and K.kx == 1         then return false end
-    if dir == 6 and K.kx == SECTION_W then return false end
-    if dir == 2 and K.ky == 1         then return false end
-    if dir == 8 and K.ky == SECTION_H then return false end
+  local function assign_section(K, room)
+    K:set_room(room)
+
+    K.kind = "annex"
+    K.expanded = true
+
+    room:add_section(K)
+  end
+
+
+  local function can_nudge(K, dir)
+    -- prevent flow on
+    if K.expanded then return false end
 
     local N = K:neighbor(dir)
+    if not N or N.used then return false end
 
-    -- this logic prevents nudging a different section in the same row or
-    -- column which would cause the sections to go out of alignment.
-    if K.room != R then
-      if K.room.shape == "odd" then return true end
-      if N.room != R then return true end
-      return false
-    end
+    -- edge of map?
+    -- FIXME: relax this sometimes
+    if N.kx == 1 or N.kx == SECTION_W then return false end
+    if N.ky == 1 or N.ky == SECTION_H then return false end
 
-    -- silently allow if neighbor section is same room
-    if N.room == R then return true end
-
-    -- check that the space is unused
-    local sx1, sy1, sx2, sy2
-
-    if geom.is_vert(dir) then
-      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1, K.sy1-1, K.sx2, K.sy2+1)
-    else
-      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1-1, K.sy1, K.sx2+1, K.sy2)
-    end
-
-    for sx = sx1,sx2 do for sy = sy1,sy2 do
-      local S = SEEDS[sx][sy]
-      if S.room or S.hall or S.expanded then return false end
-    end end
-
-    return true -- OK --
+    return true -- Ok
   end
 
 
-  local function OLD__do_nudge(K, dir, R)
-    -- ignore other rooms
-    if K.room != R then return; end
-
-    -- silently allow between same room
-    if K:same_room(dir) then return; end
-
-gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
-    -- mark seeds as occupied
-    local sx1, sy1, sx2, sy2
-
-    if geom.is_vert(dir) then
-      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1, K.sy1-1, K.sx2, K.sy2+1)
-    else
-      sx1,sy1, sx2,sy2 = geom.side_coords(dir, K.sx1-1, K.sy1, K.sx2+1, K.sy2)
-    end
-
-    for sx = sx1,sx2 do for sy = sy1,sy2 do
-      local S = SEEDS[sx][sy]
-      S.expanded = true
-    end end
-
-    -- update coordinates in the section
-    K:raw_nudge(dir)
-
-    -- NOTE: the seed themselves and the room bbox are only updated
-    --       at the very end, via the call to Plan_make_seeds().
-  end
-
-
-  local function OLD__try_nudge(K, dir)
+  local function try_nudge_section(K, dir)
     local R = K.room
 
     -- for shaped rooms require all stems to be nudged together
@@ -1255,7 +1213,8 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
       keep_stems = false
     end
 
-    local kx1,ky1, kx2,ky2 = K.kx, K.ky, K.kx, K.ky
+    local kx1, ky1 = K.kx, K.ky
+    local kx2, ky2 = K.kx, K.ky
     
     if keep_stems then
       if geom.is_vert(dir) then
@@ -1267,29 +1226,29 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
 
     -- test if all sections can be nudged
     for kx = kx1,kx2 do for ky = ky1,ky2 do
-      local N = SECTIONS[kx][ky]
-      if not can_nudge(N, dir, K.room) then return; end
+      local KP = SECTIONS[kx][ky]
+      if KP.room != K.room then continue end
+      if not can_nudge(KP, dir) then return false end
     end end
 
     -- actually nudge them
     for kx = kx1,kx2 do for ky = ky1,ky2 do
-      local N = SECTIONS[kx][ky]
-      do_nudge(N, dir, K.room)
+      local KP = SECTIONS[kx][ky]
+      if KP.room != K.room then continue end
+
+      local N = KP:neighbor(dir)
+      assign_section(N, K.room)
     end end
+
+    return true
   end
 
 
-  local function assign_section(K, room)
-    K:set_room(room)
+  local function try_reassign_section__OLD(K)
+    if K.room.shape != "odd" then
+      return
+    end
 
-    K.kind = "annex"
-    K.expanded = true  -- prevent flow on
-
-    room:add_section(K)
-  end
-
-
-  local function try_reassign_section(K)
     local SIDES
 
     if K.kind == "vert" then
@@ -1298,13 +1257,12 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
       SIDES = { 2,8 }
     else
       SIDES = { 2,4,6,8 }
---??  return  -- ignore junctions (etc)
     end
 
     rand.shuffle(SIDES)
 
     each side in SIDES do
-      local N = K:neighbor(side)  -- FIXME !!!! raw neighbor (no skipping)
+      local N = K:neighbor(side)
       if N and N.room and not N.expanded and not (N.room.shape == "rect") then
         --- if rand.odds(99) then
         assign_section(K, N.room)      
@@ -1320,20 +1278,25 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
 
   local visits = {}
 
-  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
-    table.insert(visits, SECTIONS[kx][ky])
+  for mx = 1,MAP_W do for my = 1,MAP_H do
+    local K = SECTIONS[mx*2][my*2]
+    if K.room then
+      table.insert(visits, K)
+    end
   end end
 
-  rand.shuffle(visits)
+  for loop = 1,6 do
+    rand.shuffle(visits)
 
-  each K in visits do
-    if not K.used then
-      try_reassign_section(K)
+    each K in visits do
+      try_nudge_section(K, rand.dir())
     end
   end
 
+  -- TODO: fill unused junctions that border a rooms on two sides
+
   -- fill in gaps
---  Plan_contiguous_sections()
+  Plan_contiguous_sections()
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
