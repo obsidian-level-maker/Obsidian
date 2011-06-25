@@ -1104,9 +1104,6 @@ Plan_dump_rooms("Dead Room Map")
 
 ---###  remove_dead_rooms()
 
-  Plan_expand_rooms()
-  Plan_dump_rooms("Expanded Map:")
-
   Connect_decide_start_room()
 
   -- update connections so that 'src' and 'dest' follow the natural
@@ -1116,5 +1113,27 @@ Plan_dump_rooms("Dead Room Map")
   LEVEL.rooms = {}
 
   natural_flow(LEVEL.start_room, {})
+end
+
+
+------------------------------------------------------------------------
+
+
+function Connect_cycles()
+  
+  -- FIXME: describe cycles, blah blah
+
+
+  local function look_for_cycles()
+    -- TODO
+  end
+
+
+  ---| Connect_cycles |---
+
+  look_for_cycles()
+
+  Plan_expand_rooms()
+  Plan_dump_rooms("Expanded Map:")
 end
 
