@@ -5,7 +5,9 @@ OBLIGE TODO
 Current Work
 ------------
 
-move WAD2 code --> lib_wad.c
+What is difference between:
+   (a) intrusion using two sides of a room section
+   (b) treating a HORIZ+J+VERT hallway as part of a room
 
 
 >>>>>  SECTIONS rework
@@ -14,15 +16,10 @@ move WAD2 code --> lib_wad.c
      (in other words: ability for stair chunk to be in unset floor)
 
 
-+  step_height : required parameter for each game
--  jump_height : optional parameter (not present --> cannot jump)
-
-
 
 ++  some VOID and LIQUID areas
 
 ++  LOGO pictures on indoor walls (DOOM format games)
-
 
 
 !!!  the "apply twice" problem in prefab build code
@@ -40,34 +37,16 @@ FIX: areas may be separated by "scenic" chunks
 "blend" chunks ? 
 
 
-HEIGHT ALGO
------------
-
-1. current room R = start
-2. do room areas in R
-3. spread heights to nb_room/hallway chunks via connections
-4. decide hallway chunk heights connected to R
-5. R = next room, goto 2
-
-POSSIBLE PROBLEMS
------------------
-
-(a) Windows : are already decided?  (NO)
-
-    MUST decide them after all heights are done
-
-(b) Cross-overs : need room heights of intruded room to decide
-                  height of the hallway, but hallway is visited first.
-
-                  WHAT TO DO??
-                  --> if hallway is first, pick a height and if that
-                      height is no good, then change it afterwards
-                      [need ability to change it via stairs or lifts]
+Windows: MUST decide them after all heights are done
 
 
+Cross-overs : need room heights of intruded room to decide
+              height of the hallway, but hallway is visited first.
 
-DONE: Area merging: prefer not to merge between different "contents"
-      (especially the purpose)
+              WHAT TO DO??
+              --> if hallway is first, pick a height and if that
+                  height is no good, then change it afterwards
+                  [need ability to change it via stairs or lifts]
 
 
 
@@ -84,17 +63,11 @@ DONE: Area merging: prefer not to merge between different "contents"
 
 
 
-
 >>>  Simple rooms (caves and mazes)
 
 
 -  build all hallways AFTER all rooms
    (decide a height different first though).
-
-
--  "flush depth" for wall prefabs, encourage/force nearby walls
-   to line up with it.
-
 
 
 OTHER STUFF
