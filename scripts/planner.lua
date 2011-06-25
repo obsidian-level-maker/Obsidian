@@ -1138,80 +1138,36 @@ function Plan_contiguous_sections()
   -- make sure that multi-section rooms are contiguous, i.e. each section
   -- touches a nearby section of the same room (no hallway in between).
 
-  local function nb_count(K, dir)
-    return (K:same_room(geom.RIGHT[dir]) ? 1 ; 0) +
-           (K:same_room(geom. LEFT[dir]) ? 1 ; 0)
-  end
+  local function try_join(K, dir)
+    local N  = K:neighbor(dir, 1)
+    local K2 = K:neighbor(dir, 2)
 
+    if not (N and K2) then return end
 
-  local function OLD__try_join(K, dir)
-    assert(dir == 6 or dir == 8)
+    -- require in-between section to be free
+    if N.used then return end
 
-    local N = K:neighbor(dir)
+    -- require section on far side to be same room
+    if K2.room != K.room then return end
 
-    if not (N and N.room == K.room) then return; end
-
-    -- two choices: move K or move N
-    --
-    -- we only move N if it is isolated (the adjacent sides are not
-    -- part of same room) and K is not isolated.
-
-    local K_num = nb_count(K, dir)
-    local N_num = nb_count(N, dir)
-
-    if dir == 6 then
-      if N_num == 0 and K_num > 0 then
-        N.sx1 = K.sx2 + 1
-      else
-        K.sx2 = N.sx1 - 1
-      end
-
-    else
-      if N_num == 0 and K_num > 0 then
-        N.sy1 = K.sy2 + 1
-      else
-        K.sy2 = N.sy1 - 1
-      end
-    end
-
-    K:update_size()
-    N:update_size()
-  end
-
-
-  local function try_join(K, kx, ky, dir)
-    -- get proper section neighbor (not hallway part)
-    local nx, ny = geom.nudge(kx, ky, dir, 2)
-
-    if not Section_is_valid(nx, ny) then return; end
-
-    local N = SECTIONS[nx][ny]
-
-    if not (N and N.room == K.room) then return; end
-
-    -- get hallway part
-    nx, ny = geom.nudge(kx, ky, dir)
-
-    N = SECTIONS[nx][ny]
+    N:set_room(K.room)
 
     N.kind = "section2"
-    N:set_room(K.room)
   end
 
 
   ---| Plan_contiguous_sections |---
 
-  for mx = 1,MAP_W do for my = 1,MAP_H do
-    local kx, ky = mx*2, my*2
+  for loop = 1,2 do
+    for kx = 1, SECTION_W-1 do for ky = 1, SECTION_H-1 do
+      local K = SECTIONS[kx][ky]
 
-    local K = SECTIONS[kx][ky]
-
-    if K.room then
-      try_join(K, kx, ky, 6)
-      try_join(K, kx, ky, 8)
-      try_join(K, kx, ky, 9)  -- FIXME : won't do what we want
-    end
-  end end -- kx, ky
+      if K.room then
+        try_join(K, 6)
+        try_join(K, 8)
+      end
+    end end -- kx, ky
+  end -- loop
 end
 
 
@@ -1327,7 +1283,7 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
     K:set_room(room)
 
     K.kind = "annex"
-    K.expanded = true
+    K.expanded = true  -- prevent flow on
 
     room:add_section(K)
   end
@@ -1375,6 +1331,9 @@ gui.debugf("Nudging %s dir:%d\n", K:tostr(), dir)
       try_reassign_section(K)
     end
   end
+
+  -- fill in gaps
+--  Plan_contiguous_sections()
 
   -- update the seeds themselves and the room bboxes
   Plan_make_seeds()
@@ -1722,10 +1681,9 @@ function Plan_create_rooms()
   Plan_add_special_rooms()
   Plan_add_natural_rooms()
   Plan_add_big_rooms()
+
   Plan_add_big_junctions()
-Plan_dump_sections()
   Plan_add_small_rooms()
-Plan_dump_sections()
 
   Plan_contiguous_sections()
   Plan_collect_sections()
