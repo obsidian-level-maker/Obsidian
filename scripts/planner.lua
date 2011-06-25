@@ -401,18 +401,14 @@ function Plan_create_sections()
 end
 
 
--- FIXME :REMOVE
-Plan_is_section_valid = Section_is_valid
-
-
-function Plan_has_section(mx, my)  -- FIXME: RENAME THIS FUNCTION
+function Map_part_in_use(mx, my)
   if SECTIONS[mx*2][my*2].room then
     return true
   elseif SECTIONS[mx*2][my*2].kind == "big_junc" then
     return true
-  else
-    return false
   end
+
+  return false
 end
 
 
@@ -420,7 +416,7 @@ function Plan_count_free_sections()
   local count = 0
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not Plan_has_section(mx, my) then
+    if not Map_part_in_use(mx, my) then
       count = count + 1
     end
   end end
@@ -433,7 +429,7 @@ function Plan_get_visit_list()
   local visits = {}
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not Plan_has_section(mx, my) then
+    if not Map_part_in_use(mx, my) then
       table.insert(visits, { mx=mx, my=my })
     end
   end end
@@ -543,7 +539,7 @@ function Plan_add_big_junctions()
 
   -- decide how many big hallway junctions to make
 
-  local quota = 2 -- FIXME
+  local quota = 0 -- FIXME
 
   for i = 1,quota do
     try_add_big_junc()
@@ -554,8 +550,8 @@ end
 function Plan_add_small_rooms()
 
   local function can_make_double(K, mx, my)
-    local can_x = (mx < MAP_W and not Plan_has_section(mx+1, my))
-    local can_y = (my < MAP_H and not Plan_has_section(mx, my+1))
+    local can_x = (mx < MAP_W and not Map_part_in_use(mx+1, my))
+    local can_y = (my < MAP_H and not Map_part_in_use(mx, my+1))
 
     if can_x and can_y then
       -- prefer making the room "squarer"
@@ -597,7 +593,7 @@ function Plan_add_small_rooms()
   for mx = 1,MAP_W do for my = 1,MAP_H do
     local K = SECTIONS[mx*2][my*2]
 
-    if not Plan_has_section(mx, my) then
+    if not Map_part_in_use(mx, my) then
       make_small_room(K, mx, my)
     end
   end end
@@ -682,7 +678,7 @@ function Plan_add_big_rooms()
     for mx = mx1,mx2 do for my = my1,my2 do
       if set_R then
         SECTIONS[mx*2][my*2].room = set_R
-      elseif Plan_has_section(mx, my) then
+      elseif Map_part_in_use(mx, my) then
         return false -- would overlap a room
       end
     end end
@@ -720,7 +716,7 @@ function Plan_add_big_rooms()
 
       if set_R then
         SECTIONS[mx*2][my*2].room = set_R
-      elseif Plan_has_section(mx, my) then
+      elseif Map_part_in_use(mx, my) then
         return false -- would overlap a room
       end
     end -- index
@@ -926,7 +922,7 @@ end
 function Plan_add_natural_rooms()
 
   local function find_free_spot(mx, my)
-    if not Plan_has_section(mx, my) then
+    if not Map_part_in_use(mx, my) then
       return mx, my
     end
 
@@ -945,7 +941,7 @@ function Plan_add_natural_rooms()
 
       each side in SIDES do
         local nx, ny = geom.nudge(mx, my, side)
-        if Section_is_valid(nx*2, ny*2) and not Plan_has_section(nx, ny) then
+        if Section_is_valid(nx*2, ny*2) and not Map_part_in_use(nx, ny) then
           return nx, ny
         end
       end
@@ -999,7 +995,7 @@ function Plan_add_natural_rooms()
         
         local nx, ny = geom.nudge(A.mx, A.my, dir)
 
-        if Section_is_valid(nx*2, ny*2) and not Plan_has_section(nx, ny) then
+        if Section_is_valid(nx*2, ny*2) and not Map_part_in_use(nx, ny) then
           -- OK --
           SECTIONS[nx*2][ny*2].room = area.room
           table.insert(area.active, { mx=nx, my=ny })
