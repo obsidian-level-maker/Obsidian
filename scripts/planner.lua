@@ -569,7 +569,9 @@ function Plan_add_small_rooms()
 
 
   local function make_small_room(K, mx, my)
-    local R = ROOM_CLASS.new("rect")
+    local kind = rand.sel(33, "rect", "odd")
+
+    local R = ROOM_CLASS.new(kind)
 
     K.room = R
 
