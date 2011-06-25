@@ -1036,9 +1036,19 @@ function Rooms_blow_chunks()
 
   each D in LEVEL.conns do
     if D.hall then
-      each H in D.hall.chunks do
-        H:build()
+      each C in D.hall.chunks do
+        C:build()
       end
+    end
+  end
+
+  -- egads this is horrible
+
+  each K in LEVEL.cycles do
+    local H = assert(K.hall)
+
+    each C in H.chunks do
+      C:build()
     end
   end
 end

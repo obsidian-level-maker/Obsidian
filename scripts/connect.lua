@@ -1121,15 +1121,94 @@ end
 
 function Connect_cycles()
   
-  -- FIXME: describe cycles, blah blah
+  -- TODO: describe cycles........
+
+
+  local function try_connect_rooms(R1, R2)
+    -- FIXME SHUFFLE VISITS
+    for kx = R1.kx1, R1.kx2 do for ky = R1.ky1, R1.ky2 do
+      local K1 = SECTIONS[kx][ky]
+
+      if K1.room != R1 then continue end
+
+      for dir = 2,8,2 do
+        local MID = K1:neighbor(dir)
+
+        if not MID or MID.used then continue end
+
+        local K2 = K1:neighbor(dir, 2)
+
+        if not K2 or K2.room != R2 then continue end
+
+stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
+
+        local dummy_conn = {}
+
+        Hallway_simple(K1, MID, K2, dummy_conn, dir)
+
+          -- FIXME !!!!
+          assert(#MID.hall.chunks == 1)
+          MID.hall.chunks[1].floor_h = 0
+          MID.hall.height = 512
+          MID.hall:choose_textures()
+
+        table.insert(LEVEL.cycles, MID)
+      end
+
+    end end -- kx, ky
+  end
+
+
+  local function try_cycles_from_room(R1)
+    local nexties = {}
+    local futures = {}
+
+    each D1 in R1.conns do
+      if D1.kind == "teleporter" then continue end
+
+      local R2 = D1:neighbor(R1)
+      if R2.quest != R1.quest then continue end
+
+      table.insert(nexties, R2)
+
+      each D2 in R2.conns do
+        if D2.kind == "teleporter" then continue end
+
+        local R3 = D2:neighbor(R2)
+        if R3 == R1 then continue end
+        if R3.quest != R1.quest then continue end
+
+        table.insert(futures, R3)
+      end
+    end
+
+    local check_list = futures
+---!!!    if table.empty(check_list) or rand.odds(25) then
+---!!!      check_list = nexties
+---!!!    end
+
+    each R2 in check_list do
+      try_connect_rooms(R1, R2)
+    end
+  end
 
 
   local function look_for_cycles()
-    -- TODO
+    local quest_visits = table.copy(LEVEL.quests)
+
+    rand.shuffle(quest_visits)
+
+    each Q in quest_visits do
+      each R in Q.rooms do
+        try_cycles_from_room(R)
+      end
+    end
   end
 
 
   ---| Connect_cycles |---
+
+  LEVEL.cycles = {}
 
   look_for_cycles()
 
