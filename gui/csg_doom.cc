@@ -43,7 +43,9 @@ int ef_solid_type;
 int ef_liquid_type;
 
 
-static int map_bound_y1;  // valid after DM_CreateLinedefs()
+// valid after DM_CreateLinedefs()
+static int map_bound_x1;
+static int map_bound_y1;
 
 
 #define SEC_IS_SKY         (1 << 0)
@@ -1186,6 +1188,10 @@ static void DM_MakeLine(region_c *R, snag_c *S)
   }
 
 
+  // determine lower left corner (for dummy sectors)
+  if (x1 < map_bound_x1) map_bound_x1 = x1;
+  if (x2 < map_bound_x1) map_bound_x1 = x2;
+
   if (y1 < map_bound_y1) map_bound_y1 = y1;
   if (y2 < map_bound_y1) map_bound_y1 = y2;
 
@@ -1268,6 +1274,7 @@ static void DM_MakeLine(region_c *R, snag_c *S)
 
 static void DM_CreateLinedefs()
 {
+  map_bound_x1 = 9999;
   map_bound_y1 = 9999;
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
@@ -1283,7 +1290,8 @@ static void DM_CreateLinedefs()
     }
   }
 
-  map_bound_y1 -= (map_bound_y1 & 7) + 8;
+  map_bound_x1 -= (map_bound_x1 & 31) + 32;
+  map_bound_y1 -= (map_bound_y1 & 31) + 128;
 }
 
 
@@ -1592,8 +1600,8 @@ public:
   void Construct(int index)
   {
     // determine coordinate of bottom/left corner
-    int x1 = (index % 64 - 30) * 32;
-    int y1 = map_bound_y1 - 128 - (index / 64) * 32;
+    int x1 = map_bound_x1 + (index % 64) * 32;
+    int y1 = map_bound_y1 - (index / 64) * 32;
 
     int x2 = x1 + 16;
     int y2 = y1 + 16;
