@@ -1059,18 +1059,17 @@ function Plan_add_natural_rooms()
 
   local perc = style_sel("naturals", 0, 20, 40, 90)
 
-  local quota = num_free * perc / 100
+  local quota = int(num_free * perc / 100)
 
----???  -- don't fill the levels up with natural stuff
----???  if quota > num_free-3 then
----???     quota = num_free-3
----???  end
+  -- don't fill the levels up with natural stuff
+  quota = math.min(quota, num_free - 3)
 
   gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
 
   if quota < 2 then return end
 
   -- occasionally surround the whole map
+  -- FIXME: move to Plan_add_special_rooms
   if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
     surround_map()
 
@@ -1111,7 +1110,7 @@ function Plan_add_natural_rooms()
   -- grow the areas (round-robin style) until quota is used up
 
   for loop = 1,200 do
-    if quota <= 0 then break; end
+    if quota < 1 then break; end
 
     -- sometimes skip an area
     if rand.odds(35) then continue; end
