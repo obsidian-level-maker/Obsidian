@@ -1414,40 +1414,6 @@ function Plan_decide_outdoors()
 end
 
 
-
-function Plan_find_neighbors()
-
-  -- determines neighboring rooms of each room
-  -- (including diagonals, which may touch after nudging)
-
-  local function add_neighbor(R, N)
-    -- already there?
-    for _,O in ipairs(R.neighbors) do
-      if O == N then return end
-    end
-
-    table.insert(R.neighbors, N)
-  end
-
-  for x = 1,SECTION_W do for y = 1,SECTION_H do
-    local K = SECTIONS[x][y]
-    local R = K.room
-
-    if not R.neighbors then
-      R.neighbors = {}
-    end
-
-    for side = 1,9 do if side != 5 then
-      local NK = K:neighbor(side)
-      if NK and NK.room != R then
-        add_neighbor(R, NK.room)
-      end
-    end end -- side
-
-  end end -- x, y
-end
-
-
 ------------------------------------------------------------------------
 
 
@@ -1686,8 +1652,6 @@ function Plan_create_rooms()
   Plan_contiguous_sections()
   Plan_collect_sections()
   Plan_dump_sections()
-
---!!!!!!  Plan_find_neighbors()
 
   Plan_decide_outdoors()
 
