@@ -1523,9 +1523,9 @@ function Plan_dump_rooms(title)
 end
 
 
-function Plan_prepare_rooms()
-
 --[[ OLD STUFF
+
+function Plan_prepare_rooms()
 
   local function add_edges(K)
     for side = 2,8,2 do
@@ -1622,28 +1622,16 @@ function Plan_prepare_rooms()
       end
     end
   end
---]]
 
 
   local function prepare_room(R)
     each K in R.sections do
---###      add_edges(K)
---###      add_corners(K)
---###      add_middle(R, K)
+      add_edges(K)
+      add_corners(K)
+      add_middle(R, K)
     end
 
---###    connect_corners(R)
-
-    R.num_windows = 0
-
-    R.cage_spots = {}
-    R.trap_spots = {}
-    R.mon_spots  = {}
-    R.item_spots = {}
-
-    R.prefabs = {}
-    R.blocks  = {}
-    R.decor   = {}
+    connect_corners(R)
   end
 
 
@@ -1656,6 +1644,7 @@ function Plan_prepare_rooms()
   end
 end
 
+--]]
 
 
 function Plan_create_rooms()
@@ -1705,8 +1694,5 @@ function Plan_create_rooms()
 
   Plan_make_seeds()
   Plan_dump_rooms()
-
----??  Plan_prepare_rooms()   -- SEE NOTE IN Connect_Rooms() 
-
 end
 

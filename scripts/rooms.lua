@@ -86,13 +86,26 @@ function ROOM_CLASS.new(shape)
     id = id
     kind = "normal"
     shape = shape
+
     conns = {}
+    cycles = {}
     neighbors = {}
     chunks = {}
     sections = {}
     middles = {}
     spaces = {}
     floor_mats = {}
+
+    num_windows = 0
+
+    cage_spots = {}
+    trap_spots = {}
+    mon_spots  = {}
+    item_spots = {}
+
+    prefabs = {}
+    blocks  = {}
+    decor   = {}
   }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.rooms, R)
