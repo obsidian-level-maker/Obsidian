@@ -5,9 +5,26 @@ OBLIGE TODO
 Current Work
 ------------
 
-What is difference between:
-   (a) intrusion using two sides of a room section
-   (b) treating a HORIZ+J+VERT hallway as part of a room
+
+Intrusions:
+   +  implement them by "adopting" a hallway consisting of
+      HORIZ + JUNC + VERT (around corner of the room)
+
+
+Crossovers:
+   +  room must be at >= 3 seeds long, <= 4 seeds deep
+   +  keep it simple for now: straight connection
+   -  through a reclaimed joiner (middle of CCC etc) may be ideal
+
+
+Cycles:
+   +  less chance if R2 (middle room) is large
+
+
+Big junctions:
+   +  much more likely if small (e.g. 2x2)
+   -  often use them for 90 degree stalks : even in corner of map
+
 
 
 >>>>>  SECTIONS rework
