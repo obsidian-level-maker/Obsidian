@@ -87,6 +87,8 @@ GLOBAL_STYLE_LIST =
   pictures   = { few=10, some=50, heaps=10 }
   cages      = { none=50, some=50, heaps=6 }
   crates     = { none=20, some=40, heaps=10 }
+  cycles     = { none=30, some=50, heaps=10 }
+  bridges    = { none=10, some=40 }
 
   lt_trim    = { none=40, some=20, heaps=10 }
   lt_spokes  = { none=90, some=20, heaps=5 }
