@@ -1083,12 +1083,9 @@ Plan_dump_rooms("Dead Room Map")
 
   Levels_invoke_hook("connect_rooms")
 
----###  NOTE: want to do hallways in more natural way
----###        i.e. as attempt to connect outward from K+dir
----###  Hallway_place_em()
-
-  -- NOTE: doing this here since hallways change the sizes of sections
-  Plan_prepare_rooms()
+---???  NOTE: want to do hallways in more natural way
+---???        i.e. as attempt to connect outward from K+dir
+---???  Hallway_place_em()
 
   decide_teleporters()
 
@@ -1140,7 +1137,7 @@ function Connect_cycles()
 
         if not K2 or K2.room != R2 then continue end
 
-stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
+gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
 
         local dummy_conn = {}
 
@@ -1153,9 +1150,13 @@ stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
           MID.hall:choose_textures()
 
         table.insert(LEVEL.cycles, MID)
+
+        return true
       end
 
     end end -- kx, ky
+
+    return false
   end
 
 
@@ -1182,14 +1183,22 @@ stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
       end
     end
 
-    local check_list = futures
----!!!    if table.empty(check_list) or rand.odds(25) then
----!!!      check_list = nexties
----!!!    end
+    local check_list = {}
+
+    table.append(check_list, futures)
+    table.append(check_list, nexties)
+
+    local success = false
 
     each R2 in check_list do
-      try_connect_rooms(R1, R2)
+      if try_connect_rooms(R1, R2) then
+        success = true
+
+        if STYLE.cycles != "heaps" then break; end
+      end
     end
+
+    return success
   end
 
 
@@ -1199,8 +1208,17 @@ stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
     rand.shuffle(quest_visits)
 
     each Q in quest_visits do
+      -- usually only make one cycle per quest
+      local quota = int(#Q.rooms / 5 + gui.random())
+
       each R in Q.rooms do
-        try_cycles_from_room(R)
+        if not try_cycles_from_room(R) then continue end
+
+        quota = quota - 1
+
+        if quota < 1 and STYLE.cycles != "heaps" then
+          break;
+        end
       end
     end
   end
@@ -1210,7 +1228,9 @@ stderrf("try_connect_rooms: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
 
   LEVEL.cycles = {}
 
-  look_for_cycles()
+  if STYLE.cycles != "none" then
+    look_for_cycles()
+  end
 
   Plan_expand_rooms()
   Plan_dump_rooms("Expanded Map:")
