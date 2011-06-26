@@ -89,7 +89,6 @@ function ROOM_CLASS.new(shape)
 
     conns = {}
     cycles = {}
-    neighbors = {}
     chunks = {}
     sections = {}
     middles = {}
@@ -295,6 +294,21 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 end
 
 
+function ROOM_CLASS.set_facade(R, facade)
+  R.facade = facade
+
+  each K in R.sections do
+    K.facade = facade
+  end
+
+--??  each D in R.conns do
+--??    if D.R1 == R and D.hall then
+--??      D.hall.facade = facade
+--??    end
+--??  end
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -328,39 +342,57 @@ end
 
 
 function Rooms_assign_facades()
-  for i = 1,#LEVEL.rooms,4 do
-    local R = LEVEL.rooms[i]
-    R.facade = rand.pick(LEVEL.building_facades)
+  --
+  -- Algorithm:
+  --   assign a facade to each corner of the map, and then grow
+  --   randomly until every section has a facade.  When a section
+  --   is part of a room, the whole room gets that facade.
+  --
+  each corner in { 1,3,7,9 } do
+    local kx, ky = geom.pick_corner(corner, 1,1, SECTION_W,SECTION_H)
+    local K = SECTIONS[kx][ky]
+
+    local facade = rand.pick(LEVEL.building_facades)
+
+    K:set_facade(facade)
   end
 
-  local visits = table.copy(LEVEL.rooms)
+  for loop = 1,20 do
+    local last_chance = (loop == 20)
 
-  for loop = 1,10 do
-    local changes = false
+    each K in Section_random_visits() do
+      if K.facade then continue end
 
-    rand.shuffle(visits);
+      local N = K:neighbor(rand.dir())
 
-    each R in visits do
-      if R.facade then
-        each N in R.neighbors do
-          if not N.facade then 
-            N.facade = R.facade
-            changes = true
-          end
-        end -- for N
-      elseif rand.odds(loop * loop) then
-        R.facade = rand.pick(LEVEL.building_facades)
+      local facade = N and N.facade
+      
+      -- prefer not to propagate via outdoor rooms
+      if loop <= 10 and N and N.room and N.room.outdoor then
+        continue
       end
-    end -- for R
-  end -- for loop
 
+      if not facade and last_chance then
+        facade = rand.pick(LEVEL.building_facades)
+      end
+
+      if facade then
+        K:set_facade(facade)
+      end
+
+    end -- K
+  end -- loop
+
+  -- verify that all went well
   each R in LEVEL.rooms do
     assert(R.facade)
   end
 
+  -- TODO: handle this in SECTION_CLASS.set_facade()
   each R in LEVEL.scenic_rooms do
     if not R.facade then
-      R.facade = rand.pick(LEVEL.building_facades)
+      R.facade = R.sections[1].facade
+      assert(R.facade)
     end
   end
 end

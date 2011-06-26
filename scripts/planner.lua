@@ -130,6 +130,19 @@ function Section_is_valid(x, y)
 end
 
 
+function Section_random_visits()
+  local list = {}
+
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    table.insert(list, SECTIONS[kx][ky])
+  end end
+
+  rand.shuffle(list)
+
+  return list
+end
+
+
 function SECTION_CLASS.neighbor(K, dir, dist)
   local nx, ny = geom.nudge(K.kx, K.ky, dir, dist)
 
@@ -155,6 +168,15 @@ function SECTION_CLASS.same_neighbors(K)
     end
   end
   return count
+end
+
+
+function SECTION_CLASS.set_facade(K, facade)
+  K.facade = facade
+
+  if K.room then K.room:set_facade(facade) end
+
+  if K.hall then K.hall.facade = facade end
 end
 
 
