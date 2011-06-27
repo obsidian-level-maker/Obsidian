@@ -69,7 +69,13 @@ end
 
 function Areas_handle_connections()
   
-  local NUM_PASS = 4
+  -- this creates the chunks in a room where it connects to a
+  -- hallway or another room, and sets up the link[] entries in
+  -- the chunks.
+
+  local function chunk_for_section_side(K, side)
+    -- FIXME
+  end
 
 
   local function link_chunks(C1, C2, dir, conn)
@@ -233,13 +239,22 @@ function Areas_handle_connections()
   end
 
 
+  local function handle_conn(D)
+    -- teleporters are done elsewhere (as an "important")
+    if D.kind == "teleporter" then return end
+
+    -- FIXME decent code!!!
+
+    if D.kind == "normal"  then do_section_conn(D, pass) end
+    if D.kind == "hallway" then do_hallway_conn(D, pass) end
+
+  end
+
+
   ---| Areas_handle_connections |---
 
-  for pass = 1,NUM_PASS do
-    each D in LEVEL.conns do
-      if D.kind == "normal"  then do_section_conn(D, pass) end
-      if D.kind == "hallway" then do_hallway_conn(D, pass) end
-    end
+  each D in LEVEL.conns do
+    handle_conn(D)
   end
 end
 
@@ -591,6 +606,8 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
   end
 end
 
+
+----------------------------------------------------------------
 
 
 function Areas_flesh_out()
