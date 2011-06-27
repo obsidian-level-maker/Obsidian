@@ -31,7 +31,7 @@ class QUEST
                  -- for first quest, this is the map's starting room.
                  -- Never nil.
                  --
-                 -- start.entry_conn is the entry to this arena
+                 -- start.entry_conn is the entry connection
 
   target : ROOM  -- room containing the goal of this quest (key or switch).
                  -- the room object will contain more information.
@@ -597,18 +597,32 @@ function Quest_make_quests()
   end
 
 
+  local function evaluate_exit(exit, R, ...)
+    -- TODO: better distance calc
+    local score = geom.dist(entry_kx, entry_ky, exit.K2.kx, exit.K2.ky)
+
+    -- strong preference to avoid 180 degree turns
+    if R.entry_conn and R.entry_conn.dir2 and exit.dir != R.entry_conn.dir2 then
+      scores = score + 4
+    end
+
+    -- tie breaker
+    return score + gui.random() / 3
+  end
+
+
   local function pick_free_exit(R, exits)
     if #exits == 1 then return 1 end
 
     -- teleporters cannot be locked, hence must pick it when present
-    for idx,C in ipairs(exits) do
-      if C.kind == "teleporter" then
-        return idx
+    each exit in exits do
+      if exit.kind == "teleporter" then
+        return _index
       end
     end
 
-    -- FIXME !!!!
-    do return rand.irange(1,#exits) end
+-- FIXME !!!!!
+do return rand.irange(1, #exits) end
 
     local scores = {}
 
@@ -620,17 +634,8 @@ function Quest_make_quests()
       entry_ky = R.entry_conn.K2.ky
     end
 
-    for idx,C in ipairs(exits) do
-      -- TODO: better distance calc
-      scores[idx] = geom.dist(entry_kx, entry_ky, C.K2.kx, C.K2.ky)
-
-      if R.entry_conn and R.entry_conn.dir and C.dir != (10 - R.entry_conn.dir) then
-        -- strong preference to avoid 180 degree turns
-        scores[idx] = scores[idx] + 4
-      end
-
-      -- tie breaker
-      scores[idx] = scores[idx] + gui.random() / 3
+    each exit in exits do
+      scores[_index] = evaluate_exit(exit, R) -- FIXME
     end
 
     local value,index = table.pick_best(scores)
