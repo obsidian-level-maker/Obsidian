@@ -22,8 +22,10 @@
 
 class CONN
 {
-  kind   : keyword  -- "section", "hallway", "teleporter"
-  lock   : QUEST
+  kind   : keyword  -- "normal", "cycle"
+                    -- "hallway", "teleporter"
+
+  lock   : LOCK
 
   R1, R2 : ROOM
   K1, K2 : SECTION
@@ -31,8 +33,10 @@ class CONN
 
   hall   : HALLWAY
 
-  dir   -- direction 2/4/6/8 (from K1 to K2 / C1 to C2)
-           nil for teleporters.
+  dir1, dir2  -- direction value (2/4/6/8) 
+              -- dir1 leading out of R1 / K1 / C1
+              -- dir2 leading out of R2 / K2 / C2
+              -- (not used for teleporters)
 
   conn_h  -- floor height for connection
 }
