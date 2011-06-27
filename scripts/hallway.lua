@@ -363,7 +363,7 @@ function Hallway_place_em()
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
-    local D = CONN_CLASS.new_R(R1, R2, "hallway")
+    local D = CONN_CLASS.new("hallway", R1, R2)
 
     D.hall = hall
 

@@ -118,7 +118,7 @@ function Areas_handle_connections()
     local K1 = assert(D.K1)
     local K2 = assert(D.K2)
 
-    local dir = assert(D.dir)
+    local dir = assert(D.dir1)
 
     local cx1, cy1, C1
     local cx2, cy2, C2

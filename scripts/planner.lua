@@ -180,15 +180,6 @@ function SECTION_CLASS.set_facade(K, facade)
 end
 
 
-function SECTION_CLASS.side_has_conn(K, side)
-  for _,D in ipairs(K.room.conns) do
-    if D.K1 == K and D.dir == side    then return true end
-    if D.K2 == K and D.dir == 10-side then return true end
-  end
-  return false
-end
-
-
 ------------------------------------------------------------------------
 
 function Plan_alloc_id(kind)
@@ -472,7 +463,7 @@ function Plan_dump_sections(title)
 
     if K.conn then
       local CONN_SYMS = { [2]="v", [8]="^", [4]="<", [6]=">" }
-      return CONN_SYMS[K.conn.dir] or "?"
+      return CONN_SYMS[K.conn.dir1] or "?"
     end
 
     if K.hall then return '#' end

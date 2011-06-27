@@ -27,6 +27,10 @@ class CONN
 
   lock   : LOCK
 
+  -- The two rooms are the vital (compulsory) information,
+  -- especially for the quest system.  For teleporters the
+  -- other info (sections and dir1/dir2) may be absent.
+
   R1, R2 : ROOM
   K1, K2 : SECTION
   C1, C2 : CHUNK   -- decided later (at chunk creation)
@@ -36,7 +40,6 @@ class CONN
   dir1, dir2  -- direction value (2/4/6/8) 
               -- dir1 leading out of R1 / K1 / C1
               -- dir2 leading out of R2 / K2 / C2
-              -- (not used for teleporters)
 
   conn_h  -- floor height for connection
 }
@@ -50,16 +53,13 @@ require 'util'
 
 CONN_CLASS = {}
 
-function CONN_CLASS.new_K(K1, K2, kind, dir)
-  local D = { K1=K1, K2=K2, R1=K1.room, R2=K2.room, kind=kind, dir=dir }
+function CONN_CLASS.new(kind, R1, R2, dir)
+  local D = { kind=kind, R1=R1, R2=R2 }
   table.set_class(D, CONN_CLASS)
-  return D
-end
-
-
-function CONN_CLASS.new_R(R1, R2, kind, dir)
-  local D = { R1=R1, R2=R2, kind=kind, dir=dir }
-  table.set_class(D, CONN_CLASS)
+  if dir then
+    D.dir1 = dir
+    D.dir2 = 10 - dir
+  end
   return D
 end
 
@@ -81,10 +81,9 @@ end
 
 
 function CONN_CLASS.what_dir(D, R)
-  if D.dir then
-    return (R == D.R1 ? D.dir ; 10 - D.dir)
+  if D.dir1 then
+    return (R == D.R1 ? D.dir1 ; D.dir2)
   end
-  return nil
 end
 
 
@@ -92,7 +91,7 @@ function CONN_CLASS.swap(D)
   D.K1, D.K2 = D.K2, D.K1
   D.R1, D.R2 = D.R2, D.R1
 
-  if D.dir then D.dir = 10 - D.dir end
+  D.dir1, D.dir2 = D.dir2, D.dir1
 
   if D.hall and D.hall.R1 != D.R1 then D.hall:reverse() end
 end
@@ -433,7 +432,9 @@ function Connect_rooms()
 
     Connect_merge_groups(R.conn_group, N.conn_group)
 
-    local D = CONN_CLASS.new_K(K1, K2, kind, dir)
+    local D = CONN_CLASS.new(kind, R, N, dir)
+
+    D.K1 = K1 ; D.K2 = K2
 
     table.insert(LEVEL.conns, D)
 
@@ -462,7 +463,7 @@ function Connect_rooms()
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
-    local D = CONN_CLASS.new_R(R1, R2, "teleporter")
+    local D = CONN_CLASS.new("teleporter", R1, R2)
 
     table.insert(LEVEL.conns, D)
 
@@ -500,7 +501,7 @@ function Connect_rooms()
         function(A, B) return A.dist > B.dist end)
 
 -- stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.dist)
---    add_connection(loc.K, loc.N, "normal", loc.dir)
+--    add_connection(loc.K, loc.N, "normal", loc.dir1)
   end
 
 
