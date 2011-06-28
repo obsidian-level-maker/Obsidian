@@ -77,6 +77,38 @@ function HALLWAY_CLASS.tostr(H)
 end
 
 
+function HALLWAY_CLASS.dump_path(H)
+  if not H.path then
+    gui.debugf("No Path.\n")
+    return
+  end
+
+  gui.debugf("Path:\n")
+  gui.debugf("  {\n")
+
+  each loc in H.path do
+    gui.debugf("  %s prev:%d next:%d\n", loc.G:tostr(),
+               loc.prev_dir or -1, loc.next_dir or -1)
+  end
+
+  gui.debugf("  }\n")
+end
+
+
+function HALLWAY_CLASS.dump(H)
+  gui.debugf("%s =\n", H:tostr())
+  gui.debugf("{\n")
+  gui.debugf("    R1 = %s\n", (H.R1 ? H.R1:tostr() ; "nil"))
+  gui.debugf("    R2 = %s\n", (H.R2 ? H.R2:tostr() ; "nil"))
+  gui.debugf("    K1 = %s\n", (H.K1 ? H.K1:tostr() ; "nil"))
+  gui.debugf("    K2 = %s\n", (H.K2 ? H.K2:tostr() ; "nil"))
+  gui.debugf("belong = %s\n", (H.belong_room ? H.belong_room:tostr() ; "nil"))
+
+  H:dump_path()
+  gui.debugf("}\n")
+end
+
+
 function HALLWAY_CLASS.first_chunk(H)
   return H.chunks[1]
 end
@@ -336,16 +368,6 @@ function Hallway_place_em()
   end
 
 
-  local function dump_path(hall)
-    gui.debugf("Path:\n")
-    gui.debugf("{\n")
-    for _,loc in ipairs(hall.path) do
-      gui.debugf("  Segment @ (%d,%d) prev:%d next:%d\n", loc.G.sx1, loc.G.sy1,
-                 loc.prev_dir or -1, loc.next_dir or -1)
-    end
-    gui.debugf("}\n")
-  end
-
 
   local function fix_path_dirs(hall)
     -- sets the 'next_dir' fields in the path elements
@@ -368,7 +390,8 @@ function Hallway_place_em()
     gui.debugf("Adding hallway %s --> %s\n", R1:tostr(), R2:tostr())
 
     fix_path_dirs(hall)
-    dump_path(hall)
+
+    hall:dump_path()
 
     Connect_merge_groups(R1.conn_group, R2.conn_group)
 
