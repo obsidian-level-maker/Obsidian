@@ -68,13 +68,40 @@ end
 
 
 function Areas_handle_connections()
-  
+  --[[
   -- this creates the chunks in a room where it connects to a
   -- hallway or another room, and sets up the link[] entries in
   -- the chunks.
+  --]]
 
-  local function chunk_for_section_side(K, side)
-    -- FIXME
+  local function chunk_for_section_side(K, dir)
+    -- sections are guaranteed to stay aligned, so calling this
+    -- function on two touching sections will provide two chunks
+    -- which touch each other.
+
+    -- result chunk only occupies a single seed.  Enlarging the
+    -- chunk (to make wider doors etc) can be done after all the
+    -- connections and importants have been given chunks.
+
+    local sx, sy
+
+    if geom.is_vert(dir) then
+      sx = math.imid(K.sx1, K.sx2)
+      sy = (dir == 2 ? K.sy1 ; K.sy2)
+    else
+      sy = math.imid(K.sy1, K.sy2)
+      sx = (dir == 4 ? K.sx1 ; K.sx2)
+    end
+
+    local S = SEEDS[sx][sy]
+
+    if not S.chunk then
+      local C = K.room:alloc_chunk(sx, sy, sx, sy)
+      C.foobage = "conn"
+      S.chunk = C
+    end
+
+    return S.chunk
   end
 
 
