@@ -110,19 +110,16 @@ function Areas_handle_connections()
     assert(C2)
     assert(conn)
 
-    if C1.room then conn.C1 = C1 end
-    if C2.room then conn.C2 = C2 end
+--  gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
----## stderrf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
     local LINK =
     {
-      C1 = C1,
-      C2 = C2,
-      dir = dir,
-      conn = conn,
+      C1 = C1
+      C2 = C2
+      dir = dir
+      conn = conn
     }
 
---[[
     if geom.is_vert(dir) then
       local x1 = math.max(C1.x1, C2.x1)
       local x2 = math.min(C1.x2, C2.x2)
@@ -136,7 +133,6 @@ function Areas_handle_connections()
       LINK.y1 = y1 + 16
       LINK.y2 = y2 - 16
     end
---]]
 
     C1.link[dir]      = LINK
     C2.link[10 - dir] = LINK
@@ -153,12 +149,14 @@ function Areas_handle_connections()
     local C1 = chunk_for_section_side(D.K1, D.dir1)
     local C2 = chunk_for_section_side(D.K2, D.dir2)
 
+    D.C1 = C1 ; D.C2 = C2
+
     if D.kind == "direct" then
       link_chunks(C1, D.dir1, C2, D)
     else
       -- hallway
       local H1 = D.hall:first_chunk()
-      local H2 = D.hall:last_chunk()
+      local H2 = D.hall:last_chunk()  -- may be same as first
 
       link_chunks(C1, D.dir1, H1, D)
       link_chunks(C2, D.dir2, H2, D)
