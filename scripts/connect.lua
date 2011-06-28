@@ -26,6 +26,8 @@ class CONN
 
   lock   : LOCK
 
+  id : number  -- debugging aid
+
   -- The two rooms are the vital (compulsory) information,
   -- especially for the quest system.  For teleporters the
   -- other info (sections and dir1/dir2) may be absent.
@@ -56,6 +58,7 @@ CONN_CLASS = {}
 
 function CONN_CLASS.new(kind, R1, R2, dir)
   local D = { kind=kind, R1=R1, R2=R2 }
+  D.id = Plan_alloc_id("conn")
   table.set_class(D, CONN_CLASS)
   if dir then
     D.dir1 = dir
@@ -66,8 +69,21 @@ end
 
 
 function CONN_CLASS.tostr(D)
-  return string.format("CONN [%d -> %d]",
-         D.R1.id, D.R2.id)
+  return string.format("CONN_%d [%d > %d]", D.id, D.R1.id, D.R2.id)
+end
+
+
+function CONN_CLASS.dump(D)
+  gui.debugf("%s =\n", D:tostr())
+  gui.debugf("{\n")
+  gui.debugf("    K1 = %s\n", (D.K1 ? D.K1:tostr() ; "nil"))
+  gui.debugf("    K2 = %s\n", (D.K2 ? D.K2:tostr() ; "nil"))
+  gui.debugf("    C1 = %s\n", (D.C1 ? D.C1:tostr() ; "nil"))
+  gui.debugf("    C2 = %s\n", (D.C2 ? D.C2:tostr() ; "nil"))
+  gui.debugf("  dir1 = %s\n", (D.dir1 ? tostring(D.dir1) ; "nil"))
+  gui.debugf("  dir2 = %s\n", (D.dir2 ? tostring(D.dir2) ; "nil"))
+  gui.debugf("   cyc = %s\n", string.bool(D.is_cycle))
+  gui.debugf("}\n")
 end
 
 
