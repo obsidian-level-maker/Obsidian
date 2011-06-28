@@ -22,8 +22,7 @@
 
 class CONN
 {
-  kind   : keyword  -- "normal", "cycle"
-                    -- "hallway", "teleporter"
+  kind   : keyword  -- "direct", "hallway", "teleporter"
 
   lock   : LOCK
 
@@ -40,6 +39,8 @@ class CONN
   dir1, dir2  -- direction value (2/4/6/8) 
               -- dir1 leading out of R1 / K1 / C1
               -- dir2 leading out of R2 / K2 / C2
+
+  is_cycle : boolean
 
   conn_h  -- floor height for connection
 }
@@ -88,8 +89,9 @@ end
 
 
 function CONN_CLASS.swap(D)
-  D.K1, D.K2 = D.K2, D.K1
   D.R1, D.R2 = D.R2, D.R1
+  D.K1, D.K2 = D.K2, D.K1
+  D.C1, D.C2 = D.C2, D.C1
 
   D.dir1, D.dir2 = D.dir2, D.dir1
 
@@ -423,7 +425,7 @@ function Connect_rooms()
   end
 
 
-  local function add_connection(K1, K2, kind, dir)
+  local function add_connection(K1, K2, dir)
     local R = assert(K1.room)
     local N = assert(K2.room)
 
@@ -432,7 +434,7 @@ function Connect_rooms()
 
     Connect_merge_groups(R.conn_group, N.conn_group)
 
-    local D = CONN_CLASS.new(kind, R, N, dir)
+    local D = CONN_CLASS.new("direct", R, N, dir)
 
     D.K1 = K1 ; D.K2 = K2
 
@@ -446,7 +448,7 @@ function Connect_rooms()
 
     -- setup the section in the middle
     local MID
-    if kind == "normal" then
+    if true then
       MID = assert(K1:neighbor(dir))
 
       MID.conn = D ; D.middle = MID 
@@ -501,7 +503,7 @@ function Connect_rooms()
         function(A, B) return A.dist > B.dist end)
 
 -- stderrf("add natural conn: %s --> %s  dist:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.dist)
---    add_connection(loc.K, loc.N, "normal", loc.dir1)
+--    add_connection(loc.K, loc.N, loc.dir1)
   end
 
 
@@ -587,13 +589,13 @@ function Connect_rooms()
       if K.num_conn > 0 then
         -- OK
       elseif good_connect(K, loc.dir) then
-        add_connection(K, N, "normal", loc.dir)
+        add_connection(K, N, loc.dir)
       else
         -- try the other sides
         for dir = 2,8,2 do
           local N = loc.K:neighbor(dir)
           if good_connect(K, dir) then
-            add_connection(K, N, "normal", dir)
+            add_connection(K, N, dir)
             break;
           end
         end
@@ -667,7 +669,7 @@ function Connect_rooms()
         return false
       
       elseif do_it then
-        add_connection(K, N, "normal", dir)
+        add_connection(K, N, dir)
       end
     end
 
@@ -779,7 +781,7 @@ function Connect_rooms()
     local loc = table.pick_best(list,
         function(A, B) return A.K.room.small_score < B.K.room.small_score end)
 
-    add_connection(loc.K, loc.N, "normal", loc.dir)
+    add_connection(loc.K, loc.N, loc.dir)
   end
 
 
@@ -850,7 +852,7 @@ function Connect_rooms()
 
 -- stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
-    add_connection(loc.K, loc.N, "normal", loc.dir)
+    add_connection(loc.K, loc.N, loc.dir)
 
     return true
   end

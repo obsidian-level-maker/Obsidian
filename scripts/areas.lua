@@ -105,7 +105,7 @@ function Areas_handle_connections()
   end
 
 
-  local function link_chunks(C1, C2, dir, conn)
+  local function link_chunks(C1, dir, C2, conn)
     assert(C1)
     assert(C2)
     assert(conn)
@@ -122,6 +122,7 @@ function Areas_handle_connections()
       conn = conn,
     }
 
+--[[
     if geom.is_vert(dir) then
       local x1 = math.max(C1.x1, C2.x1)
       local x2 = math.min(C1.x2, C2.x2)
@@ -135,134 +136,10 @@ function Areas_handle_connections()
       LINK.y1 = y1 + 16
       LINK.y2 = y2 - 16
     end
+--]]
 
     C1.link[dir]      = LINK
     C2.link[10 - dir] = LINK
-  end
-
-
-  local function do_section_conn(D, pass)
-    local K1 = assert(D.K1)
-    local K2 = assert(D.K2)
-
-    local dir = assert(D.dir1)
-
-    local cx1, cy1, C1
-    local cx2, cy2, C2
-
-    if geom.is_vert(dir) then
-      local sx1 = math.max(K1.sx1, K2.sx1)
-      local sx2 = math.min(K1.sx2, K2.sx2)
-
-      assert(sx1 <= sx2)
-
-      cx1 = math.imid(sx1, sx2)
-      cx2 = cx1
-
-      cy1 = sel(dir == 2, K1.sy1, K1.sy2)
-      cy2 = sel(dir == 2, K2.sy2, K2.sy1)
-    else
-      local sy1 = math.max(K1.sy1, K2.sy1)
-      local sy2 = math.min(K1.sy2, K2.sy2)
-
-      assert(sy1 <= sy2)
-
-      cy1 = math.imid(sy1, sy2)
-      cy2 = cy1
-
-      cx1 = (dir == 4 ? K1.sx1 ; K1.sx2)
-      cx2 = (dir == 4 ? K2.sx2 ; K2.sx1)
-    end
-
-    C1 = SEEDS[cx1][cy1].chunk
-    if not C1 then
-      C1 = K1.room:alloc_chunk(cx1, cy1, cx1, cy1)
-      C1.foobage = "conn"
-    end
-
-    C2 = SEEDS[cx2][cy2].chunk
-    if not C2 then
-      C2 = K2.room:alloc_chunk(cx2, cy2, cx2, cy2)
-      C2.foobage = "conn"
-    end
-
-    if pass == NUM_PASS then
-      link_chunks(C1, C2, dir, D)
-    end
-  end
-
-
-  local function do_hall_side(C, dir, K, D, pass, is_start)
-    -- hallways off a hallway are naturally aligned
-    if not K then
-      -- FIXME !!!!  local C2 = ....
-
-      if pass == NUM_PASS then
-        link_chunks(C, C2, dir, D)
-      end
-
-      return;
-    end
-
-    -- the 'C' chunk is part of the hallway
-    -- find 'C2' chunk which is part of the connected room
-
-    local sx, sy
-
-    if geom.is_vert(dir) then
-      local sx1 = math.max(C.sx1, K.sx1)
-      local sx2 = math.min(C.sx2, K.sx2)
-
-      assert(sx1 <= sx2)
-
-      sx = math.imid(sx1, sx2)
-      sy = (dir == 2 ? K.sy2 ; K.sy1)
-    else
-      local sy1 = math.max(C.sy1, K.sy1)
-      local sy2 = math.min(C.sy2, K.sy2)
-
-      assert(sy1 <= sy2)
-
-      sy = math.imid(sy1, sy2)
-      sx = (dir == 4 ? K.sx2 ; K.sx1)
-    end
-
-    C2 = SEEDS[sx][sy].chunk
-
-    if not C2 then
-      C2 = K.room:alloc_chunk(sx, sy, sx, sy)
-      C2.foobage = "conn"
-    end
-
-    if pass == NUM_PASS then
-      if is_start then
-        C, C2 = C2, C
-        dir = 10 - dir
-      end
-
-      link_chunks(C, C2, dir, D)
-    end
-  end
-
-
-  local function do_hallway_conn(D, pass)
-    local hall = assert(D.hall)
-
-    local start_C = hall.path[1].chunk
-    local   end_C = hall.path[#hall.path].chunk
-
-    assert(start_C and end_C)
-
-    local start_K = hall.K1
-    local   end_K = hall.K2
-
-    local start_dir = hall.path[1].prev_dir
-    local   end_dir = hall.path[#hall.path].next_dir
-
-    assert(start_dir and end_dir)
-
-    do_hall_side(start_C, start_dir, start_K, D, pass, true)
-    do_hall_side(  end_C,   end_dir,   end_K, D, pass, false)
   end
 
 
@@ -270,11 +147,22 @@ function Areas_handle_connections()
     -- teleporters are done elsewhere (as an "important")
     if D.kind == "teleporter" then return end
 
-    -- FIXME decent code!!!
+    assert(D.K1 and D.dir1)
+    assert(D.K2 and D.dir2)
 
-    if D.kind == "normal"  then do_section_conn(D, pass) end
-    if D.kind == "hallway" then do_hallway_conn(D, pass) end
+    local C1 = chunk_for_section_side(D.K1, D.dir1)
+    local C2 = chunk_for_section_side(D.K2, D.dir2)
 
+    if D.kind == "direct" then
+      link_chunks(C1, D.dir1, C2, D)
+    else
+      -- hallway
+      local H1 = D.hall:first_chunk()
+      local H2 = D.hall:last_chunk()
+
+      link_chunks(C1, D.dir1, H1, D)
+      link_chunks(C2, D.dir2, H2, D)
+    end
   end
 
 

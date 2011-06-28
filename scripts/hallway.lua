@@ -77,6 +77,15 @@ function HALLWAY_CLASS.tostr(H)
 end
 
 
+function HALLWAY_CLASS.first_chunk(H)
+  return H.chunks[1]
+end
+
+function HALLWAY_CLASS.last_chunk(H)
+  return H.chunks[#H.chunks]
+end
+
+
 function HALLWAY_CLASS.reverse(H)
   H.R1, H.R2 = H.R2, H.R1
   H.K1, H.K2 = H.K2, H.K1
