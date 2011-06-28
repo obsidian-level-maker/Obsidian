@@ -91,39 +91,6 @@ function SECTION_CLASS.update_size(K)
 end
 
 
-function SECTION_CLASS.raw_nudge(K, dir, delta)
-  if not delta then delta = 1 end
-
-      if dir == 4 then K.sx1 = K.sx1 - delta
-  elseif dir == 6 then K.sx2 = K.sx2 + delta
-  elseif dir == 2 then K.sy1 = K.sy1 - delta
-  else                 K.sy2 = K.sy2 + delta
-  end
-
-  K:update_size()
-end
-
-
-function SECTION_CLASS.shrink(K, side)
-  local ox1, oy1, ox2, oy2 = geom.side_coords(side, K.sx1, K.sy1, K.sx2, K.sy2)
-
-  if side == 2 then K.sy1 = K.sy1 + 1 end
-  if side == 8 then K.sy2 = K.sy2 - 1 end
-  if side == 4 then K.sx1 = K.sx1 + 1 end
-  if side == 6 then K.sx2 = K.sx2 - 1 end
-
-  K:update_size()
-
-  -- update seed map
-  for x = ox1,ox2 do for y = oy1,oy2 do
-    local S = SEEDS[x][y]
-    if S.section == K then
-      S.section = nil ; S.room = nil
-    end
-  end end
-end
-
-
 function Section_is_valid(x, y)
   return 1 <= x and x <= SECTION_W and
          1 <= y and y <= SECTION_H
