@@ -12,6 +12,23 @@ DONE:  3D bridges: test two areas don't touch
 DONE:  put "cycle" connections amongst all the rest
 
 
+Connect:
+   +  get branch_big_rooms working again
+
+   ?  remove branch_small_rooms : just use "emergency" system
+
+
+Hallways:
+   +  create them again, want ability to start at a given
+      section and dir and return list of possible hallways
+
+   -  create the double penetration hallway
+
+Big junctions:
+   +  much more likely if small (e.g. 2x2)
+   -  often use them for 90 degree stalks : even in corner of map
+
+
 Cycles:
    -  less chance if R2 (middle room) is large
 
@@ -44,12 +61,9 @@ Crossovers:
    +  keep it simple for now: straight connection
    -  through a reclaimed joiner (middle of CCC etc) may be ideal
 
+   !!  mark seeds under crossover as "on path" (and crossed over)
 
-
-Big junctions:
-   +  much more likely if small (e.g. 2x2)
-   -  often use them for 90 degree stalks : even in corner of map
-
+   !!!  logic to make the hallways and actual bridges
 
 
 >>>>>  SECTIONS rework
@@ -74,9 +88,6 @@ Big junctions:
 
 FIX: areas may be separated by "scenic" chunks
      --> prevent that, c.f. sub-room logic in V3
-
-
-"blend" chunks ? 
 
 
 Windows: MUST decide them after all heights are done
