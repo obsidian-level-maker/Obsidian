@@ -940,7 +940,6 @@ function Areas_flesh_out()
 
     if C:has_parallel_stair(dir) then return false end
 
--- if STYLE.bridges == "few" and rand.odds(40) then return false end
     return true
   end
 
@@ -1069,7 +1068,7 @@ stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start
 
 
   local function try_3D_bridge(R)
-    -- TODO: STYLE.bridges
+    -- TODO: require THEME.bridges
 
     if not PARAM.bridges then return end
 
