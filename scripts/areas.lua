@@ -930,7 +930,13 @@ function Areas_flesh_out()
 
 
   local function bridge_target_possible(C, N, dir)
+    -- area must be free
     if N.area.floor_h then return false end
+
+    -- new area should not touch existing one
+    -- [since they will both get the same floor height, making the
+    --  bridge redundant]
+    if C.area:touches(N.area) then return false end
 
     if C:has_parallel_stair(dir) then return false end
 
@@ -1021,13 +1027,14 @@ function Areas_flesh_out()
       local S = SEEDS[sx][sy]
       if S.room != C.room then return false end
 
-      -- stop if hit a non-traversing chunk (cages, void etc)
+      -- stop if hit a non-traversable chunk (cages, void etc)
       if not (S.chunk or S.chunk.area) then return false end
 
       local N = S.chunk
 
-      -- can only go off the edge of an area
-      if N == C then return false end
+      -- must go off edge of area (not through middle) and should
+      -- not reconnect to same area
+      if N.area == C.area then return false end
 
       if dist >= 2 and bridge_target_possible(C, N, dir) then
         -- SUCCESS !
@@ -1036,9 +1043,9 @@ stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start
         set_area_floor(N.area, C.floor_h) 
 
         local end_x, end_y = geom.nudge(start_x, start_y, dir, dist-2)
-
-        make_3D_bridge(start_x, start_y, end_x, end_y, dir,
-                       C.floor_h, C.room.main_tex)
+        local f_mat = C.room:pick_floor_mat(C.floor_h
+        )
+        make_3D_bridge(start_x, start_y, end_x, end_y, dir, C.floor_h, f_mat)
         return true
       end
 
