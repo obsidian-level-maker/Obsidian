@@ -821,6 +821,81 @@ function Connect_rooms()
   end
 
 
+  local function can_make_crossover(K1, dir)
+    -- TODO: support right angle turn or zig-zag
+
+    local MID_A = K1:neighbor(dir, 1)
+    local MID_B = K1:neighbor(dir, 3)
+
+    if not MID_A or MID_A.used then return false end
+    if not MID_B or MID_B.used then return false end
+
+    local K2 = K1:neighbor(dir, 2)
+    local K3 = K1:neighbor(dir, 4)
+
+    if not K2 or not K2.room or K2.room == K1.room then return false end
+    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
+
+    local poss = Connect_possibility(K1.room, K3.room)
+    if poss < 0 then return false end
+
+    -- already got one?
+    if K2.has_crossover then return false end
+
+    -- size check
+    local long, deep = K.sw, K.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if long < 3 or deep > 4 then return false end
+
+    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
+
+    return true
+  end
+
+
+  local function add_crossover(K1, dir)
+    local MID_A = K1:neighbor(dir, 1)
+    local MID_B = K1:neighbor(dir, 3)
+
+    local K2 = K1:neighbor(dir, 2)
+    local K3 = K1:neighbor(dir, 4)
+
+    gui.printf("!!!!!! Crossover %s --> %s --> %s\n", K1:tostr(), K2:tostr(), K3:tostr())
+
+    local R = K1.room
+    local N = K3.room
+
+    Connect_merge_groups(R.conn_group, N.conn_group)
+
+    MID_A.used = true
+    MID_B.used = true
+
+    local D = CONN_CLASS.new("crossover", R, N, dir)
+
+    D.K1 = K1 ; D.K2 = K3
+
+    D.crossover =
+    {
+      MID_A = MID_A
+      MID_B = MID_B
+      MID_K = K2
+    }
+
+    table.insert(LEVEL.conns, D)
+
+    table.insert(R.conns, D)
+    table.insert(N.conns, D)
+
+    K1.num_conn = K1.num_conn + 1
+    K2.num_conn = K2.num_conn + 1
+
+    -- setup the middle pieces  [FIX THIS SHIT]
+    Hallway_simple(K1, MID_A, K2, {}, dir)
+    Hallway_simple(K2, MID_B, K3, {}, dir)
+  end
+
+
   local function emergency_score(K, dir)
     if not can_connect(K, dir) then return -1 end
 
@@ -845,12 +920,13 @@ function Connect_rooms()
 
   local function emergency_branch()
     local loc
+    local cross_loc
 
     for mx = 1,MAP_W do for my = 1,MAP_H do
       local K = SECTIONS[mx*2][my*2]
       local count = 0
 
-      if not K.room then continue; end
+      if not K.room then continue end
 
       for dir = 2,8,2 do
         local score, N = emergency_score(K, dir)
@@ -860,8 +936,23 @@ function Connect_rooms()
         if score >= 0 and (not loc or score > loc.score) then
           loc = { K=K, N=N, dir=dir, score=score }
         end
+
+        -- Cross-Over checks --
+
+        local cross_score = -1
+        if can_make_crossover(K, dir) then cross_score = gui.random() end
+
+        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
+          cross_loc = { K=K, dir=dir, score=cross_score }
+        end
+
       end
     end end -- mx, my
+
+
+    if cross_loc and rand.odds(99) --[[ FIXME --]] then
+      add_crossover(cross_loc.K, cross_loc.dir)
+    end
 
     -- nothing possible? hence we are done
     if not loc then return false end
