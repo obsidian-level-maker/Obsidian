@@ -88,7 +88,6 @@ function ROOM_CLASS.new(shape)
     shape = shape
 
     conns = {}
-    cycles = {}
     chunks = {}
     sections = {}
     middles = {}
@@ -1084,16 +1083,6 @@ function Rooms_blow_chunks()
       each C in D.hall.chunks do
         C:build()
       end
-    end
-  end
-
-  -- egads this is horrible
-
-  each K in LEVEL.cycles do
-    local H = assert(K.hall)
-
-    each C in H.chunks do
-      C:build()
     end
   end
 end

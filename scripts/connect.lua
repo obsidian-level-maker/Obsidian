@@ -1144,6 +1144,29 @@ function Connect_cycles()
   -- TODO: describe cycles........
 
 
+  local function add_cycle(K1, MID, K2, dir)
+    local D = CONN_CLASS.new("cycle", K1.room, K2.room, dir)
+
+    D.K1 = K1 ; D.K2 = K2
+
+    table.insert(LEVEL.conns, D)
+
+    table.insert(K1.room.conns, D)
+    table.insert(K2.room.conns, D)
+
+    Hallway_simple(K1, MID, K2, D, dir)
+    D.kind = "cycle"  -- FIXME
+
+    -- FIXME !!!!
+    assert(#MID.hall.chunks == 1)
+    MID.hall.chunks[1].floor_h = 0
+    MID.hall.height = 512
+    MID.hall:choose_textures()
+
+    table.insert(LEVEL.conns, D)
+  end
+
+
   local function try_connect_rooms(R1, R2)
     -- FIXME SHUFFLE VISITS
     for kx = R1.kx1, R1.kx2 do for ky = R1.ky1, R1.ky2 do
@@ -1162,17 +1185,7 @@ function Connect_cycles()
 
 gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
 
-        local dummy_conn = {}
-
-        Hallway_simple(K1, MID, K2, dummy_conn, dir)
-
-          -- FIXME !!!!
-          assert(#MID.hall.chunks == 1)
-          MID.hall.chunks[1].floor_h = 0
-          MID.hall.height = 512
-          MID.hall:choose_textures()
-
-        table.insert(LEVEL.cycles, MID)
+        add_cycle(K1, MID, K2, dir)
 
         return true
       end
@@ -1248,8 +1261,6 @@ gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
 
 
   ---| Connect_cycles |---
-
-  LEVEL.cycles = {}
 
   if STYLE.cycles != "none" then
     look_for_cycles()
