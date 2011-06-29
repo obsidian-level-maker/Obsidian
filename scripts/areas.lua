@@ -153,6 +153,25 @@ function Areas_handle_connections()
 
     if D.kind == "direct" then
       link_chunks(C1, D.dir1, C2, D)
+
+    elseif D.kind == "crossover" then
+      local info = D.crossover
+
+      local CA = chunk_for_section_side(info.MID_K, D.dir2)
+      local CB = chunk_for_section_side(info.MID_K, D.dir1)
+
+      local H1_A = info.hall_A:first_chunk()
+      local H2_A = info.hall_A:last_chunk()
+
+      local H1_B = info.hall_B:first_chunk()
+      local H2_B = info.hall_B:last_chunk()
+
+      link_chunks(C1, D.dir1, H1_A, D)
+      link_chunks(CA, D.dir2, H2_A, D)
+
+      link_chunks(CB, D.dir1, H2_A, D)
+      link_chunks(C2, D.dir2, H2_B, D)
+      
     else
       -- hallway
       local H1 = D.hall:first_chunk()

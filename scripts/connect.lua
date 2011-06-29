@@ -843,7 +843,7 @@ function Connect_rooms()
     if K2.has_crossover then return false end
 
     -- size check
-    local long, deep = K.sw, K.sh
+    local long, deep = K2.sw, K2.sh
     if geom.is_horiz(dir) then long, deep = deep, long end
 
     if long < 3 or deep > 4 then return false end
@@ -868,19 +868,18 @@ function Connect_rooms()
 
     Connect_merge_groups(R.conn_group, N.conn_group)
 
-    MID_A.used = true
-    MID_B.used = true
-
     local D = CONN_CLASS.new("crossover", R, N, dir)
 
     D.K1 = K1 ; D.K2 = K3
 
-    D.crossover =
+    local info =
     {
       MID_A = MID_A
       MID_B = MID_B
       MID_K = K2
     }
+
+    D.crossover = info
 
     table.insert(LEVEL.conns, D)
 
@@ -888,11 +887,20 @@ function Connect_rooms()
     table.insert(N.conns, D)
 
     K1.num_conn = K1.num_conn + 1
-    K2.num_conn = K2.num_conn + 1
+    K3.num_conn = K3.num_conn + 1
 
-    -- setup the middle pieces  [FIX THIS SHIT]
-    Hallway_simple(K1, MID_A, K2, {}, dir)
-    Hallway_simple(K2, MID_B, K3, {}, dir)
+    K2.has_crossover = true
+
+    -- setup the middle pieces  [FIXME: FIX THIS SHIT]
+    -- Note: this will mark the MID_A/B sections as used
+    local crap_A = {}
+    local crap_B = {}
+
+    Hallway_simple(K1, MID_A, K2, crap_A, dir)
+    Hallway_simple(K2, MID_B, K3, crap_B, dir)
+
+    info.hall_A = crap_A.hall
+    info.hall_B = crap_B.hall
   end
 
 
@@ -952,6 +960,7 @@ function Connect_rooms()
 
     if cross_loc and rand.odds(99) --[[ FIXME --]] then
       add_crossover(cross_loc.K, cross_loc.dir)
+      return true
     end
 
     -- nothing possible? hence we are done
