@@ -31,14 +31,10 @@ class SEED
 
   chunk : CHUNK
 
-  edge[DIR]  -- keyword can be "solid", "air", "walk"
-             -- can be nil (unallocated)
-             -- only 2 and 4 directions are used
-
   cost[DIR]  -- used when marking paths
 
-  floor_h, ceil_h -- floor and ceiling heights
-  f_tex,   c_tex  -- floor and ceiling textures
+  is_walk  -- TRUE if seed must be remain walkable
+           -- (i.e. cannot use for void / cage / liquid)
 }
 
 
@@ -58,7 +54,7 @@ BASE_Y = 0
 SEED_CLASS = {}
 
 function SEED_CLASS.new(x, y)
-  local S = { sx=x, sy=y, edge={}, cost={} }
+  local S = { sx=x, sy=y, cost={} }
   table.set_class(S, SEED_CLASS)
   return S
 end
@@ -89,6 +85,7 @@ function SEED_CLASS.mid_point(S)
 end
 
 
+--[[ OLD : TO BE REMOVED
 function SEED_CLASS.get_edge(S, dir)
   -- far edges of map are always solid
   if (dir == 2 and S.sy == 1) or
@@ -128,7 +125,7 @@ function SEED_CLASS.set_edge(S, dir, value)
 
   S.edge[dir] = value
 end
-
+--]]
 
 
 --------------------------------------------------------------------
@@ -186,7 +183,7 @@ end
 
 
 
-function Seed_flood_fill_edges()
+function Seed_flood_fill_edges__OLD()
   local active = {}
 
   for x = 1,SEED_W do for y = 1,SEED_H do

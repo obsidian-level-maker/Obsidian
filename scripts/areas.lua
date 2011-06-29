@@ -205,8 +205,8 @@ function Areas_important_stuff()
 
         S.cost[dir] = cost
         N.cost[10-dir] = cost
-      else
-        S:set_edge(dir, "solid")
+---### else
+---###   S:set_edge(dir, "solid")
       end
     end
 
@@ -460,24 +460,22 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
       error("NO PATH INSIDE ROOM!\n")
     end
 
-    -- mark the seed edges as "walk"
-    for _,pos in ipairs(path) do
+    -- mark the seeds as "walk"
+    each pos in path do
       local sx = R.sx1 + (pos.x - 1)
       local sy = R.sy1 + (pos.y - 1)
 
       local S = SEEDS[sx][sy]
       assert(S.room == R)
 
+---###  S:set_edge(pos.dir, "walk")
+
       S.is_walk = true
 
-      S:set_edge(pos.dir, "walk")
-
-      -- debugging stuff
-      S.debug_path = true
-      if false then
-        local mx, my = S:mid_point()
-        Trans.entity("potion", mx, my, 32)
-      end
+--[[  -- DEBUGGING AID --
+      local mx, my = S:mid_point()
+      Trans.entity("potion", mx, my, 32)
+--]]
     end
 
     local last = table.last(path)
@@ -485,10 +483,10 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     local sx = R.sx1 + lx - 1
     local sy = R.sy1 + ly - 1
     local S = SEEDS[sx][sy]
+
     assert(S.room == R)
 
     S.is_walk = true
-    S.debug_path = true
   end
 
 
