@@ -5,10 +5,38 @@ OBLIGE TODO
 Current Work
 ------------
 
+DONE:  rework Areas_handle_conns() function
+
+DONE:  3D bridges: test two areas don't touch
+
+DONE:  put "cycle" connections amongst all the rest
+
+
+Cycles:
+   -  less chance if R2 (middle room) is large
+
+   +  if an area touches, try to choose a compatible height
+
+   +  when area has height difference, create stair or lift
+      in the hallway space.
+
+
+
+NO:  kill the LINK object?
+     keep it because a conn is too general (potentially
+     involving 4 chunks with hallways -- i.e. TWO linkages
+     to keep track of).
+
 
 Intrusions:
    +  implement them by "adopting" a hallway consisting of
       HORIZ + JUNC + VERT (around corner of the room)
+
+   -  could potentially adopt the whole section
+      [OR any seeds which are not part of the room paths]
+
+   Q/ keep as a "hallway" or create an "area" ?
+   A/ turn into an area
 
 
 Crossovers:
@@ -16,9 +44,6 @@ Crossovers:
    +  keep it simple for now: straight connection
    -  through a reclaimed joiner (middle of CCC etc) may be ideal
 
-
-Cycles:
-   +  less chance if R2 (middle room) is large
 
 
 Big junctions:
