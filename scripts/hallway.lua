@@ -174,6 +174,20 @@ function HALLWAY_CLASS.make_chunks(H)
 end
 
 
+function HALLWAY_CLASS.build(H)
+  -- FIXME !!!!
+  if not H.height then
+    H.height = 768
+    each C in H.chunks do C.floor_h = 0 end
+    H:choose_textures()
+  end
+
+  each C in H.chunks do
+    C:build()
+  end
+end
+
+
 ----------------------------------------------------------------
 
 

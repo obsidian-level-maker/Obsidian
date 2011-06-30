@@ -1077,11 +1077,12 @@ function Rooms_blow_chunks()
   end
 
   each D in LEVEL.conns do
-    if D.hall then
-      each C in D.hall.chunks do
-        C:build()
-      end
-    end
+    if D.hall then D.hall:build() end
+
+    if D.crossover then
+      D.crossover.hall_A:build()
+      D.crossover.hall_B:build()
+    end  
   end
 end
 

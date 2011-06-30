@@ -1285,12 +1285,6 @@ function Connect_cycles()
     Hallway_simple(K1, MID, K2, D, dir)
     D.kind = "cycle"  -- FIXME
 
-    -- FIXME !!!!
-    assert(#MID.hall.chunks == 1)
-    MID.hall.chunks[1].floor_h = 0
-    MID.hall.height = 512
-    MID.hall:choose_textures()
-
     table.insert(LEVEL.conns, D)
   end
 
