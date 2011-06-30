@@ -840,7 +840,7 @@ function Connect_rooms()
     if poss < 0 then return false end
 
     -- already got one?
-    if K2.has_crossover then return false end
+    if K2.crossover_chunk then return false end
 
     -- size check
     local long, deep = K2.sw, K2.sh
@@ -889,8 +889,6 @@ function Connect_rooms()
     K1.num_conn = K1.num_conn + 1
     K3.num_conn = K3.num_conn + 1
 
-    K2.has_crossover = true
-
     -- setup the middle pieces  [FIXME: FIX THIS SHIT]
     -- Note: this will mark the MID_A/B sections as used
     local crap_A = {}
@@ -901,6 +899,36 @@ function Connect_rooms()
 
     info.hall_A = crap_A.hall
     info.hall_B = crap_B.hall
+
+    -- allocate the chunk in the crossed-over room
+    -- [TODO: this may be an overly cautious approach, but it does
+    --        keep the logic fairly simple for now]
+    -- TODO II: probably move this into AREA code
+
+    local sx1, sy1
+    local sx2, sy2
+
+    if geom.is_vert(dir) then
+      sx1 = math.i_mid(K2.sx1, K2.sx2)
+      sx2 = sx1
+
+      sy1 = K2.sy1
+      sy2 = K2.sy2
+    else
+      sy1 = math.i_mid(K2.sy1, K2.sy2)
+      sy2 = sy1
+
+      sx1 = K2.sx1
+      sx2 = K2.sx2
+    end
+
+    local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
+
+    C.foobage = "crossover"
+
+    info.chunk = C
+
+    K2.crossover_chunk = C
   end
 
 
