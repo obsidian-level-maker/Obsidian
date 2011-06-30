@@ -793,8 +793,8 @@ end
 
     if C.hx == hx and C.hy == hy then
 
-      local mx = math.imid(x1, x2)
-      local my = math.imid(y1, y2)
+      local mx = math.i_mid(x1, x2)
+      local my = math.i_mid(y1, y2)
       
       local T = Trans.spot_transform(mx, my, f_h, 0)
 

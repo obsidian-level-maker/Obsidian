@@ -51,7 +51,7 @@ function math.mid(x, y)
   return (x + y) / 2.0
 end
 
-function math.imid(x, y)
+function math.i_mid(x, y)
   return int((x + y) / 2.0)
 end
 

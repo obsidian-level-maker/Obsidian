@@ -86,10 +86,10 @@ function Areas_handle_connections()
     local sx, sy
 
     if geom.is_vert(dir) then
-      sx = math.imid(K.sx1, K.sx2)
+      sx = math.i_mid(K.sx1, K.sx2)
       sy = (dir == 2 ? K.sy1 ; K.sy2)
     else
-      sy = math.imid(K.sy1, K.sy2)
+      sy = math.i_mid(K.sy1, K.sy2)
       sx = (dir == 4 ? K.sx1 ; K.sx2)
     end
 
