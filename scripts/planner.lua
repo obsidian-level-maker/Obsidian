@@ -147,6 +147,11 @@ function SECTION_CLASS.set_facade(K, facade)
 end
 
 
+function SECTION_CLASS.approx_side_coord(K, dir)
+  return geom.nudge(K.kx, K.ky, dir, 0.5)
+end
+
+
 ------------------------------------------------------------------------
 
 function Plan_alloc_id(kind)

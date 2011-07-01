@@ -309,9 +309,6 @@ end
 
 
 function ROOM_CLASS.num_crossovers(R)
-  return 0  -- FIXME !!!!
-
---[[
   local count = 0
 
   each K in R.sections do
@@ -319,7 +316,6 @@ function ROOM_CLASS.num_crossovers(R)
   end
 
   return count
---]]
 end
 
 

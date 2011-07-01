@@ -616,28 +616,28 @@ function Quest_make_quests()
     local score = 0
 
     -- prefer to visit rooms which have crossovers first
-    score = score + crossover_volume(D) * 2.3
+    score = score + crossover_volume(D) * 7.3
 
---[[ FIXME !!!! 
     local entry_kx = R.kx1
     local entry_ky = R.ky1
 
-    if R.entry_conn then
-      entry_kx = R.entry_conn.K2.kx
-      entry_ky = R.entry_conn.K2.ky
-    end
+    if D.dir1 and R.entry_conn and R.entry_conn.dir2 then
+      local x1, y1 = R.entry_conn.K2:approx_side_coord(R.entry_conn.dir2)
+      local x2, y2 =            D.K1:approx_side_coord(D.dir1)
 
-    -- TODO: better distance calc
-    local score = geom.dist(entry_kx, entry_ky, exit.K2.kx, exit.K2.ky)
+      local dist = geom.dist(x1, y1, x2, y2)
+      if dist > 4 then dist = 4 end
+
+      score = score + dist
+    end
 
     -- strong preference to avoid 180 degree turns
-    if R.entry_conn and R.entry_conn.dir2 and exit.dir != R.entry_conn.dir2 then
-      scores = score + 4
+    if D.dir1 and R.entry_conn and R.entry_conn.dir2 and D.dir1 != R.entry_conn.dir2 then
+      score = score + 3
     end
---]]
 
     -- tie breaker
-    return score + gui.random() / 3
+    return score + gui.random() / 5
   end
 
 
