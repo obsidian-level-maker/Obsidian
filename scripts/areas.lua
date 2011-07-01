@@ -1210,17 +1210,23 @@ function Areas_flesh_out()
       entry_area = assert(C.area)
 --- stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-      if R.entry_conn.hall then
+      if R.entry_conn.crossover then
+        local info = R.entry_conn.crossover
+        entry_h = info.hall_B.chunks[1].floor_h
+      elseif R.entry_conn.hall then
         local hall = R.entry_conn.hall
         entry_h = assert(hall.chunks[#hall.chunks].floor_h)
       else
         local NC = assert(R.entry_conn.C1)
         entry_h  = assert(NC.floor_h)
       end
-
+    
     else
       entry_area = rand.pick(R.areas)
       assert(entry_area)
+    end
+
+    if not entry_h then
       entry_h = rand.pick { 0,128,192,256,384 }
     end
 
@@ -1265,7 +1271,10 @@ function Areas_flesh_out()
 
         -- TODO: analyse nearby chunks to get min/max floor_h
 
-        if info.conn.R1.quest.id < R.quest.id then
+        local id1 = info.conn.R1.quest.id
+        local id2 = R.quest.id
+
+        if id1 < id2 or (id1 == id2 and rand.odds(30)) then
           -- the crossover bridge is part of a earlier quest, so
           -- we must not let the player fall down into this room
           -- (and subvert the quest structure).  Therefore the
@@ -1280,6 +1289,9 @@ function Areas_flesh_out()
           R.crossover_max_h = math.max(R.crossover_max_h or -999, C.crossover_h)
         end
 stderrf("CROSSOVER %s : %s @ h:%d\n", C:tostr(), C.crossover_mode, C.crossover_h)
+
+        info.hall_A.chunks[1].floor_h = C.crossover_h
+        info.hall_B.chunks[1].floor_h = C.crossover_h
       end
     end
   end

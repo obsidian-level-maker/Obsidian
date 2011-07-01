@@ -178,7 +178,7 @@ function HALLWAY_CLASS.build(H)
   -- FIXME !!!!
   if not H.height then
     H.height = 768
-    each C in H.chunks do C.floor_h = 0 end
+    each C in H.chunks do C.floor_h = C.floor_h or 0 end
     H:choose_textures()
   end
 
