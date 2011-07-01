@@ -12,6 +12,37 @@ DONE:  3D bridges: test two areas don't touch
 DONE:  put "cycle" connections amongst all the rest
 
 
+>>>>  Crossovers:
+
+   >>>  limit of one crossover per room
+
+   >>>  height of hall_A + crossover + hall_B is from R1
+        [if crossover is visited before under room]
+
+        If crossover is visited after, hall_A must adjust
+
+   >>>  when a room has a visited crossover, limit area heights
+        (e.g. bridge : max_h, channel : min_h) and the entry
+        hallway must account for that too
+
+   >>>  when a room has unvisited crossover, determine height
+        using same logic as now and entry hallway of crossover
+        must account for that when reached.
+
+   DONE:  room must be at >= 3 seeds long, <= 4 seeds deep
+
+   +  keep it simple for now: straight connection
+   -  through a reclaimed joiner (middle of CCC etc) may be ideal
+
+   !!  mark seeds under crossover as "is_walk" (and crossed over)
+
+       create a chunk for it (one seed wide)
+
+   !!!  logic to make the hallways and actual bridges
+
+   NOTE: DOOM 2.5d compatible versions are possible!
+
+
 Connect:
    +  get branch_big_rooms working again
 
@@ -54,16 +85,6 @@ Intrusions:
 
    Q/ keep as a "hallway" or create an "area" ?
    A/ turn into an area
-
-
-Crossovers:
-   +  room must be at >= 3 seeds long, <= 4 seeds deep
-   +  keep it simple for now: straight connection
-   -  through a reclaimed joiner (middle of CCC etc) may be ideal
-
-   !!  mark seeds under crossover as "on path" (and crossed over)
-
-   !!!  logic to make the hallways and actual bridges
 
 
 >>>>>  SECTIONS rework
