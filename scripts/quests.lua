@@ -535,14 +535,16 @@ function Quest_make_quests()
   end
 
 
-  local function add_lock(C)
+  local function add_lock(D)
+-- stderrf("   Locking conn to room %s\n", D.R2:tostr())
+
     local LOCK =
     {
-      conn = C,
-      tag = Plan_alloc_id("tag"),
+      conn = D
+      tag = Plan_alloc_id("tag")
     }
 
-    C.lock = LOCK
+    D.lock = LOCK
 
     -- keep newest locks at the front of the active list
     table.insert(active_locks, 1, LOCK)
@@ -597,35 +599,26 @@ function Quest_make_quests()
   end
 
 
-  local function evaluate_exit(exit, R, ...)
-    -- TODO: better distance calc
-    local score = geom.dist(entry_kx, entry_ky, exit.K2.kx, exit.K2.ky)
+  local function crossover_volume(D)
+    local count = D.R2:num_crossovers()
 
-    -- strong preference to avoid 180 degree turns
-    if R.entry_conn and R.entry_conn.dir2 and exit.dir != R.entry_conn.dir2 then
-      scores = score + 4
-    end
-
-    -- tie breaker
-    return score + gui.random() / 3
-  end
-
-
-  local function pick_free_exit(R, exits)
-    if #exits == 1 then return 1 end
-
-    -- teleporters cannot be locked, hence must pick it when present
-    each exit in exits do
-      if exit.kind == "teleporter" then
-        return _index
+    each D2 in D.R2.conns do
+      if D2.R1 == D.R2 then
+        count = count + crossover_volume(D2)
       end
     end
 
--- FIXME !!!!!
-do return rand.irange(1, #exits) end
+    return count
+  end
 
-    local scores = {}
 
+  local function evaluate_exit(R, D)
+    local score = 0
+
+    -- prefer to visit rooms which have crossovers first
+    score = score + crossover_volume(D) * 2.3
+
+--[[ FIXME !!!! 
     local entry_kx = R.kx1
     local entry_ky = R.ky1
 
@@ -634,17 +627,46 @@ do return rand.irange(1, #exits) end
       entry_ky = R.entry_conn.K2.ky
     end
 
-    each exit in exits do
-      scores[_index] = evaluate_exit(exit, R) -- FIXME
+    -- TODO: better distance calc
+    local score = geom.dist(entry_kx, entry_ky, exit.K2.kx, exit.K2.ky)
+
+    -- strong preference to avoid 180 degree turns
+    if R.entry_conn and R.entry_conn.dir2 and exit.dir != R.entry_conn.dir2 then
+      scores = score + 4
+    end
+--]]
+
+    -- tie breaker
+    return score + gui.random() / 3
+  end
+
+
+  local function pick_free_exit(R, exits)
+    if #exits == 1 then
+      return exits[1]
     end
 
-    local value,index = table.pick_best(scores)
-    assert(value)
+    -- teleporters cannot be locked, hence must pick it when present
+    each exit in exits do
+      if exit.kind == "teleporter" then
+        return exit
+      end
+    end
 
--- stderrf("scores = { %1.2f %1.2f %1.2f %1.2f } --> %d\n",
---         scores[1] or 0, scores[2] or 0,
---         scores[3] or 0, scores[4] or 0, index)
-    return index
+    local best_score = -9e9
+    local best_exit
+
+    each exit in exits do
+      local score = evaluate_exit(R, exit)
+
+-- stderrf("exit score[%d] = %1.1f", _index, score)
+      if score > best_score then
+        best_score = score
+        best_exit  = exit
+      end
+    end
+
+    return assert(best_exit)
   end
 
 
@@ -672,20 +694,17 @@ do return rand.irange(1, #exits) end
 
       else
 
-        local free_idx = pick_free_exit(R, exits)
+        local free_exit = pick_free_exit(R, exits)
 
         -- lock up any excess branches
-        for idx = 1,#exits do
-          local C = exits[idx]
-
-          if idx != free_idx then
--- stderrf("   Locking conn to room %s\n", C.R2:tostr())
-            add_lock(C)
+        each exit in exits do
+          if exit != free_exit then
+            add_lock(exit)
           end
         end
 
         -- continue down the free exit
-        R = exits[free_idx].R2
+        R = free_exit.R2
       end
     end -- while
   end
@@ -762,6 +781,21 @@ do return rand.irange(1, #exits) end
   gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
 
   dump_visit_order()
+
+
+if not total_cross then total_cross = 0 ; cross_after = 0 ; cross_before = 0 end
+each D in LEVEL.conns do
+  if D.crossover then
+    total_cross = total_cross + 1
+    local R_src  = D.R1
+    local R_over = D.crossover.MID_K.room
+    assert(R_src and R_over)
+    if R_over.quest.id < R_src.quest.id then cross_before = cross_before + 1 end
+    if R_over.quest.id > R_src.quest.id then cross_after  = cross_after  + 1 end
+  end
+end
+stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
+
 
 --??? Quest_find_storage_rooms()
 

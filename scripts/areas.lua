@@ -1054,7 +1054,7 @@ function Areas_flesh_out()
 
       if dist >= 2 and bridge_target_possible(C, N, dir) then
         -- SUCCESS !
-stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start_y, sx, sy)
+--stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start_y, sx, sy)
 
         set_area_floor(N.area, C.floor_h) 
 

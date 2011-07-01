@@ -308,6 +308,21 @@ function ROOM_CLASS.set_facade(R, facade)
 end
 
 
+function ROOM_CLASS.num_crossovers(R)
+  return 0  -- FIXME !!!!
+
+--[[
+  local count = 0
+
+  each K in R.sections do
+    if K.crossover_chunk then count = count + 1 end
+  end
+
+  return count
+--]]
+end
+
+
 ----------------------------------------------------------------
 
 
