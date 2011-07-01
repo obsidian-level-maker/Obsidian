@@ -783,6 +783,7 @@ function Quest_make_quests()
   dump_visit_order()
 
 
+--[[
 if not total_cross then total_cross = 0 ; cross_after = 0 ; cross_before = 0 end
 each D in LEVEL.conns do
   if D.crossover then
@@ -795,6 +796,7 @@ each D in LEVEL.conns do
   end
 end
 stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
+--]]
 
 
 --??? Quest_find_storage_rooms()

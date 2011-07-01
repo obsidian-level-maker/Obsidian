@@ -682,6 +682,9 @@ function Areas_flesh_out()
           -- already have it?
           if table.has_elem(list, N) then continue end
 
+          -- never merge crossover chunks
+          if N.foobage == "crossover" then return end
+
           -- maximum size check
           local new_size = C.area.size + N.area.size
 
@@ -700,6 +703,9 @@ function Areas_flesh_out()
 
 
   local function try_expand_area(C, area_tab)
+    -- never merge crossover chunks
+    if C.foobage == "crossover" then return end
+
     local neighbors = {}
 
     -- FIXME: have a C.neighbors field
@@ -751,6 +757,8 @@ function Areas_flesh_out()
       AREA.max_size = 20 --!!! math.min(R.svolume * X, Y)
 
       AREA.foobage = C.foobage
+
+      if C.foobage == "crossover" then AREA.crossover = true end
     end
 
     for loop = 1,10 do
@@ -902,7 +910,9 @@ function Areas_flesh_out()
   local function eval_stair_pair(C1, C2, dir)
     -- never use purpose or conn chunks
     if C1.purpose or C1.weapon then return -1 end
+
     if C1.foobage == "conn" then return -1 end
+    if C1.foobage == "crossover" then return -1 end
 
     -- already has stair?
     if C1.stair then return -1 end
@@ -1047,6 +1057,9 @@ function Areas_flesh_out()
       if not (S.chunk or S.chunk.area) then return false end
 
       local N = S.chunk
+
+      -- never pass a crossover [FIXME: relax this]
+      if N.foobage == "crossover" then return false end
 
       -- must go off edge of area (not through middle) and should
       -- not reconnect to same area
