@@ -1006,29 +1006,6 @@ function Plan_add_natural_rooms()
   end
 
 
-  local function surround_map()
-    -- NOTE: this won't work very well if other rooms already exist
-    
-    local area
-
-    for mx = 1,MAP_W do for my = 1,MAP_H do
-      if (mx > 1 and mx < MAP_W) and (my > 1 and my < MAP_H) then
-        continue;
-      end
-
-      local K = SECTIONS[mx*2][my*2]
-      if K.room then return end
-
-      if not area then
-        area = new_area(mx, my)
-        area.room.surrounder = true
-      end
-
-      K:set_room(area.room)
-    end end
-  end
-
-
   ---| Plan_add_natural_rooms |---
 
 -- FIXME: not necessarily "natural" -- just odd shaped
@@ -1047,15 +1024,6 @@ function Plan_add_natural_rooms()
   gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
 
   if quota < 2 then return end
-
-  -- occasionally surround the whole map
-  -- FIXME: move to Plan_add_special_rooms
-  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
-    surround_map()
-
-    Plan_dump_sections("Sections with natural areas:")
-    return;
-  end
 
 
   -- add starting spots (one for each area)
@@ -1108,7 +1076,35 @@ end
 
 
 function Plan_add_special_rooms()
-  -- nothing here.... YET!
+
+  local function surround_map()
+    local room = ROOM_CLASS.new("odd")
+
+    room.is_surrounder = true
+
+    for mx = 1,MAP_W do for my = 1,MAP_H do
+      if not (mx == 1 or mx == MAP_W or my == 1 or my == MAP_H) then
+        continue
+      end
+
+      local K = SECTIONS[mx*2][my*2]
+      assert(not K.room)
+
+      K:set_room(room)
+    end end
+
+    Plan_dump_sections("Sections for surrounder:")
+  end
+
+
+  ---| Plan_add_special_rooms |---
+
+  -- occasionally surround the whole map
+  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
+    surround_map()
+    return
+  end
+
 end
 
 
