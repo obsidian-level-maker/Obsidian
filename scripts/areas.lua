@@ -1256,8 +1256,39 @@ function Areas_flesh_out()
   end
 
 
+  local function crossover_heights(R)
+    each K in R.sections do
+      local C = K.crossover_chunk
+
+      if C then
+        local info = C.crossover_info
+
+        -- TODO: analyse nearby chunks to get min/max floor_h
+
+        if info.conn.R1.quest.id < R.quest.id then
+          -- the crossover bridge is part of a earlier quest, so
+          -- we must not let the player fall down into this room
+          -- (and subvert the quest structure).  Therefore the
+          -- crossover becomes a "cross under" :)
+
+          C.crossover_mode = "channel"
+          C.crossover_h    = R.floor_min_h - 128
+        else
+          C.crossover_mode = "bridge"
+          C.crossover_h    = R.floor_max_h + 128
+
+          R.crossover_max_h = math.max(R.crossover_max_h or -999, C.crossover_h)
+        end
+stderrf("CROSSOVER %s : %s @ h:%d\n", C:tostr(), C.crossover_mode, C.crossover_h)
+      end
+    end
+  end
+
+
   local function prepare_ceiling(R)
-    local h = R.floor_max_h + rand.pick { 128, 192, 256, 320, 384 }
+    local h = R.crossover_max_h or R.floor_max_h
+
+    h = h + rand.pick { 128, 192, 256, 320, 384 }
 
     if R.outdoor then
       R.sky_h = h + 128
@@ -1272,6 +1303,7 @@ function Areas_flesh_out()
     do_floors(R)
     area_heights(R)
     hallway_heights(R)
+    crossover_heights(R)
     prepare_ceiling(R)
   end
 

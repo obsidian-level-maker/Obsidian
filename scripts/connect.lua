@@ -874,6 +874,8 @@ function Connect_rooms()
 
     local info =
     {
+      conn = D
+
       MID_A = MID_A
       MID_B = MID_B
       MID_K = K2
@@ -925,6 +927,7 @@ function Connect_rooms()
     local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
 
     C.foobage = "crossover"
+    C.crossover_info = info
 
     info.chunk = C
 
