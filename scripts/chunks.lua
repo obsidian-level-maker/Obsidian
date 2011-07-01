@@ -465,9 +465,12 @@ end
 function CHUNK_CLASS.build(C)
 
   local f_h = assert(C.floor_h)
-  local c_h = (C.bridge_h or f_h) + 256
+  local c_h = (C.bridge_h or f_h) + 384
   local c_medium = "solid"
   local light = 0
+
+  if C.crossover_mode == "channel" then f_h = C.crossover_h end
+  if C.crossover_mode == "bridge"  then c_h = math.max(c_h, C.crossover_h + 192) end
 
   local brush
   local w_mat, w_tex
@@ -699,6 +702,48 @@ end
   end
 
 
+  -- crossover
+
+  if C.crossover_mode == "bridge" then
+    local h = C.crossover_h
+
+    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+
+    Trans.set_tex(brush, f_mat.t)
+
+    table.insert(brush, { t=h,    tex=f_tex })
+    table.insert(brush, { b=h-16, tex=f_tex })
+
+    gui.add_brush(brush)
+  end
+
+  if C.crossover_mode == "channel" then
+    local h = C.floor_h
+    local dir = assert(C.crossover_info.conn.dir1)
+
+    for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+      local S = SEEDS[sx][sy]
+
+      local x1, y1, x2, y2 = S.x1, S.y1, S.x2, S.y2
+
+      if geom.is_vert(dir) then
+        y1 = y1 + 64 ; y2 = y2 - 64
+      else
+        x1 = x1 + 64 ; x2 = x2 - 64
+      end
+
+      local brush = Trans.bare_quad(x1, y1, x2, y2)
+
+      Trans.set_tex(brush, f_mat.t)
+
+      table.insert(brush, { t=h,    tex=f_tex })
+      table.insert(brush, { b=h-16, tex=f_tex })
+
+      gui.add_brush(brush)
+    end end -- sx, sy
+  end
+
+
   -- object
 
   local ent = "dummy"
@@ -723,7 +768,9 @@ end
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.purpose and not C.stair then
+  if C.room and not C.purpose and not C.stair and
+     not (C.foobage == "crossover")
+  then
     local R = C.room
 
 --[[
