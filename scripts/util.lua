@@ -55,6 +55,10 @@ function math.i_mid(x, y)
   return int((x + y) / 2.0)
 end
 
+function math.in_range(low, x, high)
+  return low <= x and x <= high
+end
+
 function math.clamp(low, x, high)
   if x < low  then return low end
   if x > high then return high end
