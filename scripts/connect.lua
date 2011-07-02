@@ -931,6 +931,7 @@ function Connect_rooms()
     local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
 
     C.foobage = "crossover"
+    C.crossover = CROSSOVER
 
     CROSSOVER.chunk = C
   end
