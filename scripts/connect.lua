@@ -836,6 +836,12 @@ function Connect_rooms()
     if not K2 or not K2.room or K2.room == K1.room then return false end
     if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
 
+    -- limit of one per room
+    -- [cannot do more since crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if K1.room:num_crossovers() > 0 then return false end
+    if K3.room:num_crossovers() > 0 then return false end
+
     local poss = Connect_possibility(K1.room, K3.room)
     if poss < 0 then return false end
 
