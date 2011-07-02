@@ -36,6 +36,31 @@ OBLIGE 3.57 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">02-Jul-2011:</div>
+<blockquote class="news">
+Wow, hard to believe it's been five months since the last update!
+
+<p>
+OBLIGE development has been continuing and progress
+<i>is</i> being made (slowly but surely).
+
+Recently I have been working on improving the overall
+structure of levels, such as creating multiple paths between
+rooms and better hallway logic.  I have also worked on
+adding some 3D architecture into the maps, as well as
+getting more games (like Hexen) into a usable state.
+
+<p>
+I expect to make a new release by the end of the
+year -- though for anyone really curious there will
+be a couple of "WIP" (Work In Progress) testing
+packages made available on the forums before then.
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">28-Jan-2011:</div>
 <blockquote class="news">
 Quick note to say that I am still hacking
