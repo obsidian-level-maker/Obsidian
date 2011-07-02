@@ -735,6 +735,8 @@ function Areas_flesh_out()
     -- organizing them into a number of separate floor areas
     -- (generally of different heights) and stairs between them.
 
+    R.floor_limit = { -512, 1024 }
+
     -- 1. create chunks for remaining seeds
     filler_chunks(R)
 
@@ -842,8 +844,8 @@ function Areas_flesh_out()
   end
 
 
-  local function pick_stair_skin(stair)
-    if not stair then return nil end
+  local function pick_stair_skin(R, base_h, stair_spot)
+    assert(stair_spot)
 
     local tab = {}
 
@@ -853,13 +855,22 @@ function Areas_flesh_out()
       tab[name] = prob
     end
 
-    if table.empty(tab) then
-      error("could not find usable stair!")
+    -- keep trying until find one which fits
+    while not table.empty(tab) do
+      local name = rand.key_by_probs(tab)
+      tab[name] = nil
+
+      local skin = assert(GAME.SKINS[name])
+
+      -- only check the first (smallest) delta
+      local z = base_h + skin._deltas[1]
+
+      if math.in_range(R.floor_limit[1], z, R.floor_limit[2]) then
+        return skin -- OK --
+      end
     end
 
-    local name = rand.key_by_probs(tab)
-
-    return GAME.SKINS[name]
+    error("could not find usable stair!")
   end
 
 
@@ -889,10 +900,14 @@ function Areas_flesh_out()
 
     local h_probs = {}
 
-    each dh in deltas do
-      local h = base_h + dh
-      h_probs[h] = (height_is_unique(h, touching) ? 100 ; 1)
+    each dz in deltas do
+      local z = base_h + dz
+      if math.in_range(R.floor_limit[1], z, R.floor_limit[2]) then
+        h_probs[z] = (height_is_unique(z, touching) ? 100 ; 1)
+      end
     end
+
+    assert(not table.empty(h_probs))
 
     return rand.key_by_probs(h_probs)
   end
@@ -1135,7 +1150,8 @@ function Areas_flesh_out()
 ---??      mini_stair1 = mini_stair2 ; mini_stair2 = nil
 ---??    end
 
-    local skin = pick_stair_skin(stair1)
+    local skin
+    if stair1 then skin = pick_stair_skin(A1.room, base_h, stair1) end
 
     local new_h = pick_area_height(A2, base_h, skin)
 
@@ -1228,6 +1244,16 @@ function Areas_flesh_out()
 
     if not entry_h then
       entry_h = rand.pick { 0,128,192,256,384 }
+    end
+
+    if not math.in_range(R.floor_limit[1], entry_h, R.floor_limit[2]) then
+      stderrf("!!! entry_h not in floor_limit\n")
+      if entry_h < R.floor_limit[1] then
+         entry_h = R.floor_limit[1]
+      else
+         entry_h = R.floor_limit[2]
+      end
+      -- !!!! FIXME: entry hallway will need to compensate (have a stair or whatever)
     end
 
     R.entry_h = entry_h
