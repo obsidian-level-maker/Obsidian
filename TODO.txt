@@ -18,6 +18,10 @@ Crossovers:
 
    -  try to create through a reclaimed joiner (middle of CCC etc)
 
+   -  fix hallway vertical gaps
+
+   +  spot_for_wotsit: ignore/handle crossover chunk 
+
    ?  DOOM 2.5d compatible versions
       
 
@@ -72,12 +76,19 @@ Stairs:
 
 
 
+++  create AUTHORS.txt / simplify Credits web page
+
 ++  some VOID and LIQUID areas
+    [void requires 6x6 surrounding non-void room and must not
+     touch scenic chunks]
 
 ++  LOGO pictures on indoor walls (DOOM format games)
 
 
 !!!  the "apply twice" problem in prefab build code
+
+
+WISH: 3D bridges can be 3D stairs [relax area touching rule]
 
 
 
@@ -127,9 +138,9 @@ FOCUS WILL BE: room connection logic
 
 +  cycles
 
-+  intrusions
-
 +  crossovers
+
+-  intrusions
 
 -  liquid areas
 
