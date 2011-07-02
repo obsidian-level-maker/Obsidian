@@ -737,6 +737,14 @@ function Areas_flesh_out()
 
     R.floor_limit = { -512, 1024 }
 
+    if R.crossover and R.crossover.floor_h then
+      if R.crossover.mode == "bridge" then
+        R.floor_limit[2] = R.crossover.floor_h - 128
+      else
+        R.floor_limit[1] = R.crossover.floor_h + 128
+      end
+    end
+
     -- 1. create chunks for remaining seeds
     filler_chunks(R)
 
@@ -1283,10 +1291,10 @@ stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
 
 
   local function set_crossover_mode(info)
-    local id1 = info.conn.R1.quest.id
+    local id1 = info.conn.R2.quest.id
     local id2 = info.MID_K.room.quest.id
 
-    if id1 < id2 or (id1 == id2 and rand.odds(30)) then
+    if id1 < id2 or (id1 == id2 and rand.odds(10)) then
       -- the crossover bridge is part of a earlier quest, so
       -- we must not let the player fall down into this room
       -- (and subvert the quest structure).
@@ -1298,7 +1306,7 @@ stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
       info.mode = "bridge"
     end
 
-stderrf("CROSSOVER %s : %s\n", info.chunk:tostr(), info.mode)
+stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id2)
   end
 
 
