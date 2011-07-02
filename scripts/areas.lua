@@ -726,6 +726,19 @@ function Areas_flesh_out()
   end
 
 
+  --
+  -- CROSS-OVER NOTES:
+  --
+  -- +  when a room has a visited crossover, limit area heights
+  --    (e.g. bridge : max_h, channel : min_h) and the entry
+  --    hallway must account for that too
+  --
+  -- +  when a room has unvisited crossover, determine height
+  --    using room's min/max floor_h and the entry hallway of the
+  --    crossover must account for that when reached.
+  --
+
+
   local function do_floors(R)
     -- the seeds which are left over from the previous allocations
     -- should form a contiguous area which ensures traversibility

@@ -5,43 +5,21 @@ OBLIGE TODO
 Current Work
 ------------
 
-DONE:  rework Areas_handle_conns() function
 
-DONE:  3D bridges: test two areas don't touch
+Crossovers:
+   +  put stairs in the mini-hallways
 
-DONE:  put "cycle" connections amongst all the rest
+   -  build the bridges / channels using prefabs
 
+   -  give AREAS near height incompat a 'target_h' field
+      (c.f. cycles)
 
->>>>  Crossovers:
+   +  controlled via STYLES
 
-   >>>  limit of one crossover per room
+   -  try to create through a reclaimed joiner (middle of CCC etc)
 
-   >>>  height of hall_A + crossover + hall_B is from R1
-        [if crossover is visited before under room]
-
-        If crossover is visited after, hall_A must adjust
-
-   >>>  when a room has a visited crossover, limit area heights
-        (e.g. bridge : max_h, channel : min_h) and the entry
-        hallway must account for that too
-
-   >>>  when a room has unvisited crossover, determine height
-        using same logic as now and entry hallway of crossover
-        must account for that when reached.
-
-   DONE:  room must be at >= 3 seeds long, <= 4 seeds deep
-
-   +  keep it simple for now: straight connection
-   -  through a reclaimed joiner (middle of CCC etc) may be ideal
-
-   !!  mark seeds under crossover as "is_walk" (and crossed over)
-
-       create a chunk for it (one seed wide)
-
-   !!!  logic to make the hallways and actual bridges
-
-   NOTE: DOOM 2.5d compatible versions are possible!
-
+   ?  DOOM 2.5d compatible versions
+      
 
 Connect:
    +  get branch_big_rooms working again
@@ -64,6 +42,7 @@ Cycles:
    -  less chance if R2 (middle room) is large
 
    +  if an area touches, try to choose a compatible height
+      ---> target_h field in AREA class
 
    +  when area has height difference, create stair or lift
       in the hallway space.
@@ -87,9 +66,8 @@ Intrusions:
    A/ turn into an area
 
 
->>>>>  SECTIONS rework
-
->>>  Stairs: fix ability to go from A2 --> A1
+Stairs:
+  +  fix ability to go from A2 --> A1
      (in other words: ability for stair chunk to be in unset floor)
 
 
@@ -102,25 +80,12 @@ Intrusions:
 !!!  the "apply twice" problem in prefab build code
 
 
->>> stairs....
-
->>> areas.lua : all room fleshing out stuff
-
 
 FIX: areas may be separated by "scenic" chunks
      --> prevent that, c.f. sub-room logic in V3
 
 
 Windows: MUST decide them after all heights are done
-
-
-Cross-overs : need room heights of intruded room to decide
-              height of the hallway, but hallway is visited first.
-
-              WHAT TO DO??
-              --> if hallway is first, pick a height and if that
-                  height is no good, then change it afterwards
-                  [need ability to change it via stairs or lifts]
 
 
 
@@ -164,11 +129,9 @@ FOCUS WILL BE: room connection logic
 
 +  intrusions
 
--  crossovers
++  crossovers
 
-+  liquid areas
-
--  system for texture coordinates
+-  liquid areas
 
 
 
@@ -180,6 +143,8 @@ Release Goals
 +  caves working again
 
 +  better ceilings, some ceiling lights
+
+-  system for texture coordinates
 
 
 -  windows
