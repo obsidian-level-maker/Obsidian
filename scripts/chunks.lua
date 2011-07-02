@@ -469,8 +469,10 @@ function CHUNK_CLASS.build(C)
   local c_medium = "solid"
   local light = 0
 
-  if C.crossover_mode == "channel" then f_h = C.crossover_h end
-  if C.crossover_mode == "bridge"  then c_h = math.max(c_h, C.crossover_h + 192) end
+  if C.crossover then
+    if C.crossover.mode == "channel" then f_h = C.crossover_h end
+    if C.crossover.mode == "bridge"  then c_h = math.max(c_h, C.crossover_h + 192) end
+  end
 
   local brush
   local w_mat, w_tex
@@ -704,7 +706,7 @@ end
 
   -- crossover
 
-  if C.crossover_mode == "bridge" then
+  if C.crossover and C.crossover_mode == "bridge" then
     local h = C.crossover_h
 
     local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
@@ -717,7 +719,7 @@ end
     gui.add_brush(brush)
   end
 
-  if C.crossover_mode == "channel" then
+  if C.crossover and C.crossover.mode == "channel" then
     local h = C.floor_h
     local dir = assert(C.crossover_info.conn.dir1)
 

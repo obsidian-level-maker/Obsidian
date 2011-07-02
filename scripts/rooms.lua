@@ -309,13 +309,9 @@ end
 
 
 function ROOM_CLASS.num_crossovers(R)
-  local count = 0
+  if R.crossover then return 1 end
 
-  each K in R.sections do
-    if K.crossover_chunk then count = count + 1 end
-  end
-
-  return count
+  return 0
 end
 
 

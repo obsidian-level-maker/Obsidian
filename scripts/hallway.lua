@@ -29,7 +29,7 @@ class HALLWAY
 
   path : list  -- the path between the start and the destination
                -- (not including either start or dest).
-               -- each element contains: G (segment), next_dir, prev_dir
+               -- each element contains: G (section), next_dir, prev_dir
 
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
@@ -41,19 +41,17 @@ class HALLWAY
 }
 
 
-class SEGMENT     FIXME !!!!! remove this : now same as a SECTION
+struct CROSSOVER
 {
-  nx, ny    -- place in network map
+  conn : CONN
 
-  sx1, sy1, sx2, sy2  -- seed range
+  MID_A, MID_K, MID_B : SECTION
 
-  link[DIR] : SEGMENT     -- links to neighboring segments
+  hall_A, hall_B : HALLWAY
 
-  section[DIR] : SECTION  -- bordering sections
+  chunk : CHUNK
 
-  vert, horiz, junction : BOOL   -- general shape
-
-  used : BOOL  -- has been used in a hallway (cannot use again)
+  floor_h 
 }
 
 
@@ -140,7 +138,7 @@ function HALLWAY_CLASS.render_path(H)
   for _,loc in ipairs(H.path) do
     local G = loc.G
 
-    -- mark segment as used
+    -- mark section as used
     G:set_hall(H)
 
     -- store hallway in seed map
@@ -158,8 +156,6 @@ function HALLWAY_CLASS.make_chunks(H)
 
   for _,loc in ipairs(H.path) do
     local G = loc.G
-
-    -- determine block range for segment
 
     local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
 

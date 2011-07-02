@@ -36,7 +36,8 @@ class CONN
   K1, K2 : SECTION
   C1, C2 : CHUNK   -- decided later (at chunk creation)
 
-  hall   : HALLWAY
+  hall      : HALLWAY
+  crossover : CROSSOVER
 
   dir1, dir2  -- direction value (2/4/6/8) 
               -- dir1 leading out of R1 / K1 / C1
@@ -839,14 +840,10 @@ function Connect_rooms()
     -- limit of one per room
     -- [cannot do more since crossovers limit the floor heights and
     --  two crossovers can lead to an unsatisfiable range]
-    if K1.room:num_crossovers() > 0 then return false end
-    if K3.room:num_crossovers() > 0 then return false end
+    if K2.room.crossover then return false end
 
     local poss = Connect_possibility(K1.room, K3.room)
     if poss < 0 then return false end
-
-    -- already got one?
-    if K2.crossover_chunk then return false end
 
     -- size check
     local long, deep = K2.sw, K2.sh
@@ -878,7 +875,7 @@ function Connect_rooms()
 
     D.K1 = K1 ; D.K2 = K3
 
-    local info =
+    local CROSSOVER =
     {
       conn = D
 
@@ -887,7 +884,8 @@ function Connect_rooms()
       MID_K = K2
     }
 
-    D.crossover = info
+    D.crossover = CROSSOVER
+    K2.room.crossover = CROSSOVER
 
     table.insert(LEVEL.conns, D)
 
@@ -905,8 +903,8 @@ function Connect_rooms()
     Hallway_simple(K1, MID_A, K2, crap_A, dir)
     Hallway_simple(K2, MID_B, K3, crap_B, dir)
 
-    info.hall_A = crap_A.hall
-    info.hall_B = crap_B.hall
+    CROSSOVER.hall_A = crap_A.hall
+    CROSSOVER.hall_B = crap_B.hall
 
     -- allocate the chunk in the crossed-over room
     -- [TODO: this may be an overly cautious approach, but it does
@@ -933,11 +931,8 @@ function Connect_rooms()
     local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
 
     C.foobage = "crossover"
-    C.crossover_info = info
 
-    info.chunk = C
-
-    K2.crossover_chunk = C
+    CROSSOVER.chunk = C
   end
 
 
