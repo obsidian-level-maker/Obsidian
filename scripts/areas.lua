@@ -35,6 +35,8 @@ class AREA
   touching : list(AREA)
 
   floor_h  -- floor height
+
+  target_h  -- if present, get as close to this height as possible
 }
 
 
@@ -739,7 +741,36 @@ function Areas_flesh_out()
   --
 
 
-  local function do_floors(R)
+  local function areas_touching_chunk(R, C, list)
+    each C2 in R.chunks do
+      if C2.area and C2.area != C.area and C:is_adjacent(C2) then
+        table.add_unique(list, C2.area)
+      end
+    end
+  end
+
+
+  local function areas_touching_area(R, A)
+    local list = {}
+
+    each C in R.chunks do
+      if C.area == A then
+        areas_touching_chunk(R, C, list)
+      end
+    end
+
+    return list
+  end
+
+
+  local function set_all_touching(R)
+    each A in R.areas do
+      A.touching = areas_touching_area(R, A)
+    end
+  end
+
+
+  local function create_areas(R)
     -- the seeds which are left over from the previous allocations
     -- should form a contiguous area which ensures traversibility
     -- between all walk spots (doorways, switches, etc).
@@ -824,35 +855,8 @@ function Areas_flesh_out()
       assert(C)
       gui.debugf("%s, Area %d, %s\n", R:tostr(), A.id, C:tostr())
     end
-  end
 
-
-  local function areas_touching_chunk(R, C, list)
-    each C2 in R.chunks do
-      if C2.area and C2.area != C.area and C:is_adjacent(C2) then
-        table.add_unique(list, C2.area)
-      end
-    end
-  end
-
-
-  local function areas_touching_area(R, A)
-    local list = {}
-
-    each C in R.chunks do
-      if C.area == A then
-        areas_touching_chunk(R, C, list)
-      end
-    end
-
-    return list
-  end
-
-
-  local function set_all_touching(R)
-    each A in R.areas do
-      A.touching = areas_touching_area(R, A)
-    end
+    set_all_touching(R)
   end
 
 
@@ -884,9 +888,9 @@ function Areas_flesh_out()
       local skin = assert(GAME.SKINS[name])
 
       -- only check the first (smallest) delta
-      local z = base_h + skin._deltas[1]
+      local h = base_h + skin._deltas[1]
 
-      if math.in_range(R.floor_limit[1], z, R.floor_limit[2]) then
+      if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
         return skin -- OK --
       end
     end
@@ -898,13 +902,8 @@ function Areas_flesh_out()
   local function pick_area_height(N, base_h, stair_skin)
     local R = N.room
 
-    -- !!!! FIXME: EXPENSIVE : collect only once
-    local touching = areas_touching_area(R, N)
-
     local step_height = PARAM.step_height or 16
     local half_height = int(step_height / 2)
-
---?? local GOOD_DIFFS = { 16,32,32,48,48,64,80,96 } -- FIXME: probability distribution
 
     local deltas
 
@@ -921,10 +920,10 @@ function Areas_flesh_out()
 
     local h_probs = {}
 
-    each dz in deltas do
-      local z = base_h + dz
-      if math.in_range(R.floor_limit[1], z, R.floor_limit[2]) then
-        h_probs[z] = (height_is_unique(z, touching) ? 100 ; 1)
+    each dh in deltas do
+      local h = base_h + dh
+      if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
+        h_probs[h] = (height_is_unique(h, N.touching) ? 100 ; 1)
       end
     end
 
@@ -1230,8 +1229,6 @@ function Areas_flesh_out()
 
 
   local function area_heights(R)
-    set_all_touching(R)
-
     -- determine entry area
     --   1. for start room : starting chunk
     --   2. for teleport entries : teleporter chunk
@@ -1400,7 +1397,7 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
 
   local function flesh_out(R)
     decorative_chunks(R)
-    do_floors(R)
+    create_areas(R)
     area_heights(R)
     hallway_heights(R)
     crossover_heights(R)
