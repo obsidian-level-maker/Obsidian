@@ -239,13 +239,13 @@ end
 
 function CHUNK_CLASS.eval_camera(C)
   -- no cameras in the void (or cages etc)
-  if not C.area or C.ceil_h then return nil end
+  if not C.area or not C.ceil_h then return nil end
 
   local info = { chunk=C }
 
   info.x1 = (C.x1 + C.x2) / 2
   info.y1 = (C.y1 + C.y2) / 2
-  info.z1 = C.ceil_h - 64
+  info.z1 = C.ceil_h * 0.75 + C.floor_h * 0.25
 
   -- FIXME: test a range of angles or spots
 
