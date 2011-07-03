@@ -240,7 +240,8 @@ function Areas_important_stuff()
         local S = SEEDS[sx][sy]
         if S.room == R then
           
-          if S.chunk then
+          -- ignore certain chunks [crossovers]
+          if S.chunk and not S.chunk.crossover then
             S.chunk_dist = 0
           else
             S.chunk_dist = nil
