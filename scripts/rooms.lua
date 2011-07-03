@@ -315,6 +315,17 @@ function ROOM_CLASS.num_crossovers(R)
 end
 
 
+function ROOM_CLASS.mid_point(R)
+  local x1 = SEEDS[R.sx1][R.sy1].x1
+  local y1 = SEEDS[R.sx1][R.sy1].y1
+
+  local x2 = SEEDS[R.sx2][R.sy2].x2
+  local y2 = SEEDS[R.sx2][R.sy2].y2
+
+  return (x1 + x2) / 2, (y1 + y2) / 2
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -982,9 +993,8 @@ end
 
 
 function Rooms_intermission_camera()
-  if GAME.format != "quake" then return end
-
-  -- !!!! FIXME: find location using chunks, not sections
+  -- game check
+  if not GAME.ENTITIES["camera"] then return end
 
   -- determine the room (biggest one, excluding starts and exits)
   local room
@@ -1000,20 +1010,36 @@ function Rooms_intermission_camera()
   if not room then return end
 
   -- determine place in room
+  local info
+
+  each C in room.chunks do
+    local info2 = C:eval_camera()
+
+    if not info or info2.score > info.score then
+      info = info2
+    end
+  end
+
+  -- this should not happen, but just in case...
+  if not info then return end
+
+  gui.printf("Camera @ (%d %d %d)\n", info.x1, info.y1, info.z1)
+
+--[[ TO BE REMOVED : OLD SECTION-BASED METHOD
   local K
   local dir
 
-  local SIDES = { 1,3,7,9 }
-  rand.shuffle(SIDES)
+  local CORNERS = { 1,3,7,9 }
+  rand.shuffle(CORNERS)
 
-  for _,side in pairs(SIDES) do
+  each dir in CORNERS do
     local kx = (side == 1 or side == 7 ? room.kx1 ; room.kx2)
     local ky = (side == 1 or side == 3 ? room.ky1 ; room.ky2)
 
     if SECTIONS[kx][ky].room == room then
       K = SECTIONS[kx][ky]
       dir = 10 - side
-      break;
+      break
     end
   end
 
@@ -1024,8 +1050,6 @@ function Rooms_intermission_camera()
     if K:same_room(6) then dir = 3 end
     if K:same_room(8) then dir = dir + 6 end
   end
-
-  gui.printf("Camera @ %s dir:%d\n", K:tostr(), dir)
 
   local z1
   local z2 = room.entry_floor_h
@@ -1056,6 +1080,10 @@ function Rooms_intermission_camera()
 
   if dir == 1 or dir == 7 then x1,x2 = x2,x1 end
   if dir == 1 or dir == 3 then y1,y2 = y2,y1 end
+--]]
+
+  local x1, y1, z1 = info.x1, info.y1, info.z1
+  local x2, y2, z2 = info.x2, info.y2, info.z2
 
   local dist  = geom.dist(x1,y1, x2,y2)
   local angle = geom.calc_angle(x2 - x1, y2 - y1)
@@ -1452,6 +1480,6 @@ function Rooms_build_all()
 
   Rooms_add_sun()
 
----!!!!  Rooms_intermission_camera()
+  Rooms_intermission_camera()
 end
 

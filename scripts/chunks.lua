@@ -237,6 +237,35 @@ function CHUNK_CLASS.has_parallel_stair(C, dir)
 end
 
 
+function CHUNK_CLASS.eval_camera(C)
+  -- no cameras in the void (or cages etc)
+  if not C.area or C.ceil_h then return nil end
+
+  local info = { chunk=C }
+
+  info.x1 = (C.x1 + C.x2) / 2
+  info.y1 = (C.y1 + C.y2) / 2
+  info.z1 = C.ceil_h - 64
+
+  -- FIXME: test a range of angles or spots
+
+  local R = assert(C.room)
+
+  local mid_x, mid_y = R:mid_point()
+
+  local dist = geom.dist(info.x1, info.y1, mid_x, mid_y)
+  if dist < 70 then return nil end
+
+  info.x2 = mid_x
+  info.y2 = mid_y
+  info.z2 = R.floor_min_h - 64
+
+  info.score = dist + gui.random() * 200
+
+  return info
+end
+
+
 ----------------------------------------------------------------
 
 
@@ -576,6 +605,9 @@ function CHUNK_CLASS.build(C)
   table.insert(brush, { b=c_h, tex=c_tex })
 
   gui.add_brush(brush)
+
+
+  if not C.ceil_h then C.ceil_h = c_h end  -- meh, crud
 
 
   -- parts
