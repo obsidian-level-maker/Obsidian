@@ -773,55 +773,6 @@ function Connect_rooms()
   end
 
 
-  local function visit_small_room(R)
-    if #R.conns >= 2 then return end
-
-    local list = {}
-
-    for x = R.kx1,R.kx2 do for y = R.ky1,R.ky2 do
-      local K = SECTIONS[x][y]
-      if K.room == R then
-
-        for dir = 2,8,2 do
-          local N = K:neighbor(dir)
-
-          if good_connect(K, dir) and #N.room.conns < 2 then
-            table.insert(list, { K=K, N=N, dir=dir })
-          end
-        end
-
-      end
-    end end -- x, y
-
-    if #list == 0 then return end
-
-    local loc = table.pick_best(list,
-        function(A, B) return A.K.room.small_score < B.K.room.small_score end)
-
-    add_connection(loc.K, loc.N, loc.dir)
-  end
-
-
-  local function branch_small_rooms()
-    --
-    -- Goal here is to make stalks
-    --
-    local visits = table.copy(LEVEL.rooms)
-
-    each R in visits do
-      R.small_score = R.svolume + 5.0 * gui.random()
-    end
-
-    table.sort(visits, function(A, B) return A.small_score < B.small_score end)
-
-    each R in visits do
-      if R.kvolume <= 2 then
-        visit_small_room(R)
-      end
-    end
-  end
-
-
   local function can_make_crossover(K1, dir)
     -- TODO: support right angle turn or zig-zag
 
@@ -937,7 +888,7 @@ function Connect_rooms()
   end
 
 
-  local function emergency_score(K, dir)
+  local function normal_score(K, dir)
     if not can_connect(K, dir) then return -1 end
 
     local score = 0
@@ -959,7 +910,7 @@ function Connect_rooms()
   end
 
 
-  local function emergency_branch()
+  local function try_normal_branch()
     local loc
     local cross_loc
 
@@ -970,7 +921,7 @@ function Connect_rooms()
       if not K.room then continue end
 
       for dir = 2,8,2 do
-        local score, N = emergency_score(K, dir)
+        local score, N = normal_score(K, dir)
 
         if score >= 0 then count = count + 1 end
 
@@ -999,7 +950,7 @@ function Connect_rooms()
     -- nothing possible? hence we are done
     if not loc then return false end
 
--- stderrf("Emergency conn: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
+-- stderrf("Normal branch: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
     add_connection(loc.K, loc.N, loc.dir)
 
@@ -1148,7 +1099,7 @@ do return end --!!!!!! FIXME
   end
 
 
-  local function remove_group(g)
+  local function OLD__remove_group(g)
     -- process rooms
     for i = #LEVEL.rooms,1,-1 do
       local R = LEVEL.rooms[i]
@@ -1247,9 +1198,7 @@ Plan_dump_rooms("Dead Room Map")
 
 --!!!!!! FIXME  branch_big_rooms()
 
---!!!  branch_small_rooms()
-
-  while emergency_branch() do end
+  while try_normal_branch() do end
 
   if count_groups() >= 2 then
     error("Connection failure: separate groups exist")
