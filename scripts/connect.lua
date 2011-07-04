@@ -931,6 +931,10 @@ function Connect_rooms()
 
         -- Cross-Over checks --
 
+        -- FIXME: check THEME.bridges (prefab skins) too
+        if not PARAM.bridges then continue end
+        if STYLE.crossovers == "none" then continue end
+
         local cross_score = -1
         if can_make_crossover(K, dir) then cross_score = gui.random() end
 
@@ -941,8 +945,8 @@ function Connect_rooms()
       end
     end end -- mx, my
 
-
-    if cross_loc and rand.odds(99) --[[ FIXME --]] then
+    -- make a crossover?
+    if cross_loc and (STYLE.crossovers == "heaps" or rand.odds(24)) then
       add_crossover(cross_loc.K, cross_loc.dir)
       return true
     end
