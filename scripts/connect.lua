@@ -1230,7 +1230,24 @@ function Connect_cycles()
   -- TODO: describe cycles........
 
 
+  local function next_door_to_existing(R, K, dir)
+    local N1 = K:neighbor(geom.RIGHT[dir])
+    local N2 = K:neighbor(geom. LEFT[dir])
+
+    each D in R.conns do
+      if D.dir1 == dir and (D.K1 == N1 or D.K2 == N2) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   local function add_cycle(K1, MID, K2, dir)
+    gui.debugf("Cycle @ %s dir:%d (%s -> %s)\n", MID:tostr(), dir,
+               K1.room:tostr(), K2.room:tostr())
+
     local D = CONN_CLASS.new("cycle", K1.room, K2.room, dir)
 
     D.K1 = K1 ; D.K2 = K2
@@ -1248,29 +1265,46 @@ function Connect_cycles()
 
 
   local function try_connect_rooms(R1, R2)
-    -- FIXME SHUFFLE VISITS
+    local existing_dir
+
+    each D in R1.conns do
+      if D.R1 == R1 and D.R2 == R2 and D.dir1 then
+        existing_dir = D.dir1 ; break
+      end
+    end
+
+    local visits = {}
+
     for kx = R1.kx1, R1.kx2 do for ky = R1.ky1, R1.ky2 do
-      local K1 = SECTIONS[kx][ky]
+      local K = SECTIONS[kx][ky]
+      if K.room == R1 then
+        table.insert(visits, K)
+      end
+    end end -- kx, ky
 
-      if K1.room != R1 then continue end
+    rand.shuffle(visits)
 
+    each K1 in visits do
       for dir = 2,8,2 do
-        local MID = K1:neighbor(dir)
 
+        local MID = K1:neighbor(dir, 1)
         if not MID or MID.used then continue end
 
         local K2 = K1:neighbor(dir, 2)
-
         if not K2 or K2.room != R2 then continue end
 
-gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
+        if existing_dir == dir then
+          if STYLE.cycles != "heaps" then continue end
+
+          -- prevent connection next door to existing one with same direction
+          if next_door_to_existing(R1, K1, dir) then continue end
+        end
 
         add_cycle(K1, MID, K2, dir)
-
         return true
-      end
 
-    end end -- kx, ky
+      end -- dir
+    end -- K1
 
     return false
   end
@@ -1281,6 +1315,7 @@ gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
     local futures = {}
 
     each D1 in R1.conns do
+      if D1.R1 != R1 then continue end
       if D1.kind == "teleporter" then continue end
 
       local R2 = D1:neighbor(R1)
@@ -1289,10 +1324,10 @@ gui.debugf("cycle: SUCCESS @ %s dir:%d\n", MID:tostr(), dir)
       table.insert(nexties, R2)
 
       each D2 in R2.conns do
+        if D2.R1 != R2 then continue end
         if D2.kind == "teleporter" then continue end
 
         local R3 = D2:neighbor(R2)
-        if R3 == R1 then continue end
         if R3.quest != R1.quest then continue end
 
         table.insert(futures, R3)
