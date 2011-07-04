@@ -40,3 +40,60 @@ PREFAB.BRIDGE_BASIC =
   }
 }
 
+
+PREFAB.CHANNEL_BASIC =
+{
+  placement = "fitted"
+
+  repeat_height = 192
+
+  defaults =
+  {
+    bridge  = "?floor"
+    support = "?floor"
+    x_offset = 0
+  }
+
+  brushes =
+  {
+    -- left side
+    {
+      { x =   0, y =   0, mat = "?bridge" }
+      { x =  32, y =   0, mat = "?bridge" }
+      { x =  32, y = 192, mat = "?bridge" }
+      { x =   0, y = 192, mat = "?bridge" }
+      { t =   0, mat = "?bridge" }
+      { b = -16, mat = "?bridge" }
+    }
+
+    -- right side
+    {
+      { x = 160, y =   0, mat = "?bridge" }
+      { x = 192, y =   0, mat = "?bridge" }
+      { x = 192, y = 192, mat = "?bridge" }
+      { x = 160, y = 192, mat = "?bridge" }
+      { t =   0, mat = "?bridge" }
+      { b = -16, mat = "?bridge" }
+    }
+
+    -- walk on piece
+    {
+      { x =  32, y =  48, mat = "?bridge" }
+      { x = 160, y =  48, mat = "?bridge" }
+      { x = 160, y = 144, mat = "?bridge" }
+      { x =  32, y = 144, mat = "?bridge" }
+      { t =   0, mat = "?bridge" }
+      { b = -16, mat = "?bridge" }
+    }
+
+    -- supporting pillar
+    {
+      { x =  88, y =  88, mat = "?support", x_offset="?x_offset" }
+      { x = 104, y =  88, mat = "?support", x_offset="?x_offset" }
+      { x = 104, y = 104, mat = "?support", x_offset="?x_offset" }
+      { x =  88, y = 104, mat = "?support", x_offset="?x_offset" }
+      { t =  -8, mat = "?support" }
+    }
+  }
+}
+
