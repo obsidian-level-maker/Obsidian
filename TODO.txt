@@ -48,22 +48,11 @@ Big junctions:
 Cycles:
    +  less chance if R2 (middle room) is large
 
-   +  prevent using section next door to existing conn & same direction
+DONE: prevent using section next door to existing conn & same direction
       [maybe prevent same dir altogether except in "heaps"]
 
 WISH: if an area touches, try to choose a compatible height
       ---> target_h field in AREA class
-
-
-Intrusions:
-   +  implement them by "adopting" a hallway consisting of
-      HORIZ + JUNC + VERT (around corner of the room)
-
-   -  could potentially adopt the whole section
-      [OR any seeds which are not part of the room paths]
-
-   Q/ keep as a "hallway" or create an "area" ?
-   A/ turn into an area
 
 
 Stairs:
@@ -135,8 +124,6 @@ FOCUS WILL BE: room connection logic
 +  cycles
 
 +  crossovers
-
--  intrusions
 
 -  liquid areas
 

@@ -119,6 +119,15 @@ Intrusions:
      as if it were part of the room you look into.  It may work
      best in Quake games where the intrusion is a 3D walkway.
 
+  +  implement them by "adopting" a hallway consisting of
+     HORIZ + JUNC + VERT (around corner of the room)
+
+  -  could potentially adopt the whole section
+     [OR any seeds which are not part of the room paths]
+
+  Q/ keep as a "hallway" or create an "area" ?
+  A/ turn into an area
+
 
 CrossOvers:
   -  room is 1x1 sections (perhaps 2x1) using a 3D bridge,
