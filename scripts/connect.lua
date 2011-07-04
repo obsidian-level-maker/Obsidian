@@ -1231,12 +1231,14 @@ function Connect_cycles()
 
 
   local function next_door_to_existing(R, K, dir)
-    local N1 = K:neighbor(geom.RIGHT[dir])
-    local N2 = K:neighbor(geom. LEFT[dir])
+    for dist = 1,1 do
+      local N1 = K:neighbor(geom.RIGHT[dir], dist)
+      local N2 = K:neighbor(geom. LEFT[dir], dist)
 
-    each D in R.conns do
-      if D.dir1 == dir and (D.K1 == N1 or D.K2 == N2) then
-        return true
+      each D in R.conns do
+        if D.dir1 == dir and D.K1 and (D.K1 == N1 or D.K1 == N2) then
+          return true
+        end
       end
     end
 
@@ -1245,7 +1247,7 @@ function Connect_cycles()
 
 
   local function add_cycle(K1, MID, K2, dir)
-    gui.debugf("Cycle @ %s dir:%d (%s -> %s)\n", MID:tostr(), dir,
+    gui.debugf("Cycle @ %s dir:%d (%s -> %s)\n", K1:tostr(), dir,
                K1.room:tostr(), K2.room:tostr())
 
     local D = CONN_CLASS.new("cycle", K1.room, K2.room, dir)
