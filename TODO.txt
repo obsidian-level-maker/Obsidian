@@ -7,29 +7,28 @@ Current Work
 
 
 Crossovers:
-  !!  put stairs in the mini-hallways
+  !!  put stairs in the mini-hallways  [Cycles too]
 
    +  build the bridges / channels using prefabs
 
-   -  give AREAS near height incompat a 'target_h' field
-      (c.f. cycles)
-
-   +  controlled via STYLES (also check: PARAM.bridges)
+DONE: controlled via STYLES (also check: PARAM.bridges)
 
    -  fix hallway vertical gaps
 
    TEST: spot_for_wotsit: ignore/handle crossover chunk 
-
-   ?  DOOM 2.5d compatible versions
 
    WISH: make a moving train in Quake 1/2 maps
    WISH: pillars holding up the bridge
    WISH: bridges which increase height (e.g. stair in middle)
    WISH: channels which decrease height
    WISH: try to create through a reclaimed joiner (middle of CCC etc)
+   WISH: give AREAS near incompatible height a 'target_h' field
  
 
 Connect:
+  !!  allow rooms to connect to existing hallway
+      (prevent the isolated room problem)
+
    +  get branch_big_rooms working again
 
 DONE: remove branch_small_rooms : just use "emergency" system
@@ -47,13 +46,13 @@ Big junctions:
 
 
 Cycles:
-   -  less chance if R2 (middle room) is large
+   +  less chance if R2 (middle room) is large
 
-   +  if an area touches, try to choose a compatible height
+   +  prevent using section next door to existing conn & same direction
+      [maybe prevent same dir altogether except in "heaps"]
+
+WISH: if an area touches, try to choose a compatible height
       ---> target_h field in AREA class
-
-   +  when area has height difference, create stair or lift
-      in the hallway space.
 
 
 Intrusions:
