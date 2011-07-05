@@ -455,8 +455,53 @@ function Connect_rooms()
   end
 
 
+  local function eval_big_exit(R, K, dir)
+    -- check if direction is unique
+    local uniq_dir = true
+
+    each D in R.conns do
+      if D.R1 == R and D.dir1 == dir then
+        uniq_dir = false ; break
+      end
+    end
+
+    local rand = ((uniq_dir ? 1 ; 0) + gui.random()) / 2
+
+    -- a free section please
+    if K.num_conn > 0 then
+      return rand
+    end
+
+    -- a "foot" is a section sticking out (three non-room neighbors).
+    -- these are considered the best possible place for an exit
+    local foot_dir = K:is_foot()
+
+    if foot_dir then
+      return (foot_dir == dir ? 9 ; 8) + rand 
+    end
+
+    -- sections far away from existing connections are preferred
+    local conn_d = R:dist_to_closest_conn(K, dir)
+
+    conn_d = conn_d / 2  -- adjust for hallway channels
+
+    if conn_d > 4 then conn_d = 4 end
+
+    -- an "uncrowded middler" is the middle of a wide edge and does
+    -- not have any neighbors with connections
+    if K:same_room(geom.RIGHT(dir)) and
+       K:same_room(geom. LEFT(dir)) and conn_d >= 2
+    then
+      return 7 + rand
+    end
+
+    -- all other cases
+    return 6 - conn_d + rand
+  end
+
+
   local function visit_big_room(R)
-    -- FIXME !!!!!! FIXME !!!!!!
+    -- !!!!!! FIXME
   end
 
 
@@ -464,13 +509,13 @@ function Connect_rooms()
     local visits = table.copy(LEVEL.rooms)
 
     each R in visits do
-      R.big_score = R.kvolume + 2.5 * gui.random() ^ 2
+      R.big_score = R.kvolume + 4.7 * gui.random() ^ 2
     end
 
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
 
     each R in visits do
-      if R.kvolume >= 2 then
+      if R.kw >= 3 and R.kh >= 3 then
         visit_big_room(R)
       end
     end
