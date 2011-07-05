@@ -455,6 +455,11 @@ function Connect_rooms()
   end
 
 
+  local function try_make_exit(R, K, dir)
+    -- FIXME !!!!!
+  end
+
+
   local function eval_big_exit(R, K, dir)
     -- check if direction is unique
     local uniq_dir = true
@@ -500,8 +505,68 @@ function Connect_rooms()
   end
 
 
+  local function try_add_big_exit(R)
+    local exits = {}
+
+    each K in R.sections do
+      if K.kind != "section" then continue end
+
+      for dir = 2,8,2 do
+        if not conn_is_possible(R, K, dir) then continue end
+
+        local score = eval_big_exit(R, K, dir)
+
+        if score >= 0 then
+          table.insert(exits, { K=K, dir=dir, score=score })
+        end
+      end
+    end
+
+    table.sort(exits, function(A, B) return A.score > B.score end)
+
+    each EX in exits do
+      if try_make_exit(R, EX.K, EX.dir) then
+        return true -- SUCCESS
+      end
+    end
+
+    return false -- fail
+  end
+
+
   local function visit_big_room(R)
-    -- !!!!!! FIXME
+    -- determine number of connections to try
+    local want_conn
+
+    if R.shape == "rect" or R.shape == "odd" then
+      if R.map_volume <= 4 then
+        want_conn = 2
+      elseif R.map_volume <= rand.sel(30, 8, 9) then
+        want_conn = 3
+      else
+        want_conn = 4
+      end
+
+    else -- shaped room
+      if R.shape == "L" or R.shape == "S" then
+        want_conn = 2
+      elseif R.shape == "plus" or R.shape == "H" then
+        want_conn = 4
+      else
+        want_conn = 3
+      end
+    end
+
+    want_conn = want_conn - #R.conns  -- FIXME: include teleporters here?
+
+    -- try to add them, aborting on a failure
+    for i = 1,want_conn do
+      if not try_add_big_exit(R) then
+        break
+      end
+    end
+
+    R.full = true
   end
 
 
@@ -509,7 +574,7 @@ function Connect_rooms()
     local visits = table.copy(LEVEL.rooms)
 
     each R in visits do
-      R.big_score = R.kvolume + 4.7 * gui.random() ^ 2
+      R.big_score = R.map_volume + 2.5 * gui.random() ^ 2
     end
 
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
