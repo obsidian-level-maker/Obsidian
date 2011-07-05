@@ -152,6 +152,19 @@ function SECTION_CLASS.approx_side_coord(K, dir)
 end
 
 
+function SECTION_CLASS.is_foot(K)  -- returns direction, or nil
+  for dir = 2,8,2 do
+    if not K:same_room(dir) and
+       not K:same_room(geom.RIGHT[dir]) and
+       not K:same_room(geom. LEFT[dir]) and
+       K:same_room(10 - dir)
+    then
+      return dir
+    end
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 function Plan_alloc_id(kind)
