@@ -422,6 +422,12 @@ function Connect_rooms()
   end
 
 
+  local function test_direct_branch(K1, dir, allow_sub_hall)
+
+    -- FIXME !!!!!
+  end
+
+
   local function can_make_crossover(K1, dir)
     -- TODO: support right angle turn or zig-zag
 
@@ -537,11 +543,43 @@ function Connect_rooms()
   end
 
 
-  local function try_make_exit(R, K, dir)
-    -- FIXME: have a threshhold of goodness
+  local function test_crossover(K1, dir)
 
-    -- FIXME !!!!!
-    --   see if can make (a) direct conn (b) crossover (c) hallway/s
+    -- FIXME
+
+        -- FIXME: check THEME.bridges (prefab skins) too
+--[[
+        if not PARAM.bridges then continue end
+        if STYLE.crossovers == "none" then continue end
+
+        local cross_score = -1
+        if can_make_crossover(K, dir) then cross_score = gui.random() end
+
+        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
+          cross_loc = { K=K, dir=dir, score=cross_score }
+        end
+--]]
+  end
+
+
+  local function actually_make_branch()
+    local D = LEVEL.best_conn
+
+    -- FIXME !!!!
+  end
+
+
+  local function test_all_branches(R, K, dir, allow_sub_hall)
+
+    -- these functions will update 'best_conn' if the score is better
+    test_direct_branch(K, dir, allow_sub_hall)
+
+    test_crossover(K, dir)
+
+    Hallway_test_halls(K, dir)
+
+    -- TODO: Hallway_test_double()
+
   end
 
 
@@ -553,7 +591,7 @@ function Connect_rooms()
 
     if not N then return false end
 
-    if N.in_use then return false end
+    if N.used then return false end
 
     return true
   end
@@ -626,7 +664,13 @@ function Connect_rooms()
     table.sort(exits, function(A, B) return A.score > B.score end)
 
     each EX in exits do
-      if try_make_exit(R, EX.K, EX.dir) then
+      LEVEL.best_conn = { R1=R, K1=K, dir1=dir, score=0 }  -- TODO: have a threshhold of goodness
+
+      test_all_branches(R, EX.K, EX.dir, false)
+
+      -- something worked?
+      if LEVEL.best_conn.R2 then
+        actually_make_branch()
         return true -- SUCCESS
       end
     end
@@ -711,8 +755,8 @@ function Connect_rooms()
 
 
   local function try_normal_branch()
-    local loc
-    local cross_loc
+    
+    LEVEL.best_conn = { score=-999 }
 
     for mx = 1,MAP_W do for my = 1,MAP_H do
       local K = SECTIONS[mx*2][my*2]
@@ -721,6 +765,9 @@ function Connect_rooms()
       if not K.room then continue end
 
       for dir = 2,8,2 do
+
+        test_all_branches(K.room, K, dir, true)
+--[[
         local score, N = eval_normal_exit(K.room, K, dir)
 
         if score >= 0 then count = count + 1 end
@@ -728,35 +775,24 @@ function Connect_rooms()
         if score >= 0 and (not loc or score > loc.score) then
           loc = { K=K, N=N, dir=dir, score=score }
         end
-
-        -- Cross-Over checks --
-
-        -- FIXME: check THEME.bridges (prefab skins) too
-        if not PARAM.bridges then continue end
-        if STYLE.crossovers == "none" then continue end
-
-        local cross_score = -1
-        if can_make_crossover(K, dir) then cross_score = gui.random() end
-
-        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
-          cross_loc = { K=K, dir=dir, score=cross_score }
-        end
-
+--]]
       end
     end end -- mx, my
 
-    -- make a crossover?
+    --[[ make a crossover? 
     if cross_loc and (STYLE.crossovers == "heaps" or rand.odds(24)) then
       add_crossover(cross_loc.K, cross_loc.dir)
       return true
-    end
+    end --]]
 
     -- nothing possible? hence we are done
-    if not loc then return false end
+    if not LEVEL.best_conn.R2 then return false end
 
 -- stderrf("Normal branch: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
-    add_connection(loc.K, loc.N, loc.dir)
+    actually_make_branch()
+
+---###    add_connection(loc.K, loc.N, loc.dir)
 
     return true
   end

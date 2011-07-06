@@ -590,6 +590,15 @@ do return end --!!!!!!!1
 end
 
 
+function Hallway_test_halls(K1, dir)
+
+
+  ---| Hallway_test_halls |---
+
+  -- FIXME !!!!!
+end
+
+
 --------------------------------------------------------------------
 
 
