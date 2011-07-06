@@ -119,8 +119,6 @@ HARMONY.PARAMETERS =
 {
   rails = true
   switches = true
-  liquids = true
-  teleporters = true
   light_brushes = true
 
   jump_height = 24

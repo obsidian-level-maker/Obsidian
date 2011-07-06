@@ -102,8 +102,6 @@ AMULETS.PARAMETERS =
 
   rails = true
   switches = true
-  liquids = true
-  teleporters = true
   raising_start = true
   light_brushes = true
 

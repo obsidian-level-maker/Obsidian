@@ -284,8 +284,6 @@ CHEX.PARAMETERS =
 {
   rails = true
   switches = true
-  liquids = true
-  teleporters = true
   light_brushes = true
   infighting = true
 

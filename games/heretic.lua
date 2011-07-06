@@ -156,8 +156,6 @@ HERETIC.PARAMETERS =
 {
   rails = true
   switches = true
-  liquids = true
-  teleporters = true
   infighting  =  true
   prefer_stairs = true
   light_brushes = true
