@@ -134,10 +134,13 @@ function Connect_decide_start_room()
 
     cost = cost + 10 * (gui.random() ^ 2)
 
+    if R:has_teleporter() then cost = cost + 100 end
+
     gui.debugf("Start cost @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, cost)
 
     return cost
   end
+
 
   ---| Connect_decide_start_room |---
 
@@ -145,18 +148,18 @@ function Connect_decide_start_room()
     R.start_cost = eval_room(R)
   end
 
-  local start, index = table.pick_best(LEVEL.rooms,
+  local room, index = table.pick_best(LEVEL.rooms,
     function(A, B) return A.start_cost < B.start_cost end)
 
-  gui.printf("Start room: %s\n", start:tostr())
+  gui.printf("Start room: %s\n", room:tostr())
 
-  -- move it to the front of the list
-  table.remove(LEVEL.rooms, index)
-  table.insert(LEVEL.rooms, 1, start)
+---###  -- move it to the front of the list
+---###  table.remove(LEVEL.rooms, index)
+---###  table.insert(LEVEL.rooms, 1, room)
 
-  LEVEL.start_room = start
+  LEVEL.start_room = room
 
-  start.purpose = "START"
+  room.purpose = "START"
 end
 
 
@@ -417,17 +420,33 @@ function Connect_rooms()
   end
 
 
-  local function conn_is_possible(R, K, dir)
+  local function try_make_exit(R, K, dir)
+    -- FIXME: have a threshhold of goodness
+
     -- FIXME !!!!!
+    --   see if can make (a) direct conn (b) crossover (c) hallway/s
   end
 
 
-  local function try_make_exit(R, K, dir)
-    -- FIXME !!!!!
+  local function conn_might_be_possible(R, K, dir)
+    -- the purpose of this function is to quickly weed out connections
+    -- which are definitely not possible.
+
+    local N = K:neighbor(dir)
+
+    if not N then return false end
+
+    if N.in_use then return false end
+
+    return true
   end
 
 
   local function eval_big_exit(R, K, dir)
+    if not conn_might_be_possible(R, K, dir) then
+      return -1
+    end
+
     -- check if direction is unique
     local uniq_dir = true
 
@@ -479,8 +498,6 @@ function Connect_rooms()
       if K.kind != "section" then continue end
 
       for dir = 2,8,2 do
-        if not conn_is_possible(R, K, dir) then continue end
-
         local score = eval_big_exit(R, K, dir)
 
         if score >= 0 then
@@ -742,25 +759,6 @@ do return end --!!!!!! FIXME
     end
 
     return table.size(groups)
-  end
-
-
-  local function get_group_counts()
-    local groups = {}
-
-    for i = 1,999 do groups[i] = 0 end
-
-    local last_g = 0
-
-    each R in LEVEL.rooms do
-      if R.kind != "scenic" then
-        local g = R.conn_group
-        groups[g] = groups[g] + 1
-        if g > last_g then last_g = g end
-      end
-    end
-
-    return groups, last_g
   end
 
 
