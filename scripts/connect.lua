@@ -764,86 +764,6 @@ do return end --!!!!!! FIXME
   end
 
 
-  local function OLD__kill_room(R)
-    R.kind = "REMOVED"
-
-    each D in R.conns do
-      D.kind = "REMOVED"
-    end
-
-    each K in R.sections do
-      -- TODO ?!?
-    end
-
-    for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
-      local S = SEEDS[sx][sy]
-
-      if S.room == R then
-        S.room = nil
-        S.section = nil
-      end
-    end end
-  end
-
-
-  local function OLD__remove_group(g)
-    -- process rooms
-    for i = #LEVEL.rooms,1,-1 do
-      local R = LEVEL.rooms[i]
-
-      if R.conn_group == g then
-        gui.printf("Removing dead room: %s\n", R:tostr())
-        
-        table.remove(LEVEL.rooms, i)
-
-        kill_room(R)
-      end
-    end
-
-    -- process connections
-    for i = #LEVEL.conns,1,-1 do
-      local D = LEVEL.conns[i]
-
-      if D.kind == "REMOVED" then
-        table.remove(LEVEL.conns, i)
-      end
-    end
-  end
-
-
-  local function OLD__remove_dead_rooms()
-    local groups, last_g = get_group_counts()
-
-    -- do separate groups exist?
-    if last_g == 1 then return; end
-
-    -- find group with most members, all others will die
-    local best
-
-    for g = 1,last_g do
-      local num = groups[g]
-      if num > 0 and (not best or num > groups[best]) then
-        best = g
-      end
-    end
-
-    assert(best)
-
-    -- hallways are the only reason for separate groups, hence at
-    -- least two rooms must have gotten connected.
-    assert(groups[best] >= 2)
-
-    for g = 1,last_g do
-      local num = groups[g]
-      if g != best and num > 0 then
-        remove_group(g)
-      end
-    end
-
-Plan_dump_rooms("Dead Room Map")
-  end
-
-
   local function natural_flow(R, visited)
     assert(R.kind != "scenic")
 
@@ -877,10 +797,6 @@ Plan_dump_rooms("Dead Room Map")
 
   Levels_invoke_hook("connect_rooms")
 
----???  NOTE: want to do hallways in more natural way
----???        i.e. as attempt to connect outward from K+dir
----???  Hallway_place_em()
-
   decide_teleporters()
 
 --!!!!!! FIXME  branch_big_rooms()
@@ -890,8 +806,6 @@ Plan_dump_rooms("Dead Room Map")
   if count_groups() >= 2 then
     error("Connection failure: separate groups exist")
   end
-
----###  remove_dead_rooms()
 
   Connect_decide_start_room()
 
