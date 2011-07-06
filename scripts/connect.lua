@@ -302,20 +302,118 @@ function Connect_rooms()
   end
 
 
-  local function add_teleporter(R1, R2)
-    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
+  local function can_make_crossover(K1, dir)
+    -- TODO: support right angle turn or zig-zag
 
-    Connect_merge_groups(R1.conn_group, R2.conn_group)
+    local MID_A = K1:neighbor(dir, 1)
+    local MID_B = K1:neighbor(dir, 3)
 
-    local D = CONN_CLASS.new("teleporter", R1, R2)
+    if not MID_A or MID_A.used then return false end
+    if not MID_B or MID_B.used then return false end
+
+    local K2 = K1:neighbor(dir, 2)
+    local K3 = K1:neighbor(dir, 4)
+
+    if not K2 or not K2.room or K2.room == K1.room then return false end
+    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
+
+    -- limit of one per room
+    -- [cannot do more since crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if K2.room.crossover then return false end
+
+    local poss = Connect_possibility(K1.room, K3.room)
+    if poss < 0 then return false end
+
+    -- size check
+    local long, deep = K2.sw, K2.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if long < 3 or deep > 4 then return false end
+
+    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
+
+    return true
+  end
+
+
+  local function add_crossover(K1, dir)
+    local MID_A = K1:neighbor(dir, 1)
+    local MID_B = K1:neighbor(dir, 3)
+
+    local K2 = K1:neighbor(dir, 2)
+    local K3 = K1:neighbor(dir, 4)
+
+    gui.printf("!!!!!! Crossover %s --> %s --> %s\n", K1:tostr(), K2:tostr(), K3:tostr())
+
+    local R = K1.room
+    local N = K3.room
+
+    Connect_merge_groups(R.conn_group, N.conn_group)
+
+    local D = CONN_CLASS.new("crossover", R, N, dir)
+
+    D.K1 = K1 ; D.K2 = K3
+
+    local CROSSOVER =
+    {
+      conn = D
+
+      MID_A = MID_A
+      MID_B = MID_B
+      MID_K = K2
+    }
+
+    D.crossover = CROSSOVER
+    K2.room.crossover = CROSSOVER
 
     table.insert(LEVEL.conns, D)
 
-    table.insert(R1.conns, D)
-    table.insert(R2.conns, D)
+    table.insert(R.conns, D)
+    table.insert(N.conns, D)
 
-    D.tele_tag1 = Plan_alloc_id("tag")
-    D.tele_tag2 = Plan_alloc_id("tag")
+    K1.num_conn = K1.num_conn + 1
+    K3.num_conn = K3.num_conn + 1
+
+    -- setup the middle pieces  [FIXME: FIX THIS SHIT]
+    -- Note: this will mark the MID_A/B sections as used
+    local crap_A = {}
+    local crap_B = {}
+
+    Hallway_simple(K1, MID_A, K2, crap_A, dir)
+    Hallway_simple(K2, MID_B, K3, crap_B, dir)
+
+    CROSSOVER.hall_A = crap_A.hall
+    CROSSOVER.hall_B = crap_B.hall
+
+    -- allocate the chunk in the crossed-over room
+    -- [TODO: this may be an overly cautious approach, but it does
+    --        keep the logic fairly simple for now]
+    -- TODO II: probably move this into AREA code
+
+    local sx1, sy1
+    local sx2, sy2
+
+    if geom.is_vert(dir) then
+      sx1 = math.i_mid(K2.sx1, K2.sx2)
+      sx2 = sx1
+
+      sy1 = K2.sy1
+      sy2 = K2.sy2
+    else
+      sy1 = math.i_mid(K2.sy1, K2.sy2)
+      sy2 = sy1
+
+      sx1 = K2.sx1
+      sx2 = K2.sx2
+    end
+
+    local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
+
+    C.foobage = "crossover"
+    C.crossover = CROSSOVER
+
+    CROSSOVER.chunk = C
   end
 
 
@@ -456,122 +554,7 @@ function Connect_rooms()
   end
 
 
-  local function can_make_crossover(K1, dir)
-    -- TODO: support right angle turn or zig-zag
-
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    if not MID_A or MID_A.used then return false end
-    if not MID_B or MID_B.used then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    if not K2 or not K2.room or K2.room == K1.room then return false end
-    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
-
-    -- limit of one per room
-    -- [cannot do more since crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
-    if K2.room.crossover then return false end
-
-    local poss = Connect_possibility(K1.room, K3.room)
-    if poss < 0 then return false end
-
-    -- size check
-    local long, deep = K2.sw, K2.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if long < 3 or deep > 4 then return false end
-
-    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
-
-    return true
-  end
-
-
-  local function add_crossover(K1, dir)
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    gui.printf("!!!!!! Crossover %s --> %s --> %s\n", K1:tostr(), K2:tostr(), K3:tostr())
-
-    local R = K1.room
-    local N = K3.room
-
-    Connect_merge_groups(R.conn_group, N.conn_group)
-
-    local D = CONN_CLASS.new("crossover", R, N, dir)
-
-    D.K1 = K1 ; D.K2 = K3
-
-    local CROSSOVER =
-    {
-      conn = D
-
-      MID_A = MID_A
-      MID_B = MID_B
-      MID_K = K2
-    }
-
-    D.crossover = CROSSOVER
-    K2.room.crossover = CROSSOVER
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R.conns, D)
-    table.insert(N.conns, D)
-
-    K1.num_conn = K1.num_conn + 1
-    K3.num_conn = K3.num_conn + 1
-
-    -- setup the middle pieces  [FIXME: FIX THIS SHIT]
-    -- Note: this will mark the MID_A/B sections as used
-    local crap_A = {}
-    local crap_B = {}
-
-    Hallway_simple(K1, MID_A, K2, crap_A, dir)
-    Hallway_simple(K2, MID_B, K3, crap_B, dir)
-
-    CROSSOVER.hall_A = crap_A.hall
-    CROSSOVER.hall_B = crap_B.hall
-
-    -- allocate the chunk in the crossed-over room
-    -- [TODO: this may be an overly cautious approach, but it does
-    --        keep the logic fairly simple for now]
-    -- TODO II: probably move this into AREA code
-
-    local sx1, sy1
-    local sx2, sy2
-
-    if geom.is_vert(dir) then
-      sx1 = math.i_mid(K2.sx1, K2.sx2)
-      sx2 = sx1
-
-      sy1 = K2.sy1
-      sy2 = K2.sy2
-    else
-      sy1 = math.i_mid(K2.sy1, K2.sy2)
-      sy2 = sy1
-
-      sx1 = K2.sx1
-      sx2 = K2.sx2
-    end
-
-    local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
-
-    C.foobage = "crossover"
-    C.crossover = CROSSOVER
-
-    CROSSOVER.chunk = C
-  end
-
-
-  local function normal_score(K, dir)
+  local function eval_normal_exit(R, K, dir)
     if not can_connect(K, dir) then return -1 end
 
     local score = 0
@@ -604,7 +587,7 @@ function Connect_rooms()
       if not K.room then continue end
 
       for dir = 2,8,2 do
-        local score, N = normal_score(K, dir)
+        local score, N = eval_normal_exit(K.room, K, dir)
 
         if score >= 0 then count = count + 1 end
 
@@ -645,7 +628,24 @@ function Connect_rooms()
   end
 
 
-  local function teleporter_score(R)
+  local function add_teleporter(R1, R2)
+    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    local D = CONN_CLASS.new("teleporter", R1, R2)
+
+    table.insert(LEVEL.conns, D)
+
+    table.insert(R1.conns, D)
+    table.insert(R2.conns, D)
+
+    D.tele_tag1 = Plan_alloc_id("tag")
+    D.tele_tag2 = Plan_alloc_id("tag")
+  end
+
+
+  local function eval_teleporter_room(R)
     -- no teleporters already
     if R:has_teleporter() then return -1 end
 
@@ -669,7 +669,7 @@ function Connect_rooms()
     local loc_list = {}
 
     each R in LEVEL.rooms do
-      local score = teleporter_score(R)
+      local score = eval_teleporter_room(R)
       if score > 0 then
         table.insert(loc_list, { R=R, score=score })
       end
@@ -692,7 +692,7 @@ function Connect_rooms()
       local N = loc.R
 
       if R.conn_group != N.conn_group and
-         teleporter_score(N) >= 0
+         eval_teleporter_room(N) >= 0
       then
         add_teleporter(R, N)
 
@@ -710,7 +710,7 @@ function Connect_rooms()
 
 do return end --!!!!!! FIXME
 
-    if not PARAM.teleporters then return end
+    if not THEME.teleporters then return end
 
     if STYLE.teleporters == "none" then return end
 
