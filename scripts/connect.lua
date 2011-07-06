@@ -22,8 +22,9 @@
 
 class CONN
 {
-  kind   : keyword  -- "direct", "hallway", "teleporter"
-
+  kind   : keyword  -- "direct", "cycle", "crossover"
+                    -- "hallway", "double_hall"
+                    -- "teleporter"
   lock   : LOCK
 
   id : number  -- debugging aid
@@ -46,6 +47,13 @@ class CONN
   is_cycle : boolean
 
   conn_h  -- floor height for connection
+
+  
+  --- POSSIBLE_CONN ---
+
+  score : number
+  
+  hall_path : list(DIR)
 }
 
 
@@ -210,6 +218,115 @@ function Connect_merge_groups(id1, id2)
   each R in LEVEL.rooms do
     if R.conn_group == id2 then
       R.conn_group = id1
+    end
+  end
+end
+
+
+
+function Connect_teleporters()
+
+  local function add_teleporter(R1, R2)
+    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
+
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    local D = CONN_CLASS.new("teleporter", R1, R2)
+
+    table.insert(LEVEL.conns, D)
+
+    table.insert(R1.conns, D)
+    table.insert(R2.conns, D)
+
+    D.tele_tag1 = Plan_alloc_id("tag")
+    D.tele_tag2 = Plan_alloc_id("tag")
+  end
+
+
+  local function eval_teleporter_room(R)
+    -- no teleporters already
+    if R:has_teleporter() then return -1 end
+
+    if #R.conns > 0 then return -1 end
+
+    -- too small?
+    if R.sw <= 2 or R.sh <= 2 then return -1 end
+
+    local score = 0
+
+    if R.purpose == "START" then score = score + 0.3 end
+
+    -- better if more than one section
+    if R.map_volume >= 2 then score = score + 0.8 end
+
+    return score + gui.random()
+  end
+
+
+  local function collect_teleporter_locs()
+    local loc_list = {}
+
+    each R in LEVEL.rooms do
+      local score = eval_teleporter_room(R)
+
+      if score > 0 then
+        table.insert(loc_list, { R=R, score=score })
+      end
+    end
+
+    table.sort(loc_list, function(A, B) return A.score > B.score end)
+
+    return loc_list
+  end
+
+
+  local function try_add_teleporter(loc_list)
+    -- need at least a source and destination
+    if #loc_list < 2 then return false end
+
+    local R = loc_list[1].R
+    table.remove(loc_list, 1)
+
+    for index,loc in ipairs(loc_list) do
+      local N = loc.R
+
+      if R.conn_group != N.conn_group and
+         eval_teleporter_room(N) >= 0
+      then
+        add_teleporter(R, N)
+
+        table.remove(loc_list, index)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  --| Connect_teleporters |--
+
+  LEVEL.teleporters = {}  --????
+
+do return end --!!!!!! FIXME
+
+  if not THEME.teleporters then return end
+
+  if STYLE.teleporters == "none" then return end
+
+  local quota = 2
+
+  if STYLE.teleporters == "few"   then quota = 1 end
+  if STYLE.teleporters == "heaps" then quota = 5 end
+
+  gui.debugf("Teleporter quota: %d\n", quota)
+
+  local loc_list = collect_teleporter_locs()
+
+  for i = 1,quota*3 do
+    if try_add_teleporter(loc_list) then
+      quota = quota - 1
+      if quota <= 0 then break; end
     end
   end
 end
@@ -645,110 +762,6 @@ function Connect_rooms()
   end
 
 
-  local function add_teleporter(R1, R2)
-    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
-
-    Connect_merge_groups(R1.conn_group, R2.conn_group)
-
-    local D = CONN_CLASS.new("teleporter", R1, R2)
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R1.conns, D)
-    table.insert(R2.conns, D)
-
-    D.tele_tag1 = Plan_alloc_id("tag")
-    D.tele_tag2 = Plan_alloc_id("tag")
-  end
-
-
-  local function eval_teleporter_room(R)
-    -- no teleporters already
-    if R:has_teleporter() then return -1 end
-
-    if #R.conns > 0 then return -1 end
-
-    -- too small?
-    if R.sw <= 2 or R.sh <= 2 then return -1 end
-
-    local score = 0
-
-    if R.purpose == "START" then score = score + 0.3 end
-
-    -- better if more than one section
-    if R.kvolume >= 2 then score = score + 0.8 end
-
-    return score + gui.random()
-  end
-
-
-  local function collect_teleporter_locs()
-    local loc_list = {}
-
-    each R in LEVEL.rooms do
-      local score = eval_teleporter_room(R)
-      if score > 0 then
-        table.insert(loc_list, { R=R, score=score })
-      end
-    end
-
-    table.sort(loc_list, function(A, B) return A.score > B.score end)
-
-    return loc_list
-  end
-
-
-  local function try_add_teleporter(loc_list)
-    -- need at least a source and destination
-    if #loc_list < 2 then return false end
-
-    local R = loc_list[1].R
-    table.remove(loc_list, 1)
-
-    for index,loc in ipairs(loc_list) do
-      local N = loc.R
-
-      if R.conn_group != N.conn_group and
-         eval_teleporter_room(N) >= 0
-      then
-        add_teleporter(R, N)
-
-        table.remove(loc_list, index)
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  local function decide_teleporters()
-    LEVEL.teleporter_list = {}
-
-do return end --!!!!!! FIXME
-
-    if not THEME.teleporters then return end
-
-    if STYLE.teleporters == "none" then return end
-
-    local quota = 2
-
-    if STYLE.teleporters == "few"   then quota = 1 end
-    if STYLE.teleporters == "heaps" then quota = 5 end
-
-    gui.debugf("Teleporter quota: %d\n", quota)
-
-    local loc_list = collect_teleporter_locs()
-
-    for i = 1,quota*3 do
-      if try_add_teleporter(loc_list) then
-        quota = quota - 1
-        if quota <= 0 then break; end
-      end
-    end
-  end
-
-
   local function count_groups()
     local groups = {}
 
@@ -786,8 +799,6 @@ do return end --!!!!!! FIXME
 
   gui.printf("\n--==| Connecting Rooms |==--\n\n")
 
-  table.name_up(BIG_CONNECTIONS)
-
   -- give each room a 'conn_group' value, starting at one.
   -- connecting two rooms will merge the groups together.
   -- at the end, only a single group will remain (#1).
@@ -795,7 +806,7 @@ do return end --!!!!!! FIXME
 
   Levels_invoke_hook("connect_rooms")
 
-  decide_teleporters()
+  Connect_teleporters()
 
 --!!!!!! FIXME  branch_big_rooms()
 
