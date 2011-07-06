@@ -5,6 +5,38 @@ OBLIGE TODO
 Current Work
 ------------
 
+>>>>  new branch_big_rooms() logic
+
+   HAVE : LEVEL.best_conn
+   each hallway will test if score > best_conn.score (update it)
+   direct, crossover and off_hall also work that way (update best_conn)
+
++  "unused feet"
+
++  fix "uncrowded middler" to be: very middle section
+
++  double hallway : can be L shape (not just U shape)
+
++  branch_big_rooms : bonus for shaped rooms (in visit list)
+
+-  need PARAM.bridges [as a way to allow bridge prefab list in
+     DOOM themes even though only certain engines support it]
+
+
+Connect: support branching out from any section (reclaimed juncs)
+
+     HOWEVER: low score if enters/exits a room at a "section corner"
+              (i.e. junction touches 2+ sections of the room)
+
+
+
+IDEA: don't decide "big junctions" in planner, instead when all the
+      connections are made (+ quests + cycles) look for small rooms
+      which can be turned into junctions.
+
+      --> NO : instead give outward conns which join / go through
+               a big junction a really high score
+
 
 Crossovers:
   !!  put stairs in the mini-hallways  [Cycles too]
@@ -26,10 +58,6 @@ DONE: controlled via STYLES (also check: PARAM.bridges)
  
 
 Connect:
-  !!  allow rooms to connect to existing hallway
-      (prevent the isolated room problem)
-
-   +  get branch_big_rooms working again
 
 DONE: remove branch_small_rooms : just use "emergency" system
 
@@ -37,6 +65,9 @@ DONE: remove branch_small_rooms : just use "emergency" system
 Hallways:
    +  create them again, want ability to start at a given
       section and dir and return list of possible hallways
+
+  !!  allow rooms to connect to existing hallway
+      (prevent the isolated room problem)
 
    -  create the double penetration hallway
 
@@ -146,6 +177,8 @@ Release Goals
 -  normal doors
 
 -  cages
+
+-  secret niches
 
 
 ?  better exits
