@@ -35,6 +35,7 @@ LEVEL_CONTROL.SHAPES =
   "L",      "L",
   "T",      "T",
   "U",      "U",
+  "S",      "S",
   "H",      "H",
 }
 

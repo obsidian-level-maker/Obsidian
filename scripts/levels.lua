@@ -94,7 +94,7 @@ GLOBAL_STYLE_LIST =
   lt_spokes  = { none=90, some=20, heaps=5 }
   lt_swapped = { none=90, heaps=20 }
 
-  room_shape = { none=30, L=5, T=5, U=10, H=10 }
+  room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
 }
 
 
