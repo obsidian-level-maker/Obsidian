@@ -161,10 +161,6 @@ function Connect_decide_start_room()
 
   gui.printf("Start room: %s\n", room:tostr())
 
----###  -- move it to the front of the list
----###  table.remove(LEVEL.rooms, index)
----###  table.insert(LEVEL.rooms, 1, room)
-
   LEVEL.start_room = room
 
   room.purpose = "START"
@@ -224,8 +220,7 @@ end
 
 
 
-function Connect_find_branches(K, dir, dest_R)
-  -- Note: dest_R only used to find cycles
+function Connect_find_branches(K, dir, cycle_target_R)
 
   local function test_direct_branch(K1, dir)
     local allow_sub_hall
@@ -237,8 +232,11 @@ function Connect_find_branches(K, dir, dest_R)
 
     if not K2 or not K2.room then return end
 
+    if cycle_target_R and K2.room != cycle_target_R then return end
+
     if MID.used then return end  -- FIXME: sub hall check
 
+    -- FIXME: this will fail for cycles
     local poss = Connect_possibility(K1.room, K2.room)
 
     if poss < 0 then return end
@@ -313,6 +311,9 @@ function Connect_find_branches(K, dir, dest_R)
   end
 
 
+  --| Connect_find_branches |--
+
+
   -- these functions will update 'best_conn' if the score is better
   test_direct_branch(K, dir)
 
@@ -325,9 +326,7 @@ end
 
 
 
-function Connect_make_branch()
-  local D = LEVEL.best_conn
-
+function Connect_make_branch(D)
   local R1 = D.R1
   local R2 = D.R2
 
@@ -473,7 +472,7 @@ function Connect_rooms()
   end
 
 
-  local function add_crossover(K1, dir)
+  local function OLD__add_crossover(K1, dir)
     local MID_A = K1:neighbor(dir, 1)
     local MID_B = K1:neighbor(dir, 3)
 
@@ -640,7 +639,7 @@ function Connect_rooms()
 
       -- something worked?
       if LEVEL.best_conn.R2 then
-        Connect_make_branch()
+        Connect_make_branch(LEVEL.best_conn)
         return true -- SUCCESS
       end
     end
@@ -743,7 +742,7 @@ function Connect_rooms()
 
 -- stderrf("Normal branch: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
-    Connect_make_branch()
+    Connect_make_branch(LEVEL.best_conn)
 
 ---###    add_connection(loc.K, loc.N, loc.dir)
 
@@ -841,7 +840,7 @@ function Connect_cycles()
   end
 
 
-  local function add_cycle(K1, MID, K2, dir)
+  local function OLD__add_cycle(K1, MID, K2, dir)
     gui.debugf("Cycle @ %s dir:%d (%s -> %s)\n", K1:tostr(), dir,
                K1.room:tostr(), K2.room:tostr())
 
@@ -870,44 +869,33 @@ function Connect_cycles()
       end
     end
 
-    local visits = {}
+    LEVEL.best_conn = { score=0 }  -- TODO: better threshhold ?
 
     for kx = R1.kx1, R1.kx2 do for ky = R1.ky1, R1.ky2 do
-      local K = SECTIONS[kx][ky]
-      if K.room == R1 then
-        table.insert(visits, K)
-      end
-    end end -- kx, ky
+      local K1 = SECTIONS[kx][ky]
 
-    rand.shuffle(visits)
+      if K1.room == R1 then
+        for dir = 2,8,2 do
 
-    LEVEL.best_conn = { score=0 }
+          Connect_find_branches(K1, dir, R2)
 
-    each K1 in visits do
-      for dir = 2,8,2 do
-
-        Connect_find_branches(K1, dir, R2)
-
-        -- FIXME: use new system (Connect_find_branches / Connect_make_branch)
-
-        local MID = K1:neighbor(dir, 1)
-        if not MID or MID.used then continue end
-
-        local K2 = K1:neighbor(dir, 2)
-        if not K2 or K2.room != R2 then continue end
-
+        --[[ FIXME !!!!!! do this in test_direct_branch
         if existing_dir == dir then
           if STYLE.cycles != "heaps" then continue end
 
           -- prevent connection next door to existing one with same direction
           if next_door_to_existing(R1, K1, dir) then continue end
         end
+        --]]
 
-        add_cycle(K1, MID, K2, dir)
-        return true
+        end -- dir
+      end
+    end end -- kx, ky
 
-      end -- dir
-    end -- K1
+    if LEVEL.best_conn.R2 then
+      Connect_make_branch(LEVEL.best_conn)
+      return true
+    end
 
     return false
   end
@@ -965,13 +953,12 @@ function Connect_cycles()
       -- usually only make one cycle per quest
       local quota = int(#Q.rooms / 5 + gui.random())
 
+      if STYLE.cycles == "heaps" then quota = 99 end
+
       each R in Q.rooms do
-        if not try_cycles_from_room(R) then continue end
-
-        quota = quota - 1
-
-        if quota < 1 and STYLE.cycles != "heaps" then
-          break;
+        if try_cycles_from_room(R) then
+          quota = quota - 1
+          if quota < 1 then break end
         end
       end
     end
