@@ -721,6 +721,11 @@ function Connect_rooms()
 
     each R in visits do
       R.big_score = R.map_volume + 2.5 * gui.random() ^ 2
+
+      -- large bonus for shaped rooms
+      if R.shape != "rect" and R.shape != "odd" then
+        R.big_score = R.big_score * 1.7
+      end
     end
 
     table.sort(visits, function(A, B) return A.big_score > B.big_score end)
