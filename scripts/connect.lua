@@ -387,7 +387,7 @@ function Connect_rooms()
   end
 
 
-  local function add_connection(K1, K2, dir)
+  local function OLD__add_connection(K1, K2, dir)
     local R = assert(K1.room)
     local N = assert(K2.room)
 
@@ -422,9 +422,35 @@ function Connect_rooms()
   end
 
 
-  local function test_direct_branch(K1, dir, allow_sub_hall)
+  local function test_direct_branch(K1, dir)
+    local allow_sub_hall
 
-    -- FIXME !!!!!
+    if LEVEL.best_conn.score < 0 then allow_sub_hall = true end
+
+    local MID = K1:neighbor(dir, 1)
+    local K2  = K1:neighbor(dir, 2)
+
+    if not K2 or not K2.room then return end
+
+    if MID.used then return end  -- FIXME: sub hall check
+
+    local poss = Connect_possibility(K1.room, K2.room)
+
+    if poss < 0 then return end
+
+    local score = 20 + int(poss * 9) + gui.random()
+
+    if score < LEVEL.best_conn.score then return end
+
+    -- OK --
+
+    local D = CONN_CLASS.new("direct", K1.room, K2.room, dir)
+
+    D.K1 = K1 ; D.K2 = K2
+
+    D.score = score
+
+    LEVEL.best_conn = D
   end
 
 
@@ -562,45 +588,62 @@ function Connect_rooms()
   end
 
 
-  local function actually_make_branch()
-    local D = LEVEL.best_conn
+  function Hallway_make_conn(D)  -- FIXME: MOVE IT MOVE IT
 
-    -- FIXME !!!!
+    -- FIXME: handle long hallways, crossovers ETC
+
+    local MID = assert(D.K1:neighbor(dir))
+
+    MID.conn = D ; D.middle = MID 
+
+    Hallway_simple(D.K1, MID, D.K2, D, D.dir1)
   end
 
 
-  local function test_all_branches(R, K, dir, allow_sub_hall)
+  local function actually_make_branch()
+    local D = LEVEL.best_conn
+
+    local R1 = D.R1
+    local R2 = D.R2
+
+    assert(D.K1)
+    assert(D.K2)
+
+    gui.printf("Connecting %s --> %s : %s\n", R1:tostr(), R2:tostr(), D.kind or "????")
+    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
+    
+    Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+    table.insert(LEVEL.conns, D)
+
+    table.insert(R1.conns, D)
+    table.insert(R2.conns, D)
+
+    D.K1.num_conn = D.K1.num_conn + 1
+    D.K2.num_conn = D.K2.num_conn + 1
+
+    Hallway_make_conn(D)
+  end
+
+
+  local function test_all_branches(K, dir)
 
     -- these functions will update 'best_conn' if the score is better
-    test_direct_branch(K, dir, allow_sub_hall)
+    test_direct_branch(K, dir)
 
     test_crossover(K, dir)
 
     Hallway_test_halls(K, dir)
 
     -- TODO: Hallway_test_double()
-
-  end
-
-
-  local function conn_might_be_possible(R, K, dir)
-    -- the purpose of this function is to quickly weed out connections
-    -- which are definitely not possible.
-
-    local N = K:neighbor(dir)
-
-    if not N then return false end
-
-    if N.used then return false end
-
-    return true
   end
 
 
   local function eval_big_exit(R, K, dir)
-    if not conn_might_be_possible(R, K, dir) then
-      return -1
-    end
+    -- weed out connections which are definitely not possible
+    local N = K:neighbor(dir)
+
+    if not N or N.used then return false end
 
     -- check if direction is unique
     local uniq_dir = true
@@ -665,9 +708,9 @@ function Connect_rooms()
     table.sort(exits, function(A, B) return A.score > B.score end)
 
     each EX in exits do
-      LEVEL.best_conn = { R1=R, K1=K, dir1=dir, score=0 }  -- TODO: have a threshhold of goodness
+      LEVEL.best_conn = { score=0 }  -- TODO: have a threshhold of goodness
 
-      test_all_branches(R, EX.K, EX.dir, false)
+      test_all_branches(EX.K, EX.dir)
 
       -- something worked?
       if LEVEL.best_conn.R2 then
@@ -738,7 +781,7 @@ function Connect_rooms()
   end
 
 
-  local function eval_normal_exit(R, K, dir)
+  local function OLD__eval_normal_exit(R, K, dir)
     if not can_connect(K, dir) then return -1 end
 
     local score = 0
@@ -772,7 +815,7 @@ function Connect_rooms()
 
       for dir = 2,8,2 do
 
-        test_all_branches(K.room, K, dir, true)
+        test_all_branches(K, dir)
 --[[
         local score, N = eval_normal_exit(K.room, K, dir)
 
@@ -850,7 +893,7 @@ function Connect_rooms()
 
   Connect_teleporters()
 
---!!!!!! FIXME  branch_big_rooms()
+--!!!!!!!!1  branch_big_rooms()
 
   while try_normal_branch() do end
 
