@@ -5,25 +5,23 @@ OBLIGE TODO
 Current Work
 ------------
 
->>>>  new branch_big_rooms() logic
+>>>>  new connection logic
 
    HAVE : LEVEL.best_conn
    each hallway will test if score > best_conn.score (update it)
    direct, crossover and off_hall also work that way (update best_conn)
 
-+  "unused feet"
-
-+  fix "uncrowded middler" to be: very middle section
-
 +  double hallway : can be L shape (not just U shape)
-
-+  branch_big_rooms : bonus for shaped rooms (in visit list)
 
 -  need PARAM.bridges [as a way to allow bridge prefab list in
      DOOM themes even though only certain engines support it]
 
 
-Connect: support branching out from any section (reclaimed juncs)
+IDEA 2: generalise normal, big and cycle branch creation into a
+        single system which just scan sections.
+
+
+WISH: Connect: support branching out from any section (reclaimed juncs)
 
      HOWEVER: low score if enters/exits a room at a "section corner"
               (i.e. junction touches 2+ sections of the room)
