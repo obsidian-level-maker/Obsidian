@@ -224,6 +224,134 @@ end
 
 
 
+function Connect_find_branches(K, dir, dest_R)
+  -- Note: dest_R only used to find cycles
+
+  local function test_direct_branch(K1, dir)
+    local allow_sub_hall
+
+    if LEVEL.best_conn.score < 0 then allow_sub_hall = true end
+
+    local MID = K1:neighbor(dir, 1)
+    local K2  = K1:neighbor(dir, 2)
+
+    if not K2 or not K2.room then return end
+
+    if MID.used then return end  -- FIXME: sub hall check
+
+    local poss = Connect_possibility(K1.room, K2.room)
+
+    if poss < 0 then return end
+
+    local score = 20 + int(poss * 9) + gui.random()
+
+    if score < LEVEL.best_conn.score then return end
+
+    -- OK --
+
+    local D = CONN_CLASS.new("direct", K1.room, K2.room, dir)
+
+    D.K1 = K1 ; D.K2 = K2
+
+    D.score = score
+
+    LEVEL.best_conn = D
+  end
+
+
+  local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
+    -- TODO: support right angle turn or zig-zag
+
+    local MID_A = K1:neighbor(dir, 1)
+    local MID_B = K1:neighbor(dir, 3)
+
+    if not MID_A or MID_A.used then return false end
+    if not MID_B or MID_B.used then return false end
+
+    local K2 = K1:neighbor(dir, 2)
+    local K3 = K1:neighbor(dir, 4)
+
+    if not K2 or not K2.room or K2.room == K1.room then return false end
+    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
+
+    -- limit of one per room
+    -- [cannot do more since crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if K2.room.crossover then return false end
+
+    local poss = Connect_possibility(K1.room, K3.room)
+    if poss < 0 then return false end
+
+    -- size check
+    local long, deep = K2.sw, K2.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if long < 3 or deep > 4 then return false end
+
+    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
+
+    return true
+  end
+
+
+  local function test_crossover(K1, dir)
+
+    -- FIXME
+
+        -- FIXME: check THEME.bridges (prefab skins) too
+--[[
+        if not PARAM.bridges then continue end
+        if STYLE.crossovers == "none" then continue end
+
+        local cross_score = -1
+        if can_make_crossover(K, dir) then cross_score = gui.random() end
+
+        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
+          cross_loc = { K=K, dir=dir, score=cross_score }
+        end
+--]]
+  end
+
+
+  -- these functions will update 'best_conn' if the score is better
+  test_direct_branch(K, dir)
+
+  test_crossover(K, dir)
+
+  Hallway_test_halls(K, dir)
+
+  -- TODO: Hallway_test_double()
+end
+
+
+
+function Connect_make_branch()
+  local D = LEVEL.best_conn
+
+  local R1 = D.R1
+  local R2 = D.R2
+
+  assert(D.K1)
+  assert(D.K2)
+
+  gui.printf("Connecting %s --> %s : %s\n", R1:tostr(), R2:tostr(), D.kind or "????")
+  gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
+  
+  Connect_merge_groups(R1.conn_group, R2.conn_group)
+
+  table.insert(LEVEL.conns, D)
+
+  table.insert(R1.conns, D)
+  table.insert(R2.conns, D)
+
+  D.K1.num_conn = D.K1.num_conn + 1
+  D.K2.num_conn = D.K2.num_conn + 1
+
+  Hallway_make_conn(D)
+end
+
+
+
 function Connect_teleporters()
 
   local function add_teleporter(R1, R2)
@@ -345,150 +473,6 @@ function Connect_rooms()
   end
 
 
-  local function already_connected(K1, K2)
-    if not (K1 and K2 and K1.room) then return false end
-    
-    each D in K1.room.conns do
-      if (D.K1 == K1 and D.K2 == K2) or
-         (D.K1 == K2 and D.K2 == K1)
-      then
-        return true
-      end
-    end
-  end
-
-
-  local function can_connect(K1, dir)
-    if not K1 then return false end
-
-    local MID = K1:neighbor(dir)
-    if not MID or MID.used then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-    if not K2 then return false end
-
-    -- sections must be touching
---[[  -- NOTE: sections don't move in new logic  (JUNE 2011)
-    if K1.sx1 > K2.sx2 + 1 then return false end
-    if K2.sx1 > K1.sx2 + 1 then return false end
-    if K1.sy1 > K2.sy2 + 1 then return false end
-    if K2.sy1 > K1.sy2 + 1 then return false end
---]]
-    return Connect_possibility(K1.room, K2.room) >= 0
-  end
-
-
-  local function good_connect(K1, dir)
-    if not can_connect(K1, dir) then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-
-    return Connect_possibility(K1.room, K2.room) > 0
-  end
-
-
-  local function OLD__add_connection(K1, K2, dir)
-    local R = assert(K1.room)
-    local N = assert(K2.room)
-
-    gui.printf("Connection from %s --> %s\n", K1:tostr(), K2:tostr())
-    gui.debugf("Possibility value: %d\n", Connect_possibility(R, N))
-
-    Connect_merge_groups(R.conn_group, N.conn_group)
-
-    local D = CONN_CLASS.new("direct", R, N, dir)
-
-    D.K1 = K1 ; D.K2 = K2
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R.conns, D)
-    table.insert(N.conns, D)
-
-    K1.num_conn = K1.num_conn + 1
-    K2.num_conn = K2.num_conn + 1
-
-    -- setup the section in the middle
-    local MID
-    if true then
-      MID = assert(K1:neighbor(dir))
-
-      MID.conn = D ; D.middle = MID 
-
-      Hallway_simple(K1, MID, K2, D, dir)
-    end
-
-    return D
-  end
-
-
-  local function test_direct_branch(K1, dir)
-    local allow_sub_hall
-
-    if LEVEL.best_conn.score < 0 then allow_sub_hall = true end
-
-    local MID = K1:neighbor(dir, 1)
-    local K2  = K1:neighbor(dir, 2)
-
-    if not K2 or not K2.room then return end
-
-    if MID.used then return end  -- FIXME: sub hall check
-
-    local poss = Connect_possibility(K1.room, K2.room)
-
-    if poss < 0 then return end
-
-    local score = 20 + int(poss * 9) + gui.random()
-
-    if score < LEVEL.best_conn.score then return end
-
-    -- OK --
-
-    local D = CONN_CLASS.new("direct", K1.room, K2.room, dir)
-
-    D.K1 = K1 ; D.K2 = K2
-
-    D.score = score
-
-    LEVEL.best_conn = D
-  end
-
-
-  local function can_make_crossover(K1, dir)
-    -- TODO: support right angle turn or zig-zag
-
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    if not MID_A or MID_A.used then return false end
-    if not MID_B or MID_B.used then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    if not K2 or not K2.room or K2.room == K1.room then return false end
-    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
-
-    -- limit of one per room
-    -- [cannot do more since crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
-    if K2.room.crossover then return false end
-
-    local poss = Connect_possibility(K1.room, K3.room)
-    if poss < 0 then return false end
-
-    -- size check
-    local long, deep = K2.sw, K2.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if long < 3 or deep > 4 then return false end
-
-    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
-
-    return true
-  end
-
-
   local function add_crossover(K1, dir)
     local MID_A = K1:neighbor(dir, 1)
     local MID_B = K1:neighbor(dir, 3)
@@ -569,25 +553,6 @@ function Connect_rooms()
   end
 
 
-  local function test_crossover(K1, dir)
-
-    -- FIXME
-
-        -- FIXME: check THEME.bridges (prefab skins) too
---[[
-        if not PARAM.bridges then continue end
-        if STYLE.crossovers == "none" then continue end
-
-        local cross_score = -1
-        if can_make_crossover(K, dir) then cross_score = gui.random() end
-
-        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
-          cross_loc = { K=K, dir=dir, score=cross_score }
-        end
---]]
-  end
-
-
   function Hallway_make_conn(D)  -- FIXME: MOVE IT MOVE IT
 
     -- FIXME: handle long hallways, crossovers ETC
@@ -597,45 +562,6 @@ function Connect_rooms()
     MID.conn = D ; D.middle = MID 
 
     Hallway_simple(D.K1, MID, D.K2, D, D.dir1)
-  end
-
-
-  local function actually_make_branch()
-    local D = LEVEL.best_conn
-
-    local R1 = D.R1
-    local R2 = D.R2
-
-    assert(D.K1)
-    assert(D.K2)
-
-    gui.printf("Connecting %s --> %s : %s\n", R1:tostr(), R2:tostr(), D.kind or "????")
-    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
-    
-    Connect_merge_groups(R1.conn_group, R2.conn_group)
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R1.conns, D)
-    table.insert(R2.conns, D)
-
-    D.K1.num_conn = D.K1.num_conn + 1
-    D.K2.num_conn = D.K2.num_conn + 1
-
-    Hallway_make_conn(D)
-  end
-
-
-  local function test_all_branches(K, dir)
-
-    -- these functions will update 'best_conn' if the score is better
-    test_direct_branch(K, dir)
-
-    test_crossover(K, dir)
-
-    Hallway_test_halls(K, dir)
-
-    -- TODO: Hallway_test_double()
   end
 
 
@@ -710,11 +636,11 @@ function Connect_rooms()
     each EX in exits do
       LEVEL.best_conn = { score=0 }  -- TODO: have a threshhold of goodness
 
-      test_all_branches(EX.K, EX.dir)
+      Connect_find_branches(EX.K, EX.dir)
 
       -- something worked?
       if LEVEL.best_conn.R2 then
-        actually_make_branch()
+        Connect_make_branch()
         return true -- SUCCESS
       end
     end
@@ -781,28 +707,6 @@ function Connect_rooms()
   end
 
 
-  local function OLD__eval_normal_exit(R, K, dir)
-    if not can_connect(K, dir) then return -1 end
-
-    local score = 0
-
-    if good_connect(K, dir) then
-      score = score + 10
-    end
-
-    local N = K:neighbor(dir, 2)
-    assert(N and N.room)
-
-    local total_conn = K.num_conn + N.num_conn
-
-    if total_conn == 0 then
-      score = score + 5 - math.min(total_conn, 5)
-    end
-
-    return score + gui.random() , N
-  end
-
-
   local function try_normal_branch()
     
     LEVEL.best_conn = { score=-999 }
@@ -815,7 +719,7 @@ function Connect_rooms()
 
       for dir = 2,8,2 do
 
-        test_all_branches(K, dir)
+        Connect_find_branches(K, dir)
 --[[
         local score, N = eval_normal_exit(K.room, K, dir)
 
@@ -839,7 +743,7 @@ function Connect_rooms()
 
 -- stderrf("Normal branch: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
-    actually_make_branch()
+    Connect_make_branch()
 
 ---###    add_connection(loc.K, loc.N, loc.dir)
 
@@ -977,10 +881,14 @@ function Connect_cycles()
 
     rand.shuffle(visits)
 
+    LEVEL.best_conn = { score=0 }
+
     each K1 in visits do
       for dir = 2,8,2 do
 
-        -- FIXME: use new system (test_all_branches / actually_make_branch)
+        Connect_find_branches(K1, dir, R2)
+
+        -- FIXME: use new system (Connect_find_branches / Connect_make_branch)
 
         local MID = K1:neighbor(dir, 1)
         if not MID or MID.used then continue end
@@ -1071,6 +979,8 @@ function Connect_cycles()
 
 
   ---| Connect_cycles |---
+
+do return end  --!!!!! FIXME: disabled until use new system
 
   if STYLE.cycles != "none" then
     look_for_cycles()
