@@ -635,8 +635,9 @@ function Connect_rooms()
 
     -- an "uncrowded middler" is the middle of a wide edge and does
     -- not have any neighbors with connections
-    if K:same_room(geom.RIGHT(dir)) and
-       K:same_room(geom. LEFT(dir)) and conn_d >= 2
+    if K.kind == "section" and conn_d >= 2 and
+       K:same_room(geom.RIGHT(dir), 2) and
+       K:same_room(geom. LEFT(dir), 2)
     then
       return 7 + rand
     end
@@ -930,6 +931,8 @@ function Connect_cycles()
 
     each K1 in visits do
       for dir = 2,8,2 do
+
+        -- FIXME: use new system (test_all_branches / actually_make_branch)
 
         local MID = K1:neighbor(dir, 1)
         if not MID or MID.used then continue end

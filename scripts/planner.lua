@@ -121,8 +121,8 @@ function SECTION_CLASS.neighbor(K, dir, dist)
 end
 
 
-function SECTION_CLASS.same_room(K, dir)
-  local N = K:neighbor(dir)
+function SECTION_CLASS.same_room(K, dir, dist)
+  local N = K:neighbor(dir, dist)
   return N and N.room == K.room
 end
 
