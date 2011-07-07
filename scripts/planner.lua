@@ -1151,11 +1151,6 @@ function Plan_contiguous_sections()
 
   ---| Plan_contiguous_sections |---
 
-  -- save existing size
-  each R in LEVEL.rooms do
-    R.map_volume = R.kvolume
-  end
-
   for loop = 1,2 do
     for kx = 1, SECTION_W-1 do for ky = 1, SECTION_H-1 do
       local K = SECTIONS[kx][ky]

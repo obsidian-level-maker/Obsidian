@@ -156,6 +156,10 @@ function ROOM_CLASS.add_section(R, K)
   R.kw, R.kh = geom.group_size(R.kx1, R.ky1, R.kx2, R.ky2)
 
   R.kvolume = (R.kvolume or 0) + 1
+
+  if K.kind == "section" then
+    R.map_volume = (R.map_volume or 0) + 1
+  end
 end
 
 

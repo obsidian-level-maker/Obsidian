@@ -592,7 +592,7 @@ function Connect_rooms()
 
     -- FIXME: handle long hallways, crossovers ETC
 
-    local MID = assert(D.K1:neighbor(dir))
+    local MID = assert(D.K1:neighbor(D.dir1))
 
     MID.conn = D ; D.middle = MID 
 
@@ -643,7 +643,7 @@ function Connect_rooms()
     -- weed out connections which are definitely not possible
     local N = K:neighbor(dir)
 
-    if not N or N.used then return false end
+    if not N or N.used then return -1 end
 
     -- check if direction is unique
     local uniq_dir = true
@@ -670,7 +670,7 @@ function Connect_rooms()
     end
 
     -- sections far away from existing connections are preferred
-    local conn_d = R:dist_to_closest_conn(K, dir)
+    local conn_d = R:dist_to_closest_conn(K, dir) or 10
 
     conn_d = conn_d / 2  -- adjust for hallway channels
 
@@ -679,8 +679,8 @@ function Connect_rooms()
     -- an "uncrowded middler" is the middle of a wide edge and does
     -- not have any neighbors with connections
     if K.kind == "section" and conn_d >= 2 and
-       K:same_room(geom.RIGHT(dir), 2) and
-       K:same_room(geom. LEFT(dir), 2)
+       K:same_room(geom.RIGHT[dir], 2) and
+       K:same_room(geom. LEFT[dir], 2)
     then
       return 7 + rand
     end
@@ -893,7 +893,7 @@ function Connect_rooms()
 
   Connect_teleporters()
 
---!!!!!!!!1  branch_big_rooms()
+  branch_big_rooms()
 
   while try_normal_branch() do end
 
