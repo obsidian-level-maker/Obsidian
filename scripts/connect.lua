@@ -611,7 +611,7 @@ function Connect_rooms()
     end
 
     -- all other cases
-    return 6 - conn_d + rand
+    return 2 + conn_d + rand
   end
 
 
