@@ -410,7 +410,7 @@ function Rooms_assign_facades()
   end
 
   -- TODO: handle this in SECTION_CLASS.set_facade()
-  each R in LEVEL.scenic_rooms do
+  each R in LEVEL.scenics do
     if not R.facade then
       R.facade = R.sections[1].facade
       assert(R.facade)
@@ -424,7 +424,7 @@ function Rooms_choose_themes()
     Rooms_setup_theme(R)
   end
 
-  each R in LEVEL.scenic_rooms do
+  each R in LEVEL.scenics do
     Rooms_setup_theme_Scenic(R)
   end
 end

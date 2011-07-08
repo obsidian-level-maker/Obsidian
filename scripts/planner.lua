@@ -1623,9 +1623,8 @@ function Plan_create_rooms()
 
   LEVEL.rooms = {}
   LEVEL.conns = {}
-
-  LEVEL.scenic_rooms = {}
-  LEVEL.scenic_conns = {}
+  LEVEL.halls = {}
+  LEVEL.scenics = {}
 
   gui.random() ; gui.random()
 

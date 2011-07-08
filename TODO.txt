@@ -5,6 +5,20 @@ OBLIGE TODO
 Current Work
 ------------
 
+Hallways:
+
+-  definition: a bunch of segments which connect to rooms,
+               and can act as the SRC or DEST of a CONN object
+               (rename R1/R2 --> L1/L2 for "location")
+
+-  LEVEL.halls
+
+-  test_direct_branch : don't handle "off_hall" case, do that in
+                        hallway code.
+
+-  test_direct_branch : annex the section here?
+
+
 >>>>  new connection logic
 
    HAVE : LEVEL.best_conn

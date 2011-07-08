@@ -33,8 +33,10 @@ class CONN
   -- especially for the quest system.  For teleporters the
   -- other info (sections and dir1/dir2) may be absent.
 
-  R1, R2 : ROOM
+  L1, L2 : location (either ROOM or HALLWAY)
+
   K1, K2 : SECTION
+
   C1, C2 : CHUNK   -- decided later (at chunk creation)
 
   hall      : HALLWAY
