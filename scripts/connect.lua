@@ -265,67 +265,11 @@ function Connect_find_branches(K, dir, cycle_target_R)
   end
 
 
-  local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
-    -- TODO: support right angle turn or zig-zag
-
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    if not MID_A or MID_A.used then return false end
-    if not MID_B or MID_B.used then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    if not K2 or not K2.room or K2.room == K1.room then return false end
-    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
-
-    -- limit of one per room
-    -- [cannot do more since crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
-    if K2.room.crossover then return false end
-
-    local poss = Connect_possibility(K1.room, K3.room)
-    if poss < 0 then return false end
-
-    -- size check
-    local long, deep = K2.sw, K2.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if long < 3 or deep > 4 then return false end
-
-    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
-
-    return true
-  end
-
-
-  local function test_crossover(K1, dir)
-
-    -- FIXME
-
-        -- FIXME: check THEME.bridges (prefab skins) too
---[[
-        if not PARAM.bridges then continue end
-        if STYLE.crossovers == "none" then continue end
-
-        local cross_score = -1
-        if can_make_crossover(K, dir) then cross_score = gui.random() end
-
-        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
-          cross_loc = { K=K, dir=dir, score=cross_score }
-        end
---]]
-  end
-
-
   --| Connect_find_branches |--
 
 
   -- these functions will update 'best_conn' if the score is better
   test_direct_branch(K, dir)
-
-  test_crossover(K, dir)
 
   Hallway_test_halls(K, dir)
 
