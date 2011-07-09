@@ -153,7 +153,7 @@ function Areas_handle_connections()
 
     D.C1 = C1 ; D.C2 = C2
 
-    if D.kind == "direct" then
+    if D.kind == "direct" or D.kind == "hallway" then
       link_chunks(C1, D.dir1, C2, D)
 
     elseif D.kind == "crossover" then
@@ -175,12 +175,12 @@ function Areas_handle_connections()
       link_chunks(C2, D.dir2, HB_2, D)
       
     else
-      -- hallway
-      local H1 = D.hall:first_chunk()
-      local H2 = D.hall:last_chunk()  -- may be same as first
-
-      link_chunks(C1, D.dir1, H1, D)
-      link_chunks(C2, D.dir2, H2, D)
+--##      -- hallway
+--##      local H1 = D.hall:first_chunk()
+--##      local H2 = D.hall:last_chunk()  -- may be same as first
+--##
+--##      link_chunks(C1, D.dir1, H1, D)
+--##      link_chunks(C2, D.dir2, H2, D)
     end
   end
 
@@ -189,6 +189,9 @@ function Areas_handle_connections()
 
   each D in LEVEL.conns do
     handle_conn(D)
+
+    assert(D.C1)
+    assert(D.C2)
   end
 end
 
@@ -1374,10 +1377,11 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
 
   local function hallway_heights(R)
     each D in R.conns do
-      if D.R1 != R then continue end
+      if D.kind == "hallway" and D.L1 == R and D.L2.is_hall then
+        D.L2:do_floor(D)
+      end
 
-      if D.hall then D.hall:do_floor(D) end
-      if D.crossover then crossover_conn(R, D) end
+---???      if D.crossover then crossover_conn(R, D) end
     end
   end
 

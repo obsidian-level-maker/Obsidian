@@ -267,13 +267,10 @@ function Connect_find_branches(K, dir, cycle_target_R)
 
   --| Connect_find_branches |--
 
-
   -- these functions will update 'best_conn' if the score is better
   test_direct_branch(K, dir)
 
-  Hallway_test_halls(K, dir)
-
-  -- TODO: Hallway_test_double()
+  Hallway_test_branch(K, dir, cycle_target_R)
 end
 
 

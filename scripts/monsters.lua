@@ -474,10 +474,12 @@ function Monsters_do_pickups()
     while PREV.entry_conn and #room_list < 4 do
       PREV = PREV.entry_conn:neighbor(PREV)
 
-      local qty = rand.irange(3,5) / (1 + #room_list)
+      if PREV.is_room then
+        local qty = rand.irange(3,5) / (1 + #room_list)
 
-      table.insert(room_list, PREV)
-      table.insert(ratios, qty)
+        table.insert(room_list, PREV)
+        table.insert(ratios, qty)
+      end
     end
 
     return ratios, room_list

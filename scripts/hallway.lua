@@ -70,6 +70,7 @@ function HALLWAY_CLASS.new()
     chunks   = {}
   }
   table.set_class(H, HALLWAY_CLASS)
+
   return H
 end
 
@@ -108,6 +109,11 @@ function HALLWAY_CLASS.dump(H)
 
   H:dump_path()
   gui.debugf("}\n")
+end
+
+
+function HALLWAY_CLASS.add_section(H, K)
+  table.insert(H.sections, K)
 end
 
 
@@ -156,17 +162,13 @@ end
 
 
 function HALLWAY_CLASS.make_chunks(H)
-  H.chunks = {}
+  each K in H.sections do
+    K.used = true
+    K.hall = H
 
-  for _,loc in ipairs(H.path) do
-    local G = loc.G
-
-    local C = CHUNK_CLASS.new(G.sx1, G.sy1, G.sx2, G.sy2)
-
-    loc.chunk = C
+    local C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
 
     C.hall = H
-
     C:install()
 
     table.insert(H.chunks, C)
@@ -176,12 +178,9 @@ end
 
 
 function HALLWAY_CLASS.add_it(H)
-  each K in H.sections do
-    K.used = true
-    K.hall = H
-  end
-
   table.insert(LEVEL.halls, H)
+
+  H:make_chunks()
 end
 
 
@@ -609,7 +608,8 @@ do return end --!!!!!!!1
 end
 
 
-function Hallway_test_halls(K1, dir)
+
+function Hallway_test_branch(K1, dir, cycle_target_R)
 
   local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
     -- TODO: support right angle turn or zig-zag
@@ -669,6 +669,50 @@ function Hallway_test_halls(K1, dir)
   ---| Hallway_test_halls |---
 
   -- FIXME !!!!!
+
+
+  local MID = K1:neighbor(dir, 1)
+  local K2  = K1:neighbor(dir, 2)
+
+  if not K2 or not K2.room then return end
+
+  if cycle_target_R and K2.room != cycle_target_R then return end
+
+  if MID.used then return end
+
+  -- FIXME: this will fail for cycles
+  local poss = Connect_possibility(K1.room, K2.room)
+
+  if poss < 0 then return end
+
+  local score = 920 + int(poss * 9) + gui.random()
+
+  if score < LEVEL.best_conn.score then return end
+
+
+  -- OK --
+
+  local H  = HALLWAY_CLASS.new()
+
+  H:add_section(MID)
+
+  H.conn_group = K1.room.conn_group
+
+
+  local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
+
+  D1.K1 = K1 ; D1.K2 = MID
+
+
+  local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
+
+  D2.K1 = MID ; D2.K2 = K2
+  
+
+  LEVEL.best_conn.D1 = D1
+  LEVEL.best_conn.D2 = D2
+  LEVEL.best_conn.hall  = H
+  LEVEL.best_conn.score = score
 end
 
 
@@ -693,7 +737,7 @@ function HALLWAY_CLASS.do_floor(H, conn)
   local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
 
   each C in H.chunks do
-    C.floor_h = h ; h = h + delta_h
+    C.floor_h = h
   end
 
   if math.abs(delta_h) < 12 and rand.odds(10) then

@@ -1129,8 +1129,8 @@ function Rooms_blow_chunks()
   -- TEMP TEMP CRUD CRUD
 
   each R in LEVEL.rooms do
-    each H in R.chunks do
-      H:build()
+    each C in R.chunks do
+      C:build()
     end
 
     --!!!!!!!! TEST
@@ -1139,14 +1139,14 @@ function Rooms_blow_chunks()
     end
   end
 
-  each D in LEVEL.conns do
-    if D.hall then D.hall:build() end
-
-    if D.crossover then
-      D.crossover.hall_A:build()
-      D.crossover.hall_B:build()
-    end  
+  each H in LEVEL.halls do
+    H:build()
   end
+
+--???    if D.crossover then
+--???      D.crossover.hall_A:build()
+--???      D.crossover.hall_B:build()
+--???    end  
 end
 
 
