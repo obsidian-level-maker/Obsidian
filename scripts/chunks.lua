@@ -689,7 +689,7 @@ end
     -- locked doors
     local LINK = C.link[dir]
 
-    if LINK and LINK.conn and not C.hall and LINK.conn.C1 == C then
+    if LINK and LINK.conn and LINK.conn.C1 == C then
 
       if LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
         local list = THEME.lock_doors
@@ -700,8 +700,10 @@ end
 
         local skin = assert(GAME.SKINS[name])
 
+        local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
+
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                       0, 192, 32, 32)
+                                       0, long, 32, 32)
 
         local skin2 = { inner=w_matname, outer=w_matname, wall=w_matname }
 
