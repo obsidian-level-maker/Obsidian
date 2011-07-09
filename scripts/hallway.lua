@@ -148,31 +148,35 @@ function HALLWAY_CLASS.render_path(H)
   for _,loc in ipairs(H.path) do
     local G = loc.G
 
-    -- mark section as used
     G:set_hall(H)
 
-    -- store hallway in seed map
-    for sx = G.sx1,G.sx2 do for sy = G.sy1,G.sy2 do
-      local S = SEEDS[sx][sy]
-      assert(not S.room and not S.hall)
-      S.hall = H
-    end end
   end
 end
 
 
 function HALLWAY_CLASS.make_chunks(H)
+stderrf("%s chunks:\n{\n", H:tostr())
   each K in H.sections do
-    K.used = true
-    K.hall = H
+    -- mark section as used
+    K:set_hall(H)
 
     local C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
 
+stderrf("  %s\n", C:tostr())
     C.hall = H
     C:install()
 
     table.insert(H.chunks, C)
+
+    -- store hallway in seed map
+    -- FIXME: do this in K:set_hall() or C:install()
+    for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
+      local S = SEEDS[sx][sy]
+      assert(not S.room and not S.hall)
+      S.hall = H
+    end end
   end
+stderrf("}\n")
 end
 
 
@@ -665,27 +669,48 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   end
 
 
+  local function test_diagonal_hall()
+    local MID1 = K1:neighbor(dir, 1)
+    if not MID1 or MID1.used then return end
 
-  ---| Hallway_test_halls |---
+
+  end
+
+
+
+  ---| Hallway_test_branch |---
 
   -- FIXME !!!!!
 
+  local MID = K1:neighbor(dir)
+  if not MID or MID.used then return end
 
-  local MID = K1:neighbor(dir, 1)
-  local K2  = K1:neighbor(dir, 2)
+  local dir2 = geom.RIGHT[dir]
+  local JUNC = MID:neighbor(dir2)
+  if not JUNC or JUNC.used then
+    dir2 = geom.LEFT[dir]
+    JUNC = MID:neighbor(dir2)
+  end
+  if not JUNC or JUNC.used then return end
+
+  local MID2 = JUNC:neighbor(dir)
+  if not MID2 or MID2.used then
+    MID2 = JUNC:neighbor(10 - dir)
+  end
+  if not MID2 or MID2.used then return end
+
+  local K2 = MID2:neighbor(dir2)
 
   if not K2 or not K2.room then return end
 
   if cycle_target_R and K2.room != cycle_target_R then return end
-
-  if MID.used then return end
 
   -- FIXME: this will fail for cycles
   local poss = Connect_possibility(K1.room, K2.room)
 
   if poss < 0 then return end
 
-  local score = 920 + int(poss * 9) + gui.random()
+  local score = 900 + int(poss * 9) + gui.random()
 
   if score < LEVEL.best_conn.score then return end
 
@@ -695,6 +720,8 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   local H  = HALLWAY_CLASS.new()
 
   H:add_section(MID)
+  H:add_section(JUNC)
+  H:add_section(MID2)
 
   H.conn_group = K1.room.conn_group
 
@@ -704,9 +731,9 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   D1.K1 = K1 ; D1.K2 = MID
 
 
-  local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
+  local D2 = CONN_CLASS.new("hallway", H, K2.room, dir2)
 
-  D2.K1 = MID ; D2.K2 = K2
+  D2.K1 = MID2 ; D2.K2 = K2
   
 
   LEVEL.best_conn.D1 = D1

@@ -112,7 +112,7 @@ function Areas_handle_connections()
     assert(C2)
     assert(conn)
 
---  gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
+    gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
     local LINK =
     {
