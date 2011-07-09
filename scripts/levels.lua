@@ -67,7 +67,7 @@ require 'naming'
 GLOBAL_STYLE_LIST =
 {
   -- these three correspond to buttons in the GUI
-  skies      = { few=20, some=60, heaps=40 }
+  outdoors   = { few=20, some=60, heaps=40 }
   secrets    = { few=20, some=60, heaps=10 }
   traps      = { few=20, some=60, heaps=30 }
 
@@ -558,21 +558,15 @@ function Levels_do_styles()
   -- decide the values
   STYLE = {}
 
-  for name,prob_tab in pairs(style_tab) do
+  each name,prob_tab in style_tab do
     STYLE[name] = rand.key_by_probs(prob_tab)
   end
 
   -- GUI overrides...
-  if OB_CONFIG.outdoors and OB_CONFIG.outdoors != "mixed" then
-    STYLE.skies = OB_CONFIG.outdoors
-  end
-
-  if OB_CONFIG.secrets and OB_CONFIG.secrets != "mixed" then
-    STYLE.secrets = OB_CONFIG.secrets
-  end
-
-  if OB_CONFIG.traps and OB_CONFIG.traps != "mixed" then
-    STYLE.traps = OB_CONFIG.traps
+  each name in { "outdoors", "secrets", "traps" } do
+    if OB_CONFIG[name] and OB_CONFIG[name] != "mixed" then
+      STYLE[name] = OB_CONFIG[name]
+    end
   end
 
   SKY_H = rand.sel(5, 768, 512)

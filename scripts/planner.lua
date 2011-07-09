@@ -1371,11 +1371,11 @@ function Plan_decide_outdoors()
       if not THEME.courtyard_floors then return false end
     end
 
-    if STYLE.skies == "none"   then return false end
-    if STYLE.skies == "always" then return true end
+    if STYLE.outdoors == "none"   then return false end
+    if STYLE.outdoors == "always" then return true end
 
-    if STYLE.skies == "heaps" then return rand.odds(OUTDOOR_PROBS[4]) end
-    if STYLE.skies == "few"   then return rand.odds(OUTDOOR_PROBS[1] / 2) end
+    if STYLE.outdoors == "heaps" then return rand.odds(OUTDOOR_PROBS[4]) end
+    if STYLE.outdoors == "few"   then return rand.odds(OUTDOOR_PROBS[1] / 2) end
 
     if R.natural then return rand.odds(OUTDOOR_PROBS[2]) end
 

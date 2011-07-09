@@ -2428,7 +2428,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=30, few=70, some=20,  heaps=0 }
-      skies    = { none=50, few=50, some=20,  heaps=0 }
+      outdoors = { none=50, few=50, some=20,  heaps=0 }
     }
   }
   
@@ -2533,7 +2533,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=30, few=70,  some=30,  heaps=0  }
-      skies    = { none=70, few=5,   some=0,   heaps=0  }
+      outdoors = { none=70, few=5,   some=0,   heaps=0  }
       liquids  = { none=0,  few=10,  some=60,  heaps=40 }
       lakes    = { none=0,  few=10,  some=60,  heaps=40 }
     }
@@ -2626,7 +2626,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=30, few=70,  some=30,  heaps=0  }
-      skies    = { none=70, few=5,   some=0,   heaps=0  }
+      outdoors = { none=70, few=5,   some=0,   heaps=0  }
       liquids  = { none=0,  few=10,  some=60,  heaps=40 }
       lakes    = { none=0,  few=0,   some=40,  heaps=60 }
       pictures = { none=50, few=10,  some=10,  heaps=0  }
@@ -2741,7 +2741,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=70, few=30,  some=5,  heaps=0 }
-      skies    = { none=70, few=5,   some=0,  heaps=0 }
+      outdoors = { none=70, few=5,   some=0,  heaps=0 }
       liquids  = { none=40, few=60,  some=10, heaps=0 }
       lakes    = { none=60, few=40,  some=0,  heaps=0 } -- I don't think this is need, but to be safe...
       pictures = { none=50, few=0,   some=0,  heaps=0 }
@@ -2837,7 +2837,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=0,  few=0,  some=30,  heaps=70 }
-      skies    = { none=0,  few=0,  some=80,  heaps=20 }
+      outdoors = { none=0,  few=0,  some=80,  heaps=20 }
       liquids  = { none=30, few=70, some=5,   heaps=0  }
       lakes    = { none=10, few=70, some=10,  heaps=0  }
   --  I have an idea for a natural-net dividing a large natural into small ones connected by tunnels, 
@@ -2926,7 +2926,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=0,  few=0,  some=30, heaps=70 }
-      skies    = { none=30, few=70, some=5,  heaps=0  }
+      outdoors = { none=30, few=70, some=5,  heaps=0  }
       crates   = { none=60, few=40, some=0,  heaps=0  }
     }
   
@@ -3047,7 +3047,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=0, few=5, some=80, heaps=10  }
-      skies    = { none=0, few=5, some=80, heaps=10  }
+      outdoors = { none=0, few=5, some=80, heaps=10  }
   --   I had considered including flat x_09 (muck) as a floor texture, and not using
   --  liquids, but realized this would likely produce diases of muck, ect.  We need 
   --  officially transversable liquids for this theme to really work.  
@@ -3179,7 +3179,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals   = { none=0, few=5,  some=50, heaps=10 }
-      skies      = { none=0, few=5,  some=50, heaps=10 }
+      outdoors   = { none=0, few=5,  some=50, heaps=10 }
       subrooms   = { none=0, few=15, some=50, heaps=50 }
       islands    = { none=0, few=15, some=50, heaps=50 }
     }
@@ -3270,7 +3270,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=0,  few=0,  some=30, heaps=70 }
-      skies    = { none=30, few=70, some=5,  heaps=0  }
+      outdoors = { none=30, few=70, some=5,  heaps=0  }
       crates   = { none=60, few=40, some=0,  heaps=0  }
     }
   
@@ -3366,7 +3366,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=30, few=70,  some=30,  heaps=0  }
-      skies    = { none=70, few=5,   some=0,   heaps=0  }
+      outdoors = { none=70, few=5,   some=0,   heaps=0  }
       liquids  = { none=0,  few=10,  some=60,  heaps=40 }
       lakes    = { none=0,  few=0,   some=40,  heaps=60 }
       pictures = { none=50, few=10,  some=10,  heaps=0  }
@@ -3482,7 +3482,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals = { none=0, few=5, some=80, heaps=10  }
-      skies    = { none=0, few=5, some=80, heaps=10  }
+      outdoors = { none=0, few=5, some=80, heaps=10  }
   --   I had considered including flat x_09 (muck) as a floor texture, and not using
   --  liquids, but realized this would likely produce diases of muck, ect.  We need 
   --  officially transversable liquids for this theme to really work.  
@@ -3662,7 +3662,7 @@ HEXEN.LEVEL_THEMES =
     style_list =
     {
       naturals   = { none=0, few=5,  some=50, heaps=5 }
-      skies      = { none=0, few=10, some=50, heaps=0 }
+      outdoors   = { none=0, few=10, some=50, heaps=0 }
       subrooms   = { none=0, few=15, some=50, heaps=50 }
       islands    = { none=0, few=15, some=50, heaps=50 }
     }
