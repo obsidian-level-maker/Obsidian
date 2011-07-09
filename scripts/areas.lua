@@ -351,15 +351,44 @@ function Areas_important_stuff()
   end
 
 
-  local function place_importants(R)
-    -- FIXME: do teleporter here !!!!
+  local function add_teleporter(R)
+    local conn
+    
+    each D in R.conns do
+      if D.kind == "teleporter" then
+        conn = D ; break
+      end
+    end
 
-    if R.purpose then add_purpose(R) end
-    if R.weapon  then add_weapon(R)  end
+    assert(conn)
+
+    local C = spot_for_wotsit(R)
+
+    C.teleporter = conn  -- FIXME?
+
+--[[
+    local in_C  = spot_for_wotsit(R)
+    local out_C = spot_for_wotsit(R)
+
+     in_C.purpose = "TELE_IN"
+    out_C.purpose = "TELE_OUT"
+
+     in_C.tele_conn = conn
+    out_C.tele_conn = conn
+--]]
   end
 
 
-  local function pick_tele_spot(R, other_K)
+  local function place_importants(R)
+    if R.purpose then add_purpose(R) end
+
+    if R:has_teleporter() then add_teleporter(R) end
+
+    if R.weapon then add_weapon(R) end
+  end
+
+
+  local function OLD__pick_tele_spot(R, other_K)
     -- FIXME: broken???
 
     local loc_list = {}
@@ -392,7 +421,7 @@ function Areas_important_stuff()
   end
 
 
-  local function place_one_tele(R)
+  local function OLD__place_one_tele(R)
     -- we choose two sections, one for outgoing teleporter and one
     -- for the returning spot.
 
@@ -406,7 +435,7 @@ function Areas_important_stuff()
   end
 
 
-  local function place_teleporters()
+  local function OLD__place_teleporters()
     -- determine which section(s) of each room to use for teleporters
     each D in LEVEL.conns do
       if D.kind == "teleporter" then
