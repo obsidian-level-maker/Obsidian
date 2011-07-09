@@ -685,10 +685,44 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   local MID = K1:neighbor(dir)
   if not MID or MID.used then return end
 
-  local dir2 = geom.RIGHT[dir]
+  local dir2 = rand.sel(50, geom.RIGHT[dir], geom.LEFT[dir])
   local JUNC = MID:neighbor(dir2)
+
+-- TEST CODE FOR JOINING AN EXISTING HALLWAY
+if JUNC and JUNC.used and JUNC.hall and JUNC.kind == "junction" then
+  -- FUCK IT, cannot use Connect_possibility
+  if JUNC.hall.conn_group != K1.room.conn_group then
+stderrf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+    
+    local H = HALLWAY_CLASS.new()
+
+    H:add_section(MID)
+
+    H.conn_group = K1.room.conn_group
+
+
+    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
+
+    D1.K1 = K1 ; D1.K2 = MID
+
+
+    local D2 = CONN_CLASS.new("hallway", H, JUNC.hall, dir2)
+
+    D2.K1 = MID ; D2.K2 = JUNC
+    
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = D2
+    LEVEL.best_conn.hall  = H
+    LEVEL.best_conn.score = 5000
+
+    return
+  end
+end
+
+
   if not JUNC or JUNC.used then
-    dir2 = geom.LEFT[dir]
+    dir2 = 10 - dir
     JUNC = MID:neighbor(dir2)
   end
   if not JUNC or JUNC.used then return end
@@ -717,7 +751,7 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
 
   -- OK --
 
-  local H  = HALLWAY_CLASS.new()
+  local H = HALLWAY_CLASS.new()
 
   H:add_section(MID)
   H:add_section(JUNC)
