@@ -1169,16 +1169,6 @@ function Plan_expand_rooms()
   -- this must be called after hallways are generated, and will
   -- assign unused sections to belong to a neighboring room.
 
-  local function assign_section(K, room)
-    K:set_room(room)
-
-    K.kind = "annex"
-    K.expanded = true
-
-    room:add_section(K)
-  end
-
-
   local function can_nudge(K, dir)
     -- prevent flow on
     if K.expanded then return false end
@@ -1232,7 +1222,7 @@ function Plan_expand_rooms()
       if KP.room != K.room then continue end
 
       local N = KP:neighbor(dir)
-      assign_section(N, K.room)
+      K.room:annex(N)
     end end
 
     return true
@@ -1307,7 +1297,7 @@ function Plan_expand_rooms()
       if R.shape != "odd" then continue end
 
       if rooms[2] == R or rooms[8] == R then
-        assign_section(K, R)
+        R:annex(K)
         return true
       end
     end

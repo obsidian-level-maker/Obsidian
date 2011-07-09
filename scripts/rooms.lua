@@ -163,6 +163,16 @@ function ROOM_CLASS.add_section(R, K)
 end
 
 
+function ROOM_CLASS.annex(R, K)
+  K:set_room(R)
+
+  K.kind = "annex"
+  K.expanded = true
+
+  R:add_section(K)
+end
+
+
 function ROOM_CLASS.contains_seed(R, x, y)
   if x < R.sx1 or x > R.sx2 then return false end
   if y < R.sy1 or y > R.sy2 then return false end
