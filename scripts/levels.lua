@@ -66,7 +66,11 @@ require 'naming'
 
 GLOBAL_STYLE_LIST =
 {
+  -- these three correspond to buttons in the GUI
   skies      = { few=20, some=60, heaps=40 }
+  secrets    = { few=20, some=60, heaps=10 }
+  traps      = { few=20, some=60, heaps=30 }
+
   hallways   = { few=10, some=90, heaps=30 }
   liquids    = { few=30, some=50, heaps=20 }
   scenics    = { few=30, some=50, heaps=10 }
@@ -561,6 +565,14 @@ function Levels_do_styles()
   -- GUI overrides...
   if OB_CONFIG.outdoors and OB_CONFIG.outdoors != "mixed" then
     STYLE.skies = OB_CONFIG.outdoors
+  end
+
+  if OB_CONFIG.secrets and OB_CONFIG.secrets != "mixed" then
+    STYLE.secrets = OB_CONFIG.secrets
+  end
+
+  if OB_CONFIG.traps and OB_CONFIG.traps != "mixed" then
+    STYLE.traps = OB_CONFIG.traps
   end
 
   SKY_H = rand.sel(5, 768, 512)
