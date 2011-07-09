@@ -22,7 +22,7 @@ NUKEM = { }
 
 NUKEM.ENTITIES =
 {
-  --- special stuff ---
+  --- players ---
   player1 = { id=1405, kind="other", r=20,h=56 }
   player2 = { id=1405, kind="other", r=20,h=56 }
   player3 = { id=1405, kind="other", r=20,h=56 }
@@ -31,9 +31,24 @@ NUKEM.ENTITIES =
   dm_player = { id=1405, kind="other", r=20,h=56 }
 
   --- monsters ---
-  pig_cop = { id=2000, kind="monster", r=16,h=56 }
+  pig_cop   = { id=2000, kind="monster", r=16,h=56 }
+  liz_troop = { id=1680, kind="monster", r=16,h=56 } 
+  liz_man   = { id=2120, kind="monster", r=16,h=56 }
+  commander = { id=1920, kind="monster", r=16,h=56 }
+  octabrain = { id=1820, kind="monster", r=16,h=56 } 
+  new_beast = { id=4610, kind="monster", r=16,h=56 }
 
-  -- bosses
+  recon     = { id=1960, kind="monster", r=16,h=56 }
+  tank      = { id=1975, kind="monster", r=16,h=56 }
+  drone     = { id=1880, kind="monster", r=16,h=56 }
+  rotategun = { id=2360, kind="monster", r=16,h=56 }
+  green_slime = { id=2370, kind="monster", r=16,h=56 }
+
+  -- bosses  [TODO: better names]
+  Boss1 = { id=2630, kind="monster", r=50,h=200 }
+  Boss2 = { id=2710, kind="monster", r=50,h=200 }
+  Boss3 = { id=2760, kind="monster", r=50,h=200 }
+  Boss4 = { id=4740, kind="monster", r=50,h=200 }
 
   --- pickups ---
   k_yellow   = { id=80, kind="pickup", r=20,h=16, pass=true }
