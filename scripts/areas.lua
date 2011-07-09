@@ -1253,9 +1253,9 @@ function Areas_flesh_out()
 stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
         entry_h = assert(info.floor_h)
 
-      elseif R.entry_conn.hall then
-        local hall = R.entry_conn.hall
-        entry_h = assert(hall.chunks[#hall.chunks].floor_h)
+---###      elseif R.entry_conn.hall then
+---###        local hall = R.entry_conn.hall
+---###        entry_h = assert(hall.chunks[#hall.chunks].floor_h)
 
       else
         local NC = assert(R.entry_conn.C1)
@@ -1375,10 +1375,15 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
   end
 
 
-  local function hallway_heights(R)
-    each D in R.conns do
-      if D.kind == "hallway" and D.L1 == R and D.L2.is_hall then
-        D.L2:do_floor(D)
+  local function hallway_heights(L)
+    each D in L.conns do
+      if D.L1 == L and D.L2.is_hall then
+        local hall = D.L2
+
+        hall:do_heights(D.C1.floor_h)
+
+        -- handle hallway networks
+        hallway_heights(D.L2)
       end
 
 ---???      if D.crossover then crossover_conn(R, D) end

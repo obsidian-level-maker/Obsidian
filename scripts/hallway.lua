@@ -227,7 +227,7 @@ end
 
 
 
-function Hallway_place_em()
+function Hallway_place_em()  --- OLD CODE
 
   -- Place hallways into the hallway channels.
   --
@@ -692,7 +692,8 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
 if JUNC and JUNC.used and JUNC.hall and JUNC.kind == "junction" then
   -- FUCK IT, cannot use Connect_possibility
   if JUNC.hall.conn_group != K1.room.conn_group then
-stderrf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n")
+gui.debugf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d %d\n",
+        K1.room.conn_group , JUNC.hall.conn_group)
     
     local H = HALLWAY_CLASS.new()
 
@@ -789,16 +790,12 @@ function HALLWAY_CLASS.choose_textures(H)
 end
 
 
-function HALLWAY_CLASS.do_floor(H, conn)
-  -- get start height
-  assert(conn.C1)
-  local h = assert(conn.C1.floor_h)
-
+function HALLWAY_CLASS.do_heights(H, base_h)
   -- FIXME: this is rubbish
   local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
 
   each C in H.chunks do
-    C.floor_h = h
+    C.floor_h = base_h
   end
 
   if math.abs(delta_h) < 12 and rand.odds(10) then

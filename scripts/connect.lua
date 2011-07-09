@@ -278,6 +278,7 @@ end
 function CONN_CLASS.add_it(D)
   gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
   gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
+  gui.debugf("group %d --> %d\n", D.L1.conn_group, D.L2.conn_group)
 
   if D.L1.conn_group != D.L2.conn_group then
     Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
@@ -309,14 +310,18 @@ end
 
 
 function Connect_make_branch()
+gui.debugf("\nmake_branch\n\n")
   local info = LEVEL.best_conn
+
+  -- must add hallway first (so that merge_groups can find it)
+  if info.hall then
+     info.hall:add_it()
+  end
 
   info.D1:add_it()
 
-  if info.D2 then info.D2:add_it() end
-
-  if info.hall then
-    info.hall:add_it()
+  if info.D2 then
+     info.D2:add_it()
   end
 end
 
@@ -737,9 +742,11 @@ function Connect_rooms()
   local function natural_flow(L, visited)
     assert(L.kind != "scenic")
 
+--- stderrf("natural_flow @ %s\n", L:tostr())
+
     visited[L] = true
 
-    if not L.is_hall then
+    if L.is_room then
       table.insert(LEVEL.rooms, L)
     end
 
@@ -747,10 +754,12 @@ function Connect_rooms()
       if L == D.L2 and not visited[D.L1] then
         D:swap()
       end
+
       if L == D.L1 and not visited[D.L2] then
+        D.L2.entry_conn = D
+
         -- recursively handle adjacent room
         natural_flow(D.L2, visited)
-        D.L2.entry_conn = D
       end
     end
   end

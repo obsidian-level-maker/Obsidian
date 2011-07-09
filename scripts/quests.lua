@@ -601,13 +601,13 @@ function Quest_make_quests()
   end
 
 
-  local function crossover_volume(D)
+  local function crossover_volume(L)
     local count = 0
-    if D.L2.is_room then count = D.L2:num_crossovers() end
+    if L.is_room then count = L:num_crossovers() end
 
-    each D2 in D.L2.conns do
-      if D2.L1 == D.L2 then
-        count = count + crossover_volume(D2)
+    each D in L.conns do
+      if D.L1 == L then
+        count = count + crossover_volume(D.L2)
       end
     end
 
@@ -619,7 +619,7 @@ function Quest_make_quests()
     local score = 0
 
     -- prefer to visit rooms which have crossovers first
-    score = score + crossover_volume(D) * 7.3
+    score = score + crossover_volume(D.L2) * 7.3
 
     if D.dir1 and L.entry_conn and L.entry_conn.dir2 then
       local x1, y1 = L.entry_conn.K2:approx_side_coord(L.entry_conn.dir2)
