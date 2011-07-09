@@ -692,7 +692,7 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
 if JUNC and JUNC.used and JUNC.hall and JUNC.kind == "junction" then
   -- FUCK IT, cannot use Connect_possibility
   if JUNC.hall.conn_group != K1.room.conn_group then
-gui.debugf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d %d\n",
+stderrf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d %d\n",
         K1.room.conn_group , JUNC.hall.conn_group)
     
     local H = HALLWAY_CLASS.new()
