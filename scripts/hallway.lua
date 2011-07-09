@@ -34,9 +34,6 @@ class HALLWAY
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
 
-  sub_halls   -- number of hallways branching off this one
-              -- (normally zero)
-
   wall_tex, floor_tex, ceil_tex 
 }
 
@@ -64,7 +61,14 @@ require 'util'
 HALLWAY_CLASS = {}
 
 function HALLWAY_CLASS.new()
-  local H = { id=Plan_alloc_id("hall"), path={}, chunks={}, sub_halls=0 }
+  local H =
+  {
+    id       = Plan_alloc_id("hall")
+    is_hall  = true
+    conns    = {}
+    sections = {}
+    chunks   = {}
+  }
   table.set_class(H, HALLWAY_CLASS)
   return H
 end
@@ -168,6 +172,18 @@ function HALLWAY_CLASS.make_chunks(H)
     table.insert(H.chunks, C)
   end
 end
+
+
+
+function HALLWAY_CLASS.add_it(H)
+  each K in H.sections do
+    K.used = true
+    K.hall = H
+  end
+
+  table.insert(LEVEL.halls, H)
+end
+
 
 
 function HALLWAY_CLASS.build(H)

@@ -218,6 +218,12 @@ function Connect_merge_groups(id1, id2)
       R.conn_group = id1
     end
   end
+
+  each H in LEVEL.halls do
+    if H.conn_group == id2 then
+      H.conn_group = id1
+    end
+  end
 end
 
 
@@ -227,8 +233,6 @@ function Connect_find_branches(K, dir, cycle_target_R)
   local function test_direct_branch(K1, dir)
     local allow_sub_hall
 
-    if LEVEL.best_conn.score < 0 then allow_sub_hall = true end
-
     local MID = K1:neighbor(dir, 1)
     local K2  = K1:neighbor(dir, 2)
 
@@ -236,7 +240,7 @@ function Connect_find_branches(K, dir, cycle_target_R)
 
     if cycle_target_R and K2.room != cycle_target_R then return end
 
-    if MID.used then return end  -- FIXME: sub hall check
+    if MID.used then return end
 
     -- FIXME: this will fail for cycles
     local poss = Connect_possibility(K1.room, K2.room)
@@ -253,9 +257,11 @@ function Connect_find_branches(K, dir, cycle_target_R)
 
     D.K1 = K1 ; D.K2 = K2
 
-    D.score = score
+    D.middle = MID
 
-    LEVEL.best_conn = D
+    LEVEL.best_conn.D1 = D
+    LEVEL.best_conn.D2 = nil
+    LEVEL.best_conn.score = score
   end
 
 
@@ -328,27 +334,37 @@ end
 
 
 
-function Connect_make_branch(D)
-  local R1 = D.R1
-  local R2 = D.R2
+function CONN_CLASS.add_it(D)
+  gui.printf("Connecting %s --> %s : %s\n", L1:tostr(), L2:tostr(), D.kind or "????")
+  gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
+
+  if D.L1.conn_group != D.L2.conn_group then
+    Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
+  end
 
   assert(D.K1)
   assert(D.K2)
 
-  gui.printf("Connecting %s --> %s : %s\n", R1:tostr(), R2:tostr(), D.kind or "????")
-  gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
-  
-  Connect_merge_groups(R1.conn_group, R2.conn_group)
-
   table.insert(LEVEL.conns, D)
 
-  table.insert(R1.conns, D)
-  table.insert(R2.conns, D)
+  table.insert(D.L1.conns, D)
+  table.insert(D.L2.conns, D)
 
   D.K1.num_conn = D.K1.num_conn + 1
   D.K2.num_conn = D.K2.num_conn + 1
+end
 
-  Hallway_make_conn(D)
+
+function Connect_make_branch()
+  local info = LEVEL.best_conn
+
+  info.D1:add_it()
+
+  if info.D2 then info.D2:add_it() end
+
+  if info.hall then
+    info.hall:add_it()
+  end
 end
 
 
@@ -640,8 +656,8 @@ function Connect_rooms()
       Connect_find_branches(EX.K, EX.dir)
 
       -- something worked?
-      if LEVEL.best_conn.R2 then
-        Connect_make_branch(LEVEL.best_conn)
+      if LEVEL.best_conn.D1 then
+        Connect_make_branch()
         return true -- SUCCESS
       end
     end
@@ -740,11 +756,11 @@ function Connect_rooms()
     end --]]
 
     -- nothing possible? hence we are done
-    if not LEVEL.best_conn.R2 then return false end
+    if not LEVEL.best_conn.D1 then return false end
 
 -- stderrf("Normal branch: %s --> %s  score:%1.2f\n", loc.K:tostr(), loc.N:tostr(), loc.score)
 
-    Connect_make_branch(LEVEL.best_conn)
+    Connect_make_branch()
 
 ---###    add_connection(loc.K, loc.N, loc.dir)
 
@@ -894,7 +910,7 @@ function Connect_cycles()
       end
     end end -- kx, ky
 
-    if LEVEL.best_conn.R2 then
+    if LEVEL.best_conn.D1 then
       Connect_make_branch(LEVEL.best_conn)
       return true
     end
