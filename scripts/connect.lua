@@ -43,8 +43,8 @@ class CONN
   crossover : CROSSOVER
 
   dir1, dir2  -- direction value (2/4/6/8) 
-              -- dir1 leading out of R1 / K1 / C1
-              -- dir2 leading out of R2 / K2 / C2
+              -- dir1 leading out of L1 / K1 / C1
+              -- dir2 leading out of L2 / K2 / C2
 
   is_cycle : boolean
 
@@ -67,8 +67,8 @@ require 'util'
 
 CONN_CLASS = {}
 
-function CONN_CLASS.new(kind, R1, R2, dir)
-  local D = { kind=kind, R1=R1, R2=R2 }
+function CONN_CLASS.new(kind, L1, L2, dir)
+  local D = { kind=kind, L1=L1, L2=L2 }
   D.id = Plan_alloc_id("conn")
   table.set_class(D, CONN_CLASS)
   if dir then
@@ -80,7 +80,7 @@ end
 
 
 function CONN_CLASS.tostr(D)
-  return string.format("CONN_%d [%d > %d]", D.id, D.R1.id, D.R2.id)
+  return string.format("CONN_%d [%s]", D.id, D.kind)
 end
 
 
@@ -98,31 +98,31 @@ function CONN_CLASS.dump(D)
 end
 
 
-function CONN_CLASS.neighbor(D, R)
-  return (R == D.R1 ? D.R2 ; D.R1)
+function CONN_CLASS.neighbor(D, L)
+  return (L == D.L1 ? D.L2 ; D.L1)
 end
 
 
-function CONN_CLASS.section(D, R)
-  return (R == D.R1 ? D.K1 ; D.K2)
+function CONN_CLASS.section(D, L)
+  return (L == D.L1 ? D.K1 ; D.K2)
 end
 
 
-function CONN_CLASS.what_dir(D, R)
+function CONN_CLASS.what_dir(D, L)
   if D.dir1 then
-    return (R == D.R1 ? D.dir1 ; D.dir2)
+    return (L == D.L1 ? D.dir1 ; D.dir2)
   end
 end
 
 
 function CONN_CLASS.swap(D)
-  D.R1, D.R2 = D.R2, D.R1
+  D.L1, D.L2 = D.L2, D.L1
   D.K1, D.K2 = D.K2, D.K1
   D.C1, D.C2 = D.C2, D.C1
 
   D.dir1, D.dir2 = D.dir2, D.dir1
 
-  if D.hall and D.hall.R1 != D.R1 then D.hall:reverse() end
+---##  if D.hall and D.hall.L1 != D.L1 then D.hall:reverse() end
 end
 
 
@@ -279,7 +279,7 @@ end
 
 
 function CONN_CLASS.add_it(D)
-  gui.printf("Connecting %s --> %s : %s\n", L1:tostr(), L2:tostr(), D.kind or "????")
+  gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
   gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
 
   if D.L1.conn_group != D.L2.conn_group then
@@ -293,6 +293,18 @@ function CONN_CLASS.add_it(D)
 
   table.insert(D.L1.conns, D)
   table.insert(D.L2.conns, D)
+
+  -- direct connections absorb the middle section into one of the rooms
+  if D.kind == "direct" then
+    local R = D.L1
+    if R.is_hall then R = D.L2 end
+    assert(not R.is_hall)
+
+    R:annex(D.middle)
+    R:update_seed_bbox()
+
+    if R == D.L1 then D.K1 = D.middle else D.K2 = D.middle end
+  end
 
   D.K1.num_conn = D.K1.num_conn + 1
   D.K2.num_conn = D.K2.num_conn + 1
@@ -536,7 +548,7 @@ function Connect_rooms()
     local uniq_dir = true
 
     each D in R.conns do
-      if D.R1 == R and D.dir1 == dir then
+      if D.L1 == R and D.dir1 == dir then
         uniq_dir = false ; break
       end
     end
@@ -725,21 +737,23 @@ function Connect_rooms()
   end
 
 
-  local function natural_flow(R, visited)
-    assert(R.kind != "scenic")
+  local function natural_flow(L, visited)
+    assert(L.kind != "scenic")
 
-    visited[R] = true
+    visited[L] = true
 
-    table.insert(LEVEL.rooms, R)
+    if not L.is_hall then
+      table.insert(LEVEL.rooms, L)
+    end
 
-    each D in R.conns do
-      if R == D.R2 and not visited[D.R1] then
+    each D in L.conns do
+      if L == D.L2 and not visited[D.L1] then
         D:swap()
       end
-      if R == D.R1 and not visited[D.R2] then
+      if L == D.L1 and not visited[D.L2] then
         -- recursively handle adjacent room
-        natural_flow(D.R2, visited)
-        D.R2.entry_conn = D
+        natural_flow(D.L2, visited)
+        D.L2.entry_conn = D
       end
     end
   end
@@ -775,6 +789,9 @@ function Connect_rooms()
   LEVEL.rooms = {}
 
   natural_flow(LEVEL.start_room, {})
+
+  -- need this due to direct connections annexing a section
+  Plan_make_seeds()
 end
 
 
@@ -929,11 +946,12 @@ function Connect_cycles()
 
   ---| Connect_cycles |---
 
-do return end  --!!!!! FIXME: disabled until use new system
+if false then  --!!!!! FIXME: disabled until use new system
 
   if STYLE.cycles != "none" then
     look_for_cycles()
   end
+end
 
   Plan_expand_rooms()
   Plan_dump_rooms("Expanded Map:")

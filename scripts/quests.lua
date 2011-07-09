@@ -182,11 +182,13 @@ function Quest_key_distances()
   each lock in LEVEL.locks do
     want_lock = lock
 
-    lock.distance = dist_to_door(lock.target, nil, {})
-
+    -- FIXME !!!
+    lock.distance = gui.random() --!!!  dist_to_door(lock.target, nil, {})
+--[[
     gui.debugf("  %s --> %s  lock_dist:%1.1f\n",
         lock.conn.R1.quest:tostr(), lock.conn.R2.quest:tostr(),
         lock.distance)
+--]]
   end 
 end
 
@@ -227,7 +229,7 @@ function Quest_choose_keys()
     LOCK.key_score = LOCK.distance or 0
 
     -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.R1.outdoor and LOCK.conn.R2.outdoor then
+    if LOCK.conn and LOCK.conn.L1.outdoor and LOCK.conn.L2.outdoor then
       LOCK.key_score = LOCK.key_score / 2
     end
 
@@ -522,11 +524,11 @@ function Quest_make_quests()
   local active_locks = {}
 
 
-  local function get_exits(R)
+  local function get_exits(L)
     local exits = {}
 
-    for _,C in ipairs(R.conns) do
-      if C.R1 == R then
+    each C in L.conns do
+      if C.L1 == L then
         table.insert(exits, C)
       end
     end
@@ -600,10 +602,11 @@ function Quest_make_quests()
 
 
   local function crossover_volume(D)
-    local count = D.R2:num_crossovers()
+    local count = 0
+    if D.L2.is_room then count = D.L2:num_crossovers() end
 
-    each D2 in D.R2.conns do
-      if D2.R1 == D.R2 then
+    each D2 in D.L2.conns do
+      if D2.L1 == D.L2 then
         count = count + crossover_volume(D2)
       end
     end
@@ -612,28 +615,25 @@ function Quest_make_quests()
   end
 
 
-  local function evaluate_exit(R, D)
+  local function evaluate_exit(L, D)
     local score = 0
 
     -- prefer to visit rooms which have crossovers first
     score = score + crossover_volume(D) * 7.3
 
-    local entry_kx = R.kx1
-    local entry_ky = R.ky1
-
-    if D.dir1 and R.entry_conn and R.entry_conn.dir2 then
-      local x1, y1 = R.entry_conn.K2:approx_side_coord(R.entry_conn.dir2)
+    if D.dir1 and L.entry_conn and L.entry_conn.dir2 then
+      local x1, y1 = L.entry_conn.K2:approx_side_coord(L.entry_conn.dir2)
       local x2, y2 =            D.K1:approx_side_coord(D.dir1)
 
       local dist = geom.dist(x1, y1, x2, y2)
       if dist > 4 then dist = 4 end
 
       score = score + dist
-    end
 
-    -- strong preference to avoid 180 degree turns
-    if D.dir1 and R.entry_conn and R.entry_conn.dir2 and D.dir1 != R.entry_conn.dir2 then
-      score = score + 3
+      -- strong preference to avoid 180 degree turns
+      if D.dir1 != L.entry_conn.dir2 then
+        score = score + 3
+      end
     end
 
     -- tie breaker
@@ -641,7 +641,7 @@ function Quest_make_quests()
   end
 
 
-  local function pick_free_exit(R, exits)
+  local function pick_free_exit(L, exits)
     if #exits == 1 then
       return exits[1]
     end
@@ -657,7 +657,7 @@ function Quest_make_quests()
     local best_exit
 
     each exit in exits do
-      local score = evaluate_exit(R, exit)
+      local score = evaluate_exit(L, exit)
 
 -- stderrf("exit score[%d] = %1.1f", _index, score)
       if score > best_score then
@@ -670,31 +670,37 @@ function Quest_make_quests()
   end
 
 
-  local function visit_room(R, quest)
+  local function visit_room(L, quest)
     while true do
-      R.quest = quest
+      L.quest = quest
 
-      table.insert(LEVEL.rooms, R)
-      table.insert(quest.rooms, R)
+-- stderrf("visit_room @ %s\n", L:tostr())
 
-      local exits = get_exits(R)
+      if L.is_room then
+        table.insert(LEVEL.rooms, L)
+        table.insert(quest.rooms, L)
+      end
+
+      local exits = get_exits(L)
 
       if #exits == 0 then
         -- hit a leaf room
-        quest.target = R
+        assert(L.is_room)
 
-        local lock = add_goal(R)
+        quest.target = L
+
+        local lock = add_goal(L)
 
         -- finished?
         if not lock then return end
 
         -- create new quest and continue
-        R = lock.conn.R2
-        quest = QUEST_CLASS.new(R)
+        L = lock.conn.L2
+        quest = QUEST_CLASS.new(L)
 
       else
 
-        local free_exit = pick_free_exit(R, exits)
+        local free_exit = pick_free_exit(L, exits)
 
         -- lock up any excess branches
         each exit in exits do
@@ -704,7 +710,7 @@ function Quest_make_quests()
         end
 
         -- continue down the free exit
-        R = free_exit.R2
+        L = free_exit.L2
       end
     end -- while
   end
@@ -716,11 +722,14 @@ function Quest_make_quests()
 
       table.insert(quest.rooms, R)
 
-      if not LEVEL.exit_room and R != start and #R.conns <= 1 then
-        LEVEL.exit_room = R
-        R.purpose = "EXIT"
+      if R != start then
+        -- FIXME !!!
+        if not best_exit then best_exit = R end
       end
     end
+
+    LEVEL.exit_room = best_exit
+    LEVEL.exit_room.purpose = "EXIT"
   end
 
 
@@ -777,6 +786,7 @@ function Quest_make_quests()
   setup_lev_alongs()
 
   assert(LEVEL.exit_room)
+  assert(LEVEL.exit_room.is_room)
 
   gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
 

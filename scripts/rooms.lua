@@ -86,6 +86,7 @@ function ROOM_CLASS.new(shape)
     id = id
     kind = "normal"
     shape = shape
+    is_room = true
 
     conns = {}
     chunks = {}
@@ -141,6 +142,19 @@ end
 
 function ROOM_CLASS.update_size(R)
   R.sw, R.sh = geom.group_size(R.sx1, R.sy1, R.sx2, R.sy2)
+end
+
+
+function ROOM_CLASS.update_seed_bbox(R)
+  each K in R.sections do
+    R.sx1 = math.min(R.sx1, K.sx1)
+    R.sy1 = math.min(R.sy1, K.sy1)
+
+    R.sx2 = math.max(R.sx2, K.sx2)
+    R.sy2 = math.max(R.sy2, K.sy2)
+  end
+
+  R:update_size()
 end
 
 

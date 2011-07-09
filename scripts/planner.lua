@@ -1325,7 +1325,7 @@ function Plan_expand_rooms()
   -- fill in gaps
   Plan_contiguous_sections()
 
-  -- fill unused junctions that border a rooms on two sides
+  -- fill unused junctions that border a room on two sides
   fill_junctions()
 
   -- update the seeds themselves and the room bboxes
