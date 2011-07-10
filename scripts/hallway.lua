@@ -806,6 +806,31 @@ end
 end
 
 
+
+function Hallway_add_streets()
+  if STYLE.streets != "heaps" then return end
+
+  local hall = HALLWAY_CLASS.new()
+
+  hall.outdoor = true
+  hall.street  = true
+  hall.conn_group = 999
+
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+
+    if K and not K.used then
+---   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
+---   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
+
+      table.insert(hall.sections, K)
+    end
+  end end
+
+  hall:add_it()
+end
+
+
 --------------------------------------------------------------------
 
 
@@ -813,6 +838,10 @@ function HALLWAY_CLASS.choose_textures(H)
   H.wall_tex  = rand.key_by_probs(THEME.hallway_walls    or THEME.building_walls)
   H.floor_tex = rand.key_by_probs(THEME.hallway_floors   or THEME.building_floors)
   H.ceil_tex  = rand.key_by_probs(THEME.hallway_ceilings or THEME.building_ceilings or THEME.building_floors)
+
+  if H.outdoor then
+    H.floor_tex = rand.key_by_probs(THEME.street_floors or THEME.courtyard_floors or THEME.building_floors)
+  end
 
   H.trimmed = rand.sel(50)
 end
@@ -826,7 +855,9 @@ function HALLWAY_CLASS.do_heights(H, base_h)
     C.floor_h = base_h
   end
 
-  if math.abs(delta_h) < 12 and rand.odds(10) then
+  if H.outdoor then
+    H.height = 256
+  elseif math.abs(delta_h) < 12 and rand.odds(10) then
     H.height = 80
   else
     H.height = rand.sel(50, 128, 176)

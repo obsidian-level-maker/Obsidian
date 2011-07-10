@@ -776,6 +776,8 @@ function Connect_rooms()
 
   Levels_invoke_hook("connect_rooms")
 
+  Hallway_add_streets()
+
   Connect_teleporters()
 
   branch_big_rooms()

@@ -535,10 +535,12 @@ function CHUNK_CLASS.build(C)
     error("Chunk not in room or hall??")
   end
 
-  if C.room and C.room.outdoor then
+  if (C.room and C.room.outdoor) or (C.hall and C.hall.outdoor) then
     c_mat = "_SKY"
     c_medium = "sky"
-    c_h = assert(C.room.sky_h)
+    if C.room then
+      c_h = assert(C.room.sky_h)
+    end
 
   else
     light = rand.irange(40, 100)
@@ -660,6 +662,9 @@ function CHUNK_CLASS.build(C)
           Trans.set_tex(brush, w_mat.t)
           gui.add_brush(brush)
         end
+
+      elseif C.hall and STYLE.streets == "heaps" then
+        -- nothing
 
       else
           brush = Trans.bare_quad(bx1, by1, bx2, by2)
