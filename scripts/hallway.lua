@@ -80,6 +80,17 @@ function HALLWAY_CLASS.tostr(H)
 end
 
 
+function HALLWAY_CLASS.dump_chunks(H)
+  gui.debugf("%s chunks:\n{\n", H:tostr())
+
+  each C in H.chunks do
+    gui.debugf("  %s\n", C:tostr())
+  end
+
+  gui.debugf("}\n")
+end
+
+
 function HALLWAY_CLASS.dump_path(H)
   if not H.path then
     gui.debugf("No Path.\n")
@@ -155,14 +166,12 @@ end
 
 
 function HALLWAY_CLASS.make_chunks(H)
-stderrf("%s chunks:\n{\n", H:tostr())
   each K in H.sections do
     -- mark section as used
     K:set_hall(H)
 
     local C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
 
-stderrf("  %s\n", C:tostr())
     C.hall = H
     C:install()
 
@@ -176,7 +185,6 @@ stderrf("  %s\n", C:tostr())
       S.hall = H
     end end
   end
-stderrf("}\n")
 end
 
 
@@ -687,6 +695,8 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
     if score < LEVEL.best_conn.score then return end
 
 
+    -- OK --
+
     local D1 = CONN_CLASS.new("hallway", K1.room, MID.hall, dir)
 
     D1.K1 = K1 ; D1.K2 = MID
@@ -695,6 +705,44 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
     LEVEL.best_conn.D1 = D1
     LEVEL.best_conn.D2 = nil
     LEVEL.best_conn.hall  = nil
+    LEVEL.best_conn.score = score
+  end
+
+
+  local function test_direct(MID)
+    local K2 = K1:neighbor(dir, 2)
+
+    if not (K2 and K2.used and K2.room) then return end
+
+    -- FIXME: Connect_possibility or whatever
+    if K1.room.conn_group == K2.room.conn_group then return end
+
+    local score = 50 + gui.random()
+
+    if score < LEVEL.best_conn.score then return end
+
+    -- OK --
+
+    local H = HALLWAY_CLASS.new()
+
+    H:add_section(MID)
+
+    H.conn_group = K1.room.conn_group
+
+
+    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
+
+    D1.K1 = K1 ; D1.K2 = MID
+
+
+    local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
+
+    D2.K1 = MID ; D2.K2 = K2
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = D2
+    LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
   end
 
@@ -711,6 +759,9 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
     test_off_hall(MID)
     return
   end
+
+
+  test_direct(MID)
 
 
   local dir2 = rand.sel(50, geom.RIGHT[dir], geom.LEFT[dir])

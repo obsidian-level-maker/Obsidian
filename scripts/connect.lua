@@ -436,7 +436,7 @@ end
 
 
 
-function Connect_scan_sections(min_score, mode)
+function Connect_scan_sections(mode, min_score)
   LEVEL.best_conn = { score=min_score }
 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
@@ -457,6 +457,8 @@ function Connect_scan_sections(min_score, mode)
   if not LEVEL.best_conn.D1 then
     error("Connection failure: separate groups exist")
   end
+
+  Connect_make_branch()
 end
 
 
@@ -805,6 +807,10 @@ function Connect_rooms()
 
   Connect_teleporters()
 
+  while count_groups() >= 2 do
+    Connect_scan_sections("normal", -999)
+  end
+--[[ OLD WAY
   branch_big_rooms()
 
   while try_normal_branch() do end
@@ -812,6 +818,7 @@ function Connect_rooms()
   if count_groups() >= 2 then
     error("Connection failure: separate groups exist")
   end
+--]]
 
   Connect_decide_start_room()
 
@@ -965,8 +972,6 @@ function Connect_cycles()
       -- usually only make one cycle per quest
       local quota = int(#Q.rooms / 5 + gui.random())
 
-      if STYLE.cycles == "heaps" then quota = 99 end
-
       each R in Q.rooms do
         if try_cycles_from_room(R) then
           quota = quota - 1
@@ -982,7 +987,16 @@ function Connect_cycles()
 if false then  --!!!!! FIXME: disabled until use new system
 
   if STYLE.cycles != "none" then
-    look_for_cycles()
+
+    prepare_cycles()
+
+    local quota = 5 ---FIXME
+
+    if STYLE.cycles == "heaps" then quota = 50 end
+
+    for i = 1,quota do
+      Connect_scan_sections("cycle", 0)
+    end
   end
 end
 
