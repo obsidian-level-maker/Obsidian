@@ -621,7 +621,7 @@ end
 
 
 
-function Hallway_test_branch(K1, dir, mode)
+function Hallway_test_branch(start_K, dir, mode)
 
   local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
     -- TODO: support right angle turn or zig-zag
@@ -679,7 +679,7 @@ function Hallway_test_branch(K1, dir, mode)
   local function test_off_hall(MID)
     if not MID.hall then return end
 
-    if MID.hall.conn_group == K1.room.conn_group then return end
+    if MID.hall.conn_group == start_K.room.conn_group then return end
 
     local score = -100 - MID.num_conn - gui.random()
 
@@ -688,9 +688,9 @@ function Hallway_test_branch(K1, dir, mode)
 
     -- OK --
 
-    local D1 = CONN_CLASS.new("hallway", K1.room, MID.hall, dir)
+    local D1 = CONN_CLASS.new("hallway", start_K.room, MID.hall, dir)
 
-    D1.K1 = K1 ; D1.K2 = MID
+    D1.K1 = start_K ; D1.K2 = MID
 
 
     LEVEL.best_conn.D1 = D1
@@ -737,12 +737,10 @@ function Hallway_test_branch(K1, dir, mode)
   end
 
 
-  local function test_hall_conn(K, dir, visited)
-    local K2 = K1:neighbor(dir)
+  local function test_hall_conn(end_K, from_dir, visited)
+    if not (end_K and end_K.room) then return end
 
-    if not (K2 and K2.room) then return end
-
-    if not Connect_is_possible(K1.room, K2.room or K2.hall, mode) then return end
+    if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
 
     local score = 50 + table.size(visited) + gui.random()
     -- TODO: BIG BONUS for big_junc
@@ -758,23 +756,25 @@ function Hallway_test_branch(K1, dir, mode)
       H:add_section(MID)
     end
 
-    H.conn_group = K1.room.conn_group
+    H.conn_group = start_K.room.conn_group
 
 
-    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
+    local D1 = CONN_CLASS.new("hallway", start_K.room, H, dir)
 
-    D1.K1 = K1 ; D1.K2 = H.sections[1]
+    D1.K1 = start_K ; D1.K2 = H.sections[1]
 
 
-    local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
+    local D2 = CONN_CLASS.new("hallway", H, end_K.room, dir)
 
-    D2.K1 = table.last(H.sections) ; D2.K2 = K2
+    D2.K1 = table.last(H.sections) ; D2.K2 = end_K
 
 
     LEVEL.best_conn.D1 = D1
     LEVEL.best_conn.D2 = D2
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
+
+--stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
 
 
@@ -787,6 +787,8 @@ function Hallway_test_branch(K1, dir, mode)
     assert(K)
     assert(not K.used)
 
+--stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
+--stderrf("{\n")
     visited[K] = true
 
     local test_dirs
@@ -805,26 +807,29 @@ function Hallway_test_branch(K1, dir, mode)
       if dir != from_dir then
 
         if test_dirs[dir] then
-          test_hall_conn(K, dir, visited)
+--stderrf("  testing conn @ dir:%d\n", dir)
+          test_hall_conn(K:neighbor(dir), 10 - dir, visited)
         end
 
         if quota > 0 and geom.is_perpendic(dir, from_dir) then
           local N = K:neighbor(dir)
 
           if N and not N.used then
+--stderrf("  recursing @ dir:%d\n", dir)
             hall_flow(N, 10 - dir, table.copy(visited), quota - 1)
           end
         end
       end
     end
+--stderrf("}\n")
   end
 
 
   ---| Hallway_test_branch |---
 
-  assert(K1.room)  -- always begin from a room
+  assert(start_K.room)  -- always begin from a room
 
-  local MID = K1:neighbor(dir)
+  local MID = start_K:neighbor(dir)
 
   if not MID then return end
 
