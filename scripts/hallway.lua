@@ -621,7 +621,7 @@ end
 
 
 
-function Hallway_test_branch(start_K, dir, mode)
+function Hallway_test_branch(start_K, start_dir, mode)
 
   local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
     -- TODO: support right angle turn or zig-zag
@@ -688,7 +688,7 @@ function Hallway_test_branch(start_K, dir, mode)
 
     -- OK --
 
-    local D1 = CONN_CLASS.new("hallway", start_K.room, MID.hall, dir)
+    local D1 = CONN_CLASS.new("hallway", start_K.room, MID.hall, start_dir)
 
     D1.K1 = start_K ; D1.K2 = MID
 
@@ -737,12 +737,12 @@ function Hallway_test_branch(start_K, dir, mode)
   end
 
 
-  local function test_hall_conn(end_K, from_dir, visited)
+  local function test_hall_conn(end_K, end_dir, visited)
     if not (end_K and end_K.room) then return end
 
     if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
 
-    local score = 50 + table.size(visited) + gui.random()
+    local score = 50 + #visited + gui.random()
     -- TODO: BIG BONUS for big_junc
 
     if score < LEVEL.best_conn.score then return end
@@ -752,21 +752,21 @@ function Hallway_test_branch(start_K, dir, mode)
 
     local H = HALLWAY_CLASS.new()
 
-    each MID,_ in visited do
+    each MID in visited do
       H:add_section(MID)
     end
 
     H.conn_group = start_K.room.conn_group
 
 
-    local D1 = CONN_CLASS.new("hallway", start_K.room, H, dir)
+    local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
 
     D1.K1 = start_K ; D1.K2 = H.sections[1]
 
 
-    local D2 = CONN_CLASS.new("hallway", H, end_K.room, dir)
+    local D2 = CONN_CLASS.new("hallway", end_K.room, H, end_dir)
 
-    D2.K1 = table.last(H.sections) ; D2.K2 = end_K
+    D2.K1 = end_K   ; D2.K2 = table.last(H.sections)
 
 
     LEVEL.best_conn.D1 = D1
@@ -787,9 +787,12 @@ function Hallway_test_branch(start_K, dir, mode)
     assert(K)
     assert(not K.used)
 
+    -- already part of hallway path?
+    if table.has_elem(visited, K) then return end
+
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
-    visited[K] = true
+    table.insert(visited, K)
 
     local test_dirs
 
@@ -829,7 +832,7 @@ function Hallway_test_branch(start_K, dir, mode)
 
   assert(start_K.room)  -- always begin from a room
 
-  local MID = start_K:neighbor(dir)
+  local MID = start_K:neighbor(start_dir)
 
   if not MID then return end
 
@@ -842,8 +845,7 @@ function Hallway_test_branch(start_K, dir, mode)
 
   local quota = 5  -- FIXME
 
-  hall_flow(MID, 10 - dir, {}, quota)
-
+  hall_flow(MID, 10 - start_dir, {}, quota)
 end
 
 
