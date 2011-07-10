@@ -795,6 +795,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     table.insert(visited, K)
 
     local test_dirs
+    local is_junction
 
     if K.kind == "vert" then
       test_dirs = TEST_DIRS_VERT
@@ -802,6 +803,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
       test_dirs = TEST_DIRS_HORIZ
     elseif K.kind == "junction" or K.kind == "big_junc" then
       test_dirs = TEST_DIRS_NONE
+      is_junction = true
     else
       return  -- not a hallway section
     end
@@ -814,7 +816,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
           test_hall_conn(K:neighbor(dir), 10 - dir, visited)
         end
 
-        if quota > 0 and geom.is_perpendic(dir, from_dir) then
+        if quota > 0 and (not is_junction or geom.is_perpendic(dir, from_dir)) then
           local N = K:neighbor(dir)
 
           if N and not N.used then
