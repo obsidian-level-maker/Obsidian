@@ -700,7 +700,7 @@ function Hallway_test_branch(K1, dir, mode)
   end
 
 
-  local function test_direct(MID)
+  local function OLD__test_direct(MID)
     local K2 = K1:neighbor(dir, 2)
 
     if not (K2 and K2.room) then return end
@@ -737,12 +737,53 @@ function Hallway_test_branch(K1, dir, mode)
   end
 
 
+  local function test_hall_conn(K, dir, visited)
+    local K2 = K1:neighbor(dir)
+
+    if not (K2 and K2.room) then return end
+
+    if not Connect_is_possible(K1.room, K2.room or K2.hall, mode) then return end
+
+    local score = 50 + table.size(visited) + gui.random()
+    -- TODO: BIG BONUS for big_junc
+
+    if score < LEVEL.best_conn.score then return end
+
+
+    -- OK --
+
+    local H = HALLWAY_CLASS.new()
+
+    each MID,_ in visited do
+      H:add_section(MID)
+    end
+
+    H.conn_group = K1.room.conn_group
+
+
+    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
+
+    D1.K1 = K1 ; D1.K2 = H.sections[1]
+
+
+    local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
+
+    D2.K1 = table.last(H.sections) ; D2.K2 = K2
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = D2
+    LEVEL.best_conn.hall  = H
+    LEVEL.best_conn.score = score
+  end
+
+
   local TEST_DIRS_NONE  = {}
   local TEST_DIRS_VERT  = { [4]=true, [6]=true }
   local TEST_DIRS_HORIZ = { [2]=true, [8]=true }
 
 
-  local function hall_flow(K, moved_dir, visited, quota)
+  local function hall_flow(K, from_dir, visited, quota)
     assert(K)
     assert(not K.used)
 
@@ -761,17 +802,17 @@ function Hallway_test_branch(K1, dir, mode)
     end
 
     for dir = 2,8,2 do
-      if dir != moved_dir then
+      if dir != from_dir then
 
         if test_dirs[dir] then
-          test_blah_blah(K, dir, visited)
+          test_hall_conn(K, dir, visited)
         end
 
-        if quota > 0 then
+        if quota > 0 and geom.is_perpendic(dir, from_dir) then
           local N = K:neighbor(dir)
 
           if N and not N.used then
-            hall_flow(N, dir, table.copy(visited), quota - 1)
+            hall_flow(N, 10 - dir, table.copy(visited), quota - 1)
           end
         end
       end
@@ -779,111 +820,25 @@ function Hallway_test_branch(K1, dir, mode)
   end
 
 
-
   ---| Hallway_test_branch |---
 
-  -- FIXME !!!!!
+  assert(K1.room)  -- always begin from a room
 
   local MID = K1:neighbor(dir)
+
   if not MID then return end
 
   if MID.used then
     -- if neighbor section is used, nothing is possible except
-    -- branching off an existing hall.
+    -- branching off an existing hallway.
     test_off_hall(MID)
     return
   end
 
+  local quota = 5  -- FIXME
 
-  test_direct(MID)
+  hall_flow(MID, 10 - dir, {}, quota)
 
-
-  local dir2 = rand.sel(50, geom.RIGHT[dir], geom.LEFT[dir])
-  local JUNC = MID:neighbor(dir2)
-
--- TEST CODE FOR JOINING AN EXISTING HALLWAY
-if JUNC and JUNC.used and JUNC.hall and JUNC.kind == "junction" then
-  -- FUCK IT, cannot use Connect_possibility
-  if Connect_is_possible(JUNC.hall, K1.room, mode) then
-
-    local H = HALLWAY_CLASS.new()
-
-    H:add_section(MID)
-
-    H.conn_group = K1.room.conn_group
-
-
-    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
-
-    D1.K1 = K1 ; D1.K2 = MID
-
-
-    local D2 = CONN_CLASS.new("hallway", H, JUNC.hall, dir2)
-
-    D2.K1 = MID ; D2.K2 = JUNC
-    
-
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = D2
-    LEVEL.best_conn.hall  = H
-    LEVEL.best_conn.score = 5000
-
-    return
-  end
-end
-
-
-  if not JUNC or JUNC.used then
-    dir2 = 10 - dir
-    JUNC = MID:neighbor(dir2)
-  end
-  if not JUNC or JUNC.used then return end
-
-  local MID2 = JUNC:neighbor(dir)
-  if not MID2 or MID2.used then
-    MID2 = JUNC:neighbor(10 - dir)
-  end
-  if not MID2 or MID2.used then return end
-
-  local K2 = MID2:neighbor(dir2)
-
-  if not K2 or not K2.room then return end
-
-  if cycle_target_R and K2.room != cycle_target_R then return end
-
-  if not Connect_is_possible(K1.room, K2.room, mode) then return end
-
-
-  local score = 900 + gui.random()
-
-  if score < LEVEL.best_conn.score then return end
-
-
-  -- OK --
-
-  local H = HALLWAY_CLASS.new()
-
-  H:add_section(MID)
-  H:add_section(JUNC)
-  H:add_section(MID2)
-
-  H.conn_group = K1.room.conn_group
-
-
-  local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
-
-  D1.K1 = K1 ; D1.K2 = MID
-
-
-  local D2 = CONN_CLASS.new("hallway", H, K2.room, dir2)
-
-  D2.K1 = MID2 ; D2.K2 = K2
-  
-
-  LEVEL.best_conn.D1 = D1
-  LEVEL.best_conn.D2 = D2
-  LEVEL.best_conn.hall  = H
-  LEVEL.best_conn.score = score
 end
 
 
