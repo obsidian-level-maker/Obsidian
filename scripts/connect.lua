@@ -436,6 +436,31 @@ end
 
 
 
+function Connect_scan_sections(min_score, mode)
+  LEVEL.best_conn = { score=min_score }
+
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+
+    if not (K and K.used and K.room) then continue end
+
+    -- TODO: relax this
+    if K.kind != "section" then continue end
+
+    for dir = 2,8,2 do
+      Hallway_test_branch(K, dir, mode)
+    end
+  end end
+
+  if mode == "cycle" then return end
+
+  if not LEVEL.best_conn.D1 then
+    error("Connection failure: separate groups exist")
+  end
+end
+
+
+
 function Connect_rooms()
 
   -- a "branch" is a room with 3 or more connections.
