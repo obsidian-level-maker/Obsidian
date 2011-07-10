@@ -676,14 +676,6 @@ function Hallway_test_branch(K1, dir, mode)
   end
 
 
-  local function test_diagonal_hall()
-    local MID1 = K1:neighbor(dir, 1)
-    if not MID1 or MID1.used then return end
-
-
-  end
-
-
   local function test_off_hall(MID)
     if not MID.hall then return end
 
@@ -742,6 +734,48 @@ function Hallway_test_branch(K1, dir, mode)
     LEVEL.best_conn.D2 = D2
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
+  end
+
+
+  local TEST_DIRS_NONE  = {}
+  local TEST_DIRS_VERT  = { [4]=true, [6]=true }
+  local TEST_DIRS_HORIZ = { [2]=true, [8]=true }
+
+
+  local function hall_flow(K, moved_dir, visited, quota)
+    assert(K)
+    assert(not K.used)
+
+    visited[K] = true
+
+    local test_dirs
+
+    if K.kind == "vert" then
+      test_dirs = TEST_DIRS_VERT
+    elseif K.kind == "horiz" then
+      test_dirs = TEST_DIRS_HORIZ
+    elseif K.kind == "junction" or K.kind == "big_junc" then
+      test_dirs = TEST_DIRS_NONE
+    else
+      return  -- not a hallway section
+    end
+
+    for dir = 2,8,2 do
+      if dir != moved_dir then
+
+        if test_dirs[dir] then
+          test_blah_blah(K, dir, visited)
+        end
+
+        if quota > 0 then
+          local N = K:neighbor(dir)
+
+          if N and not N.used then
+            hall_flow(N, dir, table.copy(visited), quota - 1)
+          end
+        end
+      end
+    end
   end
 
 
@@ -817,7 +851,7 @@ end
 
   if cycle_target_R and K2.room != cycle_target_R then return end
 
-  if not Connect_possibility(K1.room, K2.room, mode) then return end
+  if not Connect_is_possible(K1.room, K2.room, mode) then return end
 
 
   local score = 900 + gui.random()
