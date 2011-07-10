@@ -7,16 +7,22 @@ Current Work
 
 Hallways:
 
--  definition: a bunch of segments which connect to rooms,
-               and can act as the SRC or DEST of a CONN object
-               (rename R1/R2 --> L1/L2 for "location")
+>>>  Hallway_test_branch logic
 
--  LEVEL.halls
+!!  connect direct from room to hall [low score, -100 + N]
 
--  test_direct_branch : don't handle "off_hall" case, do that in
+DONE:  definition: a bunch of segments which connect to rooms,
+                   and can act as the SRC or DEST of a CONN object
+                   (rename R1/R2 --> L1/L2 for "location")
+
+DONE:  LEVEL.halls
+
+DONE:  test_direct_branch : don't handle "off_hall" case, do that in
                         hallway code.
 
--  test_direct_branch : annex the section here?
+REVIEW:  test_direct_branch : annex the section here?  NO
+      --> Alternative 1 : have a small hallway like before
+        [ Alternative 2 : yet another idiom ]
 
 
 >>>>  new connection logic
@@ -31,11 +37,11 @@ Hallways:
      DOOM themes even though only certain engines support it]
 
 
-IDEA 2: generalise normal, big and cycle branch creation into a
-        single system which just scan sections.
+YES: IDEA 2: generalise normal, big and cycle branch creation into a
+             single system which just scan sections.
 
 
-WISH: Connect: support branching out from any section (reclaimed juncs)
+WISH: Connect: support branching out from reclaimed juncs
 
      HOWEVER: low score if enters/exits a room at a "section corner"
               (i.e. junction touches 2+ sections of the room)
@@ -64,7 +70,7 @@ DONE: controlled via STYLES (also check: PARAM.bridges)
    WISH: make a moving train in Quake 1/2 maps
    WISH: pillars holding up the bridge
    WISH: bridges which increase height (e.g. stair in middle)
-   WISH: channels which decrease height
+   WISH: channels which decrease height  [via prefab??]
    WISH: try to create through a reclaimed joiner (middle of CCC etc)
    WISH: give AREAS near incompatible height a 'target_h' field
  
@@ -75,10 +81,10 @@ DONE: remove branch_small_rooms : just use "emergency" system
 
 
 Hallways:
-   +  create them again, want ability to start at a given
+  >>  create them again, want ability to start at a given
       section and dir and return list of possible hallways
 
-  !!  allow rooms to connect to existing hallway
+  >>  allow rooms to connect to existing hallway
       (prevent the isolated room problem)
 
    -  create the double penetration hallway
@@ -102,6 +108,8 @@ Stairs:
   +  fix ability to go from A2 --> A1
      (in other words: ability for stair chunk to be in unset floor)
 
+
+-----------------------------------------------------------------
 
 
 ++  create AUTHORS.txt / simplify Credits web page
@@ -170,6 +178,8 @@ FOCUS WILL BE: room connection logic
 
 -  liquid areas
 
+?  teleporters
+
 
 
 Release Goals
@@ -196,6 +206,4 @@ Release Goals
 ?  better exits
 
 ?  diagonal corners
-
-?  teleporters
 
