@@ -621,7 +621,7 @@ end
 
 
 
-function Hallway_test_branch(K1, dir, cycle_target_R)
+function Hallway_test_branch(K1, dir, mode)
 
   local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
     -- TODO: support right angle turn or zig-zag
@@ -643,8 +643,7 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
     --  two crossovers can lead to an unsatisfiable range]
     if K2.room.crossover then return false end
 
-    local poss = Connect_possibility(K1.room, K3.room)
-    if poss < 0 then return false end
+    if not Connect_is_possible(K1.room, K3.room, mode) then return false end
 
     -- size check
     local long, deep = K2.sw, K2.sh
@@ -712,10 +711,9 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   local function test_direct(MID)
     local K2 = K1:neighbor(dir, 2)
 
-    if not (K2 and K2.used and K2.room) then return end
+    if not (K2 and K2.room) then return end
 
-    -- FIXME: Connect_possibility or whatever
-    if K1.room.conn_group == K2.room.conn_group then return end
+    if not Connect_is_possible(K1.room, K2.room or K2.hall, mode) then return end
 
     local score = 50 + gui.random()
 
@@ -756,6 +754,8 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   if not MID then return end
 
   if MID.used then
+    -- if neighbor section is used, nothing is possible except
+    -- branching off an existing hall.
     test_off_hall(MID)
     return
   end
@@ -770,10 +770,8 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
 -- TEST CODE FOR JOINING AN EXISTING HALLWAY
 if JUNC and JUNC.used and JUNC.hall and JUNC.kind == "junction" then
   -- FUCK IT, cannot use Connect_possibility
-  if JUNC.hall.conn_group != K1.room.conn_group then
-stderrf("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! %d %d\n",
-        K1.room.conn_group , JUNC.hall.conn_group)
-    
+  if Connect_is_possible(JUNC.hall, K1.room, mode) then
+
     local H = HALLWAY_CLASS.new()
 
     H:add_section(MID)
@@ -819,12 +817,10 @@ end
 
   if cycle_target_R and K2.room != cycle_target_R then return end
 
-  -- FIXME: this will fail for cycles
-  local poss = Connect_possibility(K1.room, K2.room)
+  if not Connect_possibility(K1.room, K2.room, mode) then return end
 
-  if poss < 0 then return end
 
-  local score = 900 + int(poss * 9) + gui.random()
+  local score = 900 + gui.random()
 
   if score < LEVEL.best_conn.score then return end
 

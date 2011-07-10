@@ -170,42 +170,24 @@ end
 
 
 
-function Connect_possibility(R1, R2)
-  -- check if connecting two rooms is possible.
-  -- returns: -1 : not possible
-  --           0 : possible but not good
-  --          +1 : possible and good
+function Connect_is_possible(L1, L2, mode)
+  if mode == "cycle" then
+    if L1.is_hall then return false end
+    if L2.is_hall then return false end
 
-  if not (R1 and R2) then return -1 end
+    if L1.next_in_quest == L2 then return true end
+    if L1.next_in_quest and L1.next_in_quest.next_in_quest == L2 then return true end
 
-  -- already connected?
-  if R1.conn_group == R2.conn_group then return -1 end
-
-  local is_good = true
-
-  for pass = 1,2 do
-    local R = (pass == 1 ? R1 ; R2)
-
-    if R.kind == "scenic" then return -1 end
-
-    -- only one way out of the starting room (unless large)
-    if R.purpose == "START" and #R.conns >= 1 then
-      if R.svolume < 9 then return -1 end
-      is_good = false
-    end
-
-    -- more than 4 connections is usually too many
-    if R.full or (#R.conns >= 4 and not R.natural) then
-      is_good = false
-    end
-
-    -- don't fill small rooms with lots of connections
-    if R.sw <= 4 and R.sh <= 4 and #R.conns >= 3 then
-      is_good = false
-    end
+    return false
   end
 
-  return (is_good ? 1 ; 0)
+  -- Note: require R1's group to be less than R2, which ensures that
+  --       a connection between two rooms is only tested _once_.
+  if L1.is_room and L2.is_room then
+    return (L1.conn_group < L2.conn_group)
+  end
+
+  return (L1.conn_group != L2.conn_group)
 end
 
 
@@ -228,9 +210,9 @@ end
 
 
 
-function Connect_find_branches(K, dir, cycle_target_R)
+function Connect_find_branches__OLD(K, dir, cycle_target_R)
 
-  local function test_direct_branch(K1, dir)
+  local function OLD__test_direct_branch(K1, dir)
     local allow_sub_hall
 
     local MID = K1:neighbor(dir, 1)

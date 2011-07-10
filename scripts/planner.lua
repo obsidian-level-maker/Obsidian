@@ -178,7 +178,7 @@ function SECTION_CLASS:eval_exit(K, dir)
   assert(parent)
 
   each D in parent.conns do
-    if D.L1 == R and D.dir1 == dir then
+    if D.L1 == parent and D.dir1 == dir then
       uniq_dir = false ; break
     end
   end
@@ -193,7 +193,7 @@ function SECTION_CLASS:eval_exit(K, dir)
   -- a "foot" is a section sticking out (three non-room neighbors).
   -- these are considered the best possible place for an exit
   -- TODO: determine this in preparation phase
-  if K.room then
+  if K.room and K.room.map_volume >= 3 then
     local foot_dir = K:is_foot()
 
     if foot_dir then
@@ -202,9 +202,13 @@ function SECTION_CLASS:eval_exit(K, dir)
   end
 
   -- sections far away from existing connections are preferred
-  local conn_d = R:dist_to_closest_conn(K, dir) or 10
+  local conn_d
+  
+  if K.room then
+    conn_d = K.room:dist_to_closest_conn(K, dir)
+  end
 
-  conn_d = conn_d / 2  -- adjust for hallway channels
+  conn_d = (conn_d or 10) / 2  -- adjust for hallway channels
 
   if conn_d > 4 then conn_d = 4 end
 
