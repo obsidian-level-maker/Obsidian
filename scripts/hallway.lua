@@ -677,13 +677,41 @@ function Hallway_test_branch(K1, dir, cycle_target_R)
   end
 
 
+  local function test_off_hall(MID)
+    if not MID.hall then return end
+
+    if MID.hall.conn_group == K1.room.conn_group then return end
+
+    local score = -100 - MID.num_conn - gui.random()
+
+    if score < LEVEL.best_conn.score then return end
+
+
+    local D1 = CONN_CLASS.new("hallway", K1.room, MID.hall, dir)
+
+    D1.K1 = K1 ; D1.K2 = MID
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = nil
+    LEVEL.best_conn.hall  = nil
+    LEVEL.best_conn.score = score
+  end
+
+
 
   ---| Hallway_test_branch |---
 
   -- FIXME !!!!!
 
   local MID = K1:neighbor(dir)
-  if not MID or MID.used then return end
+  if not MID then return end
+
+  if MID.used then
+    test_off_hall(MID)
+    return
+  end
+
 
   local dir2 = rand.sel(50, geom.RIGHT[dir], geom.LEFT[dir])
   local JUNC = MID:neighbor(dir2)
