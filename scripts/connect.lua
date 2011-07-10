@@ -567,57 +567,6 @@ function Connect_rooms()
   end
 
 
-  local function eval_big_exit(R, K, dir)
-    -- weed out connections which are definitely not possible
-    local N = K:neighbor(dir)
-
-    if not N or N.used then return -1 end
-
-    -- check if direction is unique
-    local uniq_dir = true
-
-    each D in R.conns do
-      if D.L1 == R and D.dir1 == dir then
-        uniq_dir = false ; break
-      end
-    end
-
-    local rand = ((uniq_dir ? 1 ; 0) + gui.random()) / 2
-
-    -- a free section please
-    if K.num_conn > 0 then
-      return rand
-    end
-
-    -- a "foot" is a section sticking out (three non-room neighbors).
-    -- these are considered the best possible place for an exit
-    local foot_dir = K:is_foot()
-
-    if foot_dir then
-      return (foot_dir == dir ? 9 ; 8) + rand 
-    end
-
-    -- sections far away from existing connections are preferred
-    local conn_d = R:dist_to_closest_conn(K, dir) or 10
-
-    conn_d = conn_d / 2  -- adjust for hallway channels
-
-    if conn_d > 4 then conn_d = 4 end
-
-    -- an "uncrowded middler" is the middle of a wide edge and does
-    -- not have any neighbors with connections
-    if K.kind == "section" and conn_d >= 2 and
-       K:same_room(geom.RIGHT[dir], 2) and
-       K:same_room(geom. LEFT[dir], 2)
-    then
-      return 7 + rand
-    end
-
-    -- all other cases
-    return 2 + conn_d + rand
-  end
-
-
   local function try_add_big_exit(R)
     local exits = {}
 

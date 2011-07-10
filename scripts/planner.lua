@@ -165,6 +165,63 @@ function SECTION_CLASS.is_foot(K)  -- returns direction, or nil
 end
 
 
+function SECTION_CLASS:eval_exit(K, dir)
+  -- evaluate exit from this section + direction
+  -- returns value between 0 and 10, or -1 if not possible at all
+
+  if not K:neighbor(dir) then return -1 end
+
+  -- check if direction is unique
+  local uniq_dir = true
+
+  local parent = K.room or K.hall
+  assert(parent)
+
+  each D in parent.conns do
+    if D.L1 == R and D.dir1 == dir then
+      uniq_dir = false ; break
+    end
+  end
+
+  local rand = ((uniq_dir ? 1 ; 0) + gui.random()) / 2
+
+  -- a free section please
+  if K.num_conn > 0 then
+    return K.num_conn / 4 + rand
+  end
+
+  -- a "foot" is a section sticking out (three non-room neighbors).
+  -- these are considered the best possible place for an exit
+  -- TODO: determine this in preparation phase
+  if K.room then
+    local foot_dir = K:is_foot()
+
+    if foot_dir then
+      return (foot_dir == dir ? 9 ; 8) + rand 
+    end
+  end
+
+  -- sections far away from existing connections are preferred
+  local conn_d = R:dist_to_closest_conn(K, dir) or 10
+
+  conn_d = conn_d / 2  -- adjust for hallway channels
+
+  if conn_d > 4 then conn_d = 4 end
+
+  -- an "uncrowded middler" is the middle of a wide edge and does
+  -- not have any neighbors with connections
+  if K.room and K.kind == "section" and conn_d >= 2 and
+     K:same_room(geom.RIGHT[dir], 2) and
+     K:same_room(geom. LEFT[dir], 2)
+  then
+    return 7 + rand
+  end
+
+  -- all other cases
+  return 2 + conn_d + rand
+end
+
+
 ------------------------------------------------------------------------
 
 function Plan_alloc_id(kind)
