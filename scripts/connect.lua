@@ -167,7 +167,7 @@ function Connect_is_possible(L1, L2, mode)
 
   -- Note: require R1's group to be less than R2, which ensures that
   --       a connection between two rooms is only tested _once_.
-  if L1.is_room and L2.is_room then
+  if mode == "normal" and L1.is_room and L2.is_room then
     return (L1.conn_group < L2.conn_group)
   end
 
@@ -196,8 +196,10 @@ end
 
 function CONN_CLASS.add_it(D)
   gui.printf("Connecting %s --> %s : %s\n", D.L1:tostr(), D.L2:tostr(), D.kind or "????")
-  gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
   gui.debugf("group %d --> %d\n", D.L1.conn_group, D.L2.conn_group)
+  if D.K1 and D.K2 then
+    gui.debugf("via %s --> %s\n", D.K1:tostr(), D.K2:tostr())
+  end
 
   if D.L1.conn_group != D.L2.conn_group then
     Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
@@ -251,7 +253,7 @@ end
 function Connect_teleporters()
 
   local function add_teleporter(R1, R2)
-    gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
+    gui.debugf("Teleporter conn : %s --> %s\n", R1:tostr(), R2:tostr())
 
     local D = CONN_CLASS.new("teleporter", R1, R2)
 
@@ -264,26 +266,20 @@ function Connect_teleporters()
 
   local function try_add_teleporter(loc_list)
     -- need at least a source and a destination
-    if #loc_list < 2 then return false end
+    while #loc_list >= 2 do
 
-    -- grab the first room (with highest score)
-    local R1 = loc_list[1].R
-    table.remove(loc_list, 1)
+      -- grab the first room (with highest score)
+      local R1 = loc_list[1].R
+      table.remove(loc_list, 1)
 
-    -- still valid?
-    if R1:eval_teleporter() < 0 then return false end
+      -- try to find a room we can connect to
+      each loc in loc_list do
+        local R2 = loc.R
 
-    -- try to find a room we can connect to
-    each loc in loc_list do
-      local R2 = loc.R
-
-      -- still valid?
-      if R2:eval_teleporter() < 0 then continue end
-
-      if Connect_is_possible(R1, R2, "teleporter") then
-        add_teleporter(R1, R2)
-        table.remove(loc_list, _index)
-        return true
+        if Connect_is_possible(R1, R2, "teleporter") then
+          add_teleporter(R1, R2)
+          return true
+        end
       end
     end
 
@@ -297,7 +293,7 @@ function Connect_teleporters()
     each R in LEVEL.rooms do
       local score = R:eval_teleporter()
 
-      if score > 0 then
+      if score >= 0 then
         table.insert(loc_list, { R=R, score=score })
       end
     end
@@ -311,23 +307,25 @@ function Connect_teleporters()
   ---| Connect_teleporters |---
 
   -- check if game / theme supports them
-  if not THEME.teleporters then return end
+---!!!  if not THEME.teleporters then return end
 
-  -- determine number to make (FIXME: adjust for MAP_W)
-  local quota = style_sel("teleporters", 0, 1, 2, 5)
+  -- determine number to make
+  local quota = style_sel("teleporters", 0, 1, 2, 4)
 
-  quota = quota + rand.irange(-1, 1)
+  quota = quota * MAP_W / 5
+  quota = quota + rand.range(-1, 1) + gui.random() ^ 3
+
+  quota = int(quota) -- round down
 
   gui.printf("Teleporter quota: %d\n", math.max(quota, 0))
 
   if quota < 1 then return end
 
-  local loc_list = collect_teleporter_locs()
+  for i = 1,quota do
+    local loc_list = collect_teleporter_locs()
 
-  for loop = 1,40 do
-    if try_add_teleporter(loc_list) then
-      quota = quota - 1
-      if quota <= 0 then break end
+    if not try_add_teleporter(loc_list) then
+      break
     end
   end
 end
