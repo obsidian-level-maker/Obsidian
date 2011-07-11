@@ -291,7 +291,7 @@ function CONN_CLASS.add_it(D)
 end
 
 
-function Connect_make_branch()
+function Connect_make_branch(mode)
 gui.debugf("\nmake_branch\n\n")
   local info = LEVEL.best_conn
 
@@ -434,13 +434,13 @@ function Connect_scan_sections(mode, min_score)
     end
   end end
 
-  if mode == "cycle" then return end
-
   if not LEVEL.best_conn.D1 then
+    if mode == "cycle" then return end
     error("Connection failure: separate groups exist")
   end
 
-  Connect_make_branch()
+if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", LEVEL.best_conn.score) end
+  Connect_make_branch(mode)
 end
 
 
@@ -549,7 +549,7 @@ function Connect_rooms()
   end
 
 
-  local function try_add_big_exit(R)
+  local function OLD__try_add_big_exit(R)
     local exits = {}
 
     each K in R.sections do
@@ -582,7 +582,7 @@ function Connect_rooms()
   end
 
 
-  local function visit_big_room(R)
+  local function OLD__visit_big_room(R)
     -- determine number of connections to try
     local want_conn
 
@@ -618,7 +618,7 @@ function Connect_rooms()
   end
 
 
-  local function branch_big_rooms()
+  local function OLD__branch_big_rooms()
     local visits = table.copy(LEVEL.rooms)
 
     each R in visits do
@@ -774,7 +774,7 @@ function Connect_cycles()
   -- TODO: describe cycles........
 
 
-  local function next_door_to_existing(R, K, dir)
+  local function next_door_to_existing(R, K, dir) -- FIXME: not used, need to do it in new system
     for dist = 1,1 do
       local N1 = K:neighbor(geom.RIGHT[dir], dist)
       local N2 = K:neighbor(geom. LEFT[dir], dist)
@@ -790,123 +790,30 @@ function Connect_cycles()
   end
 
 
-  local function OLD__add_cycle(K1, MID, K2, dir)
-    gui.debugf("Cycle @ %s dir:%d (%s -> %s)\n", K1:tostr(), dir,
-               K1.room:tostr(), K2.room:tostr())
+  local function find_room(D)
+    local L = D.L2
 
-    local D = CONN_CLASS.new("cycle", K1.room, K2.room, dir)
+    if L.is_room then return L end
 
-    D.K1 = K1 ; D.K2 = K2
+    each D2 in L.conns do
+      if D2.L1 == L and not D2.lock then
+        return find_room(D2)
+      end
+    end
 
-    table.insert(LEVEL.conns, D)
-
-    table.insert(K1.room.conns, D)
-    table.insert(K2.room.conns, D)
-
-    Hallway_simple(K1, MID, K2, D, dir)
-    D.kind = "cycle"  -- FIXME
-
-    table.insert(LEVEL.conns, D)
+    error("cycles: finding next room failed")
   end
 
+  local function prepare_cycles()
+    -- give each room a 'next_in_quest' field
 
-  local function try_connect_rooms(R1, R2)
-    local existing_dir
-
-    each D in R1.conns do
-      if D.R1 == R1 and D.R2 == R2 and D.dir1 then
-        existing_dir = D.dir1 ; break
-      end
-    end
-
-    LEVEL.best_conn = { score=0 }  -- TODO: better threshhold ?
-
-    for kx = R1.kx1, R1.kx2 do for ky = R1.ky1, R1.ky2 do
-      local K1 = SECTIONS[kx][ky]
-
-      if K1.room == R1 then
-        for dir = 2,8,2 do
-
-          Connect_find_branches(K1, dir, R2)
-
-        --[[ FIXME !!!!!! do this in test_direct_branch
-        if existing_dir == dir then
-          if STYLE.cycles != "heaps" then continue end
-
-          -- prevent connection next door to existing one with same direction
-          if next_door_to_existing(R1, K1, dir) then continue end
-        end
-        --]]
-
-        end -- dir
-      end
-    end end -- kx, ky
-
-    if LEVEL.best_conn.D1 then
-      Connect_make_branch(LEVEL.best_conn)
-      return true
-    end
-
-    return false
-  end
-
-
-  local function try_cycles_from_room(R1)
-    local nexties = {}
-    local futures = {}
-
-    each D1 in R1.conns do
-      if D1.R1 != R1 then continue end
-      if D1.kind == "teleporter" then continue end
-
-      local R2 = D1:neighbor(R1)
-      if R2.quest != R1.quest then continue end
-
-      table.insert(nexties, R2)
-
-      each D2 in R2.conns do
-        if D2.R1 != R2 then continue end
-        if D2.kind == "teleporter" then continue end
-
-        local R3 = D2:neighbor(R2)
-        if R3.quest != R1.quest then continue end
-
-        table.insert(futures, R3)
-      end
-    end
-
-    local check_list = {}
-
-    table.append(check_list, futures)
-    table.append(check_list, nexties)
-
-    local success = false
-
-    each R2 in check_list do
-      if try_connect_rooms(R1, R2) then
-        success = true
-
-        if STYLE.cycles != "heaps" then break; end
-      end
-    end
-
-    return success
-  end
-
-
-  local function look_for_cycles()
-    local quest_visits = table.copy(LEVEL.quests)
-
-    rand.shuffle(quest_visits)
-
-    each Q in quest_visits do
-      -- usually only make one cycle per quest
-      local quota = int(#Q.rooms / 5 + gui.random())
-
-      each R in Q.rooms do
-        if try_cycles_from_room(R) then
-          quota = quota - 1
-          if quota < 1 then break end
+    each R in LEVEL.rooms do
+      each D in R.conns do
+        if D.L1 == R and not D.lock then
+          R.next_in_quest = find_room(D)
+stderrf("next_in_quest @ %s --> %s\n", R:tostr(), R.next_in_quest:tostr())
+          assert(R.quest == R.next_in_quest.quest)
+          break
         end
       end
     end
@@ -915,21 +822,18 @@ function Connect_cycles()
 
   ---| Connect_cycles |---
 
-if false then  --!!!!! FIXME: disabled until use new system
-
   if STYLE.cycles != "none" then
 
     prepare_cycles()
 
     local quota = 5 ---FIXME
 
-    if STYLE.cycles == "heaps" then quota = 50 end
+    if STYLE.cycles == "heaps" then quota = 30 end
 
     for i = 1,quota do
       Connect_scan_sections("cycle", 0)
     end
   end
-end
 
   Plan_expand_rooms()
   Plan_dump_rooms("Expanded Map:")
