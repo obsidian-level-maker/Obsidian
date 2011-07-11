@@ -136,30 +136,14 @@ end
 
 
 function Connect_decide_start_room()
-
-  local function eval_room(R)
-    local cost = R.sw * R.sh
-
-    cost = cost + #R.conns * 40
-
-    cost = cost + 10 * (gui.random() ^ 2)
-
-    if R:has_teleporter() then cost = cost + 100 end
-
-    gui.debugf("Start cost @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, cost)
-
-    return cost
-  end
-
-
-  ---| Connect_decide_start_room |---
-
   each R in LEVEL.rooms do
-    R.start_cost = eval_room(R)
+    R.start_score = R:eval_start()
+
+    gui.debugf("Start score @ %s (seeds:%d) --> %1.3f\n", R:tostr(), R.sw * R.sh, R.start_score)
   end
 
   local room, index = table.pick_best(LEVEL.rooms,
-    function(A, B) return A.start_cost < B.start_cost end)
+    function(A, B) return A.start_score > B.start_score end)
 
   gui.printf("Start room: %s\n", room:tostr())
 
@@ -281,28 +265,10 @@ function Connect_teleporters()
   end
 
 
-  local function eval_teleporter_room(R)
-    -- no teleporters already
-    if R:has_teleporter() then return -1 end
-
-    if #R.conns > 0 then return -1 end
-
-    -- too small?
-    if R.sw <= 2 or R.sh <= 2 then return -1 end
-
-    local score = 0
-
-    if R.purpose == "START" then score = score + 0.3 end
-
-    -- better if more than one section
-    if R.map_volume >= 2 then score = score + 0.8 end
-
-    return score + gui.random()
-  end
-
-
   local function collect_teleporter_locs()
     local loc_list = {}
+
+do return loc_list end  --!!!! FIXME
 
     each R in LEVEL.rooms do
       local score = eval_teleporter_room(R)
@@ -344,27 +310,24 @@ function Connect_teleporters()
 
   --| Connect_teleporters |--
 
-  LEVEL.teleporters = {}  --????
-
-do return end --!!!!!! FIXME
-
+  -- check if game / theme supports them
   if not THEME.teleporters then return end
 
-  if STYLE.teleporters == "none" then return end
+  -- determine number to make (FIXME: adjust for MAP_W)
+  local quota = style_sel("teleporters", 0, 1, 2, 5)
 
-  local quota = 2
+  quota = quota + rand.irange(-1, 1)
 
-  if STYLE.teleporters == "few"   then quota = 1 end
-  if STYLE.teleporters == "heaps" then quota = 5 end
+  gui.printf("Teleporter quota: %d\n", math.max(quota, 0))
 
-  gui.debugf("Teleporter quota: %d\n", quota)
+  if quota < 1 then return end
 
   local loc_list = collect_teleporter_locs()
 
-  for i = 1,quota*3 do
+  for loop = 1,40 do
     if try_add_teleporter(loc_list) then
       quota = quota - 1
-      if quota <= 0 then break; end
+      if quota <= 0 then break end
     end
   end
 end

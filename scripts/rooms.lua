@@ -254,6 +254,33 @@ function ROOM_CLASS.dist_to_closest_conn(R, K, side)
 end
 
 
+function ROOM_CLASS.eval_start(R)
+  local cost = R.sw * R.sh
+
+  cost = cost + #R.conns * 40
+
+  if R:has_teleporter() then cost = cost + 100 end
+
+  cost = cost + 10 * gui.random() ^ 2
+
+  return 999 - cost  -- turn cost into a score
+end
+
+
+function ROOM_CLASS.eval_teleporter(R)
+  -- can only have one teleporter per room
+  if R:has_teleporter() then return -1 end
+
+  -- room too small?
+  if R.sw <= 3 or R.sh <= 3 then return -1 end
+
+  -- sweet spot for size is around 2..4 map sections
+  local score = 10 - math.abs(R.map_volume - 3.2)
+
+  return score + 2.4 * gui.random() ^ 2
+end
+
+
 function ROOM_CLASS.is_near_exit(R)
   if R.purpose == "EXIT" then return true end
   each D in R.conns do
