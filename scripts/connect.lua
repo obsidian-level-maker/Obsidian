@@ -252,9 +252,24 @@ end
 
 function Connect_teleporters()
 
-  local function add_teleporter(R1, R2)
-    gui.debugf("Teleporter conn : %s --> %s\n", R1:tostr(), R2:tostr())
+  local function collect_teleporter_locs()
+    local loc_list = {}
 
+    each R in LEVEL.rooms do
+      local score = R:eval_teleporter()
+
+      if score >= 0 then
+        table.insert(loc_list, { R=R, score=score })
+      end
+    end
+
+    table.sort(loc_list, function(A, B) return A.score > B.score end)
+
+    return loc_list
+  end
+
+
+  local function add_teleporter(R1, R2)
     local D = CONN_CLASS.new("teleporter", R1, R2)
 
     D.tele_tag1 = Plan_alloc_id("tag")
@@ -264,7 +279,9 @@ function Connect_teleporters()
   end
 
 
-  local function try_add_teleporter(loc_list)
+  local function try_add_teleporter()
+    local loc_list = collect_teleporter_locs()
+
     -- need at least a source and a destination
     while #loc_list >= 2 do
 
@@ -287,44 +304,25 @@ function Connect_teleporters()
   end
 
 
-  local function collect_teleporter_locs()
-    local loc_list = {}
-
-    each R in LEVEL.rooms do
-      local score = R:eval_teleporter()
-
-      if score >= 0 then
-        table.insert(loc_list, { R=R, score=score })
-      end
-    end
-
-    table.sort(loc_list, function(A, B) return A.score > B.score end)
-
-    return loc_list
-  end
-
-
   ---| Connect_teleporters |---
 
   -- check if game / theme supports them
 ---!!!  if not THEME.teleporters then return end
 
   -- determine number to make
-  local quota = style_sel("teleporters", 0, 1, 2, 4)
+  local quota = style_sel("teleporters", 0, 1, 2.5, 4)
 
   quota = quota * MAP_W / 5
-  quota = quota + rand.range(-1, 1) + gui.random() ^ 3
+  quota = quota + rand.range(-0.9, 1.4)  --??  + gui.random() ^ 3
 
   quota = int(quota) -- round down
 
-  gui.printf("Teleporter quota: %d\n", math.max(quota, 0))
+  gui.printf("Teleporter quota: %d\n", quota)
 
   if quota < 1 then return end
 
   for i = 1,quota do
-    local loc_list = collect_teleporter_locs()
-
-    if not try_add_teleporter(loc_list) then
+    if not try_add_teleporter() then
       break
     end
   end
