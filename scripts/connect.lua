@@ -203,9 +203,6 @@ function CONN_CLASS.add_it(D)
     Connect_merge_groups(D.L1.conn_group, D.L2.conn_group)
   end
 
-  assert(D.K1)
-  assert(D.K2)
-
   table.insert(LEVEL.conns, D)
 
   table.insert(D.L1.conns, D)
@@ -213,6 +210,9 @@ function CONN_CLASS.add_it(D)
 
   -- direct connections absorb the middle section into one of the rooms
   if D.kind == "direct" then
+    assert(D.K1)
+    assert(D.K2)
+
     local R = D.L1
     if R.is_hall then R = D.L2 end
     assert(not R.is_hall)
@@ -223,8 +223,10 @@ function CONN_CLASS.add_it(D)
     if R == D.L1 then D.K1 = D.middle else D.K2 = D.middle end
   end
 
-  D.K1.num_conn = D.K1.num_conn + 1
-  D.K2.num_conn = D.K2.num_conn + 1
+  if D.kind != "teleporter" then
+    D.K1.num_conn = D.K1.num_conn + 1
+    D.K2.num_conn = D.K2.num_conn + 1
+  end
 end
 
 
@@ -251,27 +253,49 @@ function Connect_teleporters()
   local function add_teleporter(R1, R2)
     gui.debugf("Teleporter connection %s -- >%s\n", R1:tostr(), R2:tostr())
 
-    Connect_merge_groups(R1.conn_group, R2.conn_group)
-
     local D = CONN_CLASS.new("teleporter", R1, R2)
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R1.conns, D)
-    table.insert(R2.conns, D)
 
     D.tele_tag1 = Plan_alloc_id("tag")
     D.tele_tag2 = Plan_alloc_id("tag")
+
+    D:add_it()
+  end
+
+
+  local function try_add_teleporter(loc_list)
+    -- need at least a source and a destination
+    if #loc_list < 2 then return false end
+
+    -- grab the first room (with highest score)
+    local R1 = loc_list[1].R
+    table.remove(loc_list, 1)
+
+    -- still valid?
+    if R1:eval_teleporter() < 0 then return false end
+
+    -- try to find a room we can connect to
+    each loc in loc_list do
+      local R2 = loc.R
+
+      -- still valid?
+      if R2:eval_teleporter() < 0 then continue end
+
+      if Connect_is_possible(R1, R2, "teleporter") then
+        add_teleporter(R1, R2)
+        table.remove(loc_list, _index)
+        return true
+      end
+    end
+
+    return false
   end
 
 
   local function collect_teleporter_locs()
     local loc_list = {}
 
-do return loc_list end  --!!!! FIXME
-
     each R in LEVEL.rooms do
-      local score = eval_teleporter_room(R)
+      local score = R:eval_teleporter()
 
       if score > 0 then
         table.insert(loc_list, { R=R, score=score })
@@ -284,31 +308,7 @@ do return loc_list end  --!!!! FIXME
   end
 
 
-  local function try_add_teleporter(loc_list)
-    -- need at least a source and destination
-    if #loc_list < 2 then return false end
-
-    local R = loc_list[1].R
-    table.remove(loc_list, 1)
-
-    for index,loc in ipairs(loc_list) do
-      local N = loc.R
-
-      if R.conn_group != N.conn_group and
-         eval_teleporter_room(N) >= 0
-      then
-        add_teleporter(R, N)
-
-        table.remove(loc_list, index)
-        return true
-      end
-    end
-
-    return false
-  end
-
-
-  --| Connect_teleporters |--
+  ---| Connect_teleporters |---
 
   -- check if game / theme supports them
   if not THEME.teleporters then return end
