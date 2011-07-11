@@ -1080,6 +1080,8 @@ function Rooms_intermission_camera()
   each C in room.chunks do
     local info2 = C:eval_camera()
 
+    if not info2 then continue end
+
     if not info or info2.score > info.score then
       info = info2
     end
