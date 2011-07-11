@@ -264,6 +264,43 @@ function ROOM_CLASS.is_near_exit(R)
 end
 
 
+function ROOM_CLASS.ideal_conns(R)
+  -- determine number of connections to try
+
+  if R.shape == "rect" or R.shape == "odd" then
+    if R.map_volume <= 4 then
+      return 2
+    elseif R.map_volume <= rand.sel(30, 8, 9) then
+      return 3
+    else
+      return 4
+    end
+
+  else -- shaped room
+
+    if R.shape == "L" or R.shape == "S" then
+      return 2
+    elseif R.shape == "plus" or R.shape == "H" then
+      return 4
+    else
+      return 3
+    end
+  end
+end
+
+
+function ROOM_CLASS.big_score(R)
+  local score = R.map_volume + 2.5 * gui.random() ^ 2
+
+  -- large bonus for shaped rooms
+  if R.shape != "rect" and R.shape != "odd" then
+    score = score * 1.7
+  end
+
+  return score
+end
+
+
 function ROOM_CLASS.pick_floor_mat(R, h)
   -- use same material for same height
 
