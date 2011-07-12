@@ -309,11 +309,13 @@ function Connect_teleporters()
   -- check if game / theme supports them
 ---!!!  if not THEME.teleporters then return end
 
+  if STYLE.teleporters == "none" then return end
+
   -- determine number to make
-  local quota = style_sel("teleporters", 0, 1, 2.5, 4)
+  local quota = style_sel("teleporters", 0, 1, 2, 3.7)
 
   quota = quota * MAP_W / 5
-  quota = quota + rand.range(-0.9, 1.4)  --??  + gui.random() ^ 3
+  quota = quota + rand.skew() * 1.7
 
   quota = int(quota) -- round down
 
