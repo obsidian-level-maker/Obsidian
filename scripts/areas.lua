@@ -325,7 +325,9 @@ function Areas_important_stuff()
     -- create chunk
 
     local C = R:alloc_chunk(spot.sx, spot.sy, spot.sx, spot.sy)
+
     C.foobage = "important"
+    C.spot_dir = C:dir_for_spot()
 
     return C
   end

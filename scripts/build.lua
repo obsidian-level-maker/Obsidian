@@ -513,13 +513,15 @@ function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
 end
 
 
-function Trans.spot_transform(x, y, z, angle)
+function Trans.spot_transform(x, y, z, dir)
+  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+
   return
   {
-    add_x = x,
-    add_y = y,
-    add_z = z,
-    rotate = angle,
+    add_x = x
+    add_y = y
+    add_z = z
+    rotate = ANGS[dir]
   }
 end
 

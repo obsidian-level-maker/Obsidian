@@ -213,6 +213,59 @@ function CHUNK_CLASS.good_neighbor(C1, dir)
 end
 
 
+function CHUNK_CLASS.against_wall(C, dir)
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
+  if not Seed_valid(sx1, sy1) then return true end
+
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+
+    if S.room != C.room then return true end
+  end end
+
+  return false
+end
+
+
+function CHUNK_CLASS.dir_for_spot(C)
+  -- check which sides of chunk are against a wall
+  local walls = {}
+
+  for dir = 2,8,2 do
+    if C:against_wall(dir) then
+      walls[dir] = true
+    end
+  end
+
+  -- ignore being hemmed in on both sides
+  if walls[4] and walls[6] then walls[4] = nil ; walls[6] = nil end
+  if walls[2] and walls[8] then walls[2] = nil ; walls[8] = nil end
+
+  -- FIXME: two wall case (a corner) : pick best one using position
+
+  -- find a wall to face away from
+  if not table.empty(walls) then
+    for dir = 2,8,2 do
+      if walls[dir] then
+      return 10 - dir end
+    end
+  end
+
+  -- otherwise use position in room
+  local R = C.room
+
+  if R.sh > R.sw then
+    return ((C.sy1 + C.sy2) < (R.sy1 + R.sy2) ? 2 ; 8)
+  else
+    return ((C.sx1 + C.sx2) < (R.sx1 + R.sx2) ? 4 ; 6)
+  end
+end
+
+
 function CHUNK_CLASS.bridge_pos(C, dir)
   local sx, sy
 
@@ -303,9 +356,9 @@ function CHUNK_CLASS.purpose_start(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  local skin2 = { angle = Rooms_player_angle(C.room, C) }
+  local skin2 = { }  ---??? angle = Rooms_player_angle(C.room, C)
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
@@ -317,7 +370,7 @@ function CHUNK_CLASS.purpose_exit(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
 
@@ -364,7 +417,7 @@ function CHUNK_CLASS.purpose_switch(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
@@ -390,7 +443,7 @@ function CHUNK_CLASS.purpose_teleporter(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
 end

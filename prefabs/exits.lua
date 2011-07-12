@@ -22,7 +22,6 @@ PREFAB.START_SPOT =
 {
   defaults =
   {
-    angle = 0
     x_offset = 0
     y_offset = 0
     peg = 0
@@ -52,10 +51,10 @@ PREFAB.START_SPOT =
 
   entities =
   {
-    { x =   0, y =   0, z = 8, ent = "player1", angle = "?angle" }
-    { x =  36, y =   0, z = 8, ent = "player2", angle = "?angle" }
-    { x = -36, y =   0, z = 8, ent = "player3", angle = "?angle" }
-    { x =   0, y = -36, z = 8, ent = "player4", angle = "?angle" }
+    { x =   0, y =   0, z = 8, ent = "player1", angle = 90 }
+    { x =  36, y =   0, z = 8, ent = "player2", angle = 90 }
+    { x = -36, y =   0, z = 8, ent = "player3", angle = 90 }
+    { x =   0, y = -36, z = 8, ent = "player4", angle = 90 }
   }
 }
 
