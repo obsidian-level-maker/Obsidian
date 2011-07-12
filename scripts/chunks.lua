@@ -375,16 +375,18 @@ function CHUNK_CLASS.purpose_teleporter(C)
 
   local skin1 = GAME.SKINS["Teleporter1"]  -- FIXME !!!!
 
-  -- FIXME: quake stuff
-  local skin2 = { }
+  local skin2 = {}
 
   if conn.L1 == C.room then
-    skin2. in_tag = conn.tele_tag1
-    skin2.out_tag = conn.tele_tag2
-  else
     skin2. in_tag = conn.tele_tag2
     skin2.out_tag = conn.tele_tag1
+  else
+    skin2. in_tag = conn.tele_tag1
+    skin2.out_tag = conn.tele_tag2
   end
+
+  skin2. in_target = string.format("tele%d", skin2. in_tag)
+  skin2.out_target = string.format("tele%d", skin2.out_tag)
 
   local mx, my = C:mid_point()
 

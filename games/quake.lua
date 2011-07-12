@@ -929,6 +929,17 @@ QUAKE1.SKINS =
   }
 
 
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "QUAKE_TELEPORTER"
+    _where  = "chunk"
+
+    frame = "MET5_1"
+  }
+
+
   ---| WINDOWS |---
 
   Window1 =
@@ -997,6 +1008,8 @@ QUAKE1.THEME_DEFAULTS =
 
   doors = { Door_plain = 50 }
 
+  teleporters = { Teleporter1 = 50 }
+
   windows = { Window1 = 50 }
 
   fences = { Fence1 = 50 }
@@ -1005,7 +1018,6 @@ QUAKE1.THEME_DEFAULTS =
 
   --------- OLD CRUD --------> > >
 
-  teleporter_mat = "TELE_TOP",
   tele_dest_mat = "COP3_4",
   pedestal_mat = "LIGHT1_1",
   periph_pillar_mat = "METAL2_6",
