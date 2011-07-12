@@ -567,7 +567,7 @@ function Connect_cycles()
 
     each R in LEVEL.rooms do
       each D in R.conns do
-        if D.L1 == R and not D.lock then
+        if D.L1 == R and not D.lock and D.kind != "teleporter" then
           R.next_in_quest = find_room(D)
           assert(R.quest == R.next_in_quest.quest)
           break
