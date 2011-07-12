@@ -433,7 +433,8 @@ end
 function CHUNK_CLASS.purpose_teleporter(C)
   local conn = assert(C.teleporter)
 
-  local skin1 = GAME.SKINS["Teleporter1"]  -- FIXME !!!!
+  local name  = rand.key_by_probs(THEME.teleporters)
+  local skin1 = assert(GAME.SKINS[name])
 
   local skin2 = {}
 
