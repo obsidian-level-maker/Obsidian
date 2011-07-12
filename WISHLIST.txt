@@ -49,6 +49,8 @@ Miscellaneous:
      (a connection or switch or key or major item) then give it a
      nice pickup item (etc) or at least a walk space.
 
+  -  ability to link two (far apart) areas via teleporters  
+
   -  3D chunk stuff : use z_low and z_high fields
 
   -  double or triple switches: each one raises a 24 unit stair,
@@ -142,6 +144,18 @@ CrossOvers:
 
      The quest of the low path is earlier than the quest of the
      high path (3D bridge).
+
+  +  make a moving platform in Quake 1/2 maps
+
+  -  pillars holding up the bridge
+
+  -  bridges which increase height (e.g. stair in middle)
+
+  -  channels which decrease height  [via prefab??]
+
+  -  try to create through a reclaimed joiner (middle of CCC etc)
+
+  -  give areas near incompatible height a 'target_h' field
 
 
 Lock postponing:
@@ -248,6 +262,14 @@ Possible Options:
    -  pack sidedefs
 
 
+Cycles:
+  -  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one
+     connection is a teleporter, try add teleporter from R1 -> R3.
+
+  -  prevent using section next door to existing conn & same direction
+     [maybe prevent same dir altogether except in "heaps"]
+
+
 Mazes:
 
 -  invert maze + thin_out + cave_render --> interesting walkway
@@ -279,10 +301,10 @@ Console:
 -  transfer Lua_Extended.txt document to the website
    (part of modding guide).
 
-No: allow numbers to begin with plus, like: +3
+NO: allow numbers to begin with plus, like: +3
     --> see misc/plus_number.diff
 
-No: implement 2D array access: [x, y] --> [x][y]
+NO: implement 2D array access: [x, y] --> [x][y]
     --> there's a power patch for that
 
 
@@ -561,7 +583,7 @@ Sam's suggestions:
   MISCELLANEOUS
 ----------------------------------------------------------------
 
-+  in batch mode, detect invalid game=XXX names
++  in batch mode, detect invalid game=XXX (etc) keywords
 
 
 Secrets:
@@ -603,7 +625,7 @@ Name generator:
   PIPE DREAMS
 ----------------------------------------------------------------
 
-*  diagonal chunks
++  diagonal chunks
 
 >>  teleporters!   (RED is two-way, WHITE is one-way)
 
@@ -611,7 +633,7 @@ Name generator:
 
 +  generate the Boss maps (don't use prebuilt).
 
--  bridges (activate by a switch)
+-  raising bridges (activate by a switch)
 
 -  light up levels (a la quake).
 
@@ -625,8 +647,6 @@ Name generator:
    (and the player will return to that spot when they die).
 
 -  "Horror" mode: fewer but tougher monsters, fewer ammo, darker levels.
-
--  a mod for Eternal III
 
 -  more Oblige logos, higher resolution ones too
 

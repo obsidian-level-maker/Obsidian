@@ -5,6 +5,16 @@ OBLIGE TODO
 Current Work
 ------------
 
+Teleporters:
+DONE: need SKIN for DOOM
+
+DONE: test and tweak the quota
+
+DONE: got them working
+
+  -  skin/prefab for QUAKE and other games
+
+
 Hallways:
   -  when join to existing hall, sometimes merge into one hall
 
@@ -19,6 +29,8 @@ Hallways:
 
   -  flow through big junctions, give big score bonus
 
+  !!  proper scoring
+
 
 Crossovers:
   !!  get working again
@@ -28,14 +40,6 @@ Crossovers:
   +  build the bridges / channels using prefabs
 
   -  fix hallway vertical gaps
-
-  WISH: make a moving train in Quake 1/2 maps
-  WISH: pillars holding up the bridge
-  WISH: bridges which increase height (e.g. stair in middle)
-
-  WISH: channels which decrease height  [via prefab??]
-  WISH: try to create through a reclaimed joiner (middle of CCC etc)
-  WISH: give AREAS near incompatible height a 'target_h' field
  
 
 Big junctions:
@@ -47,15 +51,9 @@ Big junctions:
 Cycles:
    +  less chance if R2 (middle room) is large
 
-   -  prevent using section next door to existing conn & same direction
-      [maybe prevent same dir altogether except in "heaps"]
 
-WISH: if an area touches, try to choose a compatible height
-      ---> target_h field in AREA class
-
-
-Stairs:
-  +  fix ability to go from A2 --> A1
+Areas:
+  +  fix ability for stairs to go from A2 --> A1
      (in other words: ability for stair chunk to be in unset floor)
 
 
