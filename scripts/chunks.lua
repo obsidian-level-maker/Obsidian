@@ -370,6 +370,30 @@ function CHUNK_CLASS.purpose_switch(C)
 end
 
 
+function CHUNK_CLASS.purpose_teleporter(C)
+  local conn = assert(C.teleporter)
+
+  local skin1 = GAME.SKINS["Teleporter1"]  -- FIXME !!!!
+
+  -- FIXME: quake stuff
+  local skin2 = { }
+
+  if conn.L1 == C.room then
+    skin2. in_tag = conn.tele_tag1
+    skin2.out_tag = conn.tele_tag2
+  else
+    skin2. in_tag = conn.tele_tag2
+    skin2.out_tag = conn.tele_tag1
+  end
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 0)
+
+  Fabricate(skin1._prefab, T, { skin1, skin2 })
+end
+
+
 function CHUNK_CLASS.do_purpose(C)
   if C.purpose == "START" then
     C:purpose_start()
@@ -382,11 +406,11 @@ function CHUNK_CLASS.do_purpose(C)
 
   elseif C.purpose == "SWITCH" then
     C:purpose_switch()
+
+  elseif C.purpose == "TELEPORTER" then
+    C:purpose_teleporter()
   end
 end
-
-
-
 
 
 

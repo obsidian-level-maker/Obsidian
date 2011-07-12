@@ -369,18 +369,13 @@ function Areas_important_stuff()
 
     local C = spot_for_wotsit(R)
 
+    C.purpose = "TELEPORTER"
     C.teleporter = conn  -- FIXME?
 
---[[
-    local in_C  = spot_for_wotsit(R)
-    local out_C = spot_for_wotsit(R)
-
-     in_C.purpose = "TELE_IN"
-    out_C.purpose = "TELE_OUT"
-
-     in_C.tele_conn = conn
-    out_C.tele_conn = conn
---]]
+        if conn.L1 == R then conn.C1 = C
+    elseif conn.L2 == R then conn.C2 = C
+    else   error("add_teleporter failure (bad conn?)")
+    end
   end
 
 
