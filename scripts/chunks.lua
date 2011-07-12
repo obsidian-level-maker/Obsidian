@@ -232,6 +232,8 @@ end
 
 
 function CHUNK_CLASS.dir_for_spot(C)
+  local R = C.room
+
   -- check which sides of chunk are against a wall
   local walls = {}
 
@@ -245,7 +247,14 @@ function CHUNK_CLASS.dir_for_spot(C)
   if walls[4] and walls[6] then walls[4] = nil ; walls[6] = nil end
   if walls[2] and walls[8] then walls[2] = nil ; walls[8] = nil end
 
-  -- FIXME: two wall case (a corner) : pick best one using position
+  -- handle corners
+  if table.size(walls) == 2 then
+    if R.sh > R.sw then
+      return (walls[2] ? 8 ; 2)
+    else
+      return (walls[4] ? 6 ; 4)
+    end
+  end
 
   -- find a wall to face away from
   if not table.empty(walls) then
@@ -256,8 +265,6 @@ function CHUNK_CLASS.dir_for_spot(C)
   end
 
   -- otherwise use position in room
-  local R = C.room
-
   if R.sh > R.sw then
     return ((C.sy1 + C.sy2) < (R.sy1 + R.sy2) ? 2 ; 8)
   else
