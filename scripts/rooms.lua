@@ -272,7 +272,7 @@ function ROOM_CLASS.eval_teleporter(R)
   if R:has_teleporter() then return -1 end
 
   -- room too small?
-  if R.sw <= 3 or R.sh <= 3 then return -1 end
+  if R.sw < 3 or R.sh < 3 or R.svolume < 10 then return -1 end
 
   -- sweet spot for size is around 2..4 map sections
   local score = 10 - math.abs(R.map_volume - 3.2)
