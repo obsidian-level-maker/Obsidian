@@ -307,7 +307,7 @@ function Connect_teleporters()
   ---| Connect_teleporters |---
 
   -- check if game / theme supports them
----!!!  if not THEME.teleporters then return end
+  if not THEME.teleporters then return end
 
   if STYLE.teleporters == "none" then return end
 
@@ -562,14 +562,13 @@ function Connect_cycles()
     error("cycles: finding next room failed")
   end
 
-  local function prepare_cycles()
+  local function prepare_cycles()   -- FIXME: MOVE TO quests.lua
     -- give each room a 'next_in_quest' field
 
     each R in LEVEL.rooms do
       each D in R.conns do
         if D.L1 == R and not D.lock then
           R.next_in_quest = find_room(D)
-stderrf("next_in_quest @ %s --> %s\n", R:tostr(), R.next_in_quest:tostr())
           assert(R.quest == R.next_in_quest.quest)
           break
         end

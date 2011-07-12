@@ -190,8 +190,10 @@ function Areas_handle_connections()
   each D in LEVEL.conns do
     handle_conn(D)
 
-    assert(D.C1)
-    assert(D.C2)
+    if D.kind != "teleporter" then
+      assert(D.C1)
+      assert(D.C2)
+    end
   end
 end
 
@@ -238,6 +240,9 @@ function Areas_important_stuff()
     -- in each unallocated seed in a room, compute the distance to
     -- the nearest allocated seed, and distance from a wall.
     
+    -- Note: with teleporters it is possible that none of the seeds
+    -- gets a 'chunk_dist' value.
+
     local function init_dists()
       for sx = R.sx1,R.sx2 do for sy = R.sy1,R.sy2 do
         local S = SEEDS[sx][sy]
@@ -272,12 +277,12 @@ function Areas_important_stuff()
             if S:same_room(dir) then
               local N = S:neighbor(dir)
 
-              if S.chunk_dist and (N.chunk_dist or 999) > S.chunk_dist + 1 then
+              if S.chunk_dist and S.chunk_dist + 1 < (N.chunk_dist or 999) then
                 N.chunk_dist = S.chunk_dist + 1
                 changed  = true
               end
 
-              if S.wall_dist and (N.wall_dist or 999) > S.wall_dist + 1 then
+              if S.wall_dist and S.wall_dist + 1 < (N.wall_dist or 999) then
                 N.wall_dist = S.wall_dist + 1
                 changed  = true
               end
@@ -305,7 +310,7 @@ function Areas_important_stuff()
       local S = SEEDS[sx][sy]
 
       if S.room == R and not S.chunk then
-        local dist = S.chunk_dist * 7 + S.wall_dist * 2.15 + S.dist_random
+        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * 2.15 + S.dist_random
 
         if dist > best_dist then
           spot = S
