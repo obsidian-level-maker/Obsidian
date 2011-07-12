@@ -418,6 +418,19 @@ function ROOM_CLASS.mid_point(R)
 end
 
 
+function ROOM_CLASS.random_seed(R)
+  for loop = 1,999 do
+    local sx = rand.irange(R.sx1, R.sx2)
+    local sy = rand.irange(R.sy1, R.sy2)
+
+    local S = SEEDS[sx][sy]
+    if S.room == R then return S end
+  end
+
+  error("failure finding a random seed??")
+end
+
+
 ----------------------------------------------------------------
 
 
