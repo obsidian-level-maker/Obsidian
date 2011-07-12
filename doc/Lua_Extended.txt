@@ -31,7 +31,7 @@ CHANGES
    the ipairs() or pairs() functions -- one is called automatically
    (ipairs for a single variable, pairs for two).
 
-   Example (i):  each A in array do ... end
+   Example (i):  each V in list do ... end
 
    Example (ii): each K,V in table do ... end
 
@@ -41,13 +41,13 @@ CHANGES
 
 3. Ternary operator similar to ?: which is well known in C / C++.
    Initially I tried a patch which used if/then/else syntax, but
-   this was too clumsy for my taste and I modified it to use the
+   that was too clumsy for my taste and I modified it to use the
    following syntax:
 
-   Example: x = (game == "doom" ? 1 , 2)
+   Example: x = (game == "doom" ? 1 ; 2)
 
    Note that the parentheses are required, which made the parsing
-   code easier but also prevents any ambiguity with the comma.
+   code easier but also prevents any ambiguity with the semicolon.
    The colon used in the C / C++ operator could not be used here
    since Lua already uses it for method calls.
 

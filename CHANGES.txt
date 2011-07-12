@@ -21,7 +21,7 @@ CHANGES (since 3.57)
 - backup files now use the .OLD extension
 
 + support for "shaped" rooms (L, T, plus, etc)
-+ worked on teleporters (NOTE: currently disabled)
++ worked on teleporters
 
 - more naming goodies, thanks to Mr Chris
 - preliminary work on Hexen II and Half-Life
