@@ -534,6 +534,28 @@ HERETIC.SKINS =
     special = 103
   }
 
+
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "TELEPORT_PAD"
+    _where  = "chunk"
+
+    top  = "FLTTELE1"
+    side = "SQPEB1"
+
+    glitter_obj = "glitter_red"
+
+    x_offset = 0
+    y_offset = 0
+    peg = 1
+
+    special = 97
+    top_special = 8
+    light = 255
+  }
+
 }
 
 
@@ -1552,6 +1574,8 @@ HERETIC.THEME_DEFAULTS =
   lock_doors = { Locked_yellow = 50, Locked_green = 50, Locked_blue = 50 }
 
   switch_doors = { Door_SW_1 = 50 }
+
+  teleporters = { Teleporter1 = 50 }
 
 
   steps = { step1=50 }

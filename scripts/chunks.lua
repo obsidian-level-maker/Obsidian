@@ -883,7 +883,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   local mx, my = C:mid_point()
 
-  if ent != "dummy" or true then
+  if ent != "dummy" then
     Trans.entity(ent, mx, my, f_h + 24)
   end
 

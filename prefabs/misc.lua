@@ -157,6 +157,11 @@ PREFAB.QUAKE_TECHLAMP =
 
 PREFAB.TELEPORT_PAD =
 {
+  defaults =
+  {
+    glitter_obj = "none"
+  }
+
   brushes =
   {
     {
@@ -173,6 +178,7 @@ PREFAB.TELEPORT_PAD =
   entities =
   {
     { x = 0, y = 0, z = 16, ent="teleport_spot", angle=90 }
+    { x = 0, y = 0, z = 24, ent="?glitter_obj" }
   }
 }
 
