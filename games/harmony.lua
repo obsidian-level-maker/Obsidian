@@ -220,14 +220,15 @@ HARMONY.MATERIALS =
 
   -- liquids --
 
-  WATER   = { t="SFALL1",   f="FWATER1" }
-  W_ICE   = { t="SFALL1",   f="NUKAGE1" }
-  W_ROCK  = { t="SFALL1",   f="SLIME05" }
-  W_STEEL = { t="GSTFONT1", f="BLOOD1"  }
+  WATER   = { f="FWATER1", t="SFALL1"   }
+  W_ICE   = { f="NUKAGE1", t="SFALL1"   }
+  W_ROCK  = { f="SLIME05", t="SFALL1"   }
+  W_STEEL = { f="BLOOD1",  t="GSTFONT1" }
+                          
+  LAVA    = { f="SLIME01", t="0ROOD02"  }  -- NOTE: texture not animated
+  NUKAGE  = { f="SLIME09", t="BFALL1"   }
 
-  LAVA    = { t="0ROOD02", f="SLIME01" }  -- NOTE: texture not animated
-  NUKAGE  = { f="BFALL1",  f="SLIME09" }
-
+  TELEPORT = { f="FLOOR5_3", t="PANEL8" }
 
   -- other --
 
@@ -1152,6 +1153,27 @@ HARMONY.SKINS =
     special = 103
   }
 
+
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "TELEPORT_PAD"
+    _where  = "chunk"
+
+    top  = "TELEPORT"
+    side = "TELEPORT"
+
+    x_offset = 0
+    y_offset = 0
+    peg = 1
+
+    special = 97
+    top_special = 8
+    light = 255
+  }
+
+
 }
 
 
@@ -1170,6 +1192,8 @@ HARMONY.THEME_DEFAULTS =
 --!!  switch_doors = { Door_SW_blue = 50 }
 
 --!!  lock_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50 }
+
+  teleporters = { Teleporter1 = 50 }
 
   liquids = { water=90, nukage=30, lava=10 }
 }
