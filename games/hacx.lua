@@ -196,12 +196,14 @@ HACX.MATERIALS =
 
   -- liquids / animated --
 
-  L_ELEC   = { t="HW177", f="NUKAGE1" }
-  L_GOO    = { t="HW325", f="LAVA1" }
-  L_WATER  = { t="BLODRIP1", f="FWATER1" }
-  L_WATER2 = { t="WFALL1", f="SLIME05" }
-  L_LAVA   = { t="SFALL1", f="SLIME09" }
-  L_SLIME  = { t="BRICK6", f="SLIME01" }
+  L_ELEC   = { f="NUKAGE1", t="HW177" }
+  L_GOO    = { f="LAVA1",   t="HW325" }
+  L_WATER  = { f="FWATER1", t="BLODRIP1" }
+  L_WATER2 = { f="SLIME05", t="WFALL1" }
+  L_LAVA   = { f="SLIME09", t="SFALL1" }
+  L_SLIME  = { f="SLIME01", t="BRICK6" }
+
+  TELEPORT = { f="BLOOD1",  t="BRONZE1" }
 
 
   -- other --
@@ -1034,6 +1036,27 @@ HACX.SKINS =
     special = 103
   }
 
+
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "TELEPORT_PAD"
+    _where  = "chunk"
+
+    top  = "TELEPORT"
+    side = "TELEPORT"
+
+    x_offset = 0
+    y_offset = 0
+    peg = 1
+
+    special = 97
+    top_special = 8
+    light = 255
+  }
+
+
 }
 
 
@@ -1054,6 +1077,8 @@ HACX.THEME_DEFAULTS =
   lock_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50 }
 
   liquids = { water=90, water2=50, elec=90, lava=50, slime=20, goo=10 }
+
+  teleporters = { Teleporter1 = 50 }
 }
 
 
