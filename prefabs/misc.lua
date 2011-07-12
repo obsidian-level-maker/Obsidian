@@ -157,6 +157,12 @@ PREFAB.QUAKE_TECHLAMP =
 
 PREFAB.TELEPORT_PAD =
 {
+  defaults =
+  {
+    tele_obj = "teleport_spot"
+    angle = 0
+  }
+
   brushes =
   {
     {
@@ -164,8 +170,10 @@ PREFAB.TELEPORT_PAD =
       { x =  32, y = -32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y =  32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x = -32, y =  32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { t = 16, mat = "?top", light = "?light", special="?sec_kind", tag="?in_tag" }
+      { t = 16, mat = "?top", special="?pad_special", tag="?in_tag" }
     }
+
+    -- FIXME: light brush
   }
 
   entities =

@@ -2331,6 +2331,26 @@ DOOM.SKINS =
   }
 
 
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "TELEPORT_PAD"
+    _where  = "chunk"
+
+    top  = { GATE1=60, GATE2=60, GATE3=30 }
+    side = "METAL"
+
+    x_offset = 0
+    y_offset = 0
+    peg = 1
+
+    special = 97
+    top_special = 8
+    light = 255
+  }
+
+
   ---| WINDOWS |---
 
   Window1 =
@@ -2480,6 +2500,8 @@ DOOM.THEME_DEFAULTS =
 
   doors = { Door_silver = 50 }
 
+  teleporters = { Teleporter1 = 50 }
+
   windows = { Window1 = 50 }
 
   fences = { Fence1 = 50 }
@@ -2561,13 +2583,6 @@ DOOM.THEME_DEFAULTS =
     special=23,
   }
 
-  teleporter_skin =
-  {
-    side="METAL", top="GATE1",
-    x_offset=0, y_offset=0, peg=1,
-    special=97, sec_kind=8, light=0.9,
-    tele_obj="teleport_spot",
-  }
 }
 
 
