@@ -265,6 +265,35 @@ PREFAB.QUAKE_TELEPORTER =
 }
 
 
+PREFAB.QUAKE2_TELEPORTER =
+{
+  brushes =
+  {
+    -- dummy brush to set the size
+    {
+      { x =  -64, y = -64 }
+      { x =   64, y = -64 }
+      { x =   64, y =  64 }
+      { x =  -64, y =  64 }
+      { t = -999 }
+    }
+  }
+  
+  entities =
+  {
+    -- teleporter itself
+    { x = 0, y = -32, z = 8, ent="teleporter", angle=90,
+      target = "?out_target"
+    }
+
+    -- return spot
+    { x = 0, y = 32, z = 8, ent="teleport_spot", angle=90,
+      targetname = "?in_target"
+    }
+  }
+}
+
+
 PREFAB.TECH_DITTO_1 =
 {
   brushes =

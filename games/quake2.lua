@@ -1596,6 +1596,16 @@ QUAKE2.SKINS =
   }
 
 
+  ---| TELEPORTERS |---
+
+  Teleporter1 =
+  {
+    _prefab = "QUAKE2_TELEPORTER"
+    _where  = "chunk"
+  }
+
+
+
 --[[
   ---| WINDOWS |---
 
@@ -1706,6 +1716,8 @@ QUAKE2.THEME_DEFAULTS =
   lock_doors = { Locked_red = 50, Locked_blue = 50 }
 
   switch_doors = { Door_SW_1 = 50 }
+
+  teleporters = { Teleporter1 = 50 }
 }
 
 
