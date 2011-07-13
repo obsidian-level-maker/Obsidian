@@ -5,14 +5,7 @@ OBLIGE TODO
 Current Work
 ------------
 
-Teleporters:
-DONE: need SKIN for DOOM
-
-DONE: test and tweak the quota
-
-DONE: got them working
-
-  -  skin/prefab for QUAKE and other games
++  fix map edges in STREET mode
 
 
 Hallways:
@@ -21,8 +14,6 @@ Hallways:
   -  remove 'path' stuff
 
   -  control number of hallways via STYLES [mainly by score jiggling]
-
-  ??  do teleporters in there too
 
   +  double hallways
      -  make some L shape (not just U shape)
@@ -75,6 +66,8 @@ Areas:
 
 
 !!!  the "apply twice" problem in prefab build code
+
++    support m="bounds" brushes (e.g. for QUAKE2_TELEPORTER)
 
 
 WISH: 3D bridges can be 3D stairs [relax area touching rule]
@@ -131,7 +124,7 @@ FOCUS WILL BE: room connection logic
 
 -  liquid areas
 
-?  teleporters
+DONE:  teleporters
 
 
 
