@@ -79,7 +79,7 @@ GLOBAL_STYLE_LIST =
   lakes      = { few=60, heaps=10 }
   sub_rooms  = { none=40, some=80, heaps=5 }
   islands    = { few=60, heaps=40 }
-  teleporters ={ none=10, few=30, some=30, heaps=5 }  -- FIXME: none=50
+  teleporters ={ none=30, few=30, some=30, heaps=5 }
 
   symmetry   = { few=20, some=60, heaps=20 }
   pillars    = { few=30, some=60, heaps=20 }
