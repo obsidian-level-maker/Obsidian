@@ -164,6 +164,7 @@ PREFAB.TELEPORT_PAD =
 
   brushes =
   {
+    -- pad itself
     {
       { x = -32, y = -32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y = -32, mat = "?side", special="?special", tag="?out_tag", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
@@ -172,7 +173,14 @@ PREFAB.TELEPORT_PAD =
       { t = 16, mat = "?top", special="?top_special", tag="?in_tag" }
     }
 
-    -- FIXME: light brush
+    -- lighting
+    {
+      { m = "light", add = 128 }
+      { x = -32, y = -32 }
+      { x =  32, y = -32 }
+      { x =  32, y =  32 }
+      { x = -32, y =  32 }
+    }
   }
 
   entities =
