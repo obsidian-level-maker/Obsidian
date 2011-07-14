@@ -118,6 +118,26 @@ Monsters:
      have swarm patterns.
 
 
+Hollows:
+   a "hollow" is an open space under the floor of a normal AREA,
+   turning that AREA into a 3D platform.
+   
+   That space can/should be represented by separate chunks
+   (maybe an actual AREA object ??)
+
+   The floor needs to match a touching AREA, perhaps the hollow
+   chunks become part of that AREA.
+
+   The walls can/should have different thickness to the
+   above chunks -- could have own pictures/lights/etc.
+
+   The ceiling should be kept simple -- assume top chunk
+   provides the bare structure, can add a light prefab.
+
+   Both chunks can support monsters and items [unless
+   the hollow has LAVA/WATER for the floor]
+
+
 Intrusions:
   -  this idea is that part of a room is reserved for the player
      to travel through in an earlier or later quest.  If the
