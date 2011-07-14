@@ -490,8 +490,10 @@ function Plan_get_visit_list()
   local visits = {}
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not SECTIONS[mx*2][my*2].used then
-      table.insert(visits, { mx=mx, my=my })
+    local K = SECTIONS[mx*2][my*2]
+
+    if not K.used then
+      table.insert(visits, { mx=mx, my=my, K=K })
     end
   end end
 
@@ -514,7 +516,7 @@ function Plan_dump_sections(title)
 
     if K.hall then return '#' end
     if K.kind == "junction" then return '+' end
-    if K.kind == "big_junc" then return '+' end
+    if K.kind == "big_junc" then return '@' end
     if K.kind == "vert"     then return '|' end
     if K.kind == "horiz"    then return '-' end
 
@@ -555,14 +557,14 @@ function Plan_add_big_junctions()
   local function can_make_big_junc(mx, my)
     local K = SECTIONS[mx][my]
 
-    -- never place in corners
-    if (mx == 1 or mx == MAP_W) and (my == 1 or my == MAP_H) then
-      return false
-    end
-
     -- less chance at edges
     if mx == 1 or mx == MAP_W or my == 1 or my == MAP_H then
-      if rand.odds(70) then return false end
+      if rand.odds(30) then return false end
+    end
+
+    -- less chance in corners
+    if (mx == 1 or mx == MAP_W) and (my == 1 or my == MAP_H) then
+      if rand.odds(30) then return false end
     end
 
     -- don't want anyone touching our junc!
@@ -578,35 +580,24 @@ function Plan_add_big_junctions()
   end
 
 
-  local function make_big_junc(mx, my)
-    local K = SECTIONS[mx*2][my*2]
-
+  local function make_big_junc(K)
     K:set_junc()
-  end
-
-
-  local function try_add_big_junc()
-    local visits = Plan_get_visit_list()
-
-    each V in visits do
-      if can_make_big_junc(V.mx, V.my) then
-        make_big_junc(V.mx, V.my)
-        return true
-      end
-    end
-
-    return false
   end
 
 
   ---| Plan_add_big_junctions |---
 
   -- decide how many big hallway junctions to make
+  if STYLE.hallways == "none" then return end
 
-  local quota = 0 -- FIXME
+  local prob = style_sel("hallways", 0, 16, 30, 60)
 
-  for i = 1,quota do
-    try_add_big_junc()
+  local visits = Plan_get_visit_list()
+
+  each V in visits do
+    if rand.odds(prob) and can_make_big_junc(V.mx, V.my) then
+      make_big_junc(V.K)
+    end
   end
 end
 

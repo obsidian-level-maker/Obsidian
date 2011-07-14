@@ -71,7 +71,7 @@ GLOBAL_STYLE_LIST =
   secrets    = { few=20, some=60, heaps=10 }
   traps      = { few=20, some=60, heaps=30 }
 
-  hallways   = { few=10, some=90, heaps=30 }
+  hallways   = { none=5, few=30, some=70, heaps=15 }
   liquids    = { few=30, some=50, heaps=20 }
   scenics    = { few=30, some=50, heaps=10 }
   naturals   = { none=10, few=30, some=60, heaps=4 }
