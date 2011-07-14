@@ -22,14 +22,13 @@
 
 class HALLWAY
 {
-  R1, K1  -- starting ROOM and SECTION
-  R2, K2  -- ending ROOM and SECTION
-
   id : number (for debugging)
 
-  path : list  -- the path between the start and the destination
-               -- (not including either start or dest).
-               -- each element contains: G (section), next_dir, prev_dir
+  conns : list(CONN)  -- connections with neighbor rooms / hallways
+  entry_conn
+
+  sections : list(SECTION)
+  chunks   : list(CHUNK)
 
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
@@ -91,77 +90,18 @@ function HALLWAY_CLASS.dump_chunks(H)
 end
 
 
-function HALLWAY_CLASS.dump_path(H)
-  if not H.path then
-    gui.debugf("No Path.\n")
-    return
-  end
-
-  gui.debugf("Path:\n")
-  gui.debugf("  {\n")
-
-  each loc in H.path do
-    gui.debugf("  %s prev:%d next:%d\n", loc.G:tostr(),
-               loc.prev_dir or -1, loc.next_dir or -1)
-  end
-
-  gui.debugf("  }\n")
-end
-
-
 function HALLWAY_CLASS.dump(H)
   gui.debugf("%s =\n", H:tostr())
   gui.debugf("{\n")
-  gui.debugf("    R1 = %s\n", (H.R1 ? H.R1:tostr() ; "nil"))
-  gui.debugf("    R2 = %s\n", (H.R2 ? H.R2:tostr() ; "nil"))
-  gui.debugf("    K1 = %s\n", (H.K1 ? H.K1:tostr() ; "nil"))
-  gui.debugf("    K2 = %s\n", (H.K2 ? H.K2:tostr() ; "nil"))
+  -- FIXME
   gui.debugf("belong = %s\n", (H.belong_room ? H.belong_room:tostr() ; "nil"))
-
-  H:dump_path()
+  gui.debugf("chunks = %s\n", (H.chunks ? tostring(#H.chunks) ; "nil"))
   gui.debugf("}\n")
 end
 
 
 function HALLWAY_CLASS.add_section(H, K)
   table.insert(H.sections, K)
-end
-
-
-function HALLWAY_CLASS.first_chunk(H)
-  return H.chunks[1]
-end
-
-function HALLWAY_CLASS.last_chunk(H)
-  return H.chunks[#H.chunks]
-end
-
-
-function HALLWAY_CLASS.reverse(H)
-  H.R1, H.R2 = H.R2, H.R1
-  H.K1, H.K2 = H.K2, H.K1
-
-  if H.path then
-    table.reverse(H.path)
-
-    each P in H.path do
-      P.next_dir, P.prev_dir = P.prev_dir, P.next_dir
-    end
-  end
-
-  if H.chunks then
-    table.reverse(H.chunks)
-  end
-end
-
-
-function HALLWAY_CLASS.render_path(H)
-  for _,loc in ipairs(H.path) do
-    local G = loc.G
-
-    G:set_hall(H)
-
-  end
 end
 
 
@@ -212,24 +152,6 @@ end
 
 
 ----------------------------------------------------------------
-
-
-function Hallway_simple(K1, MID, K2, conn, dir)
-  --- creates a simple one-section hallway between two rooms
-
-  local H = HALLWAY_CLASS.new()
-
-  conn.kind = "hallway"
-  conn.hall = H
-
-  H.K1 = K1 ; H.R1 = assert(K1.room)
-  H.K2 = K2 ; H.R2 = assert(K2.room)
-
-  table.insert(H.path, { G=MID, next_dir=dir, prev_dir=10-dir })
-
-  H:render_path()
-  H:make_chunks()
-end
 
 
 function Hallways_how_many()

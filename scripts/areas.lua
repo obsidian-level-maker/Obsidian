@@ -175,12 +175,7 @@ function Areas_handle_connections()
       link_chunks(C2, D.dir2, HB_2, D)
       
     else
---##      -- hallway
---##      local H1 = D.hall:first_chunk()
---##      local H2 = D.hall:last_chunk()  -- may be same as first
---##
---##      link_chunks(C1, D.dir1, H1, D)
---##      link_chunks(C2, D.dir2, H2, D)
+      error("Unknown conn kind: " .. tostring(D.kind))
     end
   end
 

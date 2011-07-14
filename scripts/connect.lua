@@ -121,8 +121,6 @@ function CONN_CLASS.swap(D)
   D.C1, D.C2 = D.C2, D.C1
 
   D.dir1, D.dir2 = D.dir2, D.dir1
-
----##  if D.hall and D.hall.L1 != D.L1 then D.hall:reverse() end
 end
 
 

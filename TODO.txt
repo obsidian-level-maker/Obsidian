@@ -5,13 +5,8 @@ OBLIGE TODO
 Current Work
 ------------
 
-+  fix map edges in STREET mode
-
-
 Hallways:
   -  when join to existing hall, sometimes merge into one hall
-
-  -  remove 'path' stuff
 
   -  control number of hallways via STYLES [mainly by score jiggling]
 

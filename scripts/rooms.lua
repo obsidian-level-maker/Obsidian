@@ -40,8 +40,6 @@ class ROOM
 
   branch_kind : keyword
 
-  hallway : HALLWAY_INFO   -- for hallways and stairwells
-
   symmetry : keyword   -- symmetry of room, or NIL
                        -- keywords are "x", "y", "xy"
 
