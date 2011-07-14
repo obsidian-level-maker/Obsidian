@@ -231,6 +231,36 @@ function CHUNK_CLASS.against_wall(C, dir)
 end
 
 
+function CHUNK_CLASS.against_map_edge(C, dir)
+  local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+  sx2, sy2 = geom.nudge(sx2, sy2, dir)
+
+  if not Seed_valid(sx1, sy1) then return true end
+
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    if SEEDS[sx][sy].free then return true end
+  end end
+
+  return false
+end
+
+
+function CHUNK_CLASS.get_street_sky_h(C, dir)
+  local sx1, sy1 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
+
+  sx1, sy1 = geom.nudge(sx1, sy1, dir)
+
+  if Seed_valid(sx1, sy1) then
+    local S = SEEDS[sx1][sy1]
+    if S.room then return S.room.street_inner_h end
+  end
+
+  return 64
+end
+
+
 function CHUNK_CLASS.dir_for_spot(C)
   local R = C.room
 
@@ -717,6 +747,8 @@ function CHUNK_CLASS.build(C)
   local thick = 16
 
   for dir = 2,8,2 do
+    local wall_deep = thick
+
     if not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
 
@@ -750,8 +782,16 @@ function CHUNK_CLASS.build(C)
           gui.add_brush(brush)
         end
 
-      elseif C.hall and STYLE.streets == "heaps" then
-        -- nothing
+      elseif C.hall and C.hall.street then
+        -- only build wall at edge of map
+        -- (allow building walls to show through)
+        if C:against_map_edge(dir) then
+          brush = Trans.bare_quad(bx1, by1, bx2, by2)
+          Trans.set_tex(brush, w_mat.t)
+          gui.add_brush(brush)
+        else
+          wall_deep = 0
+        end
 
       else
           brush = Trans.bare_quad(bx1, by1, bx2, by2)
@@ -796,6 +836,7 @@ end
 
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, long, 32, 32)
+        wall_deep = 32
 
         local skin2 = { inner=w_matname, outer=w_matname, wall=w_matname }
 
@@ -819,6 +860,7 @@ end
 
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
                                        0, long, 32, 32)
+        wall_deep = 32
 
         local skin2 = { tag=LINK.conn.lock.tag, inner=w_matname, outer=w_matname, wall=w_matname }
 
@@ -827,7 +869,35 @@ end
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
     end
-  end
+
+
+    -- street mode : make buildings appear to have different heights
+    if C.hall and C.hall.street and not C:similar_neighbor(dir) then
+      local bx1, by1, bx2, by2 = x1,y1, x2,y2
+
+      if dir == 2 then by2 = by1 + (wall_deep + 16) end
+      if dir == 8 then by1 = by2 - (wall_deep + 16) end
+      if dir == 4 then bx2 = bx1 + (wall_deep + 16) end
+      if dir == 6 then bx1 = bx2 - (wall_deep + 16) end
+
+      -- handle corners : extend sideways
+      if geom.is_vert(dir) then
+        bx1 = bx1 - 32 ; bx2 = bx2 + 32
+      else
+        by1 = by1 - 32 ; by2 = by2 + 32
+      end
+
+      local sky_h = f_h + C:get_street_sky_h(dir)
+
+      c_mat = Mat_lookup("_SKY")
+      brush = Trans.bare_quad(bx1, by1, bx2, by2)
+      Trans.set_tex(brush, c_mat.t)
+      table.insert(brush, 1, { m="sky" })
+      table.insert(brush, { b=sky_h, tex=c_mat.f or c_mat.t })
+      gui.add_brush(brush)
+    end
+
+  end -- dir
 
 
   -- crossover

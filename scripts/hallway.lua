@@ -497,6 +497,11 @@ function Hallway_add_streets()
   end end
 
   hall:add_it()
+
+  -- give each room an apparent height
+  each R in LEVEL.rooms do
+    R.street_inner_h = rand.pick { 160, 192, 224, 256, 288 }
+  end
 end
 
 
@@ -524,7 +529,9 @@ function HALLWAY_CLASS.do_heights(H, base_h)
     C.floor_h = base_h
   end
 
-  if H.outdoor then
+  if H.street then
+    H.height = 512
+  elseif H.outdoor then
     H.height = 256
   elseif math.abs(delta_h) < 12 and rand.odds(10) then
     H.height = 80
