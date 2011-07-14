@@ -165,7 +165,7 @@ function SECTION_CLASS.is_foot(K)  -- returns direction, or nil
 end
 
 
-function SECTION_CLASS:eval_exit(K, dir)
+function SECTION_CLASS.eval_exit(K, dir)
   -- evaluate exit from this section + direction
   -- returns value between 0 and 10, or -1 if not possible at all
 

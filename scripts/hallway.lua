@@ -41,9 +41,9 @@ struct CROSSOVER
 {
   conn : CONN
 
-  MID_A, MID_K, MID_B : SECTION
+  over_K : SECTION
 
-  hall_A, hall_B : HALLWAY
+  MID_A, MID_B : SECTION
 
   chunk : CHUNK
 
@@ -154,12 +154,20 @@ end
 ----------------------------------------------------------------
 
 
-function Hallways_how_many()
-  local perc = style_sel("hallways", 0, 15, 35, 100)
+function Hallway_how_many()
+  local quota = 0
 
-  local num = (SECTION_W + 1) * perc / 100
+  if STYLE.hallways != "none" then
+    local perc = style_sel("hallways", 0, 20, 50, 160)
 
-  return int(num + gui.random())
+    quota = (MAP_W + 1) * perc / 100 * rand.range(0.7, 1.4)
+
+    quota = int(quota)  -- round down
+  end
+
+  gui.printf("Hallway quota: %d\n", quota)
+
+  LEVEL.hall_quota = quota
 end
 
 
@@ -280,13 +288,32 @@ function Hallway_test_branch(start_K, start_dir, mode)
   end
 
 
-  local function test_hall_conn(end_K, end_dir, visited)
+  local function test_hall_conn(end_K, end_dir, visited, stats)
+    -- FIXME: support joining an existing hall [rarely]
     if not (end_K and end_K.room) then return end
 
     if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
 
-    local score = 50 + #visited + gui.random()
-    -- TODO: BIG BONUS for big_junc
+    local score1 = start_K:eval_exit(start_dir)
+    local score2 =   end_K:eval_exit(  end_dir)
+    assert(score1 >= 0 and score2 >= 0)
+
+    local score = (score1 + score2) * 10
+
+    -- big bonus for using a big junction
+    if stats.big_junc then
+      score = score + 61
+    elseif stats.crossover then
+      score = score + style_sel("crossovers", 0, 0, 31, 99)
+    end
+
+    -- minor tendency for longer halls.
+    -- [I don't think that hallway length should be a major factor in
+    --  deciding whether to make a hallway or not]
+    score = score + #visited / 10
+
+
+    -- score is now computed : test it
 
     if score < LEVEL.best_conn.score then return end
 
@@ -326,7 +353,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
   local TEST_DIRS_HORIZ = { [2]=true, [8]=true }
 
 
-  local function hall_flow(K, from_dir, visited, quota)
+  local function hall_flow(K, from_dir, visited, stats, quota)
     assert(K)
     assert(not K.used)
 
@@ -356,15 +383,18 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
         if test_dirs[dir] then
 --stderrf("  testing conn @ dir:%d\n", dir)
-          test_hall_conn(K:neighbor(dir), 10 - dir, visited)
+          test_hall_conn(K:neighbor(dir), 10 - dir, visited, stats)
         end
+
+        -- too many hallways already?
+        if #LEVEL.halls >= LEVEL.hall_quota then continue end
 
         if quota > 0 and (not is_junction or geom.is_perpendic(dir, from_dir)) then
           local N = K:neighbor(dir)
 
           if N and not N.used then
 --stderrf("  recursing @ dir:%d\n", dir)
-            hall_flow(N, 10 - dir, table.copy(visited), quota - 1)
+            hall_flow(N, 10 - dir, table.copy(visited), table.copy(stats), quota - 1)
           end
         end
       end
@@ -383,7 +413,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
   if MID.used then
     -- if neighbor section is used, nothing is possible except
-    -- branching off an existing hallway.
+    -- branching off a nearby hallway.
     test_off_hall(MID)
     return
   end
@@ -393,7 +423,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
   if STYLE.hallways == "none"  then quota = 0 end
   if STYLE.hallways == "heaps" then quota = 6 end
 
-  hall_flow(MID, 10 - start_dir, {}, quota)
+  hall_flow(MID, 10 - start_dir, {}, {}, quota)
 end
 
 
