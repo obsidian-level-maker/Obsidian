@@ -133,6 +133,10 @@ function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
   H:make_chunks()
+
+  if #H.sections > 1 then
+    LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
+  end
 end
 
 
@@ -158,14 +162,14 @@ function Hallway_how_many()
   local quota = 0
 
   if STYLE.hallways != "none" then
-    local perc = style_sel("hallways", 0, 20, 50, 160)
+    local perc = style_sel("hallways", 0, 20, 50, 120)
 
-    quota = (MAP_W + 1) * perc / 100 * rand.range(0.7, 1.4)
-
+    quota = (MAP_W * MAP_H * rand.range(1, 2)) * perc / 100 - 1
+    
     quota = int(quota)  -- round down
   end
 
-  gui.printf("Hallway quota: %d\n", quota)
+  gui.printf("Hallway quota: %d sections\n", quota)
 
   LEVEL.hall_quota = quota
 end
@@ -310,7 +314,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- minor tendency for longer halls.
     -- [I don't think that hallway length should be a major factor in
     --  deciding whether to make a hallway or not]
-    score = score + #visited / 10
+    score = score + #visited / 3.1
 
 
     -- score is now computed : test it
@@ -387,9 +391,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
         end
 
         -- too many hallways already?
-        if #LEVEL.halls >= LEVEL.hall_quota then continue end
+        if quota < 1 or LEVEL.hall_quota < 1 then continue end
 
-        if quota > 0 and (not is_junction or geom.is_perpendic(dir, from_dir)) then
+        if (not is_junction) or geom.is_perpendic(dir, from_dir) then
           local N = K:neighbor(dir)
 
           if N and not N.used then
