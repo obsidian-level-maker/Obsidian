@@ -89,8 +89,8 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   local MISSILE_DODGE = 0.85
   local MELEE_DODGE   = 0.95
 
-  local HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2, 0.1 }
-  local MISSILE_RATIOS = { 1.0, 0.3, 0.1 }
+  local HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2 }
+  local MISSILE_RATIOS = { 1.0, 0.2 }
   local MELEE_RATIOS   = { 1.0, 0.1 }
 
 
@@ -219,50 +219,72 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function monster_infight(M, N, time)
-    -- FIXME: properly model pseudo-infighting, where one monster
-    --        accidentally hits (and hurt) another, but the other
-    --        monster doesn't retaliate.
+  local function monsters_fight_mode(species1, species2)
+    -- result can be:
+    --    "friend"    : completely immune to each other
+    --    "hurt"      : can hurt each other, but not infight
+    --    "infight"   : can hurt and fight each other
 
-    if not PARAM.infighting then
-      return
-    end
+    local sheet = GAME.INFIGHT_SHEET or {}
 
-    if N.health <= 0 then
-      return
-    end
+--???   local pair = M.name .. "/" .. N.name
+--???   if sheet[pair] != nil then
+--???     return sheet[pair]
+--???   end
 
-    -- FIXME: provide a table-based way instead !!!!
-    if GAME.check_infight_func then
-      if not GAME.check_infight_func(M.info, N.info) then
-        return
-      end
+    -- default mode : assume same species cannot hurt each other and
+    --                different species will infight.
+
+    -- FIXME : have a PARAM setting (or two)
+
+    if species1 == species2 then
+      return "friend"
     else
-      -- default -> only different species infight 
-      if M.info == N.info then
-        return
-      end
+      return "infight"
     end
+  end
 
-    -- monster on monster action!
+
+  local function monster_hit_player(M, other_idx, time, factor)
+    if other_idx < 1 then return end
+
+    -- 'N' for the nearer monster
+    local N = active_mons[other_idx] 
+
+    if M.health <= 0 or N.health <= 0 then return end
+
+    local M_species = M.species or M.name
+    local N_species = N.species or N.name
+
+    local mode = monsters_fight_mode(M_species, N_species)
+
+    if mode == "friend" then return end
+
+    -- furthest monster hurts the nearest one
     local dm1 = M.info.damage * (M.info.activity or 0.5) * time
+
+    N.health = N.health - dm1 * factor
+
+    if mode != "infight" then return end
+
+    -- nearest one retaliates sometimes
     local dm2 = N.info.damage * (N.info.activity or 0.5) * time
 
-    local factor = 0.25 -- assume it happens rarely
-
-    M.health = M.health - dm2 * factor
-    N.health = N.health - dm1 * factor
+    M.health = M.health - dm2 * factor / 2
   end
 
 
   local function monsters_shoot(time)
     for idx,M in ipairs(active_mons) do
-      if M.health > 0 then
+      -- skip dead monsters
+      if M.health <= 0 then continue end
+
+      if idx < 9 then
         monster_hit_player(M, idx, time)
-        if idx >= 2 then
-          monster_infight(M, active_mons[idx-1], time)
-        end
       end
+
+      monster_hit_monster(M, idx-1, time, 0.6)
+      monster_hit_monster(M, idx-2, time, 0.1)
     end
   end
 
@@ -280,11 +302,12 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   stats.health = 0
 
-  for _,info in ipairs(monsters) do
+  each info in monsters do
     local MON =
     {
-      info=info, health=info.health,
-      power=info.damage + info.health/30 + gui.random(),
+      info   = info
+      health = info.health,
+      power  = info.damage + info.health/30 + gui.random()
     }
     table.insert(active_mons, MON)
   end
@@ -305,7 +328,9 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
     for loop = 1,shots do
       local time = player_shoot(W)
+      
       monsters_shoot(time)
+
       remove_dead_mon()
     end
   end
