@@ -221,13 +221,13 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   local function calc_infight_mode(info1, info2)
     -- looks up the monster pair in the infighting table.
-    -- this table has entries like:
-    --    baron__knight  = "friend"
-    --    gunner__all    = "hurt"
+    -- this table has entries like this:
+    --    xxx__yyy  = "friend"
+    --    aaaa__bbb = "hurt"
     --
     -- result can be:
     --    "friend"  : completely immune to each other
-    --    "hurt"    : can hurt each other, but not infight
+    --    "hurt"    : can hurt each other, but won't retaliate
     --    "infight" : can hurt and fight each other
     --
     -- the monster field 'infights' can be set to true, but
@@ -253,19 +253,14 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     result = sheet[species1 .. "__" .. species2]
     if result then return result end
 
+    -- try the pair reversed
     result = sheet[species2 .. "__" .. species1]
-    if result then return result end
-
-    result = sheet[species1 .. "__all"]
-    if result then return result end
-
-    result = sheet[species2 .. "__all"]
     if result then return result end
 
     if species1 == species2 then
       return sheet["same"] or "friend"
     else
-      return sheet["all"]  or "hurt"
+      return sheet["different"]  or "hurt"
     end
   end
 
@@ -292,7 +287,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     -- nearest one retaliates sometimes
     local dm2 = N.info.damage * (N.info.activity or 0.5) * time
 
-    M.health = M.health - dm2 * factor * 0.35
+    M.health = M.health - dm2 * factor * 0.5
   end
 
 
@@ -305,8 +300,9 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
         monster_hit_player(M, idx, time)
       end
 
-      monster_hit_monster(M, idx-1, time, 0.5)
-      monster_hit_monster(M, idx-2, time, 0.2)
+      local infight_idx = idx - rand.irange(1,3)
+
+      monster_hit_monster(M, infight_idx, time, 0.6)
     end
   end
 
