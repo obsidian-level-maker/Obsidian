@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -89,9 +89,9 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   local MISSILE_DODGE = 0.85
   local MELEE_DODGE   = 0.95
 
-  local HITSCAN_RATIOS = { 1.0, 0.8, 0.6, 0.4, 0.2 }
-  local MISSILE_RATIOS = { 1.0, 0.2 }
-  local MELEE_RATIOS   = { 1.0, 0.1 }
+  local HITSCAN_RATIOS = { 1.0, 0.75, 0.5, 0.25 }
+  local MISSILE_RATIOS = { 1.0, 0.25 }
+  local MELEE_RATIOS   = { 1.0 }
 
 
   local function remove_dead_mon()
@@ -219,44 +219,66 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
-  local function monsters_fight_mode(species1, species2)
+  local function calc_infight_mode(info1, info2)
+    -- looks up the monster pair in the infighting table.
+    -- this table has entries like:
+    --    baron__knight  = "friend"
+    --    gunner__all    = "hurt"
+    --
     -- result can be:
-    --    "friend"    : completely immune to each other
-    --    "hurt"      : can hurt each other, but not infight
-    --    "infight"   : can hurt and fight each other
+    --    "friend"  : completely immune to each other
+    --    "hurt"    : can hurt each other, but not infight
+    --    "infight" : can hurt and fight each other
+    --
+    -- the monster field 'infights' can be set to true, but
+    -- this only applies to monsters of the same species.
+    -- 
 
-    local sheet = GAME.INFIGHT_SHEET or {}
+    local species1 = info1.species or info1.name
+    local species2 = info2.species or info2.name
 
---???   local pair = M.name .. "/" .. N.name
---???   if sheet[pair] != nil then
---???     return sheet[pair]
---???   end
+    if species1 == species2 and info1.infights then
+      return "infight"
+    end
 
-    -- default mode : assume same species cannot hurt each other and
-    --                different species will infight.
+    local sheet = GAME.INFIGHT_SHEET
 
-    -- FIXME : have a PARAM setting (or two)
+    -- have a reasonable default
+    if not sheet then
+      return (species1 == species2 ? "friend" ; "hurt")
+    end
+
+    local result
+
+    result = sheet[species1 .. "__" .. species2]
+    if result then return result end
+
+    result = sheet[species2 .. "__" .. species1]
+    if result then return result end
+
+    result = sheet[species1 .. "__all"]
+    if result then return result end
+
+    result = sheet[species2 .. "__all"]
+    if result then return result end
 
     if species1 == species2 then
-      return "friend"
+      return sheet["same"] or "friend"
     else
-      return "infight"
+      return sheet["all"]  or "hurt"
     end
   end
 
 
-  local function monster_hit_player(M, other_idx, time, factor)
+  local function monster_hit_monster(M, other_idx, time, factor)
     if other_idx < 1 then return end
 
-    -- 'N' for the nearer monster
+    -- 'N' for the monster nearer the player (earlier in the list)
     local N = active_mons[other_idx] 
 
     if M.health <= 0 or N.health <= 0 then return end
 
-    local M_species = M.species or M.name
-    local N_species = N.species or N.name
-
-    local mode = monsters_fight_mode(M_species, N_species)
+    local mode = calc_infight_mode(M.info, N.info)
 
     if mode == "friend" then return end
 
@@ -270,7 +292,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     -- nearest one retaliates sometimes
     local dm2 = N.info.damage * (N.info.activity or 0.5) * time
 
-    M.health = M.health - dm2 * factor / 2
+    M.health = M.health - dm2 * factor * 0.35
   end
 
 
@@ -283,8 +305,8 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
         monster_hit_player(M, idx, time)
       end
 
-      monster_hit_monster(M, idx-1, time, 0.6)
-      monster_hit_monster(M, idx-2, time, 0.1)
+      monster_hit_monster(M, idx-1, time, 0.5)
+      monster_hit_monster(M, idx-2, time, 0.2)
     end
   end
 
@@ -306,7 +328,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
     local MON =
     {
       info   = info
-      health = info.health,
+      health = info.health
       power  = info.damage + info.health/30 + gui.random()
     }
     table.insert(active_mons, MON)
