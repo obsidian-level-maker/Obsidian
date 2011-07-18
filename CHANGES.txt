@@ -46,6 +46,7 @@ CHANGES (since 3.57)
 + ability to make multiple paths between rooms
 + worked on "cross-overs" (a bridge through another room)
 - support for simple 3D bridges within rooms
+- improved infighting logic in the Fight Simulator
 
 + customised Lua language:
   - optional commas at end of line in data tables
