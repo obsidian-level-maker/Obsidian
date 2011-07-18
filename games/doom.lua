@@ -4135,6 +4135,7 @@ DOOM.MONSTERS =
     attack = "hitscan"
     give = { {ammo="bullet",count=5} }
     density = 1.5
+    infights = true
   }
 
   shooter =
@@ -4145,6 +4146,8 @@ DOOM.MONSTERS =
     damage = 10
     attack = "hitscan"
     give = { {weapon="shotty"}, {ammo="shell",count=4} }
+    species = "zombie"
+    infights = true
   }
 
   imp =
@@ -4166,6 +4169,7 @@ DOOM.MONSTERS =
     density = 0.5
     float = true
     weap_prefs = { launch=0.2 }
+    infights = true
   }
 
   demon =
@@ -4189,6 +4193,7 @@ DOOM.MONSTERS =
     invis = true
     outdoor_factor = 3.0
     weap_prefs = { launch=0.2 }
+    species = "demon"
   }
 
   caco =
@@ -4254,6 +4259,8 @@ DOOM2.MONSTERS =
     damage = 50
     attack = "hitscan"
     give = { {weapon="chain"}, {ammo="bullet",count=10} }
+    species = "zombie"
+    infights = true
   }
 
   revenant =
@@ -4277,6 +4284,7 @@ DOOM2.MONSTERS =
     damage = 45
     attack = "missile"
     density = 0.7
+    species = "baron"
   }
 
   mancubus =

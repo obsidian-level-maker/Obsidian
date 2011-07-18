@@ -1181,6 +1181,7 @@ QUAKE1.MONSTERS =
     damage = 14
     attack = "hitscan"
     give = { {ammo="shell",count=5} }
+    infights = true
   }
 
   enforcer =
