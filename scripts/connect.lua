@@ -236,7 +236,18 @@ gui.debugf("\nmake_branch\n\n")
 
   -- must add hallway first (so that merge_groups can find it)
   if info.hall then
-     info.hall:add_it()
+    if info.D2 and info.D2.L1.is_hall and true then  -- TODO: don't always merge
+stderrf("I like to merge it merge it...\n")
+      local old_hall = info.D2.L1
+
+      old_hall:merge_it(info.hall) ; info.hall = nil
+
+      -- update the CONN info -- only need one now
+      info.D1.L2 = old_hall
+      info.D2    = nil
+    else
+      info.hall:add_it()
+    end
   end
 
   info.D1:add_it()

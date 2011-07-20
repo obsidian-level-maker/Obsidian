@@ -105,8 +105,10 @@ function HALLWAY_CLASS.add_section(H, K)
 end
 
 
-function HALLWAY_CLASS.make_chunks(H)
+function HALLWAY_CLASS.make_chunks(H, skip_old)
   each K in H.sections do
+    if skip_old and K.used then continue end
+
     -- mark section as used
     K:set_hall(H)
 
@@ -132,11 +134,28 @@ end
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
-  H:make_chunks()
+  H:make_chunks(false)
 
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
   end
+end
+
+
+function HALLWAY_CLASS.merge_it(old_H, new_H)
+  assert(old_H != new_H)
+
+  each K in new_H.sections do
+    table.insert(old_H.sections, K)
+  end
+
+  old_H:make_chunks(true)
+
+  LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
+
+  -- the new_H object is never used again
+  new_H.sections = nil
+  new_H.chunks   = nil
 end
 
 
@@ -252,49 +271,13 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.D2 = nil
     LEVEL.best_conn.hall  = nil
     LEVEL.best_conn.score = score
-  end
-
-
-  local function OLD__test_direct(MID)
-    local K2 = K1:neighbor(dir, 2)
-
-    if not (K2 and K2.room) then return end
-
-    if not Connect_is_possible(K1.room, K2.room or K2.hall, mode) then return end
-
-    local score = 50 + gui.random()
-
-    if score < LEVEL.best_conn.score then return end
-
-    -- OK --
-
-    local H = HALLWAY_CLASS.new()
-
-    H:add_section(MID)
-
-    H.conn_group = K1.room.conn_group
-
-
-    local D1 = CONN_CLASS.new("hallway", K1.room, H, dir)
-
-    D1.K1 = K1 ; D1.K2 = MID
-
-
-    local D2 = CONN_CLASS.new("hallway", H, K2.room, dir)
-
-    D2.K1 = MID ; D2.K2 = K2
-
-
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = D2
-    LEVEL.best_conn.hall  = H
-    LEVEL.best_conn.score = score
+    LEVEL.best_conn.stats = {}
   end
 
 
   local function test_hall_conn(end_K, end_dir, visited, stats)
-    -- FIXME: support joining an existing hall [rarely]
-    if not (end_K and end_K.room) then return end
+    if not end_K then return end
+    if not (end_K.room or end_K.hall) then return end
 
     if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
 
@@ -314,7 +297,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- minor tendency for longer halls.
     -- [I don't think that hallway length should be a major factor in
     --  deciding whether to make a hallway or not]
-    score = score + #visited / 3.1
+    score = score + #visited / 4.1
 
 
     -- score is now computed : test it
@@ -326,9 +309,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local H = HALLWAY_CLASS.new()
 
-    each MID in visited do
-      H:add_section(MID)
-    end
+    H.sections = visited
 
     H.conn_group = start_K.room.conn_group
 
@@ -338,7 +319,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     D1.K1 = start_K ; D1.K2 = H.sections[1]
 
 
-    local D2 = CONN_CLASS.new("hallway", end_K.room, H, end_dir)
+    -- Note: some code assumes that D2.L1 is the destination room/hall
+
+    local D2 = CONN_CLASS.new("hallway", end_K.room or end_K.hall, H, end_dir)
 
     D2.K1 = end_K   ; D2.K2 = table.last(H.sections)
 
@@ -347,6 +330,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.D2 = D2
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
+    LEVEL.best_conn.stats = stats
 
 --stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
@@ -385,7 +369,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     for dir = 2,8,2 do
       if dir != from_dir then
 
-        if test_dirs[dir] then
+        if test_dirs[dir] or true then  -- FIXME: not always !!!
 --stderrf("  testing conn @ dir:%d\n", dir)
           test_hall_conn(K:neighbor(dir), 10 - dir, visited, stats)
         end
@@ -480,6 +464,8 @@ end
 function HALLWAY_CLASS.do_heights(H, base_h)
   -- FIXME: this is rubbish
   local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
+
+  assert(H.chunks)
 
   each C in H.chunks do
     C.floor_h = base_h
