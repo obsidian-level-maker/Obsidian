@@ -668,6 +668,8 @@ Name generator:
 
 -  improved use of liquids.
 
+-  fight simulator: take amount of cover into account
+
 -  a module or style for Claustrophic levels
 
 -  PDAs or checkpoints, where the game is automatically saved
