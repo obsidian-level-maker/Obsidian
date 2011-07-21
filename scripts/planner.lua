@@ -473,11 +473,13 @@ function Plan_create_sections()
 end
 
 
-function Plan_count_free_sections()
+function Plan_count_free_room_sections()
   local count = 0
 
   for mx = 1,MAP_W do for my = 1,MAP_H do
-    if not SECTIONS[mx*2][my*2].used then
+    local K = SECTIONS[mx*2][my*2]
+
+    if not K.used then
       count = count + 1
     end
   end end
@@ -965,7 +967,7 @@ function Plan_add_big_rooms()
 
   local perc = style_sel("big_rooms", 0, 30, 50, 80)
 
-  local num_free = Plan_count_free_sections()
+  local num_free = Plan_count_free_room_sections()
 
   local quota = num_free * perc / 100
 
@@ -1082,7 +1084,7 @@ function Plan_add_natural_rooms()
 
 ---??  if not THEME.cave_walls then return end
 
-  local num_free = Plan_count_free_sections()
+  local num_free = Plan_count_free_room_sections()
 
   local perc = style_sel("naturals", 0, 20, 40, 90)
 
