@@ -316,22 +316,33 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   end
 
 
+  local function calc_monster_threat(info)
+    local threat = info.damage
+    if info.attack == "hitscan" then threat = threat * 2.4 end
+    if info.attack == "melee"   then threat = threat / 2.4 end
+
+    threat = threat + info.health / 20
+    
+    return threat + gui.random()  -- tie breaker
+  end
+
+
   ---==| Fight_Simulator |==---
 
   stats.health = 0
 
-  each info in monsters do
+  each name,info in monsters do
     local MON =
     {
       info   = info
       health = info.health
-      power  = info.damage + info.health/30 + gui.random()
+      threat  = calc_monster_threat(info)
     }
     table.insert(active_mons, MON)
   end
 
   -- put toughest monster first, weakest last.
-  table.sort(active_mons, function(A,B) return A.power > B.power end)
+  table.sort(active_mons, function(A,B) return A.threat > B.threat end)
 
   -- let the monsters throw the first punch (albeit a weak one)
   monsters_shoot(0.5)
