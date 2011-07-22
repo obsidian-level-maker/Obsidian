@@ -5,17 +5,19 @@ OBLIGE TODO
 Current Work
 ------------
 
-Hallways:
-  -  when join to existing hall, sometimes merge into one hall
 
-  -  control number of hallways via STYLES [mainly by score jiggling]
+DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
+
+      -  big junction chunk must keep track of exit dirs
+         [wall off unused dirs]
+
+
+Hallways:
 
   +  double hallways
      -  make some L shape (not just U shape)
 
-  -  flow through big junctions, give big score bonus
-
-  !!  proper scoring
+  !!  proper scoring  [done??]
 
 
 Crossovers:
@@ -28,14 +30,8 @@ Crossovers:
   -  fix hallway vertical gaps
  
 
-Big junctions:
-   +  much more likely if small (e.g. 2x2)
-
-   -  often use them for 90 degree stalks : even in corner of map
-
-
 Cycles:
-   +  less chance if R2 (middle room) is large
+   +  less chance if R2 (skipped room) is large
 
 
 Areas:
@@ -117,8 +113,6 @@ FOCUS WILL BE: room connection logic
 
 +  crossovers
 
--  liquid areas
-
 DONE:  teleporters
 
 
@@ -134,6 +128,8 @@ Release Goals
 
 -  system for texture coordinates
 
+
+-  liquid areas
 
 -  windows
 
