@@ -1,29 +1,51 @@
 OBLIGE AUTHORS
 ==============
 
-Developer
----------
+__DEVELOPER__
 
 Andrew Apted  <ajapted@gmail.com>
 
+//  I created OBLIGE and I am continuing to develop it.
 
-Contributors
-------------
-
-FIXME
+////  Some other projects I have worked on are: glBSP and EDGE.
 
 
-Thanks To
----------
+__CONTRIBUTORS__
 
-FIXME
+Chris Pisarczyk (Mr Chris)
+
+Derek Braun (Dittohead)
+
+Enhas
+
+Jared Blackburn (blackjar)
+
+Jon Vail (40oz)
+
+Sam Trenholme
 
 
-Notes
------
+__THANKS_TO__
+
+DoomJedi : Wolf3D testing, list of Wolf3D mods. 
+
+esselfortium : encouragement and detailed feedback.
+
+gggmork : beta testing, detailed feedback.
+
+leilei : initial Amulets & Armor definition, various feedback.
+
+Maxim Samoylenko : encouragement and testing.
+
+.... and everyone else who provided feedback, bug reports,
+ideas for improvements (etc), both in email and on the forums.
+Your input has been greatly appreciated.
+
+
+__NOTES__
 
 OBLIGE was written from scratch. It does not contain any code
-from SLIGE (by David Chess) or from any other random map
+from SLIGE (by David Chess) or from any other random level
 generator.
 
 The cave algorithm used in OBLIGE was described by Jim Babcock
@@ -34,5 +56,5 @@ The random number generator used by OBLIGE is the Mersenne Twister,
 with code by Richard J. Wagner / 15 May 2003 / rjwagner@writeme.com
 based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
 
-OBLIGE uses the FLTK widget library (http://www.fltk.org).
+OBLIGE uses the FLTK widget library (http://www.fltk.org)
 
