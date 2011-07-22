@@ -296,7 +296,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
-    local merge = rand.odds(9)  -- FIXME: 90
+    local merge = rand.odds(70)
 
     local score1 = start_K:eval_exit(start_dir)
     local score2 =   end_K:eval_exit(  end_dir)

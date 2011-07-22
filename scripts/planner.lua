@@ -20,7 +20,7 @@
 
 --[[ *** CLASS INFORMATION ***
 
-@@@
+TODO: describe the section/map system
 
 class SECTION
 {
@@ -228,11 +228,13 @@ end
 
 ------------------------------------------------------------------------
 
+
 function Plan_alloc_id(kind)
   local result = (LEVEL.ids[kind] or 0) + 1
   LEVEL.ids[kind] = result
   return result
 end
+
 
 
 function Plan_choose_liquid()
@@ -244,6 +246,7 @@ function Plan_choose_liquid()
     gui.printf("Liquids disabled.\n\n")
   end
 end
+
 
 
 function Plan_decide_map_size()
@@ -293,9 +296,8 @@ function Plan_decide_map_size()
 
   MAP_W = W
   MAP_H = H
-
-  
 end
+
 
 
 function Plan_create_sections()
@@ -473,6 +475,7 @@ function Plan_create_sections()
 end
 
 
+
 function Plan_count_free_room_sections()
   local count = 0
 
@@ -486,6 +489,7 @@ function Plan_count_free_room_sections()
 
   return count
 end
+
 
 
 function Plan_get_visit_list()
@@ -503,6 +507,7 @@ function Plan_get_visit_list()
 
   return visits
 end
+
 
 
 function Plan_dump_sections(title)
@@ -556,34 +561,35 @@ end
 
 function Plan_add_big_junctions()
 
-  local function can_make_big_junc(mx, my)
-    local K = SECTIONS[mx][my]
+  local function try_make_big_junc(mx, my, prob)
+    if not rand.odds(prob) then return false end
 
-    -- less chance at edges
-    if mx == 1 or mx == MAP_W or my == 1 or my == MAP_H then
-      if rand.odds(30) then return false end
-    end
+    local K = SECTIONS[mx*2][my*2]
 
-    -- less chance in corners
-    if (mx == 1 or mx == MAP_W) and (my == 1 or my == MAP_H) then
-      if rand.odds(30) then return false end
-    end
+    -- less chance at edges (even less at corners)
+    if (mx == 1 or mx == MAP_W) and rand.odds(25) then return false end
+    if (my == 1 or my == MAP_H) and rand.odds(25) then return false end
 
     -- don't want anyone touching our junc!
-    for side = 2,8,2 do
-      local nx, ny = geom.nudge(mx, my, side)
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(mx, my, dir)
       if Section_is_valid(nx*2, ny*2) then
         local N = SECTIONS[nx*2][ny*2]
         if N and N.kind == "big_junc" then return false end
       end
     end
 
-    return true
-  end
+    -- less chance if section is large
+    local size = int((K.sw + K.sh + 1) / 2)
+          size = math.clamp(2, size, 6)
 
+    if rand.odds(size * 10 - 15) then return false end
 
-  local function make_big_junc(K)
+    -- OK --
+
     K:set_junc()
+
+    return true
   end
 
 
@@ -592,16 +598,15 @@ function Plan_add_big_junctions()
   -- decide how many big hallway junctions to make
   if STYLE.hallways == "none" then return end
 
-  local prob = style_sel("hallways", 0, 16, 30, 60)
+  local prob = style_sel("hallways", 0, 25, 40, 70)
 
   local visits = Plan_get_visit_list()
 
   each V in visits do
-    if rand.odds(prob) and can_make_big_junc(V.mx, V.my) then
-      make_big_junc(V.K)
-    end
+    try_make_big_junc(V.mx, V.my, prob)
   end
 end
+
 
 
 function Plan_add_small_rooms()
@@ -657,6 +662,7 @@ function Plan_add_small_rooms()
     end
   end end
 end
+
 
 
 function Plan_add_big_rooms()
@@ -980,6 +986,7 @@ function Plan_add_big_rooms()
 
   Plan_dump_sections("Sections with big rooms:")
 end
+
 
 
 function Plan_add_natural_rooms()
@@ -1491,6 +1498,7 @@ function Plan_make_seeds()
     fill_section(kx, ky)
   end end
 end
+
 
 
 function Plan_dump_rooms(title)
