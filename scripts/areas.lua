@@ -596,10 +596,67 @@ function Areas_flesh_out()
   end
 
 
+  local function void_check_place(R, d, sx, sy)
+    for nx = sx-d, sx+d do for ny = sy-d, sy+d do
+      local S = SEEDS[nx][ny]
+
+      if S.room != R then return false end
+
+      if S.chunk or S.void then return false end
+    end end
+
+    return true -- OK --
+  end
+
+
+  local function void_find_spots(R, d, skip_sx, skip_sy)
+    local spots = {}
+
+    for sx = R.sx1+d, R.sx2-d do
+      if skip_sx[sx] then continue end
+
+      for sy = R.sy1+d, R.sy2-d do
+      if skip_sy[sy] then continue end
+
+      if void_check_place(R, d, sx, sy) then
+        table.insert(spots, SEEDS[sx][sy])
+      end
+    end end
+
+    return spots
+  end
+
+
+  local function void_islands(R)
+    local quota = 5  -- FIXME
+    local dist  = 2
+
+    if R.outdoor then quota = 1 ; dist = 3 end
+
+    local skip_sx = {}
+    local skip_sy = {}
+
+    for i = 1,quota do
+      local spots = void_find_spots(R, dist, skip_sx, skip_sy)
+      if table.empty(spots) then return end
+      local S = rand.pick(spots)
+      S.void = true
+
+      -- prevent voids which are aligned (or nearly) to this one
+      for k = -1,1 do
+        skip_sx[S.sx + k] = true
+        skip_sy[S.sy + k] = true
+      end
+    end
+  end
+
+
   local function decorative_chunks(R)
     -- this does scenic stuff like cages, nukage pits, etc...
 
     -- TODO
+
+    void_islands(R)
   end
 
 
@@ -636,7 +693,7 @@ function Areas_flesh_out()
   local function filler_chunks(R)
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
-      if S.room == R and not S.chunk then
+      if S.room == R and R:can_alloc_chunk(sx, sy, sx, sy) then
         
         local W, H = 1, 1
         local do_x_match = rand.sel(50, 0, 1)

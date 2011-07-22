@@ -357,7 +357,7 @@ function ROOM_CLASS.can_alloc_chunk(R, sx1, sy1, sx2, sy2)
   for sx = sx1, sx2 do for sy = sy1, sy2 do
     local S = SEEDS[sx][sy]
     if S.room != R then return false end
-    if S.chunk then return false end
+    if S.chunk or S.void then return false end
   end end
 
   return true
