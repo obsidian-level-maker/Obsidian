@@ -117,6 +117,8 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
     C.hall = H
     C:install()
 
+    if K.kind == "big_junc" then C.big_junc = true end  -- meh
+
     table.insert(H.chunks, C)
 
     -- store hallway in seed map
@@ -177,7 +179,7 @@ end
 ----------------------------------------------------------------
 
 
-function Hallway_how_many()
+function Hallway_prepare()
   local quota = 0
 
   if STYLE.hallways != "none" then
@@ -191,6 +193,17 @@ function Hallway_how_many()
   gui.printf("Hallway quota: %d sections\n", quota)
 
   LEVEL.hall_quota = quota
+
+  -- big junctions are marked as "used" during the planning phase,
+  -- which simplifies that code.  But now we want to actually use
+  -- them, so mark them as free again.
+  for kx = 1,SECTION_W do for ky = 1,SECTION_H do
+    local K = SECTIONS[kx][ky]
+
+    if K.kind == "big_junc" then
+      K.used = false
+    end
+  end end
 end
 
 
@@ -272,14 +285,18 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = nil
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = {}
+    LEVEL.best_conn.merge = false
   end
 
 
   local function test_hall_conn(end_K, end_dir, visited, stats)
-    if not end_K then return end
     if not (end_K.room or end_K.hall) then return end
 
     if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
+
+    if end_K.kind == "big_junc" and #visited != 1 then return end
+
+    local merge = rand.odds(9)  -- FIXME: 90
 
     local score1 = start_K:eval_exit(start_dir)
     local score2 =   end_K:eval_exit(  end_dir)
@@ -288,16 +305,21 @@ function Hallway_test_branch(start_K, start_dir, mode)
     local score = (score1 + score2) * 10
 
     -- big bonus for using a big junction
-    if stats.big_junc then
-      score = score + 61
+    if end_K.kind == "big_junc" then
+      score = score + 120
+      merge = true
+    elseif stats.big_junc then
+      score = score + 60
+      merge = false
     elseif stats.crossover then
       score = score + style_sel("crossovers", 0, 0, 31, 99)
+      merge = false
     end
 
     -- minor tendency for longer halls.
     -- [I don't think that hallway length should be a major factor in
     --  deciding whether to make a hallway or not]
-    score = score + #visited / 4.1
+    score = score + #visited / 5.4
 
 
     -- score is now computed : test it
@@ -331,6 +353,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
+    LEVEL.best_conn.merge = merge
 
 --stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
@@ -348,9 +371,17 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- already part of hallway path?
     if table.has_elem(visited, K) then return end
 
+    -- can only flow through a big junction when coming straight off
+    -- a room (i.e. ROOM, MID, BIG_JUNC).
+    if K.kind == "big_junc" and #visited != 1 then return end
+
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
 --stderrf("{\n")
     table.insert(visited, K)
+
+    if K.kind == "big_junc" then
+      stats.big_junc = true
+    end
 
     local test_dirs
     local is_junction
@@ -367,24 +398,30 @@ function Hallway_test_branch(start_K, start_dir, mode)
     end
 
     for dir = 2,8,2 do
-      if dir != from_dir then
+      -- never able to go back the way we came
+      if dir == from_dir then continue end
 
-        if test_dirs[dir] or true then  -- FIXME: not always !!!
+      local N = K:neighbor(dir)
+      if not N then continue end
+
+      -- FIXME: disabled test_dirs[] logic for now -- review this!!
+      if test_dirs[dir] or (true and K.kind != "big_junc") then  
 --stderrf("  testing conn @ dir:%d\n", dir)
-          test_hall_conn(K:neighbor(dir), 10 - dir, visited, stats)
-        end
+        test_hall_conn(N, 10 - dir, visited, stats)
+      end
 
-        -- too many hallways already?
-        if quota < 1 or LEVEL.hall_quota < 1 then continue end
+      if N.used then continue end
 
-        if (not is_junction) or geom.is_perpendic(dir, from_dir) then
-          local N = K:neighbor(dir)
+      -- too many hallways already?
+      if quota < 1 or LEVEL.hall_quota < 1 then continue end
 
-          if N and not N.used then
+      -- limit length of big junctions
+      if stats.big_junc and #visited >= 3 then continue end
+
+      if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
+
 --stderrf("  recursing @ dir:%d\n", dir)
-            hall_flow(N, 10 - dir, table.copy(visited), table.copy(stats), quota - 1)
-          end
-        end
+        hall_flow(N, 10 - dir, table.copy(visited), table.copy(stats), quota - 1)
       end
     end
 --stderrf("}\n")

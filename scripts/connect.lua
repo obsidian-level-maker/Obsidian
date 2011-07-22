@@ -236,7 +236,7 @@ gui.debugf("\nmake_branch\n\n")
 
   -- must add hallway first (so that merge_groups can find it)
   if info.hall then
-    if info.D2 and info.D2.L1.is_hall and true then  -- TODO: don't always merge
+    if info.D2 and info.merge then
 stderrf("I like to merge it merge it...\n")
       local old_hall = info.D2.L1
 
@@ -349,7 +349,6 @@ function Connect_scan_sections(mode, min_score)
 
     if not (K and K.used and K.room) then continue end
 
-    -- TODO: relax this
     if K.kind != "section" then continue end
 
     for dir = 2,8,2 do
@@ -510,7 +509,7 @@ function Connect_rooms()
 
   Levels_invoke_hook("connect_rooms")
 
-  Hallway_how_many()
+  Hallway_prepare()
   Hallway_add_streets()
 
   Connect_teleporters()

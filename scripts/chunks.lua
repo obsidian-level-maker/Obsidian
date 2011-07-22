@@ -900,6 +900,24 @@ end
   end -- dir
 
 
+  -- corners
+  if C.big_junc then
+    local size = 192 -- math.min((C.x2 - C.x1), (C.y2 - C.y1))
+    size = int(size / 3)
+
+    for corner = 1,9,2 do if corner != 5 then
+      local bx1 = (corner == 1 or corner == 7 ? C.x1 ; C.x2 - size)
+      local by1 = (corner == 1 or corner == 3 ? C.y1 ; C.y2 - size)
+      local bx2 = (corner == 1 or corner == 7 ? C.x1 + size ; C.x2)
+      local by2 = (corner == 1 or corner == 3 ? C.y1 + size ; C.y2)
+
+      brush = Trans.bare_quad(bx1, by1, bx2, by2)
+      Trans.set_tex(brush, "CRACKLE2") --!!! w_mat.t
+      gui.add_brush(brush)
+    end end
+  end
+
+
   -- crossover
   if C.crossover and C.crossover.mode == "bridge" then
     local h = C.crossover.floor_h
