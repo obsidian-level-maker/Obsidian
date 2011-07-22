@@ -119,6 +119,10 @@ PRE { /* font-size: larger; */ }
     margin-bottom: 0.7em;
 }
 
+.credit_list {
+    margin-top: 0.2em;
+}
+
 .faq_Q {
     color: #742;
     font-weight: bold;

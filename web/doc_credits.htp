@@ -17,99 +17,117 @@
 
 <div class="rest">
 
-<h3> AUTHOR </h3>
+<h3> DEVELOPER </h3>
 
-OBLIGE was created by <b>Andrew Apted</b> (me), and I am
-continuing to develop it.
+<b>Andrew Apted</b> &nbsp; &lt;ajapted@gmail.com&gt;
+
+<p>
+I created OBLIGE and I continue to develop it.
+
+<p>
 Some other projects I have worked on include:
 <a href="http://glbsp.sourceforge.net/">glBSP</a>,
 a node builder for classic DOOM, and also:
 <a href="http://edge.sourceforge.net/">EDGE</a>,
 a DOOM source port with many enhanced features.
 
-<p>
-OBLIGE was written from scratch.  It does not contain any
-code from SLIGE (by David Chess) or from any other random
-map generator.
-
 
 <h3> CONTRIBUTORS </h3>
 
-These people actually contributed code and/or prefabs
-(and usually a lot of feedback as well), and
-I am extremely grateful to them:
+<b>Chris Pisarczyk (Mr. Chris)</b>
+<ul class="credit_list">
+  <li>DOOM prefabs
+  <li>Skulltag Monsters module
+  <li>ZDoom Beastiary module
+  <li>DOOM 1 boss maps (E1M8, E2M8, E3M8)
+  <li>DOOM 2 "dead simple" boss map
+  <li>DOOM 1/2 theming
+  <li>additions to name generator
+  <li>lots of useful feedback
+  <li>general encouragement and support
+</ul>
 
 <p>
-<b>Sam Trenholme</b>
-provided greatly improved Heretic themes for Oblige V2,
-and a good workaround for the stair-building error
-(which became the 0.97 release).  Plus some other fixes.
-He also maintained his own fork of Oblige V2, called
-<i>Obhack</i>, which had some completely new features
-such as an ability to make CTF multiplayer maps.
+<b>Derek Braun (Dittohead)</b>
+<ul class="credit_list">
+  <li>DOOM tech prefabs
+</ul>
 
 <p>
 <b>Enhas</b>
-started off with helpful feedback and
-various tweaks to Oblige V2 (armor helmets in maps etc).
-For Oblige V3 he improved the Skulltag Monsters module,
-and created a cartload of new modules: ZDoom Marines,
-Stealth Monsters, and Level Control.
-He also wrote a bunch of funny Psychedelic level names,
-and is currently working on support for Chex Quest 3.
+<ul class="credit_list">
+  <li>ZDoom Marines module
+  <li>Stealth Monsters module
+  <li>Level Control module
+  <li>various Skulltag modules
+  <li>psychedelic level names
+  <li>Chex Quest game definition
+  <li>a DOOM "gotcha" style boss map
+  <li>lots of useful feedback
+  <li>fixes and tweaks
+</ul>
 
 <p>
-<b>Mr Chris (Chris Pisarczyk)</b>
-made some DOOM prefabs (though they haven't been used yet).
-He wrote the monster definitions which later became the
-Skulltag Monsters module and the ZDoom Beastiary module.
-He has helped with DOOM themes, and created a bunch of
-boss areas maps (E1M8, E2M8, E3M8 and MAP07).
+<b>Jared Blackburn (blackjar)</b>
+<ul class="credit_list">
+  <li>Hexen theming
+</ul>
 
 <p>
-<b>40oz (Jon Vail)</b>
-also made some prefabs for Oblige.
-He did a lot of work on the level name generator,
-and added more color themes for the sky generator.
-He also created a sweet little Cyberdemon arena map.
+<b>Jon Vail (40oz)</b>
+<ul class="credit_list">
+  <li>extensive work on name generator
+  <li>Cyberdemon arena map
+  <li>DOOM prefabs
+</ul>
 
 <p>
-<b>Dittohead (Derek Braun)</b>
-sent me a whole swag of great looking Prefab structures,
-which kicked off some big improvements to the Oblige V2 code
-(a new prefab system and lots of different prefabs).
+<b>Sam Trenholme</b>
+<ul class="credit_list">
+  <li>Heretic theming
+  <li>workaround for the stair-building error
+  <li>lots of feedback and support
+  <li>numerous fixes
+</ul>
+
+
+<h3> THANKS TO... </h3>
+
+<b>DoomJedi</b> : Wolf3D testing, graphics, and list of Wolf3D mods. 
 
 <p>
-<b>Esselfortium</b>
-modded Oblige V2 with his own very nice and consistent Tech
-theme -- proving that decent theming was possible.
-He also gave very detailed and encouraging feedback
-during early Oblige V3 development.
+<b>esselfortium</b> : encouragement and detailed feedback.
 
 <p>
-<b>DoomJedi</b>
-tested some pretty bad Wolf3D maps pooped out of Oblige,
-and made some Oblige logo graphics for Wolf3D maps
-(which unfortunately never got used).
-Plus he created a detailed list of Wolf3D mods and TCs
-that might get supported one day.
-
-
-<h3> THANKS TO ... </h3>
-
-<b>gggmork</b> for beta testing and detailed feedback.
+<b>gggmork</b> : beta testing, detailed feedback.
 
 <p>
-<b>leilei</b> for initial Amulets &amp; Armor game definition, and
-various feedback.
+<b>leilei</b> : initial Amulets & Armor definition, various feedback.
 
 <p>
-<b>Csonicgo</b> for beta testing.
+<b>Maxim Samoylenko</b> : encouragement and testing.
 
 <p>
-Finally I'm grateful to everyone who has provided positive
-feedback, bug reports and ideas for improvements, both in
-email and on the various forums. Cheers guys!
+..... and everyone else who provided feedback, bug reports,
+ideas for improvements (etc), both in email and on the forums.
+Your input has been greatly appreciated!
+
+
+<h3> NOTES </h3>
+
+OBLIGE was written from scratch. It does not contain any code
+from SLIGE (by David Chess) or from any other random level
+generator.
+
+<p>
+The cave algorithm used in OBLIGE was described by Jim Babcock
+in his article: "Cellular Automata Method for Generating
+Random Cave-Like Levels".
+
+<p>
+The random number generator used by OBLIGE is the Mersenne Twister,
+with code by Richard J. Wagner (15 May 2003 / rjwagner@writeme.com)
+based on code by Makoto Matsumoto, Takuji Nishimura, and Shawn Cokus.
 
 <p>
 OBLIGE uses the cool FLTK widget library
