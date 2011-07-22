@@ -5,24 +5,49 @@ __DEVELOPER__
 
 Andrew Apted  <ajapted@gmail.com>
 
-//  I created OBLIGE and I am continuing to develop it.
-
-////  Some other projects I have worked on are: glBSP and EDGE.
+I created OBLIGE and I continue to develop it.
 
 
 __CONTRIBUTORS__
 
 Chris Pisarczyk (Mr Chris)
+  - DOOM prefabs
+  - Skulltag Monsters module
+  - ZDoom Beastiary module
+  - DOOM 1 boss maps (E1M8, E2M8, E3M8)
+  - DOOM 2 "dead simple" boss map
+  - DOOM 1/2 theming
+  - additions to name generator
+  - lots of useful feedback
+  - general encouragement and support
 
 Derek Braun (Dittohead)
+  - DOOM tech prefabs
 
 Enhas
+  - ZDoom Marines module
+  - Stealth Monsters module
+  - Level Control module
+  - various Skulltag modules
+  - psychedelic level names
+  - Chex Quest game definition
+  - a DOOM "gotcha" style boss map
+  - lots of useful feedback
+  - some fixes and tweaks
 
 Jared Blackburn (blackjar)
+  - Hexen theming
 
 Jon Vail (40oz)
+  - extensive work on name generator
+  - Cyberdemon arena map
+  - DOOM prefabs
 
 Sam Trenholme
+  - Heretic theming
+  - workaround for the stair-building error
+  - lots of feedback and support
+  - various fixes
 
 
 __THANKS_TO__
