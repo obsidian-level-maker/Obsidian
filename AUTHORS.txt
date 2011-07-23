@@ -1,14 +1,15 @@
+
 OBLIGE AUTHORS
 ==============
 
-__DEVELOPER__
+DEVELOPER:
 
 Andrew Apted  <ajapted@gmail.com>
 
 I created OBLIGE and I continue to develop it.
 
 
-__CONTRIBUTORS__
+CONTRIBUTORS:
 
 Chris Pisarczyk (Mr. Chris)
   - DOOM prefabs
@@ -50,7 +51,7 @@ Sam Trenholme
   - numerous fixes
 
 
-__THANKS_TO__
+THANKS TO:
 
 DoomJedi : Wolf3D testing, list of Wolf3D mods. 
 esselfortium : encouragement and detailed feedback.
@@ -63,7 +64,7 @@ ideas for improvements (etc), both in email and on the forums.
 Your input has been greatly appreciated!
 
 
-__NOTES__
+NOTES:
 
 OBLIGE was written from scratch. It does not contain any code
 from SLIGE (by David Chess) or from any other random level
