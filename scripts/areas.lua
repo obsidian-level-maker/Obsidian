@@ -1089,6 +1089,8 @@ stderrf("TRYING....................\n")
 
       local skin = assert(GAME.SKINS[name])
 
+      -- FIXME: 2D size check
+
       -- only check the first (smallest) delta
       local h = base_h + skin._deltas[1]
 
@@ -1101,7 +1103,7 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function pick_area_height(N, base_h, stair_skin)
+  local function pick_area_height(N, base_h, stair_skin, reverse)
     local R = N.room
 
     local step_height = PARAM.step_height or 16
@@ -1123,7 +1125,7 @@ stderrf("TRYING....................\n")
     local h_probs = {}
 
     each dh in deltas do
-      local h = base_h + dh
+      local h = base_h + (reverse ? -dh ; dh)
       if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
         h_probs[h] = (height_is_unique(h, N.touching) ? 100 ; 1)
       end
@@ -1358,34 +1360,37 @@ stderrf("TRYING....................\n")
   local function connect_areas(A1, A2)
     local base_h = assert(A1.floor_h)
 
+    -- WISH: support "mini stairs"
+
     -- find a place for a stair (try both areas)
-    local stair1, mini_stair1 = find_stair_spot(A1, A2)
-    local stair2, mini_stair2 = nil, nil ---!!! find_stair_spot(A2, A1)
+    local stair1 = nil, nil --- find_stair_spot(A1, A2)
+    local stair2 = find_stair_spot(A2, A1)
+    local reverse = false
 
     if (stair2 and not stair1) or
        (stair1 and stair2 and stair1.score < stair2.score)
     then
       stair1 = stair2 ; stair2 = nil
+      reverse = true
     end
 
----??    if mini_stair2 and not mini_stair1 then
----??      mini_stair1 = mini_stair2 ; mini_stair2 = nil
----??    end
-
     local skin
-    if stair1 then skin = pick_stair_skin(A1.room, base_h, stair1) end
 
-    local new_h = pick_area_height(A2, base_h, skin)
+    if stair1 then
+      skin = pick_stair_skin(A1.room, base_h, stair1)
+    end
+
+    local new_h = pick_area_height(A2, base_h, skin, reverse)
 
     set_area_floor(A2, new_h)
 
-    -- store stair info in the chunk
     if stair1 then
-      stair1.C1.stair = stair1
-      stair1.C1.stair.skin = skin
+      stair1.skin    = skin
+      stair1.reverse = reverse
+      stair1.new_h   = new_h
 
----??? elseif mini_stair1 then
----???   mini_stair1.C1.mini_stair = mini_stair1
+      -- store stair info in the chunk
+      stair1.C1.stair = stair1
     end
   end
 
