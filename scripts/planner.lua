@@ -127,15 +127,31 @@ function SECTION_CLASS.same_room(K, dir, dist)
 end
 
 
+--[[
+function SECTION_CLASS.same_room_mask(K)  -- MEH
+  local result = 0
+  
+  if K:same_room(8,2) then result = result + 8 end
+  if K:same_room(4,2) then result = result + 4 end
+  if K:same_room(2,2) then result = result + 2 end
+  if K:same_room(6,2) then result = result + 1 end
+
+  return result
+end
+
+
 function SECTION_CLASS.same_neighbors(K)
   local count = 0
-  for side = 2,8,2 do
-    if K:same_room(side) then
+  
+  for dir = 2,8,2 do
+    if K:same_room(dir, 2) then
       count = count + 1
     end
   end
+
   return count
 end
+--]]
 
 
 function SECTION_CLASS.set_facade(K, facade)

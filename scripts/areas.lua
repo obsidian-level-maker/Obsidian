@@ -627,8 +627,123 @@ function Areas_flesh_out()
   end
 
 
+  local function try_void_in_section(K)
+    if K.sw < 3 then return false end
+    if K.sh < 3 then return false end
+
+    if K.sw == 4 and K.sh <= 4 then return false end
+    if K.sw <= 4 and K.sh == 4 then return false end
+
+stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
+    local sx1 = math.i_mid(K.sx1, K.sx2)
+    local sx2 = math.i_mid(K.sx1, K.sx2 + 1)
+    local sy1 = math.i_mid(K.sy1, K.sy2)
+    local sy2 = math.i_mid(K.sy1, K.sy2 + 1)
+
+    -- check if seeds are usable 
+    if not K.room:can_alloc_chunk(sx1-1, sy1-1, sx2+1, sy2+1) then
+      return false
+    end
+
+    for sx = sx1,sx2 do for sy = sy1,sy2 do
+      SEEDS[sx][sy].void = true
+    end end
+
+    return true
+  end
+
+
+  local function try_void_in_corners(K)
+    each corner in { 1,3,7,9 } do
+      local sx, sy = geom.pick_corner(corner, K.sx1, K.sy1, K.sx2, K.sy2)
+
+      if not K.room:can_alloc_chunk(sx, sy, sx, sy) then
+        return false
+      end
+    end
+
+    -- actually do it
+
+    each corner in { 1,3,7,9 } do
+      local sx, sy = geom.pick_corner(corner, K.sx1, K.sy1, K.sx2, K.sy2)
+
+      SEEDS[sx][sy].void = true
+    end
+
+    return true
+  end
+
+
+  local function void_in_shaped_room(R)
+    for kx = R.kx1, R.kx2 do for ky = R.ky1, R.ky2 do
+      local K = SECTIONS[kx][ky]
+
+      if K.room != R then continue end
+      
+      local num  = K:same_neighbors()
+      local mask = K:same_room_mask()
+      
+      if num >= 3 or mask == 3 or mask == 6 or mask == 9 or mask == 12 then
+        try_void_in_section(K)
+      end
+    end end
+  end
+
+
+  local function void_in_rect_room(R)
+    if (R.kw % 2) != 1 then return end
+    if (R.kh % 2) != 1 then return end
+
+    -- get middle section
+    local kx = R.kx1 + int(R.kw / 2)
+    local ky = R.ky1 + int(R.kh / 2)
+
+    local K = SECTIONS[kx][ky]
+
+    if K.room != R then return end
+    if K.kind != "section" then return end
+
+    -- test condition for four voids
+    local count = 0
+
+    for dir = 1,9 do if dir != 5 then
+      local N = K:neighbor(dir)
+      if N.room == R then
+        count = count + 1
+      end
+    end end
+
+    -- if junctions on all four corners, put void there
+    if count == 8 and K.sw >= 4 and K.sh >= 4 then
+stderrf("TRYING....................\n")
+      if try_void_in_corners(K) then
+        return
+      end
+    end
+
+    try_void_in_section(K) 
+  end
+
+
+  local function void_in_odd_room(R)
+    -- TODO: use the annexed junctions
+  end
+
+
+
   local function void_islands(R)
-    local quota = 5  -- FIXME
+    if R.outdoor then return end
+
+    if R.shape == "rect" then
+      void_in_rect_room(R)
+    elseif R.shape == "odd" then
+      void_in_odd_room(R)
+    else
+      void_in_shaped_room(R)
+    end
+
+--[[  OLD METHOD
+    local quota = 5
     local dist  = 2
 
     if R.outdoor then quota = 1 ; dist = 3 end
@@ -648,6 +763,7 @@ function Areas_flesh_out()
         skip_sy[S.sy + k] = true
       end
     end
+--]]
   end
 
 
@@ -656,7 +772,6 @@ function Areas_flesh_out()
 
     -- TODO
 
-    void_islands(R)
   end
 
 

@@ -237,7 +237,7 @@ gui.debugf("\nmake_branch\n\n")
   -- must add hallway first (so that merge_groups can find it)
   if info.hall then
     if info.D2 and info.D2.L1.is_hall and info.merge then
-stderrf("I like to merge it merge it...\n")
+--stderrf("I like to merge it merge it...\n")
       local old_hall = info.D2.L1
 
       old_hall:merge_it(info.hall) ; info.hall = nil
