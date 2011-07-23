@@ -5,6 +5,8 @@ OBLIGE TODO
 Current Work
 ------------
 
+credits page : test on FireFox and IE
+
 
 DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
 
@@ -13,11 +15,9 @@ DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
 
 
 Hallways:
+  +  double hallways [BIG JUNC]
 
-  +  double hallways
-     -  make some L shape (not just U shape)
-
-  !!  proper scoring  [done??]
+  !!  monsters / items in hallways
 
 
 Crossovers:
@@ -30,10 +30,6 @@ Crossovers:
   -  fix hallway vertical gaps
  
 
-Cycles:
-   +  less chance if R2 (skipped room) is large
-
-
 Areas:
   +  fix ability for stairs to go from A2 --> A1
      (in other words: ability for stair chunk to be in unset floor)
@@ -42,14 +38,18 @@ Areas:
 -----------------------------------------------------------------
 
 
-++  create AUTHORS.txt / simplify Credits web page
+POLISH:  create AUTHORS.txt / simplify Credits web page
 
-++  some VOID seeds
-    -  void requires 6x6 surrounding non-void room and must not
-       touch scenic chunks
-    -  better indoors than outdoors
+-  revisit VOID stuff
+    !! test for 'is_walk'
+    -  only indoors
+    -  shaped room: put in "middle" section (of L, T, plus)
+       (require two in S or H shapes)
+    -  3x3 room: sometimes one in middle section
+    -  other rooms: use the annexed junctions
+    -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
+       (2x2 possible too, not touching room edge)
     -  good for cages!
-    -  often create an area surrounding it
 
 ++  LIQUID areas
 
@@ -126,10 +126,10 @@ Release Goals
 
 +  better ceilings, some ceiling lights
 
--  system for texture coordinates
++  liquid areas
 
++  system for texture coordinates
 
--  liquid areas
 
 -  windows
 
@@ -143,4 +143,6 @@ Release Goals
 ?  better exits
 
 ?  diagonal corners
+
+?  void seeds
 

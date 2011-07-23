@@ -89,8 +89,6 @@ Teleporters:
 
 Hallways:
 
-+  sometimes fork a hallway off another one
-
 -  Special Hallway #1 : surround half the room, entrance either side
 -  Special Hallway #2 : surround a corner of large room, two entrances
 -  Special Hallway #3 : surround a room completely.
@@ -290,6 +288,8 @@ Possible Options:
 
 
 Cycles:
+  +  less chance if R2 (skipped room) is large
+
   -  create "teleporter cycles" i.e. if R1 -> R2 -> R3 and one
      connection is a teleporter, try add teleporter from R1 -> R3.
 
