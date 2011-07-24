@@ -514,11 +514,14 @@ function Connect_rooms()
 
   Connect_teleporters()
 
+  -- add connections until all rooms are reachable
   while count_groups() >= 2 do
     Connect_scan_sections("normal", -999)
   end
 
   Connect_decide_start_room()
+
+  Hallway_add_doubles()
 
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except

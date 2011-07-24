@@ -32,6 +32,9 @@ class HALLWAY
 
   big_junc : SECTION
 
+  double_fork : SECTION    -- only present for double hallways.
+  double_dir  : direction
+
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
 
@@ -102,7 +105,7 @@ function HALLWAY_CLASS.dump(H)
 end
 
 
-function HALLWAY_CLASS.add_section(H, K)
+function HALLWAY_CLASS.add_section(H, K)  -- FIXME: NOT USED?
   table.insert(H.sections, K)
 end
 
@@ -319,6 +322,12 @@ function Hallway_test_branch(start_K, start_dir, mode)
       merge = false
     end
 
+    -- big cost for trying to connect to a double hallway
+    -- (currently this only affects cycles)
+    if end_K.double_fork then
+      score = score - 200
+    end
+
     -- minor tendency for longer halls.
     -- [I don't think that hallway length should be a major factor in
     --  deciding whether to make a hallway or not]
@@ -459,6 +468,75 @@ end
 
 
 
+function Hallway_add_doubles()
+  -- looks for places where a "double hallway" can be added.
+  -- these are where the hallways comes around two sides of a room
+  -- and connects on both sides (instead of straight on).
+
+  -- Note: this is done _after_ all the connections have been made
+  -- for two reasons:
+  --    (1) don't want these to block normal connections
+  --    (2) don't want other connections joining onto these
+
+  local function try_add_at_section(H, K, dir)
+    local  left_J = K:neighbor(geom.LEFT [dir])
+    local right_J = K:neighbor(geom.RIGHT[dir])
+
+    if not  left_J or  left_J.used then return false end
+    if not right_J or right_J.used then return false end
+
+    local  left_K =  left_J:neighbor(dir)
+    local right_K = right_J:neighbor(dir)
+
+    if not  left_K or  left_K.used then return false end
+    if not right_K or right_K.used then return false end
+
+    -- FIXME .....
+  end
+
+
+  local function try_add_double(H)
+    local big_K = H.big_junc
+
+    if not (#H.sections == 1 or big_K) then return end
+
+    local SIDES = { 2,4,6,8 }
+    rand.shuffle(SIDES)
+
+    each dir in SIDES do
+      local K = H.sections[1]
+
+      if big_K then
+        K = K:neighbor(dir)  
+      end
+
+      if try_add_at_section(H, K, dir) then
+        return true
+      end
+    end
+
+    return false
+  end
+
+
+  --| Hallway_add_doubles |--
+
+  local quota = 5  -- FIXME
+
+  local visits = table.copy(LEVEL.halls)
+  rand.shuffle(visits)  -- score and sort them??
+
+  each H in visits do
+    if quota < 1 then break end
+
+    if try_add_double(H) then
+      quota = quota - 1
+    end
+  end
+end
+
+
+
 function Hallway_add_streets()
   if STYLE.streets != "heaps" then return end
 
@@ -486,6 +564,7 @@ function Hallway_add_streets()
     R.street_inner_h = rand.pick { 160, 192, 224, 256, 288 }
   end
 end
+
 
 
 --------------------------------------------------------------------
