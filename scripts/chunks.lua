@@ -55,7 +55,7 @@ class LINK
 
   dir     -- direction from C1 to C2
 
-  conn : CONN
+  conn : CONN   -- optional (not used for crossovers)
 
   x1, x2  |  y1, y2  -- coordinate range shared between chunks
 }
@@ -942,7 +942,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
 
   if C.crossover and C.crossover.mode == "channel" then
     local h = C.floor_h
-    local dir = assert(C.crossover.conn.dir1)
+    local dir = assert(C.crossover.dir)
 stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
     for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do

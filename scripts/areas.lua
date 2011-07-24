@@ -110,7 +110,6 @@ function Areas_handle_connections()
   local function link_chunks(C1, dir, C2, conn)
     assert(C1)
     assert(C2)
-    assert(conn)
 
     -- prefer to build door on the room side
     if C1.hall and C2.room then
@@ -185,24 +184,6 @@ function Areas_handle_connections()
       link_chunks(HA, A_dir, CC, D)
       link_chunks(HB, B_dir, CC, D)
 
-    elseif D.kind == "crossover" then
-      local info = assert(D.crossover)
-
-      local CA = chunk_for_section_side(info.MID_K, D.dir2)
-      local CB = chunk_for_section_side(info.MID_K, D.dir1)
-
-      local HA_1 = info.hall_A:first_chunk()
-      local HA_2 = info.hall_A:last_chunk()
-
-      local HB_1 = info.hall_B:first_chunk()
-      local HB_2 = info.hall_B:last_chunk()
-
-      link_chunks(C1, D.dir1, HA_1, D)
-      link_chunks(CA, D.dir2, HA_2, D)
-
-      link_chunks(CB, D.dir1, HB_1, D)
-      link_chunks(C2, D.dir2, HB_2, D)
-      
     else
       error("Unknown conn kind: " .. tostring(D.kind))
     end
@@ -210,7 +191,22 @@ function Areas_handle_connections()
 
 
   local function handle_crossover(H)
-    -- FIXME
+    local info = H.crossover
+
+    if not info then return end
+
+    local over_K = info.over_K
+
+    local HA = chunk_for_section_side(info.MID_A, info.dir)
+    local HB = chunk_for_section_side(info.MID_B, 10 - info.dir)
+
+    local CC = over_K.room:chunk_for_crossover(over_K, info.dir)
+
+    CC.foobage   = "crossover"
+    CC.crossover = info
+
+    link_chunks(HA, info.dir, CC, nil)
+    link_chunks(CC, info.dir, HB, nil)
   end
 
 
