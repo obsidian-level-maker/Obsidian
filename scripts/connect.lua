@@ -39,7 +39,6 @@ class CONN
 
   C1, C2 : CHUNK   -- decided later (at chunk creation)
 
-  hall      : HALLWAY
   crossover : CROSSOVER
 
   dir1, dir2  -- direction value (2/4/6/8) 

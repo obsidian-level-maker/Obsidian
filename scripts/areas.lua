@@ -156,8 +156,24 @@ function Areas_handle_connections()
     if D.kind == "direct" or D.kind == "hallway" then
       link_chunks(C1, D.dir1, C2, D)
 
+    elseif D.kind == "double_hall" then
+      local hall = (D.L1.is_hall ? D.L1 ; D.L2)
+      assert(hall.is_hall)
+
+      local A_dir = geom.RIGHT[hall.double_dir]
+      local B_dir = geom. LEFT[hall.double_dir]
+
+      local HA = chunk_for_section_side(hall.double_left, A_dir)
+      local CA = chunk_for_section_side(hall.double_left:neighbor(A_dir), 10 - A_dir)
+
+      local HB = chunk_for_section_side(hall.double_right, B_dir)
+      local CB = chunk_for_section_side(hall.double_right:neighbor(B_dir), 10 - B_dir)
+
+      link_chunks(HA, A_dir, CA, D)
+      link_chunks(HB, B_dir, CB, D)
+
     elseif D.kind == "crossover" then
-      local info = D.crossover
+      local info = assert(D.crossover)
 
       local CA = chunk_for_section_side(info.MID_K, D.dir2)
       local CB = chunk_for_section_side(info.MID_K, D.dir1)

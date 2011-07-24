@@ -105,7 +105,7 @@ function HALLWAY_CLASS.dump(H)
 end
 
 
-function HALLWAY_CLASS.add_section(H, K)  -- FIXME: NOT USED?
+function HALLWAY_CLASS.add_section(H, K)
   table.insert(H.sections, K)
 end
 
@@ -478,6 +478,20 @@ function Hallway_add_doubles()
   --    (1) don't want these to block normal connections
   --    (2) don't want other connections joining onto these
 
+  local function find_conn_for_double(H, K1, dir)
+    local K2 = K1:neighbor(dir)
+
+    each D in LEVEL.conns do
+      if D.kind != "hallway" then continue end
+
+      if D.K1 == K1 and D.K2 == K2 then return D end
+      if D.K1 == K2 and D.K2 == K1 then return D end
+    end
+
+    error("failed to find connection for hallway")
+  end
+
+
   local function try_add_at_section(H, K, dir)
     local  left_J = K:neighbor(geom.LEFT [dir])
     local right_J = K:neighbor(geom.RIGHT[dir])
@@ -491,7 +505,24 @@ function Hallway_add_doubles()
     if not  left_K or  left_K.used then return false end
     if not right_K or right_K.used then return false end
 
-    -- FIXME .....
+    stderrf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
+
+    H.double_fork  = K
+    H.double_dir   = dir
+    H.double_left  = left_K
+    H.double_right = right_K
+
+    H:add_section(K)
+    H:add_section(left_J) ; H:add_section(right_J)
+    H:add_section(left_K) ; H:add_section(right_K)
+
+    H:make_chunks(true)
+
+    -- update the connection object
+    local D = find_conn_for_double(H, K, dir)
+    D.kind = "double_hall"
+
+    return true
   end
 
 
