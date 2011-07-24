@@ -1157,6 +1157,8 @@ stderrf("TRYING....................\n")
     if C1.stair then return -1 end
     if C2.stair then return -1 end
 
+    -- TODO: prefer chunk _behind_ C1 to be part of C1.area
+
     local long = geom.vert_sel(dir, C1.x2 - C1.x1, C1.y2 - C1.y1)
 
     local score = long + (gui.random() ^ 2) * 220
@@ -1363,7 +1365,7 @@ stderrf("TRYING....................\n")
     -- WISH: support "mini stairs"
 
     -- find a place for a stair (try both areas)
-    local stair1 = nil, nil --- find_stair_spot(A1, A2)
+    local stair1 = find_stair_spot(A1, A2)
     local stair2 = find_stair_spot(A2, A1)
     local reverse = false
 
@@ -1620,9 +1622,9 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
 
   ---| Areas_flesh_out |---
 
-  each R in LEVEL.rooms do decide_windows(R) end
-
   each R in LEVEL.rooms do expand_chunks(R) end
+
+  each R in LEVEL.rooms do decide_windows(R) end
 
   each R in LEVEL.rooms do flesh_out(R) end
 end
