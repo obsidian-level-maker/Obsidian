@@ -163,20 +163,27 @@ function Areas_handle_connections()
       link_chunks(C1, D.dir1, C2, D)
 
     elseif D.kind == "double_hall" then
+      -- FIXME: C1 and C2 from above code are not needed
+
       local hall = (D.L1.is_hall ? D.L1 ; D.L2)
       assert(hall.is_hall)
+
+      local room_K = hall.double_fork:neighbor(hall.double_dir)
+
+      local CC = room_K.room:chunk_for_crossover(room_K, geom.LEFT[hall.double_dir])
+      CC.foobage = "conn"
+
+      -- fix up the conn object
+      if hall == D.L1 then D.C2 = CC else D.C1 = CC end
 
       local A_dir = geom.RIGHT[hall.double_dir]
       local B_dir = geom. LEFT[hall.double_dir]
 
-      local HA = chunk_for_section_side(hall.double_left, A_dir)
-      local CA = chunk_for_section_side(hall.double_left:neighbor(A_dir), 10 - A_dir)
-
+      local HA = chunk_for_section_side(hall.double_left,  A_dir)
       local HB = chunk_for_section_side(hall.double_right, B_dir)
-      local CB = chunk_for_section_side(hall.double_right:neighbor(B_dir), 10 - B_dir)
 
-      link_chunks(HA, A_dir, CA, D)
-      link_chunks(HB, B_dir, CB, D)
+      link_chunks(HA, A_dir, CC, D)
+      link_chunks(HB, B_dir, CC, D)
 
     elseif D.kind == "crossover" then
       local info = assert(D.crossover)
@@ -1606,6 +1613,8 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
     each D in L.conns do
       if D.L1 == L and D.L2.is_hall then
         local hall = D.L2
+
+        assert(D.C1.floor_h)
 
         hall:do_heights(D.C1.floor_h)
 

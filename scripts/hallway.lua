@@ -506,6 +506,14 @@ function Hallway_add_doubles()
     if not  left_K or  left_K.used then return false end
     if not right_K or right_K.used then return false end
 
+    -- size check
+    local room_K = K:neighbor(dir)
+
+    local long, deep = room_K.sw, room_K.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if deep < 3 then return false end
+
     stderrf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
 
     H.double_fork  = K
@@ -557,7 +565,7 @@ function Hallway_add_doubles()
 
   --| Hallway_add_doubles |--
 
-  local quota = 3  -- FIXME
+  local quota = 5  -- FIXME
 
   local visits = table.copy(LEVEL.halls)
   rand.shuffle(visits)  -- score and sort them??

@@ -432,24 +432,7 @@ function Connect_rooms()
     --        keep the logic fairly simple for now]
     -- TODO II: probably move this into AREA code
 
-    local sx1, sy1
-    local sx2, sy2
-
-    if geom.is_vert(dir) then
-      sx1 = math.i_mid(K2.sx1, K2.sx2)
-      sx2 = sx1
-
-      sy1 = K2.sy1
-      sy2 = K2.sy2
-    else
-      sy1 = math.i_mid(K2.sy1, K2.sy2)
-      sy2 = sy1
-
-      sx1 = K2.sx1
-      sx2 = K2.sx2
-    end
-
-    local C = K2.room:alloc_chunk(sx1,sy1, sx2,sy2)
+    local C = room:chunk_for_crossover(K2, dir)
 
     C.foobage = "crossover"
     C.crossover = CROSSOVER
