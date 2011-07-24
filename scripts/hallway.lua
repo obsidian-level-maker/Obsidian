@@ -30,7 +30,8 @@ class HALLWAY
   sections : list(SECTION)
   chunks   : list(CHUNK)
 
-  big_junc : SECTION
+  big_junc  : SECTION
+  crossover : CROSSOVER
 
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction
@@ -144,6 +145,10 @@ function HALLWAY_CLASS.add_it(H)
 
   H:make_chunks(false)
 
+  if H.crossover then
+    H.crossover.over_K.room.crossover = H.crossover
+  end
+
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
   end
@@ -152,6 +157,9 @@ end
 
 function HALLWAY_CLASS.merge_it(old_H, new_H)
   assert(old_H != new_H)
+
+  assert(not old_H.crossover)
+  assert(not new_H.crossover)
 
   each K in new_H.sections do
     table.insert(old_H.sections, K)
@@ -219,9 +227,16 @@ function Hallway_test_branch(start_K, start_dir, mode)
   local function test_off_hall(MID)
     if not MID.hall then return end
 
-    if MID.hall.conn_group == start_K.room.conn_group then return end
+    if not Connect_is_possible(start_K.room, MID.hall, mode) then return end
+
+    if MID.hall.crossover then return end
 
     local score = -100 - MID.num_conn - gui.random()
+
+    if MID.hall.double_fork then score = score - 100 end
+
+
+    -- score is now computed : test it
 
     if score < LEVEL.best_conn.score then return end
 
@@ -319,8 +334,11 @@ function Hallway_test_branch(start_K, start_dir, mode)
   end
 
 
-  -- WISH: make crossovers merely a part of normal hall_flow() processing.
-  --       would need to store them in stats and 
+  --
+  -- WISH: make crossovers merely a part of normal hall_flow() processing
+  --       [allow more than one in a hallway].
+  --
+
 
   local function test_crossover(K, dir, visited, stats)
     if not PARAM.bridges then return end
@@ -330,14 +348,14 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- WISH: support right angle turn or zig-zag
 
-    local MID_A = K:neighbor(dir, 1)
-    local MID_B = K:neighbor(dir, 3)
+    local MID_A = K
+    local MID_B = K:neighbor(dir, 2)
 
     if not MID_A or MID_A.used then return end
     if not MID_B or MID_B.used then return end
 
-    local mid_K = K:neighbor(dir, 2)
-    local end_K = K:neighbor(dir, 4)
+    local mid_K = K:neighbor(dir, 1)
+    local end_K = K:neighbor(dir, 3)
     local end_dir = 10 - dir
 
     if not (mid_K and mid_K.kind == "section" and mid_K.room) then return end
@@ -357,11 +375,10 @@ function Hallway_test_branch(start_K, start_dir, mode)
     if mid_K.room.crossover then return false end
 
     -- size check
-    local long, deep = K2.sw, K2.sh
+    local long, deep = mid_K.sw, mid_K.sh
     if geom.is_horiz(dir) then long, deep = deep, long end
 
     if long < 3 or deep > 4 then return false end
-
 
     -- compute score
 
@@ -372,10 +389,13 @@ function Hallway_test_branch(start_K, start_dir, mode)
     local score = (score1 + score2) * 10
 
     -- bonus for using a crossover
-    score = score + style_sel("crossovers", 0, 0, 56, 108)
+    score = score + style_sel("crossovers", 0, 0, 48, 98)
 
     -- minor tendency for longer halls.
     score = score + #visited / 9.4
+
+
+-- stderrf("Cross-Over @ %s dir:%d  score %1.2f\n", K:tostr(), dir, score)
 
 
     -- score is now computed : test it
@@ -385,14 +405,27 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- OK --
 
+    local CROSSOVER =
+    {
+      R1     = start_K.room
+      R2     = end_K.room
+
+      over_K = mid_K
+      MID_A  = MID_A
+      MID_B  = MID_B
+
+      dir    = dir
+    }
+
+
     local H = HALLWAY_CLASS.new()
 
     H.sections = visited
+    H:add_section(MID_B)
+
     H.conn_group = start_K.room.conn_group
 
-    H.big_junc = stats.big_junc
-
-    if end_K.kind == "big_junc" then H.big_junc = end_K end
+    H.crossover  = CROSSOVER
 
 
     local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
@@ -402,9 +435,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- Note: some code assumes that D2.L1 is the destination room/hall
 
-    local D2 = CONN_CLASS.new("hallway", end_K.room or end_K.hall, H, end_dir)
+    local D2 = CONN_CLASS.new("hallway", end_K.room, H, end_dir)
 
-    D2.K1 = end_K   ; D2.K2 = table.last(H.sections)
+    D2.K1 = end_K   ; D2.K2 = MID_B
 
 
     LEVEL.best_conn.D1 = D1
@@ -412,7 +445,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge = nil
+    LEVEL.best_conn.merge = false
 
 --stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end

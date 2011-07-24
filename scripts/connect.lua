@@ -22,8 +22,8 @@
 
 class CONN
 {
-  kind   : keyword  -- "direct", "cycle", "crossover"
-                    -- "hallway", "double_hall"
+  kind   : keyword  -- "hallway", "cycle"      "direct" ??
+                    -- "double_hall"
                     -- "teleporter"
   lock   : LOCK
 

@@ -209,6 +209,11 @@ function Areas_handle_connections()
   end
 
 
+  local function handle_crossover(H)
+    -- FIXME
+  end
+
+
   ---| Areas_handle_connections |---
 
   each D in LEVEL.conns do
@@ -218,6 +223,10 @@ function Areas_handle_connections()
       assert(D.C1)
       assert(D.C2)
     end
+  end
+
+  each H in LEVEL.halls do
+    handle_crossover(H)
   end
 end
 
@@ -1100,7 +1109,7 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function pick_stair_skin(R, base_h, stair_spot)
+  local function pick_stair_skin(R, base_h, stair_spot, reverse)
     assert(stair_spot)
 
     local tab = {}
@@ -1121,7 +1130,7 @@ stderrf("TRYING....................\n")
       -- FIXME: 2D size check
 
       -- only check the first (smallest) delta
-      local h = base_h + skin._deltas[1]
+      local h = base_h + skin._deltas[1] * (reverse ? -1 ; 1)
 
       if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
         return skin -- OK --
@@ -1408,7 +1417,7 @@ stderrf("TRYING....................\n")
     local skin
 
     if stair1 then
-      skin = pick_stair_skin(A1.room, base_h, stair1)
+      skin = pick_stair_skin(A1.room, base_h, stair1, reverse)
     end
 
     local new_h = pick_area_height(A2, base_h, skin, reverse)
@@ -1484,7 +1493,7 @@ stderrf("TRYING....................\n")
 
       if R.entry_conn.crossover then
         local info = R.entry_conn.crossover
-stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
+--stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
         entry_h = assert(info.floor_h)
 
 ---###      elseif R.entry_conn.hall then
@@ -1539,8 +1548,8 @@ stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
 
 
   local function set_crossover_mode(info)
-    local id1 = info.conn.R2.quest.id
-    local id2 = info.MID_K.room.quest.id
+    local id1 = info.R2.quest.id
+    local id2 = info.over_K.room.quest.id
 
     if id1 < id2 or (id1 == id2 and rand.odds(10)) then
       -- the crossover bridge is part of a earlier quest, so
@@ -1554,33 +1563,11 @@ stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
       info.mode = "bridge"
     end
 
-stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id2)
+--!!!!  stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id2)
   end
 
 
-  local function crossover_conn(R, D)
-    local info = D.crossover
-
-    -- get start height
-    assert(D.C1)
-    local h = assert(D.C1.floor_h)
-
-    -- already has a height ??
-    if info.floor_h then
-      -- FIXME: mark info.hall_A to have a stair
-      return
-    end
-
-    set_crossover_mode(info)
-
-    info.floor_h = h
-
-    info.hall_A.chunks[1].floor_h = h
-    info.hall_B.chunks[1].floor_h = h
-  end
-
-
-  local function crossover_heights(R)
+  local function crossover_room(R)
     if not R.crossover then return end
 
     local info = R.crossover
@@ -1603,9 +1590,25 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
     end
 
     info.floor_h = h
+  end
 
-    info.hall_A.chunks[1].floor_h = h
-    info.hall_B.chunks[1].floor_h = h
+
+  local function crossover_hall(H, D)
+    if not H.crossover then return end
+
+    local info = H.crossover
+
+    -- already has a height?
+    if info.floor_h then return end
+
+    set_crossover_mode(info)
+
+    -- get start height
+    local CC = H.chunks[#H.chunks]
+    assert(CC)
+    local h = assert(CC.floor_h)
+
+    info.floor_h = h
   end
 
 
@@ -1620,9 +1623,9 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
 
         -- handle hallway networks
         hallway_heights(D.L2)
-      end
 
----???      if D.crossover then crossover_conn(R, D) end
+        crossover_hall(hall)
+      end
     end
   end
 
@@ -1646,7 +1649,7 @@ stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id
     create_areas(R)
     area_heights(R)
     hallway_heights(R)
-    crossover_heights(R)
+    crossover_room(R)
     prepare_ceiling(R)
   end
 
