@@ -30,6 +30,8 @@ class HALLWAY
   sections : list(SECTION)
   chunks   : list(CHUNK)
 
+  big_junc : SECTION
+
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
 
@@ -294,6 +296,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if not Connect_is_possible(start_K.room, end_K.room or end_K.hall, mode) then return end
 
+    -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
     local merge = rand.odds(70)
@@ -332,8 +335,11 @@ function Hallway_test_branch(start_K, start_dir, mode)
     local H = HALLWAY_CLASS.new()
 
     H.sections = visited
-
     H.conn_group = start_K.room.conn_group
+
+    H.big_junc = stats.big_junc
+
+    if end_K.kind == "big_junc" then H.big_junc = end_K end
 
 
     local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
@@ -380,7 +386,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     table.insert(visited, K)
 
     if K.kind == "big_junc" then
-      stats.big_junc = true
+      stats.big_junc = K
     end
 
     local test_dirs
