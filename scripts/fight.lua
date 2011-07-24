@@ -329,7 +329,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
 
   ---==| Fight_Simulator |==---
 
-  stats.health = 0
+  stats.health = stats.health or 0
 
   each name,info in monsters do
     local MON =
