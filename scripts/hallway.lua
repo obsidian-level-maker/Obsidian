@@ -216,59 +216,6 @@ end
 
 function Hallway_test_branch(start_K, start_dir, mode)
 
-  local function can_make_crossover(K1, dir) --!!!! MERGE INTO test_crossover
-    -- TODO: support right angle turn or zig-zag
-
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    if not MID_A or MID_A.used then return false end
-    if not MID_B or MID_B.used then return false end
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    if not K2 or not K2.room or K2.room == K1.room then return false end
-    if not K3 or not K3.room or K3.room == K1.room or K3.room == K2.room then return false end
-
-    -- limit of one per room
-    -- [cannot do more since crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
-    if K2.room.crossover then return false end
-
-    if not Connect_is_possible(K1.room, K3.room, mode) then return false end
-
-    -- size check
-    local long, deep = K2.sw, K2.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if long < 3 or deep > 4 then return false end
-
-    -- TODO: evaluate the goodness (e.g. poss == 1) and return score
-
-    return true
-  end
-
-
-  local function test_crossover(K1, dir)
-
-    -- FIXME
-
-        -- FIXME: check THEME.bridges (prefab skins) too
---[[
-        if not PARAM.bridges then continue end
-        if STYLE.crossovers == "none" then continue end
-
-        local cross_score = -1
-        if can_make_crossover(K, dir) then cross_score = gui.random() end
-
-        if cross_score >= 0 and (not cross_loc or cross_score > cross_loc.score) then
-          cross_loc = { K=K, dir=dir, score=cross_score }
-        end
---]]
-  end
-
-
   local function test_off_hall(MID)
     if not MID.hall then return end
 
@@ -303,6 +250,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- only connect to a big junction straight off a room
     if end_K.kind == "big_junc" and #visited != 1 then return end
 
+    -- never connect to double hallways or crossovers
+    if end_K.hall and (end_K.hall.double_fork or end_K.hall.crossover) then return end
+
     local merge = rand.odds(70)
 
     local score1 = start_K:eval_exit(start_dir)
@@ -318,15 +268,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     elseif stats.big_junc then
       score = score + 60
       merge = false
-    elseif stats.crossover then
-      score = score + style_sel("crossovers", 0, 0, 31, 99)
-      merge = false
-    end
-
-    -- big cost for trying to connect to a double hallway
-    -- (currently this only affects cycles)
-    if end_K.double_fork then
-      score = score - 200
+---///  elseif stats.crossover then
+---///    score = score + style_sel("crossovers", 0, 0, 31, 99)
+---///    merge = false
     end
 
     -- minor tendency for longer halls.
@@ -370,6 +314,105 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
     LEVEL.best_conn.merge = merge
+
+--stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
+  end
+
+
+  -- WISH: make crossovers merely a part of normal hall_flow() processing.
+  --       would need to store them in stats and 
+
+  local function test_crossover(K, dir, visited, stats)
+    if not PARAM.bridges then return end
+
+    -- FIXME: LEVEL.crossover_quota
+    if STYLE.crossovers == "none" then return end
+
+    -- WISH: support right angle turn or zig-zag
+
+    local MID_A = K:neighbor(dir, 1)
+    local MID_B = K:neighbor(dir, 3)
+
+    if not MID_A or MID_A.used then return end
+    if not MID_B or MID_B.used then return end
+
+    local mid_K = K:neighbor(dir, 2)
+    local end_K = K:neighbor(dir, 4)
+    local end_dir = 10 - dir
+
+    if not (mid_K and mid_K.kind == "section" and mid_K.room) then return end
+    if not (end_K and end_K.kind == "section" and end_K.room) then return end
+
+    -- rooms must be distinct
+    if end_K.room == start_K.room then return end
+    if mid_K.room == start_K.room then return end
+    if mid_K.room ==   end_K.room then return end
+
+    -- connection check
+    if not Connect_is_possible(start_K.room, end_K.room, mode) then return end
+
+    -- limit of one per room
+    -- [cannot do more because crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if mid_K.room.crossover then return false end
+
+    -- size check
+    local long, deep = K2.sw, K2.sh
+    if geom.is_horiz(dir) then long, deep = deep, long end
+
+    if long < 3 or deep > 4 then return false end
+
+
+    -- compute score
+
+    local score1 = start_K:eval_exit(start_dir)
+    local score2 =   end_K:eval_exit(  end_dir)
+    assert(score1 >= 0 and score2 >= 0)
+
+    local score = (score1 + score2) * 10
+
+    -- bonus for using a crossover
+    score = score + style_sel("crossovers", 0, 0, 56, 108)
+
+    -- minor tendency for longer halls.
+    score = score + #visited / 9.4
+
+
+    -- score is now computed : test it
+
+    if score < LEVEL.best_conn.score then return end
+
+
+    -- OK --
+
+    local H = HALLWAY_CLASS.new()
+
+    H.sections = visited
+    H.conn_group = start_K.room.conn_group
+
+    H.big_junc = stats.big_junc
+
+    if end_K.kind == "big_junc" then H.big_junc = end_K end
+
+
+    local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
+
+    D1.K1 = start_K ; D1.K2 = H.sections[1]
+
+
+    -- Note: some code assumes that D2.L1 is the destination room/hall
+
+    local D2 = CONN_CLASS.new("hallway", end_K.room or end_K.hall, H, end_dir)
+
+    D2.K1 = end_K   ; D2.K2 = table.last(H.sections)
+
+
+    LEVEL.best_conn.D1 = D1
+    LEVEL.best_conn.D2 = D2
+    LEVEL.best_conn.hall  = H
+    LEVEL.best_conn.score = score
+    LEVEL.best_conn.stats = stats
+    LEVEL.best_conn.merge = nil
 
 --stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
@@ -424,6 +467,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
       if test_dirs[dir] or (true and K.kind != "big_junc") then  
 --stderrf("  testing conn @ dir:%d\n", dir)
         test_hall_conn(N, 10 - dir, visited, stats)
+
+        test_crossover(K, dir, visited, stats)
       end
 
       if N.used then continue end
