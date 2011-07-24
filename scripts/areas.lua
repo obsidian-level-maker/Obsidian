@@ -112,6 +112,12 @@ function Areas_handle_connections()
     assert(C2)
     assert(conn)
 
+    -- prefer to build door on the room side
+    if C1.hall and C2.room then
+      C1, C2 = C2, C1
+      dir    = 10 - dir
+    end
+
     gui.debugf("link_chunks: %s --> %s\n", C1:tostr(), C2:tostr())
 
     local LINK =
