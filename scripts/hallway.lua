@@ -122,7 +122,8 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
     C.hall = H
     C:install()
 
-    if K.kind == "big_junc" then C.big_junc = true end  -- meh
+    -- meh meh meh
+    C.section = K
 
     table.insert(H.chunks, C)
 
@@ -516,6 +517,10 @@ function Hallway_add_doubles()
     H:add_section(left_J) ; H:add_section(right_J)
     H:add_section(left_K) ; H:add_section(right_K)
 
+    -- meh
+    left_J.forky = true ; right_J.forky = true
+    left_K.forky = true ; right_K.forky = true
+
     H:make_chunks(true)
 
     -- update the connection object
@@ -538,7 +543,7 @@ function Hallway_add_doubles()
       local K = H.sections[1]
 
       if big_K then
-        K = K:neighbor(dir)  
+        K = big_K:neighbor(dir)  
       end
 
       if try_add_at_section(H, K, dir) then
@@ -552,7 +557,7 @@ function Hallway_add_doubles()
 
   --| Hallway_add_doubles |--
 
-  local quota = 5  -- FIXME
+  local quota = 3  -- FIXME
 
   local visits = table.copy(LEVEL.halls)
   rand.shuffle(visits)  -- score and sort them??

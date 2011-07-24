@@ -376,8 +376,15 @@ function CHUNK_CLASS.similar_neighbor(C, dir)
   end
 
   local S = SEEDS[sx][sy]
+  local C2 = S.chunk
 
 --do return (S and (S.room or S.hall)) end --!!!!!!!1
+
+  if C2 and C.hall and C.hall == C2.hall and 
+     C.section and C2.section and (C.section.forky != C2.section.forky) and
+     C.section  != C.hall.double_fork and
+     C2.section != C.hall.double_fork
+  then return false end
 
   if C.hall then return (S.hall == C.hall) end
   if C.room then return (S.room == C.room) end
@@ -823,7 +830,7 @@ end
 
     local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 
-    if LINK and LINK.conn and LINK.conn.C1 == C then
+    if LINK and LINK.conn and LINK.C1 == C then
 
       if LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
         local list = THEME.lock_doors
@@ -901,7 +908,7 @@ end
 
 
   -- corners
-  if C.big_junc then
+  if C.section and C.section.kind == "big_junc" then
     local size = 192 -- math.min((C.x2 - C.x1), (C.y2 - C.y1))
     size = int(size / 3)
 
