@@ -386,6 +386,13 @@ function CHUNK_CLASS.similar_neighbor(C, dir)
      C2.section != C.hall.double_fork
   then return false end
 
+  if C2 and C.hall and C.hall == C2.hall and C.hall.crossover and
+     C.section and
+     ( C.section == C.hall.crossover.MID_B or
+      C2.section == C.hall.crossover.MID_B)
+     and not geom.is_parallel(dir, C.hall.crossover.dir)
+  then return false end
+
   if C.hall then return (S.hall == C.hall) end
   if C.room then return (S.room == C.room) end
 
