@@ -49,6 +49,10 @@ Miscellaneous:
      (a connection or switch or key or major item) then give it a
      nice pickup item (etc) or at least a walk space.
 
+  -  "mini stairs" : two areas have largish height diff (2-4 * step)
+     and the "stair" is a short intrusion in the side of the lower
+     chunk (say no more than 32 units deep, a prefab).
+
   -  3D chunk stuff : use z_low and z_high fields
 
   -  double or triple switches: each one raises a 24 unit stair,
