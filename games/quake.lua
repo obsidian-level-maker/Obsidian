@@ -1160,7 +1160,7 @@ QUAKE1.MONSTERS =
     replace_prob = 30
     crazy_prob = 20
     health = 25
-    damage = 5
+    damage = 8
     attack = "melee"
   }
 
@@ -1221,7 +1221,7 @@ QUAKE1.MONSTERS =
     level = 3
     prob = 1
     health = 80
-    damage = 10
+    damage = 30
     attack = "melee"
     density = 0.3
     weap_prefs = { rocket=0.2,grenade=0.2 }
@@ -1233,7 +1233,7 @@ QUAKE1.MONSTERS =
     prob = 60
     density  =  0.6
     health = 75
-    damage = 9
+    damage = 15
     attack = "melee"
   }
 
@@ -1252,7 +1252,7 @@ QUAKE1.MONSTERS =
     level = 2
     prob = 40
     health = 200
-    damage = 15
+    damage = 25
     attack = "missile"
     give = { {ammo="rocket",count=2} }
     density  =  0.4
@@ -1263,7 +1263,7 @@ QUAKE1.MONSTERS =
     level = 3
     prob = 10
     health = 300
-    damage = 20
+    damage = 40
     attack = "melee"
     density  =  0.3
     weap_prefs = { grenade=0.2 }
@@ -1274,7 +1274,7 @@ QUAKE1.MONSTERS =
     level = 7
     prob = 10
     health = 400
-    damage = 25
+    damage = 60
     attack = "missile"
     density  =  0.2
   }
@@ -1284,7 +1284,7 @@ QUAKE1.MONSTERS =
     level = 7
     prob = 10
     health = 600
-    damage = 30
+    damage = 50
     attack = "hitscan"
     immunity   = { rocket=0.5,grenade=0.5 }
     weap_prefs = { rocket=0.2,grenade=0.2 }
