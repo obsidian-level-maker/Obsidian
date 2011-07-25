@@ -8,37 +8,56 @@ Current Work
 credits page : test on FireFox and IE
 
 
-DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
+Cross-Overs:
+  !!  heights are messed up?
 
-      -  big junction chunk must keep track of exit dirs
-         [wall off unused dirs]
+  !!  problem where rooms get surrounded by a crossover and then
+      cannot connect to anything else.
+
+      possible solutions:
+      (1) require over room to already be connected to another room
+      (2) teleporters
+      (3) require hall to only touch two section sides (never more)
+          and allow connection to non-self crossover halls
+      (4) detect the problem and convert cross-over to two normal conns
+      (5) only make them from JUNC --> JUNC (through a reclaimed HORIZ or VERT)
+          and allow (in worst case) room to join that hall
+
+
+
+!! fix chunk alignment in hallway connections
+
+
+DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
 
 
 Hallways:
-  +  double hallways [BIG JUNC]
+>>>  double hallways
+   DONE: fix height problem, create a chunk in room going from one
+                             side to the other (as per crossovers)
 
   !!  monsters / items in hallways
+      --> set 'belong_room' of hallway, add hall mons to that battle
 
 
 Crossovers:
-  !!  get working again
+>>>>  get working again
 
   !!  put stairs in the mini-hallways  [Cycles too]
+
+  -  higher score if crossover splits room nicely
 
   +  build the bridges / channels using prefabs
 
   -  fix hallway vertical gaps
  
 
-Areas:
-  +  fix ability for stairs to go from A2 --> A1
-     (in other words: ability for stair chunk to be in unset floor)
-
-
 -----------------------------------------------------------------
 
 
-POLISH:  create AUTHORS.txt / simplify Credits web page
+++  LIQUID areas
+
+++  LOGO pictures on indoor walls (DOOM format games)
 
 -  revisit VOID stuff
     !! test for 'is_walk'
@@ -50,10 +69,6 @@ POLISH:  create AUTHORS.txt / simplify Credits web page
     -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
        (2x2 possible too, not touching room edge)
     -  good for cages!
-
-++  LIQUID areas
-
-++  LOGO pictures on indoor walls (DOOM format games)
 
 
 !!!  the "apply twice" problem in prefab build code
