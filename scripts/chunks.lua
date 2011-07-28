@@ -926,7 +926,7 @@ end
       local by2 = (corner == 1 or corner == 3 ? C.y1 + size ; C.y2)
 
       brush = Trans.bare_quad(bx1, by1, bx2, by2)
-      Trans.set_tex(brush, "CRACKLE2") --!!! w_mat.t
+      Trans.set_tex(brush, c_mat.t)
       gui.add_brush(brush)
     end end
   end
