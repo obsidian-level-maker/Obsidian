@@ -20,9 +20,14 @@ Cross-Overs:
       (3) require hall to only touch two section sides (never more)
           and allow connection to non-self crossover halls
       (4) detect the problem and convert cross-over to two normal conns
+          [or detect and turn crossed room into a scenic lava pit]
       (5) only make them from JUNC --> JUNC (through a reclaimed HORIZ or VERT)
-          and allow (in worst case) room to join that hall
+          and allow (in worst case) room to join that hall.
+          ALSO: support crossing 3 sections [if seeds <= 5]
+          ALSO 2: corner crossing (90 degree turn)
 
+  WISH: ability to cross-over same room twice in single hall
+        [even from a single junction]
 
 
 !! fix chunk alignment in hallway connections
