@@ -714,7 +714,7 @@ function Plan_add_big_rooms()
 
   local BIG_RECT_PROBS =
   {
-    [22] = 80, [33] = 40, [32] = 20  --- [31] = 4,
+    [22] = 80, [33] = 40, [32] = 20
   }
 
 
@@ -1172,6 +1172,41 @@ end
 
 function Plan_add_special_rooms()
 
+  local function central_hub_room()
+    local room = ROOM_CLASS.new("odd")
+
+    room.is_hub = true
+
+    local hub_W = (MAP_W + 1) * 0.4
+    local hub_H = (MAP_H + 1) * 0.4
+
+    if MAP_W > 3 then hub_W = hub_W + gui.random() end
+    if MAP_H > 3 then hub_H = hub_H + gui.random() end
+
+    -- round values down and clamp
+    hub_W = int(hub_W)
+    hub_H = int(hub_H)
+
+    if hub_W > 3 then hub_W = 3 end
+    if hub_H > 3 then hub_H = 3 end
+
+    local hub_X = 1 + int((MAP_W - hub_W) / 2)
+    local hub_Y = 1 + int((MAP_H - hub_H) / 2)
+
+    for mx = hub_X, hub_X+hub_W-1 do
+      for my = hub_Y, hub_Y+hub_H-1 do
+
+        local K = SECTIONS[mx*2][my*2]
+        assert(not K.room)
+
+        K:set_room(room)
+      end
+    end
+
+    Plan_dump_sections("Sections for hub mode:")
+  end
+
+
   local function surround_map()
     local room = ROOM_CLASS.new("odd")
 
@@ -1193,6 +1228,11 @@ function Plan_add_special_rooms()
 
 
   ---| Plan_add_special_rooms |---
+
+  if STYLE.hub_mode != "none" and MAP_W >= 4 and MAP_H >= 3 then
+    central_hub_room()
+    return
+  end
 
   -- occasionally surround the whole map
   if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
