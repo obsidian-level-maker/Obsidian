@@ -1448,7 +1448,7 @@ function Plan_decide_outdoors()
       if not THEME.courtyard_floors then return false end
     end
 
-    if STYLE.streets == "heaps" then return false end
+    if STYLE.street_mode != "none" then return false end
 
     if STYLE.outdoors == "none"   then return false end
     if STYLE.outdoors == "always" then return true end
