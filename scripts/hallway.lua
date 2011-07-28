@@ -276,8 +276,11 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local score = (score1 + score2) * 10
 
+    -- bonus for connecting to a central hub room
+    if start_K.room.is_hub or (end_K.room and end_K.room.is_hub) then
+      score = score + 155
     -- big bonus for using a big junction
-    if end_K.kind == "big_junc" then
+    elseif end_K.kind == "big_junc" then
       score = score + 120
       merge = true
     elseif stats.big_junc then
@@ -287,6 +290,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 ---///    score = score + style_sel("crossovers", 0, 0, 31, 99)
 ---///    merge = false
     end
+
 
     -- minor tendency for longer halls.
     -- [I don't think that hallway length should be a major factor in

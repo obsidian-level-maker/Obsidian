@@ -203,7 +203,7 @@ function SECTION_CLASS.eval_exit(K, dir)
 
   -- a free section please
   if K.num_conn > 0 then
-    return K.num_conn / 4 + rand
+    return math.min(K.num_conn, 4) / 4 + rand
   end
 
   -- a "foot" is a section sticking out (three non-room neighbors).

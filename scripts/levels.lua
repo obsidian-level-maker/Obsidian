@@ -83,7 +83,7 @@ GLOBAL_STYLE_LIST =
   cycles      = { none=20, some=50, heaps=30 }
   islands     = { few=60, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
-  hub_mode    = { none=50, heaps=5 }
+  hub_mode    = { none=50, heaps=12 }
   street_mode = { none=50, heaps=5 }
 
   room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
