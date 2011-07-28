@@ -1342,14 +1342,13 @@ stderrf("TRYING....................\n")
 
       if dist >= 2 and bridge_target_possible(C, N, dir) then
         -- SUCCESS !
---stderrf("!!!!!!!!!!!!!! BRIDGE BRIDGE BRIDGE: %d,%d --> %d,%d\n", start_x, start_y, sx, sy)
-
         set_area_floor(N.area, C.floor_h) 
 
         local end_x, end_y = geom.nudge(start_x, start_y, dir, dist-2)
-        local f_mat = C.room:pick_floor_mat(C.floor_h
-        )
+        local f_mat = C.room:pick_floor_mat(C.floor_h)
+
         make_3D_bridge(start_x, start_y, end_x, end_y, dir, C.floor_h, f_mat)
+
         return true
       end
 
