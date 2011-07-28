@@ -569,7 +569,9 @@ function Hallway_add_doubles()
       if D.K1 == K2 and D.K2 == K1 then return D end
     end
 
-    error("failed to find connection for hallway")
+---  error("failed to find connection for hallway")
+
+    return nil
   end
 
 
@@ -594,6 +596,10 @@ function Hallway_add_doubles()
 
     if deep < 3 then return false end
 
+    -- FIXME: this should not fail !!!
+    local D = find_conn_for_double(H, K, dir)
+    if not D then return false end
+
     stderrf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
 
     H.double_fork  = K
@@ -612,7 +618,6 @@ function Hallway_add_doubles()
     H:make_chunks(true)
 
     -- update the connection object
-    local D = find_conn_for_double(H, K, dir)
     D.kind = "double_hall"
 
     return true
@@ -662,7 +667,7 @@ end
 
 
 function Hallway_add_streets()
-  if STYLE.streets != "heaps" then return end
+  if STYLE.street_mode == "none" then return end
 
   local hall = HALLWAY_CLASS.new()
 
