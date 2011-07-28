@@ -346,6 +346,8 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- FIXME: LEVEL.crossover_quota
     if STYLE.crossovers == "none" then return end
 
+do return end --!!!!!! DISABLED FOR THE W.I.P
+
     -- WISH: support right angle turn or zig-zag
 
     local MID_A = K
