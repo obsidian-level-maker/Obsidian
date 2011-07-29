@@ -717,6 +717,10 @@ end
 
 
 function HALLWAY_CLASS.do_heights(H, base_h)
+  if H.done_heights then return end
+
+  H.done_heights = true
+
   -- FIXME: this is rubbish
   local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
 
@@ -728,6 +732,8 @@ function HALLWAY_CLASS.do_heights(H, base_h)
 
   if H.street then
     H.height = 512
+  elseif H.is_cycle then
+    H.height = 384  -- FIXME: temp crud
   elseif H.outdoor then
     H.height = 256
   elseif math.abs(delta_h) < 12 and rand.odds(10) then

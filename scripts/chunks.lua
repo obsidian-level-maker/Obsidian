@@ -885,6 +885,20 @@ end
     end
 
 
+    -- cruddy handling of cycle/crossover height differences
+    if C.hall and LINK and (LINK.C1 == C or LINK.C2 == C) then
+      local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
+
+      if math.abs(N.floor_h - C.floor_h) > (PARAM.jump_height or PARAM.step_height) then
+        local mx, my = C:mid_point()
+
+        mx, my = geom.nudge(mx, my, dir, 64)
+
+        Trans.entity("evil_eye", mx, my, f_h + 24)
+      end
+    end
+
+
     -- street mode : make buildings appear to have different heights
     if C.hall and C.hall.street and not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2

@@ -246,6 +246,10 @@ gui.debugf("\nmake_branch\n\n")
       info.D2    = nil
     else
       info.hall:add_it()
+
+      if mode == "cycle" then
+        info.hall.is_cycle = true
+      end
     end
   end
 
