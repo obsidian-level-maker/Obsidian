@@ -521,6 +521,31 @@ end
 
 
 
+function CHUNK_CLASS.cycle_stair(C, dir, N)
+  -- this is temporary crud
+
+  local skin_name
+
+  if N.floor_h > C.floor_h then
+    skin_name = "Stair_Up1"
+  else
+    skin_name = "Stair_Down1"
+  end
+
+  local skin = GAME.SKINS[skin_name]
+  if not skin then return end
+
+  C.stair =
+  {
+    C1 = C
+    C2 = N
+    dir = dir
+    skin = skin
+  }
+end
+
+
+
 function CHUNK_CLASS.unpack_parts(C, filter_field)
   -- returns a list of rectangles which represent the area of the
   -- chunk _minus_ the areas of the parts.
@@ -676,6 +701,22 @@ function CHUNK_CLASS.build(C)
   else
     light = rand.irange(40, 100)
     if C.hall then light = light * 0.5 end
+  end
+
+
+  -- cruddy handling of cycle/crossover height differences
+  if C.hall and C.hall.is_cycle then
+    for dir = 2,8,2 do
+      local LINK = C.link[dir]
+
+      if LINK and (LINK.C1 == C or LINK.C2 == C) then
+        local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
+
+        if math.abs(N.floor_h - C.floor_h) > (PARAM.jump_height or PARAM.step_height) then
+          C:cycle_stair(dir, N)
+        end
+      end
+    end
   end
 
 
@@ -881,20 +922,6 @@ end
         skin2.targetname = string.format("switch%d", skin2.tag)
 
         Fabricate(skin._prefab, T, { skin, skin2 })
-      end
-    end
-
-
-    -- cruddy handling of cycle/crossover height differences
-    if C.hall and LINK and (LINK.C1 == C or LINK.C2 == C) then
-      local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
-
-      if math.abs(N.floor_h - C.floor_h) > (PARAM.jump_height or PARAM.step_height) then
-        local mx, my = C:mid_point()
-
-        mx, my = geom.nudge(mx, my, dir, 64)
-
-        Trans.entity("evil_eye", mx, my, f_h + 24)
       end
     end
 
