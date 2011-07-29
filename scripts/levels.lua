@@ -80,7 +80,7 @@ GLOBAL_STYLE_LIST =
   naturals    = { none=10, few=30, some=60, heaps=4 }
   big_rooms   = { none=3, few=40, some=40, heaps=20 }
   sub_rooms   = { none=40, some=80, heaps=5 }
-  cycles      = { none=20, some=50, heaps=30 }
+  cycles      = { none=20, some=50, heaps=50 }
   islands     = { few=60, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
   hub_mode    = { none=50, heaps=12 }
