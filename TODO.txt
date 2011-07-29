@@ -5,7 +5,11 @@ OBLIGE TODO
 Current Work
 ------------
 
-credits page : test on FireFox and IE
+Hallways:
+  !!  monsters / items in hallways
+      --> set 'belong_room' of hallway, add hall mons to that battle
+
+  !!  fix chunk alignment in hallway connections
 
 
 Cross-Overs:
@@ -15,47 +19,26 @@ Cross-Overs:
       cannot connect to anything else.
 
       possible solutions:
-      (1) require over room to already be connected to another room
+ >>   (1) require over room to already be connected to another room
       (2) teleporters
       (3) require hall to only touch two section sides (never more)
           and allow connection to non-self crossover halls
       (4) detect the problem and convert cross-over to two normal conns
           [or detect and turn crossed room into a scenic lava pit]
-      (5) only make them from JUNC --> JUNC (through a reclaimed HORIZ or VERT)
+>>>>  (5) only make them from JUNC --> JUNC (through a reclaimed HORIZ or VERT)
           and allow (in worst case) room to join that hall.
           ALSO: support crossing 3 sections [if seeds <= 5]
           ALSO 2: corner crossing (90 degree turn)
+                  can "allocate" the JUNC and create two crossover chunks
 
   WISH: ability to cross-over same room twice in single hall
         [even from a single junction]
-
-
-!! fix chunk alignment in hallway connections
-
-
-DONE: big junc: require "direct" connections (i.e. ROOM, MID, BJ)
-
-
-Hallways:
->>>  double hallways
-   DONE: fix height problem, create a chunk in room going from one
-                             side to the other (as per crossovers)
-
-  !!  monsters / items in hallways
-      --> set 'belong_room' of hallway, add hall mons to that battle
-
-
-Crossovers:
->>>>  get working again
-
-  !!  put stairs in the mini-hallways  [Cycles too]
-
-  -  higher score if crossover splits room nicely
 
   +  build the bridges / channels using prefabs
 
   -  fix hallway vertical gaps
  
+
 
 -----------------------------------------------------------------
 
@@ -109,9 +92,6 @@ Windows: MUST decide them after all heights are done
 >>>  Simple rooms (caves and mazes)
 
 
--  build all hallways AFTER all rooms
-   (decide a height different first though).
-
 
 OTHER STUFF
 
@@ -121,20 +101,7 @@ OTHER STUFF
     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
 
-
-Goals for next WIP
-==================
-
-FOCUS WILL BE: room connection logic
-
-+  decent hallways
-
-+  cycles
-
-+  crossovers
-
-DONE:  teleporters
-
+-----------------------------------------------------------------
 
 
 Release Goals
