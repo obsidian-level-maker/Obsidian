@@ -789,6 +789,12 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     -- place large clusters before small ones
     table.sort(item_list, function(A,B) return (A.count + A.random) > (B.count + B.random) end)
 
+    -- kludge to add some backpacks to DOOM maps
+    -- TODO: better system for "nice start items" or so
+    if R.purpose == "START" and GAME.ENTITIES["backpack"] then
+      table.insert(item_list, 1, { item={ name="backpack", big_item=true }, count=1 })
+    end
+
 ---##    -- FIXME: place weapon in layout code
 ---##    if R.weapon then
 ---##      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1 })
