@@ -30,8 +30,9 @@ QUAKE2.ENTITIES =
 
   dm_player = { id="info_player_deathmatch", kind="other", r=16,h=56 }
 
-  teleport_spot = { id="misc_teleporter_dest", kind="other", r=16,h=56, pass=true }
-  teleporter    = { id="misc_teleporter",      kind="other", r=16,h=56, pass=true }
+  teleport_spot = { id="info_notnull",    kind="other", r=16,h=56, pass=true }
+  teleporter    = { id="misc_teleporter", kind="other", r=16,h=56, pass=true }
+  tele_pad      = { id="misc_teleporter_dest", kind="other", r=16,h=56, pass=true }
 
   -- enemies
   guard      = { id="monster_soldier_light", kind="monster", r=16, h=56, }
