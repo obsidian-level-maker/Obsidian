@@ -5,6 +5,9 @@ OBLIGE TODO
 Current Work
 ------------
 
+!!!!  fix the "no spot for wotsit" error
+
+
 Hallways:
   !!  monsters / items in hallways
       --> set 'belong_room' of hallway, add hall mons to that battle
