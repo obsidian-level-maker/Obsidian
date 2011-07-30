@@ -54,9 +54,13 @@ Sam Trenholme
 THANKS TO:
 
 DoomJedi : Wolf3D testing, list of Wolf3D mods. 
+
 esselfortium : encouragement and detailed feedback.
+
 gggmork : beta testing, detailed feedback.
+
 leilei : initial Amulets & Armor definition, various feedback.
+
 Maxim Samoylenko : encouragement and testing.
 
 .... and everyone else who provided feedback, bug reports,

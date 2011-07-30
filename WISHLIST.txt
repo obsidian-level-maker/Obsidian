@@ -736,14 +736,17 @@ Name generator:
 
 +  Composition of prefabs
 
+-  in some (esp. large) rooms, sometimes try to always go up 
+   or always go down.  Rarely: do it for whole level
+
 -  module help / explanations ?? (appear above the options)
 
 -  CSG: clipping rectangles (typically a room)
 
 -  friendly monsters
 
--  have a table listing a quantized HSV for each texture/flat
-   and make aesthetic decisions using it.
+>>  have a table listing a quantized HSV for each texture/flat
+    and make aesthetic decisions using it.
 
 
 
