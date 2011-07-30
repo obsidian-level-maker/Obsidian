@@ -1473,9 +1473,9 @@ end
 
 
 function Plan_decide_outdoors()
-  local OUTDOOR_PROBS = THEME.outdoor_probs or { 10, 30, 50, 60 }
+  local OUTDOOR_PROBS = THEME.outdoor_probs or { 15, 35, 60 }
 
-  if #OUTDOOR_PROBS != 4 then
+  if #OUTDOOR_PROBS != 3 then
     error("Theme has bad outdoor_probs table")
   end
 
@@ -1493,21 +1493,24 @@ function Plan_decide_outdoors()
     if STYLE.outdoors == "none"   then return false end
     if STYLE.outdoors == "always" then return true end
 
-    if STYLE.outdoors == "heaps" then return rand.odds(OUTDOOR_PROBS[4]) end
-    if STYLE.outdoors == "few"   then return rand.odds(OUTDOOR_PROBS[1] / 2) end
+    if STYLE.outdoors == "heaps" then return rand.odds(OUTDOOR_PROBS[3]) end
+    if STYLE.outdoors == "few"   then return rand.odds(OUTDOOR_PROBS[1]) end
 
-    if R.natural then return rand.odds(OUTDOOR_PROBS[2]) end
+---??  NOTE: This check is for caves
+---??  if R.natural then return rand.odds(OUTDOOR_PROBS[2]) end
 
     -- higher probs for sides of map, even higher for the corners
     local what = 1
 
-    if R.kx1 == 1 or R.kx2 == SECTION_W then what = what + 1 end
-    if R.ky1 == 1 or R.ky2 == SECTION_H then what = what + 1 end
+    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
+    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
 
     return rand.odds(OUTDOOR_PROBS[what])
   end
 
   ---| Plan_decide_outdoors |---
+
+  -- TODO: local quota = blah blah...
 
   each R in LEVEL.rooms do
     if R.outdoor == nil then
