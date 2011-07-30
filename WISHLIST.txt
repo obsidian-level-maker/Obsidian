@@ -39,6 +39,8 @@ OBLIGE WISH-LIST
 ----------------------------------------------------------------
 
 Miscellaneous:
+  +  when deciding outdoors, have a section quota
+
   +  special logic to merge THEME_DEFAULTS tables??
 
   +  when traversibility in a room is poor (exit near entrance),
