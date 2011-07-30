@@ -73,6 +73,7 @@ cp -av $src/TODO.txt $dest
 cp -av $src/README.txt $dest
 cp -av $src/WISHLIST.txt $dest
 cp -av $src/CHANGES.txt $dest
+cp -av $src/AUTHORS.txt $dest
 
 #
 # all done
