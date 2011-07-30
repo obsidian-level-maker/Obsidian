@@ -926,6 +926,11 @@ end
     end
 
 
+    if LINK and LINK.conn and wall_deep < 32 then
+      wall_deep = 32
+    end
+
+
     -- street mode : make buildings appear to have different heights
     if C.hall and C.hall.street and not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
