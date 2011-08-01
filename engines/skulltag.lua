@@ -72,6 +72,7 @@ SKULLTAG.ENTITIES =
 
 SKULLTAG.PARAMETERS =
 {
+  bridges = true
   extra_floors = true
   liquid_floors = true
 }
