@@ -7,6 +7,15 @@ Current Work
 
 !!!!  fix the "no spot for wotsit" error
 
++  have a monster exclusion zone around teleporters
+
+-  street_mode and hub_mode : don't use styles for them
+
+
+!!!  the "apply twice" problem in prefab build code
+
+-  support m="bounds" brushes (e.g. for QUAKE2_TELEPORTER)
+
 
 Hallways:
   !!  monsters / items in hallways
@@ -40,31 +49,9 @@ Cross-Overs:
   +  build the bridges / channels using prefabs
 
   -  fix hallway vertical gaps
- 
 
 
 -----------------------------------------------------------------
-
-
-++  LIQUID areas
-
-++  LOGO pictures on indoor walls (DOOM format games)
-
--  revisit VOID stuff
-    !! test for 'is_walk'
-    -  only indoors
-    -  shaped room: put in "middle" section (of L, T, plus)
-       (require two in S or H shapes)
-    -  3x3 room: sometimes one in middle section
-    -  other rooms: use the annexed junctions
-    -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
-       (2x2 possible too, not touching room edge)
-    -  good for cages!
-
-
-!!!  the "apply twice" problem in prefab build code
-
-+    support m="bounds" brushes (e.g. for QUAKE2_TELEPORTER)
 
 
 WISH: 3D bridges can be 3D stairs [relax area touching rule]
@@ -107,6 +94,23 @@ OTHER STUFF
 -----------------------------------------------------------------
 
 
+Goals for next WIP
+==================
+
++  crossovers
+
++  proper building facades
+
++  windows and fences
+
+-  sky borders in outdoor rooms
+
++  system for texture coordinates
+
+
+-----------------------------------------------------------------
+
+
 Release Goals
 =============
 
@@ -118,10 +122,6 @@ Release Goals
 
 +  liquid areas
 
-+  system for texture coordinates
-
-
--  windows
 
 -  normal doors
 

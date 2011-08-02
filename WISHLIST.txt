@@ -308,6 +308,17 @@ Mazes:
 -  invert maze + thin_out + cave_render --> interesting walkway
                                             (e.g. over lava)
 
+Void stuff:
+  !! test for 'is_walk'
+  -  only indoors
+  -  shaped room: put in "middle" section (of L, T, plus)
+     (require two in S or H shapes)
+  -  3x3 room: sometimes one in middle section
+  -  other rooms: use the annexed junctions
+  -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
+     (2x2 possible too, not touching room edge)
+  -  good for cages!
+
 
 ----------------------------------------------------------------
   GUI and C++ CODE
