@@ -23,6 +23,8 @@ Hallways:
 
   !!  fix chunk alignment in hallway connections
 
+	+  proper height setting, use lifts when necessary
+
 
 Cross-Overs:
   !!  heights are messed up?
