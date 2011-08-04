@@ -25,8 +25,7 @@ INTRODUCTION
     * easy to use GUI interface (no messing with command lines)
     * built-in node builder, so the levels are ready to play
     * uses the LUA scripting language for easy customisation
-    * can create Deathmatch levels
-    * Heretic, Hexen and Quake support!
+    * DOOM, Heretic, Hexen and Quake support!
 
 
   Please visit the web site for complete information:

@@ -44,7 +44,6 @@ by David Chess)
   <li>easy to use GUI interface (no messing with command lines)
   <li>built-in node builder, the created levels are ready to play
   <li>uses the LUA scripting language for easy customisation
-  <li>can make multiplayer maps for Deathmatch and CTF
 </ul>
 
 <p>

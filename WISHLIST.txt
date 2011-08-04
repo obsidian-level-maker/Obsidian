@@ -677,6 +677,8 @@ Name generator:
 
 +  generate the Boss maps (don't use prebuilt).
 
+-  deathmatch and CTF maps
+
 -  raising bridges (activate by a switch)
 
 -  light up levels (a la quake).
