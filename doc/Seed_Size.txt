@@ -1,0 +1,50 @@
+
+SEED SIZE ESSAY
+===============
+
+Firstly, I use the term "seed" to mean a fundamental square on the
+map.  The original idea was that they would grow to accommodate
+their content, e.g. a seed containing a Spider Mastermind might
+become 320x320 units.  That idea did not work out, but the name
+stuck.
+
+DOOM's inability to align flats means that the seed size needs to
+be a multiple of 64 -- in order to make pedestals, ceiling lights
+and eventually teleporters to work simply.  When the seeds were
+256x256, the whole map was offset by 32 units so that the middle
+64x64 area would have an aligned flat.
+
+The basic idea of a seed is to have one thing going on in the
+middle (e.g. a monster or a switch or stairs) and upto one thing
+happening on each border (e.g. a wall, a door or a picture).
+
+Since the main DOOM doors are 128 units wide, and some of the
+non-boss monsters are 128x128 (arachnotron), then a seed size of
+128x128 is too small.  Also some pictures, like COMPSTA# and
+ZZWOLF#, cannot fit either -- you need a bit of wall on each side.
+
+Anything above 256x256 is probably too big, you would need more
+than one thing going on in each seed (more than one type of
+monster), which goes against the basic idea of seeds.
+
+One reason that 192x192 seems better than 256x256 is not really
+technical, but aesthetic -- the rooms just feel more "natural" at
+192x192.  With 256x256 seeds the rooms feel too roomy, dwarfing
+the player.  (I actually think a value in between, say 208, would
+be optimal, to give more space for thicker walls and wall detail,
+but 192 is the closest).
+
+With 256x256 seeds, a 2x2 or 2x3 room was OK (512 units is quite a
+large area), but 4 or 6 seeds doesn't give much options to layout
+the room.  With 192x192 seeds, the minimum room is now 3x3 seeds
+and there are more room patterns that can be used.  This is
+perhaps the most compelling thing about the 192x192 seed size,
+getting rid of the boring 2x2 rooms which were common before.
+
+A lesser reason to choose 192x192 is to use a single seed size for
+every game.  Quake has a face size limit of 240 units (due to the
+way lightmaps work), so with 256x256 seeds the faces from a seed
+would often need to be split, hence Quake was using 240x240 as the
+seed size.  Having a single fixed seed size would simplify a fair
+bit of code.
+
