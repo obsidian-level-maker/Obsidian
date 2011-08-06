@@ -72,6 +72,8 @@ Miscellaneous:
 
   -  more than one theme per episode.
 
+  -  smarter choosing health items, especially when health target is very high
+
   -  rarity for bfg10k and railgun for Skulltag
 
   -  properly count svolume
@@ -109,6 +111,12 @@ Hallway Theming:
 
   PANCASE2 would fit well for Doom2 Urban hallways.
 
+
+Starting Items:
+  -  backpack (etc) chance is based on ep_along
+
+  -  weapons: have a level field, don't get them if too early
+              (except perhaps in secrets)
 
 
 Monsters:

@@ -5,7 +5,19 @@ OBLIGE TODO
 Current Work
 ------------
 
++  reserve one border seed around map, and the hallway channel
+   at edges of map are only 1 seed wide
+
+-  distribute_stats : treat ammo and health differently, more ammo
+   should go into previous rooms, but less health.
+
+-  check that Skulltag monster module works
+
+
 !!!!  fix the "no spot for wotsit" error
+   -  make room widths have minimum of 3
+
+   IDEA: vertical hallway channels are 1 seed wide, horizontal are 2
 
 +  have a monster exclusion zone around teleporters
 
@@ -23,7 +35,7 @@ Hallways:
 
   !!  fix chunk alignment in hallway connections
 
-	+  proper height setting, use lifts when necessary
+  +  proper height setting, use lifts when necessary
 
 
 Cross-Overs:
@@ -50,7 +62,26 @@ Cross-Overs:
 
   +  build the bridges / channels using prefabs
 
+  -  sometimes make a dramatic height difference
+
   -  fix hallway vertical gaps
+
+
+Street Mode:
+  +  limit to once per episode (higher prob in secret level)
+
+  +  limit number of locked rooms:
+     (a) if too many rooms, merge some
+     (b) make some rooms be optional (storehouses or weapon)
+     (c) connect some rooms via 3D bridges
+  
+  -  allow some buildings (especially at corners) to eat the edge
+
+  -  better looking "streets" (via prefabs and SKINs)
+
+  -  fix the "big junc" situation, good place for a fountain
+
+  -  a raised outdoory room might be cool
 
 
 -----------------------------------------------------------------
