@@ -93,6 +93,8 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   local MISSILE_RATIOS = { 1.0, 0.25 }
   local MELEE_RATIOS   = { 1.0 }
 
+  local INFIGHT_RATIOS = { 0.8, 0.6, 0.4 }
+
 
   local function remove_dead_mon()
     for i = #active_mons,1,-1 do
@@ -300,9 +302,10 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
         monster_hit_player(M, idx, time)
       end
 
-      local infight_idx = idx - rand.irange(1,3)
+      local infight_dist   = rand.irange(1,3)
+      local infight_factor = INFIGHT_RATIOS[infight_dist]
 
-      monster_hit_monster(M, infight_idx, time, 0.6)
+      monster_hit_monster(M, idx - infight_dist, time, infight_factor)
     end
   end
 
