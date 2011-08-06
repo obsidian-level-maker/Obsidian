@@ -440,76 +440,93 @@ end
 
 
 
-function Monsters_do_pickups()
+function Monsters_distribute_stats()
 
-  local function distribute(R, qty, N)
-    for CL,stats in pairs(R.fight_stats) do
-      local dest = N.fight_stats[CL]
+  local function distribute(R, health_qty, ammo_qty, N)
+    each CL,R_stats in R.fight_stats do
+      local N_stats = N.fight_stats[CL]
 
-      for stat,count in pairs(stats) do
-        if count > 0 then
-           dest[stat] = (dest[stat] or 0) + count * qty
-          stats[stat] = count * (1-qty)
+      each stat,count in R_stats do
+        if count <= 0 then continue end
 
-          gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
-                     stat, count*qty,  CL, R:tostr(), N:tostr())
-        end
+        local value = count * (stat == "health" ? health_qty ; ammo_qty)
+
+        N_stats[stat] = (N_stats[stat] or 0) + value
+        R_stats[stat] =  R_stats[stat]       - value
+
+        gui.debugf("Distributing %s:%1.1f [%s]  %s --> %s\n",
+                   stat, value,  CL, R:tostr(), N:tostr())
       end
     end
   end
 
 
-  local function get_storage_prefs(arena)
-    -- Note: there are no storage rooms ATM
-    return {}, {}
-  end
+  local function get_previous_prefs(room)
+    local list = {}
 
+    -- find previous rooms
+    local R = room
 
-  local function get_previous_prefs(R)
-    local room_list = {}
-    local ratios = {}
+    while R.entry_conn do
+      R = R.entry_conn:neighbor(R)
 
-    local PREV = R
-
-    while PREV.entry_conn and #room_list < 4 do
-      PREV = PREV.entry_conn:neighbor(PREV)
-
-      if PREV.is_room then
-        local qty = rand.irange(3,5) / (1 + #room_list)
-
-        table.insert(room_list, PREV)
-        table.insert(ratios, qty)
+      if R.is_room then
+        local ratio = rand.irange(3,7) * (0.5 ^ #list)
+        table.insert(list, { room=R, ratio=ratio })
       end
     end
 
-    return ratios, room_list
+    -- add storage rooms
+    if room.quest.storage_rooms then
+      each R in room.quest.storage_rooms do
+        local ratio = rand.irange(3,7) / 11
+        table.insert(list, { room=R, ratio=ratio })
+      end
+    end
+
+    return list
   end
 
 
-  local function distribute_to_list(R, qty, ratios, room_list)
-    assert(#ratios == #room_list)
-
+  local function distribute_to_list(R, health_qty, ammo_qty, list)
     local total = 0
 
-    for i = 1,#ratios do
-      total = total + ratios[i]
+    each pos in list do
+      total = total + pos.ratio
     end
 
-    for i = 1,#ratios do
-      distribute(R, qty * ratios[i] / total, room_list[i])
-    end
-  end
+    each pos in list do
+      local h_qty = health_qty * pos.ratio / total
+      local a_qty = ammo_qty   * pos.ratio / total
 
-
-  local function distribute_fight_stats(R)
-    if R.is_storage then return end
-
-    do
-      distribute_to_list(R, 0.60, get_previous_prefs(R))
-      distribute_to_list(R, 0.10, get_storage_prefs(R.arena))
+      distribute(R, h_qty, a_qty, pos.room)
     end
   end
 
+
+  ---| Monsters_distribute_stats |---
+
+  gui.debugf("--- Monsters_distribute_stats ---\n")
+
+  each R in LEVEL.rooms do
+    if R.is_storage then continue end
+
+    if R.fight_stats then
+      distribute_to_list(R, 0.25, 0.75, get_previous_prefs(R))
+    end
+  end
+
+  each R in LEVEL.rooms do
+    if R.fight_stats then
+      gui.debugf("final result @ %s = \n%s\n", R:tostr(),
+                 table.tostr(R.fight_stats, 2))
+    end
+  end
+end
+
+
+
+function Monsters_do_pickups()
 
   local function sort_spots(R)
     rand.shuffle(R.item_spots)
@@ -813,11 +830,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
 
   ---| Monsters_do_pickups |---
 
-  each R in LEVEL.rooms do
-    if R.kind != "stairwell" and R.kind != "smallexit" then
-      distribute_fight_stats(R)
-    end
-  end
+  gui.debugf("--- Monsters_do_pickups ---\n")
 
   each R in LEVEL.rooms do
     if R.kind != "stairwell" and R.kind != "smallexit" then
@@ -1871,13 +1884,12 @@ function Monsters_in_room(R)
 --  gui.debugf("raw result = \n%s\n", table.tostr(stats,1))
 
     user_adjust_result(stats)
+
 --  gui.debugf("adjusted result = \n%s\n", table.tostr(stats,1))
 
     give_monster_drops(hmodel, mon_list, R.normal_count)
 
     subtract_stuff_we_have(stats, hmodel)
-
---  gui.debugf("final result = \n%s\n", table.tostr(stats,1))
   end
 
 
@@ -1984,6 +1996,7 @@ function Monsters_make_battles()
   -- we can decide what pickups to add (the easy part) and
   -- _where_ to place them (the hard part).
 
+  Monsters_distribute_stats()
   Monsters_do_pickups()
 end
 
