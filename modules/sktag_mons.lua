@@ -242,7 +242,7 @@ OB_MODULES["sktag_mons"] =
 
   tables =
   {
-    SKULLTAG
+    SKTAG_MONS
   }
 
   hooks =
