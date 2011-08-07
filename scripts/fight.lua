@@ -93,7 +93,7 @@ function Fight_Simulator(monsters, weapons, weap_prefs, stats)
   local MISSILE_RATIOS = { 1.0, 0.25 }
   local MELEE_RATIOS   = { 1.0 }
 
-  local INFIGHT_RATIOS = { 0.8, 0.6, 0.4 }
+  local INFIGHT_RATIOS = { 0.7, 0.5, 0.3 }
 
 
   local function remove_dead_mon()
