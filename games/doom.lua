@@ -4398,9 +4398,9 @@ DOOM.WEAPONS =
 {
   fist =
   {
+    attack = "melee"
     rate = 1.5
     damage = 10
-    attack = "melee"
   }
 
   saw =
@@ -4408,9 +4408,9 @@ DOOM.WEAPONS =
     pref = 3
     add_prob = 2
     start_prob = 1
+    attack = "melee"
     rate = 8.7
     damage = 10
-    attack = "melee"
   }
 
   berserk =
@@ -4418,18 +4418,18 @@ DOOM.WEAPONS =
     pref = 10
     add_prob = 5
     start_prob = 2
+    attack = "melee"
     rate = 1.5
     damage = 90
-    attack = "melee"
     give = { {health=70} }
   }
 
   pistol =
   {
     pref = 5
+    attack = "hitscan"
     rate = 1.8
     damage = 10
-    attack = "hitscan"
     ammo = "bullet"
     per = 1
   }
@@ -4439,9 +4439,9 @@ DOOM.WEAPONS =
     pref = 70
     add_prob = 35
     start_prob = 40
+    attack = "hitscan"
     rate = 8.5
     damage = 10
-    attack = "hitscan"
     ammo = "bullet"
     per = 1
     give = { {ammo="bullet",count=20} }
@@ -4452,9 +4452,9 @@ DOOM.WEAPONS =
     pref = 70
     add_prob = 10
     start_prob = 60
+    attack = "hitscan"
     rate = 0.9
     damage = 70
-    attack = "hitscan"
     splash = { 0,10 }
     ammo = "shell"
     per = 1
@@ -4466,9 +4466,9 @@ DOOM.WEAPONS =
     pref = 50
     add_prob = 25
     start_prob = 15
+    attack = "missile"
     rate = 1.7
     damage = 80
-    attack = "missile"
     splash = { 50,20,5 }
     ammo = "rocket"
     per = 1
@@ -4480,9 +4480,9 @@ DOOM.WEAPONS =
     pref = 30
     add_prob = 13
     start_prob = 7
+    attack = "missile"
     rate = 11
     damage = 20
-    attack = "missile"
     ammo = "cell"
     per = 1
     give = { {ammo="cell",count=40} }
@@ -4494,10 +4494,10 @@ DOOM.WEAPONS =
     add_prob = 20
     start_prob = 1
     rarity = 4
+    attack = "missile"
     rate = 0.8
     damage = 300
-    attack = "missile"
-    splash = {60,45,30,30,20,10}
+    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70, 70,70,70,70}
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
@@ -4509,9 +4509,9 @@ DOOM.WEAPONS =
     pref = 50
     add_prob = 20
     start_prob = 15
+    attack = "hitscan"
     rate = 0.6
     damage = 170
-    attack = "hitscan"
     splash = { 0,30 }
     ammo = "shell"
     per = 2
