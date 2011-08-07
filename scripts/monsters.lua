@@ -1267,13 +1267,15 @@ function Monsters_in_room(R)
     local dither = Plan_alloc_id("mon_dither")
 
     -- skill 3 (hard) is always added
-    -- skill 2 (medium) alternates between 100% and 50% chance
-    -- skill 1 (easy) is always 50% chance of adding
+    -- skill 2 (medium) alternates between 100% and 60% chance
+    -- skill 1 (easy) is always 60% chance of adding
 
-    if (dither % 2) == 0 then
-      return rand.sel(50, 1, 2)
+    if rand.odds(60) then
+      return 1
+    elseif (dither % 2) == 0 then
+      return 2
     else
-      return rand.sel(50, 1, 3)
+      return 3
     end
   end
 
