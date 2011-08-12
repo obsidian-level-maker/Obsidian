@@ -858,7 +858,7 @@ function Monsters_in_room(R)
     -- higher values produces tougher monsters.
 
     -- each level gets progressively tougher
-    local toughness = LEVEL.episode + LEVEL.ep_along * 4
+    local toughness = LEVEL.episode.index + LEVEL.ep_along * 4
 
     -- each room is tougher too
     toughness = toughness + R.lev_along

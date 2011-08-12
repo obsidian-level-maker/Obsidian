@@ -541,7 +541,7 @@ function Levels_choose_themes()
   end
 
   each L in GAME.levels do
-    set_level_theme(L, episode_list[L.episode])
+    set_level_theme(L, episode_list[L.episode.index])
   end
 end
 
@@ -703,11 +703,12 @@ end
 
 
 function Levels_make_level(L)
+  assert(L)
+  assert(L.name)
+  assert(L.theme)
+
   local index = L.index
   local total = #GAME.levels
-
-  assert(LEVEL.name)
-  assert(LEVEL.theme)
 
   -- copy level info, so that all new information added into the LEVEL
   -- object by the generator can be garbage collected once this level is

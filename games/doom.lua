@@ -4776,8 +4776,16 @@ function DOOM1.get_levels()
   local LEV_MAX = MAP_NUM
   if LEV_MAX == 9 then LEV_MAX = 7 end
 
-  for episode = 1,EP_NUM do
-    local ep_info = DOOM1.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    -- create episode info...
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = DOOM1.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -4789,22 +4797,26 @@ function DOOM1.get_levels()
         ep_along = 0.5
       end
 
+      -- create level info...
       local LEV =
       {
-        name  = string.format("E%dM%d", episode, map)
-        patch = string.format("WILV%d%d", episode-1, map-1)
+        episode = EPI
 
-        map      = map
-        episode  = episode
-        ep_along = ep_along
-        mon_along = ep_along + (episode-1) / 5
+        name  = string.format("E%dM%d",   ep_index,   map)
+        patch = string.format("WILV%d%d", ep_index-1, map-1)
+
+         ep_along = ep_along
+        mon_along = ep_along + (ep_index-1) / 5
 
         sky_light   = ep_info.sky_light
         secret_kind = (map == 9) and "plain"
       }
 
+      table.insert( EPI.levels, LEV)
+      table.insert(GAME.levels, LEV)
+
       if OB_CONFIG.length == "few" then
-        LEV.episode = few_episodes[map]
+---!!!  LEV.episode = few_episodes[map]
       end
 
       -- prebuilt levels
@@ -4820,10 +4832,8 @@ function DOOM1.get_levels()
       end
 
       if MAP_NUM == 1 or map == 3 then
-        LEV.demo_lump = string.format("DEMO%d", episode)
+        LEV.demo_lump = string.format("DEMO%d", ep_index)
       end
-
-      table.insert(GAME.levels, LEV)
     end -- for map
 
   end -- for episode
@@ -4842,19 +4852,36 @@ function DOOM2.get_levels()
 
   local few_episodes = { 1, rand.sel(70,1,2), rand.sel(70,2,3), 3 }
 
+  local EP_NUM = 1
+  if MAP_NUM > 11 then EP_NUM = 2 end
+  if MAP_NUM > 30 then EP_NUM = 3 end
+
+  -- create episode info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
   for map = 1,MAP_NUM do
     -- determine episode from map number
-    local episode
+    local ep_index
     local ep_along
 
     if map >= 31 then
-      episode = 2 ; ep_along = 0.35
+      ep_index = 2 ; ep_along = 0.35
     elseif map >= 21 then
-      episode = 3 ; ep_along = (map - 20) / 10
+      ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map >= 12 then
-      episode = 2 ; ep_along = (map - 11) / 9
+      ep_index = 2 ; ep_along = (map - 11) / 9
     else
-      episode = 1 ; ep_along = map / 11
+      ep_index = 1 ; ep_along = map / 11
     end
 
     if OB_CONFIG.length == "single" then
@@ -4863,21 +4890,27 @@ function DOOM2.get_levels()
       ep_along = map / MAP_NUM
     end
 
-    local ep_info = DOOM2.EPISODES["episode" .. episode]
+    local EPI = GAME.episodes[ep_index]
+    assert(EPI)
+
+    local ep_info = DOOM2.EPISODES["episode" .. ep_index]
     assert(ep_info)
     assert(ep_along <= 1)
 
     local LEV =
     {
+      episode = EPI
+
       name  = string.format("MAP%02d", map)
       patch = string.format("CWILV%02d", map-1)
 
-      map      = map
-      episode  = episode
       ep_along = ep_along
 
       sky_light = ep_info.sky_light
     }
+
+    table.insert( EPI.levels, LEV)
+    table.insert(GAME.levels, LEV)
 
     LEV.mon_along = LEV.ep_along
 
@@ -4888,7 +4921,7 @@ function DOOM2.get_levels()
     end
 
     if OB_CONFIG.length == "few" then
-      LEV.episode = few_episodes[map]
+---!!!  LEV.episode = few_episodes[map]
     end
 
     -- secret levels
@@ -4916,10 +4949,8 @@ function DOOM2.get_levels()
     end
 
     if MAP_NUM == 1 or (map % 10) == 3 then
-      LEV.demo_lump = string.format("DEMO%d", episode)
+      LEV.demo_lump = string.format("DEMO%d", ep_index)
     end
-
-    table.insert(GAME.levels, LEV)
   end
 end
 
