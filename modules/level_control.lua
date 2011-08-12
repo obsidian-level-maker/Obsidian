@@ -71,14 +71,12 @@ OB_MODULES["level_control"] =
     crossovers  = { label="Cross-Overs",    choices=LEVEL_CONTROL.CHOICES }
     cycles      = { label="Multiple Paths", choices=LEVEL_CONTROL.CHOICES }
     hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
-    hub_mode    = { label="Hub Mode",       choices=LEVEL_CONTROL.CHOICES }
     lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
     liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
     naturals    = { label="Natural Areas",  choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }
     scenics     = { label="Scenics",        choices=LEVEL_CONTROL.CHOICES }
-    street_mode = { label="Street Mode",    choices=LEVEL_CONTROL.CHOICES }
 --  sub_rooms   = { label="Sub-Rooms",      choices=LEVEL_CONTROL.CHOICES }
     symmetry    = { label="Symmetry",       choices=LEVEL_CONTROL.CHOICES }
     teleporters = { label="Teleporters",    choices=LEVEL_CONTROL.CHOICES }

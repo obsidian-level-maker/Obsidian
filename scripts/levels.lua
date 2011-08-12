@@ -50,8 +50,8 @@ class LEVEL
   best_conn : table  -- stores the best current connection
                      -- (only used while connecting rooms)
 
-  street_mode : boolean
-  hub_mode    : boolean
+  special : keyword  -- normally nil
+                     -- can be: "street", "surround", "wagon"
 
   -- TODO: lots of other fields : document important ones
 }
@@ -110,8 +110,6 @@ GLOBAL_STYLE_LIST =
   cycles      = { none=20, some=50, heaps=50 }
   islands     = { few=60, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
-  hub_mode    = { none=50, heaps=12 }
-  street_mode = { none=50, heaps=5 }
 
   room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }
 
@@ -373,6 +371,49 @@ end
 
 
 function Levels_decide_special_kinds()
+  each EPI in GAME.episodes do
+    -- Street Mode is fairly rare, no more than once per episode
+    -- (and sometimes none at all, when street_idx > #levels)
+    local street_idx = rand.irange(1,16)
+
+    local LEV = EPI.levels[street_idx]  -- nil if absent
+    if LEV and not LEV.special then
+      LEV.special = "street"
+    end
+
+    -- Surround Mode is even rarer
+    local surround_idx = rand.irange(1,32)
+
+    LEV = EPI.levels[surround_idx]
+    if LEV and not LEV.special then
+      LEV.special = "surround"
+    end
+
+    -- Wagon Wheel Mode : have a central hub room
+    local wagon_idx = rand.irange(1,10)
+
+    LEV = EPI.levels[wagon_idx]
+    if LEV and not LEV.special then
+      LEV.special = "wagon"
+    end
+  end
+
+  -- dump the results
+
+  local count = 0
+
+  gui.printf("\nSpecial levels:\n")
+
+  each LEV in GAME.levels do
+    if LEV.special then
+      gui.printf("  %s : %s\n", LEV.name, LEV.special)
+      count = count + 1
+    end
+  end
+
+  if count == 0 then
+    gui.printf("  none\n")
+  end
 end
 
 
@@ -799,7 +840,7 @@ function Levels_make_all()
   table.index_up(GAME.levels)
   table.index_up(GAME.episodes)
 
---Levels_decide_special_kinds()
+  Levels_decide_special_kinds()
 
   Levels_choose_themes()
 

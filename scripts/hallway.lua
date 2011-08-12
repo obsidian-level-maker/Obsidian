@@ -277,7 +277,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     local score = (score1 + score2) * 10
 
     -- bonus for connecting to a central hub room
-    if start_K.room.is_hub or (end_K.room and end_K.room.is_hub) then
+    if start_K.room.central_hub or (end_K.room and end_K.room.central_hub) then
       score = score + 155
     -- big bonus for using a big junction
     elseif end_K.kind == "big_junc" then
@@ -671,7 +671,7 @@ end
 
 
 function Hallway_add_streets()
-  if STYLE.street_mode == "none" then return end
+  if LEVEL.special != "street" then return end
 
   local hall = HALLWAY_CLASS.new()
 

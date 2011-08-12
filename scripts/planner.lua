@@ -1173,9 +1173,12 @@ end
 function Plan_add_special_rooms()
 
   local function central_hub_room()
+    -- size check
+    if MAP_W < 4 or MAP_H < 3 then return end
+
     local room = ROOM_CLASS.new("odd")
 
-    room.is_hub = true
+    room.central_hub = true
 
     local hub_W = (MAP_W + 1) * 0.4
     local hub_H = (MAP_H + 1) * 0.4
@@ -1208,6 +1211,9 @@ function Plan_add_special_rooms()
 
 
   local function surround_map()
+    -- size check
+    if MAP_W < 4 or MAP_H < 3 then return end
+
     local room = ROOM_CLASS.new("odd")
 
     room.is_surrounder = true
@@ -1229,17 +1235,13 @@ function Plan_add_special_rooms()
 
   ---| Plan_add_special_rooms |---
 
-  if STYLE.hub_mode != "none" and MAP_W >= 4 and MAP_H >= 3 then
-    central_hub_room()
-    return
-  end
-
-  -- occasionally surround the whole map
-  if MAP_W >= 4 and MAP_H >= 3 and rand.odds(3) then
+  if LEVEL.special == "surround" then
     surround_map()
-    return
-  end
 
+  elseif LEVEL.special == "wagon" then
+    central_hub_room()
+
+  end
 end
 
 
@@ -1488,7 +1490,7 @@ function Plan_decide_outdoors()
       if not THEME.courtyard_floors then return false end
     end
 
-    if STYLE.street_mode != "none" then return false end
+    if LEVEL.special == "street" then return false end
 
     if STYLE.outdoors == "none"   then return false end
     if STYLE.outdoors == "always" then return true end
