@@ -137,7 +137,7 @@ GLOBAL_STYLE_LIST =
 
 COOP_STYLE_LIST =
 {
-  -- TODO
+  cycles = { some=30, heaps=50 }
 }
 
 
@@ -598,6 +598,11 @@ function Levels_do_styles()
 
   local style_tab = table.copy(GLOBAL_STYLE_LIST)
 
+  -- adjust styles for Co-operative multiplayer
+  if OB_CONFIG.mode == "coop" then
+    table.merge(style_lists, COOP_STYLE_LIST)
+  end
+
   -- per game, per level and per theme style_lists
   if GAME.STYLE_LIST then
     table.merge(style_tab, GAME.STYLE_LIST)
@@ -697,20 +702,19 @@ function Levels_handle_prebuilt()
 end
 
 
-function Levels_make_level(EPI, L, index, NUM)
-  assert(EPI)
+function Levels_make_level(L)
+  local index = L.index
+  local total = #GAME.levels
 
-  assert(L)
-  assert(L.name)
-  assert(L.theme)
+  assert(LEVEL.name)
+  assert(LEVEL.theme)
 
   -- copy level info, so that all new information added into the LEVEL
   -- object by the generator can be garbage collected once this level is
   -- finished.  Without the copy the info would remain in GAME.levels
-  LEVEL   = table.copy(L)
-  EPISODE = table.copy(EPI)
+  LEVEL = table.copy(L)
 
-  gui.at_level(LEVEL.name, index, NUM)
+  gui.at_level(LEVEL.name, index, total)
 
   gui.printf("\n\n~~~~~~| %s |~~~~~~\n", LEVEL.name)
 
@@ -771,7 +775,7 @@ function Levels_make_level(EPI, L, index, NUM)
   gui.end_level()
 
 
-  if index < NUM then
+  if index < total then
     Levels_between_clean()
   end
 
@@ -791,6 +795,9 @@ function Levels_make_all()
     error("Episode list is empty!")
   end
 
+  table.index_up(GAME.levels)
+  table.index_up(GAME.episodes)
+
 --Levels_decide_special_kinds()
 
   Levels_choose_themes()
@@ -800,8 +807,10 @@ function Levels_make_all()
 --Levels_rarify(3, GAME.POWERUPS)
 
   each EPI in GAME.episodes do
+    EPISODE = table.copy(EPI)
+
     each L in EPI.levels do
-      if Levels_make_level(EPI, L, _index, #GAME.levels) == "abort" then
+      if Levels_make_level(L) == "abort" then
         return "abort"
       end
     end
