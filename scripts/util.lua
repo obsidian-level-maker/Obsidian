@@ -365,6 +365,12 @@ function table.name_up(t)
   end
 end
 
+function table.index_up(t)
+  for index,info in ipairs(t) do
+    info.index = index
+  end
+end
+
 function table.expand_copies(t)
 
   local function expand_it(name, sub)
