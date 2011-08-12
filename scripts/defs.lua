@@ -27,6 +27,7 @@ THEME  = {}
 
 SEEDS    = {}
 SECTIONS = {}
+EPISODE  = {}
 
 -- all prefabs go here
 PREFAB = {}

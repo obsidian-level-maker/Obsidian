@@ -26,18 +26,45 @@ class LEVEL
 
   name : string  -- engine name for this level, e.g. MAP01
 
+  description : string  -- level name or title (optional)
+
+  episode : EPISODE
+
   epi_along : float  -- how far along the episode, 0.0 -> 1.0
 
-  rooms  : list(ROOM) 
-  conns  : list(CONN)
-  quests : list(QUEST)
-  locks  : list(LOCK)
+  rooms   : list(ROOM) 
+  scenics : list(ROOM) 
+  halls   : list(HALLWAY)
 
-  last_tag  : number
-  last_mark : number
-  last_room : number
-  
+  conns   : list(CONN)
+  quests  : list(QUEST)
+  locks   : list(LOCK)
+
+  ids : table  -- used for allocating tag numbers (etc)
+
+  liquid : table  -- the main liquid in the level (can be nil)
+
+  start_room : ROOM  -- the starting room
+   exit_room : ROOM  -- the exit room
+
+  best_conn : table  -- stores the best current connection
+                     -- (only used while connecting rooms)
+
+  street_mode : boolean
+  hub_mode    : boolean
+
   -- TODO: lots of other fields : document important ones
+}
+
+
+class EPISODE
+{
+  levels : list(LEVEL)
+
+  is_hub : boolean  -- 'true' if this episode is a hub
+
+  used_keys : table  -- for hubs, remember keys which have been used
+                     -- on any level in the hub (cannot use them again)
 }
 
 
@@ -108,6 +135,12 @@ GLOBAL_STYLE_LIST =
 }
 
 
+COOP_STYLE_LIST =
+{
+  -- TODO
+}
+
+
 GLOBAL_PARAMETERS =
 {
   step_height = 16
@@ -121,6 +154,7 @@ function Levels_clean_up()
   STYLE  = {}
 
   LEVEL    = nil
+  EPISODE  = nil
   SEEDS    = nil
   SECTIONS = nil
 
@@ -137,6 +171,7 @@ function Levels_between_clean()
 end
 
 
+
 function Levels_merge_themes(theme_tab, tab)
   each name,sub_t in tab do
     if sub_t == REMOVE_ME then
@@ -148,6 +183,7 @@ function Levels_merge_themes(theme_tab, tab)
     end
   end
 end
+
 
 
 function Levels_merge_tab(name, tab)
@@ -168,6 +204,7 @@ function Levels_merge_tab(name, tab)
 end
 
 
+
 function Levels_merge_table_list(tab_list)
   each GT in tab_list do
     assert(GT)
@@ -182,6 +219,7 @@ function Levels_merge_table_list(tab_list)
     end
   end
 end
+
 
 
 function Levels_add_game()
@@ -218,6 +256,7 @@ function Levels_add_game()
 end
 
 
+
 function Levels_add_engine()
   local function recurse(name, child)
     local def = OB_ENGINES[name]
@@ -243,6 +282,7 @@ function Levels_add_engine()
 
   table.insert(GAME.modules, 2, recurse(OB_CONFIG.engine))
 end
+
 
 
 function Levels_collect_modules()
@@ -273,6 +313,7 @@ function Levels_collect_modules()
 end
 
 
+
 function Levels_invoke_hook(name, rseed, ...)
   -- two passes, for example: setup and setup2
   for pass = 1,2 do
@@ -286,6 +327,7 @@ function Levels_invoke_hook(name, rseed, ...)
     name = name .. "2"
   end
 end
+
 
 
 function Levels_setup()
@@ -327,6 +369,12 @@ function Levels_setup()
 
   table.name_up(PREFAB)
 end
+
+
+
+function Levels_decide_special_kinds()
+end
+
 
 
 function Levels_choose_themes()
@@ -629,10 +677,10 @@ function Levels_handle_prebuilt()
   -- randomly pick one
   local probs = {}
 
-  for idx,info in ipairs(LEVEL.prebuilt) do
-    probs[idx] = info.prob or 50
+  each info in LEVEL.prebuilt do
+    probs[_index] = info.prob or 50
   end
-  
+
   local info = LEVEL.prebuilt[rand.index_by_probs(probs)]
 
   assert(info)
@@ -649,11 +697,18 @@ function Levels_handle_prebuilt()
 end
 
 
-function Levels_make_level(L, index, NUM)
-  LEVEL = L
+function Levels_make_level(EPI, L, index, NUM)
+  assert(EPI)
 
-  assert(LEVEL)
-  assert(LEVEL.name)
+  assert(L)
+  assert(L.name)
+  assert(L.theme)
+
+  -- copy level info, so that all new information added into the LEVEL
+  -- object by the generator can be garbage collected once this level is
+  -- finished.  Without the copy the info would remain in GAME.levels
+  LEVEL   = table.copy(L)
+  EPISODE = table.copy(EPI)
 
   gui.at_level(LEVEL.name, index, NUM)
 
@@ -663,7 +718,7 @@ function Levels_make_level(L, index, NUM)
   LEVEL.seed = OB_CONFIG.seed * 100 + index
   LEVEL.ids  = {}
 
-  THEME = table.copy(assert(LEVEL.theme))
+  THEME = table.copy(LEVEL.theme)
 
   if GAME.THEME_DEFAULTS then
     table.merge_missing(THEME, GAME.THEME_DEFAULTS)
@@ -725,13 +780,18 @@ end
 
 
 function Levels_make_all()
-  GAME.levels = {}
+  GAME.levels   = {}
+  GAME.episodes = {}
 
   Levels_invoke_hook("get_levels",  OB_CONFIG.seed)
 
   if #GAME.levels == 0 then
     error("Level list is empty!")
+  elseif #GAME.episodes == 0 then
+    error("Episode list is empty!")
   end
+
+--Levels_decide_special_kinds()
 
   Levels_choose_themes()
 
@@ -739,9 +799,11 @@ function Levels_make_all()
 --Levels_rarify(2, GAME.MONSTERS)
 --Levels_rarify(3, GAME.POWERUPS)
 
-  each L in GAME.levels do
-    if Levels_make_level(L, _index, #GAME.levels) == "abort" then
-      return "abort"
+  each EPI in GAME.episodes do
+    each L in EPI.levels do
+      if Levels_make_level(EPI, L, _index, #GAME.levels) == "abort" then
+        return "abort"
+      end
     end
   end
 
