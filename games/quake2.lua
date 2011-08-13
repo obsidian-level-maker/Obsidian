@@ -2306,32 +2306,42 @@ end
 
 
 function QUAKE2.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 4 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
+  local  EP_NUM = (OB_CONFIG.length == "full"   ? 5 ; 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 6)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 3 end
 
-  for episode = 1,EP_NUM do
-    local ep_info = QUAKE2.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    -- create episode info...
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = QUAKE2.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
 
+      -- create level info...
       local LEV =
       {
-        name = string.format("e%dm%d", episode, map)
-        next_map = string.format("e%dm%d", episode, map+1),
+        episode = EPI
 
-        episode  = episode
-        ep_along = map / MAP_NUM
-        ep_info  = ep_info
-        mon_along = (map + episode - 1) / MAP_NUM
+        name     = string.format("e%dm%d", ep_index, map)
+        next_map = string.format("e%dm%d", ep_index, map+1)
+
+         ep_along = map / MAP_NUM
+        mon_along = (map + ep_index - 1) / MAP_NUM
       }
-      
+
       if map == MAP_NUM then
-        LEV.next_map = string.format("e%dm%d", episode+1, 1)
+        LEV.next_map = string.format("e%dm%d", ep_index+1, 1)
       end
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 

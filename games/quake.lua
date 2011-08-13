@@ -1568,10 +1568,10 @@ end
 
 
 function QUAKE1.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 4 ; 1)
+  local  EP_NUM = (OB_CONFIG.length == "full"   ? 4 ; 1)
   local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
   if OB_CONFIG.length == "episode" then MAP_NUM = 6 end
 
   local SKIP_MAPS =
@@ -1584,27 +1584,39 @@ function QUAKE1.get_levels()
     e3m6 = 2, e4m7 = 2,
   }
 
-  for episode = 1,EP_NUM do
-    local ep_info = QUAKE1.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    -- create episode info...
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = QUAKE1.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
-      local name = string.format("e%dm%d", episode, map)
+      local name = string.format("e%dm%d", ep_index, map)
 
+      -- create level info....
       local LEV =
       {
-        name = name
-        next_map = string.format("e%dm%d", episode, map+1)
+        episode = EPI
 
-        episode  = episode
-        map      = map
-        ep_along = map / MAP_NUM
-        mon_along = (map + episode - 1) / MAP_NUM
+        name = name
+        next_map = string.format("e%dm%d", ep_index, map+1)
+
+         ep_along = map / MAP_NUM
+        mon_along = (map + ep_index - 1) / MAP_NUM
       }
 
-      if not SKIP_MAPS[name] then
-        table.insert(GAME.levels, LEV)
+      if SKIP_MAPS[name] then
+        continue
       end
+
+      table.insert( EPI.levels, LEV)
+      table.insert(GAME.levels, LEV)
 
     end -- for map
 
