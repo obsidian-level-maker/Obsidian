@@ -18,17 +18,6 @@
 --  GNU General Public License for more details.
 --
 ----------------------------------------------------------------
---
---  NOTES:
---
---  *  Chex Quest 2 is considered here as an "extension" to
---     the original Chex Quest (which reflects how it actually
---     runs, because you need both WADs to play it).
---
---  *  Chex Quest 3 is NOT considered an extension, since it's
---     complete and it requires a ZDoom-based port to run.
---
-----------------------------------------------------------------
 
 CHEX  = { }  -- common stuff
 
@@ -1094,7 +1083,7 @@ CHEX.ROOM_THEMES =
 }
 
 
-CHEX1.LEVEL_THEMES =
+CHEX.LEVEL_THEMES =
 -- TECH, ARBORETUM and CAVE?
 {
   chex_tech1 =
@@ -1572,6 +1561,8 @@ end
 
 
 function CHEX1.get_levels()
+  -- this is used for both Chex Quest 1 and 2
+
   local EP_NUM  = 1
   local MAP_NUM = 1
 
@@ -1579,23 +1570,32 @@ function CHEX1.get_levels()
   if OB_CONFIG.length == "episode" then MAP_NUM = 5 end
   if OB_CONFIG.length == "full"    then MAP_NUM = 5 ; EP_NUM = 1 end
 
-  for episode = 1,EP_NUM do
+  for ep_index = 1,EP_NUM do
+    -- create episode info...
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
     for map = 1,MAP_NUM do
 
       local LEV =
       {
-        name  = string.format("E%dM%d", episode, map)
-        patch = string.format("WILV%d%d", episode-1, map-1)
+        episode = EPI
 
-        episode  = episode
-        map      = map
+        name  = string.format("E%dM%d", ep_index, map)
+        patch = string.format("WILV%d%d", ep_index-1, map-1)
+
         ep_along = map / MAP_NUM
 
         name_theme = "TECH"
       }
 
-      LEV.mon_along = LEV.ep_along + (episode-1) / 5
+      mon_along = LEV.ep_along + (ep_index-1) / 5
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 
@@ -1604,13 +1604,20 @@ end
 
 
 function CHEX3.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 3 ; 1)
+  local  EP_NUM = (OB_CONFIG.length == "full"   ? 3 ; 1)
   local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
   if OB_CONFIG.length == "few" then MAP_NUM = 2 end
 
-  for episode = 1,EP_NUM do
-    local ep_info = CHEX3.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = CHEX3.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -1624,16 +1631,16 @@ function CHEX3.get_levels()
 
       local LEV =
       {
-        name  = string.format("E%dM%d", episode, map)
-        patch = string.format("WILV%d%d", episode-1, map-1)
+        episode = EPI
 
-        episode  = episode
-        map      = map
+        name  = string.format("E%dM%d", ep_index, map)
+        patch = string.format("WILV%d%d", ep_index-1, map-1)
 
-        ep_along  = ep_along
-        mon_along = ep_along + (episode-1) / 5
+         ep_along = ep_along
+        mon_along = ep_along + (ep_index-1) / 5
       }
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 
@@ -1728,7 +1735,7 @@ OB_GAMES["chex1"] =
 OB_GAMES["chex2"] =
 {
   label = "Chex Quest 2"
-  extends = "chex1"
+
   format = "doom"
 
   tables =
@@ -1773,7 +1780,7 @@ OB_GAMES["chex3"] =
 OB_THEMES["chex_tech"] =
 {
   label = "Tech"
-  for_games = { chex1=1, chex3=1 }
+  for_games = { chex1=1, chex2=1, chex3=1 }
   name_theme = "TECH"
   mixed_prob = 60
 }
@@ -1793,6 +1800,8 @@ UNFINISHED["chex_cave"] =  -- AJA: keep as separate theme??
   name_theme = "GOTHIC"
   mixed_prob = 30
 }
+
+-- FIXME: chex2 themes
 
 -- themes (CITY2 etc...): sewers, lodge, lots of trees 
 -- and grassy / rocky terrain outdoors, wooden buildings
