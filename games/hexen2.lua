@@ -447,6 +447,12 @@ HEXEN2.EPISODES =
     theme = "TECH"
     sky_light = 0.75
   }
+
+  episode5 =
+  {
+    theme = "TECH"
+    sky_light = 0.75
+  }
 }
 
 
@@ -458,28 +464,37 @@ end
 
 
 function HEXEN2.get_levels()
-  local EP_NUM  = (OB_CONFIG.length == "full"   ? 4 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
+  local  EP_NUM = (OB_CONFIG.length == "full"   ? 5 ; 1)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
+  if OB_CONFIG.length == "episode" then MAP_NUM = 7 end
 
-  for episode = 1,EP_NUM do
-    local ep_info = HEXEN2.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = HEXEN2.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
 
       local LEV =
       {
-        name = string.format("e%dm%d", episode, map)
-        next_map = string.format("e%dm%d", episode, map+1)
+        episode = EPI
 
-        episode  = episode
-        map      = map
-        ep_along = map / MAP_NUM
-        mon_along = (map + episode - 1) / MAP_NUM
+        name     = string.format("e%dm%d", ep_index, map)
+        next_map = string.format("e%dm%d", ep_index, map+1)
+
+         ep_along = map / MAP_NUM
+        mon_along = (map + ep_index - 1) / MAP_NUM
       }
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 

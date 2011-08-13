@@ -2235,21 +2235,31 @@ function HERETIC.get_levels()
 
   if OB_CONFIG.length == "few" then MAP_NUM = 4 end
 
-  for episode = 1,EP_NUM do
-    local ep_info = HERETIC.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    -- create episode info...
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = HERETIC.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
+      -- create level info...
       local LEV =
       {
-        name = string.format("E%dM%d", episode, map)
+        episode  = EPI
 
-        episode  = episode
-        ep_along = map / MAP_NUM
-        ep_info  = ep_info
-        mon_along = (map + episode - 1) / MAP_NUM
+        name = string.format("E%dM%d", ep_index, map)
+
+         ep_along = map / MAP_NUM
+        mon_along = (map + ep_index - 1) / MAP_NUM
       }
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 

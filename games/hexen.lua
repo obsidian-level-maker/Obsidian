@@ -4608,14 +4608,21 @@ function HEXEN.get_levels()
 
 --??  GAME.original_themes = {}
 
-  for episode = 1,EP_NUM do
-    local ep_info = HEXEN.EPISODES["episode" .. episode]
+  for ep_index = 1,EP_NUM do
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+
+    local ep_info = HEXEN.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
 --??    GAME.original_themes[episode] = ep_info.orig_theme
 
     for map = 1,MAP_NUM do
-      local map_id = (episode - 1) * MAP_NUM + map
+      local map_id = (ep_index - 1) * MAP_NUM + map
 
       local ep_along = map / MAP_NUM
 
@@ -4625,8 +4632,10 @@ function HEXEN.get_levels()
 
       local LEV =
       {
+        episode = EPI
+
         name  = string.format("MAP%02d", map_id)
---??    patch = string.format("WILV%d%d", episode-1, map-1)
+--??    patch = string.format("WILV%d%d", ep_index-1, map-1)
 
         map      = map_id
         next_map = map_id + 1
@@ -4634,20 +4643,20 @@ function HEXEN.get_levels()
         -- TODO: proper clusters!
         cluster  = map_id + 10
 
-        episode  = episode
-        ep_along = ep_along
-        mon_along = ep_along + (episode-1) / 3
+         ep_along = ep_along
+        mon_along = ep_along + (ep_index-1) / 3
 
         sky_light = ep_info.sky_light
       }
 
       -- the very last map?
-      if episode == 5 and map == MAP_NUM then
+      if ep_index == 5 and map == MAP_NUM then
         LEV.next_map = nil
       elseif EP_NUM == 1 and map == 6 then
         LEV.next_map = 13
       end
 
+      table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
 

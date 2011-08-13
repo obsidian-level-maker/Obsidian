@@ -1509,20 +1509,40 @@ function HARMONY.get_levels()
   if OB_CONFIG.length == "few"    then MAP_NUM = 4  end
   if OB_CONFIG.length == "full"   then MAP_NUM = 32 end
 
+  local EP_NUM = 1
+  if MAP_NUM > 11 then EP_NUM = 2 end
+  if MAP_NUM > 30 then EP_NUM = 3 end
+
+  -- create episode info...
+
+  for ep_index = 1,EP_NUM do
+    local EPI =
+    {
+      levels = {}
+    }
+
+    table.insert(GAME.episodes, EPI)
+  end
+
+  -- create level info...
+
   for map = 1,MAP_NUM do
     -- determine episode from map number
-    local episode
+    local ep_index
     local ep_along
 
     if map >= 31 then
-      episode = 2 ; ep_along = 0.35
+      ep_index = 2 ; ep_along = 0.35
     elseif map >= 21 then
-      episode = 3 ; ep_along = (map - 20) / 10
+      ep_index = 3 ; ep_along = (map - 20) / 10
     elseif map >= 12 then
-      episode = 2 ; ep_along = (map - 11) / 9
+      ep_index = 2 ; ep_along = (map - 11) / 9
     else
-      episode = 1 ; ep_along = map / 11
+      ep_index = 1 ; ep_along = map / 11
     end
+
+    local EPI = GAME.episodes[ep_index]
+    assert(EPI)
 
     if OB_CONFIG.length == "single" then
       ep_along = rand.pick{ 0.2, 0.3, 0.4, 0.6, 0.8 }
@@ -1530,18 +1550,16 @@ function HARMONY.get_levels()
       ep_along = map / MAP_NUM
     end
 
-
     local LEV =
     {
+      episode = EPI
+
       name  = string.format("MAP%02d", map)
       patch = string.format("CWILV%02d", map-1)
 
-      map      = map
-      episode  = episode
-      ep_along = ep_along
+       ep_along = ep_along
+      mon_along = ep_along
     }
-
-    LEV.mon_along = LEV.ep_along
 
     if OB_CONFIG.length == "episode" then
       LEV.mon_along = map / 9
@@ -1554,6 +1572,7 @@ function HARMONY.get_levels()
       -- FIXME
     end
 
+    table.insert( EPI.levels, LEV)
     table.insert(GAME.levels, LEV)
   end
 end

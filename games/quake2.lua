@@ -2307,9 +2307,10 @@ end
 
 function QUAKE2.get_levels()
   local  EP_NUM = (OB_CONFIG.length == "full"   ? 5 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 6)
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
 
-  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
+  if OB_CONFIG.length == "episode" then MAP_NUM = 7 end
 
   for ep_index = 1,EP_NUM do
     -- create episode info...
