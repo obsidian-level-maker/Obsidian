@@ -443,7 +443,7 @@ namelib.THEMES =
         Vile=15, Revolting=10, Putrid=5,
         Vulgar=5, Wretched=3, Caustic=5,
         Fallen=10, Stinking=1, Grungy=3,
-        Smoky=5,
+        Smoky=5, Flagrant=20,
 
         -- contents
         Blood=20, Bloody=5, Blood_filled=3,
