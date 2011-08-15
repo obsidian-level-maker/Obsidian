@@ -4495,9 +4495,9 @@ DOOM.WEAPONS =
     start_prob = 1
     rarity = 4
     attack = "missile"
-    rate = 0.8
+    rate = 0.65  -- tweaked value, normally 0.8
     damage = 300
-    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70, 70,70,70,70}
+    splash = {70,70,70,70, 70,70,70,70, 70,70,70,70}
     ammo = "cell"
     per = 40
     give = { {ammo="cell",count=40} }
