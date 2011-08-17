@@ -36,6 +36,35 @@ OBLIGE 3.57 is the current version.
 
 <h3>NEWS</h3>
 
+<div class="newsdate">17-Aug-2011:</div>
+<blockquote class="news">
+
+OBLIGE now has a new forum.
+
+This move was prompted by various problems and annoyances
+with the existing "hosted app" phpBB3 forum.
+
+<p>
+All of the users and topics from the previous forum have been
+successfully converted into the new forum, although certain
+things did not make the transition, in particular: avatar images,
+images in posts, and post attachments.
+
+Users will need to re-upload their avatar images.
+
+<p>
+The existing phpBB3 forum will be kept around in a
+read-only state for a few months, and
+hopefully a method can be found to restore the
+attachments and images in the posts
+(otherwise I will fix the most important ones by hand and
+not worry about the rest).
+
+</blockquote>
+
+
+<hr style="clear: right;">
+
 <div class="newsdate">02-Jul-2011:</div>
 <blockquote class="news">
 Wow, hard to believe it's been five months since the last update!
