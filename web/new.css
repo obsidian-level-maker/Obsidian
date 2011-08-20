@@ -119,8 +119,12 @@ PRE { /* font-size: larger; */ }
     margin-bottom: 0.7em;
 }
 
-.credit_list {
-    margin-top: 0.2em;
+.contributor {
+    margin-bottom: 1.4em;
+}
+
+.contributor ul {
+    margin-top: 0.3em;
 }
 
 .faq_Q {

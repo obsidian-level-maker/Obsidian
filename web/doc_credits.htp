@@ -34,28 +34,36 @@ a DOOM source port with many enhanced features.
 
 <h3> CONTRIBUTORS </h3>
 
+<div class="contributor">
+
 <b>Chris Pisarczyk (Mr. Chris)</b>
-<ul class="credit_list">
-  <li>DOOM prefabs
-  <li>Skulltag Monsters module
-  <li>ZDoom Beastiary module
-  <li>DOOM 1 boss maps (E1M8, E2M8, E3M8)
-  <li>DOOM 2 "dead simple" boss map
-  <li>DOOM 1/2 theming
-  <li>additions to name generator
-  <li>lots of useful feedback
-  <li>general encouragement and support
+<ul>
+  <li>DOOM prefabs</li>
+  <li>Skulltag Monsters module</li>
+  <li>ZDoom Beastiary module</li>
+  <li>DOOM 1 boss maps (E1M8, E2M8, E3M8)</li>
+  <li>DOOM 2 "dead simple" boss map</li>
+  <li>DOOM 1/2 theming</li>
+  <li>additions to name generator</li>
+  <li>lots of useful feedback</li>
+  <li>general encouragement and support</li>
 </ul>
+</div>
 
-<p>
+
+<div class="contributor">
+
 <b>Derek Braun (Dittohead)</b>
-<ul class="credit_list">
-  <li>DOOM tech prefabs
+<ul>
+  <li>DOOM tech prefabs</li>
 </ul>
+</div>
 
-<p>
+
+<div class="contributor">
+
 <b>Enhas</b>
-<ul class="credit_list">
+<ul>
   <li>ZDoom Marines module
   <li>Stealth Monsters module
   <li>Level Control module
@@ -66,29 +74,39 @@ a DOOM source port with many enhanced features.
   <li>lots of useful feedback
   <li>fixes and tweaks
 </ul>
+</div>
 
-<p>
+
+<div class="contributor">
+
 <b>Jared Blackburn (blackjar)</b>
-<ul class="credit_list">
+<ul>
   <li>Hexen theming
 </ul>
+</div>
 
-<p>
+
+<div class="contributor">
+
 <b>Jon Vail (40oz)</b>
-<ul class="credit_list">
+<ul>
   <li>extensive work on name generator
   <li>Cyberdemon arena map
   <li>DOOM prefabs
 </ul>
+</div>
 
-<p>
+
+<div class="contributor">
+
 <b>Sam Trenholme</b>
-<ul class="credit_list">
+<ul>
   <li>Heretic theming
   <li>workaround for the stair-building error
   <li>lots of feedback and support
   <li>numerous fixes
 </ul>
+</div>
 
 
 <h3> THANKS TO... </h3>
