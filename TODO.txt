@@ -5,13 +5,30 @@ OBLIGE TODO
 Current Work
 ------------
 
+-  position-based monster ordering 
+
+
+DOOM Shadow Algorithm:
+
+1. assume light brush have a 2D origin point
+   (probably optional, if not present the light is coming down from
+    ceiling or up from floor)
+
+2. test for intersections with nearby solid brushes.
+   IF a side intersects with the light brush
+   AND the light origin is on the correct side
+   THEN split the light brush into 3 (at most) pieces
+        (i.e. subtract the shadow area from the light brush)
+
+3. a simpler alternative would be to change the light model
+   to use simple addition of all light brushes, and merely
+   create a shadow brush (at the intersection side) which cancels
+   out the original light brush.
+
+
+
 +  reserve one border seed around map, and the hallway channel
    at edges of map are only 1 seed wide
-
--  distribute_stats : treat ammo and health differently, more ammo
-   should go into previous rooms, but less health.
-
--  check that Skulltag monster module works
 
 
 !!!!  fix the "no spot for wotsit" error
@@ -21,7 +38,7 @@ Current Work
 
 +  have a monster exclusion zone around teleporters
 
--  street_mode and hub_mode : don't use styles for them
+DONE:  street_mode and hub_mode : don't use styles for them
 
 
 !!!  the "apply twice" problem in prefab build code
