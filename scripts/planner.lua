@@ -258,8 +258,16 @@ function Plan_choose_liquid()
     local name = rand.key_by_probs(THEME.liquids)
     LEVEL.liquid = assert(GAME.LIQUIDS[name])
     gui.printf("Liquid: %s\n\n", name)
+
+    -- setup the special '_LIQUID' material
+    assert(LEVEL.liquid.mat)
+    local mat = assert(GAME.MATERIALS[LEVEL.liquid.mat])
+    GAME.MATERIALS["_LIQUID"] = mat
   else
     gui.printf("Liquids disabled.\n\n")
+
+    -- leave '_LIQUID' unset : it should not be used, but if does then
+    -- the _ERROR texture will appear (like any other unknown material)
   end
 end
 
