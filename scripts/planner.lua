@@ -327,35 +327,28 @@ end
 function Plan_create_sections()
   local SIZE_TABLE = THEME.room_size_table or { 40,60,20,4 }
 
-  local border_seeds = PARAM.border_seeds or 2
-  local free_seeds   = PARAM.free_seeds   or 4
-
-  assert(border_seeds >= 1)
+  local free_seeds = 4
 
 
   local function pick_sizes(W, limit)
---??  -- adjust for Wolf3D, where each seed is 2x2 blocks, but we add a
---??  -- block to every section row and column for centered doors (etc).
---??  if PARAM.tiled then
---??    limit = PARAM.block_limit - W
---??    limit = int(limit / 2)
---??  end
+    -- one spare seed on each edge of the map
+    limit = limit - 2
 
     assert(W >= 2)
-    assert(limit >= W * 3 + border_seeds * 2)
+    assert(limit >= 1 + W * 3 + 1)
 
     -- this lists holds the result sizes
     local sizes = {}
 
     -- set very left and right (or top and bottom) hallway channels
-    sizes[1]     = border_seeds
-    sizes[W*2+1] = border_seeds
+    sizes[1]     = 1
+    sizes[W*2+1] = 1
 
     local total
 
     -- try many times to find a usable set of sizes
     for loop = 1,50 do
-      total = border_seeds * 2
+      total = sizes[1] + sizes[W*2 + 1]
 
       for x = 1,W do
         sizes[x*2] = 1 + rand.index_by_probs(SIZE_TABLE)
@@ -409,7 +402,8 @@ function Plan_create_sections()
 
 
   local function get_positions(W, sizes)
-    local pos = { 1 }
+    -- begins at 2 since there is 1 spare seed surrounding the map
+    local pos = { 2 }
 
     for x = 1, W*2 do
       pos[x+1] = pos[x] + sizes[x]
@@ -492,8 +486,8 @@ function Plan_create_sections()
 
   --- create the SEED map ---
 
-  local seed_W = section_X[SECTION_W] + section_W[SECTION_W] - 1
-  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H] - 1
+  local seed_W = section_X[SECTION_W] + section_W[SECTION_W]
+  local seed_H = section_Y[SECTION_H] + section_H[SECTION_H]
 
   Seed_init(seed_W, seed_H, 0, free_seeds)
 end
