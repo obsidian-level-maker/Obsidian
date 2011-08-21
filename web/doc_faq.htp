@@ -237,8 +237,10 @@ There are a number of reasons:
 
   <li> Flexibility.  I am not limited by what the tools can do.
        For example, I could implement my own lighting algorithms.
-
 </ol>
+
+Nevertheless, a method of creating .MAP files may still
+be added one day.
 
 </div>
 
