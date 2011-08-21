@@ -26,7 +26,7 @@ It was written in pure C++ and had a very limited architecture
 No monsters or items were added.
 A notable feature was a GUI window which
 showed you the shape of each generated area.
-The V1 codebase was never released, but rumour has it
+The V1 codebase was never released, but rumor has it
 the code lurks somewhere deep in the SVN repository.
 
 <p>
@@ -44,8 +44,15 @@ a process which is still on-going as many earlier features
 have not been re-implemented yet.
 The first public release of the V3 codebase
 occurred in April 2009 (at version 3.39)
-and it is planned to release future versions
-as often as possible.
+and the last release was version 3.57 in April 2010.
+
+<p>
+<b>Oblige V4</b> began as an experiment into a completely new way
+to layout rooms using prefabs for everything (including floors and ceilings).
+However this system proved to be unsatisfactory, so I scrapped it
+and went back to the drawing board.  Since then large portions of the
+Lua code were reworked or rewritten, and it is expected to have an
+official release sometime before the end of 2011.
 
 
 <h3>RELEASE DATES</h3>
