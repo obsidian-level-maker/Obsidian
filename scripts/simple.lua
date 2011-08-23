@@ -317,7 +317,7 @@ do return true end ---!!!!!!!!!!!!1
 
     Trans.set_mat(coords, data.wtex, data.ftex)
 
-    Trans.brush(coords)
+    brush_helper(coords)
   end
 
 
@@ -327,7 +327,8 @@ do return true end ---!!!!!!!!!!!!1
       table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
 
       Trans.set_mat(coord2, data.wtex, data.ftex)
-      Trans.brush(coord2)
+
+      brush_helper(coord2)
     end
 
     if data.c_info then
@@ -335,7 +336,8 @@ do return true end ---!!!!!!!!!!!!1
       table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
 
       Trans.set_mat(coords, data.wtex, data.ctex)
-      Trans.brush(coord2)
+
+      brush_helper(coord2)
     end
   end
 

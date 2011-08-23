@@ -234,57 +234,16 @@ function Trans.collect_flags(C)
 end
 
 
-function Trans.brush(coords, clip_rects)
 
-  -- FIXME: mirroring
-  -- (when mirroring, ensure first XY coord stays the first)
-
-  -- apply transform
-  coords = table.deep_copy(coords)
-
+function brush_helper(coords)
   local mode = coords[1].m
-
-  if mode == "nothing" then return end
 
   -- light and rail brushes only make sense for 2.5D games
   if mode == "light" and not PARAM.light_brushes then return end
   if mode == "rail"  and not PARAM.rails then return end
 
-  for _,C in ipairs(coords) do
-    if C.m then
-      -- brush info : skip
-    elseif C.x then
-      C.x, C.y = Trans.apply_xy(C.x, C.y)
-    elseif C.b then
-      C.b, C.s = Trans.apply_z(C.b, C.s)
-    elseif C.t then
-      C.t, C.s = Trans.apply_z(C.t, C.s)
-    else
-      error("weird coords in brush")
-    end
-
+  each C in coords do
     Trans.collect_flags(C)
-  end
-
-  -- ignore space management brushes here
-  if mode == "walk" or mode == "air" or mode == "used" or 
-     mode == "floor" or mode == "zone" or mode == "nosplit" or
-     mode == "spot"
-  then
-    return
-  end
-
-  if Trans.debug_brushes then
-    Trans.dump_brush(coords)
-  end
-
-  if clip_rects then
-    local list = { coords }
-    Trans.clip_brushes_to_rects(list, clip_rects)
-    for _,B in ipairs(list) do
-      gui.add_brush(B)
-    end
-    return
   end
 
   gui.add_brush(coords)
@@ -322,113 +281,6 @@ function entity_helper(name, x, y, z, props)
   gui.add_entity(ent)
 end
 
-
-function Trans.entity(name, x, y, z, props)  -- TODO : REMOVE
-  -- prevent the addition of entities
-  if Trans.no_entities then return end
-
-  -- don't add light entities for DOOM / Duke3D
-  if PARAM.light_brushes and (name == "light" or name == "sun") then
-    return
-  end
-
-  local ent
-
-  if props then
-    ent = table.copy(props)
-  else
-    ent = {}
-  end
-
-  assert(name)
-
-  local info = GAME.ENTITIES[name]
-  if not info then
-    gui.printf("\nLACKING ENTITY : %s\n\n", name)
-    return
-  end
-
-  ent.id = assert(info.id)
-
-  if x then
-    x, y = Trans.apply_xy(x, y)
-
-    ent.x = x
-    ent.y = y
-  end
-
-  if z then
-    z = Trans.apply_z(z)
-
-    if info.delta_z then
-      z = z + info.delta_z
-    elseif PARAM.entity_delta_z then
-      z = z + PARAM.entity_delta_z
-    end
-
-    ent.z = z
-  end
-
-  if ent.angle then
-    ent.angle = Trans.apply_angle(ent.angle)
-  end
-
-  if ent.angles then
-    ent.angles = Trans.apply_angles_xy(ent.angles)
-    ent.angles = Trans.apply_angles_z (ent.angles)
-  end
-
-  if info.spawnflags then
-    ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
-  end
-
-  gui.add_entity(ent)
-end
-
-
-function Trans.quad(x1,y1, x2,y2, z1,z2, props, w_face, p_face)
-  assert(x1)
-
-  if not w_face then
-    -- convenient form: only a material name was given
-    props, w_face, p_face = Mat_normal(props)
-  end
-
-  if type(props) == "string" then
-    props = { m=props }
-  end
-
-  local coords =
-  {
-    { x=x1, y=y1 }
-    { x=x2, y=y1 }
-    { x=x2, y=y2 }
-    { x=x1, y=y2 }
-  }
-
-  for _,C in ipairs(coords) do
-    table.merge(C, w_face)
-  end
-
-  if props and props.m then
-    table.insert(coords, 1, props)
-  end
-
-  if z1 then
-    local face = table.copy(p_face)
-    face.b = z1
-    table.insert(coords, face)
-  end
-
-  if z2 then
-    local face = table.copy(p_face)
-    face.t = z2
-    table.insert(coords, face)
-  end
-
---stderrf("coords = \n%s\n\n", table.tostr(coords, 3))
-  Trans.brush(coords)
-end
 
 
 function Trans.bare_quad(x1,y1, x2,y2, b,t)
@@ -2122,9 +1974,9 @@ end
 ---==========================================================---
 
 
-function Quake_test()
+function OLD__Quake_test()
 
-  -- FIXME: update for new brush system
+  -- FIXME: convert this into a prefab
 
   Trans.old_quad(get_mat("METAL1_2"), 0, 128, 256, 384,  -24, 0)
   Trans.old_quad(get_mat("CEIL1_1"),  0, 128, 256, 384,  192, 208)
@@ -2154,7 +2006,7 @@ function Quake_test()
   Trans.old_quad(wall_i, 0,   128, 256, 144,  0, 192)
   Trans.old_quad(wall_i, 0,   370, 256, 384,  0, 192)
 
-  Trans.entity("player1", 80, 256, 64)
-  Trans.entity("light",   80, 256, 160, { light=200 })
+  entity_helper("player1", 80, 256, 64)
+  entity_helper("light",   80, 256, 160, { light=200 })
 end
 
