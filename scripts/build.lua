@@ -1117,6 +1117,8 @@ function Fab_create(name)
 
   mark_outliers(fab)
 
+  fab.state = "raw"
+
   return fab
 end
 
@@ -1328,8 +1330,9 @@ function Fab_apply_skins(fab, list)
  
   ---| Fab_apply_skins |---
 
-  assert(not fab.skinned)
-  fab.skinned = true
+  assert(fab.state == "raw")
+
+  fab.state = "skinned"
 
   -- FIXME: move the code here
   Trans.process_skins(GLOBAL_SKIN_DEFAULTS,
@@ -1567,10 +1570,9 @@ function Fab_transform_XY(fab, T)
   
   ---| Fab_transform_XY |---
 
-  assert(fab.skinned)
-  assert(not fab.moved)
+  assert(fab.state == "skinned")
 
-  fab.moved = true
+  fab.state = "transform_xy"
 
   local bbox = fab.bbox
 
@@ -1693,10 +1695,9 @@ function Fab_transform_Z(fab, T)
   
   ---| Fab_transform_Z |---
 
-  assert(fab.skinned)
-  assert(not fab.bumped)
+  assert(fab.state == "transform_xy")
 
-  fab.bumped = true
+  fab.state = "transform_z"
 
   local bbox = fab.bbox
 
@@ -1833,10 +1834,9 @@ function Fab_render(fab)
 
   ---| Fab_render |---
 
-  assert(fab.moved and fab.bumped)
-  assert(not fab.rendered)
+  assert(fab.state == "transform_z")
 
-  fab.rendered = true
+  fab.state = "rendered"
 
   for _,B in ipairs(fab.brushes) do
     if CSG_BRUSHES[B[1].m] then
