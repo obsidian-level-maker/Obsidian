@@ -637,7 +637,7 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
       props.flags = DOOM_FLAGS.EASY + DOOM_FLAGS.MEDIUM + DOOM_FLAGS.HARD
     end
 
-    Trans.entity(item_name, x, y, z, props)
+    entity_helper(item_name, x, y, z, props)
   end
 
 
@@ -1299,11 +1299,7 @@ function Monsters_in_room(R)
 
     local props = { }
 
-    if PARAM.pyr_angles then
-      props.angles = string.format("0 %d 0", angle)
-    else
-      props.angle = angle
-    end
+    props.angle = angle
 
     if PARAM.use_spawnflags then
       props.spawnflags = 0
@@ -1326,7 +1322,7 @@ function Monsters_in_room(R)
       if (skill <= 2) then props.flags = props.flags + DOOM_FLAGS.MEDIUM end
     end
 
-    Trans.entity(mon, x, y, z, props)
+    entity_helper(mon, x, y, z, props)
   end
 
 

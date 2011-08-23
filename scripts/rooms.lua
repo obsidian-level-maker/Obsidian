@@ -1095,9 +1095,10 @@ end
 
 
 function Rooms_add_sun()
-  if GAME.format == "doom" then
-    return
-  end
+  -- game check
+  local sun_ent = GAME.ENTITIES["sun"]
+
+  if not sun_ent then return end
 
   local sun_r = 25000
   local sun_h = 40000
@@ -1113,17 +1114,19 @@ function Rooms_add_sun()
 
     local level = (i == 1 ? 32 ; 6)
 
-    Trans.entity("sun", x, y, sun_h, { light=level })
+    gui.entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
   end
 
-  Trans.entity("sun", 0, 0, sun_h, { light=12 })
+  gui.entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
 end
 
 
 
 function Rooms_intermission_camera()
   -- game check
-  if not GAME.ENTITIES["camera"] then return end
+  local camera_ent = GAME.ENTITIES["camera"]
+
+  if not camera_ent then return end
 
   -- determine the room (biggest one, excluding starts and exits)
   local room
@@ -1156,63 +1159,6 @@ function Rooms_intermission_camera()
 
   gui.printf("Camera @ (%d %d %d)\n", info.x1, info.y1, info.z1)
 
---[[ TO BE REMOVED : OLD SECTION-BASED METHOD
-  local K
-  local dir
-
-  local CORNERS = { 1,3,7,9 }
-  rand.shuffle(CORNERS)
-
-  each dir in CORNERS do
-    local kx = (side == 1 or side == 7 ? room.kx1 ; room.kx2)
-    local ky = (side == 1 or side == 3 ? room.ky1 ; room.ky2)
-
-    if SECTIONS[kx][ky].room == room then
-      K = SECTIONS[kx][ky]
-      dir = 10 - side
-      break
-    end
-  end
-
-  if not K then
-    K = room.sections[1]
-    dir = 1
-
-    if K:same_room(6) then dir = 3 end
-    if K:same_room(8) then dir = dir + 6 end
-  end
-
-  local z1
-  local z2 = room.entry_floor_h
-
-  if room.ceil_h then z1 = room.ceil_h - 64
-  elseif room.sky_h then z1 = room.sky_h - 96
-  else z1 = room.entry_floor_h + 128
-  end
-
-  local K2 = K
-
-      if (dir == 3 or dir == 9) and K2:same_room(6) then K2 = K2:neighbor(6)
-  elseif (dir == 7 or dir == 9) and K2:same_room(8) then K2 = K2:neighbor(8)
-  elseif (dir == 1 or dir == 3) and K2:same_room(2) then K2 = K2:neighbor(2)
-  elseif (dir == 1 or dir == 7) and K2:same_room(4) then K2 = K2:neighbor(4)
-  end
-
-  local x1 = math.min(K.x1, K2.x1)
-  local y1 = math.min(K.y1, K2.y1)
-  local x2 = math.max(K.x2, K2.x2)
-  local y2 = math.max(K.y2, K2.y2)
-  
-  local W = x2 - x1
-  local H = y2 - y1
-
-  x1 = x1 + int(W / 3) ; x2 = x2 - int(W / 3)
-  y1 = y1 + int(H / 3) ; y2 = y2 - int(H / 3)
-
-  if dir == 1 or dir == 7 then x1,x2 = x2,x1 end
-  if dir == 1 or dir == 3 then y1,y2 = y2,y1 end
---]]
-
   local x1, y1, z1 = info.x1, info.y1, info.z1
   local x2, y2, z2 = info.x2, info.y2, info.z2
 
@@ -1222,7 +1168,7 @@ function Rooms_intermission_camera()
 
   local mangle = string.format("%d %d 0", mlook, angle)
 
-  Trans.entity("camera", x1, y1, z1, { mangle=mangle })
+  gui.add_entity { id=camera_ent.id, x=x1, y=y1, z=z1, mangle=mangle }
 end
 
 
@@ -1451,7 +1397,7 @@ function OLD__Layout_spots_in_room(R)
 
 --[[  TEST
     for _,spot in ipairs(R.item_spots) do
-      Trans.entity("potion", spot.x1 + 8, spot.y1 + 8, 0)
+      entity_helper("potion", spot.x1 + 8, spot.y1 + 8, 0)
     end
 --]]
   end
@@ -1503,9 +1449,9 @@ function OLD__Layout_all_ceilings()
       local light = rand.pick { 50, 100, 150, 200 }
       local radius = ((K.x2 - K.x1) + (K.y2 - K.y1)) / 3
 
-      local mx, my = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
+      local x, y = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-      Trans.entity("light", mx, my, z, { light=light, _radius=radius })
+      gui.add_entity { id="light", x=x, y=y, z=z, light=light, _radius=radius }
      end
     end
   end

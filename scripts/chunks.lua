@@ -442,7 +442,8 @@ function CHUNK_CLASS.purpose_key(C)
 
   local mx, my = C:mid_point()
 
-  Trans.entity(LOCK.key, mx, my, C.floor_h or 0)
+  -- FIXME !!!!  use a prefab
+  entity_helper(LOCK.key, mx, my, C.floor_h or 0)
 end
 
 
@@ -1027,12 +1028,13 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   if C.purpose then C:do_purpose() end
 
+  -- !!!! FIXME: use a prefab
   if C.weapon then ent = C.weapon end
 
   local mx, my = C:mid_point()
 
   if ent != "dummy" then
-    Trans.entity(ent, mx, my, f_h + 24)
+    entity_helper(ent, mx, my, f_h + 24)
   end
 
 
@@ -1040,7 +1042,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   if light > 0 and GAME.format != "doom" then
     local z = rand.irange(64, c_h-32)
-    Trans.entity("light", mx, my, z, { light=light, _radius=400 })
+    gui.add_entity { id="light", x=mx, y=my, z=z, light=light, _radius=400 }
   end
 
 
@@ -1100,7 +1102,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
 --[[ TEST
     each spot in R.item_spots do
-      Trans.entity("potion", spot.x1 + 8, spot.y1 + 8, 0)
+      entity_helper("potion", spot.x1 + 8, spot.y1 + 8, 0)
     end
 --]]
   end

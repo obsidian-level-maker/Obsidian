@@ -540,7 +540,7 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
 
 --[[  -- DEBUGGING AID --
       local mx, my = S:mid_point()
-      Trans.entity("potion", mx, my, 32)
+      entity_helper("potion", mx, my, 32)
 --]]
     end
 

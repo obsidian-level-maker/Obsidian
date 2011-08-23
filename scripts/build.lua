@@ -291,7 +291,39 @@ function Trans.brush(coords, clip_rects)
 end
 
 
-function Trans.entity(name, x, y, z, props)
+function entity_helper(name, x, y, z, props)
+  assert(name)
+
+  local ent
+
+  if props then
+    ent = table.copy(props)
+  else
+    ent = {}
+  end
+
+  local info = GAME.ENTITIES[name]
+
+  if not info then
+    gui.printf("\nLACKING ENTITY : %s\n\n", name)
+    return
+  end
+
+  ent.id = assert(info.id)
+
+  ent.x = x
+  ent.y = y
+  ent.z = z
+
+  if info.spawnflags then
+    ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
+  end
+
+  gui.add_entity(ent)
+end
+
+
+function Trans.entity(name, x, y, z, props)  -- TODO : REMOVE
   -- prevent the addition of entities
   if Trans.no_entities then return end
 
@@ -1263,9 +1295,9 @@ function Fab_apply_skins(fab, list)
     -- Note: no need to handle slopes, they are defined to be "shrinky"
     --       (i.e. never higher that t, never lower than b).
 
-    for _,B in ipairs(fab.brushes) do
+    each B in fab.brushes do
       if not B[1].outlier then
-        for _,C in ipairs(B) do
+        each C in B do
 
           if C.x then 
             if not x1 then
@@ -1291,10 +1323,6 @@ function Fab_apply_skins(fab, list)
         end -- C
       end
     end -- B
-
-    -- FIXME !!!!!!!!  this is for floor prefabs : needs deeper consideration
-    if fab.x_size then x1 = 0 ; x2 = fab.x_size end
-    if fab.y_size then y1 = 0 ; y2 = fab.y_size end
 
     assert(x1 and y1 and x2 and y2)
 
