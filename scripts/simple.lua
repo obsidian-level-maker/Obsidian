@@ -31,7 +31,8 @@ function Layout_simple_room(R)
 
     if LEVEL.liquid and
        R.svolume >= style_sel("lakes", 99, 49, 49, 30) and
-       rand.odds(style_sel("lakes", 0, 10, 30, 90)) then
+       rand.odds(style_sel("lakes", 0, 10, 30, 90))
+    then
       R.is_lake = true
     end
   else
@@ -299,7 +300,7 @@ do return true end ---!!!!!!!!!!!!1
 
 
   local w_tex  = R.cave_tex or "ASHWALL4"
---???  local w_info = get_mat(w_tex)
+
   local high_z = EXTREME_H
 
   local base_x = SEEDS[R.sx1][R.sy1].x1
@@ -322,7 +323,7 @@ do return true end ---!!!!!!!!!!!!1
 
 
   local function FC_brush(data, coords)
-    if data.f_info then
+    if data.do_floor then
       local coord2 = table.deep_copy(coords)
       table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
 
@@ -331,7 +332,7 @@ do return true end ---!!!!!!!!!!!!1
       brush_helper(coord2)
     end
 
-    if data.c_info then
+    if data.do_ceil then
       local coord2 = table.deep_copy(coords)
       table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
 
@@ -365,10 +366,10 @@ do return true end ---!!!!!!!!!!!!1
     local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
 
     if R.is_lake then
-      data.info = Mat_liquid()
+      local liq_mat = Mat_lookup(LEVEL.liquid.mat)
       data.delta_f = rand.sel(70, -48, -72)
       data.f_z = R.cave_floor_h + 8
-      data.ftex = data.info.t_face.tex -- TEMP CRUD
+      data.ftex = liq_mat.f or liq_mat.t
     end
 
     if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
@@ -394,10 +395,10 @@ do return true end ---!!!!!!!!!!!!1
       then
 
         -- create a lava/nukage pit
-        local pit = Mat_liquid()
+        local pit = Mat_lookup(LEVEL.liquid.mat)
 
         island:render(base_x, base_y, WALL_brush,
-                      { f_z=R.cave_floor_h+8, ftex="CEIL5_1", --!!! pit.t_face.tex,
+                      { f_z=R.cave_floor_h+8, pit.f or pit.t,
                         delta_f=rand.sel(70, -52, -76) })
 
         cave:subtract(island)
@@ -445,10 +446,11 @@ do return end ----!!!!!!!
 
       last_ftex = data.ftex
 
-      data.f_info = get_mat(data.ftex)
+      data.do_floor = true
 
       if LEVEL.liquid and i==2 and rand.odds(60) then  -- TODO: theme specific prob
-        data.f_info = get_liquid()
+        local liq_mat = Mat_lookup(LEVEL.liquid.mat)
+        data.ftex = liq_mat.f or liq_mat.t
 
         -- FIXME: this bugs up monster/pickup/key spots
         if rand.odds(0) then
@@ -461,20 +463,19 @@ do return end ----!!!!!!!
       end
 
       data.f_z = R.cave_floor_h + i
-      data.ftex = data.f_info.t_face.tex
 
-      data.c_info = nil
+      data.do_ceil = false
 
       if not R.outdoor then
-        data.c_info = w_info
+        data.do_ceil = true
 
         if i==2 and rand.odds(60) then
-          data.c_info = Mat_sky()
+          local mat = Mat_lookup("_SKY")
+          data.ctex = mat.f or mat.t
         elseif rand.odds(50) then
-          data.c_info = get_mat(data.ftex)
+          data.ctex = data.ftex
         elseif rand.odds(80) then
           data.ctex = choose_tex(data.ctex, THEME.cave_trims or THEME.cave_walls)
-          data.c_info = get_mat(data.ctex)
         end
 
         data.delta_c = int((0.6 + (i-1)*0.3) * R.cave_h)

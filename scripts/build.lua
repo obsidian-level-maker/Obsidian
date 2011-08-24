@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -343,11 +343,7 @@ function Trans.set_tex(coords, wall, flat)
 end
 
 
---[[ FIXME : reimplement
-function Trans.triangle(info, x1,y1, x2,y2, x3,y3, z1,z2)
-  Trans.old_brush(info, Trans.tri_coords(x1,y1, x2,y2, x3,y3), z1,z2)
-end
-
+--[[ FIXME : reimplement ?
 function Trans.strip(info, strip, z1, z2)
   for i = 1, #strip - 1 do
     local a = strip[i]
@@ -762,45 +758,6 @@ function Mat_lookup(name)
   end
 
   return mat
-end
-
-
-function Mat_normal(wall, floor)
-  if not wall then wall = "_ERROR" end
-
-  local w_mat = Mat_lookup(wall)
-
-  local f_mat = w_mat
-  if floor then
-    f_mat = Mat_lookup(floor)
-  end
-
-  if wall == "_SKY" then
-    return "sky", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
-  end
-
-  return "solid", { tex=w_mat.t }, { tex=f_mat.f or f_mat.t }
-end
-
-
-function Mat_sky()
-  local mat = assert(GAME.MATERIALS["_SKY"])
-
-  local light = LEVEL.sky_light or 0.75
-
-  return "sky", { tex=mat.t }, { tex=mat.f or mat.t, light=light }
-end
-
-
-function Mat_liquid()
-  assert(LEVEL.liquid)
-
-  local mat = Mat_lookup(LEVEL.liquid.mat)
-
-  local light   = LEVEL.liquid.light
-  local special = LEVEL.liquid.special
-
-  return "solid", { tex=mat.t }, { tex=mat.f or mat.t, light=light, speial=special }
 end
 
 
