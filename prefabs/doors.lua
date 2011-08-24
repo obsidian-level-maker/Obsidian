@@ -26,10 +26,20 @@ PREFAB.ARCH =
   {
     outer = "?wall"
     track = "?wall"
+    step  = "?floor"
   }
 
   brushes =
   {
+    -- step
+    {
+      { x =  40, y =  0, mat = "?step" }
+      { x = 152, y =  0, mat = "?step" }
+      { x = 152, y = 48, mat = "?step" }
+      { x =  40, y = 48, mat = "?step" }
+      { t = 0, mat = "?step" }
+    }
+
     -- left side
     {
       { x = 0,  y =  0, mat = "?outer" }
@@ -79,26 +89,6 @@ PREFAB.ARCH =
       { b = 128, mat = "?track" }
     }
 
-    -- walk areas
-    {
-      { m = "walk", room = 1 }
-      { x =  40, y =  24 }
-      { x = 152, y =  24 }
-      { x = 152, y = 112 }
-      { x =  40, y = 112 }
-      { b = 0 }
-      { t = 144 }
-    }
-
-    {
-      { m = "walk", room = 2 }
-      { x =  40, y = -64 }
-      { x = 152, y = -64 }
-      { x = 152, y =  24 }
-      { x =  40, y =  24 }
-      { b = 0 }
-      { t = 144 }
-    }
   }
 }
 
@@ -373,27 +363,6 @@ PREFAB.DOOR =
       { x = 178, y = 48, mat = "?key",   peg=1, x_offset=0, y_offset=0 }
       { x = 160, y = 32, mat = "?track", peg=1, x_offset=0, y_offset=0 }
     }
-
-    -- walk areas
-    {
-      { m = "walk", room = 1 }
-      { x =  40, y =  24 }
-      { x = 152, y =  24 }
-      { x = 152, y = 112 }
-      { x =  40, y = 112 }
-      { b = 0 }
-      { t = 160 }
-    }
-
-    {
-      { m = "walk", room = 2 }
-      { x =  40, y = -64 }
-      { x = 152, y = -64 }
-      { x = 152, y =  24 }
-      { x =  40, y =  24 }
-      { b = 0 }
-      { t = 160 }
-    }
   }
 }
 
@@ -450,26 +419,6 @@ PREFAB.QUAKE_DOOR =
       { x = 160, y = 24, mat = "?outer" }
     }
 
-    -- walk areas
-    {
-      { m = "walk", room = 1 }
-      { x =  40, y =  24 }
-      { x = 152, y =  24 }
-      { x = 152, y = 112 }
-      { x =  40, y = 112 }
-      { b = 0 }
-      { t = 160 }
-    }
-
-    {
-      { m = "walk", room = 2 }
-      { x =  40, y = -64 }
-      { x = 152, y = -64 }
-      { x = 152, y =  24 }
-      { x =  40, y =  24 }
-      { b = 0 }
-      { t = 160 }
-    }
   }
 
   models =

@@ -36,17 +36,6 @@ PREFAB.START_SPOT =
       { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { t = 8, mat = "?top" }
     }
-
-    {
-      { m = "walk" }
-      { x = -80, y = -80 }
-      { x =  80, y = -80 }
-      { x =  80, y =  80 }
-      { x = -80, y =  80 }
-      { b = 0 }
-      { t = 96 }
-    }
-
   }
 
   entities =
@@ -81,17 +70,6 @@ PREFAB.START_LEDGE =
       { x =   0, y = 80, mat = "?wall" }
       { t = 128, y = 80, mat = "?wall" }
     }
-
-    -- area in front of ledge
-    {
-      { m = "walk" }
-      { x =   0, y =  80 }
-      { x = 192, y =  80 }
-      { x = 192, y = 128 }
-      { x =   0, y = 128 }
-      { b = 0 }
-      { t = 160 }
-    }
   }
 
   entities =
@@ -114,14 +92,13 @@ PREFAB.EXIT_PILLAR =
 
   brushes =
   {
+    -- floor underneath
     {
-      { m = "walk" }
-      { x = -96, y = -96 }
-      { x =  96, y = -96 }
-      { x =  96, y =  96 }
-      { x = -96, y =  96 }
-      { b = 0 }
-      { t = 160 }
+      { x = -96, y = -96, mat = "?floor" }
+      { x =  96, y = -96, mat = "?floor" }
+      { x =  96, y =  96, mat = "?floor" }
+      { x = -96, y =  96, mat = "?floor" }
+      { t = 8, mat = "?floor" }
     }
 
     -- pillar itself
@@ -130,7 +107,7 @@ PREFAB.EXIT_PILLAR =
       { x =  32, y = -32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
       { x =  32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
       { x = -32, y =  32, mat = "?switch", special="?special", act="?act", tag="?tag", arg1="?next_map", peg=1, x_offset=0, y_offset=0 }
-      { t = 128, mat = "?switch" }
+      { t = 136, mat = "?switch" }
     }
 
     -- exit signs
@@ -139,7 +116,7 @@ PREFAB.EXIT_PILLAR =
       { x = -32, y = 60, mat = "?exitside" }
       { x = -40, y = 68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = -68, y = 52, mat = "?exitside" }
-      { t = 16, light = 0.82, mat = "?exitside" }
+      { t = 24, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -147,7 +124,7 @@ PREFAB.EXIT_PILLAR =
       { x = 68, y = 52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = 40, y = 68, mat = "?exitside" }
       { x = 32, y = 60, mat = "?exitside" }
-      { t = 16, light = 0.82, mat = "?exitside" }
+      { t = 24, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -155,7 +132,7 @@ PREFAB.EXIT_PILLAR =
       { x = -68, y = -52, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = -40, y = -68, mat = "?exitside" }
       { x = -32, y = -60, mat = "?exitside" }
-      { t = 16, light = 0.82, mat = "?exitside" }
+      { t = 24, light = 0.82, mat = "?exitside" }
     }
 
     {
@@ -163,7 +140,7 @@ PREFAB.EXIT_PILLAR =
       { x = 32, y = -60, mat = "?exitside" }
       { x = 40, y = -68, mat = "?exit", peg=1, x_offset=0, y_offset=0 }
       { x = 68, y = -52, mat = "?exitside" }
-      { t = 16, light = 0.82, mat = "?exitside" }
+      { t = 24, light = 0.82, mat = "?exitside" }
     }
   }
 }
@@ -472,17 +449,6 @@ PREFAB.QUAKE_WALL_EXIT =
       { x = 192, y =  0, mat = "?wall" }
       { x = 192, y = 16, mat = "?wall" }
       { x =   0, y = 16, mat = "?wall" }
-    }
-
-    -- area in front of it
-    {
-      { m = "walk" }
-      { x =   0, y = 16 }
-      { x = 192, y = 16 }
-      { x = 192, y = 96 }
-      { x =   0, y = 96 }
-      { b = 0 }
-      { t = 128 }
     }
 
     -- the pad itself

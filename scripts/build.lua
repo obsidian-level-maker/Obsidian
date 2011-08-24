@@ -24,18 +24,25 @@ require 'util'
 
 GLOBAL_SKIN_DEFAULTS =
 {
-  tag = "", special = "",
-  light = "", style = "",
-  message = "", wait = "",
-  targetname = "",
+  tag = ""
+  special = ""
+  light = ""
+  style = ""
+  message = ""
+  wait = ""
+  targetname = ""
 }
 
 
 CSG_BRUSHES =
 {
-  solid = 1, detail = 1, clip = 1,
-  sky = 1, liquid = 1,
-  rail = 1, light = 1,
+  solid  = 1
+  detail = 1
+  clip   = 1
+  sky    = 1
+  liquid = 1
+  rail   = 1
+  light  = 1
 }
 
 
@@ -268,11 +275,13 @@ function entity_helper(name, x, y, z, props)
     return
   end
 
+  local delta_z = info.delta_z or PARAM.entity_delta_z
+
   ent.id = assert(info.id)
 
   ent.x = x
   ent.y = y
-  ent.z = z
+  ent.z = z + (delta_z or 0)
 
   if info.spawnflags then
     ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
@@ -908,6 +917,8 @@ function Trans.process_skins(...)
       return;
     end
   end
+
+  gui.debugf("\nSKIN =\n%s\n\n", table.tostr(Trans.SKIN, 1))
 
   error("process_skins: cannot resolve refs")
 end

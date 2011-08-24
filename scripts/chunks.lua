@@ -424,13 +424,14 @@ function CHUNK_CLASS.purpose_exit(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
+  local skin0 = { wall = C.room.main_tex }
 
   -- Hexen: on last map, exit will end the game
   if OB_CONFIG.game == "hexen" and not LEVEL.next_map then
     skin2.special = 75
   end
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 end
 
 

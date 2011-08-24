@@ -1114,10 +1114,10 @@ function Rooms_add_sun()
 
     local level = (i == 1 ? 32 ; 6)
 
-    gui.entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
+    gui.add_entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
   end
 
-  gui.entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
+  gui.add_entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
 end
 
 

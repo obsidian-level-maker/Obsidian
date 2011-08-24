@@ -101,21 +101,6 @@ PREFAB.OCTO_PEDESTAL =
       { x = -112, y =  -48 }
     }
 
-    -- reachability
-    {
-      { m = "walk" }
-      { x =  -48, y = -112 }
-      { x =   48, y = -112 }
-      { x =  112, y =  -48 }
-      { x =  112, y =   48 }
-      { x =   48, y =  112 }
-      { x =  -48, y =  112 }
-      { x = -112, y =   48 }
-      { x = -112, y =  -48 }
-      { b = 0 }
-      { t = 96 }
-    }
-
   }
 
   entities =
@@ -197,17 +182,6 @@ PREFAB.ITEM_NICHE =
       { x = 160, y = 64, mat = "?wall", blocked=1 }
       { x =  32, y = 64, mat = "?wall" }
       { b = 128, mat = "?wall", light = "?light", special = "?special"  }
-    }
-
-    -- space in front of it
-    {
-      { m = "walk" }
-      { x =   0, y =  64 }
-      { x = 192, y =  64 }
-      { x = 192, y = 128 }
-      { x =   0, y = 128 }
-      { b = 0 }
-      { t = 160 }
     }
 
   }

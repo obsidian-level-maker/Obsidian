@@ -359,17 +359,6 @@ PREFAB.TRAP_CLOSET_DOOM =
       { x =   0, y =  8, mat = "?wall" }
     }
 
-    -- space in front of it
-    {
-      { m = "walk" }
-      { x =   0, y = 104 }
-      { x = 192, y = 104 }
-      { x = 192, y = 144 }
-      { x =   0, y = 144 }
-      { b = 0 }
-      { t = 144 }
-    }
-
     -- left side wall
     {
       { x =  0, y =  8, mat = "?wall" }

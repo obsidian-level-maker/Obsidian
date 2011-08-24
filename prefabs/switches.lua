@@ -113,17 +113,6 @@ PREFAB.WALL_SWITCH =
       { x =   0, y =  4, mat = "?wall" }
     }
 
-    -- area in front of it
-    {
-      { m = "walk" }
-      { x =   0, y = 16 }
-      { x = 192, y = 16 }
-      { x = 192, y = 80 }
-      { x =   0, y = 80 }
-      { b = 0 }
-      { t = 96 }
-    }
-
     -- switch itself
     {
       { x =  64, y =  4 }
@@ -204,15 +193,13 @@ PREFAB.QUAKE_WALL_SWITCH =
       { x =   0, y = 16, mat = "?wall" }
     }
 
-    -- area in front of it
+    -- area in front of it [FIXME: bbox brush]
     {
-      { m = "walk" }
-      { x =   0, y = 16 }
-      { x = 192, y = 16 }
-      { x = 192, y = 80 }
-      { x =   0, y = 80 }
-      { b = 0 }
-      { t = 128 }
+      { x =   0, y = 16, mat = "?floor" }
+      { x = 192, y = 16, mat = "?floor" }
+      { x = 192, y = 80, mat = "?floor" }
+      { x =   0, y = 80, mat = "?floor" }
+      { t = 0, mat = "?floor" }
     }
   }
 
