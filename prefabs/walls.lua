@@ -67,17 +67,6 @@ PREFAB.PICTURE =
       { b = 0 }  --<<  FIXME: hack
     }
 
-    -- space in front of it
-    {
-      { m = "air" }
-      { x =   0, y =  16 }
-      { x = 192, y =  16 }
-      { x = 192, y =  80 }
-      { x =   0, y =  80 }
-      { b = 0 }
-      { t = 128 }
-    }
-
     -- picture itself
     {
       { x =  64, y =  4 }

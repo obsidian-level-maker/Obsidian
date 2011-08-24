@@ -78,15 +78,6 @@ PREFAB.CORNER_DIAG_W_TORCH =
       { x =  0, y = 64, mat = "?wall" }
     }
 
-    {
-      { m = "air" }
-      { x = 24, y = 56 }
-      { x = 56, y = 24 }
-      { x = 88, y = 56 }
-      { x = 56, y = 88 }
-      { b = 0 }
-      { t = 96 }
-    }
   }
 
   entities =
@@ -220,17 +211,6 @@ PREFAB.CORNER_JUTTING_TORCH =
       { x = 64, y = 16, mat = "?wall" }
       { x = 16, y = 64, mat = "?wall" }
       { x =  0, y = 64, mat = "?wall" }
-    }
-
-    -- air space around jutty bit
-    {
-      { m = "air" }
-      { x =  64, y =  16 }
-      { x = 128, y =  80 }
-      { x =  80, y = 128 }
-      { x =  16, y =  64 }
-      { b = 0 }
-      { t = 96 }
     }
 
     -- jutty bit

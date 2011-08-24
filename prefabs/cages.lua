@@ -152,7 +152,7 @@ PREFAB.WALL_CAGE_1 =
 {
   placement = "fitted"
 
-  flush = 144,
+  flush = 144
 
   brushes =
   {
@@ -162,17 +162,6 @@ PREFAB.WALL_CAGE_1 =
       { x = 192, y =  0, mat = "?wall" }
       { x = 192, y = 16, mat = "?wall" }
       { x =   0, y = 16, mat = "?wall" }
-    }
-
-    -- space in front
-    {
-      { m = "air" }
-      { x =   0, y = 144 }
-      { x = 192, y = 144 }
-      { x = 192, y = 176 }
-      { x =   0, y = 176 }
-      { b = 0 }
-      { t = 208 }
     }
 
     -- platform
@@ -213,7 +202,7 @@ PREFAB.WALL_CAGE_2 =
 {
   placement = "fitted"
 
-  flush = 144,
+  flush = 144
 
   brushes =
   {
@@ -223,17 +212,6 @@ PREFAB.WALL_CAGE_2 =
       { x = 256, y =  0, mat = "?wall" }
       { x = 256, y = 16, mat = "?wall" }
       { x =   0, y = 16, mat = "?wall" }
-    }
-
-    -- space in front
-    {
-      { m = "air" }
-      { x =   0, y = 144 }
-      { x = 256, y = 144 }
-      { x = 256, y = 176 }
-      { x =   0, y = 176 }
-      { b = 0 }
-      { t = 208 }
     }
 
     -- platform
@@ -286,17 +264,6 @@ PREFAB.CAGE_3D_WALL_1 =
       { x = 256, y =  0, mat = "?wall" }
       { x = 256, y = 16, mat = "?wall" }
       { x =   0, y = 16, mat = "?wall" }
-    }
-
-    -- space in front
-    {
-      { m = "air" }
-      { x =   0, y = 160 }
-      { x = 256, y = 160 }
-      { x = 256, y = 192 }
-      { x =   0, y = 192 }
-      { b = 0 }
-      { t = 256 }
     }
 
     -- platform

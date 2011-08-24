@@ -930,22 +930,13 @@ function Fab_create(name)
   local function mark_outliers(fab)
     for _,B in ipairs(fab.brushes) do
       if B[1].m and not B[1].insider and
-         (B[1].m == "walk"  or B[1].m == "air" or
-          B[1].m == "zone"  or B[1].m == "nosplit" or
-          B[1].m == "light" or B[1].m == "spot" or
-          B[1].m == "floor")
+         (B[1].m == "light" or B[1].m == "spot")
       then
         B[1].outlier = true
       end
 
       if B[1].m == "spot" then
         fab.has_spots = true
-      end
-
-      -- mark infinite brushes
-      for _,C in ipairs(B) do
-        if C.x and math.abs(C.x) > (INF * 0.9) then B[1].infinite = true end
-        if C.y and math.abs(C.y) > (INF * 0.9) then B[1].infinite = true end
       end
     end
   end
