@@ -55,17 +55,33 @@ Trans.TRANSFORM =
   -- mirror_y  : flip vertically (about given Y)
   -- mirror_z
 
-  -- scale_x   : scaling factor
-  -- scale_y
-  -- scale_z
+  -- groups_x  : coordinate remapping groups
+  -- groups_y
+  -- groups_z
 
   -- rotate    : angle in degrees, counter-clockwise,
   --             rotates about the origin
+
+  -- scale_x   : scaling factor
+  -- scale_y
+  -- scale_z
 
   -- add_x     : translation, i.e. new origin coords
   -- add_y
   -- add_z
 }
+
+
+--[[
+struct GROUP
+{
+  low,  high,  size   : original range
+  low2, high2, size2  : new range
+
+  weight  : relative weight of this group (in relation to others).
+            needed for setting up the groups, but not for using them.
+}
+--]]
 
 
 function Trans.set(T)
@@ -92,14 +108,18 @@ function Trans.apply_xy(x, y)
   if T.mirror_x then x = T.mirror_x * 2 - x end
   if T.mirror_y then y = T.mirror_y * 2 - y end
 
-  -- apply scaling
-  x = x * (T.scale_x or 1)
-  y = y * (T.scale_y or 1)
+  -- apply groups
+  if T.groups_x then x = Trans.resize_coord(T.groups_x, x) end
+  if T.groups_y then y = Trans.resize_coord(T.groups_y, y) end
 
   -- apply rotation
   if T.rotate then
     x, y = geom.rotate_vec(x, y, T.rotate)
   end
+
+  -- apply scaling
+  x = x * (T.scale_x or 1)
+  y = y * (T.scale_y or 1)
 
   -- apply translation last
   x = x + (T.add_x or 0)
@@ -109,20 +129,14 @@ function Trans.apply_xy(x, y)
 end
 
 
-function Trans.apply_z(z, slope)
+function Trans.apply_z(z)
   local T = Trans.TRANSFORM
-
-  if slope then
-    slope = table.copy(slope)
-
-    slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
-    slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
-
-    if T.mirror_z then slope.dz = - slope.dz end
-  end
 
   -- apply mirroring first
   if T.mirror_z then z = T.mirror_z * 2 - z end
+
+  -- apply groups
+  if T.groups_z then z = Trans.resize_coord(T.groups_z, z) end
 
   -- apply scaling
   z = z * (T.scale_z or 1)
@@ -131,6 +145,24 @@ function Trans.apply_z(z, slope)
   z = z + (T.add_z or 0)
 
   return z, slope
+end
+
+
+function Trans.apply_slope(slope)
+  if not slope then return nil end
+
+  local T = Trans.TRANSFORM
+
+  slope = table.copy(slope)
+
+  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
+  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
+
+  if T.mirror_z then slope.dz = - slope.dz end
+
+  slope.dz = slope.dz * (T.scale_z or 1)
+
+  return slope
 end
 
 
@@ -1317,9 +1349,7 @@ end
 
 
 
-function Trans.resize_coord(info, n)
-  local groups = info.groups
-
+function Trans.resize_coord(groups, n)
   if not groups then return n end
 
   local T = #groups
@@ -1497,9 +1527,7 @@ function Fab_transform_Z(fab, T)
       if C.b then C.b = Trans.apply_z(C.b) end
       if C.t then C.t = Trans.apply_z(C.t) end
 
-      if C.s then
-        -- FIXME: slopes
-      end
+      if C.s then C.s = Trans.apply_slope(C.s) end
     end
   end
 
