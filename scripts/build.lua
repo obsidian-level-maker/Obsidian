@@ -69,6 +69,10 @@ Trans.TRANSFORM =
   -- add_x     : translation, i.e. new origin coords
   -- add_y
   -- add_z
+
+  -- fitted_x  : sizes which a "fitted" prefab needs to become
+  -- fitted_y
+  -- fitted_z
 }
 
 
@@ -461,11 +465,11 @@ function Trans.box_transform(x1, y1, x2, y2, z, dir)
   T.rotate = ANGS[dir]
 
   if geom.is_vert(dir) then
-    T.fit_width = x2 - x1
-    T.fit_depth = y2 - y1
+    T.fitted_x = x2 - x1
+    T.fitted_y = y2 - y1
   else
-    T.fit_width = y2 - y1
-    T.fit_depth = x2 - x1
+    T.fitted_x = y2 - y1
+    T.fitted_y = x2 - x1
   end
 
   return T
@@ -486,11 +490,11 @@ function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
   T.rotate = ANGS[side]
 
   if side == 1 or side == 9 then
-    T.fit_width = horiz
-    T.fit_depth = vert
+    T.fitted_x = horiz
+    T.fitted_y = vert
   else
-    T.fit_width = vert
-    T.fit_depth = horiz
+    T.fitted_x = vert
+    T.fitted_y = horiz
   end
 
   return T
@@ -1244,20 +1248,16 @@ end
 
 
 
-function Trans.process_groups(size_list, pf_min, pf_max)
+function Trans.create_groups(size_list, pf_min, pf_max)
 
   -- pf_min and pf_max are in the 'prefab' space (i.e. before any
   -- stretching or shrinkin is done).
 
-  if not pf_min then
-    return { }
-  end
+  assert(pf_min and pf_max)
 
-  local info = { groups={} }
+  local groups={ }
 
   if not size_list then
-    info.groups = {}
-
     local G =
     {
       low  = pf_min
@@ -1267,11 +1267,9 @@ function Trans.process_groups(size_list, pf_min, pf_max)
 
     G.weight = 1 * G.size
 
-    table.insert(info.groups, G)
+    table.insert(groups, G)
 
-    info.skinned_size = G.size
-
-    return info
+    return groups
   end
 
 
@@ -1280,8 +1278,6 @@ function Trans.process_groups(size_list, pf_min, pf_max)
   assert(#size_list >= 1)
 
   local pf_pos = pf_min
-
-  info.skinned_size = 0
 
   each S in size_list do
     local G = { }
@@ -1301,9 +1297,7 @@ function Trans.process_groups(size_list, pf_min, pf_max)
 
     G.weight = G.weight * G.size
 
-    table.insert(info.groups, G)
-
-    info.skinned_size = info.skinned_size + (G.size2 or G.size)
+    table.insert(groups, G)
   end
 
   -- verify that group sizes match the coordinate bbox
@@ -1311,12 +1305,11 @@ function Trans.process_groups(size_list, pf_min, pf_max)
     error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
   end
 
-  return info
+  return groups
 end
 
 
-
-function Trans.calc_group_targets(groups, low2, high2)
+function Trans.fitted_group_targets(groups, low2, high2)
   if not groups then return end  -- ugh
 
   local extra = high2 - low2
@@ -1344,6 +1337,27 @@ function Trans.calc_group_targets(groups, low2, high2)
 
   -- verify the results
   assert(math.abs(pos2 - high2) < 0.1)
+end
+
+
+function Trans.loose_group_targets(groups)
+  local total_size  = 0
+  local total_size2 = 0
+
+  each G in groups do
+    if not G.size2 then G.size2 = assert(G.size) end
+
+    total_size  = total_size  + G.size 
+    total_size2 = total_size2 + G.size2
+  end
+
+  -- this assumes the left/bottom coord will be zero (fitted) or negative (focal)
+  local pos2 = groups[1].low * total_size2 / total_size
+
+  each G in groups do
+    G.low2  = pos2 ; pos2 = pos2 + G.size2
+    G.high2 = pos2
+  end
 end
 
 
@@ -1386,9 +1400,6 @@ function Fab_transform_XY(fab, T)
   
   local function entity_xy(E)
     if E.x then
-      E.x = Trans.resize_coord(fab.x_info, E.x)
-      E.y = Trans.resize_coord(fab.y_info, E.y)
-
       E.x, E.y = Trans.apply_xy(E.x, E.y)
     end
 
@@ -1399,17 +1410,10 @@ function Fab_transform_XY(fab, T)
     if E.angles then
       E.angles = Trans.apply_angles_xy(E.angles)
     end
-
   end
 
 
   local function model_xy(M)
-    M.x1 = Trans.resize_coord(fab.x_info, M.x1)
-    M.x2 = Trans.resize_coord(fab.x_info, M.x2)
-
-    M.y1 = Trans.resize_coord(fab.y_info, M.y1)
-    M.y2 = Trans.resize_coord(fab.y_info, M.y2)
-
     M.x1, M.y1 = Trans.apply_xy(M.x1, M.y1)
     M.x2, M.y2 = Trans.apply_xy(M.x2, M.y2)
 
@@ -1438,14 +1442,17 @@ function Fab_transform_XY(fab, T)
 
   local bbox = fab.bbox
 
-  fab.x_info = Trans.process_groups(fab.x_ranges, bbox.x1, bbox.x2)
-  fab.y_info = Trans.process_groups(fab.y_ranges, bbox.y1, bbox.y2)
+  local groups_x = Trans.create_groups(fab.x_ranges, bbox.x1, bbox.x2)
+  local groups_y = Trans.create_groups(fab.y_ranges, bbox.y1, bbox.y2)
+
+  Trans.TRANSFORM.groups_x = groups_x
+  Trans.TRANSFORM.groups_y = groups_y
 
   local x_low, x_high
   local y_low, y_high
 
   if fab.placement == "fitted" then
-    if not (T.fit_width and T.fit_depth) then
+    if not (T.fitted_x and T.fitted_y) then
       error("Fitted prefab used without fitted transform")
     end
 
@@ -1453,8 +1460,8 @@ function Fab_transform_XY(fab, T)
       error("Fitted prefab should have left/bottom coord at (0, 0)")
     end
 
-    x_low = 0 ; x_high = T.fit_width
-    y_low = 0 ; y_high = T.fit_depth
+    Trans.fitted_group_targets(groups_x, 0, T.fitted_x)
+    Trans.fitted_group_targets(groups_y, 0, T.fitted_y)
 
   else  -- "loose" placement
 
@@ -1462,29 +1469,9 @@ function Fab_transform_XY(fab, T)
       error("Loose prefab used without focal coord")
     end
 
-    -- !!!!!! FIXME: scale will be applied TWICE
-    local scale_x = T.scale_x or 1
-    local scale_y = T.scale_y or 1
-
-    if fab.x_info.skinned_size then scale_x = scale_x * fab.x_info.skinned_size / bbox.dx end
-    if fab.y_info.skinned_size then scale_y = scale_y * fab.y_info.skinned_size / bbox.dy end
-
-    x_low  = bbox.x1 * scale_x
-    x_high = bbox.x2 * scale_x
-
-    y_low  = bbox.y1 * scale_y
-    y_high = bbox.y2 * scale_y
+    Trans.loose_group_targets(groups_x)
+    Trans.loose_group_targets(groups_y)
   end
-
---[[
-stderrf("T.fit_width = %s\n", tostring(T.fit_width))
-stderrf("x_low = %s | x_high = %s\n", tostring(x_low), tostring(x_high))
-stderrf("bbox =\n%s\n", table.tostr(bbox))
-stderrf("x_info =\n%s\n", table.tostr(x_info, 3))
---]]
-
-  Trans.calc_group_targets(fab.x_info.groups, x_low, x_high)
-  Trans.calc_group_targets(fab.y_info.groups, y_low, y_high)
 
   for _,B in ipairs(fab.brushes) do
     brush_xy(B)
@@ -1507,16 +1494,13 @@ end
 function Fab_transform_Z(fab, T)
 
   local function brush_z(brush)
-    for _,C in ipairs(brush) do
-      if C.b then C.b = Trans.resize_coord(fab.z_info, C.b) end
-      if C.t then C.t = Trans.resize_coord(fab.z_info, C.t) end
+    each C in brush do
+      if C.b then C.b = Trans.apply_z(C.b) end
+      if C.t then C.t = Trans.apply_z(C.t) end
 
       if Trans.mirror_z then
         C.b, C.t = C.t, C.b
       end
-
-      if C.b then C.b = Trans.apply_z(C.b) end
-      if C.t then C.t = Trans.apply_z(C.t) end
     end
   end
 
@@ -1538,14 +1522,12 @@ function Fab_transform_Z(fab, T)
 
 
   local function model_z(M)
-    M.z1 = Trans.resize_coord(fab.z_info, M.z1)
-    M.z2 = Trans.resize_coord(fab.z_info, M.z2)
-
     M.z1 = Trans.apply_z(M.z1)
     M.z2 = Trans.apply_z(M.z2)
 
-    -- handle mirroring
-    if M.z1 > M.z2 then M.z1, M.z2 = M.z2, M.z1 end
+    if Trans.mirror_z then
+      M.z1, M.z2 = M.z2, M.z1
+    end
   end
 
   
@@ -1559,25 +1541,19 @@ function Fab_transform_Z(fab, T)
 
   local bbox = fab.bbox
 
-  if bbox.dz and bbox.dz > 1 then
+  if bbox.z1 and bbox.dz > 1 then
     local z_low, z_high
 
-    fab.z_info = Trans.process_groups(fab.z_ranges, bbox.z1, bbox.z2)
+    local groups_z = Trans.create_groups(fab.z_ranges, bbox.z1, bbox.z2)
 
-    if T.fit_height then
-      z_low  = 0
-      z_high = T.fit_height
+    Trans.TRANSFORM.groups_z = groups_z
+
+    if T.fitted_z then
+      Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
     else
-      -- !!!!!! FIXME: scale_z will be applied TWICE
-      local scale_z = T.scale_z or 1
-
-      if fab.z_info.skinned_size then scale_z = scale_z * fab.z_info.skinned_size / bbox.dz end
-
-      z_low  = bbox.z1 * scale_z
-      z_high = bbox.z2 * scale_z
+      Trans.loose_group_targets(groups_z)
     end
 
-    Trans.calc_group_targets(fab.z_info.groups, z_low, z_high)
   else
     fab.z_info = {}
   end
