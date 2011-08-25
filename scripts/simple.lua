@@ -309,14 +309,14 @@ do return true end ---!!!!!!!!!!!!1
 
   local function WALL_brush(data, coords)
     if data.shadow_info then
-      local sh_coords = shadowify_brush(coords, 40)
+      local sh_coords = Brush_shadowify(coords, 40)
 --!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
 
     if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.delta_f }) end
     if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.delta_c }) end
 
-    Trans.set_mat(coords, data.wtex, data.ftex)
+    Brush_set_mat(coords, data.wtex, data.ftex)
 
     brush_helper(coords)
   end
@@ -327,7 +327,7 @@ do return true end ---!!!!!!!!!!!!1
       local coord2 = table.deep_copy(coords)
       table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
 
-      Trans.set_mat(coord2, data.wtex, data.ftex)
+      Brush_set_mat(coord2, data.wtex, data.ftex)
 
       brush_helper(coord2)
     end
@@ -336,7 +336,7 @@ do return true end ---!!!!!!!!!!!!1
       local coord2 = table.deep_copy(coords)
       table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
 
-      Trans.set_mat(coords, data.wtex, data.ctex)
+      Brush_set_mat(coords, data.wtex, data.ctex)
 
       brush_helper(coord2)
     end

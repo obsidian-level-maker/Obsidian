@@ -328,85 +328,6 @@ end
 
 
 
-function Trans.bare_quad(x1,y1, x2,y2, b,t)
-  local coords =
-  {
-    { x=x1, y=y1 }
-    { x=x2, y=y1 }
-    { x=x2, y=y2 }
-    { x=x1, y=y2 }
-  }
-
-  if b then table.insert(coords, { b=b }) end
-  if t then table.insert(coords, { t=t }) end
-
-  return coords
-end
-
-
-function Trans.tri_coords(x1,y1, x2,y2, x3,y3)
-  return
-  {
-    { x=x1, y=y1 }
-    { x=x2, y=y2 }
-    { x=x3, y=y3 }
-  }
-end
-
-function Trans.rect_coords(x1, y1, x2, y2)
-  return
-  {
-    { x=x1, y=y1 },
-    { x=x2, y=y1 },
-    { x=x2, y=y2 },
-    { x=x1, y=y2 },
-  }
-end
-
-function Trans.box_coords(x, y, w, h)
-  return
-  {
-    { x=x,   y=y }
-    { x=x+w, y=y }
-    { x=x+w, y=y+h }
-    { x=x,   y=y+h }
-  }
-end
-
-
-function Trans.set_tex(coords, wall, flat)
-  for _,C in ipairs(coords) do
-    if wall and C.x and not C.tex then
-      C.tex = wall
-    end
-    if flat and (C.b or C.t) and not C.tex then
-      C.tex = flat
-    end
-  end
-
-  return coords
-end
-
-
---[[ FIXME : reimplement ?
-function Trans.strip(info, strip, z1, z2)
-  for i = 1, #strip - 1 do
-    local a = strip[i]
-    local b = strip[i+1]
-
-    Trans.old_brush(info,
-    {
-      { x = a[1], y = a[2] }
-      { x = a[3], y = a[4] }
-      { x = b[3], y = b[4] }
-      { x = b[1], y = b[2] }
-    },
-    z1, z2)
-  end
-end
---]]
-
-
 function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
   local T = Trans.TRANSFORM
 
@@ -517,7 +438,39 @@ end
 
 
 
-function Trans.dump_brush(brush, title)
+function Brush_new_quad(x1,y1, x2,y2, b,t)
+  local coords =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y1 }
+    { x=x2, y=y2 }
+    { x=x1, y=y2 }
+  }
+
+  if b then table.insert(coords, { b=b }) end
+  if t then table.insert(coords, { t=t }) end
+
+  return coords
+end
+
+
+function Brush_new_triangle(x1,y1, x2,y2, x3,y3, b,t)
+  local coords =
+  {
+    { x=x1, y=y1 }
+    { x=x2, y=y2 }
+    { x=x3, y=y3 }
+  }
+
+  if b then table.insert(coords, { b=b }) end
+  if t then table.insert(coords, { t=t }) end
+
+  return coords
+end
+
+
+
+function Brush_dump(brush, title)
   gui.debugf("%s:\n{\n", title or "Brush")
 
   for _,C in ipairs(brush) do
@@ -555,7 +508,7 @@ function Trans.dump_brush(brush, title)
 end
 
 
-function Trans.copy_brush(brush)
+function Brush_copy(brush)
   local newb = {}
 
   for _,C in ipairs(brush) do
@@ -566,7 +519,7 @@ function Trans.copy_brush(brush)
 end
 
 
-function Trans.brush_bbox(brush)
+function Brush_bbox(brush)
   local x1, x2 = 9e9, -9e9
   local y1, y2 = 9e9, -9e9
 
@@ -584,22 +537,22 @@ function Trans.brush_bbox(brush)
 end
 
 
-function Trans.brush_get_b(brush)
+function Brush_get_b(brush)
   for _,C in ipairs(brush) do
     if C.b then return C.b end
   end
 end
 
 
-function Trans.brush_get_t(brush)
+function Brush_get_t(brush)
   for _,C in ipairs(brush) do
     if C.t then return C.t end
   end
 end
 
 
-function Trans.brush_is_quad(brush)
-  local x1,y1, x2,y2 = Trans.brush_bbox(brush)
+function Brush_is_quad(brush)
+  local x1,y1, x2,y2 = Brush_bbox(brush)
 
   for _,C in ipairs(brush) do
     if C.x then
@@ -612,7 +565,7 @@ function Trans.brush_is_quad(brush)
 end
 
 
-function Trans.line_cuts_brush(brush, px1, py1, px2, py2)
+function Brush_line_cuts_brush(brush, px1, py1, px2, py2)
   local front, back
 
   for _,C in ipairs(brush) do
@@ -629,9 +582,9 @@ function Trans.line_cuts_brush(brush, px1, py1, px2, py2)
 end
 
 
-function Trans.cut_brush(brush, px1, py1, px2, py2)
+function Brush_cut(brush, px1, py1, px2, py2)
   -- returns the cut-off piece (on back of given line)
-  -- NOTE: assumes the line actually cuts the brush
+  -- NOTE: assumes the line actually cuts the brush!
 
   local newb = {}
 
@@ -691,7 +644,7 @@ function Trans.cut_brush(brush, px1, py1, px2, py2)
 end
 
 
-function Trans.clip_brushes_to_rects(brushes, rects)
+function Brush_clip_list_to_rects(brushes, rects)
   local process_list = {}
 
   -- transfer brushes to a separate list for processing, new brushes
@@ -701,20 +654,20 @@ function Trans.clip_brushes_to_rects(brushes, rects)
   end
   
   local function clip_to_line(B, x1, y1, x2, y2)
-    if Trans.line_cuts_brush(B, x1, y1, x2, y2) then
-       Trans.cut_brush(B, x1, y1, x2, y2)
+    if Brush_line_cuts_brush(B, x1, y1, x2, y2) then
+       Brush_cut(B, x1, y1, x2, y2)
     end
   end
 
   local function clip_brush(B, R)
-    B = Trans.copy_brush(B)
+    B = Brush_copy(B)
 
     clip_to_line(B, R.x1, R.y1, R.x1, R.y2)  -- left
     clip_to_line(B, R.x2, R.y2, R.x2, R.y1)  -- right
     clip_to_line(B, R.x1, R.y2, R.x2, R.y2)  -- top
     clip_to_line(B, R.x2, R.y1, R.x1, R.y1)  -- bottom
 
-    local bx1,by1, bx2,by2 = Trans.brush_bbox(B)
+    local bx1,by1, bx2,by2 = Brush_bbox(B)
 
     -- it lies completely outside the rectangle?
     if bx2 <= R.x1 + 1 or bx1 >= R.x2 - 1 then return end
@@ -729,21 +682,6 @@ function Trans.clip_brushes_to_rects(brushes, rects)
     end
   end
 end
-
-
-function Trans.brush_contains_brush(B, W)
-  -- FIXME !!!!!!
-  if not Trans.brush_is_quad(B) then
-gui.debugf("first NOT quad\n")
-  return false
-  end
-
-  local x1, y1, x2, y2 = Trans.brush_bbox(W)
-  local x3, y3, x4, y4 = Trans.brush_bbox(B)
-
-  return geom.box_inside_box(x1,y1,x2,y2, x3,y3,x4,y4)
-end
-
 
 
 ------------------------------------------------------------------------
@@ -819,7 +757,21 @@ function Mat_similar(A, B)
 end
 
 
-function Trans.set_mat(coords, wall, flat)
+function Brush_set_tex(coords, wall, flat)
+  for _,C in ipairs(coords) do
+    if wall and C.x and not C.tex then
+      C.tex = wall
+    end
+    if flat and (C.b or C.t) and not C.tex then
+      C.tex = flat
+    end
+  end
+
+  return coords
+end
+
+
+function Brush_set_mat(coords, wall, flat)
   if wall then
     wall = Mat_lookup(wall)
     wall = assert(wall.t)
@@ -830,7 +782,7 @@ function Trans.set_mat(coords, wall, flat)
     flat = flat.f or assert(flat.t)
   end
 
-  Trans.set_tex(coords, wall, flat)
+  Brush_set_tex(coords, wall, flat)
 end
 
 
@@ -1594,10 +1546,10 @@ function Fab_composition(fab, parent_skin)
 
     -- FIXME: support arbitrary rectangles (rotation etc)
 
-    local bx1, by1, bx2, by2 = Trans.brush_bbox(brush)
+    local bx1, by1, bx2, by2 = Brush_bbox(brush)
 
-    local low_z  = Trans.brush_get_b(brush)
-    local high_z = Trans.brush_get_t(brush)  -- not used (Fixme?)
+    local low_z  = Brush_get_b(brush)
+    local high_z = Brush_get_t(brush)  -- not used (Fixme?)
 
     local T = Trans.box_transform(bx1, by1, bx2, by2, low_z, 2)
      
@@ -1640,8 +1592,8 @@ function Fab_bound_Z(fab, z1, z2)
 
   for _,B in ipairs(fab.brushes) do
     if CSG_BRUSHES[B[1].m] then
-      local b = Trans.brush_get_b(B)
-      local t = Trans.brush_get_t(B)
+      local b = Brush_get_b(B)
+      local t = Brush_get_t(B)
 
       if z1 and not b then table.insert(B, { b = z1 }) end
       if z2 and not t then table.insert(B, { t = z2 }) end
@@ -1692,8 +1644,8 @@ function Fab_read_spots(fab)
     local x1,y1, x2,y2
     local z1,z2
 
-    if Trans.brush_is_quad(B) then
-      x1,y1, x2,y2 = Trans.brush_bbox(B)
+    if Brush_is_quad(B) then
+      x1,y1, x2,y2 = Brush_bbox(B)
       for _,C in ipairs(B) do
         if C.b then z1 = C.b end
         if C.t then z2 = C.t end
@@ -1758,7 +1710,7 @@ end
 ------------------------------------------------------------------------
 
 
-function shadowify_brush(coords, dist)
+function Brush_shadowify(coords, dist)
   --
   -- ALGORITHM
   --

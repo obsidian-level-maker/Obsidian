@@ -754,9 +754,9 @@ function CHUNK_CLASS.build(C)
     f_mat = Mat_lookup(f_matname)
     f_tex = f_mat.f or f_mat.t
 
-    brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+    brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
-    Trans.set_tex(brush, f_mat.t)
+    Brush_set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=f_h, tex=f_tex })
 
@@ -770,13 +770,13 @@ function CHUNK_CLASS.build(C)
   c_mat = Mat_lookup(c_matname)
   c_tex = c_mat.f or c_mat.t
 
-  brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+  brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
   if c_medium == "sky" then
     table.insert(brush, 1, { m="sky" })
   end
 
-  Trans.set_tex(brush, c_mat.t)
+  Brush_set_tex(brush, c_mat.t)
 
   table.insert(brush, { b=c_h, tex=c_tex })
 
@@ -828,14 +828,14 @@ function CHUNK_CLASS.build(C)
         end
 
         if bx2 > bx1 then
-          brush = Trans.bare_quad(bx1, by1, bx2, by2)
-          Trans.set_tex(brush, w_mat.t)
+          brush = Brush_new_quad(bx1, by1, bx2, by2)
+          Brush_set_tex(brush, w_mat.t)
           gui.add_brush(brush)
         end
 
         if cx2 > cx1 then
-          brush = Trans.bare_quad(cx1, cy1, cx2, cy2)
-          Trans.set_tex(brush, w_mat.t)
+          brush = Brush_new_quad(cx1, cy1, cx2, cy2)
+          Brush_set_tex(brush, w_mat.t)
           gui.add_brush(brush)
         end
 
@@ -843,16 +843,16 @@ function CHUNK_CLASS.build(C)
         -- only build wall at edge of map
         -- (allow building walls to show through)
         if C:against_map_edge(dir) then
-          brush = Trans.bare_quad(bx1, by1, bx2, by2)
-          Trans.set_tex(brush, w_mat.t)
+          brush = Brush_new_quad(bx1, by1, bx2, by2)
+          Brush_set_tex(brush, w_mat.t)
           gui.add_brush(brush)
         else
           wall_deep = 0
         end
 
       else
-          brush = Trans.bare_quad(bx1, by1, bx2, by2)
-          Trans.set_tex(brush, w_mat.t)
+          brush = Brush_new_quad(bx1, by1, bx2, by2)
+          Brush_set_tex(brush, w_mat.t)
 --[[ HALLWAY WINDOW TEST
 local C2 = C:good_neighbor(dir)
 if C2 and (C.hall or C2.hall) then
@@ -870,7 +870,7 @@ end
       if dir == 4 then bx2 = bx1 + 40 end
       if dir == 6 then bx1 = bx2 - 40 end
 
-      brush = Trans.bare_quad(bx1, by1, bx2, by2)
+      brush = Brush_new_quad(bx1, by1, bx2, by2)
       gui.spots_fill_poly(brush, (C.link[dir] ? 2 ; 1));
     end
 
@@ -952,8 +952,8 @@ end
       local sky_h = f_h + C:get_street_sky_h(dir)
 
       c_mat = Mat_lookup("_SKY")
-      brush = Trans.bare_quad(bx1, by1, bx2, by2)
-      Trans.set_tex(brush, c_mat.t)
+      brush = Brush_new_quad(bx1, by1, bx2, by2)
+      Brush_set_tex(brush, c_mat.t)
       table.insert(brush, 1, { m="sky" })
       table.insert(brush, { b=sky_h, tex=c_mat.f or c_mat.t })
       gui.add_brush(brush)
@@ -973,8 +973,8 @@ end
       local bx2 = (corner == 1 or corner == 7 ? C.x1 + size ; C.x2)
       local by2 = (corner == 1 or corner == 3 ? C.y1 + size ; C.y2)
 
-      brush = Trans.bare_quad(bx1, by1, bx2, by2)
-      Trans.set_tex(brush, c_mat.t)
+      brush = Brush_new_quad(bx1, by1, bx2, by2)
+      Brush_set_tex(brush, c_mat.t)
       gui.add_brush(brush)
     end end
   end
@@ -985,9 +985,9 @@ end
     local h = C.crossover.floor_h
 stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
 
-    local brush = Trans.bare_quad(C.x1, C.y1, C.x2, C.y2)
+    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
 
-    Trans.set_tex(brush, f_mat.t)
+    Brush_set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=h,    tex=f_tex })
     table.insert(brush, { b=h-16, tex=f_tex })
@@ -1011,9 +1011,9 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
         x1 = x1 + 64 ; x2 = x2 - 64
       end
 
-      local brush = Trans.bare_quad(x1, y1, x2, y2)
+      local brush = Brush_new_quad(x1, y1, x2, y2)
 
-      Trans.set_tex(brush, f_mat.t)
+      Brush_set_tex(brush, f_mat.t)
 
       table.insert(brush, { t=h,    tex=f_tex })
       table.insert(brush, { b=h-16, tex=f_tex })

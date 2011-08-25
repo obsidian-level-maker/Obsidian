@@ -1290,9 +1290,9 @@ stderrf("TRYING....................\n")
     local S1 = SEEDS[sx1][sy1]
     local S2 = SEEDS[sx2][sy2]
 
-    local brush = Trans.bare_quad(S1.x1, S1.y1, S2.x2, S2.y2)
+    local brush = Brush_new_quad(S1.x1, S1.y1, S2.x2, S2.y2)
 
-    Trans.set_tex(brush, f_mat.t)
+    Brush_set_tex(brush, f_mat.t)
 
     table.insert(brush, { t=floor_h,    tex=f_tex })
     table.insert(brush, { b=floor_h-16, tex=f_tex })

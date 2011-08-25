@@ -1331,7 +1331,7 @@ function OLD__Layout_spots_in_room(R)
     local x2 = dec.x + dec.info.r + 2
     local y2 = dec.y + dec.info.r + 2
 
-    gui.spots_fill_poly(Trans.bare_quad(x1,y1, x2,y2), 2)
+    gui.spots_fill_poly(Brush_new_quad(x1,y1, x2,y2), 2)
   end
 
 
