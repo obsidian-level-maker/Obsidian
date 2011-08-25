@@ -1732,54 +1732,6 @@ end
 
 
 
-function OLD__Fab_check_fits(fab, skin, width, depth, height)
-
-  -- NOTE: width is in the prefab coordinate system (X)
-  --       depth too (Y) and height as well (Z).
-  --
-  -- Any of those parameters can be nil to skip checking that part.
-
-  local DEFAULT_MIN = 16
-
-  local function minimum_size(size_list)
-    local total = 0
-
-    for _,S in ipairs(size_list) do
-      local m
-      if type(S[2]) == "string" then
-        m = Trans.substitute(S[2])
-        assert(m)
-      elseif S[2] == 0 then
-        m = S[1]
-      else
-        m = S[3] or DEFAULT_MIN
-      end
-      total = total + m
-    end
-
-    return total
-  end
-
-  if width then
-    if fab.x_min    and width < fab.x_min then return false end
-    if fab.x_ranges and width < minimum_size(fab.x_ranges) then return false end
-  end
-
-  if depth then
-    if fab.y_min    and depth < fab.y_min then return false end
-    if fab.y_ranges and depth < minimum_size(fab.y_ranges) then return false end
-  end
-
-  if height then
-    if fab.z_min    and height < fab.z_min then return false end
-    if fab.z_ranges and height < minimum_size(fab.z_ranges) then return false end
-  end
-
-  return true
-end
-
-
-
 function Fabricate(name, T, skins)
   
 -- stderrf("=========  FABRICATE %s\n", name)
