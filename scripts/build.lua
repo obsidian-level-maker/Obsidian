@@ -809,6 +809,119 @@ end
 
 
 
+function Trans.create_groups(size_list, pf_min, pf_max)
+
+  -- pf_min and pf_max are in the 'prefab' space (i.e. before any
+  -- stretching or shrinkin is done).
+
+  assert(pf_min and pf_max)
+
+  local groups={ }
+
+  if not size_list then
+    local G =
+    {
+      low  = pf_min
+      high = pf_max
+      size = pf_max - pf_min
+    }
+
+    G.weight = 1 * G.size
+
+    table.insert(groups, G)
+
+    return groups
+  end
+
+
+  -- create groups
+
+  assert(#size_list >= 1)
+
+  local pf_pos = pf_min
+
+  each S in size_list do
+    local G = { }
+
+    G.size = S[1]
+
+    G.low  = pf_pos ; pf_pos = pf_pos + G.size
+    G.high = pf_pos
+
+    G.weight = S[2] or 1
+
+    if S[3] then
+      G.size2 = S[3]
+    elseif G.weight == 0 then
+      G.size2 = G.size
+    end
+
+    G.weight = G.weight * G.size
+
+    table.insert(groups, G)
+  end
+
+  -- verify that group sizes match the coordinate bbox
+  if math.abs(pf_pos - pf_max) > 0.1 then
+    error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
+  end
+
+  return groups
+end
+
+
+function Trans.fitted_group_targets(groups, low2, high2)
+  if not groups then return end  -- ugh
+
+  local extra = high2 - low2
+  local weight_total = 0
+
+  each G in groups do
+    if G.size2 then extra = extra - G.size2 end
+    weight_total = weight_total + G.weight
+  end
+
+  local pos2 = low2
+
+  each G in groups do
+    if not G.size2 then
+      G.size2 = extra * G.weight / weight_total
+
+      if G.size2 <= 1 then
+        error("Prefab does not fit!")
+      end
+    end
+
+    G.low2  = pos2 ; pos2 = pos2 + G.size2
+    G.high2 = pos2
+  end
+
+  -- verify the results
+  assert(math.abs(pos2 - high2) < 0.1)
+end
+
+
+function Trans.loose_group_targets(groups)
+  local total_size  = 0
+  local total_size2 = 0
+
+  each G in groups do
+    if not G.size2 then G.size2 = assert(G.size) end
+
+    total_size  = total_size  + G.size 
+    total_size2 = total_size2 + G.size2
+  end
+
+  -- this assumes the left/bottom coord will be zero (fitted) or negative (focal)
+  local pos2 = groups[1].low * total_size2 / total_size
+
+  each G in groups do
+    G.low2  = pos2 ; pos2 = pos2 + G.size2
+    G.high2 = pos2
+  end
+end
+
+
 ------------------------------------------------------------------------
 
 
@@ -1223,121 +1336,6 @@ end
 
 
 
-function Trans.create_groups(size_list, pf_min, pf_max)
-
-  -- pf_min and pf_max are in the 'prefab' space (i.e. before any
-  -- stretching or shrinkin is done).
-
-  assert(pf_min and pf_max)
-
-  local groups={ }
-
-  if not size_list then
-    local G =
-    {
-      low  = pf_min
-      high = pf_max
-      size = pf_max - pf_min
-    }
-
-    G.weight = 1 * G.size
-
-    table.insert(groups, G)
-
-    return groups
-  end
-
-
-  -- create groups
-
-  assert(#size_list >= 1)
-
-  local pf_pos = pf_min
-
-  each S in size_list do
-    local G = { }
-
-    G.size = S[1]
-
-    G.low  = pf_pos ; pf_pos = pf_pos + G.size
-    G.high = pf_pos
-
-    G.weight = S[2] or 1
-
-    if S[3] then
-      G.size2 = S[3]
-    elseif G.weight == 0 then
-      G.size2 = G.size
-    end
-
-    G.weight = G.weight * G.size
-
-    table.insert(groups, G)
-  end
-
-  -- verify that group sizes match the coordinate bbox
-  if math.abs(pf_pos - pf_max) > 0.1 then
-    error(string.format("Prefab: groups mismatch with coords (%d != %d)", pf_pos, pf_max))
-  end
-
-  return groups
-end
-
-
-function Trans.fitted_group_targets(groups, low2, high2)
-  if not groups then return end  -- ugh
-
-  local extra = high2 - low2
-  local weight_total = 0
-
-  each G in groups do
-    if G.size2 then extra = extra - G.size2 end
-    weight_total = weight_total + G.weight
-  end
-
-  local pos2 = low2
-
-  each G in groups do
-    if not G.size2 then
-      G.size2 = extra * G.weight / weight_total
-
-      if G.size2 <= 1 then
-        error("Prefab does not fit!")
-      end
-    end
-
-    G.low2  = pos2 ; pos2 = pos2 + G.size2
-    G.high2 = pos2
-  end
-
-  -- verify the results
-  assert(math.abs(pos2 - high2) < 0.1)
-end
-
-
-function Trans.loose_group_targets(groups)
-  local total_size  = 0
-  local total_size2 = 0
-
-  each G in groups do
-    if not G.size2 then G.size2 = assert(G.size) end
-
-    total_size  = total_size  + G.size 
-    total_size2 = total_size2 + G.size2
-  end
-
-  -- this assumes the left/bottom coord will be zero (fitted) or negative (focal)
-  local pos2 = groups[1].low * total_size2 / total_size
-
-  each G in groups do
-    G.low2  = pos2 ; pos2 = pos2 + G.size2
-    G.high2 = pos2
-  end
-end
-
-
-
-
 function Fab_transform_XY(fab, T)
 
   local function brush_xy(brush)
@@ -1706,7 +1704,6 @@ function Fabricate(name, T, skins)
 
   return fab
 end
-
 
 
 ------------------------------------------------------------------------
