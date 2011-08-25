@@ -46,186 +46,7 @@ CSG_BRUSHES =
 }
 
 
-Trans = {}
-
-
-Trans.TRANSFORM =
-{
-  -- mirror_x  : flip horizontally (about given X)
-  -- mirror_y  : flip vertically (about given Y)
-  -- mirror_z
-
-  -- groups_x  : coordinate remapping groups
-  -- groups_y
-  -- groups_z
-
-  -- scale_x   : scaling factor
-  -- scale_y
-  -- scale_z
-
-  -- rotate    : angle in degrees, counter-clockwise,
-  --             rotates about the origin
-
-  -- add_x     : translation, i.e. new origin coords
-  -- add_y
-  -- add_z
-
-  -- fitted_x  : sizes which a "fitted" prefab needs to become
-  -- fitted_y
-  -- fitted_z
-}
-
-
---[[
-struct GROUP
-{
-  low,  high,  size   : original range
-  low2, high2, size2  : new range
-
-  weight  : relative weight of this group (in relation to others).
-            needed for setting up the groups, but not for using them.
-}
---]]
-
-
-function Trans.clear()
-  Trans.TRANSFORM = { }
-end
-
-function Trans.set(T)
-  Trans.TRANSFORM = table.copy(T)
-end
-
-function Trans.set_pos(x, y, z)
-  Trans.set { add_x=x, add_y=y, add_z=z }
-end
-
-function Trans.modify(what, value)
-  Trans.TRANSFORM[what] = value
-end
-
-
-function Trans.apply_xy(x, y)
-  local T = Trans.TRANSFORM
-
-  -- apply mirroring first
-  if T.mirror_x then x = T.mirror_x * 2 - x end
-  if T.mirror_y then y = T.mirror_y * 2 - y end
-
-  -- apply groups
-  if T.groups_x then x = Trans.resize_coord(T.groups_x, x) end
-  if T.groups_y then y = Trans.resize_coord(T.groups_y, y) end
-
-  -- apply scaling
-  x = x * (T.scale_x or 1)
-  y = y * (T.scale_y or 1)
-
-  -- apply rotation
-  if T.rotate then
-    x, y = geom.rotate_vec(x, y, T.rotate)
-  end
-
-  -- apply translation last
-  x = x + (T.add_x or 0)
-  y = y + (T.add_y or 0)
-
-  return x, y
-end
-
-
-function Trans.apply_z(z)
-  local T = Trans.TRANSFORM
-
-  -- apply mirroring first
-  if T.mirror_z then z = T.mirror_z * 2 - z end
-
-  -- apply groups
-  if T.groups_z then z = Trans.resize_coord(T.groups_z, z) end
-
-  -- apply scaling
-  z = z * (T.scale_z or 1)
-
-  -- apply translation last
-  z = z + (T.add_z or 0)
-
-  return z
-end
-
-
-function Trans.apply_slope(slope)
-  if not slope then return nil end
-
-  local T = Trans.TRANSFORM
-
-  slope = table.copy(slope)
-
-  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
-  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
-
-  if T.mirror_z then slope.dz = - slope.dz end
-
-  slope.dz = slope.dz * (T.scale_z or 1)
-
-  return slope
-end
-
-
-function Trans.apply_angle(ang)
-  local T = Trans.TRANSFORM
-
-  if not (T.rotate or T.mirror_x or T.mirror_y) then
-    return ang
-  end
-
-  if not (T.mirror_x or T.mirror_y) then
-    ang = ang + T.rotate
-  else
-    local dx = math.cos(ang * math.pi / 180)
-    local dy = math.sin(ang * math.pi / 180)
-
-    if T.mirror_x then dx = -dx end
-    if T.mirror_y then dy = -dy end
-
-    ang = math.round(geom.calc_angle(dx, dy))
-
-    if T.rotate then ang = ang + T.rotate end
-  end
-
-  if ang >= 360 then ang = ang - 360 end
-  if ang <    0 then ang = ang + 360 end
-
-  return ang
-end
-
-
-function Trans.apply_mlook(ang)
-  local T = Trans.TRANSFORM
-
-  if T.mirror_z then
-    if ang == 0 then return 0 end
-    return 360 - ang
-  else
-    return ang
-  end
-end
-
-
--- handle three-part angle strings (Quake)
-function Trans.apply_angles_xy(ang_str)
-  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
-  angle = Trans.apply_angle(0 + angle)
-  return string.format("%d %d %d", mlook, angle, roll)
-end
-
-
-function Trans.apply_angles_z(ang_str)
-  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
-  mlook = Trans.apply_mlook(0 + mlook)
-  return string.format("%d %d %d", mlook, angle, roll)
-end
-
-
-Trans.DOOM_LINE_FLAGS =
+DOOM_LINE_FLAGS =
 {
   blocked     = 0x01
   block_mon   = 0x02
@@ -238,7 +59,8 @@ Trans.DOOM_LINE_FLAGS =
 -- BOOM:  pass_thru = 0x200
 }
 
-Trans.HEXEN_ACTIONS =
+
+HEXEN_ACTIONS =
 {
   W1 = 0x0000, WR = 0x0200,  -- walk
   S1 = 0x0400, SR = 0x0600,  -- switch
@@ -248,20 +70,19 @@ Trans.HEXEN_ACTIONS =
 }
 
 
-
-function Trans.collect_flags(C)
+function Brush_collect_flags(C)
   if GAME.format == "doom" then
     local flags = C.flags or 0
 
     if C.act then
-      local spac = Trans.HEXEN_ACTIONS[C.act]
+      local spac = HEXEN_ACTIONS[C.act]
       if not spac then
         error("Unknown act value: " .. tostring(C.act))
       end
       flags = bit.bor(flags, spac)
     end
 
-    for name,value in pairs(Trans.DOOM_LINE_FLAGS) do
+    for name,value in pairs(DOOM_LINE_FLAGS) do
       if C[name] and C[name] != 0 then
         flags = bit.bor(flags, value)
       end
@@ -277,7 +98,6 @@ function Trans.collect_flags(C)
 end
 
 
-
 function brush_helper(coords)
   local mode = coords[1].m
 
@@ -286,7 +106,7 @@ function brush_helper(coords)
   if mode == "rail"  and not PARAM.rails then return end
 
   each C in coords do
-    Trans.collect_flags(C)
+    Brush_collect_flags(C)
   end
 
   gui.add_brush(coords)
@@ -325,117 +145,6 @@ function entity_helper(name, x, y, z, props)
 
   gui.add_entity(ent)
 end
-
-
-
-function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
-  local T = Trans.TRANSFORM
-
-  local x_size = (x2 - x1) * (T.scale_x or 1)
-  local y_size = (y2 - y1) * (T.scale_y or 1)
-  local z_size = (z2 - z1) * (T.scale_z or 1)
-
-  local spot = {}
-
-  spot.x, spot.y = Trans.apply_xy((x1+x2) / 2, (y1+y2) / 2)
-
-  spot.z = Trans.apply_z(z1)
-
-  spot.r = math.min(x_size, y_size)
-  spot.h = z_size
-
-  -- when rotated, find largest square that will fit inside it
-  if T.rotate then
-    local k = T.rotate % 90
-    if k > 45 then k = 90 - k end
-
-    local t = math.tan((45 - k) * math.pi / 180.0)
-    local s = math.sqrt(0.5 * (1 + t*t))
-
-    spot.r = spot.r * s
-  end
-
-  return spot
-end
-
-
-function Trans.spot_transform(x, y, z, dir)
-  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
-
-  return
-  {
-    add_x = x
-    add_y = y
-    add_z = z
-    rotate = ANGS[dir]
-  }
-end
-
-
-function Trans.box_transform(x1, y1, x2, y2, z, dir)
-  local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
-  local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
-  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
-
-  local T = {}
-
-  T.add_x = XS[dir]
-  T.add_y = YS[dir]
-  T.add_z = z
-
-  T.rotate = ANGS[dir]
-
-  if geom.is_vert(dir) then
-    T.fitted_x = x2 - x1
-    T.fitted_y = y2 - y1
-  else
-    T.fitted_x = y2 - y1
-    T.fitted_y = x2 - x1
-  end
-
-  return T
-end
-
-
-function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
-  local XS   = { [1]=x1, [9]= x2, [7]= x1, [3]=x2 }
-  local YS   = { [1]=y1, [9]= y2, [7]= y2, [3]=y1 }
-  local ANGS = { [1]=0,  [9]=180, [7]=270, [3]=90 }
-
-  local T = {}
-
-  T.add_x = XS[side]
-  T.add_y = YS[side]
-  T.add_z = z
-
-  T.rotate = ANGS[side]
-
-  if side == 1 or side == 9 then
-    T.fitted_x = horiz
-    T.fitted_y = vert
-  else
-    T.fitted_x = vert
-    T.fitted_y = horiz
-  end
-
-  return T
-end
-
-
-function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
-  if side == 4 then x2 = x1 + out ; x1 = x1 - back end
-  if side == 6 then x1 = x2 - out ; x2 = x2 + back end
-  if side == 2 then y2 = y1 + out ; y1 = y1 - back end
-  if side == 8 then y1 = y2 - out ; y2 = y2 + back end
-
-  if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
-  if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end
-  if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
-  if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
-
-  return Trans.box_transform(x1,y1, x2,y2, z, side)
-end
-
 
 
 function Brush_new_quad(x1,y1, x2,y2, b,t)
@@ -784,6 +493,320 @@ function Brush_set_mat(coords, wall, flat)
 
   Brush_set_tex(coords, wall, flat)
 end
+
+
+------------------------------------------------------------------------
+
+
+Trans = {}
+
+
+Trans.TRANSFORM =
+{
+  -- mirror_x  : flip horizontally (about given X)
+  -- mirror_y  : flip vertically (about given Y)
+  -- mirror_z
+
+  -- groups_x  : coordinate remapping groups
+  -- groups_y
+  -- groups_z
+
+  -- scale_x   : scaling factor
+  -- scale_y
+  -- scale_z
+
+  -- rotate    : angle in degrees, counter-clockwise,
+  --             rotates about the origin
+
+  -- add_x     : translation, i.e. new origin coords
+  -- add_y
+  -- add_z
+
+  -- fitted_x  : sizes which a "fitted" prefab needs to become
+  -- fitted_y
+  -- fitted_z
+}
+
+
+--[[
+struct GROUP
+{
+  low,  high,  size   : original range
+  low2, high2, size2  : new range
+
+  weight  : relative weight of this group (in relation to others).
+            needed for setting up the groups, but not for using them.
+}
+--]]
+
+
+function Trans.clear()
+  Trans.TRANSFORM = { }
+end
+
+function Trans.set(T)
+  Trans.TRANSFORM = table.copy(T)
+end
+
+function Trans.set_pos(x, y, z)
+  Trans.TRANSFORM = { add_x=x, add_y=y, add_z=z }
+end
+
+function Trans.modify(what, value)
+  Trans.TRANSFORM[what] = value
+end
+
+
+function Trans.remap_coord(groups, n)
+  if not groups then return n end
+
+  local T = #groups
+  assert(T >= 1)
+
+  if n <= groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
+  if n >= groups[T].high then return n + (groups[T].high2 - groups[T].high) end
+
+  local idx = 1
+
+  while (idx < T) and (n > groups[idx].high) do
+    idx = idx + 1
+  end
+
+  local G = groups[idx]
+
+  return G.low2 + (n - G.low) * G.size2 / G.size;
+end
+
+
+function Trans.apply_xy(x, y)
+  local T = Trans.TRANSFORM
+
+  -- apply mirroring first
+  if T.mirror_x then x = T.mirror_x * 2 - x end
+  if T.mirror_y then y = T.mirror_y * 2 - y end
+
+  -- apply groups
+  if T.groups_x then x = Trans.remap_coord(T.groups_x, x) end
+  if T.groups_y then y = Trans.remap_coord(T.groups_y, y) end
+
+  -- apply scaling
+  x = x * (T.scale_x or 1)
+  y = y * (T.scale_y or 1)
+
+  -- apply rotation
+  if T.rotate then
+    x, y = geom.rotate_vec(x, y, T.rotate)
+  end
+
+  -- apply translation last
+  x = x + (T.add_x or 0)
+  y = y + (T.add_y or 0)
+
+  return x, y
+end
+
+
+function Trans.apply_z(z)
+  local T = Trans.TRANSFORM
+
+  -- apply mirroring first
+  if T.mirror_z then z = T.mirror_z * 2 - z end
+
+  -- apply groups
+  if T.groups_z then z = Trans.remap_coord(T.groups_z, z) end
+
+  -- apply scaling
+  z = z * (T.scale_z or 1)
+
+  -- apply translation last
+  z = z + (T.add_z or 0)
+
+  return z
+end
+
+
+function Trans.apply_slope(slope)
+  if not slope then return nil end
+
+  local T = Trans.TRANSFORM
+
+  slope = table.copy(slope)
+
+  slope.x1, slope.y1 = Trans.apply_xy(slope.x1, slope.y1)
+  slope.x2, slope.y2 = Trans.apply_xy(slope.x2, slope.y2)
+
+  if T.mirror_z then slope.dz = - slope.dz end
+
+  slope.dz = slope.dz * (T.scale_z or 1)
+
+  return slope
+end
+
+
+function Trans.apply_angle(ang)
+  local T = Trans.TRANSFORM
+
+  if not (T.rotate or T.mirror_x or T.mirror_y) then
+    return ang
+  end
+
+  if not (T.mirror_x or T.mirror_y) then
+    ang = ang + T.rotate
+  else
+    local dx = math.cos(ang * math.pi / 180)
+    local dy = math.sin(ang * math.pi / 180)
+
+    if T.mirror_x then dx = -dx end
+    if T.mirror_y then dy = -dy end
+
+    ang = math.round(geom.calc_angle(dx, dy))
+
+    if T.rotate then ang = ang + T.rotate end
+  end
+
+  if ang >= 360 then ang = ang - 360 end
+  if ang <    0 then ang = ang + 360 end
+
+  return ang
+end
+
+
+function Trans.apply_mlook(ang)
+  local T = Trans.TRANSFORM
+
+  if T.mirror_z then
+    if ang == 0 then return 0 end
+    return 360 - ang
+  else
+    return ang
+  end
+end
+
+
+-- handle three-part angle strings (Quake)
+function Trans.apply_angles_xy(ang_str)
+  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
+  angle = Trans.apply_angle(0 + angle)
+  return string.format("%d %d %d", mlook, angle, roll)
+end
+
+
+function Trans.apply_angles_z(ang_str)
+  local mlook, angle, roll = string.match(ang_str, "(%d+) +(%d+) +(%d+)")
+  mlook = Trans.apply_mlook(0 + mlook)
+  return string.format("%d %d %d", mlook, angle, roll)
+end
+
+
+
+function Trans.adjust_spot(x1,y1, x2,y2, z1,z2)  -- not used atm
+  local T = Trans.TRANSFORM
+
+  local x_size = (x2 - x1) * (T.scale_x or 1)
+  local y_size = (y2 - y1) * (T.scale_y or 1)
+  local z_size = (z2 - z1) * (T.scale_z or 1)
+
+  local spot = {}
+
+  spot.x, spot.y = Trans.apply_xy((x1+x2) / 2, (y1+y2) / 2)
+
+  spot.z = Trans.apply_z(z1)
+
+  spot.r = math.min(x_size, y_size)
+  spot.h = z_size
+
+  -- when rotated, find largest square that will fit inside it
+  if T.rotate then
+    local k = T.rotate % 90
+    if k > 45 then k = 90 - k end
+
+    local t = math.tan((45 - k) * math.pi / 180.0)
+    local s = math.sqrt(0.5 * (1 + t*t))
+
+    spot.r = spot.r * s
+  end
+
+  return spot
+end
+
+
+function Trans.spot_transform(x, y, z, dir)
+  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+
+  return
+  {
+    add_x = x
+    add_y = y
+    add_z = z
+    rotate = ANGS[dir]
+  }
+end
+
+
+function Trans.box_transform(x1, y1, x2, y2, z, dir)
+  local XS   = { [2]=x1, [8]= x2, [4]= x1, [6]=x2 }
+  local YS   = { [2]=y1, [8]= y2, [4]= y2, [6]=y1 }
+  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+
+  local T = {}
+
+  T.add_x = XS[dir]
+  T.add_y = YS[dir]
+  T.add_z = z
+
+  T.rotate = ANGS[dir]
+
+  if geom.is_vert(dir) then
+    T.fitted_x = x2 - x1
+    T.fitted_y = y2 - y1
+  else
+    T.fitted_x = y2 - y1
+    T.fitted_y = x2 - x1
+  end
+
+  return T
+end
+
+
+function Trans.corner_transform(x1,y1, x2,y2, z, side, horiz, vert)
+  local XS   = { [1]=x1, [9]= x2, [7]= x1, [3]=x2 }
+  local YS   = { [1]=y1, [9]= y2, [7]= y2, [3]=y1 }
+  local ANGS = { [1]=0,  [9]=180, [7]=270, [3]=90 }
+
+  local T = {}
+
+  T.add_x = XS[side]
+  T.add_y = YS[side]
+  T.add_z = z
+
+  T.rotate = ANGS[side]
+
+  if side == 1 or side == 9 then
+    T.fitted_x = horiz
+    T.fitted_y = vert
+  else
+    T.fitted_x = vert
+    T.fitted_y = horiz
+  end
+
+  return T
+end
+
+
+function Trans.edge_transform(x1,y1, x2,y2, z, side, long1, long2, out, back)
+  if side == 4 then x2 = x1 + out ; x1 = x1 - back end
+  if side == 6 then x1 = x2 - out ; x2 = x2 + back end
+  if side == 2 then y2 = y1 + out ; y1 = y1 - back end
+  if side == 8 then y1 = y2 - out ; y2 = y2 + back end
+
+  if side == 2 then x1 = x2 - long2 ; x2 = x2 - long1 end
+  if side == 8 then x2 = x1 + long2 ; x1 = x1 + long1 end
+  if side == 4 then y2 = y1 + long2 ; y1 = y1 + long1 end
+  if side == 6 then y1 = y2 - long2 ; y2 = y2 - long1 end
+
+  return Trans.box_transform(x1,y1, x2,y2, z, side)
+end
+
 
 
 ------------------------------------------------------------------------
@@ -1149,7 +1172,7 @@ function Fab_apply_skins(fab, list)
       B[1].fab = fab
       
       for _,C in ipairs(B) do
-        Trans.collect_flags(C)
+        Brush_collect_flags(C)
       end
     end
   end
@@ -1312,27 +1335,6 @@ function Trans.loose_group_targets(groups)
   end
 end
 
-
-
-function Trans.resize_coord(groups, n)
-  if not groups then return n end
-
-  local T = #groups
-  assert(T >= 1)
-
-  if n < groups[1].low  then return n + (groups[1].low2 -  groups[1].low)  end
-  if n > groups[T].high then return n + (groups[T].high2 - groups[T].high) end
-
-  local idx = 1
-
-  while (idx < T) and (n > groups[idx].high) do
-    idx = idx + 1
-  end
-
-  local G = groups[idx]
-
-  return G.low2 + (G.high2 - G.low2) * (n - G.low) / (G.high - G.low);
-end
 
 
 
