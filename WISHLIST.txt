@@ -547,6 +547,10 @@ Sam's suggestions:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
+-  support colored lighting (FitzQuake, Darkplaces, etc).
+   - add an entry in the pack called "maps/xxx.lit", which
+   - it should contain: QLIT 1 0 0 0 <data>
+
 -  LAVA: style=5, have "lava light" similar to "sun light"
 
 -  support the Boss maps (next map = "start")
@@ -567,13 +571,11 @@ Sam's suggestions:
 
 -  Option to create _debugging_ MAP file
 
--  Option for shrinking textures to 32x32 (scaled in-map)
+-  Option for shrinking textures by half (scaled in-map)
    which would only require 1/4 of the lightmap space
    (and hence less likely to run out of it)
 
--  support colored lighting (FitzQuake, Darkplaces, etc).
-   - add an entry in the pack called "maps/xxx.lit", which
-   - it should contain: QLIT 1 0 0 0 <data>
+-  convert the Quake_test() function into a prefab
 
 ?  create dummy .lit files for FitzQuake & DarkPlaces
    -  gui.pak_add_binary_lump

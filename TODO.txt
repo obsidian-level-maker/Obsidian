@@ -8,6 +8,20 @@ Current Work
 -  position-based monster ordering 
 
 
+!!  pedestal skins for more games + make em optional
+
+>>  use prefabs for Keys and Weapons
+
+
+
+REVIEW >>  build.lua : instead of resize_coord, integrate into Trans.apply stuff
+
+FIXED?  the "apply twice" problem in prefab build code
+
+DONE?  support m="bbox" brushes (e.g. for QUAKE2_TELEPORTER)
+
+
+
 DOOM Shadow Algorithm:
 
 1. assume light brush have a 2D origin point
@@ -27,23 +41,11 @@ DOOM Shadow Algorithm:
 
 
 
-+  reserve one border seed around map, and the hallway channel
-   at edges of map are only 1 seed wide
-
-
 !!!!  fix the "no spot for wotsit" error
    -  make room widths have minimum of 3
 
-   IDEA: vertical hallway channels are 1 seed wide, horizontal are 2
-
 +  have a monster exclusion zone around teleporters
 
-DONE:  street_mode and hub_mode : don't use styles for them
-
-
-!!!  the "apply twice" problem in prefab build code
-
--  support m="bounds" brushes (e.g. for QUAKE2_TELEPORTER)
 
 
 Hallways:
