@@ -20,6 +20,17 @@
 
 PREFAB.PEDESTAL =
 {
+  defaults =
+  {
+    height = 8
+    light  = 60
+    style  = ""
+    angle  = 0
+    x_offset = ""
+    y_offset = ""
+    peg = ""
+  }
+
   brushes =
   {
     {
@@ -27,13 +38,17 @@ PREFAB.PEDESTAL =
       { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { t = 8, mat = "?top", light = "?light" }
+      { t = "?height", mat = "?top", light = "?light" }
     }
   }
 
   entities =
   {
-    { x = 0, y = 0, z = 8, ent = "?item", angle = "?angle" }
+    -- the item itself
+    { x = 0, y = 0, z = "?height", ent = "?item", angle = "?angle" }
+
+    -- light source
+    { x= 0, y = 0, z = 32, ent = "light", light = "?light", style = "?style" }
   }
 }
 

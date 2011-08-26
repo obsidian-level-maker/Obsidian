@@ -1904,6 +1904,15 @@ DOOM.SKINS =
     _deep   = 64
   }
 
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "chunk"
+
+    top  = "CEIL1_2"
+    side = "METAL"
+  }
+
 --[[
   OLD_sw_blue2 =
   {
@@ -2485,7 +2494,7 @@ DOOM.THEME_DEFAULTS =
 
   exits = { Exit_switch2 = 50 }
 
-  pedestals = { Item_niche = 50 }
+  pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 

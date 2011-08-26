@@ -443,8 +443,15 @@ function CHUNK_CLASS.purpose_key(C)
 
   local mx, my = C:mid_point()
 
-  -- FIXME !!!!  use a prefab
-  entity_helper(LOCK.key, mx, my, C.floor_h or 0)
+  local name  = rand.key_by_probs(THEME.pedestals)
+  local skin1 = assert(GAME.SKINS[name])
+
+  local skin2 = { item = LOCK.key }
+  local skin0 = { wall = C.room.main_tex }
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 end
 
 

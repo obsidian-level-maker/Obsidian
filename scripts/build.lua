@@ -116,6 +116,10 @@ end
 function entity_helper(name, x, y, z, props)
   assert(name)
 
+  if PARAM.light_brushes and name == "light" then
+    return
+  end
+
   local ent
 
   if props then
