@@ -279,14 +279,14 @@ PREFAB.QUAKE2_TELEPORTER =
   {
     -- dummy brush to set the size
     {
+      { m = "bbox" }
       { x =  -64, y = -64 }
       { x =   64, y = -64 }
       { x =   64, y =  64 }
       { x =  -64, y =  64 }
-      { t = -999 }
     }
   }
-  
+
   entities =
   {
     -- teleporter itself
