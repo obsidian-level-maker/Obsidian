@@ -1489,6 +1489,32 @@ QUAKE2.SKINS =
   }
 
 
+  ----| KEY |----
+
+  Item_niche =
+  {
+    _prefab = "ITEM_NICHE"
+    _where  = "edge"
+    _long   = 192
+    _deep   = 64
+
+    light = 128
+    style = 11
+  }
+
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "chunk"
+
+    top  = "WSTLT1_1"   -- LIGHT03_5
+    side = "METAL1_1"
+
+    light = 160
+    style = 11
+  }
+
+
   ----| STAIRS |----
 
   Stair_Up1 =
@@ -1531,18 +1557,6 @@ QUAKE2.SKINS =
   }
 
 
-  ----| KEY |----
-
-  Item_niche =
-  {
-    _prefab = "ITEM_NICHE"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 64
-
-    light = 128
-    style = 11
-  }
 --]]
 
   --- LOCKED DOORS ---
@@ -1709,6 +1723,8 @@ QUAKE2.THEME_DEFAULTS =
   starts = { Start_basic = 50 }
 
   exits = { Exit_basic = 50 }
+
+  pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
