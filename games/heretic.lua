@@ -429,6 +429,18 @@ HERETIC.SKINS =
   }
 
 
+  ----| KEY |----
+
+  Pedestal_1 =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "chunk"
+
+    top  = "FLAT500"
+    side = "SAINT1"
+  }
+
+
   ----| STAIRS |----
 
   Stair_Up1 =
@@ -1564,6 +1576,8 @@ HERETIC.THEME_DEFAULTS =
   starts = { Start_basic = 50 }
 
   exits = { Exit_switch = 50 }
+
+  pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
