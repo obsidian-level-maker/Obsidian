@@ -39,7 +39,7 @@ h2 {
 h3 { color: #c44; padding-top: 1em; }
 
 .menu {
-    background-color: #776655;
+    background-color: #554637;
     color: #ddd;
     min-height: 28px;
     line-height: 2.0em;
@@ -54,7 +54,7 @@ h3 { color: #c44; padding-top: 1em; }
 .menu a:hover   { text-decoration: none; color: white }
 
 .submenu {
-    background-color: #ddccbb;
+    background-color: #ccbbaa;
     color: #006;
     /* height: 32px; */
     line-height: 2.0em;
