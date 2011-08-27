@@ -401,6 +401,28 @@ end
 
 
 
+function CHUNK_CLASS.do_big_item(C, item_name)
+  local mx, my = C:mid_point()
+
+  -- simple method if no pedestals
+  if not THEME.pedestals then
+    entity_helper(item_name, mx, my, C.floor_h or 0)
+    return
+  end
+
+  local name  = rand.key_by_probs(THEME.pedestals)
+  local skin1 = assert(GAME.SKINS[name])
+
+  local skin2 = { item = item_name }
+  local skin0 = { wall = C.room.main_tex }
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+end
+
+
+
 function CHUNK_CLASS.purpose_start(C)
   local name  = rand.key_by_probs(THEME.starts)
   local skin1 = assert(GAME.SKINS[name])
@@ -436,22 +458,10 @@ end
 
 
 function CHUNK_CLASS.purpose_key(C)
-  local R = C.room
-
   local LOCK = assert(C.lock)
   assert(LOCK.key)
 
-  local mx, my = C:mid_point()
-
-  local name  = rand.key_by_probs(THEME.pedestals)
-  local skin1 = assert(GAME.SKINS[name])
-
-  local skin2 = { item = LOCK.key }
-  local skin0 = { wall = C.room.main_tex }
-
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
-
-  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+  C:do_big_item(LOCK.key)
 end
 
 
@@ -527,7 +537,6 @@ function CHUNK_CLASS.do_purpose(C)
     C:purpose_teleporter()
   end
 end
-
 
 
 function CHUNK_CLASS.cycle_stair(C, dir, N)
@@ -1032,18 +1041,14 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   -- object
 
-  local ent = "dummy"
-
   if C.purpose then C:do_purpose() end
 
-  -- !!!! FIXME: use a prefab
-  if C.weapon then ent = C.weapon end
+  if C.weapon then C:do_big_item(C.weapon) end
 
+  --[[ debugging aid
   local mx, my = C:mid_point()
-
-  if ent != "dummy" then
-    entity_helper(ent, mx, my, f_h + 24)
-  end
+  entity_helper("dummy", mx, my, f_h + 24)
+  --]]
 
 
   -- lighting

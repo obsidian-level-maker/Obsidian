@@ -55,6 +55,16 @@ PREFAB.PEDESTAL =
 
 PREFAB.OCTO_PEDESTAL =
 {
+  defaults =
+  {
+    light  = 60
+    style  = ""
+    angle  = 0
+    x_offset = ""
+    y_offset = ""
+    peg = ""
+  }
+
   brushes =
   {
     -- pedestal
@@ -120,7 +130,11 @@ PREFAB.OCTO_PEDESTAL =
 
   entities =
   {
+    -- the item itself
     { x = 0, y = 0, z = 16, ent = "?item", angle = "?angle" }
+
+    -- light source
+    { x= 0, y = 0, z = 40, ent = "light", light = "?light", style = "?style" }
   }
 }
 
