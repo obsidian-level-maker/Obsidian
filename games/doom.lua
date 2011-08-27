@@ -4414,6 +4414,7 @@ DOOM.WEAPONS =
 
   saw =
   {
+    level = 1
     pref = 3
     add_prob = 2
     start_prob = 1
@@ -4424,6 +4425,7 @@ DOOM.WEAPONS =
 
   berserk =
   {
+    level = 5
     pref = 10
     add_prob = 5
     start_prob = 2
@@ -4445,6 +4447,7 @@ DOOM.WEAPONS =
 
   chain =
   {
+    level = 1
     pref = 70
     add_prob = 35
     start_prob = 40
@@ -4458,6 +4461,7 @@ DOOM.WEAPONS =
 
   shotty =
   {
+    level = 1
     pref = 70
     add_prob = 10
     start_prob = 60
@@ -4472,6 +4476,7 @@ DOOM.WEAPONS =
 
   launch =
   {
+    level = 3
     pref = 50
     add_prob = 25
     start_prob = 15
@@ -4486,6 +4491,7 @@ DOOM.WEAPONS =
 
   plasma =
   {
+    level = 5
     pref = 30
     add_prob = 13
     start_prob = 7
@@ -4499,10 +4505,10 @@ DOOM.WEAPONS =
 
   bfg =
   {
+    level = 7
     pref = 15
     add_prob = 20
     start_prob = 1
-    rarity = 4
     attack = "missile"
     rate = 0.65  -- tweaked value, normally 0.8
     damage = 300
@@ -4515,6 +4521,7 @@ DOOM.WEAPONS =
   -- this is Doom II only --
   super =
   {
+    level = 3
     pref = 50
     add_prob = 20
     start_prob = 15

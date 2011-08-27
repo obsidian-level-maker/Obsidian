@@ -57,6 +57,9 @@ function CTL_DOOM.monster_setup(self)
 
       if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
       if prob > 180 then M.skip_prob = 0 end
+
+      -- allow it to appear as often as the user wants
+      M.level = 1
     end
   end -- for opt
 end
@@ -144,7 +147,7 @@ function CTL_DOOM.weapon_setup(self)
       end
 
       -- allow it to appear as often as the user wants
-      W.rarity = nil
+      W.level = 1
     end
   end -- for opt
 end
