@@ -87,13 +87,15 @@ Cross-Overs:
 
 
 Street Mode:
-  +  limit to once per episode (higher prob in secret level)
+DONE: limit to once per episode (higher prob in secret level)
 
   +  limit number of locked rooms:
      (a) if too many rooms, merge some
      (b) make some rooms be optional (storehouses or weapon)
      (c) connect some rooms via 3D bridges
   
+  -  fix the sky glitch (pieces jutting inside a room)
+
   -  allow some buildings (especially at corners) to eat the edge
 
   -  better looking "streets" (via prefabs and SKINs)
