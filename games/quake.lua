@@ -1353,6 +1353,7 @@ QUAKE1.WEAPONS =
 
   ssg =
   {
+    level = 2
     pref = 50
     add_prob = 40
     start_prob = 50
@@ -1367,6 +1368,7 @@ QUAKE1.WEAPONS =
 
   grenade =
   {
+    level = 3
     pref = 12
     add_prob = 15
     start_prob = 15
@@ -1381,6 +1383,7 @@ QUAKE1.WEAPONS =
 
   rocket =
   {
+    level = 5
     pref = 30
     add_prob = 10
     start_prob = 10
@@ -1395,6 +1398,7 @@ QUAKE1.WEAPONS =
 
   nailgun =
   {
+    level = 1
     pref = 50
     add_prob = 30
     start_prob = 50
@@ -1408,6 +1412,7 @@ QUAKE1.WEAPONS =
 
   nailgun2 =
   {
+    level = 3
     pref = 80
     add_prob = 10
     start_prob = 15
@@ -1421,10 +1426,10 @@ QUAKE1.WEAPONS =
 
   zapper =
   {
+    level = 5
     pref = 30
-    add_prob = 5
+    add_prob = 25
     start_prob = 5
-    rarity = 3
     attack = "hitscan"
     rate = 10
     damage = 30
