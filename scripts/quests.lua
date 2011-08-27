@@ -275,6 +275,61 @@ end
 
 function Quest_add_weapons()
  
+  local function prob_for_weapon(name, info, R)
+    local prob = info.add_prob
+
+    if R.purpose == "START" and not (OB_CONFIG.strength == "crazy") then
+      prob = info.start_prob
+    end
+
+    -- ignore weapons which lack a pick-up item
+    if not prob or prob <= 0 then return 0 end
+
+    -- make powerful weapons appear in later levels / rooms
+    local level = info.level or 1
+
+    if level > LEVEL.max_level then continue end
+
+    local room_level = LEVEL.max_level * R.lev_along
+    if room_level < 2 then room_level = 2 end
+
+    if level > room_level then prob = prob / 30 end
+
+    -- theme adjustment
+    if LEVEL.weap_prefs then
+      prob = prob * (LEVEL.weap_prefs[name] or 1)
+    end
+
+    if THEME.weap_prefs then
+      prob = prob * (THEME.weap_prefs[name] or 1)
+    end
+
+    return prob
+  end
+
+
+  local function decide_weapon(list, R)
+
+    -- determine probabilities, ignore already gotten weapons
+    local name_tab = {}
+
+    each name,info in GAME.WEAPONS do
+      -- already added?
+      if LEVEL.added_weapons[name] then continue end
+
+      local prob = prob_for_weapon(name, info, R)
+
+      if prob > 0 then
+        name_tab[name] = prob
+      end
+    end
+
+    @@@@
+
+    LEVEL.added_weapons[name] = true
+  end
+
+
   local function do_mark_weapon(name)
     LEVEL.added_weapons[name] = true
 
@@ -285,11 +340,8 @@ function Quest_add_weapons()
   end
 
 
-  local function add_weapon(R)
-    -- putting weapons in the exit room is a tad silly
-    if R.purpose == "EXIT" then
-      return
-    end
+
+  local function add_weapon_FIXME(R)
 
     -- determine probabilities, ignore already gotten weapons
     local name_tab = {}
@@ -330,12 +382,6 @@ function Quest_add_weapons()
     local info1 = assert(GAME.WEAPONS[early])
     local info2 = assert(GAME.WEAPONS[later])
 
----## -AJA- DISABLED, tends to make Berserk the first weapon, voilating 'start_prob'
----##    -- tend to place non-melee weapons before normal ones
----##    if info2.attack == "melee" and info1.attack != "melee" and rand.odds(65) then
----##      return true
----##    end
-
     -- otherwise only swap when the ammo is the same
     if info1.ammo == info2.ammo and
        (info1.rate * info1.damage) > (info2.rate * info2.damage)
@@ -363,13 +409,21 @@ function Quest_add_weapons()
 
   LEVEL.added_weapons = {}
 
-  add_weapon(LEVEL.rooms[1])
-
-  local next_weap_at = 1.0
+  local list = {}
+  local next_weap_at = 0  -- guarantees start room will have one
 
   each R in LEVEL.rooms do
+    -- putting weapons in the exit room is a tad silly
+    if R.purpose == "EXIT" then continue end
+
     if R.weap_along >= next_weap_at then
-      add_weapon(R)
+      decide_weapon(list, R)
+      next_weap_at = next_weap_at + 1
+    end
+
+    -- if room is large then allow a second weapon
+    if R.weap_along >= next_weap_at and R.svolume >= 12 then
+      decide_weapon(list, R)
       next_weap_at = next_weap_at + 1
     end
   end
@@ -733,15 +787,18 @@ function Quest_make_quests()
 
 
   local function setup_lev_alongs()
-    local w_along = 0
+    local w_along = LEVEL.mon_along
 
     each R in LEVEL.rooms do
       R.lev_along  = _index / #LEVEL.rooms
- 
-      R.weap_along = (w_along + R.kvolume / 3) / SECTION_W
-      R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
 
-      w_along = w_along + R.kvolume * rand.range(0.5, 0.8)
+      local w_step = R.kvolume / SECTION_W
+ 
+      R.weap_along = w_along + w_step / 3
+      R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
+stderrf("WEAPON ALONG : %1.2f\n", R.weap_along)
+
+      w_along = w_along + w_step * rand.range(0.5, 0.8)
     end
   end
 
@@ -814,6 +871,8 @@ stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
 
   Quest_select_textures()
   Quest_choose_keys()
+
+  Monsters_max_level()
 
   Quest_add_weapons()
 end

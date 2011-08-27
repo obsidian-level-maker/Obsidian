@@ -323,12 +323,7 @@ function Monsters_init()
 end
 
 
-function Monsters_global_palette()
-  -- Decides which monsters we will use on this level.
-  -- Easiest way is to pick some monsters NOT to use.
-
-  LEVEL.global_pal = {}
-
+function Monsters_max_level()
   local max_level = LEVEL.mon_along or 0.5
 
   -- adjust level based on Strength setting
@@ -340,10 +335,18 @@ function Monsters_global_palette()
   LEVEL.max_level = max_level
 
   gui.printf("Monster max_level -------> %1.3f\n", max_level)
+end
+
+
+function Monsters_global_palette()
+  -- Decides which monsters we will use on this level.
+  -- Easiest way is to pick some monsters NOT to use.
+
+  LEVEL.global_pal = {}
 
   for name,info in pairs(GAME.MONSTERS) do
     if info.prob  and info.prob > 0 and
-       info.level and info.level <= max_level
+       info.level and info.level <= LEVEL.max_level
     then
       LEVEL.global_pal[name] = 1
     end
