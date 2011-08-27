@@ -784,7 +784,12 @@ void QCOM_LightAllFaces()
   QCOM_FreeLights();
   QCOM_FindLights();
 
+  LogPrintf("found %u lights\n", qk_all_lights.size());
+
   QCOM_MakeTraceNodes();
+
+  int lit_faces  = 0;
+  int lit_luxels = 0;
 
   for (unsigned int i = 0 ; i < qk_all_faces.size() ; i++)
   {
@@ -795,9 +800,15 @@ void QCOM_LightAllFaces()
 
     QCOM_LightFace(F);
 
-    if (i % 400 == 0)
+    lit_faces++;
+    lit_luxels += F->lmap->width * F->lmap->height;
+
+    if (lit_faces % 400 == 0)
       Main_Ticker();
   }
+
+  LogPrintf("lit %d faces (of %u) using %d luxels\n",
+            lit_faces, qk_all_faces.size(), lit_luxels);
 
   // TODO: map models
 #if 0
