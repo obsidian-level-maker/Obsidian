@@ -192,6 +192,7 @@ function Quest_key_distances()
 end
 
 
+
 function Quest_choose_keys()
   local num_locks = #LEVEL.locks
 
@@ -309,12 +310,11 @@ function Quest_add_weapons()
 
 
   local function decide_weapon(list, R)
-
-    -- determine probabilities, ignore already gotten weapons
+    -- determine probabilities 
     local name_tab = {}
 
     each name,info in GAME.WEAPONS do
-      -- already added?
+      -- ignore already gotten weapons
       if LEVEL.added_weapons[name] then continue end
 
       local prob = prob_for_weapon(name, info, R)
@@ -324,84 +324,54 @@ function Quest_add_weapons()
       end
     end
 
-    @@@@
-
-    LEVEL.added_weapons[name] = true
-  end
-
-
-  local function do_mark_weapon(name)
-    LEVEL.added_weapons[name] = true
-
-    local allow = LEVEL.allowances[name]
-    if allow then
-      LEVEL.allowances[name] = sel(allow > 1, allow-1, 0)
-    end
-  end
-
-
-
-  local function add_weapon_FIXME(R)
-
-    -- determine probabilities, ignore already gotten weapons
-    local name_tab = {}
-
-    for name,info in pairs(GAME.WEAPONS) do
-      local prob = info.add_prob
-
-      if R.purpose == "START" and not (OB_CONFIG.strength == "crazy") then
-        prob = info.start_prob
-      end
-
-      if LEVEL.added_weapons[name] or LEVEL.allowances[name] == 0 then
-        prob = 0
-      end
-
-      if prob and prob > 0 then
-        name_tab[name] = prob
-      end
-    end
-
-    if table.empty(name_tab) then
-      return
-    end
+    -- nothing is possible? ok
+    if table.empty(name_tab) then return end
 
     local weapon = rand.key_by_probs(name_tab)
-    local info = GAME.WEAPONS[weapon]
 
-    R.weapon = weapon
-    R.weapon_ammo = info.ammo
+    -- mark it as used
+    LEVEL.added_weapons[weapon] = true
 
-    do_mark_weapon(weapon)
+    table.insert(list, { weapon=weapon, room=R })
   end
 
 
   local function should_swap(early, later)
-    if not early or not later then return false end
+    assert(early and later)
 
     local info1 = assert(GAME.WEAPONS[early])
     local info2 = assert(GAME.WEAPONS[later])
 
-    -- otherwise only swap when the ammo is the same
-    if info1.ammo == info2.ammo and
-       (info1.rate * info1.damage) > (info2.rate * info2.damage)
-    then
-      return true
-    end
+    -- only swap when the ammo is the same
+    if info1.ammo != info2.ammo then return false end
 
-    return false
+    -- determine firepower
+    local fp1 = info1.rate * info1.damage
+    local fp2 = info2.rate * info2.damage
+
+    return (fp1 > fp2)
   end
 
 
-  local function swap_weapons(R, index)
-    for i = index+1, #LEVEL.rooms do
-      local N = LEVEL.rooms[i]
+  local function reorder_weapons(list)
+    for pass = 1,2 do
+      for i = 1, (#list - 1) do
+        for k = (i + 1), #list do
+          if should_swap(list[i].weap, list[k].weap) then
+            local A = list[i].weapon
+            local B = list[k].weapon
 
-      if should_swap(R.weapon, N.weapon) then
-        R.weapon, N.weapon = N.weapon, R.weapon
-        R.weapon_ammo, N.weapon_ammo = N.weapon_ammo, R.weapon_ammo
+            list[i].weapon = B
+            list[k].weapon = A
+          end
+        end
       end
     end
+  end
+
+
+  local function add_weapon(R, weapon)
+    -- FIXME !!!!!!
   end
 
 
@@ -410,7 +380,7 @@ function Quest_add_weapons()
   LEVEL.added_weapons = {}
 
   local list = {}
-  local next_weap_at = 0  -- guarantees start room will have one
+  local next_weap_at = 0  -- start room guaranteed to have one
 
   each R in LEVEL.rooms do
     -- putting weapons in the exit room is a tad silly
@@ -421,7 +391,7 @@ function Quest_add_weapons()
       next_weap_at = next_weap_at + 1
     end
 
-    -- if room is large then allow a second weapon
+    -- allow a second weapon if room is large
     if R.weap_along >= next_weap_at and R.svolume >= 12 then
       decide_weapon(list, R)
       next_weap_at = next_weap_at + 1
@@ -432,17 +402,17 @@ function Quest_add_weapons()
 
   -- make sure weapon order is reasonable, e.g. the shotgun should
   -- appear before the super shotgun, plasma rifle before BFG, etc...
+  reorder_weapons(list)
 
-  each R in LEVEL.rooms do
-    swap_weapons(R, _index)
+  each loc in list do
+    gui.printf("  %s: %s\n", loc.room:tostr(), loc.weapon)
 
-    if R.weapon then
-      gui.printf("  %s: %s\n", R:tostr(), R.weapon)
-    end
+    add_weapon(loc.room, loc.weapon)
   end
 
   gui.printf("\n")
 end
+
 
 
 function Quest_find_storage_rooms()  -- NOT USED ATM
@@ -554,6 +524,7 @@ function Quest_select_textures()
 
   gui.printf("\n")
 end
+
 
 
 function Quest_make_quests()
