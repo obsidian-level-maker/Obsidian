@@ -1054,8 +1054,9 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
   -- lighting
 
   if light > 0 and GAME.format != "doom" then
+    local x, y = C:mid_point()
     local z = rand.irange(64, c_h-32)
-    gui.add_entity { id="light", x=mx, y=my, z=z, light=light, _radius=400 }
+    entity_helper("light", x, y, z, { light=light, _radius=400 })
   end
 
 

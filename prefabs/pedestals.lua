@@ -34,10 +34,10 @@ PREFAB.PEDESTAL =
   brushes =
   {
     {
-      { x = -32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y = -32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x =  32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
-      { x = -32, y =  32, mat = "?top", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y = -32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y = -32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x =  32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
+      { x = -32, y =  32, mat = "?side", peg="?peg", x_offset="?x_offset", y_offset="?y_offset" }
       { t = "?height", mat = "?top", light = "?light" }
     }
   }
