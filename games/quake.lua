@@ -868,6 +868,30 @@ QUAKE1.SKINS =
     style = 11
   }
 
+  Pedestal_tech =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "chunk"
+
+    top  = "LIGHT1_7"
+    side = "METAL1_2"
+
+    light = 160
+    style = 11
+  }
+
+  Pedestal_gothic =
+  {
+    _prefab = "PEDESTAL"
+    _where  = "chunk"
+
+    top  = "WINDOW1_4"  -- METAL6_4
+    side = "TECH02_5"   -- METAL5_8
+
+    light = 160
+    style = 11
+  }
+
 
   --- LOCKED DOORS ---
 
@@ -997,7 +1021,7 @@ QUAKE1.THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
-  pedestals = { Item_niche = 50 }
+  pedestals = { Pedestal_tech = 50 }
 
   keys = { k_silver=60, k_gold=20 }
 
@@ -1152,6 +1176,8 @@ QUAKE1.LEVEL_THEMES =
     logos = { carve=50 }
 
     steps = { step1=50, step2=50 }
+
+    pedestals = { Pedestal_gothic = 50 }
 
     scenery =
     {
