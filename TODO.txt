@@ -8,10 +8,15 @@ Current Work
 -  position-based monster ordering 
 
 
-!!  pedestal skins for more games + make em optional
 
->>  use prefabs for Keys and Weapons
+>>>  WEAPON.level stuff
 
++  level fields for games:  HERETIC  HEXEN  QUAKE2
+   -  remove most start_prob
+
++  control modules for games:  HERETIC  QUAKE  QUAKE2
+   -  level instead of rarity
+   -  start_prob
 
 
 REVIEW >>  build.lua : instead of resize_coord, integrate into Trans.apply stuff

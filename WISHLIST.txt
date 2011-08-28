@@ -115,8 +115,8 @@ Hallway Theming:
 Starting Items:
   -  backpack (etc) chance is based on ep_along
 
-  -  weapons: have a level field, don't get them if too early
-              (except perhaps in secrets)
+>>>>  weapons: have a level field, don't get them if too early
+               (except perhaps in secrets)
 
 
 Monsters:
