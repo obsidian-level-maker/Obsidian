@@ -138,8 +138,7 @@ function CTL_DOOM.weapon_setup(self)
     if W and opt.value != "default" then
       local prob = CTL_DOOM.WEAPON_PROBS[opt.value]
 
-      W.start_prob = prob
-      W.add_prob   = prob
+      W.add_prob = prob
 
       -- adjust usage preference as well
       if W.pref and prob > 0 then
@@ -148,6 +147,7 @@ function CTL_DOOM.weapon_setup(self)
 
       -- allow it to appear as often as the user wants
       W.level = 1
+      W.start_prob = nil
     end
   end -- for opt
 end
