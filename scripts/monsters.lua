@@ -138,8 +138,10 @@ end
 
 
 function Player_give_room_stuff(R)
-  if R.weapon then
-    Player_give_weapon(R.weapon)
+  if R.weapons then
+    each name in R.weapons do
+      Player_give_weapon(name)
+    end
   end
 end
 
@@ -595,7 +597,7 @@ gui.debugf("Initial %s = %1.1f\n", stat, hmodel.stats[stat] or 0)
     -- more ammo in start room
     local excess = 0
 
-    if stat == R.weapon_ammo then
+    if R.purpose == "START" and R:has_weapon_using_ammo(stat) then
       if qty > 0 then
         excess = (OB_CONFIG.strength == "crazy" ? 1.2 ; 0.6) * qty
       end
@@ -814,11 +816,6 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     if R.purpose == "START" and GAME.ENTITIES["backpack"] then
       table.insert(item_list, 1, { item={ name="backpack", big_item=true }, count=1 })
     end
-
----##    -- FIXME: place weapon in layout code
----##    if R.weapon then
----##      table.insert(item_list, 1, { item={ name=R.weapon, big_item=true }, count=1 })
----##    end
 
     place_item_list(R, item_list, CL)
   end

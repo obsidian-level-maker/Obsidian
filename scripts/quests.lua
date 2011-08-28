@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2006-2010 Andrew Apted
+--  Copyright (C) 2006-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -370,8 +370,10 @@ function Quest_add_weapons()
   end
 
 
-  local function add_weapon(R, weapon)
-    -- FIXME !!!!!!
+  local function add_weapon(R, name)
+    if not R.weapons then R.weapons = { } end
+
+    table.insert(R.weapons, name)
   end
 
 
@@ -386,14 +388,15 @@ function Quest_add_weapons()
     -- putting weapons in the exit room is a tad silly
     if R.purpose == "EXIT" then continue end
 
-    if R.weap_along >= next_weap_at then
-      decide_weapon(list, R)
-      next_weap_at = next_weap_at + 1
-    end
+    for loop = 1,3 do
+      if R.weapons < next_weap_at then break end
 
-    -- allow a second weapon if room is large
-    if R.weap_along >= next_weap_at and R.svolume >= 12 then
+      -- allow a second weapon only if room is large
+      if loop == 2 and R.svolume < 15 then break end
+      if loop == 3 and R.svolume < 60 then break end
+
       decide_weapon(list, R)
+
       next_weap_at = next_weap_at + 1
     end
   end
@@ -429,7 +432,7 @@ function Quest_find_storage_rooms()  -- NOT USED ATM
 
   each R in LEVEL.rooms do
     if R.kind != "scenic" and #R.conns == 1 and
-       not R.purpose and not R.weapon
+       not R.purpose and not R.weapons
     then
       R.is_storage = true
       table.insert(R.arena.storage_rooms, R)

@@ -380,10 +380,10 @@ function Areas_important_stuff()
   end
 
 
-  local function add_weapon(R)
+  local function add_weapon(R, weapon)
     local C = spot_for_wotsit(R)
 
-    C.weapon = R.weapon
+    C.weapon = weapon
   end
 
 
@@ -415,7 +415,9 @@ function Areas_important_stuff()
 
     if R:has_teleporter() then add_teleporter(R) end
 
-    if R.weapon then add_weapon(R) end
+    if R.weapons then
+      each name in R.weapons do add_weapon(R, name) end
+    end
   end
 
 

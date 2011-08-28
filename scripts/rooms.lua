@@ -59,6 +59,8 @@ class ROOM
 
   purpose : keyword   -- usually NIL, can be "EXIT" etc... (FIXME)
 
+  weapons : list(NAME)  -- weapons to add into room
+
   floor_h, ceil_h : number
 
 
@@ -228,6 +230,17 @@ end
 function ROOM_CLASS.has_teleporter(R)
   each D in R.conns do
     if D.kind == "teleporter" then return true end
+  end
+  return false
+end
+
+
+function ROOM_CLASS.has_weapon_using_ammo(R, ammo)
+  if R.weapons then
+    each name in R.weapons do
+      local info = GAME.WEAPONS[name]
+      if info.ammo == ammo then return true end
+    end
   end
   return false
 end
