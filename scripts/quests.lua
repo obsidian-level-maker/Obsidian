@@ -331,14 +331,11 @@ function Quest_add_weapons()
     end
 
     -- nothing is possible? ok
-    if table.empty(name_tab) then return end
+    if table.empty(name_tab) then return nil end
 
     local weapon = rand.key_by_probs(name_tab)
 
-    -- mark it as used
-    LEVEL.added_weapons[weapon] = true
-
-    table.insert(list, { weapon=weapon, room=R })
+    return weapon
   end
 
 
@@ -401,9 +398,22 @@ function Quest_add_weapons()
       if loop == 2 and R.svolume < 15 then break end
       if loop == 3 and R.svolume < 60 then break end
 
-      decide_weapon(list, R)
+      weapon = decide_weapon(list, R)
 
-      next_weap_at = next_weap_at + 1
+      if not weapon then continue end
+
+      table.insert(list, { weapon=weapon, room=R })
+
+      -- mark it as used
+      LEVEL.added_weapons[weapon] = true
+
+      -- melee weapons are not worth as much as other ones
+      local worth = 1
+      local info = GAME.WEAPONS[weapon]
+
+      if info.attack == "melee" then worth = 0.5 end
+
+      next_weap_at = next_weap_at + worth
     end
   end
 
