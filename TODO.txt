@@ -109,6 +109,10 @@ DONE: limit to once per episode (higher prob in secret level)
 
   -  a raised outdoory room might be cool
 
+  -  30% of the time  : keep the outer ring
+     30% of the time  : expand all rooms into outer ring
+     rest of the time : expand corner rooms 50%, side rooms 30%
+
 
 -----------------------------------------------------------------
 
