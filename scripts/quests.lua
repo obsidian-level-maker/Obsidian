@@ -279,8 +279,14 @@ function Quest_add_weapons()
   local function prob_for_weapon(name, info, R)
     local prob = info.add_prob
 
-    if R.purpose == "START" and not (OB_CONFIG.strength == "crazy") then
-      prob = info.start_prob
+    if R.purpose == "START" then
+      if info.start_prob then
+        prob = info.start_prob
+      elseif (info.level or 0) >= 5 then
+        prob = prob / 2
+      elseif (info.level or 0) >= 7 then
+        prob = prob / 8
+      end
     end
 
     -- ignore weapons which lack a pick-up item
