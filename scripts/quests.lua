@@ -289,7 +289,7 @@ function Quest_add_weapons()
     -- make powerful weapons appear in later levels / rooms
     local level = info.level or 1
 
-    if level > LEVEL.max_level then continue end
+    if level > LEVEL.max_level then return 0 end
 
     local room_level = LEVEL.max_level * R.lev_along
     if room_level < 2 then room_level = 2 end
@@ -357,7 +357,7 @@ function Quest_add_weapons()
     for pass = 1,2 do
       for i = 1, (#list - 1) do
         for k = (i + 1), #list do
-          if should_swap(list[i].weap, list[k].weap) then
+          if should_swap(list[i].weapon, list[k].weapon) then
             local A = list[i].weapon
             local B = list[k].weapon
 
@@ -389,7 +389,7 @@ function Quest_add_weapons()
     if R.purpose == "EXIT" then continue end
 
     for loop = 1,3 do
-      if R.weapons < next_weap_at then break end
+      if R.weap_along < next_weap_at then break end
 
       -- allow a second weapon only if room is large
       if loop == 2 and R.svolume < 15 then break end
@@ -770,7 +770,8 @@ function Quest_make_quests()
  
       R.weap_along = w_along + w_step / 3
       R.weap_along = R.weap_along * (PARAM.weapon_factor or 1)
-stderrf("WEAPON ALONG : %1.2f\n", R.weap_along)
+
+--stderrf("WEAPON ALONG : %1.2f\n", R.weap_along)
 
       w_along = w_along + w_step * rand.range(0.5, 0.8)
     end
