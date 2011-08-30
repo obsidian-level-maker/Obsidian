@@ -2027,6 +2027,7 @@ QUAKE2.WEAPONS =
 
   shotty =
   {
+    level = 1
     pref = 20
     add_prob = 10
     start_prob = 40
@@ -2040,9 +2041,9 @@ QUAKE2.WEAPONS =
 
   ssg =
   {
+    level = 3
     pref = 70
     add_prob = 50
-    start_prob = 10
     attack = "hitscan"
     rate = 0.8
     damage = 88
@@ -2054,9 +2055,9 @@ QUAKE2.WEAPONS =
 
   machine =
   {
+    level = 1
     pref = 20
     add_prob = 30
-    start_prob = 30
     attack = "hitscan"
     rate = 6.0
     damage = 8
@@ -2067,9 +2068,9 @@ QUAKE2.WEAPONS =
 
   chain =
   {
+    level = 4
     pref = 90
     add_prob = 15
-    start_prob = 5
     attack = "hitscan"
     rate = 14
     damage = 8
@@ -2080,9 +2081,9 @@ QUAKE2.WEAPONS =
 
   grenade =
   {
+    level = 3
     pref = 15
     add_prob = 25
-    start_prob = 15
     attack = "missile"
     rate = 0.7
     damage = 5
@@ -2094,9 +2095,9 @@ QUAKE2.WEAPONS =
 
   launcher =
   {
+    level = 5
     pref = 30
     add_prob = 20
-    start_prob = 3
     attack = "missile"
     rate = 1.1
     damage = 90
@@ -2108,9 +2109,9 @@ QUAKE2.WEAPONS =
 
   rail =
   {
+    level = 5
     pref = 50
     add_prob = 25
-    rarity = 3
     attack = "hitscan"
     rate = 0.6
     damage = 140
@@ -2122,9 +2123,9 @@ QUAKE2.WEAPONS =
 
   hyper =
   {
+    level = 4
     pref = 60
     add_prob = 30
-    rarity = 2
     attack = "missile"
     rate = 5.0
     damage = 20
@@ -2135,9 +2136,9 @@ QUAKE2.WEAPONS =
 
   bfg =
   {
+    level = 7
     pref = 20
     add_prob = 25
-    rarity = 4
     attack = "missile"
     rate = 0.3
     damage = 200
