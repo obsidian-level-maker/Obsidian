@@ -1963,9 +1963,9 @@ HERETIC.WEAPONS =
 
   gauntlets =
   {
+    level = 1
     pref = 10
     add_prob = 5
-    start_prob = 10
     rate = 5.2
     damage = 8
     attack = "melee"
@@ -1973,6 +1973,7 @@ HERETIC.WEAPONS =
 
   crossbow =
   {
+    level = 1
     pref = 90
     add_prob = 10
     start_prob = 70
@@ -1987,6 +1988,7 @@ HERETIC.WEAPONS =
 
   claw =  -- aka blaster
   {
+    level = 1
     pref = 60
     add_prob = 20
     start_prob = 20
@@ -2000,6 +2002,7 @@ HERETIC.WEAPONS =
 
   hellstaff =  -- aka skullrod
   {
+    level = 3
     pref = 50
     add_prob = 20
     start_prob = 5
@@ -2013,9 +2016,9 @@ HERETIC.WEAPONS =
 
   phoenix =
   {
+    level = 4
     pref = 50
     add_prob = 20
-    start_prob = 5
     rate = 1.7
     damage = 80
     attack = "missile"
@@ -2026,9 +2029,9 @@ HERETIC.WEAPONS =
 
   firemace =
   {
+    level = 6
     pref = 35
     add_prob = 20
-    start_prob = 5
     rate = 8.7
     damage = 8
     attack = "missile"
