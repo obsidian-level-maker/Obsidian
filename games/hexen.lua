@@ -4108,10 +4108,10 @@ HEXEN.WEAPONS =
   m_wand =
   {
     pref = 10
+    attack = "missile"
     rate = 2.3
     damage = 8
-    attack = "missile"
-    penetrates = true
+    splash = { 0, 6, 4, 2 }  -- model the penetrative nature
     class = "mage"
     slot = 1
   }
