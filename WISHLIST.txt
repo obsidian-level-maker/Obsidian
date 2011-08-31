@@ -119,6 +119,13 @@ Starting Items:
                (except perhaps in secrets)
 
 
+Weapons:
+  +  update some games (Chex Quest etc) with 'level' fields,
+     removing 'rarity' fields and most 'start_prob' fields.
+
+  -  update Immoral Conduct module too
+
+
 Monsters:
   -  give each monster a "class" field (e.g. class="undead")
      and have a strong tendency to use the same class of
