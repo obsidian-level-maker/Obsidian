@@ -8,15 +8,10 @@ Current Work
 -  position-based monster ordering 
 
 
+Note : scale_x/y/z is INHERENTLY INCOMPATIBLE with fit_x/y/z
 
->>>  WEAPON.level stuff
 
-+  level fields for games:  HERETIC  HEXEN  QUAKE2
-   -  remove most start_prob
-
-+  control modules for games:  HERETIC  QUAKE  QUAKE2
-   -  level instead of rarity
-   -  start_prob
++  Hexen : need proper handling of weapons
 
 
 REVIEW >>  build.lua : instead of resize_coord, integrate into Trans.apply stuff
