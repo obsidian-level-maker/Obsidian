@@ -137,8 +137,7 @@ function CTL_QUAKE2.weapon_setup(self)
     if W and opt.value != "default" then
       local prob = CTL_QUAKE2.WEAPON_PROBS[opt.value]
 
-      W.start_prob = prob
-      W.add_prob   = prob
+      W.add_prob = prob
 
       -- adjust usage preference as well
       if W.pref and prob > 0 then
@@ -146,7 +145,8 @@ function CTL_QUAKE2.weapon_setup(self)
       end
 
       -- allow it to appear as often as the user wants
-      W.rarity = nil
+      W.level = 1
+      W.start_prob = nil
     end
   end -- for opt
 end
