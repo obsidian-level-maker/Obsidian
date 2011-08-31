@@ -104,9 +104,9 @@ SKTAG_MONS.WEAPONS =
 {
   minigun =
   {
+    level = 2
     pref = 85
     add_prob = 20
-    start_prob = 10
     rate = 15
     damage = 10
     attack = "hitscan"
@@ -117,9 +117,9 @@ SKTAG_MONS.WEAPONS =
 
   glaunch =
   {
+    level = 3
     pref = 50
     add_prob = 15
-    start_prob = 8
     rate = 1.7
     damage = 80
     attack = "missile"
@@ -131,10 +131,9 @@ SKTAG_MONS.WEAPONS =
 
   railgun =
   {
+    level = 5
     pref = 20
     add_prob = 10
-    start_prob = 5
-    rarity = 3
     rate = 3.0
     damage = 200
     attack = "hitscan"
@@ -145,10 +144,9 @@ SKTAG_MONS.WEAPONS =
 
   bfg10k =
   {
+    level = 7
     pref = 15
     add_prob = 5
-    start_prob = 1
-    rarity = 4
     rate = 6.0
     damage = 160
     attack = "missile"
@@ -225,8 +223,11 @@ function SKTAG_MONS.setup(self)
   for name,_ in pairs(SKTAG_MONS.WEAPONS) do
     local W = GAME.WEAPONS[name]
     if W and factor then
-      W.add_prob   = math.max(4, W.add_prob)   * factor
-      W.start_prob = math.max(4, W.start_prob) * factor
+      W.add_prob = math.max(4, W.add_prob)   * factor
+
+      if W.start_prob then
+        W.start_prob = math.max(4, W.start_prob) * factor
+      end
     end
   end
 end
@@ -344,8 +345,7 @@ function SKTAG_MONS.weap_control_setup(self)
     if W and opt.value != "default" then
       local prob = SKTAG_MONS.CONTROL_PROBS[opt.value]
 
-      W.start_prob = prob
-      W.add_prob   = prob
+      W.add_prob = prob
 
       -- adjust usage preference as well
       if W.pref and prob > 0 then
@@ -353,7 +353,8 @@ function SKTAG_MONS.weap_control_setup(self)
       end
       
       -- allow it to appear as often as the user wants
-      W.rarity = nil
+      W.level = 1
+      W.start_prob = nil
     end
   end -- for opt
 end
