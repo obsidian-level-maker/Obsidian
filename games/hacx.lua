@@ -1274,9 +1274,9 @@ HACX.WEAPONS =
 
   reznator =
   {
+    level = 1
     pref = 2
     add_prob = 2
-    start_prob = 2
     attack = "melee"
     rate = 8.6
     damage = 10
@@ -1284,6 +1284,7 @@ HACX.WEAPONS =
 
   tazer =
   {
+    level = 1
     pref = 20
     add_prob = 10
     start_prob = 60
@@ -1297,9 +1298,9 @@ HACX.WEAPONS =
 
   cyrogun =
   {
+    level = 3
     pref = 40
     add_prob = 20
-    start_prob = 10
     attack = "hitscan"
     rate = 0.9
     damage = 170
@@ -1311,9 +1312,9 @@ HACX.WEAPONS =
 
   fu2 =
   {
+    level = 3
     pref = 40
     add_prob = 35
-    start_prob = 40
     attack = "hitscan"
     rate = 8.6
     damage = 10
@@ -1324,9 +1325,9 @@ HACX.WEAPONS =
 
   zooka =
   {
+    level = 3
     pref = 20
     add_prob = 25
-    start_prob = 10
     attack = "missile"
     rate = 1.7
     damage = 80
@@ -1338,9 +1339,9 @@ HACX.WEAPONS =
 
   antigun =
   {
+    level = 5
     pref = 50
     add_prob = 13
-    start_prob = 5
     attack = "missile"
     rate = 16
     damage = 20
@@ -1351,14 +1352,13 @@ HACX.WEAPONS =
 
   nuker =
   {
+    level = 7
     pref = 20
     add_prob = 30
-    start_prob = 0.2
-    rarity = 3
     attack = "missile"
     rate = 1.4
     damage = 300
-    splash = {60,45,30,30,20,10}
+    splash = {60,60,60,60, 60,60,60,60 }
     ammo = "molecule"
     per = 40
     give = { {ammo="molecule",count=40} }
