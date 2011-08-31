@@ -868,3 +868,80 @@ stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
   Quest_add_weapons()
 end
 
+
+----------------------------------------------------------------
+
+
+function Hub_connect_levels(epi, levels, keys, pieces)
+
+  local function connect(L1, L2)
+    -- FIXME
+  end
+
+
+  local function dump()
+    -- FIXME
+  end
+
+
+  ---| Hub_connect_levels |---
+
+  assert(#levels >= 3)
+
+  -- FIXME: use a copy of 'levels' !!!
+  local start_L = table.remove(levels)
+  local end_L   = table.remove(levels, #levels)
+
+  -- create the initial chain, which consists of the start level and
+  -- between zero and two other levels followed by the end level.
+  
+  local chain = { start_L, end_L }
+
+  for loop = 1,2 do
+    if #levels > 1 and rand.odds(60) then
+      table.insert(chain, 2, table.remove(levels))
+    end
+  end
+
+  for i = 1, #chain - 1 do
+    connect(chain[i], chain[i+1])
+  end
+
+  -- the remaining levels just branch off the current chain
+
+  local others = { }
+  
+  each L in levels do
+    -- pick existing level to branch from (NEVER the end level)
+    local N
+
+    if #others > 0 and rand.odds(30) then
+      N = rand.element(others)
+    else
+      N = chain[rand.irange(1, #chain - 1)]
+    end
+      
+    assert(L != N)
+
+    hub_connect(L, N)
+  end
+
+
+  -- lock certain connections
+
+  -- FIXME
+
+
+  -- assign weapon pieces
+
+  assert(#pieces < #levels)
+
+  local map = table.numbers(#levels - 1)
+
+  rand.shuffle(map)
+
+  each piece in pieces do
+    levels[map[_index]].piece = piece
+  end 
+end
+
