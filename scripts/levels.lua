@@ -55,6 +55,8 @@ class LEVEL
   special : keyword  -- normally nil
                      -- can be: "street", "surround", "wagon"
 
+  hub_links : list(HUB_LINK)  -- hub links which _leave_ this level
+
   -- TODO: lots of other fields : document important ones
 }
 
@@ -67,6 +69,17 @@ class EPISODE
 
   used_keys : table  -- for hubs, remember keys which have been used
                      -- on any level in the hub (cannot use them again)
+
+  hub_links : list(HUB_LINK)  -- all hub links
+}
+
+
+class HUB_LINK
+{
+  src  : LEVEL
+  dest : LEVEL
+
+  key   -- key which is required, or NIL
 }
 
 

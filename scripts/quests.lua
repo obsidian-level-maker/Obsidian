@@ -874,13 +874,56 @@ end
 
 function Hub_connect_levels(epi, keys, max_chain)
 
-  local function connect(L1, L2)
-    -- FIXME
+  local function connect(src, dest)
+    local LINK =
+    {
+      src  = src
+      dest = dest
+    }
+
+    table.insert( src.hub_links, LINK)
+    table.insert(dest.hub_links, LINK)
+    table.insert( epi.hub_links, LINK)
   end
 
 
   local function dump()
-    -- FIXME
+    gui.debugf("\nHub connections:\n")
+
+    each link in epi.hub_links do
+      gui.debugf("  %s --> %s : %s\n", link.src.name, link.dest.name,
+                 link.key or "")
+    end
+
+    gui.debugf("\n")
+  end
+
+
+  local function find_free_away(L)
+    local count = 0
+
+    each link in L.hub_links do
+      if not link.key and link.src == L then
+        count = count + 1
+
+        -- the first free away will stay unlocked, require second one
+        if count == 2 then
+          return link
+        end
+      end
+    end
+
+    return nil  -- not found
+  end
+
+
+  local function find_junction()
+    each L in epi.levels do
+      local link = find_free_away(L)
+      if link then return link end
+    end
+
+    return nil -- not found
   end
 
 
@@ -890,14 +933,21 @@ function Hub_connect_levels(epi, keys, max_chain)
 
   local levels = table.copy(epi.levels)
 
+  -- setup
+  epi.hub_links = { }
+
+  each L in levels do
+    L.hub_links = { }
+  end
+
+  -- create the initial chain, which consists of the start level, end
+  -- level and possibly a level or two in between.
+  
   local start_L = table.remove(levels)
   local end_L   = table.remove(levels, #levels)
 
   end_L.kind = "BOSS"
 
-  -- create the initial chain, which consists of the start level, end
-  -- level and possibly a level or two in between.
-  
   local chain = { start_L, end_L }
 
   for loop = 1,max_chain - 2 do
@@ -918,22 +968,42 @@ function Hub_connect_levels(epi, keys, max_chain)
     -- pick existing level to branch from (NEVER the end level)
     local N
 
-    if #others > 0 and rand.odds(30) then
-      N = rand.element(others)
-    else
-      N = chain[rand.irange(1, #chain - 1)]
-    end
-      
+    repeat
+      if #others > 0 and rand.odds(30) then
+        N = rand.pick(others)
+      else
+        N = chain[rand.irange(1, #chain - 1)]
+      end
+    -- prevent excessive branching from any one level
+    until #N.hub_links < 4
+
     assert(L != N)
 
     connect(L, N)
+
+    table.insert(others, L)
   end
 
 
   -- lock certain connections
 
-  -- FIXME
+  keys = table.copy(keys)
 
+  rand.shuffle(keys)
+
+  for loop = 1,99 do
+    local link = find_junction()
+    
+    if not link then break end
+
+    if #keys == 0 then
+      error("Hub_connect_levels: not enough keys!")
+    end
+
+    link.key = table.remove(keys)
+  end
+
+  dump()
 end
 
 
