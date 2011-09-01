@@ -28,6 +28,8 @@ class LEVEL
 
   description : string  -- level name or title (optional)
 
+  kind  -- keyword: "NORMAL", "BOSS", "SECRET"
+
   episode : EPISODE
 
   epi_along : float  -- how far along the episode, 0.0 -> 1.0

@@ -872,7 +872,7 @@ end
 ----------------------------------------------------------------
 
 
-function Hub_connect_levels(epi, levels, keys, pieces)
+function Hub_connect_levels(epi, keys, max_chain)
 
   local function connect(L1, L2)
     -- FIXME
@@ -888,16 +888,19 @@ function Hub_connect_levels(epi, levels, keys, pieces)
 
   assert(#levels >= 3)
 
-  -- FIXME: use a copy of 'levels' !!!
+  local levels = table.copy(epi.levels)
+
   local start_L = table.remove(levels)
   local end_L   = table.remove(levels, #levels)
 
-  -- create the initial chain, which consists of the start level and
-  -- between zero and two other levels followed by the end level.
+  end_L.kind = "BOSS"
+
+  -- create the initial chain, which consists of the start level, end
+  -- level and possibly a level or two in between.
   
   local chain = { start_L, end_L }
 
-  for loop = 1,2 do
+  for loop = 1,max_chain - 2 do
     if #levels > 1 and rand.odds(60) then
       table.insert(chain, 2, table.remove(levels))
     end
@@ -923,7 +926,7 @@ function Hub_connect_levels(epi, levels, keys, pieces)
       
     assert(L != N)
 
-    hub_connect(L, N)
+    connect(L, N)
   end
 
 
@@ -931,17 +934,34 @@ function Hub_connect_levels(epi, levels, keys, pieces)
 
   -- FIXME
 
+end
 
-  -- assign weapon pieces
 
-  assert(#pieces < #levels)
 
-  local map = table.numbers(#levels - 1)
+function Hub_assign_pieces(epi, pieces)
 
-  rand.shuffle(map)
+  -- assign weapon pieces (for HEXEN's super weapon) to levels
+
+  assert(#pieces < #epi.levels)
+
+  local levels = { }
+
+  each L in epi.levels do
+    if L.kind != "BOSS" and L.kind != "SECRET" then
+      table.insert(levels, L)
+    end
+  end
+
+  assert(#levels >= #pieces)
+
+  rand.shuffle(levels)
 
   each piece in pieces do
-    levels[map[_index]].piece = piece
+    local L = levels[_index]
+
+    L.piece = piece
+
+    gui.debugf("Hub: assigning piece '%s' --> %s\n", piece, L.name)
   end 
 end
 
