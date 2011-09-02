@@ -100,20 +100,35 @@ MONSTER_ALONG_POW  = { weak=1.5, medium=1.0, tough=0.5 }
 -- Doom flags
 DOOM_FLAGS =
 {
-  EASY    = 1,
-  MEDIUM  = 2,
-  HARD    = 4,
-  AMBUSH  = 8,
+  EASY    = 1
+  MEDIUM  = 2
+  HARD    = 4
+  AMBUSH  = 8
 }
 
 -- Quake flags
 QUAKE_FLAGS =
 {
-  AMBUSH     = 1,
-  NOT_EASY   = 256,
-  NOT_MEDIUM = 512,
-  NOT_HARD   = 1024,
-  NOT_DM     = 2048,
+  AMBUSH     = 1
+
+  NOT_EASY   = 256
+  NOT_MEDIUM = 512
+  NOT_HARD   = 1024
+  NOT_DM     = 2048
+}
+
+-- Hexen2 flags   [FIXME: NOT USED YET]
+HEXEN2_FLAGS =
+{
+  NOT_PALADIN  = 256
+  NOT_CLERIC   = 512
+  NOT_NECRO    = 1024
+  NOT_ASSASSIN = 2048
+
+  NOT_EASY     = 4096
+  NOT_MEDIUM   = 8192
+  NOT_HARD     = 16384
+  NOT_DM       = 32768
 }
 
 
