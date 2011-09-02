@@ -64,11 +64,28 @@ HEXEN2.ENTITIES =
   -- bosses
 
 
+  -- weapons
+  p_vorpal    = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
+  p_axe       = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+  p1_purifier = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
+  p2_purifier = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+
+  c_ice    = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
+  c_meteor = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+  c1_sun   = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
+  c2_sun   = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+
+  n_magic  = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
+  n_bone   = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+  n1_staff = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
+  n2_staff = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+
+  a_crossbow   = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
+  a_grenade    = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+  a1_vindictus = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
+  a2_vindictus = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+
   -- pickups
-
-  weapon2  = { id="wp_weapon2",    kind="pickup", r=30, h=30, pass=true }
-  weapon3  = { id="wp_weapon3",    kind="pickup", r=30, h=30, pass=true }
-
   blue_mana  = { id="item_mana_blue",  kind="pickup", r=20,h=16, pass=true }
   green_mana = { id="item_mana_green", kind="pickup", r=20,h=16, pass=true }
   dual_mana  = { id="item_mana_both",  kind="pickup", r=20,h=16, pass=true }
@@ -344,14 +361,18 @@ HEXEN2.MONSTERS =
 
 HEXEN2.WEAPONS =
 {
-  weapon1 =
+  -- FIXME !!!!  THESE STATS ARE TOTALLY BOGUS !!
+
+  -- Paladin --
+
+  p_gauntlet =
   {
     attack = "melee"
     rate = 2.0
     damage = 20
   }
 
-  weapon2 =
+  p_vorpal =
   {
     pref = 50
     add_prob = 40
@@ -363,7 +384,7 @@ HEXEN2.WEAPONS =
     per = 2
   }
 
-  weapon3 =
+  p_axe =
   {
     pref = 30
     add_prob = 40
@@ -373,6 +394,153 @@ HEXEN2.WEAPONS =
     attack = "missile"
     ammo = "green_mana"
     per = 2
+  }
+
+  p_purifier =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "dual_mana"
+    per = 4
+  }
+
+  -- Crusader --
+
+  c_hammer =
+  {
+    attack = "melee"
+    rate = 2.0
+    damage = 20
+  }
+
+  c_ice =
+  {
+    pref = 50
+    add_prob = 40
+    start_prob = 50
+    attack = "missile"
+    rate = 1.4
+    damage = 45
+    ammo = "blue_mana"
+    per = 2
+  }
+
+  c_meteor =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "green_mana"
+    per = 2
+  }
+
+  c_sun =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "dual_mana"
+    per = 4
+  }
+
+  -- Necromancer --
+
+  n_sickle =
+  {
+    attack = "melee"
+    rate = 2.0
+    damage = 20
+  }
+
+  n_magic =
+  {
+    pref = 50
+    add_prob = 40
+    start_prob = 50
+    attack = "missile"
+    rate = 1.4
+    damage = 45
+    ammo = "blue_mana"
+    per = 2
+  }
+
+  n_bone =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "green_mana"
+    per = 2
+  }
+
+  n_staff =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "dual_mana"
+    per = 4
+  }
+
+  -- Assassin --
+
+  a_dagger =
+  {
+    attack = "melee"
+    rate = 2.0
+    damage = 20
+  }
+
+  a_crossbow =
+  {
+    pref = 50
+    add_prob = 40
+    start_prob = 50
+    attack = "missile"
+    rate = 1.4
+    damage = 45
+    ammo = "blue_mana"
+    per = 2
+  }
+
+  a_grenade =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "green_mana"
+    per = 2
+  }
+
+  a_vindictus =
+  {
+    pref = 30
+    add_prob = 40
+    start_prob = 50
+    rate = 1.4
+    damage = 45
+    attack = "missile"
+    ammo = "dual_mana"
+    per = 4
   }
 }
 
@@ -410,12 +578,28 @@ HEXEN2.PICKUPS =
 
 HEXEN2.PLAYER_MODEL =
 {
-  -- FIXME: all four classes
+  paladin =
+  {
+    stats   = { health=0 }
+    weapons = { p_gauntlet=1 }
+  }
+
+  crusader =
+  {
+    stats   = { health=0 }
+    weapons = { c_hammer=1 }
+  }
+
+  necromancer =
+  {
+    stats   = { health=0 }
+    weapons = { n_sickle=1 }
+  }
 
   assassin =
   {
     stats   = { health=0 }
-    weapons = { weapon1=1 }
+    weapons = { a_dagger=1 }
   }
 }
 
