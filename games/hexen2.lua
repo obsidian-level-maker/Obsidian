@@ -370,42 +370,42 @@ HEXEN2.WEAPONS =
     attack = "melee"
     rate = 2.0
     damage = 20
+    slot = 1
   }
 
   p_vorpal =
   {
     pref = 50
     add_prob = 40
-    start_prob = 50
     attack = "missile"
     rate = 1.4
     damage = 45
     ammo = "blue_mana"
     per = 2
+    slot = 2
   }
 
   p_axe =
   {
     pref = 30
     add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "green_mana"
     per = 2
+    slot = 3
   }
 
   p_purifier =
   {
     pref = 30
-    add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "dual_mana"
     per = 4
+    slot = 4
   }
 
   -- Crusader --
@@ -415,42 +415,42 @@ HEXEN2.WEAPONS =
     attack = "melee"
     rate = 2.0
     damage = 20
+    slot = 1
   }
 
   c_ice =
   {
     pref = 50
     add_prob = 40
-    start_prob = 50
     attack = "missile"
     rate = 1.4
     damage = 45
     ammo = "blue_mana"
     per = 2
+    slot = 2
   }
 
   c_meteor =
   {
     pref = 30
     add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "green_mana"
     per = 2
+    slot = 3
   }
 
   c_sun =
   {
     pref = 30
-    add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "dual_mana"
     per = 4
+    slot = 4
   }
 
   -- Necromancer --
@@ -460,42 +460,42 @@ HEXEN2.WEAPONS =
     attack = "melee"
     rate = 2.0
     damage = 20
+    slot = 1
   }
 
   n_magic =
   {
     pref = 50
     add_prob = 40
-    start_prob = 50
     attack = "missile"
     rate = 1.4
     damage = 45
     ammo = "blue_mana"
     per = 2
+    slot = 2
   }
 
   n_bone =
   {
     pref = 30
     add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "green_mana"
     per = 2
+    slot = 3
   }
 
   n_staff =
   {
     pref = 30
-    add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "dual_mana"
     per = 4
+    slot = 4
   }
 
   -- Assassin --
@@ -505,42 +505,42 @@ HEXEN2.WEAPONS =
     attack = "melee"
     rate = 2.0
     damage = 20
+    slot = 1
   }
 
   a_crossbow =
   {
     pref = 50
     add_prob = 40
-    start_prob = 50
     attack = "missile"
     rate = 1.4
     damage = 45
     ammo = "blue_mana"
     per = 2
+    slot = 2
   }
 
   a_grenade =
   {
     pref = 30
     add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "green_mana"
     per = 2
+    slot = 3
   }
 
   a_vindictus =
   {
     pref = 30
-    add_prob = 40
-    start_prob = 50
     rate = 1.4
     damage = 45
     attack = "missile"
     ammo = "dual_mana"
     per = 4
+    slot = 4
   }
 }
 
