@@ -561,10 +561,10 @@ function Trans.modify(what, value)
 end
 
 
-function Trans.dump()
+function Trans.dump(title)
   -- debugging aid : show current transform
 
-  gui.debugf("Transform:\n")
+  gui.debugf("%s:\n", title or "Current Transform")
 
   local T = Trans.TRANSFORM
   assert(T)
@@ -1569,7 +1569,7 @@ function Fab_transform_Z(fab, T)
   local groups_z
 
   if bbox.z1 and bbox.dz > 1 then
-    local groups_z = Trans.create_groups(fab.z_ranges, bbox.z1, bbox.z2)
+    groups_z = Trans.create_groups(fab.z_ranges, bbox.z1, bbox.z2)
 
     Trans.TRANSFORM.groups_z = groups_z
   end
@@ -1602,8 +1602,6 @@ function Fab_transform_Z(fab, T)
       Trans.loose_group_targets(groups_z)
     end
   end
-
-Trans.dump()
 
   -- apply the coordinate transform to all parts of the prefab
 
