@@ -1404,30 +1404,55 @@ function Fab_transform_XY(fab, T)
   Trans.TRANSFORM.groups_x = groups_x
   Trans.TRANSFORM.groups_y = groups_y
 
-  local x_low, x_high
-  local y_low, y_high
+  --- X ---
 
-  if fab.placement == "fitted" then
-    if not (T.fitted_x and T.fitted_y) then
-      error("Fitted prefab used without fitted transform")
-    end
+  if fab.fitted and string.find(fab.fitted, "x") then
+    if not T.fitted_x then
+      error("Fitted prefab used without fitted X transform")
 
-    if math.abs(bbox.x1) > 0.1 or math.abs(bbox.y1) > 0.1 then
-      error("Fitted prefab should have left/bottom coord at (0, 0)")
+    elseif T.scale_x then
+      error("Fitted transform used with scale_x")
+
+    elseif math.abs(bbox.x1) > 0.1 then
+      error("Fitted prefab must have lowest X coord at 0")
     end
 
     Trans.fitted_group_targets(groups_x, 0, T.fitted_x)
-    Trans.fitted_group_targets(groups_y, 0, T.fitted_y)
 
   else  -- "loose" placement
+    if T.fitted_x then
+      error("Loose prefab used with fitted X transform")
+    end
 
-    if not (T.add_x and T.add_y) then
-      error("Loose prefab used without focal coord")
+    Trans.loose_group_targets(groups_x)
+  end
+
+
+  --- Y ---
+
+  if fab.fitted and string.find(fab.fitted, "y") then
+    if not T.fitted_y then
+      error("Fitted prefab used without fitted Y transform")
+
+    elseif T.scale_y then
+      error("Fitted transform used with scale_y")
+
+    elseif math.abs(bbox.y1) > 0.1 then
+      error("Fitted prefab must have lowest Y coord at 0")
+    end
+
+    Trans.fitted_group_targets(groups_y, 0, T.fitted_y)
+
+  else
+    if T.fitted_y then
+      error("Loose prefab used with fitted X transform")
     end
 
     Trans.loose_group_targets(groups_x)
     Trans.loose_group_targets(groups_y)
   end
+
+  -- apply the coordinate transform to all parts of the prefab
 
   for _,B in ipairs(fab.brushes) do
     brush_xy(B)
@@ -1496,23 +1521,44 @@ function Fab_transform_Z(fab, T)
   Trans.set(T)
 
   local bbox = fab.bbox
+  local groups_z
 
   if bbox.z1 and bbox.dz > 1 then
-    local z_low, z_high
-
     local groups_z = Trans.create_groups(fab.z_ranges, bbox.z1, bbox.z2)
 
     Trans.TRANSFORM.groups_z = groups_z
+  end
 
-    if T.fitted_z then
-      Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
-    else
-      Trans.loose_group_targets(groups_z)
+  --- Z ---
+
+  if fab.fitted and string.find(fab.fitted, "z") then
+    if not T.fitted_z then
+      error("Fitted prefab used without fitted Z transform")
+
+    elseif T.scale_z then
+      error("Fitted transform used with scale_z")
+
+    elseif not groups_z then
+      error("Fitted prefab has no vertical range!")
+
+    elseif math.abs(bbox.z1) > 0.1 then
+      error("Fitted prefab must have lowest Z coord at 0")
     end
 
-  else
-    fab.z_info = {}
+    Trans.fitted_group_targets(groups_z, 0, T.fitted_z)
+
+  else  -- "loose" mode
+
+    if T.fitted_z then
+      error("Loose prefab used with fitted Z transform")
+    end
+
+    if groups_z then
+      Trans.loose_group_targets(groups_z)
+    end
   end
+
+  -- apply the coordinate transform to all parts of the prefab
 
   for _,B in ipairs(fab.brushes) do
     brush_z(B)
