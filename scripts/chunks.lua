@@ -517,6 +517,11 @@ function CHUNK_CLASS.purpose_teleporter(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+  -- prevent monsters being close to it (in target room)
+  if C.room and conn.L2 == C.room then
+    C.room:add_exclusion_zone(C.x1, C.y1, C.x2, C.y2, 288)
+  end
 end
 
 
@@ -1085,14 +1090,24 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
     end
 --]]
 
+    -- use local lists, since we will process multiple floors
+    local item_spots = {}
+    local mon_spots  = {}
+
+    gui.spots_get_items(item_spots)
+
+    -- mark exclusion zones (e.g. area around a teleporter)
+    -- do it _after_ getting the item spots
+    if C.room and C.room.exclusion_zones then
+      each zone in C.room.exclusion_zones do
+        local brush = Brush_new_quad(zone.x1, zone.y1, zone.x2, zone.y2)
+        gui.spots_fill_poly(brush, 2)
+      end
+    end
+
 --  gui.spots_dump("Spot grid")
 
-    -- use local lists, since we will process multiple floors
-    local mon_spots  = {}
-    local item_spots = {}
-
-    gui.spots_get_mons (mon_spots)
-    gui.spots_get_items(item_spots)
+    gui.spots_get_mons(mon_spots)
 
     if table.empty(item_spots) and mon_spots[1] then
       table.insert(item_spots, mon_spots[1])

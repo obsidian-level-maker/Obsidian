@@ -105,6 +105,7 @@ function ROOM_CLASS.new(shape)
     prefabs = {}
     blocks  = {}
     decor   = {}
+    exclusion_zones = {}
   }
   table.set_class(R, ROOM_CLASS)
   table.insert(LEVEL.rooms, R)
@@ -419,6 +420,19 @@ function ROOM_CLASS.chunk_for_crossover(R, K, dir)
   assert(R:can_alloc_chunk(sx1,sy1, sx2,sy2))
 
   return R:alloc_chunk(sx1,sy1, sx2,sy2)
+end
+
+
+function ROOM_CLASS.add_exclusion_zone(R, x1, y1, x2, y2, extra_dist)
+  local ZONE =
+  {
+    x1 = x1 - (extra_dist or 0)
+    y1 = y1 - (extra_dist or 0)
+    x2 = x2 + (extra_dist or 0)
+    y2 = y2 + (extra_dist or 0)
+  }
+
+  table.insert(R.exclusion_zones, ZONE)
 end
 
 
