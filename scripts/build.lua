@@ -561,6 +561,51 @@ function Trans.modify(what, value)
 end
 
 
+function Trans.dump()
+  -- debugging aid : show current transform
+
+  gui.debugf("Transform:\n")
+
+  local T = Trans.TRANSFORM
+  assert(T)
+
+  if T.mirror_x then gui.debugf("  mirror_x = %1.0f\n", T.mirror_x) end
+  if T.mirror_y then gui.debugf("  mirror_y = %1.0f\n", T.mirror_y) end
+  if T.mirror_z then gui.debugf("  mirror_z = %1.0f\n", T.mirror_z) end
+
+  if T.scale_x then gui.debugf("  scale_x = %1.0f\n", T.scale_x) end
+  if T.scale_y then gui.debugf("  scale_y = %1.0f\n", T.scale_y) end
+  if T.scale_z then gui.debugf("  scale_z = %1.0f\n", T.scale_z) end
+
+  if T.rotate then gui.debugf("  ROTATE = %1.1f\n", T.rotate) end
+
+  if T.add_x then gui.debugf("  add_x = %1.0f\n", T.add_x) end
+  if T.add_y then gui.debugf("  add_y = %1.0f\n", T.add_y) end
+  if T.add_z then gui.debugf("  add_z = %1.0f\n", T.add_z) end
+
+  if T.fitted_x then gui.debugf("  fitted_x = %1.0f\n", T.fitted_x) end
+  if T.fitted_y then gui.debugf("  fitted_y = %1.0f\n", T.fitted_y) end
+  if T.fitted_z then gui.debugf("  fitted_z = %1.0f\n", T.fitted_z) end
+
+  local function dump_groups(name, groups)
+    gui.debugf("  %s =\n", name)
+    gui.debugf("  {\n")
+
+    each G in groups do
+      gui.debugf("    (%1.0f %1.0f %1.0f) --> (%1.0f %1.0f %1.0f)  wt:%1.2f\n",
+                 G.low  or -1, G.high  or -1, G.size  or -1,
+                 G.low2 or -1, G.high2 or -1, G.size2 or -1, G.weight)
+    end
+
+    gui.debugf("  }\n")
+  end
+
+  if T.groups_x then dump_groups("groups_x", T.groups_x) end
+  if T.groups_y then dump_groups("groups_y", T.groups_y) end
+  if T.groups_z then dump_groups("groups_z", T.groups_z) end
+end
+
+
 function Trans.remap_coord(groups, n)
   if not groups then return n end
 
@@ -1557,6 +1602,8 @@ function Fab_transform_Z(fab, T)
       Trans.loose_group_targets(groups_z)
     end
   end
+
+Trans.dump()
 
   -- apply the coordinate transform to all parts of the prefab
 
