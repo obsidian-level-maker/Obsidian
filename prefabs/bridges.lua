@@ -20,7 +20,7 @@
 
 PREFAB.BRIDGE_BASIC =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {
@@ -43,7 +43,7 @@ PREFAB.BRIDGE_BASIC =
 
 PREFAB.CHANNEL_BASIC =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   repeat_height = 192
 

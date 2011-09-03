@@ -50,7 +50,7 @@ PREFAB.START_SPOT =
 
 PREFAB.START_LEDGE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -439,7 +439,7 @@ PREFAB.QUAKE2_EXIT_PAD =
 
 PREFAB.QUAKE_WALL_EXIT =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {

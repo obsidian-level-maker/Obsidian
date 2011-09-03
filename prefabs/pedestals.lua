@@ -161,7 +161,7 @@ PREFAB.LOWERING_PEDESTAL =
 
 PREFAB.ITEM_NICHE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {

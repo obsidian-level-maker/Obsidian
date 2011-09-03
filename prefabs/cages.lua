@@ -150,7 +150,7 @@ PREFAB.CAGE_LARGE =
 
 PREFAB.WALL_CAGE_1 =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   flush = 144
 
@@ -200,7 +200,7 @@ PREFAB.WALL_CAGE_1 =
 
 PREFAB.WALL_CAGE_2 =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   flush = 144
 
@@ -254,7 +254,7 @@ PREFAB.WALL_CAGE_2 =
 
 PREFAB.CAGE_3D_WALL_1 =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -314,7 +314,7 @@ PREFAB.CAGE_3D_WALL_1 =
 
 PREFAB.TRAP_CLOSET_DOOM =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {

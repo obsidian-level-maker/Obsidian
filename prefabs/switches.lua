@@ -96,7 +96,7 @@ PREFAB.QUAKE_FLOOR_SWITCH =
 
 PREFAB.WALL_SWITCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {
@@ -176,7 +176,7 @@ PREFAB.WALL_SWITCH =
 
 PREFAB.QUAKE_WALL_SWITCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {

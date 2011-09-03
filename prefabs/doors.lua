@@ -20,7 +20,7 @@
 
 PREFAB.ARCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {
@@ -95,7 +95,7 @@ PREFAB.ARCH =
 
 PREFAB.ARCH2 =  -- BORKED : NEED WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -133,7 +133,7 @@ PREFAB.ARCH2 =  -- BORKED : NEED WALK BRUSHES
 
 PREFAB.QUAKE_ARCH =  -- BORKED : NEED WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -199,7 +199,7 @@ PREFAB.QUAKE_ARCH =  -- BORKED : NEED WALK BRUSHES
 PREFAB.ARCH_W_STAIR =  --  BORKED : Replace flavored brushes with "hole" brush,
                        --           And needs "walk" brushes.
 {
-  placement = "fitted"
+  fitted = "xy"
 
   room_dz = 80
 
@@ -281,7 +281,7 @@ PREFAB.ARCH_W_STAIR =  --  BORKED : Replace flavored brushes with "hole" brush,
 
 PREFAB.DOOR =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {32}, {128,0,"?width"}, {32} }
 
@@ -369,7 +369,7 @@ PREFAB.DOOR =
 
 PREFAB.QUAKE_DOOR =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   team_models = true
 
@@ -456,7 +456,7 @@ PREFAB.QUAKE_DOOR =
 
 PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
 {
-  placement = "fitted"
+  fitted = "xy"
   team_models = true,
 
   brushes =
@@ -496,7 +496,7 @@ PREFAB.QUAKE_DOOR_W_KEY_PIC =  -- Experiment of prefab composition
 
 PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
 
   team_models = true
 
@@ -579,7 +579,7 @@ PREFAB.QUAKE_V_DOOR =  -- BORKED : NEED WALK BRUSHES
 
 PREFAB.QUAKE2_KEY_DOOR =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {
@@ -677,7 +677,7 @@ PREFAB.QUAKE2_KEY_DOOR =
 
 PREFAB.QUAKE_4_WAY =  -- FIXME: step, WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
   team_models = true
 
   defaults =
@@ -775,7 +775,7 @@ PREFAB.QUAKE_4_WAY =  -- FIXME: step, WALK BRUSHES
 
 PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step, WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
   team_models = true
 
   brushes =
@@ -863,7 +863,7 @@ PREFAB.QUAKE2_DIAG_4_WAY =  -- FIXME: step, WALK BRUSHES
 
 PREFAB.BARS =  -- BORKED : NEED WALK BRUSHES
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {

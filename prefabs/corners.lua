@@ -26,7 +26,7 @@
 
 PREFAB.CORNER =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -42,7 +42,7 @@ PREFAB.CORNER =
 
 PREFAB.CORNER_DIAGONAL =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -59,7 +59,7 @@ PREFAB.CORNER_DIAGONAL =
 
 PREFAB.CORNER_DIAG_W_TORCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   defaults =
   {
@@ -93,7 +93,7 @@ PREFAB.CORNER_DIAG_W_TORCH =
 
 PREFAB.CORNER_CURVED =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -122,7 +122,7 @@ PREFAB.CORNER_CURVED =
 
 PREFAB.CORNER_CONCAVE_TRI =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -137,7 +137,7 @@ PREFAB.CORNER_CONCAVE_TRI =
 
 PREFAB.CORNER_CONCAVE_CURVED =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -154,7 +154,7 @@ PREFAB.CORNER_CONCAVE_CURVED =
 
 PREFAB.CORNER_NICHE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -200,7 +200,7 @@ PREFAB.CORNER_NICHE =
 
 PREFAB.CORNER_JUTTING_TORCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {

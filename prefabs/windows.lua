@@ -25,7 +25,7 @@
 
 PREFAB.WINDOW =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,4}, {64,1} }
 
@@ -79,7 +79,7 @@ PREFAB.WINDOW =
 
 PREFAB.WINDOW_W_BARS =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,2}, {64,1} }
 
@@ -152,7 +152,7 @@ PREFAB.WINDOW_W_BARS =
 
 PREFAB.WINDOW_W_CROSS =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,1}, {64,1} }
 
@@ -221,7 +221,7 @@ PREFAB.WINDOW_W_CROSS =
 
 PREFAB.WINDOW_GOTHIC =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {32,1}, {128,0}, {32,1} }
 
@@ -302,7 +302,7 @@ PREFAB.WINDOW_GOTHIC =
 
 PREFAB.QUAKE_WINDOW =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,1}, {64,1} }
 
@@ -395,7 +395,7 @@ PREFAB.QUAKE_WINDOW =
 
 PREFAB.FENCE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -413,7 +413,7 @@ PREFAB.FENCE =
 
 PREFAB.FENCE_W_GAP =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {80,1}, {32,0}, {80,1} }
 
@@ -451,7 +451,7 @@ PREFAB.FENCE_W_GAP =
 
 PREFAB.FENCE_W_BOLLARD =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {56,1}, {16,0}, {56,1} }
   y_ranges = { {8,0},  {16,1}, {8,0}  }
@@ -491,7 +491,7 @@ PREFAB.FENCE_W_BOLLARD =
 
 PREFAB.FENCE_W_INSET =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {16,0}, {96,1}, {16,0} }
   y_ranges = { {12,1}, { 8,0}, {12,1} }
@@ -538,7 +538,7 @@ PREFAB.FENCE_W_INSET =
 
 PREFAB.FENCE_W_RAIL =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {12,0}, {104,1}, {12,0} }
 
@@ -589,7 +589,7 @@ PREFAB.FENCE_W_RAIL =
 
 PREFAB.FENCE_W_RAIL_INSET =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {16,0}, {96,1}, {16,0} }
 
@@ -637,7 +637,7 @@ PREFAB.FENCE_W_RAIL_INSET =
 
 PREFAB.FENCE_W_TORCHES =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {16,0}, {96,1}, {16,0} }
 
@@ -680,7 +680,7 @@ PREFAB.FENCE_W_TORCHES =
 
 PREFAB.FENCE_W_HIGH_TORCH =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {32,1}, {64,0}, {32,1} }
 
@@ -726,7 +726,7 @@ PREFAB.FENCE_W_HIGH_TORCH =
 
 PREFAB.FENCE_W_WEIRD_BLOB =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,0}, {64,1} }
 
@@ -780,7 +780,7 @@ PREFAB.FENCE_W_WEIRD_BLOB =
 
 PREFAB.FENCE_BULGY =
 {
-  placement = "fitted"
+  fitted = "xy"
 
 --##  x_ranges = { {48,1}, {96,0}, {48,1} }
 
@@ -833,7 +833,7 @@ PREFAB.FENCE_BULGY =
 
 PREFAB.FENCE_STICKS_DOOM =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {6,0}, {20,1}, {6,0} }
 
@@ -884,7 +884,7 @@ PREFAB.FENCE_STICKS_DOOM =
 
 PREFAB.FENCE_STICKS_QUAKE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {6,0}, {20,1}, {6,0} }
 

@@ -20,7 +20,7 @@
 
 PREFAB.WALL =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -36,7 +36,7 @@ PREFAB.WALL =
 
 PREFAB.PICTURE =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {64,1}, {64,0,"?width"}, {64,1} }
   y_ranges = { {8,1}, {8,0} }
@@ -131,7 +131,7 @@ PREFAB.PICTURE =
 
 PREFAB.WALL_SPIKE_SHOOTER =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   x_ranges = { {16,1}, {96,0}, {16,1} }
   y_ranges = { {16,1}, {24,0} }

@@ -53,7 +53,7 @@ PREFAB.LIFT =
 
 PREFAB.STAIR_6 =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
@@ -126,7 +126,7 @@ PREFAB.STAIR_6 =
 
 PREFAB.NICHE_STAIR_8 =
 {
-  placement = "fitted"
+  fitted = "xy"
 
   brushes =
   {
