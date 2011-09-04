@@ -2154,6 +2154,8 @@ HEXEN.THEME_DEFAULTS =
 
   keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
 
+  hub_keys = { k_horn = 50, k_steel = 50, k_rusty = 50 }
+
   lock_doors = { Locked_axe = 50, Locked_fire = 50,
                  Locked_emerald = 50, Locked_silver = 50 }
 
@@ -4285,6 +4287,7 @@ HEXEN.ITEMS =
 }
 
 
+
 ------------------------------------------------------------
 
 HEXEN.EPISODES =
@@ -4602,9 +4605,7 @@ function HEXEN.get_levels()
   -- FIXME: temporary stuff (linear levels)
 
   local EP_NUM  = (OB_CONFIG.length == "full"   ? 5 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 6)
-
-  if OB_CONFIG.length == "few" then MAP_NUM = 3 end
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
 --??  GAME.original_themes = {}
 
@@ -4627,7 +4628,7 @@ function HEXEN.get_levels()
       local ep_along = map / MAP_NUM
 
       if MAP_NUM == 1 then
-        ep_along = rand.range(0.3, 0.7);
+        ep_along = rand.range(0.3, 0.7)
       end
 
       local LEV =
@@ -4640,8 +4641,7 @@ function HEXEN.get_levels()
         map      = map_id
         next_map = map_id + 1
 
-        -- TODO: proper clusters!
-        cluster  = map_id + 10
+        cluster  = ep_index
 
          ep_along = ep_along
         mon_along = ep_along + (ep_index-1) / 3
@@ -4649,18 +4649,34 @@ function HEXEN.get_levels()
         sky_light = ep_info.sky_light
       }
 
-      -- the very last map?
-      if ep_index == 5 and map == MAP_NUM then
+      -- second last map in each episode is a secret level, and
+      -- last map in each episode is the boss map.
+
+      if map == 6 then
+        LEV.kind = "SECRET"
+      elseif map == 7 then
+        LEV.kind = "BOSS"
+      end
+
+      -- very last map of the game?
+      if ep_index == 5 and map == 7 then
         LEV.next_map = nil
-      elseif EP_NUM == 1 and map == 6 then
-        LEV.next_map = 13
       end
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
-    end -- for map
+    end
+
+    -- link hub together (unless only making a single level)
+
+    if MAP_NUM > 1 then
+      Hub_connect_levels(EPI, GAME.THEME_DEFAULTS.hub_keys)
+
+      Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
+    end
 
   end -- for episode
+
 end
 
 
