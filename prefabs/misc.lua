@@ -191,6 +191,92 @@ PREFAB.TELEPORT_PAD =
 }
 
 
+PREFAB.HEXEN_GATE =
+{
+  brushes =
+  {
+    -- left side
+    {
+      { x = -48, y = -64, mat = "?frame" }
+      { x = -32, y = -64, mat = "?frame" }
+      { x = -32, y =   0, mat = "?frame" }
+      { x = -80, y =   0, mat = "?frame" }
+    }
+
+    -- right side
+    {
+      { x =  32, y = -64, mat = "?frame" }
+      { x =  48, y = -64, mat = "?frame" }
+      { x =  80, y =   0, mat = "?frame" }
+      { x =  32, y =   0, mat = "?frame" }
+    }
+
+    -- back side
+    {
+      { x = -32, y = -80, mat = "?frame" }
+      { x =  32, y = -80, mat = "?frame" }
+      { x =  48, y = -64, mat = "?frame" }
+      { x = -48, y = -64, mat = "?frame" }
+    }
+
+    -- bottom
+    {
+      { x = -32, y = -64, mat = "?frame" }
+      { x =  32, y = -64, mat = "?frame" }
+      { x =  32, y =   0, mat = "?frame" }
+      { x = -32, y =   0, mat = "?frame" }
+      { t = 16, mat = "?frame" }
+    }
+
+    -- top
+    {
+      { x = -32, y = -64, mat = "?frame" }
+      { x =  32, y = -64, mat = "?frame" }
+      { x =  32, y =   0, mat = "?frame" }
+      { x = -32, y =   0, mat = "?frame" }
+      { b = 144, mat = "?frame" }
+    }
+
+    -- frame texture
+    {
+      { m = "rail" }
+      { x = -32, y = -64 }
+      { x =  32, y = -64 }
+      { x =  32, y = -16, mat = "R_TPORTX" }
+      { x = -32, y = -16 }
+      { b =  16 }
+      { t = 144 }
+    }
+
+    -- teleport texture
+    {
+      { m = "rail" }
+      { x = -32, y = -64 }
+      { x =  32, y = -64 }
+      { x =  32, y = -20, mat = "R_TPORT1" }
+      { x = -32, y = -20 }
+      { b =  16 }
+      { t = 144 }
+    }
+
+    -- make the inside area dark
+    {
+      { m = "light", sub = 128 }
+      { x = -32, y = -64 }
+      { x =  32, y = -64 }
+      { x =  32, y = -20 }
+      { x = -32, y = -20 }
+    }
+  }
+
+  entities =
+  {
+    -- return spot
+    { x = 0, y = 24, z = 16, ent="teleport_spot", angle=90 }
+  }
+}
+
+
 PREFAB.QUAKE_TELEPORTER =
 {
   brushes =

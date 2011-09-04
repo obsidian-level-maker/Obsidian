@@ -1300,6 +1300,18 @@ HEXEN.SKINS =
     special = 11
     act = "S1"
   }
+
+
+  ---| TELEPORTERS |---
+
+  Hub_Gate =
+  {
+    _prefab = "HEXEN_GATE"
+    _where  = "chunk"
+
+    frame = "WOOD01"
+  }
+
 }
 
 
@@ -2155,6 +2167,9 @@ HEXEN.THEME_DEFAULTS =
   keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
 
   hub_keys = { k_horn = 50, k_steel = 50, k_rusty = 50 }
+
+-- FIXME: THIS JUST FOR TESTING
+teleporters = { Hub_Gate = 50 }
 
   lock_doors = { Locked_axe = 50, Locked_fire = 50,
                  Locked_emerald = 50, Locked_silver = 50 }
@@ -4647,6 +4662,8 @@ function HEXEN.get_levels()
         mon_along = ep_along + (ep_index-1) / 3
 
         sky_light = ep_info.sky_light
+
+        name_theme = "GOTHIC"
       }
 
       -- second last map in each episode is a secret level, and
@@ -4696,7 +4713,9 @@ function HEXEN.make_mapinfo()
   end
 
   each L in GAME.levels do
-    add("map %d \"%s\"", L.map, string.upper(L.description))
+    local desc = string.upper(L.description or "Weird Place")
+
+    add("map %d \"%s\"", L.map, desc)
     add("warptrans %d", L.map)
     add("next %d", L.next_map or 1)
     add("cluster %d", L.cluster)

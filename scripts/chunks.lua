@@ -499,6 +499,7 @@ function CHUNK_CLASS.purpose_teleporter(C)
   local name  = rand.key_by_probs(THEME.teleporters)
   local skin1 = assert(GAME.SKINS[name])
 
+  local skin0 = { wall = C.room.main_tex }
   local skin2 = {}
 
   if conn.L1 == C.room then
@@ -516,7 +517,8 @@ function CHUNK_CLASS.purpose_teleporter(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
 
-  Fabricate(skin1._prefab, T, { skin1, skin2 })
+
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
 
   -- prevent monsters being close to it (in target room)
   if C.room and conn.L2 == C.room then
