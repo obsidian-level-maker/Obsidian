@@ -5044,14 +5044,6 @@ function DOOM.make_level_gfx()
 end
 
 
-function DOOM.begin_level()
-  -- set the description
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 function DOOM.end_level()
 gui.printf("DOOM.end_level: desc='%s' patch='%s'\n",
            tostring(LEVEL.description),
@@ -5095,7 +5087,6 @@ OB_GAMES["doom1"] =
     setup        = DOOM1.setup
     get_levels   = DOOM1.get_levels
 
-    begin_level  = DOOM.begin_level
     end_level    = DOOM.end_level
     all_done     = DOOM.all_done
   }
@@ -5134,7 +5125,6 @@ OB_GAMES["doom2"] =
     setup        = DOOM2.setup
     get_levels   = DOOM2.get_levels
 
-    begin_level  = DOOM.begin_level
     end_level    = DOOM.end_level
     all_done     = DOOM.all_done
   }

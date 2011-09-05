@@ -465,14 +465,6 @@ function HALFLIFE.get_levels()
 end
 
 
-function HALFLIFE.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 ----------------------------------------------------------------
 
 UNFINISHED["halflife"] =
@@ -488,9 +480,8 @@ UNFINISHED["halflife"] =
 
   hooks =
   {
-    setup        = HALFLIFE.setup
-    get_levels   = HALFLIFE.get_levels
-    begin_level  = HALFLIFE.begin_level
+    setup      = HALFLIFE.setup
+    get_levels = HALFLIFE.get_levels
   }
 }
 

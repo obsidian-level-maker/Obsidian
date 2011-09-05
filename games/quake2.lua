@@ -2367,14 +2367,6 @@ function QUAKE2.get_levels()
 end
 
 
-function QUAKE2.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 
 ----------------------------------------------------------------
 
@@ -2393,7 +2385,6 @@ OB_GAMES["quake2"] =
   {
     setup        = QUAKE2.setup
     get_levels   = QUAKE2.get_levels
-    begin_level  = QUAKE2.begin_level
   }
 }
 

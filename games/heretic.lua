@@ -2342,14 +2342,6 @@ function HERETIC.make_cool_gfx()
 end
 
 
-function HERETIC.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 function HERETIC.all_done()
   HERETIC.make_cool_gfx()
 end
@@ -2373,7 +2365,6 @@ OB_GAMES["heretic"] =
   {
     setup        = HERETIC.setup
     get_levels   = HERETIC.get_levels
-    begin_level  = HERETIC.begin_level
     all_done     = HERETIC.all_done
   }
 }

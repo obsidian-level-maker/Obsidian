@@ -697,11 +697,6 @@ function HEXEN2.begin_level()
   end
 
   gui.q1_add_tex_wad(primary_tex_wad)
-
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
 end
 
 

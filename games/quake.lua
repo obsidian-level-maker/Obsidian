@@ -1667,11 +1667,6 @@ function QUAKE1.begin_level()
 
   gui.q1_add_tex_wad(primary_tex_wad)
 
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-
   -- set worldtype (controls the way keys look, doors sound, etc)
   gui.property("worldtype", LEVEL.theme.worldtype)
 

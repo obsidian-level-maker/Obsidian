@@ -4697,14 +4697,6 @@ function HEXEN.get_levels()
 end
 
 
-function HEXEN.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 function HEXEN.make_mapinfo()
   local mapinfo = {}
 
@@ -4817,7 +4809,6 @@ OB_GAMES["hexen"] =
   {
     setup        = HEXEN.setup
     get_levels   = HEXEN.get_levels
-    begin_level  = HEXEN.begin_level
     all_done     = HEXEN.all_done
   }
 }

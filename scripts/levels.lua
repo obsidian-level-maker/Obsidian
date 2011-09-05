@@ -481,7 +481,7 @@ function Levels_choose_themes()
       set_level_theme(L, OB_CONFIG.theme)
     end
 
-    return;
+    return
   end
 
   if OB_CONFIG.theme == "psycho" then
@@ -507,7 +507,7 @@ function Levels_choose_themes()
       end
     end
 
-    return;
+    return
   end
 
   -- Mix It Up : choose a theme for each episode
@@ -593,13 +593,14 @@ function Levels_choose_themes()
       count = count + 1
     end
 
-    return;
+    return
   end
 
   each L in GAME.levels do
     set_level_theme(L, episode_list[L.episode.index])
   end
 end
+
 
 
 function Levels_rarify(seed_idx, tab)
@@ -754,6 +755,14 @@ function Levels_handle_prebuilt()
     -- FIXME: support other games (Wolf3d, Quake, etc)
   end
 
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
+
+  if LEVEL.description then
+    gui.property("description", LEVEL.description)
+  end
+
   return "ok"
 end
 
@@ -815,6 +824,10 @@ function Levels_make_level(L)
 
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
+
+  if not LEVEL.description and LEVEL.name_theme then
+    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
+  end
 
   if LEVEL.description then
     gui.property("description", LEVEL.description)

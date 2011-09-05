@@ -1648,14 +1648,6 @@ function CHEX3.get_levels()
 end
 
 
-function CHEX1.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 function CHEX1.make_cool_gfx()
   local GREEN =
   {
@@ -1726,7 +1718,6 @@ OB_GAMES["chex1"] =
   {
     setup        = CHEX1.setup
     get_levels   = CHEX1.get_levels
-    begin_level  = CHEX1.begin_level
     all_done     = CHEX1.all_done
   }
 }
@@ -1747,7 +1738,6 @@ OB_GAMES["chex2"] =
   {
     setup        = CHEX1.setup
     get_levels   = CHEX1.get_levels
-    begin_level  = CHEX1.begin_level
     all_done     = CHEX1.all_done
   }
 }
@@ -1767,7 +1757,6 @@ OB_GAMES["chex3"] =
   {
     setup        = CHEX1.setup
     get_levels   = CHEX3.get_levels
-    begin_level  = CHEX1.begin_level
 --FIXME !!!   all_done     = CHEX1.all_done
   }
 }

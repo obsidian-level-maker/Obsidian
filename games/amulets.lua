@@ -399,14 +399,6 @@ function AMULETS.get_levels()
 end
 
 
-function AMULETS.begin_level()
-  -- set the description here
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-end
-
-
 ------------------------------------------------------------
 
 UNFINISHED["amulets"] =
@@ -422,9 +414,8 @@ UNFINISHED["amulets"] =
 
   hooks =
   {
-    setup        = AMULETS.setup
-    get_levels   = AMULETS.get_levels
-    begin_level  = AMULETS.begin_level
+    setup      = AMULETS.setup
+    get_levels = AMULETS.get_levels
   }
 }
 
