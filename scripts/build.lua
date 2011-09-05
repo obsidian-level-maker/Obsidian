@@ -147,6 +147,10 @@ function entity_helper(name, x, y, z, props)
     ent.spawnflags = ((props and props.spawnflags) or 0) + info.spawnflags
   end
 
+  if info.fields then
+    each name,value in info.fields do ent[name] = value end
+  end
+
   gui.add_entity(ent)
 end
 
@@ -1248,6 +1252,10 @@ function Fab_apply_skins(fab, list)
 
     if info.spawnflags then
       E.spawnflags = bit.bor((E.spawnflags or 0), info.spawnflags)
+    end
+
+    if info.fields then
+      each name,value in info.fields do E[name] = value end
     end
 
     return true -- OK --
