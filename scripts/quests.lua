@@ -997,6 +997,23 @@ end
 
 
 
+function Hub_assign_weapons(epi)
+
+  -- Hexen and Hexen II only have two normal weapons per class.
+  -- The normal weapon placement logic does not work well for that,
+  -- instead we pick which levels to place them on.
+
+  -- TODO: improve this
+
+  local a = 2
+  local b = rand.sel(66, 3, 4)
+
+  epi.levels[a].hexen_weapon = 1
+  epi.levels[b].hexen_weapon = 2
+end
+
+
+
 function Hub_assign_pieces(epi, pieces)
 
   -- assign weapon pieces (for HEXEN's super weapon) to levels

@@ -4689,6 +4689,7 @@ function HEXEN.get_levels()
     if MAP_NUM > 1 then
       Hub_connect_levels(EPI, GAME.THEME_DEFAULTS.hub_keys)
 
+      Hub_assign_weapons(EPI)
       Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
     end
 
