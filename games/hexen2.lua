@@ -92,6 +92,55 @@ HEXEN2.ENTITIES =
 
   health    = { id="item_health",  kind="pickup", r=30, h=30, pass=true }
 
+  -- keys
+  k_pharaoh  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="e1", netname="Pharaoh's Key" } }
+  k_anubia   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="ankey", netname="Key of Anubia" } }
+  k_ra       = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="rakey", netname="Key of Ra" } }
+  k_horus    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="eyeh", netname="Eye of Horus" } }
+
+  k_soul     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="soul", netname="Soul Key" } }
+  k_stable   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="stkey", netname="Stable Key" } }
+  k_tailor   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="takey", netname="Tailor's Key" } }
+  k_treasury = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="trkey", netname="Treasury Key" } }
+  k_guardian = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="s2", netname="Guardian Key" } }
+
+  k_stone    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="m1", netname="Stone Key" } }
+  k_skull    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="m2", netname="Crystal Skull" } }
+  k_jade     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="m3", netname="Jade Skull" } }
+  k_serpent  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="m4", netname="Serpent's Heart" } }
+
+  k_fire     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="fire", netname="Element of Fire" } }
+  k_water    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="water", netname="Element of Water" } }
+  k_air      = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="air", netname="Element of Air" } }
+  k_earth    = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="earth", netname="Element of Earth" } }
+
+  k_crystal  = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="r5", netname="Power Crystal" } }
+  k_void     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="r6", netname="Void Stone" } }
+  k_sun      = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="r7", netname="Sun Stone" } }
+  k_gold     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="r1", netname="Gold Bar" } }
+  k_silver   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="silver", netname="Silver Bar" } }
 
   -- scenery
 
@@ -210,6 +259,8 @@ HEXEN2.THEME_DEFAULTS =
   exits = { Exit_basic = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  hub_keys = { k_stable = 50, k_tailor = 50, k_treasury = 50 }
 
   -- OLD CRUD
   teleporter_mat = "TELE_TOP"
@@ -649,10 +700,7 @@ end
 
 function HEXEN2.get_levels()
   local  EP_NUM = (OB_CONFIG.length == "full"   ? 5 ; 1)
-  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 5)
-
-  if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
-  if OB_CONFIG.length == "episode" then MAP_NUM = 7 end
+  local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
   for ep_index = 1,EP_NUM do
     local EPI =
@@ -666,6 +714,13 @@ function HEXEN2.get_levels()
     assert(ep_info)
 
     for map = 1,MAP_NUM do
+      local map_id = (ep_index - 1) * MAP_NUM + map
+
+      local ep_along = map / MAP_NUM
+
+      if MAP_NUM == 1 then
+        ep_along = rand.range(0.3, 0.7)
+      end
 
       local LEV =
       {
@@ -678,9 +733,32 @@ function HEXEN2.get_levels()
         mon_along = (map + ep_index - 1) / MAP_NUM
       }
 
+      -- second last map in each episode is a secret level, and
+      -- last map in each episode is the boss map.
+
+      if map == 6 then
+        LEV.kind = "SECRET"
+      elseif map == 7 then
+        LEV.kind = "BOSS"
+      end
+
+      -- very last map of the game?
+      if ep_index == 5 and map == 7 then
+        LEV.next_map = nil
+      end
+
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
     end -- for map
+
+    -- link hub together (unless only making a single level)
+
+    if MAP_NUM > 1 then
+      Hub_connect_levels(EPI, GAME.THEME_DEFAULTS.hub_keys)
+
+      Hub_assign_weapons(EPI)
+      Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
+    end
 
   end -- for episode
 end
@@ -726,7 +804,7 @@ OB_THEMES["hexen2_gothic"] =
 {
   label = "Gothic"
   for_games = { hexen2=1 }
-  name_theme = "TECH"
+  name_theme = "GOTHIC"
   mixed_prob = 50
 }
 
