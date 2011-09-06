@@ -137,6 +137,11 @@ HEXEN2.ENTITIES =
                  fields={ puzzle_id="r6", netname="Void Stone" } }
   k_sun      = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
                  fields={ puzzle_id="r7", netname="Sun Stone" } }
+  k_shadow   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="r8", netname="Shadow Stone" } }
+
+  k_sphere   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
+                 fields={ puzzle_id="gsphere", netname="Gold Sphere" } }
   k_gold     = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
                  fields={ puzzle_id="r1", netname="Gold Bar" } }
   k_silver   = { id="puzzle_piece", kind="pickup", r=30, h=30, pass=true,
@@ -260,7 +265,7 @@ HEXEN2.THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
-  hub_keys = { k_stable = 50, k_tailor = 50, k_treasury = 50 }
+  hub_keys = { k_stone = 50, k_tailor = 50, k_treasury = 50 }
 
   -- OLD CRUD
   teleporter_mat = "TELE_TOP"
