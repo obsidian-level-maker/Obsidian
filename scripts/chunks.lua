@@ -574,8 +574,9 @@ end
 
 function CHUNK_CLASS.do_weapon(C)
   -- Hexen stuff
-  if C.weapon == "weapon2" or C.weapon1 == "weapon3" or
-     C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3"
+  if OB_CONFIG.game == "hexen" and
+     (C.weapon == "weapon2" or C.weapon == "weapon3" or
+      C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3")
   then
     C:do_hexen_triple()
   else

@@ -67,6 +67,13 @@ HEXEN2.ENTITIES =
 
 
   -- weapons
+  weapon2  = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
+  weapon3  = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
+
+  piece1   = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
+  piece2   = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+
+--[[
   p_vorpal    = { id="wp_weapon2",       kind="pickup", r=30, h=30, pass=true }
   p_axe       = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
   p1_purifier = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
@@ -86,6 +93,7 @@ HEXEN2.ENTITIES =
   a_grenade    = { id="wp_weapon3",       kind="pickup", r=30, h=30, pass=true }
   a1_vindictus = { id="wp_weapon4_head",  kind="pickup", r=30, h=30, pass=true }
   a2_vindictus = { id="wp_weapon4_staff", kind="pickup", r=30, h=30, pass=true }
+--]]
 
   -- pickups
   blue_mana  = { id="item_mana_blue",  kind="pickup", r=20,h=16, pass=true }
