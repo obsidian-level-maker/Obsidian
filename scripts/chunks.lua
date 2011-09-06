@@ -546,6 +546,44 @@ function CHUNK_CLASS.do_purpose(C)
 end
 
 
+function CHUNK_CLASS.do_hexen_triple(C)
+  -- FIXME: this is temp hack !!!
+  local skin_map =
+  {
+    weapon1 = "Weapon1_Triple"
+    weapon2 = "Weapon2_Triple"
+
+    piece1  = "Piece1_Triple"
+    piece2  = "Piece2_Triple"
+    piece3  = "Piece3_Triple"
+  }
+
+  local name  = assert(skin_map[C.weapon])
+  local skin1 = assert(GAME.SKINS[name])
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
+
+  local skin0 = { wall = C.room.main_tex }
+  local skin2 = { }
+
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+end
+
+
+function CHUNK_CLASS.do_weapon(C)
+  -- Hexen stuff
+  if C.weapon == "weapon1" or C.weapon1 == "weapon2" or
+     C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3"
+  then
+    c:do_hexen_triple()
+  else
+    C:do_big_item(C.weapon)
+  end
+end
+
+
 function CHUNK_CLASS.cycle_stair(C, dir, N)
   -- this is temporary crud
 
@@ -1050,7 +1088,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   if C.purpose then C:do_purpose() end
 
-  if C.weapon then C:do_big_item(C.weapon) end
+  if C.weapon then C:do_weapon() end
 
   --[[ debugging aid
   local mx, my = C:mid_point()
