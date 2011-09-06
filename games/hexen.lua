@@ -1211,6 +1211,42 @@ HEXEN.SKINS =
     m_item = "m_blitz"
   }
 
+  Piece1_Triple =
+  {
+    _prefab = "HEXEN_TRIPLE"
+    _where  = "chunk"
+
+    side = "CRATE05"
+
+    f_item = "f1_hilt"
+    c_item = "c1_shaft"
+    m_item = "m1_stick"
+  }
+
+  Piece2_Triple =
+  {
+    _prefab = "HEXEN_TRIPLE"
+    _where  = "chunk"
+
+    side = "CRATE05"
+
+    f_item = "f2_cross"
+    c_item = "c2_cross"
+    m_item = "m2_stub"
+  }
+
+  Piece3_Triple =
+  {
+    _prefab = "HEXEN_TRIPLE"
+    _where  = "chunk"
+
+    side = "CRATE05"
+
+    f_item = "f3_blade"
+    c_item = "c3_arc"
+    m_item = "m3_skull"
+  }
+
 
   --- LOCKED DOORS ---
 
