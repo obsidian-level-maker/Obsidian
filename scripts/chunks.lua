@@ -1106,7 +1106,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.purpose and not C.stair and
+  if C.room and not C.purpose and not C.stair and not C.weapon and
      not (C.foobage == "crossover")
   then
     local R = C.room
