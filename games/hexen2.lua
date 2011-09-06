@@ -64,6 +64,14 @@ HEXEN2.ENTITIES =
   angel2   = { id="monster_fallen_angel_lord", kind="monster", r=32, h=80 }
 
   -- bosses
+  Snake    = { id="monster_snake",    kind="monster", r=32, h=80 }
+
+  Famine   = { id="rider_famine",     kind="monster", r=32, h=80 }
+  Pest     = { id="rider_pestilence", kind="monster", r=32, h=80 }
+  War      = { id="rider_war",        kind="monster", r=32, h=80 }
+  Death    = { id="rider_death",      kind="monster", r=32, h=80 }
+
+  Eidolon  = { id="monster_eidolon",  kind="monster", r=32, h=80 }
 
 
   -- weapons
@@ -468,14 +476,6 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  snake =
-  {
-    prob = 10
-    health = 30
-    damage = 20
-    attack = "melee"
-  }
-
   hydra =
   {
     prob = 10
@@ -484,9 +484,8 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  fish =
+  fish =  -- only added in water
   {
-    prob = 10
     health = 30
     damage = 20
     attack = "melee"
@@ -550,6 +549,7 @@ HEXEN2.WEAPONS =
 
   p_gauntlet =
   {
+    pref = 5
     attack = "melee"
     rate = 2.0
     damage = 20
@@ -595,6 +595,7 @@ HEXEN2.WEAPONS =
 
   c_hammer =
   {
+    pref = 5
     attack = "melee"
     rate = 2.0
     damage = 20
@@ -640,6 +641,7 @@ HEXEN2.WEAPONS =
 
   n_sickle =
   {
+    pref = 5
     attack = "melee"
     rate = 2.0
     damage = 20
@@ -685,6 +687,7 @@ HEXEN2.WEAPONS =
 
   a_dagger =
   {
+    pref = 5
     attack = "melee"
     rate = 2.0
     damage = 20
