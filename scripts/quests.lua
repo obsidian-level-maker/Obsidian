@@ -925,7 +925,7 @@ function Hub_connect_levels(epi, keys)
   end
 
 
-  local function find_free_away(L)
+  local function OLD__find_free_away(L)
     local count = 0
 
     each link in L.hub_links do
@@ -943,7 +943,7 @@ function Hub_connect_levels(epi, keys)
   end
 
 
-  local function find_junction()
+  local function OLD__find_junction()
     each L in epi.levels do
       local link = find_free_away(L)
       if link then return link end
@@ -1007,13 +1007,13 @@ function Hub_connect_levels(epi, keys)
     -- assign keys to these branch levels
 
     if not table.empty(keys) then
-      L.key = rand.key_by_probs(keys)
+      L.hub_key = rand.key_by_probs(keys)
 
-      keys[L.key] = nil
+      keys[L.hub_key] = nil
 
-      table.insert(epi.used_keys, L.key)
+      table.insert(epi.used_keys, L.hub_key)
 
-      gui.debugf("Hub: assigning key '%s' --> %s\n", L.key, L.name)
+      gui.debugf("Hub: assigning key '%s' --> %s\n", L.hub_key, L.name)
     end
   end
 
@@ -1034,11 +1034,14 @@ function Hub_assign_weapons(epi)
 
   -- TODO: improve this
 
-  local a = 2
-  local b = rand.sel(66, 3, 4)
+  local a = rand.sel(80, 2, 1)
+  local b = rand.sel(65, 3, 4)
 
   epi.levels[a].hub_weapon = "weapon2"
   epi.levels[b].hub_weapon = "weapon3"
+
+  gui.debugf("Hub: assigning 'weapon2' --> %s\n", epi.levels[a].name)
+  gui.debugf("Hub: assigning 'weapon3' --> %s\n", epi.levels[b].name)
 end
 
 

@@ -237,7 +237,7 @@ end
 
 
 function ROOM_CLASS.has_weapon_using_ammo(R, ammo)
-  if R.weapons then
+  if R.weapons and not PARAM.hexen_weapons then
     each name in R.weapons do
       local info = GAME.WEAPONS[name]
       if info.ammo == ammo then return true end

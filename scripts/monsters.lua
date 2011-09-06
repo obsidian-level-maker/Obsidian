@@ -162,8 +162,16 @@ function Player_give_weapon(weapon, only_CL)
 end
 
 
+
+function Player_give_map_stuff()
+  if PARAM.hexen_weapons then
+    -- FIXME !!!!!
+  end
+end
+
+
 function Player_give_room_stuff(R)
-  if R.weapons then
+  if R.weapons and not PARAM.hexen_weapons then
     each name in R.weapons do
       Player_give_weapon(name)
     end
@@ -2005,6 +2013,8 @@ function Monsters_make_battles()
   -- Rooms have been sorted into a visitation order, so we
   -- simply visit them one-by-one and insert some monsters
   -- and simulate each battle.
+
+  Player_give_map_stuff()
 
   each R in LEVEL.rooms do
     Player_give_room_stuff(R)

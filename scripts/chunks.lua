@@ -577,7 +577,7 @@ function CHUNK_CLASS.do_weapon(C)
   if C.weapon == "weapon1" or C.weapon1 == "weapon2" or
      C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3"
   then
-    c:do_hexen_triple()
+    C:do_hexen_triple()
   else
     C:do_big_item(C.weapon)
   end
