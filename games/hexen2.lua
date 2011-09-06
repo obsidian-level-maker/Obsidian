@@ -38,9 +38,11 @@ HEXEN2.ENTITIES =
   imp_fire  = { id="monster_imp_fire",    kind="monster", r=32, h=80 }
   imp_ice   = { id="monster_imp_ice",     kind="monster", r=32, h=80 }
 
-  golem_s   = { id="monster_golem_stone",  kind="monster", r=32, h=80 }
-  golem_i   = { id="monster_golem_iron",   kind="monster", r=32, h=80 }
-  golem_b   = { id="monster_golem_bronze", kind="monster", r=32, h=80 }
+  golem1    = { id="monster_golem_stone",   kind="monster", r=32, h=80 }
+  golem2    = { id="monster_golem_iron",    kind="monster", r=32, h=80 }
+  golem3    = { id="monster_golem_bronze",  kind="monster", r=32, h=80 }
+  golem4    = { id="monster_golem_crystal", kind="monster", r=32, h=80 }
+
   scorpion1 = { id="monster_scorpion_yellow", kind="monster", r=32, h=80 }
   scorpion2 = { id="monster_scorpion_black",  kind="monster", r=32, h=80 }
 
@@ -58,8 +60,8 @@ HEXEN2.ENTITIES =
   medusa   = { id="monster_medusa_green",      kind="monster", r=32, h=80 }
   wizard1  = { id="monster_skull_wizard",      kind="monster", r=32, h=80 }
   wizard2  = { id="monster_skull_wizard_lord", kind="monster", r=32, h=80 }
-  angle1   = { id="monster_fallen_angel",      kind="monster", r=32, h=80 }
-  angle2   = { id="monster_fallen_angel_lord", kind="monster", r=32, h=80 }
+  angel1   = { id="monster_fallen_angel",      kind="monster", r=32, h=80 }
+  angel2   = { id="monster_fallen_angel_lord", kind="monster", r=32, h=80 }
 
   -- bosses
 
@@ -317,6 +319,8 @@ HEXEN2.LEVEL_THEMES =
 
 HEXEN2.MONSTERS =
 {
+  -- FIXME !!!!  THESE STATS ARE TOTALLY BOGUS !!
+
   archer =
   {
     prob = 50
@@ -366,7 +370,7 @@ HEXEN2.MONSTERS =
     attack = "missile"
   }
 
-  golem_s =
+  golem1 =  -- stone
   {
     prob = 20
     health = 200
@@ -374,7 +378,7 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  golem_i =
+  golem2 =  -- iron
   {
     prob = 20
     health = 200
@@ -382,13 +386,55 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  golem_b =
+  golem3 =  -- bronze
   {
     prob = 20
     health = 200
     damage = 15
     attack = "melee"
   }
+
+  golem4 =  -- crystal
+  {
+    prob = 20
+    health = 200
+    damage = 15
+    attack = "melee"
+  }
+
+  wizard1 =
+  {
+    prob = 50
+    health = 25
+    damage = 5
+    attack = "missile"
+  }
+
+  wizard2 =
+  {
+    prob = 20
+    health = 30
+    damage = 14
+    attack = "missile"
+  }
+
+  angel1 =
+  {
+    prob = 50
+    health = 25
+    damage = 5
+    attack = "missile"
+  }
+
+  angel2 =
+  {
+    prob = 20
+    health = 30
+    damage = 14
+    attack = "missile"
+  }
+
+  --- Animals ---
 
   rat =
   {
@@ -414,7 +460,77 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  -- FIXME : the rest
+  snake =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  hydra =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  fish =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  scorpion1 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  scorpion2 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  spider_r1 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  spider_r2 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  spider_y1 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
+
+  spider_y2 =
+  {
+    prob = 10
+    health = 30
+    damage = 20
+    attack = "melee"
+  }
 }
 
 
