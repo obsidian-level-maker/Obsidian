@@ -1193,6 +1193,7 @@ HEXEN.SKINS =
     _where  = "chunk"
 
     side = "CRATE05"
+    base = "F_082"
 
     f_item = "f_axe"
     c_item = "c_staff"
@@ -1205,6 +1206,7 @@ HEXEN.SKINS =
     _where  = "chunk"
 
     side = "CRATE05"
+    base = "F_082"
 
     f_item = "f_hammer"
     c_item = "c_fire"
@@ -1217,6 +1219,7 @@ HEXEN.SKINS =
     _where  = "chunk"
 
     side = "CRATE05"
+    base = "F_082"
 
     f_item = "f1_hilt"
     c_item = "c1_shaft"
@@ -1229,6 +1232,7 @@ HEXEN.SKINS =
     _where  = "chunk"
 
     side = "CRATE05"
+    base = "F_082"
 
     f_item = "f2_cross"
     c_item = "c2_cross"
@@ -1241,6 +1245,7 @@ HEXEN.SKINS =
     _where  = "chunk"
 
     side = "CRATE05"
+    base = "F_082"
 
     f_item = "f3_blade"
     c_item = "c3_arc"

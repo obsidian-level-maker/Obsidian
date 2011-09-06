@@ -236,12 +236,13 @@ PREFAB.HEXEN_TRIPLE =
 
   brushes =
   {
+    -- three crates
     {
       { x = -32, y = -32, mat = "?side", peg=1, y_offset=0 }
       { x =   0, y = -32, mat = "?side", peg=1, y_offset=0 }
       { x =   0, y =   0, mat = "?side", peg=1, y_offset=0 }
       { x = -32, y =   0, mat = "?side", peg=1, y_offset=0 }
-      { t = 32, mat = "?top" }
+      { t = 38, mat = "?top" }
     }
 
     {
@@ -249,7 +250,7 @@ PREFAB.HEXEN_TRIPLE =
       { x =  64, y = -32, mat = "?side", peg=1, y_offset=0 }
       { x =  64, y =   0, mat = "?side", peg=1, y_offset=0 }
       { x =  32, y =   0, mat = "?side", peg=1, y_offset=0 }
-      { t = 32, mat = "?top" }
+      { t = 38, mat = "?top" }
     }
 
     {
@@ -257,7 +258,17 @@ PREFAB.HEXEN_TRIPLE =
       { x =   0, y = 32, mat = "?side", peg=1, y_offset=0 }
       { x =   0, y = 64, mat = "?side", peg=1, y_offset=0 }
       { x = -32, y = 64, mat = "?side", peg=1, y_offset=0 }
-      { t = 32, mat = "?top" }
+      { t = 38, mat = "?top" }
+    }
+
+    -- base
+    {
+      { x = -48, y =  80, mat = "?base" }
+      { x = -48, y = -48, mat = "?base" }
+      { x =  80, y = -48, mat = "?base" }
+      { x =  80, y =  16, mat = "?base" }
+      { x =  16, y =  80, mat = "?base" }
+      { t = 6, mat = "?base" }
     }
   }
 
