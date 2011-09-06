@@ -1034,8 +1034,8 @@ function Hub_assign_weapons(epi)
 
   -- TODO: improve this
 
-  local a = rand.sel(80, 2, 1)
-  local b = rand.sel(65, 3, 4)
+  local a = rand.sel(75, 2, 1)
+  local b = rand.sel(75, 3, 4)
 
   epi.levels[a].hub_weapon = "weapon2"
   epi.levels[b].hub_weapon = "weapon3"

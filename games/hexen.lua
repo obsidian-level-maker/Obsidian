@@ -1187,7 +1187,7 @@ HEXEN.SKINS =
 
   ----| KEYS and ITEMS |----
 
-  Weapon1_Triple =
+  Weapon2_Set =
   {
     _prefab = "HEXEN_TRIPLE"
     _where  = "chunk"
@@ -1200,7 +1200,7 @@ HEXEN.SKINS =
     m_item = "m_cone"
   }
 
-  Weapon2_Triple =
+  Weapon3_Set =
   {
     _prefab = "HEXEN_TRIPLE"
     _where  = "chunk"
@@ -1213,7 +1213,7 @@ HEXEN.SKINS =
     m_item = "m_blitz"
   }
 
-  Piece1_Triple =
+  Piece1_Set =
   {
     _prefab = "HEXEN_TRIPLE"
     _where  = "chunk"
@@ -1226,7 +1226,7 @@ HEXEN.SKINS =
     m_item = "m1_stick"
   }
 
-  Piece2_Triple =
+  Piece2_Set =
   {
     _prefab = "HEXEN_TRIPLE"
     _where  = "chunk"
@@ -1239,7 +1239,7 @@ HEXEN.SKINS =
     m_item = "m2_stub"
   }
 
-  Piece3_Triple =
+  Piece3_Set =
   {
     _prefab = "HEXEN_TRIPLE"
     _where  = "chunk"
@@ -2231,8 +2231,8 @@ HEXEN.THEME_DEFAULTS =
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
 
-  weapon1 = { Weapon1_Triple = 50 }
-  weapon2 = { Weapon2_Triple = 50 }
+---???  weapon2 = { Weapon2_Set = 50 }
+---???  weapon3 = { Weapon3_Set = 50 }
 
   keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
 

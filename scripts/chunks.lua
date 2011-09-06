@@ -550,12 +550,12 @@ function CHUNK_CLASS.do_hexen_triple(C)
   -- FIXME: this is temp hack !!!
   local skin_map =
   {
-    weapon1 = "Weapon1_Triple"
-    weapon2 = "Weapon2_Triple"
+    weapon2 = "Weapon2_Set"
+    weapon3 = "Weapon3_Set"
 
-    piece1  = "Piece1_Triple"
-    piece2  = "Piece2_Triple"
-    piece3  = "Piece3_Triple"
+    piece1  = "Piece1_Set"
+    piece2  = "Piece2_Set"
+    piece3  = "Piece3_Set"
   }
 
   local name  = assert(skin_map[C.weapon])
@@ -574,7 +574,7 @@ end
 
 function CHUNK_CLASS.do_weapon(C)
   -- Hexen stuff
-  if C.weapon == "weapon1" or C.weapon1 == "weapon2" or
+  if C.weapon == "weapon2" or C.weapon1 == "weapon3" or
      C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3"
   then
     C:do_hexen_triple()
