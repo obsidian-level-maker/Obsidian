@@ -240,16 +240,15 @@ HEXEN.PARAMETERS =
 {
   sub_format = "hexen"
 
+  light_brushes = true
+
   rails = true
   switches = true
   infighting  =  true
   prefer_stairs = true
-  light_brushes = true
-   
-  hubs = true
-  polyobjs = true
-  three_part_weapons = true
-  ACS_script = true
+
+  -- special logic for Hexen weapon system
+  hexen_weapons = true
 
   jump_height = 66
 

@@ -380,7 +380,32 @@ function Quest_add_weapons()
   end
 
 
+  local function hexen_add_weapons()
+    local idx = 2
+
+    if #LEVEL.rooms <= 2 or rand.odds(30) then idx = 1 end
+
+    if LEVEL.hub_weapon then
+      local R = LEVEL.rooms[idx]
+      add_weapon(R, LEVEL.hub_weapon)
+    end
+
+    idx = idx + 1
+
+    if LEVEL.hub_piece then
+      local R = LEVEL.rooms[idx]
+      add_weapon(R, LEVEL.hub_piece)
+    end
+  end
+
+
   ---| Quest_add_weapons |---
+
+  -- special handling for HEXEN and HEXEN II
+  if PARAM.hexen_weapons then
+    hexen_add_weapons()
+    return
+  end
 
   LEVEL.added_weapons = {}
 
@@ -999,17 +1024,21 @@ end
 
 function Hub_assign_weapons(epi)
 
-  -- Hexen and Hexen II only have two normal weapons per class.
+  -- Hexen and Hexen II only have two pick-up-able weapons per class.
   -- The normal weapon placement logic does not work well for that,
   -- instead we pick which levels to place them on.
+
+  -- Also: for each level we assume the player has both these weapons.
+  -- When that assumption is wrong, the player will just have to manage
+  -- with whatever weapon(s) they have.
 
   -- TODO: improve this
 
   local a = 2
   local b = rand.sel(66, 3, 4)
 
-  epi.levels[a].hexen_weapon = 1
-  epi.levels[b].hexen_weapon = 2
+  epi.levels[a].hub_weapon = "weapon2"
+  epi.levels[b].hub_weapon = "weapon3"
 end
 
 
@@ -1035,7 +1064,7 @@ function Hub_assign_pieces(epi, pieces)
   each piece in pieces do
     local L = levels[_index]
 
-    L.piece = piece
+    L.hub_piece = piece
 
     gui.debugf("Hub: assigning piece '%s' --> %s\n", piece, L.name)
   end 

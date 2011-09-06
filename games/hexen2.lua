@@ -178,6 +178,9 @@ HEXEN2.PARAMETERS =
   bridges = true
   extra_floors = true
 
+  -- special logic for Hexen weapon system
+  hexen_weapons = true
+
   -- FIXME: check this
   jump_height = 42
 
