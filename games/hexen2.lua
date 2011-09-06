@@ -51,10 +51,11 @@ HEXEN2.ENTITIES =
   spider_y1 = { id="monster_spider_yellow_small", kind="monster", r=32, h=80 }
   spider_y2 = { id="monster_spider_yellow_large", kind="monster", r=32, h=80 }
 
-  fish     = { id="monster_fish",        kind="monster", r=32, h=80 }
   rat      = { id="monster_rat",         kind="monster", r=32, h=80 }
   jaguar   = { id="monster_werejaguar",  kind="monster", r=32, h=80 }
   panther  = { id="monster_werepanther", kind="monster", r=32, h=80 }
+  raven    = { id="monster_raven",       kind="monster", r=32, h=80 }
+  fish     = { id="monster_fish",        kind="monster", r=32, h=80 }
   hydra    = { id="monster_hydra",       kind="monster", r=32, h=80 }
 
   medusa   = { id="monster_medusa_green",      kind="monster", r=32, h=80 }
@@ -376,6 +377,7 @@ HEXEN2.MONSTERS =
     health = 75
     damage = 9
     attack = "missile"
+    float = true
   }
 
   imp_ice =
@@ -384,6 +386,7 @@ HEXEN2.MONSTERS =
     health = 250
     damage = 30
     attack = "missile"
+    float = true
   }
 
   golem1 =  -- stone
@@ -440,6 +443,7 @@ HEXEN2.MONSTERS =
     health = 25
     damage = 5
     attack = "missile"
+    float = true
   }
 
   angel2 =
@@ -448,6 +452,7 @@ HEXEN2.MONSTERS =
     health = 30
     damage = 14
     attack = "missile"
+    float = true
   }
 
   --- Animals ---
@@ -476,12 +481,13 @@ HEXEN2.MONSTERS =
     attack = "melee"
   }
 
-  hydra =
+  raven =
   {
     prob = 10
     health = 30
     damage = 20
     attack = "melee"
+    float = true
   }
 
   fish =  -- only added in water
@@ -489,6 +495,15 @@ HEXEN2.MONSTERS =
     health = 30
     damage = 20
     attack = "melee"
+    swim = true
+  }
+
+  hydra =  -- only added in water
+  {
+    health = 30
+    damage = 20
+    attack = "melee"
+    swim = true
   }
 
   scorpion1 =
