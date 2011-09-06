@@ -226,3 +226,47 @@ PREFAB.ITEM_NICHE =
 }
 
 
+PREFAB.HEXEN_TRIPLE =
+{
+  defaults =
+  {
+    top = "?side"
+    angle = 0
+  }
+
+  brushes =
+  {
+    {
+      { x =   0, y =  0, mat = "?side", peg=1, y_offset=0 }
+      { x =  32, y =  0, mat = "?side", peg=1, y_offset=0 }
+      { x =  32, y = 32, mat = "?side", peg=1, y_offset=0 }
+      { x =   0, y = 32, mat = "?side", peg=1, y_offset=0 }
+      { t = 32, mat = "?top" }
+    }
+
+    {
+      { x =  64, y =  0, mat = "?side", peg=1, y_offset=0 }
+      { x =  96, y =  0, mat = "?side", peg=1, y_offset=0 }
+      { x =  96, y = 32, mat = "?side", peg=1, y_offset=0 }
+      { x =  64, y = 32, mat = "?side", peg=1, y_offset=0 }
+      { t = 32, mat = "?top" }
+    }
+
+    {
+      { x =   0, y = 64, mat = "?side", peg=1, y_offset=0 }
+      { x =  32, y = 64, mat = "?side", peg=1, y_offset=0 }
+      { x =  32, y = 96, mat = "?side", peg=1, y_offset=0 }
+      { x =   0, y = 96, mat = "?side", peg=1, y_offset=0 }
+      { t = 32, mat = "?top" }
+    }
+  }
+
+  entities =
+  {
+    -- the three items (Fighter, Cleric, Mage)
+    { x = 16, y = 16, z = 32, ent = "?f_item", angle = "?angle", flags = 32 }
+    { x = 80, y = 16, z = 32, ent = "?c_item", angle = "?angle", flags = 64 }
+    { x = 16, y = 80, z = 32, ent = "?m_item", angle = "?angle", flags = 128 }
+  }
+}
+

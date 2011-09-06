@@ -106,6 +106,16 @@ DOOM_FLAGS =
   AMBUSH  = 8
 }
 
+-- Hexen thing flags
+HEXEN_FLAGS =
+{
+  FIGHTER = 32
+  CLERIC  = 64
+  MAGE    = 128
+
+  DM      = 1024
+}
+
 -- Quake flags
 QUAKE_FLAGS =
 {

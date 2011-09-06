@@ -1186,6 +1186,33 @@ HEXEN.SKINS =
   }
 
 
+  ----| KEYS and ITEMS |----
+
+  Weapon1_Triple =
+  {
+    _prefab = "HEXEN_TRIPLE"
+    _where  = "chunk"
+
+    side = "CRATE05"
+
+    f_item = "f_axe"
+    c_item = "c_staff"
+    m_item = "m_cone"
+  }
+
+  Weapon2_Triple =
+  {
+    _prefab = "HEXEN_TRIPLE"
+    _where  = "chunk"
+
+    side = "CRATE05"
+
+    f_item = "f_hammer"
+    c_item = "c_fire"
+    m_item = "m_blitz"
+  }
+
+
   --- LOCKED DOORS ---
 
   Locked_axe =
@@ -2163,6 +2190,9 @@ HEXEN.THEME_DEFAULTS =
   exits = { Exit_switch = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+
+  weapon1 = { Weapon1_Triple = 50 }
+  weapon2 = { Weapon2_Triple = 50 }
 
   keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
 
