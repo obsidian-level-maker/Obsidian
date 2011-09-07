@@ -145,7 +145,7 @@ HEXEN2_FLAGS =
 function Player_init()
   LEVEL.hmodels = table.deep_copy(GAME.PLAYER_MODEL)
 
-  for CL,hmodel in pairs(LEVEL.hmodels) do
+  each CL,hmodel in LEVEL.hmodels do
     hmodel.class = CL
   end
 end
@@ -154,7 +154,7 @@ end
 function Player_give_weapon(weapon, only_CL)
   gui.printf("Giving weapon: %s\n", weapon)
 
-  for CL,hmodel in pairs(LEVEL.hmodels) do
+  each CL,hmodel in LEVEL.hmodels do
     if not only_CL or (only_CL == CL) then
       hmodel.weapons[weapon] = 1
     end
@@ -162,10 +162,27 @@ function Player_give_weapon(weapon, only_CL)
 end
 
 
+function Player_give_class_weapon(slot)
+  each name,W in GAME.WEAPONS do
+    each CL,hmodel in LEVEL.hmodels do
+      if W.slot == slot and W.class == CL then
+        hmodel.weapons[name] = 1
+      end
+    end
+  end
+end
+
 
 function Player_give_map_stuff()
-  if PARAM.hexen_weapons then
-    -- FIXME !!!!!
+  if LEVEL.assume_weapons then
+    each name,_ in LEVEL.assume_weapons do
+          if name == "weapon2" then Player_give_class_weapon(2)
+      elseif name == "weapon3" then Player_give_class_weapon(3)
+      elseif name == "weapon4" then Player_give_class_weapon(4)
+      else
+        Player_give_weapon(name)
+      end
+    end
   end
 end
 
@@ -180,7 +197,7 @@ end
 
 
 function Player_give_stuff(hmodel, give_list)
-  for _,give in ipairs(give_list) do
+  each give in give_list do
     if give.health then
       gui.debugf("Giving [%s] health: %d\n",
                  hmodel.class, give.health)
