@@ -193,6 +193,12 @@ PREFAB.TELEPORT_PAD =
 
 PREFAB.HEXEN_GATE =
 {
+  defaults =
+  {
+    source_id = 0
+      dest_id = 0
+  }
+
   brushes =
   {
     -- left side
@@ -242,7 +248,7 @@ PREFAB.HEXEN_GATE =
       { m = "rail" }
       { x = -32, y = -64 }
       { x =  32, y = -64 }
-      { x =  32, y = -16, mat = "R_TPORTX" }
+      { x =  32, y = -16, mat = "R_TPORTX", special=74, act="WR", arg1="?dest_id", arg2="?dest_id" }
       { x = -32, y = -16 }
       { b =  16 }
       { t = 144 }
@@ -261,7 +267,7 @@ PREFAB.HEXEN_GATE =
 
     -- make the inside area dark
     {
-      { m = "light", sub = 128 }
+      { m = "light", sub = 256 }
       { x = -32, y = -64 }
       { x =  32, y = -64 }
       { x =  32, y = -20 }
@@ -272,7 +278,10 @@ PREFAB.HEXEN_GATE =
   entities =
   {
     -- return spot
-    { x = 0, y = 24, z = 16, ent="teleport_spot", angle=90 }
+    { x =   0, y = 24, z = 16, ent="player1", angle=90, tid="?source_id" }
+    { x = -48, y = 24, z = 16, ent="player2", angle=90, tid="?source_id" }
+    { x =  48, y = 24, z = 16, ent="player3", angle=90, tid="?source_id" }
+    { x =   0, y = 72, z = 16, ent="player4", angle=90, tid="?source_id" }
   }
 }
 
