@@ -1274,11 +1274,11 @@ HEXEN.SKINS =
     keynum = 3
   }
 
-  Locked_fire =
+  Locked_cave =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _keys = { k_fire=1 }
+    _keys = { k_cave=1 }
     _tagged = 1
     _long = 192
     _deep = 32
@@ -1286,11 +1286,49 @@ HEXEN.SKINS =
     w = 128
     h = 112
     door_h = 112
-    door = "D_FIRE"
+    door = "D_CAVE"
     track = "STEEL08"
     special = 13
     act = "S1"
-    keynum = 4
+    keynum = 2
+  }
+
+  Locked_castle =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_castle=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_CAST"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 11
+  }
+
+  Locked_dungeon =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_dungeon=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_DUNGEO"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 6
   }
 
   Locked_emerald =
@@ -1312,6 +1350,82 @@ HEXEN.SKINS =
     keynum = 5
   }
 
+  Locked_fire =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_fire=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_FIRE"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 4
+  }
+
+  Locked_horn =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_horn=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_WASTE"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 9
+  }
+
+  Locked_rusty =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_rusty=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_RUST"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 8
+  }
+
+  Locked_swamp =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_swamp=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_SWAMP2"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 10
+  }
+
   Locked_silver =
   {
     _prefab = "DOOR"
@@ -1329,6 +1443,25 @@ HEXEN.SKINS =
     special = 13
     act = "S1"
     keynum = 7
+  }
+
+  Locked_steel =
+  {
+    _prefab = "DOOR"
+    _where  = "edge"
+    _keys = { k_steel=1 }
+    _tagged = 1
+    _long = 192
+    _deep = 32
+
+    w = 128
+    h = 112
+    door_h = 112
+    door = "D_STEEL"
+    track = "STEEL08"
+    special = 13
+    act = "S1"
+    keynum = 1
   }
 
 
@@ -2234,12 +2367,15 @@ HEXEN.THEME_DEFAULTS =
 ---???  weapon2 = { Weapon2_Set = 50 }
 ---???  weapon3 = { Weapon3_Set = 50 }
 
-  keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_silver = 80 }
+  keys = { k_axe = 50, k_fire = 20, k_emerald = 80,
+           k_silver = 80, k_swamp = 30, k_dungeon = 30,
+           k_castle = 30, k_steel = 30, k_rusty = 30 }
 
-  hub_keys = { k_horn = 50, k_steel = 50, k_rusty = 50 }
+  hub_keys = { k_axe = 50, k_fire = 20, k_emerald = 80,
+               k_silver = 80, k_swamp = 30, k_dungeon = 30,
+               k_castle = 30, k_steel = 30, k_rusty = 30 }
 
--- FIXME: THIS JUST FOR TESTING
-teleporters = { Hub_Gate = 50 }
+  hub_gates = { Hub_Gate = 50 }
 
   lock_doors = { Locked_axe = 50, Locked_fire = 50,
                  Locked_emerald = 50, Locked_silver = 50 }
