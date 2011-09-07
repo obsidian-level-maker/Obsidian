@@ -2367,18 +2367,22 @@ HEXEN.THEME_DEFAULTS =
 ---???  weapon2 = { Weapon2_Set = 50 }
 ---???  weapon3 = { Weapon3_Set = 50 }
 
-  keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_horn = 30,
-           k_silver = 80, k_swamp = 30, k_dungeon = 30,
-           k_castle = 30, k_steel = 30, k_rusty = 30 }
+  keys = { k_axe = 50, k_cave = 50, k_castle = 50,
+           k_dungeon = 50, k_emerald = 50, k_fire = 20,
+           k_horn = 50, k_rusty = 50, k_silver = 50,
+           k_swamp = 50, k_steel = 50 }
 
-  hub_keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_horn = 30,
-               k_silver = 80, k_swamp = 30, k_dungeon = 30,
-               k_castle = 30, k_steel = 30, k_rusty = 30 }
+  hub_keys = { k_axe = 50, k_cave = 50, k_castle = 50,
+               k_dungeon = 50, k_emerald = 50, k_fire = 20,
+               k_horn = 50, k_rusty = 50, k_silver = 50,
+               k_swamp = 50, k_steel = 50 }
 
   hub_gates = { Hub_Gate = 50 }
 
-  lock_doors = { Locked_axe = 50, Locked_fire = 50,
-                 Locked_emerald = 50, Locked_silver = 50 }
+  lock_doors = { Locked_axe = 50, Locked_cave = 50, Locked_castle = 50,
+                 Locked_dungeon = 50, Locked_emerald = 50, Locked_fire = 50,
+                 Locked_horn = 50, Locked_rusty = 50, Locked_silver = 50,
+                 Locked_swamp = 50, Locked_steel = 50 }
 
   switch_doors = { Door_SW_1 = 50 }
 
