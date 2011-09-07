@@ -981,7 +981,7 @@ function Hub_connect_levels(epi, keys)
 
   local chain = { start_L, end_L }
 
-  for loop = 1, rand.sel(70, 2, 1) do
+  for loop = 1, rand.sel(75, 2, 1) do
     assert(#levels >= 1)
 
     table.insert(chain, 2, table.remove(levels, 1))
@@ -1006,7 +1006,7 @@ function Hub_connect_levels(epi, keys)
 
     -- assign keys to these branch levels
 
-    if not table.empty(keys) then
+    if L.kind != "SECRET" and not table.empty(keys) then
       L.hub_key = rand.key_by_probs(keys)
 
       keys[L.hub_key] = nil
@@ -1018,6 +1018,53 @@ function Hub_connect_levels(epi, keys)
   end
 
   dump()
+end
+
+
+
+function Hub_assign_keys(epi, keys)
+  -- determines which keys can be used on which levels
+
+  keys = table.copy(keys)
+
+  local function level_for_key()
+    for loop = 1,999 do
+      local idx = rand.irange(1, #epi.levels)
+      local L = epi.levels[idx]
+
+      if L.kind == "SECRET" then continue end
+
+      if L.hub_key and rand.odds(95) then continue end
+
+      local already = #L.usable_keys
+
+      if already == 0 then return L end
+      if already == 1 and rand.odds(20) then return L end
+      if already >= 2 and rand.odds(4)  then return L end
+    end
+
+    error("level_for_key failed.")
+  end
+
+  each L in epi.levels do
+    L.usable_keys = { }
+  end
+
+  -- take away keys already used in the branch levels
+  each name in epi.used_keys do
+    keys[name] = nil
+  end
+
+  while not table.empty(keys) do
+    local name = rand.key_by_probs(keys)
+    keys[name] = nil
+
+    local L = level_for_key()
+
+    L.usable_keys[name] = keys[name]
+
+    gui.debugf("Hub: may use key '%s' --> %s\n", name, L.name)
+  end
 end
 
 

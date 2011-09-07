@@ -2367,11 +2367,11 @@ HEXEN.THEME_DEFAULTS =
 ---???  weapon2 = { Weapon2_Set = 50 }
 ---???  weapon3 = { Weapon3_Set = 50 }
 
-  keys = { k_axe = 50, k_fire = 20, k_emerald = 80,
+  keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_horn = 30,
            k_silver = 80, k_swamp = 30, k_dungeon = 30,
            k_castle = 30, k_steel = 30, k_rusty = 30 }
 
-  hub_keys = { k_axe = 50, k_fire = 20, k_emerald = 80,
+  hub_keys = { k_axe = 50, k_fire = 20, k_emerald = 80, k_horn = 30,
                k_silver = 80, k_swamp = 30, k_dungeon = 30,
                k_castle = 30, k_steel = 30, k_rusty = 30 }
 
@@ -4895,6 +4895,7 @@ function HEXEN.get_levels()
     if MAP_NUM > 1 then
       Hub_connect_levels(EPI, GAME.THEME_DEFAULTS.hub_keys)
 
+      Hub_assign_keys(EPI, GAME.THEME_DEFAULTS.keys)
       Hub_assign_weapons(EPI)
       Hub_assign_pieces(EPI, { "piece1", "piece2", "piece3" })
     end
