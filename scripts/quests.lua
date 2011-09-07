@@ -193,6 +193,20 @@ end
 
 
 
+function Quest_distribute_unused_keys()
+  local next_L = GAME.levels[LEVEL.index + 1]
+
+  if not next_L then return end
+  if next_L.episode != LEVEL.episode then return end
+
+  each name,prob in LEVEL.usable_keys do
+    next_L.usable_keys[name] = prob
+    LEVEL .usable_keys[name] = nil
+  end
+end
+
+
+
 function Quest_choose_keys()
   local num_locks = #LEVEL.locks
 
@@ -201,7 +215,7 @@ function Quest_choose_keys()
     return
   end
 
-  local key_probs = table.copy(THEME.keys or {}) 
+  local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
   local num_keys  = table.size(key_probs)
 
   -- use less keys when number of locked doors is small
@@ -210,7 +224,7 @@ function Quest_choose_keys()
   if not THEME.switch_doors then
     assert(num_locks <= num_keys)
   else
-    while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(80) do
+    while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(70) do
       want_keys = want_keys - 1
     end
   end
@@ -249,6 +263,10 @@ function Quest_choose_keys()
 
       -- cannot use this key again
       key_probs[LOCK.key] = nil
+
+      if LEVEL.usable_keys then
+        LEVEL.usable_keys[LOCK.key] = nil
+      end
 
       want_keys = want_keys - 1
     end
@@ -888,6 +906,11 @@ stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
   Quest_select_textures()
   Quest_choose_keys()
 
+  -- left over keys can be used in the next level of a hub
+  if LEVEL.usable_keys and LEVEL.hub_links then
+    Quest_distribute_unused_keys()
+  end
+
   Monsters_max_level()
 
   Quest_add_weapons()
@@ -1057,11 +1080,13 @@ function Hub_assign_keys(epi, keys)
 
   while not table.empty(keys) do
     local name = rand.key_by_probs(keys)
+    local prob = keys[name]
+
     keys[name] = nil
 
     local L = level_for_key()
 
-    L.usable_keys[name] = keys[name]
+    L.usable_keys[name] = prob
 
     gui.debugf("Hub: may use key '%s' --> %s\n", name, L.name)
   end
