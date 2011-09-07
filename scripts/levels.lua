@@ -57,6 +57,14 @@ class LEVEL
 
   hub_links : list(HUB_LINK)  -- hub links which _leave_ this level
 
+  hub_key    : name   -- goal of this level must be this key
+  hub_weapon : name   -- weapon to place on this level
+  hub_piece  : name   -- weapon PIECE for this level
+
+  assume_weapons : table  -- weapons we got in a previous level
+
+  usable_keys : prob table  -- if present, can only use these keys
+
   -- TODO: lots of other fields : document important ones
 }
 

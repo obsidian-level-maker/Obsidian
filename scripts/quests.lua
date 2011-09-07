@@ -1028,12 +1028,6 @@ function Hub_assign_weapons(epi)
   -- The normal weapon placement logic does not work well for that,
   -- instead we pick which levels to place them on.
 
-  -- Also: for each level we assume the player has both these weapons.
-  -- When that assumption is wrong, the player will just have to manage
-  -- with whatever weapon(s) they have.
-
-  -- TODO: improve this
-
   local a = rand.sel(75, 2, 1)
   local b = rand.sel(75, 3, 4)
 
@@ -1042,6 +1036,19 @@ function Hub_assign_weapons(epi)
 
   gui.debugf("Hub: assigning 'weapon2' --> %s\n", epi.levels[a].name)
   gui.debugf("Hub: assigning 'weapon3' --> %s\n", epi.levels[b].name)
+
+  local function mark_assumes(start, weapon)
+    for i = start, #epi.levels do
+      local L = epi.levels[i]
+      if not L.assume_weapons then L.assume_weapons = { } end
+      L.assume_weapons[weapon] = true
+    end
+  end
+
+  mark_assumes(a, "weapon2")
+  mark_assumes(b, "weapon3")
+
+  mark_assumes(#epi.levels, "weapon4")
 end
 
 
