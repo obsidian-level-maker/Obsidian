@@ -325,17 +325,20 @@ end
 
 
 function Plan_create_sections()
-  local SIZE_TABLE = THEME.room_size_table or { 40,60,20,4 }
+  local SIZE_TABLE = THEME.room_size_table or { 30,50,20,10 }
 
   local free_seeds = 4
 
 
-  local function pick_sizes(W, limit)
+  local function pick_sizes(W, min_size, limit)
+    local size_table = table.copy(SIZE_TABLE)
+    if min_size >= 3 then size_table[1] = 0 end   
+
     -- one spare seed on each edge of the map
     limit = limit - 2
 
     assert(W >= 2)
-    assert(limit >= 1 + W * 3 + 1)
+    assert(limit >= 1 + W * (min_size+1) + 1)
 
     -- this lists holds the result sizes
     local sizes = {}
@@ -351,7 +354,7 @@ function Plan_create_sections()
       total = sizes[1] + sizes[W*2 + 1]
 
       for x = 1,W do
-        sizes[x*2] = 1 + rand.index_by_probs(SIZE_TABLE)
+        sizes[x*2] = 1 + rand.index_by_probs(size_table)
         total = total + sizes[x*2]
 
         if x < W then
@@ -373,7 +376,7 @@ function Plan_create_sections()
       -- find a section size to shrink
       local x = rand.irange(1, W)
 
-      while x < W and sizes[x*2] <= 2 do
+      while x < W and sizes[x*2] <= min_size do
         x = x + 1
       end
 
@@ -428,7 +431,7 @@ function Plan_create_sections()
   -- reduce level size if rooms would become too small
   -- (2 seeds + 1 hallway seeds per room the absolute minimum)
 
-  local max_W = int(limit / 3.5)
+  local max_W = int(limit / 4.3)
   local max_H = int((limit - free_seeds) / 3.5)
 
   if MAP_W > max_W then MAP_W = max_W end
@@ -440,8 +443,8 @@ function Plan_create_sections()
   gui.printf("Map Size: %dx%d / %dx%d\n", MAP_W, MAP_H, SECTION_W, SECTION_H)
 
 
-  local section_W = pick_sizes(MAP_W, limit)
-  local section_H = pick_sizes(MAP_H, limit - free_seeds)
+  local section_W = pick_sizes(MAP_W, 3, limit)
+  local section_H = pick_sizes(MAP_H, 2, limit - free_seeds)
 
   local section_X = get_positions(MAP_W, section_W)
   local section_Y = get_positions(MAP_H, section_H)
