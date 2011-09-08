@@ -466,6 +466,12 @@ function Areas_important_stuff()
   local function add_hub_gate(R, link)
     assert(link)
 
+    -- FIXME
+    if link.dest.kind == "SECRET" then
+      gui.debugf("Skipping hub gate to secret level\n")
+      return
+    end
+
     local C = spot_for_wotsit(R)
     
     C.content.kind = "GATE"
