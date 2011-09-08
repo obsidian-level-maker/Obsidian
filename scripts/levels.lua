@@ -84,10 +84,10 @@ class EPISODE
 
 class HUB_LINK
 {
+  kind : keyword  -- "chain" or "branch"
+
   src  : LEVEL
   dest : LEVEL
-
-  key   -- key which is required, or NIL
 }
 
 

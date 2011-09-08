@@ -922,11 +922,12 @@ end
 
 function Hub_connect_levels(epi, keys)
 
-  local function connect(src, dest)
+  local function connect(src, dest, kind)
     assert(src!= dest)
 
     local LINK =
     {
+      kind = kind
       src  = src
       dest = dest
     }
@@ -1011,7 +1012,7 @@ function Hub_connect_levels(epi, keys)
   end
 
   for i = 1, #chain - 1 do
-    connect(chain[i], chain[i+1])
+    connect(chain[i], chain[i+1], "chain")
   end
 
   -- the remaining levels just branch off the current chain
@@ -1025,7 +1026,7 @@ function Hub_connect_levels(epi, keys)
       src = chain[rand.irange(1, #chain - 1)]
     end
 
-    connect(src, L)
+    connect(src, L, "branch")
 
     -- assign keys to these branch levels
 

@@ -365,6 +365,8 @@ function Areas_important_stuff()
   local function add_purpose(R)
     local C = spot_for_wotsit(R)
 
+    C.content.kind = R.purpose
+
     if R.purpose == "SOLUTION" then
       local lock = assert(R.purpose_lock)
 
@@ -376,8 +378,44 @@ function Areas_important_stuff()
         error("UNKNOWN LOCK KIND")
       end
 
-    else
-      C.content.kind = R.purpose
+      if lock.kind == "KEY" then
+        C.content.key = assert(lock.key)
+      end
+    end
+
+    --- Hexen stuff ---
+
+    if R.purpose == "EXIT" and LEVEL.hub_key then
+      -- goal of branch level is just a key
+      C.content.kind = "KEY"
+      C.content.key  = LEVEL.hub_key
+    
+    elseif R.purpose == "EXIT" and LEVEL.hub_links then
+      -- goal of chain levels is gate to next level
+      local chain_link = LEVEL.hub_links[1]
+
+      if chain_link and chain_link.kind == "chain" then
+        C.content.kind = "GATE"
+        C.content.source_id = chain_link.src.map_id
+        C.content.dest_id   = chain_link.dest.map_id
+      end
+    end
+
+    if R.purpose == "START" and LEVEL.hub_links then
+      -- beginning of each level (except start) is a hub gate
+      local from_link
+
+      each link in LEVEL.hub_links do
+        if link.dest.name == LEVEL.name then
+          from_link = link ; break
+        end
+      end
+
+      if from_link then
+        C.content.kind = "GATE"
+        C.content.source_id = from_link.dest.map_id
+        C.content.dest_id   = from_link.src .map_id
+      end
     end
   end
 

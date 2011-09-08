@@ -461,10 +461,7 @@ end
 
 
 function CHUNK_CLASS.build_key(C)
-  local LOCK = assert(C.content.lock)
-  assert(LOCK.key)
-
-  C:do_big_item(LOCK.key)
+  C:do_big_item(assert(C.content.key))
 end
 
 
