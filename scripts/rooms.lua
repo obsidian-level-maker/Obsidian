@@ -94,6 +94,7 @@ function ROOM_CLASS.new(shape)
     middles = {}
     spaces = {}
     floor_mats = {}
+    gates = {}
 
     num_windows = 0
 
@@ -963,7 +964,7 @@ function Rooms_sort_targets(targets, entry_factor, conn_factor, busy_factor)
 end
 
 
-function Rooms_place_importants()
+function OLD__Rooms_place_importants()  -- NOT USED
 
   local function clear_busyness(R)
     each K in R.sections do
@@ -1559,6 +1560,49 @@ end
 ----------------------------------------------------------------
 
 
+function Rooms_place_gates()
+  if not LEVEL.hub_links then return end
+
+  local function calc_rough_space(R)
+    local space = R.svolume
+
+    if R.purpose then space = space - 4 end
+
+    space = space - 2 * #R.conns
+
+    if R.weapons then
+      space = space - 2 * #R.weapons
+    end
+
+    -- tie breaker
+    space = space - gui.random()
+
+    return space
+  end
+
+  local function pick_gate_room()
+    return table.pick_best(LEVEL.rooms, function(A, B) return A.rough_space > B.rough_space end)
+  end
+
+  --| Rooms_place_gates |--
+
+  each R in LEVEL.rooms do
+    R.rough_space = calc_rough_space(R)
+  end
+
+  each link in LEVEL.hub_links do
+    if link.src.name == LEVEL.name and link.kind == "branch" then
+      local R = pick_gate_room()
+      table.insert(R.gates, link)
+
+      R.rough_space = R.rough_space - 4
+
+      gui.debugf("Adding gate to %s @ %s\n", link.dest.name, R:tostr())
+    end
+  end
+end
+
+
 function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
@@ -1567,6 +1611,8 @@ function Rooms_build_all()
   Rooms_assign_facades()
 
 ---!!!  Rooms_setup_symmetry()
+
+  Rooms_place_gates()
 
   Areas_handle_connections()
   Areas_important_stuff()
