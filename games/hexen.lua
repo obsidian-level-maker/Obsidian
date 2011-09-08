@@ -4863,8 +4863,9 @@ function HEXEN.get_levels()
         name  = string.format("MAP%02d", map_id)
 --??    patch = string.format("WILV%d%d", ep_index-1, map-1)
 
-        map      = map_id
-        next_map = map_id + 1
+        map       = map_id
+        next_map  = map_id + 1
+        local_map = map
 
         cluster  = ep_index
 

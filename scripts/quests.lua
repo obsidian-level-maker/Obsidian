@@ -1003,13 +1003,15 @@ function Hub_connect_levels(epi, keys)
 
   assert(end_L.kind == "BOSS")
 
-  local chain = { start_L, end_L }
+  local chain = { start_L }
 
   for loop = 1, rand.sel(75, 2, 1) do
     assert(#levels >= 1)
 
-    table.insert(chain, 2, table.remove(levels, 1))
+    table.insert(chain, table.remove(levels, 1))
   end
+
+  table.insert(chain, end_L)
 
   for i = 1, #chain - 1 do
     connect(chain[i], chain[i+1], "chain")

@@ -879,6 +879,9 @@ function HEXEN2.get_levels()
         name     = string.format("e%dm%d", ep_index, map)
         next_map = string.format("e%dm%d", ep_index, map+1)
 
+        map = map_id
+        local_map = map
+
          ep_along = map / MAP_NUM
         mon_along = (map + ep_index - 1) / MAP_NUM
       }

@@ -385,6 +385,10 @@ function Areas_important_stuff()
 
     --- Hexen stuff ---
 
+    -- NOTE: arg1 of the player things is used to select which spot
+    --       the hub gate takes you to.  We set it to the local_map
+    --       number of the OTHER map.
+
     if R.purpose == "EXIT" and LEVEL.hub_key then
       -- goal of branch level is just a key
       C.content.kind = "KEY"
@@ -392,12 +396,19 @@ function Areas_important_stuff()
     
     elseif R.purpose == "EXIT" and LEVEL.hub_links then
       -- goal of chain levels is gate to next level
-      local chain_link = LEVEL.hub_links[1]
+      local chain_link
+
+      each link in LEVEL.hub_links do
+        if link.src.name == LEVEL.name then
+          chain_link = link ; break
+        end
+      end
 
       if chain_link and chain_link.kind == "chain" then
         C.content.kind = "GATE"
-        C.content.source_id = chain_link.src.map_id
-        C.content.dest_id   = chain_link.dest.map_id
+        C.content.source_id = chain_link.dest.local_map
+        C.content.dest_id   = chain_link.src .local_map
+        C.content.dest_map  = chain_link.dest.map
       end
     end
 
@@ -413,8 +424,9 @@ function Areas_important_stuff()
 
       if from_link then
         C.content.kind = "GATE"
-        C.content.source_id = from_link.dest.map_id
-        C.content.dest_id   = from_link.src .map_id
+        C.content.source_id = from_link.src .local_map
+        C.content.dest_id   = from_link.dest.local_map
+        C.content.dest_map  = from_link.src .map
       end
     end
   end
