@@ -7,7 +7,7 @@
 --  Copyright (C) 2008-2011 Andrew Apted
 --  Copyright (C) 2008-2009 Jon Vail
 --  Copyright (C)      2009 Enhas
---  Copyright (C)      2010 Chris Pisarczyk
+--  Copyright (C) 2010-2011 Chris Pisarczyk
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -21,7 +21,7 @@
 --
 ----------------------------------------------------------------
 --
---  Thanks to Jon Vail (a.k.a JohnnyRancid) who contributed
+--  Thanks to Jon Vail (a.k.a JohnnyRancid/40oz) who contributed
 --  many of the complete level names and lots of cool words.
 --
 --  Thanks to Enhas and Chris for their additions.
@@ -68,8 +68,8 @@ namelib.THEMES =
         Aethereal=10, Hypogean=5,
         Mars=10, Saturn=10, Jupiter=10,
         Deimos=15, Phobos=15, ["Tei Tenga"]=5,
-        Europa=5, Ganymede=5, Dione=5,
-        Callisto=5, Hyperion=5, Vesta=5,
+        Europa=5, Ganymede=5, Dione=5, Io=5,
+        Callisto=5, Hyperion=5, Vesta=5, Titan=3,
 
         Covert=20, Occult=10, Preliminary=3, Experimental=3,
         Northern=3, Southern=3, Eastern=3, Western=3,
@@ -212,6 +212,7 @@ namelib.THEMES =
         ["A Stray Marine"]=10
         ["Advance Guard Delta"]=10
         ["Alien Carnage"]=10
+        ["Alpha Labs"]=10
         ["Assault"]=10
         ["Backbone Breakage"]=10
         ["Baryogenesis"]=10
@@ -255,6 +256,7 @@ namelib.THEMES =
         ["Defcon Six"]=10
         ["Defragmentation factor"]=10
         ["Deja Vu"]=10
+        ["Delta Labs"]=10
         ["Denial Measures"]=10
         ["Dissolution Factor Red"]=10
         ["Domino Effect"]=10
@@ -358,6 +360,7 @@ namelib.THEMES =
         ["Out of Time"]=10
         ["Quantum Distortion"]=10
         ["System Overload"]=10
+        ["Tech Center"]=10
         ["The Delusion Machine"]=10
         ["The Emerald Parallax"]=10
         ["The Mental Abyss"]=10
@@ -429,7 +432,7 @@ namelib.THEMES =
         Cloaked=3, Hermetic=3,
         Occult=10, Surreptious=15,
         Inner=15, Abysmal=10, Deepest=15,
-        Concealed=7, Clandestine=5,
+        Concealed=7, Clandestine=5, Outer=5,
 
         -- condition
         Elder=15, Ancient=15, Eternal=5,
@@ -499,7 +502,7 @@ namelib.THEMES =
         Ghetto=2, City=5, Well=5, Realm=10,
         Lair=15, Den=7, Domain=10, Hive=5, Abode=15,
         Valley=10, River=5, Catacombs=10,
-        Palace=5, Cathedral=5, Chamber=10,
+        Palace=5, Cathedral=5, Chamber=10, Citadel=5,
         Hall=7, Rooms=3, Hecatomb=3, Tabernacle=3,
 
         Labyrinth=5, Dungeon=10, Shores=5, Cenotaph=5,
@@ -551,13 +554,13 @@ namelib.THEMES =
         ["the Dead"]=10
         ["the Denizens"]=10
         ["the Disobedient"]=10
+        ["the Emissary"]=10
         ["the Forgotten"]=10
         ["the Forsaken"]=10
         ["the Minions"]=10
         ["the Missionary"]=10
         ["the Necromancer"]=10
         ["the Neophyte"]=10
-        ["the Possessed"]=10
         ["the Possessed"]=10
         ["the Priest"]=10
         ["the Prophets"]=10
@@ -582,6 +585,7 @@ namelib.THEMES =
         ["Alone Walking"]=10
         ["And The Dead Shall Rise"]=10
         ["Ankle Deep in Blood"]=10
+        ["Angelus Mortis"]=10
         ["Ashes to Ashes"]=10
         ["Architect of Troubled Sleep"]=10
         ["Atrocitic Hunt"]=10
@@ -634,7 +638,9 @@ namelib.THEMES =
         ["Crucifix of the Damned"]=10
         ["Cynicism of Vitality"]=10
         ["Dare to Dream"]=10
+        ["Dark Citadel"]=10
         ["Dark Crusade"]=10
+        ["Dark Light"]=10
         ["Darkness Ensues"]=10
         ["Dead Inside"]=10
         ["Dead Traditions"]=10
@@ -656,11 +662,13 @@ namelib.THEMES =
         ["Dissidence Volta"]=10
         ["Dithyamb of Sadism"]=10
         ["Dogma Destroyed"]=10
+        ["Dreaming in Red"]=10
         ["Drowning the Light"]=10
         ["Durance of Hate"]=10
         ["Echos of the Dead"]=10
         ["Elderworld"]=10
         ["Embraced by Lucifer"]=10
+        ["Emissary of Pain"]=10
         ["Empty Life"]=10
         ["End of Everything"]=10
         ["End of the Line"]=10
@@ -698,6 +706,7 @@ namelib.THEMES =
         ["Human Insecticide"]=10
         ["Human Landfill"]=10
         ["Human Trafficking"]=10
+        ["Hunted"]=10
         ["Incinerated Cross"]=10
         ["Infected Grave"]=10
         ["Iniquity Inferior"]=10
@@ -742,6 +751,7 @@ namelib.THEMES =
         ["Perished in Pain"]=10
         ["Perversitas Sancta"]=10
         ["Portal of No Return"]=10
+        ["Post Combustion"]=10
         ["Punishment Defined"]=10
         ["Purgation in Molten Metal"]=10
         ["Purgatorio"]=10
@@ -758,6 +768,7 @@ namelib.THEMES =
         ["Sphacelus"]=10
         ["Satan's Disgust"]=10
         ["Satanic Propaganda"]=10
+        ["Satanic Supremacy"]=10
         ["Sawn in Half"]=10
         ["Seven Deadly Sins"]=10
         ["Severe Burns"]=10
@@ -766,11 +777,14 @@ namelib.THEMES =
         ["Sheol"]=10
         ["Sign of Evil"]=10
         ["Sinners Bleed"]=10
+        ["Sins of Allegiance"]=10
         ["Sins of the Fallen"]=10
+        ["Shadow Keep"]=10
         ["Skinfeast"]=10
         ["Skin Graft"]=10
         ["Skullbog"]=10
         ["Slow Death"]=10
+        ["Soulburn"]=10
         ["Soul Scars"]=10
         ["Spheres of Madness"]=10
         ["Spiritual Madness"]=10
@@ -778,6 +792,7 @@ namelib.THEMES =
         ["Stripped of Flesh"]=10
         ["Stygiophobia"]=10
         ["Sympathy Denied"]=10
+        ["The Bleeding"]=10
         ["The Heretic's Touch"]=10
         ["Time and Dust"]=10
         ["Terminal Filth"]=10
@@ -788,12 +803,14 @@ namelib.THEMES =
         ["Thinning the Horde"]=10
         ["Tomb of Souls"]=10
         ["Torturous Existence"]=10
+        ["Trialed in Flames"]=10
         ["Trivial Anguish"]=10
         ["Tyranny"]=10
         ["Unhealing Wounds"]=10
         ["Vertigone"]=10
         ["Vomitorium"]=10
         ["Weaving Darkness"]=10
+        ["Well of Souls"]=10
         ["What Color is Death?"]=10
         ["Where No Light Is"]=10
         ["Where Shadows Live"]=10
@@ -988,6 +1005,7 @@ namelib.THEMES =
         Fools=1, Creeps=3, Demigods=3,
 
         ["the Bizarre"]=5
+        ["the Diseased"]=5
         ["the Mad"]=7
         ["the Night"]=10
         ["the Phantasm"]=10
@@ -1010,10 +1028,12 @@ namelib.THEMES =
         ["Archipelago"]=10
         ["Armed to the Teeth"]=10
         ["Arson Anthem"]=10
+        ["As The World Burns"]=10
         ["Atomized"]=10
         ["Awaiting Death"]=10
         ["A Monster Too Many"]=10
         ["Bad Company"]=10
+        ["Behind Enemy Lines"]=10
         ["Black and Grey"]=10
         ["Bleak"]=10
         ["Blind Salvation"]=10
@@ -1078,6 +1098,7 @@ namelib.THEMES =
         ["Hidden Screams"]=10
         ["Hiding the Secrets"]=10
         ["House of a Thousand Deaths"]=10
+        ["Human Debris"]=10
         ["In Remembrance"]=10
         ["In Solitary Ruin"]=10
         ["In the Final Hour"]=10
@@ -1099,6 +1120,7 @@ namelib.THEMES =
         ["Nightfall"]=10
         ["Night Stalkers"]=10
         ["Night Terrors"]=10
+        ["No Guts No Glory"]=10
         ["No Rest No Peace"]=10
         ["Nothing's There"]=10
         ["Oblivion Upon Us"]=10
@@ -1120,6 +1142,7 @@ namelib.THEMES =
         ["Riddled by Gunfire"]=10
         ["R.I.P Humanity"]=10
         ["Red Valhalla"]=10
+        ["Realm of Chaos"]=10
         ["Remains of Humanity"]=10
         ["Retribution"]=10
         ["Roadkill"]=10
@@ -1132,7 +1155,9 @@ namelib.THEMES =
         ["Shadowland"]=10
         ["Silent Might"]=10
         ["Sin City"]=10
+        ["Solitude"]=10
         ["Stakeout"]=10
+        ["Stille Nacht"]=10
         ["Stonegate"]=10
         ["Subjugated"]=10
         ["Suspense"]=10
@@ -1249,6 +1274,7 @@ namelib.THEMES =
         ["Execution"]=10
         ["Eye for an Eye"]=10
         ["Fatality"]=10
+        ["Fate"]=10
         ["Final Fight"]=10
         ["Fire Amok"]=10
         ["Gateway"]=10
@@ -1468,6 +1494,7 @@ namelib.THEMES =
         ["Massive WTF"]=10
         ["Map of No Return"]=10
         ["Mind Blower"]=10
+        ["Money Machine"]=10
         ["Mixed and Measured"]=10
         ["Havering Hovercrafts"]=10
         ["Monkeys To Infinity"]=10
