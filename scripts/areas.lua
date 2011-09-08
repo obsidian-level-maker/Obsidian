@@ -686,14 +686,6 @@ function Areas_flesh_out()
   local pass_h = GAME.ENTITIES.player1.h + (PARAM.step_height or 16) + 8
 
 
-  local function decide_windows(R)
-    -- allocate chunks on side of room
-    -- [TODO: allow windows in existing chunks]
-
-    -- TODO !!!
-  end
-
-
   local function expand_chunks(R)
     -- so far all chunks are only a single seed in size.
     -- this function can make them bigger, for reasons like:
@@ -1700,6 +1692,14 @@ stderrf("TRYING....................\n")
   end
 
 
+  local function floor_stuff(R)
+    decorative_chunks(R)
+    create_areas(R)
+    area_heights(R)
+    hallway_heights(R)
+    crossover_room(R)
+  end
+
 
   local function prepare_ceiling(R)
     local h = R.crossover_max_h or R.floor_max_h
@@ -1714,22 +1714,47 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function flesh_out(R)
-    decorative_chunks(R)
-    create_areas(R)
-    area_heights(R)
-    hallway_heights(R)
-    crossover_room(R)
+  local function ceiling_stuff(R)
     prepare_ceiling(R)
+  end
+
+
+  local function can_make_window(K, dir)
+    local N = K:neighbor(dir)
+
+    if not N then return false end
+
+    if N.room == K.room then return false end
+
+    if K.outdoor and N.outdoor then return false end
+  end
+
+
+  local function try_add_window(R, dir, quota)
+    each K in R.sections do
+      if can_make_window(K, dir) then
+        add_window(K, dir)
+      end
+    end
+  end
+
+
+  local function decide_windows(R)
+    if STYLE.windows == "none" then return end
+
+    local quota = style_sel("windows", 0, 20, 40, 80)
+
+    each dir in rand.dir_list() do
+      try_add_window(R, dir, quota)
+    end
   end
 
 
   ---| Areas_flesh_out |---
 
   each R in LEVEL.rooms do expand_chunks(R) end
-
-  each R in LEVEL.rooms do decide_windows(R) end
-
-  each R in LEVEL.rooms do flesh_out(R) end
+  each R in LEVEL.rooms do floor_stuff(R) end
+--each R in LEVEL.rooms do decide_windows(R) end
+  each R in LEVEL.rooms do ceiling_stuff(R) end
 end
 
