@@ -366,16 +366,18 @@ function Areas_important_stuff()
     local C = spot_for_wotsit(R)
 
     if R.purpose == "SOLUTION" then
-      C.lock = assert(R.purpose_lock)
+      local lock = assert(R.purpose_lock)
 
-      if C.lock.kind == "KEY" or C.lock.kind == "SWITCH" then
-        C.purpose = C.lock.kind
+      C.content.lock = lock
+
+      if lock.kind == "KEY" or lock.kind == "SWITCH" then
+        C.content.kind = lock.kind
       else
         error("UNKNOWN LOCK KIND")
       end
 
     else
-      C.purpose = R.purpose
+      C.content.kind = R.purpose
     end
   end
 
@@ -383,7 +385,8 @@ function Areas_important_stuff()
   local function add_weapon(R, weapon)
     local C = spot_for_wotsit(R)
 
-    C.weapon = weapon
+    C.content.kind = "WEAPON"
+    C.content.weapon = weapon
   end
 
 
@@ -400,8 +403,8 @@ function Areas_important_stuff()
 
     local C = spot_for_wotsit(R)
 
-    C.purpose = "TELEPORTER"
-    C.teleporter = conn  -- FIXME?
+    C.content.kind = "TELEPORTER"
+    C.content.teleporter = conn  -- FIXME?
 
         if conn.L1 == R then conn.C1 = C
     elseif conn.L2 == R then conn.C2 = C
@@ -1184,7 +1187,7 @@ stderrf("TRYING....................\n")
 
   local function eval_stair_pair(C1, C2, dir)
     -- never use purpose or conn chunks
-    if C1.purpose or C1.weapon then return -1 end
+    if C1.content.kind then return -1 end
 
     if C1.foobage == "conn" then return -1 end
     if C1.foobage == "crossover" then return -1 end
@@ -1250,7 +1253,7 @@ stderrf("TRYING....................\n")
 
   local function bridge_passer_possible(C, N, dir)
     -- don't place bridge over certain stuff
-    if N.stair or N.purpose or N.foobage == "conn" then
+    if N.stair or N.content.kind or N.foobage == "conn" then
       return false
     end
 

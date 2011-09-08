@@ -87,10 +87,10 @@ function Quest_update_tvols(arena)  -- NOT USED ATM
 
     local total = assert(R.svolume)
 
-    for _,C in ipairs(R.conns) do
-      if not C.lock and not seen_conns[C] then
-        local N = C:neighbor(R)
-        seen_conns[C] = true
+    each D in R.conns do
+      if not D.lock and not seen_conns[D] then
+        local N = D:neighbor(R)
+        seen_conns[D] = true
         total = total + travel_volume(N, seen_conns)
       end
     end
@@ -101,9 +101,9 @@ function Quest_update_tvols(arena)  -- NOT USED ATM
 
   --| Quest_update_tvols |---  
 
-  for _,C in ipairs(arena.conns) do
-    C.src_tvol  = travel_volume(C.src,  { [C]=true })
-    C.dest_tvol = travel_volume(C.dest, { [C]=true })
+  each D in arena.conns do
+    D.src_tvol  = travel_volume(D.src,  { [D]=true })
+    D.dest_tvol = travel_volume(D.dest, { [D]=true })
   end
 end
 

@@ -1301,7 +1301,7 @@ function Layout_possible_fab_group(usage, list, req_key)
 end
 
 
-function Layout_possible_doors(E)
+function OLD__Layout_possible_doors(E)  -- NOT USED
   local list, lock, key
 
   local C = E.usage.conn

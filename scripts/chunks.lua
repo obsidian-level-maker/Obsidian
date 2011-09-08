@@ -32,6 +32,9 @@ class CHUNK
   section : SECTION
   hx, hy  --  coordinates of chunk in section
 
+  content : table   -- kind field can be: "START", "EXIT", "KEY", "SWITCH",
+                    --                    "WEAPON", "TELEPORTER", "GATE"
+
   link[DIR] : LINK
 
   parts[DIR] : PART  -- divides the chunk into 3x3 sub-areas
@@ -80,7 +83,7 @@ require 'util'
 CHUNK_CLASS = {}
 
 function CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
-  local C = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, parts={}, link={} }
+  local C = { sx1=sx1, sy1=sy1, sx2=sx2, sy2=sy2, content={}, parts={}, link={} }
   table.set_class(C, CHUNK_CLASS)
   return C
 end
@@ -423,7 +426,7 @@ end
 
 
 
-function CHUNK_CLASS.purpose_start(C)
+function CHUNK_CLASS.build_start(C)
   local name  = rand.key_by_probs(THEME.starts)
   local skin1 = assert(GAME.SKINS[name])
 
@@ -437,7 +440,7 @@ function CHUNK_CLASS.purpose_start(C)
 end
 
 
-function CHUNK_CLASS.purpose_exit(C)
+function CHUNK_CLASS.build_exit(C)
   local name  = rand.key_by_probs(THEME.exits)
   local skin1 = assert(GAME.SKINS[name])
 
@@ -457,19 +460,19 @@ function CHUNK_CLASS.purpose_exit(C)
 end
 
 
-function CHUNK_CLASS.purpose_key(C)
-  local LOCK = assert(C.lock)
+function CHUNK_CLASS.build_key(C)
+  local LOCK = assert(C.content.lock)
   assert(LOCK.key)
 
   C:do_big_item(LOCK.key)
 end
 
 
-function CHUNK_CLASS.purpose_switch(C)
-  assert(C.lock)
+function CHUNK_CLASS.build_switch(C)
+  assert(C.content.lock)
 
   local skin1
-  local skin2 = { tag=C.lock.tag }
+  local skin2 = { tag=C.content.lock.tag }
   
   -- !!! FIXME: determine skin1 properly (from door skin)
   each name,SK in GAME.SKINS do
@@ -493,8 +496,8 @@ function CHUNK_CLASS.purpose_switch(C)
 end
 
 
-function CHUNK_CLASS.purpose_teleporter(C)
-  local conn = assert(C.teleporter)
+function CHUNK_CLASS.build_teleporter(C)
+  local conn = assert(C.content.teleporter)
 
   local name  = rand.key_by_probs(THEME.teleporters)
   local skin1 = assert(GAME.SKINS[name])
@@ -527,25 +530,6 @@ function CHUNK_CLASS.purpose_teleporter(C)
 end
 
 
-function CHUNK_CLASS.do_purpose(C)
-  if C.purpose == "START" then
-    C:purpose_start()
-
-  elseif C.purpose == "EXIT" then
-    C:purpose_exit()
-
-  elseif C.purpose == "KEY" then
-    C:purpose_key()
-
-  elseif C.purpose == "SWITCH" then
-    C:purpose_switch()
-
-  elseif C.purpose == "TELEPORTER" then
-    C:purpose_teleporter()
-  end
-end
-
-
 function CHUNK_CLASS.do_hexen_triple(C)
   -- FIXME: this is temp hack !!!
   local skin_map =
@@ -558,7 +542,7 @@ function CHUNK_CLASS.do_hexen_triple(C)
     piece3  = "Piece3_Set"
   }
 
-  local name  = assert(skin_map[C.weapon])
+  local name  = assert(skin_map[C.content.weapon])
   local skin1 = assert(GAME.SKINS[name])
 
   local mx, my = C:mid_point()
@@ -572,17 +556,53 @@ function CHUNK_CLASS.do_hexen_triple(C)
 end
 
 
-function CHUNK_CLASS.do_weapon(C)
+function CHUNK_CLASS.build_weapon(C)
   -- Hexen stuff
+  local weapon = C.content.weapon
+
   if OB_CONFIG.game == "hexen" and
-     (C.weapon == "weapon2" or C.weapon == "weapon3" or
-      C.weapon == "piece1" or C.weapon == "piece2" or C.weapon == "piece3")
+     (weapon == "weapon2" or weapon == "weapon3" or
+      weapon == "piece1" or weapon == "piece2" or weapon == "piece3")
   then
     C:do_hexen_triple()
   else
-    C:do_big_item(C.weapon)
+    C:do_big_item(weapon)
   end
 end
+
+
+function CHUNK_CLASS.do_content(C)
+  local kind = C.content.kind
+
+  if not kind then return end
+
+  if kind == "START" then
+    C:build_start()
+
+  elseif kind == "EXIT" then
+    C:build_exit()
+
+  elseif kind == "KEY" then
+    C:build_key()
+
+  elseif kind == "SWITCH" then
+    C:build_switch()
+
+  elseif kind == "WEAPON" then
+    C:build_weapon()
+
+  elseif kind == "TELEPORTER" then
+    C:build_teleporter()
+
+  elseif kind == "GATE" then
+    C:build_hub_gate()
+
+  else
+    error("Unknown chunk content: " .. tostring(kind))
+  end
+end
+
+
 
 
 function CHUNK_CLASS.cycle_stair(C, dir, N)
@@ -1087,9 +1107,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
   -- object
 
-  if C.purpose then C:do_purpose() end
-
-  if C.weapon then C:do_weapon() end
+  C:do_content()
 
   --[[ debugging aid
   local mx, my = C:mid_point()
@@ -1107,7 +1125,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.purpose and not C.stair and not C.weapon and
+  if C.room and not C.content.kind and not C.stair and
      not (C.foobage == "crossover")
   then
     local R = C.room
