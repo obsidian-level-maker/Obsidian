@@ -532,10 +532,12 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
       if N.used then
         -- don't allow crossover to walk into another room
         if K.used and N.room != stats.crossover then continue end
-      
-        -- crossover test
-        if not stats.crossover and not K.used and K.kind == "junction" and
-           N.room and not N.room.crossover and can_make_crossover()
+
+        -- begin crossover?   [ FIXME : move to can_make_crossover ]
+        if not K.used and K.kind == "junction" and
+           N.room and not N.room.crossover and
+           (not stats.crossover or stats.crossover == N.room) and 
+            can_make_crossover()
         then
           -- OK
           stats.crossover = N.room
@@ -543,7 +545,7 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
           continue
         end
       end
-        
+
       if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
 
 --stderrf("  recursing @ dir:%d\n", dir)
