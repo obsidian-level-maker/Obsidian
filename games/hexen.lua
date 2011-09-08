@@ -4917,7 +4917,7 @@ function HEXEN.make_mapinfo()
   end
 
   each L in GAME.levels do
-    local desc = string.upper(L.description or "Weird Place")
+    local desc = string.upper(L.description or L.name)
 
     add("map %d \"%s\"", L.map, desc)
     add("warptrans %d", L.map)
