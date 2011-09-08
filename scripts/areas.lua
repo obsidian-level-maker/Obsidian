@@ -463,6 +463,18 @@ function Areas_important_stuff()
   end
 
 
+  local function add_hub_gate(R, link)
+    assert(link)
+
+    local C = spot_for_wotsit(R)
+    
+    C.content.kind = "GATE"
+    C.content.source_id = link.dest.local_map
+    C.content.dest_id   = link.src .local_map
+    C.content.dest_map  = link.dest.map
+  end
+
+
   local function place_importants(R)
     if R.purpose then add_purpose(R) end
 
@@ -471,6 +483,8 @@ function Areas_important_stuff()
     if R.weapons then
       each name in R.weapons do add_weapon(R, name) end
     end
+
+    each link in R.gates do add_hub_gate(R, link) end
   end
 
 
@@ -615,8 +629,8 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     -- collect chunks which the player must be able to get to
     local list = {}
 
-    for index,C in ipairs(R.chunks) do
-      if C.foobage == "conn" or C.foobage == "important" then
+    each C in R.chunks do
+      if C.foobage == "conn" or C.foobage == "important" or C.content.kind then
         table.insert(list, C)
 
         -- mark this chunk as walk
