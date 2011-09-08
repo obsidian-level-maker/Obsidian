@@ -286,9 +286,12 @@ function Hallway_test_branch(start_K, start_dir, mode)
     elseif stats.big_junc then
       score = score + 60
       merge = false
----///  elseif stats.crossover then
+    end
+
+    if stats.crossover then
 ---///    score = score + style_sel("crossovers", 0, 0, 31, 99)
----///    merge = false
+      score = score + 999
+      merge = false
     end
 
 
@@ -338,13 +341,20 @@ function Hallway_test_branch(start_K, start_dir, mode)
   end
 
 
-  --
-  -- WISH: make crossovers merely a part of normal hall_flow() processing
-  --       [allow more than one in a hallway].
-  --
+  local function can_make_crossover()
+    if not PARAM.bridges then return false end
+
+    if STYLE.crossovers == "none" then return false end
+
+    if mode == "cycle" then return false end
+
+    -- FIXME: LEVEL.crossover_quota
+
+    return true
+  end
 
 
-  local function test_crossover(K, dir, visited, stats)
+  local function OLD_test_crossover(K, dir, visited, stats)
     if not PARAM.bridges then return end
 
     -- FIXME: LEVEL.crossover_quota
@@ -464,7 +474,11 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
 
   local function hall_flow(K, from_dir, visited, stats, quota)
     assert(K)
-    assert(not K.used)
+
+    -- must be a free section except when crossing over a room
+    if not (stats.crossover and stats.crossover == K.room) then
+      assert(not K.used)
+    end
 
     -- already part of hallway path?
     if table.has_elem(visited, K) then return end
@@ -484,11 +498,11 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
     local test_dirs
     local is_junction
 
-    if K.kind == "vert" then
+    if K.orig_kind == "vert" then
       test_dirs = TEST_DIRS_VERT
-    elseif K.kind == "horiz" then
+    elseif K.orig_kind == "horiz" then
       test_dirs = TEST_DIRS_HORIZ
-    elseif K.kind == "junction" or K.kind == "big_junc" then
+    elseif K.orig_kind == "junction" or K.kind == "big_junc" then
       test_dirs = TEST_DIRS_NONE
       is_junction = true
     else
@@ -503,14 +517,11 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
       if not N then continue end
 
       -- FIXME: disabled test_dirs[] logic for now -- review this!!
-      if test_dirs[dir] or (true and K.kind != "big_junc") then  
+      -- !!! if test_dirs[dir] or (true and K.kind != "big_junc") then  
+      if K.kind != "big_junc" and not K.used then
 --stderrf("  testing conn @ dir:%d\n", dir)
         test_hall_conn(N, 10 - dir, visited, stats)
-
-        test_crossover(K, dir, visited, stats)
       end
-
-      if N.used then continue end
 
       -- too many hallways already?
       if quota < 1 or LEVEL.hall_quota < 1 then continue end
@@ -518,6 +529,21 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
       -- limit length of big junctions
       if stats.big_junc and #visited >= 3 then continue end
 
+      if N.used then
+        -- don't allow crossover to walk into another room
+        if K.used and N.room != stats.crossover then continue end
+      
+        -- crossover test
+        if not stats.crossover and not K.used and K.kind == "junction" and
+           N.room and not N.room.crossover and can_make_crossover()
+        then
+          -- OK
+          stats.crossover = N.room
+        else
+          continue
+        end
+      end
+        
       if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
 
 --stderrf("  recursing @ dir:%d\n", dir)
@@ -530,15 +556,16 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
 
   ---| Hallway_test_branch |---
 
-  assert(start_K.room)  -- always begin from a room
+  -- always begin from a room
+  assert(start_K.room)
 
   local MID = start_K:neighbor(start_dir)
 
   if not MID then return end
 
+  -- if neighbor section is used, nothing is possible except
+  -- branching off a nearby hallway.
   if MID.used then
-    -- if neighbor section is used, nothing is possible except
-    -- branching off a nearby hallway.
     test_off_hall(MID)
     return
   end
