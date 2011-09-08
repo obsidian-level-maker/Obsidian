@@ -7,27 +7,31 @@ Current Work
 
 +  Hexen stuff:
    
-   !!  proper gates between hub levels
-
-   DONE:  weapons for fight simulator
-
-   -  prevent key re-use : distribute remaining keys amongst levels
+   DONE: hub gates between the levels
+   DONE: weapons for fight simulator
+   DONE: prevent key re-use
 
 
 Prefab placement:             Example:
 --------------------------------------------------------------------
    1. whole chunk             small exit room
+
    2. whole floor             stair case
    3. whole ceiling           sky light
-   4. whole edge              wall, picture, window, item niche
+   4. whole edge              wall, picture, window, door
    5. whole corner            diagonal corner
 
    6. middle of chunk         pillar
    7. middle of floor         pedestal, fountain, crate
-   8. middle of ceiling       ceiling detail
+   8. middle of ceiling       ceiling light
    9. middle of wall          quake button, spike shooter
 
-  10. other                   3D bridge
+   ???                        3D bridge
+   ???                        fence
+   ???                        archway in hall
+   ???                        low periph
+   ???                        computer console, crate against wall
+   ???                        billboard
 
 
 -  position-based monster ordering 

@@ -36,6 +36,7 @@ CHANGES (since 3.57)
 
 + Hexen works!
 + much improved Hexen themes, thanks to blackjar
++ proper Hub system for Hexen
 
 - support FreeDoom 0.7
 - basic support for HacX 1.2
