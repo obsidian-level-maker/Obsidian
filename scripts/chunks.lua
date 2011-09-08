@@ -530,6 +530,28 @@ function CHUNK_CLASS.build_teleporter(C)
 end
 
 
+function CHUNK_CLASS.build_hub_gate(C)
+  local name  = rand.key_by_probs(THEME.hub_gates)
+  local skin1 = assert(GAME.SKINS[name])
+
+  local skin0 = { wall = C.room.main_tex }
+  local skin2 = {}
+
+  skin2.source_id = C.content.source_id
+  skin2.  dest_id = C.content.dest_id
+
+---FIXME Hexen II and Quake II support
+---??  skin2. in_target = string.format("tele%d", skin2. in_tag)
+---??  skin2.out_target = string.format("tele%d", skin2.out_tag)
+
+  local mx, my = C:mid_point()
+
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
+
+  Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+end
+
+
 function CHUNK_CLASS.do_hexen_triple(C)
   -- FIXME: this is temp hack !!!
   local skin_map =
