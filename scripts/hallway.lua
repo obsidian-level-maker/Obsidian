@@ -186,6 +186,29 @@ function HALLWAY_CLASS.merge_it(old_H, new_H)
 end
 
 
+function HALLWAY_CLASS.set_cross_mode(H)
+  assert(H.quest)
+  assert(H.crossover)
+  assert(H.crossover.quest)
+
+  local id1 = H.quest.id
+  local id2 = H.crossover.quest.id
+
+  if id1 < id2 then
+    -- the crossover bridge is part of a earlier quest, so
+    -- we must not let the player fall down into this room
+    -- (and subvert the quest structure).
+    --
+    -- Hence the crossover becomes a "cross under" :)
+
+    H.cross_mode = "channel"
+  else
+    H.cross_mode = "bridge"
+  end
+
+--- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
+  end
+
 
 function HALLWAY_CLASS.build(H)
   -- FIXME !!!!
@@ -676,6 +699,12 @@ function HALLWAY_CLASS.do_heights(H, base_h)
 
   H.done_heights = true
 
+  H.floor_h = base_h
+
+  if H.crossover then
+    H:set_cross_mode()
+  end
+
   -- FIXME: this is rubbish
   local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
 
@@ -691,7 +720,7 @@ function HALLWAY_CLASS.do_heights(H, base_h)
 
   if H.street then
     H.height = 512
-  elseif H.is_cycle then
+  elseif H.is_cycle or H.crossover then
     H.height = 384  -- FIXME: temp crud
   elseif H.outdoor then
     H.height = 256

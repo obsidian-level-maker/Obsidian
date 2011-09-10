@@ -43,6 +43,11 @@ class CHUNK
                      -- each can be NIL if nothing is there
                      -- edges may occupy whole side (no corner then)
 
+  crossover_hall : HALLWAY
+
+  max_deep[DIR]   -- the maximum distance an edge (or corner) prefab can
+                  -- intrude into this chunk.
+
   floor_h, ceil_h -- floor and ceiling heights
 
   f_tex,   c_tex  -- floor and ceiling textures
@@ -760,9 +765,11 @@ function CHUNK_CLASS.build(C)
   local c_medium = "solid"
   local light = 0
 
-  if C.crossover then
-    if C.crossover.mode == "channel" then f_h = C.crossover.floor_h end
-    if C.crossover.mode == "bridge"  then c_h = math.max(c_h, C.crossover.floor_h + 192) end
+  local x_hall = C.crossover_hall
+
+  if x_hall then
+    if x_hall.cross_mode == "channel" then f_h = x_hall.floor_h end
+    if x_hall.cross_mode == "bridge"  then c_h = math.max(c_h, x_hall.floor_h + 192) end
   end
 
   local brush
@@ -1085,8 +1092,8 @@ end
 
 
   -- crossover
-  if C.crossover and C.crossover.mode == "bridge" then
-    local h = C.crossover.floor_h
+  if x_hall and x_hall.cross_mode == "bridge" then
+    local h = x_hall.floor_h
 stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
 
     local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
@@ -1099,9 +1106,9 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
     gui.add_brush(brush)
   end
 
-  if C.crossover and C.crossover.mode == "channel" then
+  if x_hall and x_hall.cross_mode == "channel" then
     local h = C.floor_h
-    local dir = assert(C.crossover.dir)
+--!!!!    local dir = assert(C.crossover.dir)
 stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
     for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
@@ -1109,11 +1116,16 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
       local x1, y1, x2, y2 = S.x1, S.y1, S.x2, S.y2
 
+      -- FIXME
+      x1 = x1 + 32 ; y1 = y1 + 32
+      x2 = x2 - 32 ; y2 = y2 - 32
+--[[
       if geom.is_vert(dir) then
         y1 = y1 + 64 ; y2 = y2 - 64
       else
         x1 = x1 + 64 ; x2 = x2 - 64
       end
+--]]
 
       local brush = Brush_new_quad(x1, y1, x2, y2)
 
@@ -1147,8 +1159,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.content.kind and not C.stair and
-     not (C.foobage == "crossover")
+  if C.room and not C.content.kind and not C.stair and not x_hall
   then
     local R = C.room
 

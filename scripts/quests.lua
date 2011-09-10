@@ -810,8 +810,12 @@ function Quest_make_quests()
 
       if R != start then
         -- FIXME !!!
-        if not best_exit then best_exit = R end
+        best_exit = R
       end
+    end
+
+    each H in LEVEL.halls do
+      H.quest = quest
     end
 
     LEVEL.exit_room = best_exit

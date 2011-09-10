@@ -1084,8 +1084,8 @@ stderrf("TRYING....................\n")
 
     R.floor_limit = { -512, 1024 }
 
-    if R.crossover_hall and R.crossover_hall.floor_h then  -- FIXME
-      if R.crossover_hall.x_mode == "bridge" then
+    if R.crossover_hall and R.crossover_hall.floor_h then
+      if R.crossover_hall.cross_mode == "bridge" then
         R.floor_limit[2] = R.crossover_hall.floor_h - 128
       else
         R.floor_limit[1] = R.crossover_hall.floor_h + 128
@@ -1553,14 +1553,10 @@ stderrf("TRYING....................\n")
       entry_area = assert(C.area)
 --- stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-      if R.entry_conn.crossover then  -- FIXME ????
+      if false then  ---????  R.entry_conn.crossover then
         local info = R.entry_conn.crossover
 --stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
         entry_h = assert(info.floor_h)
-
----###      elseif R.entry_conn.hall then
----###        local hall = R.entry_conn.hall
----###        entry_h = assert(hall.chunks[#hall.chunks].floor_h)
 
       else
         local NC = assert(R.entry_conn.C1)
@@ -1609,71 +1605,41 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function set_crossover_mode(info)
-    local id1 = info.R2.quest.id
-    local id2 = info.over_K.room.quest.id
-
-    if id1 < id2 or (id1 == id2 and rand.odds(10)) then
-      -- the crossover bridge is part of a earlier quest, so
-      -- we must not let the player fall down into this room
-      -- (and subvert the quest structure).
-      --
-      -- Hence the crossover becomes a "cross under" :)
-
-      info.mode = "channel"
-    else
-      info.mode = "bridge"
-    end
-
---!!!!  stderrf("CROSSOVER %s : %s (id %d,%d)\n", info.chunk:tostr(), info.mode, id1, id2)
-  end
-
-
   local function crossover_room(R)
-    if not R.crossover then return end
+    local hall = R.crossover_hall
 
-    local info = R.crossover
+    if not hall then return end
 
-    -- already has a height?
-    if info.floor_h then return end
-
-    set_crossover_mode(info)
+    -- already visited?
+    if hall.floor_h then return end
 
     -- TODO: analyse nearby chunks to get min/max floor_h
     local min_h = R.floor_min_h
     local max_h = R.floor_max_h
 
-    local h
-
-    if info.mode == "bridge" then
-      h = max_h + 128
+    if hall.cross_mode == "bridge" then
+      hall:do_heights(max_h + 128)
     else
-      h = min_h - 128
+      hall:do_heights(min_h - 128)
     end
-
-    info.floor_h = h
   end
 
 
-  local function crossover_hall(H, D)
-
-do return end  --!!!!!
-    if not H.crossover then return end
-
-    local info = H.crossover
-
-    -- already has a height?
-    if info.floor_h then return end
-
-    set_crossover_mode(info)
-
-    -- get start height
-    local CC = H.chunks[#H.chunks]
-    assert(CC)
-    local h = assert(CC.floor_h)
-
-    info.floor_h = h
-  end
+---???  local function OLD__crossover_hall(hall, D)
+---???    if not H.crossover then return end
+---???
+---???    -- already visited?
+---???    if hall.floor_h then return end
+---???
+---???    hall:set_cross_mode()
+---???
+---???    -- get start height
+---???    local CC = hall.chunks[#hall.chunks]
+---???    assert(CC)
+---???    local h = assert(CC.floor_h)
+---???
+---???    hall:do_heights(h)
+---???  end
 
 
   local function hallway_heights(L)
@@ -1688,7 +1654,7 @@ do return end  --!!!!!
         -- handle hallway networks
         hallway_heights(D.L2)
 
-        crossover_hall(hall)
+---???  crossover_hall(hall)
       end
     end
   end
