@@ -37,7 +37,7 @@ class SECTION
   used : boolean
 
   room : ROOM
-  hall : HALL
+  hall : HALLWAY
   conn : CONN
 
   num_conn  -- number of connections

@@ -258,13 +258,6 @@ gui.debugf("\nmake_branch\n\n")
   if info.D2 then
      info.D2:add_it()
   end
-
-  if info.stats and info.stats.crossover then
-    local R = info.stats.crossover
-    stderrf("************* HAS CROSSOVER @ %s\n", R:tostr())
-
-    R.crossover = true
-  end
 end
 
 

@@ -27,7 +27,7 @@ class CHUNK
   x1, y1, x2, y2  -- 2D map coordinates
 
   room : ROOM
-  hall : HALL
+  hall : HALLWAY
 
   section : SECTION
   hx, hy  --  coordinates of chunk in section

@@ -31,7 +31,7 @@ class HALLWAY
   chunks   : list(CHUNK)
 
   big_junc  : SECTION
-  crossover : CROSSOVER
+  crossover : ROOM
 
   double_fork : SECTION    -- only present for double hallways.
   double_dir  : direction
@@ -40,20 +40,6 @@ class HALLWAY
                       -- without any locked door in-between.
 
   wall_tex, floor_tex, ceil_tex 
-}
-
-
-struct CROSSOVER
-{
-  conn : CONN
-
-  over_K : SECTION
-
-  MID_A, MID_B : SECTION
-
-  chunk : CHUNK
-
-  floor_h 
 }
 
 
@@ -146,7 +132,11 @@ function HALLWAY_CLASS.add_it(H)
   H:make_chunks(false)
 
   if H.crossover then
-    H.crossover.over_K.room.crossover = H.crossover
+    local over_R = H.crossover
+
+    over_R.crossover_hall = H
+
+stderrf("************* CROSSOVER @ %s\n", R:tostr())
   end
 
   if #H.sections > 1 then
@@ -268,6 +258,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- never connect to double hallways or crossovers
     if end_K.hall and (end_K.hall.double_fork or end_K.hall.crossover) then return end
 
+    -- crossovers must be distinct (not same as start or end)
+    if stats.crossover and end_K.room == stats.crossover then return end
+
     local merge = rand.odds(70)
 
     local score1 = start_K:eval_exit(start_dir)
@@ -313,9 +306,15 @@ function Hallway_test_branch(start_K, start_dir, mode)
     H.sections = visited
     H.conn_group = start_K.room.conn_group
 
-    H.big_junc = stats.big_junc
+    if end_K.kind == "big_junc" then
+      H.big_junc = end_K
+    else
+      H.big_junc = stats.big_junc
+    end
 
-    if end_K.kind == "big_junc" then H.big_junc = end_K end
+    if stats.crossover then
+      H.crossover = stats.crossover
+    end
 
 
     local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
@@ -341,14 +340,33 @@ function Hallway_test_branch(start_K, start_dir, mode)
   end
 
 
-  local function can_make_crossover()
+  local function can_make_crossover(K, N, stats)
     if not PARAM.bridges then return false end
 
     if STYLE.crossovers == "none" then return false end
 
+    -- never do crossovers for cycles (TODO: review this)
     if mode == "cycle" then return false end
 
     -- FIXME: LEVEL.crossover_quota
+
+    if K.used then return false end
+
+    -- only enter the room at a junction (i.e. through a hallway channel)
+    if K.kind != "junction" then return false end
+
+    if not N.room then return false end
+
+    -- crossovers must be distinct (not same as start or end)
+    if N.room == start_K.room then return false end
+
+    -- limit of one per room
+    -- [cannot do more because crossovers limit the floor heights and
+    --  two crossovers can lead to an unsatisfiable range]
+    if N.room.crossover_hall then return false end
+
+    -- if re-entering a room, must be the same one!
+    if stats.crossover and N.room != stats.crossover then return false end
 
     return true
   end
@@ -385,9 +403,6 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
     -- connection check
     if not Connect_is_possible(start_K.room, end_K.room, mode) then return end
 
-    -- limit of one per room
-    -- [cannot do more because crossovers limit the floor heights and
-    --  two crossovers can lead to an unsatisfiable range]
     if mid_K.room.crossover then return false end
 
     -- size check
@@ -406,64 +421,6 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
 
     -- bonus for using a crossover
     score = score + style_sel("crossovers", 0, 0, 48, 98)
-
-    -- minor tendency for longer halls.
-    score = score + #visited / 9.4
-
-
--- stderrf("Cross-Over @ %s dir:%d  score %1.2f\n", K:tostr(), dir, score)
-
-
-    -- score is now computed : test it
-
-    if score < LEVEL.best_conn.score then return end
-
-
-    -- OK --
-
-    local CROSSOVER =
-    {
-      R1     = start_K.room
-      R2     = end_K.room
-
-      over_K = mid_K
-      MID_A  = MID_A
-      MID_B  = MID_B
-
-      dir    = dir
-    }
-
-
-    local H = HALLWAY_CLASS.new()
-
-    H.sections = visited
-    H:add_section(MID_B)
-
-    H.conn_group = start_K.room.conn_group
-
-    H.crossover  = CROSSOVER
-
-
-    local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
-
-    D1.K1 = start_K ; D1.K2 = H.sections[1]
-
-
-    -- Note: some code assumes that D2.L1 is the destination room/hall
-
-    local D2 = CONN_CLASS.new("hallway", end_K.room, H, end_dir)
-
-    D2.K1 = end_K   ; D2.K2 = MID_B
-
-
-    LEVEL.best_conn.D1 = D1
-    LEVEL.best_conn.D2 = D2
-    LEVEL.best_conn.hall  = H
-    LEVEL.best_conn.score = score
-    LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge = false
-
---stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
 
 
@@ -533,17 +490,10 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
         -- don't allow crossover to walk into another room
         if K.used and N.room != stats.crossover then continue end
 
-        -- begin crossover?   [ FIXME : move to can_make_crossover ]
-        if not K.used and K.kind == "junction" and
-           N.room and not N.room.crossover and
-           (not stats.crossover or stats.crossover == N.room) and 
-            can_make_crossover()
-        then
-          -- OK
-          stats.crossover = N.room
-        else
-          continue
-        end
+        -- begin crossover?
+        if not can_make_crossover(K, N, stats) then continue end
+
+        stats.crossover = N.room
       end
 
       if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then

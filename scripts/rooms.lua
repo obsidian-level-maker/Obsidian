@@ -54,6 +54,8 @@ class ROOM
 
   sections : list  -- all sections of room
 
+  crossover_hall : HALLWAY  -- if present, a hallway crosses over this room
+
 
   quest : QUEST
 
