@@ -329,7 +329,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if stats.crossover then
 ---///    score = score + style_sel("crossovers", 0, 0, 31, 99)
-      score = score + 999
+local len = 0
+each K in visited do if K.used then len = len + 1 end end
+      score = score + 500 * len
       merge = false
     end
 
@@ -497,8 +499,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 --stderrf("  recursing @ dir:%d\n", dir)
         local new_stats = table.copy(stats)
         if do_cross then new_stats.crossover = N.room end
+        local new_quota = quota - (N.used ? 0.2 ; 1)
 
-        hall_flow(N, 10 - dir, table.copy(visited), new_stats, quota - 1)
+        hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
       end
     end
 --stderrf("}\n")
