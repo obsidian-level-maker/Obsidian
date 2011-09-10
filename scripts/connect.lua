@@ -39,8 +39,6 @@ class CONN
 
   C1, C2 : CHUNK   -- decided later (at chunk creation)
 
-  crossover : CROSSOVER
-
   dir1, dir2  -- direction value (2/4/6/8) 
               -- dir1 leading out of L1 / K1 / C1
               -- dir2 leading out of L2 / K2 / C2
@@ -380,69 +378,6 @@ function Connect_rooms()
     each R in LEVEL.rooms do
       R.conn_group = _index
     end
-  end
-
-
-  local function OLD__add_crossover(K1, dir)
-    local MID_A = K1:neighbor(dir, 1)
-    local MID_B = K1:neighbor(dir, 3)
-
-    local K2 = K1:neighbor(dir, 2)
-    local K3 = K1:neighbor(dir, 4)
-
-    gui.printf("!!!!!! Crossover %s --> %s --> %s\n", K1:tostr(), K2:tostr(), K3:tostr())
-
-    local R = K1.room
-    local N = K3.room
-
-    Connect_merge_groups(R.conn_group, N.conn_group)
-
-    local D = CONN_CLASS.new("crossover", R, N, dir)
-
-    D.K1 = K1 ; D.K2 = K3
-
-    local CROSSOVER =
-    {
-      conn = D
-
-      MID_A = MID_A
-      MID_B = MID_B
-      MID_K = K2
-    }
-
-    D.crossover = CROSSOVER
-    K2.room.crossover = CROSSOVER
-
-    table.insert(LEVEL.conns, D)
-
-    table.insert(R.conns, D)
-    table.insert(N.conns, D)
-
-    K1.num_conn = K1.num_conn + 1
-    K3.num_conn = K3.num_conn + 1
-
-    -- setup the middle pieces  [FIXME: FIX THIS SHIT]
-    -- Note: this will mark the MID_A/B sections as used
-    local crap_A = {}
-    local crap_B = {}
-
-    Hallway_simple(K1, MID_A, K2, crap_A, dir)
-    Hallway_simple(K2, MID_B, K3, crap_B, dir)
-
-    CROSSOVER.hall_A = crap_A.hall
-    CROSSOVER.hall_B = crap_B.hall
-
-    -- allocate the chunk in the crossed-over room
-    -- [TODO: this may be an overly cautious approach, but it does
-    --        keep the logic fairly simple for now]
-    -- TODO II: probably move this into AREA code
-
-    local C = room:chunk_for_crossover(K2, dir)
-
-    C.foobage = "crossover"
-    C.crossover = CROSSOVER
-
-    CROSSOVER.chunk = C
   end
 
 

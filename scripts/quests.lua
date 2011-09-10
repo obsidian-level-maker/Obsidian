@@ -883,22 +883,6 @@ function Quest_make_quests()
   dump_visit_order()
 
 
---[[
-if not total_cross then total_cross = 0 ; cross_after = 0 ; cross_before = 0 end
-each D in LEVEL.conns do
-  if D.crossover then
-    total_cross = total_cross + 1
-    local R_src  = D.R1
-    local R_over = D.crossover.MID_K.room
-    assert(R_src and R_over)
-    if R_over.quest.id < R_src.quest.id then cross_before = cross_before + 1 end
-    if R_over.quest.id > R_src.quest.id then cross_after  = cross_after  + 1 end
-  end
-end
-stderrf("CROSS STATS: %d + %d = %d\n", cross_before, cross_after, total_cross)
---]]
-
-
 --??? Quest_find_storage_rooms()
 
   Quest_key_distances()

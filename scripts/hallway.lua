@@ -395,58 +395,6 @@ function Hallway_test_branch(start_K, start_dir, mode)
   end
 
 
-  local function OLD_test_crossover(K, dir, visited, stats)
-    if not PARAM.bridges then return end
-
-    -- FIXME: LEVEL.crossover_quota
-    if STYLE.crossovers == "none" then return end
-
-do return end --!!!!!! DISABLED FOR THE W.I.P
-
-    -- WISH: support right angle turn or zig-zag
-
-    local MID_A = K
-    local MID_B = K:neighbor(dir, 2)
-
-    if not MID_A or MID_A.used then return end
-    if not MID_B or MID_B.used then return end
-
-    local mid_K = K:neighbor(dir, 1)
-    local end_K = K:neighbor(dir, 3)
-    local end_dir = 10 - dir
-
-    if not (mid_K and mid_K.kind == "section" and mid_K.room) then return end
-    if not (end_K and end_K.kind == "section" and end_K.room) then return end
-
-    -- rooms must be distinct
-    if end_K.room == start_K.room then return end
-    if mid_K.room == start_K.room then return end
-    if mid_K.room ==   end_K.room then return end
-
-    -- connection check
-    if not Connect_is_possible(start_K.room, end_K.room, mode) then return end
-
-    if mid_K.room.crossover then return false end
-
-    -- size check
-    local long, deep = mid_K.sw, mid_K.sh
-    if geom.is_horiz(dir) then long, deep = deep, long end
-
-    if long < 3 or deep > 4 then return false end
-
-    -- compute score
-
-    local score1 = start_K:eval_exit(start_dir)
-    local score2 =   end_K:eval_exit(  end_dir)
-    assert(score1 >= 0 and score2 >= 0)
-
-    local score = (score1 + score2) * 10
-
-    -- bonus for using a crossover
-    score = score + style_sel("crossovers", 0, 0, 48, 98)
-  end
-
-
   local TEST_DIRS_NONE  = {}
   local TEST_DIRS_VERT  = { [4]=true, [6]=true }
   local TEST_DIRS_HORIZ = { [2]=true, [8]=true }
