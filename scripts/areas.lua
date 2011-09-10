@@ -245,8 +245,6 @@ function Areas_important_stuff()
 
         S.cost[dir] = cost
         N.cost[10-dir] = cost
----### else
----###   S:set_edge(dir, "solid")
       end
     end
 
@@ -612,8 +610,6 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
 
       local S = SEEDS[sx][sy]
       assert(S.room == R)
-
----###  S:set_edge(pos.dir, "walk")
 
       S.is_walk = true
 

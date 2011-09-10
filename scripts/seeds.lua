@@ -85,49 +85,6 @@ function SEED_CLASS.mid_point(S)
 end
 
 
---[[ OLD : TO BE REMOVED
-function SEED_CLASS.get_edge(S, dir)
-  -- far edges of map are always solid
-  if (dir == 2 and S.sy == 1) or
-     (dir == 4 and S.sx == 1) or
-     (dir == 6 and S.sx == SEED_W) or
-     (dir == 8 and S.sy == SEED_H)
-  then
-    return "solid"
-  end
-
-  if dir == 6 or dir == 8 then  
-    S, dir = S:neighbor(dir), (10 - dir)
-  end
-
-  return S.edge[dir]
-end
-
-
-function SEED_CLASS.set_edge(S, dir, value)
-  -- ignore edge of map
-  if (dir == 2 and S.sy == 1) or
-     (dir == 4 and S.sx == 1) or
-     (dir == 6 and S.sx == SEED_W) or
-     (dir == 8 and S.sy == SEED_H)
-  then
-    return
-  end
-
-  if dir == 6 or dir == 8 then  
-    S, dir = S:neighbor(dir), (10 - dir)
-  end
-
-  -- validate (can never set it twice)
-  if S.edge[dir] and value and S.edge[dir] != value then
-    error("Seed_set_edge : already set!")
-  end
-
-  S.edge[dir] = value
-end
---]]
-
-
 --------------------------------------------------------------------
 
 
