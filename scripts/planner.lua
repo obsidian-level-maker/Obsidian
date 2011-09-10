@@ -41,6 +41,8 @@ class SECTION
   conn : CONN
 
   num_conn  -- number of connections
+
+  crossover_hall : HALLWAY
 }
 
 
@@ -80,6 +82,11 @@ end
 function SECTION_CLASS.set_hall(K, H)
   assert(not K.used)
   K.hall = H ; K.used = true
+end
+
+function SECTION_CLASS.set_crossover(K, H)
+  assert(K.used)
+  K.crossover_hall = H
 end
 
 function SECTION_CLASS.set_junc(K)

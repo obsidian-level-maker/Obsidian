@@ -191,22 +191,26 @@ function Areas_handle_connections()
 
 
   local function handle_crossover(H)
-    local info = H.crossover
+    if not H.crossover then return end
 
-    if not info then return end
+    -- this presumes the chunks are in a simple sequence (first to last)
+    for i = 1, #H.chunks - 1 do
+      local C1 = H.chunks[i]
+      local C2 = H.chunks[i+1]
 
-    local over_K = info.over_K
+      if C1.hall != C2.hall then
+        local dir
 
-    local HA = chunk_for_section_side(info.MID_A, info.dir)
-    local HB = chunk_for_section_side(info.MID_B, 10 - info.dir)
+            if C2.sx1 == C1.sx2 + 1 then dir = 6
+        elseif C2.sx2 == C1.sx1 - 1 then dir = 4
+        elseif C2.sy1 == C1.sy2 + 1 then dir = 8
+        elseif C2.sy2 == C1.sy1 - 1 then dir = 2
+        else error("handle_crossover : weird dir!")
+        end
 
-    local CC = over_K.room:chunk_for_crossover(over_K, info.dir)
-
-    CC.foobage   = "crossover"
-    CC.crossover = info
-
-    link_chunks(HA, info.dir, CC, nil)
-    link_chunks(CC, info.dir, HB, nil)
+        link_chunks(C1, dir, C2, nil)
+      end
+    end
   end
 
 
@@ -278,7 +282,7 @@ function Areas_important_stuff()
         if S.room == R then
           
           -- ignore certain chunks [crossovers]
-          if S.chunk and not S.chunk.crossover then
+          if S.chunk and not S.chunk.crossover_hall then
             S.chunk_dist = 0
           else
             S.chunk_dist = nil
@@ -1084,11 +1088,11 @@ stderrf("TRYING....................\n")
 
     R.floor_limit = { -512, 1024 }
 
-    if R.crossover and R.crossover.floor_h then
-      if R.crossover.mode == "bridge" then
-        R.floor_limit[2] = R.crossover.floor_h - 128
+    if R.crossover_hall and R.crossover_hall.floor_h then  -- FIXME
+      if R.crossover_hall.x_mode == "bridge" then
+        R.floor_limit[2] = R.crossover_hall.floor_h - 128
       else
-        R.floor_limit[1] = R.crossover.floor_h + 128
+        R.floor_limit[1] = R.crossover_hall.floor_h + 128
       end
     end
 
@@ -1553,7 +1557,7 @@ stderrf("TRYING....................\n")
       entry_area = assert(C.area)
 --- stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-      if R.entry_conn.crossover then
+      if R.entry_conn.crossover then  -- FIXME ????
         local info = R.entry_conn.crossover
 --stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
         entry_h = assert(info.floor_h)
@@ -1656,6 +1660,8 @@ stderrf("TRYING....................\n")
 
 
   local function crossover_hall(H, D)
+
+do return end  --!!!!!
     if not H.crossover then return end
 
     local info = H.crossover

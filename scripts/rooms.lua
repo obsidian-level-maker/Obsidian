@@ -455,7 +455,7 @@ end
 
 
 function ROOM_CLASS.num_crossovers(R)
-  if R.crossover then return 1 end
+  if R.crossover_hall then return 1 end
 
   return 0
 end
@@ -1221,11 +1221,6 @@ function Rooms_blow_chunks()
   each H in LEVEL.halls do
     H:build()
   end
-
---???    if D.crossover then
---???      D.crossover.hall_A:build()
---???      D.crossover.hall_B:build()
---???    end  
 end
 
 

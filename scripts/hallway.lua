@@ -99,15 +99,33 @@ end
 
 function HALLWAY_CLASS.make_chunks(H, skip_old)
   each K in H.sections do
+
     if skip_old and K.used then continue end
 
-    -- mark section as used
-    K:set_hall(H)
+    local C
 
-    local C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
+if H.crossover then
+stderrf("*** section : %s %s\n", K:tostr(), (K.used ? "USED" ; "free"))
+end
+    -- allocate chunk, mark section as used
+    if K.used then
+      assert(H.crossover)
+      K:set_crossover(H)
 
-    C.hall = H
-    C:install()
+      local over_R = H.crossover
+      assert(over_R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2))
+      
+      C = over_R:alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2)
+
+      C.foobage = "crossover"
+      C.crossover_hall = H
+    else
+      K:set_hall(H)
+
+      C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
+      C.hall = H
+      C:install()
+    end
 
     -- meh meh meh
     C.section = K
@@ -116,12 +134,15 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
 
     -- store hallway in seed map
     -- FIXME: do this in K:set_hall() or C:install()
+    if not C.crossover_hall then
     for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
       local S = SEEDS[sx][sy]
       assert(not S.room and not S.hall)
       S.hall = H
     end end
+    end
   end
+stderrf("\n")
 end
 
 
@@ -129,15 +150,15 @@ end
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
-  H:make_chunks(false)
-
   if H.crossover then
     local over_R = H.crossover
 
     over_R.crossover_hall = H
 
-stderrf("************* CROSSOVER @ %s\n", R:tostr())
+stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
   end
+
+  H:make_chunks(false)
 
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
@@ -175,7 +196,9 @@ function HALLWAY_CLASS.build(H)
   end
 
   each C in H.chunks do
-    C:build()
+    if not C.crossover_hall then
+      C:build()
+    end
   end
 end
 
@@ -486,6 +509,8 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
       -- limit length of big junctions
       if stats.big_junc and #visited >= 3 then continue end
 
+      local do_cross = false
+
       if N.used then
         -- don't allow crossover to walk into another room
         if K.used and N.room != stats.crossover then continue end
@@ -493,13 +518,16 @@ do return end --!!!!!! DISABLED FOR THE W.I.P
         -- begin crossover?
         if not can_make_crossover(K, N, stats) then continue end
 
-        stats.crossover = N.room
+        do_cross = true
       end
 
       if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
 
 --stderrf("  recursing @ dir:%d\n", dir)
-        hall_flow(N, 10 - dir, table.copy(visited), table.copy(stats), quota - 1)
+        local new_stats = table.copy(stats)
+        if do_cross then new_stats.crossover = N.room end
+
+        hall_flow(N, 10 - dir, table.copy(visited), new_stats, quota - 1)
       end
     end
 --stderrf("}\n")
@@ -706,7 +734,11 @@ function HALLWAY_CLASS.do_heights(H, base_h)
   assert(H.chunks)
 
   each C in H.chunks do
-    C.floor_h = base_h
+    if C.crossover_hall then
+      C.crossover_floor_h = base_h  -- meh
+    else
+      C.floor_h = base_h
+    end
   end
 
   if H.street then
