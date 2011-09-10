@@ -169,7 +169,7 @@ function Areas_handle_connections()
 
       local room_K = hall.double_fork:neighbor(hall.double_dir)
 
-      local CC = room_K.room:chunk_for_crossover(room_K, geom.LEFT[hall.double_dir])
+      local CC = room_K.room:chunk_for_double(room_K, geom.LEFT[hall.double_dir])
       CC.foobage = "conn"
 
       -- fix up the conn object

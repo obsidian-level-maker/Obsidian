@@ -400,7 +400,7 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 end
 
 
-function ROOM_CLASS.chunk_for_crossover(R, K, dir)
+function ROOM_CLASS.chunk_for_double(R, K, dir)
   assert(K.room == R)
 
   local sx1, sy1
