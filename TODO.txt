@@ -5,33 +5,26 @@ OBLIGE TODO
 Current Work
 ------------
 
-+  Hexen stuff:
-   
-   DONE: hub gates between the levels
-   DONE: weapons for fight simulator
-   DONE: prevent key re-use
 
-
-Prefab placement:             Example:
+Prefab placement:            EXAMPLE:
 --------------------------------------------------------------------
-   1. whole chunk             small exit room
+   1. chunk : F + C          small exit room
+   2. chunk : F              plain floor, stair case
+   3. chunk : C              plain ceiling, sky light
 
-   2. whole floor             stair case
-   3. whole ceiling           sky light
-   4. whole edge              wall, picture, window, door
-   5. whole corner            diagonal corner
+   4. edge : F + C           wall, picture, window, door, butress
+   5. edge : F               fence, quake button, spike shooter, compute console
+   6. edge : C               billboard
 
-   6. middle of chunk         pillar
-   7. middle of floor         pedestal, fountain, crate
-   8. middle of ceiling       ceiling light
-   9. middle of wall          quake button, spike shooter
+   7. middle : F + C         pillar
+   8. middle : F             pedestal, fountain, crate
+   9. middle : C             ceiling light
 
-   ???                        3D bridge
-   ???                        fence
-   ???                        archway in hall
-   ???                        low periph
-   ???                        computer console, crate against wall
-   ???                        billboard
+  10. corner : F + C         diagonal corner
+  11. corner : F             ??
+  12. corner : C             ??
+
+  ???                        3D bridge
 
 
 -  position-based monster ordering 
@@ -141,6 +134,18 @@ OTHER STUFF
 
     x_offset is alternate term for u1  [u2 can be absent]
     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
+
+
++  Hexen stuff:
+   
+   +  BOSS map : do bossy stuff
+
+   +  BOSS map : require the 2/3 hub keys to access boss room
+                 NOTE: could use them to restrict progress along chain
+
+   DONE: hub gates between the levels
+   DONE: weapons for fight simulator
+   DONE: prevent key re-use
 
 
 -----------------------------------------------------------------
