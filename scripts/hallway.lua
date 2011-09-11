@@ -388,7 +388,7 @@ each K in visited do if K.used then len = len + 1 end end
   end
 
 
-  local function can_make_crossover(K, N, stats)
+  local function can_begin_crossover(K, N, stats)
     if not PARAM.bridges then return false end
 
     if STYLE.crossovers == "none" then return false end
@@ -397,8 +397,6 @@ each K in visited do if K.used then len = len + 1 end end
     if mode == "cycle" then return false end
 
     -- FIXME: LEVEL.crossover_quota
-
-    if K.used then return false end
 
     -- only enter the room at a junction (i.e. through a hallway channel)
     if K.kind != "junction" then return false end
@@ -489,7 +487,7 @@ each K in visited do if K.used then len = len + 1 end end
         if K.used and N.room != stats.crossover then continue end
 
         -- begin crossover?
-        if not can_make_crossover(K, N, stats) then continue end
+        if not K.used and not can_begin_crossover(K, N, stats) then continue end
 
         do_cross = true
       end
@@ -499,7 +497,7 @@ each K in visited do if K.used then len = len + 1 end end
 --stderrf("  recursing @ dir:%d\n", dir)
         local new_stats = table.copy(stats)
         if do_cross then new_stats.crossover = N.room end
-        local new_quota = quota - (N.used ? 0.2 ; 1)
+        local new_quota = quota - (N.used ? 0 ; 1)
 
         hall_flow(N, 10 - dir, table.copy(visited), new_stats, new_quota)
       end
