@@ -119,6 +119,10 @@ end
 
       C.foobage = "crossover"
       C.crossover_hall = H
+
+      if K.orig_kind == "junction" then
+        C.cross_junc = true
+      end
     else
       K:set_hall(H)
 

@@ -760,17 +760,29 @@ end
 
 function CHUNK_CLASS.build(C)
 
-  local f_h = assert(C.floor_h)
-  local c_h = (C.bridge_h or f_h) + 384
+  local f_h
+  local c_h
   local c_medium = "solid"
   local light = 0
 
   local x_hall = C.crossover_hall
 
+  if C.cross_junc then
+    f_h = x_hall.floor_h
+    x_hall = nil
+  else
+    f_h = assert(C.floor_h)
+  end
+
+  c_h = (C.bridge_h or f_h) + 384
+
   if x_hall then
     if x_hall.cross_mode == "channel" then f_h = x_hall.floor_h end
     if x_hall.cross_mode == "bridge"  then c_h = math.max(c_h, x_hall.floor_h + 192) end
   end
+
+  assert(f_h)
+  assert(c_h)
 
   local brush
   local w_mat, w_tex

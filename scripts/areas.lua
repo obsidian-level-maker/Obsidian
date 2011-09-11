@@ -1098,8 +1098,14 @@ stderrf("TRYING....................\n")
     -- 2. group chunks into areas
     local area_tab = {}
 
-    -- FIXME: filter out "scenic" chunks (cages etc)
-    local fl_chunks = table.copy(R.chunks)
+    -- filter out "scenic" chunks (cages etc)
+    local fl_chunks = {}
+
+    each C in R.chunks do
+      if not (C.scenic or C.cross_junc) then
+        table.insert(fl_chunks, C)
+      end
+    end
 
     each C in fl_chunks do
       local AREA = AREA_CLASS.new("floor", R)
