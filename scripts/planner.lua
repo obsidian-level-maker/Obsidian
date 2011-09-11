@@ -89,7 +89,7 @@ function SECTION_CLASS.set_crossover(K, H)
   K.crossover_hall = H
 end
 
-function SECTION_CLASS.set_junc(K)
+function SECTION_CLASS.set_big_junc(K)
   assert(not K.used)
   K.kind = "big_junc" ; K.used = true
 end
@@ -601,23 +601,23 @@ function Plan_add_big_junctions()
     if (my == 1 or my == MAP_H) and rand.odds(25) then return false end
 
     -- don't want anyone touching our junc!
-    for dir = 2,8,2 do
-      local nx, ny = geom.nudge(mx, my, dir)
+    for dx = -1,1 do for dy = -1,1 do
+      local nx, ny = mx + dx, my + dy
       if Section_is_valid(nx*2, ny*2) then
         local N = SECTIONS[nx*2][ny*2]
         if N and N.kind == "big_junc" then return false end
       end
-    end
+    end end -- dx, dy
 
     -- less chance if section is large
     local size = int((K.sw + K.sh + 1) / 2)
-          size = math.clamp(2, size, 6)
+    local prob = math.clamp(2, size, 6) * 10 - 15
 
-    if rand.odds(size * 10 - 15) then return false end
+    if rand.odds(prob) then return false end
 
     -- OK --
 
-    K:set_junc()
+    K:set_big_junc()
 
     return true
   end
@@ -628,7 +628,7 @@ function Plan_add_big_junctions()
   -- decide how many big hallway junctions to make
   if STYLE.hallways == "none" then return end
 
-  local prob = style_sel("hallways", 0, 25, 40, 70)
+  local prob = style_sel("hallways", 0, 25, 40, 75)
 
   local visits = Plan_get_visit_list()
 
