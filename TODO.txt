@@ -6,25 +6,27 @@ Current Work
 ------------
 
 
-Prefab placement:            EXAMPLE:
+   XY_PLACE     Z_PLACE      EXAMPLES:
 --------------------------------------------------------------------
-   1. chunk : F + C          small exit room
-   2. chunk : F              plain floor, stair case
-   3. chunk : C              plain ceiling, sky light
+   chunk        all          small exit room, large cage
+   chunk        floor        plain floor, downward stair
+   chunk        ceil         plain ceiling, sky light
 
-   4. edge : F + C           wall, picture, window, door, butress
-   5. edge : F               fence, quake button, spike shooter, compute console
-   6. edge : C               billboard
+   edge         all          wall, picture, window, door, butress
+   edge         floor        fence, quake button, spike shooter,
+                               compute console, upward stair
+   edge         ceil         billboard
 
-   7. middle : F + C         pillar
-   8. middle : F             pedestal, fountain, crate
-   9. middle : C             ceiling light
+   middle       all          pillar, small cage
+   middle       floor        pedestal, fountain, crate, teleport pad
+   middle       ceil         ceiling light, crusher
 
-  10. corner : F + C         diagonal corner
-  11. corner : F             ??
-  12. corner : C             ??
+   corner       all          diagonal corner, cage
+   corner       floor        torch on platform
+   corner       ceil         ???
 
-  ???                        3D bridge
+   ???                       3D bridge
+
 
 
 -  position-based monster ordering 
