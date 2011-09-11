@@ -357,8 +357,10 @@ function Connect_scan_sections(mode, min_score)
     end
   end end
 
+  -- failed to find any connection?
   if not LEVEL.best_conn.D1 then
     if mode == "cycle" then return end
+    Plan_dump_rooms("Failed Map:")
     error("Connection failure: separate groups exist")
   end
 
