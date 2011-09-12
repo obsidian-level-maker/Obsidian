@@ -563,6 +563,7 @@ function Hallway_add_doubles()
 
 
   local function try_add_at_section(H, K, dir)
+    -- check if all the pieces we need are free
     local  left_J = K:neighbor(geom.LEFT [dir])
     local right_J = K:neighbor(geom.RIGHT[dir])
 
@@ -574,6 +575,13 @@ function Hallway_add_doubles()
 
     if not  left_K or  left_K.used then return false end
     if not right_K or right_K.used then return false end
+
+    -- hallway widths on each side must be the same
+    if geom.is_vert(dir) then
+      if left_K.sw != right_K.sw then return false end
+    else
+      if left_K.sh != right_K.sh then return false end
+    end
 
     -- size check
     local room_K = K:neighbor(dir)
@@ -637,7 +645,7 @@ function Hallway_add_doubles()
 
   --| Hallway_add_doubles |--
 
-  local quota = 5  -- FIXME
+  local quota = 4  -- FIXME
 
   local visits = table.copy(LEVEL.halls)
   rand.shuffle(visits)  -- score and sort them??
