@@ -12,10 +12,14 @@ Current Work
    chunk        floor        plain floor, downward stair
    chunk        ceil         plain ceiling, sky light
 
-   edge         all          wall, picture, window, door, butress
-   edge         floor        fence, quake button, spike shooter,
+   edge         all          wall, picture, butress
+   edge         floor        quake button, spike shooter,
                                compute console, upward stair
    edge         ceil         billboard
+
+   straddle     all          door, window
+   straddle     floor        fence
+   straddle     ceil         ??
 
    middle       all          pillar, small cage
    middle       floor        pedestal, fountain, crate, teleport pad
@@ -32,10 +36,6 @@ Current Work
 -  position-based monster ordering 
 
 
-!!!!  fix the "no spot for wotsit" error
-   -  make room widths have minimum of 3
-
-
 
 Hallways:
   !!  monsters / items in hallways
@@ -48,25 +48,6 @@ Hallways:
 
 Cross-Overs:
   !!  heights are messed up?
-
-  !!  problem where rooms get surrounded by a crossover and then
-      cannot connect to anything else.
-
-      possible solutions:
- >>   (1) require over room to already be connected to another room
-      (2) teleporters
-      (3) require hall to only touch two section sides (never more)
-          and allow connection to non-self crossover halls
-      (4) detect the problem and convert cross-over to two normal conns
-          [or detect and turn crossed room into a scenic lava pit]
->>>>  (5) only make them from JUNC --> JUNC (through a reclaimed HORIZ or VERT)
-          and allow (in worst case) room to join that hall.
-          ALSO: support crossing 3 sections [if seeds <= 5]
-          ALSO 2: corner crossing (90 degree turn)
-                  can "allocate" the JUNC and create two crossover chunks
-
-  WISH: ability to cross-over same room twice in single hall
-        [even from a single junction]
 
   +  build the bridges / channels using prefabs
 
@@ -85,17 +66,17 @@ DONE: limit to once per episode (higher prob in secret level)
   
   -  fix the sky glitch (pieces jutting inside a room)
 
-  -  allow some buildings (especially at corners) to eat the edge
-
   -  better looking "streets" (via prefabs and SKINs)
 
   -  fix the "big junc" situation, good place for a fountain
 
   -  a raised outdoory room might be cool
 
-  -  30% of the time  : keep the outer ring
-     30% of the time  : expand all rooms into outer ring
-     rest of the time : expand corner rooms 50%, side rooms 30%
+  -  25% of the time  : keep the outer ring
+     25% of the time  : expand all rooms into outer ring
+     rest of the time : expand corner rooms 50%, side rooms 33%
+
+  WISH: 3D bridges between two buildings
 
 
 -----------------------------------------------------------------
