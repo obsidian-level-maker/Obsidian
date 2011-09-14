@@ -268,8 +268,8 @@ HEXEN.PARAMETERS =
 HEXEN.MATERIALS =
 {
   -- special materials --
-  _ERROR = { t="WASTE01", f="F_033" }
-  _SKY   = { t="WASTE01", f="F_SKY" }
+  _ERROR = { t="STEEL01", f="F_075" }
+  _SKY   = { t="STEEL01", f="F_SKY" }
 
   -- walls --
 
@@ -2676,12 +2676,12 @@ HEXEN.LEVEL_THEMES =
 
     building_floors =
     {
-      F_013=25, F_032=25, F_040=15, F_44=4, F_82=15
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
     building_ceilings =
     {
-      F_013=25, F_032=25, F_040=15, F_44=4, F_82=15
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
     building_corners =
@@ -2693,7 +2693,7 @@ HEXEN.LEVEL_THEMES =
 
     courtyard_floors =
     {
-      F_013=5, F_032=30, F_040=25, F_44=4, F_82=20
+      F_013=5, F_032=30, F_040=25, F_044=4, F_082=20
     }
 
     cave_walls =
@@ -2717,12 +2717,12 @@ HEXEN.LEVEL_THEMES =
 
     hallway_floors =
     {
-      F_013=25, F_032=25, F_040=15, F_44=4, F_82=15
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
     hallway_ceilings =
     {
-      F_013=25, F_032=25, F_040=15, F_44=4, F_82=15
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
     stairwell_walls =
@@ -2734,7 +2734,7 @@ HEXEN.LEVEL_THEMES =
 
     stairwell_floors =
     {
-      F_013=25, F_032=25, F_040=15, F_44=4, F_82=15
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
     __logos = { carve=50 }
@@ -3182,13 +3182,13 @@ HEXEN.LEVEL_THEMES =
 
     building_floors =
     {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
     building_ceilings =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
@@ -3200,7 +3200,7 @@ HEXEN.LEVEL_THEMES =
 
     courtyard_floors =
     {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=5, F_018=5, F_19=10, F_20=10,
+      F_017=5, F_018=5, F_019=10, F_020=10,
       F_054=1, F_055=1, F_092=1,
       F_005=10, F_006=10, F_007=5, 
     }
@@ -3227,13 +3227,13 @@ HEXEN.LEVEL_THEMES =
 
     hallway_floors =
     {  -- Leaving x_09 (muck) here; works for hallways (flat floors); generic "liquids" don't (i.e., lava).
-      F_017=10, F_018=10, F_19=20, F_20=15,
-      F_054=10, F_055=10, F_092=5, X_09=20
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5, X_009=20
     }
 
     hallway_ceilings =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
@@ -3245,7 +3245,7 @@ HEXEN.LEVEL_THEMES =
 
     stairwell_floors =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
@@ -3620,13 +3620,13 @@ HEXEN.LEVEL_THEMES =
 
     building_floors =
     {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
     building_ceilings =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
@@ -3638,7 +3638,7 @@ HEXEN.LEVEL_THEMES =
 
     courtyard_floors =
     {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=5, F_018=5, F_19=10, F_20=10,
+      F_017=5, F_018=5, F_019=10, F_020=10,
       F_054=1, F_055=1, F_092=1,
       F_005=10, F_006=10, F_007=5, 
     }
@@ -3665,13 +3665,13 @@ HEXEN.LEVEL_THEMES =
 
     hallway_floors =
     {  -- Leaving x_09 (muck) here; works for hallways (flat floors); generic "liquids" don't (i.e., lava).
-      F_017=10, F_018=10, F_19=20, F_20=15,
-      F_054=10, F_055=10, F_092=5, X_09=20
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5, X_009=20
     }
 
     hallway_ceilings =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
@@ -3683,7 +3683,7 @@ HEXEN.LEVEL_THEMES =
 
     stairwell_floors =
     {
-      F_017=10, F_018=10, F_19=20, F_20=15,
+      F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
 
