@@ -195,19 +195,6 @@ Intrusions:
 
 
 CrossOvers:
-  -  room is 1x1 sections (perhaps 2x1) using a 3D bridge,
-     so that one path goes E/W and other path goes N/S.
-     [90 degree turns are possible too, but way less cool]
-
-     Crossovers do NOT exist as nodes in the connection map
-     (they only exist as links).
-
-     Two crossovers cannot connect to each other (because they
-     would need a node between them, which doesn't exist).
-
-     The quest of the low path is earlier than the quest of the
-     high path (3D bridge).
-
   +  make a moving platform in Quake 1/2 maps
 
   -  pillars holding up the bridge
@@ -216,9 +203,16 @@ CrossOvers:
 
   -  channels which decrease height  [via prefab??]
 
-  -  try to create through a reclaimed joiner (middle of CCC etc)
+  ?  give areas near incompatible height a 'target_h' field
 
-  -  give areas near incompatible height a 'target_h' field
+  -  exclude some areas from height limitation.
+     These areas must be outside a certain bbox, a bbox including the
+     starting area and all crossovers chunks.
+
+     Better yet, give these areas a less restrictive limitation
+     (based on how far the player may jump/fall from a high height)
+     For channels, can remove the limitation.
+
 
 
 Lock postponing:
