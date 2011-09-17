@@ -1108,7 +1108,18 @@ end
     local h = x_hall.floor_h
 stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
 
-    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+    local tx1, ty1 = C.x1, C.y1
+    local tx2, ty2 = C.x2, C.y2
+
+    if C.section.orig_kind == "vert" and (tx2 - tx1) > 256 then
+      tx1 = tx1 + 96
+      tx2 = tx2 - 96
+    elseif C.section.orig_kind == "horiz" and (ty2 - ty1) > 256 then
+      ty1 = ty1 + 96
+      ty2 = ty2 - 96
+    end
+
+    local brush = Brush_new_quad(tx1, ty1, tx2, ty2)
 
     Brush_set_tex(brush, f_mat.t)
 
