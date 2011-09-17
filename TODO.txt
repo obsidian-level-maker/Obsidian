@@ -6,6 +6,33 @@ Current Work
 ------------
 
 
+Cross-Overs:
+   (1) if hallway is visited first, give it (including bridges)
+       whatever heights.  Mark chunks leading into the crossed room
+       as "height adjusters" and give a target height or a height
+       limitation (e.g. <= 128).
+       
+       When room is visited, it will get its first height from
+       that lead-in chunk and will have a height limitation in
+       place for all areas (including 3D areas).
+
+    (2) if room is visited first, flesh out normally and give
+        crossover chunks a target height or a height limitation.
+        When hallway is visited, the exit chunk(s) which lead to
+        a crossover chunk will be the "height adjusters".
+        The hallway is free to choose the bridge heights here
+        so long as the limitation is satisfied.
+
+COMMON PART: hallways must be able to adjust their exit heights
+             to match the rooms (or hallways) they join onto.
+
+             FOR NOW: do this in a single chunk.
+
+             LATER:   can flow the differences into other chunks
+                      or even the whole hallway.
+
+
+
    XY_PLACE     Z_PLACE      EXAMPLES:
 --------------------------------------------------------------------
    chunk        all          small exit room, large cage
