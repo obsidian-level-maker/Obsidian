@@ -56,6 +56,8 @@ class ROOM
 
   crossover_hall : HALLWAY  -- if present, a hallway crosses over this room
 
+  floor_limit : { low, high }  -- a limitation of floor heights
+
 
   quest : QUEST
 

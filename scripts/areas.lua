@@ -1082,16 +1082,6 @@ stderrf("TRYING....................\n")
     -- organizing them into a number of separate floor areas
     -- (generally of different heights) and stairs between them.
 
-    R.floor_limit = { -512, 1024 }
-
-    if R.crossover_hall and R.crossover_hall.floor_h then
-      if R.crossover_hall.cross_mode == "bridge" then
-        R.floor_limit[2] = R.crossover_hall.floor_h - 128
-      else
-        R.floor_limit[1] = R.crossover_hall.floor_h + 128
-      end
-    end
-
     -- 1. create chunks for remaining seeds
     filler_chunks(R)
 
@@ -1608,6 +1598,8 @@ stderrf("TRYING....................\n")
         R.floor_max_h = math.max(R.floor_max_h, h)
       end
     end
+
+    R.done_heights = true
   end
 
 
@@ -1617,35 +1609,20 @@ stderrf("TRYING....................\n")
     if not hall then return end
 
     -- already visited?
-    if hall.floor_h then return end
+    if hall.done_heights then return end
 
     -- TODO: analyse nearby chunks to get min/max floor_h
     local min_h = R.floor_min_h
     local max_h = R.floor_max_h
 
+    local diff = hall:cross_diff()
+
     if hall.cross_mode == "bridge" then
-      hall:do_heights(max_h + 128)
+      hall.cross_limit = { -9999, max_h + diff }
     else
-      hall:do_heights(min_h - 128)
+      hall.cross_limit = { min_h - (PARAM.jump_height or 32) - 40, 9999 }
     end
   end
-
-
----???  local function OLD__crossover_hall(hall, D)
----???    if not H.crossover then return end
----???
----???    -- already visited?
----???    if hall.floor_h then return end
----???
----???    hall:set_cross_mode()
----???
----???    -- get start height
----???    local CC = hall.chunks[#hall.chunks]
----???    assert(CC)
----???    local h = assert(CC.floor_h)
----???
----???    hall:do_heights(h)
----???  end
 
 
   local function hallway_heights(L)
@@ -1655,12 +1632,10 @@ stderrf("TRYING....................\n")
 
         assert(D.C1.floor_h)
 
-        hall:do_heights(D.C1.floor_h)
+        hall:flesh_out(D.C1.floor_h)
 
-        -- handle hallway networks
+        -- recursively handle hallway networks
         hallway_heights(D.L2)
-
----???  crossover_hall(hall)
       end
     end
   end

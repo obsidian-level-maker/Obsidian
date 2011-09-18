@@ -39,6 +39,8 @@ class HALLWAY
   belong_room : ROOM  -- the room that this hallway connects to
                       -- without any locked door in-between.
 
+  cross_limit : { low, high }  -- a limitation of crossover heights
+
   wall_tex, floor_tex, ceil_tex 
 }
 
@@ -188,30 +190,6 @@ function HALLWAY_CLASS.merge_it(old_H, new_H)
   new_H.sections = nil
   new_H.chunks   = nil
 end
-
-
-function HALLWAY_CLASS.set_cross_mode(H)
-  assert(H.quest)
-  assert(H.crossover)
-  assert(H.crossover.quest)
-
-  local id1 = H.quest.id
-  local id2 = H.crossover.quest.id
-
-  if id1 < id2 then
-    -- the crossover bridge is part of a earlier quest, so
-    -- we must not let the player fall down into this room
-    -- (and subvert the quest structure).
-    --
-    -- Hence the crossover becomes a "cross under" :)
-
-    H.cross_mode = "channel"
-  else
-    H.cross_mode = "bridge"
-  end
-
---- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
-  end
 
 
 function HALLWAY_CLASS.build(H)
@@ -707,12 +685,67 @@ function HALLWAY_CLASS.choose_textures(H)
 end
 
 
-function HALLWAY_CLASS.do_heights(H, base_h)
+function HALLWAY_CLASS.set_cross_mode(H)
+  assert(H.quest)
+  assert(H.crossover)
+  assert(H.crossover.quest)
+
+  local id1 = H.quest.id
+  local id2 = H.crossover.quest.id
+
+  if id1 < id2 then
+    -- the crossover bridge is part of a earlier quest, so
+    -- we must not let the player fall down into this room
+    -- (and subvert the quest structure).
+    --
+    -- Hence the crossover becomes a "cross under" :)
+
+    H.cross_mode = "channel"
+  else
+    H.cross_mode = "bridge"
+  end
+
+--- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
+end
+
+
+function HALLWAY_CLASS.cross_diff(H)
+  assert(H.cross_mode)
+
+  if H.cross_mode == "bridge" then
+    return rand.pick { 96, 96, 128, 128, 128, 128, 160, 192, 256 }
+  else
+    return (PARAM.jump_height or 24) + rand.pick { 40, 40, 40, 96 }
+  end
+end
+
+
+function HALLWAY_CLASS.limit_crossed_room(H)
+  local R = H.crossover
+
+  if R.done_heights then return end
+
+  local min_h = H.min_floor_h
+  local max_h = H.max_floor_h
+
+  local diff = H:cross_diff()
+
+  if H.cross_mode == "bridge" then
+    R.floor_limit = { -9999, min_h - diff }
+  else
+    R.floor_limit = { max_h + diff, 9999 }
+  end
+end
+
+
+function HALLWAY_CLASS.flesh_out(H, entry_h)
   if H.done_heights then return end
 
   H.done_heights = true
 
-  H.floor_h = base_h
+  H.floor_h = entry_h
+  H.min_floor_h = entry_h
+  H.max_floor_h = entry_h
 
   if H.crossover then
     H:set_cross_mode()
@@ -725,10 +758,14 @@ function HALLWAY_CLASS.do_heights(H, base_h)
 
   each C in H.chunks do
     if C.crossover_hall then
-      C.crossover_floor_h = base_h  -- meh
+      C.crossover_floor_h = entry_h  -- meh
     else
-      C.floor_h = base_h
+      C.floor_h = entry_h
     end
+  end
+
+  if H.crossover then
+    H:limit_crossed_room()
   end
 
   if H.street then

@@ -33,6 +33,11 @@ COMMON PART: hallways must be able to adjust their exit heights
              LATER:   can flow the differences into other chunks
                       or even the whole hallway.
 
+NOTE: should be impossible to have a height adjuster in a chunk
+      which joins TWO rooms -- since (a) cycles are done after all
+      normal connections, and (b) crossover adjusters will be in
+      junctions which are never used for emergency connections.
+
 
 
    XY_PLACE     Z_PLACE      EXAMPLES:

@@ -43,7 +43,12 @@ class CHUNK
                      -- each can be NIL if nothing is there
                      -- edges may occupy whole side (no corner then)
 
+  stair : STAIR
+
   crossover_hall : HALLWAY
+
+  adjuster_dir   -- normally NIL
+                 -- set for height adjusters : direction to other height
 
   max_deep[DIR]   -- the maximum distance an edge (or corner) prefab can
                   -- intrude into this chunk.
