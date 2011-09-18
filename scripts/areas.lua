@@ -1191,7 +1191,7 @@ stderrf("TRYING....................\n")
       -- only check the first (smallest) delta
       local h = base_h + skin._deltas[1] * (reverse ? -1 ; 1)
 
-      if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
+      if R:in_floor_limit(h) then
         return skin -- OK --
       end
     end
@@ -1223,7 +1223,7 @@ stderrf("TRYING....................\n")
 
     each dh in deltas do
       local h = base_h + (reverse ? -dh ; dh)
-      if math.in_range(R.floor_limit[1], h, R.floor_limit[2]) then
+      if R:in_floor_limit(h) then
         h_probs[h] = (height_is_unique(h, N.touching) ? 100 ; 1)
       end
     end
@@ -1533,49 +1533,51 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function area_heights(R)
-    -- determine entry area
-    --   1. for start room : starting chunk
-    --   2. for teleport entries : teleporter chunk
-    --   3. for everything else : connection chunk
-    local entry_area
-    local entry_h
-
---- stderrf("area_heights in %s\n", R:tostr())
+  local function entry_chunk_and_height(R)
+    local C, floor_h
 
     if R.entry_conn then
-      local C = assert(R.entry_conn.C2)
+      C = assert(R.entry_conn.C2)
+      h = assert(R.entry_conn.C1.floor_h)
+
       assert(C.room == R)
-      entry_area = assert(C.area)
---- stderrf("  entry_conn: %s -> %s\n", R.entry_conn.R1:tostr(), R.entry_conn.R2:tostr())
 
-      if false then  ---????  R.entry_conn.crossover then
-        local info = R.entry_conn.crossover
---stderrf("area_heights @ %s with CROSSOVER %s\n", R:tostr(), info.chunk:tostr())
-        entry_h = assert(info.floor_h)
-
-      else
-        local NC = assert(R.entry_conn.C1)
-        entry_h  = assert(NC.floor_h)
-      end
-    
     else
-      entry_area = rand.pick(R.areas)
-      assert(entry_area)
+      -- TODO: if R.purpose == "START" then find_start_chunk
+      --       elseif R.has_teleporter() then find_tele_chunk
+      -- [BETTER: have R.entry_chunk field]
+      
+      repeat
+        C = rand.pick(R.chunks)
+      until C.area
+
+      if R.floor_limit then
+        h = rand.sel(50, R.floor_limit[1], R.floor_limit[2])
+      else
+        h = rand.pick { 0,128,192,256,384 }
+      end
     end
 
-    if not entry_h then
-      entry_h = rand.pick { 0,128,192,256,384 }
-    end
+    return C, h
+  end
 
-    if not math.in_range(R.floor_limit[1], entry_h, R.floor_limit[2]) then
-      stderrf("!!! entry_h not in floor_limit\n")
+
+  local function area_heights(R)
+--- stderrf("area_heights in %s\n", R:tostr())
+
+    local entry_C, entry_h = entry_chunk_and_height(R)
+
+    local entry_area = assert(entry_C.area)
+
+    if not R:in_floor_limit(entry_h) then
+      gui.debugf("WARNING !!!! entry_h not in floor_limit\n")
+
       if entry_h < R.floor_limit[1] then
          entry_h = R.floor_limit[1]
       else
          entry_h = R.floor_limit[2]
       end
-      -- !!!! FIXME: entry hallway will need to compensate (have a stair or whatever)
+    -- !!!! FIXME: entry hallway will need to compensate (have a stair or whatever)
     end
 
     R.entry_h = entry_h
@@ -1630,9 +1632,7 @@ stderrf("TRYING....................\n")
       if D.L1 == L and D.L2.is_hall then
         local hall = D.L2
 
-        assert(D.C1.floor_h)
-
-        hall:flesh_out(D.C1.floor_h)
+        hall:flesh_out(D)
 
         -- recursively handle hallway networks
         hallway_heights(D.L2)

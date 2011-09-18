@@ -261,9 +261,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- OK --
 
-    local D1 = CONN_CLASS.new("hallway", start_K.room, MID.hall, start_dir)
+    local D1 = CONN_CLASS.new("hallway", MID.hall, start_K.room, 10 - start_dir)
 
-    D1.K1 = start_K ; D1.K2 = MID
+    D1.K1 = MID ; D1.K2 = start_K
 
 
     LEVEL.best_conn.D1 = D1
@@ -271,7 +271,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     LEVEL.best_conn.hall  = nil
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = {}
-    LEVEL.best_conn.merge = false
+    LEVEL.best_conn.merge_K = nil
   end
 
 
@@ -346,17 +346,21 @@ each K in visited do if K.used then len = len + 1 end end
       H.crossover = stats.crossover
     end
 
+    if not end_K.hall or end_K.hall.crossover then
+      merge = false
+    end
+
 
     local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
 
     D1.K1 = start_K ; D1.K2 = H.sections[1]
 
 
-    -- Note: some code assumes that D2.L1 is the destination room/hall
+    -- Note: some code assumes that D2.L2 is the destination room/hall
 
-    local D2 = CONN_CLASS.new("hallway", end_K.room or end_K.hall, H, end_dir)
+    local D2 = CONN_CLASS.new("hallway", H, end_K.room or end_K.hall, 10 - end_dir)
 
-    D2.K1 = end_K   ; D2.K2 = table.last(H.sections)
+    D2.K1 = table.last(H.sections) ; D2.K2 = end_K
 
 
     LEVEL.best_conn.D1 = D1
@@ -364,7 +368,7 @@ each K in visited do if K.used then len = len + 1 end end
     LEVEL.best_conn.hall  = H
     LEVEL.best_conn.score = score
     LEVEL.best_conn.stats = stats
-    LEVEL.best_conn.merge = merge
+    LEVEL.best_conn.merge_K = (merge ? end_K ; nil)
 
 --stderrf(">>>>>>>>>> best now @ %s : score:%1.2f\n", H:tostr(), score)
   end
@@ -715,7 +719,7 @@ function HALLWAY_CLASS.cross_diff(H)
   if H.cross_mode == "bridge" then
     return rand.pick { 96, 96, 128, 128, 128, 128, 160, 192, 256 }
   else
-    return (PARAM.jump_height or 24) + rand.pick { 40, 40, 40, 96 }
+    return (PARAM.jump_height or 24) + rand.pick { 40, 40, 64, 64, 96, 128 }
   end
 end
 
@@ -738,10 +742,19 @@ function HALLWAY_CLASS.limit_crossed_room(H)
 end
 
 
-function HALLWAY_CLASS.flesh_out(H, entry_h)
-  if H.done_heights then return end
+function HALLWAY_CLASS.flesh_out(H, entry_conn)
+  ---- if H.done_heights then return end
+gui.debugf("FLESH OUT : %s\n", H:tostr())
+entry_conn:dump()
+  assert(not H.done_heights)
 
   H.done_heights = true
+
+  assert(entry_conn)
+  assert(entry_conn.C1)
+
+  local entry_C = assert(entry_conn.C2)
+  local entry_h = assert(entry_conn.C1.floor_h)
 
   H.floor_h = entry_h
   H.min_floor_h = entry_h
@@ -750,9 +763,6 @@ function HALLWAY_CLASS.flesh_out(H, entry_h)
   if H.crossover then
     H:set_cross_mode()
   end
-
-  -- FIXME: this is rubbish
-  local delta_h = rand.pick { -24, -16, -8, 0, 8, 16, 24 }
 
   assert(H.chunks)
 
@@ -774,7 +784,7 @@ function HALLWAY_CLASS.flesh_out(H, entry_h)
     H.height = 384  -- FIXME: temp crud
   elseif H.outdoor then
     H.height = 256
-  elseif math.abs(delta_h) < 12 and rand.odds(10) then
+  elseif rand.odds(10) then
     H.height = 80
   else
     H.height = rand.sel(50, 128, 176)

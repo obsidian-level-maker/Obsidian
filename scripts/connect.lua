@@ -77,20 +77,22 @@ end
 
 
 function CONN_CLASS.tostr(D)
-  return string.format("CONN_%d [%s]", D.id, D.kind)
+  return string.format("CONN_%d [%s%s]", D.id, D.kind,
+         (D.is_cycle ? "/cycle" ; ""))
 end
 
 
 function CONN_CLASS.dump(D)
   gui.debugf("%s =\n", D:tostr())
   gui.debugf("{\n")
+  gui.debugf("    L1 = %s\n", (D.L1 ? D.L1:tostr() ; "nil"))
+  gui.debugf("    L2 = %s\n", (D.L2 ? D.L2:tostr() ; "nil"))
   gui.debugf("    K1 = %s\n", (D.K1 ? D.K1:tostr() ; "nil"))
   gui.debugf("    K2 = %s\n", (D.K2 ? D.K2:tostr() ; "nil"))
   gui.debugf("    C1 = %s\n", (D.C1 ? D.C1:tostr() ; "nil"))
   gui.debugf("    C2 = %s\n", (D.C2 ? D.C2:tostr() ; "nil"))
   gui.debugf("  dir1 = %s\n", (D.dir1 ? tostring(D.dir1) ; "nil"))
   gui.debugf("  dir2 = %s\n", (D.dir2 ? tostring(D.dir2) ; "nil"))
-  gui.debugf("   cyc = %s\n", string.bool(D.is_cycle))
   gui.debugf("}\n")
 end
 
@@ -231,23 +233,29 @@ function Connect_make_branch(mode)
 gui.debugf("\nmake_branch\n\n")
   local info = LEVEL.best_conn
 
-  -- must add hallway first (so that merge_groups can find it)
+  -- merge new hall into an existing one?
+  if info.merge_K then
+    local new_hall = assert(info.hall)
+    local old_hall = assert(info.merge_K.hall)
+
+    old_hall:merge_it(new_hall)
+
+    info.hall = nil
+
+    -- update the CONN info -- only need one now
+    if info.D1.L1 == new_hall then info.D1.L1 = old_hall end
+    if info.D1.L2 == new_hall then info.D2.L2 = old_hall end
+
+    info.D2 = nil
+  end
+
+  -- must add hallway to level list now (so that merge_groups can find it)
   if info.hall then
-    if info.D2 and info.D2.L1.is_hall and info.merge then
---stderrf("I like to merge it merge it...\n")
-      local old_hall = info.D2.L1
+    info.hall:add_it()
 
-      old_hall:merge_it(info.hall) ; info.hall = nil
-
-      -- update the CONN info -- only need one now
-      info.D1.L2 = old_hall
-      info.D2    = nil
-    else
-      info.hall:add_it()
-
-      if mode == "cycle" then
-        info.hall.is_cycle = true
-      end
+    if mode == "cycle" then
+      info.is_cycle = true
+      info.hall.is_cycle = true
     end
   end
 

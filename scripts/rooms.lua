@@ -308,6 +308,13 @@ function ROOM_CLASS.is_near_exit(R)
 end
 
 
+function ROOM_CLASS.in_floor_limit(R, h)
+  if not R.floor_limit then return true end
+
+  return math.in_range(R.floor_limit[1], h, R.floor_limit[2])
+end
+
+
 function ROOM_CLASS.ideal_conns(R)
   -- determine number of connections to try
 
