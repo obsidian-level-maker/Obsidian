@@ -853,6 +853,13 @@ function Quest_make_quests()
   end
 
 
+  local function update_crossovers()
+    each H in LEVEL.halls do
+      if H.crossover then H:set_cross_mode() end
+    end
+  end
+
+
   --==| Quest_make_quests |==--
 
   gui.printf("\n--==| Make Quests |==--\n\n")
@@ -885,6 +892,8 @@ function Quest_make_quests()
   gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
 
   dump_visit_order()
+
+  update_crossovers()
 
 
 --??? Quest_find_storage_rooms()

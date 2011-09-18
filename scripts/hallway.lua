@@ -709,7 +709,7 @@ function HALLWAY_CLASS.set_cross_mode(H)
     H.cross_mode = "bridge"
   end
 
---- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
+ stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
 end
 
 
@@ -759,10 +759,6 @@ entry_conn:dump()
   H.floor_h = entry_h
   H.min_floor_h = entry_h
   H.max_floor_h = entry_h
-
-  if H.crossover then
-    H:set_cross_mode()
-  end
 
   assert(H.chunks)
 
