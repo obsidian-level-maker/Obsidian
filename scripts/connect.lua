@@ -22,8 +22,8 @@
 
 class CONN
 {
-  kind   : keyword  -- "hallway", "cycle"      "direct" ??
-                    -- "double_hall"
+  kind   : keyword  -- "normal"
+                    -- "double_L", "double_R"
                     -- "teleporter"
   lock   : LOCK
 
@@ -42,8 +42,6 @@ class CONN
   dir1, dir2  -- direction value (2/4/6/8) 
               -- dir1 leading out of L1 / K1 / C1
               -- dir2 leading out of L2 / K2 / C2
-
-  is_cycle : boolean
 
   conn_h  -- floor height for connection
 
@@ -207,21 +205,6 @@ function CONN_CLASS.add_it(D)
   table.insert(D.L1.conns, D)
   table.insert(D.L2.conns, D)
 
-  -- direct connections absorb the middle section into one of the rooms
-  if D.kind == "direct" then
-    assert(D.K1)
-    assert(D.K2)
-
-    local R = D.L1
-    if R.is_hall then R = D.L2 end
-    assert(not R.is_hall)
-
-    R:annex(D.middle)
-    R:update_seed_bbox()
-
-    if R == D.L1 then D.K1 = D.middle else D.K2 = D.middle end
-  end
-
   if D.kind != "teleporter" then
     D.K1.num_conn = D.K1.num_conn + 1
     D.K2.num_conn = D.K2.num_conn + 1
@@ -244,7 +227,7 @@ gui.debugf("\nmake_branch\n\n")
 
     -- update the CONN info -- only need one now
     if info.D1.L1 == new_hall then info.D1.L1 = old_hall end
-    if info.D1.L2 == new_hall then info.D2.L2 = old_hall end
+    if info.D1.L2 == new_hall then info.D1.L2 = old_hall end
 
     info.D2 = nil
   end
@@ -259,6 +242,7 @@ gui.debugf("\nmake_branch\n\n")
     end
   end
 
+  -- add connections
   info.D1:add_it()
 
   if info.D2 then

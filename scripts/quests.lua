@@ -613,9 +613,9 @@ function Quest_make_quests()
   local function get_exits(L)
     local exits = {}
 
-    each C in L.conns do
-      if C.L1 == L then
-        table.insert(exits, C)
+    each D in L.conns do
+      if D.L1 == L and D.kind != "double_R" then
+        table.insert(exits, D)
       end
     end
 
@@ -692,7 +692,7 @@ function Quest_make_quests()
     if L.is_room then count = L:num_crossovers() end
 
     each D in L.conns do
-      if D.L1 == L then
+      if D.L1 == L and D.kind != "double_R" then
         count = count + crossover_volume(D.L2)
       end
     end
@@ -760,7 +760,7 @@ function Quest_make_quests()
     while true do
       L.quest = quest
 
--- stderrf("visit_room @ %s\n", L:tostr())
+      -- stderrf("visit_room @ %s\n", L:tostr())
 
       if L.is_room then
         table.insert(LEVEL.rooms, L)

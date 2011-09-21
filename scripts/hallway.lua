@@ -173,6 +173,8 @@ end
 
 
 function HALLWAY_CLASS.merge_it(old_H, new_H)
+  -- gui.debugf("MERGING %s into %s\n", new_H:tostr(), old_H:tostr())
+
   assert(old_H != new_H)
 
   assert(not old_H.crossover)
@@ -251,8 +253,6 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     local score = -100 - MID.num_conn - gui.random()
 
-    if MID.hall.double_fork then score = score - 100 end
-
 
     -- score is now computed : test it
 
@@ -261,7 +261,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- OK --
 
-    local D1 = CONN_CLASS.new("hallway", MID.hall, start_K.room, 10 - start_dir)
+    local D1 = CONN_CLASS.new("normal", MID.hall, start_K.room, 10 - start_dir)
 
     D1.K1 = MID ; D1.K2 = start_K
 
@@ -351,14 +351,14 @@ each K in visited do if K.used then len = len + 1 end end
     end
 
 
-    local D1 = CONN_CLASS.new("hallway", start_K.room, H, start_dir)
+    local D1 = CONN_CLASS.new("normal", start_K.room, H, start_dir)
 
     D1.K1 = start_K ; D1.K2 = H.sections[1]
 
 
     -- Note: some code assumes that D2.L2 is the destination room/hall
 
-    local D2 = CONN_CLASS.new("hallway", H, end_K.room or end_K.hall, 10 - end_dir)
+    local D2 = CONN_CLASS.new("normal", H, end_K.room or end_K.hall, 10 - end_dir)
 
     D2.K1 = table.last(H.sections) ; D2.K2 = end_K
 
@@ -532,13 +532,11 @@ function Hallway_add_doubles()
     local K2 = K1:neighbor(dir)
 
     each D in LEVEL.conns do
-      if D.kind != "hallway" then continue end
-
-      if D.K1 == K1 and D.K2 == K2 then return D end
-      if D.K1 == K2 and D.K2 == K1 then return D end
+      if D.kind == "normal" then
+        if D.K1 == K1 and D.K2 == K2 then return D end
+        if D.K1 == K2 and D.K2 == K1 then return D end
+      end
     end
-
----  error("failed to find connection for hallway")
 
     return nil
   end
@@ -546,8 +544,11 @@ function Hallway_add_doubles()
 
   local function try_add_at_section(H, K, dir)
     -- check if all the pieces we need are free
-    local  left_J = K:neighbor(geom.LEFT [dir])
-    local right_J = K:neighbor(geom.RIGHT[dir])
+    local  left_dir = geom.LEFT [dir]
+    local right_dir = geom.RIGHT[dir]
+
+    local  left_J = K:neighbor(left_dir)
+    local right_J = K:neighbor(right_dir)
 
     if not  left_J or  left_J.used then return false end
     if not right_J or right_J.used then return false end
@@ -567,22 +568,43 @@ function Hallway_add_doubles()
 
     -- size check
     local room_K = K:neighbor(dir)
+    if not room_K.room then return false end
+
+    assert(room_K ==  left_K:neighbor(right_dir))
+    assert(room_K == right_K:neighbor( left_dir))
 
     local long, deep = room_K.sw, room_K.sh
     if geom.is_horiz(dir) then long, deep = deep, long end
 
     if deep < 3 then return false end
 
-    -- FIXME: this should not fail !!!
-    local D = find_conn_for_double(H, K, dir)
-    if not D then return false end
+    -- fixme: this should not fail
+    local D1 = find_conn_for_double(H, K, dir)
+    if not D1 then return false end
 
-    stderrf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
+    gui.debugf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
 
-    H.double_fork  = K
-    H.double_dir   = dir
-    H.double_left  = left_K
-    H.double_right = right_K
+    -- update existing connection, create peer
+    D1.kind = "double_L"
+
+    if D1.K1 != K then D1:swap() end
+    assert(D1.K1 == K)
+    assert(D1.K2 == room_K)
+
+    D1.K1   = left_K
+    D1.dir1 = right_dir
+    D1.dir2 = 10 - right_dir
+
+    local D2 = CONN_CLASS.new("double_R", H, room_K.room, left_dir)
+
+    D2.K1 = right_K
+    D2.K2 = room_K
+
+    --- D1.peer = D2 ; D2.peer = D1
+
+    D2:add_it()
+
+    H.double_fork = K  -- meh, remove
 
     H:add_section(K)
     H:add_section(left_J) ; H:add_section(right_J)
@@ -594,8 +616,8 @@ function Hallway_add_doubles()
 
     H:make_chunks(true)
 
-    -- update the connection object
-    D.kind = "double_hall"
+    -- create chunk in room
+    local CC = room_K.room:chunk_for_double(room_K, left_dir)
 
     return true
   end

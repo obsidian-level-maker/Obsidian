@@ -158,35 +158,7 @@ function Areas_handle_connections()
 
     D.C1 = C1 ; D.C2 = C2
 
-    if D.kind == "direct" or D.kind == "hallway" then
-      link_chunks(C1, D.dir1, C2, D)
-
-    elseif D.kind == "double_hall" then
-      -- FIXME: C1 and C2 from above code are not needed
-
-      local hall = (D.L1.is_hall ? D.L1 ; D.L2)
-      assert(hall.is_hall)
-
-      local room_K = hall.double_fork:neighbor(hall.double_dir)
-
-      local CC = room_K.room:chunk_for_double(room_K, geom.LEFT[hall.double_dir])
-      CC.foobage = "conn"
-
-      -- fix up the conn object
-      if hall == D.L1 then D.C2 = CC else D.C1 = CC end
-
-      local A_dir = geom.RIGHT[hall.double_dir]
-      local B_dir = geom. LEFT[hall.double_dir]
-
-      local HA = chunk_for_section_side(hall.double_left,  A_dir)
-      local HB = chunk_for_section_side(hall.double_right, B_dir)
-
-      link_chunks(HA, A_dir, CC, D)
-      link_chunks(HB, B_dir, CC, D)
-
-    else
-      error("Unknown conn kind: " .. tostring(D.kind))
-    end
+    link_chunks(C1, D.dir1, C2, D)
   end
 
 
