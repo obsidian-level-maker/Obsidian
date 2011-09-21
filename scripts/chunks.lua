@@ -636,8 +636,24 @@ end
 
 
 
-
 function CHUNK_CLASS.cycle_stair(C, dir, N)
+  local dir = C.adjuster_dir
+
+  local LINK = C.link[dir]
+
+  assert(LINK)
+  assert(LINK.C1 == C or LINK.C2 == C)
+
+  local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
+
+  -- FIXME: this don't work since stair handling will use N.floor_h
+  --        but we need to use the bridge height here.
+  if C.hall and C.crossover then return end
+
+  if math.abs(N.floor_h - C.floor_h) <= (PARAM.jump_height or PARAM.step_height) then
+    return
+  end
+
   -- this is temporary crud
 
   local skin_name
@@ -835,18 +851,8 @@ function CHUNK_CLASS.build(C)
 
 
   -- cruddy handling of cycle/crossover height differences
-  if C.hall and C.hall.is_cycle then
-    for dir = 2,8,2 do
-      local LINK = C.link[dir]
-
-      if LINK and (LINK.C1 == C or LINK.C2 == C) then
-        local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
-
-        if math.abs(N.floor_h - C.floor_h) > (PARAM.jump_height or PARAM.step_height) then
-          C:cycle_stair(dir, N)
-        end
-      end
-    end
+  if C.adjuster_dir then
+    C:cycle_stair()
   end
 
 

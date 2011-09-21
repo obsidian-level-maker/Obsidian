@@ -152,7 +152,6 @@ stderrf("\n")
 end
 
 
-
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
@@ -192,6 +191,22 @@ function HALLWAY_CLASS.merge_it(old_H, new_H)
   new_H.sections = nil
   new_H.chunks   = nil
 end
+
+
+---?? function HALLWAY_CLASS.add_adjuster(H, D)
+---??   each C in H.chunks do
+---??     for dir = 2,8,2 do
+---??       local LINK = C.links[dir]
+---?? 
+---??       if LINK and LINK.conn == D then
+---??         C.adjuster_dir = dir
+---??         return
+---??       end
+---??     end
+---??   end
+---?? 
+---??   error("Cannot find chunk for adjuster")
+---?? end
 
 
 function HALLWAY_CLASS.build(H)

@@ -159,6 +159,16 @@ function Areas_handle_connections()
     D.C1 = C1 ; D.C2 = C2
 
     link_chunks(C1, D.dir1, C2, D)
+
+    if C1.hall and C1.hall.is_cycle and C2.room then
+      C1.adjuster_dir = D.dir1
+    elseif C2.hall and C2.hall.is_cycle and C1.room then
+      C2.adjuster_dir = D.dir2
+    end
+
+    if C1.hall and C2.room and C2.room.crossover_hall then
+      C1.adjuster_dir = D.dir1
+    end
   end
 
 
@@ -170,17 +180,22 @@ function Areas_handle_connections()
       local C1 = H.chunks[i]
       local C2 = H.chunks[i+1]
 
+      local dir
+
+          if C2.sx1 == C1.sx2 + 1 then dir = 6
+      elseif C2.sx2 == C1.sx1 - 1 then dir = 4
+      elseif C2.sy1 == C1.sy2 + 1 then dir = 8
+      elseif C2.sy2 == C1.sy1 - 1 then dir = 2
+      else error("handle_crossover : weird dir!")
+      end
+
       if C1.hall != C2.hall then
-        local dir
-
-            if C2.sx1 == C1.sx2 + 1 then dir = 6
-        elseif C2.sx2 == C1.sx1 - 1 then dir = 4
-        elseif C2.sy1 == C1.sy2 + 1 then dir = 8
-        elseif C2.sy2 == C1.sy1 - 1 then dir = 2
-        else error("handle_crossover : weird dir!")
-        end
-
         link_chunks(C1, dir, C2, nil)
+
+      -- FIXME: this doesn't work
+--[[    if C1.hall then
+          C1.adjuster_dir = dir
+        end  --]]
       end
     end
   end
