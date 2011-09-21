@@ -168,6 +168,8 @@ function Areas_handle_connections()
 
     if C1.hall and C2.room and C2.room.crossover_hall then
       C1.adjuster_dir = D.dir1
+    elseif C2.hall and C1.room and C1.room.crossover_hall then
+      C2.adjuster_dir = D.dir2
     end
   end
 
@@ -1607,10 +1609,15 @@ stderrf("TRYING....................\n")
     local diff = hall:cross_diff()
 
     if hall.cross_mode == "bridge" then
-      hall.cross_limit = { -9999, max_h + diff }
+      hall.cross_limit = { max_h + diff, 9999 }
     else
-      hall.cross_limit = { min_h - (PARAM.jump_height or 32) - 40, 9999 }
+      hall.cross_limit = { -9999, min_h - (PARAM.jump_height or 32) - 40 }
     end
+if R.id == 4 then
+stderrf("Crossover_room %s : %s (%d .. %d)\n",
+        R:tostr(), hall.cross_mode, hall.cross_limit[1], hall.cross_limit[2])
+end
+
   end
 
 

@@ -614,7 +614,7 @@ function Hallway_add_doubles()
 
     D2.K1 = right_K
     D2.K2 = room_K
-
+    
     --- D1.peer = D2 ; D2.peer = D1
 
     D2:add_it()
@@ -792,6 +792,12 @@ entry_conn:dump()
 
   local entry_C = assert(entry_conn.C2)
   local entry_h = assert(entry_conn.C1.floor_h)
+
+  if H.cross_limit then
+    if entry_h < H.cross_limit[1] then entry_h = H.cross_limit[1] end
+    if entry_h > H.cross_limit[2] then entry_h = H.cross_limit[2] end
+stderrf("applied cross_limit: entry_h --> %d\n", entry_h)
+  end
 
   H.floor_h = entry_h
   H.min_floor_h = entry_h
