@@ -146,6 +146,19 @@ function Areas_handle_connections()
   end
 
 
+  local function need_adjuster(C1, C2)
+    assert(C1.hall)
+
+    if C1.hall.is_cycle then return true end
+
+    if C1.hall.crossover then return true end
+
+    if C2.room and C2.room.crossover_hall then return true end
+
+    return false
+  end
+
+
   local function handle_conn(D)
     -- teleporters are done elsewhere (as an "important")
     if D.kind == "teleporter" then return end
@@ -160,15 +173,9 @@ function Areas_handle_connections()
 
     link_chunks(C1, D.dir1, C2, D)
 
-    if C1.hall and C1.hall.is_cycle and C2.room then
+    if C1.hall and need_adjuster(C1, C2) then
       C1.adjuster_dir = D.dir1
-    elseif C2.hall and C2.hall.is_cycle and C1.room then
-      C2.adjuster_dir = D.dir2
-    end
-
-    if C1.hall and C2.room and C2.room.crossover_hall then
-      C1.adjuster_dir = D.dir1
-    elseif C2.hall and C1.room and C1.room.crossover_hall then
+    elseif C2.hall and need_adjuster(C2, C1) then
       C2.adjuster_dir = D.dir2
     end
   end
