@@ -38,6 +38,10 @@ function stderrf(fmt, ...)
   end
 end
 
+function fprintf(file, fmt, ...)
+  file:write(string.format(fmt, ...))
+end
+
 
 function math.round(x)
   if x < 0 then
