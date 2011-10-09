@@ -131,6 +131,19 @@ int gui_config_line(lua_State *L)
 }
 
 
+// LUA: mkdir(dir_name)
+//
+int gui_mkdir(lua_State *L)
+{
+  const char *name = luaL_checkstring(L,1);
+
+  bool result = FileMakeDir(name);
+
+  lua_pushboolean(L, result ? 1 : 0);
+  return 1;
+}
+
+
 // LUA: set_colormap(map, colors)
 //
 int gui_set_colormap(lua_State *L)
@@ -542,6 +555,7 @@ static const luaL_Reg gui_script_funcs[] =
   { "raw_console_print", gui_raw_console_print },
 
   { "config_line",    gui_config_line },
+  { "mkdir",          gui_mkdir },
   { "set_colormap",   gui_set_colormap },
   { "locate_data",    gui_locate_data },
 
