@@ -29,9 +29,53 @@ function EXPORT_MAP.add_brush(coords)
 
   if not file then return end  
 
-  -- FIXME !!!!!!
+  -- brushes are written directly to the file
+  fprintf(file, "{\n")
 
-  fprintf(file, "// brush %s %d\n", coords[1].m or "solid", #coords)
+  local mode
+  local err_tex = "FOOBIE"  -- FIXME
+
+  local xy_coords = {}
+
+  each C in coords do
+    -- first coordinate might be just the mode / material
+    if _index == 1 and C.m then
+      mode = C.m
+      continue
+    end
+
+    -- Top
+    if C.t then
+      fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+              0, 0, C.t,  0, 64, C.t,  64, 0, C.t, C.tex or err_tex)
+              
+    -- Bottom
+    elseif C.b then
+      fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+              0, 0, C.b,  64, 0, C.b,  0, 64, C.b, C.tex or err_tex)
+
+    else
+      assert(C.x and C.y)
+
+      table.insert(xy_coords, C)
+    end
+  end
+
+  assert(#xy_coords >= 3)
+
+  -- Sides
+  for i = 1,#xy_coords do
+    local k = i + 1
+    if k > #xy_coords then k = 1 end
+
+    local C1 = xy_coords[i]
+    local C2 = xy_coords[k]
+
+    fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
+            C1.x, C1.y, 0,  C2.x, C2.y, 0,  C1.x, C1.y, 64, C1.tex or err_tex)       
+  end
+
+  fprintf(file, "}\n")
 end
 
 
@@ -40,6 +84,7 @@ function EXPORT_MAP.add_entity(ent)
 
   if not file then return end  
 
+  -- entity lines are not output directly, but stored instead
   export_printf("{\n")
 
   local origin
@@ -86,6 +131,7 @@ function EXPORT_MAP.setup()
   if EXPORT_MAP.file then
     EXPORT_MAP.file:close()
     EXPORT_MAP.file = nil
+    EXPORT_MAP.ent_data = nil
   end
 
   -- setup hooks
@@ -120,6 +166,7 @@ function EXPORT_MAP.begin_level()
   fprintf(file, "{\n")
   fprintf(file, "\"classname\" \"worldspawn\"\n")
   fprintf(file, "\"worldtype\" \"0\"\n")  -- FIXME
+  fprintf(file, "\"wad\" \"textures.wad\"\n")
  
   -- TODO: "message" : LEVEL.description
 end
