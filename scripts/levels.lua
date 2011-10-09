@@ -665,7 +665,7 @@ function Levels_do_styles()
 
   -- adjust styles for Co-operative multiplayer
   if OB_CONFIG.mode == "coop" then
-    table.merge(style_lists, COOP_STYLE_LIST)
+    table.merge(style_tab, COOP_STYLE_LIST)
   end
 
   -- per game, per level and per theme style_lists
