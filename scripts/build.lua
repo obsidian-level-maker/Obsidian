@@ -88,6 +88,19 @@ function raw_add_entity(ent)
 end
 
 
+function raw_add_model(model)
+  assert(model.entity)
+
+  model.entity.model = gui.q1_add_mapmodel(model)
+
+  gui.add_entity(model.entity)
+
+  if GAME.add_model_func then
+     GAME.add_model_func(model)
+  end
+end
+
+
 function Brush_collect_flags(C)
   if GAME.format == "doom" then
     local flags = C.flags or 0
@@ -1726,32 +1739,21 @@ end
 
 function Fab_render(fab)
 
-  local function render_model(M)
-    assert(M.entity)
-
-    M.entity.model = gui.q1_add_mapmodel(M)
-
-    raw_add_entity(M.entity)
-  end
-
-
-  ---| Fab_render |---
-
   assert(fab.state == "transform_z")
 
   fab.state = "rendered"
 
-  for _,B in ipairs(fab.brushes) do
+  each B in fab.brushes do
     if CSG_BRUSHES[B[1].m] then
       raw_add_brush(B)
     end
   end
 
-  for _,M in ipairs(fab.models) do
-    render_model(M)
+  each M in fab.models do
+    raw_add_model(M)
   end
 
-  for _,E in ipairs(fab.entities) do
+  each E in fab.entities do
     raw_add_entity(E)
   end
 end
