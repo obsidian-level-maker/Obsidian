@@ -894,7 +894,7 @@ function CHUNK_CLASS.build(C)
 
     table.insert(brush, { t=f_h, tex=f_tex })
 
-    gui.add_brush(brush)
+    raw_add_brush(brush)
   end
 
 
@@ -914,7 +914,7 @@ function CHUNK_CLASS.build(C)
 
   table.insert(brush, { b=c_h, tex=c_tex })
 
-  gui.add_brush(brush)
+  raw_add_brush(brush)
 
 
   if not C.ceil_h then C.ceil_h = c_h end  -- meh, crud
@@ -964,13 +964,13 @@ function CHUNK_CLASS.build(C)
         if bx2 > bx1 then
           brush = Brush_new_quad(bx1, by1, bx2, by2)
           Brush_set_tex(brush, w_mat.t)
-          gui.add_brush(brush)
+          raw_add_brush(brush)
         end
 
         if cx2 > cx1 then
           brush = Brush_new_quad(cx1, cy1, cx2, cy2)
           Brush_set_tex(brush, w_mat.t)
-          gui.add_brush(brush)
+          raw_add_brush(brush)
         end
 
       elseif C.hall and C.hall.street then
@@ -979,7 +979,7 @@ function CHUNK_CLASS.build(C)
         if C:against_map_edge(dir) then
           brush = Brush_new_quad(bx1, by1, bx2, by2)
           Brush_set_tex(brush, w_mat.t)
-          gui.add_brush(brush)
+          raw_add_brush(brush)
         else
           wall_deep = 0
         end
@@ -993,7 +993,7 @@ if C2 and (C.hall or C2.hall) then
 table.insert(brush, { t=f_h+48, tex=w_mat.f or w_mat.t })
 end
 --]]
-          gui.add_brush(brush)
+          raw_add_brush(brush)
       end
 
       -- spot stuff  [FIXME: TEMP HACK]
@@ -1090,7 +1090,7 @@ end
       Brush_set_tex(brush, c_mat.t)
       table.insert(brush, 1, { m="sky" })
       table.insert(brush, { b=sky_h, tex=c_mat.f or c_mat.t })
-      gui.add_brush(brush)
+      raw_add_brush(brush)
     end
 
   end -- dir
@@ -1109,7 +1109,7 @@ end
 
       brush = Brush_new_quad(bx1, by1, bx2, by2)
       Brush_set_tex(brush, c_mat.t)
-      gui.add_brush(brush)
+      raw_add_brush(brush)
     end end
   end
 
@@ -1137,7 +1137,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
     table.insert(brush, { t=h,    tex=f_tex })
     table.insert(brush, { b=h-16, tex=f_tex })
 
-    gui.add_brush(brush)
+    raw_add_brush(brush)
   end
 
   if x_hall and x_hall.cross_mode == "channel" then
@@ -1168,7 +1168,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
       table.insert(brush, { t=h,    tex=f_tex })
       table.insert(brush, { b=h-16, tex=f_tex })
 
-      gui.add_brush(brush)
+      raw_add_brush(brush)
     end end -- sx, sy
   end
 

@@ -1153,10 +1153,10 @@ function Rooms_add_sun()
 
     local level = (i == 1 ? 32 ; 6)
 
-    gui.add_entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
+    raw_add_entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
   end
 
-  gui.add_entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
+  raw_add_entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
 end
 
 
@@ -1207,7 +1207,7 @@ function Rooms_intermission_camera()
 
   local mangle = string.format("%d %d 0", mlook, angle)
 
-  gui.add_entity { id=camera_ent.id, x=x1, y=y1, z=z1, mangle=mangle }
+  raw_add_entity { id=camera_ent.id, x=x1, y=y1, z=z1, mangle=mangle }
 end
 
 
@@ -1485,7 +1485,7 @@ function OLD__Layout_all_ceilings()
 
       local x, y = geom.box_mid(K.x1, K.y1, K.x2, K.y2)
 
-      gui.add_entity { id="light", x=x, y=y, z=z, light=light, _radius=radius }
+      raw_add_entity { id="light", x=x, y=y, z=z, light=light, _radius=radius }
      end
     end
   end
@@ -1537,7 +1537,7 @@ function OLD__Layout_all_ceilings()
     if R.outdoor then light = 192 end
 
     each K in R.sections do
-      gui.add_brush(
+      raw_add_brush(
       {
         { m="light", ambient=light },
         { x=K.x1, y=K.y1 },

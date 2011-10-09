@@ -1356,7 +1356,7 @@ stderrf("TRYING....................\n")
     table.insert(brush, { t=floor_h,    tex=f_tex })
     table.insert(brush, { b=floor_h-16, tex=f_tex })
 
-    gui.add_brush(brush)
+    raw_add_brush(brush)
   end
 
 

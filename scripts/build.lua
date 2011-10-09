@@ -70,6 +70,24 @@ HEXEN_ACTIONS =
 }
 
 
+function raw_add_brush(coords)
+  gui.add_brush(coords)
+
+  if GAME.add_brush_func then
+     GAME.add_brush_func(coords)
+  end
+end
+
+
+function raw_add_entity(ent)
+  gui.add_entity(ent)
+
+  if GAME.add_entity_func then
+     GAME.add_entity_func(ent)
+  end
+end
+
+
 function Brush_collect_flags(C)
   if GAME.format == "doom" then
     local flags = C.flags or 0
@@ -109,7 +127,7 @@ function brush_helper(coords)
     Brush_collect_flags(C)
   end
 
-  gui.add_brush(coords)
+  raw_add_brush(coords)
 end
 
 
@@ -151,7 +169,7 @@ function entity_helper(name, x, y, z, props)
     each name,value in info.fields do ent[name] = value end
   end
 
-  gui.add_entity(ent)
+  raw_add_entity(ent)
 end
 
 
@@ -1713,7 +1731,7 @@ function Fab_render(fab)
 
     M.entity.model = gui.q1_add_mapmodel(M)
 
-    gui.add_entity(M.entity)
+    raw_add_entity(M.entity)
   end
 
 
@@ -1725,7 +1743,7 @@ function Fab_render(fab)
 
   for _,B in ipairs(fab.brushes) do
     if CSG_BRUSHES[B[1].m] then
-      gui.add_brush(B)
+      raw_add_brush(B)
     end
   end
 
@@ -1734,7 +1752,7 @@ function Fab_render(fab)
   end
 
   for _,E in ipairs(fab.entities) do
-    gui.add_entity(E)
+    raw_add_entity(E)
   end
 end
 
@@ -1944,7 +1962,7 @@ function OLD__Quake_test()
 
   -- liquid test
   if false then
-    gui.add_brush(
+    raw_add_brush(
     {
       { m="liquid", medium="water" },
       { t=119, tex="e1u1/water4" },
