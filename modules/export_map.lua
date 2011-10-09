@@ -32,38 +32,46 @@ function EXPORT_MAP.add_brush(coords)
   -- brushes are written directly to the file
   fprintf(file, "{\n")
 
-  local mode
-  local err_tex = "FOOBIE"  -- FIXME
-
+  local mode, def_tex
+  local top, bottom
   local xy_coords = {}
 
+  -- scan the coordinates and grab the bits we need
   each C in coords do
     -- first coordinate might be just the mode / material
-    if _index == 1 and C.m then
+    if C.m then
       mode = C.m
-      continue
+    elseif C.t then
+      top = C
+    elseif C.b then
+      bottom = C
+    elseif C.x then
+      table.insert(xy_coords, C)
+    else
+      error("Weird brush!")
     end
 
-    -- Top
-    if C.t then
-      fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
-              0, 0, C.t,  0, 64, C.t,  64, 0, C.t, C.tex or err_tex)
-              
-    -- Bottom
-    elseif C.b then
-      fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
-              0, 0, C.b,  64, 0, C.b,  0, 64, C.b, C.tex or err_tex)
-
-    else
-      assert(C.x and C.y)
-
-      table.insert(xy_coords, C)
+    if not def_tex and C.tex then
+      def_tex = C.tex
     end
   end
 
-  assert(#xy_coords >= 3)
+  if not def_tex then def_tex = "FOOBIE" end  -- FIXME
+
+  if not top    then top    = { t= 4096, tex=def_tex } end
+  if not bottom then bottom = { b=-4096, tex=def_tex } end
+
+  -- Top
+  fprintf(file, "( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1 1\n",
+          0, 0, top.t,  0, 64, top.t,  64, 0, top.t, top.tex or def_tex)
+
+  -- Bottom
+  fprintf(file, "( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1 1\n",
+          0, 0, bottom.b,  64, 0, bottom.b,  0, 64, bottom.b, bottom.tex or def_tex)
 
   -- Sides
+  assert(#xy_coords >= 3)
+
   for i = 1,#xy_coords do
     local k = i + 1
     if k > #xy_coords then k = 1 end
@@ -71,8 +79,8 @@ function EXPORT_MAP.add_brush(coords)
     local C1 = xy_coords[i]
     local C2 = xy_coords[k]
 
-    fprintf(file, "( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) ( %1.2f %1.2f %1.2f ) %s 0 0 0 1 1\n",
-            C1.x, C1.y, 0,  C2.x, C2.y, 0,  C1.x, C1.y, 64, C1.tex or err_tex)       
+    fprintf(file, "( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
+            C1.x, C1.y, 0,  C1.x, C1.y, 64,  C2.x, C2.y, 0, C1.tex or def_tex)       
   end
 
   fprintf(file, "}\n")
@@ -83,6 +91,9 @@ function EXPORT_MAP.add_entity(ent)
   local file = EXPORT_MAP.file
 
   if not file then return end  
+
+  -- ignore certain stuff
+  if ent.id == "oblige_sun" then return end
 
   -- entity lines are not output directly, but stored instead
   export_printf("{\n")
@@ -101,6 +112,8 @@ function EXPORT_MAP.add_entity(ent)
     local key2 = key
 
     if key2 == "id" then key2 = "classname" end
+
+    if key2 == "_radius" then key2 = "light" elseif key2 == "light" then continue end
 
     export_printf("\"%s\" \"%s\"\n", tostring(key2), tostring(value))
   end
@@ -166,7 +179,7 @@ function EXPORT_MAP.begin_level()
   fprintf(file, "{\n")
   fprintf(file, "\"classname\" \"worldspawn\"\n")
   fprintf(file, "\"worldtype\" \"0\"\n")  -- FIXME
-  fprintf(file, "\"wad\" \"textures.wad\"\n")
+  fprintf(file, "\"wad\" \"quake_tex.wad\"\n")
  
   -- TODO: "message" : LEVEL.description
 end
