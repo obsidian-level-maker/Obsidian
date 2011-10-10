@@ -235,13 +235,17 @@ function Areas_important_stuff()
   local function init_seed(R, S)
     for dir = 2,4,2 do
       local N = S:neighbor(dir)
-      
-      if S:same_room(dir) then
-        local cost = 2 ^ rand.range(1, 5)
 
-        S.cost[dir] = cost
-        N.cost[10-dir] = cost
-      end
+      if not S:same_room(dir) then continue end
+
+      -- cannot use crossover junctions as part of path
+      if S.chunk and S.chunk.cross_junc then continue end
+      if N.chunk and N.chunk.cross_junc then continue end
+
+      local cost = 2 ^ rand.range(1, 5)
+
+      S.cost[dir]    = cost
+      N.cost[10-dir] = cost
     end
 
     -- mark seeds which are near a wall
@@ -571,7 +575,7 @@ function Areas_important_stuff()
 
     assert(S.room == R)
 
-    -- must stay inside room
+    -- must stay within the room
     if not S.cost[dir] then return -1 end
 
     return S.cost[dir]
@@ -632,7 +636,11 @@ gui.debugf("  seeds: (%d %d) --> (%d %d)\n", sx, sy, ex, ey)
     local list = {}
 
     each C in R.chunks do
-      if C.foobage == "conn" or C.foobage == "important" or C.content.kind then
+      if C.cross_junc then continue end
+
+      if C.foobage == "conn" or C.foobage == "important" or
+         C.foobage == "crossover" or C.content.kind
+      then
         table.insert(list, C)
 
         -- mark this chunk as walk
@@ -688,6 +696,8 @@ function Areas_flesh_out()
     --   (a) to make a centered doorway
     --   (b) use a complex pedestal for a key or switch
     --   etc...
+
+    -- Note: only applies to walkable chunks
 
     -- TODO
   end
@@ -1348,6 +1358,8 @@ stderrf("TRYING....................\n")
 
 
   local function bridge_target_possible(C, N, dir)
+    if not N.area then return false end
+
     -- area must be free
     if N.area.floor_h then return false end
 
@@ -1644,14 +1656,17 @@ stderrf("TRYING....................\n")
     R.floor_min_h = R.entry_h
     R.floor_max_h = R.entry_h
 
+    -- validate : all areas got a height
     each A in R.areas do
       each C in A.chunks do
 
---!!!!!!!!!!1 FIXME FIXME FIXME
-if not C.floor_h then C.floor_h = 0 end
+        if not C.floor_h then
+          -- stderrf("FUCKED UP IN %s @ %s\n", R:tostr(), C:tostr())
+          -- C.floor_h = 0
+          error("Area chunk failed to get a floor height")
+        end
 
-        -- validate : all areas got a height
-        local h = assert(C.floor_h)
+        local h = C.floor_h
 
         R.floor_min_h = math.min(R.floor_min_h, h)
         R.floor_max_h = math.max(R.floor_max_h, h)
