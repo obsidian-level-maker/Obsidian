@@ -864,11 +864,68 @@ stderrf("TRYING....................\n")
   end
 
 
+  local function free_seeds_along_side(R, side)
+    local seeds = {}
+
+    local whole = rand.odds(20)
+
+    each K in R.sections do
+      local N = K:neighbor(side)
+      if not whole and N and N.room == R then continue end
+
+      local sx1, sy1, sx2, sy2 = geom.side_coords(side, K.sx1, K.sy1, K.sx2, K.sy2)
+
+      if whole then sx1,sy1, sx2,sy2 = K.sx1,K.sy1, K.sx2,K.sy2 end
+
+      for sx = sx1,sx2 do for sy = sy1,sy2 do
+        local S = SEEDS[sx][sy]
+
+        -- really the edge of room ?
+        local T = S:neighbor(side)
+        if not whole then assert(not (T and T.room == R)) end
+
+--[[    while true do
+        if T and T.room == R then
+            S = T
+          else
+            break
+          end
+        end --]]
+
+        if S.is_walk then continue end
+
+        if not R:can_alloc_chunk(sx, sy, sx, sy) then continue end
+
+        table.insert(seeds, S)
+      end end
+    end
+
+    return seeds
+  end
+
+
+  local function nuke_up_side(R, side)
+    if not LEVEL.liquid then return end
+
+    local spots = free_seeds_along_side(R, side)
+
+    if #spots < 3 then return end
+
+    each S in spots do
+      local C = R:alloc_chunk(S.sx, S.sy, S.sx, S.sy)
+      C.liquid = true
+    end
+  end
+
+
   local function decorative_chunks(R)
     -- this does scenic stuff like cages, nukage pits, etc...
 
     -- TODO
 
+    for side = 2,8,2 do
+      if rand.odds(65) then nuke_up_side(R, side) end
+    end
   end
 
 
@@ -1088,7 +1145,7 @@ stderrf("TRYING....................\n")
     local fl_chunks = {}
 
     each C in R.chunks do
-      if not (C.scenic or C.cross_junc) then
+      if not (C.scenic or C.cross_junc or C.liquid) then
         table.insert(fl_chunks, C)
       end
     end
@@ -1589,6 +1646,10 @@ stderrf("TRYING....................\n")
 
     each A in R.areas do
       each C in A.chunks do
+
+--!!!!!!!!!!1 FIXME FIXME FIXME
+if not C.floor_h then C.floor_h = 0 end
+
         -- validate : all areas got a height
         local h = assert(C.floor_h)
 

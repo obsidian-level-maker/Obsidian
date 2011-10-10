@@ -45,6 +45,8 @@ class CHUNK
 
   stair : STAIR
 
+  liquid : bool
+
   crossover_hall : HALLWAY
 
   adjuster_dir   -- normally NIL
@@ -791,6 +793,8 @@ function CHUNK_CLASS.build(C)
   if C.cross_junc then
     f_h = x_hall.floor_h
     x_hall = nil
+  elseif C.liquid then
+    f_h = C.room.floor_min_h - 24
   else
     f_h = assert(C.floor_h)
   end
@@ -847,6 +851,12 @@ function CHUNK_CLASS.build(C)
   else
     light = rand.irange(40, 100)
     if C.hall then light = light * 0.5 end
+  end
+
+
+  -- FIXME: proper liquids for Quake
+  if C.liquid then
+    f_mat = LEVEL.liquid.mat
   end
 
 
@@ -1193,7 +1203,7 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
 
   -- spots [FIXME : do it properly]
-  if C.room and not C.content.kind and not C.stair and not x_hall
+  if C.room and not C.content.kind and not C.stair and not C.liquid and not x_hall
   then
     local R = C.room
 
