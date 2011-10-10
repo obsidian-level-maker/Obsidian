@@ -1279,6 +1279,8 @@ function Plan_contiguous_sections()
     N:set_room(K.room)
 
     N.kind = "section2"
+
+    table.insert(K.room.sections, N)
   end
 
 
@@ -1771,8 +1773,8 @@ function Plan_create_rooms()
   Plan_add_big_junctions()
   Plan_add_small_rooms()
 
-  Plan_contiguous_sections()
   Plan_collect_sections()
+  Plan_contiguous_sections()
   Plan_dump_sections()
 
   Plan_decide_outdoors()
