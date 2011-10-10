@@ -614,8 +614,9 @@ function Hallway_add_doubles()
 
     D2.K1 = right_K
     D2.K2 = room_K
-    
-    --- D1.peer = D2 ; D2.peer = D1
+
+    -- peer up the two connections, needed when locking one of them
+    D1.peer = D2 ; D2.peer = D1
 
     D2:add_it()
 
