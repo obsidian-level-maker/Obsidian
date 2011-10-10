@@ -756,11 +756,11 @@ gui.debugf("Excess %s = %1.1f\n", stat, excess)
     local best_dist
 
     -- FIXME: optimise this!
-    for index = 2,#R.item_spots do
+    for index = 1,#R.item_spots do
       local spot = R.item_spots[index]
       local dist = 9e9
 
-      for _,prev in ipairs(prev_spots) do
+      each prev in prev_spots do
         local d = Monsters_dist_between_spots(prev, spot)
         dist = math.min(dist, d)
       end
