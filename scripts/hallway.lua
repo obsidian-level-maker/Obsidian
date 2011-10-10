@@ -635,6 +635,8 @@ function Hallway_add_doubles()
     -- create chunk in room
     local CC = room_K.room:chunk_for_double(room_K, left_dir)
 
+    CC.foobage = "conn"
+
     return true
   end
 
