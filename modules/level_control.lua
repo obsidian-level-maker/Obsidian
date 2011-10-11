@@ -73,6 +73,7 @@ OB_MODULES["level_control"] =
     hallways    = { label="Hallways",       choices=LEVEL_CONTROL.CHOICES }
     lakes       = { label="Lakes",          choices=LEVEL_CONTROL.CHOICES }
     liquids     = { label="Liquids",        choices=LEVEL_CONTROL.CHOICES }
+    mon_variety = { label="Monster Variety",choices=LEVEL_CONTROL.CHOICES }
     naturals    = { label="Natural Areas",  choices=LEVEL_CONTROL.CHOICES }
     pictures    = { label="Pictures",       choices=LEVEL_CONTROL.CHOICES }
     pillars     = { label="Pillars",        choices=LEVEL_CONTROL.CHOICES }

@@ -390,13 +390,39 @@ function Monsters_max_level()
 end
 
 
+function Monsters_pick_single_for_level()
+  local tab = {}
+
+  if not EPISODE.single_mons then
+    EPISODE.single_mons = {}
+  end
+
+  each name,prob in LEVEL.global_pal do
+    local info = GAME.MONSTERS[name]
+    tab[name] = (info.level or 5) * 10
+
+    -- prefer monsters which have not been used before
+    if EPISODE.single_mons[name] then
+      tab[name] = tab[name] / 10
+    end
+  end
+
+  local name = rand.key_by_probs(tab)
+
+  -- mark it as used
+  EPISODE.single_mons[name] = 1
+
+  return name
+end
+
+
 function Monsters_global_palette()
   -- Decides which monsters we will use on this level.
   -- Easiest way is to pick some monsters NOT to use.
 
   LEVEL.global_pal = {}
 
-  for name,info in pairs(GAME.MONSTERS) do
+  each name,info in GAME.MONSTERS do
     if info.prob  and info.prob > 0 and
        info.level and info.level <= LEVEL.max_level
     then
@@ -409,11 +435,20 @@ function Monsters_global_palette()
   end
 
 
+  -- only one kind of monster in this level?
+  if STYLE.mon_variety == "none" then
+    local the_mon = Monsters_pick_single_for_level()
+
+    LEVEL.global_pal = {}
+    LEVEL.global_pal[the_mon] = 1
+  end
+
+
   -- sometimes skip monsters (for more variety).
   -- we don't skip when their level is close to max_level, to allow
   -- the gradual introduction of monsters to occur normally.
 
-  if PARAM.skip_monsters then
+  if PARAM.skip_monsters and STYLE.mon_variety != "none" and STYLE.mon_variety != "heaps" then
     local perc = rand.pick(PARAM.skip_monsters)
 
     local skip_list = {}
