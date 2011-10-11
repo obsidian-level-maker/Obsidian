@@ -1749,15 +1749,19 @@ function Monsters_in_room(R)
   local function decide_cage_monster(enviro, spot, room_pal, used_mons)
     -- Note: this function is used for traps too
 
+    -- FIXME: decide cage_palette EARLIER (before laying out the room)
+
     local list = {}
 
     local used_num = table.size(used_mons)
     if used_num > 4 then used_num = 4 end
 
-    for mon,info in pairs(GAME.MONSTERS) do
+    each mon,info in GAME.MONSTERS do
       local prob = prob_for_mon(mon, info, enviro)
 
-      if not mon_fits(mon, spot) then prob = 0 end
+      if STYLE.mon_variety == "none" and not LEVEL.global_pal[mon] then continue end
+
+      if not mon_fits(mon, spot) then continue end
 
       -- prefer monsters not in the room palette
       if room_pal[mon] then prob = prob / 100 end
