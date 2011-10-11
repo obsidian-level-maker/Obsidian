@@ -4,7 +4,7 @@
 --
 --  Oblige Level Maker
 --
---  Copyright (C) 2008-2010 Andrew Apted
+--  Copyright (C) 2008-2011 Andrew Apted
 --
 --  This program is free software; you can redistribute it and/or
 --  modify it under the terms of the GNU General Public License
@@ -1157,22 +1157,26 @@ function Monsters_in_room(R)
 
 
   local function number_of_kinds()
-    local kind
-    
+    local base_num
+
+    if STYLE.mon_variety == "heaps" then return 7 end
+    if STYLE.mon_variety != "some"  then return 1 end
+
     if OB_CONFIG.mons == "mixed" then
-      kind = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
+      base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
 
     elseif OB_CONFIG.mons == "prog" then
-      kind = LEVEL.prog_mons_kind
+      base_num = LEVEL.prog_mons_kind
 
     else
-      kind = MONSTER_KIND_TAB[OB_CONFIG.mons]
+      base_num = MONSTER_KIND_TAB[OB_CONFIG.mons]
     end
 
-    assert(kind)
+    assert(base_num)
 
+    -- adjust the base number to account for room size
     local size = math.sqrt(R.svolume)
-    local num  = int(size * kind / 12 + 0.6 + gui.random())
+    local num  = int(base_num * size / 12 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
     if num > 5 then num = 5 end  -- FIXME: game specific --> PARAM.xxx
