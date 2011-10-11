@@ -20,18 +20,15 @@ OBLIGE WISH-LIST
   OTHER GAMES
 ----------------------------------------------------------------
 
-+  Duke Nukem 3D
-
 -  Chex Quest 1, 2, 3
 
--  Doom64 TC
++  Duke Nukem 3D
 
 ?  Blood
+
 ?  Shadow Warrior
 
 ?  Dark Forces
-
-?  Sonic Robo Blast 2
 
 
 ----------------------------------------------------------------
