@@ -150,7 +150,7 @@ GLOBAL_STYLE_LIST =
   crates     = { none=20, some=40, heaps=10 }
   bridges    = { none=10, some=40 }
 
-  mon_variety = { none=1, few=4, some=60, heaps=10 }
+  mon_variety = { none=1, few=4, some=90, heaps=20 }
 
   lt_trim    = { none=40, some=20, heaps=10 }
   lt_spokes  = { none=90, some=20, heaps=5 }
