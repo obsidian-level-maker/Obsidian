@@ -1,4 +1,32 @@
 
+PLACEMENT TABLE:
+
+   XY_PLACE     Z_PLACE      EXAMPLES:
+--------------------------------------------------------------------
+   chunk        all          small exit room, large cage
+   chunk        floor        plain floor, downward stair
+   chunk        ceil         plain ceiling, sky light
+
+   edge         all          wall, picture, window, buttress
+   edge         floor        fence, quake button, spike shooter,
+                               compute console, upward stair
+   edge         ceil         billboard
+
+   straddle     all          door
+   straddle     floor        lowering bars
+   straddle     ceil         ??
+
+   middle       all          pillar, small cage
+   middle       floor        pedestal, fountain, crate, teleport pad
+   middle       ceil         ceiling light, crusher
+
+   corner       all          diagonal corner, cage
+   corner       floor        torch on platform
+   corner       ceil         ???
+
+   ???                       3D bridge
+
+
 QUESTION 1:
 
 Should a _single_ prefab definition for Pictures be able to support

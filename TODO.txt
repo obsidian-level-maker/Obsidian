@@ -53,33 +53,6 @@ NOTE: should be impossible to have a height adjuster in a chunk
 
 
 
-   XY_PLACE     Z_PLACE      EXAMPLES:
---------------------------------------------------------------------
-   chunk        all          small exit room, large cage
-   chunk        floor        plain floor, downward stair
-   chunk        ceil         plain ceiling, sky light
-
-   edge         all          wall, picture, butress
-   edge         floor        quake button, spike shooter,
-                               compute console, upward stair
-   edge         ceil         billboard
-
-   straddle     all          door, window
-   straddle     floor        fence
-   straddle     ceil         ??
-
-   middle       all          pillar, small cage
-   middle       floor        pedestal, fountain, crate, teleport pad
-   middle       ceil         ceiling light, crusher
-
-   corner       all          diagonal corner, cage
-   corner       floor        torch on platform
-   corner       ceil         ???
-
-   ???                       3D bridge
-
-
-
 -  position-based monster ordering 
 
 
