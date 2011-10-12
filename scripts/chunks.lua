@@ -658,16 +658,23 @@ function CHUNK_CLASS.cycle_stair(C, dir, N)
 
   -- this is temporary crud
 
-  local skin_name
+  local stair_name
+  local  lift_name
 
   if N.floor_h > C.floor_h then
-    skin_name = "Stair_Up1"
+    stair_name = "Stair_Up1"
+     lift_name =  "Lift_Up1"
   else
-    skin_name = "Stair_Down1"
+    stair_name = "Stair_Down1"
+     lift_name =  "Lift_Down1"
   end
 
-  local skin = GAME.SKINS[skin_name]
+  local skin = GAME.SKINS[stair_name]
   if not skin then return end
+
+  if math.abs(N.floor_h - C.floor_h) > 128 then
+    skin = GAME.SKINS[lift_name] or skin
+  end
 
   C.stair =
   {
