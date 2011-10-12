@@ -6,6 +6,19 @@ Current Work
 ------------
 
 
+!!  windows and fences DO NOT straddle, and outdoor rooms DO NOT
+    build the outdoor facade of buildings.
+
+
+>>>  lift prefabs for high adjusters
+
+
+HALLWAYS: don't auto-merge chunks
+
+
+++  models in .MAP exporter
+
+
 Cross-Overs:
    (1) if hallway is visited first, can give it (including bridges)
        any heights, and give the room a height limitation.  Mark the
@@ -81,8 +94,6 @@ Hallways:
 
 
 Cross-Overs:
-  !!  heights are messed up?
-
   +  build the bridges / channels using prefabs
 
   -  sometimes make a dramatic height difference
@@ -177,9 +188,9 @@ Goals for next WIP
 
 +  windows and fences
 
--  sky borders in outdoor rooms
++  liquid areas
 
-+  system for texture coordinates
+-  sky borders in outdoor rooms
 
 
 -----------------------------------------------------------------
@@ -188,13 +199,13 @@ Goals for next WIP
 Release Goals
 =============
 
++  system for texture coordinates
+
 +  working pictures
 
 +  caves working again
 
 +  better ceilings, some ceiling lights
-
-+  liquid areas
 
 
 -  normal doors
