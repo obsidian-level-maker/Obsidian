@@ -1859,6 +1859,33 @@ DOOM.SKINS =
   }
 
 
+  Lift_Up1 =  -- Rusty
+  {
+    _prefab = "LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 96,128,160,192 }
+
+    lift = "SUPPORT3"
+    top  = "CEIL5_2"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+  Lift_Down1 =  -- Shiny
+  {
+    _prefab = "LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -96,-128,-160,-192 }
+
+    lift = "SUPPORT2"
+    top  = "FLAT20"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+
   ----| ARCHES |----
 
   Arch1 =

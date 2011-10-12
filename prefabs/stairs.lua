@@ -1,5 +1,5 @@
 ----------------------------------------------------------------
---  STAIR PREFABS
+--  STAIR and LIFT PREFABS
 ----------------------------------------------------------------
 --
 --  Oblige Level Maker
@@ -24,31 +24,6 @@
 --  in the raw (unrotated) prefab.  
 --
 ----------------------------------------------------------------
-
-
-PREFAB.LIFT =
-{
-  brushes =
-  {
-    -- lift itself
-    {
-      { x =  32, y =  0, mat = "?lift", special="?walk_kind",   tag="?tag" }
-      { x = 160, y =  0, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { t = 123, mat = "?top", tag = "?tag" }
-    }
-
-    -- surrounding floor  FIXME: keep???
-    {
-      { x =   0, y=   0, mat = "?floor" }
-      { x = 192, y=   0, mat = "?floor" }
-      { x = 192, y= 192, mat = "?floor" }
-      { x =   0, y= 192, mat = "?floor" }
-      { t = 0, mat = "?floor" }
-    }
-  }
-}
 
 
 PREFAB.STAIR_6 =
@@ -376,4 +351,78 @@ PREFAB.QUAKE_3D_STAIR =
     }
   }
 }
+
+
+--------------------------------------------------------------------
+
+
+PREFAB.LIFT_UP =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- lift itself
+    {
+      { x =  32, y =  0, mat = "?lift", special="?walk_kind",   tag="?tag" }
+      { x = 160, y =  0, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { t = 130, mat = "?top", tag = "?tag" }
+    }
+
+    -- surrounding floor
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x =   0, y= 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+  }
+}
+
+
+PREFAB.LIFT_DOWN =
+{
+  fitted = "xy"
+
+  brushes =
+  {
+    -- lift itself
+    {
+      { x =  32, y = 128, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 128, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 192, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 192, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { t = 130, mat = "?top", tag = "?tag" }
+    }
+
+    -- surrounding floor
+    {
+      { x =  0, y=   0, mat = "?floor" }
+      { x = 32, y=   0, mat = "?floor" }
+      { x = 32, y= 192, mat = "?floor" }
+      { x =  0, y= 192, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x = 160, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x = 160, y= 192, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 128, mat = "?floor" }
+      { x =   0, y= 128, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+  }
+}
+
 
