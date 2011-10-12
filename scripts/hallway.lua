@@ -493,7 +493,7 @@ each K in visited do if K.used then len = len + 1 end end
         do_cross = true
       end
 
-      if (not is_junction) or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
+      if (not is_junction) or K.used or geom.is_perpendic(dir, from_dir) then --- or N.kind == "big_junc" then
 
 --stderrf("  recursing @ dir:%d\n", dir)
         local new_stats = table.copy(stats)
