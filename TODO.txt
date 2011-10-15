@@ -6,6 +6,9 @@ Current Work
 ------------
 
 
+-  occasionally void up the JUNCTIONS in an indoor room
+
+
 !!  windows and fences DO NOT straddle, and outdoor rooms DO NOT
     build the outdoor facade of buildings.
 
@@ -19,89 +22,20 @@ HALLWAYS: don't auto-merge chunks
 ++  models in .MAP exporter
 
 
-Cross-Overs:
-   (1) if hallway is visited first, can give it (including bridges)
-       any heights, and give the room a height limitation.  Mark the
-       hallway chunk leading into the room as a "height adjuster".
-
-       [Note: cycle lead-in chunks are automatically adjusters]
-
-       When room is visited, it will get its first height from
-       the lead-in chunk and will have a height limitation in
-       place for all areas.
-
-    (2) if room is visited first, flesh out normally and give
-        crossover chunks a height limitation.
-
-        When hallway is visited, the exit chunk(s) which lead
-        to a crossover chunk will be the "height adjusters".
-        The hallway is free to choose the bridge heights here
-        so long as the limitation is satisfied.
-
-COMMON PART: hallways must be able to adjust their exit heights
-             to match the rooms (or hallways) they join onto.
-
-             FOR NOW: do this in a single chunk.
-
-             LATER:   can flow the differences into other chunks
-                      or even the whole hallway.
-
-NOTE: should be impossible to have a height adjuster in a chunk
-      which joins TWO rooms -- since (a) cycles are done after all
-      normal connections, and (b) crossover adjusters will be in
-      junctions which are never used for emergency connections.
-
-
-
 -  position-based monster ordering 
 
 
 
 Hallways:
+  !!  fix chunk alignment in hallway connections
+
   !!  monsters / items in hallways
       --> set 'belong_room' of hallway, add hall mons to that battle
-
-  !!  fix chunk alignment in hallway connections
 
   +  proper height setting, use lifts when necessary
 
 
-Cross-Overs:
-  +  build the bridges / channels using prefabs
-
-  -  sometimes make a dramatic height difference
-
-  -  fix hallway vertical gaps
-
-
-Street Mode:
-DONE: limit to once per episode (higher prob in secret level)
-
-  +  limit number of locked rooms:
-     (a) if too many rooms, merge some
-     (b) make some rooms be optional (storehouses or weapon)
-     (c) connect some rooms via 3D bridges
-  
-  -  fix the sky glitch (pieces jutting inside a room)
-
-  -  better looking "streets" (via prefabs and SKINs)
-
-  -  fix the "big junc" situation, good place for a fountain
-
-  -  a raised outdoory room might be cool
-
-  -  25% of the time  : keep the outer ring
-     25% of the time  : expand all rooms into outer ring
-     rest of the time : expand corner rooms 50%, side rooms 33%
-
-  WISH: 3D bridges between two buildings
-
-
 -----------------------------------------------------------------
-
-
-WISH: 3D bridges can be 3D stairs [relax area touching rule]
-
 
 
 FIX: areas may be separated by "scenic" chunks
@@ -123,30 +57,6 @@ Windows: MUST decide them after all heights are done
 
 7. big middle prefab, e.g. nukage pit
 
-
-
->>>  Simple rooms (caves and mazes)
-
-
-
-OTHER STUFF
-
-!!  u1..v2 for texture coords on brushes
-
-    x_offset is alternate term for u1  [u2 can be absent]
-    y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
-
-
-+  Hexen stuff:
-   
-   +  BOSS map : do bossy stuff
-
-   +  BOSS map : require the 2/3 hub keys to access boss room
-                 NOTE: could use them to restrict progress along chain
-
-   DONE: hub gates between the levels
-   DONE: weapons for fight simulator
-   DONE: prevent key re-use
 
 
 -----------------------------------------------------------------
@@ -172,7 +82,12 @@ Goals for next WIP
 Release Goals
 =============
 
-+  system for texture coordinates
++  system for texture coordinates:
+
+     u1..v2 for texture coords on brushes
+
+     x_offset is alternate term for u1  [u2 can be absent]
+     y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
 +  working pictures
 

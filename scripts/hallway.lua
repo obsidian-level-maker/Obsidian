@@ -44,8 +44,31 @@ class HALLWAY
   wall_tex, floor_tex, ceil_tex 
 }
 
-
 --------------------------------------------------------------]]
+
+--
+-- Cross-Over Notes:
+-- ================
+--
+-- (1) if hallway is visited first, can give it (including bridges)
+--     any heights, and give the room a height limitation.  Mark the
+--     hallway chunk leading into the room as a "height adjuster".
+-- 
+--     [Note: cycle lead-in chunks are automatically adjusters]
+-- 
+--     When room is visited, it will get its first height from
+--     the lead-in chunk and will have a height limitation in
+--     place for all areas.
+-- 
+--  (2) if room is visited first, flesh out normally and give
+--      crossover chunks a height limitation.
+-- 
+--      When hallway is visited, the exit chunk(s) which lead
+--      to a crossover chunk will be the "height adjusters".
+--      The hallway is free to choose the bridge heights here
+--      so long as the limitation is satisfied.
+-- 
+
 
 require 'defs'
 require 'util'

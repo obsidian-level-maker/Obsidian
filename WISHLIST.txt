@@ -52,6 +52,8 @@ Miscellaneous:
      and the "stair" is a short intrusion in the side of the lower
      chunk (say no more than 32 units deep, a prefab).
 
+  -  3D bridges can be 3D stairs [use better area touching rule]
+
   -  3D chunk stuff : use z_low and z_high fields
 
   -  double or triple switches: each one raises a 24 unit stair,
@@ -81,6 +83,12 @@ Miscellaneous:
 
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
+
+Hexen:
+   !!  BOSS map : require the 2/3 hub keys to access boss room
+                 NOTE: could use them to restrict progress along chain
+
+   +   BOSS map : actually add the bosses (whatever else is needed)
 
 
 Teleporters:
@@ -192,7 +200,15 @@ Intrusions:
 
 
 CrossOvers:
+  +  build the bridges / channels using prefabs
+
+  -  sometimes make a dramatic height difference
+
+  -  fix hallway vertical gaps
+
   +  make a moving platform in Quake 1/2 maps
+
+  -  a version with arches underneath
 
   -  pillars holding up the bridge
 
@@ -242,6 +258,25 @@ Idea: "single minis" : a single room (not too big, kvolume <= 2)
 -  sometimes lock another connection (ESP: symmetry)
    with the same lock as one we just added
    [ESP: when new lock goes to leaf or semi-leaf]
+
+
+Street Mode:
+  +  limit number of locked rooms:
+     (a) if too many rooms, merge some
+     (b) make some rooms be optional (storehouses or weapon)
+     (c) connect some rooms via bridges
+  
+  -  fix the sky glitch (pieces jutting inside a room)
+
+  -  better looking "streets" (via prefabs and SKINs)
+
+  -  fix the "big junc" situation, good place for a fountain
+
+  -  a raised outdoory room might be cool
+
+  -  25% of the time  : keep the outer ring
+     25% of the time  : expand all rooms into outer ring
+     rest of the time : expand corner rooms 50%, side rooms 33%
 
 
 Caves:
