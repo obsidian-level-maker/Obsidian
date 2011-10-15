@@ -1723,7 +1723,7 @@ OB_GAMES["chex1"] =
 }
 
 
-OB_GAMES["chex2"] =
+UNFINISHED["chex2"] =
 {
   label = "Chex Quest 2"
 
@@ -1743,7 +1743,7 @@ OB_GAMES["chex2"] =
 }
 
 
-OB_GAMES["chex3"] =
+UNFINISHED["chex3"] =
 {
   label = "Chex Quest 3"
   format = "doom"

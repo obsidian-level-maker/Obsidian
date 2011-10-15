@@ -1638,7 +1638,7 @@ end
 
 ------------------------------------------------------------
 
-OB_GAMES["harmony"] =
+UNFINISHED["harmony"] =
 {
   label = "Harmony"
 
