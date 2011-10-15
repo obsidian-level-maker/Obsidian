@@ -129,9 +129,6 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
 
     local C
 
-if H.crossover then
-stderrf("*** section : %s %s\n", K:tostr(), (K.used ? "USED" ; "free"))
-end
     -- allocate chunk, mark section as used
     if K.used then
       assert(H.crossover)
@@ -171,7 +168,6 @@ end
     end end
     end
   end
-stderrf("\n")
 end
 
 
@@ -183,7 +179,7 @@ function HALLWAY_CLASS.add_it(H)
 
     over_R.crossover_hall = H
 
-stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
+-- stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
   end
 
   H:make_chunks(false)
@@ -772,7 +768,7 @@ function HALLWAY_CLASS.set_cross_mode(H)
     H.cross_mode = "bridge"
   end
 
- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
+-- stderrf("CROSSOVER %s : %s (id %d over %d)\n", H:tostr(), H.cross_mode, id1, id2)
 end
 
 
@@ -822,7 +818,7 @@ entry_conn:dump()
   if H.cross_limit then
     if entry_h < H.cross_limit[1] then entry_h = H.cross_limit[1] end
     if entry_h > H.cross_limit[2] then entry_h = H.cross_limit[2] end
-stderrf("applied cross_limit: entry_h --> %d\n", entry_h)
+-- stderrf("applied cross_limit: entry_h --> %d\n", entry_h)
   end
 
   H.floor_h = entry_h

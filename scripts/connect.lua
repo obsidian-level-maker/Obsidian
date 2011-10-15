@@ -356,7 +356,7 @@ function Connect_scan_sections(mode, min_score)
     error("Connection failure: separate groups exist")
   end
 
-if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", LEVEL.best_conn.score) end
+-- if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", LEVEL.best_conn.score) end
 
   Connect_make_branch(mode)
 end

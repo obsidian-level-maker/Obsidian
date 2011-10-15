@@ -1134,7 +1134,6 @@ end
   -- crossover
   if x_hall and x_hall.cross_mode == "bridge" then
     local h = x_hall.floor_h
-stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
 
     local tx1, ty1 = C.x1, C.y1
     local tx2, ty2 = C.x2, C.y2
@@ -1160,7 +1159,6 @@ stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER BRIDGE @ %s h:%d\n", C:tostr(), h)
   if x_hall and x_hall.cross_mode == "channel" then
     local h = C.floor_h
 --!!!!    local dir = assert(C.crossover.dir)
-stderrf(">>>>>>>>>>>>>>>>>>>>> CROSSOVER CHANNEL @ %s h:%d\n", C:tostr(), h)
 
     for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
       local S = SEEDS[sx][sy]
