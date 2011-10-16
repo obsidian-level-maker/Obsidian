@@ -376,6 +376,18 @@ function ROOM_CLASS.pick_ceil_mat(R)
 end
 
 
+function ROOM_CLASS.has_walk(R, sx1, sy1, sx2, sy2)
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+    assert(S)
+
+    if S.is_walk then return true end
+  end end
+
+  return false
+end
+
+
 function ROOM_CLASS.can_alloc_chunk(R, sx1, sy1, sx2, sy2)
   if sx1 < R.sx1 or sx2 > R.sx2 then return false end
   if sy1 < R.sy1 or sy2 > R.sy2 then return false end

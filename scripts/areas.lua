@@ -244,6 +244,10 @@ function Areas_important_stuff()
 
       local cost = 2 ^ rand.range(1, 5)
 
+      -- avoid junctions  [FIXME: only avoid ones in middle of room]
+      if S.section.orig_kind == "junction" then cost = 500 end
+      if N.section.orig_kind == "junction" then cost = 500 end
+
       S.cost[dir]    = cost
       N.cost[10-dir] = cost
     end
@@ -902,11 +906,11 @@ stderrf("TRYING....................\n")
           end
         end --]]
 
-        if S.is_walk then continue end
-
-        if not R:can_alloc_chunk(sx, sy, sx, sy) then continue end
-
-        table.insert(seeds, S)
+        if R:can_alloc_chunk(sx, sy, sx, sy) and
+              not R:has_walk(sx, sy, sx, sy)
+        then
+          table.insert(seeds, S)
+        end
       end end
     end
 
@@ -937,7 +941,9 @@ stderrf("TRYING....................\n")
   
   local function void_up_section(R, K)
     -- usually make a single chunk
-    if R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2) then
+    if R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2) and
+          not R:has_walk(K.sx1, K.sy1, K.sx2, K.sy2)
+    then
       local C = R:alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2)
       C.scenic = true
       return
@@ -946,7 +952,9 @@ stderrf("TRYING....................\n")
     for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
       local S = SEEDS[sx][sy]
 
-      if R:can_alloc_chunk(sx, sy, sx, sy) then
+      if R:can_alloc_chunk(sx, sy, sx, sy) and
+            not R:has_walk(sx, sy, sx, sy)
+      then
         local C = R:alloc_chunk(sx, sy, sx, sy)
         C.scenic = true
       end
@@ -959,9 +967,9 @@ stderrf("TRYING....................\n")
     if R.outdoor then return end
 
     -- only in some rooms
-    if not rand.odds(25) then return end
+    if not rand.odds(40) then return end
 
-    local whole = rand.odds(3)
+    local whole = rand.odds(2)
     local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE based
 
     each K in R.sections do
@@ -1707,7 +1715,8 @@ stderrf("TRYING....................\n")
 
         if not C.floor_h then
           -- stderrf("FUCKED UP IN %s @ %s\n", R:tostr(), C:tostr())
-          -- C.floor_h = 0
+          -- C.floor_h = -999
+          -- C. ceil_h =  999
           error("Area chunk failed to get a floor height")
         end
 
