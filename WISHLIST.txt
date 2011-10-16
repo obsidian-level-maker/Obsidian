@@ -44,6 +44,8 @@ Miscellaneous:
      make the exit into a switched door and put a switch at other
      end of room.
 
+  -  try position-based monster ordering for fight simulator
+
   -  in a large (multi-section) room, if any section has no "events"
      (a connection or switch or key or major item) then give it a
      nice pickup item (etc) or at least a walk space.
@@ -817,6 +819,9 @@ Name generator:
 -  CSG: clipping rectangles (typically a room)
 
 -  friendly monsters
+
+-  a module to randomly change DOOM monster / weapon stats via
+   DEHACKED / DDF / DECORATE.
 
 >>  have a table listing a quantized HSV for each texture/flat
     and make aesthetic decisions using it.

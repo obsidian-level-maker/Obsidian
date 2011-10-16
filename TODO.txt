@@ -15,15 +15,12 @@ Current Work
 
 >>>  lift prefabs for high adjusters
 
+     -  HERETIC
+     -  QUAKE
+     -  QUAKE II
+
 
 HALLWAYS: don't auto-merge chunks
-
-
-++  models in .MAP exporter
-
-
--  position-based monster ordering 
-
 
 
 Hallways:
@@ -32,31 +29,9 @@ Hallways:
   !!  monsters / items in hallways
       --> set 'belong_room' of hallway, add hall mons to that battle
 
+  +  determine ceiling heights properly
+
   +  proper height setting, use lifts when necessary
-
-
------------------------------------------------------------------
-
-
-FIX: areas may be separated by "scenic" chunks
-     --> prevent that, c.f. sub-room logic in V3
-
-
-Windows: MUST decide them after all heights are done
-
-
-
-5. corner prefab -- chunk is assumed not to be passable anymore,
-   can make the whole thing solid [c.f. the V3 corner seeds]
-   or make a curve or diagonal -- anything a prefab can do.
-   
-   need to make sure that room stays traversible
-
-6. wall prefab -- touches one (and only one) edge of room,
-   could make whole thing solid, or whatever a prefab can do.
-
-7. big middle prefab, e.g. nukage pit
-
 
 
 -----------------------------------------------------------------
@@ -69,11 +44,19 @@ Goals for next WIP
 
 +  proper building facades
 
+   -  create "scenic" chunks in unused seeds as part of a building 
+
 +  windows and fences
 
-+  liquid areas
+   -  must decide after all heights are done
 
--  sky borders in outdoor rooms
++  sky borders in outdoor rooms
+
+-  liquid areas
+
+-  diagonal corners / void seeds
+
+-  switch skins matching the doors
 
 
 -----------------------------------------------------------------
@@ -82,30 +65,27 @@ Goals for next WIP
 Release Goals
 =============
 
-+  system for texture coordinates:
++  pictures in walls
+
++  normal doors
+
+
+-  cages
+
+-  secret niches
+
+-  caves working again
+
+
+-  system for texture coordinates:
 
      u1..v2 for texture coords on brushes
 
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
-+  working pictures
 
-+  caves working again
-
-+  better ceilings, some ceiling lights
-
-
--  normal doors
-
--  cages
-
--  secret niches
-
+?  better ceilings, some ceiling lights
 
 ?  better exits
-
-?  diagonal corners
-
-?  void seeds
 

@@ -33,6 +33,7 @@ CHANGES (since 3.57)
 - monster control modules for Heretic, Quake, Quake II
 - support for liquids in Quake and Quake II
 - support reading and writing PK3 files
+- an exporter to .MAP format to help debugging
 
 + Hexen works!
 + much improved Hexen themes, thanks to blackjar
