@@ -703,7 +703,7 @@ function Areas_flesh_out()
   end
 
 
-  local function void_check_place(R, d, sx, sy)
+  local function OLD_void_check_place(R, d, sx, sy)
     for nx = sx-d, sx+d do for ny = sy-d, sy+d do
       local S = SEEDS[nx][ny]
 
@@ -716,7 +716,7 @@ function Areas_flesh_out()
   end
 
 
-  local function void_find_spots(R, d, skip_sx, skip_sy)
+  local function OLD_void_find_spots(R, d, skip_sx, skip_sy)
     local spots = {}
 
     for sx = R.sx1+d, R.sx2-d do
@@ -734,7 +734,7 @@ function Areas_flesh_out()
   end
 
 
-  local function try_void_in_section(K)
+  local function OLD_try_void_in_section(K)
     if K.sw < 3 then return false end
     if K.sh < 3 then return false end
 
@@ -760,7 +760,7 @@ stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
   end
 
 
-  local function try_void_in_corners(K)
+  local function OLD_try_void_in_corners(K)
     each corner in { 1,3,7,9 } do
       local sx, sy = geom.pick_corner(corner, K.sx1, K.sy1, K.sx2, K.sy2)
 
@@ -781,7 +781,7 @@ stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
   end
 
 
-  local function void_in_shaped_room(R)
+  local function OLD_void_in_shaped_room(R)
     for kx = R.kx1, R.kx2 do for ky = R.ky1, R.ky2 do
       local K = SECTIONS[kx][ky]
 
@@ -797,7 +797,7 @@ stderrf("(%d %d) .. (%d %d)\n", K.sx1, K.sy1, K.sx2, K.sy2)
   end
 
 
-  local function void_in_rect_room(R)
+  local function OLD_void_in_rect_room(R)
     if (R.kw % 2) != 1 then return end
     if (R.kh % 2) != 1 then return end
 
@@ -832,13 +832,13 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function void_in_odd_room(R)
+  local function OLD_void_in_odd_room(R)
     -- TODO: use the annexed junctions
   end
 
 
 
-  local function void_islands(R)
+  local function OLD_void_islands(R)
     if R.outdoor then return end
 
     if R.shape == "rect" then
@@ -928,14 +928,59 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function decorative_chunks(R)
-    -- this does scenic stuff like cages, nukage pits, etc...
-
-    -- TODO
-
+  local function liquid_in_room(R)
     for side = 2,8,2 do
       if rand.odds(65) then nuke_up_side(R, side) end
     end
+  end
+
+  
+  local function void_up_section(R, K)
+    -- usually make a single chunk
+    if R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2) then
+      local C = R:alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2)
+      C.scenic = true
+      return
+    end
+
+    for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
+      local S = SEEDS[sx][sy]
+
+      if R:can_alloc_chunk(sx, sy, sx, sy) then
+        local C = R:alloc_chunk(sx, sy, sx, sy)
+        C.scenic = true
+      end
+    end end
+  end
+
+
+  local function void_in_room(R)
+    -- never in outdoor rooms
+    if R.outdoor then return end
+
+    -- only in some rooms
+    if not rand.odds(25) then return end
+
+    local whole = rand.odds(3)
+    local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE based
+
+    each K in R.sections do
+      if K.orig_kind == "junction" or whole then
+
+        -- TODO: if cages and not whole then cage_up_section(K) else
+
+        void_up_section(R, K)
+      end
+    end
+  end
+
+
+  local function decorative_chunks(R)
+    -- this does scenic stuff like cages, nukage pits, etc...
+
+    void_in_room(R)
+
+    liquid_in_room(R)
   end
 
 
