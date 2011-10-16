@@ -177,6 +177,15 @@ function SECTION_CLASS.approx_side_coord(K, dir)
 end
 
 
+function SECTION_CLASS.touches_edge(K)
+  for dir = 2,8,2 do
+    if not K:same_room(dir) then return true end
+  end
+
+  return false
+end
+
+
 function SECTION_CLASS.is_foot(K)  -- returns direction, or nil
   for dir = 2,8,2 do
     if not K:same_room(dir) and

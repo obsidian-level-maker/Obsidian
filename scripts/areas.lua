@@ -966,19 +966,30 @@ stderrf("TRYING....................\n")
     -- never in outdoor rooms
     if R.outdoor then return end
 
-    -- only in some rooms
-    if not rand.odds(40) then return end
+    -- room must be large enough
+    if R.kw < 2 or R.kh < 2 then return end
+
+    -- do it more often in large rooms
+    local prob = (R.svolume >= 36 ? 75 ; 25)
+    if not rand.odds(prob) then return end
 
     local whole = rand.odds(2)
-    local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE based
+    local edges = rand.odds(20)
+    local cages = rand.odds(20)  -- FIXME: (a) check cage palette  (b) STYLE
+
+    if whole then cages = false end
 
     each K in R.sections do
-      if K.orig_kind == "junction" or whole then
+      local is_junc = (K.orig_kind == "junction")
+      local is_edge =  K:touches_edge()
 
-        -- TODO: if cages and not whole then cage_up_section(K) else
+      if not is_junc and not whole then continue end
 
-        void_up_section(R, K)
-      end
+      if is_edge and not (edges or whole) then continue end
+
+      -- TODO: if cages and not is_edge then cage_up_section(K) else
+
+      void_up_section(R, K)
     end
   end
 
