@@ -438,7 +438,7 @@ end
 
 
 
-function CHUNK_CLASS.build_start(C)
+function CHUNK_CLASS.content_start(C)
   local name  = rand.key_by_probs(THEME.starts)
   local skin1 = assert(GAME.SKINS[name])
 
@@ -452,7 +452,7 @@ function CHUNK_CLASS.build_start(C)
 end
 
 
-function CHUNK_CLASS.build_exit(C)
+function CHUNK_CLASS.content_exit(C)
   local name  = rand.key_by_probs(THEME.exits)
   local skin1 = assert(GAME.SKINS[name])
 
@@ -472,12 +472,12 @@ function CHUNK_CLASS.build_exit(C)
 end
 
 
-function CHUNK_CLASS.build_key(C)
+function CHUNK_CLASS.content_key(C)
   C:do_big_item(assert(C.content.key))
 end
 
 
-function CHUNK_CLASS.build_switch(C)
+function CHUNK_CLASS.content_switch(C)
   assert(C.content.lock)
 
   local skin1
@@ -505,7 +505,7 @@ function CHUNK_CLASS.build_switch(C)
 end
 
 
-function CHUNK_CLASS.build_teleporter(C)
+function CHUNK_CLASS.content_teleporter(C)
   local conn = assert(C.content.teleporter)
 
   local name  = rand.key_by_probs(THEME.teleporters)
@@ -539,7 +539,7 @@ function CHUNK_CLASS.build_teleporter(C)
 end
 
 
-function CHUNK_CLASS.build_hub_gate(C)
+function CHUNK_CLASS.content_hub_gate(C)
   local name  = rand.key_by_probs(THEME.hub_gates)
   local skin1 = assert(GAME.SKINS[name])
 
@@ -550,7 +550,7 @@ function CHUNK_CLASS.build_hub_gate(C)
   skin2.  dest_id  = C.content.dest_id
   skin2.  dest_map = C.content.dest_map
 
-stderrf("build_hub_gate: to map %d : %d --> %d\n", skin2.dest_map, skin2.source_id, skin2.dest_id)
+stderrf("content_hub_gate: to map %d : %d --> %d\n", skin2.dest_map, skin2.source_id, skin2.dest_id)
 
 ---FIXME Hexen II and Quake II support
 ---??  skin2. in_target = string.format("tele%d", skin2. in_tag)
@@ -590,7 +590,7 @@ function CHUNK_CLASS.do_hexen_triple(C)
 end
 
 
-function CHUNK_CLASS.build_weapon(C)
+function CHUNK_CLASS.content_weapon(C)
   -- Hexen stuff
   local weapon = C.content.weapon
 
@@ -611,25 +611,25 @@ function CHUNK_CLASS.do_content(C)
   if not kind then return end
 
   if kind == "START" then
-    C:build_start()
+    C:content_start()
 
   elseif kind == "EXIT" then
-    C:build_exit()
+    C:content_exit()
 
   elseif kind == "KEY" then
-    C:build_key()
+    C:content_key()
 
   elseif kind == "SWITCH" then
-    C:build_switch()
+    C:content_switch()
 
   elseif kind == "WEAPON" then
-    C:build_weapon()
+    C:content_weapon()
 
   elseif kind == "TELEPORTER" then
-    C:build_teleporter()
+    C:content_teleporter()
 
   elseif kind == "GATE" then
-    C:build_hub_gate()
+    C:content_hub_gate()
 
   else
     error("Unknown chunk content: " .. tostring(kind))
@@ -788,7 +788,41 @@ end
 
 
 
+function CHUNK_CLASS.build_scenic(C)
+  if C.prefab_skin then
+    local skin0 = {}
+
+    local skin1 = C.prefab_skin
+    local skin2 = C.prefab_skin2
+
+    local T = Trans.box_transform(C.x1, C.y1, C.x2, C.y2, C.floor_h or 0, C.prefab_dir or 2)
+
+    Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
+
+  else
+    -- plain solid quad
+
+    local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2)
+
+    local def_mat = "_ERROR"
+    
+    if C.room then
+      def_mat = C.room.main_tex or def_mat
+    end
+
+    Brush_set_tex(brush, C.mat or def_mat)
+
+    raw_add_brush(brush)
+  end
+end
+
+
+
 function CHUNK_CLASS.build(C)
+  if C.scenic then
+    C:build_scenic()
+    return
+  end
 
   local f_h
   local c_h
