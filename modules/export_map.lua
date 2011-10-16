@@ -56,7 +56,7 @@ function EXPORT_MAP.add_brush(coords)
     end
   end
 
-  if not def_tex then def_tex = "FOOBIE" end  -- FIXME
+  if not def_tex then def_tex = "_ERROR" end  -- FIXME
 
   if not top    then top    = { t= 4096, tex=def_tex } end
   if not bottom then bottom = { b=-4096, tex=def_tex } end
@@ -87,7 +87,7 @@ function EXPORT_MAP.add_brush(coords)
 end
 
 
-function EXPORT_MAP.add_entity(ent)
+function EXPORT_MAP.add_entity(ent, model)
   local file = EXPORT_MAP.file
 
   if not file then return end  
@@ -109,6 +109,9 @@ function EXPORT_MAP.add_entity(ent)
       continue
     end
 
+    -- ignore any model reference
+    if key == "model" then continue end
+
     local key2 = key
 
     if key2 == "id" then key2 = "classname" end
@@ -122,6 +125,35 @@ function EXPORT_MAP.add_entity(ent)
     export_printf("\"origin\" \"%d %d %d\"\n", origin.x or 0, origin.y or 0, origin.z or 0)
   end
 
+  if model then
+    local def_tex = "_ERROR"
+
+    export_printf("{\n")
+
+    -- Top and Bottom
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1 1\n",
+                  0, 0, model.z2,  0, 64, model.z2,  64, 0, model.z2, model.z_face.tex or def_tex)
+
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1 1\n",
+                  0, 0, model.z1,  64, 0, model.z1,  0, 64, model.z1, model.z_face.tex or def_tex)
+
+    -- Left and Right
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
+                  model.x1, model.y2, 0,  model.x1, model.y2, 64,  model.x1, model.y1, 64, model.x_face.tex or def_tex)
+
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
+                  model.x2, model.y1, 0,  model.x2, model.y1, 64,  model.x2, model.y2, 0, model.x_face.tex or def_tex)
+
+    -- Back and Front
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
+                  model.x1, model.y1, 0,  model.x1, model.y1, 64,  model.x2, model.y1, 0, model.y_face.tex or def_tex)
+
+    export_printf("( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) ( %1.0f %1.0f %1.0f ) %s 0 0 0 1.000 1.000\n",
+                  model.x2, model.y2, 0,  model.x2, model.y2, 64,  model.x1, model.y2, 0, model.y_face.tex or def_tex)
+
+    export_printf("}\n")
+  end
+
   export_printf("}\n")
 end
 
@@ -131,9 +163,9 @@ function EXPORT_MAP.add_model(model)
 
   if not file then return end  
 
-  -- FIXME !!!
+  assert(model.entity)
 
-  export_printf("// model %s\n", model.entity.id)
+  EXPORT_MAP.add_entity(model.entity, model)
 end
 
 
