@@ -283,9 +283,9 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     if not Connect_is_possible(start_K.room, MID.hall, mode) then return end
 
-    if MID.hall.crossover then return end
-
     local score = -100 - MID.num_conn - gui.random()
+
+    if MID.hall.crossover then score = score - 500 end
 
 
     -- score is now computed : test it
@@ -344,10 +344,10 @@ function Hallway_test_branch(start_K, start_dir, mode)
     end
 
     if stats.crossover then
----///    score = score + style_sel("crossovers", 0, 0, 31, 99)
-local len = 0
-each K in visited do if K.used then len = len + 1 end end
-      score = score + 500 * len
+      local factor = style_sel("crossovers", 0, -10, 0, 300)
+      local len = 0
+      each K in visited do if K.used then len = len + 1 end end
+      score = score + (len ^ 0.25) * factor
       merge = false
     end
 

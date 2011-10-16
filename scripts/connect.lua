@@ -216,6 +216,9 @@ function Connect_make_branch(mode)
 gui.debugf("\nmake_branch\n\n")
   local info = LEVEL.best_conn
 
+-- if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", info.score) end
+   if info.stats.crossover then stderrf(">>>>>>>>>>>>> CROSSOVER score:%1.2f\n", info.score) end
+
   -- merge new hall into an existing one?
   if info.merge_K then
     local new_hall = assert(info.hall)
@@ -355,8 +358,6 @@ function Connect_scan_sections(mode, min_score)
     Plan_dump_rooms("Failed Map:")
     error("Connection failure: separate groups exist")
   end
-
--- if mode == "cycle" then stderrf(">>>>>>>>>>>>>>>> CYCLE score:%1.2f\n", LEVEL.best_conn.score) end
 
   Connect_make_branch(mode)
 end

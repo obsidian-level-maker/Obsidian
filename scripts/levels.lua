@@ -126,7 +126,7 @@ GLOBAL_STYLE_LIST =
   hallways    = { none=5, few=30, some=70, heaps=15 }
   liquids     = { few=30, some=50, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
-  crossovers  = { few=20, some=50, heaps=20 }
+  crossovers  = { none=40, some=40, heaps=40 }
   naturals    = { none=10, few=30, some=60, heaps=4 }
   big_rooms   = { none=3, few=40, some=40, heaps=20 }
   sub_rooms   = { none=40, some=80, heaps=5 }
