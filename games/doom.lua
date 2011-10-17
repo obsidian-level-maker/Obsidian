@@ -2222,7 +2222,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_blue1=50 }
+    _switches = { sw_blue=1 }
     _long = 192
     _deep = 32
 
@@ -2243,6 +2243,7 @@ DOOM.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "edge"
+    _switches = { sw_blue=1 }
     _long   = 192
     _deep   = 48
 
@@ -2260,7 +2261,7 @@ DOOM.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_red1=50 }
+    _switches = { sw_red=1 }
     _long = 192
     _deep = 32
 
@@ -2281,6 +2282,7 @@ DOOM.SKINS =
   {
     _prefab = "SMALL_SWITCH"
     _where  = "edge"
+    _switches = { sw_red=1 }
     _long   = 192
     _deep   = 48
 
@@ -2294,11 +2296,11 @@ DOOM.SKINS =
   }
 
 
-  Door_pink =
+  Door_SW_pink =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_pink1=50 }
+    _switches = { sw_pink=1 }
     _long   = 192
     _deep   = 32
 
@@ -2317,25 +2319,28 @@ DOOM.SKINS =
 
   Switch_pink1 =
   {
-    _prefab = "WALL_SWITCH"
-    _where  = "edge"
+    _prefab = "SMALL_SWITCH"
+    _where  = "chunk"
+    _switches = { sw_pink=1 }
     _long   = 192
     _deep   = 48
 
     switch_h = 64
     switch = "SW1SKIN"
+    side = "SKIN2"
+    base = "SKIN2"
     x_offset = 0
-    y_offset = 0
+    y_offset = 50
     special = 103
   }
 
 
 
-  Door_vine =
+  Door_SW_vine =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_vine1=50 }
+    _switches = { sw_vine=1 }
     _long   = 192
     _deep   = 32
 
@@ -2354,15 +2359,18 @@ DOOM.SKINS =
 
   Switch_vine1 =
   {
-    _prefab = "WALL_SWITCH"
-    _where  = "edge"
+    _prefab = "SMALL_SWITCH"
+    _where  = "chunk"
+    _switches = { sw_vine=1 }
     _long   = 192
     _deep   = 48
 
     switch_h = 64
     switch = "SW1VINE"
+    side = "GRAYVINE"
+    base = "GRAYVINE"
     x_offset = 0
-    y_offset = 0
+    y_offset = 62
     special = 103
   }
 
@@ -2527,7 +2535,10 @@ DOOM.THEME_DEFAULTS =
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
-  switch_doors = { Door_SW_blue = 50, Door_SW_red = 50 }
+  switches = { sw_blue=50, sw_red=50, sw_pink=20, sw_vine=20 }
+
+  switch_doors = { Door_SW_blue = 50, Door_SW_red = 50,
+                   Door_SW_pink = 50, Door_SW_vine = 50 }
 
   lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
                  Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 }
@@ -2586,7 +2597,6 @@ DOOM.THEME_DEFAULTS =
   __small_exits = { tech_small=50 }
   __out_exits = { tech_outdoor=50 }
 
-  OLD__switches = { sw_blue=50, sw_hot=50, sw_marble=50, sw_wood=50 }
   bars = { bar_silver=50 }
 
   -- MISC STUFF : these don't quite fit in yet --  (FIXME)
@@ -3258,7 +3268,7 @@ DOOM1.LEVEL_THEMES =
       SKSNAKE1=10, SKSNAKE2=10,
     }
 
-    switch_doors = { Door_pink = 50, Door_vine = 50 }
+    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
     logos = { carve=90, pill=50, neon=5 }
 
@@ -3757,7 +3767,7 @@ DOOM2.LEVEL_THEMES =
       RROCK04=70,
     }
 
-    switch_doors = { Door_pink = 50, Door_vine = 50 }
+    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
     OLD__exits = { skin_pillar=40, skull_pillar=20,
       demon_pillar2=10, demon_pillar3=10 }
@@ -3842,7 +3852,7 @@ DOOM2.LEVEL_THEMES =
       RROCK04=70,
     }
 
-    switch_doors = { Door_pink = 50, Door_vine = 50 }
+    FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
     OLD__exits = { skin_pillar=40, skull_pillar=20,
       demon_pillar2=10, demon_pillar3=10 }
