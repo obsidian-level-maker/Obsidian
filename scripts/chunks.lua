@@ -479,16 +479,18 @@ end
 
 function CHUNK_CLASS.content_switch(C)
   assert(C.content.lock)
+  assert(C.content.lock.switch)
 
   local skin1
   local skin2 = { tag=C.content.lock.tag }
   
-  -- !!! FIXME: determine skin1 properly (from door skin)
+  -- FIXME: do this properly (e.g. Layout_possible_prefab_from_list)
   each name,SK in GAME.SKINS do
-    if SK._switches then
-      local sw_name = rand.key_by_probs(SK._switches)
-      skin1 = assert(GAME.SKINS[sw_name])
-      break;
+    if string.match(name, "^Switch") and SK._switches then
+      if SK._switches[C.content.lock.switch] then
+        skin1 = SK
+        break
+      end
     end
   end
 
@@ -1065,12 +1067,12 @@ end
 
     local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 
-    if LINK and LINK.conn and LINK.C1 == C then
+    if LINK and LINK.conn and LINK.conn.lock and LINK.C1 == C then
 
-      if LINK.conn.lock and LINK.conn.lock.kind == "KEY" then
+      if LINK.conn.lock.kind == "KEY" then
         local list = THEME.lock_doors
 
-        local edge_fabs = Layout_possible_prefab_from_list(list, "edge", LINK.conn.lock.key)
+        local edge_fabs = Layout_possible_prefab_from_list(list, "edge", LINK.conn.lock.key, LINK.conn.lock.switch)
 
         local name = rand.key_by_probs(edge_fabs)
 
@@ -1093,10 +1095,12 @@ end
         Fabricate(skin._prefab, T, { skin, skin2 })
       end
 
-      if LINK.conn.lock and LINK.conn.lock.kind == "SWITCH" then
+      if LINK.conn.lock.kind == "SWITCH" then
         local list = THEME.switch_doors
 
-        local name = rand.key_by_probs(list)
+        local edge_fabs = Layout_possible_prefab_from_list(list, "edge", LINK.conn.lock.key, LINK.conn.lock.switch)
+
+        local name = rand.key_by_probs(edge_fabs)
 
         local skin = assert(GAME.SKINS[name])
 

@@ -1267,23 +1267,17 @@ end
 
 
 
-function Layout_possible_prefab_from_list(tab, where, req_key)
+function Layout_possible_prefab_from_list(tab, where, req_key, req_sw)
 
   assert(tab)
-
-  -- FIXME: fix this rubbish somehow
-  if tab == "SWITCH" then
-    if where != "edge" then return nil end
-    return "SWITCH"
-  end
-
 
   local function match(skin)
     -- TODO: more sophisticated matches (prefab.environment)
 
     if skin._where != where then return false end
 
-    if req_key and not skin._keys[req_key] then return false end
+    if req_key and not skin._keys[req_key]    then return false end
+    if req_sw  and not skin._switches[req_sw] then return false end
 
     return true
   end
@@ -1303,7 +1297,9 @@ function Layout_possible_prefab_from_list(tab, where, req_key)
     end
   end
 
-  if table.empty(result) then return nil end
+  if table.empty(result) then
+    error("No matching prefab for door (etc)")
+  end
 
   return result
 end

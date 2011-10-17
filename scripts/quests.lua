@@ -43,7 +43,9 @@ class QUEST
 class LOCK
 {
   kind : keyword  -- "KEY" or "SWITCH"
-  key  : string   -- name of key (game specific)
+
+  key    : string   -- name of key (game specific)
+  switch : string   -- name of switch (to match door with)
 
   tag : number    -- tag number to use for a switched door
                   -- (also an identifying number)
@@ -275,16 +277,21 @@ function Quest_choose_keys()
 
   --- STEP 2 : assign switches (random spread) ---
 
+  local switches = table.copy(assert(THEME.switches))
+
   for _,LOCK in ipairs(lock_list) do
     if not LOCK.kind then
       LOCK.kind = "SWITCH"
+      LOCK.switch = rand.key_by_probs(switches)
+      -- make it less likely to choose same switch again
+      switches[LOCK.switch] = switches[LOCK.switch] / 5
     end
   end
 
   gui.printf("Lock list:\n")
 
   each LOCK in LEVEL.locks do
-    gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or "")
+    gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
   end
 
   gui.printf("\n")
