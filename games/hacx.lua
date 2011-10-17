@@ -149,14 +149,14 @@ HACX.MATERIALS =
   DARK_CONC = { t="HW205", f="CONS1_5" }
 
 
-  LITE2 = { t="LITE2", f="CEIL3_3" }
+  LITE2 = { t="LITE2", f="DEM1_2" }
 
   MODWALL3 = { t="MODWALL3", f="CEIL3_3" }
 
 
   -- switches --
 
-  SW1CMT = { t="SW1CMT", f="CEIL3_3" }
+  SW1CMT = { t="SW1CMT", f="DEM1_2" }
 
 
   -- floors --
