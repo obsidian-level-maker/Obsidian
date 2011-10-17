@@ -1276,8 +1276,8 @@ function Layout_possible_prefab_from_list(tab, where, req_key, req_sw)
 
     if skin._where != where then return false end
 
-    if req_key and not skin._keys[req_key]    then return false end
-    if req_sw  and not skin._switches[req_sw] then return false end
+    if req_key and (not skin._keys     or not skin._keys[req_key])    then return false end
+    if req_sw  and (not skin._switches or not skin._switches[req_sw]) then return false end
 
     return true
   end
@@ -1315,27 +1315,6 @@ function Layout_possible_fab_group(usage, list, req_key)
   end
 end
 
-
-function OLD__Layout_possible_doors(E)  -- NOT USED
-  local list, lock, key
-
-  local C = E.usage.conn
-
-  if C.lock and C.lock.kind == "KEY" then
-    list = THEME.lock_doors
-    lock = C.lock
-    key  = lock.key
-  elseif C.lock and C.lock.kind == "SWITCH" then
-    list = THEME.switch_doors
-    lock = C.lock
-  elseif rand.odds(20) then
-    list = THEME.doors
-  else
-    list = THEME.arches
-  end
-
-  E.usage.edge_fabs = Layout_possible_prefab_from_list(list, "edge", key)
-end
 
 function Layout_possible_windows(E)
   if E.usage.K1.room.outdoor and E.usage.K2.room.outdoor then

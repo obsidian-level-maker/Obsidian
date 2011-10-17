@@ -223,7 +223,7 @@ function Quest_choose_keys()
   -- use less keys when number of locked doors is small
   local want_keys = num_keys
 
-  if not THEME.switch_doors then
+  if not THEME.switches then
     assert(num_locks <= num_keys)
   else
     while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(70) do
@@ -231,9 +231,9 @@ function Quest_choose_keys()
     end
   end
 
-  gui.printf("Lock count:%d  want_keys:%d (of %d)  switch_doors:%s\n",
+  gui.printf("Lock count:%d  want_keys:%d (of %d)  has_switches:%s\n",
               num_locks, want_keys, num_keys,
-              string.bool(THEME.switch_doors));
+              string.bool(THEME.switches));
 
 
   --- STEP 1 : assign keys (distance based) ---
@@ -283,7 +283,7 @@ function Quest_choose_keys()
     if not LOCK.kind then
       LOCK.kind = "SWITCH"
       LOCK.switch = rand.key_by_probs(switches)
-      -- make it less likely to choose same switch again
+      -- make it less likely to choose the same switch again
       switches[LOCK.switch] = switches[LOCK.switch] / 5
     end
   end
@@ -887,7 +887,7 @@ function Quest_make_quests()
 
   local Q = QUEST_CLASS.new(LEVEL.start_room)
 
-  if THEME.switch_doors then
+  if THEME.switches then
     -- room list will be rebuilt in visit order
     LEVEL.rooms = {}
 

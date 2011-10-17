@@ -2242,7 +2242,7 @@ DOOM.SKINS =
   Switch_blue1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
+    _where  = "chunk"
     _switches = { sw_blue=1 }
     _long   = 192
     _deep   = 48
@@ -2281,7 +2281,7 @@ DOOM.SKINS =
   Switch_red1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
+    _where  = "chunk"
     _switches = { sw_red=1 }
     _long   = 192
     _deep   = 48
@@ -2537,11 +2537,13 @@ DOOM.THEME_DEFAULTS =
 
   switches = { sw_blue=50, sw_red=50, sw_pink=20, sw_vine=20 }
 
-  switch_doors = { Door_SW_blue = 50, Door_SW_red = 50,
-                   Door_SW_pink = 50, Door_SW_vine = 50 }
+  switch_fabs  = { Switch_blue1=50, Switch_red1=50,
+                   Switch_pink1=50, Switch_vine1=50 }
 
-  lock_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
-                 Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50 }
+  locked_doors = { Locked_kc_blue=50, Locked_kc_red=50, Locked_kc_yellow=50,
+                   Locked_ks_blue=50, Locked_ks_red=50, Locked_ks_yellow=50,
+                   Door_SW_blue = 50, Door_SW_red = 50,
+                   Door_SW_pink = 50, Door_SW_vine = 50 }
 
   arches = { Arch1 = 50 }
 
