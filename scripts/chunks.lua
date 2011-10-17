@@ -806,9 +806,9 @@ function CHUNK_CLASS.build_scenic(C)
       def_mat = C.room.main_tex or def_mat
     end
 
-    Brush_set_tex(brush, C.mat or def_mat)
+    Brush_set_mat(brush, C.mat or def_mat)
 
-    raw_add_brush(brush)
+    brush_helper(brush)
   end
 end
 
