@@ -1471,7 +1471,7 @@ HEXEN.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_1=50 }
+    _switches = { sw_steel=1 }
     _long = 192
     _deep = 32
 
@@ -1486,9 +1486,8 @@ HEXEN.SKINS =
   Switch_1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
+    _where  = "chunk"
+    _switches = { sw_steel=1 }
 
     switch_h = 32
     switch = "SW51_OFF"
@@ -2379,12 +2378,15 @@ HEXEN.THEME_DEFAULTS =
 
   hub_gates = { Hub_Gate = 50 }
 
-  lock_doors = { Locked_axe = 50, Locked_cave = 50, Locked_castle = 50,
-                 Locked_dungeon = 50, Locked_emerald = 50, Locked_fire = 50,
-                 Locked_horn = 50, Locked_rusty = 50, Locked_silver = 50,
-                 Locked_swamp = 50, Locked_steel = 50 }
+  switches = { sw_steel = 50 }
 
-  switch_doors = { Door_SW_1 = 50 }
+  switch_fabs = { Switch_1 = 50 }
+
+  locked_doors = { Locked_axe = 50, Locked_cave = 50, Locked_castle = 50,
+                   Locked_dungeon = 50, Locked_emerald = 50, Locked_fire = 50,
+                   Locked_horn = 50, Locked_rusty = 50, Locked_silver = 50,
+                   Locked_swamp = 50, Locked_steel = 50,
+                   Door_SW_1 = 50 }
 
   -- TODO everything else
 }

@@ -1592,7 +1592,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_DOOR"
     _where  = "edge"
-    _switches = { Switch_floor1=50 }
+    _switches = { sw_foo=1 }
     _long = 192
     _deep = 32
 
@@ -1604,7 +1604,8 @@ QUAKE2.SKINS =
   Switch_floor1 =
   {
     _prefab = "QUAKE_FLOOR_SWITCH"
-    _where  = "middle"
+    _where  = "chunk"
+    _switches = { sw_foo=1 }
 
     switch = "FLOORSW0"
     side   = "METAL1_1"
@@ -1730,9 +1731,12 @@ QUAKE2.THEME_DEFAULTS =
 
   keys = { k_red=60, k_blue=40 }
 
-  lock_doors = { Locked_red = 50, Locked_blue = 50 }
+  switches = { sw_foo=50 }
 
-  switch_doors = { Door_SW_1 = 50 }
+  switch_fabs = { Switch_floor1 = 50 }
+
+  locked_doors = { Locked_red = 50, Locked_blue = 50,
+                   Door_SW_1 = 50 }
 
   teleporters = { Teleporter1 = 50 }
 }
