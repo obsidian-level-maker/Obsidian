@@ -272,7 +272,6 @@ CHEX3.ENTITIES =
 CHEX.PARAMETERS =
 {
   rails = true
-  switches = true
   light_brushes = true
   infighting = true
 
@@ -1024,7 +1023,7 @@ CHEX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_alum=50 }
+    _switches = { sw_alum=1 }
     _long = 192
     _deep = 32
 
@@ -1041,9 +1040,8 @@ CHEX.SKINS =
   Switch_alum =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
+    _where  = "chunk"
+    _switches = { sw_alum=1 }
 
     switch_h = 64
     switch = "SW_METAL"
@@ -1069,9 +1067,12 @@ CHEX.THEME_DEFAULTS =
 
   keys = { k_red=50, k_blue=50, k_yellow=50 }
 
-  switch_doors = { Door_SW_alum = 50 }
+  switches = { sw_alum=50 }
 
-  lock_doors = { Locked_blue=50, Locked_red=50, Locked_yellow=50 }
+  switch_fabs = { Switch_alum = 50 }
+
+  locked_doors = { Locked_blue=50, Locked_red=50, Locked_yellow=50,
+                   Door_SW_alum = 50 }
 
   liquids = { water=50, slime1=50, slime2=50 }
 }
@@ -1593,7 +1594,7 @@ function CHEX1.get_levels()
         name_theme = "TECH"
       }
 
-      mon_along = LEV.ep_along + (ep_index-1) / 5
+      LEV.mon_along = LEV.ep_along + (ep_index-1) / 5
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)

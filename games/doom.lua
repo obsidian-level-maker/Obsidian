@@ -196,7 +196,6 @@ DOOM.ENTITIES =
 DOOM.PARAMETERS =
 {
   rails = true
-  switches = true
   infighting = true
   raising_start = true
   light_brushes = true

@@ -91,7 +91,6 @@ HACX.ENTITIES =
 HACX.PARAMETERS =
 {
   rails = true
-  switches = true
   light_brushes = true
 
   jump_height = 24
@@ -1006,7 +1005,7 @@ HACX.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_blue1=50 }
+    _switches = { sw_blue=1 }
     _long = 192
     _deep = 32
 
@@ -1023,9 +1022,8 @@ HACX.SKINS =
   Switch_blue1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
+    _where  = "chunk"
+    _switches = { sw_blue=1 }
 
     switch_h = 64
     switch = "SW1CMT"
@@ -1072,9 +1070,12 @@ HACX.THEME_DEFAULTS =
 
   keys = { kz_red=50, kz_blue=50, kz_yellow=50 }
 
-  switch_doors = { Door_SW_blue = 50 }
+  switches = { sw_blue = 50 }
 
-  lock_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50 }
+  switch_fabs = { Switch_blue1 = 50 }
+
+  locked_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50,
+                   Door_SW_blue = 50 }
 
   liquids = { water=90, water2=50, elec=90, lava=50, slime=20, goo=10 }
 

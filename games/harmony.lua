@@ -1123,7 +1123,7 @@ HARMONY.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_blue1=50 }
+    _switches = { sw_blue=1 }
     _long = 192
     _deep = 32
 
@@ -1140,9 +1140,8 @@ HARMONY.SKINS =
   Switch_blue1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
+    _where  = "chunk"
+    _switches = { sw_blue=1 }
 
     switch_h = 64
     switch = "SW1CMT"

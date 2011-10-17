@@ -155,7 +155,6 @@ HERETIC.ENTITIES =
 HERETIC.PARAMETERS =
 {
   rails = true
-  switches = true
   infighting  =  true
   prefer_stairs = true
   light_brushes = true
@@ -518,7 +517,7 @@ HERETIC.SKINS =
   {
     _prefab = "DOOR"
     _where  = "edge"
-    _switches = { Switch_1=50 }
+    _switches = { sw_metal=1 }
     _long = 192
     _deep = 32
 
@@ -533,9 +532,8 @@ HERETIC.SKINS =
   Switch_1 =
   {
     _prefab = "SMALL_SWITCH"
-    _where  = "edge"
-    _long   = 192
-    _deep   = 48
+    _where  = "chunk"
+    _switches = { sw_metal=1 }
 
     switch_h = 64
     switch = "SW1OFF"
@@ -1583,11 +1581,14 @@ HERETIC.THEME_DEFAULTS =
 
   -- according to Borsuk, locked doors should always appear in the
   -- following order: Yellow ==> Green ==> Blue.
-  keys = { k_yellow=9000, k_green=90, k_blue=1 }
+  keys = { k_yellow=100, k_green=10, k_blue=1 }
 
-  lock_doors = { Locked_yellow = 50, Locked_green = 50, Locked_blue = 50 }
+  switches = { sw_metal=50 }
 
-  switch_doors = { Door_SW_1 = 50 }
+  switch_fabs = { Switch_1 = 50 }
+
+  locked_doors = { Locked_yellow = 50, Locked_green = 50, Locked_blue = 50,
+                   Door_SW_1 = 50 }
 
   teleporters = { Teleporter1 = 50 }
 
