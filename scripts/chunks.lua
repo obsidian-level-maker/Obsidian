@@ -824,6 +824,7 @@ function CHUNK_CLASS.build(C)
   local c_h
   local c_medium = "solid"
   local light = 0
+  local f_special
 
   local x_hall = C.crossover_hall
 
@@ -894,6 +895,7 @@ function CHUNK_CLASS.build(C)
   -- FIXME: proper liquids for Quake
   if C.liquid then
     f_mat = LEVEL.liquid.mat
+    f_special = 16  --- FIXME: LEVEL.liquid.special
   end
 
 
@@ -939,7 +941,7 @@ function CHUNK_CLASS.build(C)
 
     Brush_set_tex(brush, f_mat.t)
 
-    table.insert(brush, { t=f_h, tex=f_tex })
+    table.insert(brush, { t=f_h, tex=f_tex, special=f_special })
 
     raw_add_brush(brush)
   end
