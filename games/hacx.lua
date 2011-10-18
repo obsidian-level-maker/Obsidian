@@ -121,6 +121,8 @@ HACX.MATERIALS =
 
   METAL  = { t="HW209", f="RROCK03" }
 
+  LIFT   = { t="HW176", f="DEM1_1" }
+
 
   -- walls --
 
@@ -936,6 +938,33 @@ HACX.SKINS =
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
+  Lift_Up1 =
+  {
+    _prefab = "LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 96,128,160,192 }
+
+    lift = "LIFT"
+     top = "LIFT"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+  Lift_Down1 =
+  {
+    _prefab = "LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -96,-128,-160,-192 }
+
+    lift = "LIFT"
+     top = "LIFT"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+
 
   ---| LOCKED DOORS |---
 
@@ -1066,7 +1095,8 @@ HACX.THEME_DEFAULTS =
 
   exits = { Exit_switch = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+              Lift_Up1 = 10,  Lift_Down1 = 10 }
 
   keys = { kz_red=50, kz_blue=50, kz_yellow=50 }
 
