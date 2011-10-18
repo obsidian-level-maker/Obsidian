@@ -124,7 +124,7 @@ GLOBAL_STYLE_LIST =
   -- things that affect the whole level
 
   hallways    = { none=5, few=30, some=70, heaps=15 }
-  liquids     = { few=30, some=50, heaps=20 }
+  liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
   crossovers  = { none=40, some=40, heaps=40 }
   naturals    = { none=10, few=30, some=60, heaps=4 }

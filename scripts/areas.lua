@@ -881,7 +881,8 @@ stderrf("TRYING....................\n")
   local function free_seeds_along_side(R, side)
     local seeds = {}
 
-    local whole = rand.odds(20)
+    local whole
+    if side == "whole" then side = 2 ; whole = true end
 
     each K in R.sections do
       local N = K:neighbor(side)
@@ -933,12 +934,20 @@ stderrf("TRYING....................\n")
 
 
   local function liquid_in_room(R)
-    for side = 2,8,2 do
-      if rand.odds(65) then nuke_up_side(R, side) end
+    local side_prob = style_sel("liquids", 0, 10, 40, 80)
+
+    local whole_prob = style_sel("liquids", 0, 2, 15, 50)
+
+    if rand.odds(whole_prob) then
+      nuke_up_side(R, "whole")
+    else
+      for side = 2,8,2 do
+        if rand.odds(side_prob) then nuke_up_side(R, side) end
+      end
     end
   end
 
-  
+
   local function void_up_section(R, K)
     -- usually make a single chunk
     if R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2) and
