@@ -2530,7 +2530,8 @@ DOOM.THEME_DEFAULTS =
 
   pedestals = { Pedestal_1 = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+             Lift_Up1 = 2, Lift_Down1 = 2 }
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 

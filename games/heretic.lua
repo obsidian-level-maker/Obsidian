@@ -457,6 +457,34 @@ HERETIC.SKINS =
   }
 
 
+  Lift_Up1 =  -- Rusty
+  {
+    _prefab = "LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 96,128,160,192 }
+
+    lift = "DOORSTON"
+    top  = "FLOOR08"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+  Lift_Down1 =  -- Shiny
+  {
+    _prefab = "LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -96,-128,-160,-192 }
+
+    lift = "DOORSTON"
+    top  = "FLOOR08"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+
+
   --- LOCKED DOORS ---
 
   Locked_yellow =
@@ -1577,7 +1605,8 @@ HERETIC.THEME_DEFAULTS =
 
   pedestals = { Pedestal_1 = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+             Lift_Up1 = 2, Lift_Down1 = 2 }
 
   -- according to Borsuk, locked doors should always appear in the
   -- following order: Yellow ==> Green ==> Blue.
