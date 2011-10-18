@@ -954,6 +954,32 @@ CHEX.SKINS =
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
+  Lift_Up1 =
+  {
+    _prefab = "LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 96,128,160,192 }
+
+    lift = "LIFT"
+     top = "LIFT"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
+  Lift_Down1 =
+  {
+    _prefab = "LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -96,-128,-160,-192 }
+
+    lift = "LIFT"
+     top = "LIFT"
+
+    walk_kind   = 88
+    switch_kind = 62
+  }
+
 
   ---| LOCKED DOORS |---
 
@@ -1063,7 +1089,8 @@ CHEX.THEME_DEFAULTS =
 
   exits = { Exit_switch = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+             Lift_Up1 = 20, Lift_Down1 = 20 }
 
   keys = { k_red=50, k_blue=50, k_yellow=50 }
 
@@ -1099,7 +1126,8 @@ CHEX.LEVEL_THEMES =
 
     building_floors =
     {
-      FLOOR0_5=50,
+      DARK_GRAY=50, BLUE_CARPET=50,
+      ORANGE_TILE=50, VERYDARK_BLUE=50,
     }
 
     building_ceilings =
