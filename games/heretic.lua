@@ -568,7 +568,7 @@ HERETIC.SKINS =
     side = "METL2"
     base = "METL2"
     x_offset = 0
-    y_offset = 50
+    y_offset = 32
     special = 103
   }
 
