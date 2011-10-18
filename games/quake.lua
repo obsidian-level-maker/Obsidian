@@ -140,6 +140,7 @@ QUAKE1.PARAMETERS =
 
   bridges = true
   extra_floors = true
+  deep_liquids = true
 
   jump_height = 42
 
@@ -655,6 +656,14 @@ QUAKE1.MATERIALS =
 
   TELEPORT   = { t="*teleport" }
 
+  L_LAVA1    = { t="*lava1"  }
+  L_SLIME    = { t="*slime"  }
+  L_SLIME0   = { t="*slime0" }
+  L_SLIME1   = { t="*slime1" }
+  L_WATER0   = { t="*water0" }
+  L_WATER1   = { t="*water1" }
+  L_WATER2   = { t="*water2" }
+
   -- Oblige specific textures
   O_CARVE    = { t="o_carve" }
   O_BOLT     = { t="o_carve" }
@@ -714,18 +723,20 @@ QUAKE1.MATERIALS =
 ---  +amtlsw
 ---  +ashoot
 
----  *lava1
----  *slime
----  *slime0
----  *slime1
----  *water0
----  *water1
----  *water2
 ---  *04awater1
 ---  *04mwat1
 ---  *04mwat2
 ---  *04water1
 ---  *04water2
+}
+
+
+QUAKE1.LIQUIDS =
+{
+  water  = { mat="L_WATER0", medium="water", color=0x000088, light=0, special=0 }
+  slime0 = { mat="L_SLIME0", medium="slime", color=0x008800, light=0, special=0, damage=99 }
+  slime  = { mat="L_SLIME",  medium="slime", color=0x008800, light=0, special=0, damage=99 }
+  lava1  = { mat="L_LAVA1",  medium="lava",  color=0x880000, light=1, special=0, damage=99 }
 }
 
 
@@ -1072,6 +1083,8 @@ QUAKE1.LEVEL_THEMES =
 
     skies = { sky1=20, sky4=80 }
 
+    liquids = { slime0=50, slime=15 }
+
     building_walls =
     {
       TECH06_1=50, TECH08_2=50, TECH09_3=50, TECH08_1=50,
@@ -1128,6 +1141,8 @@ QUAKE1.LEVEL_THEMES =
     worldtype = 0,
 
     skies = { sky1=80, sky4=20 }
+
+    liquids = { lava1=50 }
 
 --    building_facades =
 --    {

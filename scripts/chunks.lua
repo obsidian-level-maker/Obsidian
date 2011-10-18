@@ -832,7 +832,7 @@ function CHUNK_CLASS.build(C)
     f_h = x_hall.floor_h
     x_hall = nil
   elseif C.liquid then
-    f_h = C.room.floor_min_h - 24
+    f_h = C.room.floor_min_h - (PARAM.deep_liquids ? 96 ; 24)
   else
     f_h = assert(C.floor_h)
   end
@@ -894,8 +894,21 @@ function CHUNK_CLASS.build(C)
 
   -- FIXME: proper liquids for Quake
   if C.liquid then
-    f_mat = LEVEL.liquid.mat
-    f_special = 16  --- FIXME: LEVEL.liquid.special
+    if PARAM.deep_liquids then
+      local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, nil, f_h + 80)
+
+      Brush_set_mat(brush, "_LIQUID", "_LIQUID")
+
+      table.insert(brush, 1, { m="liquid", medium=LEVEL.liquid.medium })
+
+      brush_helper(brush)
+
+      -- TODO: lighting
+
+    else
+      f_mat = LEVEL.liquid.mat
+      f_special = 16  --- FIXME: LEVEL.liquid.special
+    end
   end
 
 
