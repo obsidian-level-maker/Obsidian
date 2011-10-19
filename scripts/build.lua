@@ -958,18 +958,18 @@ function Trans.fitted_group_targets(groups, low2, high2)
   if not groups then return end  -- ugh
 
   local extra = high2 - low2
-  local weight_total = 0
+  local total_weight = 0
 
   each G in groups do
     if G.size2 then extra = extra - G.size2 end
-    weight_total = weight_total + G.weight
+    total_weight = total_weight + G.weight
   end
 
   local pos2 = low2
 
   each G in groups do
     if not G.size2 then
-      G.size2 = extra * G.weight / weight_total
+      G.size2 = extra * G.weight / total_weight
 
       if G.size2 <= 1 then
         error("Prefab does not fit!")
@@ -985,12 +985,21 @@ function Trans.fitted_group_targets(groups, low2, high2)
 end
 
 
-function Trans.loose_group_targets(groups)
+function Trans.loose_group_targets(groups, scale)
   local total_size  = 0
   local total_size2 = 0
 
+  local total_weight = 0
+
   each G in groups do
-    if not G.size2 then G.size2 = assert(G.size) end
+    total_weight = total_weight + G.weight
+  end
+
+  each G in groups do
+    if not G.size2 then
+      assert(G.weight > 0)
+      G.size2 = G.size * (G.weight / total_weight) * scale
+    end
 
     total_size  = total_size  + G.size 
     total_size2 = total_size2 + G.size2
@@ -1508,7 +1517,9 @@ function Fab_transform_XY(fab, T)
       error("Loose prefab used with fitted X transform")
     end
 
-    Trans.loose_group_targets(groups_x)
+    Trans.loose_group_targets(groups_x, T.scale_x or 1)
+
+    Trans.TRANSFORM.scale_x = nil
   end
 
 
@@ -1532,7 +1543,9 @@ function Fab_transform_XY(fab, T)
       error("Loose prefab used with fitted Y transform")
     end
 
-    Trans.loose_group_targets(groups_y)
+    Trans.loose_group_targets(groups_y, T.scale_y or 1)
+
+    Trans.TRANSFORM.scale_y = nil
   end
 
   -- apply the coordinate transform to all parts of the prefab
@@ -1594,8 +1607,8 @@ function Fab_transform_Z(fab, T)
     end
 
     -- handle QUAKE I / II platforms
-    if M.entity.height and Trans.TRANSFORM.scale_z then
-      M.entity.height = M.entity.height * Trans.TRANSFORM.scale_z
+    if M.entity.height and T.scale_z then
+      M.entity.height = M.entity.height * T.scale_z
     end
   end
 
@@ -1642,7 +1655,9 @@ function Fab_transform_Z(fab, T)
     end
 
     if groups_z then
-      Trans.loose_group_targets(groups_z)
+      Trans.loose_group_targets(groups_z, T.scale_z or 1)
+
+      Trans.TRANSFORM.scale_z = nil
     end
   end
 
