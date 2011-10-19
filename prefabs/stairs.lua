@@ -360,14 +360,20 @@ PREFAB.LIFT_UP =
 {
   fitted = "xy"
 
+  defaults =
+  {
+    speed = 32
+    delay = 105
+  }
+
   brushes =
   {
     -- lift itself
     {
-      { x =  32, y =  0, mat = "?lift", special="?walk_kind",   tag="?tag" }
-      { x = 160, y =  0, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = 64, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y =  0, mat = "?lift", special="?walk_kind",   act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y =  0, mat = "?lift", special="?switch_kind", act="SR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 64, mat = "?lift", special="?switch_kind", act="SR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 64, mat = "?lift", special="?switch_kind", act="SR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
       { t = 130, mat = "?top", tag = "?tag" }
     }
 
@@ -387,14 +393,20 @@ PREFAB.LIFT_DOWN =
 {
   fitted = "xy"
 
+  defaults =
+  {
+    speed = 32
+    delay = 105
+  }
+
   brushes =
   {
     -- lift itself
     {
-      { x =  32, y = 128, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 128, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x = 160, y = 192, mat = "?lift", special="?switch_kind", tag="?tag", peg=1, x_offset=0, y_offset=0 }
-      { x =  32, y = 192, mat = "?lift", special="?walk_kind",   tag="?tag", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 128, mat = "?lift", special="?walk_kind",   act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 128, mat = "?lift", special="?walk_kind",   act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x = 160, y = 192, mat = "?lift", special="?switch_kind", act="SR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
+      { x =  32, y = 192, mat = "?lift", special="?walk_kind",   act="WR", tag="?tag", arg1="?tag", arg2="?speed", arg3="?delay", peg=1, x_offset=0, y_offset=0 }
       { t = 130, mat = "?top", tag = "?tag" }
     }
 

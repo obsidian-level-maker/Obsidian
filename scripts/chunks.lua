@@ -907,7 +907,9 @@ function CHUNK_CLASS.build(C)
 
     else
       f_mat = LEVEL.liquid.mat
-      f_special = 16  --- FIXME: LEVEL.liquid.special
+      if OB_CONFIG.game != "hexen" then
+        f_special = 16  --- FIXME: LEVEL.liquid.special
+      end
     end
   end
 
@@ -941,10 +943,15 @@ function CHUNK_CLASS.build(C)
     -- calculate the correct scaling (to fit the actual height diff)
     T.scale_z = math.abs(delta_h) / 128
 
+    local skin2 = {}
+    if skin._tagged then
+      skin2.tag = Plan_alloc_id("tag")
+    end
+
 ---## stderrf("STAIR STUFF: dir:%d h1:%d h2:%d delta:%d scale_z:%1.4f\n",
 ---##   C.stair.dir, C.stair.C1.floor_h, C.stair.C2.floor_h, delta_h, T.scale_z)
 
-    Fabricate(skin._prefab, T, { skin0, skin })
+    Fabricate(skin._prefab, T, { skin0, skin, skin2 })
 
   else
     f_mat = Mat_lookup(f_matname)

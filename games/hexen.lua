@@ -421,7 +421,7 @@ HEXEN.MATERIALS =
   PLANET1  = { t="PLANET1",  f="F_025" }
   PLANET2  = { t="PLANET2",  f="F_025" }
   PLAT01   = { t="PLAT01",   f="F_045" }
-  PLAT02   = { t="PLAT02",   f="F_045" }
+  PLAT02   = { t="PLAT02",   f="F_065" }
   PRTL02   = { t="PRTL02",   f="F_057" }
   PRTL03   = { t="PRTL03",   f="F_019" }
   PRTL04   = { t="PRTL04",   f="F_044" }
@@ -1182,6 +1182,34 @@ HEXEN.SKINS =
     _prefab = "NICHE_STAIR_8"
     _where  = "chunk"
     _deltas = { -32,-48,-64,-64,-80,-96 }
+  }
+
+  Lift_Up1 =
+  {
+    _prefab = "LIFT_UP"
+    _where  = "chunk"
+    _tagged = 1
+    _deltas = { 96,128,160,192 }
+
+    lift = "PLAT02"
+     top = "PLAT02"
+
+    walk_kind   = 62
+    switch_kind = 62
+  }
+
+  Lift_Down1 =
+  {
+    _prefab = "LIFT_DOWN"
+    _where  = "chunk"
+    _tagged = 1
+    _deltas = { -96,-128,-160,-192 }
+
+    lift = "PLAT02"
+     top = "PLAT02"
+
+    walk_kind   = 62
+    switch_kind = 62
   }
 
 
@@ -2361,7 +2389,8 @@ HEXEN.THEME_DEFAULTS =
 
   exits = { Exit_switch = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+              Lift_Up1 = 1,   Lift_Down1 = 1 }
 
 ---???  weapon2 = { Weapon2_Set = 50 }
 ---???  weapon3 = { Weapon3_Set = 50 }
