@@ -1602,6 +1602,11 @@ function Fab_transform_Z(fab, T)
     M.z1 = Trans.apply_z(M.z1)
     M.z2 = Trans.apply_z(M.z2)
 
+    if M.delta_z then
+      M.z1 = M.z1 + M.delta_z
+      M.z2 = M.z2 + M.delta_z
+    end
+
     if Trans.mirror_z then
       M.z1, M.z2 = M.z2, M.z1
     end
