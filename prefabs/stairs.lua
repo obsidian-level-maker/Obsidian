@@ -442,6 +442,10 @@ PREFAB.QUAKE_LIFT_UP =
 {
   fitted = "xy"
 
+  x_ranges = { {32,1}, {128,0}, {32,1} }
+  y_ranges = { {128,0}, {64,1} }
+  z_ranges = { {120,1}, {16,0} }
+
   defaults =
   {
     lift_flags = ""
@@ -457,6 +461,13 @@ PREFAB.QUAKE_LIFT_UP =
       { x =   0, y= 192, mat = "?floor" }
       { t = 0, mat = "?floor" }
     }
+
+    -- update bbox to include the lift model
+    {
+      { m="bbox" }
+      { b=0 }
+      { t=136 }
+    }
   }
 
   models =
@@ -465,7 +476,7 @@ PREFAB.QUAKE_LIFT_UP =
     {
       x1 =  32, x2 = 160, x_face = { mat="?lift" }
       y1 =   0, y2 = 128, y_face = { mat="?lift" }
-      z1 = 130, z2 = 146, z_face = { mat="?lift" }
+      z1 = 120, z2 = 136, z_face = { mat="?lift" }
 
       entity =
       {
@@ -480,6 +491,10 @@ PREFAB.QUAKE_LIFT_UP =
 PREFAB.QUAKE_LIFT_DOWN =
 {
   fitted = "xy"
+
+  x_ranges = { {32,1}, {128,0}, {32,1} }
+  y_ranges = { {64,1},  {64,0}, {64,1} }
+  z_ranges = { {120,1}, {16,0} }
 
   defaults =
   {
@@ -522,6 +537,13 @@ PREFAB.QUAKE_LIFT_DOWN =
       { x =  32, y= 64, mat = "?floor" }
       { t = 128, mat = "?floor" }
     }
+
+    -- update bbox to include the lift model
+    {
+      { m="bbox" }
+      { b=0 }
+      { t=136 }
+    }
   }
 
   models =
@@ -530,7 +552,7 @@ PREFAB.QUAKE_LIFT_DOWN =
     {
       x1 =  32, x2 = 160, x_face = { mat="?lift" }
       y1 =  64, y2 = 128, y_face = { mat="?lift" }
-      z1 = 130, z2 = 146, z_face = { mat="?lift" }
+      z1 = 120, z2 = 136, z_face = { mat="?lift" }
 
       entity =
       {
