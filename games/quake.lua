@@ -1050,7 +1050,7 @@ QUAKE1.THEME_DEFAULTS =
   exits = { Exit_basic = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-              Lift_Up1 = 550,  Lift_Down1 = 550 }
+              Lift_Up1 =  3,  Lift_Down1 =  3 }
 
   pedestals = { Pedestal_tech = 50 }
 
