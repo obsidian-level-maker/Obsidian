@@ -1536,7 +1536,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_LIFT_UP"
     _where  = "chunk"
-    _deltas = { 128 }  --!!! { 96,128,160,192 }
+    _deltas = { 96,128,128,160,192 }
 
     lift = "GRNX2_7"
   }
@@ -1545,7 +1545,7 @@ QUAKE2.SKINS =
   {
     _prefab = "QUAKE_LIFT_DOWN"
     _where  = "chunk"
-    _deltas = { -128 }  --!!! { -96,-128,-160,-192 }
+    _deltas = { -96,-128,-128,-160,-192 }
 
     lift = "GRNX2_7"
   }
