@@ -1865,7 +1865,7 @@ DOOM.SKINS =
     _deltas = { 96,128,160,192 }
 
     lift = "SUPPORT3"
-    top  = "CEIL5_2"
+    top  = { STEP_F1=50, STEP_F2=50 }
 
     walk_kind   = 88
     switch_kind = 62
@@ -2531,7 +2531,7 @@ DOOM.THEME_DEFAULTS =
   pedestals = { Pedestal_1 = 50 }
 
   stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
-             Lift_Up1 = 2, Lift_Down1 = 2 }
+             Lift_Up1 = 4, Lift_Down1 = 4 }
 
   keys = { kc_red=50, kc_blue=50, kc_yellow=50 }
 
