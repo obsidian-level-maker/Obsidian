@@ -1529,10 +1529,9 @@ function Fab_transform_XY(fab, T)
 
   else
     if T.fitted_y then
-      error("Loose prefab used with fitted X transform")
+      error("Loose prefab used with fitted Y transform")
     end
 
-    Trans.loose_group_targets(groups_x)
     Trans.loose_group_targets(groups_y)
   end
 
@@ -1592,6 +1591,11 @@ function Fab_transform_Z(fab, T)
 
     if Trans.mirror_z then
       M.z1, M.z2 = M.z2, M.z1
+    end
+
+    -- handle QUAKE I / II platforms
+    if M.entity.height and Trans.TRANSFORM.scale_z then
+      M.entity.height = M.entity.height * Trans.TRANSFORM.scale_z
     end
   end
 
