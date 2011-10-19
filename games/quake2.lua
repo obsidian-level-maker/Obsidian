@@ -116,6 +116,7 @@ QUAKE2.ENTITIES =
   sun   = { id="oblige_sun", kind="other", r=1, h=1, pass=true }
 
   door = { id="func_door",  kind="other", r=1, h=1, pass=true }
+  lift = { id="func_plat",  kind="other", r=1, h=1, pass=true }
   wall = { id="func_wall",  kind="other", r=1, h=1, pass=true }
   button = { id="func_button", kind="other", r=1, h=1, pass=true }
 
@@ -1531,6 +1532,24 @@ QUAKE2.SKINS =
     _deltas = { -32,-48,-64,-80,-96 }
   }
 
+  Lift_Up1 =
+  {
+    _prefab = "QUAKE_LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 128 }  --!!! { 96,128,160,192 }
+
+    lift = "GRNX2_7"
+  }
+
+  Lift_Down1 =
+  {
+    _prefab = "QUAKE_LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -128 }  --!!! { -96,-128,-160,-192 }
+
+    lift = "GRNX2_7"
+  }
+
 
   ----| ARCHES |----
 
@@ -1727,7 +1746,8 @@ QUAKE2.THEME_DEFAULTS =
 
   pedestals = { Pedestal_1 = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+              Lift_Up1 = 7,   Lift_Down1 = 7 }
 
   keys = { k_red=60, k_blue=40 }
 
