@@ -841,6 +841,24 @@ QUAKE1.SKINS =
     _deltas = { -32,-48,-64,-64,-80,-96 }
   }
 
+  Lift_Up1 =
+  {
+    _prefab = "QUAKE_LIFT_UP"
+    _where  = "chunk"
+    _deltas = { 128 }  --!!! { 96,128,160,192 }
+
+    lift = "METAL2_6"
+  }
+
+  Lift_Down1 =
+  {
+    _prefab = "QUAKE_LIFT_DOWN"
+    _where  = "chunk"
+    _deltas = { -128 }  --!!! { -96,-128,-160,-192 }
+
+    lift = "MET5_1"
+  }
+
 
   ----| ARCHES |----
 
@@ -1031,7 +1049,8 @@ QUAKE1.THEME_DEFAULTS =
 
   exits = { Exit_basic = 50 }
 
-  stairs = { Stair_Up1 = 50, Stair_Down1 = 50 }
+  stairs = { Stair_Up1 = 50, Stair_Down1 = 50,
+              Lift_Up1 = 550,  Lift_Down1 = 550 }
 
   pedestals = { Pedestal_tech = 50 }
 
@@ -1083,7 +1102,7 @@ QUAKE1.LEVEL_THEMES =
 
     skies = { sky1=20, sky4=80 }
 
-    liquids = { slime0=50, slime=15 }
+    liquids = { slime0=25, slime=50 }
 
     building_walls =
     {

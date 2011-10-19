@@ -438,3 +438,106 @@ PREFAB.LIFT_DOWN =
 }
 
 
+PREFAB.QUAKE_LIFT_UP =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    lift_flags = ""
+  }
+
+  brushes =
+  {
+    -- surrounding floor
+    {
+      { x =   0, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x =   0, y= 192, mat = "?floor" }
+      { t = 0, mat = "?floor" }
+    }
+  }
+
+  models =
+  {
+    -- lift itself
+    {
+      x1 =  32, x2 = 160, x_face = { mat="?lift" }
+      y1 =   0, y2 = 128, y_face = { mat="?lift" }
+      z1 = 130, z2 = 146, z_face = { mat="?lift" }
+
+      entity =
+      {
+        ent = "lift", sounds = 2, height = 128,
+        spawnflags = "?lift_flags"
+      }
+    }
+  }
+}
+
+
+PREFAB.QUAKE_LIFT_DOWN =
+{
+  fitted = "xy"
+
+  defaults =
+  {
+    low_floor = "?floor"
+    lift_flags = ""
+  }
+
+  brushes =
+  {
+    -- low floor
+    {
+      { x =  32, y=  64, mat = "?low_floor" }
+      { x = 160, y=  64, mat = "?low_floor" }
+      { x = 160, y= 192, mat = "?low_floor" }
+      { x =  32, y= 192, mat = "?low_floor" }
+      { t = 0, mat = "?low_floor" }
+    }
+
+    -- surrounding floor
+    {
+      { x =  0, y=   0, mat = "?floor" }
+      { x = 32, y=   0, mat = "?floor" }
+      { x = 32, y= 192, mat = "?floor" }
+      { x =  0, y= 192, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x = 160, y=   0, mat = "?floor" }
+      { x = 192, y=   0, mat = "?floor" }
+      { x = 192, y= 192, mat = "?floor" }
+      { x = 160, y= 192, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+
+    {
+      { x =  32, y=  0, mat = "?floor" }
+      { x = 160, y=  0, mat = "?floor" }
+      { x = 160, y= 64, mat = "?floor" }
+      { x =  32, y= 64, mat = "?floor" }
+      { t = 128, mat = "?floor" }
+    }
+  }
+
+  models =
+  {
+    -- lift itself
+    {
+      x1 =  32, x2 = 160, x_face = { mat="?lift" }
+      y1 =  64, y2 = 128, y_face = { mat="?lift" }
+      z1 = 130, z2 = 146, z_face = { mat="?lift" }
+
+      entity =
+      {
+        ent = "lift", sounds = 2, height = 128,
+        spawnflags = "?lift_flags"
+      }
+    }
+  }
+}
+
