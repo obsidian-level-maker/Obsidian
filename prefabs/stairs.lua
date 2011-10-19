@@ -444,7 +444,7 @@ PREFAB.QUAKE_LIFT_UP =
 
   x_ranges = { {32,1}, {128,0}, {32,1} }
   y_ranges = { {128,0}, {64,1} }
-  z_ranges = { {120,1}, {16,0} }
+  z_ranges = { {128,1} }
 
   defaults =
   {
@@ -462,11 +462,10 @@ PREFAB.QUAKE_LIFT_UP =
       { t = 0, mat = "?floor" }
     }
 
-    -- update bbox to include the lift model
+    -- set top of bounding box
     {
       { m="bbox" }
-      { b=0 }
-      { t=136 }
+      { t = 128 }
     }
   }
 
@@ -476,7 +475,9 @@ PREFAB.QUAKE_LIFT_UP =
     {
       x1 =  32, x2 = 160, x_face = { mat="?lift" }
       y1 =   0, y2 = 128, y_face = { mat="?lift" }
-      z1 = 120, z2 = 136, z_face = { mat="?lift" }
+      z1 = 128, z2 = 144, z_face = { mat="?lift" }
+
+      delta_z = -8 
 
       entity =
       {
@@ -494,7 +495,7 @@ PREFAB.QUAKE_LIFT_DOWN =
 
   x_ranges = { {32,1}, {128,0}, {32,1} }
   y_ranges = { {64,1},  {64,0}, {64,1} }
-  z_ranges = { {120,1}, {16,0} }
+  z_ranges = { {128,1} }
 
   defaults =
   {
@@ -538,11 +539,10 @@ PREFAB.QUAKE_LIFT_DOWN =
       { t = 128, mat = "?floor" }
     }
 
-    -- update bbox to include the lift model
+    -- set top of bounding box
     {
       { m="bbox" }
-      { b=0 }
-      { t=136 }
+      { t = 128 }
     }
   }
 
@@ -552,7 +552,9 @@ PREFAB.QUAKE_LIFT_DOWN =
     {
       x1 =  32, x2 = 160, x_face = { mat="?lift" }
       y1 =  64, y2 = 128, y_face = { mat="?lift" }
-      z1 = 120, z2 = 136, z_face = { mat="?lift" }
+      z1 = 128, z2 = 144, z_face = { mat="?lift" }
+
+      delta_z = -8 
 
       entity =
       {
