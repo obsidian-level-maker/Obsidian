@@ -302,30 +302,22 @@ end
 function Quest_add_weapons()
  
   local function prob_for_weapon(name, info, R)
-    local prob = info.add_prob
-
-    if R.purpose == "START" then
-      if info.start_prob then
-        prob = info.start_prob
-      elseif (info.level or 0) >= 5 then
-        prob = prob / 2
-      elseif (info.level or 0) >= 7 then
-        prob = prob / 8
-      end
-    end
+    local prob  = info.add_prob
+    local level = info.level or 1
 
     -- ignore weapons which lack a pick-up item
     if not prob or prob <= 0 then return 0 end
 
-    -- make powerful weapons appear in later levels / rooms
-    local level = info.level or 1
+    if R.purpose == "START" then
+      if info.start_prob then
+        prob = info.start_prob
+      else
+        prob = prob / level
+      end
+    end
 
+    -- make powerful weapons only appear in later levels
     if level > LEVEL.max_level then return 0 end
-
-    local room_level = LEVEL.max_level * R.lev_along
-    if room_level < 2 then room_level = 2 end
-
-    if level > room_level then prob = prob / 30 end
 
     -- theme adjustment
     if LEVEL.weap_prefs then
@@ -340,12 +332,12 @@ function Quest_add_weapons()
   end
 
 
-  local function decide_weapon(list, R)
+  local function decide_weapon(R)
     -- determine probabilities 
     local name_tab = {}
 
     each name,info in GAME.WEAPONS do
-      -- ignore already gotten weapons
+      -- ignore weapons already given
       if LEVEL.added_weapons[name] then continue end
 
       local prob = prob_for_weapon(name, info, R)
@@ -354,6 +346,8 @@ function Quest_add_weapons()
         name_tab[name] = prob
       end
     end
+
+    gui.debugf("decide_weapon list:\n%s\n", table.tostr(name_tab))
 
     -- nothing is possible? ok
     if table.empty(name_tab) then return nil end
@@ -448,9 +442,9 @@ function Quest_add_weapons()
       if loop == 2 and R.svolume < 15 then break end
       if loop == 3 and R.svolume < 60 then break end
 
-      weapon = decide_weapon(list, R)
+      weapon = decide_weapon(R)
 
-      if not weapon then continue end
+      if not weapon then break end
 
       table.insert(list, { weapon=weapon, room=R })
 
@@ -468,6 +462,10 @@ function Quest_add_weapons()
   end
 
   gui.printf("Weapon List:\n")
+
+  if table.empty(list) then
+    gui.printf("  NONE!\n")
+  end
 
   -- make sure weapon order is reasonable, e.g. the shotgun should
   -- appear before the super shotgun, plasma rifle before BFG, etc...
