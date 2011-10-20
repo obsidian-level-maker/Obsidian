@@ -83,6 +83,8 @@ Miscellaneous:
 
   -  lifts often assume meshing up at 90 degree turns
 
+  -  IDEA: STYLE to control # of lifts
+
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
@@ -543,6 +545,8 @@ Sam's suggestions:
 +  support more skies
 
 +  put 'fighter only' bit on fighter's weapons, etc..
+
+?? way to automatically give prefabs a tag?
 
 -  IDEA: have a DEFAULT_ARGS table for each line special,
          so that prefabs (etc) aren't cluttered with arguments.

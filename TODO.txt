@@ -6,30 +6,18 @@ Current Work
 ------------
 
 
--  occasionally void up the JUNCTIONS in an indoor room
-
-
-!!  windows and fences DO NOT straddle, and outdoor rooms DO NOT
-    build the outdoor facade of buildings.
-
-
->>>  lift prefabs for high adjusters
-
-     -  HERETIC
-     -  QUAKE
-     -  QUAKE II
-
-
-HALLWAYS: don't auto-merge chunks
-
-
 Hallways:
+  +  don't assume all chunks can be open to each other
+     (i.e. there is a distinct path, put walls everywhere else)
+
   !!  fix chunk alignment in hallway connections
 
   !!  monsters / items in hallways
-      --> set 'belong_room' of hallway, add hall mons to that battle
+      (a) set 'belong_room' of hallway
+      (b) add hallway spots into that room's lists
+      (c) mark hallway spots as hallway
 
-  +  determine ceiling heights properly
+  !!!  determine ceiling heights properly
 
   +  proper height setting, use lifts when necessary
 
@@ -40,8 +28,6 @@ Hallways:
 Goals for next WIP
 ==================
 
-+  crossovers
-
 +  proper building facades
 
    -  create "scenic" chunks in unused seeds as part of a building 
@@ -50,13 +36,20 @@ Goals for next WIP
 
    -  must decide after all heights are done
 
+   -  need to harmonize sky heights
+
+   -  windows and fences DO NOT straddle, and outdoor rooms ARE NOT
+      responsible for the outdoor facade of buildings.
+
 +  sky borders in outdoor rooms
 
--  liquid areas
+-  diagonal corners
 
--  diagonal corners / void seeds
+DONE-ISH: crossovers
 
--  switch skins matching the doors
+DONE-ISH: liquid areas
+
+DONE: void seeds
 
 
 -----------------------------------------------------------------
@@ -70,12 +63,9 @@ Release Goals
 +  normal doors
 
 
--  cages
-
 -  secret niches
 
 -  caves working again
-
 
 -  system for texture coordinates:
 
@@ -84,6 +74,8 @@ Release Goals
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
+
+?  cages
 
 ?  better ceilings, some ceiling lights
 
