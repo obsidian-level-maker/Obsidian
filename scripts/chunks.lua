@@ -891,6 +891,14 @@ function CHUNK_CLASS.build(C)
     if C.hall then light = light * 0.5 end
   end
 
+  -- raise ceiling height to account for crossovers
+  -- FIXME: this logic belongs elsewhere
+  if C.room and C.room.crossover_hall then
+    if c_h < C.room.crossover_hall.max_floor_h + 128 then
+       c_h = C.room.crossover_hall.max_floor_h + 128
+    end
+  end
+
 
   -- FIXME: proper liquids for Quake
   if C.liquid then
