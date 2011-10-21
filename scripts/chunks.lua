@@ -644,6 +644,8 @@ function CHUNK_CLASS.cycle_stair(C, dir, N)
 
   local N = (LINK.C1 == C ? LINK.C2 ; LINK.C1)
 
+if N.floor_h then C.adjust_ceil_h = N.floor_h + 160 end
+
   -- FIXME: this don't work since stair handling will use N.floor_h
   --        but we need to use the bridge height here.
   if C.hall and C.crossover then return end
@@ -925,6 +927,9 @@ function CHUNK_CLASS.build(C)
   -- cruddy handling of cycle/crossover height differences
   if C.adjuster_dir then
     C:cycle_stair()
+
+    -- Fixme: more hackitude....
+    if C.adjust_ceil_h then c_h = math.max(c_h, C.adjust_ceil_h) end
   end
 
 
