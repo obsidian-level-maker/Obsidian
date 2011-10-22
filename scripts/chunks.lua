@@ -902,7 +902,6 @@ function CHUNK_CLASS.build(C)
   end
 
 
-  -- FIXME: proper liquids for Quake
   if C.liquid then
     if PARAM.deep_liquids then
       local brush = Brush_new_quad(C.x1, C.y1, C.x2, C.y2, nil, f_h + 80)
@@ -915,6 +914,17 @@ function CHUNK_CLASS.build(C)
 
       -- TODO: lighting
 
+      -- add some fireballs
+      local fb_prob = 50
+      if C.room and C.room.liquid_count then
+        fb_prob = 140 / math.sqrt(C.room.liquid_count)
+      end
+
+      if LEVEL.liquid.fireballs and rand.odds(fb_prob) then
+        local mx, my = C:mid_point()
+        local speed = rand.pick { 200,300,350,450 }
+        entity_helper("fireball", mx, my, f_h + 80 - 32, { speed=speed })
+      end
     else
       f_mat = LEVEL.liquid.mat
       if OB_CONFIG.game != "hexen" then

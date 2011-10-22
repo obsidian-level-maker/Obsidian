@@ -930,6 +930,8 @@ stderrf("TRYING....................\n")
       local C = R:alloc_chunk(S.sx, S.sy, S.sx, S.sy)
       C.liquid = true
     end
+
+    R.liquid_count = (R.liquid_count or 0) + #spots
   end
 
 
