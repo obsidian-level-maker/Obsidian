@@ -6,6 +6,11 @@ Current Work
 ------------
 
 
+QUAKE:
+  -  fix teleporters to not dump you into lava / slime
+     [CHUNK:dir_for_spot]
+
+
 Hallways:
   +  don't assume all chunks can be open to each other
      (i.e. there is a distinct path, put walls everywhere else)
@@ -13,20 +18,15 @@ Hallways:
   !!  fix chunk alignment in hallway connections
 
   !!  monsters / items in hallways
-      (a) set 'belong_room' of hallway
-      (b) add hallway spots into that room's lists
-      (c) mark hallway spots as hallway
 
   !!!  determine ceiling heights properly
-
-  +  proper height setting, use lifts when necessary
 
 
 -----------------------------------------------------------------
 
 
-Goals for next WIP
-==================
+Release Goals
+=============
 
 +  proper building facades
 
@@ -43,39 +43,26 @@ Goals for next WIP
 
 +  sky borders in outdoor rooms
 
+
+-  pictures in walls
+
 -  diagonal corners
-
-DONE-ISH: crossovers
-
-DONE-ISH: liquid areas
-
-DONE: void seeds
-
-
------------------------------------------------------------------
-
-
-Release Goals
-=============
-
-+  pictures in walls
-
-+  normal doors
-
 
 -  secret niches
 
--  caves working again
 
--  system for texture coordinates:
+?  caves working again
+
+?  cages
+
+?  system for texture coordinates:
 
      u1..v2 for texture coords on brushes
 
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
 
-
-?  cages
+?  normal doors
 
 ?  better ceilings, some ceiling lights
 
