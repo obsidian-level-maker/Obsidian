@@ -48,7 +48,7 @@
 </block>
 
 <block IndexOldie>
-  <a href="i_oldie.html">OldVer</a>
+  <a href="i_oldie.html">Oldies</a>
 </block>
 
 <block IndexForums>
