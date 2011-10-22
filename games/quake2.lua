@@ -143,6 +143,7 @@ QUAKE2.PARAMETERS =
 
   bridges = true
   extra_floors = true
+  deep_liquids = true
 
   jump_height = 58
 
