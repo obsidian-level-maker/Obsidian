@@ -184,7 +184,6 @@ QUAKE2.MATERIALS =
   ARROW4     = { t="e1u1/arrow4" }
   ARROWUP3   = { t="e1u1/arrowup3" }
   ARVNT1_4   = { t="e3u3/arvnt1_4" }
-  AWATER     = { t="e3u3/awater" }
   BANNERC    = { t="e3u1/bannerc" }
   BANNERD    = { t="e3u1/bannerd" }
   BANNERE    = { t="e3u1/bannere" }
@@ -285,13 +284,11 @@ QUAKE2.MATERIALS =
   BOX4_4     = { t="e1u2/box4_4" }
   BRICK1_1   = { t="e3u1/brick1_1" }
   BRICK1_2   = { t="e3u1/brick1_2" }
-  BRLAVA     = { t="e1u1/brlava" }
   BROKEN1_1  = { t="e1u1/broken1_1" }
   BROKEN2_1  = { t="e1u1/broken2_1" }
   BROKEN2_2  = { t="e1u1/broken2_2" }
   BROKEN2_3  = { t="e1u1/broken2_3" }
   BROKEN2_4  = { t="e1u1/broken2_4" }
-  BRWATER    = { t="e1u1/brwater" }
   BRWIND5_2  = { t="e1u2/brwind5_2" }
   BTACTMACH  = { t="e1u1/btactmach" }
   BTACTMACH0 = { t="e1u1/btactmach0" }
@@ -979,7 +976,6 @@ QUAKE2.MATERIALS =
   MONT1_4    = { t="e2u3/mont1_4" }
   MONT3_1    = { t="e2u1/mont3_1" }
   MONT3_2    = { t="e2u1/mont3_2" }
-  MUD1_1     = { t="e2u1/mud1_1" }
   MVR1_2     = { t="e1u2/mvr1_2" }
   MVR1_3     = { t="e1u2/mvr1_3" }
 
@@ -1168,7 +1164,6 @@ QUAKE2.MATERIALS =
   RPIP2_1    = { t="e2u1/rpip2_1" }
   RPIP2_2    = { t="e1u1/rpip2_2" }
   RROCK1_2   = { t="e2u1/rrock1_2" }
-  SEWER1     = { t="e1u1/sewer1" }
   SFLR1_1    = { t="e1u3/sflr1_1" }
   SFLR1_2    = { t="e1u3/sflr1_2" }
   SFLR1_3    = { t="e1u3/sflr1_3" }
@@ -1257,7 +1252,6 @@ QUAKE2.MATERIALS =
   TIMPOD7    = { t="e1u1/timpod7" }
   TIMPOD8    = { t="e1u1/timpod8" }
   TIMPOD9    = { t="e1u1/timpod9" }
-  TLAVA1_3   = { t="e2u3/tlava1_3" }
   TLIGHT03   = { t="e2u1/tlight03" }
   TRAIN1_1   = { t="e1u2/train1_1" }
   TRAIN1_2   = { t="e1u2/train1_2" }
@@ -1317,10 +1311,6 @@ QUAKE2.MATERIALS =
   TWR03_1    = { t="e2u1/twr03_1" }
 
   WASTEMAP   = { t="e2u3/wastemap" }
-  WATER1_8   = { t="e1u1/water1_8" }
-  WATER4     = { t="e1u1/water4" }
-  WATER7     = { t="e3u3/water7" }
-  WATER8     = { t="e1u1/water8" }
   WATRT1_1   = { t="e1u1/watrt1_1" }
   WATRT1_2   = { t="e1u1/watrt1_2" }
   WATRT2_1   = { t="e1u1/watrt2_1" }
@@ -1399,6 +1389,17 @@ QUAKE2.MATERIALS =
 
   TRIGGER    = { t="e1u1/trigger" }
 
+  L_LAVA1    = { t="e1u1/brlava" }
+  L_LAVA2    = { t="e2u3/tlava1_3" }
+  L_MUD1     = { t="e2u1/mud1_1" }
+  L_MUD2     = { t="e1u1/brwater" }
+  L_SLIME    = { t="e1u1/sewer1" }
+  L_WATER1   = { t="e1u1/water1_8" }
+  L_WATER4   = { t="e1u1/water4" }
+  L_WATER6   = { t="e3u3/awater" }
+  L_WATER7   = { t="e3u3/water7" }
+  L_WATER8   = { t="e1u1/water8" }
+
   -- Oblige specific textures
   O_CARVE    = { t="o_carve" }
   O_BOLT     = { t="o_carve" }
@@ -1462,6 +1463,15 @@ QUAKE2.MATERIALS =
 
 QUAKE2.RAILS =
 {
+}
+
+
+QUAKE2.LIQUIDS =
+{
+  water  = { mat="L_WATER4", medium="water", color=0x000088, light=0, special=0 }
+  mud    = { mat="L_MUD2",   medium="water", color=0x442200, light=0, special=0 }
+  slime  = { mat="L_SLIME",  medium="slime", color=0x008800, light=0, special=0, damage=99 }
+  lava   = { mat="L_LAVA1",  medium="lava",  color=0x880000, light=1, special=0, damage=99 }
 }
 
 
@@ -1780,6 +1790,8 @@ QUAKE2.LEVEL_THEMES =
   quake2_base1 =
   {
     prob = 50
+
+    liquids = { slime=50, lava=40 }
 
     building_walls =
     {
