@@ -1040,7 +1040,7 @@ end
 
 
 
-function Plan_add_natural_rooms()
+function Plan_add_odd_shapes()
 
   local function find_free_spot(mx, my)
     if not SECTIONS[mx*2][my*2].used then
@@ -1136,15 +1136,11 @@ function Plan_add_natural_rooms()
   end
 
 
-  ---| Plan_add_natural_rooms |---
-
--- FIXME: not necessarily "natural" -- just odd shaped
-
----??  if not THEME.cave_walls then return end
-
-  local num_free = Plan_count_free_room_sections()
+  ---| Plan_add_odd_shapes |---
 
   local perc = style_sel("naturals", 0, 14, 30, 70)
+
+  local num_free = Plan_count_free_room_sections()
 
   local quota = int(num_free * perc / 100)
 
@@ -1512,49 +1508,93 @@ end
 
 
 function Plan_decide_outdoors()
-  local OUTDOOR_PROBS = THEME.outdoor_probs or { 15, 35, 60 }
 
-  if #OUTDOOR_PROBS != 3 then
-    error("Theme has bad outdoor_probs table")
-  end
-
-  local function choose(R)
-    if R.parent then return false end
+  local function score_room(R)
+    if R.parent then return -1 end
 
     if R.natural then
-      if not THEME.landscape_walls then return false end
+      if not THEME.landscape_walls then return -1 end
     else
-      if not THEME.courtyard_floors then return false end
+      if not THEME.courtyard_floors then return -1 end
     end
 
-    if LEVEL.special == "street" then return false end
+    if LEVEL.special == "street" then return -1 end
 
-    if STYLE.outdoors == "none"   then return false end
-    if STYLE.outdoors == "always" then return true end
+    local score = R.svolume
 
-    if STYLE.outdoors == "heaps" then return rand.odds(OUTDOOR_PROBS[3]) end
-    if STYLE.outdoors == "few"   then return rand.odds(OUTDOOR_PROBS[1]) end
-
----??  NOTE: This check is for caves
----??  if R.natural then return rand.odds(OUTDOOR_PROBS[2]) end
+    local what = 0
 
     -- higher probs for sides of map, even higher for the corners
-    local what = 1
-
     if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
     if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
 
-    return rand.odds(OUTDOOR_PROBS[what])
+    score = score + 10 * what
+
+    return score + 25 * gui.random() ^ 2
   end
+
+  
+  local function pick_room(list, quota)
+    -- remove rooms which don't meet the quota
+    for index = #list, 1, -1 do
+      local R = list[index]
+
+      if R.svolume > quota then
+        table.remove(list, index)
+      end
+    end
+
+    if table.empty(list) then return nil end
+
+    -- don't always pick the largest room
+    if #list >= 2 and rand.odds(35) then
+      return table.remove(list, 2)
+    end
+
+    return table.remove(list, 1)
+  end
+
 
   ---| Plan_decide_outdoors |---
 
-  -- TODO: local quota = blah blah...
+  -- collect rooms which can be made outdoor
+  local room_list = {}
+  local total_seeds = 0
 
   each R in LEVEL.rooms do
-    if R.outdoor == nil then
-      R.outdoor = choose(R)
+    R.outdoor_score = score_room(R)
+
+    if R.outdoor_score > 0 then
+      table.insert(room_list, R)
+      total_seeds = total_seeds + R.svolume
     end
+  end
+
+  if table.empty(room_list) then
+    gui.printf("No Outdoor Rooms\n")
+    return
+  end
+
+  -- sort rooms by score (highest first)
+  table.sort(room_list,
+    function(A, B) return A.outdoor_score > B.outdoor_score end)
+
+  -- compute the quota
+  local perc = style_sel("outdoors", 0, 15, 35, 60)
+
+  local quota = total_seeds * perc / 100
+
+  gui.printf("Outdoor Quota: %d seeds (%d total)\n", quota, total_seeds)
+
+  while quota > 0 do
+    local R = pick_room(room_list, quota)
+
+    -- nothing possible?
+    if not R then break end
+
+    R.outdoor = true
+
+    quota = quota - R.svolume
   end
 end
 
@@ -1613,7 +1653,7 @@ function Plan_dump_rooms(title)
 
     local n = 1 + ((R.id - 1) % 26)
 
-    if R.natural then
+    if not R.outdoor then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     else
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
@@ -1788,7 +1828,7 @@ function Plan_create_rooms()
   Levels_invoke_hook("add_rooms")
 
   Plan_add_special_rooms()
-  Plan_add_natural_rooms()
+  Plan_add_odd_shapes()
   Plan_add_big_rooms()
 
   Plan_add_big_junctions()
@@ -1798,9 +1838,8 @@ function Plan_create_rooms()
   Plan_contiguous_sections()
   Plan_dump_sections()
 
-  Plan_decide_outdoors()
-
   Plan_make_seeds()
+  Plan_decide_outdoors()  -- TODO: decide caves same way
   Plan_dump_rooms()
 end
 
