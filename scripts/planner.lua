@@ -650,16 +650,28 @@ end
 
 function Plan_add_small_rooms()
 
+  local function new_aspect(K, dir)
+    local N = K:neighbor(dir)
+    local sw = math.max(K.sx2, N.sx2) - math.min(K.sx1, N.sx1) + 1
+    local sh = math.max(K.sy2, N.sy2) - math.min(K.sy1, N.sy1) + 1
+    -- normalize the aspect to be >= 1.0
+    if sw < sh then sw, sh = sh, sw end
+    return sw / sh
+  end
+
   local function can_make_double(K, mx, my)
     local can_x = (mx < MAP_W) and not SECTIONS[(mx+1)*2][my*2].used
     local can_y = (my < MAP_H) and not SECTIONS[mx*2][(my+1)*2].used
 
     if can_x and can_y then
       -- prefer making the room "squarer"
-      if K.sh > K.sw+1 and rand.odds(90) then return "x" end
-      if K.sw > K.sh+1 and rand.odds(90) then return "y" end
+      local aspect_x = new_aspect(K, 6)
+      local aspect_y = new_aspect(K, 8)
 
-      return rand.sel(40, "x", "y")
+      if aspect_x < aspect_y and rand.odds(90) then return "x" end
+      if aspect_x > aspect_y and rand.odds(90) then return "y" end
+
+      return rand.sel(50, "x", "y")
     end
 
     if can_x then return "x" end
@@ -679,7 +691,7 @@ function Plan_add_small_rooms()
     -- sometimes become a 2x1 / 1x2 sized room
     local can_xy = can_make_double(K, mx, my)
 
-    if can_xy and rand.odds(55) then
+    if can_xy and rand.odds(40) then
       if can_xy == "x" then
         K = SECTIONS[(mx+1)*2][my*2]
       else
@@ -726,7 +738,7 @@ function Plan_add_big_rooms()
 
   local BIG_SHAPE_PROBS =
   {
-    rect = 350,
+    rect = 220,
     plus = 15,
 
     T1 = 25, T2 = 6,
@@ -1010,7 +1022,7 @@ function Plan_add_big_rooms()
 
   adjust_shape_probs()
 
-  local perc = style_sel("big_rooms", 0, 30, 50, 80)
+  local perc = style_sel("big_rooms", 0, 20, 40, 70)
 
   local num_free = Plan_count_free_room_sections()
 
@@ -1132,7 +1144,7 @@ function Plan_add_natural_rooms()
 
   local num_free = Plan_count_free_room_sections()
 
-  local perc = style_sel("naturals", 0, 20, 40, 90)
+  local perc = style_sel("naturals", 0, 14, 30, 70)
 
   local quota = int(num_free * perc / 100)
 
