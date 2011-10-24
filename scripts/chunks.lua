@@ -1120,7 +1120,7 @@ end
       if lock.kind == "KEY" then
         -- Quake II bits
         skin2.keyname = lock.key
-        skin2.targetname = "door" .. tostring(Plan_alloc_id("tag"))
+        skin2.targetname = "door" .. Plan_alloc_id("door")
 
       elseif lock.kind == "SWITCH" then
         skin2.tag = lock.tag
