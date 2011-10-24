@@ -1294,6 +1294,8 @@ stderrf("TRYING....................\n")
     end
 
     set_all_touching(R)
+
+    R:dump_areas(R)
   end
 
 

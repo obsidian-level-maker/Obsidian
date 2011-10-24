@@ -506,6 +506,38 @@ function ROOM_CLASS.random_seed(R)
 end
 
 
+function ROOM_CLASS.dump_areas(R)
+  local function seed_char(x, y)
+    local S = SEEDS[x][y]
+
+    if not S or S.room != R then return ' ' end
+    
+    local A = S.chunk and S.chunk.area
+
+    if not A then return '#' end
+    if not A.debug_id then return '?' end
+
+    local n = 1 + ((A.debug_id - 1) % 26)
+
+    return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+  end
+
+  gui.debugf("AREAS IN %s:\n", R:tostr())
+
+  for y = R.sy2, R.sy1, -1 do
+    local line = "  "
+
+    for x = R.sx1, R.sx2 do
+      line = line .. seed_char(x, y)
+    end
+
+    gui.debugf("%s\n", line)
+  end
+
+  gui.debugf("\n")
+end
+
+
 ----------------------------------------------------------------
 
 
