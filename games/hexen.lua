@@ -1188,7 +1188,7 @@ HEXEN.SKINS =
   {
     _prefab = "LIFT_UP"
     _where  = "chunk"
-    _tagged = 1
+    _tags   = 1
     _deltas = { 96,128,160,192 }
 
     lift = "PLAT02"
@@ -1202,7 +1202,7 @@ HEXEN.SKINS =
   {
     _prefab = "LIFT_DOWN"
     _where  = "chunk"
-    _tagged = 1
+    _tags   = 1
     _deltas = { -96,-128,-160,-192 }
 
     lift = "PLAT02"
@@ -1288,7 +1288,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_axe=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1307,7 +1307,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_cave=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1326,7 +1326,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_castle=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1345,7 +1345,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_dungeon=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1364,7 +1364,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_emerald=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1383,7 +1383,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_fire=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1402,7 +1402,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_horn=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1421,7 +1421,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_rusty=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1440,7 +1440,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_swamp=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1459,7 +1459,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_silver=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 
@@ -1478,7 +1478,7 @@ HEXEN.SKINS =
     _prefab = "DOOR"
     _where  = "edge"
     _keys = { k_steel=1 }
-    _tagged = 1
+    _tags = 1
     _long = 192
     _deep = 32
 

@@ -1406,6 +1406,14 @@ function Fab_apply_skins(fab, list)
   -- defaults are applied, don't need it anymore
   fab.defaults = nil
 
+  if Trans.SKIN._tags then
+    for i = 1, Trans.SKIN._tags do
+      local name = "tag"
+      if i >= 2 then name = name .. i end
+      Trans.SKIN[name] = Plan_alloc_id("tag")
+    end
+  end
+
   if fab.team_models then
     Trans.SKIN.team = Plan_alloc_id("team")
   end

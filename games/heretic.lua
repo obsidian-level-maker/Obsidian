@@ -461,6 +461,7 @@ HERETIC.SKINS =
   {
     _prefab = "LIFT_UP"
     _where  = "chunk"
+    _tags   = 1
     _deltas = { 96,128,160,192 }
 
     lift = "DOORSTON"
@@ -474,6 +475,7 @@ HERETIC.SKINS =
   {
     _prefab = "LIFT_DOWN"
     _where  = "chunk"
+    _tags   = 1
     _deltas = { -96,-128,-160,-192 }
 
     lift = "DOORSTON"
@@ -1610,7 +1612,7 @@ HERETIC.THEME_DEFAULTS =
 
   -- according to Borsuk, locked doors should always appear in the
   -- following order: Yellow ==> Green ==> Blue.
-  keys = { k_yellow=100, k_green=10, k_blue=1 }
+  keys = { k_yellow=9000, k_green=90, k_blue=1 }
 
   switches = { sw_metal=50 }
 

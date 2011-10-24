@@ -967,9 +967,6 @@ function CHUNK_CLASS.build(C)
     T.scale_z = math.abs(delta_h) / 128
 
     local skin2 = {}
-    if skin._tagged then
-      skin2.tag = Plan_alloc_id("tag")
-    end
 
 ---## stderrf("STAIR STUFF: dir:%d h1:%d h2:%d delta:%d scale_z:%1.4f\n",
 ---##   C.stair.dir, C.stair.C1.floor_h, C.stair.C2.floor_h, delta_h, T.scale_z)
@@ -1124,10 +1121,6 @@ end
         -- Quake II bits
         skin2.keyname = lock.key
         skin2.targetname = "door" .. tostring(Plan_alloc_id("tag"))
-
-        if skin._tagged then
-          skin2.tag = Plan_alloc_id("tag")
-        end
 
       elseif lock.kind == "SWITCH" then
         skin2.tag = lock.tag

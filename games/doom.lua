@@ -1862,6 +1862,7 @@ DOOM.SKINS =
   {
     _prefab = "LIFT_UP"
     _where  = "chunk"
+    _tags   = 1
     _deltas = { 96,128,160,192 }
 
     lift = "SUPPORT3"
@@ -1875,6 +1876,7 @@ DOOM.SKINS =
   {
     _prefab = "LIFT_DOWN"
     _where  = "chunk"
+    _tags   = 1
     _deltas = { -96,-128,-160,-192 }
 
     lift = "SUPPORT2"
