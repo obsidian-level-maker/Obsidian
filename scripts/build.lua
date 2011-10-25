@@ -105,7 +105,7 @@ function Brush_collect_flags(C)
   if GAME.format == "doom" then
     local flags = C.flags or 0
 
-    if C.act then
+    if C.act and PARAM.sub_format == "hexen" then
       local spac = HEXEN_ACTIONS[C.act]
       if not spac then
         error("Unknown act value: " .. tostring(C.act))
