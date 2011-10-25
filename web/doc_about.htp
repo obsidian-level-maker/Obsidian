@@ -124,14 +124,6 @@ Quite far from being playable, working levels cannot be built yet,
 and lacks all the same stuff missing from Quake (listed in the previous
 entry).
 
-<!---
-[p]
-[b]Wolf3D:[/b][br]
-A long way from being playable.  There is a separate piece of code
-for dealing with "Tiled" maps, but all it can do right now is make a
-bunch of connected empty rooms.
---->
-
 
 <!--- FUTURE DEVELOPMENT --->
 
