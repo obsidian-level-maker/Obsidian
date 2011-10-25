@@ -266,15 +266,10 @@ Then start a game normally.
 Delete the PAK2.pak file when you want to play the original
 Quake levels.
 
-<!---
-In Wolfenstein-3D mode, the "Build" button does not bring up
-a dialog box.
-OBLIGE simply creates the output files in the same folder where
-it is installed.
-These files are called [b]GAMEMAPS.WL6[/b] and [b]MAPHEAD.WL6[/b]
-and you need to copy them into your
-Wolf3d folder (please make a backup first!).
---->
+<p>
+Playing Quake 2 maps is similar to Quake, but place the <b>PAK2.pak</b> file
+into the BASEQ2 folder where Quake 2 is installed, and
+start a game normally.
 
 </div class="rest">
 
