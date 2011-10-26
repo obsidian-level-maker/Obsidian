@@ -1179,9 +1179,7 @@ end
 
 function Rooms_add_sun()
   -- game check
-  local sun_ent = GAME.ENTITIES["sun"]
-
-  if not sun_ent then return end
+  if not GAME.ENTITIES["sun"] then return end
 
   local sun_r = 25000
   local sun_h = 40000
@@ -1197,19 +1195,17 @@ function Rooms_add_sun()
 
     local level = (i == 1 ? 32 ; 6)
 
-    raw_add_entity { id=sun_ent.id, x=x, y=y, z=sun_h, light=level }
+    entity_helper("sun", x, y, sun_h, { light=level })
   end
 
-  raw_add_entity { id=sun_ent.id, x=0, y=0, z=sun_h, light=12 }
+  entity_helper("sun", 0, 0, sun_h, { light=12 })
 end
 
 
 
 function Rooms_intermission_camera()
   -- game check
-  local camera_ent = GAME.ENTITIES["camera"]
-
-  if not camera_ent then return end
+  if not GAME.ENTITIES["camera"] then return end
 
   -- determine the room (biggest one, excluding starts and exits)
   local room
@@ -1249,9 +1245,9 @@ function Rooms_intermission_camera()
   local angle = geom.calc_angle(x2 - x1, y2 - y1)
   local mlook = geom.calc_angle(dist, z1 - z2)
 
-  local mangle = string.format("%d %d 0", mlook, angle)
+  local angles = string.format("%d %d 0", mlook, angle)
 
-  raw_add_entity { id=camera_ent.id, x=x1, y=y1, z=z1, mangle=mangle }
+  entity_helper("camera", x1, y1, z1, { angles=angles })
 end
 
 

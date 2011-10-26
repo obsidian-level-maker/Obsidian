@@ -125,6 +125,8 @@ QUAKE2.ENTITIES =
    
   change_lev = { id="target_changelevel", kind="other", r=1, h=1, pass=true }
 
+  camera = { id="info_player_intermission", kind="other", r=1,h=1, pass=true }
+
   -- TODO
 }
 
@@ -2404,7 +2406,6 @@ function QUAKE2.get_levels()
           LEV.next_map = string.format("eou%d_.cin+*%s1", ep_index, prefixes[ep_index+1])
         end
       end
-stderrf("MAP %s | NEXT_MAP %s\n", LEV.name, LEV.next_map)
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
