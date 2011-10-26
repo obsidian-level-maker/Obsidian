@@ -228,21 +228,38 @@ function CHUNK_CLASS.good_neighbor(C1, dir)
 end
 
 
-function CHUNK_CLASS.against_wall(C, dir)
+function CHUNK_CLASS.classify_edge(C, dir)
   local sx1, sy1, sx2, sy2 = geom.side_coords(dir, C.sx1, C.sy1, C.sx2, C.sy2)
 
   sx1, sy1 = geom.nudge(sx1, sy1, dir)
   sx2, sy2 = geom.nudge(sx2, sy2, dir)
 
-  if not Seed_valid(sx1, sy1) then return true end
+  if not Seed_valid(sx1, sy1) then return "wall" end
+
+  local has_liquid
+  local diff_area
 
   for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
 
-    if S.room != C.room then return true end
+    if S.room != C.room then return "wall" end
+    if S.hall != C.hall then return "wall" end
+
+    local C2 = S.chunk
+
+    if not C2 then return "wall" end
+    if C2.scenic then return "wall" end
+
+    if C2.liquid then has_liquid = true end
+
+    if C.area != C2.area then diff_area = true end
   end end
 
-  return false
+  if has_liquid then return "liquid" end
+
+  if diff_area then return "diff" end
+
+  return "same"
 end
 
 
@@ -279,42 +296,73 @@ end
 function CHUNK_CLASS.dir_for_spot(C)
   local R = C.room
 
-  -- check which sides of chunk are against a wall
-  local walls = {}
+  -- check which sides of chunk are against a wall or liquid
+  local edges = {}
+
+  local num_wall = 0
+  local num_same = 0
+  local num_diff = 0
+  local num_liq  = 0
 
   for dir = 2,8,2 do
-    if C:against_wall(dir) then
-      walls[dir] = true
+    edges[dir] = C:classify_edge(dir)
+
+        if edges[dir] == "wall"   then num_wall = num_wall + 1
+    elseif edges[dir] == "same"   then num_same = num_same + 1
+    elseif edges[dir] == "diff"   then num_diff = num_diff + 1
+    elseif edges[dir] == "liquid" then num_liq  = num_liq  + 1
     end
   end
 
-  -- ignore being hemmed in on both sides
-  if walls[4] and walls[6] then walls[4] = nil ; walls[6] = nil end
-  if walls[2] and walls[8] then walls[2] = nil ; walls[8] = nil end
+  -- prefer direction which is in the same area
+  if num_same == 1 then
+    for dir = 2,8,2 do
+      if edges[dir] == "same" then return dir end
+    end
+  end
+
+  if num_same == 0 and num_diff == 1 then
+    for dir = 2,8,2 do
+      if edges[dir] == "diff" then return dir end
+    end
+  end
 
   -- handle corners
-  if table.size(walls) == 2 then
+  local hemmed
+
+  if edges[4] == "wall" and edges[6] == "wall" then hemmed = true end
+  if edges[2] == "wall" and edges[8] == "wall" then hemmed = true end
+
+  if num_wall == 2 and not hemmed and num_liq == 0 then
     if R.sh > R.sw then
-      return (walls[2] ? 8 ; 2)
+      return (edges[2] == "wall" ? 8 ; 2)
     else
-      return (walls[4] ? 6 ; 4)
+      return (edges[4] == "wall" ? 6 ; 4)
     end
   end
 
   -- find a wall to face away from
-  if not table.empty(walls) then
-    for dir = 2,8,2 do
-      if walls[dir] then
-      return 10 - dir end
+  for dir = 2,8,2 do
+    if edges[10 - dir] == "wall" and edges[dir] == "same" then
+      return dir
     end
   end
 
   -- otherwise use position in room
-  if R.sh > R.sw then
-    return ((C.sy1 + C.sy2) < (R.sy1 + R.sy2) ? 2 ; 8)
-  else
-    return ((C.sx1 + C.sx2) < (R.sx1 + R.sx2) ? 4 ; 6)
+  local dir1 = ((C.sx1 + C.sx2) < (R.sx1 + R.sx2) ? 6 ; 4)
+  local dir2 = ((C.sy1 + C.sy2) < (R.sy1 + R.sy2) ? 8 ; 2)
+
+  if R.sh > R.sw then dir1, dir2 = dir2, dir1 end
+
+  if edges[dir1] != "liquid" then return dir1 end
+  if edges[dir2] != "liquid" then return dir2 end
+
+  -- find any direction which does not face liquid
+  for dir = 2,8,2 do
+    if edges[dir] != "liquid" then return dir end
   end
+
+  return 2
 end
 
 
@@ -444,9 +492,9 @@ function CHUNK_CLASS.content_start(C)
 
   local mx, my = C:mid_point()
 
-  local T = Trans.spot_transform(mx, my, C.floor_h or 0, 10 - C.spot_dir)
+  local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  local skin2 = { }  ---??? angle = Rooms_player_angle(C.room, C)
+  local skin2 = { }
 
   Fabricate(skin1._prefab, T, { skin1, skin2 })
 end
@@ -605,6 +653,8 @@ function CHUNK_CLASS.do_content(C)
   local kind = C.content.kind
 
   if not kind then return end
+
+  C.spot_dir = C:dir_for_spot()
 
   if kind == "START" then
     C:content_start()

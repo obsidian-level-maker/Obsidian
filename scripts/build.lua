@@ -738,9 +738,7 @@ function Trans.apply_angle(ang)
     return ang
   end
 
-  if not (T.mirror_x or T.mirror_y) then
-    ang = ang + T.rotate
-  else
+  if T.mirror_x or T.mirror_y then
     local dx = math.cos(ang * math.pi / 180)
     local dy = math.sin(ang * math.pi / 180)
 
@@ -748,9 +746,9 @@ function Trans.apply_angle(ang)
     if T.mirror_y then dy = -dy end
 
     ang = math.round(geom.calc_angle(dx, dy))
-
-    if T.rotate then ang = ang + T.rotate end
   end
+
+  if T.rotate then ang = ang + T.rotate end
 
   if ang >= 360 then ang = ang - 360 end
   if ang <    0 then ang = ang + 360 end
@@ -819,7 +817,7 @@ end
 
 
 function Trans.spot_transform(x, y, z, dir)
-  local ANGS = { [2]=0,  [8]=180, [4]=270, [6]=90 }
+  local ANGS = { [2]=0, [8]=180, [4]=270, [6]=90 }
 
   return
   {
