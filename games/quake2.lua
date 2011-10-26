@@ -2366,6 +2366,8 @@ function QUAKE2.get_levels()
   if OB_CONFIG.length == "few"     then MAP_NUM = 3 end
   if OB_CONFIG.length == "episode" then MAP_NUM = 7 end
 
+  local prefixes = { "base", "ware", "jail", "mine", "fact" }
+
   for ep_index = 1,EP_NUM do
     -- create episode info...
     local EPI =
@@ -2378,6 +2380,8 @@ function QUAKE2.get_levels()
     local ep_info = QUAKE2.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
+    local ep_prefix = prefixes[ep_index]
+
     for map = 1,MAP_NUM do
 
       -- create level info...
@@ -2385,16 +2389,22 @@ function QUAKE2.get_levels()
       {
         episode = EPI
 
-        name     = string.format("e%dm%d", ep_index, map)
-        next_map = string.format("e%dm%d", ep_index, map+1)
+        name     = ep_prefix .. (map)
+        next_map = ep_prefix .. (map + 1)
 
          ep_along = map / MAP_NUM
         mon_along = (map + ep_index - 1) / MAP_NUM
       }
 
+      -- end of episode? Go to next one (with cinematic) or face the Boss
       if map == MAP_NUM then
-        LEV.next_map = string.format("e%dm%d", ep_index+1, 1)
+        if ep_index == 5 then
+          LEV.next_map = "boss2"
+        else
+          LEV.next_map = string.format("eou%d_.cin+*%s1", ep_index, prefixes[ep_index+1])
+        end
       end
+stderrf("MAP %s | NEXT_MAP %s\n", LEV.name, LEV.next_map)
 
       table.insert( EPI.levels, LEV)
       table.insert(GAME.levels, LEV)
