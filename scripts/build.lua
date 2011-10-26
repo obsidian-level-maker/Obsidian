@@ -80,6 +80,10 @@ end
 
 
 function raw_add_entity(ent)
+  if GAME.format == "quake" then
+    ent.mangle = ent.angles ; ent.angles = nil
+  end
+
   gui.add_entity(ent)
 
   if GAME.add_entity_func then
