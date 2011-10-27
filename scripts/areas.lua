@@ -341,11 +341,14 @@ function Areas_important_stuff()
     local spot
     local best_dist = -9e9
 
+    -- in caves we want the spot to be away from the edges of the room
+    local wall_factor = (R.cave or rand.odds(5) ? 25.1 ; 2.15)
+
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
 
       if S.room == R and not S.chunk then
-        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * 2.15 + S.dist_random
+        local dist = (S.chunk_dist or 0) * 7 + (S.wall_dist or 0) * wall_factor + S.dist_random
 
         if dist > best_dist then
           spot = S
