@@ -126,12 +126,11 @@ GLOBAL_STYLE_LIST =
   hallways    = { none=5, few=30, some=70, heaps=15 }
   liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
-  crossovers  = { none=40, some=40, heaps=40 }
-  naturals    = { none=10, few=30, some=60, heaps=4 }
+  odd_shapes  = { none=10, few=30, some=60, heaps=4 }
   big_rooms   = { none=3, few=40, some=40, heaps=20 }
-  sub_rooms   = { none=40, some=80, heaps=5 }
+  caves       = { none=20, few=50, some=30, heaps=5 }
   cycles      = { none=20, some=50, heaps=50 }
-  islands     = { few=60, heaps=40 }
+  crossovers  = { none=40, some=40, heaps=40 }
   teleporters = { none=30, few=30, some=30, heaps=5 }
 
   room_shape = { none=30, L=5, T=5, U=10, H=10, S=5 }

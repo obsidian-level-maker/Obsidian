@@ -573,7 +573,7 @@ function Plan_dump_sections(title)
 
     if R.kind == "scenic" then return '%' end
     local n = 1 + ((R.id - 1) % 26)
-    if R.natural then
+    if R.odd_shape then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     else
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
@@ -1028,7 +1028,7 @@ function Plan_add_big_rooms()
 
   local quota = num_free * perc / 100
 
-  gui.printf("Big Room Quota: %1.1f sections\n", quota)
+  gui.printf("Big Room Quota: %d sections\n", quota)
 
   while quota >= 3 do
     local size = add_biggie(quota)
@@ -1091,7 +1091,7 @@ function Plan_add_odd_shapes()
   local function new_area(mx, my)
     local R = ROOM_CLASS.new("odd")
 
-    R.natural = true
+    R.odd_shape = true
 
     local K = SECTIONS[mx*2][my*2]
 
@@ -1138,16 +1138,13 @@ function Plan_add_odd_shapes()
 
   ---| Plan_add_odd_shapes |---
 
-  local perc = style_sel("naturals", 0, 14, 30, 70)
+  local perc = style_sel("odd_shapes", 0, 14, 30, 70)
 
   local num_free = Plan_count_free_room_sections()
 
   local quota = int(num_free * perc / 100)
 
-  -- don't fill the levels up with natural stuff
-  quota = math.min(quota, num_free - 3)
-
-  gui.printf("Natural Area Quota: %s --> %d sections\n", STYLE.naturals, quota)
+  gui.printf("Odd Shape Quota: %d sections\n", quota)
 
   if quota < 2 then return end
 
@@ -1196,7 +1193,7 @@ function Plan_add_odd_shapes()
     end
   end
 
-  Plan_dump_sections("Sections with natural areas:")
+  Plan_dump_sections("Sections with odd shapes areas:")
 end
 
 
@@ -1510,17 +1507,16 @@ end
 function Plan_decide_outdoors()
 
   local function score_room(R)
-    if R.parent then return -1 end
+    if not THEME.courtyard_floors then return -1 end
+    if not THEME.landscape_walls  then return -1 end
 
-    if R.natural then
-      if not THEME.landscape_walls then return -1 end
-    else
-      if not THEME.courtyard_floors then return -1 end
-    end
-
+    -- TODO: relax this (room will have fences around it)
     if LEVEL.special == "street" then return -1 end
 
     local score = R.svolume
+
+    -- too small ?
+    if R.svolume < 8 then return -1 end
 
     local what = 0
 
@@ -1595,6 +1591,114 @@ function Plan_decide_outdoors()
     R.outdoor = true
 
     quota = quota - R.svolume
+  end
+end
+
+
+function Plan_decide_caves()
+
+  local function score_room(R)
+    if not THEME.cave_walls then return -1 end
+
+    -- too small ?
+    if R.sw < 3 or R.sh < 3 then return -1 end
+
+    local score = R.svolume
+
+    -- prefer not to eat the outdoor rooms
+    if R.outdoor then return score / 2 + gui.random() end
+
+    local what = 0
+
+    -- higher probs for sides of map, even higher for the corners
+    if R.kx1 <= 2 or R.kx2 >= SECTION_W-1 then what = what + 1 end
+    if R.ky1 <= 2 or R.ky2 >= SECTION_H-1 then what = what + 1 end
+
+    score = score + 10 * what ^ 2
+
+    -- prefer odd-shaped rooms
+    if R.odd_shape then score = score * 2 end 
+
+    return score + 25 * gui.random() ^ 2
+  end
+
+  
+  local function pick_room(list, quota)
+    -- remove rooms which don't meet the quota
+    for index = #list, 1, -1 do
+      local R = list[index]
+
+      if R.svolume > quota then
+        table.remove(list, index)
+      end
+    end
+
+    if table.empty(list) then return nil end
+
+    -- don't always pick the largest room
+    if #list >= 2 and rand.odds(35) then
+      return table.remove(list, 2)
+    end
+
+    return table.remove(list, 1)
+  end
+
+
+  ---| Plan_decide_caves |---
+
+  -- collect rooms which can be made into a cave
+  local room_list = {}
+  local total_seeds = 0
+
+  each R in LEVEL.rooms do
+    R.cave_score = score_room(R)
+
+    if R.cave_score > 0 then
+      table.insert(room_list, R)
+      total_seeds = total_seeds + R.svolume
+    end
+  end
+
+  if table.empty(room_list) then
+    gui.printf("No Outdoor Rooms\n")
+    return
+  end
+
+  -- sort rooms by score (highest first)
+  table.sort(room_list,
+    function(A, B) return A.cave_score > B.cave_score end)
+
+  -- compute the quota
+  local perc = style_sel("caves", 0, 15, 35, 65)
+
+  local quota = total_seeds * perc / 100
+
+  gui.printf("Cave Quota: %d seeds (%d total)\n", quota, total_seeds)
+
+  while quota > 0 do
+    local R = pick_room(room_list, quota)
+
+    -- nothing possible?
+    if not R then break end
+
+    -- either re-assign outdoor room as cave or leave it as-is
+    if R.outdoor and not rand.odds(perc + 30) then continue end
+
+    R.cave    = true
+    R.outdoor = nil
+
+    quota = quota - R.svolume
+  end
+end
+
+
+function Plan_decide_buildings()
+  -- this is easy: buildings are everything except outdoors and caves
+
+  each R in LEVEL.rooms do
+    if not R.outdoor or R.cave then
+      R.building = true
+    end
   end
 end
 
@@ -1804,7 +1908,7 @@ function Plan_create_rooms()
   --
   --   1. decide map size
   --   2. do any special rooms or patterns
-  --   3. add big rooms (rect / shaped / natural)
+  --   3. add odd-shaped and big rooms
   --   4. add small rooms
   --   5. decide indoor/outdoor
   --  ??? create edge and corner lists
@@ -1839,7 +1943,11 @@ function Plan_create_rooms()
   Plan_dump_sections()
 
   Plan_make_seeds()
-  Plan_decide_outdoors()  -- TODO: decide caves same way
+
+  Plan_decide_outdoors()
+  Plan_decide_caves()
+  Plan_decide_buildings()
+
   Plan_dump_rooms()
 end
 

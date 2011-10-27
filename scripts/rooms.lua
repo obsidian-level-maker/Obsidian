@@ -27,13 +27,15 @@ class ROOM
                   -- "hallway", "stairwell", "small_exit"
 
   shape : keyword -- "rect" (perfect rectangle)
-                  -- "L"  "T"  "U"
+                  -- "L"  "T"  "U"  "S"  "H"
                   -- "plus"
                   -- "odd"  (anything else)
 
-  outdoor : bool  -- true for outdoor rooms
-  natural : bool  -- true for cave/landscape areas
-  scenic  : bool  -- true for scenic (unvisitable) areas
+  outdoor  : bool  -- \
+  cave     : bool  --  main style of room : one of these is true
+  building : bool  -- /
+
+  scenic  : bool  -- true for scenic (unvisitable) rooms
 
   conns : list(CONN)  -- connections with neighbor rooms
   entry_conn : CONN
@@ -838,7 +840,7 @@ function OLD_Rooms_decide_windows()
 ---    if R.outdoor or R.semi_outdoor then return end
 
     -- TODO: cavey see-through holes
-    if R.natural then return end
+    if not R.building then return end
 
     local prob = style_sel("windows", 0, 20, 40, 80+19)
 
