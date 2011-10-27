@@ -469,7 +469,7 @@ namelib.THEMES =
         Poignant=3, Sinful=5, Unblessed=3, Bitter=7,
 
         Ominous=20, Terrifying=5, Gruesome=10,
-        Gloomy=5, Awful=10, Execrable=10,
+        Gloomy=5, Awful=10, Execrable=10, Uncanny=15,
         Horrible=10, Horrendous=10,
         Dismal=10, Dank=5, Frightful=5,
         Dreaded=15, Nightmare=5, Dolor=5,
