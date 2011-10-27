@@ -1681,11 +1681,14 @@ function Plan_decide_caves()
     -- nothing possible?
     if not R then break end
 
-    -- either re-assign outdoor room as cave or leave it as-is
+    -- if the room was outdoor, then randomly re-assign as cave,
+    -- with a probability depending on the STYLE setting.
     if R.outdoor and not rand.odds(perc + 30) then continue end
 
-    R.cave    = true
-    R.outdoor = nil
+    R.cave = true
+
+    -- re-assign any outdoor room as a cave
+    R.was_outdoor = R.outdoor ; R.outdoor = nil
 
     quota = quota - R.svolume
   end
