@@ -6,16 +6,35 @@ Current Work
 ------------
 
 
-QUAKE:
-  -  fix teleporters to not dump you into lava / slime
-     [CHUNK:dir_for_spot]
+Caves:
+  !!!!  handle disconnected areas
+
+  !!  mark_borders
+
+  !!!!  spots for monsters and items
+
+  +  proper floor and ceiling textures
+
+  -  better floors, liquid areas
+
+  -  better ceilings, chance of sky
+
+
+QUAKE II:
+  +  fix street mode edges (you can fall out of the level)
+
+
+Liquids:
+  +  generate liquid "AREAs" at same time as normal areas 
+     (by looking at free seeds).  Similarly for cages and 3D areas.
+     Create chunks after the seeds have been decided.
 
 
 Hallways:
   +  don't assume all chunks can be open to each other
      (i.e. there is a distinct path, put walls everywhere else)
 
-  !!  fix chunk alignment in hallway connections
+  !!!  fix chunk alignment in hallway connections
 
   !!  monsters / items in hallways
 
@@ -51,16 +70,14 @@ Release Goals
 -  secret niches
 
 
-?  caves working again
-
-?  cages
-
 ?  system for texture coordinates:
 
      u1..v2 for texture coords on brushes
 
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
+
+?  cages
 
 ?  normal doors
 
