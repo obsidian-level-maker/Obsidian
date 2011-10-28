@@ -89,21 +89,16 @@ function Simple_area(R, A)
   end
 
 
---[[
-  local function set_side(S, side, value)
-    local mx = (S.sx - R.sx1) * 3 + 1
-    local my = (S.sy - R.sy1) * 3 + 1
+  local function set_side(C, side, value)
+    local x1,y1, x2,y2 = geom.side_coords(side, C.cave_x1,C.cave_y1, C.cave_x2,C.cave_y2)
 
-    local x1,y1, x2,y2 = geom.side_coords(side, mx,my, mx+2,my+2)
-
-    for x = mx,mx+2 do for y = my,my+2 do
-      if geom.inside_box(x,y, x1,y1, x2,y2) then
-        set_cell(x, y, value)
-      end
+    for cx = x1,x2 do for cy = y1,y2 do
+      set_cell(cx, cy, value)
     end end
   end
 
 
+--[[
   local function set_corner(S, side, value)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
@@ -260,7 +255,7 @@ do return true end ---!!!!!!!!!!!!1
     A.cave_sh = sy2 - sy1 + 1
 
     A.cave_base_x = SEEDS[sx1][sy1].x1
-    A.cave_base_y = SEEDS[sy1][sy1].x1
+    A.cave_base_y = SEEDS[sy1][sy1].y1
 
     map = CAVE_CLASS.new(A.cave_sw * 3, A.cave_sh * 3)
 
@@ -279,16 +274,20 @@ do return true end ---!!!!!!!!!!!!1
     each C in A.chunks do
       map:fill(0, C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2)
 
-      -- FIXME: BOUNDARIES !!!!
+      for dir = 2,8,2 do
+        if not C:similar_neighbor(dir) and not C.link[dir] and
+           not (C.foobage == "important")
+        then
+          set_side(C, dir, (A.is_lake ? -1 ; 1))
+        end
+      end
     end
-
-    gui.debugf("Empty Cave:\n")
-
-    map:dump()
   end
 
 
   local function generate_cave()
+
+    gui.debugf("Empty Cave:\n") ; map:dump()
 
     -- FIXME !!!! on each failure, force a clear path between two importants
 
