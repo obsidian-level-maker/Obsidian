@@ -19,13 +19,20 @@
 ----------------------------------------------------------------
 
 
-function Layout_simple_room(R)
+function Simple_area(R, A)
 
   local map
+  local cave
 
+  local cave_tex = R.main_tex or "_ERROR"
+  local cave_floor_h = assert(A.chunks[1].floor_h)
+
+--[[
   R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
   R.cave_h = rand.pick { 128, 128, 192, 256 }
+--]]
 
+--[[
   if R.outdoor and THEME.landscape_walls then
     R.cave_tex = rand.key_by_probs(THEME.landscape_walls)
 
@@ -38,6 +45,7 @@ function Layout_simple_room(R)
   else
     R.cave_tex = rand.key_by_probs(THEME.cave_walls)
   end
+--]]
 
 
   local function setup_floor(S, h)
@@ -64,27 +72,24 @@ function Layout_simple_room(R)
   end
 
 
-  local function set_cell(mx, my, value)
+  local function set_cell(cx, cy, value)
     -- do not overwrite any cleared areas
-    if (map:get(mx, my) or 0) >= 0 then
-      map:set(mx, my, value)
+    if (map:get(cx, cy) or 0) >= 0 then
+      map:set(cx, cy, value)
     end
   end
 
 
-  local function set_whole(S, value)
-    local mx = (S.sx - R.sx1) * 3 + 1
-    local my = (S.sy - R.sy1) * 3 + 1
-
-    assert(1 <= mx and mx+2 <= map.w)
-    assert(1 <= my and my+2 <= map.h)
-
-    for x = mx,mx+2 do for y = my,my+2 do
-      set_cell(x, y, value)
-    end end
+  local function set_whole(C, value)
+    for cx = C.cave_x1, C.cave_x2 do
+      for cy = C.cave_y1, C.cave_y2 do
+        set_cell(cx, cy, value)
+      end
+    end
   end
 
 
+--[[
   local function set_side(S, side, value)
     local mx = (S.sx - R.sx1) * 3 + 1
     local my = (S.sy - R.sy1) * 3 + 1
@@ -150,15 +155,17 @@ function Layout_simple_room(R)
 
     set_corner(S, side, -1)
   end
+--]]
 
 
-  local function clear_conns()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R and S:has_any_conn() then
-        set_whole(S, -1)
+  local function clear_importants()
+    each C in A.chunks do
+      if C.foobage == "important" or C.foobage == "conn" or
+         C.crossover_hall
+      then
+        set_whole(C, -1)
       end
-    end end
+    end
   end
 
 
@@ -211,7 +218,7 @@ do return true end ---!!!!!!!!!!!!1
         local my = (S.sy - R.sy1) * 3 + 1
 
         if not S.floor_h then
-          setup_floor(S, R.cave_floor_h)
+          setup_floor(S, cave_floor_h)
         end
 
         for dx = 0,2 do for dy = 0,2 do
@@ -231,21 +238,45 @@ do return true end ---!!!!!!!!!!!!1
 
 
   local function create_map()
-    map = CAVE_CLASS.new(R.sw * 3, R.sh * 3)
+    -- determine area bounds  [FIXME: make into AREA method]
+    local sx1, sx2 = 999, -999
+    local sy1, sy2 = 999, -999
+
+    each C in A.chunks do
+      sx1 = math.min(sx1, C.sx1)
+      sy1 = math.min(sy1, C.sy1)
+
+      sx2 = math.max(sx2, C.sx2)
+      sy2 = math.max(sy2, C.sy2)
+    end
+
+    assert(sx1 <= sx2)
+    assert(sy1 <= sy2)
+
+    A.cave_sx1 = sx1
+    A.cave_sy1 = sy1
+
+    A.cave_sw = sx2 - sx1 + 1
+    A.cave_sh = sy2 - sy1 + 1
+
+    A.cave_base_x = SEEDS[sx1][sy1].x1
+    A.cave_base_y = SEEDS[sy1][sy1].x1
+
+    map = CAVE_CLASS.new(A.cave_sw * 3, A.cave_sh * 3)
 
     -- determine location of chunks inside this map
-    for _,C in ipairs(R.chunks) do
-      C.cave_x1 = (C.sx1 - R.sx1) * 3 + 1
-      C.cave_y1 = (C.sy1 - R.sy1) * 3 + 1
+    each C in A.chunks do
+      C.cave_x1 = (C.sx1 - A.cave_sx1) * 3 + 1
+      C.cave_y1 = (C.sy1 - A.cave_sy1) * 3 + 1
 
-      C.cave_x2 = (C.sx2 - R.sx1) * 3 + 3
-      C.cave_y2 = (C.sy2 - R.sy1) * 3 + 3
+      C.cave_x2 = (C.sx2 - A.cave_sx1) * 3 + 3
+      C.cave_y2 = (C.sy2 - A.cave_sy1) * 3 + 3
     end
   end
 
 
   local function mark_boundaries()
-    for _,C in ipairs(R.chunks) do
+    each C in A.chunks do
       map:fill(0, C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2)
 
       -- FIXME: BOUNDARIES !!!!
@@ -258,7 +289,8 @@ do return true end ---!!!!!!!!!!!!1
 
 
   local function generate_cave()
-    local cave
+
+    -- FIXME !!!! on each failure, force a clear path between two importants
 
     for loop = 1,20 do
       gui.debugf("Trying to make a cave: loop %d\n", loop)
@@ -275,18 +307,16 @@ do return true end ---!!!!!!!!!!!!1
         break;
       end
 
-      cave:generate((R.is_lake ? 58 ; 38))
+      cave:generate((A.is_lake ? 58 ; 38))
 
       cave:flood_fill()
 
       if is_cave_good(cave) then
-        break;
+        break
       end
 
       --- cave:dump()
     end
-
-    R.cave  = cave
 
     gui.debugf("Filled Cave:\n")
 
@@ -299,12 +329,10 @@ do return true end ---!!!!!!!!!!!!1
   ----------->
 
 
-  local w_tex  = R.cave_tex or "ASHWALL4"
+  local w_tex  = cave_tex
 
   local high_z = EXTREME_H
 
-  local base_x = SEEDS[R.sx1][R.sy1].x1
-  local base_y = SEEDS[R.sx1][R.sy1].y1
 
 
   local function WALL_brush(data, coords)
@@ -313,10 +341,10 @@ do return true end ---!!!!!!!!!!!!1
 --!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
 
-    if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.delta_f }) end
-    if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.delta_c }) end
+    if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.f_delta_z }) end
+    if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.c_delta_z }) end
 
-    Brush_set_mat(coords, data.wtex, data.ftex)
+    Brush_set_mat(coords, cave_tex, cave_tex)
 
     brush_helper(coords)
   end
@@ -359,38 +387,39 @@ do return true end ---!!!!!!!!!!!!1
 
   local function render_cave()
 
-    local cave = R.cave
-
     --- DO WALLS ---
 
-    local data = { info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
+    local data = { }  ---????  info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
 
+--[[
     if R.is_lake then
       local liq_mat = Mat_lookup(LEVEL.liquid.mat)
       data.delta_f = rand.sel(70, -48, -72)
-      data.f_z = R.cave_floor_h + 8
+      data.f_z = cave_floor_h + 8
       data.ftex = liq_mat.f or liq_mat.t
     end
 
-    if R.outdoor and not R.is_lake and R.cave_floor_h + 144 < SKY_H and rand.odds(88) then
+    if R.outdoor and not R.is_lake and cave_floor_h + 144 < SKY_H and rand.odds(88) then
       data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
     end
 
     if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
   --!!!!!    data.shadow_info = get_light(-1)
     end
+--]]
 
     -- grab walkway now (before main cave is modified)
 
-    local walkway = cave:copy_island(cave.empty_id)
+---!!!!!!  local walkway = cave:copy_island(cave.empty_id)
 
 
     -- handle islands first
 
-    for _,island in ipairs(cave.islands) do
+--[[
+    each island in cave.islands do
 
       -- FIXME
-      if LEVEL.liquid and not R.is_lake and --[[ reg.cells > 4 and --]]
+      if LEVEL.liquid and not R.is_lake and --(( reg.cells > 4 and --))
          rand.odds(1)
       then
 
@@ -404,9 +433,10 @@ do return true end ---!!!!!!!!!!!!1
         cave:subtract(island)
       end
     end
+--]]
 
 
-    cave:render(base_x, base_y, WALL_brush, data, THEME.square_caves)
+    cave:render(A.cave_base_x, A.cave_base_y, WALL_brush, data, THEME.square_caves)
 
 
 do return end ----!!!!!!!
@@ -489,16 +519,14 @@ do return end ----!!!!!!!
   end
 
 
-  ---| Layout_simple_room |---
-
-R.is_lake = false
+  ---| Simple_area |---
 
   -- create the cave object and make the boundaries solid
   create_map()
 
   mark_boundaries()
 
-  --?? clear_conns()
+  clear_importants()
 
   generate_cave()
 

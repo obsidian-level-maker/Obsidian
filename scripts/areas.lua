@@ -1766,9 +1766,14 @@ stderrf("TRYING....................\n")
     each C in R.chunks do
       if not C.void and not C.scenic and not C.cross_junc then
         C.area = AREA
+        C.cave = true
         table.insert(AREA.chunks, C)
       end
     end
+
+    area_heights(R)
+
+    Simple_area(R, AREA)
   end
 
 
@@ -1816,9 +1821,9 @@ stderrf("TRYING....................\n")
     else
       decorative_chunks(R)
       create_areas(R)
+      area_heights(R)
     end
 
-    area_heights(R)
     hallway_heights(R)
     crossover_room(R)
   end
