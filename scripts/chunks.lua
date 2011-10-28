@@ -390,6 +390,16 @@ function CHUNK_CLASS.has_parallel_stair(C, dir)
 end
 
 
+function CHUNK_CLASS.has_walk(C)
+  for sx = C.sx1, C.sx2 do for sy = C.sy1, C.sy2 do
+    local S = SEEDS[sx][sy]
+    if S.is_walk then return true end
+  end end
+
+  return false
+end
+
+
 function CHUNK_CLASS.eval_camera(C)
   -- no cameras in the void (or cages etc)
   if not C.area or not C.ceil_h then return nil end

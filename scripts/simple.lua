@@ -74,9 +74,9 @@ function Simple_area(R, A)
 
   local function set_cell(cx, cy, value)
     -- do not overwrite any cleared areas
-    if (map:get(cx, cy) or 0) >= 0 then
+---???    if (map:get(cx, cy) or 0) >= 0 then
       map:set(cx, cy, value)
-    end
+---???    end
   end
 
 
@@ -164,47 +164,6 @@ function Simple_area(R, A)
   end
 
 
-  local function is_cave_good(cave)
-
-do return true end ---!!!!!!!!!!!!1
-
-    -- FIXME: size check
-
-    --[[
-    local reg, size_ok = flood:main_empty_region()
-
-    if not reg or not size_ok then
-      gui.debugf("cave failed size check\n")
-      return false
-    end
-    --]]
-
-    -- check connections
-
-    local point_list = {}
-
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-
-      if S.room == R and S:has_any_conn() then
-        table.insert(point_list,
-        {
-          x = (S.sx - R.sx1) * 3 + 2,
-          y = (S.sy - R.sy1) * 3 + 2,
-        })
-      end
-
-    end end
-
-    if not cave:validate_conns(point_list) then
-      gui.debugf("cave failed connection check\n")
-      return false
-    end
-
-    return true
-  end
-
-
   local function FIXME_initial_map()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y]
@@ -285,6 +244,63 @@ do return true end ---!!!!!!!!!!!!1
   end
 
 
+  local function clear_walks()
+    each C in A.chunks do
+      if C:has_walk() and rand.odds(25) then
+
+        for cx = C.cave_x1, C.cave_x2 do
+          for cy = C.cave_y1, C.cave_y2 do
+            if map:get(cx, cy) == 0 and rand.odds(25) then
+              map:set(cx, cy, -1)
+            end
+          end
+        end
+
+      end
+    end
+  end
+
+
+  local function is_cave_good(cave)
+    -- check that all important parts are connected
+
+    local point_list = {}
+
+    each C in A.chunks do
+      if C.foobage == "important" or C.foobage == "conn" then
+
+        local POINT =
+        {
+          x = math.i_mid(C.cave_x1, C.cave_x2)
+          y = math.i_mid(C.cave_y1, C.cave_y2)
+        }
+
+        table.insert(point_list, POINT)
+      end
+    end
+
+    assert(#point_list > 0)
+
+    if not cave:validate_conns(point_list) then
+      gui.debugf("cave failed connection check\n")
+      return false
+    end
+
+    -- FIXME: size check
+
+    --[[   ????
+    local reg, size_ok = flood:main_empty_region()
+
+    if not reg or not size_ok then
+      gui.debugf("cave failed size check\n")
+      return false
+    end
+    --]]
+
+    return true
+  end
+
+
   local function generate_cave()
 
     gui.debugf("Empty Cave:\n") ; map:dump()
@@ -314,7 +330,10 @@ do return true end ---!!!!!!!!!!!!1
         break
       end
 
-      --- cave:dump()
+      -- randomly clear some cells along the walk path.
+      -- After each iteration the number of cleared cells will keep
+      -- increasing, making it more likely to generate a valid cave.
+      clear_walks()
     end
 
     gui.debugf("Filled Cave:\n")
