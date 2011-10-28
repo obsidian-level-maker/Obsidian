@@ -1074,7 +1074,7 @@ stderrf("TRYING....................\n")
         end
 
         local C = R:alloc_chunk(sx, sy, sx+W-1, sy+H-1)
----???  C.foobage = "filler"
+        C.filler = true
       end
     end end
   end
@@ -1273,9 +1273,8 @@ stderrf("TRYING....................\n")
     end
 
     -- collect the final areas
-    R.areas = {}
-
     local debug_id = 1
+
     each _,A in area_tab do
       A.debug_id = debug_id ; debug_id = debug_id + 1
 ---   stderrf("In %s : AREA %d size %d (>= %d)\n", R:tostr(), A.id, A.size, A.min_size)
@@ -1757,6 +1756,22 @@ stderrf("TRYING....................\n")
   end
 
 
+  local function cave_stuff(R)
+    filler_chunks(R)
+
+    local AREA = AREA_CLASS.new("floor", R)
+
+    table.insert(R.areas, AREA)
+
+    each C in R.chunks do
+      if not C.void and not C.scenic and not C.cross_junc then
+        C.area = AREA
+        table.insert(AREA.chunks, C)
+      end
+    end
+  end
+
+
   local function crossover_room(R)
     local hall = R.crossover_hall
 
@@ -1776,11 +1791,6 @@ stderrf("TRYING....................\n")
     else
       hall.cross_limit = { -9999, min_h - (PARAM.jump_height or 32) - 40 }
     end
-if R.id == 4 then
-stderrf("Crossover_room %s : %s (%d .. %d)\n",
-        R:tostr(), hall.cross_mode, hall.cross_limit[1], hall.cross_limit[2])
-end
-
   end
 
 
@@ -1799,8 +1809,15 @@ end
 
 
   local function floor_stuff(R)
-    decorative_chunks(R)
-    create_areas(R)
+    R.areas = {}
+
+    if R.cave then
+      cave_stuff(R)
+    else
+      decorative_chunks(R)
+      create_areas(R)
+    end
+
     area_heights(R)
     hallway_heights(R)
     crossover_room(R)

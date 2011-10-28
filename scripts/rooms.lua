@@ -548,6 +548,13 @@ function Rooms_setup_theme(R)
 
   R.skin.spike_group = "spike" .. tostring(R.id)
 
+  if R.cave then
+    assert(THEME.cave_walls)
+    R.main_tex = rand.key_by_probs(THEME.cave_walls)
+    R.skin.wall = R.main_tex
+    return
+  end
+
   if not R.outdoor then
     R.main_tex = rand.pick(LEVEL.building_walls)
     R.skin.wall = R.main_tex
