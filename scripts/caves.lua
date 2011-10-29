@@ -94,14 +94,14 @@ end
 
 
 function CAVE_CLASS.fill(cave, x1,y1, x2,y2, val)
-  if not x1 then
-    x1, x2 = 1, cave.w
-    y1, y2 = 1, cave.h
-  end
-
   for x = x1,x2 do for y = y1,y2 do
     cave.cells[x][y] = val
   end end
+end
+
+
+function CAVE_CLASS.set_all(cave, val)
+  cave:fill(1, 1, cave.w, cave.h, val)
 end
 
 

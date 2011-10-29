@@ -74,18 +74,10 @@ function Simple_area(R, A)
   end
 
 
-  local function set_cell(cx, cy, value)
-    -- do not overwrite any cleared areas
----???    if (map:get(cx, cy) or 0) >= 0 then
-      map:set(cx, cy, value)
----???    end
-  end
-
-
   local function set_whole(C, value)
     for cx = C.cave_x1, C.cave_x2 do
       for cy = C.cave_y1, C.cave_y2 do
-        set_cell(cx, cy, value)
+        map:set(cx, cy, value)
       end
     end
   end
@@ -95,7 +87,7 @@ function Simple_area(R, A)
     local x1,y1, x2,y2 = geom.side_coords(side, C.cave_x1,C.cave_y1, C.cave_x2,C.cave_y2)
 
     for cx = x1,x2 do for cy = y1,y2 do
-      set_cell(cx, cy, value)
+      map:set(cx, cy, value)
     end end
   end
 
@@ -110,7 +102,7 @@ function Simple_area(R, A)
     mx = mx + 1 + dx
     my = my + 1 + dy
 
-    set_cell(mx, my, value)
+    map:set(mx, my, value)
   end
 
 
@@ -548,6 +540,89 @@ do return end ----!!!!!!!
   end
 
 
+  local function step_test()
+
+    local pos_list =
+    {
+      {
+        x = point_list[1].x
+        y = point_list[1].y
+        h = cave_floor_h + 4
+      }
+    }
+
+    local freebies = CAVE_CLASS.copy(cave)
+
+
+    local function STEP_brush(data, coords)
+      table.insert(coords, { t=data.h })
+
+      Brush_set_mat(coords, cave_tex, cave_tex)
+
+      brush_helper(coords)
+    end
+
+
+    local function grow_a_step(x, y, h)
+      local step = CAVE_CLASS.blank_copy(cave)
+
+      step:set_all(0)
+
+      step.cells[x][y] = 1
+
+      local size = rand.pick { 2,2,3,3, 4,4,5,5,6,6, 9,12,15,18 }
+
+      for i = 1, rand.irange(2,6) do
+        step:grow()
+      end
+
+      step:subtract(freebies)
+
+      -- it's possible the area got divided into two or more pieces.
+      -- remove any piece not connected to the starting spot.
+      step:flood_fill()
+
+--[[ FIXME
+      if step.solid_regions >= 2 then
+        for id = 2,9999 do
+          if step.regions[id] then
+            step:kill_region(id)
+          end
+        end
+      end
+--]]
+      freebies:union(step)
+
+      step.square = true
+
+      step:render(STEP_brush, { h=h })
+
+      -- find new positions for growth  [FIXME: OPTIMISE]
+      for x = 1, cave.w do for y = 1, cave.h do
+        if (step:get(x, y) or 0) > 0 then
+          for dir = 2,8,2 do
+            local nx, ny = geom.nudge(x, y, dir)
+            if freebies:valid_cell(nx, ny) and (freebies:get(nx, ny) or 0) < 0 then
+              table.insert(pos_list, { x=nx, y=ny, h=h+16 })
+            end
+          end
+        end
+      end end
+    end
+
+    ------>
+
+    while #pos_list > 0 do
+      local pos = table.remove(pos_list, rand.irange(1, #pos_list))
+
+      -- ignore out-of-date positions
+      if freebies:get(pos.x, pos.y) > 0 then continue end
+
+      grow_a_step(pos.x, pos.y, pos.h)
+    end
+  end
+
+
   ---| Simple_area |---
 
   -- create the cave object and make the boundaries solid
@@ -561,6 +636,8 @@ do return end ----!!!!!!!
 
   generate_cave()
 
-  render_cave()
+  render_cave()  -- does walls
+
+  step_test()
 end
 
