@@ -341,8 +341,10 @@ end
 
 function CAVE_CLASS.flood_fill(cave)
   -- generate the 'flood' member, an array where each contiguous region
-  -- has a unique id.  Empty areas are negative, solid areas are positive.
-  -- Zero is invalid.  Nil cells remain nil.
+  -- has a unique id.  Empty areas are negative, solid areas are positive,
+  -- and everything else is NIL.
+  --
+  -- This also creates the 'regions' table.
 
   local W = cave.w
   local H = cave.h
@@ -458,21 +460,6 @@ function CAVE_CLASS.flood_fill(cave)
     update_info(x, y)
   end end
 
-  -- find largest regions   [NEEDED?]
---[[
-  for what,reg in pairs(flood.regions) do
-    if what < 0 then
-      if not flood.largest_empty or reg.cells > flood.largest_empty.cells then
-        flood.largest_empty = reg
-      end
-    else
-      if not flood.largest_solid or reg.cells > flood.largest_solid.cells then
-        flood.largest_solid = reg
-      end
-    end
-  end
---]]
-
   cave.flood = flood
 
   --- cave:dump_regions()
@@ -511,7 +498,44 @@ function CAVE_CLASS.validate_conns(cave, point_list)
 end
 
 
----???  function CAVE_CLASS.solidify_other_empties(cave)
+function CAVE_CLASS.solidify_pockets(cave)
+  -- this removes the empty areas which are surrounded by solid
+  -- (i.e. not part of the main walk area).
+
+  local function find_one()
+    each id,REG in cave.regions do
+      if id < 0 and id != cave.empty_id then
+        return id
+      end
+    end
+
+    -- nothing found
+    return nil
+  end
+
+  while true do
+    local pocket_id = find_one()
+
+    if not pocket_id then break end
+
+stderrf("FOUND POCKET %d\n", pocket_id)
+    local REG = cave.regions[pocket_id]
+    assert(REG)
+
+    -- solidify the cells
+    for x = REG.x1, REG.x2 do
+      for y = REG.y1, REG.y2 do
+        if cave.flood[x][y] == pocket_id then
+          cave.cells[x][y] = 1
+          cave.flood[x][y] = nil
+        end
+      end
+    end
+
+    -- remove the region info
+    cave.regions[pocket_id] = nil
+  end
+end
 
 
 function CAVE_CLASS.copy_island(cave, reg_id)

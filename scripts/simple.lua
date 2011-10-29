@@ -343,6 +343,8 @@ function Simple_area(R, A)
       clear_walks()
     end
 
+    cave:solidify_pockets()
+
     cave:dump("Filled Cave:")
 
     cave:find_islands()
