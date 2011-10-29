@@ -29,19 +29,35 @@
 class CAVE
 {
   w, h   -- width and height (in cells)
+  
+  base_x, base_y  -- coordinate of bottom left corner
 
-  cells  -- ARRAY_2D : number  -- > 0 means solid
-                               -- < 0 means empty
+  cells : array_2D(number)  -- > 0 means solid
+                            -- < 0 means empty
 
-  flood  -- ARRAY_2D : number  -- contiguous areas will have the
-                               -- same value (positive for solid
-                               -- and negative for empty).
+  flood : array_2D(number)  -- contiguous areas have the same value
+                            -- (positive for solid, negative for empty)
 
   empty_id  -- the main empty area in the flood_fill
-               this is set by the validate_conns() method
+            -- this is set by the validate_conns() method
 
-  islands  -- LIST : CAVE
+  islands : list(CAVE)
+
+  regions : table[id] -> REGION
+
+  square  -- if set, render() method won't smooth out the 64x64 blocks
 }
+
+
+class REGION
+{
+  id : number
+
+  x1, y1, x2, y2  -- bounding box (in cell coordinates)
+
+  size : number of cells
+}
+
 
 --------------------------------------------------------------]]
 
@@ -49,10 +65,16 @@ class CAVE
 CAVE_CLASS = {}
 
 
-function CAVE_CLASS.new(w, h)
-  local cave = { w=w, h=h, cells = table.array_2D(w, h) }
+function CAVE_CLASS.new(base_x, base_y, w, h)
+  local cave = { base_x=base_x, base_y=base_y, w=w, h=h }
   table.set_class(cave, CAVE_CLASS)
+  cave.cells = table.array_2D(w, h)
   return cave
+end
+
+
+function CAVE_CLASS.blank_copy(cave)
+  return CAVE_CLASS.new(cave.base_x, cave.base_y, cave.w, cave.h)
 end
 
 
@@ -100,10 +122,9 @@ end
 
 
 function CAVE_CLASS.copy(cave)
+  -- only copies 'base_x', 'base_y', 'w', 'h' and 'cells' members
 
-  -- only copies 'w', 'h' and 'cells' members
-
-  local newbie = CAVE_CLASS.new(cave.w, cave.h)
+  local newbie = cave:blank_copy()
 
   for x = 1,cave.w do for y = 1,cave.h do
     newbie.cells[x][y] = cave.cells[x][y]
@@ -499,7 +520,7 @@ function CAVE_CLASS.copy_island(cave, reg_id)
 
   local flood = assert(cave.flood)
 
-  local island = CAVE_CLASS.new(cave.w, cave.h)
+  local island = cave:blank_copy()
 
   for x = 1,W do for y = 1,H do
     local val = flood[x][y]
@@ -574,8 +595,10 @@ function CAVE_CLASS.find_islands(cave)
 end
 
 
-function CAVE_CLASS.validate_size(cave, empty_id)
-  local empty_reg = cave.regions[empty_id]
+function CAVE_CLASS.validate_size(cave)
+  assert(cave.empty_id)
+
+  local empty_reg = cave.regions[cave.empty_id]
   assert(empty_reg)
 
   local W = cave.w
@@ -826,10 +849,7 @@ function CAVE_CLASS.furthest_point(cave, ref_points)
 end
 
 
-function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
-
-  -- TODO: make base_x/y and square_caves a class field ??
-
+function CAVE_CLASS.render(cave, brush_func, data)
   local W = cave.w
   local H = cave.h
 
@@ -893,7 +913,7 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
     by = by + (y - 1) * 64
 
     -- most basic method (mostly for debugging)
-    if square_caves then
+    if cave.square then
       brush_func(data,
       {
         { x=bx+64, y=by },
@@ -962,7 +982,7 @@ function CAVE_CLASS.render(cave, base_x, base_y, brush_func, data, square_caves)
 
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
-      add_brush(corner_map, x, y, base_x, base_y)
+      add_brush(corner_map, x, y, cave.base_x, cave.base_y)
     end
   end end
 end
@@ -1165,7 +1185,7 @@ end
 
 
 
-function CAVE_CLASS.maze_render(maze, base_x, base_y, brush_func, data)
+function CAVE_CLASS.maze_render(maze, brush_func, data)
   local W = maze.w
   local H = maze.h
 
@@ -1175,8 +1195,8 @@ function CAVE_CLASS.maze_render(maze, base_x, base_y, brush_func, data)
   local function visit_cell(x, y)
     if (cells[x][y] or 0) <= 0 then return; end
 
-    local bx = base_x + (x - 1) * 64
-    local by = base_y + (y - 1) * 64
+    local bx = maze.base_x + (x - 1) * 64
+    local by = maze.base_y + (y - 1) * 64
 
     -- most basic method (mostly for debugging)
     if true then
@@ -1208,7 +1228,7 @@ function Maze_test()
   local SIZE = 15
 
   for loop = 1,20 do
-    local maze = CAVE_CLASS.new(SIZE, SIZE)
+    local maze = CAVE_CLASS.new(0, 0, SIZE, SIZE)
 
     -- solid on outside, empty in middle
     maze:fill(1,1, SIZE,SIZE,     1)

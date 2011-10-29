@@ -218,7 +218,7 @@ function Simple_area(R, A)
     A.cave_base_x = SEEDS[sx1][sy1].x1
     A.cave_base_y = SEEDS[sy1][sy1].y1
 
-    map = CAVE_CLASS.new(A.cave_sw * 3, A.cave_sh * 3)
+    map = CAVE_CLASS.new(A.cave_base_x, A.cave_base_y, A.cave_sw * 3, A.cave_sh * 3)
 
     -- determine location of chunks inside this map
     each C in A.chunks do
@@ -449,7 +449,7 @@ function Simple_area(R, A)
         -- create a lava/nukage pit
         local pit = Mat_lookup(LEVEL.liquid.mat)
 
-        island:render(base_x, base_y, WALL_brush,
+        island:render(WALL_brush,
                       { f_z=R.cave_floor_h+8, pit.f or pit.t,
                         delta_f=rand.sel(70, -52, -76) })
 
@@ -458,8 +458,12 @@ function Simple_area(R, A)
     end
 --]]
 
+    if THEME.square_caves or true then   --@@@@@@
+      cave.square = true
+    end
 
-    cave:render(A.cave_base_x, A.cave_base_y, WALL_brush, data, THEME.square_caves)
+
+    cave:render(WALL_brush, data)
 
 
 do return end ----!!!!!!!
@@ -537,7 +541,7 @@ do return end ----!!!!!!!
       end
 
 
-      walkway:render(base_x, base_y, FC_brush, data)
+      walkway:render(FC_brush, data)
     end
   end
 
