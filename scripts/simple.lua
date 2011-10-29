@@ -27,6 +27,8 @@ function Simple_area(R, A)
   local cave_tex = R.main_tex or "_ERROR"
   local cave_floor_h = assert(A.chunks[1].floor_h)
 
+  local point_list
+
 --[[
   R.cave_floor_h = 0 --!!!!!!  R.entry_floor_h
   R.cave_h = rand.pick { 128, 128, 192, 256 }
@@ -164,7 +166,7 @@ function Simple_area(R, A)
   end
 
 
-  local function FIXME_initial_map()
+  local function OLD_OLD__initial_map()
     for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
       local S = SEEDS[x][y]
       if S.room == R then
@@ -261,10 +263,8 @@ function Simple_area(R, A)
   end
 
 
-  local function is_cave_good(cave)
-    -- check that all important parts are connected
-
-    local point_list = {}
+  local function collect_important_points()
+    point_list = {}
 
     each C in A.chunks do
       if C.foobage == "important" or C.foobage == "conn" then
@@ -280,11 +280,21 @@ function Simple_area(R, A)
     end
 
     assert(#point_list > 0)
+  end
+
+
+  local function is_cave_good(cave)
+    -- check that all important parts are connected
 
     if not cave:validate_conns(point_list) then
       gui.debugf("cave failed connection check\n")
       return false
     end
+
+    cave.empty_id = cave.flood[point_list[1].x][point_list[1].y]
+
+    assert(cave.empty_id)
+    assert(cave.empty_id < 0)
 
     -- FIXME: size check
 
@@ -305,8 +315,6 @@ function Simple_area(R, A)
 
     map:dump("Empty Cave:")
 
-    -- FIXME !!!! on each failure, force a clear path between two importants
-
     local MAX_LOOP = 10
 
     for loop = 1,MAX_LOOP do
@@ -319,6 +327,7 @@ function Simple_area(R, A)
 
         -- emergency fallback
         cave:gen_empty()
+
         cave:flood_fill()
 
         is_cave_good(cave)  -- set empty_id
@@ -544,6 +553,8 @@ do return end ----!!!!!!!
 
   -- create the cave object and make the boundaries solid
   create_map()
+
+  collect_important_points()
 
   mark_boundaries()
 

@@ -302,7 +302,7 @@ end
 
 function CAVE_CLASS.flood_fill(cave)
   -- generate the 'flood' member, an array where each contiguous region
-  -- has a unique id.  Empty areas are negative, Solid areas use positive.
+  -- has a unique id.  Empty areas are negative, solid areas are positive.
   -- Zero is invalid.  Nil cells remain nil.
 
   local W = cave.w
