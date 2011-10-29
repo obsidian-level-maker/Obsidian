@@ -7,10 +7,8 @@ Current Work
 
 
 Caves:
-  !!!!  handle disconnected areas
-
-  !!  mark_borders
-
+  DONE:  handle disconnected areas
+        
   !!!!  spots for monsters and items
 
   +  proper floor and ceiling textures
@@ -18,6 +16,34 @@ Caves:
   -  better floors, liquid areas
 
   -  better ceilings, chance of sky
+
+  +  step algorithm:
+     (1) have a bunch of begin spots, at least all the importants/conns
+         sprinkly some extra ones too (e.g. corners or middle).
+
+     (2) grow them all two or three times (more for large importants)
+
+     (3) merge any areas which touch or overlap
+
+     (4) grow remaining areas until all walkable cells are covered
+
+     (5) iterate through the areas (starting with known floor_h)
+         and try to give unique height (previous + DIR * STEP)
+
+     (6) grow each area once -- hence can use cave.render() method
+         to make the floors / ceilings and there should not be any
+         gaps between the floor and walls, or floor A and floor B.
+
+
+     ANOTHER METHOD:
+
+     (1) begin at entry point (centre of chunk)
+
+     (2) grow that point a few times (at least twice).
+         keep growing if an important is _partially_ covered.
+
+     (3) select a new point which is unset and touches prev area.
+         repeat at step (2) until no such points exist.
 
 
 QUAKE II:
