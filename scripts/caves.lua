@@ -580,7 +580,7 @@ function CAVE_CLASS.main_empty_region(cave)
 end
 
 
-function CAVE_CLASS.grow(cave)
+function CAVE_CLASS.grow(cave, keep_edges)
   -- grow the cave : it will have more solids, less empties.
   -- nil cells are not affected.
 
@@ -590,25 +590,30 @@ function CAVE_CLASS.grow(cave)
   local work = table.array_2D(W, H)
   local cells = cave.cells
 
-  local function handle_neighbor(x, y, side)
-    local nx, ny = geom.nudge(x, y, side)
-    
-    if nx < 1 or nx > W or ny < 1 or ny > H then
-      return
+  local function value_for_spot(x, y)
+    local val = cells[x][y]
+    local hit_edge
+
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, dir)
+
+      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+        hit_edge = true
+      elseif cells[nx][ny] > 0 then
+        val = cells[nx][ny]
+      end
     end
 
-    if (cells[nx][ny] or 0) < 0 then
-      work[nx][ny] = cells[x][y]
+    if keep_edges and hit_edge then
+      return cells[x][y]
     end
+
+    return val
   end
 
   for x = 1,W do for y = 1,H do
-    work[x][y] = cells[x][y]
-
-    if (cells[x][y] or 0) > 0 then
-      for side = 2,8,2 do
-        handle_neighbor(x, y, side)
-      end
+    if cells[x][y] then
+      work[x][y] = value_for_spot(x, y)
     end
   end end
 
@@ -627,35 +632,30 @@ function CAVE_CLASS.shrink(cave, keep_edges)
   local work = table.array_2D(W, H)
   local cells = cave.cells
 
-  local SIDES = { 2,4,6,8 }
-
   local function value_for_spot(x, y)
-    rand.shuffle(SIDES)
+    local val = cells[x][y]
+    local hit_edge
 
-    local hit_edge = false
-
-    for _,side in ipairs(SIDES) do
-      local nx, ny = geom.nudge(x, y, side)
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, dir)
     
-      if nx < 1 or nx > W or ny < 1 or ny > H or not cells[nx][ny] then
+      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
         hit_edge = true
       elseif cells[nx][ny] < 0 then
-        return cells[nx][ny]
+        val = cells[nx][ny]
       end
     end
 
-    if hit_edge and not keep_sides then
-      return nil
+    if keep_edges and hit_edge then
+      return cells[x][y]
     end
 
-    return cells[x][y]
+    return val
   end
 
   for x = 1,W do for y = 1,H do
-    if (cells[x][y] or 0) > 0 then
+    if cells[x][y] then
       work[x][y] = value_for_spot(x, y)
-    else
-      work[x][y] = cells[x][y]
     end
   end end
 
@@ -663,8 +663,8 @@ function CAVE_CLASS.shrink(cave, keep_edges)
 end
 
 
-function CAVE_CLASS.remove_dots(cave, keep_edges, callback)
-  -- removes isolated solid cells from the cave.
+function CAVE_CLASS.remove_dots(cave)
+  -- removes isolated cells (solid or empty) from the cave.
   -- diagonal cells are NOT checked.
 
   local W = cave.w
@@ -672,29 +672,26 @@ function CAVE_CLASS.remove_dots(cave, keep_edges, callback)
 
   local cells = cave.cells
 
-  local function is_isolated(x, y)
-    local count = 0
+  local function is_isolated(x, y, val)
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, dir)
 
-    for side = 2,8,2 do
-      local nx, ny = geom.nudge(x, y, side)
-
-      if nx < 1 or nx > W or ny < 1 or ny > H or not cells[nx][ny] then
-        if keep_edges then return false end
-      elseif cells[nx][ny] > 0 then
-        count = count + 1
+      if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
+        -- ignore it   ---### if keep_edges then return false end
+      elseif cells[nx][ny] == val then
+        return false
       end
     end
 
-    return (count == 0)
+    return true
   end
 
   for x = 1,W do for y = 1,H do
-    if is_isolated(x, y) then
+    local val = cells[x][y]
+
+    if val and val != 0 and is_isolated(x, y, val) then
       local dx = (x > W/2 ? -1 ; 1)
       cells[x][y] = cells[x+dx][y]
-      if callback then
-        callback(cave, x, y)
-      end
     end
   end end
 end
