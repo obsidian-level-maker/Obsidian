@@ -1594,7 +1594,7 @@ function Plan_decide_caves()
     if not THEME.cave_walls then return -1 end
 
     -- too small ?
-    if R.sw < 4 or R.sh < 4 then return -1 end
+    if R.sw < 4 or R.sh < 3 then return -1 end
 
     local score = R.svolume
 

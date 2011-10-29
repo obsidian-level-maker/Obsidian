@@ -327,6 +327,8 @@ function Simple_area(R, A)
 
       cave:generate((A.is_lake ? 58 ; 38))
 
+      cave:remove_dots()
+
       cave:flood_fill()
 
       if is_cave_good(cave) then
