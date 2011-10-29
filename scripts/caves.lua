@@ -71,7 +71,7 @@ function CAVE_CLASS.set(cave, x, y, val)
 end
 
 
-function CAVE_CLASS.fill(cave, val, x1,y1, x2,y2)
+function CAVE_CLASS.fill(cave, x1,y1, x2,y2, val)
   if not x1 then
     x1, x2 = 1,cave.w
     y1, y2 = 1,cave.h
@@ -113,16 +113,22 @@ function CAVE_CLASS.copy(cave)
 end
 
 
-function CAVE_CLASS.dump(cave)
+function CAVE_CLASS.dump(cave, title)
+  if title then
+    gui.debugf("%s\n", title)
+  end
+
   for y = cave.h,1,-1 do
     local line = "@c| ";
     
     for x = 1,cave.w do
       local ch = " "
       local cell = cave.cells[x][y]
+
       if  cell == 0      then ch = "?" end
       if (cell or 0) > 0 then ch = "#" end
       if (cell or 0) < 0 then ch = "." end
+
       line = line .. ch
     end
 
@@ -481,7 +487,7 @@ function CAVE_CLASS.copy_island(cave, reg_id)
     end
   end end
 
-island:dump("Island for " .. tostring(reg_id))
+  island:dump("Island for " .. tostring(reg_id))
 
   return island
 end
@@ -1194,15 +1200,15 @@ function Maze_test()
     local maze = CAVE_CLASS.new(SIZE, SIZE)
 
     -- solid on outside, empty in middle
-    maze:fill( 1, 1,1, SIZE,SIZE)
-    maze:fill( 0, 2,2, SIZE-1,SIZE-1)
+    maze:fill(1,1, SIZE,SIZE,     1)
+    maze:fill(2,2, SIZE-1,SIZE-1, 0)
 
     -- doorways at top and bottom
     local d1 = rand.irange(2,SIZE-3)
     local d2 = rand.irange(2,SIZE-3)
 
-    maze:fill(-1, d1,1,      d1+2,3)
-    maze:fill(-1, d2,SIZE-2, d2+2,SIZE)
+    maze:fill(d1,1,      d1+2,3,    -1)
+    maze:fill(d2,SIZE-2, d2+2,SIZE, -1)
 
     maze:maze_generate()
 

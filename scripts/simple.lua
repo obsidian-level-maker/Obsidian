@@ -231,7 +231,7 @@ function Simple_area(R, A)
 
   local function mark_boundaries()
     each C in A.chunks do
-      map:fill(0, C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2)
+      map:fill(C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2, 0)
 
       for dir = 2,8,2 do
         if not C:similar_neighbor(dir) and not C.link[dir] and
@@ -303,23 +303,26 @@ function Simple_area(R, A)
 
   local function generate_cave()
 
-    gui.debugf("Empty Cave:\n") ; map:dump()
+    map:dump("Empty Cave:")
 
     -- FIXME !!!! on each failure, force a clear path between two importants
 
-    for loop = 1,20 do
+    local MAX_LOOP = 10
+
+    for loop = 1,MAX_LOOP do
       gui.debugf("Trying to make a cave: loop %d\n", loop)
 
       cave = map:copy()
 
-      if loop >= 20 then
+      if loop >= MAX_LOOP then
         gui.printf("Failed to generate a usable cave! (%s)\n", R:tostr())
 
         -- emergency fallback
         cave:gen_empty()
         cave:flood_fill()
+
         is_cave_good(cave)  -- set empty_id
-        break;
+        break
       end
 
       cave:generate((A.is_lake ? 58 ; 38))
@@ -336,9 +339,7 @@ function Simple_area(R, A)
       clear_walks()
     end
 
-    gui.debugf("Filled Cave:\n")
-
-    cave:dump()
+    cave:dump("Filled Cave:")
 
     cave:find_islands()
   end
