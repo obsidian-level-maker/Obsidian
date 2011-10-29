@@ -300,6 +300,24 @@ function CAVE_CLASS.gen_empty(cave)
 end
 
 
+function CAVE_CLASS.dump_regions(cave)
+  if not cave.regions then
+    gui.debugf("No region info (flood_fill not called yet)\n")
+    return
+  end
+
+  gui.debugf("Regions:\n")
+
+  each id,REG in cave.regions do
+    gui.debugf("  %+4d : (%d %d) .. (%d %d) size:%d\n",
+               REG.id, REG.x1, REG.y1, REG.x2, REG.y2, REG.size)
+  end
+
+  gui.debugf("Empty regions: %d (with %d cells)\n", cave.empty_regions, cave.empty_cells)
+  gui.debugf("Solid regions: %d (with %d cells)\n", cave.solid_regions, cave.solid_cells)
+end
+
+
 function CAVE_CLASS.flood_fill(cave)
   -- generate the 'flood' member, an array where each contiguous region
   -- has a unique id.  Empty areas are negative, solid areas are positive.
@@ -317,14 +335,13 @@ function CAVE_CLASS.flood_fill(cave)
   local next_points = {}
 
   local function flood_point(x, y)
-
     -- spread value from this cell to neighbors
 
     local A = flood[x][y]
     assert(A)
 
-    for side = 2,8,2 do
-      local nx, ny = geom.nudge(x, y, side)
+    for dir = 2,8,2 do
+      local nx, ny = geom.nudge(x, y, dir)
       if nx >= 1 and nx <= W and ny >= 1 and ny <= H then
         local B = flood[nx][ny]
 
@@ -336,45 +353,48 @@ function CAVE_CLASS.flood_fill(cave)
     end
   end
 
---[[
-  local function update_info(x, y)
-    local f = flood[x][y]
-    if not f then return end
 
-    if f < 0 then
-      flood.empty_cells = flood.empty_cells + 1
+  local function update_info(x, y)
+    local id = flood[x][y]
+
+    if not id then return end
+
+    assert(id != 0)
+
+    if id < 0 then
+      cave.empty_cells = cave.empty_cells + 1
     else
-      flood.solid_cells = flood.solid_cells + 1
+      cave.solid_cells = cave.solid_cells + 1
     end
 
-    local reg = flood.regions[f]
+    local REG = cave.regions[id]
 
-    if not reg then
-      reg =
+    if not REG then
+      REG =
       {
-        id = f,
-        x1 = x, y1 = y,
-        x2 = x, y2 = y,
-        cells = 0,
+        id = id
+        x1 = x, y1 = y
+        x2 = x, y2 = y
+        size = 0
       }
 
-      flood.regions[f] = reg
+      cave.regions[id] = REG
 
-      if f < 0 then
-        flood.empty_regions = flood.empty_regions + 1
+      if id < 0 then
+        cave.empty_regions = cave.empty_regions + 1
       else
-        flood.solid_regions = flood.solid_regions + 1
+        cave.solid_regions = cave.solid_regions + 1
       end
     end
 
-    if x < reg.x1 then reg.x1 = x end
-    if y < reg.y1 then reg.y1 = y end
-    if x > reg.x2 then reg.x2 = x end
-    if y > reg.y2 then reg.y2 = y end
+    if x < REG.x1 then REG.x1 = x end
+    if y < REG.y1 then REG.y1 = y end
+    if x > REG.x2 then REG.x2 = x end
+    if y > REG.y2 then REG.y2 = y end
 
-    reg.cells = reg.cells + 1
+    REG.size = REG.size + 1
   end
---]]
+
 
   -- initial setup
 
@@ -399,25 +419,26 @@ function CAVE_CLASS.flood_fill(cave)
   while #next_points > 0 do
     local np_list = next_points ; next_points = {}
 
-    for _,P in ipairs(np_list) do
+    each P in np_list do
       flood_point(P.x, P.y)
     end
   end
 
---[[
   -- create information for each region
-  flood.regions = {}
 
-  flood.empty_cells = 0
-  flood.solid_cells = 0
-  flood.empty_regions = 0
-  flood.solid_regions = 0
+  cave.regions = {}
+
+  cave.empty_cells = 0
+  cave.solid_cells = 0
+  cave.empty_regions = 0
+  cave.solid_regions = 0
 
   for x = 1,W do for y = 1,H do
     update_info(x, y)
   end end
 
-  -- find largest regions
+  -- find largest regions   [NEEDED?]
+--[[
   for what,reg in pairs(flood.regions) do
     if what < 0 then
       if not flood.largest_empty or reg.cells > flood.largest_empty.cells then
@@ -432,6 +453,8 @@ function CAVE_CLASS.flood_fill(cave)
 --]]
 
   cave.flood = flood
+
+  --- cave:dump_regions()
 end
 
 
