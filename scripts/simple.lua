@@ -570,9 +570,9 @@ do return end ----!!!!!!!
 
       step.cells[x][y] = 1
 
-      local size = rand.pick { 2,2,3,3, 4,4,5,5,6,6, 9,12,15,18 }
+      local count = rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
 
-      for i = 1, rand.irange(2,6) do
+      for i = 1, count do
         step:grow()
       end
 
