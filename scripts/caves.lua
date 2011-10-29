@@ -73,8 +73,8 @@ end
 
 function CAVE_CLASS.fill(cave, x1,y1, x2,y2, val)
   if not x1 then
-    x1, x2 = 1,cave.w
-    y1, y2 = 1,cave.h
+    x1, x2 = 1, cave.w
+    y1, y2 = 1, cave.h
   end
 
   for x = x1,x2 do for y = y1,y2 do
@@ -85,8 +85,8 @@ end
 
 function CAVE_CLASS.negate(cave, x1,y1, x2,y2)
   if not x1 then
-    x1, x2 = 1,cave.w
-    y1, y2 = 1,cave.h
+    x1, x2 = 1, cave.w
+    y1, y2 = 1, cave.h
   end
 
   for x = x1,x2 do for y = y1,y2 do
@@ -574,32 +574,23 @@ function CAVE_CLASS.find_islands(cave)
 end
 
 
---TODO
-function CAVE_CLASS.main_empty_region(cave)
+function CAVE_CLASS.validate_size(cave, empty_id)
+  local empty_reg = cave.regions[empty_id]
+  assert(empty_reg)
 
-  -- find the largest empty region
+  local W = cave.w
+  local H = cave.h
 
-  local empty_reg = flood.largest_empty
+  local cw = empty_reg.x2 - empty_reg.x1 + 1
+  local ch = empty_reg.y2 - empty_reg.y1 + 1
 
-  if not empty_reg then
-    return
-  end
+  if cw < W / 2 then return false end
+  if ch < H / 2 then return false end
 
-  -- size check
-  local W = flood.w
-  local H = flood.h
+  -- volume check
+  if cw * ch < W * H / 2.5 then return false end
 
-  local size_ok = true
-
-  local size_x = empty_reg.x2 - empty_reg.x1 + 1
-  local size_y = empty_reg.y2 - empty_reg.y1 + 1
-
-  if (size_x*1.6 < W and size_y*1.6 < H) or
-     (size_x*3.2 < W or  size_y*3.2 < H) then
-    size_ok = false
-  end 
-
-  return empty_reg, size_ok
+  return true  -- OK --
 end
 
 

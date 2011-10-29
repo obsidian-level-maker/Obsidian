@@ -296,23 +296,16 @@ function Simple_area(R, A)
     assert(cave.empty_id)
     assert(cave.empty_id < 0)
 
-    -- FIXME: size check
-
-    --[[   ????
-    local reg, size_ok = flood:main_empty_region()
-
-    if not reg or not size_ok then
+    if not cave:validate_size(cave.empty_id) then
       gui.debugf("cave failed size check\n")
       return false
     end
-    --]]
 
     return true
   end
 
 
   local function generate_cave()
-
     map:dump("Empty Cave:")
 
     local MAX_LOOP = 10
