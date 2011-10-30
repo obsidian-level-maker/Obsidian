@@ -445,6 +445,8 @@ NO:  CSG DOOM: support entity.light
 -  Legacy liquids are different (ceiling height is surface)
    (use legacy method for GZDoom and Skulltag)
 
+-  support per-map Fog via sourceport features (MAPINFO etc)
+
 -  DOOM: fix y_offset values
     (when have y_offset and brush side is truncated/extended)
 
@@ -606,6 +608,9 @@ Sam's suggestions:
 -  support colored lighting (FitzQuake, Darkplaces, etc).
    - add an entry in the pack called "maps/xxx.lit", which
    - it should contain: QLIT 1 0 0 0 <data>
+
+-  support fog: in worldspawn put: "fog" "density R G B"
+   (requires FitzQuake or Darkplaces)
 
 -  LAVA: style=5, have "lava light" similar to "sun light"
 
