@@ -1797,7 +1797,7 @@ stderrf("TRYING....................\n")
     R.areas = {}
 
     if R.cave then
-      filler_chunks(R)
+      -- filler_chunks(R)
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
     else

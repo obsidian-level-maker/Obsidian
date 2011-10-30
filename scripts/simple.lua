@@ -341,25 +341,106 @@ function Simple_create_areas(R)
       {
         x = point_list[1].x
         y = point_list[1].y
-        h = cave_floor_h + 4
+        area = R.entry_area
       }
     }
 
-    local freebies = CAVE_CLASS.copy(cave)
+
+    local free = CAVE_CLASS.copy(cave)
+
+    local cw = free.w
+    local ch = free.h
+
+    -- mark free areas with zero instead of negative [TODO: make into a cave method]
+    for fx = 1,cw do for fy = 1,ch do
+      if (free[fx][fy] or 0) < 0 then
+        free[fx][fy] = 0
+      end
+    end end
+
+    -- current bbox
+    local cx1, cy1
+    local cx2, cy2
+
+    local GROW_PROBS = { 100, 80, 60, 40, 20 }
 
 
-    local function grow_a_step(x, y, h)
+    local function grow_horiz(step, y, prob)
+      for x = cx1, cx2 do
+        if x > 1 and step[x][y] == 1 and step[x-1][y] == 0 and free[x-1][y] == 0 and rand.odds(prob) then
+          step[x-1][y] = 1
+          free[x-1][y] = 1
+        end
+      end
+
+      for x = cx2, cx1, -1 do
+        if x < cw and step[x][y] == 1 and step[x+1][y] == 0 and free[x+1][y] == 0 and rand.odds(prob) then
+          step[x+1][y] = 1
+          free[x+1][y] = 1
+        end
+      end
+    end
+
+
+    local function grow_vert(step, x, prob)
+      for y = cy1, cy2 do
+        if y > 1 and step[x][y] == 1 and step[x][y-1] == 0 and free[x][y-1] == 0 and rand.odds(prob) then
+          step[x][y-1] = 1
+          free[x][y-1] = 1
+        end
+      end
+
+      for y = cy2, cy1, -1 do
+        if y < ch and step[x][y] == 1 and step[x][y+1] == 0 and free[x][y+1] == 0 and rand.odds(prob) then
+          step[x][y+1] = 1
+          free[x][y+1] = 1
+        end
+      end
+    end
+
+
+    local function grow_it(step, loop)
+      loop = 1 + (loop - 1) % 5
+      local prob = 100 ---!!!!  GROW_PROBS[loop]
+      
+      for y = cy1, cy2 do
+        grow_horiz(step, y, prob)
+      end
+
+      for x = cx1, cx2 do
+        grow_vert(step, x, prob)
+      end
+    end
+
+
+    local function grow_an_area(x, y, AREA)
+      if not AREA then
+        AREA = AREA_CLASS.new("floor", R) 
+
+        table.insert(R.areas, AREA)
+      end
+
       local step = CAVE_CLASS.blank_copy(cave)
+
+      AREA.floor_map = step
 
       step:set_all(0)
 
       step.cells[x][y] = 1
 
-      local count = rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+      cx1 = x ; cx2 = x
+      cy1 = x ; cy2 = y
 
-      for i = 1, count do
-        step:grow()
+      local count = 3  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+
+      for loop = 1, count do
+        grow_it(step, i)
+
+        cx1 = cx1 - 1 ; cx2 = cx2 + 1
+        cy1 = cy1 - 1 ; cy2 = cy2 + 1
       end
+
+      -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
 
       step:subtract(freebies)
 
@@ -388,7 +469,7 @@ function Simple_create_areas(R)
           for dir = 2,8,2 do
             local nx, ny = geom.nudge(x, y, dir)
             if freebies:valid_cell(nx, ny) and (freebies:get(nx, ny) or 0) < 0 then
-              table.insert(pos_list, { x=nx, y=ny, h=h+16 })
+              table.insert(pos_list, { x=nx, y=ny })
             end
           end
         end
@@ -401,18 +482,20 @@ function Simple_create_areas(R)
       local pos = table.remove(pos_list, rand.irange(1, #pos_list))
 
       -- ignore out-of-date positions
-      if freebies:get(pos.x, pos.y) > 0 then continue end
+      if free:get(pos.x, pos.y) > 0 then continue end
 
-      grow_a_step(pos.x, pos.y, pos.h)
+      grow_an_area(pos.x, pos.y, pos.area)
     end
   end
 
 
   ---| Simple_create_areas |---
 
-  one_big_area()
-
-  -- step_test()
+  if false then
+    one_big_area()
+  else
+    step_test()
+  end
 end
 
 
