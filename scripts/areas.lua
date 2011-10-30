@@ -1222,10 +1222,7 @@ stderrf("TRYING....................\n")
     -- organizing them into a number of separate floor areas
     -- (generally of different heights) and stairs between them.
 
-    -- 1. create chunks for remaining seeds
-    filler_chunks(R)
-
-    -- 2. group chunks into areas
+    -- group chunks into areas
     local area_tab = {}
 
     -- filter out "scenic" chunks (cages etc)
@@ -1705,8 +1702,8 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function area_heights(R)
---- stderrf("area_heights in %s\n", R:tostr())
+  local function initial_height(R)
+--- stderrf("initial_height in %s\n", R:tostr())
 
     local entry_C, entry_h = entry_chunk_and_height(R)
 
@@ -1723,13 +1720,15 @@ stderrf("TRYING....................\n")
     -- !!!! FIXME: entry hallway will need to compensate (have a stair or whatever)
     end
 
-    R.entry_h = entry_h
+    R.entry_h    = entry_h
+    R.entry_C    = entry_C
     R.entry_area = entry_area
 
     set_area_floor(entry_area, entry_h)
+  end
 
-    connect_all_areas(R)
 
+  local function finish_heights(R)
     -- find minimum and maximum heights
     R.floor_min_h = R.entry_h
     R.floor_max_h = R.entry_h
@@ -1753,27 +1752,6 @@ stderrf("TRYING....................\n")
     end
 
     R.done_heights = true
-  end
-
-
-  local function cave_stuff(R)
-    filler_chunks(R)
-
-    local AREA = AREA_CLASS.new("floor", R)
-
-    table.insert(R.areas, AREA)
-
-    each C in R.chunks do
-      if not C.void and not C.scenic and not C.cross_junc then
-        C.area = AREA
-        C.cave = true
-        table.insert(AREA.chunks, C)
-      end
-    end
-
-    area_heights(R)
-
-    Simple_area(R, AREA)
   end
 
 
@@ -1817,12 +1795,25 @@ stderrf("TRYING....................\n")
     R.areas = {}
 
     if R.cave then
-      cave_stuff(R)
+      filler_chunks(R)
+      Simple_cave_or_maze(R)
+      Simple_create_areas(R)
     else
       decorative_chunks(R)
+      filler_chunks(R)
       create_areas(R)
-      area_heights(R)
     end
+
+    initial_height(R)
+    
+    if R.cave then
+      Simple_connect_all_areas(R)
+      Simple_render_cave(R)
+    else
+      connect_all_areas(R)
+    end
+
+    finish_heights(R)
 
     hallway_heights(R)
     crossover_room(R)

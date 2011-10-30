@@ -19,13 +19,10 @@
 ----------------------------------------------------------------
 
 
-function Simple_area(R, A)
+function Simple_cave_or_maze(R)
 
   local map
   local cave
-
-  local cave_tex = R.main_tex or "_ERROR"
-  local cave_floor_h = assert(A.chunks[1].floor_h)
 
   local point_list
 
@@ -48,30 +45,6 @@ function Simple_area(R, A)
     R.cave_tex = rand.key_by_probs(THEME.cave_walls)
   end
 --]]
-
-
-  local function setup_floor(S, h)
-    S.floor_h = h
-
-    S.f_tex = R.cave_tex
-    S.w_tex = R.cave_tex
-
-    if not R.outdoor then
-      S.ceil_h  = h + R.cave_h
-      S.c_tex = R.cave_tex
-    end
-
-    for side = 2,8,2 do
-      local B = S.border[side]
-      local C = B and B.conn
-
-      if C then
-        if C.conn_h then assert(C.conn_h == S.floor_h) end
-
-        C.conn_h = h
-      end
-    end
-  end
 
 
   local function set_whole(C, value)
@@ -155,33 +128,6 @@ function Simple_area(R, A)
         set_whole(C, -1)
       end
     end
-  end
-
-
-  local function OLD_OLD__initial_map()
-    for x = R.sx1,R.sx2 do for y = R.sy1,R.sy2 do
-      local S = SEEDS[x][y]
-      if S.room == R then
-        local mx = (S.sx - R.sx1) * 3 + 1
-        local my = (S.sy - R.sy1) * 3 + 1
-
-        if not S.floor_h then
-          setup_floor(S, cave_floor_h)
-        end
-
-        for dx = 0,2 do for dy = 0,2 do
-          map:set(mx+dx, my+dy, 0)
-        end end
-
-        for side = 2,8,2 do
-          handle_wall(S, side)
-        end
-
-        for side = 1,9,2 do if side != 5 then
-          handle_corner(S, side)
-        end end
-      end
-    end end -- for x, y
   end
 
 
@@ -348,8 +294,154 @@ function Simple_area(R, A)
 
   local w_tex  = cave_tex
 
-  local high_z = EXTREME_H
 
+
+  ---| Simple_cave_or_maze |---
+
+  -- create the cave object and make the boundaries solid
+  create_map()
+
+  collect_important_points()
+
+  mark_boundaries()
+
+  clear_importants()
+
+  generate_cave()
+
+end
+
+
+
+function Simple_create_areas(R)
+
+  local function one_big_area()
+
+    local AREA = AREA_CLASS.new("floor", R)
+
+    table.insert(R.areas, AREA)
+
+    each C in R.chunks do
+      if not C.void and not C.scenic and not C.cross_junc then
+        C.area = AREA
+        C.cave = true
+        table.insert(AREA.chunks, C)
+      end
+    end
+  end
+
+
+  local cave_floor_h = 0 ---  assert(A.chunks[1].floor_h)
+
+
+  local function step_test()
+
+    local pos_list =
+    {
+      {
+        x = point_list[1].x
+        y = point_list[1].y
+        h = cave_floor_h + 4
+      }
+    }
+
+    local freebies = CAVE_CLASS.copy(cave)
+
+
+    local function grow_a_step(x, y, h)
+      local step = CAVE_CLASS.blank_copy(cave)
+
+      step:set_all(0)
+
+      step.cells[x][y] = 1
+
+      local count = rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+
+      for i = 1, count do
+        step:grow()
+      end
+
+      step:subtract(freebies)
+
+      -- it's possible the area got divided into two or more pieces.
+      -- remove any piece not connected to the starting spot.
+      step:flood_fill()
+
+--[[ FIXME
+      if step.solid_regions >= 2 then
+        for id = 2,9999 do
+          if step.regions[id] then
+            step:kill_region(id)
+          end
+        end
+      end
+--]]
+      freebies:union(step)
+
+      step.square = true
+
+      step:render(STEP_brush, { h=h })
+
+      -- find new positions for growth  [FIXME: OPTIMISE]
+      for x = 1, cave.w do for y = 1, cave.h do
+        if (step:get(x, y) or 0) > 0 then
+          for dir = 2,8,2 do
+            local nx, ny = geom.nudge(x, y, dir)
+            if freebies:valid_cell(nx, ny) and (freebies:get(nx, ny) or 0) < 0 then
+              table.insert(pos_list, { x=nx, y=ny, h=h+16 })
+            end
+          end
+        end
+      end end
+    end
+
+    ------>
+
+    while #pos_list > 0 do
+      local pos = table.remove(pos_list, rand.irange(1, #pos_list))
+
+      -- ignore out-of-date positions
+      if freebies:get(pos.x, pos.y) > 0 then continue end
+
+      grow_a_step(pos.x, pos.y, pos.h)
+    end
+  end
+
+
+  ---| Simple_create_areas |---
+
+  one_big_area()
+
+  step_test()
+end
+
+
+
+function Simple_connect_all_areas(R)
+
+  -- FIXME
+
+end
+
+
+
+function Simple_render_cave(R)
+
+  local cave_tex = R.main_tex or "_ERROR"
+
+
+  local function choose_tex(last, tab)
+    local tex = rand.key_by_probs(tab)
+
+    if last then
+      for loop = 1,5 do
+        if not Mat_similar(last, tex) then break; end
+        tex = rand.key_by_probs(tab)
+      end
+    end
+
+    return tex
+  end
 
 
   local function WALL_brush(data, coords)
@@ -388,21 +480,16 @@ function Simple_area(R, A)
   end
 
 
-  local function choose_tex(last, tab)
-    local tex = rand.key_by_probs(tab)
+  local function STEP_brush(data, coords)
+    table.insert(coords, { t=data.h })
 
-    if last then
-      for loop = 1,5 do
-        if not Mat_similar(last, tex) then break; end
-        tex = rand.key_by_probs(tab)
-      end
-    end
+    Brush_set_mat(coords, cave_tex, cave_tex)
 
-    return tex
+    brush_helper(coords)
   end
 
 
-  local function render_cave()
+  local function render_walls()
 
     --- DO WALLS ---
 
@@ -430,6 +517,13 @@ function Simple_area(R, A)
 ---!!!!!!  local walkway = cave:copy_island(cave.empty_id)
 
 
+    if THEME.square_caves or true then   --@@@@@@
+      cave.square = true
+    end
+
+    cave:render(WALL_brush, data)
+
+
     -- handle islands first
 
 --[[
@@ -451,13 +545,6 @@ function Simple_area(R, A)
       end
     end
 --]]
-
-    if THEME.square_caves or true then   --@@@@@@
-      cave.square = true
-    end
-
-
-    cave:render(WALL_brush, data)
 
 
 do return end ----!!!!!!!
@@ -540,104 +627,9 @@ do return end ----!!!!!!!
   end
 
 
-  local function step_test()
+  ---| Simple_connect_and_render |---
+  
+  render_walls()
 
-    local pos_list =
-    {
-      {
-        x = point_list[1].x
-        y = point_list[1].y
-        h = cave_floor_h + 4
-      }
-    }
-
-    local freebies = CAVE_CLASS.copy(cave)
-
-
-    local function STEP_brush(data, coords)
-      table.insert(coords, { t=data.h })
-
-      Brush_set_mat(coords, cave_tex, cave_tex)
-
-      brush_helper(coords)
-    end
-
-
-    local function grow_a_step(x, y, h)
-      local step = CAVE_CLASS.blank_copy(cave)
-
-      step:set_all(0)
-
-      step.cells[x][y] = 1
-
-      local count = rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
-
-      for i = 1, count do
-        step:grow()
-      end
-
-      step:subtract(freebies)
-
-      -- it's possible the area got divided into two or more pieces.
-      -- remove any piece not connected to the starting spot.
-      step:flood_fill()
-
---[[ FIXME
-      if step.solid_regions >= 2 then
-        for id = 2,9999 do
-          if step.regions[id] then
-            step:kill_region(id)
-          end
-        end
-      end
---]]
-      freebies:union(step)
-
-      step.square = true
-
-      step:render(STEP_brush, { h=h })
-
-      -- find new positions for growth  [FIXME: OPTIMISE]
-      for x = 1, cave.w do for y = 1, cave.h do
-        if (step:get(x, y) or 0) > 0 then
-          for dir = 2,8,2 do
-            local nx, ny = geom.nudge(x, y, dir)
-            if freebies:valid_cell(nx, ny) and (freebies:get(nx, ny) or 0) < 0 then
-              table.insert(pos_list, { x=nx, y=ny, h=h+16 })
-            end
-          end
-        end
-      end end
-    end
-
-    ------>
-
-    while #pos_list > 0 do
-      local pos = table.remove(pos_list, rand.irange(1, #pos_list))
-
-      -- ignore out-of-date positions
-      if freebies:get(pos.x, pos.y) > 0 then continue end
-
-      grow_a_step(pos.x, pos.y, pos.h)
-    end
-  end
-
-
-  ---| Simple_area |---
-
-  -- create the cave object and make the boundaries solid
-  create_map()
-
-  collect_important_points()
-
-  mark_boundaries()
-
-  clear_importants()
-
-  generate_cave()
-
-  render_cave()  -- does walls
-
-  step_test()
 end
 
