@@ -1022,7 +1022,7 @@ function Plan_add_big_rooms()
 
   adjust_shape_probs()
 
-  local perc = style_sel("big_rooms", 0, 20, 40, 70)
+  local perc = style_sel("big_rooms", 0, 17, 35, 70)
 
   local num_free = Plan_count_free_room_sections()
 

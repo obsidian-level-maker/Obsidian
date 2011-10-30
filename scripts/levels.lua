@@ -126,7 +126,7 @@ GLOBAL_STYLE_LIST =
   hallways    = { none=5, few=30, some=70, heaps=15 }
   liquids     = { none=10, few=30, some=40, heaps=20 }
   scenics     = { few=30, some=50, heaps=10 }
-  odd_shapes  = { none=10, few=30, some=60, heaps=4 }
+  odd_shapes  = { none=10, few=40, some=60, heaps=4 }
   big_rooms   = { none=6, few=60, some=40, heaps=20 }
   caves       = { none=20, few=50, some=30, heaps=5 }
   cycles      = { none=20, some=50, heaps=50 }
