@@ -510,7 +510,7 @@ end
 
 
 function Brush_set_tex(coords, wall, flat)
-  for _,C in ipairs(coords) do
+  each C in coords do
     if wall and C.x and not C.tex then
       C.tex = wall
     end
@@ -518,8 +518,6 @@ function Brush_set_tex(coords, wall, flat)
       C.tex = flat
     end
   end
-
-  return coords
 end
 
 

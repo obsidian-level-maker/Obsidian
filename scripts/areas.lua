@@ -30,6 +30,8 @@ class AREA
 
   chunks : list(CHUNK)
 
+  floor_map : CAVE  -- in cave rooms, this is the shape of the floor
+
   size : number of seeds occupied
 
   touching : list(AREA)
@@ -63,6 +65,15 @@ function AREA_CLASS.touches(A, A2)
   end
 
   return false
+end
+
+
+function AREA_CLASS.set_floor(A, floor_h)
+  A.floor_h = floor_h
+
+  each C in A.chunks do
+    C.floor_h = floor_h
+  end
 end
 
 
@@ -1372,15 +1383,6 @@ stderrf("TRYING....................\n")
   end
 
 
-  local function set_area_floor(A, floor_h)
-    A.floor_h = floor_h
-
-    each C in A.chunks do
-      C.floor_h = floor_h
-    end
-  end
-
-
   local function eval_stair_pair(C1, C2, dir)
     -- never use purpose or conn chunks
     if C1.content.kind then return -1 end
@@ -1545,7 +1547,7 @@ stderrf("TRYING....................\n")
 
       if dist >= 2 and bridge_target_possible(C, N, dir) then
         -- SUCCESS !
-        set_area_floor(N.area, C.floor_h) 
+        N.area:set_floor(C.floor_h) 
 
         local end_x, end_y = geom.nudge(start_x, start_y, dir, dist-2)
         local f_mat = C.room:pick_floor_mat(C.floor_h)
@@ -1620,7 +1622,7 @@ stderrf("TRYING....................\n")
 
     local new_h = pick_area_height(A2, base_h, skin, reverse)
 
-    set_area_floor(A2, new_h)
+    A2:set_floor(new_h)
 
     if stair1 then
       stair1.skin    = skin
@@ -1724,7 +1726,7 @@ stderrf("TRYING....................\n")
     R.entry_C    = entry_C
     R.entry_area = entry_area
 
-    set_area_floor(entry_area, entry_h)
+    entry_area:set_floor(entry_h)
   end
 
 

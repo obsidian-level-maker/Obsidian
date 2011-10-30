@@ -276,7 +276,7 @@ function Simple_cave_or_maze(R)
       clear_walks()
     end
 
-    R.cavemap = cave
+    R.cave_map = cave
 
     cave:solidify_pockets()
 
@@ -313,7 +313,6 @@ end
 function Simple_create_areas(R)
 
   local function one_big_area()
-
     local AREA = AREA_CLASS.new("floor", R)
 
     table.insert(R.areas, AREA)
@@ -325,6 +324,10 @@ function Simple_create_areas(R)
         table.insert(AREA.chunks, C)
       end
     end
+
+    AREA.floor_map = R.cave_map:copy()
+
+    AREA.floor_map:negate()
   end
 
 
@@ -416,15 +419,35 @@ end
 
 function Simple_connect_all_areas(R)
 
-  -- FIXME
+  local z_dir = 1
 
+  local function recurse(A)
+    assert(A.floor_h)
+
+    if not A.touching then return end
+
+    each N in A.touching do
+      if not N.floor_h then
+        local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
+
+        N:set_floor(new_h)
+
+        recurse(N)
+      end
+    end
+  end
+
+
+  ---| Simple_connect_all_areas |---
+
+  recurse(R.entry_area)
 end
 
 
 
 function Simple_render_cave(R)
 
-  local cave = R.cavemap
+  local cave = R.cave_map
 
   local cave_tex = R.main_tex or "_ERROR"
 
@@ -449,42 +472,33 @@ function Simple_render_cave(R)
 --!!!!      Trans.old_brush(data.shadow_info, sh_coords, -EXTREME_H, (data.z2 or EXTREME_H) - 4)
     end
 
-    if data.f_z then table.insert(coords, { t=data.f_z, delta_z=data.f_delta_z }) end
-    if data.c_z then table.insert(coords, { b=data.c_z, delta_z=data.c_delta_z }) end
+    if data.f_h then table.insert(coords, { t=data.f_h, delta_z=data.f_delta }) end
+    if data.c_h then table.insert(coords, { b=data.c_h, delta_z=data.c_delta }) end
 
-    Brush_set_mat(coords, cave_tex, cave_tex)
+    Brush_set_mat(coords, data.w_mat, data.w_mat)
 
     brush_helper(coords)
   end
 
 
   local function FC_brush(data, coords)
-    if data.do_floor then
+    if data.f_h then
       local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { t=data.f_z, delta_z=data.delta_f })
+      table.insert(coord2, { t=data.f_h, delta_z=data.f_delta })
 
-      Brush_set_mat(coord2, data.wtex, data.ftex)
+      Brush_set_mat(coord2, data.f_mat, data.f_mat)
 
       brush_helper(coord2)
     end
 
-    if data.do_ceil then
+    if data.c_h then
       local coord2 = table.deep_copy(coords)
-      table.insert(coord2, { b=data.c_z, delta_z=data.delta_c })
+      table.insert(coord2, { b=data.c_h, delta_z=data.c_delta })
 
-      Brush_set_mat(coords, data.wtex, data.ctex)
+      Brush_set_mat(coord2, data.c_mat, data.c_mat)
 
       brush_helper(coord2)
     end
-  end
-
-
-  local function STEP_brush(data, coords)
-    table.insert(coords, { t=data.h })
-
-    Brush_set_mat(coords, cave_tex, cave_tex)
-
-    brush_helper(coords)
   end
 
 
@@ -492,18 +506,18 @@ function Simple_render_cave(R)
 
     --- DO WALLS ---
 
-    local data = { }  ---????  info=w_info, wtex=w_tex, ftex=w_tex, ctex=w_tex }
+    local data = { w_mat = cave_tex }
 
 --[[
     if R.is_lake then
       local liq_mat = Mat_lookup(LEVEL.liquid.mat)
       data.delta_f = rand.sel(70, -48, -72)
-      data.f_z = cave_floor_h + 8
+      data.f_h = cave_floor_h + 8
       data.ftex = liq_mat.f or liq_mat.t
     end
 
     if R.outdoor and not R.is_lake and cave_floor_h + 144 < SKY_H and rand.odds(88) then
-      data.f_z = R.cave_floor_h + rand.sel(65, 80, 144)
+      data.f_h = R.cave_floor_h + rand.sel(65, 80, 144)
     end
 
     if PARAM.outdoor_shadows and R.outdoor and not R.is_lake then
@@ -537,7 +551,7 @@ function Simple_render_cave(R)
         local pit = Mat_lookup(LEVEL.liquid.mat)
 
         island:render(WALL_brush,
-                      { f_z=R.cave_floor_h+8, pit.f or pit.t,
+                      { f_h=R.cave_floor_h+8, pit.f or pit.t,
                         delta_f=rand.sel(70, -52, -76) })
 
         cave:subtract(island)
@@ -599,7 +613,7 @@ do return end ----!!!!!!!
         data.delta_f = -(i * 10)
       end
 
-      data.f_z = R.cave_floor_h + i
+      data.f_h = R.cave_floor_h + i
 
       data.do_ceil = false
 
@@ -626,9 +640,30 @@ do return end ----!!!!!!!
   end
 
 
+  local function render_floor_ceil(A)
+    assert(A.floor_map)
+
+    A.floor_map.square = true  --!!!
+
+    local data =
+    {
+      f_h = A.floor_h + 2
+      c_h = A.floor_h + 92
+
+      f_mat = cave_tex
+      c_mat = cave_tex
+    }
+
+    A.floor_map:render(FC_brush, data)
+  end
+
+
   ---| Simple_connect_and_render |---
   
   render_walls()
 
+  each A in R.areas do
+    render_floor_ceil(A)
+  end
 end
 

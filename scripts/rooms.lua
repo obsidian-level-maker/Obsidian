@@ -69,6 +69,7 @@ class ROOM
 
   floor_h, ceil_h : number
 
+  cave_map : CAVE  -- the generated cave / maze
 
   --- plan_sp code only:
 
