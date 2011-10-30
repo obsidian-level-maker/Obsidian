@@ -146,7 +146,7 @@ function CAVE_CLASS.dump(cave, title)
       local ch = " "
       local cell = cave.cells[x][y]
 
-      if  cell == 0      then ch = "?" end
+      if  cell == 0      then ch = "/" end
       if (cell or 0) > 0 then ch = "#" end
       if (cell or 0) < 0 then ch = "." end
 

@@ -1797,7 +1797,9 @@ stderrf("TRYING....................\n")
     R.areas = {}
 
     if R.cave then
-      -- filler_chunks(R)
+      -- FIXME: don't really need these chunks [used to clear cave]
+      filler_chunks(R)
+
       Simple_cave_or_maze(R)
       Simple_create_areas(R)
     else

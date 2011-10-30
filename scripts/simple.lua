@@ -213,6 +213,8 @@ function Simple_cave_or_maze(R)
     end
 
     assert(#point_list > 0)
+
+    R.point_list = point_list
   end
 
 
@@ -336,29 +338,33 @@ function Simple_create_areas(R)
 
   local function step_test()
 
-    local pos_list =
+    local pos_list = { }
+
+    pos_list[1] =
     {
-      {
-        x = point_list[1].x
-        y = point_list[1].y
-        area = R.entry_area
-      }
+      x = R.point_list[1].x
+      y = R.point_list[1].y
     }
 
 
-    local free = CAVE_CLASS.copy(cave)
+    local free = CAVE_CLASS.copy(R.cave_map)
 
     local cw = free.w
     local ch = free.h
 
+    local f_cel = free.cells
+    local s_cel
+
     -- mark free areas with zero instead of negative [TODO: make into a cave method]
     for fx = 1,cw do for fy = 1,ch do
-      if (free[fx][fy] or 0) < 0 then
-        free[fx][fy] = 0
+      if (f_cel[fx][fy] or 0) < 0 then
+        f_cel[fx][fy] = 0
       end
     end end
 
-    -- current bbox
+free:dump("Free:")
+
+    -- current bbox : big speed up by limiting the scan area
     local cx1, cy1
     local cx2, cy2
 
@@ -367,16 +373,16 @@ function Simple_create_areas(R)
 
     local function grow_horiz(step, y, prob)
       for x = cx1, cx2 do
-        if x > 1 and step[x][y] == 1 and step[x-1][y] == 0 and free[x-1][y] == 0 and rand.odds(prob) then
-          step[x-1][y] = 1
-          free[x-1][y] = 1
+        if x > 1 and s_cel[x][y] == 1 and s_cel[x-1][y] == 0 and f_cel[x-1][y] == 0 and rand.odds(prob) then
+          s_cel[x-1][y] = 1
+          f_cel[x-1][y] = 1
         end
       end
 
       for x = cx2, cx1, -1 do
-        if x < cw and step[x][y] == 1 and step[x+1][y] == 0 and free[x+1][y] == 0 and rand.odds(prob) then
-          step[x+1][y] = 1
-          free[x+1][y] = 1
+        if x < cw and s_cel[x][y] == 1 and s_cel[x+1][y] == 0 and f_cel[x+1][y] == 0 and rand.odds(prob) then
+          s_cel[x+1][y] = 1
+          f_cel[x+1][y] = 1
         end
       end
     end
@@ -384,16 +390,16 @@ function Simple_create_areas(R)
 
     local function grow_vert(step, x, prob)
       for y = cy1, cy2 do
-        if y > 1 and step[x][y] == 1 and step[x][y-1] == 0 and free[x][y-1] == 0 and rand.odds(prob) then
-          step[x][y-1] = 1
-          free[x][y-1] = 1
+        if y > 1 and s_cel[x][y] == 1 and s_cel[x][y-1] == 0 and f_cel[x][y-1] == 0 and rand.odds(prob) then
+          s_cel[x][y-1] = 1
+          f_cel[x][y-1] = 1
         end
       end
 
       for y = cy2, cy1, -1 do
-        if y < ch and step[x][y] == 1 and step[x][y+1] == 0 and free[x][y+1] == 0 and rand.odds(prob) then
-          step[x][y+1] = 1
-          free[x][y+1] = 1
+        if y < ch and s_cel[x][y] == 1 and s_cel[x][y+1] == 0 and f_cel[x][y+1] == 0 and rand.odds(prob) then
+          s_cel[x][y+1] = 1
+          f_cel[x][y+1] = 1
         end
       end
     end
@@ -413,63 +419,57 @@ function Simple_create_areas(R)
     end
 
 
-    local function grow_an_area(x, y, AREA)
+    local function grow_an_area(x, y, prev_A)
+      local AREA
+
       if not AREA then
         AREA = AREA_CLASS.new("floor", R) 
 
         table.insert(R.areas, AREA)
       end
 
-      local step = CAVE_CLASS.blank_copy(cave)
+      local step = CAVE_CLASS.blank_copy(free)
+      s_cel = step.cells
 
       AREA.floor_map = step
 
       step:set_all(0)
 
-      step.cells[x][y] = 1
+      -- set initial point
+      s_cel[x][y] = 1
 
       cx1 = x ; cx2 = x
-      cy1 = x ; cy2 = y
+      cy1 = y ; cy2 = y
 
       local count = 3  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
 
       for loop = 1, count do
-        grow_it(step, i)
+        grow_it(step, loop)
 
-        cx1 = cx1 - 1 ; cx2 = cx2 + 1
-        cy1 = cy1 - 1 ; cy2 = cy2 + 1
+        -- expand bbox
+        if cx1 > 1  then cx1 = cx1 - 1 end
+        if cy1 > 1  then cy1 = cy1 - 1 end
+
+        if cx2 < cw then cx2 = cx2 + 1 end
+        if cy2 < ch then cy2 = cy2 + 1 end
       end
+
+step:dump("Step for " .. AREA:tostr())
 
       -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
 
-      step:subtract(freebies)
-
-      -- it's possible the area got divided into two or more pieces.
-      -- remove any piece not connected to the starting spot.
-      step:flood_fill()
-
---[[ FIXME
-      if step.solid_regions >= 2 then
-        for id = 2,9999 do
-          if step.regions[id] then
-            step:kill_region(id)
-          end
-        end
-      end
---]]
-      freebies:union(step)
+      -- FIXME : if is_too_small(step) and prev_A then merge into prev_A
 
       step.square = true
 
-      step:render(STEP_brush, { h=h })
+      -- find new positions for growth
 
-      -- find new positions for growth  [FIXME: OPTIMISE]
-      for x = 1, cave.w do for y = 1, cave.h do
-        if (step:get(x, y) or 0) > 0 then
+      for x = cx1, cx2 do for y = cy1, cy2 do
+        if s_cel[x][y] == 1 then
           for dir = 2,8,2 do
             local nx, ny = geom.nudge(x, y, dir)
-            if freebies:valid_cell(nx, ny) and (freebies:get(nx, ny) or 0) < 0 then
-              table.insert(pos_list, { x=nx, y=ny })
+            if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
+              table.insert(pos_list, { x=nx, y=ny, prev=AREA })
             end
           end
         end
@@ -482,9 +482,9 @@ function Simple_create_areas(R)
       local pos = table.remove(pos_list, rand.irange(1, #pos_list))
 
       -- ignore out-of-date positions
-      if free:get(pos.x, pos.y) > 0 then continue end
+      if f_cel[pos.x][pos.y] != 0 then continue end
 
-      grow_an_area(pos.x, pos.y, pos.area)
+      grow_an_area(pos.x, pos.y, pos.prev)
     end
   end
 
