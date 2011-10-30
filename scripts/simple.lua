@@ -121,7 +121,7 @@ function Simple_cave_or_maze(R)
 
 
   local function clear_importants()
-    each C in A.chunks do
+    each C in R.chunks do
       if C.foobage == "important" or C.foobage == "conn" or
          C.crossover_hall
       then
@@ -132,52 +132,47 @@ function Simple_cave_or_maze(R)
 
 
   local function create_map()
-    -- determine area bounds  [FIXME: make into AREA method]
-    local sx1, sx2 = 999, -999
-    local sy1, sy2 = 999, -999
+---##  local sx1, sx2 = 999, -999
+---##  local sy1, sy2 = 999, -999
+---##
+---##  each C in R.chunks do
+---##    sx1 = math.min(sx1, C.sx1)
+---##    sy1 = math.min(sy1, C.sy1)
+---##
+---##    sx2 = math.max(sx2, C.sx2)
+---##    sy2 = math.max(sy2, C.sy2)
+---##  end
+---##
+---##  assert(sx1 <= sx2)
+---##  assert(sy1 <= sy2)
 
-    each C in A.chunks do
-      sx1 = math.min(sx1, C.sx1)
-      sy1 = math.min(sy1, C.sy1)
+    R.cave_base_x = SEEDS[R.sx1][R.sy1].x1
+    R.cave_base_y = SEEDS[R.sx1][R.sy1].y1
 
-      sx2 = math.max(sx2, C.sx2)
-      sy2 = math.max(sy2, C.sy2)
-    end
-
-    assert(sx1 <= sx2)
-    assert(sy1 <= sy2)
-
-    A.cave_sx1 = sx1
-    A.cave_sy1 = sy1
-
-    A.cave_sw = sx2 - sx1 + 1
-    A.cave_sh = sy2 - sy1 + 1
-
-    A.cave_base_x = SEEDS[sx1][sy1].x1
-    A.cave_base_y = SEEDS[sy1][sy1].y1
-
-    map = CAVE_CLASS.new(A.cave_base_x, A.cave_base_y, A.cave_sw * 3, A.cave_sh * 3)
+    map = CAVE_CLASS.new(R.cave_base_x, R.cave_base_y, R.sw * 3, R.sh * 3)
 
     -- determine location of chunks inside this map
-    each C in A.chunks do
-      C.cave_x1 = (C.sx1 - A.cave_sx1) * 3 + 1
-      C.cave_y1 = (C.sy1 - A.cave_sy1) * 3 + 1
+    each C in R.chunks do
+      C.cave_x1 = (C.sx1 - R.sx1) * 3 + 1
+      C.cave_y1 = (C.sy1 - R.sy1) * 3 + 1
 
-      C.cave_x2 = (C.sx2 - A.cave_sx1) * 3 + 3
-      C.cave_y2 = (C.sy2 - A.cave_sy1) * 3 + 3
+      C.cave_x2 = (C.sx2 - R.sx1) * 3 + 3
+      C.cave_y2 = (C.sy2 - R.sy1) * 3 + 3
     end
   end
 
 
   local function mark_boundaries()
-    each C in A.chunks do
+    each C in R.chunks do
+      if C.void or C.scenic or C.cross_junc then continue end
+
       map:fill(C.cave_x1, C.cave_y1, C.cave_x2, C.cave_y2, 0)
 
       for dir = 2,8,2 do
         if not C:similar_neighbor(dir) and not C.link[dir] and
            not (C.foobage == "important")
         then
-          set_side(C, dir, (A.is_lake ? -1 ; 1))
+          set_side(C, dir, (R.is_lake ? -1 ; 1))
         end
       end
     end
@@ -185,7 +180,7 @@ function Simple_cave_or_maze(R)
 
 
   local function clear_walks()
-    each C in A.chunks do
+    each C in R.chunks do
       if C:has_walk() and rand.odds(25) then
 
         for cx = C.cave_x1, C.cave_x2 do
@@ -204,7 +199,7 @@ function Simple_cave_or_maze(R)
   local function collect_important_points()
     point_list = {}
 
-    each C in A.chunks do
+    each C in R.chunks do
       if C.foobage == "important" or C.foobage == "conn" then
 
         local POINT =
@@ -265,7 +260,7 @@ function Simple_cave_or_maze(R)
         break
       end
 
-      cave:generate((A.is_lake ? 58 ; 38))
+      cave:generate((R.is_lake ? 58 ; 38))
 
       cave:remove_dots()
 
@@ -280,6 +275,8 @@ function Simple_cave_or_maze(R)
       -- increasing, making it more likely to generate a valid cave.
       clear_walks()
     end
+
+    R.cavemap = cave
 
     cave:solidify_pockets()
 
@@ -412,7 +409,7 @@ function Simple_create_areas(R)
 
   one_big_area()
 
-  step_test()
+  -- step_test()
 end
 
 
@@ -426,6 +423,8 @@ end
 
 
 function Simple_render_cave(R)
+
+  local cave = R.cavemap
 
   local cave_tex = R.main_tex or "_ERROR"
 
