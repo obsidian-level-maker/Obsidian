@@ -314,6 +314,8 @@ end
 
 function Simple_create_areas(R)
 
+  local cover_chunks
+
   local function one_big_area()
     local AREA = AREA_CLASS.new("floor", R)
 
@@ -333,6 +335,17 @@ function Simple_create_areas(R)
   end
 
 
+  local function collect_cover_chunks()
+    -- find the chunks which must be completed covered by any area.
+
+    each C in R.chunks do
+      if C.foobage == "important" or C.foobage == "conn" then
+        table.insert(cover_chunks, C)
+      end
+    end
+  end
+
+
   local cave_floor_h = 0 ---  assert(A.chunks[1].floor_h)
 
 
@@ -347,14 +360,20 @@ function Simple_create_areas(R)
     }
 
 
-    local free = CAVE_CLASS.copy(R.cave_map)
+    local free  = CAVE_CLASS.copy(R.cave_map)
+    local f_cel = free.cells
+
+    local step
+    local s_cel
+    local size
 
     local cw = free.w
     local ch = free.h
 
-    local f_cel = free.cells
-    local s_cel
-    local size
+    -- current bbox : big speed up by limiting the scan area
+    local cx1, cy1
+    local cx2, cy2
+
 
     -- mark free areas with zero instead of negative [TODO: make into a cave method]
     for fx = 1,cw do for fy = 1,ch do
@@ -363,14 +382,8 @@ function Simple_create_areas(R)
       end
     end end
 
-    -- current bbox : big speed up by limiting the scan area
-    local cx1, cy1
-    local cx2, cy2
 
-    local GROW_PROBS = { 100, 80, 60, 40, 20 }
-
-
-    local function grow_horiz(step, y, prob)
+    local function grow_horiz(y, prob)
       for x = cx1, cx2 do
         if x > 1 and s_cel[x][y] == 1 and s_cel[x-1][y] == 0 and f_cel[x-1][y] == 0 and rand.odds(prob) then
           s_cel[x-1][y] = 1
@@ -389,7 +402,7 @@ function Simple_create_areas(R)
     end
 
 
-    local function grow_vert(step, x, prob)
+    local function grow_vert(x, prob)
       for y = cy1, cy2 do
         if y > 1 and s_cel[x][y] == 1 and s_cel[x][y-1] == 0 and f_cel[x][y-1] == 0 and rand.odds(prob) then
           s_cel[x][y-1] = 1
@@ -408,23 +421,60 @@ function Simple_create_areas(R)
     end
 
 
-    local function grow_it(step, loop)
-      loop = 1 + (loop - 1) % 5
-      local prob = 50 ---!!!!  GROW_PROBS[loop]
-      
+    local function grow_it(prob)
       for y = cy1, cy2 do
-        grow_horiz(step, y, prob)
+        grow_horiz(y, prob)
       end
 
       for x = cx1, cx2 do
-        grow_vert(step, x, prob)
+        grow_vert(x, prob)
       end
+    end
+
+
+    local function chunk_touches_step(C)
+      -- FIXME !!!!!
+    end
+
+
+    local function test_cover_chunks()
+      local chunks = {}
+
+      for index = #cover_chunks, 1, -1 do
+        local C = cover_chunks[index]
+
+        local what = chunk_touches_step(C)
+
+        if what == "no" then continue end
+
+        -- while the step only partially covers the chunk, keep growing it
+        -- (this should always stop, but limit the loop just in case)
+        for loop = 1,30 do
+          if what == "cover" then break end
+
+          if loop == 30 then
+            gui.printf("WARNING: failed to cover a chunk\n")
+          end
+
+          grow_it(100)
+
+          what = chunk_touches_step(C)
+          assert(what != "no")
+        end
+
+        -- chunk is now covered, add to area and remove from list
+        table.insert(chunks, C)
+
+        table.remove(covered, index)
+      end
+
+      return chunks
     end
 
 
     local function grow_an_area(x, y, prev_A)
 
-      local step = CAVE_CLASS.blank_copy(free)
+      step  = CAVE_CLASS.blank_copy(free)
       s_cel = step.cells
 
       step.square = true
@@ -439,10 +489,12 @@ function Simple_create_areas(R)
       cx1 = x ; cx2 = x
       cy1 = y ; cy2 = y
 
-      local count = 5  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+      local count = 4  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+
+      grow_it(100)
 
       for loop = 1, count do
-        grow_it(step, loop)
+        grow_it(50)
 
         -- expand bbox
         if cx1 > 1  then cx1 = cx1 - 1 end
@@ -452,7 +504,13 @@ function Simple_create_areas(R)
         if cy2 < ch then cy2 = cy2 + 1 end
       end
 
-      if size < 4 then grow_it(step, 100) end
+      if size < 4 then grow_it(100) end
+
+      -- check if the step overlaps any important chunk.
+      -- these will require the step to keep growing to cover the chunk,
+      -- and the chunk gets added to the AREA's chunk list (which is
+      -- vital for height distribution ETC).
+      local chunks = test_cover_chunks()
 
       -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
 
@@ -469,6 +527,10 @@ function Simple_create_areas(R)
         prev_A = AREA
 
         AREA.floor_map = step
+      end
+
+      each C in chunks do
+        table.insert(AREA.chunks, C)
       end
 
 
@@ -504,7 +566,13 @@ function Simple_create_areas(R)
   if false then
     one_big_area()
   else
+    collect_cover_chunks()
+
     step_test()
+
+    if #cover_chunks > 0 then
+      error("Cave steps failed to cover all important chunks\n")
+    end
   end
 
   -- [[ debugging
