@@ -1075,6 +1075,13 @@ QUAKE1.THEME_DEFAULTS =
 
   indoor_fabs = { TechLamp = 50, RoundPillar = 50 }
 
+  cave_walls =  -- FIXME TEMP TEMP
+  {
+    ROCK1_2=10, ROCK5_2=40, ROCK3_8=20,
+    WALL11_2=10, GROUND1_6=10, GROUND1_7=10,
+    GRAVE01_3=10, WSWAMP1_2=20, 
+  }
+
   --------- OLD CRUD --------> > >
 
   tele_dest_mat = "COP3_4",
