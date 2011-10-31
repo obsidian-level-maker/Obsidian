@@ -6,44 +6,43 @@ Current Work
 ------------
 
 
+flyingdeath naming ideas:
+  Enter the ...
+  Welcome to the
+  Flight from the  / Escape
+  Journey to the
+  Assault on the
+  Death Awaits in the
+  Oh God not another
+  Curse of the
+  Fear the
+  Yet another
+
+WISH / IDEA: levels get inherently tougher to beat over a megawad
+
+flyingdeath's Fight Sim tweaks
+
+
 Caves:
+  >>   CHUNKS: don't build floor/ceil if cave
+
   DONE:  handle disconnected areas
         
+  DONE:  fill any unconnected empty areas
+
   !!!!  spots for monsters and items
 
-  +  proper floor and ceiling textures
+  >>  proper floor and ceiling textures
 
   -  better floors, liquid areas
 
   -  better ceilings, chance of sky
 
-  +  step algorithm:
-     (1) have a bunch of begin spots, at least all the importants/conns
-         sprinkly some extra ones too (e.g. corners or middle).
-
-     (2) grow them all two or three times (more for large importants)
-
-     (3) merge any areas which touch or overlap
-
-     (4) grow remaining areas until all walkable cells are covered
-
-     (5) iterate through the areas (starting with known floor_h)
-         and try to give unique height (previous + DIR * STEP)
-
-     (6) grow each area once -- hence can use cave.render() method
-         to make the floors / ceilings and there should not be any
-         gaps between the floor and walls, or floor A and floor B.
+  -  create a large area (or two) by merging areas together
 
 
-     ANOTHER METHOD:
-
-     (1) begin at entry point (centre of chunk)
-
-     (2) grow that point a few times (at least twice).
-         keep growing if an important is _partially_ covered.
-
-     (3) select a new point which is unset and touches prev area.
-         repeat at step (2) until no such points exist.
+Monsters:
+  +  in later levels, low-level monsters should be used in bigger swarms
 
 
 QUAKE II:
