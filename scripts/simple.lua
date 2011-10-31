@@ -508,6 +508,19 @@ function Simple_create_areas(R)
       until not grew
     end
 
+    
+    local function merge_step(prev)
+      -- meh, need this functions because union() method does not
+      --      consider '0' as a valid value.
+      -- At least this one is a bit more efficient :)
+
+      for x = cx1, cx2 do for y = cy1, cy2 do
+        if s_cel[x][y] == 1 then
+          prev.cells[x][y] = 1
+        end
+      end end
+    end
+
 
     local function grow_an_area(x, y, prev_A)
 
@@ -548,12 +561,12 @@ function Simple_create_areas(R)
 
       test_cover_chunks(chunks)
 
-      -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
+-- step:dump("Step after:")
 
       -- when the step is too small, merge it into previous area
       if size < 4 and prev_A then
         
-        prev_A.floor_map:union(step)
+        merge_step(prev_A.floor_map)
 
       else
         local AREA = AREA_CLASS.new("floor", R) 
@@ -621,13 +634,13 @@ function Simple_create_areas(R)
     end
   end
 
-  -- [[ debugging
+--[[ debugging
   each A in R.areas do
     assert(A.floor_map)
 
     A.floor_map:dump("Step for " .. A:tostr())
   end
-  --]]
+--]]
 end
 
 
