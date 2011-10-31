@@ -442,6 +442,13 @@ function Simple_create_areas(R)
 
 
     local function chunk_touches_step(C)
+      -- early out by checking the bbox
+      if C.cave_x1 > cx2 or C.cave_x2 < cx1 or
+         C.cave_y1 > cy2 or C.cave_y2 < cy1
+      then
+        return "no"
+      end
+
       local hit  = 0
       local miss = 0
 
