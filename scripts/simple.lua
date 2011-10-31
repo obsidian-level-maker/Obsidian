@@ -354,6 +354,7 @@ function Simple_create_areas(R)
 
     local f_cel = free.cells
     local s_cel
+    local size
 
     -- mark free areas with zero instead of negative [TODO: make into a cave method]
     for fx = 1,cw do for fy = 1,ch do
@@ -361,8 +362,6 @@ function Simple_create_areas(R)
         f_cel[fx][fy] = 0
       end
     end end
-
-free:dump("Free:")
 
     -- current bbox : big speed up by limiting the scan area
     local cx1, cy1
@@ -376,6 +375,7 @@ free:dump("Free:")
         if x > 1 and s_cel[x][y] == 1 and s_cel[x-1][y] == 0 and f_cel[x-1][y] == 0 and rand.odds(prob) then
           s_cel[x-1][y] = 1
           f_cel[x-1][y] = 1
+          size = size + 1
         end
       end
 
@@ -383,6 +383,7 @@ free:dump("Free:")
         if x < cw and s_cel[x][y] == 1 and s_cel[x+1][y] == 0 and f_cel[x+1][y] == 0 and rand.odds(prob) then
           s_cel[x+1][y] = 1
           f_cel[x+1][y] = 1
+          size = size + 1
         end
       end
     end
@@ -393,6 +394,7 @@ free:dump("Free:")
         if y > 1 and s_cel[x][y] == 1 and s_cel[x][y-1] == 0 and f_cel[x][y-1] == 0 and rand.odds(prob) then
           s_cel[x][y-1] = 1
           f_cel[x][y-1] = 1
+          size = size + 1
         end
       end
 
@@ -400,6 +402,7 @@ free:dump("Free:")
         if y < ch and s_cel[x][y] == 1 and s_cel[x][y+1] == 0 and f_cel[x][y+1] == 0 and rand.odds(prob) then
           s_cel[x][y+1] = 1
           f_cel[x][y+1] = 1
+          size = size + 1
         end
       end
     end
@@ -407,7 +410,7 @@ free:dump("Free:")
 
     local function grow_it(step, loop)
       loop = 1 + (loop - 1) % 5
-      local prob = 100 ---!!!!  GROW_PROBS[loop]
+      local prob = 50 ---!!!!  GROW_PROBS[loop]
       
       for y = cy1, cy2 do
         grow_horiz(step, y, prob)
@@ -420,28 +423,23 @@ free:dump("Free:")
 
 
     local function grow_an_area(x, y, prev_A)
-      local AREA
-
-      if not AREA then
-        AREA = AREA_CLASS.new("floor", R) 
-
-        table.insert(R.areas, AREA)
-      end
 
       local step = CAVE_CLASS.blank_copy(free)
       s_cel = step.cells
 
-      AREA.floor_map = step
+      step.square = true
 
       step:set_all(0)
 
       -- set initial point
       s_cel[x][y] = 1
+      f_cel[x][y] = 1
+      size = 1
 
       cx1 = x ; cx2 = x
       cy1 = y ; cy2 = y
 
-      local count = 3  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
+      local count = 5  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
 
       for loop = 1, count do
         grow_it(step, loop)
@@ -454,13 +452,25 @@ free:dump("Free:")
         if cy2 < ch then cy2 = cy2 + 1 end
       end
 
-step:dump("Step for " .. AREA:tostr())
+      if size < 4 then grow_it(step, 100) end
 
       -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
 
-      -- FIXME : if is_too_small(step) and prev_A then merge into prev_A
+      -- when the step is too small, merge it into previous area
+      if size < 4 and prev_A then
+        
+        prev_A.floor_map:union(step)
 
-      step.square = true
+      else
+        local AREA = AREA_CLASS.new("floor", R) 
+
+        table.insert(R.areas, AREA)
+
+        prev_A = AREA
+
+        AREA.floor_map = step
+      end
+
 
       -- find new positions for growth
 
@@ -469,7 +479,7 @@ step:dump("Step for " .. AREA:tostr())
           for dir = 2,8,2 do
             local nx, ny = geom.nudge(x, y, dir)
             if free:valid_cell(nx, ny) and f_cel[nx][ny] == 0 then
-              table.insert(pos_list, { x=nx, y=ny, prev=AREA })
+              table.insert(pos_list, { x=nx, y=ny, prev=prev_A })
             end
           end
         end
@@ -496,6 +506,14 @@ step:dump("Step for " .. AREA:tostr())
   else
     step_test()
   end
+
+  -- [[ debugging
+  each A in R.areas do
+    assert(A.floor_map)
+
+    A.floor_map:dump("Step for " .. A:tostr())
+  end
+  --]]
 end
 
 
