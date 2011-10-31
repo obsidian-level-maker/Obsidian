@@ -522,7 +522,7 @@ function Simple_create_areas(R)
     end
 
 
-    local function grow_an_area(x, y, prev_A)
+    local function grow_an_area(cx, cy, prev_A)
 
 -- free:dump("Free:")
 
@@ -534,12 +534,12 @@ function Simple_create_areas(R)
       step:set_all(0)
 
       -- set initial point
-      s_cel[x][y] = 1
-      f_cel[x][y] = 1
+      s_cel[cx][cy] = 1
+      f_cel[cx][cy] = 1
       size = 1
 
-      cx1 = x ; cx2 = x
-      cy1 = y ; cy2 = y
+      cx1 = cx ; cx2 = cx
+      cy1 = cy ; cy2 = cy
 
       local count = 4  ---!!!  rand.pick { 2,2,3,3, 4,4,5,5, 8,12,20 }
 
@@ -605,6 +605,13 @@ function Simple_create_areas(R)
           end
         end
       end end
+
+-- LIGHTING TEST CRAP
+  if GAME.format != "doom" then
+    prev_A.light_x = step.base_x + 32 + (cx-1) * 64
+    prev_A.light_y = step.base_y + 32 + (cy-1) * 64
+  end
+
     end
 
     ------>
@@ -659,6 +666,15 @@ function Simple_connect_all_areas(R)
         local new_h = A.floor_h + z_dir * rand.sel(35, 8, 16)
 
         N:set_floor(new_h)
+
+-- LIGHTING TEST CRAP
+  if GAME.format != "doom" then
+    local x = assert(N.light_x)
+    local y = assert(N.light_y)
+    local z = N.floor_h + rand.pick { 40,60,80 }
+    local rad = rand.pick { 100, 200, 300 }
+    entity_helper("light", x, y, z, { light=128, _radius=rad })
+  end
 
         recurse(N)
       end
@@ -876,7 +892,7 @@ do return end ----!!!!!!!
     local data =
     {
       f_h = A.floor_h + 2
-      c_h = A.floor_h + 92
+      c_h = A.floor_h + 122
 
       f_mat = cave_tex
       c_mat = cave_tex
