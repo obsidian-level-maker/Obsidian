@@ -316,6 +316,7 @@ function Simple_create_areas(R)
 
   local cover_chunks
 
+
   local function one_big_area()
     local AREA = AREA_CLASS.new("floor", R)
 
@@ -430,6 +431,13 @@ function Simple_create_areas(R)
       for x = cx1, cx2 do
         grow_vert(x, prob)
       end
+
+      -- expand bbox
+      if cx1 > 1  then cx1 = cx1 - 1 end
+      if cy1 > 1  then cy1 = cy1 - 1 end
+
+      if cx2 < cw then cx2 = cx2 + 1 end
+      if cy2 < ch then cy2 = cy2 + 1 end
     end
 
 
@@ -455,47 +463,55 @@ function Simple_create_areas(R)
     end
 
 
-    local function test_cover_chunks()
-      local chunks = {}
+    local function test_cover_chunks(finished_chunks)
+      -- Note: the growth here can cause more chunks to be touched,
+      --       hence need to repeat the test when that happens.
+      repeat
+        local grew = false
 
-      for index = #cover_chunks, 1, -1 do
-        local C = cover_chunks[index]
+        for index = #cover_chunks, 1, -1 do
+          local C = cover_chunks[index]
 
-        local what = chunk_touches_step(C)
+          local what = chunk_touches_step(C)
 
-        if what == "no" then continue end
+          if what == "no" then continue end
 
-stderrf("Step touches %s : %s\n", C:tostr(), what)
+  stderrf("Step touches %s : %s\n", C:tostr(), what)
 
-        -- while the step only partially covers the chunk, keep growing it
-        -- (this should always stop, but limit the loop just in case)
-        for loop = 1,30 do
-          if what == "cover" then break end
+          -- while the step only partially covers the chunk, keep growing it
+          -- (this should always stop, but limit the loop just in case)
+          for loop = 1,30 do
+            if what == "cover" then break end
 
-          if loop == 30 then
-            gui.printf("WARNING: failed to cover a chunk\n")
+            if loop == 30 then
+              gui.printf("WARNING: failed to cover a chunk\n")
+            end
+
+            grow_it(100)
+
+            grew = true
+--step:dump("After touching growth")
+
+            what = chunk_touches_step(C)
+  stderrf("  loop %d | new status: %s\n", loop, what)
+            assert(what != "no")
           end
 
-          grow_it(100)
+  stderrf("  OK!\n")
 
-          what = chunk_touches_step(C)
-stderrf("  loop %d | new status: %s\n", loop, what)
-          assert(what != "no")
+          -- chunk is now covered, add to area and remove from list
+          table.insert(finished_chunks, C)
+
+          table.remove(cover_chunks, index)
         end
 
-stderrf("  OK!\n")
-
-        -- chunk is now covered, add to area and remove from list
-        table.insert(chunks, C)
-
-        table.remove(cover_chunks, index)
-      end
-
-      return chunks
+      until not grew
     end
 
 
     local function grow_an_area(x, y, prev_A)
+
+-- free:dump("Free:")
 
       step  = CAVE_CLASS.blank_copy(free)
       s_cel = step.cells
@@ -518,22 +534,19 @@ stderrf("  OK!\n")
 
       for loop = 1, count do
         grow_it(50)
-
-        -- expand bbox
-        if cx1 > 1  then cx1 = cx1 - 1 end
-        if cy1 > 1  then cy1 = cy1 - 1 end
-
-        if cx2 < cw then cx2 = cx2 + 1 end
-        if cy2 < ch then cy2 = cy2 + 1 end
       end
 
       if size < 4 then grow_it(100) end
+
+-- step:dump("Step before:")
 
       -- check if the step overlaps any important chunk.
       -- these will require the step to keep growing to cover the chunk,
       -- and the chunk gets added to the AREA's chunk list (which is
       -- vital for height distribution ETC).
-      local chunks = test_cover_chunks()
+      local chunks = {}
+
+      test_cover_chunks(chunks)
 
       -- !!!! FIXME FIXME: check if step overlaps any chunk [add chunk to area]
 
@@ -545,15 +558,25 @@ stderrf("  OK!\n")
       else
         local AREA = AREA_CLASS.new("floor", R) 
 
+        AREA.touching = {}
+
         table.insert(R.areas, AREA)
 
-        prev_A = AREA
-
         AREA.floor_map = step
+
+        -- !!! FIXME: PROPERLY DETERMINE WHO TOUCHES WHO
+        if prev_A then
+          prev_A:add_touching(AREA)
+            AREA:add_touching(prev_A)
+        end
+
+        prev_A = AREA
       end
 
       each C in chunks do
         table.insert(prev_A.chunks, C)
+
+        C.area = prev_A
       end
 
 

@@ -68,6 +68,11 @@ function AREA_CLASS.touches(A, A2)
 end
 
 
+function AREA_CLASS.add_touching(A, N)
+  table.add_unique(A.touching, N)
+end
+
+
 function AREA_CLASS.set_floor(A, floor_h)
   A.floor_h = floor_h
 
