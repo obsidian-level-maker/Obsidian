@@ -337,6 +337,7 @@ function Simple_create_areas(R)
 
   local function collect_cover_chunks()
     -- find the chunks which must be completed covered by any area.
+    cover_chunks = {}
 
     each C in R.chunks do
       if C.foobage == "important" or C.foobage == "conn" then
@@ -433,7 +434,24 @@ function Simple_create_areas(R)
 
 
     local function chunk_touches_step(C)
-      -- FIXME !!!!!
+      local hit  = 0
+      local miss = 0
+
+      for x = C.cave_x1, C.cave_x2 do
+        for y = C.cave_y1, C.cave_y2 do
+          if s_cel[x][y] == 1 then
+            hit = hit + 1
+          else
+            miss = miss + 1
+          end
+        end
+      end
+
+      if hit == 0 then return "no" end
+
+      if miss == 0 then return "cover" end
+
+      return "partial"
     end
 
 
@@ -447,6 +465,8 @@ function Simple_create_areas(R)
 
         if what == "no" then continue end
 
+stderrf("Step touches %s : %s\n", C:tostr(), what)
+
         -- while the step only partially covers the chunk, keep growing it
         -- (this should always stop, but limit the loop just in case)
         for loop = 1,30 do
@@ -459,13 +479,16 @@ function Simple_create_areas(R)
           grow_it(100)
 
           what = chunk_touches_step(C)
+stderrf("  loop %d | new status: %s\n", loop, what)
           assert(what != "no")
         end
+
+stderrf("  OK!\n")
 
         -- chunk is now covered, add to area and remove from list
         table.insert(chunks, C)
 
-        table.remove(covered, index)
+        table.remove(cover_chunks, index)
       end
 
       return chunks
@@ -530,7 +553,7 @@ function Simple_create_areas(R)
       end
 
       each C in chunks do
-        table.insert(AREA.chunks, C)
+        table.insert(prev_A.chunks, C)
       end
 
 
