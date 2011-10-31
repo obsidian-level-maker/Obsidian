@@ -605,7 +605,7 @@ function Hallway_add_doubles()
     if not room_K.room then return false end
 
     -- rarely connect to caves
-    if room_K.room.cave and rand.odds(50) then return false end
+    if room_K.room.cave and rand.odds(80) then return false end
 
     assert(room_K ==  left_K:neighbor(right_dir))
     assert(room_K == right_K:neighbor( left_dir))
