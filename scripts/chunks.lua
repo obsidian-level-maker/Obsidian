@@ -882,6 +882,9 @@ function CHUNK_CLASS.build(C)
     return
   end
 
+  -- Ugh dirty hack
+  if C.room and C.room.cave and C.filler then return end
+
   local f_h
   local c_h
   local c_medium = "solid"
