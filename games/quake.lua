@@ -1270,7 +1270,7 @@ QUAKE1.MONSTERS =
 
   enforcer =
   {
-    level = 3
+    level = 2
     prob = 40
     health = 80
     damage = 18
@@ -1344,7 +1344,7 @@ QUAKE1.MONSTERS =
 
   fiend =
   {
-    level = 3
+    level = 4
     prob = 10
     health = 300
     damage = 40
