@@ -880,6 +880,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
   local cells = cave.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
+  local newbie_map = table.array_2D(W, H)
 
   local function analyse_corner(corner_map, x, y, side)
     local dx, dy = geom.delta(side)
@@ -895,44 +896,48 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
       if nx < 1 or nx > W or ny < 1 or ny > H then return true end
 
-      return not cells[nx][ny] or (cells[nx][ny] > 0)
+      return ((cells[nx][ny] or 1) > 0)
     end
 
     local A = test_nb(0, dy)
     local B = test_nb(dx, 0)
     local C = test_nb(dx, dy)
 
-    if C then return end
-
     if not A and not B then
 
-      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(70) then
+do return end
+
+      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(1) then
         corner_map[cx][cy] = "drop"
         return
       end
 
-      corner_map[cx][cy] = rand.pick { "x", "y", "xy", "split" }
+---!!!   corner_map[cx][cy] = "xy" --- rand.pick { "x", "y", "xy", "split" }
       return
     end
 
+    if C then return end
+
     if A and not B then
-      if rand.odds(40) then corner_map[cx][cy] = "x" end
+      if rand.odds(50) then corner_map[cx][cy] = "x" end
       return
     end
 
     if B and not A then
-      if rand.odds(40) then corner_map[cx][cy] = "y" end
+      if rand.odds(50) then corner_map[cx][cy] = "y" end
       return
     end
 
     -- assert(A and B and not C)
 
-    if rand.odds(1) then corner_map[cx][cy] = "split" end
-    return
+--  if rand.odds(1) then corner_map[cx][cy] = "split" end
+    if cave:valid_cell(x+dx, y+dy) then
+      newbie_map[x+dx][y+dy] = assert(side)
+    end
   end
 
 
-  local function add_brush(corner_map, x, y, bx, by)
+  local function corner_brush(corner_map, x, y, bx, by)
     bx = bx + (x - 1) * 64
     by = by + (y - 1) * 64
 
@@ -955,13 +960,18 @@ function CAVE_CLASS.render(cave, brush_func, data)
     for _,side in ipairs(SIDES) do
       local dx, dy = geom.delta(side)
 
-      local cx = x + (dx < 0 ? 0 ; 1)
-      local cy = y + (dy < 0 ? 0 ; 1)
-
       local fx = bx + (dx < 0 ? 0 ; 64)
       local fy = by + (dy < 0 ? 0 ; 64)
 
+      local cx = x + (dx < 0 ? 0 ; 1)
+      local cy = y + (dy < 0 ? 0 ; 1)
+
       local what = corner_map[cx][cy]
+
+if "grow" then
+dx = -dx
+dy = -dy
+end
 
       if what == "drop" then
         -- ignore it
@@ -994,6 +1004,48 @@ function CAVE_CLASS.render(cave, brush_func, data)
   end
 
 
+  local function newbie_brush(n_side, x, y, bx, by)
+    bx = bx + (x - 1) * 64
+    by = by + (y - 1) * 64
+
+    if cave.square then return end
+
+    local coords = { }
+    local SIDES  = { 1,3,9,7 }
+
+    for _,side in ipairs(SIDES) do
+      local dx, dy = geom.delta(side)
+
+      if side == n_side then continue end
+
+      local fx = bx + (dx < 0 ? 0 ; 64)
+      local fy = by + (dy < 0 ? 0 ; 64)
+
+      local cx = x + (dx < 0 ? 0 ; 1)
+      local cy = y + (dy < 0 ? 0 ; 1)
+
+      local what = corner_map[cx][cy]
+
+if "grow" then
+dx = -dx
+dy = -dy
+end
+
+        if what == "x" then fx = fx - dx*24 end
+        if what == "y" then fy = fy - dy*24 end
+
+        if what == "xy" then
+          fx = fx - dx*16
+          fy = fy - dy*16
+        end
+
+      table.insert(coords, { x=fx, y=fy })
+    end
+
+    brush_func(data, coords)
+  end
+
+
   ---| Cave.render |---
 
   for x = 1,W do for y = 1,H do
@@ -1006,7 +1058,10 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
-      add_brush(corner_map, x, y, cave.base_x, cave.base_y)
+      corner_brush(corner_map, x, y, cave.base_x, cave.base_y)
+    end
+    if newbie_map[x][y] then
+      newbie_brush(newbie_map[x][y], x, y, cave.base_x, cave.base_y)
     end
   end end
 end
