@@ -464,6 +464,8 @@ NO:  CSG DOOM: support entity.light
 
 .  build our own REJECT lump (use vis info like Quake)
 
+-  support lightning in ZDoom etc (via MAPINFO)
+
 -  ZDoom slopes:
    340 = 0,   Plane_Align (1, 0)  // Slope front floor
    341 = 0,   Plane_Align (0, 1)  // Slope front ceiling
