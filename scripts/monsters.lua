@@ -1029,6 +1029,21 @@ function Monsters_in_room(R)
   end
 
 
+  local function calc_strength_factor(info)
+    local factor = (info.level or 1)
+
+    if OB_CONFIG.strength == "weak" then
+      return 1 / factor
+
+    elseif OB_CONFIG.strength == "tough" then
+      return factor
+    
+    else
+      return 1
+    end
+  end
+
+
   local function prob_for_mon(name, info, enviro)
     local prob = info.prob
 
@@ -1074,7 +1089,11 @@ function Monsters_in_room(R)
 
     if prob == 0 then return 0 end
 
-    
+
+    -- apply user's Strength setting
+    prob = prob * calc_strength_factor(info)
+
+
     -- level check (harder monsters occur in later rooms)
     assert(info.level)
 
@@ -1159,7 +1178,7 @@ function Monsters_in_room(R)
   local function number_of_kinds()
     local base_num
 
-    if STYLE.mon_variety == "heaps" or rand.odds(6) then return 9 end
+    if STYLE.mon_variety == "heaps" or rand.odds(4) then return 9 end
     if STYLE.mon_variety != "some"  or rand.odds(2) then return 1 end
 
     if OB_CONFIG.mons == "mixed" then
@@ -1652,7 +1671,7 @@ function Monsters_in_room(R)
       total_density = total_density + densities[mon]
     end
 
-----stderrf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densities,1))
+gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densities,1))
 
     -- convert density map to monster counts
     local wants = {}
@@ -1664,6 +1683,8 @@ function Monsters_in_room(R)
         wants[mon] = int(num + gui.random())
       end
     end
+
+gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     return wants
   end
@@ -1694,7 +1715,7 @@ function Monsters_in_room(R)
 
     -- add at least one monster of each kind, trying larger ones first
     for pass = 1,3 do
-      for mon,prob in pairs(wants) do
+      for mon,qty in pairs(wants) do if qty >= 1 then
         if (pass == 1 and is_huge(mon)) or
            (pass == 2 and is_big(mon) and not is_huge(mon)) or
            (pass == 3 and not is_big(mon))
@@ -1708,7 +1729,7 @@ function Monsters_in_room(R)
             try_add_mon_group(mon, 1)
           end
         end
-      end
+      end end -- mon, qty
     end
 
 
