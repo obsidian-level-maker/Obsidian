@@ -1333,7 +1333,7 @@ QUAKE1.MONSTERS =
 
   ogre =
   {
-    level = 2
+    level = 3
     prob = 40
     health = 200
     damage = 25
