@@ -880,9 +880,16 @@ function CAVE_CLASS.render(cave, brush_func, data)
   local cells = cave.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
-  local newbie_map = table.array_2D(W, H)
+  local newbie_map
 
   local B_CORNERS = { 1,3,9,7 }
+
+
+  local function test_nb(nx, ny)
+    if nx < 1 or nx > W or ny < 1 or ny > H then return true end
+
+    return ((cells[nx][ny] or 1) > 0)
+  end
 
 
   local function analyse_corner(corner_map, x, y, side)
@@ -891,20 +898,12 @@ function CAVE_CLASS.render(cave, brush_func, data)
     local cx = x + (dx < 0 ? 0 ; 1)
     local cy = y + (dy < 0 ? 0 ; 1)
 
-    if corner_map[cx][cy] then return end  -- already decided
+    -- already decided?
+    if corner_map[cx][cy] then return end
 
-    local function test_nb(dx, dy)
-      local nx = x + dx
-      local ny = y + dy
-
-      if nx < 1 or nx > W or ny < 1 or ny > H then return true end
-
-      return ((cells[nx][ny] or 1) > 0)
-    end
-
-    local A = test_nb(0, dy)
-    local B = test_nb(dx, 0)
-    local C = test_nb(dx, dy)
+    local A = test_nb(x, y + dy)
+    local B = test_nb(x + dx, y)
+    local C = test_nb(x + dx, y + dy)
 
     if not A and not B then
       if cave.expand then
@@ -912,7 +911,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
         return
       end
 
-      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(90) then
+      if test_nb(x - dx, y) and test_nb(x, y - dy) and rand.odds(90) then
         corner_map[cx][cy] = "drop"
         return
       end
@@ -936,27 +935,36 @@ function CAVE_CLASS.render(cave, brush_func, data)
     -- assert(A and B and not C)
     
     if cave.expand then
-      if cave:valid_cell(x+dx, y+dy) then
-        newbie_map[x+dx][y+dy] = assert(side)
-      end
+      -- it will get a newbie
     else
-      return "reverse_xy"
+      corner_map[cx][cy] = "reverse_xy"
     end
   end
 
 
-  local function corner_brush(corner_map, x, y, bx, by)
-    bx = bx + (x - 1) * 64
-    by = by + (y - 1) * 64
+  local function check_newbie(x, y, side)
+    local A = test_nb(x, y + dy)
+    local B = test_nb(x + dx, y)
+    local C = test_nb(x + dx, y + dy)
+
+    if A and B and C then
+      newbie_map[x][y] = side
+    end
+  end
+
+
+  local function corner_brush(x, y)
+    local bx = cave.base_x + (x - 1) * 64
+    local by = cave.base_y + (y - 1) * 64
 
     -- most basic method (mostly for debugging)
     if cave.square then
       brush_func(data,
       {
-        { x=bx+64, y=by },
-        { x=bx+64, y=by+64 },
-        { x=bx,    y=by+64 },
-        { x=bx,    y=by },
+        { x=bx+64, y=by }
+        { x=bx+64, y=by+64 }
+        { x=bx,    y=by+64 }
+        { x=bx,    y=by }
       })
 
       return;
@@ -1012,9 +1020,9 @@ function CAVE_CLASS.render(cave, brush_func, data)
   end
 
 
-  local function newbie_brush(n_side, x, y, bx, by)
-    bx = bx + (x - 1) * 64
-    by = by + (y - 1) * 64
+  local function newbie_brush(x, y, n_side)
+    local bx = cave.base_x + (x - 1) * 64
+    local by = cave.base_y + (y - 1) * 64
 
     if cave.square then return end
 
@@ -1056,21 +1064,32 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
   ---| Cave.render |---
 
+  -- analyse the cave and determine the corners:
+
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
       for side = 1,9,2 do if side != 5 then
         analyse_corner(corner_map, x, y, side)
       end end
     end
+
+    -- in expansion mode, find corners where we can add a brush
+    if cave.expand and (cells[x][y] or 1) <= 0 then
+      for side = 1,9,2 do if side != 5 then
+        check_newbie(x, y, side)
+      end end
+    end
   end end -- for x, y
+
+  -- actually create the brushes:
 
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
-      corner_brush(corner_map, x, y, cave.base_x, cave.base_y)
+      corner_brush(x, y)
     end
 
     if newbie_map[x][y] then
-      newbie_brush(newbie_map[x][y], x, y, cave.base_x, cave.base_y)
+      newbie_brush(x, y, newbie_map[x][y])
     end
   end end
 end
@@ -1290,10 +1309,10 @@ function CAVE_CLASS.maze_render(maze, brush_func, data)
     if true then
       brush_func(data,
       {
-        { x=bx+64, y=by },
-        { x=bx+64, y=by+64 },
-        { x=bx,    y=by+64 },
-        { x=bx,    y=by },
+        { x=bx+64, y=by }
+        { x=bx+64, y=by+64 }
+        { x=bx,    y=by+64 }
+        { x=bx,    y=by }
       })
 
       return;
