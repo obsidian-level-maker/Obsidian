@@ -1455,7 +1455,7 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
   SYS_ASSERT(R);
 
 // !!!!! FIXME: this is a hacky workaround for a deeper problem 
-if (R->gaps.size() == 0)
+if (R->gaps.size() == 0 or group.sides.size() < 3)
 {
 // FIXME: PROPER WARNING
 fprintf(stderr, "FUCKED UP GROUP\n");
