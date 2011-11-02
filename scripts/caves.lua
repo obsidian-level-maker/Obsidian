@@ -882,6 +882,9 @@ function CAVE_CLASS.render(cave, brush_func, data)
   local corner_map = table.array_2D(W + 1, H + 1)
   local newbie_map = table.array_2D(W, H)
 
+  local B_CORNERS = { 1,3,9,7 }
+
+
   local function analyse_corner(corner_map, x, y, side)
     local dx, dy = geom.delta(side)
 
@@ -904,15 +907,17 @@ function CAVE_CLASS.render(cave, brush_func, data)
     local C = test_nb(dx, dy)
 
     if not A and not B then
+      if cave.expand then
+        if rand.odds(50) then corner_map[cx][cy] = "xy" end
+        return
+      end
 
-do return end
-
-      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(1) then
+      if test_nb(-dx, 0) and test_nb(0, -dy) and rand.odds(90) then
         corner_map[cx][cy] = "drop"
         return
       end
 
----!!!   corner_map[cx][cy] = "xy" --- rand.pick { "x", "y", "xy", "split" }
+      corner_map[cx][cy] = "xy"
       return
     end
 
@@ -929,10 +934,13 @@ do return end
     end
 
     -- assert(A and B and not C)
-
---  if rand.odds(1) then corner_map[cx][cy] = "split" end
-    if cave:valid_cell(x+dx, y+dy) then
-      newbie_map[x+dx][y+dy] = assert(side)
+    
+    if cave.expand then
+      if cave:valid_cell(x+dx, y+dy) then
+        newbie_map[x+dx][y+dy] = assert(side)
+      end
+    else
+      return "reverse_xy"
     end
   end
 
@@ -955,9 +963,8 @@ do return end
     end
 
     local coords = { }
-    local SIDES  = { 1,3,9,7 }
 
-    for _,side in ipairs(SIDES) do
+    each side in B_CORNERS do
       local dx, dy = geom.delta(side)
 
       local fx = bx + (dx < 0 ? 0 ; 64)
@@ -966,30 +973,31 @@ do return end
       local cx = x + (dx < 0 ? 0 ; 1)
       local cy = y + (dy < 0 ? 0 ; 1)
 
-      local what = corner_map[cx][cy]
+      if not cave.expand then dx, dy = -dx, -dy end
 
-if "grow" then
-dx = -dx
-dy = -dy
-end
+      local what = corner_map[cx][cy]
 
       if what == "drop" then
         -- ignore it
 
       elseif what == "split" then
         if side == 1 or side == 9 then
-          table.insert(coords, { x=fx, y=fy-dy*24 })
-          table.insert(coords, { x=fx-dx*24, y=fy })
+          table.insert(coords, { x=fx, y=fy + dy*24 })
+          table.insert(coords, { x=fx + dx*24, y=fy })
         else
-          table.insert(coords, { x=fx-dx*24, y=fy })
-          table.insert(coords, { x=fx, y=fy-dy*24 })
+          table.insert(coords, { x=fx + dx*24, y=fy })
+          table.insert(coords, { x=fx, y=fy + dy*24 })
         end
 
       else
-        if what == "x" then fx = fx - dx*24 end
-        if what == "y" then fy = fy - dy*24 end
+        if what == "x" then fx = fx + dx*24 end
+        if what == "y" then fy = fy + dy*24 end
 
         if what == "xy" then
+          fx = fx + dx*16
+          fy = fy + dy*16
+
+        elseif what == "reverse_xy" then
           fx = fx - dx*16
           fy = fy - dy*16
         end
@@ -1011,9 +1019,8 @@ end
     if cave.square then return end
 
     local coords = { }
-    local SIDES  = { 1,3,9,7 }
 
-    for _,side in ipairs(SIDES) do
+    each side in B_CORNERS do
       local dx, dy = geom.delta(side)
 
       if side == n_side then continue end
@@ -1024,17 +1031,18 @@ end
       local cx = x + (dx < 0 ? 0 ; 1)
       local cy = y + (dy < 0 ? 0 ; 1)
 
+      if not cave.expand then dx, dy = -dx, -dy end
+
       local what = corner_map[cx][cy]
 
-if "grow" then
-dx = -dx
-dy = -dy
-end
-
-        if what == "x" then fx = fx - dx*24 end
-        if what == "y" then fy = fy - dy*24 end
+        if what == "x" then fx = fx + dx*24 end
+        if what == "y" then fy = fy + dy*24 end
 
         if what == "xy" then
+          fx = fx + dx*16
+          fy = fy + dy*16
+        
+        elseif what == "reverse_xy" then
           fx = fx - dx*16
           fy = fy - dy*16
         end
@@ -1060,6 +1068,7 @@ end
     if (cells[x][y] or 0) > 0 then
       corner_brush(corner_map, x, y, cave.base_x, cave.base_y)
     end
+
     if newbie_map[x][y] then
       newbie_brush(newbie_map[x][y], x, y, cave.base_x, cave.base_y)
     end
@@ -1076,9 +1085,9 @@ function CAVE_CLASS.maze_generate(maze)
 
   -- Generates a maze in the current object.
   --
-  -- The initial contents should form a mao where the maze will
-  -- be generated.  The cells next to walls should be set to 1,
-  -- and areas which must remain clear (in front of doors) set to -1.
+  -- The initial contents should form a map where the maze will be
+  -- generated.  The cells next to walls should be set to 1 and
+  -- areas which must remain clear (in front of doors) set to -1.
   --
   -- These values can be used:
   --
