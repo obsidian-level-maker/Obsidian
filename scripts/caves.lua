@@ -18,9 +18,9 @@
 --
 ----------------------------------------------------------------
 --
---  The cave algorithm used here was described by Jim Babcock
---  in his article: "Cellular Automata Method for Generating
---  Random Cave-Like Levels".
+--  The cave algorithm used here in the generate() function was
+--  described by Jim Babcock in his article: "Cellular Automata
+--  Method for Generating Random Cave-Like Levels".
 --
 ----------------------------------------------------------------
 
@@ -738,7 +738,7 @@ function CAVE_CLASS.remove_dots(cave)
       local nx, ny = geom.nudge(x, y, dir)
 
       if not cave:valid_cell(nx, ny) or not cells[nx][ny] then
-        -- ignore it   ---### if keep_edges then return false end
+        -- ignore it
       elseif cells[nx][ny] == val then
         return false
       end
@@ -880,7 +880,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
   local cells = cave.cells
 
   local corner_map = table.array_2D(W + 1, H + 1)
-  local newbie_map
+  local newbie_map = table.array_2D(W, H)
 
   local B_CORNERS = { 1,3,9,7 }
 
@@ -892,7 +892,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
   end
 
 
-  local function analyse_corner(corner_map, x, y, side)
+  local function analyse_corner(x, y, side)
     local dx, dy = geom.delta(side)
 
     local cx = x + (dx < 0 ? 0 ; 1)
@@ -907,7 +907,6 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
     if not A and not B then
       if cave.expand then
-        if rand.odds(50) then corner_map[cx][cy] = "xy" end
         return
       end
 
@@ -931,18 +930,12 @@ function CAVE_CLASS.render(cave, brush_func, data)
       if rand.odds(50) then corner_map[cx][cy] = "y" end
       return
     end
-
-    -- assert(A and B and not C)
-    
-    if cave.expand then
-      -- it will get a newbie
-    else
-      corner_map[cx][cy] = "reverse_xy"
-    end
   end
 
 
-  local function check_newbie(x, y, side)
+  local function analyse_newbie(x, y, side)
+    local dx, dy = geom.delta(side)
+
     local A = test_nb(x, y + dy)
     local B = test_nb(x + dx, y)
     local C = test_nb(x + dx, y + dy)
@@ -966,8 +959,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
         { x=bx,    y=by+64 }
         { x=bx,    y=by }
       })
-
-      return;
+      return
     end
 
     local coords = { }
@@ -986,7 +978,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
       local what = corner_map[cx][cy]
 
       if what == "drop" then
-        -- ignore it
+        -- skip this vertex
 
       elseif what == "split" then
         if side == 1 or side == 9 then
@@ -1014,7 +1006,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
       end
     end
 
-  --- gui.debugf("CAVE BRUSH:\n%s\n\n", table.tostr(coords,2))
+--- gui.debugf("CAVE BRUSH:\n%s\n\n", table.tostr(coords,2))
 
     brush_func(data, coords)
   end
@@ -1028,10 +1020,12 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
     local coords = { }
 
+    -- TODO: experiment with two triangles forming a pseudo curve
+
     each side in B_CORNERS do
       local dx, dy = geom.delta(side)
 
-      if side == n_side then continue end
+      if side == (10 - n_side) then continue end
 
       local fx = bx + (dx < 0 ? 0 ; 64)
       local fy = by + (dy < 0 ? 0 ; 64)
@@ -1043,17 +1037,17 @@ function CAVE_CLASS.render(cave, brush_func, data)
 
       local what = corner_map[cx][cy]
 
-        if what == "x" then fx = fx + dx*24 end
-        if what == "y" then fy = fy + dy*24 end
+      if what == "x" then fx = fx + dx*24 end
+      if what == "y" then fy = fy + dy*24 end
 
-        if what == "xy" then
-          fx = fx + dx*16
-          fy = fy + dy*16
-        
-        elseif what == "reverse_xy" then
-          fx = fx - dx*16
-          fy = fy - dy*16
-        end
+      if what == "xy" then
+        fx = fx + dx*16
+        fy = fy + dy*16
+      
+      elseif what == "reverse_xy" then
+        fx = fx - dx*16
+        fy = fy - dy*16
+      end
 
       table.insert(coords, { x=fx, y=fy })
     end
@@ -1069,14 +1063,14 @@ function CAVE_CLASS.render(cave, brush_func, data)
   for x = 1,W do for y = 1,H do
     if (cells[x][y] or 0) > 0 then
       for side = 1,9,2 do if side != 5 then
-        analyse_corner(corner_map, x, y, side)
+        analyse_corner(x, y, side)
       end end
     end
 
     -- in expansion mode, find corners where we can add a brush
     if cave.expand and (cells[x][y] or 1) <= 0 then
       for side = 1,9,2 do if side != 5 then
-        check_newbie(x, y, side)
+        analyse_newbie(x, y, side)
       end end
     end
   end end -- for x, y
@@ -1088,7 +1082,7 @@ function CAVE_CLASS.render(cave, brush_func, data)
       corner_brush(x, y)
     end
 
-    if newbie_map[x][y] then
+    if cave.expand and newbie_map[x][y] then
       newbie_brush(x, y, newbie_map[x][y])
     end
   end end
