@@ -1221,14 +1221,14 @@ function Rooms_intermission_camera()
   local room
 
   each R in LEVEL.rooms do
-    if R.purpose != "START" and R.purpose != "EXIT" then
+    if R.purpose != "START" and R.purpose != "EXIT" and not R.cave then
       if not room or (R.kvolume > room.kvolume) then
         room = R
       end
     end
   end
 
-  if not room then return end
+  if not room then room = rand.pick(LEVEL.rooms) end
 
   -- determine place in room
   local info
