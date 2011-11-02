@@ -6,6 +6,14 @@ Current Work
 ------------
 
 
+!!!!!!!!!!
+CSG-QUAKE: is broken, mini-sides are not created properly because the
+!!!!!!!!!! intercept list does not keep track of whether an intercept
+           is open or closed on each side.
+
+           Either fix this (ugh) or re-think how it should work.
+
+
 flyingdeath naming ideas:
   Enter the ...
   Welcome to the
@@ -18,19 +26,35 @@ flyingdeath naming ideas:
   Fear the
   Yet another
 
-WISH / IDEA: levels get inherently tougher to beat over a megawad
-
 flyingdeath's Fight Sim tweaks
+
+Jared's DEIMOS theme additions
+
+
+Zone IDEA:
+  -  divides level into separate sections with distinct texturing
+     and maybe other kinds of distinctness (monsters, weapon ammo).
+
+  -  small levels: rarely more than one zone
+  
+  -  large levels: 3 or 4 zones
+
+  -  keyed doors are preferred separator of zones.
 
 
 Caves:
-  >>   CHUNKS: don't build floor/ceil if cave
+  >>  newbie_map  : generate separate pass, check for <= 0 cells
 
+  DONE:  CHUNKS: don't build floor/ceil if cave
   DONE:  handle disconnected areas
-        
   DONE:  fill any unconnected empty areas
+  DONE:  optimise touch_chunk with bbox check
 
   !!!!  spots for monsters and items
+
+  !!!!  get the diagonalisation working again (on FLOORS too)
+
+  !!  determine touching lists
 
   >>  proper floor and ceiling textures
 
@@ -40,8 +64,12 @@ Caves:
 
   -  create a large area (or two) by merging areas together
 
+  DONE:  QUAKE: avoid caves for intermission camera
+
 
 Monsters:
+REVIEW: how strength setting affects room palettes
+
   +  in later levels, low-level monsters should be used in bigger swarms
 
 

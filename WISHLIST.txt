@@ -85,6 +85,9 @@ Miscellaneous:
 
   -  IDEA: STYLE to control # of lifts
 
+  -  IDEA: levels get inherently tougher to beat over a megawad
+           [assume player's skill increases].
+
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
