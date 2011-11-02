@@ -92,9 +92,8 @@ COOP_MON_FACTOR = 1.35
 COOP_HEALTH_FACTOR = 1.3
 COOP_AMMO_FACTOR   = 1.6
 
-MONSTER_MAX_TIME   = { weak=12,  medium=18,  tough=24  }
-MONSTER_MAX_DAMAGE = { weak=140, medium=220, tough=360 }
-MONSTER_ALONG_POW  = { weak=1.5, medium=1.0, tough=0.5 }
+MONSTER_MAX_TIME   = { weak=6,  medium=9,   tough=12  }
+MONSTER_MAX_DAMAGE = { weak=70, medium=110, tough=180 }
 
 
 -- Doom flags
@@ -376,17 +375,13 @@ end
 
 
 function Monsters_max_level()
-  local max_level = LEVEL.mon_along or 0.5
-
-  -- adjust level based on Strength setting
-  local pow = MONSTER_ALONG_POW[OB_CONFIG.strength] or 1
-  max_level = 10 * (max_level ^ pow)
+  local max_level = 10 * (LEVEL.mon_along or 0.5)
 
   if max_level < 1 then max_level = 1 end
 
   LEVEL.max_level = max_level
 
-  gui.printf("Monster max_level -------> %1.3f\n", max_level)
+  gui.printf("Monster max_level : %1.3f\n", max_level)
 end
 
 
@@ -1155,8 +1150,7 @@ function Monsters_in_room(R)
 
 
     -- would the monster take too long to kill?
-    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 15
-    max_time = max_time / 2
+    local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 8
 
     if time > max_time then
       d = d * max_time / time
@@ -1164,8 +1158,7 @@ function Monsters_in_room(R)
 
 
     -- would the monster inflict too much damage on the player?
-    local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 200
-    max_damage = max_damage / 2
+    local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 100
 
     if damage > max_damage then
       d = d * max_damage / damage
