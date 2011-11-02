@@ -1341,6 +1341,22 @@ static quake_leaf_c * Solid_Leaf(region_c *R, unsigned int g, int is_ceil,
 }
 
 
+static quake_node_c * Solid_Node(quake_group_c & group)
+{
+  quake_node_c * node = new quake_node_c();
+
+  node->plane.x  = node->plane.y  = 0;
+  node->plane.nx = node->plane.ny = 0;
+  node->plane.z  = 0;
+  node->plane.nz = +1;
+
+  node->front_L = Solid_Leaf(group);
+  node-> back_L = Solid_Leaf(group);
+
+  return node;
+}
+
+
 static quake_node_c * CreateLeaf(region_c * R, unsigned int g /* gap */,
                                  quake_group_c & group,
                                  std::vector<quake_vertex_c> & winding,
@@ -1437,6 +1453,15 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
   region_c *R = group.FinalRegion();
 
   SYS_ASSERT(R);
+
+// !!!!! FIXME: this is a hacky workaround for a deeper problem 
+if (R->gaps.size() == 0)
+{
+// FIXME: PROPER WARNING
+fprintf(stderr, "FUCKED UP GROUP\n");
+return Solid_Node(group);
+}
+
   SYS_ASSERT(R->gaps.size() > 0);
 
   quake_bbox_c bbox;
