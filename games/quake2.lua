@@ -1772,6 +1772,13 @@ QUAKE2.THEME_DEFAULTS =
                    Door_SW_1 = 50 }
 
   teleporters = { Teleporter1 = 50 }
+
+  cave_walls =  -- FIXME TEMP TEMP
+  {
+    ROCK1_1  = 50, ROCK0_1  = 20, ROCK25_1 = 50,
+    ROCKS21_1 = 20, ROCKS24_2 = 50,
+    ROCKS22_1 = 50,  -- crystal / ice
+  }
 }
 
 
