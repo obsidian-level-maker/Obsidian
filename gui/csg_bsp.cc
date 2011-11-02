@@ -950,7 +950,8 @@ static partition_c * ChoosePartition(group_c & group, bool *reached_chunk)
 
   // -AJA- An obvious thing to try here is to choose the best
   //       horiz/vert node based on distance to the middle.
-  //       But it had no benefit, and was slower as well.
+  //
+  //       I tried it and... no benefit, was slower as well.
 
   snag_c *poss = NULL;
 
