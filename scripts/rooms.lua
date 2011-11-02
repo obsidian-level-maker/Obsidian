@@ -1264,22 +1264,17 @@ end
 
 function Rooms_blow_chunks()
 
-  -- TEMP TEMP CRUD CRUD
-
   each R in LEVEL.rooms do
     each C in R.chunks do
       C:build()
-    end
-
-    --!!!!!!!! TEST
-    if R.purpose != "START" then
----    Layout_simple_room(R)
     end
   end
 
   each H in LEVEL.halls do
     H:build()
   end
+
+  -- scenic rooms ??
 end
 
 
@@ -1656,11 +1651,7 @@ function Rooms_build_all()
   end
 
   Rooms_blow_chunks()
-
-  -- scenic rooms ??
-
   Rooms_add_sun()
-
   Rooms_intermission_camera()
 end
 
