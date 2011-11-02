@@ -31,17 +31,6 @@ flyingdeath's Fight Sim tweaks
 Jared's DEIMOS theme additions
 
 
-Zone IDEA:
-  -  divides level into separate sections with distinct texturing
-     and maybe other kinds of distinctness (monsters, weapon ammo).
-
-  -  small levels: rarely more than one zone
-  
-  -  large levels: 3 or 4 zones
-
-  -  keyed doors are preferred separator of zones.
-
-
 Caves:
   >>  newbie_map  : generate separate pass, check for <= 0 cells
 

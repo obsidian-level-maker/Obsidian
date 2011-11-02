@@ -91,6 +91,17 @@ Miscellaneous:
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
+Zone IDEA:
+  -  divides level into separate sections with distinct texturing
+     and maybe other kinds of distinctness (monsters, weapon ammo).
+
+  -  small levels: rarely more than one zone
+  
+  -  large levels: 3 or 4 zones
+
+  -  keyed doors are preferred separator for zones
+
+
 Hexen:
    !!  BOSS map : require the 2/3 hub keys to access boss room
                  NOTE: could use them to restrict progress along chain
