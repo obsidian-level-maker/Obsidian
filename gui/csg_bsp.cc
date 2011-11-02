@@ -586,7 +586,7 @@ static bool RegionHasFlattened(region_c *R)
 }
 
 
-static void CreateRegion(group_c & group, csg_brush_c *P)
+static void CreateRegion(group_c & root, csg_brush_c *P)
 {
   SYS_ASSERT(P);
 
@@ -623,8 +623,12 @@ static void CreateRegion(group_c & group, csg_brush_c *P)
     if (qx1 == qx2 && qy1 == qy2)  // degenerate ?
       continue;
 
-    snag_c *S = new snag_c(v2, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
-                               qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID);
+#if 0  // vertex quantization is disabled -- probably a bad idea
+    snag_c *S = new snag_c(v2, v1->x, qx1 * QUANTIZE_GRID, qy1 * QUANTIZE_GRID,
+                                      qx2 * QUANTIZE_GRID, qy2 * QUANTIZE_GRID); */
+#else
+    snag_c *S = new snag_c(v2, v1->x, v1->y, v2->x, v2->y);
+#endif
 
     R->AddSnag(S);
 
@@ -643,7 +647,7 @@ static void CreateRegion(group_c & group, csg_brush_c *P)
   }
   else
   {
-    group.AddRegion(R);
+    root.AddRegion(R);
 
     all_regions.push_back(R);
   }
