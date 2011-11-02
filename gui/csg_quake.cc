@@ -81,6 +81,18 @@ struct intersect_qdist_Compare
 };
 
 
+void DumpIntersections(std::vector<intersect_t> & cuts)
+{
+  DebugPrintf("Intersections:\n");
+
+  for (unsigned int i = 0 ; i < cuts.size() ; i++)
+  {
+    DebugPrintf("  %03d : dir:%+d along:%1.5f q_dist:%d\n", i,
+                cuts[i].dir, cuts[i].along, cuts[i].q_dist);
+  }
+}
+
+
 static void AddIntersection(std::vector<intersect_t> & cut_list,
                             double along, int dir)
 {
@@ -240,6 +252,12 @@ public:
 
     plane->Normalize();
   }
+
+  void Dump(unsigned int index) const
+  {
+    DebugPrintf("Side %u : (%1.1f %1.1f) -> (%1.1f %1.1f) snag:%p  on_node:%p/%d\n",
+                index, x1, y1, x2, y2, snag, on_node, node_side);
+  }
 };
 
 
@@ -333,6 +351,19 @@ public:
     CalcMid(&mid_x, &mid_y);
 
     return CSG_PointInRegion(mid_x, mid_y);
+  }
+
+  void Dump() const
+  {
+    DebugPrintf("Group %p : %u sides, %u brushes\n", this,
+                sides.size(), brushes.size());
+
+    for (unsigned int i = 0 ; i < sides.size() ; i++)
+    {
+      const quake_side_c *S = sides[i];
+    
+      S->Dump(i);
+    }
   }
 };
 
@@ -749,9 +780,6 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
     int sw  = sx2 - sx1;
     int sh  = sy2 - sy1;
 
-// fprintf(stderr, "bounds (%1.5f %1.5f) .. (%1.5f %1.5f)\n", gx1, gy1, gx2, gy2);
-// fprintf(stderr, " sx/sy (%d,%d) .. (%d,%d) = %dx%d\n",  sx1, sy1, sx2, sy2, sw, sh);
-
     if (sw >= 2 || sh >= 2)
     {
       if (sw >= sh)
@@ -785,6 +813,10 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
       SYS_ASSERT(*reached_cluster);
 
       CheckClusterEdges(group, cx, cy);
+
+//    DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+//                cx, cy, gx1, gy1, gx2, gy2);
+//    group.Dump();
     }
   }
 
