@@ -74,6 +74,14 @@ function math.low_high(a, b)
   return a, b
 end
 
+function math.quadratic(x, limit)
+  if not limit then limit = 1 end
+
+  if x < 0 or x > limit then return x end
+
+  return x * (limit * 2 - x) / limit
+end
+
 
 function string.bool(n)
   if n == nil   then return "nil"   end
