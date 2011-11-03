@@ -5,7 +5,6 @@ OBLIGE TODO
 Current Work
 ------------
 
-
 !!!!!!!!!!
 CSG-QUAKE: is broken, mini-sides are not created properly because the
 !!!!!!!!!! intercept list does not keep track of whether an intercept
@@ -81,6 +80,36 @@ Hallways:
   !!  monsters / items in hallways
 
   !!!  determine ceiling heights properly
+
+
+Zone IDEA:
+  -  divides level into separate sections with distinct texturing
+     and maybe other kinds of distinctness (monsters, weapon ammo).
+
+  -  small levels: 1 or 2 zones (usually one)
+  -  large levels: 3 or 4 zones
+
+  -  keyed doors are preferred separator for zones
+
+  -  switches and their doors are limited to a single zone
+
+  ?  ZONE_THEMES
+
+
+Quests:
++  if all exits have TVOL < 2 (or so) then don't add any locks
+   (i.e. make all but one of them into STORAGE rooms)
+
+-  prefer adding weapons into these STORAGE rooms
+
+-  check or re-implement logic to reduce back-tracking
+
+-  Zone logic: works by merging quests (so occurs after quests
+   have been decided).  Merge zones until min_size is satisified
+   AND number of zones <= number of keys + 1.
+   
+   update pick key logic to greatly prefer keys between two zones.
+   [also rule about no key between two outdoor rooms -- use bars]
 
 
 -----------------------------------------------------------------
