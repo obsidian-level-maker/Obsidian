@@ -628,6 +628,32 @@ function Quest_make_quests()
   end
 
 
+  local function calc_travel_volume(L)
+    -- returns volume for given room + all descendants
+
+    local vol
+
+    -- larger rooms have bigger volume 
+    if L.is_hall then
+      vol = 0.2
+    else
+      vol = 1 + L.svolume / 50
+    end
+
+    L.base_tvol = vol
+
+    local exits = get_exits(L)
+
+    each D in exits do
+      vol = vol + calc_travel_volume(D.L2)
+    end
+
+    L.travel_vol = vol
+
+    return L.travel_vol
+  end
+
+
   local function add_lock(D)
 -- stderrf("   Locking conn to room %s\n", D.R2:tostr())
 
@@ -786,7 +812,7 @@ function Quest_make_quests()
       end
     end
 
-    gui.debugf("%s%s\n", line, L:tostr())
+    gui.debugf("%s%s (%1.1f)\n", line, L:tostr(), L.travel_vol)
 
     local exits = get_exits(L)
 
@@ -919,6 +945,8 @@ function Quest_make_quests()
   LEVEL.locks  = {}
 
   local Q = QUEST_CLASS.new(LEVEL.start_room)
+
+  calc_travel_volume(Q.start)
 
   gui.debugf("Level Flow:\n\n")
   dump_room_flow(Q.start)
