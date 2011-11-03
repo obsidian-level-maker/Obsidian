@@ -767,11 +767,46 @@ function Quest_make_quests()
   end
 
 
-  local function visit_room(L, quest)
+  local function dump_room_flow(L, indents)
+    if not indents then
+      indents = {}
+    else
+      indents = table.copy(indents)
+    end
+
+    local line = ""
+
+    for i = 1, #indents do
+      if i == #indents then
+        line = line .. "|-- "
+      elseif indents[i] then
+        line = line .. "|   "
+      else
+        line = line .. "    "
+      end
+    end
+
+    gui.debugf("%s%s\n", line, L:tostr())
+
+    local exits = get_exits(L)
+
+    table.insert(indents, true)
+
+    each D in exits do
+      if _index == #exits then
+        indents[#indents] = false
+      end
+
+      dump_room_flow(D.L2, indents)
+    end
+  end
+
+
+  local function quest_flow(L, quest)
     while true do
       L.quest = quest
 
-      -- stderrf("visit_room @ %s\n", L:tostr())
+      -- stderrf("quest_flow @ %s\n", L:tostr())
 
       if L.is_room then
         table.insert(LEVEL.rooms, L)
@@ -885,11 +920,14 @@ function Quest_make_quests()
 
   local Q = QUEST_CLASS.new(LEVEL.start_room)
 
+  gui.debugf("Level Flow:\n\n")
+  dump_room_flow(Q.start)
+
   if THEME.switches then
     -- room list will be rebuilt in visit order
     LEVEL.rooms = {}
 
-    visit_room(Q.start, Q)
+    quest_flow(Q.start, Q)
   else
     -- room list remains in the "natural flow" order
     no_quest_order(Q.start, Q)
