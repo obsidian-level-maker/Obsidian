@@ -43,7 +43,8 @@ CHANGES (since 3.57)
 - basic support for HacX 1.2
 - basic support for Chex Quest 1, 2 and 3
 - preliminary support for Harmony
-- Doom themes for Episodes 2 and 4, courtesy Mr Chris
+- DOOM themes for Episodes 2 and 4, courtesy Mr Chris
+- monsters are progressive over a full game in DOOM 2
 
 + ability to make multiple paths between rooms
 + worked on "cross-overs" (a bridge through another room)
