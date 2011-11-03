@@ -1590,14 +1590,17 @@ function HACX.get_levels()
       name  = string.format("MAP%02d", map)
       patch = string.format("CWILV%02d", map-1)
 
-       ep_along = ep_along
-      mon_along = ep_along
+      ep_along = ep_along
     }
 
-    if OB_CONFIG.length == "episode" then
-      LEV.mon_along = map / 9
-    elseif OB_CONFIG.length == "full" then
-      LEV.mon_along = map / 16
+    if map == 31 or map == 32 then
+      -- secret levels are easy
+      LEV.mon_along = 0.35
+    elseif OB_CONFIG.length == "single" then
+      LEV.mon_along = ep_along
+    else
+      -- difficulty ramps up over whole wad
+      LEV.mon_along = math.quadratic(map / (MAP_NUM + 1))
     end
 
     -- secret levels
