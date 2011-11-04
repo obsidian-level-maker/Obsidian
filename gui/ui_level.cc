@@ -250,6 +250,7 @@ const char * UI_Level::size_syms[] =
   "small",   "Small",
   "regular", "Regular",
   "large",   "Large",
+  "extreme", "Extreme",
 
   "prog",    "Progressive",
   "mixed",   "Mix It Up",
