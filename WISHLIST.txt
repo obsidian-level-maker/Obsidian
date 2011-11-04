@@ -77,8 +77,6 @@ Miscellaneous:
 
   -  rarity for bfg10k and railgun for Skulltag
 
-  -  properly count svolume
-
   ?  PARAM.angle_format = "pyr"  -- for pitch/yaw/roll
 
   -  lifts often assume meshing up at 90 degree turns
@@ -236,12 +234,6 @@ CrossOvers:
 
 
 
-Lock postponing:
-  after decided all locked conns, pick one and if next room is a
-  stalk, then can move the lock to the next door (and the next room
-  becomes part of the earlier quest).
-
-
 Porches:
   -  this is 3 or more seeds around a door from outside->inside
      with a non-sky ceiling and some pillars and a raised floor.
@@ -252,6 +244,7 @@ Facades:
 
   -  ability to ensure both inner/outer are the same
      [perhaps a room_theme setting]
+     [or: special keyword in building_walls]
 
 
 Quests:
@@ -263,9 +256,21 @@ Quests:
 Idea: "single minis" : a single room (not too big, kvolume <= 2)
       which contains something nice to get (weapon, powerup, etc).
 
+      NO ---> go with the "STORAGE" idiom instead
+
 -  sometimes lock another connection (ESP: symmetry)
    with the same lock as one we just added
    [ESP: when new lock goes to leaf or semi-leaf]
+
+-  lowering bars between two outdoor rooms [even between zones]
+
+-  Lock postponing:
+     after decided all locked conns, pick one and if next room is a
+     stalk, then can move the lock to the next door (and the next room
+     becomes part of the earlier quest).
+
+     [especially when next "room" is a hallway]
+
 
 
 Street Mode:

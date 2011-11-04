@@ -82,14 +82,18 @@ Hallways:
   !!!  determine ceiling heights properly
 
 
-Zone IDEA:
-  -  divides level into separate sections with distinct texturing
-     and maybe other kinds of distinctness (monsters, weapon ammo).
+Zones:
+  DONE: create the zones by merging quests
+        -  small levels: 1 or 2 zones
+        -  large levels: 3 or 4 zones
 
-  -  small levels: 1 or 2 zones (usually one)
-  -  large levels: 3 or 4 zones
+  +  distinct texturing in each zone
 
-  -  keyed doors are preferred separator for zones
+  +  keyed doors are preferred separator for zones
+
+  -  prefer weapons be placed in different zones
+
+  -  think about other kinds of distinctions
 
   -  switches and their doors are limited to a single zone
 
@@ -103,13 +107,6 @@ Quests:
 -  prefer adding weapons into these STORAGE rooms
 
 -  check or re-implement logic to reduce back-tracking
-
--  Zone logic: works by merging quests (so occurs after quests
-   have been decided).  Merge zones until min_size is satisified
-   AND number of zones <= number of keys + 1.
-   
-   update pick key logic to greatly prefer keys between two zones.
-   [also rule about no key between two outdoor rooms -- use bars]
 
 
 -----------------------------------------------------------------
