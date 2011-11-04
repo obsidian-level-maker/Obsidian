@@ -126,12 +126,17 @@ end
 
 ZONE_CLASS = {}
 
-function ZONE_CLASS.new(quest)
+function ZONE_CLASS.new()
   local id = 1 + #LEVEL.zones
-  local Z = { id=id, quests={ quest } }
+  local Z = { id=id, quests={} }
   table.set_class(Z, ZONE_CLASS)
   table.insert(LEVEL.zones, Z)
   return Z
+end
+
+
+function ZONE_CLASS.tostr(Z)
+  return string.format("ZONE_%d", Z.id)
 end
 
 
@@ -162,12 +167,14 @@ end
 
 
 function ZONE_CLASS.merge(Z1, Z2)
+  assert(Z2.parent == Z1)
+
   -- transfer the quests
   each Q in Z2.quests do
     Z1:add_quest(Q)
   end
 
-  calc_volume(Z1)
+  Z1:calc_volume()
 
   -- fix any parent fields which refer to Z2
   each Z in LEVEL.zones do
@@ -673,7 +680,7 @@ function Quest_create_zones()
     LEVEL.zones = {}
 
     each Q in LEVEL.quests do
-      local Z = ZONE_CLASS.new(Q)
+      local Z = ZONE_CLASS.new()
 
       Z:add_quest(Q)
 
@@ -695,7 +702,7 @@ function Quest_create_zones()
   end
 
 
-  local function min_zone_size()
+  local function min_zone_tvol()
     local low_vol
     local low_Z
 
@@ -739,6 +746,11 @@ function Quest_create_zones()
 
     assert(Z1)
 
+    -- can only merge the child into the parent
+    if Z1.parent == Z2 then
+      Z1, Z2 = Z2, Z1
+    end
+
     Z1:merge(Z2)
   end
 
@@ -747,7 +759,16 @@ function Quest_create_zones()
     gui.printf("Zone list:\n")
 
     each Z in LEVEL.zones do
-      
+      local q_line = "{ "
+
+      each Q in Z.quests do
+        q_line = q_line .. string.format("%d ", Q.id)
+      end
+
+      q_line = q_line .. "}"
+
+      gui.printf("  %d: parent:%2d vol:%5.1f quests=%s\n", Z.id,
+                 (Z.parent ? Z.parent.id ; -1), Z.volume, q_line) 
     end
   end
 
@@ -755,30 +776,35 @@ function Quest_create_zones()
   ---| Quest_create_zones |---
 
 
-  local zone_quota = int(MAP_W / 3 + rand.range(0.6, 2.1))
-  
-  local keys = LEVEL.usable_keys or THEME.keys or {}
+  local base = (MAP_W + MAP_H) / 6
+  local zone_quota = base * rand.pick({ 1.3, 1.7, 2.1, 2.5 })
 
-  if zone_quota > 1 + #keys then
-     zone_quota = 1 + #keys
+  local keys = LEVEL.usable_keys or THEME.keys or {}
+  local num_keys = table.size(keys)
+
+  if zone_quota > 1 + num_keys then
+     zone_quota = 1 + num_keys
   end
 
-  -- TODO: this may need tweaking
-  local min_size = 8  -- tvol
+  -- TODO: this will need tweaking
+  local min_tvol = 6.5
 
-  gui.printf("Zone quota: %d (min_size: %d)\n\n", zone_quota, min_size)
+  gui.printf("Zone quota: %1.1f (tvol >= %1.1f)\n\n", zone_quota, min_tvol)
 
   initial_zones()
 
-dump_zones()
+  --- dump_zones()
 
   while #LEVEL.zones > 1 do
-    local vol, Z = min_zone_size()
+    local vol, Z = min_zone_tvol()
 
     -- stop merging when all zones are large enough
-    if vol >= min_size and #LEVEL.zones <= zone_quota then break end
+    if vol >= min_tvol and #LEVEL.zones <= zone_quota then break end
 
     merge_a_zone(Z)
+
+    --- gui.printf("AFTER MERGE\n")
+    --- dump_zones()
   end
 
   dump_zones()
