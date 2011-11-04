@@ -765,10 +765,6 @@ function Levels_handle_prebuilt()
     -- FIXME: support other games (Wolf3d, Quake, etc)
   end
 
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
-
   if LEVEL.description then
     gui.property("description", LEVEL.description)
   end
@@ -786,6 +782,11 @@ function Levels_make_level(L)
   local total = #GAME.levels
 
 -- if index != 23 then return end
+
+  -- must create the description before the copy (else games/modules won't see it)
+  if not L.description and L.name_theme then
+    L.description = Naming_grab_one(L.name_theme)
+  end
 
   -- copy level info, so that all new information added into the LEVEL
   -- object by the generator can be garbage collected once this level is
@@ -836,10 +837,6 @@ function Levels_make_level(L)
 
   gui.property("error_tex",  error_mat.t)
   gui.property("error_flat", error_mat.f or error_mat.t)
-
-  if not LEVEL.description and LEVEL.name_theme then
-    LEVEL.description = Naming_grab_one(LEVEL.name_theme)
-  end
 
   if LEVEL.description then
     gui.property("description", LEVEL.description)
