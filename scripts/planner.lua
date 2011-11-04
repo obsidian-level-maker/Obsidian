@@ -322,7 +322,7 @@ function Plan_decide_map_size()
     H = HEIGHTS[n]
 
   else
-    local WIDTHS  = { small=4, regular=6, large=8, extreme=12 }
+    local WIDTHS  = { small=4, regular=6, large=9, extreme=12 }
     local HEIGHTS = { small=3, regular=4, large=6, extreme=11 }
 
     W = WIDTHS[ob_size]
