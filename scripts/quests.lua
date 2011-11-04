@@ -957,11 +957,15 @@ function Quest_make_quests()
 
 
   local function evaluate_exit(L, D)
-    local score = 0
+    -- generally want to visit the SMALLEST section first, since that
+    -- means the player's hard work to find the switch is rewarded
+    -- with a larger new area to explore.  In theory anyway :-)
+    local score = 100 - math.min(D.L2.travel_vol, 100)
 
     -- prefer to visit rooms which have crossovers first
-    score = score + crossover_volume(D.L2) * 7.3
+    score = score + crossover_volume(D.L2) * 3.1
 
+    -- prefer exit to be away from entrance
     if D.dir1 and L.entry_conn and L.entry_conn.dir2 then
       local x1, y1 = L.entry_conn.K2:approx_side_coord(L.entry_conn.dir2)
       local x2, y2 =            D.K1:approx_side_coord(D.dir1)
@@ -969,16 +973,16 @@ function Quest_make_quests()
       local dist = geom.dist(x1, y1, x2, y2)
       if dist > 4 then dist = 4 end
 
-      score = score + dist
-
-      -- strong preference to avoid 180 degree turns
+      -- preference to avoid 180 degree turns
       if D.dir1 != L.entry_conn.dir2 then
-        score = score + 3
+        dist = dist + 2
       end
+
+      score = score + dist / 2.0
     end
 
     -- tie breaker
-    return score + gui.random() / 5
+    return score + gui.random() / 10
   end
 
 
@@ -1011,7 +1015,7 @@ function Quest_make_quests()
   end
 
 
-  local function dump_room_flow(L, indents)
+  local function dump_room_flow(L, indents, is_locked)
     if not indents then
       indents = {}
     else
@@ -1022,8 +1026,10 @@ function Quest_make_quests()
 
     for i = 1, #indents do
       if i == #indents then
-        if L.is_room and L:has_teleporter() then
+        if is_locked then
           line = line .. "|## "
+        elseif L.is_room and L:has_teleporter() then
+          line = line .. "|== "
         else
           line = line .. "|-- "
         end
@@ -1051,7 +1057,7 @@ function Quest_make_quests()
         indents[#indents] = false
       end
 
-      dump_room_flow(D.L2, indents)
+      dump_room_flow(D.L2, indents, D.lock)
     end
   end
 
@@ -1092,6 +1098,8 @@ function Quest_make_quests()
       else
 
         local free_exit = pick_free_exit(L, exits)
+
+        L.exit_conn = free_exit
 
         -- lock up any excess branches
         each exit in exits do
@@ -1181,9 +1189,6 @@ function Quest_make_quests()
 
   calc_travel_volume(Q.start)
 
-  gui.debugf("Level Flow:\n\n")
-  dump_room_flow(Q.start)
-
   if THEME.switches then
     -- room list will be rebuilt in visit order
     LEVEL.rooms = {}
@@ -1193,6 +1198,9 @@ function Quest_make_quests()
     -- room list remains in the "natural flow" order
     no_quest_order(Q.start, Q)
   end
+
+  gui.debugf("Level Flow:\n\n")
+  dump_room_flow(Q.start)
 
   setup_lev_alongs()
 
