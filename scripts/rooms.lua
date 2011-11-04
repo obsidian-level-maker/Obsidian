@@ -38,7 +38,9 @@ class ROOM
   scenic  : bool  -- true for scenic (unvisitable) rooms
 
   conns : list(CONN)  -- connections with neighbor rooms
-  entry_conn : CONN
+
+  entry_conn : CONN  -- the main connection used to enter the room
+  exit_conn  : CONN  -- the main unlocked connection which exits the room
 
   branch_kind : keyword
 

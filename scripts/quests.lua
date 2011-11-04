@@ -26,6 +26,8 @@ class QUEST
   -- a key or switch which allows progression to the next quest.
   -- The final quest always leads to a room with an exit switch.
 
+  id : number
+
   start : ROOM   -- room which player enters this quest.
                  -- for first quest, this is the map's starting room.
                  -- Never nil.
@@ -36,7 +38,7 @@ class QUEST
                  -- the room object will contain more information.
                  -- Never nil.
 
-  rooms : list(ROOM)  -- all the rooms in the quest
+  rooms : list(ROOM / HALL)  -- all the rooms in the quest
 
   zone : ZONE
 
@@ -46,17 +48,21 @@ class QUEST
 
   branches : list(QUEST)  -- the quests which branch of this one
 
-  volume : number  -- size of quest (sum of tvol in each room)
+  volume : number  -- size of quest (sum of tvols)
 }
 
 
 class ZONE
 {
+  -- a zone is a group of quests    FIXME: MORE INFO
+
   id : number
 
   quests : list(QUEST)
 
   volume : number  -- total of all quests
+
+  parent : ZONE
 }
 
 
@@ -87,15 +93,31 @@ QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
   local id = 1 + #LEVEL.quests
-  local Q = { id=id, start=start, rooms={} }
+  local Q = { id=id, start=start, rooms={}, branches={} }
   table.set_class(Q, QUEST_CLASS)
   table.insert(LEVEL.quests, Q)
   return Q
 end
 
 
-function QUEST_CLASS.tostr(Q)
-  return string.format("QUEST_%d", Q.id)
+function QUEST_CLASS.tostr(quest)
+  return string.format("QUEST_%d", quest.id)
+end
+
+
+function QUEST_CLASS.calc_volume(quest)
+  quest.volume = 0
+
+  each L in quest.rooms do
+    quest.volume = quest.volume + L.base_tvol
+  end
+end
+
+
+function QUEST_CLASS.add_room_or_hall(quest, L)
+  L.quest = quest
+
+  table.insert(quest.rooms, L)
 end
 
 
@@ -123,6 +145,13 @@ function ZONE_CLASS.remove(Z)
 end
 
 
+function ZONE_CLASS.add_quest(Z, quest)
+  quest.zone = Z
+
+  table.insert(Z.quests, quest)
+end
+
+
 function ZONE_CLASS.calc_volume(Z)
   Z.volume = 0
 
@@ -133,12 +162,19 @@ end
 
 
 function ZONE_CLASS.merge(Z1, Z2)
+  -- transfer the quests
   each Q in Z2.quests do
-    table.insert(Z1.quests, Q)
-    Q.zone = Z1
+    Z1:add_quest(Q)
   end
 
   calc_volume(Z1)
+
+  -- fix any parent fields which refer to Z2
+  each Z in LEVEL.zones do
+    if Z.parent == Z2 then
+       Z.parent = Z1
+    end
+  end
 
   ZONE_CLASS.remove(Z2)
 end
@@ -631,6 +667,34 @@ end
 
 function Quest_create_zones()
 
+  local function initial_zones()
+    -- initially have one zone for every quest
+
+    LEVEL.zones = {}
+
+    each Q in LEVEL.quests do
+      local Z = ZONE_CLASS.new(Q)
+
+      Z:add_quest(Q)
+
+      -- determine size of each quest too
+      Q:calc_volume()
+    end
+
+    -- clone the structure too (just the 'parent' field)
+    each Q in LEVEL.quests do
+      if Q.parent then
+        Q.zone.parent = Q.parent.zone
+      end
+    end
+
+    -- calculate volumes
+    each Z in LEVEL.zones do
+      Z:calc_volume()
+    end
+  end
+
+
   local function min_zone_size()
     local low_vol
     local low_Z
@@ -646,29 +710,50 @@ function Quest_create_zones()
   end
 
   
+  local function score_for_merge(Z1, Z2)
+    -- prefer smallest
+    local score = 200 - Z1.volume
+
+    return score + gui.random()  -- tie breaker
+  end
+
+
   local function merge_a_zone(Z2)
     -- merges Z2 into an existing zone
 
-    -- FIXME FIXME
-    error("merge_a_zone")
+    -- A zone can only merge with its parent or one of its children.
+
+    local Z1
+    local best_score
+
+    each Z in LEVEL.zones do
+      if Z != Z2 and (Z.parent == Z2 or Z2.parent == Z) then
+        
+        local score = score_for_merge(Z, Z2)
+
+        if not best_score or score > best_score then
+          Z1 = Z ; best_score = score
+        end
+      end
+    end
+
+    assert(Z1)
+
+    Z1:merge(Z2)
+  end
+
+
+  local function dump_zones()
+    gui.printf("Zone list:\n")
+
+    each Z in LEVEL.zones do
+      
+    end
   end
 
 
   ---| Quest_create_zones |---
 
-  LEVEL.zones = {}
-
-  -- determine size of each quest
-  each Q in LEVEL.quests do
-    Q.volume = 0
-
-    each R in Q.rooms do
-      Q.volume = Q.volume + R.base_tvol
-    end
-
-    -- initially have a zone for each quest
-    Q.zone = ZONE_CLASS.new(Q)
-  end
 
   local zone_quota = int(MAP_W / 3 + rand.range(0.6, 2.1))
   
@@ -678,9 +763,14 @@ function Quest_create_zones()
      zone_quota = 1 + #keys
   end
 
+  -- TODO: this may need tweaking
   local min_size = 8  -- tvol
 
-  gui.printf("Zone quota: %d (size >= %d)\n", zone_quota, min_size)
+  gui.printf("Zone quota: %d (min_size: %d)\n\n", zone_quota, min_size)
+
+  initial_zones()
+
+dump_zones()
 
   while #LEVEL.zones > 1 do
     local vol, Z = min_zone_size()
@@ -690,6 +780,8 @@ function Quest_create_zones()
 
     merge_a_zone(Z)
   end
+
+  dump_zones()
 end
 
 
@@ -940,13 +1032,12 @@ function Quest_make_quests()
 
   local function quest_flow(L, quest)
     while true do
-      L.quest = quest
+      quest:add_room_or_hall(L)
 
       -- stderrf("quest_flow @ %s\n", L:tostr())
 
       if L.is_room then
         table.insert(LEVEL.rooms, L)
-        table.insert(quest.rooms, L)
       end
 
       local exits = get_exits(L)
@@ -962,10 +1053,16 @@ function Quest_make_quests()
         -- finished?
         if not lock then return end
 
-        -- create new quest and continue
-        L = lock.conn.L2
-        quest = QUEST_CLASS.new(L)
+        -- create new quest
+        local new_quest = QUEST_CLASS.new(L)
 
+        table.insert(quest.branches, new_quest)
+
+        new_quest.parent = quest
+
+        -- continue on with new room and quest
+        L = lock.conn.L2
+        quest = new_quest
       else
 
         local free_exit = pick_free_exit(L, exits)
@@ -986,7 +1083,7 @@ function Quest_make_quests()
 
   local function no_quest_order(start, quest)
     each R in LEVEL.rooms do
-      R.quest = quest
+      quest:add_room_or_hall(R)
 
       table.insert(quest.rooms, R)
 
@@ -997,7 +1094,7 @@ function Quest_make_quests()
     end
 
     each H in LEVEL.halls do
-      H.quest = quest
+      quest:add_room_or_hall(H)
     end
 
     LEVEL.exit_room = best_exit

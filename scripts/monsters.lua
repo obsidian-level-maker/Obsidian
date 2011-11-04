@@ -381,7 +381,7 @@ function Monsters_max_level()
 
   LEVEL.max_level = max_level
 
-  gui.printf("Monster along: %1.2f --> max_level: %1.2f\n", LEVEL.mon_along, max_level)
+  gui.printf("Monster max_level: %1.2f\n", max_level)
 end
 
 
