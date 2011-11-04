@@ -37,6 +37,26 @@ class QUEST
                  -- Never nil.
 
   rooms : list(ROOM)  -- all the rooms in the quest
+
+  zone : ZONE
+
+  parent : QUEST  -- the quest which this one branched off (if any)
+
+  parent_room : ROOM / HALL  -- the room or hall branched off
+
+  branches : list(QUEST)  -- the quests which branch of this one
+
+  volume : number  -- size of quest (sum of tvol in each room)
+}
+
+
+class ZONE
+{
+  id : number
+
+  quests : list(QUEST)
+
+  volume : number  -- total of all quests
 }
 
 
@@ -79,37 +99,52 @@ function QUEST_CLASS.tostr(Q)
 end
 
 
-
-function Quest_update_tvols(arena)  -- NOT USED ATM
-
-  local function travel_volume(R, seen_conns)
-    -- Determine total volume of rooms that are reachable from the
-    -- given room R, including itself, but excluding connections
-    -- that have been "locked" or already seen.
-
-    local total = assert(R.svolume)
-
-    each D in R.conns do
-      if not D.lock and not seen_conns[D] then
-        local N = D:neighbor(R)
-        seen_conns[D] = true
-        total = total + travel_volume(N, seen_conns)
-      end
-    end
-
-    return total
-  end
+----------------------------------------------------------------
 
 
-  --| Quest_update_tvols |---  
+ZONE_CLASS = {}
 
-  each D in arena.conns do
-    D.src_tvol  = travel_volume(D.src,  { [D]=true })
-    D.dest_tvol = travel_volume(D.dest, { [D]=true })
+function ZONE_CLASS.new(quest)
+  local id = 1 + #LEVEL.zones
+  local Z = { id=id, quests={ quest } }
+  table.set_class(Z, ZONE_CLASS)
+  table.insert(LEVEL.zones, Z)
+  return Z
+end
+
+
+function ZONE_CLASS.remove(Z)
+  assert(Z.id)
+
+  table.kill_elem(LEVEL.zones, Z)
+
+  Z.id = nil
+  Z.quests = nil
+end
+
+
+function ZONE_CLASS.calc_volume(Z)
+  Z.volume = 0
+
+  each Q in Z.quests do
+    Z.volume = Z.volume + Q.volume
   end
 end
 
 
+function ZONE_CLASS.merge(Z1, Z2)
+  each Q in Z2.quests do
+    table.insert(Z1.quests, Q)
+    Q.zone = Z1
+  end
+
+  calc_volume(Z1)
+
+  ZONE_CLASS.remove(Z2)
+end
+
+
+----------------------------------------------------------------
 
 function Quest_find_path_to_room(src, dest)  -- NOT USED ATM
   local seen_rooms = {}
@@ -594,6 +629,71 @@ end
 
 
 
+function Quest_create_zones()
+
+  local function min_zone_size()
+    local low_vol
+    local low_Z
+
+    each Z in LEVEL.zones do
+      if not low_vol or Z.volume < low_vol then
+        low_vol = Z.volume
+        low_Z = Z
+      end
+    end
+      
+    return low_vol, low_Z
+  end
+
+  
+  local function merge_a_zone(Z2)
+    -- merges Z2 into an existing zone
+
+    -- FIXME FIXME
+    error("merge_a_zone")
+  end
+
+
+  ---| Quest_create_zones |---
+
+  LEVEL.zones = {}
+
+  -- determine size of each quest
+  each Q in LEVEL.quests do
+    Q.volume = 0
+
+    each R in Q.rooms do
+      Q.volume = Q.volume + R.base_tvol
+    end
+
+    -- initially have a zone for each quest
+    Q.zone = ZONE_CLASS.new(Q)
+  end
+
+  local zone_quota = int(MAP_W / 3 + rand.range(0.6, 2.1))
+  
+  local keys = LEVEL.usable_keys or THEME.keys or {}
+
+  if zone_quota > 1 + #keys then
+     zone_quota = 1 + #keys
+  end
+
+  local min_size = 8  -- tvol
+
+  gui.printf("Zone quota: %d (size >= %d)\n", zone_quota, min_size)
+
+  while #LEVEL.zones > 1 do
+    local vol, Z = min_zone_size()
+
+    -- stop merging when all zones are large enough
+    if vol >= min_size and #LEVEL.zones <= zone_quota then break end
+
+    merge_a_zone(Z)
+  end
+end
+
+
+
 function Quest_make_quests()
 
   -- ALGORITHM NOTES:
@@ -804,7 +904,11 @@ function Quest_make_quests()
 
     for i = 1, #indents do
       if i == #indents then
-        line = line .. "|-- "
+        if L.is_room and L:has_teleporter() then
+          line = line .. "|## "
+        else
+          line = line .. "|-- "
+        end
       elseif indents[i] then
         line = line .. "|   "
       else
@@ -815,6 +919,12 @@ function Quest_make_quests()
     gui.debugf("%s%s (%1.1f)\n", line, L:tostr(), L.travel_vol)
 
     local exits = get_exits(L)
+
+    --[[
+      while #exits == 1 do
+        L = exits[1].L2 ; exits = get_exits(L)
+      end
+    --]]
 
     table.insert(indents, true)
 
@@ -986,6 +1096,8 @@ function Quest_make_quests()
   end
 
   Monsters_max_level()
+
+  Quest_create_zones()
 
   Quest_add_weapons()
 end
