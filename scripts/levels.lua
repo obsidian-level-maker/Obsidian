@@ -165,6 +165,7 @@ COOP_STYLE_LIST =
 
 GLOBAL_PARAMETERS =
 {
+  map_limit = 10000
   step_height = 16
 }
 

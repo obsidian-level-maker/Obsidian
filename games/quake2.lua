@@ -133,7 +133,8 @@ QUAKE2.ENTITIES =
 
 QUAKE2.PARAMETERS =
 {
-  seed_limit = 42
+  -- FIXME: verify this for QUAKE II
+  map_limit = 8000
 
   centre_map = true
 

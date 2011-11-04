@@ -187,7 +187,7 @@ HEXEN2.PARAMETERS =
   -- TODO
 
   -- Quake engine needs all coords to lie between -4000 and +4000.
-  seed_limit = 42
+  map_limit = 8000
 
   centre_map = true
 

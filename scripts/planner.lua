@@ -445,10 +445,10 @@ function Plan_create_sections()
 
   ---| Plan_create_sections |---
 
-  local limit = PARAM.seed_limit or 52
+  local limit = int(PARAM.map_limit / SEED_SIZE)
 
   -- reduce level size if rooms would become too small
-  -- (2 seeds + 1 hallway seeds per room the absolute minimum)
+  -- (this must take hallway channels into account too).
 
   local max_W = int(limit / 4.3)
   local max_H = int((limit - free_seeds) / 3.5)
