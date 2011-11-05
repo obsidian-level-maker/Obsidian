@@ -765,11 +765,91 @@ end
 
 
 
+function calc_travel_volumes(L, zoney)
+  -- returns volume for given room + all descendants.
+  -- if zoney is true => treat a child room with a zone as locked
+
+  local vol
+
+  -- larger rooms have bigger volume 
+  if L.is_hall then
+    vol = 0.2
+  else
+    vol = 1 + L.svolume / 50
+  end
+
+  L.base_tvol = vol
+
+  local exits = Quest_get_exits(L)
+
+  each D in exits do
+    local child_vol = calc_travel_volumes(D.L2)
+
+    -- exclude locked exits
+    if not (D.L2.lock or (zoney and D.L2.zone)) then
+      vol = vol + child_vol
+    end
+
+    D.L2.PARENT = L
+  end
+
+  L.travel_vol = vol
+
+  return L.travel_vol
+end
+
+
+
+function dump_room_flow(L, indents, is_locked)
+  if not indents then
+    indents = {}
+  else
+    indents = table.copy(indents)
+  end
+
+  local line = ""
+
+  for i = 1, #indents do
+    if i == #indents then
+      if is_locked then
+        line = line .. "|## "
+      elseif L.is_room and L:has_teleporter() then
+        line = line .. "|== "
+      else
+        line = line .. "|-- "
+      end
+    elseif indents[i] then
+      line = line .. "|   "
+    else
+      line = line .. "    "
+    end
+  end
+
+  gui.debugf("%s%s (%1.1f)\n", line, L:tostr(), L.travel_vol)
+
+  local exits = Quest_get_exits(L)
+
+  --[[
+    while #exits == 1 do
+      L = exits[1].L2 ; exits = Quest_get_exits(L)
+    end
+  --]]
+
+  table.insert(indents, true)
+
+  each D in exits do
+    if _index == #exits then
+      indents[#indents] = false
+    end
+
+    dump_room_flow(D.L2, indents, D.lock)
+  end
+end
+
+
 function Quest_create_zones()
 
   local all_rooms_and_halls = {}
-
-  local zone_heads = {}
 
 
   local function collect_rooms_and_halls()
@@ -785,8 +865,6 @@ function Quest_create_zones()
 
   local function initial_zones()
     -- initially have one zone for every quest
-
-    LEVEL.zones = {}
 
     each Q in LEVEL.quests do
       local Z = ZONE_CLASS.new()
@@ -933,16 +1011,8 @@ function Quest_create_zones()
     gui.printf("Zone list:\n")
 
     each Z in LEVEL.zones do
-      local q_line = "{ "
-
-      each Q in Z.quests do
-        q_line = q_line .. string.format("%d ", Q.id)
-      end
-
-      q_line = q_line .. "}"
-
-      gui.printf("  %d: parent:%2d vol:%5.1f rooms=%s\n", Z.id,
-                 (Z.parent ? Z.parent.id ; -1), Z.volume, q_line) 
+      gui.printf("  %d: vol:%5.1f head=%s rooms=%d\n", Z.id, Z.volume or 0,
+                 (Z.rooms[1] ? Z.rooms[1]:tostr() ; "NIL"), #Z.rooms)
     end
   end
 
@@ -975,12 +1045,16 @@ function Quest_create_zones()
 
       if L.travel_vol < min_tvol then continue end
 
-      if not (L.PARENT and has_lockable_exit(L.PARENT, child)) then continue end
+      if L.PARENT and not has_lockable_exit(L.PARENT, child) then continue end
 
       if not best or L.travel_vol < best.travel_vol then
         best = L
       end
     end
+
+if not best then gui.debugf("find_branch_for_zone: NONE\n")
+else gui.debugf("find_branch_for_zone: %s tvol:%1.1f\n", best:tostr(), best.travel_vol)
+end
 
     return best
   end
@@ -991,10 +1065,11 @@ function Quest_create_zones()
 
     if not Z then
       Z = ZONE_CLASS.new()
-      table.insert(zone_heads, L)
+gui.debugf("Created %s\n", Z:tostr())
     end
 
     Z:add_room(L)
+gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
     each exit in Quest_get_exits(L) do
       local L2 = exit.L2
@@ -1008,9 +1083,9 @@ function Quest_create_zones()
   end
 
 
-  local function assign_zone_to_root()
+  local function assign_zone_to_root(min_tvol)
     if #LEVEL.zones == 0 then
-      return create_zone_at_room(LEVEL.start_room, Z)
+      return create_zone_at_room(LEVEL.start_room)
     end
 
     local best_Z
@@ -1030,12 +1105,15 @@ function Quest_create_zones()
 
     assert(best_Z)
 
+    gui.debugf("assign_zone_to_root: using %s\n", best_Z:tostr())
+
     create_zone_at_room(LEVEL.start_room, best_Z)
   end
 
 
   ---| Quest_create_zones |---
 
+  LEVEL.zones = {}
 
   local base = (MAP_W + MAP_H) / 6
   local zone_quota = base * rand.pick({ 1.3, 1.7, 2.1, 2.5 })
@@ -1062,14 +1140,21 @@ function Quest_create_zones()
   while true do
     local L = find_branch_for_zone(min_tvol)
 
-    assert(L != LEVEL.start_room)
-
+    -- finished?
     if not L then
-      assign_zone_to_root()
+      if not LEVEL.start_room.zone then
+        assign_zone_to_root()
+      end
+
       break
     end
 
     create_zone_at_room(L)
+
+    calc_travel_volumes(LEVEL.start_room, "zoney")
+
+gui.debugf("AFTER CREATING ZONE:\n")
+dump_room_flow(LEVEL.start_room)
   end
 
   -- verify everything got a zone
@@ -1119,34 +1204,6 @@ function Quest_make_quests()
   -- 
 
   local active_locks = {}
-
-
-  local function calc_travel_volume(L)
-    -- returns volume for given room + all descendants
-
-    local vol
-
-    -- larger rooms have bigger volume 
-    if L.is_hall then
-      vol = 0.2
-    else
-      vol = 1 + L.svolume / 50
-    end
-
-    L.base_tvol = vol
-
-    local exits = Quest_get_exits(L)
-
-    each D in exits do
-      vol = vol + calc_travel_volume(D.L2)
-
-      D.L2.PARENT = L
-    end
-
-    L.travel_vol = vol
-
-    return L.travel_vol
-  end
 
 
   local function add_lock(D)
@@ -1290,51 +1347,6 @@ function Quest_make_quests()
   end
 
 
-  local function dump_room_flow(L, indents, is_locked)
-    if not indents then
-      indents = {}
-    else
-      indents = table.copy(indents)
-    end
-
-    local line = ""
-
-    for i = 1, #indents do
-      if i == #indents then
-        if is_locked then
-          line = line .. "|## "
-        elseif L.is_room and L:has_teleporter() then
-          line = line .. "|== "
-        else
-          line = line .. "|-- "
-        end
-      elseif indents[i] then
-        line = line .. "|   "
-      else
-        line = line .. "    "
-      end
-    end
-
-    gui.debugf("%s%s (%1.1f)\n", line, L:tostr(), L.travel_vol)
-
-    local exits = Quest_get_exits(L)
-
-    --[[
-      while #exits == 1 do
-        L = exits[1].L2 ; exits = Quest_get_exits(L)
-      end
-    --]]
-
-    table.insert(indents, true)
-
-    each D in exits do
-      if _index == #exits then
-        indents[#indents] = false
-      end
-
-      dump_room_flow(D.L2, indents, D.lock)
-    end
-  end
 
 
   local function quest_flow(L, quest)
@@ -1492,12 +1504,14 @@ function Quest_make_quests()
   LEVEL.locks  = {}
 
 
-  calc_travel_volume(LEVEL.start_room)
+  calc_travel_volumes(LEVEL.start_room, "zoney")
 
   gui.debugf("Level Flow:\n\n")
   dump_room_flow(LEVEL.start_room)
 
   Quest_create_zones()
+
+  calc_travel_volumes(LEVEL.start_room, "normal")
 
   create_quests()
 
