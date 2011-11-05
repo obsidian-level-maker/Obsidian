@@ -369,88 +369,6 @@ end
 
 
 
-function Quest_choose_keys()
-
-  local function dump_locks()
-    gui.printf("Locks:\n")
-
-    each LOCK in LEVEL.locks do
-      gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
-    end
-
-    gui.printf("\n")
-  end
-
-
-  ---| Quest_choose_keys |---
-
-  local num_locks = #LEVEL.locks
-
-  if num_locks <= 0 then
-    gui.printf("Locks: NONE\n\n")
-    return
-  end
-
-
-  local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
-  local num_keys  = table.size(key_probs)
-
---!!!!!!
-num_keys = math.min(num_keys, #LEVEL.zones - 1)
-
-  assert(THEME.switches)
-
-  local switches = table.copy(THEME.switches)
-
-  gui.printf("Lock count:%d  want_keys:%d (of %d)  switches:%d\n",
-              num_locks, #LEVEL.zones - 1, num_keys, table.size(switches));
-
-
-  --- Step 1: assign keys to places where a new ZONE is entered ---
-
-  local function add_key(LOCK)
-    if num_keys < 1 then error("Quests: Run out of keys!") end
-
-    LOCK.kind = "KEY"
-    LOCK.key  = rand.key_by_probs(key_probs)
-
-    -- cannot use this key again
-    key_probs[LOCK.key] = nil
-
-    if LEVEL.usable_keys then
-      LEVEL.usable_keys[LOCK.key] = nil
-    end
-
-    num_keys = num_keys - 1
-  end
-
-  each LOCK in LEVEL.locks do
-    if LOCK.conn.L1.zone != LOCK.conn.L2.zone then
-      add_key(LOCK)
-    end
-  end
-
-
-  -- Step 2. assign keys or switches everywhere else
-
-  -- TODO: use left-over keys
-
-  local function add_switch(LOCK)
-    LOCK.kind = "SWITCH"
-    LOCK.switch = rand.key_by_probs(switches)
-
-    -- make it less likely to choose the same switch again
-    switches[LOCK.switch] = switches[LOCK.switch] / 5
-  end
-
-  each LOCK in LEVEL.locks do
-    if not LOCK.kind then
-      add_switch(LOCK)
-    end
-  end
-
-  dump_locks()
-end
 
 
 
@@ -783,19 +701,17 @@ function calc_travel_volumes(L, zoney)
   local exits = Quest_get_exits(L)
 
   each D in exits do
-    local child_vol = calc_travel_volumes(D.L2)
+    calc_travel_volumes(D.L2, zoney)
 
     -- exclude locked exits
-    if not (D.L2.lock or (zoney and D.L2.zone)) then
-      vol = vol + child_vol
+    if not (D.lock or (zoney and D.L2.zone)) then
+      vol = vol + D.L2.travel_vol
     end
 
     D.L2.PARENT = L
   end
 
   L.travel_vol = vol
-
-  return L.travel_vol
 end
 
 
@@ -863,47 +779,13 @@ function Quest_create_zones()
   end
 
 
-  local function initial_zones()
-    -- initially have one zone for every quest
-
-    each Q in LEVEL.quests do
-      local Z = ZONE_CLASS.new()
-
-      Z:add_quest(Q)
-
-      -- determine size of each quest too
-      Q:calc_volume()
-    end
-
-    -- clone the structure too (just the 'parent' field)
-    each Q in LEVEL.quests do
-      if Q.parent then
-        Q.zone.parent = Q.parent.zone
-      end
-    end
-
-    -- calculate volumes
+  local function update_zone_volumes()
     each Z in LEVEL.zones do
       Z:calc_volume()
     end
   end
 
 
-  local function min_zone_tvol()
-    local low_vol
-    local low_Z
-
-    each Z in LEVEL.zones do
-      if not low_vol or Z.volume < low_vol then
-        low_vol = Z.volume
-        low_Z = Z
-      end
-    end
-      
-    return low_vol, low_Z
-  end
-
-  
   local function score_for_merge(Z1, Z2)
     -- prefer smallest
     local score = 200 - Z1.volume
@@ -939,71 +821,8 @@ function Quest_create_zones()
     end
 
     Z1:merge(Z2)
-  end
 
-
-  local function mark_pseudo_leaves(L)
-    
-    -- a pseudo-leaf is a room which is either a leaf or it has only one
-    -- free "pseudo-exit" and that exit is a pseudo-leaf.
-    --
-    -- a pseudo-exit is a exit which (a) is not a teleporter (b) does
-    -- not lead to a room already assigned to a zone.
-
-    L.pseudo_leaf = false
-    L.pseudo_parent = nil
-
-    if L.zone then return end
-
-    -- recurse down now to check if children are pseudoish
-    local exits = Quest_get_exits(L)
-
-    each exit in exits do
-      mark_pseudo_leaves(exit.L2)
-    end
-
-
-    exits = Quest_get_exits(L, "no_tele")
-
-    -- cannot be a pseudo_leaf if more than one exit
-    if #exits > 1 then return end
-
-    if #exits == 1 then
-      local L2 = exits[1].L2
-
-      if not L2.pseudo_leaf then return end
-
-      L2.pseudo_parent = L
-    end
-
-    pseudo_leaf = true
-  end
-
-
-  local function make_zone(L)
-    local Z = ZONE_CLASS.new()
-
-    Z:add_room(L)
-
-    each R in LEVEL.rooms do
-      if R.pseudo_parent == L then Z:add_room(R) end
-    end
-
-    each H in LEVEL.halls do
-      if H.pseudo_parent == L then Z:add_room(H) end
-    end
-  end
-
-
-  local function try_form_zones(leafs, min_tvol)
-    each L in leafs do
-      if L.pseudo_vol >= min_tvol then
-        make_zone(L)
-        return true
-      end
-    end
-
-    return false
+    Z1:calc_volume()
   end
 
 
@@ -1011,8 +830,9 @@ function Quest_create_zones()
     gui.printf("Zone list:\n")
 
     each Z in LEVEL.zones do
-      gui.printf("  %d: vol:%5.1f head=%s rooms=%d\n", Z.id, Z.volume or 0,
-                 (Z.rooms[1] ? Z.rooms[1]:tostr() ; "NIL"), #Z.rooms)
+      gui.printf("  %d: vol:%3.1f rooms:%d head:%s\n", Z.id,
+                 Z.volume or 0, #Z.rooms,
+                 (Z.rooms[1] ? Z.rooms[1]:tostr() ; "NIL"))
     end
   end
 
@@ -1108,6 +928,8 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
     gui.debugf("assign_zone_to_root: using %s\n", best_Z:tostr())
 
     create_zone_at_room(LEVEL.start_room, best_Z)
+
+    update_zone_volumes()
   end
 
 
@@ -1153,6 +975,8 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
     calc_travel_volumes(LEVEL.start_room, "zoney")
 
+    update_zone_volumes()
+
 gui.debugf("AFTER CREATING ZONE:\n")
 dump_room_flow(LEVEL.start_room)
   end
@@ -1162,6 +986,8 @@ dump_room_flow(LEVEL.start_room)
     assert(L.zone)
   end
 
+
+  -- FIXME: IF TOO MANY ZONES, MERGE SOME !!!!!
 
 ---##  initial_zones()
 ---##
@@ -1206,6 +1032,91 @@ function Quest_make_quests()
   local active_locks = {}
 
 
+local function Quest_choose_keys()
+
+  local function dump_locks()
+    gui.printf("Locks:\n")
+
+    each LOCK in LEVEL.locks do
+      gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
+    end
+
+    gui.printf("\n")
+  end
+
+
+  ---| Quest_choose_keys |---
+
+  local num_locks = #LEVEL.locks
+
+  if num_locks <= 0 then
+    gui.printf("Locks: NONE\n\n")
+    return
+  end
+
+
+  local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
+  local num_keys  = table.size(key_probs)
+
+--!!!!!!
+--num_keys = math.min(num_keys, #LEVEL.zones - 1)
+
+  assert(THEME.switches)
+
+  local switches = table.copy(THEME.switches)
+
+  gui.printf("Lock count:%d  want_keys:%d (of %d)  switches:%d\n",
+              num_locks, #LEVEL.zones - 1, num_keys, table.size(switches));
+
+
+  --- Step 1: assign keys to places where a new ZONE is entered ---
+
+  local function add_key(LOCK)
+    if num_keys < 1 then error("Quests: Run out of keys!") end
+
+    LOCK.kind = "KEY"
+    LOCK.key  = rand.key_by_probs(key_probs)
+
+    -- cannot use this key again
+    key_probs[LOCK.key] = nil
+
+    if LEVEL.usable_keys then
+      LEVEL.usable_keys[LOCK.key] = nil
+    end
+
+    num_keys = num_keys - 1
+  end
+
+  each LOCK in LEVEL.locks do
+    ---### if LOCK.conn.L1.zone != LOCK.conn.L2.zone then
+    if LOCK.kind == "KEY" then
+      add_key(LOCK)
+    end
+  end
+
+
+  -- Step 2. assign keys or switches everywhere else
+
+  -- TODO: use left-over keys
+
+  local function add_switch(LOCK)
+    LOCK.kind = "SWITCH"
+    LOCK.switch = rand.key_by_probs(switches)
+
+    -- make it less likely to choose the same switch again
+    switches[LOCK.switch] = switches[LOCK.switch] / 5
+  end
+
+  each LOCK in LEVEL.locks do
+    if LOCK.kind == "SWITCH" then
+      add_switch(LOCK)
+    end
+  end
+
+  dump_locks()
+end
+
+
   local function add_lock(D)
 
     local LOCK =
@@ -1213,6 +1124,12 @@ function Quest_make_quests()
       conn = D
       tag = Plan_alloc_id("tag")
     }
+
+    if D.L1.zone == D.L2.zone then
+      LOCK.kind = "SWITCH"
+    else
+      LOCK.kind = "KEY"
+    end
 
     D.lock = LOCK
 
@@ -1231,7 +1148,7 @@ function Quest_make_quests()
   end
 
 
-  local function pick_lock_to_solve()
+  local function pick_lock_to_solve(cur_zone)
     --
     -- choosing the newest lock (at index 1) produces the most linear
     -- progression, which is easiest on the player.  Choosing older
@@ -1240,6 +1157,35 @@ function Quest_make_quests()
     --
 
     assert(#active_locks > 0)
+
+    local poss_locks = {}
+
+    each LOCK in active_locks do
+      if LOCK.kind == "SWITCH" and LOCK.conn.L1.zone == cur_zone then
+        table.insert(poss_locks, LOCK)
+      end
+    end
+
+    if poss_locks[1] then
+      local LOCK = poss_locks[1]
+      table.kill_elem(active_locks, LOCK)
+      return LOCK
+    end
+
+    each LOCK in active_locks do
+      if LOCK.kind == "KEY" then
+        table.insert(poss_locks, LOCK)
+      end
+    end
+    
+    if poss_locks[1] then
+      local LOCK = poss_locks[1]
+      table.kill_elem(active_locks, LOCK)
+      return LOCK
+    end
+
+    error("WTF : no active lock we can use")
+
 
     local index = 1
 
@@ -1261,7 +1207,7 @@ function Quest_make_quests()
       return false
     end
 
-    local lock = pick_lock_to_solve()
+    local lock = pick_lock_to_solve(R.zone)
 
 -- gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
 
@@ -1345,7 +1291,6 @@ function Quest_make_quests()
 
     return assert(best_exit)
   end
-
 
 
 
@@ -1511,7 +1456,7 @@ function Quest_make_quests()
 
   Quest_create_zones()
 
-  calc_travel_volumes(LEVEL.start_room, "normal")
+  calc_travel_volumes(LEVEL.start_room)
 
   create_quests()
 
