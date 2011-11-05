@@ -865,7 +865,7 @@ function Quest_create_zones()
 
       if L.travel_vol < min_tvol then continue end
 
-      if L.PARENT and not has_lockable_exit(L.PARENT, child) then continue end
+      if L.PARENT and not has_lockable_exit(L.PARENT, L) then continue end
 
       if not best or L.travel_vol < best.travel_vol then
         best = L
