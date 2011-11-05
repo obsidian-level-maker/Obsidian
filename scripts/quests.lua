@@ -78,8 +78,6 @@ class LOCK
 
   target : ROOM   -- the room containing the key or switch
   conn   : CONN   -- the connection which is locked
-
-  distance : number  -- number of rooms between key and door
 }
 
 
@@ -226,7 +224,7 @@ end
 
 
 
-function Quest_key_distances()
+function Quest_key_distances()  -- NOT USED ANYMORE (REPLACED BY ZONE SYSTEM)
   -- determine distance (approx) between key and the door it opens.
   -- the biggest distances will use actual keys (which are limited)
   -- whereas everything else will use switched doors.
@@ -287,7 +285,7 @@ end
 
 
 
-function Quest_choose_keys()
+function Quest_choose_keys_OLD()
   local num_locks = #LEVEL.locks
 
   if num_locks <= 0 then
@@ -304,6 +302,7 @@ function Quest_choose_keys()
   if not THEME.switches then
     assert(num_locks <= num_keys)
   else
+  local want_keys = num_keys
     while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(70) do
       want_keys = want_keys - 1
     end
@@ -366,13 +365,88 @@ function Quest_choose_keys()
     end
   end
 
-  gui.printf("Lock list:\n")
+end
 
-  each LOCK in LEVEL.locks do
-    gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
+
+
+function Quest_choose_keys()
+
+  local function dump_locks()
+    gui.printf("Locks:\n")
+
+    each LOCK in LEVEL.locks do
+      gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
+    end
+
+    gui.printf("\n")
   end
 
-  gui.printf("\n")
+
+  ---| Quest_choose_keys |---
+
+  local num_locks = #LEVEL.locks
+
+  if num_locks <= 0 then
+    gui.printf("Locks: NONE\n\n")
+    return
+  end
+
+
+  local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
+  local num_keys  = table.size(key_probs)
+
+  assert(THEME.switches)
+
+  local switches = table.copy(THEME.switches)
+
+  gui.printf("Lock count:%d  want_keys:%d (of %d)  switches:%d\n",
+              num_locks, #LEVEL.zones, num_keys, table.size(switches));
+
+
+  --- Step 1: assign keys to places where a new ZONE is entered ---
+
+  local function add_key(LOCK)
+    if num_keys < 1 then error("Quests: Run out of keys!") end
+
+    LOCK.kind = "KEY"
+    LOCK.key  = rand.key_by_probs(key_probs)
+
+    -- cannot use this key again
+    key_probs[LOCK.key] = nil
+
+    if LEVEL.usable_keys then
+      LEVEL.usable_keys[LOCK.key] = nil
+    end
+
+    num_keys = num_keys - 1
+  end
+
+  each LOCK in LEVEL.locks do
+    if LOCK.D.L1.zone != LOCK.D.L2.zone then
+      add_key(LOCK)
+    end
+  end
+
+
+  -- Step 2. assign keys or switches everywhere else
+
+  -- TODO: use left-over keys
+
+  local function add_switch(LOCK)
+    LOCK.kind = "SWITCH"
+    LOCK.switch = rand.key_by_probs(switches)
+
+    -- make it less likely to choose the same switch again
+    switches[LOCK.switch] = switches[LOCK.switch] / 5
+  end
+
+  each LOCK in LEVEL.locks do
+    if not LOCK.kind then
+      add_switch(LOCK)
+    end
+  end
+
+  dump_locks()
 end
 
 
@@ -808,6 +882,15 @@ function Quest_create_zones()
   end
 
   dump_zones()
+
+  -- give each ROOM and HALL a 'zone' field
+  each R in LEVEL.rooms do
+    R.zone = R.quest.zone
+  end
+
+  each H in LEVEL.halls do
+    H.zone = H.quest.zone
+  end
 end
 
 
@@ -905,10 +988,6 @@ function Quest_make_quests()
     --
 
     assert(#active_locks > 0)
-
-    if PERVERSE_MODE then  -- TODO
-      return #active_locks
-    end
 
     local index = 1
 
@@ -1095,6 +1174,7 @@ function Quest_make_quests()
         -- continue on with new room and quest
         L = lock.conn.L2
         quest = new_quest
+
       else
 
         local free_exit = pick_free_exit(L, exits)
@@ -1177,6 +1257,8 @@ function Quest_make_quests()
 
   gui.printf("\n--==| Make Quests |==--\n\n")
 
+  Monsters_max_level()
+
   -- need at least a START room and an EXIT room
   if #LEVEL.rooms < 2 then
     error("Level only has one room! (2 or more are needed)")
@@ -1214,11 +1296,10 @@ function Quest_make_quests()
   update_crossovers()
 
 
---??? Quest_find_storage_rooms()
+  Quest_create_zones()
 
-  Quest_key_distances()
+  Quest_select_textures()  -- FIXME: ZONE SYSTEM
 
-  Quest_select_textures()
   Quest_choose_keys()
 
   -- left over keys can be used in the next level of a hub
@@ -1226,11 +1307,8 @@ function Quest_make_quests()
     Quest_distribute_unused_keys()
   end
 
-  Monsters_max_level()
-
-  Quest_create_zones()
-
   Quest_add_weapons()
+
 end
 
 
