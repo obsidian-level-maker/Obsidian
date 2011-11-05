@@ -58,11 +58,11 @@ class ZONE
 
   id : number
 
-  quests : list(QUEST)
+  rooms : list(ROOM)
 
-  volume : number  -- total of all quests
+  volume : number  -- total of all rooms
 
-  parent : ZONE
+---##  parent : ZONE
 }
 
 
@@ -126,7 +126,7 @@ ZONE_CLASS = {}
 
 function ZONE_CLASS.new()
   local id = 1 + #LEVEL.zones
-  local Z = { id=id, quests={} }
+  local Z = { id=id, rooms={} }
   table.set_class(Z, ZONE_CLASS)
   table.insert(LEVEL.zones, Z)
   return Z
@@ -144,27 +144,27 @@ function ZONE_CLASS.remove(Z)
   table.kill_elem(LEVEL.zones, Z)
 
   Z.id = nil
-  Z.quests = nil
+  Z.rooms = nil
 end
 
 
-function ZONE_CLASS.add_quest(Z, quest)
-  quest.zone = Z
+function ZONE_CLASS.add_room(Z, R)
+  R.zone = Z
 
-  table.insert(Z.quests, quest)
+  table.insert(Z.rooms, R)
 end
 
 
 function ZONE_CLASS.calc_volume(Z)
   Z.volume = 0
 
-  each Q in Z.quests do
-    Z.volume = Z.volume + Q.volume
+  each L in Z.rooms do
+    Z.volume = Z.volume + L.base_tvol
   end
 end
 
 
-function ZONE_CLASS.merge(Z1, Z2)
+function ZONE_CLASS.merge(Z1, Z2)  -- FIXME !!!
   assert(Z2.parent == Z1)
 
   -- transfer the quests
@@ -409,10 +409,6 @@ num_keys = math.min(num_keys, #LEVEL.zones - 1)
   --- Step 1: assign keys to places where a new ZONE is entered ---
 
   local function add_key(LOCK)
-gui.debugf("add_key @ LOCK_%d @ %s :\n", LOCK.tag, LOCK.conn:tostr())
-gui.debugf("  L1 = %s @ %s\n", LOCK.conn.L1:tostr(), LOCK.conn.L1.zone:tostr())
-gui.debugf("  L2 = %s @ %s\n", LOCK.conn.L2:tostr(), LOCK.conn.L2.zone:tostr())
-
     if num_keys < 1 then error("Quests: Run out of keys!") end
 
     LOCK.kind = "KEY"
@@ -753,7 +749,39 @@ end
 
 
 
+function Quest_get_exits(L, no_teleporters)
+  local exits = {}
+
+  each D in L.conns do
+    if D.L1 == L and D.kind != "double_R" and
+       (not no_teleporters or D.kind != "teleporter")
+    then
+      table.insert(exits, D)
+    end
+  end
+
+  return exits
+end
+
+
+
 function Quest_create_zones()
+
+  local all_rooms_and_halls = {}
+
+  local zone_heads = {}
+
+
+  local function collect_rooms_and_halls()
+    each R in LEVEL.rooms do
+      table.insert(all_rooms_and_halls, R)
+    end
+
+    each H in LEVEL.halls do
+      table.insert(all_rooms_and_halls, H)
+    end
+  end
+
 
   local function initial_zones()
     -- initially have one zone for every quest
@@ -836,6 +864,71 @@ function Quest_create_zones()
   end
 
 
+  local function mark_pseudo_leaves(L)
+    
+    -- a pseudo-leaf is a room which is either a leaf or it has only one
+    -- free "pseudo-exit" and that exit is a pseudo-leaf.
+    --
+    -- a pseudo-exit is a exit which (a) is not a teleporter (b) does
+    -- not lead to a room already assigned to a zone.
+
+    L.pseudo_leaf = false
+    L.pseudo_parent = nil
+
+    if L.zone then return end
+
+    -- recurse down now to check if children are pseudoish
+    local exits = Quest_get_exits(L)
+
+    each exit in exits do
+      mark_pseudo_leaves(exit.L2)
+    end
+
+
+    exits = Quest_get_exits(L, "no_tele")
+
+    -- cannot be a pseudo_leaf if more than one exit
+    if #exits > 1 then return end
+
+    if #exits == 1 then
+      local L2 = exits[1].L2
+
+      if not L2.pseudo_leaf then return end
+
+      L2.pseudo_parent = L
+    end
+
+    pseudo_leaf = true
+  end
+
+
+  local function make_zone(L)
+    local Z = ZONE_CLASS.new()
+
+    Z:add_room(L)
+
+    each R in LEVEL.rooms do
+      if R.pseudo_parent == L then Z:add_room(R) end
+    end
+
+    each H in LEVEL.halls do
+      if H.pseudo_parent == L then Z:add_room(H) end
+    end
+  end
+
+
+  local function try_form_zones(leafs, min_tvol)
+    each L in leafs do
+      if L.pseudo_vol >= min_tvol then
+        make_zone(L)
+        return true
+      end
+    end
+
+    return false
+  end
+
+
   local function dump_zones()
     gui.printf("Zone list:\n")
 
@@ -848,9 +941,96 @@ function Quest_create_zones()
 
       q_line = q_line .. "}"
 
-      gui.printf("  %d: parent:%2d vol:%5.1f quests=%s\n", Z.id,
+      gui.printf("  %d: parent:%2d vol:%5.1f rooms=%s\n", Z.id,
                  (Z.parent ? Z.parent.id ; -1), Z.volume, q_line) 
     end
+  end
+
+
+  local function has_lockable_exit(L, child)
+
+    local count = 0
+
+    each exit in Quest_get_exits(L) do
+      local L2 = exit.L2
+
+      if L2.zone then continue end
+
+      if L2 == child and exit.kind == "teleporter" then return false end
+
+      count = count + 1
+
+      if count >= 2 then return true end
+    end
+
+    return false
+  end
+
+
+  local function find_branch_for_zone(min_tvol)
+    local best
+
+    each L in all_rooms_and_halls do
+      if L.zone then continue end
+
+      if L.travel_vol < min_tvol then continue end
+
+      if not (L.PARENT and has_lockable_exit(L.PARENT, child)) then continue end
+
+      if not best or L.travel_vol < best.travel_vol then
+        best = L
+      end
+    end
+
+    return best
+  end
+
+
+  local function create_zone_at_room(L, Z)
+    assert(not L.zone)
+
+    if not Z then
+      Z = ZONE_CLASS.new()
+      table.insert(zone_heads, L)
+    end
+
+    Z:add_room(L)
+
+    each exit in Quest_get_exits(L) do
+      local L2 = exit.L2
+
+      if L2.zone then continue end
+
+      create_zone_at_room(L2, Z)
+    end
+
+    return Z
+  end
+
+
+  local function assign_zone_to_root()
+    if #LEVEL.zones == 0 then
+      return create_zone_at_room(LEVEL.start_room, Z)
+    end
+
+    local best_Z
+
+    each Z in LEVEL.zones do
+      local L1 = Z.rooms[1] ; assert(L1)
+
+      assert(L1.PARENT)
+
+      if L1.PARENT.zone then continue end
+
+      if not best_Z -- or L1.zone.volume < best_Z.volume
+      then
+        best_Z = Z
+      end
+    end
+
+    assert(best_Z)
+
+    create_zone_at_room(LEVEL.start_room, best_Z)
   end
 
 
@@ -868,36 +1048,54 @@ function Quest_create_zones()
   end
 
   -- TODO: this will need tweaking
-  local min_tvol = 6.5
+  -- [IDEA: adjust this instead of having a zone quota]
+  local min_tvol = 6.1  --!!!! 4.2
 
-  gui.printf("Zone quota: %1.1f (tvol >= %1.1f)\n\n", zone_quota, min_tvol)
+  zone_quota = int(zone_quota + 0.5)
 
-  initial_zones()
+  gui.printf("Zone quota: %d (tvol >= %1.1f)\n\n", zone_quota, min_tvol)
 
-  --- dump_zones()
 
-  while #LEVEL.zones > 1 do
-    local vol, Z = min_zone_tvol()
+  collect_rooms_and_halls()
 
-    -- stop merging when all zones are large enough
-    if vol >= min_tvol and #LEVEL.zones <= zone_quota then break end
 
-    merge_a_zone(Z)
+  while true do
+    local L = find_branch_for_zone(min_tvol)
 
-    --- gui.printf("AFTER MERGE\n")
-    --- dump_zones()
+    assert(L != LEVEL.start_room)
+
+    if not L then
+      assign_zone_to_root()
+      break
+    end
+
+    create_zone_at_room(L)
   end
+
+  -- verify everything got a zone
+  each L in all_rooms_and_halls do
+    assert(L.zone)
+  end
+
+
+---##  initial_zones()
+---##
+---##      dump_zones()
+---##
+---##  while #LEVEL.zones > 1 do
+---##    local vol, Z = min_zone_tvol()
+---##
+---##    -- stop merging when all zones are large enough
+---##    if vol >= min_tvol and #LEVEL.zones <= zone_quota then break end
+---##
+---##    merge_a_zone(Z)
+---##
+---##        gui.printf("AFTER MERGE\n")
+---##        dump_zones()
+---##  end
 
   dump_zones()
 
-  -- give each ROOM and HALL a 'zone' field
-  each R in LEVEL.rooms do
-    R.zone = R.quest.zone
-  end
-
-  each H in LEVEL.halls do
-    H.zone = H.quest.zone
-  end
 end
 
 
@@ -923,19 +1121,6 @@ function Quest_make_quests()
   local active_locks = {}
 
 
-  local function get_exits(L)
-    local exits = {}
-
-    each D in L.conns do
-      if D.L1 == L and D.kind != "double_R" then
-        table.insert(exits, D)
-      end
-    end
-
-    return exits
-  end
-
-
   local function calc_travel_volume(L)
     -- returns volume for given room + all descendants
 
@@ -950,10 +1135,12 @@ function Quest_make_quests()
 
     L.base_tvol = vol
 
-    local exits = get_exits(L)
+    local exits = Quest_get_exits(L)
 
     each D in exits do
       vol = vol + calc_travel_volume(D.L2)
+
+      D.L2.PARENT = L
     end
 
     L.travel_vol = vol
@@ -972,7 +1159,7 @@ function Quest_make_quests()
 
     D.lock = LOCK
 
-gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
+-- gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
 
     -- for double hallways, put the lock in both connections
     if D.kind == "double_L" then
@@ -1011,7 +1198,7 @@ gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
     assert(R.is_room)
 
     if table.empty(active_locks) then
-gui.debugf("add_solution: EXIT\n")
+-- gui.debugf("add_solution: EXIT\n")
       R.purpose = "EXIT"
       LEVEL.exit_room = R
       return false
@@ -1019,7 +1206,7 @@ gui.debugf("add_solution: EXIT\n")
 
     local lock = pick_lock_to_solve()
 
-gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
+-- gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
 
     R.purpose = "SOLUTION"
     R.purpose_lock = lock
@@ -1130,11 +1317,11 @@ gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
 
     gui.debugf("%s%s (%1.1f)\n", line, L:tostr(), L.travel_vol)
 
-    local exits = get_exits(L)
+    local exits = Quest_get_exits(L)
 
     --[[
       while #exits == 1 do
-        L = exits[1].L2 ; exits = get_exits(L)
+        L = exits[1].L2 ; exits = Quest_get_exits(L)
       end
     --]]
 
@@ -1151,7 +1338,7 @@ gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
 
 
   local function quest_flow(L, quest)
-gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
+-- gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
     quest:add_room_or_hall(L)
 
@@ -1159,7 +1346,7 @@ gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
       table.insert(LEVEL.rooms, L)
     end
 
-    local exits = get_exits(L)
+    local exits = Quest_get_exits(L)
 
     if #exits > 0 then
 
@@ -1183,7 +1370,7 @@ gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
     --- leaf room ---
 
-gui.debugf("hit leaf\n")
+-- gui.debugf("hit leaf\n")
 
     quest.target = L
 
@@ -1193,13 +1380,15 @@ gui.debugf("hit leaf\n")
     if not lock then return end
 
     -- create new quest
+    local old_Q = assert(lock.conn.L1.quest)
+
     local new_Q = QUEST_CLASS.new(lock.conn.L2)
 
-    table.insert(quest.branches, new_Q)
+    table.insert(old_Q.branches, new_Q)
 
-    new_Q.parent = quest
+    new_Q.parent = old_Q
 
-gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
+-- gui.debugf("branching off %s is new %s\n", old_Q:tostr(), new_Q:tostr())
 
     -- continue on with new room and quest
     return quest_flow(new_Q.start, new_Q)
@@ -1260,8 +1449,6 @@ gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
   local function create_quests()
     local Q = QUEST_CLASS.new(LEVEL.start_room)
 
-    calc_travel_volume(Q.start)
-
     if THEME.switches then
       -- room list will be rebuilt in visit order
       LEVEL.rooms = {}
@@ -1271,9 +1458,6 @@ gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
       -- room list remains in the "natural flow" order
       no_quest_order(Q.start, Q)
     end
-
-    gui.debugf("Level Flow:\n\n")
-    dump_room_flow(Q.start)
 
     setup_lev_alongs()
 
@@ -1307,14 +1491,22 @@ gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
   LEVEL.quests = {}
   LEVEL.locks  = {}
 
+
+  calc_travel_volume(LEVEL.start_room)
+
+  gui.debugf("Level Flow:\n\n")
+  dump_room_flow(LEVEL.start_room)
+
+  Quest_create_zones()
+
   create_quests()
 
   update_crossovers()
 
 
-  Quest_create_zones()
-
   Quest_select_textures()  -- FIXME: ZONE SYSTEM
+
+  Quest_add_weapons()
 
   Quest_choose_keys()
 
@@ -1322,9 +1514,6 @@ gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
   if LEVEL.usable_keys and LEVEL.hub_links then
     Quest_distribute_unused_keys()
   end
-
-  Quest_add_weapons()
-
 end
 
 
