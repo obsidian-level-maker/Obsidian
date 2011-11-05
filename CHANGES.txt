@@ -48,6 +48,7 @@ CHANGES (since 3.57)
 
 + ability to make multiple paths between rooms
 + worked on "cross-overs" (a bridge through another room)
+- new 'Extreme' option for level size
 - support for simple 3D bridges within rooms
 - improved infighting logic in the Fight Simulator
 
