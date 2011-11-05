@@ -164,22 +164,22 @@ function ZONE_CLASS.calc_volume(Z)
 end
 
 
-function ZONE_CLASS.merge(Z1, Z2)  -- FIXME !!!
-  assert(Z2.parent == Z1)
+function ZONE_CLASS.merge(Z1, Z2)
+  --- assert(Z2.parent == Z1)
 
-  -- transfer the quests
-  each Q in Z2.quests do
-    Z1:add_quest(Q)
+  -- transfer the rooms and halls
+  each L in Z2.rooms do
+    Z1:add_room(L)
   end
 
   Z1:calc_volume()
 
-  -- fix any parent fields which refer to Z2
-  each Z in LEVEL.zones do
-    if Z.parent == Z2 then
-       Z.parent = Z1
-    end
-  end
+---##  -- fix any parent fields which refer to Z2
+---##  each Z in LEVEL.zones do
+---##    if Z.parent == Z2 then
+---##       Z.parent = Z1
+---##    end
+---##  end
 
   ZONE_CLASS.remove(Z2)
 end
@@ -289,7 +289,7 @@ function Quest_choose_keys_OLD()
   local num_locks = #LEVEL.locks
 
   if num_locks <= 0 then
-    gui.printf("Locks: NONE\n\n")
+    gui.printf("Lock list: NONE\n\n")
     return
   end
 
@@ -727,10 +727,10 @@ function dump_room_flow(L, indents, is_locked)
 
   for i = 1, #indents do
     if i == #indents then
-      if is_locked then
-        line = line .. "|## "
-      elseif L.is_room and L:has_teleporter() then
+      if is_locked == "tele" then
         line = line .. "|== "
+      elseif is_locked then
+        line = line .. "|## "
       else
         line = line .. "|-- "
       end
@@ -758,7 +758,7 @@ function dump_room_flow(L, indents, is_locked)
       indents[#indents] = false
     end
 
-    dump_room_flow(D.L2, indents, D.lock)
+    dump_room_flow(D.L2, indents, (D.kind == "teleporter" ? "tele" ; D.lock))
   end
 end
 
@@ -788,41 +788,47 @@ function Quest_create_zones()
 
   local function score_for_merge(Z1, Z2)
     -- prefer smallest
-    local score = 200 - Z1.volume
+    local score = 400 - (Z1.volume + Z2.volume)
 
     return score + gui.random()  -- tie breaker
   end
 
 
-  local function merge_a_zone(Z2)
-    -- merges Z2 into an existing zone
+  local function merge_a_zone()
+    -- merge two zones together
 
     -- A zone can only merge with its parent or one of its children.
 
-    local Z1
+    local best_Z1
+    local best_Z2
     local best_score
 
     each Z in LEVEL.zones do
-      if Z != Z2 and (Z.parent == Z2 or Z2.parent == Z) then
-        
-        local score = score_for_merge(Z, Z2)
+      local L = Z.rooms[1] ; assert(L)
 
-        if not best_score or score > best_score then
-          Z1 = Z ; best_score = score
-        end
+      assert(L.zone == Z)
+
+      if not L.PARENT then continue end
+
+      local Z1 = L.PARENT.zone
+
+      local score = score_for_merge(Z1, Z)
+
+      if not best_score or score > best_score then
+        best_Z1 = Z1
+        best_Z2 = Z
+        best_score = score
       end
     end
 
-    assert(Z1)
+    assert(best_Z1)
+    assert(best_Z2)
 
-    -- can only merge the child into the parent
-    if Z1.parent == Z2 then
-      Z1, Z2 = Z2, Z1
-    end
+    gui.debugf("Merging %s --> %s\n", best_Z2:tostr(), best_Z1:tostr())
 
-    Z1:merge(Z2)
+    best_Z1:merge(best_Z2)
 
-    Z1:calc_volume()
+    best_Z1:calc_volume()
   end
 
 
@@ -849,11 +855,9 @@ function Quest_create_zones()
       if L2 == child and exit.kind == "teleporter" then return false end
 
       count = count + 1
-
-      if count >= 2 then return true end
     end
 
-    return false
+    return (count >= 2)
   end
 
 
@@ -949,9 +953,9 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
   -- TODO: this will need tweaking
   -- [IDEA: adjust this instead of having a zone quota]
-  local min_tvol = 6.1  --!!!! 4.2
+  local min_tvol = 4.5
 
-  zone_quota = int(zone_quota + 0.5)
+  zone_quota = int(zone_quota)
 
   gui.printf("Zone quota: %d (tvol >= %1.1f)\n\n", zone_quota, min_tvol)
 
@@ -987,7 +991,11 @@ dump_room_flow(LEVEL.start_room)
   end
 
 
-  -- FIXME: IF TOO MANY ZONES, MERGE SOME !!!!!
+  -- if too many zones, merge some
+
+  while #LEVEL.zones > zone_quota do
+    merge_a_zone()
+  end
 
 ---##  initial_zones()
 ---##
@@ -1035,7 +1043,7 @@ function Quest_make_quests()
 local function Quest_choose_keys()
 
   local function dump_locks()
-    gui.printf("Locks:\n")
+    gui.printf("Lock list:\n")
 
     each LOCK in LEVEL.locks do
       gui.printf("  %d = %s %s\n", _index, LOCK.kind, LOCK.key or LOCK.switch or "")
@@ -1050,7 +1058,7 @@ local function Quest_choose_keys()
   local num_locks = #LEVEL.locks
 
   if num_locks <= 0 then
-    gui.printf("Locks: NONE\n\n")
+    gui.printf("Lock list: NONE\n\n")
     return
   end
 
@@ -1280,6 +1288,9 @@ end
     local best_exit
 
     each exit in exits do
+      -- a zone difference is always locked
+      if exit.L1.zone != exit.L2.zone then continue end
+
       local score = evaluate_exit(L, exit)
 
 -- stderrf("exit score[%d] = %1.1f", _index, score)
