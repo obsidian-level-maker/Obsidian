@@ -395,17 +395,24 @@ function Quest_choose_keys()
   local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
   local num_keys  = table.size(key_probs)
 
+--!!!!!!
+num_keys = math.min(num_keys, #LEVEL.zones - 1)
+
   assert(THEME.switches)
 
   local switches = table.copy(THEME.switches)
 
   gui.printf("Lock count:%d  want_keys:%d (of %d)  switches:%d\n",
-              num_locks, #LEVEL.zones, num_keys, table.size(switches));
+              num_locks, #LEVEL.zones - 1, num_keys, table.size(switches));
 
 
   --- Step 1: assign keys to places where a new ZONE is entered ---
 
   local function add_key(LOCK)
+gui.debugf("add_key @ LOCK_%d @ %s :\n", LOCK.tag, LOCK.conn:tostr())
+gui.debugf("  L1 = %s @ %s\n", LOCK.conn.L1:tostr(), LOCK.conn.L1.zone:tostr())
+gui.debugf("  L2 = %s @ %s\n", LOCK.conn.L2:tostr(), LOCK.conn.L2.zone:tostr())
+
     if num_keys < 1 then error("Quests: Run out of keys!") end
 
     LOCK.kind = "KEY"
@@ -422,7 +429,7 @@ function Quest_choose_keys()
   end
 
   each LOCK in LEVEL.locks do
-    if LOCK.D.L1.zone != LOCK.D.L2.zone then
+    if LOCK.conn.L1.zone != LOCK.conn.L2.zone then
       add_key(LOCK)
     end
   end
@@ -956,7 +963,6 @@ function Quest_make_quests()
 
 
   local function add_lock(D)
--- stderrf("   Locking conn to room %s\n", D.R2:tostr())
 
     local LOCK =
     {
@@ -965,6 +971,8 @@ function Quest_make_quests()
     }
 
     D.lock = LOCK
+
+gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
 
     -- for double hallways, put the lock in both connections
     if D.kind == "double_L" then
@@ -995,22 +1003,23 @@ function Quest_make_quests()
       index = index + 1
     end
 
-    return index
+    return table.remove(active_locks, index)
   end
 
 
-  local function add_goal(R)
+  local function add_solution(R)
+    assert(R.is_room)
+
     if table.empty(active_locks) then
-      LEVEL.exit_room = R
+gui.debugf("add_solution: EXIT\n")
       R.purpose = "EXIT"
+      LEVEL.exit_room = R
       return false
     end
 
-    local lock_idx = pick_lock_to_solve()
+    local lock = pick_lock_to_solve()
 
--- stderrf("ADDING GOAL : %d / %d\n", lock_idx, table.size(active_locks))
-
-    local lock = table.remove(active_locks, lock_idx)
+gui.debugf("add_solution: LOCK_%d @ %s\n", lock.tag, R:tostr())
 
     R.purpose = "SOLUTION"
     R.purpose_lock = lock
@@ -1142,56 +1151,58 @@ function Quest_make_quests()
 
 
   local function quest_flow(L, quest)
-    while true do
-      quest:add_room_or_hall(L)
+gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
-      -- stderrf("quest_flow @ %s\n", L:tostr())
+    quest:add_room_or_hall(L)
 
-      if L.is_room then
-        table.insert(LEVEL.rooms, L)
-      end
+    if L.is_room then
+      table.insert(LEVEL.rooms, L)
+    end
 
-      local exits = get_exits(L)
+    local exits = get_exits(L)
 
-      if #exits == 0 then
-        -- hit a leaf room
-        assert(L.is_room)
+    if #exits > 0 then
 
-        quest.target = L
+      --- branching room ---
 
-        local lock = add_goal(L)
+      local free_exit = pick_free_exit(L, exits)
 
-        -- finished?
-        if not lock then return end
+      L.exit_conn = free_exit
 
-        -- create new quest
-        local new_quest = QUEST_CLASS.new(L)
-
-        table.insert(quest.branches, new_quest)
-
-        new_quest.parent = quest
-
-        -- continue on with new room and quest
-        L = lock.conn.L2
-        quest = new_quest
-
-      else
-
-        local free_exit = pick_free_exit(L, exits)
-
-        L.exit_conn = free_exit
-
-        -- lock up any excess branches
-        each exit in exits do
-          if exit != free_exit then
-            add_lock(exit)
-          end
+      -- lock up all other branches
+      each exit in exits do
+        if exit != free_exit then
+          add_lock(exit)
         end
-
-        -- continue down the free exit
-        L = free_exit.L2
       end
-    end -- while
+
+      -- continue down the free exit
+      return quest_flow(free_exit.L2, quest)
+    end
+
+
+    --- leaf room ---
+
+gui.debugf("hit leaf\n")
+
+    quest.target = L
+
+    local lock = add_solution(L)
+
+    -- finished?
+    if not lock then return end
+
+    -- create new quest
+    local new_Q = QUEST_CLASS.new(lock.conn.L2)
+
+    table.insert(quest.branches, new_Q)
+
+    new_Q.parent = quest
+
+gui.debugf("branching off %s is new %s\n", quest:tostr(), new_Q:tostr())
+
+    -- continue on with new room and quest
+    return quest_flow(new_Q.start, new_Q)
   end
 
 
@@ -1246,6 +1257,35 @@ function Quest_make_quests()
   end
 
 
+  local function create_quests()
+    local Q = QUEST_CLASS.new(LEVEL.start_room)
+
+    calc_travel_volume(Q.start)
+
+    if THEME.switches then
+      -- room list will be rebuilt in visit order
+      LEVEL.rooms = {}
+
+      quest_flow(Q.start, Q)
+    else
+      -- room list remains in the "natural flow" order
+      no_quest_order(Q.start, Q)
+    end
+
+    gui.debugf("Level Flow:\n\n")
+    dump_room_flow(Q.start)
+
+    setup_lev_alongs()
+
+    assert(LEVEL.exit_room)
+    assert(LEVEL.exit_room.is_room)
+
+    gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
+
+    dump_visit_order()
+  end
+
+
   local function update_crossovers()
     each H in LEVEL.halls do
       if H.crossover then H:set_cross_mode() end
@@ -1267,31 +1307,7 @@ function Quest_make_quests()
   LEVEL.quests = {}
   LEVEL.locks  = {}
 
-  local Q = QUEST_CLASS.new(LEVEL.start_room)
-
-  calc_travel_volume(Q.start)
-
-  if THEME.switches then
-    -- room list will be rebuilt in visit order
-    LEVEL.rooms = {}
-
-    quest_flow(Q.start, Q)
-  else
-    -- room list remains in the "natural flow" order
-    no_quest_order(Q.start, Q)
-  end
-
-  gui.debugf("Level Flow:\n\n")
-  dump_room_flow(Q.start)
-
-  setup_lev_alongs()
-
-  assert(LEVEL.exit_room)
-  assert(LEVEL.exit_room.is_room)
-
-  gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
-
-  dump_visit_order()
+  create_quests()
 
   update_crossovers()
 
