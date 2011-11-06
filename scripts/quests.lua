@@ -1313,6 +1313,40 @@ end
   end
 
 
+  local function storage_flow(L, quest)
+    -- used when a branch of the level is dudded
+    
+    stderrf("storage_flow @ %s : %s\n", L:tostr(), quest:tostr())
+
+    quest:add_room_or_hall(L)
+
+    if L.is_room then
+      table.insert(LEVEL.rooms, L)
+    end
+
+    local exits = Quest_get_exits(L)
+
+    if #exits == 0 then
+      -- hit a leaf
+
+      assert(L.is_room)
+
+      L.storage = true
+    end
+
+    each D in exits do
+      storage_flow(D.L2, quest)
+
+      -- this ought to be impossible, since zones need to be large and
+      -- we only dud up small sections of the level.
+      if D.L1.zone != D.L2.zone then
+        error("Zone was dudded!")
+      end
+    end
+
+    return "ok"
+  end
+
 
   local function quest_flow(L, quest)
 -- gui.debugf("quest_flow @ %s : %s\n", L:tostr(), quest:tostr())
@@ -1334,14 +1368,23 @@ end
       L.exit_conn = free_exit
 
       -- lock up all other branches
+      table.kill_elem(exits, free_exit)
+
       each exit in exits do
-        if exit != free_exit then
-          add_lock(exit)
+
+        -- TEST SHITE FOR DUDDING
+        if _index >= 2 and exit.L2.travel_vol < 2.1 then
+          storage_flow(exit.L2, quest)
+          continue
         end
+
+        add_lock(exit)
       end
 
       -- continue down the free exit
-      return quest_flow(free_exit.L2, quest)
+      quest_flow(free_exit.L2, quest)
+
+      return "ok"
     end
 
 
@@ -1368,15 +1411,15 @@ end
 -- gui.debugf("branching off %s is new %s\n", old_Q:tostr(), new_Q:tostr())
 
     -- continue on with new room and quest
-    return quest_flow(new_Q.start, new_Q)
+    quest_flow(new_Q.start, new_Q)
+
+    return "ok"
   end
 
 
   local function no_quest_order(start, quest)
     each R in LEVEL.rooms do
       quest:add_room_or_hall(R)
-
-      table.insert(quest.rooms, R)
 
       if R != start then
         -- FIXME !!!
