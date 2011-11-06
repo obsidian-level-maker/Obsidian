@@ -781,7 +781,13 @@ function Levels_make_level(L)
   local index = L.index
   local total = #GAME.levels
 
--- if index != 23 then return end
+  -- debugging aid : ability to build only a particular level
+  if OB_CONFIG.only_level and
+     string.lower(OB_CONFIG.only_level) != string.lower(L.name)
+  then
+    gui.printf("\nSkipping level: %s....\n\n", L.name)
+    return
+  end
 
   -- must create the description before the copy (else games/modules won't see it)
   if not L.description and L.name_theme then
