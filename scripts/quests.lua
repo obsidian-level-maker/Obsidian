@@ -224,53 +224,6 @@ end
 
 
 
-function Quest_key_distances()  -- NOT USED ANYMORE (REPLACED BY ZONE SYSTEM)
-  -- determine distance (approx) between key and the door it opens.
-  -- the biggest distances will use actual keys (which are limited)
-  -- whereas everything else will use switched doors.
-
-  -- TODO: proper measurement between connections
-
-  local want_lock
-
-  local function dist_to_door(R, entry_C, seen_rooms)
-    seen_rooms[R] = true
-
-    if R:has_lock(want_lock) then
-      return 1
-    end
-
-    for _,C in ipairs(R.conns) do
-      local R2 = C:neighbor(R)
-      if not seen_rooms[R2] then
-        local d = dist_to_door(R2, C, seen_rooms)
-        if d then
-          return d + 1
-        end
-      end
-    end
-
-    -- not in this part of the connection map
-    return nil
-  end
-
-  gui.debugf("Key Distances:\n")
-
-  each lock in LEVEL.locks do
-    want_lock = lock
-
-    -- FIXME !!!
-    lock.distance = gui.random() --!!!  dist_to_door(lock.target, nil, {})
---[[
-    gui.debugf("  %s --> %s  lock_dist:%1.1f\n",
-        lock.conn.R1.quest:tostr(), lock.conn.R2.quest:tostr(),
-        lock.distance)
---]]
-  end 
-end
-
-
-
 function Quest_distribute_unused_keys()
   local next_L = GAME.levels[LEVEL.index + 1]
 
@@ -282,93 +235,6 @@ function Quest_distribute_unused_keys()
     LEVEL .usable_keys[name] = nil
   end
 end
-
-
-
-function Quest_choose_keys_OLD()
-  local num_locks = #LEVEL.locks
-
-  if num_locks <= 0 then
-    gui.printf("Lock list: NONE\n\n")
-    return
-  end
-
-  local key_probs = table.copy(LEVEL.usable_keys or THEME.keys or {}) 
-  local num_keys  = table.size(key_probs)
-
-  -- use less keys when number of locked doors is small
-  local want_keys = num_keys
-
-  if not THEME.switches then
-    assert(num_locks <= num_keys)
-  else
-  local want_keys = num_keys
-    while want_keys > 1 and (want_keys*2 > num_locks) and rand.odds(70) do
-      want_keys = want_keys - 1
-    end
-  end
-
-  gui.printf("Lock count:%d  want_keys:%d (of %d)  has_switches:%s\n",
-              num_locks, want_keys, num_keys,
-              string.bool(THEME.switches));
-
-
-  --- STEP 1 : assign keys (distance based) ---
-
-  local lock_list = table.copy(LEVEL.locks)
-
-  each LOCK in lock_list do
-    -- when the distance gets large, keys are better than switches
-    LOCK.key_score = LOCK.distance or 0
-
-    -- prefer not to use keyed doors between two outdoor rooms
-    if LOCK.conn and LOCK.conn.L1.outdoor and LOCK.conn.L2.outdoor then
-      LOCK.key_score = LOCK.key_score / 2
-    end
-
-    LOCK.key_score = LOCK.key_score + gui.random() / 1.5
-  end
-
-  table.sort(lock_list, function(A,B) return A.key_score > B.key_score end)
-
-  each LOCK in lock_list do
-    if table.empty(key_probs) or want_keys <= 0 then
-      break;
-    end
-
-    if not LOCK.kind then
-      LOCK.kind = "KEY"
-      LOCK.key  = rand.key_by_probs(key_probs)
-
-      -- cannot use this key again
-      key_probs[LOCK.key] = nil
-
-      if LEVEL.usable_keys then
-        LEVEL.usable_keys[LOCK.key] = nil
-      end
-
-      want_keys = want_keys - 1
-    end
-  end
-
-
-  --- STEP 2 : assign switches (random spread) ---
-
-  local switches = table.copy(assert(THEME.switches))
-
-  for _,LOCK in ipairs(lock_list) do
-    if not LOCK.kind then
-      LOCK.kind = "SWITCH"
-      LOCK.switch = rand.key_by_probs(switches)
-      -- make it less likely to choose the same switch again
-      switches[LOCK.switch] = switches[LOCK.switch] / 5
-    end
-  end
-
-end
-
-
-
 
 
 
@@ -1326,25 +1192,34 @@ end
 
     local exits = Quest_get_exits(L)
 
+    -- hit a leaf?
     if #exits == 0 then
-      -- hit a leaf
-
       assert(L.is_room)
 
       L.storage = true
+
+      return L
     end
 
+
+    local best_leaf
+
     each D in exits do
-      storage_flow(D.L2, quest)
+      local leaf = storage_flow(D.L2, quest)
+
+      -- choose largest leaf [only needed in NO-QUEST mode]
+      if leaf and (not best_leaf or leaf.svolume > best_leaf.svolume) then
+        best_leaf = leaf
+      end
 
       -- this ought to be impossible, since zones need to be large and
       -- we only dud up small sections of the level.
       if D.L1.zone != D.L2.zone then
-        error("Zone was dudded!")
+-- FIXME: HAPPENS IN NO_QUEST MODE  error("Zone was dudded!")
       end
     end
 
-    return "ok"
+    return best_leaf  -- NIL is ok
   end
 
 
@@ -1417,22 +1292,18 @@ end
   end
 
 
-  local function no_quest_order(start, quest)
-    each R in LEVEL.rooms do
-      quest:add_room_or_hall(R)
+  local function meander_flow(start, quest)
+    -- this is used when there are no quests (except to find the exit)
 
-      if R != start then
-        -- FIXME !!!
-        best_exit = R
-      end
-    end
+    local leaf = storage_flow(start, quest)
 
-    each H in LEVEL.halls do
-      quest:add_room_or_hall(H)
-    end
+    assert(leaf)
+    assert(leaf != start)
 
-    LEVEL.exit_room = best_exit
-    LEVEL.exit_room.purpose = "EXIT"
+    leaf.purpose = "EXIT"
+    leaf.storage = nil
+
+    LEVEL.exit_room = leaf
   end
 
 
@@ -1469,20 +1340,18 @@ end
   local function create_quests()
     local Q = QUEST_CLASS.new(LEVEL.start_room)
 
-    if THEME.switches then
-      -- room list will be rebuilt in visit order
-      LEVEL.rooms = {}
+    -- room list will be rebuilt in visit order
+    LEVEL.rooms = {}
 
+    if THEME.switches and THEME.keys then
       quest_flow(Q.start, Q)
     else
-      -- room list remains in the "natural flow" order
-      no_quest_order(Q.start, Q)
+      meander_flow(Q.start, Q)
     end
 
     setup_lev_alongs()
 
     assert(LEVEL.exit_room)
-    assert(LEVEL.exit_room.is_room)
 
     gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
 
@@ -1568,34 +1437,6 @@ function Hub_connect_levels(epi, keys)
     end
 
     gui.debugf("\n")
-  end
-
-
-  local function OLD__find_free_away(L)
-    local count = 0
-
-    each link in L.hub_links do
-      if not link.key and link.src == L then
-        count = count + 1
-
-        -- the first free away will stay unlocked, require second one
-        if count == 2 then
-          return link
-        end
-      end
-    end
-
-    return nil  -- not found
-  end
-
-
-  local function OLD__find_junction()
-    each L in epi.levels do
-      local link = find_free_away(L)
-      if link then return link end
-    end
-
-    return nil -- not found
   end
 
 
