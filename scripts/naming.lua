@@ -66,7 +66,8 @@ GLOBAL_NAME_THEMES =
       h = 10   --/
 
       n = 50   -- noun: Base, Station, City (etc)
-      p = 3    -- person: Satan (etc)
+      m = 3    -- monster name: Demon, Imp, Mummy (etc)
+      e = 3    -- evil being: Satan (etc)
 
       t = 1    -- article: The XX
       v = 50   -- phrase before a noun: Curse of the XX
@@ -434,9 +435,9 @@ GLOBAL_NAME_THEMES =
          ["%n of %h"] = 26
       ["%a %n of %h"] = 14
 
-      ["%p's %n"]       = 10
-      ["%p's %a %n"]    = 8
-      ["%p's %n of %h"] = 6
+      ["%e's %n"]       = 10
+      ["%e's %a %n"]    = 8
+      ["%e's %n of %h"] = 6
 
       ["%v %n"]    = 10
       ["%v %a %n"] = 10
@@ -451,7 +452,7 @@ GLOBAL_NAME_THEMES =
         The=50
       }
 
-      p =
+      e =
       {
         Satan=10, ["The Devil"]=7, Lucifer=7, Helgor=3, 
         Ceren=2, Mephisto=3, Vuradi=2, Oltion=2, Ktulu=2,
