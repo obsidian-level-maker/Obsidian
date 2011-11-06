@@ -803,26 +803,26 @@ function Quest_create_zones()
     local best_Z2
     local best_score
 
-    each Z in LEVEL.zones do
-      local L = Z.rooms[1] ; assert(L)
-
-      assert(L.zone == Z)
+    each L in all_rooms_and_halls do
+      local Z1 = L.zone
 
       if not L.PARENT then continue end
 
-      local Z1 = L.PARENT.zone
+      local Z2 = L.PARENT.zone
 
-      local score = score_for_merge(Z1, Z)
+      if Z2 == Z1 then continue end
+
+      local score = score_for_merge(Z1, Z2)
 
       if not best_score or score > best_score then
         best_Z1 = Z1
-        best_Z2 = Z
+        best_Z2 = Z2
         best_score = score
       end
     end
 
-    assert(best_Z1)
-    assert(best_Z2)
+    assert(best_Z1 and best_Z2)
+    assert(best_Z1 !=  best_Z2)
 
     gui.debugf("Merging %s --> %s\n", best_Z2:tostr(), best_Z1:tostr())
 
