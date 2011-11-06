@@ -32,8 +32,19 @@ require 'util'
 
 namelib = {}
 
-namelib.THEMES =
+GLOBAL_NAME_THEMES =
 {
+  COMMON =
+  {
+    -- these words and patterns are shared by all themes
+
+    -- FIXME...
+  }
+  -- end of 'COMMON' theme
+
+
+  --------------------------------------------------
+
   TECH =
   {
     patterns =
@@ -378,10 +389,11 @@ namelib.THEMES =
       n = 50
       s = 300
     }
-  }  -- TECH
+  }
+  -- end of 'TECH' theme
 
 
-  ----------------------------------------
+  --------------------------------------------------
 
   GOTHIC =
   {
@@ -855,10 +867,11 @@ namelib.THEMES =
       n = 50
       s = 300
     }
-  }  -- GOTHIC
+  }
+  -- end of 'GOTHIC' theme
 
 
-  ----------------------------------------
+  --------------------------------------------------
 
   URBAN =
   {
@@ -1223,10 +1236,11 @@ namelib.THEMES =
       n = 50
       s = 300
     }
-  }  -- URBAN
+  }
+  -- end of 'URBAN' theme
 
 
-  ----------------------------------------
+  --------------------------------------------------
 
   BOSS =
   {
@@ -1351,10 +1365,11 @@ namelib.THEMES =
     {
       s = 300
     }
-  }  -- BOSS
+  }
+  -- end of 'BOSS' theme
 
 
-  ----------------------------------------
+  --------------------------------------------------
 
   PSYCHO =
   {
@@ -1554,8 +1569,12 @@ namelib.THEMES =
     {
       s = 300
     }
-  }  -- PSYCHO
+  }
+  -- end of 'PSYCHO' theme
 }
+
+
+----------------------------------------------------------------
 
 
 namelib.IGNORE_WORDS =
@@ -1672,17 +1691,36 @@ function namelib.choose_one(DEF, max_len)
 end
 
 
-function namelib.generate(theme, count, max_len)
-  local defs = table.deep_copy(namelib.THEMES)
+function namelib.merge_theme(theme_name)
+  -- verify the theme name
+  if not GLOBAL_NAME_THEMES[theme_name] then
+    error("namelib.generate: unknown theme: " .. tostring(theme_name))
+  end
 
-  if GAME.NAME_THEMES then
-    table.deep_merge(defs, GAME.NAME_THEMES)
+  local theme = {}
+
+  local sources = { GLOBAL_NAME_THEMES, GAME.NAME_THEMES or {} }
+
+  -- always merge in the "COMMON" theme before the main one
+  each S in sources do
+    if S["COMMON"] then
+      table.deep_merge(theme, S["COMMON"])
+    end
   end
- 
-  local DEF = defs[theme]
-  if not DEF then
-    error("namelib.generate: unknown theme: " .. tostring(theme))
+
+  -- now merge in the actual specific theme
+  each S in sources do
+    if S[theme_name] then
+      table.deep_merge(theme, S[theme_name])
+    end
   end
+
+  return theme
+end
+
+
+function namelib.generate(theme_name, count, max_len)
+  local DEF = namelib.merge_theme(theme_name)
 
   local list = {}
 
@@ -1713,6 +1751,7 @@ function namelib.test()
   test_theme("TECH")
   test_theme("GOTHIC")
   test_theme("URBAN")
+  test_theme("BOSS")
 end
 
 
@@ -1721,8 +1760,10 @@ function Naming_grab_one(theme)
     GAME.name_cache = {}
   end
 
-  if not GAME.name_cache[theme] or table.empty(GAME.name_cache[theme]) then
-    GAME.name_cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length)
+  local cache = GAME.name_cache
+
+  if not cache[theme] or table.empty(cache[theme]) then
+    cache[theme] = namelib.generate(theme, 30, PARAM.max_name_length)
   end
 
   return table.remove(GAME.name_cache[theme], 1)
