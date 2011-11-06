@@ -1156,52 +1156,61 @@ end
   end
 
 
+  local function get_matching_locks(req_kind, req_zone)
+    -- req_kind is the required kind, or NIL for any
+    -- req_zone is the required zone (front side of doo), or NIL for any
+
+    local indexes = {}
+
+    each LOCK in active_locks do
+      if req_kind and LOCK.kind != req_kind then continue end
+
+      if req_zone and LOCK.conn.L1.zone != req_zone then continue end
+
+      table.insert(indexes, _index)
+    end
+
+    return indexes
+  end
+
+
   local function pick_lock_to_solve(cur_zone)
-    --
-    -- choosing the newest lock (at index 1) produces the most linear
-    -- progression, which is easiest on the player.  Choosing older
-    -- locks produces more back-tracking and memory strain, which on
-    -- large levels can make it very confusing to navigate.
-    --
+    
+    -- for switched doors we require that the solution room lies in the
+    -- same zone as the room with the locked door.  So the only reason
+    -- the player needs to back-track out of a zone is because they
+    -- found a key which will provide access into a new zone.
 
     assert(#active_locks > 0)
 
-    local poss_locks = {}
+    local poss_locks = get_matching_locks("SWITCH", cur_zone)
 
-    each LOCK in active_locks do
-      if LOCK.kind == "SWITCH" and LOCK.conn.L1.zone == cur_zone then
-        table.insert(poss_locks, LOCK)
-      end
+    if table.empty(poss_locks) then
+      poss_locks = get_matching_locks("KEY", nil)
     end
 
-    if poss_locks[1] then
-      local LOCK = poss_locks[1]
-      table.kill_elem(active_locks, LOCK)
-      return LOCK
+    -- the above SHOULD work -- but this is emergency fallback
+    if table.empty(poss_locks) then
+      gui.printf("WARNING: could not pick an appropriate lock.\n")
+      poss_locks = get_matching_locks(nil, nil)
     end
 
-    each LOCK in active_locks do
-      if LOCK.kind == "KEY" then
-        table.insert(poss_locks, LOCK)
-      end
-    end
-    
-    if poss_locks[1] then
-      local LOCK = poss_locks[1]
-      table.kill_elem(active_locks, LOCK)
-      return LOCK
-    end
+    -- choosing the newest lock (at index 1) produces the most linear
+    -- progression, which is easiest on the player.  Choosing older
+    -- locks produces more back-tracking and memory strain, which on
+    -- large levels could make it very confusing to navigate.
+    --
+    -- [Note: the zone system alleviates this problem a lot]
 
-    error("WTF : no active lock we can use")
+    assert(#poss_locks > 0)
 
+    local p = 1
 
-    local index = 1
-
-    while (index+1) <= #active_locks and rand.odds(30) do
-      index = index + 1
+    while (p + 1) <= #poss_locks and rand.odds(50) do
+       p = p + 1
     end
 
-    return table.remove(active_locks, index)
+    return table.remove(active_locks, poss_locks[p])
   end
 
 
@@ -1406,8 +1415,8 @@ end
     gui.printf("Room Visit Order:\n")
 
     each R in LEVEL.rooms do
-      gui.printf("%s : %1.2f : quest %d : purpose %s\n", R:tostr(),
-                 R.lev_along, R.quest.id, R.purpose or "-")
+      gui.printf("Room %2d : %1.2f : quest %d : zone %d : purpose %s\n",
+                 R.id, R.lev_along, R.quest.id, R.zone.id, R.purpose or "-")
     end
 
     gui.printf("\n")
