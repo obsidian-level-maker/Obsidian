@@ -39,6 +39,40 @@ GLOBAL_NAME_THEMES =
     -- these words and patterns are shared by all themes
 
     -- FIXME...
+
+    lexicon =
+    {
+      f =
+      {
+        -- these from flyingdeath
+        ["Enter the"]=10
+        ["Welcome to the"]=10
+        ["Flight from the"]=5 
+        ["Escape from the"]=5 
+        ["Journey to the"]=10
+        ["Assault on the"]=10
+        ["Death Awaits in the"]=5
+        ["Oh God not another"]=2
+        ["Curse of the"]=10
+        ["Fear the"]=10
+        ["Yet another"]=10
+      }
+    }
+
+    divisors =
+    {
+      a = 10   --\
+      b = 10   -- adjectives
+      h = 10   --/
+
+      n = 50   -- noun: Base, Station, City (etc)
+      p = 3    -- person: Satan (etc)
+
+      f = 50   -- phrase before a noun: Curse of the XX
+      t = 1    -- article: The XX
+
+      s = 1000  -- single complete names
+    }
   }
   -- end of 'COMMON' theme
 
@@ -382,13 +416,6 @@ GLOBAL_NAME_THEMES =
       }
     }
 
-    divisors =
-    {
-      a = 10
-      b = 10
-      n = 50
-      s = 300
-    }
   }
   -- end of 'TECH' theme
 
@@ -858,15 +885,6 @@ GLOBAL_NAME_THEMES =
         ["You Can't Handle the Noose"]=10
       }
     }
-
-    divisors =
-    {
-      p = 3
-      a = 10
-      h = 10
-      n = 50
-      s = 300
-    }
   }
   -- end of 'GOTHIC' theme
 
@@ -1228,14 +1246,6 @@ GLOBAL_NAME_THEMES =
         ["You Don't Belong Here"]=10
       }
     }
-
-    divisors =
-    {
-      a = 10
-      h = 10
-      n = 50
-      s = 300
-    }
   }
   -- end of 'URBAN' theme
 
@@ -1359,11 +1369,6 @@ GLOBAL_NAME_THEMES =
         ["What Color is Death?"]=10
         ["You May Not Pass!"]=10
       }
-    }
-
-    divisors =
-    {
-      s = 300
     }
   }
   -- end of 'BOSS' theme
@@ -1564,11 +1569,6 @@ GLOBAL_NAME_THEMES =
         ["Zone of a Billion Deaths"]=10
       }
     }
-
-    divisors =
-    {
-      s = 300
-    }
   }
   -- end of 'PSYCHO' theme
 }
@@ -1680,6 +1680,8 @@ function namelib.choose_one(DEF, max_len)
 
   -- adjust probabilities
   for c,divisor in pairs(DEF.divisors) do
+    if not DEF.lexicon[c] then continue end
+
     for w,prob in pairs(DEF.lexicon[c]) do
       if namelib.match_parts(w, parts) then
         DEF.lexicon[c][w] = prob / divisor
