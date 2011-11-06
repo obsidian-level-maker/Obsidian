@@ -42,7 +42,7 @@ GLOBAL_NAME_THEMES =
 
     lexicon =
     {
-      f =
+      v =
       {
         -- these from flyingdeath
         ["Enter the"]=10
@@ -55,7 +55,7 @@ GLOBAL_NAME_THEMES =
         ["Oh God not another"]=2
         ["Curse of the"]=10
         ["Fear the"]=10
-        ["Yet another"]=10
+        ["Yet Another"]=5
       }
     }
 
@@ -68,8 +68,8 @@ GLOBAL_NAME_THEMES =
       n = 50   -- noun: Base, Station, City (etc)
       p = 3    -- person: Satan (etc)
 
-      f = 50   -- phrase before a noun: Curse of the XX
       t = 1    -- article: The XX
+      v = 50   -- phrase before a noun: Curse of the XX
 
       s = 1000  -- single complete names
     }
@@ -90,6 +90,10 @@ GLOBAL_NAME_THEMES =
       ["%t %a %n"]    = 17
       ["%t %b %n"]    = 17
       ["%t %a %b %n"] = 5
+
+      ["%v %n"]    = 12
+      ["%v %a %n"] = 12
+      ["%v %b %n"] = 12
 
       ["%s"] = 16
     }
@@ -435,6 +439,9 @@ GLOBAL_NAME_THEMES =
       ["%p's %n"]       = 10
       ["%p's %a %n"]    = 8
       ["%p's %n of %h"] = 6
+
+      ["%v %n"]    = 10
+      ["%v %a %n"] = 10
 
       ["%s"] = 14
     }
@@ -901,6 +908,9 @@ GLOBAL_NAME_THEMES =
       [   "%n of %h"] = 20
       ["%t %n of %h"] = 12
       ["%a %n of %h"] = 7
+
+      ["%v %n"]    = 10
+      ["%v %a %n"] = 10
 
       ["%s"] = 12
     }
