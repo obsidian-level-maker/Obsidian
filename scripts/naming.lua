@@ -116,7 +116,6 @@ GLOBAL_NAME_THEMES =
         Subterrestrial=10, Sub_terra=5,
         Aethereal=10, Hypogean=5,
         Mars=10, Saturn=10, Jupiter=10,
-        Deimos=15, Phobos=15, ["Tei Tenga"]=5,
         Europa=5, Ganymede=5, Dione=5, Io=5,
         Callisto=5, Hyperion=5, Vesta=5, Titan=3,
 
@@ -185,7 +184,7 @@ GLOBAL_NAME_THEMES =
         Atlas=3, Promethus=2, Cronus=3, 
         Hyperion=2, Icarus=2, Echo=2,
         Morpheus=2, Eos=2, Orion=2,
-        Tiephron=2, UAC=15,
+        Tiephron=2,
 
         -- materials / substances
         Power=20, Energy=15, Cargo=10,
@@ -381,7 +380,6 @@ GLOBAL_NAME_THEMES =
         ["This Is Not a Drill"]=10
         ["Too Close For Comfort"]=10
         ["Turboshaft"]=10
-        ["UAC Crisis"]=10
         ["Unwanted Attention"]=10
         ["Waste Management"]=10
         ["Wires and Bloodcells"]=10

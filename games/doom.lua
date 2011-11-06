@@ -2634,7 +2634,35 @@ DOOM.THEME_DEFAULTS =
     x_offset=0, y_offset=0, peg=1,
     special=23,
   }
+}
 
+
+DOOM.NAME_THEMES =
+{
+  -- these tables provide *additional* words to those in naming.lua
+
+  TECH =
+  {
+    lexicon =
+    {
+      a =
+      {
+        Deimos=30
+        Phobos=30
+        ["Tei Tenga"]=15
+      }
+
+      b =
+      {
+        UAC=30
+      }
+
+      s =
+      {
+        ["UAC Crisis"]=30
+      }
+    }
+  }
 }
 
 
