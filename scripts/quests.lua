@@ -1115,10 +1115,12 @@ end
     -- generally want to visit the SMALLEST section first, since that
     -- means the player's hard work to find the switch is rewarded
     -- with a larger new area to explore.  In theory anyway :-)
-    local score = 100 - math.min(D.L2.travel_vol, 100)
+    local vol = math.clamp(2.5, D.L2.travel_vol, 50)
+
+    local score = 50 - vol
 
     -- prefer to visit rooms which have crossovers first
-    score = score + crossover_volume(D.L2) * 3.1
+    score = score + crossover_volume(D.L2) * 2.3
 
     -- prefer exit to be away from entrance
     if D.dir1 and L.entry_conn and L.entry_conn.dir2 then
@@ -1146,60 +1148,23 @@ end
       return exits[1]
     end
 
-    -- teleporters cannot be locked, hence must pick it when present
-    each exit in exits do
-      if exit.kind == "teleporter" then
-        return exit
-      end
-    end
-
+    local best
     local best_score = -9e9
-    local best_exit
 
-    each exit in exits do
-      -- a zone difference is always locked
-      if exit.L1.zone != exit.L2.zone then continue end
+    each D in exits do
+      assert(D.kind != "teleporter")
 
-      local score = evaluate_exit(L, exit)
+      local score = evaluate_exit(L, D)
 
--- stderrf("exit score[%d] = %1.1f", _index, score)
-      if score > best_score then
-        best_score = score
-        best_exit  = exit
-      end
-    end
-
-    return assert(best_exit)
-  end
-
-
-  local function pick_storage_exit(L, exits)
-    -- never use up all the exits
-    if #exits < 2 then return nil end
-
-    local max_tvol = 2.1
-
-    local best_score = -9e9
-    local best_exit
-
-    -- FIXME: random chance : must mark the exit somehow
-
-    each exit in exits do
-      -- size check
-      if exit.L2.travel_vol > max_tvol then continue end
-
-      -- a zone difference is always locked : play safe and abort [FIXME]
-      if exit.L1.zone != exit.L2.zone then return nil end
-
-      local score = 100 - exit.L2.travel_vol + gui.random()
+-- gui.debugf("exit score for %s = %1.1f", D:tostr(), score)
 
       if score > best_score then
+        best = D
         best_score = score
-        best_exit  = exit
       end
     end
 
-    return best_exit
+    return assert(best)
   end
 
 
@@ -1238,7 +1203,7 @@ end
         best_leaf = leaf
       end
 
-      -- normally this should be impossible, since zones must be large
+      -- normally this should be impossible, since zones are large
       -- (over a minimum size) but we only dud up small branches.
       -- It commonly occurs in NO-QUEST mode though.
       if D.L1.zone != D.L2.zone then
@@ -1265,26 +1230,48 @@ end
 
       --- branching room ---
 
-      -- turn some small branches into storage
-      while true do
-        local D = pick_storage_exit(L, exits)
-        if not D then break end
+      local free_exit
 
-        table.kill_elem(exits, D)
+      -- handle exits which MUST be either free or locked
+      for index = #exits, 1, -1 do
+        local D = exits[index]
 
-        storage_flow(D.L2, quest)
+        if D.L1.zone != D.L2.zone then
+          add_lock(L, D)
+
+          table.remove(exits, index)
+
+        -- teleporters cannot be locked
+        -- [they could become storage, but we don't do it]
+        elseif D.kind == "teleporter" then
+          assert(not free_exit)
+          free_exit = D
+
+          table.remove(exits, index)
+        end
       end
 
-      -- pick the exit to keep travelling down
-      local free_exit = pick_free_exit(L, exits)
+      -- pick the free exit now
+      if not free_exit then
+        free_exit = pick_free_exit(L, exits)
+
+        table.kill_elem(exits, free_exit)
+      end
 
       L.exit_conn = free_exit
 
-      table.kill_elem(exits, free_exit)
+      -- turn some branches into storage
+      each D in exits do
+        if D.L2.travel_vol < 1.9 and rand.odds(50) then
+          table.kill_elem(exits, D)
+
+          storage_flow(D.L2, quest)
+        end
+      end
 
       -- lock up all other branches
-      each exit in exits do
-        add_lock(L, exit)
+      each D in exits do
+        add_lock(L, D)
       end
 
       -- continue down the free exit
