@@ -251,6 +251,18 @@ gui.debugf("\nmake_branch\n\n")
   if info.D2 then
      info.D2:add_it()
   end
+
+  -- for cycles, ensure new hallway gets a quest and zone
+  if mode == "cycle" then
+    assert(info.D1.L1.quest)
+    assert(info.D1.L1.zone)
+
+    assert(not info.D1.L2.quest)
+    assert(not info.D1.L2.zone)
+
+    info.D1.L1.quest:add_room_or_hall(info.D1.L2)
+    info.D1.L1.zone :add_room        (info.D1.L2)
+  end
 end
 
 
