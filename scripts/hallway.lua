@@ -739,9 +739,9 @@ end
 
 
 function HALLWAY_CLASS.choose_textures(H)
-  H.wall_tex  = rand.key_by_probs(THEME.hallway_walls    or THEME.building_walls)
-  H.floor_tex = rand.key_by_probs(THEME.hallway_floors   or THEME.building_floors)
-  H.ceil_tex  = rand.key_by_probs(THEME.hallway_ceilings or THEME.building_ceilings or THEME.building_floors)
+  H.wall_tex  = rand.key_by_probs(H.zone.hallway_walls)
+  H.floor_tex = rand.key_by_probs(H.zone.hallway_floors)
+  H.ceil_tex  = rand.key_by_probs(H.zone.hallway_ceilings)
 
   if H.outdoor then
     H.floor_tex = rand.key_by_probs(THEME.street_floors or THEME.courtyard_floors or THEME.building_floors)

@@ -440,52 +440,99 @@ end
 
 
 function Quest_select_textures()
-  local base_num = 3
 
-  -- more variety in large levels
-  if SECTION_W * SECTION_H >= 30 then
-    base_num = 4
-  end
+  local function assign_to_zones(WHAT, orig_source)
+    
+    -- TODO: number of passes depends on zone size
+    --       __OR__ : do a pass for each real room
 
-  if not LEVEL.building_facades then
-    LEVEL.building_facades = {}
+    local source
 
-    for num = 1,base_num - rand.sel(75,1,0) do
-      local name = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
-      LEVEL.building_facades[num] = name
-    end
-  end
+    for pass = 1,1 do
+      each Z in LEVEL.zones do
 
-  if not LEVEL.building_walls then
-    LEVEL.building_walls = {}
+        if not Z[WHAT] then
+          Z[WHAT] = {}
+        end
 
-    for num = 1,base_num do
-      local name = rand.key_by_probs(THEME.building_walls)
-      LEVEL.building_walls[num] = name
-    end
-  end
+        if not source or table.empty(source) then
+          source = table.copy(orig_source)
+        end
 
-  if not LEVEL.building_floors then
-    LEVEL.building_floors = {}
+        local mat = rand.key_by_probs(source)
 
-    for num = 1,base_num do
-      local name = rand.key_by_probs(THEME.building_floors)
-      LEVEL.building_floors[num] = name
-    end
-  end
+        source[mat] = nil  -- don't use again
 
-  if not LEVEL.courtyard_floors then
-    LEVEL.courtyard_floors = {}
+        local mat_tab = Z[WHAT]
 
-    if not THEME.courtyard_floors then
-      LEVEL.courtyard_floors[1] = rand.key_by_probs(THEME.building_floors)
-    else
-      for num = 1,base_num do
-        local name = rand.key_by_probs(THEME.courtyard_floors)
-        LEVEL.courtyard_floors[num] = name
+        mat_tab[mat] = 60 - (pass - 1) * 20
       end
     end
   end
+
+
+  ---| Quest_select_textures |---
+
+  assign_to_zones("building_walls",    THEME.building_walls)
+  assign_to_zones("building_facades",  THEME.building_facades or THEME.building_walls)
+  assign_to_zones("building_floors",   THEME.building_floors)
+  assign_to_zones("building_ceilings", THEME.building_ceilings)
+
+  assign_to_zones("hallway_walls",    THEME.hallway_walls    or THEME.building_walls)
+  assign_to_zones("hallway_floors",   THEME.hallway_floors   or THEME.building_floors)
+  assign_to_zones("hallway_ceilings", THEME.hallway_ceilings or THEME.building_ceilings)
+
+  assign_to_zones("courtyard_floors", THEME.courtyard_floors or THEME.building_floors)
+
+  -- ETC ETC...
+
+
+---##  local base_num = 3
+---##
+---##  -- more variety in large levels
+---##  if SECTION_W * SECTION_H >= 30 then
+---##    base_num = 4
+---##  end
+---##
+---##  if not LEVEL.building_facades then
+---##    LEVEL.building_facades = {}
+---##
+---##    for num = 1,base_num - rand.sel(75,1,0) do
+---##      local name = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
+---##      LEVEL.building_facades[num] = name
+---##    end
+---##  end
+---##
+---##  if not LEVEL.building_walls then
+---##    LEVEL.building_walls = {}
+---##
+---##    for num = 1,base_num do
+---##      local name = rand.key_by_probs(THEME.building_walls)
+---##      LEVEL.building_walls[num] = name
+---##    end
+---##  end
+---##
+---##  if not LEVEL.building_floors then
+---##    LEVEL.building_floors = {}
+---##
+---##    for num = 1,base_num do
+---##      local name = rand.key_by_probs(THEME.building_floors)
+---##      LEVEL.building_floors[num] = name
+---##    end
+---##  end
+---##
+---##  if not LEVEL.courtyard_floors then
+---##    LEVEL.courtyard_floors = {}
+---##
+---##    if not THEME.courtyard_floors then
+---##      LEVEL.courtyard_floors[1] = rand.key_by_probs(THEME.building_floors)
+---##    else
+---##      for num = 1,base_num do
+---##        local name = rand.key_by_probs(THEME.courtyard_floors)
+---##        LEVEL.courtyard_floors[num] = name
+---##      end
+---##    end
+---##  end
 
   if not LEVEL.outer_fence_tex then
     if THEME.outer_fences then

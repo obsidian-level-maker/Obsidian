@@ -362,9 +362,9 @@ function ROOM_CLASS.pick_floor_mat(R, h)
 
   if not R.floor_mats[h] then
     if R.outdoor then
-      R.floor_mats[h] = rand.pick(LEVEL.courtyard_floors)
+      R.floor_mats[h] = rand.key_by_probs(R.zone.courtyard_floors)
     else
-      R.floor_mats[h] = rand.pick(LEVEL.building_floors)
+      R.floor_mats[h] = rand.key_by_probs(R.zone.building_floors)
     end
   end
 
@@ -374,7 +374,7 @@ end
 
 function ROOM_CLASS.pick_ceil_mat(R)
   if not R.ceil_mat then
-    R.ceil_mat = rand.key_by_probs(THEME.building_ceilings)
+    R.ceil_mat = rand.key_by_probs(R.zone.building_ceilings)
   end
 
   return R.ceil_mat
@@ -555,17 +555,19 @@ function Rooms_setup_theme(R)
     assert(THEME.cave_walls)
     R.main_tex = rand.key_by_probs(THEME.cave_walls)
     R.skin.wall = R.main_tex
+    assert(R.main_tex)
     return
   end
 
   if not R.outdoor then
-    R.main_tex = rand.pick(LEVEL.building_walls)
+    R.main_tex = rand.key_by_probs(R.zone.building_walls)
     R.skin.wall = R.main_tex
+    assert(R.main_tex)
     return
   end
 
   if not R.quest.courtyard_floor then
-    R.quest.courtyard_floor = rand.pick(LEVEL.courtyard_floors)
+    R.quest.courtyard_floor = rand.key_by_probs(R.zone.courtyard_floors)
   end
 
   R.main_tex = R.quest.courtyard_floor
@@ -593,7 +595,7 @@ function Rooms_assign_facades()
     local kx, ky = geom.pick_corner(corner, 1,1, SECTION_W,SECTION_H)
     local K = SECTIONS[kx][ky]
 
-    local facade = rand.pick(LEVEL.building_facades)
+    local facade = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
 
     K:set_facade(facade)
   end
@@ -614,7 +616,7 @@ function Rooms_assign_facades()
       end
 
       if not facade and last_chance then
-        facade = rand.pick(LEVEL.building_facades)
+        facade = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
       end
 
       if facade then
