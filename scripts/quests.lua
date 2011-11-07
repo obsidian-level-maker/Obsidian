@@ -40,13 +40,13 @@ class QUEST
 
   rooms : list(ROOM / HALL)  -- all the rooms in the quest
 
+  storage_rooms : list(ROOM)
+
   zone : ZONE
 
   parent : QUEST  -- the quest which this one branched off (if any)
 
   parent_room : ROOM / HALL  -- the room or hall branched off
-
-  branches : list(QUEST)  -- the quests which branch of this one
 
   volume : number  -- size of quest (sum of tvols)
 }
@@ -91,7 +91,7 @@ QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
   local id = 1 + #LEVEL.quests
-  local Q = { id=id, start=start, rooms={}, branches={} }
+  local Q = { id=id, start=start, rooms={}, storage_rooms={} }
   table.set_class(Q, QUEST_CLASS)
   table.insert(LEVEL.quests, Q)
   return Q
@@ -116,6 +116,24 @@ function QUEST_CLASS.add_room_or_hall(quest, L)
   L.quest = quest
 
   table.insert(quest.rooms, L)
+end
+
+
+function QUEST_CLASS.add_storage_room(quest, R)
+  -- a "storage room" is a dead-end room which does not contain a
+  -- specific purpose (key, switch or exit).  We place some of the
+  -- ammo and health needed by the player elsewhere into these rooms
+  -- to encourage exploration.
+  R.is_storage = true
+
+  table.insert(quest.storage_rooms, R)
+end
+
+
+function QUEST_CLASS.remove_storage_room(quest, R)
+  R.is_storage = nil
+
+  table.kill_elem(quest.storage_rooms, R)
 end
 
 
@@ -419,30 +437,6 @@ function Quest_add_weapons()
   gui.printf("\n")
 end
 
-
-
-function Quest_find_storage_rooms()  -- NOT USED ATM
-
-  -- a "storage room" is a dead-end room which does not contain
-  -- anything special (keys, switches or weapons).  We place some
-  -- of the ammo and health needed by the player elsewhere into
-  -- these rooms to encourage exploration (i.e. to make these
-  -- rooms not totally useless).
-
-  each Q in LEVEL.quests do
-    Q.storage_rooms = {}
-  end
-
-  each R in LEVEL.rooms do
-    if R.kind != "scenic" and #R.conns == 1 and
-       not R.purpose and not R.weapons
-    then
-      R.is_storage = true
-      table.insert(R.arena.storage_rooms, R)
-      gui.debugf("Storage room @ %s in ARENA_%d\n", R:tostr(), R.arena.id)
-    end
-  end
-end
 
 
 function Quest_select_textures()
@@ -1184,6 +1178,8 @@ end
     
     stderrf("storage_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
+    L.dudded = true
+
     quest:add_room_or_hall(L)
 
     if L.is_room then
@@ -1196,7 +1192,7 @@ end
     if #exits == 0 then
       assert(L.is_room)
 
-      L.storage = true
+      quest:add_storage_room(L)
 
       return L
     end
@@ -1212,10 +1208,11 @@ end
         best_leaf = leaf
       end
 
-      -- this ought to be impossible, since zones need to be large and
-      -- we only dud up small sections of the level.
+      -- normally this should be impossible, since zones must be large
+      -- (over a minimum size) but we only dud up small branches.
+      -- It commonly occurs in NO-QUEST mode though.
       if D.L1.zone != D.L2.zone then
--- FIXME: HAPPENS IN NO_QUEST MODE  error("Zone was dudded!")
+        gui.printf("WARNING: dudded %s\n", D.L2.zone:tostr())
       end
     end
 
@@ -1275,15 +1272,17 @@ end
     if not lock then return end
 
     -- create new quest
-    local old_Q = assert(lock.conn.L1.quest)
+    local old_room = lock.conn.L1
+    local new_room = lock.conn.L2
+
+    local old_Q = assert(old_room.quest)
 
     local new_Q = QUEST_CLASS.new(lock.conn.L2)
 
-    table.insert(old_Q.branches, new_Q)
-
     new_Q.parent = old_Q
+    new_Q.parent_room = old_room
 
--- gui.debugf("branching off %s is new %s\n", old_Q:tostr(), new_Q:tostr())
+-- gui.debugf("new %s branches off %s\n", new_Q:tostr(), old_Q:tostr())
 
     -- continue on with new room and quest
     quest_flow(new_Q.start, new_Q)
@@ -1292,7 +1291,7 @@ end
   end
 
 
-  local function meander_flow(start, quest)
+  local function no_quest_mode(start, quest)
     -- this is used when there are no quests (except to find the exit)
 
     local leaf = storage_flow(start, quest)
@@ -1300,8 +1299,9 @@ end
     assert(leaf)
     assert(leaf != start)
 
+    quest:remove_storage_room(leaf)
+
     leaf.purpose = "EXIT"
-    leaf.storage = nil
 
     LEVEL.exit_room = leaf
   end
@@ -1346,14 +1346,14 @@ end
     if THEME.switches and THEME.keys then
       quest_flow(Q.start, Q)
     else
-      meander_flow(Q.start, Q)
+      no_quest_mode(Q.start, Q)
     end
 
     setup_lev_alongs()
 
     assert(LEVEL.exit_room)
 
-    gui.printf("Exit room is %s\n", LEVEL.exit_room:tostr())
+    gui.printf("Exit room: %s\n", LEVEL.exit_room:tostr())
 
     dump_visit_order()
   end
