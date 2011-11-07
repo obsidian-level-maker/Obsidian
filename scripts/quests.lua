@@ -985,7 +985,7 @@ local function Quest_choose_keys()
 end
 
 
-  local function add_lock(D)
+  local function add_lock(L, D)
 
     local LOCK =
     {
@@ -1173,10 +1173,40 @@ end
   end
 
 
+  local function pick_storage_exit(L, exits)
+    -- never use up all the exits
+    if #exits < 2 then return nil end
+
+    local max_tvol = 2.1
+
+    local best_score = -9e9
+    local best_exit
+
+    -- FIXME: random chance : must mark the exit somehow
+
+    each exit in exits do
+      -- size check
+      if exit.L2.travel_vol > max_tvol then continue end
+
+      -- a zone difference is always locked : play safe and abort [FIXME]
+      if exit.L1.zone != exit.L2.zone then return nil end
+
+      local score = 100 - exit.L2.travel_vol + gui.random()
+
+      if score > best_score then
+        best_score = score
+        best_exit  = exit
+      end
+    end
+
+    return best_exit
+  end
+
+
   local function storage_flow(L, quest)
     -- used when a branch of the level is dudded
     
-    stderrf("storage_flow @ %s : %s\n", L:tostr(), quest:tostr())
+    gui.debugf("storage_flow @ %s : %s\n", L:tostr(), quest:tostr())
 
     L.dudded = true
 
@@ -1235,22 +1265,26 @@ end
 
       --- branching room ---
 
+      -- turn some small branches into storage
+      while true do
+        local D = pick_storage_exit(L, exits)
+        if not D then break end
+
+        table.kill_elem(exits, D)
+
+        storage_flow(D.L2, quest)
+      end
+
+      -- pick the exit to keep travelling down
       local free_exit = pick_free_exit(L, exits)
 
       L.exit_conn = free_exit
 
-      -- lock up all other branches
       table.kill_elem(exits, free_exit)
 
+      -- lock up all other branches
       each exit in exits do
-
-        -- TEST SHITE FOR DUDDING
-        if _index >= 2 and exit.L2.travel_vol < 2.1 then
-          storage_flow(exit.L2, quest)
-          continue
-        end
-
-        add_lock(exit)
+        add_lock(L, exit)
       end
 
       -- continue down the free exit
