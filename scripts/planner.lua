@@ -1502,7 +1502,7 @@ function Plan_decide_outdoors()
 
   local function score_room(R)
     if not THEME.courtyard_floors then return -1 end
-    if not THEME.landscape_walls  then return -1 end
+--??  if not THEME.landscape_walls  then return -1 end
 
     -- TODO: relax this (room will have fences around it)
     if LEVEL.special == "street" then return -1 end
