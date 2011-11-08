@@ -16,19 +16,22 @@ Zones consist of rooms and each room has it's own 'Room Theme',
 defined in GAME.ROOM_THEMES.  That includes hallways too.
 
 The GAME.THEME_DEFAULTS table provides info which can be common to
-every theme -- and hence that stuff does not need to be repeated in
-all the specific themes.
+every theme -- and hence that stuff does not need to be duplicated
+in all the specific themes.
 
-The most specific theme overrides any values from the less specific
-one, with the following priorities:
+The most specific theme usually[*] overrides any values from a
+more generic one, with the following priorities:
 
    ROOM_THEMES > ZONE_THEMES > LEVEL_THEMES > THEME_DEFAULTS
 
 Zone Themes can be absent, in which case OBLIGE will create its own
 one using the data in the Level Theme.
 
-Room Themes could theoretically be absent, but generally aren't since
-the textures used for buildings look bad for caves, and vice versa.
+Room Themes cannot be absent (for buildings anyone, see below).
+
+[*] it depends, for example OBLIGE selects a single liquid to be
+used for the whole level, hence any 'liquids' table in a Zone
+Theme or Room Theme will be ignored.
 
 
 Application
@@ -38,36 +41,30 @@ Theming is decided after all the rooms have been connected and the
 quest structure is in place (including the zones).
 
 Liquids are easy: there is only one liquid per level (if any) and
-this was decided right at the beginning of the planning stage.
+this gets decided right at the beginning of the planning stage.
 
 Building facades are fairly easy.  There will be a single facade
-used in each zone [perhaps in the future allow two if the level is
-very large].  It will be chosen by the 'facades' table in the
-Zone Theme, if absent then try 'facades' in the Level Theme, then
-try THEME_DEFAULTS, and if all else fails then use the wall from
-one of the buildings in the zone.
+used in each zone [perhaps in the future allow two in very large
+levels].  It will be chosen using the 'facades' table in the
+Zone Theme, if absent then try 'facades' in the Level Theme, but
+if all else fails then OBLIGE will use the interior wall from one
+of the buildings in the zone.
 
-Each room and hallway will get a 'room_theme' reference.  The Room
-Theme is chosen from a table in the Zone Theme, but if absent then
-try the Level Theme, then try THEME_DEFAULTS, and if all else fails
-then it will be set to an empty table [which will usually lead to a
-fatal error unless the Zone Theme or Level Theme have the necessary
-material choice tables].
-
+Each room and hallway will get a 'room_theme' reference.
 There are four basic kinds of rooms: Buildings, Caves, Outdoor and
 Hallways.  [Note: hallways are not really considered rooms by the
 Lua code, but we ignore that distinction here].  For each kind of
 room there should be table for choosing the room theme:
  
-    buildings = { B1=50 }
+    buildings = { B1=50, B2=15 }
     caves     = { C1=50 }
     outdoors  = { D1=50 }
-    hallways  = { H1=50 }
+    hallways  = { H1=40, H2=10 }
 
 If such a table is absent in the Zone Theme, then the Level Theme
-is tried, and lastly the THEME_DEFAULTS.  It is a fatal error for
-the 'buildings' table to be completely absent.  When 'caves' is
-completely absent, the level will simply contain no caves, and
-the same goes for outdoor areas.  When no 'hallways' table can be
-found, then OBLIGE will just use the 'buildings' table instead.
+is tried.  It is a fatal error for the 'buildings' table to be
+completely absent.  When 'caves' is completely absent, the level will
+simply contain no caves, and the same goes for outdoor areas. When no
+'hallways' table can be found, then OBLIGE will use the Room Theme
+of a room which the hallway connects to.
 
