@@ -1,0 +1,31 @@
+
+
+THEME SYSTEM
+============
+
+Every level has a single 'Level Theme', defined in GAME.LEVEL_THEMES.
+This is game-specific, so in the Lua file it appears with the game
+namespace before it, like: QUAKE.LEVEL_THEMES.
+
+Levels are divided (generally by keyed doors) into 'Zones' which
+have their own 'Zone Theme', defined in GAME.ZONE_THEMES.
+
+Zones consist of rooms and each room has it's own 'Room Theme',
+defined in GAME.ROOM_THEMES.  That includes hallways too.
+
+The GAME.THEME_DEFAULTS table provides info which can be common to
+every theme -- and hence that stuff does not need to be repeated in
+all the specific themes.
+
+The most specific theme overrides any values from the less specific
+one, with the following priorities:
+
+   ROOM_THEMES > ZONE_THEMES > LEVEL_THEMES > THEME_DEFAULTS
+
+Zone Themes can be absent, in which case OBLIGE will create its own
+one using the data in the Level Theme.
+
+Room Themes could theoretically be absent, but generally aren't since
+the textures used for buildings tend to look bad for caves (and vice
+versa).
+
