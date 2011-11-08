@@ -1,7 +1,9 @@
 
-
 THEME SYSTEM
 ============
+
+Theme Definitions
+-----------------
 
 Every level has a single 'Level Theme', defined in GAME.LEVEL_THEMES.
 This is game-specific, so in the Lua file it appears with the game
@@ -26,6 +28,46 @@ Zone Themes can be absent, in which case OBLIGE will create its own
 one using the data in the Level Theme.
 
 Room Themes could theoretically be absent, but generally aren't since
-the textures used for buildings tend to look bad for caves (and vice
-versa).
+the textures used for buildings look bad for caves, and vice versa.
+
+
+Application
+-----------
+
+Theming is decided after all the rooms have been connected and the
+quest structure is in place (including the zones).
+
+Liquids are easy: there is only one liquid per level (if any) and
+this was decided right at the beginning of the planning stage.
+
+Building facades are fairly easy.  There will be a single facade
+used in each zone [perhaps in the future allow two if the level is
+very large].  It will be chosen by the 'facades' table in the
+Zone Theme, if absent then try 'facades' in the Level Theme, then
+try THEME_DEFAULTS, and if all else fails then use the wall from
+one of the buildings in the zone.
+
+Each room and hallway will get a 'room_theme' reference.  The Room
+Theme is chosen from a table in the Zone Theme, but if absent then
+try the Level Theme, then try THEME_DEFAULTS, and if all else fails
+then it will be set to an empty table [which will usually lead to a
+fatal error unless the Zone Theme or Level Theme have the necessary
+material choice tables].
+
+There are four basic kinds of rooms: Buildings, Caves, Outdoor and
+Hallways.  [Note: hallways are not really considered rooms by the
+Lua code, but we ignore that distinction here].  For each kind of
+room there should be table for choosing the room theme:
+ 
+    buildings = { B1=50 }
+    caves     = { C1=50 }
+    outdoors  = { D1=50 }
+    hallways  = { H1=50 }
+
+If such a table is absent in the Zone Theme, then the Level Theme
+is tried, and lastly the THEME_DEFAULTS.  It is a fatal error for
+the 'buildings' table to be completely absent.  When 'caves' is
+completely absent, the level will simply contain no caves, and
+the same goes for outdoor areas.  When no 'hallways' table can be
+found, then OBLIGE will just use the 'buildings' table instead.
 
