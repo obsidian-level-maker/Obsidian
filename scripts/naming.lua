@@ -52,9 +52,7 @@ GLOBAL_NAME_THEMES =
         ["Journey to the"]=10
         ["Assault on the"]=10
         ["Death Awaits in the"]=5
-        ["Oh God not another"]=2
-        ["Curse of the"]=10
-        ["Fear the"]=10
+        ["Oh God not another"]=5
         ["Yet Another"]=5
       }
     }
@@ -616,6 +614,12 @@ GLOBAL_NAME_THEMES =
         ["the Unknown"]=10
         ["the Unmaker"]=10
         ["the Vicar"]=10
+      }
+
+      v =
+      {
+        ["Curse of the"]=10
+        ["Fear the"]=10
       }
 
       s =
