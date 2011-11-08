@@ -5,18 +5,18 @@ THEME SYSTEM
 Theme Definitions
 -----------------
 
-Every level has a single 'Level Theme', defined in the game-specific
+Every level has a single "Level Theme", defined in the game-specific
 LEVEL_THEMES table.  For example, it is called QUAKE.LEVEL_THEMES in
 the games/quake.lua file.  There can be several Level Themes which
-belong to a single 'User Theme' -- e.g. with DOOM the "Hell" theme
+belong to a single "User Theme" -- e.g. with DOOM the 'Hell' theme
 will randomly select between two Level Themes: doom_hell1 (which is
 green marble) and doom_hell2 (which is hot red bricks).
 
-Levels are divided into large 'Zones' (usually separated by keyed
-doors) and each zone has its own 'Zone Theme', defined in the
+Levels are divided into large "Zones" (usually separated by keyed
+doors) and each zone has its own "Zone Theme", defined in the
 ZONE_THEMES table.
 
-Zones consist of rooms, and each room has its own 'Room Theme',
+Zones consist of rooms, and each room has its own "Room Theme",
 defined in the ROOM_THEMES table.  That includes hallways too.
 
 The THEME_DEFAULTS table provides info which can be common to
@@ -74,10 +74,12 @@ no 'hallways' table can be found, then OBLIGE will use the Room Theme
 of a room which the hallway connects to.
 
 
-Material Tables
----------------
+Material Choices
+----------------
 
-Parts of a room will use materials chosen from the Room Theme.
+Parts of a room will use materials (textures) chosen from the
+Room Theme.
+
 Buildings and Hallways have three main tables:
 
     walls = { STARTAN3=50, METAL2=10 }
@@ -86,11 +88,21 @@ Buildings and Hallways have three main tables:
 
     ceilings = { CEIL1_1=50 }
 
+The special keyword '_FACADE' can be used in the 'walls' table,
+which causes the interior texture of a building to match the
+exterior (facade) texture.
+
+The 'floors' and 'ceilings' tables can be absent (one or both),
+which means they will use the same material as the one chosen
+for the walls.
+
+
 Caves have a single table, the wall and floor are chosen separately
 from this table, and the ceiling will match either the wall or the
 floor (or can be SKY in places).
 
     naturals = { ASHWALL4=50, ROCK1=20 }
+
 
 Outdoor areas have some combination of man-made ("constructed") parts
 and natural parts, and hence use these two tables:
@@ -102,6 +114,34 @@ and natural parts, and hence use these two tables:
 Outdoor areas generally don't need walls, they are normally bounded
 by buildings or caves, or have a fence between a neighboring outdoor
 area (or a "sky fence" at the edge of the map).  However if a wall
-is absolutely necessary then one of 'floors' or 'naturals' would be
+was absolutely necessary then one of 'floors' or 'naturals' would be
 chosen and used appropriately.
+
+
+The Other Stuff
+---------------
+
+Walls, floors and ceilings are very important, but levels are
+pretty boring without some other things too :-)
+
+Theme definitions can contain other "choice tables" which refer
+to various types of stuff.  For example the 'keys' table refers
+to the names of KEY entities, and the 'doors' table refers to the
+names of DOOR skins.
+
+Many of these tables are for prefabs.  Prefabs are used to build a
+lot of a level's architecture, things like archways, doors, stairs,
+pedestals, windows, fences, etc....  A "skin" is a definition for
+a prefab, specifying all the materials it needs (among other things,
+like line-types etc).  Skins definitions are located in the
+game-specific 'SKINS' table (e.g. DOOM.SKINS).
+
+For example, this table in a Theme definition:
+
+    stairs = { Stair_Up1=50, Stair_Down1=50 }
+
+specifies there are two types of stairs to be used in a room,
+'Stair_Up1' and 'Stair_Down1', and both are equally likely.
+Changing the first 50 --> 5 would cause OBLIGE to create rooms
+where he player mostly goes downward from the entrance.
 
