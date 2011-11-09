@@ -726,9 +726,6 @@ function Levels_build_it()
   Quest_make_quests()
   if gui.abort() then return "abort" end
 
-  Connect_cycles()
-  if gui.abort() then return "abort" end
-
   gui.prog_step("Rooms");
 
   Rooms_build_all()

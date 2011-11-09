@@ -1051,50 +1051,12 @@ dump_room_flow(LEVEL.start_room)
     merge_a_zone()
   end
 
----##  initial_zones()
----##
----##      dump_zones()
----##
----##  while #LEVEL.zones > 1 do
----##    local vol, Z = min_zone_tvol()
----##
----##    -- stop merging when all zones are large enough
----##    if vol >= min_tvol and #LEVEL.zones <= zone_quota then break end
----##
----##    merge_a_zone(Z)
----##
----##        gui.printf("AFTER MERGE\n")
----##        dump_zones()
----##  end
-
   dump_zones()
-
 end
 
 
 
-function Quest_make_quests()
-
-  -- ALGORITHM NOTES:
-  --
-  -- A fundamental requirement of a locked door is that the player
-  -- needs to reach the door _before_ he/she reaches the key.  Then
-  -- the player knows what they are looking for.  Without this, the
-  -- player can just stumble on the key before finding the door and
-  -- says to themselves "what the hell is this key for ???".
-  --
-  -- The main idea in this algorithm is that you LOCK all but one exits
-  -- in each room, and continue down the free exit.  Each lock is added
-  -- to an active list.  When you hit a leaf room, pick a lock from the
-  -- active list (removing it) and mark the room as having its key.
-  -- Then the algorithm continues on the other side of the locked door
-  -- (creating a new quest for those rooms).
-  -- 
-
-  local active_locks = {}
-
-
-local function Quest_choose_keys()
+function Quest_choose_keys()
 
   local function dump_locks()
     gui.printf("Lock list:\n")
@@ -1177,6 +1139,28 @@ local function Quest_choose_keys()
 
   dump_locks()
 end
+
+
+
+function Quest_make_quests()
+
+  -- ALGORITHM NOTES:
+  --
+  -- A fundamental requirement of a locked door is that the player
+  -- needs to reach the door _before_ he/she reaches the key.  Then
+  -- the player knows what they are looking for.  Without this, the
+  -- player can just stumble on the key before finding the door and
+  -- says to themselves "what the hell is this key for ???".
+  --
+  -- The main idea in this algorithm is that you LOCK all but one exits
+  -- in each room, and continue down the free exit.  Each lock is added
+  -- to an active list.  When you hit a leaf room, pick a lock from the
+  -- active list (removing it) and mark the room as having its key.
+  -- Then the algorithm continues on the other side of the locked door
+  -- (creating a new quest for those rooms).
+  -- 
+
+  local active_locks = {}
 
 
   local function add_lock(L, D)
@@ -1608,6 +1592,10 @@ end
   create_quests()
 
   update_crossovers()
+
+
+  -- create cycles now, before theming logic kicks in...
+  Connect_cycles()
 
 
   Quest_assign_themes()
