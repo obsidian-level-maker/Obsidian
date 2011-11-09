@@ -242,20 +242,6 @@ end
 
 
 
-function Quest_distribute_unused_keys()
-  local next_L = GAME.levels[LEVEL.index + 1]
-
-  if not next_L then return end
-  if next_L.episode != LEVEL.episode then return end
-
-  each name,prob in LEVEL.usable_keys do
-    next_L.usable_keys[name] = prob
-    LEVEL .usable_keys[name] = nil
-  end
-end
-
-
-
 function Quest_add_weapons()
  
   local function prob_for_weapon(name, info, R)
@@ -1138,6 +1124,20 @@ function Quest_choose_keys()
   end
 
   dump_locks()
+end
+
+
+
+function Quest_distribute_unused_keys()
+  local next_L = GAME.levels[LEVEL.index + 1]
+
+  if not next_L then return end
+  if next_L.episode != LEVEL.episode then return end
+
+  each name,prob in LEVEL.usable_keys do
+    next_L.usable_keys[name] = prob
+    LEVEL .usable_keys[name] = nil
+  end
 end
 
 
