@@ -868,7 +868,7 @@ do return end ----!!!!!!!
 
       data.do_ceil = false
 
-      if not R.outdoor then
+      if R.kind != "outdoor" then
         data.do_ceil = true
 
         if i==2 and rand.odds(60) then

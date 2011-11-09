@@ -555,7 +555,7 @@ function Monsters_distribute_stats()
     while R.entry_conn do
       R = R.entry_conn:neighbor(R)
 
-      if R.is_room then
+      if R.kind != "hallway" then
         local ratio = rand.irange(3,7) * (0.5 ^ #list)
         table.insert(list, { room=R, ratio=ratio })
       end
@@ -1078,7 +1078,7 @@ function Monsters_in_room(R)
       prob = prob * (R.room_type.theme.monster_prefs[name] or 1)
     end
 
-    if R.outdoor then
+    if R.kind == "outdoor" or R.semi_outdoor then
       prob = prob * (info.outdoor_factor or 1)
     end
 
@@ -1867,7 +1867,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
       palette = room_palette()
     end
 
-    local barrel_chance = (R.outdoor ? 2 ; 15)
+    local barrel_chance = (R.kind == "building" ? 15 ; 2)
     if R.natural then barrel_chance = 3 end
     if R.hallway then barrel_chance = 5 end
 

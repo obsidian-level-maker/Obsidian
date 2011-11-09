@@ -22,6 +22,8 @@
 
 class HALLWAY
 {
+  kind : keyword  --  "hallway"
+
   id : number (for debugging)
 
   conns : list(CONN)  -- connections with neighbor rooms / hallways
@@ -79,8 +81,8 @@ HALLWAY_CLASS = {}
 function HALLWAY_CLASS.new()
   local H =
   {
-    id       = Plan_alloc_id("hall")
-    is_hall  = true
+    kind     = "hallway"
+    id       = Plan_alloc_id("hallway")
     conns    = {}
     sections = {}
     chunks   = {}
@@ -605,7 +607,7 @@ function Hallway_add_doubles()
     if not room_K.room then return false end
 
     -- rarely connect to caves
-    if room_K.room.cave and rand.odds(80) then return false end
+    if room_K.room.kind == "cave" and rand.odds(80) then return false end
 
     assert(room_K ==  left_K:neighbor(right_dir))
     assert(room_K == right_K:neighbor( left_dir))

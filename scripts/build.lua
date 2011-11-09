@@ -1941,7 +1941,7 @@ function Build_shadow(S, side, dist, z2)
 
   if side < 0 then
     S = S:neighbor(-side)
-    if not (S and S.room and S.room.outdoor) then return end
+    if not (S and S.room and S.room.kind == "outdoor") then return end
     side = 10 + side
   end
 
@@ -1950,7 +1950,7 @@ function Build_shadow(S, side, dist, z2)
 
   if side == 8 then
     local N = S:neighbor(6)
-    local clip = not (N and N.room and N.room.outdoor)
+    local clip = not (N and N.room and N.room.kind == "outdoor")
 
     -- FIXME: update for new brush system
     Trans.old_brush(get_light(-1),
@@ -1965,7 +1965,7 @@ function Build_shadow(S, side, dist, z2)
 
   if side == 4 then
     local N = S:neighbor(2)
-    local clip = not (N and N.room and N.room.outdoor)
+    local clip = not (N and N.room and N.room.kind == "outdoor")
 
     Trans.old_brush(get_light(-1),
     {

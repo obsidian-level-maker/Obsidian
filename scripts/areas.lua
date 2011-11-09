@@ -358,7 +358,7 @@ function Areas_important_stuff()
     local best_dist = -9e9
 
     -- in caves we want the spot to be away from the edges of the room
-    local wall_factor = (R.cave or rand.odds(5) ? 25.1 ; 2.15)
+    local wall_factor = (R.kind == "cave" or rand.odds(5) ? 15.2 ; 2.15)
 
     for sx = R.sx1, R.sx2 do for sy = R.sy1, R.sy2 do
       local S = SEEDS[sx][sy]
@@ -993,7 +993,7 @@ stderrf("TRYING....................\n")
 
   local function void_in_room(R)
     -- never in outdoor rooms
-    if R.outdoor then return end
+    if R.kind == "outdoor" then return end
 
     -- room must be large enough
     if R.kw < 2 or R.kh < 2 then return end
@@ -1786,7 +1786,7 @@ stderrf("TRYING....................\n")
 
   local function hallway_heights(L)
     each D in L.conns do
-      if D.L1 == L and D.L2.is_hall then
+      if D.L1 == L and D.L2.kind == "hallway" then
         local hall = D.L2
 
         hall:flesh_out(D)
@@ -1801,7 +1801,7 @@ stderrf("TRYING....................\n")
   local function floor_stuff(R)
     R.areas = {}
 
-    if R.cave then
+    if R.kind == "cave" then
       -- FIXME: don't really need these chunks [used to clear cave]
       filler_chunks(R)
 
@@ -1815,7 +1815,7 @@ stderrf("TRYING....................\n")
 
     initial_height(R)
     
-    if R.cave then
+    if R.kind == "cave" then
       Simple_connect_all_areas(R)
       Simple_render_cave(R)
     else
@@ -1834,7 +1834,7 @@ stderrf("TRYING....................\n")
 
     h = h + rand.pick { 128, 192, 256, 320, 384 }
 
-    if R.outdoor then
+    if R.kind == "outdoor" then
       R.sky_h = h + 128
     else
       R.ceil_h = h
@@ -1854,7 +1854,7 @@ stderrf("TRYING....................\n")
 
     if N.room == K.room then return false end
 
-    if K.outdoor and N.outdoor then return false end
+    if K.kind == "outdoor" and N.kind == "outdoor" then return false end
   end
 
 

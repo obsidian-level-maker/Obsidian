@@ -458,33 +458,23 @@ function Quest_assign_themes()
 
   local function assign_theme(L)
     -- one hallway theme per zone
-    if L.is_hall and L.zone.hallway_theme then
+    if L.kind == "hallway" and L.zone.hallway_theme then
       L.theme = L.zone.hallway_theme
       return
     -- one cave theme per level
-    elseif L.cave and LEVEL.cave_theme then
+    elseif L.kind == "cave" and LEVEL.cave_theme then
       L.theme = L.cave_theme
       return
     end
 
     -- figure out which table to use
     local tab
-    local tab_name
-
-    if L.is_hall then
-      tab_name = "hallways"
-    elseif L.cave then
-      tab_name = "caves"
-    elseif L.outdoor then
-      tab_name = "outdoors"
-    else
-      tab_name = "buildings"
-    end
+    local tab_name = L.kind .. "s"
 
     -- the Zone Theme takes precedence over the Level Theme
     tab = L.zone.theme[tab_name] or THEME[tab_name]
 
-    if not tab and L.is_hall then
+    if not tab and L.kind == "hallway" then
       tab = L.zone.theme["buildings"] or THEME["buildings"]
     end
 
@@ -505,9 +495,9 @@ function Quest_assign_themes()
 
     gui.debugf("Room theme @ %s : %s\n", L:tostr(), theme_name)
 
-    if L.is_hall then
+    if L.kind == "hallway" then
       L.zone.hallway_theme = L.theme
-    elseif L.cave then
+    elseif L.kind == "cave" then
       LEVEL.cave_theme = L.theme
     end
   end
@@ -530,9 +520,9 @@ end
 
 function Quest_select_textures()
 
-  local function facade_from_rooms(zone, req_building)
+  local function facade_from_rooms(zone, require_kind)
     each R in zone.rooms do
-      if req_building and not R.building then continue end
+      if require_kind and R.kind != require_kind then continue end
 
       return R.main_tex
     end
@@ -559,10 +549,10 @@ function Quest_select_textures()
       
       else
         -- grab facade from a room (prefer a building)
-        Z.facade_mat = facade_from_rooms(Z, true)
+        Z.facade_mat = facade_from_rooms(Z, "building")
 
         if not Z.facade_mat then
-          Z.facade_mat = facade_from_rooms(Z, false)
+          Z.facade_mat = facade_from_rooms(Z)
         end
       end
 
@@ -732,7 +722,7 @@ function calc_travel_volumes(L, zoney)
   local vol
 
   -- larger rooms have bigger volume 
-  if L.is_hall then
+  if L.kind == "hallway" then
     vol = 0.2
   else
     vol = 1 + L.svolume / 50
@@ -1255,7 +1245,7 @@ function Quest_make_quests()
 
 
   local function add_solution(R)
-    assert(R.is_room)
+    assert(R.kind != "hallway")
 
     if table.empty(active_locks) then
 -- gui.debugf("add_solution: EXIT\n")
@@ -1279,7 +1269,7 @@ function Quest_make_quests()
 
   local function crossover_volume(L)
     local count = 0
-    if L.is_room then count = L:num_crossovers() end
+    if L.kind != "hallway" then count = L:num_crossovers() end
 
     each D in L.conns do
       if D.L1 == L and D.kind != "double_R" then
@@ -1357,7 +1347,7 @@ function Quest_make_quests()
 
     quest:add_room_or_hall(L)
 
-    if L.is_room then
+    if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
     end
 
@@ -1365,7 +1355,7 @@ function Quest_make_quests()
 
     -- hit a leaf?
     if #exits == 0 then
-      assert(L.is_room)
+      assert(L.kind != "hallway")
 
       quest:add_storage_room(L)
 
@@ -1400,7 +1390,7 @@ function Quest_make_quests()
 
     quest:add_room_or_hall(L)
 
-    if L.is_room then
+    if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
     end
 

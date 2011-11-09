@@ -883,7 +883,7 @@ function CHUNK_CLASS.build(C)
   end
 
   -- Ugh dirty hack
-  if C.room and C.room.cave and C.filler then return end
+  if C.room and C.room.kind == "cave" and C.filler then return end
 
   local f_h
   local c_h
@@ -944,7 +944,7 @@ function CHUNK_CLASS.build(C)
     error("Chunk not in room or hall??")
   end
 
-  if (C.room and C.room.outdoor) or (C.hall and C.hall.outdoor) then
+  if (C.room and C.room.kind == "outdoor") or (C.hall and C.hall.outdoor) then
     c_mat = "_SKY"
     c_medium = "sky"
     if C.room then

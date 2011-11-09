@@ -1492,9 +1492,6 @@ end
 function Plan_decide_outdoors()
 
   local function score_room(R)
-    if not THEME.courtyard_floors then return -1 end
---??  if not THEME.landscape_walls  then return -1 end
-
     -- TODO: relax this (room will have fences around it)
     if LEVEL.special == "street" then return -1 end
 
@@ -1551,8 +1548,8 @@ function Plan_decide_outdoors()
     end
   end
 
-  if table.empty(room_list) then
-    gui.printf("No Outdoor Rooms\n")
+  if table.empty(room_list) or not THEME.outdoors then
+    gui.printf("Outdoor Quota: NONE\n")
     return
   end
 
@@ -1573,7 +1570,7 @@ function Plan_decide_outdoors()
     -- nothing possible?
     if not R then break end
 
-    R.outdoor = true
+    R.kind = "outdoor"
 
     quota = quota - R.svolume
   end
@@ -1583,15 +1580,13 @@ end
 function Plan_decide_caves()
 
   local function score_room(R)
-    if not THEME.cave_walls then return -1 end
-
     -- too small ?
     if R.svolume < 24 then return -1 end
 
     local score = R.svolume
 
-    -- prefer not to eat the outdoor rooms
-    if R.outdoor then return score / 2 + gui.random() end
+---##  -- prefer not to eat the outdoor rooms
+---##  if R.kind == "outdoor" then return score / 2 + gui.random() end
 
     local what = 0
 
@@ -1644,8 +1639,8 @@ function Plan_decide_caves()
     end
   end
 
-  if table.empty(room_list) then
-    gui.printf("No Outdoor Rooms\n")
+  if table.empty(room_list) or not THEME.caves then
+    gui.printf("Cave Quota: NONE\n")
     return
   end
 
@@ -1668,25 +1663,14 @@ function Plan_decide_caves()
 
     -- if the room was outdoor, then randomly re-assign as cave,
     -- with a probability depending on the STYLE setting.
-    if R.outdoor and not rand.odds(perc + 30) then continue end
+    if R.kind == "outdoor" and not rand.odds(perc + 30) then continue end
 
-    R.cave = true
+    R.old_kind = R.kind
 
-    -- re-assign any outdoor room as a cave
-    R.was_outdoor = R.outdoor ; R.outdoor = nil
+    -- re-assign room as a cave
+    R.kind = "cave"
 
     quota = quota - R.svolume
-  end
-end
-
-
-function Plan_decide_buildings()
-  -- this is easy: buildings are everything except outdoors and caves
-
-  each R in LEVEL.rooms do
-    if not R.outdoor or R.cave then
-      R.building = true
-    end
   end
 end
 
@@ -1731,8 +1715,7 @@ end
 
 
 
-function Plan_dump_rooms(title)
-
+function Plan_dump_rooms(title, match_kind)
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
     local R = S.room
@@ -1745,10 +1728,10 @@ function Plan_dump_rooms(title)
 
     local n = 1 + ((R.id - 1) % 26)
 
-    if not R.outdoor then
-      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
-    else
+    if R.kind == (match_kind or "outdoor") then
       return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
+    else
+      return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
     end
   end
 
@@ -1898,7 +1881,7 @@ function Plan_create_rooms()
   --   2. do any special rooms or patterns
   --   3. add odd-shaped and big rooms
   --   4. add small rooms
-  --   5. decide indoor/outdoor
+  --   5. decide outdoors and caves
   --  ??? create edge and corner lists
   --
   gui.printf("\n--==| Planning Rooms |==--\n\n")
@@ -1909,8 +1892,6 @@ function Plan_create_rooms()
   LEVEL.conns = {}
   LEVEL.halls = {}
   LEVEL.scenics = {}
-
-  gui.random() ; gui.random()
 
   Plan_choose_liquid()
 
@@ -1934,7 +1915,6 @@ function Plan_create_rooms()
 
   Plan_decide_outdoors()
   Plan_decide_caves()
-  Plan_decide_buildings()
 
   Plan_dump_rooms()
 end

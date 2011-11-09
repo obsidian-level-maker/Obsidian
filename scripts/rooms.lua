@@ -22,18 +22,15 @@
 
 class ROOM
 {
-  kind : keyword  -- "normal" (layout-able room)
-                  -- "scenic" (unvisitable room)
-                  -- "hallway", "stairwell", "small_exit"
+  kind : keyword  -- "building" : constructed room
+                  -- "cave"     : natural room
+                  -- "outdoor"  : room with sky
+                  -- "hallway"  : corridor / passage
 
   shape : keyword -- "rect" (perfect rectangle)
                   -- "L"  "T"  "U"  "S"  "H"
                   -- "plus"
-                  -- "odd"  (anything else)
-
-  outdoor  : bool  -- \
-  cave     : bool  --  main style of room : one of these is true
-  building : bool  -- /
+                  -- "odd" (everything else)
 
   scenic  : bool  -- true for scenic (unvisitable) rooms
 
@@ -93,9 +90,8 @@ function ROOM_CLASS.new(shape)
   local R =
   {
     id = id
-    kind = "normal"
+    kind = "building"
     shape = shape
-    is_room = true
 
     conns = {}
     chunks = {}
@@ -129,9 +125,9 @@ end
 
 
 function ROOM_CLASS.longstr(R)
-  return string.format("%s_%s [%d,%d..%d,%d]",
-      (R.parent ? "SUB_ROOM" ; "ROOM"),
-      R.id, R.kx1, R.ky1, R.kx2, R.ky2)
+  return string.format("%s_ROOM_%d [%d,%d..%d,%d]",
+      string.upper(R.kind), R.id,
+      R.sx1, R.sy1, R.sx2, R.sy2)
 end
 
 
@@ -232,7 +228,7 @@ end
 function ROOM_CLASS.has_sky_neighbor(R)
   each D in R.conns do
     local N = D:neighbor(R)
-    if N.outdoor then return true end
+    if N.kind == "outdoor" then return true end
   end
   return false
 end
@@ -361,7 +357,7 @@ function ROOM_CLASS.pick_floor_mat(R, h)
   -- use same material for same height
 
   if not R.floor_mats[h] then
-    if R.outdoor then
+    if R.kind == "outdoor" then
       R.floor_mats[h] = rand.key_by_probs(R.zone.courtyard_floors)
     else
       R.floor_mats[h] = rand.key_by_probs(R.zone.building_floors)
@@ -536,7 +532,7 @@ function Rooms_setup_theme(R)
 
   R.skin.spike_group = "spike" .. tostring(R.id)
 
-  if R.cave then
+  if R.kind == "cave" then
     assert(THEME.cave_walls)
     R.main_tex = rand.key_by_probs(THEME.cave_walls)
     R.skin.wall = R.main_tex
@@ -544,7 +540,7 @@ function Rooms_setup_theme(R)
     return
   end
 
-  if not R.outdoor then
+  if not R.kind == "outdoor" then
     R.main_tex = rand.key_by_probs(R.zone.building_walls)
     R.skin.wall = R.main_tex
     assert(R.main_tex)
@@ -764,7 +760,7 @@ function OLD_Rooms_decide_windows()
 
       -- FIXME: sometimes make windows from indoor to indoor
 
-      if can_add_window(K, side) and N.room.outdoor
+      if can_add_window(K, side) and N.room.kind == "outdoor"
          and rand.odds(prob)
       then
         add_window(K, N, side)      
@@ -781,7 +777,7 @@ function OLD_Rooms_decide_windows()
 ---    if R.outdoor or R.semi_outdoor then return end
 
     -- TODO: cavey see-through holes
-    if not R.building then return end
+    if R.kind != "building" then return end
 
     local prob = style_sel("windows", 0, 20, 40, 80+19)
 
@@ -1154,7 +1150,9 @@ function Rooms_intermission_camera()
   local room
 
   each R in LEVEL.rooms do
-    if R.purpose != "START" and R.purpose != "EXIT" and not R.cave then
+    if R.purpose != "START" and R.purpose != "EXIT" and
+       R.kind != "cave" and R.kind != "hallway"
+    then
       if not room or (R.kvolume > room.kvolume) then
         room = R
       end
@@ -1224,9 +1222,9 @@ function Layout_inner_outer_tex(skin, K, K2)
   skin.wall  = R.skin.wall
   skin.outer = N.skin.wall
 
-  if R.outdoor and not N.outdoor then
+  if R.kind == "outdoor" and N.kind != "outdoor" then
     skin.wall  = N.facade or skin.outer
-  elseif N.outdoor and not R.outdoor then
+  elseif N.kind == "outdoor" and R.kind != "outdoor" then
     skin.outer = R.facade or skin.wall
   end
 end
@@ -1283,7 +1281,7 @@ end
 
 
 function Layout_possible_windows(E)
-  if E.usage.K1.room.outdoor and E.usage.K2.room.outdoor then
+  if E.usage.K1.room.kind == "outdoor" and E.usage.K2.room.kind == "outdoor" then
     list = THEME.fences
   else
     list = THEME.windows
@@ -1487,7 +1485,7 @@ function OLD__Layout_all_ceilings()
     end
 
     local light = rand.pick { 128, 144, 160 }
-    if R.outdoor then light = 192 end
+    if R.kind == "outdoor" then light = 192 end
 
     each K in R.sections do
       raw_add_brush(

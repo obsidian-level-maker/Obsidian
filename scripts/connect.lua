@@ -151,8 +151,8 @@ end
 
 function Connect_is_possible(L1, L2, mode)
   if mode == "cycle" then
-    if L1.is_hall then return false end
-    if L2.is_hall then return false end
+    if L1.kind == "hallway" then return false end
+    if L2.kind == "hallway" then return false end
 
     if L1.next_in_quest == L2 then return true end
     if L1.next_in_quest and L1.next_in_quest.next_in_quest == L2 then return true end
@@ -162,7 +162,7 @@ function Connect_is_possible(L1, L2, mode)
 
   -- Note: require R1's group to be less than R2, which ensures that
   --       a connection between two rooms is only tested _once_.
-  if mode == "normal" and L1.is_room and L2.is_room then
+  if mode == "normal" and L1.kind != "hallway" and L2.kind != "hallway" then
     return (L1.conn_group < L2.conn_group)
   end
 
@@ -408,7 +408,7 @@ function Connect_rooms()
 
     visited[L] = true
 
-    if L.is_room then
+    if L.kind != "hallway" then
       table.insert(LEVEL.rooms, L)
     end
 
@@ -492,7 +492,7 @@ function Connect_cycles()
   local function find_room(D)
     local L = D.L2
 
-    if L.is_room then return L end
+    if L.kind != "hallway" then return L end
 
     each D2 in L.conns do
       if D2.L1 == L and not D2.lock then
