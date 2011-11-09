@@ -19,7 +19,7 @@
 --
 ----------------------------------------------------------------
 
-QUAKE = { }
+QUAKE = {}
 
 QUAKE.ENTITIES =
 {
@@ -1213,7 +1213,7 @@ QUAKE.LEVEL_THEMES =
 
   quake_castle1 =
   {
-    prob=50
+    prob = 50
 
     worldtype = 0
 

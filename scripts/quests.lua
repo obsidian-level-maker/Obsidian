@@ -503,6 +503,8 @@ function Quest_assign_themes()
       error("No such room theme: " .. tostring(name))
     end
 
+    gui.debugf("Room theme @ %s : %s\n", L:tostr(), theme_name)
+
     if L.is_hall then
       L.zone.hallway_theme = L.theme
     elseif L.cave then
@@ -519,8 +521,8 @@ function Quest_assign_themes()
     assign_theme(R)
   end
 
-  each H in LEVEL.hallways do
-    assign_theme(R)
+  each H in LEVEL.halls do
+    assign_theme(H)
   end
 end
 
