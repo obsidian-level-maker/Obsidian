@@ -463,7 +463,7 @@ function Quest_assign_themes()
       return
     -- one cave theme per level
     elseif L.kind == "cave" and LEVEL.cave_theme then
-      L.theme = L.cave_theme
+      L.theme = LEVEL.cave_theme
       return
     end
 
