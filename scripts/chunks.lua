@@ -487,7 +487,7 @@ function CHUNK_CLASS.do_big_item(C, item_name)
   local skin1 = assert(GAME.SKINS[name])
 
   local skin2 = { item = item_name }
-  local skin0 = { wall = C.room.main_tex }
+  local skin0 = { wall = C.room.wall_mat }
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
@@ -519,7 +519,7 @@ function CHUNK_CLASS.content_exit(C)
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
   local skin2 = { next_map = LEVEL.next_map, targetname = "exit" }
-  local skin0 = { wall = C.room.main_tex }
+  local skin0 = { wall = C.room.wall_mat }
 
   -- Hexen: on last map, exit will end the game
   if OB_CONFIG.game == "hexen" and not LEVEL.next_map then
@@ -565,7 +565,7 @@ function CHUNK_CLASS.content_teleporter(C)
   local name  = rand.key_by_probs(THEME.teleporters)
   local skin1 = assert(GAME.SKINS[name])
 
-  local skin0 = { wall = C.room.main_tex }
+  local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
 
   if conn.L1 == C.room then
@@ -597,7 +597,7 @@ function CHUNK_CLASS.content_hub_gate(C)
   local name  = rand.key_by_probs(THEME.hub_gates)
   local skin1 = assert(GAME.SKINS[name])
 
-  local skin0 = { wall = C.room.main_tex }
+  local skin0 = { wall = C.room.wall_mat }
   local skin2 = {}
 
   skin2.source_id  = C.content.source_id
@@ -637,7 +637,7 @@ function CHUNK_CLASS.do_hexen_triple(C)
 
   local T = Trans.spot_transform(mx, my, C.floor_h or 0, C.spot_dir)
 
-  local skin0 = { wall = C.room.main_tex }
+  local skin0 = { wall = C.room.wall_mat }
   local skin2 = { }
 
   Fabricate(skin1._prefab, T, { skin0, skin1, skin2 })
@@ -865,7 +865,7 @@ function CHUNK_CLASS.build_scenic(C)
     local def_mat = "_ERROR"
     
     if C.room then
-      def_mat = C.room.main_tex or def_mat
+      def_mat = C.room.wall_mat or def_mat
     end
 
     Brush_set_mat(brush, C.mat or def_mat)
@@ -930,14 +930,14 @@ function CHUNK_CLASS.build(C)
 
 
   if C.room then
-    w_mat = assert(C.room.main_tex)
-    f_mat = C.room:pick_floor_mat(f_h)
+    w_mat = assert(C.room.wall_mat)
+    f_mat = C.room:pick_floor_mat(f_h)  -- FIXME !!!!!  decide this EARLIER
     c_mat = C.room:pick_ceil_mat()
 
-  elseif C.hall then
-    w_mat = assert(C.hall.wall_tex)
-    f_mat = assert(C.hall.floor_tex)
-    c_mat = assert(C.hall.ceil_tex)
+  elseif C.hall then  -- FIXME !!!!!  decide this EARLIER
+    w_mat = assert(C.hall.wall_mat)
+    f_mat = assert(C.hall.floor_mat)
+    c_mat = assert(C.hall.ceiling_mat)
 
     c_h = f_h + C.hall.height
   else

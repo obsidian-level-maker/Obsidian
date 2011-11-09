@@ -356,6 +356,9 @@ end
 function ROOM_CLASS.pick_floor_mat(R, h)
   -- use same material for same height
 
+-- FIXME !!!!
+do return assert(R.floor_mat or R.wall_mat) end
+
   if not R.floor_mats[h] then
     if R.kind == "outdoor" then
       R.floor_mats[h] = rand.key_by_probs(R.zone.courtyard_floors)
@@ -369,11 +372,14 @@ end
 
 
 function ROOM_CLASS.pick_ceil_mat(R)
-  if not R.ceil_mat then
-    R.ceil_mat = rand.key_by_probs(R.zone.building_ceilings)
+-- FIXME !!!!
+do return assert(R.ceiling_mat or R.wall_mat) end
+
+  if not R.ceiling_mat then
+    R.ceiling_mat = rand.key_by_probs(R.zone.building_ceilings)
   end
 
-  return R.ceil_mat
+  return R.ceiling_mat
 end
 
 
@@ -527,7 +533,7 @@ end
 ----------------------------------------------------------------
 
 
-function Rooms_setup_theme(R)
+function OLD__Rooms_setup_theme(R)
   R.skin = {}
 
   R.skin.spike_group = "spike" .. tostring(R.id)
@@ -554,11 +560,10 @@ function Rooms_setup_theme(R)
   R.main_tex = R.quest.courtyard_floor
 
   R.skin.wall = R.main_tex
-  R.skin.fence = "ICKWALL7"
 end
 
 
-function Rooms_setup_theme_Scenic(R)
+function OLD__Rooms_setup_theme_Scenic(R)
   -- TODO
   R.outdoor = true
   Rooms_setup_theme(R)
@@ -566,7 +571,7 @@ end
 
 
 
-function Rooms_choose_themes()
+function OLD__Rooms_choose_themes()
   each R in LEVEL.rooms do
     Rooms_setup_theme(R)
   end
@@ -640,7 +645,7 @@ function Rooms_select_textures()
   end
 
 
-  local function assign_to_zones(WHAT, orig_source)
+  local function TESTCRUD__assign_to_zones(WHAT, orig_source)
     
     -- TODO: number of passes depends on zone size
     --       __OR__ : do a pass for each real room
@@ -670,10 +675,48 @@ function Rooms_select_textures()
   end
 
 
+  local function select_textures(L)
+    local tab = L.theme.walls or L.theme.naturals
+    assert(tab)
+
+    -- FIXME: way way way to simple!!
+
+    L.wall_mat = rand.key_by_probs(tab)
+
+    if L.theme.floors then
+      L.floor_mat = rand.key_by_probs(L.theme.floors)
+    end
+
+    if L.theme.ceilings then
+      L.ceiling_mat = rand.key_by_probs(L.theme.ceilings)
+    end
+  end 
+
+
+  local function setup_skin(L)
+    L.skin = {}
+
+    L.skin.spike_group = "spike" .. tostring(L.id)
+
+    L.skin.wall = L.wall_mat
+  end
+
+
   ---| Rooms_select_textures |---
 
   select_facades()
 
+  each R in LEVEL.rooms do
+    select_textures(R)
+    setup_skin(R)
+  end
+
+  each H in LEVEL.halls do
+    select_textures(H)
+    setup_skin(H)
+  end
+
+--[[
   assign_to_zones("building_walls",    THEME.building_walls)
   assign_to_zones("building_facades",  THEME.building_facades or THEME.building_walls)
   assign_to_zones("building_floors",   THEME.building_floors)
@@ -684,11 +727,7 @@ function Rooms_select_textures()
   assign_to_zones("hallway_ceilings", THEME.hallway_ceilings or THEME.building_ceilings)
 
   assign_to_zones("courtyard_floors", THEME.courtyard_floors or THEME.building_floors)
-
-  -- ETC ETC...
-
-
-
+--]]
 
 ---##  local base_num = 3
 ---##
@@ -737,45 +776,13 @@ function Rooms_select_textures()
 ---##    end
 ---##  end
 
-  if not LEVEL.outer_fence_tex then
-    if THEME.outer_fences then
-      LEVEL.outer_fence_tex = rand.key_by_probs(THEME.outer_fences)
-    end
-  end
 
-  if not LEVEL.step_skin then
-    if not THEME.steps then
-      gui.printf("WARNING: Theme is missing step skins\n") 
-      LEVEL.step_skin = {}
-    else
-      local name = rand.key_by_probs(THEME.steps)
-      LEVEL.step_skin = assert(GAME.STEPS[name])
-    end
-  end
-
-  if not LEVEL.lift_skin then
-    if not THEME.lifts then
-      -- OK
-    else
-      local name = rand.key_by_probs(THEME.lifts)
-      LEVEL.lift_skin = assert(GAME.LIFTS[name])
-    end
-  end
-
-
-  -- TODO: caves and landscapes
-
-  gui.printf("\nSelected textures:\n")
-
-  gui.printf("facades =\n%s\n", table.tostr(LEVEL.building_facades))
-  gui.printf("walls =\n%s\n", table.tostr(LEVEL.building_walls))
-  gui.printf("floors =\n%s\n", table.tostr(LEVEL.building_floors))
-  gui.printf("courtyards =\n%s\n", table.tostr(LEVEL.courtyard_floors))
-
-  gui.printf("\n")
+--???  if not LEVEL.outer_fence_tex then
+--???    if THEME.outer_fences then
+--???      LEVEL.outer_fence_tex = rand.key_by_probs(THEME.outer_fences)
+--???    end
+--???  end
 end
-
-
 
 
 

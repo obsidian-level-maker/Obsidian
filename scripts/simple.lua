@@ -700,7 +700,7 @@ function Simple_render_cave(R)
 
   local cave = R.cave_map
 
-  local cave_tex = R.main_tex or "_ERROR"
+  local cave_tex = R.wall_mat or "_ERROR"
 
 
   local function choose_tex(last, tab)

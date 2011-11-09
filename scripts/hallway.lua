@@ -43,7 +43,7 @@ class HALLWAY
 
   cross_limit : { low, high }  -- a limitation of crossover heights
 
-  wall_tex, floor_tex, ceil_tex 
+  wall_mat, floor_mat, ceiling_mat 
 }
 
 --------------------------------------------------------------]]
@@ -741,13 +741,13 @@ end
 
 
 function HALLWAY_CLASS.choose_textures(H)
-  H.wall_tex  = rand.key_by_probs(H.zone.hallway_walls)
-  H.floor_tex = rand.key_by_probs(H.zone.hallway_floors)
-  H.ceil_tex  = rand.key_by_probs(H.zone.hallway_ceilings)
-
-  if H.outdoor then
-    H.floor_tex = rand.key_by_probs(THEME.street_floors or THEME.courtyard_floors or THEME.building_floors)
-  end
+---##  H.wall_tex  = rand.key_by_probs(H.zone.hallway_walls)
+---##  H.floor_tex = rand.key_by_probs(H.zone.hallway_floors)
+---##  H.ceil_tex  = rand.key_by_probs(H.zone.hallway_ceilings)
+---##
+---##  if H.outdoor then
+---##    H.floor_tex = rand.key_by_probs(THEME.street_floors or THEME.courtyard_floors or THEME.building_floors)
+---##  end
 
   H.trimmed = rand.sel(50)
 end
