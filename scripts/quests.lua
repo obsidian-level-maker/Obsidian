@@ -542,6 +542,47 @@ end
 
 function Quest_select_textures()
 
+  local function facade_from_rooms(zone, req_building)
+    each R in zone.rooms do
+      if req_building and not R.building then continue end
+
+      return R.main_tex
+    end
+  end
+
+
+  local function select_facades()
+    local global_facades
+
+    if THEME.facades then
+      global_facades = table.copy(THEME.facades)
+    end
+
+    each Z in LEVEL.zones do
+      local tab = Z.theme.facades or THEME.facades
+
+      if tab then
+        Z.facade_mat = rand.key_by_probs(tab)
+
+        -- try not to use the same facade again
+        if tab == global_facades then
+          global_facades[Z.facade_mat] = global_facades[Z.facade_mat] / 20
+        end
+      
+      else
+        -- grab facade from a room (prefer a building)
+        Z.facade_mat = facade_from_rooms(Z, true)
+
+        if not Z.facade_mat then
+          Z.facade_mat = facade_from_rooms(Z, false)
+        end
+      end
+
+      assert(Z.facade_mat)
+    end
+  end
+
+
   local function assign_to_zones(WHAT, orig_source)
     
     -- TODO: number of passes depends on zone size
@@ -586,6 +627,11 @@ function Quest_select_textures()
   assign_to_zones("courtyard_floors", THEME.courtyard_floors or THEME.building_floors)
 
   -- ETC ETC...
+
+
+  -- this must occur after all the room textures are established
+  select_facades()
+
 
 
 ---##  local base_num = 3
