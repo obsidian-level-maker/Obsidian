@@ -166,10 +166,11 @@ HACX.MATERIALS =
   GRASS1 = { t="MARBGRAY", f="TLITE6_1" }
   GRASS2 = { t="MARBGRAY", f="CONS1_7" }
 
-  STARTAN3 = { t="STARTAN3", f="GRASS2" }
+  GRAY_BRICK = { f="GRASS2", t="STARTAN3" }
+  HERRING_1  = { f="FLAT9", t="HW306" }
+  WOOD_TILE  = { f="CEIL5_2", t="MIDBARS1", }
+
 --FLAT14   = { t="STARTAN3", f="FLAT14" }
-  FLAT9    = { t="HW306", f="FLAT9" }
-  MIDBARS1 = { t="MIDBARS1", f="CEIL5_2" }
 
 
   -- rails --
@@ -571,7 +572,7 @@ STARG3 , color=0x826647
 STARGR1 , color=0x8a7256
 STARTAN1 , color=0x182015
 STARTAN2 , color=0x383838
-STARTAN3 , color=0x4a4841
+GRAY_BRICK , color=0x4a4841
 STEP1 , color=0x1b1b14
 STEP2 , color=0x19110b
 STEP3 , color=0x4b2c13
@@ -755,7 +756,7 @@ CEIL4_1 , color=0xac7e57
 CEIL4_2 , color=0x696969
 CEIL4_3 , color=0x686868
 CEIL5_1 , color=0x524d38
-CEIL5_2 , color=0x725b44
+*WOOD_TILE , color=0x725b44
 COMP01 , color=0x595754
 CONS1_1 , color=0x2a230e
 CONS1_5 , color=0x131313
@@ -793,7 +794,7 @@ FLAT5_6 , color=0x3a342d
 FLAT5_7 , color=0x343434
 FLAT5_8 , color=0x4f412e
 FLAT8 , color=0x474747
-FLAT9 , color=0x736359
+*HERRING_1 , color=0x736359
 FLOOR0_1 , color=0x343433
 FLOOR0_2 , color=0x9f9f9f
 FLOOR0_3 , color=0x448d33
@@ -1109,45 +1110,75 @@ HACX.THEME_DEFAULTS =
   locked_doors = { Locked_kz_blue=50, Locked_kz_red=50, Locked_kz_yellow=50,
                    Door_SW_blue = 50 }
 
-  liquids = { water=90, water2=50, elec=90, lava=50, slime=20, goo=10 }
-
   teleporters = { Teleporter1 = 50 }
+}
+
+
+HACX.NAME_THEMES =
+{
+}
+
+
+HACX.ROOM_THEMES =
+{
+  Urban_generic =
+  {
+    walls =
+    {
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, BLOCKY2=50
+    }
+
+    floors =
+    {
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
+      WOOD_TILE=50,
+    }
+
+    ceilings =
+    {
+      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
+    }
+  }
+
+  Cave_generic =
+  {
+    naturals = { GRAY_ROCK=50 }
+  }
+
+  Outdoors_generic =
+  {
+    floors = { HERRING_1=50, GRAY_BRICK=50 }
+
+    naturals = { GRAY_ROCK=50, DIRTY1=50, GRASS1=50 }
+  }
+}
+
+
+HACX.ZONE_THEMES =
+{
 }
 
 
 HACX.LEVEL_THEMES =
 {
-  hacx_tech1 =
+  hacx_urban1 =
   {
     prob = 50
 
-    building_walls =
-    {
-      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, BLOCKY2=50
-    }
+    liquids = { water=90, water2=50, elec=90, lava=50, slime=20, goo=10 }
 
-    building_floors =
-    {
-      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
-    }
+    buildings = { Urban_generic=50 }
 
-    building_ceilings =
-    {
-      MODWALL3=50, STONY1=50, TECHY1=50, CAVEY1=50, BLOCKY1=50, WOODY1=50
-    }
+    caves = { Cave_generic=50 }
 
-    courtyard_floors =
-    {
-      GRASS1=50, STARTAN3=50, FLAT9=50, MIDBARS1=50,
-      DIRTY1=50, DIRTY2=50,
-    }
+    outdoors = { Outdoors_generic=50 }
 
-    landscape_walls =
-    {
-      GRAY_ROCK=50,
-    }
+    -- hallways = { blah }
 
-  }  -- TECH
+    -- TODO: more stuff
+  }
+
+  -- TODO: more themes (e.g. cyberspace)
 }
 
 
@@ -1688,11 +1719,11 @@ OB_GAMES["hacx"] =
 }
 
 
-OB_THEMES["hacx_tech"] =
+OB_THEMES["hacx_urban"] =
 {
-  label = "Tech"
+  label = "Urban"
   for_games = { hacx=1 }
-  name_theme = "TECH"
+  name_theme = "URBAN"
   mixed_prob = 50
 }
 
