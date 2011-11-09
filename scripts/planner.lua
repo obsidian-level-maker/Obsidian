@@ -163,15 +163,6 @@ end
 --]]
 
 
-function SECTION_CLASS.set_facade(K, facade)
-  K.facade = facade
-
-  if K.room then K.room:set_facade(facade) end
-
-  if K.hall then K.hall.facade = facade end
-end
-
-
 function SECTION_CLASS.approx_side_coord(K, dir)
   return geom.nudge(K.kx, K.ky, dir, 0.5)
 end

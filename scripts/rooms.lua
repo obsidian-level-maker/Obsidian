@@ -465,21 +465,6 @@ function ROOM_CLASS.add_exclusion_zone(R, x1, y1, x2, y2, extra_dist)
 end
 
 
-function ROOM_CLASS.set_facade(R, facade)
-  R.facade = facade
-
-  each K in R.sections do
-    K.facade = facade
-  end
-
---??  each D in R.conns do
---??    if D.R1 == R and D.hall then
---??      D.hall.facade = facade
---??    end
---??  end
-end
-
-
 function ROOM_CLASS.num_crossovers(R)
   if R.crossover_hall then return 1 end
 
@@ -583,62 +568,6 @@ function Rooms_setup_theme_Scenic(R)
   Rooms_setup_theme(R)
 end
 
-
-function Rooms_assign_facades()
-  --
-  -- Algorithm:
-  --   assign a facade to each corner of the map, and then grow
-  --   randomly until every section has a facade.  When a section
-  --   is part of a room, the whole room gets that facade.
-  --
-  each corner in { 1,3,7,9 } do
-    local kx, ky = geom.pick_corner(corner, 1,1, SECTION_W,SECTION_H)
-    local K = SECTIONS[kx][ky]
-
-    local facade = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
-
-    K:set_facade(facade)
-  end
-
-  for loop = 1,20 do
-    local last_chance = (loop == 20)
-
-    each K in Section_random_visits() do
-      if K.facade then continue end
-
-      local N = K:neighbor(rand.dir())
-
-      local facade = N and N.facade
-      
-      -- prefer not to propagate via outdoor rooms
-      if loop <= 10 and N and N.room and N.room.outdoor then
-        continue
-      end
-
-      if not facade and last_chance then
-        facade = rand.key_by_probs(THEME.building_facades or THEME.building_walls)
-      end
-
-      if facade then
-        K:set_facade(facade)
-      end
-
-    end -- K
-  end -- loop
-
-  -- verify that all went well
-  each R in LEVEL.rooms do
-    assert(R.facade)
-  end
-
-  -- TODO: handle this in SECTION_CLASS.set_facade()
-  each R in LEVEL.scenics do
-    if not R.facade then
-      R.facade = R.sections[1].facade
-      assert(R.facade)
-    end
-  end
-end
 
 
 function Rooms_choose_themes()
@@ -1638,7 +1567,6 @@ function Rooms_build_all()
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
   Rooms_choose_themes()
-  Rooms_assign_facades()
 
 ---!!!  Rooms_setup_symmetry()
 
