@@ -1102,23 +1102,19 @@ CHEX.THEME_DEFAULTS =
 
   locked_doors = { Locked_blue=50, Locked_red=50, Locked_yellow=50,
                    Door_SW_alum = 50 }
+}
 
-  liquids = { water=50, slime1=50, slime2=50 }
+
+CHEX.NAME_THEMES =
+{
 }
 
 
 CHEX.ROOM_THEMES =
 {
-  PLAIN = { }
-}
-
-
-CHEX.LEVEL_THEMES =
--- TECH, ARBORETUM and CAVE?
-{
-  chex_tech1 =
+  Tech_generic =
   {
-    building_walls =
+    walls =
     {
       BLUE_WALL=30,
       GRAY_PANELS=10, GRAY_PIPES=20, GRAY_STRIPE=10,
@@ -1126,21 +1122,56 @@ CHEX.LEVEL_THEMES =
       TAN1=10, TAN2=10
     }
 
-    building_floors =
+    floors =
     {
       DARK_GRAY=50, BLUE_CARPET=50,
       ORANGE_TILE=50, VERYDARK_BLUE=50,
     }
 
-    building_ceilings =
+    ceilings =
     {
       CEIL4_1=50,
     }
+  }
+
+  Cave_generic =
+  {
+    naturals = { CAVE=50 }
+  }
+
+  Outdoors_generic =
+  {
+    floors = { RED_FLOOR=50, TAN1=50, DARK_GRAY=50 }
+
+    naturals = { DIRT=50 }
+  }
+
+  -- TODO: Outdoor_space_port
+}
+
+
+CHEX.ZONE_THEMES =
+{
+}
+
+
+CHEX.LEVEL_THEMES =
+{
+--?? TECH, ARBORETUM and CAVE ??
+
+  chex_tech1 =
+  {
+    prob = 50
+
+    liquids = { water=50, slime1=50, slime2=50 }
+
+    buildings = { Tech_generic=50 }
     
-    courtyard_floors =
-    {
-      DIRT=50, DARK_GRAY=50, RED_FLOOR=50, TAN1=50
-    }
+    caves = { Cave_generic=50 }
+
+    outdoors = { Outdoors_generic=50 }
+
+    -- hallways = { blah }
   }
 }
 
