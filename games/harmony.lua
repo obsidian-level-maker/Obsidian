@@ -163,7 +163,9 @@ HARMONY.MATERIALS =
 
   FLOOR4_8 = { f="FLOOR4_8", t="SILVER3" }
 
-  GRASS2 = { t="ZZWOLF11", f="GRASS2" }
+  GRASS2 = { f="GRASS2", t="ZZWOLF11" }
+
+  ROCKS = { f="TLITE6_4", t="ZZWOLF9" }
 
 
 
@@ -1194,7 +1196,54 @@ HARMONY.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 50 }
 
-  liquids = { water=90, nukage=30, lava=10 }
+}
+
+
+HARMONY.ROOM_THEMES =
+{
+  Tech_generic =
+  {
+    walls =
+    {
+      ORANJE3=50,
+    }
+
+    floors =
+    {
+      ORANJE3=50,
+    }
+
+    ceilings =
+    {
+      FLOOR4_8=50,
+    }
+  }
+
+  Cave_generic =
+  {
+    naturals =
+    {
+      ROCKS=50
+    }
+  }
+
+  Outdoors_generic =
+  {
+    floors =
+    {
+      ORANJE3=50,
+    }
+
+    naturals =
+    {
+      GRASS2=50, ROCKS=10
+    }
+  }
+}
+
+
+HARMONY.ZONE_THEMES =
+{
 }
 
 
@@ -1204,30 +1253,13 @@ HARMONY.LEVEL_THEMES =
   {
     prob = 50
 
-    building_walls =
-    {
-      ORANJE3=50,
-    }
+    liquids = { water=90, nukage=30, lava=10 }
 
-    building_floors =
-    {
-      ORANJE3=50,
-    }
+    buildings = { Tech_generic=50 }
 
-    building_ceilings =
-    {
-      FLOOR4_8=50,
-    }
+    caves = { Cave_generic=50 }
 
-    courtyard_floors =
-    {
-      GRASS2=50,
-    }
-
-    landscape_walls =
-    {
-      GRASS2=50,
-    }
+    outdoors = { Outdoors_generic=50 }
   }
 }
 
