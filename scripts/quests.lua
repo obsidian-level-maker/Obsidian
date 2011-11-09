@@ -522,10 +522,27 @@ function Quest_select_textures()
 
   local function facade_from_rooms(zone, require_kind)
     each R in zone.rooms do
-      if require_kind and R.kind != require_kind then continue end
+      if require_kind and R.kind != require_kind then
+        continue
+      end
 
-      return R.main_tex
+      local tab = R.theme.walls or R.theme.naturals
+      assert(tab)
+
+      -- adjust probabilities, try to pick a unique facade
+      tab = table.copy(tab)
+
+      each Z in LEVEL.zones do
+        if Z.facade_mat and tab[Z.facade_mat] then
+          tab[Z.facade_mat] = tab[Z.facade_mat] / 20
+        end
+      end
+
+      return rand.key_by_probs(tab)
     end
+
+    -- no matching rooms
+    return nil
   end
 
 
@@ -557,6 +574,8 @@ function Quest_select_textures()
       end
 
       assert(Z.facade_mat)
+
+      gui.debugf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
     end
   end
 
@@ -593,6 +612,8 @@ function Quest_select_textures()
 
   ---| Quest_select_textures |---
 
+  select_facades()
+
   assign_to_zones("building_walls",    THEME.building_walls)
   assign_to_zones("building_facades",  THEME.building_facades or THEME.building_walls)
   assign_to_zones("building_floors",   THEME.building_floors)
@@ -606,9 +627,6 @@ function Quest_select_textures()
 
   -- ETC ETC...
 
-
-  -- this must occur after all the room textures are established
-  select_facades()
 
 
 
