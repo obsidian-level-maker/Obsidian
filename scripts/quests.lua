@@ -418,7 +418,7 @@ function Quest_add_weapons()
     end
   end
 
-  gui.printf("Weapon List:\n")
+  gui.printf("Weapon list:\n")
 
   if table.empty(list) then
     gui.printf("  NONE!\n")
@@ -435,6 +435,107 @@ function Quest_add_weapons()
   end
 
   gui.printf("\n")
+end
+
+
+
+function Quest_assign_themes()
+ 
+  local function handle_zones()
+    local zone_tab
+    
+    if THEME.zones then
+      zone_tab = table.copy(THEME.zones)
+    else
+      -- FIXME: create some (?)
+    end
+    
+    each Z in LEVEL.zones do
+      if zone_tab then
+        local name = rand.key_by_probs(zone_tab)
+
+        -- greatly prefer to pick a different one
+        zone_tab[name] = zone_tab[name] / 20
+      
+        Z.theme = GAME.ZONE_THEMES[name]
+
+        if not Z.theme then
+          error("No such zone theme: " .. tostring(name))
+        end
+
+      else
+        Z.theme = { dummy=true }
+      end
+    end
+  end
+
+
+  local function assign_theme(L)
+    -- one hallway theme per zone
+    if L.is_hall and L.zone.hallway_theme then
+      L.theme = L.zone.hallway_theme
+      return
+    -- one cave theme per level
+    elseif L.cave and LEVEL.cave_theme then
+      L.theme = L.cave_theme
+      return
+    end
+
+    -- figure out which table to use
+    local tab
+    local tab_name
+
+    if L.is_hall then
+      tab_name = "hallways"
+    elseif L.cave then
+      tab_name = "caves"
+    elseif L.outdoor then
+      tab_name = "outdoors"
+    else
+      tab_name = "buildings"
+    end
+
+    -- the Zone Theme takes precedence over the Level Theme
+    tab = L.zone.theme[tab_name] or THEME[tab_name]
+
+    if not tab and L.is_hall then
+      tab = L.zone.theme["buildings"] or THEME["buildings"]
+    end
+
+    if not tab then
+      error("Theme is missing choices table: " .. tab_name)
+    end
+
+    -- now pick one
+    -- FIXME: this is too simplistic
+
+    local theme_name = rand.key_by_probs(tab)
+
+    L.theme = GAME.ROOM_THEMES[theme_name]
+
+    if not L.theme then
+      error("No such room theme: " .. tostring(name))
+    end
+
+    if L.is_hall then
+      L.zone.hallway_theme = L.theme
+    elseif L.cave then
+      LEVEL.cave_theme = L.theme
+    end
+  end
+
+
+  ---| Quest_assign_themes |---
+
+  handle_zones()
+
+  each R in LEVEL.rooms do
+    assign_theme(R)
+  end
+
+  each H in LEVEL.hallways do
+    assign_theme(R)
+  end
 end
 
 
@@ -1463,7 +1564,9 @@ end
   update_crossovers()
 
 
-  Quest_select_textures()  -- FIXME: ZONE SYSTEM
+  Quest_assign_themes()
+
+  Quest_select_textures()
 
   Quest_add_weapons()
 
