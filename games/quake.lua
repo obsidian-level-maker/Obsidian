@@ -19,9 +19,9 @@
 --
 ----------------------------------------------------------------
 
-QUAKE1 = { }
+QUAKE = { }
 
-QUAKE1.ENTITIES =
+QUAKE.ENTITIES =
 {
   -- players
   player1 = { id="info_player_start", kind="other", r=16,h=56 }
@@ -125,7 +125,7 @@ QUAKE1.ENTITIES =
 }
 
 
-QUAKE1.PARAMETERS =
+QUAKE.PARAMETERS =
 {
   -- Quake engine needs all coords to lie between -4000 and +4000.
   map_limit = 8000
@@ -160,7 +160,7 @@ QUAKE1.PARAMETERS =
 
 ----------------------------------------------------------------
 
-QUAKE1.MATERIALS =
+QUAKE.MATERIALS =
 {
   -- special materials --
   _ERROR = { t="metal1_1" }  -- METAL1_1
@@ -731,7 +731,7 @@ QUAKE1.MATERIALS =
 }
 
 
-QUAKE1.LIQUIDS =
+QUAKE.LIQUIDS =
 {
   water  = { mat="L_WATER0", medium="water", color=0x000088, light=0, special=0 }
   slime0 = { mat="L_SLIME0", medium="slime", color=0x008800, light=0, special=0, damage=99 }
@@ -743,7 +743,7 @@ QUAKE1.LIQUIDS =
 ----------------------------------------------------------------
 
 
-QUAKE1.EXITS =
+QUAKE.EXITS =
 {
   exit_pad =
   {
@@ -755,7 +755,7 @@ QUAKE1.EXITS =
 }
 
 
-QUAKE1.PICTURES =
+QUAKE.PICTURES =
 {
   carve =
   {
@@ -770,12 +770,12 @@ QUAKE1.PICTURES =
 
 ----------------------------------------------------------------
 
-QUAKE1.SKIN_DEFAULTS =
+QUAKE.SKIN_DEFAULTS =
 {
 }
 
 
-QUAKE1.SKINS =
+QUAKE.SKINS =
 {
   ----| STARTS |----
 
@@ -1031,12 +1031,12 @@ QUAKE1.SKINS =
     pillar = "TECH02_5"
   }
 
-} -- end of QUAKE1.SKINS
+} -- end of QUAKE.SKINS
 
 
 ----------------------------------------------------------------
 
-QUAKE1.THEME_DEFAULTS =
+QUAKE.THEME_DEFAULTS =
 {
   starts = { Start_basic = 50 }
 
@@ -1076,13 +1076,13 @@ QUAKE1.THEME_DEFAULTS =
 }
 
 
-QUAKE1.NAME_THEMES =
+QUAKE.NAME_THEMES =
 {
   -- TODO
 }
 
 
-QUAKE1.ROOM_THEMES =
+QUAKE.ROOM_THEMES =
 {
   Base_generic =
   {
@@ -1172,12 +1172,12 @@ QUAKE1.ROOM_THEMES =
 }
 
 
-QUAKE1.ZONE_THEMES =
+QUAKE.ZONE_THEMES =
 {
 }
 
 
-QUAKE1.LEVEL_THEMES =
+QUAKE.LEVEL_THEMES =
 {
   quake_base1 =
   {
@@ -1238,7 +1238,7 @@ QUAKE1.LEVEL_THEMES =
 
 ----------------------------------------------------------------
 
-QUAKE1.MONSTERS =
+QUAKE.MONSTERS =
 {
   dog =
   {
@@ -1381,7 +1381,7 @@ QUAKE1.MONSTERS =
 }
 
 
-QUAKE1.WEAPONS =
+QUAKE.WEAPONS =
 {
   axe =
   {
@@ -1504,7 +1504,7 @@ QUAKE1.WEAPONS =
 }
 
 
-QUAKE1.PICKUPS =
+QUAKE.PICKUPS =
 {
   -- HEALTH --
 
@@ -1600,7 +1600,7 @@ QUAKE1.PICKUPS =
 }
 
 
-QUAKE1.PLAYER_MODEL =
+QUAKE.PLAYER_MODEL =
 {
   quakeguy =
   {
@@ -1612,7 +1612,7 @@ QUAKE1.PLAYER_MODEL =
 
 ------------------------------------------------------------
 
-QUAKE1.EPISODES =
+QUAKE.EPISODES =
 {
   episode1 =
   {
@@ -1642,12 +1642,12 @@ QUAKE1.EPISODES =
 
 ----------------------------------------------------------------
 
-function QUAKE1.setup()
+function QUAKE.setup()
   -- nothing needed
 end
 
 
-function QUAKE1.get_levels()
+function QUAKE.get_levels()
   local  EP_NUM = (OB_CONFIG.length == "full"   ? 4 ; 1)
   local MAP_NUM = (OB_CONFIG.length == "single" ? 1 ; 7)
 
@@ -1673,7 +1673,7 @@ function QUAKE1.get_levels()
 
     table.insert(GAME.episodes, EPI)
 
-    local ep_info = QUAKE1.EPISODES["episode" .. ep_index]
+    local ep_info = QUAKE.EPISODES["episode" .. ep_index]
     assert(ep_info)
 
     for map = 1,MAP_NUM do
@@ -1704,7 +1704,7 @@ function QUAKE1.get_levels()
 end
 
 
-function QUAKE1.begin_level()
+function QUAKE.begin_level()
   -- find the texture wad
   local primary_tex_wad = gui.locate_data("quake_tex.wd2")
 
@@ -1735,14 +1735,14 @@ OB_GAMES["quake"] =
 
   tables =
   {
-    QUAKE1
+    QUAKE
   }
 
   hooks =
   {
-    setup        = QUAKE1.setup
-    get_levels   = QUAKE1.get_levels
-    begin_level  = QUAKE1.begin_level
+    setup        = QUAKE.setup
+    get_levels   = QUAKE.get_levels
+    begin_level  = QUAKE.begin_level
   }
 }
 
