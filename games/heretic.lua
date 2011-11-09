@@ -1574,30 +1574,8 @@ HERETIC.PICS =
   glass1 = { wall="STNGLS1",  w=128, h=128 }
 }
 
+
 ---- QUEST STUFF ----------------
-
-
-HERETIC.ROOMS =
-{
-  PLAIN =
-  {
-  }
-
-  HALLWAY =
-  {
-    room_heights = { [96]=50, [128]=50 }
-    door_probs   = { out_diff=75, combo_diff=50, normal=5 }
-    window_probs = { out_diff=1, combo_diff=1, normal=1 }
-    space_range  = { 20, 65 }
-  }
- 
-  SCENIC =
-  {
-  }
-
-  -- TODO: check in-game level names for ideas
-}
-
 
 HERETIC.THEME_DEFAULTS =
 {
@@ -1616,12 +1594,12 @@ HERETIC.THEME_DEFAULTS =
 
   switches = { sw_metal=50 }
 
-  switch_fabs = { Switch_1 = 50 }
+  switch_fabs = { Switch_1=50 }
 
-  locked_doors = { Locked_yellow = 50, Locked_green = 50, Locked_blue = 50,
-                   Door_SW_1 = 50 }
+  locked_doors = { Locked_yellow=50, Locked_green=50, Locked_blue=50,
+                   Door_SW_1=50 }
 
-  teleporters = { Teleporter1 = 50 }
+  teleporters = { Teleporter1=50 }
 
 
   steps = { step1=50 }
@@ -1647,6 +1625,85 @@ HERETIC.THEME_DEFAULTS =
 }
 
 
+HERETIC.NAME_THEMES =
+{
+  -- TODO
+}
+
+
+HERETIC.ROOM_THEMES =
+{
+  Urban_generic =
+  {
+    walls =
+    {
+      SANDSQ2=50, GRSTNPB=50, WOODWL=10,
+      CTYSTUC4=80, CTYSTCI2=80, TRISTON2=20,
+    }
+
+    floors =
+    {
+      FLOOR06=50, FLOOR03=50, FLOOR00=50, FLOOR10=50,
+    }
+
+    ceilings =
+    {
+      FLOOR11=50, FLOOR03=30, FLOOR04=30, FLOOR12=50,
+    }
+  }
+
+  Castle_generic =
+  {
+    walls =
+    {
+      CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
+      SQPEB1=20, TRISTON1=20,
+    }
+
+    floors =
+    {
+      FLAT503=20, FLAT507=10, FLAT520=10, FLAT521=10,
+      FLOOR00=10, FLOOR03=20, FLOOR07=10,
+      FLAT523=20,
+    }
+
+    ceilings =
+    {
+      FLAT520=20, FLAT521=10, FLAT508=15,
+      FLOOR20=25, FLOOR29=10,
+    }
+  }
+
+  Cave_generic =
+  {
+    naturals =
+    {
+      LOOSERCK=20, LAVA1=20, BRWNRCKS=20
+    }
+  }
+
+  Outdoors_generic =
+  {
+    floors =
+    {
+      FLOOR00=20, FLOOR27=30, FLOOR18=50,
+      FLAT522=10, FLAT523=20,
+    }
+
+    naturals =
+    {
+      FLOOR17=50, FLAT509=20, FLAT510=20,
+      FLAT513=20, FLAT516=35, 
+    }
+  }
+}
+
+
+HERETIC.ZONE_THEMES =
+{
+}
+
+
 HERETIC.LEVEL_THEMES =
 {
   heretic_urban1 =
@@ -1655,77 +1712,38 @@ HERETIC.LEVEL_THEMES =
 
     liquids = { water=50, sludge=15, lava=4 }
 
-    building_walls =
-    {
-      SANDSQ2=50, GRSTNPB=50, WOODWL=10,
-      CTYSTUC4=80, CTYSTCI2=80, TRISTON2=20,
-    }
+    buildings = { Urban_generic=50 }
 
-    building_floors =
-    {
-      FLOOR06=50, FLOOR03=50, FLOOR00=50, FLOOR10=50,
-    }
+    caves = { Cave_generic=50 }
 
-    building_ceilings =
-    {
-      FLOOR11=50, FLOOR03=30, FLOOR04=30, FLOOR12=50,
-    }
+    outdoors = { Outdoors_generic=50 }
 
-    courtyard_floors =
-    {
-      FLOOR00=20, FLOOR17=50, FLOOR27=30, FLOOR18=50,
-    }
+    -- hallways = { blah }
 
-    room_types =
-    {
-      -- FIXME
-    }
+    --TODO: more stuff
 
-    scenery =
-    {
-      -- FIXME
-    }
-
-    monster_prefs =
-    {
-    }
   }  -- CITY1
 
 
-  heretic_gothic1 =
+  heretic_castle1 =
   {
     prob = 50
 
     liquids = { lava=50, magma=20, sludge=3 }
 
-    building_walls =
-    {
-      CSTLRCK=50, GRNBLOK1=20, MOSSRCK1=20,
-      SQPEB1=20, TRISTON1=20,
-    }
+    buildings = { Castle_generic=50 }
 
-    building_floors =
-    {
-      FLAT503=20, FLAT507=10, FLAT520=10, FLAT521=10,
-      FLOOR00=10, FLOOR03=20, FLOOR07=10,
-      FLAT523=20,
-    }
+    caves = { Cave_generic=50 }
 
-    building_ceilings =
-    {
-      FLAT520=20, FLAT521=10, FLAT508=15,
-      FLOOR20=25, FLOOR29=10,
-    }
+    outdoors = { Outdoors_generic=50 }
 
-    courtyard_floors =
-    {
-      FLAT509=20, FLAT510=20, FLAT513=20,
-      FLAT516=20, FLAT522=20,
-    }
+    -- hallways = { blah }
 
-  }  -- GOTHIC1
+    --TODO: more stuff
+  }
 
 
+--[[
   heretic_cave1 =  -- Keep this ???  Nope !
   {
     prob = 50
@@ -1751,7 +1769,8 @@ HERETIC.LEVEL_THEMES =
       FLAT516=50, FLAT510=50, FLAT516=50,
     }
 
-  }  -- CAVE1
+  }
+--]]
 
 
 --[[ FIXME: good old stuff
@@ -2409,9 +2428,9 @@ OB_THEMES["heretic_urban"] =
   mixed_prob = 50
 }
 
-OB_THEMES["heretic_gothic"] =  -- castles
+OB_THEMES["heretic_castle"] =
 {
-  label = "Gothic"
+  label = "Castle"
   for_games = { heretic=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
