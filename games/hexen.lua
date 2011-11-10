@@ -2421,12 +2421,30 @@ HEXEN.THEME_DEFAULTS =
 }
 
 
+HEXEN.NAME_THEMES =
+{
+  -- TODO
+}
+
+
+HEXEN.ROOM_THEMES =
+{
+}
+
+
 HEXEN.LEVEL_THEMES =
 {
   hexen_dungeon1 =
   -- This is the monestary / palacial castle type dungeon
   {
     prob = 50
+
+--[[
+    buildings = { Dungeon1_room=50 }
+    caves     = { Dungeon1_cave=50 }
+    outdoors  = { Dungeon1_outdoors=50 }
+    hallways  = { Dungeon1_hallway=50 }
+--]]
 
     building_walls =
     {
@@ -2501,23 +2519,6 @@ HEXEN.LEVEL_THEMES =
       F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,  
       F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
       F_073=3, F_077=2, F_089=2, F_092=2,
-    }
-
-    stairwell_walls =
-    {
-      MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
-      MONK14=15, MONK15=15, MONK16=15,
-      FOREST01=12, TOMB05=4, WINN01=12,
-      PRTL02=12
-    }
-
-    stairwell_floors =
-    {
-      F_010=10, F_011=20, F_012=8, F_014=8, 
-      F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
-      F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,  
-      F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
-      F_073=3, F_077=10, F_089=12, F_092=2,
     }
 
     pictures =
@@ -2651,24 +2652,6 @@ HEXEN.LEVEL_THEMES =
       F_073=10, F_076=10, F_033=10
     }
 
-    stairwell_walls =
-    {
-      CASTLE01=20, CASTLE07=35, CASTLE11=10, CAVE01=8, 
-      CAVE02=10, CAVE07=5, FOREST02=5, PRTL03=12, 
-      SEWER01=15, SEWER07=15, SEWER08=15, TOMB04=15, 
-      TOMB05=15, TOMB07=15, TOMB11=10, GRAVE01=10, MONK07=10     
-    }
-
-    stairwell_floors =
-    {
-      F_008=10, F_009=10, F_012=10, F_013=10, 
-      F_015=10, F_017=10, F_018=10, F_021=5, 
-      F_022=10, F_023=2, F_027=10, F_030=10, 
-      F_031=5, F_038=2, F_042=5, F_044=10, 
-      F_045=5, F_057=10, F_058=10, F_059=10, 
-      F_073=10, F_076=10
-    }
-
     pictures =
     {
       Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10, 
@@ -2756,28 +2739,12 @@ HEXEN.LEVEL_THEMES =
       F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
 
-    stairwell_walls =
-    {
-      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15, 
-      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
-      FIRE11=10, FIRE12=10
-    }
-
-    stairwell_floors =
-    {
-      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
-    }
-
-    __logos = { carve=50 }
-
     pictures =
     {
       pic_forest11=5, pic_fire14=20, pic_spawn13=3,
       pic_winnow02=5, pic_brass1=2, pic_monk06=2, pic_monk11=21,
       pic_glass01=1, pic_glass03=1, pic_glass05=1
     }
-
-    __steps = { s_01=10, s_09=5, s_05=10 }
 
     __big_pillars = { pillar02=10, fire06=25, xfire=15 }
 
@@ -2855,24 +2822,10 @@ HEXEN.LEVEL_THEMES =
       F_013=40, F_033=15, F_040=30
     }
 
-    stairwell_walls =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
-
-    stairwell_floors =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
-
     pictures =
     {
       pic_forest11=10, pic_spawn13=10, 
     }
-
-    __logos = { carve=50 }
-
-    __steps = { s_02=10, s_06=10, s_09=10  }
 
     __big_pillars = { ice01=5, ice02=20 }
 
@@ -2971,23 +2924,6 @@ HEXEN.LEVEL_THEMES =
       F_075=15, F_078=10
     }
 
-    stairwell_walls =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10, 
-      STEEL06=15, STEEL07=5, STEEL08=5
-    }
-
-    stairwell_floors =
-    {
-      F_065=10, F_066=10, F_067=10, F_068=10, 
-      F_069=15, F_070=15, F_073, F_074=40, 
-      F_075=15, F_078=10
-    }
-
-    __logos = { carve=50 }
-
-    __steps = { s_01=10, s_13=10 }
-
     __big_pillars = { steel01=10, steel02=10, steel06=10, steel07=10 }
 
     __outer_fences = 
@@ -3063,28 +2999,12 @@ HEXEN.LEVEL_THEMES =
       F_002=5, F_003=5, F_004=5, F_005=0, F_037=50
     }
 
-    stairwell_walls =
-    {
-      WASTE01=15, WASTE02=10, WASTE04=10, WASTE03=5,
-      FOREST01=25, MONK16=15, WOOD01=5, VILL01=5, 
-      VILL04=10, VILL05=10,
-    }
-    stairwell_floors =
-    {
-      F_002=10, F_003=10, F_004=5, F_037=20,
-      F_029=20, F_044=15, F_082=10
-    }
-
     pictures =
     {
       pic_forest11=5, pic_books01=1, pic_tomb06=15, 
       pic_monk06=2, pic_monk11=2, pic_spawn13=2
     }
 
-    __logos = { carve=50 }
-
-    __steps = { s_01=10, s_04=10, s_09=10, s_12=10 }
-  
     __big_pillars = { pillar01=5, monk14=25 }
 
     __outer_fences = 
@@ -3154,26 +3074,12 @@ HEXEN.LEVEL_THEMES =
       CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25
     }
 
-    stairwell_walls =
-    {        
-      CAVE01=20, CAVE02=20, CAVE03=20, CAVE04=40, 
-      CAVE05=15, CAVE06=60, CAVE07=15, WASTE02=15
-    }
-
-    stairwell_floors =
-    {
-      F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
-
     pictures =
     {
       pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
       pic_spawn13=4, pic_fire14=5, 
     }
 
-    __steps = { s_01=30, s_02=50 }
-  
     __big_pillars =
     { 
       monk14=10, castle07=5, prtl02=5, fire06=10
@@ -3268,28 +3174,12 @@ HEXEN.LEVEL_THEMES =
       F_054=10, F_055=10, F_092=5
     }
 
-    stairwell_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
-    }
-
-    stairwell_floors =
-    {
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
-
     pictures =
     {
       pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
       pic_books01=3, pic_books02=2
     }
 
-    __logos = { carve=50 }
-
-    __steps = { s_02=5, s_11=15, s_12=10 }
-  
     __big_pillars =
     { 
       swamp01=20, swamp02=20, vill01=5, wood03=15
@@ -3400,32 +3290,12 @@ HEXEN.LEVEL_THEMES =
       F_077=10, F_081=5
     }
 
-    stairwell_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
-      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
-      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
-      WOOD01=10, WOOD02=10, WOOD03=2, 
-    }
-
-    stairwell_floors =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_005=5, F_006=5, F_007=5, F_077=10
-    }
-
     pictures =
     {
       pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
       pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
       pic_books01=2, pic_books02=1
     }
-
-    __logos = { carve=50 }
-
-    __steps = { s_02=10, s_05=15, s_11=5, s_12=10 }
 
     __big_pillars =
     { 
@@ -3496,28 +3366,12 @@ HEXEN.LEVEL_THEMES =
       CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25
     }
 
-    stairwell_walls =
-    {        
-      CAVE01=20, CAVE02=20, CAVE03=20, CAVE04=40, 
-      CAVE05=15, CAVE06=60, CAVE07=15, WASTE02=15
-    }
-
-    stairwell_floors =
-    {
-      F_008=5, F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
-
     pictures =
     {
       pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
       pic_spawn13=4, pic_fire14=5, 
     }
 
-    __logos = { carve=50 }
-  
-    __steps = { s_01=30, s_02=50 }
-  
     __big_pillars =
     { 
       monk14=10, castle07=5, prtl02=5, fire06=10
@@ -3596,24 +3450,11 @@ HEXEN.LEVEL_THEMES =
       F_013=40, F_033=15, F_040=30
     }
 
-    stairwell_walls =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
-    stairwell_floors =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
-
     pictures =
     {
       pic_forest11=10, pic_spawn13=10, 
     }
 
-    __logos = { carve=50 }
-
-    __steps = { s_02=10, s_06=10, s_09=10  }
-  
     __big_pillars = { ice01=5, ice02=20 }
 
     __outer_fences = 
@@ -3706,28 +3547,12 @@ HEXEN.LEVEL_THEMES =
       F_054=10, F_055=10, F_092=5
     }
 
-    stairwell_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
-    }
-
-    stairwell_floors =
-    {
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
-
     pictures =
     {
       pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
       pic_books01=3, pic_books02=2
     }
 
-    __logos = { carve=50 }
-
-    __steps = { s_02=5, s_11=15, s_12=10 }
-  
     __big_pillars = { swamp01=20, swamp02=20, vill01=5, wood03=15 }
 
     __outer_fences = 
@@ -3873,25 +3698,6 @@ HEXEN.LEVEL_THEMES =
       F_077=10, F_081=5
     }
 
-    stairwell_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
-      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
-      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
-      WOOD01=10, WOOD02=10, WOOD03=2,  PRTL02=12,
-      MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
-      MONK14=15, MONK15=15, MONK16=15,
-      FOREST01=12, TOMB05=4, WINN01=12,
-    }
-
-    stairwell_floors =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_005=5, F_006=5, F_007=5, F_077=10
-    }
-
     pictures =
     {
       pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2, 
@@ -3899,14 +3705,6 @@ HEXEN.LEVEL_THEMES =
       pic_books02=10, pic_brass1=10, pic_tomb06=10, pic_forest11=15,
       pic_monk08=10, pic_planet1=5, pic_monk06=5, pic_monk11=5, 
       pic_winnow02=10, pic_spawn13=5, 
-    }
-
-    __logos = { carve=50 }
-
-    __steps =
-    { 
-      s_02=15, s_05=15, s_11=5, s_12=10,
-      s_04=10, s_06=5, s_07=10
     }
 
     __big_pillars =
