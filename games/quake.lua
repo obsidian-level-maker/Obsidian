@@ -1152,7 +1152,7 @@ QUAKE.ROOM_THEMES =
     }
   }
 
-  Outdoor_generic =
+  Outdoors_generic =
   {
     floors =
     {
@@ -1193,7 +1193,7 @@ QUAKE.LEVEL_THEMES =
 
     caves = { Cave_generic=50 }
 
-    outdoors = { Outdoor_generic=50 }
+    outdoors = { Outdoors_generic=50 }
 
 --[[
     hallways = { Hallway_generic=50 }
@@ -1227,7 +1227,7 @@ QUAKE.LEVEL_THEMES =
 
     caves = { Cave_generic=50 }
 
-    outdoors = { Outdoor_generic=50 }
+    outdoors = { Outdoors_generic=50 }
 
     pedestals = { Pedestal_gothic=50 }
 

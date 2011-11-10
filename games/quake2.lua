@@ -1706,36 +1706,6 @@ QUAKE2.SKINS =
 
 ----------------------------------------------------------------
 
-QUAKE2.COMBOS =
-{
-  TECH_BASE =
-  {
-    wall  = "e1u1/wslt1_1",
-    floor = "e1u1/wtroof4_3",
-    ceil  = "e1u1/floor3_3",
-  }
-
-  TECH_GROUND =
-  {
-    outdoor = true,
-
-    wall  = "e1u1/rocks16_2",
-    ceil  = "e1u1/grass1_4",
-    floor = "e1u1/grass1_4",
-  }
-}
-
-QUAKE2.EXITS =
-{
-}
-
-
-QUAKE2.STEPS =
-{
-  step1 = { step_w="MET5_1",   side_w="METAL2_2",  top_f="METAL2_2" }
-  step2 = { step_w="CITY3_2",  side_w="CITY3_4",   top_f="CITY3_4" }
-}
-
 
 QUAKE2.PICTURES =
 {
@@ -1774,25 +1744,69 @@ QUAKE2.THEME_DEFAULTS =
 
   teleporters = { Teleporter1 = 50 }
 
-  cave_walls =  -- FIXME TEMP TEMP
-  {
-    ROCK1_1  = 50, ROCK0_1  = 20, ROCK25_1 = 50,
-    ROCKS21_1 = 20, ROCKS24_2 = 50,
-    ROCKS22_1 = 50,  -- crystal / ice
-  }
 }
 
 
-QUAKE2.AREA_THEMES =
+QUAKE2.NAME_THEMES =
 {
+  -- TODO (especially 'Strogg')
 }
 
 
 QUAKE2.ROOM_THEMES =
 {
-  PLAIN =
+  Base_generic =
   {
+    walls =
+    {
+      METAL2_1=10, METAL14_1=40,
+      WSLT1_1=40, WATRT1_1=10,
+      MINE05_1=20, MINE06_3=10, TWALL5_1=10,
+      BLUM12_2=10,
+    }
+
+    floors =
+    {
+      FLAT1_2=30, FLOOR3_3=10, METAL1_8=20,
+      METAL3_3=20, WTROOF4_2=30,
+      WTROOF1_5=20, FLORR1_1=10,
+    }
+
+    ceilings =
+    {
+      WGRATE1_4=50, GRATE1_4=30, BASIC1_7=30,
+      GRNX2_5=30, GRNX2_1=30,
+    }
   }
+
+  Cave_generic =
+  {
+    naturals =
+    {
+      ROCK1_1  = 50, ROCK0_1  = 20, ROCK25_1 = 50,
+      ROCKS21_1 = 20, ROCKS24_2 = 50,
+      ROCKS22_1 = 50,  -- crystal / ice
+    }
+  }
+
+  Outdoors_generic =
+  {
+    floors =
+    {
+      FLOOR3_1=30, FLOOR3_2=5,
+    }
+
+    naturals =
+    {
+      GRASS1_4=50, ROCKS19_1=50,
+      ROCK1_1=20, ROCKS24_2=20,
+    }
+  }
+}
+
+
+QUAKE2.ZONE_THEMES =
+{
 }
 
 
@@ -1804,47 +1818,12 @@ QUAKE2.LEVEL_THEMES =
 
     liquids = { slime=50, lava=40 }
 
-    building_walls =
-    {
-      METAL2_1=10, METAL14_1=40,
-      WSLT1_1=40, WATRT1_1=10,
-      MINE05_1=20, MINE06_3=10, TWALL5_1=10,
-      BLUM12_2=10,
-    }
+    buildings = { Base_generic=50 }
 
-    building_floors =
-    {
-      FLAT1_2=30, FLOOR3_3=10, METAL1_8=20,
-      METAL3_3=20, WTROOF4_2=30,
-      WTROOF1_5=20, FLORR1_1=10,
-    }
+    caves = { Cave_generic=50 }
 
-    building_ceilings =
-    {
-      WGRATE1_4=50, GRATE1_4=30, BASIC1_7=30,
-      GRNX2_5=30, GRNX2_1=30,
-    }
+    outdoors = { Outdoors_generic=50 }
 
-    courtyard_floors =
-    {
-      GRASS1_4=50, ROCKS19_1=50,
-      FLOOR3_1=30, FLOOR3_2=5,
-      ROCK1_1=20, ROCKS24_2=20,
-    }
-
-    __logos = { carve=50 }
-
-    __steps = { step1=50, step2=50 }
-
-    __exit =
-    {
-      -- FIXME
-    }
-
-    scenery =
-    {
-      -- FIXME
-    }
   }
 }
 
