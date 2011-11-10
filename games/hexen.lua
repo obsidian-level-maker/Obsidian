@@ -2473,6 +2473,19 @@ HEXEN.ROOM_THEMES =
 
   Dungeon1_outdoors =
   {
+    floors =
+    {
+      F_024=25, F_034=50, F_001=10, F_002=10,
+      F_004=15, F_005=15, F_010=2, F_011=4, 
+      F_025=3, F_028=2, F_029=2, F_030=2, F_031=2,
+      F_046=2, F_047=2, F_048=2, F_057=1, F_059=2,    
+      F_077=2, F_089=2, F_012=2, F_014=2
+    }
+
+    naturals =
+    {
+      WASTE02=50, WASTE01=20, CAVE05=40
+    }
   }
 
   Dungeon1_hallway =
@@ -2547,6 +2560,16 @@ HEXEN.ROOM_THEMES =
       F_045=5, F_057=10, F_058=10, F_059=10, 
       F_073=10, F_076=10, F_033=10
     }
+
+    __corners =
+    {
+      CASTLE01=20, CASTLE07=35, CASTLE11=10, CAVE01=8, 
+      CAVE02=10, CAVE07=5, FOREST02=5, PRTL03=12, 
+      SEWER01=15, SEWER07=15, SEWER08=15, TOMB04=15, 
+      TOMB05=15, TOMB07=15, TOMB11=10, GRAVE01=10, D_END3=10,
+      D_END4=15, D_END2=5
+    }
+
   }
 
   Dungeon2_cave =
@@ -2560,6 +2583,23 @@ HEXEN.ROOM_THEMES =
 
   Dungeon2_outdoors =
   {
+    floors =
+    {
+      F_024=25, F_034=50, F_001=10, F_002=10,
+      F_004=15, F_005=15, 
+
+      F_008=2, F_009=2, F_012=2, F_013=2, 
+      F_015=2, F_017=2, F_018=2, F_021=1, 
+      F_022=2, F_027=2, F_030=2, 
+      F_031=1, F_038=10, F_042=1, F_044=2, 
+      F_045=1, F_057=2, F_058=2, F_059=2, 
+      F_073=2, F_076=2
+    }
+
+    naturals =
+    { 
+      WASTE02=30, FOREST02=10 
+    }
   }
 
   Dungeon2_hallway =
@@ -2614,6 +2654,13 @@ HEXEN.ROOM_THEMES =
     {
       F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
     }
+
+    __corners =
+    {
+      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15, 
+      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
+      FIRE11=10, FIRE12=10, X_FIRE01=30
+    }
   }
 
   Fire_cave =
@@ -2626,6 +2673,17 @@ HEXEN.ROOM_THEMES =
 
   Fire_outdoors =
   {
+    floors =
+    {
+      F_013=5, F_032=30, F_040=25, F_044=4, F_082=20
+    }
+
+    naturals =
+    {
+      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15, 
+      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
+      FIRE11=10, FIRE12=10
+    }
   }
 
   Fire_hallway =
@@ -2650,6 +2708,7 @@ HEXEN.ROOM_THEMES =
 
 
   -- This is the "element" ice
+
   Ice_room =
   {
     walls =
@@ -2666,6 +2725,11 @@ HEXEN.ROOM_THEMES =
     {
       F_013=40, F_033=15, F_040=30
     }
+
+    __corners =
+    {
+      ICE01=15, ICE02=30, ICE03=5, ICE06=25
+    }
   }
 
   Ice_cave =
@@ -2678,6 +2742,15 @@ HEXEN.ROOM_THEMES =
 
   Ice_outdoors =
   {
+    floors =
+    {
+      F_013=15, F_033=40, F_040=30
+    }
+
+    naturals =
+    {
+      ICE01=45, ICE02=30, ICE03=5, ICE06=25
+    }
   }
 
   Ice_hallway =
@@ -2722,6 +2795,12 @@ HEXEN.ROOM_THEMES =
       F_069=15, F_070=15, F_073, F_074=40, 
       F_075=15, F_078=10
     }
+
+    __corners =
+    {
+      STEEL01=40, STEEL02=10, STEEL05=10, 
+      STEEL06=15, STEEL07=5, STEEL08=5
+    }
   }
 
   Steel_cave =
@@ -2731,11 +2810,22 @@ HEXEN.ROOM_THEMES =
       STEEL01=40, STEEL02=10, STEEL05=10, 
       STEEL06=15, STEEL07=5, STEEL08=5
     }
-
   }
 
   Steel_outdoors =
   {
+    floors =
+    {
+      F_065=10, F_066=10, F_067=10, F_068=10, 
+      F_069=15, F_070=15, F_073, F_074=40, 
+      F_075=15, F_078=10
+    }
+
+    naturals =
+    {
+      STEEL01=40, STEEL02=10, STEEL05=10, 
+      STEEL06=15, STEEL07=5, STEEL08=5
+    }
   }
 
   Steel_hallway =
@@ -2772,15 +2862,22 @@ HEXEN.ROOM_THEMES =
       FOREST01=25, MONK16=15, WOOD01=5, VILL01=5, 
       VILL04=10, VILL05=10,
     }
+    
     floors =
     {
       F_002=10, F_003=10, F_004=5, F_037=20,
       F_029=20, F_044=15, F_082=10
     }
+
     ceilings =
     {
       F_037=20, F_029=20, F_044=15, F_082=10,
       D_END3=27, D_END4=3
+    }
+
+    __corners =
+    {
+      WOOD01=50, WASTE04=10, WASTE03=10
     }
   }
 
@@ -2790,11 +2887,19 @@ HEXEN.ROOM_THEMES =
     {
       WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
     }
-
   }
 
   Wild1_outdoors =
   {
+    floors =
+    {
+      F_002=25, F_003=25, F_004=10, F_005=5, F_037=20
+    }
+
+    naturals =
+    {
+      WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
+    }
   }
 
   Wild1_hallway =
@@ -2803,10 +2908,12 @@ HEXEN.ROOM_THEMES =
     {
       WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
     }
+
     floors =
     {
       F_002=25, F_003=25, F_004=10, F_005=5, F_037=20
     }
+
     ceilings =
     {
       F_002=5, F_003=5, F_004=5, F_005=0, F_037=50
@@ -2835,6 +2942,12 @@ HEXEN.ROOM_THEMES =
       F_039=75, F_040=40, 
       F_073=10, F_076=15
     }
+
+    __corners =
+    { 
+      PILLAR01=20, WOOD01=15, WOOD03=15,
+      D_END3=50, D_END4=5
+    }
   }
 
   Cave1_cave =
@@ -2848,10 +2961,16 @@ HEXEN.ROOM_THEMES =
 
   Cave1_outdoors =
   {
-  }
+    floors =
+    {
+      F_007=10, F_039=75, F_040=40, 
+      F_073=10, F_076=10
+    }
 
-  Cave1_hallway =
-  {
+    naturals =
+    {        
+      CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25
+    }
   }
 
 
@@ -2876,6 +2995,12 @@ HEXEN.ROOM_THEMES =
       F_017=10, F_018=10, F_019=20, F_020=15,
       F_054=10, F_055=10, F_092=5
     }
+
+    __corners =
+    {
+      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
+      WOOD01=25, WOOD02=25, WOOD03=35
+    }
   }
 
   Swamp1_cave =
@@ -2890,6 +3015,19 @@ HEXEN.ROOM_THEMES =
 
   Swamp1_outdoors =
   {
+    floors =
+    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
+      F_017=5, F_018=5, F_019=10, F_020=10,
+      F_054=1, F_055=1, F_092=1,
+      F_005=10, F_006=10, F_007=5, 
+    }
+
+    naturals =
+    {
+      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
+      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
+      WASTE02=5
+    }
   }
 
   Swamp1_hallway =
@@ -2941,6 +3079,11 @@ HEXEN.ROOM_THEMES =
       F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
       F_077=10, F_081=5
     }
+
+    __corners =
+    {
+      FOREST10=20, WOOD01=15, WOOD03=3
+    }
   }
 
   Wild4_cave =
@@ -2954,6 +3097,21 @@ HEXEN.ROOM_THEMES =
 
   Wild4_outdoors =
   {
+    floors =
+    {
+      F_014=7, F_030=7, F_047=5, F_048=5, F_038=3,
+      F_076=3, F_089=10,  F_005=35, F_006=45, F_007=25, 
+      F_077=2
+    }
+
+    naturals =
+    {
+      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
+      FIRE07=5, FOREST01=40, FOREST02=25, FOREST03=5,
+      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
+      PRTL03=15, CAVE05=30, CAVE03=20, 
+      CAVE04=15, CAVE05=15, CAVE06=10,
+    }
   }
 
   Wild4_hallway =
@@ -3021,6 +3179,15 @@ HEXEN.ROOM_THEMES =
       F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
       F_077=10, F_081=5
     }
+
+    __corners =
+    {
+      FOREST10=20, WOOD01=15, WOOD03=5,
+      PILLAR01=10, MONK01=15, MONK02=20, MONK04=10,
+      MONK06=10, MONK09=10, MONK11=10, MONK12=10,
+      FOREST05=10, WASTE04=5, WASTE04=3, D_END3=5,
+      D_END4=5, PILLAR02=15
+    }
   }
 
   Village1_cave =
@@ -3030,11 +3197,31 @@ HEXEN.ROOM_THEMES =
       CAVE05=30, FOREST02=25, CAVE03=20, CAVE04=15, 
       CAVE05=15, CAVE06=15, WASTE02=15
     }
-
   }
 
   Village1_outdoors =
   {
+    floors =
+    {
+      F_024=25, F_034=50, F_001=10, F_002=10,
+      F_004=15, F_005=15, F_089=10, F_005=35, 
+      F_006=45, F_007=25, 
+
+      F_010=2, F_011=4, F_025=3, F_028=2, F_029=2, 
+      F_030=2, F_031=2, F_046=2, F_047=2, F_048=2, 
+      F_057=1, F_059=2, F_077=2, F_089=2, F_012=2, 
+      F_014=2, F_014=7, F_030=7, F_047=5, F_048=5, 
+      F_038=3, F_076=3, F_077=2
+    }
+
+    naturals =
+    {
+      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
+      FIRE07=5, FOREST01=40, FOREST02=25, FOREST03=5,
+      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
+      PRTL03=15, CAVE05=30, CAVE03=20, CAVE04=15, 
+      CAVE05=40, CAVE06=10, WASTE02=35, WASTE01=35
+    }
   }
 
   Village1_hallway =
@@ -3079,23 +3266,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Dungeon1_outdoors=50 }
     hallways  = { Dungeon1_hallway=50 }
 
-
-    courtyard_floors =
-    {
-      F_024=25, F_034=50, F_001=10, F_002=10,
-      F_004=15, F_005=15, F_010=2, F_011=4, 
-      F_025=3, F_028=2, F_029=2, F_030=2, F_031=2,
-      F_046=2, F_047=2, F_048=2, F_057=1, F_059=2,    
-      F_077=2, F_089=2, F_012=2, F_014=2
-    }
-
-    landscape_walls =
-    {
-      WASTE02=50, WASTE01=20, CAVE05=40
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2, 
     pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
@@ -3131,36 +3302,7 @@ HEXEN.LEVEL_THEMES =
       SEWER08=10, WINN01=7, TOMB05=5, TOMB04=3, MONK07=10
     }
   
-
-    building_corners =
-    {
-      CASTLE01=20, CASTLE07=35, CASTLE11=10, CAVE01=8, 
-      CAVE02=10, CAVE07=5, FOREST02=5, PRTL03=12, 
-      SEWER01=15, SEWER07=15, SEWER08=15, TOMB04=15, 
-      TOMB05=15, TOMB07=15, TOMB11=10, GRAVE01=10, D_END3=10,
-      D_END4=15, D_END2=5
-    }
-
-    courtyard_floors =
-    {
-      F_024=25, F_034=50, F_001=10, F_002=10,
-      F_004=15, F_005=15, 
-
-      F_008=2, F_009=2, F_012=2, F_013=2, 
-      F_015=2, F_017=2, F_018=2, F_021=1, 
-      F_022=2, F_027=2, F_030=2, 
-      F_031=1, F_038=10, F_042=1, F_044=2, 
-      F_045=1, F_057=2, F_058=2, F_059=2, 
-      F_073=2, F_076=2
-    }
-
-    landscape_walls =
-    { 
-      WASTE02=30, FOREST02=10 
-    }
-
-
-    pictures =
+    __pictures =
     {
       Pic_forest11=10, Pic_monk08=10, Pic_winnow02=10, 
       Pic_spawn13=5, Pic_fire14=5, Pic_books01=1,
@@ -3193,28 +3335,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Fire_outdoors=50 }
     hallways  = { Fire_hallway=50 }
 
-
-    building_corners =
-    {
-      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15, 
-      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
-      FIRE11=10, FIRE12=10, X_FIRE01=30
-    }
-
-    courtyard_floors =
-    {
-      F_013=5, F_032=30, F_040=25, F_044=4, F_082=20
-    }
-
-    landscape_walls =
-    {
-      FIRE01=30, FIRE04=5, FIRE05=10, FIRE06=15, 
-      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
-      FIRE11=10, FIRE12=10
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=5, pic_fire14=20, pic_spawn13=3,
       pic_winnow02=5, pic_brass1=2, pic_monk06=2, pic_monk11=21,
@@ -3251,24 +3372,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Ice_outdoors=50 }
     hallways  = { Ice_hallway=50 }
 
-
-    building_corners =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
-
-    courtyard_floors =
-    {
-      F_013=15, F_033=40, F_040=30
-    }
-
-    landscape_walls =
-    {
-      ICE01=45, ICE02=30, ICE03=5, ICE06=25
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_spawn13=10, 
     }
@@ -3309,27 +3413,6 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Steel_outdoors=50 }
     hallways  = { Steel_hallway=50 }
 
-
-    building_corners =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10, 
-      STEEL06=15, STEEL07=5, STEEL08=5
-    }
-
-    courtyard_floors =
-    {
-      F_065=10, F_066=10, F_067=10, F_068=10, 
-      F_069=15, F_070=15, F_073, F_074=40, 
-      F_075=15, F_078=10
-    }
-
-    landscape_walls =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10, 
-      STEEL06=15, STEEL07=5, STEEL08=5
-    }
-
-
     __big_pillars = { steel01=10, steel02=10, steel06=10, steel07=10 }
 
     __outer_fences = 
@@ -3360,23 +3443,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Wild1_outdoors=50 }
     hallways  = { Wild1_hallway=50 }
 
-    building_corners =
-    {
-      WOOD01=50, WASTE04=10, WASTE03=10
-    }
-
-    courtyard_floors =
-    {
-      F_002=25, F_003=25, F_004=10, F_005=5, F_037=20
-    }
-
-    landscape_walls =
-    {
-      WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=5, pic_books01=1, pic_tomb06=15, 
       pic_monk06=2, pic_monk11=2, pic_spawn13=2
@@ -3412,27 +3479,8 @@ HEXEN.LEVEL_THEMES =
     buildings = { Cave1_room=50 }
     caves     = { Cave1_cave=50 }
     outdoors  = { Cave1_outdoors=50 }
-    hallways  = { Cave1_hallway=50 }
 
-
-    building_corners =
-    { 
-      PILLAR01=20, WOOD01=15, WOOD03=15,
-      D_END3=50, D_END4=5
-    }
-
-    courtyard_floors =
-    {
-      F_007=10, F_039=75, F_040=40, 
-      F_073=10, F_076=10
-    }
-
-    landscape_walls =
-    {        
-      CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25
-    }
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
       pic_spawn13=4, pic_fire14=5, 
@@ -3473,29 +3521,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Swamp1_outdoors=50 }
     hallways  = { Swamp1_hallway=50 }
 
-
-    building_corners =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=25, WOOD02=25, WOOD03=35
-    }
-
-    courtyard_floors =
-    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=5, F_018=5, F_019=10, F_020=10,
-      F_054=1, F_055=1, F_092=1,
-      F_005=10, F_006=10, F_007=5, 
-    }
-
-    landscape_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
-      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
-      WASTE02=5
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
       pic_books01=3, pic_books02=2
@@ -3543,30 +3569,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Wild4_outdoors=50 }
     hallways  = { Wild4_hallway=50 }
 
-
-    building_corners =
-    {
-      FOREST10=20, WOOD01=15, WOOD03=3
-    }
-
-    courtyard_floors =
-    {
-      F_014=7, F_030=7, F_047=5, F_048=5, F_038=3,
-      F_076=3, F_089=10,  F_005=35, F_006=45, F_007=25, 
-      F_077=2
-    }
-
-    landscape_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=25, FOREST03=5,
-      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
-      PRTL03=15, CAVE05=30, CAVE03=20, 
-      CAVE04=15, CAVE05=15, CAVE06=10,
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_glass01=10, pic_glass02=10, pic_glass03=10, pic_forest11=10,
       pic_monk08=5, pic_winnow02=10, pic_spawn13=3,
@@ -3606,25 +3609,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Cave1_outdoors=50 }
     hallways  = { Cave1_hallway=50 }
 
-
-    building_corners =
-    { 
-      PILLAR01=20, WOOD01=15, WOOD03=15,
-      D_END3=50, D_END4=5
-    }
-
-    courtyard_floors =
-    {
-      F_007=10, F_039=75, F_040=40, 
-      F_073=10, F_076=10
-    }
-
-    landscape_walls =
-    {        
-      CAVE03=20, CAVE04=40, CAVE05=15, WASTE02=25
-    }
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_monk08=10, pic_winnow02=10, 
       pic_spawn13=4, pic_fire14=5, 
@@ -3665,24 +3650,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Ice_outdoors=50 }
     hallways  = { Ice_hallway=50 }
 
-
-    building_corners =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
-
-    courtyard_floors =
-    {
-      F_013=15, F_033=40, F_040=30
-    }
-
-    landscape_walls =
-    {
-      ICE01=45, ICE02=30, ICE03=5, ICE06=25
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_spawn13=10, 
     }
@@ -3705,7 +3673,7 @@ HEXEN.LEVEL_THEMES =
   
     monster_prefs =
     {
-      iceguy =500, afrit=0.2
+      iceguy=500, afrit=0.2
     }
   }
 
@@ -3721,29 +3689,7 @@ HEXEN.LEVEL_THEMES =
     outdoors  = { Swamp1_outdoors=50 }
     hallways  = { Swamp1_hallway=50 }
 
-
-    building_corners =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=25, WOOD02=25, WOOD03=35
-    }
-
-    courtyard_floors =
-    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=5, F_018=5, F_019=10, F_020=10,
-      F_054=1, F_055=1, F_092=1,
-      F_005=10, F_006=10, F_007=5, 
-    }
-
-    landscape_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
-      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
-      WASTE02=5
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_forest11=10, pic_monk08=2, pic_winnow02=3, pic_spawn13=5,
       pic_books01=3, pic_books02=2
@@ -3798,41 +3744,8 @@ HEXEN.LEVEL_THEMES =
       MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
       MONK14=15, MONK15=15, MONK16=15, TOMB05=4
     }
-  
 
-    building_corners =
-    {
-      FOREST10=20, WOOD01=15, WOOD03=5,
-      PILLAR01=10, MONK01=15, MONK02=20, MONK04=10,
-      MONK06=10, MONK09=10, MONK11=10, MONK12=10,
-      FOREST05=10, WASTE04=5, WASTE04=3, D_END3=5,
-      D_END4=5, PILLAR02=15
-    }
-
-    courtyard_floors =
-    {
-      F_024=25, F_034=50, F_001=10, F_002=10,
-      F_004=15, F_005=15, F_089=10, F_005=35, 
-      F_006=45, F_007=25, 
-
-      F_010=2, F_011=4, F_025=3, F_028=2, F_029=2, 
-      F_030=2, F_031=2, F_046=2, F_047=2, F_048=2, 
-      F_057=1, F_059=2, F_077=2, F_089=2, F_012=2, 
-      F_014=2, F_014=7, F_030=7, F_047=5, F_048=5, 
-      F_038=3, F_076=3, F_077=2
-    }
-
-    landscape_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=25, FOREST03=5,
-      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
-      PRTL03=15, CAVE05=30, CAVE03=20, CAVE04=15, 
-      CAVE05=40, CAVE06=10, WASTE02=35, WASTE01=35
-    }
-
-
-    pictures =
+    __pictures =
     {
       pic_glass01=20, pic_glass02=2, pic_glass03=20, pic_glass04=2, 
       pic_glass05=20, pic_glass06=2, pic_tomb03=5, pic_books01=15,
