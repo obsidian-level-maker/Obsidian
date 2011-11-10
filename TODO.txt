@@ -13,21 +13,27 @@ CSG-QUAKE: is broken, mini-sides are not created properly because the
            Either fix this (ugh) or re-think how it should work.
 
 
-flyingdeath naming ideas:
-  Enter the ...
-  Welcome to the
-  Flight from the  / Escape
-  Journey to the
-  Assault on the
-  Death Awaits in the
-  Oh God not another
-  Curse of the
-  Fear the
-  Yet another
+CRAZY FRICKIN' IDEA: instead of ZONE_THEMES, just use alternate
+                     level themes (e.g. doom_hell1/2)
 
-flyingdeath's Fight Sim tweaks
 
-Jared's DEIMOS theme additions
+update games for Theme System
+-  DOOM
+
+?  Jared's DEIMOS theme additions
+
+
+implement ZONE_THEMES  (via 'zones' field) and ROOM_THEME (via 'room' field)
+
+- use current code to "construct" a zone theme if none present
+  (similarly for rooms)
+
+- rarity="zone" for ROOM_THEMES  [also: "level", "episode" and "game" keywords]
+
+? ubiquity keyword ?
+
+DONE: ROOM.kind : "building", "cave", "outdoor", "hallway"
+                  kill the [.]building, [.]cave, [.]is_hall, [.]is_room
 
 
 Caves:
@@ -51,6 +57,7 @@ Caves:
   -  better ceilings, chance of sky
 
   -  create a large area (or two) by merging areas together
+     [OR: pre-allocate a large chunk / reclaimed junction]
 
   DONE:  QUAKE: avoid caves for intermission camera
 
@@ -66,7 +73,7 @@ QUAKE II:
 
 
 Liquids:
-  +  generate liquid "AREAs" at same time as normal areas 
+  ?  generate liquid "AREAs" at same time as normal areas 
      (by looking at free seeds).  Similarly for cages and 3D areas.
      Create chunks after the seeds have been decided.
 
@@ -87,26 +94,26 @@ Zones:
         -  small levels: 1 or 2 zones
         -  large levels: 3 or 4 zones
 
-  +  distinct texturing in each zone
-
-  +  keyed doors are preferred separator for zones
+>>>  distinct texturing in each zone
 
   -  prefer weapons be placed in different zones
+     rather than: two in second zone, none in third (or so).
 
-  -  think about other kinds of distinctions
+     Note: does NOT apply to the starting room
 
-  -  switches and their doors are limited to a single zone
+  DONE:  switches and their doors are limited to a single zone
+  DONE:  keyed doors are preferred separator for zones
 
-  ?  ZONE_THEMES
+  -  Idea: ZONE_THEMES
+
+  +  if keys are left over, can use them for non-Zone locks
 
 
-Quests:
-+  if all exits have TVOL < 2 (or so) then don't add any locks
-   (i.e. make all but one of them into STORAGE rooms)
+Storage Rooms:
+  -  actually use them for, um, storage
 
--  prefer adding weapons into these STORAGE rooms
-
--  check or re-implement logic to reduce back-tracking
+  -  prefer adding weapons into these STORAGE rooms
+     (rather than another room in the quest, ESPECIALLY solution room)
 
 
 -----------------------------------------------------------------
