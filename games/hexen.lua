@@ -2429,24 +2429,11 @@ HEXEN.NAME_THEMES =
 
 HEXEN.ROOM_THEMES =
 {
-}
-
-
-HEXEN.LEVEL_THEMES =
-{
-  hexen_dungeon1 =
   -- This is the monestary / palacial castle type dungeon
+
+  Dungeon1_room =
   {
-    prob = 50
-
---[[
-    buildings = { Dungeon1_room=50 }
-    caves     = { Dungeon1_cave=50 }
-    outdoors  = { Dungeon1_outdoors=50 }
-    hallways  = { Dungeon1_hallway=50 }
---]]
-
-    building_walls =
+    walls =
     {
       MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
       MONK14=15, MONK15=15, MONK16=15, TOMB05=15, 
@@ -2456,7 +2443,7 @@ HEXEN.LEVEL_THEMES =
       VILL01=7,
     }
 
-    building_floors =
+    floors =
     {
       F_010=10, F_011=20, F_012=8, F_014=8, 
       F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
@@ -2465,7 +2452,7 @@ HEXEN.LEVEL_THEMES =
       F_073=3, F_077=10, F_089=12, F_092=2,
     }
 
-    building_ceilings =
+    ceilings =
     {
       F_010=10, F_011=20, F_012=8, F_014=8, 
       F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
@@ -2473,6 +2460,522 @@ HEXEN.LEVEL_THEMES =
       F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
       F_073=3, F_077=2, F_089=2, F_081=4, F_092=2,
     }
+  }
+
+  Dungeon1_cave =
+  {
+    naturals =
+    {
+      CAVE03=20, CAVE04=25, CAVE06=15, 
+      CAVE05=30, WASTE02=15
+    }
+  }
+
+  Dungeon1_outdoors =
+  {
+  }
+
+  Dungeon1_hallway =
+  {
+  }
+
+
+  -- This is the dark, dank dungeon type of crumbling castles, cemetaries, 
+  -- crypts, sewers, and of course, dungeons.
+
+  Dungeon2_room =
+  {
+    walls =
+    {
+      -- First, common castle / sewer (hub 4) patterns that should be used a lot
+      CASTLE01=20, CASTLE07=35, CASTLE11=10, CAVE01=8, 
+      CAVE02=10, CAVE07=5, FOREST02=5, PRTL03=12, MONK07=10,
+      SEWER01=15, SEWER07=15, SEWER08=15, WINN01=5,
+    
+      -- Next, some novelty patterns that should be used rarely
+      CASTLE02=1, CASTLE06=1, SEWER12=1, X_SWR1=1,
+      CASTLE08=1, CASTLE09=1, SEWER02=3, SEWER05=1, 
+      SEWER06=1, SEWER09=1, SEWER10=1, SEWER11=1, 
+    
+      -- Finally, tomb / grave patterns (hub 5) both common and rare
+      TOMB04=15, TOMB07=15, TOMB08=3, 
+      TOMB11=10, GRAVE01=2, TOMB05=15, 
+    }
+
+    floors =
+    {
+      F_008=10, F_009=10, F_012=10, F_013=10, 
+      F_015=10, F_017=10, F_018=10, F_021=5, 
+      F_022=10, F_023=2, F_027=10, F_030=10, 
+      F_031=5, F_038=2, F_042=5, F_044=10, 
+      F_045=5, F_057=10, F_058=10, F_059=10, 
+      F_073=10, F_076=10, F_033=10
+    }
+
+    ceilings =
+    {
+      F_008=10, F_009=10, F_012=10, F_013=10, 
+      F_015=10, F_017=10, F_018=10, F_021=5, 
+      F_022=10, F_023=2, F_027=10, F_030=10, 
+      F_031=5, F_038=2, F_042=5, F_044=10, 
+      F_045=5, F_057=10, F_058=10, F_059=10, 
+      F_073=10, F_076=10, F_033=10
+    }
+  }
+
+  Dungeon2_cave =
+  {
+    naturals =
+    {        
+      CAVE03=20, CAVE04=20, CAVE05=15, CAVE06=20, 
+      WASTE02=15, FOREST02=30
+    }
+  }
+
+  Dungeon2_outdoors =
+  {
+  }
+
+  Dungeon2_hallway =
+  {
+  }
+
+
+  -- This is the element fire, as in "The Guardian or Fire" in Raven's original wad.
+
+  Fire_room =
+  {
+    walls =
+    {
+      FIRE01=30, FIRE04=4, FIRE05=10, FIRE06=15, 
+      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
+      FIRE11=10, FIRE12=10, X_FIRE01=1
+    }
+
+    floors =
+    {
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
+    }
+
+    ceilings =
+    {
+      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
+    }
+  }
+
+  Fire_cave =
+  {
+    naturals =
+    {
+      FIRE01=60, CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
+    }
+  }
+
+  Fire_outdoors =
+  {
+  }
+
+  Fire_hallway =
+  {
+  }
+
+
+  -- This is the "element" ice
+  Ice_room =
+  {
+    walls =
+    {
+      ICE01=15, ICE02=30, ICE03=5, ICE06=25
+    }
+    
+    floors =
+    {
+      F_013=40, F_033=15, F_040=30
+    }
+    
+    ceilings =
+    {
+      F_013=40, F_033=15, F_040=30
+    }
+  }
+
+  Ice_cave =
+  {
+    naturals =
+    {
+      ICE01=75, ICE06=25
+    }
+  }
+
+  Ice_outdoors =
+  {
+  }
+
+  Ice_hallway =
+  {
+  }
+
+
+  -- This is the "element" steel, as in "The Guardian or Steel" in Raven's original wad.
+
+  Steel_room =
+  {
+    walls =
+    {
+      STEEL01=40, STEEL02=10, STEEL05=10, 
+      STEEL06=15, STEEL07=5, STEEL08=5
+    }
+
+    floors =
+    {
+      F_065=10, F_066=10, F_067=10, F_068=10, 
+      F_069=15, F_070=15, F_073, F_074=40, 
+      F_075=15, F_078=10
+    }
+
+    ceilings =
+    {
+      F_065=10, F_066=10, F_067=10, F_068=10, 
+      F_069=15, F_070=15, F_073, F_074=40, 
+      F_075=15, F_078=10
+    }
+  }
+
+  Steel_cave =
+  {
+    naturals =
+    {
+      STEEL01=40, STEEL02=10, STEEL05=10, 
+      STEEL06=15, STEEL07=5, STEEL08=5
+    }
+
+  }
+
+  Steel_outdoors =
+  {
+  }
+
+  Steel_hallway =
+  {
+  }
+
+
+  -- This is the barren, deserty wildness, based on "The Wasteland" in Raven's original wad.
+
+  Wild1_room =
+  {
+    walls =
+    {
+      WASTE01=15, WASTE02=10, WASTE04=10, WASTE03=5,
+      FOREST01=25, MONK16=15, WOOD01=5, VILL01=5, 
+      VILL04=10, VILL05=10,
+    }
+    floors =
+    {
+      F_002=10, F_003=10, F_004=5, F_037=20,
+      F_029=20, F_044=15, F_082=10
+    }
+    ceilings =
+    {
+      F_037=20, F_029=20, F_044=15, F_082=10,
+      D_END3=27, D_END4=3
+    }
+  }
+
+  Wild1_cave =
+  {
+    naturals =
+    {
+      WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
+    }
+
+  }
+
+  Wild1_outdoors =
+  {
+  }
+
+  Wild1_hallway =
+  {
+  }
+
+
+  -- This is the cave type wildness; cave1 duplicates for those who like caves.
+
+  Wild2_room =
+  {
+    walls =
+    { -- In the caves, even rooms may have cave ways, being carved from solid rock
+      CAVE01=20, CAVE02=20, CAVE03=20, 
+      CAVE05=15, CAVE07=15, WASTE02=10
+    }
+
+    floors =
+    {
+      F_007=20, F_008=5, F_039=75, F_040=40, 
+      F_073=10, F_076=15
+    }
+
+    ceilings =
+    {
+      F_039=75, F_040=40, 
+      F_073=10, F_076=15
+    }
+  }
+
+  Wild2_cave =
+  {
+    naturals =
+    {        
+      CAVE03=20, CAVE04=40, CAVE05=15, CAVE06=60, 
+      WASTE02=15
+    }
+  }
+
+  Wild2_outdoors =
+  {
+  }
+
+  Wild2_hallway =
+  {
+  }
+
+
+  -- cave1 
+
+  Cave1_room =
+  {
+    walls =
+    { -- In the caves, even rooms may have cave ways, being carved from solid rock
+      CAVE01=20, CAVE02=20, CAVE03=20, 
+      CAVE05=15, CAVE07=15, WASTE02=10
+    }
+
+    floors =
+    {
+      F_007=20, F_008=5, F_039=75, F_040=40, 
+      F_073=10, F_076=15
+    }
+
+    ceilings =
+    {
+      F_039=75, F_040=40, 
+      F_073=10, F_076=15
+    }
+  }
+
+  Cave1_cave =
+  {
+    naturals =
+    {        
+      CAVE03=20, CAVE04=40, CAVE05=15, CAVE06=60, 
+      WASTE02=15
+    }
+  }
+
+  Cave1_outdoors =
+  {
+  }
+
+  Cave1_hallway =
+  {
+  }
+
+
+  -- This is the swamp-type wilderness (swamp1 duplicates this for those who like swamps).
+
+  Wild3_room =
+  {
+    walls =
+    {
+      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
+      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
+    }
+
+    floors =
+    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5
+    }
+
+    ceilings =
+    {
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5
+    }
+  }
+
+  Wild3_outdoors =
+  {
+  }
+
+  Wild3_hallway =
+  {
+  }
+
+
+  -- swamp1
+
+  Swamp1_room =
+  {
+    walls =
+    {
+      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
+      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
+    }
+
+    floors =
+    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5
+    }
+
+    ceilings =
+    {
+      F_017=10, F_018=10, F_019=20, F_020=15,
+      F_054=10, F_055=10, F_092=5
+    }
+  }
+
+  Swamp1_cave =
+  {
+    naturals =
+    {
+      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
+      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
+      WASTE02=5      
+    }
+  }
+
+  Swamp1_outdoors =
+  {
+  }
+
+  Swamp1_hallway =
+  {
+  }
+
+
+  -- This is the woodland wilderness found in The Shadow Wood and Winnowing Hall;
+  -- village1, bellow duplicates this fairly closely for those who like wooded villages.
+
+  Wild4_room =
+  {
+    walls =
+    {
+      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
+      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
+      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
+      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
+      WOOD01=10, WOOD02=10, WOOD03=2, 
+    }
+
+    floors =
+    {
+      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
+      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
+      F_005=5, F_006=5, F_007=5, F_077=10
+    }
+
+    ceilings =
+    {
+      F_014=15, F_030=15, F_047=10, F_048=10, F_038=2,
+      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
+      F_077=10, F_081=5
+    }
+  }
+
+  Wild4_cave =
+  {
+    naturals =
+    {
+      CAVE05=30, FOREST02=25, CAVE03=20, CAVE04=15, 
+      CAVE05=15, CAVE06=10, 
+    }
+  }
+
+  Wild4_outdoors =
+  {
+  }
+
+  Wild4_hallway =
+  {
+  }
+
+
+  -- village1
+
+  Village1_room =
+  {
+    walls =
+    {
+      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
+      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
+      FOREST04=5, FOREST05=10, FOREST07=5, FOREST10=15,
+      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
+      WOOD01=10, WOOD02=10, WOOD03=2, 
+
+      MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
+      MONK14=15, MONK15=15, MONK16=15, MONK04=10,
+      MONK06=10, MONK09=10, MONK11=10, MONK12=10, 
+      MONK17=8, MONK18=2, MONK19=5, MONK21=4, 
+      MONK22=1, WASTE04=5, WINN01=12, 
+      PRTL02=12, PRTL04=12, PRTL05=10, VILL01=7, 
+      TOMB05=15,
+    }
+
+    floors =
+    {
+      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
+      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
+      F_005=5, F_006=5, F_007=5, F_077=10,
+
+      F_010=10, F_011=20, F_012=8, F_014=8, 
+      F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
+      F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,  
+      F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
+      F_073=3, F_077=10, F_089=12, F_092=2,      
+    }
+
+    ceilings =
+    {
+      F_014=15, F_030=15, F_047=10, F_048=10, F_038=2,
+      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
+      F_077=10, F_081=5
+    }
+  }
+
+  Village1_cave =
+  {
+    naturals =
+    {
+      CAVE05=30, FOREST02=25, CAVE03=20, CAVE04=15, 
+      CAVE05=15, CAVE06=15, WASTE02=15
+    }
+
+  }
+
+  Village1_outdoors =
+  {
+  }
+
+  Village1_hallway =
+  {
+  }
+}
+
+
+HEXEN.LEVEL_THEMES =
+{
+  hexen_dungeon1 =
+  {
+    prob = 50
+
+    buildings = { Dungeon1_room=50 }
+    caves     = { Dungeon1_cave=50 }
+    outdoors  = { Dungeon1_outdoors=50 }
+    hallways  = { Dungeon1_hallway=50 }
+
 
     courtyard_floors =
     {
@@ -2481,12 +2984,6 @@ HEXEN.LEVEL_THEMES =
       F_025=3, F_028=2, F_029=2, F_030=2, F_031=2,
       F_046=2, F_047=2, F_048=2, F_057=1, F_059=2,    
       F_077=2, F_089=2, F_012=2, F_014=2
-    }
-
-    cave_walls =
-    {
-      CAVE03=20, CAVE04=25, CAVE06=15, 
-      CAVE05=30, WASTE02=15
     }
 
     landscape_walls =
@@ -2540,56 +3037,23 @@ HEXEN.LEVEL_THEMES =
 
 
   hexen_dungeon2 =
-  -- This is the dark, dank dungeon type of crumbling castles, cemetaries, 
-  -- crypts, sewers, and of course, dungeons.
   {
     prob = 50
 
     liquids = { water=25, muck=70, icefloor=5 }
   
-    building_facades =
+    buildings = { Dungeon2_room=50 }
+    caves     = { Dungeon2_cave=50 }
+    outdoors  = { Dungeon2_outdoors=50 }
+    hallways  = { Dungeon2_hallway=50 }
+
+    facades =
     {
       CASTLE01=10, CASTLE07=35, CASTLE11=10, CAVE01=10, 
       CAVE02=15, PRTL03=15, SEWER01=10, SEWER07=10, 
       SEWER08=10, WINN01=7, TOMB05=5, TOMB04=3, MONK07=10
     }
   
-    building_walls =
-    {
-      -- First, common castle / sewer (hub 4) patterns that should be used a lot
-      CASTLE01=20, CASTLE07=35, CASTLE11=10, CAVE01=8, 
-      CAVE02=10, CAVE07=5, FOREST02=5, PRTL03=12, MONK07=10,
-      SEWER01=15, SEWER07=15, SEWER08=15, WINN01=5,
-    
-      -- Next, some novelty patterns that should be used rarely
-      CASTLE02=1, CASTLE06=1, SEWER12=1, X_SWR1=1,
-      CASTLE08=1, CASTLE09=1, SEWER02=3, SEWER05=1, 
-      SEWER06=1, SEWER09=1, SEWER10=1, SEWER11=1, 
-    
-      -- Finally, tomb / grave patterns (hub 5) both common and rare
-      TOMB04=15, TOMB07=15, TOMB08=3, 
-      TOMB11=10, GRAVE01=2, TOMB05=15, 
-    }
-
-    building_floors =
-    {
-      F_008=10, F_009=10, F_012=10, F_013=10, 
-      F_015=10, F_017=10, F_018=10, F_021=5, 
-      F_022=10, F_023=2, F_027=10, F_030=10, 
-      F_031=5, F_038=2, F_042=5, F_044=10, 
-      F_045=5, F_057=10, F_058=10, F_059=10, 
-      F_073=10, F_076=10, F_033=10
-    }
-
-    building_ceilings =
-    {
-      F_008=10, F_009=10, F_012=10, F_013=10, 
-      F_015=10, F_017=10, F_018=10, F_021=5, 
-      F_022=10, F_023=2, F_027=10, F_030=10, 
-      F_031=5, F_038=2, F_042=5, F_044=10, 
-      F_045=5, F_057=10, F_058=10, F_059=10, 
-      F_073=10, F_076=10, F_033=10
-    }
 
     building_corners =
     {
@@ -2611,12 +3075,6 @@ HEXEN.LEVEL_THEMES =
       F_031=1, F_038=10, F_042=1, F_044=2, 
       F_045=1, F_057=2, F_058=2, F_059=2, 
       F_073=2, F_076=2
-    }
-
-    cave_walls =
-    {        
-      CAVE03=20, CAVE04=20, CAVE05=15, CAVE06=20, 
-      WASTE02=15, FOREST02=30
     }
 
     landscape_walls =
@@ -2675,28 +3133,16 @@ HEXEN.LEVEL_THEMES =
   
 
   hexen_element1 =
-  -- This is the element fire, as in "The Guardian or Fire" in Raven's original wad.
   {
     prob = 20
 
     liquids = { lava=100 }
 
-    building_walls =
-    {
-      FIRE01=30, FIRE04=4, FIRE05=10, FIRE06=15, 
-      FIRE07=15, FIRE08=10, FIRE09=10, FIRE10=10, 
-      FIRE11=10, FIRE12=10, X_FIRE01=1
-    }
+    buildings = { Fire_room=50 }
+    caves     = { Fire_cave=50 }
+    outdoors  = { Fire_outdoors=50 }
+    hallways  = { Fire_hallway=50 }
 
-    building_floors =
-    {
-      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
-    }
-
-    building_ceilings =
-    {
-      F_013=25, F_032=25, F_040=15, F_044=4, F_082=15
-    }
 
     building_corners =
     {
@@ -2708,11 +3154,6 @@ HEXEN.LEVEL_THEMES =
     courtyard_floors =
     {
       F_013=5, F_032=30, F_040=25, F_044=4, F_082=20
-    }
-
-    cave_walls =
-    {
-      FIRE01=60, CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
     }
 
     landscape_walls =
@@ -2766,26 +3207,16 @@ HEXEN.LEVEL_THEMES =
   
 
   hexen_element2 =
-  -- This is the "element" ice; ice1 below duplicates this for those who like ice.
   {
     prob = 20
 
     liquids = { icefloor=100 } -- ice1 will use "liquids = { ice=70, water=30 }" instead, for variety.
   
-    building_walls =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
-    
-    building_floors =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
-    
-    building_ceilings =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
+    buildings = { Ice_room=50 }
+    caves     = { Ice_cave=50 }
+    outdoors  = { Ice_outdoors=50 }
+    hallways  = { Ice_hallway=50 }
+
 
     building_corners =
     {
@@ -2795,11 +3226,6 @@ HEXEN.LEVEL_THEMES =
     courtyard_floors =
     {
       F_013=15, F_033=40, F_040=30
-    }
-
-    cave_walls =
-    {
-      ICE01=75, ICE06=25
     }
 
     landscape_walls =
@@ -2851,7 +3277,6 @@ HEXEN.LEVEL_THEMES =
   
     
   hexen_element3 =
-  -- This is the "element" steel, as in "The Guardian or Steel" in Raven's original wad.
   {
     prob = 20
 
@@ -2859,25 +3284,11 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { lava=20, icefloor=10, water=5, muck=5 }
 
-    building_walls =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10, 
-      STEEL06=15, STEEL07=5, STEEL08=5
-    }
+    buildings = { Steel_room=50 }
+    caves     = { Steel_cave=50 }
+    outdoors  = { Steel_outdoors=50 }
+    hallways  = { Steel_hallway=50 }
 
-    building_floors =
-    {
-      F_065=10, F_066=10, F_067=10, F_068=10, 
-      F_069=15, F_070=15, F_073, F_074=40, 
-      F_075=15, F_078=10
-    }
-
-    building_ceilings =
-    {
-      F_065=10, F_066=10, F_067=10, F_068=10, 
-      F_069=15, F_070=15, F_073, F_074=40, 
-      F_075=15, F_078=10
-    }
 
     building_corners =
     {
@@ -2890,12 +3301,6 @@ HEXEN.LEVEL_THEMES =
       F_065=10, F_066=10, F_067=10, F_068=10, 
       F_069=15, F_070=15, F_073, F_074=40, 
       F_075=15, F_078=10
-    }
-
-    cave_walls =
-    {
-      STEEL01=40, STEEL02=10, STEEL05=10, 
-      STEEL06=15, STEEL07=5, STEEL08=5
     }
 
     landscape_walls =
@@ -2944,28 +3349,16 @@ HEXEN.LEVEL_THEMES =
   
     
   hexen_wild1 =
-  -- This is the barren, deserty wildness, based on "The Wasteland" in Raven's original wad.
   {
     prob = 20
 
     liquids = { water=30, muck=40, lava=20 }
 
-    building_walls =
-    {
-      WASTE01=15, WASTE02=10, WASTE04=10, WASTE03=5,
-      FOREST01=25, MONK16=15, WOOD01=5, VILL01=5, 
-      VILL04=10, VILL05=10,
-    }
-    building_floors =
-    {
-      F_002=10, F_003=10, F_004=5, F_037=20,
-      F_029=20, F_044=15, F_082=10
-    }
-    building_ceilings =
-    {
-      F_037=20, F_029=20, F_044=15, F_082=10,
-      D_END3=27, D_END4=3
-    }
+    buildings = { Wild1_room=50 }
+    caves     = { Wild1_cave=50 }
+    outdoors  = { Wild1_outdoors=50 }
+    hallways  = { Wild1_hallway=50 }
+
     building_corners =
     {
       WOOD01=50, WASTE04=10, WASTE03=10
@@ -2974,11 +3367,6 @@ HEXEN.LEVEL_THEMES =
     courtyard_floors =
     {
       F_002=25, F_003=25, F_004=10, F_005=5, F_037=20
-    }
-
-    cave_walls =
-    {
-      WASTE01=35, WASTE02=15, WASTE04=10, WASTE03=5
     }
 
     landscape_walls =
@@ -3027,29 +3415,16 @@ HEXEN.LEVEL_THEMES =
   
   
   hexen_wild2 =
-  -- This is the cave type wildness; cave1 duplicates for those who like caves.
   {
     prob = 20
 
     liquids = { water=60, muck=10, lava=25 }
 
-    building_walls =
-    { -- In the caves, even rooms may have cave ways, being carved from solid rock
-      CAVE01=20, CAVE02=20, CAVE03=20, 
-      CAVE05=15, CAVE07=15, WASTE02=10
-    }
+    buildings = { Wild2_room=50 }
+    caves     = { Wild2_cave=50 }
+    outdoors  = { Wild2_outdoors=50 }
+    hallways  = { Wild2_hallway=50 }
 
-    building_floors =
-    {
-      F_007=20, F_008=5, F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
-
-    building_ceilings =
-    {
-      F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
 
     building_corners =
     { 
@@ -3061,12 +3436,6 @@ HEXEN.LEVEL_THEMES =
     {
       F_007=10, F_039=75, F_040=40, 
       F_073=10, F_076=10
-    }
-
-    cave_walls =
-    {        
-      CAVE03=20, CAVE04=40, CAVE05=15, CAVE06=60, 
-      WASTE02=15
     }
 
     landscape_walls =
@@ -3105,29 +3474,16 @@ HEXEN.LEVEL_THEMES =
 
   
   hexen_wild3 =
-  -- This is the swamp-type wilderness (swamp1 duplicates this for those who like swamps).
   {
     prob = 20
 
     liquids = { muck=100 }  -- for whole mulit-level swamp1 theme this will be "liquids = { muck=80, water 20 }"
   
-    building_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
-    }
+    buildings = { Wild3_room=50 }
+    caves     = { Swamp1_cave=50 }
+    outdoors  = { Wild3_outdoors=50 }
+    hallways  = { Wild3_hallway=50 }
 
-    building_floors =
-    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
-
-    building_ceilings =
-    {
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
 
     building_corners =
     {
@@ -3140,13 +3496,6 @@ HEXEN.LEVEL_THEMES =
       F_017=5, F_018=5, F_019=10, F_020=10,
       F_054=1, F_055=1, F_092=1,
       F_005=10, F_006=10, F_007=5, 
-    }
-
-    cave_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
-      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
-      WASTE02=5      
     }
 
     landscape_walls =
@@ -3212,35 +3561,16 @@ HEXEN.LEVEL_THEMES =
 
   
   hexen_wild4 =
-  -- This is the woodland wilderness found in The Shadow Wood and Winnowing Hall;
-  -- village1, bellow duplicates this fairly closely for those who like wooded villages.
   {
     prob = 40
 
     liquids = { water=60, muck=15, lava=10 }
   
-    building_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
-      FOREST04=5, FOREST05=5, FOREST07=5, FOREST10=15,
-      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
-      WOOD01=10, WOOD02=10, WOOD03=2, 
-    }
+    buildings = { Wild4_room=50 }
+    caves     = { Wild4_cave=50 }
+    outdoors  = { Wild4_outdoors=50 }
+    hallways  = { Wild4_hallway=50 }
 
-    building_floors =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_005=5, F_006=5, F_007=5, F_077=10
-    }
-
-    building_ceilings =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=2,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_077=10, F_081=5
-    }
 
     building_corners =
     {
@@ -3252,12 +3582,6 @@ HEXEN.LEVEL_THEMES =
       F_014=7, F_030=7, F_047=5, F_048=5, F_038=3,
       F_076=3, F_089=10,  F_005=35, F_006=45, F_007=25, 
       F_077=2
-    }
-
-    cave_walls =
-    {
-      CAVE05=30, FOREST02=25, CAVE03=20, CAVE04=15, 
-      CAVE05=15, CAVE06=10, 
     }
 
     landscape_walls =
@@ -3325,23 +3649,11 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { water=60, muck=10, lava=25 }
 
-    building_walls =
-    { -- In the caves, even rooms may have cave ways, being carved from solid rock
-      CAVE01=20, CAVE02=20, CAVE03=20, 
-      CAVE05=15, CAVE07=15, WASTE02=10
-    }
+    buildings = { Cave1_room=50 }
+    caves     = { Cave1_cave=50 }
+    outdoors  = { Cave1_outdoors=50 }
+    hallways  = { Cave1_hallway=50 }
 
-    building_floors =
-    {
-      F_007=20, F_008=5, F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
-
-    building_ceilings =
-    {
-      F_039=75, F_040=40, 
-      F_073=10, F_076=15
-    }
 
     building_corners =
     { 
@@ -3353,12 +3665,6 @@ HEXEN.LEVEL_THEMES =
     {
       F_007=10, F_039=75, F_040=40, 
       F_073=10, F_076=10
-    }
-
-    cave_walls =
-    {        
-      CAVE03=20, CAVE04=40, CAVE05=15, CAVE06=60, 
-      WASTE02=15
     }
 
     landscape_walls =
@@ -3402,20 +3708,11 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { icefloor=70, water=30 }
   
-    building_walls =
-    {
-      ICE01=15, ICE02=30, ICE03=5, ICE06=25
-    }
+    buildings = { Ice_room=50 }
+    caves     = { Ice_cave=50 }
+    outdoors  = { Ice_outdoors=50 }
+    hallways  = { Ice_hallway=50 }
 
-    building_floors =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
-
-    building_ceilings =
-    {
-      F_013=40, F_033=15, F_040=30
-    }
 
     building_corners =
     {
@@ -3425,11 +3722,6 @@ HEXEN.LEVEL_THEMES =
     courtyard_floors =
     {
       F_013=15, F_033=40, F_040=30
-    }
-
-    cave_walls =
-    {
-      ICE01=75, ICE06=25
     }
 
     landscape_walls =
@@ -3484,23 +3776,11 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { muck=80, water=20 }
   
-    building_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, VILL01=10, VILL02=10,
-      WOOD01=5, WOOD02=5, WOOD03=15, FOREST07=10
-    }
+    buildings = { Swamp1_room=50 }
+    caves     = { Swamp1_cave=50 }
+    outdoors  = { Swamp1_outdoors=50 }
+    hallways  = { Swamp1_hallway=50 }
 
-    building_floors =
-    {  -- Had considered using flat x_09 (muck) as a floor; see note in style_list below.
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
-
-    building_ceilings =
-    {
-      F_017=10, F_018=10, F_019=20, F_020=15,
-      F_054=10, F_055=10, F_092=5
-    }
 
     building_corners =
     {
@@ -3513,13 +3793,6 @@ HEXEN.LEVEL_THEMES =
       F_017=5, F_018=5, F_019=10, F_020=10,
       F_054=1, F_055=1, F_092=1,
       F_005=10, F_006=10, F_007=5, 
-    }
-
-    cave_walls =
-    {
-      SWAMP01=20, SWAMP03=20, SWAMP04=20, FOREST07=10,            
-      CAVE03=10, CAVE04=10, CAVE05=10, CAVE06=10, 
-      WASTE02=5      
     }
 
     landscape_walls =
@@ -3587,7 +3860,12 @@ HEXEN.LEVEL_THEMES =
 
     liquids = { water=60, muck=15, lava=10 }
   
-    building_facades =
+    buildings = { Village1_room=50 }
+    caves     = { Village1_cave=50 }
+    outdoors  = { Village1_outdoors=50 }
+    hallways  = { Village1_hallway=50 }
+
+    facades =
     {
       CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
       FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
@@ -3598,42 +3876,6 @@ HEXEN.LEVEL_THEMES =
       MONK14=15, MONK15=15, MONK16=15, TOMB05=4
     }
   
-    building_walls =
-    {
-      CASTLE07=15, CAVE01=15, CAVE02=15, FIRE06=5,
-      FIRE07=5, FOREST01=40, FOREST02=5, FOREST03=5,
-      FOREST04=5, FOREST05=10, FOREST07=5, FOREST10=15,
-      PRTL03=15, VILL01=5, VILL04=10, VILL05=10, 
-      WOOD01=10, WOOD02=10, WOOD03=2, 
-
-      MONK01=30, MONK02=40, MONK03=15, MONK07=15, 
-      MONK14=15, MONK15=15, MONK16=15, MONK04=10,
-      MONK06=10, MONK09=10, MONK11=10, MONK12=10, 
-      MONK17=8, MONK18=2, MONK19=5, MONK21=4, 
-      MONK22=1, WASTE04=5, WINN01=12, 
-      PRTL02=12, PRTL04=12, PRTL05=10, VILL01=7, 
-      TOMB05=15,
-    }
-
-    building_floors =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=5,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_005=5, F_006=5, F_007=5, F_077=10,
-
-      F_010=10, F_011=20, F_012=8, F_014=8, 
-      F_025=15, F_028=10, F_029=10, F_030=10, F_033=10,
-      F_031=12, F_041=3, F_042=8, F_043=4, F_044=5,  
-      F_046=12, F_047=9, F_048=9, F_057=5, F_059=10,  
-      F_073=3, F_077=10, F_089=12, F_092=2,      
-    }
-
-    building_ceilings =
-    {
-      F_014=15, F_030=15, F_047=10, F_048=10, F_038=2,
-      F_054=5, F_055=5, F_076=20, F_089=20, F_092=5,
-      F_077=10, F_081=5
-    }
 
     building_corners =
     {
@@ -3655,12 +3897,6 @@ HEXEN.LEVEL_THEMES =
       F_057=1, F_059=2, F_077=2, F_089=2, F_012=2, 
       F_014=2, F_014=7, F_030=7, F_047=5, F_048=5, 
       F_038=3, F_076=3, F_077=2
-    }
-
-    cave_walls =
-    {
-      CAVE05=30, FOREST02=25, CAVE03=20, CAVE04=15, 
-      CAVE05=15, CAVE06=15, WASTE02=15
     }
 
     landscape_walls =
