@@ -218,19 +218,21 @@ HEXEN2.PARAMETERS =
 
 HEXEN2.MATERIALS =
 {
+  -- FIXME: THIS IS EXTREMELY INCOMPLETE....
+
   -- special materials --
   _ERROR = { t="error" }
   _SKY   = { t="sky001" }
 
   FLOOR  = { t="rtex001" }
   WALL   = { t="rtex238" }
+  ROCK   = { t="rtex032" }
 
   -- special stuff
   TRIGGER    = { t="trigger" }
 
   TELEPORT   = { t="*teleport" }
 
-  -- FIXME
 }
 
 
@@ -298,36 +300,61 @@ HEXEN2.THEME_DEFAULTS =
 }
 
 
-HEXEN2.LEVEL_THEMES =
+HEXEN2.ROOM_THEMES =
 {
-  hexen2_gothic1 =
+  Castle_generic =
   {
-    prob = 50
-
-    building_walls =
+    walls =
     {
       WALL=50,
     }
 
-    building_floors =
+    floors =
     {
       FLOOR=50,
     }
 
-    building_ceilings =
+    ceilings =
     {
       FLOOR=50,
     }
 
-    courtyard_floors =
+  }
+
+  Cave_generic =
+  {
+    naturals =
+    {
+      ROCK=50,
+    }
+  }
+
+  Outdoors_generic =
+  {
+    floors =
     {
       FLOOR=50,
     }
 
-    scenery =
+    naturals =
     {
-      -- FIXME
+      ROCK=50,
     }
+  }
+}
+
+
+HEXEN2.LEVEL_THEMES =
+{
+  hexen2_castle1 =
+  {
+    prob = 50
+
+    buildings = { Castle_generic=50 }
+
+    caves = { Cave_generic=50 }
+
+    outdoors = { Outdoors_generic=50 }
   }
 }
 
@@ -953,9 +980,9 @@ UNFINISHED["hexen2"] =
 }
 
 
-OB_THEMES["hexen2_gothic"] =
+OB_THEMES["hexen2_castle"] =
 {
-  label = "Gothic"
+  label = "Castle"
   for_games = { hexen2=1 }
   name_theme = "GOTHIC"
   mixed_prob = 50
