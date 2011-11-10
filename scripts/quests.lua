@@ -490,7 +490,7 @@ function Quest_assign_themes()
     L.theme = GAME.ROOM_THEMES[theme_name]
 
     if not L.theme then
-      error("No such room theme: " .. tostring(name))
+      error("No such room theme: " .. tostring(theme_name))
     end
 
     gui.debugf("Room theme @ %s : %s\n", L:tostr(), theme_name)
