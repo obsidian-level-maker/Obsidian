@@ -1699,11 +1699,6 @@ HERETIC.ROOM_THEMES =
 }
 
 
-HERETIC.ZONE_THEMES =
-{
-}
-
-
 HERETIC.LEVEL_THEMES =
 {
   heretic_urban1 =

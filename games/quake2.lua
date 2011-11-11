@@ -1805,11 +1805,6 @@ QUAKE2.ROOM_THEMES =
 }
 
 
-QUAKE2.ZONE_THEMES =
-{
-}
-
-
 QUAKE2.LEVEL_THEMES =
 {
   quake2_base1 =

@@ -1154,11 +1154,6 @@ HACX.ROOM_THEMES =
 }
 
 
-HACX.ZONE_THEMES =
-{
-}
-
-
 HACX.LEVEL_THEMES =
 {
   hacx_urban1 =

@@ -1242,11 +1242,6 @@ HARMONY.ROOM_THEMES =
 }
 
 
-HARMONY.ZONE_THEMES =
-{
-}
-
-
 HARMONY.LEVEL_THEMES =
 {
   harm_tech1 =
