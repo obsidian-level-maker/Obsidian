@@ -3814,10 +3814,8 @@ DOOM2.LEVEL_THEMES =
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { D2_Marble_room=50 }
-    outdoors  = { D2_Marble_outdoor=50 }
+    outdoors  = { D2_Marble_outdoors=50 }
     caves     = { D2_Hell_cave=50 }
-
-
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
@@ -3853,10 +3851,8 @@ DOOM2.LEVEL_THEMES =
     keys = { ks_red=50, ks_blue=50, ks_yellow=50 }
 
     buildings = { D2_Hot_room=50 }
-    outdoors  = { D2_Hot_outdoor=50 }
+    outdoors  = { D2_Hot_outdoors=50 }
     caves     = { D2_Hell_cave=50 }
-
-
 
     FIXME_switch_doors = { Door_pink = 50, Door_vine = 50 }
 
