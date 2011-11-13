@@ -563,26 +563,6 @@ function OLD__Rooms_setup_theme(R)
 end
 
 
-function OLD__Rooms_setup_theme_Scenic(R)
-  -- TODO
-  R.outdoor = true
-  Rooms_setup_theme(R)
-end
-
-
-
-function OLD__Rooms_choose_themes()
-  each R in LEVEL.rooms do
-    Rooms_setup_theme(R)
-  end
-
-  each R in LEVEL.scenics do
-    Rooms_setup_theme_Scenic(R)
-  end
-end
-
-
-
 function Rooms_select_textures()
 
   local function facade_from_rooms(zone, require_kind)
@@ -699,6 +679,12 @@ function Rooms_select_textures()
     L.skin.spike_group = "spike" .. tostring(L.id)
 
     L.skin.wall = L.wall_mat
+
+    if L.kind == "outdoor" then
+      L.skin.facade = L.wall_mat
+    else
+      L.skin.facade = L.zone.facade_mat
+    end
   end
 
 
@@ -1303,6 +1289,11 @@ end
 
 
 
+function Rooms_bound_outdoor_areas()
+end
+
+
+
 ------------------------------------------------------------------------
 
 
@@ -1410,11 +1401,11 @@ function Rooms_blow_chunks()
     end
   end
 
+  -- scenic rooms ??
+
   each H in LEVEL.halls do
     H:build()
   end
-
-  -- scenic rooms ??
 end
 
 

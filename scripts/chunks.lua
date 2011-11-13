@@ -1092,6 +1092,9 @@ function CHUNK_CLASS.build(C)
   for dir = 2,8,2 do
     local wall_deep = thick
 
+    local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
+
+
     if not C:similar_neighbor(dir) then
       local bx1, by1, bx2, by2 = x1,y1, x2,y2
 
@@ -1125,7 +1128,9 @@ function CHUNK_CLASS.build(C)
           raw_add_brush(brush)
         end
 
-      elseif C.hall and C.hall.street then
+      elseif (C.hall and C.hall.street) or
+             (C.room and C.room.kind == "outdoor")
+      then
         -- only build wall at edge of map
         -- (allow building walls to show through)
         if C:against_map_edge(dir) then
@@ -1137,15 +1142,23 @@ function CHUNK_CLASS.build(C)
         end
 
       else
-          brush = Brush_new_quad(bx1, by1, bx2, by2)
-          Brush_set_tex(brush, w_mat.t)
+        -- SOLID WALL
+
+        local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
+                                       0, long, thick, 0)
+
+        local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
+        assert(skin)
+        assert(skin.facade)
+
+        Fabricate("WALL", T, { skin })
+
 --[[ HALLWAY WINDOW TEST
 local C2 = C:good_neighbor(dir)
 if C2 and (C.hall or C2.hall) then
 table.insert(brush, { t=f_h+48, tex=w_mat.f or w_mat.t })
 end
 --]]
-          raw_add_brush(brush)
       end
 
       -- spot stuff  [FIXME: TEMP HACK]
@@ -1163,8 +1176,6 @@ end
 
     -- locked doors
     local LINK = C.link[dir]
-
-    local long = geom.vert_sel(dir, C.x2 - C.x1, C.y2 - C.y1)
 
     if LINK and LINK.conn and LINK.conn.lock and LINK.C1 == C then
       local lock = LINK.conn.lock
