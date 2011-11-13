@@ -4,7 +4,7 @@
 //
 //  Oblige Level Maker
 //
-//  Copyright (C) 2006-2010 Andrew Apted
+//  Copyright (C) 2006-2011 Andrew Apted
 //
 //  This program is free software; you can redistribute it and/or
 //  modify it under the terms of the GNU General Public License
@@ -42,125 +42,6 @@
 
 
 #define FACE_MAX_SIZE  240
-
-
-// an "intersection" remembers the vertex that touches a BSP divider
-// line (especially a new vertex that is created at a seg split).
-
-// Note: two points can exist in the intersection list with
-//       the same along value but different dirs.
-typedef struct
-{
-  // how far along the partition line the vertex is.
-  // bigger value are further along the partition line.
-  double along;
-
-  // quantized along value
-  int q_dist;
-
-  // direction that miniseg will touch, +1 for further along
-  // the partition, and -1 for backwards on the partition.
-  // The values +2 and -2 indicate REMOVED points.
-  int dir;
-
-  // this is only set after MergeIntersections().
-  double next_along;
-}
-intersect_t;
-
-
-struct intersect_qdist_Compare
-{
-  inline bool operator() (const intersect_t& A, const intersect_t& B) const
-  {
-    if (A.q_dist != B.q_dist)
-      return A.q_dist < B.q_dist;
-
-    return A.dir < B.dir;
-  }
-};
-
-
-void DumpIntersections(std::vector<intersect_t> & cuts)
-{
-  DebugPrintf("Intersections:\n");
-
-  for (unsigned int i = 0 ; i < cuts.size() ; i++)
-  {
-    DebugPrintf("  %03d : dir:%+d along:%1.5f q_dist:%d\n", i,
-                cuts[i].dir, cuts[i].along, cuts[i].q_dist);
-  }
-}
-
-
-static void AddIntersection(std::vector<intersect_t> & cut_list,
-                            double along, int dir)
-{
-  intersect_t new_cut;
-
-  new_cut.along = along;
-  new_cut.q_dist = I_ROUND(along * 21.6f);
-  new_cut.dir = dir;
-  new_cut.next_along = -1e30;
-
-  cut_list.push_back(new_cut);
-}
-
-
-static void MergeIntersections(std::vector<intersect_t> & cut_list)
-{
-  if (cut_list.empty())
-    return;
-
-  // move input vector contents into a temporary vector, which we
-  // sort and iterate over.  Valid intersections then get pushed
-  // back into the input vector.
-
-  std::vector<intersect_t> local_cuts;
-
-  local_cuts.swap(cut_list);
-
-  std::sort(local_cuts.begin(), local_cuts.end(),
-            intersect_qdist_Compare());
-
-  std::vector<intersect_t>::iterator A, B;
-
-  A = local_cuts.begin();
-
-  while (A != local_cuts.end())
-  {
-    if (A->dir != +1)
-    {
-      A++; continue;
-    }
-
-    B = A; B++;
-
-    if (B == local_cuts.end())
-      break;
-
-    // this handles multiple +1 entries and also ensures
-    // that the +2 "remove" entry kills a +1 entry.
-    if (A->q_dist == B->q_dist)
-    {
-      A++; continue;
-    }
-
-    if (B->dir != -1)
-    {
-      DebugPrintf("WARNING: bad pair in intersection list\n");
-
-      A = B; continue;
-    }
-
-    // found a viable intersection!
-    A->next_along = B->along;
-
-    cut_list.push_back(*A);
-
-    B++; A = B; continue;
-  }
-}
 
 
 //------------------------------------------------------------------------
@@ -544,6 +425,170 @@ static void CreateBrushes(quake_group_c & group)
 }
 
 
+// an "intersection" remembers the vertex that touches a BSP divider
+// line (including a new vertex that is created at a seg split).
+
+#define ISK_SITTING  1
+#define ISK_CLOSED   2
+#define ISK_OPEN     3
+
+typedef struct
+{
+  // how far along the partition line the vertex is.
+  // bigger value are further along the partition line.
+  double along;
+
+  // quantized along value
+  int q_dist;
+
+  // this is only set after MergeIntersections().
+  double next_along;
+
+  // direction can be: +1 = forward along partition, -1 = backwards
+  int dir;
+
+  // the following specifies what appears at this point on the partition
+  // in the direction given by 'dir' :
+  //
+  //    ISK_OPEN     : open space, need a mini-side
+  //    ISK_CLOSED   : void space
+  //    ISK_SITTING  : a side is sitting on the partition and starts or ends here
+  int kind;
+
+  // this is the angle between the seg and the partition
+  double angle;
+}
+intersect_t;
+
+
+struct intersect_qdist_Compare
+{
+  inline bool operator() (const intersect_t& A, const intersect_t& B) const
+  {
+    if (A.q_dist != B.q_dist)
+      return A.q_dist < B.q_dist;
+
+    if (A.dir != B.dir)
+      return A.dir < B.dir;
+
+    return A.angle < B.angle;
+  }
+};
+
+
+void DumpIntersections(std::vector<intersect_t> & cuts)
+{
+  DebugPrintf("Intersections:\n");
+
+  for (unsigned int i = 0 ; i < cuts.size() ; i++)
+  {
+    DebugPrintf("  %03d : dir:%+d along:%1.5f q_dist:%d\n", i,
+                cuts[i].dir, cuts[i].along, cuts[i].q_dist);
+  }
+}
+
+
+static void AddIntersection(std::vector<intersect_t> & cut_list,
+                            double along, int dir, int kind, double angle)
+{
+  intersect_t new_cut;
+
+  new_cut.along = along;
+  new_cut.q_dist = I_ROUND(along * 21.6f);
+  new_cut.next_along = -1e30;
+
+  new_cut.dir = dir;
+  new_cut.kind = kind;
+  new_cut.angle = angle;
+
+  cut_list.push_back(new_cut);
+}
+
+
+// vert: 0 for start, 1 for end
+static void AddIntersection(std::vector<intersect_t> & cut_list,
+                            const quake_side_c *part, const quake_side_c *S,
+                            int vert, int dir, int kind)
+{
+  double along;
+
+  if (vert == 0)
+    along = AlongDist(S->x1, S->y1, part->x1, part->y1, part->x2, part->y2);
+  else
+    along = AlongDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
+
+  double angle = 0;
+
+  if (kind != ISK_SITTING)
+  {
+    angle = FOO();  //!!!!! FIXME FIXME
+  }
+
+  AddIntersection(cut_list, along, dir, kind, angle);
+}
+
+
+static void MergeIntersections(std::vector<intersect_t> & cut_list)
+{
+  if (cut_list.empty())
+    return;
+
+  // move input vector contents into a temporary vector, which we
+  // sort and iterate over.  Valid intersections then get pushed
+  // back into the input vector.
+
+  std::vector<intersect_t> local_cuts;
+
+  local_cuts.swap(cut_list);
+
+  std::sort(local_cuts.begin(), local_cuts.end(),
+            intersect_qdist_Compare());
+
+DumpIntersections(local_cuts);
+
+  std::vector<intersect_t>::iterator A, B;
+
+  A = local_cuts.begin();
+
+  while (A != local_cuts.end())
+  {
+    if (A->dir != +1)
+    {
+      A++; continue;
+    }
+
+    B = A; B++;
+
+    if (B == local_cuts.end())
+      break;
+
+    // this handles multiple +1 entries and also ensures
+    // that the +2 "remove" entry kills a +1 entry.
+    if (A->q_dist == B->q_dist)
+    {
+      A++; continue;
+    }
+
+    if (B->dir != -1)
+    {
+      DebugPrintf("WARNING: bad pair in intersection list\n");
+
+      A = B; continue;
+    }
+
+    // found a viable intersection!
+    A->next_along = B->along;
+
+DebugPrintf("  merged cut: %1.1f .. %1.1f\n", A->along, A->next_along);
+    cut_list.push_back(*A);
+
+    B++; A = B; continue;
+  }
+}
+
+
+
+
 static void CreateMiniSides(std::vector<intersect_t> & cut_list,
                             quake_node_c *node,
                             const quake_side_c *part,
@@ -558,6 +603,14 @@ static void CreateMiniSides(std::vector<intersect_t> & cut_list,
 
     quake_side_c *F = new quake_side_c(node, 0, part, along1, along2);
     quake_side_c *B = new quake_side_c(node, 1, part, along2, along1);
+
+if ((fabs(F->x1 - -1152) < 9e9 && fabs(F->y1 - -192) < .1) &&
+    (fabs(F->x2 - -1152) < 9e9 && fabs(F->y2 - -192) < .1))
+{
+  DebugPrintf("created mini %p:\n", F);
+  F->Dump(0);
+  part->Dump(0);
+}
 
     front.AddSide(F);
      back.AddSide(B);
@@ -632,17 +685,14 @@ static quake_side_c * SplitSideAt(quake_side_c *S, float new_x, float new_y)
   S->x2 = T->x1 = new_x;
   S->y2 = T->y1 = new_y;
 
-  return T;
+if ((fabs(T->x1 - -1152) < .1 && fabs(T->y1 - -192) < .1) ||
+    (fabs(T->x2 - -1152) < .1 && fabs(T->y2 - -192) < .1))
+{
+  DebugPrintf("split mini %p:\n", T);
+  T->Dump(0);
 }
 
-
-// what: 0 for start, 1 for end
-static inline double P_Along(const quake_side_c *p, const quake_side_c *S, int what)
-{
-  if (what == 0)
-    return AlongDist(S->x1, S->y1, p->x1, p->y1, p->x2, p->y2);
-  else
-    return AlongDist(S->x2, S->y2, p->x1, p->y1, p->x2, p->y2);
+  return T;
 }
 
 
@@ -650,6 +700,13 @@ static void Split_XY(quake_group_c & group,
                      quake_node_c *node, const quake_side_c *part,
                      quake_group_c & front, quake_group_c & back)
 {
+if (fabs(part->y1 - -192.0) < .1 && fabs(part->y2 - -192.0) < .1)
+{
+DebugPrintf("Split_XY : PARTITION (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+            part->x1, part->y1, part->x2, part->y2);
+group.Dump();
+}
+
   std::vector<intersect_t> cut_list;
 
   std::vector<quake_side_c *> local_sides;
@@ -672,6 +729,12 @@ static void Split_XY(quake_group_c & group,
     int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
     int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
 
+if (fabs(S->x1 - -1088) < .1 && fabs(S->y1 - -192) < .1)
+{
+DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, b);
+}
+
+
     if (a_side == 0 && b_side == 0)
     {
       // side sits on the partition
@@ -684,9 +747,8 @@ static void Split_XY(quake_group_c & group,
 
         S->node_side = 0;
 
-        // +2 and -2 mean "remove"
-        AddIntersection(cut_list, P_Along(part, S, 0), +2);
-        AddIntersection(cut_list, P_Along(part, S, 1), -2);
+        AddIntersection(cut_list, part, S, 0, -1, ISK_SITTING);
+        AddIntersection(cut_list, part, S, 1, +1, ISK_SITTING);
       }
       else
       {
@@ -694,8 +756,8 @@ static void Split_XY(quake_group_c & group,
 
         S->node_side = 1;
 
-        AddIntersection(cut_list, P_Along(part, S, 0), -2);
-        AddIntersection(cut_list, P_Along(part, S, 1), +2);
+        AddIntersection(cut_list, part, S, 0, +1, ISK_SITTING);
+        AddIntersection(cut_list, part, S, 1, -1, ISK_SITTING);
       }
       continue;
     }
@@ -705,9 +767,9 @@ static void Split_XY(quake_group_c & group,
       front.AddSide(S);
 
       if (a_side == 0)
-        AddIntersection(cut_list, P_Along(part, S, 0), -1);
+        AddIntersection(cut_list, part, S, 0, -1, ISK_OPEN);
       else if (b_side == 0)
-        AddIntersection(cut_list, P_Along(part, S, 1), +1);
+        AddIntersection(cut_list, part, S, 1, +1, ISK_OPEN);
 
       continue;
     }
@@ -717,9 +779,9 @@ static void Split_XY(quake_group_c & group,
       back.AddSide(S);
 
       if (a_side == 0)
-        AddIntersection(cut_list, P_Along(part, S, 0), +1);
+        AddIntersection(cut_list, part, S, 0, +1, ISK_OPEN);
       else if (b_side == 0)
-        AddIntersection(cut_list, P_Along(part, S, 1), -1);
+        AddIntersection(cut_list, part, S, 1, -1, ISK_OPEN);
 
       continue;
     }
@@ -734,10 +796,13 @@ static void Split_XY(quake_group_c & group,
 
     quake_side_c *T = SplitSideAt(S, ix, iy);
 
-    front.AddSide((a > 0) ? S : T);
-     back.AddSide((a > 0) ? T : S);
+    // the new segs are: S = a .. i  |  T = i .. b
 
-    AddIntersection(cut_list, P_Along(part, T, 0), a_side);
+    front.AddSide((a_side > 0) ? S : T);
+     back.AddSide((a_side > 0) ? T : S);
+
+    AddIntersection(cut_list, part, S, 1, b_side, ISK_OPEN);
+    AddIntersection(cut_list, part, T, 0, a_side, ISK_OPEN);
   }
 
   for (unsigned int n = 0 ; n < local_brushes.size() ; n++)
@@ -750,7 +815,19 @@ static void Split_XY(quake_group_c & group,
     if (side >= 0) front.AddBrush(B);
   }
 
+if (fabs(part->y1 - -192.0) < .1 && fabs(part->y2 - -192.0) < .1)
+{
+DebugPrintf("PARTITION : (%1.1f %1.1f) --> (%1.1f %1.1f)\n", part->x1, part->y1, part->x2, part->y2);
+DumpIntersections(cut_list);
+}
+
   MergeIntersections(cut_list);
+
+if (fabs(part->y1 - -192.0) < .1 && fabs(part->y2 - -192.0) < .1)
+{
+DebugPrintf("AFTER MERGE:\n");
+DumpIntersections(cut_list);
+}
 
   CreateMiniSides(cut_list, node, part, front, back);
 }
@@ -814,9 +891,9 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
 
       CheckClusterEdges(group, cx, cy);
 
-//    DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-//                cx, cy, gx1, gy1, gx2, gy2);
-//    group.Dump();
+      DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+                  cx, cy, gx1, gy1, gx2, gy2);
+      group.Dump();
     }
   }
 
@@ -1454,13 +1531,13 @@ static quake_node_c * Partition_Z(quake_group_c & group, qCluster_c *cluster)
 
   SYS_ASSERT(R);
 
-// !!!!! FIXME: this is a hacky workaround for a deeper problem 
-if (R->gaps.size() == 0 or group.sides.size() < 3)
-{
-// FIXME: PROPER WARNING
-fprintf(stderr, "FUCKED UP GROUP\n");
-return Solid_Node(group);
-}
+  // THIS SHOULD NOT HAPPEN -- but handle it just in case
+  if (R->gaps.size() == 0 or group.sides.size() < 3)
+  {
+    DebugPrintf("WARNING: bad group at Partition_Z\n");
+
+    return Solid_Node(group);
+  }
 
   SYS_ASSERT(R->gaps.size() > 0);
 
