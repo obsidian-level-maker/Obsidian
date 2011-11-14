@@ -477,7 +477,7 @@ void DumpIntersections(std::vector<intersect_t> & cuts, const char *title)
   {
     DebugPrintf("  %03d : along:%1.3f dir:%+d %s angle:%1.2f\n", i,
                 cuts[i].along, cuts[i].dir,
-                (cuts[i].kind == K1_NORMAL) ? "NOR" :
+                (cuts[i].kind == K1_NORMAL) ? "NORM" :
                 (cuts[i].kind == K1_SITTING) ? "SITT" :
                 (cuts[i].kind == 0) ? "C==C" :
                 (cuts[i].kind == K2F_OPEN_FORWARD)  ? "C->O" :
@@ -530,15 +530,17 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
 
     p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
-// DebugPrintf("\nSEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d | angle --> %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, angle);
-// DebugPrintf("PART = (%1.0f %1.0f) .. (%1.0f %1.0f) dir:%d along:%1.0f  | angle --> %1.1f\n", part->x1, part->y1, part->x2, part->y2, dir, along, p_angle);
+DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f  raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along, p_angle);
+DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir, s_angle);
 
     s_angle = s_angle - p_angle;
 
     if (s_angle > 180.0)
       s_angle -= 360.0;
+    else if (s_angle < -180.0)
+      s_angle += 360.0;
 
-// DebugPrintf("angle_diff = %1.2f\n", angle);
+DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
   }
 
   AddIntersection(cut_list, along, dir, kind, s_angle);
@@ -636,13 +638,15 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
                             const quake_side_c *part,
                             quake_group_c & front, quake_group_c & back)
 {
+  std::sort(cuts.begin(), cuts.end(), intersect_qdist_Compare());
+
   DumpIntersections(cuts, "Intersection List");
 
   std::vector<intersect_t> merged;
 
   MergeIntersections(cuts, merged);
 
-  DumpIntersections(cuts, "Merged List");
+  DumpIntersections(merged, "Merged List");
 
   for (unsigned int i = 0 ; i+1 < merged.size() ; i++)
   {
@@ -789,10 +793,9 @@ if (fabs(S->x1 - -1088) < .1 && fabs(S->y1 - -192) < .1)
 DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, b);
 }
 
-
+    // side sits on the partition?
     if (a_side == 0 && b_side == 0)
     {
-      // side sits on the partition
       S->on_node = node;
 
       if (VectorSameDir(part->x2 - part->x1, part->y2 - part->y1,
@@ -817,6 +820,7 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
       continue;
     }
 
+    // completely on the front of the partition?
     if (a_side >= 0 && b_side >= 0)
     {
       front.AddSide(S);
@@ -829,6 +833,7 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
       continue;
     }
 
+    // completely on the back of the partition?
     if (a_side <= 0 && b_side <= 0)
     {
       back.AddSide(S);
@@ -856,8 +861,8 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
     front.AddSide((a_side > 0) ? S : T);
      back.AddSide((a_side > 0) ? T : S);
 
-    AddIntersection(cut_list, part, S, 1, -a_side, K1_NORMAL);
-    AddIntersection(cut_list, part, T, 0, -b_side, K1_NORMAL);
+    AddIntersection(cut_list, part, S, 1, a_side, K1_NORMAL);
+    AddIntersection(cut_list, part, T, 0, a_side, K1_NORMAL);
   }
 
   for (unsigned int n = 0 ; n < local_brushes.size() ; n++)
