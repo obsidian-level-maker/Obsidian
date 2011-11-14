@@ -1686,23 +1686,7 @@ function Plan_make_seeds()
 
     if not R then return end
 
-    for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
-      local S = SEEDS[sx][sy]
-      assert(not S.hall)
-
-      S.room = K.room
-      S.section = K
-      S.expanded = nil
-    end end
-
-    if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
-    if not R.sy1 or K.sy1 < R.sy1 then R.sy1 = K.sy1 end
-    if not R.sx2 or K.sx2 > R.sx2 then R.sx2 = K.sx2 end
-    if not R.sy2 or K.sy2 > R.sy2 then R.sy2 = K.sy2 end
-
-    R:update_size()
-
-    R.svolume = (R.svolume or 0) + (K.sw * K.sh)
+    R:fill_section(K)
   end
 
 
