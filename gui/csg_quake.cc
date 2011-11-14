@@ -445,9 +445,6 @@ typedef struct
   // quantized along value
   int q_dist;
 
-  // direction can be: +1 = forward along partition, -1 = backwards
-  int dir;
-
   // the following specifies what appears at this point on the partition
   // in the direction given by 'dir' :
   //
@@ -455,6 +452,11 @@ typedef struct
   //    ISK_CLOSED   : void space
   //    ISK_SITTING  : a side is sitting on the partition and starts or ends here
   int kind;
+
+  // for K1_SITTING, this is direction away from touching point
+  // for K1_NORMAL,  this is direction toward OPEN space
+  // can be: +1 = forward along partition, -1 = backwards
+  int dir;
 
   // this is the angle between the seg and the partition
   double angle;
@@ -553,9 +555,54 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
 static bool TestIntersectionOpen(std::vector<intersect_t> & cuts,
                                  unsigned int first, unsigned int last, int dir)
 {
-  // FIXME !!!! FIXME !!!!
+  unsigned int i;
 
-  return false;
+  // if have sitting with same dir : not open
+  for (i = first ; i <= last ; i++)
+    if (cuts[i].kind == K1_SITTING && cuts[i].dir == dir)
+      return false;
+
+  // find intersection with closest angle along dir
+  unsigned int closest = -1;
+  double cl_angle = 999.0;
+
+  for (i = first ; i <= last ; i++)
+  {
+    if (cuts[i].kind == K1_SITTING)
+      continue;
+
+    double angle = cuts[i].angle;
+
+    // angles are relative to forward direction on partition,
+    // so adjust them for the backward direction.
+    if (dir < 0)
+    {
+      if (angle < 0)
+        angle = -180 - angle;
+      else
+        angle = 180 - angle;
+    }
+
+    if (fabs(angle) < fabs(cl_angle))
+    {
+      closest  = i;
+      cl_angle = angle;
+    }
+    // it is normal for two segs to touch at a partition but face
+    // opposite directions.  it is important here to pick the OPEN one.
+    else if (angle == cl_angle && cuts[i].dir == dir)
+    {
+      closest = i;
+    }
+  }
+
+  // none?? (should not happen)
+  if (closest < 0)
+    return false;
+
+  // check if closest seg is open towards given dir
+
+  return cuts[closest].dir == dir;
 }
 
 
