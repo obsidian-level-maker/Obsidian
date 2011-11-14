@@ -536,8 +536,6 @@ function Simple_create_areas(R)
       step  = CAVE_CLASS.blank_copy(free)
       s_cel = step.cells
 
-      step.square = true
-
       step:set_all(0)
 
       -- set initial point
@@ -894,7 +892,8 @@ do return end ----!!!!!!!
   local function render_floor_ceil(A)
     assert(A.floor_map)
 
-    A.floor_map.square = true  --!!!
+    A.floor_map.square = false  --!!!
+    A.floor_map.expand = true
 
     local data =
     {
