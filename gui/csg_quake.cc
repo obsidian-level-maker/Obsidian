@@ -530,8 +530,8 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
 
     p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
 
-DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f  raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along, p_angle);
-DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir, s_angle);
+// DebugPrintf("\nPART = (%1.0f %1.0f) .. (%1.0f %1.0f) along:%1.0f  raw_angle: %1.1f\n", part->x1, part->y1, part->x2, part->y2, along, p_angle);
+// DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d dir:%+d raw_angle: %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, dir, s_angle);
 
     s_angle = s_angle - p_angle;
 
@@ -540,7 +540,7 @@ DebugPrintf("SEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d dir:%+d raw_angle: %1.
     else if (s_angle < -180.0)
       s_angle += 360.0;
 
-DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
+// DebugPrintf("angle_diff ---> %1.2f\n", s_angle);
   }
 
   AddIntersection(cut_list, along, dir, kind, s_angle);
@@ -640,13 +640,13 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
 {
   std::sort(cuts.begin(), cuts.end(), intersect_qdist_Compare());
 
-  DumpIntersections(cuts, "Intersection List");
+// DumpIntersections(cuts, "Intersection List");
 
   std::vector<intersect_t> merged;
 
   MergeIntersections(cuts, merged);
 
-  DumpIntersections(merged, "Merged List");
+// DumpIntersections(merged, "Merged List");
 
   for (unsigned int i = 0 ; i+1 < merged.size() ; i++)
   {
@@ -663,15 +663,6 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
 
       front.AddSide(F);
        back.AddSide(B);
-
-if ((fabs(F->x1 - -1152) < 9e9 && fabs(F->y1 - -192) < .1) &&
-    (fabs(F->x2 - -1152) < 9e9 && fabs(F->y2 - -192) < .1))
-{
-  DebugPrintf("created mini %p:\n", F);
-  F->Dump(0);
-  part->Dump(0);
-}
-
     }
   }
 }
@@ -744,13 +735,6 @@ static quake_side_c * SplitSideAt(quake_side_c *S, float new_x, float new_y)
   S->x2 = T->x1 = new_x;
   S->y2 = T->y1 = new_y;
 
-if ((fabs(T->x1 - -1152) < .1 && fabs(T->y1 - -192) < .1) ||
-    (fabs(T->x2 - -1152) < .1 && fabs(T->y2 - -192) < .1))
-{
-  DebugPrintf("split mini %p:\n", T);
-  T->Dump(0);
-}
-
   return T;
 }
 
@@ -759,13 +743,6 @@ static void Split_XY(quake_group_c & group,
                      quake_node_c *node, const quake_side_c *part,
                      quake_group_c & front, quake_group_c & back)
 {
-if (fabs(part->y1 - -192.0) < .1 && fabs(part->y2 - -192.0) < .1)
-{
-DebugPrintf("Split_XY : PARTITION (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-            part->x1, part->y1, part->x2, part->y2);
-group.Dump();
-}
-
   std::vector<intersect_t> cut_list;
 
   std::vector<quake_side_c *> local_sides;
@@ -787,11 +764,6 @@ group.Dump();
 
     int a_side = (a < -Q_EPSILON) ? -1 : (a > Q_EPSILON) ? +1 : 0;
     int b_side = (b < -Q_EPSILON) ? -1 : (b > Q_EPSILON) ? +1 : 0;
-
-if (fabs(S->x1 - -1088) < .1 && fabs(S->y1 - -192) < .1)
-{
-DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, b);
-}
 
     // side sits on the partition?
     if (a_side == 0 && b_side == 0)
@@ -875,12 +847,6 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
     if (side >= 0) front.AddBrush(B);
   }
 
-if (fabs(part->y1 - -192.0) < .1 && fabs(part->y2 - -192.0) < .1)
-{
-DebugPrintf("PARTITION : (%1.1f %1.1f) --> (%1.1f %1.1f)\n", part->x1, part->y1, part->x2, part->y2);
-///DumpIntersections(cut_list);
-}
-
   CreateMiniSides(cut_list, node, part, front, back);
 }
 
@@ -943,9 +909,9 @@ static bool FindPartition_XY(quake_group_c & group, quake_side_c *part,
 
       CheckClusterEdges(group, cx, cy);
 
-      DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
-                  cx, cy, gx1, gy1, gx2, gy2);
-      group.Dump();
+///   DebugPrintf("Reached cluster (%d %d) @ (%1.1f %1.1f) .. (%1.1f %1.1f)\n",
+///               cx, cy, gx1, gy1, gx2, gy2);
+///   group.Dump();
     }
   }
 
