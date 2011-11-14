@@ -428,13 +428,12 @@ static void CreateBrushes(quake_group_c & group)
 // an "intersection" remembers the vertex that touches a BSP divider
 // line (including a new vertex that is created at a seg split).
 
-#define ISK_SITTING  1
-#define ISK_CLOSED   2
-#define ISK_OPEN     3
+#define K1_NORMAL   4
+#define K1_SITTING  5
 
-// these used after MergeIntersections()
-#define K2_OPEN_FORWARD   1
-#define K2_OPEN_BACKWARD  2
+// these bitflags are used after MergeIntersections()
+#define K2F_OPEN_FORWARD   1
+#define K2F_OPEN_BACKWARD  2
 
 typedef struct
 {
@@ -445,20 +444,17 @@ typedef struct
   // quantized along value
   int q_dist;
 
-  // the following specifies what appears at this point on the partition
-  // in the direction given by 'dir' :
-  //
-  //    ISK_OPEN     : open space, need a mini-side
-  //    ISK_CLOSED   : void space
-  //    ISK_SITTING  : a side is sitting on the partition and starts or ends here
+  // before merging, this is either K1_NORMAL or K1_SITTING.
+  // after merging, this is a bitflag using K2F_XXX values.
   int kind;
 
-  // for K1_SITTING, this is direction away from touching point
-  // for K1_NORMAL,  this is direction toward OPEN space
-  // can be: +1 = forward along partition, -1 = backwards
+  // for K1_NORMAL  : this is direction toward OPEN space
+  // for K1_SITTING : this is direction away from touching point
+  // values can be: +1 = forward along partition, -1 = backwards.
   int dir;
 
   // this is the angle between the seg and the partition
+  // it ranges between (0..180) or (-0..-180) exclusive
   double angle;
 }
 intersect_t;
@@ -468,13 +464,7 @@ struct intersect_qdist_Compare
 {
   inline bool operator() (const intersect_t& A, const intersect_t& B) const
   {
-    if (A.q_dist != B.q_dist)
-      return A.q_dist < B.q_dist;
-
-    if (A.dir != B.dir)
-      return A.dir < B.dir;
-
-    return A.angle < B.angle;
+    return A.q_dist < B.q_dist;
   }
 };
 
@@ -487,9 +477,12 @@ void DumpIntersections(std::vector<intersect_t> & cuts, const char *title)
   {
     DebugPrintf("  %03d : along:%1.3f dir:%+d %s angle:%1.2f\n", i,
                 cuts[i].along, cuts[i].dir,
-                (cuts[i].kind == ISK_OPEN) ? "OPN" :
-                (cuts[i].kind == ISK_CLOSED) ? "CLS" :
-                (cuts[i].kind == ISK_SITTING) ? "SIT" : "???",
+                (cuts[i].kind == K1_NORMAL) ? "NOR" :
+                (cuts[i].kind == K1_SITTING) ? "SITT" :
+                (cuts[i].kind == 0) ? "C==C" :
+                (cuts[i].kind == K2F_OPEN_FORWARD)  ? "C->O" :
+                (cuts[i].kind == K2F_OPEN_BACKWARD) ? "O<-C" :
+                (cuts[i].kind == 3) ? "O--O" : "???",
                 cuts[i].angle);
   }
 }
@@ -500,18 +493,19 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
 {
   intersect_t new_cut;
 
-  new_cut.along = along;
+  new_cut.along  = along;
   new_cut.q_dist = I_ROUND(along * 21.6f);
 
-  new_cut.dir = dir;
-  new_cut.kind = kind;
+  new_cut.dir   = dir;
+  new_cut.kind  = kind;
   new_cut.angle = angle;
 
   cut_list.push_back(new_cut);
 }
 
 
-// vert: 0 for start, 1 for end
+// vert: 0 if the start touches partition
+//       1 if the end touches partition
 static void AddIntersection(std::vector<intersect_t> & cut_list,
                             const quake_side_c *part, const quake_side_c *S,
                             int vert, int dir, int kind)
@@ -524,31 +518,30 @@ static void AddIntersection(std::vector<intersect_t> & cut_list,
     along = AlongDist(S->x2, S->y2, part->x1, part->y1, part->x2, part->y2);
 
   // compute the angle between the two vectors
-  double angle = 0;
+  double s_angle = 0;
+  double p_angle;
 
-  if (kind != ISK_SITTING)
+  if (kind != K1_SITTING)
   {
-    angle = CalcAngle(S->x1, S->y1, S->x2, S->y2);
+    if (vert == 0)
+      s_angle = CalcAngle(S->x1, S->y1, S->x2, S->y2);
+    else
+      s_angle = CalcAngle(S->x2, S->y2, S->x1, S->y1);
 
-    double p_angle;
-
-//    if (dir > 0)
     p_angle = CalcAngle(part->x1, part->y1, part->x2, part->y2);
-//    else
-//      p_angle = CalcAngle(part->x2, part->y2, part->x1, part->y1);
 
 // DebugPrintf("\nSEG = (%1.0f %1.0f) .. (%1.0f %1.0f) vert:%d | angle --> %1.1f\n", S->x1, S->y1, S->x2, S->y2, vert, angle);
 // DebugPrintf("PART = (%1.0f %1.0f) .. (%1.0f %1.0f) dir:%d along:%1.0f  | angle --> %1.1f\n", part->x1, part->y1, part->x2, part->y2, dir, along, p_angle);
 
-    angle = angle - p_angle;
+    s_angle = s_angle - p_angle;
 
-    if (angle < 0)
-      angle += 360.0;
+    if (s_angle > 180.0)
+      s_angle -= 360.0;
 
 // DebugPrintf("angle_diff = %1.2f\n", angle);
   }
 
-  AddIntersection(cut_list, along, dir, kind, angle);
+  AddIntersection(cut_list, along, dir, kind, s_angle);
 }
 
 
@@ -625,9 +618,11 @@ static void MergeIntersections(std::vector<intersect_t> & cuts,
     intersect_t new_cut;
 
     new_cut.along = cuts[first].along;
-    new_cut.kind  = (backward ? K2_OPEN_BACKWARD : 0) |
-                    ( forward ? K2_OPEN_FORWARD  : 0);
-    
+    new_cut.kind  = (backward ? K2F_OPEN_BACKWARD : 0) |
+                    ( forward ? K2F_OPEN_FORWARD  : 0);
+    new_cut.dir   = 0;
+    new_cut.angle = 0;
+
     merged.push_back(new_cut);
 
     // move pointer to next group
@@ -641,14 +636,18 @@ static void CreateMiniSides(std::vector<intersect_t> & cuts,
                             const quake_side_c *part,
                             quake_group_c & front, quake_group_c & back)
 {
+  DumpIntersections(cuts, "Intersection List");
+
   std::vector<intersect_t> merged;
 
   MergeIntersections(cuts, merged);
 
+  DumpIntersections(cuts, "Merged List");
+
   for (unsigned int i = 0 ; i+1 < merged.size() ; i++)
   {
-    if ((merged[i  ].kind & K2_OPEN_FORWARD) &&
-        (merged[i+1].kind & K2_OPEN_BACKWARD))
+    if ((merged[i  ].kind & K2F_OPEN_FORWARD) &&
+        (merged[i+1].kind & K2F_OPEN_BACKWARD))
     {
       double along1 = merged[i  ].along;
       double along2 = merged[i+1].along;
@@ -803,8 +802,8 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
 
         S->node_side = 0;
 
-        AddIntersection(cut_list, part, S, 0, +1, ISK_SITTING);
-        AddIntersection(cut_list, part, S, 1, -1, ISK_SITTING);
+        AddIntersection(cut_list, part, S, 0, +1, K1_SITTING);
+        AddIntersection(cut_list, part, S, 1, -1, K1_SITTING);
       }
       else
       {
@@ -812,8 +811,8 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
 
         S->node_side = 1;
 
-        AddIntersection(cut_list, part, S, 0, -1, ISK_SITTING);
-        AddIntersection(cut_list, part, S, 1, +1, ISK_SITTING);
+        AddIntersection(cut_list, part, S, 0, -1, K1_SITTING);
+        AddIntersection(cut_list, part, S, 1, +1, K1_SITTING);
       }
       continue;
     }
@@ -823,9 +822,9 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
       front.AddSide(S);
 
       if (a_side == 0)
-        AddIntersection(cut_list, part, S, 0, -1, ISK_OPEN);
+        AddIntersection(cut_list, part, S, 0, -1, K1_NORMAL);
       else if (b_side == 0)
-        AddIntersection(cut_list, part, S, 1, +1, ISK_OPEN);
+        AddIntersection(cut_list, part, S, 1, +1, K1_NORMAL);
 
       continue;
     }
@@ -835,9 +834,9 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
       back.AddSide(S);
 
       if (a_side == 0)
-        AddIntersection(cut_list, part, S, 0, +1, ISK_OPEN);
+        AddIntersection(cut_list, part, S, 0, +1, K1_NORMAL);
       else if (b_side == 0)
-        AddIntersection(cut_list, part, S, 1, -1, ISK_OPEN);
+        AddIntersection(cut_list, part, S, 1, -1, K1_NORMAL);
 
       continue;
     }
@@ -857,8 +856,8 @@ DebugPrintf("for side[%d] : a=%d (%1.4f) b=%d (%1.4f)\n", k, a_side, a, b_side, 
     front.AddSide((a_side > 0) ? S : T);
      back.AddSide((a_side > 0) ? T : S);
 
-    AddIntersection(cut_list, part, S, 1, -a_side, ISK_OPEN);
-    AddIntersection(cut_list, part, T, 0, -b_side, ISK_OPEN);
+    AddIntersection(cut_list, part, S, 1, -a_side, K1_NORMAL);
+    AddIntersection(cut_list, part, T, 0, -b_side, K1_NORMAL);
   }
 
   for (unsigned int n = 0 ; n < local_brushes.size() ; n++)
