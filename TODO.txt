@@ -5,22 +5,14 @@ OBLIGE TODO
 Current Work
 ------------
 
-!!!!!!!!!!
-CSG-QUAKE: is broken, mini-sides are not created properly because the
-!!!!!!!!!! intercept list does not keep track of whether an intercept
-           is open or closed on each side.
 
-           Either fix this (ugh) or re-think how it should work.
-
-
-CRAZY FRICKIN' IDEA: instead of ZONE_THEMES, just use alternate
-                     level themes (e.g. doom_hell1/2)
+THEME SYSTEM:
+??  allow materials in 'facades', 'walls' (etc) to not exist,
+    and simply remove that entry from the table.  Same for entity
+    stuff.  Hence can share room themes between DOOM and DOOM 2.
 
 
-update games for Theme System
--  DOOM
-
-?  Jared's DEIMOS theme additions
+-  Jared's DEIMOS theme additions
 
 
 implement ZONE_THEMES  (via 'zones' field) and ROOM_THEME (via 'room' field)
@@ -32,8 +24,6 @@ implement ZONE_THEMES  (via 'zones' field) and ROOM_THEME (via 'room' field)
 
 ? ubiquity keyword ?
 
-DONE: ROOM.kind : "building", "cave", "outdoor", "hallway"
-                  kill the [.]building, [.]cave, [.]is_hall, [.]is_room
 
 
 Caves:
@@ -46,7 +36,7 @@ Caves:
 
   !!!!  spots for monsters and items
 
-  !!!!  get the diagonalisation working again (on FLOORS too)
+  >>>  get the diagonalisation working again (on FLOORS too)
 
   !!  determine touching lists
 
@@ -90,9 +80,6 @@ Hallways:
 
 
 Zones:
-  DONE: create the zones by merging quests
-        -  small levels: 1 or 2 zones
-        -  large levels: 3 or 4 zones
 
 >>>  distinct texturing in each zone
 
