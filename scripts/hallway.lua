@@ -220,7 +220,7 @@ function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
     -- is chunk outside of used area?
     if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
       C.scenic = true
-      C.mat = rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
+      C.mat = assert(H.zone.facade_mat) --- rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
     end
   end
 end
@@ -232,18 +232,25 @@ function HALLWAY_CLASS.used_section_length(H, K, dir)
 
   each p_dir,where in K.hall_path do
     if where == H and geom.is_parallel(dir, p_dir) then
-      -- FIXME
+      local p
+      if p_dir == 2 then p = K.sy1 end
+      if p_dir == 8 then p = K.sy2 end
+      if p_dir == 4 then p = K.sx1 end
+      if p_dir == 6 then p = K.sx2 end
+      assert(p)
+
+      p1 = math.min(p1, p)
+      p2 = math.max(p2, p)
     end
   end
 
-  -- FIXME !!!
   each D in H.conns do
     if D.K1 == K or D.K2 == K then
       local C = (D.K1 == K ? D.C1 ; D.C2)
       assert(C)
 
       p1 = math.min(p1, geom.vert_sel(dir, C.sy1, C.sx1))
-      p2 = math.max(p1, geom.vert_sel(dir, C.sy2, C.sx2))
+      p2 = math.max(p2, geom.vert_sel(dir, C.sy2, C.sx2))
     end
   end
 
