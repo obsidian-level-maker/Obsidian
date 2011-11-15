@@ -171,21 +171,29 @@ function HALLWAY_CLASS.setup_path(H)
     K2.hall_path[10 - dir] = H
   end
 
-  -- setup first and last sections
+  -- NOTE: path leading "off" the hallway is handled by CONN:add_it()
+end
 
-  each D in H.conns do
-    if D.L1 == H then
-      assert(D.K1.hall == H)
-      D.K1.hall_path[D.dir1] = D.L2
-    elseif D.L2 == H then
-      assert(D.K2.hall == H)
-      D.K2.hall_path[D.dir2] = D.L1
-    else
-      error("WTF bad hall conn")
-    end
-  end
 
-  H:dump_path()
+function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
+  assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
+  assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
+
+  local C = CHUNK_CLASS.new(sx1, sy1, sx2, sy2)
+
+  C.hall = H
+  C.section = K
+
+  table.insert(H.chunks, C)
+
+  C:install()
+
+  return C
+end
+
+
+function HALLWAY_CLASS.filler_chunks_in_section(H, K)
+  -- TODO
 end
 
 
@@ -196,11 +204,8 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
 
     local C
 
-    -- allocate chunk, mark section as used
-    if K.used then
-      assert(H.crossover)
-      K:set_crossover(H)
-
+    -- allocate chunk
+    if K.crossover_hall then
       local over_R = H.crossover
       assert(over_R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2))
       
@@ -213,8 +218,6 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
         C.cross_junc = true
       end
     else
-      K:set_hall(H)
-
       C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
       C.hall = H
       C:install()
@@ -249,8 +252,21 @@ function HALLWAY_CLASS.add_it(H)
 -- stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
   end
 
-  -- FIXME: NOT HERE (later on)
-  H:make_chunks(false)
+  -- mark sections as used
+  each K in H.sections do
+    -- an already used section can only be a crossover
+    if K.used then
+      assert(K.room)
+      assert(H.crossover)
+
+      K:set_crossover(H)
+    else
+      K:set_hall(H)
+    end
+  end
+
+---!!!  -- FIXME: NOT HERE (later on)
+---!!!  H:make_chunks(false)
 
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections

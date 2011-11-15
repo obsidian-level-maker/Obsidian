@@ -92,7 +92,7 @@ function Areas_handle_connections()
   -- the chunks.
   --]]
 
-  local function chunk_for_section_side(K, dir)
+  local function chunk_for_section_side(K, dir, other_K)
     -- sections are guaranteed to stay aligned, so calling this
     -- function on two touching sections will provide two chunks
     -- which touch each other.
@@ -112,14 +112,37 @@ function Areas_handle_connections()
     end
 
     local S = SEEDS[sx][sy]
+    local C = S.chunk
 
-    if not S.chunk then
-      local C = K.room:alloc_chunk(sx, sy, sx, sy)
+    if not C then
+      if K.hall then
+        local sx1, sy1 = sx, sy
+        local sx2, sy2 = sx, sy
+
+        -- junctions become a single chunk
+        if K.kind == "junction" then
+          sx1, sy1, sx2, sy2 = K.sx1, K.sy1, K.sx2, K.sy2
+
+        -- a hallway chunk must be as _deep_ as the hallway channel
+        -- [but only when connecting to a room]
+        elseif other_K.room then
+          if K.sw >= 2 and dir == 4 then sx2 = K.sx2 end
+          if K.sw >= 2 and dir == 6 then sx1 = K.sx1 end
+
+          if K.sh >= 2 and dir == 2 then sy2 = K.sy2 end
+          if K.sh >= 2 and dir == 8 then sy1 = K.sy1 end
+        end
+
+        C = K.hall:alloc_chunk(K, sx1, sy1, sx2, sy2)
+      else
+        C = K.room:alloc_chunk(sx, sy, sx, sy)
+      end
+
       C.foobage = "conn"
       S.chunk = C
     end
 
-    return S.chunk
+    return C
   end
 
 
@@ -182,8 +205,8 @@ function Areas_handle_connections()
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
 
-    local C1 = chunk_for_section_side(D.K1, D.dir1)
-    local C2 = chunk_for_section_side(D.K2, D.dir2)
+    local C1 = chunk_for_section_side(D.K1, D.dir1, D.K2)
+    local C2 = chunk_for_section_side(D.K2, D.dir2, D.K1)
 
     D.C1 = C1 ; D.C2 = C2
 

@@ -639,6 +639,8 @@ function Plan_add_big_junctions()
 
   ---| Plan_add_big_junctions |---
 
+do return end --!!!!!!!! FIXME FIXME
+
   -- decide how many big hallway junctions to make
   if STYLE.hallways == "none" then return end
 
