@@ -526,6 +526,8 @@ function ROOM_CLASS.dump_areas(R)
     if not S or S.room != R then return ' ' end
     if not S.chunk then return '!' end
 
+    if S.chunk.liquid then return '~' end
+
     local A = S.chunk.area
 
     if not A then return '#' end
