@@ -954,6 +954,10 @@ stderrf("TRYING....................\n")
 
 
   local function liquid_in_room(R)
+    -- FIXME: this is a workaround for issue where a seed can become
+    --        surrounded by liquids, causing the area to be isolated.
+    if R.street then return end
+
     local side_prob = style_sel("liquids", 0, 10, 40, 80)
 
     local whole_prob = style_sel("liquids", 0, 2, 15, 50)
