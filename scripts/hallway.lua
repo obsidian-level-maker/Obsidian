@@ -208,32 +208,84 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 end
 
 
-function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2)
+function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
+                                              ux1, uy1, ux2, uy2)
   if sx1 < K.sx1 or sy1 < K.sy1 then return end
   if sx2 > K.sx2 or sy2 > K.sy2 then return end
 
   if H:can_alloc_chunk(sx1, sy1, sx2, sy2) then
     local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
     C.filler = true
+
+    -- is chunk outside of used area?
+    if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
+      C.scenic = true
+      C.mat = rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
+    end
   end
 end
 
 
-function HALLWAY_CLASS.filler_chunks_in_section(H, K)
-  -- junctions always become a single chunk
-  if K.kind == "junction" then
-    H:try_filler_chunk(K, K.sx1, K.sy1, K.sx2, K.sy2)
+function HALLWAY_CLASS.used_section_length(H, K, dir)
+  local p1 =  999
+  local p2 = -999
 
-  elseif K.kind == "vert" then
-    for sy = K.sy1, K.sy2 do
-      H:try_filler_chunk(K, K.sx1, sy, K.sx2, sy+1)
-      H:try_filler_chunk(K, K.sx1, sy, K.sx2, sy)
+  each p_dir,where in K.hall_path do
+    if where == H and geom.is_parallel(dir, p_dir) then
+      -- FIXME
+    end
+  end
+
+  -- FIXME !!!
+  each D in H.conns do
+    if D.K1 == K or D.K2 == K then
+      local C = (D.K1 == K ? D.C1 ; D.C2)
+      assert(C)
+
+      p1 = math.min(p1, geom.vert_sel(dir, C.sy1, C.sx1))
+      p2 = math.max(p1, geom.vert_sel(dir, C.sy2, C.sx2))
+    end
+  end
+
+  if p1 > p2 then
+stderrf("p1 > p2 !!!!\n")
+    if geom.is_vert(dir) then
+      return K.sy1, K.sy2
+    else
+      return K.sx1, K.sx2
+    end
+  end
+
+  return p1, p2
+end
+
+
+function HALLWAY_CLASS.filler_chunks_in_section(H, K)
+
+  -- junctions _always_ become a single chunk
+  if K.kind == "junction" then
+    H:try_filler_chunk(K, K.sx1, K.sy1, K.sx2, K.sy2,
+                          K.sx1, K.sy1, K.sx2, K.sy2)
+    return
+  end
+
+  local sx1, sy1 = K.sx1, K.sy1
+  local sx2, sy2 = K.sx2, K.sy2
+
+  if K.kind == "vert" then
+    local used_y1, used_y2 = H:used_section_length(K, 2)
+
+    for sy = sy1, sy2 do
+      H:try_filler_chunk(K, sx1, sy, sx2, sy+1,  sx1, used_y1, sx2, used_y2)
+      H:try_filler_chunk(K, sx1, sy, sx2, sy,    sx1, used_y1, sx2, used_y2)
     end
 
   elseif K.kind == "horiz" then
-    for sx = K.sx1, K.sx2 do
-      H:try_filler_chunk(K, sx, K.sy1, sx+1, K.sy2)
-      H:try_filler_chunk(K, sx, K.sy1, sx,   K.sy2)
+    local used_x1, used_x2 = H:used_section_length(K, 4)
+
+    for sx = sx1, sx2 do
+      H:try_filler_chunk(K, sx, sy1, sx+1, sy2,  used_x1, sy1, used_x2, sy2)
+      H:try_filler_chunk(K, sx, sy1, sx,   sy2,  used_x1, sy1, used_x2, sy2)
     end
 
   else
