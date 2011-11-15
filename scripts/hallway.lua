@@ -188,12 +188,30 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 
   C:install()
 
+  for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
+    local S = SEEDS[sx][sy]
+    assert(not S.room and not S.hall)
+    S.hall = H
+  end end
+
   return C
 end
 
 
+-- FIXME: TEMP RUBBISH
 function HALLWAY_CLASS.filler_chunks_in_section(H, K)
-  -- TODO
+  for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
+    local S = SEEDS[sx][sy]
+    if not S.chunk then
+      local C = H:alloc_chunk(K, sx, sy, sx, sy)
+    end
+  end end
+end
+
+function HALLWAY_CLASS.filler_chunks(H)
+  each K in H.sections do
+    H:filler_chunks_in_section(K)
+  end
 end
 
 
@@ -229,7 +247,7 @@ function HALLWAY_CLASS.make_chunks(H, skip_old)
     table.insert(H.chunks, C)
 
     -- store hallway in seed map
-    -- FIXME: do this in K:set_hall() or C:install()
+    -- FIXME: THIS IS DONE IN alloc_chunk() method
     if not C.crossover_hall then
     for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
       local S = SEEDS[sx][sy]
@@ -920,6 +938,8 @@ entry_conn:dump()
   H.max_floor_h = entry_h
 
   assert(H.chunks)
+
+  H:filler_chunks()
 
   each C in H.chunks do
     if C.crossover_hall then
