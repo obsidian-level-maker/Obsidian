@@ -401,10 +401,12 @@ function Levels_decide_special_kinds()
     -- (and sometimes none at all, when street_idx > #levels)
     local street_idx = rand.irange(1,16)
 
+--[[ FIXME DISABLED FOR TIME BEING
     local LEV = EPI.levels[street_idx]  -- nil if absent
     if LEV and not LEV.special then
       LEV.special = "street"
     end
+--]]
 
     -- Surround Mode is even rarer
     local surround_idx = rand.irange(1,32)
