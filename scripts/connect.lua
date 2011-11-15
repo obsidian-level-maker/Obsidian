@@ -160,9 +160,16 @@ function Connect_is_possible(L1, L2, mode)
     return false
   end
 
+  -- only connect TO a street
+  if L1.street then return false end
+
   -- Note: require R1's group to be less than R2, which ensures that
   --       a connection between two rooms is only tested _once_.
-  if mode == "normal" and L1.kind != "hallway" and L2.kind != "hallway" then
+  if mode == "normal" and
+     L1.kind != "hallway" and
+     L2.kind != "hallway" and
+     not L2.street
+  then
     return (L1.conn_group < L2.conn_group)
   end
 

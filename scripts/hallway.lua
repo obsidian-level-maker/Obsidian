@@ -54,7 +54,7 @@ class HALLWAY
 --
 -- (1) if hallway is visited first, can give it (including bridges)
 --     any heights, and give the room a height limitation.  Mark the
---     hallway chunk leading into the room as a "height adjuster".
+--     chunk leading into the room as a "height adjuster".
 -- 
 --     [Note: cycle lead-in chunks are automatically adjusters]
 -- 
@@ -62,13 +62,13 @@ class HALLWAY
 --     the lead-in chunk and will have a height limitation in
 --     place for all areas.
 -- 
---  (2) if room is visited first, flesh out normally and give
---      crossover chunks a height limitation.
+-- (2) if room is visited first, flesh out normally and give
+--     crossover chunks a height limitation.
 -- 
---      When hallway is visited, the exit chunk(s) which lead
---      to a crossover chunk will be the "height adjusters".
---      The hallway is free to choose the bridge heights here
---      so long as the limitation is satisfied.
+--     When hallway is visited, the exit chunk(s) which lead
+--     to a crossover chunk will be the "height adjusters".
+--     The hallway is free to choose the bridge heights here
+--     so long as the limitation is satisfied.
 -- 
 
 
@@ -281,13 +281,13 @@ end
 function Hallway_test_branch(start_K, start_dir, mode)
 
   local function test_off_hall(MID)
-    if not MID.hall then return end
+    if not (MID.hall or (MID.room and MID.room.street)) then return end
 
-    if not Connect_is_possible(start_K.room, MID.hall, mode) then return end
+    if not Connect_is_possible(start_K.room, MID.hall or MID.room, mode) then return end
 
     local score = -100 - MID.num_conn - gui.random()
 
-    if MID.hall.crossover then score = score - 500 end
+    if MID.hall and MID.hall.crossover then score = score - 500 end
 
 
     -- score is now computed : test it
@@ -297,7 +297,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
 
     -- OK --
 
-    local D1 = CONN_CLASS.new("normal", MID.hall, start_K.room, 10 - start_dir)
+    local D1 = CONN_CLASS.new("normal", MID.hall or MID.room, start_K.room, 10 - start_dir)
 
     D1.K1 = MID ; D1.K2 = start_K
 
@@ -710,9 +710,9 @@ end
 function Hallway_add_streets()
   if LEVEL.special != "street" then return end
 
-  local hall = HALLWAY_CLASS.new()
+  local hall = ROOM_CLASS.new()
 
-  hall.outdoor = true
+  hall.kind = "outdoor"
   hall.street  = true
   hall.conn_group = 999
 
@@ -723,11 +723,14 @@ function Hallway_add_streets()
 ---   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
 ---   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
 
-      table.insert(hall.sections, K)
+      K:set_room(hall)
+
+      hall:add_section(K)
+      hall:fill_section(K)
     end
   end end
 
-  hall:add_it()
+---  hall:add_it()
 
   -- give each room an apparent height
   each R in LEVEL.rooms do
@@ -808,6 +811,7 @@ end
 
 function HALLWAY_CLASS.flesh_out(H, entry_conn)
   ---- if H.done_heights then return end
+
 gui.debugf("FLESH OUT : %s\n", H:tostr())
 entry_conn:dump()
   assert(not H.done_heights)

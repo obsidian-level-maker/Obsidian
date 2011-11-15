@@ -524,8 +524,9 @@ function ROOM_CLASS.dump_areas(R)
     local S = SEEDS[x][y]
 
     if not S or S.room != R then return ' ' end
-    
-    local A = S.chunk and S.chunk.area
+    if not S.chunk then return '!' end
+
+    local A = S.chunk.area
 
     if not A then return '#' end
     if not A.debug_id then return '?' end

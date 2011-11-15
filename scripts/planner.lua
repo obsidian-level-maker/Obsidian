@@ -1709,6 +1709,7 @@ function Plan_dump_rooms(title, match_kind)
     if not R then return "." end
 
     if R.kind == "scenic" then return "=" end
+    if R.street then return "/" end
 
     local n = 1 + ((R.id - 1) % 26)
 
