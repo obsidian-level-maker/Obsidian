@@ -208,15 +208,12 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 end
 
 
-function HALLWAY_CLASS.try_filler_chunk(H, K, sx, sy, sw, sh)
-  local sx2 = sx + sw - 1
-  local sy2 = sy + sh - 1
-
-  if sx  < K.sx1 or sy  < K.sy1 then return end
+function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2)
+  if sx1 < K.sx1 or sy1 < K.sy1 then return end
   if sx2 > K.sx2 or sy2 > K.sy2 then return end
 
-  if H:can_alloc_chunk(sx, sy, sx2, sy2) then
-    local C = H:alloc_chunk(K, sx, sy, sx2, sy2)
+  if H:can_alloc_chunk(sx1, sy1, sx2, sy2) then
+    local C = H:alloc_chunk(K, sx1, sy1, sx2, sy2)
     C.filler = true
   end
 end
@@ -229,14 +226,14 @@ function HALLWAY_CLASS.filler_chunks_in_section(H, K)
 
   elseif K.kind == "vert" then
     for sy = K.sy1, K.sy2 do
-      H:try_filler_chunk(K, K.sx1, sy, K.sw, 2)
-      H:try_filler_chunk(K, K.sx1, sy, K.sw, 1)
+      H:try_filler_chunk(K, K.sx1, sy, K.sx2, sy+1)
+      H:try_filler_chunk(K, K.sx1, sy, K.sx2, sy)
     end
 
   elseif K.kind == "horiz" then
     for sx = K.sx1, K.sx2 do
-      H:try_filler_chunk(K, sx, K.sy1, 2, K.sh)
-      H:try_filler_chunk(K, sx, K.sy1, 1, K.sh)
+      H:try_filler_chunk(K, sx, K.sy1, sx+1, K.sy2)
+      H:try_filler_chunk(K, sx, K.sy1, sx,   K.sy2)
     end
 
   else
@@ -253,7 +250,7 @@ function HALLWAY_CLASS.filler_chunks(H)
 for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
   local S = SEEDS[sx][sy]
   if not S.chunk then
-    stderrf("WTF: no chunk in %s @ %s\n", H:tostr(), S:tostr())
+    stderrf("WTF: no chunk in %s @ %s\n", H:tostr(), K:tostr())
   end
 end end
 
