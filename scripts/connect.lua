@@ -259,6 +259,10 @@ gui.debugf("\nmake_branch\n\n")
      info.D2:add_it()
   end
 
+  if info.hall then
+    info.hall:setup_path()
+  end
+
   -- for cycles, ensure new hallway gets a quest and zone
   if mode == "cycle" then
     assert(info.D1.L1.quest)

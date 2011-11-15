@@ -43,6 +43,11 @@ class SECTION
   num_conn  -- number of connections
 
   crossover_hall : HALLWAY
+
+  hall_path[dir] : ROOM/HALL  -- non-nil means that this section in a
+                              -- hallway is "pathing" in the given
+                              -- direction to the given room, which
+                              -- is usually the same as 'hall' field.
 }
 
 
@@ -63,7 +68,15 @@ SECTION_CLASS = { }
 
 
 function SECTION_CLASS.new(kind, kx, ky)
-  local K = { kind=kind, orig_kind=kind, kx=kx, ky=ky, num_conn=0 }
+  local K =
+  {
+    kind = kind
+    orig_kind = kind
+    kx = kx
+    ky = ky
+    num_conn = 0
+    hall_path = {}
+  }
   table.set_class(K, SECTION_CLASS)
   return K
 end

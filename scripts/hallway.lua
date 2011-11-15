@@ -124,6 +124,71 @@ function HALLWAY_CLASS.add_section(H, K)
 end
 
 
+function HALLWAY_CLASS.dump_path(H)
+  gui.debugf("Path in %s:\n", H:tostr())
+  gui.debugf("{\n")
+
+  each K in H.sections do
+    local line = ""
+
+    for dir = 2,8,2 do
+      local L = K.hall_path[dir]
+
+      if L then
+        line = line .. string.format("[%d] --> %s  ", dir, L:tostr())
+      end
+    end
+
+    gui.debugf("  @ %s : %s\n", K:tostr(), line)
+  end
+
+  gui.debugf("}\n\n")
+end
+
+
+function HALLWAY_CLASS.setup_path(H)
+  -- because big_junc get merged [FIXME: LOGIC for MERGE + PATH]
+  if H.big_junc then return end
+
+  -- the 'sections' list is the same as 'visited' list, and contains
+  -- each visited section from one end to the other.  
+
+  for i = 1, #H.sections-1 do
+    local K1 = H.sections[i]
+    local K2 = H.sections[i+1]
+
+    -- figure out direction
+    local dir
+
+        if K2.sx1 > K1.sx2 then dir = 6
+    elseif K2.sx2 < K1.sx1 then dir = 4
+    elseif K2.sy1 > K1.sy2 then dir = 8
+    elseif K2.sy2 < K1.sy1 then dir = 2
+    else error("weird hallway path")
+    end
+
+    K1.hall_path[dir] = H
+    K2.hall_path[10 - dir] = H
+  end
+
+  -- setup first and last sections
+
+  each D in H.conns do
+    if D.L1 == H then
+      assert(D.K1.hall == H)
+      D.K1.hall_path[D.dir1] = D.L2
+    elseif D.L2 == H then
+      assert(D.K2.hall == H)
+      D.K2.hall_path[D.dir2] = D.L1
+    else
+      error("WTF bad hall conn")
+    end
+  end
+
+  H:dump_path()
+end
+
+
 function HALLWAY_CLASS.make_chunks(H, skip_old)
   each K in H.sections do
 
@@ -184,6 +249,7 @@ function HALLWAY_CLASS.add_it(H)
 -- stderrf("************* CROSSOVER @ %s\n", over_R:tostr())
   end
 
+  -- FIXME: NOT HERE (later on)
   H:make_chunks(false)
 
   if #H.sections > 1 then
@@ -457,7 +523,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     if table.has_elem(visited, K) then return end
 
     -- can only flow through a big junction when coming straight off
-    -- a room (i.e. ROOM, MID, BIG_JUNC).
+    -- a room (i.e. ROOM --> MID --> BIG_JUNC).
     if K.kind == "big_junc" and #visited != 1 then return end
 
 --stderrf("hall_flow: visited @ %s from:%d\n", K:tostr(), from_dir)
@@ -690,6 +756,9 @@ function Hallway_add_doubles()
 
 
   --| Hallway_add_doubles |--
+
+--!!!!!! FIXME: disabled for time being
+do return end
 
   local quota = MAP_W / 2 + gui.random()
 
