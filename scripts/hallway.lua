@@ -325,7 +325,7 @@ function Hallway_test_branch(start_K, start_dir, mode)
     -- crossovers must be distinct (not same as start or end)
     if stats.crossover and end_K.room == stats.crossover then return end
 
-    local merge = rand.odds(70)
+    local merge = false --FIXME !!!!! rand.odds(70)
 
     local score1 = start_K:eval_exit(start_dir)
     local score2 =   end_K:eval_exit(  end_dir)
