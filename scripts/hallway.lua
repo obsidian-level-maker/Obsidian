@@ -175,6 +175,16 @@ function HALLWAY_CLASS.setup_path(H)
 end
 
 
+function HALLWAY_CLASS.can_alloc_chunk(H, sx1, sy1, sx2, sy2)
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
+    local S = SEEDS[sx][sy]
+    if S.chunk then return false end
+  end end
+
+  return true
+end
+
+
 function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
   assert(K.sx1 <= sx1 and sx1 <= sx2 and sx2 <= K.sx2)
   assert(K.sy1 <= sy1 and sy1 <= sy2 and sy2 <= K.sy2)
@@ -188,7 +198,7 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 
   C:install()
 
-  for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
+  for sx = sx1,sx2 do for sy = sy1,sy2 do
     local S = SEEDS[sx][sy]
     assert(not S.room and not S.hall)
     S.hall = H
@@ -198,19 +208,55 @@ function HALLWAY_CLASS.alloc_chunk(H, K, sx1, sy1, sx2, sy2)
 end
 
 
--- FIXME: TEMP RUBBISH
-function HALLWAY_CLASS.filler_chunks_in_section(H, K)
-  for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
-    local S = SEEDS[sx][sy]
-    if not S.chunk then
-      local C = H:alloc_chunk(K, sx, sy, sx, sy)
-    end
-  end end
+function HALLWAY_CLASS.try_filler_chunk(H, K, sx, sy, sw, sh)
+  local sx2 = sx + sw - 1
+  local sy2 = sy + sh - 1
+
+  if sx  < K.sx1 or sy  < K.sy1 then return end
+  if sx2 > K.sx2 or sy2 > K.sy2 then return end
+
+  if H:can_alloc_chunk(sx, sy, sx2, sy2) then
+    local C = H:alloc_chunk(K, sx, sy, sx2, sy2)
+    C.filler = true
+  end
 end
+
+
+function HALLWAY_CLASS.filler_chunks_in_section(H, K)
+  -- junctions always become a single chunk
+  if K.kind == "junction" then
+    H:try_filler_chunk(K, K.sx1, K.sy1, K.sx2, K.sy2)
+
+  elseif K.kind == "vert" then
+    for sy = K.sy1, K.sy2 do
+      H:try_filler_chunk(K, K.sx1, sy, K.sw, 2)
+      H:try_filler_chunk(K, K.sx1, sy, K.sw, 1)
+    end
+
+  elseif K.kind == "horiz" then
+    for sx = K.sx1, K.sx2 do
+      H:try_filler_chunk(K, sx, K.sy1, 2, K.sh)
+      H:try_filler_chunk(K, sx, K.sy1, 1, K.sh)
+    end
+
+  else
+    error("WTF @ filler_chunks_in_section")
+  end
+end
+
 
 function HALLWAY_CLASS.filler_chunks(H)
   each K in H.sections do
     H:filler_chunks_in_section(K)
+
+-- verify all went well
+for sx = K.sx1, K.sx2 do for sy = K.sy1, K.sy2 do
+  local S = SEEDS[sx][sy]
+  if not S.chunk then
+    stderrf("WTF: no chunk in %s @ %s\n", H:tostr(), S:tostr())
+  end
+end end
+
   end
 end
 
