@@ -110,7 +110,7 @@ function Areas_handle_connections()
   end
 
 
-  local function chunk_for_section_side(K, dir, other_K)
+  local function chunk_for_section_side(K, dir, other_K, is_double)
     -- sections are guaranteed to stay aligned, so calling this
     -- function on two touching sections will provide two chunks
     -- which touch each other.
@@ -119,24 +119,41 @@ function Areas_handle_connections()
     -- chunk (to make wider doors etc) can be done after all the
     -- connections and importants have been given chunks.
 
-    local sx, sy
+    local sx1, sy1
+    local sx2, sy2
 
     if geom.is_vert(dir) then
-      sx = math.i_mid(K.sx1, K.sx2)
-      sy = (dir == 2 ? K.sy1 ; K.sy2)
+      sx1 = math.i_mid(K.sx1, K.sx2)
+      sy1 = (dir == 2 ? K.sy1 ; K.sy2)
     else
-      sy = math.i_mid(K.sy1, K.sy2)
-      sx = (dir == 4 ? K.sx1 ; K.sx2)
+      sy1 = math.i_mid(K.sy1, K.sy2)
+      sx1 = (dir == 4 ? K.sx1 ; K.sx2)
     end
 
-    local S = SEEDS[sx][sy]
+    sx2 = sx1
+    sy2 = sy1
+
+    -- when there are four (or more) seeds, use the middle two
+    if not is_double then
+      if geom.is_vert(dir)  and K.sw >= 4 then sx2 = sx1 + 1 end
+      if geom.is_horiz(dir) and K.sh >= 4 then sy2 = sy1 + 1 end
+    end
+
+    -- when connecting to junctions, use the same size as the junction
+    if other_K.kind == "junction" then
+      if geom.is_vert(dir) then
+        sx1, sx2 = other_K.sx1, other_K.sx2
+      else
+        sy1, sy2 = other_K.sy1, other_K.sy2
+      end
+    end
+
+    -- if chunk already exists, use it
+    local S = SEEDS[sx1][sy1]
     local C = S.chunk
 
     if not C then
       if K.hall then
-        local sx1, sy1 = sx, sy
-        local sx2, sy2 = sx, sy
-
         -- junctions become a single chunk
         if K.kind == "junction" then
           sx1, sy1, sx2, sy2 = K.sx1, K.sy1, K.sx2, K.sy2
@@ -154,11 +171,11 @@ function Areas_handle_connections()
         C = K.hall:alloc_chunk(K, sx1, sy1, sx2, sy2)
 
       -- double hall chunk
-      elseif K == K.room.double_K and geom.is_parallel(K.room.double_dir, dir) then
-        C = chunk_for_double(K, dir, sx, sy)
+      elseif K.room and is_double then
+        C = chunk_for_double(K, dir, sx1, sy1)
 
       else
-        C = K.room:alloc_chunk(sx, sy, sx, sy)
+        C = K.room:alloc_chunk(sx1, sy1, sx2, sy2)
       end
 
       C.foobage = "conn"
@@ -228,8 +245,10 @@ function Areas_handle_connections()
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
 
-    local C1 = chunk_for_section_side(D.K1, D.dir1, D.K2)
-    local C2 = chunk_for_section_side(D.K2, D.dir2, D.K1)
+    local is_double = (D.kind == "double_L" or D.kind == "double_R")
+
+    local C1 = chunk_for_section_side(D.K1, D.dir1, D.K2, is_double)
+    local C2 = chunk_for_section_side(D.K2, D.dir2, D.K1, is_double)
 
     D.C1 = C1 ; D.C2 = C2
 
