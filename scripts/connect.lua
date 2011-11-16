@@ -465,12 +465,6 @@ function Connect_rooms()
 
   Connect_decide_start_room()
 
-  Hallway_add_doubles()
-
-  each H in LEVEL.halls do
-    H:dump_path()
-  end
-
   -- update connections so that 'src' and 'dest' follow the natural
   -- flow of the level, i.e. player always walks src -> dest (except
   -- when backtracking).  Room order is updated too, though quests
@@ -540,7 +534,6 @@ function Connect_cycles()
   ---| Connect_cycles |---
 
   if STYLE.cycles != "none" then
-
     prepare_cycles()
 
     local quota = 5 ---FIXME
@@ -550,6 +543,12 @@ function Connect_cycles()
     for i = 1,quota do
       Connect_scan_sections("cycle", 0)
     end
+  end
+
+  Hallway_add_doubles()
+
+  each H in LEVEL.halls do
+    H:dump_path()
   end
 
   Plan_expand_rooms()
