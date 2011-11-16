@@ -4426,7 +4426,7 @@ DOOM.WEAPONS =
   -- this is Doom II only --
   super =
   {
-    level = 3
+    level = 4
     pref = 50
     add_prob = 20
     start_prob = 60
