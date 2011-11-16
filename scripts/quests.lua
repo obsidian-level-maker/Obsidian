@@ -115,6 +115,8 @@ end
 function QUEST_CLASS.add_room_or_hall(quest, L)
   L.quest = quest
 
+  L.visit_id = Plan_alloc_id("visit_id")
+
   table.insert(quest.rooms, L)
 end
 
