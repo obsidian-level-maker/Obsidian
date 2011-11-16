@@ -6,7 +6,32 @@ Current Work
 ------------
 
 
+ARCH_W_WINDOW
+
+
 THEME SYSTEM:
+
+-  pick a hallway theme, cave theme, one or two outdoor theme
+   and one to three buildings for each zone.
+   
+-  when user has seen too much of a theme (some seed quota)
+   then pick a new one for the room, but go back to start if run out.
+
+-  support rarity="zone" in room themes, pick it, use it once and
+   never again in the zone.  support "level" keyword too.
+
+-  kill ZONE_THEMES
+
+-  IDEA: collapse 'buildings', 'caves', 'outdoors', 'hallways'
+         into a single table and give room themes a "kind" field
+
+-  if keys are left over, can use them for non-Zone locks
+
+-  REVIEW: need a zone_quota ?
+
++  split current room themes into smaller ones
+
+
 ??  allow materials in 'facades', 'walls' (etc) to not exist,
     and simply remove that entry from the table.  Same for entity
     stuff.  Hence can share room themes between DOOM and DOOM 2.
@@ -15,18 +40,10 @@ THEME SYSTEM:
 -  Jared's DEIMOS theme additions
 
 
-implement ZONE_THEMES  (via 'zones' field) and ROOM_THEME (via 'room' field)
-
-- use current code to "construct" a zone theme if none present
-  (similarly for rooms)
-
-- rarity="zone" for ROOM_THEMES  [also: "level", "episode" and "game" keywords]
-
-? ubiquity keyword ?
-
-
 
 Caves:
+  !!!!  fix spurious diagonals (at corners of room)
+
   >>  newbie_map  : generate separate pass, check for <= 0 cells
 
   DONE:  CHUNKS: don't build floor/ceil if cave
@@ -62,38 +79,26 @@ QUAKE II:
   +  fix street mode edges (you can fall out of the level)
 
 
-Liquids:
-  ?  generate liquid "AREAs" at same time as normal areas 
-     (by looking at free seeds).  Similarly for cages and 3D areas.
-     Create chunks after the seeds have been decided.
-
-
 Hallways:
-  +  don't assume all chunks can be open to each other
+>>>> don't assume all chunks can be open to each other
      (i.e. there is a distinct path, put walls everywhere else)
 
-  !!!  fix chunk alignment in hallway connections
+>>>>>> fix chunk alignment in hallway connections
+
+DONE:  proper chunk size (in other side) when one side is a JUNCTION
 
   !!  monsters / items in hallways
 
   !!!  determine ceiling heights properly
 
+DONE: get double halls working again
 
-Zones:
+  -  get big junctions working again
 
->>>  distinct texturing in each zone
+  -  get "merging" of one hallway into another working again
 
-  -  prefer weapons be placed in different zones
-     rather than: two in second zone, none in third (or so).
-
-     Note: does NOT apply to the starting room
-
-  DONE:  switches and their doors are limited to a single zone
-  DONE:  keyed doors are preferred separator for zones
-
-  -  Idea: ZONE_THEMES
-
-  +  if keys are left over, can use them for non-Zone locks
+  -  ability to merge the section of a "simple" hallway into
+     one of the rooms [especially to make a "Porch"].
 
 
 Storage Rooms:
@@ -106,8 +111,15 @@ Storage Rooms:
 -----------------------------------------------------------------
 
 
-Release Goals
-=============
+Next WIP Goals
+==============
+
++  hallway stuff sorted out
+
++  cave stuff sorted out
+
++  theme stuff sorted out
+
 
 +  proper building facades
 
@@ -125,12 +137,21 @@ Release Goals
 +  sky borders in outdoor rooms
 
 
+-----------------------------------------------------------------
+
+
+Release Goals
+=============
+
 -  pictures in walls
 
 -  diagonal corners
 
 -  secret niches
 
+-  cages (in the void chunks)
+
+-  normal doors
 
 ?  system for texture coordinates:
 
@@ -138,10 +159,6 @@ Release Goals
 
      x_offset is alternate term for u1  [u2 can be absent]
      y_offset is alternate term for v1 or v2  (depends on 'peg' flag)
-
-?  cages
-
-?  normal doors
 
 ?  better ceilings, some ceiling lights
 
