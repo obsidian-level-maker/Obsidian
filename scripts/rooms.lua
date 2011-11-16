@@ -446,32 +446,6 @@ function ROOM_CLASS.alloc_chunk(R, sx1, sy1, sx2, sy2)
 end
 
 
-function ROOM_CLASS.chunk_for_double(R, K, dir)
-  assert(K.room == R)
-
-  local sx1, sy1
-  local sx2, sy2
-
-  if geom.is_vert(dir) then
-    sx1 = math.i_mid(K.sx1, K.sx2)
-    sx2 = sx1
-
-    sy1 = K.sy1
-    sy2 = K.sy2
-  else
-    sy1 = math.i_mid(K.sy1, K.sy2)
-    sy2 = sy1
-
-    sx1 = K.sx1
-    sx2 = K.sx2
-  end
-
-  assert(R:can_alloc_chunk(sx1,sy1, sx2,sy2))
-
-  return R:alloc_chunk(sx1,sy1, sx2,sy2)
-end
-
-
 function ROOM_CLASS.add_exclusion_zone(R, x1, y1, x2, y2, extra_dist)
   local ZONE =
   {

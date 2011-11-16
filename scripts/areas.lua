@@ -92,6 +92,24 @@ function Areas_handle_connections()
   -- the chunks.
   --]]
 
+  local function chunk_for_double(K, dir, sx, sy)
+    local sx1, sy1 = K.sx1, K.sy1
+    local sx2, sy2 = K.sx2, K.sy2
+
+    if geom.is_vert(dir) then
+      sx1 = sx ; sx2 = sx
+    else
+      sy1 = sy ; sy2 = sy
+    end
+
+    local R = K.room
+
+    assert(R:can_alloc_chunk(sx1,sy1, sx2,sy2))
+
+    return R:alloc_chunk(sx1,sy1, sx2,sy2)
+  end
+
+
   local function chunk_for_section_side(K, dir, other_K)
     -- sections are guaranteed to stay aligned, so calling this
     -- function on two touching sections will provide two chunks
@@ -134,6 +152,11 @@ function Areas_handle_connections()
         end
 
         C = K.hall:alloc_chunk(K, sx1, sy1, sx2, sy2)
+
+      -- double hall chunk
+      elseif K == K.room.double_K and geom.is_parallel(K.room.double_dir, dir) then
+        C = chunk_for_double(K, dir, sx, sy)
+
       else
         C = K.room:alloc_chunk(sx, sy, sx, sy)
       end

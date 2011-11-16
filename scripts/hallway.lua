@@ -823,7 +823,15 @@ function Hallway_add_doubles()
     local D1 = find_conn_for_double(H, K, dir)
     if not D1 then return false end
 
+
+    ---- MAKE IT SO ----
+
     gui.debugf("Double hallway @ %s dir:%d\n", K:tostr(), dir)
+
+    H.double_fork = K
+
+    room_K.room.double_K   = room_K
+    room_K.room.double_dir = left_dir
 
     -- update existing connection, create peer
     D1.kind = "double_L"
@@ -853,8 +861,6 @@ function Hallway_add_doubles()
     left_J:set_hall(H) ; right_J:set_hall(H)
     left_K:set_hall(H) ; right_K:set_hall(H)
 
-    H.double_fork = K
-
     -- update path through the sections
     K.hall_path[dir] = nil
     K.hall_path[left_dir]  = H
@@ -874,12 +880,6 @@ function Hallway_add_doubles()
 
 ---    H:make_chunks(true)
 
-    -- create chunk in room
-    local CC = room_K.room:chunk_for_double(room_K, left_dir)
-
-    CC.foobage = "conn"
-
-stderrf("DOUBLE HALL !!!!!!!!!!!!!!\n")
     return true
   end
 
