@@ -846,23 +846,40 @@ function Hallway_add_doubles()
 
     D2:add_it()
 
-    H.double_fork = K  -- meh, remove
-
-    H:add_section(K)
+    -- add new sections to hallway
     H:add_section(left_J) ; H:add_section(right_J)
     H:add_section(left_K) ; H:add_section(right_K)
 
-    -- meh
-    left_J.forky = true ; right_J.forky = true
-    left_K.forky = true ; right_K.forky = true
+    left_J:set_hall(H) ; right_J:set_hall(H)
+    left_K:set_hall(H) ; right_K:set_hall(H)
 
-    H:make_chunks(true)
+    H.double_fork = K
+
+    -- update path through the sections
+    K.hall_path[dir] = nil
+    K.hall_path[left_dir]  = H
+    K.hall_path[right_dir] = H
+
+     left_J.hall_path[dir] = H
+    right_J.hall_path[dir] = H
+
+     left_J.hall_path[right_dir] = H
+    right_J.hall_path[ left_dir] = H
+
+     left_K.hall_path[10-dir] = H
+    right_K.hall_path[10-dir] = H
+
+     left_K.hall_path[right_dir] = room_K.room
+    right_K.hall_path[ left_dir] = room_K.room
+
+---    H:make_chunks(true)
 
     -- create chunk in room
     local CC = room_K.room:chunk_for_double(room_K, left_dir)
 
     CC.foobage = "conn"
 
+stderrf("DOUBLE HALL !!!!!!!!!!!!!!\n")
     return true
   end
 
@@ -893,9 +910,6 @@ function Hallway_add_doubles()
 
   --| Hallway_add_doubles |--
 
---!!!!!! FIXME: disabled for time being
-do return end
-
   local quota = MAP_W / 2 + gui.random()
 
   local visits = table.copy(LEVEL.halls)
@@ -915,11 +929,11 @@ end
 function Hallway_add_streets()
   if LEVEL.special != "street" then return end
 
-  local hall = ROOM_CLASS.new()
+  local room = ROOM_CLASS.new()
 
-  hall.kind = "outdoor"
-  hall.street  = true
-  hall.conn_group = 999
+  room.kind = "outdoor"
+  room.street  = true
+  room.conn_group = 999
 
   for kx = 1,SECTION_W do for ky = 1,SECTION_H do
     local K = SECTIONS[kx][ky]
@@ -928,10 +942,10 @@ function Hallway_add_streets()
 ---   if K.kind == "vert"  and (kx == 1 or kx == SECTION_W) then continue end
 ---   if K.kind == "horiz" and (ky == 1 or ky == SECTION_H) then continue end
 
-      K:set_room(hall)
+      K:set_room(room)
 
-      hall:add_section(K)
-      hall:fill_section(K)
+      room:add_section(K)
+      room:fill_section(K)
     end
   end end
 
