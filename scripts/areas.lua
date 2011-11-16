@@ -1855,13 +1855,13 @@ stderrf("TRYING....................\n")
 
   local function hallway_heights(L)
     each D in L.conns do
-      if D.L1 == L and D.L2.kind == "hallway" then
+      if D.L1 == L and D.L2.kind == "hallway" and D.kind != "double_R" then
         local hall = D.L2
 
         hall:flesh_out(D)
 
         -- recursively handle hallway networks
-        hallway_heights(D.L2)
+        hallway_heights(hall)
       end
     end
   end

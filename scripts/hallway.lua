@@ -839,10 +839,13 @@ function Hallway_add_doubles()
     room_K.room.double_K   = room_K
     room_K.room.double_dir = left_dir
 
-    -- update existing connection, create peer
+    -- update existing connection
     D1.kind = "double_L"
 
-    if D1.K1 != K then D1:swap() end
+    local need_swap
+
+    if D1.K1 != K then need_swap = true ; D1:swap() end
+
     assert(D1.K1 == K)
     assert(D1.K2 == room_K)
 
@@ -855,7 +858,16 @@ function Hallway_add_doubles()
     D2.K1 = right_K
     D2.K2 = room_K
 
-    -- peer up the two connections, needed when locking one of them
+    -- restore previous connection order
+    -- [this is needed now that doubles are done _after_ quests]
+    if need_swap then
+      D1:swap() ; D2:swap()
+    end
+
+    -- make sure new connection has the same lock
+    D2.lock = D1.lock
+    
+    -- peer them up (not needed ATM, might be useful someday)
     D1.peer = D2 ; D2.peer = D1
 
     D2:add_it()

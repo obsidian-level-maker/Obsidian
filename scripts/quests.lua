@@ -994,11 +994,7 @@ function Quest_make_quests()
 
 -- gui.debugf("add_lock: LOCK_%d to %s\n", LOCK.tag, D.L2:tostr())
 
-    -- for double hallways, put the lock in both connections
-    if D.kind == "double_L" then
-      assert(D.peer)
-      D.peer.lock = LOCK
-    end
+    assert(D.kind != "double_L")
 
     -- keep newest locks at the front of the active list
     table.insert(active_locks, 1, LOCK)
