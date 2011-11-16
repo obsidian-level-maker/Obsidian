@@ -766,7 +766,7 @@ function Hallway_add_doubles()
   --    (1) don't want these to block normal connections
   --    (2) don't want other connections joining onto these
 
-  local function find_conn_for_double(H, K1, dir)
+  local function find_conn_for_double(K1, dir)
     local K2 = K1:neighbor(dir)
 
     each D in LEVEL.conns do
@@ -820,8 +820,16 @@ function Hallway_add_doubles()
     if deep < 3 then return false end
 
     -- fixme: this should not fail
-    local D1 = find_conn_for_double(H, K, dir)
+    local D1 = find_conn_for_double(K, dir)
     if not D1 then return false end
+
+    -- less chance if entrance was locked 
+    local entry_D = find_conn_for_double(K, 10 - dir)
+
+    if entry_D and entry_D.lock then
+      if entry_D.lock.kind == "KEY" then return false end
+      if rand.odds(65) then return false end
+    end
 
 
     ---- MAKE IT SO ----
