@@ -766,13 +766,11 @@ function Hallway_add_doubles()
   --    (1) don't want these to block normal connections
   --    (2) don't want other connections joining onto these
 
-  local function find_conn_for_double(K1, dir)
-    local K2 = K1:neighbor(dir)
-
+  local function find_conn_for_double(K, dir)
     each D in LEVEL.conns do
       if D.kind == "normal" then
-        if D.K1 == K1 and D.K2 == K2 then return D end
-        if D.K1 == K2 and D.K2 == K1 then return D end
+        if D.K1 == K and D.dir1 == dir then return D end
+        if D.K2 == K and D.dir2 == dir then return D end
       end
     end
 
