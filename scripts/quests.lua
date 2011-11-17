@@ -211,11 +211,23 @@ function ZONE_CLASS.facade_from_rooms(Z, require_kind)
       continue
     end
 
+    -- ignore special rooms
+    if R.rarity then continue end
+
     local tab = R.theme.walls or R.theme.naturals
     assert(tab)
 
     -- adjust probabilities, try to pick a unique facade
     tab = table.copy(tab)
+
+    -- never pick any pseudo-materials
+    if tab["_FACADE"] then
+      tab["_FACADE"] = nil
+    end
+
+    if table.empty(tab) then
+      continue
+    end
 
     each Z2 in LEVEL.zones do
       if Z2.facade_mat and tab[Z2.facade_mat] then
@@ -527,9 +539,12 @@ function Quest_assign_room_themes()
                        Z:facade_from_rooms()
       end
 
-      assert(Z.facade_mat)
-
-      gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
+      if not Z.facade_mat then
+        gui.printf("WARNING: missing Facade for %s\n", Z:tostr())
+        Z.facade_mat = "_ERROR"
+      else
+        gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
+      end
     end
 
     gui.printf("\n")
