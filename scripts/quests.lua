@@ -427,37 +427,8 @@ end
 
 
 
-function Quest_assign_themes()
+function Quest_assign_room_themes()
  
-  local function handle_zones()
-    local zone_tab
-    
-    if THEME.zones then
-      zone_tab = table.copy(THEME.zones)
-    else
-      -- FIXME: create some (?)
-    end
-    
-    each Z in LEVEL.zones do
-      if zone_tab then
-        local name = rand.key_by_probs(zone_tab)
-
-        -- greatly prefer to pick a different one
-        zone_tab[name] = zone_tab[name] / 20
-      
-        Z.theme = GAME.ZONE_THEMES[name]
-
-        if not Z.theme then
-          error("No such zone theme: " .. tostring(name))
-        end
-
-      else
-        Z.theme = { dummy=true }
-      end
-    end
-  end
-
-
   local function assign_theme(L)
     -- one hallway theme per zone
     if L.kind == "hallway" and L.zone.hallway_theme then
@@ -473,11 +444,10 @@ function Quest_assign_themes()
     local tab
     local tab_name = L.kind .. "s"
 
-    -- the Zone Theme takes precedence over the Level Theme
-    tab = L.zone.theme[tab_name] or THEME[tab_name]
+    tab = THEME[tab_name]
 
     if not tab and L.kind == "hallway" then
-      tab = L.zone.theme["buildings"] or THEME["buildings"]
+      tab = THEME["buildings"]
     end
 
     if not tab then
@@ -495,7 +465,7 @@ function Quest_assign_themes()
       error("No such room theme: " .. tostring(theme_name))
     end
 
-    gui.debugf("Room theme @ %s : %s\n", L:tostr(), theme_name)
+    gui.printf("  %s --> %s\n", L:tostr(), theme_name)
 
     if L.kind == "hallway" then
       L.zone.hallway_theme = L.theme
@@ -505,9 +475,9 @@ function Quest_assign_themes()
   end
 
 
-  ---| Quest_assign_themes |---
+  ---| Quest_assign_room_themes |---
 
-  handle_zones()
+  gui.printf("Assigning room themes:\n")
 
   each R in LEVEL.rooms do
     assign_theme(R)
@@ -1407,7 +1377,7 @@ function Quest_make_quests()
   Connect_cycles()
 
 
-  Quest_assign_themes()
+  Quest_assign_room_themes()
 
   Quest_add_weapons()
 

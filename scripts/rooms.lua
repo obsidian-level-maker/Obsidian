@@ -594,7 +594,7 @@ function Rooms_select_textures()
     end
 
     each Z in LEVEL.zones do
-      local tab = Z.theme.facades or THEME.facades
+      local tab = THEME.facades
 
       if tab then
         Z.facade_mat = rand.key_by_probs(tab)
