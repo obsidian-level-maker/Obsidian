@@ -964,10 +964,10 @@ function Hallway_add_streets()
 
       room:add_section(K)
       room:fill_section(K)
+
+      room.map_volume = (room.map_volume or 0) + 0.5
     end
   end end
-
----  hall:add_it()
 
   -- give each room an apparent height
   each R in LEVEL.rooms do
