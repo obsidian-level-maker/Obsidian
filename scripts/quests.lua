@@ -205,6 +205,32 @@ function ZONE_CLASS.merge(Z1, Z2)
 end
 
 
+function ZONE_CLASS.facade_from_rooms(Z, require_kind)
+  each R in Z.rooms do
+    if require_kind and R.kind != require_kind then
+      continue
+    end
+
+    local tab = R.theme.walls or R.theme.naturals
+    assert(tab)
+
+    -- adjust probabilities, try to pick a unique facade
+    tab = table.copy(tab)
+
+    each Z2 in LEVEL.zones do
+      if Z2.facade_mat and tab[Z2.facade_mat] then
+        tab[Z2.facade_mat] = tab[Z2.facade_mat] / 20
+      end
+    end
+
+    return rand.key_by_probs(tab)
+  end
+
+  -- no matching rooms
+  return nil
+end
+
+
 ----------------------------------------------------------------
 
 function Quest_find_path_to_room(src, dest)  -- NOT USED ATM
@@ -465,19 +491,52 @@ function Quest_assign_room_themes()
       error("No such room theme: " .. tostring(theme_name))
     end
 
-    gui.printf("  %s --> %s\n", L:tostr(), theme_name)
+    gui.printf("Room theme for %s : %s\n", L:tostr(), theme_name)
 
     if L.kind == "hallway" then
       L.zone.hallway_theme = L.theme
     elseif L.kind == "cave" then
       LEVEL.cave_theme = L.theme
     end
+
+    gui.printf("\n")
+  end
+
+
+  local function select_facades()
+    local global_facades
+
+    if THEME.facades then
+      global_facades = table.copy(THEME.facades)
+    end
+
+    each Z in LEVEL.zones do
+      local tab = THEME.facades
+
+      if tab then
+        Z.facade_mat = rand.key_by_probs(tab)
+
+        -- try not to use the same facade again
+        if tab == global_facades then
+          global_facades[Z.facade_mat] = global_facades[Z.facade_mat] / 20
+        end
+      
+      else
+        -- grab facade from a room (prefer a building)
+        Z.facade_mat = Z:facade_from_rooms("building") or
+                       Z:facade_from_rooms()
+      end
+
+      assert(Z.facade_mat)
+
+      gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
+    end
+
+    gui.printf("\n")
   end
 
 
   ---| Quest_assign_room_themes |---
-
-  gui.printf("Assigning room themes:\n")
 
   each R in LEVEL.rooms do
     assign_theme(R)
@@ -486,6 +545,8 @@ function Quest_assign_room_themes()
   each H in LEVEL.halls do
     assign_theme(H)
   end
+
+  select_facades()
 end
 
 

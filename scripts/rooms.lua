@@ -560,103 +560,17 @@ end
 
 function Rooms_select_textures()
 
-  local function facade_from_rooms(zone, require_kind)
-    each R in zone.rooms do
-      if require_kind and R.kind != require_kind then
-        continue
-      end
-
-      local tab = R.theme.walls or R.theme.naturals
-      assert(tab)
-
-      -- adjust probabilities, try to pick a unique facade
-      tab = table.copy(tab)
-
-      each Z in LEVEL.zones do
-        if Z.facade_mat and tab[Z.facade_mat] then
-          tab[Z.facade_mat] = tab[Z.facade_mat] / 20
-        end
-      end
-
-      return rand.key_by_probs(tab)
-    end
-
-    -- no matching rooms
-    return nil
-  end
-
-
-  local function select_facades()
-    local global_facades
-
-    if THEME.facades then
-      global_facades = table.copy(THEME.facades)
-    end
-
-    each Z in LEVEL.zones do
-      local tab = THEME.facades
-
-      if tab then
-        Z.facade_mat = rand.key_by_probs(tab)
-
-        -- try not to use the same facade again
-        if tab == global_facades then
-          global_facades[Z.facade_mat] = global_facades[Z.facade_mat] / 20
-        end
-      
-      else
-        -- grab facade from a room (prefer a building)
-        Z.facade_mat = facade_from_rooms(Z, "building")
-
-        if not Z.facade_mat then
-          Z.facade_mat = facade_from_rooms(Z)
-        end
-      end
-
-      assert(Z.facade_mat)
-
-      gui.debugf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
-    end
-  end
-
-
-  local function TESTCRUD__assign_to_zones(WHAT, orig_source)
-    
-    -- TODO: number of passes depends on zone size
-    --       __OR__ : do a pass for each real room
-
-    local source
-
-    for pass = 1,1 do
-      each Z in LEVEL.zones do
-
-        if not Z[WHAT] then
-          Z[WHAT] = {}
-        end
-
-        if not source or table.empty(source) then
-          source = table.copy(orig_source)
-        end
-
-        local mat = rand.key_by_probs(source)
-
-        source[mat] = nil  -- don't use again
-
-        local mat_tab = Z[WHAT]
-
-        mat_tab[mat] = 60 - (pass - 1) * 20
-      end
-    end
-  end
-
-
   local function select_textures(L)
     local tab = L.theme.walls or L.theme.naturals
     assert(tab)
 
-    -- FIXME: way way way to simple!!
+    -- FIXME: too simple?
 
     L.wall_mat = rand.key_by_probs(tab)
+
+    if L.wall_mat == "_FACADE" then
+      L.wall_mat = assert(L.zone.facade_mat)
+    end
 
     if L.theme.floors then
       L.floor_mat = rand.key_by_probs(L.theme.floors)
@@ -671,9 +585,8 @@ function Rooms_select_textures()
   local function setup_skin(L)
     L.skin = {}
 
-    L.skin.spike_group = "spike" .. tostring(L.id)
-
     L.skin.wall = L.wall_mat
+    L.skin.spike_group = "spike" .. tostring(L.id)
 
     if L.kind == "outdoor" then
       L.skin.facade = L.wall_mat
@@ -684,8 +597,6 @@ function Rooms_select_textures()
 
 
   ---| Rooms_select_textures |---
-
-  select_facades()
 
   each R in LEVEL.rooms do
     select_textures(R)
