@@ -1398,36 +1398,6 @@ function Plan_expand_rooms()
   end
 
 
-  local function try_reassign_section__OLD(K)
-    if K.room.shape != "odd" then
-      return
-    end
-
-    local SIDES
-
-    if K.kind == "vert" then
-      SIDES = { 4,6 }
-    elseif K.kind == "horiz" then
-      SIDES = { 2,8 }
-    else
-      SIDES = { 2,4,6,8 }
-    end
-
-    rand.shuffle(SIDES)
-
-    each side in SIDES do
-      local N = K:neighbor(side)
-      if N and N.room and not N.expanded and not (N.room.shape == "rect") then
-        --- if rand.odds(99) then
-        assign_section(K, N.room)      
-        return true
-      end
-    end
-
-    return false
-  end
-
-
   local function try_fill_junc(K)
     local rooms = {}
 
