@@ -190,6 +190,15 @@ function SECTION_CLASS.touches_edge(K)
 end
 
 
+function SECTION_CLASS.set_expanded(K, dir)
+  if not K.expanded_dirs then
+    K.expanded_dirs = {}
+  end
+
+  K.expanded_dirs[dir] = true
+end
+
+
 function SECTION_CLASS.is_foot(K)  -- returns direction, or nil
   for dir = 2,8,2 do
     if not K:same_room(dir) and
@@ -1327,7 +1336,9 @@ function Plan_expand_rooms()
 
   local function can_nudge(K, dir)
     -- prevent flow on
-    if K.expanded then return false end
+    if K.expanded_dirs and K.expanded_dirs[dir] then
+      return false
+    end
 
     local N = K:neighbor(dir)
     if not N or N.used then return false end
@@ -1358,20 +1369,30 @@ function Plan_expand_rooms()
       end
     end
 
+    local count = 0
+
     -- test if all sections can be nudged
     for kx = kx1,kx2 do for ky = ky1,ky2 do
       local KP = SECTIONS[kx][ky]
       if KP.room != K.room then continue end
+      if KP:same_room(dir) then continue end
+
       if not can_nudge(KP, dir) then return false end
+      count = count + 1
     end end
+
+    if count == 0 then return false end
 
     -- actually nudge them
     for kx = kx1,kx2 do for ky = ky1,ky2 do
       local KP = SECTIONS[kx][ky]
       if KP.room != K.room then continue end
+      if KP:same_room(dir) then continue end
 
       local N = KP:neighbor(dir)
+
       K.room:annex(N)
+      K:set_expanded(dir)
     end end
 
     return true
@@ -1379,14 +1400,36 @@ function Plan_expand_rooms()
 
 
   local function nudge_rooms()
-    local visits = {}
+    local visits  = {}
+    local narrows = {}
 
     for mx = 1,MAP_W do for my = 1,MAP_H do
       local K = SECTIONS[mx*2][my*2]
+
       if K.room then
         table.insert(visits, K)
+
+        if K.sh == 2 then
+          table.insert(narrows, { K=K, dir=2 })
+          table.insert(narrows, { K=K, dir=8 })
+        end
+
+        if K.sw == 2 then
+          table.insert(narrows, { K=K, dir=4 })
+          table.insert(narrows, { K=K, dir=6 })
+        end
       end
     end end
+
+    -- do a single pass to try and expand very narrow rooms
+    rand.shuffle(narrows)
+
+    each spot in narrows do
+      try_nudge_section(spot.K, spot.dir)
+    end
+
+    -- Note: we deliberately don't try every possibility
+    --       (allow some free space for traps or secrets)
 
     for loop = 1,MAP_W do
       rand.shuffle(visits)
@@ -1417,6 +1460,7 @@ function Plan_expand_rooms()
 
       if rooms[2] == R or rooms[8] == R then
         R:annex(K)
+        K.expanded_dirs = { 2,4,6,8 }
         return true
       end
     end
@@ -1667,11 +1711,14 @@ function Plan_make_seeds()
   
   local function fill_section(kx, ky)
     local K = SECTIONS[kx][ky]
-    local R = K.room
 
-    if not R then return end
+    for sx = K.sx1,K.sx2 do for sy = K.sy1,K.sy2 do
+      SEEDS[sx][sy].section = K
+    end end
 
-    R:fill_section(K)
+    if K.room then
+      K.room:fill_section(K)
+    end
   end
 
 
@@ -1687,21 +1734,21 @@ end
 function Plan_dump_rooms(title, match_kind)
   local function seed_to_char(sx, sy)
     local S = SEEDS[sx][sy]
+
+    if S.section and S.section.hall then return "#" end
+
     local R = S.room
-
-    if S.hall then return "#" end
-
     if not R then return "." end
 
     if R.kind == "scenic" then return "=" end
-    if R.street then return "/" end
+    if R.street then return "#" end
 
     local n = 1 + ((R.id - 1) % 26)
 
-    if R.kind == (match_kind or "outdoor") then
-      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
-    else
+    if R.shape == "odd" then --!!! R.kind == (match_kind or "outdoor") then
       return string.sub("abcdefghijklmnopqrstuvwxyz", n, n)
+    else
+      return string.sub("ABCDEFGHIJKLMNOPQRSTUVWXYZ", n, n)
     end
   end
 

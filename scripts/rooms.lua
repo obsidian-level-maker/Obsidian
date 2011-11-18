@@ -191,7 +191,6 @@ function ROOM_CLASS.fill_section(R, K)
 
     S.room = K.room
     S.section = K
-    S.expanded = nil
   end end
 
   if not R.sx1 or K.sx1 < R.sx1 then R.sx1 = K.sx1 end
@@ -209,7 +208,6 @@ function ROOM_CLASS.annex(R, K)
   K:set_room(R)
 
   K.kind = "annex"
-  K.expanded = true
 
   R:add_section(K)
 end
