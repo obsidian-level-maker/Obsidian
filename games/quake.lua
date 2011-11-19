@@ -1705,8 +1705,9 @@ function QUAKE.begin_level()
 
   if not primary_tex_wad then
     error("cannot find texture file: quake_tex.wd2\n\n" ..
-          "Please visit the OBLIGE website for full information on " ..
-          "how to setup Quake support.")
+          "Please visit the following link which takes you to the " ..
+          "Quake Setup documentation on the OBLIGE website: " ..
+          "<a http://oblige.sourceforge.net/doc_usage.html#quake>Setting Up Quake</a>")
   end
 
   gui.q1_add_tex_wad(primary_tex_wad)

@@ -950,8 +950,9 @@ function HEXEN2.begin_level()
 
   if not primary_tex_wad then
     error("cannot find texture file: hexen2_tex.wd2\n\n" ..
-          "Please visit the OBLIGE website for full information on " ..
-          "how to setup Hexen 2 support.")
+          "Please visit the following link which takes you to the " ..
+          "Hexen 2 Setup documentation on the OBLIGE website: " ..
+          "<a http://oblige.sourceforge.net/doc_usage.html#quake>Setting Up Hexen 2</a>")
   end
 
   gui.q1_add_tex_wad(primary_tex_wad)
