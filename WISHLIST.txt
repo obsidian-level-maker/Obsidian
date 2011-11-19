@@ -281,7 +281,7 @@ Street Mode:
   
   -  fix the sky glitch (pieces jutting inside a room)
 
-  -  better looking "streets" (via prefabs and SKINs)
+  -  better looking "streets" (via prefabs and SKINs) ?
 
   -  fix the "big junc" situation, good place for a fountain
 
@@ -290,6 +290,12 @@ Street Mode:
   -  25% of the time  : keep the outer ring
      25% of the time  : expand all rooms into outer ring
      rest of the time : expand corner rooms 50%, side rooms 33%
+
+  -  allow outdoor rooms
+
+  -  allow big monsters in the street [c.f. MAP12]
+
+  -  limit caves to being in corner of map, expanded
 
 
 Caves:
@@ -389,6 +395,14 @@ Void stuff:
   -  create a 3x3 (or 4x4) chunk and this is the middle of chunk
      (2x2 possible too, not touching room edge)
   -  good for cages!
+
+
+Cancellation:
+  +  can abort monster code (Fight sim) midstream 
+  -  can abort CSG_BSP() midstream
+  -  can abort DOOM / Duke processing midstream
+  -  can abort Quake I / II BSP generation midstream
+  -  can abort Q1_ClippingHull() midstream
 
 
 ----------------------------------------------------------------
@@ -616,6 +630,8 @@ Sam's suggestions:
    -  support multiple WD2 files : gui.quake_add_textures
    -  create OBLIGE logos : gui.quake_make_logo()
 
+-  for the missing WAD message: a clickable hyperlink
+
 -  support colored lighting (FitzQuake, Darkplaces, etc).
    - add an entry in the pack called "maps/xxx.lit", which
    - it should contain: QLIT 1 0 0 0 <data>
@@ -706,10 +722,23 @@ Sam's suggestions:
 
 
 ----------------------------------------------------------------
+  DOCUMENTATION / WEB SITE
+----------------------------------------------------------------
+
+-  new "RUNNING THE MAPS" section ?
+
+-  To reset all settings, simply delete this file: CONFIG.txt
+
+[etc.... merge WEB_TODO.txt into here...]
+
+
+----------------------------------------------------------------
   MISCELLANEOUS
 ----------------------------------------------------------------
 
 +  in batch mode, detect invalid game=XXX (etc) keywords
+
+-  in batch mode, handle theme=tech (find the "doom_tech" entry)
 
 
 Secrets:

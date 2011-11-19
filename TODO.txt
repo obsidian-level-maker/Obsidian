@@ -5,25 +5,28 @@ OBLIGE TODO
 Current Work
 ------------
 
-
-ARCH_W_WINDOW
+TEST: hyperlink code in Windows
 
 
 THEME SYSTEM:
 
 -  pick a hallway theme, cave theme, one or two outdoor theme
-   and one to three buildings for each zone.
+   and one or two building themes for each zone.
    
--  when user has seen too much of a theme (some seed quota)
+-  when user has seen too much of a room theme (some seed quota)
    then pick a new one for the room, but go back to start if run out.
+
+   --> perhaps a more general "tiredness" idea : compute how much
+       of the theme has been used uptil any given point, and when
+       it exceeds a threshhold then switch room themes (and reduce
+       previous tiredness values while a different theme is in use).
+
+       [hmmm probably too complex, zones already help a lot]
 
 -  support rarity="zone" in room themes, pick it, use it once and
    never again in the zone.  support "level" keyword too.
 
--  kill ZONE_THEMES
-
--  IDEA: collapse 'buildings', 'caves', 'outdoors', 'hallways'
-         into a single table and give room themes a "kind" field
+DONE:  select facades _first_, allow "_FACADE" in wall choices
 
 -  if keys are left over, can use them for non-Zone locks
 
@@ -32,7 +35,7 @@ THEME SYSTEM:
 +  split current room themes into smaller ones
 
 
-??  allow materials in 'facades', 'walls' (etc) to not exist,
+NO: allow materials in 'facades', 'walls' (etc) to not exist,
     and simply remove that entry from the table.  Same for entity
     stuff.  Hence can share room themes between DOOM and DOOM 2.
 
@@ -72,11 +75,14 @@ Caves:
 Monsters:
 REVIEW: how strength setting affects room palettes
 
+  +  set Cyberdemon to INSANE, but get none??
+
   +  in later levels, low-level monsters should be used in bigger swarms
 
 
 QUAKE II:
   +  fix street mode edges (you can fall out of the level)
+  [will be fixed when outdoor rooms get sky borders]
 
 
 Hallways:
@@ -135,6 +141,8 @@ Next WIP Goals
       responsible for the outdoor facade of buildings.
 
 +  sky borders in outdoor rooms
+
+-  ARCH_W_WINDOW
 
 
 -----------------------------------------------------------------
