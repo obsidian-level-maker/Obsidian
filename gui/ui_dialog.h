@@ -22,27 +22,6 @@
 
 void DLG_ShowError(const char *msg, ...);
 
-typedef struct extract_info_s
-{
-  const char *game;   // e.g. "Quake1"
-  const char *type;   // e.g. "the textures"
-  const char *file;   // e.g. "pak0.pak"
-  const char *dir;    // e.g. "id1", or NULL
-
-  const char *detected;  // detected filename or NULL
-}
-extract_info_t;
-
-typedef enum
-{
-  EXDLG_Abort = 1,
-  EXDLG_UseDetected  = 2,
-  EXDLG_FindManually = 3
-}
-extract_dialog_result_e;
-
-int DLG_ExtractStuff(extract_info_t *info);
-
 #endif // __DIALOG_HEADER__
 
 //--- editor settings ---
