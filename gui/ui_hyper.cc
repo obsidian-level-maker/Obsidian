@@ -34,20 +34,27 @@
 #define LINK_BLUE  FL_BLUE  // fl_rgb_color(0,0,192)
 
 
-UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label) :
+UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label,
+                           const char *_url) :
     Fl_Button(x, y, w, h, label),
-    hover(false)
+    hover(false),
+    label_X(0), label_Y(0), label_W(0), label_H(0)
 {
+  // copy the URL string
+  url = StringDup(_url);
+
   box(FL_FLAT_BOX);
   color(FL_GRAY);
   labelcolor(LINK_BLUE);
 
-  label_X = label_Y = label_W = label_H = 0;
+  // setup the callback
+  callback(callback_Link, NULL);
 }
 
 
 UI_HyperLink::~UI_HyperLink()
 {
+  StringFree(url);
 }
 
 
@@ -153,5 +160,16 @@ void UI_HyperLink::draw()
   if (Fl::focus() == this)
     draw_focus();
 */
+}
+
+
+void UI_HyperLink::callback_Link(Fl_Widget *w, void *data)
+{
+  UI_HyperLink *link = (UI_HyperLink *)w;
+
+  if (! fl_open_uri(link->url))
+  {
+    LogPrintf("\nOpen URL failed: %s\n\n", link->url);
+  }
 }
 

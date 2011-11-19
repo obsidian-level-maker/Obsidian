@@ -31,39 +31,25 @@ private:
   // area containing the label
   int label_X, label_Y, label_W, label_H;
 
+  // the URL to visit when clicked
+  const char *url;
+
 public:
-  UI_HyperLink(int x, int y, int w, int h, const char *label = NULL);
+  UI_HyperLink(int x, int y, int w, int h, const char *label,
+               const char *_url);
   virtual ~UI_HyperLink();
 
 public:
   // FLTK overrides
 
-/*
-  //! Override of Fl_Widget::color()
-  inline void color( unsigned c )
-  { col = (Fl_Color)c; Fl_Button::color(col); }
+  int handle(int event);
 
-  //! Override of Fl_Widget::color()
-  inline Fl_Color color() const
-  { return col; }
-
-  //! Override of Fl_Widget::selection_color()
-  inline void selection_color( unsigned c )
-  { sCol = (Fl_Color)c; Fl_Button::selection_color(sCol); }
-
-  //! Override of Fl_Widget::selection_color()
-  inline Fl_Color selection_color() const
-  { return sCol; }
-*/
-
-  //! Override of Fl_Button::handle()
-  int handle( int event );
-
-  // Override of Fl_Button::draw()
   void draw();
 
 private:
   void checkLink();
+
+  static void callback_Link(Fl_Widget *w, void *data);
 };
 
 #endif /* __UI_HYPER_H__ */
