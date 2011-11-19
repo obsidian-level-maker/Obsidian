@@ -131,7 +131,7 @@ void UI_HyperLink::draw()
 
   if (align() & FL_ALIGN_LEFT)
     label_X = 2;
-  if (align() & FL_ALIGN_RIGHT)
+  else if (align() & FL_ALIGN_RIGHT)
     label_X = w() - label_W - 2;
   else
     label_X = (w() - label_W) / 2;
