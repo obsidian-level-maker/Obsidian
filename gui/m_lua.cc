@@ -416,10 +416,7 @@ int gui_ticker(lua_State *L)
 //
 int gui_abort(lua_State *L)
 {
-  int value = 0;
-
-  if (main_win && main_win->action >= UI_MainWin::ABORT)
-    value = 1;
+  int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
 
   lua_pushboolean(L, value);
   return 1;

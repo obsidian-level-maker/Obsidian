@@ -21,6 +21,7 @@
 #include "headers.h"
 #include "hdr_fltk.h"
 #include "hdr_ui.h"
+#include "main.h"
 
 #ifndef WIN32
 #include <unistd.h>
@@ -44,8 +45,7 @@ int KF = 0;
 
 static void main_win_close_CB(Fl_Widget *w, void *data)
 {
-  if (main_win)
-    main_win->action = UI_MainWin::QUIT;
+  main_action = MAIN_QUIT;
 }
 
 
@@ -53,8 +53,7 @@ static void main_win_close_CB(Fl_Widget *w, void *data)
 // MainWin Constructor
 //
 UI_MainWin::UI_MainWin(int W, int H, const char *title) :
-    Fl_Double_Window(W, H, title),
-    action(UI_MainWin::NONE)
+    Fl_Double_Window(W, H, title)
 {
   end(); // cancel begin() in Fl_Group constructor
 

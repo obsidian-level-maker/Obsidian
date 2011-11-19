@@ -520,7 +520,7 @@ static void GB_Ticker(void)
 {
   Main_Ticker();
 
-  if (main_win && main_win->action >= UI_MainWin::ABORT)
+  if (main_action >= MAIN_CANCEL)
   {
     nb_comms.cancelled = TRUE;
   }

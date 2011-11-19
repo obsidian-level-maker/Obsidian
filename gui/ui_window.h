@@ -40,16 +40,6 @@ public:
   UI_Build  *build_box;
   UI_CustomMods *mod_box;
 
-  enum  // actions
-  {
-    NONE = 0,
-    BUILD,
-    ABORT,
-    QUIT
-  };
-  
-  int action;
-
 public:
   UI_MainWin(int W, int H, const char *title);
   virtual ~UI_MainWin();

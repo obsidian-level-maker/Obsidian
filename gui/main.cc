@@ -49,6 +49,8 @@ const char *install_path = NULL;
 int screen_w;
 int screen_h;
 
+int main_action;
+
 bool batch_mode = false;
 
 const char *batch_output_file = NULL;
@@ -336,7 +338,7 @@ int Main_key_handler(int event)
       // if building is in progress, cancel it, otherwise quit
       if (game_object && ! Fl::modal())
       {
-        main_win->action = UI_MainWin::ABORT;
+        main_action = MAIN_CANCEL;
         return 1;
       }
       else
@@ -351,9 +353,9 @@ int Main_key_handler(int event)
       return 1;
 
     case FL_F+2:   // F1 = BUILD
-      if (main_win->action == UI_MainWin::NONE)
+      if (main_action == 0)
       {
-        main_win->action = UI_MainWin::BUILD;
+        main_action = MAIN_BUILD;
       }
       return 1;
 
@@ -484,8 +486,8 @@ bool Build_Cool_Shit()
 
     main_win->Locked(false);
 
-    if (main_win->action == UI_MainWin::ABORT)
-      main_win->action = UI_MainWin::NONE;
+    if (main_action == MAIN_CANCEL)
+      main_action = 0;
   }
 
   // don't need game object anymore
@@ -665,12 +667,12 @@ int main(int argc, char **argv)
       {
         Fl::wait(0.2);
 
-        if (main_win->action == UI_MainWin::QUIT)
+        if (main_action == MAIN_QUIT)
           break;
 
-        if (main_win->action == UI_MainWin::BUILD)
+        if (main_action == MAIN_BUILD)
         {
-          main_win->action = UI_MainWin::NONE;
+          main_action = 0;
 
           // save config in case everything blows up
           Cookie_Save(CONFIG_FILENAME);

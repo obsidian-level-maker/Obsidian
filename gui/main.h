@@ -39,6 +39,18 @@ extern bool batch_mode;
 
 extern const char *batch_output_file;
 
+// when this is true, user pressed 'Cancel' or has quit the program
+typedef enum
+{
+  MAIN_NONE = 0,
+  MAIN_BUILD,
+  MAIN_CANCEL,
+  MAIN_QUIT
+}
+main_action_kind_e;
+
+extern int main_action;
+
 // Misc Options
 extern bool create_backups;
 extern bool hide_module_panel;

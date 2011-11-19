@@ -337,9 +337,9 @@ void UI_Build::AddStatusStep(const char *name)
   
 void UI_Build::build_callback(Fl_Widget *w, void *data)
 {
-  if (main_win->action == UI_MainWin::NONE)
+  if (main_action == 0)
   {
-    main_win->action = UI_MainWin::BUILD;
+    main_action = MAIN_BUILD;
   }
 }
 
@@ -355,15 +355,15 @@ void UI_Build::options_callback(Fl_Widget *w, void *data)
 
 void UI_Build::stop_callback(Fl_Widget *w, void *data)
 {
-  if (main_win->action != UI_MainWin::QUIT)
+  if (main_action != MAIN_QUIT)
   {
-    main_win->action = UI_MainWin::ABORT;
+    main_action = MAIN_CANCEL;
   }
 }
 
 void UI_Build::quit_callback(Fl_Widget *w, void *data)
 {
-  main_win->action = UI_MainWin::QUIT;
+  main_action = MAIN_QUIT;
 }
 
 //--- editor settings ---
