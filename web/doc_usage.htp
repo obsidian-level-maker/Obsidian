@@ -67,7 +67,7 @@ or just press the ESCAPE key.
 </div>
 
 
-<h3>GAME SETTINGS</h3>
+<h3 id="game">GAME SETTINGS</h3>
 
 
 <p>
@@ -87,7 +87,7 @@ Other settings include:
   <li>the "Length" of the output wad (SINGLE-LEVEL, ONE-EPISODE, FULL-GAME).
 </ul>
 
-<h3>LEVEL ARCHITECTURE</h3>
+<h3 id="level">LEVEL ARCHITECTURE</h3>
 
 The Level Architecture panel lets you control general features
 of the maps, like what size they should be, what theme to use,
@@ -111,7 +111,7 @@ since a custom theme could replace one of them.
 anything yet)</I>
 
 
-<h3>PLAYING STYLE</h3>
+<h3 id="playing">PLAYING STYLE</h3>
 
 This panel is all about the gameplay.
 Here you can control the amount and strength of the
@@ -139,7 +139,7 @@ drive you insane (hence the name).
 anything yet)</I>
 
 
-<h3>MODULES PANEL</h3>
+<h3 id="modules">MODULES PANEL</h3>
 
 Modules are a great new feature in Oblige V3.
 The idea is that new functionality can be implemented
@@ -171,7 +171,7 @@ those options are not shown while the module is disabled
 (though the option settings are never forgotten).
 
 
-<h3>BUILD PANEL</h3>
+<h3 id="build">BUILD PANEL</h3>
 
 Once you've chosen the desired settings, press the "Build" button.
 This will open a Save-File dialog asking you what the output file
@@ -192,7 +192,7 @@ Blah blah blag
 --->
 
 
-<h3>QUAKE SETUP</h3>
+<h3 id="quake">QUAKE SETUP</h3>
 
 Quake levels have the unusual feature of including a full copy
 of every texture which they use.
@@ -238,7 +238,7 @@ not functional just yet)</i>
 --->
 
 
-<h3>MISC NOTES</h3>
+<h3 id="misc">MISC NOTES</h3>
 
 OBLIGE requires the full version of each game it supports.
 It will NOT work properly with shareware or demo versions,
