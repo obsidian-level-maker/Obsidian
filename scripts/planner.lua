@@ -576,7 +576,7 @@ function Plan_dump_sections(title)
 
     if K.hall then return '#' end
     if K.kind == "junction" then return '+' end
-    if K.kind == "big_junc" then return '@' end
+    if K.kind == "big_junc" then return '*' end
     if K.kind == "vert"     then return '|' end
     if K.kind == "horiz"    then return '-' end
 
