@@ -194,6 +194,9 @@ Blah blah blag
 
 <h3 id="quake">QUAKE SETUP</h3>
 
+<i>(Note: the following applies to Hexen 2 as well)</i>
+
+<p>
 Quake levels have the unusual feature of including a full copy
 of every texture which they use.
 But this is a problem for OBLIGE, as it needs to get
