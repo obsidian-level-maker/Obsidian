@@ -23,6 +23,7 @@
 
 #include "ui_dialog.h"
 #include "ui_about.h"
+#include "ui_hyper.h"
 #include "ui_map.h"
 #include "ui_rchoice.h"
 #include "ui_console.h"
