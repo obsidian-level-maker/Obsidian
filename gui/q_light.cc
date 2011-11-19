@@ -804,7 +804,12 @@ void QCOM_LightAllFaces()
     lit_luxels += F->lmap->width * F->lmap->height;
 
     if (lit_faces % 400 == 0)
+    {
       Main_Ticker();
+
+      if (main_action >= MAIN_CANCEL)
+        break;
+    }
   }
 
   LogPrintf("lit %d faces (of %u) using %d luxels\n",
