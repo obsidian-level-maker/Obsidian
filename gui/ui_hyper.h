@@ -26,7 +26,10 @@ class UI_HyperLink : public Fl_Button
 {
 private:
   int labelSize[4];
+
+  // true when mouse is over this widget
   bool hover;
+
   Fl_Color col, sCol;
 
 public:

@@ -31,16 +31,16 @@
 #include "lib_util.h"
 #include "main.h"
 
+#define LINK_BLUE  FL_BLUE  // fl_rgb_color(0,0,192)
+
 
 UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label) :
     Fl_Button(x, y, w, h, label),
     hover(false)
 {
   box(FL_FLAT_BOX);
-
   color(FL_GRAY);
-  labelcolor(FL_BLUE);
-  selection_color(FL_GRAY);
+  labelcolor(LINK_BLUE);
 }
 
 
@@ -51,12 +51,13 @@ UI_HyperLink::~UI_HyperLink()
 
 void UI_HyperLink::checkLink()
 {
-  // change the cursor if the mouse is over the link
-  // the 'hover' variable reduces the number of times fl_cursor needs to be called (since it can be expensive)
-  
+  // change the cursor if the mouse is over the link.
+  // the 'hover' variable reduces the number of times fl_cursor()
+  // needs to be called (since it can be expensive).
+
   if (Fl::event_inside(x()+labelSize[0], y()+labelSize[1], labelSize[2], labelSize[3]))
   {
-    if (!hover)
+    if (! hover)
       fl_cursor(FL_CURSOR_HAND);
 
     hover = true;
@@ -86,13 +87,6 @@ int UI_HyperLink::handle(int event)
 
     case FL_ENTER:
     {
-/*
-      if(active())
-      {
-        Fl_Button::color(fl_lighter(col));
-        Fl_Button::selection_color(fl_lighter( sCol));
-      }
-*/
       checkLink();
       redraw();
       return 1;
@@ -101,10 +95,6 @@ int UI_HyperLink::handle(int event)
 
     case FL_LEAVE:
     {
-/*
-      Fl_Button::color(col);
-      Fl_Button::selection_color(sCol);
-*/
       checkLink();
       redraw();
       return 1;
@@ -118,14 +108,10 @@ int UI_HyperLink::handle(int event)
 }
 
 
-// modified explicitly from Fl_Return_Button.cpp
 void UI_HyperLink::draw()
 {
   if (type() == FL_HIDDEN_BUTTON)
     return;
-
-  if (!active())
-    Fl_Button::color(col);
 
   // draw the link text
 
@@ -141,12 +127,19 @@ void UI_HyperLink::draw()
   fl_draw(label(), x()+labelSize[0], y()+labelSize[1],
       labelSize[2], labelSize[3], FL_ALIGN_LEFT);
 
-  if (true)
+  // draw the underline
+
+  if (! value())
   {
     fl_line_style(FL_SOLID);
     fl_line(x()+labelSize[0], y()+labelSize[1]+labelSize[3]-2,
         x()+labelSize[0]+labelSize[2], y()+labelSize[1]+labelSize[3]-2);
     fl_line_style(0);
   }
+
+/*
+  if (Fl::focus() == this)
+    draw_focus();
+*/
 }
 
