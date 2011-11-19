@@ -1247,6 +1247,9 @@ void Q1_ClippingHull(int hull)
   if (hull > clip_hulls)
     return;
 
+  if (main_action >= MAIN_CANCEL)
+    return;
+
 
   LogPrintf("\nClipping Hull %d...\n", hull);
 
