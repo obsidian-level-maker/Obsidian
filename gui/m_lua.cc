@@ -418,6 +418,8 @@ int gui_abort(lua_State *L)
 {
   int value = (main_action >= MAIN_CANCEL) ? 1 : 0;
 
+  Main_Ticker();
+
   lua_pushboolean(L, value);
   return 1;
 }

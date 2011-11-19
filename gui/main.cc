@@ -485,9 +485,13 @@ bool Build_Cool_Shit()
     main_win->build_box->SetAbortButton(false);
 
     main_win->Locked(false);
+  }
 
-    if (main_action == MAIN_CANCEL)
-      main_action = 0;
+  if (main_action == MAIN_CANCEL)
+  {
+    main_action = 0;
+
+    Main_ProgStatus("Cancelled");
   }
 
   // don't need game object anymore
