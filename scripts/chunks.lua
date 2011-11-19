@@ -921,6 +921,10 @@ function CHUNK_CLASS.build(C)
   local x2, y2 = C.x2, C.y2
 
 
+  -- !!!!!!! testing junk
+  if C.hall then f_h = f_h + rand.irange(-11,11) end
+
+
   -- Spot stuff : begin with "clear" rectangle (contents = 0).
   --              walls and high barriers get removed (contents = 1)
   --              as well as other unusable places (contents = 2).
@@ -1144,8 +1148,9 @@ function CHUNK_CLASS.build(C)
       else
         -- SOLID WALL
 
+        -- !!!!!!! FIXME: the '4' should be '0'
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                       0, long, thick, 0)
+                                       0, long, thick, 4)
 
         local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
         assert(skin)
