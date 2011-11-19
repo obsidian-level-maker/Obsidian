@@ -2079,6 +2079,8 @@ function Monsters_make_battles()
   
   gui.printf("\n--==| Make Battles |==--\n\n")
 
+  gui.prog_step("Mons");
+
   Player_init()
 
   Monsters_init()

@@ -713,10 +713,6 @@ function Levels_build_it()
     return "ok"
   end
 
---[[
-  Quake_test() ; do return "ok" end
---]]
-
   Plan_create_rooms()
   if gui.abort() then return "abort" end
 
@@ -726,12 +722,8 @@ function Levels_build_it()
   Quest_make_quests()
   if gui.abort() then return "abort" end
 
-  gui.prog_step("Rooms");
-
   Rooms_build_all()
   if gui.abort() then return "abort" end
-
-  gui.prog_step("Mons");
 
   Monsters_make_battles()
   if gui.abort() then return "abort" end
@@ -817,7 +809,7 @@ function Levels_make_level(L)
     Levels_invoke_hook("begin_level",  LEVEL.seed)
 
     local res = Levels_handle_prebuilt()
-    if res == "abort" then
+    if res != "ok" then
       return res
     end
 
@@ -847,7 +839,7 @@ function Levels_make_level(L)
 
 
   local res = Levels_build_it()
-  if res == "abort" then
+  if res != "ok" then
     return res
   end
 

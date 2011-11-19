@@ -1668,6 +1668,8 @@ function Rooms_build_all()
 
   gui.printf("\n--==| Build Rooms |==--\n\n")
 
+  gui.prog_step("Rooms");
+
   Rooms_select_textures()
 
 ---!!!  Rooms_setup_symmetry()
