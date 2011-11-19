@@ -83,6 +83,7 @@ private:
   }
 
   static const char *Text;
+  static const char *URL;
 };
 
 
@@ -98,6 +99,9 @@ const char *UI_About::Text =
   "\n"
   "There is ABSOLUTELY NO WARRANTY\n"
   "Use at your OWN RISK";
+
+
+const char *UI_About::URL = "http://oblige.sourceforge.net";
 
 
 //
@@ -142,7 +146,8 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 
   // website address
-  UI_HyperLink *link = new UI_HyperLink(10, cy, W-20, 30, "http://oblige.sourceforge.net");
+
+  UI_HyperLink *link = new UI_HyperLink(10, cy, W-20, 30, URL, URL);
   link->align(FL_ALIGN_CENTER);
   link->labelsize(20);
   add(link);
