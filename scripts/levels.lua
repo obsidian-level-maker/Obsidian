@@ -853,6 +853,8 @@ function Levels_make_level(L)
     Levels_between_clean()
   end
 
+  if gui.abort() then return "abort" end
+
   return "ok"
 end
 
