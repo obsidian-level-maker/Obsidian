@@ -362,6 +362,14 @@ function Plan_create_sections()
   local free_seeds = 4
 
 
+  local function dump_sizes(line, t, N)
+    for i = 1,N do
+      line = line .. tostring(t[i]) .. " "
+    end
+    gui.printf("%s\n", line)
+  end
+
+
   local function pick_sizes(W, min_size, limit)
     local size_table = table.copy(SIZE_TABLE)
     if min_size >= 3 then size_table[1] = 0 end   
@@ -404,15 +412,19 @@ function Plan_create_sections()
 
     gui.printf("Adjusting column/row sizes....\n")
 
-    while total > limit do
+    for loop = 1,200 do
+      if total <= limit then
+        return sizes  -- OK!
+      end
+
       -- find a section size to shrink
       local x = rand.irange(1, W)
 
-      while x < W and sizes[x*2] <= min_size do
+      while x <= W and sizes[x*2] <= min_size do
         x = x + 1
       end
 
-      if x < W then
+      if x <= W then
         sizes[x*2] = sizes[x*2] - 1
         total = total - 1
       end
@@ -421,18 +433,23 @@ function Plan_create_sections()
       if total > limit and rand.odds(25) then
         x = rand.irange(1, W-1)
 
-        while x < W-1 and sizes[x*2+1] <= 1 do
+        while x <= W-1 and sizes[x*2+1] <= 1 do
           x = x + 1
         end
 
-        if x < W-1 then
+        if x <= W-1 then
           sizes[x*2+1] = sizes[x*2+1] - 1
           total = total - 1
         end
       end 
     end
 
-    return sizes
+    -- the assert() above should mean we never get here
+
+    gui.debugf("W:%d min_size:%d limit:%d\n", W, min_size, limit)
+    dump_sizes("Failed sizes: ", sizes, W*2 + 1)
+
+    error("pick_sizes failed")
   end
 
 
@@ -445,14 +462,6 @@ function Plan_create_sections()
     end
 
     return pos
-  end
-
-
-  local function dump_sizes(line, t, N)
-    for i = 1,N do
-      line = line .. tostring(t[i]) .. " "
-    end
-    gui.printf("%s\n", line)
   end
 
 
