@@ -110,6 +110,25 @@ function Areas_handle_connections()
   end
 
 
+  local function chunk_for_crossover(H, K)
+    local R = K.room
+
+    assert(R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2))
+    
+    C = R:alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2)
+
+    C.foobage = "crossover"
+    C.crossover_hall = H
+    C.section = K
+
+    if K.orig_kind == "junction" then
+      C.cross_junc = true
+    end
+
+    return C
+  end
+
+
   local function chunk_for_section_side(K, dir, other_K, is_double)
     -- sections are guaranteed to stay aligned, so calling this
     -- function on two touching sections will provide two chunks
@@ -239,9 +258,6 @@ function Areas_handle_connections()
 
 
   local function handle_conn(D)
-    -- teleporters are done elsewhere (as an "important")
-    if D.kind == "teleporter" then return end
-
     assert(D.K1 and D.dir1)
     assert(D.K2 and D.dir2)
 
@@ -263,29 +279,26 @@ function Areas_handle_connections()
 
 
   local function handle_crossover(H)
-    if not H.crossover then return end
-
-    -- this presumes the chunks are in a simple sequence (first to last)
-    for i = 1, #H.chunks - 1 do
-      local C1 = H.chunks[i]
-      local C2 = H.chunks[i+1]
-
-      local dir
-
-          if C2.sx1 == C1.sx2 + 1 then dir = 6
-      elseif C2.sx2 == C1.sx1 - 1 then dir = 4
-      elseif C2.sy1 == C1.sy2 + 1 then dir = 8
-      elseif C2.sy2 == C1.sy1 - 1 then dir = 2
-      else error("handle_crossover : weird dir!")
+    -- create the chunks in the room for the bridge / channel
+    each K in H.sections do
+      if K.room then
+        chunk_for_crossover(H, K)
       end
+    end
 
-      if C1.hall != C2.hall then
+    -- link these chunks with the hallway outside of the room
+    each K1 in H.sections do
+      if not K1.room then continue end
+
+      each dir,_ in K1.hall_path do
+        local K2 = K1:neighbor(dir)
+
+        if not K2.hall then continue end
+
+        local C1 = chunk_for_section_side(K1,    dir, K2, false)
+        local C2 = chunk_for_section_side(K2, 10-dir, K1, false)
+
         link_chunks(C1, dir, C2, nil)
-
-      -- FIXME: this doesn't work
---[[    if C1.hall then
-          C1.adjuster_dir = dir
-        end  --]]
       end
     end
   end
@@ -294,17 +307,21 @@ function Areas_handle_connections()
   ---| Areas_handle_connections |---
 
   each D in LEVEL.conns do
-    handle_conn(D)
-
+    -- teleporters are done elsewhere (as an "important")
     if D.kind != "teleporter" then
+      handle_conn(D)
+
       assert(D.C1)
       assert(D.C2)
     end
   end
 
   each H in LEVEL.halls do
-    handle_crossover(H)
+    if H.crossover then
+      handle_crossover(H)
+    end
   end
+
 end
 
 

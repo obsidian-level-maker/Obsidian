@@ -268,6 +268,8 @@ end
 
 
 function HALLWAY_CLASS.filler_chunks_in_section(H, K)
+  -- ignore crossovers
+  if K.room then return end
 
   -- junctions _always_ become a single chunk
   if K.kind == "junction" then
@@ -317,50 +319,6 @@ end end
 end
 
 
-function HALLWAY_CLASS.make_chunks(H, skip_old)
-  each K in H.sections do
-
-    if skip_old and K.used then continue end
-
-    local C
-
-    -- allocate chunk
-    if K.crossover_hall then
-      local over_R = H.crossover
-      assert(over_R:can_alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2))
-      
-      C = over_R:alloc_chunk(K.sx1, K.sy1, K.sx2, K.sy2)
-
-      C.foobage = "crossover"
-      C.crossover_hall = H
-
-      if K.orig_kind == "junction" then
-        C.cross_junc = true
-      end
-    else
-      C = CHUNK_CLASS.new(K.sx1, K.sy1, K.sx2, K.sy2)
-      C.hall = H
-      C:install()
-    end
-
-    -- meh meh meh
-    C.section = K
-
-    table.insert(H.chunks, C)
-
-    -- store hallway in seed map
-    -- FIXME: THIS IS DONE IN alloc_chunk() method
-    if not C.crossover_hall then
-    for sx = C.sx1,C.sx2 do for sy = C.sy1,C.sy2 do
-      local S = SEEDS[sx][sy]
-      assert(not S.room and not S.hall)
-      S.hall = H
-    end end
-    end
-  end
-end
-
-
 function HALLWAY_CLASS.add_it(H)
   table.insert(LEVEL.halls, H)
 
@@ -385,9 +343,6 @@ function HALLWAY_CLASS.add_it(H)
     end
   end
 
----!!!  -- FIXME: NOT HERE (later on)
----!!!  H:make_chunks(false)
-
   if #H.sections > 1 then
     LEVEL.hall_quota = LEVEL.hall_quota - #H.sections
   end
@@ -405,8 +360,6 @@ function HALLWAY_CLASS.merge_it(old_H, new_H)
   each K in new_H.sections do
     table.insert(old_H.sections, K)
   end
-
-  old_H:make_chunks(true)
 
   LEVEL.hall_quota = LEVEL.hall_quota - #new_H.sections
 
@@ -895,8 +848,6 @@ function Hallway_add_doubles()
 
      left_K.hall_path[right_dir] = room_K.room
     right_K.hall_path[ left_dir] = room_K.room
-
----    H:make_chunks(true)
 
     return true
   end
