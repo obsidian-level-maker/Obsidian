@@ -62,7 +62,7 @@ class ZONE
 
   volume : number  -- total of all rooms
 
----##  parent : ZONE
+  themes[kind] : list(name)  -- main room themes to use
 }
 
 
@@ -146,7 +146,7 @@ ZONE_CLASS = {}
 
 function ZONE_CLASS.new()
   local id = 1 + #LEVEL.zones
-  local Z = { id=id, rooms={} }
+  local Z = { id=id, rooms={}, themes={} }
   table.set_class(Z, ZONE_CLASS)
   table.insert(LEVEL.zones, Z)
   return Z
@@ -472,9 +472,9 @@ function Quest_assign_room_themes()
   -- per ZONE, where 0 means the whole level.
   local EXTENT_TAB = {}
 
-  local function total_for_room_kind(kind)
+  local function total_of_room_kind(kind)
     if kind == "hallway" then
-      return #LEVEL.halls * 0.5
+      return #LEVEL.halls * 0.7
     end
 
     local total = 0
@@ -489,8 +489,8 @@ function Quest_assign_room_themes()
   end
 
 
-  local function adjust_room_kind(kind, A, B)
-    local qty = total_for_room_kind(kind)
+  local function extent_for_room_kind(kind, A, B, C)
+    local qty = total_of_room_kind(kind)
 
     -- rough calculation of room area per zone
     qty = qty / #LEVEL.zones
@@ -505,16 +505,60 @@ function Quest_assign_room_themes()
 
 
   local function determine_extents()
-    adjust_room_kind("building", 3, 8)
-    adjust_room_kind("cave",     3, 8)
-    adjust_room_kind("hallway",  3, 8)
-    adjust_room_kind("outdoor",  3, 8)
+    extent_for_room_kind("building", 3, 8, 14)
+    extent_for_room_kind("cave",     3, 8, 14)
+    extent_for_room_kind("outdoor",  3, 8, 14)
+    extent_for_room_kind("hallway",  3, 6, 10)
+  end
+
+
+  local function pick_themes_for_kind(kind, extent)
+    -- figure out which table to use
+    local tab_name = kind .. "s"
+    local tab = THEME[tab_name]
+
+    if not tab and kind == "hallway" then
+      tab = THEME["buildings"]
+    end
+
+    if not tab then
+      error("Theme is missing " .. tab_name .. " choices")
+    end
+
+    -- copy the table so we can modify probabilities
+    tab = table.copy(tab)
+
+    local global_theme
+
+    if extent == 0 then
+      global_theme = rand.key_by_probs(tab)
+    end
+
+    each Z in LEVEL.zones do
+      Z.themes[kind] = {}
+
+      if global_theme then
+        table.insert(Z.themes, global_theme)
+        continue
+      end
+
+      for loop = 1, extent do
+        local name = rand.key_by_probs(tab)
+        -- try not to re-use the same theme again
+        tab[name] = tab[name] / 20
+
+        table.insert(Z.themes, name)
+      end
+    end
   end
 
 
   local function assign_theme(L)
     assert(EXTENT_TAB[L.kind])
 
+    -- !!!!!!!!!!
+
+--[[
     -- one hallway theme per zone
     if L.kind == "hallway" and L.zone.hallway_theme then
       L.theme = L.zone.hallway_theme
@@ -559,6 +603,7 @@ function Quest_assign_room_themes()
     end
 
     gui.printf("\n")
+--]]
   end
 
 
@@ -568,6 +613,8 @@ function Quest_assign_room_themes()
     if THEME.facades then
       global_facades = table.copy(THEME.facades)
     end
+
+    -- !!!!!! FIXME: global_facades NOT USED??
 
     each Z in LEVEL.zones do
       local tab = THEME.facades
