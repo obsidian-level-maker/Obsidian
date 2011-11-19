@@ -377,6 +377,9 @@ function Connect_scan_sections(mode, min_score)
     for dir = 2,8,2 do
       Hallway_test_branch(K, dir, mode)
     end
+
+    -- this function can be expensive, so check for user abort
+    if gui.abort() then return end
   end end
 
   -- failed to find any connection?
@@ -461,6 +464,8 @@ function Connect_rooms()
   -- add connections until all rooms are reachable
   while count_groups() >= 2 do
     Connect_scan_sections("normal", -999)
+
+    if gui.abort() then return end
   end
 
   Connect_decide_start_room()
@@ -542,6 +547,8 @@ function Connect_cycles()
 
     for i = 1,quota do
       Connect_scan_sections("cycle", 0)
+
+      if gui.abort() then return end
     end
   end
 
