@@ -467,7 +467,54 @@ end
 
 function Quest_assign_room_themes()
  
+  -- figure out how many room themes to use for each kind of room.
+  -- keys are room kinds ("building" etc) and value is number of themes
+  -- per ZONE, where 0 means the whole level.
+  local EXTENT_TAB = {}
+
+  local function total_for_room_kind(kind)
+    if kind == "hallway" then
+      return #LEVEL.halls * 0.5
+    end
+
+    local total = 0
+
+    each R in LEVEL.rooms do
+      if R.kind == kind then
+        total = total + R.base_tvol
+      end
+    end
+
+    return total
+  end
+
+
+  local function adjust_room_kind(kind, A, B)
+    local qty = total_for_room_kind(kind)
+
+    -- rough calculation of room area per zone
+    qty = qty / #LEVEL.zones
+
+        if qty < A then EXTENT_TAB[kind] = 0
+    elseif qty < B then EXTENT_TAB[kind] = 1
+    else                EXTENT_TAB[kind] = 2
+    end
+
+    gui.debugf("EXTENT_TAB[%s] --> %d (qty:%1.1f)\n", kind, EXTENT_TAB[kind], qty)
+  end
+
+
+  local function determine_extents()
+    adjust_room_kind("building", 3, 8)
+    adjust_room_kind("cave",     3, 8)
+    adjust_room_kind("hallway",  3, 8)
+    adjust_room_kind("outdoor",  3, 8)
+  end
+
+
   local function assign_theme(L)
+    assert(EXTENT_TAB[L.kind])
+
     -- one hallway theme per zone
     if L.kind == "hallway" and L.zone.hallway_theme then
       L.theme = L.zone.hallway_theme
@@ -552,6 +599,8 @@ function Quest_assign_room_themes()
 
 
   ---| Quest_assign_room_themes |---
+
+  determine_extents()
 
   each R in LEVEL.rooms do
     assign_theme(R)
