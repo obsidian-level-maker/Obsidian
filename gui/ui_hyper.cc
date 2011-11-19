@@ -41,6 +41,8 @@ UI_HyperLink::UI_HyperLink(int x, int y, int w, int h, const char *label) :
   box(FL_FLAT_BOX);
   color(FL_GRAY);
   labelcolor(LINK_BLUE);
+
+  label_X = label_Y = label_W = label_H = 0;
 }
 
 
@@ -55,7 +57,7 @@ void UI_HyperLink::checkLink()
   // the 'hover' variable reduces the number of times fl_cursor()
   // needs to be called (since it can be expensive).
 
-  if (Fl::event_inside(x()+labelSize[0], y()+labelSize[1], labelSize[2], labelSize[3]))
+  if (Fl::event_inside(x()+label_X, y()+label_Y, label_W, label_H))
   {
     if (! hover)
       fl_cursor(FL_CURSOR_HAND);
@@ -113,27 +115,37 @@ void UI_HyperLink::draw()
   if (type() == FL_HIDDEN_BUTTON)
     return;
 
+  // determine where to draw the label
+
+  label_X = label_Y = label_W = label_H = 0;
+
+  fl_font(labelfont(), labelsize());
+  fl_measure(label(), label_W, label_H, 1);
+
+  if (align() & FL_ALIGN_LEFT)
+    label_X = 2;
+  if (align() & FL_ALIGN_RIGHT)
+    label_X = w() - label_W - 2;
+  else
+    label_X = (w() - label_W) / 2;
+
+  label_Y += h() / 2 - labelsize() / 2 - 2;
+
   // draw the link text
 
   fl_draw_box(box(), x(), y(), w(), h(), color());
-  labelSize[0] = labelSize[1] = labelSize[2] = labelSize[3] = 0;
-  fl_font(labelfont(), labelsize());
-  fl_measure(label(), labelSize[2], labelSize[3], 1);
-
-  labelSize[0] += 2;
-  labelSize[1] += h()/2 - labelsize()/2 - 2;
 
   fl_color(labelcolor());
-  fl_draw(label(), x()+labelSize[0], y()+labelSize[1],
-      labelSize[2], labelSize[3], FL_ALIGN_LEFT);
+  fl_draw(label(), x() + label_X, y() + label_Y, label_W, label_H, FL_ALIGN_LEFT);
 
   // draw the underline
 
   if (! value())
   {
+    int yy = y() + label_Y + label_H-2;
+
     fl_line_style(FL_SOLID);
-    fl_line(x()+labelSize[0], y()+labelSize[1]+labelSize[3]-2,
-        x()+labelSize[0]+labelSize[2], y()+labelSize[1]+labelSize[3]-2);
+    fl_line(x() + label_X, yy, x() + label_X + label_W, yy);
     fl_line_style(0);
   }
 
