@@ -142,12 +142,12 @@ UI_About::UI_About(int W, int H, const char *label) :
 
 
   // website address
-  box = new Fl_Box(10, cy, W-20, 30, "http://oblige.sourceforge.net");
-  box->align(FL_ALIGN_INSIDE | FL_ALIGN_CENTER);
-  box->labelsize(20);
-  add(box);
+  UI_HyperLink *link = new UI_HyperLink(10, cy, W-20, 30, "http://oblige.sourceforge.net");
+  link->align(FL_ALIGN_CENTER);
+  link->labelsize(20);
+  add(link);
 
-  cy += box->h() + 10;
+  cy += link->h() + 10;
 
 
   SYS_ASSERT(cy < H);
