@@ -38,7 +38,8 @@ static void dialog_close_CB(Fl_Widget *w, void *data)
 
 #define FONT_SIZE  18
 
-static void DialogShowAndRun(const char *message, const char *title)
+static void DialogShowAndRun(const char *message, const char *title,
+                             const char *link_title, const char *link_url)
 {
   dialog_result = 0;
 
@@ -61,6 +62,9 @@ static void DialogShowAndRun(const char *message, const char *title)
 
   int total_W = 10 + ICON_W + 10 + mesg_W + 10;
   int total_H = 10 + mesg_H + 10 + BTN_H  + 10;
+
+  if (link_title)
+    total_H += FONT_SIZE + 8;
 
   // create window...
   Fl_Window *dialog = new Fl_Window(0, 0, total_W, total_H, title);
@@ -90,6 +94,20 @@ static void DialogShowAndRun(const char *message, const char *title)
 
   dialog->add(box);
 
+  // create the hyperlink...
+  if (link_title)
+  {
+    SYS_ASSERT(link_url);
+
+    UI_HyperLink *link = new UI_HyperLink(ICON_W + 20, 10 + mesg_H, mesg_W, 24,
+                                          link_title, link_url);
+    link->align(FL_ALIGN_INSIDE | FL_ALIGN_LEFT);
+    link->labelfont(FL_HELVETICA);
+    link->labelsize(FONT_SIZE);
+
+    dialog->add(link);
+  }
+
   // create button...
   Fl_Button *button =
     new Fl_Button(total_W - BTN_W - 20, total_H - BTN_H - 12,
@@ -118,6 +136,44 @@ static void DialogShowAndRun(const char *message, const char *title)
 }
 
 
+static void ParseHyperLink(char *buffer, unsigned int buf_len,
+                           const char ** link_title, const char ** link_url)
+{
+  // the syntax for a hyperlink is similar to HTML :-
+  //    <a http://blah.blah.org/foobie.html>Title</a>
+
+  char *pos = strstr(buffer, "<a ");
+
+  if (! pos)
+    return;
+
+  // terminate the rest of the message here
+  pos[0] = '\n';
+  pos[1] = 0;
+
+  pos += 3;
+
+  *link_url = pos;
+  
+  pos = strstr(pos, ">");
+
+  if (! pos)  // malformed : oh well
+    return;
+
+  // terminate the URL here
+  pos[0] = 0;
+
+  pos++;
+
+  *link_title = pos;
+
+  pos = strstr(pos, "<");
+
+  if (pos)
+    pos[0] = 0;
+}
+
+
 void DLG_ShowError(const char *msg, ...)
 {
   static char buffer[MSG_BUF_LEN];
@@ -132,8 +188,14 @@ void DLG_ShowError(const char *msg, ...)
 
   LogPrintf("\n%s\n\n", buffer);
 
+  const char *link_title = NULL;
+  const char *link_url   = NULL;
+
+  // handle error messages with a hyperlink at the end
+  ParseHyperLink(buffer, sizeof(buffer), &link_title, &link_url);
+
   if (! batch_mode)
-    DialogShowAndRun(buffer, "Oblige - Error Message");
+    DialogShowAndRun(buffer, "Oblige - Error Message", link_title, link_url);
 }
 
 //--- editor settings ---
