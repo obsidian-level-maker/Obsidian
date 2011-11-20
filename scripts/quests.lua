@@ -497,7 +497,8 @@ function Quest_assign_room_themes()
 
         if qty < A then EXTENT_TAB[kind] = 0
     elseif qty < B then EXTENT_TAB[kind] = 1
-    else                EXTENT_TAB[kind] = 2
+    elseif qty < C then EXTENT_TAB[kind] = 2
+    else                EXTENT_TAB[kind] = 3
     end
 
     gui.debugf("EXTENT_TAB[%s] --> %d (qty:%1.1f)\n", kind, EXTENT_TAB[kind], qty)
@@ -512,7 +513,26 @@ function Quest_assign_room_themes()
   end
 
 
-  local function pick_themes_for_kind(kind, extent)
+  local function dump_dominant_themes()
+    gui.debugf("Dominant themes:\n")
+
+    each Z in LEVEL.zones do
+      gui.debugf("  @ %s:\n", Z:tostr())
+
+      each kind,extent in EXTENT_TAB do
+        local line = ""
+
+        each name in Z.themes[kind] do
+          line = line .. " " .. name
+        end
+
+        gui.debugf("    %s : {%s }\n", kind, line)
+      end
+    end
+  end
+
+
+  local function dominant_themes_for_kind(kind, extent)
     -- figure out which table to use
     local tab_name = kind .. "s"
     local tab = THEME[tab_name]
@@ -525,8 +545,16 @@ function Quest_assign_room_themes()
       error("Theme is missing " .. tab_name .. " choices")
     end
 
-    -- copy the table so we can modify probabilities
-    tab = table.copy(tab)
+    -- copy the table, so we can modify probabilities
+    local old_tab = tab ; tab = table.copy(tab)
+
+    -- remove the rare rooms
+    each name,prob in old_tab do
+      local rt = assert(GAME.ROOM_THEMES[name])
+      if rt.rarity then tab[name] = nil end
+    end
+
+    assert(not table.empty(tab))
 
     local global_theme
 
@@ -538,7 +566,7 @@ function Quest_assign_room_themes()
       Z.themes[kind] = {}
 
       if global_theme then
-        table.insert(Z.themes, global_theme)
+        table.insert(Z.themes[kind], global_theme)
         continue
       end
 
@@ -547,16 +575,17 @@ function Quest_assign_room_themes()
         -- try not to re-use the same theme again
         tab[name] = tab[name] / 20
 
-        table.insert(Z.themes, name)
+        table.insert(Z.themes[kind], name)
       end
     end
   end
 
 
-  local function assign_theme(L)
+  local function assign_theme(L, index)
     assert(EXTENT_TAB[L.kind])
 
     -- !!!!!!!!!!
+    L.theme = GAME.ROOM_THEMES["D2_Tech_room"]
 
 --[[
     -- one hallway theme per zone
@@ -649,8 +678,16 @@ function Quest_assign_room_themes()
 
   determine_extents()
 
-  each R in LEVEL.rooms do
-    assign_theme(R)
+  each kind,extent in EXTENT_TAB do
+    dominant_themes_for_kind(kind, extent)
+  end
+
+  dump_dominant_themes()
+
+  each Z in LEVEL.zones do
+    each R in Z.rooms do
+      assign_theme(R, _index)
+    end
   end
 
   each H in LEVEL.halls do
