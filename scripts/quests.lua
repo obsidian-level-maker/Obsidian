@@ -744,9 +744,9 @@ function Quest_assign_room_themes()
     end
   end
 
-  each H in LEVEL.halls do
-    assign_theme(H, _index)
-  end
+  -- verify each room / hall got a theme
+  each R in LEVEL.rooms do assert(R.theme) end
+  each H in LEVEL.halls do assert(H.theme) end
 
   select_facades()
 end
