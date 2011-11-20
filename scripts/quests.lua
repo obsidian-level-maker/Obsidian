@@ -1027,27 +1027,12 @@ gui.debugf("Added %s --> %s\n", L:tostr(), Z:tostr())
 
   LEVEL.zones = {}
 
-  local base = (MAP_W + MAP_H) / 6
-  local zone_quota = base * rand.pick({ 1.3, 1.7, 2.1, 2.5 })
-
   local keys = LEVEL.usable_keys or THEME.keys or {}
   local num_keys = table.size(keys)
 
-  if zone_quota > 1 + num_keys then
-     zone_quota = 1 + num_keys
-  end
-
-  -- TODO: this will need tweaking
-  -- [IDEA: adjust this instead of having a zone quota]
   local min_tvol = 4.5
 
-  zone_quota = int(zone_quota)
-
-  gui.printf("Zone quota: %d (tvol >= %1.1f)\n\n", zone_quota, min_tvol)
-
-
   collect_rooms_and_halls()
-
 
   while true do
     local L = find_branch_for_zone(min_tvol)
@@ -1076,10 +1061,8 @@ dump_room_flow(LEVEL.start_room)
     assert(L.zone)
   end
 
-
   -- if too many zones, merge some
-
-  while #LEVEL.zones > zone_quota do
+  while #LEVEL.zones > 1 + num_keys do
     merge_a_zone()
   end
 
