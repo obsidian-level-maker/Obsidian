@@ -559,7 +559,14 @@ end
 function Rooms_select_textures()
 
   local function select_textures(L)
-    local tab = L.theme.walls or L.theme.naturals
+    local tab
+
+    if L.kind == "outdoor" or L.kind == "cave" then
+      tab = L.theme.naturals or THEME.naturals
+    else
+      tab = L.theme.walls or THEME.walls
+    end
+
     assert(tab)
 
     -- FIXME: too simple?

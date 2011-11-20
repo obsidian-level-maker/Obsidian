@@ -1326,7 +1326,7 @@ end
 
   C:do_content()
 
-  -- [[ debugging aid
+  --[[ debugging aid
   local mx, my = C:mid_point()
   entity_helper("dummy", mx, my, f_h + 24)
   --]]
