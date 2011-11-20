@@ -71,12 +71,9 @@ OB_THEMES["psycho"] =
 }
 
 
--- room layout stuff
+-- important constants
+
 SEED_SIZE = 192
 
 EXTREME_H = 4000
-
--- special prefab value
-INF = 9999
-
 
