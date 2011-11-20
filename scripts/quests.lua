@@ -159,6 +159,7 @@ function ZONE_CLASS.new()
     id = id
     rooms = {}
     themes = {}
+    previous = {}
     rare_used = {}
   }
   table.set_class(Z, ZONE_CLASS)
@@ -531,7 +532,7 @@ function Quest_assign_room_themes()
     gui.debugf("Dominant themes:\n")
 
     each Z in LEVEL.zones do
-      gui.debugf("  @ %s:\n", Z:tostr())
+      gui.debugf("@ %s:\n", Z:tostr())
 
       each kind,extent in EXTENT_TAB do
         local line = ""
@@ -540,7 +541,7 @@ function Quest_assign_room_themes()
           line = line .. " " .. name
         end
 
-        gui.debugf("    %s : {%s }\n", kind, line)
+        gui.debugf("   %s : {%s }\n", kind, line)
       end
     end
   end
@@ -596,12 +597,37 @@ function Quest_assign_room_themes()
   end
 
 
-  local function pick_rare_room(kind)
-    -- FIXME
+  local function pick_rare_room(L)
+    local tab_name = L.kind .. "s"
+    local tab_orig = THEME[tab_name]
+
+    if not tab_orig then return nil end
+
+    local tab = table.copy(tab_orig)
+
+    -- remove non-rare themes and already used themes
+    each name,prob in tab_orig do
+      local rt = assert(GAME.ROOM_THEMES[name])
+
+      if not rt.rarity or
+         (rt.rarity == "zone"  and L.zone.rare_used[name]) or
+         (rt.rarity == "level" and  LEVEL.rare_used[name]) or
+         (rt.rarity == "episode" and EPISODE.rare_used[name])
+      then
+        tab[name] = nil
+      end
+    end
+
+    -- nothing is possible?
+    if table.empty(tab) then
+      return nil
+    end
+
+    return rand.key_by_probs(tab)
   end
 
 
-  local function assign_theme(L)
+  local function assign_theme(L, index)
     local theme_list = L.zone.themes[L.kind]
     local  prev_list = L.zone.previous[L.kind]
 
@@ -609,16 +635,35 @@ function Quest_assign_room_themes()
     assert( prev_list)
 
     local theme_name
-    local rarity
 
-    -- FIXME:
-    -- if BLAH-BLAH then
-    --   theme_name, rarity = try_pick_rare_room()
-    -- end
+    if (index % 2) == 0 and rand.odds(30) then
+      theme_name = pick_rare_room(L)
+    end
+
+    if not theme_name and #theme_list == 1 then
+      theme_name = theme_list[1]
+    end
 
     if not theme_name then
-      --!!!!!!!! BLAH BLAH
-      theme_name = "D2_Tech_room"
+      local prev_count = 0
+
+      if prev_list[1] then prev_count = 1 end
+      if prev_list[2] and prev_list[2] == prev_list[1] then prev_count = 2 end
+      if prev_list[3] and prev_list[3] == prev_list[1] then prev_count = 3 end
+
+      -- logic to re-use a previous theme
+      if (prev_count == 1 and rand.odds(80)) or
+         (prev_count == 2 and rand.odds(50)) or
+         (prev_count == 3 and rand.odds(20))
+      then
+        theme_name = prev_list[1]
+      else
+        -- use a new one
+        theme_name = theme_list[1]
+
+        -- rotate the theme list
+        table.insert(theme_list, table.remove(theme_list, 1))
+      end
     end
 
     L.theme = GAME.ROOM_THEMES[theme_name]
@@ -629,13 +674,13 @@ function Quest_assign_room_themes()
 
     gui.printf("Room theme for %s : %s\n", L:tostr(), theme_name)
 
-    if not rarity then
-      table.insert(prev_list, theme_name)
-    elseif rarity == "zone" then
+    if not L.theme.rarity then
+      table.insert(prev_list, 1, theme_name)
+    elseif L.theme.rarity == "zone" then
       L.zone.rare_used[theme_name] = 1
-    elseif rarity == "level" then
+    elseif L.theme.rarity == "level" then
       LEVEL.rare_used[theme_name] = 1
-    elseif rarity == "episode" then
+    elseif L.theme.rarity == "episode" then
       EPISODE.rare_used[theme_name] = 1
     end
   end
@@ -695,12 +740,12 @@ function Quest_assign_room_themes()
 
   each Z in LEVEL.zones do
     each R in Z.rooms do
-      assign_theme(R)
+      assign_theme(R, _index)
     end
   end
 
   each H in LEVEL.halls do
-    assign_theme(H)
+    assign_theme(H, _index)
   end
 
   select_facades()
