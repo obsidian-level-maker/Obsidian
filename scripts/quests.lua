@@ -65,6 +65,8 @@ class ZONE
   themes[kind] : list(name)  -- main room themes to use
 
   previous[kind] : list(name)
+
+  facade_mat  -- material to use for building exteriors (can be NIL)
 }
 
 
@@ -217,44 +219,6 @@ function ZONE_CLASS.merge(Z1, Z2)
 ---##  end
 
   ZONE_CLASS.remove(Z2)
-end
-
-
-function ZONE_CLASS.facade_from_rooms(Z, require_kind)
-  each R in Z.rooms do
-    if require_kind and R.kind != require_kind then
-      continue
-    end
-
-    -- ignore special rooms
-    if R.rarity then continue end
-
-    local tab = R.theme.walls or R.theme.naturals
-    assert(tab)
-
-    -- adjust probabilities, try to pick a unique facade
-    tab = table.copy(tab)
-
-    -- never pick any pseudo-materials
-    if tab["_FACADE"] then
-      tab["_FACADE"] = nil
-    end
-
-    if table.empty(tab) then
-      continue
-    end
-
-    each Z2 in LEVEL.zones do
-      if Z2.facade_mat and tab[Z2.facade_mat] then
-        tab[Z2.facade_mat] = tab[Z2.facade_mat] / 20
-      end
-    end
-
-    return rand.key_by_probs(tab)
-  end
-
-  -- no matching rooms
-  return nil
 end
 
 
@@ -627,6 +591,33 @@ function Quest_assign_room_themes()
   end
 
 
+  local function facade_from_room_theme(L)
+    local facade_tab = L.theme.facades or LEVEL.global_facades or
+                       L.theme.walls   or THEME.walls
+    assert(facade_tab)
+
+    -- remove any pseudo-materials
+    local tab = table.copy(facade_tab)
+
+    if tab["_FACADE"] then
+       tab["_FACADE"] = nil
+    end
+
+    if table.empty(tab) then
+      return nil
+    end
+
+    local mat = rand.key_by_probs(tab)
+
+    L.zone.facade_mat = mat
+
+    -- prefer not to use the same facade again
+    if facade_tab == LEVEL.global_facades then
+      facade_tab[mat] = facade_tab[mat] / 20
+    end
+  end
+
+
   local function assign_theme(L, index)
     local theme_list = L.zone.themes[L.kind]
     local  prev_list = L.zone.previous[L.kind]
@@ -683,44 +674,13 @@ function Quest_assign_room_themes()
     elseif L.theme.rarity == "episode" then
       EPISODE.rare_used[theme_name] = 1
     end
-  end
 
-
-  local function select_facades()
-    local global_facades
-
-    if THEME.facades then
-      global_facades = table.copy(THEME.facades)
+    -- possibly set the Zone's facade too
+    if not L.zone.facade_mat and L.kind == "building" and
+       not L.theme.rarity
+    then
+      facade_from_room_theme(L)
     end
-
-    -- !!!!!! FIXME: global_facades NOT USED??
-
-    each Z in LEVEL.zones do
-      local tab = THEME.facades
-
-      if tab then
-        Z.facade_mat = rand.key_by_probs(tab)
-
-        -- try not to use the same facade again
-        if tab == global_facades then
-          global_facades[Z.facade_mat] = global_facades[Z.facade_mat] / 20
-        end
-      
-      else
-        -- grab facade from a room (prefer a building)
-        Z.facade_mat = Z:facade_from_rooms("building") or
-                       Z:facade_from_rooms()
-      end
-
-      if not Z.facade_mat then
-        gui.printf("WARNING: missing Facade for %s\n", Z:tostr())
-        Z.facade_mat = "_ERROR"
-      else
-        gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat)
-      end
-    end
-
-    gui.printf("\n")
   end
 
 
@@ -729,6 +689,10 @@ function Quest_assign_room_themes()
   LEVEL.rare_used = {}
 
   if not EPISODE.rare_used then EPISODE.rare_used = {} end
+
+  if THEME.facades then
+    LEVEL.global_facades = table.copy(THEME.facades)
+  end
 
   determine_extents()
 
@@ -744,11 +708,13 @@ function Quest_assign_room_themes()
     end
   end
 
-  -- verify each room / hall got a theme
+  each Z in LEVEL.zones do
+    gui.printf("Facade for %s : %s\n", Z:tostr(), Z.facade_mat or "none!")
+  end
+
+  -- verify each room and hallway got a theme
   each R in LEVEL.rooms do assert(R.theme) end
   each H in LEVEL.halls do assert(H.theme) end
-
-  select_facades()
 end
 
 

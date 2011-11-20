@@ -583,12 +583,11 @@ function Rooms_select_textures()
   local function setup_skin(L)
     L.skin = {}
 
-    L.skin.wall = L.wall_mat
+    L.skin.wall   = L.wall_mat
+    L.skin.facade = L.wall_mat
     L.skin.spike_group = "spike" .. tostring(L.id)
 
-    if L.kind == "outdoor" then
-      L.skin.facade = L.wall_mat
-    else
+    if L.kind != "outdoor" and L.zone.facade_mat then
       L.skin.facade = L.zone.facade_mat
     end
   end

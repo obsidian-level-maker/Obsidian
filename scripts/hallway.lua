@@ -220,7 +220,7 @@ function HALLWAY_CLASS.try_filler_chunk(H, K, sx1, sy1, sx2, sy2,
     -- is chunk outside of used area?
     if sx2 < ux1 or sy2 < uy1 or sx1 > ux2 or sy1 > uy2 then
       C.scenic = true
-      C.mat = assert(H.zone.facade_mat) --- rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
+      C.mat = H.zone.facade_mat or H.wall_mat --- rand.pick { "CRACKLE4", "COMPBLUE", "ZIMMER8", "ASHWALL" }
     end
   end
 end
