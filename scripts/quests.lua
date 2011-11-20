@@ -63,6 +63,8 @@ class ZONE
   volume : number  -- total of all rooms
 
   themes[kind] : list(name)  -- main room themes to use
+
+  previous[kind] : list(name)
 }
 
 
@@ -91,7 +93,13 @@ QUEST_CLASS = {}
 
 function QUEST_CLASS.new(start)
   local id = 1 + #LEVEL.quests
-  local Q = { id=id, start=start, rooms={}, storage_rooms={} }
+  local Q =
+  {
+    id = id
+    start = start
+    rooms = {}
+    storage_rooms = {}
+  }
   table.set_class(Q, QUEST_CLASS)
   table.insert(LEVEL.quests, Q)
   return Q
@@ -146,7 +154,13 @@ ZONE_CLASS = {}
 
 function ZONE_CLASS.new()
   local id = 1 + #LEVEL.zones
-  local Z = { id=id, rooms={}, themes={} }
+  local Z =
+  {
+    id = id
+    rooms = {}
+    themes = {}
+    rare_used = {}
+  }
   table.set_class(Z, ZONE_CLASS)
   table.insert(LEVEL.zones, Z)
   return Z
@@ -550,8 +564,8 @@ function Quest_assign_room_themes()
 
     -- remove the rare rooms
     each name,prob in old_tab do
-      local rt = assert(GAME.ROOM_THEMES[name])
-      if rt.rarity then tab[name] = nil end
+      local rt = GAME.ROOM_THEMES[name]
+      if rt and rt.rarity then tab[name] = nil end
     end
 
     assert(not table.empty(tab))
@@ -564,6 +578,7 @@ function Quest_assign_room_themes()
 
     each Z in LEVEL.zones do
       Z.themes[kind] = {}
+      Z.previous[kind] = {}
 
       if global_theme then
         table.insert(Z.themes[kind], global_theme)
@@ -581,41 +596,30 @@ function Quest_assign_room_themes()
   end
 
 
-  local function assign_theme(L, index)
-    assert(EXTENT_TAB[L.kind])
+  local function pick_rare_room(kind)
+    -- FIXME
+  end
 
-    -- !!!!!!!!!!
-    L.theme = GAME.ROOM_THEMES["D2_Tech_room"]
 
---[[
-    -- one hallway theme per zone
-    if L.kind == "hallway" and L.zone.hallway_theme then
-      L.theme = L.zone.hallway_theme
-      return
-    -- one cave theme per level
-    elseif L.kind == "cave" and LEVEL.cave_theme then
-      L.theme = LEVEL.cave_theme
-      return
+  local function assign_theme(L)
+    local theme_list = L.zone.themes[L.kind]
+    local  prev_list = L.zone.previous[L.kind]
+
+    assert(theme_list)
+    assert( prev_list)
+
+    local theme_name
+    local rarity
+
+    -- FIXME:
+    -- if BLAH-BLAH then
+    --   theme_name, rarity = try_pick_rare_room()
+    -- end
+
+    if not theme_name then
+      --!!!!!!!! BLAH BLAH
+      theme_name = "D2_Tech_room"
     end
-
-    -- figure out which table to use
-    local tab
-    local tab_name = L.kind .. "s"
-
-    tab = THEME[tab_name]
-
-    if not tab and L.kind == "hallway" then
-      tab = THEME["buildings"]
-    end
-
-    if not tab then
-      error("Theme is missing choices table: " .. tab_name)
-    end
-
-    -- now pick one
-    -- FIXME: this is too simplistic
-
-    local theme_name = rand.key_by_probs(tab)
 
     L.theme = GAME.ROOM_THEMES[theme_name]
 
@@ -625,14 +629,15 @@ function Quest_assign_room_themes()
 
     gui.printf("Room theme for %s : %s\n", L:tostr(), theme_name)
 
-    if L.kind == "hallway" then
-      L.zone.hallway_theme = L.theme
-    elseif L.kind == "cave" then
-      LEVEL.cave_theme = L.theme
+    if not rarity then
+      table.insert(prev_list, theme_name)
+    elseif rarity == "zone" then
+      L.zone.rare_used[theme_name] = 1
+    elseif rarity == "level" then
+      LEVEL.rare_used[theme_name] = 1
+    elseif rarity == "episode" then
+      EPISODE.rare_used[theme_name] = 1
     end
-
-    gui.printf("\n")
---]]
   end
 
 
@@ -676,6 +681,10 @@ function Quest_assign_room_themes()
 
   ---| Quest_assign_room_themes |---
 
+  LEVEL.rare_used = {}
+
+  if not EPISODE.rare_used then EPISODE.rare_used = {} end
+
   determine_extents()
 
   each kind,extent in EXTENT_TAB do
@@ -686,7 +695,7 @@ function Quest_assign_room_themes()
 
   each Z in LEVEL.zones do
     each R in Z.rooms do
-      assign_theme(R, _index)
+      assign_theme(R)
     end
   end
 
