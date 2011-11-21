@@ -198,6 +198,28 @@ void snag_c::TransferSides(snag_c *other)
 }
 
 
+void snag_c::RemoveSide(int index)
+{
+  SYS_ASSERT(index < (int)sides.size());
+
+  sides[index] = sides.back();
+
+  sides.pop_back();
+}
+
+
+void snag_c::RemoveSidesForBrush(const csg_brush_c *B)
+{
+  for (int k = (int)sides.size()-1 ; k >= 0 ; k--)
+  {
+    brush_vert_c *V = sides[k];
+
+    if (V->parent == B)
+      RemoveSide(k);
+  }
+}
+
+
 brush_vert_c * snag_c::FindOneSidedVert(double z)
 {
   for (unsigned int i = 0 ; i < sides.size() ; i++)
@@ -301,6 +323,8 @@ void region_c::AddBrush(csg_brush_c *P)
 void region_c::RemoveBrush(int index)
 {
   SYS_ASSERT(index < (int)brushes.size());
+
+  RemoveSidesForBrush(brushes[index]);
 
   brushes[index] = brushes.back();
 
@@ -484,6 +508,15 @@ struct csg_brush_ptr_Compare
 void region_c::SortBrushes()
 {
   std::sort(brushes.begin(), brushes.end(), csg_brush_ptr_Compare());
+}
+
+
+void region_c::RemoveSidesForBrush(const csg_brush_c *B)
+{
+  for (unsigned int i = 0 ; i < snags.size() ; i++)
+  {
+    snags[i]->RemoveSidesForBrush(B);
+  }
 }
 
 

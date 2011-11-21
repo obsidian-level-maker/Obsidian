@@ -77,6 +77,9 @@ public:
 
   void TransferSides(snag_c *other);
 
+  void RemoveSide(int index);
+  void RemoveSidesForBrush(const csg_brush_c *B);
+
   // brush side finding functions, return NULL if not found
   brush_vert_c * FindOneSidedVert(double z);
   brush_vert_c * FindBrushVert(const csg_brush_c *B);
@@ -126,6 +129,8 @@ public:
   bool ContainsPoint(double x, double y) const;
 
   void SortBrushes();
+
+  void RemoveSidesForBrush(const csg_brush_c *B);
 
   // this requires CSG_SortBrushes() to have been called earlier
   bool HasSameBrushes(const region_c *other) const;
