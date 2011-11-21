@@ -1148,9 +1148,8 @@ function CHUNK_CLASS.build(C)
       else
         -- SOLID WALL
 
-        -- !!!!!!! FIXME: the '4' should be '0'
         local T = Trans.edge_transform(C.x1, C.y1, C.x2, C.y2, f_h, dir,
-                                       0, long, thick, 4)
+                                       0, long, thick, 0)
 
         local skin = (C.room and C.room.skin) or (C.hall and C.hall.skin)
         assert(skin)
