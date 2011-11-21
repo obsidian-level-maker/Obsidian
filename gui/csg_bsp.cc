@@ -500,6 +500,15 @@ struct csg_brush_ptr_Compare
 {
   inline bool operator() (const csg_brush_c *A, const csg_brush_c *B) const
   {
+    // want lowest bottom to be first
+    if (fabs(A->b.z - B->b.z) >= Z_EPSILON)
+      return A->b.z < B->b.z;
+
+    // if bottom is the same, want highest top to be first
+    if (fabs(A->t.z - B->t.z) >= Z_EPSILON)
+      return A->t.z > B->t.z;
+
+    // tie breaker
     return A < B;
   }
 };
