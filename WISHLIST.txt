@@ -89,6 +89,11 @@ Miscellaneous:
   -  log-print CSG stats (e.g. linedef count, plane count, etc)
 
 
+Theme System:
+
+  -  if keys are left over, can use them for non-Zone locks
+
+
 Hexen:
    !!  BOSS map : require the 2/3 hub keys to access boss room
                  NOTE: could use them to restrict progress along chain
@@ -146,6 +151,13 @@ Starting Items:
                (except perhaps in secrets)
 
 
+Storage Rooms:
+  -  actually use them for, um, storage
+
+  -  prefer adding weapons into these STORAGE rooms
+     (rather than another room in the quest, ESPECIALLY solution room)
+
+
 Weapons:
   +  update some games (Chex Quest etc) with 'level' fields,
      removing 'rarity' fields and most 'start_prob' fields.
@@ -163,6 +175,7 @@ Monsters:
      all the monsters close to each other, perhaps even
      have swarm patterns.
 
+  +  in later levels, low-level monsters should be used in bigger swarms
 
 
 Hollows:

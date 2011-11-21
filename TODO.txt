@@ -8,44 +8,41 @@ Current Work
 TEST: hyperlink code in Windows
 
 
-THEME SYSTEM:
+Theme System:
 
--  pick a hallway theme, cave theme, one or two outdoor theme
-   and one or two building themes for each zone.
-   
--  when user has seen too much of a room theme (some seed quota)
-   then pick a new one for the room, but go back to start if run out.
-
-   --> perhaps a more general "tiredness" idea : compute how much
-       of the theme has been used uptil any given point, and when
-       it exceeds a threshhold then switch room themes (and reduce
-       previous tiredness values while a different theme is in use).
-
-       [hmmm probably too complex, zones already help a lot]
-
--  support rarity="zone" in room themes, pick it, use it once and
-   never again in the zone.  support "level" keyword too.
-
-DONE:  select facades _first_, allow "_FACADE" in wall choices
-
--  if keys are left over, can use them for non-Zone locks
-
--  REVIEW: need a zone_quota ?
-
-+  split current room themes into smaller ones
+!!!  split current room themes into smaller ones
 
 
-NO: allow materials in 'facades', 'walls' (etc) to not exist,
-    and simply remove that entry from the table.  Same for entity
-    stuff.  Hence can share room themes between DOOM and DOOM 2.
+Hallways:
+>>>> don't assume all chunks can be open to each other
+     (i.e. there is a distinct path, put walls everywhere else)
 
+>>>>>> fix chunk alignment in hallway connections
 
--  Jared's DEIMOS theme additions
+DONE:  proper chunk size (in other side) when one side is a JUNCTION
 
+  !!  monsters / items in hallways
+
+  !!!  determine ceiling heights properly
+
+DONE: get double halls working again
+
+  -  get big junctions working again
+
+  -  get "merging" of one hallway into another working again
+
+  -  ability to merge the section of a "simple" hallway into
+     one of the rooms [especially to make a "Porch"].
 
 
 Caves:
   !!!!  fix spurious diagonals (at corners of room)
+
+  !!!!  use "shrinky" mode for steps too
+
+        ALGORITHM: for each cell which shrinks (including solid walls)
+                   find a floor cell to use.  Add that cell into floor
+                   _BUT_ ensure that it never shrinks itself.
 
   >>  newbie_map  : generate separate pass, check for <= 0 cells
 
@@ -72,46 +69,8 @@ Caves:
   DONE:  QUAKE: avoid caves for intermission camera
 
 
-Monsters:
-REVIEW: how strength setting affects room palettes
 
-  +  set Cyberdemon to INSANE, but get none??
-
-  +  in later levels, low-level monsters should be used in bigger swarms
-
-
-QUAKE II:
-  +  fix street mode edges (you can fall out of the level)
-  [will be fixed when outdoor rooms get sky borders]
-
-
-Hallways:
->>>> don't assume all chunks can be open to each other
-     (i.e. there is a distinct path, put walls everywhere else)
-
->>>>>> fix chunk alignment in hallway connections
-
-DONE:  proper chunk size (in other side) when one side is a JUNCTION
-
-  !!  monsters / items in hallways
-
-  !!!  determine ceiling heights properly
-
-DONE: get double halls working again
-
-  -  get big junctions working again
-
-  -  get "merging" of one hallway into another working again
-
-  -  ability to merge the section of a "simple" hallway into
-     one of the rooms [especially to make a "Porch"].
-
-
-Storage Rooms:
-  -  actually use them for, um, storage
-
-  -  prefer adding weapons into these STORAGE rooms
-     (rather than another room in the quest, ESPECIALLY solution room)
+REVIEW: how strength setting affects monster room palettes
 
 
 -----------------------------------------------------------------
@@ -130,6 +89,8 @@ Next WIP Goals
 +  proper building facades
 
    -  create "scenic" chunks in unused seeds as part of a building 
+
+   -  narrowify floor and ceiling parts next to a wall
 
 +  windows and fences
 
