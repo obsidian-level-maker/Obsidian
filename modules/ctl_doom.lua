@@ -41,25 +41,33 @@ CTL_DOOM.MON_PROBS =
   insane = 2000
 }
 
+CTL_DOOM.DENSITIES =
+{
+  none   = 0.1
+  scarce = 0.2
+  less   = 0.4
+  plenty = 0.7
+  more   = 1.2
+  heaps  = 3.3
+  insane = 9.9
+}
+
 
 function CTL_DOOM.monster_setup(self)
   for name,opt in pairs(self.options) do
     local M = GAME.MONSTERS[name]
 
     if M and opt.value != "default" then
-      local prob = CTL_DOOM.MON_PROBS[opt.value]
+      M.prob    = CTL_DOOM.MON_PROBS[opt.value]
+      M.density = CTL_DOOM.DENSITIES[opt.value]
 
       -- allow Spectres to be controlled individually
       M.replaces = nil
 
-      M.prob = prob
-      M.crazy_prob = prob
-
-      if prob >  80 then M.density = 1.0 ; M.skip_prob = 30 end
-      if prob > 180 then M.skip_prob = 0 end
-
-      -- allow it to appear as often as the user wants
+      -- loosen some of the normal restrictions
       M.level = 1
+      M.skip_prob = nil
+      M.crazy_prob = nil
     end
   end -- for opt
 end
@@ -130,22 +138,27 @@ CTL_DOOM.WEAPON_PROBS =
   loveit = 1000
 }
 
+CTL_DOOM.WEAPON_PREFS =
+{
+  none   = 1
+  scarce = 10
+  less   = 25
+  plenty = 40
+  more   = 70
+  heaps  = 100
+  loveit = 170
+}
+
 
 function CTL_DOOM.weapon_setup(self)
   for name,opt in pairs(self.options) do
     local W = GAME.WEAPONS[name]
 
     if W and opt.value != "default" then
-      local prob = CTL_DOOM.WEAPON_PROBS[opt.value]
+      W.add_prob = CTL_DOOM.WEAPON_PROBS[opt.value]
+      W.pref     = CTL_DOOM.WEAPON_PREFS[opt.value]
 
-      W.add_prob = prob
-
-      -- adjust usage preference as well
-      if W.pref and prob > 0 then
-        W.pref = W.pref * ((prob / 50) ^ 0.6)
-      end
-
-      -- allow it to appear as often as the user wants
+      -- loosen some of the normal restrictions
       W.level = 1
       W.start_prob = nil
     end
