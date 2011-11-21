@@ -450,7 +450,7 @@ function Monsters_global_palette()
     local skip_total = 0
     local mon_total  = 0
 
-    for name,_ in pairs(LEVEL.global_pal) do
+    each name,_ in LEVEL.global_pal do
       local M = GAME.MONSTERS[name]
       local prob = M.skip_prob or 50
 
@@ -488,6 +488,8 @@ function Monsters_global_palette()
       LEVEL.global_pal[name] = nil
     end
   end
+
+  gui.debugf("Monster global palette:\n%s\n", table.tostr(LEVEL.global_pal))
 
   gui.printf("\n")
 end
@@ -989,8 +991,8 @@ function Monsters_in_room(R)
       if is_small then qty = qty * 1.25 end
     else
       -- random variation
-          if rand.odds(10) then qty = qty * 0.3
-      elseif rand.odds(4)  then qty = qty * 1.9
+          if rand.odds(5) then qty = qty * 0.4
+      elseif rand.odds(5) then qty = qty * 1.9
       else
         qty = qty * rand.pick { 0.7, 1.0, 1.3 }
       end
@@ -1001,17 +1003,17 @@ function Monsters_in_room(R)
   end
 
 
-  local function tally_spots(list)
+  local function tally_spots(spot_list)
     -- This is meant to give a rough estimate, and assumes each monster
     -- fits in a 64x64 square and there is no height restrictions.
     -- We can adjust for the real monster size later.
 
     -- simple for Wolf3D :-)
-    if PARAM.tiled then return #list end
+    if PARAM.tiled then return #spot_list end
 
     local count = 0
 
-    for _,spot in ipairs(list) do
+    each spot in spot_list do
       local w, h = geom.box_size(spot.x1, spot.y1, spot.x2, spot.y2)
 
       w = int(w / 64) ; if w < 1 then w = 1 end
@@ -1028,11 +1030,11 @@ function Monsters_in_room(R)
     local factor = (info.level or 1)
 
     if OB_CONFIG.strength == "weak" then
-      return 1 / factor
+      return 2 / (1 + factor)
 
     elseif OB_CONFIG.strength == "tough" then
-      return factor
-    
+      return (factor + 1) / 2
+
     else
       return 1
     end
@@ -1073,9 +1075,8 @@ function Monsters_in_room(R)
     if THEME.monster_prefs then
       prob = prob * (THEME.monster_prefs[name] or 1)
     end
-
-    if R.room_type and R.room_type.monster_prefs then
-      prob = prob * (R.room_type.theme.monster_prefs[name] or 1)
+    if R.theme.monster_prefs then
+      prob = prob * (R.theme.monster_prefs[name] or 1)
     end
 
     if R.kind == "outdoor" or R.semi_outdoor then
@@ -1152,18 +1153,24 @@ function Monsters_in_room(R)
     -- would the monster take too long to kill?
     local max_time = MONSTER_MAX_TIME[OB_CONFIG.strength] or 8
 
-    if time > max_time then
-      d = d * max_time / time
+    if time > max_time*2 then
+      d = d / 4
+    elseif time > max_time then
+      d = d / 2
     end
 
 
     -- would the monster inflict too much damage on the player?
+
+    --> TOO FRICKIN' BAD
+
+--[[
     local max_damage = MONSTER_MAX_DAMAGE[OB_CONFIG.strength] or 100
 
     if damage > max_damage then
-      d = d * max_damage / damage
+      d = d / 
     end
-
+--]]
     return d
   end
 
@@ -1171,8 +1178,8 @@ function Monsters_in_room(R)
   local function number_of_kinds()
     local base_num
 
-    if STYLE.mon_variety == "heaps" or rand.odds(4) then return 9 end
-    if STYLE.mon_variety != "some"  or rand.odds(2) then return 1 end
+    if STYLE.mon_variety == "heaps" or rand.odds(3) then return 9 end
+    if STYLE.mon_variety != "some"  or rand.odds(3) then return 1 end
 
     if OB_CONFIG.mons == "mixed" then
       base_num = rand.range(MONSTER_KIND_TAB.scarce, MONSTER_KIND_TAB.heaps)
@@ -1287,9 +1294,9 @@ function Monsters_in_room(R)
         mon = rand.key_by_probs(LEVEL.mon_replacement[mon])
       end
 
-      -- give large monsters a boost so they are more likely to find a
-      -- usable spot.  This does not affect the desired quantity.
-      if is_big(mon) then prob = prob * 2 end
+---##   -- give large monsters a boost so they are more likely to find a
+---##   -- usable spot.  This does not affect the desired quantity.
+---##   if is_big(mon) then prob = prob * 2 end
 
       palette[mon] = prob
 
@@ -1658,7 +1665,7 @@ function Monsters_in_room(R)
 
     local total_density = densities.NONE
 
-    for mon,_ in pairs(palette) do
+    each mon,_ in palette do
       densities[mon] = density_for_mon(mon)
 
       total_density = total_density + densities[mon]
@@ -1669,7 +1676,7 @@ gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densit
     -- convert density map to monster counts
     local wants = {}
 
-    for mon,d in pairs(densities) do
+    each mon,d in densities do
       if mon != "NONE" then
         local num = want_total * d / total_density
 
@@ -1680,6 +1687,16 @@ gui.debugf("densities =  total:%1.3f\n%s\n\n", total_density, table.tostr(densit
 gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     return wants
+  end
+
+
+  local function calc_horde_size(mon, info)
+    local horde = 1
+
+    if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
+    if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
+    
+    return horde
   end
 
 
@@ -1731,7 +1748,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
     local pal2 = {}
 
-    for mon,_ in pairs(palette) do
+    each mon,_ in palette do
       pal2[mon] = 50
     end
 
@@ -1742,21 +1759,20 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
 
       if wants[mon] < 1 then
         pal2[mon] = nil
+        continue
+      end
+
+      -- figure out how many to place together
+      local horde = calc_horde_size(mon, info)
+
+      horde = math.min(horde, wants[mon])
+
+      local actual = try_add_mon_group(mon, horde)
+
+      if actual > 0 and actual < wants[mon] then
+        wants[mon] = wants[mon] - actual
       else
-
-        local horde = 1
-        if info.health <= 500 and rand.odds(30) then horde = horde + 1 end
-        if info.health <= 100 then horde = horde + rand.index_by_probs { 90, 40, 10, 3, 0.5 } end
-
-        horde = math.min(horde, wants[mon])
-
-        local actual = try_add_mon_group(mon, horde)
-
-        if actual > 0 and actual < wants[mon] then
-          wants[mon] = wants[mon] - actual
-        else
-          pal2[mon] = nil
-        end
+        pal2[mon] = nil
       end
     end
   end
@@ -2079,7 +2095,7 @@ function Monsters_make_battles()
   
   gui.printf("\n--==| Make Battles |==--\n\n")
 
-  gui.prog_step("Mons");
+  gui.prog_step("Mons")
 
   Player_init()
 
