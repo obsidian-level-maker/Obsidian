@@ -1341,109 +1341,19 @@ static bool CanSwallowBrush(region_c *R, int i, int k)
 }
 
 
-// TODO: REMOVE THIS FLAVOR STUFF
-
-static int FlavorCompare(const char *flavor1, const char *flavor2)
-{
-  // format of a flavor string is "name:123"
-  // where 123 is the priority value.
-  // higher priority kills lower ones.
-
-  SYS_ASSERT(flavor1);
-  SYS_ASSERT(flavor2);
-
-  const char *A = flavor1;
-  const char *B = flavor2;
-
-  for (;;)
-  {
-    if (! *A) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor1);
-    if (! *B) Main_FatalError("Bad brush flavor (no colon) : '%s'\n", flavor2);
-
-    if (*A != *B)
-      break;  // different flavors
-
-    if (*A != ':')
-    {
-      A++;  B++;
-      continue;
-    }
-
-    int pri_1 = atoi(A + 1);
-    int pri_2 = atoi(B + 1);
-
-    if (pri_1 <= 0) Main_FatalError("Bad brush flavor (bad pri) : '%s'\n", flavor1);
-    if (pri_2 <= 0) Main_FatalError("Bad brush flavor (bad pri) : '%s'\n", flavor2);
-
-    return pri_1 - pri_2;
-  }
-
-  return 0;
-}
-
-
-static bool TrySwallowFlavored(region_c *R)
-{
-  for (int i = 0 ; i < (int)R->brushes.size() ; i++)
-  {
-    csg_brush_c *A = R->brushes[i];
-
-    if (! (A->bflags & BRU_IF_Flavor))
-      continue;
-
-    for (int k = 0 ; k < (int)R->brushes.size() ; k++)
-    {
-      if (k == i)
-        continue;
-
-      csg_brush_c *B = R->brushes[k];
-
-      if (! (B->bflags & BRU_IF_Flavor))
-        continue;
-
-      const char * A_flavor = A->props.getStr("flavor");
-      const char * B_flavor = B->props.getStr("flavor");
-
-      int cmp = FlavorCompare(A_flavor, B_flavor);
-
-      if (cmp < 0)
-      {
-        R->RemoveBrush(i);
-        return true;
-      }
-      else if (cmp > 0)
-      {
-        R->RemoveBrush(k);
-        return true;
-      }
-    }
-  }
-
-  // no change
-  return false;
-}
-
-
 void CSG_SwallowBrushes()
 {
   // check each region_c for redundant brushes, ones which are
   // completely surrounded by another brush (on the Z axis).
-  // this also handles flavored brushes.
 
-  int count=0;
-  int total=0;
+  int count = 0;
+  int total = 0;
 
   for (unsigned int i = 0 ; i < all_regions.size() ; i++)
   {
     region_c *R = all_regions[i];
 
     total += (int)R->brushes.size();
-
-    // need to handle flavors first
-    while (TrySwallowFlavored(R))
-    {
-      count++;
-    }
 
     R->SortBrushes();
 
