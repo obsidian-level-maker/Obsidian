@@ -34,25 +34,25 @@ QUAKE.ENTITIES =
   teleport_spot = { id="info_teleport_destination", kind="other", r=16,h=56, pass=true }
 
   -- enemies
-  dog      = { id="monster_dog",      kind="monster", r=32, h=80 }
-  grunt    = { id="monster_army",     kind="monster", r=32, h=80 }
-  enforcer = { id="monster_enforcer", kind="monster", r=32, h=80 }
+  dog      = { id="monster_dog",      kind="monster", r=32, h=80 }  -- dogs are fat!
+  grunt    = { id="monster_army",     kind="monster", r=16, h=80 }
+  enforcer = { id="monster_enforcer", kind="monster", r=16, h=80 }
   fiend    = { id="monster_demon1",   kind="monster", r=32, h=80 }
 
-  knight   = { id="monster_knight",   kind="monster", r=32, h=80 }
+  knight   = { id="monster_knight",   kind="monster", r=16, h=80 }
   death_kt = { id="monster_hell_knight", kind="monster", r=32, h=80 }
   ogre     = { id="monster_ogre",     kind="monster", r=32, h=80 }
-  fish     = { id="monster_fish",     kind="monster", r=32, h=80 }
-  scrag    = { id="monster_wizard",   kind="monster", r=32, h=80 }
+  fish     = { id="monster_fish",     kind="monster", r=16, h=80 }
+  scrag    = { id="monster_wizard",   kind="monster", r=16, h=80 }
 
   shambler = { id="monster_shambler", kind="monster", r=32, h=80 }
-  tarbaby  = { id="monster_tarbaby",  kind="monster", r=32, h=80 }
+  tarbaby  = { id="monster_tarbaby",  kind="monster", r=16, h=80 }
   vore     = { id="monster_shalrath", kind="monster", r=32, h=80 }
-  zombie   = { id="monster_zombie",   kind="monster", r=32, h=80 }
+  zombie   = { id="monster_zombie",   kind="monster", r=16, h=80 }
 
   -- bosses
-  Chthon   = { id="monster_boss",   kind="monster", r=32, h=80 }
-  Shub     = { id="monster_oldone", kind="monster", r=32, h=80 }
+  Chthon   = { id="monster_boss",   kind="monster", r=128, h=160 }
+  Shub     = { id="monster_oldone", kind="monster", r=128, h=160 }
 
   -- pickups
   k_silver = { id="item_key1", kind="pickup", r=30, h=30, pass=true }
