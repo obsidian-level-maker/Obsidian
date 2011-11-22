@@ -483,8 +483,6 @@ function Simple_create_areas(R)
 
           if what == "no" then continue end
 
-  stderrf("Step touches %s : %s\n", C:tostr(), what)
-
           -- while the step only partially covers the chunk, keep growing it
           -- (this should always stop, but limit the loop just in case)
           for loop = 1,30 do
@@ -500,11 +498,8 @@ function Simple_create_areas(R)
 --step:dump("After touching growth")
 
             what = chunk_touches_step(C)
-  stderrf("  loop %d | new status: %s\n", loop, what)
             assert(what != "no")
           end
-
-  stderrf("  OK!\n")
 
           -- chunk is now covered, add to area and remove from list
           table.insert(finished_chunks, C)
