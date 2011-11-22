@@ -982,11 +982,16 @@ function Monsters_in_room(L)
       qty = qty * COOP_MON_FACTOR
     end
 
-    -- more in EXIT or KEY rooms (extra boost in small rooms)
-    local is_small = (R.svolume <= 20)
 
-    if L.purpose then
+    -- less in hallways
+    if L.kind == "hallway" then
+      qty = qty * rand.pick { 0.4, 0.6, 0.8 }
+
+    -- more in EXIT or KEY rooms (extra boost in small rooms)
+    elseif L.purpose then
       qty = qty * rand.pick { 1.6, 1.8, 2.1 }
+
+      local is_small = (L.svolume <= 20)
 
       if is_small then qty = qty * 1.25 end
     else
@@ -1193,8 +1198,12 @@ function Monsters_in_room(L)
 
     assert(base_num)
 
+    if L.kind == "hallway" then
+      return rand.sel(50, 2, 1)
+    end
+
     -- adjust the base number to account for room size
-    local size = math.sqrt(R.svolume)
+    local size = math.sqrt(L.svolume)
     local num  = int(base_num * size / 12 + 0.6 + gui.random())
 
     if num < 1 then num = 1 end
@@ -1210,8 +1219,14 @@ function Monsters_in_room(L)
 
 
   local function crazy_palette()
-    local size = (R.tw or R.sw) + (R.th or R.sh)
-    local num_kinds = int(size / 2)
+    local num_kinds
+
+    if L.kind == "hallway" then
+      num_kinds = rand.index_by_probs({ 90, 30, 10 })
+    else
+      local size = math.sqrt(L.svolume)
+      num_kinds = int(size / 2)
+    end
 
     local list = {}
 
@@ -1735,7 +1750,7 @@ gui.debugf("wants =\n%s\n\n", table.tostr(wants))
           wants[mon] = wants[mon] - 1
 
           -- extra one for very large rooms
-          if R.svolume > 70 then
+          if (L.svolume or 0) > 70 then
             try_add_mon_group(mon, 1)
           end
         end
